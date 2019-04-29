@@ -2,51 +2,51 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 65950DD2C
-	for <lists+linux-gpio@lfdr.de>; Mon, 29 Apr 2019 09:53:31 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CBE9BDD5D
+	for <lists+linux-gpio@lfdr.de>; Mon, 29 Apr 2019 10:05:25 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726718AbfD2Hxa (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 29 Apr 2019 03:53:30 -0400
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:41980 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727483AbfD2Hxa (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 29 Apr 2019 03:53:30 -0400
-Received: by mail-oi1-f193.google.com with SMTP id v23so7406711oif.8
-        for <linux-gpio@vger.kernel.org>; Mon, 29 Apr 2019 00:53:30 -0700 (PDT)
+        id S1727610AbfD2IFY (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 29 Apr 2019 04:05:24 -0400
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:43541 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727605AbfD2IFY (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 29 Apr 2019 04:05:24 -0400
+Received: by mail-ot1-f68.google.com with SMTP id u15so7802407otq.10
+        for <linux-gpio@vger.kernel.org>; Mon, 29 Apr 2019 01:05:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baylibre-com.20150623.gappssmtp.com; s=20150623;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc:content-transfer-encoding;
-        bh=lTE8ZUe/zLng+ZlAw7wli/wZIDmLwzaqTDPEWlKoyEA=;
-        b=Qx62XkIJWMVhX1tTSZWgOrwz8HqepXlV4Z8D/gGYVWMMi3Fr7nKK6+vdKy+/pkZKQR
-         +V9oTnF1Ly8xgazFAj7rw9JQYl/fZrD2f9Tp86WViZB2TPAp3ng40jFlm9coh/XWAF0u
-         DrSvLYAd0KRFq7iMmeut7Hb5l52C2Zkg70OSuASvoSBQHh2TjoQeD2ieWNAHaLtf2HHu
-         ytdoE8LdVTQ6oRu/1CuQeHRRtoiI3gsBuf5wTuZGmtRVTCin7OvAvRvYBxdxCISdByDa
-         38oNq9pBe+IBCUUuNxTQ7S63ChjAVZ148iac6aVUHuBuz8kEkRvvajvtAGU5Fut5OmJ2
-         iLxw==
+        bh=YyXy/Ie73uurSifnxXwPPCjDOWFEG0F3DJdimxJFcAc=;
+        b=fn6je0oV2jgwh2sHe5zKMIc4U2H+O56n6fjSEqsXZCL+M7jv/d/4Yfuecsmkg1xJ9Q
+         O279VIqyP3zsz0kl19ZfqlBEwrlTlLyy5yDRK5L4XZWEe5HxB5uIN9d9ISS6weZTErxW
+         HildR8uWJjLWzSiN/X4kk3tNZZL9zrfLGrund0vKJwhNTFlQLdfTDvOHM8G5P9lX+3ic
+         gYJIx+xi8Ve9UkNDMOJ0EFldRr4bCZ6j6Qw7hxusgce+jynuMORB7/7Sou09k6lsvTdm
+         N/JbrKvegeGQmq8Lxu48MqB5G2qouNoSEq7+L1UwgUo1ui9vW7urRqoWT3ejm7hIebFk
+         Hvyg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc:content-transfer-encoding;
-        bh=lTE8ZUe/zLng+ZlAw7wli/wZIDmLwzaqTDPEWlKoyEA=;
-        b=LnEgSYeWbPW8tRjPMe3/PqynY1cuXieGbmaiHNPmDuqonQ4WIWVeuCbtGTKTK10hFg
-         GWlEtMPvPTr+ejxQKoki/oMNBlkjMWhlBSQp+3HZZtFDlb7WofFbcHN7kK0CqfC6dBWZ
-         Xc5wMeZlKHb61WYeo5gplLCDLvria5c53VNyO1xe8EDkGn2m2Kiy02PKH1+hg4LOomVk
-         /+qY2RA1J/gyLBnE/NSqfbzHsCJ3ATv5/sQvdP1QrZzKLJm1YavSPMoEeRtDIVO8++OC
-         Nc8lPY9+VA7yCyxCUEsTrV3P5rSYOw8LulZX6xRAy7AAXPlKbRPbKZlsUHbIr69gUO6l
-         RFoQ==
-X-Gm-Message-State: APjAAAXcHQKT4PsX0JHYccY1fXnZDyzGZ2zPF+D4Wr/WRfgjFam90I4w
-        uKqbFuu/Y7VZLhM9cb1VUaB0vWt6stndI3CwW65ZCA==
-X-Google-Smtp-Source: APXvYqyY1pL6kRZdPE6htYzE5BsCHj0A4NAoBg0naE/rczUfA/B7jwsFBoqxIDeKMTkoBUnW2oqw9qHLa5Is1D2s+uE=
-X-Received: by 2002:aca:f2c2:: with SMTP id q185mr9556506oih.147.1556524409451;
- Mon, 29 Apr 2019 00:53:29 -0700 (PDT)
+        bh=YyXy/Ie73uurSifnxXwPPCjDOWFEG0F3DJdimxJFcAc=;
+        b=d9L93zqLOuMWd4Rx5Nl3Yk16SEIxppbUWGg4zziD++xNYAkxEGkuXa+E4o+CBEY8r9
+         ueZJLlkFMSVTV+LMd0GknKNaTanVXkF9i6idKdXrXZ3p9uiUlm/pztZvziFgLKYRjR09
+         deUSARFW6bVbpXtxfiJPdzLonir3eVa6d1bVc6E56x3olobKNy/EIygeytX20MrSwsV0
+         Ip9L1x6shO0RMmzWWz+e5zuNe2uTmIWypZRcBK7lx9SapbukeM8ICd27sV+iDmyCpLFq
+         WpagGwGbDEBJmWBwEKV49aWY7AEb3L4CzGUJTfh5wwPjOWHZixqE04pgzrIMJs+tU73I
+         819A==
+X-Gm-Message-State: APjAAAWk04OsFGkejVRGlnffTNcEfAXpb1nmJxhlbOpAhlu3FHVu6PMy
+        do99AIpGwmndo0kaThE0shyx8FGqY0UQ40JhEMFfXg==
+X-Google-Smtp-Source: APXvYqx06BG5eGh9UuXz0Saif18cT4+/cKdFi3yFkZEctF3FVCXmjfXlgQFyMDjYw0sd5whF3mGM3cwBeBSfl7lfReA=
+X-Received: by 2002:a05:6830:150:: with SMTP id j16mr34168719otp.27.1556525123456;
+ Mon, 29 Apr 2019 01:05:23 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190429054948.9185-1-andrew.smirnov@gmail.com>
-In-Reply-To: <20190429054948.9185-1-andrew.smirnov@gmail.com>
+References: <20190429054948.9185-1-andrew.smirnov@gmail.com> <20190429054948.9185-2-andrew.smirnov@gmail.com>
+In-Reply-To: <20190429054948.9185-2-andrew.smirnov@gmail.com>
 From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Date:   Mon, 29 Apr 2019 09:53:18 +0200
-Message-ID: <CAMpxmJVe2C1RSHq0xVDSdNEK0S06e2Q=tp5k5QJXdCTG2DzJbQ@mail.gmail.com>
-Subject: Re: [PATCH 1/2] gpio: vf610: Use devm_platform_ioremap_resource()
+Date:   Mon, 29 Apr 2019 10:05:12 +0200
+Message-ID: <CAMpxmJUrVU6qGH9ZOaxABOuOopnHjyv+iqT908p1f-NuSk0r5w@mail.gmail.com>
+Subject: Re: [PATCH 2/2] gpio: vf610: Use PTR_ERR_OR_ZERO() in vf610_gpio_probe()
 To:     Andrey Smirnov <andrew.smirnov@gmail.com>
 Cc:     linux-gpio <linux-gpio@vger.kernel.org>,
         Linus Walleij <linus.walleij@linaro.org>,
@@ -62,9 +62,8 @@ X-Mailing-List: linux-gpio@vger.kernel.org
 pon., 29 kwi 2019 o 07:50 Andrey Smirnov <andrew.smirnov@gmail.com> napisa=
 =C5=82(a):
 >
-> Replace calls to platform_get_resource() and devm_ioremap_resource()
-> with newly added devm_platform_ioremap_resource() for brevity. No
-> functional change intended.
+> Simplify error checking code by replacing multiple ERR macros with a
+> call to PTR_ERR_OR_ZERO. No functional change intended.
 >
 > Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
 > Cc: Linus Walleij <linus.walleij@linaro.org>
@@ -73,39 +72,58 @@ pon., 29 kwi 2019 o 07:50 Andrey Smirnov <andrew.smirnov@gmail.com> napisa=
 > Cc: linux-gpio@vger.kernel.org
 > Cc: linux-kernel@vger.kernel.org
 > ---
->  drivers/gpio/gpio-vf610.c | 7 ++-----
->  1 file changed, 2 insertions(+), 5 deletions(-)
+>  drivers/gpio/gpio-vf610.c | 14 ++++++++------
+>  1 file changed, 8 insertions(+), 6 deletions(-)
 >
 > diff --git a/drivers/gpio/gpio-vf610.c b/drivers/gpio/gpio-vf610.c
-> index 6f6558715b88..30aef41e3b7e 100644
+> index 30aef41e3b7e..7ba668db171b 100644
 > --- a/drivers/gpio/gpio-vf610.c
 > +++ b/drivers/gpio/gpio-vf610.c
-> @@ -242,7 +242,6 @@ static int vf610_gpio_probe(struct platform_device *p=
+> @@ -265,7 +265,8 @@ static int vf610_gpio_probe(struct platform_device *p=
 dev)
->         struct device *dev =3D &pdev->dev;
->         struct device_node *np =3D dev->of_node;
->         struct vf610_gpio_port *port;
-> -       struct resource *iores;
->         struct gpio_chip *gc;
->         struct irq_chip *ic;
->         int i;
-> @@ -253,13 +252,11 @@ static int vf610_gpio_probe(struct platform_device =
+>                 return port->irq;
+>
+>         port->clk_port =3D devm_clk_get(dev, "port");
+> -       if (!IS_ERR(port->clk_port)) {
+> +       ret =3D PTR_ERR_OR_ZERO(port->clk_port);
+> +       if (!ret) {
+>                 ret =3D clk_prepare_enable(port->clk_port);
+>                 if (ret)
+>                         return ret;
+> @@ -273,16 +274,17 @@ static int vf610_gpio_probe(struct platform_device =
 *pdev)
->                 return -ENOMEM;
+>                                                port->clk_port);
+>                 if (ret)
+>                         return ret;
+> -       } else if (port->clk_port =3D=3D ERR_PTR(-EPROBE_DEFER)) {
+> +       } else if (ret =3D=3D -EPROBE_DEFER) {
+>                 /*
+>                  * Percolate deferrals, for anything else,
+>                  * just live without the clocking.
+>                  */
+> -               return PTR_ERR(port->clk_port);
+> +               return ret;
+>         }
 >
->         port->sdata =3D of_device_get_match_data(dev);
-> -       iores =3D platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> -       port->base =3D devm_ioremap_resource(dev, iores);
-> +       port->base =3D devm_platform_ioremap_resource(pdev, 0);
->         if (IS_ERR(port->base))
->                 return PTR_ERR(port->base);
+>         port->clk_gpio =3D devm_clk_get(dev, "gpio");
+> -       if (!IS_ERR(port->clk_gpio)) {
+> +       ret =3D PTR_ERR_OR_ZERO(port->clk_gpio);
+> +       if (!ret) {
+>                 ret =3D clk_prepare_enable(port->clk_gpio);
+>                 if (ret)
+>                         return ret;
+> @@ -290,8 +292,8 @@ static int vf610_gpio_probe(struct platform_device *p=
+dev)
+>                                                port->clk_gpio);
+>                 if (ret)
+>                         return ret;
+> -       } else if (port->clk_gpio =3D=3D ERR_PTR(-EPROBE_DEFER)) {
+> -               return PTR_ERR(port->clk_gpio);
+> +       } else if (ret =3D=3D -EPROBE_DEFER) {
+> +               return ret;
+>         }
 >
-> -       iores =3D platform_get_resource(pdev, IORESOURCE_MEM, 1);
-> -       port->gpio_base =3D devm_ioremap_resource(dev, iores);
-> +       port->gpio_base =3D devm_platform_ioremap_resource(pdev, 1);
->         if (IS_ERR(port->gpio_base))
->                 return PTR_ERR(port->gpio_base);
->
+>         gc =3D &port->gc;
 > --
 > 2.20.1
 >
