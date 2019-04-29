@@ -2,60 +2,58 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 29729DAE8
-	for <lists+linux-gpio@lfdr.de>; Mon, 29 Apr 2019 05:55:45 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 15312DBA9
+	for <lists+linux-gpio@lfdr.de>; Mon, 29 Apr 2019 07:50:19 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727238AbfD2Dzd (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sun, 28 Apr 2019 23:55:33 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:35060 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727235AbfD2Dzc (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sun, 28 Apr 2019 23:55:32 -0400
-Received: by mail-pf1-f194.google.com with SMTP id t21so4650222pfh.2
-        for <linux-gpio@vger.kernel.org>; Sun, 28 Apr 2019 20:55:32 -0700 (PDT)
+        id S1727158AbfD2FuO (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 29 Apr 2019 01:50:14 -0400
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:36125 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725958AbfD2FuO (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 29 Apr 2019 01:50:14 -0400
+Received: by mail-pl1-f194.google.com with SMTP id w20so3925873plq.3;
+        Sun, 28 Apr 2019 22:50:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=WAZlyDzGKVIdVMC388n6S7o0DOasFYjgOEfAKf4uteY=;
-        b=nSEa1MJ4YGhP7t6ZTTKWFurbopRUMivjdQCEUKmamdRbDSTbxUQbmsdw/JeTlHj47P
-         e9Rjsu7YKOeUFG6lZbHcj2EFQJ2rW7yuNvBuXJVi0gyadnS0GlwtOvda8IRiGsZRqzsr
-         tU5oaOTdgfubtwUJH0ZWA4QUdgzfJLmwUBugM=
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Ex/wtvFh2LFQHAMf1Hh9PK5P1Lhyqf0a9tTK9sge9xk=;
+        b=CBU82FhgablygK35UzOKv2SgpPcjcujsSP/UUsEGT/SMOMRi9MaKMzA6+oDZeV2W+w
+         xmgVaqaWs4mN13kqw0q7JFsg8Kr6w9oqxIKvUljNzyy6aM/bqu+N7twvIvp0Pf817soR
+         Syoi2M+sGB/T7FwoiETpJRvTX17KHB1OQFGf5sjSP9oAfZQY8LoX5NRBch7FL/mK0tC8
+         jqPbraWZysNQocjzRMS2PSnhr7uh2te1ZWrvh1m/DUt7DBaplNjVc7QdjmD+m3hwHykp
+         BQIQJhgjVru3CsHQJuVbOZMMeCWj/GSEVz1PM04Bbiv3g9hq1C2lw0jUkRIvjQrgg1vn
+         AEmA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=WAZlyDzGKVIdVMC388n6S7o0DOasFYjgOEfAKf4uteY=;
-        b=Bb31KelM8D3Bwkb9an8Y8nad6Xhx2k0FLfC8/wvy7iAQ+gi+5ircdHZZSmbsy1o993
-         TcTI3j6VF5Jl3Du/tik9r6ArcL0ugm/acDqL61IhSo/gRny2x/XG8KZ3itRHzR0cOxFN
-         h4F8Ege4dU+SBjCGn6LJlp48+nhPfzElJ+LE0wi8Pse5OJiCOsV2EIF2yFON3XlJN8KM
-         snWg3eJbsxL+TFYDr3sKs6BcrZHmTR6yahPLZOPwvWR0EmvFKbNJ7sroYg5RfBc8SHmu
-         xhmxDb6OvGcGK4/ANd8G6b2Z2dFAMZYHriyzSmPxLzTmK/65xSLKjcp3jeJVyuyM9uVe
-         KKtg==
-X-Gm-Message-State: APjAAAV6/wq3ixVW6WdRY45uBGjcKoeAAXUB+phmTUZg+mgdlxrnNhb5
-        Tu66/kgFWD7ryA0C0/LCVvCmT6FgqOs=
-X-Google-Smtp-Source: APXvYqx3TFhPNmuhW9pXjaa8z9fORbLQnXGmeqzBi0NVBXmBzyMccsPh3dh+KK5grUYlUW8sKt9sow==
-X-Received: by 2002:a62:a219:: with SMTP id m25mr60974348pff.197.1556510131833;
-        Sun, 28 Apr 2019 20:55:31 -0700 (PDT)
-Received: from drinkcat2.tpe.corp.google.com ([2401:fa00:1:b:d8b7:33af:adcb:b648])
-        by smtp.gmail.com with ESMTPSA id x128sm55433585pfx.103.2019.04.28.20.55.29
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 28 Apr 2019 20:55:31 -0700 (PDT)
-From:   Nicolas Boichat <drinkcat@chromium.org>
-To:     linux-mediatek@lists.infradead.org
-Cc:     Sean Wang <sean.wang@kernel.org>,
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Ex/wtvFh2LFQHAMf1Hh9PK5P1Lhyqf0a9tTK9sge9xk=;
+        b=DoT0G5IwkipfQXlTY0gWSFxtPmt6dA6FSwNfCHAMQEcnVy7Qe/c3tpNWxpWFlNZqrc
+         mmhdv0ion4MQjoqyYZrq9MMI7cvh5cQ6wTTthOhNN/WMF8AzqoQszLvwNxpLknW4MjT6
+         ye6/GcTwKCMISW/+frqdqsNxe+hVL6rAKJ0adt0RzXxXJ07DX375wRql8HWgnBI/4kLF
+         7930w2VMYZksCumQwbWkdH2DS4EQNWuNRVBaDyDTdE9V266D0DOI7C7D8oMajfgipggX
+         sQ5PpxQJtLSmBEt6e/l4z2ARV2fGJCIpzGmILmxJwnXJUG8+EbhtzBhKCysJMiECbvH2
+         /aSQ==
+X-Gm-Message-State: APjAAAWL07RA0zh8IcCCO8kP3mrrBUzLHQR/n5A6irzHlKq+Ms0o2/+R
+        zG3n8BrRPehqwyqLJQSY9wAsqd19mbM=
+X-Google-Smtp-Source: APXvYqz/9SFVYQabsBysw74iG7onoc3zdKpkL2tocCsMGiOf94ZphQFsikUupJnMT771LF1Kw6O54Q==
+X-Received: by 2002:a17:902:a988:: with SMTP id bh8mr41019202plb.243.1556517013668;
+        Sun, 28 Apr 2019 22:50:13 -0700 (PDT)
+Received: from squirtle.lan (c-24-22-235-96.hsd1.wa.comcast.net. [24.22.235.96])
+        by smtp.gmail.com with ESMTPSA id n188sm19613605pfn.64.2019.04.28.22.50.12
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Sun, 28 Apr 2019 22:50:12 -0700 (PDT)
+From:   Andrey Smirnov <andrew.smirnov@gmail.com>
+To:     linux-gpio@vger.kernel.org
+Cc:     Andrey Smirnov <andrew.smirnov@gmail.com>,
         Linus Walleij <linus.walleij@linaro.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org,
-        Chuanjia Liu <Chuanjia.Liu@mediatek.com>, evgreen@chromium.org,
-        swboyd@chromium.org
-Subject: [PATCH 2/2] pinctrl: mediatek: Update cur_mask in mask/mask ops
-Date:   Mon, 29 Apr 2019 11:55:15 +0800
-Message-Id: <20190429035515.73611-3-drinkcat@chromium.org>
-X-Mailer: git-send-email 2.21.0.593.g511ec345e18-goog
-In-Reply-To: <20190429035515.73611-1-drinkcat@chromium.org>
-References: <20190429035515.73611-1-drinkcat@chromium.org>
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Chris Healy <cphealy@gmail.com>, linux-kernel@vger.kernel.org
+Subject: [PATCH 1/2] gpio: vf610: Use devm_platform_ioremap_resource()
+Date:   Sun, 28 Apr 2019 22:49:47 -0700
+Message-Id: <20190429054948.9185-1-andrew.smirnov@gmail.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-gpio-owner@vger.kernel.org
@@ -63,76 +61,48 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-During suspend/resume, mtk_eint_mask may be called while
-wake_mask is active. For example, this happens if a wake-source
-with an active interrupt handler wakes the system:
-irq/pm.c:irq_pm_check_wakeup would disable the interrupt, so
-that it can be handled later on in the resume flow.
+Replace calls to platform_get_resource() and devm_ioremap_resource()
+with newly added devm_platform_ioremap_resource() for brevity. No
+functional change intended.
 
-However, this may happen before mtk_eint_do_resume is called:
-in this case, wake_mask is loaded, and cur_mask is restored
-from an older copy, re-enabling the interrupt, and causing
-an interrupt storm (especially for level interrupts).
-
-Instead, we just record mask/unmask changes in cur_mask. This
-also avoids the need to read the current mask in eint_do_suspend,
-and we can remove mtk_eint_chip_read_mask function.
-
-Signed-off-by: Nicolas Boichat <drinkcat@chromium.org>
+Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>
+Cc: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Cc: Chris Healy <cphealy@gmail.com>
+Cc: linux-gpio@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
 ---
- drivers/pinctrl/mediatek/mtk-eint.c | 18 ++++--------------
- 1 file changed, 4 insertions(+), 14 deletions(-)
+ drivers/gpio/gpio-vf610.c | 7 ++-----
+ 1 file changed, 2 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/pinctrl/mediatek/mtk-eint.c b/drivers/pinctrl/mediatek/mtk-eint.c
-index 737385e86beb807..7e526bcf5e0b55c 100644
---- a/drivers/pinctrl/mediatek/mtk-eint.c
-+++ b/drivers/pinctrl/mediatek/mtk-eint.c
-@@ -113,6 +113,8 @@ static void mtk_eint_mask(struct irq_data *d)
- 	void __iomem *reg = mtk_eint_get_offset(eint, d->hwirq,
- 						eint->regs->mask_set);
+diff --git a/drivers/gpio/gpio-vf610.c b/drivers/gpio/gpio-vf610.c
+index 6f6558715b88..30aef41e3b7e 100644
+--- a/drivers/gpio/gpio-vf610.c
++++ b/drivers/gpio/gpio-vf610.c
+@@ -242,7 +242,6 @@ static int vf610_gpio_probe(struct platform_device *pdev)
+ 	struct device *dev = &pdev->dev;
+ 	struct device_node *np = dev->of_node;
+ 	struct vf610_gpio_port *port;
+-	struct resource *iores;
+ 	struct gpio_chip *gc;
+ 	struct irq_chip *ic;
+ 	int i;
+@@ -253,13 +252,11 @@ static int vf610_gpio_probe(struct platform_device *pdev)
+ 		return -ENOMEM;
  
-+	eint->cur_mask[d->hwirq >> 5] &= ~mask;
-+
- 	writel(mask, reg);
- }
+ 	port->sdata = of_device_get_match_data(dev);
+-	iores = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+-	port->base = devm_ioremap_resource(dev, iores);
++	port->base = devm_platform_ioremap_resource(pdev, 0);
+ 	if (IS_ERR(port->base))
+ 		return PTR_ERR(port->base);
  
-@@ -123,6 +125,8 @@ static void mtk_eint_unmask(struct irq_data *d)
- 	void __iomem *reg = mtk_eint_get_offset(eint, d->hwirq,
- 						eint->regs->mask_clr);
+-	iores = platform_get_resource(pdev, IORESOURCE_MEM, 1);
+-	port->gpio_base = devm_ioremap_resource(dev, iores);
++	port->gpio_base = devm_platform_ioremap_resource(pdev, 1);
+ 	if (IS_ERR(port->gpio_base))
+ 		return PTR_ERR(port->gpio_base);
  
-+	eint->cur_mask[d->hwirq >> 5] |= mask;
-+
- 	writel(mask, reg);
- 
- 	if (eint->dual_edge[d->hwirq])
-@@ -217,19 +221,6 @@ static void mtk_eint_chip_write_mask(const struct mtk_eint *eint,
- 	}
- }
- 
--static void mtk_eint_chip_read_mask(const struct mtk_eint *eint,
--				    void __iomem *base, u32 *buf)
--{
--	int port;
--	void __iomem *reg;
--
--	for (port = 0; port < eint->hw->ports; port++) {
--		reg = base + eint->regs->mask + (port << 2);
--		buf[port] = ~readl_relaxed(reg);
--		/* Mask is 0 when irq is enabled, and 1 when disabled. */
--	}
--}
--
- static int mtk_eint_irq_request_resources(struct irq_data *d)
- {
- 	struct mtk_eint *eint = irq_data_get_irq_chip_data(d);
-@@ -384,7 +375,6 @@ static void mtk_eint_irq_handler(struct irq_desc *desc)
- 
- int mtk_eint_do_suspend(struct mtk_eint *eint)
- {
--	mtk_eint_chip_read_mask(eint, eint->base, eint->cur_mask);
- 	mtk_eint_chip_write_mask(eint, eint->base, eint->wake_mask);
- 
- 	return 0;
 -- 
-2.21.0.593.g511ec345e18-goog
+2.20.1
 
