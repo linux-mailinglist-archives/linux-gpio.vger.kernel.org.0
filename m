@@ -2,130 +2,79 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id CBE9BDD5D
-	for <lists+linux-gpio@lfdr.de>; Mon, 29 Apr 2019 10:05:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id EA39BDE1A
+	for <lists+linux-gpio@lfdr.de>; Mon, 29 Apr 2019 10:39:06 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727610AbfD2IFY (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 29 Apr 2019 04:05:24 -0400
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:43541 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727605AbfD2IFY (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 29 Apr 2019 04:05:24 -0400
-Received: by mail-ot1-f68.google.com with SMTP id u15so7802407otq.10
-        for <linux-gpio@vger.kernel.org>; Mon, 29 Apr 2019 01:05:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=YyXy/Ie73uurSifnxXwPPCjDOWFEG0F3DJdimxJFcAc=;
-        b=fn6je0oV2jgwh2sHe5zKMIc4U2H+O56n6fjSEqsXZCL+M7jv/d/4Yfuecsmkg1xJ9Q
-         O279VIqyP3zsz0kl19ZfqlBEwrlTlLyy5yDRK5L4XZWEe5HxB5uIN9d9ISS6weZTErxW
-         HildR8uWJjLWzSiN/X4kk3tNZZL9zrfLGrund0vKJwhNTFlQLdfTDvOHM8G5P9lX+3ic
-         gYJIx+xi8Ve9UkNDMOJ0EFldRr4bCZ6j6Qw7hxusgce+jynuMORB7/7Sou09k6lsvTdm
-         N/JbrKvegeGQmq8Lxu48MqB5G2qouNoSEq7+L1UwgUo1ui9vW7urRqoWT3ejm7hIebFk
-         Hvyg==
+        id S1727600AbfD2IjF (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 29 Apr 2019 04:39:05 -0400
+Received: from mail-ua1-f66.google.com ([209.85.222.66]:43845 "EHLO
+        mail-ua1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727554AbfD2IjF (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 29 Apr 2019 04:39:05 -0400
+Received: by mail-ua1-f66.google.com with SMTP id n16so3203490uae.10;
+        Mon, 29 Apr 2019 01:39:04 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=YyXy/Ie73uurSifnxXwPPCjDOWFEG0F3DJdimxJFcAc=;
-        b=d9L93zqLOuMWd4Rx5Nl3Yk16SEIxppbUWGg4zziD++xNYAkxEGkuXa+E4o+CBEY8r9
-         ueZJLlkFMSVTV+LMd0GknKNaTanVXkF9i6idKdXrXZ3p9uiUlm/pztZvziFgLKYRjR09
-         deUSARFW6bVbpXtxfiJPdzLonir3eVa6d1bVc6E56x3olobKNy/EIygeytX20MrSwsV0
-         Ip9L1x6shO0RMmzWWz+e5zuNe2uTmIWypZRcBK7lx9SapbukeM8ICd27sV+iDmyCpLFq
-         WpagGwGbDEBJmWBwEKV49aWY7AEb3L4CzGUJTfh5wwPjOWHZixqE04pgzrIMJs+tU73I
-         819A==
-X-Gm-Message-State: APjAAAWk04OsFGkejVRGlnffTNcEfAXpb1nmJxhlbOpAhlu3FHVu6PMy
-        do99AIpGwmndo0kaThE0shyx8FGqY0UQ40JhEMFfXg==
-X-Google-Smtp-Source: APXvYqx06BG5eGh9UuXz0Saif18cT4+/cKdFi3yFkZEctF3FVCXmjfXlgQFyMDjYw0sd5whF3mGM3cwBeBSfl7lfReA=
-X-Received: by 2002:a05:6830:150:: with SMTP id j16mr34168719otp.27.1556525123456;
- Mon, 29 Apr 2019 01:05:23 -0700 (PDT)
+         :message-id:subject:to:cc;
+        bh=GnxBF0jspOG3+YYITdmvIXsHWEoXG/JoFXQLoO8H8mc=;
+        b=srgQGvQehvcNGo79mnScNogUk0PH0TNCI0NSawmAZfQO4EEiG00MdvB4XBE2xayz5x
+         3ILGh4Md7Xs/bE651MY20QYdogRUy8pBaSEFXGIrYPiQOwK8dpLDT51BFr4US9xyeRSh
+         vapIg2nW8jHNx5ZThcNQnCNQ+i6Buy0ESkhrCDRl4Z9Lf9apdlZamwKuecFsN6k3hKOa
+         m9p8YVt91QsGZnYevC/6kDxOiMFBy2c2bzJrDv/TaRoi29NM/gB62FegisUEjyaTAkB5
+         W+0F2vtxukmL8z5+J+V48QUahrl9n/+AUS+fVae34bcC1oHDD5+HAm0WH8vI6c4DQKja
+         m8yA==
+X-Gm-Message-State: APjAAAWVZdm2n9feWdmX1nNWF0hIh07kSLUvP9SLjHrTRyA9ERmgpRU6
+        jgYdlAuIMTXFShwZmpa54IRQ7B0cOge8HKHzBULyYA==
+X-Google-Smtp-Source: APXvYqySuVBKCjsg0ITcy7+yxJ3DC3BYWPSchTC5XaksWQRt8ozQndvhm8zNOSD/SVZZ38Cn3ZD+1AMaB2GP+5HxDsg=
+X-Received: by 2002:ab0:6419:: with SMTP id x25mr30526721uao.86.1556527143965;
+ Mon, 29 Apr 2019 01:39:03 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190429054948.9185-1-andrew.smirnov@gmail.com> <20190429054948.9185-2-andrew.smirnov@gmail.com>
-In-Reply-To: <20190429054948.9185-2-andrew.smirnov@gmail.com>
-From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Date:   Mon, 29 Apr 2019 10:05:12 +0200
-Message-ID: <CAMpxmJUrVU6qGH9ZOaxABOuOopnHjyv+iqT908p1f-NuSk0r5w@mail.gmail.com>
-Subject: Re: [PATCH 2/2] gpio: vf610: Use PTR_ERR_OR_ZERO() in vf610_gpio_probe()
-To:     Andrey Smirnov <andrew.smirnov@gmail.com>
-Cc:     linux-gpio <linux-gpio@vger.kernel.org>,
+References: <20190425095542.726-1-geert+renesas@glider.be> <20190425095542.726-2-geert+renesas@glider.be>
+ <20190426092139.5mwjtmm5fnpek6bb@verge.net.au>
+In-Reply-To: <20190426092139.5mwjtmm5fnpek6bb@verge.net.au>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Mon, 29 Apr 2019 10:38:52 +0200
+Message-ID: <CAMuHMdXMeaO8uTT1thMGp+rfk=pcy-ejEU1EPNc_z+0Gw1GF5w@mail.gmail.com>
+Subject: Re: [PATCH 1/4] pinctrl: sh-pfc: Correct printk level of group
+ referral warning
+To:     Simon Horman <horms@verge.net.au>
+Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
         Linus Walleij <linus.walleij@linaro.org>,
-        Chris Healy <cphealy@gmail.com>,
-        LKML <linux-kernel@vger.kernel.org>
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-pon., 29 kwi 2019 o 07:50 Andrey Smirnov <andrew.smirnov@gmail.com> napisa=
-=C5=82(a):
->
-> Simplify error checking code by replacing multiple ERR macros with a
-> call to PTR_ERR_OR_ZERO. No functional change intended.
->
-> Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
-> Cc: Linus Walleij <linus.walleij@linaro.org>
-> Cc: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> Cc: Chris Healy <cphealy@gmail.com>
-> Cc: linux-gpio@vger.kernel.org
-> Cc: linux-kernel@vger.kernel.org
-> ---
->  drivers/gpio/gpio-vf610.c | 14 ++++++++------
->  1 file changed, 8 insertions(+), 6 deletions(-)
->
-> diff --git a/drivers/gpio/gpio-vf610.c b/drivers/gpio/gpio-vf610.c
-> index 30aef41e3b7e..7ba668db171b 100644
-> --- a/drivers/gpio/gpio-vf610.c
-> +++ b/drivers/gpio/gpio-vf610.c
-> @@ -265,7 +265,8 @@ static int vf610_gpio_probe(struct platform_device *p=
-dev)
->                 return port->irq;
->
->         port->clk_port =3D devm_clk_get(dev, "port");
-> -       if (!IS_ERR(port->clk_port)) {
-> +       ret =3D PTR_ERR_OR_ZERO(port->clk_port);
-> +       if (!ret) {
->                 ret =3D clk_prepare_enable(port->clk_port);
->                 if (ret)
->                         return ret;
-> @@ -273,16 +274,17 @@ static int vf610_gpio_probe(struct platform_device =
-*pdev)
->                                                port->clk_port);
->                 if (ret)
->                         return ret;
-> -       } else if (port->clk_port =3D=3D ERR_PTR(-EPROBE_DEFER)) {
-> +       } else if (ret =3D=3D -EPROBE_DEFER) {
->                 /*
->                  * Percolate deferrals, for anything else,
->                  * just live without the clocking.
->                  */
-> -               return PTR_ERR(port->clk_port);
-> +               return ret;
->         }
->
->         port->clk_gpio =3D devm_clk_get(dev, "gpio");
-> -       if (!IS_ERR(port->clk_gpio)) {
-> +       ret =3D PTR_ERR_OR_ZERO(port->clk_gpio);
-> +       if (!ret) {
->                 ret =3D clk_prepare_enable(port->clk_gpio);
->                 if (ret)
->                         return ret;
-> @@ -290,8 +292,8 @@ static int vf610_gpio_probe(struct platform_device *p=
-dev)
->                                                port->clk_gpio);
->                 if (ret)
->                         return ret;
-> -       } else if (port->clk_gpio =3D=3D ERR_PTR(-EPROBE_DEFER)) {
-> -               return PTR_ERR(port->clk_gpio);
-> +       } else if (ret =3D=3D -EPROBE_DEFER) {
-> +               return ret;
->         }
->
->         gc =3D &port->gc;
-> --
-> 2.20.1
->
+Hi Simon,
 
-Reviewed-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+On Fri, Apr 26, 2019 at 11:21 AM Simon Horman <horms@verge.net.au> wrote:
+> On Thu, Apr 25, 2019 at 11:55:39AM +0200, Geert Uytterhoeven wrote:
+> > Fixes: 6161b39a14380815 ("pinctrl: sh-pfc: Validate pinmux tables at runtime when debugging")
+> > Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+>
+> This looks good to me
+>
+> Reviewed-by: Simon Horman <simon.horman@netronome.com>
+
+Thanks!
+
+Is the atypical email address for sh-pfc reviews intentional?
+
+> But I do wonder if "referred" should be "referenced"
+
+Yes, sounds better.
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
