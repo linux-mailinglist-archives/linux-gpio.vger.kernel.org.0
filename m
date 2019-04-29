@@ -2,270 +2,112 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 0C2FEDBB5
-	for <lists+linux-gpio@lfdr.de>; Mon, 29 Apr 2019 07:56:15 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 65950DD2C
+	for <lists+linux-gpio@lfdr.de>; Mon, 29 Apr 2019 09:53:31 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727079AbfD2F4O (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 29 Apr 2019 01:56:14 -0400
-Received: from goliath.siemens.de ([192.35.17.28]:40483 "EHLO
-        goliath.siemens.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727016AbfD2F4N (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 29 Apr 2019 01:56:13 -0400
-Received: from mail1.sbs.de (mail1.sbs.de [192.129.41.35])
-        by goliath.siemens.de (8.15.2/8.15.2) with ESMTPS id x3T5trAc026079
-        (version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 29 Apr 2019 07:55:53 +0200
-Received: from [139.22.43.249] ([139.22.43.249])
-        by mail1.sbs.de (8.15.2/8.15.2) with ESMTP id x3T5tqka012116;
-        Mon, 29 Apr 2019 07:55:52 +0200
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-gpio@vger.kernel.org,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        "Rafael J., Wysocki" <rafael.j.wysocki@intel.com>
-From:   Jan Kiszka <jan.kiszka@siemens.com>
-Subject: [PATCH v2] gpio: sch: Add interrupt support
-Message-ID: <046793ee-ba51-6a1b-1aa5-14560d849df7@siemens.com>
-Date:   Mon, 29 Apr 2019 07:55:52 +0200
-User-Agent: Mozilla/5.0 (X11; U; Linux i686 (x86_64); de; rv:1.8.1.12)
- Gecko/20080226 SUSE/2.0.0.12-1.1 Thunderbird/2.0.0.12 Mnenhy/0.7.5.666
+        id S1726718AbfD2Hxa (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 29 Apr 2019 03:53:30 -0400
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:41980 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727483AbfD2Hxa (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 29 Apr 2019 03:53:30 -0400
+Received: by mail-oi1-f193.google.com with SMTP id v23so7406711oif.8
+        for <linux-gpio@vger.kernel.org>; Mon, 29 Apr 2019 00:53:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=lTE8ZUe/zLng+ZlAw7wli/wZIDmLwzaqTDPEWlKoyEA=;
+        b=Qx62XkIJWMVhX1tTSZWgOrwz8HqepXlV4Z8D/gGYVWMMi3Fr7nKK6+vdKy+/pkZKQR
+         +V9oTnF1Ly8xgazFAj7rw9JQYl/fZrD2f9Tp86WViZB2TPAp3ng40jFlm9coh/XWAF0u
+         DrSvLYAd0KRFq7iMmeut7Hb5l52C2Zkg70OSuASvoSBQHh2TjoQeD2ieWNAHaLtf2HHu
+         ytdoE8LdVTQ6oRu/1CuQeHRRtoiI3gsBuf5wTuZGmtRVTCin7OvAvRvYBxdxCISdByDa
+         38oNq9pBe+IBCUUuNxTQ7S63ChjAVZ148iac6aVUHuBuz8kEkRvvajvtAGU5Fut5OmJ2
+         iLxw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=lTE8ZUe/zLng+ZlAw7wli/wZIDmLwzaqTDPEWlKoyEA=;
+        b=LnEgSYeWbPW8tRjPMe3/PqynY1cuXieGbmaiHNPmDuqonQ4WIWVeuCbtGTKTK10hFg
+         GWlEtMPvPTr+ejxQKoki/oMNBlkjMWhlBSQp+3HZZtFDlb7WofFbcHN7kK0CqfC6dBWZ
+         Xc5wMeZlKHb61WYeo5gplLCDLvria5c53VNyO1xe8EDkGn2m2Kiy02PKH1+hg4LOomVk
+         /+qY2RA1J/gyLBnE/NSqfbzHsCJ3ATv5/sQvdP1QrZzKLJm1YavSPMoEeRtDIVO8++OC
+         Nc8lPY9+VA7yCyxCUEsTrV3P5rSYOw8LulZX6xRAy7AAXPlKbRPbKZlsUHbIr69gUO6l
+         RFoQ==
+X-Gm-Message-State: APjAAAXcHQKT4PsX0JHYccY1fXnZDyzGZ2zPF+D4Wr/WRfgjFam90I4w
+        uKqbFuu/Y7VZLhM9cb1VUaB0vWt6stndI3CwW65ZCA==
+X-Google-Smtp-Source: APXvYqyY1pL6kRZdPE6htYzE5BsCHj0A4NAoBg0naE/rczUfA/B7jwsFBoqxIDeKMTkoBUnW2oqw9qHLa5Is1D2s+uE=
+X-Received: by 2002:aca:f2c2:: with SMTP id q185mr9556506oih.147.1556524409451;
+ Mon, 29 Apr 2019 00:53:29 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20190429054948.9185-1-andrew.smirnov@gmail.com>
+In-Reply-To: <20190429054948.9185-1-andrew.smirnov@gmail.com>
+From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Date:   Mon, 29 Apr 2019 09:53:18 +0200
+Message-ID: <CAMpxmJVe2C1RSHq0xVDSdNEK0S06e2Q=tp5k5QJXdCTG2DzJbQ@mail.gmail.com>
+Subject: Re: [PATCH 1/2] gpio: vf610: Use devm_platform_ioremap_resource()
+To:     Andrey Smirnov <andrew.smirnov@gmail.com>
+Cc:     linux-gpio <linux-gpio@vger.kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Chris Healy <cphealy@gmail.com>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Validated on the Quark platform, this adds interrupt support on rising
-and/or falling edges.
+pon., 29 kwi 2019 o 07:50 Andrey Smirnov <andrew.smirnov@gmail.com> napisa=
+=C5=82(a):
+>
+> Replace calls to platform_get_resource() and devm_ioremap_resource()
+> with newly added devm_platform_ioremap_resource() for brevity. No
+> functional change intended.
+>
+> Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
+> Cc: Linus Walleij <linus.walleij@linaro.org>
+> Cc: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> Cc: Chris Healy <cphealy@gmail.com>
+> Cc: linux-gpio@vger.kernel.org
+> Cc: linux-kernel@vger.kernel.org
+> ---
+>  drivers/gpio/gpio-vf610.c | 7 ++-----
+>  1 file changed, 2 insertions(+), 5 deletions(-)
+>
+> diff --git a/drivers/gpio/gpio-vf610.c b/drivers/gpio/gpio-vf610.c
+> index 6f6558715b88..30aef41e3b7e 100644
+> --- a/drivers/gpio/gpio-vf610.c
+> +++ b/drivers/gpio/gpio-vf610.c
+> @@ -242,7 +242,6 @@ static int vf610_gpio_probe(struct platform_device *p=
+dev)
+>         struct device *dev =3D &pdev->dev;
+>         struct device_node *np =3D dev->of_node;
+>         struct vf610_gpio_port *port;
+> -       struct resource *iores;
+>         struct gpio_chip *gc;
+>         struct irq_chip *ic;
+>         int i;
+> @@ -253,13 +252,11 @@ static int vf610_gpio_probe(struct platform_device =
+*pdev)
+>                 return -ENOMEM;
+>
+>         port->sdata =3D of_device_get_match_data(dev);
+> -       iores =3D platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> -       port->base =3D devm_ioremap_resource(dev, iores);
+> +       port->base =3D devm_platform_ioremap_resource(pdev, 0);
+>         if (IS_ERR(port->base))
+>                 return PTR_ERR(port->base);
+>
+> -       iores =3D platform_get_resource(pdev, IORESOURCE_MEM, 1);
+> -       port->gpio_base =3D devm_ioremap_resource(dev, iores);
+> +       port->gpio_base =3D devm_platform_ioremap_resource(pdev, 1);
+>         if (IS_ERR(port->gpio_base))
+>                 return PTR_ERR(port->gpio_base);
+>
+> --
+> 2.20.1
+>
 
-Signed-off-by: Jan Kiszka <jan.kiszka@siemens.com>
----
-
-Changes in v2:
- - consistently use spinlock irqsave
-
- drivers/gpio/gpio-sch.c | 144 +++++++++++++++++++++++++++++++++++++++++++++---
- 1 file changed, 137 insertions(+), 7 deletions(-)
-
-diff --git a/drivers/gpio/gpio-sch.c b/drivers/gpio/gpio-sch.c
-index fb143f28c386..75c95da145d8 100644
---- a/drivers/gpio/gpio-sch.c
-+++ b/drivers/gpio/gpio-sch.c
-@@ -18,12 +18,17 @@
- #define GEN	0x00
- #define GIO	0x04
- #define GLV	0x08
-+#define GTPE	0x0c
-+#define GTNE	0x10
-+#define GGPE	0x14
-+#define GTS	0x1c
- 
- struct sch_gpio {
- 	struct gpio_chip chip;
- 	spinlock_t lock;
- 	unsigned short iobase;
- 	unsigned short resume_base;
-+	int irq_base;
- };
- 
- static unsigned sch_gpio_offset(struct sch_gpio *sch, unsigned gpio,
-@@ -79,10 +84,11 @@ static void sch_gpio_reg_set(struct sch_gpio *sch, unsigned gpio, unsigned reg,
- static int sch_gpio_direction_in(struct gpio_chip *gc, unsigned gpio_num)
- {
- 	struct sch_gpio *sch = gpiochip_get_data(gc);
-+	unsigned long flags;
- 
--	spin_lock(&sch->lock);
-+	spin_lock_irqsave(&sch->lock, flags);
- 	sch_gpio_reg_set(sch, gpio_num, GIO, 1);
--	spin_unlock(&sch->lock);
-+	spin_unlock_irqrestore(&sch->lock, flags);
- 	return 0;
- }
- 
-@@ -95,20 +101,22 @@ static int sch_gpio_get(struct gpio_chip *gc, unsigned gpio_num)
- static void sch_gpio_set(struct gpio_chip *gc, unsigned gpio_num, int val)
- {
- 	struct sch_gpio *sch = gpiochip_get_data(gc);
-+	unsigned long flags;
- 
--	spin_lock(&sch->lock);
-+	spin_lock_irqsave(&sch->lock, flags);
- 	sch_gpio_reg_set(sch, gpio_num, GLV, val);
--	spin_unlock(&sch->lock);
-+	spin_unlock_irqrestore(&sch->lock, flags);
- }
- 
- static int sch_gpio_direction_out(struct gpio_chip *gc, unsigned gpio_num,
- 				  int val)
- {
- 	struct sch_gpio *sch = gpiochip_get_data(gc);
-+	unsigned long flags;
- 
--	spin_lock(&sch->lock);
-+	spin_lock_irqsave(&sch->lock, flags);
- 	sch_gpio_reg_set(sch, gpio_num, GIO, 0);
--	spin_unlock(&sch->lock);
-+	spin_unlock_irqrestore(&sch->lock, flags);
- 
- 	/*
- 	 * according to the datasheet, writing to the level register has no
-@@ -130,6 +138,12 @@ static int sch_gpio_get_direction(struct gpio_chip *gc, unsigned gpio_num)
- 	return sch_gpio_reg_get(sch, gpio_num, GIO);
- }
- 
-+static int sch_gpio_to_irq(struct gpio_chip *gpio, unsigned int offset)
-+{
-+	struct sch_gpio *sch = gpiochip_get_data(gpio);
-+	return sch->irq_base + offset;
-+}
-+
- static const struct gpio_chip sch_gpio_chip = {
- 	.label			= "sch_gpio",
- 	.owner			= THIS_MODULE,
-@@ -138,12 +152,96 @@ static const struct gpio_chip sch_gpio_chip = {
- 	.direction_output	= sch_gpio_direction_out,
- 	.set			= sch_gpio_set,
- 	.get_direction		= sch_gpio_get_direction,
-+	.to_irq			= sch_gpio_to_irq,
- };
- 
-+static u32 sch_sci_handler(void *context)
-+{
-+	struct sch_gpio *sch = context;
-+	unsigned long core_status, resume_status;
-+	unsigned int resume_gpios, offset;
-+
-+	core_status = inl(sch->iobase + GTS);
-+	resume_status = inl(sch->iobase + GTS + 0x20);
-+
-+	if (core_status == 0 && resume_status == 0)
-+		return ACPI_INTERRUPT_NOT_HANDLED;
-+
-+	for_each_set_bit(offset, &core_status, sch->resume_base)
-+		generic_handle_irq(sch->irq_base + offset);
-+
-+	resume_gpios = sch->chip.ngpio - sch->resume_base;
-+	for_each_set_bit(offset, &resume_status, resume_gpios)
-+		generic_handle_irq(sch->irq_base + sch->resume_base + offset);
-+
-+	outl(core_status, sch->iobase + GTS);
-+	outl(resume_status, sch->iobase + GTS + 0x20);
-+
-+	return ACPI_INTERRUPT_HANDLED;
-+}
-+
-+static int sch_irq_type(struct irq_data *d, unsigned int type)
-+{
-+	struct irq_chip_generic *gc = irq_data_get_irq_chip_data(d);
-+	struct sch_gpio *sch = gc->private;
-+	unsigned int gpio_num = d->irq - sch->irq_base;
-+	unsigned long flags;
-+	int rising = 0;
-+	int falling = 0;
-+
-+	switch (type & IRQ_TYPE_SENSE_MASK) {
-+	case IRQ_TYPE_EDGE_RISING:
-+		rising = 1;
-+		break;
-+	case IRQ_TYPE_EDGE_FALLING:
-+		falling = 1;
-+		break;
-+	case IRQ_TYPE_EDGE_BOTH:
-+		rising = 1;
-+		falling = 1;
-+		break;
-+	default:
-+		return -EINVAL;
-+	}
-+
-+	spin_lock_irqsave(&sch->lock, flags);
-+	sch_gpio_reg_set(sch, gpio_num, GTPE, rising);
-+	sch_gpio_reg_set(sch, gpio_num, GTNE, falling);
-+	spin_unlock_irqrestore(&sch->lock, flags);
-+
-+	return 0;
-+}
-+
-+static void sch_irq_set_enable(struct irq_data *d, int val)
-+{
-+	struct irq_chip_generic *gc = irq_data_get_irq_chip_data(d);
-+	struct sch_gpio *sch = gc->private;
-+	unsigned int gpio_num = d->irq - sch->irq_base;
-+	unsigned long flags;
-+
-+	spin_lock_irqsave(&sch->lock, flags);
-+	sch_gpio_reg_set(sch, gpio_num, GGPE, val);
-+	spin_unlock_irqrestore(&sch->lock, flags);
-+}
-+
-+static void sch_irq_mask(struct irq_data *d)
-+{
-+	sch_irq_set_enable(d, 0);
-+}
-+
-+static void sch_irq_unmask(struct irq_data *d)
-+{
-+	sch_irq_set_enable(d, 1);
-+}
-+
- static int sch_gpio_probe(struct platform_device *pdev)
- {
-+	struct irq_chip_generic *gc;
-+	struct irq_chip_type *ct;
- 	struct sch_gpio *sch;
- 	struct resource *res;
-+	acpi_status status;
-+	int irq_base, ret;
- 
- 	sch = devm_kzalloc(&pdev->dev, sizeof(*sch), GFP_KERNEL);
- 	if (!sch)
-@@ -203,7 +301,39 @@ static int sch_gpio_probe(struct platform_device *pdev)
- 
- 	platform_set_drvdata(pdev, sch);
- 
--	return devm_gpiochip_add_data(&pdev->dev, &sch->chip, sch);
-+	ret = devm_gpiochip_add_data(&pdev->dev, &sch->chip, sch);
-+	if (ret)
-+		return ret;
-+
-+	irq_base = devm_irq_alloc_descs(&pdev->dev, -1, 0, sch->chip.ngpio,
-+					NUMA_NO_NODE);
-+	if (irq_base < 0)
-+		return irq_base;
-+	sch->irq_base = irq_base;
-+
-+	gc = devm_irq_alloc_generic_chip(&pdev->dev, "sch_gpio", 1, irq_base,
-+					 NULL, handle_simple_irq);
-+	if (!gc)
-+		return -ENOMEM;
-+
-+	gc->private = sch;
-+	ct = gc->chip_types;
-+
-+	ct->chip.irq_mask = sch_irq_mask;
-+	ct->chip.irq_unmask = sch_irq_unmask;
-+	ct->chip.irq_set_type = sch_irq_type;
-+
-+	ret = devm_irq_setup_generic_chip(&pdev->dev, gc,
-+					  IRQ_MSK(sch->chip.ngpio),
-+					  0, IRQ_NOREQUEST | IRQ_NOPROBE, 0);
-+	if (ret)
-+		return ret;
-+
-+	status = acpi_install_sci_handler(sch_sci_handler, sch);
-+	if (ACPI_FAILURE(status))
-+		return -EINVAL;
-+
-+	return 0;
- }
- 
- static struct platform_driver sch_gpio_driver = {
--- 
-2.16.4
+Reviewed-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
