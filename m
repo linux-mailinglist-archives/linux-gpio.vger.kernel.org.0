@@ -2,165 +2,85 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 7DD5BE10D
-	for <lists+linux-gpio@lfdr.de>; Mon, 29 Apr 2019 13:10:04 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0798FE1A8
+	for <lists+linux-gpio@lfdr.de>; Mon, 29 Apr 2019 13:55:58 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727753AbfD2LKD (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 29 Apr 2019 07:10:03 -0400
-Received: from mout.kundenserver.de ([212.227.17.10]:36565 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727710AbfD2LKD (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 29 Apr 2019 07:10:03 -0400
-Received: from [192.168.1.110] ([77.9.18.117]) by mrelayeu.kundenserver.de
- (mreue106 [212.227.15.183]) with ESMTPSA (Nemesis) id
- 1M5PVb-1hKFDL2woH-001TpN; Mon, 29 Apr 2019 13:09:22 +0200
-Subject: Re: [PATCH 2/2] gpio: sch: Add interrupt support
-To:     Jan Kiszka <jan.kiszka@siemens.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-gpio@vger.kernel.org, linux-acpi@vger.kernel.org,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
-References: <20190424081802.GV2654@lahna.fi.intel.com>
- <5a28f22c-22f7-760a-d076-68ff19800d44@siemens.com>
- <20190424084259.GW2654@lahna.fi.intel.com>
- <7e328b7e-f4f0-851a-4152-a9ffd058201c@siemens.com>
- <20190424094506.GA2654@lahna.fi.intel.com>
- <292e6eff-82cc-6e4d-925b-77a60399e2e0@siemens.com>
- <20190424100130.GB2654@lahna.fi.intel.com>
- <1200464b-f969-ebc2-ae82-1f8ca98aaca1@siemens.com>
- <20190424103306.GC2654@lahna.fi.intel.com>
- <9377620b-d74a-04d9-a51e-8590400b1c0f@siemens.com>
- <20190426130615.GT9224@smile.fi.intel.com>
- <bd5453e1-0279-02ab-3304-edc6ebf509dc@siemens.com>
- <bc856e19-470d-7655-5680-a031831ab513@metux.net>
- <2f3da791-4a10-c2c4-dc5a-22ad16ed7be6@siemens.com>
-From:   "Enrico Weigelt, metux IT consult" <lkml@metux.net>
-Organization: metux IT consult
-Message-ID: <ea29ee73-705b-7d13-0084-11274db02394@metux.net>
-Date:   Mon, 29 Apr 2019 13:09:20 +0200
-User-Agent: Mozilla/5.0 (X11; Linux i686 on x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.2.1
+        id S1727977AbfD2Lzl (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 29 Apr 2019 07:55:41 -0400
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:34681 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727954AbfD2Lzl (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 29 Apr 2019 07:55:41 -0400
+Received: by mail-lf1-f68.google.com with SMTP id h5so7777128lfm.1
+        for <linux-gpio@vger.kernel.org>; Mon, 29 Apr 2019 04:55:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=/rPuONNGSTiyrFw5e49VWbx4wW4Nuh0y3B11Ms6hq6w=;
+        b=rcIhuSOW3GD8sy3gDeWdXg97tk/SubJFKPYF3jsb5hu+ic/+/5laq8LTdJVcBD+o2I
+         sTs/B2aMM8YGuXH3NY6HtEaKGaG1Gn6+SKF0MOhOnOJPRmojjKodDMmOmx8X2oolK3+2
+         x9RQDkbPBZm4bThesPcFEvfPsQKdTqHtDYmMT8QDp7IMj5a9kss0/KhUiLozAv8lLebw
+         pijP3WndVopJ3hALx4Z1EZIueGoGa8U2CM33tKbtgbXi791hC7bDe6ZM4bSu9D6J+x+w
+         aXqEb5IqzhKwvst3/zIW7uu7pP98eSmugr3D7nW/HrUezbj0anpUIsm+0jM/bfCKEslB
+         F2qQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=/rPuONNGSTiyrFw5e49VWbx4wW4Nuh0y3B11Ms6hq6w=;
+        b=SCIpjwPrWtP4KKovjwLR9wnG7tqFNOQNS/G1Tc+A31iwOVwm7hS387V/PS6rJbOHcc
+         4GDGtyMyKlaIY7RRoriT79QHXVXrHQT+F8FZG4OfGT2o5j2bndJjvF3diorgQBUWlOjv
+         syVsSiNKnkj7ghDtXAqW+MGTx928XqTl0ZBDTDaxjNMcelMkYoi+4s/SqLPgDZoeIEWg
+         hMUuwbvb/27pXV0JFYdh2zDS7p8+7xR35+dNCOv2ljhMGqgSldiqLYlaxQLyx7xUXRQ7
+         aOft4d7fIsDPEA0fiS98QL/bt4Dc3aM9U8cwP0T7Z6qtNzONAJqJnTYPekmjeiRMpBrW
+         bAlA==
+X-Gm-Message-State: APjAAAVdwSlgsrauc0qKwwDsEFz5NU2dWwe2dvjNAvj9H/MzoMSiR4gM
+        GbUmc+3Pk4xGS480h1FE0gc6UPzjGAkM8YmU3x0snATL
+X-Google-Smtp-Source: APXvYqydkuVdTQQfaAL0PrSk48egRwhm4wiMeHytMgxYw3UAwUwbK1J7QFV084gahJGg0hJT9+RXZFZRkIFMlEZ3TGg=
+X-Received: by 2002:ac2:4a86:: with SMTP id l6mr31393914lfp.51.1556538939836;
+ Mon, 29 Apr 2019 04:55:39 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <2f3da791-4a10-c2c4-dc5a-22ad16ed7be6@siemens.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Provags-ID: V03:K1:ndrTni+YBOZxXZkZ7IToqMM/GZvcULIwUsm5LDP+g2mahGQGo3L
- 42W9sLV2w/xr90//pC5hSi2csbLgwvbiPN8Q4w2C8lVkQe7e16PfaiFla85V3Cexir2dvvq
- gU5NMPkssVTbRqODecV03tBQ/g1QPduJz13w+mEiKoUOIGVlx994YhspHaSSAtLgkM/cM0T
- 8b0UBRbZFfrBSW+vrzk2Q==
-X-Spam-Flag: NO
-X-UI-Out-Filterresults: notjunk:1;V03:K0:fJ15T8TPtGg=:WAfQ/bsI3PPtJ50PIgEQc9
- Apen7Spd//EH5xwygy/W9OwZ0o0OzHJDmI73fnux74+l1uwLmMaAG0g5f7N+ncpGn7h7aulme
- 9v7T3O9aGVfwuuMjqzV0F1IF3nap9kFvLwWVmZZ+OTe6cbVp6kRS1/ZLvDcjjoy0l1tDcbKQL
- T55DKe4oyq0QKSkyvEbqOZ5ow8mu8KgRGPMqXJBDIcgTZDrolRVp283U+66OykDqgFz0SOnmZ
- Wr11OJXKqcMylgEZsfelTsue5VQsy6YtXWZf2n9Syca3d9nwP2xknjaEQF2T+eoM+qllyKdnw
- MHdjBAGyuJj/sPM0BMT0EEdsI1R6gah+uUaNtIzhfV/OPXv7vHcivZoxM/9uFXV5ZUMAItarc
- y1J5lY0X+NkzHHb6r/sYpXncL8+eRmipTRPBoof+dNOyREJT2A15n3xBoBNE8LecYB4vIigH0
- dqbA5PykJgHA69rdV5rUiPM8SAUzLJDsaBudc9QTeeCKpb8BMnM1Ru6rrKdTFg6h+/7oz1rKP
- 0DT7N/pER6SkbbgYjmC3Ii9YaFpOyvygQ2nHjHmT+sfSwrs1Ic8d7jsRCo2cLCHFI2O2BlwK7
- RJ9ItRBtpURKyISLa1CP5KBb5kkwWG9vywgFqOU8YgxngTeZgpRYdspsGK1gySd9FYcf01SkU
- TBlJkdE+YISZL4PauROfgPgOTBCbOT/wCvpN0qjk63Dy0+o6AugX4m1Lm+8SnuYQcmF7kXIYp
- BbbcdhjRQU08QqqjqhGsTmPAEDqEvOCbynfVdcW/nKnYf35PuEG3md6X81E=
+References: <0fb34aa5-60d8-cf6d-ffcf-237298977347@eurek.it>
+ <CACRpkdaWGBoV_OFkjj6y0Rayz1hNziDCaA7VXh+1Uf5soh46Ww@mail.gmail.com>
+ <7e0af1af-a565-a12e-8356-e9964d8174c4@eurek.it> <CACRpkdZs_E=6cjPa+vaNvqcXF1DmtMPujtPLS-nPQqysYhG2pQ@mail.gmail.com>
+ <4a854870-d294-8a84-8d82-51a90e20b362@eurek.it>
+In-Reply-To: <4a854870-d294-8a84-8d82-51a90e20b362@eurek.it>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Mon, 29 Apr 2019 13:55:28 +0200
+Message-ID: <CACRpkdZPnuQz8psnOXo-_Jy5UWOVoajicmGGi_dXf0SSrdj4XQ@mail.gmail.com>
+Subject: Re: GPIO Character device driver
+To:     gianluca <gianlucarenzi@eurek.it>
+Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 26.04.19 18:03, Jan Kiszka wrote:
+On Mon, Apr 29, 2019 at 11:49 AM gianluca <gianlucarenzi@eurek.it> wrote:
+> On 04/24/2019 07:07 PM, Linus Walleij wrote:
 
-> Leaving that blunt hack aside:
-> 
-> import mraa
-> 
-> pin = mraa.Gpio(13)
-> pin.dir(mraa.DIR_OUT)
-> pin.write(1)
-> 
-> And the same goes for nodejs, java and c++.
+> > What happens next is that the kernel invokes the uevent helper.
+> > This used to be /sbin/hotplug but udev+systemd systems
+> > nowadays use a netlink socket to send the events to userspace
+> > and I have no idea how that works, sorry.
+>
+> Well, in my systems I have systemd disable because we are heavly
+> customizing the boot sequence as we are using sysinit for booting...
+>
+> Is this behaviour forced to *NOT* have gpio characters in udev /dev
+> structure during boot up?
 
-Such trivial wrappers are easy write in the coffe break.
-For those usecases the good old sysfs interface is really sufficient.
+Hm you need to have something like udev and the ruleset from
+udev that creates the devices. No idea how that looks on your
+system though.
 
-(I'm frequently replacing those kind of "abstraction layers" of sevaral
-10kLoC in various client projects by just a few lines of really tiny
-shim ...)
+But something like this seems to be your problem, lacking
+the right userspace recepies to handle hotplug from udev.
 
-And relying on numeric gpio ids is generally a bad idea.
-(exactly one of the kind of problems why certain clients call me in
-great despair, when it broke again :p)
+Does it work to plug in things like USB sticks?
 
-> Moreover, this allows you to abstract away where "Pin 13" actually came
-> from on that board if the kernel changes (BSP -> upstream...) or the
-> extension board or ... 
-
-As said: numeric pin IDs are a *bad* idea.
-If it's a *name* (=string), then that seems to be a usecase for labels.
-For convenience, you could just pupulate the fs w/ proper symlinks that
-are named by the pin names from the schematics.
-
-> We will exploit that when moving to a completely
-> different base hardware with the next revision or our IOT2000.
-
-When doing that, you could also kick out Intel and move to ARM, as quite
-everybody else does ;-)
-
-<snip>
-
-> You also have to keep the class of "cool, I've just created my first
-> Node.RED node!" IoT newbies in mind.
-
-As said above: writing a small js wrapper for that is just a coffee
-break job.
-
-> These higher abstraction help to
-> keep them away from the wrong lower APIs - or enable them to do
-> something at all ("Cool, I've just connected my first two nodes!"). 
-
-gpio's are already very low-level. Highlevel would be things like keys,
-leds, etc.
-
-That's one of the things I frequently have to teach my clients: first
-make yourself clear about what you're *actually* doing with these pins
-and then pick the right drivers.
-
-Okay, we could talk about creating some nice oftree-overlay generators,
-to make it easier for newbies. Or create some small DSL, perhaps w/ some
-tiny GUI editor. But don't let them play w/ raw gpio's - this quickly
-goes horribly wrong (I've seen that in the field, many times).
-
-It's nice, that you folks (Siemens) are now doing your own controller,
-so you can finally throw out the ugly AMX+co crap. But please don't
-repeat their mistakes. We don't need yet another raspi for building
-automation - we need a different programming model than the old PLC-
-style spaghetti configuration :p
-
-(oh, and if you add ATEX and railways certification, I might have a new
-customer for you ;-))
-
-Okay, that's getting far OT, so maybe we should continue off-list ;-)
-
-> By far not all of them have consultants at hand.
-
-They better should :p
-
-> And while we only ship our IOT2000 image with mraa and all the fun as
-> reference image, it's way more for quite a few users. Even if you do not
-> want to look behind the curtains of certain software components (that we
-> primarily inherited and then started to clean up), they are working, or
-> we would have heard.
-
-Maybe because some field techs rather grab some beers and go to some
-friend who happens to be a linux hacker, instead of burning their time
-on the official channels those big corporate structures ;-)
-
-
---mtx
-
--- 
-Enrico Weigelt, metux IT consult
-Free software and Linux embedded engineering
-info@metux.net -- +49-151-27565287
+Yours,
+Linus Walleij
