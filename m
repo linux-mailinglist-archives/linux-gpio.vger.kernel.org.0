@@ -2,85 +2,74 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 0798FE1A8
-	for <lists+linux-gpio@lfdr.de>; Mon, 29 Apr 2019 13:55:58 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BDB75E1FD
+	for <lists+linux-gpio@lfdr.de>; Mon, 29 Apr 2019 14:11:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727977AbfD2Lzl (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 29 Apr 2019 07:55:41 -0400
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:34681 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727954AbfD2Lzl (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 29 Apr 2019 07:55:41 -0400
-Received: by mail-lf1-f68.google.com with SMTP id h5so7777128lfm.1
-        for <linux-gpio@vger.kernel.org>; Mon, 29 Apr 2019 04:55:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=/rPuONNGSTiyrFw5e49VWbx4wW4Nuh0y3B11Ms6hq6w=;
-        b=rcIhuSOW3GD8sy3gDeWdXg97tk/SubJFKPYF3jsb5hu+ic/+/5laq8LTdJVcBD+o2I
-         sTs/B2aMM8YGuXH3NY6HtEaKGaG1Gn6+SKF0MOhOnOJPRmojjKodDMmOmx8X2oolK3+2
-         x9RQDkbPBZm4bThesPcFEvfPsQKdTqHtDYmMT8QDp7IMj5a9kss0/KhUiLozAv8lLebw
-         pijP3WndVopJ3hALx4Z1EZIueGoGa8U2CM33tKbtgbXi791hC7bDe6ZM4bSu9D6J+x+w
-         aXqEb5IqzhKwvst3/zIW7uu7pP98eSmugr3D7nW/HrUezbj0anpUIsm+0jM/bfCKEslB
-         F2qQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=/rPuONNGSTiyrFw5e49VWbx4wW4Nuh0y3B11Ms6hq6w=;
-        b=SCIpjwPrWtP4KKovjwLR9wnG7tqFNOQNS/G1Tc+A31iwOVwm7hS387V/PS6rJbOHcc
-         4GDGtyMyKlaIY7RRoriT79QHXVXrHQT+F8FZG4OfGT2o5j2bndJjvF3diorgQBUWlOjv
-         syVsSiNKnkj7ghDtXAqW+MGTx928XqTl0ZBDTDaxjNMcelMkYoi+4s/SqLPgDZoeIEWg
-         hMUuwbvb/27pXV0JFYdh2zDS7p8+7xR35+dNCOv2ljhMGqgSldiqLYlaxQLyx7xUXRQ7
-         aOft4d7fIsDPEA0fiS98QL/bt4Dc3aM9U8cwP0T7Z6qtNzONAJqJnTYPekmjeiRMpBrW
-         bAlA==
-X-Gm-Message-State: APjAAAVdwSlgsrauc0qKwwDsEFz5NU2dWwe2dvjNAvj9H/MzoMSiR4gM
-        GbUmc+3Pk4xGS480h1FE0gc6UPzjGAkM8YmU3x0snATL
-X-Google-Smtp-Source: APXvYqydkuVdTQQfaAL0PrSk48egRwhm4wiMeHytMgxYw3UAwUwbK1J7QFV084gahJGg0hJT9+RXZFZRkIFMlEZ3TGg=
-X-Received: by 2002:ac2:4a86:: with SMTP id l6mr31393914lfp.51.1556538939836;
- Mon, 29 Apr 2019 04:55:39 -0700 (PDT)
-MIME-Version: 1.0
-References: <0fb34aa5-60d8-cf6d-ffcf-237298977347@eurek.it>
- <CACRpkdaWGBoV_OFkjj6y0Rayz1hNziDCaA7VXh+1Uf5soh46Ww@mail.gmail.com>
- <7e0af1af-a565-a12e-8356-e9964d8174c4@eurek.it> <CACRpkdZs_E=6cjPa+vaNvqcXF1DmtMPujtPLS-nPQqysYhG2pQ@mail.gmail.com>
- <4a854870-d294-8a84-8d82-51a90e20b362@eurek.it>
-In-Reply-To: <4a854870-d294-8a84-8d82-51a90e20b362@eurek.it>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Mon, 29 Apr 2019 13:55:28 +0200
-Message-ID: <CACRpkdZPnuQz8psnOXo-_Jy5UWOVoajicmGGi_dXf0SSrdj4XQ@mail.gmail.com>
+        id S1727936AbfD2MLU (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 29 Apr 2019 08:11:20 -0400
+Received: from mout.kundenserver.de ([212.227.17.24]:49575 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727913AbfD2MLU (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 29 Apr 2019 08:11:20 -0400
+Received: from [192.168.1.110] ([77.9.18.117]) by mrelayeu.kundenserver.de
+ (mreue106 [212.227.15.183]) with ESMTPSA (Nemesis) id
+ 1N5W0q-1giu4d0OAk-016uqO; Mon, 29 Apr 2019 14:11:17 +0200
 Subject: Re: GPIO Character device driver
-To:     gianluca <gianlucarenzi@eurek.it>
+To:     gianluca <gianlucarenzi@eurek.it>,
+        Linus Walleij <linus.walleij@linaro.org>
 Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+References: <0fb34aa5-60d8-cf6d-ffcf-237298977347@eurek.it>
+ <CACRpkdaWGBoV_OFkjj6y0Rayz1hNziDCaA7VXh+1Uf5soh46Ww@mail.gmail.com>
+ <7e0af1af-a565-a12e-8356-e9964d8174c4@eurek.it>
+ <CACRpkdZs_E=6cjPa+vaNvqcXF1DmtMPujtPLS-nPQqysYhG2pQ@mail.gmail.com>
+ <4a854870-d294-8a84-8d82-51a90e20b362@eurek.it>
+From:   "Enrico Weigelt, metux IT consult" <lkml@metux.net>
+Organization: metux IT consult
+Message-ID: <b15d2ef7-c26d-0900-76e2-56c3c3756047@metux.net>
+Date:   Mon, 29 Apr 2019 14:11:15 +0200
+User-Agent: Mozilla/5.0 (X11; Linux i686 on x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.2.1
+MIME-Version: 1.0
+In-Reply-To: <4a854870-d294-8a84-8d82-51a90e20b362@eurek.it>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Provags-ID: V03:K1:CrSKcEezL/yDmWyIVm5IosfPMJoxFbzeif37ALi9e5yx5b5pIaz
+ 8EcZgmPmI5WT6XaTTyL4IPS/UgBiDWOv03cm5dGCNLqu8kccnMk3ZZ3LUShG9yS+c7GExPQ
+ 7KR7tj3CKrt5PGLLQ5iBI575Hg1CKPlfV4dqsomRfJ0CbxI1MLLriEjmnX29nUVPZ3xUK/J
+ sZE3A+73f2R6EeCf0ZrVA==
+X-Spam-Flag: NO
+X-UI-Out-Filterresults: notjunk:1;V03:K0:JKAfbKuz6go=:6zX8Qps6waDpfA9/awtYPZ
+ EXsFyI7jODOuyPW+UoiP38ixLoVJfulZIWX0yJdipv+r//mtc043rmyI2hMVOHNdPAh3oVi0t
+ teZ0/z0mC/EcP3+BCWErejbZavKdnYDNefYbehUHaYOAuAPfHRbqn+369Nqim8/kWP8jdevii
+ TluJsVkuligucyEVQX/RVCuJPrtwIN/QiyrYpQOBUrfB+ckiLTq82zLxoQwRGWEyOupHspHRg
+ j6eYi1/SKpUPjQ4tEEBxBE7aQr7vJ153RSt6akNLVRUYUe7b4Ntuf1FEHL58fRrUwGdRvryXX
+ HStBEYFriQ33cFdtgkI8LRvi0RYFu6rePP2w+PfCHnVITUSxr4HRrfUgKVRuFqkxo/KQFjQOy
+ d0QYGwZmIf7CCge6VM/K4G4j2Kfi83cNXMizJw5Kk3oDLtNy/aNWKFsRbQNZcZ01aL/lMqIeU
+ +O+R46LkH0oXBRIkx/4VuAwIpunSNBUV7BGz9SO9J0dcqVkLL1CMQLdopxfAHEXwJGOUk9nQN
+ wmBUEotdkLifv89bPcJ06wj5pNRf85uzIrs9Jou5NBsTTHYuaNaySlY2ncqSYXC9+BNrSjDb7
+ PiMM3UVHC6c0eju/MF0Qq+06irqrxVFR/yp5PiUCfu6thaUoQ2fzsxQO/9IzpArDQYfdpTBKw
+ BytAp0GO/BtVyowLXvbu0Gh8CE/yN2q1jgCPdJYMKVLax/VDYiXyw7cxZlJLVdQTDW8nYs78C
+ G23zOeU4u64Fn+F3pVrjrVMcFxJfXXKG6eVWf6L5fGy8MtUdBUwz/BhVKZM=
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Apr 29, 2019 at 11:49 AM gianluca <gianlucarenzi@eurek.it> wrote:
-> On 04/24/2019 07:07 PM, Linus Walleij wrote:
+On 29.04.19 11:49, gianluca wrote:
 
-> > What happens next is that the kernel invokes the uevent helper.
-> > This used to be /sbin/hotplug but udev+systemd systems
-> > nowadays use a netlink socket to send the events to userspace
-> > and I have no idea how that works, sorry.
->
 > Well, in my systems I have systemd disable because we are heavly
 > customizing the boot sequence as we are using sysinit for booting...
->
-> Is this behaviour forced to *NOT* have gpio characters in udev /dev
-> structure during boot up?
 
-Hm you need to have something like udev and the ruleset from
-udev that creates the devices. No idea how that looks on your
-system though.
+Me neither (I dont let such Lennartware anywhere near my machines :p).
 
-But something like this seems to be your problem, lacking
-the right userspace recepies to handle hotplug from udev.
+But do you have udev running ? That's the one who usually does this.
 
-Does it work to plug in things like USB sticks?
 
-Yours,
-Linus Walleij
+--mtx
+
+-- 
+Enrico Weigelt, metux IT consult
+Free software and Linux embedded engineering
+info@metux.net -- +49-151-27565287
