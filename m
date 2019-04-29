@@ -2,48 +2,48 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 9D6C0E35F
-	for <lists+linux-gpio@lfdr.de>; Mon, 29 Apr 2019 15:12:18 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 18BB3E361
+	for <lists+linux-gpio@lfdr.de>; Mon, 29 Apr 2019 15:12:21 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726564AbfD2NMR (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 29 Apr 2019 09:12:17 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:36531 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726062AbfD2NMR (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 29 Apr 2019 09:12:17 -0400
-Received: by mail-wr1-f65.google.com with SMTP id o4so4041135wra.3
-        for <linux-gpio@vger.kernel.org>; Mon, 29 Apr 2019 06:12:15 -0700 (PDT)
+        id S1726401AbfD2NMT (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 29 Apr 2019 09:12:19 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:40404 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726403AbfD2NMS (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 29 Apr 2019 09:12:18 -0400
+Received: by mail-wr1-f66.google.com with SMTP id h4so15978553wre.7
+        for <linux-gpio@vger.kernel.org>; Mon, 29 Apr 2019 06:12:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=zgLkZH7fvnn9ow85IxLoErjzNeQPt/Y/6sGtcm5H+QY=;
-        b=JUEtyqTfzgq+eI8JsoNhV2vJVtHVdvLJneMkfVrhS7zClvtLa1COifGGYGf1vqxZsY
-         oL/ChqJVd/RBTwXD5iru8C/LUzLz6jjirc+ok6uL3d+L3bwJYu6ptGzutMt9T9KnKne6
-         JjCEp7UjWOIjrNKdA6HCoA0ACG6hThLrFTo5rEPUiLMjowlnHb1g2ms6t4iLrT3Pj582
-         pItzXWpE2Pg2Qu19ZOF3VQAlYYMPATGQHxZ1N1kSRBpsu5eCmxmGSrK9q2Y7Be12UFYs
-         THtw+p6BHyz2Yfrunab4WyoE55JWezpVm8bxfQ8q291n2vU76uMm/3m/XqzF5Bs2NAMt
-         oZig==
+        bh=LflG0JOcbN8VcRqNOvuJxlldgCtsVbbH4h32KwiCqss=;
+        b=ElwC/dqyvPGkd7e4295vczNFShOirzGuBqdcY0+km+H5WkenpoB7C4k4h9TYj6Ak1D
+         RWL/xEmSkeCmKYBXiSL0WLzeOy4M7otJdu9ogPADkHyARgiuArqGpY5gkcYUAPOALtLF
+         j6VaYECxgPkQmOv1TnNU4v9DH0UaSQ3ARXKhBWY5RPyBzw8spXWuksnol/xZWpe/sMn+
+         +O5AeEc3sWJS/Syv+gDpLOBOrNFCRXRp9tHhKaAQE1SXfsZ5otjL985N0wwA3wxLpe3I
+         wjlgFMNyQ7r7VcwTUecaBbDbq3NNFRivwhM/pUAfPSvl0tf+tpkQRCq/I+2ERcqGUPnt
+         o71g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=zgLkZH7fvnn9ow85IxLoErjzNeQPt/Y/6sGtcm5H+QY=;
-        b=uUupHrOyYIex8ZsxfPNqURqwecpllpoRgY8+PRk8WwiqyjBPr9pJXcnA9c5zoAkuG1
-         wKVyJgy8+LXIih0R0Jtxh2Abp799kHAwy3zSZ9Y6aC+rxCct/ijMmJ5op/mx519dg++A
-         9GtVk8xm1UE/aYY4dVVL7CKQ+xHIn4F1oY6/vX3xx8PFwfk0J+9XHeN+Gic/lZTVGMUD
-         Wq8yNNqMoyc7D+OEKPKtfg/zfIXguM3cCc5GA0ER5Q2oWbbyfxPZmSNk3uA/mqAwrmdx
-         92iLlMYch/YWHHlX02g2qRl/kQEQVId++RmDyDph5i35XgBRL251wp5rPSIoPq7G2+FV
-         +8oQ==
-X-Gm-Message-State: APjAAAVv2/N8wNEeAxmbONtJUqhDyuenv4vZpj0L8//PX2dKeR+heEKP
-        uWmhfc6mIHcavDpxRJdWqVgyP7bx23TvPA==
-X-Google-Smtp-Source: APXvYqwJ8ZujIPozdE+1Ob5C21h/cnNZvQf3dhNn73e7SzG9yWn26X0dddFhBP5DGB/Kau+p1YxQpA==
-X-Received: by 2002:a5d:464f:: with SMTP id j15mr19107653wrs.265.1556543533485;
-        Mon, 29 Apr 2019 06:12:13 -0700 (PDT)
+        bh=LflG0JOcbN8VcRqNOvuJxlldgCtsVbbH4h32KwiCqss=;
+        b=cZH5Q0qH+N6LcnxqRN2nv5M1pUQu301YUDqeP3VW1UciHDXjel2cwy28uXUlmBX7Hi
+         +6N25mAkI7a1hkkIaswv7fe76YN72WPmItyipnYrV6x/+YrLKwDCgatOa1CepntZG05U
+         xyneDz/zUpjcacL2KV1gcDD1TS+hqtywmjAzE93jT//KNIyTaZAUa+zqJU0R6/bZREUZ
+         6stbN4S+2WgEOq07UO4Ewee0WvEMVIJ3seMehgMIuaMN4coYFUBXK0XcZTKarItXxwTm
+         79NyZRce02z94ePMXsfkg4bdjro+QzlH6Ags6yolSwl69RdHpIW3PAWRxbD7hjP0c6bA
+         GTAg==
+X-Gm-Message-State: APjAAAXkx0pYHi1ZVANKE+96MswnmwpA40oyAUY7QLdLBbQcixQK6WKl
+        lPdLh+VmyX8/Xeb88/JWwbJFdpJOFBlDfw==
+X-Google-Smtp-Source: APXvYqxZRciGKidEMatOjeaVtXcFEliHDCDCxz2u62O6w/9skVAzOgp9b9xr6SoZkrJE31gTiz9QpA==
+X-Received: by 2002:a05:6000:12c1:: with SMTP id l1mr4895866wrx.152.1556543536105;
+        Mon, 29 Apr 2019 06:12:16 -0700 (PDT)
 Received: from sudo.home ([2a01:cb1d:112:6f00:f9fc:88:6502:8fa7])
-        by smtp.gmail.com with ESMTPSA id s16sm5410282wrg.71.2019.04.29.06.12.11
+        by smtp.gmail.com with ESMTPSA id s16sm5410282wrg.71.2019.04.29.06.12.13
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 29 Apr 2019 06:12:12 -0700 (PDT)
+        Mon, 29 Apr 2019 06:12:15 -0700 (PDT)
 From:   Ard Biesheuvel <ard.biesheuvel@linaro.org>
 To:     linux-gpio@vger.kernel.org
 Cc:     linux-acpi@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
@@ -56,9 +56,9 @@ Cc:     linux-acpi@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         Mika Westerberg <mika.westerberg@linux.intel.com>,
         "Rafael J. Wysocki" <rjw@rjwysocki.net>,
         Len Brown <lenb@kernel.org>
-Subject: [PATCH v2 1/4] acpi/irq: implement getter for GSI irqdomain
-Date:   Mon, 29 Apr 2019 15:12:05 +0200
-Message-Id: <20190429131208.3620-2-ard.biesheuvel@linaro.org>
+Subject: [PATCH v2 2/4] irqchip/exiu: preparatory refactor for ACPI support
+Date:   Mon, 29 Apr 2019 15:12:06 +0200
+Message-Id: <20190429131208.3620-3-ard.biesheuvel@linaro.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190429131208.3620-1-ard.biesheuvel@linaro.org>
 References: <20190429131208.3620-1-ard.biesheuvel@linaro.org>
@@ -69,106 +69,135 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-ACPI permits arbitrary producer->consumer interrupt links to be
-described in AML, which means a topology such as the following
-is perfectly legal:
-
-  Device (EXIU) {
-    Name (_HID, "SCX0008")
-    Name (_UID, Zero)
-    Name (_CRS, ResourceTemplate () {
-      ...
-    })
-  }
-
-  Device (GPIO) {
-    Name (_HID, "SCX0007")
-    Name (_UID, Zero)
-    Name (_CRS, ResourceTemplate () {
-      Memory32Fixed (ReadWrite, SYNQUACER_GPIO_BASE, SYNQUACER_GPIO_SIZE)
-      Interrupt (ResourceConsumer, Edge, ActiveHigh, ExclusiveAndWake, 0, "\\_SB.EXIU") {
-        7,
-      }
-    })
-    ...
-  }
-
-The EXIU in this example is the external interrupt unit as can be found
-on Socionext SynQuacer based platforms, which converts a block of 32 SPIs
-from arbitrary polarity/trigger into level-high, with a separate set
-of config/mask/unmask/clear controls.
-
-The existing DT based driver in drivers/irqchip/irq-sni-exiu.c models
-this as a hierarchical domain stacked on top of the GIC's irqdomain.
-Since the GIC is modeled as a DT node as well, obtaining a reference
-to this irqdomain is easily done by going through the parent link.
-
-On ACPI systems, however, the GIC is not modeled as an object in the
-namespace, and so device objects cannot refer to it directly. So in
-order to obtain the irqdomain reference when driving the EXIU in ACPI
-mode, we need a helper that returns the default domain for unqualified
-interrupts.
-
-This is essentially what the ACPI GSI domain provides, so add a helper
-that returns a reference to this domain.
+In preparation of adding support for EXIU controller devices described
+via ACPI, split the DT init function in a DT specific and a generic part,
+where the latter will be reused for ACPI support later.
 
 Signed-off-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
 ---
- drivers/acpi/irq.c   | 14 ++++++++++----
- include/linux/acpi.h |  1 +
- 2 files changed, 11 insertions(+), 4 deletions(-)
+ drivers/irqchip/irq-sni-exiu.c | 77 ++++++++++++--------
+ 1 file changed, 48 insertions(+), 29 deletions(-)
 
-diff --git a/drivers/acpi/irq.c b/drivers/acpi/irq.c
-index c3b2222e2129..d47bbd54d4aa 100644
---- a/drivers/acpi/irq.c
-+++ b/drivers/acpi/irq.c
-@@ -17,6 +17,14 @@ enum acpi_irq_model_id acpi_irq_model;
+diff --git a/drivers/irqchip/irq-sni-exiu.c b/drivers/irqchip/irq-sni-exiu.c
+index 1927b2f36ff6..52ce662334d4 100644
+--- a/drivers/irqchip/irq-sni-exiu.c
++++ b/drivers/irqchip/irq-sni-exiu.c
+@@ -1,7 +1,7 @@
+ /*
+  * Driver for Socionext External Interrupt Unit (EXIU)
+  *
+- * Copyright (c) 2017 Linaro, Ltd. <ard.biesheuvel@linaro.org>
++ * Copyright (c) 2017-2019 Linaro, Ltd. <ard.biesheuvel@linaro.org>
+  *
+  * Based on irq-tegra.c:
+  *   Copyright (C) 2011 Google, Inc.
+@@ -167,35 +167,25 @@ static const struct irq_domain_ops exiu_domain_ops = {
+ 	.free		= irq_domain_free_irqs_common,
+ };
  
- static struct fwnode_handle *acpi_gsi_domain_id;
+-static int __init exiu_init(struct device_node *node,
+-			    struct device_node *parent)
++static struct irq_domain *exiu_init(struct irq_domain *parent_domain,
++				    struct fwnode_handle *fwnode,
++				    struct resource *res)
+ {
+-	struct irq_domain *parent_domain, *domain;
++	struct irq_domain *domain;
+ 	struct exiu_irq_data *data;
+ 	int err;
  
-+/**
-+ * acpi_get_gsi_irqdomain - Retrieve the irqdomain that owns the GSI space.
-+ */
-+struct irq_domain *acpi_get_gsi_irqdomain(void)
-+{
-+	return irq_find_matching_fwnode(acpi_gsi_domain_id, DOMAIN_BUS_ANY);
+-	if (!parent) {
+-		pr_err("%pOF: no parent, giving up\n", node);
+-		return -ENODEV;
+-	}
+-
+-	parent_domain = irq_find_host(parent);
+-	if (!parent_domain) {
+-		pr_err("%pOF: unable to obtain parent domain\n", node);
+-		return -ENXIO;
+-	}
+-
+ 	data = kzalloc(sizeof(*data), GFP_KERNEL);
+ 	if (!data)
+-		return -ENOMEM;
++		return ERR_PTR(-ENOMEM);
+ 
+-	if (of_property_read_u32(node, "socionext,spi-base", &data->spi_base)) {
+-		pr_err("%pOF: failed to parse 'spi-base' property\n", node);
++	if (fwnode_property_read_u32_array(fwnode, "socionext,spi-base",
++					   &data->spi_base, 1)) {
+ 		err = -ENODEV;
+ 		goto out_free;
+ 	}
+ 
+-	data->base = of_iomap(node, 0);
++	data->base = ioremap(res->start, resource_size(res));
+ 	if (!data->base) {
+ 		err = -ENODEV;
+ 		goto out_free;
+@@ -205,23 +195,52 @@ static int __init exiu_init(struct device_node *node,
+ 	writel_relaxed(0xFFFFFFFF, data->base + EIREQCLR);
+ 	writel_relaxed(0xFFFFFFFF, data->base + EIMASK);
+ 
+-	domain = irq_domain_add_hierarchy(parent_domain, 0, NUM_IRQS, node,
+-					  &exiu_domain_ops, data);
++	domain = irq_domain_create_hierarchy(parent_domain, 0, NUM_IRQS,
++					     fwnode, &exiu_domain_ops, data);
+ 	if (!domain) {
+-		pr_err("%pOF: failed to allocate domain\n", node);
+ 		err = -ENOMEM;
+ 		goto out_unmap;
+ 	}
++	return domain;
++out_unmap:
++	iounmap(data->base);
++out_free:
++	kfree(data);
++	return ERR_PTR(err);
 +}
 +
- /**
-  * acpi_gsi_to_irq() - Retrieve the linux irq number for a given GSI
-  * @gsi: GSI IRQ number to map
-@@ -29,8 +37,7 @@ static struct fwnode_handle *acpi_gsi_domain_id;
-  */
- int acpi_gsi_to_irq(u32 gsi, unsigned int *irq)
- {
--	struct irq_domain *d = irq_find_matching_fwnode(acpi_gsi_domain_id,
--							DOMAIN_BUS_ANY);
-+	struct irq_domain *d = acpi_get_gsi_irqdomain();
++static int __init exiu_dt_init(struct device_node *node,
++			       struct device_node *parent)
++{
++	struct irq_domain *parent_domain, *domain;
++	struct resource res;
++
++	if (!parent) {
++		pr_err("%pOF: no parent, giving up\n", node);
++		return -ENODEV;
++	}
++
++	parent_domain = irq_find_host(parent);
++	if (!parent_domain) {
++		pr_err("%pOF: unable to obtain parent domain\n", node);
++		return -ENXIO;
++	}
++
++	if (of_address_to_resource(node, 0, &res)) {
++		pr_err("%pOF: failed to parse memory resource\n", node);
++		return -ENXIO;
++	}
++
++	domain = exiu_init(parent_domain, of_node_to_fwnode(node), &res);
++	if (IS_ERR(domain)) {
++		pr_err("%pOF: failed to create IRQ domain (%ld)\n", node,
++		       PTR_ERR(domain));
++		return PTR_ERR(domain);
++	}
  
- 	*irq = irq_find_mapping(d, gsi);
- 	/*
-@@ -76,8 +83,7 @@ EXPORT_SYMBOL_GPL(acpi_register_gsi);
-  */
- void acpi_unregister_gsi(u32 gsi)
- {
--	struct irq_domain *d = irq_find_matching_fwnode(acpi_gsi_domain_id,
--							DOMAIN_BUS_ANY);
-+	struct irq_domain *d = acpi_get_gsi_irqdomain();
- 	int irq = irq_find_mapping(d, gsi);
+ 	pr_info("%pOF: %d interrupts forwarded to %pOF\n", node, NUM_IRQS,
+ 		parent);
  
- 	irq_dispose_mapping(irq);
-diff --git a/include/linux/acpi.h b/include/linux/acpi.h
-index d5dcebd7aad3..1016027dd626 100644
---- a/include/linux/acpi.h
-+++ b/include/linux/acpi.h
-@@ -316,6 +316,7 @@ static inline bool acpi_sci_irq_valid(void)
- extern int sbf_port;
- extern unsigned long acpi_realmode_flags;
- 
-+struct irq_domain *acpi_get_gsi_irqdomain(void);
- int acpi_register_gsi (struct device *dev, u32 gsi, int triggering, int polarity);
- int acpi_gsi_to_irq (u32 gsi, unsigned int *irq);
- int acpi_isa_irq_to_gsi (unsigned isa_irq, u32 *gsi);
+ 	return 0;
+-
+-out_unmap:
+-	iounmap(data->base);
+-out_free:
+-	kfree(data);
+-	return err;
+ }
+-IRQCHIP_DECLARE(exiu, "socionext,synquacer-exiu", exiu_init);
++IRQCHIP_DECLARE(exiu, "socionext,synquacer-exiu", exiu_dt_init);
 -- 
 2.20.1
 
