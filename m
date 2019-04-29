@@ -2,129 +2,110 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id C0D63DFC4
-	for <lists+linux-gpio@lfdr.de>; Mon, 29 Apr 2019 11:49:08 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id EC243DFF6
+	for <lists+linux-gpio@lfdr.de>; Mon, 29 Apr 2019 12:00:11 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727368AbfD2JtI (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 29 Apr 2019 05:49:08 -0400
-Received: from submit-1.e-mind.com ([188.94.192.45]:48712 "EHLO
-        submit-1.e-mind.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727514AbfD2JtI (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 29 Apr 2019 05:49:08 -0400
-Received: from localhost (unknown [127.0.0.1])
-        by submit-1.e-mind.com (Postfix) with ESMTP id EB4CF835925
-        for <linux-gpio@vger.kernel.org>; Mon, 29 Apr 2019 09:49:04 +0000 (UTC)
-X-Virus-Scanned: amavisd-new at emind.it
-Received: from submit-1.e-mind.com ([127.0.0.1])
-        by localhost (submit-1.e-mind.com [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id xRDdOkd1_7G8 for <linux-gpio@vger.kernel.org>;
-        Mon, 29 Apr 2019 11:49:04 +0200 (CEST)
-Received: from qmail.e-mind.com (qmail34.e-mind.com [188.94.192.34])
-        by submit-1.e-mind.com (Postfix) with SMTP id 98503836281
-        for <linux-gpio@vger.kernel.org>; Mon, 29 Apr 2019 11:49:04 +0200 (CEST)
-Received: (qmail 11496 invoked by uid 0); 29 Apr 2019 09:49:05 -0000
-Received: from unknown (HELO ?192.168.143.6?) (185.53.252.165)
-  by 0 with SMTP; 29 Apr 2019 09:49:05 -0000
-Subject: Re: GPIO Character device driver
+        id S1727428AbfD2KAL (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 29 Apr 2019 06:00:11 -0400
+Received: from mga09.intel.com ([134.134.136.24]:46330 "EHLO mga09.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727217AbfD2KAL (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Mon, 29 Apr 2019 06:00:11 -0400
+X-Amp-Result: UNSCANNABLE
+X-Amp-File-Uploaded: False
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 29 Apr 2019 03:00:10 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.60,409,1549958400"; 
+   d="scan'208";a="227682191"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by orsmga001.jf.intel.com with ESMTP; 29 Apr 2019 03:00:08 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1003)
+        id 2E213213; Mon, 29 Apr 2019 13:00:08 +0300 (EEST)
+Date:   Mon, 29 Apr 2019 13:00:08 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 To:     Linus Walleij <linus.walleij@linaro.org>
-References: <0fb34aa5-60d8-cf6d-ffcf-237298977347@eurek.it>
- <CACRpkdaWGBoV_OFkjj6y0Rayz1hNziDCaA7VXh+1Uf5soh46Ww@mail.gmail.com>
- <7e0af1af-a565-a12e-8356-e9964d8174c4@eurek.it>
- <CACRpkdZs_E=6cjPa+vaNvqcXF1DmtMPujtPLS-nPQqysYhG2pQ@mail.gmail.com>
-Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
-From:   gianluca <gianlucarenzi@eurek.it>
-Message-ID: <4a854870-d294-8a84-8d82-51a90e20b362@eurek.it>
-Date:   Mon, 29 Apr 2019 11:49:03 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:45.0) Gecko/20100101
- Thunderbird/45.8.0
+Cc:     Linux pin control <linux-gpio@vger.kernel.org>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: [GIT PULL] intel-pinctrl for 5.2-1
+Message-ID: <20190429100007.GA69386@black.fi.intel.com>
 MIME-Version: 1.0
-In-Reply-To: <CACRpkdZs_E=6cjPa+vaNvqcXF1DmtMPujtPLS-nPQqysYhG2pQ@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 04/24/2019 07:07 PM, Linus Walleij wrote:
-> On Wed, Apr 24, 2019 at 3:10 PM gianluca <gianlucarenzi@eurek.it> wrote:
->> On 04/23/2019 07:51 PM, Linus Walleij wrote:
->>>> Do I have to __DISABLE__ the sysfs support from kernel config?
->>>
->>> No.
->>
->> Ok, mainly because the kernel config has GPIOLIB enabled by default and
->> I added a _NOT_MODULE_ sysfs driver i.e. it is monolithic inside the
->> kernel...
->
-> The character device is created from inside the core GPIOLIB code
-> and cannot be disabled.
+Hi Linus,
 
-Got it.
+There will be a conflict due to a patch for Intel pin control landed in the
+devel pin control queue. Though, it applies cleanly on top of for-next.
 
->
->> No, I mean which is the 'entry point' for creating those
->> /dev/gpiochip[X] devices? I suppose some system call has to be issued to
->> tell udev to create those char drivers...
->
-> The character device for each gpiochip is created inside the
-> gpiochip_setup_dev() call in drivers/gpio/gpiolib.c
->
+I would recommend to drop Intel specific patches from devel queue.
 
-Ok.
+Thanks,
 
-> What happens next is that the kernel invokes the uevent helper.
-> This used to be /sbin/hotplug but udev+systemd systems
-> nowadays use a netlink socket to send the events to userspace
-> and I have no idea how that works, sorry.
->
+With Best Regards,
+Andy Shevchenko
 
-Well, in my systems I have systemd disable because we are heavly 
-customizing the boot sequence as we are using sysinit for booting...
+The following changes since commit 9e98c678c2d6ae3a17cb2de55d17f69dddaa231b:
 
-Is this behaviour forced to *NOT* have gpio characters in udev /dev 
-structure during boot up?
+  Linux 5.1-rc1 (2019-03-17 14:22:26 -0700)
 
-As soon as possible I will check better in my boards which having Kernel 
- > 4.9 to find which issue is causing those drivers not to appear in /dev...
+are available in the Git repository at:
 
->>> /dev/gpiochipN even appears on my Intel laptop.
->>
->> I suppose you are using non OF_ but ACPI_ stuff. ;-)
->
-> It doesn't matter. The /dev/gpiochipN are the same no matter what
-> hardware description you use. The appear when the driver
-> call [devm_]gpiochip_add[_data](). This is the same for all
-> GPIO drivers.
->
+  git://git.kernel.org/pub/scm/linux/kernel/git/pinctrl/intel.git tags/intel-pinctrl-v5.2-1
 
-Ok.
+for you to fetch changes up to 5f61d9517f17069dbedb94aa71034f0a22e014ef:
 
->> Ok. Now this reveals a question: if I configure some pin using sysfs,
->> those pins can be used in gpiolib chardev stuff? I suppose I have to
->> unregister the driver with 'unexport'.
->
-> I want to forget how the sysfs works but it is protected AFAIK
-> so you cannot use the same pins with sysfs and the chardev.
->
-> exporting/unexporting just affects individual lines on a chip
-> it doesn't register/unregister the driver att all.
->
+  pinctrl: intel: Increase readability of intel_gpio_update_pad_mode() (2019-04-28 20:19:06 +0300)
 
-Ok, I will test it under userspace ASAP if it breaks up our software...
+----------------------------------------------------------------
+intel-pinctrl for v5.2-1
 
->> P.S.: by the way, it is an HONOR to me, having a mail with the 2nd Linus
->> of the Kernel! ;-P
->
-> I'm just some engineer, it's not that big deal.
+Non-critical fixes for Intel Baytrail and Intel Cedarfork.
+Couple of fixes for all pinctrl-intel based drivers with regard to
+IRQ handling, i.e. moving PM calls to noirq level to avoid IRQ lose
+and restore ownership of pins to prevent IRQ masking side effect.
 
+The following is an automated git shortlog grouped by driver:
 
-It's a big deal to me afterall.
+baytrail:
+ -  Fix potential NULL pointer dereference
 
-Kindest regards,
+cedarfork:
+ -  Update pin names according to v1.13c
+
+intel:
+ -  Increase readability of intel_gpio_update_pad_mode()
+ -  Retain HOSTSW_OWN for requested gpio pin
+ -  move gpio suspend/resume to noirq phase
+
+----------------------------------------------------------------
+Aditya Pakki (1):
+      pinctrl: baytrail: Fix potential NULL pointer dereference
+
+Andy Shevchenko (2):
+      pinctrl: cedarfork: Update pin names according to v1.13c
+      pinctrl: intel: Increase readability of intel_gpio_update_pad_mode()
+
+Binbin Wu (1):
+      pinctrl: pinctrl-intel: move gpio suspend/resume to noirq phase
+
+Chris Chiu (1):
+      pinctrl: intel: Retain HOSTSW_OWN for requested gpio pin
+
+ drivers/pinctrl/intel/pinctrl-baytrail.c  |  2 +
+ drivers/pinctrl/intel/pinctrl-cedarfork.c | 18 ++++-----
+ drivers/pinctrl/intel/pinctrl-intel.c     | 66 ++++++++++++++++++++++++++++---
+ drivers/pinctrl/intel/pinctrl-intel.h     | 11 +++---
+ 4 files changed, 78 insertions(+), 19 deletions(-)
+
 -- 
-Eurek s.r.l.                          |
-Electronic Engineering                | http://www.eurek.it
-via Celletta 8/B, 40026 Imola, Italy  | Phone: +39-(0)542-609120
-p.iva 00690621206 - c.f. 04020030377  | Fax:   +39-(0)542-609212
+With Best Regards,
+Andy Shevchenko
+
+
