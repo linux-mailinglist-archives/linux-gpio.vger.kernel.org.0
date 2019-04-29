@@ -2,96 +2,104 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 6E7DCEEB4
-	for <lists+linux-gpio@lfdr.de>; Tue, 30 Apr 2019 04:12:38 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 44D2FEAC6
+	for <lists+linux-gpio@lfdr.de>; Mon, 29 Apr 2019 21:19:59 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729835AbfD3CMh (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 29 Apr 2019 22:12:37 -0400
-Received: from mail-qk1-f194.google.com ([209.85.222.194]:45358 "EHLO
-        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729626AbfD3CMh (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 29 Apr 2019 22:12:37 -0400
-Received: by mail-qk1-f194.google.com with SMTP id d5so7245049qko.12
-        for <linux-gpio@vger.kernel.org>; Mon, 29 Apr 2019 19:12:36 -0700 (PDT)
+        id S1729174AbfD2TT6 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 29 Apr 2019 15:19:58 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:37523 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729167AbfD2TT6 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 29 Apr 2019 15:19:58 -0400
+Received: by mail-wr1-f65.google.com with SMTP id r6so17680608wrm.4
+        for <linux-gpio@vger.kernel.org>; Mon, 29 Apr 2019 12:19:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=endlessm-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=AvEs9iF7UgH1KoPh1IzqcTHpTm8A152gkwFXPuBPxi4=;
-        b=qZFM76xqwX0nHQwBnaEyXEkQW/Nn9Cxxfguc3CWDmtGBZ32MljDrhYn2YTKLFb7Czx
-         aw4hhzV5DzabQQFxoo8Nsg3ioD25APmb9se+2ym5QcnWM3B9BYPyAqPUcz/6uZig0zyT
-         QAnHoCyQzZJjTocOK9ePD4uO3nvTnIcDpEPEqjgS+9y6hgxX3Y0WpEX0qbcrYbmQpb9Y
-         dXwB7l0x1Q60XoUvmNmN0l+k1O0Nt5tbcrB80rYUK5LvOGE0n5Irshwld5BaFlIWmK4g
-         rUX3SKGhr0BSwseFpeLZXj2M8hWfaw5/kziMKB1BAgcTE/54PH5LvR17oSCt6ECW6TpY
-         RVfQ==
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:in-reply-to:references:date:message-id
+         :mime-version;
+        bh=o99xvhRC5sFnq6ftH7UC6NOUl2mc2F/JHhODAhGJmOI=;
+        b=j4Q5Hgg/pCWearQ9tNJdFKlIxNWXnA6VxAE6KZm5OKrvP3gX5PC7sXVA5OXNSxSAPA
+         JfwKDfUYySqqmZByUh55GXaUq5RZ57lsty2Tjny/b/+5C5ERKA8raqBc/WuJ57ANtFnc
+         m8espR+RY2lztpXSY1nTpQlqFiqZDuXIP9T3VZ/aSIikIKh0dlLqETf+cZldoCejkQv3
+         Oq++XXVNkYPGJFPj6AHRlXRjeAMUFm2vKIZ3R+psEgjITF8A3xa2EFCeWZ3TE6vsDS8B
+         2TYJ5P98wMFyraYxFHJigGr2MskC0DCNDNQRmryXw7idPHKFaWgpMSU4pJPFTEDKg8UU
+         ifug==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=AvEs9iF7UgH1KoPh1IzqcTHpTm8A152gkwFXPuBPxi4=;
-        b=fF+XdTpa23XVmAVvztbK6s0hDZzX3eysj7DxXgG+05sxQLZdfVLeUxUOqw6/fgwQvL
-         w7vfqGa/IhWmvg41jZ3w9A2D2+KTufEnjMfj0jVn5c4dfIQQoVjAl9CSijQDHYRe2885
-         c8hen6x52B1UQIQVsysc/JraW+3ZUw/mxx2mheHt2wdUL+X+8Z4eGtW1PUYkVrPGXpT/
-         MNJlw9z0takzXFkdgu9XRFtNCj8giLmtzYtKNKSBATrEvKSD70zN/1ZdlqQl7nxobIQj
-         /aZ2T3gFpvDjuGE5DC8bQxNZuWqj7HO1pdxqkIGapd43EvAK+PIvFn1Lv8iHv1PQKPPp
-         rXiA==
-X-Gm-Message-State: APjAAAUpP0y+rY6iwTycHmv/Xg5rvPyrLvqJ53w/OA8zJ5vkmfbGhSw5
-        8lubXw+fFjxOxuifRSG4uqFVpxCqXEWvGmt9JtlXVA==
-X-Google-Smtp-Source: APXvYqzqb3PJHn1yZcKtN0ujVfgfOiIbacUnfqiU/Iwlvs3nFz94JrQtCCBqvBgb2BgMuPsnhY7XSR/J6J3QytvtpQQ=
-X-Received: by 2002:ae9:e60b:: with SMTP id z11mr18198439qkf.80.1556590356354;
- Mon, 29 Apr 2019 19:12:36 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
+         :message-id:mime-version;
+        bh=o99xvhRC5sFnq6ftH7UC6NOUl2mc2F/JHhODAhGJmOI=;
+        b=KW3IPUbplKsjiG8+Bq3BTXlugSohCoBeEwxQx3EOu/3uGpWtWOD8B3KeIqEnQn9CPL
+         oe1IRRxMOpsi1XRdQwLvaUC03WDECAvcwsqMB4UTYgVT4ZzUN4tg7goQ/bf/HNdJaLUq
+         whNsPElnsrEWv7BBvuHx7i/e6boIQN0Wf+sW8KvAThU4eddezp8Zmqh9ba4tK7ui8G1C
+         5vJl4WYqg0QVJZJ5vS439ltwaoiqbjM0wtLbkcWXpFV+TsZVg+S5xBrCDjXaiw+Ij04B
+         dEH1/hRHVJFnvR1KZoHC0pUBXFQRIDIKZVjszmF8tVeE8rYZyNCWGizM+YhLKnj+RG0t
+         OLvA==
+X-Gm-Message-State: APjAAAVIV52bxCWbx/KtEmjEqoiuSv/vlm3AVcZf8zuzz5N6fDK7RaQj
+        VkAbS2LnVglpyfElnKZrC8BePg==
+X-Google-Smtp-Source: APXvYqwEXr8OYIPTGri/6F9PHbn5e5LQun9eok/Rf+idtRLZMn4WX5GSh+J0vBLZTxGXNwVeC+JJnw==
+X-Received: by 2002:a5d:5343:: with SMTP id t3mr5278260wrv.262.1556565596087;
+        Mon, 29 Apr 2019 12:19:56 -0700 (PDT)
+Received: from localhost ([2601:602:9200:a1a5:f580:39a4:9be7:1974])
+        by smtp.googlemail.com with ESMTPSA id d10sm551143wmb.15.2019.04.29.12.19.53
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 29 Apr 2019 12:19:55 -0700 (PDT)
+From:   Kevin Hilman <khilman@baylibre.com>
+To:     Guillaume La Roque <glaroque@baylibre.com>,
+        linus.walleij@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com
+Cc:     linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 1/4] dt-bindings: pinctrl: add a 'drive-strength-uA' property
+In-Reply-To: <20190418124758.24022-2-glaroque@baylibre.com>
+References: <20190418124758.24022-1-glaroque@baylibre.com> <20190418124758.24022-2-glaroque@baylibre.com>
+Date:   Mon, 29 Apr 2019 12:19:48 -0700
+Message-ID: <7hk1fcr54b.fsf@baylibre.com>
 MIME-Version: 1.0
-References: <20190415055358.9269-1-chiu@endlessm.com> <CACRpkdanhW206AEj7m+2FQBhJ5epUzw60Y6v+k-eoJLLW_-SSQ@mail.gmail.com>
- <20190426125031.GQ9224@smile.fi.intel.com>
-In-Reply-To: <20190426125031.GQ9224@smile.fi.intel.com>
-From:   Chris Chiu <chiu@endlessm.com>
-Date:   Tue, 30 Apr 2019 02:12:29 +0800
-Message-ID: <CAB4CAwfF7FoQK9OndOm_yHQe19j=E_cNLn3eTBfoggEacONiyg@mail.gmail.com>
-Subject: Re: [PATCH v3] pinctrl:intel: Retain HOSTSW_OWN for requested gpio pin
-To:     Andriy Shevchenko <andriy.shevchenko@intel.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        Daniel Drake <drake@endlessm.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Linux Upstreaming Team <linux@endlessm.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Apr 26, 2019 at 8:50 PM Andriy Shevchenko
-<andriy.shevchenko@intel.com> wrote:
->
-> On Tue, Apr 23, 2019 at 12:38:17PM +0200, Linus Walleij wrote:
-> > On Mon, Apr 15, 2019 at 7:54 AM Chris Chiu <chiu@endlessm.com> wrote:
-> >
-> > > The touchpad of the ASUS laptops E403NA, X540NA, X541NA are not
-> > > responsive after suspend/resume. The following error message
-> > > shows after resume.
-> > >  i2c_hid i2c-ELAN1200:00: failed to reset device.
-> > >
-> > > On these laptops, the touchpad interrupt is connected via a GPIO
-> > > pin which is controlled by Intel pinctrl. After system resumes,
-> > > the GPIO is in ACPI mode and no longer works as an IRQ.
-> > >
-> > > This commit saves the HOSTSW_OWN value during suspend, make sure
-> > > the HOSTSW_OWN mode remains the same after resume.
-> > >
-> > > Signed-off-by: Chris Chiu <chiu@endlessm.com>
-> >
-> > This v3 patch applied with Mika's ACK.
->
-> Hmm... It's supposed to go along with our PR.
+Rob,
 
-Anything I can help with?
+Guillaume La Roque <glaroque@baylibre.com> writes:
 
-Chris
+> This property allow drive-strength parameter in uA instead of mA.
 >
-> --
-> With Best Regards,
-> Andy Shevchenko
+> Signed-off-by: Guillaume La Roque <glaroque@baylibre.com>
+> ---
+>  Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt | 3 +++
+>  1 file changed, 3 insertions(+)
 >
->
+> diff --git a/Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt b/Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt
+> index cef2b5855d60..fc7018459aa2 100644
+> --- a/Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt
+> +++ b/Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt
+> @@ -258,6 +258,7 @@ drive-push-pull		- drive actively high and low
+>  drive-open-drain	- drive with open drain
+>  drive-open-source	- drive with open source
+>  drive-strength		- sink or source at most X mA
+> +drive-strength-uA	- sink or source at most X uA
+>  input-enable		- enable input on pin (no effect on output, such as
+>  			  enabling an input buffer)
+>  input-disable		- disable input on pin (no effect on output, such as
+> @@ -326,6 +327,8 @@ arguments are described below.
+>  
+>  - drive-strength takes as argument the target strength in mA.
+>  
+> +- drive-strength-uA takes as argument the target strength in uA.
+> +
+>  - input-debounce takes the debounce time in usec as argument
+>    or 0 to disable debouncing
+
+Can we get your input on this?
+
+Linus W. is OK with this[1], but wants opinion/approval from DT
+maintainers first.
+
+Thanks,
+
+Kevin
+
+[1] https://lore.kernel.org/lkml/CACRpkdZ2dPzrtJQkxmN7V=f6+qYZAvrF+b0J77cN9hoRAgFqrw@mail.gmail.com/T/#u
