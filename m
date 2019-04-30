@@ -2,111 +2,145 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id D819DFCBA
-	for <lists+linux-gpio@lfdr.de>; Tue, 30 Apr 2019 17:24:20 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 87B56FE22
+	for <lists+linux-gpio@lfdr.de>; Tue, 30 Apr 2019 18:48:18 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726105AbfD3PYU (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 30 Apr 2019 11:24:20 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:39530 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725906AbfD3PYU (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 30 Apr 2019 11:24:20 -0400
-Received: by mail-wm1-f67.google.com with SMTP id n25so4286486wmk.4
-        for <linux-gpio@vger.kernel.org>; Tue, 30 Apr 2019 08:24:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-transfer-encoding:content-language;
-        bh=sfPiJtc0QJCi1p8F+pLfyW3kyCVBd6/w24lBML4INFs=;
-        b=Zq29Lce4FbgANq8O/VR3G2DR2T0McxOvjAYNyFuGiseM6g0bFwbbKyg6YAdPZGaXB9
-         qR42Am+otNkuxkoxLnvL3C11uwc87q2JORpiNTArbGaOX9lQsC0H619piV+BTkIJiBqk
-         bv14v1HIcvXqUneiIi1i3MHBgnHpgH4Bn0gIhYWoe/SfR+wDasBlzzQmKA2elwrOAlYK
-         yRqwj0wM5DdV4t42oN9NHi82sgsbC9HPX8bX7Zc05QL3xz6ypUgyaKckplMe5Mgje5RG
-         KrlINFZ7i9Bhg9WVZ7ANpr5QqK1b4QC5i7Y7f627OU2rwVdTFFihabLo3nOatYM6Hw9a
-         pP4w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding
-         :content-language;
-        bh=sfPiJtc0QJCi1p8F+pLfyW3kyCVBd6/w24lBML4INFs=;
-        b=M8bo6DOb/aK5LNS+GmFTWdDO5VDCWA9Bvlif6b5GnUmcnpgnLn6IDI1n5jVavhE9y3
-         oCs4crmXBJBmjHYZWIXqPV2YHur2jQwZmjI8Z7/Sk1ZeaWsH3W0CWeOub5Crli33pru/
-         46yfB0+A6ysEjG7GJ0AAqpy1+u3raf2I37wLmldvyLjsHSePpaC3eCn5ck4JsDBRz50n
-         1uACROrs1ZgEpwLD9jMUJzrJYIf8wB+VN+vnqGzReeHRbzsMN33hRDMOoJC6M5uPu74H
-         CM3+RupwYcOL42inL+/4hORIWuS6EvwzLXjy/qCt7I3ujTJBa9Tx3e9LWyMmWJ1hBdMs
-         +r/w==
-X-Gm-Message-State: APjAAAUpPXKXFzaKT12P9VQ4Kl2XoA5kLEf1T/WDRt1jlu/xd/4v1JuE
-        SfRyrWVk5FiKdJw//cv8tEKmbQ==
-X-Google-Smtp-Source: APXvYqwZu73MRdHtNl6L5wzqWxZQM0gSV2O1ZuD0lDRbcOfSjsiOhySkIltHDNpgSln+Rq/Ek1lkSg==
-X-Received: by 2002:a1c:a843:: with SMTP id r64mr1118747wme.45.1556637858428;
-        Tue, 30 Apr 2019 08:24:18 -0700 (PDT)
-Received: from [10.1.4.98] (lmontsouris-657-1-212-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
-        by smtp.gmail.com with ESMTPSA id s132sm3986240wms.10.2019.04.30.08.24.17
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 30 Apr 2019 08:24:17 -0700 (PDT)
-Subject: Re: [PATCH v2 1/4] dt-bindings: pinctrl: add a 'drive-strength-uA'
- property
-To:     Rob Herring <robh@kernel.org>
-Cc:     linus.walleij@linaro.org, mark.rutland@arm.com,
-        khilman@baylibre.com, linux-gpio@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-amlogic@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-References: <20190418124758.24022-1-glaroque@baylibre.com>
- <20190418124758.24022-2-glaroque@baylibre.com> <20190430151243.GA6879@bogus>
-From:   guillaume La Roque <glaroque@baylibre.com>
-Message-ID: <7d1743ca-f45a-133f-6130-c77059d27de2@baylibre.com>
-Date:   Tue, 30 Apr 2019 17:24:16 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        id S1726209AbfD3QsR (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 30 Apr 2019 12:48:17 -0400
+Received: from mga04.intel.com ([192.55.52.120]:43074 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725942AbfD3QsR (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Tue, 30 Apr 2019 12:48:17 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 30 Apr 2019 09:48:16 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.60,414,1549958400"; 
+   d="scan'208";a="147045559"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.72.86])
+  by orsmga003.jf.intel.com with ESMTP; 30 Apr 2019 09:48:14 -0700
+Received: from andy by smile with local (Exim 4.92)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1hLVvR-0007yC-Ab; Tue, 30 Apr 2019 19:48:13 +0300
+Date:   Tue, 30 Apr 2019 19:48:13 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Kai-Heng Feng <kai.heng.feng@canonical.com>
+Cc:     mika.westerberg@linux.intel.com, linus.walleij@linaro.org,
+        hotwater438@tutanota.com, hdegoede@redhat.com,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] pinctrl: intel: Clear interrupt status in mask/unmask
+ callback
+Message-ID: <20190430164813.GP9224@smile.fi.intel.com>
+References: <20190430083753.18197-1-kai.heng.feng@canonical.com>
 MIME-Version: 1.0
-In-Reply-To: <20190430151243.GA6879@bogus>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190430083753.18197-1-kai.heng.feng@canonical.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Rob,
+On Tue, Apr 30, 2019 at 04:37:53PM +0800, Kai-Heng Feng wrote:
+> Commit a939bb57cd47 ("pinctrl: intel: implement gpio_irq_enable") was
+> added because clearing interrupt status bit is required to avoid
+> unexpected behavior.
+> 
+> Turns out the unmask callback also needs the fix, which can solve weird
+> IRQ triggering issues on I2C touchpad ELAN1200.
+
+Pushed to my review and testing queue, thanks!
+
+> 
+> Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+> ---
+> v2:
+> - Clear interrupt status for both mask/umask cases.
+> - Reduce calculation under irq spinlock.
+> 
+>  drivers/pinctrl/intel/pinctrl-intel.c | 37 +++++----------------------
+>  1 file changed, 6 insertions(+), 31 deletions(-)
+> 
+> diff --git a/drivers/pinctrl/intel/pinctrl-intel.c b/drivers/pinctrl/intel/pinctrl-intel.c
+> index 3b1818184207..717148d2818c 100644
+> --- a/drivers/pinctrl/intel/pinctrl-intel.c
+> +++ b/drivers/pinctrl/intel/pinctrl-intel.c
+> @@ -913,35 +913,6 @@ static void intel_gpio_irq_ack(struct irq_data *d)
+>  	}
+>  }
+>  
+> -static void intel_gpio_irq_enable(struct irq_data *d)
+> -{
+> -	struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
+> -	struct intel_pinctrl *pctrl = gpiochip_get_data(gc);
+> -	const struct intel_community *community;
+> -	const struct intel_padgroup *padgrp;
+> -	int pin;
+> -
+> -	pin = intel_gpio_to_pin(pctrl, irqd_to_hwirq(d), &community, &padgrp);
+> -	if (pin >= 0) {
+> -		unsigned int gpp, gpp_offset, is_offset;
+> -		unsigned long flags;
+> -		u32 value;
+> -
+> -		gpp = padgrp->reg_num;
+> -		gpp_offset = padgroup_offset(padgrp, pin);
+> -		is_offset = community->is_offset + gpp * 4;
+> -
+> -		raw_spin_lock_irqsave(&pctrl->lock, flags);
+> -		/* Clear interrupt status first to avoid unexpected interrupt */
+> -		writel(BIT(gpp_offset), community->regs + is_offset);
+> -
+> -		value = readl(community->regs + community->ie_offset + gpp * 4);
+> -		value |= BIT(gpp_offset);
+> -		writel(value, community->regs + community->ie_offset + gpp * 4);
+> -		raw_spin_unlock_irqrestore(&pctrl->lock, flags);
+> -	}
+> -}
+> -
+>  static void intel_gpio_irq_mask_unmask(struct irq_data *d, bool mask)
+>  {
+>  	struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
+> @@ -954,15 +925,20 @@ static void intel_gpio_irq_mask_unmask(struct irq_data *d, bool mask)
+>  	if (pin >= 0) {
+>  		unsigned int gpp, gpp_offset;
+>  		unsigned long flags;
+> -		void __iomem *reg;
+> +		void __iomem *reg, *is;
+>  		u32 value;
+>  
+>  		gpp = padgrp->reg_num;
+>  		gpp_offset = padgroup_offset(padgrp, pin);
+>  
+>  		reg = community->regs + community->ie_offset + gpp * 4;
+> +		is = community->regs + community->is_offset + gpp * 4;
+>  
+>  		raw_spin_lock_irqsave(&pctrl->lock, flags);
+> +
+> +		/* Clear interrupt status first to avoid unexpected interrupt */
+> +		writel(BIT(gpp_offset), is);
+> +
+>  		value = readl(reg);
+>  		if (mask)
+>  			value &= ~BIT(gpp_offset);
+> @@ -1106,7 +1082,6 @@ static irqreturn_t intel_gpio_irq(int irq, void *data)
+>  
+>  static struct irq_chip intel_gpio_irqchip = {
+>  	.name = "intel-gpio",
+> -	.irq_enable = intel_gpio_irq_enable,
+>  	.irq_ack = intel_gpio_irq_ack,
+>  	.irq_mask = intel_gpio_irq_mask,
+>  	.irq_unmask = intel_gpio_irq_unmask,
+> -- 
+> 2.17.1
+> 
+
+-- 
+With Best Regards,
+Andy Shevchenko
 
 
-On 4/30/19 5:12 PM, Rob Herring wrote:
-> On Thu, Apr 18, 2019 at 02:47:55PM +0200, Guillaume La Roque wrote:
->> This property allow drive-strength parameter in uA instead of mA.
->>
->> Signed-off-by: Guillaume La Roque <glaroque@baylibre.com>
->> ---
->>  Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt | 3 +++
->>  1 file changed, 3 insertions(+)
->>
->> diff --git a/Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt b/Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt
->> index cef2b5855d60..fc7018459aa2 100644
->> --- a/Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt
->> +++ b/Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt
->> @@ -258,6 +258,7 @@ drive-push-pull		- drive actively high and low
->>  drive-open-drain	- drive with open drain
->>  drive-open-source	- drive with open source
->>  drive-strength		- sink or source at most X mA
->> +drive-strength-uA	- sink or source at most X uA
->>  input-enable		- enable input on pin (no effect on output, such as
->>  			  enabling an input buffer)
->>  input-disable		- disable input on pin (no effect on output, such as
->> @@ -326,6 +327,8 @@ arguments are described below.
->>  
->>  - drive-strength takes as argument the target strength in mA.
->>  
->> +- drive-strength-uA takes as argument the target strength in uA.
->> +
-> We have standard unit suffixes defined in bindings/property-units.txt. 
-> Use them please.
-
-
-thanks for your feedback and sorry i don't see this doc.
-
-According to it i will update patch series with drive-strength-microamp
-
-
-> Rob
-Guillaume
