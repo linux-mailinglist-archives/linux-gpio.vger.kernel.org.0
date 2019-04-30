@@ -2,111 +2,63 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 40D43FE94
-	for <lists+linux-gpio@lfdr.de>; Tue, 30 Apr 2019 19:13:41 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C32BCFFEC
+	for <lists+linux-gpio@lfdr.de>; Tue, 30 Apr 2019 20:46:59 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726772AbfD3RNk (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 30 Apr 2019 13:13:40 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:39160 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725942AbfD3RNk (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 30 Apr 2019 13:13:40 -0400
-Received: by mail-pg1-f194.google.com with SMTP id l18so7134168pgj.6
-        for <linux-gpio@vger.kernel.org>; Tue, 30 Apr 2019 10:13:39 -0700 (PDT)
+        id S1726977AbfD3Sq6 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 30 Apr 2019 14:46:58 -0400
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:46289 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726006AbfD3Sq5 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 30 Apr 2019 14:46:57 -0400
+Received: by mail-oi1-f193.google.com with SMTP id d62so6257669oib.13
+        for <linux-gpio@vger.kernel.org>; Tue, 30 Apr 2019 11:46:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=8M09mf4d9C1R3KhxiH2MmcrT4xP2EWrCq3b8NOgfWsA=;
-        b=gKipQ1pdsxyErkdzR4ohu+KryhsxU0t02ME3acogkXzYjGZqrLQpbvN2VvU/jZHq0m
-         r/2mcwlwkVfldN3jyPeDdZHsaaDkJUcRscSvQQ9fxAi6uurcWSbzsMHMlOfYlpW0dNRo
-         UlzG43xtofCSz8L9oBYfvJ021Cg9PWvy/ekarl2gcVf+ONj/mhHFzK7dJSILqyCx2kqR
-         l+BKgBsF91HV/77sLCLVJ81dHeq+1dQLCuelv4G5L1h7Y96YkCfCOHX/BbD3XGQx1/FU
-         uQk5s8d0Wx/tHdp6tNYmWm7XdWXau+vl8W70B/QdeoaeOFMfjuoSUNe0ugFEPOpHCEGz
-         wuqQ==
+        d=gmail.com; s=20161025;
+        h=mime-version:reply-to:from:date:message-id:subject:to;
+        bh=MzgADEAaLqCZCtsDLm4ffnQ0XJMngefK8MXJLmFTvck=;
+        b=glb//KP+PuAZbut/JVmdhf66XnjbOtatJe284nPayjH8bTCPTAmTVfVgaLuDqxIYUb
+         QLcjTxxEq8roSq6Cxf2ZU8uBSrVxlKPUiRCHuH6k0BmUHVTyZKQqg/AX15C545z6LUFQ
+         mndHMykJ5Qx4A/+H5vBvamlb7KEJDa0/+NFfaE4dr9MQLeFEv9NuhYmaLgSUhJ9cxI9x
+         hCVTqaNAT/nEJLGJxugYwA9twtQquJuG0K2H4gOxMfJfdQxPELVSXFVwdgk0DTPmvAfJ
+         s6VUspASoTfxKc/RC4komHjr2Hf5rbPNOM6GPjE+ezOg26C6ybXiAz2yroGfCFNHxc+a
+         0b6w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=8M09mf4d9C1R3KhxiH2MmcrT4xP2EWrCq3b8NOgfWsA=;
-        b=OFLTQwszsB6JQoE49u6LELVx1zHXVj+h2cf82lQqII7UJZ1nHH8GfBQivTPRHohYkU
-         8GC0Ak9iW3gX7asOwhHK/gpRgbYk28nbRg/T2rFGZb3SxxV+04S0vEDMms0SJvirZyBQ
-         QAH87KnpqmbyvaQCiD6t0VPRYd2ChCZdzMkATAggJdFkyXNnV+WK2fMtvM0JVNeooMPZ
-         UFiL4F2h4f3NmqQzqfQqIudG3TI321zG7Z0ykeYVsR5BmaAFYxs+4UqF0QOtoybC0x73
-         XNIvu7xCi54T9TKCEvD+8D4Npcwj5BmsyyAp49Ez3oSzr1LiJG2pc8fQktKACK/sUHPG
-         BWaQ==
-X-Gm-Message-State: APjAAAX5d5O1rdrE4qjjfGesdQX71Z583Kjn71jD4a/YqQ8JpfQo7aQo
-        U62RiuMClukqgmAG6KHo2oBv4g==
-X-Google-Smtp-Source: APXvYqwIV6fARS8L5xf7OJfpsq2RSKwS5E7u2mONG4DLIAVZsS+loPGnOikPOS8QYUxQ3gJEOj4fIQ==
-X-Received: by 2002:a63:e003:: with SMTP id e3mr36640958pgh.0.1556644418940;
-        Tue, 30 Apr 2019 10:13:38 -0700 (PDT)
-Received: from tuxbook-pro (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id k7sm11692657pfk.93.2019.04.30.10.13.37
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 30 Apr 2019 10:13:37 -0700 (PDT)
-Date:   Tue, 30 Apr 2019 10:13:39 -0700
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Brian Masney <masneyb@onstation.org>
-Cc:     andy.gross@linaro.org, david.brown@linaro.org, robh+dt@kernel.org,
-        mark.rutland@arm.com, linux-arm-msm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linus.walleij@linaro.org, linux-gpio@vger.kernel.org
-Subject: Re: [PATCH 0/8] qcom: spmi/ssbi gpio: correct gpio hogging
-Message-ID: <20190430171339.GE2867@tuxbook-pro>
-References: <20190306005316.12232-1-masneyb@onstation.org>
- <20190427053034.GH3137@builder>
- <20190427102206.GA296@basecamp>
+        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
+         :subject:to;
+        bh=MzgADEAaLqCZCtsDLm4ffnQ0XJMngefK8MXJLmFTvck=;
+        b=KP4u2Vv0QY49o9gPXTY82oGACkCcewCEG3h5FAFNC3t7KXGxkVyBqa4B979MdqpDSN
+         /g95vLEocoM8Dd5OQjHlQYPMZQV9v/wHr9La9B0A9oICoEgHhCuZyiPsLsF/sfZjRnik
+         gZF0N2qDuvKjf3F7M3w8TNFmRevYRQoih382LWAJvVpvSj4VKZSCM+R1vzIgx929AfFZ
+         S6G/KV2I1vC4fE6g/uLO15CybelgkTrWMXj7zpNfNohXZYHOMLzgWoF/+IJCXZSaLndC
+         rKlc5cTTM2zgT9ARhY6id7ybT5iefB5eRSIkKsjXTF1D3w3D1LQa9Hf9TP+FTz2Y5W64
+         mHjA==
+X-Gm-Message-State: APjAAAXAzurbpcjKSdqbumz9GFW9NHWeQmg8eoUS9WE1/G0Ysi6yze9p
+        G8elRovDfPlJ/nAmp5t0+ZmUe3aq3SdwhO780NU=
+X-Google-Smtp-Source: APXvYqzQJ/4dx5muDjOnh6vSn25jGyKnkVlfG5apSO9nFTqD+MywkfAt7nJnPr1gkqJZWJ7Y0dAHf0gUZrq5p3RaQv0=
+X-Received: by 2002:aca:b68a:: with SMTP id g132mr4063432oif.47.1556650016873;
+ Tue, 30 Apr 2019 11:46:56 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190427102206.GA296@basecamp>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+Received: by 2002:ac9:7994:0:0:0:0:0 with HTTP; Tue, 30 Apr 2019 11:46:56
+ -0700 (PDT)
+Reply-To: cephasagbeh1@gmail.com
+From:   Cephas Agbeh <christophermulei2@gmail.com>
+Date:   Tue, 30 Apr 2019 18:46:56 +0000
+Message-ID: <CAAx=c--RCcw-ZUCZo=TkHbVqjeMC=GYMaUk5p2twx-eK1BEV4Q@mail.gmail.com>
+Subject: Important Notification
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Sat 27 Apr 03:22 PDT 2019, Brian Masney wrote:
+I am bringing this notice to your attention in respect of the death of
+a deceased client of mine that has the same surname with you and his
+fund valued at $19.9M to be paid to you.contact me at
+cephasagbeh1@gmail.com for more details.
 
-> Hi Bjorn,
-> 
-> On Fri, Apr 26, 2019 at 10:30:34PM -0700, Bjorn Andersson wrote:
-> > On Tue 05 Mar 16:53 PST 2019, Brian Masney wrote:
-> > 
-> > > Here are some patches that fix gpio hogging for all boards that use
-> > > spmi-gpio and ssbi-gpio. These depend on the following two patches
-> > > that were merged in 4.20-rc1:
-> > > 
-> > > commit 149a96047237 ("pinctrl: qcom: spmi-gpio: fix gpio-hog related
-> > > boot issues")
-> > > 
-> > > commit 7ed078557738 ("pinctrl: qcom: ssbi-gpio: fix gpio-hog related
-> > > boot issues")
-> > > 
-> > > I've already fixed pm8941 for the Nexus 5 and that fix is queued to go
-> > > into v5.1 during this merge window:
-> > > 
-> > > https://lore.kernel.org/lkml/20181101001149.13453-7-masneyb@onstation.org/
-> > > 
-> > > Andy: You may want to consider submitting these post rc1 as a fix for
-> > > v5.1 and possibly marking these for stable.
-> > > 
-> > > Brian Masney (8):
-> > >   ARM: dts: qcom: apq8064: add gpio-ranges
-> > >   ARM: dts: qcom: mdm9615: add gpio-ranges
-> > >   ARM: dts: qcom: msm8660: add gpio-ranges
-> > >   ARM: dts: qcom: pma8084: add gpio-ranges
-> > 
-> > Looks like I missed the ARM patches before. All 8 picked up now, with
-> > Linus' r-b.
-> 
-> Andy already picked these 8 patches up in his tree.
-> 
-> https://git.kernel.org/pub/scm/linux/kernel/git/agross/linux.git/log/?h=for-next
-> 
-
-Perfect. And I see that all 8 are included in Andy's pull request for
-5.2
-
-Regards,
-Bjorn
+Yours Sincerely,
+Cephas Agbeh,
+Attorney At Law.
