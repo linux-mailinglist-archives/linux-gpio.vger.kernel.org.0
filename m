@@ -2,314 +2,126 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 0223BF289
-	for <lists+linux-gpio@lfdr.de>; Tue, 30 Apr 2019 11:11:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 435F1F3F3
+	for <lists+linux-gpio@lfdr.de>; Tue, 30 Apr 2019 12:15:23 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726294AbfD3JLZ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 30 Apr 2019 05:11:25 -0400
-Received: from mail-it1-f195.google.com ([209.85.166.195]:37566 "EHLO
-        mail-it1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726923AbfD3JLT (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 30 Apr 2019 05:11:19 -0400
-Received: by mail-it1-f195.google.com with SMTP id r85so3580193itc.2
-        for <linux-gpio@vger.kernel.org>; Tue, 30 Apr 2019 02:11:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=74N8uVDgnbUU0QJxHwKxdfXzPWk/Zhn2TmoGdHEfMro=;
-        b=ldYgztHLOex01cWo7A8vpjaHy+3VBSZrTEvsXM2SOVENFEAAXRUeUNZxJ5XS2PXj5l
-         6t/yfMBBxtDy0KJ0Jukw4LWzu0TYWUJU7qraZejg65DLny0TdVgOJebBb9ZUCnoFfKru
-         /U6HNt738iugvH50W7FlM/3+FUa4G+domWWepkZXnhlXfxSO95K8hmWWli59IqIcfeVg
-         ss0wkp2oHpYw1UYkYfApDq9aU517Slnm+KOu5nO+o9sar9Ii5bDPzwUKM6/eatOgbwBF
-         ll8M2lhgdELpOnW/KOE6cfRBvtgryj+CJHGV7Je5JmFYFJ7XMociMhedhuoKRqDs2vOj
-         PDQA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=74N8uVDgnbUU0QJxHwKxdfXzPWk/Zhn2TmoGdHEfMro=;
-        b=qWkQY4vijqDUX77EUrFpIDTo1j6+5g8rfd/LPaiy/mMkdo6Wqyf8eCZHdB+ISUVua0
-         MbqehLCQ4/p3DT/4wwFl8Y611p4xc/0Bq7bpApOqqaU9Vt61bG0ZWaH7sq5VKDyh/BFz
-         apVYNvpmbfojvJVTFuN6d2aoDjJzmjalTQAKe0OnSHH1iUBurc222hkVnNLM2l2hG6yY
-         0I/+HdF19fuH4iUBeRd96MV220XnZbMjSjlZzdE8dpikciuAkXqbT4U25Okk7BmOY9Wp
-         XP/f5t3i/pXTlQ9u0F4R9OF/CuYQ1THCa6NVSPlp8CFkEw9tlrtKkzGj0cYg5cc28033
-         YR/g==
-X-Gm-Message-State: APjAAAUKtWlLEkCnzHAQWnfCE3tzTLdAlbixMpHtSFJGxJD2K+Gc+9QE
-        Sk/gOJE6LMyZaySRB+cX8dnfK+1/f0NJ9f2BpcszIg==
-X-Google-Smtp-Source: APXvYqxbYlBvWIHtRFN78GqEkysV6RnX4j67zaKjrkqgheGXygI16+B7GQxThoj2QX6LH0gcp2FUQWsFCnwGhVMEl2k=
-X-Received: by 2002:a24:4d85:: with SMTP id l127mr2917671itb.53.1556615478181;
- Tue, 30 Apr 2019 02:11:18 -0700 (PDT)
+        id S1727300AbfD3KN6 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 30 Apr 2019 06:13:58 -0400
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:36946 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726129AbfD3KN6 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 30 Apr 2019 06:13:58 -0400
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id x3UADb0M044378;
+        Tue, 30 Apr 2019 05:13:37 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1556619217;
+        bh=aTzbaXCkitoyyObVP7/290TFOKbW9FPc/rnqgRyc600=;
+        h=From:To:CC:Subject:Date:In-Reply-To:References;
+        b=Fo3hbaZklQ3SvglTk45UBDsFWjKtxj09CmQGaGpRFV84SCc1gO/gmQA59MN28iT8Q
+         nkG7vp1OVgOkcfOYJm9KnmRkBdYo4FUqst/LS7EG4HsaBj5TC9J00o2Ec0xJqaWqgp
+         NlxhWfVqFOgmpqYIPT+Aed/J/jwsoxqR4KzoqMRs=
+Received: from DFLE109.ent.ti.com (dfle109.ent.ti.com [10.64.6.30])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x3UADbWm124840
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 30 Apr 2019 05:13:37 -0500
+Received: from DFLE105.ent.ti.com (10.64.6.26) by DFLE109.ent.ti.com
+ (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Tue, 30
+ Apr 2019 05:13:37 -0500
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE105.ent.ti.com
+ (10.64.6.26) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Tue, 30 Apr 2019 05:13:37 -0500
+Received: from uda0131933.india.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id x3UAD0Y9085082;
+        Tue, 30 Apr 2019 05:13:33 -0500
+From:   Lokesh Vutla <lokeshvutla@ti.com>
+To:     Marc Zyngier <marc.zyngier@arm.com>,
+        Santosh Shilimkar <ssantosh@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>, Nishanth Menon <nm@ti.com>,
+        <tglx@linutronix.de>, <jason@lakedaemon.net>
+CC:     Linux ARM Mailing List <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, Tero Kristo <t-kristo@ti.com>,
+        Sekhar Nori <nsekhar@ti.com>, Tony Lindgren <tony@atomide.com>,
+        <linus.walleij@linaro.org>, Peter Ujfalusi <peter.ujfalusi@ti.com>,
+        Grygorii Strashko <grygorii.strashko@ti.com>,
+        Lokesh Vutla <lokeshvutla@ti.com>,
+        Device Tree Mailing List <devicetree@vger.kernel.org>,
+        <linux-gpio@vger.kernel.org>
+Subject: [PATCH v8 07/14] gpio: thunderx: Use the default parent apis for {request,release}_resources
+Date:   Tue, 30 Apr 2019 15:42:23 +0530
+Message-ID: <20190430101230.21794-8-lokeshvutla@ti.com>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20190430101230.21794-1-lokeshvutla@ti.com>
+References: <20190430101230.21794-1-lokeshvutla@ti.com>
 MIME-Version: 1.0
-References: <20190423090451.23711-1-brgl@bgdev.pl>
-In-Reply-To: <20190423090451.23711-1-brgl@bgdev.pl>
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Tue, 30 Apr 2019 11:11:07 +0200
-Message-ID: <CAMRc=MfDVc6nTRTOcDzKtqphtC1J+uDGwwgtuVLCO9yqVUz1nQ@mail.gmail.com>
-Subject: Re: [PATCH v10 00/11] mfd: add support for max77650 PMIC
-To:     Lee Jones <lee.jones@linaro.org>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        Linux Input <linux-input@vger.kernel.org>,
-        Linux LED Subsystem <linux-leds@vger.kernel.org>,
-        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Linux PM list <linux-pm@vger.kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Sebastian Reichel <sre@kernel.org>,
-        Pavel Machek <pavel@ucw.cz>,
-        Mark Rutland <mark.rutland@arm.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-wt., 23 kwi 2019 o 11:04 Bartosz Golaszewski <brgl@bgdev.pl> napisa=C5=82(a=
-):
->
-> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
->
-> This series adds support for max77650 ultra low-power PMIC. It provides
-> the core mfd driver and a set of five sub-drivers for the regulator,
-> power supply, gpio, leds and input subsystems.
->
-> Patches 1-4 add the DT binding documents. Patch 5 documents mfd_add_devic=
-es().
-> Patches 6-10 add all drivers. Last patch adds a MAINTAINERS entry for thi=
-s
-> device.
->
-> The regulator part is already upstream.
->
-> v1 -> v2:
-> =3D=3D=3D=3D=3D=3D=3D=3D=3D
->
-> General:
-> - use C++ style comments for the SPDX license identifier and the
->   copyright header
-> - s/MODULE_LICENSE("GPL")/MODULE_LICENSE("GPL v2")/
-> - lookup the virtual interrupt numbers in the MFD driver, setup
->   resources for child devices and use platform_get_irq_byname()
->   in sub-drivers
-> - picked up review tags
-> - use devm_request_any_context_irq() for interrupt requests
->
-> LEDs:
-> - changed the max77650_leds_ prefix to max77650_led_
-> - drop the max77650_leds structure as the only field it held was the
->   regmap pointer, move said pointer to struct max77650_led
-> - change the driver name to "max77650-led"
-> - drop the last return value check and return the result of
->   regmap_write() directly
-> - change the labeling scheme to one consistent with other LED drivers
->
-> ONKEY:
-> - drop the key reporting helper and call the input functions directly
->   from interrupt handlers
-> - rename the rv local variable to error
-> - drop parent device asignment
->
-> Regulator:
-> - drop the unnecessary init_data lookup from the driver code
-> - drop unnecessary include
->
-> Charger:
-> - disable the charger on driver remove
-> - change the power supply type to POWER_SUPPLY_TYPE_USB
->
-> GPIO:
-> - drop interrupt support until we have correct implementation of hierarch=
-ical
->   irqs in gpiolib
->
-> v2 -> v3:
-> =3D=3D=3D=3D=3D=3D=3D=3D=3D
->
-> General:
-> - dropped regulator patches as they're already in Mark Brown's branch
->
-> LED:
-> - fix the compatible string in the DT binding example
-> - use the max_brightness property
-> - use a common prefix ("MAX77650_LED") for all defines in the driver
->
-> MFD:
-> - add the MODULE_DEVICE_TABLE()
-> - add a sentinel to the of_device_id array
-> - constify the pointers to irq names
-> - use an enum instead of defines for interrupt indexes
->
-> v3 -> v4:
-> =3D=3D=3D=3D=3D=3D=3D=3D=3D
->
-> GPIO:
-> - as discussed with Linus Walleij: the gpio-controller is now part of
->   the core mfd module (we don't spawn a sub-node anymore), the binding
->   document for GPIO has been dropped, the GPIO properties have been
->   defined in the binding document for the mfd core, the interrupt
->   functionality has been reintroduced with the irq directly passed from
->   the mfd part
-> - due to the above changes the Reviewed-by tag from Linus was dropped
->
-> v4 -> v5:
-> =3D=3D=3D=3D=3D=3D=3D=3D=3D
->
-> General:
-> - add a patch documenting mfd_add_devices()
->
-> MFD:
-> - pass the regmap irq_chip irq domain to mfd over mfd_add_devices so that
->   the hw interrupts from resources can be correctly mapped to virtual irq=
-s
-> - remove the enum listing cell indexes
-> - extend Kconfig help
-> - add a link to the programming manual
-> - use REGMAP_IRQ_REG() for regmap interrupts (except for GPI which has
->   is composed of two hw interrupts for rising and falling edge)
-> - add error messages in probe
-> - use PLATFORM_DEVID_NONE constant in devm_mfd_add_devices()
-> - set irq_base to 0 in regmap_add_irq_chip() as other users to, it's only
->   relevant if it's > 0
->
-> Charger:
-> - use non-maxim specific property names for minimum input voltage and cur=
-rent
->   limit
-> - code shrink by using the enable/disable charger helpers everywhere
-> - use more descriptive names for constants
->
-> Onkey:
-> - use EV_SW event type for slide mode
->
-> LED:
-> - remove stray " from Kconfig help
->
-> v5 -> v6:
-> =3D=3D=3D=3D=3D=3D=3D=3D=3D
->
-> MFD:
-> - remove stray spaces in the binding document
-> - rename the example dt node
-> - remove unnecessary interrupt-parent property from the bindings
->
-> LED:
-> - add a missing dependency on LEDS_CLASS to Kconfig
->
-> Onkey:
-> - use boolean for the slide button property
->
-> Charger:
-> - fix the property names in DT example
-> - make constants even more readable
->
-> v6 -> v7:
-> =3D=3D=3D=3D=3D=3D=3D=3D=3D
->
-> Charger:
-> - rename the current limit property to current-limit-microamp
->
-> v7 -> v8:
-> =3D=3D=3D=3D=3D=3D=3D=3D=3D
->
-> General:
-> - collected acks from Lee
-> - changed the documentation for mfd_add_devices() as suggested by Lee
-> - rebased on top of v5.1-rc3
->
-> v8 > v9:
-> =3D=3D=3D=3D=3D=3D=3D=3D
->
-> General:
-> - collected new tags
-> - rebased on top of v5.1-rc4
->
-> MFD:
-> - various improvements in error messages
-> - coding style tweaks
->
-> Charger:
-> - named the two optional properties in a more descriptive way, so that
->   we can make them generic for charger bindings if more potential users
->   appear
->
-> v9 -> v10:
-> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
->
-> General:
-> - added the review tag from Sebastian
-> - rebased on top of v5.1-rc6
->
-> Charger:
-> - fixed the example in the binding document
->
-> Bartosz Golaszewski (11):
->   dt-bindings: mfd: add DT bindings for max77650
->   dt-bindings: power: supply: add DT bindings for max77650
->   dt-bindings: leds: add DT bindings for max77650
->   dt-bindings: input: add DT bindings for max77650
->   mfd: core: document mfd_add_devices()
->   mfd: max77650: new core mfd driver
->   power: supply: max77650: add support for battery charger
->   gpio: max77650: add GPIO support
->   leds: max77650: add LEDs support
->   input: max77650: add onkey support
->   MAINTAINERS: add an entry for max77650 mfd driver
->
->  .../bindings/input/max77650-onkey.txt         |  26 ++
->  .../bindings/leds/leds-max77650.txt           |  57 +++
->  .../devicetree/bindings/mfd/max77650.txt      |  46 +++
->  .../power/supply/max77650-charger.txt         |  28 ++
->  MAINTAINERS                                   |  14 +
->  drivers/gpio/Kconfig                          |   7 +
->  drivers/gpio/Makefile                         |   1 +
->  drivers/gpio/gpio-max77650.c                  | 190 +++++++++
->  drivers/input/misc/Kconfig                    |   9 +
->  drivers/input/misc/Makefile                   |   1 +
->  drivers/input/misc/max77650-onkey.c           | 121 ++++++
->  drivers/leds/Kconfig                          |   6 +
->  drivers/leds/Makefile                         |   1 +
->  drivers/leds/leds-max77650.c                  | 147 +++++++
->  drivers/mfd/Kconfig                           |  14 +
->  drivers/mfd/Makefile                          |   1 +
->  drivers/mfd/max77650.c                        | 232 +++++++++++
->  drivers/mfd/mfd-core.c                        |  13 +
->  drivers/power/supply/Kconfig                  |   7 +
->  drivers/power/supply/Makefile                 |   1 +
->  drivers/power/supply/max77650-charger.c       | 368 ++++++++++++++++++
->  include/linux/mfd/max77650.h                  |  59 +++
->  22 files changed, 1349 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/input/max77650-onke=
-y.txt
->  create mode 100644 Documentation/devicetree/bindings/leds/leds-max77650.=
-txt
->  create mode 100644 Documentation/devicetree/bindings/mfd/max77650.txt
->  create mode 100644 Documentation/devicetree/bindings/power/supply/max776=
-50-charger.txt
->  create mode 100644 drivers/gpio/gpio-max77650.c
->  create mode 100644 drivers/input/misc/max77650-onkey.c
->  create mode 100644 drivers/leds/leds-max77650.c
->  create mode 100644 drivers/mfd/max77650.c
->  create mode 100644 drivers/power/supply/max77650-charger.c
->  create mode 100644 include/linux/mfd/max77650.h
->
-> --
-> 2.21.0
->
+thunderx_gpio_irq_{request,release}_resources apis are trying to
+{request,release} resources on parent interrupt. There are default
+apis doing the same. Use the default parent apis instead of writing
+the same code snippet.
 
-Hi Lee,
+Cc: linux-gpio@vger.kernel.org
+Cc: Linus Walleij <linus.walleij@linaro.org>
+Acked-by: Linus Walleij <linus.walleij@linaro.org>
+Signed-off-by: Lokesh Vutla <lokeshvutla@ti.com>
+---
+Changes since v7:
+- None
 
-just a gentle ping before I leave on vacation.
+ drivers/gpio/gpio-thunderx.c | 16 ++++------------
+ 1 file changed, 4 insertions(+), 12 deletions(-)
 
-All the relevant Acks are there. Any chance of getting this in for
-v5.2? Obviously this cannot cause any regressions so it shouldn't be
-too late in the release cycle.
+diff --git a/drivers/gpio/gpio-thunderx.c b/drivers/gpio/gpio-thunderx.c
+index 1306722faa5a..715371b5102a 100644
+--- a/drivers/gpio/gpio-thunderx.c
++++ b/drivers/gpio/gpio-thunderx.c
+@@ -363,22 +363,16 @@ static int thunderx_gpio_irq_request_resources(struct irq_data *data)
+ {
+ 	struct thunderx_line *txline = irq_data_get_irq_chip_data(data);
+ 	struct thunderx_gpio *txgpio = txline->txgpio;
+-	struct irq_data *parent_data = data->parent_data;
+ 	int r;
+ 
+ 	r = gpiochip_lock_as_irq(&txgpio->chip, txline->line);
+ 	if (r)
+ 		return r;
+ 
+-	if (parent_data && parent_data->chip->irq_request_resources) {
+-		r = parent_data->chip->irq_request_resources(parent_data);
+-		if (r)
+-			goto error;
+-	}
++	r = irq_chip_request_resources_parent(data);
++	if (r)
++		gpiochip_unlock_as_irq(&txgpio->chip, txline->line);
+ 
+-	return 0;
+-error:
+-	gpiochip_unlock_as_irq(&txgpio->chip, txline->line);
+ 	return r;
+ }
+ 
+@@ -386,10 +380,8 @@ static void thunderx_gpio_irq_release_resources(struct irq_data *data)
+ {
+ 	struct thunderx_line *txline = irq_data_get_irq_chip_data(data);
+ 	struct thunderx_gpio *txgpio = txline->txgpio;
+-	struct irq_data *parent_data = data->parent_data;
+ 
+-	if (parent_data && parent_data->chip->irq_release_resources)
+-		parent_data->chip->irq_release_resources(parent_data);
++	irq_chip_release_resources_parent(data);
+ 
+ 	gpiochip_unlock_as_irq(&txgpio->chip, txline->line);
+ }
+-- 
+2.21.0
 
-Thanks in advance,
-Bartosz Golaszewski
