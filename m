@@ -2,126 +2,84 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 435F1F3F3
-	for <lists+linux-gpio@lfdr.de>; Tue, 30 Apr 2019 12:15:23 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id EC902F5CE
+	for <lists+linux-gpio@lfdr.de>; Tue, 30 Apr 2019 13:37:33 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727300AbfD3KN6 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 30 Apr 2019 06:13:58 -0400
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:36946 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726129AbfD3KN6 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 30 Apr 2019 06:13:58 -0400
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id x3UADb0M044378;
-        Tue, 30 Apr 2019 05:13:37 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1556619217;
-        bh=aTzbaXCkitoyyObVP7/290TFOKbW9FPc/rnqgRyc600=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=Fo3hbaZklQ3SvglTk45UBDsFWjKtxj09CmQGaGpRFV84SCc1gO/gmQA59MN28iT8Q
-         nkG7vp1OVgOkcfOYJm9KnmRkBdYo4FUqst/LS7EG4HsaBj5TC9J00o2Ec0xJqaWqgp
-         NlxhWfVqFOgmpqYIPT+Aed/J/jwsoxqR4KzoqMRs=
-Received: from DFLE109.ent.ti.com (dfle109.ent.ti.com [10.64.6.30])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x3UADbWm124840
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 30 Apr 2019 05:13:37 -0500
-Received: from DFLE105.ent.ti.com (10.64.6.26) by DFLE109.ent.ti.com
- (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Tue, 30
- Apr 2019 05:13:37 -0500
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE105.ent.ti.com
- (10.64.6.26) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Tue, 30 Apr 2019 05:13:37 -0500
-Received: from uda0131933.india.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id x3UAD0Y9085082;
-        Tue, 30 Apr 2019 05:13:33 -0500
-From:   Lokesh Vutla <lokeshvutla@ti.com>
-To:     Marc Zyngier <marc.zyngier@arm.com>,
-        Santosh Shilimkar <ssantosh@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>, Nishanth Menon <nm@ti.com>,
-        <tglx@linutronix.de>, <jason@lakedaemon.net>
-CC:     Linux ARM Mailing List <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, Tero Kristo <t-kristo@ti.com>,
-        Sekhar Nori <nsekhar@ti.com>, Tony Lindgren <tony@atomide.com>,
-        <linus.walleij@linaro.org>, Peter Ujfalusi <peter.ujfalusi@ti.com>,
-        Grygorii Strashko <grygorii.strashko@ti.com>,
-        Lokesh Vutla <lokeshvutla@ti.com>,
-        Device Tree Mailing List <devicetree@vger.kernel.org>,
-        <linux-gpio@vger.kernel.org>
-Subject: [PATCH v8 07/14] gpio: thunderx: Use the default parent apis for {request,release}_resources
-Date:   Tue, 30 Apr 2019 15:42:23 +0530
-Message-ID: <20190430101230.21794-8-lokeshvutla@ti.com>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190430101230.21794-1-lokeshvutla@ti.com>
-References: <20190430101230.21794-1-lokeshvutla@ti.com>
+        id S1726916AbfD3Lhd (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 30 Apr 2019 07:37:33 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:45514 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726202AbfD3Lhc (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 30 Apr 2019 07:37:32 -0400
+Received: by mail-pf1-f196.google.com with SMTP id e24so6894959pfi.12;
+        Tue, 30 Apr 2019 04:37:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=ArYktBF09rhGuKJJvxws6bmCXNyXRl7oK9w8DZA3jMs=;
+        b=cLvRzkIcWgly0/Gpwh4ATcidIfK8nunE+CfEIHNMuZlNChdocwBsWQWtV9mWnVh+Tg
+         IGR5E1rHZxWIne0KNjl2kr2YsvbAXEuoxT6l/Wxt+P82QPQh19Ahw3b3Nvo7O6QtRRAO
+         2d49DVJvlqH6/4su4vBDD15NeprPTxITbkR1EwwrxbkB45eIgU9iyp4M/GQWXNYtgZRE
+         2fY0EwBPEjxd293a2C7drN6MWLvLPNPzKUNgA8EuSNrdnPKCFl+PkHADjj47egCx4chJ
+         KBwhuLm03wz9qDJjUmeciMHaVvaMzPJFgqSEo3ZLsQD6oP1idZ5WaaoIEjkCFQ7/B1NW
+         rldw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ArYktBF09rhGuKJJvxws6bmCXNyXRl7oK9w8DZA3jMs=;
+        b=Y2YutZUxK8twNQj0nT0tD/hGQNZOBR1WRKrr3Ehd1mTlFbgUa8B00BZ9MjrtpTyb92
+         p44PrvGG8UWnr8UXTNTkbXHdCVFbEsztNTiviXhMtZI+9Wjtco0RoIIHXfVkbwSMJnLK
+         tH9uE1zz2TWsEuVO9I5RFmuvzXVXxwGRRPKbIPqZaxOzYuFRVlXTI01TXCoFE+AEtHlC
+         /9bJ61uo6iYOzKMXfl1c86tXHbHoL38Pu/oNZNUw0YR8np1g/MsbO17ElkeTBSGmerDE
+         7fPVRq30/nKg2Jj2mHk3dpEaDknW0oh722yTeosUUR/DrdVgh1+h2q3Agfw4rBu9iAlR
+         oeUw==
+X-Gm-Message-State: APjAAAWGwgZu94o6NaIOMxu8IA4doHSWGcDi2GK3DDS77RySFufqfplP
+        HVYURie0jDZNrysgE1e4z6oOA9MW/hK4S9ZT8h8=
+X-Google-Smtp-Source: APXvYqxeTLEwPB3TIeB8WOLsRYNJsiWdLDF7iEquJbzVoKTXQ0DmwzZH0n+9/pxWuXYK29wkHSrqbfnjMvyNB8fX6AA=
+X-Received: by 2002:a63:c54e:: with SMTP id g14mr65308627pgd.265.1556624252039;
+ Tue, 30 Apr 2019 04:37:32 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+References: <20190415055358.9269-1-chiu@endlessm.com> <CACRpkdanhW206AEj7m+2FQBhJ5epUzw60Y6v+k-eoJLLW_-SSQ@mail.gmail.com>
+ <20190426125031.GQ9224@smile.fi.intel.com> <CAB4CAwfF7FoQK9OndOm_yHQe19j=E_cNLn3eTBfoggEacONiyg@mail.gmail.com>
+In-Reply-To: <CAB4CAwfF7FoQK9OndOm_yHQe19j=E_cNLn3eTBfoggEacONiyg@mail.gmail.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Tue, 30 Apr 2019 14:37:21 +0300
+Message-ID: <CAHp75VfXj=1Ef7aXWyETyiaUF3ftLEodTs3azoDHTq=yrj7adw@mail.gmail.com>
+Subject: Re: [PATCH v3] pinctrl:intel: Retain HOSTSW_OWN for requested gpio pin
+To:     Chris Chiu <chiu@endlessm.com>
+Cc:     Andriy Shevchenko <andriy.shevchenko@intel.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        Daniel Drake <drake@endlessm.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Linux Upstreaming Team <linux@endlessm.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-thunderx_gpio_irq_{request,release}_resources apis are trying to
-{request,release} resources on parent interrupt. There are default
-apis doing the same. Use the default parent apis instead of writing
-the same code snippet.
+On Tue, Apr 30, 2019 at 5:15 AM Chris Chiu <chiu@endlessm.com> wrote:
+> On Fri, Apr 26, 2019 at 8:50 PM Andriy Shevchenko
+> <andriy.shevchenko@intel.com> wrote:
+> > On Tue, Apr 23, 2019 at 12:38:17PM +0200, Linus Walleij wrote:
+> > > On Mon, Apr 15, 2019 at 7:54 AM Chris Chiu <chiu@endlessm.com> wrote:
 
-Cc: linux-gpio@vger.kernel.org
-Cc: Linus Walleij <linus.walleij@linaro.org>
-Acked-by: Linus Walleij <linus.walleij@linaro.org>
-Signed-off-by: Lokesh Vutla <lokeshvutla@ti.com>
----
-Changes since v7:
-- None
+> > > This v3 patch applied with Mika's ACK.
+> >
+> > Hmm... It's supposed to go along with our PR.
+>
+> Anything I can help with?
 
- drivers/gpio/gpio-thunderx.c | 16 ++++------------
- 1 file changed, 4 insertions(+), 12 deletions(-)
+Not sure.
+I sent PR to Linus and asked at the same time to drop Intel specifics
+from devel queue. Fortunately, for-next doesn't have such issue.
+Linus?
 
-diff --git a/drivers/gpio/gpio-thunderx.c b/drivers/gpio/gpio-thunderx.c
-index 1306722faa5a..715371b5102a 100644
---- a/drivers/gpio/gpio-thunderx.c
-+++ b/drivers/gpio/gpio-thunderx.c
-@@ -363,22 +363,16 @@ static int thunderx_gpio_irq_request_resources(struct irq_data *data)
- {
- 	struct thunderx_line *txline = irq_data_get_irq_chip_data(data);
- 	struct thunderx_gpio *txgpio = txline->txgpio;
--	struct irq_data *parent_data = data->parent_data;
- 	int r;
- 
- 	r = gpiochip_lock_as_irq(&txgpio->chip, txline->line);
- 	if (r)
- 		return r;
- 
--	if (parent_data && parent_data->chip->irq_request_resources) {
--		r = parent_data->chip->irq_request_resources(parent_data);
--		if (r)
--			goto error;
--	}
-+	r = irq_chip_request_resources_parent(data);
-+	if (r)
-+		gpiochip_unlock_as_irq(&txgpio->chip, txline->line);
- 
--	return 0;
--error:
--	gpiochip_unlock_as_irq(&txgpio->chip, txline->line);
- 	return r;
- }
- 
-@@ -386,10 +380,8 @@ static void thunderx_gpio_irq_release_resources(struct irq_data *data)
- {
- 	struct thunderx_line *txline = irq_data_get_irq_chip_data(data);
- 	struct thunderx_gpio *txgpio = txline->txgpio;
--	struct irq_data *parent_data = data->parent_data;
- 
--	if (parent_data && parent_data->chip->irq_release_resources)
--		parent_data->chip->irq_release_resources(parent_data);
-+	irq_chip_release_resources_parent(data);
- 
- 	gpiochip_unlock_as_irq(&txgpio->chip, txline->line);
- }
 -- 
-2.21.0
-
+With Best Regards,
+Andy Shevchenko
