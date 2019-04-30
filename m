@@ -2,84 +2,87 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id EC902F5CE
-	for <lists+linux-gpio@lfdr.de>; Tue, 30 Apr 2019 13:37:33 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 520A3FC86
+	for <lists+linux-gpio@lfdr.de>; Tue, 30 Apr 2019 17:12:51 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726916AbfD3Lhd (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 30 Apr 2019 07:37:33 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:45514 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726202AbfD3Lhc (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 30 Apr 2019 07:37:32 -0400
-Received: by mail-pf1-f196.google.com with SMTP id e24so6894959pfi.12;
-        Tue, 30 Apr 2019 04:37:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ArYktBF09rhGuKJJvxws6bmCXNyXRl7oK9w8DZA3jMs=;
-        b=cLvRzkIcWgly0/Gpwh4ATcidIfK8nunE+CfEIHNMuZlNChdocwBsWQWtV9mWnVh+Tg
-         IGR5E1rHZxWIne0KNjl2kr2YsvbAXEuoxT6l/Wxt+P82QPQh19Ahw3b3Nvo7O6QtRRAO
-         2d49DVJvlqH6/4su4vBDD15NeprPTxITbkR1EwwrxbkB45eIgU9iyp4M/GQWXNYtgZRE
-         2fY0EwBPEjxd293a2C7drN6MWLvLPNPzKUNgA8EuSNrdnPKCFl+PkHADjj47egCx4chJ
-         KBwhuLm03wz9qDJjUmeciMHaVvaMzPJFgqSEo3ZLsQD6oP1idZ5WaaoIEjkCFQ7/B1NW
-         rldw==
+        id S1726006AbfD3PMu (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 30 Apr 2019 11:12:50 -0400
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:35156 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725976AbfD3PMu (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 30 Apr 2019 11:12:50 -0400
+Received: by mail-oi1-f193.google.com with SMTP id w197so11545449oia.2;
+        Tue, 30 Apr 2019 08:12:50 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ArYktBF09rhGuKJJvxws6bmCXNyXRl7oK9w8DZA3jMs=;
-        b=Y2YutZUxK8twNQj0nT0tD/hGQNZOBR1WRKrr3Ehd1mTlFbgUa8B00BZ9MjrtpTyb92
-         p44PrvGG8UWnr8UXTNTkbXHdCVFbEsztNTiviXhMtZI+9Wjtco0RoIIHXfVkbwSMJnLK
-         tH9uE1zz2TWsEuVO9I5RFmuvzXVXxwGRRPKbIPqZaxOzYuFRVlXTI01TXCoFE+AEtHlC
-         /9bJ61uo6iYOzKMXfl1c86tXHbHoL38Pu/oNZNUw0YR8np1g/MsbO17ElkeTBSGmerDE
-         7fPVRq30/nKg2Jj2mHk3dpEaDknW0oh722yTeosUUR/DrdVgh1+h2q3Agfw4rBu9iAlR
-         oeUw==
-X-Gm-Message-State: APjAAAWGwgZu94o6NaIOMxu8IA4doHSWGcDi2GK3DDS77RySFufqfplP
-        HVYURie0jDZNrysgE1e4z6oOA9MW/hK4S9ZT8h8=
-X-Google-Smtp-Source: APXvYqxeTLEwPB3TIeB8WOLsRYNJsiWdLDF7iEquJbzVoKTXQ0DmwzZH0n+9/pxWuXYK29wkHSrqbfnjMvyNB8fX6AA=
-X-Received: by 2002:a63:c54e:: with SMTP id g14mr65308627pgd.265.1556624252039;
- Tue, 30 Apr 2019 04:37:32 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=7aahexJfH3+ZCWyzwJ4HVTibyUsm/U8CQ+avun/lb8w=;
+        b=M5GbafMPEw1FpUNuPjUwms7Cxan/YhI0LBNBnJ1NgEifzyephSGFy7trreF1QLuWZN
+         9phJCGSBD9crQT60BJWkeBZS7Be36B4Qpht0y9svV1UC5W42Cwi2JFbAx5R7+fTaWhc6
+         ZUJAvGzg5l3HA/3dODChYMIBwoNJKnT2U9yDXYmeTivpKtHxLK98B9Q7jwvqn+sltgUx
+         rZYXQUDQUAB0IrO52LJKGp4vmQKYrPwYHgUq7tv2g/5LHZzTBJ5HIjUG0pxyY+ULMkp+
+         +PlJ+eUK5NJGibNv0vYV9DkaLrR/mOHxWuoGJZ/0tsm392BWIEIU1stUlXu4ahSz0eHq
+         xbXg==
+X-Gm-Message-State: APjAAAXGD74hm5RcB9NSOHchEisoAEiBDMOg2gzHg5RjR3IcBeYpu+fv
+        ia4I9xI92hsFSxJlr3r+tHCCh9I=
+X-Google-Smtp-Source: APXvYqw+7CtQGpDl9egPhX/Ibog5Hs4VhoUaMkukQMspgHXvHnYdx7igDWd16RY8bjIjwyxtwGAzZQ==
+X-Received: by 2002:aca:55c1:: with SMTP id j184mr3206627oib.119.1556637164785;
+        Tue, 30 Apr 2019 08:12:44 -0700 (PDT)
+Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id o1sm16620919otj.11.2019.04.30.08.12.43
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 30 Apr 2019 08:12:43 -0700 (PDT)
+Date:   Tue, 30 Apr 2019 10:12:43 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Guillaume La Roque <glaroque@baylibre.com>
+Cc:     linus.walleij@linaro.org, mark.rutland@arm.com,
+        khilman@baylibre.com, linux-gpio@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-amlogic@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 1/4] dt-bindings: pinctrl: add a 'drive-strength-uA'
+ property
+Message-ID: <20190430151243.GA6879@bogus>
+References: <20190418124758.24022-1-glaroque@baylibre.com>
+ <20190418124758.24022-2-glaroque@baylibre.com>
 MIME-Version: 1.0
-References: <20190415055358.9269-1-chiu@endlessm.com> <CACRpkdanhW206AEj7m+2FQBhJ5epUzw60Y6v+k-eoJLLW_-SSQ@mail.gmail.com>
- <20190426125031.GQ9224@smile.fi.intel.com> <CAB4CAwfF7FoQK9OndOm_yHQe19j=E_cNLn3eTBfoggEacONiyg@mail.gmail.com>
-In-Reply-To: <CAB4CAwfF7FoQK9OndOm_yHQe19j=E_cNLn3eTBfoggEacONiyg@mail.gmail.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Tue, 30 Apr 2019 14:37:21 +0300
-Message-ID: <CAHp75VfXj=1Ef7aXWyETyiaUF3ftLEodTs3azoDHTq=yrj7adw@mail.gmail.com>
-Subject: Re: [PATCH v3] pinctrl:intel: Retain HOSTSW_OWN for requested gpio pin
-To:     Chris Chiu <chiu@endlessm.com>
-Cc:     Andriy Shevchenko <andriy.shevchenko@intel.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        Daniel Drake <drake@endlessm.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Linux Upstreaming Team <linux@endlessm.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190418124758.24022-2-glaroque@baylibre.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Apr 30, 2019 at 5:15 AM Chris Chiu <chiu@endlessm.com> wrote:
-> On Fri, Apr 26, 2019 at 8:50 PM Andriy Shevchenko
-> <andriy.shevchenko@intel.com> wrote:
-> > On Tue, Apr 23, 2019 at 12:38:17PM +0200, Linus Walleij wrote:
-> > > On Mon, Apr 15, 2019 at 7:54 AM Chris Chiu <chiu@endlessm.com> wrote:
+On Thu, Apr 18, 2019 at 02:47:55PM +0200, Guillaume La Roque wrote:
+> This property allow drive-strength parameter in uA instead of mA.
+> 
+> Signed-off-by: Guillaume La Roque <glaroque@baylibre.com>
+> ---
+>  Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt | 3 +++
+>  1 file changed, 3 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt b/Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt
+> index cef2b5855d60..fc7018459aa2 100644
+> --- a/Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt
+> +++ b/Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt
+> @@ -258,6 +258,7 @@ drive-push-pull		- drive actively high and low
+>  drive-open-drain	- drive with open drain
+>  drive-open-source	- drive with open source
+>  drive-strength		- sink or source at most X mA
+> +drive-strength-uA	- sink or source at most X uA
+>  input-enable		- enable input on pin (no effect on output, such as
+>  			  enabling an input buffer)
+>  input-disable		- disable input on pin (no effect on output, such as
+> @@ -326,6 +327,8 @@ arguments are described below.
+>  
+>  - drive-strength takes as argument the target strength in mA.
+>  
+> +- drive-strength-uA takes as argument the target strength in uA.
+> +
 
-> > > This v3 patch applied with Mika's ACK.
-> >
-> > Hmm... It's supposed to go along with our PR.
->
-> Anything I can help with?
+We have standard unit suffixes defined in bindings/property-units.txt. 
+Use them please.
 
-Not sure.
-I sent PR to Linus and asked at the same time to drop Intel specifics
-from devel queue. Fortunately, for-next doesn't have such issue.
-Linus?
-
--- 
-With Best Regards,
-Andy Shevchenko
+Rob
