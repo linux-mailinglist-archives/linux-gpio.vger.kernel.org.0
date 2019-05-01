@@ -2,35 +2,34 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id BB54B106DD
-	for <lists+linux-gpio@lfdr.de>; Wed,  1 May 2019 12:15:17 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 009DB106E7
+	for <lists+linux-gpio@lfdr.de>; Wed,  1 May 2019 12:21:43 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726243AbfEAKPK (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 1 May 2019 06:15:10 -0400
-Received: from cloudserver094114.home.pl ([79.96.170.134]:64696 "EHLO
+        id S1726145AbfEAKVn (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 1 May 2019 06:21:43 -0400
+Received: from cloudserver094114.home.pl ([79.96.170.134]:58967 "EHLO
         cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726101AbfEAKPK (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 1 May 2019 06:15:10 -0400
+        with ESMTP id S1726052AbfEAKVn (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 1 May 2019 06:21:43 -0400
 Received: from 79.184.254.69.ipv4.supernova.orange.pl (79.184.254.69) (HELO kreacher.localnet)
  by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.213)
- id 16ecf9d589608daa; Wed, 1 May 2019 12:15:07 +0200
+ id f51534df836c7de9; Wed, 1 May 2019 12:21:40 +0200
 From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
-To:     Changbin Du <changbin.du@gmail.com>
-Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Fenghua Yu <fenghua.yu@intel.com>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        linux-gpio@vger.kernel.org,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-Subject: Re: [PATCH v5 00/23] Include linux ACPI docs into Sphinx TOC tree
-Date:   Wed, 01 May 2019 12:15:07 +0200
-Message-ID: <3825811.MXkekUSqSZ@kreacher>
-In-Reply-To: <20190425152034.u4q6wjhm3yfhbnzp@mail.google.com>
-References: <20190424175306.25880-1-changbin.du@gmail.com> <CAJZ5v0i3iEyn1vBjPkA0X=8h_UrSeTNV_JduJq9qfYpgCOAPjQ@mail.gmail.com> <20190425152034.u4q6wjhm3yfhbnzp@mail.google.com>
+To:     Ulf Hansson <ulf.hansson@linaro.org>
+Cc:     linux-pm@vger.kernel.org,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Loic Pallardy <loic.pallardy@st.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Rob Herring <robh@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Johan Hovold <johan@kernel.org>, linux-gpio@vger.kernel.org,
+        linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] PM / core: Propagate dev->power.wakeup_path when no callbacks
+Date:   Wed, 01 May 2019 12:21:40 +0200
+Message-ID: <3232066.oa1jrYo8oc@kreacher>
+In-Reply-To: <20190410095516.6170-1-ulf.hansson@linaro.org>
+References: <20190410095516.6170-1-ulf.hansson@linaro.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7Bit
 Content-Type: text/plain; charset="us-ascii"
@@ -39,29 +38,70 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thursday, April 25, 2019 5:20:35 PM CEST Changbin Du wrote:
-> On Thu, Apr 25, 2019 at 10:44:14AM +0200, Rafael J. Wysocki wrote:
-> > .On Wed, Apr 24, 2019 at 7:54 PM Changbin Du <changbin.du@gmail.com> wrote:
-> > >
-> > > Hi All,
-> > > The kernel now uses Sphinx to generate intelligent and beautiful documentation
-> > > from reStructuredText files. I converted all of the Linux ACPI/PCI/X86 docs to
-> > > reST format in this serias.
-> > >
-> > > The hieararchy of ACPI docs are based on Corbet's suggestion:
-> > > https://lkml.org/lkml/2019/4/3/1047
-> > > I did some adjustment according to the content and finally they are placed as:
-> > > Documentation/firmware-guide/acpi/
-> > 
-> > I'd like to queue up this series, but it is missing a patch to create
-> > Documentation/firmware-guide/acpi/index.rst.
-> > 
-> > Care to provide one?
-> oops, the first patch is missed. Let me add it next.
+On Wednesday, April 10, 2019 11:55:16 AM CEST Ulf Hansson wrote:
+> The dev->power.direct_complete flag may become set in device_prepare() in
+> case the device don't have any PM callbacks (dev->power.no_pm_callbacks is
+> set). This leads to a broken behaviour, when there is child having wakeup
+> enabled and relies on its parent to be used in the wakeup path.
+> 
+> More precisely, when the direct complete path becomes selected for the
+> child in __device_suspend(), the propagation of the dev->power.wakeup_path
+> becomes skipped as well.
+> 
+> Let's address this problem, by checking if the device is a part the wakeup
+> path or has wakeup enabled, then prevent the direct complete path from
+> being used.
+> 
+> Reported-by: Loic Pallardy <loic.pallardy@st.com>
+> Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+> ---
+> 
+> More background:
+> 
+> This problem was reported by Loic Pallardy, offlist, while he was working
+> on enabling wakeup for a tty serial console driver.
+> 
+> When I looked more closely, I noticed that uart_suspend_port() calls
+> device_may_wakeup() for the tty child devices, and then also the used serial
+> driver check its device (parent) for device_may_wakeup(). To me this looks like
+> workarounds to fix a behaviour that really should be dealt with from the PM
+> core, no matter of whether the child have PM callbacks assigned or not.
+> 
+> In other words, it seems like the serial driver(s) should be checking the
+> wakeup_path flag for the parent, solely, instead.
+> 
+> I haven't digested further behaviours for other subsystem, but recently
+> reviewed a patch for a gpio driver [1], that seems to be suffering from the
+> similar problems.
+> 
+> Kind regards
+> Ulf Hansson
+> 
+> [1]
+> https://lkml.org/lkml/2019/4/4/1283
+> 
+> ---
+>  drivers/base/power/main.c | 4 ++++
+>  1 file changed, 4 insertions(+)
+> 
+> diff --git a/drivers/base/power/main.c b/drivers/base/power/main.c
+> index 41eba82ee7b9..f9cfdeee8288 100644
+> --- a/drivers/base/power/main.c
+> +++ b/drivers/base/power/main.c
+> @@ -1747,6 +1747,10 @@ static int __device_suspend(struct device *dev, pm_message_t state, bool async)
+>  	if (dev->power.syscore)
+>  		goto Complete;
+>  
+> +	/* Avoid direct_complete, to let wakeup_path being propagated. */
+> +	if (device_may_wakeup(dev) || dev->power.wakeup_path)
+> +		dev->power.direct_complete = false;
+> +
+>  	if (dev->power.direct_complete) {
+>  		if (pm_runtime_status_suspended(dev)) {
+>  			pm_runtime_disable(dev);
+> 
 
-I've picked up the first patch from the v6 and applied this series on top of it.
-
- Thanks!
+Applied, thanks!
 
 
 
