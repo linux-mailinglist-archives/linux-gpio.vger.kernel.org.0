@@ -2,27 +2,27 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 0BB2711D99
-	for <lists+linux-gpio@lfdr.de>; Thu,  2 May 2019 17:36:37 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 807B611D9C
+	for <lists+linux-gpio@lfdr.de>; Thu,  2 May 2019 17:36:38 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727672AbfEBPbz (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 2 May 2019 11:31:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51272 "EHLO mail.kernel.org"
+        id S1729068AbfEBPcB (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 2 May 2019 11:32:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51346 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729068AbfEBPby (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Thu, 2 May 2019 11:31:54 -0400
+        id S1729074AbfEBPb5 (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Thu, 2 May 2019 11:31:57 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6600A20C01;
-        Thu,  2 May 2019 15:31:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E034521670;
+        Thu,  2 May 2019 15:31:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556811113;
-        bh=HbsuwdOIgem/E0Mlci7TCiK8L+RXj1IGzfey9vqEvCY=;
+        s=default; t=1556811116;
+        bh=ajV3JpXOrvSXip+WAVQ2R56F6sOHZ8UgqSRoshVk9yk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ItgcUYSBqnY+6Xvgh2QsxxieaUgwaDFaEa1fR+hNc002Nzl0ZKtxSePmXj8m/RnRY
-         S3Gg7tySvqECIvfi0uQyTdesxXxUOUnjVKEmS3wQMKBW7V/AvzWwD7pirFXt4yEpnU
-         e7zylUW0MaNSUyHyNqjVip4HyrsWtRLLi79TvvqE=
+        b=LZMMf5WYBg8NE+rFa/csdea13Qee4s/2lm6vKL+Dh7lmE555Qp0UaOqbQcPD6Ixif
+         CyT04HqeQKMBwlkqXoEjUraPVZDi5koWBYiv/sAjwtyCT0DmDnb2KMQ1AkrN450lHh
+         LWz2HTCvtQqW7OuU+pWp3dxmKomC6+sxxfTHmLqM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -31,9 +31,9 @@ Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>,
         Chris Healy <cphealy@gmail.com>, linux-gpio@vger.kernel.org,
         "Sasha Levin (Microsoft)" <sashal@kernel.org>
-Subject: [PATCH 5.0 080/101] gpio: of: Check propname before applying "cs-gpios" quirks
-Date:   Thu,  2 May 2019 17:21:22 +0200
-Message-Id: <20190502143345.235274686@linuxfoundation.org>
+Subject: [PATCH 5.0 081/101] gpio: of: Check for "spi-cs-high" in child instead of parent node
+Date:   Thu,  2 May 2019 17:21:23 +0200
+Message-Id: <20190502143345.297630995@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190502143339.434882399@linuxfoundation.org>
 References: <20190502143339.434882399@linuxfoundation.org>
@@ -46,12 +46,11 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-[ Upstream commit e5545c94e43b8f6599ffc01df8d1aedf18ee912a ]
+[ Upstream commit 7ce40277bf848391705011ba37eac2e377cbd9e6 ]
 
-SPI GPIO device has more than just "cs-gpio" property in its node and
-would request those GPIOs as a part of its initialization. To avoid
-applying CS-specific quirk to all of them add a check to make sure
-that propname is "cs-gpios".
+"spi-cs-high" is going to be specified in child node of an SPI
+controller's representing attached SPI device, so change the code to
+look for it there, instead of checking parent node.
 
 Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
 Cc: Linus Walleij <linus.walleij@linaro.org>
@@ -62,23 +61,33 @@ Cc: linux-kernel@vger.kernel.org
 Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
 Signed-off-by: Sasha Levin (Microsoft) <sashal@kernel.org>
 ---
- drivers/gpio/gpiolib-of.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/gpio/gpiolib-of.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
 diff --git a/drivers/gpio/gpiolib-of.c b/drivers/gpio/gpiolib-of.c
-index a1dd2f1c0d02..9470563f2506 100644
+index 9470563f2506..f1ae28289a67 100644
 --- a/drivers/gpio/gpiolib-of.c
 +++ b/drivers/gpio/gpiolib-of.c
-@@ -119,7 +119,8 @@ static void of_gpio_flags_quirks(struct device_node *np,
- 	 * to determine if the flags should have inverted semantics.
- 	 */
- 	if (IS_ENABLED(CONFIG_SPI_MASTER) &&
--	    of_property_read_bool(np, "cs-gpios")) {
-+	    of_property_read_bool(np, "cs-gpios") &&
-+	    !strcmp(propname, "cs-gpios")) {
- 		struct device_node *child;
- 		u32 cs;
- 		int ret;
+@@ -142,16 +142,16 @@ static void of_gpio_flags_quirks(struct device_node *np,
+ 				 * conflict and the "spi-cs-high" flag will
+ 				 * take precedence.
+ 				 */
+-				if (of_property_read_bool(np, "spi-cs-high")) {
++				if (of_property_read_bool(child, "spi-cs-high")) {
+ 					if (*flags & OF_GPIO_ACTIVE_LOW) {
+ 						pr_warn("%s GPIO handle specifies active low - ignored\n",
+-							of_node_full_name(np));
++							of_node_full_name(child));
+ 						*flags &= ~OF_GPIO_ACTIVE_LOW;
+ 					}
+ 				} else {
+ 					if (!(*flags & OF_GPIO_ACTIVE_LOW))
+ 						pr_info("%s enforce active low on chipselect handle\n",
+-							of_node_full_name(np));
++							of_node_full_name(child));
+ 					*flags |= OF_GPIO_ACTIVE_LOW;
+ 				}
+ 				break;
 -- 
 2.19.1
 
