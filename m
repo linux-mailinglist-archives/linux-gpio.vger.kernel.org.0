@@ -2,353 +2,276 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id DF6171115E
-	for <lists+linux-gpio@lfdr.de>; Thu,  2 May 2019 04:20:40 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DAFE81143C
+	for <lists+linux-gpio@lfdr.de>; Thu,  2 May 2019 09:35:53 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726423AbfEBCUa (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 1 May 2019 22:20:30 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:56604 "EHLO
-        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726566AbfEBCTH (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 1 May 2019 22:19:07 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
-        Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
-        List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
-        List-Archive; bh=UCd5PvISpjx6MWF5+BmECaXInU42js58B4pjqnsk864=; b=bBKj7O+BnLNV
-        xND2O0l4u5/I5B9ChdTjX0Nldz82WcCBeZ0yDiwwDokSEVPRxIhsy3NDLl6OBcduLvWMqDuyV0dvi
-        e3VHGF0RXUl1UycVhtU09tk6iSDZOp2CM/Y9oKZcVnVAoIMLuzDqWqHfbYbbUynlpbsfNF2ox6EOR
-        95mok=;
-Received: from [211.55.52.15] (helo=finisterre.ee.mobilebroadband)
-        by heliosphere.sirena.org.uk with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <broonie@sirena.org.uk>)
-        id 1hM1JO-0005vR-Uv; Thu, 02 May 2019 02:19:03 +0000
-Received: by finisterre.ee.mobilebroadband (Postfix, from userid 1000)
-        id D8D0C441D3F; Thu,  2 May 2019 03:18:59 +0100 (BST)
-From:   Mark Brown <broonie@kernel.org>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        H Hartley Sweeten <hsweeten@visionengravers.com>,
-        linux-gpio@vger.kernel.org, linux-spi@vger.kernel.org,
-        Mark Brown <broonie@kernel.org>
-Subject: Applied "spi: ep93xx: Convert to use CS GPIO descriptors" to the spi tree
-In-Reply-To: <20190420110559.4947-1-linus.walleij@linaro.org>
-X-Patchwork-Hint: ignore
-Message-Id: <20190502021859.D8D0C441D3F@finisterre.ee.mobilebroadband>
-Date:   Thu,  2 May 2019 03:18:59 +0100 (BST)
+        id S1726249AbfEBHfs (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 2 May 2019 03:35:48 -0400
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:42931 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725795AbfEBHfr (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 2 May 2019 03:35:47 -0400
+Received: by mail-lj1-f195.google.com with SMTP id r72so1237492ljb.9;
+        Thu, 02 May 2019 00:35:44 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=f0nKg4+Q/T5kK5uvm+jeP7BQaQUkQKsJ7nRo2YBgk6k=;
+        b=hPJxKgLDGTqBxusxENdcxCsX7MMBoPLHkbLQRtpa7Os24CYzfQkQPGq0g98pQtDY7G
+         3UFS+Yn8pSlkEsVjbmAKOn/7VbyWL8IiwdMrm3am+WCFfpQcznKJpPxK/urgy7ZhWD7T
+         d0zkn7kHNEzoyw1eCWNpudFHPwIcTIT2bp5dEMGfI5Eq2qoodh0+Bry0GPpTYKj3CE83
+         ID4xHWDJrUcx3kpR1PEeylBD82twYCTyTFXbTJcclH5XyDAdo24m4bb1blSwprq8Lwr5
+         0vTLuu+kqfUCxUQXR+p+G9XQv/ADQXAtsqckRoAjZ44bV429B5pnMmIxQhZUE0WkouXK
+         bJgA==
+X-Gm-Message-State: APjAAAVIo7fMKApiBRKbHPQwN/YOsryUAJ2IohzUghxSnSGQ6sZqaM5W
+        FHPH9YTC4pNG18Ncnscs+zc=
+X-Google-Smtp-Source: APXvYqzIpAHQ7nHKtraHvv4s2zWB5pLMM9V2XACoeCr8U64xGT7XSBTcwo0x1dcDx2z2HD9HPiqymg==
+X-Received: by 2002:a2e:8090:: with SMTP id i16mr994712ljg.135.1556782543766;
+        Thu, 02 May 2019 00:35:43 -0700 (PDT)
+Received: from localhost.localdomain ([213.255.186.46])
+        by smtp.gmail.com with ESMTPSA id m15sm527367lfl.54.2019.05.02.00.35.42
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 02 May 2019 00:35:43 -0700 (PDT)
+Date:   Thu, 2 May 2019 10:35:39 +0300
+From:   Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+To:     Sebastian Reichel <sebastian.reichel@collabora.com>
+Cc:     mazziesaccount@gmail.com, Lee Jones <lee.jones@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Guenter Roeck <linux@roeck-us.net>, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-gpio@vger.kernel.org, linux-pm@vger.kernel.org,
+        linux-rtc@vger.kernel.org, linux-watchdog@vger.kernel.org,
+        heikki.haikola@fi.rohmeurope.com, mikko.mutanen@fi.rohmeurope.com
+Subject: Re: [PATCH RESEND v13 7/8] power: supply: Initial support for ROHM
+ BD70528 PMIC charger block
+Message-ID: <20190502073539.GB7864@localhost.localdomain>
+References: <cover2.1554371464.git.matti.vaittinen@fi.rohmeurope.com>
+ <resend.d5ba82b3d674d237d62a5e1768c9fa81cde2cf4e.1554371464.git.matti.vaittinen@fi.rohmeurope.com>
+ <20190501222535.yt4ofrlf6wfwfmz7@earth.universe>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190501222535.yt4ofrlf6wfwfmz7@earth.universe>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-The patch
+Hello Sebastian,
 
-   spi: ep93xx: Convert to use CS GPIO descriptors
+Thanks for the review. This is highly appreciated as charger subsystem
+is new to me =)
 
-has been applied to the spi tree at
+On Thu, May 02, 2019 at 12:25:35AM +0200, Sebastian Reichel wrote:
+> Hi,
+> 
+> On Thu, Apr 25, 2019 at 02:16:51PM +0300, Matti Vaittinen wrote:
+> > ROHM BD70528 PMIC includes battery charger block. Support charger
+> > staus queries and doing few basic settings like input current limit
+> > and charging current.
+> > 
+> > Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+> > ---
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git for-5.2
+//snip
 
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.  
+> > +struct irq_name_pair {
+> > +	const char *n;
+> > +	irqreturn_t (*h)(int irq, void *arg);
+> > +};
+> > +
+> > +static int bd70528_get_irqs(struct platform_device *pdev,
+> > +			    struct bd70528_psy *bdpsy)
+> > +{
+> > +	int irq, i, ret;
+> > +	unsigned int mask;
+> > +	struct irq_name_pair bd70528_chg_irqs[] = {
+> > +		{ .n = "bd70528-bat-ov-res", .h = BD_IRQ_HND(BAT_OV_RES) },
+> > +		{ .n = "bd70528-bat-ov-det", .h = BD_IRQ_HND(BAT_OV_DET) },
+> > +		{ .n = "bd70528-bat-dead", .h = BD_IRQ_HND(DBAT_DET) },
+> > +		{ .n = "bd70528-bat-warmed", .h = BD_IRQ_HND(COLD_RES) },
+> > +		{ .n = "bd70528-bat-cold", .h = BD_IRQ_HND(COLD_DET) },
+> > +		{ .n = "bd70528-bat-cooled", .h = BD_IRQ_HND(HOT_RES) },
+> > +		{ .n = "bd70528-bat-hot", .h = BD_IRQ_HND(HOT_DET) },
+> > +		{ .n = "bd70528-chg-tshd", .h = BD_IRQ_HND(CHG_TSD) },
+> > +		{ .n = "bd70528-bat-removed", .h = BD_IRQ_HND(BAT_RMV) },
+> > +		{ .n = "bd70528-bat-detected", .h = BD_IRQ_HND(BAT_DET) },
+> > +		{ .n = "bd70528-dcin2-ov-res", .h = BD_IRQ_HND(DCIN2_OV_RES) },
+> > +		{ .n = "bd70528-dcin2-ov-det", .h = BD_IRQ_HND(DCIN2_OV_DET) },
+> > +		{ .n = "bd70528-dcin2-removed", .h = BD_IRQ_HND(DCIN2_RMV) },
+> > +		{ .n = "bd70528-dcin2-detected", .h = BD_IRQ_HND(DCIN2_DET) },
+> > +		{ .n = "bd70528-dcin1-removed", .h = BD_IRQ_HND(DCIN1_RMV) },
+> > +		{ .n = "bd70528-dcin1-detected", .h = BD_IRQ_HND(DCIN1_DET) },
+> > +	};
+> 
+> static const?
 
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
+Const seems appropriate but I don't see the benefits of static? I think
+it's just fine to have this at stack?
 
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
+> > +
+> > +struct linear_range {
+> > +	int min;
+> > +	int step;
+> > +	int vals;
+> > +	int low_sel;
+> > +};
+> > +
+> > +struct linear_range current_limit_ranges[] = {
+> > +	{
+> > +		.min = 5,
+> > +		.step = 1,
+> > +		.vals = 36,
+> > +		.low_sel = 0,
+> > +	},
+> > +	{
+> > +		.min = 40,
+> > +		.step = 5,
+> > +		.vals = 5,
+> > +		.low_sel = 0x23,
+> > +	},
+> > +	{
+> > +		.min = 60,
+> > +		.step = 20,
+> > +		.vals = 8,
+> > +		.low_sel = 0x27,
+> > +	},
+> > +	{
+> > +		.min = 200,
+> > +		.step = 50,
+> > +		.vals = 7,
+> > +		.low_sel = 0x2e,
+> > +	}
+> > +};
+> 
+> static const?
 
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
+Definitely static, can be const too. Thanks.
 
-Thanks,
-Mark
+> > +/*
+> > + * BD70528 would support setting and getting own charge current/
+> > + * voltage for low temperatures. The driver currently only reads
+> > + * the charge current at room temperature. We do set both though.
+> > + */
+> > +struct linear_range warm_charge_curr[] = {
+> > +	{
+> > +		.min = 10,
+> > +		.step = 10,
+> > +		.vals = 20,
+> > +		.low_sel = 0,
+> > +	},
+> > +	{
+> > +		.min = 200,
+> > +		.step = 25,
+> > +		.vals = 13,
+> > +		.low_sel = 0x13,
+> > +	},
+> > +};
+> 
+> static const?
 
-From 1dfbf334f12361ebe6269c5918328b755ee960c7 Mon Sep 17 00:00:00 2001
-From: Linus Walleij <linus.walleij@linaro.org>
-Date: Sat, 20 Apr 2019 13:05:59 +0200
-Subject: [PATCH] spi: ep93xx: Convert to use CS GPIO descriptors
+Yes. I agree. Thanks =)
+ 
+> > +static const struct power_supply_desc bd70528_charger_desc = {
+> > +	.name		= "bd70528-charger",
+> > +	.type		= POWER_SUPPLY_TYPE_BATTERY,
+> 
+> charge should use POWER_SUPPLY_TYPE_MAINS (or
+> POWER_SUPPLY_TYPE_USB for USB chargers).
 
-This converts the EP93xx SPI master driver to use GPIO
-descriptors for chip select handling.
+I'll check this. Thanks.
+ 
+> > +	.properties	= bd70528_charger_props,
+> > +	.num_properties	= ARRAY_SIZE(bd70528_charger_props),
+> > +	.get_property	= bd70528_charger_get_property,
+> > +	.set_property	= bd70528_charger_set_property,
+> > +	.property_is_writeable	= bd70528_prop_is_writable,
+> > +};
+> > +
+> > +static int bd70528_power_probe(struct platform_device *pdev)
+> > +{
+> > +	struct rohm_regmap_dev *mfd;
+> > +	struct bd70528_psy *bdpsy;
+> > +	struct power_supply_config cfg = {};
+> > +
+> > +	mfd = dev_get_drvdata(pdev->dev.parent);
+> > +	if (!mfd) {
+> > +		dev_err(&pdev->dev, "No MFD driver data\n");
+> > +		return -EINVAL;
+> > +	}
+> 
+> There is absolutley no need for this hack. Just get the regmap
+> for the parent device and store the regmap and the device pointer
+> directly in bdpsy.
 
-EP93xx was using platform data to pass in GPIO lines,
-by converting all board files to use GPIO descriptor
-tables the core will look up the GPIO lines from the
-SPI device in the same manner as for device tree.
+So I guess you suggest just using the dev_get_regmap(pdev->dev.parent)
+instead of using the platform data from parent? This is fine now as we
+don't care about the chip_type just now as the only PMIC thic charger
+driver supports for now is BD70528. So I can drop reading the parent's
+drvdata - although we may get back to this when I work with next ROHM
+PMIC with (almost) similar charger block.. :) But I'll switch to the
+dev_get_regmap() for now.
+ 
+> > +	bdpsy = devm_kzalloc(&pdev->dev, sizeof(*bdpsy), GFP_KERNEL);
+> > +	if (!bdpsy)
+> > +		return -ENOMEM;
+> > +	bdpsy->chip = *mfd;
+> > +	bdpsy->chip.dev = &pdev->dev;
+> > +
+> > +	platform_set_drvdata(pdev, bdpsy);
+> > +	cfg.drv_data = bdpsy;
+> > +	cfg.of_node = pdev->dev.parent->of_node;
+> > +
+> > +	bdpsy->psy = devm_power_supply_register(&pdev->dev,
+> > +						&bd70528_charger_desc, &cfg);
+> > +	if (IS_ERR(bdpsy->psy)) {
+> > +		dev_err(&pdev->dev, "failed: power supply register\n");
+> > +		return PTR_ERR(bdpsy->psy);
+> > +	}
+> > +
+> > +	return bd70528_get_irqs(pdev, bdpsy);
+> > +}
+> > +
+> > +static struct platform_driver bd70528_power = {
+> > +	.driver = {
+> > +		.name = "bd70528-power"
+> > +	},
+> > +	.probe = bd70528_power_probe,
+> > +};
+> > +
+> > +module_platform_driver(bd70528_power);
+> > +
+> > +MODULE_AUTHOR("Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>");
+> > +MODULE_DESCRIPTION("BD70528 power-supply driver");
+> > +MODULE_LICENSE("GPL");
+> 
+> Otherwise looks ok to me.
 
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
-Signed-off-by: Mark Brown <broonie@kernel.org>
----
- arch/arm/mach-ep93xx/edb93xx.c           | 13 +++++++---
- arch/arm/mach-ep93xx/simone.c            | 11 +++++---
- arch/arm/mach-ep93xx/ts72xx.c            | 25 ++++++++++++------
- arch/arm/mach-ep93xx/vision_ep9307.c     | 15 ++++++-----
- drivers/spi/spi-ep93xx.c                 | 32 +++++-------------------
- include/linux/platform_data/spi-ep93xx.h |  4 ---
- 6 files changed, 48 insertions(+), 52 deletions(-)
+Thanks. I'll fix issues you pointed (except the static struct in
+function) and translate this to ack. Please let me know if this is not
+Ok or if you really think the array bd70528_chg_irqs (which is local to
+function) should be static.
 
-diff --git a/arch/arm/mach-ep93xx/edb93xx.c b/arch/arm/mach-ep93xx/edb93xx.c
-index 8e89ec8b6f0f..34e18e9556d9 100644
---- a/arch/arm/mach-ep93xx/edb93xx.c
-+++ b/arch/arm/mach-ep93xx/edb93xx.c
-@@ -29,6 +29,7 @@
- #include <linux/platform_device.h>
- #include <linux/i2c.h>
- #include <linux/spi/spi.h>
-+#include <linux/gpio/machine.h>
- 
- #include <sound/cs4271.h>
- 
-@@ -105,13 +106,16 @@ static struct spi_board_info edb93xx_spi_board_info[] __initdata = {
- 	},
- };
- 
--static int edb93xx_spi_chipselects[] __initdata = {
--	EP93XX_GPIO_LINE_EGPIO6,
-+static struct gpiod_lookup_table edb93xx_spi_cs_gpio_table = {
-+	.dev_id = "ep93xx-spi.0",
-+	.table = {
-+		GPIO_LOOKUP("A", 6, "cs", GPIO_ACTIVE_LOW),
-+		{ },
-+	},
- };
- 
- static struct ep93xx_spi_info edb93xx_spi_info __initdata = {
--	.chipselect	= edb93xx_spi_chipselects,
--	.num_chipselect	= ARRAY_SIZE(edb93xx_spi_chipselects),
-+	/* Intentionally left blank */
- };
- 
- static void __init edb93xx_register_spi(void)
-@@ -123,6 +127,7 @@ static void __init edb93xx_register_spi(void)
- 	else if (machine_is_edb9315a())
- 		edb93xx_cs4271_data.gpio_nreset = EP93XX_GPIO_LINE_EGPIO14;
- 
-+	gpiod_add_lookup_table(&edb93xx_spi_cs_gpio_table);
- 	ep93xx_register_spi(&edb93xx_spi_info, edb93xx_spi_board_info,
- 			    ARRAY_SIZE(edb93xx_spi_board_info));
- }
-diff --git a/arch/arm/mach-ep93xx/simone.c b/arch/arm/mach-ep93xx/simone.c
-index 80ccb984d521..f0f38c0dba52 100644
---- a/arch/arm/mach-ep93xx/simone.c
-+++ b/arch/arm/mach-ep93xx/simone.c
-@@ -77,13 +77,15 @@ static struct spi_board_info simone_spi_devices[] __initdata = {
-  * low between multi-message command blocks. From v1.4, it uses a GPIO instead.
-  * v1.3 parts will still work, since the signal on SFRMOUT is automatic.
-  */
--static int simone_spi_chipselects[] __initdata = {
--	EP93XX_GPIO_LINE_EGPIO1,
-+static struct gpiod_lookup_table simone_spi_cs_gpio_table = {
-+	.dev_id = "ep93xx-spi.0",
-+	.table = {
-+		GPIO_LOOKUP("A", 1, "cs", GPIO_ACTIVE_LOW),
-+		{ },
-+	},
- };
- 
- static struct ep93xx_spi_info simone_spi_info __initdata = {
--	.chipselect	= simone_spi_chipselects,
--	.num_chipselect	= ARRAY_SIZE(simone_spi_chipselects),
- 	.use_dma = 1,
- };
- 
-@@ -113,6 +115,7 @@ static void __init simone_init_machine(void)
- 	ep93xx_register_i2c(simone_i2c_board_info,
- 			    ARRAY_SIZE(simone_i2c_board_info));
- 	gpiod_add_lookup_table(&simone_mmc_spi_gpio_table);
-+	gpiod_add_lookup_table(&simone_spi_cs_gpio_table);
- 	ep93xx_register_spi(&simone_spi_info, simone_spi_devices,
- 			    ARRAY_SIZE(simone_spi_devices));
- 	simone_register_audio();
-diff --git a/arch/arm/mach-ep93xx/ts72xx.c b/arch/arm/mach-ep93xx/ts72xx.c
-index 85b74ac943f0..a3a20c83c6b8 100644
---- a/arch/arm/mach-ep93xx/ts72xx.c
-+++ b/arch/arm/mach-ep93xx/ts72xx.c
-@@ -22,6 +22,7 @@
- #include <linux/spi/mmc_spi.h>
- #include <linux/mmc/host.h>
- #include <linux/platform_data/spi-ep93xx.h>
-+#include <linux/gpio/machine.h>
- 
- #include <mach/gpio-ep93xx.h>
- #include <mach/hardware.h>
-@@ -269,13 +270,15 @@ static struct spi_board_info bk3_spi_board_info[] __initdata = {
-  * The all work is performed automatically by !SPI_FRAME (SFRM1) and
-  * goes through CPLD
-  */
--static int bk3_spi_chipselects[] __initdata = {
--	EP93XX_GPIO_LINE_F(3),
-+static struct gpiod_lookup_table bk3_spi_cs_gpio_table = {
-+	.dev_id = "ep93xx-spi.0",
-+	.table = {
-+		GPIO_LOOKUP("F", 3, "cs", GPIO_ACTIVE_LOW),
-+		{ },
-+	},
- };
- 
- static struct ep93xx_spi_info bk3_spi_master __initdata = {
--	.chipselect	= bk3_spi_chipselects,
--	.num_chipselect = ARRAY_SIZE(bk3_spi_chipselects),
- 	.use_dma	= 1,
- };
- 
-@@ -316,13 +319,17 @@ static struct spi_board_info ts72xx_spi_devices[] __initdata = {
- 	},
- };
- 
--static int ts72xx_spi_chipselects[] __initdata = {
--	EP93XX_GPIO_LINE_F(2),		/* DIO_17 */
-+static struct gpiod_lookup_table ts72xx_spi_cs_gpio_table = {
-+	.dev_id = "ep93xx-spi.0",
-+	.table = {
-+		/* DIO_17 */
-+		GPIO_LOOKUP("F", 2, "cs", GPIO_ACTIVE_LOW),
-+		{ },
-+	},
- };
- 
- static struct ep93xx_spi_info ts72xx_spi_info __initdata = {
--	.chipselect	= ts72xx_spi_chipselects,
--	.num_chipselect	= ARRAY_SIZE(ts72xx_spi_chipselects),
-+	/* Intentionally left blank */
- };
- 
- static void __init ts72xx_init_machine(void)
-@@ -339,6 +346,7 @@ static void __init ts72xx_init_machine(void)
- 	if (board_is_ts7300())
- 		platform_device_register(&ts73xx_fpga_device);
- #endif
-+	gpiod_add_lookup_table(&ts72xx_spi_cs_gpio_table);
- 	ep93xx_register_spi(&ts72xx_spi_info, ts72xx_spi_devices,
- 			    ARRAY_SIZE(ts72xx_spi_devices));
- }
-@@ -398,6 +406,7 @@ static void __init bk3_init_machine(void)
- 
- 	ep93xx_register_eth(&ts72xx_eth_data, 1);
- 
-+	gpiod_add_lookup_table(&bk3_spi_cs_gpio_table);
- 	ep93xx_register_spi(&bk3_spi_master, bk3_spi_board_info,
- 			    ARRAY_SIZE(bk3_spi_board_info));
- 
-diff --git a/arch/arm/mach-ep93xx/vision_ep9307.c b/arch/arm/mach-ep93xx/vision_ep9307.c
-index 767ee64628dc..f95a644769e4 100644
---- a/arch/arm/mach-ep93xx/vision_ep9307.c
-+++ b/arch/arm/mach-ep93xx/vision_ep9307.c
-@@ -245,15 +245,17 @@ static struct spi_board_info vision_spi_board_info[] __initdata = {
- 	},
- };
- 
--static int vision_spi_chipselects[] __initdata = {
--	EP93XX_GPIO_LINE_EGPIO6,
--	EP93XX_GPIO_LINE_EGPIO7,
--	EP93XX_GPIO_LINE_G(2),
-+static struct gpiod_lookup_table vision_spi_cs_gpio_table = {
-+	.dev_id = "ep93xx-spi.0",
-+	.table = {
-+		GPIO_LOOKUP_IDX("A", 6, "cs", 0, GPIO_ACTIVE_LOW),
-+		GPIO_LOOKUP_IDX("A", 7, "cs", 1, GPIO_ACTIVE_LOW),
-+		GPIO_LOOKUP_IDX("G", 2, "cs", 2, GPIO_ACTIVE_LOW),
-+		{ },
-+	},
- };
- 
- static struct ep93xx_spi_info vision_spi_master __initdata = {
--	.chipselect	= vision_spi_chipselects,
--	.num_chipselect	= ARRAY_SIZE(vision_spi_chipselects),
- 	.use_dma	= 1,
- };
- 
-@@ -295,6 +297,7 @@ static void __init vision_init_machine(void)
- 	ep93xx_register_i2c(vision_i2c_info,
- 				ARRAY_SIZE(vision_i2c_info));
- 	gpiod_add_lookup_table(&vision_spi_mmc_gpio_table);
-+	gpiod_add_lookup_table(&vision_spi_cs_gpio_table);
- 	ep93xx_register_spi(&vision_spi_master, vision_spi_board_info,
- 				ARRAY_SIZE(vision_spi_board_info));
- 	vision_register_i2s();
-diff --git a/drivers/spi/spi-ep93xx.c b/drivers/spi/spi-ep93xx.c
-index 79fc3940245a..47e39251bad9 100644
---- a/drivers/spi/spi-ep93xx.c
-+++ b/drivers/spi/spi-ep93xx.c
-@@ -28,7 +28,6 @@
- #include <linux/platform_device.h>
- #include <linux/sched.h>
- #include <linux/scatterlist.h>
--#include <linux/gpio.h>
- #include <linux/spi/spi.h>
- 
- #include <linux/platform_data/dma-ep93xx.h>
-@@ -676,6 +675,7 @@ static int ep93xx_spi_probe(struct platform_device *pdev)
- 	if (!master)
- 		return -ENOMEM;
- 
-+	master->use_gpio_descriptors = true;
- 	master->prepare_transfer_hardware = ep93xx_spi_prepare_hardware;
- 	master->unprepare_transfer_hardware = ep93xx_spi_unprepare_hardware;
- 	master->prepare_message = ep93xx_spi_prepare_message;
-@@ -683,31 +683,11 @@ static int ep93xx_spi_probe(struct platform_device *pdev)
- 	master->bus_num = pdev->id;
- 	master->mode_bits = SPI_CPOL | SPI_CPHA | SPI_CS_HIGH;
- 	master->bits_per_word_mask = SPI_BPW_RANGE_MASK(4, 16);
--
--	master->num_chipselect = info->num_chipselect;
--	master->cs_gpios = devm_kcalloc(&master->dev,
--					master->num_chipselect, sizeof(int),
--					GFP_KERNEL);
--	if (!master->cs_gpios) {
--		error = -ENOMEM;
--		goto fail_release_master;
--	}
--
--	for (i = 0; i < master->num_chipselect; i++) {
--		master->cs_gpios[i] = info->chipselect[i];
--
--		if (!gpio_is_valid(master->cs_gpios[i]))
--			continue;
--
--		error = devm_gpio_request_one(&pdev->dev, master->cs_gpios[i],
--					      GPIOF_OUT_INIT_HIGH,
--					      "ep93xx-spi");
--		if (error) {
--			dev_err(&pdev->dev, "could not request cs gpio %d\n",
--				master->cs_gpios[i]);
--			goto fail_release_master;
--		}
--	}
-+	/*
-+	 * The SPI core will count the number of GPIO descriptors to figure
-+	 * out the number of chip selects available on the platform.
-+	 */
-+	master->num_chipselect = 0;
- 
- 	platform_set_drvdata(pdev, master);
- 
-diff --git a/include/linux/platform_data/spi-ep93xx.h b/include/linux/platform_data/spi-ep93xx.h
-index eb16c6739ac2..b439f2a896e0 100644
---- a/include/linux/platform_data/spi-ep93xx.h
-+++ b/include/linux/platform_data/spi-ep93xx.h
-@@ -6,13 +6,9 @@ struct spi_device;
- 
- /**
-  * struct ep93xx_spi_info - EP93xx specific SPI descriptor
-- * @chipselect: array of gpio numbers to use as chip selects
-- * @num_chipselect: ARRAY_SIZE(chipselect)
-  * @use_dma: use DMA for the transfers
-  */
- struct ep93xx_spi_info {
--	int	*chipselect;
--	int	num_chipselect;
- 	bool	use_dma;
- };
- 
+Br,
+	Matti Vaittinen
+
 -- 
-2.20.1
+Matti Vaittinen, Linux device drivers
+ROHM Semiconductors, Finland SWDC
+Kiviharjunlenkki 1E
+90220 OULU
+FINLAND
 
+~~~ "I don't think so," said Rene Descartes. Just then he vanished ~~~
