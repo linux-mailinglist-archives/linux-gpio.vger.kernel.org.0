@@ -2,80 +2,142 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 1FCFC122F0
-	for <lists+linux-gpio@lfdr.de>; Thu,  2 May 2019 21:55:58 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2D868125D1
+	for <lists+linux-gpio@lfdr.de>; Fri,  3 May 2019 02:53:11 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726193AbfEBTzt (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 2 May 2019 15:55:49 -0400
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:33474 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726121AbfEBTzs (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 2 May 2019 15:55:48 -0400
-Received: by mail-ot1-f68.google.com with SMTP id s11so3284001otp.0;
-        Thu, 02 May 2019 12:55:48 -0700 (PDT)
+        id S1726457AbfECAxK (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 2 May 2019 20:53:10 -0400
+Received: from mail-qt1-f194.google.com ([209.85.160.194]:38523 "EHLO
+        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726150AbfECAxK (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 2 May 2019 20:53:10 -0400
+Received: by mail-qt1-f194.google.com with SMTP id d13so4953988qth.5
+        for <linux-gpio@vger.kernel.org>; Thu, 02 May 2019 17:53:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=KVq/ptxRQpcNDoBImsMtflPpiDxEADD8mGoV5ENJygU=;
+        b=c6dGu3TEKj7g9svDOCStGyjCeqPcYYKRwURWSifIP+8gqyQCF49EtCmn9GEIMJmvZ+
+         +XlleJDV98oHyazbTc1/pyV8Pq4dFtZ0dXMHf2HV25jqI1ggdC+Tm5bjGkgw5SeCL3pQ
+         Lh6mBgMi6wK06jeVD64CwMDTA4fi9ClwjcUHk=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=dfR3x3hstUPTqdrAbnZLIHv3xXGIWPlsZu8Q4UGru+0=;
-        b=lQGePnslo5AsBbp4Ke12zFlgQWJ4FbEYf05DZ86J2wo5pyBP9mwBHfaZF6/TBZqSP9
-         +SBQL9hyNXRBxRiw9gDHDIXcelKUz6Vz4ib10tesDou3wyIiNLtkgi7W/vbca0/MqqFu
-         x+y1mGhs4WGYgLT6EN1nKTYDrLed2jzcP+Xi1fLGvv35PRtd75wbaU+CokH1hyiY06bM
-         Aw9lNIuQQ6eFmZ1o/Am2eER946hudoM1VIB7QNhfWoAbebWG5KP5Wpa7z00CuHYYBsil
-         ToOT+KmJQWGHVcWeT470NQMYBI3j2F32VHlGCZcqzf24kNSk8AzkmmXInfVgWmJeoZ7W
-         u1FQ==
-X-Gm-Message-State: APjAAAXAMDgXFdQFSgwYz9oNfTr2BeSXH6PDFZRON/qrTsQrIciAUN3s
-        56UjUdlRpp/yu4ZB5x96J4UoW5w=
-X-Google-Smtp-Source: APXvYqyJ46V/sup1mO2TC0Nk8Rr1keP20TQdh2EDygYMpUGVsCUg35clCqSiDOMw/AQC+4zVwSHhtQ==
-X-Received: by 2002:a05:6830:12:: with SMTP id c18mr4135762otp.26.1556826947997;
-        Thu, 02 May 2019 12:55:47 -0700 (PDT)
-Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id n11sm2499369otk.4.2019.05.02.12.55.46
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 02 May 2019 12:55:47 -0700 (PDT)
-Date:   Thu, 2 May 2019 14:55:46 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Christian Lamparter <chunkeey@gmail.com>
-Cc:     Jonathan =?iso-8859-1?Q?Neusch=E4fer?= <j.neuschaefer@gmx.net>,
-        linux-arm-msm@vger.kernel.org, Andy Gross <andy.gross@linaro.org>,
-        David Brown <david.brown@linaro.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] dt-bindings: pinctrl: Fix spelling of bias-pull-up
-Message-ID: <20190502195546.GA24769@bogus>
-References: <20190428150822.13935-1-j.neuschaefer@gmx.net>
- <2683948.V7X3pFLLSZ@debian64>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=KVq/ptxRQpcNDoBImsMtflPpiDxEADD8mGoV5ENJygU=;
+        b=jLy4x/iD2YJZFJvIjIgtnV9zbI+wqvntOyUq4Ab/nLUVDmIpYaDAPvISHKikLesraX
+         MTf7x0R7VXx1oMFd/u16Qk9yviP+kz5s7VTLyZM+mNUZGvZ5oVTolSXnU4/jClE5+P8D
+         RJESseoL10wUOrG12CNBN4pcS7arRel+HR7x7FR/I+aMPZuAGILsjcaq08vUqArBUGLg
+         YC4LWw2OV7x/MsNSersVO2PKH78gqdtQd9PKBmfbOsxjtk70P6+vXKpbFNFIzpaQK9NV
+         heLEo3+uKscIcnAczx6rmlWgsWNJRMfkDeDy5nJVv65H68V6KKcHDhoBxW+JWHna3aNG
+         LfeQ==
+X-Gm-Message-State: APjAAAVVJAEM119MoTx6xy6CMyvO+dbKdKWo+DqGlzb/6XQWWZm3tX7t
+        qGCMlIrA6CFU7uehmIRgrZAfvumHecWeswENfDlWAA==
+X-Google-Smtp-Source: APXvYqyjWk4rmPJKNPpzClFQHuSGSaFCyCx4/b9+Xa9XJSK/iVmucGfYdCZ/C43Ww7mdO1NyQQxlzSgGtf4xZ3HO9bM=
+X-Received: by 2002:ac8:1607:: with SMTP id p7mr6149088qtj.75.1556844788925;
+ Thu, 02 May 2019 17:53:08 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <2683948.V7X3pFLLSZ@debian64>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20190429032551.65975-1-drinkcat@chromium.org> <20190429032551.65975-2-drinkcat@chromium.org>
+ <1556804888.28808.6.camel@mtksdaap41>
+In-Reply-To: <1556804888.28808.6.camel@mtksdaap41>
+From:   Nicolas Boichat <drinkcat@chromium.org>
+Date:   Fri, 3 May 2019 08:52:58 +0800
+Message-ID: <CANMq1KAugRiL+-bAFijEM7NngLSoOUQtN=rNV5+YYdJ12u+jVQ@mail.gmail.com>
+Subject: Re: [PATCH 1/2] pinctrl: mediatek: Add mtk_eint_pm_ops to common-v2
+To:     Yingjoe Chen <yingjoe.chen@mediatek.com>
+Cc:     Chuanjia Liu <Chuanjia.Liu@mediatek.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Sean Wang <sean.wang@kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Evan Green <evgreen@chromium.org>,
+        Stephen Boyd <swboyd@chromium.org>, linux-gpio@vger.kernel.org,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Apr 30, 2019 at 11:32:17PM +0200, Christian Lamparter wrote:
-> On Sunday, April 28, 2019 5:08:22 PM CEST Jonathan Neuschäfer wrote:
-> > The property is spelled 'bias-pull-up', as documented in
-> > pinctrl-bindings.txt.
-> > 
-> 
-> I also sent out a patch for that... back in 2017:
-> 
-> https://patchwork.ozlabs.org/patch/763151/
-> 
-> It's marked Accepted and Archived.
-> 
-> @rob ?
+On Thu, May 2, 2019 at 9:48 PM Yingjoe Chen <yingjoe.chen@mediatek.com> wrote:
+>
+> On Mon, 2019-04-29 at 11:25 +0800, Nicolas Boichat wrote:
+> > pinctrl variants that include pinctrl-mtk-common-v2.h (and not
+> > pinctrl-mtk-common.h) also need to use mtk_eint_pm_ops to setup
+> > wake mask properly, so copy over the pm_ops to v2.
+> >
+> > It is not easy to merge the 2 copies (or move
+> > mtk_eint_suspend/resume to mtk-eint.c), as we need to
+> > dereference pctrl->eint, and struct mtk_pinctrl *pctl has a
+> > different structure definition for v1 and v2.
+> >
+> > Signed-off-by: Nicolas Boichat <drinkcat@chromium.org>
+> > Reviewed-by: Chuanjia Liu <Chuanjia.Liu@mediatek.com>
+> > ---
+> >  .../pinctrl/mediatek/pinctrl-mtk-common-v2.c  | 19 +++++++++++++++++++
+> >  .../pinctrl/mediatek/pinctrl-mtk-common-v2.h  |  1 +
+> >  2 files changed, 20 insertions(+)
+> >
+> > diff --git a/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.c b/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.c
+> > index 20e1c890e73b30c..7e19b5a4748eafe 100644
+> > --- a/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.c
+> > +++ b/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.c
+> > @@ -723,3 +723,22 @@ int mtk_pinconf_adv_drive_get(struct mtk_pinctrl *hw,
+> >
+> >       return 0;
+> >  }
+> > +
+> > +static int mtk_eint_suspend(struct device *device)
+> > +{
+> > +     struct mtk_pinctrl *pctl = dev_get_drvdata(device);
+> > +
+> > +     return mtk_eint_do_suspend(pctl->eint);
+> > +}
+> > +
+> > +static int mtk_eint_resume(struct device *device)
+> > +{
+> > +     struct mtk_pinctrl *pctl = dev_get_drvdata(device);
+> > +
+> > +     return mtk_eint_do_resume(pctl->eint);
+> > +}
+> > +
+> > +const struct dev_pm_ops mtk_eint_pm_ops = {
+> > +     .suspend_noirq = mtk_eint_suspend,
+> > +     .resume_noirq = mtk_eint_resume,
+> > +};
+>
+> This is identical to the one in pinctrl-mtk-common.c and will have name
+> clash if both pinctrl-mtk-common.c and pinctrl-mtk-common-v2.c are
+> built.
+>
+> It would be better if we try to merge both version into mtk-eint.c, this
+> way we could also remove some global functions.
 
-No idea what happened besides a problem between the screen and keyboard.
+Argh, I didn't think about the name clash, you're right. I guess the
+easy way is to rename this one mtk_eint_pm_ops_v2 ...
 
-Let me try again...
+As highlighted in the commit message, it's tricky to merge the 2 sets
+of functions, they look identical, but they actually work on struct
+mtk_pinctrl that are defined differently (in
+pinctrl-mtk-common[-v2].h), so the ->eint member is at different
+addresses...
 
-Rob
+I don't really see a way around this... Unless we want to change
+platform_set_drvdata(pdev, pctl); to pass another type of structure
+that could be shared (but I think that'll make the code fairly
+verbose, with another layer of indirection). Or just assign struct
+mtk_eint to that, since that contains pctl so we could get back the
+struct mtk_pinctrl from that, but that feels ugly as well...
+
+>
+> Joe.C
+>
+>
+>
+> _______________________________________________
+> Linux-mediatek mailing list
+> Linux-mediatek@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-mediatek
