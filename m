@@ -2,154 +2,88 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 8198D132E1
-	for <lists+linux-gpio@lfdr.de>; Fri,  3 May 2019 19:09:05 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9981113615
+	for <lists+linux-gpio@lfdr.de>; Sat,  4 May 2019 01:20:37 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726789AbfECRJE (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 3 May 2019 13:09:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47696 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726391AbfECRJE (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Fri, 3 May 2019 13:09:04 -0400
-Received: from mail-wr1-f50.google.com (mail-wr1-f50.google.com [209.85.221.50])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B71682087F;
-        Fri,  3 May 2019 17:09:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556903343;
-        bh=B6/MSMYbkg+WTWBm94Gih3RB7d5QYsXpBeEAwOIv+D0=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=DYiblBjocgSq/Lbl+6Cnzwlf09QeF+2q8IFuQwZX3/BLRsXP4Z+XvuCmgRoSCZwG9
-         BVB+hH7S5ve0VvNLT7q0V2uKB9P9eBCb9gUh6VoK6y9SGwxlWhn8KIvR1Nyr9X9fiW
-         3z73v9x5d5zBCOR6auE/dpxTltqebB2nIcLzY4XM=
-Received: by mail-wr1-f50.google.com with SMTP id h4so8746342wre.7;
-        Fri, 03 May 2019 10:09:02 -0700 (PDT)
-X-Gm-Message-State: APjAAAXvJBnQYm2p1uINlFIzYdiQ8m3w8+1revBWEz93vuZld5kueCRC
-        sEi6/RD8qwRnxpUTUpQZ1MUndEEjenMjHOX68cg=
-X-Google-Smtp-Source: APXvYqxUYmAOLutHuKkaO6/H+LbNDlFI1Tlxl80gA9Hwuxr9ET8QCNLanMkTbxWvc59Wz2Wn8KG7Ghk5n2dYvn1pPYw=
-X-Received: by 2002:adf:f310:: with SMTP id i16mr7641713wro.291.1556903341329;
- Fri, 03 May 2019 10:09:01 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190429032551.65975-1-drinkcat@chromium.org> <20190429032551.65975-2-drinkcat@chromium.org>
- <1556804888.28808.6.camel@mtksdaap41> <CANMq1KAugRiL+-bAFijEM7NngLSoOUQtN=rNV5+YYdJ12u+jVQ@mail.gmail.com>
-In-Reply-To: <CANMq1KAugRiL+-bAFijEM7NngLSoOUQtN=rNV5+YYdJ12u+jVQ@mail.gmail.com>
-From:   Sean Wang <sean.wang@kernel.org>
-Date:   Fri, 3 May 2019 10:08:50 -0700
-X-Gmail-Original-Message-ID: <CAGp9LzqdYapagHUH1uuuHRR+j5JcphN7hhM2SyZoXQFCP8_fSw@mail.gmail.com>
-Message-ID: <CAGp9LzqdYapagHUH1uuuHRR+j5JcphN7hhM2SyZoXQFCP8_fSw@mail.gmail.com>
-Subject: Re: [PATCH 1/2] pinctrl: mediatek: Add mtk_eint_pm_ops to common-v2
-To:     Nicolas Boichat <drinkcat@chromium.org>
-Cc:     Yingjoe Chen <yingjoe.chen@mediatek.com>,
-        Chuanjia Liu <Chuanjia.Liu@mediatek.com>,
+        id S1726059AbfECXUg (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 3 May 2019 19:20:36 -0400
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:41363 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726042AbfECXUg (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 3 May 2019 19:20:36 -0400
+Received: by mail-lj1-f195.google.com with SMTP id k8so6537629lja.8
+        for <linux-gpio@vger.kernel.org>; Fri, 03 May 2019 16:20:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=OK5m9Cm+xqBfZ44Cyga28760Sdb3iwEFSEr+ygWKg7U=;
+        b=rL7RJVIBUhs2AdbiNVGZze5zull8Coo79gMzUTRL0lVRRctqV9jVwk7mRRs9VOqS3a
+         HXadrXXdgMPedF6sp0tKj7qTlTEViTsjxYN5qGHwYEXm8meeHKh7OR6qJC3IRvARgMkK
+         xrNDAOU0p4PRNlPEHQz+brbgXbZF8fmB6UOhQpC7XyqjhVX8nPvIw58cNvwNd7rvdYuA
+         ZtRe++8hA96PFbYGyXMOr/mQ9AOneu696yVU0SRl1tJuX6D59DS856+KBVr5hgWXFwko
+         qjnxJRbtUT8v0mr/C1qw28ALIOdwRfkmLAkdByBJm5VF7mm4Lsugdv7GlfNP7c9YeGp1
+         KlJg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=OK5m9Cm+xqBfZ44Cyga28760Sdb3iwEFSEr+ygWKg7U=;
+        b=auo4SeB97tGCKIF3d3hU7Pp/dlgI/yI9LXij3yVcS2iGr1TOTCDtdhOmDxrCnmvxWF
+         bzuiJpd0OI7ZVsIGaFeG5OxMzcrfinUZQydvOAfe9QQmw4Zaf+4eaZ2VJvDiivRU+eQ8
+         2dJaUnjGNbybx9PUJlKi9z57WngVuxSOOZ8MlwM5JzzxApajG8h6+NcjZncU9Xsaaa41
+         SdSMswU9YHQW+3aruumqXcABxRVnhvJaCTpghvftofqi6W+kO+MEPRZXS7l0c7vfZj5/
+         Z0635Ik0G+9aljXeSOixe760rjijHOTJ2a7q14n5K2i64TRZsRfj5/cNIVAfq7ZnSR5f
+         4K4Q==
+X-Gm-Message-State: APjAAAUFfKRUhjBbUhnpMoFe4QfP+MTzSu7VxCEpDfTU8xW10XkFHOTg
+        lwuUs1zO+9KY8Mkv0cCcpU0KgQ==
+X-Google-Smtp-Source: APXvYqwLyiQb6ULEsADXURyxHy7G4e4SeR5cyeXbGeusD3xdAZrq/YN7PPbN+oebJkilhYAvmpQE7Q==
+X-Received: by 2002:a05:651c:111:: with SMTP id a17mr6341289ljb.195.1556925634581;
+        Fri, 03 May 2019 16:20:34 -0700 (PDT)
+Received: from localhost.localdomain (c-d2cd225c.014-348-6c756e10.bbcust.telenor.se. [92.34.205.210])
+        by smtp.gmail.com with ESMTPSA id t8sm622511ljc.25.2019.05.03.16.20.32
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 03 May 2019 16:20:33 -0700 (PDT)
+From:   Linus Walleij <linus.walleij@linaro.org>
+To:     Mark Brown <broonie@kernel.org>, linux-spi@vger.kernel.org,
+        Fabio Estevam <festevam@gmail.com>
+Cc:     linux-gpio@vger.kernel.org,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
         Linus Walleij <linus.walleij@linaro.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Evan Green <evgreen@chromium.org>,
-        Stephen Boyd <swboyd@chromium.org>, linux-gpio@vger.kernel.org,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+        Stephen Rothwell <sfr@canb.auug.org.au>
+Subject: [PATCH] spi: ep93xx: Drop unused variable
+Date:   Sat,  4 May 2019 01:18:29 +0200
+Message-Id: <20190503231829.4112-1-linus.walleij@linaro.org>
+X-Mailer: git-send-email 2.20.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi, Nicolas
+My previous patch leaves a dangling variable in the driver.
+get rid of it.
 
-On Thu, May 2, 2019 at 5:53 PM Nicolas Boichat <drinkcat@chromium.org> wrote:
->
-> On Thu, May 2, 2019 at 9:48 PM Yingjoe Chen <yingjoe.chen@mediatek.com> wrote:
-> >
-> > On Mon, 2019-04-29 at 11:25 +0800, Nicolas Boichat wrote:
-> > > pinctrl variants that include pinctrl-mtk-common-v2.h (and not
-> > > pinctrl-mtk-common.h) also need to use mtk_eint_pm_ops to setup
-> > > wake mask properly, so copy over the pm_ops to v2.
-> > >
-> > > It is not easy to merge the 2 copies (or move
-> > > mtk_eint_suspend/resume to mtk-eint.c), as we need to
-> > > dereference pctrl->eint, and struct mtk_pinctrl *pctl has a
-> > > different structure definition for v1 and v2.
-> > >
-> > > Signed-off-by: Nicolas Boichat <drinkcat@chromium.org>
-> > > Reviewed-by: Chuanjia Liu <Chuanjia.Liu@mediatek.com>
-> > > ---
-> > >  .../pinctrl/mediatek/pinctrl-mtk-common-v2.c  | 19 +++++++++++++++++++
-> > >  .../pinctrl/mediatek/pinctrl-mtk-common-v2.h  |  1 +
-> > >  2 files changed, 20 insertions(+)
-> > >
-> > > diff --git a/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.c b/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.c
-> > > index 20e1c890e73b30c..7e19b5a4748eafe 100644
-> > > --- a/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.c
-> > > +++ b/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.c
-> > > @@ -723,3 +723,22 @@ int mtk_pinconf_adv_drive_get(struct mtk_pinctrl *hw,
-> > >
-> > >       return 0;
-> > >  }
-> > > +
-> > > +static int mtk_eint_suspend(struct device *device)
-> > > +{
-> > > +     struct mtk_pinctrl *pctl = dev_get_drvdata(device);
-> > > +
-> > > +     return mtk_eint_do_suspend(pctl->eint);
-> > > +}
-> > > +
-> > > +static int mtk_eint_resume(struct device *device)
-> > > +{
-> > > +     struct mtk_pinctrl *pctl = dev_get_drvdata(device);
-> > > +
-> > > +     return mtk_eint_do_resume(pctl->eint);
-> > > +}
-> > > +
-> > > +const struct dev_pm_ops mtk_eint_pm_ops = {
-> > > +     .suspend_noirq = mtk_eint_suspend,
-> > > +     .resume_noirq = mtk_eint_resume,
-> > > +};
-> >
-> > This is identical to the one in pinctrl-mtk-common.c and will have name
-> > clash if both pinctrl-mtk-common.c and pinctrl-mtk-common-v2.c are
-> > built.
-> >
-> > It would be better if we try to merge both version into mtk-eint.c, this
-> > way we could also remove some global functions.
->
-> Argh, I didn't think about the name clash, you're right. I guess the
-> easy way is to rename this one mtk_eint_pm_ops_v2 ...
->
-> As highlighted in the commit message, it's tricky to merge the 2 sets
-> of functions, they look identical, but they actually work on struct
-> mtk_pinctrl that are defined differently (in
-> pinctrl-mtk-common[-v2].h), so the ->eint member is at different
-> addresses...
->
-> I don't really see a way around this... Unless we want to change
-> platform_set_drvdata(pdev, pctl); to pass another type of structure
-> that could be shared (but I think that'll make the code fairly
-> verbose, with another layer of indirection). Or just assign struct
-> mtk_eint to that, since that contains pctl so we could get back the
-> struct mtk_pinctrl from that, but that feels ugly as well...
->
+Fixes: 06a391b1621e ("spi: ep93xx: Convert to use CS GPIO descriptors")
+Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+---
+ drivers/spi/spi-ep93xx.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-I agree on renaming would make the thing simple. but I wouldn't like
-to rename to mtk_eint_pm_ops_v2 since this would make people
-misunderstand that is mtk_eint_v2.
+diff --git a/drivers/spi/spi-ep93xx.c b/drivers/spi/spi-ep93xx.c
+index 47e39251bad9..81889389280b 100644
+--- a/drivers/spi/spi-ep93xx.c
++++ b/drivers/spi/spi-ep93xx.c
+@@ -651,7 +651,6 @@ static int ep93xx_spi_probe(struct platform_device *pdev)
+ 	struct resource *res;
+ 	int irq;
+ 	int error;
+-	int i;
+ 
+ 	info = dev_get_platdata(&pdev->dev);
+ 	if (!info) {
+-- 
+2.20.1
 
-How about renaming to mtk_paris_pinctrl_pm_ops and then place related
-logic you added into pinctrl-paris.c? Because I prefer to keep pure
-pinctrl hardware operations in pinctrl-mtk-common-v2.c, and for
-relevant to other modules (mtk eint) or others subsystem (device tree
-binding, GPIO subsytem, PM something like that) they should be moved
-to pinctrl-paris.c or pinctrl-moore.c
-
-     Sean
-
-> >
-> > Joe.C
-> >
-> >
-> >
-> > _______________________________________________
-> > Linux-mediatek mailing list
-> > Linux-mediatek@lists.infradead.org
-> > http://lists.infradead.org/mailman/listinfo/linux-mediatek
