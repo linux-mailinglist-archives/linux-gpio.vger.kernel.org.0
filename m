@@ -2,121 +2,132 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 7A5D712C96
-	for <lists+linux-gpio@lfdr.de>; Fri,  3 May 2019 13:43:09 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C0B2C12D08
+	for <lists+linux-gpio@lfdr.de>; Fri,  3 May 2019 13:59:13 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726377AbfECLnI (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 3 May 2019 07:43:08 -0400
-Received: from albert.telenet-ops.be ([195.130.137.90]:60008 "EHLO
-        albert.telenet-ops.be" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727065AbfECLnI (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 3 May 2019 07:43:08 -0400
-Received: from ramsan ([84.194.111.163])
-        by albert.telenet-ops.be with bizsmtp
-        id 7nj6200073XaVaC06nj6Ur; Fri, 03 May 2019 13:43:06 +0200
-Received: from rox.of.borg ([192.168.97.57])
-        by ramsan with esmtp (Exim 4.90_1)
-        (envelope-from <geert@linux-m68k.org>)
-        id 1hMWan-0004Sg-UF; Fri, 03 May 2019 13:43:05 +0200
-Received: from geert by rox.of.borg with local (Exim 4.90_1)
-        (envelope-from <geert@linux-m68k.org>)
-        id 1hMWan-0005K0-S9; Fri, 03 May 2019 13:43:05 +0200
-From:   Geert Uytterhoeven <geert+renesas@glider.be>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>,
-        linux-renesas-soc@vger.kernel.org, linux-gpio@vger.kernel.org,
-        Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH] pinctrl: sh-pfc: r8a77970: Remove MMC_{CD,WP}
-Date:   Fri,  3 May 2019 13:43:04 +0200
-Message-Id: <20190503114304.20412-1-geert+renesas@glider.be>
-X-Mailer: git-send-email 2.17.1
+        id S1727699AbfECL7F (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 3 May 2019 07:59:05 -0400
+Received: from mail-it1-f195.google.com ([209.85.166.195]:52119 "EHLO
+        mail-it1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727394AbfECL7F (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 3 May 2019 07:59:05 -0400
+Received: by mail-it1-f195.google.com with SMTP id s3so8647425itk.1
+        for <linux-gpio@vger.kernel.org>; Fri, 03 May 2019 04:59:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=amarulasolutions.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=vDgYOPNAs5a7jn6rrh+mqlUAcW/QL6gqLTt3pqvnNY8=;
+        b=Y6srGshKU+8ofVAzr5oXPRlANIBEkdOrCHKBPiE3tUswNgNowbNADcWMckRUE5gkSL
+         9ukukehth9mBJJ/QJCpdkUMMW2+iAg10JbBAKpi7BjWy2OQ+HfalsNh4xdNDSsHWnKVY
+         6bANvGQZzE11Hw3Y7RiWx/Sk3RaGiUf3o+mJs=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=vDgYOPNAs5a7jn6rrh+mqlUAcW/QL6gqLTt3pqvnNY8=;
+        b=SWf+8aJj1u2hAdszIyrCRm6X2EFH+X/+a9gtM9hkPnMHjsJ1GM7OnUsYPbnbm0aYiL
+         VerVf/qFGrSUBbo1nrpJ9978Du486hWBmqFzCg/FXyzc9ZOvM4zWiBnclRUPKIyLBjel
+         eb1xA2+pNsCsoYhcD1Rzxp8q+iEd4+JrgPrENet5kjv5i8nfLFtrs3Ubp+7OjvVX+bJ2
+         nFJgVDVywA07pJwk3ZPKoCJr7iGV0/eHD7PX83QpKfwwFn39ijPErWxeyDn8U2oWSFOB
+         1YSzJkDv9//MMY/69Vz5vfUikFvU6T+uJhb5XdQbgB1Fol7lzeC9Iun4fBP+1T5D4xgY
+         YtXw==
+X-Gm-Message-State: APjAAAW64ZKq6biJahsSia5UrnAL+t4hMdN2I3/+BWIaCPNp/+X1vkNt
+        Zmyv++NhfDW4/7ak1rYu23g5ZJ0l40WlcQfG/h873A==
+X-Google-Smtp-Source: APXvYqxogbylovsed3LC9Wji6QY3Bj1N0GsCs2SPDNY1RvVGOuqXHQj+rfQkbvVmWscSed3alM3kokBhRmxHN3Y8JlY=
+X-Received: by 2002:a24:70d5:: with SMTP id f204mr6307014itc.32.1556884744596;
+ Fri, 03 May 2019 04:59:04 -0700 (PDT)
+MIME-Version: 1.0
+References: <20190413165418.27880-1-megous@megous.com> <20190413165418.27880-6-megous@megous.com>
+In-Reply-To: <20190413165418.27880-6-megous@megous.com>
+From:   Jagan Teki <jagan@amarulasolutions.com>
+Date:   Fri, 3 May 2019 17:28:53 +0530
+Message-ID: <CAMty3ZDx6NXyYhQehYT9geeGwAk2PZidiVMwVw1nnZJa3zwyOg@mail.gmail.com>
+Subject: Re: [linux-sunxi] [PATCH v4 5/9] arm64: dts: allwinner: orange-pi-3:
+ Enable ethernet
+To:     megous@megous.com
+Cc:     linux-sunxi <linux-sunxi@googlegroups.com>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Jose Abreu <joabreu@synopsys.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        netdev@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com,
+        linux-gpio@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hardware Manual Errata for rev. 15.0 of March 26, 2019 removed the bit
-definitions for MMC_CD and MMC_WP in the documentation for the IPSR6
-register, as these pin functionalities do not exist on R-Car V3M.
+On Sat, Apr 13, 2019 at 10:24 PM megous via linux-sunxi
+<linux-sunxi@googlegroups.com> wrote:
+>
+> From: Ondrej Jirman <megous@megous.com>
+>
+> Orange Pi 3 has two regulators that power the Realtek RTL8211E. According
+> to the phy datasheet, both regulators need to be enabled at the same time,
+> but we can only specify a single phy-supply in the DT.
+>
+> This can be achieved by making one regulator depedning on the other via
+> vin-supply. While it's not a technically correct description of the
+> hardware, it achieves the purpose.
+>
+> All values of RX/TX delay were tested exhaustively and a middle one of the
+> working values was chosen.
+>
+> Signed-off-by: Ondrej Jirman <megous@megous.com>
+> ---
+>  .../dts/allwinner/sun50i-h6-orangepi-3.dts    | 44 +++++++++++++++++++
+>  1 file changed, 44 insertions(+)
+>
+> diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-3.dts b/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-3.dts
+> index 17d496990108..6d6b1f66796d 100644
+> --- a/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-3.dts
+> +++ b/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-3.dts
+> @@ -15,6 +15,7 @@
+>
+>         aliases {
+>                 serial0 = &uart0;
+> +               ethernet0 = &emac;
+>         };
+>
+>         chosen {
+> @@ -44,6 +45,27 @@
+>                 regulator-max-microvolt = <5000000>;
+>                 regulator-always-on;
+>         };
+> +
+> +       /*
+> +        * The board uses 2.5V RGMII signalling. Power sequence to enable
+> +        * the phy is to enable GMAC-2V5 and GMAC-3V3 (aldo2) power rails
+> +        * at the same time and to wait 100ms.
+> +        */
+> +       reg_gmac_2v5: gmac-2v5 {
+> +               compatible = "regulator-fixed";
+> +               regulator-name = "gmac-2v5";
+> +               regulator-min-microvolt = <2500000>;
+> +               regulator-max-microvolt = <2500000>;
+> +               startup-delay-us = <100000>;
+> +               enable-active-high;
+> +               gpio = <&pio 3 6 GPIO_ACTIVE_HIGH>; /* PD6 */
+> +
+> +               /* The real parent of gmac-2v5 is reg_vcc5v, but we need to
+> +                * enable two regulators to power the phy. This is one way
+> +                * to achieve that.
+> +                */
+> +               vin-supply = <&reg_aldo2>; /* GMAC-3V3 */
 
-Remove the definitions, and the corrresponding pins and groups.
-
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
----
-To be queued in sh-pfc-for-v5.3.
-
- drivers/pinctrl/sh-pfc/pfc-r8a77970.c | 24 ++----------------------
- 1 file changed, 2 insertions(+), 22 deletions(-)
-
-diff --git a/drivers/pinctrl/sh-pfc/pfc-r8a77970.c b/drivers/pinctrl/sh-pfc/pfc-r8a77970.c
-index 8473a83bd4ca6570..25e27b6bee89366f 100644
---- a/drivers/pinctrl/sh-pfc/pfc-r8a77970.c
-+++ b/drivers/pinctrl/sh-pfc/pfc-r8a77970.c
-@@ -205,8 +205,8 @@
- #define IP6_19_16	FM(VI1_DATA8)			F_(0, 0)		FM(CTS4_N)	FM(D11)		FM(MMC_D5)		F_(0, 0)	F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0)
- #define IP6_23_20	FM(VI1_DATA9)			F_(0, 0)		FM(RTS4_N)	FM(D12)		FM(MMC_D6)		FM(SCL3_B)	F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0)
- #define IP6_27_24	FM(VI1_DATA10)			F_(0, 0)		F_(0, 0)	FM(D13)		FM(MMC_D7)		FM(SDA3_B)	F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0)
--#define IP6_31_28	FM(VI1_DATA11)			FM(SCL4)		FM(IRQ4)	FM(D14)		FM(MMC_WP)		F_(0, 0)	F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0)
--#define IP7_3_0		FM(VI1_FIELD)			FM(SDA4)		FM(IRQ5)	FM(D15)		FM(MMC_CD)		F_(0, 0)	F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0)
-+#define IP6_31_28	FM(VI1_DATA11)			FM(SCL4)		FM(IRQ4)	FM(D14)		F_(0, 0)		F_(0, 0)	F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0)
-+#define IP7_3_0		FM(VI1_FIELD)			FM(SDA4)		FM(IRQ5)	FM(D15)		F_(0, 0)		F_(0, 0)	F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0)
- #define IP7_7_4		FM(SCL0)			FM(DU_DR0)		FM(TPU0TO0)	FM(CLKOUT)	F_(0, 0)		FM(MSIOF0_RXD)	F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0)
- #define IP7_11_8	FM(SDA0)			FM(DU_DR1)		FM(TPU0TO1)	FM(BS_N)	FM(SCK0)		FM(MSIOF0_TXD)	F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0)
- #define IP7_15_12	FM(SCL1)			FM(DU_DG0)		FM(TPU0TO2)	FM(RD_N)	FM(CTS0_N)		FM(MSIOF0_SCK)	F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0)
-@@ -631,14 +631,12 @@ static const u16 pinmux_data[] = {
- 	PINMUX_IPSR_GPSR(IP6_31_28,	SCL4),
- 	PINMUX_IPSR_GPSR(IP6_31_28,	IRQ4),
- 	PINMUX_IPSR_GPSR(IP6_31_28,	D14),
--	PINMUX_IPSR_GPSR(IP6_31_28,	MMC_WP),
- 
- 	/* IPSR7 */
- 	PINMUX_IPSR_GPSR(IP7_3_0,	VI1_FIELD),
- 	PINMUX_IPSR_GPSR(IP7_3_0,	SDA4),
- 	PINMUX_IPSR_GPSR(IP7_3_0,	IRQ5),
- 	PINMUX_IPSR_GPSR(IP7_3_0,	D15),
--	PINMUX_IPSR_GPSR(IP7_3_0,	MMC_CD),
- 
- 	PINMUX_IPSR_GPSR(IP7_7_4,	SCL0),
- 	PINMUX_IPSR_GPSR(IP7_7_4,	DU_DR0),
-@@ -1121,20 +1119,6 @@ static const unsigned int mmc_ctrl_pins[] = {
- static const unsigned int mmc_ctrl_mux[] = {
- 	MMC_CLK_MARK, MMC_CMD_MARK,
- };
--static const unsigned int mmc_cd_pins[] = {
--	/* CD */
--	RCAR_GP_PIN(3, 16),
--};
--static const unsigned int mmc_cd_mux[] = {
--	MMC_CD_MARK,
--};
--static const unsigned int mmc_wp_pins[] = {
--	/* WP */
--	RCAR_GP_PIN(3, 15),
--};
--static const unsigned int mmc_wp_mux[] = {
--	MMC_WP_MARK,
--};
- 
- /* - MSIOF0 ----------------------------------------------------------------- */
- static const unsigned int msiof0_clk_pins[] = {
-@@ -1726,8 +1710,6 @@ static const struct sh_pfc_pin_group pinmux_groups[] = {
- 	SH_PFC_PIN_GROUP(mmc_data4),
- 	SH_PFC_PIN_GROUP(mmc_data8),
- 	SH_PFC_PIN_GROUP(mmc_ctrl),
--	SH_PFC_PIN_GROUP(mmc_cd),
--	SH_PFC_PIN_GROUP(mmc_wp),
- 	SH_PFC_PIN_GROUP(msiof0_clk),
- 	SH_PFC_PIN_GROUP(msiof0_sync),
- 	SH_PFC_PIN_GROUP(msiof0_ss1),
-@@ -1897,8 +1879,6 @@ static const char * const mmc_groups[] = {
- 	"mmc_data4",
- 	"mmc_data8",
- 	"mmc_ctrl",
--	"mmc_cd",
--	"mmc_wp",
- };
- 
- static const char * const msiof0_groups[] = {
--- 
-2.17.1
-
+The actual output supply pin name is GMAC-3V which has an input of
+VCC3V3-MAC (ie aldo2), if we compatible to schematics better to use
+the same, IMHO.
