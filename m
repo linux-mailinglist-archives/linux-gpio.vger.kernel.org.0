@@ -2,70 +2,70 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 90A2812820
-	for <lists+linux-gpio@lfdr.de>; Fri,  3 May 2019 08:55:00 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3003E128B2
+	for <lists+linux-gpio@lfdr.de>; Fri,  3 May 2019 09:26:07 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727141AbfECGy7 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 3 May 2019 02:54:59 -0400
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:37943 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726182AbfECGy7 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 3 May 2019 02:54:59 -0400
-Received: by mail-lj1-f193.google.com with SMTP id e18so4358147lja.5
-        for <linux-gpio@vger.kernel.org>; Thu, 02 May 2019 23:54:58 -0700 (PDT)
+        id S1726457AbfECH0G (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 3 May 2019 03:26:06 -0400
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:39889 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726297AbfECH0G (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 3 May 2019 03:26:06 -0400
+Received: by mail-lf1-f67.google.com with SMTP id d12so3714205lfk.6
+        for <linux-gpio@vger.kernel.org>; Fri, 03 May 2019 00:26:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=hBz4+yiuQjXPLH1KAsmMsIM1wRgzxzGB2JbaU1ql2DU=;
-        b=sVRMi/DJmrrgH/2QPq/HwUbYwDJw9IFCAT7qVP5WGBPZEroP5fSMoT2OLTeqF+u89U
-         om2uw4eq2IIpFviSmf+TjuS8UdyIu++38nlddcW7MPBdxWVz8rHEjZ3C5yDjYuyN+n92
-         KupEWlSJtYqzGUZ/PO7DIrSrNU84MLxq7AvCtEdRqQhWIScoldabu0s95H7he4j3l8iY
-         E28wXNieUxPctaePEvU+8++2ekh5gvjt/Ws9wcqtasdf6nsrFBeRit+oQbrOiHlxof/3
-         mLp9aaH+ebBVplOkGMrer2t/KVUqnnc6jQPySL4RzzD04mv510iWdrTeQcleQeOdSo1W
-         tnJA==
+        bh=GWyOvulffdPmoJy4VjcbFGVFmuQLekuQ0m822Q/1tE4=;
+        b=Ub+XbMidIqZRHqeZgWpg+Ffe7mLXnvgT0QSWGRsWeBoObFeGRI3WSrFbibCHTUP0/L
+         4iv6isUQxHYvJJOwxVpCS8VxqBDgool17jmHpUqq8X1Yx3dfmTksbcuVwhAio6mQu28Y
+         ZlsCv1LRr2f4b8MO7HPPSB5Wz9P6yCwVKA9gyM3cMWFQLVGWqN+qs8XvhoDJXutxLYiW
+         aNbEscbNJhSU9nXiajuj57KvXfV7ZH1H5wK1dEsgnXpjFvMfBQ/Id5EmwS1KXk0cOgdp
+         74nsVZGNMW/dsRFWCV3dTIIBCt4mdh16OsDQVjEWhBcoF+XeZCvVeNvCXkXucDdzxFoo
+         0A8w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=hBz4+yiuQjXPLH1KAsmMsIM1wRgzxzGB2JbaU1ql2DU=;
-        b=EPBDGpGxNBCP0Re4OGnTHDsDAsoiKqmzddFt1VNS8SOzCMN8Ccn4Q+0uk0tX+fcKl1
-         2vK8SAdLX86rWxxvRvf/BqRvN9pv2n8Ua7QEYoS2KoII6An8u171Ye2IjXk0IgqQBUwy
-         MnW/iw5jbfFhYcpExtgUp5FxoTCmMb7udWlbBDI8vbOaWFZ1Z4SPmYQp10JWWqCUDb6H
-         sfR8OLqtaJBG4kXXQt0vfUciAmWDmYzZqj2f1NCExzgr3dA9Nv1rYjeyq3eds572OnUN
-         IymFeWT1p6fXvFjekqfee9lPNKDlURkST2iXz4m622CKt9dPB55POjxnWxYNqPsAWKfU
-         dhew==
-X-Gm-Message-State: APjAAAXfRq+HMCJ4Z1wkbKLuSSf9uhEhjrXNBUyN0xVAWP/fRqnNJdYm
-        uJtZ7ohcZeMrSN5OprIcecPi6z4S9IGrEcNSCQkxzC0IZaA=
-X-Google-Smtp-Source: APXvYqxEdOe9qyQToC9y9v8WHIzuLQkgky94xWFfOYkm+skEbDX6tXI4BpT0semqfP6NrVTQVRTJRAdnf+PiYVo4wSE=
-X-Received: by 2002:a2e:9d86:: with SMTP id c6mr2002903ljj.135.1556866497584;
- Thu, 02 May 2019 23:54:57 -0700 (PDT)
+        bh=GWyOvulffdPmoJy4VjcbFGVFmuQLekuQ0m822Q/1tE4=;
+        b=Rps/cVjwoKuTqzJ2EWLnx/Cgg8bdRATQMyb6xoLAFDzRmkJQm+iRiir1LJpqdDbJz+
+         ZAYxgT5129Pb7djIhyoWmCg4ZtsnJEOUCLy7rwnunCvgb6jhOO1/E8vv2TMFehWzu4wj
+         HpCC3jhGPCR7ArWpQq9dqvJI4WKSmOwm3flGiz8oHdPwRcSyvfbuz0PFHPXdMaEadmsJ
+         cnsZ9w5NQ4irtJ394l60OH3cz5Wrxi21VPxoeqLs0ZWaQnobMLP3IExD7UmSLJI3Nd2y
+         QQc6DudkiDqdi77HFHY8WDgGOm0SNlLfhZVIaSbLC+wYx8Xh1lt307OMK3hXF03YZ/7z
+         O72Q==
+X-Gm-Message-State: APjAAAWNu0TN9h/GkG45O7JphBb1b1lEIOwPpGtsdWRjBrb5HVXI8loQ
+        SJIoZ0008svFjVFVUJCqb4oxX3rjhifO+G4AwIK/Vg==
+X-Google-Smtp-Source: APXvYqxD72lqogVdVFkqHMHcyIBu3Z9QH3+lIYInAnACqEb8WSPId60oRH+a04KV7UilhcL5P52IOc+wl4Ok7bQ7ZyA=
+X-Received: by 2002:a19:97c8:: with SMTP id z191mr4120992lfd.167.1556868364355;
+ Fri, 03 May 2019 00:26:04 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190429100007.GA69386@black.fi.intel.com>
-In-Reply-To: <20190429100007.GA69386@black.fi.intel.com>
+References: <20190425095542.726-1-geert+renesas@glider.be>
+In-Reply-To: <20190425095542.726-1-geert+renesas@glider.be>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Fri, 3 May 2019 07:54:46 +0100
-Message-ID: <CACRpkdaag0EAzs8-B3Q0RzeG3ZQp1AMGpeM83CvRCy2T6RxDoA@mail.gmail.com>
-Subject: Re: [GIT PULL] intel-pinctrl for 5.2-1
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     Linux pin control <linux-gpio@vger.kernel.org>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>
+Date:   Fri, 3 May 2019 08:25:52 +0100
+Message-ID: <CACRpkdYkv=oMWvmcxFXkcjVEnZkL=n-KadMonX+6x=EQ2iUONA@mail.gmail.com>
+Subject: Re: [PATCH 0/4] pinctrl: sh-pfc: Run-time debug code fixes and enhancements
+To:     Geert Uytterhoeven <geert+renesas@glider.be>
+Cc:     Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Apr 29, 2019 at 11:00 AM Andy Shevchenko
-<andriy.shevchenko@linux.intel.com> wrote:
+On Thu, Apr 25, 2019 at 10:55 AM Geert Uytterhoeven
+<geert+renesas@glider.be> wrote:
 
-> There will be a conflict due to a patch for Intel pin control landed in the
-> devel pin control queue. Though, it applies cleanly on top of for-next.
+> This patch series contains several fixes and enhancements for the
+> debug code to validate pinctrl tables at run-time.
 >
-> I would recommend to drop Intel specific patches from devel queue.
+> I intend to queue this in sh-pfc-for-v5.3.
 
-OK I dropped Chris Chiu's patch from my queue and pulled this in
-instead. Sorry for picking that up by mistake.
+I don't mind to take this in for v5.2, but it's your pick.
+If you send me a pull request pronto I will pull it in.
 
 Yours,
 Linus Walleij
