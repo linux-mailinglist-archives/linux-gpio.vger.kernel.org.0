@@ -2,88 +2,51 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 9981113615
-	for <lists+linux-gpio@lfdr.de>; Sat,  4 May 2019 01:20:37 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8617013B71
+	for <lists+linux-gpio@lfdr.de>; Sat,  4 May 2019 19:40:33 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726059AbfECXUg (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 3 May 2019 19:20:36 -0400
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:41363 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726042AbfECXUg (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 3 May 2019 19:20:36 -0400
-Received: by mail-lj1-f195.google.com with SMTP id k8so6537629lja.8
-        for <linux-gpio@vger.kernel.org>; Fri, 03 May 2019 16:20:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=OK5m9Cm+xqBfZ44Cyga28760Sdb3iwEFSEr+ygWKg7U=;
-        b=rL7RJVIBUhs2AdbiNVGZze5zull8Coo79gMzUTRL0lVRRctqV9jVwk7mRRs9VOqS3a
-         HXadrXXdgMPedF6sp0tKj7qTlTEViTsjxYN5qGHwYEXm8meeHKh7OR6qJC3IRvARgMkK
-         xrNDAOU0p4PRNlPEHQz+brbgXbZF8fmB6UOhQpC7XyqjhVX8nPvIw58cNvwNd7rvdYuA
-         ZtRe++8hA96PFbYGyXMOr/mQ9AOneu696yVU0SRl1tJuX6D59DS856+KBVr5hgWXFwko
-         qjnxJRbtUT8v0mr/C1qw28ALIOdwRfkmLAkdByBJm5VF7mm4Lsugdv7GlfNP7c9YeGp1
-         KlJg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=OK5m9Cm+xqBfZ44Cyga28760Sdb3iwEFSEr+ygWKg7U=;
-        b=auo4SeB97tGCKIF3d3hU7Pp/dlgI/yI9LXij3yVcS2iGr1TOTCDtdhOmDxrCnmvxWF
-         bzuiJpd0OI7ZVsIGaFeG5OxMzcrfinUZQydvOAfe9QQmw4Zaf+4eaZ2VJvDiivRU+eQ8
-         2dJaUnjGNbybx9PUJlKi9z57WngVuxSOOZ8MlwM5JzzxApajG8h6+NcjZncU9Xsaaa41
-         SdSMswU9YHQW+3aruumqXcABxRVnhvJaCTpghvftofqi6W+kO+MEPRZXS7l0c7vfZj5/
-         Z0635Ik0G+9aljXeSOixe760rjijHOTJ2a7q14n5K2i64TRZsRfj5/cNIVAfq7ZnSR5f
-         4K4Q==
-X-Gm-Message-State: APjAAAUFfKRUhjBbUhnpMoFe4QfP+MTzSu7VxCEpDfTU8xW10XkFHOTg
-        lwuUs1zO+9KY8Mkv0cCcpU0KgQ==
-X-Google-Smtp-Source: APXvYqwLyiQb6ULEsADXURyxHy7G4e4SeR5cyeXbGeusD3xdAZrq/YN7PPbN+oebJkilhYAvmpQE7Q==
-X-Received: by 2002:a05:651c:111:: with SMTP id a17mr6341289ljb.195.1556925634581;
-        Fri, 03 May 2019 16:20:34 -0700 (PDT)
-Received: from localhost.localdomain (c-d2cd225c.014-348-6c756e10.bbcust.telenor.se. [92.34.205.210])
-        by smtp.gmail.com with ESMTPSA id t8sm622511ljc.25.2019.05.03.16.20.32
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 03 May 2019 16:20:33 -0700 (PDT)
-From:   Linus Walleij <linus.walleij@linaro.org>
-To:     Mark Brown <broonie@kernel.org>, linux-spi@vger.kernel.org,
-        Fabio Estevam <festevam@gmail.com>
-Cc:     linux-gpio@vger.kernel.org,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>
-Subject: [PATCH] spi: ep93xx: Drop unused variable
-Date:   Sat,  4 May 2019 01:18:29 +0200
-Message-Id: <20190503231829.4112-1-linus.walleij@linaro.org>
-X-Mailer: git-send-email 2.20.1
+        id S1726763AbfEDRkd (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sat, 4 May 2019 13:40:33 -0400
+Received: from sonic314-53.consmr.mail.ne1.yahoo.com ([66.163.189.179]:42525
+        "EHLO sonic314-53.consmr.mail.ne1.yahoo.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726514AbfEDRkc (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sat, 4 May 2019 13:40:32 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1556991631; bh=Wn45IEVQxjYS/KJ/AenupJ6pixj3tpnk+IQw8lNF8Cw=; h=Date:From:Reply-To:Subject:References:From:Subject; b=rey+bWihNw74pAszG8aLNkWR0kM5/OjWZQGHJZutD1bkvNoS0oENPYrtMfsqAILP73ixYWcJvdtoSr6NZOQULnR4VRa8DeiSYNSPhGplBLE3VZrLz6QeOTO0uG95YD1Jh+YZP3JQeaUw6ili+PxQ8glG1GMlK4yRQ1YZcDuEkAVd0EyX25hjhsrU95+90TNido9umRrPAHGc0epPOf1puz584LoTgmvmM5sMdjs2+sJFT/TZ5ztDXSeZ15ZtuVT6PuyBy9L5xlkwCsFS+mzodbcihy8U64ZG46JHQBJKXupZ6DO/bWozkjC9revIPDY/yOYpEmc7kIegGCYy+n1mHw==
+X-YMail-OSG: 39RWrvUVM1lI0t7v_kMAKEiqK8xDvxJJqJNjKxwZTcMmp7TAwp4zY3YmT.1A3Pm
+ zMig1Mm.SPfOklkpwX6e8gGKhzuY5taMtiUnsK5JAjXxt2x2tKjauwZ.ZSYxa.YPoDBbMQjy5eqw
+ r.PsrHMpWRlGFcEqg9o71cbscV9cDijxizh_wVdb6Ix0k.mMhQVOKXH5GyA95vc0W7smTVJBh96x
+ ZOsV3UucvxFO4n3jr8rRdkO_yAdlZKH6wvN0XfcbDFvTuwu.pF9zNnHqITzGV8cV6Jra0OJFuP4U
+ QEFXeIu.bLh.9_6TeMHsiSIBD9SeR3KvFzQXw7pXf50Drl7z.tXtnSCpAckoh_WysFjvecIs4bJJ
+ lCjs3OkVcNfVtFo.HbFc2VgKekz_2WDiVA4L1Z.iIRhqtkU2W_hlsLdXvj96HfXp.YXggD9zugzR
+ dCDrnl_b1pPsXFaL4a3TE_O9snzq_t4E7g4mQalBjGDH_CxIcHdbwk5MMHQ.xliABM3MrVI3Dggp
+ BzaVFB5FGb4LODie3T75Q1Zzm6MUpZZXyoesU_l7tnTBwnlTMccUisQK50BKjrUSCkQ9a3pc0fJY
+ xP.8ZsLKGOcEoEdnXvoAyTBn17XnFOGlnFnY.VyCbK.OO2G147AcAQCjk8dTSnNpkltpEI6L1wwr
+ xvI1lWSKjBFbkk7wmc6TVypZClThb3NmngtmZmqbEEUiqQkVnyCZJq6Klz_YfzzrCj3SBJmXv4K4
+ _LYFauYpcL4pyyEJLDKsibehem1S4_h.MUIoCjwqtSSF6mLfC7c1f8a4ggnFqNSVCPP.4AJcYqBf
+ ah5Eo6d5ND2Eua7250NfS.H3S4tae35heXqmCowqNXob._Ioye3Qbkv.pkbpE7_6PKbimK8RSjtM
+ si9NwTt53WXS._br_EGm3.bHyt5Vtbs.GoocbuYsAVzf5RVQc_tNRdUSjM1HhYRkGIm.mIzNW8Db
+ zVOYFpgrOJF.59wD1oXopBIO2zveovbxqEicOerR4LiMufN23WRRf2j5sbtnsCBDoxV5DoCjyusZ
+ BhZweuWqVQfjI5DhdKGTvk50vXiQwS4TPmhaRRnshZ7WNtxKgIoKXidevHzFWZO8CdCKPL_s0qlw
+ 959scia6B8crHGV4ni2lgULtlAafh0LqSlnZcp1b7KGSLS99Rd5XTBex795LQmiA6AJsYE2QsUrV
+ ATtTxVwYxuFabAl1s9JUu3pDhIAbPdUPavImcPyEa9B4sFgB0MiEYytBiVj0dBpk-
+Received: from sonic.gate.mail.ne1.yahoo.com by sonic314.consmr.mail.ne1.yahoo.com with HTTP; Sat, 4 May 2019 17:40:31 +0000
+Date:   Sat, 4 May 2019 17:38:30 +0000 (UTC)
+From:   Major Dennis Hornbeck <ab49@btopmt.online>
+Reply-To: Major Dennis Hornbeck <hornbeckmajordennis635@gmail.com>
+Message-ID: <1930395256.1373343.1556991510360@mail.yahoo.com>
+Subject: 
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+References: <1930395256.1373343.1556991510360.ref@mail.yahoo.com>
+X-Mailer: WebService/1.1.13583 YahooMailBasic Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3683.86 Safari/537.36
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-My previous patch leaves a dangling variable in the driver.
-get rid of it.
+I am in the military unit here in Afghanistan, we have some amount of funds that we want to move out of the country. My partners and I need a good partner someone we can trust. It is risk free and legal. Reply to this email: hornbeckmajordennis635@gmail.com
 
-Fixes: 06a391b1621e ("spi: ep93xx: Convert to use CS GPIO descriptors")
-Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
----
- drivers/spi/spi-ep93xx.c | 1 -
- 1 file changed, 1 deletion(-)
-
-diff --git a/drivers/spi/spi-ep93xx.c b/drivers/spi/spi-ep93xx.c
-index 47e39251bad9..81889389280b 100644
---- a/drivers/spi/spi-ep93xx.c
-+++ b/drivers/spi/spi-ep93xx.c
-@@ -651,7 +651,6 @@ static int ep93xx_spi_probe(struct platform_device *pdev)
- 	struct resource *res;
- 	int irq;
- 	int error;
--	int i;
- 
- 	info = dev_get_platdata(&pdev->dev);
- 	if (!info) {
--- 
-2.20.1
-
+Regards,
+Major Dennis Hornbeck.
