@@ -2,43 +2,43 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 8617013B71
-	for <lists+linux-gpio@lfdr.de>; Sat,  4 May 2019 19:40:33 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2268913C70
+	for <lists+linux-gpio@lfdr.de>; Sun,  5 May 2019 02:42:32 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726763AbfEDRkd (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sat, 4 May 2019 13:40:33 -0400
-Received: from sonic314-53.consmr.mail.ne1.yahoo.com ([66.163.189.179]:42525
-        "EHLO sonic314-53.consmr.mail.ne1.yahoo.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726514AbfEDRkc (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sat, 4 May 2019 13:40:32 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1556991631; bh=Wn45IEVQxjYS/KJ/AenupJ6pixj3tpnk+IQw8lNF8Cw=; h=Date:From:Reply-To:Subject:References:From:Subject; b=rey+bWihNw74pAszG8aLNkWR0kM5/OjWZQGHJZutD1bkvNoS0oENPYrtMfsqAILP73ixYWcJvdtoSr6NZOQULnR4VRa8DeiSYNSPhGplBLE3VZrLz6QeOTO0uG95YD1Jh+YZP3JQeaUw6ili+PxQ8glG1GMlK4yRQ1YZcDuEkAVd0EyX25hjhsrU95+90TNido9umRrPAHGc0epPOf1puz584LoTgmvmM5sMdjs2+sJFT/TZ5ztDXSeZ15ZtuVT6PuyBy9L5xlkwCsFS+mzodbcihy8U64ZG46JHQBJKXupZ6DO/bWozkjC9revIPDY/yOYpEmc7kIegGCYy+n1mHw==
-X-YMail-OSG: 39RWrvUVM1lI0t7v_kMAKEiqK8xDvxJJqJNjKxwZTcMmp7TAwp4zY3YmT.1A3Pm
- zMig1Mm.SPfOklkpwX6e8gGKhzuY5taMtiUnsK5JAjXxt2x2tKjauwZ.ZSYxa.YPoDBbMQjy5eqw
- r.PsrHMpWRlGFcEqg9o71cbscV9cDijxizh_wVdb6Ix0k.mMhQVOKXH5GyA95vc0W7smTVJBh96x
- ZOsV3UucvxFO4n3jr8rRdkO_yAdlZKH6wvN0XfcbDFvTuwu.pF9zNnHqITzGV8cV6Jra0OJFuP4U
- QEFXeIu.bLh.9_6TeMHsiSIBD9SeR3KvFzQXw7pXf50Drl7z.tXtnSCpAckoh_WysFjvecIs4bJJ
- lCjs3OkVcNfVtFo.HbFc2VgKekz_2WDiVA4L1Z.iIRhqtkU2W_hlsLdXvj96HfXp.YXggD9zugzR
- dCDrnl_b1pPsXFaL4a3TE_O9snzq_t4E7g4mQalBjGDH_CxIcHdbwk5MMHQ.xliABM3MrVI3Dggp
- BzaVFB5FGb4LODie3T75Q1Zzm6MUpZZXyoesU_l7tnTBwnlTMccUisQK50BKjrUSCkQ9a3pc0fJY
- xP.8ZsLKGOcEoEdnXvoAyTBn17XnFOGlnFnY.VyCbK.OO2G147AcAQCjk8dTSnNpkltpEI6L1wwr
- xvI1lWSKjBFbkk7wmc6TVypZClThb3NmngtmZmqbEEUiqQkVnyCZJq6Klz_YfzzrCj3SBJmXv4K4
- _LYFauYpcL4pyyEJLDKsibehem1S4_h.MUIoCjwqtSSF6mLfC7c1f8a4ggnFqNSVCPP.4AJcYqBf
- ah5Eo6d5ND2Eua7250NfS.H3S4tae35heXqmCowqNXob._Ioye3Qbkv.pkbpE7_6PKbimK8RSjtM
- si9NwTt53WXS._br_EGm3.bHyt5Vtbs.GoocbuYsAVzf5RVQc_tNRdUSjM1HhYRkGIm.mIzNW8Db
- zVOYFpgrOJF.59wD1oXopBIO2zveovbxqEicOerR4LiMufN23WRRf2j5sbtnsCBDoxV5DoCjyusZ
- BhZweuWqVQfjI5DhdKGTvk50vXiQwS4TPmhaRRnshZ7WNtxKgIoKXidevHzFWZO8CdCKPL_s0qlw
- 959scia6B8crHGV4ni2lgULtlAafh0LqSlnZcp1b7KGSLS99Rd5XTBex795LQmiA6AJsYE2QsUrV
- ATtTxVwYxuFabAl1s9JUu3pDhIAbPdUPavImcPyEa9B4sFgB0MiEYytBiVj0dBpk-
-Received: from sonic.gate.mail.ne1.yahoo.com by sonic314.consmr.mail.ne1.yahoo.com with HTTP; Sat, 4 May 2019 17:40:31 +0000
-Date:   Sat, 4 May 2019 17:38:30 +0000 (UTC)
-From:   Major Dennis Hornbeck <ab49@btopmt.online>
+        id S1727046AbfEEAmb (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sat, 4 May 2019 20:42:31 -0400
+Received: from sonic310-17.consmr.mail.bf2.yahoo.com ([74.6.135.240]:37742
+        "EHLO sonic310-17.consmr.mail.bf2.yahoo.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726768AbfEEAmb (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sat, 4 May 2019 20:42:31 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1557016949; bh=Wn45IEVQxjYS/KJ/AenupJ6pixj3tpnk+IQw8lNF8Cw=; h=Date:From:Reply-To:Subject:References:From:Subject; b=QwQEf9Vk7p2Bz0uElzVPePsJuZji1iC6YeOL7jvegtYtlbBn4L8K/5r1e5y5WWjiRCii1MyiaV1A5QduEHHLfU97F+tUTj4xPwE/zKFKcSOBn8ILh6NsOzxLnyK/iHFnfC5kbn8ciLy3Ck20iXTod166k9MTNNt8k2fC9FICFr/zxrTNoaor1DWgD8hAOgomHJKbM6Z6r0L5kGoykmmiOkQC6FoEMdPJ1F4iFYhk0nb0r1I2yFvn7X9rtiiVIzu3egKb1wPXPVpvdsEyEV5IwY3nZ5llVRapRJIG7J94FHDPc9Nt4pkrTRB5lU9yBdL0nQNXmnJEIP6Kl00qpBYSAw==
+X-YMail-OSG: Qb66hxgVM1lzYcSc.B7605RVE3v9eXBp8Mk_lkQ8b.H2N2ijQ7q_dfE5AwadAsk
+ ID6PfgFDC4C5km0QAqw_jcvfRWmQQ9xuL12hW1hUgygTuUF3Gqdgr9.952837dreub22ngalPYad
+ QHlrPh0aJzr50CH_QCYqDNq5Fkmn4vvdbrsRsBg71b7o.URz1.lZJmvfZWg8tlRW1TsBuQyUQCVi
+ 4T5ooFQrHbHOF35WyuweLZoefWkJFbcd2axlTpYdW0VjV1x0qBKkNp25mEMcMhNiChLyjUjjLhb8
+ oDAij4ImnWfDHfxHKZaLwtdxFDUtVo1mYO5m_c9fn_4KSn2i0i8rrHe_NtjgWuj94VvB2s7fz1yk
+ 9rBMSQU9OQx9GT0DegM5dEQv5uwh3bvjKHYnTQprLNFcqU.ItAYy7CDKz7.KrRHcthelEI.7AW5J
+ 4UZIXRVQiFbL74VgV5DjQfolq7OnI_UOuwhESaPfeNzhJw5z7rHarccSLuEJSTRZeo4nkBaV9Umv
+ W398rxV.3o1SBHESQnHlNbV1wjCornNuVz0qRSRjwYjbshO43gjKZY_u9yw2lVg2.FQeX7_MVvlM
+ 1cQy2vS0mmHAphfpsEQ2DZuTr8.Uzr1FaKH1.UVjZvGTuYkbjP_EC.N68Af.NCMpgy63zjZv2MwF
+ Z1Mdz01BzOD9lWZbebU5FAH4WFDaE0RKxZFyRKJOypAUBo6fzYrpulqs8gHmd4zRNTRt4s0Q.J6O
+ aMgTImQ2g8KfBbMB6xFDfi2kkfKo_5gKbB3AygKRj.cKDemcQrCSRkEgl_llMMBu_zJYmUoy6lPu
+ N2niTtP39uKY3WmCmQZ3DQN3U19s_xg.lF8kA0.0njkTTIp74r8aAOnTmp4Sw_d3LU.x2yZjgg9b
+ h_60cJ5O73dU6brRjQuXwgddqzdy6sgRN17RtBIpWnmi9.L1kQgNJocF.zHd1dAU0sKxdTquV.oo
+ GTeA187VxhOIclYFqZlnw727ESM7cIILoecylnns_1b_BIxCXgUvYzkVWgxEnfXa8zY2GNMotyLb
+ c_2NYIbmMTxJa1_ZFhc3H7XK49hCsukDzR8hc_1oufGb6EMMMLGC.kGVoIcweUcaSdQL.s1GZOHB
+ eGZ7l44ghdQXoui4WGPoGJ3x_QTDVEJSOfCE80kDNFj0fpFB3j18XUkxIGPDDbBA1qWNut0gt4kf
+ kz1nt57baTyvXmlAsM9oSGNaQ4VgoaY1CihcdyDaf
+Received: from sonic.gate.mail.ne1.yahoo.com by sonic310.consmr.mail.bf2.yahoo.com with HTTP; Sun, 5 May 2019 00:42:29 +0000
+Date:   Sun, 5 May 2019 00:40:29 +0000 (UTC)
+From:   Major Dennis Hornbeck <bc27@btopmt.online>
 Reply-To: Major Dennis Hornbeck <hornbeckmajordennis635@gmail.com>
-Message-ID: <1930395256.1373343.1556991510360@mail.yahoo.com>
+Message-ID: <1109310748.228824.1557016829171@mail.yahoo.com>
 Subject: 
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-References: <1930395256.1373343.1556991510360.ref@mail.yahoo.com>
+References: <1109310748.228824.1557016829171.ref@mail.yahoo.com>
 X-Mailer: WebService/1.1.13583 YahooMailBasic Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3683.86 Safari/537.36
 To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-gpio-owner@vger.kernel.org
