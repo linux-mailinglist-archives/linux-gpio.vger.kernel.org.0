@@ -2,51 +2,51 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id F18941699F
-	for <lists+linux-gpio@lfdr.de>; Tue,  7 May 2019 19:54:07 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id F1D95169D8
+	for <lists+linux-gpio@lfdr.de>; Tue,  7 May 2019 20:03:28 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727546AbfEGRx6 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 7 May 2019 13:53:58 -0400
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:45650 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726452AbfEGRx6 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 7 May 2019 13:53:58 -0400
-Received: by mail-oi1-f193.google.com with SMTP id u3so7253544oic.12;
-        Tue, 07 May 2019 10:53:57 -0700 (PDT)
+        id S1726761AbfEGSD2 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 7 May 2019 14:03:28 -0400
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:39106 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726522AbfEGSD1 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 7 May 2019 14:03:27 -0400
+Received: by mail-ot1-f67.google.com with SMTP id o39so15810796ota.6;
+        Tue, 07 May 2019 11:03:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=googlemail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=7flmOY2ATgGfQPKE9sBeHn57pA1FJ9fgxAgK5bf/VXc=;
-        b=M5MayXekFPagZQ5mdyBhaKAXMoy8IaH7d9jFE8KzsTXxsbxQ+j+4u6H02CRXeL1p5J
-         EzTE4z4LojpYp7Nlyn/gV+zMJm1tyEgP7BseAUmRN5bNXZbn+mB/rydOG9HvlIhkFyaO
-         V7Ay9tjeHOlLKfjzLdrymd3PBPnHCI5M10i3TlkXg++ucuhiPqCFcRweLF36wgBHWu+y
-         3krEQlgulpbzhOpy467IhUvTv78AUJes+Ykb5SVN0BXM58cB7ogm+1SN9Qmavd8uyhBD
-         aOZQOORBm3cucV/GAcz/jWRugt2Z9BjR8sAWbT+0owqHjp9a/hqBudd3nV/HVJwhNulA
-         wqGQ==
+        bh=JPY4MNS2RU9Z7127GFID4Lx/B6dOG3nVMga0YqQtB8c=;
+        b=dEjPu79oBosxszWQphXSKUqe7G1xsSPgFhtqj4tKfyqpcctSiuhn/Fb66s9jXMolky
+         3/vX9dPKYZDNBS3w5AuB+6GiRdByvIdADIWDyE7qfX6CiEnXiQ1T7ivdnnJOwldqBkVc
+         v4lg11BczqJr454iyBOORvN47uUdLjtHzwdH+LIoqXvoPLjAAJX7O+TDhzFG2LiiB3yh
+         zQ4GjQsfw0RpbY3v/M46MMcHlhLjUYoVg74+42B5FPKdr3eIAnCirn378EZL8byrbbXO
+         yf7c9bL7D7lktp6PPblQIUTjIK354FWIpLlgXoL0KCyS9maY19pcygF5NeXUlWJJjaRH
+         WwDQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=7flmOY2ATgGfQPKE9sBeHn57pA1FJ9fgxAgK5bf/VXc=;
-        b=O1FGoCk4YRIUPSpaT5AcagsxW+FX66tViFTuUOJghs8/QuWVZYHoVDyYkUjbCVyWSy
-         /Yv/HfeCu1g9SKK/uICGQXQYSvT6knayw0O9Nb37XCgdDqAVF7v0BPd//Wt4jbii8RXK
-         hoWpIm55TlRHMnRI/h0IR5JdJCduRzQYP7xVFn9UKtW1SZikxRH/ifbe+Whqgv8JLl37
-         mC2NqJctOkwJk4UfU5dQre71Q3kbFqiKr/qa7BgKR1oCKPKrsvRS2IEf6hv1+uuB+H+j
-         Kt6lIZyeYBRGV2/TkiIqodh2j16C3ZmsKiixOlRn8eiCbqMPUWF2NsTvHD5G7dT2LMuy
-         XOew==
-X-Gm-Message-State: APjAAAWTIQpPbpU/MOlhOLyvJFAu7d5oh6d/w5YCWuw1METgsurOmXI2
-        ntfbAC+DTijPNWr1ySoa4DJBwIE2aApWY/nxzmMMWLdga9A=
-X-Google-Smtp-Source: APXvYqwnv2W92AwYPmHA+pZgR+UfUWyGF7yrgdcg/vKDBYgUmxUAUGXWBDjENWKrzjJVY2Wha6sDhMq72YjhPCXJxfg=
-X-Received: by 2002:aca:5b06:: with SMTP id p6mr1023295oib.129.1557251635564;
- Tue, 07 May 2019 10:53:55 -0700 (PDT)
+        bh=JPY4MNS2RU9Z7127GFID4Lx/B6dOG3nVMga0YqQtB8c=;
+        b=sFzjQLDdHlZTDJRSXXqzz3jDzuK2cHNfnslWEz0kJ3keH9y7jTXsAK0IzEHytFaZ5F
+         UhlW0UrwMBD3PoSTD3+o5GdHssQAy1tHe+inLjY9zLpxautUdMT0vBqFdqHgNxohe/YN
+         3ZzfLW0M3UNyz4LgZsMpp0F3q8DV9Ga73HX5kUnVCNEZpZJmU6Oe7SlCJQu2eDV0TG8l
+         bAvTvijZecNLFgLpdE46lK9ZTTPcJy9UfQ2ZSjsN5hrNY2K2N6IxyVKdEd7ZYY0Syl0o
+         3izTJR3R2szPFQdkt9X8n3Q0XQnknkBWNHsYkfPrvtOcRwrPTxpFAv6Yjkdtf9CN1RXD
+         1RlQ==
+X-Gm-Message-State: APjAAAVRphbPiEuan0Eiyb9xCHwP0qinGSVZDoRyzozRrLwwOmc2NabK
+        O2LLAZHphpFD1QwJ8K0edQUbdkTpvzHD2915UgY=
+X-Google-Smtp-Source: APXvYqw3QBhK8LJY1eO9eY8Zl3pQCD8whSaY67O+KAJ6VK+cZrA3KkKtchg9DDHLc0L3WQpNu0M/382cG+WBidgDFb8=
+X-Received: by 2002:a9d:4e97:: with SMTP id v23mr22088662otk.148.1557252207032;
+ Tue, 07 May 2019 11:03:27 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190507115726.23714-1-glaroque@baylibre.com> <20190507115726.23714-5-glaroque@baylibre.com>
-In-Reply-To: <20190507115726.23714-5-glaroque@baylibre.com>
+References: <20190507115726.23714-1-glaroque@baylibre.com>
+In-Reply-To: <20190507115726.23714-1-glaroque@baylibre.com>
 From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Date:   Tue, 7 May 2019 19:53:44 +0200
-Message-ID: <CAFBinCBQSE7wh367Aa25zwtDphsx8Z_KGDTn8dcSCir6bLvq_A@mail.gmail.com>
-Subject: Re: [PATCH v3 4/6] pinctrl: meson: Rework enable/disable bias part
+Date:   Tue, 7 May 2019 20:03:15 +0200
+Message-ID: <CAFBinCBeqW7NLyFygB5vi5a+KGcez8q5Hy1e7MdHmaWLv7KmkA@mail.gmail.com>
+Subject: Re: [PATCH v3 0/6] Add drive-strength in Meson pinctrl driver
 To:     Guillaume La Roque <glaroque@baylibre.com>
 Cc:     linus.walleij@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com,
         khilman@baylibre.com, linux-gpio@vger.kernel.org,
@@ -58,112 +58,49 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Guillaume,
-
 On Tue, May 7, 2019 at 1:57 PM Guillaume La Roque <glaroque@baylibre.com> wrote:
 >
-> rework bias enable/disable part to prepare drive-strength integration
-if it was my patch I would add "no functional changes" at the end to
-make it explicit that this only changes the structure of the code.
-
+> The purpose of this patchset is to add drive-strength support in meson pinconf
+> driver. This is a new feature that was added on the g12a. It is critical for us
+> to support this since many functions are failing with default pad drive-strength.
 >
-> Signed-off-by: Guillaume La Roque <glaroque@baylibre.com>
-with the minor comments from below addressed:
-Reviewed-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-
-> ---
->  drivers/pinctrl/meson/pinctrl-meson.c | 79 ++++++++++++++++-----------
->  1 file changed, 48 insertions(+), 31 deletions(-)
+> The value achievable by the SoC are 0.5mA, 2.5mA, 3mA and 4mA and the DT property
+> 'drive-strength' is expressed in mA.
+> So this patch add another generic property "drive-strength-uA". The change to do so
+> would be minimal and could be benefit to other platforms later on.
 >
-> diff --git a/drivers/pinctrl/meson/pinctrl-meson.c b/drivers/pinctrl/meson/pinctrl-meson.c
-> index 96a4a72708e4..a216a7537564 100644
-> --- a/drivers/pinctrl/meson/pinctrl-meson.c
-> +++ b/drivers/pinctrl/meson/pinctrl-meson.c
-> @@ -174,13 +174,57 @@ int meson_pmx_get_groups(struct pinctrl_dev *pcdev, unsigned selector,
->         return 0;
->  }
+> Cheers
+> Guillaume
 >
-> +static int meson_pinconf_disable_bias(struct meson_pinctrl *pc,
-> +                                     unsigned int pin)
-> +{
-> +       struct meson_bank *bank;
-> +       unsigned int reg, bit = 0;
-> +       int ret;
-> +
-> +       ret = meson_get_bank(pc, pin, &bank);
-> +       if (ret)
-> +               return ret;
-add an empty line here to keep it consistent with the rest of the code
-
-[...]
->  static int meson_pinconf_set(struct pinctrl_dev *pcdev, unsigned int pin,
->                              unsigned long *configs, unsigned num_configs)
->  {
->         struct meson_pinctrl *pc = pinctrl_dev_get_drvdata(pcdev);
->         struct meson_bank *bank;
-bank is not read anymore (it's passed to meson_get_bank to set it, but
-then it's not read, which is probably why my compiler doesn't
-complain)
-
->         enum pin_config_param param;
-> -       unsigned int reg, bit;
->         int i, ret;
+> Changes since v2:
+> - update driver-strength-uA property to be compliant with DT documentation
+> - rework patch series for better understanding
+> - rework set_bias function
 >
->         ret = meson_get_bank(pc, pin, &bank);
-> @@ -192,44 +236,17 @@ static int meson_pinconf_set(struct pinctrl_dev *pcdev, unsigned int pin,
+> Changes since v1:
+> - fix missing break
+> - implement new pinctrl generic property "drive-strength-uA"
 >
->                 switch (param) {
->                 case PIN_CONFIG_BIAS_DISABLE:
-> -                       dev_dbg(pc->dev, "pin %u: disable bias\n", pin);
-> -
-> -                       meson_calc_reg_and_bit(bank, pin, REG_PULLEN, &reg,
-> -                                              &bit);
-> -                       ret = regmap_update_bits(pc->reg_pullen, reg,
-> -                                                BIT(bit), 0);
-> +                       ret = meson_pinconf_disable_bias(pc, pin);
->                         if (ret)
->                                 return ret;
->                         break;
->                 case PIN_CONFIG_BIAS_PULL_UP:
-> -                       dev_dbg(pc->dev, "pin %u: enable pull-up\n", pin);
-> -
-> -                       meson_calc_reg_and_bit(bank, pin, REG_PULLEN,
-> -                                              &reg, &bit);
-> -                       ret = regmap_update_bits(pc->reg_pullen, reg,
-> -                                                BIT(bit), BIT(bit));
-> -                       if (ret)
-> -                               return ret;
-> -
-> -                       meson_calc_reg_and_bit(bank, pin, REG_PULL, &reg, &bit);
-> -                       ret = regmap_update_bits(pc->reg_pull, reg,
-> -                                                BIT(bit), BIT(bit));
-> +                       ret = meson_pinconf_enable_bias(pc, pin, 1);
-use "true" instead of "1"?
-
->                         if (ret)
->                                 return ret;
->                         break;
->                 case PIN_CONFIG_BIAS_PULL_DOWN:
-> -                       dev_dbg(pc->dev, "pin %u: enable pull-down\n", pin);
-> -
-> -                       meson_calc_reg_and_bit(bank, pin, REG_PULLEN,
-> -                                              &reg, &bit);
-> -                       ret = regmap_update_bits(pc->reg_pullen, reg,
-> -                                                BIT(bit), BIT(bit));
-> -                       if (ret)
-> -                               return ret;
-> -
-> -                       meson_calc_reg_and_bit(bank, pin, REG_PULL, &reg, &bit);
-> -                       ret = regmap_update_bits(pc->reg_pull, reg,
-> -                                                BIT(bit), 0);
-> +                       ret = meson_pinconf_enable_bias(pc, pin, 0);
-use "false" instead of "0"?
-
-one overall comment: thank you for working on this!
-in my opinion it's a good preparation step to ensure that
-meson_pinconf_set is easy to understand even if we add more
-functionality here
-
-
-Regards
-Martin
+> [1] https://lkml.kernel.org/r/20190314163725.7918-1-jbrunet@baylibre.com
+>
+>
+> Guillaume La Roque (6):
+>   dt-bindings: pinctrl: add a 'drive-strength-microamp' property
+>   pinctrl: generic: add new 'drive-strength-microamp' property support
+>   dt-bindings: pinctrl: meson: Add drive-strength-microamp property
+>   pinctrl: meson: Rework enable/disable bias part
+>   pinctrl: meson: add support of drive-strength-microamp
+>   pinctrl: meson: g12a: add DS bank value
+>
+>  .../bindings/pinctrl/meson,pinctrl.txt        |   4 +
+>  .../bindings/pinctrl/pinctrl-bindings.txt     |   3 +
+>  drivers/pinctrl/meson/pinctrl-meson-g12a.c    |  36 ++--
+>  drivers/pinctrl/meson/pinctrl-meson.c         | 177 +++++++++++++++---
+>  drivers/pinctrl/meson/pinctrl-meson.h         |  18 +-
+>  drivers/pinctrl/pinconf-generic.c             |   2 +
+>  include/linux/pinctrl/pinconf-generic.h       |   3 +
+>  7 files changed, 195 insertions(+), 48 deletions(-)
+I gave this a go on one of my Meson8m2 boards:
+[Meson8m2 doesn't support drive strength and still boots without any
+crashes or obvious regressions]
+Tested-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
