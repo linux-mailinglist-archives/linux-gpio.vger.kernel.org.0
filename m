@@ -2,72 +2,110 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 0086516614
-	for <lists+linux-gpio@lfdr.de>; Tue,  7 May 2019 16:54:36 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8D54C16718
+	for <lists+linux-gpio@lfdr.de>; Tue,  7 May 2019 17:45:09 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726526AbfEGOyb (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 7 May 2019 10:54:31 -0400
-Received: from mail-vs1-f67.google.com ([209.85.217.67]:33214 "EHLO
-        mail-vs1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725843AbfEGOya (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 7 May 2019 10:54:30 -0400
-Received: by mail-vs1-f67.google.com with SMTP id z145so10569813vsc.0;
-        Tue, 07 May 2019 07:54:30 -0700 (PDT)
+        id S1726720AbfEGPpE (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 7 May 2019 11:45:04 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:43976 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726594AbfEGPpE (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 7 May 2019 11:45:04 -0400
+Received: by mail-wr1-f66.google.com with SMTP id r4so7733114wro.10
+        for <linux-gpio@vger.kernel.org>; Tue, 07 May 2019 08:45:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=message-id:subject:from:to:cc:date:in-reply-to:references
+         :user-agent:mime-version:content-transfer-encoding;
+        bh=2V0KRw1X58VA1zYEdAPk5xBLtGjEZfqDlI4myBarUq4=;
+        b=Yy5jMJ2ZIGJeG404RpP9WoYgNRTgrT7VYEhcrexMSkT2UlStHDAKro9YhHqIU9PMMQ
+         Gj0SWTbwWOp4k85nkWe7AQCbG958G/t1/tkf7FGVNOnmc6lx6fmKUSQ725yVo6vlNQQr
+         JUc02nMsvq2nbCmnvR0IpehTOl51duBRK4067ahnaSB7cu524DKutjAnFW6aOK0m1+2P
+         joCLhf5ig8b2ig9oPswIWq/l35IWziGT4chI8F6xifOvS6ZmGwrZoxGQdqufYa+sluUY
+         UbG4F25wQqcAbHbdKrTjr1aXfJYhXqcdlRPdNUnV3/MqAC+xOw5aW1Te1jyHXl/tNDh7
+         CpLA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=jPX1bA70OpjfsOSON+iKXddSP9ZQtnXso2oNmufNBaM=;
-        b=ZyWcuEj0vgQUtuDgbccfwK8xWfBVSh6BxYfEY2OJDFZEwGrH6ajvS6aASMuzjumwHH
-         w/Y88dmzYEbzPTqNJd2RLeyZgsa49kyq6epAGNckCkGRL7HDRJSBbPWbVlgr6r8h1la7
-         kTtpP+z+ZYZpp57PFZEe0a2k8yCUhTYzFs8aS6byZJYsibMxFsj8LlRfYe/6K1xvkKzv
-         Hao5l1UqdlcoFC3rCwgLP0pvvQ0nktaxiDCIOGM7AnTtKKM8tEJt7RxXuZBg4ovr23bP
-         m1ZxZOQFk6BQyMJIyCYbuiJz4QniqjPLrQAjQA353RTOeZ/SWszROfCGWYYCNZtRpZNw
-         J0Pw==
-X-Gm-Message-State: APjAAAUg/kdELSCjEGAH7Cw+OqLejGxtP02THLcSmawML4ERxVwSMKBY
-        j4Hwd9yjNj5SxXGs5sl7xqFywRFwfa6Xdu7dgI4=
-X-Google-Smtp-Source: APXvYqwLsxPOVIDjLlCmvwkyoBn4lKzFI6xI9wloL0ckxyUi2cccejXAdB9dxiOloi3+tZxrZsyOtUDrKTB4d/SqFvg=
-X-Received: by 2002:a05:6102:406:: with SMTP id d6mr10027633vsq.63.1557240869907;
- Tue, 07 May 2019 07:54:29 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190503094926.12208-1-geert+renesas@glider.be> <20190503094926.12208-4-geert+renesas@glider.be>
-In-Reply-To: <20190503094926.12208-4-geert+renesas@glider.be>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Tue, 7 May 2019 16:54:18 +0200
-Message-ID: <CAMuHMdVwsghkR22QBfZTBswsr8sSQvoEiiRmEO22Wevqpzp6Pg@mail.gmail.com>
-Subject: Re: [PATCH 3/4] pinctrl: sh-pfc: r8a7796: Add TPU pins, groups and functions
-To:     Geert Uytterhoeven <geert+renesas@glider.be>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Cao Van Dong <cv-dong@jinso.co.jp>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
+        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
+         :references:user-agent:mime-version:content-transfer-encoding;
+        bh=2V0KRw1X58VA1zYEdAPk5xBLtGjEZfqDlI4myBarUq4=;
+        b=Wow2iy+xuH7gwVRxpT8R1DLcWh6wEIZUcfzqL8DEgU3JyeGd4E5H5F6+aPtZETv/Zx
+         Eko9BGolQxpwxfzrhe8oWlmnCsR4aaBuIjB36e6HU2ddSA9/MZ9wHuriWFWysTn00u4f
+         maevWjN932BcqfXNbGtcOx/nXCnWowEMESZ7yJXBYNKO09fAkYeLVwrS7MSe2y6wr2tM
+         RLGB+FT9O5/bF4UEru2Jm1rHhrJPIi1Y3qfW0E+mFKKVGmIin6cmA7t7dF3CQjd6/hK6
+         YOPYGy2c8BaL0fCHHq+/f0QzflqFHsSfm0xE/UvGU7L7yAPp38Ou6wVw0xWHvv3rxH48
+         eReQ==
+X-Gm-Message-State: APjAAAUa2nGMyh6YrNWomH5tQs9rjlmrpuxsbd0K7PFxU4JrKe0XcPSl
+        moDLhgBoOamCook7rw49xN5hJA==
+X-Google-Smtp-Source: APXvYqx1ZgBnmf0Vh3kreTWGa5/FxgkWxJQ/j0gdArM5OEkyd7Azus61oAFXyJvB3HAhrbHjJgvz7Q==
+X-Received: by 2002:a5d:52c4:: with SMTP id r4mr18766060wrv.79.1557243902842;
+        Tue, 07 May 2019 08:45:02 -0700 (PDT)
+Received: from boomer.baylibre.com (uluru.liltaz.com. [163.172.81.188])
+        by smtp.gmail.com with ESMTPSA id j71sm14285280wmj.44.2019.05.07.08.45.01
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Tue, 07 May 2019 08:45:02 -0700 (PDT)
+Message-ID: <8c4776976c1803d4cd944d88dd73e2b414fe1201.camel@baylibre.com>
+Subject: Re: [PATCH v3 0/6]  Add drive-strength in Meson pinctrl driver
+From:   Jerome Brunet <jbrunet@baylibre.com>
+To:     Guillaume La Roque <glaroque@baylibre.com>,
+        linus.walleij@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com,
+        khilman@baylibre.com
+Cc:     linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
+Date:   Tue, 07 May 2019 17:45:00 +0200
+In-Reply-To: <20190507115726.23714-1-glaroque@baylibre.com>
+References: <20190507115726.23714-1-glaroque@baylibre.com>
 Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.30.5 (3.30.5-1.fc29) 
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, May 3, 2019 at 11:49 AM Geert Uytterhoeven
-<geert+renesas@glider.be> wrote:
-> Add pins, groups and functions for the 16-Bit Timer Pulse Unit outputs
-> on the R-Car M3-W and RZ/G2M SoCs.
->
-> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> ---
->  drivers/pinctrl/sh-pfc/pfc-r8a7796.c | 42 ++++++++++++++++++++++++++++
+On Tue, 2019-05-07 at 13:57 +0200, Guillaume La Roque wrote:
+> The purpose of this patchset is to add drive-strength support in meson pinconf
+> driver. This is a new feature that was added on the g12a. It is critical for us
+> to support this since many functions are failing with default pad drive-strength.
+> 
+> The value achievable by the SoC are 0.5mA, 2.5mA, 3mA and 4mA and the DT property
+> 'drive-strength' is expressed in mA.
+> So this patch add another generic property "drive-strength-uA". The change to do so
+> would be minimal and could be benefit to other platforms later on.
+> 
+> Cheers
+> Guillaume
+> 
+> Changes since v2:
+> - update driver-strength-uA property to be compliant with DT documentation
+> - rework patch series for better understanding
+> - rework set_bias function
+> 
+> Changes since v1:
+> - fix missing break
+> - implement new pinctrl generic property "drive-strength-uA"
+> 
+> [1] https://lkml.kernel.org/r/20190314163725.7918-1-jbrunet@baylibre.com
+> 
+> 
+> Guillaume La Roque (6):
+>   dt-bindings: pinctrl: add a 'drive-strength-microamp' property
+>   pinctrl: generic: add new 'drive-strength-microamp' property support
+>   dt-bindings: pinctrl: meson: Add drive-strength-microamp property
+>   pinctrl: meson: Rework enable/disable bias part
+>   pinctrl: meson: add support of drive-strength-microamp
+>   pinctrl: meson: g12a: add DS bank value
+> 
+>  .../bindings/pinctrl/meson,pinctrl.txt        |   4 +
+>  .../bindings/pinctrl/pinctrl-bindings.txt     |   3 +
+>  drivers/pinctrl/meson/pinctrl-meson-g12a.c    |  36 ++--
+>  drivers/pinctrl/meson/pinctrl-meson.c         | 177 +++++++++++++++---
+>  drivers/pinctrl/meson/pinctrl-meson.h         |  18 +-
+>  drivers/pinctrl/pinconf-generic.c             |   2 +
+>  include/linux/pinctrl/pinconf-generic.h       |   3 +
+>  7 files changed, 195 insertions(+), 48 deletions(-)
+> 
 
-This is embarrassing: how did I manage to forget to update the .common[]
-array sizes, given I added all this extra validation code?!?
+Tested-by: Jerome Brunet <jbrunet@baylibre.com>
 
-Sorry for that. stay tuned for v2...
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
