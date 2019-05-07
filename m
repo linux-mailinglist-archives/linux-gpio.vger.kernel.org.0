@@ -2,150 +2,101 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 0AC561629C
-	for <lists+linux-gpio@lfdr.de>; Tue,  7 May 2019 13:12:38 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6373416326
+	for <lists+linux-gpio@lfdr.de>; Tue,  7 May 2019 13:57:31 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726145AbfEGLMh (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 7 May 2019 07:12:37 -0400
-Received: from relay1.mentorg.com ([192.94.38.131]:45254 "EHLO
-        relay1.mentorg.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725844AbfEGLMh (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 7 May 2019 07:12:37 -0400
-Received: from nat-ies.mentorg.com ([192.94.31.2] helo=svr-ies-mbx-01.mgc.mentorg.com)
-        by relay1.mentorg.com with esmtps (TLSv1.2:ECDHE-RSA-AES256-SHA384:256)
-        id 1hNy1S-0004Fb-5x from Harish_Kandiga@mentor.com ; Tue, 07 May 2019 04:12:34 -0700
-Received: from [10.0.4.15] (137.202.0.90) by svr-ies-mbx-01.mgc.mentorg.com
- (139.181.222.1) with Microsoft SMTP Server (TLS) id 15.0.1320.4; Tue, 7 May
- 2019 12:12:29 +0100
-Subject: Re: [PATCH V1 1/2] gpio: make it possible to set active-state on GPIO
- lines
-To:     Linus Walleij <linus.walleij@linaro.org>
-CC:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
-References: <1557122501-5183-1-git-send-email-harish_kandiga@mentor.com>
- <1557122501-5183-2-git-send-email-harish_kandiga@mentor.com>
- <CACRpkdZ84hkg_8J+OAYpZD0CFzENkUMeaSZoMyTK+hBdTCKGqA@mail.gmail.com>
- <ca559ed5-69ac-b578-2b82-fc0a4d532d3d@mentor.com>
- <CACRpkdYJ930fnO5a1HtUzRL5x1qA9cbgvEJb7mnwC=JLQOKXqQ@mail.gmail.com>
- <aaf22e96-a963-0dfc-a377-05383a219d0a@mentor.com>
- <CACRpkdYzOOOT4YVW2HxS99-aoBiAvqOW8XAUjwiF4=8g=MCizg@mail.gmail.com>
-From:   Harish Jenny K N <harish_kandiga@mentor.com>
-Message-ID: <867f4d8c-89ba-883e-a881-7526e693426d@mentor.com>
-Date:   Tue, 7 May 2019 16:42:19 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
-MIME-Version: 1.0
-In-Reply-To: <CACRpkdYzOOOT4YVW2HxS99-aoBiAvqOW8XAUjwiF4=8g=MCizg@mail.gmail.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Originating-IP: [137.202.0.90]
-X-ClientProxiedBy: svr-ies-mbx-01.mgc.mentorg.com (139.181.222.1) To
- svr-ies-mbx-01.mgc.mentorg.com (139.181.222.1)
+        id S1726322AbfEGL5a (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 7 May 2019 07:57:30 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:52640 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726412AbfEGL53 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 7 May 2019 07:57:29 -0400
+Received: by mail-wm1-f66.google.com with SMTP id o25so8956091wmf.2
+        for <linux-gpio@vger.kernel.org>; Tue, 07 May 2019 04:57:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id;
+        bh=OPHdfYWKRwJAQs5uJB7kF0RzPQn+beeGrm95NylS/7s=;
+        b=x8IfvxSV8xEyOX6DuO+iRYAmA4ddSLYPKfR6dboTkoILy/QRKBArxlBAqvMLlcmJL1
+         /5D8PHaON0JpgYnLnNZnWq9uxuReXFmxTfcDj+3heSe1vSpK7rUgSOtcnqBuDb40cG8W
+         DONlXDGPv3EnkrEbbGS0r8GTGdxvqbI5Rs5XAAjZoOIa8sj36Xmvbvpd8hGuEXmkVlXA
+         kKUSswjcq87zaGBGK5mK3W9Cz9wP0qjY1Nc7vL857HnFB5qcKLNbMeNDbSo3uv05fbno
+         KB5O8EZSr1mMGwCqRxSoVtld61l4K+vCXFWZyiYf8EauwQ4Qq5xWoxE1LSw2ed6XxKGE
+         UPVA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=OPHdfYWKRwJAQs5uJB7kF0RzPQn+beeGrm95NylS/7s=;
+        b=Vo1srHPidkzrHrYM3FNgUZFEZRAul1voo0ft9Fpu9FTXkI5RI6nr19Kx5dACMMl3G9
+         AMCTu18gUqgNaxLpsWFvtCDupTH6Thf+oiyh163Vif28pJcMrp8rHhG0Jx0HN6fG8AD1
+         j6CU3z4C5Vhub5az0OBMzgDesSTiie83CwTtvas7BLCjc5LaB4e6LOPG6MjonNdHQncP
+         HRYpk/EYxIbB54hIoEN6eh5yV2UlqGrnzgTza6MnyAVd8ZRZZxPjszcJ5HdA0KOeoOCB
+         +ywR9D2AMIOX1VsJ+tjlIKGXP2rHjORiHamotMPCyy9cWjgB2AMLXzMsV63g3KBp9UPU
+         iNOA==
+X-Gm-Message-State: APjAAAXYTMYpLnZnLCJ9fCW6QjgyKqabq3PchQmWZeb6Z9+bHxUd5K56
+        82ik6xWfkynTRLELlcw7QZtdZw==
+X-Google-Smtp-Source: APXvYqxq1oFwTc8aEPHZEL8JAQfGOWvAnNWHmRNXvEeDBiKqtaWlXMyzKk+kWPFbz7vEnwL3O1Lq0w==
+X-Received: by 2002:a1c:1903:: with SMTP id 3mr20479100wmz.103.1557230248087;
+        Tue, 07 May 2019 04:57:28 -0700 (PDT)
+Received: from glaroque-ThinkPad-T480.local (lmontsouris-657-1-212-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
+        by smtp.gmail.com with ESMTPSA id s11sm7120274wrb.71.2019.05.07.04.57.26
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 07 May 2019 04:57:27 -0700 (PDT)
+From:   Guillaume La Roque <glaroque@baylibre.com>
+To:     linus.walleij@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com,
+        khilman@baylibre.com
+Cc:     linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v3 0/6]  Add drive-strength in Meson pinctrl driver
+Date:   Tue,  7 May 2019 13:57:20 +0200
+Message-Id: <20190507115726.23714-1-glaroque@baylibre.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+The purpose of this patchset is to add drive-strength support in meson pinconf
+driver. This is a new feature that was added on the g12a. It is critical for us
+to support this since many functions are failing with default pad drive-strength.
 
-On 07/05/19 1:58 PM, Linus Walleij wrote:
-> On Mon, May 6, 2019 at 11:15 AM Harish Jenny K N
-> <harish_kandiga@mentor.com> wrote:
->
->> Again I wanted to highlight that the intention of the patch was to make it generic
->> and avoid changes in userspace for different hardware samples. (i.e  Some pins in
->> hardware be configured as active low, this can vary between hardware samples
-> First, can you explain what you mean by that? Is it that you mean to use the
-> kernel gpiolib for prototyping, so we are not talking about production
-> systems, such as any kind of product coming off a factory line?
->
-> In that case I think it is in the maker-prototyping charter, which means
-> it is actually appropriate for having that configuration in userspace,
-> since it is a one-off. It will not have any generic use. The kernel is
-> generally for reusable stuff.
->
-> Second, I question the use of a property on the gpio chip for this. I
-> highly doubt
-> that the silicon chip will be manufactured with some random inverters
-> on some lines depending on which silicon sample we are using.
-> (Correct me if I'm wrong.)
->
-> What I think is happening is that you are using different PCBs or
-> wiremeshes and you have inverters outside the gpio chip.
-> That should not be a property of the gpio chip.
->
-> In this case what you need is either encode it on the consumer side
-> as we already do, or start to model inverters in the device tree
-> to properly describe the hardware, so we have a hierarchy of
-> gpio lines:
->
-> gpio0: gpio {
->    compatible = "foo,chip";
->    gpio-controller;
->    (...)
-> };
->
-> inv0: inverter {
->     compatible = "inverter";
->     gpio-controller;
->     gpios = <&gpio0 0 GPIO_ACTIVE_HIGH>;
-> };
->
-> consumer {
->    compatible = "bar";
->    gpios = <&inv0 0 GPIO_ACTIVE_HIGH>;
-> };
->
-> This is a rough sketch, it would need some elaborate thinking
-> and DT-bindings and changes in gpiolib to deal with those
-> inverters as gpiochips.
->
-> It is a better model of what is really happening: altering the
-> polarity on the gpiochip is wrong since the signal out from
-> the chip is actually the same, and altering the consumer flag
-> as we do today is also wrong because the component does
-> have a very specific polarity.
->
-> We have several boards like this already, but they all just
-> summarize the inversions happening between the gpio chip
-> and the consumer and put the resulting flag in the consumer
-> polarity flag, so no explicit inverters in the device tree so far.
-> This is a simplification of the actual electronics, but the goal
-> with those device trees is running systems, not perfect
-> abstraction of hardware in the device tree.
->
-> However your usecase might warrant an introduction of
-> this inverter concept, if it is like you say that you get new stuff
-> every week that need testing and you like to use the DT to
-> help with this. Again, this is under the assumption that you
-> are actually not changing the GPIO chip, just the PCB.
->
-> But I think real inverter nodes is what you should use if this
-> is your usecase.
->
->> . User application uses gpio-line-name property to map pins
->> and port, this helps the application to handle pin change
->> from hardware sample to sample.
-> I'm happy you can use this :)
-> I worked a lot to make that available.
->
->> As of now there is no
->> configuration available for user space applications for polarity.)
-> I think GPIOHANDLE_REQUEST_ACTIVE_LOW does
-> that? Is there some misunderstanding?
+The value achievable by the SoC are 0.5mA, 2.5mA, 3mA and 4mA and the DT property
+'drive-strength' is expressed in mA.
+So this patch add another generic property "drive-strength-uA". The change to do so
+would be minimal and could be benefit to other platforms later on.
+
+Cheers
+Guillaume
+
+Changes since v2:
+- update driver-strength-uA property to be compliant with DT documentation
+- rework patch series for better understanding
+- rework set_bias function
+
+Changes since v1:
+- fix missing break
+- implement new pinctrl generic property "drive-strength-uA"
+
+[1] https://lkml.kernel.org/r/20190314163725.7918-1-jbrunet@baylibre.com
 
 
-Sorry I was not aware of this earlier. But yes, I confirmed that we could GPIOHANDLE_REQUEST_ACTIVE_LOW.
+Guillaume La Roque (6):
+  dt-bindings: pinctrl: add a 'drive-strength-microamp' property
+  pinctrl: generic: add new 'drive-strength-microamp' property support
+  dt-bindings: pinctrl: meson: Add drive-strength-microamp property
+  pinctrl: meson: Rework enable/disable bias part
+  pinctrl: meson: add support of drive-strength-microamp
+  pinctrl: meson: g12a: add DS bank value
 
-Thanks for the detailed comments.
+ .../bindings/pinctrl/meson,pinctrl.txt        |   4 +
+ .../bindings/pinctrl/pinctrl-bindings.txt     |   3 +
+ drivers/pinctrl/meson/pinctrl-meson-g12a.c    |  36 ++--
+ drivers/pinctrl/meson/pinctrl-meson.c         | 177 +++++++++++++++---
+ drivers/pinctrl/meson/pinctrl-meson.h         |  18 +-
+ drivers/pinctrl/pinconf-generic.c             |   2 +
+ include/linux/pinctrl/pinconf-generic.h       |   3 +
+ 7 files changed, 195 insertions(+), 48 deletions(-)
 
-Yes, We are talking about different PCBs. An example would be a product PCB A and a product PCB B, mainly identical, but due to slightly different hardware different GPIO polarity on some lines. Driven by the same Linux kernel and user space, just different device trees.
-
-The proposal of "inverters" defining the polarity configuration makes sense.
-
-
-Thanks,
-
-Harish Jenny K N
-
+-- 
+2.17.1
 
