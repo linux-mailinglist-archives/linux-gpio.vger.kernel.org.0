@@ -2,52 +2,52 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 9FCE116953
-	for <lists+linux-gpio@lfdr.de>; Tue,  7 May 2019 19:37:22 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 38DC41695D
+	for <lists+linux-gpio@lfdr.de>; Tue,  7 May 2019 19:38:10 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726985AbfEGRhP (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 7 May 2019 13:37:15 -0400
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:44188 "EHLO
+        id S1727416AbfEGRiD (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 7 May 2019 13:38:03 -0400
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:41136 "EHLO
         mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726335AbfEGRhP (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 7 May 2019 13:37:15 -0400
-Received: by mail-oi1-f195.google.com with SMTP id y25so5943259oih.11;
-        Tue, 07 May 2019 10:37:14 -0700 (PDT)
+        with ESMTP id S1726335AbfEGRiC (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 7 May 2019 13:38:02 -0400
+Received: by mail-oi1-f195.google.com with SMTP id b17so5799359oie.8;
+        Tue, 07 May 2019 10:38:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=googlemail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=A7rFP5HCgHx8H7Ab1m4RlZcKeQpsRgTbpXa86ApVmL4=;
-        b=jznAwWaz1+h6XkFSKPJ8JUuHKDtojrwc1VIMQUkbeOnuLfA04Bh4drUJSQVjwTRLLK
-         tpRN+k80EUcAFYURp8kW6oIR6A7W/dABaQ+vHCvB+PBXmOXDBhK4TtRl1bmNrxWvB/kQ
-         tsfPhOzDtvNjrgONOygJhsfxDqEQe/D02brPS/tPrvZhd/A0IhuZWBSo2NWyBjk05XGU
-         NzDxQUu9u67atekXYBHBMIK24wDmPrRaiI9jj8ftvAEcOsSmg8vhcWkWr/stardW5fVp
-         Vdus8drJXa3uTlzkuSzGRWOW0+JRuUUS1Q6mRqMeHN56P0g2dZX9+XlNjy34VwmGcZYG
-         NyaA==
+        bh=zejYr5P9JiV4KR1EkhmBRbvHxOzLvVhI6r2OnIBaRd0=;
+        b=RrcJGUvSDVZbfl9hZpD4xKaS/X/X4eJ6XNpnE5TvH+8k+M2J4BezoyG0uoPiw1T7Mp
+         FNJyR+M+8/EbLI1BtdXnA7FrTybPRf81fPQONlrpduFRI11rcpGZDW8cwIYFWG2HrWiQ
+         LRI9jgY3uD+hiJfgtD9soAMao74Sg/iw7l5OrN6HkpglxIDsS96YHHz7wwwjFBepAGWB
+         5bn4pwwmXWF2+ym5S9dE+E2o7IcaNQ5s9iGVMyPzeva6LWuLZ4d96j/G9Lxh787YvDVM
+         jEsg646vwYrMf0PZQHfWP6Z8WhSkejg4RbFIeCtnD2ZJdZltQ8cFknYVNvNFOUUIJJNX
+         HfWQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=A7rFP5HCgHx8H7Ab1m4RlZcKeQpsRgTbpXa86ApVmL4=;
-        b=rHp5riBXEMfbr8707j+M8QZtsRdDbracgqD9NV8N+3ER+fAfrJjQROsV1kIAU8iFcu
-         4yyZk246rPC0lPvmqyQ2kk6m0A30oEYsbk4dIpgCHuUjaimLtClxl9ozB1JqX+UI5dzZ
-         PfbZwaYBTgfRULkBfT2thoOh9NjxFXEvaeCbuuwu6LuUD9Uidt9Z2BtjpRKilbwsAiFT
-         0NOAtfnsf585+0eenQr2N0L7Ta29jMYdlWfqqf5PubYByFfYVzK4DJB6EIz0TfBlCR+h
-         U9l9m31oPRpBKVth5BfRuKMcas0fMazXlvkvpwqJCq4SYZYuDxqGFCUXOmhgeC81PANM
-         oxbg==
-X-Gm-Message-State: APjAAAUK1r8qQCSem+10FdoRsyhMGz9AoIAF1kt/VO4MR5w9THcV1+1j
-        Yj7ssJqgGMhKKTaGqXfx8TGUA+wYSNvsLRViPXs=
-X-Google-Smtp-Source: APXvYqzovDy0Mb8VNCrV2ND+CU4kL4rfD7/PRqoAPGA9ilH4XNAxUQq05LTuTGAWxinmXAUUJyzTdAUM2/wiGQGZAE0=
-X-Received: by 2002:aca:bdc4:: with SMTP id n187mr910881oif.140.1557250633841;
- Tue, 07 May 2019 10:37:13 -0700 (PDT)
+        bh=zejYr5P9JiV4KR1EkhmBRbvHxOzLvVhI6r2OnIBaRd0=;
+        b=P7w7Z2aUsUWqxqcheHfk3dcanUieg2V2ykHZ5WyFuF+evZV92nGIb9eGmb1//L296/
+         Fsf1NqJtGPhtRF+y+pkL6LUgXOzUfZW8ApnUo9sbsIXs/yxYfKMEjQJfHInPw/buXx42
+         JvxIMiwmYBVGmnteNUIcvl07VBSFSXihrwJuPNIgl+QQBXVSKmhvBALQRpHswa65fU//
+         VoJwyNkpYzPeBM5gVClCXFTa+jV5L/m3FKiRsiSllVwj1VRpi7z2uJrvuXzJbh2quD1f
+         8JS5UzSXsfAjN6lWS2jAx5B+MtJNQeQnIOMJXX1GiQp6XvSYlx0tjMt4FjN7X7hmR3Ip
+         u00Q==
+X-Gm-Message-State: APjAAAUvgRuuxnMXclH3s8LyxKdBW7tKsbFWnYGAYpHdwkmK+o8PinSx
+        HviVGnKCaKUbPfmF//9u0TnWDzkSNozxi5g6+8M=
+X-Google-Smtp-Source: APXvYqyVJ600eKkO90LrXjBVxF5ULSSxyIkNoCzDHXPjvL2K6/VaX5vZILVpcwZqeiW15E86Kikyb6sBuTUNfC7cu/4=
+X-Received: by 2002:aca:5b06:: with SMTP id p6mr977542oib.129.1557250681968;
+ Tue, 07 May 2019 10:38:01 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190507115726.23714-1-glaroque@baylibre.com> <20190507115726.23714-2-glaroque@baylibre.com>
-In-Reply-To: <20190507115726.23714-2-glaroque@baylibre.com>
+References: <20190507115726.23714-1-glaroque@baylibre.com> <20190507115726.23714-4-glaroque@baylibre.com>
+In-Reply-To: <20190507115726.23714-4-glaroque@baylibre.com>
 From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Date:   Tue, 7 May 2019 19:37:02 +0200
-Message-ID: <CAFBinCDXrr9gCsAu_H0LQec-k25YA3vo7zf4n5Nbzh=QKoKizA@mail.gmail.com>
-Subject: Re: [PATCH v3 1/6] dt-bindings: pinctrl: add a 'drive-strength-microamp'
- property
+Date:   Tue, 7 May 2019 19:37:50 +0200
+Message-ID: <CAFBinCANc2DmOofmp0QtLGZy8yNNTY2+0+AXQYxsTM5bjWp2zw@mail.gmail.com>
+Subject: Re: [PATCH v3 3/6] dt-bindings: pinctrl: meson: Add
+ drive-strength-microamp property
 To:     Guillaume La Roque <glaroque@baylibre.com>
 Cc:     linus.walleij@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com,
         khilman@baylibre.com, linux-gpio@vger.kernel.org,
@@ -61,7 +61,7 @@ X-Mailing-List: linux-gpio@vger.kernel.org
 
 On Tue, May 7, 2019 at 1:57 PM Guillaume La Roque <glaroque@baylibre.com> wrote:
 >
-> This property allow drive-strength parameter in uA instead of mA.
+> Add optional drive-strength-microamp property
 >
 > Signed-off-by: Guillaume La Roque <glaroque@baylibre.com>
-Acked-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Reviewed-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
