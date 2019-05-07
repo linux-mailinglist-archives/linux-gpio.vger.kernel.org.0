@@ -2,110 +2,86 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 3110715DD0
-	for <lists+linux-gpio@lfdr.de>; Tue,  7 May 2019 09:04:40 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 53FB515E2F
+	for <lists+linux-gpio@lfdr.de>; Tue,  7 May 2019 09:27:18 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726437AbfEGHE1 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 7 May 2019 03:04:27 -0400
-Received: from relay1.mentorg.com ([192.94.38.131]:38757 "EHLO
-        relay1.mentorg.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726253AbfEGHE0 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 7 May 2019 03:04:26 -0400
-Received: from nat-ies.mentorg.com ([192.94.31.2] helo=svr-ies-mbx-01.mgc.mentorg.com)
-        by relay1.mentorg.com with esmtps (TLSv1.2:ECDHE-RSA-AES256-SHA384:256)
-        id 1hNu9D-0007DO-OO from Harish_Kandiga@mentor.com ; Tue, 07 May 2019 00:04:19 -0700
-Received: from [10.0.4.15] (137.202.0.90) by svr-ies-mbx-01.mgc.mentorg.com
- (139.181.222.1) with Microsoft SMTP Server (TLS) id 15.0.1320.4; Tue, 7 May
- 2019 08:04:15 +0100
-Subject: Re: [PATCH V1 1/2] gpio: make it possible to set active-state on GPIO
- lines
-To:     Phil Reid <preid@electromag.com.au>,
-        Linus Walleij <linus.walleij@linaro.org>
-CC:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
-References: <1557122501-5183-1-git-send-email-harish_kandiga@mentor.com>
- <1557122501-5183-2-git-send-email-harish_kandiga@mentor.com>
- <CACRpkdZ84hkg_8J+OAYpZD0CFzENkUMeaSZoMyTK+hBdTCKGqA@mail.gmail.com>
- <ca559ed5-69ac-b578-2b82-fc0a4d532d3d@mentor.com>
- <CACRpkdYJ930fnO5a1HtUzRL5x1qA9cbgvEJb7mnwC=JLQOKXqQ@mail.gmail.com>
- <aaf22e96-a963-0dfc-a377-05383a219d0a@mentor.com>
- <c1a3fd4e-5080-aef6-a731-49bdb020598f@electromag.com.au>
-From:   Harish Jenny K N <harish_kandiga@mentor.com>
-Message-ID: <ea2ef903-b61d-fb7d-f8a7-13528c0d241f@mentor.com>
-Date:   Tue, 7 May 2019 12:34:04 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        id S1726750AbfEGH1R (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 7 May 2019 03:27:17 -0400
+Received: from mail-vs1-f68.google.com ([209.85.217.68]:34760 "EHLO
+        mail-vs1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726085AbfEGH1Q (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 7 May 2019 03:27:16 -0400
+Received: by mail-vs1-f68.google.com with SMTP id b23so9762663vso.1;
+        Tue, 07 May 2019 00:27:16 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=FyVGzS5//5vO9vIjlcFm3jhEO92omY429+h8Xxopymg=;
+        b=NLx/R2v5lpgrqLKTCbgZo149IrRIJ6Wra/M1byl0d7kSMToi82zah/qlZ1UcYsTeH8
+         /Cb21rDU/LefPI94YiOwq1OOWFAQFrRwHgeZLLBiXimJbxl3CPqLw0R75KVyu/U/rBDN
+         03uOnGMUtDSLORiE6iQam4BaOfsjzFeLVEzDedkJyRR8S53B5pagQsrdZCThG5kYY7Xo
+         YTZIlQoY7zoq71wiFcKef15VEvRXZiF7dbuqaQ9LiL1fQgggKf3r07HWnkK0MT090OM5
+         M8vsf8UBQQ01PwwtjDEAPuyGGhpntmIY+DOd6Sd9GT45tBT9MmFuXvaYICUDW/pw6Tqo
+         7NQg==
+X-Gm-Message-State: APjAAAWeEk6ImGX01zDk4cHEqxfNLsWBgfDKcMs+zDW1yApJhv+u7tRq
+        SUdXeY181l0D/Rk2WNyyL/LVgK0NFxha3HdDp7E=
+X-Google-Smtp-Source: APXvYqwrEEzrFVkDP47Qz72Io6bBpzKJVgVkqqfZ2FyCdPMsHIiZzF/v2t9Mtavq+/7sFR555XysNTU8MSI5igMJ/LI=
+X-Received: by 2002:a67:e2ca:: with SMTP id i10mr8120311vsm.96.1557214035681;
+ Tue, 07 May 2019 00:27:15 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <c1a3fd4e-5080-aef6-a731-49bdb020598f@electromag.com.au>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-Originating-IP: [137.202.0.90]
-X-ClientProxiedBy: SVR-IES-MBX-04.mgc.mentorg.com (139.181.222.4) To
- svr-ies-mbx-01.mgc.mentorg.com (139.181.222.1)
+References: <20190503114304.20412-1-geert+renesas@glider.be> <7b8155bd-94da-8bc5-ab64-3847dc30e9a0@cogentembedded.com>
+In-Reply-To: <7b8155bd-94da-8bc5-ab64-3847dc30e9a0@cogentembedded.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Tue, 7 May 2019 09:27:03 +0200
+Message-ID: <CAMuHMdU5rOq9FKRsU35PtA1Dnd3s559EjjCYX8=nr-zTT83wug@mail.gmail.com>
+Subject: Re: [PATCH] pinctrl: sh-pfc: r8a77970: Remove MMC_{CD,WP}
+To:     Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+Hi Sergei,
 
-On 06/05/19 3:27 PM, Phil Reid wrote:
-> On 6/05/2019 17:15, Harish Jenny K N wrote:
->>
->> On 06/05/19 2:02 PM, Linus Walleij wrote:
->>> On Mon, May 6, 2019 at 9:57 AM Harish Jenny K N
->>> <harish_kandiga@mentor.com> wrote:
->>>
->>>> Can the userspace consumers define the polarity?
->>> Yes. From userspace after opening the GPIO character
->>> device:
->>>
->>> #include <linux/gpio.h>
->>>
->>> struct gpiohandle_request req;
->>>
->>> req.flags = GPIOHANDLE_REQUEST_ACTIVE_LOW | GPIOHANDLE_REQUEST_OUTPUT;
->>> req.lines = 1;
->>> req.lineoffsets[0] = 0;
->>>
->>> ret = ioctl(fd, GPIO_GET_LINEHANDLE_IOCTL, &req);
->>> (...)
->>>
->>> For more details on how to use the character device see tools/gpio/*
->>> in the kernel tree.
->>>
->>>> Intention was to define polarity for lines which are not having consumers from kernelspace.
->>> OK the above should work fine :)
->>>
->>>>> Even when using GPIOs from userspace (which I do not
->>>>> recommend) the character device suppors a polarity flag
->>>>> GPIOLINE_FLAG_ACTIVE_LOW so also userspace
->>>>> consumers define polarity.
->>>> yes. aware of the GPIOLINE_FLAG_ACTIVE_LOW flag to get the status.
->>> Sorry, I was being unclear,
->>> GPIOHANDLE_REQUEST_ACTIVE_LOW
->>> is what you want to use.
->>
->> Thanks. I will explore GPIOHANDLE_REQUEST_ACTIVE_LOW to see if we can use this.
->>
->> Again I wanted to highlight that the intention of the patch was to make it generic and avoid changes in userspace for different hardware samples. (i.e  Some pins in hardware be configured as active low, this can vary between hardware samples. User application uses gpio-line-name property to map pins and port, this helps the application to handle pin change from hardware sample to sample. As of now there is no configuration available for user space applications for polarity.)
->>
+On Mon, May 6, 2019 at 8:46 PM Sergei Shtylyov
+<sergei.shtylyov@cogentembedded.com> wrote:
+> On 05/03/2019 02:43 PM, Geert Uytterhoeven wrote:
 >
-> This is pretty useful to be able to abstract polarity (and other properties from userspace).
+> > Hardware Manual Errata for rev. 15.0 of March 26, 2019 removed the bit
 >
-> I was thinking of adding a virtual gpio provider for one pin that just uses the dt consumer bindings to hide
-> polarities etc from userspace.
+>    1.50 perhaps? :-)
+>
+> > definitions for MMC_CD and MMC_WP in the documentation for the IPSR6
+>
+>    ... and IPSR7. ;-)
+>
+> > register, as these pin functionalities do not exist on R-Car V3M.
+> >
+> > Remove the definitions, and the corrresponding pins and groups.
+> >
+> > Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> > ---
+> > To be queued in sh-pfc-for-v5.3.
+>
+>    With these small issues fixed:
+>
+> Reviewed-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
 
+Thanks for your continued attention!
 
-Thanks for the input.
+Gr{oetje,eeting}s,
 
-Can the maintainers please confirm how does they want to have this implemented?
+                        Geert
 
-i.e How to define the polarity for generic GPIOs exported to user space in the device tree, to be able to make user space GPIO usage independent of hardware revisions?
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
-
-Thanks,
-
-Harish Jenny K N
-
-
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
