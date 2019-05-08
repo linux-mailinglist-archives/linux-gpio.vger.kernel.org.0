@@ -2,169 +2,341 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 80C2E172B7
-	for <lists+linux-gpio@lfdr.de>; Wed,  8 May 2019 09:40:04 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 32022173CC
+	for <lists+linux-gpio@lfdr.de>; Wed,  8 May 2019 10:28:57 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726783AbfEHHkD (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 8 May 2019 03:40:03 -0400
-Received: from mail-qk1-f193.google.com ([209.85.222.193]:40453 "EHLO
-        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726657AbfEHHkD (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 8 May 2019 03:40:03 -0400
-Received: by mail-qk1-f193.google.com with SMTP id w20so244000qka.7
-        for <linux-gpio@vger.kernel.org>; Wed, 08 May 2019 00:40:02 -0700 (PDT)
+        id S1726614AbfEHI24 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 8 May 2019 04:28:56 -0400
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:40679 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726387AbfEHI24 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 8 May 2019 04:28:56 -0400
+Received: by mail-lj1-f196.google.com with SMTP id d15so16709815ljc.7
+        for <linux-gpio@vger.kernel.org>; Wed, 08 May 2019 01:28:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=kdzNGG6w8busuuDVf/UQqEgzyyAeZLA0QEhPPerzhfg=;
-        b=mGDwoD4U62ey6G7SruSx83RUQNe+cXi/7VIMvqL9+ahBUlgPNQwS98dYlXxeQxQ8Bk
-         IFuhOGwxWtAVuqezODZivYfjrX+e6ntlFVnvGVkxIp8xa9mms3GEcgUcVyeOzSv2/dj5
-         /BZw0T/c0G6FkPHM4B0kzgTFXOIZmj9mSHFqo=
+        d=linaro.org; s=google;
+        h=mime-version:from:date:message-id:subject:to:cc
+         :content-transfer-encoding;
+        bh=Li2d49mzUCijRdjBZvZl5BfDZelXl1h8JGrIA0GByPA=;
+        b=hQEiu9NwZ9a4IbxhU6owGDpKuil/IxbGA5l+3dGnkJrMWRKyDArU011X4k/LyLnur0
+         Xstppkl66cEtx54D/LyMU9iAlJfz/9WED5xVKGAw6xgUDbOl4WNdUz8qwLNvjcNmA8+F
+         5nO9XpanANu7X2s9BM5FEN/IxsdH4uu1Z5QoKCduOP0Ccf9VJ/Va8j/sPyPv2G/z5GyY
+         PNRG1VlWHkubDDw6MsZN5tSA7TIuZP19Nk+6fLD4GTb7b2ZHqFtbm2CRCddO1ipsiM2P
+         OKjGokhvhGZzj0RXBmhSGIHgOx2I+tPDK3PopsDiIXtl6nRx2x019djnYQPw/IN2CAMe
+         L7iw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=kdzNGG6w8busuuDVf/UQqEgzyyAeZLA0QEhPPerzhfg=;
-        b=HxHctukMUKG1eV/LgwefqZZx/Pndghv56kK3Y73yB8jj3SlDqQGCxtT6kcf1ESrgGt
-         n3HOHEiPmM0DK1TOe7+Q8u+lwJZ+UScidFGz39QqMX/3Nlvlrzcxd1oQSzZP9tLcVYcG
-         s+Ty/qpSq6IU3T2gxmLsj2Y8RqSd0FMUSVV3eTZ/WwxjMO1H7+QLWIZY1bomDuZPFbLh
-         GqXe5qMl9JcZJNlsFEkIs3R96ENTyvN/zNgF1VSoRH0PRPRFTyFP1TinNZecXBRXX/Lk
-         5O+VxobFLm9nK0z3ec0yoS7eX53givC2Bj9G9MVQtjUj0h18jUddRpDteF8pmUFoqgZK
-         Hghg==
-X-Gm-Message-State: APjAAAXB9Cl08I2Bc6uxv+KBqfsHO8HJwVg+xmWWJFwhn9M3qjb0c51G
-        v8Is08sZy8E1X4xVzZxPWheoO+YNsna7G6Z7kJJANg==
-X-Google-Smtp-Source: APXvYqysbcDT6bwWGV2HclOY8NZruV58WYxSqPpErYEwFdjc/fTQZKoLsn3w/8kJFVIKm/xaLb0gQ5MJd+XlaYmy6fc=
-X-Received: by 2002:a05:620a:1670:: with SMTP id d16mr15764186qko.288.1557301201879;
- Wed, 08 May 2019 00:40:01 -0700 (PDT)
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc
+         :content-transfer-encoding;
+        bh=Li2d49mzUCijRdjBZvZl5BfDZelXl1h8JGrIA0GByPA=;
+        b=JRz6IkOktPtwkwTn2LAq1etLaXO5DWi+ka4TQtyN5Z7ikJVMhs44rR8nkQ/GBZsJdR
+         ruNWrQuN5wyhUS8Gg2gdXaT3CpFAvEmZgEGQBCNwQFo6l8sCiKKSl9x4d9nhqbgij/fS
+         OZQmeSy+MRNluAJMuKaNdfZsRlNcwT0bVOe40jYuRkVFBHsZv/SzMraBOMqlWl8G92qj
+         isGJehDs5yL3zUexOh4pytutkqf3Se20LRkoxijT0gKzbNI31ItZhMI+e55Y9ILkBk7g
+         LMm6Qq2L3fxGH+9G8vhTCWFTw889+yxCBr5yf3TMNfmMPnKzI6OvWaRNRItNUnIhomjt
+         eR3Q==
+X-Gm-Message-State: APjAAAWMTshDW3xZ8rkDr+qoYYwa5YuPgg3Av58Udw1EmcJBwkWgvGIM
+        dvEE2xFRmIFLfPHwWVH8gXjY5PNzsAoSxTOJ63Ko9A==
+X-Google-Smtp-Source: APXvYqwdytMSTAaaAsjidNhN+zTs9tk31m2UbS9Ja2jgOUZBFtflTnWYtm4JdDbQvZvHCWgTW1UuIDhC/4ynh9i5QP0=
+X-Received: by 2002:a2e:834d:: with SMTP id l13mr21017713ljh.97.1557304132981;
+ Wed, 08 May 2019 01:28:52 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190429032551.65975-1-drinkcat@chromium.org> <20190429032551.65975-2-drinkcat@chromium.org>
- <1556804888.28808.6.camel@mtksdaap41> <CANMq1KAugRiL+-bAFijEM7NngLSoOUQtN=rNV5+YYdJ12u+jVQ@mail.gmail.com>
- <CAGp9LzqdYapagHUH1uuuHRR+j5JcphN7hhM2SyZoXQFCP8_fSw@mail.gmail.com>
-In-Reply-To: <CAGp9LzqdYapagHUH1uuuHRR+j5JcphN7hhM2SyZoXQFCP8_fSw@mail.gmail.com>
-From:   Nicolas Boichat <drinkcat@chromium.org>
-Date:   Wed, 8 May 2019 16:39:50 +0900
-Message-ID: <CANMq1KCzy45RYR-8Y6zeCj+xzOk6QUJvTA8aB8LYZ7zmORmiGQ@mail.gmail.com>
-Subject: Re: [PATCH 1/2] pinctrl: mediatek: Add mtk_eint_pm_ops to common-v2
-To:     Sean Wang <sean.wang@kernel.org>
-Cc:     Yingjoe Chen <yingjoe.chen@mediatek.com>,
-        Chuanjia Liu <Chuanjia.Liu@mediatek.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Evan Green <evgreen@chromium.org>,
-        Stephen Boyd <swboyd@chromium.org>, linux-gpio@vger.kernel.org,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Wed, 8 May 2019 10:28:41 +0200
+Message-ID: <CACRpkdYMDCQEhWUGGqKs6SM-TB_dtPtjcAL7RJnLuHu4Wto=kA@mail.gmail.com>
+Subject: [GIT PULL] pin control changes for v5.2
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Sat, May 4, 2019 at 2:09 AM Sean Wang <sean.wang@kernel.org> wrote:
->
-> Hi, Nicolas
->
-> On Thu, May 2, 2019 at 5:53 PM Nicolas Boichat <drinkcat@chromium.org> wrote:
-> >
-> > On Thu, May 2, 2019 at 9:48 PM Yingjoe Chen <yingjoe.chen@mediatek.com> wrote:
-> > >
-> > > On Mon, 2019-04-29 at 11:25 +0800, Nicolas Boichat wrote:
-> > > > pinctrl variants that include pinctrl-mtk-common-v2.h (and not
-> > > > pinctrl-mtk-common.h) also need to use mtk_eint_pm_ops to setup
-> > > > wake mask properly, so copy over the pm_ops to v2.
-> > > >
-> > > > It is not easy to merge the 2 copies (or move
-> > > > mtk_eint_suspend/resume to mtk-eint.c), as we need to
-> > > > dereference pctrl->eint, and struct mtk_pinctrl *pctl has a
-> > > > different structure definition for v1 and v2.
-> > > >
-> > > > Signed-off-by: Nicolas Boichat <drinkcat@chromium.org>
-> > > > Reviewed-by: Chuanjia Liu <Chuanjia.Liu@mediatek.com>
-> > > > ---
-> > > >  .../pinctrl/mediatek/pinctrl-mtk-common-v2.c  | 19 +++++++++++++++++++
-> > > >  .../pinctrl/mediatek/pinctrl-mtk-common-v2.h  |  1 +
-> > > >  2 files changed, 20 insertions(+)
-> > > >
-> > > > diff --git a/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.c b/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.c
-> > > > index 20e1c890e73b30c..7e19b5a4748eafe 100644
-> > > > --- a/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.c
-> > > > +++ b/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.c
-> > > > @@ -723,3 +723,22 @@ int mtk_pinconf_adv_drive_get(struct mtk_pinctrl *hw,
-> > > >
-> > > >       return 0;
-> > > >  }
-> > > > +
-> > > > +static int mtk_eint_suspend(struct device *device)
-> > > > +{
-> > > > +     struct mtk_pinctrl *pctl = dev_get_drvdata(device);
-> > > > +
-> > > > +     return mtk_eint_do_suspend(pctl->eint);
-> > > > +}
-> > > > +
-> > > > +static int mtk_eint_resume(struct device *device)
-> > > > +{
-> > > > +     struct mtk_pinctrl *pctl = dev_get_drvdata(device);
-> > > > +
-> > > > +     return mtk_eint_do_resume(pctl->eint);
-> > > > +}
-> > > > +
-> > > > +const struct dev_pm_ops mtk_eint_pm_ops = {
-> > > > +     .suspend_noirq = mtk_eint_suspend,
-> > > > +     .resume_noirq = mtk_eint_resume,
-> > > > +};
-> > >
-> > > This is identical to the one in pinctrl-mtk-common.c and will have name
-> > > clash if both pinctrl-mtk-common.c and pinctrl-mtk-common-v2.c are
-> > > built.
-> > >
-> > > It would be better if we try to merge both version into mtk-eint.c, this
-> > > way we could also remove some global functions.
-> >
-> > Argh, I didn't think about the name clash, you're right. I guess the
-> > easy way is to rename this one mtk_eint_pm_ops_v2 ...
-> >
-> > As highlighted in the commit message, it's tricky to merge the 2 sets
-> > of functions, they look identical, but they actually work on struct
-> > mtk_pinctrl that are defined differently (in
-> > pinctrl-mtk-common[-v2].h), so the ->eint member is at different
-> > addresses...
-> >
-> > I don't really see a way around this... Unless we want to change
-> > platform_set_drvdata(pdev, pctl); to pass another type of structure
-> > that could be shared (but I think that'll make the code fairly
-> > verbose, with another layer of indirection). Or just assign struct
-> > mtk_eint to that, since that contains pctl so we could get back the
-> > struct mtk_pinctrl from that, but that feels ugly as well...
-> >
->
-> I agree on renaming would make the thing simple. but I wouldn't like
-> to rename to mtk_eint_pm_ops_v2 since this would make people
-> misunderstand that is mtk_eint_v2.
->
-> How about renaming to mtk_paris_pinctrl_pm_ops and then place related
-> logic you added into pinctrl-paris.c? Because I prefer to keep pure
-> pinctrl hardware operations in pinctrl-mtk-common-v2.c, and for
-> relevant to other modules (mtk eint) or others subsystem (device tree
-> binding, GPIO subsytem, PM something like that) they should be moved
-> to pinctrl-paris.c or pinctrl-moore.c
+Hi Linus,
 
-Sounds reasonable. I uploaded a v2 that does just that.
+here is the bulk changes for pin control for this merge window.
+It is pretty calm and chill in pin control for the moment. Just incremental
+development.
 
-Note that we'd still have to duplicate this code between paris and
-moore, if we wanted to implement pm_ops in moore as well, but maybe
-that's ok for now.
+There is an odd patch to the Super-H architecture, it's coming from
+the maintainers so should be fine.
 
->      Sean
->
-> > >
-> > > Joe.C
-> > >
-> > >
-> > >
-> > > _______________________________________________
-> > > Linux-mediatek mailing list
-> > > Linux-mediatek@lists.infradead.org
-> > > http://lists.infradead.org/mailman/listinfo/linux-mediatek
+More details are in the signed tag.
+
+Please pull it in!
+
+Yours,
+Linus Walleij
+
+The following changes since commit 9e98c678c2d6ae3a17cb2de55d17f69dddaa231b=
+:
+
+  Linux 5.1-rc1 (2019-03-17 14:22:26 -0700)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git
+tags/pinctrl-v5.2-1
+
+for you to fetch changes up to e0e31695b53b649dc2784c4dd517bcdd09bce189:
+
+  pinctrl: mcp23s08: Do not complain about unsupported params
+(2019-05-07 11:47:14 +0200)
+
+----------------------------------------------------------------
+Pin control changes for v5.2:
+
+Nex drivers:
+- New driver for Bitmain BM1880 pin controller
+- New driver for Mediatek MT8516
+- New driver for Cirrus Logich Lochnagar PMIC pins
+
+Updates:
+- Incremental development on Renesas SH-PFC
+- Incremental development on Intel pin controller and some
+  particular updates for Cedarfork.
+- Pin configuration support in Allwinner SunXi drivers
+- Suspend/resume support in the NXP/Freescale i.MX8MQ driver
+- Support for more packaging of the ST Micro STM32
+
+----------------------------------------------------------------
+Abel Vesa (1):
+      pinctrl: imx8mq: Add suspend/resume ops
+
+Aditya Pakki (2):
+      pinctrl: baytrail: Fix potential NULL pointer dereference
+      pinctrl: axp209: Fix NULL pointer dereference after allocation
+
+Alexandre Torgue (4):
+      dt-bindings: pinctrl: stm32: add new entry for package information
+      pinctrl: stm32: introduce package support
+      pinctrl: stm32: add package information for stm32mp157c
+      pinctrl: stm32: align stm32mp157 pin names
+
+Andy Shevchenko (2):
+      pinctrl: cedarfork: Update pin names according to v1.13c
+      pinctrl: intel: Increase readability of intel_gpio_update_pad_mode()
+
+Anson Huang (1):
+      pinctrl: freescale: use devm_platform_ioremap_resource() to simplify =
+code
+
+Binbin Wu (1):
+      pinctrl: pinctrl-intel: move gpio suspend/resume to noirq phase
+
+Charles Keepax (2):
+      pinctrl: lochnagar: Add initial binding documentation
+      pinctrl: lochnagar: Add support for the Cirrus Logic Lochnagar
+
+Chris Chiu (1):
+      pinctrl: intel: Retain HOSTSW_OWN for requested gpio pin
+
+Christina Quast (1):
+      dt-bindings: pinctrl: imx7d: Fix PAD_CTL_DSE_X*
+
+Dan Carpenter (1):
+      pinctrl: imx: remove an unnecessary NULL check
+
+Fabien Dessenne (1):
+      pinctrl: stm32: check irq controller availability at probe
+
+Fabien Parent (2):
+      pinctrl: mt65xx: add OF bindings for MT8516
+      pinctrl: mediatek: Add MT8516 Pinctrl driver
+
+Fabrizio Castro (2):
+      pinctrl: sh-pfc: r8a7796: Move CANFD pin groups and functions
+      pinctrl: sh-pfc: r8a77990: Move CANFD pin groups and functions
+
+Geert Uytterhoeven (16):
+      pinctrl: sh-pfc: r8a77970: Rename IOCTRLx registers
+      pinctrl: sh-pfc: r8a77980: Rename IOCTRLx registers
+      pinctrl: sh-pfc: r8a77990: Rename IOCTRLx registers
+      pinctrl: sh-pfc: Validate pinmux tables at runtime when debugging
+      pinctrl: sh-pfc: Introduce PINCTRL_SH_FUNC_GPIO helper symbol
+      pinctrl: sh-pfc: Add missing #include <linux/errno.h>
+      sh: sh7786: Add explicit I/O cast to sh7786_mm_sel()
+      pinctrl: sh-pfc: Allow compile-testing of all drivers
+      pinctrl: sh-pfc: Absorb enum IDs in PINMUX_CFG_REG() macro
+      pinctrl: sh-pfc: Absorb enum IDs in PINMUX_CFG_REG_VAR() macro
+      pinctrl: sh-pfc: Absorb enum IDs in PINMUX_DATA_REG() macro
+      pinctrl: sh-pfc: Validate enum IDs for regs with fixed-width fields
+      pinctrl: sh-pfc: Validate enum IDs for regs with variable-width field=
+s
+      pinctrl: rza1: Remove unneeded spinlock acquisitions
+      pinctrl: sh-pfc: Improve PINMUX_IPSR_PHYS() documentation
+      pinctrl: sh-pfc: r8a77970: Fix spacing
+
+Jan Kundr=C3=A1t (2):
+      gpiolib: export devprop_gpiochip_set_names()
+      pinctrl: mcp23s08: Do not complain about unsupported params
+
+Linus Walleij (4):
+      Merge tag 'sh-pfc-for-v5.2-tag1' of
+git://git.kernel.org/.../geert/renesas-drivers into devel
+      gpiolib: devprop: Fix syntax error
+      pinctrl: artpec6: Drop unused function and rename
+      Merge tag 'intel-pinctrl-v5.2-1' of
+git://git.kernel.org/.../pinctrl/intel into devel
+
+Manivannan Sadhasivam (4):
+      dt-bindings: pinctrl: Add BM1880 pinctrl binding
+      pinctrl: Add pinctrl support for BM1880 SoC
+      MAINTAINERS: Add entry for BM1880 pinctrl
+      pinctrl: Rework Kconfig dependency for BM1880 pinctrl driver
+
+Marek Vasut (1):
+      pinctrl: sh-pfc: rcar-gen3: Retain TDSELCTRL register across
+suspend/resume
+
+Maxime Ripard (4):
+      pinctrl: sunxi: implement pin_config_set
+      pinctrl: sunxi: Fix variable assignment syntax
+      pinctrl: sunxi: Declare set_config on the GPIO chip
+      pinctrl: sunxi: Allow to disable pinctrl drivers
+
+Ondrej Jirman (2):
+      pinctrl: sunxi: Prepare for alternative bias voltage setting methods
+      pinctrl: sunxi: Support I/O bias voltage setting on H6
+
+Sandeep Singh (1):
+      pinctrl: Added IRQF_SHARED flag for amd-pinctrl driver
+
+Takeshi Kihara (9):
+      pinctrl: sh-pfc: r8a77990: Fix MOD_SEL0 bit16 when using NFALE and NF=
+RB_N
+      pinctrl: sh-pfc: r8a77990: Fix MOD_SEL1 bit31 when using SIM0_D
+      pinctrl: sh-pfc: r8a77990: Fix MOD_SEL1 bit30 when using
+SSI_SCK2 and SSI_WS2
+      pinctrl: sh-pfc: rcar-gen3: Remove HDMI CEC pins, groups, and functio=
+ns
+      pinctrl: sh-pfc: rcar-gen3: Remove CC5_OSCOUT pin
+      pinctrl: sh-pfc: rcar-gen3: Rename RTS{0,1,3,4}# pin function definit=
+ions
+      pinctrl: sh-pfc: rcar-gen3: Rename SEL_ADG_{A,B,C} to SEL_ADG{A,B,C}
+      pinctrl: sh-pfc: rcar-gen3: Rename SEL_NDFC to SEL_NDF
+      pinctrl: sh-pfc: r8a77965: Add I2C{0,3,5} pins, groups and functions
+
+Ulrich Hecht (2):
+      pinctrl: sh-pfc: r8a7779: Add HSCIF0/1 pins
+      pinctrl: sh-pfc: r8a7796: Remove placeholder I2C pin data
+
+Wen Yang (4):
+      pinctrl: samsung: fix leaked of_node references
+      pinctrl: st: fix leaked of_node references
+      pinctrl: pistachio: fix leaked of_node references
+      pinctrl: zte: fix leaked of_node references
+
+YueHaibing (2):
+      pinctrl: fsl: Make pinctrl_ipc_handle static
+      pinctrl: artpec6: Make two functions static
+
+Zhiyong Tao (2):
+      pinctrl: mt8183: add DT binding document
+      pinctrl: add drive for I2C related pins on MT8183
+
+ .../bindings/pinctrl/bitmain,bm1880-pinctrl.txt    |   98 ++
+ .../bindings/pinctrl/cirrus,lochnagar.txt          |  141 +++
+ .../bindings/pinctrl/fsl,imx7d-pinctrl.txt         |    6 +-
+ .../devicetree/bindings/pinctrl/pinctrl-mt65xx.txt |    1 +
+ .../devicetree/bindings/pinctrl/pinctrl-mt8183.txt |  132 +++
+ .../bindings/pinctrl/st,stm32-pinctrl.txt          |    2 +
+ MAINTAINERS                                        |    2 +
+ arch/sh/include/cpu-sh4/cpu/sh7786.h               |    2 +-
+ drivers/gpio/gpiolib-devprop.c                     |    2 +
+ drivers/gpio/gpiolib.h                             |    3 -
+ drivers/pinctrl/Kconfig                            |    8 +
+ drivers/pinctrl/Makefile                           |    1 +
+ drivers/pinctrl/cirrus/Kconfig                     |   10 +
+ drivers/pinctrl/cirrus/Makefile                    |    2 +
+ drivers/pinctrl/cirrus/pinctrl-lochnagar.c         | 1235 ++++++++++++++++=
+++++
+ drivers/pinctrl/freescale/pinctrl-imx.c            |   25 +-
+ drivers/pinctrl/freescale/pinctrl-imx.h            |    1 +
+ drivers/pinctrl/freescale/pinctrl-imx8mq.c         |    1 +
+ drivers/pinctrl/freescale/pinctrl-scu.c            |    2 +-
+ drivers/pinctrl/intel/pinctrl-baytrail.c           |    2 +
+ drivers/pinctrl/intel/pinctrl-cedarfork.c          |   18 +-
+ drivers/pinctrl/intel/pinctrl-intel.c              |   66 +-
+ drivers/pinctrl/intel/pinctrl-intel.h              |   11 +-
+ drivers/pinctrl/mediatek/Kconfig                   |    7 +
+ drivers/pinctrl/mediatek/Makefile                  |    1 +
+ drivers/pinctrl/mediatek/pinctrl-mt8183.c          |   50 +
+ drivers/pinctrl/mediatek/pinctrl-mt8516.c          |  362 ++++++
+ drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.c   |   49 +
+ drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.h   |   11 +
+ drivers/pinctrl/mediatek/pinctrl-mtk-mt8516.h      | 1182 ++++++++++++++++=
++++
+ drivers/pinctrl/mediatek/pinctrl-paris.c           |   21 +
+ drivers/pinctrl/pinctrl-amd.c                      |    4 +-
+ drivers/pinctrl/pinctrl-artpec6.c                  |   19 +-
+ drivers/pinctrl/pinctrl-axp209.c                   |    2 +
+ drivers/pinctrl/pinctrl-bm1880.c                   |  965 +++++++++++++++
+ drivers/pinctrl/pinctrl-mcp23s08.c                 |    3 +-
+ drivers/pinctrl/pinctrl-pistachio.c                |    2 +
+ drivers/pinctrl/pinctrl-rza1.c                     |   18 +-
+ drivers/pinctrl/pinctrl-st.c                       |   15 +-
+ drivers/pinctrl/samsung/pinctrl-exynos-arm.c       |    1 +
+ drivers/pinctrl/sh-pfc/Kconfig                     |  204 ++--
+ drivers/pinctrl/sh-pfc/Makefile                    |   15 +
+ drivers/pinctrl/sh-pfc/core.c                      |  130 +++
+ drivers/pinctrl/sh-pfc/gpio.c                      |    8 +-
+ drivers/pinctrl/sh-pfc/pfc-emev2.c                 |   67 +-
+ drivers/pinctrl/sh-pfc/pfc-r8a73a4.c               |   64 +-
+ drivers/pinctrl/sh-pfc/pfc-r8a7740.c               |   56 +-
+ drivers/pinctrl/sh-pfc/pfc-r8a77470.c              |  136 ++-
+ drivers/pinctrl/sh-pfc/pfc-r8a7778.c               |  101 +-
+ drivers/pinctrl/sh-pfc/pfc-r8a7779.c               |  235 +++-
+ drivers/pinctrl/sh-pfc/pfc-r8a7790.c               |  132 ++-
+ drivers/pinctrl/sh-pfc/pfc-r8a7791.c               |  156 +--
+ drivers/pinctrl/sh-pfc/pfc-r8a7792.c               |  134 ++-
+ drivers/pinctrl/sh-pfc/pfc-r8a7794.c               |  127 +-
+ drivers/pinctrl/sh-pfc/pfc-r8a7795-es1.c           |  222 ++--
+ drivers/pinctrl/sh-pfc/pfc-r8a7795.c               |  201 ++--
+ drivers/pinctrl/sh-pfc/pfc-r8a7796.c               |  225 ++--
+ drivers/pinctrl/sh-pfc/pfc-r8a77965.c              |  294 +++--
+ drivers/pinctrl/sh-pfc/pfc-r8a77970.c              |  123 +-
+ drivers/pinctrl/sh-pfc/pfc-r8a77980.c              |  135 +--
+ drivers/pinctrl/sh-pfc/pfc-r8a77990.c              |  214 ++--
+ drivers/pinctrl/sh-pfc/pfc-r8a77995.c              |  120 +-
+ drivers/pinctrl/sh-pfc/pfc-sh7203.c                |  152 +--
+ drivers/pinctrl/sh-pfc/pfc-sh7264.c                |  232 ++--
+ drivers/pinctrl/sh-pfc/pfc-sh7269.c                |  252 ++--
+ drivers/pinctrl/sh-pfc/pfc-sh73a0.c                |   52 +-
+ drivers/pinctrl/sh-pfc/pfc-sh7720.c                |  144 +--
+ drivers/pinctrl/sh-pfc/pfc-sh7722.c                |  220 ++--
+ drivers/pinctrl/sh-pfc/pfc-sh7723.c                |  200 ++--
+ drivers/pinctrl/sh-pfc/pfc-sh7724.c                |  204 ++--
+ drivers/pinctrl/sh-pfc/pfc-sh7734.c                |  140 ++-
+ drivers/pinctrl/sh-pfc/pfc-sh7757.c                |  244 ++--
+ drivers/pinctrl/sh-pfc/pfc-sh7785.c                |  136 +--
+ drivers/pinctrl/sh-pfc/pfc-sh7786.c                |   80 +-
+ drivers/pinctrl/sh-pfc/pfc-shx3.c                  |   32 +-
+ drivers/pinctrl/sh-pfc/sh_pfc.h                    |   68 +-
+ drivers/pinctrl/stm32/pinctrl-stm32.c              |  105 +-
+ drivers/pinctrl/stm32/pinctrl-stm32.h              |   14 +
+ drivers/pinctrl/stm32/pinctrl-stm32mp157.c         | 1089 +++++++++-------=
+-
+ drivers/pinctrl/sunxi/Kconfig                      |   57 +-
+ drivers/pinctrl/sunxi/pinctrl-sun50i-h6.c          |    1 +
+ drivers/pinctrl/sunxi/pinctrl-sun9i-a80-r.c        |    2 +-
+ drivers/pinctrl/sunxi/pinctrl-sun9i-a80.c          |    2 +-
+ drivers/pinctrl/sunxi/pinctrl-sunxi.c              |   96 +-
+ drivers/pinctrl/sunxi/pinctrl-sunxi.h              |   18 +-
+ drivers/pinctrl/zte/pinctrl-zx.c                   |    1 +
+ include/dt-bindings/pinctrl/stm32-pinfunc.h        |    6 +
+ include/linux/gpio/driver.h                        |    3 +
+ 88 files changed, 8120 insertions(+), 3012 deletions(-)
+ create mode 100644
+Documentation/devicetree/bindings/pinctrl/bitmain,bm1880-pinctrl.txt
+ create mode 100644
+Documentation/devicetree/bindings/pinctrl/cirrus,lochnagar.txt
+ create mode 100644 Documentation/devicetree/bindings/pinctrl/pinctrl-mt818=
+3.txt
+ create mode 100644 drivers/pinctrl/cirrus/pinctrl-lochnagar.c
+ create mode 100644 drivers/pinctrl/mediatek/pinctrl-mt8516.c
+ create mode 100644 drivers/pinctrl/mediatek/pinctrl-mtk-mt8516.h
+ create mode 100644 drivers/pinctrl/pinctrl-bm1880.c
