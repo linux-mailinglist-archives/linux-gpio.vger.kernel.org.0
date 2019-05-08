@@ -2,88 +2,54 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id F385217FBA
-	for <lists+linux-gpio@lfdr.de>; Wed,  8 May 2019 20:19:49 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 41F4517FDA
+	for <lists+linux-gpio@lfdr.de>; Wed,  8 May 2019 20:35:59 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727949AbfEHSTt (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 8 May 2019 14:19:49 -0400
-Received: from muru.com ([72.249.23.125]:48178 "EHLO muru.com"
+        id S1727785AbfEHSaP (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 8 May 2019 14:30:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58180 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727352AbfEHSTt (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Wed, 8 May 2019 14:19:49 -0400
-Received: from hillo.muru.com (localhost [127.0.0.1])
-        by muru.com (Postfix) with ESMTP id B8153809F;
-        Wed,  8 May 2019 18:20:05 +0000 (UTC)
-From:   Tony Lindgren <tony@atomide.com>
-To:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Cc:     linux-gpio@vger.kernel.org, linux-omap@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        Aaro Koskinen <aaro.koskinen@iki.fi>,
-        Grygorii Strashko <grygorii.strashko@ti.com>,
-        Keerthy <j-keerthy@ti.com>,
-        Ladislav Michl <ladis@linux-mips.org>,
-        Peter Ujfalusi <peter.ujfalusi@ti.com>,
-        Russell King <rmk+kernel@armlinux.org.uk>,
-        Tero Kristo <t-kristo@ti.com>
-Subject: [PATCH] gpio: gpio-omap: Fix lost edge wake-up interrupts
-Date:   Wed,  8 May 2019 11:19:39 -0700
-Message-Id: <20190508181939.1990-1-tony@atomide.com>
-X-Mailer: git-send-email 2.21.0
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        id S1726976AbfEHSaP (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Wed, 8 May 2019 14:30:15 -0400
+Subject: Re: [GIT PULL] pin control changes for v5.2
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1557340214;
+        bh=I+uPXP+HjRDNkRKVRHVofBX4QbgRklvSz84xAFg1kFQ=;
+        h=From:In-Reply-To:References:Date:To:Cc:From;
+        b=GpxSR/RRAmExfkXzl23r6O+ogJWUafPJ3n687kfVEDO9h+DU9pNRmg8wQk7rfXQQN
+         LQQtBN8dUjkOwOq/EiKi2St9pEHaXmFmgyEa3i1JgFQ3IsLVbPzLI/RJuo0Q6UYMy2
+         JSfAZRalDm6Qn4sZCCDYAW/+jcpnpvrbpDXz7ff0=
+From:   pr-tracker-bot@kernel.org
+In-Reply-To: <CACRpkdYMDCQEhWUGGqKs6SM-TB_dtPtjcAL7RJnLuHu4Wto=kA@mail.gmail.com>
+References: <CACRpkdYMDCQEhWUGGqKs6SM-TB_dtPtjcAL7RJnLuHu4Wto=kA@mail.gmail.com>
+X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <CACRpkdYMDCQEhWUGGqKs6SM-TB_dtPtjcAL7RJnLuHu4Wto=kA@mail.gmail.com>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git
+ tags/pinctrl-v5.2-1
+X-PR-Tracked-Commit-Id: e0e31695b53b649dc2784c4dd517bcdd09bce189
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: fe460a6df6a8427d4ce7c731a0de43b6e10e9f6b
+Message-Id: <155734021464.8790.1091749190534215079.pr-tracker-bot@kernel.org>
+Date:   Wed, 08 May 2019 18:30:14 +0000
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-If an edge interrupt triggers while entering idle just before we save
-GPIO datain register to saved_datain, the triggered GPIO will not be
-noticed on wake-up. This is because the saved_datain and GPIO datain
-are the same. Let's fix this by ignoring any pending edge interrupts
-in saved_datain.
+The pull request you sent on Wed, 8 May 2019 10:28:41 +0200:
 
-This can be somewhat easily reproduced by pinging an idle system with
-smsc911x Ethernet interface configured IRQ_TYPE_EDGE_FALLING. At some
-point the smsc911x interrupts will just stop triggering.
+> git://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git tags/pinctrl-v5.2-1
 
-Note that in the long run we may be able to cancel entering idle by
-returning an error in gpio_omap_cpu_notifier(). But let's fix the bug
-first.
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/fe460a6df6a8427d4ce7c731a0de43b6e10e9f6b
 
-Also note that because of the recent clean-up efforts this patch does
-not apply directly to older kernels. This does fix a long term issue
-though, and can be backported as needed.
+Thank you!
 
-Cc: Aaro Koskinen <aaro.koskinen@iki.fi>
-Cc: Grygorii Strashko <grygorii.strashko@ti.com>
-Cc: Keerthy <j-keerthy@ti.com>
-Cc: Ladislav Michl <ladis@linux-mips.org>
-Cc: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Cc: Russell King <rmk+kernel@armlinux.org.uk>
-Cc: Tero Kristo <t-kristo@ti.com>
-Signed-off-by: Tony Lindgren <tony@atomide.com>
----
- drivers/gpio/gpio-omap.c | 7 +++++++
- 1 file changed, 7 insertions(+)
-
-diff --git a/drivers/gpio/gpio-omap.c b/drivers/gpio/gpio-omap.c
---- a/drivers/gpio/gpio-omap.c
-+++ b/drivers/gpio/gpio-omap.c
-@@ -1279,7 +1279,14 @@ static void omap_gpio_idle(struct gpio_bank *bank, bool may_lose_context)
- 	void __iomem *base = bank->base;
- 	u32 nowake;
- 
-+	/*
-+	 * Save datain register to trigger edge interrupts on unidle for GPIOS
-+	 * that are not wake-up capable. Ignore any enabled_non_wakeup_gpios
-+	 * that may have just triggered as we're entering idle. Otherwise unidle
-+	 * will not notice them.
-+	 */
- 	bank->saved_datain = readl_relaxed(base + bank->regs->datain);
-+	bank->saved_datain |= bank->enabled_non_wakeup_gpios;
- 
- 	if (!bank->enabled_non_wakeup_gpios)
- 		goto update_gpio_context_count;
 -- 
-2.21.0
+Deet-doot-dot, I am a bot.
+https://korg.wiki.kernel.org/userdoc/prtracker
