@@ -2,77 +2,103 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id E416E17444
-	for <lists+linux-gpio@lfdr.de>; Wed,  8 May 2019 10:54:59 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2E3A3174A4
+	for <lists+linux-gpio@lfdr.de>; Wed,  8 May 2019 11:09:25 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726602AbfEHIy6 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 8 May 2019 04:54:58 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:33426 "EHLO
+        id S1726634AbfEHJJY (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 8 May 2019 05:09:24 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:57876 "EHLO
         heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726387AbfEHIy6 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 8 May 2019 04:54:58 -0400
+        with ESMTP id S1726460AbfEHJJY (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 8 May 2019 05:09:24 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
+        Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
         Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=vGicS9ee7VFI1RMg56juBK5dAe3X/Jb33WVAH1KqMHo=; b=LA3vZV4u2NvdKxD0xAev/4o+w
-        wFOFlOoX628tNmGsdo1eJS7fCB7QtMASSea7glsUB3GZjFP7u8yIMeDa4Mw+At/v5C7hs9yCrR7vM
-        YAdJ0f68Jp1DJJjT5QLuYWtelIw0Kj3cqB4LOLeLWcPdrbAy5jkDvF/6QoMGYlA7+lrPI=;
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
+        List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
+        List-Archive; bh=COXYRcFBUtXgmLe1rrJSb3TEPOb9/EzOUdDeaGoi6o0=; b=oAeisNZ57zz4
+        COQDcdRFLZvXoyvnN5PB5bS0cJ3DdZ2+GGjXwwHp4Vp5e+f2mw4DbECyoMKOhgYUOTWnAcZpULWzs
+        MDfx7VbaI1CXl0nw4Yl5QaYy4n1GhQpGG/vOTeDUz+zaAtdDlXf7t7QfckvulVQ13da+cwEseLIbL
+        nC48Y=;
 Received: from [61.199.190.11] (helo=finisterre.sirena.org.uk)
         by heliosphere.sirena.org.uk with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <broonie@sirena.org.uk>)
-        id 1hOILm-0007cN-Is; Wed, 08 May 2019 08:54:55 +0000
+        id 1hOIZf-0007gb-Og; Wed, 08 May 2019 09:09:16 +0000
 Received: by finisterre.sirena.org.uk (Postfix, from userid 1000)
-        id E307644000C; Wed,  8 May 2019 09:54:47 +0100 (BST)
-Date:   Wed, 8 May 2019 17:54:47 +0900
+        id 4A279440017; Wed,  8 May 2019 10:08:58 +0100 (BST)
 From:   Mark Brown <broonie@kernel.org>
 To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     linux-spi@vger.kernel.org, Fabio Estevam <festevam@gmail.com>,
-        linux-gpio@vger.kernel.org,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: Re: [PATCH 2/2] spi: fsl: Convert to use CS GPIO descriptors
-Message-ID: <20190508085447.GA16289@sirena.org.uk>
-References: <20190420111404.6225-1-linus.walleij@linaro.org>
- <20190420111404.6225-2-linus.walleij@linaro.org>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="bp/iNruPH9dso1Pn"
-Content-Disposition: inline
-In-Reply-To: <20190420111404.6225-2-linus.walleij@linaro.org>
-X-Cookie: May I ask a question?
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Fabio Estevam <festevam@gmail.com>, linux-gpio@vger.kernel.org,
+        linux-spi@vger.kernel.org, Mark Brown <broonie@kernel.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>
+Subject: Applied "spi: ep93xx: Drop unused variable" to the spi tree
+In-Reply-To: <20190503231829.4112-1-linus.walleij@linaro.org>
+X-Patchwork-Hint: ignore
+Message-Id: <20190508090858.4A279440017@finisterre.sirena.org.uk>
+Date:   Wed,  8 May 2019 10:08:58 +0100 (BST)
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+The patch
 
---bp/iNruPH9dso1Pn
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+   spi: ep93xx: Drop unused variable
 
-On Sat, Apr 20, 2019 at 01:14:04PM +0200, Linus Walleij wrote:
-> This converts the Freescale SPI master driver to use GPIO
-> descriptors for chip select handling.
+has been applied to the spi tree at
 
-This doesn't apply against current code, please check and resend.
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git for-5.3
 
---bp/iNruPH9dso1Pn
-Content-Type: application/pgp-signature; name="signature.asc"
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.  
 
------BEGIN PGP SIGNATURE-----
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlzSmVcACgkQJNaLcl1U
-h9Dp1gf9ExPU4QvvF3QLRyGyTa+cc6xJmV+JwH29Yhc6XXBEP8xUGNX8T+m9E/J+
-7+7wo9gurseCS4q28fEQMcOT2+XCUPAa+lQOp4i1WkbBj0fuCLSHDNcGOvH1+U70
-aV5H612NvqoTEK+kaBMyualUcYstEqjW58hDl0VMHmdqnpVWau0mkFuxpCmSTJ38
-An/qzi14RSceCH/pQBQw9bQMUUarpGnt8oKWRSlooS/t1XD1Zm9ymx8etHOHcEZS
-7iSDCSs03UrfTokCkATGSOBfJbsgrprJ/neJZupl5PqOSLytMhyuXJXNtEnDfwR7
-rM4hlweh9nzSfIZe5Jo5uEiix/nd+Q==
-=+rBZ
------END PGP SIGNATURE-----
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
 
---bp/iNruPH9dso1Pn--
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+Thanks,
+Mark
+
+From e29eaa3c4b76d4dd46d7a92018de1ab2793794e1 Mon Sep 17 00:00:00 2001
+From: Linus Walleij <linus.walleij@linaro.org>
+Date: Sat, 4 May 2019 01:18:29 +0200
+Subject: [PATCH] spi: ep93xx: Drop unused variable
+
+My previous patch leaves a dangling variable in the driver.
+get rid of it.
+
+Fixes: 06a391b1621e ("spi: ep93xx: Convert to use CS GPIO descriptors")
+Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+Signed-off-by: Mark Brown <broonie@kernel.org>
+---
+ drivers/spi/spi-ep93xx.c | 1 -
+ 1 file changed, 1 deletion(-)
+
+diff --git a/drivers/spi/spi-ep93xx.c b/drivers/spi/spi-ep93xx.c
+index 47e39251bad9..81889389280b 100644
+--- a/drivers/spi/spi-ep93xx.c
++++ b/drivers/spi/spi-ep93xx.c
+@@ -651,7 +651,6 @@ static int ep93xx_spi_probe(struct platform_device *pdev)
+ 	struct resource *res;
+ 	int irq;
+ 	int error;
+-	int i;
+ 
+ 	info = dev_get_platdata(&pdev->dev);
+ 	if (!info) {
+-- 
+2.20.1
+
