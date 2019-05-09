@@ -2,46 +2,47 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 62736193E5
-	for <lists+linux-gpio@lfdr.de>; Thu,  9 May 2019 23:01:20 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0958C193E9
+	for <lists+linux-gpio@lfdr.de>; Thu,  9 May 2019 23:01:24 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726219AbfEIVBT (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 9 May 2019 17:01:19 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:40477 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725992AbfEIVBT (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 9 May 2019 17:01:19 -0400
-Received: by mail-pl1-f196.google.com with SMTP id b3so1713886plr.7;
-        Thu, 09 May 2019 14:01:19 -0700 (PDT)
+        id S1726805AbfEIVBW (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 9 May 2019 17:01:22 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:45983 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725992AbfEIVBV (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 9 May 2019 17:01:21 -0400
+Received: by mail-pg1-f195.google.com with SMTP id i21so1801148pgi.12;
+        Thu, 09 May 2019 14:01:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=HiuXIyYLdmsAYU6zvL+k+NRqP/Z17rWpYIQBydjoiww=;
-        b=p5q8KobLVi5edHgQ6CguPyLD2oE0Vj0uuNMeT13IKga4CeJPBxJ045FvYlbPdKgkVG
-         KNRVHGuossb5kf4g3Cqi9vTFc7+/1DdhVZJoc5aD41kJ0xsLXFVk1jwl1hGKvKh9aR3V
-         oHBwjetUfosixvCiPwkjEA4T9cN0IxGJCWz8qqWcfz3GJx0n+ICGyyE1HLPDlTKTwy0a
-         c31mCmHqfpTGU9ASAKA7ithdmMuD1aIOhwebdXG70EZ1ru9obYde2uI6pESM00RYPvN3
-         8LSrDi0XTbk0KcEDWOP63SAkWJPVlhDR6ZgwRW3xoeTzghmFs1zSXobjmSvTY5HmGs1t
-         8oog==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=Rji3Tsx4QdgFefM8jscUiPkqR6jrOJsimIgfbLEWBM8=;
+        b=qI6ufmv32wwIJe/P5xoB6V2LwPg2k0uATPOsgYvQ/FktxohPd6qokjj0qp9drwdjwg
+         7CY8GzyGig23rFHllc8aINFtiVD/Z3RRCWKgqgzBaQwIVpnVOcJ3xUci/n/LZjr7OXwG
+         riavwMw5bWNSE5/ZuR04jHA757v7RbyirigrVoJ7wYr8QcdVHk/eEsjQYPoJ8GUuJd9+
+         oHL8ssMVpWeCHfz3VGUl5BBg/muHwDEkERYzioFgnWXKLKWMfQKrEwjj6HZPzP/ggSpO
+         +9duQoHcTE00N9LzP1sG02BuG7Rp9uYVSUvQrF++uqpsGhn5OuBfNbvRUHDDCJPh7jqx
+         3hwQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=HiuXIyYLdmsAYU6zvL+k+NRqP/Z17rWpYIQBydjoiww=;
-        b=rZVY04c4RW3EjB3T9220ZHFN6pQJKJCvdBZlkxnvjeJCmR8fDUq1YNUUuTswYMBT8N
-         2+EKgzkg7UnZs2kJy1adVWRsTh0yc4+1RU7+/8PLjhrB95yzuwUsip2TL/yqysMElsKl
-         +MtIQVjv5uq+rAaHXBiSbjR499fYzKRuhJJklLnI3PutYw/cjHqo609v620SXcXgM29S
-         w8VUnP1wucc/2LxD8i64vPU+Bxdasdte0p/i9M23we0RrSM3Ayv0wQwtp5sTjjzTY/0K
-         h/Z1jTYRkRPbuqO7MyEqiUhmmmuoOUQbkO2awfhhnmrXo5FeCIiMp3W4mynhDEFWSEdi
-         VC1g==
-X-Gm-Message-State: APjAAAUzOtN6rr6aY4w8/chepH7YhAsGXeDD+XWsgbDwU2a6xiCeIvg3
-        yLkdq3Wh67F3cnl9fDr5FTs=
-X-Google-Smtp-Source: APXvYqwPPVJPZR7Ngz7iUDd5Xh+3EilFjMx5Kc5mIo1MpJqawPOja005npdCY5gWF1YEA35rO2073Q==
-X-Received: by 2002:a17:902:bd86:: with SMTP id q6mr8273799pls.152.1557435678642;
-        Thu, 09 May 2019 14:01:18 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=Rji3Tsx4QdgFefM8jscUiPkqR6jrOJsimIgfbLEWBM8=;
+        b=gENNiBPr4gGHvFIYiSFHbPcR+NRM0ImmsjpwRkfaGyT2v79byj11Dkc5Cbhp+4onIS
+         dAQ7ozgI1oDFqJF5uwAoFApY59tF9JLGWglJtnWj+hZ5ESw6K4T2yunA279yDyr38KGx
+         aMTxdOacbITgdOemcSK9mPu5Pqv90fr3fBjQ8R5u80jddterKrFubd1fw+RCcV9AQvJh
+         hbw2jYOeoiVsYVhztIIXoNQ2E+sJ5xv2j1DvJQUX3t1JyVFY7pKdU/h+dx8mgJkwXGLZ
+         TqaHcexVC056Ep78ZB143Kttfpy3iwobyqwUlfU5WRcOxCKw1C8KhVEiEWLN33FqriT4
+         2+VA==
+X-Gm-Message-State: APjAAAX+At175aIEBYhRt0p/SiHaSIN4b4ZQqQAv254aB8+Af3p7kXcQ
+        DdviQP09YL+xCDjPJl9wg7E=
+X-Google-Smtp-Source: APXvYqxGsWxzMY/zvlEJjq4i52EZgy9WmOXV9oY/+hUqUu+ZAT9UlzzCIOeZHOjiUYsD90CSHX8NQQ==
+X-Received: by 2002:a65:554d:: with SMTP id t13mr8487941pgr.171.1557435680626;
+        Thu, 09 May 2019 14:01:20 -0700 (PDT)
 Received: from fainelli-desktop.igp.broadcom.net ([192.19.223.250])
-        by smtp.gmail.com with ESMTPSA id d15sm10989209pfm.186.2019.05.09.14.01.16
+        by smtp.gmail.com with ESMTPSA id d15sm10989209pfm.186.2019.05.09.14.01.18
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 09 May 2019 14:01:17 -0700 (PDT)
+        Thu, 09 May 2019 14:01:19 -0700 (PDT)
 From:   Florian Fainelli <f.fainelli@gmail.com>
 To:     linux-arm-kernel@lists.infradead.org
 Cc:     Florian Fainelli <f.fainelli@gmail.com>,
@@ -65,39 +66,39 @@ Cc:     Florian Fainelli <f.fainelli@gmail.com>,
         DEVICE TREE BINDINGS),
         linux-rpi-kernel@lists.infradead.org (moderated list:BROADCOM BCM2835
         ARM ARCHITECTURE), linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH 0/3] pinctrl: bcm: Allow PINCTRL_BCM2835 for ARCH_BRCMSTB
-Date:   Thu,  9 May 2019 13:59:52 -0700
-Message-Id: <20190509205955.27842-1-f.fainelli@gmail.com>
+Subject: [PATCH 1/3] dt-bindings: pinctrl: bcm2835-gpio: Document BCM7211 compatible
+Date:   Thu,  9 May 2019 13:59:53 -0700
+Message-Id: <20190509205955.27842-2-f.fainelli@gmail.com>
 X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20190509205955.27842-1-f.fainelli@gmail.com>
+References: <20190509205955.27842-1-f.fainelli@gmail.com>
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Linus,
+BCM7211 has a slightly different block layout and some additional GPIO
+registers that were added, document the compatible string.
 
-This patch series allows making use of the pinctrl-bcm2835 driver on
-ARCH_BRCMSTB where it is also used. Binding document is updated, and
-then the Kconfig language is updated to allow selecting this driver with
-ARCH_BRCMSTB, finally, Al updates the logic to account for the
-additional registers that were added on 7211.
+Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+---
+ .../devicetree/bindings/pinctrl/brcm,bcm2835-gpio.txt          | 3 +++
+ 1 file changed, 3 insertions(+)
 
-Thanks!
-
-Al Cooper (1):
-  pinctrl: bcm2835: bcm7211: Add support for 7211 pull-up functionality
-
-Doug Berger (1):
-  pinctrl: bcm: Allow PINCTRL_BCM2835 for ARCH_BRCMSTB
-
-Florian Fainelli (1):
-  dt-bindings: pinctrl: bcm2835-gpio: Document BCM7211 compatible
-
- .../bindings/pinctrl/brcm,bcm2835-gpio.txt    |  3 +
- drivers/pinctrl/bcm/Kconfig                   |  6 +-
- drivers/pinctrl/bcm/pinctrl-bcm2835.c         | 85 +++++++++++++++++--
- 3 files changed, 88 insertions(+), 6 deletions(-)
-
+diff --git a/Documentation/devicetree/bindings/pinctrl/brcm,bcm2835-gpio.txt b/Documentation/devicetree/bindings/pinctrl/brcm,bcm2835-gpio.txt
+index 3fac0a061bcc..ac6d614d74e0 100644
+--- a/Documentation/devicetree/bindings/pinctrl/brcm,bcm2835-gpio.txt
++++ b/Documentation/devicetree/bindings/pinctrl/brcm,bcm2835-gpio.txt
+@@ -5,6 +5,9 @@ controller, and pinmux/control device.
+ 
+ Required properties:
+ - compatible: "brcm,bcm2835-gpio"
++- compatible: should be one of:
++  "brcm,bcm2835-gpio" - BCM2835 compatible pinctrl
++  "brcm,bcm7211-gpio" - BCM7211 compatible pinctrl
+ - reg: Should contain the physical address of the GPIO module's registers.
+ - gpio-controller: Marks the device node as a GPIO controller.
+ - #gpio-cells : Should be two. The first cell is the pin number and the
 -- 
 2.17.1
 
