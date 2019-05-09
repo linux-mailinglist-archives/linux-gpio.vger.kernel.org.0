@@ -2,69 +2,104 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 03EF918A93
-	for <lists+linux-gpio@lfdr.de>; Thu,  9 May 2019 15:28:14 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4922818E0C
+	for <lists+linux-gpio@lfdr.de>; Thu,  9 May 2019 18:29:12 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726546AbfEIN2I (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 9 May 2019 09:28:08 -0400
-Received: from sonic302-2.consmr.mail.bf2.yahoo.com ([74.6.135.41]:43374 "EHLO
-        sonic302-2.consmr.mail.bf2.yahoo.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726411AbfEIN2H (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 9 May 2019 09:28:07 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aol.com; s=a2048; t=1557408486; bh=M+2BQM2x3GSy/dmtDG0o07y3ZYWK28QOQCLRz1DcS2Q=; h=Date:From:Reply-To:Subject:References:From:Subject; b=oV8WDxSR1hMfS2M+rvD+0F64UE9K+2QuIcRqYAgHCZU8EZ2czKFGS8+8vays+Md9nn7dBP1IK8z9iVDm3xlpmy8YSZptUz8iPxqqDwHKuQuCcqn/f4yF9QWpp8fCdS4q4XDwc9gtpJw7Tfkr1IGxMqa2kLEZAG5PZQk+ZZW5pBaIm2TgyyVsGbBC05YXKSaZeCYnjIW/PCksKgHksMeR0PaRQj/UDiyrfvDDqGV4YlUtCEyR4u7bE96cSrHJTDU0kkGWKjeYiUOfY3dzZwMzRdl1XfdM13lqRqhjOeM/Hw1q0kHMyTJRP6dK5U8cUtYC2vv2l4MocRvciuXS0+u4CA==
-X-YMail-OSG: i_wzu_YVM1nC9k6Hp.cuagygbAqGpjX9DNt2a6S3es3eErcSlAFGn8LEsTB2.wz
- cqf1m7gq_pBpSpy.Iijvc3REvwvm7w0CSxzbkZXTMFrFkgm2.DtJXy_8O0VK1g3sRfIS0VD6thIz
- bYBsd9MpwMlWBQX6qNOwJD7Z7Q_.WEwU9Y.PYbeIE0L6a39K2uiFQ0rvm5XTfgrde5LaAkTj9atF
- HpjRHqHTxfWHMo.9FpRS_mic_WtVHhvlOCON1SFNnCZyjhNcQauwvtG3BhcD89RDESLQSHbme0y3
- 2hFa_Ds6IG9aS2m9i0lwdaROSwVBCl0QOq9CPggRUlta.DRwpsrcFKz1Ea0uBXskQ.XgkfCL2YFS
- RwAzRbVHVuU2DFwUojESa39DkHdBOf3wTKAMa3ot7IYSbHTM1LuASCGO_K5gvuPb3t.vtyzFJcTq
- gvrId8bMdP_Fr.8pPDercSs.yRFwZzgHjQWKR0MqJs0b_u13ykW6xXuiYXZxKPOYvmkZTO1N3rPc
- U5ooIyWOzN9n6E0045oPoIWrtjxDoY0SsnNptRn.I1iph17fbO1M95v15Gvnc4GKCmaLY30wPBXv
- i6tjaAJo9HJ7WHEaayK_49ytwbsBmbvY66494IrTKcqOGlGwcVmV8RE0rCOougQ9r2GuMJnlqCxi
- Od.cLN.ULZh4o7nl3EYciEmccONajiYeFfOUQTjQHr1L95ZSxtCiPE63vVhAZn3rahisboZPhOgt
- PazHgCoGI714sHiSgEazo7Bnby38xSMt1s2F_oNRSIWaUl9BTOVKpGF.opPMBNTS9mVMvS9og0gE
- npQBMigxabDLnkBqcmg4l68N.PrflM.Wy9nrl.w4DoBGFhbpbZ2Cipr9f.kP3ALZEyHiykgu.AFl
- wag7nuxW9jTJVGVPAD2mZEHSnqmVGvtwkpWqUwyHTfiFaN9cUIm86WNfk6eo3mgc0pnoXqtO8e9o
- 2S6NPAyD9iwEhJMSz92P7_Kq5iSQyv3VQ9RiCcH1dP8QA.0rCheY4R9NVlQftEern72hIcYuD6ix
- k2BdNnGcxeFuxuI3xyQOW4_t4m2_hLGtsvt34itjqED_2g2orUSOr2gJLK.hS8TPiMUeG8xRqVq7
- 4l5JWy1AdRxC5E2IBDErWx83w6zlyz.rkCcv4Jo0p7obTuS_njmvaMl_fPVBdh9CM
-Received: from sonic.gate.mail.ne1.yahoo.com by sonic302.consmr.mail.bf2.yahoo.com with HTTP; Thu, 9 May 2019 13:28:06 +0000
-Date:   Thu, 9 May 2019 13:28:05 +0000 (UTC)
-From:   Aisha Gaddafi <aishagaddafi721@aol.com>
-Reply-To: Aisha Gaddafi <gaisha983@gmail.com>
-Message-ID: <1076440513.2039102.1557408485465@mail.yahoo.com>
-Subject: Hello My Beloved One, i need your assistance
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-References: <1076440513.2039102.1557408485465.ref@mail.yahoo.com>
-X-Mailer: WebService/1.1.13583 YahooMailBasic Mozilla/5.0 (Windows NT 6.1; rv:66.0) Gecko/20100101 Firefox/66.0
-To:     unlisted-recipients:; (no To-header on input)
+        id S1727153AbfEIQ3D (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 9 May 2019 12:29:03 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:36291 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727310AbfEIQ3D (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 9 May 2019 12:29:03 -0400
+Received: by mail-wr1-f66.google.com with SMTP id o4so3935585wra.3
+        for <linux-gpio@vger.kernel.org>; Thu, 09 May 2019 09:29:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id;
+        bh=xnUcq849ljF3W1PVVaGBumjDSyHUcTVt7HVj2vrbpqs=;
+        b=ImAZTHHuJkcRseb3Xm8ZXczl83t2j4YUlF5xajtB6swwmxCVE+rFqGrqeSLPxSt6Nh
+         5DR4zpcHG/qA3XBzGzcVQG8xCpjO4PTSA4NWFKu2BPfbTnkQXLnX4Y4wS2j/AAa6reee
+         s8AKXQiSpZE31rUUZMH+Mfdm0vr+7rSmGGz6wEKeOu0/YjPUo1aAoRp3g9PNi7js2ZC1
+         zcoD5rAHg2oU6rBrot11qF8DFCKp7Uc35edkIY6cMBaXJaZhvvCDtI1dSz3OP6K73bkI
+         J4jdszWKQGJjWeW2k/pVLd5l5N8h7zo3F1VAiuDpxupiHlUHq+1D+Y4H91t27ZkVa6O1
+         dmFA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=xnUcq849ljF3W1PVVaGBumjDSyHUcTVt7HVj2vrbpqs=;
+        b=Y462XXJM99+ocaBqsba41vNO8yQE06l/FQMoWdIDZiFwswClZ0egnX0ORO+exaMcof
+         zzylEHIryiXPnSBkyW+hASeOccTLoMiqv5Nqgk/IK67OmZRZXGE6HdkwkVjKbWV8Y8Zm
+         VM4DKLomeDeB0R6hOPX1lMTRgdiDXm90MN1phGfHB+Ilty/yPBbrMlLgnbxHRnrTzcM+
+         nE6fHcZR/Rul5EoW9D1AiasCU4y691sD5x1OMCyqceV7wIVnPeUsDFhjoYZdeHmWelDA
+         NPgnDWYw0yStsA8NTIe6sH9nkiUzLv9F7+TULGGDNGs+SKeJFCrGxvzU8aXjKadGqTja
+         89Rw==
+X-Gm-Message-State: APjAAAXvVjsVD9rNqFxVxd9oo2vVVZGZD9wA7+64uD8l7PsLmhQZj1pb
+        VIhyd5v66a3TsZtAN56DVohgPQ==
+X-Google-Smtp-Source: APXvYqz6tghhvw5ngKFutUOgPjB5QMLbIMJhbXOpnWUau29mKVkEg/a0IPmLzTZ8+PO6XTPmB4S4gw==
+X-Received: by 2002:adf:b3d4:: with SMTP id x20mr4226008wrd.284.1557419341336;
+        Thu, 09 May 2019 09:29:01 -0700 (PDT)
+Received: from glaroque-ThinkPad-T480.home ([2a01:cb1d:379:8b00:1910:6694:7019:d3a])
+        by smtp.gmail.com with ESMTPSA id z7sm3649796wme.26.2019.05.09.09.29.00
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 09 May 2019 09:29:00 -0700 (PDT)
+From:   Guillaume La Roque <glaroque@baylibre.com>
+To:     linus.walleij@linaro.org, khilman@baylibre.com
+Cc:     jbrunet@baylibre.com, linux-gpio@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-amlogic@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v4 0/6] Add drive-strength in Meson pinctrl driver
+Date:   Thu,  9 May 2019 18:28:53 +0200
+Message-Id: <20190509162859.7001-1-glaroque@baylibre.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Dear Friend,
+The purpose of this patchset is to add drive-strength support in meson pinconf
+driver. This is a new feature that was added on the g12a. It is critical for us
+to support this since many functions are failing with default pad drive-strength.
 
-I came across your e-mail contact prior a private search while in need of 
-your assistance. My name is Aisha  Gaddafi a single Mother and a Widow with 
-three Children. I am the only biological Daughter of late Libyan President 
-(Late Colonel Muammar Gaddafi).
+The value achievable by the SoC are 0.5mA, 2.5mA, 3mA and 4mA and the DT property
+'drive-strength' is expressed in mA.
+So this patch add another generic property "drive-strength-uA". The change to do so
+would be minimal and could be benefit to other platforms later on.
 
-I have investment funds worth Twenty Seven Million Five Hundred Thousand 
-United State Dollar ($27.500.000.00 ) and i need a trusted investment 
-Manager/Partner because of my current refugee status, however, I am 
-interested in you for investment project assistance in your country, may be 
-from there, we can build business relationship in the nearest future.
+Cheers
+Guillaume
 
-I am willing to negotiate investment/business profit sharing ratio with you 
-base on the future investment earning profits.
+Changes since v3:
+- remove dev_err in meson_get_drive_strength
+- cleanup code
 
-If you are willing to handle this project on my behalf kindly reply urgent 
-to enable me provide you more information about the investment funds.
+Changes since v2:
+- update driver-strength-uA property to be compliant with DT documentation
+- rework patch series for better understanding
+- rework set_bias function
 
-Your Urgent Reply Will Be Appreciated.
+Changes since v1:
+- fix missing break
+- implement new pinctrl generic property "drive-strength-uA"
 
-Best Regards
-Mrs Aisha Gaddafi
+[1] https://lkml.kernel.org/r/20190314163725.7918-1-jbrunet@baylibre.com
+
+Guillaume La Roque (6):
+  dt-bindings: pinctrl: add a 'drive-strength-microamp' property
+  pinctrl: generic: add new 'drive-strength-microamp' property support
+  dt-bindings: pinctrl: meson: Add drive-strength-microamp property
+  pinctrl: meson: Rework enable/disable bias part
+  pinctrl: meson: add support of drive-strength-microamp
+  pinctrl: meson: g12a: add DS bank value
+
+ .../bindings/pinctrl/meson,pinctrl.txt        |   4 +
+ .../bindings/pinctrl/pinctrl-bindings.txt     |   3 +
+ drivers/pinctrl/meson/pinctrl-meson-g12a.c    |  36 ++--
+ drivers/pinctrl/meson/pinctrl-meson.c         | 180 ++++++++++++++----
+ drivers/pinctrl/meson/pinctrl-meson.h         |  18 +-
+ drivers/pinctrl/pinconf-generic.c             |   2 +
+ include/linux/pinctrl/pinconf-generic.h       |   3 +
+ 7 files changed, 193 insertions(+), 53 deletions(-)
+
+-- 
+2.17.1
+
