@@ -2,148 +2,95 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 5517618736
-	for <lists+linux-gpio@lfdr.de>; Thu,  9 May 2019 10:59:47 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8F606187CB
+	for <lists+linux-gpio@lfdr.de>; Thu,  9 May 2019 11:33:32 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726808AbfEII72 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 9 May 2019 04:59:28 -0400
-Received: from mx08-00178001.pphosted.com ([91.207.212.93]:5184 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726788AbfEII71 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 9 May 2019 04:59:27 -0400
-Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
-        by mx08-00178001.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x498wbLc026180;
-        Thu, 9 May 2019 10:59:15 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
- : date : message-id : in-reply-to : references : mime-version :
- content-type; s=STMicroelectronics;
- bh=mFZQPLDGPjKt70imPyAS0Iwmd9g1BKLzp4jIxeRFe/4=;
- b=mrJuxgmTRkKi6vXuuZE9IOnUgFyfeYBd1pho4OYRc0d+qYX5k653DNHiUPW5hbVGATEI
- ev2dw/HdIZtnKSQI3c3PqWmiXlB1/FKUzudDnzES1f2B+fsYz9jbNLKK9hxUEYST08n/
- FPLglL/YT+xJzkp/wIjgmRj1DtJBEixN4GRIELVwzllWC1pqWKOBZ8jJaUFr1j2/8yiS
- Ol5+GLrqmDx5KvPo72fxv1ew6mzdZ+tlvHQA/orsJ2ZysjZj4rb1wZ+2TT6CfMbpE7hd
- hPEICPgtRCVY8yLE7mcLaO5aM9UrwwCzPA4lISgIXDwv+XI483Loawk6V0pQOX5+qPck IA== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx08-00178001.pphosted.com with ESMTP id 2sc9s4a9mb-1
-        (version=TLSv1 cipher=ECDHE-RSA-AES256-SHA bits=256 verify=NOT);
-        Thu, 09 May 2019 10:59:15 +0200
-Received: from zeta.dmz-eu.st.com (zeta.dmz-eu.st.com [164.129.230.9])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id C0E9A41;
-        Thu,  9 May 2019 08:59:14 +0000 (GMT)
-Received: from Webmail-eu.st.com (Safex1hubcas22.st.com [10.75.90.92])
-        by zeta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 975DB153B;
-        Thu,  9 May 2019 08:59:14 +0000 (GMT)
-Received: from SAFEX1HUBCAS24.st.com (10.75.90.95) by Safex1hubcas22.st.com
- (10.75.90.92) with Microsoft SMTP Server (TLS) id 14.3.439.0; Thu, 9 May 2019
- 10:59:14 +0200
-Received: from localhost (10.201.20.5) by webmail-ga.st.com (10.75.90.48) with
- Microsoft SMTP Server (TLS) id 14.3.439.0; Thu, 9 May 2019 10:59:14 +0200
-From:   Amelie Delaunay <amelie.delaunay@st.com>
-To:     Lee Jones <lee.jones@linaro.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
+        id S1726649AbfEIJdb (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 9 May 2019 05:33:31 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:54195 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726644AbfEIJdb (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 9 May 2019 05:33:31 -0400
+Received: by mail-wm1-f68.google.com with SMTP id 198so2327669wme.3
+        for <linux-gpio@vger.kernel.org>; Thu, 09 May 2019 02:33:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=SyRgRxtjdMJpbsjK9vjm2B3TwSm8QJJ2pjmdSOpbmps=;
+        b=AauaUrfm2cnOW6SNDfuMRv0+hlgU2BgvMMo5qTYqMWmgv0tM2Y605oJ9MDb6GCKkyr
+         xxLZDhgFvVAUlAqzhZZgGwA2pJ050Cg3c+g34asToSOFZ08TE2qbNZLS3DeuykRS59oz
+         8+wg3JumczxfcDO7Pl6qu7oRNbTm/41lIdyzvY1NkLggKzIkIhVByv0CcEtkutzoETEX
+         NxstvI4XTnL3mAERfoDswn2CPdQJx+hVe0gJm0AM6FQHrltYCRVbW5fJLJS4w4cxHgzg
+         ACVVbtk5SuzhgRFF6Z67DPh3S/iQNyWj0leAwGWeu9gnUt6RivRWexcjB7HEr88L+o0d
+         BWvg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=SyRgRxtjdMJpbsjK9vjm2B3TwSm8QJJ2pjmdSOpbmps=;
+        b=tnyQygfIZaGjrEYFJliQMQoUShMeEagdsrw3y/BAja/ZRWEPGru20h2/85majQhaSy
+         Qlq6zcwLLLgMtmLLoUFtp9sykv8rfx31LLvWzb0zzyOxySqvbIS/S05b19yPXsNdGBkI
+         NiK32kdaG7QbS3TMmxNgqSTVhEMZOBkgOym2ktXXAJeRQN9tUipYpgWSETshtaTcRinR
+         gNEuUZDSpUON0Y5sOzbIIM8S6551hnTa+RF1Pt3U/TgbHPJp3xx+CTSXosEyzmV7NOpv
+         T4lnmat4TcH+9a6jPX9dtzhp5+6XOjqebhYEdiTLq1vIxOO1yW0SReTlIBJBMwA00jmn
+         C1tA==
+X-Gm-Message-State: APjAAAXvEBvcL15v6L4TYw1mZPq3u8f2TFXK4in+IiPdC0hn4jtvgsgB
+        WrpEwDVOTgl97iDzaN7EOlT/mw==
+X-Google-Smtp-Source: APXvYqzWxiSGBE8sUUva3+DpZ/awGVFeFFPJtZu5iHJoO63RJCNa28okuodpAuszCvvYsv8zSHsUTA==
+X-Received: by 2002:a1c:f111:: with SMTP id p17mr1919584wmh.62.1557394409462;
+        Thu, 09 May 2019 02:33:29 -0700 (PDT)
+Received: from dell ([2.27.167.43])
+        by smtp.gmail.com with ESMTPSA id j131sm4430911wmb.9.2019.05.09.02.33.27
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 09 May 2019 02:33:28 -0700 (PDT)
+Date:   Thu, 9 May 2019 10:33:26 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Amelie Delaunay <amelie.delaunay@st.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
         Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexandre Torgue <alexandre.torgue@st.com>,
-        "Maxime Coquelin" <mcoquelin.stm32@gmail.com>
-CC:     <linux-gpio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <devicetree@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        Amelie Delaunay <amelie.delaunay@st.com>
-Subject: [PATCH v6 9/9] ARM: dts: stm32: add joystick support on stm32mp157c-ev1
-Date:   Thu, 9 May 2019 10:58:56 +0200
-Message-ID: <1557392336-28239-10-git-send-email-amelie.delaunay@st.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1557392336-28239-1-git-send-email-amelie.delaunay@st.com>
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-stm32@st-md-mailman.stormreply.com
+Subject: Re: [PATCH v6 1/9] dt-bindings: mfd: Add ST Multi-Function eXpander
+ (STMFX) core bindings
+Message-ID: <20190509093326.GV31645@dell>
 References: <1557392336-28239-1-git-send-email-amelie.delaunay@st.com>
+ <1557392336-28239-2-git-send-email-amelie.delaunay@st.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.201.20.5]
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-09_02:,,
- signatures=0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <1557392336-28239-2-git-send-email-amelie.delaunay@st.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-The joystick (B1) on stm32mp157c-ev1 uses gpios on STMFX gpio expander.
-These gpios need a pin configuration (push-pull and bias-pull-down),
-described under stmfx_pinctrl node.
+On Thu, 09 May 2019, Amelie Delaunay wrote:
 
-Signed-off-by: Amelie Delaunay <amelie.delaunay@st.com>
----
- arch/arm/boot/dts/stm32mp157c-ev1.dts | 44 +++++++++++++++++++++++++++++++++++
- 1 file changed, 44 insertions(+)
+> This patch adds documentation of device tree bindings for the
+> STMicroelectronics Multi-Function eXpander (STMFX) MFD core.
+> 
+> Signed-off-by: Amelie Delaunay <amelie.delaunay@st.com>
+> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+> Reviewed-by: Rob Herring <robh@kernel.org>
+> Acked-for-MFD-by: Lee Jones <lee.jones@linaro.org>
+> ---
+>  Documentation/devicetree/bindings/mfd/stmfx.txt | 28 +++++++++++++++++++++++++
+>  1 file changed, 28 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/mfd/stmfx.txt
 
-diff --git a/arch/arm/boot/dts/stm32mp157c-ev1.dts b/arch/arm/boot/dts/stm32mp157c-ev1.dts
-index eec3c79..009f9d6 100644
---- a/arch/arm/boot/dts/stm32mp157c-ev1.dts
-+++ b/arch/arm/boot/dts/stm32mp157c-ev1.dts
-@@ -7,6 +7,7 @@
- 
- #include "stm32mp157c-ed1.dts"
- #include <dt-bindings/gpio/gpio.h>
-+#include <dt-bindings/input/input.h>
- 
- / {
- 	model = "STMicroelectronics STM32MP157C eval daughter on eval mother";
-@@ -21,6 +22,43 @@
- 		ethernet0 = &ethernet0;
- 	};
- 
-+	joystick {
-+		compatible = "gpio-keys";
-+		#size-cells = <0>;
-+		pinctrl-0 = <&joystick_pins>;
-+		pinctrl-names = "default";
-+		button-0 {
-+			label = "JoySel";
-+			linux,code = <KEY_ENTER>;
-+			interrupt-parent = <&stmfx_pinctrl>;
-+			interrupts = <0 IRQ_TYPE_EDGE_RISING>;
-+		};
-+		button-1 {
-+			label = "JoyDown";
-+			linux,code = <KEY_DOWN>;
-+			interrupt-parent = <&stmfx_pinctrl>;
-+			interrupts = <1 IRQ_TYPE_EDGE_RISING>;
-+		};
-+		button-2 {
-+			label = "JoyLeft";
-+			linux,code = <KEY_LEFT>;
-+			interrupt-parent = <&stmfx_pinctrl>;
-+			interrupts = <2 IRQ_TYPE_EDGE_RISING>;
-+		};
-+		button-3 {
-+			label = "JoyRight";
-+			linux,code = <KEY_RIGHT>;
-+			interrupt-parent = <&stmfx_pinctrl>;
-+			interrupts = <3 IRQ_TYPE_EDGE_RISING>;
-+		};
-+		button-4 {
-+			label = "JoyUp";
-+			linux,code = <KEY_UP>;
-+			interrupt-parent = <&stmfx_pinctrl>;
-+			interrupts = <4 IRQ_TYPE_EDGE_RISING>;
-+		};
-+	};
-+
- 	panel_backlight: panel-backlight {
- 		compatible = "gpio-backlight";
- 		gpios = <&gpiod 13 GPIO_ACTIVE_LOW>;
-@@ -113,6 +151,12 @@
- 			interrupt-controller;
- 			#interrupt-cells = <2>;
- 			gpio-ranges = <&stmfx_pinctrl 0 0 24>;
-+
-+			joystick_pins: joystick {
-+				pins = "gpio0", "gpio1", "gpio2", "gpio3", "gpio4";
-+				drive-push-pull;
-+				bias-pull-down;
-+			};
- 		};
- 	};
- };
+Applied, thanks.
+
 -- 
-2.7.4
-
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
