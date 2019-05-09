@@ -2,116 +2,196 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id C59DA183DC
-	for <lists+linux-gpio@lfdr.de>; Thu,  9 May 2019 04:39:10 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BEB111869F
+	for <lists+linux-gpio@lfdr.de>; Thu,  9 May 2019 10:14:39 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726254AbfEICjK (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 8 May 2019 22:39:10 -0400
-Received: from mail-qt1-f195.google.com ([209.85.160.195]:36219 "EHLO
-        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726109AbfEICjJ (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 8 May 2019 22:39:09 -0400
-Received: by mail-qt1-f195.google.com with SMTP id a17so879891qth.3
-        for <linux-gpio@vger.kernel.org>; Wed, 08 May 2019 19:39:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=endlessm-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:from:date:message-id:subject:to:cc;
-        bh=8JIdFWt9EhJ27YwtTKJWjA31c5Y15g2X/6abYDZaxSI=;
-        b=YjeiVL9YOP0BtRGLoQ3dKbmyzNDX+L5Yjtwi75kjCgxrucDoY8M1mwLY8SiDLSQP49
-         55pWR6LzymblOrB9/bZZV/dluwJ6GiSloEExwTRcj3HfhN2HAruWhTrIAKKuIvFe30Ou
-         aypP0WGMCUh2lCses3I+VVTnAG0SYBFh0tGSYdgp1BWikVAzVKg8ZBEcpJOGR+0oXdCj
-         +zifbvtJgQxvVqnEQu8CQ1up/N/3Gh7OeyQAYnSVgqKWh+bZiN0HYnu+uyPSmWHF07qL
-         s23pp9q6NS2Bu6MYsLZimZIMP+sydT4Dpha6Jl1KPeKNZD4j0l+98evKdSynaNfVJ/bo
-         ZT0A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
-        bh=8JIdFWt9EhJ27YwtTKJWjA31c5Y15g2X/6abYDZaxSI=;
-        b=dzJPvcILC89hoaQPVKvTcnis2VgcjS+JDSgC1vypgsKceekU7+btNS/aPJfCJ56NOM
-         1ZFa5suqvxMlWCw23CIk7DnXm7DxzhOVbzbBN/9XZCmv8VQWwS3Fg4snmQJRewyMZdvj
-         PxwQRyO2kN2zV2e02gDC9ukB8LJBXKn/9J9/WuGgnrRuqsdc+VTp+k5mtlZZH2mfZtAp
-         o56VfVNDB+6xGn/x/R9Q2WBWUcoA7QOZaGs3DRtU1sB761YHIW/McuWirpi7DEMGZ5KL
-         eBQ1UdIJ7/jd4rBKSsGKDtNX2M/sNxLe8e2vDjBto6+BC0z9Eo+32ZQywfjHjQ+lzVtm
-         TPNw==
-X-Gm-Message-State: APjAAAUjbWo7Yz0+SIz4MEWFVaSQss0XnGBY6wSpPK3UqDexAhkOqpNY
-        QXik0gH4P1KMPG45k9WJ58c+2LUgi/WMO2vB8lCPRg==
-X-Google-Smtp-Source: APXvYqyBJXvyO4wOwRcbfGWKTzD31R5S2okTzyq3vZ4EXkD1yvmWKaPNYzH1ix8XKUjp/QYSjzu8K+CX8Pb3IW6CQzw=
-X-Received: by 2002:ac8:222f:: with SMTP id o44mr1368009qto.198.1557369548585;
- Wed, 08 May 2019 19:39:08 -0700 (PDT)
+        id S1726179AbfEIIOh (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 9 May 2019 04:14:37 -0400
+Received: from hqemgate14.nvidia.com ([216.228.121.143]:15130 "EHLO
+        hqemgate14.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725822AbfEIIOh (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 9 May 2019 04:14:37 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate14.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5cd3e1730000>; Thu, 09 May 2019 01:14:43 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Thu, 09 May 2019 01:14:35 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Thu, 09 May 2019 01:14:35 -0700
+Received: from HQMAIL110.nvidia.com (172.18.146.15) by HQMAIL103.nvidia.com
+ (172.20.187.11) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 9 May
+ 2019 08:14:34 +0000
+Received: from HQMAIL105.nvidia.com (172.20.187.12) by hqmail110.nvidia.com
+ (172.18.146.15) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 9 May
+ 2019 08:14:23 +0000
+Received: from hqnvemgw01.nvidia.com (172.20.150.20) by HQMAIL105.nvidia.com
+ (172.20.187.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
+ Transport; Thu, 9 May 2019 08:14:23 +0000
+Received: from kyarlagadda-linux.nvidia.com (Not Verified[10.19.64.169]) by hqnvemgw01.nvidia.com with Trustwave SEG (v7,5,8,10121)
+        id <B5cd3e0230000>; Thu, 09 May 2019 01:09:09 -0700
+From:   Krishna Yarlagadda <kyarlagadda@nvidia.com>
+To:     <linus.walleij@linaro.org>, <thierry.reding@gmail.com>,
+        <jonathanh@nvidia.com>, <linux-kernel@vger.kernel.org>,
+        <linux-gpio@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
+        <devicetree@vger.kernel.org>
+CC:     <pdeschrijver@nvidia.com>, <josephl@nvidia.com>,
+        <smangipudi@nvidia.com>, <ldewangan@nvidia.com>,
+        <vidyas@nvidia.com>, Krishna Yarlagadda <kyarlagadda@nvidia.com>
+Subject: [Patch-V2 1/4] dt-binding: Tegra194 pinctrl support
+Date:   Thu, 9 May 2019 13:38:13 +0530
+Message-ID: <1557389296-10257-1-git-send-email-kyarlagadda@nvidia.com>
+X-Mailer: git-send-email 2.7.4
+X-NVConfidentiality: public
 MIME-Version: 1.0
-From:   Daniel Drake <drake@endlessm.com>
-Date:   Thu, 9 May 2019 10:38:57 +0800
-Message-ID: <CAD8Lp46veF458PQXXRY85UAHFjP-toMeZ=zpqUqoT6axP2osaQ@mail.gmail.com>
-Subject: Intel Amber Lake I2C/GpioInt issue, ELAN touchpad unusable
-To:     linux-input <linux-input@vger.kernel.org>,
-        linux-i2c@vger.kernel.org,
-        "open list:PIN CONTROL SUBSYSTEM" <linux-gpio@vger.kernel.org>
-Cc:     Endless Linux Upstreaming Team <linux@endlessm.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1557389683; bh=sB+iNXK22PqlMOrwAHWKGUHwkQpr8r09L+/nsBMb4Sc=;
+        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
+         X-NVConfidentiality:MIME-Version:Content-Type;
+        b=GA0bAGEL/DAPS78zX5a367cWB8RdvvBw6tWe/9m6LlC9zib6Q24SBDrVMm93RYtIB
+         BYe6kZ9ljbw/36gmgTRWe5R4g2gJKgRAXYmnYImmwsWRMrSBIFrhHE6X2H8Zvtsgbk
+         oDsTmApIIT0rj5ZvR4bYXVtPyWf7/jldKzAJbRpOjmtju/oi+wNXidJe4ETA6YfxGw
+         xhi2Lbu0JJFK4awN/Qk8VBDP8QyQa1FCoqhENDZNg03Kc/9ytl7wB15MUM1dBujcDY
+         FHHb+GG/mBROKlF65R6khL9Ifz9vo/zy4JctqZLqoZDExh0+mzZxvJjHAlAL2kXVHb
+         xYpmKmbu42gBw==
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi,
+Add binding doc for Tegra 194 pinctrl driver
 
-We're working with a new consumer laptop product based on Intel Amber
-Lake (Intel Core m3-8100Y). Unfortunately the hid-multitouch touchpad
-is not working right - when using the touchpad there are lots of
-cursor jumps, and libinput also complains that it's detected/ignored
-several jumps every second. This has been reproduced on Linus git as
-of yesterday.
+Signed-off-by: Krishna Yarlagadda <kyarlagadda@nvidia.com>
+---
+Changes in V2:
+created new binding doc to handle Tegra194 pinctrl driver
 
-I: Bus=0018 Vendor=04f3 Product=30ce Version=0100
-N: Name="ELAN1201:01 04F3:30CE Touchpad"
-P: Phys=i2c-ELAN1201:01
-S: Sysfs=/devices/pci0000:00/0000:00:15.1/i2c_designware.1/i2c-5/i2c-ELAN1201:01/0018:04F3:30CE.0002/input/input18
-U: Uniq=
-H: Handlers=mouse0 event15
-B: PROP=5
-B: EV=1b
-B: KEY=e520 10000 0 0 0 0
-B: ABS=2e0800000000003
-B: MSC=20
+ .../bindings/pinctrl/nvidia,tegra194-pinmux.txt    | 116 +++++++++++++++++++++
+ 1 file changed, 116 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/pinctrl/nvidia,tegra194-pinmux.txt
 
-Full boot log:
-https://gist.github.com/dsd/cf411da3f4b84bfbc3871bd7915a7bce
+diff --git a/Documentation/devicetree/bindings/pinctrl/nvidia,tegra194-pinmux.txt b/Documentation/devicetree/bindings/pinctrl/nvidia,tegra194-pinmux.txt
+new file mode 100644
+index 0000000..80e36c7
+--- /dev/null
++++ b/Documentation/devicetree/bindings/pinctrl/nvidia,tegra194-pinmux.txt
+@@ -0,0 +1,116 @@
++NVIDIA Tegra194 pinmux controller
++
++Required properties:
++- compatible: "nvidia,tegra194-pinmux"
++- reg: Should contain a list of base address and size pairs for:
++  - first entry: The APB_MISC_GP_*_PADCTRL registers (pad control)
++  - second entry: The PINMUX_AUX_* registers (pinmux)
++
++Please refer to pinctrl-bindings.txt in this directory for details of the
++common pinctrl bindings used by client devices, including the meaning of the
++phrase "pin configuration node".
++
++Tegra's pin configuration nodes act as a container for an arbitrary number of
++subnodes. Each of these subnodes represents some desired configuration for a
++pin, a group, or a list of pins or groups. This configuration can include the
++mux function to select on those pin(s)/group(s), and various pin configuration
++parameters, such as pull-up, tristate, drive strength, etc.
++
++See the TRM to determine which properties and values apply to each pin/group.
++Macro values for property values are defined in
++include/dt-binding/pinctrl/pinctrl-tegra.h.
++
++Required subnode-properties:
++- nvidia,pins : An array of strings. Each string contains the name of a pin or
++    group. Valid values for these names are listed below.
++
++Optional subnode-properties:
++- nvidia,function: A string containing the name of the function to mux to the
++    pin or group.
++- nvidia,pull: Integer, representing the pull-down/up to apply to the pin.
++    0: none, 1: down, 2: up.
++- nvidia,tristate: Integer.
++    0: drive, 1: tristate.
++- nvidia,enable-input: Integer. Enable the pin's input path.
++    enable :TEGRA_PIN_ENABLE and
++    disable or output only: TEGRA_PIN_DISABLE.
++- nvidia,open-drain: Integer.
++    enable: TEGRA_PIN_ENABLE.
++    disable: TEGRA_PIN_DISABLE.
++- nvidia,lock: Integer. Lock the pin configuration against further changes
++    until reset.
++    enable: TEGRA_PIN_ENABLE.
++    disable: TEGRA_PIN_DISABLE.
++- nvidia,io-hv: Integer. Select high-voltage receivers.
++    normal: TEGRA_PIN_DISABLE
++    high: TEGRA_PIN_ENABLE
++- nvidia,high-speed-mode: Integer. Enable high speed mode the pins.
++    normal: TEGRA_PIN_DISABLE
++    high: TEGRA_PIN_ENABLE
++- nvidia,schmitt: Integer. Enables Schmitt Trigger on the input.
++    normal: TEGRA_PIN_DISABLE
++    high: TEGRA_PIN_ENABLE
++- nvidia,drive-type: Integer. Valid range 0...3.
++- nvidia,pull-down-strength: Integer. Controls drive strength. 0 is weakest.
++    The range of valid values depends on the pingroup. See "CAL_DRVDN" in the
++    Tegra TRM.
++- nvidia,pull-up-strength: Integer. Controls drive strength. 0 is weakest.
++    The range of valid values depends on the pingroup. See "CAL_DRVUP" in the
++    Tegra TRM.
++- nvidia,slew-rate-rising: Integer. Controls rising signal slew rate. 0 is
++    fastest. The range of valid values depends on the pingroup. See
++    "DRVDN_SLWR" in the Tegra TRM.
++- nvidia,slew-rate-falling: Integer. Controls falling signal slew rate. 0 is
++    fastest. The range of valid values depends on the pingroup. See
++    "DRVUP_SLWF" in the Tegra TRM.
++
++Valid values for pin and group names (nvidia,pin) are:
++
++    These correspond to Tegra PADCTL_* (pinmux) registers.
++
++  Mux groups:
++
++    These correspond to Tegra PADCTL_* (pinmux) registers. Any property
++    that exists in those registers may be set for the following pin names.
++
++    pex_l5_clkreq_n_pgg0, pex_l5_rst_n_pgg1
++
++  Drive groups:
++
++    These registers controls a single pin for which a mux group exists.
++    See the list above for the pin name to use when configuring the pinmux.
++
++    pex_l5_clkreq_n_pgg0, pex_l5_rst_n_pgg1
++
++Valid values for nvidia,functions are:
++
++    pe5
++
++Power Domain:
++    pex_l5_clkreq_n_pgg0 and pex_l5_rst_n_pgg1 are part of PCIE C5 power
++    partition. Client devices must enable this partition before accessing
++    these pins here.
++
++
++Example:
++
++		tegra_pinctrl: pinmux: pinmux@2430000 {
++			compatible = "nvidia,tegra194-pinmux";
++			reg = <0x2430000 0x17000
++			       0xc300000 0x4000>;
++
++			pinctrl-names = "pex_rst";
++			pinctrl-0 = <&pex_rst_c5_out_state>;
++
++			pex_rst_c5_out_state: pex_rst_c5_out {
++				pex_rst {
++					nvidia,pins = "pex_l5_rst_n_pgg1";
++					nvidia,schmitt = <TEGRA_PIN_DISABLE>;
++					nvidia,lpdr = <TEGRA_PIN_ENABLE>;
++					nvidia,enable-input = <TEGRA_PIN_DISABLE>;
++					nvidia,io-high-voltage = <TEGRA_PIN_ENABLE>;
++					nvidia,tristate = <TEGRA_PIN_DISABLE>;
++					nvidia,pull = <TEGRA_PIN_PULL_NONE>;
++				};
++			};
++		};
+-- 
+2.7.4
 
-The touchpad has ACPI HID ELAN1201 and HID ID 04F3:30CE. We've worked
-with other products with the same HID & ID before, so my initial
-thinking is that this is a platform-level problem, especially given
-the newness of Amber Lake in consumer products and similar bugs that
-we've faced with brand-new platforms in the past.
-
-The touchpad works fine under Windows 10.
-
-The touchpad is probed via ACPI; the _CRS provides an I2C device and a
-GPIO interrupt. The GPIO interrupt comes off a controller with ACPI
-HID INT344B driven by pinctrl-sunrisepoint.c:
-00:15.1 Signal processing controller [1180]: Intel Corporation Sunrise
-Point-LP Serial IO I2C Controller #1 [8086:9d61] (rev 21)
-    Subsystem: ASUSTeK Computer Inc. Sunrise Point-LP Serial IO I2C
-Controller [1043:18b1]
-
-When using the touchpad, interrupts are raised and then
-i2c_hid_get_input() will read data that is not in the form you would
-expect...
-
-- The 16-byte input reports are almost always duplicated. That is,
-right after an input report is read, another interrupt arrives and the
-exact same 16 byte report is read back again.
-- After an input report is read (and usually for the 2nd time as it
-gets duplicated), between 0 and 4 further interrupts arrive, but the
-i2c request here returns 0 bytes of data, as if the interrupts are
-spurious
-- Especially when holding your finger on the touchpad for more than an
-instant, within the data stream there will occasionally be 16 byte
-input reports read that are entirely 0xff bytes
-
-Is there any awareness of issues like this on the new Amber Lake platform?
-If not, hopefully this mail acts as a useful first step towards a solution.
-
-Suggestions appreciated!
-
-Thanks
-Daniel
