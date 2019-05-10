@@ -2,103 +2,118 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id B65BE19571
-	for <lists+linux-gpio@lfdr.de>; Fri, 10 May 2019 00:53:40 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1F910198F4
+	for <lists+linux-gpio@lfdr.de>; Fri, 10 May 2019 09:23:31 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726682AbfEIWxj (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 9 May 2019 18:53:39 -0400
-Received: from anholt.net ([50.246.234.109]:39386 "EHLO anholt.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726219AbfEIWxj (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Thu, 9 May 2019 18:53:39 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by anholt.net (Postfix) with ESMTP id C42CF10A34BF;
-        Thu,  9 May 2019 15:53:38 -0700 (PDT)
-X-Virus-Scanned: Debian amavisd-new at anholt.net
-Received: from anholt.net ([127.0.0.1])
-        by localhost (kingsolver.anholt.net [127.0.0.1]) (amavisd-new, port 10024)
-        with LMTP id KaayIk_7wkA7; Thu,  9 May 2019 15:53:37 -0700 (PDT)
-Received: from eliezer.anholt.net (localhost [127.0.0.1])
-        by anholt.net (Postfix) with ESMTP id A64FC10A34BC;
-        Thu,  9 May 2019 15:53:37 -0700 (PDT)
-Received: by eliezer.anholt.net (Postfix, from userid 1000)
-        id 27EFC2FE3AA9; Thu,  9 May 2019 15:53:37 -0700 (PDT)
-From:   Eric Anholt <eric@anholt.net>
-To:     Florian Fainelli <f.fainelli@gmail.com>,
-        linux-arm-kernel@lists.infradead.org
-Cc:     Florian Fainelli <f.fainelli@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
+        id S1727184AbfEJHXT (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 10 May 2019 03:23:19 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:36856 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727226AbfEJHXT (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 10 May 2019 03:23:19 -0400
+Received: by mail-wm1-f67.google.com with SMTP id j187so6193490wmj.1
+        for <linux-gpio@vger.kernel.org>; Fri, 10 May 2019 00:23:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=6IJvqYq4JZWD5aTcjw2ROgUsvIuulKVOwmPtVdRwUBw=;
+        b=MLfJXEMdZmKpvWHQlqIzfyImp6Wy+KcsU0p5YvE1otyh3zIOF+I1vvQ/PJnC4diJpY
+         sh7j6UBJ/0TsdJxDPFx15teFeEEP0QzxEIQEcUOhHwljvJCS2Tjkf/2mrXiP9/ZgNwHe
+         CH4EkBxMqLQgUUoLVvHev0mv2XVIeQZeRZWtqthsJGrx+ZQjGkna1+4trW4eI+KMpWg/
+         NqQgmANFTSZNHuEBAXzpXICTBex/HmPLIEN8E0Q2umUFYZfV9vf8qRqgiXOYJdB/lK+T
+         nasc2eF4kXFxaiNB/WjJeNwU3qb9R9VMtLpc1FhwexCo5vE8Uqiyx1kEp0G2RSSP1FIm
+         NJ6A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=6IJvqYq4JZWD5aTcjw2ROgUsvIuulKVOwmPtVdRwUBw=;
+        b=WbKb0W4V2CJootF1XUYHQvVF48VjYXDLl74k42Ujp4xn5tZGcUL7lxgElyUBoYNJQr
+         qbE25cyghpub31ltZJHkxKiCUiGjLXj/MgU2uuKc/OYirhHWMnbh9r3FEApH7VvrEoTR
+         ZBq8aE70ePX8XKjiOHpoaG47bTLzOFcJr67gmHtUgcee5zRxXBigaPoHR0og+CQe3n0f
+         iKkNW2xxLIt5sLshQJpNc4tLv+vrTUDRhBk7xMeiOJSwPvMQJZdH6FqzRMMCHZpSwFWU
+         mZuNlYeQPaamyjf8oOLdkl6TaVxhF0n8/CwEzirr+y8Yo8Z2pkkAoFsB686/++J1a94i
+         6fAw==
+X-Gm-Message-State: APjAAAU3nusLnkjpd2vMx+waTLHAu8FJPsLAlgvyY6uYU/ImqhTHZQwC
+        sJqxjZ27VhVWsImI4VLXQBbdgQ==
+X-Google-Smtp-Source: APXvYqwFI/XoRqh3l4hbVHQYN4vuu2sgvGQIfc1CDZPFb5/hfW20fNRJaFM/GapMBIrdKush+zwVEw==
+X-Received: by 2002:a1c:7008:: with SMTP id l8mr5638463wmc.49.1557472996594;
+        Fri, 10 May 2019 00:23:16 -0700 (PDT)
+Received: from dell ([2.27.167.43])
+        by smtp.gmail.com with ESMTPSA id n14sm1748514wrt.79.2019.05.10.00.23.15
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 10 May 2019 00:23:16 -0700 (PDT)
+Date:   Fri, 10 May 2019 08:23:14 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Amelie Delaunay <amelie.delaunay@st.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
         Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        Ray Jui <rjui@broadcom.com>,
-        Scott Branden <sbranden@broadcom.com>,
-        "maintainer\:BROADCOM BCM281XX\/BCM11XXX\/BCM216XX ARM ARCHITE..." 
-        <bcm-kernel-feedback-list@broadcom.com>,
-        Stefan Wahren <stefan.wahren@i2se.com>,
-        Doug Berger <opendmb@gmail.com>,
-        Matheus Castello <matheus@castello.eng.br>,
-        =?utf-8?Q?Rafa=C5=82_Mi=C5=82ecki?= <rafal@milecki.pl>,
-        Lukas Wunner <lukas@wunner.de>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Al Cooper <alcooperx@gmail.com>,
-        "open list\:PIN CONTROL SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "open list\:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        "moderated list\:BROADCOM BCM2835 ARM ARCHITECTURE" 
-        <linux-rpi-kernel@lists.infradead.org>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 0/3] pinctrl: bcm: Allow PINCTRL_BCM2835 for ARCH_BRCMSTB
-In-Reply-To: <20190509205955.27842-1-f.fainelli@gmail.com>
-References: <20190509205955.27842-1-f.fainelli@gmail.com>
-User-Agent: Notmuch/0.22.2+1~gb0bcfaa (http://notmuchmail.org) Emacs/26.1 (x86_64-pc-linux-gnu)
-Date:   Thu, 09 May 2019 15:53:36 -0700
-Message-ID: <87woizqlxr.fsf@anholt.net>
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-stm32@st-md-mailman.stormreply.com
+Subject: [GIT PULL] Immutable branch between MFD and Pinctrl due for the v5.2
+ merge window
+Message-ID: <20190510072314.GC7321@dell>
+References: <1557392336-28239-1-git-send-email-amelie.delaunay@st.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="=-=-=";
-        micalg=pgp-sha512; protocol="application/pgp-signature"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <1557392336-28239-1-git-send-email-amelie.delaunay@st.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
---=-=-=
-Content-Type: text/plain
+Enjoy!
 
-Florian Fainelli <f.fainelli@gmail.com> writes:
+The following changes since commit e93c9c99a629c61837d5a7fc2120cd2b6c70dbdd:
 
-> Hi Linus,
->
-> This patch series allows making use of the pinctrl-bcm2835 driver on
-> ARCH_BRCMSTB where it is also used. Binding document is updated, and
-> then the Kconfig language is updated to allow selecting this driver with
-> ARCH_BRCMSTB, finally, Al updates the logic to account for the
-> additional registers that were added on 7211.
+  Linux 5.1 (2019-05-05 17:42:58 -0700)
 
-As far as platform maintainer goes, patch 1-2 are:
+are available in the Git repository at:
 
-Reviewed-by: Eric Anholt <eric@anholt.net>
+  git://git.kernel.org/pub/scm/linux/kernel/git/lee/mfd.git ib-mfd-pinctrl-v5.2
 
-and patch 3 is:
+for you to fetch changes up to 1490d9f841b186664f9d3ca213dcfa4464a60680:
 
-Acked-by: Eric Anholt <eric@anholt.net>
+  pinctrl: Add STMFX GPIO expander Pinctrl/GPIO driver (2019-05-10 08:21:31 +0100)
 
---=-=-=
-Content-Type: application/pgp-signature; name="signature.asc"
+----------------------------------------------------------------
+Immutable branch between MFD and Pinctrl due for the v5.2 merge window
 
------BEGIN PGP SIGNATURE-----
+----------------------------------------------------------------
+Amelie Delaunay (4):
+      dt-bindings: mfd: Add ST Multi-Function eXpander (STMFX) core bindings
+      mfd: Add ST Multi-Function eXpander (STMFX) core driver
+      dt-bindings: pinctrl: document the STMFX pinctrl bindings
+      pinctrl: Add STMFX GPIO expander Pinctrl/GPIO driver
 
-iQIzBAEBCgAdFiEE/JuuFDWp9/ZkuCBXtdYpNtH8nugFAlzUr3AACgkQtdYpNtH8
-nuhpHQ//dM7jTyPUB9eHCYdZerTKDtr+6aY7wKi3KTY3eTJVErru/9skG0qyV1Es
-ccQf6Zkj20wnXjucSP9f0zEHCaeybXgx3OKLALE063nuglnvfKhEzDGvzWUb2Xv6
-BBlCBf5o9xM5nIhdw1i2bITSNvUXYZy+JFRTVZH59x5h6OBYfaxLFwon7hxFajpQ
-1VxFDUEIpltkJuJNp7dXNvC+iIEAv7zWNS5JR05S8h5R7H23c4odUPfWEGkMTFdH
-w2+kPoNVT6aZ3u4DT+EFH/SGfhAWwkCX06KBa5/J8G026R/x6VG6lmsohe7sGyrh
-HRoozBamxxCixfHI2imHsjwkLWLlEijZeh+HV8iHmTlQcdZnLY6hQ0KxAsVr9dqW
-r03BFJ1uHKhFg86kPsVraAVlOhr8riqQnzsrmh/LkmG0eF6WppgLQ1Q2txFvA4/R
-WxFXNu0vRRd4X4ICCcllge77E50HM3bhxwmbdp/oouQfyJVMxwVJUzbbDGEKWQ5u
-JDYndEouNcbB8+vnRzli8bqu+tkif/wODaqp8THHB4IvpteGcgk2+yCBh0CrYV6f
-/WGNhOZFqWHshFL1uVYwPvnlW4VkJPTJ7O8w490kobjnU8CwCTn0rUoe2n45f8Oi
-iecWgOgVSl9mjzEL3d81+PmuomYdSwz9vz2LhOkD4oiATkGSbK4=
-=HgWt
------END PGP SIGNATURE-----
---=-=-=--
+ Documentation/devicetree/bindings/mfd/stmfx.txt    |  28 +
+ .../devicetree/bindings/pinctrl/pinctrl-stmfx.txt  | 116 +++
+ drivers/mfd/Kconfig                                |  13 +
+ drivers/mfd/Makefile                               |   2 +-
+ drivers/mfd/stmfx.c                                | 545 ++++++++++++++
+ drivers/pinctrl/Kconfig                            |  12 +
+ drivers/pinctrl/Makefile                           |   1 +
+ drivers/pinctrl/pinctrl-stmfx.c                    | 820 +++++++++++++++++++++
+ include/linux/mfd/stmfx.h                          | 123 ++++
+ 9 files changed, 1659 insertions(+), 1 deletion(-)
+ create mode 100644 Documentation/devicetree/bindings/mfd/stmfx.txt
+ create mode 100644 Documentation/devicetree/bindings/pinctrl/pinctrl-stmfx.txt
+ create mode 100644 drivers/mfd/stmfx.c
+ create mode 100644 drivers/pinctrl/pinctrl-stmfx.c
+ create mode 100644 include/linux/mfd/stmfx.h
+
+-- 
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
