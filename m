@@ -2,55 +2,55 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 26B2719996
-	for <lists+linux-gpio@lfdr.de>; Fri, 10 May 2019 10:24:07 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7108A1997B
+	for <lists+linux-gpio@lfdr.de>; Fri, 10 May 2019 10:23:38 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727213AbfEJIX5 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 10 May 2019 04:23:57 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:46115 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727234AbfEJIXa (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 10 May 2019 04:23:30 -0400
-Received: by mail-wr1-f67.google.com with SMTP id r7so6038520wrr.13
-        for <linux-gpio@vger.kernel.org>; Fri, 10 May 2019 01:23:30 -0700 (PDT)
+        id S1727242AbfEJIXe (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 10 May 2019 04:23:34 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:51229 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727009AbfEJIXd (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 10 May 2019 04:23:33 -0400
+Received: by mail-wm1-f66.google.com with SMTP id o189so6502404wmb.1
+        for <linux-gpio@vger.kernel.org>; Fri, 10 May 2019 01:23:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baylibre-com.20150623.gappssmtp.com; s=20150623;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=iSJwm6tn+7I484rTSQE+9G4s/2gB2UbS4DNi3jkBUBM=;
-        b=oAZbHTeixjMVCdjaa3zL+b9as4L3V9Jsf1rfkcKP96iCk/Tx02/ml4qRjW36JHqNZ2
-         EwijpHHTg3GHz08FdsJOkr/zkLGviT48ErIRITFIIcLHz6XMTm2KjR8BKl4Q3Ve5vlV8
-         AozZ8aZekFk5odWod7o0X6yewGKcB6urj/CKd6G+oKOqyqM9sTuS0tPT/tHMbxTSTs7l
-         ETuVPARWgw+N36Dmtql7QOkKJeJXeSfWbptLomabmWCtnLv8w4fb1kB5mx4ykrBIxMjX
-         jPY0Yx3rxGqqR/OygtCyrjvRTycD9WlNpjNe9f3l0xQR3m59uTvq0tQET528LcvPv62m
-         AaSA==
+        bh=vmeMuMSDMRsdloGxuoikGok3kV3ygZ9BvAD0hdZ7+1Q=;
+        b=0mH9YjY5pN4altS8m8esAKUXR8IjrVzuxHW1h+AtZQx1kLM9VnfJwqhePnEaJ3+tcQ
+         LDsHRX5weQ9wgdfEnAhU2tnojIKrjQyaRKZBpIiIC/6QOSZxzPqq8AVQh0dQcOvopUCT
+         MmZPZTadQtHXyNJpU2dKz9hO1m/Kuh7a06sz6g0BzBnVl2JndWzmNQFQgG3WHVB7bBAg
+         chdGBxSgbo/1Nwsc6TAmltJjr2DtkcNk0bJl+qbmNHHzu6thGLT7IAxq+ahgEcy8qYHy
+         LItGoR6khG+/yWSoyynqqrIjzgfYTQRuqO8gHCKgi8DfrNVIG1F0tbq1XgHLBAZJhHIV
+         unFQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=iSJwm6tn+7I484rTSQE+9G4s/2gB2UbS4DNi3jkBUBM=;
-        b=pNqxoBLsfxWkzEnSiwQbIJNOufHY0EfM0yIxBdsxmDF9ERD1HJuTU+4RDyIH5g5Bg6
-         NWu+x59kDCsvo3c9YfMQbNcfn/TFzXRHfw40ND0Yrx3puNn6zcqJPKfc0HyKWl+HQ3UR
-         JwSGAvDO/omqPRSmWcoAtG0ZJ1VhGkJCDDqCi2nyem7H+P5sjrssEgbKebHs9OSUNOnX
-         36/HT5motu2vA1h286/x+V3h+mko2VEK/eElckABouiVthdLaZReFQ4MUm8EmVQ2pDkI
-         3w3Vsly8gpMLQfAFyMv24PWpYWWrmPmBgayOxsG+dHFB0Un/2C7OJaiUiXkDV//CD2+T
-         QYtw==
-X-Gm-Message-State: APjAAAX7z2LLMIUBrjyeyUrRLdYlY+Ef3DX+roGrsfgjKSk2myFlmCFR
-        bMerCK5enFbIoc9r89uf40UaAA==
-X-Google-Smtp-Source: APXvYqxlF/r5xHoMV1z98KMJEdYEWrKrgLBqt6pcdi39230iWP8YKfBjZ7KLcW4flbcD2DEVH1Mf6Q==
-X-Received: by 2002:adf:ea86:: with SMTP id s6mr1579096wrm.44.1557476609735;
-        Fri, 10 May 2019 01:23:29 -0700 (PDT)
+        bh=vmeMuMSDMRsdloGxuoikGok3kV3ygZ9BvAD0hdZ7+1Q=;
+        b=KRXm1DB9S5QiU2ld4u3FkJJrgChKV+6iQ8/FWdOIpw9a6kECXEhWBrVy1wHkYBmv/m
+         K5HBPcfNC7E4vjfm1krJITAgfRqx1xJ+Hh+mMt6iYddIgbBqRPPlp6VriQNOUnq72Jkr
+         BhVum1aWlI+y5Iy6LcxL4WRkIoIAHo2ZihBVqRPysyzIti6Vlk//sWvukq2STbWnsXEh
+         ANM5HSrS6zSKIUouThN4lis9raI+EA4gIrAyR+9dqTsSBEoSK9VbUJ1J/JJvs1/U3diY
+         9g7u/CygLhDVeSO8jQkEzgnVfb0XPJ6ynWiwUyMjmbM3u0u6GTrH4oWhcFnODfCe4mNv
+         dadQ==
+X-Gm-Message-State: APjAAAV8BlH4YJM9qD6R6Ndv0C+1kWmob40wnm38VyK4vcU8vn9rMQMB
+        hDDHijznt55+pJuJHJtax7s+pw==
+X-Google-Smtp-Source: APXvYqzH46oUYeeQfj80hmpJooPiNtx258oSc9+1YhNuanvgtlSfyRKNdwfzGIXGbohEiEHZM9Vyuw==
+X-Received: by 2002:a1c:2109:: with SMTP id h9mr6127281wmh.68.1557476610628;
+        Fri, 10 May 2019 01:23:30 -0700 (PDT)
 Received: from glaroque-ThinkPad-T480.local (lmontsouris-657-1-212-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
-        by smtp.gmail.com with ESMTPSA id z4sm3790285wmk.5.2019.05.10.01.23.28
+        by smtp.gmail.com with ESMTPSA id z4sm3790285wmk.5.2019.05.10.01.23.29
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 10 May 2019 01:23:28 -0700 (PDT)
+        Fri, 10 May 2019 01:23:30 -0700 (PDT)
 From:   Guillaume La Roque <glaroque@baylibre.com>
 To:     linus.walleij@linaro.org, khilman@baylibre.com
 Cc:     jbrunet@baylibre.com, linux-gpio@vger.kernel.org,
         devicetree@vger.kernel.org, linux-amlogic@lists.infradead.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v5 3/6] dt-bindings: pinctrl: meson: Add drive-strength-microamp property
-Date:   Fri, 10 May 2019 10:23:21 +0200
-Message-Id: <20190510082324.21181-4-glaroque@baylibre.com>
+Subject: [PATCH v5 4/6] pinctrl: meson: Rework enable/disable bias part
+Date:   Fri, 10 May 2019 10:23:22 +0200
+Message-Id: <20190510082324.21181-5-glaroque@baylibre.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190510082324.21181-1-glaroque@baylibre.com>
 References: <20190510082324.21181-1-glaroque@baylibre.com>
@@ -59,28 +59,130 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Add optional drive-strength-microamp property
+rework bias enable/disable part to prepare drive-strength integration
+no functional changes
 
 Signed-off-by: Guillaume La Roque <glaroque@baylibre.com>
 ---
- Documentation/devicetree/bindings/pinctrl/meson,pinctrl.txt | 4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/pinctrl/meson/pinctrl-meson.c | 85 +++++++++++++++------------
+ 1 file changed, 49 insertions(+), 36 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/pinctrl/meson,pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/meson,pinctrl.txt
-index a47dd990a8d3..a7618605bf1e 100644
---- a/Documentation/devicetree/bindings/pinctrl/meson,pinctrl.txt
-+++ b/Documentation/devicetree/bindings/pinctrl/meson,pinctrl.txt
-@@ -51,6 +51,10 @@ Configuration nodes support the generic properties "bias-disable",
- "bias-pull-up" and "bias-pull-down", described in file
- pinctrl-bindings.txt
+diff --git a/drivers/pinctrl/meson/pinctrl-meson.c b/drivers/pinctrl/meson/pinctrl-meson.c
+index 96a4a72708e4..8ea5c1527064 100644
+--- a/drivers/pinctrl/meson/pinctrl-meson.c
++++ b/drivers/pinctrl/meson/pinctrl-meson.c
+@@ -174,62 +174,75 @@ int meson_pmx_get_groups(struct pinctrl_dev *pcdev, unsigned selector,
+ 	return 0;
+ }
  
-+Optional properties :
-+ - drive-strength-microamp: Drive strength for the specified pins in uA.
-+			    This property is only valid for G12A and newer.
+-static int meson_pinconf_set(struct pinctrl_dev *pcdev, unsigned int pin,
+-			     unsigned long *configs, unsigned num_configs)
++static int meson_pinconf_disable_bias(struct meson_pinctrl *pc,
++				      unsigned int pin)
+ {
+-	struct meson_pinctrl *pc = pinctrl_dev_get_drvdata(pcdev);
+ 	struct meson_bank *bank;
+-	enum pin_config_param param;
+-	unsigned int reg, bit;
+-	int i, ret;
++	unsigned int reg, bit = 0;
++	int ret;
+ 
+ 	ret = meson_get_bank(pc, pin, &bank);
+ 	if (ret)
+ 		return ret;
+ 
++	meson_calc_reg_and_bit(bank, pin, REG_PULLEN, &reg, &bit);
++	ret = regmap_update_bits(pc->reg_pullen, reg, BIT(bit), 0);
++	if (ret)
++		return ret;
 +
- === Example ===
++	return 0;
++}
++
++static int meson_pinconf_enable_bias(struct meson_pinctrl *pc, unsigned int pin,
++				     bool pull_up)
++{
++	struct meson_bank *bank;
++	unsigned int reg, bit, val = 0;
++	int ret;
++
++	ret = meson_get_bank(pc, pin, &bank);
++	if (ret)
++		return ret;
++
++	meson_calc_reg_and_bit(bank, pin, REG_PULL, &reg, &bit);
++	if (pull_up)
++		val = BIT(bit);
++
++	ret = regmap_update_bits(pc->reg_pull, reg, BIT(bit), val);
++	if (ret)
++		return ret;
++
++	meson_calc_reg_and_bit(bank, pin, REG_PULLEN, &reg, &bit);
++	ret = regmap_update_bits(pc->reg_pullen, reg, BIT(bit),	BIT(bit));
++	if (ret)
++		return ret;
++
++	return 0;
++}
++
++static int meson_pinconf_set(struct pinctrl_dev *pcdev, unsigned int pin,
++			     unsigned long *configs, unsigned num_configs)
++{
++	struct meson_pinctrl *pc = pinctrl_dev_get_drvdata(pcdev);
++	enum pin_config_param param;
++	int i, ret;
++
+ 	for (i = 0; i < num_configs; i++) {
+ 		param = pinconf_to_config_param(configs[i]);
  
- 	pinctrl: pinctrl@c1109880 {
+ 		switch (param) {
+ 		case PIN_CONFIG_BIAS_DISABLE:
+-			dev_dbg(pc->dev, "pin %u: disable bias\n", pin);
+-
+-			meson_calc_reg_and_bit(bank, pin, REG_PULLEN, &reg,
+-					       &bit);
+-			ret = regmap_update_bits(pc->reg_pullen, reg,
+-						 BIT(bit), 0);
++			ret = meson_pinconf_disable_bias(pc, pin);
+ 			if (ret)
+ 				return ret;
+ 			break;
+ 		case PIN_CONFIG_BIAS_PULL_UP:
+-			dev_dbg(pc->dev, "pin %u: enable pull-up\n", pin);
+-
+-			meson_calc_reg_and_bit(bank, pin, REG_PULLEN,
+-					       &reg, &bit);
+-			ret = regmap_update_bits(pc->reg_pullen, reg,
+-						 BIT(bit), BIT(bit));
+-			if (ret)
+-				return ret;
+-
+-			meson_calc_reg_and_bit(bank, pin, REG_PULL, &reg, &bit);
+-			ret = regmap_update_bits(pc->reg_pull, reg,
+-						 BIT(bit), BIT(bit));
++			ret = meson_pinconf_enable_bias(pc, pin, true);
+ 			if (ret)
+ 				return ret;
+ 			break;
+ 		case PIN_CONFIG_BIAS_PULL_DOWN:
+-			dev_dbg(pc->dev, "pin %u: enable pull-down\n", pin);
+-
+-			meson_calc_reg_and_bit(bank, pin, REG_PULLEN,
+-					       &reg, &bit);
+-			ret = regmap_update_bits(pc->reg_pullen, reg,
+-						 BIT(bit), BIT(bit));
+-			if (ret)
+-				return ret;
+-
+-			meson_calc_reg_and_bit(bank, pin, REG_PULL, &reg, &bit);
+-			ret = regmap_update_bits(pc->reg_pull, reg,
+-						 BIT(bit), 0);
++			ret = meson_pinconf_enable_bias(pc, pin, false);
+ 			if (ret)
+ 				return ret;
+ 			break;
 -- 
 2.17.1
 
