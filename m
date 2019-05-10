@@ -2,84 +2,113 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id CC81B19D01
-	for <lists+linux-gpio@lfdr.de>; Fri, 10 May 2019 14:10:27 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2529019F41
+	for <lists+linux-gpio@lfdr.de>; Fri, 10 May 2019 16:34:38 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727196AbfEJMK1 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 10 May 2019 08:10:27 -0400
-Received: from albert.telenet-ops.be ([195.130.137.90]:58046 "EHLO
-        albert.telenet-ops.be" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727194AbfEJMK1 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 10 May 2019 08:10:27 -0400
-Received: from ramsan ([84.194.111.163])
-        by albert.telenet-ops.be with bizsmtp
-        id AcAQ2000F3XaVaC06cAQSW; Fri, 10 May 2019 14:10:24 +0200
-Received: from rox.of.borg ([192.168.97.57])
-        by ramsan with esmtp (Exim 4.90_1)
-        (envelope-from <geert@linux-m68k.org>)
-        id 1hP4M4-0003Qp-4G; Fri, 10 May 2019 14:10:24 +0200
-Received: from geert by rox.of.borg with local (Exim 4.90_1)
-        (envelope-from <geert@linux-m68k.org>)
-        id 1hP4M4-0001g2-3E; Fri, 10 May 2019 14:10:24 +0200
-From:   Geert Uytterhoeven <geert+renesas@glider.be>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     linux-renesas-soc@vger.kernel.org, linux-gpio@vger.kernel.org,
-        Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH 2/2] pinctrl: sh-pfc: r8a7778: Use common PORT_GP_CFG_27() macro
-Date:   Fri, 10 May 2019 14:10:23 +0200
-Message-Id: <20190510121023.6397-3-geert+renesas@glider.be>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190510121023.6397-1-geert+renesas@glider.be>
-References: <20190510121023.6397-1-geert+renesas@glider.be>
+        id S1727966AbfEJOeT (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 10 May 2019 10:34:19 -0400
+Received: from mga14.intel.com ([192.55.52.115]:32461 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727248AbfEJOeT (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Fri, 10 May 2019 10:34:19 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 10 May 2019 07:34:16 -0700
+X-ExtLoop1: 1
+Received: from smile.fi.intel.com (HELO smile) ([10.237.72.86])
+  by orsmga002.jf.intel.com with ESMTP; 10 May 2019 07:34:08 -0700
+Received: from andy by smile with local (Exim 4.92)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1hP6b9-0004Sg-Pc; Fri, 10 May 2019 17:34:07 +0300
+Date:   Fri, 10 May 2019 17:34:07 +0300
+From:   "andriy.shevchenko@linux.intel.com" 
+        <andriy.shevchenko@linux.intel.com>
+To:     "Ardelean, Alexandru" <alexandru.Ardelean@analog.com>
+Cc:     "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-ide@vger.kernel.org" <linux-ide@vger.kernel.org>,
+        "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
+        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
+        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
+        "cgroups@vger.kernel.org" <cgroups@vger.kernel.org>,
+        "intel-gfx@lists.freedesktop.org" <intel-gfx@lists.freedesktop.org>,
+        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        "linux-security-module@vger.kernel.org" 
+        <linux-security-module@vger.kernel.org>,
+        "devel@driverdev.osuosl.org" <devel@driverdev.osuosl.org>,
+        "linux-integrity@vger.kernel.org" <linux-integrity@vger.kernel.org>,
+        "linux-fbdev@vger.kernel.org" <linux-fbdev@vger.kernel.org>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        "linux-rpi-kernel@lists.infradead.org" 
+        <linux-rpi-kernel@lists.infradead.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>,
+        "linux-rockchip@lists.infradead.org" 
+        <linux-rockchip@lists.infradead.org>,
+        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>,
+        "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>,
+        "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>
+Subject: Re: [PATCH 03/16] lib,treewide: add new match_string() helper/macro
+Message-ID: <20190510143407.GA9224@smile.fi.intel.com>
+References: <20190508112842.11654-1-alexandru.ardelean@analog.com>
+ <20190508112842.11654-5-alexandru.ardelean@analog.com>
+ <20190508131128.GL9224@smile.fi.intel.com>
+ <20190508131856.GB10138@kroah.com>
+ <b2440bc9485456a7a90a488c528997587b22088b.camel@analog.com>
+ <4df165bc4247e60aa4952fd55cb0c77e60712767.camel@analog.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <4df165bc4247e60aa4952fd55cb0c77e60712767.camel@analog.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Get rid of the custom PORT_GP_PUP_27() macro by using the common
-PORT_GP_CFG_27() macro instead.
+On Fri, May 10, 2019 at 09:15:27AM +0000, Ardelean, Alexandru wrote:
+> On Wed, 2019-05-08 at 16:22 +0300, Alexandru Ardelean wrote:
+> > On Wed, 2019-05-08 at 15:18 +0200, Greg KH wrote:
+> > > On Wed, May 08, 2019 at 04:11:28PM +0300, Andy Shevchenko wrote:
+> > > > On Wed, May 08, 2019 at 02:28:29PM +0300, Alexandru Ardelean wrote:
 
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
----
-No change in generated code.
----
- drivers/pinctrl/sh-pfc/pfc-r8a7778.c | 18 +-----------------
- 1 file changed, 1 insertion(+), 17 deletions(-)
+> > > > Can you split include/linux/ change from the rest?
+> > > 
+> > > That would break the build, why do you want it split out?  This makes
+> > > sense all as a single patch to me.
+> > > 
+> > 
+> > Not really.
+> > It would be just be the new match_string() helper/macro in a new commit.
+> > And the conversions of the simple users of match_string() (the ones using
+> > ARRAY_SIZE()) in another commit.
+> > 
+> 
+> I should have asked in my previous reply.
+> Leave this as-is or re-formulate in 2 patches ?
 
-diff --git a/drivers/pinctrl/sh-pfc/pfc-r8a7778.c b/drivers/pinctrl/sh-pfc/pfc-r8a7778.c
-index 985e8c215c6dee48..564b219942aac34c 100644
---- a/drivers/pinctrl/sh-pfc/pfc-r8a7778.c
-+++ b/drivers/pinctrl/sh-pfc/pfc-r8a7778.c
-@@ -22,28 +22,12 @@
- #define PORT_GP_PUP_1(bank, pin, fn, sfx)	\
- 	PORT_GP_CFG_1(bank, pin, fn, sfx, SH_PFC_PIN_CFG_PULL_UP)
- 
--#define PORT_GP_PUP_27(bank, fn, sfx)					\
--	PORT_GP_PUP_1(bank, 0,  fn, sfx), PORT_GP_PUP_1(bank, 1,  fn, sfx),	\
--	PORT_GP_PUP_1(bank, 2,  fn, sfx), PORT_GP_PUP_1(bank, 3,  fn, sfx),	\
--	PORT_GP_PUP_1(bank, 4,  fn, sfx), PORT_GP_PUP_1(bank, 5,  fn, sfx),	\
--	PORT_GP_PUP_1(bank, 6,  fn, sfx), PORT_GP_PUP_1(bank, 7,  fn, sfx),	\
--	PORT_GP_PUP_1(bank, 8,  fn, sfx), PORT_GP_PUP_1(bank, 9,  fn, sfx),	\
--	PORT_GP_PUP_1(bank, 10, fn, sfx), PORT_GP_PUP_1(bank, 11, fn, sfx),	\
--	PORT_GP_PUP_1(bank, 12, fn, sfx), PORT_GP_PUP_1(bank, 13, fn, sfx),	\
--	PORT_GP_PUP_1(bank, 14, fn, sfx), PORT_GP_PUP_1(bank, 15, fn, sfx),	\
--	PORT_GP_PUP_1(bank, 16, fn, sfx), PORT_GP_PUP_1(bank, 17, fn, sfx),	\
--	PORT_GP_PUP_1(bank, 18, fn, sfx), PORT_GP_PUP_1(bank, 19, fn, sfx),	\
--	PORT_GP_PUP_1(bank, 20, fn, sfx), PORT_GP_PUP_1(bank, 21, fn, sfx),	\
--	PORT_GP_PUP_1(bank, 22, fn, sfx), PORT_GP_PUP_1(bank, 23, fn, sfx),	\
--	PORT_GP_PUP_1(bank, 24, fn, sfx), PORT_GP_PUP_1(bank, 25, fn, sfx),	\
--	PORT_GP_PUP_1(bank, 26, fn, sfx)
--
- #define CPU_ALL_GP(fn, sfx)		\
- 	PORT_GP_CFG_32(0, fn, sfx, SH_PFC_PIN_CFG_PULL_UP),		\
- 	PORT_GP_CFG_32(1, fn, sfx, SH_PFC_PIN_CFG_PULL_UP),		\
- 	PORT_GP_CFG_32(2, fn, sfx, SH_PFC_PIN_CFG_PULL_UP),		\
- 	PORT_GP_CFG_32(3, fn, sfx, SH_PFC_PIN_CFG_PULL_UP),		\
--	PORT_GP_PUP_27(4, fn, sfx)
-+	PORT_GP_CFG_27(4, fn, sfx, SH_PFC_PIN_CFG_PULL_UP)
- 
- enum {
- 	PINMUX_RESERVED = 0,
+Depends on on what you would like to spend your time: collecting Acks for all
+pieces in treewide patch or send new API first followed up by per driver /
+module update in next cycle.
+
+I also have no strong preference.
+And I think it's good to add Heikki Krogerus to Cc list for both patch series,
+since he is the author of sysfs variant and may have something to comment on
+the rest.
+
 -- 
-2.17.1
+With Best Regards,
+Andy Shevchenko
+
 
