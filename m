@@ -2,121 +2,127 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 37ECA19980
-	for <lists+linux-gpio@lfdr.de>; Fri, 10 May 2019 10:23:45 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 538B719A0A
+	for <lists+linux-gpio@lfdr.de>; Fri, 10 May 2019 10:52:11 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727281AbfEJIXf (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 10 May 2019 04:23:35 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:34136 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727223AbfEJIXe (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 10 May 2019 04:23:34 -0400
-Received: by mail-wr1-f65.google.com with SMTP id f7so6709688wrq.1
-        for <linux-gpio@vger.kernel.org>; Fri, 10 May 2019 01:23:33 -0700 (PDT)
+        id S1727117AbfEJIwK (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 10 May 2019 04:52:10 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:39216 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727043AbfEJIwK (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 10 May 2019 04:52:10 -0400
+Received: by mail-wm1-f67.google.com with SMTP id n25so6480308wmk.4
+        for <linux-gpio@vger.kernel.org>; Fri, 10 May 2019 01:52:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=5yCZDsoXX8gNHDHrkDE/DYR09t36eKuYM9S/4pn/Ftw=;
-        b=uhtIwH/NZFJ48uIDBhqwqTjMsx8agUVdKqxKn/wT/HGQlFyxplSo0EsUpNiPGg6JHo
-         Hwk87YTmDU83xzZU4f/LZkFJEptHPgRlhmGbuvPSGo0flQPdltEjUO/tJnmJINywp1fF
-         /fhrTKpp689UDLZLwSpp+XZJgc7OJowEQWncaI5m+nzv/EgOSI1GKWIZ2za/9eUCQthL
-         jrTAKxlBFre024EAVcXeIFQAfH8L4ey988GlfD7Ze8o2FQxlZ3680a3vePn+4c505AGu
-         OXhELXQScpUgFO5OHMHi3k/S3oLkrmucozy0M0Z0VCjv8rKIpqafTyX1HTUcXELNZDhC
-         rOoQ==
+        h=message-id:subject:from:to:cc:date:in-reply-to:references
+         :user-agent:mime-version:content-transfer-encoding;
+        bh=aaM8432jFaEmhAAs5kJRzcW3PtFv9V/mPFGHY/gVINc=;
+        b=HC9GwhY1KxcCvquoeRmAWTsEHBkGlMjC2GOSg6QgSOb4NqeO9tQazouSymWwoGOCjA
+         9JWrMkzWVeVEGra7oAVM1kJhEEZM/PhqiogQbhTl6twBJtLpQ0/MPg56TCYYAt+Nvv1o
+         mCJg3YB/RHexlJfjgBa+KFzqJ5FvXDDHsnnWtvdJONcsi/MDywBvcfou5mimKwOEo1iZ
+         aCqw/BkOF0tmUEWP1PK3VYzCYHdrfLvr1cLVaGotwWbUkfqHza9nLRXR4qX182qhGhEq
+         TKz1aA9ZIVvYWW+B6qEF292a80KFSQDyuElD+0kAVBqsrRz195OMy7ClsyOwrwFgKNTG
+         4aNQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=5yCZDsoXX8gNHDHrkDE/DYR09t36eKuYM9S/4pn/Ftw=;
-        b=R+9fivr2pCM0QodHPY2Br5GMo6wtsYO3XsO85wt7YdZRke2ZHHa3aIvQr5D4posOvn
-         gFlOaGx+Z+I5CjdoZ7KTJ5RXT5GdoJuVrA5qPgZqkjOggJGsC7nEkwUXQ34ConBW+564
-         XfgOslxNGkojtC+oqdMQhl5MBNKP+fXcmDUhxcSUriT6HUFQuwzD7HkKayKRVGnlVEYa
-         FKIACkck+wOOOWMgZXfyGkhk65fG0a9Bpjdd/TrpHcrZUySX04a17OCpxg0o+IZ3Vbpu
-         7fC+NyYPG0LNUoS5Zy0LRhydJApGdFNR/a58QYAbGbOZ+7wdMeSOyP7P7E7PhwWcEGZG
-         cSvw==
-X-Gm-Message-State: APjAAAXQvYUr8KgdUq6opfD19gZH67QXJCSeHQbHUK1Uy3SbzoaW2yGG
-        oEoEjb4gzKh/PeWbaNCtpQvW9pJzCQ4=
-X-Google-Smtp-Source: APXvYqy1wdwN6UVZDfIDYZvOAXqF7PasI/1MfUnTkfGHdroPNXzwZ1cLMEwwK7qQbtPMHGjW6nfkaw==
-X-Received: by 2002:adf:eb02:: with SMTP id s2mr286910wrn.29.1557476612615;
-        Fri, 10 May 2019 01:23:32 -0700 (PDT)
-Received: from glaroque-ThinkPad-T480.local (lmontsouris-657-1-212-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
-        by smtp.gmail.com with ESMTPSA id z4sm3790285wmk.5.2019.05.10.01.23.31
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 10 May 2019 01:23:32 -0700 (PDT)
-From:   Guillaume La Roque <glaroque@baylibre.com>
-To:     linus.walleij@linaro.org, khilman@baylibre.com
-Cc:     jbrunet@baylibre.com, linux-gpio@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-amlogic@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v5 6/6] pinctrl: meson: g12a: add DS bank value
-Date:   Fri, 10 May 2019 10:23:24 +0200
-Message-Id: <20190510082324.21181-7-glaroque@baylibre.com>
-X-Mailer: git-send-email 2.17.1
+        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
+         :references:user-agent:mime-version:content-transfer-encoding;
+        bh=aaM8432jFaEmhAAs5kJRzcW3PtFv9V/mPFGHY/gVINc=;
+        b=qpawjQ+D4ZA/IVSLc373VulY/W/k9QR3W5XJnL3g/nMv4bimXMX8nRgWwgWljAezyj
+         1zTBXqxxpjOD0u7sI0iccC5yOLTG/cR8y5N/0zn+SQAl16UN2wpbmfycn6W4lfXWsqPt
+         7duH1XND6VfXluhwBplUVp5txx4ScMy9saYyazHbJ9A0n3rkEH9gOPKirxMjylNswquX
+         EjIZn4C8X8+kpw/veyZ5ny5cHw0mfIebCmM1FoAlmXdU2nGNVLnEpmdb9RnAgNzZx9Ox
+         pHr2aNYiohYcYmSSwRMckDp1XQkAwLXQP0XwiDU4gj5NcsoInakXQpP8mfJyWTzUOKbw
+         ECyw==
+X-Gm-Message-State: APjAAAVaLJ2B6rXHlT75aSWmpoLox6Ywk4KuoPmun4ls7H398RUWasix
+        5bllMCUT64e6x0NF/ftk7VxSRw==
+X-Google-Smtp-Source: APXvYqykj1mHG44y8+cSJrOUjhNqzrgeo1uIXi5+tTVxFFhizSUvTXk2PbGt+OXdLaVSil5RdqYKuA==
+X-Received: by 2002:a1c:80d7:: with SMTP id b206mr5910297wmd.48.1557478328921;
+        Fri, 10 May 2019 01:52:08 -0700 (PDT)
+Received: from boomer.baylibre.com (lmontsouris-657-1-212-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
+        by smtp.gmail.com with ESMTPSA id d4sm12281121wrf.7.2019.05.10.01.52.07
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Fri, 10 May 2019 01:52:08 -0700 (PDT)
+Message-ID: <331673da2c1cad1c72d61b45e0c614961445ec90.camel@baylibre.com>
+Subject: Re: [PATCH v5 0/6] Add drive-strength in Meson pinctrl driver
+From:   Jerome Brunet <jbrunet@baylibre.com>
+To:     Guillaume La Roque <glaroque@baylibre.com>,
+        linus.walleij@linaro.org, khilman@baylibre.com
+Cc:     linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
+Date:   Fri, 10 May 2019 10:52:07 +0200
 In-Reply-To: <20190510082324.21181-1-glaroque@baylibre.com>
 References: <20190510082324.21181-1-glaroque@baylibre.com>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.30.5 (3.30.5-1.fc29) 
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-add drive-strength bank regiter and bit value for G12A SoC
+On Fri, 2019-05-10 at 10:23 +0200, Guillaume La Roque wrote:
+> The purpose of this patchset is to add drive-strength support in meson pinconf
+> driver. This is a new feature that was added on the g12a. It is critical for us
+> to support this since many functions are failing with default pad drive-strength.
+> 
+> The value achievable by the SoC are 0.5mA, 2.5mA, 3mA and 4mA and the DT property
+> 'drive-strength' is expressed in mA.
+> So this patch add another generic property "drive-strength-microamp". The change to do so
+> would be minimal and could be benefit to other platforms later on.
+> 
+> Cheers
+> Guillaume
 
-Signed-off-by: Guillaume La Roque <glaroque@baylibre.com>
----
- drivers/pinctrl/meson/pinctrl-meson-g12a.c | 36 +++++++++++-----------
- 1 file changed, 18 insertions(+), 18 deletions(-)
+Guillaume,
 
-diff --git a/drivers/pinctrl/meson/pinctrl-meson-g12a.c b/drivers/pinctrl/meson/pinctrl-meson-g12a.c
-index d494492e98e9..3475cd7bd2af 100644
---- a/drivers/pinctrl/meson/pinctrl-meson-g12a.c
-+++ b/drivers/pinctrl/meson/pinctrl-meson-g12a.c
-@@ -1304,28 +1304,28 @@ static struct meson_pmx_func meson_g12a_aobus_functions[] = {
- };
- 
- static struct meson_bank meson_g12a_periphs_banks[] = {
--	/* name  first  last  irq  pullen  pull  dir  out  in */
--	BANK("Z",    GPIOZ_0,    GPIOZ_15, 12, 27,
--	     4,  0,  4,  0,  12,  0,  13, 0,  14, 0),
--	BANK("H",    GPIOH_0,    GPIOH_8, 28, 36,
--	     3,  0,  3,  0,  9,  0,  10,  0,  11,  0),
--	BANK("BOOT", BOOT_0,     BOOT_15,  37, 52,
--	     0,  0,  0,  0,  0, 0,  1, 0,  2, 0),
--	BANK("C",    GPIOC_0,    GPIOC_7,  53, 60,
--	     1,  0,  1,  0,  3, 0,  4, 0,  5, 0),
--	BANK("A",    GPIOA_0,    GPIOA_15,  61, 76,
--	     5,  0,  5,  0,  16,  0,  17,  0,  18,  0),
--	BANK("X",    GPIOX_0,    GPIOX_19,   77, 96,
--	     2,  0,  2,  0,  6,  0,  7,  0,  8,  0),
-+	/* name  first  last  irq  pullen  pull  dir  out  in  ds */
-+	BANK_DS("Z",    GPIOZ_0,    GPIOZ_15, 12, 27,
-+		4,  0,  4,  0,  12,  0,  13, 0,  14, 0, 5, 0),
-+	BANK_DS("H",    GPIOH_0,    GPIOH_8, 28, 36,
-+		3,  0,  3,  0,  9,  0,  10,  0,  11,  0, 4, 0),
-+	BANK_DS("BOOT", BOOT_0,     BOOT_15,  37, 52,
-+		0,  0,  0,  0,  0, 0,  1, 0,  2, 0, 0, 0),
-+	BANK_DS("C",    GPIOC_0,    GPIOC_7,  53, 60,
-+		1,  0,  1,  0,  3, 0,  4, 0,  5, 0, 1, 0),
-+	BANK_DS("A",    GPIOA_0,    GPIOA_15,  61, 76,
-+		5,  0,  5,  0,  16,  0,  17,  0,  18,  0, 6, 0),
-+	BANK_DS("X",    GPIOX_0,    GPIOX_19,   77, 96,
-+		2,  0,  2,  0,  6,  0,  7,  0,  8,  0, 2, 0),
- };
- 
- static struct meson_bank meson_g12a_aobus_banks[] = {
--	/* name  first  last  irq  pullen  pull  dir  out  in  */
--	BANK("AO",   GPIOAO_0,  GPIOAO_11,  0, 11,
--	     3,  0,  2, 0,  0,  0,  4, 0,  1,  0),
-+	/* name  first  last  irq  pullen  pull  dir  out  in  ds */
-+	BANK_DS("AO", GPIOAO_0, GPIOAO_11, 0, 11, 3, 0, 2, 0, 0, 0, 4, 0, 1, 0,
-+		0, 0),
- 	/* GPIOE actually located in the AO bank */
--	BANK("E",   GPIOE_0,  GPIOE_2,   97, 99,
--	     3,  16,  2, 16,  0,  16,  4, 16,  1,  16),
-+	BANK_DS("E", GPIOE_0, GPIOE_2, 97, 99, 3, 16, 2, 16, 0, 16, 4, 16, 1,
-+		16, 1, 0),
- };
- 
- static struct meson_pmx_bank meson_g12a_periphs_pmx_banks[] = {
--- 
-2.17.1
+Several tags, such as Acked-by, Reviewed-by or Tested-by have been given on this
+series.
+
+Please remember to collect and add them to the commit description when posting newer
+revision of a series
+
+If you didn't already, please have a look at Documentation/process/submitting-patches.rst
+
+Thanks
+
+> 
+> Changes since v4:
+> - fix dt-binding documentation
+> - rename drive-strength-uA to drive-strength-microamp in coverletter
+> 
+> Changes since v3:
+> - remove dev_err in meson_get_drive_strength
+> - cleanup code
+> 
+> Changes since v2:
+> - rename driver-strength-uA property to drive-strength-microamp
+> - rework patch series for better understanding
+> - rework set_bias function
+> 
+> Changes since v1:
+> - fix missing break
+> - implement new pinctrl generic property "drive-strength-uA"
+> 
+> [1] https://lkml.kernel.org/r/20190314163725.7918-1-jbrunet@baylibre.com
+> 
+> Guillaume La Roque (6):
+>   dt-bindings: pinctrl: add a 'drive-strength-microamp' property
+>   pinctrl: generic: add new 'drive-strength-microamp' property support
+>   dt-bindings: pinctrl: meson: Add drive-strength-microamp property
+>   pinctrl: meson: Rework enable/disable bias part
+>   pinctrl: meson: add support of drive-strength-microamp
+>   pinctrl: meson: g12a: add DS bank value
+> 
+>  .../bindings/pinctrl/meson,pinctrl.txt        |   4 +
+>  .../bindings/pinctrl/pinctrl-bindings.txt     |   3 +
+>  drivers/pinctrl/meson/pinctrl-meson-g12a.c    |  36 ++--
+>  drivers/pinctrl/meson/pinctrl-meson.c         | 180 ++++++++++++++----
+>  drivers/pinctrl/meson/pinctrl-meson.h         |  18 +-
+>  drivers/pinctrl/pinconf-generic.c             |   2 +
+>  include/linux/pinctrl/pinconf-generic.h       |   3 +
+>  7 files changed, 193 insertions(+), 53 deletions(-)
+
 
