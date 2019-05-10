@@ -2,118 +2,82 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 1F910198F4
-	for <lists+linux-gpio@lfdr.de>; Fri, 10 May 2019 09:23:31 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7D7C71991E
+	for <lists+linux-gpio@lfdr.de>; Fri, 10 May 2019 09:43:04 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727184AbfEJHXT (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 10 May 2019 03:23:19 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:36856 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727226AbfEJHXT (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 10 May 2019 03:23:19 -0400
-Received: by mail-wm1-f67.google.com with SMTP id j187so6193490wmj.1
-        for <linux-gpio@vger.kernel.org>; Fri, 10 May 2019 00:23:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=6IJvqYq4JZWD5aTcjw2ROgUsvIuulKVOwmPtVdRwUBw=;
-        b=MLfJXEMdZmKpvWHQlqIzfyImp6Wy+KcsU0p5YvE1otyh3zIOF+I1vvQ/PJnC4diJpY
-         sh7j6UBJ/0TsdJxDPFx15teFeEEP0QzxEIQEcUOhHwljvJCS2Tjkf/2mrXiP9/ZgNwHe
-         CH4EkBxMqLQgUUoLVvHev0mv2XVIeQZeRZWtqthsJGrx+ZQjGkna1+4trW4eI+KMpWg/
-         NqQgmANFTSZNHuEBAXzpXICTBex/HmPLIEN8E0Q2umUFYZfV9vf8qRqgiXOYJdB/lK+T
-         nasc2eF4kXFxaiNB/WjJeNwU3qb9R9VMtLpc1FhwexCo5vE8Uqiyx1kEp0G2RSSP1FIm
-         NJ6A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=6IJvqYq4JZWD5aTcjw2ROgUsvIuulKVOwmPtVdRwUBw=;
-        b=WbKb0W4V2CJootF1XUYHQvVF48VjYXDLl74k42Ujp4xn5tZGcUL7lxgElyUBoYNJQr
-         qbE25cyghpub31ltZJHkxKiCUiGjLXj/MgU2uuKc/OYirhHWMnbh9r3FEApH7VvrEoTR
-         ZBq8aE70ePX8XKjiOHpoaG47bTLzOFcJr67gmHtUgcee5zRxXBigaPoHR0og+CQe3n0f
-         iKkNW2xxLIt5sLshQJpNc4tLv+vrTUDRhBk7xMeiOJSwPvMQJZdH6FqzRMMCHZpSwFWU
-         mZuNlYeQPaamyjf8oOLdkl6TaVxhF0n8/CwEzirr+y8Yo8Z2pkkAoFsB686/++J1a94i
-         6fAw==
-X-Gm-Message-State: APjAAAU3nusLnkjpd2vMx+waTLHAu8FJPsLAlgvyY6uYU/ImqhTHZQwC
-        sJqxjZ27VhVWsImI4VLXQBbdgQ==
-X-Google-Smtp-Source: APXvYqwFI/XoRqh3l4hbVHQYN4vuu2sgvGQIfc1CDZPFb5/hfW20fNRJaFM/GapMBIrdKush+zwVEw==
-X-Received: by 2002:a1c:7008:: with SMTP id l8mr5638463wmc.49.1557472996594;
-        Fri, 10 May 2019 00:23:16 -0700 (PDT)
-Received: from dell ([2.27.167.43])
-        by smtp.gmail.com with ESMTPSA id n14sm1748514wrt.79.2019.05.10.00.23.15
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 10 May 2019 00:23:16 -0700 (PDT)
-Date:   Fri, 10 May 2019 08:23:14 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Amelie Delaunay <amelie.delaunay@st.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-stm32@st-md-mailman.stormreply.com
-Subject: [GIT PULL] Immutable branch between MFD and Pinctrl due for the v5.2
- merge window
-Message-ID: <20190510072314.GC7321@dell>
-References: <1557392336-28239-1-git-send-email-amelie.delaunay@st.com>
+        id S1727116AbfEJHmu (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 10 May 2019 03:42:50 -0400
+Received: from mx08-00178001.pphosted.com ([91.207.212.93]:10722 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727010AbfEJHmn (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>);
+        Fri, 10 May 2019 03:42:43 -0400
+Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
+        by mx08-00178001.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x4A7cYSq028701;
+        Fri, 10 May 2019 09:42:37 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-type; s=STMicroelectronics;
+ bh=N1v+zxTZE44tr6xZHlbxMHCvWy6h3ciCGaY/rbHViTk=;
+ b=a3QCQoY3R8nEO8Y32dWwA5wH5/dpmNaO2RWr6VTmU7jIFh7vyzTNByjPUx4/8sSFFo0v
+ dUAUkMCoQ7Abuptg4YLoUf7Icw2NDODJs4UH/o7Sy+whdv7qTsWtYUJvBQgkz0BYx2kl
+ yih3y6T17fxLnL96mLWfALBw7a/4WvR9ANOzySz1AZgK6NdWOiUFodUIepPWGnFuwoZw
+ PowJnbuKFkqqrGk+c+oFRxSf79vCD3VmlIaHsVPsjCDda7jWNU06NduMlwo5R8vThEIM
+ UspZc+xoPOeUAJ5XTEARNg+F0eSZ26/Vy9nqcOFPiLDgQUDYnyPhabkKjyc94GYy6sZU KA== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx08-00178001.pphosted.com with ESMTP id 2sc9s4gpn3-1
+        (version=TLSv1 cipher=ECDHE-RSA-AES256-SHA bits=256 verify=NOT);
+        Fri, 10 May 2019 09:42:37 +0200
+Received: from zeta.dmz-eu.st.com (zeta.dmz-eu.st.com [164.129.230.9])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 07FFA3A;
+        Fri, 10 May 2019 07:42:35 +0000 (GMT)
+Received: from Webmail-eu.st.com (sfhdag3node2.st.com [10.75.127.8])
+        by zeta.dmz-eu.st.com (STMicroelectronics) with ESMTP id B752A15AD;
+        Fri, 10 May 2019 07:42:35 +0000 (GMT)
+Received: from localhost (10.75.127.46) by SFHDAG3NODE2.st.com (10.75.127.8)
+ with Microsoft SMTP Server (TLS) id 15.0.1347.2; Fri, 10 May 2019 09:42:35
+ +0200
+From:   Alexandre Torgue <alexandre.torgue@st.com>
+To:     Linus Walleij <linus.walleij@linaro.org>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>
+CC:     <linux-kernel@vger.kernel.org>, <linux-gpio@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <alexandre.torgue@st.com>
+Subject: [PATCH 0/2] pinctrl: stm32: add suspend/resume management
+Date:   Fri, 10 May 2019 09:42:28 +0200
+Message-ID: <1557474150-19618-1-git-send-email-alexandre.torgue@st.com>
+X-Mailer: git-send-email 2.7.4
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <1557392336-28239-1-git-send-email-amelie.delaunay@st.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: text/plain
+X-Originating-IP: [10.75.127.46]
+X-ClientProxiedBy: SFHDAG7NODE1.st.com (10.75.127.19) To SFHDAG3NODE2.st.com
+ (10.75.127.8)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-09_02:,,
+ signatures=0
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Enjoy!
+During power sequence, GPIO hardware registers could be lost if the power
+supply is switched off. Each device using pinctrl API is in charge of
+managing pins during suspend/resume sequences. But for pins used as gpio or
+irq stm32 pinctrl driver has to save the hardware configuration.
+Each register will be saved at runtime and restored during resume sequence.
 
-The following changes since commit e93c9c99a629c61837d5a7fc2120cd2b6c70dbdd:
+Regards
+Alex
 
-  Linux 5.1 (2019-05-05 17:42:58 -0700)
 
-are available in the Git repository at:
+Alexandre Torgue (2):
+  pinctrl: stm32: add suspend/resume management
+  pinctrl: stm32: Enable suspend/resume for stm32mp157c SoC
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/lee/mfd.git ib-mfd-pinctrl-v5.2
-
-for you to fetch changes up to 1490d9f841b186664f9d3ca213dcfa4464a60680:
-
-  pinctrl: Add STMFX GPIO expander Pinctrl/GPIO driver (2019-05-10 08:21:31 +0100)
-
-----------------------------------------------------------------
-Immutable branch between MFD and Pinctrl due for the v5.2 merge window
-
-----------------------------------------------------------------
-Amelie Delaunay (4):
-      dt-bindings: mfd: Add ST Multi-Function eXpander (STMFX) core bindings
-      mfd: Add ST Multi-Function eXpander (STMFX) core driver
-      dt-bindings: pinctrl: document the STMFX pinctrl bindings
-      pinctrl: Add STMFX GPIO expander Pinctrl/GPIO driver
-
- Documentation/devicetree/bindings/mfd/stmfx.txt    |  28 +
- .../devicetree/bindings/pinctrl/pinctrl-stmfx.txt  | 116 +++
- drivers/mfd/Kconfig                                |  13 +
- drivers/mfd/Makefile                               |   2 +-
- drivers/mfd/stmfx.c                                | 545 ++++++++++++++
- drivers/pinctrl/Kconfig                            |  12 +
- drivers/pinctrl/Makefile                           |   1 +
- drivers/pinctrl/pinctrl-stmfx.c                    | 820 +++++++++++++++++++++
- include/linux/mfd/stmfx.h                          | 123 ++++
- 9 files changed, 1659 insertions(+), 1 deletion(-)
- create mode 100644 Documentation/devicetree/bindings/mfd/stmfx.txt
- create mode 100644 Documentation/devicetree/bindings/pinctrl/pinctrl-stmfx.txt
- create mode 100644 drivers/mfd/stmfx.c
- create mode 100644 drivers/pinctrl/pinctrl-stmfx.c
- create mode 100644 include/linux/mfd/stmfx.h
+ drivers/pinctrl/stm32/pinctrl-stm32.c      | 132 +++++++++++++++++++++++++++++
+ drivers/pinctrl/stm32/pinctrl-stm32.h      |   2 +
+ drivers/pinctrl/stm32/pinctrl-stm32mp157.c |   5 ++
+ 3 files changed, 139 insertions(+)
 
 -- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+2.7.4
+
