@@ -2,567 +2,331 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 6878B1A06E
-	for <lists+linux-gpio@lfdr.de>; Fri, 10 May 2019 17:46:03 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 17C851A736
+	for <lists+linux-gpio@lfdr.de>; Sat, 11 May 2019 10:45:21 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727000AbfEJPpt (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 10 May 2019 11:45:49 -0400
-Received: from mx08-00178001.pphosted.com ([91.207.212.93]:21414 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726930AbfEJPpt (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>);
-        Fri, 10 May 2019 11:45:49 -0400
-Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
-        by mx08-00178001.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x4AFRMrc029079;
-        Fri, 10 May 2019 17:45:29 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
- : date : message-id : mime-version : content-type; s=STMicroelectronics;
- bh=EDgWPk87oXg8YzV/4F3uiVhPZFZ4rv/kb1qOckXHwGM=;
- b=Y2K9EEVGq+tebiaiBvUZHMXqFqfWcldSosAX82+yaCvwWCsHSb3rddjodYSlqs8kThiV
- JLzAFZxeXEq+w6PtSPJtJN09CbWTO5SvjPRJ+TDGT/8aeWNPJ+Z5X4eSqCNyyZDT6pQE
- MOinOB281F0tKKISu+zqwellC2OC2zSpjPOrAD24vEC1SL76YLfBF4oWWsENxpdhp1XH
- hx59lupxH8lKbBssRi7ALnPAxsbrFUlzQMKxgWM+ehghSMlIMUaE5b18Cd6IGqxicvhO
- 7MzqTmMItuhvpOIDB97anLnB2eA/ry52s+SbdJNAYzlzWNzTVDAQqIMUkKxgTH7ffC3k vA== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx08-00178001.pphosted.com with ESMTP id 2sc9s4kas1-1
-        (version=TLSv1 cipher=ECDHE-RSA-AES256-SHA bits=256 verify=NOT);
-        Fri, 10 May 2019 17:45:28 +0200
-Received: from zeta.dmz-eu.st.com (zeta.dmz-eu.st.com [164.129.230.9])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 3AE4831;
-        Fri, 10 May 2019 15:45:28 +0000 (GMT)
-Received: from Webmail-eu.st.com (sfhdag3node2.st.com [10.75.127.8])
-        by zeta.dmz-eu.st.com (STMicroelectronics) with ESMTP id D19592945;
-        Fri, 10 May 2019 15:45:27 +0000 (GMT)
-Received: from localhost (10.75.127.44) by SFHDAG3NODE2.st.com (10.75.127.8)
- with Microsoft SMTP Server (TLS) id 15.0.1347.2; Fri, 10 May 2019 17:45:27
- +0200
-From:   Alexandre Torgue <alexandre.torgue@st.com>
-To:     Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>
-CC:     <linux-arm-kernel@lists.infradead.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-gpio@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>
-Subject: [PATCH v2] dt-bindings: pinctrl: Convert stm32 pinctrl bindings to json-schema
-Date:   Fri, 10 May 2019 17:45:26 +0200
-Message-ID: <1557503126-3025-1-git-send-email-alexandre.torgue@st.com>
-X-Mailer: git-send-email 2.7.4
+        id S1728407AbfEKIpU (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sat, 11 May 2019 04:45:20 -0400
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:33012 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726941AbfEKIpT (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sat, 11 May 2019 04:45:19 -0400
+Received: by mail-lf1-f66.google.com with SMTP id x132so5769011lfd.0
+        for <linux-gpio@vger.kernel.org>; Sat, 11 May 2019 01:45:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:from:date:message-id:subject:to:cc
+         :content-transfer-encoding;
+        bh=7miCwUTaPzpCoLaJea3kZEZZgRHl7mSXf9NxVsCSnNU=;
+        b=UtMNtNMDMqHqnkxd6aZtKZ+J8EbM4s7N2XncMyt6oyNApiUGhCTFtzqgcdnn/8KaZE
+         6D4ysagMoR02w48haXBxHMzhYpYxtGt8uWdAr9nn9JikoOedpru45mkeWE3PI0yoCTKL
+         8fJgnO9Q+zEM4bQgqdkq1pZvTPv5tDmJh2Vpz6FmEEmJUHUrAUx9QlheALn7rja3MEfa
+         06FAqIi1RQ5uWDWjJEh7lKE7SwdJFu5HytUi13HQSObu+1GSsN6vquhhf55CNlI87kpR
+         svS1wnIIU1ABKjPjexWwou7wbwqGeYL7PJf5TwX/oFFEvQaQJNxuQaoU6fu6BLSvi+6/
+         22hw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc
+         :content-transfer-encoding;
+        bh=7miCwUTaPzpCoLaJea3kZEZZgRHl7mSXf9NxVsCSnNU=;
+        b=OGvhp8RqQ/HftepDumB7D1ac+upxgZKHAuFxaycH/hpXRv2Dt3HqENaoTFkZ051LX4
+         /Wx9zwNJjx3928BZLoREz+QZJolDfDUDgDcV8oo0T6SUnlhRwOwsPtDtRTpMA/KrWS5L
+         16AE1LOF9Mu/a6z9nN0gz3Y1sIiW0TufgcHh1QNFdgtW5MyCNokLgnGhaoBGmkuu907U
+         CAGQ3lyMkEV2hoOIY9AnMdhi63hzAQnPsA9G5qql8BJn64WIAP91eunFea75Er7W1Gac
+         Xa3DwkCETfgowumQIT5nrxX5d3Z3wp7uqmSBxMBFyoF7vKuXcv9kchZSipwuyyK6HksC
+         fMuQ==
+X-Gm-Message-State: APjAAAVqWXoEgyWfTtilWcR1eMN9efOZJJjJRwNEF1lYeuEUDsO7mtJk
+        WP6jEAKP171GHU/OLHUHm8JekVygREs3/seuxVEgzQ==
+X-Google-Smtp-Source: APXvYqz2xYym3AWToebYZOUd+QV/vWxtJVsivCRmE6Q9u16ih1rZaKnDz72ETc6nSs4LynUNvkaM6gnWYtZA6UT1hIA=
+X-Received: by 2002:ac2:4a86:: with SMTP id l6mr7971680lfp.51.1557564316907;
+ Sat, 11 May 2019 01:45:16 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.75.127.44]
-X-ClientProxiedBy: SFHDAG3NODE3.st.com (10.75.127.9) To SFHDAG3NODE2.st.com
- (10.75.127.8)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-09_02:,,
- signatures=0
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Sat, 11 May 2019 10:45:05 +0200
+Message-ID: <CACRpkdZg0=f1KvwDhYGo=iv0ntQWzjTqYno1BgLE4zYxq-RAUQ@mail.gmail.com>
+Subject: [GIT PULL] GPIO bulk changes for v5.2
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Convert the STM32 pinctrl binding to DT schema format using json-schema.
+Hi Linus,
 
-Signed-off-by: Alexandre Torgue <alexandre.torgue@st.com>
----
+here is the big pull request for GPIO for v5.2. A bit later than usual
+because I was ironing out my own mistakes. I'm holding some
+stuff back for the next kernel as a result, and this should be a
+healthy and well tested batch.
 
-Hi,
+I merged in v5.1-rc3 at one point to get rid of some nasty merge
+conflicts with one of the bigger fixes that went in in the early rcs.
 
-First pacth to convert DT bindings file (here pinctrl STM32) to json-schema
-in order to take advantage of devicetree validation tool for STM32.
+Other than that it is business as usual and a not very busy kernel
+cycle this time.
 
-Changes since v1:
- - Fix errors reported by Rob.
+Please pull it in!
+
+Yours,
+Linus Walleij
 
 
-regards
-Alex
+The following changes since commit 79a3aaa7b82e3106be97842dedfd8429248896e6=
+:
 
-diff --git a/Documentation/devicetree/bindings/pinctrl/st,stm32-pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/st,stm32-pinctrl.txt
-deleted file mode 100644
-index 0016925..0000000
---- a/Documentation/devicetree/bindings/pinctrl/st,stm32-pinctrl.txt
-+++ /dev/null
-@@ -1,208 +0,0 @@
--* STM32 GPIO and Pin Mux/Config controller
--
--STMicroelectronics's STM32 MCUs intregrate a GPIO and Pin mux/config hardware
--controller. It controls the input/output settings on the available pins and
--also provides ability to multiplex and configure the output of various on-chip
--controllers onto these pads.
--
--Pin controller node:
--Required properies:
-- - compatible: value should be one of the following:
--   "st,stm32f429-pinctrl"
--   "st,stm32f469-pinctrl"
--   "st,stm32f746-pinctrl"
--   "st,stm32f769-pinctrl"
--   "st,stm32h743-pinctrl"
--   "st,stm32mp157-pinctrl"
--   "st,stm32mp157-z-pinctrl"
-- - #address-cells: The value of this property must be 1
-- - #size-cells	: The value of this property must be 1
-- - ranges	: defines mapping between pin controller node (parent) to
--   gpio-bank node (children).
-- - pins-are-numbered: Specify the subnodes are using numbered pinmux to
--   specify pins.
--
--GPIO controller/bank node:
--Required properties:
-- - gpio-controller : Indicates this device is a GPIO controller
-- - #gpio-cells	  : Should be two.
--			The first cell is the pin number
--			The second one is the polarity:
--				- 0 for active high
--				- 1 for active low
-- - reg		  : The gpio address range, relative to the pinctrl range
-- - clocks	  : clock that drives this bank
-- - st,bank-name	  : Should be a name string for this bank as specified in
--   the datasheet
--
--Optional properties:
-- - reset:	  : Reference to the reset controller
-- - st,syscfg: Should be phandle/offset/mask.
--	-The phandle to the syscon node which includes IRQ mux selection register.
--	-The offset of the IRQ mux selection register
--	-The field mask of IRQ mux, needed if different of 0xf.
-- - gpio-ranges: Define a dedicated mapping between a pin-controller and
--   a gpio controller. Format is <&phandle a b c> with:
--	-(phandle): phandle of pin-controller.
--	-(a): gpio base offset in range.
--	-(b): pin base offset in range.
--	-(c): gpio count in range
--   This entry has to be used either if there are holes inside a bank:
--	GPIOB0/B1/B2/B14/B15 (see example 2)
--   or if banks are not contiguous:
--	GPIOA/B/C/E...
--   NOTE: If "gpio-ranges" is used for a gpio controller, all gpio-controller
--   have to use a "gpio-ranges" entry.
--   More details in Documentation/devicetree/bindings/gpio/gpio.txt.
-- - st,bank-ioport: should correspond to the EXTI IOport selection (EXTI line
--   used to select GPIOs as interrupts).
-- - hwlocks: reference to a phandle of a hardware spinlock provider node.
-- - st,package: Indicates the SOC package used.
--   More details in include/dt-bindings/pinctrl/stm32-pinfunc.h
--
--Example 1:
--#include <dt-bindings/pinctrl/stm32f429-pinfunc.h>
--...
--
--	pin-controller {
--		#address-cells = <1>;
--		#size-cells = <1>;
--		compatible = "st,stm32f429-pinctrl";
--		ranges = <0 0x40020000 0x3000>;
--		pins-are-numbered;
--
--		gpioa: gpio@40020000 {
--			gpio-controller;
--			#gpio-cells = <2>;
--			reg = <0x0 0x400>;
--			resets = <&reset_ahb1 0>;
--			st,bank-name = "GPIOA";
--		};
--		...
--		pin-functions nodes follow...
--	};
--
--Example 2:
--#include <dt-bindings/pinctrl/stm32f429-pinfunc.h>
--...
--
--	pinctrl: pin-controller {
--		#address-cells = <1>;
--		#size-cells = <1>;
--		compatible = "st,stm32f429-pinctrl";
--		ranges = <0 0x40020000 0x3000>;
--		pins-are-numbered;
--
--		gpioa: gpio@40020000 {
--			gpio-controller;
--			#gpio-cells = <2>;
--			reg = <0x0 0x400>;
--			resets = <&reset_ahb1 0>;
--			st,bank-name = "GPIOA";
--			gpio-ranges = <&pinctrl 0 0 16>;
--		};
--
--		gpiob: gpio@40020400 {
--			gpio-controller;
--			#gpio-cells = <2>;
--			reg = <0x0 0x400>;
--			resets = <&reset_ahb1 0>;
--			st,bank-name = "GPIOB";
--			ngpios = 4;
--			gpio-ranges = <&pinctrl 0 16 3>,
--				      <&pinctrl 14 30 2>;
--		};
--
--
--		...
--		pin-functions nodes follow...
--	};
--
--
--Contents of function subnode node:
------------------------------------
--Subnode format
--A pinctrl node should contain at least one subnode representing the
--pinctrl group available on the machine. Each subnode will list the
--pins it needs, and how they should be configured, with regard to muxer
--configuration, pullups, drive, output high/low and output speed.
--
--    node {
--	pinmux = <PIN_NUMBER_PINMUX>;
--	GENERIC_PINCONFIG;
--    };
--
--Required properties:
--- pinmux: integer array, represents gpio pin number and mux setting.
--  Supported pin number and mux varies for different SoCs, and are defined in
--  dt-bindings/pinctrl/<soc>-pinfunc.h directly.
--  These defines are calculated as:
--    ((port * 16 + line) << 8) | function
--  With:
--    - port: The gpio port index (PA = 0, PB = 1, ..., PK = 11)
--    - line: The line offset within the port (PA0 = 0, PA1 = 1, ..., PA15 = 15)
--    - function: The function number, can be:
--      * 0 : GPIO
--      * 1 : Alternate Function 0
--      * 2 : Alternate Function 1
--      * 3 : Alternate Function 2
--      * ...
--      * 16 : Alternate Function 15
--      * 17 : Analog
--
--  To simplify the usage, macro is available to generate "pinmux" field.
--  This macro is available here:
--    - include/dt-bindings/pinctrl/stm32-pinfunc.h
--
--  Some examples of using macro:
--    /* GPIO A9 set as alernate function 2 */
--    ... {
--		pinmux = <STM32_PINMUX('A', 9, AF2)>;
--    };
--    /* GPIO A9 set as GPIO  */
--    ... {
--		pinmux = <STM32_PINMUX('A', 9, GPIO)>;
--    };
--    /* GPIO A9 set as analog */
--    ... {
--		pinmux = <STM32_PINMUX('A', 9, ANALOG)>;
--    };
--
--Optional properties:
--- GENERIC_PINCONFIG: is the generic pinconfig options to use.
--  Available options are:
--   - bias-disable,
--   - bias-pull-down,
--   - bias-pull-up,
--   - drive-push-pull,
--   - drive-open-drain,
--   - output-low
--   - output-high
--   - slew-rate = <x>, with x being:
--       < 0 > : Low speed
--       < 1 > : Medium speed
--       < 2 > : Fast speed
--       < 3 > : High speed
--
--Example:
--
--pin-controller {
--...
--	usart1_pins_a: usart1@0 {
--		pins1 {
--			pinmux = <STM32_PINMUX('A', 9, AF7)>;
--			bias-disable;
--			drive-push-pull;
--			slew-rate = <0>;
--		};
--		pins2 {
--			pinmux = <STM32_PINMUX('A', 10, AF7)>;
--			bias-disable;
--		};
--	};
--};
--
--&usart1 {
--	pinctrl-0 = <&usart1_pins_a>;
--	pinctrl-names = "default";
--};
-diff --git a/Documentation/devicetree/bindings/pinctrl/st,stm32-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/st,stm32-pinctrl.yaml
-new file mode 100644
-index 0000000..06c4b66
---- /dev/null
-+++ b/Documentation/devicetree/bindings/pinctrl/st,stm32-pinctrl.yaml
-@@ -0,0 +1,264 @@
-+# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-+# Copyright (C) STMicroelectronics 2019.
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/pinctrl/st,stm32-pinctrl.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: STM32 GPIO and Pin Mux/Config controller
-+
-+maintainers:
-+  - Alexandre TORGUE <alexandre.torgue@st.com>
-+
-+description: |
-+  STMicroelectronics's STM32 MCUs intregrate a GPIO and Pin mux/config hardware
-+  controller. It controls the input/output settings on the available pins and
-+  also provides ability to multiplex and configure the output of various
-+  on-chip controllers onto these pads.
-+
-+properties:
-+  compatible:
-+    enum:
-+      - st,stm32f429-pinctrl
-+      - st,stm32f469-pinctrl
-+      - st,stm32f746-pinctrl
-+      - st,stm32f769-pinctrl
-+      - st,stm32h743-pinctrl
-+      - st,stm32mp157-pinctrl
-+      - st,stm32mp157-z-pinctrl
-+
-+  '#address-cells':
-+    const: 1
-+  '#size-cells':
-+    const: 1
-+
-+  ranges: true
-+  pins-are-numbered: true
-+  hwlocks: true
-+
-+  st,syscfg:
-+    $ref: "/schemas/types.yaml#/definitions/phandle-array"
-+    description: Should be phandle/offset/mask
-+    items:
-+      - description: Phandle to the syscon node which includes IRQ mux selection.
-+      - description: The offset of the IRQ mux selection register.
-+      - description: The field mask of IRQ mux, needed if different of 0xf.
-+
-+  st,package:
-+    allOf:
-+      - $ref: /schemas/types.yaml#/definitions/uint32
-+      - enum: [1, 2, 4, 8]
-+    description:
-+     Indicates the SOC package used.
-+     More details in include/dt-bindings/pinctrl/stm32-pinfunc.h
-+
-+
-+patternProperties:
-+  '^gpio@[0-9a-f]*$':
-+    properties:
-+      gpio-controller: true
-+      '#gpio-cells':
-+        const: 2
-+
-+      reg:
-+        maxItems: 1
-+      clocks:
-+        maxItems: 1
-+      reset:
-+        minItems: 1
-+        maxItems: 1
-+      gpio-ranges:
-+        minItems: 1
-+        maxItems: 16
-+      ngpios:
-+        description:
-+          Number of available gpios in a bank.
-+        minimum: 1
-+        maximum: 16
-+
-+      st,bank-name:
-+        allOf:
-+          - $ref: "/schemas/types.yaml#/definitions/string"
-+          - enum:
-+            - GPIOA
-+            - GPIOB
-+            - GPIOC
-+            - GPIOD
-+            - GPIOE
-+            - GPIOF
-+            - GPIOG
-+            - GPIOH
-+            - GPIOI
-+            - GPIOJ
-+            - GPIOK
-+            - GPIOZ
-+        description:
-+          Should be a name string for this bank as specified in the datasheet.
-+
-+      st,bank-ioport:
-+        allOf:
-+          - $ref: "/schemas/types.yaml#/definitions/uint32"
-+          - minimum: 0
-+          - maximum: 11
-+
-+        description:
-+          Should correspond to the EXTI IOport selection (EXTI line used
-+          to select GPIOs as interrupts).
-+
-+    required:
-+      - gpio-controller
-+      - '#gpio-cells'
-+      - reg
-+      - clocks
-+      - st,bank-name
-+
-+  '-[0-9]*$':
-+    patternProperties:
-+      '^pins':
-+        description: |
-+          A pinctrl node should contain at least one subnode representing the
-+          pinctrl group available on the machine. Each subnode will list the
-+          pins it needs, and how they should be configured, with regard to muxer
-+          configuration, pullups, drive, output high/low and output speed.
-+        properties:
-+          pinmux:
-+            allOf:
-+              - $ref: "/schemas/types.yaml#/definitions/uint32-array"
-+            description: |
-+              Integer array, represents gpio pin number and mux setting.
-+              Supported pin number and mux varies for different SoCs, and are
-+              defined in dt-bindings/pinctrl/<soc>-pinfunc.h directly.
-+              These defines are calculated as: ((port * 16 + line) << 8) | function
-+              With:
-+              - port: The gpio port index (PA = 0, PB = 1, ..., PK = 11)
-+              - line: The line offset within the port (PA0 = 0, PA1 = 1, ..., PA15 = 15)
-+              - function: The function number, can be:
-+              * 0 : GPIO
-+              * 1 : Alternate Function 0
-+              * 2 : Alternate Function 1
-+              * 3 : Alternate Function 2
-+              * ...
-+              * 16 : Alternate Function 15
-+              * 17 : Analog
-+              To simplify the usage, macro is available to generate "pinmux" field.
-+              This macro is available here:
-+                - include/dt-bindings/pinctrl/stm32-pinfunc.h
-+              Some examples of using macro:
-+               /* GPIO A9 set as alernate function 2 */
-+               ... {
-+                          pinmux = <STM32_PINMUX('A', 9, AF2)>;
-+               };
-+               /* GPIO A9 set as GPIO  */
-+               ... {
-+                          pinmux = <STM32_PINMUX('A', 9, GPIO)>;
-+               };
-+               /* GPIO A9 set as analog */
-+               ... {
-+                          pinmux = <STM32_PINMUX('A', 9, ANALOG)>;
-+               };
-+
-+          bias-disable:
-+            type: boolean
-+          bias-pull-down:
-+            type: boolean
-+          bias-pull-up:
-+            type: boolean
-+          drive-push-pull:
-+            type: boolean
-+          drive-open-drain:
-+            type: boolean
-+          output-low:
-+            type: boolean
-+          output-high:
-+            type: boolean
-+          slew-rate:
-+            description: |
-+              0: Low speed
-+              1: Medium speed
-+              2: Fast speed
-+              3: High speed
-+            allOf:
-+              - $ref: /schemas/types.yaml#/definitions/uint32
-+              - enum: [0, 1, 2, 3]
-+
-+        required:
-+          - pinmux
-+
-+required:
-+  - compatible
-+  - '#address-cells'
-+  - '#size-cells'
-+  - ranges
-+  - pins-are-numbered
-+
-+examples:
-+  - |
-+    #include <dt-bindings/pinctrl/stm32-pinfunc.h>
-+    //Example 1
-+      pinctrl@40020000 {
-+              #address-cells = <1>;
-+              #size-cells = <1>;
-+              compatible = "st,stm32f429-pinctrl";
-+              ranges = <0 0x40020000 0x3000>;
-+              pins-are-numbered;
-+
-+              gpioa: gpio@0 {
-+                      gpio-controller;
-+                      #gpio-cells = <2>;
-+                      reg = <0x0 0x400>;
-+                      resets = <&reset_ahb1 0>;
-+                      st,bank-name = "GPIOA";
-+              };
-+       };
-+
-+    //Example 2 (using gpio-ranges)
-+      pinctrl@50020000 {
-+              #address-cells = <1>;
-+              #size-cells = <1>;
-+              compatible = "st,stm32f429-pinctrl";
-+              ranges = <0 0x50020000 0x3000>;
-+              pins-are-numbered;
-+
-+              gpiob: gpio@1000 {
-+                      gpio-controller;
-+                      #gpio-cells = <2>;
-+                      reg = <0x1000 0x400>;
-+                      resets = <&reset_ahb1 0>;
-+                      st,bank-name = "GPIOB";
-+                      gpio-ranges = <&pinctrl 0 0 16>;
-+              };
-+
-+              gpioc: gpio@2000 {
-+                      gpio-controller;
-+                      #gpio-cells = <2>;
-+                      reg = <0x2000 0x400>;
-+                      resets = <&reset_ahb1 0>;
-+                      st,bank-name = "GPIOC";
-+                      ngpios = <5>;
-+                      gpio-ranges = <&pinctrl 0 16 3>,
-+                                    <&pinctrl 14 30 2>;
-+              };
-+      };
-+
-+    //Example 3 pin groups
-+      pinctrl@60020000 {
-+        usart1_pins_a: usart1-0 {
-+                pins1 {
-+                        pinmux = <STM32_PINMUX('A', 9, AF7)>;
-+                        bias-disable;
-+                        drive-push-pull;
-+                        slew-rate = <0>;
-+                };
-+                pins2 {
-+                        pinmux = <STM32_PINMUX('A', 10, AF7)>;
-+                        bias-disable;
-+                };
-+        };
-+    };
-+
-+    usart1 {
-+                pinctrl-0 = <&usart1_pins_a>;
-+                pinctrl-names = "default";
-+    };
-+
-+...
--- 
-2.7.4
+  Linux 5.1-rc3 (2019-03-31 14:39:29 -0700)
 
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-gpio.git
+tags/gpio-v5.2-1
+
+for you to fetch changes up to 0fbee1df2078fa1f61e2da14f51ceb357c79ae69:
+
+  gpio: Update documentation (2019-05-07 16:32:12 +0200)
+
+----------------------------------------------------------------
+This is the bulk of the GPIO changes for the v5.2 kernel cycle:
+
+Core changes:
+- The gpiolib MMIO driver has been enhanced to handle two direction
+  registers, i.e. one register to set lines as input and one register
+  to set lines as output. It turns out some silicon engineer thinks
+  the ability to configure a line as input and output at the same
+  time makes sense, this can be debated but includes a lot of analog
+  electronics reasoning, and the registers are there and need to
+  be handled consistently. Unsurprisingly, we enforce the lines to
+  be either inputs or outputs in such schemes.
+- Send in the proper argument value to .set_config() dispatched to
+  the pin control subsystem. Nobody used it before, now someone
+  does, so fix it to work as expected.
+- The ACPI gpiolib portions can now handle pin bias setting (pull up
+  or pull down). This has been in the ACPI spec for years and we
+  finally have it properly integrated with Linux GPIOs. It was based
+  on an observation from Andy Schevchenko that Thomas Petazzoni's
+  changes to the core for biasing the PCA950x GPIO expander actually
+  happen to fit hand-in-glove with what the ACPI core needed.
+  Such nice synergies happen sometimes.
+
+New drivers:
+- A new driver for the Mellanox BlueField GPIO controller. This is
+  using 64bit MMIO registers and can configure lines as inputs
+  and outputs at the same time and after improving the MMIO library
+  we handle it just fine. Interesting.
+- A new IXP4xx proper gpiochip driver with hierarchical interrupts
+  should be coming in from the ARM SoC tree as well.
+
+Driver enhancements:
+- The PCA053x driver handles the CAT9554 GPIO expander.
+- The PCA053x driver handles the NXP PCAL6416 GPIO expander.
+- Wake-up support on PCA053x GPIO lines.
+- OMAP now does a nice asynchronous IRQ handling on wake-ups by
+  letting everything wake up on edges, and this makes runtime PM
+  work as expected too.
+
+Misc:
+- Several cleanups such as devres fixes.
+- Get rid of some languager comstructs that cause problems when
+  compiling with LLVMs clang.
+- Documentation review and update.
+
+----------------------------------------------------------------
+Alexandre Belloni (3):
+      gpio: pca953x: add pcal6416 to the of_device_id table
+      dt-bindings: gpio: pca953x: document the nxp,pca6416
+      gpio: pca953x: add support for pca6416
+
+Andrey Smirnov (7):
+      gpio: vf610: Do not share irq_chip
+      gpio: vf610: Simplify vf610_gpio_set()
+      gpio: vf610: Simplify vf610_gpio_get()
+      gpio: vf610: Use devres to disable clk_port
+      gpio: vf610: Use devres to disable clk_gpio
+      gpio: vf610: Use devres to remove gpiochip
+      gpio: vf610: Don't use explicit &pdev->dev in vf610_gpio_probe()
+
+Andy Shevchenko (12):
+      gpio: 74x164: Make use of device properties
+      gpio: 74x164: Remove linux/init.h and sort headers
+      gpio: 74x164: Convert to use SPDX identifier
+      gpiolib: acpi: Fix references in kernel doc and amend
+      gpiolib: Don't WARN on gpiod_put() for optional GPIO
+      gpiolib: Indent entry values of enum gpio_lookup_flags
+      gpiolib: Make use of enum gpio_lookup_flags consistent
+      gpiolib: Introduce GPIO_LOOKUP_FLAGS_DEFAULT
+      gpiolib: acpi: Change type of dflags
+      gpiolib: acpi: Set pin value, based on bias, more accurately
+      gpiolib: acpi: Add acpi_gpio_update_gpiod_lookup_flags() helper
+      gpiolib: acpi: Respect pin bias setting
+
+Anson Huang (1):
+      gpio: mxc: use devm_platform_ioremap_resource() to simplify code
+
+Arnd Bergmann (1):
+      gpio: omap: avoid clang warning
+
+Bartosz Golaszewski (2):
+      gpio: mockup: drop unneeded dependencies from Kconfig
+      gpio: mockup: move the driver out of the IOMEM drivers section
+
+Enrico Weigelt, metux IT consult (36):
+      drivers: gpio: Kconfig: pedantic formatting cleanups
+      drivers: gpio: 74xx-mmio: use devm_platform_ioremap_resource()
+      drivers: gpio: amdpt: use devm_platform_ioremap_resource()
+      drivers: gpio: aspeed: use devm_platform_ioremap_resource()
+      drivers: gpio: bcm-kona: use devm_platform_ioremap_resource()
+      drivers: gpio: cadence: use devm_platform_ioremap_resource()
+      drivers: gpio: clps711x: use devm_platform_ioremap_resource()
+      drivers: gpio: dwap: use devm_platform_ioremap_resource()
+      drivers: gpio: sprd: use devm_platform_ioremap_resource()
+      drivers: gpio: ftgpio010: use devm_platform_ioremap_resource()
+      drivers: gpio: hlwd: use devm_platform_ioremap_resource()
+      drivers: gpio: iop: use devm_platform_ioremap_resource()
+      drivers: gpio: janz-ttl: use devm_platform_ioremap_resource()
+      drivers: gpio: loongon1: use devm_platform_ioremap_resource()
+      drivers: gpio: lpc18xx: use devm_platform_ioremap_resource()
+      drivers: gpio: mb86s7x: use devm_platform_ioremap_resource()
+      drivers: gpio: mt7621: use devm_platform_ioremap_resource()
+      drivers: gpio: mvebu: use devm_platform_ioremap_resource()
+      drivers: gpio: mxc: use devm_platform_ioremap_resource()
+      drivers: gpio: octeon: use devm_platform_ioremap_resource()
+      drivers: gpio: pxa: use devm_platform_ioremap_resource()
+      drivers: gpio: rcar: use devm_platform_ioremap_resource()
+      drivers: gpio: spear-spics: use devm_platform_ioremap_resource()
+      drivers: gpio: sta2x11: use devm_platform_ioremap_resource()
+      drivers: gpio: stp-xway: use devm_platform_ioremap_resource()
+      drivers: gpio: tb10x: use devm_platform_ioremap_resource()
+      drivers: gpio: tegra: use devm_platform_ioremap_resource()
+      drivers: gpio: timberdale: use devm_platform_ioremap_resource()
+      drivers: gpio: ts4800: use devm_platform_ioremap_resource()
+      drivers: gpio: uniphier: use devm_platform_ioremap_resource()
+      drivers: gpio: vf610: use devm_platform_ioremap_resource()
+      drivers: gpio: xgene-sb: use devm_platform_ioremap_resource()
+      drivers: gpio: zx: use devm_platform_ioremap_resource()
+      drivers: gpio: xlp: devm_platform_ioremap_resource()
+      gpio: zynq: use devm_platform_ioremap_resource()
+      gpio: omap: use devm_platform_ioremap_resource()
+
+Geert Uytterhoeven (5):
+      dt-bindings: gpio: pca953x: Document onnn,cat9554
+      gpio: pca953x: Add support for CAT9554
+      gpio: Remove obsolete comment about gpiochip_free_hogs() usage
+      gpio: of: Optimize quirk checks
+      gpio: pca953x: Configure wake-up path when wake-up is enabled
+
+Jan Kiszka (1):
+      gpio: sch: Remove write-only core_base
+
+Jan Kotas (1):
+      gpio: mmio: Fix bgpio_get_set & bgpio_get_set_multiple
+
+Jan Kundr=C3=A1t (1):
+      pinctrl: mcp23s08: debugfs: remove custom printer
+
+Linus Walleij (5):
+      gpio: mmio: Support two direction registers
+      gpio: mmio: Drop bgpio_dir_inverted
+      Merge tag 'v5.1-rc3' into devel
+      Merge tag 'gpio-v5.2-updates-for-linus-part1' of
+git://git.kernel.org/.../brgl/linux into devel
+      gpio: Update documentation
+
+Mauro Carvalho Chehab (1):
+      docs: gpio: convert docs to ReST and rename to *.rst
+
+Maxime Ripard (1):
+      gpio: Set proper argument value to set_config
+
+Russell King (2):
+      gpio: gpio-omap: configure edge detection for level IRQs for idle wak=
+eup
+      gpio: gpio-omap: Remove conditional pm_runtime handling for GPIO
+interrupts
+
+Shravan Kumar Ramani (2):
+      gpio: add driver for Mellanox BlueField GPIO controller
+      gpio: mlxbf: Add dependency on 64BIT to Kconfig entry
+
+Tony Lindgren (3):
+      gpio: gpio-omap: limit errata 1.101 handling to wkup domain gpios onl=
+y
+      gpio: gpio-omap: always scan for triggered non-wakeup capable interru=
+pts
+      gpio: gpio-omap: add check for off wake capable gpios
+
+Uwe Kleine-K=C3=B6nig (1):
+      tracing: stop making gpio tracing configurable
+
+YueHaibing (2):
+      gpio: mlxbf: remove unused including <linux/version.h>
+      gpio: pxa: Make two symbols static
+
+ .../devicetree/bindings/gpio/gpio-pca953x.txt      |   2 +
+ Documentation/driver-api/gpio/driver.rst           | 361 +++++++-----
+ Documentation/gpio/index.rst                       |  17 +
+ Documentation/gpio/{sysfs.txt =3D> sysfs.rst}        |  39 +-
+ arch/arm/configs/aspeed_g4_defconfig               |   1 -
+ arch/arm/configs/aspeed_g5_defconfig               |   1 -
+ drivers/gpio/Kconfig                               |  83 +--
+ drivers/gpio/Makefile                              |   1 +
+ drivers/gpio/gpio-74x164.c                         |  22 +-
+ drivers/gpio/gpio-74xx-mmio.c                      |   4 +-
+ drivers/gpio/gpio-amdpt.c                          |   8 +-
+ drivers/gpio/gpio-aspeed.c                         |   4 +-
+ drivers/gpio/gpio-bcm-kona.c                       |   4 +-
+ drivers/gpio/gpio-cadence.c                        |   4 +-
+ drivers/gpio/gpio-clps711x.c                       |   7 +-
+ drivers/gpio/gpio-dwapb.c                          |   4 +-
+ drivers/gpio/gpio-ftgpio010.c                      |   4 +-
+ drivers/gpio/gpio-hlwd.c                           |   4 +-
+ drivers/gpio/gpio-iop.c                            |   4 +-
+ drivers/gpio/gpio-janz-ttl.c                       |   4 +-
+ drivers/gpio/gpio-loongson1.c                      |   4 +-
+ drivers/gpio/gpio-lpc18xx.c                        |   5 +-
+ drivers/gpio/gpio-mb86s7x.c                        |   4 +-
+ drivers/gpio/gpio-mlxbf.c                          | 152 +++++
+ drivers/gpio/gpio-mmio.c                           |  99 ++--
+ drivers/gpio/gpio-mt7621.c                         |   3 +-
+ drivers/gpio/gpio-mvebu.c                          |   7 +-
+ drivers/gpio/gpio-mxc.c                            |   4 +-
+ drivers/gpio/gpio-octeon.c                         |   4 +-
+ drivers/gpio/gpio-omap.c                           | 644 +++++++++--------=
+----
+ drivers/gpio/gpio-pca953x.c                        |  25 +-
+ drivers/gpio/gpio-pxa.c                            |  12 +-
+ drivers/gpio/gpio-rcar.c                           |   5 +-
+ drivers/gpio/gpio-sch.c                            |   5 -
+ drivers/gpio/gpio-spear-spics.c                    |   4 +-
+ drivers/gpio/gpio-sprd.c                           |   4 +-
+ drivers/gpio/gpio-sta2x11.c                        |   5 +-
+ drivers/gpio/gpio-stp-xway.c                       |   4 +-
+ drivers/gpio/gpio-tb10x.c                          |   4 +-
+ drivers/gpio/gpio-tegra.c                          |   4 +-
+ drivers/gpio/gpio-timberdale.c                     |   4 +-
+ drivers/gpio/gpio-ts4800.c                         |   4 +-
+ drivers/gpio/gpio-uniphier.c                       |   4 +-
+ drivers/gpio/gpio-vf610.c                          |  92 ++-
+ drivers/gpio/gpio-xgene-sb.c                       |   4 +-
+ drivers/gpio/gpio-xlp.c                            |   7 +-
+ drivers/gpio/gpio-zx.c                             |   4 +-
+ drivers/gpio/gpio-zynq.c                           |   4 +-
+ drivers/gpio/gpiolib-acpi.c                        | 115 ++--
+ drivers/gpio/gpiolib-of.c                          |  24 +-
+ drivers/gpio/gpiolib.c                             |  43 +-
+ drivers/gpio/gpiolib.h                             |  19 +-
+ drivers/pinctrl/pinctrl-mcp23s08.c                 | 110 ----
+ include/linux/gpio/driver.h                        |  15 +-
+ include/linux/gpio/machine.h                       |  26 +-
+ include/linux/platform_data/gpio-omap.h            |   2 -
+ include/trace/events/gpio.h                        |   4 -
+ kernel/trace/Kconfig                               |   7 -
+ 58 files changed, 1052 insertions(+), 1012 deletions(-)
+ create mode 100644 Documentation/gpio/index.rst
+ rename Documentation/gpio/{sysfs.txt =3D> sysfs.rst} (86%)
+ create mode 100644 drivers/gpio/gpio-mlxbf.c
