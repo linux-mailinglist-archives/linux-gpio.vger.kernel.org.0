@@ -2,25 +2,25 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 37E691BA11
-	for <lists+linux-gpio@lfdr.de>; Mon, 13 May 2019 17:29:17 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BC9011BA08
+	for <lists+linux-gpio@lfdr.de>; Mon, 13 May 2019 17:29:14 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731333AbfEMP3I (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 13 May 2019 11:29:08 -0400
-Received: from andre.telenet-ops.be ([195.130.132.53]:55958 "EHLO
-        andre.telenet-ops.be" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731345AbfEMP3G (ORCPT
+        id S1731351AbfEMP3H (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 13 May 2019 11:29:07 -0400
+Received: from baptiste.telenet-ops.be ([195.130.132.51]:51266 "EHLO
+        baptiste.telenet-ops.be" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731334AbfEMP3G (ORCPT
         <rfc822;linux-gpio@vger.kernel.org>); Mon, 13 May 2019 11:29:06 -0400
 Received: from ramsan ([84.194.111.163])
-        by andre.telenet-ops.be with bizsmtp
-        id BrV32000H3XaVaC01rV3y0; Mon, 13 May 2019 17:29:04 +0200
+        by baptiste.telenet-ops.be with bizsmtp
+        id BrV32000C3XaVaC01rV3Qg; Mon, 13 May 2019 17:29:03 +0200
 Received: from rox.of.borg ([192.168.97.57])
         by ramsan with esmtp (Exim 4.90_1)
         (envelope-from <geert@linux-m68k.org>)
-        id 1hQCsx-0001dD-6O; Mon, 13 May 2019 17:29:03 +0200
+        id 1hQCsx-0001dI-7i; Mon, 13 May 2019 17:29:03 +0200
 Received: from geert by rox.of.borg with local (Exim 4.90_1)
         (envelope-from <geert@linux-m68k.org>)
-        id 1hQCsx-0003Qg-4l; Mon, 13 May 2019 17:29:03 +0200
+        id 1hQCsx-0003Qk-64; Mon, 13 May 2019 17:29:03 +0200
 From:   Geert Uytterhoeven <geert+renesas@glider.be>
 To:     Linus Walleij <linus.walleij@linaro.org>,
         Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>,
@@ -29,9 +29,9 @@ To:     Linus Walleij <linus.walleij@linaro.org>,
         Chris Paterson <chris.paterson2@renesas.com>
 Cc:     linux-renesas-soc@vger.kernel.org, linux-gpio@vger.kernel.org,
         Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH 02/11] pinctrl: sh-pfc: emev2: Use new macros for non-GPIO pins
-Date:   Mon, 13 May 2019 17:28:48 +0200
-Message-Id: <20190513152857.13122-3-geert+renesas@glider.be>
+Subject: [PATCH 03/11] pinctrl: sh-pfc: r8a7778: Use new macros for non-GPIO pins
+Date:   Mon, 13 May 2019 17:28:49 +0200
+Message-Id: <20190513152857.13122-4-geert+renesas@glider.be>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190513152857.13122-1-geert+renesas@glider.be>
 References: <20190513152857.13122-1-geert+renesas@glider.be>
@@ -40,135 +40,98 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Update the EMMA Mobile EV2 pin control driver to use the new macros for
+Update the R-Car M1A pin control driver to use the new macros for
 describing pins without GPIO functionality.  This replaces the use of
-physical pin numbers on the EMMA Mobile EV2 SoC (in 23x23 BGA package)
-by symbolic enum values, referring to signal names.
+physical pin numbers on the R-Car M1A SoC (in 25x25 FCBGA package) by
+symbolic enum values, referring to signal names.
 
 Note that the user-visible names of these pins are still based on pin
 numbers instead of signal names, to preserve DT backwards compatibility.
 
 Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
 ---
- drivers/pinctrl/sh-pfc/pfc-emev2.c | 70 +++++++++++++++---------------
- 1 file changed, 34 insertions(+), 36 deletions(-)
+ drivers/pinctrl/sh-pfc/pfc-r8a7778.c | 29 +++++++++++++++-------------
+ 1 file changed, 16 insertions(+), 13 deletions(-)
 
-diff --git a/drivers/pinctrl/sh-pfc/pfc-emev2.c b/drivers/pinctrl/sh-pfc/pfc-emev2.c
-index 0af1ef82a1a81a2b..6c66fc335d2f7f2d 100644
---- a/drivers/pinctrl/sh-pfc/pfc-emev2.c
-+++ b/drivers/pinctrl/sh-pfc/pfc-emev2.c
-@@ -19,6 +19,20 @@
- 	PORT_1(155, fn, pfx##155, sfx), PORT_1(156, fn, pfx##156, sfx), \
- 	PORT_1(157, fn, pfx##157, sfx), PORT_1(158, fn, pfx##158, sfx)
+diff --git a/drivers/pinctrl/sh-pfc/pfc-r8a7778.c b/drivers/pinctrl/sh-pfc/pfc-r8a7778.c
+index 564b219942aac34c..24866a5958aee512 100644
+--- a/drivers/pinctrl/sh-pfc/pfc-r8a7778.c
++++ b/drivers/pinctrl/sh-pfc/pfc-r8a7778.c
+@@ -29,6 +29,11 @@
+ 	PORT_GP_CFG_32(3, fn, sfx, SH_PFC_PIN_CFG_PULL_UP),		\
+ 	PORT_GP_CFG_27(4, fn, sfx, SH_PFC_PIN_CFG_PULL_UP)
  
 +#define CPU_ALL_NOGP(fn)		\
-+	PIN_NOGP(LCD3_B2, "B15", fn),	\
-+	PIN_NOGP(LCD3_B3, "C15", fn),	\
-+	PIN_NOGP(LCD3_B4, "D15", fn),	\
-+	PIN_NOGP(LCD3_B5, "B14", fn),	\
-+	PIN_NOGP(LCD3_B6, "C14", fn),	\
-+	PIN_NOGP(LCD3_B7, "D14", fn),	\
-+	PIN_NOGP(LCD3_G2, "B17", fn),	\
-+	PIN_NOGP(LCD3_G3, "C17", fn),	\
-+	PIN_NOGP(LCD3_G4, "D17", fn),	\
-+	PIN_NOGP(LCD3_G5, "B16", fn),	\
-+	PIN_NOGP(LCD3_G6, "C16", fn),	\
-+	PIN_NOGP(LCD3_G7, "D16", fn)
++	PIN_NOGP(CLKOUT, "B25", fn),	\
++	PIN_NOGP(CS0, "A20", fn),	\
++	PIN_NOGP(CS1_A26, "C20", fn)
 +
  enum {
  	PINMUX_RESERVED = 0,
  
-@@ -218,10 +232,13 @@ enum {
- 	PINMUX_MARK_END,
+@@ -1237,19 +1242,17 @@ static const u16 pinmux_data[] = {
+ 	PINMUX_IPSR_MSEL(IP10_24_22,	CAN_CLK_C,	SEL_CANCLK_C),
  };
  
 -/* Pin numbers for pins without a corresponding GPIO port number are computed
 - * from the row and column numbers with a 1000 offset to avoid collisions with
-- * GPIO port numbers. */
--#define PIN_NUMBER(row, col)            (1000+((row)-1)*23+(col)-1)
+- * GPIO port numbers.
 +/*
 + * Pins not associated with a GPIO port.
-+ */
+  */
+-#define PIN_NUMBER(row, col)		(1000+((row)-1)*25+(col)-1)
 +enum {
-+	PORT_ASSIGN_LAST(),
++	GP_ASSIGN_LAST(),
 +	NOGP_ALL(),
 +};
  
- /* Expand to a list of sh_pfc_pin entries (named PORT#).
-  * NOTE: No config are recorded since the driver do not handle pinconf. */
-@@ -230,20 +247,7 @@ enum {
- 
  static const struct sh_pfc_pin pinmux_pins[] = {
- 	PINMUX_EMEV_GPIO_ALL(),
+ 	PINMUX_GPIO_GP_ALL(),
 -
 -	/* Pins not associated with a GPIO port */
--	SH_PFC_PIN_NAMED(2, 14, B14),
--	SH_PFC_PIN_NAMED(2, 15, B15),
--	SH_PFC_PIN_NAMED(2, 16, B16),
--	SH_PFC_PIN_NAMED(2, 17, B17),
--	SH_PFC_PIN_NAMED(3, 14, C14),
--	SH_PFC_PIN_NAMED(3, 15, C15),
--	SH_PFC_PIN_NAMED(3, 16, C16),
--	SH_PFC_PIN_NAMED(3, 17, C17),
--	SH_PFC_PIN_NAMED(4, 14, D14),
--	SH_PFC_PIN_NAMED(4, 15, D15),
--	SH_PFC_PIN_NAMED(4, 16, D16),
--	SH_PFC_PIN_NAMED(4, 17, D17),
+-	SH_PFC_PIN_NAMED(3, 20, C20),
+-	SH_PFC_PIN_NAMED(1, 20, A20),
+-	SH_PFC_PIN_NAMED(2, 25, B25),
 +	PINMUX_NOGP_ALL(),
  };
  
- /* Expand to a list of name_DATA, name_FN marks */
-@@ -829,12 +833,10 @@ static const unsigned int lcd3_rgb888_pins[] = {
- 	/* R[0:7], G[0:7], B[0:7] */
- 	32, 33, 34, 35,
- 	36, 37, 38, 39,
--	40, 41, PIN_NUMBER(2, 17), PIN_NUMBER(3, 17),
--	PIN_NUMBER(4, 17), PIN_NUMBER(2, 16), PIN_NUMBER(3, 16),
--	PIN_NUMBER(4, 16),
--	42, 43, PIN_NUMBER(2, 15), PIN_NUMBER(3, 15),
--	PIN_NUMBER(4, 15), PIN_NUMBER(2, 14), PIN_NUMBER(3, 14),
--	PIN_NUMBER(4, 14)
-+	40, 41, PIN_LCD3_G2, PIN_LCD3_G3,
-+	PIN_LCD3_G4, PIN_LCD3_G5, PIN_LCD3_G6, PIN_LCD3_G7,
-+	42, 43, PIN_LCD3_B2, PIN_LCD3_B3,
-+	PIN_LCD3_B4, PIN_LCD3_B5, PIN_LCD3_B6, PIN_LCD3_B7
- };
- static const unsigned int lcd3_rgb888_mux[] = {
- 	LCD3_R0_MARK, LCD3_R1_MARK, LCD3_R2_MARK, LCD3_R3_MARK,
-@@ -850,12 +852,10 @@ static const unsigned int yuv3_pins[] = {
- 	/* CLK_O, HS, VS, DE */
- 	18, 21, 22, 23,
- 	/* YUV3_D[0:15] */
--	40, 41, PIN_NUMBER(2, 17), PIN_NUMBER(3, 17),
--	PIN_NUMBER(4, 17), PIN_NUMBER(2, 16), PIN_NUMBER(3, 16),
--	PIN_NUMBER(4, 16),
--	42, 43, PIN_NUMBER(2, 15), PIN_NUMBER(3, 15),
--	PIN_NUMBER(4, 15), PIN_NUMBER(2, 14), PIN_NUMBER(3, 14),
--	PIN_NUMBER(4, 14),
-+	40, 41, PIN_LCD3_G2, PIN_LCD3_G3,
-+	PIN_LCD3_G4, PIN_LCD3_G5, PIN_LCD3_G6, PIN_LCD3_G7,
-+	42, 43, PIN_LCD3_B2, PIN_LCD3_B3,
-+	PIN_LCD3_B4, PIN_LCD3_B5, PIN_LCD3_B6, PIN_LCD3_B7,
- };
- static const unsigned int yuv3_mux[] = {
- 	YUV3_CLK_O_MARK, YUV3_HS_MARK, YUV3_VS_MARK, YUV3_DE_MARK,
-@@ -972,12 +972,10 @@ static const unsigned int tp33_pins[] = {
- 	/* CLK, CTRL */
- 	38, 39,
- 	/* TP33_DATA[0:15] */
--	40, 41, PIN_NUMBER(2, 17), PIN_NUMBER(3, 17),
--	PIN_NUMBER(4, 17), PIN_NUMBER(2, 16), PIN_NUMBER(3, 16),
--	PIN_NUMBER(4, 16),
--	42, 43, PIN_NUMBER(2, 15), PIN_NUMBER(3, 15),
--	PIN_NUMBER(4, 15), PIN_NUMBER(2, 14), PIN_NUMBER(3, 14),
--	PIN_NUMBER(4, 14),
-+	40, 41, PIN_LCD3_G2, PIN_LCD3_G3,
-+	PIN_LCD3_G4, PIN_LCD3_G5, PIN_LCD3_G6, PIN_LCD3_G7,
-+	42, 43, PIN_LCD3_B2, PIN_LCD3_B3,
-+	PIN_LCD3_B4, PIN_LCD3_B5, PIN_LCD3_B6, PIN_LCD3_B7,
- };
- static const unsigned int tp33_mux[] = {
- 	TP33_CLK_MARK, TP33_CTRL_MARK,
+ /* - macro */
+@@ -1384,7 +1387,7 @@ HSPI_PFC_DAT(hspi1_a,	HSPI_CLK1_A,		HSPI_CS1_A,
+ 			HSPI_RX1_A,		HSPI_TX1_A);
+ 
+ HSPI_PFC_PIN(hspi1_b,	RCAR_GP_PIN(0, 27),	RCAR_GP_PIN(0, 26),
+-			PIN_NUMBER(1, 20),	PIN_NUMBER(2, 25));
++			PIN_CS0,		PIN_CLKOUT);
+ HSPI_PFC_DAT(hspi1_b,	HSPI_CLK1_B,		HSPI_CS1_B,
+ 			HSPI_RX1_B,		HSPI_TX1_B);
+ 
+@@ -1410,7 +1413,7 @@ I2C_PFC_PIN(i2c1_b,	RCAR_GP_PIN(4, 17),	RCAR_GP_PIN(4, 18));
+ I2C_PFC_MUX(i2c1_b,	SDA1_B,			SCL1_B);
+ 
+ /* - I2C2 ------------------------------------------------------------------ */
+-I2C_PFC_PIN(i2c2_a,	PIN_NUMBER(3, 20),	RCAR_GP_PIN(1, 3));
++I2C_PFC_PIN(i2c2_a,	PIN_CS1_A26,		RCAR_GP_PIN(1, 3));
+ I2C_PFC_MUX(i2c2_a,	SDA2_A,			SCL2_A);
+ I2C_PFC_PIN(i2c2_b,	RCAR_GP_PIN(0, 3),	RCAR_GP_PIN(0, 4));
+ I2C_PFC_MUX(i2c2_b,	SDA2_B,			SCL2_B);
+@@ -1500,7 +1503,7 @@ SCIF_PFC_PIN(scif2_data_e,	RCAR_GP_PIN(0, 3),	RCAR_GP_PIN(0, 4));
+ SCIF_PFC_DAT(scif2_data_e,	TX2_E,			RX2_E);
+ SCIF_PFC_PIN(scif2_clk_a,	RCAR_GP_PIN(3, 9));
+ SCIF_PFC_CLK(scif2_clk_a,	SCK2_A);
+-SCIF_PFC_PIN(scif2_clk_b,	PIN_NUMBER(3, 20));
++SCIF_PFC_PIN(scif2_clk_b,	PIN_CS1_A26);
+ SCIF_PFC_CLK(scif2_clk_b,	SCK2_B);
+ SCIF_PFC_PIN(scif2_clk_c,	RCAR_GP_PIN(4, 12));
+ SCIF_PFC_CLK(scif2_clk_c,	SCK2_C);
+@@ -1615,7 +1618,7 @@ SSI_PFC_PINS(ssi0_data,		RCAR_GP_PIN(3, 10));
+ SSI_PFC_DATA(ssi0_data,		SSI_SDATA0);
+ SSI_PFC_PINS(ssi1_a_ctrl,	RCAR_GP_PIN(2, 20),	RCAR_GP_PIN(2, 21));
+ SSI_PFC_CTRL(ssi1_a_ctrl,	SSI_SCK1_A,		SSI_WS1_A);
+-SSI_PFC_PINS(ssi1_b_ctrl,	PIN_NUMBER(3, 20),	RCAR_GP_PIN(1, 3));
++SSI_PFC_PINS(ssi1_b_ctrl,	PIN_CS1_A26,		RCAR_GP_PIN(1, 3));
+ SSI_PFC_CTRL(ssi1_b_ctrl,	SSI_SCK1_B,		SSI_WS1_B);
+ SSI_PFC_PINS(ssi1_data,		RCAR_GP_PIN(3, 9));
+ SSI_PFC_DATA(ssi1_data,		SSI_SDATA1);
 -- 
 2.17.1
 
