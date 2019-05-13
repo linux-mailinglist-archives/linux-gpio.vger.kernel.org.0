@@ -2,55 +2,57 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 645FD1B563
-	for <lists+linux-gpio@lfdr.de>; Mon, 13 May 2019 14:00:40 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8EF681B564
+	for <lists+linux-gpio@lfdr.de>; Mon, 13 May 2019 14:00:47 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729572AbfEMMAj (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 13 May 2019 08:00:39 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:36263 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728841AbfEMMAj (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 13 May 2019 08:00:39 -0400
-Received: by mail-wr1-f68.google.com with SMTP id o4so14960468wra.3
-        for <linux-gpio@vger.kernel.org>; Mon, 13 May 2019 05:00:38 -0700 (PDT)
+        id S1729573AbfEMMAr (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 13 May 2019 08:00:47 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:44497 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728841AbfEMMAq (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 13 May 2019 08:00:46 -0400
+Received: by mail-wr1-f65.google.com with SMTP id c5so14905418wrs.11
+        for <linux-gpio@vger.kernel.org>; Mon, 13 May 2019 05:00:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=devtank-co-uk.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=VIPfv7Xwi72lPVyQgz558kp2pr0X5l2wG0qLp9fHfmw=;
-        b=cCMVTgBmPR4Lm9wvTZF9En3Bl13V5EImz4YFbOL8nCnDEHhfUts9WT6m/bLlvDO/Xd
-         YCwTRa9c7dl9aCQXabQuxiTqWJKyUvnuXFnGC/z+9VZeEZmoeRNgGbutWjoEU9lFxtA1
-         cxIhfU037guRSCCw806zKw5beCSkD2Z8zI3rqwoRcU7BhisUkzTFvs2aN6jGxTlJkuF1
-         +JOCf2jFbrfveMAyBP2JQArMD0INU0fwiZN3mSS02FjvhFmvzU3PN4BhpC3DK4UdGleh
-         w9zdRrL7mW3LLu1W32QT9X9jBIfAQ5CdYkzUyFIa+KqiyQAN8/5mBI9cAM9w2hJM9SnL
-         1MEw==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=iwZ3lFLZbf4cU+cjzv2o05vhfHG6YljowyuZLWPK0KA=;
+        b=c7Q843Ki3UqtgiVJsz8AGwSQFM9oslOVWpPjjIWbATm9Z+H+kInORzgS7tAhCAq1NX
+         gu2RRWEeBP/+HtNut8eHBqUO/H87Rp52R+oh3PM/E8yq0AIOkgWUL/3DPc9D099DGvrN
+         5BDbux5uZMAjVHJNIi5twmh18U0iwHFAEFVHCe8DQ0yLMG4eECxJ1Q7WtboiB79t65aH
+         F25fi2APyxHy3E3HWVKtuWtgoIZ0lbqYiuVOxAMKRSmitxc2yy1H0+1L4qEDmGQ4bVVo
+         Tm/5IlxEsEATi1HsmMwX9ulnnaA3K4s+aGdOMdKBDcOME0wQBLEZXK1+r77kA02oCCp0
+         9LkA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=VIPfv7Xwi72lPVyQgz558kp2pr0X5l2wG0qLp9fHfmw=;
-        b=GkkOZ+tt8HLu+FJbmzVrTBK7k03rjUFzV9LQw+07yC/CSdLgXajHIfqFue8vTxlV36
-         KmD835zFwdf16fs14H6pVXrkNHlLJLnUNfCfDaR9jqNmhuoSLRKHL9QMIf5Sn8NjEIi6
-         f5PKAszrYPluVr60aS0YIzmgoLt7681Le5z1bvRBARleZyrVaC2OuKpO2XhESiFSXVkS
-         heGKHXz77Y6b4e9orQvdaoEZB+yEGtO9+XLcZ2il8BqKfSbEa0sgjduppi5XRBjJx9Fd
-         9UifaSrha36dbg2fFo+FlBjBE+3ujnbw+gQji+r0FmILa87QzYZNFhvGPQhrrj4O5EEH
-         30gg==
-X-Gm-Message-State: APjAAAVPVRzVYJ3ib8e/owlk41olE59TzlLSWB4NeE+xyIzK4VXPhg2W
-        i3CXo+APW4EUSyixzIvLw10/6N3uLUc=
-X-Google-Smtp-Source: APXvYqx0xRuBkon71Yy7lphb8cRysfDkY6KpcqEqC012meRLLpHD/gzv9hPQv4vjyugSTNyfbYekuQ==
-X-Received: by 2002:adf:ce88:: with SMTP id r8mr17579284wrn.191.1557748837352;
-        Mon, 13 May 2019 05:00:37 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=iwZ3lFLZbf4cU+cjzv2o05vhfHG6YljowyuZLWPK0KA=;
+        b=bASIwJiq1UgnMsKtUgksLZm+eZJiJq1mYbAxVyCtv1wgzZHfV9wBSSh/bJvcaGHeLq
+         Mc5tCihFr6VkTa3xhZjBy5FblDGGFsPmr6nYYGhQX5S/i+hjxBXr6nZe38qupxrgDCcQ
+         OUlfgNd3Acdq1TH4mDTMJQwLf8C9i9Q2W/ifRzuyQ4wM4Ec/oWz9oHJQy+cFaroOlQRK
+         //ZMPKx8cg9yJ5NSAI2gHZl6pz1kHKmlIZiiKUlpSaCNMP5rm2rmno7ZdtW2F6OCcuBr
+         LUXMGSgAgxYqzxdpDzLY96dSUmcJ1nrrE7BjxzcBsYda9VyTVTsilpxZHzYkOmCb+v+2
+         7Ucg==
+X-Gm-Message-State: APjAAAWgX+Y+QaW7A6xYXi7JY5SxOzDhWcJ+hVzJ2zv2wI6l8yunips0
+        LkIxLn28XEASbZndRqN7+l2TtC5/1dM=
+X-Google-Smtp-Source: APXvYqz1+gKpOPrMBsfwuUFO4VbY+bwM+5C2Z29ZzVk4BtQQE3j3xYv4Milq+AC6mpGnVub+mvGfSg==
+X-Received: by 2002:adf:9023:: with SMTP id h32mr5632551wrh.95.1557748845091;
+        Mon, 13 May 2019 05:00:45 -0700 (PDT)
 Received: from jabjoe-thinkpad.lan ([141.105.200.141])
-        by smtp.googlemail.com with ESMTPSA id 34sm5000102wre.32.2019.05.13.05.00.36
+        by smtp.googlemail.com with ESMTPSA id 34sm5000102wre.32.2019.05.13.05.00.44
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 13 May 2019 05:00:36 -0700 (PDT)
+        Mon, 13 May 2019 05:00:44 -0700 (PDT)
 From:   Joe Burmeister <joe.burmeister@devtank.co.uk>
 To:     linux-gpio@vger.kernel.org
 Cc:     Joe Burmeister <joe.burmeister@devtank.co.uk>
-Subject: [PATCH 1/2] (v2) Expand MCP23S08 driver for use as interrupt controller.
-Date:   Mon, 13 May 2019 13:00:23 +0100
-Message-Id: <20190513120024.17026-1-joe.burmeister@devtank.co.uk>
+Subject: [PATCH 2/2] (v2) Mark MCP23S08 as one that will not sleep.
+Date:   Mon, 13 May 2019 13:00:24 +0100
+Message-Id: <20190513120024.17026-2-joe.burmeister@devtank.co.uk>
 X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190513120024.17026-1-joe.burmeister@devtank.co.uk>
+References: <20190513120024.17026-1-joe.burmeister@devtank.co.uk>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-gpio-owner@vger.kernel.org
@@ -58,43 +60,26 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-To be used as interrupt controller, pin control callbacks needed to
-setup the registers.
+Though it has a 'standby' it doesn't appear to be an issue and
+marking the chip with can_sleep means gpiolib.c won't allow its use
+as a interrupt controller.
 ---
- drivers/pinctrl/pinctrl-mcp23s08.c | 13 +++++++++++++
- 1 file changed, 13 insertions(+)
+ drivers/pinctrl/pinctrl-mcp23s08.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/drivers/pinctrl/pinctrl-mcp23s08.c b/drivers/pinctrl/pinctrl-mcp23s08.c
-index 98905d4a79ca..3fc63cb5b332 100644
+index 3fc63cb5b332..7334d8eb9135 100644
 --- a/drivers/pinctrl/pinctrl-mcp23s08.c
 +++ b/drivers/pinctrl/pinctrl-mcp23s08.c
-@@ -264,6 +264,12 @@ static int mcp_pinconf_get(struct pinctrl_dev *pctldev, unsigned int pin,
- 			return ret;
- 		status = (data & BIT(pin)) ? 1 : 0;
- 		break;
-+	case PIN_CONFIG_OUTPUT:
-+		ret = mcp_read(mcp, MCP_IODIR, &data);
-+		if (ret < 0)
-+			return ret;
-+		status = (data & BIT(pin)) ? 0 : 1; /* true is input */
-+		break;
- 	default:
- 		dev_err(mcp->dev, "Invalid config param %04x\n", param);
- 		return -ENOTSUPP;
-@@ -291,6 +297,13 @@ static int mcp_pinconf_set(struct pinctrl_dev *pctldev, unsigned int pin,
- 		case PIN_CONFIG_BIAS_PULL_UP:
- 			ret = mcp_set_bit(mcp, MCP_GPPU, pin, arg);
- 			break;
-+		case PIN_CONFIG_OUTPUT:
-+			ret = mcp_set_bit(mcp, MCP_IODIR, pin, false);
-+			if (!ret && arg)
-+				ret = mcp_set_bit(mcp, MCP_GPPU, pin, true);
-+			else
-+				ret = mcp_set_bit(mcp, MCP_GPPU, pin, false);
-+			break;
- 		default:
- 			dev_err(mcp->dev, "Invalid config param %04x\n", param);
- 			return -ENOTSUPP;
+@@ -890,7 +890,7 @@ static int mcp23s08_probe_one(struct mcp23s08 *mcp, struct device *dev,
+ 		return PTR_ERR(mcp->regmap);
+ 
+ 	mcp->chip.base = base;
+-	mcp->chip.can_sleep = true;
++	mcp->chip.can_sleep = false;
+ 	mcp->chip.parent = dev;
+ 	mcp->chip.owner = THIS_MODULE;
+ 
 -- 
 2.20.1
 
