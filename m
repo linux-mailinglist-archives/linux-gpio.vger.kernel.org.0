@@ -2,25 +2,25 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 3E8AB1BA04
-	for <lists+linux-gpio@lfdr.de>; Mon, 13 May 2019 17:29:13 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4473A1BA0E
+	for <lists+linux-gpio@lfdr.de>; Mon, 13 May 2019 17:29:16 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731335AbfEMP3H (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 13 May 2019 11:29:07 -0400
-Received: from andre.telenet-ops.be ([195.130.132.53]:55922 "EHLO
+        id S1731348AbfEMP3I (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 13 May 2019 11:29:08 -0400
+Received: from andre.telenet-ops.be ([195.130.132.53]:55976 "EHLO
         andre.telenet-ops.be" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731343AbfEMP3G (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 13 May 2019 11:29:06 -0400
+        with ESMTP id S1731333AbfEMP3I (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 13 May 2019 11:29:08 -0400
 Received: from ramsan ([84.194.111.163])
         by andre.telenet-ops.be with bizsmtp
-        id BrV32000E3XaVaC01rV3xx; Mon, 13 May 2019 17:29:03 +0200
+        id BrV32000F3XaVaC01rV3xy; Mon, 13 May 2019 17:29:04 +0200
 Received: from rox.of.borg ([192.168.97.57])
         by ramsan with esmtp (Exim 4.90_1)
         (envelope-from <geert@linux-m68k.org>)
-        id 1hQCsx-0001d9-4N; Mon, 13 May 2019 17:29:03 +0200
+        id 1hQCsx-0001dB-50; Mon, 13 May 2019 17:29:03 +0200
 Received: from geert by rox.of.borg with local (Exim 4.90_1)
         (envelope-from <geert@linux-m68k.org>)
-        id 1hQCsx-0003Qc-1O; Mon, 13 May 2019 17:29:03 +0200
+        id 1hQCsx-0003Qe-3N; Mon, 13 May 2019 17:29:03 +0200
 From:   Geert Uytterhoeven <geert+renesas@glider.be>
 To:     Linus Walleij <linus.walleij@linaro.org>,
         Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>,
@@ -29,115 +29,133 @@ To:     Linus Walleij <linus.walleij@linaro.org>,
         Chris Paterson <chris.paterson2@renesas.com>
 Cc:     linux-renesas-soc@vger.kernel.org, linux-gpio@vger.kernel.org,
         Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH 00/11] pinctrl: sh-pfc: Convert to new non-GPIO helper macros
-Date:   Mon, 13 May 2019 17:28:46 +0200
-Message-Id: <20190513152857.13122-1-geert+renesas@glider.be>
+Subject: [PATCH 01/11] pinctrl: sh-pfc: Add new non-GPIO helper macros
+Date:   Mon, 13 May 2019 17:28:47 +0200
+Message-Id: <20190513152857.13122-2-geert+renesas@glider.be>
 X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20190513152857.13122-1-geert+renesas@glider.be>
+References: <20190513152857.13122-1-geert+renesas@glider.be>
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-	Hi all,
+Add new macros for describing pins without GPIO functionality:
+  - NOGP_ALL() expands to a list of PIN_id values, to be used for
+    generating symbolic enum values,
+  - PINMUX_NOGP_ALL() expands to a list of sh_pfc_pin entries, to
+    list all pins and their capabilities.
+Both macros depend on an SoC-specific CPU_ALL_NOGP() macro, to be
+provided by each individual SoC pin control driver.
 
-On many Renesas ARM SoCs, there exist pins that are not associated with
-a GPIO port, but still need configuration (e.g. drive strength or
-pull-up).  While pins with GPIO functionality are indexed by their
-GPIO number, no such number exists for non-GPIO pins.  Hence for the
-latter, the pin control driver uses numbers outside the GPIO number
-space, derived from the row and column numbers of the physical pins.
+The new macros offer two advantages over the existing SH_PFC_PIN_NAMED()
+and SH_PFC_PIN_NAMED_CFG() macros:
+  1. They do not rely on PIN_NUMBER() macros and physical pin numbering,
+     hence do not suffer from pin numbering confusion among different
+     SoC/SiP packages.
+  2. They are similar in spirit to the existing scheme for handling pins
+     with GPIO functionality.
 
-For R-Car H3 (and later M3-W and M3-N), the choice was made to use the
-SiP (System-in-Package, i.e. SoC + RAM + HyperFlash in a BGA package)
-physical pin numbers, as the SiP was what was mounted on the
-Salvator-X(S) and ULCB development boards available at that time.
+Note that internal to the driver, non-GPIO pins use a sequential
+numbering scheme which starts after the highest GPIO pin number in use.
+This value is calculated automatically, using two new helper macros, for
+systems with either 32-port bank (GP port style) or linear (PORT style)
+pin space.  Sample expansion:
 
-In hindsight, it would have been better to settle on the SoC physical
-pin numbers, though: the pin control driver for R-Car M3-W was reused
-for the RZ/G2M SoC, which is only available as an SoC, not SiP, thus
-making it hard to match the driver with the documentation.
+    GP_LAST = sizeof(union {
+	char dummy[0] __attribute__((deprecated, deprecated));
+	char GP_0_0[(0 * 32) + 0] __attribute__((deprecated, deprecated));
+	char GP_0_1[(0 * 32) + 1] __attribute__((deprecated, deprecated));
+	...
+	char GP_7_3[(7 * 32) + 3] __attribute__((deprecated, deprecated));
+    })
 
-But even for SoCs there can be confusion: several SoCs are available in
-multiple packages, with the same or different number of pins, leading to
-different pin numberings.
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+---
+ drivers/pinctrl/sh-pfc/sh_pfc.h | 56 +++++++++++++++++++++++++++++++++
+ 1 file changed, 56 insertions(+)
 
-As this numbering is used only internal to the driver, and pin control
-configuration from DT refers to these pins by signal name, not pin
-number (usually, see exceptions below[*]), I started wondering if we
-could get rid of the SoC/SiP pin numbers instead.  As the actual numbers
-don't matter, all that is needed for the driver is a unique number for
-each pin.
-
-Hence this patch series converts the affected drivers to use new macros
-that allow to describe pins without GPIO functionality, and refer to
-them by auto-generated symbolic enum values, similar in spirit to the
-existing scheme for handling pins with GPIO functionality.
-
-This series consists of three parts:
-  - Patch 1 introduces new macros to describe and handle pins without
-    GPIO functionality,
-  - Patches 2-10 convert the pin control drivers for the individual SoCs
-    to use the new macros,
-  - Patch 11 removes the now unused old macros.
-
-There should be no functional changes induced by this patch series,
-which has been tested on Salvator-X(S) (with R-Car H3 ES1.0 and ES2.0,
-M3-W, and M3-N), Ebisu (R-Car E3), and KZM-A9-GT (SH-Mobile AG5).
-
-[*] The user-visible names of pins without GPIO functionality are based
-    on pin numbers (e.g. "B25") instead of signal names ("CLKOUT") on
-    EMMA Mobile EV2, R-Car M1A, R-Car H2, and SH-Mobile AG5.
-    I didn't change these to preserve DT backwards compatibility.
-
-The "name" parameters of the PIN_NOGP_CFG() and PIN_NOGP() macros could
-be removed, if these macros would generate the names from the "pin"
-parameters.  However, that would:
-  1. Require replacing the "#" suffices in pin names for active-low
-     signals by "_N",
-     R-Car H3/M3-W/M3-N use a "#" suffix, R-Car E3 use a "_N" suffix.
-  2. Replace the names based on pin numbers on older SoCs by signal
-     names.
-Both changes could affect DT backwards compatibility.  None of these are
-currently used in (upstream) DTS files, though.
-Do you think it would be worthwhile to make this consistent?
-
-Thanks for your comments!
-
-Geert Uytterhoeven (11):
-  pinctrl: sh-pfc: Add new non-GPIO helper macros
-  pinctrl: sh-pfc: emev2: Use new macros for non-GPIO pins
-  pinctrl: sh-pfc: r8a7778: Use new macros for non-GPIO pins
-  pinctrl: sh-pfc: r8a7790: Use new macros for non-GPIO pins
-  pinctrl: sh-pfc: r8a7795-es1: Use new macros for non-GPIO pins
-  pinctrl: sh-pfc: r8a7795: Use new macros for non-GPIO pins
-  pinctrl: sh-pfc: r8a7796: Use new macros for non-GPIO pins
-  pinctrl: sh-pfc: r8a77965: Use new macros for non-GPIO pins
-  pinctrl: sh-pfc: r8a77990: Use new macros for non-GPIO pins
-  pinctrl: sh-pfc: sh73a0: Use new macros for non-GPIO pins
-  pinctrl: sh-pfc: Remove obsolete SH_PFC_PIN_NAMED*() macros
-
- drivers/pinctrl/sh-pfc/pfc-emev2.c       |  70 +++--
- drivers/pinctrl/sh-pfc/pfc-r8a7778.c     |  29 +-
- drivers/pinctrl/sh-pfc/pfc-r8a7790.c     |  34 ++-
- drivers/pinctrl/sh-pfc/pfc-r8a7795-es1.c | 333 +++++++++++------------
- drivers/pinctrl/sh-pfc/pfc-r8a7795.c     | 313 +++++++++++----------
- drivers/pinctrl/sh-pfc/pfc-r8a7796.c     | 307 ++++++++++-----------
- drivers/pinctrl/sh-pfc/pfc-r8a77965.c    | 307 ++++++++++-----------
- drivers/pinctrl/sh-pfc/pfc-r8a77990.c    |  87 +++---
- drivers/pinctrl/sh-pfc/pfc-sh73a0.c      |  19 +-
- drivers/pinctrl/sh-pfc/sh_pfc.h          |  72 +++--
- 10 files changed, 797 insertions(+), 774 deletions(-)
-
+diff --git a/drivers/pinctrl/sh-pfc/sh_pfc.h b/drivers/pinctrl/sh-pfc/sh_pfc.h
+index 305a8db70ca86334..a379698c97410202 100644
+--- a/drivers/pinctrl/sh-pfc/sh_pfc.h
++++ b/drivers/pinctrl/sh-pfc/sh_pfc.h
+@@ -608,6 +608,24 @@ extern const struct sh_pfc_soc_info shx3_pinmux_info;
+ #define _GP_DATA(bank, pin, name, sfx, cfg)	PINMUX_DATA(name##_DATA, name##_FN)
+ #define PINMUX_DATA_GP_ALL()		CPU_ALL_GP(_GP_DATA, unused)
+ 
++/*
++ * GP_ASSIGN_LAST() - Expand to an enum definition for the last GP pin
++ *
++ * The largest GP pin index is obtained by taking the size of a union,
++ * containing one array per GP pin, sized by the corresponding pin index.
++ * As the fields in the CPU_ALL_GP() macro definition are separated by commas,
++ * while the members of a union must be terminated by semicolons, the commas
++ * are absorbed by wrapping them inside dummy attributes.
++ */
++#define _GP_ENTRY(bank, pin, name, sfx, cfg)				\
++	deprecated)); char name[(bank * 32) + pin] __attribute__((deprecated
++#define GP_ASSIGN_LAST()						\
++	GP_LAST = sizeof(union {					\
++		char dummy[0] __attribute__((deprecated,		\
++		CPU_ALL_GP(_GP_ENTRY, unused),				\
++		deprecated));						\
++	})
++
+ /*
+  * PORT style (linear pin space)
+  */
+@@ -673,6 +691,24 @@ extern const struct sh_pfc_soc_info shx3_pinmux_info;
+ 		    PORT##pfx##_OUT, PORT##pfx##_IN)
+ #define PINMUX_DATA_ALL()		CPU_ALL_PORT(_PORT_DATA, , unused)
+ 
++/*
++ * PORT_ASSIGN_LAST() - Expand to an enum definition for the last PORT pin
++ *
++ * The largest PORT pin index is obtained by taking the size of a union,
++ * containing one array per PORT pin, sized by the corresponding pin index.
++ * As the fields in the CPU_ALL_PORT() macro definition are separated by
++ * commas, while the members of a union must be terminated by semicolons, the
++ * commas are absorbed by wrapping them inside dummy attributes.
++ */
++#define _PORT_ENTRY(pn, pfx, sfx)					\
++	deprecated)); char pfx[pn] __attribute__((deprecated
++#define PORT_ASSIGN_LAST()						\
++	PORT_LAST = sizeof(union {					\
++		char dummy[0] __attribute__((deprecated,		\
++		CPU_ALL_PORT(_PORT_ENTRY, PORT, unused),		\
++		deprecated));						\
++	})
++
+ /* GPIO_FN(name) - Expand to a sh_pfc_pin entry for a function GPIO */
+ #define PINMUX_GPIO_FN(gpio, base, data_or_mark)			\
+ 	[gpio - (base)] = {						\
+@@ -682,6 +718,26 @@ extern const struct sh_pfc_soc_info shx3_pinmux_info;
+ #define GPIO_FN(str)							\
+ 	PINMUX_GPIO_FN(GPIO_FN_##str, PINMUX_FN_BASE, str##_MARK)
+ 
++/*
++ * Pins not associated with a GPIO port
++ */
++
++#define PIN_NOGP_CFG(pin, name, fn, cfg)	fn(pin, name, cfg)
++#define PIN_NOGP(pin, name, fn)			fn(pin, name, 0)
++
++/* NOGP_ALL - Expand to a list of PIN_id */
++#define _NOGP_ALL(pin, name, cfg)		PIN_##pin
++#define NOGP_ALL()				CPU_ALL_NOGP(_NOGP_ALL)
++
++/* PINMUX_NOGP_ALL - Expand to a list of sh_pfc_pin entries */
++#define _NOGP_PINMUX(_pin, _name, cfg)					\
++	{								\
++		.pin = PIN_##_pin,					\
++		.name = "PIN_" _name,					\
++		.configs = SH_PFC_PIN_CFG_NO_GPIO | cfg,		\
++	}
++#define PINMUX_NOGP_ALL()		CPU_ALL_NOGP(_NOGP_PINMUX)
++
+ /*
+  * PORTnCR helper macro for SH-Mobile/R-Mobile
+  */
 -- 
 2.17.1
 
-Gr{oetje,eeting}s,
-
-						Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-							    -- Linus Torvalds
