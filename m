@@ -2,25 +2,25 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id BB7101BA0B
-	for <lists+linux-gpio@lfdr.de>; Mon, 13 May 2019 17:29:15 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 546281BA13
+	for <lists+linux-gpio@lfdr.de>; Mon, 13 May 2019 17:29:18 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731342AbfEMP3L (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 13 May 2019 11:29:11 -0400
-Received: from xavier.telenet-ops.be ([195.130.132.52]:33954 "EHLO
-        xavier.telenet-ops.be" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731352AbfEMP3K (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 13 May 2019 11:29:10 -0400
+        id S1731347AbfEMP3J (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 13 May 2019 11:29:09 -0400
+Received: from baptiste.telenet-ops.be ([195.130.132.51]:51280 "EHLO
+        baptiste.telenet-ops.be" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731340AbfEMP3J (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 13 May 2019 11:29:09 -0400
 Received: from ramsan ([84.194.111.163])
-        by xavier.telenet-ops.be with bizsmtp
-        id BrV22000K3XaVaC01rV2Db; Mon, 13 May 2019 17:29:03 +0200
+        by baptiste.telenet-ops.be with bizsmtp
+        id BrV32000G3XaVaC01rV3Qh; Mon, 13 May 2019 17:29:03 +0200
 Received: from rox.of.borg ([192.168.97.57])
         by ramsan with esmtp (Exim 4.90_1)
         (envelope-from <geert@linux-m68k.org>)
-        id 1hQCsx-0001dg-AM; Mon, 13 May 2019 17:29:03 +0200
+        id 1hQCsx-0001dq-BV; Mon, 13 May 2019 17:29:03 +0200
 Received: from geert by rox.of.borg with local (Exim 4.90_1)
         (envelope-from <geert@linux-m68k.org>)
-        id 1hQCsx-0003Qq-8e; Mon, 13 May 2019 17:29:03 +0200
+        id 1hQCsx-0003Qt-A1; Mon, 13 May 2019 17:29:03 +0200
 From:   Geert Uytterhoeven <geert+renesas@glider.be>
 To:     Linus Walleij <linus.walleij@linaro.org>,
         Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>,
@@ -29,9 +29,9 @@ To:     Linus Walleij <linus.walleij@linaro.org>,
         Chris Paterson <chris.paterson2@renesas.com>
 Cc:     linux-renesas-soc@vger.kernel.org, linux-gpio@vger.kernel.org,
         Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH 05/11] pinctrl: sh-pfc: r8a7795-es1: Use new macros for non-GPIO pins
-Date:   Mon, 13 May 2019 17:28:51 +0200
-Message-Id: <20190513152857.13122-6-geert+renesas@glider.be>
+Subject: [PATCH 06/11] pinctrl: sh-pfc: r8a7795: Use new macros for non-GPIO pins
+Date:   Mon, 13 May 2019 17:28:52 +0200
+Message-Id: <20190513152857.13122-7-geert+renesas@glider.be>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190513152857.13122-1-geert+renesas@glider.be>
 References: <20190513152857.13122-1-geert+renesas@glider.be>
@@ -40,21 +40,21 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Update the R-Car H3 ES1.x pin control driver to use the new macros for
-describing pins without GPIO functionality.  This replaces the use of
-physical pin numbers on the R-Car H3 ES1.x SiP (in 39x39 BGA package) by
-symbolic enum values, referring to signal names.
+Update the R-Car H3 ES2.0 and later pin control driver to use the new
+macros for describing pins without GPIO functionality.  This replaces
+the use of physical pin numbers on the R-Car H3 ES2.0 SiP (in 39x39
+BGA package) by symbolic enum values, referring to signal names.
 
 Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
 ---
- drivers/pinctrl/sh-pfc/pfc-r8a7795-es1.c | 333 +++++++++++------------
- 1 file changed, 163 insertions(+), 170 deletions(-)
+ drivers/pinctrl/sh-pfc/pfc-r8a7795.c | 313 +++++++++++++--------------
+ 1 file changed, 154 insertions(+), 159 deletions(-)
 
-diff --git a/drivers/pinctrl/sh-pfc/pfc-r8a7795-es1.c b/drivers/pinctrl/sh-pfc/pfc-r8a7795-es1.c
-index 0d7b0dd21e15c05f..95f9aae3bfba777b 100644
---- a/drivers/pinctrl/sh-pfc/pfc-r8a7795-es1.c
-+++ b/drivers/pinctrl/sh-pfc/pfc-r8a7795-es1.c
-@@ -26,6 +26,53 @@
+diff --git a/drivers/pinctrl/sh-pfc/pfc-r8a7795.c b/drivers/pinctrl/sh-pfc/pfc-r8a7795.c
+index bfa19309d14c91c5..7df010f757b197f0 100644
+--- a/drivers/pinctrl/sh-pfc/pfc-r8a7795.c
++++ b/drivers/pinctrl/sh-pfc/pfc-r8a7795.c
+@@ -27,6 +27,52 @@
  	PORT_GP_CFG_26(5, fn, sfx, CFG_FLAGS),	\
  	PORT_GP_CFG_32(6, fn, sfx, CFG_FLAGS),	\
  	PORT_GP_CFG_4(7, fn, sfx, CFG_FLAGS)
@@ -75,7 +75,6 @@ index 0d7b0dd21e15c05f..95f9aae3bfba777b 100644
 +	PIN_NOGP_CFG(AVB_TXC, "AVB_TXC", fn, CFG_FLAGS),		\
 +	PIN_NOGP_CFG(AVB_TXCREFCLK, "AVB_TXCREFCLK", fn, CFG_FLAGS),	\
 +	PIN_NOGP_CFG(AVB_TX_CTL, "AVB_TX_CTL", fn, CFG_FLAGS),		\
-+	PIN_NOGP_CFG(CLKOUT, "CLKOUT", fn, CFG_FLAGS),			\
 +	PIN_NOGP_CFG(DU_DOTCLKIN0, "DU_DOTCLKIN0", fn, CFG_FLAGS),	\
 +	PIN_NOGP_CFG(DU_DOTCLKIN1, "DU_DOTCLKIN1", fn, CFG_FLAGS),	\
 +	PIN_NOGP_CFG(DU_DOTCLKIN2, "DU_DOTCLKIN2", fn, CFG_FLAGS),	\
@@ -108,7 +107,7 @@ index 0d7b0dd21e15c05f..95f9aae3bfba777b 100644
  /*
   * F_() : just information
   * FM() : macro for FN_xxx / xxx_MARK
-@@ -1445,68 +1492,16 @@ static const u16 pinmux_data[] = {
+@@ -1506,67 +1552,16 @@ static const u16 pinmux_data[] = {
  };
  
  /*
@@ -150,7 +149,6 @@ index 0d7b0dd21e15c05f..95f9aae3bfba777b 100644
 -	SH_PFC_PIN_NAMED_CFG('B', 18, AVB_TD1, CFG_FLAGS),
 -	SH_PFC_PIN_NAMED_CFG('B', 19, AVB_RXC, CFG_FLAGS),
 -	SH_PFC_PIN_NAMED_CFG('C',  1, PRESETOUT#, CFG_FLAGS),
--	SH_PFC_PIN_NAMED_CFG('F',  1, CLKOUT, CFG_FLAGS),
 -	SH_PFC_PIN_NAMED_CFG('H', 37, MLB_REF, CFG_FLAGS),
 -	SH_PFC_PIN_NAMED_CFG('V',  3, QSPI1_SPCLK, CFG_FLAGS),
 -	SH_PFC_PIN_NAMED_CFG('V',  5, QSPI1_SSL, CFG_FLAGS),
@@ -183,7 +181,7 @@ index 0d7b0dd21e15c05f..95f9aae3bfba777b 100644
  };
  
  /* - AUDIO CLOCK ------------------------------------------------------------ */
-@@ -1655,7 +1650,7 @@ static const unsigned int avb_phy_int_mux[] = {
+@@ -1714,7 +1709,7 @@ static const unsigned int avb_phy_int_mux[] = {
  };
  static const unsigned int avb_mdio_pins[] = {
  	/* AVB_MDC, AVB_MDIO */
@@ -192,7 +190,7 @@ index 0d7b0dd21e15c05f..95f9aae3bfba777b 100644
  };
  static const unsigned int avb_mdio_mux[] = {
  	AVB_MDC_MARK, AVB_MDIO_MARK,
-@@ -1668,11 +1663,11 @@ static const unsigned int avb_mii_pins[] = {
+@@ -1727,11 +1722,11 @@ static const unsigned int avb_mii_pins[] = {
  	 * AVB_RD1, AVB_RD2, AVB_RD3,
  	 * AVB_TXCREFCLK
  	 */
@@ -209,59 +207,7 @@ index 0d7b0dd21e15c05f..95f9aae3bfba777b 100644
  
  };
  static const unsigned int avb_mii_mux[] = {
-@@ -3134,22 +3129,21 @@ static const unsigned int pwm6_b_mux[] = {
- /* - QSPI0 ------------------------------------------------------------------ */
- static const unsigned int qspi0_ctrl_pins[] = {
- 	/* QSPI0_SPCLK, QSPI0_SSL */
--	PIN_NUMBER('W', 3), PIN_NUMBER('Y', 3),
-+	PIN_QSPI0_SPCLK, PIN_QSPI0_SSL,
- };
- static const unsigned int qspi0_ctrl_mux[] = {
- 	QSPI0_SPCLK_MARK, QSPI0_SSL_MARK,
- };
- static const unsigned int qspi0_data2_pins[] = {
- 	/* QSPI0_MOSI_IO0, QSPI0_MISO_IO1 */
--	PIN_A_NUMBER('C', 5), PIN_A_NUMBER('B', 4),
-+	PIN_QSPI0_MOSI_IO0, PIN_QSPI0_MISO_IO1,
- };
- static const unsigned int qspi0_data2_mux[] = {
- 	QSPI0_MOSI_IO0_MARK, QSPI0_MISO_IO1_MARK,
- };
- static const unsigned int qspi0_data4_pins[] = {
- 	/* QSPI0_MOSI_IO0, QSPI0_MISO_IO1, QSPI0_IO2, QSPI0_IO3 */
--	PIN_A_NUMBER('C', 5), PIN_A_NUMBER('B', 4),
--	PIN_NUMBER('Y', 6), PIN_A_NUMBER('B', 6),
-+	PIN_QSPI0_MOSI_IO0, PIN_QSPI0_MISO_IO1, PIN_QSPI0_IO2, PIN_QSPI0_IO3,
- };
- static const unsigned int qspi0_data4_mux[] = {
- 	QSPI0_MOSI_IO0_MARK, QSPI0_MISO_IO1_MARK,
-@@ -3158,22 +3152,21 @@ static const unsigned int qspi0_data4_mux[] = {
- /* - QSPI1 ------------------------------------------------------------------ */
- static const unsigned int qspi1_ctrl_pins[] = {
- 	/* QSPI1_SPCLK, QSPI1_SSL */
--	PIN_NUMBER('V', 3), PIN_NUMBER('V', 5),
-+	PIN_QSPI1_SPCLK, PIN_QSPI1_SSL,
- };
- static const unsigned int qspi1_ctrl_mux[] = {
- 	QSPI1_SPCLK_MARK, QSPI1_SSL_MARK,
- };
- static const unsigned int qspi1_data2_pins[] = {
- 	/* QSPI1_MOSI_IO0, QSPI1_MISO_IO1 */
--	PIN_A_NUMBER('C', 7), PIN_A_NUMBER('E', 5),
-+	PIN_QSPI1_MOSI_IO0, PIN_QSPI1_MISO_IO1,
- };
- static const unsigned int qspi1_data2_mux[] = {
- 	QSPI1_MOSI_IO0_MARK, QSPI1_MISO_IO1_MARK,
- };
- static const unsigned int qspi1_data4_pins[] = {
- 	/* QSPI1_MOSI_IO0, QSPI1_MISO_IO1, QSPI1_IO2, QSPI1_IO3 */
--	PIN_A_NUMBER('C', 7), PIN_A_NUMBER('E', 5),
--	PIN_A_NUMBER('E', 4), PIN_A_NUMBER('C', 3),
-+	PIN_QSPI1_MOSI_IO0, PIN_QSPI1_MISO_IO1, PIN_QSPI1_IO2, PIN_QSPI1_IO3,
- };
- static const unsigned int qspi1_data4_mux[] = {
- 	QSPI1_MOSI_IO0_MARK, QSPI1_MISO_IO1_MARK,
-@@ -5311,44 +5304,44 @@ static const struct pinmux_cfg_reg pinmux_config_regs[] = {
+@@ -5662,44 +5657,44 @@ static const struct pinmux_cfg_reg pinmux_config_regs[] = {
  
  static const struct pinmux_drive_reg pinmux_drive_regs[] = {
  	{ PINMUX_DRIVE_REG("DRVCTRL0", 0xe6060300) {
@@ -338,16 +284,7 @@ index 0d7b0dd21e15c05f..95f9aae3bfba777b 100644
  	} },
  	{ PINMUX_DRIVE_REG("DRVCTRL4", 0xe6060310) {
  		{ RCAR_GP_PIN(2, 12), 28, 3 },	/* AVB_LINK */
-@@ -5391,7 +5384,7 @@ static const struct pinmux_drive_reg pinmux_drive_regs[] = {
- 		{ RCAR_GP_PIN(1, 19),  0, 3 },	/* A19 */
- 	} },
- 	{ PINMUX_DRIVE_REG("DRVCTRL8", 0xe6060320) {
--		{ PIN_NUMBER('F', 1), 28, 3 },	/* CLKOUT */
-+		{ PIN_CLKOUT,         28, 3 },	/* CLKOUT */
- 		{ RCAR_GP_PIN(1, 20), 24, 3 },	/* CS0 */
- 		{ RCAR_GP_PIN(1, 21), 20, 3 },	/* CS1_A26 */
- 		{ RCAR_GP_PIN(1, 22), 16, 3 },	/* BS */
-@@ -5402,7 +5395,7 @@ static const struct pinmux_drive_reg pinmux_drive_regs[] = {
+@@ -5753,7 +5748,7 @@ static const struct pinmux_drive_reg pinmux_drive_regs[] = {
  	} },
  	{ PINMUX_DRIVE_REG("DRVCTRL9", 0xe6060324) {
  		{ RCAR_GP_PIN(1, 27), 28, 3 },	/* EX_WAIT0 */
@@ -356,7 +293,7 @@ index 0d7b0dd21e15c05f..95f9aae3bfba777b 100644
  		{ RCAR_GP_PIN(0,  0), 20, 3 },	/* D0 */
  		{ RCAR_GP_PIN(0,  1), 16, 3 },	/* D1 */
  		{ RCAR_GP_PIN(0,  2), 12, 3 },	/* D2 */
-@@ -5421,30 +5414,30 @@ static const struct pinmux_drive_reg pinmux_drive_regs[] = {
+@@ -5772,30 +5767,30 @@ static const struct pinmux_drive_reg pinmux_drive_regs[] = {
  		{ RCAR_GP_PIN(0, 13),  0, 3 },	/* D13 */
  	} },
  	{ PINMUX_DRIVE_REG("DRVCTRL11", 0xe606032c) {
@@ -407,7 +344,7 @@ index 0d7b0dd21e15c05f..95f9aae3bfba777b 100644
  	} },
  	{ PINMUX_DRIVE_REG("DRVCTRL14", 0xe6060338) {
  		{ RCAR_GP_PIN(3,  6), 28, 3 },	/* SD1_CLK */
-@@ -5513,7 +5506,7 @@ static const struct pinmux_drive_reg pinmux_drive_regs[] = {
+@@ -5864,7 +5859,7 @@ static const struct pinmux_drive_reg pinmux_drive_regs[] = {
  		{ RCAR_GP_PIN(5, 23), 16, 3 },	/* MLB_CLK */
  		{ RCAR_GP_PIN(5, 24), 12, 3 },	/* MLB_SIG */
  		{ RCAR_GP_PIN(5, 25),  8, 3 },	/* MLB_DAT */
@@ -416,7 +353,7 @@ index 0d7b0dd21e15c05f..95f9aae3bfba777b 100644
  		{ RCAR_GP_PIN(6,  0),  0, 3 },	/* SSI_SCK01239 */
  	} },
  	{ PINMUX_DRIVE_REG("DRVCTRL21", 0xe6060354) {
-@@ -5587,35 +5580,35 @@ static int r8a7795es1_pin_to_pocctrl(struct sh_pfc *pfc, unsigned int pin,
+@@ -5937,35 +5932,35 @@ static int r8a7795_pin_to_pocctrl(struct sh_pfc *pfc, unsigned int pin, u32 *poc
  
  static const struct pinmux_bias_reg pinmux_bias_regs[] = {
  	{ PINMUX_BIAS_REG("PUEN0", 0xe6060400, "PUD0", 0xe6060440) {
@@ -481,16 +418,7 @@ index 0d7b0dd21e15c05f..95f9aae3bfba777b 100644
  		[29] = RCAR_GP_PIN(2,  9),	/* AVB_MDC */
  		[30] = RCAR_GP_PIN(2, 10),	/* AVB_MAGIC */
  		[31] = RCAR_GP_PIN(2, 11),	/* AVB_PHY_INT */
-@@ -5655,7 +5648,7 @@ static const struct pinmux_bias_reg pinmux_bias_regs[] = {
- 		[31] = RCAR_GP_PIN(1, 19),	/* A19 */
- 	} },
- 	{ PINMUX_BIAS_REG("PUEN2", 0xe6060408, "PUD2", 0xe6060448) {
--		[ 0] = PIN_NUMBER('F', 1),	/* CLKOUT */
-+		[ 0] = PIN_CLKOUT,		/* CLKOUT */
- 		[ 1] = RCAR_GP_PIN(1, 20),	/* CS0_N */
- 		[ 2] = RCAR_GP_PIN(1, 21),	/* CS1_N_A26 */
- 		[ 3] = RCAR_GP_PIN(1, 22),	/* BS_N */
-@@ -5664,7 +5657,7 @@ static const struct pinmux_bias_reg pinmux_bias_regs[] = {
+@@ -6014,7 +6009,7 @@ static const struct pinmux_bias_reg pinmux_bias_regs[] = {
  		[ 6] = RCAR_GP_PIN(1, 25),	/* WE0_N */
  		[ 7] = RCAR_GP_PIN(1, 26),	/* WE1_N */
  		[ 8] = RCAR_GP_PIN(1, 27),	/* EX_WAIT0_A */
@@ -499,7 +427,7 @@ index 0d7b0dd21e15c05f..95f9aae3bfba777b 100644
  		[10] = RCAR_GP_PIN(0,  0),	/* D0 */
  		[11] = RCAR_GP_PIN(0,  1),	/* D1 */
  		[12] = RCAR_GP_PIN(0,  2),	/* D2 */
-@@ -5685,20 +5678,20 @@ static const struct pinmux_bias_reg pinmux_bias_regs[] = {
+@@ -6035,20 +6030,20 @@ static const struct pinmux_bias_reg pinmux_bias_regs[] = {
  		[27] = RCAR_GP_PIN(7,  1),	/* AVS2 */
  		[28] = RCAR_GP_PIN(7,  2),	/* GP7_02 */
  		[29] = RCAR_GP_PIN(7,  3),	/* GP7_03 */
@@ -531,7 +459,7 @@ index 0d7b0dd21e15c05f..95f9aae3bfba777b 100644
  		[10] = RCAR_GP_PIN(3,  0),	/* SD0_CLK */
  		[11] = RCAR_GP_PIN(3,  1),	/* SD0_CMD */
  		[12] = RCAR_GP_PIN(3,  2),	/* SD0_DAT0 */
-@@ -5763,7 +5756,7 @@ static const struct pinmux_bias_reg pinmux_bias_regs[] = {
+@@ -6113,7 +6108,7 @@ static const struct pinmux_bias_reg pinmux_bias_regs[] = {
  		[ 3] = RCAR_GP_PIN(5, 23),	/* MLB_CLK */
  		[ 4] = RCAR_GP_PIN(5, 24),	/* MLB_SIG */
  		[ 5] = RCAR_GP_PIN(5, 25),	/* MLB_DAT */
