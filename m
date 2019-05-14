@@ -2,141 +2,112 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id D8FE81C05E
-	for <lists+linux-gpio@lfdr.de>; Tue, 14 May 2019 03:38:12 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2B90F1C4A1
+	for <lists+linux-gpio@lfdr.de>; Tue, 14 May 2019 10:26:58 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726657AbfENBiL (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 13 May 2019 21:38:11 -0400
-Received: from mail-qk1-f194.google.com ([209.85.222.194]:45819 "EHLO
-        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726604AbfENBiL (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 13 May 2019 21:38:11 -0400
-Received: by mail-qk1-f194.google.com with SMTP id j1so9291990qkk.12
-        for <linux-gpio@vger.kernel.org>; Mon, 13 May 2019 18:38:10 -0700 (PDT)
+        id S1726143AbfENI05 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 14 May 2019 04:26:57 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:39832 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726060AbfENI05 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 14 May 2019 04:26:57 -0400
+Received: by mail-wm1-f67.google.com with SMTP id n25so1805102wmk.4
+        for <linux-gpio@vger.kernel.org>; Tue, 14 May 2019 01:26:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=zwRPJV1ea5/fubxrHAnDt8q85ACTUpNCnRonfvDrwtQ=;
-        b=cV8CDih8rYP1Q2P21ENTjW7+9KHarjnNarh3p+yta6mBnxR3GWMtJ+F9aPtbPrgmmG
-         X+DiLrn5IlCaW7mpsL9/U0ujHeFG2aNeIn9QmS2ZUcIoDhQcUHCUg3kwoTnsR0XXvXwE
-         FaEg81DlK47GL87NGWbxzH/nAjQTjMixtBP3w=
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id;
+        bh=X0toZzy5jG06W74WS/hZf53CDr/smndRtb9GSpbhzgw=;
+        b=DCcz3Yp69wR3bZBKDn/QuVK0FvCSof8Ew0WzSEPM81nXrM6IGVV4Z378IW/wEmApc9
+         6rJYt5azj7d//VJx3fFlxx9csNHdvyMki7rvr5x0lXeY3yt4/TBV9idded8Kfj3wGnko
+         zZVMKUlZf8rv79WH6OmPz8scKITVnTsJKQwfXSdwK0y5KG61Lqd1DXDQHF8y76Osrs7I
+         timrhpRIfLeKoo3xSDFVYbgKZZPLMUW2NaoCeqDtvrYVz9+f7pxgnBO0ut49nHYqsWMp
+         ikucev/DepoE0LeBL3uM7ZWS+hdInkxhqj33nX/o47Qnyegi6YG8MQGwk4yydf7LXlFg
+         bEfA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=zwRPJV1ea5/fubxrHAnDt8q85ACTUpNCnRonfvDrwtQ=;
-        b=Cgqzvc7u/9qNvBFBzJqLBduC4u+hmuJmRrY9Avs1IRO6kuplli0JmvUrTNkGLpQ7XR
-         ZGff+091DzXAhOmnxvFLRTly6SsChrDQ6SBed7ALE95fQWmps0BbjeQPiqXTF/0QN+ek
-         dFjURHI8CUDUymDZt+IgTkiVwTTXxmMoUVaSl4h1pPZ/MzzBOgFZ+KmXAWBdkFcUmp6R
-         jprPtdTr7sUq7Ywf1MG+nnE3Jnf0TsAAQmj7foRBQvsviPN+piJ4Ps0IlieMvokwvd52
-         xo3G72J8HxbgxNV9bYodJ8BtMctULFSKWWZLdYHXbn6kbRYEjsS21nLDLAt/uoHK7Qmg
-         4hVQ==
-X-Gm-Message-State: APjAAAXMLLchms0Q+Ej62dPvfbyfz/LY69QEv9Hc5j0GO9+ao6JIOWM5
-        4HY3ubimM6KV9kS92cHUJDG7/IyEZm7s6bLrhRZxow==
-X-Google-Smtp-Source: APXvYqzsJpqxHDJ2qevMSmT1HPJa1iHE7NRKTlyDxcyCq4T4aHwPxe7bd9ialVJHGfZ/iY2dzrt8lG7EoBq9Zw90IgI=
-X-Received: by 2002:a37:2e05:: with SMTP id u5mr26568027qkh.124.1557797889779;
- Mon, 13 May 2019 18:38:09 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190429035515.73611-1-drinkcat@chromium.org> <20190429035515.73611-3-drinkcat@chromium.org>
- <155778659317.14659.136626364818483852@swboyd.mtv.corp.google.com>
-In-Reply-To: <155778659317.14659.136626364818483852@swboyd.mtv.corp.google.com>
-From:   Nicolas Boichat <drinkcat@chromium.org>
-Date:   Tue, 14 May 2019 09:37:58 +0800
-Message-ID: <CANMq1KBMd7eR3dP=V9gJ6G4OgE6DsXad_gzvuNJ25_pee4+6eg@mail.gmail.com>
-Subject: Re: [PATCH 2/2] pinctrl: mediatek: Update cur_mask in mask/mask ops
-To:     Stephen Boyd <swboyd@chromium.org>
-Cc:     "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>,
-        Sean Wang <sean.wang@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        linux-gpio@vger.kernel.org,
-        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Chuanjia Liu <Chuanjia.Liu@mediatek.com>,
-        Evan Green <evgreen@chromium.org>
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=X0toZzy5jG06W74WS/hZf53CDr/smndRtb9GSpbhzgw=;
+        b=StJd2hJx9CC/6/C81Jt1LyM+ALjtk/Q+an5qx3SunrvmjQMQIr1Q3ySQb42pXSiH3H
+         QY/NR+OJzFgfWL3fhnX7X4FnoPxr48eQJXrtTd9lnoLP49ucVMeURyIvvCZAaUefRJ46
+         cM/rLErxVPBoL184WuWWYO8Pl9RNG/cHOGuyRxAJJ2LchoVoviNjOB/CI35SMFNCvVvS
+         xtiKJdNDvc4KaQUo6jjh8APBfx5ht2bsv8/ytA0xUzU+qGoF6bkyQ8lPSvsXsDtJWhvV
+         hGjNGlbC8K4UfZ8dP5ubV7x/u38oqbEw2WE+8BFCcqSuDAefDf+rhvg0Jw0NRy9ofAG0
+         MjRQ==
+X-Gm-Message-State: APjAAAXlX1FZ5LMLVdhwCa6roWzVRE/tByRCeEbtGVgNKalvKs2x8aNB
+        +k9+jZSGPY+m4ct/Cy4PCfmFj0rmJ9HssA==
+X-Google-Smtp-Source: APXvYqxnQPc8uylG3Vch3Y5Tb7DiuQJ87G8GH7fcOBvIRwt2mlcz4eOXf1LUsAUj88af8nCLk1cElQ==
+X-Received: by 2002:a1c:21c1:: with SMTP id h184mr1792485wmh.78.1557822414947;
+        Tue, 14 May 2019 01:26:54 -0700 (PDT)
+Received: from glaroque-ThinkPad-T480.home ([2a01:cb1d:379:8b00:1910:6694:7019:d3a])
+        by smtp.gmail.com with ESMTPSA id j190sm2450772wmb.19.2019.05.14.01.26.53
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 14 May 2019 01:26:53 -0700 (PDT)
+From:   Guillaume La Roque <glaroque@baylibre.com>
+To:     linus.walleij@linaro.org, khilman@baylibre.com
+Cc:     jbrunet@baylibre.com, linux-gpio@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-amlogic@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v6 0/6] Add drive-strength in Meson pinctrl driver
+Date:   Tue, 14 May 2019 10:26:46 +0200
+Message-Id: <20190514082652.20686-1-glaroque@baylibre.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, May 14, 2019 at 6:29 AM Stephen Boyd <swboyd@chromium.org> wrote:
->
-> Quoting Nicolas Boichat (2019-04-28 20:55:15)
-> > During suspend/resume, mtk_eint_mask may be called while
-> > wake_mask is active. For example, this happens if a wake-source
-> > with an active interrupt handler wakes the system:
-> > irq/pm.c:irq_pm_check_wakeup would disable the interrupt, so
-> > that it can be handled later on in the resume flow.
-> >
-> > However, this may happen before mtk_eint_do_resume is called:
-> > in this case, wake_mask is loaded, and cur_mask is restored
-> > from an older copy, re-enabling the interrupt, and causing
-> > an interrupt storm (especially for level interrupts).
-> >
-> > Instead, we just record mask/unmask changes in cur_mask. This
-> > also avoids the need to read the current mask in eint_do_suspend,
-> > and we can remove mtk_eint_chip_read_mask function.
-> >
-> > Signed-off-by: Nicolas Boichat <drinkcat@chromium.org>
->
-> It looks an awful lot like you should just use IRQCHIP_MASK_ON_SUSPEND
-> here. Isn't that what's happening? All non-wake irqs should be masked at
-> the hardware level so they can't cause a wakeup during suspend and on
-> resume they can be unmasked?
+The purpose of this patchset is to add drive-strength support in meson pinconf
+driver. This is a new feature that was added on the g12a. It is critical for us
+to support this since many functions are failing with default pad drive-strength.
 
-No, this is for an line that has both wake and interrupt enabled. To
-reword the commit message above:
- 1. cur_mask[irq] = 1; wake_mask[irq] = 1; EINT_EN[irq] = 1 (interrupt
-enabled at hardware level)
- 2. System suspends, resumes due to that line (at this stage EINT_HW
-== wake_mask)
- 3. irq_pm_check_wakeup is called, and disables the interrupt =>
-EINT_EN[irq] = 0, but we still have cur_mask[irq] = 1
- 4. mtk_eint_do_resume is called, and restores EINT_EN = cur_mask, so
-it reenables EINT_EN[irq] = 1 => interrupt storm.
+The value achievable by the SoC are 0.5mA, 2.5mA, 3mA and 4mA and the DT property
+'drive-strength' is expressed in mA.
+So this patch add another generic property "drive-strength-microamp". The change to do so
+would be minimal and could be benefit to other platforms later on.
 
-This patch fixes the issue in step 3. So that the interrupt can be
-re-enabled properly later on, sometimes after mtk_eint_do_resume, when
-the driver is ready to handle it.
+Cheers
+Guillaume
 
-Also, IRQCHIP_MASK_ON_SUSPEND does not handle lines that are enabled
-as a wake source, but without interrupt enabled (e.g. cros_ec driver
-does that), which we do want to support.
+Changes since v5:
+- restore Tested-by/Reviewed-by/Ack-by tags
 
-> > diff --git a/drivers/pinctrl/mediatek/mtk-eint.c b/drivers/pinctrl/mediatek/mtk-eint.c
-> > index 737385e86beb807..7e526bcf5e0b55c 100644
-> > --- a/drivers/pinctrl/mediatek/mtk-eint.c
-> > +++ b/drivers/pinctrl/mediatek/mtk-eint.c
-> > @@ -113,6 +113,8 @@ static void mtk_eint_mask(struct irq_data *d)
-> >         void __iomem *reg = mtk_eint_get_offset(eint, d->hwirq,
-> >                                                 eint->regs->mask_set);
-> >
-> > +       eint->cur_mask[d->hwirq >> 5] &= ~mask;
-> > +
-> >         writel(mask, reg);
-> >  }
-> >
-> > @@ -123,6 +125,8 @@ static void mtk_eint_unmask(struct irq_data *d)
-> >         void __iomem *reg = mtk_eint_get_offset(eint, d->hwirq,
-> >                                                 eint->regs->mask_clr);
-> >
-> > +       eint->cur_mask[d->hwirq >> 5] |= mask;
-> > +
-> >         writel(mask, reg);
-> >
-> >         if (eint->dual_edge[d->hwirq])
-> > @@ -384,7 +375,6 @@ static void mtk_eint_irq_handler(struct irq_desc *desc)
-> >
-> >  int mtk_eint_do_suspend(struct mtk_eint *eint)
-> >  {
-> > -       mtk_eint_chip_read_mask(eint, eint->base, eint->cur_mask);
-> >         mtk_eint_chip_write_mask(eint, eint->base, eint->wake_mask);
-> >
->
->
-> This alone looks like, write out the mask to only allow wake interrupts.
+Changes since v4:
+- fix dt-binding documentation
+- rename drive-strength-uA to drive-strength-microamp in coverletter
 
-Yes, and enable wake interrupts that may not be in cur_mask.
+Changes since v3:
+- remove dev_err in meson_get_drive_strength
+- cleanup code
+
+Changes since v2:
+- rename driver-strength-uA property to drive-strength-microamp
+- rework patch series for better understanding
+- rework set_bias function
+
+Changes since v1:
+- fix missing break
+- implement new pinctrl generic property "drive-strength-uA"
+
+[1] https://lkml.kernel.org/r/20190314163725.7918-1-jbrunet@baylibre.com
+Tested-by: Jerome Brunet <jbrunet@baylibre.com>
+
+Guillaume La Roque (6):
+  dt-bindings: pinctrl: add a 'drive-strength-microamp' property
+  pinctrl: generic: add new 'drive-strength-microamp' property support
+  dt-bindings: pinctrl: meson: Add drive-strength-microamp property
+  pinctrl: meson: Rework enable/disable bias part
+  pinctrl: meson: add support of drive-strength-microamp
+  pinctrl: meson: g12a: add DS bank value
+
+ .../bindings/pinctrl/meson,pinctrl.txt        |   4 +
+ .../bindings/pinctrl/pinctrl-bindings.txt     |   3 +
+ drivers/pinctrl/meson/pinctrl-meson-g12a.c    |  36 ++--
+ drivers/pinctrl/meson/pinctrl-meson.c         | 180 ++++++++++++++----
+ drivers/pinctrl/meson/pinctrl-meson.h         |  18 +-
+ drivers/pinctrl/pinconf-generic.c             |   2 +
+ include/linux/pinctrl/pinconf-generic.h       |   3 +
+ 7 files changed, 193 insertions(+), 53 deletions(-)
+
+-- 
+2.17.1
+
