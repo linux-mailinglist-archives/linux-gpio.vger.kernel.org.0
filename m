@@ -2,96 +2,81 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 4E5CD206C6
-	for <lists+linux-gpio@lfdr.de>; Thu, 16 May 2019 14:20:29 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3930020728
+	for <lists+linux-gpio@lfdr.de>; Thu, 16 May 2019 14:45:11 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726623AbfEPMU2 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 16 May 2019 08:20:28 -0400
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:43127 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726513AbfEPMU2 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 16 May 2019 08:20:28 -0400
-Received: by mail-lj1-f194.google.com with SMTP id z5so2878892lji.10
-        for <linux-gpio@vger.kernel.org>; Thu, 16 May 2019 05:20:27 -0700 (PDT)
+        id S1727461AbfEPMoo (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 16 May 2019 08:44:44 -0400
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:39502 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727385AbfEPMon (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 16 May 2019 08:44:43 -0400
+Received: by mail-lj1-f195.google.com with SMTP id a10so2963040ljf.6
+        for <linux-gpio@vger.kernel.org>; Thu, 16 May 2019 05:44:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=wr0yrITWiDgpTtW7hOhkZTXIfJ4eLHxYShx+ors7rts=;
-        b=Bv91VW9mbA/lrzvFPX4j+c3OhgAcDSfRzunT5DviBFTgoDJy1VXoMb6bjYHNgUba0h
-         iuTJ56lTMab3DfGAa800XyxOtYrQoW8W+8EZbMNrgx70FPAS9gni/Y2QEkyJ6/9BnwYp
-         yNUsXm6uUi0yhdWmLNPugsYACmutqAYkFzD9RfSo5KUe5LUPCq/Vhx+TyrMa7W33rvMk
-         rZATdE02XuJ52GYiOqe4BTvCu5RjHyY11uH3t9I9vZF3tdLAosTkiHu/nT2AEvCZ3Ujf
-         /F3Aaq8LpWQIPPDQcsweXzRUnoz1dtZBnIB1u6Q76qpmC6twBOf7G42QJ9M/M58eEga2
-         q4mQ==
+         :cc:content-transfer-encoding;
+        bh=WAcJqFUogOC+q5kPPB4TqPaHzS2NFJ0eM8JptnvXwCY=;
+        b=lSbRP38AQ6SFgZe7kefhpxx8/TDZSnH2lvUSx43pHjMx7U+pNW/gkPtChmN1XxMZQF
+         aG2GYCNFQE+Js4XFSeeF7MJ/tiTkjkFTJRM70xPIljpD2HgNUhuqx8SA46t1GmT6Rdl8
+         3RLaQ2GRTITuwusHV0tg0yumSCSrJF5QL1iHC65CT/k8XNcW8NDZ/jRf4dZGVELvQS4s
+         s0DL/WgyqYOS3VbeBY3JXWXLvY2aEWcwuTp77vIRTQs9uxgH3+45Fo/vPNGdEM15QrZ0
+         b5P0PZA8CP9nS+kTyJv9NupA/e7XY8Px9gHOg0Ite/fQTuPpCEO2N4o1Y+5S5IEtTBBw
+         9EfQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=wr0yrITWiDgpTtW7hOhkZTXIfJ4eLHxYShx+ors7rts=;
-        b=oHaf2UsySAv/p93JTH/YC07geWSddhcH3aaoyDmm3yQv5m73u0GLfBmOtXsud1pqEj
-         YEPzk5OS2aCiOITrWXLkysN2KQK+Y2r0VOxUd2VccZjCU3SV4VS+UsjCJ+uvoApkKKvi
-         PBSj7ne+1FAZ7AIOEDZI4uE5zI259lFaAop0oGs2fu3P5tRPMQuU6gCBAl33MUDrfGpG
-         gryWnT77cEvUDNAyU/Sgf/NVY/Btp2fJBjmGQ42kly0OGXH55iestU4uV1DSQqugdbhB
-         5yGa6p2xy9G7HhRAQIgzqt2H+rI/+vAkkkMlHQ2tmEJQL9j5BmFBj4nfIKeif8DFqC9S
-         Tjnw==
-X-Gm-Message-State: APjAAAUGZ80x5LO/pPv98KR9t0AosYawflqKQf+pCR8TfbfVMe4GrmHg
-        SSPcgIFUa4kVPIvriB00Z/TuJpgKKQmVlkoWJYL52Q==
-X-Google-Smtp-Source: APXvYqz3tKAivV8Dh7JbLsHVm95JkncbNhNajSVq3rYNN6TMvN6O2ZDg675uuDTUoVEOcB135K7WzRtiYKDdXgotPBY=
-X-Received: by 2002:a2e:8741:: with SMTP id q1mr2126359ljj.97.1558009226473;
- Thu, 16 May 2019 05:20:26 -0700 (PDT)
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=WAcJqFUogOC+q5kPPB4TqPaHzS2NFJ0eM8JptnvXwCY=;
+        b=jWFIzTRpBHmFnBzuQU4dUS4lf8XBucUlbtbQ/041553O7NxaAxMjAsnexJ6JV5KgEn
+         LIskaGMewNGffPz27UwGUUxx2eKWpj9WbKMd+YDpBVKqE822fDdyS9pd1D8lhXz/RlOJ
+         zk+zRNfmiyHnxpLY3UUeTbX8i88eU+D4ZZ3BEa7PZ5MqehwNfB2CiVVSy20Y7OGUmYO9
+         3be/pOqdusHyaDnGPXdkvBA14xklz03/WqYCSqqxQzD+pwOUShMbVG3jJJxJupqc2YDK
+         1qxtqIwjX59KMOhl26L3/+DWD9K3MRAHvIkvMwVq6BPiH5hC5BikBnoi+seX5hig0ya/
+         hA/A==
+X-Gm-Message-State: APjAAAUKlaoYQPg9beN1pJ6s5Eb9J/fB5+KTAmgjdXi+T/l053FLI7Am
+        8ptOv5xCF88LEnQZAfgkjNDYuDYHPyBoMgwFw9ypwQ==
+X-Google-Smtp-Source: APXvYqz1nKgkBL8f+HFCe7nXbFNOicCiF9Au3HD3bQcJw9TF68xCQ8lq2AMz/ruba3dbZXK+AF6xyEkmAFuQTpMWTEI=
+X-Received: by 2002:a2e:301a:: with SMTP id w26mr8899681ljw.153.1558010681900;
+ Thu, 16 May 2019 05:44:41 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190424081802.GV2654@lahna.fi.intel.com> <5a28f22c-22f7-760a-d076-68ff19800d44@siemens.com>
- <20190424084259.GW2654@lahna.fi.intel.com> <7e328b7e-f4f0-851a-4152-a9ffd058201c@siemens.com>
- <20190424094506.GA2654@lahna.fi.intel.com> <292e6eff-82cc-6e4d-925b-77a60399e2e0@siemens.com>
- <20190424100130.GB2654@lahna.fi.intel.com> <1200464b-f969-ebc2-ae82-1f8ca98aaca1@siemens.com>
- <20190424103306.GC2654@lahna.fi.intel.com> <9377620b-d74a-04d9-a51e-8590400b1c0f@siemens.com>
- <20190426130615.GT9224@smile.fi.intel.com> <bd5453e1-0279-02ab-3304-edc6ebf509dc@siemens.com>
- <bc856e19-470d-7655-5680-a031831ab513@metux.net> <2f3da791-4a10-c2c4-dc5a-22ad16ed7be6@siemens.com>
- <ea29ee73-705b-7d13-0084-11274db02394@metux.net>
-In-Reply-To: <ea29ee73-705b-7d13-0084-11274db02394@metux.net>
+References: <20190428150822.13935-1-j.neuschaefer@gmx.net>
+In-Reply-To: <20190428150822.13935-1-j.neuschaefer@gmx.net>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Thu, 16 May 2019 14:20:14 +0200
-Message-ID: <CACRpkdZJSYFYuJYtubUHyPhSkiHi0eUX_hmbmmXqO2XPg6rJcw@mail.gmail.com>
-Subject: Re: [PATCH 2/2] gpio: sch: Add interrupt support
-To:     "Enrico Weigelt, metux IT consult" <lkml@metux.net>
-Cc:     Jan Kiszka <jan.kiszka@siemens.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+Date:   Thu, 16 May 2019 14:44:30 +0200
+Message-ID: <CACRpkdZcP3gEsudT0rpzNuBe=4Mz0s=KLPd_y-38E4oxVeQD0A@mail.gmail.com>
+Subject: Re: [PATCH] dt-bindings: pinctrl: Fix spelling of bias-pull-up
+To:     =?UTF-8?Q?Jonathan_Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>
+Cc:     MSM <linux-arm-msm@vger.kernel.org>,
+        Andy Gross <andy.gross@linaro.org>,
+        David Brown <david.brown@linaro.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi folks,
+On Sun, Apr 28, 2019 at 5:08 PM Jonathan Neusch=C3=A4fer
+<j.neuschaefer@gmx.net> wrote:
 
-this became an interesting thread and Manivannan made some nice
-changes to MRAA as a result.
+> The property is spelled 'bias-pull-up', as documented in
+> pinctrl-bindings.txt.
+>
+> Signed-off-by: Jonathan Neusch=C3=A4fer <j.neuschaefer@gmx.net>
 
-It appears the Raspberry Pi has become a victim of its own success
-and went from hobbyist toy system to a foundation for random industrial
-control hacks. I'm a bit scared about that for electronic reasons but when
-it comes to the software that is a board that get things right after
-we added line-names to everything on its connectors.
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 
-What I can add is that when designing the character device I tried to get some
-input from inductrial control (PLC) vendors and asked on the mailing list,
-and mailed directly to ABB at one point, I am sorry for not finding the right
-contact at Siemens (would have helped for sure).
-
-I have tried to talk to Liebherr in related matters but can't seem to find the
-right contact.
-
-We really want to do things right with industrial control boards because
-these seem to have very long life cycles and stay around forever in the
-kernel for that reason.
+It appears from Rob's comment that he's applying it,
+tell me if I need to apply it to the pinctrl tree.
 
 Yours,
 Linus Walleij
