@@ -2,75 +2,86 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 0A0ED2073A
-	for <lists+linux-gpio@lfdr.de>; Thu, 16 May 2019 14:48:33 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8D4E92074B
+	for <lists+linux-gpio@lfdr.de>; Thu, 16 May 2019 14:52:18 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727149AbfEPMs2 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 16 May 2019 08:48:28 -0400
-Received: from mail-it1-f193.google.com ([209.85.166.193]:54784 "EHLO
-        mail-it1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726503AbfEPMs2 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 16 May 2019 08:48:28 -0400
-Received: by mail-it1-f193.google.com with SMTP id a190so5848393ite.4
-        for <linux-gpio@vger.kernel.org>; Thu, 16 May 2019 05:48:28 -0700 (PDT)
+        id S1727379AbfEPMwR (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 16 May 2019 08:52:17 -0400
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:33968 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727015AbfEPMwR (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 16 May 2019 08:52:17 -0400
+Received: by mail-lj1-f196.google.com with SMTP id j24so3028079ljg.1
+        for <linux-gpio@vger.kernel.org>; Thu, 16 May 2019 05:52:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:reply-to:from:date:message-id:subject:to;
-        bh=YaQgqTGT7eZWt9OrC4ZMPifl262v3HLFMT2+YAgjTCo=;
-        b=IMPSU6xhTGat/3Qo1Q0W4XMwIu3iAxfGQkV2jJLnWbPxqO8bntXmUQhxRBs0dAqDEe
-         7a41jciNQHOertoYZs7BzdTe18uFyEzQFjnMNc9O6fjri6CQQEMzQhA4Gfot02WlmjWD
-         AlvoWqYRBs9SuWbky4nJVkneTVchAvBN4jUmCuy3DMZiX1IjwCWzR+meQl9Dm2KBaFWX
-         g02gYJ5sfHGHIgDe5NJkvHRct0NrxPw8OVxjvsKpE0zeY/Sc4CYRf/aYEk9mMlXuF3Ca
-         ZYq1u8VAErD8FCFqGlbEC3tqkauQ9HR1Oxx67kfGHwkO1d8eWFW0JOHPoPAqFqXxWveM
-         jSNg==
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=M8dIMMLTGG86thIxs/mRUU5bsghAX7RRvWXWnrAvMAs=;
+        b=iC9xJc/LqP5wzVxXoivXXOnuzTrrgFiN2GtZrWRT5bsmasTGCrg1mUFbsRM8/yJ8lE
+         Chia4VkQR8GHzZ1wp3SftBAPhcf0/0id8JlaHJajgdxXO4Fo/NfHfxfwZJhaYduFdKPz
+         oX39O8pOX2C1YCZdt6Z1yL8eTySL64PduJAGls98JcKwJ8XtPpYNUuaPXVGg3C+bqQ0v
+         G+dFQh2qz/jUZKW5/q6RWlhrG4KOpDKiBtPFLz8HkLYufM8kTyzHmC0u8Gzu6hbq2W2n
+         RnAB8XpXl17EpT/Wkex+RjpHiNP90Y5JpsNjFtK5hVwJ2oSDKVetXxS0UvIQ5qd2tovw
+         qhiA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
-         :subject:to;
-        bh=YaQgqTGT7eZWt9OrC4ZMPifl262v3HLFMT2+YAgjTCo=;
-        b=DhDj0AVNrBogyXQ3UTCddiwr8bsX9aA6JJY+0iPplwOnjdL/QPnBUS92csUQxZHS9t
-         Yv2BJs7te11T1sN8X3aFmJtxDunwIUd6iRR7MenSJtoRssMXzBykZTosCPY+XXEheaBn
-         787vi9xvWdxhxjhCwOtJl+3pIRCRzsRZTXW01qzpkNljNXWE3OUVh72GILTF/NrKFgV9
-         pBnIAHll9xJUzE0vbXBWBbYI3kawHM+FV6zb0PC8GsACOQbsx2YOXShQWqfKRc4DaQW/
-         NT2//UlQ/zR9Qdv2cR7Q2WAVuELnbZQ7TIlzNDeLxVkwMmFZ2AR5dgCWfZ+tlauM44m/
-         cB3w==
-X-Gm-Message-State: APjAAAVRAdMVOAuV6Qbzs8nzvOx95Ghgh2dhnhQ5BeGNrUtk2XSwCM6H
-        hz1Tv0T06sO+rM44112F0Sxbnq1cmP6n0q4vh68=
-X-Google-Smtp-Source: APXvYqz2zMViO+5S8TAASzxnCka+pnTqmabgFCBBkbGXqu1RqBvOL3tDgoYTMDyOWVencqOf2DShpQ1N8BaXn1JBvxo=
-X-Received: by 2002:a24:4cd2:: with SMTP id a201mr11657179itb.26.1558010907814;
- Thu, 16 May 2019 05:48:27 -0700 (PDT)
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=M8dIMMLTGG86thIxs/mRUU5bsghAX7RRvWXWnrAvMAs=;
+        b=eDww/c9QX8rtnguaNE3kRRN/tfrGBc+Nosyklvucr2nXgdFkcNgqYtx+mkoBm8t/sI
+         i31yt3QWufdF2pCfqre5WSdr9udxhJwtCe/6hRHsWhwyNwH7S0HuMs+6UEnHODgZ0Z8g
+         iIVWRfqAu+W0j6czIrwBgL6rYzyGpXKSvukP+JKkzhFn1wVB1xE2SXqaEVKuy405+QXe
+         HQuMHg1HnZihY2rc0Ua6IBAjUkGr4ASopAZR/4qVtb2jCFBE3GTRBxlxohucFXlY/TfP
+         x8q1j+7mg71EUz/nANIsrS9zQ5l4EmQBGmqUPzkKel3M0rM0m7MI3D3X4OYXH9cchacu
+         UIVQ==
+X-Gm-Message-State: APjAAAVX2tmjicLU/FaDLY0O2ox+szZ6nRoPeo6Hf0EVe3/cQCKyz/R7
+        QIyQf7HGY33X+V2rhTf7MVxUx/MgVIjREHlDip3sJXmM
+X-Google-Smtp-Source: APXvYqyKQvo32z2nDVQNlGDeWm4ClSjw2DAn7P89XY+RzmdqMHft5SDvxQb/j4IO5PU3+gOiYdzXt4I8x6QxAuXOZMU=
+X-Received: by 2002:a2e:731a:: with SMTP id o26mr21431284ljc.105.1558011134949;
+ Thu, 16 May 2019 05:52:14 -0700 (PDT)
 MIME-Version: 1.0
-Received: by 2002:a4f:1a84:0:0:0:0:0 with HTTP; Thu, 16 May 2019 05:48:27
- -0700 (PDT)
-Reply-To: noura_gazi@live.fr
-From:   Dernoura <migonoflooz@gmail.com>
-Date:   Thu, 16 May 2019 12:48:27 +0000
-Message-ID: <CAJ+7iRzJ_KTLuiP0FR-BBFUyt4cELkmrKPVcG9kGRziAZBUyYA@mail.gmail.com>
-Subject: NOTIFICATION
-To:     undisclosed-recipients:;
+References: <20190514082652.20686-1-glaroque@baylibre.com>
+In-Reply-To: <20190514082652.20686-1-glaroque@baylibre.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Thu, 16 May 2019 14:52:03 +0200
+Message-ID: <CACRpkdZ+p-J5Em3rzZcUwpA-a+CVOY91CgLqoRm_QVZP6E4Osw@mail.gmail.com>
+Subject: Re: [PATCH v6 0/6] Add drive-strength in Meson pinctrl driver
+To:     Guillaume La Roque <glaroque@baylibre.com>
+Cc:     Kevin Hilman <khilman@baylibre.com>,
+        Jerome Brunet <jbrunet@baylibre.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        "open list:ARM/Amlogic Meson..." <linux-amlogic@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Dear Good day
+On Tue, May 14, 2019 at 10:26 AM Guillaume La Roque
+<glaroque@baylibre.com> wrote:
 
-It is with tears that i am writing to you i need your help and
-assistance am an aging widow suffering from long time cancer of the
-throat and I inherited from my late husband,and I need someone like
-you a foreign partner that will withdraw this money then use for
-better investments and charity in your country , i contacted you to do
-this because i am seriously sick and i will not have time to do all i
-have stated because of my health and the doctors have already told me
-that i have few time to live so please if you are interested kindly
-let me know immediately so that we can proceed because i am really
-suffering from this illness cancer so please have mercy and pity on me
-and help me get my funds transferred use it for Charity works or any
-profitable venture that can help the poor and street children
-especially, I accept this decision because I do not have any child who
-will inherit  this money after I die.
+> The purpose of this patchset is to add drive-strength support in meson pinconf
+> driver. This is a new feature that was added on the g12a. It is critical for us
+> to support this since many functions are failing with default pad drive-strength.
+>
+> The value achievable by the SoC are 0.5mA, 2.5mA, 3mA and 4mA and the DT property
+> 'drive-strength' is expressed in mA.
+> So this patch add another generic property "drive-strength-microamp". The change to do so
+> would be minimal and could be benefit to other platforms later on.
+>
+> Cheers
+> Guillaume
+>
+> Changes since v5:
+> - restore Tested-by/Reviewed-by/Ack-by tags
 
-Warmest Regards,
+All 6 patches applied for v5.3.
 
-Mme.N
+They will appear in the tree once v5.2-rc1 is out.
+
+Yours,
+Linus Walleij
