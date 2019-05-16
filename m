@@ -2,81 +2,102 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 3930020728
-	for <lists+linux-gpio@lfdr.de>; Thu, 16 May 2019 14:45:11 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 063D520735
+	for <lists+linux-gpio@lfdr.de>; Thu, 16 May 2019 14:47:46 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727461AbfEPMoo (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 16 May 2019 08:44:44 -0400
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:39502 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727385AbfEPMon (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 16 May 2019 08:44:43 -0400
-Received: by mail-lj1-f195.google.com with SMTP id a10so2963040ljf.6
-        for <linux-gpio@vger.kernel.org>; Thu, 16 May 2019 05:44:42 -0700 (PDT)
+        id S1727227AbfEPMrp (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 16 May 2019 08:47:45 -0400
+Received: from mail-qk1-f194.google.com ([209.85.222.194]:37982 "EHLO
+        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726995AbfEPMro (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 16 May 2019 08:47:44 -0400
+Received: by mail-qk1-f194.google.com with SMTP id a64so2136406qkg.5
+        for <linux-gpio@vger.kernel.org>; Thu, 16 May 2019 05:47:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
+        d=chromium.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=WAcJqFUogOC+q5kPPB4TqPaHzS2NFJ0eM8JptnvXwCY=;
-        b=lSbRP38AQ6SFgZe7kefhpxx8/TDZSnH2lvUSx43pHjMx7U+pNW/gkPtChmN1XxMZQF
-         aG2GYCNFQE+Js4XFSeeF7MJ/tiTkjkFTJRM70xPIljpD2HgNUhuqx8SA46t1GmT6Rdl8
-         3RLaQ2GRTITuwusHV0tg0yumSCSrJF5QL1iHC65CT/k8XNcW8NDZ/jRf4dZGVELvQS4s
-         s0DL/WgyqYOS3VbeBY3JXWXLvY2aEWcwuTp77vIRTQs9uxgH3+45Fo/vPNGdEM15QrZ0
-         b5P0PZA8CP9nS+kTyJv9NupA/e7XY8Px9gHOg0Ite/fQTuPpCEO2N4o1Y+5S5IEtTBBw
-         9EfQ==
+         :cc;
+        bh=W184LUt3OLZpc35GbIgyfbdRWYWzS470rOoUrNJBmxU=;
+        b=TRma6EWmVqtTh6oyWeOyXuXYl+5HLkiD+FLBf6YYv1n3LTrxOJcXtDjC9qMNgWV3IM
+         9/L3ct4DLiJQOWk/6Vr+Zcmy4GqUrvJkXz80l5T6lMeDYVdK+B2rz9KW/QoYjrG5fcXu
+         dYY57kMN4S4l7szDwWKXb9Qsvi5JOUOtVT/i4=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=WAcJqFUogOC+q5kPPB4TqPaHzS2NFJ0eM8JptnvXwCY=;
-        b=jWFIzTRpBHmFnBzuQU4dUS4lf8XBucUlbtbQ/041553O7NxaAxMjAsnexJ6JV5KgEn
-         LIskaGMewNGffPz27UwGUUxx2eKWpj9WbKMd+YDpBVKqE822fDdyS9pd1D8lhXz/RlOJ
-         zk+zRNfmiyHnxpLY3UUeTbX8i88eU+D4ZZ3BEa7PZ5MqehwNfB2CiVVSy20Y7OGUmYO9
-         3be/pOqdusHyaDnGPXdkvBA14xklz03/WqYCSqqxQzD+pwOUShMbVG3jJJxJupqc2YDK
-         1qxtqIwjX59KMOhl26L3/+DWD9K3MRAHvIkvMwVq6BPiH5hC5BikBnoi+seX5hig0ya/
-         hA/A==
-X-Gm-Message-State: APjAAAUKlaoYQPg9beN1pJ6s5Eb9J/fB5+KTAmgjdXi+T/l053FLI7Am
-        8ptOv5xCF88LEnQZAfgkjNDYuDYHPyBoMgwFw9ypwQ==
-X-Google-Smtp-Source: APXvYqz1nKgkBL8f+HFCe7nXbFNOicCiF9Au3HD3bQcJw9TF68xCQ8lq2AMz/ruba3dbZXK+AF6xyEkmAFuQTpMWTEI=
-X-Received: by 2002:a2e:301a:: with SMTP id w26mr8899681ljw.153.1558010681900;
- Thu, 16 May 2019 05:44:41 -0700 (PDT)
+         :message-id:subject:to:cc;
+        bh=W184LUt3OLZpc35GbIgyfbdRWYWzS470rOoUrNJBmxU=;
+        b=jlX8Gew0hjfvToLXRx91GL3Y7Qn39aAYsngUEd5ZE+oBtCRGe20GGQ+L8T1b2xZQfk
+         AxZNggiP/D7tjstPiEcx9FTf0eQrVVq6Dg1oKTi5iBlW3aLi7o4ezmM+P1Ro6b65HKxj
+         CWs0ZZ54zwkyQ1s2K6if4Hufh08hreIfFiK7FQxqiSklPrs6aPl8qqR/hOpSq4rV9jZa
+         wjMuVwuSOtlqrdHawwH2kWjRTxuRrUHJr/KJQViCL55LVVn4Yudu32sJORAPR/xyH+cX
+         YmumNVcx0+ohFUh9Et2M38dbK9T/ZT0QC1R+cXtKx57ry9+VwuoLI/8GNMJXE3Nnrzzn
+         xs/A==
+X-Gm-Message-State: APjAAAWo5Zjb9UzDS+fAJyIzfcSnyIiCvlSAi3gaWOmD0kTFyjiepHii
+        V7H8x8UDtYjdFkd7vAxILjSAP3j5uioWrm8l3uVvTw==
+X-Google-Smtp-Source: APXvYqybed54iK4vV+PN2Aj3PjQ2Py6dcAunCb38T+fR74fZCjJqmxhGgna5I/pOr2f8Y6E05PAXezd/gE5bKfmgw6I=
+X-Received: by 2002:ae9:f818:: with SMTP id x24mr37963214qkh.329.1558010863680;
+ Thu, 16 May 2019 05:47:43 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190428150822.13935-1-j.neuschaefer@gmx.net>
-In-Reply-To: <20190428150822.13935-1-j.neuschaefer@gmx.net>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Thu, 16 May 2019 14:44:30 +0200
-Message-ID: <CACRpkdZcP3gEsudT0rpzNuBe=4Mz0s=KLPd_y-38E4oxVeQD0A@mail.gmail.com>
-Subject: Re: [PATCH] dt-bindings: pinctrl: Fix spelling of bias-pull-up
-To:     =?UTF-8?Q?Jonathan_Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>
-Cc:     MSM <linux-arm-msm@vger.kernel.org>,
-        Andy Gross <andy.gross@linaro.org>,
-        David Brown <david.brown@linaro.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
+References: <20190508073331.27475-1-drinkcat@chromium.org> <CACRpkdZb73vNyepcfjzEGAopc7BBxde_N1wxn7PSJ3aGC0=Gig@mail.gmail.com>
+In-Reply-To: <CACRpkdZb73vNyepcfjzEGAopc7BBxde_N1wxn7PSJ3aGC0=Gig@mail.gmail.com>
+From:   Nicolas Boichat <drinkcat@chromium.org>
+Date:   Thu, 16 May 2019 20:47:32 +0800
+Message-ID: <CANMq1KAOeuDCZEvV2A18nUts3WP2MbhUpY7gQ+vk0oTOz8TRQA@mail.gmail.com>
+Subject: Re: [PATCH v2 0/2] pinctrl: mediatek: mt8183: Add support for wake sources
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>,
+        Sean Wang <sean.wang@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Chuanjia Liu <Chuanjia.Liu@mediatek.com>,
+        Evan Green <evgreen@chromium.org>,
+        Stephen Boyd <swboyd@chromium.org>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Sun, Apr 28, 2019 at 5:08 PM Jonathan Neusch=C3=A4fer
-<j.neuschaefer@gmx.net> wrote:
-
-> The property is spelled 'bias-pull-up', as documented in
-> pinctrl-bindings.txt.
+On Thu, May 16, 2019 at 7:55 PM Linus Walleij <linus.walleij@linaro.org> wrote:
 >
-> Signed-off-by: Jonathan Neusch=C3=A4fer <j.neuschaefer@gmx.net>
+> On Wed, May 8, 2019 at 9:33 AM Nicolas Boichat <drinkcat@chromium.org> wrote:
+>
+> > This adds support for wake sources in pinctrl-mtk-common-v2, and
+> > pinctrl-mt8183. Without this patch, all interrupts that are left
+> > enabled on suspend act as wake sources (and wake sources without
+> > interrupt enabled do not).
+> >
+> > Changes since v1:
+> >  - Move changes from mtk-common-v2 to mtk-pinctrl-paris, as
+> >    recommended by Sean, to keep better separation between eint
+> >    and pinctrl-common features.
+> >
+> > Nicolas Boichat (2):
+> >   pinctrl: mediatek: Add pm_ops to pinctrl-paris
+> >   pinctrl: mediatek: mt8183: Add mtk_pinctrl_paris_pm_ops
+>
+> All seems to look fair to me, but I need some official ACK from
+> Sean on these.
+>
+> I see there is some discussion on a related patch set which
+> also has two patches so I am a but confused how mature the
+> two patch sets are? Are they at all related?
 
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+They are somewhat related, but I don't think this depends on the other series.
 
-It appears from Rob's comment that he's applying it,
-tell me if I need to apply it to the pinctrl tree.
+This series adds support for wake on mt8183, and makes it similar to,
+say, mt8173.
 
-Yours,
-Linus Walleij
+The other patch series fixes issues that affect all mtk pinctrl
+variants (i.e. I think mt8173 pinctrl on current mainline has similar
+issues). It's not impossible that the answer to the other series is
+that we need to refactor code, but in that case, if we merge this
+first, we'd just have to clean up one more pinctrl variant.
+
+Thanks,
+
+> Yours,
+> Linus Walleij
