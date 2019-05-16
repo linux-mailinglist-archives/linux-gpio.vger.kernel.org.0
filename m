@@ -2,123 +2,87 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 0B506207CC
-	for <lists+linux-gpio@lfdr.de>; Thu, 16 May 2019 15:15:32 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 50DA620807
+	for <lists+linux-gpio@lfdr.de>; Thu, 16 May 2019 15:25:15 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727547AbfEPNPY (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 16 May 2019 09:15:24 -0400
-Received: from mout.gmx.net ([212.227.15.19]:34607 "EHLO mout.gmx.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726427AbfEPNPY (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Thu, 16 May 2019 09:15:24 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1558012516;
-        bh=4PSlOiO3eht+wWQhmBnMks1JK1SUuaolOlOFVMPsFKg=;
-        h=X-UI-Sender-Class:Date:From:To:Cc:Subject:References:In-Reply-To;
-        b=gZT8I55HYG+eXIuD+hI8Nwg4b2+u0YlQCZSpmJ6d8XRtab7Uo5AZ0b3ZOiO46jHWi
-         C9HyaR0jD5FhM9ujXcOA0hHl8v1j14ZnFvjySmsRQ3uTuy8zRa7FJfEKW6F/SRfH9F
-         9NxSphwuM2WaJx+ePeRpLYC5XJjc2cfnAYOToEd4=
-X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from longitude ([109.90.233.200]) by mail.gmx.com (mrgmx003
- [212.227.17.190]) with ESMTPSA (Nemesis) id 0Lb5GD-1gyV6z2Uwr-00kibW; Thu, 16
- May 2019 15:15:16 +0200
-Date:   Thu, 16 May 2019 15:15:15 +0200
-From:   Jonathan =?utf-8?Q?Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Jonathan =?utf-8?Q?Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>,
-        MSM <linux-arm-msm@vger.kernel.org>,
-        Andy Gross <andy.gross@linaro.org>,
-        David Brown <david.brown@linaro.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        id S1727071AbfEPNZP (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 16 May 2019 09:25:15 -0400
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:42757 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726923AbfEPNZO (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 16 May 2019 09:25:14 -0400
+Received: by mail-lj1-f194.google.com with SMTP id 188so3074529ljf.9
+        for <linux-gpio@vger.kernel.org>; Thu, 16 May 2019 06:25:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=T7i74xwX9U5ncTUvzhWe57o2tW8tsCxNGT7kMEIaIPk=;
+        b=UZ2HOcb7CW2/11jSTnSPHfiHBasuAf7GrJd1OBF6+iXtAEPjKJR5dDzMbRtLzM4B0l
+         /VkhzqF8QqngYjEeMk13keD+R52PQsWlMoV5kTRyWfoAgz9X9IgjKR6nnUSsEwV0mlvq
+         y+2K3uxFvkCLSlgMAAxkNqa4ewh01JlutozwHyviQURNfG80lV2yU7d+3oyeWqBazhAI
+         kuHMJC9agm5hBYp4WmqgZDYo+Xp7/nQBxPU7o3rG/+09m1MHnx/mOwKZsbFpC+wr6c5S
+         sZFsWoZBbHj9rRsvLHsDi9DOijCG62RpIhgTZ5Oe6FQPq/y2Q6YEKijQk72SopivTngI
+         oXlA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=T7i74xwX9U5ncTUvzhWe57o2tW8tsCxNGT7kMEIaIPk=;
+        b=sarMwal825znZnZwN1phbMH2+3PN49/QwuLejlvt/+M5u/4yksA1A8JEonVv3sACXh
+         DFD5SiNPJJcWzzLkdCeMm79+brcsbXad6qB/lnfFyR7Rc3SWLoXDNoND5ag/KK1MKHrw
+         4gbKaeWDK7zS25nLveF/zGzFLdl7MKNydSsRFi1UoxcIhYp0ZL670oKZznkQzw+znWFB
+         y49qmJOBrb0+H5rwkvVfoQgsvl7UfwdyNW+/iw/Vdc8Av4qLD9q2ENyl1wigH3PL7xD6
+         JeSbHOlruygG7fpHIgNixxrC/kSwnEJ+zoB7F6ltgrA0V5PHyYr/i4AeVz7Srr6RXsva
+         BlZg==
+X-Gm-Message-State: APjAAAU9UQh8IkTNTgEu9XP7Jt0ZyTYTJcNGn580ICZifshMX96wQhgx
+        7GYWJ8VibDty9Jy4q5eIvAx22MEvsOvclAtKC1VX9g==
+X-Google-Smtp-Source: APXvYqypGlrkwcWpkDZqIzkGCG+DJBLuflw6yusCBeidrQObvNv3EKCslo+yOFvLup20kJPOGzeawHtuUNUjQ5uzhwo=
+X-Received: by 2002:a2e:731a:: with SMTP id o26mr21535501ljc.105.1558013113062;
+ Thu, 16 May 2019 06:25:13 -0700 (PDT)
+MIME-Version: 1.0
+References: <20190509205955.27842-1-f.fainelli@gmail.com> <20190509205955.27842-2-f.fainelli@gmail.com>
+In-Reply-To: <20190509205955.27842-2-f.fainelli@gmail.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Thu, 16 May 2019 15:25:01 +0200
+Message-ID: <CACRpkdZqAi4bbpGO8sTBq573dDRF-VWg9gE8=uGVJ3Jv0MY5bg@mail.gmail.com>
+Subject: Re: [PATCH 1/3] dt-bindings: pinctrl: bcm2835-gpio: Document BCM7211 compatible
+To:     Florian Fainelli <f.fainelli@gmail.com>
+Cc:     Linux ARM <linux-arm-kernel@lists.infradead.org>,
         Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Ray Jui <rjui@broadcom.com>,
+        Scott Branden <sbranden@broadcom.com>,
+        "maintainer:BROADCOM BCM281XX/BCM11XXX/BCM216XX ARM ARCHITE..." 
+        <bcm-kernel-feedback-list@broadcom.com>,
+        Eric Anholt <eric@anholt.net>,
+        Stefan Wahren <stefan.wahren@i2se.com>,
+        Doug Berger <opendmb@gmail.com>,
+        Matheus Castello <matheus@castello.eng.br>,
+        =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal@milecki.pl>,
+        Lukas Wunner <lukas@wunner.de>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Al Cooper <alcooperx@gmail.com>,
+        "open list:PIN CONTROL SUBSYSTEM" <linux-gpio@vger.kernel.org>,
         "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
         <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] dt-bindings: pinctrl: Fix spelling of bias-pull-up
-Message-ID: <20190516131515.GB2000@latitude>
-References: <20190428150822.13935-1-j.neuschaefer@gmx.net>
- <CACRpkdZcP3gEsudT0rpzNuBe=4Mz0s=KLPd_y-38E4oxVeQD0A@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="M9NhX3UHpAaciwkO"
-Content-Disposition: inline
-In-Reply-To: <CACRpkdZcP3gEsudT0rpzNuBe=4Mz0s=KLPd_y-38E4oxVeQD0A@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Provags-ID: V03:K1:Ue4Zk/ZiHBIR0wdXiJyWlB7U9GLA0tsVWbvjz0k9/U2nNoQgzvs
- l36UQu5c7MJiQHuy9vlcNE3aEY4u3KTq4GmYtmyEoZWHmsUwHr9KR5sVodNkMHyhVsWnXMP
- ahZVoFVvnRbonQWFlQdKF+rLVkRVatYHqUkZPdC11igbZOJ8QqZYBzoTNDQouyS2Sley0Xi
- KUbMYvZQiEIUcPksylp0w==
-X-Spam-Flag: NO
-X-UI-Out-Filterresults: notjunk:1;V03:K0:c51TKyMCnFY=:cTt9QpyEDqQtRvclrxCIxx
- 1ukQuW8dx1RvA5SyRSf9jo/IqKZxcruWAjhSErjdXRDZc8SttXdvdv5GD4cj/PSO8s6PaGYk9
- rE8jKwrkKUwkXcqOBbFfvXUQ6+GUX5OFit0J+JdEoXNgO2+ADQmadWFCdsjNIhX8WqsqMo6ea
- y1EQn3e8mVJw8IfIG56LehkeD1ZrVFOc7qziAhrjpjAPv92cY21kg5GkX3EWZb2PUpv9KHLjO
- 13bzx2f3ie39sg4K7yBJ7TgpxzG3gwlv8q5ZzoulwbbdIO5Yy83oYUpcrUP2gMwzYINIhGylb
- yjXJ//3mLIUGtx8v/MVDHwdvSqq2VLGRrf5j95y91YZLPDW8+c7GrnrJRaxNXIKoVOp+SFSJ9
- R3qWv4B2E5BU2oVch5Xa9e8KrOa/7ZQ1Biw5p078YtDraaZivfjOMH+2bYVpMghQw3gNwn8f2
- GiWu8jpElhGrVacy110UKY7uJNRimkzT80ggUYyZSNJ/WxQSjgjuX9Z45/BiZ8qkGx9LVyfRP
- cZlgrL2fLxOog6yC1IDsB5AnSwYlefH5F7BcsAI23/TQzyOVIpwfRzV/ySqd0b/JzKZE4/xn6
- Nz5Iz12LjRSHeRvRpZuItpztUdKCK8r8/yils/Qb/bgTU/va1jWjZkXi4mDiUVaLu3QVR96/T
- 9vsdPDRuqxcNOWLIg1A3iyGXHDhABbG9/n1Q49HJLvc44Fic3HP6Q/cKZlCsK92eP1vzhEXgq
- HeFfgD/T4/xvZjQRgmIyx8iPWYLZx7d6dt0ZTjBVItMNIKZU8ZoPP0FlrX5vUhAQPiRTDGWXR
- hPz329qM5kU2Zn+4eUEmuo5JFUpaFDc+7rWu0uoxUjRj8MRYq7G3xMXjyki4LOuV00V7jQocH
- eNAbHguyrWrIoR8rIZHUWCsdCDQ0pb0lZw/dHZy71dDhutal/ROZnoYIrgzp60/hM8Qewosqp
- H2+GV6AKtiBnsv8yIM/X8N0bq3FNZU/g=
+        "moderated list:BROADCOM BCM2835 ARM ARCHITECTURE" 
+        <linux-rpi-kernel@lists.infradead.org>,
+        open list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+On Thu, May 9, 2019 at 11:01 PM Florian Fainelli <f.fainelli@gmail.com> wrote:
 
---M9NhX3UHpAaciwkO
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+> BCM7211 has a slightly different block layout and some additional GPIO
+> registers that were added, document the compatible string.
+>
+> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
 
-On Thu, May 16, 2019 at 02:44:30PM +0200, Linus Walleij wrote:
-> On Sun, Apr 28, 2019 at 5:08 PM Jonathan Neusch=C3=A4fer
-> <j.neuschaefer@gmx.net> wrote:
->=20
-> > The property is spelled 'bias-pull-up', as documented in
-> > pinctrl-bindings.txt.
-> >
-> > Signed-off-by: Jonathan Neusch=C3=A4fer <j.neuschaefer@gmx.net>
->=20
-> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
->=20
-> It appears from Rob's comment that he's applying it,
-> tell me if I need to apply it to the pinctrl tree.
+Patch applied for v5.3 with ACKs.
 
-Yes, Rob applied Christian's version to dt/next:
-https://git.kernel.org/pub/scm/linux/kernel/git/robh/linux.git/commit/?h=3D=
-dt/next&id=3Dc50495aa4cfcaace5f61174ab3069d5047d14f17
-
-So there's no need to apply my version.
-
-
-Thanks,
-Jonathan Neusch=C3=A4fer
-
---M9NhX3UHpAaciwkO
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEvHAHGBBjQPVy+qvDCDBEmo7zX9sFAlzdYl0ACgkQCDBEmo7z
-X9vDaBAArHDvJllzymlUcI+Bs9d6A5YfI4V3wR7SI7nvjkCSa+ctj11a0qOLsLqw
-4+QoXkCETu5Qrwz4utAi8emKVpSjWaEkkickLtpjNDZacjF8kt8QA28uzn8WScoe
-7gs+bd0DZ2Q+doK/QRoGAIZvY/SPSTacaNwec2wKc0d63dn8tKoqrz29r9fNOW3Z
-MvS03f9PF2JFgHCPJkQPDbfmaMXl+57S4N7F9USDhFZmiF2hZNAwL4/p8whw8fLq
-1aRjIpqLw9otvivF4LpK5WUj5XZoSGxbIfAQ2pS2Uj8K+MUp95fB8TqXCGG9hQHw
-dstusnYe8NrcwCBYkedHoNAy2cmj3l73JTe9bSZkeSpSo/dFO9GEvILvS9BaYhJZ
-9bTydEkP1YmAUeC0R962HGD1Yx1t6izL0WNzX/cawg4iQUC1uJPPLWu1p2y2FajO
-FX+nUz3/z8CtGu49Wl8gezj+eI1L3joUuRAMypw7MfQzDsFv0G39wNzjcsfllhZg
-8w71tQx7yA7M4tUGFBWip1tj30d1M8HghAn7psNN8FOKxZbb5NUyDT8l1v+wt1Xl
-VcIfIfT9P2p9//etRlY3gdiTVj7rkZedJttSPq4LUWxENMUVnBf8BYF49hruMat8
-w6L9nhPmq1qQMjZStJBQQupKADwnt6Yce6xhk4f6BYeNbuHAtZY=
-=BpWe
------END PGP SIGNATURE-----
-
---M9NhX3UHpAaciwkO--
+Yours,
+Linus Walleij
