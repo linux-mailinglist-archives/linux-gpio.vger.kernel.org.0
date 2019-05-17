@@ -2,285 +2,151 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id C6CF3217CE
-	for <lists+linux-gpio@lfdr.de>; Fri, 17 May 2019 13:34:40 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E827021B05
+	for <lists+linux-gpio@lfdr.de>; Fri, 17 May 2019 17:55:56 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728877AbfEQLec (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 17 May 2019 07:34:32 -0400
-Received: from hqemgate14.nvidia.com ([216.228.121.143]:4259 "EHLO
-        hqemgate14.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728103AbfEQLec (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 17 May 2019 07:34:32 -0400
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqemgate14.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5cde9c4b0000>; Fri, 17 May 2019 04:34:35 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate102.nvidia.com (PGP Universal service);
-  Fri, 17 May 2019 04:34:29 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Fri, 17 May 2019 04:34:29 -0700
-Received: from [10.24.47.197] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 17 May
- 2019 11:34:24 +0000
-Subject: Re: [PATCH V3 3/4] pinctrl: tegra: Add Tegra194 pinmux driver
-To:     Krishna Yarlagadda <kyarlagadda@nvidia.com>,
-        <linus.walleij@linaro.org>, <thierry.reding@gmail.com>,
-        <jonathanh@nvidia.com>, <linux-kernel@vger.kernel.org>,
-        <linux-gpio@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
-        <devicetree@vger.kernel.org>
-CC:     <pdeschrijver@nvidia.com>, <josephl@nvidia.com>,
-        <smangipudi@nvidia.com>, <ldewangan@nvidia.com>
-References: <1558007594-14824-1-git-send-email-kyarlagadda@nvidia.com>
- <1558007594-14824-3-git-send-email-kyarlagadda@nvidia.com>
-X-Nvconfidentiality: public
-From:   Vidya Sagar <vidyas@nvidia.com>
-Message-ID: <9066b6bd-c8ca-2d5b-dd1e-20c94a492cbf@nvidia.com>
-Date:   Fri, 17 May 2019 17:04:21 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
-MIME-Version: 1.0
-In-Reply-To: <1558007594-14824-3-git-send-email-kyarlagadda@nvidia.com>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1558092875; bh=Y9BZ/VKBiBTqykuPOxXX48dcESowFVreE6atkN5q4r0=;
-        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
-         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
-         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=BsUDj2JP+4MavbWeCkanjVpCdVKQ/l9UQ7JSwGY57tMPmAFlIRzHbplcVkCx1Druk
-         FQZ5BcaRMGy4VuCPYPdMmi+NdWBZeImWpE5U+Nc19MN5QtWMcFlsIN8tssSNpRG46I
-         qBv68PpTdsocvUudwUxOQ4PKexQKqLDtHq+mSSqoydrB1ttSD+ES+GUdD5vHLWF1J1
-         qaP18/P95SHz0Fc22/TaJJ+eqCAjLodurb+nfmQChLh36bLrNwO0Gq6VrkV9jmj4Jk
-         ZXOekKwl70su7X0p7Ace1vfUBhdGmyTcgIxzHM5A4BGaTPj00HoWC94BMscies35+D
-         xIsMq9IDi6MEA==
+        id S1729111AbfEQPz4 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 17 May 2019 11:55:56 -0400
+Received: from mail-qt1-f195.google.com ([209.85.160.195]:42267 "EHLO
+        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728664AbfEQPzz (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 17 May 2019 11:55:55 -0400
+Received: by mail-qt1-f195.google.com with SMTP id j53so8518905qta.9
+        for <linux-gpio@vger.kernel.org>; Fri, 17 May 2019 08:55:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=ID2V1s/STUaNVMoZOr8Ozn/UiIBFdSTd8uEqv1CTbgI=;
+        b=a5ABeCVbhhYLK+M6opqU17cFVnG8i39QkNwqRf+1xMtFLaQCipsCfVpThMV2jWIsv1
+         mFjR/77Vv8Mhr/A+tDFZ8edky2AKC51JASTxjnrS3pwd5sKU004lti40k5YJ1T6SWk5N
+         63z27KphCx52vEHLE+zq7wScK40JfdHbumA6Q0oIxJX0w/FXd01niFe0R/sW3dq6WWXU
+         EMs1cRBd7SRcXHqDeKN+ZDt0WcvXUOEdvDkY92WO1gJGDnOtz82TbDZPPMRTaGSy8I3A
+         VAbA65AKxe3kh8fFZ0mXWoTYMwc3XH+RGwquRiYKNaIgq9WxtbSLd++oulOUvcUNOw1K
+         Ywvg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=ID2V1s/STUaNVMoZOr8Ozn/UiIBFdSTd8uEqv1CTbgI=;
+        b=SdlMWoNinNFmq/zRqwaf8YGEEQKtsbemuoaLB2LwbqsEY6NUxJ+/FcHmIzbGqbCnYC
+         JUo/iUi1FP1GiVAvilD9SVC4CI4frBlTSfvCKaufucpzWcBHJOYegN2/nT7Ix4D2UVFZ
+         dT7wFLCJ42Zxq1JRXE53UmV4RMWLfi4556dRUaZz2Wpiuwobo1q+URMViCcOz530eMMM
+         Z2hSVIVPS8Y+Xj0xn07YWTiyxYf0BnfsPovSCM48c6EhrOSa9u+3HVJouDMU8moN+gIz
+         jbx+RGJzQSVldpTQIYzDOjHw95BZ8pQdymgP5Uh5Y2zBFzpNAPno+RnKo3B0OfI7yg/I
+         kwRQ==
+X-Gm-Message-State: APjAAAV/M1D4QCt7CvvgyGlPAiwhCJLMzSU9chG2Qem0XrRkjcS6T8rr
+        dqb1MgnvSxGbd82/C17WltjrQK8/lz4=
+X-Google-Smtp-Source: APXvYqyb0wB19odHeiPViAIuou9NfctzxTRVMrMzWPwbFfZhwPlG+u4ni1Wdl9KT3uZ/pfUvB3zURg==
+X-Received: by 2002:aed:2428:: with SMTP id r37mr49641750qtc.213.1558108554877;
+        Fri, 17 May 2019 08:55:54 -0700 (PDT)
+Received: from jfdmac.sonatest.net (ipagstaticip-d73c7528-4de5-0861-800b-03d8b15e3869.sdsl.bell.ca. [174.94.156.236])
+        by smtp.gmail.com with ESMTPSA id t17sm5924991qte.66.2019.05.17.08.55.53
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 17 May 2019 08:55:54 -0700 (PDT)
+Content-Type: text/plain;
+        charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.8\))
+Subject: Re: [PATCH] gpio: zynq: add a to_irq implementation
+From:   Jean-Francois Dagenais <jeff.dagenais@gmail.com>
+In-Reply-To: <CAMpxmJVUBgv5BXLwDnZt7Sr6ym1qB64KiAyipvArLsy5hEPEYA@mail.gmail.com>
+Date:   Fri, 17 May 2019 11:55:52 -0400
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        linux-gpio <linux-gpio@vger.kernel.org>,
+        Michal Simek <michal.simek@xilinx.com>
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <B06C8F4B-DED0-4222-9260-80A2FC053132@gmail.com>
+References: <20190516182237.5315-1-jeff.dagenais@gmail.com>
+ <CAMpxmJVUBgv5BXLwDnZt7Sr6ym1qB64KiAyipvArLsy5hEPEYA@mail.gmail.com>
+To:     Bartosz Golaszewski <bgolaszewski@baylibre.com>
+X-Mailer: Apple Mail (2.3445.104.8)
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 5/16/2019 5:23 PM, Krishna Yarlagadda wrote:
-> Tegra194 has PCIE L5 rst and clkreq pins which need to be controlled
-> dynamically at runtime. This driver supports change pinmux for these
-> pins. Pinmux for rest of the pins is set statically by bootloader and
-> will not be changed by this driver
-> 
-> Signed-off-by: Krishna Yarlagadda <kyarlagadda@nvidia.com>
-> Signed-off-by: Suresh Mangipudi <smangipudi@nvidia.com>
-> ---
-> Changes in V3:
-> Fix build issue observed with previous version
-> 
->   drivers/pinctrl/tegra/Kconfig            |   4 +
->   drivers/pinctrl/tegra/Makefile           |   1 +
->   drivers/pinctrl/tegra/pinctrl-tegra194.c | 170 +++++++++++++++++++++++++++++++
->   3 files changed, 175 insertions(+)
->   create mode 100644 drivers/pinctrl/tegra/pinctrl-tegra194.c
-> 
-> diff --git a/drivers/pinctrl/tegra/Kconfig b/drivers/pinctrl/tegra/Kconfig
-> index 24e20cc..6f79f1f 100644
-> --- a/drivers/pinctrl/tegra/Kconfig
-> +++ b/drivers/pinctrl/tegra/Kconfig
-> @@ -23,6 +23,10 @@ config PINCTRL_TEGRA210
->   	bool
->   	select PINCTRL_TEGRA
->   
-> +config PINCTRL_TEGRA194
-> +	bool
-> +	select PINCTRL_TEGRA
-> +
->   config PINCTRL_TEGRA_XUSB
->   	def_bool y if ARCH_TEGRA
->   	select GENERIC_PHY
-> diff --git a/drivers/pinctrl/tegra/Makefile b/drivers/pinctrl/tegra/Makefile
-> index bbcb043..ead4e10 100644
-> --- a/drivers/pinctrl/tegra/Makefile
-> +++ b/drivers/pinctrl/tegra/Makefile
-> @@ -5,4 +5,5 @@ obj-$(CONFIG_PINCTRL_TEGRA30)		+= pinctrl-tegra30.o
->   obj-$(CONFIG_PINCTRL_TEGRA114)		+= pinctrl-tegra114.o
->   obj-$(CONFIG_PINCTRL_TEGRA124)		+= pinctrl-tegra124.o
->   obj-$(CONFIG_PINCTRL_TEGRA210)		+= pinctrl-tegra210.o
-> +obj-$(CONFIG_PINCTRL_TEGRA194)		+= pinctrl-tegra194.o
->   obj-$(CONFIG_PINCTRL_TEGRA_XUSB)	+= pinctrl-tegra-xusb.o
-> diff --git a/drivers/pinctrl/tegra/pinctrl-tegra194.c b/drivers/pinctrl/tegra/pinctrl-tegra194.c
-> new file mode 100644
-> index 0000000..957ef19
-> --- /dev/null
-> +++ b/drivers/pinctrl/tegra/pinctrl-tegra194.c
-> @@ -0,0 +1,170 @@
-> +// SPDX-License-Identifier: GPL-2.0+
-> +/*
-> + * Pinctrl data for the NVIDIA Tegra194 pinmux
-> + *
-> + * Copyright (c) 2019, NVIDIA CORPORATION.  All rights reserved.
-> + *
-> + * This program is free software; you can redistribute it and/or modify it
-> + * under the terms and conditions of the GNU General Public License,
-> + * version 2, as published by the Free Software Foundation.
-> + *
-> + * This program is distributed in the hope it will be useful, but WITHOUT
-> + * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-> + * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
-> + * more details.
-> + */
-> +
-> +#include <linux/init.h>
-> +#include <linux/of.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/pinctrl/pinctrl.h>
-> +#include <linux/pinctrl/pinmux.h>
-> +
-> +#include "pinctrl-tegra.h"
-> +
-> +/* Define unique ID for each pins */
-> +enum pin_id {
-> +	TEGRA_PIN_PEX_L5_CLKREQ_N_PGG0 = 256,
-> +	TEGRA_PIN_PEX_L5_RST_N_PGG1 = 257,
-> +	TEGRA_PIN_NUM_GPIOS = 258,
-> +};
-> +
-> +/* Table for pin descriptor */
-> +static const struct pinctrl_pin_desc tegra194_pins[] = {
-> +	PINCTRL_PIN(TEGRA_PIN_PEX_L5_CLKREQ_N_PGG0,
-> +		    "TEGRA_PIN_PEX_L5_CLKREQ_N_PGG0"),
-> +	PINCTRL_PIN(TEGRA_PIN_PEX_L5_RST_N_PGG1,
-> +		    "TEGRA_PIN_PEX_L5_RST_N_PGG1"),
-> +};
-> +
-> +static const unsigned int pex_l5_clkreq_n_pgg0_pins[] = {
-> +	TEGRA_PIN_PEX_L5_CLKREQ_N_PGG0,
-> +};
-> +
-> +static const unsigned int pex_l5_rst_n_pgg1_pins[] = {
-> +	TEGRA_PIN_PEX_L5_RST_N_PGG1,
-> +};
-> +
-> +/* Define unique ID for each function */
-> +enum tegra_mux_dt {
-> +	TEGRA_MUX_RSVD0,
-> +	TEGRA_MUX_RSVD1,
-> +	TEGRA_MUX_RSVD2,
-> +	TEGRA_MUX_RSVD3,
-> +	TEGRA_MUX_PE5,
-> +};
-> +
-> +/* Make list of each function name */
-> +#define TEGRA_PIN_FUNCTION(lid)			\
-> +	{					\
-> +		.name = #lid,			\
-> +	}
-> +static struct tegra_function tegra194_functions[] = {
-> +	TEGRA_PIN_FUNCTION(rsvd0),
-> +	TEGRA_PIN_FUNCTION(rsvd1),
-> +	TEGRA_PIN_FUNCTION(rsvd2),
-> +	TEGRA_PIN_FUNCTION(rsvd3),
-> +	TEGRA_PIN_FUNCTION(pe5),
-> +};
-> +
-> +#define DRV_PINGROUP_ENTRY_Y(r, drvdn_b, drvdn_w, drvup_b,	\
-> +			     drvup_w, slwr_b, slwr_w, slwf_b,	\
-> +			     slwf_w, bank)			\
-> +		.drv_reg = ((r)),			\
-> +		.drv_bank = bank,				\
-> +		.drvdn_bit = drvdn_b,				\
-> +		.drvdn_width = drvdn_w,				\
-> +		.drvup_bit = drvup_b,				\
-> +		.drvup_width = drvup_w,				\
-> +		.slwr_bit = slwr_b,				\
-> +		.slwr_width = slwr_w,				\
-> +		.slwf_bit = slwf_b,				\
-> +		.slwf_width = slwf_w
-> +
-> +#define PIN_PINGROUP_ENTRY_Y(r, bank, pupd, e_lpbk, e_input,	\
-> +			     e_od, schmitt_b, drvtype)		\
-> +		.mux_reg = ((r)),				\
-> +		.lpmd_bit = -1,					\
-> +		.lock_bit = -1,					\
-> +		.hsm_bit = -1,					\
-> +		.parked_bit = -1,				\
-> +		.mux_bank = bank,				\
-> +		.mux_bit = 0,					\
-> +		.pupd_reg = ((r)),		\
-> +		.pupd_bank = bank,				\
-> +		.pupd_bit = 2,					\
-> +		.tri_reg = ((r)),				\
-> +		.tri_bank = bank,				\
-> +		.tri_bit = 4,					\
-> +		.einput_bit = e_input,				\
-> +		.odrain_bit = e_od,				\
-> +		.schmitt_bit = schmitt_b,			\
-> +		.drvtype_bit = 13,				\
-> +		.drv_reg = -1
-> +
-> +#define drive_pex_l5_clkreq_n_pgg0				\
-> +	DRV_PINGROUP_ENTRY_Y(0x14004, 12, 5, 20, 5, -1, -1, -1, -1, 0)
-> +#define drive_pex_l5_rst_n_pgg1					\
-> +	DRV_PINGROUP_ENTRY_Y(0x1400c, 12, 5, 20, 5, -1, -1, -1, -1, 0)
-> +
-> +#define PINGROUP(pg_name, f0, f1, f2, f3, r, bank, pupd, e_lpbk,	\
-> +		 e_input, e_lpdr, e_od, schmitt_b, drvtype, io_rail)	\
-> +	{							\
-> +		.name = #pg_name,				\
-> +		.pins = pg_name##_pins,				\
-> +		.npins = ARRAY_SIZE(pg_name##_pins),		\
-> +			.funcs = {				\
-> +				TEGRA_MUX_##f0,			\
-> +				TEGRA_MUX_##f1,			\
-> +				TEGRA_MUX_##f2,			\
-> +				TEGRA_MUX_##f3,			\
-> +			},					\
-> +		PIN_PINGROUP_ENTRY_Y(r, bank, pupd, e_lpbk,	\
-> +				     e_input, e_od,		\
-> +				     schmitt_b, drvtype),	\
-> +		drive_##pg_name,				\
-> +	}
-> +
-> +static const struct tegra_pingroup tegra194_groups[] = {
-> +	PINGROUP(pex_l5_clkreq_n_pgg0, PE5, RSVD1, RSVD2, RSVD3, 0x14000, 0,
-> +		 Y, -1, 6, 8, 11, 12, N, "vddio_pex_ctl_2"),
-> +	PINGROUP(pex_l5_rst_n_pgg1, PE5, RSVD1, RSVD2, RSVD3, 0x14008, 0,
-> +		 Y, -1, 6, 8, 11, 12, N, "vddio_pex_ctl_2"),
-> +};
-> +
-> +static const struct tegra_pinctrl_soc_data tegra194_pinctrl = {
-> +	.ngpios = TEGRA_PIN_NUM_GPIOS,
-> +	.pins = tegra194_pins,
-> +	.npins = ARRAY_SIZE(tegra194_pins),
-> +	.functions = tegra194_functions,
-> +	.nfunctions = ARRAY_SIZE(tegra194_functions),
-> +	.groups = tegra194_groups,
-> +	.ngroups = ARRAY_SIZE(tegra194_groups),
-> +	.hsm_in_mux = true,
-> +	.schmitt_in_mux = true,
-> +	.drvtype_in_mux = true,
-> +};
-> +
-> +static int tegra194_pinctrl_probe(struct platform_device *pdev)
-> +{
-> +	return tegra_pinctrl_probe(pdev, &tegra194_pinctrl);
-> +}
-> +
-> +static const struct of_device_id tegra194_pinctrl_of_match[] = {
-> +	{ .compatible = "nvidia,tegra194-pinmux", },
-> +	{ },
-> +};
-> +
-> +static struct platform_driver tegra194_pinctrl_driver = {
-> +	.driver = {
-> +		.name = "tegra194-pinctrl",
-> +		.of_match_table = tegra194_pinctrl_of_match,
-> +	},
-> +	.probe = tegra194_pinctrl_probe,
-> +};
-> +
-> +static int __init tegra194_pinctrl_init(void)
-> +{
-> +	return platform_driver_register(&tegra194_pinctrl_driver);
-> +}
-> +arch_initcall(tegra194_pinctrl_init);
-> 
+Hi Bart,
+Thanks for your answer. See below.
 
-Tested-by: Vidya Sagar <vidyas@nvidia.com>
+> On May 17, 2019, at 03:36, Bartosz Golaszewski =
+<bgolaszewski@baylibre.com> wrote:
+>=20
+> the default implementation for this function is already assigned
+> inside the call to gpiochip_irqchip_add() and it does the same thing
+> internally (looks up the mapping from the domain). If there's a
+> problem with this driver then the culprit lies somewhere else.
+
+Indeed. I totally missed that. So yeah, disregard my patch.
+
+But then my problem still remains...
+
+The root cause of the "edge" attribute missing is that the exported pins =
+have
+been exported through my own version of gpio-hog-auto-sysfs-exported =
+from DTS
+("linux,gpio-export") patch :-/
+Inception came from: =
+https://www.spinics.net/lists/devicetree/msg08604.html
+
+So under my gpio controller node:
+	boardid_0 {
+		gpio-hog;
+		linux,gpio-export;
+		gpios =3D <33 GPIO_ACTIVE_HIGH>;
+		input;
+		line-name =3D "boardid_0";
+	};
+
+makes /sys/class/gpio/boardid_0 appear automatically. The DTS is a =
+natural fit
+for such information in my opinion. No init script is required so it =
+just works
+in all images I make (initrd or real rootfs) without extra dependencies. =
+The
+cost is about 15 lines of code in the kernel.
+
+I modified of_gpiochip_add to flag "FLAG_AUTO_EXPORT" each =
+linux,gpio-export
+marked hogged pins.
+
+Then in gpiochip_add_data, which runs after of_gpiochip_add, I call my
+gpiochip_auto_export to scan pins for "FLAG_AUTO_EXPORT" and export =
+them.
+
+The problem is that when all this occurs from =
+zynq_gpio_probe/gpiochip_add_data,
+gpiochip_irqchip_add has not been called yet, so to_irq is still NULL.
+
+Perhaps I should defer my auto-export operation to another point (like =
+at the
+end of zynq_gpio_probe? But then I have to do the same for another i2c
+io-expander chip we have that also exports pins. Or a tasklet...? =
+(yikes. no.)
+
+Any thoughts?
+
+If I can make it work correctly in gpiolib, any point in submitting a =
+patch?
+
+Cheers!
+
+P.S. Here's my current workaround after your comeback:
+
+diff --git a/drivers/gpio/gpiolib-sysfs.c b/drivers/gpio/gpiolib-sysfs.c
+index 694d6884e451..ec8ca101041f 100644
+--- a/drivers/gpio/gpiolib-sysfs.c
++++ b/drivers/gpio/gpiolib-sysfs.c
+@@ -364,8 +364,6 @@ static umode_t gpio_is_visible(struct kobject *kobj, =
+struct attribute *attr,
+ 		if (!show_direction)
+ 			mode =3D 0;
+ 	} else if (attr =3D=3D &dev_attr_edge.attr) {
+-		if (gpiod_to_irq(desc) < 0)
+-			mode =3D 0;
+ 		if (!show_direction && test_bit(FLAG_IS_OUT, =
+&desc->flags))
+ 			mode =3D 0;
+ 	}
+--=20
+2.11.0
+
