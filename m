@@ -2,109 +2,62 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id BFD8223B7D
-	for <lists+linux-gpio@lfdr.de>; Mon, 20 May 2019 17:05:16 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 252C324000
+	for <lists+linux-gpio@lfdr.de>; Mon, 20 May 2019 20:08:28 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733112AbfETPFP (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 20 May 2019 11:05:15 -0400
-Received: from sauhun.de ([88.99.104.3]:51558 "EHLO pokefinder.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730766AbfETPFP (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Mon, 20 May 2019 11:05:15 -0400
-Received: from localhost (p54B333DA.dip0.t-ipconnect.de [84.179.51.218])
-        by pokefinder.org (Postfix) with ESMTPSA id 3853E2C2761;
-        Mon, 20 May 2019 17:05:11 +0200 (CEST)
-Date:   Mon, 20 May 2019 17:05:10 +0200
-From:   Wolfram Sang <wsa@the-dreams.de>
-To:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-Cc:     Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        Mauro Carvalho Chehab <mchehab@infradead.org>,
-        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
-        x86@kernel.org, linux-acpi@vger.kernel.org,
-        linux-edac@vger.kernel.org, netdev@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-amlogic@lists.infradead.org, linux-arm-msm@vger.kernel.org,
-        linux-gpio@vger.kernel.org, linux-i2c@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, xen-devel@lists.xenproject.org,
-        platform-driver-x86@vger.kernel.org, devel@driverdev.osuosl.org,
-        kvm@vger.kernel.org, virtualization@lists.linux-foundation.org,
-        devel@acpica.org, linux-mm@kvack.org,
-        linux-security-module@vger.kernel.org,
-        linux-kselftest@vger.kernel.org
-Subject: Re: [PATCH 10/10] docs: fix broken documentation links
-Message-ID: <20190520150510.GA2606@kunai>
-References: <cover.1558362030.git.mchehab+samsung@kernel.org>
- <4fd1182b4a41feb2447c7ccde4d7f0a6b3c92686.1558362030.git.mchehab+samsung@kernel.org>
+        id S1727414AbfETSHq (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 20 May 2019 14:07:46 -0400
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:39916 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727413AbfETSHq (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 20 May 2019 14:07:46 -0400
+Received: by mail-oi1-f193.google.com with SMTP id v2so10710224oie.6;
+        Mon, 20 May 2019 11:07:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=googlemail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=k7G1MGSx6nHwpQNyADoCOs+yAwPJeVT4zKxuY01zrPw=;
+        b=ZpZBX2L1phGIkWqLtP/wGPhPMbIoJguECDVjKtHvg0SxK2vj293g3R9X2fd3f3/yZL
+         xAtRNLhTgspuLkunpxlKA0fR7+285acvRqZNQd+GX3Whb1mWqPP4GtaEsNZ1f9Rlqj07
+         E7nUq+RnPYMQj79rxPpCpH5rghIwLEIKNoVMfUpyKkaSAuQZFcTR5/Bvq0w0v8xFmHGG
+         eJKeMnq7ItUeBpDtjA/UcCT5Jm7QJbY3pvwEyr9qZVq4MAqXN8mM45x2n1F3AA+nurzJ
+         BVBA/ioRgbJ1ESG5ru7e6O3Sj0GOumyy5j8t6pO1RTMq7hCZC5hGTGi6V+/Hnb1+2vfs
+         xobw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=k7G1MGSx6nHwpQNyADoCOs+yAwPJeVT4zKxuY01zrPw=;
+        b=KRQYb+sR5kI1AcSPSlv/QkH6mLvjdrMGUum5oVcSLyKK+VNv45Y/Ll5veP344Epw0U
+         tM4pE7uLvWmSnQUf24BlKXfOSgtCCgzhQkhQP0UDf91//r4M43uPV4THVysWmR44+aAv
+         ltpUbb/UtShE7UwDdH/n1k8drTcacLjTBULHuo8Pfvj009pXvzpgQfJx8LS3qMjL8wqR
+         w+0Iej2Mqev2sW4QreVJTJ9dxuQSIRtF9pfXs/Z3jEcmyaEUoEzKkqwReLjfpyP834vw
+         zalPD0UAubLgqqdkXW+MwWm8HboGBc7HZKQ8qHltWT14Fv562rOBo38Tr1RniRzweREC
+         6nZg==
+X-Gm-Message-State: APjAAAUjIr7ThuEniI3CFsndBUfyFzmNwNYuR+Hx0MnJG2cEMdF/Kbcy
+        KrpTi/wI2RWvLW1eOgyslVYZQWvohVUVHdpir9Q=
+X-Google-Smtp-Source: APXvYqy59OliiQjhnHxHS1SdLMScXn9f1+tKlaosJtDBLEK0tbw3TDkfYCYFObUPl6UzrYIrxy5IwZdGaWdzpFXXWRo=
+X-Received: by 2002:aca:ab04:: with SMTP id u4mr315260oie.15.1558375665674;
+ Mon, 20 May 2019 11:07:45 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="6c2NcOVqGQ03X4Wi"
-Content-Disposition: inline
-In-Reply-To: <4fd1182b4a41feb2447c7ccde4d7f0a6b3c92686.1558362030.git.mchehab+samsung@kernel.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20190520144108.3787-1-narmstrong@baylibre.com> <20190520144108.3787-2-narmstrong@baylibre.com>
+In-Reply-To: <20190520144108.3787-2-narmstrong@baylibre.com>
+From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Date:   Mon, 20 May 2019 20:07:34 +0200
+Message-ID: <CAFBinCAaoSb9z8MHu7CmGG-ij+aBOTtUjVcgRmp+wcuiDbxs+Q@mail.gmail.com>
+Subject: Re: [PATCH 1/5] pinctrl: meson: update with SPDX Licence identifier
+To:     Neil Armstrong <narmstrong@baylibre.com>
+Cc:     linus.walleij@linaro.org, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-amlogic@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-
---6c2NcOVqGQ03X4Wi
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Mon, May 20, 2019 at 11:47:39AM -0300, Mauro Carvalho Chehab wrote:
-> Mostly due to x86 and acpi conversion, several documentation
-> links are still pointing to the old file. Fix them.
->=20
-> Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-
-Thanks, didn't notice that.
-
->  Documentation/i2c/instantiating-devices          |  2 +-
-
-=2E..
-
-> diff --git a/Documentation/i2c/instantiating-devices b/Documentation/i2c/=
-instantiating-devices
-> index 0d85ac1935b7..5a3e2f331e8c 100644
-> --- a/Documentation/i2c/instantiating-devices
-> +++ b/Documentation/i2c/instantiating-devices
-> @@ -85,7 +85,7 @@ Method 1c: Declare the I2C devices via ACPI
->  -------------------------------------------
-> =20
->  ACPI can also describe I2C devices. There is special documentation for t=
-his
-> -which is currently located at Documentation/acpi/enumeration.txt.
-> +which is currently located at Documentation/firmware-guide/acpi/enumerat=
-ion.rst.
-> =20
-> =20
->  Method 2: Instantiate the devices explicitly
-
-For this I2C part:
-
-Reviewed-by: Wolfram Sang <wsa@the-dreams.de>
-
-
---6c2NcOVqGQ03X4Wi
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAlziwiIACgkQFA3kzBSg
-Kbb/+hAArOEJ2RcuEqvOP7Ge80J7VxtEVTCR0sWRFg/7cpRGLnwf1qLSAUlfAJYj
-fUhZ9ANfeB4Y4ZltOPwJ34KNtZy/kYzYyoy/WgiNfJUrf+s7auOF+dMXRvBe8VyX
-v/pHpAMzTf8rtNkaESOahPExL1lgrI2dShZa3Mxofm2eb3Kam0OJRr6Cvj7mA/Rq
-PHq1QUlG+Y3hZdvAHjQ6GN6wr+pNnhqeSSAd3BZg5MZQpPRiaK+C4tPkqOD/TNwX
-9+iPJTMPhWsdei4UO1POHGCOclFatxkPOQm9JjsTD1h1lEJK7Afs1cTCd0crwpzW
-nQuj+MSjKTqcOwQ4hF1x6PwlbJm4Hq/+r6b50UsnQYai6pt7Khp9OISmYTxPQhgI
-8aXZbjsMB3k9ebYulULGdF0f3p/IPoqneTUf3yi5OxNbhJ8eyNcQ4l35MP9hEyYb
-H/9a/G4GXP7CLyCtKd53OtNeE1tTF4zGKIhe7v9OInHolA3gLx1R1rxiBeQB+XyA
-NO/4FdEIZ1QWAyl7m1aWBtYpar2uvFyEhZWG3sVhZYsA9dQNBfgzFSu60wus7hy4
-D9FxYijaEnHZvPivrTwfcp8ittAvsIrM3xANcOhWXEU6eC6w0KX15QiiyPQUbssL
-H3fPVUBxQlwicyY98Dvh7eJmnD1WEsMcDmDI5RqrAxhdD/bxbN0=
-=b4+p
------END PGP SIGNATURE-----
-
---6c2NcOVqGQ03X4Wi--
+On Mon, May 20, 2019 at 4:42 PM Neil Armstrong <narmstrong@baylibre.com> wrote:
+>
+> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+Reviewed-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
