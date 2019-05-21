@@ -2,24 +2,24 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id A1A8724D78
-	for <lists+linux-gpio@lfdr.de>; Tue, 21 May 2019 13:02:08 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 939A724E37
+	for <lists+linux-gpio@lfdr.de>; Tue, 21 May 2019 13:42:13 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726900AbfEULCC (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 21 May 2019 07:02:02 -0400
-Received: from mailgate1.rohmeurope.com ([178.15.145.194]:51106 "EHLO
-        mailgate1.rohmeurope.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726138AbfEULCC (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 21 May 2019 07:02:02 -0400
-X-AuditID: c0a8fbf4-519ff700000014c1-ea-5ce3daa70e1e
-Received: from smtp.reu.rohmeu.com (will-cas002.reu.rohmeu.com [192.168.251.178])
-        by mailgate1.rohmeurope.com (Symantec Messaging Gateway) with SMTP id 28.9E.05313.7AAD3EC5; Tue, 21 May 2019 13:01:59 +0200 (CEST)
-Received: from WILL-MAIL001.REu.RohmEu.com ([fe80::2915:304f:d22c:c6ba]) by
- WILL-CAS002.REu.RohmEu.com ([fe80::fc24:4cbc:e287:8659%12]) with mapi id
- 14.03.0439.000; Tue, 21 May 2019 13:01:54 +0200
-From:   "Vaittinen, Matti" <Matti.Vaittinen@fi.rohmeurope.com>
-To:     "mazziesaccount@gmail.com" <mazziesaccount@gmail.com>
-CC:     "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>,
+        id S1726750AbfEULmN (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 21 May 2019 07:42:13 -0400
+Received: from relay2-d.mail.gandi.net ([217.70.183.194]:55273 "EHLO
+        relay2-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726692AbfEULmN (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 21 May 2019 07:42:13 -0400
+X-Originating-IP: 92.137.69.152
+Received: from localhost (alyon-656-1-672-152.w92-137.abo.wanadoo.fr [92.137.69.152])
+        (Authenticated sender: alexandre.belloni@bootlin.com)
+        by relay2-d.mail.gandi.net (Postfix) with ESMTPSA id E18C640003;
+        Tue, 21 May 2019 11:41:49 +0000 (UTC)
+Date:   Tue, 21 May 2019 13:41:49 +0200
+From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
+To:     "Vaittinen, Matti" <Matti.Vaittinen@fi.rohmeurope.com>
+Cc:     "mazziesaccount@gmail.com" <mazziesaccount@gmail.com>,
         "robh+dt@kernel.org" <robh+dt@kernel.org>,
         "mturquette@baylibre.com" <mturquette@baylibre.com>,
         "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
@@ -43,50 +43,38 @@ CC:     "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>,
         "Haikola, Heikki" <Heikki.Haikola@fi.rohmeurope.com>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 Subject: Re: [PATCH v14 0/8] support ROHM BD70528 PMIC
-Thread-Topic: [PATCH v14 0/8] support ROHM BD70528 PMIC
-Thread-Index: AQHVAMcZ2S9oIqrnW0ecnOWL7FvEJaZ1ZiIA
-Date:   Tue, 21 May 2019 11:01:53 +0000
-Message-ID: <3a78cc77499d5027f527be51a7c40f6c5d70338c.camel@fi.rohmeurope.com>
+Message-ID: <20190521114149.GG3274@piout.net>
 References: <cover.1556787930.git.matti.vaittinen@fi.rohmeurope.com>
-In-Reply-To: <cover.1556787930.git.matti.vaittinen@fi.rohmeurope.com>
-Accept-Language: en-US, de-DE
-Content-Language: de-DE
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [213.255.186.46]
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <431A5F4502DF11498E73A4ADCF92A350@de.rohmeurope.com>
-Content-Transfer-Encoding: base64
+ <3a78cc77499d5027f527be51a7c40f6c5d70338c.camel@fi.rohmeurope.com>
 MIME-Version: 1.0
-X-Brightmail-Tracker: H4sIAAAAAAAAA01Te0xTVxzOuff23lvgboeCcsTHtAkzkiiyEDkGY3Qb2dX4SkzMRkjqVa5c
-        sj7YbWuoJqZmMyrMhWSYzYqABvBVN+iimwUUmmIQVEKGtSiotQ2I8RlUomK3e1sU/jnnO7/v
-        fN/3O8nvsKTuNZ3OlphtomwWjHo6gWo/9c6z+OTtcOHSwDjG9X03Gbz/aSODXx7rpvDhUITG
-        tf4bGnzvVSfAr/sPELhq4iSBX/x8V4P/qp0A+F9vNY3HDvkBvnK2n8bBPy4xOHL8GoEbbvUR
-        uLqhi8J93fl4X5ufwdFAM4V7Wmw4PBolV83k3TVuwD8L7mP4Gvdu/qJriOE9Zw7S/GCgleZP
-        u90a/uK4k+F/q3lD8GOeeZsSChJXbBNsOzeXFJuzVm5NlEarA3SpX1M23Plc4wRNmnKgZRHM
-        QQ17WxScwOpgAKCR0NDkoQuga9VHmXLAsjRcgcoHYjAVLkfNfcmqloS9WlTb+KmKU+Ay1Om9
-        TKk4Feai812DZBx/gSp/amJUTMEMdNdZGbvDwQ3oeNUgULEOfo1GLjhj9lqYj5rqYq0BOBcd
-        dD4l4lFpyDM8PtkyRPWtvWQcz0Cj4ehkXY/a3oQo1YaEi9Cf3qy4dBWaOHV10mYBqqoIMfEO
-        ktHVIxGqEsx0TUtwTald09SuaWrXNHUd0JwByCSUGIsFm5i9RBbtS2SLZFK27RaTB8Rn5uU/
-        4D/fGh+ALNAncVFfuFCnEXZaHSYfmMUS+hncoSyl9Mk2S5FDEqySQbYbRasPIJbUp3I93Q8K
-        dVyR4NglypYP1GyW0qdx77wdhTqoJn8viqWi/IGdw7J6xJUOKKbJslgslu0oMdqmaILVquYJ
-        6alW0VwkyoLdJhnUUTFYlVlRqSQld2NQkXPWUsGkVOPSbpDNtp8IHSPZJx0jylo38LaG1FFm
-        i1lMT+NWqnlQFUh288e4RyBNeXUKt1hlk5TP9NHtkRJEKEFzmViQTZii0p3gx105Be3mzzPs
-        kSZ/8PCzxN9zf2hd+/B579Bq03BOSsTw9qvArS/n9OfJxr+9dWDPXu+6aNl364ce99dGzha3
-        NebeyV6zNm+sucVm6DgibeIrte+jT77dcv/90usVwfz5mXnLTOduN4YLPlvO8q7MigwHAo6F
-        wYauJKNU/8uv33T26CmrJGRnkrJV+B/6QzoeCQQAAA==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <3a78cc77499d5027f527be51a7c40f6c5d70338c.camel@fi.rohmeurope.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-SGVsbG8gQWxsLA0KDQpPbiBUaHUsIDIwMTktMDUtMDIgYXQgMTI6MTEgKzAzMDAsIE1hdHRpIFZh
-aXR0aW5lbiB3cm90ZToNCj4gUGF0Y2ggc2VyaWVzIGludHJvZHVjaW5nIHN1cHBvcnQgZm9yIFJP
-SE0gQkQ3MDUyOCBQTUlDDQo+IA0KSnVzdCB0aG91Z2h0IEknZCBhc2sgaWYgdGhlcmUncyBhbnkg
-Y2hhbmNlcyB0byBnZXQgdGhpcyBzZXJpZXMgaW4gNS4yPw0KSXQgc2VlbXMgdG8gbWUgdGhlIFdE
-VCBwYXJ0IChwYXRjaCA4KSB3YXMgYWxyZWFkeSBtZXJnZWQgaW4gYnV0IHJlc3Qgb2YNCnRoZSBw
-YXRjaGVzIHNlZW0gdG8gYmUgaW4gbGltYm8gc29tZXdoZXJlIDopDQoNCkkgZ3Vlc3MgbW9zdCBv
-ZiB0aGUgcGF0Y2hlcyBoYXZlIHJlbGV2YW50IGFja3MgLSBzbyB3b25kZXIgaWYgdGhlIHJlc3QN
-CmNhbiBnbyB0aHJvdWdoIExlZSdzIHRyZWU/IEkgYWRtaXQgSSBhbSBnZXR0aW5nIHNsaWdodGx5
-IGltcGF0aWVudCAtDQpzb3JyeSBmb3IgdGhhdCA6XQ0KDQpCciwNCglNYXR0aSBWYWl0dGluZW4N
-Cg==
+On 21/05/2019 11:01:53+0000, Vaittinen, Matti wrote:
+> Hello All,
+> 
+> On Thu, 2019-05-02 at 12:11 +0300, Matti Vaittinen wrote:
+> > Patch series introducing support for ROHM BD70528 PMIC
+> > 
+> Just thought I'd ask if there's any chances to get this series in 5.2?
+> It seems to me the WDT part (patch 8) was already merged in but rest of
+> the patches seem to be in limbo somewhere :)
+> 
+> I guess most of the patches have relevant acks - so wonder if the rest
+> can go through Lee's tree? I admit I am getting slightly impatient -
+> sorry for that :]
+> 
+
+Nope, the 5.2 merge windows is closed. This will have to wait for 5.3.
+
+
+-- 
+Alexandre Belloni, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
