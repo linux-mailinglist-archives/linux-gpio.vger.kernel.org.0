@@ -2,101 +2,91 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 1418C24D6E
-	for <lists+linux-gpio@lfdr.de>; Tue, 21 May 2019 13:01:03 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A1A8724D78
+	for <lists+linux-gpio@lfdr.de>; Tue, 21 May 2019 13:02:08 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727686AbfEULBC (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 21 May 2019 07:01:02 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:52201 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726242AbfEULBB (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 21 May 2019 07:01:01 -0400
-Received: by mail-wm1-f68.google.com with SMTP id c77so2512972wmd.1
-        for <linux-gpio@vger.kernel.org>; Tue, 21 May 2019 04:01:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=devtank-co-uk.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=xx1/BNKJkSZTh4qrBNcdndPwRJoZAQ0lryCakBXnIco=;
-        b=SpZQwNgTSRiyQ6DY71OthziA8T03QR2+sh0+duUHXKDE9w/FfK9+SFj3tePZpI9t+X
-         CB/aZijQou+wqa4zF0s5d36LQeQHrstYNbrCYtcO5pu+n9vA1NjvSDBSY0hNQA7/9T5T
-         ArKvOMvH8+5sofSjvaUs7CRYxuMbrXTAWVEsoeNKTuhiq4VXX8jPnaYXxj1pdMz5NQmg
-         mPGtv5RT9cx4VJhcvRw+QodTvplja5/NsTjFTEQ3cg2uR989zTzXNe9VHltZwQndwsfx
-         RqnixB2C7NwbA2PQ33r7/3skJLfkuNRvqI8Bsyw24c2WpdZDwkozV1Wf0LaejCnJS+13
-         +X1g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=xx1/BNKJkSZTh4qrBNcdndPwRJoZAQ0lryCakBXnIco=;
-        b=fytnRMxtvx84i9ZftfiFslx8Dl7WG0hntjmbiYmsPGS+2wddffzmeOVGTCIMFad/mn
-         1grNJL2GkoCvydpYc3cK6hal6vw19j6F9wScK+xPWXzVOuaH3egEZSfsCAX1AQlFOuRf
-         7TPbCY1nggYoiQC8oSJQr/ykjgWL8Yy5MdFmXCgZ1kMp62qVpfbjsJSDWpddcyrjnixc
-         C0Tr4nT3xJDQPSw8zaWScThhPH/2Dxmt0Elcs4UZNvQqwhOnr642qiCM0i2M8r32XPj5
-         r9Efqpq7Lf3CWBwMKNKxtsq7uXDMUzVyqaqF3S4SJQVUieSLj79RGYgqdGecD6GdLkJG
-         lB9w==
-X-Gm-Message-State: APjAAAV8+nBON4HitYMYHYKaaFq94WBNCwXY5qBEH69OWUFqSye3d//U
-        Oi/+6QMmEufKbSaTUbR4eJM2rKhn5UE=
-X-Google-Smtp-Source: APXvYqzw1jEkF3nq2qnkwFc/juGl3uCqe8Ce2/dmybDnG8a+n7Nxy9/Mu4fa0cAyf1uY/R+/Ep4U3g==
-X-Received: by 2002:a05:600c:23d2:: with SMTP id p18mr2866724wmb.66.1558436459723;
-        Tue, 21 May 2019 04:00:59 -0700 (PDT)
-Received: from jabjoe-thinkpad.lan ([141.105.200.141])
-        by smtp.googlemail.com with ESMTPSA id u7sm7278270wmg.25.2019.05.21.04.00.59
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 21 May 2019 04:00:59 -0700 (PDT)
-From:   Joe Burmeister <joe.burmeister@devtank.co.uk>
-To:     linux-gpio@vger.kernel.org
-Cc:     Joe Burmeister <joe.burmeister@devtank.co.uk>
-Subject: [PATCH] Expand MCP23S08 driver for use as interrupt controller.(v3)
-Date:   Tue, 21 May 2019 12:00:51 +0100
-Message-Id: <20190521110051.3295-1-joe.burmeister@devtank.co.uk>
-X-Mailer: git-send-email 2.20.1
+        id S1726900AbfEULCC (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 21 May 2019 07:02:02 -0400
+Received: from mailgate1.rohmeurope.com ([178.15.145.194]:51106 "EHLO
+        mailgate1.rohmeurope.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726138AbfEULCC (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 21 May 2019 07:02:02 -0400
+X-AuditID: c0a8fbf4-519ff700000014c1-ea-5ce3daa70e1e
+Received: from smtp.reu.rohmeu.com (will-cas002.reu.rohmeu.com [192.168.251.178])
+        by mailgate1.rohmeurope.com (Symantec Messaging Gateway) with SMTP id 28.9E.05313.7AAD3EC5; Tue, 21 May 2019 13:01:59 +0200 (CEST)
+Received: from WILL-MAIL001.REu.RohmEu.com ([fe80::2915:304f:d22c:c6ba]) by
+ WILL-CAS002.REu.RohmEu.com ([fe80::fc24:4cbc:e287:8659%12]) with mapi id
+ 14.03.0439.000; Tue, 21 May 2019 13:01:54 +0200
+From:   "Vaittinen, Matti" <Matti.Vaittinen@fi.rohmeurope.com>
+To:     "mazziesaccount@gmail.com" <mazziesaccount@gmail.com>
+CC:     "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mturquette@baylibre.com" <mturquette@baylibre.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
+        "sre@kernel.org" <sre@kernel.org>,
+        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
+        "sboyd@kernel.org" <sboyd@kernel.org>,
+        "lee.jones@linaro.org" <lee.jones@linaro.org>,
+        "a.zummo@towertech.it" <a.zummo@towertech.it>,
+        "broonie@kernel.org" <broonie@kernel.org>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "linux-watchdog@vger.kernel.org" <linux-watchdog@vger.kernel.org>,
+        "Mutanen, Mikko" <Mikko.Mutanen@fi.rohmeurope.com>,
+        "linux@roeck-us.net" <linux@roeck-us.net>,
+        "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
+        "bgolaszewski@baylibre.com" <bgolaszewski@baylibre.com>,
+        "wim@linux-watchdog.org" <wim@linux-watchdog.org>,
+        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
+        "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>,
+        "Haikola, Heikki" <Heikki.Haikola@fi.rohmeurope.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v14 0/8] support ROHM BD70528 PMIC
+Thread-Topic: [PATCH v14 0/8] support ROHM BD70528 PMIC
+Thread-Index: AQHVAMcZ2S9oIqrnW0ecnOWL7FvEJaZ1ZiIA
+Date:   Tue, 21 May 2019 11:01:53 +0000
+Message-ID: <3a78cc77499d5027f527be51a7c40f6c5d70338c.camel@fi.rohmeurope.com>
+References: <cover.1556787930.git.matti.vaittinen@fi.rohmeurope.com>
+In-Reply-To: <cover.1556787930.git.matti.vaittinen@fi.rohmeurope.com>
+Accept-Language: en-US, de-DE
+Content-Language: de-DE
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [213.255.186.46]
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <431A5F4502DF11498E73A4ADCF92A350@de.rohmeurope.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA01Te0xTVxzOuff23lvgboeCcsTHtAkzkiiyEDkGY3Qb2dX4SkzMRkjqVa5c
+        sj7YbWuoJqZmMyrMhWSYzYqABvBVN+iimwUUmmIQVEKGtSiotQ2I8RlUomK3e1sU/jnnO7/v
+        fN/3O8nvsKTuNZ3OlphtomwWjHo6gWo/9c6z+OTtcOHSwDjG9X03Gbz/aSODXx7rpvDhUITG
+        tf4bGnzvVSfAr/sPELhq4iSBX/x8V4P/qp0A+F9vNY3HDvkBvnK2n8bBPy4xOHL8GoEbbvUR
+        uLqhi8J93fl4X5ufwdFAM4V7Wmw4PBolV83k3TVuwD8L7mP4Gvdu/qJriOE9Zw7S/GCgleZP
+        u90a/uK4k+F/q3lD8GOeeZsSChJXbBNsOzeXFJuzVm5NlEarA3SpX1M23Plc4wRNmnKgZRHM
+        QQ17WxScwOpgAKCR0NDkoQuga9VHmXLAsjRcgcoHYjAVLkfNfcmqloS9WlTb+KmKU+Ay1Om9
+        TKk4Feai812DZBx/gSp/amJUTMEMdNdZGbvDwQ3oeNUgULEOfo1GLjhj9lqYj5rqYq0BOBcd
+        dD4l4lFpyDM8PtkyRPWtvWQcz0Cj4ehkXY/a3oQo1YaEi9Cf3qy4dBWaOHV10mYBqqoIMfEO
+        ktHVIxGqEsx0TUtwTald09SuaWrXNHUd0JwByCSUGIsFm5i9RBbtS2SLZFK27RaTB8Rn5uU/
+        4D/fGh+ALNAncVFfuFCnEXZaHSYfmMUS+hncoSyl9Mk2S5FDEqySQbYbRasPIJbUp3I93Q8K
+        dVyR4NglypYP1GyW0qdx77wdhTqoJn8viqWi/IGdw7J6xJUOKKbJslgslu0oMdqmaILVquYJ
+        6alW0VwkyoLdJhnUUTFYlVlRqSQld2NQkXPWUsGkVOPSbpDNtp8IHSPZJx0jylo38LaG1FFm
+        i1lMT+NWqnlQFUh288e4RyBNeXUKt1hlk5TP9NHtkRJEKEFzmViQTZii0p3gx105Be3mzzPs
+        kSZ/8PCzxN9zf2hd+/B579Bq03BOSsTw9qvArS/n9OfJxr+9dWDPXu+6aNl364ce99dGzha3
+        NebeyV6zNm+sucVm6DgibeIrte+jT77dcv/90usVwfz5mXnLTOduN4YLPlvO8q7MigwHAo6F
+        wYauJKNU/8uv33T26CmrJGRnkrJV+B/6QzoeCQQAAA==
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-To be used as interrupt controller, pin control callbacks needed to
-setup the registers.
-
-Signed-off-by: Joe Burmeister <joe.burmeister@devtank.co.uk>
----
- drivers/pinctrl/pinctrl-mcp23s08.c | 13 +++++++++++++
- 1 file changed, 13 insertions(+)
-
-diff --git a/drivers/pinctrl/pinctrl-mcp23s08.c b/drivers/pinctrl/pinctrl-mcp23s08.c
-index 98905d4a79ca..3fc63cb5b332 100644
---- a/drivers/pinctrl/pinctrl-mcp23s08.c
-+++ b/drivers/pinctrl/pinctrl-mcp23s08.c
-@@ -264,6 +264,12 @@ static int mcp_pinconf_get(struct pinctrl_dev *pctldev, unsigned int pin,
- 			return ret;
- 		status = (data & BIT(pin)) ? 1 : 0;
- 		break;
-+	case PIN_CONFIG_OUTPUT:
-+		ret = mcp_read(mcp, MCP_IODIR, &data);
-+		if (ret < 0)
-+			return ret;
-+		status = (data & BIT(pin)) ? 0 : 1; /* true is input */
-+		break;
- 	default:
- 		dev_err(mcp->dev, "Invalid config param %04x\n", param);
- 		return -ENOTSUPP;
-@@ -291,6 +297,13 @@ static int mcp_pinconf_set(struct pinctrl_dev *pctldev, unsigned int pin,
- 		case PIN_CONFIG_BIAS_PULL_UP:
- 			ret = mcp_set_bit(mcp, MCP_GPPU, pin, arg);
- 			break;
-+		case PIN_CONFIG_OUTPUT:
-+			ret = mcp_set_bit(mcp, MCP_IODIR, pin, false);
-+			if (!ret && arg)
-+				ret = mcp_set_bit(mcp, MCP_GPPU, pin, true);
-+			else
-+				ret = mcp_set_bit(mcp, MCP_GPPU, pin, false);
-+			break;
- 		default:
- 			dev_err(mcp->dev, "Invalid config param %04x\n", param);
- 			return -ENOTSUPP;
--- 
-2.20.1
-
+SGVsbG8gQWxsLA0KDQpPbiBUaHUsIDIwMTktMDUtMDIgYXQgMTI6MTEgKzAzMDAsIE1hdHRpIFZh
+aXR0aW5lbiB3cm90ZToNCj4gUGF0Y2ggc2VyaWVzIGludHJvZHVjaW5nIHN1cHBvcnQgZm9yIFJP
+SE0gQkQ3MDUyOCBQTUlDDQo+IA0KSnVzdCB0aG91Z2h0IEknZCBhc2sgaWYgdGhlcmUncyBhbnkg
+Y2hhbmNlcyB0byBnZXQgdGhpcyBzZXJpZXMgaW4gNS4yPw0KSXQgc2VlbXMgdG8gbWUgdGhlIFdE
+VCBwYXJ0IChwYXRjaCA4KSB3YXMgYWxyZWFkeSBtZXJnZWQgaW4gYnV0IHJlc3Qgb2YNCnRoZSBw
+YXRjaGVzIHNlZW0gdG8gYmUgaW4gbGltYm8gc29tZXdoZXJlIDopDQoNCkkgZ3Vlc3MgbW9zdCBv
+ZiB0aGUgcGF0Y2hlcyBoYXZlIHJlbGV2YW50IGFja3MgLSBzbyB3b25kZXIgaWYgdGhlIHJlc3QN
+CmNhbiBnbyB0aHJvdWdoIExlZSdzIHRyZWU/IEkgYWRtaXQgSSBhbSBnZXR0aW5nIHNsaWdodGx5
+IGltcGF0aWVudCAtDQpzb3JyeSBmb3IgdGhhdCA6XQ0KDQpCciwNCglNYXR0aSBWYWl0dGluZW4N
+Cg==
