@@ -2,103 +2,176 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 64DDF249EF
-	for <lists+linux-gpio@lfdr.de>; Tue, 21 May 2019 10:13:54 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CDBDA24B17
+	for <lists+linux-gpio@lfdr.de>; Tue, 21 May 2019 11:03:25 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726201AbfEUINt (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 21 May 2019 04:13:49 -0400
-Received: from mx07-00178001.pphosted.com ([62.209.51.94]:18594 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726193AbfEUINt (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>);
-        Tue, 21 May 2019 04:13:49 -0400
-Received: from pps.filterd (m0046668.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x4L875aA001663;
-        Tue, 21 May 2019 10:13:37 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=STMicroelectronics;
- bh=wbqGG8HuDpV3tZJFOhJKGCU27qgfbSdFuxdaOzI8vDQ=;
- b=Qa0hmHH3fbgr1Qh1hO3qmsjBmLMxNUiuF2akEV2t1FZ+ymEY/RoQG2Sd6wOw2yMHsUwE
- tyUWx/GFZbFk77lanlGc9DENBAFoUjcs9Yc4h2gX9v5Rxe+YPRAOQIUmt8B/XQY1dauJ
- Az4cSInjeewi4fCnbtuVbUzVXEgGUfndzsFzpVKiuAtPeorw70Ol3Z5gtj9OQM4pdWVN
- QzL1PNjj2Xbleil4j/QqkJJu9osO1xzjHGLC/L6qlSoWtoQNe2alBIi38qOJvBvpA37z
- p3QqGZ1G3umnhIDWZR18W1Pz8zoqrzMwVrFkWajybeg0q9cySz2ZumtQ4C+BAQQoNwUm OQ== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 2sj7h0r4ck-1
-        (version=TLSv1 cipher=ECDHE-RSA-AES256-SHA bits=256 verify=NOT);
-        Tue, 21 May 2019 10:13:37 +0200
-Received: from zeta.dmz-eu.st.com (zeta.dmz-eu.st.com [164.129.230.9])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 0040A34;
-        Tue, 21 May 2019 08:13:36 +0000 (GMT)
-Received: from Webmail-eu.st.com (sfhdag3node2.st.com [10.75.127.8])
-        by zeta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 8D20E17FB;
-        Tue, 21 May 2019 08:13:36 +0000 (GMT)
-Received: from [10.48.0.204] (10.75.127.51) by SFHDAG3NODE2.st.com
- (10.75.127.8) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Tue, 21 May
- 2019 10:13:34 +0200
-Subject: Re: [PATCH v6 0/9] Introduce STMFX I2C Multi-Function eXpander
-To:     Amelie Delaunay <amelie.delaunay@st.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>
-CC:     <linux-gpio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <devicetree@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>
-References: <1557392336-28239-1-git-send-email-amelie.delaunay@st.com>
-From:   Alexandre Torgue <alexandre.torgue@st.com>
-Message-ID: <0a9bf716-addc-9342-09fe-06ff048ff7d7@st.com>
-Date:   Tue, 21 May 2019 10:13:34 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        id S1726867AbfEUJDL (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 21 May 2019 05:03:11 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:35073 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726347AbfEUJDL (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 21 May 2019 05:03:11 -0400
+Received: by mail-wm1-f68.google.com with SMTP id q15so2028740wmj.0
+        for <linux-gpio@vger.kernel.org>; Tue, 21 May 2019 02:03:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=5R288mKF0GeHgJxCPpIdKCMHA/0CyoeQ5qge6u2tdDc=;
+        b=pp8mOjd7Mqs7yfAH43C6eB3d9rmh5jCVdEhDqU+Aug0+WajfS82ikNUV0LIXbA7tvR
+         GiEy7Q8pt8JgbacuMahdKch3HK6U286+qD0Aba9TVrFSpnIfFveJ96qnzZ2zO2kX8dt1
+         wi5xQcY/HMjYR9AhAUvRBXqw1Jhm6+mqmOSJlW41wQm2OcEwu0gauPLqZJMoP1wgnrAA
+         JFa0/dqis26Zwlg+wkVoYUaJReioOvFd7MY+BbyIBEdCh6kD7kWv2pgqTLFgAt7pUQC/
+         9+mAFIHrmYIahtfh+3vb13EqZYNILpT9bI4rwKAKNcknH25HW5ulQ20HEZHTEXKHRRJM
+         K7/A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=5R288mKF0GeHgJxCPpIdKCMHA/0CyoeQ5qge6u2tdDc=;
+        b=DbGamNcG+BSYUZh0JwUbMmVK1dKSKgTD3WgO2tx1quoVzWRAndzOxxelYha4Qh0JZ0
+         KLCNJI2MTk1my2+BXCyILfLdN+NdGKgPZ8F2lq9lOzkpg6lRSoKHkENmGx9ESyK1ur1/
+         RK3LnOFxE+hgjqmz8SjQPT9hLtcGhf8N0Ryco296m6br1nDSDNC8viLT1KjUTYRFl3Vu
+         /v729nmiHt1svqu4iMBDKZdY/DgxlRh4L6yK3xrxSddYCkFOTBRl3aFLEaAwvkhYr9bw
+         jBa7tUaDjfhB/nM+l1Cw1Rwn5kwCPPnbBysBnGRr0RqPNGD4dwPfuvORWP9fav/R1q40
+         UdxA==
+X-Gm-Message-State: APjAAAWZJWqCouXrFxjX88kjkWZwl+K9GCktW6o5Xs9h/TThdgx0uNQg
+        MlaHg5FLCjrdNgxA7E0EIjX4ysYO8Ko=
+X-Google-Smtp-Source: APXvYqyYRmwwb6Ur91PzaPTRyj5uJeV4urFJ2olz107d6M1dE6T9hSGdHqM0jQjQDKlGiWhJgCMxFA==
+X-Received: by 2002:a7b:cd0e:: with SMTP id f14mr2414832wmj.127.1558429389238;
+        Tue, 21 May 2019 02:03:09 -0700 (PDT)
+Received: from debian-brgl.home ([2a01:cb1d:af:5b00:6d6c:8493:1ab5:dad7])
+        by smtp.gmail.com with ESMTPSA id j28sm35898692wrd.64.2019.05.21.02.03.08
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 21 May 2019 02:03:08 -0700 (PDT)
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Subject: [PATCH 1/2] gpio: max732x: use i2c_new_dummy_device()
+Date:   Tue, 21 May 2019 11:03:05 +0200
+Message-Id: <20190521090306.28113-1-brgl@bgdev.pl>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-In-Reply-To: <1557392336-28239-1-git-send-email-amelie.delaunay@st.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.75.127.51]
-X-ClientProxiedBy: SFHDAG1NODE2.st.com (10.75.127.2) To SFHDAG3NODE2.st.com
- (10.75.127.8)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-21_01:,,
- signatures=0
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Amélie,
+From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 
-On 5/9/19 10:58 AM, Amelie Delaunay wrote:
-> This series adds support for STMicroelectronics Multi-Function eXpander
-> (STMFX), used on some STM32 discovery and evaluation boards.
-> 
-> STMFX is an STM32L152 slave controller whose firmware embeds the following
-> features:
-> - I/O expander (16 GPIOs + 8 extra if the other features are not enabled),
-> - resistive touchscreen controller,
-> - IDD measurement.
-> 
-> I2C stuff and chip initialization is based on an MFD parent driver, which
-> registers STMFX features MFD children.
+We now have a resource managed version of i2c_new_dummy_device() that
+also returns an actual error code instead of a NULL-pointer. Use it
+in the max732x GPIO driver and simplify code in the process.
 
-...
+Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+---
+ drivers/gpio/gpio-max732x.c | 37 ++++++++++++++-----------------------
+ 1 file changed, 14 insertions(+), 23 deletions(-)
 
-> Amelie Delaunay (9):
->    dt-bindings: mfd: Add ST Multi-Function eXpander (STMFX) core bindings
->    mfd: Add ST Multi-Function eXpander (STMFX) core driver
->    dt-bindings: pinctrl: document the STMFX pinctrl bindings
->    pinctrl: Add STMFX GPIO expander Pinctrl/GPIO driver
->    ARM: dts: stm32: add STMFX support on stm32746g-eval
->    ARM: dts: stm32: add joystick support on stm32746g-eval
->    ARM: dts: stm32: add orange and blue leds on stm32746g-eval
->    ARM: dts: stm32: add STMFX support on stm32mp157c-ev1
->    ARM: dts: stm32: add joystick support on stm32mp157c-ev1
-
-Device tree patches (5 to 9) applied on stm32-next.
-
-Thanks
-Alex
+diff --git a/drivers/gpio/gpio-max732x.c b/drivers/gpio/gpio-max732x.c
+index f03cb0ba7726..7fd1bdfe00e5 100644
+--- a/drivers/gpio/gpio-max732x.c
++++ b/drivers/gpio/gpio-max732x.c
+@@ -652,12 +652,12 @@ static int max732x_probe(struct i2c_client *client,
+ 	case 0x60:
+ 		chip->client_group_a = client;
+ 		if (nr_port > 8) {
+-			c = i2c_new_dummy(client->adapter, addr_b);
+-			if (!c) {
++			c = devm_i2c_new_dummy_device(&client->dev,
++						      client->adapter, addr_b);
++			if (IS_ERR(c)) {
+ 				dev_err(&client->dev,
+ 					"Failed to allocate I2C device\n");
+-				ret = -ENODEV;
+-				goto out_failed;
++				return PTR_ERR(c);
+ 			}
+ 			chip->client_group_b = chip->client_dummy = c;
+ 		}
+@@ -665,12 +665,12 @@ static int max732x_probe(struct i2c_client *client,
+ 	case 0x50:
+ 		chip->client_group_b = client;
+ 		if (nr_port > 8) {
+-			c = i2c_new_dummy(client->adapter, addr_a);
+-			if (!c) {
++			c = devm_i2c_new_dummy_device(&client->dev,
++						      client->adapter, addr_a);
++			if (IS_ERR(c)) {
+ 				dev_err(&client->dev,
+ 					"Failed to allocate I2C device\n");
+-				ret = -ENODEV;
+-				goto out_failed;
++				return PTR_ERR(c);
+ 			}
+ 			chip->client_group_a = chip->client_dummy = c;
+ 		}
+@@ -678,36 +678,34 @@ static int max732x_probe(struct i2c_client *client,
+ 	default:
+ 		dev_err(&client->dev, "invalid I2C address specified %02x\n",
+ 				client->addr);
+-		ret = -EINVAL;
+-		goto out_failed;
++		return -EINVAL;
+ 	}
+ 
+ 	if (nr_port > 8 && !chip->client_dummy) {
+ 		dev_err(&client->dev,
+ 			"Failed to allocate second group I2C device\n");
+-		ret = -ENODEV;
+-		goto out_failed;
++		return -ENODEV;
+ 	}
+ 
+ 	mutex_init(&chip->lock);
+ 
+ 	ret = max732x_readb(chip, is_group_a(chip, 0), &chip->reg_out[0]);
+ 	if (ret)
+-		goto out_failed;
++		return ret;
+ 	if (nr_port > 8) {
+ 		ret = max732x_readb(chip, is_group_a(chip, 8), &chip->reg_out[1]);
+ 		if (ret)
+-			goto out_failed;
++			return ret;
+ 	}
+ 
+ 	ret = gpiochip_add_data(&chip->gpio_chip, chip);
+ 	if (ret)
+-		goto out_failed;
++		return ret;
+ 
+ 	ret = max732x_irq_setup(chip, id);
+ 	if (ret) {
+ 		gpiochip_remove(&chip->gpio_chip);
+-		goto out_failed;
++		return ret;
+ 	}
+ 
+ 	if (pdata && pdata->setup) {
+@@ -719,10 +717,6 @@ static int max732x_probe(struct i2c_client *client,
+ 
+ 	i2c_set_clientdata(client, chip);
+ 	return 0;
+-
+-out_failed:
+-	i2c_unregister_device(chip->client_dummy);
+-	return ret;
+ }
+ 
+ static int max732x_remove(struct i2c_client *client)
+@@ -744,9 +738,6 @@ static int max732x_remove(struct i2c_client *client)
+ 
+ 	gpiochip_remove(&chip->gpio_chip);
+ 
+-	/* unregister any dummy i2c_client */
+-	i2c_unregister_device(chip->client_dummy);
+-
+ 	return 0;
+ }
+ 
+-- 
+2.21.0
 
