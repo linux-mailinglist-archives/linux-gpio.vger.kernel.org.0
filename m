@@ -2,142 +2,158 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 3CB3824F97
-	for <lists+linux-gpio@lfdr.de>; Tue, 21 May 2019 15:04:15 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6802A2528E
+	for <lists+linux-gpio@lfdr.de>; Tue, 21 May 2019 16:47:49 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728144AbfEUNEO (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 21 May 2019 09:04:14 -0400
-Received: from mail-qt1-f194.google.com ([209.85.160.194]:35393 "EHLO
-        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728132AbfEUNEO (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 21 May 2019 09:04:14 -0400
-Received: by mail-qt1-f194.google.com with SMTP id a39so20364590qtk.2
-        for <linux-gpio@vger.kernel.org>; Tue, 21 May 2019 06:04:13 -0700 (PDT)
+        id S1728104AbfEUOrs (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 21 May 2019 10:47:48 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:42323 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727044AbfEUOrr (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 21 May 2019 10:47:47 -0400
+Received: by mail-pg1-f195.google.com with SMTP id 145so8706065pgg.9;
+        Tue, 21 May 2019 07:47:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=BRX4mALwgbnK3Swl9SWa51GTZ74LmTCWSwzujtcfH6A=;
-        b=YWThnf96OxXRK1aVFR/BqFChjvG5lHcQI2QrT/loCkRy2xZP2yGDvOqFH5OLcUI7pz
-         g31LMYp330OdGCROYEFyQAwDTl1coXVo49H0rDbBBDCbKjzWande5JAIJZx2aJNeHHWY
-         Vad+Tk+zL0zP4TqQcxmPAgC86CNuYp9CwrNs4aiGqq1tASgE1Ij+vsOk+2HZ7GTc1GkA
-         pr3StTZ81TIoGyGy8Cel/Q6vITK14+nqvG46V312mfLyvQcRkVHXe0I2JN5XzpneCG2f
-         L2YEO2dRLJJeQScKEzPeOjjVHIDlpUDF2Y/fHjf5WHzDiSaxICpQTNTpVQIpNal5ujzY
-         RQMA==
+        h=from:to:cc:subject:date:message-id;
+        bh=vWapel5oQFRL5IS9nITnTDS1CiQKS+fkgwKTVcUkRi8=;
+        b=J+wfUmDSL7gurwPNzxB20Y9csHlDX+J2lMuxHU1BjO7Ee4cmiTK3EE9XkA8tMMn42W
+         tpNPg1ZAjRJesMpVd8tltQp5G3UdZSkYd7s2iUQZnoF4ZHlXjn1NwcMWf0p+gms2GcSW
+         uOK0LiORxiKO8x2i6QVei6lCzwf/Opm9dLSkMSuxG6bWc+lYkLbmpcV9askG7wkwCGeZ
+         p+qPqk66IZYb5VzlNCh1Llg/fKpj/4lGWf/W63jm8IekkNnB+EVElP15Ay/Iz57W50SU
+         8VulXzLuTttSDYpHHb9B4whok/Yqx9b5E1gk68sEd01REGO192+SgL/PDwIKH8M1JkcA
+         k7gw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=BRX4mALwgbnK3Swl9SWa51GTZ74LmTCWSwzujtcfH6A=;
-        b=U6IiMKLAGN9x9w5pg4qjW13hhR4mKrRnC/bEv36qfMfFOuJTKOAyQdFK0dDwbN2qxU
-         D+y3CVdr4aiAZJAEjOkSNZFrBvGS1J0HfdjxX62TlThEKpEa2sfBUib+5RPVuEnB4Ziu
-         gSTGcM87stQXuRRIhkZkO8BMI/ZnBq41z3UGSS5E7qJqLjuWZVF0mk/UunTAw/4cPw0o
-         VSE2OdZoLvZ0sybPi7PjXA2K50cVTbcHrYS2KdQaw1Kc297EpiohL74/F+SRlmKw93x+
-         czznILsY7f05eJxtxHh5eI+uoXu2qJ+UI5DKvvGZT3Oke39DbxehcljcjjzoA7W/JUER
-         1gGQ==
-X-Gm-Message-State: APjAAAVhDm7fcYkpjuT0o/Hk4DTmheD98fAnGd/hHEZH9EHP8a2FLstF
-        wtkSVYhQAsOalGWmIA+SvrY=
-X-Google-Smtp-Source: APXvYqzjLLStib+qVyUzaF97vy82udbcfRpApR3g6e3+DgsCXnZf5XntcQGy6IBP+ra/zqYkJ6jjtg==
-X-Received: by 2002:aed:3bcf:: with SMTP id s15mr47267865qte.105.1558443853225;
-        Tue, 21 May 2019 06:04:13 -0700 (PDT)
-Received: from jfdmac.sonatest.net (ipagstaticip-d73c7528-4de5-0861-800b-03d8b15e3869.sdsl.bell.ca. [174.94.156.236])
-        by smtp.gmail.com with ESMTPSA id s28sm13292739qtc.81.2019.05.21.06.04.11
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=vWapel5oQFRL5IS9nITnTDS1CiQKS+fkgwKTVcUkRi8=;
+        b=FrDfaKdWEfdmhoCpSEH2sRgwN/pOCx6i/SKXjX7vRKFe1DRbV9RaGc0UgvlPssi97X
+         vNEUPtSLQ6aQ7vX1VbzyYIzthgZ2NjMrePOKwjaYFQ7qd3du/vbvEPIie7Qvo+RH/MYS
+         +wcccbXKL/28Petvz7zkbajiPSVMOL4mayknFEWmYkjpaWLhL0QbKQJUQoAjnwvxhGhI
+         /smuZbnmwBsoFlmgoyJmXpI4G3Jq/7r9C/xwIBdd6iScdNZmk1vBb382NbNAdj0FdNU6
+         7lsDRLipoJxq6R1XgvyIpOVku1Gt8WSbLFlZtZElaRZEBs0O559Ss9sS5rmcjBjocw1E
+         EPVA==
+X-Gm-Message-State: APjAAAUOgwe9EogSr3h/Ix6QYOaSuY3pJjpC1//j8UWUhbHAkyO2OxHc
+        p8YeR1e4jdf303IrRswtyeY=
+X-Google-Smtp-Source: APXvYqzLKro+yl9TmaN24S/pQj0fpek+/qhlfX1j1ZWZnpe6kEvnbtW9El8eBXcB5losLDhepUyYKA==
+X-Received: by 2002:a62:304:: with SMTP id 4mr70248166pfd.186.1558450067108;
+        Tue, 21 May 2019 07:47:47 -0700 (PDT)
+Received: from localhost ([43.224.245.181])
+        by smtp.gmail.com with ESMTPSA id a7sm40112206pgj.42.2019.05.21.07.47.45
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 21 May 2019 06:04:12 -0700 (PDT)
-Content-Type: text/plain;
-        charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.8\))
-Subject: Re: [PATCH] gpio: zynq: add a to_irq implementation
-From:   Jean-Francois Dagenais <jeff.dagenais@gmail.com>
-In-Reply-To: <CAMpxmJXhsxJzpw=RNUqaAMWLm-aUoV2wM4-zFW9urnM9fgU4Dw@mail.gmail.com>
-Date:   Tue, 21 May 2019 09:04:10 -0400
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        linux-gpio <linux-gpio@vger.kernel.org>,
-        Michal Simek <michal.simek@xilinx.com>
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <63CE06C6-5E28-4F9C-B73D-CAED9791EF75@gmail.com>
-References: <20190516182237.5315-1-jeff.dagenais@gmail.com>
- <CAMpxmJVUBgv5BXLwDnZt7Sr6ym1qB64KiAyipvArLsy5hEPEYA@mail.gmail.com>
- <B06C8F4B-DED0-4222-9260-80A2FC053132@gmail.com>
- <CAMpxmJXhsxJzpw=RNUqaAMWLm-aUoV2wM4-zFW9urnM9fgU4Dw@mail.gmail.com>
-To:     Bartosz Golaszewski <bgolaszewski@baylibre.com>
-X-Mailer: Apple Mail (2.3445.104.8)
+        Tue, 21 May 2019 07:47:46 -0700 (PDT)
+From:   houweitao <houweitaoo@gmail.com>
+X-Google-Original-From: houweitao <houweitao@xiaomi.com>
+To:     linus.walleij@linaro.org, yamada.masahiro@socionext.com,
+        a.zummo@towertech.it, alexandre.belloni@bootlin.com,
+        baohua@kernel.org, gregkh@linuxfoundation.org, jslaby@suse.com,
+        shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de,
+        festevam@gmail.com, linux-imx@nxp.com, davem@davemloft.net,
+        rostedt@goodmis.org, mingo@redhat.com
+Cc:     linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-rtc@vger.kernel.org,
+        linux-serial@vger.kernel.org, sparclinux@vger.kernel.org,
+        houweitao <houweitao@xiaomi.com>
+Subject: [PATCH] tracing: fix typos in code and comments
+Date:   Tue, 21 May 2019 22:47:40 +0800
+Message-Id: <20190521144740.22490-1-houweitao@xiaomi.com>
+X-Mailer: git-send-email 2.18.0
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Thank you for your thoughts!
+fix ingore to ignore in kernel; since there are other
+mistakes can be found with "git grep ",fix all
 
-> On May 20, 2019, at 02:38, Bartosz Golaszewski =
-<bgolaszewski@baylibre.com> wrote:
->=20
->>=20
->> Any thoughts?
->>=20
->=20
-> Yes! Don't use sysfs and especially don't add your own buggy
-> interfaces?
+Signed-off-by: houweitao <houweitao@xiaomi.com>
+---
+ drivers/pinctrl/uniphier/pinctrl-uniphier-core.c | 2 +-
+ drivers/rtc/rtc-sirfsoc.c                        | 2 +-
+ drivers/tty/serial/mxs-auart.c                   | 2 +-
+ drivers/tty/serial/serial_txx9.c                 | 2 +-
+ drivers/tty/serial/sunsab.c                      | 2 +-
+ kernel/trace/trace.c                             | 2 +-
+ 6 files changed, 6 insertions(+), 6 deletions(-)
 
-aawww... but I like adding a bunch of "buggy" interfaces here and there =
-to make
-sure my customers get a challenge when using my product. :P
+diff --git a/drivers/pinctrl/uniphier/pinctrl-uniphier-core.c b/drivers/pinctrl/uniphier/pinctrl-uniphier-core.c
+index 57babf31e320..9f56863ed481 100644
+--- a/drivers/pinctrl/uniphier/pinctrl-uniphier-core.c
++++ b/drivers/pinctrl/uniphier/pinctrl-uniphier-core.c
+@@ -399,7 +399,7 @@ static int uniphier_conf_pin_bias_set(struct pinctrl_dev *pctldev,
+ 		}
+ 
+ 		if (arg == 0)
+-			return 0; /* configuration ingored */
++			return 0; /* configuration ignored */
+ 		break;
+ 	default:
+ 		BUG();
+diff --git a/drivers/rtc/rtc-sirfsoc.c b/drivers/rtc/rtc-sirfsoc.c
+index 9ba28d1ebd87..af1b7ba403fc 100644
+--- a/drivers/rtc/rtc-sirfsoc.c
++++ b/drivers/rtc/rtc-sirfsoc.c
+@@ -121,7 +121,7 @@ static int sirfsoc_rtc_set_alarm(struct device *dev,
+ 		rtc_status_reg = sirfsoc_rtc_readl(rtcdrv, RTC_STATUS);
+ 		if (rtc_status_reg & SIRFSOC_RTC_AL0E) {
+ 			/*
+-			 * An ongoing alarm in progress - ingore it and not
++			 * An ongoing alarm in progress - ignore it and not
+ 			 * to return EBUSY
+ 			 */
+ 			dev_info(dev, "An old alarm was set, will be replaced by a new one\n");
+diff --git a/drivers/tty/serial/mxs-auart.c b/drivers/tty/serial/mxs-auart.c
+index 4c188f4079b3..9f83a387d6ed 100644
+--- a/drivers/tty/serial/mxs-auart.c
++++ b/drivers/tty/serial/mxs-auart.c
+@@ -667,7 +667,7 @@ static void mxs_auart_rx_char(struct mxs_auart_port *s)
+ 	}
+ 
+ 	/*
+-	 * Mask off conditions which should be ingored.
++	 * Mask off conditions which should be ignored.
+ 	 */
+ 	stat &= s->port.read_status_mask;
+ 
+diff --git a/drivers/tty/serial/serial_txx9.c b/drivers/tty/serial/serial_txx9.c
+index d22ccb32aa9b..372890e3b896 100644
+--- a/drivers/tty/serial/serial_txx9.c
++++ b/drivers/tty/serial/serial_txx9.c
+@@ -314,7 +314,7 @@ receive_chars(struct uart_txx9_port *up, unsigned int *status)
+ 			}
+ 
+ 			/*
+-			 * Mask off conditions which should be ingored.
++			 * Mask off conditions which should be ignored.
+ 			 */
+ 			disr &= up->port.read_status_mask;
+ 
+diff --git a/drivers/tty/serial/sunsab.c b/drivers/tty/serial/sunsab.c
+index 72131b5e132e..daae2b0dbe11 100644
+--- a/drivers/tty/serial/sunsab.c
++++ b/drivers/tty/serial/sunsab.c
+@@ -200,7 +200,7 @@ receive_chars(struct uart_sunsab_port *up,
+ 				up->port.icount.overrun++;
+ 
+ 			/*
+-			 * Mask off conditions which should be ingored.
++			 * Mask off conditions which should be ignored.
+ 			 */
+ 			stat->sreg.isr0 &= (up->port.read_status_mask & 0xff);
+ 			stat->sreg.isr1 &= ((up->port.read_status_mask >> 8) & 0xff);
+diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
+index 2c92b3d9ea30..bfa5ab0663e7 100644
+--- a/kernel/trace/trace.c
++++ b/kernel/trace/trace.c
+@@ -8554,7 +8554,7 @@ init_tracer_tracefs(struct trace_array *tr, struct dentry *d_tracer)
+ 	ftrace_init_tracefs(tr, d_tracer);
+ }
+ 
+-static struct vfsmount *trace_automount(struct dentry *mntpt, void *ingore)
++static struct vfsmount *trace_automount(struct dentry *mntpt, void *ignore)
+ {
+ 	struct vfsmount *mnt;
+ 	struct file_system_type *type;
+-- 
+2.18.0
 
-BTW, I've always been fully aware, when I made this change in gpiolib, =
-that I
-would not be upstreaming it. It's been years and we're quite happy with =
-what it
-allowed us to do. Only now, because I needed to use the "edge" =
-attribute, have I
-had any problems with this approach. So it has served us well this far. =
-I was
-just long-shot probing you the other day.
-
-> Is there any reason you can't use libgpiod and the
-> character device?
-
-To be honest, I had only glanced quite a while back at gpiolib and =
-thought it
-was a bit overkill at that stage of our development to include another C =
-library
-and methods into the mix. Later, I forgot about it. Looking at it again =
-here I
-can see the command line tools do satisfy a great part of the =
-"simplicity"
-argument. I will most likely add gpiolib to my base yocto image, thanks!
-
-> What does your own class provide that none of the
-> upstream interfaces do?
-
-I have not fully explored gpiolib's API yet so I may be missing =
-something but
-the hog/auto-export I use allows for the hardware pin to be described
-functionally all the way to userspace and abstract what chip a line is =
-on and
-whether it is active_low or high.
-
-So for example a line name could be MYSUBCIRCUIT_RESET. =46rom the DTS, =
-that line
-name is given, but in the hog/auto-export, it would be shown at
-/sys/class/gpio/mysubcircuit_enable. So a functional name is given
-(mysubcircuit_enable), along with ACTIVE_LOW to abstract the line =
-polarity. That
-changes this particular gpio's function to a "cleaner" api (an enable =
-gpio
-rather than a reset gpio). All along, userspace is none the wiser in =
-that
-hardware "details", other than the gpio functional name, need not be =
-present in
-the userspace consumer.
-
-This is akin to having positive boolean in a program. Hardware designers =
-have
-different physical reasons for making "not" signals (inverted). This =
-should stay
-in the DTS where we already describe the hardware.
-
-If you can describe a pin "functionally" from DTS and still use gpiolib, =
-I will
-stand corrected.
-
-Thanks for your feedback!=
