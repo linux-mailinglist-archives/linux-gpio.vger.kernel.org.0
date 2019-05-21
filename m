@@ -2,88 +2,101 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 60B6224C70
-	for <lists+linux-gpio@lfdr.de>; Tue, 21 May 2019 12:13:32 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1418C24D6E
+	for <lists+linux-gpio@lfdr.de>; Tue, 21 May 2019 13:01:03 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726344AbfEUKNb (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 21 May 2019 06:13:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43986 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726138AbfEUKNb (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Tue, 21 May 2019 06:13:31 -0400
-Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com [209.85.221.45])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A6400217D9;
-        Tue, 21 May 2019 10:13:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558433610;
-        bh=OufmRIYJQ0nbYLIvqyUNnOhI9i9mkYrk0LMrip+KEiI=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=ryfrH3Wpwo2adEt4OeWEHICRHYnhpBhlyK66YfjCP0puw45cAuqNoYm8thn9W3mkd
-         kWQ4RlSa8sMKzjuBwR/QImifJYSWp8Q0Slhnu6jVxxtfSmQWup7R5D05uId9XdsFuM
-         AxlIZzHLF+n+PEvOThSGF8l08U2XN+RCqv/PXWJk=
-Received: by mail-wr1-f45.google.com with SMTP id w8so17920365wrl.6;
-        Tue, 21 May 2019 03:13:30 -0700 (PDT)
-X-Gm-Message-State: APjAAAVWgMuhgwjbXfo2jBiwytazeYtcIxzPSXYgNJRXkt5BDom62/gF
-        ZaiB8udKmjOegIEqVEzwJSqi5D7iPF0sPGdYja8=
-X-Google-Smtp-Source: APXvYqzmTjjOL9v8MqfbpV2G5sAp6vg4KFpwg98Fgc4v9EVuXBUC7juwUBRFOmLuLrdEoaon7lkrW6QqVeiKkYCEMQ4=
-X-Received: by 2002:adf:ee0c:: with SMTP id y12mr24087711wrn.34.1558433609178;
- Tue, 21 May 2019 03:13:29 -0700 (PDT)
+        id S1727686AbfEULBC (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 21 May 2019 07:01:02 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:52201 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726242AbfEULBB (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 21 May 2019 07:01:01 -0400
+Received: by mail-wm1-f68.google.com with SMTP id c77so2512972wmd.1
+        for <linux-gpio@vger.kernel.org>; Tue, 21 May 2019 04:01:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=devtank-co-uk.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=xx1/BNKJkSZTh4qrBNcdndPwRJoZAQ0lryCakBXnIco=;
+        b=SpZQwNgTSRiyQ6DY71OthziA8T03QR2+sh0+duUHXKDE9w/FfK9+SFj3tePZpI9t+X
+         CB/aZijQou+wqa4zF0s5d36LQeQHrstYNbrCYtcO5pu+n9vA1NjvSDBSY0hNQA7/9T5T
+         ArKvOMvH8+5sofSjvaUs7CRYxuMbrXTAWVEsoeNKTuhiq4VXX8jPnaYXxj1pdMz5NQmg
+         mPGtv5RT9cx4VJhcvRw+QodTvplja5/NsTjFTEQ3cg2uR989zTzXNe9VHltZwQndwsfx
+         RqnixB2C7NwbA2PQ33r7/3skJLfkuNRvqI8Bsyw24c2WpdZDwkozV1Wf0LaejCnJS+13
+         +X1g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=xx1/BNKJkSZTh4qrBNcdndPwRJoZAQ0lryCakBXnIco=;
+        b=fytnRMxtvx84i9ZftfiFslx8Dl7WG0hntjmbiYmsPGS+2wddffzmeOVGTCIMFad/mn
+         1grNJL2GkoCvydpYc3cK6hal6vw19j6F9wScK+xPWXzVOuaH3egEZSfsCAX1AQlFOuRf
+         7TPbCY1nggYoiQC8oSJQr/ykjgWL8Yy5MdFmXCgZ1kMp62qVpfbjsJSDWpddcyrjnixc
+         C0Tr4nT3xJDQPSw8zaWScThhPH/2Dxmt0Elcs4UZNvQqwhOnr642qiCM0i2M8r32XPj5
+         r9Efqpq7Lf3CWBwMKNKxtsq7uXDMUzVyqaqF3S4SJQVUieSLj79RGYgqdGecD6GdLkJG
+         lB9w==
+X-Gm-Message-State: APjAAAV8+nBON4HitYMYHYKaaFq94WBNCwXY5qBEH69OWUFqSye3d//U
+        Oi/+6QMmEufKbSaTUbR4eJM2rKhn5UE=
+X-Google-Smtp-Source: APXvYqzw1jEkF3nq2qnkwFc/juGl3uCqe8Ce2/dmybDnG8a+n7Nxy9/Mu4fa0cAyf1uY/R+/Ep4U3g==
+X-Received: by 2002:a05:600c:23d2:: with SMTP id p18mr2866724wmb.66.1558436459723;
+        Tue, 21 May 2019 04:00:59 -0700 (PDT)
+Received: from jabjoe-thinkpad.lan ([141.105.200.141])
+        by smtp.googlemail.com with ESMTPSA id u7sm7278270wmg.25.2019.05.21.04.00.59
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 21 May 2019 04:00:59 -0700 (PDT)
+From:   Joe Burmeister <joe.burmeister@devtank.co.uk>
+To:     linux-gpio@vger.kernel.org
+Cc:     Joe Burmeister <joe.burmeister@devtank.co.uk>
+Subject: [PATCH] Expand MCP23S08 driver for use as interrupt controller.(v3)
+Date:   Tue, 21 May 2019 12:00:51 +0100
+Message-Id: <20190521110051.3295-1-joe.burmeister@devtank.co.uk>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-References: <20190508073331.27475-1-drinkcat@chromium.org> <CACRpkdZb73vNyepcfjzEGAopc7BBxde_N1wxn7PSJ3aGC0=Gig@mail.gmail.com>
-In-Reply-To: <CACRpkdZb73vNyepcfjzEGAopc7BBxde_N1wxn7PSJ3aGC0=Gig@mail.gmail.com>
-From:   Sean Wang <sean.wang@kernel.org>
-Date:   Tue, 21 May 2019 03:13:17 -0700
-X-Gmail-Original-Message-ID: <CAGp9LzriFJTf_pqUDx3Tmp2dbJBy7Rv1y73Tq+Rw5WeXPT94aA@mail.gmail.com>
-Message-ID: <CAGp9LzriFJTf_pqUDx3Tmp2dbJBy7Rv1y73Tq+Rw5WeXPT94aA@mail.gmail.com>
-Subject: Re: [PATCH v2 0/2] pinctrl: mediatek: mt8183: Add support for wake sources
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Nicolas Boichat <drinkcat@chromium.org>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Chuanjia Liu <Chuanjia.Liu@mediatek.com>,
-        Evan Green <evgreen@chromium.org>,
-        Stephen Boyd <swboyd@chromium.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, May 16, 2019 at 4:56 AM Linus Walleij <linus.walleij@linaro.org> wrote:
->
-> On Wed, May 8, 2019 at 9:33 AM Nicolas Boichat <drinkcat@chromium.org> wrote:
->
-> > This adds support for wake sources in pinctrl-mtk-common-v2, and
-> > pinctrl-mt8183. Without this patch, all interrupts that are left
-> > enabled on suspend act as wake sources (and wake sources without
-> > interrupt enabled do not).
-> >
-> > Changes since v1:
-> >  - Move changes from mtk-common-v2 to mtk-pinctrl-paris, as
-> >    recommended by Sean, to keep better separation between eint
-> >    and pinctrl-common features.
-> >
-> > Nicolas Boichat (2):
-> >   pinctrl: mediatek: Add pm_ops to pinctrl-paris
-> >   pinctrl: mediatek: mt8183: Add mtk_pinctrl_paris_pm_ops
->
-> All seems to look fair to me, but I need some official ACK from
-> Sean on these.
->
+To be used as interrupt controller, pin control callbacks needed to
+setup the registers.
 
-sure, it looks good to me and thanks for Nicolas' help
+Signed-off-by: Joe Burmeister <joe.burmeister@devtank.co.uk>
+---
+ drivers/pinctrl/pinctrl-mcp23s08.c | 13 +++++++++++++
+ 1 file changed, 13 insertions(+)
 
-Acked-by: Sean Wang <sean.wang@kernel.org>
+diff --git a/drivers/pinctrl/pinctrl-mcp23s08.c b/drivers/pinctrl/pinctrl-mcp23s08.c
+index 98905d4a79ca..3fc63cb5b332 100644
+--- a/drivers/pinctrl/pinctrl-mcp23s08.c
++++ b/drivers/pinctrl/pinctrl-mcp23s08.c
+@@ -264,6 +264,12 @@ static int mcp_pinconf_get(struct pinctrl_dev *pctldev, unsigned int pin,
+ 			return ret;
+ 		status = (data & BIT(pin)) ? 1 : 0;
+ 		break;
++	case PIN_CONFIG_OUTPUT:
++		ret = mcp_read(mcp, MCP_IODIR, &data);
++		if (ret < 0)
++			return ret;
++		status = (data & BIT(pin)) ? 0 : 1; /* true is input */
++		break;
+ 	default:
+ 		dev_err(mcp->dev, "Invalid config param %04x\n", param);
+ 		return -ENOTSUPP;
+@@ -291,6 +297,13 @@ static int mcp_pinconf_set(struct pinctrl_dev *pctldev, unsigned int pin,
+ 		case PIN_CONFIG_BIAS_PULL_UP:
+ 			ret = mcp_set_bit(mcp, MCP_GPPU, pin, arg);
+ 			break;
++		case PIN_CONFIG_OUTPUT:
++			ret = mcp_set_bit(mcp, MCP_IODIR, pin, false);
++			if (!ret && arg)
++				ret = mcp_set_bit(mcp, MCP_GPPU, pin, true);
++			else
++				ret = mcp_set_bit(mcp, MCP_GPPU, pin, false);
++			break;
+ 		default:
+ 			dev_err(mcp->dev, "Invalid config param %04x\n", param);
+ 			return -ENOTSUPP;
+-- 
+2.20.1
 
-> I see there is some discussion on a related patch set which
-> also has two patches so I am a but confused how mature the
-> two patch sets are? Are they at all related?
->
-> Yours,
-> Linus Walleij
