@@ -2,43 +2,40 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 78A1D26D88
-	for <lists+linux-gpio@lfdr.de>; Wed, 22 May 2019 21:42:56 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 25D6526D56
+	for <lists+linux-gpio@lfdr.de>; Wed, 22 May 2019 21:41:34 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732453AbfEVTme (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 22 May 2019 15:42:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51386 "EHLO mail.kernel.org"
+        id S1732355AbfEVT27 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 22 May 2019 15:28:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51796 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731818AbfEVT2k (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Wed, 22 May 2019 15:28:40 -0400
+        id S1732705AbfEVT27 (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Wed, 22 May 2019 15:28:59 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BA617204FD;
-        Wed, 22 May 2019 19:28:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 813C520879;
+        Wed, 22 May 2019 19:28:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558553319;
-        bh=vSmiZq5dxqYPiG2qfKNaV+N43JayFslu7smwEAuFZVM=;
+        s=default; t=1558553338;
+        bh=lTQOjyWJLtdG/gOoRGAJugqulRKgZtsX6TNysc+fPX8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Xz9D5GHenteio9KQfmkqOm3x3NOSTkP9ydiRiaAqVGFKeBM9mo44Xnr3SJmyWYGxi
-         yw1kWMMuYN9k7Gd6sBPKP+0QYHkxdGGE7kiFnogRF4G16zIJBMCbdwhESLJcUWYfPo
-         /4JM9PfclAHHiSBw8TvvYODzYkzHHMTtlAIqBvbE=
+        b=pt5vYDr5/TA6EDHlyH7JI1oImzQ40L0uqhQMySmMA1eEU8dkeydfnJ1qr0aQij04G
+         2nrLLz/h/Li8iMpaprjWmPq+VaDxQpJ2Waw5noW87aXBqtFNS5mG1s/QuqoylSNaGS
+         Mr8sb1T6PCmnN0pufBG+UD6AdSTTASrv3VvVRqYw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Wen Yang <wen.yang99@zte.com.cn>,
         Linus Walleij <linus.walleij@linaro.org>,
-        Tomasz Figa <tomasz.figa@gmail.com>,
-        Sylwester Nawrocki <s.nawrocki@samsung.com>,
-        Kukjin Kim <kgene@kernel.org>,
-        linux-samsung-soc@vger.kernel.org, linux-gpio@vger.kernel.org,
-        Krzysztof Kozlowski <krzk@kernel.org>,
+        Jun Nie <jun.nie@linaro.org>, linux-gpio@vger.kernel.org,
+        Shawn Guo <shawnguo@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.19 082/244] pinctrl: samsung: fix leaked of_node references
-Date:   Wed, 22 May 2019 15:23:48 -0400
-Message-Id: <20190522192630.24917-82-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.14 011/167] pinctrl: zte: fix leaked of_node references
+Date:   Wed, 22 May 2019 15:26:06 -0400
+Message-Id: <20190522192842.25858-11-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190522192630.24917-1-sashal@kernel.org>
-References: <20190522192630.24917-1-sashal@kernel.org>
+In-Reply-To: <20190522192842.25858-1-sashal@kernel.org>
+References: <20190522192842.25858-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -50,43 +47,44 @@ X-Mailing-List: linux-gpio@vger.kernel.org
 
 From: Wen Yang <wen.yang99@zte.com.cn>
 
-[ Upstream commit 44b9f86cd41db6c522effa5aec251d664a52fbc0 ]
+[ Upstream commit 02d15f0d80720545f1f4922a1550ea4aaad4e152 ]
 
-The call to of_find_compatible_node returns a node pointer with refcount
+The call to of_parse_phandle returns a node pointer with refcount
 incremented thus it must be explicitly decremented after the last
 usage.
 
 Detected by coccinelle with the following warnings:
-./drivers/pinctrl/samsung/pinctrl-exynos-arm.c:76:2-8: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 66, but without a corresponding object release within this function.
-./drivers/pinctrl/samsung/pinctrl-exynos-arm.c:82:1-7: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 66, but without a corresponding object release within this function.
+./drivers/pinctrl/zte/pinctrl-zx.c:415:2-8: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 407, but without a corresponding object release within this function.
+./drivers/pinctrl/zte/pinctrl-zx.c:422:2-8: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 407, but without a corresponding object release within this function.
+./drivers/pinctrl/zte/pinctrl-zx.c:436:2-8: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 407, but without a corresponding object release within this function.
+./drivers/pinctrl/zte/pinctrl-zx.c:444:2-8: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 407, but without a corresponding object release within this function.
+./drivers/pinctrl/zte/pinctrl-zx.c:448:1-7: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 407, but without a corresponding object release within this function.
 
 Signed-off-by: Wen Yang <wen.yang99@zte.com.cn>
 Cc: Linus Walleij <linus.walleij@linaro.org>
-Cc: Tomasz Figa <tomasz.figa@gmail.com>
-Cc: Sylwester Nawrocki <s.nawrocki@samsung.com>
-Cc: Kukjin Kim <kgene@kernel.org>
-Cc: linux-samsung-soc@vger.kernel.org
+Cc: Jun Nie <jun.nie@linaro.org>
+Cc: Linus Walleij <linus.walleij@linaro.org>
 Cc: linux-gpio@vger.kernel.org
 Cc: linux-kernel@vger.kernel.org
-Reviewed-by: Krzysztof Kozlowski <krzk@kernel.org>
+Acked-by: Shawn Guo <shawnguo@kernel.org>
 Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pinctrl/samsung/pinctrl-exynos-arm.c | 1 +
+ drivers/pinctrl/zte/pinctrl-zx.c | 1 +
  1 file changed, 1 insertion(+)
 
-diff --git a/drivers/pinctrl/samsung/pinctrl-exynos-arm.c b/drivers/pinctrl/samsung/pinctrl-exynos-arm.c
-index 44c6b753f692a..85ddf49a51885 100644
---- a/drivers/pinctrl/samsung/pinctrl-exynos-arm.c
-+++ b/drivers/pinctrl/samsung/pinctrl-exynos-arm.c
-@@ -71,6 +71,7 @@ s5pv210_retention_init(struct samsung_pinctrl_drv_data *drvdata,
+diff --git a/drivers/pinctrl/zte/pinctrl-zx.c b/drivers/pinctrl/zte/pinctrl-zx.c
+index ded366bb6564d..91955e770236e 100644
+--- a/drivers/pinctrl/zte/pinctrl-zx.c
++++ b/drivers/pinctrl/zte/pinctrl-zx.c
+@@ -411,6 +411,7 @@ int zx_pinctrl_init(struct platform_device *pdev,
  	}
  
- 	clk_base = of_iomap(np, 0);
+ 	zpctl->aux_base = of_iomap(np, 0);
 +	of_node_put(np);
- 	if (!clk_base) {
- 		pr_err("%s: failed to map clock registers\n", __func__);
- 		return ERR_PTR(-EINVAL);
+ 	if (!zpctl->aux_base)
+ 		return -ENOMEM;
+ 
 -- 
 2.20.1
 
