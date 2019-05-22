@@ -2,27 +2,27 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id D105727041
-	for <lists+linux-gpio@lfdr.de>; Wed, 22 May 2019 22:02:49 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0DE8126F8B
+	for <lists+linux-gpio@lfdr.de>; Wed, 22 May 2019 21:57:52 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729864AbfEVUCh (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 22 May 2019 16:02:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42566 "EHLO mail.kernel.org"
+        id S1731199AbfEVTYM (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 22 May 2019 15:24:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45262 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730202AbfEVTVz (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Wed, 22 May 2019 15:21:55 -0400
+        id S1731174AbfEVTYM (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Wed, 22 May 2019 15:24:12 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B2E9A2173E;
-        Wed, 22 May 2019 19:21:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 957F2217D7;
+        Wed, 22 May 2019 19:24:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558552914;
+        s=default; t=1558553051;
         bh=QhdAarfzTmA6anoCvQ7Aa0lRiqrk8MkX1Str9Wrz+N8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=oNuR5P5n8OCTXuUqH31t88zRUsl8f3NGAGsCoQkpJoVHzb5/CAjh8VQM+sOwdFa3z
-         P8ATSzFzS5C+ZqsEr+wgox68h13Y70Jhh/G4iEPkZzDDxw6h5gWVFgSpHXAJZszv5i
-         jih143yC6rCWhc7wy6XYxulCF2u1ZOtJGPifrVzQ=
+        b=c6rxc87PSc7TJhTLdJFc4MkQ+fm6XtDI1pr7HPWGCHEFTDL+YTe9cig+vLhqvu/FE
+         VpDgA9clZkEdm8FwzmbC4w7Qi+SKSvf+NhiSo9o0lVjqyP83mDLcEHD/Kxeor6z0s0
+         uPshKFv7p5Whl48UgybZE53wQ/WNL6bSaDP/viuQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Wen Yang <wen.yang99@zte.com.cn>,
@@ -30,12 +30,12 @@ Cc:     Wen Yang <wen.yang99@zte.com.cn>,
         Jun Nie <jun.nie@linaro.org>, linux-gpio@vger.kernel.org,
         Shawn Guo <shawnguo@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.1 027/375] pinctrl: zte: fix leaked of_node references
-Date:   Wed, 22 May 2019 15:15:27 -0400
-Message-Id: <20190522192115.22666-27-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.0 022/317] pinctrl: zte: fix leaked of_node references
+Date:   Wed, 22 May 2019 15:18:43 -0400
+Message-Id: <20190522192338.23715-22-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190522192115.22666-1-sashal@kernel.org>
-References: <20190522192115.22666-1-sashal@kernel.org>
+In-Reply-To: <20190522192338.23715-1-sashal@kernel.org>
+References: <20190522192338.23715-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
