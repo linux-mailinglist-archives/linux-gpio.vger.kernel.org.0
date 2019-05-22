@@ -2,88 +2,105 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 44C76266E6
-	for <lists+linux-gpio@lfdr.de>; Wed, 22 May 2019 17:30:00 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BB52A267C7
+	for <lists+linux-gpio@lfdr.de>; Wed, 22 May 2019 18:12:31 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729758AbfEVP3p (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 22 May 2019 11:29:45 -0400
-Received: from mx07-00178001.pphosted.com ([62.209.51.94]:9640 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729832AbfEVP3m (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>);
-        Wed, 22 May 2019 11:29:42 -0400
-Received: from pps.filterd (m0046668.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x4MFSLdn021231;
-        Wed, 22 May 2019 17:29:32 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
- : date : message-id : in-reply-to : references : mime-version :
- content-type; s=STMicroelectronics;
- bh=B6DKjDnb7O5BR/R4BaH3RkAeSYESY1eQiVlZXH9oE8A=;
- b=Nsbzx5vOjEJkV6yl0J71Fvx548IwqVYr5OK+tf/R+yDwNL/jXPYF5cCRqDr/O99pgeYH
- 0ozfyPcQkt6fT8zAvU1kfbBuNu90pOOEkOzQjh/KFw/OAAuwwg/Bry9j3ZzkAxvjmzTB
- S9cYHgLoffD6ew/N+GxezB5ZBZasKT/JVJpusP2/sWvqP93/T7zHcOgu4y6mYBlTeHEq
- 0hr71YovpDRlVqBWpd6wZSqmxK/hmmIgDcx6Z4YXDXZXONzyegRzNWS2r8q8e4L5TR7T
- 2Dpj+FLeOrndDydEazYRjwezPqxckX1Hssp03CO49DxgnkEfH4BkR1wPXqG9aX+Gnswu Kw== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 2sj7h11b1j-1
-        (version=TLSv1 cipher=ECDHE-RSA-AES256-SHA bits=256 verify=NOT);
-        Wed, 22 May 2019 17:29:32 +0200
-Received: from zeta.dmz-eu.st.com (zeta.dmz-eu.st.com [164.129.230.9])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 3A46941;
-        Wed, 22 May 2019 15:29:31 +0000 (GMT)
-Received: from Webmail-eu.st.com (Safex1hubcas21.st.com [10.75.90.44])
-        by zeta.dmz-eu.st.com (STMicroelectronics) with ESMTP id EAEE42CD8;
-        Wed, 22 May 2019 15:29:30 +0000 (GMT)
-Received: from SAFEX1HUBCAS22.st.com (10.75.90.93) by SAFEX1HUBCAS21.st.com
- (10.75.90.44) with Microsoft SMTP Server (TLS) id 14.3.439.0; Wed, 22 May
- 2019 17:29:30 +0200
-Received: from localhost (10.201.20.122) by Webmail-ga.st.com (10.75.90.48)
- with Microsoft SMTP Server (TLS) id 14.3.439.0; Wed, 22 May 2019 17:29:30
- +0200
-From:   Benjamin Gaignard <benjamin.gaignard@st.com>
-To:     <linus.walleij@linaro.org>, <alexandre.torgue@st.com>,
-        <amelie.delaunay@st.com>
-CC:     <linux-gpio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <benjamin.gaignard@linaro.org>,
-        Benjamin Gaignard <benjamin.gaignard@st.com>
-Subject: [PATCH 2/2] pinctrl: stmfx: enable links creations
-Date:   Wed, 22 May 2019 17:29:25 +0200
-Message-ID: <20190522152925.12419-3-benjamin.gaignard@st.com>
-X-Mailer: git-send-email 2.15.0
-In-Reply-To: <20190522152925.12419-1-benjamin.gaignard@st.com>
-References: <20190522152925.12419-1-benjamin.gaignard@st.com>
+        id S1729803AbfEVQMa (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 22 May 2019 12:12:30 -0400
+Received: from outils.crapouillou.net ([89.234.176.41]:49332 "EHLO
+        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729740AbfEVQMa (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 22 May 2019 12:12:30 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
+        s=mail; t=1558541548; h=from:from:sender:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:references; bh=ommTaJiiF1wEQejjgl2jDFfJkhMbVYAtU2wzIc7UzPA=;
+        b=OXsob//8E2wfBWl4R46XcNFX0M97JmIeGlwO8MdA9bqrgw/9dNhpxJ6DDdSTiXhaD1K53t
+        pLye01sif6jXdr29xdH+hzlqvWhTkmvNuffecCoNq6gc4X9V9DQa2S56O6/cIPxzOowbmJ
+        wTa0I6drPzcC0YOOY3ruZReOEBaI1U8=
+From:   Paul Cercueil <paul@crapouillou.net>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     od@zcrc.me, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Paul Cercueil <paul@crapouillou.net>
+Subject: [PATCH] pinctrl: ingenic: Handle PIN_CONFIG_OUTPUT config
+Date:   Wed, 22 May 2019 18:12:24 +0200
+Message-Id: <20190522161224.6169-1-paul@crapouillou.net>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.201.20.122]
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-22_08:,,
- signatures=0
+Content-Transfer-Encoding: 8bit
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Set create_link to inform pinctrl core that stmfx wants to create
-link with its consumers.
+This enables devicetree bindings to specify that a given GPIO should be
+driven low or high.
 
-Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
+Signed-off-by: Paul Cercueil <paul@crapouillou.net>
 ---
- drivers/pinctrl/pinctrl-stmfx.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/pinctrl/pinctrl-ingenic.c | 23 ++++++++++++++++++++++-
+ 1 file changed, 22 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/pinctrl/pinctrl-stmfx.c b/drivers/pinctrl/pinctrl-stmfx.c
-index eba872ce4a7c..55a9f145b4d9 100644
---- a/drivers/pinctrl/pinctrl-stmfx.c
-+++ b/drivers/pinctrl/pinctrl-stmfx.c
-@@ -622,6 +622,7 @@ static int stmfx_pinctrl_probe(struct platform_device *pdev)
- 	pctl->pctl_desc.pins = stmfx_pins;
- 	pctl->pctl_desc.npins = ARRAY_SIZE(stmfx_pins);
- 	pctl->pctl_desc.owner = THIS_MODULE;
-+	pctl->pctl_desc.create_link = true;
+diff --git a/drivers/pinctrl/pinctrl-ingenic.c b/drivers/pinctrl/pinctrl-ingenic.c
+index a83ddd52efdd..07342bc769d1 100644
+--- a/drivers/pinctrl/pinctrl-ingenic.c
++++ b/drivers/pinctrl/pinctrl-ingenic.c
+@@ -1154,19 +1154,30 @@ static void ingenic_set_bias(struct ingenic_pinctrl *jzpc,
+ 		ingenic_config_pin(jzpc, pin, JZ4740_GPIO_PULL_DIS, !enabled);
+ }
  
- 	ret = devm_pinctrl_register_and_init(pctl->dev, &pctl->pctl_desc,
- 					     pctl, &pctl->pctl_dev);
++static void ingenic_set_output_level(struct ingenic_pinctrl *jzpc,
++				     unsigned int pin, bool high)
++{
++	if (jzpc->version >= ID_JZ4770)
++		ingenic_config_pin(jzpc, pin, JZ4770_GPIO_PAT0, high);
++	else
++		ingenic_config_pin(jzpc, pin, JZ4740_GPIO_DATA, high);
++}
++
+ static int ingenic_pinconf_set(struct pinctrl_dev *pctldev, unsigned int pin,
+ 		unsigned long *configs, unsigned int num_configs)
+ {
+ 	struct ingenic_pinctrl *jzpc = pinctrl_dev_get_drvdata(pctldev);
+ 	unsigned int idx = pin % PINS_PER_GPIO_CHIP;
+ 	unsigned int offt = pin / PINS_PER_GPIO_CHIP;
+-	unsigned int cfg;
++	unsigned int cfg, arg;
++	int ret;
+ 
+ 	for (cfg = 0; cfg < num_configs; cfg++) {
+ 		switch (pinconf_to_config_param(configs[cfg])) {
+ 		case PIN_CONFIG_BIAS_DISABLE:
+ 		case PIN_CONFIG_BIAS_PULL_UP:
+ 		case PIN_CONFIG_BIAS_PULL_DOWN:
++		case PIN_CONFIG_OUTPUT:
+ 			continue;
+ 		default:
+ 			return -ENOTSUPP;
+@@ -1174,6 +1185,8 @@ static int ingenic_pinconf_set(struct pinctrl_dev *pctldev, unsigned int pin,
+ 	}
+ 
+ 	for (cfg = 0; cfg < num_configs; cfg++) {
++		arg = pinconf_to_config_argument(configs[cfg]);
++
+ 		switch (pinconf_to_config_param(configs[cfg])) {
+ 		case PIN_CONFIG_BIAS_DISABLE:
+ 			dev_dbg(jzpc->dev, "disable pull-over for pin P%c%u\n",
+@@ -1197,6 +1210,14 @@ static int ingenic_pinconf_set(struct pinctrl_dev *pctldev, unsigned int pin,
+ 			ingenic_set_bias(jzpc, pin, true);
+ 			break;
+ 
++		case PIN_CONFIG_OUTPUT:
++			ret = pinctrl_gpio_direction_output(pin);
++			if (ret)
++				return ret;
++
++			ingenic_set_output_level(jzpc, pin, arg);
++			break;
++
+ 		default:
+ 			unreachable();
+ 		}
 -- 
-2.15.0
+2.21.0.593.g511ec345e18
 
