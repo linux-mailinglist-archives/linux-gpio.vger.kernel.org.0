@@ -2,103 +2,98 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 04456271E1
-	for <lists+linux-gpio@lfdr.de>; Wed, 22 May 2019 23:49:00 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B71632765B
+	for <lists+linux-gpio@lfdr.de>; Thu, 23 May 2019 08:56:29 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729752AbfEVVs7 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 22 May 2019 17:48:59 -0400
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:41768 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729381AbfEVVs7 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 22 May 2019 17:48:59 -0400
-Received: by mail-lj1-f196.google.com with SMTP id q16so3506134ljj.8
-        for <linux-gpio@vger.kernel.org>; Wed, 22 May 2019 14:48:57 -0700 (PDT)
+        id S1728668AbfEWG42 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 23 May 2019 02:56:28 -0400
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:35699 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725814AbfEWG42 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 23 May 2019 02:56:28 -0400
+Received: by mail-lf1-f66.google.com with SMTP id c17so3564230lfi.2
+        for <linux-gpio@vger.kernel.org>; Wed, 22 May 2019 23:56:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=iOQBrNwTYw1SJ63/WnHNyssBXV9YJJ2k4UCp73ToEmY=;
-        b=qp7ksrqLx5ft/ImrAs4PupVHbiOySR7j6SkKW6uxuR8rBj9z12Uj+F7+UyVWnv3ZHz
-         W/Ns+ZonjORK43hZe/WgphVUkLMjHRH7+C2CNrYMyTxOBeGlmhgZvFCL3PHMXZmIupnV
-         Y2hwr1kXNAqp9r+XIOwauIZzoI8Lf/63GwjL23s1Vuiuc+XwA+i9mAAypjha7jlDGIAc
-         X1S4iBB9s9w2hOve0jwvAT44+DQbAXUFZIBTrQLJLV064mcfUB8fUhoDVxPJogbRtnJH
-         JgXNXOCEvNqmZWHkGd1aN6+yQ+zGUCJ4ndPiPzuSsnpNVvkz4tIcl79YBJdEbf44d11d
-         JSWw==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=/WBJ44iDQX30k02SlTfkJc3yqkwJmRNSAtFwx3J5/HQ=;
+        b=eoC99qMwNiwrn4v2tvawer93YYgIy10vPBy59SKp48cG3bvOvBEBPc74uFWhP8rRgk
+         u37O5eoKRyCKgjo+Xe10DNeDnEthcQC62K+dCcEdO2YHzsorAg9PX1JCm6LGw+PKkefm
+         +N+TDaJ9pNBlmMYA02EILADFv557+kaPGn19BNvfjxhZ/6wuq5qO4TgZxIZ7nlhS7Bk4
+         fDfHEUMaLCBCh3ic1/ZATKN0+Py+ayOJCjG6xIIsycnjuBWYA7LnWUT6oMhJnRFA+LEg
+         E415mc46d6Dc6FUhfxFToUw/vfezNwU5bWa6XCNgQtPVe9yzvjuLkMfk6MMbHwSZJqIf
+         ut5g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=iOQBrNwTYw1SJ63/WnHNyssBXV9YJJ2k4UCp73ToEmY=;
-        b=g3OYVBgyZ5ozCghKLb47vpryT73WUdFeQqfvYLQcLjrGgXX/X20Ngv6BUbR/bcMxN1
-         HUrWlnL2U02JrKQAl9Ie0v0NyDFZ8sTFQNRI0rwepj5uzNFwAb6BTNQkmZRG6Ck/l1Pb
-         nUg/QCksz8DOs05eTOyIu5+3l8X9Gr4ZWjiaksNkA5nCyYLvgpsMk1tp4NZnwwdLEeI1
-         aVHI1p/x72u1ELuhEdbXUJLr5s7ldtWzUB1ltYo2ilW9XFRGOYNe3WNMEMpD6qaX7/2S
-         lkExdGHo/9DPthY83ognRTGyQ/EDsp4aVZwgrGogkuUogwCSW2xxcH2gP4joh2ND0bDz
-         /n/w==
-X-Gm-Message-State: APjAAAXiJjZZPjr83+x22t6aWNu4WVTr/GJmPFB9Je7tfiq10sEZ8FZT
-        Fhmr0JdDVzA8pbSl0Je3fbsvb8wu/WWCrmhTTp6cEA==
-X-Google-Smtp-Source: APXvYqwn7Y1cj8wPhej94OTp0JB16CcRc/bDKnwG8PWg9M3eToMM02XbJOSHxYn9oeKK6KCeZ6o6KloIF4NRh2kbJzU=
-X-Received: by 2002:a2e:95d2:: with SMTP id y18mr24141079ljh.167.1558561737233;
- Wed, 22 May 2019 14:48:57 -0700 (PDT)
-MIME-Version: 1.0
-References: <1558338735-8444-1-git-send-email-amelie.delaunay@st.com>
- <20190522054833.GB4574@dell> <eb8425ec-989a-9701-7fee-61bd1d2b93c1@st.com>
- <20190522084133.GF4574@dell> <bc1b5f1d-23b0-141d-f58f-b54ac303fe20@st.com>
-In-Reply-To: <bc1b5f1d-23b0-141d-f58f-b54ac303fe20@st.com>
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=/WBJ44iDQX30k02SlTfkJc3yqkwJmRNSAtFwx3J5/HQ=;
+        b=I9/7eaO/Z6bd9horr8YaX9F5OhPQ7gKzoXhSwlqLgwcCBixv5ef8RegFXwmKvIeDtO
+         LFih5jqL9mr7AggCO5nEAzKX0DILA4YdZVE0O+oeLfMfmakLMwlCIvZg92a741I7xT1e
+         3rKHBSaO8MZOB1vM9hZ7qsnEmQX8A/S/LAfDHzYCwBh4nxM3zpU62MkoCb86G7QiCvj/
+         q/ZruDoQgjG6DS2PU1naJxhK4yf5CcCUMiPz4Vz7HXrehLxU42H8lZi5blBhLQMesZWb
+         ZvgFtKE1J+krxHAMXbRMf7qJFuVIJsDu9JuaQ/ZBXLcMbESNI9F+uHOu5mQ55qfLslFi
+         JvSQ==
+X-Gm-Message-State: APjAAAXaz5/sB+qxt6Bkek/PcMnA7sOsl6WmogWGPQ6719MB2owd+X5B
+        4Wr7Oq/B3rCatdC89A4jOIGBSPJLMPw=
+X-Google-Smtp-Source: APXvYqw3+cxk9mNBYA6X7NKjKLozJFVLAD1u7WyCe9qNZBEahbDBt/knqzssZ7jMcGDz8MXkcR5m2g==
+X-Received: by 2002:a19:e057:: with SMTP id g23mr14589323lfj.19.1558594585966;
+        Wed, 22 May 2019 23:56:25 -0700 (PDT)
+Received: from genomnajs.ideon.se ([85.235.10.227])
+        by smtp.gmail.com with ESMTPSA id u14sm4718677lfq.6.2019.05.22.23.56.24
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 22 May 2019 23:56:24 -0700 (PDT)
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Wed, 22 May 2019 23:48:45 +0200
-Message-ID: <CACRpkdYmdpwEvCBrL6i1V+Zxd0OSpZmD8BJPSZu9jYNeJkoimQ@mail.gmail.com>
-Subject: Re: [PATCH] pinctrl: stmfx: Fix compile issue when CONFIG_OF_GPIO is
- not defined
-To:     Amelie DELAUNAY <amelie.delaunay@st.com>
-Cc:     Lee Jones <lee.jones@linaro.org>,
-        Alexandre TORGUE <alexandre.torgue@st.com>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-stm32@st-md-mailman.stormreply.com" 
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        "kbuild-all@01.org" <kbuild-all@01.org>,
-        Randy Dunlap <rdunlap@infradead.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+To:     linux-gpio@vger.kernel.org
+Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Linus Walleij <linus.walleij@linaro.org>
+Subject: [PATCH] gpio: Update Kconfig text for GPIO_SYSFS
+Date:   Thu, 23 May 2019 08:56:23 +0200
+Message-Id: <20190523065623.5993-1-linus.walleij@linaro.org>
+X-Mailer: git-send-email 2.20.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, May 22, 2019 at 11:21 AM Amelie DELAUNAY <amelie.delaunay@st.com> w=
-rote:
+This feature is deprecated, it is helpful to inform users about
+this. I'm resisting the temptation to add "depends on BROKEN"
+to this, but saving that for later.
 
-> ../drivers/pinctrl/pinctrl-stmfx.c:409:20: error:
-> =E2=80=98pinconf_generic_dt_node_to_map_pin=E2=80=99 undeclared here (not=
- in a function)
->    .dt_node_to_map =3D pinconf_generic_dt_node_to_map_pin,
->
-> OF_GPIO depends on OF.
->
-> So either
->      depends on OF || (OF && COMPILE_TEST)
-> or
->      depends on OF || (OF_GPIO && COMPILE_TEST)
->
-> and
->
->      select OF_GPIO
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+---
+ drivers/gpio/Kconfig | 14 +++++---------
+ 1 file changed, 5 insertions(+), 9 deletions(-)
 
-I would use just:
+diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
+index 8023d03ec362..a10b821e1d92 100644
+--- a/drivers/gpio/Kconfig
++++ b/drivers/gpio/Kconfig
+@@ -61,16 +61,12 @@ config GPIO_SYSFS
+ 	bool "/sys/class/gpio/... (sysfs interface)"
+ 	depends on SYSFS
+ 	help
+-	  Say Y here to add a sysfs interface for GPIOs.
++	  Say Y here to add the legacy sysfs interface for GPIOs.
+ 
+-	  This is mostly useful to work around omissions in a system's
+-	  kernel support.  Those are common in custom and semicustom
+-	  hardware assembled using standard kernels with a minimum of
+-	  custom patches.  In those cases, userspace code may import
+-	  a given GPIO from the kernel, if no kernel driver requested it.
+-
+-	  Kernel drivers may also request that a particular GPIO be
+-	  exported to userspace; this can be useful when debugging.
++	  This ABI is deprecated. If you want to use GPIO from userspace,
++	  use the character device /dev/gpiochipN with the appropriate
++	  ioctl() operations instead. The character device is always
++	  available.
+ 
+ config GPIO_GENERIC
+ 	depends on HAS_IOMEM # Only for IOMEM drivers
+-- 
+2.20.1
 
-depends on OF_GPIO
-
-Because OF_GPIO already depends on OF, and
-compile tests will not work without OF_GPIO which
-require OF so...
-
-Besides it is what most other GPIO drivers do.
-
-So just keep that one line and drop the rest.
-
-Yours,
-Linus Walleij
