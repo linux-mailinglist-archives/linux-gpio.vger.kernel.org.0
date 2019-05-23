@@ -2,98 +2,85 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id B71632765B
-	for <lists+linux-gpio@lfdr.de>; Thu, 23 May 2019 08:56:29 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C532827728
+	for <lists+linux-gpio@lfdr.de>; Thu, 23 May 2019 09:37:36 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728668AbfEWG42 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 23 May 2019 02:56:28 -0400
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:35699 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725814AbfEWG42 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 23 May 2019 02:56:28 -0400
-Received: by mail-lf1-f66.google.com with SMTP id c17so3564230lfi.2
-        for <linux-gpio@vger.kernel.org>; Wed, 22 May 2019 23:56:27 -0700 (PDT)
+        id S1730327AbfEWHhg (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 23 May 2019 03:37:36 -0400
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:42174 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729866AbfEWHhf (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 23 May 2019 03:37:35 -0400
+Received: by mail-lf1-f68.google.com with SMTP id y13so3619974lfh.9
+        for <linux-gpio@vger.kernel.org>; Thu, 23 May 2019 00:37:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=/WBJ44iDQX30k02SlTfkJc3yqkwJmRNSAtFwx3J5/HQ=;
-        b=eoC99qMwNiwrn4v2tvawer93YYgIy10vPBy59SKp48cG3bvOvBEBPc74uFWhP8rRgk
-         u37O5eoKRyCKgjo+Xe10DNeDnEthcQC62K+dCcEdO2YHzsorAg9PX1JCm6LGw+PKkefm
-         +N+TDaJ9pNBlmMYA02EILADFv557+kaPGn19BNvfjxhZ/6wuq5qO4TgZxIZ7nlhS7Bk4
-         fDfHEUMaLCBCh3ic1/ZATKN0+Py+ayOJCjG6xIIsycnjuBWYA7LnWUT6oMhJnRFA+LEg
-         E415mc46d6Dc6FUhfxFToUw/vfezNwU5bWa6XCNgQtPVe9yzvjuLkMfk6MMbHwSZJqIf
-         ut5g==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=cx8kg7WymCjtyRcPfqK4zjuEJ4lhy55B2Gkin5DJtFU=;
+        b=fR8RE84n1odppI3p20OTG7XaGgUYqo6kXCldCRW8or5Z3hIBeoEMGNKMB5ZPtdNJk/
+         mgByEQfAV30URjnhve0FLDZCf3VjYeJTLxrXOtpebu/WgWJa95xV6q/bzJIWfQu5kAM/
+         lb+2YJRaFCyI9zlUIgxWbqOGBQ8GH9WL7wLHOn/TeVF16dYN8cUyFpGCJTNx4/m3BA6y
+         WhJFolJShRdIpJ8lYYTZrjQzkt4A0fSuH6IOy7MSadTiKYexx/vuh+O5dw6MVcnvh0iX
+         6FmVEvoLxExnr+FvKCG/9HFdK3pBLFR3kjTdxjnhyNRcvh8Flzh1gs9FGLySsBOjgh/R
+         +vAg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=/WBJ44iDQX30k02SlTfkJc3yqkwJmRNSAtFwx3J5/HQ=;
-        b=I9/7eaO/Z6bd9horr8YaX9F5OhPQ7gKzoXhSwlqLgwcCBixv5ef8RegFXwmKvIeDtO
-         LFih5jqL9mr7AggCO5nEAzKX0DILA4YdZVE0O+oeLfMfmakLMwlCIvZg92a741I7xT1e
-         3rKHBSaO8MZOB1vM9hZ7qsnEmQX8A/S/LAfDHzYCwBh4nxM3zpU62MkoCb86G7QiCvj/
-         q/ZruDoQgjG6DS2PU1naJxhK4yf5CcCUMiPz4Vz7HXrehLxU42H8lZi5blBhLQMesZWb
-         ZvgFtKE1J+krxHAMXbRMf7qJFuVIJsDu9JuaQ/ZBXLcMbESNI9F+uHOu5mQ55qfLslFi
-         JvSQ==
-X-Gm-Message-State: APjAAAXaz5/sB+qxt6Bkek/PcMnA7sOsl6WmogWGPQ6719MB2owd+X5B
-        4Wr7Oq/B3rCatdC89A4jOIGBSPJLMPw=
-X-Google-Smtp-Source: APXvYqw3+cxk9mNBYA6X7NKjKLozJFVLAD1u7WyCe9qNZBEahbDBt/knqzssZ7jMcGDz8MXkcR5m2g==
-X-Received: by 2002:a19:e057:: with SMTP id g23mr14589323lfj.19.1558594585966;
-        Wed, 22 May 2019 23:56:25 -0700 (PDT)
-Received: from genomnajs.ideon.se ([85.235.10.227])
-        by smtp.gmail.com with ESMTPSA id u14sm4718677lfq.6.2019.05.22.23.56.24
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 22 May 2019 23:56:24 -0700 (PDT)
-From:   Linus Walleij <linus.walleij@linaro.org>
-To:     linux-gpio@vger.kernel.org
-Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Linus Walleij <linus.walleij@linaro.org>
-Subject: [PATCH] gpio: Update Kconfig text for GPIO_SYSFS
-Date:   Thu, 23 May 2019 08:56:23 +0200
-Message-Id: <20190523065623.5993-1-linus.walleij@linaro.org>
-X-Mailer: git-send-email 2.20.1
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=cx8kg7WymCjtyRcPfqK4zjuEJ4lhy55B2Gkin5DJtFU=;
+        b=ptLxE2Ba2jhfNTNwzdl5n/GNNy05fR4H+qpU6WUotgDUVb/NnSJqcPHD/V3K9w1+G8
+         6hn0/OiW0zSC7JjJV6qBOI/7tsABGTo7f2TWS904bh4PIyUqICMpRCb+T6aaKfJoWa5k
+         sWWErkpiVfwksePCUM4GLB9DebM9sd3Cu+CItR/opXrR5AhpD9JbX6gizwlu1DfspvH8
+         lBJr8wXOTb870KjIRLDzVgY/UdyTUXYeK5lNVDSvgFu4Kiy2WNQHqDijA/YixTwBfVmm
+         oaVU1V87pTD/P9n+RpZp5glcngdNB5l0z5efIfFuoix28yn0EWYd7XowPb80JSRwBCIO
+         W1HA==
+X-Gm-Message-State: APjAAAWK9CKprKMU91U5Rz6UOrTmyxNq17X+o/GIHeNKGSxso+Wt+UvM
+        P5s7SpAqiqaOkZuR8+8zHTGeoQbhrToiGAF7gVn44g==
+X-Google-Smtp-Source: APXvYqyBRsqXPk9Dhzbeg2Oz3JZyzA3NjwECl9TBODwCZZrOK9/RFjOdjOlwiSIFYgEUEDYHs19a86bibzY+Aklnf3E=
+X-Received: by 2002:ac2:5935:: with SMTP id v21mr4885287lfi.117.1558597053613;
+ Thu, 23 May 2019 00:37:33 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20190522152925.12419-1-benjamin.gaignard@st.com>
+In-Reply-To: <20190522152925.12419-1-benjamin.gaignard@st.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Thu, 23 May 2019 09:37:22 +0200
+Message-ID: <CACRpkdYOS0UrXPtJb0--4RW6QM_Xq8wb=9Gj5X9fk7JWCgpWfQ@mail.gmail.com>
+Subject: Re: [PATCH 0/2] Allow pinctrl framework to create links
+To:     Benjamin Gaignard <benjamin.gaignard@st.com>
+Cc:     Alexandre TORGUE <alexandre.torgue@st.com>,
+        Amelie Delaunay <amelie.delaunay@st.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        linux-stm32@st-md-mailman.stormreply.com,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Benjamin Gaignard <benjamin.gaignard@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-This feature is deprecated, it is helpful to inform users about
-this. I'm resisting the temptation to add "depends on BROKEN"
-to this, but saving that for later.
+Hi Benjamin!
 
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
----
- drivers/gpio/Kconfig | 14 +++++---------
- 1 file changed, 5 insertions(+), 9 deletions(-)
+On Wed, May 22, 2019 at 5:29 PM Benjamin Gaignard
+<benjamin.gaignard@st.com> wrote:
 
-diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
-index 8023d03ec362..a10b821e1d92 100644
---- a/drivers/gpio/Kconfig
-+++ b/drivers/gpio/Kconfig
-@@ -61,16 +61,12 @@ config GPIO_SYSFS
- 	bool "/sys/class/gpio/... (sysfs interface)"
- 	depends on SYSFS
- 	help
--	  Say Y here to add a sysfs interface for GPIOs.
-+	  Say Y here to add the legacy sysfs interface for GPIOs.
- 
--	  This is mostly useful to work around omissions in a system's
--	  kernel support.  Those are common in custom and semicustom
--	  hardware assembled using standard kernels with a minimum of
--	  custom patches.  In those cases, userspace code may import
--	  a given GPIO from the kernel, if no kernel driver requested it.
--
--	  Kernel drivers may also request that a particular GPIO be
--	  exported to userspace; this can be useful when debugging.
-+	  This ABI is deprecated. If you want to use GPIO from userspace,
-+	  use the character device /dev/gpiochipN with the appropriate
-+	  ioctl() operations instead. The character device is always
-+	  available.
- 
- config GPIO_GENERIC
- 	depends on HAS_IOMEM # Only for IOMEM drivers
--- 
-2.20.1
+> Some pin controllers may need to ensure suspend/resume calls ordering between
+> themselves and their clients.
+> That is the case for STMFX (an I2C GPIO expender) which need to be suspended
+> after all it clients to let them call pinctrl_pm_select_sleep_state() before
+> perform it own suspend function. It is the same problem for resume but in
+> reverse order.
+>
+> This series allow to let pinctrl core knows if a controller would like to
+> create link between itself and it client by setting create_link to true.
 
+I changed the name of the boolt to "link_consumers" and applied!
+
+I will send patches for all other pin controllers that are I2C or other
+slow bus based, as they will definately need this. Let's see what
+happens!
+
+Yours,
+Linus Walleij
