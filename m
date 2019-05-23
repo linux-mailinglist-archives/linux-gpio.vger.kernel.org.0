@@ -2,112 +2,91 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id AA64528961
-	for <lists+linux-gpio@lfdr.de>; Thu, 23 May 2019 21:42:36 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DF0B828CCF
+	for <lists+linux-gpio@lfdr.de>; Fri, 24 May 2019 00:00:59 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390399AbfEWTfn (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 23 May 2019 15:35:43 -0400
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:38681 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390771AbfEWT0e (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 23 May 2019 15:26:34 -0400
-Received: by mail-lj1-f194.google.com with SMTP id 14so6556527ljj.5
-        for <linux-gpio@vger.kernel.org>; Thu, 23 May 2019 12:26:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=4oPHJ791QDhQXaDhiV5z4nPMfZPUmYNBT531vwDg+48=;
-        b=zeVJvESMaCyb/o40lHgrHQaR0wxSc/HnzXDVChS7CIkoyKGjuK9jSN5lY5+wkWP/8U
-         BiunktJcKY/63y/25SK4wIix5sjdUMoD7qWL4KhsDhmWYtUaUR4H8a1ruGfIx3I9qkjh
-         Q3qwEuDphbV7b5jU6ySDVNLEi6ctlkImQTLisW/XTfvt5PfFd4AQ0Ld0UOjoe46VD2GG
-         KpOEhQPppu8xbPyd1n2awy5ttv7sLzYdgP4xgcEgSaZvyjs/TKv8PeHpX2ccaMw4DKfy
-         p86y4//xMNjZMskJm2NsQUNu8ueqe3JmChrs1H2C24CrUO8wSLZsLj+08IJtDFIUbuy1
-         EY1Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=4oPHJ791QDhQXaDhiV5z4nPMfZPUmYNBT531vwDg+48=;
-        b=q+xEjTvHOM1F9AIHTNO6ctZ/tbmZ1PAZ8XVj/91IvzUROMbIgDaik9Mm/c26BI817g
-         rAFfx3VBix5aIwmMDLY/DySE1KkqPVAsbjEx7wAwIPt1QREDfXLfE2NrDn72oDo2LiGp
-         la55SlvZJdZPuhDVnkqyPwRNMDTM8/2vscjtLeigRIXsuKL3fDHBhMXUZBBp9uES10gy
-         SFl8NfiRuT8YKsyNzNCtpla4gV/HMXl0JAXhvY5+S0G8C5MzG7LIB+52odP6j9Xmt0h5
-         +A7AVyqoZU8hNEqGyg8lc6NN5YVHMTq7vAF6JfDguzQ0kLjGevaXe61GdN0HjlfqJswp
-         Fblg==
-X-Gm-Message-State: APjAAAVZOL/c7civ+bri0t2ANf3G9o+ycCueqpOJI5YH9FU6nXRsjHui
-        48SBFHz/DxLHyt0ffFwDEe3YbnvaI+etKE1w0yx/gA==
-X-Google-Smtp-Source: APXvYqw1/NENPB+wYuJbCaWzvbL6Q6fSr1KQwaAmsfMTd9ZqJ6Yzw8D8osZ71U+Vfdl6V/MOWyoc3/ahcxiWU+5OoEE=
-X-Received: by 2002:a2e:9cd1:: with SMTP id g17mr9897354ljj.191.1558639591978;
- Thu, 23 May 2019 12:26:31 -0700 (PDT)
+        id S2388358AbfEWWA7 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 23 May 2019 18:00:59 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:42228 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387616AbfEWWA6 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 23 May 2019 18:00:58 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=Content-Transfer-Encoding:Content-Type:
+        MIME-Version:Date:Message-ID:Subject:From:Cc:To:Sender:Reply-To:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
+        List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=q0ChSwIgjWmAlSA3WLmbkrMunJ+EzRmHj6nCPrtyT6A=; b=3VKjo/+zSV+G+nl3AlhMIVepW+
+        +cr9FiVKt7O00ECmmRJS5LXWb0qORktCXK3waGV0LpMbofvOiuTA7MkuUYVSwD94A7jIZHFMXR6/A
+        XciZW1qUoziZiVS+z/AEeO01pbjki3pb7H26BySZ1MtEYvuloC6fUW68pqymnw7daEeZx2xEL75Tr
+        /RNM9zuLSIXG2It+JD6kbuSGirnKOIJ/wltfLd58y2whO96hqpcGSpqik/CoVx/nqCoIdGjbeuXq+
+        iA7lbSg0+Q2+45LGHRTw+hUL72iCNYmmaD++ipo51ilZ0vtVDv13lm8HHVQ/VvwarPw1xhJBuIi2N
+        0L1oD0cw==;
+Received: from static-50-53-52-16.bvtn.or.frontiernet.net ([50.53.52.16] helo=midway.dunlab)
+        by merlin.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1hTvlV-0005vn-6z; Thu, 23 May 2019 22:00:45 +0000
+To:     LKML <linux-kernel@vger.kernel.org>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>
+Cc:     kbuild test robot <lkp@intel.com>,
+        Michael Hennerich <michael.hennerich@analog.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Subject: [PATCH] gpio: fix gpio-adp5588 build errors
+Message-ID: <8054bec0-ea24-8590-738b-bae58c0be3b4@infradead.org>
+Date:   Thu, 23 May 2019 15:00:41 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-References: <20190523080654.19155-1-linus.walleij@linaro.org> <5ce6dddf.1c69fb81.8efac.03cf@mx.google.com>
-In-Reply-To: <5ce6dddf.1c69fb81.8efac.03cf@mx.google.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Thu, 23 May 2019 21:26:20 +0200
-Message-ID: <CACRpkdZ95Np43+mbGAmWBTN1b=sE0Tos9h3_xNhEM5yZ_EMJgA@mail.gmail.com>
-Subject: Re: [PATCH] pinctrl: qcom: Enable device links to consumers
-To:     Stephen Boyd <swboyd@chromium.org>
-Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Brian Masney <masneyb@onstation.org>,
-        Lina Iyer <ilina@codeaurora.org>,
-        Benjamin Gaignard <benjamin.gaignard@st.com>,
-        Evan Green <evgreen@chromium.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, May 23, 2019 at 7:52 PM Stephen Boyd <swboyd@chromium.org> wrote:
+From: Randy Dunlap <rdunlap@infradead.org>
 
-> Also, what is the usecase for device links in pinctrl?
+The gpio-adp5588 driver uses interfaces that are provided by
+GPIOLIB_IRQCHIP, so select that symbol in its Kconfig entry.
 
-Most prominent is a device (such as a GPIO block or I2C
-block or something) that need to suspend before the pin
-controller itself suspend()s.
+Fixes these build errors:
 
-> Doesn't the
-> driver core reorder the suspend list when probing devices so that
-> devices that probe defer get moved later in list and thus suspended
-> first?
+../drivers/gpio/gpio-adp5588.c: In function ‘adp5588_irq_handler’:
+../drivers/gpio/gpio-adp5588.c:266:26: error: ‘struct gpio_chip’ has no member named ‘irq’
+            dev->gpio_chip.irq.domain, gpio));
+                          ^
+../drivers/gpio/gpio-adp5588.c: In function ‘adp5588_irq_setup’:
+../drivers/gpio/gpio-adp5588.c:298:2: error: implicit declaration of function ‘gpiochip_irqchip_add_nested’ [-Werror=implicit-function-declaration]
+  ret = gpiochip_irqchip_add_nested(&dev->gpio_chip,
+  ^
+../drivers/gpio/gpio-adp5588.c:307:2: error: implicit declaration of function ‘gpiochip_set_nested_irqchip’ [-Werror=implicit-function-declaration]
+  gpiochip_set_nested_irqchip(&dev->gpio_chip,
+  ^
 
-AFAIK it does not, the device links however can do this so that
-the probe order does not have to use deferral at all. But the
-links can also be added later at runtime (like when pin control
-states are requested by drivers) and that is what this patch
-does.
+Fixes: 459773ae8dbb ("gpio: adp5588-gpio: support interrupt controller")
 
-By way of the chicken-and-egg problem we cannot really use
-these device links much for probe ordering, but they can
-readily be used to control suspend/resume sequencing
-like this.
+Reported-by: kbuild test robot <lkp@intel.com>
+Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
+Cc: Michael Hennerich <michael.hennerich@analog.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>
+Cc: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Cc: linux-gpio@vger.kernel.org
+---
+ drivers/gpio/Kconfig |    1 +
+ 1 file changed, 1 insertion(+)
 
->I can understand that runtime suspend may be important because
-> order of suspend isn't fixed, but system suspend should be unaffected,
-> right?
+--- lnx-52-rc1.orig/drivers/gpio/Kconfig
++++ lnx-52-rc1/drivers/gpio/Kconfig
+@@ -822,6 +822,7 @@ config GPIO_ADP5588
+ config GPIO_ADP5588_IRQ
+ 	bool "Interrupt controller support for ADP5588"
+ 	depends on GPIO_ADP5588=y
++	select GPIOLIB_IRQCHIP
+ 	help
+ 	  Say yes here to enable the adp5588 to be used as an interrupt
+ 	  controller. It requires the driver to be built in the kernel.
 
-AFAIK both runtime PM and system suspend use the device
-links, this was implemented especially for system suspend/resume
-and tested with the STMFX driver on STM32.
 
-> >         pctrl->desc.npins = pctrl->soc->npins;
-> > +       pctrl->desc.link_consumers = true;
->
-> Why is it an opt-in flag instead of a mandated feature for all pinctrl
-> providers?
-
-I am afraid of breaking stuff. (OK maybe I am chicken...)
-
-We slammed in device links in the DRM core and it exploded in
-our face. Because of fear of causing a similar debacle and
-having to back out all drivers that definately need this,
-I am making it opt-in for the moment.
-
-Once we have a feeling that this is not breaking (on e.g.
-qcom) we might just make it default to link all devices
-getting pinctrl states to their pin controllers.
-
-Yours,
-Linus Walleij
