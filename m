@@ -2,112 +2,125 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 7F2D227F30
-	for <lists+linux-gpio@lfdr.de>; Thu, 23 May 2019 16:11:43 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8E63428552
+	for <lists+linux-gpio@lfdr.de>; Thu, 23 May 2019 19:52:35 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730697AbfEWOLn (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 23 May 2019 10:11:43 -0400
-Received: from mx07-00178001.pphosted.com ([62.209.51.94]:50767 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1730323AbfEWOLm (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>);
-        Thu, 23 May 2019 10:11:42 -0400
-Received: from pps.filterd (m0046037.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x4NE5jjk005074;
-        Thu, 23 May 2019 16:11:13 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
- : date : message-id : references : in-reply-to : content-type : content-id
- : content-transfer-encoding : mime-version; s=STMicroelectronics;
- bh=Bn0iz+tF/GtBv/wF0WfrXOWDGayct1EsCY0uvVuAAio=;
- b=foDBrFtMiEpQ4S191xrSp76m77Dycn3qTuxkYSsyrsxWzOjBws7kfFD2eGy7ZXm0JkF/
- 8rES42SfBfNvk5gbWOdx0crWSpHgnsIi9EsXMiRpDrDy198KPXGZXSI2oM5Kl6j/gXOm
- kWHDQguFJF1JhQs4QAKcKDYU1JHuYJGeXHzbxwUeMK2m13mv/lWXUzDyg2GmzhGTvhwC
- lquiqMeJ+8R4cFk5rlQY+cSZv+qr1jt9H5zGBM3GBS9VeHgglBtvlzbe77RpdKQHcbME
- L9jCMT6j5SkwgeoHiRBF5soBrzvd6XlzZxoCaM0OoUuWwyhnNr8RAFuGKfsB36u7I5vw fA== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 2snrve1myv-1
-        (version=TLSv1 cipher=ECDHE-RSA-AES256-SHA bits=256 verify=NOT);
-        Thu, 23 May 2019 16:11:13 +0200
-Received: from zeta.dmz-eu.st.com (zeta.dmz-eu.st.com [164.129.230.9])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 94D2638;
-        Thu, 23 May 2019 14:11:12 +0000 (GMT)
-Received: from Webmail-eu.st.com (sfhdag3node1.st.com [10.75.127.7])
-        by zeta.dmz-eu.st.com (STMicroelectronics) with ESMTP id DAD212CA5;
-        Thu, 23 May 2019 14:11:11 +0000 (GMT)
-Received: from SFHDAG3NODE2.st.com (10.75.127.8) by SFHDAG3NODE1.st.com
- (10.75.127.7) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Thu, 23 May
- 2019 16:11:11 +0200
-Received: from SFHDAG3NODE2.st.com ([fe80::b82f:1ce:8854:5b96]) by
- SFHDAG3NODE2.st.com ([fe80::b82f:1ce:8854:5b96%20]) with mapi id
- 15.00.1347.000; Thu, 23 May 2019 16:11:11 +0200
-From:   Amelie DELAUNAY <amelie.delaunay@st.com>
-To:     Linus Walleij <linus.walleij@linaro.org>
-CC:     Lee Jones <lee.jones@linaro.org>,
-        Alexandre TORGUE <alexandre.torgue@st.com>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-stm32@st-md-mailman.stormreply.com" 
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        "kbuild-all@01.org" <kbuild-all@01.org>,
-        Randy Dunlap <rdunlap@infradead.org>
-Subject: Re: [PATCH] pinctrl: stmfx: Fix compile issue when CONFIG_OF_GPIO is
- not defined
-Thread-Topic: [PATCH] pinctrl: stmfx: Fix compile issue when CONFIG_OF_GPIO is
- not defined
-Thread-Index: AQHVDuDxK6HzwnJUFE6SYGi4rooWzqZ2hLKAgAAnAgCAAAlUgIAACtCAgADRIYCAARFPAA==
-Date:   Thu, 23 May 2019 14:11:11 +0000
-Message-ID: <08ea97544018430caf53af36677902b7@SFHDAG3NODE2.st.com>
-References: <1558338735-8444-1-git-send-email-amelie.delaunay@st.com>
- <20190522054833.GB4574@dell> <eb8425ec-989a-9701-7fee-61bd1d2b93c1@st.com>
- <20190522084133.GF4574@dell> <bc1b5f1d-23b0-141d-f58f-b54ac303fe20@st.com>
- <CACRpkdYmdpwEvCBrL6i1V+Zxd0OSpZmD8BJPSZu9jYNeJkoimQ@mail.gmail.com>
-In-Reply-To: <CACRpkdYmdpwEvCBrL6i1V+Zxd0OSpZmD8BJPSZu9jYNeJkoimQ@mail.gmail.com>
-Accept-Language: fr-FR, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-fcc:    imap://frq92262@localhost/Sent
-x-mozilla-draft-info: internal/draft; vcard=0; receipt=0; DSN=0; uuencode=0;
- attachmentreminder=0; deliveryformat=4
-x-account-key: account1
-user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
-x-identity-key: id1
-x-ms-exchange-messagesentrepresentingtype: 1
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.75.127.47]
+        id S1731450AbfEWRwd (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 23 May 2019 13:52:33 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:40650 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730928AbfEWRwc (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 23 May 2019 13:52:32 -0400
+Received: by mail-pg1-f195.google.com with SMTP id d30so3515985pgm.7
+        for <linux-gpio@vger.kernel.org>; Thu, 23 May 2019 10:52:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=message-id:mime-version:content-transfer-encoding:in-reply-to
+         :references:subject:from:cc:to:user-agent:date;
+        bh=UrXnnQ33Tfh0IwHhrolHqHt7nDIlbIW0sSrF3BDtDyw=;
+        b=nnUIGQYXFqnYY/knr+uDdU89mgV4My2CcFgP9MqSRPaPYV+rAYNivd8oaH/QX5US8q
+         vkWLVZO2geUVh17cjilv2/rJMkYQ+0UWQMPSeNmxKqU0CMxD89vpptm36l9oFiJ3xRkc
+         osmDdk/bTOKhNUxoczD3kdAjTNUKBeDcfYYh4=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:mime-version
+         :content-transfer-encoding:in-reply-to:references:subject:from:cc:to
+         :user-agent:date;
+        bh=UrXnnQ33Tfh0IwHhrolHqHt7nDIlbIW0sSrF3BDtDyw=;
+        b=SInSvHSH7j8/xbAjosHToZtu9TZSW9sV0Mm/xq64oDuDpttQIgIFTzp0L/Y0+6VyTo
+         KYZ9FNpL/4txAcBm4fuBWpFetiRDwf2YxuDeKd+T39gTr6NlLiRUVfi311QwLMADeQf/
+         1vS/1bi4/yoAUxtNYfvGva8pEQPNafKY+Gzve/XNMZy8HII57PFTvyPByT/0h5Tg9oVq
+         pjhQ+MHd8fUvCtEe1EBKQ4H3eLZLOXCGSVAsQbUVLqntv5gS5qitG0WUvLFZRDHtaolE
+         ti4jMrdvSnkpMHLYNDuhjX9zzOuPKkCC3sv43Kix0inG85mKUb8YACmWb25Pm43/PMXp
+         KR4Q==
+X-Gm-Message-State: APjAAAXwA+Qmg2SLdqrcf0x1mOKH/Q/RvCy0Lo43e0/blSDrbvCXUK4u
+        Dbah0QqS+3ppoRrYQcs/ZtyfmA==
+X-Google-Smtp-Source: APXvYqxNcC9D8jcVwGCdDqIQCwIkhiDst9LLsg5JMcXhi8uWHiwEOSGgRIuQBid1v8gmf89vGseuKA==
+X-Received: by 2002:aa7:9203:: with SMTP id 3mr107005266pfo.123.1558633952091;
+        Thu, 23 May 2019 10:52:32 -0700 (PDT)
+Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
+        by smtp.gmail.com with ESMTPSA id z14sm71707pfk.73.2019.05.23.10.52.31
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 23 May 2019 10:52:31 -0700 (PDT)
+Message-ID: <5ce6dddf.1c69fb81.8efac.03cf@mx.google.com>
 Content-Type: text/plain; charset="utf-8"
-Content-ID: <7D90F5DB4CC7194687CC2E9A6A3EEA8F@st.com>
-Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-23_12:,,
- signatures=0
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20190523080654.19155-1-linus.walleij@linaro.org>
+References: <20190523080654.19155-1-linus.walleij@linaro.org>
+Subject: Re: [PATCH] pinctrl: qcom: Enable device links to consumers
+From:   Stephen Boyd <swboyd@chromium.org>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Brian Masney <masneyb@onstation.org>,
+        Lina Iyer <ilina@codeaurora.org>,
+        Benjamin Gaignard <benjamin.gaignard@st.com>,
+        Evan Green <evgreen@chromium.org>
+To:     Linus Walleij <linus.walleij@linaro.org>,
+        linux-gpio@vger.kernel.org
+User-Agent: alot/0.8.1
+Date:   Thu, 23 May 2019 10:52:30 -0700
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-T24gNS8yMi8xOSAxMTo0OCBQTSwgTGludXMgV2FsbGVpaiB3cm90ZToNCj4gT24gV2VkLCBNYXkg
-MjIsIDIwMTkgYXQgMTE6MjEgQU0gQW1lbGllIERFTEFVTkFZIDxhbWVsaWUuZGVsYXVuYXlAc3Qu
-Y29tPiB3cm90ZToNCj4gDQo+PiAuLi9kcml2ZXJzL3BpbmN0cmwvcGluY3RybC1zdG1meC5jOjQw
-OToyMDogZXJyb3I6DQo+PiDigJhwaW5jb25mX2dlbmVyaWNfZHRfbm9kZV90b19tYXBfcGlu4oCZ
-IHVuZGVjbGFyZWQgaGVyZSAobm90IGluIGEgZnVuY3Rpb24pDQo+PiAgICAgLmR0X25vZGVfdG9f
-bWFwID0gcGluY29uZl9nZW5lcmljX2R0X25vZGVfdG9fbWFwX3BpbiwNCj4+DQo+PiBPRl9HUElP
-IGRlcGVuZHMgb24gT0YuDQo+Pg0KPj4gU28gZWl0aGVyDQo+PiAgICAgICBkZXBlbmRzIG9uIE9G
-IHx8IChPRiAmJiBDT01QSUxFX1RFU1QpDQo+PiBvcg0KPj4gICAgICAgZGVwZW5kcyBvbiBPRiB8
-fCAoT0ZfR1BJTyAmJiBDT01QSUxFX1RFU1QpDQo+Pg0KPj4gYW5kDQo+Pg0KPj4gICAgICAgc2Vs
-ZWN0IE9GX0dQSU8NCj4gDQo+IEkgd291bGQgdXNlIGp1c3Q6DQo+IA0KPiBkZXBlbmRzIG9uIE9G
-X0dQSU8NCj4gDQo+IEJlY2F1c2UgT0ZfR1BJTyBhbHJlYWR5IGRlcGVuZHMgb24gT0YsIGFuZA0K
-PiBjb21waWxlIHRlc3RzIHdpbGwgbm90IHdvcmsgd2l0aG91dCBPRl9HUElPIHdoaWNoDQo+IHJl
-cXVpcmUgT0Ygc28uLi4NCj4gDQo+IEJlc2lkZXMgaXQgaXMgd2hhdCBtb3N0IG90aGVyIEdQSU8g
-ZHJpdmVycyBkby4NCj4gDQo+IFNvIGp1c3Qga2VlcCB0aGF0IG9uZSBsaW5lIGFuZCBkcm9wIHRo
-ZSByZXN0Lg0KPiANCj4gWW91cnMsDQo+IExpbnVzIFdhbGxlaWoNCj4gDQoNCk9rIHNvIEkgY2Fu
-IGdldCByaWQgb2YgQ09NUElMRV9URVNUID8NCglkZXBlbmRzIG9uIEkyQw0KCWRlcGVuZHMgb24g
-T0ZfR1BJTw0KCXNlbGVjdCBHRU5FUklDX1BJTkNPTkYNCglzZWxlY3QgR1BJT0xJQl9JUlFDSElQ
-DQoJc2VsZWN0IE1GRF9TVE1GWA0KDQpCZWNhdXNlIEkndmUgbm8gYXJjaCB0byBiYWxhbmNlIENP
-TVBJTEVfVEVTVC4gT3IgbWF5YmUgc29tZXRoaW5nIGxpa2UgDQoJZGVwZW5kcyBvbiBPRl9HUElP
-ICYmIChPRiB8fCBDT01QSUxFX1RFU1QpDQpldmVuIGlmIE9GX0dQSU8gJiYgT0YgaXMgcmVkdW5k
-YW50ID8NCg0KUmVnYXJkcywNCkFtZWxpZQ0K
+Quoting Linus Walleij (2019-05-23 01:06:54)
+> A recent core change makes it possible to create device links
+> between a pin controller and its consumers. This is necessary
+> to ascertain the right suspend/resume order for the devices:
+> if a device is using a certain pin control state and want
+> to switch that before/after going to suspend, then the pin
+> controller may not be suspended already, and conversely
+> on the resume path.
+>=20
+> Make sure any qcom pin control consumers are suspended before
+> the qcom pin control is suspended.
+>=20
+> Since Qualcomm is one of the few pin controllers implementing
+> suspend/resume I suppose you will see this problem sooner
+> or later so let's see if we can just fix it right now before
+> you run into it.
+>=20
+> Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
+> Cc: Brian Masney <masneyb@onstation.org>
+> Cc: Lina Iyer <ilina@codeaurora.org>
+> Cc: Stephen Boyd <swboyd@chromium.org>
+> Cc: Benjamin Gaignard <benjamin.gaignard@st.com>
+> Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+> ---
+> You can test this patch by pulling in this branch:
+> https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git/=
+log/?h=3Dconsumer-links
+> ---
+>  drivers/pinctrl/qcom/pinctrl-msm.c | 1 +
+>  1 file changed, 1 insertion(+)
+
+I don't know how much it will matter for qcom right now. This pinctrl
+driver just forces over some suspend pins for the hogs during suspend,
+so it's not like drivers that are suspended after this moves hogs over
+will break, unless somehow the hogs change behavior of the pins those
+other drivers are using which doesn't seem possible.
+
+Also, what is the usecase for device links in pinctrl? Doesn't the
+driver core reorder the suspend list when probing devices so that
+devices that probe defer get moved later in list and thus suspended
+first? I can understand that runtime suspend may be important because
+order of suspend isn't fixed, but system suspend should be unaffected,
+right?
+
+>=20
+> diff --git a/drivers/pinctrl/qcom/pinctrl-msm.c b/drivers/pinctrl/qcom/pi=
+nctrl-msm.c
+> index ee8119879c4c..d4a6edbccdb9 100644
+> --- a/drivers/pinctrl/qcom/pinctrl-msm.c
+> +++ b/drivers/pinctrl/qcom/pinctrl-msm.c
+> @@ -1139,6 +1139,7 @@ int msm_pinctrl_probe(struct platform_device *pdev,
+>         pctrl->desc.name =3D dev_name(&pdev->dev);
+>         pctrl->desc.pins =3D pctrl->soc->pins;
+>         pctrl->desc.npins =3D pctrl->soc->npins;
+> +       pctrl->desc.link_consumers =3D true;
+
+Why is it an opt-in flag instead of a mandated feature for all pinctrl
+providers?
+
