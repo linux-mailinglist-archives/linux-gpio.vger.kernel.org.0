@@ -2,105 +2,108 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 961C92778C
-	for <lists+linux-gpio@lfdr.de>; Thu, 23 May 2019 09:57:14 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C876A277AD
+	for <lists+linux-gpio@lfdr.de>; Thu, 23 May 2019 10:07:32 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726310AbfEWH5N (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 23 May 2019 03:57:13 -0400
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:39783 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725814AbfEWH5N (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 23 May 2019 03:57:13 -0400
-Received: by mail-ot1-f68.google.com with SMTP id r7so4580964otn.6
-        for <linux-gpio@vger.kernel.org>; Thu, 23 May 2019 00:57:13 -0700 (PDT)
+        id S1726222AbfEWIHT (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 23 May 2019 04:07:19 -0400
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:42109 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727919AbfEWIHD (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 23 May 2019 04:07:03 -0400
+Received: by mail-lf1-f67.google.com with SMTP id y13so3681734lfh.9
+        for <linux-gpio@vger.kernel.org>; Thu, 23 May 2019 01:07:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=sYZ3enp20XrSZdyI55mRcQRGaPisKQrcms2lHaLmhv0=;
-        b=zpLWVcPZCEmWq3gBwa+x5aLw7/pLLpYFipZWclUvkkQvjE2KEWoigYbEB7Wwy0DUkR
-         nDLNe+iA7W1THry7BlOcOcvq4uEaSIeusVMpHk7y9GrPDGUvfnFovhBYh4oh3g4QqeM+
-         4e3z78zi3+I8PqfQl6vhSalOa0qV4f3js+XxLL4yB5l6inpNQWylfGvhiI2YY7p1atxP
-         nsw6/HAZt5FZ+K8l4GMhE/fdwdR8aZYA30S1qMWlU9nGNyJqKES+5cevZj1ivWjIBDBT
-         5Gac2WId/CJiami4eOg+iN7TqLFkB8cNxt1WQVKikQZEOKE6YHByNYBQ602Knm8BJ1Bz
-         /F4w==
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=hcBOC0mi7IP2Hq/sOwxuUJwQO0e5HPAWKceJ4HblTdg=;
+        b=eHfEHJnO2MZbw9tJoCVBFwylgmR8416RMuKgpx3Cyt1WurqmAr5UgP1NSxrPnh+4/a
+         dlPgv9a5JhsiQJREg75fPamGCJP7dVacIysek39PDAmqc6gRBZX+P3Ar6tLbz4QATuzr
+         +Hp2DCSudeLPyCQiA8p7cX1ME63asWEVn+xbXK4Z9eq45b+yt9V8IzEToFyyAoWUZ8x2
+         ApUrfnd3/7ZaEqOpJvGzS8IA8RcLGgqhF4TfnOugLJspeUtjH8ifapfCRnvTe8dU4/Pt
+         mRfS/RYe0uIjqxpkSp6WczRHDo1m4FrZKdsNhU9bRgIGBJkH7XtNTt1yV3++XbwcSp8y
+         Zfzw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=sYZ3enp20XrSZdyI55mRcQRGaPisKQrcms2lHaLmhv0=;
-        b=DkXNJPFVyWW4M1Ik+1tZFvFRFIbii6VndsT4IP2qLM3tIL9HmopLW2GbhWIv6zzySi
-         ndlAwUM1Uf3VQiNq+L9HsBufT51ddLA8kvCIOdXBhSJveL1zIzPjjKn0KkiYkC7uq/+v
-         zagXmZe1Yy4D8KNCyFt4MuamJ91JdUC3iJ9V65zZw6jQU+Sf1aGfoGYU1Jp4i23eWm76
-         mnhiH499JEvGzeJruWM8pSUi/BFogIxXZXIEu5bVVtJE6onEqsYerxFIc6mD3lpwk/9l
-         CMCVmfrUSY7GN9Oyq+o+oCxJ0W7AokI9qnWL4Yv9OFQvb5qT4X+A7t4CYT0bDztCRdNj
-         p/wQ==
-X-Gm-Message-State: APjAAAXtC2p5u4pjT4cioMO8SUqcLCgeyhbiStO8uHbC6ufMUTc8mUAi
-        9WMLa//1S82S5pTbQdM7sNgqw0rkOmWnEh9dDq+o3w==
-X-Google-Smtp-Source: APXvYqyE5RAlubAAQlKpTgbmqEkcxsR21OZdW1NeFMUD79gcE/eXYbDfUtq79+Vk4HqarCnSuU9PkW3Rejug41FPmK4=
-X-Received: by 2002:a9d:6c5a:: with SMTP id g26mr1910019otq.194.1558598232715;
- Thu, 23 May 2019 00:57:12 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=hcBOC0mi7IP2Hq/sOwxuUJwQO0e5HPAWKceJ4HblTdg=;
+        b=oyybWasGMyNiwZa8LyOYwVrWk+jLobtbxMR8ipzVIdknzK/Hn3ioSqD0mcg8j3cWfT
+         4upREY2qiJIrbtVPSeHci1rtHholjTEwkkSX7i+XUctl9l2WTMwJU4AOvVnkpHLMxOhM
+         gij4MSvL51tMPXCZeuQ4z0GSNRYqKXCKetMXAZcNC+t7Mgw+z9DiTRD9IAiuQYrbWNiq
+         vjb0fqgdpFihgZIO4vIXiuG41b0FdQy/274ObMLEFDGjvZRdRj3sc0m82P3w7KmTThQM
+         gg9cDdcWnOlmwOSwKt8ThRUYHKLcuTwR52eP7ZlhZ2Poy9rex/Uew0KrMLonhf2bI4+e
+         l6vA==
+X-Gm-Message-State: APjAAAUP9d7vRROsrNnUEiM+LVADmijiwh048peYkh4neHk196xzk9x1
+        MundR/0I4moRf6c4MVSNmwSu5cNC1bU=
+X-Google-Smtp-Source: APXvYqwo4Ss/y7QfNiicdcl4vaU5dlJw/sd16S3BH1em9LqILXPbiRmNOaq2NbdRmIueOEkDGppMkQ==
+X-Received: by 2002:a19:c517:: with SMTP id w23mr29859835lfe.73.1558598820638;
+        Thu, 23 May 2019 01:07:00 -0700 (PDT)
+Received: from genomnajs.ideon.se ([85.235.10.227])
+        by smtp.gmail.com with ESMTPSA id o76sm6009498lfo.7.2019.05.23.01.06.59
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 23 May 2019 01:06:59 -0700 (PDT)
+From:   Linus Walleij <linus.walleij@linaro.org>
+To:     linux-gpio@vger.kernel.org
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Brian Masney <masneyb@onstation.org>,
+        Lina Iyer <ilina@codeaurora.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Benjamin Gaignard <benjamin.gaignard@st.com>
+Subject: [PATCH] pinctrl: qcom: Enable device links to consumers
+Date:   Thu, 23 May 2019 10:06:54 +0200
+Message-Id: <20190523080654.19155-1-linus.walleij@linaro.org>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-References: <20190523065623.5993-1-linus.walleij@linaro.org>
-In-Reply-To: <20190523065623.5993-1-linus.walleij@linaro.org>
-From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Date:   Thu, 23 May 2019 09:57:01 +0200
-Message-ID: <CAMpxmJXS3dmMfm7o2iWXRyfJ2SskZArO6La0t-G+hRCW6LrR5w@mail.gmail.com>
-Subject: Re: [PATCH] gpio: Update Kconfig text for GPIO_SYSFS
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     linux-gpio <linux-gpio@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-czw., 23 maj 2019 o 08:56 Linus Walleij <linus.walleij@linaro.org> napisa=
-=C5=82(a):
->
-> This feature is deprecated, it is helpful to inform users about
-> this. I'm resisting the temptation to add "depends on BROKEN"
-> to this, but saving that for later.
->
-> Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
-> ---
->  drivers/gpio/Kconfig | 14 +++++---------
->  1 file changed, 5 insertions(+), 9 deletions(-)
->
-> diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
-> index 8023d03ec362..a10b821e1d92 100644
-> --- a/drivers/gpio/Kconfig
-> +++ b/drivers/gpio/Kconfig
-> @@ -61,16 +61,12 @@ config GPIO_SYSFS
->         bool "/sys/class/gpio/... (sysfs interface)"
->         depends on SYSFS
->         help
-> -         Say Y here to add a sysfs interface for GPIOs.
-> +         Say Y here to add the legacy sysfs interface for GPIOs.
->
-> -         This is mostly useful to work around omissions in a system's
-> -         kernel support.  Those are common in custom and semicustom
-> -         hardware assembled using standard kernels with a minimum of
-> -         custom patches.  In those cases, userspace code may import
-> -         a given GPIO from the kernel, if no kernel driver requested it.
-> -
-> -         Kernel drivers may also request that a particular GPIO be
-> -         exported to userspace; this can be useful when debugging.
-> +         This ABI is deprecated. If you want to use GPIO from userspace,
-> +         use the character device /dev/gpiochipN with the appropriate
-> +         ioctl() operations instead. The character device is always
-> +         available.
->
->  config GPIO_GENERIC
->         depends on HAS_IOMEM # Only for IOMEM drivers
-> --
-> 2.20.1
->
+A recent core change makes it possible to create device links
+between a pin controller and its consumers. This is necessary
+to ascertain the right suspend/resume order for the devices:
+if a device is using a certain pin control state and want
+to switch that before/after going to suspend, then the pin
+controller may not be suspended already, and conversely
+on the resume path.
 
-Reviewed-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Make sure any qcom pin control consumers are suspended before
+the qcom pin control is suspended.
 
-I strongly believe that in a couple releases we should WARN_ONCE()
-when sysfs is used. :)
+Since Qualcomm is one of the few pin controllers implementing
+suspend/resume I suppose you will see this problem sooner
+or later so let's see if we can just fix it right now before
+you run into it.
 
-Bart
+Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc: Brian Masney <masneyb@onstation.org>
+Cc: Lina Iyer <ilina@codeaurora.org>
+Cc: Stephen Boyd <swboyd@chromium.org>
+Cc: Benjamin Gaignard <benjamin.gaignard@st.com>
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+---
+You can test this patch by pulling in this branch:
+https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git/log/?h=consumer-links
+---
+ drivers/pinctrl/qcom/pinctrl-msm.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/drivers/pinctrl/qcom/pinctrl-msm.c b/drivers/pinctrl/qcom/pinctrl-msm.c
+index ee8119879c4c..d4a6edbccdb9 100644
+--- a/drivers/pinctrl/qcom/pinctrl-msm.c
++++ b/drivers/pinctrl/qcom/pinctrl-msm.c
+@@ -1139,6 +1139,7 @@ int msm_pinctrl_probe(struct platform_device *pdev,
+ 	pctrl->desc.name = dev_name(&pdev->dev);
+ 	pctrl->desc.pins = pctrl->soc->pins;
+ 	pctrl->desc.npins = pctrl->soc->npins;
++	pctrl->desc.link_consumers = true;
+ 
+ 	pctrl->pctrl = devm_pinctrl_register(&pdev->dev, &pctrl->desc, pctrl);
+ 	if (IS_ERR(pctrl->pctrl)) {
+-- 
+2.20.1
+
