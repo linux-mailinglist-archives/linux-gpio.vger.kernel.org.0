@@ -2,85 +2,107 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id C532827728
-	for <lists+linux-gpio@lfdr.de>; Thu, 23 May 2019 09:37:36 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1BD542775C
+	for <lists+linux-gpio@lfdr.de>; Thu, 23 May 2019 09:46:32 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730327AbfEWHhg (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 23 May 2019 03:37:36 -0400
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:42174 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729866AbfEWHhf (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 23 May 2019 03:37:35 -0400
-Received: by mail-lf1-f68.google.com with SMTP id y13so3619974lfh.9
-        for <linux-gpio@vger.kernel.org>; Thu, 23 May 2019 00:37:34 -0700 (PDT)
+        id S1726081AbfEWHqb (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 23 May 2019 03:46:31 -0400
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:34975 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725814AbfEWHqb (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 23 May 2019 03:46:31 -0400
+Received: by mail-lf1-f65.google.com with SMTP id c17so3663609lfi.2
+        for <linux-gpio@vger.kernel.org>; Thu, 23 May 2019 00:46:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=cx8kg7WymCjtyRcPfqK4zjuEJ4lhy55B2Gkin5DJtFU=;
-        b=fR8RE84n1odppI3p20OTG7XaGgUYqo6kXCldCRW8or5Z3hIBeoEMGNKMB5ZPtdNJk/
-         mgByEQfAV30URjnhve0FLDZCf3VjYeJTLxrXOtpebu/WgWJa95xV6q/bzJIWfQu5kAM/
-         lb+2YJRaFCyI9zlUIgxWbqOGBQ8GH9WL7wLHOn/TeVF16dYN8cUyFpGCJTNx4/m3BA6y
-         WhJFolJShRdIpJ8lYYTZrjQzkt4A0fSuH6IOy7MSadTiKYexx/vuh+O5dw6MVcnvh0iX
-         6FmVEvoLxExnr+FvKCG/9HFdK3pBLFR3kjTdxjnhyNRcvh8Flzh1gs9FGLySsBOjgh/R
-         +vAg==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=SNNBJSnx3sXoOboWJiPonCGDAGxtUWB/VomEYANV8g0=;
+        b=saIesGeF5H5wuOLPc4qHpPhs01t+hLPYqfO0MdarfCANbniA8IPtXJdob3P1KB3grT
+         lSgqF9KLEbSXd/WG8HiOSPeA/PdhL7l7aBv6VA0zU1doIQUxvDjAD1sSWI0ll0jvrvL8
+         eaT5R2UoaCMtghgHEdX9KNexU9aWmsRkVXIJuNgSyTKh14Z5D9ngSWBL+0iT/QM70PS0
+         CU/9bVXK5+uOI26hRFihQ2NHsfIQDGt/5UXr/bQ/bth9/mbxja8PgCXaIourB5QoHlf/
+         9u/rxvUXU6GTJpqnaf4EU2U+J+S1ZhT5hNDojSkZri26Sjd1iB/kgD1FP+t/2lsT4o9y
+         UULw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=cx8kg7WymCjtyRcPfqK4zjuEJ4lhy55B2Gkin5DJtFU=;
-        b=ptLxE2Ba2jhfNTNwzdl5n/GNNy05fR4H+qpU6WUotgDUVb/NnSJqcPHD/V3K9w1+G8
-         6hn0/OiW0zSC7JjJV6qBOI/7tsABGTo7f2TWS904bh4PIyUqICMpRCb+T6aaKfJoWa5k
-         sWWErkpiVfwksePCUM4GLB9DebM9sd3Cu+CItR/opXrR5AhpD9JbX6gizwlu1DfspvH8
-         lBJr8wXOTb870KjIRLDzVgY/UdyTUXYeK5lNVDSvgFu4Kiy2WNQHqDijA/YixTwBfVmm
-         oaVU1V87pTD/P9n+RpZp5glcngdNB5l0z5efIfFuoix28yn0EWYd7XowPb80JSRwBCIO
-         W1HA==
-X-Gm-Message-State: APjAAAWK9CKprKMU91U5Rz6UOrTmyxNq17X+o/GIHeNKGSxso+Wt+UvM
-        P5s7SpAqiqaOkZuR8+8zHTGeoQbhrToiGAF7gVn44g==
-X-Google-Smtp-Source: APXvYqyBRsqXPk9Dhzbeg2Oz3JZyzA3NjwECl9TBODwCZZrOK9/RFjOdjOlwiSIFYgEUEDYHs19a86bibzY+Aklnf3E=
-X-Received: by 2002:ac2:5935:: with SMTP id v21mr4885287lfi.117.1558597053613;
- Thu, 23 May 2019 00:37:33 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190522152925.12419-1-benjamin.gaignard@st.com>
-In-Reply-To: <20190522152925.12419-1-benjamin.gaignard@st.com>
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=SNNBJSnx3sXoOboWJiPonCGDAGxtUWB/VomEYANV8g0=;
+        b=EoPhoPhzyIeNpmlmvEU7Dy6IKLP3CgyWbQXELvIjAtwRXgv8q5R+MXNY1Tdy3TJ5IM
+         YYCOYSn4rpza6aHmQ01UMp09IDFSYqucLptmeiHUaOBxIM4kEJEhbIOpqQaMrEX8X8ZT
+         HnD1MevAiaA/+T7B3BrRkNw/+rOM4GnZl/VeJ3JdynYxkkETGjDCp9+WQ1c01VDHG6xH
+         gHisGLFMlDoMlpdLV+/CYSmnMZk4YMoKC4YwvKa1dZ4+CXI/OUj7pKb4LYOf1viQf58i
+         07f0lXIgyncKVZ8f4KcqVXVvyzOtnvvGvBU21wPM/il4oGRn7kk5sTQC5ayVs2Ce7ySM
+         Kzsw==
+X-Gm-Message-State: APjAAAV0lvJ2WirM6q19W8UBDiwwJo9CMGSfD+3ENsYjhAOt4jZV4fa5
+        xU+Q4nPtI4tyNri6tPDXFpl3f7kkm2o=
+X-Google-Smtp-Source: APXvYqzI03BF+mNgNlRWkFrqlOld95yPe8Xw4m4RuiUHOl2KiZEp/JDfchee8cCch0wpX7P6xKunhg==
+X-Received: by 2002:ac2:5612:: with SMTP id v18mr30620142lfd.15.1558597588740;
+        Thu, 23 May 2019 00:46:28 -0700 (PDT)
+Received: from genomnajs.ideon.se ([85.235.10.227])
+        by smtp.gmail.com with ESMTPSA id k18sm5628761ljk.70.2019.05.23.00.46.27
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 23 May 2019 00:46:27 -0700 (PDT)
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Thu, 23 May 2019 09:37:22 +0200
-Message-ID: <CACRpkdYOS0UrXPtJb0--4RW6QM_Xq8wb=9Gj5X9fk7JWCgpWfQ@mail.gmail.com>
-Subject: Re: [PATCH 0/2] Allow pinctrl framework to create links
-To:     Benjamin Gaignard <benjamin.gaignard@st.com>
-Cc:     Alexandre TORGUE <alexandre.torgue@st.com>,
-        Amelie Delaunay <amelie.delaunay@st.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        linux-stm32@st-md-mailman.stormreply.com,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Benjamin Gaignard <benjamin.gaignard@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
+To:     linux-gpio@vger.kernel.org
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        =?UTF-8?q?Jan=20Kundr=C3=A1t?= <jan.kundrat@cesnet.cz>,
+        Lars Poeschel <poeschel@lemonage.de>,
+        Jason Kridner <jkridner@gmail.com>,
+        Marco Felsch <m.felsch@pengutronix.de>,
+        Phil Reid <preid@electromag.com.au>
+Subject: [PATCH] pinctrl: mcp23s08: Enable device links to consumers
+Date:   Thu, 23 May 2019 09:46:25 +0200
+Message-Id: <20190523074625.15294-1-linus.walleij@linaro.org>
+X-Mailer: git-send-email 2.20.1
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Benjamin!
+A recent core change makes it possible to create device links
+between a pin controller and its consumers. This is necessary
+to ascertain the right suspend/resume order for the devices:
+if a device is using a certain pin control state and want
+to switch that before/after going to suspend, then the pin
+controller may not be suspended already, and conversely
+on the resume path.
 
-On Wed, May 22, 2019 at 5:29 PM Benjamin Gaignard
-<benjamin.gaignard@st.com> wrote:
+Make sure any MCP23s08 consumers are suspended before the
+MCP23s08 is suspended.
 
-> Some pin controllers may need to ensure suspend/resume calls ordering between
-> themselves and their clients.
-> That is the case for STMFX (an I2C GPIO expender) which need to be suspended
-> after all it clients to let them call pinctrl_pm_select_sleep_state() before
-> perform it own suspend function. It is the same problem for resume but in
-> reverse order.
->
-> This series allow to let pinctrl core knows if a controller would like to
-> create link between itself and it client by setting create_link to true.
+The MCP23s08 does not implement suspend/resume callbacks,
+but the device links are hierarchical, and this also makes
+sure that the I2C master where the MCP23s08 is in turn
+connected will not suspend before any clients of the pin
+control settings are suspended (and conversely for resume).
 
-I changed the name of the boolt to "link_consumers" and applied!
+Cc: Jan Kundrát <jan.kundrat@cesnet.cz>
+Cc: Lars Poeschel <poeschel@lemonage.de>
+Cc: Jason Kridner <jkridner@gmail.com>
+Cc: Marco Felsch <m.felsch@pengutronix.de>
+Cc: Phil Reid <preid@electromag.com.au>
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+---
+ drivers/pinctrl/pinctrl-mcp23s08.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-I will send patches for all other pin controllers that are I2C or other
-slow bus based, as they will definately need this. Let's see what
-happens!
+diff --git a/drivers/pinctrl/pinctrl-mcp23s08.c b/drivers/pinctrl/pinctrl-mcp23s08.c
+index f0cdb5234e49..9025835c0ec4 100644
+--- a/drivers/pinctrl/pinctrl-mcp23s08.c
++++ b/drivers/pinctrl/pinctrl-mcp23s08.c
+@@ -831,6 +831,7 @@ static int mcp23s08_probe_one(struct mcp23s08 *mcp, struct device *dev,
+ 	else if (mcp->pinctrl_desc.npins == 16)
+ 		mcp->pinctrl_desc.pins = mcp23x17_pins;
+ 	mcp->pinctrl_desc.owner = THIS_MODULE;
++	mcp->pinctrl_desc.link_consumers = true;
+ 
+ 	mcp->pctldev = devm_pinctrl_register(dev, &mcp->pinctrl_desc, mcp);
+ 	if (IS_ERR(mcp->pctldev)) {
+-- 
+2.20.1
 
-Yours,
-Linus Walleij
