@@ -2,90 +2,77 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 967F029769
-	for <lists+linux-gpio@lfdr.de>; Fri, 24 May 2019 13:38:58 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AB1E029776
+	for <lists+linux-gpio@lfdr.de>; Fri, 24 May 2019 13:41:33 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391083AbfEXLia (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 24 May 2019 07:38:30 -0400
-Received: from mail-qk1-f193.google.com ([209.85.222.193]:42577 "EHLO
-        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390714AbfEXLi3 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 24 May 2019 07:38:29 -0400
-Received: by mail-qk1-f193.google.com with SMTP id b18so1012749qkc.9
-        for <linux-gpio@vger.kernel.org>; Fri, 24 May 2019 04:38:29 -0700 (PDT)
+        id S2391135AbfEXLlX (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 24 May 2019 07:41:23 -0400
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:36540 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390743AbfEXLlX (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 24 May 2019 07:41:23 -0400
+Received: by mail-lf1-f67.google.com with SMTP id y10so6909125lfl.3
+        for <linux-gpio@vger.kernel.org>; Fri, 24 May 2019 04:41:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=0lxiGmWfLgl7C0PUBf51UY66oylRUCwuW2L386gQxFM=;
-        b=LUaBU+oQ+7tPBoX/UMmq0HZGaNUxbnS4Li9ZC0bSZJ7gQ9i5S9z2Y2TGSJQ60X+Bki
-         37KF1sRvhwYU42JBaxNqk4Eqn1GJayVPYODxe20VQIWSzDpMqbh8MJjp45HbKdJcc1vk
-         pnjeuZ5OvGdmGOhbaC44nP2tbXRRQOb1mJWvYKyEjDAEl1Obt6lZ/G7NI6GmNocDUBRK
-         2Xr0SjpwW4FnOuCvKUVeEXnWXj740GTgprlcCV47PSyFUBMbMBeFQPZXHLO+psfn24Hu
-         NfEsR+Js97tD3PQlVq9YDIiPVtP070m/YuQ6Y40B3Z9p3A1JaaI75CbnbuN8ANVi+udN
-         mNKg==
+        bh=eJLDwVfH5VJnZx8ZM8GCRIzVJV8WcHMD+lvgI85Fwb8=;
+        b=tFjCJYE4s1Z94dMb5aFsdWecVIC3UQ9ZA0iji4fhIgPiEbpjNkp6PM+YSIl/F0zg/8
+         v067wNSAoldwvwxNc12hzdZ1o+Ue6PunKG5AFaw6SVX+axaqR+H6XYobKIQ2AOZfRVDT
+         2MSu12IVDZlJVYeaEXVBJ6u0fHu/T+hQ38wwb9HMSr/yWO0eah4xbg1CG4Yx04vpm/Gl
+         5waRRmDXldlktA4Axy7Gh6TMSlIUN0TR5TR6qQnFCE/iDu+Yu3IwGLAbBiOQYDTZkcO5
+         7PFePDllYZl7eMyl9c9S364wV1ARtv7+Ho5BblphuAKfQYr1mTkL2OPyj3M5EdvOFQ9r
+         bP4g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=0lxiGmWfLgl7C0PUBf51UY66oylRUCwuW2L386gQxFM=;
-        b=aUu7jLR39C/WAM8yV/talIHN71a7K3WX+RINg1/UOArqvi0GaduS6v/yTwMGsAhKiq
-         l5T95f4RQckDbTYhapd3H2bsfJKt9rDBgZXA9EcruADHrhsfcjyVEqMRLpC8b0sIS/nb
-         8uZZeLZS7iELaDh6Zb1yyq9FRCmeVip0ebuUoyloSYj0qI9kFBtcuMa1ySBwZF1idgvt
-         F4trUEYT6mbB2sT6NWfr5vkB1CHDEk2qKaz5qtkz9ZDQq0ysK8uB9a7NfgAStB9o7IKA
-         8rmScKapF93Ir1ok68tBMXOHu3WiHboggcD8p8bQA87vW+XNyffHSKqvDrM2+rBjgTPc
-         T1Ow==
-X-Gm-Message-State: APjAAAUj1jOJh0a69404vqqahm6+/iLj8LB1kzfbKf1rwe2g5aI2DHyJ
-        uaSnGK0w54VrdqqS7TujS9m/1aAEt+Qqkgt/XKI4Gg==
-X-Google-Smtp-Source: APXvYqwgX2PLA0fSXA7p0azFhUSmOAckdqbzgNqBifI/FEQSkUa/r3EhD7hLuBNm+vM7K0FXzlsJhhdkDC52rf3oPlA=
-X-Received: by 2002:a37:b287:: with SMTP id b129mr70960448qkf.20.1558697909058;
- Fri, 24 May 2019 04:38:29 -0700 (PDT)
+        bh=eJLDwVfH5VJnZx8ZM8GCRIzVJV8WcHMD+lvgI85Fwb8=;
+        b=ErI2YGG3MSk3z54O2Ie01p6UVFKsixpH47CXqW0m3Wc5WWxk+adsUcRL9AN5OIo6ba
+         EQiwakOr9fH39N6Y6r7wSGzlCccP1LSdGS53nI72FXaUq/03zJhpzEGM2r3P42PzTBEr
+         dt+zZYToto6qNC4lwthC9SspPTWdZHFQ9reqI0+XLXNBacWOkGGPRXNerQxHL+Vp9LhS
+         5X5oPEvBC9clDrBsgJjZhUQEnJxwbWaTF/VDB22Nr5+UhwTH1RVmUqpBoMxM3uvaNwvN
+         iyB03byeLsR2RNWP+zVoSnKAoO1kycZ/DA/PPd6banuXOjVc2gNlhRm7JUAbkXoBY0iP
+         /dGw==
+X-Gm-Message-State: APjAAAW4921f+TSOoZSdvgVJgu31en6TyU64/wwiXC9seb+cu/JGpTGG
+        sQGmXhprtZr6VdStGG+6ubzVhPvqpay0baMasrqJDQ==
+X-Google-Smtp-Source: APXvYqwlCU/Ve7G0DQMfQWyCLtGMK3SgbEDDMWwyMwxIxCdMA7wUKKKX4Ntzrp8svUCapzuA04ATKczG2IaW15wIr9U=
+X-Received: by 2002:ac2:5935:: with SMTP id v21mr9226943lfi.117.1558698082036;
+ Fri, 24 May 2019 04:41:22 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190514005033.15593-1-robh@kernel.org>
-In-Reply-To: <20190514005033.15593-1-robh@kernel.org>
+References: <1557503126-3025-1-git-send-email-alexandre.torgue@st.com>
+In-Reply-To: <1557503126-3025-1-git-send-email-alexandre.torgue@st.com>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Fri, 24 May 2019 13:38:17 +0200
-Message-ID: <CACRpkdZabT3_vjkv0PR+GLC0ZXWzpMxfwJU6O9Y+omKJ=6zCaA@mail.gmail.com>
-Subject: Re: [PATCH] dt-bindings: gpio: Convert Arm PL061 to json-schema
-To:     Rob Herring <robh@kernel.org>,
-        viresh kumar <viresh.kumar@linaro.org>
-Cc:     "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+Date:   Fri, 24 May 2019 13:41:09 +0200
+Message-ID: <CACRpkdazPrbzL-oo6rhfgDcLftjCE1hrgPQCMvtE2TOUUnorVg@mail.gmail.com>
+Subject: Re: [PATCH v2] dt-bindings: pinctrl: Convert stm32 pinctrl bindings
+ to json-schema
+To:     Alexandre Torgue <alexandre.torgue@st.com>
+Cc:     Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
         <devicetree@vger.kernel.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        linux-stm32@st-md-mailman.stormreply.com
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, May 14, 2019 at 2:50 AM Rob Herring <robh@kernel.org> wrote:
+On Fri, May 10, 2019 at 5:45 PM Alexandre Torgue
+<alexandre.torgue@st.com> wrote:
 
-> Convert the Arm PL061 GPIO controller binding to json-schema format.
+> Convert the STM32 pinctrl binding to DT schema format using json-schema.
 >
-> As I'm the author for all but the gpio-ranges line, make the schema dual
-> GPL/BSD license.
->
-> Cc: Linus Walleij <linus.walleij@linaro.org>
-> Cc: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> Cc: linux-gpio@vger.kernel.org
-> Signed-off-by: Rob Herring <robh@kernel.org>
+> Signed-off-by: Alexandre Torgue <alexandre.torgue@st.com>
 
-Patch applied. As you know I am already a big fan of this scheme.
-
-> This warns on a few platforms missing clocks, interrupt-controller
-> and/or #interrupt-cells. We could not make those required, but really
-> they should be IMO. OTOH, it's platforms like Spear and Calxeda which
-> aren't too active, so I don't know that we want to fix them.
-
-What works for you works for me.
-
-We could add dummy fixed clocks in the DTS files if
-we wanted I suppose. The #interrupt-cells and interrupt-controller
-things we can just fix, but I wonder what the maintainers of these
-platforms are up to? Isn't Calxeda yours, and could Viresh fix
-up the SPEAr?
+What a feat. Well done!
+Patch applied with Rob's Review tag.
 
 Yours,
 Linus Walleij
