@@ -2,116 +2,119 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 251122916D
-	for <lists+linux-gpio@lfdr.de>; Fri, 24 May 2019 09:03:27 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DEDF929187
+	for <lists+linux-gpio@lfdr.de>; Fri, 24 May 2019 09:10:35 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388859AbfEXHD0 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 24 May 2019 03:03:26 -0400
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:44508 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388460AbfEXHD0 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 24 May 2019 03:03:26 -0400
-Received: by mail-oi1-f195.google.com with SMTP id z65so6263906oia.11
-        for <linux-gpio@vger.kernel.org>; Fri, 24 May 2019 00:03:25 -0700 (PDT)
+        id S2388891AbfEXHKf (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 24 May 2019 03:10:35 -0400
+Received: from mail-eopbgr820075.outbound.protection.outlook.com ([40.107.82.75]:9911
+        "EHLO NAM01-SN1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2388460AbfEXHKe (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Fri, 24 May 2019 03:10:34 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=ggAqQCZOVRZtFKzDVVtPukGfGP3OkJTZeJtZud1HmIk=;
-        b=VrpPEWTyV7w/xBs02DOpEB2wHeHLcT5gaBjDP3+JsnrYHNsdP/gHQs/91puwpoSwjk
-         lI+Q6BKnQWGbZSAcUtt+qBmgzxJjPIehh1lqAs6zBvLLVtSJU1dc35uKKxtIBPJtRdrJ
-         +MPG8/Oig2M2xOLcbZ64OB9F6H9f++/ZIRGdX42UUQsXKaSVQZ8/+UdKxOEbPLku9DGm
-         I0LkfKw8RXhb40SCoxN2zrMDPkMYzDuAZBdjPtYIAUZd/45cIRRlB2GRyl+oXe8kO0vq
-         EhA+pIJE+8ehAjGmHvnAsFwTB2JCRZCsdF50f5UCREyiZEYmM9S0D5/A1eNVUXS+FJwR
-         PUGA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=ggAqQCZOVRZtFKzDVVtPukGfGP3OkJTZeJtZud1HmIk=;
-        b=KS1ezONlYuJ0neJ199PR26ESceznlCF4OIuFSMIMVaOQYlpk66yGoY0vK3cPU77AOl
-         9uVW0fv/KyZfRaPV/xf3kyApM2tWK9H64koctSCdveuXp5wUpzjOeM64vZKUqwEfQyym
-         dNY+Of8zYHoJ7vT15jXGdvo3dh+1M5QwE9qHR9hNQrPX73FXARHxRIojaD0IoYz/5N0H
-         s/sWeEv5QI2nen7B5XGwvYxT81TOrP0MFL7l/JZ7jKHn9QnBt0j8BEtZM7wDIiWTay2I
-         b7V/dGPt+2Y0XKiEc0JTak3Ft0lrkSNMHakuYRmCzunfgz2FVw1kFWakcQY24j9MSgil
-         skFQ==
-X-Gm-Message-State: APjAAAXXdZtJRTucPOaGW7ba73HXocA0s9lIYrsD/D8qq0BwBl++mOhL
-        7YUXNT4RgGJj/wPwaZ+W++uRhU8yUZYyLBayB4Hq/A==
-X-Google-Smtp-Source: APXvYqxAbBUuROv5rdCa31jOH1GdpIUh2srX0z4DRxWpYcHFRalRwK2qR7nmEndZPgcFAvpYqZyxeAGzKrIjF2xYEU8=
-X-Received: by 2002:aca:4e42:: with SMTP id c63mr5486438oib.170.1558681405264;
- Fri, 24 May 2019 00:03:25 -0700 (PDT)
-MIME-Version: 1.0
+ d=analog.onmicrosoft.com; s=selector1-analog-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ww0LyfRxGFq8R5I05daDtQhsIkDCr1jVHS1jTB8NDVg=;
+ b=k2WAcfx2hzIWOfrslF5oEh+yVX8XkKuVaWq4T6gQKRKMdbfpXT/Rp02LknvvSWvybEqoad+Ov56TKyOkCPG9EwQWz5Diw9rZMGaiyS83PtJdl63iI/MtXhJzziLcCUJQL810u5ALN50gEVFVFRSXplhDAWz/Au2Qgqly8uFsEHI=
+Received: from BY1PR0301MB0901.namprd03.prod.outlook.com (10.160.195.140) by
+ BY1PR0301MB1319.namprd03.prod.outlook.com (10.161.206.27) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1900.16; Fri, 24 May 2019 07:10:28 +0000
+Received: from BY1PR0301MB0901.namprd03.prod.outlook.com
+ ([fe80::f582:135:91b7:eb89]) by BY1PR0301MB0901.namprd03.prod.outlook.com
+ ([fe80::f582:135:91b7:eb89%4]) with mapi id 15.20.1922.017; Fri, 24 May 2019
+ 07:10:28 +0000
+From:   "Hennerich, Michael" <Michael.Hennerich@analog.com>
+To:     Randy Dunlap <rdunlap@infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>
+CC:     kbuild test robot <lkp@intel.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Subject: RE: [PATCH] gpio: fix gpio-adp5588 build errors
+Thread-Topic: [PATCH] gpio: fix gpio-adp5588 build errors
+Thread-Index: AQHVEbMIs/GUdK8HvES52ZhkR4tgfKZ53FCA
+Date:   Fri, 24 May 2019 07:10:28 +0000
+Message-ID: <BY1PR0301MB090122CBC8CED2B6830425378E020@BY1PR0301MB0901.namprd03.prod.outlook.com>
 References: <8054bec0-ea24-8590-738b-bae58c0be3b4@infradead.org>
 In-Reply-To: <8054bec0-ea24-8590-738b-bae58c0be3b4@infradead.org>
-From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Date:   Fri, 24 May 2019 09:03:14 +0200
-Message-ID: <CAMpxmJUVoaAq0-0ELpzmZjke7yjZN+n75WO9i=cWK-WbXw8gZw@mail.gmail.com>
-Subject: Re: [PATCH] gpio: fix gpio-adp5588 build errors
-To:     Randy Dunlap <rdunlap@infradead.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-        kbuild test robot <lkp@intel.com>,
-        Michael Hennerich <michael.hennerich@analog.com>,
-        Linus Walleij <linus.walleij@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Accept-Language: de-DE, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=Michael.Hennerich@analog.com; 
+x-originating-ip: [137.71.226.54]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 284cbd15-3702-4909-52c4-08d6e016e6dc
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(4618075)(2017052603328)(7193020);SRVR:BY1PR0301MB1319;
+x-ms-traffictypediagnostic: BY1PR0301MB1319:
+x-microsoft-antispam-prvs: <BY1PR0301MB1319DC372529CF925CCA5F588E020@BY1PR0301MB1319.namprd03.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:7219;
+x-forefront-prvs: 0047BC5ADE
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(366004)(346002)(396003)(376002)(39860400002)(136003)(199004)(13464003)(189003)(52536014)(305945005)(6246003)(25786009)(5660300002)(11346002)(446003)(53936002)(26005)(4326008)(316002)(8936002)(76116006)(14454004)(256004)(486006)(476003)(71190400001)(86362001)(7736002)(66446008)(66476007)(66946007)(64756008)(73956011)(66556008)(71200400001)(102836004)(66066001)(6506007)(53546011)(99286004)(33656002)(72206003)(2906002)(478600001)(2501003)(110136005)(76176011)(7696005)(54906003)(68736007)(6436002)(9686003)(55016002)(186003)(8676002)(81166006)(81156014)(74316002)(229853002)(6116002)(3846002);DIR:OUT;SFP:1101;SCL:1;SRVR:BY1PR0301MB1319;H:BY1PR0301MB0901.namprd03.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: analog.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: 2N67lV7P4oE7PINIHd1W+YTKgUqh+GCqzD1AyRp8sVnMkMnkagaLSBdQ70Hm3/CWt0738ONetqwYLDB8wOaPUc7O2SI4EzVfE9Ez3DLo6KtTCXDAvgnFCfCda6TncZeqStzHvPkSTejAbefQQdUzdzRKMzoQeVlUsK9A5WwqUYvfVL17L0NKfDuXfbB8/DxvRV3mxE3JGIpoaPEs9vw6vzvUWA3ey4jdGZ2UfXvAaIMQrog68Id0+2bxt9YFzERgLcCBcUdrjz5w4cf25t9mJpventHp5VYy02ToNQzFBO0jnHiwSETv0d1ULCm99HW15u6xjLxAbW3Of6FBVJh7JZLkbwFOKK/UCoFbMaQI7bLLQEmttislwc8Fd2qSW+O977YbvX45yarMpdQnsh+AqF9h+h4voP5UAJwbEe+zmv4=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-OriginatorOrg: analog.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 284cbd15-3702-4909-52c4-08d6e016e6dc
+X-MS-Exchange-CrossTenant-originalarrivaltime: 24 May 2019 07:10:28.4173
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: eaa689b4-8f87-40e0-9c6f-7228de4d754a
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY1PR0301MB1319
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-pt., 24 maj 2019 o 00:00 Randy Dunlap <rdunlap@infradead.org> napisa=C5=82(=
-a):
->
-> From: Randy Dunlap <rdunlap@infradead.org>
->
-> The gpio-adp5588 driver uses interfaces that are provided by
-> GPIOLIB_IRQCHIP, so select that symbol in its Kconfig entry.
->
-> Fixes these build errors:
->
-> ../drivers/gpio/gpio-adp5588.c: In function =E2=80=98adp5588_irq_handler=
-=E2=80=99:
-> ../drivers/gpio/gpio-adp5588.c:266:26: error: =E2=80=98struct gpio_chip=
-=E2=80=99 has no member named =E2=80=98irq=E2=80=99
->             dev->gpio_chip.irq.domain, gpio));
->                           ^
-> ../drivers/gpio/gpio-adp5588.c: In function =E2=80=98adp5588_irq_setup=E2=
-=80=99:
-> ../drivers/gpio/gpio-adp5588.c:298:2: error: implicit declaration of func=
-tion =E2=80=98gpiochip_irqchip_add_nested=E2=80=99 [-Werror=3Dimplicit-func=
-tion-declaration]
->   ret =3D gpiochip_irqchip_add_nested(&dev->gpio_chip,
->   ^
-> ../drivers/gpio/gpio-adp5588.c:307:2: error: implicit declaration of func=
-tion =E2=80=98gpiochip_set_nested_irqchip=E2=80=99 [-Werror=3Dimplicit-func=
-tion-declaration]
->   gpiochip_set_nested_irqchip(&dev->gpio_chip,
->   ^
->
-> Fixes: 459773ae8dbb ("gpio: adp5588-gpio: support interrupt controller")
->
-> Reported-by: kbuild test robot <lkp@intel.com>
-> Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
-> Cc: Michael Hennerich <michael.hennerich@analog.com>
-> Cc: Linus Walleij <linus.walleij@linaro.org>
-> Cc: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> Cc: linux-gpio@vger.kernel.org
-> ---
->  drivers/gpio/Kconfig |    1 +
->  1 file changed, 1 insertion(+)
->
-> --- lnx-52-rc1.orig/drivers/gpio/Kconfig
-> +++ lnx-52-rc1/drivers/gpio/Kconfig
-> @@ -822,6 +822,7 @@ config GPIO_ADP5588
->  config GPIO_ADP5588_IRQ
->         bool "Interrupt controller support for ADP5588"
->         depends on GPIO_ADP5588=3Dy
-> +       select GPIOLIB_IRQCHIP
->         help
->           Say yes here to enable the adp5588 to be used as an interrupt
->           controller. It requires the driver to be built in the kernel.
->
->
-
-Reviewed-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBSYW5keSBEdW5sYXAgW21haWx0
+bzpyZHVubGFwQGluZnJhZGVhZC5vcmddDQo+IFNlbnQ6IEZyZWl0YWcsIDI0LiBNYWkgMjAxOSAw
+MDowMQ0KPiBUbzogTEtNTCA8bGludXgta2VybmVsQHZnZXIua2VybmVsLm9yZz47IGxpbnV4LWdw
+aW9Admdlci5rZXJuZWwub3JnDQo+IENjOiBrYnVpbGQgdGVzdCByb2JvdCA8bGtwQGludGVsLmNv
+bT47IEhlbm5lcmljaCwgTWljaGFlbCA8TWljaGFlbC5IZW5uZXJpY2hAYW5hbG9nLmNvbT47IExp
+bnVzIFdhbGxlaWoNCj4gPGxpbnVzLndhbGxlaWpAbGluYXJvLm9yZz47IEJhcnRvc3ogR29sYXN6
+ZXdza2kgPGJnb2xhc3pld3NraUBiYXlsaWJyZS5jb20+DQo+IFN1YmplY3Q6IFtQQVRDSF0gZ3Bp
+bzogZml4IGdwaW8tYWRwNTU4OCBidWlsZCBlcnJvcnMNCj4gDQo+IEZyb206IFJhbmR5IER1bmxh
+cCA8cmR1bmxhcEBpbmZyYWRlYWQub3JnPg0KPiANCj4gVGhlIGdwaW8tYWRwNTU4OCBkcml2ZXIg
+dXNlcyBpbnRlcmZhY2VzIHRoYXQgYXJlIHByb3ZpZGVkIGJ5DQo+IEdQSU9MSUJfSVJRQ0hJUCwg
+c28gc2VsZWN0IHRoYXQgc3ltYm9sIGluIGl0cyBLY29uZmlnIGVudHJ5Lg0KPiANCj4gRml4ZXMg
+dGhlc2UgYnVpbGQgZXJyb3JzOg0KPiANCj4gLi4vZHJpdmVycy9ncGlvL2dwaW8tYWRwNTU4OC5j
+OiBJbiBmdW5jdGlvbiDigJhhZHA1NTg4X2lycV9oYW5kbGVy4oCZOg0KPiAuLi9kcml2ZXJzL2dw
+aW8vZ3Bpby1hZHA1NTg4LmM6MjY2OjI2OiBlcnJvcjog4oCYc3RydWN0IGdwaW9fY2hpcOKAmSBo
+YXMgbm8gbWVtYmVyIG5hbWVkIOKAmGlyceKAmQ0KPiAgICAgICAgICAgICBkZXYtPmdwaW9fY2hp
+cC5pcnEuZG9tYWluLCBncGlvKSk7DQo+ICAgICAgICAgICAgICAgICAgICAgICAgICAgXg0KPiAu
+Li9kcml2ZXJzL2dwaW8vZ3Bpby1hZHA1NTg4LmM6IEluIGZ1bmN0aW9uIOKAmGFkcDU1ODhfaXJx
+X3NldHVw4oCZOg0KPiAuLi9kcml2ZXJzL2dwaW8vZ3Bpby1hZHA1NTg4LmM6Mjk4OjI6IGVycm9y
+OiBpbXBsaWNpdCBkZWNsYXJhdGlvbiBvZiBmdW5jdGlvbiDigJhncGlvY2hpcF9pcnFjaGlwX2Fk
+ZF9uZXN0ZWTigJkgWy1XZXJyb3I9aW1wbGljaXQtDQo+IGZ1bmN0aW9uLWRlY2xhcmF0aW9uXQ0K
+PiAgIHJldCA9IGdwaW9jaGlwX2lycWNoaXBfYWRkX25lc3RlZCgmZGV2LT5ncGlvX2NoaXAsDQo+
+ICAgXg0KPiAuLi9kcml2ZXJzL2dwaW8vZ3Bpby1hZHA1NTg4LmM6MzA3OjI6IGVycm9yOiBpbXBs
+aWNpdCBkZWNsYXJhdGlvbiBvZiBmdW5jdGlvbiDigJhncGlvY2hpcF9zZXRfbmVzdGVkX2lycWNo
+aXDigJkgWy1XZXJyb3I9aW1wbGljaXQtDQo+IGZ1bmN0aW9uLWRlY2xhcmF0aW9uXQ0KPiAgIGdw
+aW9jaGlwX3NldF9uZXN0ZWRfaXJxY2hpcCgmZGV2LT5ncGlvX2NoaXAsDQo+ICAgXg0KPiANCj4g
+Rml4ZXM6IDQ1OTc3M2FlOGRiYiAoImdwaW86IGFkcDU1ODgtZ3Bpbzogc3VwcG9ydCBpbnRlcnJ1
+cHQgY29udHJvbGxlciIpDQo+IA0KPiBSZXBvcnRlZC1ieToga2J1aWxkIHRlc3Qgcm9ib3QgPGxr
+cEBpbnRlbC5jb20+DQo+IFNpZ25lZC1vZmYtYnk6IFJhbmR5IER1bmxhcCA8cmR1bmxhcEBpbmZy
+YWRlYWQub3JnPg0KDQpBY2tlZC1ieTogTWljaGFlbCBIZW5uZXJpY2ggPG1pY2hhZWwuaGVubmVy
+aWNoQGFuYWxvZy5jb20+DQoNCj4gQ2M6IE1pY2hhZWwgSGVubmVyaWNoIDxtaWNoYWVsLmhlbm5l
+cmljaEBhbmFsb2cuY29tPg0KPiBDYzogTGludXMgV2FsbGVpaiA8bGludXMud2FsbGVpakBsaW5h
+cm8ub3JnPg0KPiBDYzogQmFydG9zeiBHb2xhc3pld3NraSA8YmdvbGFzemV3c2tpQGJheWxpYnJl
+LmNvbT4NCj4gQ2M6IGxpbnV4LWdwaW9Admdlci5rZXJuZWwub3JnDQo+IC0tLQ0KPiAgZHJpdmVy
+cy9ncGlvL0tjb25maWcgfCAgICAxICsNCj4gIDEgZmlsZSBjaGFuZ2VkLCAxIGluc2VydGlvbigr
+KQ0KPiANCj4gLS0tIGxueC01Mi1yYzEub3JpZy9kcml2ZXJzL2dwaW8vS2NvbmZpZw0KPiArKysg
+bG54LTUyLXJjMS9kcml2ZXJzL2dwaW8vS2NvbmZpZw0KPiBAQCAtODIyLDYgKzgyMiw3IEBAIGNv
+bmZpZyBHUElPX0FEUDU1ODgNCj4gIGNvbmZpZyBHUElPX0FEUDU1ODhfSVJRDQo+ICAgICAgICAg
+Ym9vbCAiSW50ZXJydXB0IGNvbnRyb2xsZXIgc3VwcG9ydCBmb3IgQURQNTU4OCINCj4gICAgICAg
+ICBkZXBlbmRzIG9uIEdQSU9fQURQNTU4OD15DQo+ICsgICAgICAgc2VsZWN0IEdQSU9MSUJfSVJR
+Q0hJUA0KPiAgICAgICAgIGhlbHANCj4gICAgICAgICAgIFNheSB5ZXMgaGVyZSB0byBlbmFibGUg
+dGhlIGFkcDU1ODggdG8gYmUgdXNlZCBhcyBhbiBpbnRlcnJ1cHQNCj4gICAgICAgICAgIGNvbnRy
+b2xsZXIuIEl0IHJlcXVpcmVzIHRoZSBkcml2ZXIgdG8gYmUgYnVpbHQgaW4gdGhlIGtlcm5lbC4N
+Cj4gDQoNCg==
