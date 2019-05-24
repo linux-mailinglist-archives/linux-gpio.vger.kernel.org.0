@@ -2,51 +2,51 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id B62ED29793
-	for <lists+linux-gpio@lfdr.de>; Fri, 24 May 2019 13:51:24 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 55CB829797
+	for <lists+linux-gpio@lfdr.de>; Fri, 24 May 2019 13:52:03 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391292AbfEXLvY (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 24 May 2019 07:51:24 -0400
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:44709 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2391289AbfEXLvY (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 24 May 2019 07:51:24 -0400
-Received: by mail-lj1-f196.google.com with SMTP id e13so8363009ljl.11
-        for <linux-gpio@vger.kernel.org>; Fri, 24 May 2019 04:51:22 -0700 (PDT)
+        id S2391023AbfEXLwC (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 24 May 2019 07:52:02 -0400
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:46551 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2391179AbfEXLwC (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 24 May 2019 07:52:02 -0400
+Received: by mail-lf1-f67.google.com with SMTP id l26so6896341lfh.13
+        for <linux-gpio@vger.kernel.org>; Fri, 24 May 2019 04:52:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=nVGSSaSKko66gmIM4yeSPo0D27KVf/MwdUcazG0psBs=;
-        b=CAmpOuMMgs9LNo7ffRbh2niHdnt9B+qRNFjXwdDDbdmKYvjsctl3g/iYhVPPMDXmNQ
-         C9nCmUdsHuo/sXnalkykTGtXCI08h3hJXnqYckZEQBOV2H3XvVNS2Dw0rjzrSYLTAsBL
-         PISC6f5iKEvlGI7Y6GmykNJP1NipS2yfbNBChNABwwmH3qY+78D78zSMqo5TqjyQXizP
-         N6maHehsRnJvSf/9qt0lNOhnhc8rlvG2SJf4Qp9lq/WFS+WXiJgVk6bOrtkAm0MeZzsU
-         Wt5vp0P7eU7nQmhGwG7OeUGt7wJgtBOx7tUcinuSNvgXlABpan0CL5MHMchYDegM9OD1
-         c+pQ==
+        bh=6iYR7JRp1HHKG9HCoJt7Z3ej82/8WkT9mMtbM2Bxr1w=;
+        b=eVJQ8nvD3hAKgGuALBDODWh58e0l1HeXP9wXW7FkvNcgnbbFuZmFeCJovVHM7dlj/m
+         2EiHPDPxvbTD2brb1rT+agQlFIUawA/Dzm6nyArjH8xr3WTv2B6gMtblpROM0lb8OJrD
+         VGashTDvVUiaWWxCOc5ezn4iX/aWk+8fmj6TVDLYJogUsOmKuhBtWeoUozBpCe0OX+yX
+         K4swzxSB5D53DseVA278hofCrfKYTqriUqPa6ygQQHcf/KgMvQq+TRm1eSn/h/n39EzK
+         LO6xBo6WWVgl1/V6k1rKddLmIA1nePqoCwSjk6sPrzwEslBhyCmRfdyKxx+qT3d8MNGO
+         ZoEA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=nVGSSaSKko66gmIM4yeSPo0D27KVf/MwdUcazG0psBs=;
-        b=i2LUpVsxp6KYHjdbbzJYdWlZa74auryt0ONRGXXARwe9v+kePIVSRqheEyA+3DgRlW
-         Cg8UrVeX6KuMquE86rz4QpUM9aJuuzu9+NLVCS3UpwV1gXp+rjahjL0mD21S1OFMC9OA
-         ff8HjeyM/9RHkT/4L1ro4p6dEw1sT3Y+h5WEhPJk5eLYZ8kkZS7Xz3+FpwKmHo7s5i2w
-         p/4eb/ukp3EgS4MFSE1iEhsG9jpDHwRZJc5MT7sZXZwu59FqGuKUW1SJMkjOlshhmmJX
-         AFi5hgC0imaeoqtOhH+fe5Lo6LwNvI8eR8+mY8BIOraBTAvzhsn8KA1OuqEFN56Di1TV
-         TM+w==
-X-Gm-Message-State: APjAAAWGBqmQDnIT9Im0SZTkTxLaDIrLohd499dC83ytUGzM1jllFvw7
-        kC/mz4d3DWPjIE4BzsaI4e5pSVHAfbq/zjQP8Be4jSVY
-X-Google-Smtp-Source: APXvYqzGplebYUdWzYGmasp0vQj8eWkrY4uvvmACdfcAYttZqHwEGva24jRGrNIllzpYWD5Z+5whxlKgLAX04p3HNOg=
-X-Received: by 2002:a2e:874b:: with SMTP id q11mr23966805ljj.48.1558698682215;
- Fri, 24 May 2019 04:51:22 -0700 (PDT)
+        bh=6iYR7JRp1HHKG9HCoJt7Z3ej82/8WkT9mMtbM2Bxr1w=;
+        b=sXhx8PTPKJELVqTnktHqRntGaaEpTSVBxr+9oEcUhUpBbT60tMrCc26nzphZGW9hg8
+         getGY6YWSlOMdCFzqeEG+qZ3irScVWfwN+j1u2oZkTnjXHZHmtEKKRtJvUbF8KvHKrVV
+         qUlys1QGssf72YrBXiSHOwgI0ke+OmEhP20iObDLXN8qzmOua3p5dT/Ze/WXgEe7GNqa
+         rnPIBAbvaTktobwkUla/ug8pxDXSjX/lgS7vIyIhPYJ6ZSO+bSvl7RA59XWsOyKD1/19
+         4yJl1bMVAXkyXBs/ZWXzEZaKtDkBtrDUFpzs7eGxvUFguh1e1206t2GN3Kst9WdJJXUY
+         t4Lg==
+X-Gm-Message-State: APjAAAVM8VUjSaTugrFqW/Fy2zk3GwokeQcF4+xYdpkhKCqRV8B2mSDB
+        qF/qAsyAdwb/rE209fnxg314dBzIqqazkfIYGreDMg==
+X-Google-Smtp-Source: APXvYqz1+uN4e3Ih8IK72RpE7uJUloQIFTXznGy8kaAypBy8X/PEODddYscikHDcaeojiUt2pj4//IiIs7Se/lmo8RM=
+X-Received: by 2002:a19:750f:: with SMTP id y15mr1121022lfe.74.1558698720606;
+ Fri, 24 May 2019 04:52:00 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190520083101.10229-1-manivannan.sadhasivam@linaro.org> <20190520083101.10229-2-manivannan.sadhasivam@linaro.org>
-In-Reply-To: <20190520083101.10229-2-manivannan.sadhasivam@linaro.org>
+References: <20190520083101.10229-1-manivannan.sadhasivam@linaro.org> <20190520083101.10229-3-manivannan.sadhasivam@linaro.org>
+In-Reply-To: <20190520083101.10229-3-manivannan.sadhasivam@linaro.org>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Fri, 24 May 2019 13:51:10 +0200
-Message-ID: <CACRpkdZTE-FZAht+txxVXYwe42uN_f1uPthLiKG54-=_YueUnw@mail.gmail.com>
-Subject: Re: [PATCH 1/5] dt-bindings: pinctrl: Modify pinctrl memory map
+Date:   Fri, 24 May 2019 13:51:49 +0200
+Message-ID: <CACRpkdbWCbhCdrbUueC9Jv1tJQcKiu5OaFfAqyMhKmEK+nH+xA@mail.gmail.com>
+Subject: Re: [PATCH 2/5] arm64: dts: bitmain: Modify pin controller memory map
 To:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 Cc:     Rob Herring <robh+dt@kernel.org>,
         "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
@@ -66,13 +66,15 @@ On Mon, May 20, 2019 at 10:31 AM Manivannan Sadhasivam
 
 > Earlier, the PWM registers were included as part of the pinctrl memory
 > map, but this turned to be useless as the muxing is being handled by the
-> SoC pin controller itself. So, lets modify the pinctrl memory map to
-> reflect the same.
+> SoC pin controller itself. Hence, this commit removes the pwm register
+> mapping from the pinctrl node to make it more clean.
 >
-> Fixes: 07b734fbdea2 ("dt-bindings: pinctrl: Add BM1880 pinctrl binding")
+> Fixes: af2ff87de413 ("arm64: dts: bitmain: Add pinctrl support for BM1880 SoC")
 > Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 
-Patch applied.
+Acked-by: Linus Walleij <linus.walleij@linaro.org>
+
+Please funnel this through ARM SoC.
 
 Yours,
 Linus Walleij
