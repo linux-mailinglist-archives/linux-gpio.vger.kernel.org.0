@@ -2,87 +2,80 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id F02B029274
-	for <lists+linux-gpio@lfdr.de>; Fri, 24 May 2019 10:08:52 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 67A512927B
+	for <lists+linux-gpio@lfdr.de>; Fri, 24 May 2019 10:10:32 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388960AbfEXIIr (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 24 May 2019 04:08:47 -0400
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:43340 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388959AbfEXIIq (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 24 May 2019 04:08:46 -0400
-Received: by mail-lf1-f66.google.com with SMTP id u27so6406048lfg.10
-        for <linux-gpio@vger.kernel.org>; Fri, 24 May 2019 01:08:45 -0700 (PDT)
+        id S2389296AbfEXIKY (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 24 May 2019 04:10:24 -0400
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:43214 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389245AbfEXIKY (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 24 May 2019 04:10:24 -0400
+Received: by mail-lj1-f195.google.com with SMTP id z5so7831347lji.10
+        for <linux-gpio@vger.kernel.org>; Fri, 24 May 2019 01:10:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=47BMQdLR7bja0wVOm3y003+9mQi2F7wpyQcEeaV61G4=;
-        b=tRf9oi3WPr72KA5JL3sFRe1+og4j3l2Ro3tzWWGxSB2KchLmR06thHvO9EvQL/zuk+
-         D7IqaFtZVH8+Zbf30LQQcZbB6nDy7qIDTvv8/cmfyX1Dp1SBfTZyPWHLLL4iT2WbNV/H
-         VHX+/n+r7sH5cjPKRu+A/fQMkyMRFoKt5SYDvkxAHooVTPNSwooFuHKW7eDaXAzuHBan
-         7FJoYaR25kyj6z30kCH2TTw+C9KDQIqI5vE5Dd6Dui+Jw2FRyhFiYWvpdePf4C53d2BZ
-         hDtkJtp83CX8gvqSp3uMtI5MXUo5hk540ttey6lFOY7KQvFE1s3nOY1Oc1CfkwQchUBN
-         4VWg==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=RcI5nX0zsFocv6c9Dh5dsyELmuugz9pu4xszs0C7sEQ=;
+        b=TuplLlJStenwIfjMi0SPcifzNyONWCjOAlzsqNaVJLUf0JuryBZSSfqTfFouJIuKzD
+         0YC70wD3x8HwBrd+c6N7bKprIw/j7WEBdykVkNvZ5kfd1Q1dAik3xDID7CXPN47G5nKV
+         2aBSa3fo6+2pNul3KMaZQtmWsojWbkfJ3TU7f/MQ26mY1/WEdKrxO0X3tLBuaN0kuqw1
+         +YegxUN9DJ/Twi84rwuicS92wlXlg2Ir6jLEZ5BElnExtPPOot/MYLcJ94OvTDN/UACH
+         l3GMGETArM3mdVdYN3y3YkrYU4j8JovLoxeuYk9/NgH+4yLCITdjm01+eKqcIJUoU543
+         lETw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=47BMQdLR7bja0wVOm3y003+9mQi2F7wpyQcEeaV61G4=;
-        b=uaHtH8Leug/5yz1YiBWWgBKNCB0caK04xO7S6xvNCJPVsh5sw6qejWCl+FVlzQ8Vrz
-         wg2Tkr5yfUIIxoCjjikq/LFPDdn5OxU23rfQKwDrD963Dg5MCVaOKRpN5+v84O/X0Vxf
-         oj+compOq1PcKh/FscsfkX6RK7TzFOOLA6elM3kgYM1+Szu5N1sVMQNtyVDa5dvyjV/x
-         /zMGxQUa4o0EcNJxCA3wyHC1nGQV/XeH5nDXnTvKB+1mMjbsc7YZEmQLyCO8/fxSmgnJ
-         2DyTr3DLtRhcXM3pEuayM4v0plnu6CjVHOKEWHaI4BqWhu4g6B2j6kfpqA99Y7NqN9Yr
-         qPGg==
-X-Gm-Message-State: APjAAAUbNHumesepIp1xPgtWHOjAhHlD6Dqx+ykyYCSoAGfpDnNWrqqQ
-        2qLOuv5wcn2/K8/w0n6eV9i8lQMM8Ps=
-X-Google-Smtp-Source: APXvYqx71Zsk2qZCZkI9rGpTcgP24A3ZgEN8yhJCZHSmuQjINPN8JlrJP+n8jEkvUGm1ZQ8mA/DZIw==
-X-Received: by 2002:a19:700b:: with SMTP id h11mr4483601lfc.25.1558685324212;
-        Fri, 24 May 2019 01:08:44 -0700 (PDT)
-Received: from genomnajs.ideon.se ([85.235.10.227])
-        by smtp.gmail.com with ESMTPSA id j22sm448486lfh.14.2019.05.24.01.08.43
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 24 May 2019 01:08:43 -0700 (PDT)
-From:   Linus Walleij <linus.walleij@linaro.org>
-To:     linux-gpio@vger.kernel.org
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Benjamin Gaignard <benjamin.gaignard@st.com>
-Subject: [PATCH] pinctrl: core: Do not add device links for hogs
-Date:   Fri, 24 May 2019 10:08:39 +0200
-Message-Id: <20190524080839.7118-1-linus.walleij@linaro.org>
-X-Mailer: git-send-email 2.20.1
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=RcI5nX0zsFocv6c9Dh5dsyELmuugz9pu4xszs0C7sEQ=;
+        b=oq1jgs6B3akD2wSMUP/9L0RqvM3WIemb6MRVqW1Q/DtZ1rAgaZzhxSHOgoP9aDYrOu
+         0ChzePLxIzqOJZqqwA/ZtLtLiGf5FjrJUaTfg/XVBCeRszbm3p0fzcoYVaXP3Ca5zHkX
+         Z6ZVDlW2ZI/ltHTMDkmtVkOguyFnnI2lMd4oTmxGjtXnS2Vu5OAXbcjRbBd2C+qsXE/f
+         38Op3Eel8LqtscgbJlIEgiqGInmVxuyf8MjFKBHiSL8W3R7mUlwerzxZf9ooS+KDHTqv
+         ezyj8yf+iLWNJJA6y4iMWm2/aKZJ/UhvH5eguaNgIvjnVQHWzXRlrvbRovbabA1oKOdC
+         UDSw==
+X-Gm-Message-State: APjAAAX6rR0rkDQ0gCt53PfmTpgmdXmChEQIElTbJxj947cVFhDWegeG
+        FgDs2dtXxBe/fGB0kJEPNZLdnKSe1EKo0GkfJQ1/RA==
+X-Google-Smtp-Source: APXvYqwVNWAVXwkUBL7c8AEmHQLOpoFiD7Z4FJzo1VkNZyw8J0vlNLuTHQZ22OQHfGXFRXfI0eoS6GlJNewBVqn8NeY=
+X-Received: by 2002:a2e:9cd1:: with SMTP id g17mr11514251ljj.191.1558685422051;
+ Fri, 24 May 2019 01:10:22 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <1558683125-31882-1-git-send-email-amelie.delaunay@st.com>
+In-Reply-To: <1558683125-31882-1-git-send-email-amelie.delaunay@st.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Fri, 24 May 2019 10:10:10 +0200
+Message-ID: <CACRpkdbRuveWT8huqpvo6vrSqyF2_g=xcHF+YjAs6AH4xcA65w@mail.gmail.com>
+Subject: Re: [PATCH v2] pinctrl: stmfx: Fix compile issue when CONFIG_OF_GPIO
+ is not defined
+To:     Amelie Delaunay <amelie.delaunay@st.com>
+Cc:     Lee Jones <lee.jones@linaro.org>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        linux-stm32@st-md-mailman.stormreply.com, kbuild-all@01.org,
+        Randy Dunlap <rdunlap@infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hogs would create circular device links, so do not link
-the device to itself.
+On Fri, May 24, 2019 at 9:32 AM Amelie Delaunay <amelie.delaunay@st.com> wrote:
 
-Cc: Benjamin Gaignard <benjamin.gaignard@st.com>
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
----
- drivers/pinctrl/core.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+> When CONFIG_GPIO_OF is not defined, struct gpio_chip 'of_node' member does
+> not exist:
+> drivers/pinctrl/pinctrl-stmfx.c: In function 'stmfx_pinctrl_probe':
+> drivers/pinctrl/pinctrl-stmfx.c:652:17: error: 'struct gpio_chip' has no member named 'of_node'
+>      pctl->gpio_chip.of_node = np;
+>
+> Fixes: 1490d9f841b1 ("pinctrl: Add STMFX GPIO expander Pinctrl/GPIO driver")
+> Reported-by: kbuild test robot <lkp@intel.com>
+> Signed-off-by: Amelie Delaunay <amelie.delaunay@st.com>
 
-diff --git a/drivers/pinctrl/core.c b/drivers/pinctrl/core.c
-index d757c51d7114..41adb4e47dc0 100644
---- a/drivers/pinctrl/core.c
-+++ b/drivers/pinctrl/core.c
-@@ -1271,7 +1271,9 @@ static int pinctrl_commit_state(struct pinctrl *p, struct pinctrl_state *state)
- 			goto unapply_new_state;
- 		}
- 
--		pinctrl_link_add(setting->pctldev, p->dev);
-+		/* Do not link hogs (circular dependency) */
-+		if (p != setting->pctldev->p)
-+			pinctrl_link_add(setting->pctldev, p->dev);
- 	}
- 
- 	p->state = state;
--- 
-2.20.1
+Patch applied for fixes.
 
+Yours,
+Linus Walleij
