@@ -2,71 +2,90 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 667E129726
-	for <lists+linux-gpio@lfdr.de>; Fri, 24 May 2019 13:27:45 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 967F029769
+	for <lists+linux-gpio@lfdr.de>; Fri, 24 May 2019 13:38:58 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390861AbfEXL1o (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 24 May 2019 07:27:44 -0400
-Received: from mail-qk1-f196.google.com ([209.85.222.196]:45904 "EHLO
-        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390701AbfEXL1o (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 24 May 2019 07:27:44 -0400
-Received: by mail-qk1-f196.google.com with SMTP id j1so6910165qkk.12
-        for <linux-gpio@vger.kernel.org>; Fri, 24 May 2019 04:27:44 -0700 (PDT)
+        id S2391083AbfEXLia (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 24 May 2019 07:38:30 -0400
+Received: from mail-qk1-f193.google.com ([209.85.222.193]:42577 "EHLO
+        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390714AbfEXLi3 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 24 May 2019 07:38:29 -0400
+Received: by mail-qk1-f193.google.com with SMTP id b18so1012749qkc.9
+        for <linux-gpio@vger.kernel.org>; Fri, 24 May 2019 04:38:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=BjYcnQFmVjebl5i0cXPxIGxnyaXnU2JY+brSml/1DDA=;
-        b=wGoUtIoO0xz1EQhdjt87mJBjfAHd7Ze0qgWrdLO3iyLU463hhfssDEWbk1Ei9Z18zD
-         MzH1H0jYXc1FdtERUsP1TKuCRpAT1DJC+kGD7/6qUtElGHuy418CvUscrLkU/4gqu1TZ
-         j05FNLrxUQCBUTfGoaPwzMuxLUedlu2x/ExF1zPVYt+Ce26ouQwv6MO3sZA8TRdeCURJ
-         /AaGaj1MziyxFXmubqdVhkewE0SkemPgilorVvo10rANGoC294M0WlmnuMEI9OXQGmqu
-         +ShnV6T6oumzk3r3twukFvr8i3d/6MGzzQ0MHXz5ssSfVnMySSixwiCRxCJQsh/5Ij09
-         QExQ==
+        bh=0lxiGmWfLgl7C0PUBf51UY66oylRUCwuW2L386gQxFM=;
+        b=LUaBU+oQ+7tPBoX/UMmq0HZGaNUxbnS4Li9ZC0bSZJ7gQ9i5S9z2Y2TGSJQ60X+Bki
+         37KF1sRvhwYU42JBaxNqk4Eqn1GJayVPYODxe20VQIWSzDpMqbh8MJjp45HbKdJcc1vk
+         pnjeuZ5OvGdmGOhbaC44nP2tbXRRQOb1mJWvYKyEjDAEl1Obt6lZ/G7NI6GmNocDUBRK
+         2Xr0SjpwW4FnOuCvKUVeEXnWXj740GTgprlcCV47PSyFUBMbMBeFQPZXHLO+psfn24Hu
+         NfEsR+Js97tD3PQlVq9YDIiPVtP070m/YuQ6Y40B3Z9p3A1JaaI75CbnbuN8ANVi+udN
+         mNKg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=BjYcnQFmVjebl5i0cXPxIGxnyaXnU2JY+brSml/1DDA=;
-        b=Dm0y3OoYEJHS72kxOnf7QnUVXiQ9d7ii9sRgoniQ1KAtbB45og/A3ixHlDN2DW8s2T
-         e3JAmZ/We9/k6K6TQTWxe+4k8qoGqcpt0yFoWCt3VKIvb8ooVF8lKQFYmntj3DvZPZOS
-         UmOPnK1p/2dbaSYwRwqjWJwHmLaQTMsBFxAoMmjp/aOGKZqVe38zWWp4qNyrsnIhGMC7
-         QSA3e47l6EBAlHHe0BcBb6CSprBugyiU58XEO0i2z+8BpTpBYcCxiuu6Lh7CZsFa08yT
-         7AaDylua9PyAeIqL0O6WCmgNdSsHUdmmora3/rVYFGtcgwP/QjN8svGQs/N/NlIbyAqo
-         FYyQ==
-X-Gm-Message-State: APjAAAV00J1ZMSx9qFCaKNyJHpseUqbhTNKbrO5gfXxzItDRUFkVxuch
-        q+Or/uWfn6R6V30+ggzE8UKQ+cj7SrB2awdQ67gU/w==
-X-Google-Smtp-Source: APXvYqxf7/9bFgNldoDEakk0wvrkUDY2w+3N/zeuVyi+hiSEB2HQNspS+Lvdr8CIJFtRT4V11GagahDvrbloBFIO5qU=
-X-Received: by 2002:ad4:45ab:: with SMTP id y11mr82554975qvu.137.1558697263652;
- Fri, 24 May 2019 04:27:43 -0700 (PDT)
+        bh=0lxiGmWfLgl7C0PUBf51UY66oylRUCwuW2L386gQxFM=;
+        b=aUu7jLR39C/WAM8yV/talIHN71a7K3WX+RINg1/UOArqvi0GaduS6v/yTwMGsAhKiq
+         l5T95f4RQckDbTYhapd3H2bsfJKt9rDBgZXA9EcruADHrhsfcjyVEqMRLpC8b0sIS/nb
+         8uZZeLZS7iELaDh6Zb1yyq9FRCmeVip0ebuUoyloSYj0qI9kFBtcuMa1ySBwZF1idgvt
+         F4trUEYT6mbB2sT6NWfr5vkB1CHDEk2qKaz5qtkz9ZDQq0ysK8uB9a7NfgAStB9o7IKA
+         8rmScKapF93Ir1ok68tBMXOHu3WiHboggcD8p8bQA87vW+XNyffHSKqvDrM2+rBjgTPc
+         T1Ow==
+X-Gm-Message-State: APjAAAUj1jOJh0a69404vqqahm6+/iLj8LB1kzfbKf1rwe2g5aI2DHyJ
+        uaSnGK0w54VrdqqS7TujS9m/1aAEt+Qqkgt/XKI4Gg==
+X-Google-Smtp-Source: APXvYqwgX2PLA0fSXA7p0azFhUSmOAckdqbzgNqBifI/FEQSkUa/r3EhD7hLuBNm+vM7K0FXzlsJhhdkDC52rf3oPlA=
+X-Received: by 2002:a37:b287:: with SMTP id b129mr70960448qkf.20.1558697909058;
+ Fri, 24 May 2019 04:38:29 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190510090339.17211-1-luca@lucaceresoli.net>
-In-Reply-To: <20190510090339.17211-1-luca@lucaceresoli.net>
+References: <20190514005033.15593-1-robh@kernel.org>
+In-Reply-To: <20190514005033.15593-1-robh@kernel.org>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Fri, 24 May 2019 13:27:31 +0200
-Message-ID: <CACRpkda5afsF+2WwMg4_L7uDexFR0UExgmHQ-+JajXmPCpzU3g@mail.gmail.com>
-Subject: Re: [PATCH] Documentation: gpio: remove duplicated lines
-To:     Luca Ceresoli <luca@lucaceresoli.net>
-Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Jonathan Corbet <corbet@lwn.net>,
+Date:   Fri, 24 May 2019 13:38:17 +0200
+Message-ID: <CACRpkdZabT3_vjkv0PR+GLC0ZXWzpMxfwJU6O9Y+omKJ=6zCaA@mail.gmail.com>
+Subject: Re: [PATCH] dt-bindings: gpio: Convert Arm PL061 to json-schema
+To:     Rob Herring <robh@kernel.org>,
+        viresh kumar <viresh.kumar@linaro.org>
+Cc:     "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Linux Doc Mailing List <linux-doc@vger.kernel.org>
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, May 10, 2019 at 11:03 AM Luca Ceresoli <luca@lucaceresoli.net> wrote:
+On Tue, May 14, 2019 at 2:50 AM Rob Herring <robh@kernel.org> wrote:
 
-> The 'default (active high)' lines are repeated twice. Avoid people stare at
-> their screens looking for differences.
+> Convert the Arm PL061 GPIO controller binding to json-schema format.
 >
-> Signed-off-by: Luca Ceresoli <luca@lucaceresoli.net>
+> As I'm the author for all but the gpio-ranges line, make the schema dual
+> GPL/BSD license.
+>
+> Cc: Linus Walleij <linus.walleij@linaro.org>
+> Cc: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> Cc: linux-gpio@vger.kernel.org
+> Signed-off-by: Rob Herring <robh@kernel.org>
 
-Patch applied with Bartosz's ACK.
+Patch applied. As you know I am already a big fan of this scheme.
+
+> This warns on a few platforms missing clocks, interrupt-controller
+> and/or #interrupt-cells. We could not make those required, but really
+> they should be IMO. OTOH, it's platforms like Spear and Calxeda which
+> aren't too active, so I don't know that we want to fix them.
+
+What works for you works for me.
+
+We could add dummy fixed clocks in the DTS files if
+we wanted I suppose. The #interrupt-cells and interrupt-controller
+things we can just fix, but I wonder what the maintainers of these
+platforms are up to? Isn't Calxeda yours, and could Viresh fix
+up the SPEAr?
 
 Yours,
 Linus Walleij
