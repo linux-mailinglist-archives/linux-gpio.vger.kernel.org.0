@@ -2,85 +2,73 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 55EA62A926
-	for <lists+linux-gpio@lfdr.de>; Sun, 26 May 2019 11:20:38 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6AE902AA88
+	for <lists+linux-gpio@lfdr.de>; Sun, 26 May 2019 17:50:01 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727659AbfEZJUh (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sun, 26 May 2019 05:20:37 -0400
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:39851 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727640AbfEZJUh (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sun, 26 May 2019 05:20:37 -0400
-Received: by mail-oi1-f196.google.com with SMTP id v2so9955289oie.6
-        for <linux-gpio@vger.kernel.org>; Sun, 26 May 2019 02:20:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:reply-to:from:date:message-id:subject:to;
-        bh=GpNdYRES46RfzpVIgTMPzZ6u6WQI6KIHaSlhSlcg/+c=;
-        b=nbNBbfMWm2mXzZtG+d/KFNhu8a2pvNqwEwkQSY1OD2DBSFt9MjMrAdl3BCWZoqVYH2
-         692qPpZqaxacjmsuPCYxePVaDF+fn/Q9MvIBBypXskuS9A50wvHpQj04gXBI1o2uOxyz
-         BzwhAZsHtiXg7QzOMCc12wVV2TUuMO3QBnuicBYc23yhrbSsbqLkUcGr5rMl629+Q8hI
-         dWYGSF6L2zGVQJC5KVZu4U/Cd+Ayhl75cuonsk9Pl040j5CSEMqKDIAyIQ0HnQz2qnOt
-         1cegoM3UecRmwS15zyE5IyHkTIsrGP1CZdHH5QR4ezASrFvWIFhTRzeHGxnVuK/HlTLn
-         z3dg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
-         :subject:to;
-        bh=GpNdYRES46RfzpVIgTMPzZ6u6WQI6KIHaSlhSlcg/+c=;
-        b=CBqrLV6Irel8VDJ6MqDz54C3C9DbNR/HmYpAv4ROGZXcSNL1s3jCCXH+oKAZA9pQWn
-         UFAEqNREjBBHgBcaQQHoQQTYtt2gnIHXTBFLMnDTyOmubw1FYedJ2PTRD/gAdVMoPnjV
-         lZyyKoXH3L/OdIUnZmMN03L6TnXF7Eu7V8T+0qi+T78Jo3+63HLBkz1cX9KqEWdDRh1Z
-         D0gcswK+H16+nlAiXUI703j9vO8UPIwBtxQe5/g+M1zXUWzarfRsjyLwqxuSMZYQA5zv
-         sSJYfIbOUyQGT+EHHm8bZzxvwjHLdxibFvHWtnhzc7LrCRjFwigTBNq0lcrVzwBEHNzX
-         0/Vw==
-X-Gm-Message-State: APjAAAXaHzxXk/LUyaDz5WXPULePvs0kLof+rHc/qj3nWTqlFO4SJfw0
-        KaJjop7pzBs7lknCSfHQv1WkHR16VoU0cB4pmmw=
-X-Google-Smtp-Source: APXvYqxslmhwqpcwOXne15bZQahpthtNO/qqT3gC7GlkqbYDfsSpTdc5I/AQGOU7EVImClC5CFYJTOLxzdGbux/ELdE=
-X-Received: by 2002:aca:f189:: with SMTP id p131mr2237842oih.89.1558862436403;
- Sun, 26 May 2019 02:20:36 -0700 (PDT)
+        id S1727859AbfEZPt7 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sun, 26 May 2019 11:49:59 -0400
+Received: from sonic306-21.consmr.mail.ne1.yahoo.com ([66.163.189.83]:35066
+        "EHLO sonic306-21.consmr.mail.ne1.yahoo.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726875AbfEZPt7 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>);
+        Sun, 26 May 2019 11:49:59 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1558885798; bh=FCjWGTqDRXQUUN8ivg02MDhbiDKrvltOcpc7W52q/3U=; h=Date:From:Reply-To:Subject:References:From:Subject; b=p8lV/joolu5crMcaFYOakgmMEXSU89ws7n+JxmWxYjDIVEF48pKOyskhiN45IJizMT61U5moQTe8HP2maQVJAlG8Qtx3K/KT6fLZtQPBa6/bIoNscswy2srQR4T5bPOTZgp+wWjunBSwnHBoRrPS9t8y7CRZB4qXRAWeyVSYE74G/zvyGp2MhFb0yScannxyTPlI/WTwc0UlB5Fl3B/rFrlNvoZnEziNH9la3PRQxAOoiG21negz/TDje4F2J1dEViNh91an+HxV3+FGXW1sNQpc1rmTgy7Z7L+i3yuIJevEBYc7VUwWvM7/HuuLmVRSOl0QMPCoWP3e/SiJzgWbqQ==
+X-YMail-OSG: jSfUWIkVM1lFCYK2YHcwT7K9xQsUl0Oc5_Rj9gT5zxnNnlRgmSn8iQeq0yZfamU
+ myr3yILo212nkdrY59dfpg3OZyCKYecKvhX9TzGjtGcti2zne8LZ78cBgg4lC64kl0kY36DOpbGi
+ jOLq3DoHJ2gunI4ryTh7Dsh5mQnkFp98_CG93BKGI0H2FrOtycoyjXPcmzgskoFD5GC7wTv2ocRJ
+ hQbRKqmQfWiIa.B2f3NUZ2DGstac5LEx.rUt6yOvHAaRk_0j8eOjGyF0J2g5bogQZs9jfk4kJW1R
+ MihmgA6YMWbzAbnGPwD7evZJWYAisVl4tcEwpBEeZ7FnzlvAVImIANL6v2IMnJJJJ8zkipXNuVjd
+ yCT44OmhDHXTvFWbmuZIP5.8QwXt3Y7HEiLe66dSva7T2cuIHBBAZGg8cQReuiom5dkzGdJxUbBc
+ INbc0fWCVLLLa7Tv28CTzvdQYMUy1Bd7mvqpqScF0RxKy7_IWXQG0yU2X6HpdCFQcZTarINwHBeh
+ asGoer5ZWl4ucpv3UJ7Aq0t8AQhp.FLR7TM3KpOPRzeeS9ZRHyfM_O4Q.2Wg12XiQA0A6nhh2n3Q
+ 9QNWYlrW_ZDltGlTHjpDHTcbFW25WCTfNTvS5xSz5aUJwZzj1rsaFuFC6k8OJjMhZH_o8QSAMi89
+ _jXEiVLAUM1jTBiVXO0TvnJKEYhWoEp0JpYBLEA1AFBCbwFecWbnGomhzT9NRak4jp4pDn6Txyys
+ 1_Zzccc069LRuGaCXN4aqjucNU.6QEp4J1ZuFtTtE3t3ko8NmPVWfmV_4fhYmvXgIhNQqYatqwfu
+ LW9GApOchXgEp.LIkF82Pt.z1.zbX2XT4Q2p2DRrwf4aRdN0Yb7_3PbERZvq_O2IG8cQIIvz_464
+ WXD67JdSC0l8rOS7XO5KqMeA3e5jWTQfHKVxjlv1Uom5flGFJDCfPp.P8IVMUr8e5U9q9YM7BKGv
+ UanDm_dWtPGZ4BHj2xFsCjWjTkic4.hEO19216bs0TsV_DkZU.qnH1ax15vWctYZEwx_OtWDcyxV
+ qGStZINrCpneEGjI2Z8prM7zXcp9AtL1FuzYJ4TOBhsj2ElIrZD7KigcBGY3KrZaOYCgGaZoyRH1
+ WYmzfYMdJZpCoqnL3vYRHBEmkPj6GDAGitWNF8Q88kR6c7CvDRftv9YuATFiu1fksRtsA_SCuszh
+ kvBWeeSh1oBMMvYoMpadegIq3wjpUsGO_xjkCy22QnhLNUrwbDO7PndR9s08-
+Received: from sonic.gate.mail.ne1.yahoo.com by sonic306.consmr.mail.ne1.yahoo.com with HTTP; Sun, 26 May 2019 15:49:58 +0000
+Date:   Sun, 26 May 2019 15:49:54 +0000 (UTC)
+From:   Ms Lisa Hugh <lisa.hugh101@gmail.com>
+Reply-To: Ms Lisa Hugh <ms.lisahugh000@gmail.com>
+Message-ID: <855196847.7802943.1558885794550@mail.yahoo.com>
+Subject: URGENT REPLY FOR THIS BUSINESS...
 MIME-Version: 1.0
-Received: by 2002:a9d:5b5:0:0:0:0:0 with HTTP; Sun, 26 May 2019 02:20:34 -0700 (PDT)
-Reply-To: kylieelizabethwatson2019@gmail.com
-From:   "Sgt. Kylie Elizabeth Watson" <alasanahmad100@gmail.com>
-Date:   Sun, 26 May 2019 13:50:34 +0430
-Message-ID: <CAHFS=NknG1pe1rgDoX5_Xyp3hE4b4AVLRgRAx6du8e4-DckDiA@mail.gmail.com>
-Subject: Assist Request From You
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+References: <855196847.7802943.1558885794550.ref@mail.yahoo.com>
+X-Mailer: WebService/1.1.13634 YahooMailBasic Mozilla/5.0 (Windows NT 6.2; Win64; x64; rv:66.0) Gecko/20100101 Firefox/66.0
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
--- 
-Accept my greetings to you
 
-Assist Request From You
 
-I am 28 years old single an orphan my parents died when I am five
-years old nobody to help me,I send you my business proposal with tears
-and sorrow,Please let this not be a surprised message to you because I
-decided to contact you on this magnitude and lucrative transaction for
-our present and future survival in life. Moreover, I have laid all the
-solemn trust in you before i decided to disclose this successful and
-confidential transaction to you.
+Dear Friend,
 
-I am  Kylie Elizabeth Watson ,I hope all is well with you? I am female
-soldier working as United Nations peace keeping troop in Afghanistan
-on war against terrorism. I have in my possession the sum of
-$3.5million USD Which I made here in Afghanistan 2014,I deposited this
-money with a Red Cross agent. I want you to stand as my beneficiary
-and receive the fund And keep it safe so that as soon as am through
-with my mission here in Afghanistan.
+I am  Ms Lisa Hugh work with the department of Audit and accounting manager here in the Bank,
 
-You will assist me to invest it in a good profitable Venture or you
-keep it for me until I arrive your country, I will give You 40% of the
-total money for your assistance after you have receive The money.
-Please reply back to me if you are willing to work with me so that I
-can send you the information where the money is been deposited, your
-urgent reply is needed in my email address below
-(kylieelizabethwatson2019@gmail.com) so i can send you more details.
+There is this fund that was keep in my custody years ago,please i need your assistance for the transferring of thIs fund to your bank account for both of us benefit for life time investment and the amount is  (US$4.5M DOLLARS).
 
-Thank Yours
-Sgt,Kylie Elizabeth Watson
+I have every inquiry details to make the bank believe you and release the fund in within 5 banking working days with your full co-operation with me after success.
+
+Note/ 50% for you why 50% for me after success of the transfer to your bank account.
+
+Below information is what i need from you so will can be reaching each other .
+
+1)Full name ...
+2)Private telephone number...
+3)Age...
+4)Nationality...
+5)Occupation ...
+
+
+Thanks.
+
+
+Ms Lisa Hugh
