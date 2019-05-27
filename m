@@ -2,67 +2,77 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 68EC42B0FE
-	for <lists+linux-gpio@lfdr.de>; Mon, 27 May 2019 11:08:19 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D3B1A2B10F
+	for <lists+linux-gpio@lfdr.de>; Mon, 27 May 2019 11:10:29 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726115AbfE0JIS (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 27 May 2019 05:08:18 -0400
-Received: from mail-lf1-f45.google.com ([209.85.167.45]:43856 "EHLO
-        mail-lf1-f45.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726063AbfE0JIS (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 27 May 2019 05:08:18 -0400
-Received: by mail-lf1-f45.google.com with SMTP id u27so11506098lfg.10
-        for <linux-gpio@vger.kernel.org>; Mon, 27 May 2019 02:08:17 -0700 (PDT)
+        id S1726560AbfE0JK3 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 27 May 2019 05:10:29 -0400
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:46016 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726338AbfE0JK2 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 27 May 2019 05:10:28 -0400
+Received: by mail-lj1-f193.google.com with SMTP id r76so3247206lja.12
+        for <linux-gpio@vger.kernel.org>; Mon, 27 May 2019 02:10:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=rDjGbdorg9VdOEm4pIIngWtSBO/UW2gLWez1MYyE5DI=;
-        b=E87KyphMNdtx1RsRmYPA7RZccxTrwICvaCPBCt6Rnum603pJRSQWXtq9KRBVqbkMDq
-         VsFCOGB23YIxRLhNa8hmeLmoEfl77mssf1meVNMOxjpX+Ky+6n/vHdKxlN721QOkdmna
-         fiqyNBQAHz+7XcGzjyV/GkJSYTZd7SmmCe4H+2lN0geyjNMjTc0gxlIeW3oKwEFxd76J
-         o2q5wHmrhVo7Mj0kANCj4QxRpXuc4suEOhtOeFZrBfB4O1iyZ6P+/ureqQVGwKKwU3XQ
-         g3b6ukVTPUAm1UygJg6i/4thEOp2nwgWFxSKk5zC7ZkA81IKCNMP2iDkQL4qHSoYTfJJ
-         Lvwg==
+        bh=pEGlKR9cMXvIeUwusBglsYeiQ+SPB2PmHYL6y3sHsr0=;
+        b=FhjjRkkXUEVnfVIt6bTqWSZJb/80sf15Ilad86TcxGXBhK8aK4E1Q8KTgK9nZ7a3Wc
+         L+08R9RZF08RtWFv83jca1VyQfwi7ljQUoGUnI+MLWoxcugHRvse2TEQADWqDxxGDhkv
+         03VruCzQb3H2EC7bW3VH9sYFSU1DSddBsVfvpbfT+VLY9BvT7GtBotmkm3OzN5YNmVAG
+         kO6OSAhPlVJGlX/tgBr5UHCMZEYKdewpzcS9XDXgV/Z2rjnIc5B86w2RLERHCubNoixu
+         uI8Dtj9y6WlZ2f+MIDty1Q5bXXvSPYBMYwABhThGOV8v6RJF3aNCo0+PFKpKf3EFP0+Z
+         kd1g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=rDjGbdorg9VdOEm4pIIngWtSBO/UW2gLWez1MYyE5DI=;
-        b=dt+C4qE0SsAh/ju5rkYfFyljYyo7opR1+JmYbIRgrwnlxXkBONT2aVBo2m+3CTerwJ
-         r3YRJw7kX3aOeCEGeWeU6DEgDx7mKePpnvCYp650EBKgr0mpqwoiAL4G+YEQSYU9+VVS
-         MdXMGRQmyiuFZETEGRekvorIepqnj9vENnhObNfrCl+khojtKkUXQ5VVeHNOcRW2lxvI
-         BiKBNR+WqudYzpSWYlAAAfoo9OEn2kJv6paBbfAcfe2PHA0NgBZeTbRlShpspuQ5Z5x2
-         rH4gs2S/kiykIUVt9mT5uNE3A4E44DNjLZBVUvI980yD3qpAHqC9YWbWZzPrBXGcI6n1
-         4j4Q==
-X-Gm-Message-State: APjAAAUaET0Hde8AkDe+ggmyeOZrnXHaQ884aOAw+sV84Nc205/qOwNB
-        d5M7CGRtugsfPbGeCXKa+tynwzQcR/yXFitQjj7H3BQS
-X-Google-Smtp-Source: APXvYqwv1JTcOZe837wXtstcLIpuvvkHuSYKbOWbc0VNjwntjC/e211gRcOyWBz3ZNq0k3EpHAzF78ipzFtKlGnM52Q=
-X-Received: by 2002:ac2:48ad:: with SMTP id u13mr29300961lfg.60.1558948096536;
- Mon, 27 May 2019 02:08:16 -0700 (PDT)
+        bh=pEGlKR9cMXvIeUwusBglsYeiQ+SPB2PmHYL6y3sHsr0=;
+        b=f+OhRw8duFwFVn2YcFPqZfBWB/jvclkk8zIxBF1Q+YtGU8NhBWNpRNwmQIfcEIKjFn
+         f4eoXLGCy9TLzXxL3Rt36uPl89umxM3KoyFlc+SFmkdnH0iBlTXHcbhZ7mdwKiqPGA1L
+         l0nAl5DwE6KcbnI/q1OgK6nqoz6wGzPGLQxKmPfBgifrGCeMz+xGeEYFOrZo3puR2iXC
+         XpNXn638EPg//jy4+UUfXncUgxpld7auhKHm2JZuJuXarnfD9A9XOsdRyNHT1caqZnXs
+         OJP8/UpwItwYoDgNhQqdWIvYuSMIp5aS6WOyfam60sJ4VDNclsLxta53KFFzxxTs+XBP
+         aVmA==
+X-Gm-Message-State: APjAAAVwZHBxw/yGv2vP6qS+5ceekIFfreAPO26O+j9AcDY4BA4gyrf+
+        6aDRt7Nia6aU5NacSPaOtEui+7rPehkA0IcjxfqpbA==
+X-Google-Smtp-Source: APXvYqx3PadhULZkWPFoOWBCluXUOl+KRGzn+HWRbMqV3BUzCYyZIRy5UR/oJ53rjISdwLm4eqiipmAdUSlkYMpbwu0=
+X-Received: by 2002:a2e:5c1:: with SMTP id 184mr52626256ljf.94.1558948227212;
+ Mon, 27 May 2019 02:10:27 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190524154424.GA68376@black.fi.intel.com>
-In-Reply-To: <20190524154424.GA68376@black.fi.intel.com>
+References: <20190525204228.8546-1-colin.king@canonical.com>
+In-Reply-To: <20190525204228.8546-1-colin.king@canonical.com>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Mon, 27 May 2019 11:08:04 +0200
-Message-ID: <CACRpkdYLKG1pqzaTZc8StgigV1YF3Du8Xbg2A+Sq0N=-dz9S9A@mail.gmail.com>
-Subject: Re: [GIT PULL] intel-pinctrl for 5.2-2
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     Linux pin control <linux-gpio@vger.kernel.org>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>
+Date:   Mon, 27 May 2019 11:10:15 +0200
+Message-ID: <CACRpkdadikx9MPrVUQxXa6KYsmnuoakjYVTNEcv_HOoW0pCgZg@mail.gmail.com>
+Subject: Re: [PATCH] dt-bindings: pinctrl: fix spelling mistakes in pinctl documentation
+To:     Colin King <colin.king@canonical.com>
+Cc:     Andy Gross <agross@kernel.org>,
+        David Brown <david.brown@linaro.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        MSM <linux-arm-msm@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, kernel-janitors@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, May 24, 2019 at 5:44 PM Andy Shevchenko
-<andriy.shevchenko@linux.intel.com> wrote:
+On Sat, May 25, 2019 at 10:42 PM Colin King <colin.king@canonical.com> wrote:
 
-> Bugfix for v5.2-rc2. I send it separately due to last minute arrival during
-> merge window.
+> From: Colin Ian King <colin.king@canonical.com>
+>
+> The spelling of configured is incorrect in the documentation. Fix it.
+>
+> Signed-off-by: Colin Ian King <colin.king@canonical.com>
 
-Pulled into my pinctrl fixes branch.
+Patch applied with Bjorn's review tag.
 
-Thanks!
+Yours,
 Linus Walleij
