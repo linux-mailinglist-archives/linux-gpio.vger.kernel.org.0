@@ -2,77 +2,113 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id D3B1A2B10F
-	for <lists+linux-gpio@lfdr.de>; Mon, 27 May 2019 11:10:29 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B16FF2B331
+	for <lists+linux-gpio@lfdr.de>; Mon, 27 May 2019 13:27:28 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726560AbfE0JK3 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 27 May 2019 05:10:29 -0400
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:46016 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726338AbfE0JK2 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 27 May 2019 05:10:28 -0400
-Received: by mail-lj1-f193.google.com with SMTP id r76so3247206lja.12
-        for <linux-gpio@vger.kernel.org>; Mon, 27 May 2019 02:10:27 -0700 (PDT)
+        id S1726600AbfE0L11 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 27 May 2019 07:27:27 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:42613 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726175AbfE0L11 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 27 May 2019 07:27:27 -0400
+Received: by mail-wr1-f67.google.com with SMTP id l2so16574429wrb.9
+        for <linux-gpio@vger.kernel.org>; Mon, 27 May 2019 04:27:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=pEGlKR9cMXvIeUwusBglsYeiQ+SPB2PmHYL6y3sHsr0=;
-        b=FhjjRkkXUEVnfVIt6bTqWSZJb/80sf15Ilad86TcxGXBhK8aK4E1Q8KTgK9nZ7a3Wc
-         L+08R9RZF08RtWFv83jca1VyQfwi7ljQUoGUnI+MLWoxcugHRvse2TEQADWqDxxGDhkv
-         03VruCzQb3H2EC7bW3VH9sYFSU1DSddBsVfvpbfT+VLY9BvT7GtBotmkm3OzN5YNmVAG
-         kO6OSAhPlVJGlX/tgBr5UHCMZEYKdewpzcS9XDXgV/Z2rjnIc5B86w2RLERHCubNoixu
-         uI8Dtj9y6WlZ2f+MIDty1Q5bXXvSPYBMYwABhThGOV8v6RJF3aNCo0+PFKpKf3EFP0+Z
-         kd1g==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=9y/IH+JG6Qynh8FmtZUM9JghLzxsBV1mtWL7v5H2a4Q=;
+        b=cHbav5PPQ68d4UGIDc+xzZrqmq4aIerkhnu8xmIvRGjKdNlVQUIz0jJdiPXHgVriId
+         OcKZDQ+9FZJVo2826Wh7U2dJ7lrJ+4AUuddSxYw6fVe5Zp1wvzjsVw0DXONQ9+SIqPfp
+         e9HK86zx6MtksU20+2u3ZEukWQQya3JLMLKuY9/tqjRKM3gdFbF+Gnl1/HiHj45XaQLp
+         FgSlBgt4CPbP+769bkjaHXbdh6OuMxAqRhYz5Dt+1gsSRsV2rDfo404xPOPDEUDHMcKk
+         jrGAV4/6WYF8pygNm/Q3Io2X33ESyDIfXArcPPWkAUkuu7SSToh7PZ97HXOnRaZMZPT5
+         Fjgg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=pEGlKR9cMXvIeUwusBglsYeiQ+SPB2PmHYL6y3sHsr0=;
-        b=f+OhRw8duFwFVn2YcFPqZfBWB/jvclkk8zIxBF1Q+YtGU8NhBWNpRNwmQIfcEIKjFn
-         f4eoXLGCy9TLzXxL3Rt36uPl89umxM3KoyFlc+SFmkdnH0iBlTXHcbhZ7mdwKiqPGA1L
-         l0nAl5DwE6KcbnI/q1OgK6nqoz6wGzPGLQxKmPfBgifrGCeMz+xGeEYFOrZo3puR2iXC
-         XpNXn638EPg//jy4+UUfXncUgxpld7auhKHm2JZuJuXarnfD9A9XOsdRyNHT1caqZnXs
-         OJP8/UpwItwYoDgNhQqdWIvYuSMIp5aS6WOyfam60sJ4VDNclsLxta53KFFzxxTs+XBP
-         aVmA==
-X-Gm-Message-State: APjAAAVwZHBxw/yGv2vP6qS+5ceekIFfreAPO26O+j9AcDY4BA4gyrf+
-        6aDRt7Nia6aU5NacSPaOtEui+7rPehkA0IcjxfqpbA==
-X-Google-Smtp-Source: APXvYqx3PadhULZkWPFoOWBCluXUOl+KRGzn+HWRbMqV3BUzCYyZIRy5UR/oJ53rjISdwLm4eqiipmAdUSlkYMpbwu0=
-X-Received: by 2002:a2e:5c1:: with SMTP id 184mr52626256ljf.94.1558948227212;
- Mon, 27 May 2019 02:10:27 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=9y/IH+JG6Qynh8FmtZUM9JghLzxsBV1mtWL7v5H2a4Q=;
+        b=jeYobOLcPsbcqIlA5k3rI9z4Yc0ZBAxHxhWCLDyKJ6l6lULaILtGdV1+gFFdqrA67f
+         B09ZyE28UDsXEPR46Hhf3HQTfcoOE1YB7bAXO+O5fkTkzFl86clC9YBdDmC8qdT4iFLa
+         PSokvbSAudXDxnZZK3slv50Yni0aSsrWaADWin7umQFHbqLxkx9uNY4+7aTVWSJTtPDu
+         wG67G1BarLANsvaofdnzgDTTlM+3J07AyK4IPTyziPrHABDMO7Kx3+HbBRNBtmzS6Rp3
+         9HJHICWlit5SiEXSXLVke4SwvIiOqaIE4igwrhdcYfsG+HgklD9dJIF8lzvHBBRgfy7w
+         GA1g==
+X-Gm-Message-State: APjAAAUyCOYByDksRXEV1xE38LrJ1pNEQ16PLso3F8gmJxwYDKTgZ5Cs
+        yumpYkII7j57lgsjLrJ0YnmE8A==
+X-Google-Smtp-Source: APXvYqw6Q/+9wUrVhaGxUO4Y2xHThdWFzl7gnG7lKlZuiOqW5LExAjRfDNU8mFsL9VLv3EzN750x8w==
+X-Received: by 2002:adf:a749:: with SMTP id e9mr5294854wrd.64.1558956445366;
+        Mon, 27 May 2019 04:27:25 -0700 (PDT)
+Received: from sudo.home ([2a01:cb1d:112:6f00:ccdd:dadc:1517:f416])
+        by smtp.gmail.com with ESMTPSA id l6sm9677747wmi.24.2019.05.27.04.27.24
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 27 May 2019 04:27:24 -0700 (PDT)
+From:   Ard Biesheuvel <ard.biesheuvel@linaro.org>
+To:     linux-arm-kernel@lists.infradead.org
+Cc:     linux-acpi@vger.kernel.org, linux-gpio@vger.kernel.org,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Masahisa Kojima <masahisa.kojima@linaro.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Marc Zyngier <marc.zyngier@arm.com>,
+        Graeme Gregory <graeme.gregory@linaro.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>
+Subject: [PATCH v3 0/4] synquacer: implement ACPI gpio/interrupt support
+Date:   Mon, 27 May 2019 13:27:16 +0200
+Message-Id: <20190527112720.2266-1-ard.biesheuvel@linaro.org>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-References: <20190525204228.8546-1-colin.king@canonical.com>
-In-Reply-To: <20190525204228.8546-1-colin.king@canonical.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Mon, 27 May 2019 11:10:15 +0200
-Message-ID: <CACRpkdadikx9MPrVUQxXa6KYsmnuoakjYVTNEcv_HOoW0pCgZg@mail.gmail.com>
-Subject: Re: [PATCH] dt-bindings: pinctrl: fix spelling mistakes in pinctl documentation
-To:     Colin King <colin.king@canonical.com>
-Cc:     Andy Gross <agross@kernel.org>,
-        David Brown <david.brown@linaro.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        MSM <linux-arm-msm@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, kernel-janitors@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Sat, May 25, 2019 at 10:42 PM Colin King <colin.king@canonical.com> wrote:
+Wire up the existing GPIO and interrupt controller drivers to the ACPI
+subsystem so they can be used on ACPI systems for ACPI event (power
+button, hardware error notification etc)
 
-> From: Colin Ian King <colin.king@canonical.com>
->
-> The spelling of configured is incorrect in the documentation. Fix it.
->
-> Signed-off-by: Colin Ian King <colin.king@canonical.com>
+Changes since v2:
+- use helper to create hierarchical IRQ domains under ACPI instead of exposing
+  the GSI domain's irqdomain pointer directly (#1)
+- use has_acpi_companion() instead of ACPI_COMPANION() where possible (#4)
+- add Mika's ack to #4
 
-Patch applied with Bjorn's review tag.
+Changes since v1:
+- Describe the EXIU controller as a separate device, which is a more accurate
+  depiction of reality, and untangles the code a bit as well. Note that this
+  requires the GPIO AML device to describe the EXIU interrupts explicitly.
+- Add a patch to obtain the ACPI GSI irqdomain. The EXIU driver needs this
+  to obtain the default parent domain, since the GIC is not modeled as an
+  ACPI object in the namespace, and so the parent<->child link cannot be
+  expressed in AML.
+- Drop the Kconfig symbol for the GPIO controller. Just include the ACPI part
+  when CONFIG_ACPI is defined.
 
-Yours,
-Linus Walleij
+Cc: Masahisa Kojima <masahisa.kojima@linaro.org>
+Cc: Linus Walleij <linus.walleij@linaro.org>
+Cc: Marc Zyngier <marc.zyngier@arm.com>
+Cc: Graeme Gregory <graeme.gregory@linaro.org>
+Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Cc: Mika Westerberg <mika.westerberg@linux.intel.com>
+Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Cc: Len Brown <lenb@kernel.org>
+
+Ard Biesheuvel (4):
+  acpi/irq: implement helper to create hierachical domains
+  irqchip/exiu: preparatory refactor for ACPI support
+  irqchip/exiu: implement ACPI support
+  gpio: mb86s7x: enable ACPI support
+
+ drivers/acpi/irq.c             |  20 +++
+ drivers/gpio/gpio-mb86s7x.c    |  51 ++++++-
+ drivers/irqchip/irq-sni-exiu.c | 142 +++++++++++++++-----
+ include/linux/acpi.h           |   7 +
+ 4 files changed, 182 insertions(+), 38 deletions(-)
+
+-- 
+2.20.1
+
