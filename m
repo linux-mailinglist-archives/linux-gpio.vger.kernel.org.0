@@ -2,85 +2,87 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 7D7D42C165
-	for <lists+linux-gpio@lfdr.de>; Tue, 28 May 2019 10:34:15 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1150B2C174
+	for <lists+linux-gpio@lfdr.de>; Tue, 28 May 2019 10:36:04 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726633AbfE1IeO (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 28 May 2019 04:34:14 -0400
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:37087 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725943AbfE1IeO (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 28 May 2019 04:34:14 -0400
-Received: by mail-lf1-f66.google.com with SMTP id m15so13266078lfh.4
-        for <linux-gpio@vger.kernel.org>; Tue, 28 May 2019 01:34:13 -0700 (PDT)
+        id S1726653AbfE1IgD (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 28 May 2019 04:36:03 -0400
+Received: from mail-lf1-f54.google.com ([209.85.167.54]:39494 "EHLO
+        mail-lf1-f54.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726694AbfE1IgD (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 28 May 2019 04:36:03 -0400
+Received: by mail-lf1-f54.google.com with SMTP id f1so13869402lfl.6
+        for <linux-gpio@vger.kernel.org>; Tue, 28 May 2019 01:36:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=rQlVBElgqXAsDEjOxVj9oK5E1X6lwcA+b9Oa3dAIje4=;
-        b=udG6T27C4vdJ8zRIZhbkTWMPAJ+dtGnvQtSiuSdnq2ColNYCkE2PvnvMty+raYMKkH
-         79zqDkoEkMJF9R85zm4zDZKeR1iEwuZ1Rt2B+7EaLfrK3bS9lgX4yE9ilGZce6u7iY/f
-         /5zfPG8/NTnl9Di/S0ey7teztK73hy3mpScooR4aD5NS/9bOjXHjJ/SiVz9wVGIwqGft
-         i20oZVz4vT8ysrW4zdU3vX6l2KiyA4aHJQ4nuM69GH4ko2LsN8KqUlm77NE5fw8/4HDt
-         VMP57lwYrL2WWQqTCihljvptTWeMX9JPy/pgr/gUXnIqU/UewvjvBC6Pf0LBre7pVqZM
-         xgYA==
+        h=mime-version:from:date:message-id:subject:to:cc;
+        bh=yGBH/lxqvHqFsz6lRGVsYKarIndIu7K0cDIDuNE2kEY=;
+        b=t8uXHE6Eo71XN5/0LfAnQJtdKF1DZJ01TSP2KuemN6aimlNbT+poh/sKFvxx+3276L
+         80YxslLoq+o3FUz74jqdIMmxWifsmK/YeEMy6Sbjg9IkVsKaznht0/F98iHNIX4hX9vv
+         sI5RLy7rwzQGqMUJOzmqqUn7ZM4s3PddrgMuFrvoho9zBe09ezHdZ2ETNQylB+poX0b7
+         s4b3YSR4b3myJ/Bv+gfWa34/JVQ37ZnES6bSxmAX/l4JNzyLNTh7LUQOzsVax5+de8bF
+         XX+GNG6ljzUkqg5cJyBe0LoLaCOU5cCGnVlRhvwE2UPmga0kPSavydiZU4iQtfb/90En
+         oAdA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=rQlVBElgqXAsDEjOxVj9oK5E1X6lwcA+b9Oa3dAIje4=;
-        b=Al7AJbZSGvtZJIZ/Cj5AJWlRt0nKMxOe7aNxZ/AdoDy0EScmfLf760jbdnAXB1eTv8
-         ud2naqXKTVRLQaraacvnUDRBZJgrp5vCbHqX6M11Rw5MsoZeZf1oEa/eqeuuorujofNK
-         p53YTGwsulmjER7KO+Og46OEID/ry3qz3qVCgzxLtZh8/iKf7RqSlQpzNzo47wE9yey8
-         5SLYSNS/pAeLIOnfcelxl7xnSifDmEu8XQRl1y0YQmaTgGV0XK3iJZljSJQYnyXddXF+
-         U11cT1ZRoUFspn6gLr+ZIVdUDE3oeK7jJxpWsLTzt+f8R+g2/wjnATvtz/yceLEByySB
-         6vVw==
-X-Gm-Message-State: APjAAAULiQ+Op7afj/EM0N71xZoMTbm2ql6O6eTGdu6YXJVjLc4Ramey
-        xm8CBaeqqbLXrVyTFzc+IPLq4qzvD44/bQft5kAnZ4mZ
-X-Google-Smtp-Source: APXvYqxEgjRjWENBkz7z95vx7w4Cpgl0m4NZZB0qQ+U9+mLZUVcLXmiPEJ9MA2A3h94RRT/FZGoGmDskw0N5eZFtLck=
-X-Received: by 2002:ac2:48a8:: with SMTP id u8mr11205394lfg.141.1559032452849;
- Tue, 28 May 2019 01:34:12 -0700 (PDT)
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
+        bh=yGBH/lxqvHqFsz6lRGVsYKarIndIu7K0cDIDuNE2kEY=;
+        b=SDdbumh09MSXAvmYMYp5s2KEAmlfio+V5hiJdKYcdGbSnCQ+Z2atOjhTVnwGRIVK0F
+         mcRY4Vlz+uimXoBcvmTtPzfG1NNDJO4dOxQdvnuJ/TsYmPSKdmdulmTgPS2t2haueWJW
+         QG8MPUPYwgJU+ceq6rWnX6pcc3Pd/UwTmySuBF+toG4Xxp7w++PFQz6/FHwJv4xQs4St
+         69uHdk6HGtj7O6yFi/m/hNp9+b/fVsANfx2iRcWzDc67mq1hfhbLaYtLZwtEZ8vWeP69
+         cn5uWyyZzmKs/CCmRRw9FgzLjbEayae0Gmh4wjyGNbU6tLA91HOkqMJYC+DZ58iKmZri
+         w9Fw==
+X-Gm-Message-State: APjAAAXM/+3VcdGQhoQAEo1tDALVp4v9LHGcIjg5CYCuecghRsSFdloK
+        wnioegANGc1Z/yU36MaNVNWRFQ14cwP5/0Bf4tHWKHZ1yUI=
+X-Google-Smtp-Source: APXvYqwiAT32MaadcvHafzg2n8U5QdAoTfh/4/HDPVnWQYXPe5SkMEfiCg717aQu4St/JWwcMyxsQXFmcemRcKlMfP8=
+X-Received: by 2002:ac2:48ad:: with SMTP id u13mr32586025lfg.60.1559032561919;
+ Tue, 28 May 2019 01:36:01 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190527112720.2266-1-ard.biesheuvel@linaro.org> <20190527112720.2266-5-ard.biesheuvel@linaro.org>
-In-Reply-To: <20190527112720.2266-5-ard.biesheuvel@linaro.org>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Tue, 28 May 2019 10:34:01 +0200
-Message-ID: <CACRpkdZt-AosWLPcwDQqi_2i4adDk-ioT3g3aTicyXiZpQOGGg@mail.gmail.com>
-Subject: Re: [PATCH v3 4/4] gpio: mb86s7x: enable ACPI support
-To:     Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Cc:     Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Masahisa Kojima <masahisa.kojima@linaro.org>,
-        Marc Zyngier <marc.zyngier@arm.com>,
-        Graeme Gregory <graeme.gregory@linaro.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>
+Date:   Tue, 28 May 2019 10:35:50 +0200
+Message-ID: <CACRpkdasSjtspciHijdc4mQyNvQVSgYMgsZKaSn+ZSvsev6t0g@mail.gmail.com>
+Subject: [GIT PULL] GPIO fixes for v5.2
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Randy Dunlap <rdunlap@infradead.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, May 27, 2019 at 1:27 PM Ard Biesheuvel
-<ard.biesheuvel@linaro.org> wrote:
+Hi Linus,
 
-> Make the mb86s7x GPIO block discoverable via ACPI. In addition, add
-> support for ACPI GPIO interrupts routed via platform interrupts, by
-> wiring the two together via the to_irq() gpiochip callback.
->
-> Reviewed-by: Mika Westerberg <mika.westerberg@linux.intel.com>
-> Signed-off-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+a single GPIO fix for v5.2.
 
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+Just a build fix on a fringe driver so not much to say.
 
-I assume you want to merge this through the IRQ tree or the ACPI
-tree, so go ahead.
-
-If you want me to queue the whole thing in the GPIO tree just tell
-me (once we have the ACKs in place).
+Please pull it in!
 
 Yours,
 Linus Walleij
+
+The following changes since commit a188339ca5a396acc588e5851ed7e19f66b0ebd9:
+
+  Linux 5.2-rc1 (2019-05-19 15:47:09 -0700)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-gpio.git
+tags/gpio-v5.2-2
+
+for you to fetch changes up to e9646f0f5bb62b7d43f0968f39d536cfe7123b53:
+
+  gpio: fix gpio-adp5588 build errors (2019-05-24 11:16:05 +0200)
+
+----------------------------------------------------------------
+GPIO fixes for v5.2:
+- Fix a build error in gpio-adp5588
+
+----------------------------------------------------------------
+Randy Dunlap (1):
+      gpio: fix gpio-adp5588 build errors
+
+ drivers/gpio/Kconfig | 1 +
+ 1 file changed, 1 insertion(+)
