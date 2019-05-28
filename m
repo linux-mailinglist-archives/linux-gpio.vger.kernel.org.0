@@ -2,48 +2,48 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 45DCD2C7D2
-	for <lists+linux-gpio@lfdr.de>; Tue, 28 May 2019 15:36:59 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 66DCB2C7D3
+	for <lists+linux-gpio@lfdr.de>; Tue, 28 May 2019 15:37:00 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727428AbfE1Ng6 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 28 May 2019 09:36:58 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:34980 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727308AbfE1Ng6 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 28 May 2019 09:36:58 -0400
-Received: by mail-wr1-f66.google.com with SMTP id m3so20283662wrv.2
-        for <linux-gpio@vger.kernel.org>; Tue, 28 May 2019 06:36:56 -0700 (PDT)
+        id S1727457AbfE1NhA (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 28 May 2019 09:37:00 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:43377 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726924AbfE1Ng7 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 28 May 2019 09:36:59 -0400
+Received: by mail-wr1-f68.google.com with SMTP id l17so11871124wrm.10
+        for <linux-gpio@vger.kernel.org>; Tue, 28 May 2019 06:36:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=yQpN5swIgln+h3KvcWmaxvYHMF5E8isSyunz8n1i0Vo=;
-        b=in1naDrX5yVxXt0LJcbaqCAypeI4S26Kt++ybMo8wbfmcVV1iRQAX9qIaxyogyQH5r
-         J4WaMvWFSGDr9yh/vYvCH3QIM2IAffribS5/z8g+rsJufUGenw0XbO1rn96Swib6gpth
-         T3AOxHuViXmok4591SFZgPh0Z2K31uAffWaLNNxSJi+dhhH3ScFrPrvm55DB0GLlqpcG
-         Z/EKtKJhT0BsZ1APWgyNL7HNxtKyXejjvv8Uv39bW5uGMlyhL50ACApmUOWSsg3BXwu9
-         YNAVR3s7rCrp72bsqfElpQ40PXAYgTHjprZEM/f4/ESk+B13ICJfNGUeDOtl1D9DcaQG
-         S2hQ==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=Ce8JB4XUI/WvY+NITbCG46XF1cnECw0qEl06Q1Mp/6Q=;
+        b=P/jGceWxx8v4ni8+lxF2N/eLIfQmpPLTRxWN2UiaK2Bp1kohbPKJIrNXBc7yP+Ph/b
+         XT7wb92Kbe06wMgapYg99AEwL1lrR+r2KY5jX8JOPyIhRYlC2hD1ZXIKZylwz5WYff8J
+         95YCxb0D/XNQOzuA2qIt4qUrIj+OOwhHjlnhwgxIZXJ+hBVMbv6zd2DOCooJKyWH+vtD
+         3n4qdvaqtCopkxCxkMRVvJBtXaSVdKmqjKw1A/TUEIsKXm0xGrssVJ66v+bE4N1JYRy2
+         TQOSN1fppopXHuPcLxN3r3xxVco9Xphd6RhQNBDHZVTySETNbp7npBDN2cJ/riXq3EBO
+         OgUw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=yQpN5swIgln+h3KvcWmaxvYHMF5E8isSyunz8n1i0Vo=;
-        b=ZOm0XkFp8+1pAHNxwejNC/2UZW8ewgK9V80DX0zR0S5mGfzMws5M4Eacr7OnmswSvh
-         kFIj46TMHQIn1wjgp62+PyZ5U2sQgyQ+nVeCuaI8aX8+3gsXXQI/FtUdyoD4FtB5LPTq
-         5A8oYovAH81boiROjXrrdfHgCIw1EKwrVk7cCNMhyIa0RG9yYY8TvfMEsINwg7Enxi+2
-         T5bjyZYgElU3y3T6TbRt5vVzGBgoxn3uc2H/mia2dl7pcdhiomvCh/fKSJgPjCkQmqF/
-         f90kHOMF3/SHlb5tXvvns5CLv56T8R7SYkmWnnnfLPseLhfpTlLwjyaSqRnTAgRn/ot+
-         mhrw==
-X-Gm-Message-State: APjAAAX3P36fuDRy9RJjRD0tiISmJLOfeKMWBLk/rfmyzFPkxxDqXwBK
-        sAFbgid79tYzhnOymjirP09rhA==
-X-Google-Smtp-Source: APXvYqzf6CfyFQVhTOPIaLwja1Y5Xpt8/iP5bbGjiJVNJqRW3hhDwpM3zIPlc1xgVWCbi/I/VLDuvQ==
-X-Received: by 2002:a05:6000:1285:: with SMTP id f5mr8494632wrx.112.1559050615986;
-        Tue, 28 May 2019 06:36:55 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=Ce8JB4XUI/WvY+NITbCG46XF1cnECw0qEl06Q1Mp/6Q=;
+        b=COejofU+23kSqYDwk74t2eApleSczQJK5SyqTZwZA+Kk6+AAS1VLm6Fnz16/ZXNfVJ
+         JWr/KInk5cHc3l0O2WLus1+lTRkog0hyNgq7WHvRCPAOrInk8zGFz57QSQa17EM89NEQ
+         WP1ZMDQTwQGBTsSnYTNnGjlNR2Xn/MVmxOLCnnekfAJsqvHjVaNse/dD3b2jCMmE4xzR
+         G0TyfYCBn+b/sP/raElCDyd5HwA/nB+Siw3RVHQhULbVm0HPR/sUnQiWsvlzivFgS4+Q
+         2TysVZgikGdyVCP7NRwWDN07Pxn7MudYUmwRCcek0gbda9eTMD68cUJo96rN2yRoAHxa
+         urDw==
+X-Gm-Message-State: APjAAAW8/e7HAtbmnQpZj5wIj435RWZbThmAlS/uyhCYAe/ALr1OCNVU
+        ZS7yShObfQxgl1+WLcuhS+cQog==
+X-Google-Smtp-Source: APXvYqx2CE57SmrhiCjOkLL+8sPrYUtF2G/COWgH9e10bLXzDIkX0v+1Au3LnYdN5q2CDra5lG5b2Q==
+X-Received: by 2002:adf:f246:: with SMTP id b6mr4672878wrp.92.1559050617427;
+        Tue, 28 May 2019 06:36:57 -0700 (PDT)
 Received: from sudo.home ([2a01:cb1d:112:6f00:c8c7:f81b:b165:1aa7])
-        by smtp.gmail.com with ESMTPSA id 95sm8652668wrk.70.2019.05.28.06.36.53
+        by smtp.gmail.com with ESMTPSA id 95sm8652668wrk.70.2019.05.28.06.36.56
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 28 May 2019 06:36:54 -0700 (PDT)
+        Tue, 28 May 2019 06:36:56 -0700 (PDT)
 From:   Ard Biesheuvel <ard.biesheuvel@linaro.org>
 To:     linux-arm-kernel@lists.infradead.org
 Cc:     linux-acpi@vger.kernel.org, linux-gpio@vger.kernel.org,
@@ -56,10 +56,12 @@ Cc:     linux-acpi@vger.kernel.org, linux-gpio@vger.kernel.org,
         Mika Westerberg <mika.westerberg@linux.intel.com>,
         "Rafael J. Wysocki" <rjw@rjwysocki.net>,
         Len Brown <lenb@kernel.org>
-Subject: [PATCH v4 0/4] synquacer: implement ACPI gpio/interrupt support
-Date:   Tue, 28 May 2019 15:36:43 +0200
-Message-Id: <20190528133647.3362-1-ard.biesheuvel@linaro.org>
+Subject: [PATCH v4 1/4] acpi/irq: implement helper to create hierachical domains
+Date:   Tue, 28 May 2019 15:36:44 +0200
+Message-Id: <20190528133647.3362-2-ard.biesheuvel@linaro.org>
 X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190528133647.3362-1-ard.biesheuvel@linaro.org>
+References: <20190528133647.3362-1-ard.biesheuvel@linaro.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-gpio-owner@vger.kernel.org
@@ -67,54 +69,114 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Wire up the existing GPIO and interrupt controller drivers to the ACPI
-subsystem so they can be used on ACPI systems for ACPI event (power
-button, hardware error notification etc)
+ACPI permits arbitrary producer->consumer interrupt links to be
+described in AML, which means a topology such as the following
+is perfectly legal:
 
-Changes since v3:
-- export ACPI irq domain helper to modules
-- documents its parameters
-- tweak commit log of #1
-- add acks to patches #1 , #3 and #4
+  Device (EXIU) {
+    Name (_HID, "SCX0008")
+    Name (_UID, Zero)
+    Name (_CRS, ResourceTemplate () {
+      ...
+    })
+  }
 
-Changes since v2:
-- use helper to create hierarchical IRQ domains under ACPI instead of exposing
-  the GSI domain's irqdomain pointer directly (#1)
-- use has_acpi_companion() instead of ACPI_COMPANION() where possible (#4)
-- add Mika's ack to #4
+  Device (GPIO) {
+    Name (_HID, "SCX0007")
+    Name (_UID, Zero)
+    Name (_CRS, ResourceTemplate () {
+      Memory32Fixed (ReadWrite, SYNQUACER_GPIO_BASE, SYNQUACER_GPIO_SIZE)
+      Interrupt (ResourceConsumer, Edge, ActiveHigh, ExclusiveAndWake, 0, "\\_SB.EXIU") {
+        7,
+      }
+    })
+    ...
+  }
 
-Changes since v1:
-- Describe the EXIU controller as a separate device, which is a more accurate
-  depiction of reality, and untangles the code a bit as well. Note that this
-  requires the GPIO AML device to describe the EXIU interrupts explicitly.
-- Add a patch to obtain the ACPI GSI irqdomain. The EXIU driver needs this
-  to obtain the default parent domain, since the GIC is not modeled as an
-  ACPI object in the namespace, and so the parent<->child link cannot be
-  expressed in AML.
-- Drop the Kconfig symbol for the GPIO controller. Just include the ACPI part
-  when CONFIG_ACPI is defined.
+The EXIU in this example is the external interrupt unit as can be found
+on Socionext SynQuacer based platforms, which converts a block of 32 SPIs
+from arbitrary polarity/trigger into level-high, with a separate set
+of config/mask/unmask/clear controls.
 
-Cc: Masahisa Kojima <masahisa.kojima@linaro.org>
-Cc: Linus Walleij <linus.walleij@linaro.org>
-Cc: Marc Zyngier <marc.zyngier@arm.com>
-Cc: Graeme Gregory <graeme.gregory@linaro.org>
-Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Cc: Mika Westerberg <mika.westerberg@linux.intel.com>
-Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Cc: Len Brown <lenb@kernel.org>
+The existing DT based driver in drivers/irqchip/irq-sni-exiu.c models
+this as a hierarchical domain stacked on top of the GIC's irqdomain.
+Since the GIC is modeled as a DT node as well, obtaining a reference
+to this irqdomain is easily done by going through the parent link.
 
-Ard Biesheuvel (4):
-  acpi/irq: implement helper to create hierachical domains
-  irqchip/exiu: preparatory refactor for ACPI support
-  irqchip/exiu: implement ACPI support
-  gpio: mb86s7x: enable ACPI support
+On ACPI systems, however, the GIC is not modeled as an object in the
+namespace, and so device objects cannot refer to it directly. So in
+order to obtain the irqdomain reference when driving the EXIU in ACPI
+mode, we need a helper that implicitly grabs the default domain as the
+parent of the hierarchy for interrupts allocated out of the global GSI
+pool.
 
- drivers/acpi/irq.c             |  26 ++++
- drivers/gpio/gpio-mb86s7x.c    |  51 ++++++-
- drivers/irqchip/irq-sni-exiu.c | 142 +++++++++++++++-----
- include/linux/acpi.h           |   7 +
- 4 files changed, 188 insertions(+), 38 deletions(-)
+Reviewed-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+Reviewed-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Signed-off-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+---
+ drivers/acpi/irq.c   | 26 ++++++++++++++++++++
+ include/linux/acpi.h |  7 ++++++
+ 2 files changed, 33 insertions(+)
 
+diff --git a/drivers/acpi/irq.c b/drivers/acpi/irq.c
+index c3b2222e2129..ce6b25a3b7a7 100644
+--- a/drivers/acpi/irq.c
++++ b/drivers/acpi/irq.c
+@@ -295,3 +295,29 @@ void __init acpi_set_irq_model(enum acpi_irq_model_id model,
+ 	acpi_irq_model = model;
+ 	acpi_gsi_domain_id = fwnode;
+ }
++
++/**
++ * acpi_irq_create_hierarchy - Create a hierarchical IRQ domain with the default
++ *                             GSI domain as its parent.
++ * @flags:      Irq domain flags associated with the domain
++ * @size:       Size of the domain.
++ * @fwnode:     Optional fwnode of the interrupt controller
++ * @ops:        Pointer to the interrupt domain callbacks
++ * @host_data:  Controller private data pointer
++ */
++struct irq_domain *acpi_irq_create_hierarchy(unsigned int flags,
++					     unsigned int size,
++					     struct fwnode_handle *fwnode,
++					     const struct irq_domain_ops *ops,
++					     void *host_data)
++{
++	struct irq_domain *d = irq_find_matching_fwnode(acpi_gsi_domain_id,
++							DOMAIN_BUS_ANY);
++
++	if (!d)
++		return NULL;
++
++	return irq_domain_create_hierarchy(d, flags, size, fwnode, ops,
++					   host_data);
++}
++EXPORT_SYMBOL_GPL(acpi_irq_create_hierarchy);
+diff --git a/include/linux/acpi.h b/include/linux/acpi.h
+index 98440df7fe42..70de4bc30cea 100644
+--- a/include/linux/acpi.h
++++ b/include/linux/acpi.h
+@@ -23,6 +23,7 @@
+ 
+ #include <linux/errno.h>
+ #include <linux/ioport.h>	/* for struct resource */
++#include <linux/irqdomain.h>
+ #include <linux/resource_ext.h>
+ #include <linux/device.h>
+ #include <linux/property.h>
+@@ -327,6 +328,12 @@ int acpi_isa_irq_to_gsi (unsigned isa_irq, u32 *gsi);
+ void acpi_set_irq_model(enum acpi_irq_model_id model,
+ 			struct fwnode_handle *fwnode);
+ 
++struct irq_domain *acpi_irq_create_hierarchy(unsigned int flags,
++					     unsigned int size,
++					     struct fwnode_handle *fwnode,
++					     const struct irq_domain_ops *ops,
++					     void *host_data);
++
+ #ifdef CONFIG_X86_IO_APIC
+ extern int acpi_get_override_irq(u32 gsi, int *trigger, int *polarity);
+ #else
 -- 
 2.20.1
 
