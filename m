@@ -2,56 +2,70 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 21E562CC98
-	for <lists+linux-gpio@lfdr.de>; Tue, 28 May 2019 18:50:17 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BE3A62CCB5
+	for <lists+linux-gpio@lfdr.de>; Tue, 28 May 2019 18:55:29 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726786AbfE1QuQ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 28 May 2019 12:50:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46562 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726515AbfE1QuQ (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Tue, 28 May 2019 12:50:16 -0400
+        id S1726736AbfE1Qz2 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 28 May 2019 12:55:28 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:41458 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726668AbfE1Qz2 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 28 May 2019 12:55:28 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
+        Subject:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=tjE6QMRxQGDaZAHg1T23ciZZhTNDkmGgz6H779ZcJj8=; b=uPXQ6C/Z7993dM+bButrtfQdW
+        8Yln2G+Hg1mDs/MP4OEcgTyTERox9fGsdImW2ryW7QGdH9t0wJ8Ew9Gtcv4+oAcJCeHXwoALa0Ox6
+        L19LQsPvtF5lwfAJSCh+vDLkHoIfn0TOuTqg4edBnawl7Xnbzv/8pNu9L7+4RIbLCtfmxMYhCKRES
+        JWbznK/xcegihw3I8j3w6jhktGNRPSr3dxGejIJmSzzaPE0t+BsSoOlxN2n71FOnOEdniemwa0JA+
+        M/XuaxSK+H9TjjJjwbPa/AkTzADkCij8QZeCPjlXREcX/rqO5S61NjS8GJVE9dzZRp/wwTDhP30L1
+        XJH3yLozA==;
+Received: from static-50-53-52-16.bvtn.or.frontiernet.net ([50.53.52.16] helo=midway.dunlab)
+        by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1hVfNl-0003Y9-2a; Tue, 28 May 2019 16:55:25 +0000
 Subject: Re: [GIT PULL] pin control fixes for v5.2
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559062215;
-        bh=yryTIORFujiT7sUdeULow+fh1QkMuOSIn4FJCcW+f+4=;
-        h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=EKyUNjZenWur8Q2i34rbCenoDn76B5lWYh93enek/THQsKCdIPqIoelv2Yf7Cc2dp
-         NAh5gVuAA6JpHG/0EuvLxoRRj2Z/i5El8EFlDG2fbTZNLq1xaLM7B+YWoZ2BqZjkcH
-         p0/+8MuEwajigkpEM5dbP/R22nYzkAdi9AvdhxwY=
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <CACRpkdYFqcu=gz57H-+h5C3g_rvD-+XoRTw_A86PKDVA3=rfJg@mail.gmail.com>
-References: <CACRpkdYFqcu=gz57H-+h5C3g_rvD-+XoRTw_A86PKDVA3=rfJg@mail.gmail.com>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <CACRpkdYFqcu=gz57H-+h5C3g_rvD-+XoRTw_A86PKDVA3=rfJg@mail.gmail.com>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git
- tags/pinctrl-v5.2-2
-X-PR-Tracked-Commit-Id: b1fa7d8592c730d1b44536b5cacadeb318d369fd
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 9fb67d643f6f1892a08ee3a04ea54022d1060bb0
-Message-Id: <155906221546.16286.17261469406240264372.pr-tracker-bot@kernel.org>
-Date:   Tue, 28 May 2019 16:50:15 +0000
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+To:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Linus Walleij <linus.walleij@linaro.org>
+Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
         linux-kernel <linux-kernel@vger.kernel.org>,
         Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
         Amelie Delaunay <amelie.delaunay@st.com>
+References: <CACRpkdYFqcu=gz57H-+h5C3g_rvD-+XoRTw_A86PKDVA3=rfJg@mail.gmail.com>
+ <CAHk-=wgZBfGwnyRGjziYvPMssSf7XO+7L_FTGfkR9Gz031VAzw@mail.gmail.com>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <26d4f415-4a99-05d4-3653-083991e49d97@infradead.org>
+Date:   Tue, 28 May 2019 09:55:22 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
+MIME-Version: 1.0
+In-Reply-To: <CAHk-=wgZBfGwnyRGjziYvPMssSf7XO+7L_FTGfkR9Gz031VAzw@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-The pull request you sent on Tue, 28 May 2019 10:43:53 +0200:
+On 5/28/19 9:44 AM, Linus Torvalds wrote:
+> On Tue, May 28, 2019 at 1:44 AM Linus Walleij <linus.walleij@linaro.org> wrote:
+>>
+>> The outstanding commits are the Intel fixes [..]
+> 
+> Heh. Swedism? "Outstanding" in English means "exceptionally good". I
+> suspect you meant commits that "står ut", which translates to "stands
+> out".
+> 
+> Or maybe the commits really are _that_ good?
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git tags/pinctrl-v5.2-2
+third definition:
+continuing in existence; remaining unsettled, unpaid, etc.:
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/9fb67d643f6f1892a08ee3a04ea54022d1060bb0
+i.e., missing.
 
-Thank you!
 
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.wiki.kernel.org/userdoc/prtracker
+~Randy
