@@ -2,66 +2,57 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 840302C7DA
-	for <lists+linux-gpio@lfdr.de>; Tue, 28 May 2019 15:37:05 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BA50C2CA8B
+	for <lists+linux-gpio@lfdr.de>; Tue, 28 May 2019 17:46:09 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727090AbfE1NhF (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 28 May 2019 09:37:05 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:36120 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727308AbfE1NhF (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 28 May 2019 09:37:05 -0400
-Received: by mail-wm1-f66.google.com with SMTP id v22so2907626wml.1
-        for <linux-gpio@vger.kernel.org>; Tue, 28 May 2019 06:37:02 -0700 (PDT)
+        id S1726362AbfE1PqJ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 28 May 2019 11:46:09 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:33035 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726243AbfE1PqJ (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 28 May 2019 11:46:09 -0400
+Received: by mail-wm1-f68.google.com with SMTP id v19so2621373wmh.0
+        for <linux-gpio@vger.kernel.org>; Tue, 28 May 2019 08:46:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=bbidxiifh4zQbXF3+idClmgRZbbOXntRKLhQM+IruEA=;
-        b=g9r4++eHwLh867+bZIoekdLRqjajwptL/liJwhVXgwhBPKGDq91Utht30DkTs2rLA8
-         6XkZmrhQcku9bdDJTCKfx17EMKG6UICuzY5+k7bio0APavWFb1UXXUtuLP23415dIlJ5
-         1/qnuMXVHlchnfPwtC4zFsD+ggvXQb4K49gfJ78eW6fOT59rbcBOhhFX8ApU8uOxMamh
-         BBsA6HpW9Srs9QxHDkGywSvzGNL4W/T9PYNBhPl9B0otlG7uEaS1eNIOICTLyXVwZ1+j
-         STdHEgUqufGyFsqmmYUwtRq+5AcF9kTkB+83hQpFzdP/ZS4VF9RRE0DEMTMpkXTkn+ab
-         4/mA==
+        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=YvPe/WoFmp/q5zbztljWLv6WbDnxG3m2k+4xkeHE8vI=;
+        b=cxhmLGX2ZdSJOmAHko4dD/W+AOa/TKFCzFiarXOwqxy5syhJ4YgfD3a1o79H6qv26l
+         rnME+acVm4Z+eUl7yMDjBb6npXB8+dO9RS8N+oBxaBl3k9vyGw2sNtLTYVDZTV4aL34z
+         PlVVH1TueZF9Y1dx6oNvoFuUSdGZAjdSPSub4ASceDITXUtIBXeXjU7wY3/2V4/x+o3c
+         9RW0R2NY1loFV+YgunLuYgki7dr/vSS5D+qOd5IHBFbIyR3QN+D3hH4Npy8pPd6MzWHv
+         bVWrJjReWtU8QjzYDAfSG7A4R+kAG7u0nqCtTpN6nLaLHI9Q/QEqdHGisM35CBGYfLeT
+         2slw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=bbidxiifh4zQbXF3+idClmgRZbbOXntRKLhQM+IruEA=;
-        b=USbag/8cH7R9ZIH4OrgOHAUa2s5poZ7wmX/SlZjEbewwSaQm+L5Jo1LnxgzC90z291
-         pKUXuhC6i4Hi1//C+hH/Qg5LBE/PkttRt49b9An6EY8+5eX8ztenmJGynMv0Dv7zqKql
-         0KEdgNHz3LXQTIGiaeN11Pqz1oVrlYkwkHCd4Vj9nx+wtz42f3RWRfV10prYhHtu4zgV
-         O8HJ5qhIpXdkV2kfiBlZtyI1s/ajiWcugbM/fCVdDeJ8JmbkaxGZSEnNgkRUx1Gl5pLG
-         CsHmbYiiLVzYlLhxb1fHXxLDHrKBJqO4xzS3ykaME65Qb7dOgC57vq5f0AXg3GgTCik5
-         FHQQ==
-X-Gm-Message-State: APjAAAWPDiBLZN+BkZK4WtoC7nBVYdeWAlL9Aq7PlBL3+eQ2O8xAunis
-        yP4V25gb2CS13FLQk7Xa+nBMjA==
-X-Google-Smtp-Source: APXvYqyI5qyGpNcVWlsS5O2+hF8OV81599UKPoaPWKuP93JFnxAM6YxqxifnXuT1dQl9Oboy3wZUSw==
-X-Received: by 2002:a7b:cbd8:: with SMTP id n24mr3221074wmi.2.1559050621491;
-        Tue, 28 May 2019 06:37:01 -0700 (PDT)
-Received: from sudo.home ([2a01:cb1d:112:6f00:c8c7:f81b:b165:1aa7])
-        by smtp.gmail.com with ESMTPSA id 95sm8652668wrk.70.2019.05.28.06.37.00
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=YvPe/WoFmp/q5zbztljWLv6WbDnxG3m2k+4xkeHE8vI=;
+        b=W1xHFVCeQbCgfTYI8q20PqA7qSjWPzBV7JY2IO4PS8y3AeN/IdBtehgnFxp3DKJQzw
+         aLtDP1zDb7jWiLIueDXgGWdHfGEf+hqIYaatueyb/qAoFKpnZr1DHX3vE6U+tCpsGFli
+         YlHBCEK9z7ucoce+POQkqRg1dzXHuDvCDmMEV4je3pfGcoijSzTirXTJGAQZSkc2o7By
+         EE8+DT3WetP9Ve34IKblwR42bXS3xfjLtaCbVsspCjcuY5vrTjAMxIeS37WnNbu99KGm
+         /rw3s+YwvRWMEbrgQu9dHZxxSqC6Rd4HeqRiHZorfibsZNFgwSrlx8utS4mKz7Z2s1cz
+         q2Hw==
+X-Gm-Message-State: APjAAAXQ1HvVHJShZSRASnFmF6zJkvv8PYQeXngCOA2nAJSTxTkTOSO/
+        OY+7yFoXMSzIBsYKuzswsMUIyw==
+X-Google-Smtp-Source: APXvYqyljSDWAYqixD/7c/Su+cisPLhxrUQTPrOE4i8VpAYUfJ8s79CeAJLRR1A67vb5mBHifmQxDg==
+X-Received: by 2002:a1c:e914:: with SMTP id q20mr3839340wmc.55.1559058367135;
+        Tue, 28 May 2019 08:46:07 -0700 (PDT)
+Received: from localhost.localdomain (amontpellier-652-1-281-69.w109-210.abo.wanadoo.fr. [109.210.96.69])
+        by smtp.gmail.com with ESMTPSA id l18sm38546703wrh.54.2019.05.28.08.46.06
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 28 May 2019 06:37:00 -0700 (PDT)
-From:   Ard Biesheuvel <ard.biesheuvel@linaro.org>
-To:     linux-arm-kernel@lists.infradead.org
-Cc:     linux-acpi@vger.kernel.org, linux-gpio@vger.kernel.org,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Masahisa Kojima <masahisa.kojima@linaro.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Marc Zyngier <marc.zyngier@arm.com>,
-        Graeme Gregory <graeme.gregory@linaro.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>
-Subject: [PATCH v4 4/4] gpio: mb86s7x: enable ACPI support
-Date:   Tue, 28 May 2019 15:36:47 +0200
-Message-Id: <20190528133647.3362-5-ard.biesheuvel@linaro.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190528133647.3362-1-ard.biesheuvel@linaro.org>
-References: <20190528133647.3362-1-ard.biesheuvel@linaro.org>
+        Tue, 28 May 2019 08:46:06 -0700 (PDT)
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     linux-gpio@vger.kernel.org, inux-kernel@vger.kernel.org,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: [PATCH] gpio: em: use the managed version of gpiochip_add_data()
+Date:   Tue, 28 May 2019 17:46:01 +0200
+Message-Id: <20190528154601.7597-1-brgl@bgdev.pl>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-gpio-owner@vger.kernel.org
@@ -69,130 +60,39 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Make the mb86s7x GPIO block discoverable via ACPI. In addition, add
-support for ACPI GPIO interrupts routed via platform interrupts, by
-wiring the two together via the to_irq() gpiochip callback.
+From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
-Signed-off-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Use the managed variant of gpiochip_add_data() and remove the call to
+gpiochip_remove().
+
+Cc: Geert Uytterhoeven <geert+renesas@glider.be>
+Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 ---
- drivers/gpio/gpio-mb86s7x.c | 51 +++++++++++++++++---
- 1 file changed, 44 insertions(+), 7 deletions(-)
+ drivers/gpio/gpio-em.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
-diff --git a/drivers/gpio/gpio-mb86s7x.c b/drivers/gpio/gpio-mb86s7x.c
-index 9308081e0a4a..64027f57a8aa 100644
---- a/drivers/gpio/gpio-mb86s7x.c
-+++ b/drivers/gpio/gpio-mb86s7x.c
-@@ -14,6 +14,7 @@
-  *  GNU General Public License for more details.
-  */
- 
-+#include <linux/acpi.h>
- #include <linux/io.h>
- #include <linux/init.h>
- #include <linux/clk.h>
-@@ -27,6 +28,8 @@
- #include <linux/spinlock.h>
- #include <linux/slab.h>
- 
-+#include "gpiolib.h"
-+
- /*
-  * Only first 8bits of a register correspond to each pin,
-  * so there are 4 registers for 32 pins.
-@@ -143,6 +146,20 @@ static void mb86s70_gpio_set(struct gpio_chip *gc, unsigned gpio, int value)
- 	spin_unlock_irqrestore(&gchip->lock, flags);
- }
- 
-+static int mb86s70_gpio_to_irq(struct gpio_chip *gc, unsigned int offset)
-+{
-+	int irq, index;
-+
-+	for (index = 0;; index++) {
-+		irq = platform_get_irq(to_platform_device(gc->parent), index);
-+		if (irq <= 0)
-+			break;
-+		if (irq_get_irq_data(irq)->hwirq == offset)
-+			return irq;
-+	}
-+	return -EINVAL;
-+}
-+
- static int mb86s70_gpio_probe(struct platform_device *pdev)
- {
- 	struct mb86s70_gpio_chip *gchip;
-@@ -158,13 +175,15 @@ static int mb86s70_gpio_probe(struct platform_device *pdev)
- 	if (IS_ERR(gchip->base))
- 		return PTR_ERR(gchip->base);
- 
--	gchip->clk = devm_clk_get(&pdev->dev, NULL);
--	if (IS_ERR(gchip->clk))
--		return PTR_ERR(gchip->clk);
-+	if (!has_acpi_companion(&pdev->dev)) {
-+		gchip->clk = devm_clk_get(&pdev->dev, NULL);
-+		if (IS_ERR(gchip->clk))
-+			return PTR_ERR(gchip->clk);
- 
--	ret = clk_prepare_enable(gchip->clk);
--	if (ret)
--		return ret;
-+		ret = clk_prepare_enable(gchip->clk);
-+		if (ret)
-+			return ret;
-+	}
- 
- 	spin_lock_init(&gchip->lock);
- 
-@@ -180,19 +199,28 @@ static int mb86s70_gpio_probe(struct platform_device *pdev)
- 	gchip->gc.parent = &pdev->dev;
- 	gchip->gc.base = -1;
- 
-+	if (has_acpi_companion(&pdev->dev))
-+		gchip->gc.to_irq = mb86s70_gpio_to_irq;
-+
- 	ret = gpiochip_add_data(&gchip->gc, gchip);
- 	if (ret) {
- 		dev_err(&pdev->dev, "couldn't register gpio driver\n");
- 		clk_disable_unprepare(gchip->clk);
-+		return ret;
+diff --git a/drivers/gpio/gpio-em.c b/drivers/gpio/gpio-em.c
+index 40f8c38bec1c..299101d25fa8 100644
+--- a/drivers/gpio/gpio-em.c
++++ b/drivers/gpio/gpio-em.c
+@@ -359,7 +359,7 @@ static int em_gio_probe(struct platform_device *pdev)
+ 		goto err1;
  	}
  
--	return ret;
-+	if (has_acpi_companion(&pdev->dev))
-+		acpi_gpiochip_request_interrupts(&gchip->gc);
-+
-+	return 0;
- }
- 
- static int mb86s70_gpio_remove(struct platform_device *pdev)
+-	ret = gpiochip_add_data(gpio_chip, p);
++	ret = devm_gpiochip_add_data(&pdev->dev, gpio_chip, p);
+ 	if (ret) {
+ 		dev_err(&pdev->dev, "failed to add GPIO controller\n");
+ 		goto err1;
+@@ -376,8 +376,6 @@ static int em_gio_remove(struct platform_device *pdev)
  {
- 	struct mb86s70_gpio_chip *gchip = platform_get_drvdata(pdev);
+ 	struct em_gio_priv *p = platform_get_drvdata(pdev);
  
-+	if (has_acpi_companion(&pdev->dev))
-+		acpi_gpiochip_free_interrupts(&gchip->gc);
- 	gpiochip_remove(&gchip->gc);
- 	clk_disable_unprepare(gchip->clk);
- 
-@@ -205,10 +233,19 @@ static const struct of_device_id mb86s70_gpio_dt_ids[] = {
- };
- MODULE_DEVICE_TABLE(of, mb86s70_gpio_dt_ids);
- 
-+#ifdef CONFIG_ACPI
-+static const struct acpi_device_id mb86s70_gpio_acpi_ids[] = {
-+	{ "SCX0007" },
-+	{ /* sentinel */ }
-+};
-+MODULE_DEVICE_TABLE(acpi, mb86s70_gpio_acpi_ids);
-+#endif
-+
- static struct platform_driver mb86s70_gpio_driver = {
- 	.driver = {
- 		.name = "mb86s70-gpio",
- 		.of_match_table = mb86s70_gpio_dt_ids,
-+		.acpi_match_table = ACPI_PTR(mb86s70_gpio_acpi_ids),
- 	},
- 	.probe = mb86s70_gpio_probe,
- 	.remove = mb86s70_gpio_remove,
+-	gpiochip_remove(&p->gpio_chip);
+-
+ 	irq_domain_remove(p->irq_domain);
+ 	return 0;
+ }
 -- 
-2.20.1
+2.21.0
 
