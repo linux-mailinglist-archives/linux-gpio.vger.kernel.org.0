@@ -2,215 +2,186 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 4428D2E7E4
-	for <lists+linux-gpio@lfdr.de>; Thu, 30 May 2019 00:15:20 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1E71B2E924
+	for <lists+linux-gpio@lfdr.de>; Thu, 30 May 2019 01:26:15 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726439AbfE2WPT (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 29 May 2019 18:15:19 -0400
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:40273 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726054AbfE2WPT (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 29 May 2019 18:15:19 -0400
-Received: by mail-ot1-f66.google.com with SMTP id u11so3665242otq.7;
-        Wed, 29 May 2019 15:15:18 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=KSFF4bDXPHpLrA6n50RMJhRFJYg/glW80Pouz4KvDb0=;
-        b=IEMl1JGnDtgMbFifwyt+n3RoZCpqnF0MNkZcfSyOGUu1w/+TML/K7HiMRd3TSAnRAL
-         ZuqQDsEbRhnCWSAQIjgz6VbQul60A0HhsNT7GMyxUDKEuIRCMnxWitJp9+KVO+5iSJqo
-         S/qcC31/FZ3nnKUF+fSljw0UG7fmu3+vjItB25xpCU1y7NkHpkF7Vstg5JpAYC+U8qsm
-         neHTiQBLeJXV4btS5aMuc/DMPtqo03oNMM837UiS9w25RjGFgf7PQ0jQuVYdhDeXRC3H
-         78qDOYIn+BMFdc+yOuGwpneB3q0DNIhRYzG7TzSwwW0A6VobOzuIwptdc1P4xtM3TDvz
-         S4sQ==
-X-Gm-Message-State: APjAAAVX+ZMtywgTCQG4/41Adnsncs05rE2yh08s3ldEEINZ+O1vjqa+
-        qW+E0ogJzkO2rBOzM9cCeHzLqPJlxKg=
-X-Google-Smtp-Source: APXvYqymNn0zHzzyTzWydenBNUP9THKeC6tneQbniCp78hi77D0MatlYykgW/AlXXGz9nC66DhCInw==
-X-Received: by 2002:a9d:7d9a:: with SMTP id j26mr105618otn.102.1559168118123;
-        Wed, 29 May 2019 15:15:18 -0700 (PDT)
-Received: from mail-oi1-f173.google.com (mail-oi1-f173.google.com. [209.85.167.173])
-        by smtp.gmail.com with ESMTPSA id r14sm335550otk.72.2019.05.29.15.15.15
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 29 May 2019 15:15:15 -0700 (PDT)
-Received: by mail-oi1-f173.google.com with SMTP id w144so3380984oie.12;
-        Wed, 29 May 2019 15:15:15 -0700 (PDT)
-X-Received: by 2002:aca:ea05:: with SMTP id i5mr374591oih.51.1559168115228;
- Wed, 29 May 2019 15:15:15 -0700 (PDT)
+        id S1726874AbfE2XY0 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 29 May 2019 19:24:26 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:49236 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726689AbfE2XYD (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 29 May 2019 19:24:03 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Sender:Content-Transfer-Encoding:
+        MIME-Version:Message-Id:Date:Subject:Cc:To:From:Reply-To:Content-Type:
+        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+        Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=StJ6LM8sQHkYI5UThzShneAjra5wi5bo/RYRsdxPQsA=; b=V2B9Vgs83dRLjIuQnd2C2vgYZ
+        +JgyOXeO1GKHOK9c4tRnNUqThik6tzysID2WPnKRr+36Nqy1H2ECRX9ShWnHkjcDarRRE36sMjLp8
+        rMBiNxdP14bOP1wi/jaweQN4P3parh4up8rfOPsYIJGMzClSMcNhqm2YUZ7FfQaCciCjPJlpLJJ9c
+        aeXT61eHnnOWKaxRn+HXRc3LwC2Y8Shpt7KozKcXuJxu6PITTqtbQgKa7rv4JBRtqJqIYr0SPtFcn
+        /5RDAzsKEfsB7oXgNPBlX7TDbPq/0Xg+hPhZkg4J+5oeanlc8QNxz2G9sF0j0yZAp7oTlogcPh66P
+        SAaTMxt+g==;
+Received: from 177.132.232.81.dynamic.adsl.gvt.net.br ([177.132.232.81] helo=bombadil.infradead.org)
+        by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1hW7vL-0005Rx-II; Wed, 29 May 2019 23:23:59 +0000
+Received: from mchehab by bombadil.infradead.org with local (Exim 4.92)
+        (envelope-from <mchehab@bombadil.infradead.org>)
+        id 1hW7vI-0007wg-Fn; Wed, 29 May 2019 20:23:56 -0300
+From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>
+Cc:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Mauro Carvalho Chehab <mchehab@infradead.org>,
+        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
+        xen-devel@lists.xenproject.org, linux-kselftest@vger.kernel.org,
+        linux-amlogic@lists.infradead.org, linux-gpio@vger.kernel.org,
+        linux-pm@vger.kernel.org, devel@driverdev.osuosl.org,
+        keyrings@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        linux-integrity@vger.kernel.org, linux-mtd@lists.infradead.org,
+        patches@opensource.cirrus.com, devicetree@vger.kernel.org,
+        netdev@vger.kernel.org, alsa-devel@alsa-project.org,
+        devel@acpica.org, virtualization@lists.linux-foundation.org,
+        linux-mm@kvack.org, linux-pci@vger.kernel.org,
+        linux-acpi@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-security-module@vger.kernel.org, linux-i2c@vger.kernel.org,
+        kvm@vger.kernel.org, bpf@vger.kernel.org, x86@kernel.org
+Subject: [PATCH 00/22] Some documentation fixes
+Date:   Wed, 29 May 2019 20:23:31 -0300
+Message-Id: <cover.1559171394.git.mchehab+samsung@kernel.org>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-References: <20190529083254.39581-1-chuanhua.han@nxp.com> <20190529083254.39581-2-chuanhua.han@nxp.com>
-In-Reply-To: <20190529083254.39581-2-chuanhua.han@nxp.com>
-From:   Li Yang <leoyang.li@nxp.com>
-Date:   Wed, 29 May 2019 17:15:03 -0500
-X-Gmail-Original-Message-ID: <CADRPPNTyr+ZpK84C4KPwLVLnabNYN4MC3q=Gp94hBc5VPh7fYg@mail.gmail.com>
-Message-ID: <CADRPPNTyr+ZpK84C4KPwLVLnabNYN4MC3q=Gp94hBc5VPh7fYg@mail.gmail.com>
-Subject: Re: [PATCH 2/3] gpio: mpc8xxx: Use IRQF_SHARED mode to request IRQ
-To:     Chuanhua Han <chuanhua.han@nxp.com>
-Cc:     Shawn Guo <shawnguo@kernel.org>, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        bgolaszewski@baylibre.com,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, lkml <linux-kernel@vger.kernel.org>,
-        linux-gpio@vger.kernel.org,
-        Zhang Ying-22455 <ying.zhang22455@nxp.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, May 29, 2019 at 3:33 AM Chuanhua Han <chuanhua.han@nxp.com> wrote:
->
-> GPIO3 and GPIO4 controllers share one irq number on Layerscape
-> platform. In the current implementation, only one GPIO controller
-> can register successfully.
->
-> This patch is to allow two controllers to share a single interrupt
-> number.
+Fix several warnings and broken links.
 
-This patch definitely did more than setting the IRQF_SHARED flag for
-interrupt.  If the driver do need some cleanup please separate the
-cleanup into another patch.
+This series was generated against linux-next, but was rebased to be applied at
+docs-next. It should apply cleanly on either tree.
 
->
-> Signed-off-by: Zhang Ying-22455 <ying.zhang22455@nxp.com>
-> Signed-off-by: Chuanhua Han <chuanhua.han@nxp.com>
-> ---
->  drivers/gpio/gpio-mpc8xxx.c | 43 ++++++++++++++++++++++++++-----------
->  1 file changed, 30 insertions(+), 13 deletions(-)
->
-> diff --git a/drivers/gpio/gpio-mpc8xxx.c b/drivers/gpio/gpio-mpc8xxx.c
-> index 555e0e7957d9..63c8586fe5c8 100644
-> --- a/drivers/gpio/gpio-mpc8xxx.c
-> +++ b/drivers/gpio/gpio-mpc8xxx.c
-> @@ -11,6 +11,7 @@
->
->  #include <linux/kernel.h>
->  #include <linux/init.h>
-> +#include <linux/interrupt.h>
->  #include <linux/spinlock.h>
->  #include <linux/io.h>
->  #include <linux/of.h>
-> @@ -105,10 +106,9 @@ static int mpc8xxx_gpio_to_irq(struct gpio_chip *gc, unsigned offset)
->                 return -ENXIO;
->  }
->
-> -static void mpc8xxx_gpio_irq_cascade(struct irq_desc *desc)
-> +static irqreturn_t mpc8xxx_gpio_irq_cascade(int irq, void *dev_id)
->  {
-> -       struct mpc8xxx_gpio_chip *mpc8xxx_gc = irq_desc_get_handler_data(desc);
-> -       struct irq_chip *chip = irq_desc_get_chip(desc);
-> +       struct mpc8xxx_gpio_chip *mpc8xxx_gc = dev_id;
->         struct gpio_chip *gc = &mpc8xxx_gc->gc;
->         unsigned int mask;
->
-> @@ -117,8 +117,7 @@ static void mpc8xxx_gpio_irq_cascade(struct irq_desc *desc)
->         if (mask)
->                 generic_handle_irq(irq_linear_revmap(mpc8xxx_gc->irq,
->                                                      32 - ffs(mask)));
-> -       if (chip->irq_eoi)
-> -               chip->irq_eoi(&desc->irq_data);
-> +       return IRQ_HANDLED;
->  }
->
->  static void mpc8xxx_irq_unmask(struct irq_data *d)
-> @@ -129,6 +128,9 @@ static void mpc8xxx_irq_unmask(struct irq_data *d)
->
->         raw_spin_lock_irqsave(&mpc8xxx_gc->lock, flags);
->
-> +       gc->write_reg(mpc8xxx_gc->regs + GPIO_IER,
-> +                     gc->pin2mask(gc, irqd_to_hwirq(d)));
+There's a git tree with all of them applied on the top of docs/docs-next
+at:
 
-This API has been removed for a while, are you sure you compiled and
-tested the change on latest kernel?
+https://git.linuxtv.org/mchehab/experimental.git/log/?h=fix_doc_links_v2
 
-commit 24efd94bc38290dc1d9775a1e767ed4685d8a79b
-Author: Linus Walleij <linus.walleij@linaro.org>
-Date:   Fri Oct 20 16:31:27 2017 +0200
 
-    gpio: mmio: Make pin2mask() a private business
+Mauro Carvalho Chehab (21):
+  ABI: sysfs-devices-system-cpu: point to the right docs
+  isdn: mISDN: remove a bogus reference to a non-existing doc
+  dt: fix broken references to nand.txt
+  docs: zh_CN: get rid of basic_profiling.txt
+  doc: it_IT: fix reference to magic-number.rst
+  docs: mm: numaperf.rst: get rid of a build warning
+  docs: bpf: get rid of two warnings
+  docs: mark orphan documents as such
+  docs: amd-memory-encryption.rst get rid of warnings
+  gpu: amdgpu: fix broken amdgpu_dma_buf.c references
+  gpu: i915.rst: Fix references to renamed files
+  docs: zh_CN: avoid duplicate citation references
+  docs: vm: hmm.rst: fix some warnings
+  docs: it: license-rules.rst: get rid of warnings
+  docs: gpio: driver.rst: fix a bad tag
+  docs: soundwire: locking: fix tags for a code-block
+  docs: security: trusted-encrypted.rst: fix code-block tag
+  docs: security: core.rst: Fix several warnings
+  docs: net: dpio-driver.rst: fix two codeblock warnings
+  docs: net: sja1105.rst: fix table format
+  docs: fix broken documentation links
 
-    The vtable call pin2mask() was introducing a vtable function call
-    in every gpiochip callback for a generic MMIO GPIO chip. This was
-    not exactly efficient. (Maybe link-time optimization could get rid of
-    it, I don't know.)
+Otto Sabart (1):
+  mfd: madera: Fix bad reference to pinctrl.txt file
 
-    After removing all external calls into this API we can make it a
-    boolean flag in the struct gpio_chip call and sink the function into
-    the gpio-mmio driver yielding encapsulation and potential speedups.
+ .../ABI/testing/sysfs-devices-system-cpu      |  3 +-
+ Documentation/accelerators/ocxl.rst           |  2 +
+ Documentation/acpi/dsd/leds.txt               |  2 +-
+ .../admin-guide/kernel-parameters.rst         |  6 +-
+ .../admin-guide/kernel-parameters.txt         | 16 ++---
+ Documentation/admin-guide/mm/numaperf.rst     |  5 +-
+ Documentation/admin-guide/ras.rst             |  2 +-
+ Documentation/arm/stm32/overview.rst          |  2 +
+ .../arm/stm32/stm32f429-overview.rst          |  2 +
+ .../arm/stm32/stm32f746-overview.rst          |  2 +
+ .../arm/stm32/stm32f769-overview.rst          |  2 +
+ .../arm/stm32/stm32h743-overview.rst          |  2 +
+ .../arm/stm32/stm32mp157-overview.rst         |  2 +
+ Documentation/bpf/btf.rst                     |  2 +
+ .../bindings/mtd/amlogic,meson-nand.txt       |  2 +-
+ .../devicetree/bindings/mtd/gpmc-nand.txt     |  2 +-
+ .../devicetree/bindings/mtd/marvell-nand.txt  |  2 +-
+ .../devicetree/bindings/mtd/tango-nand.txt    |  2 +-
+ .../devicetree/bindings/net/fsl-enetc.txt     |  7 +-
+ .../bindings/pci/amlogic,meson-pcie.txt       |  2 +-
+ .../regulator/qcom,rpmh-regulator.txt         |  2 +-
+ .../devicetree/booting-without-of.txt         |  2 +-
+ Documentation/driver-api/gpio/board.rst       |  2 +-
+ Documentation/driver-api/gpio/consumer.rst    |  2 +-
+ Documentation/driver-api/gpio/driver.rst      |  2 +-
+ .../driver-api/soundwire/locking.rst          |  4 +-
+ .../firmware-guide/acpi/enumeration.rst       |  2 +-
+ .../firmware-guide/acpi/method-tracing.rst    |  2 +-
+ Documentation/gpu/amdgpu.rst                  |  4 +-
+ Documentation/gpu/i915.rst                    |  6 +-
+ Documentation/gpu/msm-crash-dump.rst          |  2 +
+ Documentation/i2c/instantiating-devices       |  2 +-
+ Documentation/interconnect/interconnect.rst   |  2 +
+ Documentation/laptops/lg-laptop.rst           |  2 +
+ .../freescale/dpaa2/dpio-driver.rst           |  4 +-
+ Documentation/networking/dsa/sja1105.rst      |  6 +-
+ Documentation/powerpc/isa-versions.rst        |  2 +
+ Documentation/security/keys/core.rst          | 16 +++--
+ .../security/keys/trusted-encrypted.rst       |  4 +-
+ Documentation/sysctl/kernel.txt               |  4 +-
+ .../translations/it_IT/process/howto.rst      |  2 +-
+ .../it_IT/process/license-rules.rst           | 28 ++++----
+ .../it_IT/process/magic-number.rst            |  2 +-
+ .../it_IT/process/stable-kernel-rules.rst     |  4 +-
+ .../translations/zh_CN/basic_profiling.txt    | 71 -------------------
+ .../translations/zh_CN/process/4.Coding.rst   |  2 +-
+ .../zh_CN/process/management-style.rst        |  4 +-
+ .../zh_CN/process/programming-language.rst    | 28 ++++----
+ .../virtual/kvm/amd-memory-encryption.rst     |  5 ++
+ Documentation/virtual/kvm/vcpu-requests.rst   |  2 +
+ Documentation/vm/hmm.rst                      |  9 ++-
+ Documentation/x86/x86_64/5level-paging.rst    |  2 +-
+ Documentation/x86/x86_64/boot-options.rst     |  4 +-
+ .../x86/x86_64/fake-numa-for-cpusets.rst      |  2 +-
+ MAINTAINERS                                   |  6 +-
+ arch/arm/Kconfig                              |  2 +-
+ arch/arm64/kernel/kexec_image.c               |  2 +-
+ arch/powerpc/Kconfig                          |  2 +-
+ arch/x86/Kconfig                              | 16 ++---
+ arch/x86/Kconfig.debug                        |  2 +-
+ arch/x86/boot/header.S                        |  2 +-
+ arch/x86/entry/entry_64.S                     |  2 +-
+ arch/x86/include/asm/bootparam_utils.h        |  2 +-
+ arch/x86/include/asm/page_64_types.h          |  2 +-
+ arch/x86/include/asm/pgtable_64_types.h       |  2 +-
+ arch/x86/kernel/cpu/microcode/amd.c           |  2 +-
+ arch/x86/kernel/kexec-bzimage64.c             |  2 +-
+ arch/x86/kernel/pci-dma.c                     |  2 +-
+ arch/x86/mm/tlb.c                             |  2 +-
+ arch/x86/platform/pvh/enlighten.c             |  2 +-
+ drivers/acpi/Kconfig                          | 10 +--
+ drivers/isdn/mISDN/dsp_core.c                 |  2 -
+ drivers/net/ethernet/faraday/ftgmac100.c      |  2 +-
+ .../fieldbus/Documentation/fieldbus_dev.txt   |  4 +-
+ drivers/vhost/vhost.c                         |  2 +-
+ include/acpi/acpi_drivers.h                   |  2 +-
+ include/linux/fs_context.h                    |  2 +-
+ include/linux/lsm_hooks.h                     |  2 +-
+ include/linux/mfd/madera/pdata.h              |  3 +-
+ mm/Kconfig                                    |  2 +-
+ security/Kconfig                              |  2 +-
+ tools/include/linux/err.h                     |  2 +-
+ .../Documentation/stack-validation.txt        |  4 +-
+ tools/testing/selftests/x86/protection_keys.c |  2 +-
+ 84 files changed, 183 insertions(+), 212 deletions(-)
+ delete mode 100644 Documentation/translations/zh_CN/basic_profiling.txt
 
-    Cc: Anton Vorontsov <anton@enomsg.org>
-    Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+-- 
+2.21.0
 
-> +
->         gc->write_reg(mpc8xxx_gc->regs + GPIO_IMR,
->                 gc->read_reg(mpc8xxx_gc->regs + GPIO_IMR)
->                 | mpc_pin2mask(irqd_to_hwirq(d)));
-> @@ -302,21 +304,31 @@ static int mpc8xxx_probe(struct platform_device *pdev)
->         struct gpio_chip        *gc;
->         const struct mpc8xxx_gpio_devtype *devtype =
->                 of_device_get_match_data(&pdev->dev);
-> -       int ret;
-> +       int ret, irq;
->
->         mpc8xxx_gc = devm_kzalloc(&pdev->dev, sizeof(*mpc8xxx_gc), GFP_KERNEL);
->         if (!mpc8xxx_gc)
->                 return -ENOMEM;
->
-> -       platform_set_drvdata(pdev, mpc8xxx_gc);
-> -
-> -       raw_spin_lock_init(&mpc8xxx_gc->lock);
-> -
->         mpc8xxx_gc->regs = of_iomap(np, 0);
->         if (!mpc8xxx_gc->regs)
->                 return -ENOMEM;
->
->         gc = &mpc8xxx_gc->gc;
-> +       irq = platform_get_irq(pdev, 0);
-> +       if (irq < 0) {
-> +               dev_err(&pdev->dev, "can't get irq number\n");
-> +               return irq;
-> +       }
-> +
-> +       mpc8xxx_gc->gc.label = pdev->name;
-> +       mpc8xxx_gc->gc.owner = THIS_MODULE;
-> +       mpc8xxx_gc->gc.base = -1;
-> +       mpc8xxx_gc->gc.ngpio = MPC8XXX_GPIO_PINS;
-> +
-> +       platform_set_drvdata(pdev, mpc8xxx_gc);
-> +
-> +       raw_spin_lock_init(&mpc8xxx_gc->lock);
->
->         if (of_property_read_bool(np, "little-endian")) {
->                 ret = bgpio_init(gc, &pdev->dev, 4,
-> @@ -364,7 +376,7 @@ static int mpc8xxx_probe(struct platform_device *pdev)
->                 goto err;
->         }
->
-> -       mpc8xxx_gc->irqn = irq_of_parse_and_map(np, 0);
-> +       mpc8xxx_gc->irqn = platform_get_irq(pdev, 0);
->         if (!mpc8xxx_gc->irqn)
->                 return 0;
->
-> @@ -378,8 +390,13 @@ static int mpc8xxx_probe(struct platform_device *pdev)
->         gc->write_reg(mpc8xxx_gc->regs + GPIO_IMR, 0xffffffff);
->         gc->write_reg(mpc8xxx_gc->regs + GPIO_ICR2, 0xffffffff);
->
-> -       irq_set_chained_handler_and_data(mpc8xxx_gc->irqn,
-> -                                        mpc8xxx_gpio_irq_cascade, mpc8xxx_gc);
-> +       /* Request IRQ */
-> +       ret = devm_request_irq(&pdev->dev, irq, mpc8xxx_gpio_irq_cascade,
-> +                              IRQF_SHARED, pdev->name, mpc8xxx_gc);
-> +       if (ret) {
-> +               dev_err(&pdev->dev, "can't claim irq %d\n", mpc8xxx_gc->irqn);
-> +               goto err;
-> +       }
->         return 0;
->  err:
->         iounmap(mpc8xxx_gc->regs);
-> --
-> 2.17.1
->
+
