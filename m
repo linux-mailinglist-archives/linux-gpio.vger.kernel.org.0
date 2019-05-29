@@ -2,49 +2,49 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 86D6D2E7AD
-	for <lists+linux-gpio@lfdr.de>; Wed, 29 May 2019 23:54:08 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4428D2E7E4
+	for <lists+linux-gpio@lfdr.de>; Thu, 30 May 2019 00:15:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726512AbfE2VyH (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 29 May 2019 17:54:07 -0400
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:35524 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726508AbfE2VyH (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 29 May 2019 17:54:07 -0400
-Received: by mail-ot1-f65.google.com with SMTP id n14so3644248otk.2;
-        Wed, 29 May 2019 14:54:06 -0700 (PDT)
+        id S1726439AbfE2WPT (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 29 May 2019 18:15:19 -0400
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:40273 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726054AbfE2WPT (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 29 May 2019 18:15:19 -0400
+Received: by mail-ot1-f66.google.com with SMTP id u11so3665242otq.7;
+        Wed, 29 May 2019 15:15:18 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=t0RV3+kisHUMXyneeAKaGTJdWRVaLmpR4yiYkhivyfc=;
-        b=b/kK+HUOCpztpaHykIhF9DikDJvLs+iRQuDhcDKeJjV5OW+j3cKgnYladmp3jQ+3iS
-         pYT2zdtrR9CIXGBip2T8y9HJODZx+TAIjCMGvvDbqgHW/jxRm7RMIJbxaOOjFWxH3Iu0
-         7fgDW00+WUyZ0cI6axsB8LZx8QglNk5q68emHuy5DCRRT1uyphxwX9YTVD3FOGFnqLu/
-         IixHKir8B5IACAjaufWTcvv874NGR6rexYWAhEVUIOoUAq9toSDKbdJMF5SdI3pgzWNW
-         plLmnbdx6ItNhHInFrfaqzTcwkvRjnv10SXYzoTAlJHP3aqvBoViwCWgPB8fHK7YbDnh
-         JkvA==
-X-Gm-Message-State: APjAAAU8jycD4L4u2U8DJ9GPQPh+JONEqmqsuzGdGy6TqrFappDGym2A
-        DjJUerdHVAVLIJirPorfqkcp8Gq0wGQ=
-X-Google-Smtp-Source: APXvYqzrKWTxIu04+QqxzysOQWMh1txFa3MBWVB/r24ex7U1/u3liDy6ZewvC/BEmGVEX/uq24wOcQ==
-X-Received: by 2002:a9d:6c06:: with SMTP id f6mr9834otq.185.1559166846326;
-        Wed, 29 May 2019 14:54:06 -0700 (PDT)
-Received: from mail-oi1-f174.google.com (mail-oi1-f174.google.com. [209.85.167.174])
-        by smtp.gmail.com with ESMTPSA id h67sm142594otb.24.2019.05.29.14.54.04
+        bh=KSFF4bDXPHpLrA6n50RMJhRFJYg/glW80Pouz4KvDb0=;
+        b=IEMl1JGnDtgMbFifwyt+n3RoZCpqnF0MNkZcfSyOGUu1w/+TML/K7HiMRd3TSAnRAL
+         ZuqQDsEbRhnCWSAQIjgz6VbQul60A0HhsNT7GMyxUDKEuIRCMnxWitJp9+KVO+5iSJqo
+         S/qcC31/FZ3nnKUF+fSljw0UG7fmu3+vjItB25xpCU1y7NkHpkF7Vstg5JpAYC+U8qsm
+         neHTiQBLeJXV4btS5aMuc/DMPtqo03oNMM837UiS9w25RjGFgf7PQ0jQuVYdhDeXRC3H
+         78qDOYIn+BMFdc+yOuGwpneB3q0DNIhRYzG7TzSwwW0A6VobOzuIwptdc1P4xtM3TDvz
+         S4sQ==
+X-Gm-Message-State: APjAAAVX+ZMtywgTCQG4/41Adnsncs05rE2yh08s3ldEEINZ+O1vjqa+
+        qW+E0ogJzkO2rBOzM9cCeHzLqPJlxKg=
+X-Google-Smtp-Source: APXvYqymNn0zHzzyTzWydenBNUP9THKeC6tneQbniCp78hi77D0MatlYykgW/AlXXGz9nC66DhCInw==
+X-Received: by 2002:a9d:7d9a:: with SMTP id j26mr105618otn.102.1559168118123;
+        Wed, 29 May 2019 15:15:18 -0700 (PDT)
+Received: from mail-oi1-f173.google.com (mail-oi1-f173.google.com. [209.85.167.173])
+        by smtp.gmail.com with ESMTPSA id r14sm335550otk.72.2019.05.29.15.15.15
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 29 May 2019 14:54:05 -0700 (PDT)
-Received: by mail-oi1-f174.google.com with SMTP id u64so3391887oib.1;
-        Wed, 29 May 2019 14:54:04 -0700 (PDT)
-X-Received: by 2002:aca:e44b:: with SMTP id b72mr359320oih.108.1559166843892;
- Wed, 29 May 2019 14:54:03 -0700 (PDT)
+        Wed, 29 May 2019 15:15:15 -0700 (PDT)
+Received: by mail-oi1-f173.google.com with SMTP id w144so3380984oie.12;
+        Wed, 29 May 2019 15:15:15 -0700 (PDT)
+X-Received: by 2002:aca:ea05:: with SMTP id i5mr374591oih.51.1559168115228;
+ Wed, 29 May 2019 15:15:15 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190529083254.39581-1-chuanhua.han@nxp.com>
-In-Reply-To: <20190529083254.39581-1-chuanhua.han@nxp.com>
+References: <20190529083254.39581-1-chuanhua.han@nxp.com> <20190529083254.39581-2-chuanhua.han@nxp.com>
+In-Reply-To: <20190529083254.39581-2-chuanhua.han@nxp.com>
 From:   Li Yang <leoyang.li@nxp.com>
-Date:   Wed, 29 May 2019 16:53:52 -0500
-X-Gmail-Original-Message-ID: <CADRPPNRTf6ooaJJDkO8xa9qhJhh1ZaQ5crRDX7sLaSV0CoRVyg@mail.gmail.com>
-Message-ID: <CADRPPNRTf6ooaJJDkO8xa9qhJhh1ZaQ5crRDX7sLaSV0CoRVyg@mail.gmail.com>
-Subject: Re: [PATCH 1/3] gpio: mpc8xxx: Enable port input and interrupt
+Date:   Wed, 29 May 2019 17:15:03 -0500
+X-Gmail-Original-Message-ID: <CADRPPNTyr+ZpK84C4KPwLVLnabNYN4MC3q=Gp94hBc5VPh7fYg@mail.gmail.com>
+Message-ID: <CADRPPNTyr+ZpK84C4KPwLVLnabNYN4MC3q=Gp94hBc5VPh7fYg@mail.gmail.com>
+Subject: Re: [PATCH 2/3] gpio: mpc8xxx: Use IRQF_SHARED mode to request IRQ
 To:     Chuanhua Han <chuanhua.han@nxp.com>
 Cc:     Shawn Guo <shawnguo@kernel.org>, Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
@@ -64,47 +64,153 @@ X-Mailing-List: linux-gpio@vger.kernel.org
 
 On Wed, May 29, 2019 at 3:33 AM Chuanhua Han <chuanhua.han@nxp.com> wrote:
 >
-> The GPIO Input Buffer Enable register is used to control the input
-> enable of each individual GPIO port. When an individual GPIO port's
-> direction is set to input (GPIO_GPDIR[DRn=0]), the associated
-> input enable must be set (GPIOxGPIE[IEn]=1) to propagate the port
-> value to the GPIO Data Register.
-
-I cannot relate what you are saying here with the code you changed.
-
+> GPIO3 and GPIO4 controllers share one irq number on Layerscape
+> platform. In the current implementation, only one GPIO controller
+> can register successfully.
 >
-> This patch enable port input and interrupt.
+> This patch is to allow two controllers to share a single interrupt
+> number.
 
-NACK
-
-Why do we need to unmask all the interrupts by default?  The correct
-behavior is that all interrupts masked until they are actually
-requested.
+This patch definitely did more than setting the IRQF_SHARED flag for
+interrupt.  If the driver do need some cleanup please separate the
+cleanup into another patch.
 
 >
 > Signed-off-by: Zhang Ying-22455 <ying.zhang22455@nxp.com>
 > Signed-off-by: Chuanhua Han <chuanhua.han@nxp.com>
 > ---
->  drivers/gpio/gpio-mpc8xxx.c | 5 +++--
->  1 file changed, 3 insertions(+), 2 deletions(-)
+>  drivers/gpio/gpio-mpc8xxx.c | 43 ++++++++++++++++++++++++++-----------
+>  1 file changed, 30 insertions(+), 13 deletions(-)
 >
 > diff --git a/drivers/gpio/gpio-mpc8xxx.c b/drivers/gpio/gpio-mpc8xxx.c
-> index c8673a5d9412..555e0e7957d9 100644
+> index 555e0e7957d9..63c8586fe5c8 100644
 > --- a/drivers/gpio/gpio-mpc8xxx.c
 > +++ b/drivers/gpio/gpio-mpc8xxx.c
-> @@ -373,9 +373,10 @@ static int mpc8xxx_probe(struct platform_device *pdev)
->         if (!mpc8xxx_gc->irq)
+> @@ -11,6 +11,7 @@
+>
+>  #include <linux/kernel.h>
+>  #include <linux/init.h>
+> +#include <linux/interrupt.h>
+>  #include <linux/spinlock.h>
+>  #include <linux/io.h>
+>  #include <linux/of.h>
+> @@ -105,10 +106,9 @@ static int mpc8xxx_gpio_to_irq(struct gpio_chip *gc, unsigned offset)
+>                 return -ENXIO;
+>  }
+>
+> -static void mpc8xxx_gpio_irq_cascade(struct irq_desc *desc)
+> +static irqreturn_t mpc8xxx_gpio_irq_cascade(int irq, void *dev_id)
+>  {
+> -       struct mpc8xxx_gpio_chip *mpc8xxx_gc = irq_desc_get_handler_data(desc);
+> -       struct irq_chip *chip = irq_desc_get_chip(desc);
+> +       struct mpc8xxx_gpio_chip *mpc8xxx_gc = dev_id;
+>         struct gpio_chip *gc = &mpc8xxx_gc->gc;
+>         unsigned int mask;
+>
+> @@ -117,8 +117,7 @@ static void mpc8xxx_gpio_irq_cascade(struct irq_desc *desc)
+>         if (mask)
+>                 generic_handle_irq(irq_linear_revmap(mpc8xxx_gc->irq,
+>                                                      32 - ffs(mask)));
+> -       if (chip->irq_eoi)
+> -               chip->irq_eoi(&desc->irq_data);
+> +       return IRQ_HANDLED;
+>  }
+>
+>  static void mpc8xxx_irq_unmask(struct irq_data *d)
+> @@ -129,6 +128,9 @@ static void mpc8xxx_irq_unmask(struct irq_data *d)
+>
+>         raw_spin_lock_irqsave(&mpc8xxx_gc->lock, flags);
+>
+> +       gc->write_reg(mpc8xxx_gc->regs + GPIO_IER,
+> +                     gc->pin2mask(gc, irqd_to_hwirq(d)));
+
+This API has been removed for a while, are you sure you compiled and
+tested the change on latest kernel?
+
+commit 24efd94bc38290dc1d9775a1e767ed4685d8a79b
+Author: Linus Walleij <linus.walleij@linaro.org>
+Date:   Fri Oct 20 16:31:27 2017 +0200
+
+    gpio: mmio: Make pin2mask() a private business
+
+    The vtable call pin2mask() was introducing a vtable function call
+    in every gpiochip callback for a generic MMIO GPIO chip. This was
+    not exactly efficient. (Maybe link-time optimization could get rid of
+    it, I don't know.)
+
+    After removing all external calls into this API we can make it a
+    boolean flag in the struct gpio_chip call and sink the function into
+    the gpio-mmio driver yielding encapsulation and potential speedups.
+
+    Cc: Anton Vorontsov <anton@enomsg.org>
+    Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+
+> +
+>         gc->write_reg(mpc8xxx_gc->regs + GPIO_IMR,
+>                 gc->read_reg(mpc8xxx_gc->regs + GPIO_IMR)
+>                 | mpc_pin2mask(irqd_to_hwirq(d)));
+> @@ -302,21 +304,31 @@ static int mpc8xxx_probe(struct platform_device *pdev)
+>         struct gpio_chip        *gc;
+>         const struct mpc8xxx_gpio_devtype *devtype =
+>                 of_device_get_match_data(&pdev->dev);
+> -       int ret;
+> +       int ret, irq;
+>
+>         mpc8xxx_gc = devm_kzalloc(&pdev->dev, sizeof(*mpc8xxx_gc), GFP_KERNEL);
+>         if (!mpc8xxx_gc)
+>                 return -ENOMEM;
+>
+> -       platform_set_drvdata(pdev, mpc8xxx_gc);
+> -
+> -       raw_spin_lock_init(&mpc8xxx_gc->lock);
+> -
+>         mpc8xxx_gc->regs = of_iomap(np, 0);
+>         if (!mpc8xxx_gc->regs)
+>                 return -ENOMEM;
+>
+>         gc = &mpc8xxx_gc->gc;
+> +       irq = platform_get_irq(pdev, 0);
+> +       if (irq < 0) {
+> +               dev_err(&pdev->dev, "can't get irq number\n");
+> +               return irq;
+> +       }
+> +
+> +       mpc8xxx_gc->gc.label = pdev->name;
+> +       mpc8xxx_gc->gc.owner = THIS_MODULE;
+> +       mpc8xxx_gc->gc.base = -1;
+> +       mpc8xxx_gc->gc.ngpio = MPC8XXX_GPIO_PINS;
+> +
+> +       platform_set_drvdata(pdev, mpc8xxx_gc);
+> +
+> +       raw_spin_lock_init(&mpc8xxx_gc->lock);
+>
+>         if (of_property_read_bool(np, "little-endian")) {
+>                 ret = bgpio_init(gc, &pdev->dev, 4,
+> @@ -364,7 +376,7 @@ static int mpc8xxx_probe(struct platform_device *pdev)
+>                 goto err;
+>         }
+>
+> -       mpc8xxx_gc->irqn = irq_of_parse_and_map(np, 0);
+> +       mpc8xxx_gc->irqn = platform_get_irq(pdev, 0);
+>         if (!mpc8xxx_gc->irqn)
 >                 return 0;
 >
-> -       /* ack and mask all irqs */
-> +       /* ack and enable irqs */
->         gc->write_reg(mpc8xxx_gc->regs + GPIO_IER, 0xffffffff);
-> -       gc->write_reg(mpc8xxx_gc->regs + GPIO_IMR, 0);
-> +       gc->write_reg(mpc8xxx_gc->regs + GPIO_IMR, 0xffffffff);
-> +       gc->write_reg(mpc8xxx_gc->regs + GPIO_ICR2, 0xffffffff);
+> @@ -378,8 +390,13 @@ static int mpc8xxx_probe(struct platform_device *pdev)
+>         gc->write_reg(mpc8xxx_gc->regs + GPIO_IMR, 0xffffffff);
+>         gc->write_reg(mpc8xxx_gc->regs + GPIO_ICR2, 0xffffffff);
 >
->         irq_set_chained_handler_and_data(mpc8xxx_gc->irqn,
->                                          mpc8xxx_gpio_irq_cascade, mpc8xxx_gc);
+> -       irq_set_chained_handler_and_data(mpc8xxx_gc->irqn,
+> -                                        mpc8xxx_gpio_irq_cascade, mpc8xxx_gc);
+> +       /* Request IRQ */
+> +       ret = devm_request_irq(&pdev->dev, irq, mpc8xxx_gpio_irq_cascade,
+> +                              IRQF_SHARED, pdev->name, mpc8xxx_gc);
+> +       if (ret) {
+> +               dev_err(&pdev->dev, "can't claim irq %d\n", mpc8xxx_gc->irqn);
+> +               goto err;
+> +       }
+>         return 0;
+>  err:
+>         iounmap(mpc8xxx_gc->regs);
 > --
 > 2.17.1
 >
