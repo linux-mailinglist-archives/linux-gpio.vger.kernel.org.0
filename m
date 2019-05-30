@@ -2,88 +2,59 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id DA11130415
-	for <lists+linux-gpio@lfdr.de>; Thu, 30 May 2019 23:18:42 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 89075304D2
+	for <lists+linux-gpio@lfdr.de>; Fri, 31 May 2019 00:34:14 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726326AbfE3VSk (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 30 May 2019 17:18:40 -0400
-Received: from mail-ed1-f66.google.com ([209.85.208.66]:38439 "EHLO
-        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726045AbfE3VSj (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 30 May 2019 17:18:39 -0400
-Received: by mail-ed1-f66.google.com with SMTP id g13so11134216edu.5
-        for <linux-gpio@vger.kernel.org>; Thu, 30 May 2019 14:18:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=r5R6tZfjTNjpig1YwvQcPmHOMI9F55RZALKjyS8amew=;
-        b=J/rGTs6BFPCdzdCLidoE6OepNbdigl1AKH1hoOtNyZeutIHxfAfVzeG8nqpsuxPcJy
-         XfTlgfkCNlJFx70ZkJ5ZuqKZZI6+gEr/LMPXdTfCiy+lbBG025jLyf2GGuUbq0SiEmqI
-         psp8x+YqsasWYtIUMLJdxjPqQ5m5/PscrdgktVyj8CHNuSDg3k87PmHId6wqH0ihjtmT
-         mwgsd4waBsfEK/itidN8Xu+AQCVog7b4hTQ6LpW89vKeDnkaPzZ8R6Fn4xx/aQ6dIFd8
-         4KxdG1+sK3P7Hnwcdw9y2Crk188CwHRjqDmtiIAZJ+Cu/uWWc/4iWgzP1/DNJVtAtr29
-         lxrQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=r5R6tZfjTNjpig1YwvQcPmHOMI9F55RZALKjyS8amew=;
-        b=GjKhqhQwuKrosb/VLqO0m0Z9KdIBJB9gSNGQRNPamxyxHaTar+RCo2zWyD5U6GNz5T
-         PIbBoZJXdy3UZQEizrHRnl/R2/e4qC2KEIiV+2X315yWG8rIfgYOfHE5VbPLMPEGvzNU
-         NcXfdn9ghS2ujopD7Gilsvcp5ZooLLwG/y2ujNjc+vAH9eMbmb29aV3BntVqjyZTfaQ+
-         lHeMb5SLg0dLa2Mn6vcRC1bdVzwoOqLxd2LiDJfcD5fD32zzGmjHuvoF+Wmb2oTn/YIg
-         o1b/vH+JMrPhIgEjO6qTnonoZTNm3PZ7VcUedSSIZN+fHYqJNk++1HQI1LSaGWeKYDj8
-         ZGkQ==
-X-Gm-Message-State: APjAAAV/QkSV+todOA3rbiJHyPcnIuONVcFFN8/0l6edlHgGLQtV8ALJ
-        dBTtZgDvay4CwA1/pZWn/J8=
-X-Google-Smtp-Source: APXvYqxkI9VkTvL9lfaZtu6FtNliD/B6QRXIDnG2qA6xuMGuFQtuMCoMbLYqWqzGOZpiEu62+73eUw==
-X-Received: by 2002:a50:ca45:: with SMTP id e5mr7217191edi.1.1559251118310;
-        Thu, 30 May 2019 14:18:38 -0700 (PDT)
-Received: from smtp.gmail.com (86-40-30-62-dynamic.b-ras2.prp.dublin.eircom.net. [86.40.30.62])
-        by smtp.gmail.com with ESMTPSA id c20sm615474ejr.69.2019.05.30.14.18.36
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 30 May 2019 14:18:37 -0700 (PDT)
-From:   Tomasz Kazimierz Motyl <tomasz.motyl666@gmail.com>
-X-Google-Original-From: Tomasz Kazimierz Motyl <tomasz.motyl@se.com>
-To:     linus.walleij@linaro.org, bgolaszewski@baylibre.com,
-        linux-gpio@vger.kernel.org
-Cc:     butterfly_tm666@yahoo.com,
-        Tomasz Kazimierz Motyl <tomasz.motyl@se.com>
-Subject: [PATCH] When ones changes the state of any input pins of a PCA9555 chip before setting up the IRQ mask through i.e. SysFS e.g. echo "both" > /sys/class/gpio/gpioXYZ/edge the epoll_wait shall not exit on the subsequent change of the GPIO state. The reason behind it is that the IRQ status is not being saved when the IRQ is masked.
-Date:   Thu, 30 May 2019 14:18:32 -0700
-Message-Id: <20190530211832.23889-1-tomasz.motyl@se.com>
-X-Mailer: git-send-email 2.17.1
+        id S1726100AbfE3WeN convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-gpio@lfdr.de>); Thu, 30 May 2019 18:34:13 -0400
+Received: from smtp.tjto.jus.br ([189.10.44.215]:43580 "EHLO smtp.tjto.jus.br"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726045AbfE3WeN (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Thu, 30 May 2019 18:34:13 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by smtp.tjto.jus.br (Postfix) with ESMTP id 284443E53B7;
+        Thu, 30 May 2019 18:38:25 -0300 (BRT)
+Received: from smtp.tjto.jus.br ([127.0.0.1])
+        by localhost (mta-in.tjto.jus.br [127.0.0.1]) (amavisd-new, port 10032)
+        with ESMTP id 6PQeMGFtgOoH; Thu, 30 May 2019 18:38:24 -0300 (BRT)
+Received: from localhost (localhost [127.0.0.1])
+        by smtp.tjto.jus.br (Postfix) with ESMTP id D7B3B3E3527;
+        Thu, 30 May 2019 18:38:24 -0300 (BRT)
+X-Virus-Scanned: amavisd-new at mta-in.tjto.jus.br
+Received: from smtp.tjto.jus.br ([127.0.0.1])
+        by localhost (mta-in.tjto.jus.br [127.0.0.1]) (amavisd-new, port 10026)
+        with ESMTP id UtgJnyHOs3SJ; Thu, 30 May 2019 18:38:24 -0300 (BRT)
+Received: from [192.99.135.118] (ip118.ip-192-99-135.net [192.99.135.118])
+        (Authenticated sender: nelsonsena@tjto.jus.br)
+        by smtp.tjto.jus.br (Postfix) with ESMTPSA id 7FBB03E3F05;
+        Thu, 30 May 2019 18:38:18 -0300 (BRT)
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8BIT
+Content-Description: Mail message body
+Subject: =?utf-8?b?UmU6IOKCrCAyLDAwMCwwMDAuMDAgRXVybw==?=
+To:     Recipients <nelsonsena@tjto.jus.br>
+From:   nelsonsena@tjto.jus.br
+Date:   Thu, 30 May 2019 14:38:13 -0700
+Reply-To: myburghhugohendrik@gmail.com
+Message-Id: <20190530213818.7FBB03E3F05@smtp.tjto.jus.br>
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
----
- drivers/gpio/gpio-pca953x.c | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+Lieber Freund,
 
-diff --git a/drivers/gpio/gpio-pca953x.c b/drivers/gpio/gpio-pca953x.c
-index 7e76830b3368..088bef902156 100644
---- a/drivers/gpio/gpio-pca953x.c
-+++ b/drivers/gpio/gpio-pca953x.c
-@@ -716,13 +716,16 @@ static bool pca953x_irq_pending(struct pca953x_chip *chip, u8 *pending)
- 		trigger[i] = (cur_stat[i] ^ old_stat[i]) & chip->irq_mask[i];
- 		if (trigger[i])
- 			trigger_seen = true;
-+
-+    /* We want the current status recorded in the chip->irq stat regardless the
-+     * chip->irq_mask setting in order to have a change detected when the interrupt
-+     * mask gets changed i.e. echo "both" > /sys/class/gpioXYZ/edge */
-+    chip->irq_stat[i] = cur_stat[i];
- 	}
- 
- 	if (!trigger_seen)
- 		return false;
- 
--	memcpy(chip->irq_stat, cur_stat, NBANK(chip));
--
- 	for (i = 0; i < NBANK(chip); i++) {
- 		pending[i] = (old_stat[i] & chip->irq_trig_fall[i]) |
- 			(cur_stat[i] & chip->irq_trig_raise[i]);
--- 
-2.17.1
+Ich bin Herr Richard Wahl der Mega-Gewinner von $ 533M In Mega Millions Jackpot spende ich an 5 zufällige Personen, wenn Sie diese E-Mail erhalten, dann wurde Ihre E-Mail nach einem Spinball ausgewählt. Ich habe den größten Teil meines Vermögens auf eine Reihe von Wohltätigkeitsorganisationen und Organisationen verteilt. Ich habe mich freiwillig dazu entschieden, Ihnen den Betrag von € 2.000.000,00 zu spenden eine der ausgewählten 5, um meine Gewinne zu überprüfen, finden Sie auf meiner You Tube Seite unten.
 
+UHR MICH HIER: https://www.youtube.com/watch?v=tne02ExNDrw
+
+Das ist dein Spendencode: [DF00430342018]
+
+Antworten Sie mit dem Spendencode auf diese E-Mail: wahlfoundationorg@gmail.com
+
+Ich hoffe, Sie und Ihre Familie glücklich zu machen.
+
+Grüße
+
+Herr Richard Wahl
