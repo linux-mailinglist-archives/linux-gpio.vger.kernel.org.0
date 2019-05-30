@@ -2,27 +2,27 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 03F122F693
-	for <lists+linux-gpio@lfdr.de>; Thu, 30 May 2019 06:57:54 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B7A4A2F3F1
+	for <lists+linux-gpio@lfdr.de>; Thu, 30 May 2019 06:34:11 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728102AbfE3E5c (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 30 May 2019 00:57:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45728 "EHLO mail.kernel.org"
+        id S1729679AbfE3Ed6 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 30 May 2019 00:33:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58640 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727696AbfE3DJy (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Wed, 29 May 2019 23:09:54 -0400
+        id S1729455AbfE3DN1 (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Wed, 29 May 2019 23:13:27 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E81A12447B;
-        Thu, 30 May 2019 03:09:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7D32A2449A;
+        Thu, 30 May 2019 03:13:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559185794;
+        s=default; t=1559186006;
         bh=aFulq45jcbmOE+rmTiPFUcS+ut7sv6MMNvhjK8ujpNg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NbNAfI3dz90hZq9zqUd9HT7HcpKDltpebiB3+KlZV4sechz1bC9qYXL14zQj2aed0
-         M30Z8IESM0WvjO68tGPWLSQfhDZSo+uRfQY1fGUULva8htdhRCrJAEKdcA0kKl2JpM
-         Y7jMCYi06uvAfY0L+XCJL2B13noTf/MeEYMkz7MU=
+        b=HtbDNkmAQCrugU/l6NLmCTXa1j5t7XV8zfwq3byiHkJUGtx+4VKJVgKGWO3I/1Vy3
+         +NCSudbGRMjyLWF7pu9c0UmxLZ+n4c2jWWO7N1cqmukS1zvXvjOXHXceZr9p4e45Fg
+         rjs6v/EgQtdtTOtbNxgDVPc8dBLrFeepzrnSW0Po=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -31,12 +31,12 @@ Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Jun Nie <jun.nie@linaro.org>, linux-gpio@vger.kernel.org,
         Shawn Guo <shawnguo@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 068/405] pinctrl: zte: fix leaked of_node references
-Date:   Wed, 29 May 2019 20:01:06 -0700
-Message-Id: <20190530030544.374403462@linuxfoundation.org>
+Subject: [PATCH 5.0 061/346] pinctrl: zte: fix leaked of_node references
+Date:   Wed, 29 May 2019 20:02:14 -0700
+Message-Id: <20190530030544.157167473@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190530030540.291644921@linuxfoundation.org>
-References: <20190530030540.291644921@linuxfoundation.org>
+In-Reply-To: <20190530030540.363386121@linuxfoundation.org>
+References: <20190530030540.363386121@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
