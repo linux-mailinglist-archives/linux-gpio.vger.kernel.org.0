@@ -2,102 +2,109 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id C4A9930E15
-	for <lists+linux-gpio@lfdr.de>; Fri, 31 May 2019 14:27:48 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id F258F31389
+	for <lists+linux-gpio@lfdr.de>; Fri, 31 May 2019 19:12:35 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726330AbfEaM1r (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 31 May 2019 08:27:47 -0400
-Received: from mout.kundenserver.de ([212.227.126.187]:45493 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726415AbfEaM1r (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 31 May 2019 08:27:47 -0400
-Received: from [192.168.1.110] ([77.7.63.28]) by mrelayeu.kundenserver.de
- (mreue009 [212.227.15.167]) with ESMTPSA (Nemesis) id
- 1MMoXE-1hGFi146Q0-00Il8N; Fri, 31 May 2019 14:27:30 +0200
-Subject: Re: [PATCH -next] x86: apuv2: Make two symbols static
-To:     YueHaibing <yuehaibing@huawei.com>, info@metux.net,
-        dvhart@infradead.org, andy@infradead.org, linus.walleij@linaro.org
-Cc:     linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-        linux-gpio@vger.kernel.org
-References: <20190529143844.23084-1-yuehaibing@huawei.com>
-From:   "Enrico Weigelt, metux IT consult" <lkml@metux.net>
-Organization: metux IT consult
-Message-ID: <abbb799c-07d1-1c8e-dac0-259678f53a20@metux.net>
-Date:   Fri, 31 May 2019 14:27:28 +0200
-User-Agent: Mozilla/5.0 (X11; Linux i686 on x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.2.1
-MIME-Version: 1.0
-In-Reply-To: <20190529143844.23084-1-yuehaibing@huawei.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Provags-ID: V03:K1:9EgrzZs0sVlzNy1LbqYZBr4fsjC/c0wL4kwv8y8gUl+ppMRDt/N
- /Tl9/jXG828zpp9Q6XVDpIoHj3NKDMi8HVhsSftaZSnO0fvDNF/MEmykYzy09URxMho1JdS
- FQ/Lagz4RFiFs8CZVgHYuUPabctTlJ61WKy815SAh7l4QFCJguHJwbnY1dM71yxyRFg9PFl
- 8NDvRNPvQ3cTXo+XouDzw==
-X-Spam-Flag: NO
-X-UI-Out-Filterresults: notjunk:1;V03:K0:1RAZlWEqpOk=:ZHh41jLhluryaRA021Cpdu
- yLgCVf1xRyPN4VVCEHQWZ/gWtqTTgMVohjN52ZjKgOyZZdnRg/+LfZEaRkUHQy1WB18ZOqjja
- /6m3yRDGV279qBsDHmFPaHlQ1PNRJZz7jj1AL78Te5ycExrax4eEVguTlE+RkSDDnmh3Do+9G
- Cz4awr374VzRt3ykEzm4HgzktTgDFHYYpiRCsT1f9cARJthTa+qGAP1amEXBlaYFLYTRA82CG
- kuwRt9mdwO905KXMo5du3YEovC1Hketk3UCgCSTttKBAJJ0qvxqmw2vkQbJwKRRCxv5PyfpAD
- SgY5vejr5o0NBMEy21ZhbUEXPx+iJZtFM1PgzGNwy3BpkEs4gAW4EfZ/aTfpG/022f34Yvrag
- SofuX3pcKpKQY2m4A13mM5objPps2B05mV8nJSAvWB4bwcn4u3AI1/+tktfFump2BUt3kc2Yx
- USnECAXXyRDv8916QxYBRCUj6HCyl5V+ZvHDkxgBBPdUhlEdLkmF5iwMCZxaNXehHjMMLwQSX
- UJUansj64azhcnw67ml1pa2ipS/iiHIzvBbpjLSkxXDHdFR47ZGHk9P2ohlbg3MKvqumPi5lc
- kaHx1smnR1o5Qjwk/XDzvaCPS+nyXj0EcDKykDn/tEUpF+XPahB2Tn9O6zmSKbgAtnvMeUscg
- g6BXU7FuWQjYG0Dre1M+V73TekRFLb1Vw4HDbuvbYysGvNreI1tqGaszlfImyBxEAILL95g5+
- XD2e/mE729RD2DMSiRAl8HAzkMZBf5t1RfQwaD84gkcEoNv+2TWnmdO0QSU=
+        id S1726958AbfEaRM0 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 31 May 2019 13:12:26 -0400
+Received: from mo4-p01-ob.smtp.rzone.de ([85.215.255.53]:17266 "EHLO
+        mo4-p01-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726831AbfEaRM0 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 31 May 2019 13:12:26 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1559322743;
+        s=strato-dkim-0002; d=goldelico.com;
+        h=To:Cc:Message-Id:Date:Subject:From:X-RZG-CLASS-ID:X-RZG-AUTH:From:
+        Subject:Sender;
+        bh=JriaLsjSlZ+BK9N47gZuzIFoF3kDET8Abii6wdEaQFY=;
+        b=gumy8RkpkfsOP8SPZXsW34njktCZUmPhnQOT8Dv+0J88J0mlvqiyvtnPE0uXkhP+C2
+        S/Q7CO0Lf3EnZ2NzSNHLJLFtvkGNcVxM1ll36ZBzR3SjtKx+wYbhXpg1Z1fit1iLb9xO
+        R8x6QddF2lsncwotbvVnjW5EV7XFmLolDxFWo0dr5J97iiI3ZA1YB2bYl6knodouA0OB
+        600Fb3UVbzRPMO9oA2SJNsP67CICxneM8ZdPEyzOoAHSMSBz8yNL5B9+WfSHk9djIbj8
+        VrLaRF3xY0ITQ6o2KGnm0UMasyejNsYY5d7BO5u9eqEgxd5/j6a+pigtj1tX/zYbaZqt
+        xuXg==
+X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMgPgp8VKxflSZ1P34KBj7wpz8NMGH/vrwDeuaw=="
+X-RZG-CLASS-ID: mo00
+Received: from imac.fritz.box
+        by smtp.strato.de (RZmta 44.18 DYNA|AUTH)
+        with ESMTPSA id j04dc1v4VH6364g
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (curve secp521r1 with 521 ECDH bits, eq. 15360 bits RSA))
+        (Client did not present a certificate);
+        Fri, 31 May 2019 19:06:03 +0200 (CEST)
+From:   "H. Nikolaus Schaller" <hns@goldelico.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: quoted-printable
+Subject: BUG: gpio: pca953x: 24 bit expanders broken since v5.2-rc1
+Date:   Fri, 31 May 2019 19:06:03 +0200
+Message-Id: <F29452FD-AFA4-422B-992C-D348FEEAE0E2@goldelico.com>
+Cc:     Discussions about the Letux Kernel <letux-kernel@openphoenux.org>,
+        kernel@pyra-handheld.com,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+To:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Nandor Han <nandor.han@vaisala.com>,
+        Mark Brown <broonie@kernel.org>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Tony Lindgren <tony@atomide.com>
+Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
+X-Mailer: Apple Mail (2.3124)
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 29.05.19 16:38, YueHaibing wrote:
-> Fix sparse warnings:
-> 
-> drivers/platform/x86/pcengines-apuv2.c:80:27: warning: symbol 'gpios_led_table' was not declared. Should it be static?
-> drivers/platform/x86/pcengines-apuv2.c:113:27: warning: symbol 'gpios_key_table' was not declared. Should it be static?
-> 
-> Reported-by: Hulk Robot <hulkci@huawei.com>
-> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-> ---
->  drivers/platform/x86/pcengines-apuv2.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/platform/x86/pcengines-apuv2.c b/drivers/platform/x86/pcengines-apuv2.c
-> index c1ca931e1fab..b0d3110ae378 100644
-> --- a/drivers/platform/x86/pcengines-apuv2.c
-> +++ b/drivers/platform/x86/pcengines-apuv2.c
-> @@ -77,7 +77,7 @@ static const struct gpio_led_platform_data apu2_leds_pdata = {
->  	.leds		= apu2_leds,
->  };
->  
-> -struct gpiod_lookup_table gpios_led_table = {
-> +static struct gpiod_lookup_table gpios_led_table = {
->  	.dev_id = "leds-gpio",
->  	.table = {
->  		GPIO_LOOKUP_IDX(AMD_FCH_GPIO_DRIVER_NAME, APU2_GPIO_LINE_LED1,
-> @@ -110,7 +110,7 @@ static const struct gpio_keys_platform_data apu2_keys_pdata = {
->  	.name		= "apu2-keys",
->  };
->  
-> -struct gpiod_lookup_table gpios_key_table = {
-> +static struct gpiod_lookup_table gpios_key_table = {
->  	.dev_id = "gpio-keys-polled",
->  	.table = {
->  		GPIO_LOOKUP_IDX(AMD_FCH_GPIO_DRIVER_NAME, APU2_GPIO_LINE_MODESW,
-> 
+We discovered that the ti,tca6424 and the nxp,pcal6524 used on the
+omap5uevm resp. pyra-handheld are broken starting with
+v5.2-rc1.
 
-thanks.
+The symptom is:
+
+> [    7.524125] pca953x 4-0022: failed writing register
+> [    7.529444] pca953x: probe of 4-0022 failed with error -22   =20
+
+Tony also noticed this to happen with some BeagleBone Black cape.
+
+Some analysis shows that it happens in device_pca95xx_init()
+when trying to write the invert register (PCA953X_INVERT).
+
+The PCA953X_INVERT 0x02 is translated into 0x88. Because
+since
+
+	b32cecb46bdc8 gpio: pca953x: Extract the register address =
+mangling to single function
+
+a 24 bit expander always gets the autoincrement flag REG_ADDR_AI
+(0x80) set. I don't know if that happened before.
+
+Now, this was not a (visible) problem until patch
+
+	8b9f9d4dc511 regmap: verify if register is writeable before =
+writing operations
+
+enforces to check the register number before invoking the
+callback pca953x_writeable_register(). pca953x_writeable_register()
+seems to know about REG_ADDR_AI (through reg & REG_ADDR_MASK) and
+accepts 0x88 as a valid register number.
+
+After the regmap patch the register is checked against
+pca953x_i2c_regmap.max_register before applying REG_ADDR_MASK
+and 0x88 is obviously beyond, explaining the symptom.
+
+A test shows that reverting 8b9f9d4dc511 makes the driver work again.
+
+But IMHO this is the wrong fix, because I think the combined use of
+regmap and REG_ADDR_AI in the pca953x driver seems to be fundamentally
+broken and not the new regmap address test. Unless we expect that regmap =
+can
+pass the REG_ADDR_AI address bit to i2c but ignores it during cache
+lookup. Then, I think the pca953x_i2c_regmap.reg_bits should also be
+7 and not 8.
+
+So the real solution should IMHO be to eliminate using the autoincrement
+mode of these chips. But this may break the PCA9575 which seems
+to need AI for multi-byte writes according to some comment.
+
+BR and thanks,
+Nikolaus
 
 
-Acked-By: Enrico Weigelt, metux IT consult <info@metux.net>
-
-
---mtx
-
--- 
-Enrico Weigelt, metux IT consult
-Free software and Linux embedded engineering
-info@metux.net -- +49-151-27565287
