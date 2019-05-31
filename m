@@ -2,97 +2,109 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 07259305B3
-	for <lists+linux-gpio@lfdr.de>; Fri, 31 May 2019 02:17:36 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B4921308F0
+	for <lists+linux-gpio@lfdr.de>; Fri, 31 May 2019 08:47:03 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726326AbfEaARf (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 30 May 2019 20:17:35 -0400
-Received: from mail-ed1-f67.google.com ([209.85.208.67]:33217 "EHLO
-        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726029AbfEaARf (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 30 May 2019 20:17:35 -0400
-Received: by mail-ed1-f67.google.com with SMTP id n17so11766181edb.0
-        for <linux-gpio@vger.kernel.org>; Thu, 30 May 2019 17:17:34 -0700 (PDT)
+        id S1725963AbfEaGrD (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 31 May 2019 02:47:03 -0400
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:41863 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725955AbfEaGrD (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 31 May 2019 02:47:03 -0400
+Received: by mail-ot1-f65.google.com with SMTP id 107so2339189otj.8
+        for <linux-gpio@vger.kernel.org>; Thu, 30 May 2019 23:47:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google;
-        h=subject:to:references:from:message-id:date:user-agent:mime-version
-         :in-reply-to:content-language:content-transfer-encoding;
-        bh=KilQgTmnb5nYWh7a+i+EYwFVHm8qNkHvjaIrcsYy+bQ=;
-        b=UYD6a11T0faxUH6FuHYRubUy66uwhxQIFEQHBDNi6Hm0rsKXch8bTe4qbEogjYXF12
-         +tAXmYQJ2h0kxzyQiD4t336y85hpXCAo42Kpxvof+f9lePbWvaCcWzpiUJcAHGhnIRYb
-         0uJU5TwEMlTC8awpUo4J5raGlGPbw6sNU0C0o=
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=LHsuz5C78dkdvwrhyeVagSvPz79gQy4vqSHZT3+aUfg=;
+        b=NSxrzxd8aOEYZehUe9dCn90NakB9YFTWgiZUbBdgNlda6YA0tme/1FPQ06xaEb/3r8
+         AHfU3Zw4eC3BrBDfVt+AJvkKCADxkkCQ+XvnDygzYk1i5qSXOkevg8h7GO+vddXkrmXS
+         d7+nxkab/cIZfIyf1xL25mkjECp7tuBNklgTcAta3w46aeR6UVbjQv5F/4datpKXTnrl
+         h2KdMEleaHpuRFm1zuaSfK1BkENLKraCNBQUi+nUAJMu2pOVq3cYKqRC+vlhD1DBq/Hg
+         ctv3IBzlT9N3CVMeo0RtX57DYLHuy/U5tb3nWihIbdemmh+DmSISVnso6iXSHHBxNHUa
+         AzgQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=KilQgTmnb5nYWh7a+i+EYwFVHm8qNkHvjaIrcsYy+bQ=;
-        b=oH8uwrTxizYPy3o9Glx6Jv4rhqCgeB3HABUzrNWqlOKrcvUPMzhoFXQQVryOC0DJer
-         IV8TH2v/l0TANBXSrNRdDBizCR7/G7suq3q1d4pUiisvhcPwpOAvgIq2I/hVpxTm9HMJ
-         GkmfjkJKGVsYjoRp8ojuQ1dSdFRhVTgjn6Ob+x0tNbNW02fD8hMeGSdOiJTQnP3DhTZ5
-         DQtp5Vc9dMsQzkMn7jaK0RqmSBvxM8xAw2F2NZz1qfbUTFe5oQ/1WOmoYcaLc5OmavSu
-         YW3LbGWmtOcfLQi78E7aZTR2+NkVF8rzFSbiqpVUHeTLBHZ2qZ7RbcodUC9VMASatGVr
-         Qk5Q==
-X-Gm-Message-State: APjAAAV0/plSqQ8afNHkET52WqXpYmK65mJ1J9YgKEynmKDHlPCUx5n1
-        SF6igiWUTB3LHxYSfWqDjddxPQ==
-X-Google-Smtp-Source: APXvYqxpHaDuapqKKB2H8FRfUx2YJNboFSFW9NVWgRnsRiE5ANLJDWfQM9va4NxyzqJDXI1k3Rd8FQ==
-X-Received: by 2002:a17:906:843:: with SMTP id f3mr6346472ejd.70.1559261853687;
-        Thu, 30 May 2019 17:17:33 -0700 (PDT)
-Received: from [10.136.8.252] ([192.19.228.250])
-        by smtp.gmail.com with ESMTPSA id o2sm684618ejz.22.2019.05.30.17.17.30
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 30 May 2019 17:17:32 -0700 (PDT)
-Subject: Re: [PATCH] pinctrl: ns2: Fix potential NULL dereference
-To:     Young Xiao <92siuyang@gmail.com>, rjui@broadcom.com,
-        sbranden@broadcom.com, bcm-kernel-feedback-list@broadcom.com,
-        linus.walleij@linaro.org, linux-arm-kernel@lists.infradead.org,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <1559097838-26070-1-git-send-email-92siuyang@gmail.com>
-From:   Ray Jui <ray.jui@broadcom.com>
-Message-ID: <ace57d13-6194-df8e-d2e8-fbc85d9ce21a@broadcom.com>
-Date:   Thu, 30 May 2019 17:17:28 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=LHsuz5C78dkdvwrhyeVagSvPz79gQy4vqSHZT3+aUfg=;
+        b=JTOoTi1Vo8knmiwe//XBi6T1A/9WmXTC5jFwOwbijdTZqt/5+cr2VWGoZ9UgcyoK9C
+         w2+6cyIWa6XNzhXry/EWrsw17NiKIeHtF7CkMF0fFN8oIlvpYS06+ygpOUX0cskyoNw6
+         FsXrggJ0AqO0K2aWSzG1rKCaunKZBJW0P0b0L8YfFsuSaXVnLBfa79OKyMWs21EHuMgB
+         wbWVLrGXwzQF/6Kop/xKLCx9cqfs27lqTMPC9GahOevsEZ9vKb/ffmjSFK/oP/7kkhUL
+         hOcwyCphaYDboVfYsn1chcgr6/G31dUJJjGlJ0tbzyvSTGa/Wy7x7XgOtIl5ZA9dwt+J
+         Xv8Q==
+X-Gm-Message-State: APjAAAVUE9TNmW6dtPAwqmLr+80TQvUeeP5yB14rbAHdhGrw+sm52cj1
+        tIizkvwTtYzIUCRT0evj1kYz9iXVVUbwJLmZhZe94Q==
+X-Google-Smtp-Source: APXvYqwfZHeQnWjNQ/2RVzPT65SQnuV2CF+p1BUmCVG6iYSOdkJl9naM3l/rYR0IW9a1yRrR1mQ5HMQJbp4Mx22Kyk4=
+X-Received: by 2002:a9d:6c5a:: with SMTP id g26mr631753otq.194.1559285222315;
+ Thu, 30 May 2019 23:47:02 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <1559097838-26070-1-git-send-email-92siuyang@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20190530211832.23889-1-tomasz.motyl@se.com>
+In-Reply-To: <20190530211832.23889-1-tomasz.motyl@se.com>
+From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Date:   Fri, 31 May 2019 08:46:51 +0200
+Message-ID: <CAMpxmJUKtqrA7sOV5S+v4wUA33YqW=Sog4MTV5Oibb4KcYZ4wg@mail.gmail.com>
+Subject: Re: [PATCH] When ones changes the state of any input pins of a
+ PCA9555 chip before setting up the IRQ mask through i.e. SysFS e.g. echo
+ "both" > /sys/class/gpio/gpioXYZ/edge the epoll_wait shall not exit on the
+ subsequent change of the GPIO state. The reason behind it is that the IRQ
+ status is not being saved when the IRQ is masked.
+To:     Tomasz Kazimierz Motyl <tomasz.motyl666@gmail.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        linux-gpio <linux-gpio@vger.kernel.org>,
+        butterfly_tm666@yahoo.com,
+        Tomasz Kazimierz Motyl <tomasz.motyl@se.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-
-
-On 5/28/2019 7:43 PM, Young Xiao wrote:
-> platform_get_resource() may fail and return NULL, so we should
-> better check it's return value to avoid a NULL pointer dereference
-> a bit later in the code.
-> 
-> Signed-off-by: Young Xiao <92siuyang@gmail.com>
+czw., 30 maj 2019 o 23:18 Tomasz Kazimierz Motyl
+<tomasz.motyl666@gmail.com> napisa=C5=82(a):
+>
 > ---
->  drivers/pinctrl/bcm/pinctrl-ns2-mux.c | 2 ++
->  1 file changed, 2 insertions(+)
-> 
-> diff --git a/drivers/pinctrl/bcm/pinctrl-ns2-mux.c b/drivers/pinctrl/bcm/pinctrl-ns2-mux.c
-> index 4b5cf0e..2bf6af7 100644
-> --- a/drivers/pinctrl/bcm/pinctrl-ns2-mux.c
-> +++ b/drivers/pinctrl/bcm/pinctrl-ns2-mux.c
-> @@ -1048,6 +1048,8 @@ static int ns2_pinmux_probe(struct platform_device *pdev)
->  		return PTR_ERR(pinctrl->base0);
->  
->  	res = platform_get_resource(pdev, IORESOURCE_MEM, 1);
-> +	if (!res)
-> +		return -EINVAL;
+>  drivers/gpio/gpio-pca953x.c | 7 +++++--
+>  1 file changed, 5 insertions(+), 2 deletions(-)
+>
+> diff --git a/drivers/gpio/gpio-pca953x.c b/drivers/gpio/gpio-pca953x.c
+> index 7e76830b3368..088bef902156 100644
+> --- a/drivers/gpio/gpio-pca953x.c
+> +++ b/drivers/gpio/gpio-pca953x.c
+> @@ -716,13 +716,16 @@ static bool pca953x_irq_pending(struct pca953x_chip=
+ *chip, u8 *pending)
+>                 trigger[i] =3D (cur_stat[i] ^ old_stat[i]) & chip->irq_ma=
+sk[i];
+>                 if (trigger[i])
+>                         trigger_seen =3D true;
+> +
+> +    /* We want the current status recorded in the chip->irq stat regardl=
+ess the
+> +     * chip->irq_mask setting in order to have a change detected when th=
+e interrupt
+> +     * mask gets changed i.e. echo "both" > /sys/class/gpioXYZ/edge */
+> +    chip->irq_stat[i] =3D cur_stat[i];
+>         }
+>
+>         if (!trigger_seen)
+>                 return false;
+>
+> -       memcpy(chip->irq_stat, cur_stat, NBANK(chip));
+> -
+>         for (i =3D 0; i < NBANK(chip); i++) {
+>                 pending[i] =3D (old_stat[i] & chip->irq_trig_fall[i]) |
+>                         (cur_stat[i] & chip->irq_trig_raise[i]);
+> --
+> 2.17.1
+>
 
-Right, usually not needed if devm_ioremap_resource is used since it was
-checked there. But in this case, I do think it needs to be checked. This
-change looks good to me. Thanks.
+Hi Tomasz,
 
->  	pinctrl->base1 = devm_ioremap_nocache(&pdev->dev, res->start,
->  					resource_size(res));
->  	if (!pinctrl->base1) {
-> 
+please format your patch correctly. Give it a short summary line in
+title (no longer than 75 characters) and put the detailed description
+below.
 
-Reviewed-by: Ray Jui <ray.jui@broadcom.com>
+Bart
