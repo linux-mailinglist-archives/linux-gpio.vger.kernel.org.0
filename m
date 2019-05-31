@@ -2,98 +2,53 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 273E630920
-	for <lists+linux-gpio@lfdr.de>; Fri, 31 May 2019 09:07:07 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1977730A77
+	for <lists+linux-gpio@lfdr.de>; Fri, 31 May 2019 10:39:04 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726002AbfEaHHG (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 31 May 2019 03:07:06 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:36297 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725963AbfEaHHG (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 31 May 2019 03:07:06 -0400
-Received: by mail-pl1-f193.google.com with SMTP id d21so3634908plr.3;
-        Fri, 31 May 2019 00:07:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=gCzPYZeRgzuxB/s/HnMyy2mQvWi7OdLM0MRQ3A6icIU=;
-        b=N9aDnulkY1Sw39aFl/VRAFPXkuoHv54dZ8n6jHZMrECIta1ErWsd8gArMwFTJ6Z5CF
-         +fn1jBNNvO+PilqWYQc/qg7ZFfBcae1os5qtWEsuR44IWdIp4m3FTJky3L4Hy2F+Cp6z
-         KfGAGW1+WcPCoqMBsrhuaE1sZZE8rjnTNh1GQFu+FKVgJ3JFTi+a2QfEzqv204N5GBY1
-         srom02AuUoSAuNVSlf68bBQDm1t3CMsgLwnlIjnmVIc6/IlZPergmNzqA789t/6bZnKp
-         QvSQLrMPS0wqQwX/8wDgrtKhvelcX0jyCe5BDdSnOoOxFVVEcJF7n85QebaMXTMzdOrb
-         X8fw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=gCzPYZeRgzuxB/s/HnMyy2mQvWi7OdLM0MRQ3A6icIU=;
-        b=NVdItCVxk6NZVib4hQYpLKHLqKc1ISCnbLqu/GFc27JIUlJEH0RvssfX5N97THho8+
-         4j+CePg7hvAgVF7Lr9rQ4YiPh6C2+xdTKuJ0skiuKHSY+C8N1NVT/2nUx4oouHHOeXGq
-         yqvP/ANSAbrzzKXFAxBoF3mf9oxYhMJcsKGsUlEHiAFUt9BhrxxsQoQhya8IGG3O0E+l
-         mI7BzgJ/vz9MK/Naj0qRyfSwnrbnFl5Qpm02WD+7ijBDQ5teROxIPUzu+ZAfXF0nIAsB
-         zLxJeuOpCq7VsWS68Mdco5dgGuGEX/f9Yg6erNsiVN/MiK612lXqpOa/xeEwxEr8agZt
-         ew1Q==
-X-Gm-Message-State: APjAAAUifCXrGYs96EiNG1QMe1vqVhlpUZzC1kySZLwqGBlXeOMlPdQQ
-        y4V91oqAkE+Yff2yQ6SM6co=
-X-Google-Smtp-Source: APXvYqyxJsDO9UeM9q0M+fBL8/9K7JuWsbGJrDj2dkj/zbuEYvCNFMay+iJhARsFqHiwXuGlN3cG1Q==
-X-Received: by 2002:a17:902:a40d:: with SMTP id p13mr7181833plq.11.1559286425503;
-        Fri, 31 May 2019 00:07:05 -0700 (PDT)
-Received: from xy-data.openstacklocal (ecs-159-138-22-150.compute.hwclouds-dns.com. [159.138.22.150])
-        by smtp.gmail.com with ESMTPSA id k6sm5177437pfi.86.2019.05.31.00.07.03
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Fri, 31 May 2019 00:07:04 -0700 (PDT)
-From:   Young Xiao <92siuyang@gmail.com>
-To:     sean.wang@kernel.org, matthias.bgg@gmail.com,
-        linux-mediatek@lists.infradead.org, linux-gpio@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc:     Young Xiao <92siuyang@gmail.com>
-Subject: [PATCH] pinctrl: pinctrl-mtk-common: fix a possible NULL pointer deference
-Date:   Fri, 31 May 2019 15:08:09 +0800
-Message-Id: <1559286489-5418-1-git-send-email-92siuyang@gmail.com>
-X-Mailer: git-send-email 2.7.4
+        id S1726275AbfEaIjD (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 31 May 2019 04:39:03 -0400
+Received: from smtp1.ono.com ([62.42.230.162]:29144 "EHLO smtp1.ono.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726002AbfEaIjD (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Fri, 31 May 2019 04:39:03 -0400
+X-Junkmail-Premium-Raw: score=16/50,refid=2.7.2:2019.5.31.73617:17:16.798,ip=62.42.230.132,rules=__HAS_MSGID,
+ __SANE_MSGID, MSGID_JMAIL_DEFAULT, INVALID_MSGID_NO_FQDN, __HAS_FROM,
+ __HAS_REPLYTO, __FRAUD_WEBMAIL_REPLYTO, __SUBJ_ALPHA_END, __MIME_VERSION,
+ __CT, __CT_TEXT_PLAIN, __CTE, MISSING_HEADERS, __FRAUD_INYOURCOUNTRY,
+ __STOCK_PHRASE_7, __STOCK_PHRASE_8, __FRAUD_MONEY_GENERIC,
+ __FRAUD_MONEY_BIG_COIN_DIG, __OEM_PRICE, __FRAUD_MONEY_CURRENCY_DOLLAR,
+ __NO_HTML_TAG_RAW, BODYTEXTP_SIZE_3000_LESS, BODY_SIZE_400_499,
+ __MIME_TEXT_P1, __MIME_TEXT_ONLY, HTML_00_01, HTML_00_10,
+ __FRAUD_MONEY_CURRENCY, __FRAUD_MONEY_BIG_COIN, __FRAUD_MONEY_VALUE,
+ __FRAUD_MONEY, FRAUD_X3, BODY_SIZE_5000_LESS, __FRAUD_WEBMAIL,
+ WEBMAIL_REPLYTO_NOT_FROM, FRAUD_WEBMAIL_R_NOT_F, __FRAUD_COMMON,
+ __MIME_TEXT_P, NO_URI_FOUND, NO_CTA_URI_FOUND, __PHISH_SPEAR_STRUCTURE_1,
+ BODY_SIZE_1000_LESS, BODY_SIZE_2000_LESS, __PHISH_SPEAR_STRUCTURE_2,
+ REPLYTO_FROM_DIFF_ADDY, NO_URI_HTTPS, BODY_SIZE_7000_LESS, TO_MALFORMED
+Received: from resprs02 (62.42.230.132) by smtp1.ono.com (9.0.019.09-1)
+        id 5C12554F0874ECB5; Fri, 31 May 2019 10:38:51 +0200
+Received: from (149.126.75.12) by webmailcpr02n.ono.com;  Fri, 31 May 2019 10:01:44 +0200
+Message-ID: <13920846.2733161559289704313.JavaMail.defaultUser@defaultHost>
+Date:   Fri, 31 May 2019 10:01:44 +0200 (CEST)
+From:   Aisha Gaddafi <anicetovalle@ono.com>
+Reply-To: gaisha983@gmail.com
+Subject: Hello My Beloved One, i need your assistance
+MIME-Version: 1.0
+Content-Type: text/plain;charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-The function, external interrupt controller, is made as an optional to
-pinctrl. But if we don't want pio behaves as an external interrupt
-controller, it would lead to pctl->eint not be created properly and then
-will cause 'kernel NULL pointer' issue when gpiochip try to call .to_irq
-or .set_config. To fix it, check pctl->eint before accessing the member.
-
-See commit 5f591543a937 ("pinctrl: mt7622: fix a kernel panic when pio
-don't work as EINT controller") for details.
-
-Signed-off-by: Young Xiao <92siuyang@gmail.com>
----
- drivers/pinctrl/mediatek/pinctrl-mtk-common.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/pinctrl/mediatek/pinctrl-mtk-common.c b/drivers/pinctrl/mediatek/pinctrl-mtk-common.c
-index 0716238..b395f0b 100644
---- a/drivers/pinctrl/mediatek/pinctrl-mtk-common.c
-+++ b/drivers/pinctrl/mediatek/pinctrl-mtk-common.c
-@@ -836,6 +836,9 @@ static int mtk_gpio_to_irq(struct gpio_chip *chip, unsigned offset)
- 	const struct mtk_desc_pin *pin;
- 	unsigned long eint_n;
- 
-+	if (!pctl->eint)
-+		return -ENOTSUPP;
-+
- 	pin = pctl->devdata->pins + offset;
- 	if (pin->eint.eintnum == NO_EINT_SUPPORT)
- 		return -EINVAL;
-@@ -853,7 +856,8 @@ static int mtk_gpio_set_config(struct gpio_chip *chip, unsigned offset,
- 	unsigned long eint_n;
- 	u32 debounce;
- 
--	if (pinconf_to_config_param(config) != PIN_CONFIG_INPUT_DEBOUNCE)
-+	if (!pctl->eint ||
-+	    pinconf_to_config_param(config) != PIN_CONFIG_INPUT_DEBOUNCE)
- 		return -ENOTSUPP;
- 
- 	pin = pctl->devdata->pins + offset;
--- 
-2.7.4
+Dear Assalamu Alaikum,
+I came across your contact during my private search
+Mrs Aisha Al-Qaddafi is my name, the only daughter of late Libyan
+president, I have funds the sum
+of $27.5 million USD for investment, I am interested in you for
+investment project assistance in your country,
+i shall compensate you 30% of the total sum after the funds are
+transfer into your account,
+Mrs Aisha Al-Qaddafi
 
