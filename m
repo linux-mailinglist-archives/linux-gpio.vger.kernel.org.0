@@ -2,109 +2,71 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id B4921308F0
-	for <lists+linux-gpio@lfdr.de>; Fri, 31 May 2019 08:47:03 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 049DF3090E
+	for <lists+linux-gpio@lfdr.de>; Fri, 31 May 2019 08:58:14 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725963AbfEaGrD (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 31 May 2019 02:47:03 -0400
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:41863 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725955AbfEaGrD (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 31 May 2019 02:47:03 -0400
-Received: by mail-ot1-f65.google.com with SMTP id 107so2339189otj.8
-        for <linux-gpio@vger.kernel.org>; Thu, 30 May 2019 23:47:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=LHsuz5C78dkdvwrhyeVagSvPz79gQy4vqSHZT3+aUfg=;
-        b=NSxrzxd8aOEYZehUe9dCn90NakB9YFTWgiZUbBdgNlda6YA0tme/1FPQ06xaEb/3r8
-         AHfU3Zw4eC3BrBDfVt+AJvkKCADxkkCQ+XvnDygzYk1i5qSXOkevg8h7GO+vddXkrmXS
-         d7+nxkab/cIZfIyf1xL25mkjECp7tuBNklgTcAta3w46aeR6UVbjQv5F/4datpKXTnrl
-         h2KdMEleaHpuRFm1zuaSfK1BkENLKraCNBQUi+nUAJMu2pOVq3cYKqRC+vlhD1DBq/Hg
-         ctv3IBzlT9N3CVMeo0RtX57DYLHuy/U5tb3nWihIbdemmh+DmSISVnso6iXSHHBxNHUa
-         AzgQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=LHsuz5C78dkdvwrhyeVagSvPz79gQy4vqSHZT3+aUfg=;
-        b=JTOoTi1Vo8knmiwe//XBi6T1A/9WmXTC5jFwOwbijdTZqt/5+cr2VWGoZ9UgcyoK9C
-         w2+6cyIWa6XNzhXry/EWrsw17NiKIeHtF7CkMF0fFN8oIlvpYS06+ygpOUX0cskyoNw6
-         FsXrggJ0AqO0K2aWSzG1rKCaunKZBJW0P0b0L8YfFsuSaXVnLBfa79OKyMWs21EHuMgB
-         wbWVLrGXwzQF/6Kop/xKLCx9cqfs27lqTMPC9GahOevsEZ9vKb/ffmjSFK/oP/7kkhUL
-         hOcwyCphaYDboVfYsn1chcgr6/G31dUJJjGlJ0tbzyvSTGa/Wy7x7XgOtIl5ZA9dwt+J
-         Xv8Q==
-X-Gm-Message-State: APjAAAVUE9TNmW6dtPAwqmLr+80TQvUeeP5yB14rbAHdhGrw+sm52cj1
-        tIizkvwTtYzIUCRT0evj1kYz9iXVVUbwJLmZhZe94Q==
-X-Google-Smtp-Source: APXvYqwfZHeQnWjNQ/2RVzPT65SQnuV2CF+p1BUmCVG6iYSOdkJl9naM3l/rYR0IW9a1yRrR1mQ5HMQJbp4Mx22Kyk4=
-X-Received: by 2002:a9d:6c5a:: with SMTP id g26mr631753otq.194.1559285222315;
- Thu, 30 May 2019 23:47:02 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190530211832.23889-1-tomasz.motyl@se.com>
-In-Reply-To: <20190530211832.23889-1-tomasz.motyl@se.com>
-From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Date:   Fri, 31 May 2019 08:46:51 +0200
-Message-ID: <CAMpxmJUKtqrA7sOV5S+v4wUA33YqW=Sog4MTV5Oibb4KcYZ4wg@mail.gmail.com>
-Subject: Re: [PATCH] When ones changes the state of any input pins of a
- PCA9555 chip before setting up the IRQ mask through i.e. SysFS e.g. echo
- "both" > /sys/class/gpio/gpioXYZ/edge the epoll_wait shall not exit on the
- subsequent change of the GPIO state. The reason behind it is that the IRQ
- status is not being saved when the IRQ is masked.
-To:     Tomasz Kazimierz Motyl <tomasz.motyl666@gmail.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        linux-gpio <linux-gpio@vger.kernel.org>,
-        butterfly_tm666@yahoo.com,
-        Tomasz Kazimierz Motyl <tomasz.motyl@se.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        id S1726413AbfEaG6N (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 31 May 2019 02:58:13 -0400
+Received: from alexa-out-tai-01.qualcomm.com ([103.229.16.226]:10736 "EHLO
+        alexa-out-tai-01.qualcomm.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725963AbfEaG6N (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>);
+        Fri, 31 May 2019 02:58:13 -0400
+X-Greylist: delayed 366 seconds by postgrey-1.27 at vger.kernel.org; Fri, 31 May 2019 02:58:12 EDT
+Received: from ironmsg02-tai.qualcomm.com ([10.249.140.7])
+  by alexa-out-tai-01.qualcomm.com with ESMTP; 31 May 2019 14:52:04 +0800
+X-IronPort-AV: E=McAfee;i="5900,7806,9273"; a="30797288"
+Received: from c-fan-gv.ap.qualcomm.com (HELO c-fan-gv) ([10.231.253.105])
+  by ironmsg02-tai.qualcomm.com with ESMTP/TLS/DHE-RSA-AES256-SHA; 31 May 2019 14:51:55 +0800
+From:   Tengfei Fan <tengfeif@codeaurora.org>
+To:     bjorn.andersson@linaro.org, andy.gross@linaro.org,
+        david.brown@linaro.org, linus.walleij@linaro.org
+Cc:     linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Tengfei Fan <tengfeif@codeaurora.org>
+Subject: [PATCH] pinctrl: qcom: Clear status bit on irq_unmask
+Date:   Fri, 31 May 2019 14:51:52 +0800
+Message-Id: <1559285512-27784-1-git-send-email-tengfeif@codeaurora.org>
+X-Mailer: git-send-email 1.9.1
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-czw., 30 maj 2019 o 23:18 Tomasz Kazimierz Motyl
-<tomasz.motyl666@gmail.com> napisa=C5=82(a):
->
-> ---
->  drivers/gpio/gpio-pca953x.c | 7 +++++--
->  1 file changed, 5 insertions(+), 2 deletions(-)
->
-> diff --git a/drivers/gpio/gpio-pca953x.c b/drivers/gpio/gpio-pca953x.c
-> index 7e76830b3368..088bef902156 100644
-> --- a/drivers/gpio/gpio-pca953x.c
-> +++ b/drivers/gpio/gpio-pca953x.c
-> @@ -716,13 +716,16 @@ static bool pca953x_irq_pending(struct pca953x_chip=
- *chip, u8 *pending)
->                 trigger[i] =3D (cur_stat[i] ^ old_stat[i]) & chip->irq_ma=
-sk[i];
->                 if (trigger[i])
->                         trigger_seen =3D true;
-> +
-> +    /* We want the current status recorded in the chip->irq stat regardl=
-ess the
-> +     * chip->irq_mask setting in order to have a change detected when th=
-e interrupt
-> +     * mask gets changed i.e. echo "both" > /sys/class/gpioXYZ/edge */
-> +    chip->irq_stat[i] =3D cur_stat[i];
->         }
->
->         if (!trigger_seen)
->                 return false;
->
-> -       memcpy(chip->irq_stat, cur_stat, NBANK(chip));
-> -
->         for (i =3D 0; i < NBANK(chip); i++) {
->                 pending[i] =3D (old_stat[i] & chip->irq_trig_fall[i]) |
->                         (cur_stat[i] & chip->irq_trig_raise[i]);
-> --
-> 2.17.1
->
+The gpio interrupt status bit is getting set after the
+irq is disabled and causing an immediate interrupt after
+enablling the irq, so clear status bit on irq_unmask.
 
-Hi Tomasz,
+Signed-off-by: Tengfei Fan <tengfeif@codeaurora.org>
+---
+ drivers/pinctrl/qcom/pinctrl-msm.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-please format your patch correctly. Give it a short summary line in
-title (no longer than 75 characters) and put the detailed description
-below.
+diff --git a/drivers/pinctrl/qcom/pinctrl-msm.c b/drivers/pinctrl/qcom/pinctrl-msm.c
+index ee81198..7283c50 100644
+--- a/drivers/pinctrl/qcom/pinctrl-msm.c
++++ b/drivers/pinctrl/qcom/pinctrl-msm.c
+@@ -740,6 +740,7 @@ static void msm_gpio_irq_mask(struct irq_data *d)
+ static void msm_gpio_irq_unmask(struct irq_data *d)
+ {
+ 	struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
++	uint32_t irqtype = irqd_get_trigger_type(d);
+ 	struct msm_pinctrl *pctrl = gpiochip_get_data(gc);
+ 	const struct msm_pingroup *g;
+ 	unsigned long flags;
+@@ -749,6 +750,12 @@ static void msm_gpio_irq_unmask(struct irq_data *d)
+ 
+ 	raw_spin_lock_irqsave(&pctrl->lock, flags);
+ 
++	if (irqtype & (IRQF_TRIGGER_HIGH | IRQF_TRIGGER_LOW)) {
++		val = readl_relaxed(pctrl->regs + g->intr_status_reg);
++		val &= ~BIT(g->intr_status_bit);
++		 writel_relaxed(val, pctrl->regs + g->intr_status_reg);
++	}
++
+ 	val = msm_readl_intr_cfg(pctrl, g);
+ 	val |= BIT(g->intr_raw_status_bit);
+ 	val |= BIT(g->intr_enable_bit);
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
 
-Bart
