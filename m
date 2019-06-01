@@ -2,80 +2,71 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id ADC8B32034
-	for <lists+linux-gpio@lfdr.de>; Sat,  1 Jun 2019 19:44:42 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 37C9832036
+	for <lists+linux-gpio@lfdr.de>; Sat,  1 Jun 2019 19:45:19 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726143AbfFARol (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sat, 1 Jun 2019 13:44:41 -0400
-Received: from mail-lf1-f67.google.com ([209.85.167.67]:37397 "EHLO
-        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726075AbfFARol (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sat, 1 Jun 2019 13:44:41 -0400
-Received: by mail-lf1-f67.google.com with SMTP id m15so10445483lfh.4
-        for <linux-gpio@vger.kernel.org>; Sat, 01 Jun 2019 10:44:40 -0700 (PDT)
+        id S1726617AbfFARpS (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sat, 1 Jun 2019 13:45:18 -0400
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:42551 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726013AbfFARpR (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sat, 1 Jun 2019 13:45:17 -0400
+Received: by mail-lj1-f196.google.com with SMTP id t28so1436041lje.9
+        for <linux-gpio@vger.kernel.org>; Sat, 01 Jun 2019 10:45:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=19BA31i5trcVG0iExuaBgIWsHZ5o1qSn5nq4u3sMUZ0=;
-        b=CWJCdoQvmYppqIwGxNQ56CW/rG/WRxA9vbqyJD/45MJEQGyXGhQIFRWphYZSzdu60Z
-         TaNKjHMLUkVRusle1wRuXshEtFqk4u+7gLO5F2X37xNe335qN6ydcTFBtjp4WX41vrsb
-         TJcOs621jsrgvWScBTc77KyStbiVxYSxfpO5VrxsPDfWnwHK08OtpP1n/JBy83sNytle
-         pZQjWrFtvBacyq3yBCDx67WFbTAmIxP7zjCRSoXLeX/6QGsEYJf5XvGGj2qgK15JgNPB
-         tE6UT84NHyXmIC6gRDdXmGdMhXR9iJkuzywNtsr+w0qfXAXtJ8NHa4B4L4ifo0vMMiIT
-         XKtw==
+         :cc;
+        bh=EXOx4KeIoy5u65m3f547Wl3OoIYqly6wuZi2P/gW0Wc=;
+        b=FZN3yOrjC7gc03SymAGLotKrHQQ5pLQb+K7hPid9q5fzyQTYusfDMW5FgO25wUHYiL
+         tBpYzXVoVd52OeHbPKWOaSQ770OS7SUSeWlsef4vM3GjNfViB51vEXmyYBzWMknDKfWg
+         DLjdJWF7oqsetqurvgep+9tFmWKmbOKjMa+KPDueJozFDtQx/NE/xvyGA8Vgr2KdjXLg
+         R+CVky81pEdVcOYByBFrnLCJinRY9UYfruK8T2wyHQTW6e4bbQYWr8FU5MTQnpEUmzm/
+         I13XvGE7ABq8xR17lI9Zkf3M6uNvrWNWTp+bq9YoxUu87/4nhphSC7ejK9gSi/oGQ5xB
+         pTXg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=19BA31i5trcVG0iExuaBgIWsHZ5o1qSn5nq4u3sMUZ0=;
-        b=OaZEzeTNaSHCuNqgSpww3fp2hVjTvjvcFSXemTHOM2jxpq5uusEAw30mP97IxC74o/
-         veSakX6CHVnT1r4Rhzot1s0iMbzhgvKKEPK/8SVsF0olJmn9VDs0Mt50gB+KQqlfSP7G
-         Tt0AhcPUAsn1EvX20PAYrRSTuZ91WN/fpqJjnw9uE+mvNlsvx4Mg6F2tcV4Irek4Qfd7
-         UV6Rbxnz/J4Ofs8xp6EYBgs/pDDar5bD6RRrNd0UgnuVac8jq8sF1saHy1EP5//OpdBB
-         nzi33++XWhG2mUUubqe2HLiTFltU0T22sKhUb41iyrxZISxt35AjQrIRnw3kXYCmOvn+
-         be9Q==
-X-Gm-Message-State: APjAAAXf+2O9QlNqBfoCGjVe0fO8UCmWzuEH0lAjsXxTub4mqjUlJXKu
-        8wvYiDmqstB1uyEZ7Buqvlpoj/M6lbaajJDiqiSsNg==
-X-Google-Smtp-Source: APXvYqy21uDuDi2B6fWM6ZKQYs7NA0XB3bUhxRM3FJqBmsm7UAxYO8wSl7Aab26iAsUg9e9Bnqipq/CrQLqa5fCO83s=
-X-Received: by 2002:ac2:5382:: with SMTP id g2mr9016431lfh.92.1559411079951;
- Sat, 01 Jun 2019 10:44:39 -0700 (PDT)
+         :message-id:subject:to:cc;
+        bh=EXOx4KeIoy5u65m3f547Wl3OoIYqly6wuZi2P/gW0Wc=;
+        b=FbAAEr6YJd9BV6qHbv27oByBmXWpvT6QYwuD8lFWh6JcfD/pTaQoZUFbnDRn6kwBQ2
+         mVU+LP9M1VnxZmPoeeVy4WFkf32dsqfNPWgE2mUUl2UmMNRD4PJOTCJ9eRsUf10uf3e2
+         Gy5w7GbTLCZ5HVJ2eZ8GBoIrR875mg/w9xnXnyew3H0YYKie6nKp1lyL1CKrVQna2aNh
+         cxOc/0MXZN/I7MV4SJiqa2E1DozrX/xtMMUnmoFR3+v+a3328uAkqobdNoHynzTG6z1+
+         MWiHqj7Ul21DYRaDIiRw95MvdsD0R3kjPQjuzD67xRLkaWgkAXMyRpIWurt2G3ZO48Kn
+         +CQA==
+X-Gm-Message-State: APjAAAUHDYsk61tuw+MXwItSVj/18rpbyM39XIi9ccTAk1YFGvdR8zMf
+        cME83Vcz6FG6PXrdZUcH5uJeDUST91fi+xJplwiOUw==
+X-Google-Smtp-Source: APXvYqzp4Po5ITkze/xPUJmMmbWc1bBXkKwp5O48dzl+OgvTFaArTL+3EiM1BRgEUeF2q1BFoRt5CfExhv7Ft+/C2os=
+X-Received: by 2002:a2e:9e85:: with SMTP id f5mr3598541ljk.104.1559411115745;
+ Sat, 01 Jun 2019 10:45:15 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190521090306.28113-1-brgl@bgdev.pl> <CAMRc=MdJoO602kLfP_Hw9-0pB25CeUMxfqBUYhC7CB3Aw+5O4A@mail.gmail.com>
-In-Reply-To: <CAMRc=MdJoO602kLfP_Hw9-0pB25CeUMxfqBUYhC7CB3Aw+5O4A@mail.gmail.com>
+References: <20190521090306.28113-1-brgl@bgdev.pl> <20190521090306.28113-2-brgl@bgdev.pl>
+In-Reply-To: <20190521090306.28113-2-brgl@bgdev.pl>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Sat, 1 Jun 2019 19:44:28 +0200
-Message-ID: <CACRpkdYaeD4=T=uux_tKwJpgKzyRcZnKFW2EwhNPzpkHNe3-QQ@mail.gmail.com>
-Subject: Re: [PATCH 1/2] gpio: max732x: use i2c_new_dummy_device()
+Date:   Sat, 1 Jun 2019 19:45:04 +0200
+Message-ID: <CACRpkdYNSgVTLijca53kn6Ve1bje2U0TrVyvLAOU0Z=upv3R4A@mail.gmail.com>
+Subject: Re: [PATCH 2/2] gpio: max732x: use devm_gpiochip_add_data()
 To:     Bartosz Golaszewski <brgl@bgdev.pl>
 Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, May 28, 2019 at 5:53 PM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
-> wt., 21 maj 2019 o 11:03 Bartosz Golaszewski <brgl@bgdev.pl> napisa=C5=82=
-(a):
-> >
-> > From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> >
-> > We now have a resource managed version of i2c_new_dummy_device() that
-> > also returns an actual error code instead of a NULL-pointer. Use it
-> > in the max732x GPIO driver and simplify code in the process.
-> >
-> > Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> > ---
+On Tue, May 21, 2019 at 11:03 AM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
+
+> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 >
-> If there are no objections I'll apply it by the end of this week.
+> We can simplify the code a bit with a resource managed variant of
+> gpiochip_add_data().
+>
+> Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 
 Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
-
-Just include it in some pull request to me!
 
 Yours,
 Linus Walleij
