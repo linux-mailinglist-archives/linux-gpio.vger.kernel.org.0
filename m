@@ -2,75 +2,87 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 5EC153203B
-	for <lists+linux-gpio@lfdr.de>; Sat,  1 Jun 2019 19:49:05 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0056032043
+	for <lists+linux-gpio@lfdr.de>; Sat,  1 Jun 2019 19:56:22 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726343AbfFARtE (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sat, 1 Jun 2019 13:49:04 -0400
-Received: from mail-lf1-f67.google.com ([209.85.167.67]:39553 "EHLO
-        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726211AbfFARtE (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sat, 1 Jun 2019 13:49:04 -0400
-Received: by mail-lf1-f67.google.com with SMTP id p24so3989833lfo.6
-        for <linux-gpio@vger.kernel.org>; Sat, 01 Jun 2019 10:49:03 -0700 (PDT)
+        id S1726075AbfFAR4W (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sat, 1 Jun 2019 13:56:22 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:46001 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726013AbfFAR4W (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sat, 1 Jun 2019 13:56:22 -0400
+Received: by mail-wr1-f67.google.com with SMTP id b18so8502096wrq.12
+        for <linux-gpio@vger.kernel.org>; Sat, 01 Jun 2019 10:56:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Qo0+ueJv/aJTWlBAJydFHhGp+OjN3tsRRuz9/0epPIQ=;
-        b=p7slmxGplfKpVqpg89DZmqNY3zX6aMXgXEo6pld3GgkCVTWHjXat8Tr+EZnVJkmFXz
-         bPgHceCmVhDyK5x4b2UE+eD1/W+0btWiQY27OG9oaq/G8l4z810BzhjOWHGyqfXb893M
-         ARJdFlMGmfx/Br2/XtGGTcgfFL5mQ5WLZOQoJhbKE1dUwbNCP59V9bhuASndyUYnNhwa
-         8eZCBFRZKLbwaaAGjVlo2bxxwSKoF1I0l5QTiMyBvj22JjjK6DYS9VgjnlFDjF9SoE50
-         r3DoXN5xt6scKG6FaHR0mNpgVIxbQMdkaih0jqN6iNgUKtRV1Ws8xgRy+Osjeik4K+vi
-         jkaw==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=E0cHNFy5gDg41HCIv+Ws6zQZpjqg/63XwafEKIw29x0=;
+        b=kZluv1I0dPzhVvKM1xoP7u2NgneoaywMk/qw04oYezIX1ADcmL8ABVZKBTzIZkLrI9
+         DH5ITWmzOunZOl9BFORRKXx5QZBXxCHbMsTM/TWcrR3WIO6H9Lmieqxnc6N+tjXoQ7IQ
+         Pab5JV8JKE+/KS0bqnk8tLPrd3h6dkooeRDTtTnz0/S10HxpS5W3BnM4qFmP+25pF6Ru
+         AY7JHiAF1d3nXf7OOWuoNxkFWJlB352eYWV8/bnhZJQsvKmRC02mgP59qyjlYvSEZbjy
+         lsy6uJrv+K0YdFfIpndk39LPNfGdQ+DUXzSkQRhBvOf3JUVlfCcG6ODXBBsbE3l1E42F
+         0WKA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Qo0+ueJv/aJTWlBAJydFHhGp+OjN3tsRRuz9/0epPIQ=;
-        b=XpEOu37aD/r9XiNgrSPoODmQtSFZer42VB/WbxI9Zv8e5btX2EDpB9gF6IJuxKMPcp
-         Qz7ZmuZChqtGF4MNp71it9wpEe9Vu3+TE+Di78jwYel3wfhjjGkPwbHctuJlHkefK7b8
-         3iyiYWDkGU6WTUSxmQJjt0iLKlbCu/exM7iRZ4fIIXTRRlGLQnUIslWLngH8FxeqBOoq
-         tAvxStVSCMRUY9tuU0LK3DZhtv9cZEBEBvuxIkjiS5+yQTTj76y3eVTm3zSkiRLgwjNf
-         Ig8GysI0bLrLnc6snfRiE/lfdDL9cVdiZZvm9xj5tyfLvCRnTqLwuEbIhLhvOw5KGqKe
-         yINw==
-X-Gm-Message-State: APjAAAXpJse2io/FUqJ2GpC2JL1eqaM64UwNI0a1rNUwHa6PE+nASwNC
-        H0vcP2Pq1hi05bsyK7E84WC59JV0NkeSRDA93yA707JI
-X-Google-Smtp-Source: APXvYqwv0jWGV4BMtWQTcGLMEUlFaSUlJ/eW4uXxjl+y7Xj0xYXGg60k+K2V2O1AZftPbLrmQ9hmGHJI7cqMILC9PpQ=
-X-Received: by 2002:a19:ae09:: with SMTP id f9mr9147805lfc.60.1559411342738;
- Sat, 01 Jun 2019 10:49:02 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190527124051.7615-1-geert+renesas@glider.be> <20190527124051.7615-3-geert+renesas@glider.be>
-In-Reply-To: <20190527124051.7615-3-geert+renesas@glider.be>
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=E0cHNFy5gDg41HCIv+Ws6zQZpjqg/63XwafEKIw29x0=;
+        b=ZY9hG4XP2b/o08UxcGNf46k3l62lHw1gkseRvZELLFLE27ITZRwowlL0v7HoJpwiSv
+         nsWT3tVtbEIx+A4OqoIIfWev+qblmI8QZGQf1D/uh2A82nMSOm1IpaSZMN63dq3nbP4E
+         lnZQxeXeaVdKvz2DsQ/OuqxSGfxAriMhc32dsy31Gawv4KZh2g3hOIULV8SO497YlFja
+         OoPR5KmiBjRJxUAt31iOtJO0dcmyXLkFLIt+bfUWgQqnd3X7fJTTW4ASTKVCnFW/8xJ9
+         gEEkJVa4X1NjRa/AI2Ct0Pp+wrsQFh2L7XP2MtIi8j0SPsTBc2dHdVm2adcPxUlvbBnD
+         fkig==
+X-Gm-Message-State: APjAAAV+wXt5ORCZSxf4HdyLJxZ14FbjzQn4R8HGPfWLdIHoy1M3GFoD
+        Zsph7IKLiAt1/Kb2NR9t6PtkhQbzJ7U=
+X-Google-Smtp-Source: APXvYqwlaZq1Mow6dtLoHbNdevhcnjQBL1RZnCgXU1CWUjO16Bylqgdtnx7AM7WQOajokhv+i8c1ng==
+X-Received: by 2002:a5d:5452:: with SMTP id w18mr10486900wrv.327.1559411780564;
+        Sat, 01 Jun 2019 10:56:20 -0700 (PDT)
+Received: from localhost.localdomain (catv-89-135-96-219.catv.broadband.hu. [89.135.96.219])
+        by smtp.gmail.com with ESMTPSA id 67sm18309946wmd.38.2019.06.01.10.56.18
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Sat, 01 Jun 2019 10:56:19 -0700 (PDT)
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Sat, 1 Jun 2019 19:48:51 +0200
-Message-ID: <CACRpkdbsfm-CU41Gj1b6-WhZBgkBDjtOUn8=W1YXe5p0EG=RAA@mail.gmail.com>
-Subject: Re: [PATCH 2/2] gpio: em: Return early on error in em_gio_probe()
-To:     Geert Uytterhoeven <geert+renesas@glider.be>
-Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        =?UTF-8?Q?Niklas_S=C3=B6derlund?= <niklas.soderlund@ragnatech.se>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+To:     linux-gpio@vger.kernel.org
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Benjamin Gaignard <benjamin.gaignard@st.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>
+Subject: [PATCH] pinctrl: stm32: Add links to consumers
+Date:   Sat,  1 Jun 2019 19:56:12 +0200
+Message-Id: <20190601175612.26498-1-linus.walleij@linaro.org>
+X-Mailer: git-send-email 2.20.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, May 27, 2019 at 2:40 PM Geert Uytterhoeven
-<geert+renesas@glider.be> wrote:
+Using STM32 as guinea pig after Alex's initial positive
+test to see if this is something we should encourage
+in general and make default behaviour.
 
-> em_gio_probe() uses managed initializations for everything but creating
-> the IRQ domain.  Hence in most failure cases, no cleanup needs to be
-> performed at all.
->
-> Make this clearer for the casual reviewer by returning early, instead of
-> jumping to an out-of-sight label.
->
-> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Cc: Benjamin Gaignard <benjamin.gaignard@st.com>
+Cc:  Alexandre Torgue <alexandre.torgue@st.com>
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+---
+ drivers/pinctrl/stm32/pinctrl-stm32.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-Patch applied.
+diff --git a/drivers/pinctrl/stm32/pinctrl-stm32.c b/drivers/pinctrl/stm32/pinctrl-stm32.c
+index 92e35fb930be..b453aed1bbeb 100644
+--- a/drivers/pinctrl/stm32/pinctrl-stm32.c
++++ b/drivers/pinctrl/stm32/pinctrl-stm32.c
+@@ -1438,6 +1438,7 @@ int stm32_pctl_probe(struct platform_device *pdev)
+ 	pctl->pctl_desc.owner = THIS_MODULE;
+ 	pctl->pctl_desc.pins = pins;
+ 	pctl->pctl_desc.npins = pctl->npins;
++	pctl->pctl_desc.link_consumers = true;
+ 	pctl->pctl_desc.confops = &stm32_pconf_ops;
+ 	pctl->pctl_desc.pctlops = &stm32_pctrl_ops;
+ 	pctl->pctl_desc.pmxops = &stm32_pmx_ops;
+-- 
+2.20.1
 
-Yours,
-Linus Walleij
