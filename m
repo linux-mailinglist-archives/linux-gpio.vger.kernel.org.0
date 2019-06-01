@@ -2,51 +2,51 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 93FE732039
-	for <lists+linux-gpio@lfdr.de>; Sat,  1 Jun 2019 19:48:02 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5EC153203B
+	for <lists+linux-gpio@lfdr.de>; Sat,  1 Jun 2019 19:49:05 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726210AbfFARsB (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sat, 1 Jun 2019 13:48:01 -0400
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:39345 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726013AbfFARsB (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sat, 1 Jun 2019 13:48:01 -0400
-Received: by mail-lj1-f194.google.com with SMTP id a10so9325699ljf.6
-        for <linux-gpio@vger.kernel.org>; Sat, 01 Jun 2019 10:47:59 -0700 (PDT)
+        id S1726343AbfFARtE (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sat, 1 Jun 2019 13:49:04 -0400
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:39553 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726211AbfFARtE (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sat, 1 Jun 2019 13:49:04 -0400
+Received: by mail-lf1-f67.google.com with SMTP id p24so3989833lfo.6
+        for <linux-gpio@vger.kernel.org>; Sat, 01 Jun 2019 10:49:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=nDFWOamDcwclWQ44b4W8wXrrwx4uqY/RgBjU1iNelu8=;
-        b=ReIJPFAl33oDUp+o8LjcGF+2oUpFciOZZ26gu2yTUCnCDRM6QCWW5WXKnwx01MPzE7
-         b4Y6sXxYUYwY2MZrOoKoKLxzRl9fMloY0B9P/RW04S288V3Jcfk+JxAvH4Uy0UlStfgj
-         ZiZ49jxXdNX9Za4kixvZ8dmGH2sRJ2taxlKOXydasxLlO3tPdK4RQw1UhG3R1UZUKOX+
-         Z9eTLYVKkENQ8GGUNKK147+xlstt3xQmvEQau8IeooieyaKhtSiL9yoUMXXyt+ilpKIX
-         bU19lZelNxeKz+Oo0oGrEWZwl2VGZcJDsaVHJWnbwCZaaGsLPLsWst73Nb1ToWzb2enV
-         9aNQ==
+        bh=Qo0+ueJv/aJTWlBAJydFHhGp+OjN3tsRRuz9/0epPIQ=;
+        b=p7slmxGplfKpVqpg89DZmqNY3zX6aMXgXEo6pld3GgkCVTWHjXat8Tr+EZnVJkmFXz
+         bPgHceCmVhDyK5x4b2UE+eD1/W+0btWiQY27OG9oaq/G8l4z810BzhjOWHGyqfXb893M
+         ARJdFlMGmfx/Br2/XtGGTcgfFL5mQ5WLZOQoJhbKE1dUwbNCP59V9bhuASndyUYnNhwa
+         8eZCBFRZKLbwaaAGjVlo2bxxwSKoF1I0l5QTiMyBvj22JjjK6DYS9VgjnlFDjF9SoE50
+         r3DoXN5xt6scKG6FaHR0mNpgVIxbQMdkaih0jqN6iNgUKtRV1Ws8xgRy+Osjeik4K+vi
+         jkaw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=nDFWOamDcwclWQ44b4W8wXrrwx4uqY/RgBjU1iNelu8=;
-        b=qc+DDwB5kPTKiT3ME6yKnfPCtMW4HjggNF1R4WWEwK0qDsdu7qd/qeHVBNdUQYQgTJ
-         BWc5C+CLgT2zwAyP16bpHU2GG/s22TBeNjSCuWU1PeLQahUBmMFJ47JcvkEiwR3wTEmY
-         f1AbKfQMRMHu8VMWVmUTkYW6URf7O1sAhNzkvjZq04Hthz+bRONFQMb3wLAaUBWM1AJG
-         72FgSK+bayLySggD7C0GYoyBKDdOwXSYO9xs3z9qzt1UrWCIokuLXwGSwd/2ifbHbYq4
-         3E+m9qG0CuKIAA5TkLOj4i7q4XY7jkckQZZCCba6LKkcMJ3vn2Zku3M28d9oSFdEg5FF
-         SuXQ==
-X-Gm-Message-State: APjAAAVZg6zVt+lJYEW74zcOJPZDjxBs01ZsIsiCak94ePL6u0pPTh55
-        ZcggefayMS+QtGd7cuAQ9TXPqG+LP3jFmca09VyNZQ==
-X-Google-Smtp-Source: APXvYqy5OpP0IGZrGerI3GIBoPyhV7Km+3aotWslvdxyxcZf0Rb/AYL1m/dQfTtRm33uDghRZao7uhN5aYvLTK/5l3g=
-X-Received: by 2002:a2e:5bdd:: with SMTP id m90mr310625lje.46.1559411279300;
- Sat, 01 Jun 2019 10:47:59 -0700 (PDT)
+        bh=Qo0+ueJv/aJTWlBAJydFHhGp+OjN3tsRRuz9/0epPIQ=;
+        b=XpEOu37aD/r9XiNgrSPoODmQtSFZer42VB/WbxI9Zv8e5btX2EDpB9gF6IJuxKMPcp
+         Qz7ZmuZChqtGF4MNp71it9wpEe9Vu3+TE+Di78jwYel3wfhjjGkPwbHctuJlHkefK7b8
+         3iyiYWDkGU6WTUSxmQJjt0iLKlbCu/exM7iRZ4fIIXTRRlGLQnUIslWLngH8FxeqBOoq
+         tAvxStVSCMRUY9tuU0LK3DZhtv9cZEBEBvuxIkjiS5+yQTTj76y3eVTm3zSkiRLgwjNf
+         Ig8GysI0bLrLnc6snfRiE/lfdDL9cVdiZZvm9xj5tyfLvCRnTqLwuEbIhLhvOw5KGqKe
+         yINw==
+X-Gm-Message-State: APjAAAXpJse2io/FUqJ2GpC2JL1eqaM64UwNI0a1rNUwHa6PE+nASwNC
+        H0vcP2Pq1hi05bsyK7E84WC59JV0NkeSRDA93yA707JI
+X-Google-Smtp-Source: APXvYqwv0jWGV4BMtWQTcGLMEUlFaSUlJ/eW4uXxjl+y7Xj0xYXGg60k+K2V2O1AZftPbLrmQ9hmGHJI7cqMILC9PpQ=
+X-Received: by 2002:a19:ae09:: with SMTP id f9mr9147805lfc.60.1559411342738;
+ Sat, 01 Jun 2019 10:49:02 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190527124051.7615-1-geert+renesas@glider.be> <20190527124051.7615-2-geert+renesas@glider.be>
-In-Reply-To: <20190527124051.7615-2-geert+renesas@glider.be>
+References: <20190527124051.7615-1-geert+renesas@glider.be> <20190527124051.7615-3-geert+renesas@glider.be>
+In-Reply-To: <20190527124051.7615-3-geert+renesas@glider.be>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Sat, 1 Jun 2019 19:47:48 +0200
-Message-ID: <CACRpkdbLfKqs-kwS0NZgU2_k6H53u7B5cJ9VSoHvsxLQEtTdbQ@mail.gmail.com>
-Subject: Re: [PATCH 1/2] gpio: em: Remove error messages on out-of-memory conditions
+Date:   Sat, 1 Jun 2019 19:48:51 +0200
+Message-ID: <CACRpkdbsfm-CU41Gj1b6-WhZBgkBDjtOUn8=W1YXe5p0EG=RAA@mail.gmail.com>
+Subject: Re: [PATCH 2/2] gpio: em: Return early on error in em_gio_probe()
 To:     Geert Uytterhoeven <geert+renesas@glider.be>
 Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
         =?UTF-8?Q?Niklas_S=C3=B6derlund?= <niklas.soderlund@ragnatech.se>,
@@ -61,11 +61,12 @@ X-Mailing-List: linux-gpio@vger.kernel.org
 On Mon, May 27, 2019 at 2:40 PM Geert Uytterhoeven
 <geert+renesas@glider.be> wrote:
 
-> There is no need to print error messages when memory allocations or
-> related operations fail, as the core will take care of that.
+> em_gio_probe() uses managed initializations for everything but creating
+> the IRQ domain.  Hence in most failure cases, no cleanup needs to be
+> performed at all.
 >
-> Change the returned error codes to -ENOMEM to match the failure cause
-> while at it.
+> Make this clearer for the casual reviewer by returning early, instead of
+> jumping to an out-of-sight label.
 >
 > Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
