@@ -2,150 +2,84 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 68FE431948
-	for <lists+linux-gpio@lfdr.de>; Sat,  1 Jun 2019 05:30:32 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CC18631A01
+	for <lists+linux-gpio@lfdr.de>; Sat,  1 Jun 2019 09:12:24 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726550AbfFADab (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 31 May 2019 23:30:31 -0400
-Received: from condef-04.nifty.com ([202.248.20.69]:35768 "EHLO
-        condef-04.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726485AbfFADab (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 31 May 2019 23:30:31 -0400
-Received: from conuserg-12.nifty.com ([10.126.8.75])by condef-04.nifty.com with ESMTP id x513Q8SK004197;
-        Sat, 1 Jun 2019 12:26:08 +0900
-Received: from grover.flets-west.jp (softbank126125154139.bbtec.net [126.125.154.139]) (authenticated)
-        by conuserg-12.nifty.com with ESMTP id x513MrHC023003;
-        Sat, 1 Jun 2019 12:22:53 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-12.nifty.com x513MrHC023003
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1559359374;
-        bh=r3qAVs3xM8MaSXiqlFioeBt+ecKWRRFeKPnE+XTAM3A=;
-        h=From:To:Cc:Subject:Date:From;
-        b=xw0YwrrAPeAY0OlcTa3SqAJKQnezXQoI2+/7rrH2CfETfalYjs1oPY4aVPA7tr9gd
-         PRENg4z1TGu6XcME/fQNuRRNr/MWUyJDUA9g6NOMDBnSEuZOGzvFEhQ27AUfnIO3sa
-         i1YAFJSzyn2RPF7OIZdKRk5sifWn4Jnc1sOFY9daWmqQyNbN9Bv7WwR1Z0r2TcU1q8
-         wYJjAACezYFAKTQmvSn0Nxg8GYX4RN/YnoLhUfVK+VO0x+7E0OfO0bRe/S3bJLJByI
-         R2uRHaeHgFubi/04LIXnk9kFNomJCl9TkcTXqn7fOzIIxpVKdpGhv5s4zM4BOfsM7g
-         mqkobRgO/jTHA==
-X-Nifty-SrcIP: [126.125.154.139]
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     linux-spdx@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
-        linux-kernel@vger.kernel.org, Kees Cook <keescook@chromium.org>,
-        Joe Perches <joe@perches.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Jaroslav Kysela <perex@perex.cz>, alsa-devel@alsa-project.org,
-        Mark Brown <broonie@kernel.org>, linux-gpio@vger.kernel.org,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-renesas-soc@vger.kernel.org, Takashi Iwai <tiwai@suse.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Russell King <linux@armlinux.org.uk>,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH] treewide: fix typos of SPDX-License-Identifier
-Date:   Sat,  1 Jun 2019 12:22:42 +0900
-Message-Id: <20190601032242.10405-1-yamada.masahiro@socionext.com>
-X-Mailer: git-send-email 2.17.1
+        id S1726058AbfFAHMY (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sat, 1 Jun 2019 03:12:24 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:33354 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726013AbfFAHMX (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sat, 1 Jun 2019 03:12:23 -0400
+Received: by mail-wr1-f66.google.com with SMTP id d9so7907561wrx.0
+        for <linux-gpio@vger.kernel.org>; Sat, 01 Jun 2019 00:12:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=U0o3CHgc/oBGGF4DhiVoayfCI4Q5nSrFbWJXOCfptPE=;
+        b=fmvi9prJFEiqYA8NwXarV7Q2CR/tTCoFHOpAkAbgmjAmbVSdbL6y1AMZP4Ne/58jMr
+         2mwkghoE2FiOVka1MhvIa46sJ89+elM/XW+kytGUDFvcHlSv/odlFxilz2vqzazLba5H
+         yd3k0/wUgjLHcTKvYhDNEV71MH4SZO8v+V+Qrtd5WVoGITSVQBvfobYTYjpew5HgYxZl
+         ElHvNisE8kI3gAOBOGzwSBYGJ2I7Yr7h1NPdI4lD3ajWnceAM5Yes9hrgFXa+3DKJr/i
+         iBZPh3B7laPECxAuh1KzT5j5FBaxqrd32VnO7Sa/OBrinRgKEtVGEpwT8xbelUAqxCp6
+         JPKQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=U0o3CHgc/oBGGF4DhiVoayfCI4Q5nSrFbWJXOCfptPE=;
+        b=pYRy+MWvUsVAb7ANKJ6grNNR4/3mpHtYxjsHvdVerS/Dl8UTo0om5kFgd0IOMfuGJ0
+         9zXuQHxVBLlW+us9jyNykUyK0rK6xU7r4wNg7n88iDgdgjy7GBtII2P0Vfw/eK7TOulc
+         DLWOz+ofCo+XgoeyHRrwi8fCjAZdgTHgaAiv5YtoIPfStdV1Yi39BN6bWPm7LJG6O3A6
+         W0nRog8plCY54AVgVC1Xdxh8OF6JgC1gCfXwmum3EaaYSpIwcXZslenY5LpT/2htnhJP
+         KeMvZpPxzMxstSg8qfwB/s3noNwwYZRP4dhwzvu8vBf1Y/UxcgiJ8q7iRaZNRNNP5PCh
+         eKrg==
+X-Gm-Message-State: APjAAAUp/QVaOuVX6/73HWMsj4BlaaK1YGTBj+usTswJv1nBUcK4K4Z/
+        OsEyoXbGtVG3dk6wuLlYLDFlAcME
+X-Google-Smtp-Source: APXvYqwwYYs4il3r6Ouc0vW+fESGUae9oHc/h31pkNNRgDfNzks6vY1BsPxpQot8HY+QBfBNmQAfxA==
+X-Received: by 2002:a5d:4104:: with SMTP id l4mr9281244wrp.302.1559373142369;
+        Sat, 01 Jun 2019 00:12:22 -0700 (PDT)
+Received: from morpheus.roving-it.com.com (2.e.6.5.c.a.a.1.a.8.0.3.1.e.3.c.1.8.6.2.1.1.b.f.0.b.8.0.1.0.0.2.ip6.arpa. [2001:8b0:fb11:2681:c3e1:308a:1aac:56e2])
+        by smtp.googlemail.com with ESMTPSA id u9sm18642101wme.48.2019.06.01.00.12.20
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Sat, 01 Jun 2019 00:12:21 -0700 (PDT)
+From:   Peter Robinson <pbrobinson@gmail.com>
+To:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        linux-gpio@vger.kernel.org
+Cc:     Peter Robinson <pbrobinson@gmail.com>
+Subject: [PATCH] gpio: pca953x: Add support for the TI TCA9539
+Date:   Sat,  1 Jun 2019 08:12:18 +0100
+Message-Id: <20190601071218.27958-1-pbrobinson@gmail.com>
+X-Mailer: git-send-email 2.21.0
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Prior to the adoption of SPDX, it was difficult for tools to determine
-the correct license due to incomplete or badly formatted license text.
-The SPDX solves this issue, assuming people can correctly spell
-"SPDX-License-Identifier" although this assumption is broken in some
-places.
+The TI TCA9539 is a variant of the PCA953x GPIO expander,
+with 16 GPIOs and interrupt functionality.
 
-Since scripts/spdxcheck.py parses only lines that exactly matches to
-the correct tag, it cannot (should not) detect this kind of error.
-
-If the correct tag is missing, scripts/checkpatch.pl warns like this:
-
- WARNING: Missing or malformed SPDX-License-Identifier tag in line *
-
-So, people should notice it before the patch submission, but in reality
-broken tags sometimes slip in. The checkpatch warning is not useful for
-checking the committed files globally since large number of files still
-have no SPDX tag.
-
-Also, I am not sure about the legal effect when the SPDX tag is broken.
-
-Anyway, these typos are absolutely worth fixing. It is pretty easy to
-find suspicious lines by grep.
-
-  $ git grep --not -e SPDX-License-Identifier --and -e SPDX- -- \
-    :^LICENSES :^scripts/spdxcheck.py :^*/license-rules.rst
-  arch/arm/kernel/bugs.c:// SPDX-Identifier: GPL-2.0
-  drivers/phy/st/phy-stm32-usbphyc.c:// SPDX-Licence-Identifier: GPL-2.0
-  drivers/pinctrl/sh-pfc/pfc-r8a77980.c:// SPDX-Lincense-Identifier: GPL 2.0
-  lib/test_stackinit.c:// SPDX-Licenses: GPLv2
-  sound/soc/codecs/max9759.c:// SPDX-Licence-Identifier: GPL-2.0
-
-Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+Signed-off-by: Peter Robinson <pbrobinson@gmail.com>
 ---
+ drivers/gpio/gpio-pca953x.c | 1 +
+ 1 file changed, 1 insertion(+)
 
- arch/arm/kernel/bugs.c                | 2 +-
- drivers/phy/st/phy-stm32-usbphyc.c    | 2 +-
- drivers/pinctrl/sh-pfc/pfc-r8a77980.c | 2 +-
- lib/test_stackinit.c                  | 2 +-
- sound/soc/codecs/max9759.c            | 2 +-
- 5 files changed, 5 insertions(+), 5 deletions(-)
-
-diff --git a/arch/arm/kernel/bugs.c b/arch/arm/kernel/bugs.c
-index d41d3598e5e5..14c8dbbb7d2d 100644
---- a/arch/arm/kernel/bugs.c
-+++ b/arch/arm/kernel/bugs.c
-@@ -1,4 +1,4 @@
--// SPDX-Identifier: GPL-2.0
-+// SPDX-License-Identifier: GPL-2.0
- #include <linux/init.h>
- #include <asm/bugs.h>
- #include <asm/proc-fns.h>
-diff --git a/drivers/phy/st/phy-stm32-usbphyc.c b/drivers/phy/st/phy-stm32-usbphyc.c
-index 1255cd1d9a60..56bdea4b0bd9 100644
---- a/drivers/phy/st/phy-stm32-usbphyc.c
-+++ b/drivers/phy/st/phy-stm32-usbphyc.c
-@@ -1,4 +1,4 @@
--// SPDX-Licence-Identifier: GPL-2.0
-+// SPDX-License-Identifier: GPL-2.0
- /*
-  * STMicroelectronics STM32 USB PHY Controller driver
-  *
-diff --git a/drivers/pinctrl/sh-pfc/pfc-r8a77980.c b/drivers/pinctrl/sh-pfc/pfc-r8a77980.c
-index 473da65890a7..9ed4ead2dafb 100644
---- a/drivers/pinctrl/sh-pfc/pfc-r8a77980.c
-+++ b/drivers/pinctrl/sh-pfc/pfc-r8a77980.c
-@@ -1,4 +1,4 @@
--// SPDX-Lincense-Identifier: GPL 2.0
-+// SPDX-License-Identifier: GPL-2.0
- /*
-  * R8A77980 processor support - PFC hardware block.
-  *
-diff --git a/lib/test_stackinit.c b/lib/test_stackinit.c
-index 13115b6f2b88..e97dc54b4fdf 100644
---- a/lib/test_stackinit.c
-+++ b/lib/test_stackinit.c
-@@ -1,4 +1,4 @@
--// SPDX-Licenses: GPLv2
-+// SPDX-License-Identifier: GPL-2.0
- /*
-  * Test cases for compiler-based stack variable zeroing via future
-  * compiler flags or CONFIG_GCC_PLUGIN_STRUCTLEAK*.
-diff --git a/sound/soc/codecs/max9759.c b/sound/soc/codecs/max9759.c
-index ecfb4a80424b..00e9d4fd1651 100644
---- a/sound/soc/codecs/max9759.c
-+++ b/sound/soc/codecs/max9759.c
-@@ -1,4 +1,4 @@
--// SPDX-Licence-Identifier: GPL-2.0
-+// SPDX-License-Identifier: GPL-2.0
- /*
-  * MAX9759 Amplifier Driver
-  *
+diff --git a/drivers/gpio/gpio-pca953x.c b/drivers/gpio/gpio-pca953x.c
+index b7ef33f63392..c31ad558d056 100644
+--- a/drivers/gpio/gpio-pca953x.c
++++ b/drivers/gpio/gpio-pca953x.c
+@@ -1180,6 +1180,7 @@ static const struct of_device_id pca953x_dt_ids[] = {
+ 	{ .compatible = "ti,tca6408", .data = OF_953X( 8, PCA_INT), },
+ 	{ .compatible = "ti,tca6416", .data = OF_953X(16, PCA_INT), },
+ 	{ .compatible = "ti,tca6424", .data = OF_953X(24, PCA_INT), },
++	{ .compatible = "ti,tca9539", .data = OF_953X(16, PCA_INT), },
+ 
+ 	{ .compatible = "onnn,cat9554", .data = OF_953X( 8, PCA_INT), },
+ 	{ .compatible = "onnn,pca9654", .data = OF_953X( 8, PCA_INT), },
 -- 
-2.17.1
+2.21.0
 
