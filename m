@@ -2,71 +2,74 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 37C9832036
-	for <lists+linux-gpio@lfdr.de>; Sat,  1 Jun 2019 19:45:19 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 93FE732039
+	for <lists+linux-gpio@lfdr.de>; Sat,  1 Jun 2019 19:48:02 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726617AbfFARpS (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sat, 1 Jun 2019 13:45:18 -0400
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:42551 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726013AbfFARpR (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sat, 1 Jun 2019 13:45:17 -0400
-Received: by mail-lj1-f196.google.com with SMTP id t28so1436041lje.9
-        for <linux-gpio@vger.kernel.org>; Sat, 01 Jun 2019 10:45:16 -0700 (PDT)
+        id S1726210AbfFARsB (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sat, 1 Jun 2019 13:48:01 -0400
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:39345 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726013AbfFARsB (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sat, 1 Jun 2019 13:48:01 -0400
+Received: by mail-lj1-f194.google.com with SMTP id a10so9325699ljf.6
+        for <linux-gpio@vger.kernel.org>; Sat, 01 Jun 2019 10:47:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=EXOx4KeIoy5u65m3f547Wl3OoIYqly6wuZi2P/gW0Wc=;
-        b=FZN3yOrjC7gc03SymAGLotKrHQQ5pLQb+K7hPid9q5fzyQTYusfDMW5FgO25wUHYiL
-         tBpYzXVoVd52OeHbPKWOaSQ770OS7SUSeWlsef4vM3GjNfViB51vEXmyYBzWMknDKfWg
-         DLjdJWF7oqsetqurvgep+9tFmWKmbOKjMa+KPDueJozFDtQx/NE/xvyGA8Vgr2KdjXLg
-         R+CVky81pEdVcOYByBFrnLCJinRY9UYfruK8T2wyHQTW6e4bbQYWr8FU5MTQnpEUmzm/
-         I13XvGE7ABq8xR17lI9Zkf3M6uNvrWNWTp+bq9YoxUu87/4nhphSC7ejK9gSi/oGQ5xB
-         pTXg==
+        bh=nDFWOamDcwclWQ44b4W8wXrrwx4uqY/RgBjU1iNelu8=;
+        b=ReIJPFAl33oDUp+o8LjcGF+2oUpFciOZZ26gu2yTUCnCDRM6QCWW5WXKnwx01MPzE7
+         b4Y6sXxYUYwY2MZrOoKoKLxzRl9fMloY0B9P/RW04S288V3Jcfk+JxAvH4Uy0UlStfgj
+         ZiZ49jxXdNX9Za4kixvZ8dmGH2sRJ2taxlKOXydasxLlO3tPdK4RQw1UhG3R1UZUKOX+
+         Z9eTLYVKkENQ8GGUNKK147+xlstt3xQmvEQau8IeooieyaKhtSiL9yoUMXXyt+ilpKIX
+         bU19lZelNxeKz+Oo0oGrEWZwl2VGZcJDsaVHJWnbwCZaaGsLPLsWst73Nb1ToWzb2enV
+         9aNQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=EXOx4KeIoy5u65m3f547Wl3OoIYqly6wuZi2P/gW0Wc=;
-        b=FbAAEr6YJd9BV6qHbv27oByBmXWpvT6QYwuD8lFWh6JcfD/pTaQoZUFbnDRn6kwBQ2
-         mVU+LP9M1VnxZmPoeeVy4WFkf32dsqfNPWgE2mUUl2UmMNRD4PJOTCJ9eRsUf10uf3e2
-         Gy5w7GbTLCZ5HVJ2eZ8GBoIrR875mg/w9xnXnyew3H0YYKie6nKp1lyL1CKrVQna2aNh
-         cxOc/0MXZN/I7MV4SJiqa2E1DozrX/xtMMUnmoFR3+v+a3328uAkqobdNoHynzTG6z1+
-         MWiHqj7Ul21DYRaDIiRw95MvdsD0R3kjPQjuzD67xRLkaWgkAXMyRpIWurt2G3ZO48Kn
-         +CQA==
-X-Gm-Message-State: APjAAAUHDYsk61tuw+MXwItSVj/18rpbyM39XIi9ccTAk1YFGvdR8zMf
-        cME83Vcz6FG6PXrdZUcH5uJeDUST91fi+xJplwiOUw==
-X-Google-Smtp-Source: APXvYqzp4Po5ITkze/xPUJmMmbWc1bBXkKwp5O48dzl+OgvTFaArTL+3EiM1BRgEUeF2q1BFoRt5CfExhv7Ft+/C2os=
-X-Received: by 2002:a2e:9e85:: with SMTP id f5mr3598541ljk.104.1559411115745;
- Sat, 01 Jun 2019 10:45:15 -0700 (PDT)
+        bh=nDFWOamDcwclWQ44b4W8wXrrwx4uqY/RgBjU1iNelu8=;
+        b=qc+DDwB5kPTKiT3ME6yKnfPCtMW4HjggNF1R4WWEwK0qDsdu7qd/qeHVBNdUQYQgTJ
+         BWc5C+CLgT2zwAyP16bpHU2GG/s22TBeNjSCuWU1PeLQahUBmMFJ47JcvkEiwR3wTEmY
+         f1AbKfQMRMHu8VMWVmUTkYW6URf7O1sAhNzkvjZq04Hthz+bRONFQMb3wLAaUBWM1AJG
+         72FgSK+bayLySggD7C0GYoyBKDdOwXSYO9xs3z9qzt1UrWCIokuLXwGSwd/2ifbHbYq4
+         3E+m9qG0CuKIAA5TkLOj4i7q4XY7jkckQZZCCba6LKkcMJ3vn2Zku3M28d9oSFdEg5FF
+         SuXQ==
+X-Gm-Message-State: APjAAAVZg6zVt+lJYEW74zcOJPZDjxBs01ZsIsiCak94ePL6u0pPTh55
+        ZcggefayMS+QtGd7cuAQ9TXPqG+LP3jFmca09VyNZQ==
+X-Google-Smtp-Source: APXvYqy5OpP0IGZrGerI3GIBoPyhV7Km+3aotWslvdxyxcZf0Rb/AYL1m/dQfTtRm33uDghRZao7uhN5aYvLTK/5l3g=
+X-Received: by 2002:a2e:5bdd:: with SMTP id m90mr310625lje.46.1559411279300;
+ Sat, 01 Jun 2019 10:47:59 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190521090306.28113-1-brgl@bgdev.pl> <20190521090306.28113-2-brgl@bgdev.pl>
-In-Reply-To: <20190521090306.28113-2-brgl@bgdev.pl>
+References: <20190527124051.7615-1-geert+renesas@glider.be> <20190527124051.7615-2-geert+renesas@glider.be>
+In-Reply-To: <20190527124051.7615-2-geert+renesas@glider.be>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Sat, 1 Jun 2019 19:45:04 +0200
-Message-ID: <CACRpkdYNSgVTLijca53kn6Ve1bje2U0TrVyvLAOU0Z=upv3R4A@mail.gmail.com>
-Subject: Re: [PATCH 2/2] gpio: max732x: use devm_gpiochip_add_data()
-To:     Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Date:   Sat, 1 Jun 2019 19:47:48 +0200
+Message-ID: <CACRpkdbLfKqs-kwS0NZgU2_k6H53u7B5cJ9VSoHvsxLQEtTdbQ@mail.gmail.com>
+Subject: Re: [PATCH 1/2] gpio: em: Remove error messages on out-of-memory conditions
+To:     Geert Uytterhoeven <geert+renesas@glider.be>
+Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        =?UTF-8?Q?Niklas_S=C3=B6derlund?= <niklas.soderlund@ragnatech.se>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, May 21, 2019 at 11:03 AM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
+On Mon, May 27, 2019 at 2:40 PM Geert Uytterhoeven
+<geert+renesas@glider.be> wrote:
 
-> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> There is no need to print error messages when memory allocations or
+> related operations fail, as the core will take care of that.
 >
-> We can simplify the code a bit with a resource managed variant of
-> gpiochip_add_data().
+> Change the returned error codes to -ENOMEM to match the failure cause
+> while at it.
 >
-> Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+Patch applied.
 
 Yours,
 Linus Walleij
