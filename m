@@ -2,51 +2,51 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 425ED32011
-	for <lists+linux-gpio@lfdr.de>; Sat,  1 Jun 2019 19:21:44 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 499E132018
+	for <lists+linux-gpio@lfdr.de>; Sat,  1 Jun 2019 19:22:51 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726547AbfFARVn (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sat, 1 Jun 2019 13:21:43 -0400
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:34001 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726013AbfFARVn (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sat, 1 Jun 2019 13:21:43 -0400
-Received: by mail-lj1-f196.google.com with SMTP id j24so12559907ljg.1
-        for <linux-gpio@vger.kernel.org>; Sat, 01 Jun 2019 10:21:42 -0700 (PDT)
+        id S1726143AbfFARWt (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sat, 1 Jun 2019 13:22:49 -0400
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:45355 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726211AbfFARWq (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sat, 1 Jun 2019 13:22:46 -0400
+Received: by mail-lf1-f68.google.com with SMTP id u10so3389962lfm.12
+        for <linux-gpio@vger.kernel.org>; Sat, 01 Jun 2019 10:22:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=tccTfkPaCkJqRCXrpmp0F9b3WbVNC0IPQMXCiDJx7Zw=;
-        b=UZtlyyL6Ejbc3chPwsjMtIJrr+PXyz7LxaO4UIZFJt2+uxLH5ykzqraVFcICHhrsY9
-         pGfOa7MQ2C6zVn3ddiQXwce6RVhQcO8AvhM3d3OmVGP9AlXxqoOqMNQtxdd+fsYhSoZ3
-         6mdjty69zdNWY2S+vzaOoG3QQSTu3k9QJSCFac1JleRtSBsrOUd+FLpqegh+BbUlPfG2
-         Ih1/6yKSKGQVyfe/wYgbkqaXy7OEU0wvX176nvmmPqyDNm/VH5RLolti/OKrXLhwTs5D
-         U5ApdQK/AFDljwY6mE/ZUvu9SXcqTwmt1oX4FzuSMHFmNkx9doAwynnQDftnnTzwdz2t
-         T8Pg==
+        bh=yD3/2nMu40iWkCJApa1un3cbczzFbKdO9B0J2VVf/BQ=;
+        b=fdXIboJGEs9ESGymq78yu8qUEGAMvfm1YFl7lJvcJq74hnBGstgi3nh1Ht7YV0Ckm4
+         XZ8/FKCIUqFbF3v+mtlW8LWp3BuPT8bjmcahkROSYSZ+unuhb8849YDQDon13YS/gZfp
+         uqWhz3jP9iZ+94jHeB0wTBPQfgfM6Pu0642rIFbomK/rrAllD8V5JoaaDMLqZQR/p5uT
+         +XXXicxvkrcPkwk79q4OPIxeqDLvbxQrMBWbUjjiOHV7zOwrgtn0YYyGP5/11yMmrN3N
+         bKZby/3X/rUyhnTaBnkGhFORTADk5zbD/ISe7q3l0wAQJGUCu8b5HZys81i0NHgpcqJB
+         l7YA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=tccTfkPaCkJqRCXrpmp0F9b3WbVNC0IPQMXCiDJx7Zw=;
-        b=uFe2elRPthXusWiG1Vq1e4UFKoYZF1ykUE7txHx6OlRF1oBKvbKCuefn3ErT7Wb1Gl
-         6LGaPEF+1cz8rnVWUTpwYxj2BRWYfGSTnAKFRas4ugE4bhY/Cst+DgUf5gZFwLSE3/Oq
-         a0lH1h3UK6KtfyT06+8AFg6Yz1WMGhL82ZAgz8R9PE8QbEy7UvrIHJ7U3E0NdyP40M9w
-         01e653QtcMb08epgalQuJRfrQQ4ySwe2aCYVC4qVqOzj6bCSfvXNZ5AB1rJrD5fYvFhD
-         7uiMPryo2kdakZvd54fhJMX0hAPngvOeRKVZz1bBNc04nv3QxIfncQk6vWmlh7CaMXJ4
-         UG1Q==
-X-Gm-Message-State: APjAAAU+qbdwoeWjEhyHKUynA2WSfg3rPPL6D80Zl3Vu1PVr68t3zHY6
-        BQEtAALrTTuGO70bRSfn9p3ky+MwmmLiPmZE5yPyqQ==
-X-Google-Smtp-Source: APXvYqy7Mf/XaWFq/LXOzPSf1s6Jcjn+sKV/HBkrnZUpN8ofis3WnAWx2KOtRgDlC08AA+7Y/pJ1KFcI15Rf9GhIu2A=
-X-Received: by 2002:a2e:9018:: with SMTP id h24mr2415646ljg.165.1559409701490;
- Sat, 01 Jun 2019 10:21:41 -0700 (PDT)
+        bh=yD3/2nMu40iWkCJApa1un3cbczzFbKdO9B0J2VVf/BQ=;
+        b=DFODLTtBGLZDN0gNQ8vHFTo5zH5z2KngO/TsO+Jg0l2eB9lJZGGExbBlrD7X1kTlVX
+         DPXftU1MUUND/zbNslbI39f6NJ6EADKzsu7uwBJdYTaK8hqeaVGCIB7LhHmIJgXIDogr
+         Ap8ZN3MydvAUu/LIKIuBkB20RMak/wlrs48QvNiItNWptHoBAodmIVj8HC/D12rqHKSy
+         6zMwOd2osC2QW2cQd39ifWTyXJV23yJjlc6LPSqLyh1m7PmUtw8i9FpcqtsERpa6iUDd
+         9TWJX8npI+IbDi+BiDgO/8ForLwJGWAwNvXhkQZtqufGKI6JNuu0r63VCvFmIzLJ+CVH
+         UEfw==
+X-Gm-Message-State: APjAAAVJ+2ooOCPgGV48BiaE/imTotMCPIZY5ulXbfM/R0fcV8IYt5tC
+        gIZSdLAwIjI9ka1qJdRo28C88eDdonE8EWiDmaWJmw==
+X-Google-Smtp-Source: APXvYqw55gN5VS0X6O9i9hhjw+uvDGiRLwxkuM3dwGJ0LgEBcvGtcO3QnqZCk2Lc0KpmVCUEwbZz3DIJZLpEdAK2dJQ=
+X-Received: by 2002:a19:6a01:: with SMTP id u1mr7439447lfu.141.1559409763924;
+ Sat, 01 Jun 2019 10:22:43 -0700 (PDT)
 MIME-Version: 1.0
-References: <1558007594-14824-1-git-send-email-kyarlagadda@nvidia.com>
-In-Reply-To: <1558007594-14824-1-git-send-email-kyarlagadda@nvidia.com>
+References: <1558007594-14824-1-git-send-email-kyarlagadda@nvidia.com> <1558007594-14824-2-git-send-email-kyarlagadda@nvidia.com>
+In-Reply-To: <1558007594-14824-2-git-send-email-kyarlagadda@nvidia.com>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Sat, 1 Jun 2019 19:21:30 +0200
-Message-ID: <CACRpkdYMx9obZV70EsieU_3eVVxqu9jVFpCO3Fk4t-2PUya97Q@mail.gmail.com>
-Subject: Re: [PATCH V3 1/4] dt-binding: Tegra194 pinctrl support
+Date:   Sat, 1 Jun 2019 19:22:32 +0200
+Message-ID: <CACRpkdb9swUxO9GBvZQMVu0t0-77Pr9W5RivuiVhgrM1eBGtdA@mail.gmail.com>
+Subject: Re: [PATCH V3 2/4] pinctrl: tegra: Support 32 bit register access
 To:     Krishna Yarlagadda <kyarlagadda@nvidia.com>
 Cc:     "thierry.reding@gmail.com" <thierry.reding@gmail.com>,
         Jon Hunter <jonathanh@nvidia.com>,
@@ -68,14 +68,14 @@ X-Mailing-List: linux-gpio@vger.kernel.org
 On Thu, May 16, 2019 at 1:53 PM Krishna Yarlagadda
 <kyarlagadda@nvidia.com> wrote:
 
-> Add binding doc for Tegra 194 pinctrl driver
+> Tegra194 chip has 32 bit pinctrl registers. Existing register defines in
+> header are only 16 bit.
+> Modified common pinctrl-tegra driver to support 32 bit registers of
+> Tegra 194 and later chips.
 >
 > Signed-off-by: Krishna Yarlagadda <kyarlagadda@nvidia.com>
-> ---
-> Changes in V3:
-> remove optional fields not supported by pins published here
 
-Patch applied with the tags.
+Patch applied.
 
 Yours,
 Linus Walleij
