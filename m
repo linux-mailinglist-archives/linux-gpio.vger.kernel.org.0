@@ -2,125 +2,206 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id B53B833BA0
-	for <lists+linux-gpio@lfdr.de>; Tue,  4 Jun 2019 00:59:21 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DD39C33BB9
+	for <lists+linux-gpio@lfdr.de>; Tue,  4 Jun 2019 01:06:10 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726464AbfFCW7P (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 3 Jun 2019 18:59:15 -0400
-Received: from atlmailgw2.ami.com ([63.147.10.42]:64965 "EHLO
-        atlmailgw2.ami.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726025AbfFCW7O (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 3 Jun 2019 18:59:14 -0400
-X-Greylist: delayed 900 seconds by postgrey-1.27 at vger.kernel.org; Mon, 03 Jun 2019 18:59:14 EDT
-X-AuditID: ac10606f-bd5ff70000003de9-4b-5cf5a2bc2cf5
-Received: from atlms1.us.megatrends.com (atlms1.us.megatrends.com [172.16.96.144])
-        (using TLS with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by atlmailgw2.ami.com (Symantec Messaging Gateway) with SMTP id C7.FD.15849.CB2A5FC5; Mon,  3 Jun 2019 18:44:13 -0400 (EDT)
-Received: from hongweiz-Ubuntu-AMI.us.megatrends.com (172.16.98.93) by
- atlms1.us.megatrends.com (172.16.96.144) with Microsoft SMTP Server (TLS) id
- 14.3.408.0; Mon, 3 Jun 2019 18:44:12 -0400
-From:   Hongwei Zhang <hongweiz@ami.com>
-To:     Joel Stanley <joel@jms.id.au>,
+        id S1726528AbfFCXGK (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 3 Jun 2019 19:06:10 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:45579 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726522AbfFCXGK (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 3 Jun 2019 19:06:10 -0400
+Received: by mail-wr1-f67.google.com with SMTP id b18so13762917wrq.12
+        for <linux-gpio@vger.kernel.org>; Mon, 03 Jun 2019 16:06:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=62silUQy/7aeoCdt04j9RpYNbsvvZNlBGQR0pM3QIso=;
+        b=WIKmSZ7pmARWEEV8BS4zdhjal90nAuJ6g/h+Al3uuJLZ/SF75IhCnU2FOcjIEBTtIL
+         3q/eTx0vKIgin9MseQixvBJOhL5eIcbrY7Wq/DJX+V4R5C5wR6dgaBcqog42t0Uzicg3
+         r5jCXMadMkSGu4QDpZTwk8/mg3HyElt/ebrgNyKPeLu3hQ7uDENd9VfBQ21LsXfJfqOq
+         /ByI4T6H2d2ep3AQ+97PsjthL4apmdzgqg7cNIkvft3KOIl7RfYWv+OGOmp/CCRwFfgg
+         PBtq8eNRp4lgFqn6KfYSOUUoIqZAS7kJmqWiw3XsDOsu7wdE8dSWE+izZ1g42fFlXo/V
+         jECQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=62silUQy/7aeoCdt04j9RpYNbsvvZNlBGQR0pM3QIso=;
+        b=ufrM2blhksmw2lry4hTdbIuLysW2MS2LHTR59YA+CheLuv+L50jMqhfqxClj9aVRr3
+         c2KKgQ1fF+XR0vdGKsVShwaeIsEYxH5VOoWYwLhGHd2d5etSB9cUA7qnmuiKMUB2DlXu
+         oCyzyzQfdysa7miPD/+9Gk/l2FIKwJfgP2rwdku4XmvVXFvDxf62SIkBhDi1/2zDrKfc
+         C0Irlgo0spbTnu4TP2W8pr9GfFs443hxGEBT0OP0V5TlpLjFg0gkMaz4OV02IwvX8ama
+         UfY64jIzWxDJVe+eh10trOkHikIKX4G28cOFH/72nDoqFzR1rL16oU74rD27ygH67EYY
+         8hgw==
+X-Gm-Message-State: APjAAAXwo3ObFG1YoUc01wushRxQsWpMXoXwB4+QL5g+MouG7KVoQwgw
+        R0zEqyT4IMan7Jl5R1TqpWEDBK6ZCvA=
+X-Google-Smtp-Source: APXvYqwzbYlppaBiGNG3xibokAvW5kKOT8stf9KnukNhM6WUM84jeiZz32Ywlsl/kCnkPoSZJIqMsg==
+X-Received: by 2002:adf:e843:: with SMTP id d3mr8354832wrn.249.1559603167811;
+        Mon, 03 Jun 2019 16:06:07 -0700 (PDT)
+Received: from localhost.localdomain (catv-89-135-96-219.catv.broadband.hu. [89.135.96.219])
+        by smtp.gmail.com with ESMTPSA id u19sm38142957wmu.41.2019.06.03.16.06.06
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Mon, 03 Jun 2019 16:06:06 -0700 (PDT)
+From:   Linus Walleij <linus.walleij@linaro.org>
+To:     linux-gpio@vger.kernel.org
+Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
         Linus Walleij <linus.walleij@linaro.org>,
-        Andrew Jeffery <andrew@aj.id.au>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>
-CC:     Hongwei Zhang <hongweiz@ami.com>, <linux-gpio@vger.kernel.org>,
-        <devicetree@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-aspeed@lists.ozlabs.org>, <linux-kernel@vger.kernel.org>
-Subject: [PATCH linux dev-5.1 v1] ARM: dts: aspeed: Add SGPM pinmux
-Date:   Mon, 3 Jun 2019 18:43:09 -0400
-Message-ID: <1559601789-27121-1-git-send-email-hongweiz@ami.com>
-X-Mailer: git-send-email 2.7.4
+        Federico Vaga <federico.vaga@cern.ch>,
+        Pat Riehecky <riehecky@fnal.gov>,
+        Alessandro Rubini <rubini@gnudd.com>
+Subject: [PATCH] RFC: fmc: Try to convert to GPIO descriptors
+Date:   Tue,  4 Jun 2019 01:06:04 +0200
+Message-Id: <20190603230604.30938-1-linus.walleij@linaro.org>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [172.16.98.93]
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrCLMWRmVeSWpSXmKPExsWyRiBhgu7eRV9jDJ5NkLTYdZnDYv6Rc6wW
-        v8//ZbaY8mc5k8Wmx9dYLZpXn2O22Dz/D6PF5V1z2CyWXr/IZNG69wi7A5fH1fZd7B5r5q1h
-        9Lj48Rizx6ZVnWwed67tYfPYvKTe4/yMhYwenzfJBXBEcdmkpOZklqUW6dslcGVsubuKqWC2
-        RMWfM81MDYzHRboYOTkkBEwkXrz9xQZiCwnsYpK4s6usi5ELyD7EKDH9/C12kASbgJrE3s1z
-        mEASIgI7GCU657exgjjMAmcZJTY83MsMUiUs4Czx78NGRhCbRUBFYu2sS2BxXgEHic4rk9kh
-        1slJ3DzXCRUXlDg58wkLiM0sICFx8MULZogzZCVuHXrMBFGvIPG87zHLBEa+WUhaZiFpWcDI
-        tIpRKLEkJzcxMye93EgvMTdTLzk/dxMjJKTzdzB+/Gh+iJGJgxHoJQ5mJRHexNtfYoR4UxIr
-        q1KL8uOLSnNSiw8xSnOwKInzzgi5HCMkkJ5YkpqdmlqQWgSTZeLglGpgXFWk/GnRonOdGUuS
-        Yvj+KN696zD/SIOiGe9i1tu51qxbHpmmTKi+xySVLxDkWlKqesnXKcfL1mijY7nSMhND1wcz
-        nFXCAo1vqgbVvpP/wvr8Q3ha28qiqNnlLscamS8/Z7tUU6QdbnZvscfNq0IFhzYXzP59cmJw
-        ZLXxjnk29exmpTETWL4rsRRnJBpqMRcVJwIA93vZXlcCAAA=
+Content-Transfer-Encoding: 8bit
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Add SGPM pinmux to ast2500-pinctrl function and group, to prepare for
-supporting SGPIO in AST2500 SoC.
+This tries to convert the FMC subsystem to use GPIO descriptors.
+I say try because several pieces of this puzzle seems to not
+be in the mainline kernel.
 
-Signed-off-by: Hongwei Zhang <hongweiz@ami.com>
+For details of this change, see drivers/gpio/TODO.
+
+We assume the FMC device is created somewhere and the GPIOs can
+be added in this place using gpio descriptor tables from
+<linux/gpio/machine.h> as in other conversions, but the place
+where the FMC device is created does not seem to be in the
+mainline Linux kernel. We assume the index ordering can be
+made to match the current GPIO index order in FMC which
+isn't especially specific.
+
+We get rid of some GPIO compatibility defines for kernel 3.0
+in the process, it is long overdue.
+
+It might be that gpio numbers in this subsystem has nothing
+to do with gpio numbers in the GPIO subsystem, and it is just
+including <linux/gpio.h> and reusing some defines for no
+good reason. Then this should be changed to some approach
+decoupling FMC from the GPIO subsystem.
+
+Cc: Federico Vaga <federico.vaga@cern.ch>
+Cc: Pat Riehecky <riehecky@fnal.gov>
+Cc: Alessandro Rubini <rubini@gnudd.com>
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
 ---
- Documentation/devicetree/bindings/pinctrl/pinctrl-aspeed.txt | 2 +-
- arch/arm/boot/dts/aspeed-g5.dtsi                             | 5 +++++
- drivers/pinctrl/aspeed/pinctrl-aspeed-g5.c                   | 4 ++++
- 3 files changed, 10 insertions(+), 1 deletion(-)
+ drivers/fmc/fmc-core.c    |  1 +
+ drivers/fmc/fmc-trivial.c | 21 ++++++++++++++++-----
+ include/linux/fmc.h       | 15 ++++-----------
+ 3 files changed, 21 insertions(+), 16 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/pinctrl/pinctrl-aspeed.txt b/Documentation/devicetree/bindings/pinctrl/pinctrl-aspeed.txt
-index 3b7266c..8f1c5c4 100644
---- a/Documentation/devicetree/bindings/pinctrl/pinctrl-aspeed.txt
-+++ b/Documentation/devicetree/bindings/pinctrl/pinctrl-aspeed.txt
-@@ -84,7 +84,7 @@ NDCD2 NDCD3 NDCD4 NDSR1 NDSR2 NDSR3 NDSR4 NDTR1 NDTR2 NDTR3 NDTR4 NRI1 NRI2
- NRI3 NRI4 NRTS1 NRTS2 NRTS3 NRTS4 OSCCLK PEWAKE PNOR PWM0 PWM1 PWM2 PWM3 PWM4
- PWM5 PWM6 PWM7 RGMII1 RGMII2 RMII1 RMII2 RXD1 RXD2 RXD3 RXD4 SALT1 SALT10
- SALT11 SALT12 SALT13 SALT14 SALT2 SALT3 SALT4 SALT5 SALT6 SALT7 SALT8 SALT9
--SCL1 SCL2 SD1 SD2 SDA1 SDA2 SGPS1 SGPS2 SIOONCTRL SIOPBI SIOPBO SIOPWREQ
-+SCL1 SCL2 SD1 SD2 SDA1 SDA2 SGPM SGPS1 SGPS2 SIOONCTRL SIOPBI SIOPBO SIOPWREQ
- SIOPWRGD SIOS3 SIOS5 SIOSCI SPI1 SPI1CS1 SPI1DEBUG SPI1PASSTHRU SPI2CK SPI2CS0
- SPI2CS1 SPI2MISO SPI2MOSI TIMER3 TIMER4 TIMER5 TIMER6 TIMER7 TIMER8 TXD1 TXD2
- TXD3 TXD4 UART6 USB11BHID USB2AD USB2AH USB2BD USB2BH USBCKI VGABIOSROM VGAHS
-diff --git a/arch/arm/boot/dts/aspeed-g5.dtsi b/arch/arm/boot/dts/aspeed-g5.dtsi
-index 383510d..d10c3ea 100644
---- a/arch/arm/boot/dts/aspeed-g5.dtsi
-+++ b/arch/arm/boot/dts/aspeed-g5.dtsi
-@@ -1394,6 +1394,11 @@
- 		groups = "SDA2";
- 	};
+diff --git a/drivers/fmc/fmc-core.c b/drivers/fmc/fmc-core.c
+index bbcb505d1522..f08b6f81f442 100644
+--- a/drivers/fmc/fmc-core.c
++++ b/drivers/fmc/fmc-core.c
+@@ -14,6 +14,7 @@
+ #include <linux/device.h>
+ #include <linux/fmc.h>
+ #include <linux/fmc-sdb.h>
++#include <linux/gpio/consumer.h>
  
-+	pinctrl_sgpm_default: sgpm_default {
-+		function = "SGPM";
-+		groups = "SGPM";
-+	};
-+
- 	pinctrl_sgps1_default: sgps1_default {
- 		function = "SGPS1";
- 		groups = "SGPS1";
-diff --git a/drivers/pinctrl/aspeed/pinctrl-aspeed-g5.c b/drivers/pinctrl/aspeed/pinctrl-aspeed-g5.c
-index 187abd7..0c89647 100644
---- a/drivers/pinctrl/aspeed/pinctrl-aspeed-g5.c
-+++ b/drivers/pinctrl/aspeed/pinctrl-aspeed-g5.c
-@@ -577,6 +577,8 @@ SS_PIN_DECL(N3, GPIOJ2, SGPMO);
- SIG_EXPR_LIST_DECL_SINGLE(SGPMI, SGPM, SIG_DESC_SET(SCU84, 11));
- SS_PIN_DECL(N4, GPIOJ3, SGPMI);
+ #include "fmc-private.h"
  
-+FUNC_GROUP_DECL(SGPM, R2, L2, N3, N4);
-+
- #define N5 76
- SIG_EXPR_LIST_DECL_SINGLE(VGAHS, VGAHS, SIG_DESC_SET(SCU84, 12));
- SIG_EXPR_LIST_DECL_SINGLE(DASHN5, DASHN5, SIG_DESC_SET(SCU94, 8));
-@@ -2127,6 +2129,7 @@ static const struct aspeed_pin_group aspeed_g5_groups[] = {
- 	ASPEED_PINCTRL_GROUP(SD2),
- 	ASPEED_PINCTRL_GROUP(SDA1),
- 	ASPEED_PINCTRL_GROUP(SDA2),
-+	ASPEED_PINCTRL_GROUP(SGPM),
- 	ASPEED_PINCTRL_GROUP(SGPS1),
- 	ASPEED_PINCTRL_GROUP(SGPS2),
- 	ASPEED_PINCTRL_GROUP(SIOONCTRL),
-@@ -2296,6 +2299,7 @@ static const struct aspeed_pin_function aspeed_g5_functions[] = {
- 	ASPEED_PINCTRL_FUNC(SD2),
- 	ASPEED_PINCTRL_FUNC(SDA1),
- 	ASPEED_PINCTRL_FUNC(SDA2),
-+	ASPEED_PINCTRL_FUNC(SGPM),
- 	ASPEED_PINCTRL_FUNC(SGPS1),
- 	ASPEED_PINCTRL_FUNC(SGPS2),
- 	ASPEED_PINCTRL_FUNC(SIOONCTRL),
+diff --git a/drivers/fmc/fmc-trivial.c b/drivers/fmc/fmc-trivial.c
+index 8defdee3e3a3..bab02d17f02c 100644
+--- a/drivers/fmc/fmc-trivial.c
++++ b/drivers/fmc/fmc-trivial.c
+@@ -15,7 +15,7 @@
+ #include <linux/module.h>
+ #include <linux/init.h>
+ #include <linux/interrupt.h>
+-#include <linux/gpio.h>
++#include <linux/gpio/consumer.h>
+ #include <linux/fmc.h>
+ 
+ static struct fmc_driver t_drv; /* initialized later */
+@@ -31,12 +31,12 @@ static irqreturn_t t_handler(int irq, void *dev_id)
+ 
+ static struct fmc_gpio t_gpio[] = {
+ 	{
+-		.gpio = FMC_GPIO_IRQ(0),
+-		.mode = GPIOF_DIR_IN,
++		.gpio_index = FMC_GPIO_IRQ(0),
++		.flags = GPIOD_IN,
+ 		.irqmode = IRQF_TRIGGER_RISING,
+ 	}, {
+-		.gpio = FMC_GPIO_IRQ(1),
+-		.mode = GPIOF_DIR_IN,
++		.gpio_index = FMC_GPIO_IRQ(1),
++		.flags = GPIOD_IN,
+ 		.irqmode = IRQF_TRIGGER_RISING,
+ 	}
+ };
+@@ -45,6 +45,7 @@ static int t_probe(struct fmc_device *fmc)
+ {
+ 	int ret;
+ 	int index = 0;
++	int i;
+ 
+ 	index = fmc_validate(fmc, &t_drv);
+ 	if (index < 0)
+@@ -53,6 +54,16 @@ static int t_probe(struct fmc_device *fmc)
+ 	ret = fmc_irq_request(fmc, t_handler, "fmc-trivial", IRQF_SHARED);
+ 	if (ret < 0)
+ 		return ret;
++	/*
++	 * All GPIOs are associated with the FMC device using machine
++	 * descriptor tables or similar. Pick the indices we want.
++	 */
++	for (i = 0; i < ARRAY_SIZE(t_gpio); i++) {
++		t_gpio[i].gpiod = devm_gpiod_get_index(&fmc->dev,
++						       NULL,
++						       t_gpio[i].gpio_index,
++						       t_gpio[i].flags);
++	}
+ 	/* ignore error code of call below, we really don't care */
+ 	fmc_gpio_config(fmc, t_gpio, ARRAY_SIZE(t_gpio));
+ 
+diff --git a/include/linux/fmc.h b/include/linux/fmc.h
+index 3dc8a1b2db7b..452688aa97db 100644
+--- a/include/linux/fmc.h
++++ b/include/linux/fmc.h
+@@ -15,6 +15,7 @@
+ #include <linux/list.h>
+ #include <linux/interrupt.h>
+ #include <linux/io.h>
++#include <linux/gpio/consumer.h>
+ 
+ struct fmc_device;
+ struct fmc_driver;
+@@ -99,9 +100,9 @@ struct fmc_driver {
+  */
+ struct fmc_gpio {
+ 	char *carrier_name; /* name or NULL for virtual pins */
+-	int gpio;
+-	int _gpio;	/* internal use by the carrier */
+-	int mode;	/* GPIOF_DIR_OUT etc, from <linux/gpio.h> */
++	int gpio_index;
++	struct gpio_desc *gpiod;
++	enum gpiod_flags flags; /* see <linux/gpio/consumer.h> */
+ 	int irqmode;	/* IRQF_TRIGGER_LOW and so on */
+ };
+ 
+@@ -115,14 +116,6 @@ struct fmc_gpio {
+ #define FMC_GPIO_USER(x)	((x) + 0x1400)	/*  256 of them */
+ /* We may add SCL and SDA, or other roles if the need arises */
+ 
+-/* GPIOF_DIR_IN etc are missing before 3.0. copy from <linux/gpio.h> */
+-#ifndef GPIOF_DIR_IN
+-#  define GPIOF_DIR_OUT   (0 << 0)
+-#  define GPIOF_DIR_IN    (1 << 0)
+-#  define GPIOF_INIT_LOW  (0 << 1)
+-#  define GPIOF_INIT_HIGH (1 << 1)
+-#endif
+-
+ /*
+  * The operations are offered by each carrier and should make driver
+  * design completely independent of the carrier. Named GPIO pins may be
 -- 
-2.7.4
+2.20.1
 
