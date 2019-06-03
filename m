@@ -2,138 +2,269 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 1D8C432A1B
-	for <lists+linux-gpio@lfdr.de>; Mon,  3 Jun 2019 09:54:22 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4DF7A32A3C
+	for <lists+linux-gpio@lfdr.de>; Mon,  3 Jun 2019 10:01:38 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727021AbfFCHyJ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 3 Jun 2019 03:54:09 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:41918 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726292AbfFCHyJ (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 3 Jun 2019 03:54:09 -0400
-Received: by mail-wr1-f67.google.com with SMTP id c2so10908832wrm.8;
-        Mon, 03 Jun 2019 00:54:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=Jc7RTNdlKbjvzZoes3lNTQ2YApwJsgBEhNds1f4HJKs=;
-        b=h35yfEjrY2vvw99MwIpgXVkJ5IJiLh3ia6b0guwVdc3G0+xJ2Lb1yR3zklGwbM3WxX
-         BL9Uh2FU37IOo8En3rj1xsbbk36A6TTZfUw4xW57Z8D4k/Q2kj+3vzrADUe2RP1a9hCO
-         T9fGLYAcz6iENTagpLuICFPOUeCyAy/nn8b1w+H/1W6eg/2/WStqBy9DteoE/WgKHgWY
-         6vkKgvCshlq7vF3eyL1FKkaybSVOorAkVs3CqUusi+kl0gF0uAgbYLTrBjX/QsDcagNd
-         brUWJdFilFSI2qHU4us+OZ95q9iLISWkqoeRjL1oxvn1boPXwPFTZho2AyjZ9TheB+4D
-         DrKA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Jc7RTNdlKbjvzZoes3lNTQ2YApwJsgBEhNds1f4HJKs=;
-        b=c959ET3jhdje8pI85lQp7zFmLItbZ7cU13rue6w5pSllvXUoDWJDxSEOHWk442gx4G
-         pAeRvTPs9YMoJ7M+OdEfScgRDaCOgg2mSEG8WypgCtyRaE4ibOkhyHaHp4zLNpXNDtzN
-         +HIdKVUlVJ8qw2Zj4cpd9q5R/XOockDsiRSlpcDaPDZeLqpvffecWQO4j1V7/rJmLe54
-         kQV9++9InlcjvJrZSlpvlKhtU8cldrhvVnWZNZb4zrNX7u/pgQutA/JXaVaDQqfXN/Vc
-         Ijc2iiNuFZTQ1ty4kEbQlgJxnhHY5GvZ3mfbwFtZSjeILURZ+fVFd839AkWSgK8NbO01
-         MYow==
-X-Gm-Message-State: APjAAAVdpZ79b0FNkS5am9QGd8n+PHKh3LP+UGyAhTKZMZ9+AgPasJxo
-        /NIvYdZee5uI1hZBXHwD424=
-X-Google-Smtp-Source: APXvYqxiTSwZLXUULRvAFA/dfGcBZic3OggAmUtZmzPOd/5qOuxPbnrAMWF3IQY0KCa3Np3mjYPxUA==
-X-Received: by 2002:a5d:5390:: with SMTP id d16mr8506962wrv.85.1559548447260;
-        Mon, 03 Jun 2019 00:54:07 -0700 (PDT)
-Received: from localhost (p2E5BEF36.dip0.t-ipconnect.de. [46.91.239.54])
-        by smtp.gmail.com with ESMTPSA id c2sm20530611wrf.75.2019.06.03.00.54.06
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Mon, 03 Jun 2019 00:54:06 -0700 (PDT)
-Date:   Mon, 3 Jun 2019 09:54:05 +0200
-From:   Thierry Reding <thierry.reding@gmail.com>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Lina Iyer <ilina@codeaurora.org>,
-        Jon Hunter <jonathanh@nvidia.com>,
-        Sowjanya Komatineni <skomatineni@nvidia.com>,
-        Bitan Biswas <bbiswas@nvidia.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        linux-tegra@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v3 1/2] gpio: Add support for hierarchical IRQ domains
-Message-ID: <20190603075405.GB27753@ulmo>
-References: <20190529145322.20630-1-thierry.reding@gmail.com>
- <20190529145322.20630-2-thierry.reding@gmail.com>
- <CACRpkda_aK++k0eVHmGszgts86usaxbQ9uU0kqAzAjapK8AOQg@mail.gmail.com>
- <CACRpkdb6OjHZGgDHXH8gfi0WwzX8170zHJKbpbnSRv+UsZvfhw@mail.gmail.com>
+        id S1726559AbfFCIBh (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 3 Jun 2019 04:01:37 -0400
+Received: from mailgw02.mediatek.com ([1.203.163.81]:36174 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725975AbfFCIBh (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 3 Jun 2019 04:01:37 -0400
+X-UUID: d6559528fade49c5a60c880ad2a7a20a-20190603
+X-UUID: d6559528fade49c5a60c880ad2a7a20a-20190603
+Received: from mtkcas35.mediatek.inc [(172.27.4.253)] by mailgw02.mediatek.com
+        (envelope-from <chuanjia.liu@mediatek.com>)
+        (mailgw01.mediatek.com ESMTP with TLS)
+        with ESMTP id 1299333839; Mon, 03 Jun 2019 16:01:28 +0800
+Received: from MTKCAS32.mediatek.inc (172.27.4.184) by MTKMBS32N1.mediatek.inc
+ (172.27.4.71) with Microsoft SMTP Server (TLS) id 15.0.1395.4; Mon, 3 Jun
+ 2019 16:01:26 +0800
+Received: from [10.17.3.153] (172.27.4.253) by MTKCAS32.mediatek.inc
+ (172.27.4.170) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Mon, 3 Jun 2019 16:01:25 +0800
+Message-ID: <1559548885.13732.28.camel@mhfsdcap03>
+Subject: Re: [PATCH 2/2] pinctrl: mediatek: Update cur_mask in mask/mask ops
+From:   Chuanjia Liu <Chuanjia.Liu@mediatek.com>
+To:     Evan Green <evgreen@chromium.org>
+CC:     Nicolas Boichat <drinkcat@chromium.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>,
+        Sean Wang <sean.wang@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        <linux-gpio@vger.kernel.org>,
+        "linux-arm Mailing List" <linux-arm-kernel@lists.infradead.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>
+Date:   Mon, 3 Jun 2019 16:01:25 +0800
+In-Reply-To: <CAE=gft7YOVFUiWD=u39xSPVFUtiqb7m93sMGBFb7Ufn2RB+B_g@mail.gmail.com>
+References: <20190429035515.73611-1-drinkcat@chromium.org>
+         <20190429035515.73611-3-drinkcat@chromium.org>
+         <155778659317.14659.136626364818483852@swboyd.mtv.corp.google.com>
+         <CANMq1KBMd7eR3dP=V9gJ6G4OgE6DsXad_gzvuNJ25_pee4+6eg@mail.gmail.com>
+         <155786487644.14659.17142525593824613967@swboyd.mtv.corp.google.com>
+         <CANMq1KCNzn-5sYJZGivUedsNaQfVW_MjgDZn27W6sz8Fk3beNA@mail.gmail.com>
+         <CAE=gft6jxR9Lt7tLwm6VKy9_shMVW7wf3g6rBGEqtB7oNH0hUA@mail.gmail.com>
+         <1559289956.13732.17.camel@mhfsdcap03>
+         <CAE=gft7YOVFUiWD=u39xSPVFUtiqb7m93sMGBFb7Ufn2RB+B_g@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.2.3-0ubuntu6 
+Content-Transfer-Encoding: 7bit
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="TRYliJ5NKNqkz5bu"
-Content-Disposition: inline
-In-Reply-To: <CACRpkdb6OjHZGgDHXH8gfi0WwzX8170zHJKbpbnSRv+UsZvfhw@mail.gmail.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+X-TM-SNTS-SMTP: 2C14DE7CA442EC2F710E1EF29AFDD501DEEBC05FC271561E76C5DBCCDCA3DF262000:8
+X-MTK:  N
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-
---TRYliJ5NKNqkz5bu
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Sun, Jun 02, 2019 at 10:35:22PM +0200, Linus Walleij wrote:
-> On Sun, Jun 2, 2019 at 3:51 PM Linus Walleij <linus.walleij@linaro.org> w=
-rote:
-> > On Wed, May 29, 2019 at 4:53 PM Thierry Reding <thierry.reding@gmail.co=
-m> wrote:
+On Fri, 2019-05-31 at 10:17 -0700, Evan Green wrote:
+> On Fri, May 31, 2019 at 1:06 AM Chuanjia Liu <Chuanjia.Liu@mediatek.com> wrote:
 > >
-> > > From: Thierry Reding <treding@nvidia.com>
-> > >
-> > > Hierarchical IRQ domains can be used to stack different IRQ controlle=
-rs
-> > > on top of each other. One specific use-case where this can be useful =
-is
-> > > if a power management controller has top-level controls for wakeup
-> > > interrupts. In such cases, the power management controller can be a
-> > > parent to other interrupt controllers and program additional registers
-> > > when an IRQ has its wake capability enabled or disabled.
-> > >
-> > > Signed-off-by: Thierry Reding <treding@nvidia.com>
-> > > ---
-> > > Changes in v3:
-> > > - use irq_create_fwspec_mapping() instead of irq_domain_alloc_irqs()
-> > > - add missing kerneldoc for new parent_domain field
-> > > - keep IRQ_DOMAIN dependency for clarity
+> > On Thu, 2019-05-30 at 10:12 -0700, Evan Green wrote:
+> > > On Wed, May 15, 2019 at 1:05 AM Nicolas Boichat <drinkcat@chromium.org> wrote:
+> > > >
+> > > > On Wed, May 15, 2019 at 4:14 AM Stephen Boyd <swboyd@chromium.org> wrote:
+> > > > >
+> > > > > Quoting Nicolas Boichat (2019-05-13 18:37:58)
+> > > > > > On Tue, May 14, 2019 at 6:29 AM Stephen Boyd <swboyd@chromium.org> wrote:
+> > > > > > >
+> > > > > > > Quoting Nicolas Boichat (2019-04-28 20:55:15)
+> > > > > > > > During suspend/resume, mtk_eint_mask may be called while
+> > > > > > > > wake_mask is active. For example, this happens if a wake-source
+> > > > > > > > with an active interrupt handler wakes the system:
+> > > > > > > > irq/pm.c:irq_pm_check_wakeup would disable the interrupt, so
+> > > > > > > > that it can be handled later on in the resume flow.
+> > > > > > > >
+> > > > > > > > However, this may happen before mtk_eint_do_resume is called:
+> > > > > > > > in this case, wake_mask is loaded, and cur_mask is restored
+> > > > > > > > from an older copy, re-enabling the interrupt, and causing
+> > > > > > > > an interrupt storm (especially for level interrupts).
+> > > > > > > >
+> > > > > > > > Instead, we just record mask/unmask changes in cur_mask. This
+> > > > > > > > also avoids the need to read the current mask in eint_do_suspend,
+> > > > > > > > and we can remove mtk_eint_chip_read_mask function.
+> > > > > > > >
+> > > > > > > > Signed-off-by: Nicolas Boichat <drinkcat@chromium.org>
+> > > > > > >
+> > > > > > > It looks an awful lot like you should just use IRQCHIP_MASK_ON_SUSPEND
+> > > > > > > here. Isn't that what's happening? All non-wake irqs should be masked at
+> > > > > > > the hardware level so they can't cause a wakeup during suspend and on
+> > > > > > > resume they can be unmasked?
+> > > > > >
+> > > > > > No, this is for an line that has both wake and interrupt enabled. To
+> > > > > > reword the commit message above:
+> > > > >
+> > > > > Is my understanding correct that there isn't a different "wake up"
+> > > > > register that can be written to cause a GPIO to be configured to wake
+> > > > > the system from suspend? The only way to do so is to leave the GPIO
+> > > > > unmasked in the hardware by having EINT_EN[irq] = 1? And thus any
+> > > > > interrupts that we don't want to wake us up during suspend should be
+> > > > > masked in the hardware?
+> > > >
+> > > > Yes, that's my understanding as well.
+> > > >
+> > > > And then, what this driver does is to emulate the behaviour of a
+> > > > controller that would actually have separate irq and wake enable
+> > > > registers.
+> > > >
+> > > > > If that's true, the code here that's trying to keep track of enabled
+> > > > > irqs and wakeup enabled irqs can be replaced with the irqchip flag so
+> > > > > that wakeup irqs are not masked while non-wakeups are masked.
+> > > >
+> > > > Correct, but with the caveat that I don't see anything that definitely
+> > > > requires an interrupt to be enabled to be a wake source. See below...
+> > > >
+> > > > >
+> > > > > >  1. cur_mask[irq] = 1; wake_mask[irq] = 1; EINT_EN[irq] = 1 (interrupt
+> > > > > > enabled at hardware level)
+> > > > > >  2. System suspends, resumes due to that line (at this stage EINT_HW
+> > > > > > == wake_mask)
+> > > > > >  3. irq_pm_check_wakeup is called, and disables the interrupt =>
+> > > > > > EINT_EN[irq] = 0, but we still have cur_mask[irq] = 1
+> > > > > >  4. mtk_eint_do_resume is called, and restores EINT_EN = cur_mask, so
+> > > > > > it reenables EINT_EN[irq] = 1 => interrupt storm.
+> > > > > >
+> > > > > > This patch fixes the issue in step 3. So that the interrupt can be
+> > > > > > re-enabled properly later on, sometimes after mtk_eint_do_resume, when
+> > > > > > the driver is ready to handle it.
+> > > > >
+> > > > > Right, we'd rather not see irqchip drivers working around the genirq
+> > > > > layer to do these things like tracking cur_mask and wake_mask. That
+> > > > > leads to subtle bugs and makes the driver maintain state across the
+> > > > > irqchip callbacks and system suspend/resume.
+> > > > >
+> > > > > >
+> > > > > > Also, IRQCHIP_MASK_ON_SUSPEND does not handle lines that are enabled
+> > > > > > as a wake source, but without interrupt enabled (e.g. cros_ec driver
+> > > > > > does that), which we do want to support.
+> > > > >
+> > > > > Hmm. I thought that even if the irq is disabled by a driver, that would
+> > > > > be a lazy disable so it isn't really masked in the hardware. Then if an
+> > > > > interrupt comes in during suspend on a wake configured irq line, the
+> > > > > hardware will have left it unmasked because IRQCHIP_MASK_ON_SUSPEND in
+> > > > > combination with lazy disable would mean that the line is left unmasked
+> > > > > (ignoring whatever this mediatek driver is doing to mask and unmask in
+> > > > > PM hooks).
+> > > >
+> > > > At the very least, that's not what happens with this system. The
+> > > > interrupt is definitely not kept enabled in suspend, and the system
+> > > > would not wake from an EC interrupt. (see also this series, BTW:
+> > > > https://patchwork.kernel.org/cover/10921121/).
+> > > >
+> > > > > Just reading Documentation/power/suspend-and-interrupts.txt I'm led to
+> > > > > believe that the cros_ec driver shouldn't call disable_irq() on the
+> > > > > interrupt if it wants to wakeup from it:
+> > > > >
+> > > > > "Calling enable_irq_wake() causes suspend_device_irqs() to treat the
+> > > > > given IRQ in a special way.  Namely, the IRQ remains enabled, by on the
+> > > > > first interrupt it will be disabled, marked as pending and "suspended"
+> > > > > so that it will be re-enabled by resume_device_irqs() during the
+> > > > > subsequent system resume.  Also the PM core is notified about the event
+> > > > > which causes the system suspend in progress to be aborted (that doesn't
+> > > > > have to happen immediately, but at one of the points where the suspend
+> > > > > thread looks for pending wakeup events)."
+> > > >
+> > > > I think this describes the behaviour when you keep both enabled.
+> > > >
+> > > > > I suppose the problem is an irq line disabled in hardware that has
+> > > > > wakeup armed on it? Is this even valid? Shouldn't an irq be enabled for
+> > > > > wakeup to work?
+> > > >
+> > > > I couldn't really find a definite answer, but there are a bunch of
+> > > > examples of other drivers in the kernel:
+> > > >  - drivers/extcon/extcon-usb-gpio.c:usb_extcon_suspend
+> > > >  - drivers/hid/i2c-hid/i2c-hid.c:i2c_hid_suspend
+> > > >  - drivers/mfd/max77843.c:max77843_suspend
+> > > > (not exhaustive, this is quite hard to grep for...)
+> > > >
+> > > > > We could immediately unmask those lines in the hardware when the
+> > > > > set_wake() callback is called. That way the genirq layer can use the
+> > > > > driver to do what it wants with the hardware and the driver can make
+> > > > > sure that set_wake() will always cause the wakeup interrupt to be
+> > > > > delivered to genirq even when software has disabled it.
+> > > > >
+> > > > > But I think that there might be a problem with how genirq understands
+> > > > > the masked state of a line when the wakeup implementation conflates
+> > > > > masked state with wakeup armed state. Consider this call-flow:
+> > > > >
+> > > > >         irq masked in hardware, IRQD_IRQ_MASKED is set
+> > > > >         enable_irq_wake()
+> > > > >           unmask_irq in hardware
+> > > > >         IRQD_WAKEUP_ARMED is set
+> > > > >         <suspend and wakeup from irq>
+> > > > >         handle_level_irq()
+> > > > >           mask_ack_irq()
+> > > > >             mask_irq()
+> > > > >               if (irqd_irq_masked()) -> returns true and skips masking!
+> > > > >             if (desc->irq_data.chip->irq_ack)
+> > > > >               ...
+> > > > >           irq_may_run()
+> > > > >             irq_pm_check_wakeup()
+> > > > >               irq_disable()
+> > > > >                 mask_irq() -> does nothing again
+> > > > >
+> > > > > In the above flow, we never mask the irq because we thought it was
+> > > > > already masked when it was disabled, but the irqchip implementation
+> > > > > unmasked it to make wakeup work. Maybe we should always mask the irq if
+> > > > > wakeup is armed and we're trying to call mask_irq()? Looks hacky.
+> > Maybe we can implement irqchip's mask_ack_irq  in mediatek driver to
+> > always mask the irq. Then flow will always call it without judgment
+> > IRQD_IRQ_MASKED.
 > >
-> > Actually I applied the patch, and dropped the two lines making
-> > it possible to override .to_irq() for now, so I can illustrate my
-> > idea on top. If I manage.
->=20
-> Bah I rewrote the whole think as I want it, maybe my ideas are stupid
-> but take a look at it, also very interested in input from the irqchip
-> maintainers.
->=20
-> Sending it out as RFC in a moment.
+> > diff --git a/drivers/pinctrl/mediatek/mtk-eint.c
+> > b/drivers/pinctrl/mediatek/mtk-
+> > index f464f8c..9f1aae2 100644
+> > --- a/drivers/pinctrl/mediatek/mtk-eint.c
+> > +++ b/drivers/pinctrl/mediatek/mtk-eint.c
+> > @@ -272,12 +272,19 @@ static void mtk_eint_irq_release_resources(struct
+> > irq_data
+> >         gpiochip_unlock_as_irq(gpio_c, gpio_n);
+> >  }
+> >
+> > +static void mtk_eint_mask_ack(struct irq_data *d)
+> > +{
+> > +       mtk_eint_mask(d);
+> > +       mtk_eint_ack(d);
+> > +}
+> > +
+> >  static struct irq_chip mtk_eint_irq_chip = {
+> >         .name = "mt-eint",
+> >         .irq_disable = mtk_eint_mask,
+> >         .irq_mask = mtk_eint_mask,
+> >         .irq_unmask = mtk_eint_unmask,
+> >         .irq_ack = mtk_eint_ack,
+> > +       .irq_mask_ack = mtk_eint_mask_ack,
+> >         .irq_set_type = mtk_eint_set_type,
+> >         .irq_set_wake = mtk_eint_irq_set_wake,
+> >         .irq_request_resources = mtk_eint_irq_request_resources,
+> >
+> > This seems like a small change.
+> > thanks.
+> 
+> Does this work? My understanding is that Linux thinks the irq is
+> _already_ masked, so it short-circuits in the generic IRQ code and
+> doesn't call mask again.
+> -Evan
 
-Okay, taking a look.
+Yes, you are right.
 
-Thierry
+The underlying problem is really that the hardware IRQ enabled state is
+out of sync with what linux thinks.In resume flow,Linux thinks the irq
+is _already_masked, so it short-circuits in the generic IRQ code and
+doesn't call mask again.So in step 3 will have a interrupt storm.
 
---TRYliJ5NKNqkz5bu
-Content-Type: application/pgp-signature; name="signature.asc"
+But we implement irqchip's mask_ack_irq so that mask_ack_irq() calls
+desc->irq_data.chip->irq_mask_ack instead of mask_irq() that needs to
+judge IRQD_IRQ_MASKED. This will correctly set cur_mask[irq] = 0 to 
+sync with kernel state.
 
------BEGIN PGP SIGNATURE-----
+Also, this patch can solve the issue of [1/2] in this patchset[1] which
+also is the interrupt mask cannot be set correctly due to hardware irq
+state not sync kernel.
 
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAlz00h0ACgkQ3SOs138+
-s6EZfw/7BJannL3kB1Nh/+VGh/5w17Bx5M9krNi9ZnAdgOmUdIkhU2jgYJeq9rHL
-lL0mqmiTp3kOC/P6UaWZDuP9Ua2c4A4tWyDm1f1/mFntd+jwdf/RCkeeGwlGKeaP
-Hjk+xQLfb+iJGAIDE/yFuObO5/4NbcqtfNr62odpmhy/X2AvZT09bDIRJEtkrPdw
-Eg2QIsO7Y7IQ7FaIpL353upu01V7xgiFxJuTq883zLT7TEF//RxnpYe3KEqAwVA2
-Vj18fFheP0kJbFfsQWeHw7Dald+4pENxQzfq2eohnl2BdwkbFWLEwlNRcozhLgLP
-cT8AX1H1L//+aOSZAnvm2QvVNsvkMyGELs1rznw6+82/BS3+bZctpDXUoJ9gl1Bc
-nvZjzKftd3cUkr10K5tPgXiM/72MqQWflEHhlJ68kA2sJrOuoTEpRyNgXpIBqHuX
-StSVhjqQU3UHP/QgviN1Bp/QpEI+1NPjrO1debtHdiKEa/JcwqGuzl/6bcckBwoC
-0bT1bb/5DE5IFYLixCQndPaX5rWnV6xX7FDttEi7+1f6QtqvH1tkexhddKWNOCOB
-rCMlNgDYTpbV0wVNixKgepiJLbUw3xxX/UMOZV161MQayl9ahIKa1y1zJWTzjlPg
-nc6cNCt8uaYBLH/rm0w4nQ4VN2EypDKEn7fjj3Sk8QqLYz0s3mE=
-=lwgL
------END PGP SIGNATURE-----
+[1] https://patchwork.kernel.org/patch/10921143/
 
---TRYliJ5NKNqkz5bu--
+
