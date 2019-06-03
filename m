@@ -2,137 +2,100 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 9F3FF33646
-	for <lists+linux-gpio@lfdr.de>; Mon,  3 Jun 2019 19:15:10 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5877E33663
+	for <lists+linux-gpio@lfdr.de>; Mon,  3 Jun 2019 19:18:35 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727812AbfFCRPJ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 3 Jun 2019 13:15:09 -0400
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:42914 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727247AbfFCRPJ (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 3 Jun 2019 13:15:09 -0400
-Received: by mail-lf1-f65.google.com with SMTP id y13so14190470lfh.9
-        for <linux-gpio@vger.kernel.org>; Mon, 03 Jun 2019 10:15:07 -0700 (PDT)
+        id S1727622AbfFCRSe (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 3 Jun 2019 13:18:34 -0400
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:33680 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726717AbfFCRSd (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 3 Jun 2019 13:18:33 -0400
+Received: by mail-lj1-f193.google.com with SMTP id v29so5696464ljv.0
+        for <linux-gpio@vger.kernel.org>; Mon, 03 Jun 2019 10:18:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=Wx1qlMK3NepKa7TTJ5PUW2ztJ4RMVsDvNE3t80Pi7Yk=;
-        b=qk4YTH/aK8Kaeu/mPgkElXYfvcdGP6XJh3xMnh8SUG6nUL3UNfT5aM6IKFimH1KDW9
-         DwKZhEjMg+hMEvx9sjGh2ElxdaHptTFMnxpgxjuLvnW193C0wD6kmpLi9o7cgIVJragj
-         Uvjs3tcZulLtNaWnvg2Tb/Zw/rDvE3tKHaPAPtcw8O2RJ/kRo+94nhKrW5dxRsNkKYmS
-         Vr7f4vephC8YOFfJFxok0+2g2TL/79wro9M0DAQZo6fg0D91B9+iaESe7MQfHoe+xxdn
-         DGBnoiewfWP89HvB6ZjZB5AqI9gpjXXEmZKXwIdCNFHQhIIRvr4238HWeFsiEwdo64L/
-         SwwA==
+        bh=kj6JT+jHXGMgF6wpvxZYkTfPGiKrPB/frgW1hOjbrMA=;
+        b=hyECpzvQd4Hy+9lad6DlatxfjeHDgMuaALhIfrQmsjEQNp6FH3aOgiKvYB0xVpsLYh
+         rlGhKICZSmJX0KBEUS9zmukzOXMf4nCXmgLVcwqQu7TNBndtMTtZt5Te0glKDv4bop41
+         gZd93FhSHK+rt7ZJbIIs0t/HqSNfzSkWXlfqHpdqgOMaQBBhTJs7guk8iaoyXZ5S1Mtl
+         2FBYEqHIgtRVmL4Y9xXMjWLNsewRRMBtCwIpgv8fBTl1az0LTew4CuDdAreBmV4r9aRV
+         GRiEeQxzsHui/M+SsD6y2u6aOFTVmUJqrxikIu+0r5Uca5hRAQL/fkgvgqsFO2fOU/So
+         WDuQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=Wx1qlMK3NepKa7TTJ5PUW2ztJ4RMVsDvNE3t80Pi7Yk=;
-        b=oWwNOl+bFI8HqmK5+WYn17vTf4epv9KDfCMYOquTIswTxGxlAnQyX8idbP2YvzvPoO
-         PtvdHSjjVT3+HCZ71UA7Z19gfdkmRxD0nmaSU8PwcB3TAisbOEAZovbALTqMs8Qj5022
-         NyeP5X6rQSArIQUw6uoDFSju/zPTkLfcDMxHHfBgu6iXxiCKwWz+8vrRofH/1onT0H6f
-         bK7R37CPK0XC8ShdAv2arj2KlURzUIBvn2GwkRTj0jONqvMY+xOqvMv4XzNEbCXd0+VB
-         izO5fWRrkLZt2jOsOkMpqzv0QuxgaEMB4gDigh1mpvXxwqkhvcCObOmDcWjkr+RxBskM
-         8F2Q==
-X-Gm-Message-State: APjAAAViRqrHB1BSjMUOD+jmnS7susnpNc8Y99dh7OdcQKwZcSV50j/r
-        VDl4UurffYZaWxowxp04UIRO+2XAXwxyzMKH2DBPgZEccko=
-X-Google-Smtp-Source: APXvYqxbVJ05nLPoJ01NJyWakek+FTAApTtwpBnubTvb2Vd49Fl2YeNua4N6FgSbYprAWJ8QKMO6SbGz34oA1+bZU00=
-X-Received: by 2002:ac2:429a:: with SMTP id m26mr12542502lfh.152.1559582106875;
- Mon, 03 Jun 2019 10:15:06 -0700 (PDT)
+        bh=kj6JT+jHXGMgF6wpvxZYkTfPGiKrPB/frgW1hOjbrMA=;
+        b=RYhU9ozcN59yN9Fk/QBWUPsZ5BILSyP5rlrwxLYspZe7HojV7AT/cpZzj+c7AQiEpA
+         zbAUaulDP1YTvmuJG2yslui+MXicoAhVbMUrVJitNTOp9ONDORIq7gmdTEM0IHwWx/xc
+         r55R6eVTwJKgdSDwXOVlTtNUZluEyRAqOSdr4j5K20rFShAkiQfT5zd1eLXs/0AMk9Pv
+         bZUtnYik3lVvyQMbCo9Ddizn/HqBDbRu1wzuoRMZROrDtAEQ8NqJ1C5gglCLwkEfbu47
+         cYbS8wfUeQuKikQBLFkHjX5g0v4zYOARyX5imxT2WvCTcGzLfK7+Gq3qSWhEK/ONltHF
+         RUvg==
+X-Gm-Message-State: APjAAAVrg2J7d9e4lj7/Rj2xx+oNujRtqMLJgYef529uJOvudDAwLt1Z
+        gHu8dncmPVPdBrTM5/ZzdyOyQ7zbYze6x0y59z096Q==
+X-Google-Smtp-Source: APXvYqyFnODudaj909lWUHE37IZ9sbywYN6M0rtVkC2iqcHnFD9xerHpf7WP1RnGxEjy5VPDFLhVtiiV2to5M4DXZw0=
+X-Received: by 2002:a2e:9e85:: with SMTP id f5mr8624764ljk.104.1559582311867;
+ Mon, 03 Jun 2019 10:18:31 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190602205424.28674-1-linus.walleij@linaro.org> <2c14f320-41e8-6e66-6c6f-7fcc7ab65793@arm.com>
-In-Reply-To: <2c14f320-41e8-6e66-6c6f-7fcc7ab65793@arm.com>
+References: <20190602205424.28674-1-linus.walleij@linaro.org>
+ <20190602205424.28674-2-linus.walleij@linaro.org> <20190603091649.GD27753@ulmo>
+In-Reply-To: <20190603091649.GD27753@ulmo>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Mon, 3 Jun 2019 19:14:55 +0200
-Message-ID: <CACRpkdb7Q795HnUOat-ZhcWBLDqbbGpZ=9K9C+0GbHt7O+6FQA@mail.gmail.com>
-Subject: Re: [PATCH 1/2] RFC: gpio: Add support for hierarchical IRQ domains
-To:     Marc Zyngier <marc.zyngier@arm.com>
+Date:   Mon, 3 Jun 2019 19:18:20 +0200
+Message-ID: <CACRpkdb_LZZWxfTmMsfXGZ7=GeTvQ_sR8sWp10Q0nMaBnA=vDA@mail.gmail.com>
+Subject: Re: [PATCH 2/2] RFC: gpio: ixp4xx: Convert to hieararchical GPIOLIB_IRQCHIP
+To:     Thierry Reding <thierry.reding@gmail.com>
 Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>,
         Thomas Gleixner <tglx@linutronix.de>,
+        Marc Zyngier <marc.zyngier@arm.com>,
         Lina Iyer <ilina@codeaurora.org>,
         Jon Hunter <jonathanh@nvidia.com>,
         Sowjanya Komatineni <skomatineni@nvidia.com>,
-        Bitan Biswas <bbiswas@nvidia.com>, linux-tegra@vger.kernel.org,
-        Thierry Reding <treding@nvidia.com>
+        Bitan Biswas <bbiswas@nvidia.com>, linux-tegra@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Jun 3, 2019 at 6:12 PM Marc Zyngier <marc.zyngier@arm.com> wrote:
-> On 02/06/2019 21:54, Linus Walleij wrote:
+On Mon, Jun 3, 2019 at 11:16 AM Thierry Reding <thierry.reding@gmail.com> wrote:
+> Me
 
-> > +     /* DT will deal with mapping each IRQ as we go along */
-> > +     if (is_of_node(gpiochip->irq.fwnode))
-> > +             return;
-> > +
-> > +     /*
-> > +      * This is for legacy and boardfile "irqchip" fwnodes: allocate
-> > +      * irqs upfront instead of dynamically since we don't have the
-> > +      * dynamic type of allocation that hardware description languages
-> > +      * provide.
-> > +      */
-> > +     if (is_fwnode_irqchip(gpiochip->irq.fwnode)) {
+> > +const struct gpiochip_hierarchy_map ixp4xx_gpiomap[] = {
+> > +     { .hwirq = 0, .parent_hwirq = 6, .parent_type = IRQ_TYPE_LEVEL_HIGH },
+> > +     { .hwirq = 1, .parent_hwirq = 7, .parent_type = IRQ_TYPE_LEVEL_HIGH },
+> > +     { .hwirq = 2, .parent_hwirq = 19, .parent_type = IRQ_TYPE_LEVEL_HIGH },
+> > +     { .hwirq = 3, .parent_hwirq = 20, .parent_type = IRQ_TYPE_LEVEL_HIGH },
+> > +     { .hwirq = 4, .parent_hwirq = 21, .parent_type = IRQ_TYPE_LEVEL_HIGH },
+> > +     { .hwirq = 5, .parent_hwirq = 22, .parent_type = IRQ_TYPE_LEVEL_HIGH },
+> > +     { .hwirq = 6, .parent_hwirq = 23, .parent_type = IRQ_TYPE_LEVEL_HIGH },
+> > +     { .hwirq = 7, .parent_hwirq = 24, .parent_type = IRQ_TYPE_LEVEL_HIGH },
+> > +     { .hwirq = 8, .parent_hwirq = 25, .parent_type = IRQ_TYPE_LEVEL_HIGH },
+> > +     { .hwirq = 9, .parent_hwirq = 26, .parent_type = IRQ_TYPE_LEVEL_HIGH },
+> > +     { .hwirq = 10, .parent_hwirq = 27, .parent_type = IRQ_TYPE_LEVEL_HIGH },
+> > +     { .hwirq = 11, .parent_hwirq = 28, .parent_type = IRQ_TYPE_LEVEL_HIGH },
+> > +     { .hwirq = 12, .parent_hwirq = 29, .parent_type = IRQ_TYPE_LEVEL_HIGH },
 >
-> How about ACPI-based systems? Do they even exist in this scheme? This is
-> a genuine question, as I have no idea...
+> I think this is a good example of what I was referring to. There's no
+> easy way to represent this mapping in code, other than basically writing
+> up the table as a switch statement, or a couple of if/else clauses. But
+> if you have a large number of pins in the GPIO controller and they all
+> can be easily described by just a handful of lines of code, I think it'd
+> be nice to avoid all that extra data.
 
-I assume we can just add another if() clause for them?
+I agree, but we can add those as we go along. I wonder if such code expressions
+of the mapping are really that magical? Isn't it simply at best ranges of hwirqs
+so a n_hwirqs need to be added to the map and just collapse the above to:
 
-I have no ACPI system using gpiochip in my mental or practical
-world, but I assume they are not very special wrt this since they
-invented fwnode and drove it all the way into the core.
+{ .hwirq = 0, .parent_hwirq = 6, .nr_hwirqs = 13, .parent_type =
+IRQ_TYPE_LEVEL_HIGH }
 
-I don't know if I should add upfront code for them since I can't
-test it (that I know).
-
-> > +                     fwspec.fwnode = gpiochip->irq.fwnode;
-> > +                     /* This is the hwirq for the GPIO line side of things */
-> > +                     fwspec.param[0] = map->hwirq;
-> > +                     /* Just pick something */
-> > +                     fwspec.param[1] = IRQ_TYPE_EDGE_RISING;
-> > +                     fwspec.param_count = 2;
-> > +                     ret = __irq_domain_alloc_irqs(gpiochip->irq.domain,
-> > +                                                   /* just pick something */
-> > +                                                   -1,
-> > +                                                   1,
-> > +                                                   NUMA_NO_NODE,
-> > +                                                   &fwspec,
->
-> It feels a bit odd that we're building a fwspec for something that
-> already has all the required information (the alloc function has the
-> gpio_irq_chip as host_data). I have the feeling that we could just have
-> a single __irq_domain_alloc_irqs() call with irq.parent_n_irq_maps as
-> the nr_irqs, and let the alloc function sort it out...
-
-Oh you're probably right, since the domain is implicitly linear
-anyways. I suppose this is part of the answer to Thierry's question
-actually: since I do this one irq at the time the domain will look
-like such as well.
-
-> > +     /* Some drivers provide custom irqdomain ops */
-> >       if (gpiochip->irq.domain_ops)
-> >               ops = gpiochip->irq.domain_ops;
->
-> Is that already a requirement? Or an educated guess?
-
-Yeah look at drivers/gpio/gpio-tegra186.c:
-
-irq = &gpio->gpio.irq;
-(...)
-irq->domain_ops = &tegra186_gpio_irq_domain_ops;
-
-what I just discovered is that this driver does not call
-irq_domain_add* or irq_domain_create* not does it ask gpiolib
-to do it so I have no idea how that thing is even working, so I
-asked Thierry to explain it.
-
-Right now my assumption is that is uses a NULL initalized irqdomain
-and assign some random translation functions to it and hope
-for the best or something, I might be missing something here.
+I'm up for that. Maybe as a separate patch though.
 
 Yours,
 Linus Walleij
