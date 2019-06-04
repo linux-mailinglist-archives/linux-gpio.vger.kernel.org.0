@@ -2,18 +2,18 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id DE0B534A2D
-	for <lists+linux-gpio@lfdr.de>; Tue,  4 Jun 2019 16:20:14 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 15CC634A42
+	for <lists+linux-gpio@lfdr.de>; Tue,  4 Jun 2019 16:22:46 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727383AbfFDOTw convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-gpio@lfdr.de>); Tue, 4 Jun 2019 10:19:52 -0400
-Received: from mail02.inet.sy ([212.11.196.40]:56238 "HELO mail02.inet.sy"
+        id S1727827AbfFDOWp convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-gpio@lfdr.de>); Tue, 4 Jun 2019 10:22:45 -0400
+Received: from mail02.inet.sy ([212.11.196.40]:60689 "HELO mail02.inet.sy"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with SMTP
-        id S1728107AbfFDOTv (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Tue, 4 Jun 2019 10:19:51 -0400
+        id S1727378AbfFDOWp (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Tue, 4 Jun 2019 10:22:45 -0400
 Received: from localhost (localhost [127.0.0.1])
-        by mail02.inet.sy (Postfix) with ESMTP id 4BD7B164F42;
-        Tue,  4 Jun 2019 17:19:44 +0300 (EEST)
+        by mail02.inet.sy (Postfix) with ESMTP id 8C849164F92;
+        Tue,  4 Jun 2019 17:22:21 +0300 (EEST)
 X-Virus-Scanned: Debian amavisd-new at mail03.inet.sy
 X-Spam-Flag: NO
 X-Spam-Score: 6.358
@@ -26,21 +26,21 @@ X-Spam-Status: No, score=6.358 tagged_above=-999 required=7
         autolearn=unavailable
 Received: from mail02.inet.sy ([127.0.0.1])
         by localhost (mail02.inet.sy [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id Ehwk5vhvBegM; Tue,  4 Jun 2019 17:19:44 +0300 (EEST)
+        with ESMTP id N3zVuxEE3FFm; Tue,  4 Jun 2019 17:22:21 +0300 (EEST)
 Received: from mail01.inet.sy (mail.inet.sy [212.11.196.115])
-        by mail02.inet.sy (Postfix) with ESMTP id 33035164F40;
-        Tue,  4 Jun 2019 17:19:44 +0300 (EEST)
+        by mail02.inet.sy (Postfix) with ESMTP id 6EC2B164F8D;
+        Tue,  4 Jun 2019 17:22:21 +0300 (EEST)
 Received: from Mail-Exchange.firefite.local (unknown [212.11.218.206])
-        by mail01.inet.sy (Postfix) with ESMTP id E931D8EC025;
-        Tue,  4 Jun 2019 17:20:51 +0300 (EEST)
+        by mail01.inet.sy (Postfix) with ESMTP id 325578EC025;
+        Tue,  4 Jun 2019 17:23:29 +0300 (EEST)
 Received: from Mail-Exchange.firefite.local (192.168.0.19) by
  Mail-Exchange.firefite.local (192.168.0.19) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384_P384) id
- 15.1.1466.3; Tue, 4 Jun 2019 17:19:48 +0300
+ 15.1.1466.3; Tue, 4 Jun 2019 17:22:25 +0300
 Received: from Admin.localhost (105.186.0.15) by Mail-Exchange.firefite.local
  (192.168.0.19) with Microsoft SMTP Server (version=TLS1_0,
  cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.1.1466.3 via Frontend Transport;
- Tue, 4 Jun 2019 17:19:42 +0300
+ Tue, 4 Jun 2019 17:22:19 +0300
 Content-Type: text/plain; charset="iso-8859-1"
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8BIT
@@ -48,11 +48,11 @@ Content-Description: Mail message body
 Subject: Award Notice
 To:     Recipients <hnkglobalpromo@brew-meister.com>
 From:   "Mrs. Vera Donald" <hnkglobalpromo@brew-meister.com>
-Date:   Tue, 4 Jun 2019 22:19:32 +0800
+Date:   Tue, 4 Jun 2019 22:22:09 +0800
 Reply-To: <hp-fudiciaryagent@brew-meister.com>
 X-Antivirus: Avast (VPS 190604-2, 06/04/2019), Outbound message
 X-Antivirus-Status: Clean
-Message-ID: <46e6268c-661a-4d1c-8ca2-d8f589396994@Mail-Exchange.firefite.local>
+Message-ID: <ddd170fa-941c-44b8-9a05-1891a61c9dde@Mail-Exchange.firefite.local>
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
