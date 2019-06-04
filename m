@@ -2,90 +2,141 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 1B37E3527C
-	for <lists+linux-gpio@lfdr.de>; Wed,  5 Jun 2019 00:03:40 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1F28C3528E
+	for <lists+linux-gpio@lfdr.de>; Wed,  5 Jun 2019 00:09:19 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726551AbfFDWDj (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 4 Jun 2019 18:03:39 -0400
-Received: from atlmailgw1.ami.com ([63.147.10.40]:61758 "EHLO
-        atlmailgw1.ami.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726510AbfFDWDj (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 4 Jun 2019 18:03:39 -0400
-X-AuditID: ac1060b2-2cbff70000003d86-4a-5cf6eab90d42
-Received: from atlms2.us.megatrends.com (atlms2.us.megatrends.com [172.16.96.152])
-        (using TLS with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by atlmailgw1.ami.com (Symantec Messaging Gateway) with SMTP id 4B.AE.15750.9BAE6FC5; Tue,  4 Jun 2019 18:03:37 -0400 (EDT)
-Received: from ATLMS1.us.megatrends.com ([fe80::8c55:daf0:ef05:5605]) by
- atlms2.us.megatrends.com ([fe80::29dc:a91e:ea0c:cdeb%12]) with mapi id
- 14.03.0415.000; Tue, 4 Jun 2019 18:03:37 -0400
-From:   Hongwei Zhang <Hongweiz@ami.com>
-To:     Linus Walleij <linus.walleij@linaro.org>
-CC:     Joel Stanley <joel@jms.id.au>, Andrew Jeffery <andrew@aj.id.au>,
-        "Rob Herring" <robh+dt@kernel.org>,
+        id S1726293AbfFDWJO (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 4 Jun 2019 18:09:14 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:44466 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726399AbfFDWJO (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 4 Jun 2019 18:09:14 -0400
+Received: by mail-pf1-f193.google.com with SMTP id t16so4704520pfe.11
+        for <linux-gpio@vger.kernel.org>; Tue, 04 Jun 2019 15:09:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=NGFWos9reZ21x+VPBWgjaST/llqX50Psvr0VLnDsejc=;
+        b=LE3OjEH9gGdSD8HL7lZl/oU8JB8AiXuo0O9VefLwxFSrPzWA63vjBLqujXKByi2zHo
+         EW8hrmDGrAVo+1FFiSO6D5l8GqZo+xaiPL1i23DAlGDzelL9ldMHJRRlsPlN26HhXZMV
+         marf4yM/9clcphCztYfcrrJf4Y24XL4i4DvoBEx8Ibsvm+H7Bx90Gabs8cniguI8L5GN
+         fKo/ejDhrSjivqMZcnaALrq0d8EiuYc5zsOdh+OE+P/9NWv9URNwckpzMLR0lmlAkZc+
+         Qa5arISvb2yhpPXSTDY1s81jbncFzBIsZHb7kBrmj23EXebMO+H86+TiLegdgtF7xF3A
+         iHOQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=NGFWos9reZ21x+VPBWgjaST/llqX50Psvr0VLnDsejc=;
+        b=H1JwEWuWGNJb+d6Q7U2ab7zDJCCVHaBlGgjPdi7SUXsfGSW/M9Jbu7KDaW5S4xsNkO
+         MnLcodMZ+joM3km8yYhr5+mWj4LpTavjbsvfxKwc8LEuNmsr6Qw1axyxkA9YqJGIasU9
+         lJeh3xGANB1JtCryYTxCrEU1flvV1vmCrPJugEXnQCchHMP5tfXRIudWQx/vv8W4PzfV
+         oGcHTdAaKRhIBgnnxsHmaAKP736d49pL/OqSFSqNO+IXntuiWLmHsiE4cI2OYXv9Cacv
+         SdLf2su/+EgrJys0gA/ZDKUi13otECY5wg/QpwaCPfyDNn2dUlB3sI5wCKnunVZR5P/2
+         +vLQ==
+X-Gm-Message-State: APjAAAV9eDFbHLxKHrC0jtrFKinQnx+gW3U+/hN7EzT1iJE2aPm6rVAr
+        cGzQQYgUYjYjT/6c8tUGHfUe7A==
+X-Google-Smtp-Source: APXvYqz0k3aXvYp9vPgvRV/jmmcqPdGm62iQvQ+8caZbKxT6w3UTp/yE1RNEnvkaFlsMacIaHCfcaQ==
+X-Received: by 2002:a62:2bc7:: with SMTP id r190mr5307624pfr.40.1559686153100;
+        Tue, 04 Jun 2019 15:09:13 -0700 (PDT)
+Received: from minitux (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id j20sm15469801pff.183.2019.06.04.15.09.11
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 04 Jun 2019 15:09:12 -0700 (PDT)
+Date:   Tue, 4 Jun 2019 15:09:10 -0700
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Stephen Boyd <swboyd@chromium.org>
+Cc:     Andy Gross <agross@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "linux-aspeed@lists.ozlabs.org" <linux-aspeed@lists.ozlabs.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH linux dev-5.1 v1] ARM: dts: aspeed: Add SGPM pinmux
-Thread-Topic: [PATCH linux dev-5.1 v1] ARM: dts: aspeed: Add SGPM pinmux
-Thread-Index: AQHVGl3d/v6MjHMzm0SmoLtXRU7xKqaK0JyAgAE8dbA=
-Date:   Tue, 4 Jun 2019 22:03:37 +0000
-Message-ID: <14D3C8298A3B0F42A1EB31EE961CFF8231E4AA@atlms1.us.megatrends.com>
-References: <1559601789-27121-1-git-send-email-hongweiz@ami.com>
- <CACRpkdYPHw994Ov0xCfK6tCg60tiuWrRwTcYpMSfOr4G0VKu_Q@mail.gmail.com>
-In-Reply-To: <CACRpkdYPHw994Ov0xCfK6tCg60tiuWrRwTcYpMSfOr4G0VKu_Q@mail.gmail.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [172.16.100.241]
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Pedro Sousa <pedrom.sousa@synopsys.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-scsi@vger.kernel.org, Evan Green <evgreen@chromium.org>
+Subject: Re: [PATCH 3/3] arm64: dts: qcom: sdm845-mtp: Specify UFS
+ device-reset GPIO
+Message-ID: <20190604220910.GA4814@minitux>
+References: <20190604072001.9288-1-bjorn.andersson@linaro.org>
+ <20190604072001.9288-4-bjorn.andersson@linaro.org>
+ <5cf69ad2.1c69fb81.216a9.30f8@mx.google.com>
 MIME-Version: 1.0
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrHIsWRmVeSWpSXmKPExsWyRiBhhu7OV99iDN5tULDYdZnDYv6Rc6wW
-        v8//ZbaY8mc5k8Wmx9dYLZpXn2O22Dz/D6PF5V1z2CyWXr/IZNG69wi7A5fH1fZd7B5r5q1h
-        9Lj48Rizx6ZVnWwed67tYfPYvKTe4/yMhYwenzfJBXBEcdmkpOZklqUW6dslcGW8m3iTpWAF
-        f8Wj27tZGxi/8HUxcnJICJhI/Py6h7WLkYtDSGAXk8TlpzugnEOMEv97FrCAVLEJqEk8/dPA
-        DmKLCOhIdG/7CVbELHCPWWLO55dADgeHsIC7xIJ1tRA1HhLTp/9jg7CtJDa9/8YEYrMIqEhc
-        P/cdLM4r4Ctx/dBudohl7YwSbbv/gS3gFAiUuLJyOlgDo4CYxPdTa8BsZgFxiVtP5jNBnC0g
-        sWTPeWYIW1Ti5eN/rBC2kkTDin9MIPcwC2hKrN+lD9GqKDGl+yE7xF5BiZMzn7BMYBSdhWTq
-        LISOWUg6ZiHpWMDIsopRKLEkJzcxMye93FAvMTdTLzk/dxMjJE437WBsuWh+iJGJgxEYdhzM
-        SiK8ibe/xAjxpiRWVqUW5ccXleakFh9ilOZgURLnXbnmW4yQQHpiSWp2ampBahFMlomDU6qB
-        cdKihp/iwvaPZuYmcTMt/X8jRP/yRpYqY2ZnNv9Gz1OhOj+W6Mg80VE42X19YctqyakLd7mf
-        CZzledFnRmnQovvFVUsibs/8nBXw22/9S9uX9QzPHH3dwoR/dQafOy6TXbi3WuC1F3f+7EXG
-        kx/f2pCRlHsvpZt5Xj3jvx/2R7Xqel+sZ3jXr8RSnJFoqMVcVJwIAJ80j6fBAgAA
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <5cf69ad2.1c69fb81.216a9.30f8@mx.google.com>
+User-Agent: Mutt/1.12.0 (2019-05-25)
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-LS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCkZyb206IExpbnVzIFdhbGxlaWogPGxpbnVzLndh
-bGxlaWpAbGluYXJvLm9yZz4gDQpTZW50OiBNb25kYXksIEp1bmUgMywgMjAxOSA3OjA4IFBNDQpU
-bzogSG9uZ3dlaSBaaGFuZyA8SG9uZ3dlaXpAYW1pLmNvbT4NCkNjOiBKb2VsIFN0YW5sZXkgPGpv
-ZWxAam1zLmlkLmF1PjsgQW5kcmV3IEplZmZlcnkgPGFuZHJld0Bhai5pZC5hdT47IFJvYiBIZXJy
-aW5nIDxyb2JoK2R0QGtlcm5lbC5vcmc+OyBNYXJrIFJ1dGxhbmQgPG1hcmsucnV0bGFuZEBhcm0u
-Y29tPjsgb3BlbiBsaXN0OkdQSU8gU1VCU1lTVEVNIDxsaW51eC1ncGlvQHZnZXIua2VybmVsLm9y
-Zz47IG9wZW4gbGlzdDpPUEVOIEZJUk1XQVJFIEFORCBGTEFUVEVORUQgREVWSUNFIFRSRUUgQklO
-RElOR1MgPGRldmljZXRyZWVAdmdlci5rZXJuZWwub3JnPjsgTGludXggQVJNIDxsaW51eC1hcm0t
-a2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmc+OyBsaW51eC1hc3BlZWRAbGlzdHMub3psYWJzLm9y
-ZzsgbGludXgta2VybmVsQHZnZXIua2VybmVsLm9yZw0KU3ViamVjdDogUmU6IFtQQVRDSCBsaW51
-eCBkZXYtNS4xIHYxXSBBUk06IGR0czogYXNwZWVkOiBBZGQgU0dQTSBwaW5tdXgNCg0KSGkgSG9u
-Z3dlaSwNCg0KT24gVHVlLCBKdW4gNCwgMjAxOSBhdCAxMjo0NCBBTSBIb25nd2VpIFpoYW5nIDxo
-b25nd2VpekBhbWkuY29tPiB3cm90ZToNCj4NCj4gQWRkIFNHUE0gcGlubXV4IHRvIGFzdDI1MDAt
-cGluY3RybCBmdW5jdGlvbiBhbmQgZ3JvdXAsIHRvIHByZXBhcmUgZm9yIA0KPiBzdXBwb3J0aW5n
-IFNHUElPIGluIEFTVDI1MDAgU29DLg0KPg0KPiBTaWduZWQtb2ZmLWJ5OiBIb25nd2VpIFpoYW5n
-IDxob25nd2VpekBhbWkuY29tPg0KPiAtLS0NCj4gIERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9i
-aW5kaW5ncy9waW5jdHJsL3BpbmN0cmwtYXNwZWVkLnR4dCB8IDIgKy0NCj4gIGFyY2gvYXJtL2Jv
-b3QvZHRzL2FzcGVlZC1nNS5kdHNpICAgICAgICAgICAgICAgICAgICAgICAgICAgICB8IDUgKysr
-KysNCj4gIGRyaXZlcnMvcGluY3RybC9hc3BlZWQvcGluY3RybC1hc3BlZWQtZzUuYyAgICAgICAg
-ICAgICAgICAgICB8IDQgKysrKw0KDQpQbGVhc2UgdHJ5IHRvIHNlcGFyYXRlIG91dCB0aGUgY2hh
-bmdlIHRvIGFyY2gvYXJtL2Jvb3QvZHRzL2FzcGVlZC1nNS5kdHNpIGludG8gYSBzZXBhcmF0ZSBw
-YXRjaCB0aGF0IGdvZXMgdGhyb3VnaCBBUk0gU29DLg0KDQpKdXN0IGNvbW1pdHRlZCB0aGUgRFQg
-cGF0Y2ggdG8gX2h0dHBzOi8vZ2l0Lmtlcm5lbC5vcmcvcHViL3NjbS9saW51eC9rZXJuZWwvZ2l0
-L2FybS9hcm0tc29jLmdpdCAsIHBsZWFzZSBoZWxwIHRvIHJldmlldy4gVGhhbmtzIQ0KDQoNCk90
-aGVyIHRoYW4gdGhhdCBpdCBsb29rcyBmaW5lIHRvIG1lLg0KDQpZb3VycywNCkxpbnVzIFdhbGxl
-aWoNCg==
+On Tue 04 Jun 09:22 PDT 2019, Stephen Boyd wrote:
+
+> Quoting Bjorn Andersson (2019-06-04 00:20:01)
+> > Specify the UFS device-reset gpio, so that the controller will issue a
+> > reset of the UFS device.
+> > 
+> > Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+> > ---
+> >  arch/arm64/boot/dts/qcom/sdm845-mtp.dts | 2 ++
+> >  1 file changed, 2 insertions(+)
+> > 
+> > diff --git a/arch/arm64/boot/dts/qcom/sdm845-mtp.dts b/arch/arm64/boot/dts/qcom/sdm845-mtp.dts
+> > index 2e78638eb73b..d116a0956a9c 100644
+> > --- a/arch/arm64/boot/dts/qcom/sdm845-mtp.dts
+> > +++ b/arch/arm64/boot/dts/qcom/sdm845-mtp.dts
+> > @@ -388,6 +388,8 @@
+> >  &ufs_mem_hc {
+> >         status = "okay";
+> >  
+> > +       device-reset-gpios = <&tlmm 150 GPIO_ACTIVE_LOW>;
+> > +
+> 
+> We had to do something similar on one particular brand of UFS that we had. I
+> think it was an SK Hynix part that had trouble and wouldn't provision properly.
+> Either way, we did this with a pinctrl toggle in the DTS where the "init" state
+> has the UFS_RESET pin asserted and then "default" state has the pin deasserted.
+> That was good enough to make this work.
+> 
+
+Thanks for pointing this out, I forgot to attribute these downstream
+changes. I can see how this works, but I must say I find it quite
+hackish.
+
+The downstream solution seems to have evolved this into naming these
+states and jumping between them (with the appropriate sleeps) during a
+host reset as well.
+
+
+But thanks for the confirmation that there's more than John's memory
+that needs this.
+
+Regards,
+Bjorn
+
+> 	&ufs_mem_hc {
+> 		pinctrl-names = "init", "default";
+> 		pinctrl-0 = <&ufs_dev_reset_assert>;
+> 		pinctrl-1 = <&ufs_dev_reset_deassert>;
+> 	};
+> 
+>         ufs_dev_reset_assert: ufs_dev_reset_assert {
+>                 config {
+>                         pins = "ufs_reset";
+>                         bias-pull-down;         /* default: pull down */
+>                         drive-strength = <8>;   /* default: 3.1 mA */
+>                         output-low; /* active low reset */
+>                 };
+>         };
+> 
+>         ufs_dev_reset_deassert: ufs_dev_reset_deassert {
+>                 config {
+>                         pins = "ufs_reset";
+>                         bias-pull-down;         /* default: pull down */
+>                         drive-strength = <8>;
+>                         output-high; /* active low reset */
+>                 };
+>         };
