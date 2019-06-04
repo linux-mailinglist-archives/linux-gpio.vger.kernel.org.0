@@ -2,93 +2,67 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id B282D34496
-	for <lists+linux-gpio@lfdr.de>; Tue,  4 Jun 2019 12:45:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4FEFB3470F
+	for <lists+linux-gpio@lfdr.de>; Tue,  4 Jun 2019 14:40:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727470AbfFDKpQ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 4 Jun 2019 06:45:16 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:40989 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727482AbfFDKpI (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 4 Jun 2019 06:45:08 -0400
-Received: by mail-wr1-f65.google.com with SMTP id c2so15282774wrm.8
-        for <linux-gpio@vger.kernel.org>; Tue, 04 Jun 2019 03:45:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=MkGVFZY1XhtlH3EXbDSeWCPiZrbaYk4zwPdOeyiIsNc=;
-        b=hljw8RsTFEcbuplHCj6D4tq/5nIpPFTXoAK24WDaO16R2lM4A4tkIl52AnrPf6JXw1
-         gT3EjpICXK9lQrDnqMtsHhdKD3i45MO0tlSwTZkOGsLnygeqnS1GEq42hVT5+HlqpNGw
-         T+gYf8t0vIU7HSEAEdNBmet5opXalvHQjYcEdfz/km30EDtQQfXPpL8nTAL5/46rMhak
-         gMuexpRELw1yz4AqSHcBpII97mOzlQXjdBv9q9uxJg0vY4L2Wkz4mWfTGT41kUyPjWyf
-         oCCUVzTVMMLzv8BuVscDTyHO0HMHqetsCPsptCOLxfHbS+xv6PqNZFqqiN1cTF5Ezas/
-         RETA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=MkGVFZY1XhtlH3EXbDSeWCPiZrbaYk4zwPdOeyiIsNc=;
-        b=MqdiLCf5BJ9pzfHiSSMFzYUFTF5E0LrG/DdA1zTCdxE8i0jpVyP9kiYh2VZO5/i5Ym
-         pAl99yhFaDP25Fkjzl7jF3SFB/Zz1UsFuqsRV9sEeS5hqbgAlZ6dTIA6K3ox8Xarusm9
-         N/Rs4AkDkhbw3mviRl1bjdwYFQA/s3suk51JMBxhobACNgxPnkad88aErQaf9y3V14dA
-         pucHrf03oSLCORE8/icxFjN7tksVwiSO/KidDrdhL1Xvx23pOpdLBz3uVyR12/H9GtX9
-         23Wzpn3I8a9TZFVn707mU/HElWH9dMDCrc0ln3sQV13Z1DIl8vZOpSbDD5hAdbX06lV1
-         N5oA==
-X-Gm-Message-State: APjAAAUyM7j2l8uzRoEIou7PU7o3gF/C/lUVG+DWk+Ch4bsgcM2YxnzL
-        wBpldm2HcsW/uI1uYE9XRB4g5w==
-X-Google-Smtp-Source: APXvYqyK+bgytdW+OPwhr0ZBevMVV7NDVd58ezc6owb6wL4UOd2DK/LWci6dPsr3n48XMl5sTrJS0w==
-X-Received: by 2002:adf:a38d:: with SMTP id l13mr13613323wrb.187.1559645107190;
-        Tue, 04 Jun 2019 03:45:07 -0700 (PDT)
-Received: from localhost.localdomain ([2.27.167.43])
-        by smtp.gmail.com with ESMTPSA id t140sm2718623wmt.0.2019.06.04.03.45.06
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 04 Jun 2019 03:45:06 -0700 (PDT)
-From:   Lee Jones <lee.jones@linaro.org>
-To:     alokc@codeaurora.org, kramasub@codeaurora.org,
-        andy.gross@linaro.org, david.brown@linaro.org,
-        wsa+renesas@sang-engineering.com, bjorn.andersson@linaro.org,
-        linus.walleij@linaro.org, balbi@kernel.org,
-        gregkh@linuxfoundation.org
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        jlhugo@gmail.com, linux-i2c@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-usb@vger.kernel.org, Lee Jones <lee.jones@linaro.org>
-Subject: [PATCH 8/8] usb: dwc3: qcom: Improve error handling
-Date:   Tue,  4 Jun 2019 11:44:55 +0100
-Message-Id: <20190604104455.8877-8-lee.jones@linaro.org>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190604104455.8877-1-lee.jones@linaro.org>
-References: <20190604104455.8877-1-lee.jones@linaro.org>
+        id S1727714AbfFDMkT convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-gpio@lfdr.de>); Tue, 4 Jun 2019 08:40:19 -0400
+Received: from mail02.inet.sy ([212.11.196.40]:49850 "HELO mail02.inet.sy"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with SMTP
+        id S1727580AbfFDMkT (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Tue, 4 Jun 2019 08:40:19 -0400
+X-Greylist: delayed 328 seconds by postgrey-1.27 at vger.kernel.org; Tue, 04 Jun 2019 08:40:18 EDT
+Received: from localhost (localhost [127.0.0.1])
+        by mail02.inet.sy (Postfix) with ESMTP id 7D1031633D3;
+        Tue,  4 Jun 2019 15:34:44 +0300 (EEST)
+X-Virus-Scanned: Debian amavisd-new at mail03.inet.sy
+X-Spam-Flag: NO
+X-Spam-Score: 6.357
+X-Spam-Level: ******
+X-Spam-Status: No, score=6.357 tagged_above=-999 required=7
+        tests=[BAYES_50=0.8, FREEMAIL_FROM=0.001, FREEMAIL_REPLYTO=1,
+        LOTS_OF_MONEY=0.001, SPF_FAIL=0.001, SPF_HELO_NONE=0.001,
+        SPOOFED_FREEM_REPTO=2.499, TO_EQ_FM_DOM_SPF_FAIL=0.053,
+        TO_EQ_FM_SPF_FAIL=0.001, US_DOLLARS_3=2] autolearn=unavailable
+Received: from mail02.inet.sy ([127.0.0.1])
+        by localhost (mail02.inet.sy [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id Dyob27clzD8r; Tue,  4 Jun 2019 15:34:44 +0300 (EEST)
+Received: from mail01.inet.sy (mail.inet.sy [212.11.196.115])
+        by mail02.inet.sy (Postfix) with ESMTP id 657151633D2;
+        Tue,  4 Jun 2019 15:34:44 +0300 (EEST)
+Received: from Mail-Exchange.firefite.local (unknown [212.11.218.206])
+        by mail01.inet.sy (Postfix) with ESMTP id EC48A8EC025;
+        Tue,  4 Jun 2019 15:35:51 +0300 (EEST)
+Received: from Mail-Exchange.firefite.local (192.168.0.19) by
+ Mail-Exchange.firefite.local (192.168.0.19) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384_P384) id
+ 15.1.1466.3; Tue, 4 Jun 2019 15:34:48 +0300
+Received: from Admin.localhost (105.186.0.15) by Mail-Exchange.firefite.local
+ (192.168.0.19) with Microsoft SMTP Server (version=TLS1_0,
+ cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.1.1466.3 via Frontend Transport;
+ Tue, 4 Jun 2019 15:34:42 +0300
+Content-Type: text/plain; charset="iso-8859-1"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8BIT
+Content-Description: Mail message body
+Subject: Award Notice
+To:     Recipients <hnkglobalpromo@brew-meister.com>
+From:   "Mrs. Vera Donald" <hnkglobalpromo@brew-meister.com>
+Date:   Tue, 4 Jun 2019 20:34:34 +0800
+Reply-To: <hp-fudiciaryagent@brew-meister.com>
+X-Antivirus: Avast (VPS 190604-1, 06/03/2019), Outbound message
+X-Antivirus-Status: Clean
+Message-ID: <c4c0709e-bf75-4830-b004-8d862a6931f3@Mail-Exchange.firefite.local>
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-dwc3_qcom_clk_init() is called with of_count_phandle_with_args() as an
-argument.  If of_count_phandle_with_args() returns an error, the number
-of clocks will be a negative value and will lead to undefined behaviour.
+We are gleeful to inform you that your e-mail address eventually entered our 2019 online promotion that won you C$3,780,000.00 Canadian Dollars. Kindly respond for claim processing.
 
-Ensure we check for an error before attempting to blindly use the value.
+Mrs. Vera Donald
 
-Signed-off-by: Lee Jones <lee.jones@linaro.org>
 ---
- drivers/usb/dwc3/dwc3-qcom.c | 3 +++
- 1 file changed, 3 insertions(+)
-
-diff --git a/drivers/usb/dwc3/dwc3-qcom.c b/drivers/usb/dwc3/dwc3-qcom.c
-index f21fdd6cdd1a..633482926497 100644
---- a/drivers/usb/dwc3/dwc3-qcom.c
-+++ b/drivers/usb/dwc3/dwc3-qcom.c
-@@ -419,6 +419,9 @@ static int dwc3_qcom_clk_init(struct dwc3_qcom *qcom, int count)
- 	if (!count || ACPI_HANDLE(dev))
- 		return 0;
- 
-+	if (count < 0)
-+		return count;
-+
- 	qcom->clks = devm_kcalloc(dev, qcom->num_clocks,
- 				  sizeof(struct clk *), GFP_KERNEL);
- 	if (!qcom->clks)
--- 
-2.17.1
+This email has been checked for viruses by Avast antivirus software.
+https://www.avast.com/antivirus
 
