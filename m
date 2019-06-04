@@ -2,120 +2,107 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id DBFFA34F97
-	for <lists+linux-gpio@lfdr.de>; Tue,  4 Jun 2019 20:10:20 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 962FC3524F
+	for <lists+linux-gpio@lfdr.de>; Tue,  4 Jun 2019 23:53:57 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726406AbfFDSKQ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 4 Jun 2019 14:10:16 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:36737 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726179AbfFDSKQ (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 4 Jun 2019 14:10:16 -0400
-Received: by mail-wr1-f65.google.com with SMTP id n4so13792524wrs.3;
-        Tue, 04 Jun 2019 11:10:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=lLFJn8hfJB0bfYBQ2rEhUXIcdzRXExeNARfQE/rlETg=;
-        b=vUjBWTaBQcbMO0GWKgSI7xMK2QKr+0vX8zwG8ghZF85C1ae5KmMhS2KIgThcOqJ/rJ
-         TRzn+Njtqf/0JHaJzVdZt9V7KWSyWOqkiA8DTFHnfvw3BdAJ+5thsRwTgcBjaI83+gSy
-         1hqQpkUvlZY9LLtaUdp0L0TbBtBClqlkMuM23UiANzcvbBI1FcreHSUVrHBV7XpeZXy/
-         c/3hlvOFu3ruXyFBa/cYv0/K+X+brPVFx7HdrNG+e9RHJoe6JQGdrUhPb3s3UbmnQtj7
-         xAP75dTJ9fanBvBRUykQrrsmL713koEcbQjGcZlZrzMHPpJoeARIzNYJz0zD+hhPd2qG
-         cCsw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=lLFJn8hfJB0bfYBQ2rEhUXIcdzRXExeNARfQE/rlETg=;
-        b=YpAzXpiSCnZZZgDLLm5GwaMTx66Obdj9eczSHMi/u9GtquusEeWSVGYgAAODnS6PUk
-         IG4+uDwbO1gvv8nLobomnQbvolJ/sRoGT8gtzcLKXOtK5N+EBx2m17kEonD9b3fG2+Jh
-         QeY7WhYUzL8N72bnKUdUZr25y1qxnUTb9ZJ3UICk4+CHnZiZc0rXLrIi/OPV2QFsCmVa
-         WdA+5RbmA+RzVusV8DjE8D+rRXWewOqvfS9Yey8ZeoGxzX1JgARTi6FknB/ozo2844i+
-         VN1qN1D0/BwE9pECw6F5NLKlJDur+O4MVEc6iEQwsSVI/OiXrta3Fvq+2lHLGS+fgSiK
-         pQbA==
-X-Gm-Message-State: APjAAAUltmqSAyvTtaujeOiK43AKTZJ8IBctsIjM+I47AFBOCCiiV8oZ
-        FKQstiwMSFFSLylWqqaQecqKGKZQcluz0pabexs=
-X-Google-Smtp-Source: APXvYqxrnaWRBKNjOZJP0zWlO2DmEFkaazI6Z+tkInzQvHcCwD+PxOjOGa8Jm+4UyZqJvTfz1hmYWCIZQQV23Cv8CnY=
-X-Received: by 2002:a5d:4992:: with SMTP id r18mr7697528wrq.107.1559671814077;
- Tue, 04 Jun 2019 11:10:14 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190604072001.9288-1-bjorn.andersson@linaro.org>
- <20190604072001.9288-3-bjorn.andersson@linaro.org> <BN7PR08MB568450B1EC51ABAA2E426AC0DB150@BN7PR08MB5684.namprd08.prod.outlook.com>
-In-Reply-To: <BN7PR08MB568450B1EC51ABAA2E426AC0DB150@BN7PR08MB5684.namprd08.prod.outlook.com>
-From:   John Stultz <john.stultz@linaro.org>
-Date:   Tue, 4 Jun 2019 11:10:01 -0700
-Message-ID: <CANcMJZB+bg9LWzo=EaL-QnWiL49=MzyBJy8qsBiSMu8HZeWRxw@mail.gmail.com>
-Subject: Re: [EXT] [PATCH 2/3] scsi: ufs: Allow resetting the UFS device
-To:     "Bean Huo (beanhuo)" <beanhuo@micron.com>
-Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Pedro Sousa <pedrom.sousa@synopsys.com>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Andy Gross <agross@kernel.org>,
+        id S1726568AbfFDVxg (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 4 Jun 2019 17:53:36 -0400
+Received: from atlmailgw2.ami.com ([63.147.10.42]:58767 "EHLO
+        atlmailgw2.ami.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726519AbfFDVxg (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 4 Jun 2019 17:53:36 -0400
+X-AuditID: ac10606f-bbfff70000003de9-9b-5cf6e85fb469
+Received: from atlms1.us.megatrends.com (atlms1.us.megatrends.com [172.16.96.144])
+        (using TLS with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by atlmailgw2.ami.com (Symantec Messaging Gateway) with SMTP id 2A.12.15849.F58E6FC5; Tue,  4 Jun 2019 17:53:35 -0400 (EDT)
+Received: from hongweiz-Ubuntu-AMI.us.megatrends.com (172.16.98.93) by
+ atlms1.us.megatrends.com (172.16.96.144) with Microsoft SMTP Server (TLS) id
+ 14.3.408.0; Tue, 4 Jun 2019 17:53:35 -0400
+From:   Hongwei Zhang <hongweiz@ami.com>
+To:     Joel Stanley <joel@jms.id.au>,
         Linus Walleij <linus.walleij@linaro.org>,
+        Andrew Jeffery <andrew@aj.id.au>,
         Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
-        Subhash Jadavani <subhashj@codeaurora.org>
-Content-Type: text/plain; charset="UTF-8"
+        Mark Rutland <mark.rutland@arm.com>
+CC:     Hongwei Zhang <hongweiz@ami.com>, <linux-gpio@vger.kernel.org>,
+        <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-aspeed@lists.ozlabs.org>, <linux-kernel@vger.kernel.org>
+Subject: [PATCH 1/3 linux dev-5.1 v2] ARM: dts: aspeed: Add SGPM pinmux
+Date:   Tue, 4 Jun 2019 17:53:32 -0400
+Message-ID: <1559685212-15857-1-git-send-email-hongweiz@ami.com>
+X-Mailer: git-send-email 2.7.4
+MIME-Version: 1.0
+Content-Type: text/plain
+X-Originating-IP: [172.16.98.93]
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrMLMWRmVeSWpSXmKPExsWyRiBhgm78i28xBtuOmlnsusxhMf/IOVaL
+        3+f/MltM+bOcyWLT42usFs2rzzFbbJ7/h9Hi8q45bBZLr19ksmjde4Tdgcvjavsudo8189Yw
+        elz8eIzZY9OqTjaPO9f2sHlsXlLvcX7GQkaPz5vkAjiiuGxSUnMyy1KL9O0SuDK+HJzGXrBU
+        pOLGm2fMDYz7BbsYOTgkBEwk2ldmdjFycggJ7GKSuDpPqouRC8g+xCjxd9ULJpAEm4CaxN7N
+        c5hAEiICOxglOue3sYI4zAJnGSU2PNzLDFIlLOAusfnjA0YQm0VARaJpwyI2EJtXwEGifecM
+        sBoJATmJm+c6mSHighInZz5hAbGZBSQkDr54wQxxhqzErUOPmSDqFSSe9z1mmcDINwtJyywk
+        LQsYmVYxCiWW5OQmZuaklxvpJeZm6iXn525ihAR0/g7Gjx/NDzEycTACvcTBrCTCm3j7S4wQ
+        b0piZVVqUX58UWlOavEhRmkOFiVx3lVrvsUICaQnlqRmp6YWpBbBZJk4OKUaGFmuC7473/RG
+        p23hviWB7gezwvuk102f8PmA3gqzF9umZluYTr/S8l28QH5l95w9JuvibYwZ9LfLzkx5eqZG
+        63z/tHutkoLuyeZXyzyqXi/qUPRiPjmxLUhps72pbeHu3nNXFFp6Hk8QPn339kONji0192c8
+        2yQaUWvn48MYKHywZemsek5rWSWW4oxEQy3mouJEACilowFWAgAA
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Jun 4, 2019 at 1:14 AM Bean Huo (beanhuo) <beanhuo@micron.com> wrote:
->
-> Hi, Bjorn
->
-> >Acquire the device-reset GPIO and toggle this to reset the UFS device during
-> >initialization and host reset.
-> >
-> >+/**
-> >+ ufshcd_device_reset() - toggle the (optional) device reset line
-> >+ * @hba: per-adapter instance
-> >+ *
-> >+ * Toggles the (optional) reset line to reset the attached device.
-> >+ */
-> >+static void ufshcd_device_reset(struct ufs_hba *hba) {
-> >+      /*
-> >+       * The USB device shall detect reset pulses of 1us, sleep for 10us to
-> >+       * be on the safe side.
-> >+       */
-> >+      gpiod_set_value_cansleep(hba->device_reset, 1);
-> >+      usleep_range(10, 15);
-> >+
-> >+      gpiod_set_value_cansleep(hba->device_reset, 0);
-> >+      usleep_range(10, 15);
-> >+}
-> >+
-> > /**
-> >  * ufshcd_host_reset_and_restore - reset and restore host controller
-> >  * @hba: per-adapter instance
-> >@@ -6159,6 +6179,9 @@ static int ufshcd_reset_and_restore(struct ufs_hba
-> >*hba)
-> >       int retries = MAX_HOST_RESET_RETRIES;
-> >
-> >       do {
-> >+              /* Reset the attached device */
-> >+              ufshcd_device_reset(hba);
-> >+
->
-> what's problem you met, and you should reset UFS device here? could you give more info?
+Add SGPM pinmux to ast2500-pinctrl function and group, to prepare for
+supporting SGPIO in AST2500 SoC.
 
-On the pixel3, devices with micron UFS chips won't boot upstream
-kernels without this patch, which is a rewrite of an earlier patch:
-  https://git.linaro.org/people/john.stultz/android-dev.git/commit/?h=dev/p3&id=99f3dd8519a848b752679584451c45f42c326a17
+Signed-off-by: Hongwei Zhang <hongweiz@ami.com>
+---
+ Documentation/devicetree/bindings/pinctrl/pinctrl-aspeed.txt | 2 +-
+ drivers/pinctrl/aspeed/pinctrl-aspeed-g5.c                   | 4 ++++
+ 2 files changed, 5 insertions(+), 1 deletion(-)
 
-Which was pulled from the downstream tree from here:
-  https://android.googlesource.com/kernel/msm.git/+/9c8077087e818017%5E%21/
+diff --git a/Documentation/devicetree/bindings/pinctrl/pinctrl-aspeed.txt b/Documentation/devicetree/bindings/pinctrl/pinctrl-aspeed.txt
+index 3b7266c..8f1c5c4 100644
+--- a/Documentation/devicetree/bindings/pinctrl/pinctrl-aspeed.txt
++++ b/Documentation/devicetree/bindings/pinctrl/pinctrl-aspeed.txt
+@@ -84,7 +84,7 @@ NDCD2 NDCD3 NDCD4 NDSR1 NDSR2 NDSR3 NDSR4 NDTR1 NDTR2 NDTR3 NDTR4 NRI1 NRI2
+ NRI3 NRI4 NRTS1 NRTS2 NRTS3 NRTS4 OSCCLK PEWAKE PNOR PWM0 PWM1 PWM2 PWM3 PWM4
+ PWM5 PWM6 PWM7 RGMII1 RGMII2 RMII1 RMII2 RXD1 RXD2 RXD3 RXD4 SALT1 SALT10
+ SALT11 SALT12 SALT13 SALT14 SALT2 SALT3 SALT4 SALT5 SALT6 SALT7 SALT8 SALT9
+-SCL1 SCL2 SD1 SD2 SDA1 SDA2 SGPS1 SGPS2 SIOONCTRL SIOPBI SIOPBO SIOPWREQ
++SCL1 SCL2 SD1 SD2 SDA1 SDA2 SGPM SGPS1 SGPS2 SIOONCTRL SIOPBI SIOPBO SIOPWREQ
+ SIOPWRGD SIOS3 SIOS5 SIOSCI SPI1 SPI1CS1 SPI1DEBUG SPI1PASSTHRU SPI2CK SPI2CS0
+ SPI2CS1 SPI2MISO SPI2MOSI TIMER3 TIMER4 TIMER5 TIMER6 TIMER7 TIMER8 TXD1 TXD2
+ TXD3 TXD4 UART6 USB11BHID USB2AD USB2AH USB2BD USB2BH USBCKI VGABIOSROM VGAHS
+diff --git a/drivers/pinctrl/aspeed/pinctrl-aspeed-g5.c b/drivers/pinctrl/aspeed/pinctrl-aspeed-g5.c
+index 187abd7..0c89647 100644
+--- a/drivers/pinctrl/aspeed/pinctrl-aspeed-g5.c
++++ b/drivers/pinctrl/aspeed/pinctrl-aspeed-g5.c
+@@ -577,6 +577,8 @@ SS_PIN_DECL(N3, GPIOJ2, SGPMO);
+ SIG_EXPR_LIST_DECL_SINGLE(SGPMI, SGPM, SIG_DESC_SET(SCU84, 11));
+ SS_PIN_DECL(N4, GPIOJ3, SGPMI);
+ 
++FUNC_GROUP_DECL(SGPM, R2, L2, N3, N4);
++
+ #define N5 76
+ SIG_EXPR_LIST_DECL_SINGLE(VGAHS, VGAHS, SIG_DESC_SET(SCU84, 12));
+ SIG_EXPR_LIST_DECL_SINGLE(DASHN5, DASHN5, SIG_DESC_SET(SCU94, 8));
+@@ -2127,6 +2129,7 @@ static const struct aspeed_pin_group aspeed_g5_groups[] = {
+ 	ASPEED_PINCTRL_GROUP(SD2),
+ 	ASPEED_PINCTRL_GROUP(SDA1),
+ 	ASPEED_PINCTRL_GROUP(SDA2),
++	ASPEED_PINCTRL_GROUP(SGPM),
+ 	ASPEED_PINCTRL_GROUP(SGPS1),
+ 	ASPEED_PINCTRL_GROUP(SGPS2),
+ 	ASPEED_PINCTRL_GROUP(SIOONCTRL),
+@@ -2296,6 +2299,7 @@ static const struct aspeed_pin_function aspeed_g5_functions[] = {
+ 	ASPEED_PINCTRL_FUNC(SD2),
+ 	ASPEED_PINCTRL_FUNC(SDA1),
+ 	ASPEED_PINCTRL_FUNC(SDA2),
++	ASPEED_PINCTRL_FUNC(SGPM),
+ 	ASPEED_PINCTRL_FUNC(SGPS1),
+ 	ASPEED_PINCTRL_FUNC(SGPS2),
+ 	ASPEED_PINCTRL_FUNC(SIOONCTRL),
+-- 
+2.7.4
 
-CCing Subhash as he may have additional context.
-
-thanks
--john
