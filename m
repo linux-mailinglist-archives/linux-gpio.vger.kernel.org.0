@@ -2,110 +2,194 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 965D935687
-	for <lists+linux-gpio@lfdr.de>; Wed,  5 Jun 2019 08:01:14 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8472D356BD
+	for <lists+linux-gpio@lfdr.de>; Wed,  5 Jun 2019 08:16:47 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726674AbfFEGBL (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 5 Jun 2019 02:01:11 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:38443 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726645AbfFEGBK (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 5 Jun 2019 02:01:10 -0400
-Received: by mail-pg1-f194.google.com with SMTP id v11so11787634pgl.5
-        for <linux-gpio@vger.kernel.org>; Tue, 04 Jun 2019 23:01:10 -0700 (PDT)
+        id S1726656AbfFEGQi (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 5 Jun 2019 02:16:38 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:38851 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726555AbfFEGQh (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 5 Jun 2019 02:16:37 -0400
+Received: by mail-pg1-f193.google.com with SMTP id v11so11807888pgl.5
+        for <linux-gpio@vger.kernel.org>; Tue, 04 Jun 2019 23:16:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=XhgXHLObV5Vbqo0Ol1dr/K9C6PfbnIr6P+CU31xn0uk=;
-        b=JMDtt3o4OpRyNKqkIsA2AAl8veHAMN2+KlqcyzaxHwpNI6+UJ79YrJx/oC0KuKGwN4
-         uLEguOKwpu/0TSXjxpVrV9ohcTpmW1vkIcHcIVFgf/wP1efqPouTguYWm4hBw/s9V3XE
-         aw5GVUVx5BjtFgTryP1pejwqui5+CG9DuIUr2Ev5/THCjVKRvJBSeEgLJSQ/KuXmabKK
-         8imeg+KY2S7LywceHrI7pk9u1toSQeENkXq3lHGZjPFcoLpEOYr1s0TZGtu8CjO/sgnV
-         mzVHrj+TjeVEHvdU1/i3c4QDrjusE5znnwztyeYOiLl5Loaz8upXQeqBR5ZaH4KbdnXP
-         iplA==
+        bh=yPLGcJboWqTS41OXT0YPS9mFDLi+KIswrNZ4xj5RMzE=;
+        b=a2p19VFRYfiN+slwv4mz43rBb2yISQyrLkTJcMwSA/WWx9l79OZvNlzb0McxQjlz1q
+         V0H85qKfEr5ZtprV5QK9qBTKSV8I1gF9ndrBiqTp2IS+Bz1UAF4xjzJ5ovK8Dbv9obd/
+         E4MAUdbc473B8+RS4fi0cnV5jtQ/pttN9wdLEjbGLZPKISnutmqS1RoLvLUmatV7Sxj4
+         1YpTj26Z25oIhkuyqe73xgLobBxUTtBRWPzTU80HA6shTFVU+iFMdg7A/LeV1fBVQ54j
+         iipbbvvwaXrxFxqY26USW52xFqh7PwiURi/plOK8dz92vePi2swKlawieFKqGfDli8E8
+         zFfA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=XhgXHLObV5Vbqo0Ol1dr/K9C6PfbnIr6P+CU31xn0uk=;
-        b=m/pBszv4IbaFPtEnKzauPGh45aB5hAIDkz5iiiGNMKKc80hJpZjw7x0dd/u+FhGdsN
-         6tAQpB+5fGwg/3gq4jcgKII4Ra1aYuC8EsijcJCAKVlDoL9fYa9Y1Q6wnma01YK3U8w0
-         s1IfLKodMAUJ0WBpDXXmjLw8flnagXWr0xeGNERfFVRTGOud2LCGqxGJ6FPRHvPizqoB
-         wU6S1aXYfGu02blyoTCbD/xWDi3BWppWu2/gTn47i6fQeBD4qVlUSAfu3fadib7WgLQC
-         hP17JNCdl+FgL6rlUiBeDdiurMJ0CNnUEYOR6/NCoL+bXlVDhRHEw3+1Mu72qpjkPLs5
-         HPEA==
-X-Gm-Message-State: APjAAAWUA0Q1djma3x7ihaHYCucYHN1KCuJEHZnalnErypTJktaQ/Ue5
-        sBLsw8AIYk7ZppcvsB6KBX1O/w==
-X-Google-Smtp-Source: APXvYqxRBdu6ErpFV+5gKRxDXyTrGYM8duUS6m39Y3koDFw3q4yhtgHG0ERg3ih11MGWr8lRBc13xA==
-X-Received: by 2002:a17:90a:2ec9:: with SMTP id h9mr43058272pjs.130.1559714469980;
-        Tue, 04 Jun 2019 23:01:09 -0700 (PDT)
+        bh=yPLGcJboWqTS41OXT0YPS9mFDLi+KIswrNZ4xj5RMzE=;
+        b=RTnUJjtNeT0icNPTpf5r2csxIb8aeqQ85nYEJQ6ug4zbc3IW/2FAExQ/AMEP5/R06V
+         Qyn4lQIdryzuuPD9IPTbSR0Q7My9gHPSWSZRxcfRUSWjIL5bqiCMo7qS7HmGKywfGlm0
+         cxQrP12H5GT52T31eS07l2gRC7WXfkvsxEgG+mHwv7CGF2Q59pH72TpyjRIXIt1Yn5Lx
+         2Gyi/7JstXPnwDbiw6Ap7ulFWxJMTq+/1EYKZCI3H7Q3ldJplc84ZjF+oKGezl72kgYs
+         SPz659mJ/h30Cpx+hYVkOdmiRyLBfG1FvDx4gdhlvqO3CxmixX3fQswiC8vfTazoeRrP
+         iqAw==
+X-Gm-Message-State: APjAAAXGBLFMcJOeN41D5s+pgRU//b7zDKHQb0Lsln4XhzpUACHCdUiM
+        HYSDOSqLgZgnlJO1w38FzmPrRA==
+X-Google-Smtp-Source: APXvYqwEJhIs8QubYN0avnbvfixWjIzhGaRnp7YPaFTgZ2Z2O0BG2WDaO37plKfU2MMrMOlw9tyzHw==
+X-Received: by 2002:a62:ea0a:: with SMTP id t10mr43421341pfh.236.1559715396814;
+        Tue, 04 Jun 2019 23:16:36 -0700 (PDT)
 Received: from tuxbook-pro (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id q22sm2332383pff.63.2019.06.04.23.01.08
+        by smtp.gmail.com with ESMTPSA id z18sm8987858pgh.88.2019.06.04.23.16.35
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 04 Jun 2019 23:01:09 -0700 (PDT)
-Date:   Tue, 4 Jun 2019 23:01:54 -0700
+        Tue, 04 Jun 2019 23:16:36 -0700 (PDT)
+Date:   Tue, 4 Jun 2019 23:17:21 -0700
 From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Avri Altman <Avri.Altman@wdc.com>
-Cc:     John Stultz <john.stultz@linaro.org>,
-        Andy Gross <agross@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Pedro Sousa <pedrom.sousa@synopsys.com>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>
-Subject: Re: [PATCH 0/3] (Qualcomm) UFS device reset support
-Message-ID: <20190605060154.GJ22737@tuxbook-pro>
-References: <20190604072001.9288-1-bjorn.andersson@linaro.org>
- <CANcMJZBmgWMZu7Y53Lnx_x3L2UpCmEbFRHVW0SFCXfW=Yw9uYg@mail.gmail.com>
- <SN6PR04MB4925530F216E86F6404FE14CFC160@SN6PR04MB4925.namprd04.prod.outlook.com>
+To:     Lee Jones <lee.jones@linaro.org>
+Cc:     alokc@codeaurora.org, kramasub@codeaurora.org,
+        andy.gross@linaro.org, david.brown@linaro.org,
+        wsa+renesas@sang-engineering.com, linus.walleij@linaro.org,
+        balbi@kernel.org, gregkh@linuxfoundation.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        jlhugo@gmail.com, linux-i2c@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-usb@vger.kernel.org
+Subject: Re: [PATCH 4/8] pinctrl: qcom: sdm845: Provide ACPI support
+Message-ID: <20190605061721.GK22737@tuxbook-pro>
+References: <20190604104455.8877-1-lee.jones@linaro.org>
+ <20190604104455.8877-4-lee.jones@linaro.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <SN6PR04MB4925530F216E86F6404FE14CFC160@SN6PR04MB4925.namprd04.prod.outlook.com>
+In-Reply-To: <20190604104455.8877-4-lee.jones@linaro.org>
 User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue 04 Jun 22:50 PDT 2019, Avri Altman wrote:
+On Tue 04 Jun 03:44 PDT 2019, Lee Jones wrote:
 
-> Hi,
+> This patch provides basic support for booting with ACPI instead
+> of the currently supported Device Tree.  When doing so there are a
+> couple of differences which we need to taken into consideration.
 > 
-> > 
-> > On Tue, Jun 4, 2019 at 12:22 AM Bjorn Andersson
-> > <bjorn.andersson@linaro.org> wrote:
-> > >
-> > > This series exposes the ufs_reset line as a gpio, adds support for ufshcd to
-> > > acquire and toggle this and then adds this to SDM845 MTP.
-> > >
-> > > Bjorn Andersson (3):
-> > >   pinctrl: qcom: sdm845: Expose ufs_reset as gpio
-> > >   scsi: ufs: Allow resetting the UFS device
-> > >   arm64: dts: qcom: sdm845-mtp: Specify UFS device-reset GPIO
-> > 
-> > Adding similar change as in sdm845-mtp to the not yet upstream
-> > blueline dts, I validated this allows my micron UFS pixel3 to boot.
-> > 
-> > Tested-by: John Stultz <john.stultz@linaro.org>
-> Maybe ufs_hba_variant_ops would be the proper place to add this?
+> Firstly, the SDM850 ACPI tables omit information pertaining to the
+> 4 reserved GPIOs on the platform.  If Linux attempts to touch/
+> initialise any of these lines, the firmware will restart the
+> platform.
 > 
+> Secondly, when booting with ACPI, it is expected that the firmware
+> will set-up things like; Regulators, Clocks, Pin Functions, etc in
+> their ideal configuration.  Thus, the possible Pin Functions
+> available to this platform are not advertised when providing the
+> higher GPIOD/Pinctrl APIs with pin information.
+> 
+> Signed-off-by: Lee Jones <lee.jones@linaro.org>
+> ---
+>  drivers/pinctrl/qcom/Kconfig          |  2 +-
+>  drivers/pinctrl/qcom/pinctrl-sdm845.c | 35 ++++++++++++++++++++++++++-
+>  2 files changed, 35 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/pinctrl/qcom/Kconfig b/drivers/pinctrl/qcom/Kconfig
+> index 2e66ab72c10b..aafbe932424f 100644
+> --- a/drivers/pinctrl/qcom/Kconfig
+> +++ b/drivers/pinctrl/qcom/Kconfig
+> @@ -168,7 +168,7 @@ config PINCTRL_SDM660
+>  
+>  config PINCTRL_SDM845
+>         tristate "Qualcomm Technologies Inc SDM845 pin controller driver"
+> -       depends on GPIOLIB && OF
+> +       depends on GPIOLIB && (OF || ACPI)
+>         select PINCTRL_MSM
+>         help
+>           This is the pinctrl, pinmux, pinconf and gpiolib driver for the
+> diff --git a/drivers/pinctrl/qcom/pinctrl-sdm845.c b/drivers/pinctrl/qcom/pinctrl-sdm845.c
+> index c97f20fca5fd..7188bee3cf3e 100644
+> --- a/drivers/pinctrl/qcom/pinctrl-sdm845.c
+> +++ b/drivers/pinctrl/qcom/pinctrl-sdm845.c
+> @@ -3,6 +3,7 @@
+>   * Copyright (c) 2016-2018, The Linux Foundation. All rights reserved.
+>   */
+>  
+> +#include <linux/acpi.h>
+>  #include <linux/module.h>
+>  #include <linux/of.h>
+>  #include <linux/platform_device.h>
+> @@ -1277,6 +1278,10 @@ static const struct msm_pingroup sdm845_groups[] = {
+>  	UFS_RESET(ufs_reset, 0x99f000),
+>  };
+>  
+> +static const int sdm845_acpi_reserved_gpios[] = {
+> +	0, 1, 2, 3, 81, 82, 83, 84, -1
+> +};
+> +
+>  static const struct msm_pinctrl_soc_data sdm845_pinctrl = {
+>  	.pins = sdm845_pins,
+>  	.npins = ARRAY_SIZE(sdm845_pins),
+> @@ -1284,14 +1289,41 @@ static const struct msm_pinctrl_soc_data sdm845_pinctrl = {
+>  	.nfunctions = ARRAY_SIZE(sdm845_functions),
+>  	.groups = sdm845_groups,
+>  	.ngroups = ARRAY_SIZE(sdm845_groups),
+> +	.reserved_gpios = sdm845_acpi_reserved_gpios,
 
-Are you saying that these memories only need a reset when they are
-paired with the Qualcomm host controller?
+The reason why put these in DT is because the list is board/firmware
+dependent. E.g. the firmware on db845c does not support the peripherals
+that sits on these 8 pins and as such these are not reserved.
 
-The way it's implemented it here is that the device-reset GPIO is
-optional and only if you specify it we'll toggle the reset. So if your
-board design has a UFS memory that requires a reset pulse during
-initialization you specify this, regardless of which vendor your SoC
-comes from.
+But given that the two structs looks identical now, did you perhaps not
+intend to add.reserved_gpios for the non-ACPI case?
 
 Regards,
 Bjorn
+
+> +	.ngpios = 150,
+> +};
+> +
+> +static const struct msm_pinctrl_soc_data sdm845_acpi_pinctrl = {
+> +	.pins = sdm845_pins,
+> +	.npins = ARRAY_SIZE(sdm845_pins),
+> +	.groups = sdm845_groups,
+> +	.ngroups = ARRAY_SIZE(sdm845_groups),
+> +	.reserved_gpios = sdm845_acpi_reserved_gpios,
+>  	.ngpios = 150,
+>  };
+>  
+>  static int sdm845_pinctrl_probe(struct platform_device *pdev)
+>  {
+> -	return msm_pinctrl_probe(pdev, &sdm845_pinctrl);
+> +	int ret;
+> +
+> +	if (pdev->dev.of_node) {
+> +		ret = msm_pinctrl_probe(pdev, &sdm845_pinctrl);
+> +	} else if (ACPI_HANDLE(&pdev->dev)) {
+> +		ret = msm_pinctrl_probe(pdev, &sdm845_acpi_pinctrl);
+> +	} else {
+> +		dev_err(&pdev->dev, "DT and ACPI disabled\n");
+> +		return -EINVAL;
+> +	}
+> +
+> +	return ret;
+>  }
+>  
+> +static const struct acpi_device_id sdm845_pinctrl_acpi_match[] = {
+> +	{ "QCOM0217"},
+> +	{ },
+> +};
+> +MODULE_DEVICE_TABLE(acpi, sdm845_pinctrl_acpi_match);
+> +
+>  static const struct of_device_id sdm845_pinctrl_of_match[] = {
+>  	{ .compatible = "qcom,sdm845-pinctrl", },
+>  	{ },
+> @@ -1302,6 +1334,7 @@ static struct platform_driver sdm845_pinctrl_driver = {
+>  		.name = "sdm845-pinctrl",
+>  		.pm = &msm_pinctrl_dev_pm_ops,
+>  		.of_match_table = sdm845_pinctrl_of_match,
+> +		.acpi_match_table = ACPI_PTR(sdm845_pinctrl_acpi_match),
+>  	},
+>  	.probe = sdm845_pinctrl_probe,
+>  	.remove = msm_pinctrl_remove,
+> -- 
+> 2.17.1
+> 
