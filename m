@@ -2,51 +2,53 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id EE8353645B
-	for <lists+linux-gpio@lfdr.de>; Wed,  5 Jun 2019 21:15:00 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B453C364B7
+	for <lists+linux-gpio@lfdr.de>; Wed,  5 Jun 2019 21:29:41 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726691AbfFETO6 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 5 Jun 2019 15:14:58 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:41629 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726653AbfFETO5 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 5 Jun 2019 15:14:57 -0400
-Received: by mail-pl1-f193.google.com with SMTP id s24so9905205plr.8
-        for <linux-gpio@vger.kernel.org>; Wed, 05 Jun 2019 12:14:56 -0700 (PDT)
+        id S1726280AbfFET3b (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 5 Jun 2019 15:29:31 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:50603 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726461AbfFET3b (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 5 Jun 2019 15:29:31 -0400
+Received: by mail-wm1-f68.google.com with SMTP id f204so48963wme.0
+        for <linux-gpio@vger.kernel.org>; Wed, 05 Jun 2019 12:29:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=3Rc60lsJ3z1zOjfi7ksD28e6ywcaQlCBCKfGl8ThP5g=;
-        b=wl9zOlVGzsak3W0n9srNqt6xTicaVMXyvuV62ylpgplp0YgPU7AxCF2aoOl4RB2iC5
-         6cPYPEmWEcxRkhSQT57mRJKRMLXCedtcqKwMwsOGUFlinvg03O+6j6DGB/fUMSIL09V+
-         wbvrFegoqrdRMWReviAaArKT1XKDv7Q3UdZInx0oUItNDGwcSfHj0y3P/XbhDxVRBZ0D
-         1yCB6OValT1P7bMoLKXsiTopYfc7JTB1ixy+cTPwWdKa2YzQE2Wk+wXa6s4NUj8y8Dfc
-         D9FBIWE1C6kkbzPxlvNmqGmNa6Z9G3Xpa+E2YU9W+JqS/kkBUZJxb5rYvg85KIW0DsTX
-         h0Mw==
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=D5NcDW+/WmQwqSB+Xi8h1sKYPuuI5ApOFt3kq9BvkTE=;
+        b=U4jgD3qb1TiWPeo0I0EQj9YVlGjsjBiUgv3hdUmrYuJZrUIMq1nNLAiutPQCj8EtAU
+         YcN2wBjP/xTv7tUdThX93VYX+jHZw5o551/dyZ5nHxveozxZb7mV7AnbhOP3Xm1aNcgb
+         zWPwwh4cUFyxAGVJHFgITDfzSo0Fijs3mzurFbu3Dxh9EE16inWaZaO31svsntXTWO+E
+         rfQ2q3CIc3i7jCGmbbwjZpRhYeLhJK8BD9iADSXBK+n0GDyNWmK+SIK+418dbmYGmH2y
+         bIn0iv+CbWqXWwlNmyM/unKrXJcIfcEAv7F48JcipbDFhbKp/iNFt0eUPUWKtO7DjtrJ
+         Jocw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=3Rc60lsJ3z1zOjfi7ksD28e6ywcaQlCBCKfGl8ThP5g=;
-        b=dMXiKsvdJV8kWinMl/3fOkrlmho89GMRyjvclsQNRUAntD2+h75nSsA4M5OiAWksVR
-         rC9dbLpdstWia/sJklegiGoZ4RRywE34GIHSFRwYdU6/1sxZGkU6SJrkqyyvpdbAjKML
-         Y8J21J4fM7FY75CsKgPhUsvJRtz4l0uUbfs7SYd5ptpa8GuHmAipqS3wFT3Qr1ZmGj+p
-         a6ld+hSuJAed/de/vyswXkUvHViJjicLtzphdwEOMqnzV56B7skGjgxp80M+rfRkG/6d
-         m+q8Ji2d2t8qmbloRaAcF3REMKaU2bdZZVqDiMSMazaLbBa51zNLR5NuzPf30mjv55lK
-         JXiw==
-X-Gm-Message-State: APjAAAVzrRq2i88pDyt23RxR/Xnkx4sjG2kEQ1EkqXC1BF4MRLXuijTq
-        1/wdV5SswHCPPWz6/hX33Bbxfg==
-X-Google-Smtp-Source: APXvYqz+h4aRHxX//DbbKSqnGBRk+YbQMFSEIS2PAURYu4NSWDUnLwqSRo+mFseHlHHDfgCMaf9Iyw==
-X-Received: by 2002:a17:902:2ba7:: with SMTP id l36mr45371487plb.334.1559762096439;
-        Wed, 05 Jun 2019 12:14:56 -0700 (PDT)
-Received: from minitux (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id t15sm21182517pjb.6.2019.06.05.12.14.55
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=D5NcDW+/WmQwqSB+Xi8h1sKYPuuI5ApOFt3kq9BvkTE=;
+        b=fBdWr4LuC40HFhIpAcmGXdIxxzhhPHH+sz93rTttChtvOlfaEc9Nyz2rcwrzQflK6X
+         k5RjyOMa6ffNTkCftGKK4hNVAo6DdkefYqAkbxxlKVIbKpIUFkvbcZfK1FRpKJLm7tzs
+         X3XrqVBF0u0Y+P0Cd23S0/0Ca4b+EyvRMqxtnTsXdfzCFUYAVoapYgTIT0hipPQsDOH5
+         ggDNdA8zILIIb2Li/3MtMqbp7h61/wj8HnBDTm5p16NGylI9f9yuGm5OrLc9+JGLJwGd
+         KTn4JvOyuULOIsB7EYcBj5TBlJRuXPwt/nl+r8I7xaoh0waGziYgB+DpxEMO/RrfrDjj
+         yrFw==
+X-Gm-Message-State: APjAAAUKOdQ/lMUNvC1PyW8FN8INDCM9ep6qzi+7uvkmfNfnMciJprh5
+        8qqdie/RMRR8/Sl2ZNKyV55bqg==
+X-Google-Smtp-Source: APXvYqz8xLqEZUQ1bW9JTYYNxCZRI9YeEhZeMBTkaYKaXpxE3Ij1iNeqP9qVNZUnCX1dMi5d/0Ok/g==
+X-Received: by 2002:a1c:ca06:: with SMTP id a6mr23888475wmg.48.1559762968778;
+        Wed, 05 Jun 2019 12:29:28 -0700 (PDT)
+Received: from dell ([2.31.167.229])
+        by smtp.gmail.com with ESMTPSA id w185sm20968659wma.39.2019.06.05.12.29.27
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 05 Jun 2019 12:14:55 -0700 (PDT)
-Date:   Wed, 5 Jun 2019 12:14:53 -0700
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Lee Jones <lee.jones@linaro.org>
+        Wed, 05 Jun 2019 12:29:28 -0700 (PDT)
+Date:   Wed, 5 Jun 2019 20:29:26 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>
 Cc:     alokc@codeaurora.org, kramasub@codeaurora.org,
         andy.gross@linaro.org, david.brown@linaro.org,
         wsa+renesas@sang-engineering.com, linus.walleij@linaro.org,
@@ -57,132 +59,79 @@ Cc:     alokc@codeaurora.org, kramasub@codeaurora.org,
         linux-usb@vger.kernel.org
 Subject: Re: [PATCH 7/8] usb: dwc3: qcom: Start USB in 'host mode' on the
  SDM845
-Message-ID: <20190605191453.GJ4814@minitux>
+Message-ID: <20190605192926.GW4797@dell>
 References: <20190604104455.8877-1-lee.jones@linaro.org>
  <20190604104455.8877-7-lee.jones@linaro.org>
  <20190605070029.GN22737@tuxbook-pro>
  <20190605083454.GO4797@dell>
+ <20190605191453.GJ4814@minitux>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20190605083454.GO4797@dell>
-User-Agent: Mutt/1.12.0 (2019-05-25)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190605191453.GJ4814@minitux>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed 05 Jun 01:34 PDT 2019, Lee Jones wrote:
+On Wed, 05 Jun 2019, Bjorn Andersson wrote:
 
-> On Wed, 05 Jun 2019, Bjorn Andersson wrote:
+> On Wed 05 Jun 01:34 PDT 2019, Lee Jones wrote:
 > 
-> > On Tue 04 Jun 03:44 PDT 2019, Lee Jones wrote:
+> > On Wed, 05 Jun 2019, Bjorn Andersson wrote:
 > > 
-> > > When booting with Device Tree, the current default boot configuration
-> > > table option, the request to boot via 'host mode' comes from the
-> > > "dr_mode" property.
-> > 
-> > This has been the default on the MTP, but this is changing as this is
-> > causing issues when connected downstream from a hub (the typical
-> > development case for the primary USB port of a phone like device) and
-> > more importantly we don't have support for the PMIC blocks that control
-> > VBUS.
-> 
-> My point is not about which mode is currently chosen.  It's more about
-> the capability of choosing which mode is appropriate for a given
-> system via DT.
-> 
-> > Once these issues are resolved the dr_mode would be "otg".
-> 
-> OTG doesn't work on this H/W, so we need to specify "host" mode.
-> 
-
-My objection is that when you say "this H/W" you mean a particular
-product, but you're making this decision for all SDM845 based products
-using ACPI.
-
-I don't know if there is a Windows phone based on SDM845, but if there
-is then I don't think forcing it to host would be correct.
-
-> > > A property of the same name can be used inside
-> > > ACPI tables too.  However it is missing from the SDM845's ACPI tables
-> > > so we have to supply this information using Platform Device Properites
-> > > instead.
+> > > On Tue 04 Jun 03:44 PDT 2019, Lee Jones wrote:
 > > > 
-> > 
-> > Afaict this would install a fall-back property, so in the case that we
-> > have specified dr_mode in DT (or ACPI) that would take precedence. So
-> 
-> That's correct.
-> 
-> > the commit message should reflect that this redefines the default choice
-> > to be "host", rather than "otg".
-> 
-> No problem.
-> 
-> > Which is in conflict with what's described for dr_mode in
-> > Documentation/devicetree/bindings/usb/generic.txt
-> 
-> This implementation only affects ACPI based platforms.  When booting
-> with DT, the description in that DT related document is still
-> accurate.
-> 
-
-You're right, I got lost between the patches and the sprinkled if
-(ACPI_HANDLE()) in the probe. This is only added for ACPI.
-
-> > And this driver is used on a range of different Qualcomm platforms, so I
-> > don't think this is SDM845 specific.
-> 
-> ACPI based platforms?
-> 
-> All the ones I've seen use the XHCI USB driver directly ("PNP0D10").
->  
-
-MSM8998 (835) has the same controller, so this should affect those
-laptops as well.
-
-Regards,
-Bjorn
-
-> > > Signed-off-by: Lee Jones <lee.jones@linaro.org>
-> > > ---
-> > >  drivers/usb/dwc3/dwc3-qcom.c | 12 ++++++++++++
-> > >  1 file changed, 12 insertions(+)
+> > > > When booting with Device Tree, the current default boot configuration
+> > > > table option, the request to boot via 'host mode' comes from the
+> > > > "dr_mode" property.
 > > > 
-> > > diff --git a/drivers/usb/dwc3/dwc3-qcom.c b/drivers/usb/dwc3/dwc3-qcom.c
-> > > index 349bf549ee44..f21fdd6cdd1a 100644
-> > > --- a/drivers/usb/dwc3/dwc3-qcom.c
-> > > +++ b/drivers/usb/dwc3/dwc3-qcom.c
-> > > @@ -468,6 +468,11 @@ static const struct acpi_device_id dwc3_qcom_acpi_match[] = {
-> > >  };
-> > >  MODULE_DEVICE_TABLE(acpi, dwc3_qcom_acpi_match);
-> > >  
-> > > +static const struct property_entry dwc3_qcom_acpi_properties[] = {
-> > > +	PROPERTY_ENTRY_STRING("dr_mode", "host"),
-> > > +	{}
-> > > +};
-> > > +
-> > >  static int dwc3_qcom_probe(struct platform_device *pdev)
-> > >  {
-> > >  	struct device_node	*np = pdev->dev.of_node, *dwc3_np;
-> > > @@ -603,6 +608,13 @@ static int dwc3_qcom_probe(struct platform_device *pdev)
-> > >  			goto platform_unalloc;
-> > >  		}
-> > >  
-> > > +		ret = platform_device_add_properties(qcom->dwc3,
-> > > +						     dwc3_qcom_acpi_properties);
-> > > +		if (ret < 0) {
-> > > +			dev_err(&pdev->dev, "failed to add properties\n");
-> > > +			goto platform_unalloc;
-> > > +		}
-> > > +
-> > >  		ret = platform_device_add(qcom->dwc3);
-> > >  		if (ret) {
-> > >  			dev_err(&pdev->dev, "failed to add device\n");
+> > > This has been the default on the MTP, but this is changing as this is
+> > > causing issues when connected downstream from a hub (the typical
+> > > development case for the primary USB port of a phone like device) and
+> > > more importantly we don't have support for the PMIC blocks that control
+> > > VBUS.
+> > 
+> > My point is not about which mode is currently chosen.  It's more about
+> > the capability of choosing which mode is appropriate for a given
+> > system via DT.
+> > 
+> > > Once these issues are resolved the dr_mode would be "otg".
+> > 
+> > OTG doesn't work on this H/W, so we need to specify "host" mode.
 > 
-> -- 
-> Lee Jones [?????????]
-> Linaro Services Technical Lead
-> Linaro.org ??? Open source software for ARM SoCs
-> Follow Linaro: Facebook | Twitter | Blog
+> My objection is that when you say "this H/W" you mean a particular
+> product, but you're making this decision for all SDM845 based products
+> using ACPI.
+> 
+> I don't know if there is a Windows phone based on SDM845, but if there
+> is then I don't think forcing it to host would be correct.
+
+You mean if someone wanted to boot Linux on a Windows phone?  Not sure
+how likely that is, but even if a) there is an SDM845 based Windows
+phone and b) someone is crazy enough to run Linux on it, it should be
+trivial for them to conduct some device matching and choose a
+different property based on the result.
+
+[...]
+
+> > > And this driver is used on a range of different Qualcomm platforms, so I
+> > > don't think this is SDM845 specific.
+> > 
+> > ACPI based platforms?
+> > 
+> > All the ones I've seen use the XHCI USB driver directly ("PNP0D10").
+> 
+> MSM8998 (835) has the same controller, so this should affect those
+> laptops as well.
+
+This would also be the correct configuration for them too.  OTG
+doesn't make much sense for a laptop form factor.
+
+-- 
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
