@@ -2,101 +2,98 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id C526A35FF1
-	for <lists+linux-gpio@lfdr.de>; Wed,  5 Jun 2019 17:12:56 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D66E33622B
+	for <lists+linux-gpio@lfdr.de>; Wed,  5 Jun 2019 19:16:55 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728174AbfFEPMs (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 5 Jun 2019 11:12:48 -0400
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:48864 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727971AbfFEPMs (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 5 Jun 2019 11:12:48 -0400
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id x55FCk3g110054;
-        Wed, 5 Jun 2019 10:12:46 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1559747566;
-        bh=Inienvm9gOICy/UB/TwfBQ4GevAD5jXz3rtnGwbNT90=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=KDcC91zaBAjY/jDaPnJQ0EoR31zRKscNxb/XRkXrPYvL8s2RBdRidzoQNzzifAyCM
-         d3kRjmo41zmEUCGoYYdXtQnNWvPGKQYFHD65e6EnbKLPToph+3UpdUisGFJauJxUCh
-         +FVT7kaeRH8zHJrm81GfgDqDUettVt0Z7kFWtJhY=
-Received: from DFLE103.ent.ti.com (dfle103.ent.ti.com [10.64.6.24])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x55FCkS1051136
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 5 Jun 2019 10:12:46 -0500
-Received: from DFLE109.ent.ti.com (10.64.6.30) by DFLE103.ent.ti.com
- (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Wed, 5 Jun
- 2019 10:12:46 -0500
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE109.ent.ti.com
- (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Wed, 5 Jun 2019 10:12:46 -0500
-Received: from [172.24.191.45] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id x55FChC3053628;
-        Wed, 5 Jun 2019 10:12:44 -0500
-Subject: Re: [PATCH v2 2/3] gpio: davinci: Add new compatible for K3 AM654
- SoCs
-To:     Bartosz Golaszewski <bgolaszewski@baylibre.com>
-CC:     Linus Walleij <linus.walleij@linaro.org>, <lokeshvutla@ti.com>,
-        linux-gpio <linux-gpio@vger.kernel.org>,
-        Tero Kristo <t-kristo@ti.com>,
-        LKML <linux-kernel@vger.kernel.org>
-References: <20190605080259.2462-1-j-keerthy@ti.com>
- <20190605080259.2462-3-j-keerthy@ti.com>
- <CAMpxmJXjMX20TAEsfEa7pqZx5-aW_rMKwS+6g9NTvRNEfuAyeA@mail.gmail.com>
-From:   Keerthy <j-keerthy@ti.com>
-Message-ID: <96dbfd50-2a45-e3dc-3928-47fbc52f9269@ti.com>
-Date:   Wed, 5 Jun 2019 20:43:26 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        id S1726528AbfFERQM (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 5 Jun 2019 13:16:12 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:58046 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725950AbfFERQM (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 5 Jun 2019 13:16:12 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id 407346063A; Wed,  5 Jun 2019 17:16:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1559754971;
+        bh=FdlcBmhv22cQY8wMK0PgQ3r93qrONz476UJE+bJjDO4=;
+        h=From:To:Subject:Date:From;
+        b=Ieo5tQpi9gySz3Ixsi3ysw/ZxCGrXrVPG1DnZnWoOY3QMYtvBeZ5rkVxtQeZ32OC+
+         x2+YTZuVvItNudc2oKLRCuuxXK3ZQiu5LDku4aV9SApDbJZqlc5CgOWIt0dV8BrvxL
+         Fo6jLfoOTW3sXoUiki4hA4kRwzwJS8PJbdiLNITw=
+X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
+        pdx-caf-mail.web.codeaurora.org
+X-Spam-Level: 
+X-Spam-Status: No, score=-2.7 required=2.0 tests=ALL_TRUSTED,BAYES_00,
+        DKIM_INVALID,DKIM_SIGNED,SPF_NONE autolearn=no autolearn_force=no
+        version=3.4.0
+Received: from srichara-linux.qualcomm.com (blr-c-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.19.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: sricharan@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 8C14E6063A;
+        Wed,  5 Jun 2019 17:16:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1559754970;
+        bh=FdlcBmhv22cQY8wMK0PgQ3r93qrONz476UJE+bJjDO4=;
+        h=From:To:Subject:Date:From;
+        b=cLqKEbMtwDbOXwdDl5cANUaP7t18uBCbMBe4k5vi9oKe/Tm7pAM1uwQUWgomgI7TX
+         m0i+G52gG6GFw3vJCjGbUyodA8b6wDNQFyjG6b/BTOG46yiPZNBmAfriaFsZfecH/K
+         Cs1KlvCAP5UjUe/G7yjje9LlepUmjCfaU9NrMzB4=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 8C14E6063A
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=sricharan@codeaurora.org
+From:   Sricharan R <sricharan@codeaurora.org>
+To:     robh+dt@kernel.org, sboyd@codeaurora.org, linus.walleij@linaro.org,
+        agross@kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-gpio@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Subject: [PATCH 0/6] Add minimal boot support for IPQ6018
+Date:   Wed,  5 Jun 2019 22:45:55 +0530
+Message-Id: <1559754961-26783-1-git-send-email-sricharan@codeaurora.org>
+X-Mailer: git-send-email 1.9.1
 MIME-Version: 1.0
-In-Reply-To: <CAMpxmJXjMX20TAEsfEa7pqZx5-aW_rMKwS+6g9NTvRNEfuAyeA@mail.gmail.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+The IPQ6018 is Qualcomm’s 802.11ax SoC for Routers,
+Gateways and Access Points.
 
+This series adds minimal board boot support for ipq6018-cp01
+board.
 
-On 05/06/19 7:56 PM, Bartosz Golaszewski wrote:
-> śr., 5 cze 2019 o 10:02 Keerthy <j-keerthy@ti.com> napisał(a):
->>
->> Add new compatible for K3 AM654 SoCs.
->>
->> Signed-off-by: Keerthy <j-keerthy@ti.com>
->> ---
->>   drivers/gpio/gpio-davinci.c | 1 +
->>   1 file changed, 1 insertion(+)
->>
->> diff --git a/drivers/gpio/gpio-davinci.c b/drivers/gpio/gpio-davinci.c
->> index 0977590eb996..fc494a84a29d 100644
->> --- a/drivers/gpio/gpio-davinci.c
->> +++ b/drivers/gpio/gpio-davinci.c
->> @@ -632,6 +632,7 @@ static int davinci_gpio_irq_setup(struct platform_device *pdev)
->>
->>   static const struct of_device_id davinci_gpio_ids[] = {
->>          { .compatible = "ti,keystone-gpio", keystone_gpio_get_irq_chip},
->> +       { .compatible = "ti,am654-gpio", keystone_gpio_get_irq_chip},
-> 
-> Please add a patch adding this compatible to the binding document as well.
+Sricharan R (6):
+  pinctrl: qcom: Add ipq6018 pinctrl driver
+  dt-bindings: qcom: Add ipq6018 bindings
+  clk: qcom: Add DT bindings for ipq6018 gcc clock controller
+  clk: qcom: Add ipq6018 Global Clock Controller support
+  arm64: dts: Add ipq6018 SoC and CP01 board support
+  arm64: defconfig: Enable qcom ipq6018 clock and pinctrl
 
-https://patchwork.kernel.org/patch/10976445/
+ Documentation/devicetree/bindings/arm/qcom.yaml    |    2 +
+ .../devicetree/bindings/clock/qcom,gcc.txt         |    1 +
+ arch/arm64/boot/dts/qcom/Makefile                  |    1 +
+ arch/arm64/boot/dts/qcom/ipq6018-cp01-c1.dts       |   35 +
+ arch/arm64/boot/dts/qcom/ipq6018.dtsi              |  231 +
+ arch/arm64/configs/defconfig                       |    2 +
+ drivers/clk/qcom/Kconfig                           |    9 +
+ drivers/clk/qcom/Makefile                          |    1 +
+ drivers/clk/qcom/gcc-ipq6018.c                     | 5267 ++++++++++++++++++++
+ drivers/pinctrl/qcom/Kconfig                       |   10 +
+ drivers/pinctrl/qcom/Makefile                      |    1 +
+ drivers/pinctrl/qcom/pinctrl-ipq6018.c             | 1183 +++++
+ include/dt-bindings/clock/qcom,gcc-ipq6018.h       |  405 ++
+ 13 files changed, 7148 insertions(+)
+ create mode 100644 arch/arm64/boot/dts/qcom/ipq6018-cp01-c1.dts
+ create mode 100644 arch/arm64/boot/dts/qcom/ipq6018.dtsi
+ create mode 100644 drivers/clk/qcom/gcc-ipq6018.c
+ create mode 100644 drivers/pinctrl/qcom/pinctrl-ipq6018.c
+ create mode 100644 include/dt-bindings/clock/qcom,gcc-ipq6018.h
 
-Posted but did not add you in Cc. Sorry about that.
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
 
-- Keerthy
-> 
-> Bart
-> 
->>          { .compatible = "ti,dm6441-gpio", davinci_gpio_get_irq_chip},
->>          { /* sentinel */ },
->>   };
->> --
->> 2.17.1
->>
