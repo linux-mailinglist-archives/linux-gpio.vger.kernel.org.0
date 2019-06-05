@@ -2,79 +2,145 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id DFC1D35846
-	for <lists+linux-gpio@lfdr.de>; Wed,  5 Jun 2019 10:02:52 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 38C1B3586B
+	for <lists+linux-gpio@lfdr.de>; Wed,  5 Jun 2019 10:20:58 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726684AbfFEICi (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 5 Jun 2019 04:02:38 -0400
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:53714 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726728AbfFEICh (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 5 Jun 2019 04:02:37 -0400
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id x5582aAr002082;
-        Wed, 5 Jun 2019 03:02:36 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1559721756;
-        bh=hIv3m0nvpBJjbhu7oWIXqB0Efd9SLUjlr+sYX36ES7k=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=D3t02seyF6o7j+EOEU1ftQ9sLXcCbyT83fDW/olIfVvlazszWNCPikl7O61y7sqDk
-         ESAaVHHzyYxjUkQmmgVutQivlw0vndtwwj2iA8fVZC5vVGnjK3UbjAdjjnnpqNZE37
-         ZcndVXuuN6OEWGQsDr0RDJRwYIPv4TYt0urYURhE=
-Received: from DFLE103.ent.ti.com (dfle103.ent.ti.com [10.64.6.24])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x5582a01128510
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 5 Jun 2019 03:02:36 -0500
-Received: from DFLE114.ent.ti.com (10.64.6.35) by DFLE103.ent.ti.com
- (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Wed, 5 Jun
- 2019 03:02:35 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE114.ent.ti.com
- (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Wed, 5 Jun 2019 03:02:36 -0500
-Received: from a0393675ula.india.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id x5582N7o041815;
-        Wed, 5 Jun 2019 03:02:33 -0500
-From:   Keerthy <j-keerthy@ti.com>
-To:     <linus.walleij@linaro.org>, <bgolaszewski@baylibre.com>
-CC:     <lokeshvutla@ti.com>, <linux-gpio@vger.kernel.org>,
-        <t-kristo@ti.com>, <j-keerthy@ti.com>,
-        <linux-kernel@vger.kernel.org>
-Subject: [PATCH v2 3/3] gpio: Davinci: Add K3 dependencies
-Date:   Wed, 5 Jun 2019 13:32:59 +0530
-Message-ID: <20190605080259.2462-4-j-keerthy@ti.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190605080259.2462-1-j-keerthy@ti.com>
-References: <20190605080259.2462-1-j-keerthy@ti.com>
+        id S1726501AbfFEIUz (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 5 Jun 2019 04:20:55 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:46992 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726561AbfFEIUx (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 5 Jun 2019 04:20:53 -0400
+Received: by mail-wr1-f66.google.com with SMTP id n4so13231645wrw.13
+        for <linux-gpio@vger.kernel.org>; Wed, 05 Jun 2019 01:20:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=4N4wbbPbH5vFPQ02lIzPzQHg+yDqqNmeJgiKq0aKWHQ=;
+        b=EEsoVwHJfcVfB0ReGOh4L2CQa6hWhl7NbcxauHoct4OV4K/eJmfkm8ODRylrWf0538
+         cFa6Ud53SF9GDxPzTf2QH8ClrklK6SAbghEFIvkPB08cXK8dmhn83Xof+s2ZK+q518Aj
+         2GSJmz2YyAyeCySlO/be4cLEbL9RVXGU2l/CaV+hYuqsyJZHVcKKnBUKrOw96GNUV40b
+         KNe4oyVp/g92y3oHSnA66Q/gFpFB8Qukzyhelc9SvseBGDW6imI5ONkiObzQkjBsYMub
+         PuXqEPcOMPhEBrpFa02315DvejuZd4l+e3SZjyFqd8VDsFe7rOanchMNtkmv8jUP81la
+         /Ovg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=4N4wbbPbH5vFPQ02lIzPzQHg+yDqqNmeJgiKq0aKWHQ=;
+        b=RZ9053yGRVkwTOkxUda1y8b2OV2KCCg309uiOR006oP4gfwrzSBMtfrP5w8Wa/L2Gj
+         NhNCivmXkOA63QnlcpPZ3PawK6M9BFBix6Jm48+D2qtNDeTK+j7GQJbO9F2f3MxkqaoF
+         xA/rjRYJDXsIUWxHleYOzdriNSsVXVFiRmSxxHUAW0+voNULz5KteQ1BXiz5NJYGaulk
+         /7GacWSf5AWvHSNHGztzZFDqbK2IjRunI0syLXbI7nmhu23gy+/NkeeXoTUSdYQBeWR1
+         N4SNfCT1OBjQZSS8tB9GBRf2j1qnMF5BiIFoaNHBPYe9g7FHu717hER6vvLv6tClH1nO
+         bXMg==
+X-Gm-Message-State: APjAAAWlbCABMTJFzg5ZYOaDSykjKknHPqTVcqufcGmTnYzoNDgikhsR
+        weH3HUrKD0T49HZrQW53pbX9Fw==
+X-Google-Smtp-Source: APXvYqx/8oIyrbj4ascfwZpwcyMAKVAvtaBu7KaV63F4l5bAfkhGLPkaQF18jo6DwFQGyXdhimt4dQ==
+X-Received: by 2002:adf:f38a:: with SMTP id m10mr9150235wro.81.1559722850820;
+        Wed, 05 Jun 2019 01:20:50 -0700 (PDT)
+Received: from dell ([2.27.167.43])
+        by smtp.gmail.com with ESMTPSA id a62sm21930094wmf.19.2019.06.05.01.20.49
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 05 Jun 2019 01:20:49 -0700 (PDT)
+Date:   Wed, 5 Jun 2019 09:20:47 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Johan Hovold <johan@kernel.org>
+Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>, balbi@kernel.org,
+        wsa+renesas@sang-engineering.com, gregkh@linuxfoundation.org,
+        linus.walleij@linaro.org, linux-usb@vger.kernel.org,
+        linux-kernel@vger.kernel.org, david.brown@linaro.org,
+        alokc@codeaurora.org, kramasub@codeaurora.org,
+        linux-i2c@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, andy.gross@linaro.org,
+        jlhugo@gmail.com, linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH 2/8] i2c: i2c-qcom-geni: Signify successful driver probe
+Message-ID: <20190605082047.GM4797@dell>
+References: <20190604104455.8877-1-lee.jones@linaro.org>
+ <20190604104455.8877-2-lee.jones@linaro.org>
+ <20190605062020.GL22737@tuxbook-pro>
+ <20190605071625.GK4797@dell>
+ <20190605075656.GC29637@localhost>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190605075656.GC29637@localhost>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Add K3 dependencies to enable the driver on K3 platforms.
+On Wed, 05 Jun 2019, Johan Hovold wrote:
 
-Signed-off-by: Keerthy <j-keerthy@ti.com>
----
- drivers/gpio/Kconfig | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+> On Wed, Jun 05, 2019 at 08:16:25AM +0100, Lee Jones wrote:
+> > On Tue, 04 Jun 2019, Bjorn Andersson wrote:
+> > 
+> > > On Tue 04 Jun 03:44 PDT 2019, Lee Jones wrote:
+> > > 
+> > > > The Qualcomm Geni I2C driver currently probes silently which can be
+> > > > confusing when debugging potential issues.  Add a low level (INFO)
+> > > > print when each I2C controller is successfully initially set-up.
+> > > > 
+> > > > Signed-off-by: Lee Jones <lee.jones@linaro.org>
+> > > > ---
+> > > >  drivers/i2c/busses/i2c-qcom-geni.c | 2 ++
+> > > >  1 file changed, 2 insertions(+)
+> > > > 
+> > > > diff --git a/drivers/i2c/busses/i2c-qcom-geni.c b/drivers/i2c/busses/i2c-qcom-geni.c
+> > > > index 0fa93b448e8d..e27466d77767 100644
+> > > > --- a/drivers/i2c/busses/i2c-qcom-geni.c
+> > > > +++ b/drivers/i2c/busses/i2c-qcom-geni.c
+> > > > @@ -598,6 +598,8 @@ static int geni_i2c_probe(struct platform_device *pdev)
+> > > >  		return ret;
+> > > >  	}
+> > > >  
+> > > > +	dev_info(&pdev->dev, "Geni-I2C adaptor successfully added\n");
+> > > > +
+> > > 
+> > > I would prefer that we do not add such prints, as it would be to accept
+> > > the downstream behaviour of spamming the log to the point where no one
+> > > will ever look through it.
+> > 
+> > We should be able to find a middle ground.  Spamming the log with all
+> > sorts of device specific information/debug is obviously not
+> > constructive, but a single liner to advertise that an important
+> > device/controller has been successfully initialised is more helpful
+> > than it is hinderous.
+> > 
+> > This print was added due to the silent initialisation costing me
+> > several hours of debugging ACPI device/driver code (albeit learning a
+> > lot about ACPI as I go) just to find out that it was already doing the
+> > right thing - just very quietly.
+> 
+> No, we don't add noise like this to the logs just because it may be
+> useful while debugging. Even one-liners add up.
 
-diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
-index 62f3fe06cd2f..28dba62e2219 100644
---- a/drivers/gpio/Kconfig
-+++ b/drivers/gpio/Kconfig
-@@ -174,7 +174,7 @@ config GPIO_CLPS711X
- config GPIO_DAVINCI
- 	bool "TI Davinci/Keystone GPIO support"
- 	default y if ARCH_DAVINCI
--	depends on ARM && (ARCH_DAVINCI || ARCH_KEYSTONE)
-+	depends on (ARM || ARM64) && (ARCH_DAVINCI || ARCH_KEYSTONE || ARCH_K3)
- 	help
- 	  Say yes here to enable GPIO support for TI Davinci/Keystone SoCs.
- 
+One line per device is should not cause an issue.
+
+Problems occur when developers try to print all kinds of device
+specifics to the boot log.  A simple, single line for such an
+important device/controller has more benefits than drawbacks.
+
+> There are plenty of options for debugging already ranging from adding a
+> temporary dev_info() to the probe function in question to using dynamic
+> debugging to have driver core log every successful probe.
+
+This is what I ended up doing.  It was time consuming to parse though
+a log of that size when you have no paging or keyboard.
+
+> And in this case you say the driver was in fact already bound; that can
+> easily be verified through sysfs too in case things aren't behaving the
+> way you expect.
+
+Not in a non-booting system with no keyboard you can't. ;)
+
 -- 
-2.17.1
-
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
