@@ -2,14 +2,14 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 3AEC1354A8
-	for <lists+linux-gpio@lfdr.de>; Wed,  5 Jun 2019 02:18:00 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C441D354A7
+	for <lists+linux-gpio@lfdr.de>; Wed,  5 Jun 2019 02:17:59 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726464AbfFEAR7 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        id S1726572AbfFEAR7 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
         Tue, 4 Jun 2019 20:17:59 -0400
-Received: from smtp3.ono.com ([62.42.230.163]:5044 "EHLO smtp3.ono.com"
+Received: from smtp2.ono.com ([62.42.230.179]:62402 "EHLO smtp2.ono.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726501AbfFEAR7 (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        id S1726464AbfFEAR7 (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
         Tue, 4 Jun 2019 20:17:59 -0400
 X-Junkmail-Premium-Raw: score=13/50,refid=2.7.2:2019.6.4.234816:17:13.011,ip=62.42.230.133,rules=__HAS_MSGID,
  __SANE_MSGID, MSGID_JMAIL_DEFAULT, INVALID_MSGID_NO_FQDN, __HAS_FROM,
@@ -23,11 +23,11 @@ X-Junkmail-Premium-Raw: score=13/50,refid=2.7.2:2019.6.4.234816:17:13.011,ip=62.
  __MIME_TEXT_P, NO_URI_FOUND, NO_CTA_URI_FOUND, __PHISH_SPEAR_STRUCTURE_1,
  BODY_SIZE_1000_LESS, BODY_SIZE_2000_LESS, __PHISH_SPEAR_STRUCTURE_2,
  REPLYTO_FROM_DIFF_ADDY, NO_URI_HTTPS, BODY_SIZE_7000_LESS, TO_MALFORMED
-Received: from resprs03 (62.42.230.133) by smtp3.ono.com (9.0.019.09-1)
-        id 5CC0A28F01B56111; Wed, 5 Jun 2019 02:17:25 +0200
-Received: from (149.126.76.17) by webmailcpr03n.ono.com;  Wed, 5 Jun 2019 02:17:22 +0200
-Message-ID: <23032806.112261559693842978.JavaMail.defaultUser@defaultHost>
-Date:   Wed, 5 Jun 2019 02:17:22 +0200 (CEST)
+Received: from resprs03 (62.42.230.133) by smtp2.ono.com (9.0.019.09-1)
+        id 5CAF0F5D02573722; Wed, 5 Jun 2019 02:17:25 +0200
+Received: from (149.126.76.17) by webmailcpr03n.ono.com;  Wed, 5 Jun 2019 02:17:23 +0200
+Message-ID: <4159203.112281559693843160.JavaMail.defaultUser@defaultHost>
+Date:   Wed, 5 Jun 2019 02:17:23 +0200 (CEST)
 From:   "Mrs Salami.Momodu" <oposicionesayudantes@ono.com>
 Reply-To: mrssalami.momodu1@barid.com
 Subject: Dear Friend,
