@@ -2,111 +2,102 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id BBEC036D2D
-	for <lists+linux-gpio@lfdr.de>; Thu,  6 Jun 2019 09:17:49 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id F1C1036DBC
+	for <lists+linux-gpio@lfdr.de>; Thu,  6 Jun 2019 09:49:19 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726173AbfFFHRn (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 6 Jun 2019 03:17:43 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:43085 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726014AbfFFHRn (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 6 Jun 2019 03:17:43 -0400
-Received: by mail-pf1-f194.google.com with SMTP id i189so920498pfg.10
-        for <linux-gpio@vger.kernel.org>; Thu, 06 Jun 2019 00:17:43 -0700 (PDT)
+        id S1725947AbfFFHtT (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 6 Jun 2019 03:49:19 -0400
+Received: from mail-it1-f194.google.com ([209.85.166.194]:38403 "EHLO
+        mail-it1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725267AbfFFHtT (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 6 Jun 2019 03:49:19 -0400
+Received: by mail-it1-f194.google.com with SMTP id h9so1667923itk.3
+        for <linux-gpio@vger.kernel.org>; Thu, 06 Jun 2019 00:49:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=hcWZk37MluweMWQW5kURRUWLOOrFjT2oPnVPPLPHyMo=;
-        b=O3e+gR3QjxlY+TukOifhxUhwrU3NQR9N60NyUoUy2uHUzeQ5KzKmm22cgKDvq9AaJa
-         HBGqpO0VEYMp0+DsxlKagVVxBG5mngX5vhbyuBCbFEc64bWcpGSZDbONnglt4HCdyMTT
-         gAHr9JUL56oourAFBSHRUZ9hJubAKsm7DjmHYvMrHhbisgdNMH1KQPc6GjAxwEudVouO
-         pIGF8m/RYSGkUtvnQN1fVj/L+5Vo8t7aUAykze+iK61/eKcNXTCaWI9ACCLz8IPMvXGu
-         RYrFpq+7LQ5/u4AA76LNdgSRPpHxDsxfDMtgnN3FfsGb5M9viJKACY2o0B8cEH2hfUAa
-         rbWQ==
+        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=PcZKwq/QD7LJ9zOMqPBkBZNVNvBl9KD97CXS9sN46Ic=;
+        b=tslJI5N8NVUXGgSYyFDm6Rx/IYywuSzoAMmRxkLMt2p+Rkws1bC12MUcQUVV6XICKn
+         SeRyYKTpJI6IXFNceW6UkugB5Xzfu12Zxiokks8+oY+44WayWNL/dwu7VK1lozagBJG1
+         R0aJaEdXMStztEXMk7SE01TbjnyvkxOADgc0T2Urm4kEc+rX18oH/jov9lzcAIs+Ymop
+         rGYhGmC1Uu8GsH5IglOL2e+k4Evdano3zltIFlkQIXs19TswkBXzgdh9ZHl56VM692QH
+         sLUNrdb0RD8OaLAvklfwLNop7i2G+mGH+e1xSosTSK13ldsKtrMuaSAkFaHhwLFEUxFJ
+         y6fA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=hcWZk37MluweMWQW5kURRUWLOOrFjT2oPnVPPLPHyMo=;
-        b=rSWIYfxThf+NBLHsC5g63J/5pdb6EoSEg3ubMW2ywSvDTjchRsrF9usMZ4vYbDtbOn
-         L4n/t3gH5eymEd6d4QCY75nJeCK3aVvjeoRK+sKTrW65H2l/apOYC9jJUYsDLnwyCw/5
-         sCM2bm/ZhmXCn932vRe47NZwcVzhcfoIrCzgi1TinJQKMKbHoxLmrG/B5vsaECqwX+t/
-         FESx1nzDegahYmbr84AJCH3ugkQPGKF2VTlKYWzYF7wNPHBsd32tSJrsJtLlgpzoDjNe
-         0CXmj8bSue7YemAVyL8yaM5SPBBSxu+Q8JagZe2o2Q4oX+jn0duPFCuAbo6pAWdRdLaJ
-         oi+w==
-X-Gm-Message-State: APjAAAUgbccnZ/if4WYHMB3Sy69DzUtN8qcfI/LufzEyh3Q4twpsqpe3
-        iG3O8SMbLBesnBSbrnw3K1b3zg==
-X-Google-Smtp-Source: APXvYqwJj7EcN4AJ9SENmqHf4hWfVQH6OLhC5JBuOCIoK19YSarjdumJo7ny/lpvNb23GM0WxHXIZg==
-X-Received: by 2002:a17:90a:3ae8:: with SMTP id b95mr13710133pjc.68.1559805462753;
-        Thu, 06 Jun 2019 00:17:42 -0700 (PDT)
-Received: from tuxbook-pro (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id b4sm1058689pfd.120.2019.06.06.00.17.41
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 06 Jun 2019 00:17:42 -0700 (PDT)
-Date:   Thu, 6 Jun 2019 00:18:28 -0700
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Avri Altman <Avri.Altman@wdc.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alim Akhtar <alim.akhtar@samsung.com>,
-        Pedro Sousa <pedrom.sousa@synopsys.com>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Andy Gross <agross@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Evan Green <evgreen@chromium.org>,
-        "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>
-Subject: Re: [PATCH v2 2/3] scsi: ufs: Allow resetting the UFS device
-Message-ID: <20190606071828.GS22737@tuxbook-pro>
-References: <20190606010249.3538-1-bjorn.andersson@linaro.org>
- <20190606010249.3538-3-bjorn.andersson@linaro.org>
- <SN6PR04MB4925FC3F1001326AA218DF21FC170@SN6PR04MB4925.namprd04.prod.outlook.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=PcZKwq/QD7LJ9zOMqPBkBZNVNvBl9KD97CXS9sN46Ic=;
+        b=G8xr5OlwYAQYYk4ixphzIdMwvnopPMWccfDTxVI4J0XMNpS3/i/6gf5umY7wof+i2n
+         3SQmS9rLVLOag/IDXNVuhKBADaHHe0cJ26Rj18gQtFeWFH7xZoLunzG3zkNzAIe6hXbX
+         LlA7m5NFhNT/tll6r25EDcAHGmJ4qEConmmcsPfcPwecnXdcxM1u1y/ZTxwlJV1c0Tgk
+         3PBSPQmySaBv7dwKuz6ZLcFLM5a26dJoBJZYg5pHh8O9CYA7B77HxrsGzz3r03hQRNPA
+         BXVb3ESWGAFhtVEwXNfjpNwgbQPRKGWbd1l9FlMhzH+IJSuL8SnxsYUuCj3lWFm9MECW
+         3oxA==
+X-Gm-Message-State: APjAAAX9xmqVC3BXFsPhE36R+1azIDiPyrFNvcuwaAkJZhsI44uchtQI
+        fc9UgXUGP6U1m+UV6EYdWlnnnRaPEbff0QYOQJ0QbQ==
+X-Google-Smtp-Source: APXvYqwY1eUY0+k0Cf3njMKrLihozk0MzOpSW1lrQzK1tT6QCcAba90QQwPbH08U+8lE1IIyz4SrsTiB3UnwXw5oF4Y=
+X-Received: by 2002:a05:6638:cf:: with SMTP id w15mr9341723jao.136.1559807358196;
+ Thu, 06 Jun 2019 00:49:18 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <SN6PR04MB4925FC3F1001326AA218DF21FC170@SN6PR04MB4925.namprd04.prod.outlook.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+References: <20190605080259.2462-1-j-keerthy@ti.com> <20190605080259.2462-3-j-keerthy@ti.com>
+ <CAMpxmJXjMX20TAEsfEa7pqZx5-aW_rMKwS+6g9NTvRNEfuAyeA@mail.gmail.com> <96dbfd50-2a45-e3dc-3928-47fbc52f9269@ti.com>
+In-Reply-To: <96dbfd50-2a45-e3dc-3928-47fbc52f9269@ti.com>
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+Date:   Thu, 6 Jun 2019 09:49:07 +0200
+Message-ID: <CAMRc=Mfe+K=s4OZp7VWRik7JtSU6Fpufx0yDZtYCMNh5+LSJuQ@mail.gmail.com>
+Subject: Re: [PATCH v2 2/3] gpio: davinci: Add new compatible for K3 AM654 SoCs
+To:     Keerthy <j-keerthy@ti.com>
+Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Linus Walleij <linus.walleij@linaro.org>, lokeshvutla@ti.com,
+        linux-gpio <linux-gpio@vger.kernel.org>,
+        Tero Kristo <t-kristo@ti.com>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed 05 Jun 23:36 PDT 2019, Avri Altman wrote:
+=C5=9Br., 5 cze 2019 o 17:12 Keerthy <j-keerthy@ti.com> napisa=C5=82(a):
+>
+>
+>
+> On 05/06/19 7:56 PM, Bartosz Golaszewski wrote:
+> > =C5=9Br., 5 cze 2019 o 10:02 Keerthy <j-keerthy@ti.com> napisa=C5=82(a)=
+:
+> >>
+> >> Add new compatible for K3 AM654 SoCs.
+> >>
+> >> Signed-off-by: Keerthy <j-keerthy@ti.com>
+> >> ---
+> >>   drivers/gpio/gpio-davinci.c | 1 +
+> >>   1 file changed, 1 insertion(+)
+> >>
+> >> diff --git a/drivers/gpio/gpio-davinci.c b/drivers/gpio/gpio-davinci.c
+> >> index 0977590eb996..fc494a84a29d 100644
+> >> --- a/drivers/gpio/gpio-davinci.c
+> >> +++ b/drivers/gpio/gpio-davinci.c
+> >> @@ -632,6 +632,7 @@ static int davinci_gpio_irq_setup(struct platform_=
+device *pdev)
+> >>
+> >>   static const struct of_device_id davinci_gpio_ids[] =3D {
+> >>          { .compatible =3D "ti,keystone-gpio", keystone_gpio_get_irq_c=
+hip},
+> >> +       { .compatible =3D "ti,am654-gpio", keystone_gpio_get_irq_chip}=
+,
+> >
+> > Please add a patch adding this compatible to the binding document as we=
+ll.
+>
+> https://patchwork.kernel.org/patch/10976445/
+>
+> Posted but did not add you in Cc. Sorry about that.
+>
 
-> 
-> >  static int ufshcd_hba_init(struct ufs_hba *hba)
-> >  {
-> >  	int err;
-> > @@ -7425,9 +7460,15 @@ static int ufshcd_hba_init(struct ufs_hba *hba)
-> >  	if (err)
-> >  		goto out_disable_vreg;
-> > 
-> > +	err = ufshcd_init_device_reset(hba);
-> > +	if (err)
-> > +		goto out_disable_variant;
-> > +
-> >  	hba->is_powered = true;
-> >  	goto out;
-> > 
-> > +out_disable_variant:
-> > +	ufshcd_vops_setup_regulators(hba, false);
-> Is this necessary?
-> ufshcd_vops_setup_regulators() was just called as part of ufshcd_variant_hba_init
-> 
+I don't see it on GPIO patchwork either. Please resend it as part of
+this series.
 
-Yes, so my attempt here is to reverse the enablement of the vops
-regulators (hence passing false). But looking at it again I see that we
-should also do ufshcd_vops_exit(), so the right thing to call here is
-ufshcd_variant_hba_exit().
-
-PS. This initialization sequence should really be rewritten to first
-acquire all resources and then turn them on. This mixes init/setup
-sequence is really hard to reason about.
-
-Regards,
-Bjorn
+Bart
