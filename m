@@ -2,80 +2,74 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 1BD6C3975A
-	for <lists+linux-gpio@lfdr.de>; Fri,  7 Jun 2019 23:08:21 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E70F539776
+	for <lists+linux-gpio@lfdr.de>; Fri,  7 Jun 2019 23:13:44 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730401AbfFGVIU (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 7 Jun 2019 17:08:20 -0400
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:43588 "EHLO
+        id S1731077AbfFGVNo (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 7 Jun 2019 17:13:44 -0400
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:43993 "EHLO
         mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730254AbfFGVIU (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 7 Jun 2019 17:08:20 -0400
-Received: by mail-lj1-f194.google.com with SMTP id 16so2893745ljv.10
-        for <linux-gpio@vger.kernel.org>; Fri, 07 Jun 2019 14:08:18 -0700 (PDT)
+        with ESMTP id S1730992AbfFGVNo (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 7 Jun 2019 17:13:44 -0400
+Received: by mail-lj1-f194.google.com with SMTP id 16so2903606ljv.10
+        for <linux-gpio@vger.kernel.org>; Fri, 07 Jun 2019 14:13:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=f6jL7ejK1vdoksS3xLayzljNzEjieCxBcJeb5tUZgYI=;
-        b=vegyCWkoFq7IWHKgGIIU7ajpXmTFnt5PpMQ9WCQO4zF3Q/P2g/7GacC2aZLGSPk7+k
-         bwnKT4BjE4rsV0FAHf9xG/aEDLvBOW+z+MciDjGAJnnRQTaNamB/IA7WdfJeNgPuY5VL
-         l69vSI2aMGChyzbeGI9JtyDF+xnfqxqznHF5qxCwD1n4/FJaZGuR38MdzlOoNiqnR4+D
-         lOx0xMbHlCKYL1nYd151G75AOt9/cgRis88Her1XSNeTwqKZJGwxGK3xCG7hInDN+zoG
-         +/PsDxfzby9IDLyGazyfoIU2PDdufTCb8/oXvvsP0ynVXnqs+pyfxXYNdkyYvxFqslBV
-         /lZw==
+        bh=buV+QOyxzNDlDJH8veXIKdL2iiFBfuvxwZCwvBEfDTQ=;
+        b=PbA+vTjbgf9IPXeh/acYRqrHgQ/Cjj1yrQprtGznL/es8T3gCcNRwDa3YZdRJ/uF/v
+         32h/I3BSs26eSDvUTKOdMkrK+uYPnnZTsZv5z4EdDPgVzhWZqXBKVULLsGZX0xqNpcAn
+         SVhfqA2WQ90XxZnoYxFuvdF0bCBSWXYCLUVaO3+zVqn8HY2gFJ5AzkFFpTp5JR0fU0wc
+         1hDS5MjiNH0JecOnCuNnqbqaS88kPpYSRSdW/XiJwMe1fSSEPUqs9fgRQz23dlySJ18o
+         CApFNcY1FIynSD0OEVggMunh4iBVIRm6OK6zhhZGMmD3SOfb4tiBA5WpvkZmiUU88aCC
+         TCcw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=f6jL7ejK1vdoksS3xLayzljNzEjieCxBcJeb5tUZgYI=;
-        b=uMTkosKm1BuR3I1pIy1zMAw33ChHHgiYoIuAELJU9a09sPSMOAz6dzg9UsbJFdb8jf
-         FQHTMqY/laHYzRW5qbHsP1BBoV1q6XCVnb25x2yA8ROGos+EXEMpqVuuFIcsI04zkaRy
-         OhkTNcjIpDFPNCJrzVGzXTtADlasCWVeDtw31FrtOSsqPlxO9/B02yWv3eVRIw6I+t9a
-         l2O86al/NzkSIOwBOKe7pX37fjdQ0qCS2z8WF+nPZFU2D0v26V8FWmfgVPs/u2ovJ3LM
-         ojGbw1b1cHWJVRmgsIpTrAH2t7hANDJUH3XEUsHMh5kzyNZd5FS527nP0P+JmqLJ/wNi
-         0ORg==
-X-Gm-Message-State: APjAAAW6j2aGyLS0ByafBYunOC4WhnZI0NtEqazI219rHtdIa02BYcat
-        R8iFc0+LKuX1jXJxJT2shPsss9PFHwNK/gdtT6gvGa5a
-X-Google-Smtp-Source: APXvYqwPTQVLwavT2qXQKKLz8bFfoqAyN+lJI4vElZiZLHJbP2BQZYrz/3pv5Uyw1qDhaFDWje1vP/YBI4KFNgDVDhs=
-X-Received: by 2002:a2e:8902:: with SMTP id d2mr29169874lji.94.1559941698057;
- Fri, 07 Jun 2019 14:08:18 -0700 (PDT)
+        bh=buV+QOyxzNDlDJH8veXIKdL2iiFBfuvxwZCwvBEfDTQ=;
+        b=j4y7mNGVCaU1jrvyV/Q/+8u+n19VBLkzxYZrXP/o5FEwwQf8y0cra0bmBkqZIjMk53
+         qwfYN7JB+XNVLOtVp9+dKP2sLfkc7tB3VsxEsW3M6QVj4JvlMTf1Ex9GMNMYJc/kl0Ij
+         mpGkWFT2diVFWEnGkq1fGm0ECMj4+WeVQ2km9Axt0LYQYWMPM7BNVfOhjecgre0yc5UH
+         15Y96w9wDIuv7ytBuT97galFhE58dweRIbuLLO2RdpaKwxSmIzV/moyKP7y8M/yfJ61M
+         Aqc7sB8pgX8GYoG1N1Fyi/9/11Cy8fjxvo8GOyutXiXdOY0AVXNkpdrOH/QCf6rjjTXc
+         69GQ==
+X-Gm-Message-State: APjAAAWFCh4m8qFHYsWuOfgefz4FnOuvHf/Wlwe/uaX867qLCAqIhC2U
+        JTn42uGf7zFCGPkTl07rZGmFhkRMMtlNsbC6joqy6KOT
+X-Google-Smtp-Source: APXvYqwcF6ADHtl33t9VDfzL225Zx/JgITfxxEzGI9UwCFCbx97hu3h2mIvOoT6ew9/mRJxwXE0v0pl6avRqO2cwvZ4=
+X-Received: by 2002:a2e:8902:: with SMTP id d2mr29179625lji.94.1559942022414;
+ Fri, 07 Jun 2019 14:13:42 -0700 (PDT)
 MIME-Version: 1.0
-References: <1559285512-27784-1-git-send-email-tengfeif@codeaurora.org>
-In-Reply-To: <1559285512-27784-1-git-send-email-tengfeif@codeaurora.org>
+References: <20190603073421.10314-1-manivannan.sadhasivam@linaro.org>
+In-Reply-To: <20190603073421.10314-1-manivannan.sadhasivam@linaro.org>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Fri, 7 Jun 2019 23:08:10 +0200
-Message-ID: <CACRpkdbdkbSofrvJ0hSV66DX+DcwWXp0ONDjx0265Pz50yE8TA@mail.gmail.com>
-Subject: Re: [PATCH] pinctrl: qcom: Clear status bit on irq_unmask
-To:     Tengfei Fan <tengfeif@codeaurora.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Niklas Cassel <niklas.cassel@linaro.org>
-Cc:     Andy Gross <andy.gross@linaro.org>,
-        David Brown <david.brown@linaro.org>,
-        MSM <linux-arm-msm@vger.kernel.org>,
+Date:   Fri, 7 Jun 2019 23:13:34 +0200
+Message-ID: <CACRpkdZcwZks6eKOb=Mq1EfCP8Kir+nPC1r9=FrA=si5WpwQww@mail.gmail.com>
+Subject: Re: [PATCH 1/2] dt-bindings: pinctrl: Document drive strength
+ settings for BM1880 SoC
+To:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        haitao.suo@bitmain.com, darren.tsao@bitmain.com,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+        alec.lin@bitmain.com
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, May 31, 2019 at 8:52 AM Tengfei Fan <tengfeif@codeaurora.org> wrote:
+On Mon, Jun 3, 2019 at 9:35 AM Manivannan Sadhasivam
+<manivannan.sadhasivam@linaro.org> wrote:
 
-> The gpio interrupt status bit is getting set after the
-> irq is disabled and causing an immediate interrupt after
-> enablling the irq, so clear status bit on irq_unmask.
+> Document drive strength settings for Bitmain BM1880 SoC.
 >
-> Signed-off-by: Tengfei Fan <tengfeif@codeaurora.org>
+> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 
-This looks pretty serious, can one of the Qcom maintainers ACK
-this?
-
-Should it be sent to fixes and even stable?
-
-Fixes: tag?
+Standard bindings, uncontroversial so patch applied!
 
 Yours,
 Linus Walleij
