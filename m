@@ -2,81 +2,98 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id E4556397B6
-	for <lists+linux-gpio@lfdr.de>; Fri,  7 Jun 2019 23:26:58 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DDE28397C2
+	for <lists+linux-gpio@lfdr.de>; Fri,  7 Jun 2019 23:29:39 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730458AbfFGV0z (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 7 Jun 2019 17:26:55 -0400
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:43957 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729689AbfFGV0z (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 7 Jun 2019 17:26:55 -0400
-Received: by mail-lj1-f196.google.com with SMTP id 16so2926225ljv.10
-        for <linux-gpio@vger.kernel.org>; Fri, 07 Jun 2019 14:26:54 -0700 (PDT)
+        id S1729629AbfFGV3j (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 7 Jun 2019 17:29:39 -0400
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:43652 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729125AbfFGV3j (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 7 Jun 2019 17:29:39 -0400
+Received: by mail-lf1-f68.google.com with SMTP id j29so2642169lfk.10
+        for <linux-gpio@vger.kernel.org>; Fri, 07 Jun 2019 14:29:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=q6sGj4udjdudlOgOeP/H6pDDZcmuzFdAkSUlLYTz7Hc=;
-        b=z23mfVUe0uLJ/lnbrCPAfFLlJoZeq+fXYSy3t319XR2mXsJF2HJBlsHc72bDowYPbr
-         BKlcfggdOUpnzKEOcmo/gWDJBafNeMAp2aw7/FOy/CEMhLhZAkJiqltxY9gqYHhdPADe
-         LWRluJiEIcw2pJBdRmdTdrAVM13WBgOAg9klKPj6zLBbvJjcvG0SF3UGpq5K05+1nydQ
-         YVvrkZaXl+tnN/7TgP1T8xCinH9HAqs6lCo00edbK7wHMvW8WMzCuFvKYkfX8GduJi99
-         j0wanfih+iwQg+9v0kDSq7XaxRBoHZrhq0vIpY4sKoaShnKX2Gdts7XNyc78ZgcYCS/j
-         ih7A==
+        bh=TIMrqKW25YRU/lsjOLblvs15sgdsKLwySWVm5NwcunE=;
+        b=LEyPoWvUT06FfHbItCfBI2qmi3bYEZELMr+9Pni7GDUF94Agfqp1YHfqhKChaPNy0S
+         ZRrr2fMOaZXZKxSe6aofGIFR7LjwntjDu4Ymu/9AejpBfm408pcV/eJjScMUPAbkOdDl
+         Fl0vtL8xKw368lF1ANwXcdukr5iT+Ccm/zrjm2KLPABaM0HEHaQHCgk8hsv9jL8fU6H4
+         85psQUYFehCz4IH7rMAck/TXvTavh+f/raVZ8jY4XrxX4uMm2glO06/Lv6sfMBqqXsE5
+         LX9Folqn1I+2HshKmbo6eQUAYCMFskiJNPWGp8sTSUUYbP1Qb2lMPRPL6Ix9DzuB4hcN
+         dKdQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=q6sGj4udjdudlOgOeP/H6pDDZcmuzFdAkSUlLYTz7Hc=;
-        b=jqmjxOSiBzTuPQUuhykwuBfSzYA8HhLvsgcIZ00CwEGmVo6OJ+e+5zHvs41cabAQG2
-         QZ622NeR3dPGUB+W9bHWOQw1h3oUUT6HqZpj31E/ra49O67e2dbtdL51VTh0UUDGP2QU
-         XAoxB/Ib0ks2/5GIEc4U/5NyZ/2pqGjXqByLJ/EqGnnlJVe6gd596a6Q7Cc/X/zUs7xz
-         r8h6tEjUvoCv+jdLZo4fEPphfuiOeFJVU+UR043BZygstRTD0BfUNFqCB6lE9+l0MbxW
-         FRthfLquhOGj+VTy9lNtABj2Pp9X1LAHcuQnS2Wrub+11Cgdv3NgPMbDa4w+DkMo7PUZ
-         CVYA==
-X-Gm-Message-State: APjAAAVFo8tYxDiR4EbNlgRpCpLyDZbdNnRQi+KBYOzdasnY2CvWBVMc
-        kRDKe8l5uSsGltwcZnJthRZDfa7ZvCkF5DszpJPMpA==
-X-Google-Smtp-Source: APXvYqwIajTpMSgCMZav18YPN+TlLmExrYklafV6rIWWxNFhS1pNAPS/UUbCntmRCn13SfjJkYCmG7CoaruMAno9FuY=
-X-Received: by 2002:a2e:7508:: with SMTP id q8mr13158846ljc.165.1559942813429;
- Fri, 07 Jun 2019 14:26:53 -0700 (PDT)
+        bh=TIMrqKW25YRU/lsjOLblvs15sgdsKLwySWVm5NwcunE=;
+        b=FZg4xq6qLBqT/Y25KBuBmzeRed2fTTW3Yc0NbDP9vPw37qHiy5Ct9J1Uti9QjJjc7a
+         PxG4hD6D1WlCq40FmWcKQHCxnraBKOgAFKBqK5K5M+uGdRPFZfLRODqQAcbxgUAf//Nr
+         zDnbBEZw399OSZKTZZjplf8b0S+16ahRLS3dqi+LMhePje6xTTeDregfp83whpMtFmoj
+         X6y0tVwsOFcM7pg66UE38DKSjNnjwtlT3Ucg4eecHyfhzB1iiyFIocYyDZJ1gih8ojhK
+         BIV9gDdZteMxwSXeW0AcUWxa2VS6fMXWP2EXdSj9SMBZe7GTqx4bx76JW0p9rWdaD9ba
+         XCjg==
+X-Gm-Message-State: APjAAAVszHu0R8NEGcdLmTTGLPUJNHzAKAvadCn5BSoPf73RDNvnYdeE
+        jreg6fweLw79sZOUwOcPNewQc4idTRx85XvBEoAmEA==
+X-Google-Smtp-Source: APXvYqxu7/X7NjUFxX6W5IcQz4mZnT/YMlUAhiF61ildOXzlhB4NdGWiAz3/p9m7nmRJn/dhPT/KUQv4XTm38jdKvEo=
+X-Received: by 2002:ac2:5382:: with SMTP id g2mr27329569lfh.92.1559942977232;
+ Fri, 07 Jun 2019 14:29:37 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190604072001.9288-1-bjorn.andersson@linaro.org> <20190604072001.9288-2-bjorn.andersson@linaro.org>
-In-Reply-To: <20190604072001.9288-2-bjorn.andersson@linaro.org>
+References: <20190602210918.32741-1-linus.walleij@linaro.org>
+ <CAMuHMdX8idAx9QnOMYyS0htYFw66Zs08pbGb7OEf5ED7Egv9rg@mail.gmail.com> <20190604084545.GA1129@kroah.com>
+In-Reply-To: <20190604084545.GA1129@kroah.com>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Fri, 7 Jun 2019 23:26:46 +0200
-Message-ID: <CACRpkdazzRV5XydKHmXRQiU2Mx+=HyRgNCEpNqsOsCdycXmMOg@mail.gmail.com>
-Subject: Re: [PATCH 1/3] pinctrl: qcom: sdm845: Expose ufs_reset as gpio
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     Rob Herring <robh+dt@kernel.org>, Andy Gross <agross@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Pedro Sousa <pedrom.sousa@synopsys.com>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        MSM <linux-arm-msm@vger.kernel.org>,
+Date:   Fri, 7 Jun 2019 23:29:29 +0200
+Message-ID: <CACRpkdY-HCGd_ScGNNDAOqY66jvfQZ9Gjm7o9tj+YUuxwV8i4g@mail.gmail.com>
+Subject: Re: [PATCH] pinctrl: nomadik: Fix SPDX tags
+To:     Greg KH <gregkh@linuxfoundation.org>
+Cc:     Geert Uytterhoeven <geert@linux-m68k.org>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        linux-scsi@vger.kernel.org
+        Thomas Gleixner <tglx@linutronix.de>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Jun 4, 2019 at 9:20 AM Bjorn Andersson
-<bjorn.andersson@linaro.org> wrote:
-
-> The ufs_reset pin is expected to be wired to the reset pin of the
-> primary UFS memory but is pretty much just a general purpose output pinr
+On Tue, Jun 4, 2019 at 10:45 AM Greg KH <gregkh@linuxfoundation.org> wrote:
+> On Tue, Jun 04, 2019 at 10:26:06AM +0200, Geert Uytterhoeven wrote:
+> > Hi Linus,
+> >
+> > On Sun, Jun 2, 2019 at 11:12 PM Linus Walleij <linus.walleij@linaro.org> wrote:
+> > > Some files were missing the appropriate SPDX tags so
+> > > fixed it up.
+> > >
+> > > Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+> > > ---
+> > >  drivers/pinctrl/nomadik/Kconfig           | 2 ++
+> > >  drivers/pinctrl/nomadik/pinctrl-ab8500.c  | 5 +----
+> > >  drivers/pinctrl/nomadik/pinctrl-ab8505.c  | 5 +----
+> > >  drivers/pinctrl/nomadik/pinctrl-abx500.c  | 6 +-----
+> > >  drivers/pinctrl/nomadik/pinctrl-nomadik.c | 5 +----
+> > >  5 files changed, 6 insertions(+), 17 deletions(-)
+> >
+> > Please note this conflicts with commit ec8f24b7faaf3d47 ("treewide: Add
+> > SPDX license identifier - Makefile/Kconfig") upstream, which added
+> > (different) tags.
+> >
+> > > diff --git a/drivers/pinctrl/nomadik/Kconfig b/drivers/pinctrl/nomadik/Kconfig
+> > > index c3efe7d7e91f..749466fa8f97 100644
+> > > --- a/drivers/pinctrl/nomadik/Kconfig
+> > > +++ b/drivers/pinctrl/nomadik/Kconfig
+> > > @@ -1,3 +1,5 @@
+> > > +# SPDX-License-Identifier: GPL-2.0
 >
-> Reorder the pins and expose it as gpio 150, so that the UFS driver can
-> toggle it.
+> The tags added mean the same thing, what is there today is
+> "GPL-2.0-only" and this "GPL-2.0" is stating the identical thing, but in
+> a different way.
 >
-> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+> So all is good for when the merge happens.
 
-Patch applied.
+I guess I could tag on "-only" to cut down the buzz and make git
+resolution happier.
 
 Yours,
 Linus Walleij
