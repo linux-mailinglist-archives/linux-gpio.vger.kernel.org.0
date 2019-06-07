@@ -2,196 +2,78 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id C0888393FD
-	for <lists+linux-gpio@lfdr.de>; Fri,  7 Jun 2019 20:09:48 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BAFF239505
+	for <lists+linux-gpio@lfdr.de>; Fri,  7 Jun 2019 20:57:04 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730465AbfFGSJs (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 7 Jun 2019 14:09:48 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:42101 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730402AbfFGSJr (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 7 Jun 2019 14:09:47 -0400
-Received: by mail-pf1-f193.google.com with SMTP id q10so1614628pff.9
-        for <linux-gpio@vger.kernel.org>; Fri, 07 Jun 2019 11:09:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=/3m639ul9fLGHczHyKn0H1zZg+5SVSXXo1Nl+CYKby4=;
-        b=PzFmnwe5R9+tXehwIXZM6y8FoShB+B2G5A0MZe7+0cyb/EOpN+t4FPLENdAFQiY4vp
-         snMFvVlNDWgHWDB2eUSQIPp1jPpux+sTG071CiSoW9pKxLK4lCyinxlVC7k40V6c7NyM
-         z5pTl9+LJCEFZIC3Qz7jsfCfXo3GXCw4hr6fH/Of0zai00v9lD1BaHATpmLQ9qqU0zRI
-         HEJWGafkIT/mIu9OHFbD7peMSgFffJJnzRTXUZh94uyM4rRLf4WGCbHpAYNJSgv6Pp+D
-         fd+lIHwpViriTTXjPu1DqDEtndYAxhmI9tO3EsjbdeUbHvIlHX+VrJDGetgrOd1J7w40
-         Dz0w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=/3m639ul9fLGHczHyKn0H1zZg+5SVSXXo1Nl+CYKby4=;
-        b=S5w/CkVAVmJZ9Ec6zFUjyshvStsZCvsTCgMdcTlgCBaKelGXmgdJTmedoD7uuxJ88w
-         IjDMbiCC3juhYiSYZlwtc7NdVnIYPi3Jq4h5sem/sAzwm3JT8f/14MYtT0YBoYjb/GR3
-         9WXiw2+s0Fuc+9+EWgN4kg/o+FJlRUgcMfYWape4/sVD+FmtThTZpYGo5rbiQjRKx2sK
-         TA54bS+WwlZfPIKysW+3eba0g8iMlLg8L+BhovMYXR2Tdlfr7WilaxwZACDB2MUIZirm
-         0lndYndeRSJFMGZlcGPuMb1xpnDFWpFyC/PHtFL8x75L0+gJGwXpvhML1FYv3JSQC6GW
-         8juA==
-X-Gm-Message-State: APjAAAUpSg5PuvePaXFyCFSAUGUufWxwmVu2lLnlmQk/kpvwKYv4rLTF
-        mlTtZsOKiiYsOt7F208SMnuQ2A==
-X-Google-Smtp-Source: APXvYqzt5gwdXKwtn7ZORpYSN5ZFetcAiXsBwVaXb6cj35kEgitwNjg1kWrl11fOzV9tGYSsCfKnXw==
-X-Received: by 2002:a62:3287:: with SMTP id y129mr4134583pfy.251.1559930986308;
-        Fri, 07 Jun 2019 11:09:46 -0700 (PDT)
-Received: from tuxbook-pro (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id l44sm6897224pje.29.2019.06.07.11.09.43
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Fri, 07 Jun 2019 11:09:45 -0700 (PDT)
-Date:   Fri, 7 Jun 2019 11:10:30 -0700
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Cc:     Lee Jones <lee.jones@linaro.org>, alokc@codeaurora.org,
-        Andy Gross <andy.gross@linaro.org>,
-        David Brown <david.brown@linaro.org>,
-        wsa+renesas@sang-engineering.com,
-        Linus Walleij <linus.walleij@linaro.org>, balbi@kernel.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        linux-usb <linux-usb@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        linux-i2c <linux-i2c@vger.kernel.org>,
-        Jeffrey Hugo <jlhugo@gmail.com>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [PATCH v2 3/8] pinctrl: msm: Add ability for drivers to supply a
- reserved GPIO list
-Message-ID: <20190607181030.GX22737@tuxbook-pro>
-References: <20190607082901.6491-1-lee.jones@linaro.org>
- <20190607082901.6491-3-lee.jones@linaro.org>
- <CAKv+Gu-1QhX-9aNhFJauc9NVe6ceQQueE8Kd14031XJ-2yaupA@mail.gmail.com>
+        id S1730483AbfFGS43 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 7 Jun 2019 14:56:29 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:42284 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732051AbfFGSyk (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 7 Jun 2019 14:54:40 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Sender:Content-Transfer-Encoding:
+        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:
+        Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=jgwcv0yUHJkpC0RNxq8/GXr5590Xomrjfw0h2lyU8s8=; b=raMDeqoTfqqEQGzpZlFQZ3SRGn
+        9g6TQhLsjS/gjBh+2U5mHsW5a48/kKYqXf8f2krjuTj0AMcBWApyIltl2IMJPKmEtp5ubrrO2w443
+        yxDqf2610IrosbWMzgfADTAXtP2s3i+qU6jLJK+ej0p7628oQjWMpKzvrmpv8gxNav+3RjLfHIEQE
+        m2Y/x0GTTSuyzqwimmuKxPNWRx5218qE3o9SAPYK369vWKVrV540ru4u82QF/pQ2YRmBkZhYwlPLm
+        zIo7eVcxkBSXteMYeGd6I/9YBnd1DVEgQk3yRd4AmS/CP8XiU4c4RbYLlU/nBYcNARduXXf+L7DjY
+        nDo8tt/A==;
+Received: from [179.181.119.115] (helo=bombadil.infradead.org)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1hZK0d-0005sg-KS; Fri, 07 Jun 2019 18:54:39 +0000
+Received: from mchehab by bombadil.infradead.org with local (Exim 4.92)
+        (envelope-from <mchehab@bombadil.infradead.org>)
+        id 1hZK0b-0007F2-F2; Fri, 07 Jun 2019 15:54:37 -0300
+From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>
+Cc:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Mauro Carvalho Chehab <mchehab@infradead.org>,
+        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        linux-gpio@vger.kernel.org
+Subject: [PATCH v3 10/20] docs: gpio: driver.rst: fix a bad tag
+Date:   Fri,  7 Jun 2019 15:54:26 -0300
+Message-Id: <123b42e77f9c1beadfcf7d93cfe1d5e3319049c4.1559933665.git.mchehab+samsung@kernel.org>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <ff457774d46d96e8fe56b45409aba39d87a8672a.1559933665.git.mchehab+samsung@kernel.org>
+References: <ff457774d46d96e8fe56b45409aba39d87a8672a.1559933665.git.mchehab+samsung@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAKv+Gu-1QhX-9aNhFJauc9NVe6ceQQueE8Kd14031XJ-2yaupA@mail.gmail.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri 07 Jun 04:10 PDT 2019, Ard Biesheuvel wrote:
+With ReST, [foo]_ means a reference to foo, causing this warning:
 
-> On Fri, 7 Jun 2019 at 10:29, Lee Jones <lee.jones@linaro.org> wrote:
-> >
-> > When booting MSM based platforms with Device Tree or some ACPI
-> > implementations, it is possible to provide a list of reserved pins
-> > via the 'gpio-reserved-ranges' and 'gpios' properties respectively.
-> > However some ACPI tables are not populated with this information,
-> > thus it has to come from a knowledgable device driver instead.
-> >
-> > Here we provide the MSM common driver with additional support to
-> > parse this informtion and correctly populate the widely used
-> > 'valid_mask'.
-> >
-> > Signed-off-by: Lee Jones <lee.jones@linaro.org>
-> 
-> I'm not sure if this is the correct approach. Presumably, on ACPI
-> systems, all the pinctl stuff is already set up by the firmware, and
-> so we shouldn't touch *any* pins unless they have been requested
-> explicitly. Is there any way we can support this in the current
-> framework?
-> 
+    Documentation/driver-api/gpio/driver.rst:419: WARNING: Unknown target name: "devm".
 
-The only reason why we do this (at least the initial reason) is because
-gpiolib will read the current state of all GPIOs during initialization.
+Fix it by using a literal for the name.
 
-But due to the sensitive nature of the application using these pins
-Linux is prohibited from touching the associated GPIO/pinmux/pinconf
-registers - resulting in a security violation if we allow gpiolib to
-touch them.
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+---
+ Documentation/driver-api/gpio/driver.rst | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
+diff --git a/Documentation/driver-api/gpio/driver.rst b/Documentation/driver-api/gpio/driver.rst
+index 1ce7fcd0f989..25e2ddeb4f31 100644
+--- a/Documentation/driver-api/gpio/driver.rst
++++ b/Documentation/driver-api/gpio/driver.rst
+@@ -418,7 +418,7 @@ symbol:
+ 
+ If there is a need to exclude certain GPIO lines from the IRQ domain handled by
+ these helpers, we can set .irq.need_valid_mask of the gpiochip before
+-[devm_]gpiochip_add_data() is called. This allocates an .irq.valid_mask with as
++``[devm_]gpiochip_add_data()`` is called. This allocates an .irq.valid_mask with as
+ many bits set as there are GPIO lines in the chip, each bit representing line
+ 0..n-1. Drivers can exclude GPIO lines by clearing bits from this mask. The mask
+ must be filled in before gpiochip_irqchip_add() or gpiochip_irqchip_add_nested()
+-- 
+2.21.0
 
-When it comes to pinmux/pinconf those are only poked explicitly and
-those seems to be described in PEP nodes, such as:
-
-	Package (0x02)
-	{
-	    "TLMMGPIO",
-	    Package (0x06)
-	    {
-		0x2C,
-		One,
-		Zero,
-		One,
-		Zero,
-		Zero
-	    }
-	},
-
-So the pinctrl-sdm845/msm drivers gives us GPIOs, but for pinconf and
-pinmux there's a need for something very different from what we're used
-to.
-
-Regards,
-Bjorn
-
-> > ---
-> >  drivers/pinctrl/qcom/pinctrl-msm.c | 18 ++++++++++++++++++
-> >  drivers/pinctrl/qcom/pinctrl-msm.h |  1 +
-> >  2 files changed, 19 insertions(+)
-> >
-> > diff --git a/drivers/pinctrl/qcom/pinctrl-msm.c b/drivers/pinctrl/qcom/pinctrl-msm.c
-> > index ee8119879c4c..3ac740b36508 100644
-> > --- a/drivers/pinctrl/qcom/pinctrl-msm.c
-> > +++ b/drivers/pinctrl/qcom/pinctrl-msm.c
-> > @@ -607,8 +607,23 @@ static int msm_gpio_init_valid_mask(struct gpio_chip *chip)
-> >         int ret;
-> >         unsigned int len, i;
-> >         unsigned int max_gpios = pctrl->soc->ngpios;
-> > +       const int *reserved = pctrl->soc->reserved_gpios;
-> >         u16 *tmp;
-> >
-> > +       /* Driver provided reserved list overrides DT and ACPI */
-> > +       if (reserved) {
-> > +               bitmap_fill(chip->valid_mask, max_gpios);
-> > +               for (i = 0; reserved[i] >= 0; i++) {
-> > +                       if (i >= max_gpios || reserved[i] >= max_gpios) {
-> > +                               dev_err(pctrl->dev, "invalid list of reserved GPIOs\n");
-> > +                               return -EINVAL;
-> > +                       }
-> > +                       clear_bit(reserved[i], chip->valid_mask);
-> > +               }
-> > +
-> > +               return 0;
-> > +       }
-> > +
-> >         /* The number of GPIOs in the ACPI tables */
-> >         len = ret = device_property_read_u16_array(pctrl->dev, "gpios", NULL,
-> >                                                    0);
-> > @@ -964,6 +979,9 @@ static void msm_gpio_irq_handler(struct irq_desc *desc)
-> >
-> >  static bool msm_gpio_needs_valid_mask(struct msm_pinctrl *pctrl)
-> >  {
-> > +       if (pctrl->soc->reserved_gpios)
-> > +               return true;
-> > +
-> >         return device_property_read_u16_array(pctrl->dev, "gpios", NULL, 0) > 0;
-> >  }
-> >
-> > diff --git a/drivers/pinctrl/qcom/pinctrl-msm.h b/drivers/pinctrl/qcom/pinctrl-msm.h
-> > index c12048e54a6f..23b93ae92269 100644
-> > --- a/drivers/pinctrl/qcom/pinctrl-msm.h
-> > +++ b/drivers/pinctrl/qcom/pinctrl-msm.h
-> > @@ -121,6 +121,7 @@ struct msm_pinctrl_soc_data {
-> >         bool pull_no_keeper;
-> >         const char *const *tiles;
-> >         unsigned int ntiles;
-> > +       const int *reserved_gpios;
-> >  };
-> >
-> >  extern const struct dev_pm_ops msm_pinctrl_dev_pm_ops;
-> > --
-> > 2.17.1
-> >
-> >
-> > _______________________________________________
-> > linux-arm-kernel mailing list
-> > linux-arm-kernel@lists.infradead.org
-> > http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
