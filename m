@@ -2,89 +2,79 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 2E2EF39900
-	for <lists+linux-gpio@lfdr.de>; Sat,  8 Jun 2019 00:38:46 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 03F3B3990D
+	for <lists+linux-gpio@lfdr.de>; Sat,  8 Jun 2019 00:40:06 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730959AbfFGWib (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 7 Jun 2019 18:38:31 -0400
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:41601 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731776AbfFGWiV (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 7 Jun 2019 18:38:21 -0400
-Received: by mail-lf1-f68.google.com with SMTP id 136so2730168lfa.8
-        for <linux-gpio@vger.kernel.org>; Fri, 07 Jun 2019 15:38:21 -0700 (PDT)
+        id S1729925AbfFGWkF (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 7 Jun 2019 18:40:05 -0400
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:46115 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729042AbfFGWkF (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 7 Jun 2019 18:40:05 -0400
+Received: by mail-lj1-f196.google.com with SMTP id m15so3027211ljg.13
+        for <linux-gpio@vger.kernel.org>; Fri, 07 Jun 2019 15:40:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=ET3CFvRFkI0MF/L2BngZV7pHB0kqkmb+NPPDszDMmzE=;
-        b=la+kAQw+qsaiVBk6+KatB7XKgUOQshyAywGFIAIvLnyWbM44AQD3zDX3pKapxSYt4a
-         u3GUBtfj6P/Oxxl9QWxXPWRsdxguE7S0o4s8Giuqu9SGAndIJjiOwd5ua0slHTTM79z7
-         dAcF+wCHd8q02R92tR4Yq0NCf8O479vhO78iKhl2OrWl2Y1o5XqX+/GXiYb2D1b8dmuo
-         H9tcj2OjLjotzInGGsDpWbD9WBl6JAipNBNP8VhjZVU8eFX5ucB5BFad8ny5ZpIjgz8x
-         ZZvgDibFSGEH9KqtYipA4wh+CJFtECjt2WUaZDyqwHr95wNMA8xxcd+iBLre6Wf5gTAq
-         El2w==
+         :cc;
+        bh=2He8fM7kcXQfsornTR9w4EIW8ewTHe/YWrAox5h8fVA=;
+        b=Y1wzQSw3xyLXOije8DwbtzUeT40ID/RB3K6j9lA9ycHeOawwFiOB2UGDToQY9iptd8
+         qdB0PTbgAPUdAs5j6OGLikt0UDPGJVvwRx3MQrFm1sa/4ive4N+MZEH1ZdRZkWTj7jan
+         Ea4lmsPTV1MmZvUaLuyQ+1N202QQE1+a5jt06n7dyjTuxVkLeGD862oU7Yv/bwPfI6Ek
+         /0wcCoDdB4M+BU3QmL1/uR/m3vbdS1Xuj9DKutHK5+rObzRUXA/CJBp+n7yQU+Lsvz5R
+         vbfHWFBswsWYELI4G8Akq5VXlkm870a6aSKiOWw2ejytuYdUkwWGVItwc6Dc/nd3xNkF
+         S0/w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=ET3CFvRFkI0MF/L2BngZV7pHB0kqkmb+NPPDszDMmzE=;
-        b=pYe9kUGkU82jzDV0+miAOAssUXFG7CyPpi2GmIyje7MHumTmq83RUfZF8JXoEUmgK0
-         2BLKo47IQJsGCWcSN2py04riAatENu/b6pOZ7ZYHsAwJnvXCFA0rjt6uI7Ar8cgIlKF8
-         +e9nGEDTZof6wVtLBX/nZOMM9eQvgu+0Lp2vB0Ydixo7nwQZhB7XfN7D9OPiDI2ADlYh
-         HycFFLi42AVFfM6KBaummdd8MHXvaOGAlgPf5hf0t5itF+52EtxVyp+ayJVRllUXI1OI
-         kR1bug1+i1z/h1nqjYUDVsvzYn3LLpwxOwnQsWUAJt50Lh30WIX014SPKrd+2eev/2mS
-         EVfg==
-X-Gm-Message-State: APjAAAXtjCejxmSDSsCBDdSQTCR1GOJV6gNF7HKoOHcCILK5GWyHekhC
-        YT9YENwtMzvUiTjHM7CYbgUceNwmX/yZEaeqDiTHg1Ni
-X-Google-Smtp-Source: APXvYqwU6tE2vqZEcO3A/q6LuYfqSxDoBrcVt4WBoMI4WPwbOyt15dI+odVEiKCLsZ0yFS2STPMXWyGJ1aaCxj2Iziw=
-X-Received: by 2002:ac2:4891:: with SMTP id x17mr16073289lfc.60.1559947100366;
- Fri, 07 Jun 2019 15:38:20 -0700 (PDT)
+         :message-id:subject:to:cc;
+        bh=2He8fM7kcXQfsornTR9w4EIW8ewTHe/YWrAox5h8fVA=;
+        b=XCw7jcXBVsOwQJL5j+CIQm8NvjB1ZXlKkR88aJJX4W4sbznY9G1wN7/JSA0U7HPVcL
+         VV90Z1nUKDZtLxUohHvUcJvq6lA4VD/alpz0NBmpgSrMtYHxsPfN1dpf0I8yvAFvfDvn
+         AKm4S8uMhIXhvn5AwC5UxdwOQUyTsZ8qEMa5yQ7mjlNdsyjF25OIAhqqbSwQ1qSPaJyH
+         zp0UjGbuj9QwmR4nDQKAy2DGXJsF/ahgh/5a1pjxTqkUERcA4ADbM2ngoUKC5zA8UF54
+         agH4O2YMM2qfLhySmAmV+yCqBfLYq3YHFQqU3IJB2sbcLo89HNvneQpt0myEZTQSmGmi
+         OMVA==
+X-Gm-Message-State: APjAAAWYxnUfxsvd3jE3UKN5silvABo0diPg66+qJt0tO1iw9bSi1pql
+        TK/r2VsRGG14ImR1Ay2mWc/zXqM99zc70s56uFMxig==
+X-Google-Smtp-Source: APXvYqx/VwNEsPm3ayxAU3renmpKyYQsiC7r4U3mSDqbHCSnM+jZ3lPRwPTRSWn4x0qqtNvr8hw2rES8YOA2GkaI/gY=
+X-Received: by 2002:a2e:9e85:: with SMTP id f5mr23363303ljk.104.1559947203348;
+ Fri, 07 Jun 2019 15:40:03 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190605080259.2462-1-j-keerthy@ti.com> <20190605080259.2462-3-j-keerthy@ti.com>
- <CAMpxmJXjMX20TAEsfEa7pqZx5-aW_rMKwS+6g9NTvRNEfuAyeA@mail.gmail.com>
- <96dbfd50-2a45-e3dc-3928-47fbc52f9269@ti.com> <CAMRc=Mfe+K=s4OZp7VWRik7JtSU6Fpufx0yDZtYCMNh5+LSJuQ@mail.gmail.com>
-In-Reply-To: <CAMRc=Mfe+K=s4OZp7VWRik7JtSU6Fpufx0yDZtYCMNh5+LSJuQ@mail.gmail.com>
+References: <20190606095620.6211-1-j-keerthy@ti.com> <20190606095620.6211-2-j-keerthy@ti.com>
+In-Reply-To: <20190606095620.6211-2-j-keerthy@ti.com>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Sat, 8 Jun 2019 00:38:12 +0200
-Message-ID: <CACRpkda_YmWoatVEt6OO+enYVfbZ6wvP5gmRG5+h5k=DVbPi+A@mail.gmail.com>
-Subject: Re: [PATCH v2 2/3] gpio: davinci: Add new compatible for K3 AM654 SoCs
-To:     Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     Keerthy <j-keerthy@ti.com>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+Date:   Sat, 8 Jun 2019 00:39:55 +0200
+Message-ID: <CACRpkdY-yK3+uZvq1Xk7qJ2Nd7mgRkQ9C22AYO4AiZP5Cs719w@mail.gmail.com>
+Subject: Re: [RFC RESEND PATCH v2 1/4] dt-bindings: gpio: davinci: Add k3
+ am654 compatible
+To:     Keerthy <j-keerthy@ti.com>
+Cc:     Tero Kristo <t-kristo@ti.com>, ext Nishanth Menon <nm@ti.com>,
+        Rob Herring <robh+dt@kernel.org>,
         Lokesh Vutla <lokeshvutla@ti.com>,
-        linux-gpio <linux-gpio@vger.kernel.org>,
-        Tero Kristo <t-kristo@ti.com>,
-        LKML <linux-kernel@vger.kernel.org>
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Jun 6, 2019 at 9:49 AM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
-> =C5=9Br., 5 cze 2019 o 17:12 Keerthy <j-keerthy@ti.com> napisa=C5=82(a):
+On Thu, Jun 6, 2019 at 11:55 AM Keerthy <j-keerthy@ti.com> wrote:
 
-> > >>   static const struct of_device_id davinci_gpio_ids[] =3D {
-> > >>          { .compatible =3D "ti,keystone-gpio", keystone_gpio_get_irq=
-_chip},
-> > >> +       { .compatible =3D "ti,am654-gpio", keystone_gpio_get_irq_chi=
-p},
-> > >
-> > > Please add a patch adding this compatible to the binding document as =
-well.
-> >
-> > https://patchwork.kernel.org/patch/10976445/
-> >
-> > Posted but did not add you in Cc. Sorry about that.
+> The patch adds k3 am654 compatible, specific properties and
+> an example.
 >
-> I don't see it on GPIO patchwork either. Please resend it as part of
-> this series.
+> Signed-off-by: Keerthy <j-keerthy@ti.com>
 
-I see the whole other series got resent as RFC, I'll just apply these
-three and the binding patch so we don't have to pingpong these
-patches too much around :)
+Patch applied with the three others, so now all
+GPIO changes are in tree.
+
+Please funnel all the DTS changes through ARM SoC.
 
 Yours,
 Linus Walleij
