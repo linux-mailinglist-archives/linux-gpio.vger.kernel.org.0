@@ -2,295 +2,196 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 53FC2392BD
-	for <lists+linux-gpio@lfdr.de>; Fri,  7 Jun 2019 19:04:38 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C0888393FD
+	for <lists+linux-gpio@lfdr.de>; Fri,  7 Jun 2019 20:09:48 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729585AbfFGREh (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 7 Jun 2019 13:04:37 -0400
-Received: from sed198n136.SEDSystems.ca ([198.169.180.136]:4467 "EHLO
-        sed198n136.sedsystems.ca" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729118AbfFGREh (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 7 Jun 2019 13:04:37 -0400
-Received: from barney.sedsystems.ca (barney [198.169.180.121])
-        by sed198n136.sedsystems.ca  with ESMTP id x57H4XAU012724
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 7 Jun 2019 11:04:34 -0600 (CST)
-Received: from SED.RFC1918.192.168.sedsystems.ca (eng1n65.eng.sedsystems.ca [172.21.1.65])
-        by barney.sedsystems.ca (8.14.7/8.14.4) with ESMTP id x57H4X8E065084
-        (version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
-        Fri, 7 Jun 2019 11:04:33 -0600
-From:   Robert Hancock <hancock@sedsystems.ca>
-To:     linux-gpio@vger.kernel.org
-Cc:     linus.walleij@linaro.org, bgolaszewski@baylibre.com,
-        michal.simek@xilinx.com, shubhraj@xilinx.com,
-        Robert Hancock <hancock@sedsystems.ca>
-Subject: [PATCH v3] gpio: xilinx: convert from OF GPIO to standard devm APIs
-Date:   Fri,  7 Jun 2019 11:04:16 -0600
-Message-Id: <1559927056-12064-1-git-send-email-hancock@sedsystems.ca>
-X-Mailer: git-send-email 1.8.3.1
-X-Scanned-By: MIMEDefang 2.64 on 198.169.180.136
+        id S1730465AbfFGSJs (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 7 Jun 2019 14:09:48 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:42101 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730402AbfFGSJr (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 7 Jun 2019 14:09:47 -0400
+Received: by mail-pf1-f193.google.com with SMTP id q10so1614628pff.9
+        for <linux-gpio@vger.kernel.org>; Fri, 07 Jun 2019 11:09:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=/3m639ul9fLGHczHyKn0H1zZg+5SVSXXo1Nl+CYKby4=;
+        b=PzFmnwe5R9+tXehwIXZM6y8FoShB+B2G5A0MZe7+0cyb/EOpN+t4FPLENdAFQiY4vp
+         snMFvVlNDWgHWDB2eUSQIPp1jPpux+sTG071CiSoW9pKxLK4lCyinxlVC7k40V6c7NyM
+         z5pTl9+LJCEFZIC3Qz7jsfCfXo3GXCw4hr6fH/Of0zai00v9lD1BaHATpmLQ9qqU0zRI
+         HEJWGafkIT/mIu9OHFbD7peMSgFffJJnzRTXUZh94uyM4rRLf4WGCbHpAYNJSgv6Pp+D
+         fd+lIHwpViriTTXjPu1DqDEtndYAxhmI9tO3EsjbdeUbHvIlHX+VrJDGetgrOd1J7w40
+         Dz0w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=/3m639ul9fLGHczHyKn0H1zZg+5SVSXXo1Nl+CYKby4=;
+        b=S5w/CkVAVmJZ9Ec6zFUjyshvStsZCvsTCgMdcTlgCBaKelGXmgdJTmedoD7uuxJ88w
+         IjDMbiCC3juhYiSYZlwtc7NdVnIYPi3Jq4h5sem/sAzwm3JT8f/14MYtT0YBoYjb/GR3
+         9WXiw2+s0Fuc+9+EWgN4kg/o+FJlRUgcMfYWape4/sVD+FmtThTZpYGo5rbiQjRKx2sK
+         TA54bS+WwlZfPIKysW+3eba0g8iMlLg8L+BhovMYXR2Tdlfr7WilaxwZACDB2MUIZirm
+         0lndYndeRSJFMGZlcGPuMb1xpnDFWpFyC/PHtFL8x75L0+gJGwXpvhML1FYv3JSQC6GW
+         8juA==
+X-Gm-Message-State: APjAAAUpSg5PuvePaXFyCFSAUGUufWxwmVu2lLnlmQk/kpvwKYv4rLTF
+        mlTtZsOKiiYsOt7F208SMnuQ2A==
+X-Google-Smtp-Source: APXvYqzt5gwdXKwtn7ZORpYSN5ZFetcAiXsBwVaXb6cj35kEgitwNjg1kWrl11fOzV9tGYSsCfKnXw==
+X-Received: by 2002:a62:3287:: with SMTP id y129mr4134583pfy.251.1559930986308;
+        Fri, 07 Jun 2019 11:09:46 -0700 (PDT)
+Received: from tuxbook-pro (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id l44sm6897224pje.29.2019.06.07.11.09.43
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Fri, 07 Jun 2019 11:09:45 -0700 (PDT)
+Date:   Fri, 7 Jun 2019 11:10:30 -0700
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Cc:     Lee Jones <lee.jones@linaro.org>, alokc@codeaurora.org,
+        Andy Gross <andy.gross@linaro.org>,
+        David Brown <david.brown@linaro.org>,
+        wsa+renesas@sang-engineering.com,
+        Linus Walleij <linus.walleij@linaro.org>, balbi@kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        linux-usb <linux-usb@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        linux-i2c <linux-i2c@vger.kernel.org>,
+        Jeffrey Hugo <jlhugo@gmail.com>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [PATCH v2 3/8] pinctrl: msm: Add ability for drivers to supply a
+ reserved GPIO list
+Message-ID: <20190607181030.GX22737@tuxbook-pro>
+References: <20190607082901.6491-1-lee.jones@linaro.org>
+ <20190607082901.6491-3-lee.jones@linaro.org>
+ <CAKv+Gu-1QhX-9aNhFJauc9NVe6ceQQueE8Kd14031XJ-2yaupA@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAKv+Gu-1QhX-9aNhFJauc9NVe6ceQQueE8Kd14031XJ-2yaupA@mail.gmail.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-This driver was using the OF GPIO helper API, but barely used any of its
-features and it cost more code than it saved. Also, the OF GPIO code is
-now deprecated. Convert it to use a more standard setup and use devm
-APIs for initialization to avoid the need for a remove function.
+On Fri 07 Jun 04:10 PDT 2019, Ard Biesheuvel wrote:
 
-Our rationale for this change is that we are using the Xilinx GPIO with
-resources injected using the MFD core rather than on the device tree
-itself. Using platform rather than OF-specific resources allows this to
-work for free.
+> On Fri, 7 Jun 2019 at 10:29, Lee Jones <lee.jones@linaro.org> wrote:
+> >
+> > When booting MSM based platforms with Device Tree or some ACPI
+> > implementations, it is possible to provide a list of reserved pins
+> > via the 'gpio-reserved-ranges' and 'gpios' properties respectively.
+> > However some ACPI tables are not populated with this information,
+> > thus it has to come from a knowledgable device driver instead.
+> >
+> > Here we provide the MSM common driver with additional support to
+> > parse this informtion and correctly populate the widely used
+> > 'valid_mask'.
+> >
+> > Signed-off-by: Lee Jones <lee.jones@linaro.org>
+> 
+> I'm not sure if this is the correct approach. Presumably, on ACPI
+> systems, all the pinctl stuff is already set up by the firmware, and
+> so we shouldn't touch *any* pins unless they have been requested
+> explicitly. Is there any way we can support this in the current
+> framework?
+> 
 
-Signed-off-by: Robert Hancock <hancock@sedsystems.ca>
----
+The only reason why we do this (at least the initial reason) is because
+gpiolib will read the current state of all GPIOs during initialization.
 
-Changed from v2: Cleaned up probe error message code
+But due to the sensitive nature of the application using these pins
+Linux is prohibited from touching the associated GPIO/pinmux/pinconf
+registers - resulting in a security violation if we allow gpiolib to
+touch them.
 
- drivers/gpio/Kconfig       |  1 -
- drivers/gpio/gpio-xilinx.c | 90 +++++++++++++++++++---------------------------
- 2 files changed, 36 insertions(+), 55 deletions(-)
 
-diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
-index acd40eb..66f1f13 100644
---- a/drivers/gpio/Kconfig
-+++ b/drivers/gpio/Kconfig
-@@ -602,7 +602,6 @@ config GPIO_XGENE_SB
- 
- config GPIO_XILINX
- 	tristate "Xilinx GPIO support"
--	depends on OF_GPIO
- 	help
- 	  Say yes here to support the Xilinx FPGA GPIO device
- 
-diff --git a/drivers/gpio/gpio-xilinx.c b/drivers/gpio/gpio-xilinx.c
-index 32944eb..a9748b5 100644
---- a/drivers/gpio/gpio-xilinx.c
-+++ b/drivers/gpio/gpio-xilinx.c
-@@ -11,7 +11,6 @@
- #include <linux/module.h>
- #include <linux/of_device.h>
- #include <linux/of_platform.h>
--#include <linux/of_gpio.h>
- #include <linux/io.h>
- #include <linux/gpio/driver.h>
- #include <linux/slab.h>
-@@ -33,14 +32,16 @@
- 
- /**
-  * struct xgpio_instance - Stores information about GPIO device
-- * @mmchip: OF GPIO chip for memory mapped banks
-+ * @gc: GPIO chip
-+ * @regs: register block
-  * @gpio_width: GPIO width for every channel
-  * @gpio_state: GPIO state shadow register
-  * @gpio_dir: GPIO direction shadow register
-  * @gpio_lock: Lock used for synchronization
-  */
- struct xgpio_instance {
--	struct of_mm_gpio_chip mmchip;
-+	struct gpio_chip gc;
-+	void __iomem *regs;
- 	unsigned int gpio_width[2];
- 	u32 gpio_state[2];
- 	u32 gpio_dir[2];
-@@ -84,11 +85,10 @@ static inline int xgpio_offset(struct xgpio_instance *chip, int gpio)
-  */
- static int xgpio_get(struct gpio_chip *gc, unsigned int gpio)
- {
--	struct of_mm_gpio_chip *mm_gc = to_of_mm_gpio_chip(gc);
- 	struct xgpio_instance *chip = gpiochip_get_data(gc);
- 	u32 val;
- 
--	val = xgpio_readreg(mm_gc->regs + XGPIO_DATA_OFFSET +
-+	val = xgpio_readreg(chip->regs + XGPIO_DATA_OFFSET +
- 			    xgpio_regoffset(chip, gpio));
- 
- 	return !!(val & BIT(xgpio_offset(chip, gpio)));
-@@ -106,7 +106,6 @@ static int xgpio_get(struct gpio_chip *gc, unsigned int gpio)
- static void xgpio_set(struct gpio_chip *gc, unsigned int gpio, int val)
- {
- 	unsigned long flags;
--	struct of_mm_gpio_chip *mm_gc = to_of_mm_gpio_chip(gc);
- 	struct xgpio_instance *chip = gpiochip_get_data(gc);
- 	int index =  xgpio_index(chip, gpio);
- 	int offset =  xgpio_offset(chip, gpio);
-@@ -119,7 +118,7 @@ static void xgpio_set(struct gpio_chip *gc, unsigned int gpio, int val)
- 	else
- 		chip->gpio_state[index] &= ~BIT(offset);
- 
--	xgpio_writereg(mm_gc->regs + XGPIO_DATA_OFFSET +
-+	xgpio_writereg(chip->regs + XGPIO_DATA_OFFSET +
- 		       xgpio_regoffset(chip, gpio), chip->gpio_state[index]);
- 
- 	spin_unlock_irqrestore(&chip->gpio_lock[index], flags);
-@@ -138,7 +137,6 @@ static void xgpio_set_multiple(struct gpio_chip *gc, unsigned long *mask,
- 			       unsigned long *bits)
- {
- 	unsigned long flags;
--	struct of_mm_gpio_chip *mm_gc = to_of_mm_gpio_chip(gc);
- 	struct xgpio_instance *chip = gpiochip_get_data(gc);
- 	int index = xgpio_index(chip, 0);
- 	int offset, i;
-@@ -150,7 +148,7 @@ static void xgpio_set_multiple(struct gpio_chip *gc, unsigned long *mask,
- 		if (*mask == 0)
- 			break;
- 		if (index !=  xgpio_index(chip, i)) {
--			xgpio_writereg(mm_gc->regs + XGPIO_DATA_OFFSET +
-+			xgpio_writereg(chip->regs + XGPIO_DATA_OFFSET +
- 				       xgpio_regoffset(chip, i),
- 				       chip->gpio_state[index]);
- 			spin_unlock_irqrestore(&chip->gpio_lock[index], flags);
-@@ -166,7 +164,7 @@ static void xgpio_set_multiple(struct gpio_chip *gc, unsigned long *mask,
- 		}
- 	}
- 
--	xgpio_writereg(mm_gc->regs + XGPIO_DATA_OFFSET +
-+	xgpio_writereg(chip->regs + XGPIO_DATA_OFFSET +
- 		       xgpio_regoffset(chip, i), chip->gpio_state[index]);
- 
- 	spin_unlock_irqrestore(&chip->gpio_lock[index], flags);
-@@ -184,7 +182,6 @@ static void xgpio_set_multiple(struct gpio_chip *gc, unsigned long *mask,
- static int xgpio_dir_in(struct gpio_chip *gc, unsigned int gpio)
- {
- 	unsigned long flags;
--	struct of_mm_gpio_chip *mm_gc = to_of_mm_gpio_chip(gc);
- 	struct xgpio_instance *chip = gpiochip_get_data(gc);
- 	int index =  xgpio_index(chip, gpio);
- 	int offset =  xgpio_offset(chip, gpio);
-@@ -193,7 +190,7 @@ static int xgpio_dir_in(struct gpio_chip *gc, unsigned int gpio)
- 
- 	/* Set the GPIO bit in shadow register and set direction as input */
- 	chip->gpio_dir[index] |= BIT(offset);
--	xgpio_writereg(mm_gc->regs + XGPIO_TRI_OFFSET +
-+	xgpio_writereg(chip->regs + XGPIO_TRI_OFFSET +
- 		       xgpio_regoffset(chip, gpio), chip->gpio_dir[index]);
- 
- 	spin_unlock_irqrestore(&chip->gpio_lock[index], flags);
-@@ -216,7 +213,6 @@ static int xgpio_dir_in(struct gpio_chip *gc, unsigned int gpio)
- static int xgpio_dir_out(struct gpio_chip *gc, unsigned int gpio, int val)
- {
- 	unsigned long flags;
--	struct of_mm_gpio_chip *mm_gc = to_of_mm_gpio_chip(gc);
- 	struct xgpio_instance *chip = gpiochip_get_data(gc);
- 	int index =  xgpio_index(chip, gpio);
- 	int offset =  xgpio_offset(chip, gpio);
-@@ -228,12 +224,12 @@ static int xgpio_dir_out(struct gpio_chip *gc, unsigned int gpio, int val)
- 		chip->gpio_state[index] |= BIT(offset);
- 	else
- 		chip->gpio_state[index] &= ~BIT(offset);
--	xgpio_writereg(mm_gc->regs + XGPIO_DATA_OFFSET +
-+	xgpio_writereg(chip->regs + XGPIO_DATA_OFFSET +
- 			xgpio_regoffset(chip, gpio), chip->gpio_state[index]);
- 
- 	/* Clear the GPIO bit in shadow register and set direction as output */
- 	chip->gpio_dir[index] &= ~BIT(offset);
--	xgpio_writereg(mm_gc->regs + XGPIO_TRI_OFFSET +
-+	xgpio_writereg(chip->regs + XGPIO_TRI_OFFSET +
- 			xgpio_regoffset(chip, gpio), chip->gpio_dir[index]);
- 
- 	spin_unlock_irqrestore(&chip->gpio_lock[index], flags);
-@@ -243,43 +239,23 @@ static int xgpio_dir_out(struct gpio_chip *gc, unsigned int gpio, int val)
- 
- /**
-  * xgpio_save_regs - Set initial values of GPIO pins
-- * @mm_gc: Pointer to memory mapped GPIO chip structure
-+ * @chip: Pointer to GPIO instance
-  */
--static void xgpio_save_regs(struct of_mm_gpio_chip *mm_gc)
-+static void xgpio_save_regs(struct xgpio_instance *chip)
- {
--	struct xgpio_instance *chip =
--		container_of(mm_gc, struct xgpio_instance, mmchip);
--
--	xgpio_writereg(mm_gc->regs + XGPIO_DATA_OFFSET,	chip->gpio_state[0]);
--	xgpio_writereg(mm_gc->regs + XGPIO_TRI_OFFSET, chip->gpio_dir[0]);
-+	xgpio_writereg(chip->regs + XGPIO_DATA_OFFSET,	chip->gpio_state[0]);
-+	xgpio_writereg(chip->regs + XGPIO_TRI_OFFSET, chip->gpio_dir[0]);
- 
- 	if (!chip->gpio_width[1])
- 		return;
- 
--	xgpio_writereg(mm_gc->regs + XGPIO_DATA_OFFSET + XGPIO_CHANNEL_OFFSET,
-+	xgpio_writereg(chip->regs + XGPIO_DATA_OFFSET + XGPIO_CHANNEL_OFFSET,
- 		       chip->gpio_state[1]);
--	xgpio_writereg(mm_gc->regs + XGPIO_TRI_OFFSET + XGPIO_CHANNEL_OFFSET,
-+	xgpio_writereg(chip->regs + XGPIO_TRI_OFFSET + XGPIO_CHANNEL_OFFSET,
- 		       chip->gpio_dir[1]);
- }
- 
- /**
-- * xgpio_remove - Remove method for the GPIO device.
-- * @pdev: pointer to the platform device
-- *
-- * This function remove gpiochips and frees all the allocated resources.
-- *
-- * Return: 0 always
-- */
--static int xgpio_remove(struct platform_device *pdev)
--{
--	struct xgpio_instance *chip = platform_get_drvdata(pdev);
--
--	of_mm_gpiochip_remove(&chip->mmchip);
--
--	return 0;
--}
--
--/**
-  * xgpio_of_probe - Probe method for the GPIO device.
-  * @pdev: pointer to the platform device
-  *
-@@ -340,21 +316,28 @@ static int xgpio_probe(struct platform_device *pdev)
- 		spin_lock_init(&chip->gpio_lock[1]);
- 	}
- 
--	chip->mmchip.gc.ngpio = chip->gpio_width[0] + chip->gpio_width[1];
--	chip->mmchip.gc.parent = &pdev->dev;
--	chip->mmchip.gc.direction_input = xgpio_dir_in;
--	chip->mmchip.gc.direction_output = xgpio_dir_out;
--	chip->mmchip.gc.get = xgpio_get;
--	chip->mmchip.gc.set = xgpio_set;
--	chip->mmchip.gc.set_multiple = xgpio_set_multiple;
-+	chip->gc.base = -1;
-+	chip->gc.ngpio = chip->gpio_width[0] + chip->gpio_width[1];
-+	chip->gc.parent = &pdev->dev;
-+	chip->gc.direction_input = xgpio_dir_in;
-+	chip->gc.direction_output = xgpio_dir_out;
-+	chip->gc.get = xgpio_get;
-+	chip->gc.set = xgpio_set;
-+	chip->gc.set_multiple = xgpio_set_multiple;
-+
-+	chip->gc.label = dev_name(&pdev->dev);
-+
-+	chip->regs = devm_platform_ioremap_resource(pdev, 0);
-+	if (IS_ERR(chip->regs)) {
-+		dev_err(&pdev->dev, "failed to ioremap memory resource\n");
-+		return PTR_ERR(chip->regs);
-+	}
- 
--	chip->mmchip.save_regs = xgpio_save_regs;
-+	xgpio_save_regs(chip);
- 
--	/* Call the OF gpio helper to setup and register the GPIO device */
--	status = of_mm_gpiochip_add_data(np, &chip->mmchip, chip);
-+	status = devm_gpiochip_add_data(&pdev->dev, &chip->gc, chip);
- 	if (status) {
--		pr_err("%pOF: error in probe function with status %d\n",
--		       np, status);
-+		dev_err(&pdev->dev, "failed to add GPIO chip\n");
- 		return status;
- 	}
- 
-@@ -370,7 +353,6 @@ static int xgpio_probe(struct platform_device *pdev)
- 
- static struct platform_driver xgpio_plat_driver = {
- 	.probe		= xgpio_probe,
--	.remove		= xgpio_remove,
- 	.driver		= {
- 			.name = "gpio-xilinx",
- 			.of_match_table	= xgpio_of_match,
--- 
-1.8.3.1
+When it comes to pinmux/pinconf those are only poked explicitly and
+those seems to be described in PEP nodes, such as:
 
+	Package (0x02)
+	{
+	    "TLMMGPIO",
+	    Package (0x06)
+	    {
+		0x2C,
+		One,
+		Zero,
+		One,
+		Zero,
+		Zero
+	    }
+	},
+
+So the pinctrl-sdm845/msm drivers gives us GPIOs, but for pinconf and
+pinmux there's a need for something very different from what we're used
+to.
+
+Regards,
+Bjorn
+
+> > ---
+> >  drivers/pinctrl/qcom/pinctrl-msm.c | 18 ++++++++++++++++++
+> >  drivers/pinctrl/qcom/pinctrl-msm.h |  1 +
+> >  2 files changed, 19 insertions(+)
+> >
+> > diff --git a/drivers/pinctrl/qcom/pinctrl-msm.c b/drivers/pinctrl/qcom/pinctrl-msm.c
+> > index ee8119879c4c..3ac740b36508 100644
+> > --- a/drivers/pinctrl/qcom/pinctrl-msm.c
+> > +++ b/drivers/pinctrl/qcom/pinctrl-msm.c
+> > @@ -607,8 +607,23 @@ static int msm_gpio_init_valid_mask(struct gpio_chip *chip)
+> >         int ret;
+> >         unsigned int len, i;
+> >         unsigned int max_gpios = pctrl->soc->ngpios;
+> > +       const int *reserved = pctrl->soc->reserved_gpios;
+> >         u16 *tmp;
+> >
+> > +       /* Driver provided reserved list overrides DT and ACPI */
+> > +       if (reserved) {
+> > +               bitmap_fill(chip->valid_mask, max_gpios);
+> > +               for (i = 0; reserved[i] >= 0; i++) {
+> > +                       if (i >= max_gpios || reserved[i] >= max_gpios) {
+> > +                               dev_err(pctrl->dev, "invalid list of reserved GPIOs\n");
+> > +                               return -EINVAL;
+> > +                       }
+> > +                       clear_bit(reserved[i], chip->valid_mask);
+> > +               }
+> > +
+> > +               return 0;
+> > +       }
+> > +
+> >         /* The number of GPIOs in the ACPI tables */
+> >         len = ret = device_property_read_u16_array(pctrl->dev, "gpios", NULL,
+> >                                                    0);
+> > @@ -964,6 +979,9 @@ static void msm_gpio_irq_handler(struct irq_desc *desc)
+> >
+> >  static bool msm_gpio_needs_valid_mask(struct msm_pinctrl *pctrl)
+> >  {
+> > +       if (pctrl->soc->reserved_gpios)
+> > +               return true;
+> > +
+> >         return device_property_read_u16_array(pctrl->dev, "gpios", NULL, 0) > 0;
+> >  }
+> >
+> > diff --git a/drivers/pinctrl/qcom/pinctrl-msm.h b/drivers/pinctrl/qcom/pinctrl-msm.h
+> > index c12048e54a6f..23b93ae92269 100644
+> > --- a/drivers/pinctrl/qcom/pinctrl-msm.h
+> > +++ b/drivers/pinctrl/qcom/pinctrl-msm.h
+> > @@ -121,6 +121,7 @@ struct msm_pinctrl_soc_data {
+> >         bool pull_no_keeper;
+> >         const char *const *tiles;
+> >         unsigned int ntiles;
+> > +       const int *reserved_gpios;
+> >  };
+> >
+> >  extern const struct dev_pm_ops msm_pinctrl_dev_pm_ops;
+> > --
+> > 2.17.1
+> >
+> >
+> > _______________________________________________
+> > linux-arm-kernel mailing list
+> > linux-arm-kernel@lists.infradead.org
+> > http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
