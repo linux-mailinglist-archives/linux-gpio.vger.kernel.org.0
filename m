@@ -2,94 +2,78 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 3AC4D399B2
-	for <lists+linux-gpio@lfdr.de>; Sat,  8 Jun 2019 01:24:58 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0F9A6399BE
+	for <lists+linux-gpio@lfdr.de>; Sat,  8 Jun 2019 01:33:11 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729794AbfFGXY5 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 7 Jun 2019 19:24:57 -0400
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:40230 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727933AbfFGXY5 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 7 Jun 2019 19:24:57 -0400
-Received: by mail-lj1-f194.google.com with SMTP id a21so3109061ljh.7
-        for <linux-gpio@vger.kernel.org>; Fri, 07 Jun 2019 16:24:56 -0700 (PDT)
+        id S1730562AbfFGXdK (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 7 Jun 2019 19:33:10 -0400
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:41278 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730389AbfFGXdJ (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 7 Jun 2019 19:33:09 -0400
+Received: by mail-lf1-f65.google.com with SMTP id 136so2790979lfa.8
+        for <linux-gpio@vger.kernel.org>; Fri, 07 Jun 2019 16:33:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=Yxnf76CubLzSCgXqXpm3Tzi+epD/T4P0TuWJfUgCO5c=;
-        b=m7cbzg/qI+c44FkJJMtfka3ULkiYlcpI79X7AytRLLbncMH7UguQ+pmdFoSIdUQ4xb
-         395kdBEA+7vIzXou6mzkhFaOnbg2G6WVZhTjgjZPNPiTnn7mThymVTCdv9vmRwNjli6d
-         qr2CcHPVG2YAWGQ5HzNc8MSGj8lw8kgCTu22wQvaB22PTIPDMpRPp7FCzXhccEh9sOHR
-         YseeXQCtF4KngoJUx/oUlBuVKGXanwNSs4NDsZ1vXs6ca6MlZ+667a2xeAYC94qsAXmB
-         0DJdQlJq+UnSK/PlBL+kR3FZBg6+Lj0ESBAyT2iqyuQXZXAG6xtEzMt1Gjsxnhg7w6m0
-         y2Jg==
+        bh=b84e26eYaKgGCT6K1FjZ9jXnFTuxlUg7JfvW+0XdYtc=;
+        b=l3jz+3Ek8s0CZvnWEPDNeCfepaK2+5mKU1CCkn6P12a7vmIsN31sFpahBIi8kf9N6U
+         b6M6+ezCfd0mVfoKnj47oS9psfl3AYh+WvkryghgekPpS9i1Ok4xhjaaDeyw1C6zItxt
+         onAc/Vl1RhQdwg4IVbQ7wj+yXPvpi/foqsaAVG+Xrk77X+MVi//MlvAuWf2zP2PXHhs5
+         4aJMEnbPcp79QKjeWNxdXY4I4OaPTzYOuRtpB37NqJTt1nWThZAPbsswJI7DRbYPVjwD
+         OHUMdFeqGGe5xZVj6gfvUYjPngmcbaUkKyjQ3D46zbKS4rzGuN0tVtThnGq4bdQooOWv
+         NHuQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=Yxnf76CubLzSCgXqXpm3Tzi+epD/T4P0TuWJfUgCO5c=;
-        b=tCTT74l8d5te09aSL98FUEX+6DXtaquP9+4bqzBi70Ugwxv+lwrAftJek7cCB+LLIi
-         d+V7Tw6SZqIZeMctfAQpqQ5r2VHDeMSzx4w5TpRhramrkgkLfzAAS0XcEz3lm6BzIPVR
-         M6cpr+EHl7M7rrwxjbb3kgvA834/KkTIB6hlzG+/3ZciliO1f0DoDGUminQrI+Yy7syx
-         iUB28K6K833805P4tBSJqSFGbtu9FymO38sqmYBgsDRythZ/lH5KhZG5MkwyaOgvhgBP
-         k/EVMNN5rCATBYSHvtBesR/qCoyrhhfnuX35ZEMOHGsVnngs32tGpvfq/w3LmqJbGE/2
-         pb4Q==
-X-Gm-Message-State: APjAAAUa6TNpLJRjesukyZNSVyPc38RKaYMsfnKoeOplRTT+Njq67eJY
-        Zq8/2Mq4l6A54k7WrRJmLHlX37dBsuVI/wo2RKn0HD78
-X-Google-Smtp-Source: APXvYqz+5A0YHaUqFPfF5fc/C7ZquljZneISf6m3UY24XIeHmwjuL30ItSQeeaMXOgZ8MXGYNR70QQM+S+zI5+UI0c0=
-X-Received: by 2002:a2e:5dc4:: with SMTP id v65mr20460259lje.138.1559949895389;
- Fri, 07 Jun 2019 16:24:55 -0700 (PDT)
+        bh=b84e26eYaKgGCT6K1FjZ9jXnFTuxlUg7JfvW+0XdYtc=;
+        b=j3JgMSJxWdqcc+fm9EfjsWXmQhMkolcsOHQfGuU8fHjrKJyrRdQLBvo/T94yyhk2kj
+         d1S//r/a7oWW4S9y5qgy5PmeECbducM09UB30oOhdw9+OVBX0Y5KfsRuEypVUiFfi9hj
+         aV0Yw6P6t6Kgk8waMHWU+RwWbpm63bj7sRQS6oECUcC9E9PaEmMvgPdpCXQROqs9693O
+         MBetIdZGzCkZESYEvoL1J7v7kgvk2x/ZG7c1JbzyOhart7R1kB0d1YOVzQOPgXfEKUz6
+         x7GreQpenjTYWNZTq0TeOh/bAUhZ9kRpSpTrXjAxtomSAa3w43bAGJYCc/O3hHBai1Kp
+         AMPw==
+X-Gm-Message-State: APjAAAXiJ6FZOpDFRlUzAflce6LpOdgX4csGGYqjQ5QaNgpbTjmCSqqg
+        ITkyUNZm9YrehEF27IS6alcFhrmZZ8iJ6JTsbFvkucO5
+X-Google-Smtp-Source: APXvYqzZLdmSsLlcph+VEzMPX3mWCaT3njpPwLqplLMNQBLXG9T9Pgz/fKfOhRBQRz5dDTEtP7/e6ZX73GUIjGYu02Y=
+X-Received: by 2002:ac2:598d:: with SMTP id w13mr27044811lfn.165.1559950388186;
+ Fri, 07 Jun 2019 16:33:08 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190606231144.GA1402@embeddedor>
-In-Reply-To: <20190606231144.GA1402@embeddedor>
+References: <20190607072433.17253-1-geert+renesas@glider.be>
+In-Reply-To: <20190607072433.17253-1-geert+renesas@glider.be>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Sat, 8 Jun 2019 01:24:47 +0200
-Message-ID: <CACRpkdYXxHZ2KmU5Fz1eDXN=Z9i=uqwAtOWmpHam6F0U-eYySA@mail.gmail.com>
-Subject: Re: [PATCH v2] pinctrl: tb10x: Use flexible-array member and
- struct_size() helper
-To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Date:   Sat, 8 Jun 2019 01:33:00 +0200
+Message-ID: <CACRpkdb1Qn+jN0AmJ7dn3PCBHfhGjZ-49Sqe=qdzZw3H071=GQ@mail.gmail.com>
+Subject: Re: [git pull] pinctrl: sh-pfc: Updates for v5.3
+To:     Geert Uytterhoeven <geert+renesas@glider.be>
 Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Kees Cook <keescook@chromium.org>
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Jun 7, 2019 at 1:11 AM Gustavo A. R. Silva
-<gustavo@embeddedor.com> wrote:
+On Fri, Jun 7, 2019 at 9:24 AM Geert Uytterhoeven
+<geert+renesas@glider.be> wrote:
 
-> Update the code to use a flexible array member instead of a pointer in
-> structure tb10x_pinctrl and use the struct_size() helper:
+> The following changes since commit a188339ca5a396acc588e5851ed7e19f66b0ebd9:
 >
-> struct tb10x_pinctrl {
->         ...
->         struct tb10x_of_pinfunc pinfuncs[];
-> };
+>   Linux 5.2-rc1 (2019-05-19 15:47:09 -0700)
 >
-> Also, make use of the struct_size() helper instead of an open-coded
-> version in order to avoid any potential type mistakes.
+> are available in the Git repository at:
 >
-> So, replace the following form:
+>   git://git.kernel.org/pub/scm/linux/kernel/git/geert/renesas-drivers.git tags/sh-pfc-for-v5.3-tag1
 >
-> sizeof(struct tb10x_pinctrl) + of_get_child_count(of_node) * sizeof(struct tb10x_of_pinfunc)
+> for you to fetch changes up to 992968d78626031a264d847e25f8f9810b9a1b50:
 >
-> with:
->
-> struct_size(state, pinfuncs, of_get_child_count(of_node))
->
-> This code was detected with the help of Coccinelle.
->
-> Reviewed-by: Kees Cook <keescook@chromium.org>
-> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
-> ---
-> Changes in v2:
->  - Update changelog text.
->  - Add Kees' Reviewed-by tag.
+>   pinctrl: sh-pfc: Remove obsolete SH_PFC_PIN_NAMED*() macros (2019-06-04 11:19:25 +0200)
 
-Patch applied.
+Pulled to my "devel" branch as usual.
+
+Thanks for the great work!
 
 Yours,
 Linus Walleij
