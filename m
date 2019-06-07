@@ -2,141 +2,123 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 81004381D2
-	for <lists+linux-gpio@lfdr.de>; Fri,  7 Jun 2019 01:32:17 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6598E384E8
+	for <lists+linux-gpio@lfdr.de>; Fri,  7 Jun 2019 09:24:44 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726379AbfFFXcR (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 6 Jun 2019 19:32:17 -0400
-Received: from gateway36.websitewelcome.com ([192.185.196.23]:13523 "EHLO
-        gateway36.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726305AbfFFXcQ (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 6 Jun 2019 19:32:16 -0400
-X-Greylist: delayed 1228 seconds by postgrey-1.27 at vger.kernel.org; Thu, 06 Jun 2019 19:32:15 EDT
-Received: from cm10.websitewelcome.com (cm10.websitewelcome.com [100.42.49.4])
-        by gateway36.websitewelcome.com (Postfix) with ESMTP id C4D7E400E0006
-        for <linux-gpio@vger.kernel.org>; Thu,  6 Jun 2019 17:32:43 -0500 (CDT)
-Received: from gator4166.hostgator.com ([108.167.133.22])
-        by cmsmtp with SMTP
-        id Z1XuhzkcI2PzOZ1XuhJnAa; Thu, 06 Jun 2019 18:11:46 -0500
-X-Authority-Reason: nr=8
-Received: from [189.250.127.120] (port=54232 helo=embeddedor)
-        by gator4166.hostgator.com with esmtpa (Exim 4.92)
-        (envelope-from <gustavo@embeddedor.com>)
-        id 1hZ1Xt-000gqI-Gn; Thu, 06 Jun 2019 18:11:45 -0500
-Date:   Thu, 6 Jun 2019 18:11:44 -0500
-From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+        id S1727629AbfFGHYl (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 7 Jun 2019 03:24:41 -0400
+Received: from baptiste.telenet-ops.be ([195.130.132.51]:56266 "EHLO
+        baptiste.telenet-ops.be" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725962AbfFGHYk (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 7 Jun 2019 03:24:40 -0400
+Received: from ramsan ([84.194.111.163])
+        by baptiste.telenet-ops.be with bizsmtp
+        id MjQd2000L3XaVaC01jQdWU; Fri, 07 Jun 2019 09:24:38 +0200
+Received: from rox.of.borg ([192.168.97.57])
+        by ramsan with esmtp (Exim 4.90_1)
+        (envelope-from <geert@linux-m68k.org>)
+        id 1hZ9Er-0003jc-N0; Fri, 07 Jun 2019 09:24:37 +0200
+Received: from geert by rox.of.borg with local (Exim 4.90_1)
+        (envelope-from <geert@linux-m68k.org>)
+        id 1hZ9Er-0004V1-Lf; Fri, 07 Jun 2019 09:24:37 +0200
+From:   Geert Uytterhoeven <geert+renesas@glider.be>
 To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        Kees Cook <keescook@chromium.org>
-Subject: [PATCH v2] pinctrl: tb10x: Use flexible-array member and
- struct_size() helper
-Message-ID: <20190606231144.GA1402@embeddedor>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 189.250.127.120
-X-Source-L: No
-X-Exim-ID: 1hZ1Xt-000gqI-Gn
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: (embeddedor) [189.250.127.120]:54232
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 2
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
+Cc:     linux-gpio@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
+        Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: [git pull] pinctrl: sh-pfc: Updates for v5.3
+Date:   Fri,  7 Jun 2019 09:24:33 +0200
+Message-Id: <20190607072433.17253-1-geert+renesas@glider.be>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Update the code to use a flexible array member instead of a pointer in
-structure tb10x_pinctrl and use the struct_size() helper:
+	Hi Linus,
 
-struct tb10x_pinctrl {
-        ...
-	struct tb10x_of_pinfunc pinfuncs[];
-};
+The following changes since commit a188339ca5a396acc588e5851ed7e19f66b0ebd9:
 
-Also, make use of the struct_size() helper instead of an open-coded
-version in order to avoid any potential type mistakes.
+  Linux 5.2-rc1 (2019-05-19 15:47:09 -0700)
 
-So, replace the following form:
+are available in the Git repository at:
 
-sizeof(struct tb10x_pinctrl) + of_get_child_count(of_node) * sizeof(struct tb10x_of_pinfunc)
+  git://git.kernel.org/pub/scm/linux/kernel/git/geert/renesas-drivers.git tags/sh-pfc-for-v5.3-tag1
 
-with:
+for you to fetch changes up to 992968d78626031a264d847e25f8f9810b9a1b50:
 
-struct_size(state, pinfuncs, of_get_child_count(of_node))
+  pinctrl: sh-pfc: Remove obsolete SH_PFC_PIN_NAMED*() macros (2019-06-04 11:19:25 +0200)
 
-This code was detected with the help of Coccinelle.
+----------------------------------------------------------------
+pinctrl: sh-pfc: Updates for v5.3
 
-Reviewed-by: Kees Cook <keescook@chromium.org>
-Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
----
-Changes in v2:
- - Update changelog text.
- - Add Kees' Reviewed-by tag.
+  - Add more checks for pinctrl table validation,
+  - Add TPU (Timer Pulse Unit / PWM) pin groups on R-Car H3, M3-W, and
+    M3-N,
+  - Rework description of pins without GPIO functionality,
+  - Small fixes and cleanups.
 
- drivers/pinctrl/pinctrl-tb10x.c | 12 +++++-------
- 1 file changed, 5 insertions(+), 7 deletions(-)
+Thanks for pulling!
 
-diff --git a/drivers/pinctrl/pinctrl-tb10x.c b/drivers/pinctrl/pinctrl-tb10x.c
-index 2e90a6d8fb3b..a32badf3f118 100644
---- a/drivers/pinctrl/pinctrl-tb10x.c
-+++ b/drivers/pinctrl/pinctrl-tb10x.c
-@@ -483,22 +483,22 @@ struct tb10x_port {
-  * @base: register set base address.
-  * @pingroups: pointer to an array of the pin groups this driver manages.
-  * @pinfuncgrpcnt: number of pingroups in @pingroups.
-- * @pinfuncs: pointer to an array of pin functions this driver manages.
-  * @pinfuncnt: number of pin functions in @pinfuncs.
-  * @mutex: mutex for exclusive access to a pin controller's state.
-  * @ports: current state of each port.
-  * @gpios: Indicates if a given pin is currently used as GPIO (1) or not (0).
-+ * @pinfuncs: flexible array of pin functions this driver manages.
-  */
- struct tb10x_pinctrl {
- 	struct pinctrl_dev *pctl;
- 	void *base;
- 	const struct tb10x_pinfuncgrp *pingroups;
- 	unsigned int pinfuncgrpcnt;
--	struct tb10x_of_pinfunc *pinfuncs;
- 	unsigned int pinfuncnt;
- 	struct mutex mutex;
- 	struct tb10x_port ports[TB10X_PORTS];
- 	DECLARE_BITMAP(gpios, MAX_PIN + 1);
-+	struct tb10x_of_pinfunc pinfuncs[];
- };
- 
- static inline void tb10x_pinctrl_set_config(struct tb10x_pinctrl *state,
-@@ -771,15 +771,13 @@ static int tb10x_pinctrl_probe(struct platform_device *pdev)
- 		return -EINVAL;
- 	}
- 
--	state = devm_kzalloc(dev, sizeof(struct tb10x_pinctrl) +
--					of_get_child_count(of_node)
--					* sizeof(struct tb10x_of_pinfunc),
--				GFP_KERNEL);
-+	state = devm_kzalloc(dev, struct_size(state, pinfuncs,
-+					      of_get_child_count(of_node)),
-+			     GFP_KERNEL);
- 	if (!state)
- 		return -ENOMEM;
- 
- 	platform_set_drvdata(pdev, state);
--	state->pinfuncs = (struct tb10x_of_pinfunc *)(state + 1);
- 	mutex_init(&state->mutex);
- 
- 	mem = platform_get_resource(pdev, IORESOURCE_MEM, 0);
--- 
-2.21.0
+----------------------------------------------------------------
+Geert Uytterhoeven (25):
+      pinctrl: sh-pfc: Correct printk level of group reference warning
+      pinctrl: sh-pfc: Mark run-time debug code __init
+      pinctrl: sh-pfc: Add check for empty pinmux groups/functions
+      pinctrl: sh-pfc: Validate pin tables at runtime
+      pinctrl: sh-pfc: Rename 2-parameter CPU_ALL_PORT() variant
+      pinctrl: sh-pfc: Add SH_PFC_PIN_CFG_PULL_UP_DOWN shorthand
+      pinctrl: sh-pfc: Move PIN_NONE to shared header file
+      pinctrl: sh-pfc: r8a77970: Remove MMC_{CD,WP}
+      pinctrl: sh-pfc: r8a7795-es1: Add TPU pins, groups and functions
+      pinctrl: sh-pfc: r8a7795: Add TPU pins, groups and functions
+      pinctrl: sh-pfc: r8a7796: Add TPU pins, groups and functions
+      pinctrl: sh-pfc: r8a77965: Add TPU pins, groups and functions
+      pinctrl: sh-pfc: Add PORT_GP_27 helper macro
+      pinctrl: sh-pfc: r8a7778: Use common PORT_GP_CFG_27() macro
+      pinctrl: sh-pfc: Add new non-GPIO helper macros
+      pinctrl: sh-pfc: emev2: Use new macros for non-GPIO pins
+      pinctrl: sh-pfc: r8a7778: Use new macros for non-GPIO pins
+      pinctrl: sh-pfc: r8a7790: Use new macros for non-GPIO pins
+      pinctrl: sh-pfc: r8a7795-es1: Use new macros for non-GPIO pins
+      pinctrl: sh-pfc: r8a7795: Use new macros for non-GPIO pins
+      pinctrl: sh-pfc: r8a7796: Use new macros for non-GPIO pins
+      pinctrl: sh-pfc: r8a77965: Use new macros for non-GPIO pins
+      pinctrl: sh-pfc: r8a77990: Use new macros for non-GPIO pins
+      pinctrl: sh-pfc: sh73a0: Use new macros for non-GPIO pins
+      pinctrl: sh-pfc: Remove obsolete SH_PFC_PIN_NAMED*() macros
 
+ drivers/pinctrl/sh-pfc/core.c            |  60 ++++-
+ drivers/pinctrl/sh-pfc/pfc-emev2.c       |  70 +++--
+ drivers/pinctrl/sh-pfc/pfc-r8a73a4.c     |   2 +-
+ drivers/pinctrl/sh-pfc/pfc-r8a7740.c     |   2 +-
+ drivers/pinctrl/sh-pfc/pfc-r8a77470.c    |   2 +-
+ drivers/pinctrl/sh-pfc/pfc-r8a7778.c     | 125 ++++-----
+ drivers/pinctrl/sh-pfc/pfc-r8a7779.c     |   2 +-
+ drivers/pinctrl/sh-pfc/pfc-r8a7790.c     |  36 +--
+ drivers/pinctrl/sh-pfc/pfc-r8a7791.c     |   2 +-
+ drivers/pinctrl/sh-pfc/pfc-r8a7792.c     |   2 +-
+ drivers/pinctrl/sh-pfc/pfc-r8a7794.c     |   2 +-
+ drivers/pinctrl/sh-pfc/pfc-r8a7795-es1.c | 434 +++++++++++++++++--------------
+ drivers/pinctrl/sh-pfc/pfc-r8a7795.c     | 414 +++++++++++++++--------------
+ drivers/pinctrl/sh-pfc/pfc-r8a7796.c     | 414 +++++++++++++++--------------
+ drivers/pinctrl/sh-pfc/pfc-r8a77965.c    | 410 ++++++++++++++++-------------
+ drivers/pinctrl/sh-pfc/pfc-r8a77970.c    |  26 +-
+ drivers/pinctrl/sh-pfc/pfc-r8a77980.c    |   2 +-
+ drivers/pinctrl/sh-pfc/pfc-r8a77990.c    | 181 +++++++------
+ drivers/pinctrl/sh-pfc/pfc-r8a77995.c    |   2 +-
+ drivers/pinctrl/sh-pfc/pfc-sh73a0.c      |  21 +-
+ drivers/pinctrl/sh-pfc/pfc-sh7734.c      |   2 +-
+ drivers/pinctrl/sh-pfc/pinctrl.c         |   3 +-
+ drivers/pinctrl/sh-pfc/sh_pfc.h          |  90 +++++--
+ 23 files changed, 1245 insertions(+), 1059 deletions(-)
+
+Gr{oetje,eeting}s,
+
+						Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+							    -- Linus Torvalds
