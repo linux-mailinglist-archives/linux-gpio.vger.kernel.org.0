@@ -2,65 +2,64 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 4136039944
-	for <lists+linux-gpio@lfdr.de>; Sat,  8 Jun 2019 01:02:29 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 48D2A39964
+	for <lists+linux-gpio@lfdr.de>; Sat,  8 Jun 2019 01:10:06 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730170AbfFGXCX (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 7 Jun 2019 19:02:23 -0400
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:38195 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731250AbfFGXCS (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 7 Jun 2019 19:02:18 -0400
-Received: by mail-lf1-f65.google.com with SMTP id b11so2765430lfa.5
-        for <linux-gpio@vger.kernel.org>; Fri, 07 Jun 2019 16:02:17 -0700 (PDT)
+        id S1730675AbfFGXIb (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 7 Jun 2019 19:08:31 -0400
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:33099 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730347AbfFGXIb (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 7 Jun 2019 19:08:31 -0400
+Received: by mail-lj1-f195.google.com with SMTP id v29so3118940ljv.0
+        for <linux-gpio@vger.kernel.org>; Fri, 07 Jun 2019 16:08:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc:content-transfer-encoding;
-        bh=5xFvF+4uJK8Lh2AsjRCLimxFRPpGedGu0+ViCBhUWR4=;
-        b=H5gdtMARqwXZeZeFjKwNuxbqV7Ma28Zy+ksL8TIwffhROYWLRyFUstv2pLeZRXOtVI
-         fAhShFz/IZuaKEtFrFCylwW+MoCj5faYUez2qq2xt7Fy22nACsumSyiw4RjiAz8FnrXC
-         7GtI0/gcBjnuD3WLTh0f4i+ovxk/37NSTnaGr+rNE28cNDK9nt51/7yY0bnDcrQYbwEJ
-         hr/PnOIYlRhZoIZbhsi7K73CA5EyoPpIoef1Vzg9WAzleef10NaCpIn1AMsr/JMWRfWX
-         hHz1RCfhhjKHLMy9rsvhEyACNYumCq+iakbKsRoDM2vq4izlpoylJdu1CyzZEmCTFnZ/
-         T44A==
+        bh=CJjAb+Z5ioBZ0AM/8mCFtzkkLn/OKSEL3IHSOtuKgfQ=;
+        b=FkVCVtLwoVP2xNToV3V9nLLFBH8qK0uahCMEKeFCpaR2z9IF0rpEg8YFqnUmGXZsgq
+         DfvxttPbgwKv51MItse2JF1YQ5TsRI5GCwNHRb9IYez7H3NYfXRNHgXB0gnp2gTndxNB
+         LwkbDBxTrRmHrzyvFF13obVOy9KBAFVFFzTocL3+JUOgAFqMpgZ+U41+ABtrRyWnIodz
+         eqN5ctPHY09xzgpkZFV2Tez9dxUvSL4e5wfFHFtt31VxWoUedzV9qMV9ZKUB51qacrdz
+         tTCqV/urQYCK3kC4ka+GuQTTXl3BE0wjaSiIPmANYwxUqfk3h0q8w6gczsAnBL5+4gOe
+         vC3Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc:content-transfer-encoding;
-        bh=5xFvF+4uJK8Lh2AsjRCLimxFRPpGedGu0+ViCBhUWR4=;
-        b=DXb7OFTAsosWOlqDVX/wC8ol1OTlfr9hzLHRhVu+WgrxG1py8nT4kRfmc5z2GcfqT8
-         KAXsdLfmctYDAT0ZW8iEBY7XDlCeMonFIKY1Mxwb6PnF/fxfS4YqaAXc7rKcEWHOQeX8
-         3A70tW/QGcqGZAANvOaDGtmK6N3/gK2He9l5EBM0DkSx1U0m3oxDgUiVHXTfNSfXDKJp
-         +U0MSIqTBAniQ+6KoTr6FKgn4FAHzQwZ3anMpK1dODEYBGEhdn5H2A13UszbW20k/RLf
-         1CMOqaSHwUPAvo3fXofvZWW+OvxlbM99oKe1TjDura18No3qFSCStHfDt+Ohgo/+14Xo
-         gFrQ==
-X-Gm-Message-State: APjAAAXuWn3Cw2sQtFcYRMLkOZyiNfHjF4XZnKBUBmOX0tjw79MNL50D
-        NLBtfsjlvKElLRqU1Z28cSE8QWsF0VZxrQJaR6pNiQ==
-X-Google-Smtp-Source: APXvYqxzX4pBaF3Caq1oDbU7bQ+/NcABw//1thgHYHWRKTRFjeHnAO7VM0FJu2uXV21zUNtbO89kZJkPdws6UI2If2A=
-X-Received: by 2002:ac2:50c4:: with SMTP id h4mr14517898lfm.61.1559948536365;
- Fri, 07 Jun 2019 16:02:16 -0700 (PDT)
+        bh=CJjAb+Z5ioBZ0AM/8mCFtzkkLn/OKSEL3IHSOtuKgfQ=;
+        b=JjwcYZcJ+F7CSl3tqCJ5kx6zjffxdjksklOyYiCHqu59ndaeUQA5QnUItc+I1YEgN0
+         clpwNqJR53tzlfP7i4GijJdsY130A90iI+C5qaWU9RelR4iENW5SAGFS75Qf61Av/05f
+         VIgXLVshCbR9rnuVcvxHpG7e4ncsnZk8iIdY2ifLYadFND9wnxmKRYiQX0DQ3K8N+2dx
+         kFs7Jl0Hf7XWAH82j5tILCVMHcHHF4YZ5YsuEsxonm6vD8AE5cXbUGwIsXZHD+WihHQJ
+         HBsqvNxWavWpy6Gn+ECp0jAub2wffFTntUXBZXwEYqrbQvVwS+TvlX35odDpswT7jnRS
+         yugw==
+X-Gm-Message-State: APjAAAU7TKz6M9s7sXts9bS69hx27agrrhF6FeOTFas3YIUmk9PBrqlX
+        vE41jEBWPvgt8r3lgfc6Jf8Q0pftIV3YtlL9k4SQLg==
+X-Google-Smtp-Source: APXvYqxUOi2ComwroPYJqL0+HmrxnRaNzTbxCzwrLY351hzZwjGfd8PvKzmcThTDM6zJHWY6X2LcwPf0/66wKSkFxIw=
+X-Received: by 2002:a2e:5bdd:: with SMTP id m90mr19985474lje.46.1559948910013;
+ Fri, 07 Jun 2019 16:08:30 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190605114302.22509-1-lee.jones@linaro.org> <20190605114302.22509-3-lee.jones@linaro.org>
-In-Reply-To: <20190605114302.22509-3-lee.jones@linaro.org>
+References: <1559754961-26783-1-git-send-email-sricharan@codeaurora.org>
+In-Reply-To: <1559754961-26783-1-git-send-email-sricharan@codeaurora.org>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Sat, 8 Jun 2019 01:02:09 +0200
-Message-ID: <CACRpkdaEe3uKAsSuhbToevXH1cMsuMUvwaopLPuD+JkDTnuEnQ@mail.gmail.com>
-Subject: Re: [PATCH 3/8] pinctrl: msm: Add ability for drivers to supply a
- reserved GPIO list
-To:     Lee Jones <lee.jones@linaro.org>
-Cc:     alokc@codeaurora.org, Andy Gross <andy.gross@linaro.org>,
-        David Brown <david.brown@linaro.org>,
-        Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Felipe Balbi <balbi@kernel.org>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+Date:   Sat, 8 Jun 2019 01:08:22 +0200
+Message-ID: <CACRpkdbxUHR8Uo+M7+_0v77Pg6k_jmL79KeHKNzWmFhtq+mZXw@mail.gmail.com>
+Subject: Re: [PATCH 0/6] Add minimal boot support for IPQ6018
+To:     Sricharan R <sricharan@codeaurora.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Stephen Boyd <sboyd@codeaurora.org>,
+        Andy Gross <agross@kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        jlhugo@gmail.com, linux-i2c@vger.kernel.org,
-        MSM <linux-arm-msm@vger.kernel.org>,
+        linux-clk <linux-clk@vger.kernel.org>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        linux-usb@vger.kernel.org
+        MSM <linux-arm-msm@vger.kernel.org>,
+        "open list:ARM/QUALCOMM SUPPORT" <linux-soc@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 Sender: linux-gpio-owner@vger.kernel.org
@@ -68,24 +67,21 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Jun 5, 2019 at 1:43 PM Lee Jones <lee.jones@linaro.org> wrote:
+On Wed, Jun 5, 2019 at 7:16 PM Sricharan R <sricharan@codeaurora.org> wrote=
+:
 
-> When booting MSM based platforms with Device Tree or some ACPI
-> implementations, it is possible to provide a list of reserved pins
-> via the 'gpio-reserved-ranges' and 'gpios' properties respectively.
-> However some ACPI tables are not populated with this information,
-> thus it has to come from a knowledgable device driver instead.
+> The IPQ6018 is Qualcomm=E2=80=99s 802.11ax SoC for Routers,
+> Gateways and Access Points.
 >
-> Here we provide the MSM common driver with additional support to
-> parse this informtion and correctly populate the widely used
-> 'valid_mask'.
+> This series adds minimal board boot support for ipq6018-cp01
+> board.
 >
-> Signed-off-by: Lee Jones <lee.jones@linaro.org>
+> Sricharan R (6):
+>   pinctrl: qcom: Add ipq6018 pinctrl driver
+>   dt-bindings: qcom: Add ipq6018 bindings
 
-Exactly how we should use of the API, so if Bj=C3=B6rn can supply an
-ACK to patches 3 and 4 I'm happy to apply them.
-
-Bj=C3=B6rn?
+I'm happy to merge these two if I can get a review from
+Bjorn Andersson on them.
 
 Yours,
 Linus Walleij
