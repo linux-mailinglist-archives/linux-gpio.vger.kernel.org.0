@@ -2,98 +2,94 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id DDE28397C2
-	for <lists+linux-gpio@lfdr.de>; Fri,  7 Jun 2019 23:29:39 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1C49539828
+	for <lists+linux-gpio@lfdr.de>; Sat,  8 Jun 2019 00:04:27 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729629AbfFGV3j (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 7 Jun 2019 17:29:39 -0400
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:43652 "EHLO
+        id S1727963AbfFGWE0 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 7 Jun 2019 18:04:26 -0400
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:42784 "EHLO
         mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729125AbfFGV3j (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 7 Jun 2019 17:29:39 -0400
-Received: by mail-lf1-f68.google.com with SMTP id j29so2642169lfk.10
-        for <linux-gpio@vger.kernel.org>; Fri, 07 Jun 2019 14:29:37 -0700 (PDT)
+        with ESMTP id S1727933AbfFGWE0 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 7 Jun 2019 18:04:26 -0400
+Received: by mail-lf1-f68.google.com with SMTP id y13so2685779lfh.9
+        for <linux-gpio@vger.kernel.org>; Fri, 07 Jun 2019 15:04:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=TIMrqKW25YRU/lsjOLblvs15sgdsKLwySWVm5NwcunE=;
-        b=LEyPoWvUT06FfHbItCfBI2qmi3bYEZELMr+9Pni7GDUF94Agfqp1YHfqhKChaPNy0S
-         ZRrr2fMOaZXZKxSe6aofGIFR7LjwntjDu4Ymu/9AejpBfm408pcV/eJjScMUPAbkOdDl
-         Fl0vtL8xKw368lF1ANwXcdukr5iT+Ccm/zrjm2KLPABaM0HEHaQHCgk8hsv9jL8fU6H4
-         85psQUYFehCz4IH7rMAck/TXvTavh+f/raVZ8jY4XrxX4uMm2glO06/Lv6sfMBqqXsE5
-         LX9Folqn1I+2HshKmbo6eQUAYCMFskiJNPWGp8sTSUUYbP1Qb2lMPRPL6Ix9DzuB4hcN
-         dKdQ==
+        bh=iSGQwLEBuCK9zP7NpUSQEjWlt9syiyScK1Qv82y9zDY=;
+        b=Rqrv2fw0OYkyZCGgpZZfV8pHIKnnDqeqwB/GSfmW0R1GWq17BPPCFxCOmyyKhSmTAC
+         iJ+sTJVzs1dN0I5UydjVGQ/TqRBiXREqAbxKmvClzTTM48MzK67ENGlUmnLCepOJMIOw
+         Z7nx0Vp+Bh+nyEcsbhQrrLRhtFtXmrRcFUrF0qok9m27CoHzyIS5dsfr8ZcX1kL5yBkG
+         7aqg+uWDat7P7iT6MkrjKUrlMppj8gQPtNFAaujnmx3ebL2sKEbPHsIT+TPGjMXGefUi
+         BWB2G69ZLk6Qc+TeqJcVwk54B4r6gqFueiRlVhZwcClRpV5B7PZa4B4PmArip/cFaRUz
+         LquQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=TIMrqKW25YRU/lsjOLblvs15sgdsKLwySWVm5NwcunE=;
-        b=FZg4xq6qLBqT/Y25KBuBmzeRed2fTTW3Yc0NbDP9vPw37qHiy5Ct9J1Uti9QjJjc7a
-         PxG4hD6D1WlCq40FmWcKQHCxnraBKOgAFKBqK5K5M+uGdRPFZfLRODqQAcbxgUAf//Nr
-         zDnbBEZw399OSZKTZZjplf8b0S+16ahRLS3dqi+LMhePje6xTTeDregfp83whpMtFmoj
-         X6y0tVwsOFcM7pg66UE38DKSjNnjwtlT3Ucg4eecHyfhzB1iiyFIocYyDZJ1gih8ojhK
-         BIV9gDdZteMxwSXeW0AcUWxa2VS6fMXWP2EXdSj9SMBZe7GTqx4bx76JW0p9rWdaD9ba
-         XCjg==
-X-Gm-Message-State: APjAAAVszHu0R8NEGcdLmTTGLPUJNHzAKAvadCn5BSoPf73RDNvnYdeE
-        jreg6fweLw79sZOUwOcPNewQc4idTRx85XvBEoAmEA==
-X-Google-Smtp-Source: APXvYqxu7/X7NjUFxX6W5IcQz4mZnT/YMlUAhiF61ildOXzlhB4NdGWiAz3/p9m7nmRJn/dhPT/KUQv4XTm38jdKvEo=
-X-Received: by 2002:ac2:5382:: with SMTP id g2mr27329569lfh.92.1559942977232;
- Fri, 07 Jun 2019 14:29:37 -0700 (PDT)
+        bh=iSGQwLEBuCK9zP7NpUSQEjWlt9syiyScK1Qv82y9zDY=;
+        b=poLRxSTZkym71gabmZgYIuDGGMdH9l8vKsenEfdBkpHOl65K2WUArMFLnlY52SAtSh
+         ZRqIuJF3JnEeYnF+0iZSb1HJZ7oBXj+7YPV0X/7OEp0lD5PFcZ80lAltySVqYlzt+y4e
+         UDUYCYYlOJzlPP+S3HXuOPdtE1RIHOORVVFuPJRrsjXhtMkhkm1WYIQK3oGLuU+8B1QF
+         hkvJM6UGyOdZ6LybBQHBp+ueoMW/jR4jKuDvfkOElqkL2XykRyP06WaCIq9ZQxC1G/kR
+         yHB4dcN9xQUojdJF5nhmkH2L8PPYCiwHgZWKmJvkJ5ZbICZj755u2PSc2miIts3H+FCC
+         pW6w==
+X-Gm-Message-State: APjAAAW4iqw7+sMbTAhh3DNGB+Bd5a8vxUJCWPUDvR2lpMCUzOP0pcZQ
+        Lq0hyPW6VRTm3HBIv7VjRNQ65H4wKCol1V5PmNWhwA==
+X-Google-Smtp-Source: APXvYqwVpDLv8iqMxP0olSZYnqLx5zmax/077YaDYBmmnV4PB62sxN/GRgbQx9K+fhcwLTxaiRy5bNBfMaxV6Y9CtKo=
+X-Received: by 2002:ac2:598d:: with SMTP id w13mr26914521lfn.165.1559945064357;
+ Fri, 07 Jun 2019 15:04:24 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190602210918.32741-1-linus.walleij@linaro.org>
- <CAMuHMdX8idAx9QnOMYyS0htYFw66Zs08pbGb7OEf5ED7Egv9rg@mail.gmail.com> <20190604084545.GA1129@kroah.com>
-In-Reply-To: <20190604084545.GA1129@kroah.com>
+References: <9bb9ca6102e795dc2495d92b7b661779509adebc.1559651758.git.hns@goldelico.com>
+In-Reply-To: <9bb9ca6102e795dc2495d92b7b661779509adebc.1559651758.git.hns@goldelico.com>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Fri, 7 Jun 2019 23:29:29 +0200
-Message-ID: <CACRpkdY-HCGd_ScGNNDAOqY66jvfQZ9Gjm7o9tj+YUuxwV8i4g@mail.gmail.com>
-Subject: Re: [PATCH] pinctrl: nomadik: Fix SPDX tags
-To:     Greg KH <gregkh@linuxfoundation.org>
-Cc:     Geert Uytterhoeven <geert@linux-m68k.org>,
+Date:   Sat, 8 Jun 2019 00:04:15 +0200
+Message-ID: <CACRpkda6Hk1hE322KGC==0OFr5YZ+Qsvh6Dird_xjS5xop4bEw@mail.gmail.com>
+Subject: Re: [PATCH] gpio: pca953x: hack to fix 24 bit gpio expanders
+To:     "H. Nikolaus Schaller" <hns@goldelico.com>
+Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Discussions about the Letux Kernel 
+        <letux-kernel@openphoenux.org>, kernel@pyra-handheld.com
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Jun 4, 2019 at 10:45 AM Greg KH <gregkh@linuxfoundation.org> wrote:
-> On Tue, Jun 04, 2019 at 10:26:06AM +0200, Geert Uytterhoeven wrote:
-> > Hi Linus,
-> >
-> > On Sun, Jun 2, 2019 at 11:12 PM Linus Walleij <linus.walleij@linaro.org> wrote:
-> > > Some files were missing the appropriate SPDX tags so
-> > > fixed it up.
-> > >
-> > > Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
-> > > ---
-> > >  drivers/pinctrl/nomadik/Kconfig           | 2 ++
-> > >  drivers/pinctrl/nomadik/pinctrl-ab8500.c  | 5 +----
-> > >  drivers/pinctrl/nomadik/pinctrl-ab8505.c  | 5 +----
-> > >  drivers/pinctrl/nomadik/pinctrl-abx500.c  | 6 +-----
-> > >  drivers/pinctrl/nomadik/pinctrl-nomadik.c | 5 +----
-> > >  5 files changed, 6 insertions(+), 17 deletions(-)
-> >
-> > Please note this conflicts with commit ec8f24b7faaf3d47 ("treewide: Add
-> > SPDX license identifier - Makefile/Kconfig") upstream, which added
-> > (different) tags.
-> >
-> > > diff --git a/drivers/pinctrl/nomadik/Kconfig b/drivers/pinctrl/nomadik/Kconfig
-> > > index c3efe7d7e91f..749466fa8f97 100644
-> > > --- a/drivers/pinctrl/nomadik/Kconfig
-> > > +++ b/drivers/pinctrl/nomadik/Kconfig
-> > > @@ -1,3 +1,5 @@
-> > > +# SPDX-License-Identifier: GPL-2.0
->
-> The tags added mean the same thing, what is there today is
-> "GPL-2.0-only" and this "GPL-2.0" is stating the identical thing, but in
-> a different way.
->
-> So all is good for when the merge happens.
+On Tue, Jun 4, 2019 at 2:36 PM H. Nikolaus Schaller <hns@goldelico.com> wrote:
 
-I guess I could tag on "-only" to cut down the buzz and make git
-resolution happier.
+> 24 bit expanders use REG_ADDR_AI in combination with register addressing. This
+> conflicts with regmap which takes this bit as part of the register number,
+> i.e. a second cache entry is defined for accessed with REG_ADDR_AI being
+> set although on the chip it is the same register as with REG_ADDR_AI being
+> cleared.
+>
+> The problem was introduced by
+>
+>         commit b32cecb46bdc ("gpio: pca953x: Extract the register address mangling to single function")
+>
+> but only became visible by
+>
+>         commit 8b9f9d4dc511 ("regmap: verify if register is writeable before writing operations")
+>
+> because before, the regmap size was effectively ignored and
+> pca953x_writeable_register() did know to ignore REG_ADDR_AI. Still, there
+> were two separate cache entries created.
+>
+> Since the use of REG_ADDR_AI seems to be static we can work around this
+> issue by simply increasing the size of the regmap to cover the "virtual"
+> registers with REG_ADDR_AI being set. This only means that half of the
+> regmap buffer will be unused.
+>
+> Reported-by: H. Nikolaus Schaller <hns@goldelico.com>
+> Suggested-by: Linus Walleij <linus.walleij@linaro.org>
+> Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
+
+Patch queued for fixes, let's think about better solutions going
+forward.
 
 Yours,
 Linus Walleij
