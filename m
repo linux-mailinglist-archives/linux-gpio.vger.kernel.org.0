@@ -2,107 +2,72 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id C6D4239748
-	for <lists+linux-gpio@lfdr.de>; Fri,  7 Jun 2019 23:04:36 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9516C39757
+	for <lists+linux-gpio@lfdr.de>; Fri,  7 Jun 2019 23:06:53 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731139AbfFGVEf (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 7 Jun 2019 17:04:35 -0400
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:40752 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731127AbfFGVEf (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 7 Jun 2019 17:04:35 -0400
-Received: by mail-lj1-f194.google.com with SMTP id a21so2898689ljh.7
-        for <linux-gpio@vger.kernel.org>; Fri, 07 Jun 2019 14:04:34 -0700 (PDT)
+        id S1730392AbfFGVGk (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 7 Jun 2019 17:06:40 -0400
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:36905 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730342AbfFGVGh (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 7 Jun 2019 17:06:37 -0400
+Received: by mail-lj1-f196.google.com with SMTP id 131so2916990ljf.4
+        for <linux-gpio@vger.kernel.org>; Fri, 07 Jun 2019 14:06:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=vkU0CLA4zd7U+4w/MeYB7MsnfkDi0Po4BQ8jWMFBUjo=;
-        b=Bl3VdEFDNRcw68lQN2+iAhPiWw5DQMPXg2SfOdO0jMkLGnBZ+uzq2sVjmQ4vaHAbG4
-         yNaYAP/1r/yIlm+Vay8Wsve+dfOIcTk28G0cVRmtAwbrROgC3Dyj8uSlyUDJNpKeM1wL
-         EBMTqw5WMOWJKdh3wSd10dvEDiZK+z1gGAbKjQrBjE6N7MCrUY9X5KM/bZYvdjcRZ424
-         gdJXbrG19WOm+xi1E8pcpR2k4g5NwCTXuPQO1pXeFt8zefmVKfKGIXKgKIHsdyV+XrUH
-         AIsp1mw/e21lcxOHA2q/t59+syFLF30vm0Vl1BbVgLnQG/sILfmw0yuI/keT7LFF3F9f
-         Ghqg==
+        bh=ngGsJ3sa6qftNEqIKxcUHf+2Y/2GL6FaDVqLdkUZI+U=;
+        b=NOfBgz52VTuWpjz7V14ZcBELLxddIR64OTKQA2xzLIUhsP5/le33K3ipkbvzpS+NkU
+         TWmkiy05Zzo+Sq8ohP322QzhhjfpVeWa3bmyyK/KZJLgA3RCPiaJ0nbUV6gxuUPQRsiR
+         hJHfhpW/t6Z28Jy4XvFxx+geHjK/yYy5OuNGkeigArmPSC0v/6zCUFzp8bwFS1Iw/5bp
+         +ekz1pj2MJaEvb2F+QqbdjFM3A6f0v3/J42m1DO7RMB9LDgmXsQxC/FZuZitbQv1Aow5
+         +4H0ysai+Q1d9tSXFbGxA+jZGnU7StunRABpEMHuadstqz4nLOPTxZhqWZ+6jBCFPgMf
+         fufA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=vkU0CLA4zd7U+4w/MeYB7MsnfkDi0Po4BQ8jWMFBUjo=;
-        b=ovW1uFTIstJ/csYAwP/sp6rxPr9cDqbhWMiOrzTwiS7udWguTAJt4tdA8nffg0GDbI
-         H15JYqTmU4PgvX9DrDxJf9nRIZqXTaYgCfT5ZQPwMPn/IE1bboLPUs9MScVmcQpOMjeY
-         urkIhtjaYK+jLV0DBsx3vdNSCXeGCEtkFaTJlDgd1MHM6awmDQhuuGBcZU4HJ4LfEvUp
-         cZY3tPBGDJ6VhRZMz410v4Vbto5mARqkBi9d4ztvv3n1/vHDVoNaIlwj7n6jWRVamW5r
-         HCjRaLzfYfAQcTi+FhHB6Ya5s40SH8sDk5xHSBwpZ3UcxpEUAy2wOvAq7pBVhWamYs/3
-         wenQ==
-X-Gm-Message-State: APjAAAUmMgGuhlSaqHDAg4s8IjnQaL1PyNnvZuGGfepv3onMD4Kpv/6g
-        e9h6kuhZjfnHIC48awVL5/QthknrGo7fcJBAU2iIhw==
-X-Google-Smtp-Source: APXvYqyCQqq/sYVcHyrozCmhdkems9DE56UaaALAZIcDJuvLRmL+KVL12nZblAfJci6jVwnq/iR/eVswn8WPsSelqws=
-X-Received: by 2002:a2e:5bdd:: with SMTP id m90mr19782540lje.46.1559941473627;
- Fri, 07 Jun 2019 14:04:33 -0700 (PDT)
+        bh=ngGsJ3sa6qftNEqIKxcUHf+2Y/2GL6FaDVqLdkUZI+U=;
+        b=I+R/64515IUKoUnSt257tTvQw9q4JYL727GALY8yoYfBEHOmRU1zO0/EpzTSOCUCZk
+         2HEakOSrobZr6gjRrCQTSO4/QUVMNaEFWWRGrjXc2/eUW8SgD2w5nGcpZPS5QrZNT0Cp
+         JpMvvpQpStsMqeUKs5n61Sq6ziuiUnxQm1oWp03SYWtCBT14Dlt8HbhZkzyct4VS6DNW
+         na32L43rHY3dfKzeBv6ejnzmG2LBC70jewX7a1OiObGSbOjJk0gPaXvJQ8EUblzlaJDZ
+         Pvu57RkEOelTqH33l8/jaKI2efDl5v2yauJ96hnAQdgQQaF1jvpKCVtV/HE5ami6RaeE
+         CmNw==
+X-Gm-Message-State: APjAAAUKXZYH1n5UGrSOf3/9mC6XMQNclgOFkW9MxCeJku1ptOeBSD2E
+        uvKL28gDGalvC+VG3y5aEBPwtpQxhxPiPzA83scAiA==
+X-Google-Smtp-Source: APXvYqwzWHOHL3qBWLcwt+um28DnahteXeh1UMVYjgkOQaL8ZQiEb0mBtE051TG+KFU+85SgayUB0dlFm2sVY1/RIA0=
+X-Received: by 2002:a2e:9753:: with SMTP id f19mr5273384ljj.113.1559941594784;
+ Fri, 07 Jun 2019 14:06:34 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190530030546.9224-1-Anson.Huang@nxp.com>
-In-Reply-To: <20190530030546.9224-1-Anson.Huang@nxp.com>
+References: <1559097838-26070-1-git-send-email-92siuyang@gmail.com>
+In-Reply-To: <1559097838-26070-1-git-send-email-92siuyang@gmail.com>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Fri, 7 Jun 2019 23:04:25 +0200
-Message-ID: <CACRpkdY-35o378Ka+4bgeSPjmq6P8DM872sgTxq2X3dDP9XZHQ@mail.gmail.com>
-Subject: Re: [PATCH 1/3] dt-bindings: imx: Add pinctrl binding doc for i.MX8MN
-To:     Anson Huang <Anson.Huang@nxp.com>
-Cc:     Dong Aisheng <aisheng.dong@nxp.com>,
-        Fabio Estevam <festevam@gmail.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Stefan Agner <stefan@agner.ch>,
-        Sascha Hauer <kernel@pengutronix.de>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Olof Johansson <olof@lixom.net>,
-        Simon Horman <horms+renesas@verge.net.au>,
-        Jagan Teki <jagan@amarulasolutions.com>,
-        Leonard Crestez <leonard.crestez@nxp.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Dinh Nguyen <dinguyen@kernel.org>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
+Date:   Fri, 7 Jun 2019 23:06:27 +0200
+Message-ID: <CACRpkdYYYxCti4zRzF1bG+cb+NAONVjg1ynOww5DpG7dzi1B6w@mail.gmail.com>
+Subject: Re: [PATCH] pinctrl: ns2: Fix potential NULL dereference
+To:     Young Xiao <92siuyang@gmail.com>
+Cc:     Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>,
+        bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>,
         Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        NXP Linux Team <Linux-imx@nxp.com>
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, May 30, 2019 at 5:04 AM <Anson.Huang@nxp.com> wrote:
+On Wed, May 29, 2019 at 4:42 AM Young Xiao <92siuyang@gmail.com> wrote:
 
-> From: Anson Huang <Anson.Huang@nxp.com>
+> platform_get_resource() may fail and return NULL, so we should
+> better check it's return value to avoid a NULL pointer dereference
+> a bit later in the code.
 >
-> Add binding doc for i.MX8MN pinctrl driver.
->
-> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+> Signed-off-by: Young Xiao <92siuyang@gmail.com>
 
-Looks mostly OK to me, but I'd like the maintainers to review,
-so Dong et al please look at this!
-
-> +Required properties:
-> +- compatible: "fsl,imx8mn-iomuxc"
-
-So should this not be "nxp,imx8mn-iomuxc"
-or "nxp,freescale-imx8mn-iomuxc" or something these
-days? The vendor name is nxp is it not.
-
-I was complaining to the DT maintainers at one point that
-these companies seem to buy each other left and right
-so this vendor nomenclature is dubious, but I guess at least
-it should reflect the vendor that produced the chip or something.
-
-If everyone is happy with "fsl,*" I will not complain though.
-(i.e. if the maintainers ACK it.)
+Patch applied with Ray's ACK.
 
 Yours,
 Linus Walleij
