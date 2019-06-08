@@ -2,97 +2,80 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id D73FE39E7C
-	for <lists+linux-gpio@lfdr.de>; Sat,  8 Jun 2019 13:49:53 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C9BAB3A001
+	for <lists+linux-gpio@lfdr.de>; Sat,  8 Jun 2019 15:46:17 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728422AbfFHLs7 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sat, 8 Jun 2019 07:48:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37770 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729877AbfFHLs5 (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Sat, 8 Jun 2019 07:48:57 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C492521726;
-        Sat,  8 Jun 2019 11:48:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559994536;
-        bh=xGNvfSkJpos0XatsvLVLRADF5VlntOdYvEp1Bbncnjw=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=SBbZoenDdXIzRR7r00sby1YiZCBmjO42/RSEwM+YKP92ZMOwGwfvKcZEeCryEGPIT
-         hJtYewF6svSCLVS+8l7Dx2ksbVeIN9NdA3BJDnoFPQHx5PuTncRpnGQAV/oVPD/VHw
-         YSNSe+kx8+v8aG9aAGyN2Jphti/RmMPLI3mlKdio=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Randy Dunlap <rdunlap@infradead.org>,
-        kbuild test robot <lkp@intel.com>,
-        linux-gpio@vger.kernel.org,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Michael Hennerich <michael.hennerich@analog.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.4 05/13] gpio: fix gpio-adp5588 build errors
-Date:   Sat,  8 Jun 2019 07:48:37 -0400
-Message-Id: <20190608114847.9973-5-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190608114847.9973-1-sashal@kernel.org>
-References: <20190608114847.9973-1-sashal@kernel.org>
+        id S1726796AbfFHNqR (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sat, 8 Jun 2019 09:46:17 -0400
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:39608 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726227AbfFHNqQ (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sat, 8 Jun 2019 09:46:16 -0400
+Received: by mail-lf1-f67.google.com with SMTP id p24so3641620lfo.6
+        for <linux-gpio@vger.kernel.org>; Sat, 08 Jun 2019 06:46:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=ofYgsLuXZbDJJLvQ3kbbwDxmKxUMJavDmJ4aftucJL8=;
+        b=ReCVugjebDcRYbz6018VpCGuLxRUxhWI6kszCBIeM05m2Ai0dpqgIgBhHJdZVP7z34
+         b6T5XZZTTnqz3Gr0grQg/WNRaOg6CiCw4G3CLkdNbJUnhaFdL1i/ph9Rmu9PKqHEpqIb
+         6ssomMVUhSIsgtG2ibv56iLmlAP4Smp/Z2Q8c2FruUNYnB4KSMn47+xRr4AQ4EUg+8H3
+         kWC+t+2Sl4s/5jMBFBVsslhhMkE1ke0lykA3ar4KwEmW+i9ud5DA3lxqX3gyRZRpijuf
+         ExSNh26nnQBYk4YDyUrwcEYyvczcGTN5b8YkKRGj/71pb8FNpd4ZPnFpVFRVBizN+NCe
+         U0HQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ofYgsLuXZbDJJLvQ3kbbwDxmKxUMJavDmJ4aftucJL8=;
+        b=NDT5z76/gs8ml6Q0SuMomLiZO1i82NriOTE+DzXbIglhGcZ15YaQTzF8vQ273GDliR
+         xAC7J7e6T3zMJDMpNif80RNCLkiFAVpwpTOm1CizlPu3cH+XDy3Zrpxinn6UmpW8OfRk
+         3IRIYlQZ8ihxhL4i7ihPZMPZQrguk1qL963GBhUwO8JcXmIiXYRBmY6i69AcZLqgK5WU
+         JViEbCs7t62tQeZyiuLr5qm9p9UMswBp+DHXK275NqK3Feq0Nb107D6mq6KUISxkPPNn
+         3SLOS7hA5UTI6b7IkiEVuC6ovls/5CfVIyE9zUmEgU3yZfYr/jQmfaxtomYjup9ty1Wv
+         F9hQ==
+X-Gm-Message-State: APjAAAXnpXz5FnhWfBLBmeJO9HAXyw2eGhoJlrI1PurhClULtCKJrxPB
+        AoIx2ugUeUYI96jMwhR5MN5XLv+4/4WzBiC0hcHLOQ==
+X-Google-Smtp-Source: APXvYqxR1+S7TpAKcaY19xGekrYcikcKLF1619Fhs6N1/cnEP8mkGyTqpUIypegiC3N1+wkqjCRw66N49sxpNwPAg/A=
+X-Received: by 2002:ac2:50c4:: with SMTP id h4mr16104016lfm.61.1560001575166;
+ Sat, 08 Jun 2019 06:46:15 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+References: <20190603230604.30938-1-linus.walleij@linaro.org> <22282873.PltXLBtAh5@pcbe13614>
+In-Reply-To: <22282873.PltXLBtAh5@pcbe13614>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Sat, 8 Jun 2019 15:46:07 +0200
+Message-ID: <CACRpkdaCFZcQ8VMjKJkXAm+TRH+=DY3j5Udh0mcYR7YcDr8VtA@mail.gmail.com>
+Subject: Re: [PATCH] RFC: fmc: Try to convert to GPIO descriptors
+To:     Federico Vaga <federico.vaga@cern.ch>
+Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Pat Riehecky <riehecky@fnal.gov>,
+        Alessandro Rubini <rubini@gnudd.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-From: Randy Dunlap <rdunlap@infradead.org>
+On Tue, Jun 4, 2019 at 8:42 AM Federico Vaga <federico.vaga@cern.ch> wrote:
 
-[ Upstream commit e9646f0f5bb62b7d43f0968f39d536cfe7123b53 ]
+> I take this occasion to renovate my proposal
+> https://lkml.org/lkml/2018/10/29/534
 
-The gpio-adp5588 driver uses interfaces that are provided by
-GPIOLIB_IRQCHIP, so select that symbol in its Kconfig entry.
+Hm, it looks from your proposal like the FMC device core
+is using its own hacks for i2c mastering, FPGA management
+and irqchips. Does it also have its own GPIO implementation
+not using struct gpio_chip from <linux/gpio/driver.h>?
 
-Fixes these build errors:
+In that case my first step should rather be to remove the
+reference to <linux/gpio.h> because then FMC is not really
+using the GPIO subsystem.
 
-../drivers/gpio/gpio-adp5588.c: In function ‘adp5588_irq_handler’:
-../drivers/gpio/gpio-adp5588.c:266:26: error: ‘struct gpio_chip’ has no member named ‘irq’
-            dev->gpio_chip.irq.domain, gpio));
-                          ^
-../drivers/gpio/gpio-adp5588.c: In function ‘adp5588_irq_setup’:
-../drivers/gpio/gpio-adp5588.c:298:2: error: implicit declaration of function ‘gpiochip_irqchip_add_nested’ [-Werror=implicit-function-declaration]
-  ret = gpiochip_irqchip_add_nested(&dev->gpio_chip,
-  ^
-../drivers/gpio/gpio-adp5588.c:307:2: error: implicit declaration of function ‘gpiochip_set_nested_irqchip’ [-Werror=implicit-function-declaration]
-  gpiochip_set_nested_irqchip(&dev->gpio_chip,
-  ^
+As for the proposal so remove it, I'd like to hear what
+Alessandro says. If there is consensus on deleting this
+I can queue something up and send it to Torvalds, but
+I need consent from everyone who cares.
 
-Fixes: 459773ae8dbb ("gpio: adp5588-gpio: support interrupt controller")
-Reported-by: kbuild test robot <lkp@intel.com>
-Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
-Cc: linux-gpio@vger.kernel.org
-Reviewed-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Acked-by: Michael Hennerich <michael.hennerich@analog.com>
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/gpio/Kconfig | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
-index 469dc378adeb..aaae6040b4c8 100644
---- a/drivers/gpio/Kconfig
-+++ b/drivers/gpio/Kconfig
-@@ -579,6 +579,7 @@ config GPIO_ADP5588
- config GPIO_ADP5588_IRQ
- 	bool "Interrupt controller support for ADP5588"
- 	depends on GPIO_ADP5588=y
-+	select GPIOLIB_IRQCHIP
- 	help
- 	  Say yes here to enable the adp5588 to be used as an interrupt
- 	  controller. It requires the driver to be built in the kernel.
--- 
-2.20.1
-
+Yours,
+Linus Walleij
