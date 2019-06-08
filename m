@@ -2,27 +2,27 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id E907739DF4
-	for <lists+linux-gpio@lfdr.de>; Sat,  8 Jun 2019 13:45:30 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 02B9E39ED2
+	for <lists+linux-gpio@lfdr.de>; Sat,  8 Jun 2019 13:52:16 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727557AbfFHLpV (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sat, 8 Jun 2019 07:45:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60704 "EHLO mail.kernel.org"
+        id S1729217AbfFHLrW (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sat, 8 Jun 2019 07:47:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36060 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728721AbfFHLnW (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Sat, 8 Jun 2019 07:43:22 -0400
+        id S1729208AbfFHLrV (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Sat, 8 Jun 2019 07:47:21 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4AB352171F;
-        Sat,  8 Jun 2019 11:43:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E1FD72171F;
+        Sat,  8 Jun 2019 11:47:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559994202;
-        bh=6o0D+x52MFuxGsCyxRfSi796nPgPYJJzKdaZrBjjOOs=;
+        s=default; t=1559994440;
+        bh=nPehQ8OxGDN4dmddhdCXL8y/Qfjv9HY8eTDsw7GZqz4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=niFWG4UKbLVTL4+LoDW9GZ2GBWgzFGEI5Y+vSXTGFkbCBlSQ4BC6l59sgvzzRi+EJ
-         wUdvs/S8ORL6cy00xYz8g6q9s+Sa+aFl/ufrU3FGb5dLllwqZ6/i9HCH3ADX1rMdtV
-         9fqnnssu7BnJb7bMnCMRKRD+e5Jrw7A6Alhtpo0g=
+        b=io2bBXwPSLCbrC+Ebyjb6oF9wv0iijWbntUM53IzWji3KCmDMjhGvU0fGV7cobyTq
+         ZfzE5y7PHc7W1llii8yw+VEKpEIaFi56Bam+x/lcv57ydGHd7HGrZObgI49cF0DWhQ
+         fvpucz9xCavK0PmO/uEMaXmMYqEFk3arIS978lPU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Randy Dunlap <rdunlap@infradead.org>,
@@ -32,12 +32,12 @@ Cc:     Randy Dunlap <rdunlap@infradead.org>,
         Michael Hennerich <michael.hennerich@analog.com>,
         Linus Walleij <linus.walleij@linaro.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.19 16/49] gpio: fix gpio-adp5588 build errors
-Date:   Sat,  8 Jun 2019 07:41:57 -0400
-Message-Id: <20190608114232.8731-16-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.14 13/31] gpio: fix gpio-adp5588 build errors
+Date:   Sat,  8 Jun 2019 07:46:24 -0400
+Message-Id: <20190608114646.9415-13-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190608114232.8731-1-sashal@kernel.org>
-References: <20190608114232.8731-1-sashal@kernel.org>
+In-Reply-To: <20190608114646.9415-1-sashal@kernel.org>
+References: <20190608114646.9415-1-sashal@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 X-stable: review
@@ -82,10 +82,10 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 1 insertion(+)
 
 diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
-index 4f52c3a8ec99..ed51221621a5 100644
+index 3f80f167ed56..2357d2f73c1a 100644
 --- a/drivers/gpio/Kconfig
 +++ b/drivers/gpio/Kconfig
-@@ -784,6 +784,7 @@ config GPIO_ADP5588
+@@ -712,6 +712,7 @@ config GPIO_ADP5588
  config GPIO_ADP5588_IRQ
  	bool "Interrupt controller support for ADP5588"
  	depends on GPIO_ADP5588=y
