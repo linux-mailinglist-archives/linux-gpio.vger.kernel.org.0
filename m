@@ -2,115 +2,117 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 0C9783A03F
-	for <lists+linux-gpio@lfdr.de>; Sat,  8 Jun 2019 16:22:15 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DDE7E3A057
+	for <lists+linux-gpio@lfdr.de>; Sat,  8 Jun 2019 17:00:41 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727034AbfFHOWN (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sat, 8 Jun 2019 10:22:13 -0400
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:43111 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727009AbfFHOWM (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sat, 8 Jun 2019 10:22:12 -0400
-Received: by mail-lf1-f68.google.com with SMTP id j29so3670161lfk.10
-        for <linux-gpio@vger.kernel.org>; Sat, 08 Jun 2019 07:22:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=aIUAKPG6L/Uk7RNnahoThkSWUC4nrgmZui5o+1IQtNk=;
-        b=a8zCjMPgP8flEe8AX4DYltakrbTeXlf4HJdUBQFer/b0IPJPCfVav33LROaOIvkRBh
-         d/ezKZe+qMrAcg+2zaULmB+dIX8setyM8Dw/amQKtBtuGvpqfUZdtCABo4QaT5ZFUGGd
-         fksqElAG9w2gwbE6Q6S46627rrHHqLiRDCA8eScKkVkurpN9O6Dge+avOCJxW9CwIBjE
-         vWmpOGwdimteMBWpy3R6+1wtE1HyS9jIIsl6y+9pjv6itruHNG55mTSg6Qzlisw2u1sl
-         d/rKG06wFYR5828vG892iuyGTPq8CV75uQK3Cx8ndRZlvQhTZTCv/wvDzZyIGlw+oOwZ
-         bmxg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=aIUAKPG6L/Uk7RNnahoThkSWUC4nrgmZui5o+1IQtNk=;
-        b=Tq69fUMcGikpc4gQJP/wfZUbfzYYsWD6A9k5DUVWiEMn2NRzb/cdakbuV88qGBdUdf
-         p24j0giSQyjQn20bfDNd20VFrLc+pgNdAeR9qCfu+Ft2qwuYELlZkYhI/XeKZ8GXB2sg
-         FRKQapNlN/XY8VyXlg5/GyF7xdKYjvpWRKBugG8/+0VhZRWydCvXs8KGQSSBYRycIKPO
-         Xp2K97UYZzoXAHz7n/lMTtNV0UeUi4LSLR7OdUwNSHTdAaot5cI5HBkA7GJInxo7qwZK
-         ok6uITsT6XpbH20tvwrVtye6Hu+XjSQx65yIr583Ykgvc/IlqhcNs09U+OMfSvQ4oaHn
-         0/lg==
-X-Gm-Message-State: APjAAAXFtknV7dAEOEwUgQSJvCVhNwGQH+p6HmVkQfzxCN/pl9v1FLq0
-        twqPrchRuAtr/v0WhfqvGRqcoPUm1dWurybMj4NEPg==
-X-Google-Smtp-Source: APXvYqx2MoGtkoQjUm5Wa5IOCM/k/orM6EKwAwZG7AXIo8rcqREn8WTPkR2Fc2Pbt++tRSEdz7xZS6GOynFOOaZSLRQ=
-X-Received: by 2002:ac2:598d:: with SMTP id w13mr28511822lfn.165.1560003730786;
- Sat, 08 Jun 2019 07:22:10 -0700 (PDT)
+        id S1727059AbfFHPAj (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sat, 8 Jun 2019 11:00:39 -0400
+Received: from mail-eopbgr80075.outbound.protection.outlook.com ([40.107.8.75]:23106
+        "EHLO EUR04-VI1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727053AbfFHPAj (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Sat, 8 Jun 2019 11:00:39 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cern.onmicrosoft.com;
+ s=selector1-cern-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=TMpylm2w4FISiyGnJPCOxLBjOWL+kV0aaO7YAqbspUo=;
+ b=iJzzeBAfxPxTU9k0pkcIm1HisyIX95SZ4JPpOJTj6oQni0s1UaT1fu0HO15yL0IVyRvn9jeylJQz3mOfJMD7rOIw3gk6t8qREPReNGaWvBoNxe/xmAHzzPooMIEF5YE46g2ik5GKXH10nWhkDtTy/nTDImyGFcw5g7HU7v9ccfI=
+Received: from DB6PR06CA0017.eurprd06.prod.outlook.com (2603:10a6:6:1::30) by
+ VI1PR0602MB3598.eurprd06.prod.outlook.com (2603:10a6:803:2::31) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.1965.15; Sat, 8 Jun
+ 2019 15:00:35 +0000
+Received: from HE1EUR02FT059.eop-EUR02.prod.protection.outlook.com
+ (2a01:111:f400:7e05::209) by DB6PR06CA0017.outlook.office365.com
+ (2603:10a6:6:1::30) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.1965.14 via Frontend
+ Transport; Sat, 8 Jun 2019 15:00:34 +0000
+Authentication-Results: spf=pass (sender IP is 188.184.36.50)
+ smtp.mailfrom=cern.ch; linaro.org; dkim=none (message not signed)
+ header.d=none;linaro.org; dmarc=bestguesspass action=none
+ header.from=cern.ch;
+Received-SPF: Pass (protection.outlook.com: domain of cern.ch designates
+ 188.184.36.50 as permitted sender) receiver=protection.outlook.com;
+ client-ip=188.184.36.50; helo=cernmxgwlb4.cern.ch;
+Received: from cernmxgwlb4.cern.ch (188.184.36.50) by
+ HE1EUR02FT059.mail.protection.outlook.com (10.152.11.25) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
+ 15.20.1965.12 via Frontend Transport; Sat, 8 Jun 2019 15:00:34 +0000
+Received: from cernfe01.cern.ch (188.184.36.42) by cernmxgwlb4.cern.ch
+ (188.184.36.50) with Microsoft SMTP Server (TLS) id 14.3.439.0; Sat, 8 Jun
+ 2019 17:00:34 +0200
+Received: from harkonnen.localnet (178.199.148.24) by smtp.cern.ch
+ (188.184.36.52) with Microsoft SMTP Server (TLS) id 14.3.439.0; Sat, 8 Jun
+ 2019 17:00:33 +0200
+From:   Federico Vaga <federico.vaga@cern.ch>
+To:     Linus Walleij <linus.walleij@linaro.org>
+CC:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "Bartosz Golaszewski" <bgolaszewski@baylibre.com>,
+        Pat Riehecky <riehecky@fnal.gov>,
+        Alessandro Rubini <rubini@gnudd.com>
+Subject: Re: [PATCH] RFC: fmc: Try to convert to GPIO descriptors
+Date:   Sat, 8 Jun 2019 17:00:32 +0200
+Message-ID: <1726027.xYMg8yrU2x@harkonnen>
+Organization: CERN
+In-Reply-To: <CACRpkdaCFZcQ8VMjKJkXAm+TRH+=DY3j5Udh0mcYR7YcDr8VtA@mail.gmail.com>
+References: <20190603230604.30938-1-linus.walleij@linaro.org> <22282873.PltXLBtAh5@pcbe13614> <CACRpkdaCFZcQ8VMjKJkXAm+TRH+=DY3j5Udh0mcYR7YcDr8VtA@mail.gmail.com>
 MIME-Version: 1.0
-References: <20190607082901.6491-1-lee.jones@linaro.org> <20190607082901.6491-3-lee.jones@linaro.org>
- <CAKv+Gu-1QhX-9aNhFJauc9NVe6ceQQueE8Kd14031XJ-2yaupA@mail.gmail.com>
-In-Reply-To: <CAKv+Gu-1QhX-9aNhFJauc9NVe6ceQQueE8Kd14031XJ-2yaupA@mail.gmail.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Sat, 8 Jun 2019 16:22:03 +0200
-Message-ID: <CACRpkdZmBe6ucmekLUNkypDKx=eAXqtwdYNpZzwByzuWb-sjDA@mail.gmail.com>
-Subject: Re: [PATCH v2 3/8] pinctrl: msm: Add ability for drivers to supply a
- reserved GPIO list
-To:     Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Cc:     Lee Jones <lee.jones@linaro.org>, alokc@codeaurora.org,
-        Andy Gross <andy.gross@linaro.org>,
-        David Brown <david.brown@linaro.org>,
-        Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Felipe Balbi <balbi@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        linux-usb <linux-usb@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        linux-i2c <linux-i2c@vger.kernel.org>,
-        Jeffrey Hugo <jlhugo@gmail.com>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
+X-Originating-IP: [178.199.148.24]
+X-EOPAttributedMessage: 0
+X-Forefront-Antispam-Report: CIP:188.184.36.50;IPV:NLI;CTRY:CH;EFV:NLI;SFV:NSPM;SFS:(10009020)(39860400002)(136003)(346002)(396003)(376002)(2980300002)(199004)(189003)(8936002)(33716001)(53546011)(5660300002)(966005)(46406003)(478600001)(8676002)(36916002)(6306002)(9686003)(86362001)(54906003)(97756001)(356004)(246002)(316002)(76176011)(50466002)(70586007)(70206006)(9576002)(4744005)(74482002)(6116002)(3846002)(230700001)(305945005)(4326008)(16526019)(23726003)(7736002)(7636002)(106002)(956004)(126002)(476003)(6246003)(426003)(561944003)(44832011)(486006)(336012)(47776003)(66066001)(229853002)(26005)(186003)(6916009)(2906002)(446003)(11346002)(39026011);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR0602MB3598;H:cernmxgwlb4.cern.ch;FPR:;SPF:Pass;LANG:en;PTR:cernmx11.cern.ch;A:1;MX:1;
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 3b116f23-8ccc-412a-4915-08d6ec220f07
+X-Microsoft-Antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(4709080)(1401327)(2017052603328)(7193020);SRVR:VI1PR0602MB3598;
+X-MS-TrafficTypeDiagnostic: VI1PR0602MB3598:
+X-MS-Exchange-PUrlCount: 1
+X-Microsoft-Antispam-PRVS: <VI1PR0602MB3598F0F9C083B7278C967A91EF110@VI1PR0602MB3598.eurprd06.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:7219;
+X-Forefront-PRVS: 0062BDD52C
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam-Message-Info: pIbKYCFsotZqyxBoe60vp2WaP/mLrKq86PhB/+mH24wQtJmtL0HWul9EazqlAd0WfKbwTz174RO2u3lqlt5Er7Rau9k4F1ppbpvJK2MfuKC8FU3MHu4xGkpILh4t8hOfK1zmV38ubRrWfOZcWeM2TyD7UCsTk7V+ypTtojKmLiJbp/DlQC38LejXJ4Gvt8sEV9hl0DXlt4QlDSv3ChVbP88JeY1QkadFsX9IFP1GEs8nonmZzfAkZMiDZ/C+JT4BZKNCpUmqJhfxiK5cr1foxEavkQuo/ApckeEVfnk4xaORFY9DZU4iWUTj60RDjj3e6dA8Nw1yZatHhiUX4026qD9nuCHOk6M7H8KcpexEVPLbGOWy5F5WoZAG0vfEuAQZA1woCCW1UJActnkHGuwg3k4D8Zld0ZI0ViXuVlKpYNo=
+X-OriginatorOrg: cern.ch
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 Jun 2019 15:00:34.1700
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 3b116f23-8ccc-412a-4915-08d6ec220f07
+X-MS-Exchange-CrossTenant-Id: c80d3499-4a40-4a8c-986e-abce017d6b19
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=c80d3499-4a40-4a8c-986e-abce017d6b19;Ip=[188.184.36.50];Helo=[cernmxgwlb4.cern.ch]
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR0602MB3598
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Jun 7, 2019 at 1:10 PM Ard Biesheuvel <ard.biesheuvel@linaro.org> wrote:
-> On Fri, 7 Jun 2019 at 10:29, Lee Jones <lee.jones@linaro.org> wrote:
-> >
-> > When booting MSM based platforms with Device Tree or some ACPI
-> > implementations, it is possible to provide a list of reserved pins
-> > via the 'gpio-reserved-ranges' and 'gpios' properties respectively.
-> > However some ACPI tables are not populated with this information,
-> > thus it has to come from a knowledgable device driver instead.
-> >
-> > Here we provide the MSM common driver with additional support to
-> > parse this informtion and correctly populate the widely used
-> > 'valid_mask'.
-> >
-> > Signed-off-by: Lee Jones <lee.jones@linaro.org>
+On Saturday, June 8, 2019 3:46:07 PM CEST Linus Walleij wrote:
+> On Tue, Jun 4, 2019 at 8:42 AM Federico Vaga <federico.vaga@cern.ch> wrote:
+> > I take this occasion to renovate my proposal
+> > https://lkml.org/lkml/2018/10/29/534
+> 
+> Hm, it looks from your proposal like the FMC device core
+> is using its own hacks for i2c mastering, FPGA management
+> and irqchips. Does it also have its own GPIO implementation
+> not using struct gpio_chip from <linux/gpio/driver.h>?
+
+The FMC subsystem has its own API for all those things.
+
+> In that case my first step should rather be to remove the
+> reference to <linux/gpio.h> because then FMC is not really
+> using the GPIO subsystem.
+
+No it is not. Probably you can safely remove it.
+
+> As for the proposal so remove it, I'd like to hear what
+> Alessandro says. If there is consensus on deleting this
+> I can queue something up and send it to Torvalds, but
+> I need consent from everyone who cares.
 >
-> I'm not sure if this is the correct approach. Presumably, on ACPI
-> systems, all the pinctl stuff is already set up by the firmware, and
-> so we shouldn't touch *any* pins unless they have been requested
-> explicitly. Is there any way we can support this in the current
-> framework?
+> Yours,
+> Linus Walleij
 
-I don't suppose anything but the GPIO portions of the pinctrl
-driver is ever used under ACPI. I guess in an ideal ACPI world
-noone (like userspace) would ever use a GPIO because ACPI
-would have all GPIOs assigned a particular purpose, so accessing
-any of them would lead to a crash.
 
-But in practice it seems a lot of GPIOs are available and used
-for example by userspace hacks, so just blacklisting the ones
-that cannot be accessed by the GPIO subsystem seems like
-a viable compromise.
+-- 
+Federico Vaga [CERN BE-CO-HT]
 
-Then we have the ACPI paradigm of pin control being controlled
-by ACPI: this is also great in theory, but it seems like the ACPI
-firmware has in cases forgot or omitted to implement some of
-it and people need to access it anyways. The people writing the
-default firmware cannot think out or test all usecases, so some
-will be left open-ended to non-firmware authoring users. This is why
-drivers/pinctrl/intel/* exists despite being for exclusively
-ACPI platforms. Being able to control pins also from the kernel
-has become a viable compromise.
 
-Yours,
-Linus Walleij
