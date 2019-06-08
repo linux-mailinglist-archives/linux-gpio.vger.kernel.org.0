@@ -2,81 +2,135 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id F37DF39D09
-	for <lists+linux-gpio@lfdr.de>; Sat,  8 Jun 2019 13:03:02 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C743A39F33
+	for <lists+linux-gpio@lfdr.de>; Sat,  8 Jun 2019 13:55:26 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726816AbfFHLDC (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sat, 8 Jun 2019 07:03:02 -0400
-Received: from mail-ot1-f51.google.com ([209.85.210.51]:33918 "EHLO
-        mail-ot1-f51.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726789AbfFHLDC (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sat, 8 Jun 2019 07:03:02 -0400
-Received: by mail-ot1-f51.google.com with SMTP id z24so4237109oto.1
-        for <linux-gpio@vger.kernel.org>; Sat, 08 Jun 2019 04:03:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:reply-to:from:date:message-id:subject:to
-         :content-transfer-encoding;
-        bh=9J2rB/w/C1d6Kmr9NG/ST8WWFGD7yyNCzoKlVDkdJpM=;
-        b=UPTI7qhDvil3TM/El7gOes7HWYqZFmxfk3QfMcxy/xtvSNXfRQbyEAMzBh/KvtrVgG
-         BeikjWg6iR1FVts2wLWkvfRvhVokrMX2ht5aF6NmZFSFW6BC7DXvidvBEiS50MEt+HYb
-         BqvazcPUawt29I4uwZS9mo53oPF4Tp38+QVxoRTNjX3kD8yW7hCtBkmYqyaehIMMPMtH
-         qU8thBLfT6dHh9FIeb5tldpMA5qUpbR8IHkCPzV3oHuBHlOZ1pnQ5VEG2ZfyDAZ3QILZ
-         rE/IbvR68YOp56C0tYmDIUC5xhL5NmNiT4Mz6+sizFhuScBuY2NTaY5hrR9e2nV0lX8/
-         suUw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
-         :subject:to:content-transfer-encoding;
-        bh=9J2rB/w/C1d6Kmr9NG/ST8WWFGD7yyNCzoKlVDkdJpM=;
-        b=f/ca7AZo8FVA5OiQqBzrKXxeV0fkTPP9Xp693qgYH5E/A2j3m6sXwEiAOXWXrr7ZRD
-         j1+WRpGerP9Ald+aFETHmIrbxzHVy1ZeNrV4TASr+xcW1BSZyTfdO5drBAw/YlEEYAlS
-         VzE0YyN+eletRLtwJrDOvlz0b5564tQ4Y7zOGSjNvrrwPuc4Ku0iKQV7i8EZnncubo/U
-         D7eRX3BqRCjafaNBiq/2Lb17oT/iUQWhfCTzl95qmPXlbPR6nxnOajtoZuGHY9AEe9m8
-         Fi/cyDNtj2V0X1KVvKZ+RwD9FgBh9U3VBA5GIrZmcvxz8LcKoXcgyle0OmUsmjoSSJnJ
-         S2og==
-X-Gm-Message-State: APjAAAUntz/HdGnE1Yo6u1hwHU8L60ibe8k6QFlJiF+HUJKsYmFnSWIJ
-        Rs1o0Y2pL0g4YFraeCeIbvPVaoqL0dDmKLaZFEI=
-X-Google-Smtp-Source: APXvYqwGMfuM3EFbWgFYsxl9ysI235G9tlYQsVS53aBm0mW7IUzus5ZRUGE7KZAMk+4p39FLMi1H0XHqtbi5LnXUqk4=
-X-Received: by 2002:a9d:629a:: with SMTP id x26mr17173616otk.7.1559991781211;
- Sat, 08 Jun 2019 04:03:01 -0700 (PDT)
+        id S1727250AbfFHLkE (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sat, 8 Jun 2019 07:40:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57106 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727226AbfFHLkB (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Sat, 8 Jun 2019 07:40:01 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4A1FA214DA;
+        Sat,  8 Jun 2019 11:40:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1559994000;
+        bh=XNPzqCkMa/JAr9kd8x/BUx/perXm0amxEIG1SLZiqR0=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=dKmOGbXpWmOGInuFvsUHT28WtKeNPE2Q1VLjmTGr7M/YHOVg2Uxp38+7e2pvww0IX
+         te7miSeQqLWPO8Ruz6JWYBmCuXZGf10lOelhNCHFdmlyRfss9O1DGwdxndUBPo5mKs
+         rMDLOOcqvhvsu3Kvwg5wBJUWBF2lNav8pdY5axng=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Sasha Levin <sashal@kernel.org>, linux-gpio@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.1 08/70] pinctrl: intel: Clear interrupt status in mask/unmask callback
+Date:   Sat,  8 Jun 2019 07:38:47 -0400
+Message-Id: <20190608113950.8033-8-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190608113950.8033-1-sashal@kernel.org>
+References: <20190608113950.8033-1-sashal@kernel.org>
 MIME-Version: 1.0
-Received: by 2002:a4a:254d:0:0:0:0:0 with HTTP; Sat, 8 Jun 2019 04:03:00 -0700 (PDT)
-Reply-To: drmallicksha1@yandex.com
-From:   "Dr. Mallick Shahla" <dabuhado2@gmail.com>
-Date:   Fri, 7 Jun 2019 23:03:00 -1200
-Message-ID: <CAJ+Rrq4s89MWti-UZTqcsMCmutvOnRHpQ0_9BjvYJk7S0AEXvQ@mail.gmail.com>
-Subject: I Need Your Assistance.
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Dear Friend,
-I Need Your Assistance.
+From: Kai-Heng Feng <kai.heng.feng@canonical.com>
 
-I am Dr. Mallick Shahla, Manager Auditing and Accountancy Department,
-United Bank For Africa in (U.B.A) Burkina Faso. I got your email
-account while searching for a business oriented personality and you
-happen to be the one.
+[ Upstream commit 670784fb4ebe54434e263837390e358405031d9e ]
 
-I bring forth a business proposal in the tune of $12.5 million U.S.
-dollars to be transferred to an offshore account with your assistance
-acting as beneficiary and next-of-kin to the funds.
+Commit a939bb57cd47 ("pinctrl: intel: implement gpio_irq_enable") was
+added because clearing interrupt status bit is required to avoid
+unexpected behavior.
 
-If you know you are capable of involving and partaking in this
-transaction, please send down the following personal details of yours.
+Turns out the unmask callback also needs the fix, which can solve weird
+IRQ triggering issues on I2C touchpad ELAN1200.
 
-Please contact me Via drmallickshahla20@yandex.com
-(1)Full names:.............................
-(2)Occupation:................ ..............
-(3)Age and Sex:..........................
-(4)Marital=E2=80=A6=E2=80=A6=E2=80=A6=E2=80=A6.
-Status:................
-(5)Private phone number:..................
-(6)Current residential address:.................
-Noted; that every discussion is in the detail.
-Dr. Mallick Shahla
+Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/pinctrl/intel/pinctrl-intel.c | 37 +++++----------------------
+ 1 file changed, 6 insertions(+), 31 deletions(-)
+
+diff --git a/drivers/pinctrl/intel/pinctrl-intel.c b/drivers/pinctrl/intel/pinctrl-intel.c
+index 3b1818184207..717148d2818c 100644
+--- a/drivers/pinctrl/intel/pinctrl-intel.c
++++ b/drivers/pinctrl/intel/pinctrl-intel.c
+@@ -913,35 +913,6 @@ static void intel_gpio_irq_ack(struct irq_data *d)
+ 	}
+ }
+ 
+-static void intel_gpio_irq_enable(struct irq_data *d)
+-{
+-	struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
+-	struct intel_pinctrl *pctrl = gpiochip_get_data(gc);
+-	const struct intel_community *community;
+-	const struct intel_padgroup *padgrp;
+-	int pin;
+-
+-	pin = intel_gpio_to_pin(pctrl, irqd_to_hwirq(d), &community, &padgrp);
+-	if (pin >= 0) {
+-		unsigned int gpp, gpp_offset, is_offset;
+-		unsigned long flags;
+-		u32 value;
+-
+-		gpp = padgrp->reg_num;
+-		gpp_offset = padgroup_offset(padgrp, pin);
+-		is_offset = community->is_offset + gpp * 4;
+-
+-		raw_spin_lock_irqsave(&pctrl->lock, flags);
+-		/* Clear interrupt status first to avoid unexpected interrupt */
+-		writel(BIT(gpp_offset), community->regs + is_offset);
+-
+-		value = readl(community->regs + community->ie_offset + gpp * 4);
+-		value |= BIT(gpp_offset);
+-		writel(value, community->regs + community->ie_offset + gpp * 4);
+-		raw_spin_unlock_irqrestore(&pctrl->lock, flags);
+-	}
+-}
+-
+ static void intel_gpio_irq_mask_unmask(struct irq_data *d, bool mask)
+ {
+ 	struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
+@@ -954,15 +925,20 @@ static void intel_gpio_irq_mask_unmask(struct irq_data *d, bool mask)
+ 	if (pin >= 0) {
+ 		unsigned int gpp, gpp_offset;
+ 		unsigned long flags;
+-		void __iomem *reg;
++		void __iomem *reg, *is;
+ 		u32 value;
+ 
+ 		gpp = padgrp->reg_num;
+ 		gpp_offset = padgroup_offset(padgrp, pin);
+ 
+ 		reg = community->regs + community->ie_offset + gpp * 4;
++		is = community->regs + community->is_offset + gpp * 4;
+ 
+ 		raw_spin_lock_irqsave(&pctrl->lock, flags);
++
++		/* Clear interrupt status first to avoid unexpected interrupt */
++		writel(BIT(gpp_offset), is);
++
+ 		value = readl(reg);
+ 		if (mask)
+ 			value &= ~BIT(gpp_offset);
+@@ -1106,7 +1082,6 @@ static irqreturn_t intel_gpio_irq(int irq, void *data)
+ 
+ static struct irq_chip intel_gpio_irqchip = {
+ 	.name = "intel-gpio",
+-	.irq_enable = intel_gpio_irq_enable,
+ 	.irq_ack = intel_gpio_irq_ack,
+ 	.irq_mask = intel_gpio_irq_mask,
+ 	.irq_unmask = intel_gpio_irq_unmask,
+-- 
+2.20.1
+
