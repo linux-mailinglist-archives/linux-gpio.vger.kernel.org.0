@@ -2,109 +2,78 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 9C12F39ACF
-	for <lists+linux-gpio@lfdr.de>; Sat,  8 Jun 2019 06:10:54 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5247039C39
+	for <lists+linux-gpio@lfdr.de>; Sat,  8 Jun 2019 11:42:18 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725997AbfFHEKs (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sat, 8 Jun 2019 00:10:48 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:40978 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725797AbfFHEKs (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sat, 8 Jun 2019 00:10:48 -0400
-Received: by mail-pf1-f194.google.com with SMTP id m30so1727048pff.8
-        for <linux-gpio@vger.kernel.org>; Fri, 07 Jun 2019 21:10:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=crP/L6ZX28vkkYT7tQbRmMKy/ZkhEnI0JhfxmVeFjC0=;
-        b=TxsNOhcUk2dUhjgJIcbkyLXBtKqvJpHTaNc+xRSs9moW2ndwxj0wvHpb7UdzZ8GIHB
-         kLyvVG7zidxP9IwSJaymt3F8UL/RjVnz25slMDWhjSipyy7NK5DrrZByM4hqIzNMUSwe
-         ps+y0MD8eWL3A3X5z+GVpgopfFtTJLERmnFQgsMBKRMuDXgI16xf4cX5zcQqBZ0JbZdv
-         UFvzSVX0RPSdSceNL453+7PL2y9nE2pm1Vr6heypDuiZ0SQFVNO8xElhZJO5HQFMq4N8
-         EQ3h/DKqO7j8gM2LNhNJd3H3U9/qGXBzsfz16WMsfUUgYOqNRTcZIB6THFxBwhxXZGjN
-         8Dsw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=crP/L6ZX28vkkYT7tQbRmMKy/ZkhEnI0JhfxmVeFjC0=;
-        b=gqHT2VkJn1HqdnO5syPUtWg20HxnHgj3oBv4B5DHjliUnuMdU8ecUyTM1XNcq/uCxJ
-         OpVObo0vKJVxRX5NWIFUAjnj79+5SpQnqvVVdq6auK1aXGTBiy5DsdsBbYlDzRlx7QlG
-         ufptJNxKDGoYYWXia5s+6lV+Gt9D4gEz+7LSwKV86u/J5IYcCtMJHA4kmqqMku4hcwtG
-         kgyx1xfwkQptMQWnguyeDJfm8vfobMog4CbuGbialQRy1O0Y3uc+xZC7ij0yTSD4lXSP
-         VwfWkB23qqNypUNp8pcyVfQakmbYkCgSWNx78Hw/rwQfUApVzesUHXP1YRgfffx5pN4r
-         QW1g==
-X-Gm-Message-State: APjAAAWBT6kf0iyxC+VHahdyo2F5xRlEStVpRQQrTd2wOlW0mYrj0Pri
-        73Ncf1Ppmx/YjqAS4XhwgTBIug==
-X-Google-Smtp-Source: APXvYqyqDR2r/6Uj2YzgTATzPBXHYoPMxcYRP/mHWDNK1dDw68dJRtVmbbW/lRrBdRydM7vET5JDPA==
-X-Received: by 2002:a63:ee0a:: with SMTP id e10mr5868676pgi.28.1559967047717;
-        Fri, 07 Jun 2019 21:10:47 -0700 (PDT)
-Received: from builder (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id b35sm3516670pjc.15.2019.06.07.21.10.46
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 07 Jun 2019 21:10:46 -0700 (PDT)
-Date:   Fri, 7 Jun 2019 21:10:44 -0700
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+        id S1726638AbfFHJmR (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sat, 8 Jun 2019 05:42:17 -0400
+Received: from casper.infradead.org ([85.118.1.10]:36002 "EHLO
+        casper.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726719AbfFHJmR (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sat, 8 Jun 2019 05:42:17 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:Content-Type:
+        MIME-Version:References:In-Reply-To:Message-ID:Subject:Cc:To:From:Date:Sender
+        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=L6aKzlUkWy+OfHCVOhU+Gs2YnJQVaK61S0nVMkufido=; b=IfhkF06RWiZRh8TccdsDPqJ8E8
+        BzHA6r6xGh+PKE0l9y7k3YCJvjia7GMMLlhYj5r4aWc3jsFOzNWjIGNZmlxFXOp8stdj1EguJcWXi
+        iCLJcyQY3fd/SVz3TxGnsqBPdFtvqlh96XzKKfmYiiZfRCMqgnrGofIozJhaH7VdaE7aQ2MSoOgxs
+        3CwxBVLYqrABCIZevjMMQsOoz3K9UvDHg6eoq9V/QAVHRtRUlts5qbob/aeO4i+HAOnpp1fcF2+KP
+        OfLRyxTGkZHu/+XkHZJTifUfsZB75n6c6Cc875smWbCG2n1xSk/La1qa7n+TzXibY6i2N/1tCydeh
+        shGb2EAA==;
+Received: from [179.181.119.115] (helo=coco.lan)
+        by casper.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1hZXra-000178-D8; Sat, 08 Jun 2019 09:42:14 +0000
+Date:   Sat, 8 Jun 2019 06:42:08 -0300
+From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Lee Jones <lee.jones@linaro.org>, alokc@codeaurora.org,
-        Andy Gross <andy.gross@linaro.org>,
-        David Brown <david.brown@linaro.org>,
-        Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        Felipe Balbi <balbi@kernel.org>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+Cc:     Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        Mauro Carvalho Chehab <mchehab@infradead.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        jlhugo@gmail.com, linux-i2c@vger.kernel.org,
-        MSM <linux-arm-msm@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        linux-usb@vger.kernel.org
-Subject: Re: [PATCH 3/8] pinctrl: msm: Add ability for drivers to supply a
- reserved GPIO list
-Message-ID: <20190608041044.GK24059@builder>
-References: <20190605114302.22509-1-lee.jones@linaro.org>
- <20190605114302.22509-3-lee.jones@linaro.org>
- <CACRpkdaEe3uKAsSuhbToevXH1cMsuMUvwaopLPuD+JkDTnuEnQ@mail.gmail.com>
+        Jonathan Corbet <corbet@lwn.net>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
+Subject: Re: [PATCH v2 12/22] docs: gpio: driver.rst: fix a bad tag
+Message-ID: <20190608064208.12e0e145@coco.lan>
+In-Reply-To: <CACRpkdayQdrtqO3aygY1uDG0LCX_9rVnSnxP5F_C-KMZURTAYA@mail.gmail.com>
+References: <cover.1559656538.git.mchehab+samsung@kernel.org>
+        <ee8f4f56658247a0ab0d9e2c16a9afafefe38da0.1559656538.git.mchehab+samsung@kernel.org>
+        <CACRpkdayQdrtqO3aygY1uDG0LCX_9rVnSnxP5F_C-KMZURTAYA@mail.gmail.com>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CACRpkdaEe3uKAsSuhbToevXH1cMsuMUvwaopLPuD+JkDTnuEnQ@mail.gmail.com>
-User-Agent: Mutt/1.10.0 (2018-05-17)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri 07 Jun 16:02 PDT 2019, Linus Walleij wrote:
+Hi Linus,
 
-> On Wed, Jun 5, 2019 at 1:43 PM Lee Jones <lee.jones@linaro.org> wrote:
+Em Sat, 8 Jun 2019 00:08:10 +0200
+Linus Walleij <linus.walleij@linaro.org> escreveu:
+
+> On Tue, Jun 4, 2019 at 4:18 PM Mauro Carvalho Chehab
+> <mchehab+samsung@kernel.org> wrote:
 > 
-> > When booting MSM based platforms with Device Tree or some ACPI
-> > implementations, it is possible to provide a list of reserved pins
-> > via the 'gpio-reserved-ranges' and 'gpios' properties respectively.
-> > However some ACPI tables are not populated with this information,
-> > thus it has to come from a knowledgable device driver instead.
+> > With ReST, [foo]_ means a reference to foo, causing this warning:
 > >
-> > Here we provide the MSM common driver with additional support to
-> > parse this informtion and correctly populate the widely used
-> > 'valid_mask'.
+> >     Documentation/driver-api/gpio/driver.rst:419: WARNING: Unknown target name: "devm".
 > >
-> > Signed-off-by: Lee Jones <lee.jones@linaro.org>
+> > Fix it by using a literal for the name.
+> >
+> > Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>  
 > 
-> Exactly how we should use of the API, so if Björn can supply an
-> ACK to patches 3 and 4 I'm happy to apply them.
-> 
-> Björn?
-> 
+> Looks identical to the v1 I already applied, so keeping
+> that one.
 
-I'm waiting for a version that does not specify the reserved_gpios for
-struct msm_pinctrl_soc_data sdm845_pinctrl {}, as this would override
-the ability of getting these from DT.
+Thanks for applying it.
 
-I haven't seen such revision yet, will review it once I find it.
+Yeah, it should be identical (and so it should be the v3 I sent yesterday).
 
-Regards,
-Bjorn
+v2 and v3 are just rebases on the top of linux-next.
+
+Thanks,
+Mauro
