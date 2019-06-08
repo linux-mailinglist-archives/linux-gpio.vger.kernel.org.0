@@ -2,49 +2,49 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id EB74739A52
-	for <lists+linux-gpio@lfdr.de>; Sat,  8 Jun 2019 05:34:06 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C5FC339A60
+	for <lists+linux-gpio@lfdr.de>; Sat,  8 Jun 2019 05:48:46 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730561AbfFHDeB (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 7 Jun 2019 23:34:01 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:44501 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730380AbfFHDeA (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 7 Jun 2019 23:34:00 -0400
-Received: by mail-pl1-f196.google.com with SMTP id c5so1516609pll.11
-        for <linux-gpio@vger.kernel.org>; Fri, 07 Jun 2019 20:34:00 -0700 (PDT)
+        id S1730561AbfFHDsk (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 7 Jun 2019 23:48:40 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:34932 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730299AbfFHDsj (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 7 Jun 2019 23:48:39 -0400
+Received: by mail-pf1-f196.google.com with SMTP id d126so2236470pfd.2
+        for <linux-gpio@vger.kernel.org>; Fri, 07 Jun 2019 20:48:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=ihE023CT/rMQl2qIaLdVuB3OofNBQ4r5UpD2iOf9IuU=;
-        b=SAWxkolARx/0f7qHBnHiY4nthwn2oaTJCRjpz2fysaq+9FdeXwY912H77Om0se1vYk
-         x7aILqkwsprUnQ5axckUh90+tYTfcQFHA8B+SmSGmtb0HT1SjeNpbx40NxvyRlXIOdGx
-         gYdrot3nrxyPAQQadWmKzjw5RDS7UnoqZV49MXXE1B/u8+mwWQY8rUtNoykenxykPP/b
-         3+C93op4+lgAuiKZCdwI7tRodivQ3YU7olye2RICaSaKx/06XbJu6pX/gp8xjg7salpf
-         FWa195lCgSaiXUsZNRx//8PiMIGKzd1yHO6c6zEIz5qgfBUvkleh8KGGmSqCRMmcjr7P
-         k0BA==
+        bh=yt5F3KHUlzjy0AdkA6V8SCn+TqvjDlOlGQ7sXkFU/4U=;
+        b=pMq8yt72s6hvm85eFMqbo1bbvvUHknNb7NANwZTI7zKyQUy3mAxQsnmEzO/uYaDk86
+         1tph5zL4g+BSsCzwZLG5mCMyNUtp4wEOVC2fMakjSyLC/+NwtC8C+S4/HIMzdc5Z1Nyv
+         iDAVTJ8SLMnT/IeLDpMc8uHKUyMRLql0RExI11hvRp7bn35lgViBYH15ICPJzX9E3a/8
+         wpmy9A33YsU4ssf8/ysUuyRSJkv3Q2SMSAehkPOKrSIH4jIs08C/ADnE42D507/iaBbZ
+         DwdY8mc/uaT6Wfb+Qwvfpjvm4Qscwg3kX0U63wehEJzLI1BxfIUEK8N4ltciAkfVH0SX
+         VhGg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=ihE023CT/rMQl2qIaLdVuB3OofNBQ4r5UpD2iOf9IuU=;
-        b=Zt2j4iQCiQrAbk8vAKP5yKt51o7ivPeg9THCk9iTEnseEGZWW28m1ojRVSOWoWREO+
-         sart5xBfGU+OTGWwLQhHg3e921wjxY4CSVzum4UT2akf7kiCVtaY5232HsUvN2jqvt+t
-         muPVMtP6JyleXowXfu5r+2WG8rTJIjg2eYyix1uUDuFegby6RV0H+ZdQ4xSF4rvY2qcF
-         cg3abDL9EOD+e+6yRQJwjJTceY7elg9pvoIEnUSovt9qgMs/mmccgNDrHGOXK6wySDO1
-         Wxd1C2Olgjonc+x6H8ossNJCW9BbivBniKVnB4eRh/1TzeclgXysICMBYraFZFhN8yoA
-         f08Q==
-X-Gm-Message-State: APjAAAXVIGp5sEfd1MMbAJ6QCjeUrGgaIlplqjLe1/OQiSl3bp8YMcQG
-        zVzW4UzijGpHjnzoj2XOyFon2A==
-X-Google-Smtp-Source: APXvYqy/lLMCtH4+L3oPEbW3s6gC5IG3FuySN7Y8b6Edlz2i7XEm97kBI/xuCG1XKsXLzMReIofhNg==
-X-Received: by 2002:a17:902:1003:: with SMTP id b3mr60133530pla.172.1559964839895;
-        Fri, 07 Jun 2019 20:33:59 -0700 (PDT)
+        bh=yt5F3KHUlzjy0AdkA6V8SCn+TqvjDlOlGQ7sXkFU/4U=;
+        b=UKd/Kx8A2ysMz7+eW18S9uxqDmFvXNOonetefylyFiGd6fatFUHtKt6lm4Xapw1mXb
+         65zMZSCQSW/yS4PN0924HDCnot8Schl/bB0cMYt06jGsASt8Vh1o8GDju5WT+HVdigvZ
+         G+2L9O8lQp1N/t7eF4feyZQKbLpZdzbFxr5MccXLT9bDi2/8fnCLqZBLDvwwdncoVbrQ
+         dEhO4lobROZ8eXSt+FAyWRW35RRPpJ3oEr+EE9aLv7VlwD7156p3GWQFzjIoL+3DomJo
+         TAdWiEO2qP6bGQfWQtwImTOC55z65aMpey2LCnq8bvHby5iFl7sVhAAWvGbd8bvAQLrv
+         0FRA==
+X-Gm-Message-State: APjAAAVDnCh55WhF7KBHccl/bmrGWCJfvc3V38zSAIO2P12/JCVICATP
+        0t+Fe3SXrUbrMyje6/4yom3zpQ==
+X-Google-Smtp-Source: APXvYqx41j/Y9xOVY+gwjTUJtSuLJFtt/seEk+u1PtXLDXZTDfYMw85BXhi5o3RAGvgn0vb+EC8lHA==
+X-Received: by 2002:a17:90a:5884:: with SMTP id j4mr9640327pji.142.1559965718573;
+        Fri, 07 Jun 2019 20:48:38 -0700 (PDT)
 Received: from builder (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id x14sm4501155pfq.158.2019.06.07.20.33.58
+        by smtp.gmail.com with ESMTPSA id a12sm4965276pgq.0.2019.06.07.20.48.37
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 07 Jun 2019 20:33:59 -0700 (PDT)
-Date:   Fri, 7 Jun 2019 20:33:57 -0700
+        Fri, 07 Jun 2019 20:48:37 -0700 (PDT)
+Date:   Fri, 7 Jun 2019 20:48:35 -0700
 From:   Bjorn Andersson <bjorn.andersson@linaro.org>
 To:     Sricharan R <sricharan@codeaurora.org>
 Cc:     robh+dt@kernel.org, sboyd@codeaurora.org, linus.walleij@linaro.org,
@@ -52,467 +52,382 @@ Cc:     robh+dt@kernel.org, sboyd@codeaurora.org, linus.walleij@linaro.org,
         linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
         linux-gpio@vger.kernel.org, linux-arm-msm@vger.kernel.org,
         linux-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH 3/6] clk: qcom: Add DT bindings for ipq6018 gcc clock
- controller
-Message-ID: <20190608033357.GG24059@builder>
+Subject: Re: [PATCH 5/6] arm64: dts: Add ipq6018 SoC and CP01 board support
+Message-ID: <20190608034835.GH24059@builder>
 References: <1559754961-26783-1-git-send-email-sricharan@codeaurora.org>
- <1559754961-26783-4-git-send-email-sricharan@codeaurora.org>
+ <1559754961-26783-6-git-send-email-sricharan@codeaurora.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1559754961-26783-4-git-send-email-sricharan@codeaurora.org>
+In-Reply-To: <1559754961-26783-6-git-send-email-sricharan@codeaurora.org>
 User-Agent: Mutt/1.10.0 (2018-05-17)
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed 05 Jun 10:15 PDT 2019, Sricharan R wrote:
+On Wed 05 Jun 10:16 PDT 2019, Sricharan R wrote:
 
-> Add the compatible strings and the include file for ipq6018
-> gcc clock controller.
+> Add initial device tree support for the Qualcomm IPQ6018 SoC and
+> CP01 evaluation board.
 > 
 > Signed-off-by: Sricharan R <sricharan@codeaurora.org>
-> Signed-off-by: anusha <anusharao@codeaurora.org>
 > Signed-off-by: Abhishek Sahu <absahu@codeaurora.org>
 
-Please fix your s-o-b chain.
+Please fix the order of these (or add a Co-developed-by).
 
 > ---
->  .../devicetree/bindings/clock/qcom,gcc.txt         |   1 +
->  include/dt-bindings/clock/qcom,gcc-ipq6018.h       | 405 +++++++++++++++++++++
->  2 files changed, 406 insertions(+)
->  create mode 100644 include/dt-bindings/clock/qcom,gcc-ipq6018.h
+>  arch/arm64/boot/dts/qcom/Makefile            |   1 +
+>  arch/arm64/boot/dts/qcom/ipq6018-cp01-c1.dts |  35 ++++
+>  arch/arm64/boot/dts/qcom/ipq6018.dtsi        | 231 +++++++++++++++++++++++++++
+>  3 files changed, 267 insertions(+)
+>  create mode 100644 arch/arm64/boot/dts/qcom/ipq6018-cp01-c1.dts
+>  create mode 100644 arch/arm64/boot/dts/qcom/ipq6018.dtsi
 > 
-> diff --git a/Documentation/devicetree/bindings/clock/qcom,gcc.txt b/Documentation/devicetree/bindings/clock/qcom,gcc.txt
-> index 8661c3c..40bb3de 100644
-> --- a/Documentation/devicetree/bindings/clock/qcom,gcc.txt
-> +++ b/Documentation/devicetree/bindings/clock/qcom,gcc.txt
-> @@ -9,6 +9,7 @@ Required properties :
->  			"qcom,gcc-ipq8064"
->  			"qcom,gcc-ipq4019"
->  			"qcom,gcc-ipq8074"
-> +			"qcom,gcc-ipq6018"
+> diff --git a/arch/arm64/boot/dts/qcom/Makefile b/arch/arm64/boot/dts/qcom/Makefile
+> index 21d548f..ac22dbb 100644
+> --- a/arch/arm64/boot/dts/qcom/Makefile
+> +++ b/arch/arm64/boot/dts/qcom/Makefile
+> @@ -2,6 +2,7 @@
+>  dtb-$(CONFIG_ARCH_QCOM)	+= apq8016-sbc.dtb
+>  dtb-$(CONFIG_ARCH_QCOM)	+= apq8096-db820c.dtb
+>  dtb-$(CONFIG_ARCH_QCOM)	+= ipq8074-hk01.dtb
+> +dtb-$(CONFIG_ARCH_QCOM)	+= ipq6018-cp01-c1.dtb
 
-And please maintain sort order.
+Sort order.
+
+>  dtb-$(CONFIG_ARCH_QCOM)	+= msm8916-mtp.dtb
+>  dtb-$(CONFIG_ARCH_QCOM)	+= msm8992-bullhead-rev-101.dtb
+>  dtb-$(CONFIG_ARCH_QCOM)	+= msm8994-angler-rev-101.dtb
+> diff --git a/arch/arm64/boot/dts/qcom/ipq6018-cp01-c1.dts b/arch/arm64/boot/dts/qcom/ipq6018-cp01-c1.dts
+> new file mode 100644
+> index 0000000..ac7cb22
+> --- /dev/null
+> +++ b/arch/arm64/boot/dts/qcom/ipq6018-cp01-c1.dts
+> @@ -0,0 +1,35 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * IPQ6018 CP01 board device tree source
+> + *
+> + * Copyright (c) 2019, The Linux Foundation. All rights reserved.
+> + */
+> +
+> +/dts-v1/;
+> +
+> +#include "ipq6018.dtsi"
+> +
+> +/ {
+> +	#address-cells = <0x2>;
+> +	#size-cells = <0x2>;
+
+This is a count, write it in base 10..
+
+> +	model = "Qualcomm Technologies, Inc. IPQ6018/AP-CP01-C1";
+> +	compatible = "qcom,ipq6018-cp01", "qcom,ipq6018";
+> +	interrupt-parent = <&intc>;
+
+Changing #address-cells, #size-cells and interrupt-parent will break the
+dtsi, so I think you should specify them there.
+
+> +};
+> +
+> +&tlmm {
+
+Please sort your nodes based on address, then node name, then label.
+
+> +	uart_pins: uart_pins {
+> +		mux {
+> +			pins = "gpio44", "gpio45";
+> +			function = "blsp2_uart";
+> +			drive-strength = <8>;
+> +			bias-pull-down;
+> +		};
+> +	};
+> +};
+> +
+> +&blsp1_uart3 {
+> +	pinctrl-0 = <&uart_pins>;
+> +	pinctrl-names = "default";
+> +	status = "ok";
+> +};
+> diff --git a/arch/arm64/boot/dts/qcom/ipq6018.dtsi b/arch/arm64/boot/dts/qcom/ipq6018.dtsi
+> new file mode 100644
+> index 0000000..79cccdd
+> --- /dev/null
+> +++ b/arch/arm64/boot/dts/qcom/ipq6018.dtsi
+> @@ -0,0 +1,231 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * IPQ6018 SoC device tree source
+> + *
+> + * Copyright (c) 2019, The Linux Foundation. All rights reserved.
+> + */
+> +
+> +#include <dt-bindings/interrupt-controller/arm-gic.h>
+> +#include <dt-bindings/clock/qcom,gcc-ipq6018.h>
+> +
+> +/ {
+> +	model = "Qualcomm Technologies, Inc. IPQ6018";
+> +	compatible = "qcom,ipq6018";
+
+No need for model and compatible in the dtsi, these should always be
+specified by the including file.
+
+> +
+> +	chosen {
+> +		bootargs = "console=ttyMSM0,115200,n8 rw init=/init";
+
+Do you really need console? Can't you use stdout-path?
+
+And there's no need to specify init=/init.
+
+> +		bootargs-append = " swiotlb=1 clk_ignore_unused";
+
+I'm hoping that you will work on removing the need for
+clk_ignore_unused.
+
+> +	};
+> +
+> +	reserved-memory {
+> +		#address-cells = <2>;
+> +		#size-cells = <2>;
+> +		ranges;
+> +
+> +		tz:tz@48500000 {
+
+Space after :
+
+> +			no-map;
+> +			reg = <0x0 0x48500000 0x0 0x00200000>;
+
+I would prefer to have the reg first in these nodes, then the region's
+properties.
+
+> +		};
+> +	};
+> +
+> +	soc: soc {
+> +		#address-cells = <0x1>;
+> +		#size-cells = <0x1>;
+> +		ranges = <0 0 0 0xffffffff>;
+> +		dma-ranges;
+> +		compatible = "simple-bus";
+> +
+> +		intc: interrupt-controller@b000000 {
+
+As described above, please sort your nodes based on address, node name
+and lastly label name.
+
+> +			compatible = "qcom,msm-qgic2";
+> +			interrupt-controller;
+> +			#interrupt-cells = <0x3>;
+> +			reg = <0xb000000 0x1000>, <0xb002000 0x1000>;
+> +		};
+> +
+> +		timer {
+> +			compatible = "arm,armv8-timer";
+> +			interrupts = <GIC_PPI 2 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>,
+> +				     <GIC_PPI 3 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>,
+> +				     <GIC_PPI 4 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>,
+> +				     <GIC_PPI 1 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>;
+> +		};
+> +
+> +		timer@b120000 {
+> +			#address-cells = <1>;
+> +			#size-cells = <1>;
+> +			ranges;
+> +			compatible = "arm,armv7-timer-mem";
+> +			reg = <0xb120000 0x1000>;
+
+Please pad addresses in reg to 8 digits, to make them faster to compare.
+
+> +			clock-frequency = <19200000>;
+> +
+> +			frame@b120000 {
+> +				frame-number = <0>;
+> +				interrupts = <GIC_SPI 8 IRQ_TYPE_LEVEL_HIGH>,
+> +					     <GIC_SPI 7 IRQ_TYPE_LEVEL_HIGH>;
+> +				reg = <0xb121000 0x1000>,
+> +				      <0xb122000 0x1000>;
+> +			};
+> +
+> +			frame@b123000 {
+> +				frame-number = <1>;
+> +				interrupts = <GIC_SPI 9 IRQ_TYPE_LEVEL_HIGH>;
+> +				reg = <0xb123000 0x1000>;
+> +				status = "disabled";
+> +			};
+> +
+> +			frame@b124000 {
+> +				frame-number = <2>;
+> +				interrupts = <GIC_SPI 10 IRQ_TYPE_LEVEL_HIGH>;
+> +				reg = <0xb124000 0x1000>;
+> +				status = "disabled";
+> +			};
+> +
+> +			frame@b125000 {
+> +				frame-number = <3>;
+> +				interrupts = <GIC_SPI 11 IRQ_TYPE_LEVEL_HIGH>;
+> +				reg = <0xb125000 0x1000>;
+> +				status = "disabled";
+> +			};
+> +
+> +			frame@b126000 {
+> +				frame-number = <4>;
+> +				interrupts = <GIC_SPI 12 IRQ_TYPE_LEVEL_HIGH>;
+> +				reg = <0xb126000 0x1000>;
+> +				status = "disabled";
+> +			};
+> +
+> +			frame@b127000 {
+> +				frame-number = <5>;
+> +				interrupts = <GIC_SPI 13 IRQ_TYPE_LEVEL_HIGH>;
+> +				reg = <0xb127000 0x1000>;
+> +				status = "disabled";
+> +			};
+> +
+> +			frame@b128000 {
+> +				frame-number = <6>;
+> +				interrupts = <GIC_SPI 14 IRQ_TYPE_LEVEL_HIGH>;
+> +				reg = <0xb128000 0x1000>;
+> +				status = "disabled";
+> +			};
+> +		};
+> +
+> +		gcc: gcc@1800000 {
+> +			compatible = "qcom,gcc-ipq6018";
+> +			reg = <0x1800000 0x80000>;
+> +			#clock-cells = <0x1>;
+
+This is a count, use base 10.
+
+> +			#reset-cells = <0x1>;
+> +		};
+> +
+> +		blsp1_uart3: serial@78b1000 {
+> +			compatible = "qcom,msm-uartdm-v1.4", "qcom,msm-uartdm";
+> +			reg = <0x78b1000 0x200>;
+> +			interrupts = <GIC_SPI 306 IRQ_TYPE_LEVEL_HIGH>;
+> +			clocks = <&gcc GCC_BLSP1_UART3_APPS_CLK>,
+> +				<&gcc GCC_BLSP1_AHB_CLK>;
+> +			clock-names = "core", "iface";
+> +			status = "disabled";
+> +		};
+> +
+> +		tlmm: pinctrl@1000000 {
+> +			compatible = "qcom,ipq6018-pinctrl";
+> +			reg = <0x1000000 0x300000>;
+> +			interrupts = <GIC_SPI 0xd0 IRQ_TYPE_NONE>;
+> +			gpio-controller;
+> +			#gpio-cells = <0x2>;
+
+gpio-ranges = <&tlmm 0 80>;
+
+> +			interrupt-controller;
+> +			#interrupt-cells = <0x2>;
+> +
+> +			uart_pins: uart_pins {
+> +				pins = "gpio44", "gpio45";
+> +				function = "blsp2_uart";
+> +				drive-strength = <8>;
+> +				bias-pull-down;
+> +			};
+> +		};
+> +	};
+> +
+> +	psci: psci {
+> +		compatible = "arm,psci-1.0";
+> +		method = "smc";
+> +	};
+> +
+> +	cpus: cpus {
+> +		#address-cells = <0x1>;
+> +		#size-cells = <0x0>;
+> +
+> +		CPU0: cpu@0 {
+> +			device_type = "cpu";
+> +			compatible = "arm,cortex-a53";
+> +			reg = <0x0>;
+> +			enable-method = "psci";
+> +			next-level-cache = <&L2_0>;
+> +		};
+> +
+> +		CPU1: cpu@1 {
+> +			device_type = "cpu";
+> +			compatible = "arm,cortex-a53";
+> +			enable-method = "psci";
+> +			reg = <0x1>;
+> +			next-level-cache = <&L2_0>;
+> +		};
+> +
+> +		CPU2: cpu@2 {
+> +			device_type = "cpu";
+> +			compatible = "arm,cortex-a53";
+> +			enable-method = "psci";
+> +			reg = <0x2>;
+> +			next-level-cache = <&L2_0>;
+> +		};
+> +
+> +		CPU3: cpu@3 {
+> +			device_type = "cpu";
+> +			compatible = "arm,cortex-a53";
+> +			enable-method = "psci";
+> +			reg = <0x3>;
+> +			next-level-cache = <&L2_0>;
+> +		};
+> +
+> +		L2_0: l2-cache {
+> +			compatible = "cache";
+> +			cache-level = <0x2>;
+> +		};
+> +	};
+> +
+> +	pmuv8: pmu {
+> +		compatible = "arm,armv8-pmuv3";
+> +		interrupts = <GIC_PPI 7 (GIC_CPU_MASK_SIMPLE(4) |
+> +					 IRQ_TYPE_LEVEL_HIGH)>;
+> +	};
+> +
+> +	clocks {
+> +		sleep_clk: sleep_clk {
+
+Don't use _ in the node names.
+
+> +			compatible = "fixed-clock";
+> +			clock-frequency = <32000>;
+> +			#clock-cells = <0>;
+> +		};
+> +
+> +		xo: xo {
+> +			compatible = "fixed-clock";
+> +			clock-frequency = <24000000>;
+> +			#clock-cells = <0>;
+> +		};
+> +
+> +		bias_pll_cc_clk {
+
+Please give this a label and reference it from the node that uses it
+(regardless of the implementation matching by clock name).
+
+> +			compatible = "fixed-clock";
+> +			clock-frequency = <300000000>;
+> +			#clock-cells = <0>;
+> +		};
+> +
+> +		bias_pll_nss_noc_clk {
+> +			compatible = "fixed-clock";
+> +			clock-frequency = <416500000>;
+> +			#clock-cells = <0>;
+> +		};
+> +
+> +		usb3phy_0_cc_pipe_clk {
+
+This should come from the PHY.
+
+> +			compatible = "fixed-clock";
+> +			clock-frequency = <125000000>;
+> +			#clock-cells = <0>;
+> +		};
 
 Regards,
 Bjorn
-
->  			"qcom,gcc-msm8660"
->  			"qcom,gcc-msm8916"
->  			"qcom,gcc-msm8960"
-> diff --git a/include/dt-bindings/clock/qcom,gcc-ipq6018.h b/include/dt-bindings/clock/qcom,gcc-ipq6018.h
-> new file mode 100644
-> index 0000000..b8aec10
-> --- /dev/null
-> +++ b/include/dt-bindings/clock/qcom,gcc-ipq6018.h
-> @@ -0,0 +1,405 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +/*
-> + * Copyright (c) 2018, The Linux Foundation. All rights reserved.
-> + */
-> +
-> +#ifndef _DT_BINDINGS_CLOCK_IPQ_GCC_6018_H
-> +#define _DT_BINDINGS_CLOCK_IPQ_GCC_6018_H
-> +
-> +#define GPLL0					0
-> +#define UBI32_PLL				1
-> +#define GPLL6					2
-> +#define GPLL4					3
-> +#define PCNOC_BFDCD_CLK_SRC			4
-> +#define GPLL2					5
-> +#define NSS_CRYPTO_PLL				6
-> +#define NSS_PPE_CLK_SRC				7
-> +#define GCC_XO_CLK_SRC				8
-> +#define NSS_CE_CLK_SRC				9
-> +#define GCC_SLEEP_CLK_SRC			10
-> +#define APSS_AHB_CLK_SRC			11
-> +#define NSS_PORT5_RX_CLK_SRC			12
-> +#define NSS_PORT5_TX_CLK_SRC			13
-> +#define PCIE0_AXI_CLK_SRC			14
-> +#define USB0_MASTER_CLK_SRC			15
-> +#define APSS_AHB_POSTDIV_CLK_SRC		16
-> +#define NSS_PORT1_RX_CLK_SRC			17
-> +#define NSS_PORT1_TX_CLK_SRC			18
-> +#define NSS_PORT2_RX_CLK_SRC			19
-> +#define NSS_PORT2_TX_CLK_SRC			20
-> +#define NSS_PORT3_RX_CLK_SRC			21
-> +#define NSS_PORT3_TX_CLK_SRC			22
-> +#define NSS_PORT4_RX_CLK_SRC			23
-> +#define NSS_PORT4_TX_CLK_SRC			24
-> +#define NSS_PORT5_RX_DIV_CLK_SRC		25
-> +#define NSS_PORT5_TX_DIV_CLK_SRC		26
-> +#define APSS_AXI_CLK_SRC			27
-> +#define NSS_CRYPTO_CLK_SRC			28
-> +#define NSS_PORT1_RX_DIV_CLK_SRC		29
-> +#define NSS_PORT1_TX_DIV_CLK_SRC		30
-> +#define NSS_PORT2_RX_DIV_CLK_SRC		31
-> +#define NSS_PORT2_TX_DIV_CLK_SRC		32
-> +#define NSS_PORT3_RX_DIV_CLK_SRC		33
-> +#define NSS_PORT3_TX_DIV_CLK_SRC		34
-> +#define NSS_PORT4_RX_DIV_CLK_SRC		35
-> +#define NSS_PORT4_TX_DIV_CLK_SRC		36
-> +#define NSS_UBI0_CLK_SRC			37
-> +#define BLSP1_QUP1_I2C_APPS_CLK_SRC		38
-> +#define BLSP1_QUP1_SPI_APPS_CLK_SRC		39
-> +#define BLSP1_QUP2_I2C_APPS_CLK_SRC		40
-> +#define BLSP1_QUP2_SPI_APPS_CLK_SRC		41
-> +#define BLSP1_QUP3_I2C_APPS_CLK_SRC		42
-> +#define BLSP1_QUP3_SPI_APPS_CLK_SRC		43
-> +#define BLSP1_QUP4_I2C_APPS_CLK_SRC		44
-> +#define BLSP1_QUP4_SPI_APPS_CLK_SRC		45
-> +#define BLSP1_QUP5_I2C_APPS_CLK_SRC		46
-> +#define BLSP1_QUP5_SPI_APPS_CLK_SRC		47
-> +#define BLSP1_QUP6_I2C_APPS_CLK_SRC		48
-> +#define BLSP1_QUP6_SPI_APPS_CLK_SRC		49
-> +#define BLSP1_UART1_APPS_CLK_SRC		50
-> +#define BLSP1_UART2_APPS_CLK_SRC		51
-> +#define BLSP1_UART3_APPS_CLK_SRC		52
-> +#define BLSP1_UART4_APPS_CLK_SRC		53
-> +#define BLSP1_UART5_APPS_CLK_SRC		54
-> +#define BLSP1_UART6_APPS_CLK_SRC		55
-> +#define CRYPTO_CLK_SRC				56
-> +#define NSS_UBI0_DIV_CLK_SRC			57
-> +#define PCIE0_AUX_CLK_SRC			58
-> +#define PCIE0_PIPE_CLK_SRC			59
-> +#define SDCC1_APPS_CLK_SRC			60
-> +#define USB0_AUX_CLK_SRC			61
-> +#define USB0_MOCK_UTMI_CLK_SRC			62
-> +#define USB0_PIPE_CLK_SRC			63
-> +#define USB1_MOCK_UTMI_CLK_SRC			64
-> +#define GCC_APSS_AHB_CLK			65
-> +#define GCC_APSS_AXI_CLK			66
-> +#define GCC_BLSP1_AHB_CLK			67
-> +#define GCC_BLSP1_QUP1_I2C_APPS_CLK		68
-> +#define GCC_BLSP1_QUP1_SPI_APPS_CLK		69
-> +#define GCC_BLSP1_QUP2_I2C_APPS_CLK		70
-> +#define GCC_BLSP1_QUP2_SPI_APPS_CLK		71
-> +#define GCC_BLSP1_QUP3_I2C_APPS_CLK		72
-> +#define GCC_BLSP1_QUP3_SPI_APPS_CLK		73
-> +#define GCC_BLSP1_QUP4_I2C_APPS_CLK		74
-> +#define GCC_BLSP1_QUP4_SPI_APPS_CLK		75
-> +#define GCC_BLSP1_QUP5_I2C_APPS_CLK		76
-> +#define GCC_BLSP1_QUP5_SPI_APPS_CLK		77
-> +#define GCC_BLSP1_QUP6_I2C_APPS_CLK		78
-> +#define GCC_BLSP1_QUP6_SPI_APPS_CLK		79
-> +#define GCC_BLSP1_UART1_APPS_CLK		80
-> +#define GCC_BLSP1_UART2_APPS_CLK		81
-> +#define GCC_BLSP1_UART3_APPS_CLK		82
-> +#define GCC_BLSP1_UART4_APPS_CLK		83
-> +#define GCC_BLSP1_UART5_APPS_CLK		84
-> +#define GCC_BLSP1_UART6_APPS_CLK		85
-> +#define GCC_CRYPTO_AHB_CLK			86
-> +#define GCC_CRYPTO_AXI_CLK			87
-> +#define GCC_CRYPTO_CLK				88
-> +#define GCC_XO_CLK				89
-> +#define GCC_XO_DIV4_CLK				90
-> +#define GCC_MDIO_AHB_CLK			91
-> +#define GCC_CRYPTO_PPE_CLK			92
-> +#define GCC_NSS_CE_APB_CLK			93
-> +#define GCC_NSS_CE_AXI_CLK			94
-> +#define GCC_NSS_CFG_CLK				95
-> +#define GCC_NSS_CRYPTO_CLK			96
-> +#define GCC_NSS_CSR_CLK				97
-> +#define GCC_NSS_EDMA_CFG_CLK			98
-> +#define GCC_NSS_EDMA_CLK			99
-> +#define GCC_NSS_NOC_CLK				100
-> +#define GCC_NSS_PORT1_RX_CLK			101
-> +#define GCC_NSS_PORT1_TX_CLK			102
-> +#define GCC_NSS_PORT2_RX_CLK			103
-> +#define GCC_NSS_PORT2_TX_CLK			104
-> +#define GCC_NSS_PORT3_RX_CLK			105
-> +#define GCC_NSS_PORT3_TX_CLK			106
-> +#define GCC_NSS_PORT4_RX_CLK			107
-> +#define GCC_NSS_PORT4_TX_CLK			108
-> +#define GCC_NSS_PORT5_RX_CLK			109
-> +#define GCC_NSS_PORT5_TX_CLK			110
-> +#define GCC_NSS_PPE_CFG_CLK			111
-> +#define GCC_NSS_PPE_CLK				112
-> +#define GCC_NSS_PPE_IPE_CLK			113
-> +#define GCC_NSS_PTP_REF_CLK			114
-> +#define GCC_NSSNOC_CE_APB_CLK			115
-> +#define GCC_NSSNOC_CE_AXI_CLK			116
-> +#define GCC_NSSNOC_CRYPTO_CLK			117
-> +#define GCC_NSSNOC_PPE_CFG_CLK			118
-> +#define GCC_NSSNOC_PPE_CLK			119
-> +#define GCC_NSSNOC_QOSGEN_REF_CLK		120
-> +#define GCC_NSSNOC_TIMEOUT_REF_CLK		121
-> +#define GCC_NSSNOC_UBI0_AHB_CLK			122
-> +#define GCC_PORT1_MAC_CLK			123
-> +#define GCC_PORT2_MAC_CLK			124
-> +#define GCC_PORT3_MAC_CLK			125
-> +#define GCC_PORT4_MAC_CLK			126
-> +#define GCC_PORT5_MAC_CLK			127
-> +#define GCC_UBI0_AHB_CLK			128
-> +#define GCC_UBI0_AXI_CLK			129
-> +#define GCC_UBI0_CORE_CLK			130
-> +#define GCC_PCIE0_AHB_CLK			131
-> +#define GCC_PCIE0_AUX_CLK			132
-> +#define GCC_PCIE0_AXI_M_CLK			133
-> +#define GCC_PCIE0_AXI_S_CLK			134
-> +#define GCC_PCIE0_PIPE_CLK			135
-> +#define GCC_PRNG_AHB_CLK			136
-> +#define GCC_QPIC_AHB_CLK			137
-> +#define GCC_QPIC_CLK				138
-> +#define GCC_SDCC1_AHB_CLK			139
-> +#define GCC_SDCC1_APPS_CLK			140
-> +#define GCC_UNIPHY0_AHB_CLK			141
-> +#define GCC_UNIPHY0_PORT1_RX_CLK		142
-> +#define GCC_UNIPHY0_PORT1_TX_CLK		143
-> +#define GCC_UNIPHY0_PORT2_RX_CLK		144
-> +#define GCC_UNIPHY0_PORT2_TX_CLK		145
-> +#define GCC_UNIPHY0_PORT3_RX_CLK		146
-> +#define GCC_UNIPHY0_PORT3_TX_CLK		147
-> +#define GCC_UNIPHY0_PORT4_RX_CLK		148
-> +#define GCC_UNIPHY0_PORT4_TX_CLK		149
-> +#define GCC_UNIPHY0_PORT5_RX_CLK		150
-> +#define GCC_UNIPHY0_PORT5_TX_CLK		151
-> +#define GCC_UNIPHY0_SYS_CLK			152
-> +#define GCC_UNIPHY1_AHB_CLK			153
-> +#define GCC_UNIPHY1_PORT5_RX_CLK		154
-> +#define GCC_UNIPHY1_PORT5_TX_CLK		155
-> +#define GCC_UNIPHY1_SYS_CLK			156
-> +#define GCC_USB0_AUX_CLK			157
-> +#define GCC_USB0_MASTER_CLK			158
-> +#define GCC_USB0_MOCK_UTMI_CLK			159
-> +#define GCC_USB0_PHY_CFG_AHB_CLK		160
-> +#define GCC_USB0_PIPE_CLK			161
-> +#define GCC_USB0_SLEEP_CLK			162
-> +#define GCC_USB1_MASTER_CLK			163
-> +#define GCC_USB1_MOCK_UTMI_CLK			164
-> +#define GCC_USB1_PHY_CFG_AHB_CLK		165
-> +#define GCC_USB1_SLEEP_CLK			166
-> +#define GP1_CLK_SRC				167
-> +#define GP2_CLK_SRC				168
-> +#define GP3_CLK_SRC				169
-> +#define GCC_GP1_CLK				170
-> +#define GCC_GP2_CLK				171
-> +#define GCC_GP3_CLK				172
-> +#define SYSTEM_NOC_BFDCD_CLK_SRC		173
-> +#define GCC_NSSNOC_SNOC_CLK			174
-> +#define GCC_UBI0_NC_AXI_CLK			175
-> +#define GCC_UBI1_NC_AXI_CLK			176
-> +#define GPLL0_MAIN				177
-> +#define UBI32_PLL_MAIN				178
-> +#define GPLL6_MAIN				179
-> +#define GPLL4_MAIN				180
-> +#define GPLL2_MAIN				181
-> +#define NSS_CRYPTO_PLL_MAIN			182
-> +#define GCC_CMN_12GPLL_AHB_CLK			183
-> +#define GCC_CMN_12GPLL_SYS_CLK			184
-> +#define GCC_SNOC_BUS_TIMEOUT2_AHB_CLK		185
-> +#define GCC_SYS_NOC_USB0_AXI_CLK		186
-> +#define GCC_SYS_NOC_PCIE0_AXI_CLK		187
-> +#define QDSS_TSCTR_CLK_SRC			188
-> +#define QDSS_AT_CLK_SRC				189
-> +#define GCC_QDSS_AT_CLK				190
-> +#define GCC_QDSS_DAP_CLK			191
-> +#define ADSS_PWM_CLK_SRC			192
-> +#define GCC_ADSS_PWM_CLK			193
-> +#define SDCC1_ICE_CORE_CLK_SRC			194
-> +#define GCC_SDCC1_ICE_CORE_CLK			195
-> +#define GCC_DCC_CLK				196
-> +#define PCIE0_RCHNG_CLK_SRC			197
-> +#define GCC_PCIE0_AXI_S_BRIDGE_CLK		198
-> +#define PCIE0_RCHNG_CLK				199
-> +#define UBI32_MEM_NOC_BFDCD_CLK_SRC		200
-> +#define WCSS_AHB_CLK_SRC			201
-> +#define Q6_AXI_CLK_SRC				202
-> +#define GCC_Q6SS_PCLKDBG_CLK			203
-> +#define GCC_Q6_TSCTR_1TO2_CLK			204
-> +#define GCC_WCSS_CORE_TBU_CLK			205
-> +#define GCC_WCSS_AXI_M_CLK			206
-> +#define GCC_SYS_NOC_WCSS_AHB_CLK		207
-> +#define GCC_Q6_AXIM_CLK				208
-> +#define GCC_Q6SS_ATBM_CLK			209
-> +#define GCC_WCSS_Q6_TBU_CLK			210
-> +#define GCC_Q6_AXIM2_CLK			211
-> +#define GCC_Q6_AHB_CLK				212
-> +#define GCC_Q6_AHB_S_CLK			213
-> +#define GCC_WCSS_DBG_IFC_APB_CLK		214
-> +#define GCC_WCSS_DBG_IFC_ATB_CLK		215
-> +#define GCC_WCSS_DBG_IFC_NTS_CLK		216
-> +#define GCC_WCSS_DBG_IFC_DAPBUS_CLK		217
-> +#define GCC_WCSS_DBG_IFC_APB_BDG_CLK		218
-> +#define GCC_WCSS_DBG_IFC_ATB_BDG_CLK		219
-> +#define GCC_WCSS_DBG_IFC_NTS_BDG_CLK		220
-> +#define GCC_WCSS_DBG_IFC_DAPBUS_BDG_CLK		221
-> +#define GCC_WCSS_ECAHB_CLK			222
-> +#define GCC_WCSS_ACMT_CLK			223
-> +#define GCC_WCSS_AHB_S_CLK			224
-> +#define GCC_RBCPR_WCSS_CLK			225
-> +#define RBCPR_WCSS_CLK_SRC			226
-> +#define GCC_RBCPR_WCSS_AHB_CLK			227
-> +#define GCC_LPASS_CORE_AXIM_CLK			228
-> +#define GCC_LPASS_SNOC_CFG_CLK			229
-> +#define GCC_LPASS_Q6_AXIM_CLK			230
-> +#define GCC_LPASS_Q6_ATBM_AT_CLK		231
-> +#define GCC_LPASS_Q6_PCLKDBG_CLK		232
-> +#define GCC_LPASS_Q6SS_TSCTR_1TO2_CLK		233
-> +#define GCC_LPASS_Q6SS_TRIG_CLK			234
-> +#define GCC_LPASS_TBU_CLK			235
-> +#define LPASS_CORE_AXIM_CLK_SRC			236
-> +#define LPASS_SNOC_CFG_CLK_SRC			237
-> +#define LPASS_Q6_AXIM_CLK_SRC			238
-> +#define GCC_PCNOC_LPASS_CLK			239
-> +#define GCC_UBI0_UTCM_CLK			240
-> +#define SNOC_NSSNOC_BFDCD_CLK_SRC		241
-> +#define GCC_SNOC_NSSNOC_CLK			242
-> +#define GCC_MEM_NOC_Q6_AXI_CLK			243
-> +#define GCC_MEM_NOC_UBI32_CLK			244
-> +#define GCC_MEM_NOC_LPASS_CLK			245
-> +#define GCC_SNOC_LPASS_CFG_CLK			246
-> +
-> +#define GCC_BLSP1_BCR				0
-> +#define GCC_BLSP1_QUP1_BCR			1
-> +#define GCC_BLSP1_UART1_BCR			2
-> +#define GCC_BLSP1_QUP2_BCR			3
-> +#define GCC_BLSP1_UART2_BCR			4
-> +#define GCC_BLSP1_QUP3_BCR			5
-> +#define GCC_BLSP1_UART3_BCR			6
-> +#define GCC_BLSP1_QUP4_BCR			7
-> +#define GCC_BLSP1_UART4_BCR			8
-> +#define GCC_BLSP1_QUP5_BCR			9
-> +#define GCC_BLSP1_UART5_BCR			10
-> +#define GCC_BLSP1_QUP6_BCR			11
-> +#define GCC_BLSP1_UART6_BCR			12
-> +#define GCC_IMEM_BCR				13
-> +#define GCC_SMMU_BCR				14
-> +#define GCC_APSS_TCU_BCR			15
-> +#define GCC_SMMU_XPU_BCR			16
-> +#define GCC_PCNOC_TBU_BCR			17
-> +#define GCC_SMMU_CFG_BCR			18
-> +#define GCC_PRNG_BCR				19
-> +#define GCC_BOOT_ROM_BCR			20
-> +#define GCC_CRYPTO_BCR				21
-> +#define GCC_WCSS_BCR				22
-> +#define GCC_WCSS_Q6_BCR				23
-> +#define GCC_NSS_BCR				24
-> +#define GCC_SEC_CTRL_BCR			25
-> +#define GCC_DDRSS_BCR				26
-> +#define GCC_SYSTEM_NOC_BCR			27
-> +#define GCC_PCNOC_BCR				28
-> +#define GCC_TCSR_BCR				29
-> +#define GCC_QDSS_BCR				30
-> +#define GCC_DCD_BCR				31
-> +#define GCC_MSG_RAM_BCR				32
-> +#define GCC_MPM_BCR				33
-> +#define GCC_SPDM_BCR				34
-> +#define GCC_RBCPR_BCR				35
-> +#define GCC_RBCPR_MX_BCR			36
-> +#define GCC_TLMM_BCR				37
-> +#define GCC_RBCPR_WCSS_BCR			38
-> +#define GCC_USB0_PHY_BCR			39
-> +#define GCC_USB3PHY_0_PHY_BCR			40
-> +#define GCC_USB0_BCR				41
-> +#define GCC_USB1_BCR				42
-> +#define GCC_QUSB2_0_PHY_BCR			43
-> +#define GCC_QUSB2_1_PHY_BCR			44
-> +#define GCC_SDCC1_BCR				45
-> +#define GCC_SNOC_BUS_TIMEOUT0_BCR		46
-> +#define GCC_SNOC_BUS_TIMEOUT1_BCR		47
-> +#define GCC_SNOC_BUS_TIMEOUT2_BCR		48
-> +#define GCC_PCNOC_BUS_TIMEOUT0_BCR		49
-> +#define GCC_PCNOC_BUS_TIMEOUT1_BCR		50
-> +#define GCC_PCNOC_BUS_TIMEOUT2_BCR		51
-> +#define GCC_PCNOC_BUS_TIMEOUT3_BCR		52
-> +#define GCC_PCNOC_BUS_TIMEOUT4_BCR		53
-> +#define GCC_PCNOC_BUS_TIMEOUT5_BCR		54
-> +#define GCC_PCNOC_BUS_TIMEOUT6_BCR		55
-> +#define GCC_PCNOC_BUS_TIMEOUT7_BCR		56
-> +#define GCC_PCNOC_BUS_TIMEOUT8_BCR		57
-> +#define GCC_PCNOC_BUS_TIMEOUT9_BCR		58
-> +#define GCC_UNIPHY0_BCR				59
-> +#define GCC_UNIPHY1_BCR				60
-> +#define GCC_CMN_12GPLL_BCR			61
-> +#define GCC_QPIC_BCR				62
-> +#define GCC_MDIO_BCR				63
-> +#define GCC_WCSS_CORE_TBU_BCR			64
-> +#define GCC_WCSS_Q6_TBU_BCR			65
-> +#define GCC_USB0_TBU_BCR			66
-> +#define GCC_PCIE0_TBU_BCR			67
-> +#define GCC_PCIE0_BCR				68
-> +#define GCC_PCIE0_PHY_BCR			69
-> +#define GCC_PCIE0PHY_PHY_BCR			70
-> +#define GCC_PCIE0_LINK_DOWN_BCR			71
-> +#define GCC_DCC_BCR				72
-> +#define GCC_APC0_VOLTAGE_DROOP_DETECTOR_BCR	73
-> +#define GCC_SMMU_CATS_BCR			74
-> +#define GCC_UBI0_AXI_ARES			75
-> +#define GCC_UBI0_AHB_ARES			76
-> +#define GCC_UBI0_NC_AXI_ARES			77
-> +#define GCC_UBI0_DBG_ARES			78
-> +#define GCC_UBI0_CORE_CLAMP_ENABLE		79
-> +#define GCC_UBI0_CLKRST_CLAMP_ENABLE		80
-> +#define GCC_UBI0_UTCM_ARES			81
-> +#define GCC_NSS_CFG_ARES			82
-> +#define GCC_NSS_NOC_ARES			83
-> +#define GCC_NSS_CRYPTO_ARES			84
-> +#define GCC_NSS_CSR_ARES			85
-> +#define GCC_NSS_CE_APB_ARES			86
-> +#define GCC_NSS_CE_AXI_ARES			87
-> +#define GCC_NSSNOC_CE_APB_ARES			88
-> +#define GCC_NSSNOC_CE_AXI_ARES			89
-> +#define GCC_NSSNOC_UBI0_AHB_ARES		90
-> +#define GCC_NSSNOC_SNOC_ARES			91
-> +#define GCC_NSSNOC_CRYPTO_ARES			92
-> +#define GCC_NSSNOC_ATB_ARES			93
-> +#define GCC_NSSNOC_QOSGEN_REF_ARES		94
-> +#define GCC_NSSNOC_TIMEOUT_REF_ARES		95
-> +#define GCC_PCIE0_PIPE_ARES			96
-> +#define GCC_PCIE0_SLEEP_ARES			97
-> +#define GCC_PCIE0_CORE_STICKY_ARES		98
-> +#define GCC_PCIE0_AXI_MASTER_ARES		99
-> +#define GCC_PCIE0_AXI_SLAVE_ARES		100
-> +#define GCC_PCIE0_AHB_ARES			101
-> +#define GCC_PCIE0_AXI_MASTER_STICKY_ARES	102
-> +#define GCC_PCIE0_AXI_SLAVE_STICKY_ARES		103
-> +#define GCC_PPE_FULL_RESET			104
-> +#define GCC_UNIPHY0_SOFT_RESET			105
-> +#define GCC_UNIPHY0_XPCS_RESET			106
-> +#define GCC_UNIPHY1_SOFT_RESET			107
-> +#define GCC_UNIPHY1_XPCS_RESET			108
-> +#define GCC_EDMA_HW_RESET			109
-> +#define GCC_ADSS_BCR				110
-> +#define GCC_NSS_NOC_TBU_BCR			111
-> +#define GCC_NSSPORT1_RESET			112
-> +#define GCC_NSSPORT2_RESET			113
-> +#define GCC_NSSPORT3_RESET			114
-> +#define GCC_NSSPORT4_RESET			115
-> +#define GCC_NSSPORT5_RESET			116
-> +#define GCC_UNIPHY0_PORT1_ARES			117
-> +#define GCC_UNIPHY0_PORT2_ARES			118
-> +#define GCC_UNIPHY0_PORT3_ARES			119
-> +#define GCC_UNIPHY0_PORT4_ARES			120
-> +#define GCC_UNIPHY0_PORT5_ARES			121
-> +#define GCC_UNIPHY0_PORT_4_5_RESET		122
-> +#define GCC_UNIPHY0_PORT_4_RESET		123
-> +#define GCC_LPASS_BCR				124
-> +#define GCC_UBI32_TBU_BCR			125
-> +#define GCC_LPASS_TBU_BCR			126
-> +#define GCC_WCSSAON_RESET			127
-> +#define GCC_LPASS_Q6_AXIM_ARES			128
-> +#define GCC_LPASS_Q6SS_TSCTR_1TO2_ARES		129
-> +#define GCC_LPASS_Q6SS_TRIG_ARES		130
-> +#define GCC_LPASS_Q6_ATBM_AT_ARES		131
-> +#define GCC_LPASS_Q6_PCLKDBG_ARES		132
-> +#define GCC_LPASS_CORE_AXIM_ARES		133
-> +#define GCC_LPASS_SNOC_CFG_ARES			134
-> +#define GCC_WCSS_DBG_ARES			135
-> +#define GCC_WCSS_ECAHB_ARES			136
-> +#define GCC_WCSS_ACMT_ARES			137
-> +#define GCC_WCSS_DBG_BDG_ARES			138
-> +#define GCC_WCSS_AHB_S_ARES			139
-> +#define GCC_WCSS_AXI_M_ARES			140
-> +#define GCC_Q6SS_DBG_ARES			141
-> +#define GCC_Q6_AHB_S_ARES			142
-> +#define GCC_Q6_AHB_ARES				143
-> +#define GCC_Q6_AXIM2_ARES			144
-> +#define GCC_Q6_AXIM_ARES			145
-> +#define GCC_UBI0_CORE_ARES			146
-> +
-> +#endif
-> -- 
-> QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
-> 
