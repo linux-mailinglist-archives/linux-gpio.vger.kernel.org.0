@@ -2,96 +2,102 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id B96CB3A4EB
-	for <lists+linux-gpio@lfdr.de>; Sun,  9 Jun 2019 12:58:18 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6371B3A664
+	for <lists+linux-gpio@lfdr.de>; Sun,  9 Jun 2019 16:36:27 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728070AbfFIK6S (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sun, 9 Jun 2019 06:58:18 -0400
-Received: from mail-lf1-f46.google.com ([209.85.167.46]:43380 "EHLO
-        mail-lf1-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728029AbfFIK6S (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sun, 9 Jun 2019 06:58:18 -0400
-Received: by mail-lf1-f46.google.com with SMTP id j29so4649960lfk.10
-        for <linux-gpio@vger.kernel.org>; Sun, 09 Jun 2019 03:58:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=o1mbpiR+5qYYAg9zrkdTnavnWkH+BH3AIpNtsKGgNZE=;
-        b=NPhtjuO5dVpBnc5LK82hlYwPTdp2+uzxKSaon0bagBU8Lg0Sb1b+nnZmtB8QObZ0lp
-         uccftlzq3nyHvuLFfgLRkaKNCK1eUZalp8Fdu4RJ5Ox/wOlB+3dJpZYyxLnQbMnXHRGf
-         kHtvbhagbg4NqlY4VouvD3QG0nw6XghAnEVuFGsxLLNBRkMxqHv1MfXH4m2ET2TONPyD
-         w0I2lbZgPaopScKrTxj+55TbqHhLLSV3eSRMjC/nkJpLNpXpiVC6m/IxQDsATsPzZzpC
-         GBdlp/I16tzcuTzF2h2t8lEd8vjm4zCte6gTPVMKx2+08UbURpTgmgyPMBW5Sh7qFiEE
-         moTg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=o1mbpiR+5qYYAg9zrkdTnavnWkH+BH3AIpNtsKGgNZE=;
-        b=TJxH4tpMUqRk5zob3jHvbUWL6rJiV/TYSLmg43kmfYZo2Hkj8NlOclJUPYenRA5HF1
-         w+BpZwA3T7IgJpuDOW44I6Ff7QLS/yAv5yg0W/1ohey6TfaulGNirqSydt2deWdQV0yw
-         ttPYeHZkegZReGd93FxZk3iqHEbhiFa17fAVAmLEcUGvATxw5wbNgYgITNzP2rzzU8Ri
-         q0A80pEmbieqBfzMJnHJYa87ZK7eb4azGarTLl2/heHrdytlTq6+3WXe0yTedYHJV+cK
-         F8yIx/HiyeFDqzk0PABnOc09J/gIhO8vIXzD599WBfUWHJXsfd6N9gBKWV47f9GGq1Zo
-         B//Q==
-X-Gm-Message-State: APjAAAVMhswRtIg0ZgB1wW9WhivOAs9X4AHxQ2MzpmEZHau9FZ73qkOD
-        NjMYKYudnAOjA4LzeTvAitRCVdhCrBn7iN2ZAiMEkTUsdhc=
-X-Google-Smtp-Source: APXvYqwtLNGlnRZ9pqmsWhoOKGPmtXrJNoxXkE5wMwxrvUmCavrc8SGmP2RfcRr05jIHzumMXUgtuqJM8oKvb7DHUkQ=
-X-Received: by 2002:ac2:598d:: with SMTP id w13mr30533372lfn.165.1560077896390;
- Sun, 09 Jun 2019 03:58:16 -0700 (PDT)
+        id S1727649AbfFIOg0 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sun, 9 Jun 2019 10:36:26 -0400
+Received: from condef-04.nifty.com ([202.248.20.69]:46917 "EHLO
+        condef-04.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727560AbfFIOg0 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sun, 9 Jun 2019 10:36:26 -0400
+Received: from conssluserg-06.nifty.com ([10.126.8.85])by condef-04.nifty.com with ESMTP id x59EUYNQ023720
+        for <linux-gpio@vger.kernel.org>; Sun, 9 Jun 2019 23:30:34 +0900
+Received: from mail-vs1-f49.google.com (mail-vs1-f49.google.com [209.85.217.49]) (authenticated)
+        by conssluserg-06.nifty.com with ESMTP id x59EUPdw001203
+        for <linux-gpio@vger.kernel.org>; Sun, 9 Jun 2019 23:30:26 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-06.nifty.com x59EUPdw001203
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1560090626;
+        bh=Ux6Drtn3f9GnEIbTOne3OsP078Vk/vvWggBCGA/snnA=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=Drd+DVJiDUyCCSrdK7EJrw5NjCOudwVGifS0KQOPahxMKdNZJWRG0GtFPUSCr9j7x
+         SHV2POnwgQq/mzI397KmEnhCG5RvhXPKLVKMXDJ7lsA6l5AJnnRvLk/wcxgtH2ElGT
+         Gsq2In16ne+g/R6SopSH+w4PJA9Yr6/DQYBS3oTiPKI/Lmc8y/kx2KNxwedjIaECqy
+         +Gc0eM5iVwpJCGdCX1Uj/LbaT33a5HIRoVtl3grFKIU608ysjjoZJwUmc5XseZoCW0
+         jROvlb9mxfmdWU/F5zM4HVbUDjKXfkUXEOoNCg5T176qRIw+05/5/fXeW3acGrnSAD
+         C1utQuozf5Ejg==
+X-Nifty-SrcIP: [209.85.217.49]
+Received: by mail-vs1-f49.google.com with SMTP id n2so3863011vso.6
+        for <linux-gpio@vger.kernel.org>; Sun, 09 Jun 2019 07:30:26 -0700 (PDT)
+X-Gm-Message-State: APjAAAU3Ekg/2TFEoMBb2OgSXigYp1ktbpZ7Z2x6PdxKrijNqUofe0Ue
+        kJgXdT7hLE99Psk+THQ3gJV6QxeO1l+IOh0LfaA=
+X-Google-Smtp-Source: APXvYqw1RWt3QfmI5niyxk54CiX2Qj+S6bPbstWWAoBy4yjWG691YaDVHG3lzuM6d59VBBzv7ELimoCFaDWhzRZ1lYg=
+X-Received: by 2002:a67:ed04:: with SMTP id l4mr15152598vsp.179.1560090625075;
+ Sun, 09 Jun 2019 07:30:25 -0700 (PDT)
 MIME-Version: 1.0
-References: <ba89e0fd-c9a9-4326-1fb3-a8b9dcb24601@electromag.com.au>
-In-Reply-To: <ba89e0fd-c9a9-4326-1fb3-a8b9dcb24601@electromag.com.au>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Sun, 9 Jun 2019 12:58:09 +0200
-Message-ID: <CACRpkdZ-2TUrNOZyiJxXfO8iJUyaJRrnQicQirR8+G3M=+an0g@mail.gmail.com>
-Subject: Re: pinctrl: mcp23s08: detected irqchip that is shared with multiple
- gpiochips - real of false?
-To:     Phil Reid <preid@electromag.com.au>,
-        Marco Felsch <m.felsch@pengutronix.de>,
-        =?UTF-8?B?SmFuIEt1bmRyw6F0?= <jan.kundrat@cesnet.cz>,
-        Lars Poeschel <poeschel@lemonage.de>,
-        Jason Kridner <jkridner@gmail.com>,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Cc:     "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>
+References: <20190602210918.32741-1-linus.walleij@linaro.org>
+ <CAMuHMdX8idAx9QnOMYyS0htYFw66Zs08pbGb7OEf5ED7Egv9rg@mail.gmail.com>
+ <20190604084545.GA1129@kroah.com> <CACRpkdY-HCGd_ScGNNDAOqY66jvfQZ9Gjm7o9tj+YUuxwV8i4g@mail.gmail.com>
+In-Reply-To: <CACRpkdY-HCGd_ScGNNDAOqY66jvfQZ9Gjm7o9tj+YUuxwV8i4g@mail.gmail.com>
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+Date:   Sun, 9 Jun 2019 23:29:49 +0900
+X-Gmail-Original-Message-ID: <CAK7LNAT0rMF5U8mOTeA1uggJJUDOArW4JO3Bz9Tf=hQk_64D8Q@mail.gmail.com>
+Message-ID: <CAK7LNAT0rMF5U8mOTeA1uggJJUDOArW4JO3Bz9Tf=hQk_64D8Q@mail.gmail.com>
+Subject: Re: [PATCH] pinctrl: nomadik: Fix SPDX tags
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     Greg KH <gregkh@linuxfoundation.org>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Added Marco and a few other MCP23s08 people who may be more familiar
-with this code. (The driver is a bit complex.)
-
-On Thu, Jun 6, 2019 at 10:59 AM Phil Reid <preid@electromag.com.au> wrote:
-
-> Using kernel 5.1 I'm getting the following message:
-> "detected irqchip that is shared with multiple gpiochips: please fix the driver"
+On Sat, Jun 8, 2019 at 7:18 AM Linus Walleij <linus.walleij@linaro.org> wrote:
 >
-> Which I believe should be fixed by:
-> 19ab5ca "pinctrl: mcp23s08: Allocate irq_chip dynamic"
+> On Tue, Jun 4, 2019 at 10:45 AM Greg KH <gregkh@linuxfoundation.org> wrote:
+> > On Tue, Jun 04, 2019 at 10:26:06AM +0200, Geert Uytterhoeven wrote:
+> > > Hi Linus,
+> > >
+> > > On Sun, Jun 2, 2019 at 11:12 PM Linus Walleij <linus.walleij@linaro.org> wrote:
+> > > > Some files were missing the appropriate SPDX tags so
+> > > > fixed it up.
+> > > >
+> > > > Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+> > > > ---
+> > > >  drivers/pinctrl/nomadik/Kconfig           | 2 ++
+> > > >  drivers/pinctrl/nomadik/pinctrl-ab8500.c  | 5 +----
+> > > >  drivers/pinctrl/nomadik/pinctrl-ab8505.c  | 5 +----
+> > > >  drivers/pinctrl/nomadik/pinctrl-abx500.c  | 6 +-----
+> > > >  drivers/pinctrl/nomadik/pinctrl-nomadik.c | 5 +----
+> > > >  5 files changed, 6 insertions(+), 17 deletions(-)
+> > >
+> > > Please note this conflicts with commit ec8f24b7faaf3d47 ("treewide: Add
+> > > SPDX license identifier - Makefile/Kconfig") upstream, which added
+> > > (different) tags.
+> > >
+> > > > diff --git a/drivers/pinctrl/nomadik/Kconfig b/drivers/pinctrl/nomadik/Kconfig
+> > > > index c3efe7d7e91f..749466fa8f97 100644
+> > > > --- a/drivers/pinctrl/nomadik/Kconfig
+> > > > +++ b/drivers/pinctrl/nomadik/Kconfig
+> > > > @@ -1,3 +1,5 @@
+> > > > +# SPDX-License-Identifier: GPL-2.0
+> >
+> > The tags added mean the same thing, what is there today is
+> > "GPL-2.0-only" and this "GPL-2.0" is stating the identical thing, but in
+> > a different way.
+> >
+> > So all is good for when the merge happens.
 >
-> However mcp23s08_probe_one() ends up calling gpiochip_set_irq_hooks() twice.
+> I guess I could tag on "-only" to cut down the buzz and make git
+> resolution happier.
 
-It looks strange when I look at the mcp23s08_probe_one() function
-because it goes like:
+You do not need to apply this patch.
+No sense to add the equivalent changes via different trees.
 
-if (mcp->irq && mcp->irq_controller) {
-    ret = mcp23s08_irqchip_setup(mcp);
-    if (ret)
-        goto fail;
-}
-(...)
-if (mcp->irq)
-    ret = mcp23s08_irq_setup(mcp);
-
-That seems wrong... but overall the code in this probe_one is pretty hard to
-follow and probably needs some refactoring.
-
-This comes from f259f896f234 ("pinctrl: mcp23s08: fix irq and irqchip
-setup order")
-by Marco, Marco can you look into this and help us figure out why this happens?
-
-Yours,
-Linus Walleij
+-- 
+Best Regards
+Masahiro Yamada
