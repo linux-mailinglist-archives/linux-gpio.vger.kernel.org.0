@@ -2,119 +2,89 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 26FB73A697
-	for <lists+linux-gpio@lfdr.de>; Sun,  9 Jun 2019 17:10:22 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C65F63A878
+	for <lists+linux-gpio@lfdr.de>; Sun,  9 Jun 2019 19:01:05 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728984AbfFIPKV (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sun, 9 Jun 2019 11:10:21 -0400
-Received: from conuserg-11.nifty.com ([210.131.2.78]:59515 "EHLO
-        conuserg-11.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728635AbfFIPKV (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sun, 9 Jun 2019 11:10:21 -0400
-Received: from grover.flets-west.jp (softbank126125154139.bbtec.net [126.125.154.139]) (authenticated)
-        by conuserg-11.nifty.com with ESMTP id x59F9vDP015586;
-        Mon, 10 Jun 2019 00:09:57 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-11.nifty.com x59F9vDP015586
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1560092997;
-        bh=0eo4lFsztS6xZOJdGXsOvDiKLKz0/o6ftdMYEqEAoTU=;
-        h=From:To:Cc:Subject:Date:From;
-        b=T04STplsglT9qczTK8mYyn5afdvQA8elzsgrBWchugaCq1BRTj5O9oftLlqEX2tEK
-         LVd6LX9soEsS5XHO6aLT07NOJKU2HfzVBdxUBHYQag1kcMg1RmlCbaRLVVKKlup/h+
-         a6N2rFgRrnSYR7HXmioJyBVtiUoRPskGHENplK+36+/qu3JMftXIr2CKguvZJuR8Vz
-         5lf6QpvHOzuVqrz0m3oTh51sTngXfYwjQ0b5sj4zYHdFjNRybJX2bK5agQkS+eHY6r
-         hyiNYSlRDOiFBAdF2kVph0M8/IC6ddigJR5xxnQlzXuDXaI99VhxWSQ98obIxof56M
-         4G17wrlIM760g==
-X-Nifty-SrcIP: [126.125.154.139]
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-To:     linux-gpio@vger.kernel.org,
-        Linus Walleij <linus.walleij@linaro.org>
-Cc:     Masahiro Yamada <yamada.masahiro@socionext.com>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] pinctrl: remove unused pin_is_valid()
-Date:   Mon, 10 Jun 2019 00:09:53 +0900
-Message-Id: <20190609150953.6432-1-yamada.masahiro@socionext.com>
-X-Mailer: git-send-email 2.17.1
+        id S1733228AbfFIRAz (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sun, 9 Jun 2019 13:00:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37680 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2387936AbfFIRAv (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Sun, 9 Jun 2019 13:00:51 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6C49E208C0;
+        Sun,  9 Jun 2019 17:00:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1560099650;
+        bh=vrJCrsS0o/ebWX0utpzadPeJ5hYHg+tfqDNnxGM147s=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=iw4TImB0galGXTjxuBgZrDDdeGsjBLUFIl6L4T1izgbQ3qlXYQXnUfoi1f434Y8I0
+         2/0UGjLfbLE+TkldrRLzrBGAjCtnlwTSjvbyAY0rE7Vzd2dsQcw2HLy2VlVOZEFBPY
+         X6T0/W1vQbkX5vmWXx1hjkk5L7Kl0rgX//XtNvDQ=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Wen Yang <wen.yang99@zte.com.cn>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-gpio@vger.kernel.org, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.4 116/241] pinctrl: pistachio: fix leaked of_node references
+Date:   Sun,  9 Jun 2019 18:40:58 +0200
+Message-Id: <20190609164151.148628901@linuxfoundation.org>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20190609164147.729157653@linuxfoundation.org>
+References: <20190609164147.729157653@linuxfoundation.org>
+User-Agent: quilt/0.66
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-This function was used by pin_request() to pointlessly double-check
-the pin validity, and it was the only user ever.
+[ Upstream commit 44a4455ac2c6b0981eace683a2b6eccf47689022 ]
 
-Since commit d2f6a1c6fb0e ("pinctrl: remove double pin validity
-check."), no one has ever used it.
+The call to of_get_child_by_name returns a node pointer with refcount
+incremented thus it must be explicitly decremented after the last
+usage.
 
-Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+Detected by coccinelle with the following warnings:
+./drivers/pinctrl/pinctrl-pistachio.c:1422:1-7: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 1360, but without a corresponding object release within this function.
+
+Signed-off-by: Wen Yang <wen.yang99@zte.com.cn>
+Cc: Linus Walleij <linus.walleij@linaro.org>
+Cc: linux-gpio@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
+ drivers/pinctrl/pinctrl-pistachio.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
- drivers/pinctrl/core.c          | 23 -----------------------
- include/linux/pinctrl/pinctrl.h | 10 ----------
- 2 files changed, 33 deletions(-)
-
-diff --git a/drivers/pinctrl/core.c b/drivers/pinctrl/core.c
-index a64849a9d1b0..aeba6366fb13 100644
---- a/drivers/pinctrl/core.c
-+++ b/drivers/pinctrl/core.c
-@@ -177,29 +177,6 @@ const char *pin_get_name(struct pinctrl_dev *pctldev, const unsigned pin)
- 	return desc->name;
- }
- 
--/**
-- * pin_is_valid() - check if pin exists on controller
-- * @pctldev: the pin control device to check the pin on
-- * @pin: pin to check, use the local pin controller index number
-- *
-- * This tells us whether a certain pin exist on a certain pin controller or
-- * not. Pin lists may be sparse, so some pins may not exist.
-- */
--bool pin_is_valid(struct pinctrl_dev *pctldev, int pin)
--{
--	struct pin_desc *pindesc;
--
--	if (pin < 0)
--		return false;
--
--	mutex_lock(&pctldev->mutex);
--	pindesc = pin_desc_get(pctldev, pin);
--	mutex_unlock(&pctldev->mutex);
--
--	return pindesc != NULL;
--}
--EXPORT_SYMBOL_GPL(pin_is_valid);
--
- /* Deletes a range of pin descriptors */
- static void pinctrl_free_pindescs(struct pinctrl_dev *pctldev,
- 				  const struct pinctrl_pin_desc *pins,
-diff --git a/include/linux/pinctrl/pinctrl.h b/include/linux/pinctrl/pinctrl.h
-index e429e5d92dd6..34b10d112be6 100644
---- a/include/linux/pinctrl/pinctrl.h
-+++ b/include/linux/pinctrl/pinctrl.h
-@@ -166,7 +166,6 @@ extern struct pinctrl_dev *devm_pinctrl_register(struct device *dev,
- extern void devm_pinctrl_unregister(struct device *dev,
- 				struct pinctrl_dev *pctldev);
- 
--extern bool pin_is_valid(struct pinctrl_dev *pctldev, int pin);
- extern void pinctrl_add_gpio_range(struct pinctrl_dev *pctldev,
- 				struct pinctrl_gpio_range *range);
- extern void pinctrl_add_gpio_ranges(struct pinctrl_dev *pctldev,
-@@ -197,15 +196,6 @@ struct pinctrl_dev *of_pinctrl_get(struct device_node *np)
- extern const char *pinctrl_dev_get_name(struct pinctrl_dev *pctldev);
- extern const char *pinctrl_dev_get_devname(struct pinctrl_dev *pctldev);
- extern void *pinctrl_dev_get_drvdata(struct pinctrl_dev *pctldev);
--#else
--
--struct pinctrl_dev;
--
--/* Sufficiently stupid default functions when pinctrl is not in use */
--static inline bool pin_is_valid(struct pinctrl_dev *pctldev, int pin)
--{
--	return pin >= 0;
--}
- 
- #endif /* !CONFIG_PINCTRL */
- 
+diff --git a/drivers/pinctrl/pinctrl-pistachio.c b/drivers/pinctrl/pinctrl-pistachio.c
+index 98a459b1c095a..86e8d989092c8 100644
+--- a/drivers/pinctrl/pinctrl-pistachio.c
++++ b/drivers/pinctrl/pinctrl-pistachio.c
+@@ -1373,6 +1373,7 @@ static int pistachio_gpio_register(struct pistachio_pinctrl *pctl)
+ 		if (!of_find_property(child, "gpio-controller", NULL)) {
+ 			dev_err(pctl->dev,
+ 				"No gpio-controller property for bank %u\n", i);
++			of_node_put(child);
+ 			ret = -ENODEV;
+ 			goto err;
+ 		}
+@@ -1380,6 +1381,7 @@ static int pistachio_gpio_register(struct pistachio_pinctrl *pctl)
+ 		irq = irq_of_parse_and_map(child, 0);
+ 		if (irq < 0) {
+ 			dev_err(pctl->dev, "No IRQ for bank %u: %d\n", i, irq);
++			of_node_put(child);
+ 			ret = irq;
+ 			goto err;
+ 		}
 -- 
-2.17.1
+2.20.1
+
+
 
