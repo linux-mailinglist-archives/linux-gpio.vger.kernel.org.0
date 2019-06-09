@@ -2,84 +2,71 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id ED2893A663
-	for <lists+linux-gpio@lfdr.de>; Sun,  9 Jun 2019 16:36:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CA89A3A670
+	for <lists+linux-gpio@lfdr.de>; Sun,  9 Jun 2019 16:43:32 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728635AbfFIOg0 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sun, 9 Jun 2019 10:36:26 -0400
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:34844 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727649AbfFIOgZ (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sun, 9 Jun 2019 10:36:25 -0400
-Received: by mail-lj1-f194.google.com with SMTP id x25so1039334ljh.2
-        for <linux-gpio@vger.kernel.org>; Sun, 09 Jun 2019 07:36:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=JK4vu4sLdSULC2fSMGogH6TEKgCHvesH+mwHY+UBzDY=;
-        b=kBeuKMwwFXVi/W2FO+ZpRO3DvYUswwRt1xpZtOtqqVCchYyTz6lE9ei78oqmmEmVrA
-         4hNHxhi2FYaGSdPSzJbDfa+oPuF2skJ5/4gQVwZ/nvOrFwBdLaSKmXz+m1NYWlBNgwAZ
-         GCNANUYgP4KDcSmCC/lEF/q8DxgXnnECzZI+8ujqwdvPt3zG7xlzkf+/4Gvs5T5g09DX
-         +9Ic62GbnswMqbLDX7Aj6qJLnnDMmKccSkPX5Vf1k0/JIlIu8YEHqgvl7BehWz/Muk1+
-         mqAjGFYG9AFMIfRCniFHeLuXB4nAFYVBWraOgQqFfQsyVara5FCsLkTBYjaST26Fbr9U
-         a5tw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=JK4vu4sLdSULC2fSMGogH6TEKgCHvesH+mwHY+UBzDY=;
-        b=AQa3knoWD6CUVG42bGLpAfIp3N9m4YUCZBxOTxrKIM6DOZgnkyY+c1yKqBbB0lrWkz
-         C+kKqm7z/LWVMii4x5ev9Sp6FV2r3+bIAEInOPVOXjOmMbZys5gnDbxrNNL3wfToAFNX
-         /ENQlptAzt9tY0Ty2G3zBx7mqazBezKJHkKl29oMNXIG9pzHQussrRcZjqrbRwjfPwNw
-         VCdX8XOA3tpo0NCPWRsbmo4TXegYzavFU9g91T7HAkegmMLNoylyNxYGC2B4h7uU1gxZ
-         Fg7uwoAfS16WI0N0OQSQLXMC5H6rrn0SyrkazIBpNKU4TfW226BlnVcDANmnRWDB/Jcg
-         K3Dg==
-X-Gm-Message-State: APjAAAU8NjvCWCdpF39USGjN8WyBTNWtIjzD/rx8qWDYwOfJNePQy4R9
-        9XS5qzgOPYdobUjgab8h8pDMxO4xXMUCrtcosQTecV46
-X-Google-Smtp-Source: APXvYqw97CQhtz/Z07DubzbfOmpbMBvaIzWVgPxSNP/D82OPJh6ZogHQPXicKFxb26EycmA43o+u6osu8RykyNXEbDM=
-X-Received: by 2002:a2e:9e85:: with SMTP id f5mr27624245ljk.104.1560090983783;
- Sun, 09 Jun 2019 07:36:23 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190602210918.32741-1-linus.walleij@linaro.org>
- <CAMuHMdX8idAx9QnOMYyS0htYFw66Zs08pbGb7OEf5ED7Egv9rg@mail.gmail.com>
- <20190604084545.GA1129@kroah.com> <CACRpkdY-HCGd_ScGNNDAOqY66jvfQZ9Gjm7o9tj+YUuxwV8i4g@mail.gmail.com>
- <CAK7LNAT0rMF5U8mOTeA1uggJJUDOArW4JO3Bz9Tf=hQk_64D8Q@mail.gmail.com>
-In-Reply-To: <CAK7LNAT0rMF5U8mOTeA1uggJJUDOArW4JO3Bz9Tf=hQk_64D8Q@mail.gmail.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Sun, 9 Jun 2019 16:36:16 +0200
-Message-ID: <CACRpkdYRHtMB+wyu3DPnjUW642U3LDK2S=_=u18a7Pi3v5K-6Q@mail.gmail.com>
-Subject: Re: [PATCH] pinctrl: nomadik: Fix SPDX tags
-To:     Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc:     Greg KH <gregkh@linuxfoundation.org>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>
-Content-Type: text/plain; charset="UTF-8"
+        id S1727500AbfFIOnb (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sun, 9 Jun 2019 10:43:31 -0400
+Received: from conuserg-11.nifty.com ([210.131.2.78]:27433 "EHLO
+        conuserg-11.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727041AbfFIOnb (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sun, 9 Jun 2019 10:43:31 -0400
+X-Greylist: delayed 776 seconds by postgrey-1.27 at vger.kernel.org; Sun, 09 Jun 2019 10:43:30 EDT
+Received: from grover.flets-west.jp (softbank126125154139.bbtec.net [126.125.154.139]) (authenticated)
+        by conuserg-11.nifty.com with ESMTP id x59EhFnf030551;
+        Sun, 9 Jun 2019 23:43:15 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-11.nifty.com x59EhFnf030551
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1560091395;
+        bh=mhbD8S5r6Dd/oZAAnNntLyx9FTh4P/nE5CCP+9R0SRk=;
+        h=From:To:Cc:Subject:Date:From;
+        b=0M6RuL/KNuNRwWEfi7rYdXDE062I4Q5xbpSsJyxlTFqcefr/j3QhU7wkAzTXViEQJ
+         +fCZ/BIOgqqosktM5zmO3dQ4aUVHpvn1TAw4Jt0XpCeor5hrDcTlmEkMCPGBXXSa8e
+         YCIDrqR1EKMIWviXMaWJzzZcCOy5dA35wtuJrjzvFghJspu2rxMiqjeMzOHTXDYAuy
+         vCaUK0cuK83cYj3ph88g6OLCF8g0gp8j4Bb6/vHq0r7zf9fnDigTORAE3ldYNVDhEY
+         nrhQ54GhpYnYhz7C+NGI4omvB0qI2u41zHo4mlOD96oYI19bQVhMfJSdS9VviG9fRW
+         +srL8MIPtNP7g==
+X-Nifty-SrcIP: [126.125.154.139]
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+To:     linux-gpio@vger.kernel.org,
+        Linus Walleij <linus.walleij@linaro.org>
+Cc:     Masahiro Yamada <yamada.masahiro@socionext.com>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] pinctrl: add include guard to pinctrl-state.h
+Date:   Sun,  9 Jun 2019 23:43:13 +0900
+Message-Id: <20190609144313.4842-1-yamada.masahiro@socionext.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Sun, Jun 9, 2019 at 4:30 PM Masahiro Yamada
-<yamada.masahiro@socionext.com> wrote:
-> On Sat, Jun 8, 2019 at 7:18 AM Linus Walleij <linus.walleij@linaro.org> wrote:
+Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+---
 
-> > I guess I could tag on "-only" to cut down the buzz and make git
-> > resolution happier.
->
-> You do not need to apply this patch.
-> No sense to add the equivalent changes via different trees.
+ include/linux/pinctrl/pinctrl-state.h | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-Hm good point, I should have looked closer to see if the same things
-were identical in both patches :/
+diff --git a/include/linux/pinctrl/pinctrl-state.h b/include/linux/pinctrl/pinctrl-state.h
+index a0e785815a64..635d97e9285e 100644
+--- a/include/linux/pinctrl/pinctrl-state.h
++++ b/include/linux/pinctrl/pinctrl-state.h
+@@ -3,6 +3,9 @@
+  * Standard pin control state definitions
+  */
+ 
++#ifndef __LINUX_PINCTRL_PINCTRL_STATE_H
++#define __LINUX_PINCTRL_PINCTRL_STATE_H
++
+ /**
+  * @PINCTRL_STATE_DEFAULT: the state the pinctrl handle shall be put
+  *	into as default, usually this means the pins are up and ready to
+@@ -31,3 +34,5 @@
+ #define PINCTRL_STATE_INIT "init"
+ #define PINCTRL_STATE_IDLE "idle"
+ #define PINCTRL_STATE_SLEEP "sleep"
++
++#endif /* __LINUX_PINCTRL_PINCTRL_STATE_H */
+-- 
+2.17.1
 
-Right now I can't rebase the tree since I pulled in development from
-submaintainers.
-
-But it's impossible to avoid stepping on each others toes when we do
-treewide changes so let's try to just live with the result that sometimes
-two patches contest about the same changes.
-
-Yours,
-Linus Walleij
