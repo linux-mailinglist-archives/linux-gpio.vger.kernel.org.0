@@ -2,130 +2,96 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id B94E23A271
-	for <lists+linux-gpio@lfdr.de>; Sun,  9 Jun 2019 01:14:32 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B96CB3A4EB
+	for <lists+linux-gpio@lfdr.de>; Sun,  9 Jun 2019 12:58:18 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727406AbfFHXOb (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sat, 8 Jun 2019 19:14:31 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:33197 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726190AbfFHXOb (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sat, 8 Jun 2019 19:14:31 -0400
-Received: by mail-wm1-f65.google.com with SMTP id h19so6507677wme.0
-        for <linux-gpio@vger.kernel.org>; Sat, 08 Jun 2019 16:14:30 -0700 (PDT)
+        id S1728070AbfFIK6S (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sun, 9 Jun 2019 06:58:18 -0400
+Received: from mail-lf1-f46.google.com ([209.85.167.46]:43380 "EHLO
+        mail-lf1-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728029AbfFIK6S (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sun, 9 Jun 2019 06:58:18 -0400
+Received: by mail-lf1-f46.google.com with SMTP id j29so4649960lfk.10
+        for <linux-gpio@vger.kernel.org>; Sun, 09 Jun 2019 03:58:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=3Zp1bn2oYxda6LDTqyZ5GXOuq4BjnJOFiw+QZsnsSzQ=;
-        b=wuM2tsMdlF07OQhHKBfdaPH8QFPb0U1rth7MZGBaMdKTfuacIn2acYCRPtFtUhPq6c
-         TUeW23Qf6cdiKy3kjiAS4zHxDhRU6/LMCNgjQumU5rDkkpnCQH/KQsd3wwqdzxnCkitf
-         xx8f7GC6pv9qKP8pLLwDGTgSjFZsluwtW2SbZ87fEVlwJJGmpu0D6RYboQrj80E9J68y
-         Z71sa83+SauXC+eNiSvXR2l/1W6oAUPpOvubkOIbejayqQUib1mMQFyDoV7/4Di7hPYX
-         82wBi0s3e7tuTsYmIUtCiCSd+svNdKCf3HOVEtqAag4hMDarXW7nCvPo0+YbXoG8xDnM
-         2Alg==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=o1mbpiR+5qYYAg9zrkdTnavnWkH+BH3AIpNtsKGgNZE=;
+        b=NPhtjuO5dVpBnc5LK82hlYwPTdp2+uzxKSaon0bagBU8Lg0Sb1b+nnZmtB8QObZ0lp
+         uccftlzq3nyHvuLFfgLRkaKNCK1eUZalp8Fdu4RJ5Ox/wOlB+3dJpZYyxLnQbMnXHRGf
+         kHtvbhagbg4NqlY4VouvD3QG0nw6XghAnEVuFGsxLLNBRkMxqHv1MfXH4m2ET2TONPyD
+         w0I2lbZgPaopScKrTxj+55TbqHhLLSV3eSRMjC/nkJpLNpXpiVC6m/IxQDsATsPzZzpC
+         GBdlp/I16tzcuTzF2h2t8lEd8vjm4zCte6gTPVMKx2+08UbURpTgmgyPMBW5Sh7qFiEE
+         moTg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=3Zp1bn2oYxda6LDTqyZ5GXOuq4BjnJOFiw+QZsnsSzQ=;
-        b=XbBoLufRcvmlNRHGrrvQxiwHgcD673v6qNnOYx/50n95xfouy/TkgVy2wt0uKL7keh
-         EefkJF2hVUyx+yrVCsAVXWjO9GRcIrnIhcXdukFNo2X9G2uACEnVeikeE6qJAmFT1Ohn
-         +GVa7eq7vzANQ/A4Bvhvu1oxnlHpjobUg5NBuYJkBn2uqBv96MjUMBwr+5MndnCwKzv1
-         SIVWv6ef5YuEH2pqoMSyBf3DAJ8jAO9k40hammkIh0Z6kz5Wf7bAxCGkf92vZGU2y+aQ
-         r/LOuo8mNe+1zWevwBTrNZKbctMoTwfnloW+yYuyjcXGxBk93BxJU2MMGC6OP5wvNvsy
-         tHVA==
-X-Gm-Message-State: APjAAAWnv6efeJ5Z3MMlqlxD4SpnZ/BJRrTAGeUY5PdaXe/lmFCbvKhX
-        jHBn/Idc5wylQKE51FTLnzBRnLbcing=
-X-Google-Smtp-Source: APXvYqzjpnE/WH1WB4sTdu66sWnhJBvWshmJVjhVCXp6UMnklKl5qtP0SBAnBBYD5v4j9tc2nDeilA==
-X-Received: by 2002:a1c:a545:: with SMTP id o66mr8645942wme.138.1560035669245;
-        Sat, 08 Jun 2019 16:14:29 -0700 (PDT)
-Received: from localhost.localdomain (catv-89-135-96-219.catv.broadband.hu. [89.135.96.219])
-        by smtp.gmail.com with ESMTPSA id z17sm5118911wru.21.2019.06.08.16.14.27
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Sat, 08 Jun 2019 16:14:28 -0700 (PDT)
-From:   Linus Walleij <linus.walleij@linaro.org>
-To:     linux-gpio@vger.kernel.org
-Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Federico Vaga <federico.vaga@cern.ch>,
-        Pat Riehecky <riehecky@fnal.gov>,
-        Alessandro Rubini <rubini@gnudd.com>
-Subject: [PATCH] fmc: Decouple from Linux GPIO subsystem
-Date:   Sun,  9 Jun 2019 01:14:30 +0200
-Message-Id: <20190608231430.22916-1-linus.walleij@linaro.org>
-X-Mailer: git-send-email 2.20.1
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=o1mbpiR+5qYYAg9zrkdTnavnWkH+BH3AIpNtsKGgNZE=;
+        b=TJxH4tpMUqRk5zob3jHvbUWL6rJiV/TYSLmg43kmfYZo2Hkj8NlOclJUPYenRA5HF1
+         w+BpZwA3T7IgJpuDOW44I6Ff7QLS/yAv5yg0W/1ohey6TfaulGNirqSydt2deWdQV0yw
+         ttPYeHZkegZReGd93FxZk3iqHEbhiFa17fAVAmLEcUGvATxw5wbNgYgITNzP2rzzU8Ri
+         q0A80pEmbieqBfzMJnHJYa87ZK7eb4azGarTLl2/heHrdytlTq6+3WXe0yTedYHJV+cK
+         F8yIx/HiyeFDqzk0PABnOc09J/gIhO8vIXzD599WBfUWHJXsfd6N9gBKWV47f9GGq1Zo
+         B//Q==
+X-Gm-Message-State: APjAAAVMhswRtIg0ZgB1wW9WhivOAs9X4AHxQ2MzpmEZHau9FZ73qkOD
+        NjMYKYudnAOjA4LzeTvAitRCVdhCrBn7iN2ZAiMEkTUsdhc=
+X-Google-Smtp-Source: APXvYqwtLNGlnRZ9pqmsWhoOKGPmtXrJNoxXkE5wMwxrvUmCavrc8SGmP2RfcRr05jIHzumMXUgtuqJM8oKvb7DHUkQ=
+X-Received: by 2002:ac2:598d:: with SMTP id w13mr30533372lfn.165.1560077896390;
+ Sun, 09 Jun 2019 03:58:16 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <ba89e0fd-c9a9-4326-1fb3-a8b9dcb24601@electromag.com.au>
+In-Reply-To: <ba89e0fd-c9a9-4326-1fb3-a8b9dcb24601@electromag.com.au>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Sun, 9 Jun 2019 12:58:09 +0200
+Message-ID: <CACRpkdZ-2TUrNOZyiJxXfO8iJUyaJRrnQicQirR8+G3M=+an0g@mail.gmail.com>
+Subject: Re: pinctrl: mcp23s08: detected irqchip that is shared with multiple
+ gpiochips - real of false?
+To:     Phil Reid <preid@electromag.com.au>,
+        Marco Felsch <m.felsch@pengutronix.de>,
+        =?UTF-8?B?SmFuIEt1bmRyw6F0?= <jan.kundrat@cesnet.cz>,
+        Lars Poeschel <poeschel@lemonage.de>,
+        Jason Kridner <jkridner@gmail.com>,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Cc:     "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-FMC has its own GPIO handling, the inclusion of <linux/gpio.h>
-is only to reuse some flags that we can just as well provide
-using local defines.
+Added Marco and a few other MCP23s08 people who may be more familiar
+with this code. (The driver is a bit complex.)
 
-Cc: Federico Vaga <federico.vaga@cern.ch>
-Cc: Pat Riehecky <riehecky@fnal.gov>
-Cc: Alessandro Rubini <rubini@gnudd.com>
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
----
-I will merge this into the GPIO tree unless there are protests
-against it.
----
- drivers/fmc/fmc-trivial.c |  1 -
- include/linux/fmc.h       | 18 ++++++++++--------
- 2 files changed, 10 insertions(+), 9 deletions(-)
+On Thu, Jun 6, 2019 at 10:59 AM Phil Reid <preid@electromag.com.au> wrote:
 
-diff --git a/drivers/fmc/fmc-trivial.c b/drivers/fmc/fmc-trivial.c
-index 8defdee3e3a3..b99dbc7ee203 100644
---- a/drivers/fmc/fmc-trivial.c
-+++ b/drivers/fmc/fmc-trivial.c
-@@ -15,7 +15,6 @@
- #include <linux/module.h>
- #include <linux/init.h>
- #include <linux/interrupt.h>
--#include <linux/gpio.h>
- #include <linux/fmc.h>
- 
- static struct fmc_driver t_drv; /* initialized later */
-diff --git a/include/linux/fmc.h b/include/linux/fmc.h
-index 3dc8a1b2db7b..f0d482d29df7 100644
---- a/include/linux/fmc.h
-+++ b/include/linux/fmc.h
-@@ -101,7 +101,7 @@ struct fmc_gpio {
- 	char *carrier_name; /* name or NULL for virtual pins */
- 	int gpio;
- 	int _gpio;	/* internal use by the carrier */
--	int mode;	/* GPIOF_DIR_OUT etc, from <linux/gpio.h> */
-+	int mode;	/* GPIOF_DIR_OUT etc */
- 	int irqmode;	/* IRQF_TRIGGER_LOW and so on */
- };
- 
-@@ -115,13 +115,15 @@ struct fmc_gpio {
- #define FMC_GPIO_USER(x)	((x) + 0x1400)	/*  256 of them */
- /* We may add SCL and SDA, or other roles if the need arises */
- 
--/* GPIOF_DIR_IN etc are missing before 3.0. copy from <linux/gpio.h> */
--#ifndef GPIOF_DIR_IN
--#  define GPIOF_DIR_OUT   (0 << 0)
--#  define GPIOF_DIR_IN    (1 << 0)
--#  define GPIOF_INIT_LOW  (0 << 1)
--#  define GPIOF_INIT_HIGH (1 << 1)
--#endif
-+/*
-+ * These are similar to the legacy Linux GPIO defines from <linux/gpio.h>
-+ * but in fact FMC has its own GPIO handling and is not using the Linux
-+ * GPIO subsystem.
-+ */
-+#define GPIOF_DIR_OUT   (0 << 0)
-+#define GPIOF_DIR_IN    (1 << 0)
-+#define GPIOF_INIT_LOW  (0 << 1)
-+#define GPIOF_INIT_HIGH (1 << 1)
- 
- /*
-  * The operations are offered by each carrier and should make driver
--- 
-2.20.1
+> Using kernel 5.1 I'm getting the following message:
+> "detected irqchip that is shared with multiple gpiochips: please fix the driver"
+>
+> Which I believe should be fixed by:
+> 19ab5ca "pinctrl: mcp23s08: Allocate irq_chip dynamic"
+>
+> However mcp23s08_probe_one() ends up calling gpiochip_set_irq_hooks() twice.
 
+It looks strange when I look at the mcp23s08_probe_one() function
+because it goes like:
+
+if (mcp->irq && mcp->irq_controller) {
+    ret = mcp23s08_irqchip_setup(mcp);
+    if (ret)
+        goto fail;
+}
+(...)
+if (mcp->irq)
+    ret = mcp23s08_irq_setup(mcp);
+
+That seems wrong... but overall the code in this probe_one is pretty hard to
+follow and probably needs some refactoring.
+
+This comes from f259f896f234 ("pinctrl: mcp23s08: fix irq and irqchip
+setup order")
+by Marco, Marco can you look into this and help us figure out why this happens?
+
+Yours,
+Linus Walleij
