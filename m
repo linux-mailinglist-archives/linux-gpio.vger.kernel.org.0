@@ -2,53 +2,54 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id EFEBB3AC1A
-	for <lists+linux-gpio@lfdr.de>; Sun,  9 Jun 2019 23:50:31 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4CBAE3AC1F
+	for <lists+linux-gpio@lfdr.de>; Sun,  9 Jun 2019 23:52:22 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725933AbfFIVua (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sun, 9 Jun 2019 17:50:30 -0400
-Received: from mail-lf1-f43.google.com ([209.85.167.43]:38847 "EHLO
-        mail-lf1-f43.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728635AbfFIVua (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sun, 9 Jun 2019 17:50:30 -0400
-Received: by mail-lf1-f43.google.com with SMTP id b11so5214567lfa.5
-        for <linux-gpio@vger.kernel.org>; Sun, 09 Jun 2019 14:50:29 -0700 (PDT)
+        id S1729538AbfFIVwV (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sun, 9 Jun 2019 17:52:21 -0400
+Received: from mail-lj1-f176.google.com ([209.85.208.176]:46583 "EHLO
+        mail-lj1-f176.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729529AbfFIVwV (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sun, 9 Jun 2019 17:52:21 -0400
+Received: by mail-lj1-f176.google.com with SMTP id v24so1798902ljg.13
+        for <linux-gpio@vger.kernel.org>; Sun, 09 Jun 2019 14:52:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=He8uuSEDC/b/uWidg8RVfT3AGe4hP03AsY17X0DSxgk=;
-        b=zlJsT0l/3IuyndfDS2BTaHnjJraASu525KwaMplyFARGp91fxTu7ST6SIuVl4iRefh
-         Zw2rTEVnDvjnMuSCPzdUGoVDoRp8QrZ61tK4XFRB4D3Zl0L6VgXr//I766ZqEDgE17BM
-         ARN60spGcN65rNvB7ab14R7DSGuQndhDP7PBCgB3CP8DrR7V+VOu1ATbAAdkQfPQj4IY
-         quGE/acE6nwNwUq5m4i9HC26SOp56AoTeO2Nuk1flxiykzI9jViwQQchw1hlF1ArhsRC
-         N14lVBN37nhxWkXhB1kOBhH6Fg5Nahbz9F5Ozo1lzj8nZbQmTBZ4tBPY5d9h7mtBuiCS
-         cZyA==
+        bh=3u47NK04VLWnks2ECFn41iwvdVn3zhAxLH2OdU56Dmw=;
+        b=Cl0rVA3z38e6L8+wW94OpWj72TSurDFbVXa3pn24DZWJJzrOrvC+fdcaUtFQndqIgP
+         txxwbLiEo1JBtH/op3umTaxckv2djd/WaR5I5qa+EGNTpKe0HtK0Tq8lpu4RgQ+aidH1
+         RQN+njo2AS3nHqvbBnl0jOecogbHfZyq2ZQoBr6Un7SjO9AiaCcnPinHmJPgJB5ysgy5
+         i4n1mXa2crZfqK3FvymkbMZneKJ/uEnHKZlQ/hZb3BaKT89F9FiUvIiAc0qIjTvgsyHc
+         GdMMVySRP+4084kUDTBoax7mRi1FuV0caKswGmr9183KWlYwKXnOIZg9Gxdz/EPAQTx5
+         IU6A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=He8uuSEDC/b/uWidg8RVfT3AGe4hP03AsY17X0DSxgk=;
-        b=ESqg/V3vUgL2hSjsPXCh2dXeC/FuvFd4iHbqwlv626sLDbwmpAgo1z5O9B0QeCATqI
-         1neqpTnTKaX0T+ybH/rDtAIj6YcZ3X2Ha3jPRAr94wpBd7dUx1rIi9f4t3Er+yHpEXV3
-         rFvFzqQxRMs3z6QrQRjs/KQYuOi/lNRNqPlixEdxt61R+uVBpYTV/s4ufqsRneJLgHLs
-         kYk+G2DpZK9siqybM82ACgU9emyF+ph42ogCLQOrMv4OM9/omSKsajHyfDGaj8K8rw1I
-         rzKEjy1R0RdBq31kTEmp8sUYjvhrjMXmT/UV77gsFVEo8AmN/LGJEnOWMUblWsE2vaOG
-         Qtyw==
-X-Gm-Message-State: APjAAAVhODj4l9JIjEuQ5DgjWMPb5XbeREPfljk58B7shFYElD0yl+bI
-        /MgfO7SNwuuy8d4/X57xISZ01HffADqoZgYjMfj7xA==
-X-Google-Smtp-Source: APXvYqyf2NDu19vowinqKXukK4VxadyL6zt3qyCVskmgqawUHY4dBR21FjzW4762E23uuSqmCFocFD/qpnabF+6julg=
-X-Received: by 2002:a19:dc0d:: with SMTP id t13mr9951237lfg.152.1560117028189;
- Sun, 09 Jun 2019 14:50:28 -0700 (PDT)
+        bh=3u47NK04VLWnks2ECFn41iwvdVn3zhAxLH2OdU56Dmw=;
+        b=W3VsAMeDE5D5JDGULBVBpX8plTp/d+KsiWZME20a4AdPZKmq1bMCAbxSeZhGXzn+60
+         UzsrFENHFI33attDWulQZllPT6Xj/zlq54D29qhhAY0qaDe6tnZr6KsaQyh9xC7hVSBb
+         gbIXr5Ac5ZycdPH5XrnHYltivci3EiND+UqmqONJEOOCi5q/oFJhp+CMETTizmOysry0
+         j0HOn0V9ZCweFdHrRp7PgRBj+zgXJXcSN57zWdSHh1q19mDq8vuZoOPOR/oryWm+2V0N
+         4pp0a1+gCEjiuftiBgTtDNtZgiDstEapJ/lSD/H+DTbR18QcQo+6ss4Iz0TCM7bgDeK1
+         t8IQ==
+X-Gm-Message-State: APjAAAXnhJ1FBj+OL75fw1iOF0QU22t4Lmlll5TrsggVH/xCqiRL/Ijv
+        DpjOsIoRYvx1mhWvEOTDtuKq7HUMKn6E1GQnlwPLJw==
+X-Google-Smtp-Source: APXvYqxxvAPH8DO2c0X0YBL0L2eBq2A1RkbOzyw6mq+phUKB0rDXYXygI1YbFcBf/zVxAnxBKN7lStrxUTnG75YtXlc=
+X-Received: by 2002:a2e:9753:: with SMTP id f19mr10655574ljj.113.1560117139172;
+ Sun, 09 Jun 2019 14:52:19 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190609180621.7607-1-martin.blumenstingl@googlemail.com> <20190609180621.7607-4-martin.blumenstingl@googlemail.com>
-In-Reply-To: <20190609180621.7607-4-martin.blumenstingl@googlemail.com>
+References: <20190609180621.7607-1-martin.blumenstingl@googlemail.com> <20190609204510.GB8247@lunn.ch>
+In-Reply-To: <20190609204510.GB8247@lunn.ch>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Sun, 9 Jun 2019 23:50:21 +0200
-Message-ID: <CACRpkdZCbFiUfW-qOM1Hxuj0e5TC8ViMuiz-VeVjSYP8A9sN3A@mail.gmail.com>
-Subject: Re: [RFC next v1 3/5] net: stmmac: use GPIO descriptors in stmmac_mdio_reset
-To:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Cc:     netdev <netdev@vger.kernel.org>,
+Date:   Sun, 9 Jun 2019 23:52:12 +0200
+Message-ID: <CACRpkdbOnxZJZ=Lvv0mbnrCg8kPWyeRsBbOa2cUiwjcPnR=4RA@mail.gmail.com>
+Subject: Re: [RFC next v1 0/5] stmmac: honor the GPIO flags for the PHY reset GPIO
+To:     Andrew Lunn <andrew@lunn.ch>
+Cc:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        netdev <netdev@vger.kernel.org>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
         "open list:ARM/Amlogic Meson..." <linux-amlogic@lists.infradead.org>,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>,
@@ -57,37 +58,25 @@ Cc:     netdev <netdev@vger.kernel.org>,
         Jose Abreu <joabreu@synopsys.com>,
         "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
         <devicetree@vger.kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Neil Armstrong <narmstrong@baylibre.com>,
         Kevin Hilman <khilman@baylibre.com>,
-        Neil Armstrong <narmstrong@baylibre.com>
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Sun, Jun 9, 2019 at 8:06 PM Martin Blumenstingl
-<martin.blumenstingl@googlemail.com> wrote:
+On Sun, Jun 9, 2019 at 10:45 PM Andrew Lunn <andrew@lunn.ch> wrote:
 
-> Switch stmmac_mdio_reset to use GPIO descriptors. GPIO core handles the
-> "snps,reset-gpio" for GPIO descriptors so we don't need to take care of
-> it inside the driver anymore.
->
-> The advantage of this is that we now preserve the GPIO flags which are
-> passed via devicetree. This is required on some newer Amlogic boards
-> which use an Open Drain pin for the reset GPIO. This pin can only output
-> a LOW signal or switch to input mode but it cannot output a HIGH signal.
-> There are already devicetree bindings for these special cases and GPIO
-> core already takes care of them but only if we use GPIO descriptors
-> instead of GPIO numbers.
->
-> Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+> Linus can probably create a stable branch with the GPIO changes, which
+> David can pull into net-next, and then apply the stmmac changes on
+> top.
 
-This is in line with how I want the gpiolib to just swallow all quirks,
-so:
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+Sure thing, just tell me what to queue and I'll create an immutable
+branch for this that David can pull.
 
 Yours,
 Linus Walleij
