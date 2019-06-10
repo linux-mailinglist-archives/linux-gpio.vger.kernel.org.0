@@ -2,77 +2,73 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 1CB2E3B73F
-	for <lists+linux-gpio@lfdr.de>; Mon, 10 Jun 2019 16:25:06 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8D65A3B7C2
+	for <lists+linux-gpio@lfdr.de>; Mon, 10 Jun 2019 16:51:34 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403865AbfFJOZF (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 10 Jun 2019 10:25:05 -0400
-Received: from mail-qk1-f196.google.com ([209.85.222.196]:33118 "EHLO
-        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2403856AbfFJOZF (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 10 Jun 2019 10:25:05 -0400
-Received: by mail-qk1-f196.google.com with SMTP id r6so5642449qkc.0
-        for <linux-gpio@vger.kernel.org>; Mon, 10 Jun 2019 07:25:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=AxTmTaTGovdwJKYxPDbL1EHD+aiuBq1QqWwWhlFLw7k=;
-        b=eX0ysJUZo0vOp40lQ6sd2i9rIWMxEF1pJ+MZCrjdGJMPDEChOT3O5zFKqRs60kPwSt
-         VfRb2qLf+rWpZkxDFUp5yISPz01Du6omZOCeK4taggYvyAQkpKYagYnbHdzp7lC3R78B
-         TSISLGOr2yErIpapv32j5bFtR1tTiSH0sDkjTJdZ35k/gOgFoz9AjyeT9DhmKA4x9iR0
-         cIrQmOX0DllA8ILu7shQk7kwzLBtPA8hGvKR2QngsMLbdC1pLMX5PfNa++ccQEb5pX2G
-         74FQhgutQLzyHSLImrv3B6g0s5msxHGHMMfJWqVOOi08z32WouD18r9mYVfkZnaqH2SN
-         BK1w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=AxTmTaTGovdwJKYxPDbL1EHD+aiuBq1QqWwWhlFLw7k=;
-        b=n93zzu049t/6+rAf24gA5i0DeSQWl/IlZfLTOYwofG3jo6RMe7X0a7+3V1Na6mvwaF
-         muNq44PIKlJyKV/xlCpUx+8xFtV9XNHJt7MqQc518QJg79zunSkQQURtWWRSIP58AExH
-         WBQrTTbf2ww17DbqXlbFH73mGP0zDorInkahIfZKCtrwZk0N0jyz0vQrJEPSISR4Gms+
-         33sqFuPGeyd1BB0BhQ8HJJyiPr1NhwfuDJpTxO5K5TdkivRx2wYgrUn4nvw5m4lzrT8E
-         Z03cvzJGB2UT3cT6bnkiypnFafUnX6dtf5BxXtHGnGYSC7wXMweuML4eH0aPTdFrk00r
-         9S0A==
-X-Gm-Message-State: APjAAAUkDLgCujmwKhCtsUYKN2YKGbdZ3pfgGuNgKdzzKrv4amcD8tbO
-        GKQ//mIT14Mgjt51hUHBgj+YbF+TUe7yaNLFNJ4eew==
-X-Google-Smtp-Source: APXvYqzr68PG6EYbXa+8wsFv5OiYcjlbWhv2n2YugxrUYAMID8v5lALEMXfpkzEJtVO3RcgMahyWSw7mrK3qlvEOvFQ=
-X-Received: by 2002:a05:620a:1407:: with SMTP id d7mr44558379qkj.20.1560176704327;
- Mon, 10 Jun 2019 07:25:04 -0700 (PDT)
+        id S2390109AbfFJOvd (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 10 Jun 2019 10:51:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49490 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2389123AbfFJOvd (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Mon, 10 Jun 2019 10:51:33 -0400
+Received: from kernel.org (unknown [104.132.0.74])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id DD1132085A;
+        Mon, 10 Jun 2019 14:51:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1560178293;
+        bh=/U+wRbtteOILfQyqQEFAX34EWpIssdlfePMqvbBQcok=;
+        h=In-Reply-To:References:To:From:Cc:Subject:Date:From;
+        b=Ni0M5RTJQlOeKFtGcIhyjvjbFQh9+sc5iJLSUSog2oF2FOHTnobpDTXHykwpzxgoP
+         TZDXbEjB6h0jAElBvVK5dtBxqTyu8J34WTjIwPSqdNbb/z4yUNw2TDvhq+BsP3AHAK
+         dF5aylUD2a3MN7MyeBl1zrHT8NaBG5H7Zs8xVfko=
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-References: <1560160211-12748-1-git-send-email-preid@electromag.com.au>
-In-Reply-To: <1560160211-12748-1-git-send-email-preid@electromag.com.au>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Mon, 10 Jun 2019 16:24:58 +0200
-Message-ID: <CACRpkdYj4E37VnCmzAeG95PfZrUKThQDJFoWCoD4kHKwfE0SMw@mail.gmail.com>
-Subject: Re: [PATCH 1/1] gpio: altera: Allocate irq_chip dynamically
-To:     Phil Reid <preid@electromag.com.au>
-Cc:     Tien Hock Loh <thloh@altera.com>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <CACRpkdbdkbSofrvJ0hSV66DX+DcwWXp0ONDjx0265Pz50yE8TA@mail.gmail.com>
+References: <1559285512-27784-1-git-send-email-tengfeif@codeaurora.org> <CACRpkdbdkbSofrvJ0hSV66DX+DcwWXp0ONDjx0265Pz50yE8TA@mail.gmail.com>
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Niklas Cassel <niklas.cassel@linaro.org>,
+        Tengfei Fan <tengfeif@codeaurora.org>
+From:   Stephen Boyd <sboyd@kernel.org>
+Cc:     Andy Gross <andy.gross@linaro.org>,
+        David Brown <david.brown@linaro.org>,
+        MSM <linux-arm-msm@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] pinctrl: qcom: Clear status bit on irq_unmask
+User-Agent: alot/0.8.1
+Date:   Mon, 10 Jun 2019 07:51:32 -0700
+Message-Id: <20190610145132.DD1132085A@mail.kernel.org>
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Jun 10, 2019 at 11:50 AM Phil Reid <preid@electromag.com.au> wrote:
+Quoting Linus Walleij (2019-06-07 14:08:10)
+> On Fri, May 31, 2019 at 8:52 AM Tengfei Fan <tengfeif@codeaurora.org> wro=
+te:
+>=20
+> > The gpio interrupt status bit is getting set after the
+> > irq is disabled and causing an immediate interrupt after
+> > enablling the irq, so clear status bit on irq_unmask.
+> >
+> > Signed-off-by: Tengfei Fan <tengfeif@codeaurora.org>
+>=20
+> This looks pretty serious, can one of the Qcom maintainers ACK
+> this?
+>=20
+> Should it be sent to fixes and even stable?
+>=20
+> Fixes: tag?
+>=20
 
-> Keeping the irq_chip definition static shares it with multiple instances
-> of the altera gpiochip in the system. This is bad and now we get this
-> warning from gpiolib core:
->
-> "detected irqchip that is shared with multiple gpiochips: please fix the
-> driver."
->
-> Hence, move the irq_chip definition from being driver static into the
-> struct altera_gpio_chips. So a unique irq_chip is used for each gpiochip
-> instance.
->
-> Signed-off-by: Phil Reid <preid@electromag.com.au>
+How is the interrupt status bit getting set after the irq is disabled?
+It looks like this is a level type interrupt? I thought that after
+commit b55326dc969e ("pinctrl: msm: Really mask level interrupts to
+prevent latching") this wouldn't be a problem. Am I wrong, or is qcom
+just clearing out patches on drivers and this is the last one that needs
+to be upstreamed?
 
-Patch applied.
-
-Yours,
-Linus Walleij
