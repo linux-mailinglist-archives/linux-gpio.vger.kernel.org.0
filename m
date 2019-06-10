@@ -2,77 +2,77 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 237203B72F
-	for <lists+linux-gpio@lfdr.de>; Mon, 10 Jun 2019 16:23:21 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1CB2E3B73F
+	for <lists+linux-gpio@lfdr.de>; Mon, 10 Jun 2019 16:25:06 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390793AbfFJOXU (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 10 Jun 2019 10:23:20 -0400
-Received: from mail-qt1-f196.google.com ([209.85.160.196]:42564 "EHLO
-        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390708AbfFJOXU (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 10 Jun 2019 10:23:20 -0400
-Received: by mail-qt1-f196.google.com with SMTP id s15so10741509qtk.9
-        for <linux-gpio@vger.kernel.org>; Mon, 10 Jun 2019 07:23:19 -0700 (PDT)
+        id S2403865AbfFJOZF (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 10 Jun 2019 10:25:05 -0400
+Received: from mail-qk1-f196.google.com ([209.85.222.196]:33118 "EHLO
+        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2403856AbfFJOZF (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 10 Jun 2019 10:25:05 -0400
+Received: by mail-qk1-f196.google.com with SMTP id r6so5642449qkc.0
+        for <linux-gpio@vger.kernel.org>; Mon, 10 Jun 2019 07:25:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=Kyt1gkFUXh0ymRm66FYg+aduOK7LX9ifxRJWXh+F5zk=;
-        b=H1QVvyx8oEFxT5H2+UZGtCWe7i4Egge2DZC889UbwMsClJs5kJCKkBt4kp6L+3cPdf
-         xZlw1bJpa0aMWD7FaZod6fdhyLLzzNQ2WatmlbRi9Xc2DxrQoUekqObvo8U325jbCkIk
-         TkV5ZOv4zXEV+CrNl9++JYpECLS2XgBPymyuAZOCYeA6bA5dNUk0VemPOHI2jUsbuQxs
-         UCll9NGYwqSh/vcfH4FKIzskM2SZhAdEqYIRjEX1mH5mU5PUFkbgKDKwuhaA6eaRZ/+9
-         n+ku5T2rh2tmyIp2cVYOlaH8GbAtMGBctmaKxVpQZ59nR7zQ/15y0aMBUgTJcpgT/UDN
-         j74w==
+        bh=AxTmTaTGovdwJKYxPDbL1EHD+aiuBq1QqWwWhlFLw7k=;
+        b=eX0ysJUZo0vOp40lQ6sd2i9rIWMxEF1pJ+MZCrjdGJMPDEChOT3O5zFKqRs60kPwSt
+         VfRb2qLf+rWpZkxDFUp5yISPz01Du6omZOCeK4taggYvyAQkpKYagYnbHdzp7lC3R78B
+         TSISLGOr2yErIpapv32j5bFtR1tTiSH0sDkjTJdZ35k/gOgFoz9AjyeT9DhmKA4x9iR0
+         cIrQmOX0DllA8ILu7shQk7kwzLBtPA8hGvKR2QngsMLbdC1pLMX5PfNa++ccQEb5pX2G
+         74FQhgutQLzyHSLImrv3B6g0s5msxHGHMMfJWqVOOi08z32WouD18r9mYVfkZnaqH2SN
+         BK1w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=Kyt1gkFUXh0ymRm66FYg+aduOK7LX9ifxRJWXh+F5zk=;
-        b=e5sWCY3lBev+9paNf8MuzvNZOqfcFVso2r41RHrVK7+tTFXzzp3dJ41jevhY5IraOq
-         tqdcZj7F4Hr8d0f7NMheHkvKnnmyqoOkZQe6wiF/YQW2PMieebDiO9He0JgeiJ2hOkd4
-         R1goIC5rs7UV55mncu22G2Lf3aH5XzSl5oMXw4xnAPHYFGvUXVG1zbYi30ryVCB+eDVp
-         01SumNPEsKmuDlfWxkMo+GjmoMLHjfgsi4T2Z+nFCRkvV1c2jzpbKM2S5qeFE+Iv9QA9
-         VOD1aqIxrgcjb+RzCCvdV9s5ik//73LE6iBkCV/8vS3L20ts3Sf7AHQ8ve5coM2Os/ar
-         ePJw==
-X-Gm-Message-State: APjAAAUSKaxELUwXvhvJNYid5ZEnTTkJ68KOjOBR3ws9UpAAvlue7SPs
-        crPQfZk49tZgBdI3gFWv9khCh8PoLkjPd1xtxURDa0bR
-X-Google-Smtp-Source: APXvYqx0uwDgR25sDw86oo3LGmR++J1Q1/6GoGKkEofglwXSEtjAhcbMJd5fM3i0X/iVfcd0DwXdwW225Gb3vnR9xHw=
-X-Received: by 2002:ac8:2bb3:: with SMTP id m48mr58492402qtm.218.1560176599278;
- Mon, 10 Jun 2019 07:23:19 -0700 (PDT)
+        bh=AxTmTaTGovdwJKYxPDbL1EHD+aiuBq1QqWwWhlFLw7k=;
+        b=n93zzu049t/6+rAf24gA5i0DeSQWl/IlZfLTOYwofG3jo6RMe7X0a7+3V1Na6mvwaF
+         muNq44PIKlJyKV/xlCpUx+8xFtV9XNHJt7MqQc518QJg79zunSkQQURtWWRSIP58AExH
+         WBQrTTbf2ww17DbqXlbFH73mGP0zDorInkahIfZKCtrwZk0N0jyz0vQrJEPSISR4Gms+
+         33sqFuPGeyd1BB0BhQ8HJJyiPr1NhwfuDJpTxO5K5TdkivRx2wYgrUn4nvw5m4lzrT8E
+         Z03cvzJGB2UT3cT6bnkiypnFafUnX6dtf5BxXtHGnGYSC7wXMweuML4eH0aPTdFrk00r
+         9S0A==
+X-Gm-Message-State: APjAAAUkDLgCujmwKhCtsUYKN2YKGbdZ3pfgGuNgKdzzKrv4amcD8tbO
+        GKQ//mIT14Mgjt51hUHBgj+YbF+TUe7yaNLFNJ4eew==
+X-Google-Smtp-Source: APXvYqzr68PG6EYbXa+8wsFv5OiYcjlbWhv2n2YugxrUYAMID8v5lALEMXfpkzEJtVO3RcgMahyWSw7mrK3qlvEOvFQ=
+X-Received: by 2002:a05:620a:1407:: with SMTP id d7mr44558379qkj.20.1560176704327;
+ Mon, 10 Jun 2019 07:25:04 -0700 (PDT)
 MIME-Version: 1.0
-References: <1559927056-12064-1-git-send-email-hancock@sedsystems.ca>
-In-Reply-To: <1559927056-12064-1-git-send-email-hancock@sedsystems.ca>
+References: <1560160211-12748-1-git-send-email-preid@electromag.com.au>
+In-Reply-To: <1560160211-12748-1-git-send-email-preid@electromag.com.au>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Mon, 10 Jun 2019 16:23:13 +0200
-Message-ID: <CACRpkdZbKF7Pq+NWNVi-8+f-EBQjVjA5xL3gpP-jEspZy3KyKw@mail.gmail.com>
-Subject: Re: [PATCH v3] gpio: xilinx: convert from OF GPIO to standard devm APIs
-To:     Robert Hancock <hancock@sedsystems.ca>
-Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+Date:   Mon, 10 Jun 2019 16:24:58 +0200
+Message-ID: <CACRpkdYj4E37VnCmzAeG95PfZrUKThQDJFoWCoD4kHKwfE0SMw@mail.gmail.com>
+Subject: Re: [PATCH 1/1] gpio: altera: Allocate irq_chip dynamically
+To:     Phil Reid <preid@electromag.com.au>
+Cc:     Tien Hock Loh <thloh@altera.com>,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Michal Simek <michal.simek@xilinx.com>,
-        Shubhrajyoti Datta <shubhraj@xilinx.com>
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Jun 7, 2019 at 7:04 PM Robert Hancock <hancock@sedsystems.ca> wrote:
+On Mon, Jun 10, 2019 at 11:50 AM Phil Reid <preid@electromag.com.au> wrote:
 
-> This driver was using the OF GPIO helper API, but barely used any of its
-> features and it cost more code than it saved. Also, the OF GPIO code is
-> now deprecated. Convert it to use a more standard setup and use devm
-> APIs for initialization to avoid the need for a remove function.
+> Keeping the irq_chip definition static shares it with multiple instances
+> of the altera gpiochip in the system. This is bad and now we get this
+> warning from gpiolib core:
 >
-> Our rationale for this change is that we are using the Xilinx GPIO with
-> resources injected using the MFD core rather than on the device tree
-> itself. Using platform rather than OF-specific resources allows this to
-> work for free.
+> "detected irqchip that is shared with multiple gpiochips: please fix the
+> driver."
 >
-> Signed-off-by: Robert Hancock <hancock@sedsystems.ca>
+> Hence, move the irq_chip definition from being driver static into the
+> struct altera_gpio_chips. So a unique irq_chip is used for each gpiochip
+> instance.
+>
+> Signed-off-by: Phil Reid <preid@electromag.com.au>
 
-Patch applied with Michal's ACK.
+Patch applied.
 
 Yours,
 Linus Walleij
