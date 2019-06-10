@@ -2,119 +2,77 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id A7EFC3B672
-	for <lists+linux-gpio@lfdr.de>; Mon, 10 Jun 2019 15:51:19 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 237203B72F
+	for <lists+linux-gpio@lfdr.de>; Mon, 10 Jun 2019 16:23:21 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390529AbfFJNvS (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 10 Jun 2019 09:51:18 -0400
-Received: from relay4-d.mail.gandi.net ([217.70.183.196]:43071 "EHLO
-        relay4-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390306AbfFJNvS (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 10 Jun 2019 09:51:18 -0400
-X-Originating-IP: 90.88.159.246
-Received: from localhost (aaubervilliers-681-1-40-246.w90-88.abo.wanadoo.fr [90.88.159.246])
-        (Authenticated sender: maxime.ripard@bootlin.com)
-        by relay4-d.mail.gandi.net (Postfix) with ESMTPSA id 22AD7E0004;
-        Mon, 10 Jun 2019 13:51:09 +0000 (UTC)
-Date:   Mon, 10 Jun 2019 15:51:09 +0200
-From:   Maxime Ripard <maxime.ripard@bootlin.com>
-To:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Cc:     Andrew Lunn <andrew@lunn.ch>, netdev@vger.kernel.org,
-        linux-gpio@vger.kernel.org, linux-amlogic@lists.infradead.org,
-        linus.walleij@linaro.org, bgolaszewski@baylibre.com,
-        peppe.cavallaro@st.com, alexandre.torgue@st.com,
-        joabreu@synopsys.com, devicetree@vger.kernel.org,
-        Neil Armstrong <narmstrong@baylibre.com>, khilman@baylibre.com,
-        linux-kernel@vger.kernel.org, davem@davemloft.net,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [RFC next v1 0/5] stmmac: honor the GPIO flags for the PHY reset
- GPIO
-Message-ID: <20190610135109.7alkvruvw2jbtwph@flea>
-References: <20190609180621.7607-1-martin.blumenstingl@googlemail.com>
- <20190609204510.GB8247@lunn.ch>
- <20190610114700.tymqzzax334ahtz4@flea>
- <CAFBinCCs5pa1QmaV32Dk9rOADKGXXFpZsSK=LUk4CGWMrG5VUQ@mail.gmail.com>
+        id S2390793AbfFJOXU (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 10 Jun 2019 10:23:20 -0400
+Received: from mail-qt1-f196.google.com ([209.85.160.196]:42564 "EHLO
+        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390708AbfFJOXU (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 10 Jun 2019 10:23:20 -0400
+Received: by mail-qt1-f196.google.com with SMTP id s15so10741509qtk.9
+        for <linux-gpio@vger.kernel.org>; Mon, 10 Jun 2019 07:23:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Kyt1gkFUXh0ymRm66FYg+aduOK7LX9ifxRJWXh+F5zk=;
+        b=H1QVvyx8oEFxT5H2+UZGtCWe7i4Egge2DZC889UbwMsClJs5kJCKkBt4kp6L+3cPdf
+         xZlw1bJpa0aMWD7FaZod6fdhyLLzzNQ2WatmlbRi9Xc2DxrQoUekqObvo8U325jbCkIk
+         TkV5ZOv4zXEV+CrNl9++JYpECLS2XgBPymyuAZOCYeA6bA5dNUk0VemPOHI2jUsbuQxs
+         UCll9NGYwqSh/vcfH4FKIzskM2SZhAdEqYIRjEX1mH5mU5PUFkbgKDKwuhaA6eaRZ/+9
+         n+ku5T2rh2tmyIp2cVYOlaH8GbAtMGBctmaKxVpQZ59nR7zQ/15y0aMBUgTJcpgT/UDN
+         j74w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Kyt1gkFUXh0ymRm66FYg+aduOK7LX9ifxRJWXh+F5zk=;
+        b=e5sWCY3lBev+9paNf8MuzvNZOqfcFVso2r41RHrVK7+tTFXzzp3dJ41jevhY5IraOq
+         tqdcZj7F4Hr8d0f7NMheHkvKnnmyqoOkZQe6wiF/YQW2PMieebDiO9He0JgeiJ2hOkd4
+         R1goIC5rs7UV55mncu22G2Lf3aH5XzSl5oMXw4xnAPHYFGvUXVG1zbYi30ryVCB+eDVp
+         01SumNPEsKmuDlfWxkMo+GjmoMLHjfgsi4T2Z+nFCRkvV1c2jzpbKM2S5qeFE+Iv9QA9
+         VOD1aqIxrgcjb+RzCCvdV9s5ik//73LE6iBkCV/8vS3L20ts3Sf7AHQ8ve5coM2Os/ar
+         ePJw==
+X-Gm-Message-State: APjAAAUSKaxELUwXvhvJNYid5ZEnTTkJ68KOjOBR3ws9UpAAvlue7SPs
+        crPQfZk49tZgBdI3gFWv9khCh8PoLkjPd1xtxURDa0bR
+X-Google-Smtp-Source: APXvYqx0uwDgR25sDw86oo3LGmR++J1Q1/6GoGKkEofglwXSEtjAhcbMJd5fM3i0X/iVfcd0DwXdwW225Gb3vnR9xHw=
+X-Received: by 2002:ac8:2bb3:: with SMTP id m48mr58492402qtm.218.1560176599278;
+ Mon, 10 Jun 2019 07:23:19 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="hlwqgl7jkkjm4sqs"
-Content-Disposition: inline
-In-Reply-To: <CAFBinCCs5pa1QmaV32Dk9rOADKGXXFpZsSK=LUk4CGWMrG5VUQ@mail.gmail.com>
-User-Agent: NeoMutt/20180716
+References: <1559927056-12064-1-git-send-email-hancock@sedsystems.ca>
+In-Reply-To: <1559927056-12064-1-git-send-email-hancock@sedsystems.ca>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Mon, 10 Jun 2019 16:23:13 +0200
+Message-ID: <CACRpkdZbKF7Pq+NWNVi-8+f-EBQjVjA5xL3gpP-jEspZy3KyKw@mail.gmail.com>
+Subject: Re: [PATCH v3] gpio: xilinx: convert from OF GPIO to standard devm APIs
+To:     Robert Hancock <hancock@sedsystems.ca>
+Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Michal Simek <michal.simek@xilinx.com>,
+        Shubhrajyoti Datta <shubhraj@xilinx.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+On Fri, Jun 7, 2019 at 7:04 PM Robert Hancock <hancock@sedsystems.ca> wrote:
 
---hlwqgl7jkkjm4sqs
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-
-Hi Martin,
-
-On Mon, Jun 10, 2019 at 02:31:17PM +0200, Martin Blumenstingl wrote:
-> On Mon, Jun 10, 2019 at 1:47 PM Maxime Ripard <maxime.ripard@bootlin.com> wrote:
-> >
-> > Hi Andrew,
-> >
-> > On Sun, Jun 09, 2019 at 10:45:10PM +0200, Andrew Lunn wrote:
-> > > > Patch #1 and #4 are minor cleanups which follow the boyscout rule:
-> > > > "Always leave the campground cleaner than you found it."
-> > >
-> > > > I
-> > > > am also looking for suggestions how to handle these cross-tree changes
-> > > > (patch #2 belongs to the linux-gpio tree, patches #1, 3 and #4 should
-> > > > go through the net-next tree. I will re-send patch #5 separately as
-> > > > this should go through Kevin's linux-amlogic tree).
-> > >
-> > > Patches 1 and 4 don't seem to have and dependencies. So i would
-> > > suggest splitting them out and submitting them to netdev for merging
-> > > independent of the rest.
-> >
-> > Jumping on the occasion of that series. These properties have been
-> > defined to deal with phy reset, while it seems that the PHY core can
-> > now handle that pretty easily through generic properties.
-> >
-> > Wouldn't it make more sense to just move to that generic properties
-> > that already deals with the flags properly?
-> thank you for bringing this up!
-> if anyone else (just like me) doesn't know about it, there are generic
-> bindings defined here: [0]
+> This driver was using the OF GPIO helper API, but barely used any of its
+> features and it cost more code than it saved. Also, the OF GPIO code is
+> now deprecated. Convert it to use a more standard setup and use devm
+> APIs for initialization to avoid the need for a remove function.
 >
-> I just tested this on my X96 Max by defining the following properties
-> inside the PHY node:
->   reset-delay-us = <10000>;
->   reset-assert-us = <10000>;
->   reset-deassert-us = <10000>;
->   reset-gpios = <&gpio GPIOZ_15 (GPIO_ACTIVE_LOW | GPIO_OPEN_DRAIN)>;
+> Our rationale for this change is that we are using the Xilinx GPIO with
+> resources injected using the MFD core rather than on the device tree
+> itself. Using platform rather than OF-specific resources allows this to
+> work for free.
 >
-> that means I don't need any stmmac patches which seems nice.
+> Signed-off-by: Robert Hancock <hancock@sedsystems.ca>
 
-I'm glad it works for you :)
+Patch applied with Michal's ACK.
 
-> instead I can submit a patch to mark the snps,reset-gpio properties in
-> the dt-bindings deprecated (and refer to the generic bindings instead)
-> what do you think?
-
-I already did as part of the binding reworks I did earlier today:
-http://lists.infradead.org/pipermail/linux-arm-kernel/2019-June/658427.html
-
-Maxime
-
---
-Maxime Ripard, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
-
---hlwqgl7jkkjm4sqs
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXP5gTQAKCRDj7w1vZxhR
-xTX2AQDErQs37AlgMjoegkuBtrfya5ARL23dKC2yJPk5bFAPIQEA8brM32gT3g4u
-5bbyMYmku0KJTlZo2bHr8P+VKtd70A0=
-=Jc07
------END PGP SIGNATURE-----
-
---hlwqgl7jkkjm4sqs--
+Yours,
+Linus Walleij
