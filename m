@@ -2,143 +2,189 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id EC8343B308
-	for <lists+linux-gpio@lfdr.de>; Mon, 10 Jun 2019 12:20:45 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 613343B3A1
+	for <lists+linux-gpio@lfdr.de>; Mon, 10 Jun 2019 13:01:34 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388708AbfFJKUo (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 10 Jun 2019 06:20:44 -0400
-Received: from mail-it1-f194.google.com ([209.85.166.194]:54079 "EHLO
-        mail-it1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389166AbfFJKUo (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 10 Jun 2019 06:20:44 -0400
-Received: by mail-it1-f194.google.com with SMTP id m187so12380916ite.3
-        for <linux-gpio@vger.kernel.org>; Mon, 10 Jun 2019 03:20:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=TD9nldu+Dkg66DtJL22FIFPPAtJrtLwLTy4JIGvUcQ0=;
-        b=xGOZzIJLwgDnCGn+KlPHKMf5rhw1h6HPB+95GrnYpcFyME3d6inxxLyUdmnkUq34J+
-         zIomGN+MLBR/oBWOe0ulrBE7Z4E32pfkipA+UvLZ1HSdKDy8GC6l8Mp9wJ803ogYGbAJ
-         XkKTMgVLsEwE6FpWaaDwbvNxWnbiruke6qUOyB0ejNsZuBRBi3b43yVy4fvDCb91ewO2
-         Zjef6VagFWfnsI0m34DKo41NNnLdVP9/Dyh1VbdA8PowiwZdyPE/WzmPhq03ic8Wi1/B
-         bsA1uFFW4PNjaH9sgcjjZ0hpbNNQwDPdUAJ2P909ro09PZSJ1gys4wpgtKshS4+ctbrH
-         zTDA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=TD9nldu+Dkg66DtJL22FIFPPAtJrtLwLTy4JIGvUcQ0=;
-        b=qeK/cMPX84/3vRKDsKJaRP8PAiOC0gVjBkQamTnThc7WJpePyQbtNEfKCQfC2QBvFt
-         OlSgFWLe0YvWtiqBno/WGkPRzur0HJxqxkm0oiwipLa3+zdM302sxwEAucVK3HPLe5Zw
-         YHbZh7WeBPlHXd16J84MZnzG6oAPY62jodyYkSCAzfADah+UrZIZMJtUBLhCpaCBb0rd
-         9FBfOy8xS0X3uSoNrXjqdD72IlImrFBoN1jHwZy8bZKRLjApi4gU0BKkTZhb8N+w+3ue
-         PH0qxE3OFyZf4wKm+Re9HrFIy5ehypyYmOhorl8Et0CIt6BWrXO5ytXh/nNwfhdTQqUh
-         E24A==
-X-Gm-Message-State: APjAAAUgMtbLw7SgP0dlfDOkYCxnCte6N+k8X3sAVcB2nncPjqhiX7BH
-        tmHBmKFxCxlAs3/Vuty/J2omZfxa0c7wQlg2KQa36g==
-X-Google-Smtp-Source: APXvYqz8+9gsk4GZjuP3WNO3dIJxKVqLA91XwEqoIRkCKyS++7skP/Y8F+BITEkNQ+1mKDd2q8VehsdTmYGSs98dr0s=
-X-Received: by 2002:a05:660c:44a:: with SMTP id d10mr12222840itl.153.1560162043688;
- Mon, 10 Jun 2019 03:20:43 -0700 (PDT)
+        id S2389256AbfFJLBI (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 10 Jun 2019 07:01:08 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:59498 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389191AbfFJLBI (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 10 Jun 2019 07:01:08 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id BB26C6087F; Mon, 10 Jun 2019 11:01:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1560164466;
+        bh=3trH4tk+FpSyNWsSjAcyso4X8iKz3q8bkwkkDW6kp0c=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=i8tCth4CABKcWpiDev0U4v9Cd0hlZ2e6aN4vxx7m5ErpM6rGgwy5QBYdBSJtDvF5U
+         j8bzacfJIq/qf06qk7YwR/Gp6vzz5q8/TOC1wawsnW0cDxcjP6b/p3ehn5lkSO0Vpy
+         3iwXiU1dhYnMx0jz2KBnZnY34TruF0R1BQl+q66U=
+X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
+        pdx-caf-mail.web.codeaurora.org
+X-Spam-Level: 
+X-Spam-Status: No, score=-2.7 required=2.0 tests=ALL_TRUSTED,BAYES_00,
+        DKIM_INVALID,DKIM_SIGNED,SPF_NONE autolearn=no autolearn_force=no
+        version=3.4.0
+Received: from [10.201.2.161] (blr-c-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.19.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: sricharan@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id D3A9060271;
+        Mon, 10 Jun 2019 11:01:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1560164465;
+        bh=3trH4tk+FpSyNWsSjAcyso4X8iKz3q8bkwkkDW6kp0c=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=Zs7bRIFkXPtBEcVN0IE3hG8C/WidjWXVwfjfZUssqzofuOtu47AoMtEwzeR2ie/QY
+         GGAv5OEPk1Xt899aW9drGqPiVD2eARuuAaZU03W5qIMRxlGDvUZTBFZiaCM/1+kM6K
+         AGqozjHVsq4h9oAHisZKzuUAsj48PMm85Iz6xaCY=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org D3A9060271
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=sricharan@codeaurora.org
+Subject: Re: [PATCH 1/6] pinctrl: qcom: Add ipq6018 pinctrl driver
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     robh+dt@kernel.org, Stephen Boyd <sboyd@kernel.org>,
+        linus.walleij@linaro.org, agross@kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+References: <1559754961-26783-1-git-send-email-sricharan@codeaurora.org>
+ <1559754961-26783-2-git-send-email-sricharan@codeaurora.org>
+ <20190608032613.GC24059@builder>
+From:   Sricharan R <sricharan@codeaurora.org>
+Message-ID: <1766bee3-e4da-7c7c-9881-4a58885640dc@codeaurora.org>
+Date:   Mon, 10 Jun 2019 16:30:59 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-References: <20190610084213.1052-1-lee.jones@linaro.org> <20190610084213.1052-4-lee.jones@linaro.org>
- <CAKv+Gu_s7i8JC4cv-dJMvm1_0cGzzhzf+Dxu0rxcF7iugF=vHg@mail.gmail.com>
- <20190610085542.GL4797@dell> <CAKv+Gu8rhxciy1cOG3B3pda9+p4R_COGrrqa7S_Rj9y2HeBxYw@mail.gmail.com>
- <20190610092245.GN4797@dell>
-In-Reply-To: <20190610092245.GN4797@dell>
-From:   Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Date:   Mon, 10 Jun 2019 12:20:30 +0200
-Message-ID: <CAKv+Gu94ES4_SjkmAMaAgwCtsx_YmOn0=yaeM9GFjPCCxrANoQ@mail.gmail.com>
-Subject: Re: [PATCH v3 4/8] pinctrl: qcom: sdm845: Provide ACPI support
-To:     Lee Jones <lee.jones@linaro.org>
-Cc:     alokc@codeaurora.org, Andy Gross <andy.gross@linaro.org>,
-        David Brown <david.brown@linaro.org>,
-        wsa+renesas@sang-engineering.com,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Linus Walleij <linus.walleij@linaro.org>, balbi@kernel.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jeffrey Hugo <jlhugo@gmail.com>,
-        linux-i2c <linux-i2c@vger.kernel.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        linux-usb <linux-usb@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20190608032613.GC24059@builder>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, 10 Jun 2019 at 11:22, Lee Jones <lee.jones@linaro.org> wrote:
->
-> On Mon, 10 Jun 2019, Ard Biesheuvel wrote:
->
-> > On Mon, 10 Jun 2019 at 10:55, Lee Jones <lee.jones@linaro.org> wrote:
-> > >
-> > > On Mon, 10 Jun 2019, Ard Biesheuvel wrote:
-> > >
-> > > > On Mon, 10 Jun 2019 at 10:42, Lee Jones <lee.jones@linaro.org> wrote:
-> > > > >
-> > > > > This patch provides basic support for booting with ACPI instead
-> > > > > of the currently supported Device Tree.  When doing so there are a
-> > > > > couple of differences which we need to taken into consideration.
-> > > > >
-> > > > > Firstly, the SDM850 ACPI tables omit information pertaining to the
-> > > > > 4 reserved GPIOs on the platform.  If Linux attempts to touch/
-> > > > > initialise any of these lines, the firmware will restart the
-> > > > > platform.
-> > > > >
-> > > > > Secondly, when booting with ACPI, it is expected that the firmware
-> > > > > will set-up things like; Regulators, Clocks, Pin Functions, etc in
-> > > > > their ideal configuration.  Thus, the possible Pin Functions
-> > > > > available to this platform are not advertised when providing the
-> > > > > higher GPIOD/Pinctrl APIs with pin information.
-> > > > >
-> > > > > Signed-off-by: Lee Jones <lee.jones@linaro.org>
-> > > >
-> > > > For the ACPI probing boilerplate:
-> > > > Acked-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
-> > > >
-> > > > *However*, I really don't like hardcoding reserved GPIOs like this.
-> > > > What guarantee do we have that each and every ACPI system
-> > > > incorporating the QCOM0217 device has the exact same list of reserved
-> > > > GPIOs?
-> > >
-> > > This is SDM845 specific, so the chances are reduced.
-> >
-> > You don't know that.
->
-> All the evidence I have to hand tells me that this is the case.  Even
-> on very closely related variants Qualcomm uses different H/W blocks
-> for GPIO.
->
-> > > However, if another SDM845 variant does crop up, also lacking the
-> > > "gpios" property, we will have to find another differentiating factor
-> > > between them and conduct some matching.  What else can you do with
-> > > platforms supporting non-complete/non-forthcoming ACPI tables?
-> > >
-> >
-> > Either we don't touch any pins at all if they are not referenced
-> > explicitly anywhere
->
-> I guess this would require an API change, which is out of scope of
-> this patch-set.  Happy to change this implementation later if the
-> subsystem allows for it though.
->
-> > or we parse the PEP tables, which seem to cover
-> > some of this information (if Bjorn's analysis is correct)
->
-> Maybe someone can conduct some further work on this when we start to
-> enable or write a driver for the PEP (Windows-compatible System Power
-> Management Controller).  The tables for the PEP look pretty complex,
-> so this task would be extremely difficult if not impossible without
-> Qualcomm's help.  I wouldn't even know how to extrapolate this
-> information from the tables.
->
-> > (if Bjorn's analysis is correct)
->
-> Bjorn is about to provide his Reviewed-by for this implementation.
->
+Hi Bjorn,
 
-If Bjorn can live with it, then so can I.
+On 6/8/2019 8:56 AM, Bjorn Andersson wrote:
+> On Wed 05 Jun 10:15 PDT 2019, Sricharan R wrote:
+> 
+>> Add initial pinctrl driver to support pin configuration with
+>> pinctrl framework for ipq6018.
+>>
+>> Signed-off-by: Sricharan R <sricharan@codeaurora.org>
+>> Signed-off-by: Rajkumar Ayyasamy <arajkuma@codeaurora.org>
+>> Signed-off-by: speriaka <speriaka@codeaurora.org>
+> 
+
+ Thanks for the review !!
+
+> These should start with the author, then followed by each person that
+> handled the patch on its way to the list - so your name should probably
+> be last.  If you have more than one author add Co-developed-by, in
+> addition to the Signed-off-by.
+> 
+> And please spell our speriaka's first and last name.
+> 
+ 
+  ok, will fix it.
+
+> [..]
+>> diff --git a/Documentation/devicetree/bindings/pinctrl/qcom,ipq6018-pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/qcom,ipq6018-pinctrl.txt
+> [..]
+>> +- #gpio-cells:
+>> +	Usage: required
+>> +	Value type: <u32>
+>> +	Definition: must be 2. Specifying the pin number and flags, as defined
+>> +		    in <dt-bindings/gpio/gpio.h>
+> 
+> You're missing the required "gpio-ranges" property.
+> 
+
+ ok, will add.
+
+>> +
+> [..]
+>> +- function:
+>> +	Usage: required
+>> +	Value type: <string>
+>> +	Definition: Specify the alternative function to be configured for the
+>> +		    specified pins. Functions are only valid for gpio pins.
+>> +		    Valid values are:
+>> +	adsp_ext, alsp_int, atest_bbrx0, atest_bbrx1, atest_char, atest_char0,
+> 
+> Please indent these.
+> 
+
+ ok.
+
+> [..]
+> 
+> The rest should be in a separate patch from the binding.
+> 
+>> diff --git a/drivers/pinctrl/qcom/Kconfig b/drivers/pinctrl/qcom/Kconfig
+> [..]
+>> +enum ipq6018_functions {
+> [..]
+>> +	msm_mux_NA,
+> 
+> I like when these are sorted, and if you make the last entry msm_mux__
+> the msm_pingroup array becomes easier to read.
+> 
+
+ ok.
+
+>> +};
+> [..]
+>> +static const struct msm_function ipq6018_functions[] = {
+> [..]
+>> +	FUNCTION(gcc_tlmm),
+> 
+> As above, please sort these.
+> 
+
+ ok.
+
+>> +};
+>> +
+>> +static const struct msm_pingroup ipq6018_groups[] = {
+>> +	PINGROUP(0, qpic_pad, wci20, qdss_traceclk_b, NA, burn0, NA, NA, NA,
+>> +		 NA),
+> 
+> Please ignore the 80-char and skip the line breaks.
+> 
+
+ ok.
+
+>> +	PINGROUP(1, qpic_pad, mac12, qdss_tracectl_b, NA, burn1, NA, NA, NA,
+>> +		 NA),
+>> +	PINGROUP(2, qpic_pad, wci20, qdss_tracedata_b, NA, NA, NA, NA, NA, NA),
+>> +	PINGROUP(3, qpic_pad, mac01, qdss_tracedata_b, NA, NA, NA, NA, NA, NA),
+>> +	PINGROUP(4, qpic_pad, mac01, qdss_tracedata_b, NA, NA, NA, NA, NA, NA),
+>> +	PINGROUP(5, qpic_pad4, mac21, qdss_tracedata_b, NA, NA, NA, NA, NA, NA),
+> 
+> Is there a reason to keep qpic_padN as separate functions from qpic_pad?
+> 
+  Hmm, the auto-gen scripts needs to be fixed. Will correct it.
+
+> [..]
+>> +static struct platform_driver ipq6018_pinctrl_driver = {
+>> +	.driver = {
+>> +		.name = "ipq6018-pinctrl",
+>> +		.owner = THIS_MODULE,
+> 
+> .owner is populated automagically by platform_driver_register, so please
+> omit this.
+> 
+
+ ok, missed it. will fix. 
+
+Regards,
+ Sricharan
+
+-- 
+"QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
