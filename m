@@ -2,365 +2,212 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 486333B137
-	for <lists+linux-gpio@lfdr.de>; Mon, 10 Jun 2019 10:49:18 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DAB0B3B15C
+	for <lists+linux-gpio@lfdr.de>; Mon, 10 Jun 2019 10:57:03 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388267AbfFJItM (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 10 Jun 2019 04:49:12 -0400
-Received: from mail-eopbgr710053.outbound.protection.outlook.com ([40.107.71.53]:45856
-        "EHLO NAM05-BY2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2388020AbfFJItM (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Mon, 10 Jun 2019 04:49:12 -0400
+        id S2388779AbfFJIzt (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 10 Jun 2019 04:55:49 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:38247 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388772AbfFJIzq (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 10 Jun 2019 04:55:46 -0400
+Received: by mail-wr1-f67.google.com with SMTP id d18so8295693wrs.5
+        for <linux-gpio@vger.kernel.org>; Mon, 10 Jun 2019 01:55:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=xilinx.onmicrosoft.com; s=selector1-xilinx-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=tIy52q9bpnnZTvA4xxHapQr8uCOcYVqeu/mtyBToV1w=;
- b=NPfxElpS9bLZFHiO6SixBC3Xt6OqSSTeY+UXqGpg6UGq3nexi+5fzmln8XMYrAwW0PDysfF/jwXy97Jb27mYRt54E8ynAHf9+flI+syoRZIYDsL+DL7DzpIUN+RZiMmp1MLdKMUTOFk13FCk44uzC7o4DTVY4+n/vjnntniRVzg=
-Received: from DM6PR02CA0097.namprd02.prod.outlook.com (2603:10b6:5:1f4::38)
- by BYASPR01MB0021.namprd02.prod.outlook.com (2603:10b6:a03:72::27) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.1965.16; Mon, 10 Jun
- 2019 08:49:06 +0000
-Received: from BL2NAM02FT009.eop-nam02.prod.protection.outlook.com
- (2a01:111:f400:7e46::207) by DM6PR02CA0097.outlook.office365.com
- (2603:10b6:5:1f4::38) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.20.1965.17 via Frontend
- Transport; Mon, 10 Jun 2019 08:49:05 +0000
-Authentication-Results: spf=pass (sender IP is 149.199.60.100)
- smtp.mailfrom=xilinx.com; sedsystems.ca; dkim=none (message not signed)
- header.d=none;sedsystems.ca; dmarc=bestguesspass action=none
- header.from=xilinx.com;
-Received-SPF: Pass (protection.outlook.com: domain of xilinx.com designates
- 149.199.60.100 as permitted sender) receiver=protection.outlook.com;
- client-ip=149.199.60.100; helo=xsj-pvapsmtpgw02;
-Received: from xsj-pvapsmtpgw02 (149.199.60.100) by
- BL2NAM02FT009.mail.protection.outlook.com (10.152.77.68) with Microsoft SMTP
- Server (version=TLS1_0, cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.20.1965.12
- via Frontend Transport; Mon, 10 Jun 2019 08:49:04 +0000
-Received: from unknown-38-66.xilinx.com ([149.199.38.66]:42346 helo=xsj-pvapsmtp01)
-        by xsj-pvapsmtpgw02 with esmtp (Exim 4.63)
-        (envelope-from <michal.simek@xilinx.com>)
-        id 1haFzE-0002ml-5l; Mon, 10 Jun 2019 01:49:04 -0700
-Received: from [127.0.0.1] (helo=localhost)
-        by xsj-pvapsmtp01 with smtp (Exim 4.63)
-        (envelope-from <michal.simek@xilinx.com>)
-        id 1haFz9-0006ZI-2W; Mon, 10 Jun 2019 01:48:59 -0700
-Received: from xsj-pvapsmtp01 (smtp3.xilinx.com [149.199.38.66])
-        by xsj-smtp-dlp2.xlnx.xilinx.com (8.13.8/8.13.1) with ESMTP id x5A8muRY011668;
-        Mon, 10 Jun 2019 01:48:56 -0700
-Received: from [172.30.17.116]
-        by xsj-pvapsmtp01 with esmtp (Exim 4.63)
-        (envelope-from <michals@xilinx.com>)
-        id 1haFz6-0006Wy-1j; Mon, 10 Jun 2019 01:48:56 -0700
-Subject: Re: [PATCH v3] gpio: xilinx: convert from OF GPIO to standard devm
- APIs
-To:     Robert Hancock <hancock@sedsystems.ca>, linux-gpio@vger.kernel.org
-Cc:     linus.walleij@linaro.org, bgolaszewski@baylibre.com,
-        michal.simek@xilinx.com, shubhraj@xilinx.com
-References: <1559927056-12064-1-git-send-email-hancock@sedsystems.ca>
-From:   Michal Simek <michal.simek@xilinx.com>
-Message-ID: <bdb2c988-acdb-b273-0d0b-d77317a96617@xilinx.com>
-Date:   Mon, 10 Jun 2019 10:48:53 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=GpySo1g8LDVz9k5a5vKZQ7sUTfsxzgZnBVStPDXVsTE=;
+        b=TLJxZMAGuxy/AarP67BjcpuFCdXmgR43IKr0+QKdb6Ol6EwjkgW464DzS62DwAo+dO
+         4l3D0glt/AANh00dpOKeX5lgOGgnaHX5MLKI65hRHi1lyXRAlxo+62OuFKkD2ZaRQmV/
+         rI8WIiHsmp51LUX4YV67upchYnpEWrPy/SORxZ7qXCtZ2qHX3OSg2GFqUgV0Qmye4QRn
+         vHth3Dz6FslHlbL0Hr2s3SDTPwXw4Rw1HdBy85K9V5tOqQ5Vt0wKY5E3wp4wLIRhsXug
+         FNL3oCKSL/XBHtVjEY+6D6WgGpP7i050rJ6/+HHW2jGvqbrA7bIIrN60uwfYlIt2VUPj
+         LJcg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=GpySo1g8LDVz9k5a5vKZQ7sUTfsxzgZnBVStPDXVsTE=;
+        b=J0sWYDiVgMJtso+l1nhgBM98RsoHDr+vZIBWCQcgHnLGT3EOauLbCRNCTfzu2s6d12
+         0jZpm5dXnAfS6teMc3pgHSIfrO/uqBprOG8scgEtc5aWfwQZXGCaFJrdOt5WA6Y/NWVF
+         35Imd8aAbkQDB5Hr4Ws9Ak9ni7D7NNHynge/8oNOUDFrKs43aeEBGVSVEYrXen5ejEOl
+         NdJdI0Xotcaeb2QYuIF6dNkfDbFTja/2e1qdI67253XyhCeC3PIyx+LL8SMW6k5ey29H
+         I4fHfICIJb6WqHkTMPGC5XYS8+NnOVIK2ben4FtCLYEEiUeQIhZNJlixw7mDuAZBGg4M
+         dtIQ==
+X-Gm-Message-State: APjAAAV7cWe7/VHjDRAmoPLX2w9q8rewjnh1gkOxGZ0+qte6Gx7xe2Qr
+        FsUMdJ7GlKm9hn15GzwDPsdDSg==
+X-Google-Smtp-Source: APXvYqyjQYjI9vIrm/FNhIBXPO/+5VtKCSvydqLfAPGAnBQLd3gOIGqGaZYrgEZEfWBncvk0AvMC2A==
+X-Received: by 2002:adf:aa09:: with SMTP id p9mr23598944wrd.59.1560156944579;
+        Mon, 10 Jun 2019 01:55:44 -0700 (PDT)
+Received: from dell ([2.31.167.229])
+        by smtp.gmail.com with ESMTPSA id x129sm13809283wmg.44.2019.06.10.01.55.43
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 10 Jun 2019 01:55:44 -0700 (PDT)
+Date:   Mon, 10 Jun 2019 09:55:42 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Cc:     alokc@codeaurora.org, Andy Gross <andy.gross@linaro.org>,
+        David Brown <david.brown@linaro.org>,
+        wsa+renesas@sang-engineering.com,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Linus Walleij <linus.walleij@linaro.org>, balbi@kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jeffrey Hugo <jlhugo@gmail.com>,
+        linux-i2c <linux-i2c@vger.kernel.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        linux-usb <linux-usb@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v3 4/8] pinctrl: qcom: sdm845: Provide ACPI support
+Message-ID: <20190610085542.GL4797@dell>
+References: <20190610084213.1052-1-lee.jones@linaro.org>
+ <20190610084213.1052-4-lee.jones@linaro.org>
+ <CAKv+Gu_s7i8JC4cv-dJMvm1_0cGzzhzf+Dxu0rxcF7iugF=vHg@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <1559927056-12064-1-git-send-email-hancock@sedsystems.ca>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-RCIS-Action: ALLOW
-X-TM-AS-Product-Ver: IMSS-7.1.0.1224-8.2.0.1013-23620.005
-X-TM-AS-User-Approved-Sender: Yes;Yes
-X-EOPAttributedMessage: 0
-X-MS-Office365-Filtering-HT: Tenant
-X-Forefront-Antispam-Report: CIP:149.199.60.100;IPV:NLI;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(376002)(346002)(39860400002)(396003)(136003)(2980300002)(199004)(189003)(186003)(6246003)(65826007)(63266004)(478600001)(9786002)(77096007)(8936002)(230700001)(305945005)(44832011)(31696002)(81156014)(5660300002)(31686004)(4326008)(81166006)(107886003)(8676002)(36386004)(36756003)(426003)(70206006)(446003)(70586007)(2906002)(486006)(6666004)(356004)(229853002)(50466002)(476003)(336012)(106002)(126002)(26005)(2616005)(2486003)(52146003)(23676004)(64126003)(11346002)(47776003)(316002)(76176011)(14444005)(58126008)(65806001)(65956001)(5001870100001);DIR:OUT;SFP:1101;SCL:1;SRVR:BYASPR01MB0021;H:xsj-pvapsmtpgw02;FPR:;SPF:Pass;LANG:en;PTR:unknown-60-100.xilinx.com,xapps1.xilinx.com;A:1;MX:1;
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 79b7a8f7-6cb6-4437-ce26-08d6ed807e57
-X-Microsoft-Antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(4709080)(1401327)(2017052603328);SRVR:BYASPR01MB0021;
-X-MS-TrafficTypeDiagnostic: BYASPR01MB0021:
-X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
-X-Microsoft-Antispam-PRVS: <BYASPR01MB0021BF26FADA3B0E38083449C6130@BYASPR01MB0021.namprd02.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:8273;
-X-Forefront-PRVS: 0064B3273C
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam-Message-Info: XD13ESfK678M7fO93qNNNAPa/7LTUTWAsFGkdv9Yx+jEGSwxn2puD83OTaOv1S/C/6GmL05IwfEn3aLDIxoDWvez9zjuRyLwiLIY1zLhZZkiIUCDQycaSdw4Flf38v+mBJz2s7n9cGiTq4RfAZBLtUA3CyRBCuV/B5TAWZKX1/QNkgziuOBw9Qs4UmIholPQiGPGMK+8v8zYBQGzIuRQi/fOa5RG9SKSKv8OQBDfdVCdCGjQjDAEmI1FHODdchEbn4sIxoL1v+9uDPQosUbnABJTWjU6izX90yXlNmTpSokB5Fbq26PBHVLvO90qUu3FbirXQ2V/e/QpOkO0TX1sWilSt0PZov4wEAzEWSSsLDD5/mhd4scwQpoejvSu+tPMR3jTm9KuZ6MkYzwj2ypXlQ36xk5xCqTe649iCoRRUgQ=
-X-OriginatorOrg: xilinx.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Jun 2019 08:49:04.7771
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 79b7a8f7-6cb6-4437-ce26-08d6ed807e57
-X-MS-Exchange-CrossTenant-Id: 657af505-d5df-48d0-8300-c31994686c5c
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=657af505-d5df-48d0-8300-c31994686c5c;Ip=[149.199.60.100];Helo=[xsj-pvapsmtpgw02]
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYASPR01MB0021
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAKv+Gu_s7i8JC4cv-dJMvm1_0cGzzhzf+Dxu0rxcF7iugF=vHg@mail.gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 07. 06. 19 19:04, Robert Hancock wrote:
-> This driver was using the OF GPIO helper API, but barely used any of its
-> features and it cost more code than it saved. Also, the OF GPIO code is
-> now deprecated. Convert it to use a more standard setup and use devm
-> APIs for initialization to avoid the need for a remove function.
-> 
-> Our rationale for this change is that we are using the Xilinx GPIO with
-> resources injected using the MFD core rather than on the device tree
-> itself. Using platform rather than OF-specific resources allows this to
-> work for free.
-> 
-> Signed-off-by: Robert Hancock <hancock@sedsystems.ca>
-> ---
-> 
-> Changed from v2: Cleaned up probe error message code
-> 
->  drivers/gpio/Kconfig       |  1 -
->  drivers/gpio/gpio-xilinx.c | 90 +++++++++++++++++++---------------------------
->  2 files changed, 36 insertions(+), 55 deletions(-)
-> 
-> diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
-> index acd40eb..66f1f13 100644
-> --- a/drivers/gpio/Kconfig
-> +++ b/drivers/gpio/Kconfig
-> @@ -602,7 +602,6 @@ config GPIO_XGENE_SB
->  
->  config GPIO_XILINX
->  	tristate "Xilinx GPIO support"
-> -	depends on OF_GPIO
->  	help
->  	  Say yes here to support the Xilinx FPGA GPIO device
->  
-> diff --git a/drivers/gpio/gpio-xilinx.c b/drivers/gpio/gpio-xilinx.c
-> index 32944eb..a9748b5 100644
-> --- a/drivers/gpio/gpio-xilinx.c
-> +++ b/drivers/gpio/gpio-xilinx.c
-> @@ -11,7 +11,6 @@
->  #include <linux/module.h>
->  #include <linux/of_device.h>
->  #include <linux/of_platform.h>
-> -#include <linux/of_gpio.h>
->  #include <linux/io.h>
->  #include <linux/gpio/driver.h>
->  #include <linux/slab.h>
-> @@ -33,14 +32,16 @@
->  
->  /**
->   * struct xgpio_instance - Stores information about GPIO device
-> - * @mmchip: OF GPIO chip for memory mapped banks
-> + * @gc: GPIO chip
-> + * @regs: register block
->   * @gpio_width: GPIO width for every channel
->   * @gpio_state: GPIO state shadow register
->   * @gpio_dir: GPIO direction shadow register
->   * @gpio_lock: Lock used for synchronization
->   */
->  struct xgpio_instance {
-> -	struct of_mm_gpio_chip mmchip;
-> +	struct gpio_chip gc;
-> +	void __iomem *regs;
->  	unsigned int gpio_width[2];
->  	u32 gpio_state[2];
->  	u32 gpio_dir[2];
-> @@ -84,11 +85,10 @@ static inline int xgpio_offset(struct xgpio_instance *chip, int gpio)
->   */
->  static int xgpio_get(struct gpio_chip *gc, unsigned int gpio)
->  {
-> -	struct of_mm_gpio_chip *mm_gc = to_of_mm_gpio_chip(gc);
->  	struct xgpio_instance *chip = gpiochip_get_data(gc);
->  	u32 val;
->  
-> -	val = xgpio_readreg(mm_gc->regs + XGPIO_DATA_OFFSET +
-> +	val = xgpio_readreg(chip->regs + XGPIO_DATA_OFFSET +
->  			    xgpio_regoffset(chip, gpio));
->  
->  	return !!(val & BIT(xgpio_offset(chip, gpio)));
-> @@ -106,7 +106,6 @@ static int xgpio_get(struct gpio_chip *gc, unsigned int gpio)
->  static void xgpio_set(struct gpio_chip *gc, unsigned int gpio, int val)
->  {
->  	unsigned long flags;
-> -	struct of_mm_gpio_chip *mm_gc = to_of_mm_gpio_chip(gc);
->  	struct xgpio_instance *chip = gpiochip_get_data(gc);
->  	int index =  xgpio_index(chip, gpio);
->  	int offset =  xgpio_offset(chip, gpio);
-> @@ -119,7 +118,7 @@ static void xgpio_set(struct gpio_chip *gc, unsigned int gpio, int val)
->  	else
->  		chip->gpio_state[index] &= ~BIT(offset);
->  
-> -	xgpio_writereg(mm_gc->regs + XGPIO_DATA_OFFSET +
-> +	xgpio_writereg(chip->regs + XGPIO_DATA_OFFSET +
->  		       xgpio_regoffset(chip, gpio), chip->gpio_state[index]);
->  
->  	spin_unlock_irqrestore(&chip->gpio_lock[index], flags);
-> @@ -138,7 +137,6 @@ static void xgpio_set_multiple(struct gpio_chip *gc, unsigned long *mask,
->  			       unsigned long *bits)
->  {
->  	unsigned long flags;
-> -	struct of_mm_gpio_chip *mm_gc = to_of_mm_gpio_chip(gc);
->  	struct xgpio_instance *chip = gpiochip_get_data(gc);
->  	int index = xgpio_index(chip, 0);
->  	int offset, i;
-> @@ -150,7 +148,7 @@ static void xgpio_set_multiple(struct gpio_chip *gc, unsigned long *mask,
->  		if (*mask == 0)
->  			break;
->  		if (index !=  xgpio_index(chip, i)) {
-> -			xgpio_writereg(mm_gc->regs + XGPIO_DATA_OFFSET +
-> +			xgpio_writereg(chip->regs + XGPIO_DATA_OFFSET +
->  				       xgpio_regoffset(chip, i),
->  				       chip->gpio_state[index]);
->  			spin_unlock_irqrestore(&chip->gpio_lock[index], flags);
-> @@ -166,7 +164,7 @@ static void xgpio_set_multiple(struct gpio_chip *gc, unsigned long *mask,
->  		}
->  	}
->  
-> -	xgpio_writereg(mm_gc->regs + XGPIO_DATA_OFFSET +
-> +	xgpio_writereg(chip->regs + XGPIO_DATA_OFFSET +
->  		       xgpio_regoffset(chip, i), chip->gpio_state[index]);
->  
->  	spin_unlock_irqrestore(&chip->gpio_lock[index], flags);
-> @@ -184,7 +182,6 @@ static void xgpio_set_multiple(struct gpio_chip *gc, unsigned long *mask,
->  static int xgpio_dir_in(struct gpio_chip *gc, unsigned int gpio)
->  {
->  	unsigned long flags;
-> -	struct of_mm_gpio_chip *mm_gc = to_of_mm_gpio_chip(gc);
->  	struct xgpio_instance *chip = gpiochip_get_data(gc);
->  	int index =  xgpio_index(chip, gpio);
->  	int offset =  xgpio_offset(chip, gpio);
-> @@ -193,7 +190,7 @@ static int xgpio_dir_in(struct gpio_chip *gc, unsigned int gpio)
->  
->  	/* Set the GPIO bit in shadow register and set direction as input */
->  	chip->gpio_dir[index] |= BIT(offset);
-> -	xgpio_writereg(mm_gc->regs + XGPIO_TRI_OFFSET +
-> +	xgpio_writereg(chip->regs + XGPIO_TRI_OFFSET +
->  		       xgpio_regoffset(chip, gpio), chip->gpio_dir[index]);
->  
->  	spin_unlock_irqrestore(&chip->gpio_lock[index], flags);
-> @@ -216,7 +213,6 @@ static int xgpio_dir_in(struct gpio_chip *gc, unsigned int gpio)
->  static int xgpio_dir_out(struct gpio_chip *gc, unsigned int gpio, int val)
->  {
->  	unsigned long flags;
-> -	struct of_mm_gpio_chip *mm_gc = to_of_mm_gpio_chip(gc);
->  	struct xgpio_instance *chip = gpiochip_get_data(gc);
->  	int index =  xgpio_index(chip, gpio);
->  	int offset =  xgpio_offset(chip, gpio);
-> @@ -228,12 +224,12 @@ static int xgpio_dir_out(struct gpio_chip *gc, unsigned int gpio, int val)
->  		chip->gpio_state[index] |= BIT(offset);
->  	else
->  		chip->gpio_state[index] &= ~BIT(offset);
-> -	xgpio_writereg(mm_gc->regs + XGPIO_DATA_OFFSET +
-> +	xgpio_writereg(chip->regs + XGPIO_DATA_OFFSET +
->  			xgpio_regoffset(chip, gpio), chip->gpio_state[index]);
->  
->  	/* Clear the GPIO bit in shadow register and set direction as output */
->  	chip->gpio_dir[index] &= ~BIT(offset);
-> -	xgpio_writereg(mm_gc->regs + XGPIO_TRI_OFFSET +
-> +	xgpio_writereg(chip->regs + XGPIO_TRI_OFFSET +
->  			xgpio_regoffset(chip, gpio), chip->gpio_dir[index]);
->  
->  	spin_unlock_irqrestore(&chip->gpio_lock[index], flags);
-> @@ -243,43 +239,23 @@ static int xgpio_dir_out(struct gpio_chip *gc, unsigned int gpio, int val)
->  
->  /**
->   * xgpio_save_regs - Set initial values of GPIO pins
-> - * @mm_gc: Pointer to memory mapped GPIO chip structure
-> + * @chip: Pointer to GPIO instance
->   */
-> -static void xgpio_save_regs(struct of_mm_gpio_chip *mm_gc)
-> +static void xgpio_save_regs(struct xgpio_instance *chip)
->  {
-> -	struct xgpio_instance *chip =
-> -		container_of(mm_gc, struct xgpio_instance, mmchip);
-> -
-> -	xgpio_writereg(mm_gc->regs + XGPIO_DATA_OFFSET,	chip->gpio_state[0]);
-> -	xgpio_writereg(mm_gc->regs + XGPIO_TRI_OFFSET, chip->gpio_dir[0]);
-> +	xgpio_writereg(chip->regs + XGPIO_DATA_OFFSET,	chip->gpio_state[0]);
-> +	xgpio_writereg(chip->regs + XGPIO_TRI_OFFSET, chip->gpio_dir[0]);
->  
->  	if (!chip->gpio_width[1])
->  		return;
->  
-> -	xgpio_writereg(mm_gc->regs + XGPIO_DATA_OFFSET + XGPIO_CHANNEL_OFFSET,
-> +	xgpio_writereg(chip->regs + XGPIO_DATA_OFFSET + XGPIO_CHANNEL_OFFSET,
->  		       chip->gpio_state[1]);
-> -	xgpio_writereg(mm_gc->regs + XGPIO_TRI_OFFSET + XGPIO_CHANNEL_OFFSET,
-> +	xgpio_writereg(chip->regs + XGPIO_TRI_OFFSET + XGPIO_CHANNEL_OFFSET,
->  		       chip->gpio_dir[1]);
->  }
->  
->  /**
-> - * xgpio_remove - Remove method for the GPIO device.
-> - * @pdev: pointer to the platform device
-> - *
-> - * This function remove gpiochips and frees all the allocated resources.
-> - *
-> - * Return: 0 always
-> - */
-> -static int xgpio_remove(struct platform_device *pdev)
-> -{
-> -	struct xgpio_instance *chip = platform_get_drvdata(pdev);
-> -
-> -	of_mm_gpiochip_remove(&chip->mmchip);
-> -
-> -	return 0;
-> -}
-> -
-> -/**
->   * xgpio_of_probe - Probe method for the GPIO device.
->   * @pdev: pointer to the platform device
->   *
-> @@ -340,21 +316,28 @@ static int xgpio_probe(struct platform_device *pdev)
->  		spin_lock_init(&chip->gpio_lock[1]);
->  	}
->  
-> -	chip->mmchip.gc.ngpio = chip->gpio_width[0] + chip->gpio_width[1];
-> -	chip->mmchip.gc.parent = &pdev->dev;
-> -	chip->mmchip.gc.direction_input = xgpio_dir_in;
-> -	chip->mmchip.gc.direction_output = xgpio_dir_out;
-> -	chip->mmchip.gc.get = xgpio_get;
-> -	chip->mmchip.gc.set = xgpio_set;
-> -	chip->mmchip.gc.set_multiple = xgpio_set_multiple;
-> +	chip->gc.base = -1;
-> +	chip->gc.ngpio = chip->gpio_width[0] + chip->gpio_width[1];
-> +	chip->gc.parent = &pdev->dev;
-> +	chip->gc.direction_input = xgpio_dir_in;
-> +	chip->gc.direction_output = xgpio_dir_out;
-> +	chip->gc.get = xgpio_get;
-> +	chip->gc.set = xgpio_set;
-> +	chip->gc.set_multiple = xgpio_set_multiple;
-> +
-> +	chip->gc.label = dev_name(&pdev->dev);
-> +
-> +	chip->regs = devm_platform_ioremap_resource(pdev, 0);
-> +	if (IS_ERR(chip->regs)) {
-> +		dev_err(&pdev->dev, "failed to ioremap memory resource\n");
-> +		return PTR_ERR(chip->regs);
-> +	}
->  
-> -	chip->mmchip.save_regs = xgpio_save_regs;
-> +	xgpio_save_regs(chip);
->  
-> -	/* Call the OF gpio helper to setup and register the GPIO device */
-> -	status = of_mm_gpiochip_add_data(np, &chip->mmchip, chip);
-> +	status = devm_gpiochip_add_data(&pdev->dev, &chip->gc, chip);
->  	if (status) {
-> -		pr_err("%pOF: error in probe function with status %d\n",
-> -		       np, status);
-> +		dev_err(&pdev->dev, "failed to add GPIO chip\n");
->  		return status;
->  	}
->  
-> @@ -370,7 +353,6 @@ static int xgpio_probe(struct platform_device *pdev)
->  
->  static struct platform_driver xgpio_plat_driver = {
->  	.probe		= xgpio_probe,
-> -	.remove		= xgpio_remove,
->  	.driver		= {
->  			.name = "gpio-xilinx",
->  			.of_match_table	= xgpio_of_match,
-> 
+On Mon, 10 Jun 2019, Ard Biesheuvel wrote:
 
-Looks good.
+> On Mon, 10 Jun 2019 at 10:42, Lee Jones <lee.jones@linaro.org> wrote:
+> >
+> > This patch provides basic support for booting with ACPI instead
+> > of the currently supported Device Tree.  When doing so there are a
+> > couple of differences which we need to taken into consideration.
+> >
+> > Firstly, the SDM850 ACPI tables omit information pertaining to the
+> > 4 reserved GPIOs on the platform.  If Linux attempts to touch/
+> > initialise any of these lines, the firmware will restart the
+> > platform.
+> >
+> > Secondly, when booting with ACPI, it is expected that the firmware
+> > will set-up things like; Regulators, Clocks, Pin Functions, etc in
+> > their ideal configuration.  Thus, the possible Pin Functions
+> > available to this platform are not advertised when providing the
+> > higher GPIOD/Pinctrl APIs with pin information.
+> >
+> > Signed-off-by: Lee Jones <lee.jones@linaro.org>
+> 
+> For the ACPI probing boilerplate:
+> Acked-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+> 
+> *However*, I really don't like hardcoding reserved GPIOs like this.
+> What guarantee do we have that each and every ACPI system
+> incorporating the QCOM0217 device has the exact same list of reserved
+> GPIOs?
 
-Acked-by: Michal Simek <michal.simek@xilinx.com>
+This is SDM845 specific, so the chances are reduced.
 
-Thanks,
-Michal
+However, if another SDM845 variant does crop up, also lacking the
+"gpios" property, we will have to find another differentiating factor
+between them and conduct some matching.  What else can you do with
+platforms supporting non-complete/non-forthcoming ACPI tables?
+
+> > ---
+> >  drivers/pinctrl/qcom/Kconfig          |  2 +-
+> >  drivers/pinctrl/qcom/pinctrl-sdm845.c | 36 ++++++++++++++++++++++++++-
+> >  2 files changed, 36 insertions(+), 2 deletions(-)
+> >
+> > diff --git a/drivers/pinctrl/qcom/Kconfig b/drivers/pinctrl/qcom/Kconfig
+> > index 2e66ab72c10b..aafbe932424f 100644
+> > --- a/drivers/pinctrl/qcom/Kconfig
+> > +++ b/drivers/pinctrl/qcom/Kconfig
+> > @@ -168,7 +168,7 @@ config PINCTRL_SDM660
+> >
+> >  config PINCTRL_SDM845
+> >         tristate "Qualcomm Technologies Inc SDM845 pin controller driver"
+> > -       depends on GPIOLIB && OF
+> > +       depends on GPIOLIB && (OF || ACPI)
+> >         select PINCTRL_MSM
+> >         help
+> >           This is the pinctrl, pinmux, pinconf and gpiolib driver for the
+> > diff --git a/drivers/pinctrl/qcom/pinctrl-sdm845.c b/drivers/pinctrl/qcom/pinctrl-sdm845.c
+> > index c97f20fca5fd..98a438dba711 100644
+> > --- a/drivers/pinctrl/qcom/pinctrl-sdm845.c
+> > +++ b/drivers/pinctrl/qcom/pinctrl-sdm845.c
+> > @@ -3,6 +3,7 @@
+> >   * Copyright (c) 2016-2018, The Linux Foundation. All rights reserved.
+> >   */
+> >
+> > +#include <linux/acpi.h>
+> >  #include <linux/module.h>
+> >  #include <linux/of.h>
+> >  #include <linux/platform_device.h>
+> > @@ -1277,6 +1278,10 @@ static const struct msm_pingroup sdm845_groups[] = {
+> >         UFS_RESET(ufs_reset, 0x99f000),
+> >  };
+> >
+> > +static const int sdm845_acpi_reserved_gpios[] = {
+> > +       0, 1, 2, 3, 81, 82, 83, 84, -1
+> > +};
+> > +
+> >  static const struct msm_pinctrl_soc_data sdm845_pinctrl = {
+> >         .pins = sdm845_pins,
+> >         .npins = ARRAY_SIZE(sdm845_pins),
+> > @@ -1287,11 +1292,39 @@ static const struct msm_pinctrl_soc_data sdm845_pinctrl = {
+> >         .ngpios = 150,
+> >  };
+> >
+> > +static const struct msm_pinctrl_soc_data sdm845_acpi_pinctrl = {
+> > +       .pins = sdm845_pins,
+> > +       .npins = ARRAY_SIZE(sdm845_pins),
+> > +       .groups = sdm845_groups,
+> > +       .ngroups = ARRAY_SIZE(sdm845_groups),
+> > +       .reserved_gpios = sdm845_acpi_reserved_gpios,
+> > +       .ngpios = 150,
+> > +};
+> > +
+> >  static int sdm845_pinctrl_probe(struct platform_device *pdev)
+> >  {
+> > -       return msm_pinctrl_probe(pdev, &sdm845_pinctrl);
+> > +       int ret;
+> > +
+> > +       if (pdev->dev.of_node) {
+> > +               ret = msm_pinctrl_probe(pdev, &sdm845_pinctrl);
+> > +       } else if (has_acpi_companion(&pdev->dev)) {
+> > +               ret = msm_pinctrl_probe(pdev, &sdm845_acpi_pinctrl);
+> > +       } else {
+> > +               dev_err(&pdev->dev, "DT and ACPI disabled\n");
+> > +               return -EINVAL;
+> > +       }
+> > +
+> > +       return ret;
+> >  }
+> >
+> > +#if CONFIG_ACPI
+> > +static const struct acpi_device_id sdm845_pinctrl_acpi_match[] = {
+> > +       { "QCOM0217"},
+> > +       { },
+> > +};
+> > +MODULE_DEVICE_TABLE(acpi, sdm845_pinctrl_acpi_match);
+> > +#endif
+> > +
+> >  static const struct of_device_id sdm845_pinctrl_of_match[] = {
+> >         { .compatible = "qcom,sdm845-pinctrl", },
+> >         { },
+> > @@ -1302,6 +1335,7 @@ static struct platform_driver sdm845_pinctrl_driver = {
+> >                 .name = "sdm845-pinctrl",
+> >                 .pm = &msm_pinctrl_dev_pm_ops,
+> >                 .of_match_table = sdm845_pinctrl_of_match,
+> > +               .acpi_match_table = ACPI_PTR(sdm845_pinctrl_acpi_match),
+> >         },
+> >         .probe = sdm845_pinctrl_probe,
+> >         .remove = msm_pinctrl_remove,
+> >
+
+-- 
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
