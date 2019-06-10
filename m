@@ -2,184 +2,142 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id E2FD43B433
-	for <lists+linux-gpio@lfdr.de>; Mon, 10 Jun 2019 13:47:34 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0ACF43B46B
+	for <lists+linux-gpio@lfdr.de>; Mon, 10 Jun 2019 14:15:39 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389567AbfFJLrS (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 10 Jun 2019 07:47:18 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:58334 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389517AbfFJLrQ (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 10 Jun 2019 07:47:16 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 410E86019D; Mon, 10 Jun 2019 11:47:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1560167235;
-        bh=4XDPRPKTvdPgn7fWEq49BU4VLSuWjWWn+L9RjxS4Tr4=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=F/dI8LIPkR1zdhwduM0KxCFEvB4R6ylEK+IMajctYv7slDZptEe5nU0lculLlTMZQ
-         Lg3tAfE9I7+Gk0OZiXfCU/WQagxn5xLuPfeRxffBFonuOox3TlDtWo7tIZ74Nrn7J2
-         AfjbGx6A3s0n0TQSFxBiSl2XXuIocxM3BIFaRuaw=
-X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
-        pdx-caf-mail.web.codeaurora.org
-X-Spam-Level: 
-X-Spam-Status: No, score=-2.7 required=2.0 tests=ALL_TRUSTED,BAYES_00,
-        DKIM_INVALID,DKIM_SIGNED,SPF_NONE autolearn=no autolearn_force=no
-        version=3.4.0
-Received: from [10.201.2.161] (blr-c-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.19.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: sricharan@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 5252560209;
-        Mon, 10 Jun 2019 11:47:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1560167234;
-        bh=4XDPRPKTvdPgn7fWEq49BU4VLSuWjWWn+L9RjxS4Tr4=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=HfPMGgqiNfj2YJKVBh25nt5zqx5ec/y9KHWxNKJvfhFGKk9l84OrWrmGkfLDOvf4P
-         ZnJ65lj203tCDVTIr73AOpExlWf94+9F/aA6lBqjitMDM8gEWDEAnvkIM5H/H/FKAm
-         6iSahlOERBQTYbRiirWGS29X26w5VJh3hNTma+R8=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 5252560209
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=sricharan@codeaurora.org
-Subject: Re: [PATCH 4/6] clk: qcom: Add ipq6018 Global Clock Controller
- support
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     robh+dt@kernel.org, Stephen Boyd <sboyd@kernel.org>,
-        linus.walleij@linaro.org, agross@kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org,
+        id S2389532AbfFJMPd (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 10 Jun 2019 08:15:33 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:38128 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388866AbfFJMPd (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 10 Jun 2019 08:15:33 -0400
+Received: by mail-wr1-f68.google.com with SMTP id d18so8935076wrs.5;
+        Mon, 10 Jun 2019 05:15:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=TNg7dffhdY0k328udTWVO2CXIL9HjzaUVHvDgf+GtK4=;
+        b=ZXLPQq+o6b0nHKPZK/M+Qxx+orok889VPYieNoCf6MJVzZ8VSDN1BzvcxpdKVntchY
+         C1/sw4NDZP0TUhAMPNkYtDw6AwrsqcnbUmdn4dXvq912jSdsDC+vSyAme9UkMRIga+J3
+         +GUHIdXkEjbWUNkxxNmHzZ3NCBqUeSEEeOtOsvnmfAsu23ey6WbVZSOhgpI+KOiGMzzn
+         fLpyI+p4nx5dS9N6aPzCZe0vE2r5t440mvO4FK7d60UbD6c8Eq2DPERRqehWbpfAeAHk
+         nt+1PpKw+OkF6i+jWmSEygcr4LEoAlH4aEdP/Oj15O7GQrB108NI0bjYSf9znu0e+Spn
+         ZWgw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=TNg7dffhdY0k328udTWVO2CXIL9HjzaUVHvDgf+GtK4=;
+        b=EdEbb2wG/+eo/ARWsgwlLnxMZVRN2i3c9V+s8olaU3J+cJXNhC+TR+kqpIkSfP48Wf
+         blsoYc23qBzrmOTPgQ62fV8mUQSCbacvcS6vFYUycH7Gws6qPoYXb96xdVZOhwuYfRDK
+         YTpTB0UdrVeG4WjW6ibMuyg/cyv9yA+COxNDOhUsy1Cgws8qG2DipgW45ducDBC9nY5v
+         IuW0MlhVvKOMSAbHDCPOyOxOmmswLrLFGVaKFrofhqpXvPp2tjndaTuuNA5k2Dx7ddSF
+         EwVKz4c8aL07AQTk145K6lG5UPYwa1ZplrVlTGxap/o7Si+lj33YnQPdTh8QBs82en8s
+         MfGQ==
+X-Gm-Message-State: APjAAAVo3Z9TaYZLe84vnKOQe6Xa2QNWWBgcmWVByIoF5Q2s0a2ILaMv
+        xSBbT0YHUrb2Gj6lB1LsdQXdbzRD91s=
+X-Google-Smtp-Source: APXvYqzlQSAtl9/8yztiGR6lp/ce64UZfTWo4eBT3hz9ZP/qGRp2sOkCeft5kX5JxyJgCWLCirAzxQ==
+X-Received: by 2002:adf:fb0b:: with SMTP id c11mr4158638wrr.56.1560168930388;
+        Mon, 10 Jun 2019 05:15:30 -0700 (PDT)
+Received: from debian64.daheim (pD9E29896.dip0.t-ipconnect.de. [217.226.152.150])
+        by smtp.gmail.com with ESMTPSA id v67sm11434321wme.24.2019.06.10.05.15.28
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Mon, 10 Jun 2019 05:15:29 -0700 (PDT)
+Received: from localhost.daheim ([127.0.0.1] helo=debian64.localnet)
+        by debian64.daheim with esmtp (Exim 4.92)
+        (envelope-from <chunkeey@gmail.com>)
+        id 1haJCy-0004Co-5N; Mon, 10 Jun 2019 14:15:28 +0200
+From:   Christian Lamparter <chunkeey@gmail.com>
+To:     Sricharan R <sricharan@codeaurora.org>
+Cc:     Rob Herring <robh+dt@kernel.org>, Stephen Boyd <sboyd@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>, agross@kernel.org,
+        devicetree <devicetree@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-clk@vger.kernel.org,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
         linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-References: <1559754961-26783-1-git-send-email-sricharan@codeaurora.org>
- <1559754961-26783-5-git-send-email-sricharan@codeaurora.org>
- <20190608033229.GE24059@builder>
-From:   Sricharan R <sricharan@codeaurora.org>
-Message-ID: <6583f576-acf4-a71b-d691-bce548e2c008@codeaurora.org>
-Date:   Mon, 10 Jun 2019 17:17:09 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
+        =?utf-8?B?0J/QsNCy0LXQuw==?= <be.dissent@gmail.com>
+Subject: Re: [PATCH 5/6] arm64: dts: Add ipq6018 SoC and CP01 board support
+Date:   Mon, 10 Jun 2019 14:15:28 +0200
+Message-ID: <4056907.DrFocau5Ix@debian64>
+In-Reply-To: <50231fba-7212-f8b9-9313-0c79294d4cc6@codeaurora.org>
+References: <1559754961-26783-1-git-send-email-sricharan@codeaurora.org> <CAAd0S9DKqAgFPgLzHiCBiJgE+OmUW7ainyjM_3-RyfCoKEa51A@mail.gmail.com> <50231fba-7212-f8b9-9313-0c79294d4cc6@codeaurora.org>
 MIME-Version: 1.0
-In-Reply-To: <20190608033229.GE24059@builder>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Bjorn,
-
-On 6/8/2019 9:02 AM, Bjorn Andersson wrote:
-> On Wed 05 Jun 10:15 PDT 2019, Sricharan R wrote:
+On Monday, June 10, 2019 12:09:56 PM CEST Sricharan R wrote:
+> Hi Christian,
 > 
->> This patch adds support for the global clock controller found on
->> the ipq6018 based devices.
->>
->> Signed-off-by: Sricharan R <sricharan@codeaurora.org>
->> Signed-off-by: anusha <anusharao@codeaurora.org>
->> Signed-off-by: Abhishek Sahu <absahu@codeaurora.org>
+> On 6/6/2019 2:11 AM, Christian Lamparter wrote:
+> > On Wed, Jun 5, 2019 at 7:16 PM Sricharan R <sricharan@codeaurora.org> wrote:
+> >>
+> >> Add initial device tree support for the Qualcomm IPQ6018 SoC and
+> >> CP01 evaluation board.
+> >>
+> >> Signed-off-by: Sricharan R <sricharan@codeaurora.org>
+> >> Signed-off-by: Abhishek Sahu <absahu@codeaurora.org>
+> >> --- /dev/null
+> >> +++ b/arch/arm64/boot/dts/qcom/ipq6018.dtsi
+> >>
+> >> +       clocks {
+> >> +               sleep_clk: sleep_clk {
+> >> +                       compatible = "fixed-clock";
+> >> +                       clock-frequency = <32000>;
+> >> +                       #clock-cells = <0>;
+> >> +               };
+> >> +
+> > Recently-ish, we ran into an issue with the clock-frequency of the sleep_clk
+> > on older IPQ40XX (and IPQ806x) on the OpenWrt Github and ML.
+> > From what I know, the external "32KHz" crystals have 32768 Hz, but the QSDK
+> > declares them at 32000 Hz. Since you probably have access to the BOM and
+> > datasheets. Can you please confirm what's the real clock frequency for
+> > the IPQ6018.
+> > (And maybe also for the sleep_clk of the IPQ4018 as well?).
+> > 
 > 
-> Please fix your s-o-b chain, as described in my reply to 1/8..
-> 
+> What exactly is the issue that you faced ?
+> Looking in to the docs, it is <32000> only on ipq6018 and ipq40xx as well.
 
- ok.
+We need just a confirmation.
 
->> ---
->>  drivers/clk/qcom/Kconfig       |    9 +
->>  drivers/clk/qcom/Makefile      |    1 +
->>  drivers/clk/qcom/gcc-ipq6018.c | 5267 ++++++++++++++++++++++++++++++++++++++++
->>  3 files changed, 5277 insertions(+)
->>  create mode 100644 drivers/clk/qcom/gcc-ipq6018.c
->>
->> diff --git a/drivers/clk/qcom/Kconfig b/drivers/clk/qcom/Kconfig
->> index e1ff83c..e5fb091 100644
->> --- a/drivers/clk/qcom/Kconfig
->> +++ b/drivers/clk/qcom/Kconfig
->> @@ -120,6 +120,15 @@ config IPQ_GCC_8074
->>  	  i2c, USB, SD/eMMC, etc. Select this for the root clock
->>  	  of ipq8074.
->>  
->> +config IPQ_GCC_6018
-> 
-> Please maintain sort order.
-> 
+Then again, Currently the qcom-ipq4019.dtsi is using 32768 Hz.
 
- ok.
+|		sleep_clk: sleep_clk {
+|			compatible = "fixed-clock";
+|			clock-frequency = <32768>;
+|			#clock-cells = <0>;
+|		};
 
->> +	tristate "IPQ6018 Global Clock Controller"
->> +	depends on COMMON_CLK_QCOM
->> +	help
->> +	  Support for global clock controller on ipq6018 devices.
->> +	  Say Y if you want to use peripheral devices such as UART, SPI,
->> +	  i2c, USB, SD/eMMC, etc. Select this for the root clock
->> +	  of ipq6018.
->> +
->>  config MSM_GCC_8660
->>  	tristate "MSM8660 Global Clock Controller"
->>  	help
->> diff --git a/drivers/clk/qcom/Makefile b/drivers/clk/qcom/Makefile
->> index f0768fb..025137d 100644
->> --- a/drivers/clk/qcom/Makefile
->> +++ b/drivers/clk/qcom/Makefile
->> @@ -22,6 +22,7 @@ obj-$(CONFIG_APQ_MMCC_8084) += mmcc-apq8084.o
->>  obj-$(CONFIG_IPQ_GCC_4019) += gcc-ipq4019.o
->>  obj-$(CONFIG_IPQ_GCC_806X) += gcc-ipq806x.o
->>  obj-$(CONFIG_IPQ_GCC_8074) += gcc-ipq8074.o
->> +obj-$(CONFIG_IPQ_GCC_6018) += gcc-ipq6018.o
-> 
-> Ditto.
-> 
+<https://github.com/torvalds/linux/blob/master/arch/arm/boot/dts/qcom-ipq4019.dtsi#L144>
 
- ok.
+Which makes sense, because all previous Qualcomm Atheros MIPS and the
+future IPQ8072 SoCs have been either using or deriving a 32768 Hz clock.
 
->>  obj-$(CONFIG_IPQ_LCC_806X) += lcc-ipq806x.o
->>  obj-$(CONFIG_MDM_GCC_9615) += gcc-mdm9615.o
->>  obj-$(CONFIG_MDM_LCC_9615) += lcc-mdm9615.o
->> diff --git a/drivers/clk/qcom/gcc-ipq6018.c b/drivers/clk/qcom/gcc-ipq6018.c
-> [..]
->> +static int gcc_ipq6018_probe(struct platform_device *pdev)
->> +{
->> +	return qcom_cc_probe(pdev, &gcc_ipq6018_desc);
->> +}
->> +
->> +static int gcc_ipq6018_remove(struct platform_device *pdev)
->> +{
->> +	return 0;
-> 
-> Just omit .remove from the gcc_ipq6018_driver instead of providing a
-> dummy function.
-> 
+For example: The AR9344 derives the clock from the 25MHz/40MHz external
+oscillator. This is explained in "8.16.9 Derived RTC Clock (DERIVED_RTC_CLK)".
+Which mentions that the "32KHz" clock interval is 30.5 usec / 30.48 usec
+depending whenever the external reference crystal has 40MHz or 25MHz.
+(1/30.5usec = 32.7868852 kilohertz!). The QCA9558 datasheet says the same
+in "10.19.11 Derived RTC Clock". 
 
- ok.
+For IPQ8072: I point to the post by Sven Eckelmann on the OpenWrt ML:
+<http://lists.infradead.org/pipermail/openwrt-devel/2019-May/017131.html>
+"I was only able to verify for IPQ8072 that it had a 32.768 KHz
+sleep clock." 
 
->> +}
->> +
->> +static struct platform_driver gcc_ipq6018_driver = {
->> +	.probe = gcc_ipq6018_probe,
->> +	.remove = gcc_ipq6018_remove,
->> +	.driver = {
->> +		.name   = "qcom,gcc-ipq6018",
->> +		.owner  = THIS_MODULE,
-> 
-> Don't specify .owner in platform drivers.
-> 
+So this is pretty much "why there is an issue", it's confusing.
+Is possible can you please look if there are (fixed) divisors values
+listed in the documentation or the registers and bits that the values
+are stored in? Because then we could just calculate it. 
 
- ok.
-
-> [..]
->> +MODULE_DESCRIPTION("Qualcomm Technologies, Inc. GCC IPQ6018 Driver");
->> +MODULE_LICENSE("GPL v2");
->> +MODULE_ALIAS("platform:gcc-ipq6018");
-> 
-> This modalias won't be used.
->
-
- ok. But it looks to be there in other clk drivers as well.
- 
 Regards,
- Sricharan
+Christian
 
--- 
-"QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
+
