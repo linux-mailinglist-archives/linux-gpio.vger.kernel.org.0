@@ -2,487 +2,488 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 365253B836
-	for <lists+linux-gpio@lfdr.de>; Mon, 10 Jun 2019 17:22:08 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D7D863B872
+	for <lists+linux-gpio@lfdr.de>; Mon, 10 Jun 2019 17:45:55 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391163AbfFJPWH (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 10 Jun 2019 11:22:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38292 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390243AbfFJPWG (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Mon, 10 Jun 2019 11:22:06 -0400
-Received: from kernel.org (unknown [104.132.0.74])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S2390380AbfFJPpf (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 10 Jun 2019 11:45:35 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:50680 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390230AbfFJPpe (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 10 Jun 2019 11:45:34 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id 1D61E60275; Mon, 10 Jun 2019 15:45:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1560181533;
+        bh=JLkeq82w7WKXfiw+H9jdcNpXmDI145eAKRmA3feEAeU=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=dRox7VQ03BzZZt9n8e+czaNKqicjCTGoyPmgb67fOXCWu/nR53/Y6L2K7XCASG4gg
+         jUy8yVAaIa0ovVh1xSkdUfzhLy6ZOP7ZfA1tNlAggiZUkRxut8qGbviLXTJmJKVhpz
+         IcfpvVxsLWNXQ9ST+JNpHd98DVySeQEoLc8bkhM0=
+X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
+        pdx-caf-mail.web.codeaurora.org
+X-Spam-Level: 
+X-Spam-Status: No, score=-2.7 required=2.0 tests=ALL_TRUSTED,BAYES_00,
+        DKIM_INVALID,DKIM_SIGNED,SPF_NONE autolearn=no autolearn_force=no
+        version=3.4.0
+Received: from [192.168.1.6] (unknown [171.60.244.20])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1EC24207E0;
-        Mon, 10 Jun 2019 15:22:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560180125;
-        bh=ohOZQ3uSJ69XY58rw6nO7YSebPCTbrdeqXflgbv6YU0=;
-        h=In-Reply-To:References:To:From:Subject:Date:From;
-        b=TbY/eelfCY3JlfQcTR3Y2+vVNnHbQGqyHdPLLh+4CBVgGG+FS3G40fM/Fg/CsT+PY
-         GR4YNBZcXqXqid/3mVqrCf7JE6gmyUdKVVUhz8SewsvPgyFkDghakPZtap9dcuf+tr
-         ie39ArNlq+iYb/209aYj5CLM39TMQUPbE5JmwbHo=
-Content-Type: text/plain; charset="utf-8"
+        (Authenticated sender: sricharan@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id C24C060213;
+        Mon, 10 Jun 2019 15:45:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1560181531;
+        bh=JLkeq82w7WKXfiw+H9jdcNpXmDI145eAKRmA3feEAeU=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=GaUQuf0o1Jem/Hq3U+CRNQ6OcnLIbVZ8RBw9wb66XqGcfQn/AITy8H6QhXQAN481x
+         gZ4FtBh6v7xiE1qfAFm+yfbVCpFh0Ih4gl83bY2U5R1wQelXVlY35ZPJ0qrJmF488p
+         2E1LyMUyZJ2nj/kD6z1eVWa3eVPMo/90g+PIKbvs=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org C24C060213
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=sricharan@codeaurora.org
+Subject: Re: [PATCH 5/6] arm64: dts: Add ipq6018 SoC and CP01 board support
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     robh+dt@kernel.org, sboyd@codeaurora.org, linus.walleij@linaro.org,
+        agross@kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-gpio@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+References: <1559754961-26783-1-git-send-email-sricharan@codeaurora.org>
+ <1559754961-26783-6-git-send-email-sricharan@codeaurora.org>
+ <20190608034835.GH24059@builder>
+From:   Sricharan R <sricharan@codeaurora.org>
+Message-ID: <048a25c0-3a2c-3906-84d4-5eb67f3ce2ef@codeaurora.org>
+Date:   Mon, 10 Jun 2019 21:15:22 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <1559755738-28643-5-git-send-email-sricharan@codeaurora.org>
-References: <1559755738-28643-1-git-send-email-sricharan@codeaurora.org> <1559755738-28643-5-git-send-email-sricharan@codeaurora.org>
-To:     Sricharan R <sricharan@codeaurora.org>, agross@kernel.org,
-        devicetree@vger.kernel.org, linus.walleij@linaro.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-soc@vger.kernel.org, robh+dt@kernel.org
-From:   Stephen Boyd <sboyd@kernel.org>
-Subject: Re: [PATCH 4/6] clk: qcom: Add ipq6018 Global Clock Controller support
-User-Agent: alot/0.8.1
-Date:   Mon, 10 Jun 2019 08:22:04 -0700
-Message-Id: <20190610152205.1EC24207E0@mail.kernel.org>
+In-Reply-To: <20190608034835.GH24059@builder>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Quoting Sricharan R (2019-06-05 10:28:56)
-> diff --git a/drivers/clk/qcom/Kconfig b/drivers/clk/qcom/Kconfig
-> index e1ff83c..e5fb091 100644
-> --- a/drivers/clk/qcom/Kconfig
-> +++ b/drivers/clk/qcom/Kconfig
-> @@ -120,6 +120,15 @@ config IPQ_GCC_8074
->           i2c, USB, SD/eMMC, etc. Select this for the root clock
->           of ipq8074.
-> =20
-> +config IPQ_GCC_6018
-> +       tristate "IPQ6018 Global Clock Controller"
-> +       depends on COMMON_CLK_QCOM
+Hi Bjorn,
 
-Not sure I commented on this, but this should be removed. The whole
-thing is inside an if now.
 
-> +       help
-> +         Support for global clock controller on ipq6018 devices.
-> +         Say Y if you want to use peripheral devices such as UART, SPI,
-> +         i2c, USB, SD/eMMC, etc. Select this for the root clock
-> +         of ipq6018.
-> +
->  config MSM_GCC_8660
->         tristate "MSM8660 Global Clock Controller"
->         help
-> diff --git a/drivers/clk/qcom/gcc-ipq6018.c b/drivers/clk/qcom/gcc-ipq601=
-8.c
-> new file mode 100644
-> index 0000000..9f4552b
-> --- /dev/null
-> +++ b/drivers/clk/qcom/gcc-ipq6018.c
-> @@ -0,0 +1,5267 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Copyright (c) 2018, The Linux Foundation. All rights reserved.
-> + */
-> +
-> +#include <linux/kernel.h>
-> +#include <linux/err.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/module.h>
-> +#include <linux/of.h>
-> +#include <linux/of_device.h>
-> +#include <linux/clk-provider.h>
-> +#include <linux/regmap.h>
-> +
-> +#include <linux/reset-controller.h>
-> +#include <dt-bindings/clock/qcom,gcc-ipq6018.h>
-> +
-> +#include "common.h"
-> +#include "clk-regmap.h"
-> +#include "clk-pll.h"
-> +#include "clk-rcg.h"
-> +#include "clk-branch.h"
-> +#include "clk-alpha-pll.h"
-> +#include "clk-regmap-divider.h"
-> +#include "clk-regmap-mux.h"
-> +#include "reset.h"
-> +
-> +#define F(f, s, h, m, n) { (f), (s), (2 * (h) - 1), (m), (n) }
-[...]
-> +
-> +static struct clk_alpha_pll gpll0_main =3D {
-> +       .offset =3D 0x21000,
-> +       .regs =3D clk_alpha_pll_regs[CLK_ALPHA_PLL_TYPE_DEFAULT],
-> +       .clkr =3D {
-> +               .enable_reg =3D 0x0b000,
-> +               .enable_mask =3D BIT(0),
-> +               .hw.init =3D &(struct clk_init_data){
-> +                       .name =3D "gpll0_main",
-> +                       .parent_names =3D (const char *[]){
-> +                               "xo"
-> +                       },
-> +                       .num_parents =3D 1,
-> +                       .ops =3D &clk_alpha_pll_ops,
-> +                       .flags =3D CLK_IS_CRITICAL,
+On 6/8/2019 9:18 AM, Bjorn Andersson wrote:
+> On Wed 05 Jun 10:16 PDT 2019, Sricharan R wrote:
+> 
+>> Add initial device tree support for the Qualcomm IPQ6018 SoC and
+>> CP01 evaluation board.
+>>
+>> Signed-off-by: Sricharan R <sricharan@codeaurora.org>
+>> Signed-off-by: Abhishek Sahu <absahu@codeaurora.org>
+> 
+> Please fix the order of these (or add a Co-developed-by).
+> 
 
-Can you add a comment on why this is critical?
+ ok
 
-> +               },
-> +       },
-> +};
-> +
-> +static struct clk_fixed_factor gpll0_out_main_div2 =3D {
-> +       .mult =3D 1,
-> +       .div =3D 2,
-> +       .hw.init =3D &(struct clk_init_data){
-> +               .name =3D "gpll0_out_main_div2",
-> +               .parent_names =3D (const char *[]){
-> +                       "gpll0_main"
-> +               },
-> +               .num_parents =3D 1,
-> +               .ops =3D &clk_fixed_factor_ops,
-> +               .flags =3D CLK_SET_RATE_PARENT,
-> +       },
-> +};
-> +
-> +static struct clk_alpha_pll_postdiv gpll0 =3D {
-> +       .offset =3D 0x21000,
-> +       .regs =3D clk_alpha_pll_regs[CLK_ALPHA_PLL_TYPE_DEFAULT],
-> +       .width =3D 4,
-> +       .clkr.hw.init =3D &(struct clk_init_data){
-> +               .name =3D "gpll0",
-> +               .parent_names =3D (const char *[]){
-> +                       "gpll0_main"
-> +               },
-> +               .num_parents =3D 1,
-> +               .ops =3D &clk_alpha_pll_postdiv_ro_ops,
-> +               .flags =3D CLK_SET_RATE_PARENT,
-> +       },
-> +};
-> +
-> +static struct clk_alpha_pll ubi32_pll_main =3D {
-> +       .offset =3D 0x25000,
-> +       .regs =3D clk_alpha_pll_regs[CLK_ALPHA_PLL_TYPE_HUAYRA],
-> +       .flags =3D SUPPORTS_DYNAMIC_UPDATE,
-> +       .clkr =3D {
-> +               .enable_reg =3D 0x0b000,
-> +               .enable_mask =3D BIT(6),
-> +               .hw.init =3D &(struct clk_init_data){
-> +                       .name =3D "ubi32_pll_main",
-> +                       .parent_names =3D (const char *[]){
-> +                               "xo"
-> +                       },
-> +                       .num_parents =3D 1,
-> +                       .ops =3D &clk_alpha_pll_huayra_ops,
-> +               },
-> +       },
-> +};
-> +
-> +static struct clk_alpha_pll_postdiv ubi32_pll =3D {
-> +       .offset =3D 0x25000,
-> +       .regs =3D clk_alpha_pll_regs[CLK_ALPHA_PLL_TYPE_HUAYRA],
-> +       .width =3D 2,
-> +       .clkr.hw.init =3D &(struct clk_init_data){
-> +               .name =3D "ubi32_pll",
-> +               .parent_names =3D (const char *[]){
-> +                       "ubi32_pll_main"
-> +               },
-> +               .num_parents =3D 1,
-> +               .ops =3D &clk_alpha_pll_postdiv_ro_ops,
-> +               .flags =3D CLK_SET_RATE_PARENT,
-> +       },
-> +};
-> +
-> +static struct clk_alpha_pll gpll6_main =3D {
-> +       .offset =3D 0x37000,
-> +       .regs =3D clk_alpha_pll_regs[CLK_ALPHA_PLL_TYPE_BRAMMO],
-> +       .clkr =3D {
-> +               .enable_reg =3D 0x0b000,
-> +               .enable_mask =3D BIT(7),
-> +               .hw.init =3D &(struct clk_init_data){
-> +                       .name =3D "gpll6_main",
-> +                       .parent_names =3D (const char *[]){
-> +                               "xo"
-> +                       },
-> +                       .num_parents =3D 1,
-> +                       .ops =3D &clk_alpha_pll_ops,
-> +                       .flags =3D CLK_IS_CRITICAL,
+>> ---
+>>  arch/arm64/boot/dts/qcom/Makefile            |   1 +
+>>  arch/arm64/boot/dts/qcom/ipq6018-cp01-c1.dts |  35 ++++
+>>  arch/arm64/boot/dts/qcom/ipq6018.dtsi        | 231 +++++++++++++++++++++++++++
+>>  3 files changed, 267 insertions(+)
+>>  create mode 100644 arch/arm64/boot/dts/qcom/ipq6018-cp01-c1.dts
+>>  create mode 100644 arch/arm64/boot/dts/qcom/ipq6018.dtsi
+>>
+>> diff --git a/arch/arm64/boot/dts/qcom/Makefile b/arch/arm64/boot/dts/qcom/Makefile
+>> index 21d548f..ac22dbb 100644
+>> --- a/arch/arm64/boot/dts/qcom/Makefile
+>> +++ b/arch/arm64/boot/dts/qcom/Makefile
+>> @@ -2,6 +2,7 @@
+>>  dtb-$(CONFIG_ARCH_QCOM)	+= apq8016-sbc.dtb
+>>  dtb-$(CONFIG_ARCH_QCOM)	+= apq8096-db820c.dtb
+>>  dtb-$(CONFIG_ARCH_QCOM)	+= ipq8074-hk01.dtb
+>> +dtb-$(CONFIG_ARCH_QCOM)	+= ipq6018-cp01-c1.dtb
+> 
+> Sort order.
+> 
 
-Can you add a comment on why this is critical?
+ ok
 
-> +               },
-> +       },
-> +};
-> +
-> +static struct clk_alpha_pll_postdiv gpll6 =3D {
-> +       .offset =3D 0x37000,
-> +       .regs =3D clk_alpha_pll_regs[CLK_ALPHA_PLL_TYPE_BRAMMO],
-> +       .width =3D 2,
-> +       .clkr.hw.init =3D &(struct clk_init_data){
-> +               .name =3D "gpll6",
-> +               .parent_names =3D (const char *[]){
-> +                       "gpll6_main"
-> +               },
-> +               .num_parents =3D 1,
-> +               .ops =3D &clk_alpha_pll_postdiv_ro_ops,
-> +               .flags =3D CLK_SET_RATE_PARENT,
-> +       },
-> +};
-> +
-> +static struct clk_alpha_pll gpll4_main =3D {
-> +       .offset =3D 0x24000,
-> +       .regs =3D clk_alpha_pll_regs[CLK_ALPHA_PLL_TYPE_DEFAULT],
-> +       .clkr =3D {
-> +               .enable_reg =3D 0x0b000,
-> +               .enable_mask =3D BIT(5),
-> +               .hw.init =3D &(struct clk_init_data){
-> +                       .name =3D "gpll4_main",
-> +                       .parent_names =3D (const char *[]){
-> +                               "xo"
-> +                       },
-> +                       .num_parents =3D 1,
-> +                       .ops =3D &clk_alpha_pll_ops,
-> +                       .flags =3D CLK_IS_CRITICAL,
+>>  dtb-$(CONFIG_ARCH_QCOM)	+= msm8916-mtp.dtb
+>>  dtb-$(CONFIG_ARCH_QCOM)	+= msm8992-bullhead-rev-101.dtb
+>>  dtb-$(CONFIG_ARCH_QCOM)	+= msm8994-angler-rev-101.dtb
+>> diff --git a/arch/arm64/boot/dts/qcom/ipq6018-cp01-c1.dts b/arch/arm64/boot/dts/qcom/ipq6018-cp01-c1.dts
+>> new file mode 100644
+>> index 0000000..ac7cb22
+>> --- /dev/null
+>> +++ b/arch/arm64/boot/dts/qcom/ipq6018-cp01-c1.dts
+>> @@ -0,0 +1,35 @@
+>> +// SPDX-License-Identifier: GPL-2.0
+>> +/*
+>> + * IPQ6018 CP01 board device tree source
+>> + *
+>> + * Copyright (c) 2019, The Linux Foundation. All rights reserved.
+>> + */
+>> +
+>> +/dts-v1/;
+>> +
+>> +#include "ipq6018.dtsi"
+>> +
+>> +/ {
+>> +	#address-cells = <0x2>;
+>> +	#size-cells = <0x2>;
+> 
+> This is a count, write it in base 10..
+> 
 
-Can you add a comment on why this is critical?
+ ok
 
-> +               },
-> +       },
-> +};
-> +
-> +static struct clk_alpha_pll_postdiv gpll4 =3D {
-> +       .offset =3D 0x24000,
-> +       .regs =3D clk_alpha_pll_regs[CLK_ALPHA_PLL_TYPE_DEFAULT],
-> +       .width =3D 4,
-> +       .clkr.hw.init =3D &(struct clk_init_data){
-> +               .name =3D "gpll4",
-> +               .parent_names =3D (const char *[]){
-> +                       "gpll4_main"
-> +               },
-> +               .num_parents =3D 1,
-> +               .ops =3D &clk_alpha_pll_postdiv_ro_ops,
-> +               .flags =3D CLK_SET_RATE_PARENT,
-> +       },
-> +};
-> +
-> +static const struct freq_tbl ftbl_pcnoc_bfdcd_clk_src[] =3D {
-> +       F(24000000, P_XO, 1, 0, 0),
-> +       F(50000000, P_GPLL0, 16, 0, 0),
-> +       F(100000000, P_GPLL0, 8, 0, 0),
-> +       { }
-> +};
-> +
-> +static struct clk_rcg2 pcnoc_bfdcd_clk_src =3D {
-> +       .cmd_rcgr =3D 0x27000,
-> +       .freq_tbl =3D ftbl_pcnoc_bfdcd_clk_src,
-> +       .hid_width =3D 5,
-> +       .parent_map =3D gcc_xo_gpll0_gpll0_out_main_div2_map,
-> +       .clkr.hw.init =3D &(struct clk_init_data){
-> +               .name =3D "pcnoc_bfdcd_clk_src",
-> +               .parent_names =3D gcc_xo_gpll0_gpll0_out_main_div2,
-> +               .num_parents =3D 3,
-> +               .ops =3D &clk_rcg2_ops,
-> +               .flags =3D CLK_IS_CRITICAL,
+>> +	model = "Qualcomm Technologies, Inc. IPQ6018/AP-CP01-C1";
+>> +	compatible = "qcom,ipq6018-cp01", "qcom,ipq6018";
+>> +	interrupt-parent = <&intc>;
+> 
+> Changing #address-cells, #size-cells and interrupt-parent will break the
+> dtsi, so I think you should specify them there.
+> 
 
-Can you add a comment on why this is critical?
+ ok, will move it to the dtsi.
 
-> +       },
-> +};
-> +
-> +static struct clk_fixed_factor pcnoc_clk_src =3D {
-> +       .mult =3D 1,
-> +       .div =3D 1,
-> +       .hw.init =3D &(struct clk_init_data){
-> +               .name =3D "pcnoc_clk_src",
-> +               .parent_names =3D (const char *[]){
-> +                       "pcnoc_bfdcd_clk_src"
-> +               },
-> +               .num_parents =3D 1,
-> +               .ops =3D &clk_fixed_factor_ops,
-> +               .flags =3D CLK_SET_RATE_PARENT,
-> +       },
-> +};
-> +
-> +static struct clk_alpha_pll gpll2_main =3D {
-> +       .offset =3D 0x4a000,
-> +       .regs =3D clk_alpha_pll_regs[CLK_ALPHA_PLL_TYPE_DEFAULT],
-> +       .clkr =3D {
-> +               .enable_reg =3D 0x0b000,
-> +               .enable_mask =3D BIT(2),
-> +               .hw.init =3D &(struct clk_init_data){
-> +                       .name =3D "gpll2_main",
-> +                       .parent_names =3D (const char *[]){
-> +                               "xo"
-> +                       },
-> +                       .num_parents =3D 1,
-> +                       .ops =3D &clk_alpha_pll_ops,
-> +                       .flags =3D CLK_IS_CRITICAL,
+>> +};
+>> +
+>> +&tlmm {
+> 
+> Please sort your nodes based on address, then node name, then label.
+> 
 
-Can you add a comment on why this is critical?
+ ok
 
-> +               },
-> +       },
-> +};
-> +
-[...]
-> +
-> +static struct clk_fixed_factor system_noc_clk_src =3D {
-> +       .mult =3D 1,
-> +       .div =3D 1,
-> +       .hw.init =3D &(struct clk_init_data){
-> +               .name =3D "system_noc_clk_src",
-> +               .parent_names =3D (const char *[]){
-> +                       "system_noc_bfdcd_clk_src"
-> +               },
-> +               .num_parents =3D 1,
-> +               .ops =3D &clk_fixed_factor_ops,
-> +               .flags =3D CLK_SET_RATE_PARENT,
-> +       },
-> +};
+>> +	uart_pins: uart_pins {
+>> +		mux {
+>> +			pins = "gpio44", "gpio45";
+>> +			function = "blsp2_uart";
+>> +			drive-strength = <8>;
+>> +			bias-pull-down;
+>> +		};
+>> +	};
+>> +};
+>> +
+>> +&blsp1_uart3 {
+>> +	pinctrl-0 = <&uart_pins>;
+>> +	pinctrl-names = "default";
+>> +	status = "ok";
+>> +};
+>> diff --git a/arch/arm64/boot/dts/qcom/ipq6018.dtsi b/arch/arm64/boot/dts/qcom/ipq6018.dtsi
+>> new file mode 100644
+>> index 0000000..79cccdd
+>> --- /dev/null
+>> +++ b/arch/arm64/boot/dts/qcom/ipq6018.dtsi
+>> @@ -0,0 +1,231 @@
+>> +// SPDX-License-Identifier: GPL-2.0
+>> +/*
+>> + * IPQ6018 SoC device tree source
+>> + *
+>> + * Copyright (c) 2019, The Linux Foundation. All rights reserved.
+>> + */
+>> +
+>> +#include <dt-bindings/interrupt-controller/arm-gic.h>
+>> +#include <dt-bindings/clock/qcom,gcc-ipq6018.h>
+>> +
+>> +/ {
+>> +	model = "Qualcomm Technologies, Inc. IPQ6018";
+>> +	compatible = "qcom,ipq6018";
+> 
+> No need for model and compatible in the dtsi, these should always be
+> specified by the including file.
+> 
 
-What is the point of these fixed factor 1/1 clks? Just to rename things?
-Does it matter, or can we just specify system_noc_bfdcd_clk_src as the
-parent and drop this intermediate clk?
+ ok, will move it to the dts.
 
-> +
-> +static struct clk_branch gcc_sleep_clk_src =3D {
-> +       .halt_reg =3D 0x30000,
-> +       .clkr =3D {
-> +               .enable_reg =3D 0x30000,
-> +               .enable_mask =3D BIT(1),
-> +               .hw.init =3D &(struct clk_init_data){
-> +                       .name =3D "gcc_sleep_clk_src",
-> +                       .parent_names =3D (const char *[]){
-> +                               "sleep_clk"
-> +                       },
-> +                       .num_parents =3D 1,
-> +                       .ops =3D &clk_branch2_ops,
-> +                       .flags =3D CLK_IS_CRITICAL,
-> +               },
-> +       },
-> +};
-> +
-[...]
-> +
-> +static struct clk_branch gcc_qdss_at_clk =3D {
-> +       .halt_reg =3D 0x29024,
-> +       .clkr =3D {
-> +               .enable_reg =3D 0x29024,
-> +               .enable_mask =3D BIT(0),
-> +               .hw.init =3D &(struct clk_init_data){
-> +                       .name =3D "gcc_qdss_at_clk",
-> +                       .parent_names =3D (const char *[]){
-> +                               "qdss_at_clk_src"
-> +                       },
-> +                       .num_parents =3D 1,
-> +                       .flags =3D CLK_SET_RATE_PARENT | CLK_IS_CRITICAL,
+>> +
+>> +	chosen {
+>> +		bootargs = "console=ttyMSM0,115200,n8 rw init=/init";
+> 
+> Do you really need console? Can't you use stdout-path?
+> 
 
-Can you add a comment on why this is critical?
+ ok, will change.
 
-> +                       .ops =3D &clk_branch2_ops,
-> +               },
-> +       },
-> +};
-> +
-> +static struct clk_branch gcc_qdss_dap_clk =3D {
-> +       .halt_reg =3D 0x29084,
-> +       .clkr =3D {
-> +               .enable_reg =3D 0x29084,
-> +               .enable_mask =3D BIT(0),
-> +               .hw.init =3D &(struct clk_init_data){
-> +                       .name =3D "gcc_qdss_dap_clk",
-> +                       .parent_names =3D (const char *[]){
-> +                               "qdss_dap_sync_clk_src"
-> +                       },
-> +                       .num_parents =3D 1,
-> +                       .flags =3D CLK_SET_RATE_PARENT | CLK_IS_CRITICAL,
+> And there's no need to specify init=/init.
+> 
 
-Can you add a comment on why this is critical?
+ ok.
 
-> +                       .ops =3D &clk_branch2_ops,
-> +               },
-> +       },
-> +};
-> +
-> +static struct clk_branch gcc_qpic_ahb_clk =3D {
-> +       .halt_reg =3D 0x57024,
-> +       .clkr =3D {
-> +               .enable_reg =3D 0x57024,
-> +               .enable_mask =3D BIT(0),
-> +               .hw.init =3D &(struct clk_init_data){
-> +                       .name =3D "gcc_qpic_ahb_clk",
-> +                       .parent_names =3D (const char *[]){
-> +                               "pcnoc_clk_src"
-> +                       },
-> +                       .num_parents =3D 1,
-> +                       .flags =3D CLK_SET_RATE_PARENT,
-> +                       .ops =3D &clk_branch2_ops,
-> +               },
-> +       },
-> +};
-> +
-[...]
-> +static struct clk_branch gcc_dcc_clk =3D {
-> +       .halt_reg =3D 0x77004,
-> +       .clkr =3D {
-> +               .enable_reg =3D 0x77004,
-> +               .enable_mask =3D BIT(0),
-> +               .hw.init =3D &(struct clk_init_data){
-> +                       .name =3D "gcc_dcc_clk",
-> +                       .parent_names =3D (const char *[]){
-> +                               "pcnoc_clk_src"
-> +                       },
+>> +		bootargs-append = " swiotlb=1 clk_ignore_unused";
+> 
+> I'm hoping that you will work on removing the need for
+> clk_ignore_unused.
+> 
 
-Can you use the new method of specifying clk parents here? That will
-make this simpler.
+ hmm, should not be required even now. will remove that.
 
-> +                       .num_parents =3D 1,
-> +                       .flags =3D CLK_SET_RATE_PARENT,
-> +                       .ops =3D &clk_branch2_ops,
-> +               },
-> +       },
-> +};
-> +
-> +static const struct alpha_pll_config ubi32_pll_config =3D {
-> +       .l =3D 0x3e,
-> +       .alpha =3D 0x57,
-> +       .config_ctl_val =3D 0x200d6aa8,
-> +       .config_ctl_hi_val =3D 0x3c2,
-> +       .main_output_mask =3D BIT(0),
-> +       .aux_output_mask =3D BIT(1),
-> +       .pre_div_val =3D 0x0,
-> +       .pre_div_mask =3D BIT(12),
-> +       .post_div_val =3D 0x0,
-> +       .post_div_mask =3D GENMASK(9, 8),
-> +};
-> +
-> +static const struct alpha_pll_config nss_crypto_pll_config =3D {
-> +       .l =3D 0x32,
-> +       .alpha =3D 0x0,
-> +       .alpha_hi =3D 0x0,
-> +       .config_ctl_val =3D 0x4001055b,
-> +       .main_output_mask =3D BIT(0),
-> +       .pre_div_val =3D 0x0,
-> +       .pre_div_mask =3D GENMASK(14, 12),
-> +       .post_div_val =3D 0x1 << 8,
-> +       .post_div_mask =3D GENMASK(11, 8),
-> +       .vco_mask =3D GENMASK(21, 20),
-> +       .vco_val =3D 0x0,
-> +       .alpha_en_mask =3D BIT(24),
-> +};
-> +
-> +static struct clk_hw *gcc_ipq6018_hws[] =3D {
+>> +	};
+>> +
+>> +	reserved-memory {
+>> +		#address-cells = <2>;
+>> +		#size-cells = <2>;
+>> +		ranges;
+>> +
+>> +		tz:tz@48500000 {
+> 
+> Space after :
+> 
 
-It would be nice to trim this down to a list of 0.
+ ok.
 
-> +       &gpll0_out_main_div2.hw,
-> +       &pcnoc_clk_src.hw,
-> +       &snoc_nssnoc_clk_src.hw,
-> +       &system_noc_clk_src.hw,
-> +       &gcc_xo_div4_clk_src.hw,
-> +       &ubi32_mem_noc_clk_src.hw,
-> +       &nss_ppe_cdiv_clk_src.hw,
-> +       &gpll6_out_main_div2.hw,
+>> +			no-map;
+>> +			reg = <0x0 0x48500000 0x0 0x00200000>;
+> 
+> I would prefer to have the reg first in these nodes, then the region's
+> properties.
+> 
 
-Why do we need this? Does anyone use it?
+ ok.
 
-> +       &qdss_dap_sync_clk_src.hw,
-> +       &qdss_tsctr_div2_clk_src.hw,
-> +};
-> +
+>> +		};
+>> +	};
+>> +
+>> +	soc: soc {
+>> +		#address-cells = <0x1>;
+>> +		#size-cells = <0x1>;
+>> +		ranges = <0 0 0 0xffffffff>;
+>> +		dma-ranges;
+>> +		compatible = "simple-bus";
+>> +
+>> +		intc: interrupt-controller@b000000 {
+> 
+> As described above, please sort your nodes based on address, node name
+> and lastly label name.
+> 
+
+ ok.
+
+>> +			compatible = "qcom,msm-qgic2";
+>> +			interrupt-controller;
+>> +			#interrupt-cells = <0x3>;
+>> +			reg = <0xb000000 0x1000>, <0xb002000 0x1000>;
+>> +		};
+>> +
+>> +		timer {
+>> +			compatible = "arm,armv8-timer";
+>> +			interrupts = <GIC_PPI 2 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>,
+>> +				     <GIC_PPI 3 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>,
+>> +				     <GIC_PPI 4 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>,
+>> +				     <GIC_PPI 1 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>;
+>> +		};
+>> +
+>> +		timer@b120000 {
+>> +			#address-cells = <1>;
+>> +			#size-cells = <1>;
+>> +			ranges;
+>> +			compatible = "arm,armv7-timer-mem";
+>> +			reg = <0xb120000 0x1000>;
+> 
+> Please pad addresses in reg to 8 digits, to make them faster to compare.
+> 
+
+ ok.
+
+>> +			clock-frequency = <19200000>;
+>> +
+>> +			frame@b120000 {
+>> +				frame-number = <0>;
+>> +				interrupts = <GIC_SPI 8 IRQ_TYPE_LEVEL_HIGH>,
+>> +					     <GIC_SPI 7 IRQ_TYPE_LEVEL_HIGH>;
+>> +				reg = <0xb121000 0x1000>,
+>> +				      <0xb122000 0x1000>;
+>> +			};
+>> +
+>> +			frame@b123000 {
+>> +				frame-number = <1>;
+>> +				interrupts = <GIC_SPI 9 IRQ_TYPE_LEVEL_HIGH>;
+>> +				reg = <0xb123000 0x1000>;
+>> +				status = "disabled";
+>> +			};
+>> +
+>> +			frame@b124000 {
+>> +				frame-number = <2>;
+>> +				interrupts = <GIC_SPI 10 IRQ_TYPE_LEVEL_HIGH>;
+>> +				reg = <0xb124000 0x1000>;
+>> +				status = "disabled";
+>> +			};
+>> +
+>> +			frame@b125000 {
+>> +				frame-number = <3>;
+>> +				interrupts = <GIC_SPI 11 IRQ_TYPE_LEVEL_HIGH>;
+>> +				reg = <0xb125000 0x1000>;
+>> +				status = "disabled";
+>> +			};
+>> +
+>> +			frame@b126000 {
+>> +				frame-number = <4>;
+>> +				interrupts = <GIC_SPI 12 IRQ_TYPE_LEVEL_HIGH>;
+>> +				reg = <0xb126000 0x1000>;
+>> +				status = "disabled";
+>> +			};
+>> +
+>> +			frame@b127000 {
+>> +				frame-number = <5>;
+>> +				interrupts = <GIC_SPI 13 IRQ_TYPE_LEVEL_HIGH>;
+>> +				reg = <0xb127000 0x1000>;
+>> +				status = "disabled";
+>> +			};
+>> +
+>> +			frame@b128000 {
+>> +				frame-number = <6>;
+>> +				interrupts = <GIC_SPI 14 IRQ_TYPE_LEVEL_HIGH>;
+>> +				reg = <0xb128000 0x1000>;
+>> +				status = "disabled";
+>> +			};
+>> +		};
+>> +
+>> +		gcc: gcc@1800000 {
+>> +			compatible = "qcom,gcc-ipq6018";
+>> +			reg = <0x1800000 0x80000>;
+>> +			#clock-cells = <0x1>;
+> 
+> This is a count, use base 10.
+> 
+
+ ok.
+
+>> +			#reset-cells = <0x1>;
+>> +		};
+>> +
+>> +		blsp1_uart3: serial@78b1000 {
+>> +			compatible = "qcom,msm-uartdm-v1.4", "qcom,msm-uartdm";
+>> +			reg = <0x78b1000 0x200>;
+>> +			interrupts = <GIC_SPI 306 IRQ_TYPE_LEVEL_HIGH>;
+>> +			clocks = <&gcc GCC_BLSP1_UART3_APPS_CLK>,
+>> +				<&gcc GCC_BLSP1_AHB_CLK>;
+>> +			clock-names = "core", "iface";
+>> +			status = "disabled";
+>> +		};
+>> +
+>> +		tlmm: pinctrl@1000000 {
+>> +			compatible = "qcom,ipq6018-pinctrl";
+>> +			reg = <0x1000000 0x300000>;
+>> +			interrupts = <GIC_SPI 0xd0 IRQ_TYPE_NONE>;
+>> +			gpio-controller;
+>> +			#gpio-cells = <0x2>;
+> 
+> gpio-ranges = <&tlmm 0 80>;
+> 
+
+ ok.
+
+>> +			interrupt-controller;
+>> +			#interrupt-cells = <0x2>;
+>> +
+>> +			uart_pins: uart_pins {
+>> +				pins = "gpio44", "gpio45";
+>> +				function = "blsp2_uart";
+>> +				drive-strength = <8>;
+>> +				bias-pull-down;
+>> +			};
+>> +		};
+>> +	};
+>> +
+>> +	psci: psci {
+>> +		compatible = "arm,psci-1.0";
+>> +		method = "smc";
+>> +	};
+>> +
+>> +	cpus: cpus {
+>> +		#address-cells = <0x1>;
+>> +		#size-cells = <0x0>;
+>> +
+>> +		CPU0: cpu@0 {
+>> +			device_type = "cpu";
+>> +			compatible = "arm,cortex-a53";
+>> +			reg = <0x0>;
+>> +			enable-method = "psci";
+>> +			next-level-cache = <&L2_0>;
+>> +		};
+>> +
+>> +		CPU1: cpu@1 {
+>> +			device_type = "cpu";
+>> +			compatible = "arm,cortex-a53";
+>> +			enable-method = "psci";
+>> +			reg = <0x1>;
+>> +			next-level-cache = <&L2_0>;
+>> +		};
+>> +
+>> +		CPU2: cpu@2 {
+>> +			device_type = "cpu";
+>> +			compatible = "arm,cortex-a53";
+>> +			enable-method = "psci";
+>> +			reg = <0x2>;
+>> +			next-level-cache = <&L2_0>;
+>> +		};
+>> +
+>> +		CPU3: cpu@3 {
+>> +			device_type = "cpu";
+>> +			compatible = "arm,cortex-a53";
+>> +			enable-method = "psci";
+>> +			reg = <0x3>;
+>> +			next-level-cache = <&L2_0>;
+>> +		};
+>> +
+>> +		L2_0: l2-cache {
+>> +			compatible = "cache";
+>> +			cache-level = <0x2>;
+>> +		};
+>> +	};
+>> +
+>> +	pmuv8: pmu {
+>> +		compatible = "arm,armv8-pmuv3";
+>> +		interrupts = <GIC_PPI 7 (GIC_CPU_MASK_SIMPLE(4) |
+>> +					 IRQ_TYPE_LEVEL_HIGH)>;
+>> +	};
+>> +
+>> +	clocks {
+>> +		sleep_clk: sleep_clk {
+> 
+> Don't use _ in the node names.
+> 
+
+ ok.
+
+>> +			compatible = "fixed-clock";
+>> +			clock-frequency = <32000>;
+>> +			#clock-cells = <0>;
+>> +		};
+>> +
+>> +		xo: xo {
+>> +			compatible = "fixed-clock";
+>> +			clock-frequency = <24000000>;
+>> +			#clock-cells = <0>;
+>> +		};
+>> +
+>> +		bias_pll_cc_clk {
+> 
+> Please give this a label and reference it from the node that uses it
+> (regardless of the implementation matching by clock name).
+> 
+ ok, in that case, so might have to remove these for now, till we add
+ the corresponding users.
+
+>> +			compatible = "fixed-clock";
+>> +			clock-frequency = <300000000>;
+>> +			#clock-cells = <0>;
+>> +		};
+>> +
+>> +		bias_pll_nss_noc_clk {
+>> +			compatible = "fixed-clock";
+>> +			clock-frequency = <416500000>;
+>> +			#clock-cells = <0>;
+>> +		};
+>> +
+>> +		usb3phy_0_cc_pipe_clk {
+> 
+> This should come from the PHY.
+
+  ok, will remove it here and add it later when adding USB node
+
+Regards,
+ Sricharan  
+
+-- 
+"QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
