@@ -2,53 +2,53 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id EAC5F3B175
-	for <lists+linux-gpio@lfdr.de>; Mon, 10 Jun 2019 11:04:07 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5EFDE3B1DF
+	for <lists+linux-gpio@lfdr.de>; Mon, 10 Jun 2019 11:22:50 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388715AbfFJJEH (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 10 Jun 2019 05:04:07 -0400
-Received: from mail-it1-f195.google.com ([209.85.166.195]:39467 "EHLO
-        mail-it1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388555AbfFJJEH (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 10 Jun 2019 05:04:07 -0400
-Received: by mail-it1-f195.google.com with SMTP id j204so11988993ite.4
-        for <linux-gpio@vger.kernel.org>; Mon, 10 Jun 2019 02:04:06 -0700 (PDT)
+        id S2388633AbfFJJWt (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 10 Jun 2019 05:22:49 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:40260 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387989AbfFJJWt (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 10 Jun 2019 05:22:49 -0400
+Received: by mail-wr1-f66.google.com with SMTP id p11so8383053wre.7
+        for <linux-gpio@vger.kernel.org>; Mon, 10 Jun 2019 02:22:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=fT90yBCfvgHH/USr4Fa6t7Hb/A6wLFnh4q0k27VLHoA=;
-        b=MiBmuh4HcFCHNwSDfo1tTNQ7oVKa6r6w1uW/9apFsiPxN4cBNnJOAkrD9G9NcYbBz0
-         eDV76xl/95MZ78MKpWkJ5xVCZpS6Ia7dwF2Cz6M4m4Iu3mB5a20AXD/HjJC4pYaVzMO7
-         firn3hGYSYxkMc577jeK/u5pGhEs+AQOsyxGOiuVYB41BLhCRXEgB5slWh/gsZN+/lAA
-         Bf3OAVrpWFjdZFLYduRzO+I2SE5pQK867tkKniEgqfkJEEW6xQHZFnM8ygi73IJI4EW9
-         J79NCgY1YVRqSBhBymYFPGfyzTrD2ooEB9Uw0nv22rHBC/gwyvYx98yO6JEcJ5gKeClL
-         jKcg==
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=G1lpUotvma47Z1RO2D5VX/I7uflkBXZ22xkg1HQ/USI=;
+        b=hJCkx2KR+NIkDwRFeraGfF4DHt2DUmwtr60qd9nLSH36qGSOynSiXeBtl5ybF8L0dn
+         pnA/bDiJGCLtMFrKG64+F4PxE/BCjEnmUfgybp5rvC84ASqfVLs+C7uKecLuJCDAOxWo
+         nL4ORmsbFf6ofo5z0z78tNg1LeWUIxyO901/KwIoH+c/xzpLZJLgrkprAWxAZqJ+OEP1
+         nFZLqfILmv5pT7tNKbySmIy22ONGFTE8fGEDz8KzFkJJaGzD9V9yDSEzeGC+4BWr4Z9e
+         FdxvQDp8O5Loq/iEqqXceHHaLCdkegi8ZozuBckAqV6LiQPJDHVQJTe4H0zcalEQXVFh
+         INAg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=fT90yBCfvgHH/USr4Fa6t7Hb/A6wLFnh4q0k27VLHoA=;
-        b=Img3Ws6CRUHmdZ5ZdgYJnACVGSwj9qaGAAKcF+ZysQnt47e8aQLOO/1ttXK+kUHawS
-         cKneYgiLNhqWAHl3Y1PmJ5sAynCHt6JfGfBdnazLiDTe8qiaQTZEji0cyxA8WDW82NK6
-         c6sV+yGPt4wNoQ1lgqA8tpIfe1lporBN7qapiMcHK9eZjRQLnfLQV3EUGjk9Mqz3vatH
-         7pMsQRdEOL6YPJXsdVcAHR/ya9QK5l32LkVlHX0Zo2IDu7StI3IKqMez8WvdJRuN2rVX
-         avnWYOfgQy+9/ysWU5E2A09G3PBtbFhA7wbz2jlMXAdMeVvN5ENizx+BqnY01/FrThEJ
-         KoQA==
-X-Gm-Message-State: APjAAAUVYjBwFONDwF7MfraYCgfIPPQ6cgQ7yYDnHNIcukHeeA7Sbw6v
-        HYrqroo+petmEt0YHhMDmAleLIkxG8ndUssA7N0J/w==
-X-Google-Smtp-Source: APXvYqwkUy8NJlaVC3ZLeQiyK4NjB0jc9Voa3XoI7Z3nR5vGUM1XyHPJFdz9nE7zh9z+pHwwmOgMLp1ZWxUKgEuZmJs=
-X-Received: by 2002:a24:740f:: with SMTP id o15mr14362252itc.76.1560157446438;
- Mon, 10 Jun 2019 02:04:06 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190610084213.1052-1-lee.jones@linaro.org> <20190610084213.1052-4-lee.jones@linaro.org>
- <CAKv+Gu_s7i8JC4cv-dJMvm1_0cGzzhzf+Dxu0rxcF7iugF=vHg@mail.gmail.com> <20190610085542.GL4797@dell>
-In-Reply-To: <20190610085542.GL4797@dell>
-From:   Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Date:   Mon, 10 Jun 2019 11:03:46 +0200
-Message-ID: <CAKv+Gu8rhxciy1cOG3B3pda9+p4R_COGrrqa7S_Rj9y2HeBxYw@mail.gmail.com>
-Subject: Re: [PATCH v3 4/8] pinctrl: qcom: sdm845: Provide ACPI support
-To:     Lee Jones <lee.jones@linaro.org>
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=G1lpUotvma47Z1RO2D5VX/I7uflkBXZ22xkg1HQ/USI=;
+        b=EkRHDO+Sn1XfFnPLBqz8S1/kY1sFvslpYHMlVoQcgyNyyf9jjmbDTHXpI9sWrimm6e
+         S+LvpRRYlu3fyaH3HNc+Bc+7YaFUP0WGdzpN0d6uVG3w9zlD4orxF783xzQm0k9MkJra
+         Z8dwQz55bHUjLikpRY5ZcnCrD+jIIu6FgXVVxvupSPzUxkn/Ux4YyNxnzGYFNKGVBp/B
+         SyItEdabBCFPcE93hrFrjMJ/e6wBL1CgQ/D7u/AjrIfZW40KrwwXtO89HqdisxxrXxiJ
+         GCr25hxwZjfVXFN/P0qPrOLLViGEJkRJrZdXV8jvsONKOOiyOIfwNdS8uz75UXjWAWVN
+         7/1Q==
+X-Gm-Message-State: APjAAAXaUxtrkgejp5/geEdD0z2KHS/CrAaTSABNiFVg5Vo5sh2G1fHF
+        mc5FqR/eMA1TLaRAPA5HYR+gDg==
+X-Google-Smtp-Source: APXvYqwF7A2E5R4fmM/F0NbqYzotL3Yb9yzsKrwKjxbsYMU0XzfAxqQRhUHKAoBn6OW6wfm5SWZNSQ==
+X-Received: by 2002:adf:b64b:: with SMTP id i11mr44160150wre.205.1560158567552;
+        Mon, 10 Jun 2019 02:22:47 -0700 (PDT)
+Received: from dell ([2.31.167.229])
+        by smtp.gmail.com with ESMTPSA id l18sm7825015wrv.38.2019.06.10.02.22.46
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 10 Jun 2019 02:22:46 -0700 (PDT)
+Date:   Mon, 10 Jun 2019 10:22:45 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Ard Biesheuvel <ard.biesheuvel@linaro.org>
 Cc:     alokc@codeaurora.org, Andy Gross <andy.gross@linaro.org>,
         David Brown <david.brown@linaro.org>,
         wsa+renesas@sang-engineering.com,
@@ -62,54 +62,94 @@ Cc:     alokc@codeaurora.org, Andy Gross <andy.gross@linaro.org>,
         linux-usb <linux-usb@vger.kernel.org>,
         linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Subject: Re: [PATCH v3 4/8] pinctrl: qcom: sdm845: Provide ACPI support
+Message-ID: <20190610092245.GN4797@dell>
+References: <20190610084213.1052-1-lee.jones@linaro.org>
+ <20190610084213.1052-4-lee.jones@linaro.org>
+ <CAKv+Gu_s7i8JC4cv-dJMvm1_0cGzzhzf+Dxu0rxcF7iugF=vHg@mail.gmail.com>
+ <20190610085542.GL4797@dell>
+ <CAKv+Gu8rhxciy1cOG3B3pda9+p4R_COGrrqa7S_Rj9y2HeBxYw@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAKv+Gu8rhxciy1cOG3B3pda9+p4R_COGrrqa7S_Rj9y2HeBxYw@mail.gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, 10 Jun 2019 at 10:55, Lee Jones <lee.jones@linaro.org> wrote:
->
-> On Mon, 10 Jun 2019, Ard Biesheuvel wrote:
->
-> > On Mon, 10 Jun 2019 at 10:42, Lee Jones <lee.jones@linaro.org> wrote:
-> > >
-> > > This patch provides basic support for booting with ACPI instead
-> > > of the currently supported Device Tree.  When doing so there are a
-> > > couple of differences which we need to taken into consideration.
-> > >
-> > > Firstly, the SDM850 ACPI tables omit information pertaining to the
-> > > 4 reserved GPIOs on the platform.  If Linux attempts to touch/
-> > > initialise any of these lines, the firmware will restart the
-> > > platform.
-> > >
-> > > Secondly, when booting with ACPI, it is expected that the firmware
-> > > will set-up things like; Regulators, Clocks, Pin Functions, etc in
-> > > their ideal configuration.  Thus, the possible Pin Functions
-> > > available to this platform are not advertised when providing the
-> > > higher GPIOD/Pinctrl APIs with pin information.
-> > >
-> > > Signed-off-by: Lee Jones <lee.jones@linaro.org>
+On Mon, 10 Jun 2019, Ard Biesheuvel wrote:
+
+> On Mon, 10 Jun 2019 at 10:55, Lee Jones <lee.jones@linaro.org> wrote:
 > >
-> > For the ACPI probing boilerplate:
-> > Acked-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+> > On Mon, 10 Jun 2019, Ard Biesheuvel wrote:
 > >
-> > *However*, I really don't like hardcoding reserved GPIOs like this.
-> > What guarantee do we have that each and every ACPI system
-> > incorporating the QCOM0217 device has the exact same list of reserved
-> > GPIOs?
->
-> This is SDM845 specific, so the chances are reduced.
->
+> > > On Mon, 10 Jun 2019 at 10:42, Lee Jones <lee.jones@linaro.org> wrote:
+> > > >
+> > > > This patch provides basic support for booting with ACPI instead
+> > > > of the currently supported Device Tree.  When doing so there are a
+> > > > couple of differences which we need to taken into consideration.
+> > > >
+> > > > Firstly, the SDM850 ACPI tables omit information pertaining to the
+> > > > 4 reserved GPIOs on the platform.  If Linux attempts to touch/
+> > > > initialise any of these lines, the firmware will restart the
+> > > > platform.
+> > > >
+> > > > Secondly, when booting with ACPI, it is expected that the firmware
+> > > > will set-up things like; Regulators, Clocks, Pin Functions, etc in
+> > > > their ideal configuration.  Thus, the possible Pin Functions
+> > > > available to this platform are not advertised when providing the
+> > > > higher GPIOD/Pinctrl APIs with pin information.
+> > > >
+> > > > Signed-off-by: Lee Jones <lee.jones@linaro.org>
+> > >
+> > > For the ACPI probing boilerplate:
+> > > Acked-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+> > >
+> > > *However*, I really don't like hardcoding reserved GPIOs like this.
+> > > What guarantee do we have that each and every ACPI system
+> > > incorporating the QCOM0217 device has the exact same list of reserved
+> > > GPIOs?
+> >
+> > This is SDM845 specific, so the chances are reduced.
+> 
+> You don't know that.
 
-You don't know that.
+All the evidence I have to hand tells me that this is the case.  Even
+on very closely related variants Qualcomm uses different H/W blocks
+for GPIO.
 
-> However, if another SDM845 variant does crop up, also lacking the
-> "gpios" property, we will have to find another differentiating factor
-> between them and conduct some matching.  What else can you do with
-> platforms supporting non-complete/non-forthcoming ACPI tables?
->
+> > However, if another SDM845 variant does crop up, also lacking the
+> > "gpios" property, we will have to find another differentiating factor
+> > between them and conduct some matching.  What else can you do with
+> > platforms supporting non-complete/non-forthcoming ACPI tables?
+> >
+> 
+> Either we don't touch any pins at all if they are not referenced
+> explicitly anywhere
 
-Either we don't touch any pins at all if they are not referenced
-explicitly anywhere, or we parse the PEP tables, which seem to cover
-some of this information (if Bjorn's analysis is correct)
+I guess this would require an API change, which is out of scope of
+this patch-set.  Happy to change this implementation later if the
+subsystem allows for it though.
+
+> or we parse the PEP tables, which seem to cover
+> some of this information (if Bjorn's analysis is correct)
+
+Maybe someone can conduct some further work on this when we start to
+enable or write a driver for the PEP (Windows-compatible System Power
+Management Controller).  The tables for the PEP look pretty complex,
+so this task would be extremely difficult if not impossible without
+Qualcomm's help.  I wouldn't even know how to extrapolate this
+information from the tables.
+
+> (if Bjorn's analysis is correct)
+
+Bjorn is about to provide his Reviewed-by for this implementation.
+
+-- 
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
