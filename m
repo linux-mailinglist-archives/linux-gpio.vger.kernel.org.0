@@ -2,110 +2,103 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id AFDF53BA4D
-	for <lists+linux-gpio@lfdr.de>; Mon, 10 Jun 2019 19:05:40 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 848F93BA7A
+	for <lists+linux-gpio@lfdr.de>; Mon, 10 Jun 2019 19:12:28 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727815AbfFJRFd (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 10 Jun 2019 13:05:33 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:35685 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727914AbfFJRFc (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 10 Jun 2019 13:05:32 -0400
-Received: by mail-wm1-f67.google.com with SMTP id c6so110485wml.0;
-        Mon, 10 Jun 2019 10:05:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=googlemail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=U333hXUxyQhiqlTlWhPVMGKcPUQsglAuf+7XETbuhQ0=;
-        b=EuwZ9CI9TRpQ84BisjKdi9pjg2eefrWXVLkXsGK2DzD35kxciUA1a5Y7RdBpprceED
-         0+ki6jQ5tmyBuxBWnu4z2lawxRauHHha4h+1whSl8Y9OpnNI0kagg6z4sok3d5PTNWV5
-         Immur+79WjzdGBoXMtA9IFoCPk5uZTmiZ+SBmtmOFWtQl+G8gWsNKXxglmTbogajJrGT
-         SvAeFPOLL5DIm+UBwYSlIh7QIhAT9eDl8Hd7F9wW1rEXp+RsFXvFLqwglH9mV7uiZAoz
-         Oq5ijbNgGaB3pSOl2kS9+XKun63d4ehI0mIhsWridFqZfO9emPYNKKKcG85I/T3EjMwN
-         refQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=U333hXUxyQhiqlTlWhPVMGKcPUQsglAuf+7XETbuhQ0=;
-        b=FdGy8pf83o4VgSZLmUG7dm+YUDibV2ppS1184ICoaeD+CkKohHEL+gZ0DcWv0XZDwU
-         kArI3SNqPXWi8NqbDCkjDVnqCPsSL8pNw2EOArk3+uXZ9Ss2z7HcXABirWvLV7E6GdAD
-         c7bkvG0xesmdgBICdgqGab8CNtF/bnZJmwedxrmSJcw3ZO6RCly3bA43i6yi5YPIHRAg
-         +Q3vxZgMN9EfjIz6BaH+JgkNRSwr2ZEZ8YG2pDfPtG4eAW1+rwFVXMO1rVglHUqVgUGK
-         kiccy/VaP8Ztu4J/BQI2zTAcvu00ZsGfmgtmAWgUthkM6lJWgy3xaF2v5b2hgTTxfrRK
-         7cRw==
-X-Gm-Message-State: APjAAAVwMeG/eJA1JGKEwPBfeNVlChRaWHTQgwwAJ1m0ZMJm312Xutf5
-        LoA5BeUzjyUJgG25aY0d/Yo=
-X-Google-Smtp-Source: APXvYqw/sJe73OJ/n8Bn3G6ZRNzoYNUjNZpgT9wrlMFjix8pu35QsHAFFRx5k8sKTKqlNoiLmchwaQ==
-X-Received: by 2002:a1c:ed0b:: with SMTP id l11mr13861973wmh.103.1560186330361;
-        Mon, 10 Jun 2019 10:05:30 -0700 (PDT)
-Received: from blackbox.darklights.net (p200300F133DDA40000C4C39937FBD289.dip0.t-ipconnect.de. [2003:f1:33dd:a400:c4:c399:37fb:d289])
-        by smtp.googlemail.com with ESMTPSA id r5sm21558160wrg.10.2019.06.10.10.05.29
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Mon, 10 Jun 2019 10:05:29 -0700 (PDT)
-From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-To:     linus.walleij@linaro.org, bgolaszewski@baylibre.com,
-        linux-gpio@vger.kernel.org
-Cc:     andrew@lunn.ch, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Subject: [PATCH 1/1] gpio: of: parse stmmac PHY reset line specific active-low property
-Date:   Mon, 10 Jun 2019 19:05:23 +0200
-Message-Id: <20190610170523.26554-2-martin.blumenstingl@googlemail.com>
-X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20190610170523.26554-1-martin.blumenstingl@googlemail.com>
-References: <20190610170523.26554-1-martin.blumenstingl@googlemail.com>
+        id S2387396AbfFJRLY (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 10 Jun 2019 13:11:24 -0400
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:44254 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728373AbfFJRLY (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 10 Jun 2019 13:11:24 -0400
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id x5AHBCWa121338;
+        Mon, 10 Jun 2019 12:11:12 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1560186672;
+        bh=t38w1L4mrxYXXMjDQM1becdv+NFut23PDyS5X30wChs=;
+        h=From:To:CC:Subject:Date;
+        b=IY7mJsgQmMZXyAx1hLY3wQu261gSm79u4CiTJ53uSmXqLjbf7invQW++CCrFO2mb7
+         V3Ag3YM3RSQuMRUJmbTfgRAYLvLu9YCWbjTDjb2g9UXuZTI1p4doIEb1128wCPwOh/
+         RgT+mKi7stL9fx7C4U/xUt+07bLYEVs1JPf9DCb4=
+Received: from DFLE113.ent.ti.com (dfle113.ent.ti.com [10.64.6.34])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x5AHBCiO079481
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Mon, 10 Jun 2019 12:11:12 -0500
+Received: from DFLE106.ent.ti.com (10.64.6.27) by DFLE113.ent.ti.com
+ (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Mon, 10
+ Jun 2019 12:11:11 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE106.ent.ti.com
+ (10.64.6.27) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Mon, 10 Jun 2019 12:11:11 -0500
+Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id x5AHBAaL066346;
+        Mon, 10 Jun 2019 12:11:11 -0500
+From:   Grygorii Strashko <grygorii.strashko@ti.com>
+To:     Russell King <rmk@arm.linux.org.uk>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Tony Lindgren <tony@atomide.com>
+CC:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        <linux-omap@vger.kernel.org>, <linux-gpio@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        Santosh Shilimkar <ssantosh@kernel.org>,
+        Grygorii Strashko <grygorii.strashko@ti.com>
+Subject: [PATCH-next 00/20]  gpio: gpio-omap: set of fixes and big clean-up
+Date:   Mon, 10 Jun 2019 20:10:43 +0300
+Message-ID: <20190610171103.30903-1-grygorii.strashko@ti.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-The stmmac driver currently ignores the GPIO flags which are passed via
-devicetree because it operates with legacy GPIO numbers instead of GPIO
-descriptors. stmmac assumes that the GPIO is "active HIGH" by default.
-This can be overwritten by setting "snps,reset-active-low" to make the
-reset line "active LOW".
+Hi Linus, Russell, Tony, All,
 
-Recent Amlogic SoCs (G12A which includes S905X2 and S905D2 as well as
-G12B which includes S922X) use GPIOZ_14 or GPIOZ_15 for the PHY reset
-line. These GPIOs are special because they are marked as "3.3V input
-tolerant open drain" pins which means they can only drive the pin output
-LOW (to reset the PHY) or to switch to input mode (to take the PHY out
-of reset).
-The GPIO subsystem already supports this with the GPIO_OPEN_DRAIN and
-GPIO_OPEN_SOURCE flags in the devicetree bindings.
+This series contains set of patches from Russell King which were circulated
+internally for quite some time already and I fill it's reasonable to move
+future discussion upstream (and also avoid rebasing).
+Fisrt two patches are fixes and the rest are big, great clean up
+from Russell King.
 
-Add the stmmac PHY reset line specific active low parsing to gpiolib-of
-so stmmac can be ported to GPIO descriptors while being backwards
-compatible with device trees which use the "old" way of specifying the
-polarity.
+Personally, I like this clean up and refactoring very much and don't want
+it to be lost.
 
-Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
----
- drivers/gpio/gpiolib-of.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+Code can be found at:
+ git@git.ti.com:~gragst/ti-linux-kernel/gragsts-ti-linux-kernel.git
+branch:
+ lkml-next-gpio-clean-up
 
-diff --git a/drivers/gpio/gpiolib-of.c b/drivers/gpio/gpiolib-of.c
-index 00deb885409c..a8f02f551d6b 100644
---- a/drivers/gpio/gpiolib-of.c
-+++ b/drivers/gpio/gpiolib-of.c
-@@ -158,6 +158,12 @@ static void of_gpio_flags_quirks(struct device_node *np,
- 			}
- 		}
- 	}
-+
-+	/* Legacy handling of stmmac's active-low PHY reset line */
-+	if (IS_ENABLED(CONFIG_STMMAC_ETH) &&
-+	    !strcmp(propname, "snps,reset-gpio") &&
-+	    of_property_read_bool(np, "snps,reset-active-low"))
-+		*flags |= OF_GPIO_ACTIVE_LOW;
- }
- 
- /**
+Russell King (20):
+  gpio: gpio-omap: ensure irq is enabled before wakeup
+  gpio: gpio-omap: fix lack of irqstatus_raw0 for OMAP4
+  gpio: gpio-omap: remove remainder of list management
+  gpio: gpio-omap: clean up edge interrupt handling
+  gpio: gpio-omap: remove irq_ack method
+  gpio: gpio-omap: move omap_gpio_request() and omap_gpio_free()
+  gpio: gpio-omap: simplify omap_gpio_get_direction()
+  gpio: gpio-omap: simplify get() method
+  gpio: gpio-omap: simplify get_multiple()
+  gpio: gpio-omap: simplify set_multiple()
+  gpio: gpio-omap: simplify bank->level_mask
+  gpio: gpio-omap: simplify read-modify-write
+  gpio: gpio-omap: simplify omap_toggle_gpio_edge_triggering()
+  gpio: gpio-omap: simplify omap_set_gpio_irqenable()
+  gpio: gpio-omap: remove dataout variation in context handling
+  gpio: gpio-omap: clean up omap_gpio_restore_context()
+  gpio: gpio-omap: constify register tables
+  gpio: gpio-omap: clean up wakeup handling
+  gpio: gpio-omap: irq_startup() must not return error codes
+  gpio: gpio-omap: clean up register access in omap2_set_gpio_debounce()
+
+ drivers/gpio/gpio-omap.c                | 497 ++++++++----------------
+ include/linux/platform_data/gpio-omap.h |   2 +-
+ 2 files changed, 161 insertions(+), 338 deletions(-)
+
 -- 
-2.22.0
+2.17.1
 
