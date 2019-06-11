@@ -2,18 +2,18 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 3CA0C3CE6E
-	for <lists+linux-gpio@lfdr.de>; Tue, 11 Jun 2019 16:21:48 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1F6823CE5E
+	for <lists+linux-gpio@lfdr.de>; Tue, 11 Jun 2019 16:21:41 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390573AbfFKOTp (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 11 Jun 2019 10:19:45 -0400
-Received: from hermes.aosc.io ([199.195.250.187]:33451 "EHLO hermes.aosc.io"
+        id S2389172AbfFKOTl (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 11 Jun 2019 10:19:41 -0400
+Received: from hermes.aosc.io ([199.195.250.187]:33445 "EHLO hermes.aosc.io"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389585AbfFKOTn (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Tue, 11 Jun 2019 10:19:43 -0400
+        id S2388808AbfFKOTl (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Tue, 11 Jun 2019 10:19:41 -0400
 Received: from localhost (localhost [127.0.0.1]) (Authenticated sender: icenowy@aosc.io)
-        by hermes.aosc.io (Postfix) with ESMTPSA id EAC598229B;
-        Tue, 11 Jun 2019 14:12:22 +0000 (UTC)
+        by hermes.aosc.io (Postfix) with ESMTPSA id 8FCE78229F;
+        Tue, 11 Jun 2019 14:12:36 +0000 (UTC)
 From:   Icenowy Zheng <icenowy@aosc.io>
 To:     Rob Herring <robh+dt@kernel.org>,
         Maxime Ripard <maxime.ripard@bootlin.com>,
@@ -23,81 +23,44 @@ Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
         linux-gpio@vger.kernel.org, linux-sunxi@googlegroups.com,
         Icenowy Zheng <icenowy@aosc.io>
-Subject: [PATCH v2 08/11] ARM: sunxi: dts: s3/s3l/v3: add DTSI files for S3/S3L/V3 SoCs
-Date:   Tue, 11 Jun 2019 22:09:37 +0800
-Message-Id: <20190611140940.14357-9-icenowy@aosc.io>
+Subject: [PATCH v2 09/11] dt-bindings: vendor-prefixes: add Sipeed
+Date:   Tue, 11 Jun 2019 22:09:38 +0800
+Message-Id: <20190611140940.14357-10-icenowy@aosc.io>
 In-Reply-To: <20190611140940.14357-1-icenowy@aosc.io>
 References: <20190611140940.14357-1-icenowy@aosc.io>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-The Allwinner S3/S3L/V3 SoCs all share the same die with the V3s SoC,
-but with more GPIO wired out of the package.
+Shenzhen Sipeed Technology Co., Ltd. is a company focused on development
+kits, which also contains rebranded Lichee Pi series.
 
-Add DTSI files for these SoCs. The DTSI file for V3 just replaces the
-pinctrl compatible string, and the S3/S3L DTSI files just include the V3
-DTSI file.
+Add its vendor prefix binding.
 
 Signed-off-by: Icenowy Zheng <icenowy@aosc.io>
 ---
-No changes in v2.
+New patch in v2.
 
- arch/arm/boot/dts/sun8i-s3.dtsi  |  6 ++++++
- arch/arm/boot/dts/sun8i-s3l.dtsi |  6 ++++++
- arch/arm/boot/dts/sun8i-v3.dtsi  | 14 ++++++++++++++
- 3 files changed, 26 insertions(+)
- create mode 100644 arch/arm/boot/dts/sun8i-s3.dtsi
- create mode 100644 arch/arm/boot/dts/sun8i-s3l.dtsi
- create mode 100644 arch/arm/boot/dts/sun8i-v3.dtsi
+ Documentation/devicetree/bindings/vendor-prefixes.yaml | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/arch/arm/boot/dts/sun8i-s3.dtsi b/arch/arm/boot/dts/sun8i-s3.dtsi
-new file mode 100644
-index 000000000000..0f41a25ecb30
---- /dev/null
-+++ b/arch/arm/boot/dts/sun8i-s3.dtsi
-@@ -0,0 +1,6 @@
-+// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-+/*
-+ * Copyright (C) 2019 Icenowy Zheng <icenowy@aosc.io>
-+ */
-+
-+#include "sun8i-v3.dtsi"
-diff --git a/arch/arm/boot/dts/sun8i-s3l.dtsi b/arch/arm/boot/dts/sun8i-s3l.dtsi
-new file mode 100644
-index 000000000000..0f41a25ecb30
---- /dev/null
-+++ b/arch/arm/boot/dts/sun8i-s3l.dtsi
-@@ -0,0 +1,6 @@
-+// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-+/*
-+ * Copyright (C) 2019 Icenowy Zheng <icenowy@aosc.io>
-+ */
-+
-+#include "sun8i-v3.dtsi"
-diff --git a/arch/arm/boot/dts/sun8i-v3.dtsi b/arch/arm/boot/dts/sun8i-v3.dtsi
-new file mode 100644
-index 000000000000..6ae8645ade50
---- /dev/null
-+++ b/arch/arm/boot/dts/sun8i-v3.dtsi
-@@ -0,0 +1,14 @@
-+// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-+/*
-+ * Copyright (C) 2019 Icenowy Zheng <icenowy@aosc.io>
-+ */
-+
-+#include "sun8i-v3s.dtsi"
-+
-+&ccu {
-+	compatible = "allwinner,sun8i-v3-ccu";
-+};
-+
-+&pio {
-+	compatible = "allwinner,sun8i-v3-pinctrl";
-+};
+diff --git a/Documentation/devicetree/bindings/vendor-prefixes.yaml b/Documentation/devicetree/bindings/vendor-prefixes.yaml
+index 2c8a8b195c07..c0cd22e5672a 100644
+--- a/Documentation/devicetree/bindings/vendor-prefixes.yaml
++++ b/Documentation/devicetree/bindings/vendor-prefixes.yaml
+@@ -791,6 +791,8 @@ patternProperties:
+     description: Silicon Mitus, Inc.
+   "^simtek,.*":
+     description: Cypress Semiconductor Corporation (Simtek Corporation)
++  "^sipeed,.*":
++    description: Shenzhen Sipeed Technology Co., Ltd.
+   "^sirf,.*":
+     description: SiRF Technology, Inc.
+   "^sis,.*":
 -- 
 2.21.0
 
