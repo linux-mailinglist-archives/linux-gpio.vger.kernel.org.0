@@ -2,114 +2,119 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id E2ED73C959
-	for <lists+linux-gpio@lfdr.de>; Tue, 11 Jun 2019 12:52:03 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A4C4B3C9EA
+	for <lists+linux-gpio@lfdr.de>; Tue, 11 Jun 2019 13:23:07 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387560AbfFKKwD (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 11 Jun 2019 06:52:03 -0400
-Received: from mail-eopbgr40074.outbound.protection.outlook.com ([40.107.4.74]:22631
-        "EHLO EUR03-DB5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2387489AbfFKKwC (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Tue, 11 Jun 2019 06:52:02 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=rPvnWu3FFfI5wL/TOLxlpYANYvESdJTFIUZyEBdJAs0=;
- b=RrepAC0Yn/zUfmOTDtWlMCrkU5d7evKC8+WfXnzqWa1ct/6ILLs8CjGmerbo3AuQKUDNUWcciK8XORCqpagAxWZ85G3pMRbbKVk8ShFyNjTBKzu72oQcxjHg3TjymRwqJ5YKRaI6Kge3FsbUmnWPptRDk4/qVp2IoZwG+RVbtWI=
-Received: from AM0PR04MB4211.eurprd04.prod.outlook.com (52.134.92.158) by
- AM0PR04MB4546.eurprd04.prod.outlook.com (52.135.149.160) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1965.17; Tue, 11 Jun 2019 10:51:58 +0000
-Received: from AM0PR04MB4211.eurprd04.prod.outlook.com
- ([fe80::11e1:3bb9:156b:a3e4]) by AM0PR04MB4211.eurprd04.prod.outlook.com
- ([fe80::11e1:3bb9:156b:a3e4%3]) with mapi id 15.20.1965.017; Tue, 11 Jun 2019
- 10:51:58 +0000
-From:   Aisheng Dong <aisheng.dong@nxp.com>
-To:     Anson Huang <anson.huang@nxp.com>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "stefan@agner.ch" <stefan@agner.ch>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
-        "will.deacon@arm.com" <will.deacon@arm.com>,
-        "maxime.ripard@bootlin.com" <maxime.ripard@bootlin.com>,
-        "olof@lixom.net" <olof@lixom.net>,
-        "horms+renesas@verge.net.au" <horms+renesas@verge.net.au>,
-        "jagan@amarulasolutions.com" <jagan@amarulasolutions.com>,
-        Leonard Crestez <leonard.crestez@nxp.com>,
-        "bjorn.andersson@linaro.org" <bjorn.andersson@linaro.org>,
-        "dinguyen@kernel.org" <dinguyen@kernel.org>,
-        "enric.balletbo@collabora.com" <enric.balletbo@collabora.com>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-CC:     dl-linux-imx <linux-imx@nxp.com>
-Subject: RE: [PATCH 3/3] arm64: defconfig: Select CONFIG_PINCTRL_IMX8MN by
- default
-Thread-Topic: [PATCH 3/3] arm64: defconfig: Select CONFIG_PINCTRL_IMX8MN by
- default
-Thread-Index: AQHVFpRvb6leaT2HWESvmvTiSrMpmqaWWUQw
-Date:   Tue, 11 Jun 2019 10:51:58 +0000
-Message-ID: <AM0PR04MB4211E5EC9392837648BB488880ED0@AM0PR04MB4211.eurprd04.prod.outlook.com>
-References: <20190530030546.9224-1-Anson.Huang@nxp.com>
- <20190530030546.9224-3-Anson.Huang@nxp.com>
-In-Reply-To: <20190530030546.9224-3-Anson.Huang@nxp.com>
-Accept-Language: zh-CN, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=aisheng.dong@nxp.com; 
-x-originating-ip: [119.31.174.66]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 3d6ea856-371e-4aa6-266a-08d6ee5ad398
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:AM0PR04MB4546;
-x-ms-traffictypediagnostic: AM0PR04MB4546:
-x-microsoft-antispam-prvs: <AM0PR04MB4546650BB5BC8FCC9710B54B80ED0@AM0PR04MB4546.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:291;
-x-forefront-prvs: 006546F32A
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(366004)(136003)(376002)(396003)(39860400002)(346002)(189003)(199004)(7416002)(74316002)(3846002)(33656002)(229853002)(6116002)(6436002)(256004)(14444005)(4744005)(71190400001)(66066001)(71200400001)(9686003)(4326008)(25786009)(55016002)(14454004)(8676002)(110136005)(99286004)(2906002)(53936002)(81166006)(8936002)(305945005)(81156014)(7736002)(6246003)(5660300002)(2501003)(476003)(26005)(478600001)(186003)(2201001)(486006)(66476007)(316002)(66446008)(68736007)(446003)(73956011)(86362001)(66946007)(7696005)(66556008)(102836004)(11346002)(76176011)(52536014)(44832011)(6506007)(64756008)(76116006)(921003)(1121003);DIR:OUT;SFP:1101;SCL:1;SRVR:AM0PR04MB4546;H:AM0PR04MB4211.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: hfC4yn+yl/PtgLd18ttIPEyjk2wZkrYUF4j2g8dUPD9qwTDyFADko8pRaudG71/+p4y86mu6OTnfIi7AOJ7iFqRuZ/8C/s2ez/7XR2oHNMDbopZdgnm7fHJQUyBmJH8zq2Gq8RMG2qm5OXQM98qKBW2Fo65f1wUGSqOiX1poB71avc66AZh2yeBIvBOqawkrPQtDxG++oQLr7gUpVAcUdwUFptLDqmLeAcZHw/bHyfH24dY/ZFAU9G5EeeBr5shQwsGowt3VO8u5WFKJDpvYkt6DbKmQx47JYt6kr0axcD1k4Ozo+v2SQNYZXW1WBSRQGX5vtYQILU68Ii3v+s4NrY4c2Z0b60cvSSv4fWbDSY4iEwczi/+QYeBTKPj1fLWDPSA7mM5l/RCBxEd4WIqHmcuOfGedlqGSOkavUWm0RHY=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        id S2389302AbfFKLXG (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 11 Jun 2019 07:23:06 -0400
+Received: from foss.arm.com ([217.140.110.172]:58912 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2389200AbfFKLXG (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Tue, 11 Jun 2019 07:23:06 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7E64F344;
+        Tue, 11 Jun 2019 04:23:05 -0700 (PDT)
+Received: from [10.1.197.61] (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C3EDD3F557;
+        Tue, 11 Jun 2019 04:24:46 -0700 (PDT)
+Subject: Re: [PATCH 0/4] irqchip: renesas: Use proper irq_chip name and parent
+To:     Geert Uytterhoeven <geert+renesas@glider.be>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Cc:     linux-renesas-soc@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20190607095858.10028-1-geert+renesas@glider.be>
+From:   Marc Zyngier <marc.zyngier@arm.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=marc.zyngier@arm.com; prefer-encrypt=mutual; keydata=
+ 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
+ Z46HaNmN2hZS/oJ69c1DI5Rcww==
+Organization: ARM Ltd
+Message-ID: <b1720fb0-b638-32d1-7f48-c1f24b64e83f@arm.com>
+Date:   Tue, 11 Jun 2019 12:23:02 +0100
+User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 3d6ea856-371e-4aa6-266a-08d6ee5ad398
-X-MS-Exchange-CrossTenant-originalarrivaltime: 11 Jun 2019 10:51:58.3475
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: aisheng.dong@nxp.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR04MB4546
+In-Reply-To: <20190607095858.10028-1-geert+renesas@glider.be>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-PiBGcm9tOiBBbnNvbi5IdWFuZ0BueHAuY29tIFttYWlsdG86QW5zb24uSHVhbmdAbnhwLmNvbV0N
-Cj4gU2VudDogVGh1cnNkYXksIE1heSAzMCwgMjAxOSAxMTowNiBBTQ0KPiANCj4gRW5hYmxlIENP
-TkZJR19QSU5DVFJMX0lNWDhNTiBieSBkZWZhdWx0IHRvIHN1cHBvcnQgaS5NWDhNTiBwaW5jdHJs
-DQo+IGRyaXZlci4NCj4gDQo+IFNpZ25lZC1vZmYtYnk6IEFuc29uIEh1YW5nIDxBbnNvbi5IdWFu
-Z0BueHAuY29tPg0KDQpOaXRwaWNrOiBwbGVhc2UgY2hlY2sgdGhlIGFscGhhYmV0aWNhbCBvcmRl
-ciwNCk90aGVyd2lzZToNClJldmlld2VkLWJ5OiBEb25nIEFpc2hlbmcgPGFpc2hlbmcuZG9uZ0Bu
-eHAuY29tPg0KDQpSZWdhcmRzDQpEb25nIEFpc2hlbmcNCg0KPiAtLS0NCj4gIGFyY2gvYXJtNjQv
-Y29uZmlncy9kZWZjb25maWcgfCAxICsNCj4gIDEgZmlsZSBjaGFuZ2VkLCAxIGluc2VydGlvbigr
-KQ0KPiANCj4gZGlmZiAtLWdpdCBhL2FyY2gvYXJtNjQvY29uZmlncy9kZWZjb25maWcgYi9hcmNo
-L2FybTY0L2NvbmZpZ3MvZGVmY29uZmlnDQo+IGluZGV4IDdjN2I2YjUuLjhkNGYyNWMgMTAwNjQ0
-DQo+IC0tLSBhL2FyY2gvYXJtNjQvY29uZmlncy9kZWZjb25maWcNCj4gKysrIGIvYXJjaC9hcm02
-NC9jb25maWdzL2RlZmNvbmZpZw0KPiBAQCAtMzczLDYgKzM3Myw3IEBAIENPTkZJR19TUElfU1VO
-Nkk9eQ0KPiAgQ09ORklHX1NQTUk9eQ0KPiAgQ09ORklHX1BJTkNUUkxfU0lOR0xFPXkNCj4gIENP
-TkZJR19QSU5DVFJMX01BWDc3NjIwPXkNCj4gK0NPTkZJR19QSU5DVFJMX0lNWDhNTj15DQo+ICBD
-T05GSUdfUElOQ1RSTF9JTVg4TU09eQ0KPiAgQ09ORklHX1BJTkNUUkxfSU1YOE1RPXkNCj4gIENP
-TkZJR19QSU5DVFJMX0lNWDhRWFA9eQ0KPiAtLQ0KPiAyLjcuNA0KDQo=
+On 07/06/2019 10:58, Geert Uytterhoeven wrote:
+> 	Hi all,
+> 
+> Recently, Marc pointed out some common misconceptions w.r.t. the .name
+> and .parent_device fields in struct irq_chip.  This patch series fixes
+> them in the Renesas interrupt controller drivers.
+> 
+> The first two patches are destined for the irqchip tree, the last two
+> for the GPIO tree.
+> 
+> Thanks!
+> 
+> Geert Uytterhoeven (4):
+>   irqchip/renesas-intc-irqpin: Use proper irq_chip name and parent
+>   irqchip/renesas-irqc: Use proper irq_chip name and parent
+>   gpio: em: Use proper irq_chip name
+>   gpio: rcar: Use proper irq_chip name
+> 
+>  drivers/gpio/gpio-em.c                    | 2 +-
+>  drivers/gpio/gpio-rcar.c                  | 2 +-
+>  drivers/irqchip/irq-renesas-intc-irqpin.c | 3 ++-
+>  drivers/irqchip/irq-renesas-irqc.c        | 3 ++-
+>  4 files changed, 6 insertions(+), 4 deletions(-)
+> 
+
+I've applied patches 1 and2 to the irqchip tree.
+
+Thanks,
+
+	M.
+-- 
+Jazz is not dead. It just smells funny...
