@@ -2,129 +2,74 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id D5FCD3CE62
-	for <lists+linux-gpio@lfdr.de>; Tue, 11 Jun 2019 16:21:42 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 440763CEA4
+	for <lists+linux-gpio@lfdr.de>; Tue, 11 Jun 2019 16:27:42 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389733AbfFKOTl (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 11 Jun 2019 10:19:41 -0400
-Received: from hermes.aosc.io ([199.195.250.187]:33444 "EHLO hermes.aosc.io"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388789AbfFKOTl (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Tue, 11 Jun 2019 10:19:41 -0400
-Received: from localhost (localhost [127.0.0.1]) (Authenticated sender: icenowy@aosc.io)
-        by hermes.aosc.io (Postfix) with ESMTPSA id DB191822A7;
-        Tue, 11 Jun 2019 14:12:51 +0000 (UTC)
-From:   Icenowy Zheng <icenowy@aosc.io>
-To:     Rob Herring <robh+dt@kernel.org>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Chen-Yu Tsai <wens@csie.org>,
+        id S2389566AbfFKO1j (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 11 Jun 2019 10:27:39 -0400
+Received: from mout.kundenserver.de ([217.72.192.73]:54807 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388676AbfFKO1i (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 11 Jun 2019 10:27:38 -0400
+Received: from [192.168.1.110] ([95.118.191.213]) by mrelayeu.kundenserver.de
+ (mreue109 [212.227.15.183]) with ESMTPSA (Nemesis) id
+ 1N63NW-1gUNeI3ip6-016NZw; Tue, 11 Jun 2019 16:27:34 +0200
+Subject: Re: [PATCH] pinctrl: lantiq: Switch to SPDX header
+To:     Lubomir Rintel <lkundrak@v3.sk>,
         Linus Walleij <linus.walleij@linaro.org>
-Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-gpio@vger.kernel.org, linux-sunxi@googlegroups.com,
-        Icenowy Zheng <icenowy@aosc.io>
-Subject: [PATCH v2 11/11] ARM: dts: sun8i: s3: add devicetree for Lichee zero plus w/ S3
-Date:   Tue, 11 Jun 2019 22:09:40 +0800
-Message-Id: <20190611140940.14357-12-icenowy@aosc.io>
-In-Reply-To: <20190611140940.14357-1-icenowy@aosc.io>
-References: <20190611140940.14357-1-icenowy@aosc.io>
+Cc:     John Crispin <john@phrozen.org>, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20190611072004.2978373-1-lkundrak@v3.sk>
+From:   "Enrico Weigelt, metux IT consult" <lkml@metux.net>
+Organization: metux IT consult
+Message-ID: <9c4a0f59-1e3a-0c72-b9e7-a7978753a52b@metux.net>
+Date:   Tue, 11 Jun 2019 16:27:27 +0200
+User-Agent: Mozilla/5.0 (X11; Linux i686 on x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.2.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190611072004.2978373-1-lkundrak@v3.sk>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Provags-ID: V03:K1:PussVQk4+Tim9l3yHxtaW/xw3MAu2tJSQHgBiXBjwyJn3td4qd5
+ DzAmcgkXFaVD5bU0mAirWCzHLXaqkq2nPJSDKP0Caf/anqMydAtp209jXXgXlbA4wqpTrk7
+ qiASHhasELWfF9ZPOi0PPAlCgkxwuULwLUONBm4+CNeiV2/wD39EJq7g93H9u7X7gK16NOV
+ uX8LfEAFqGpnUKrxEFt+Q==
+X-Spam-Flag: NO
+X-UI-Out-Filterresults: notjunk:1;V03:K0:gNwBp84gseg=:6NaPQe9wBqiSo3CYlIqCTa
+ Mxv22qGmczPYNPO/hSeVlxSDRXIdPXhHnCeBjh3T3gO9PsU5AWp68fH8FDHNtH44ukkyAq8/l
+ ZchOcpV8eIFE3nHmaLyBoF2kEYPSGhGEA79FG/prDr4nAJ6MdkNqFS55njmekO9x1PNpF3vBT
+ cD/ab686Ul/+UJLt0FtblFYACWSadLdamMcdEZA28RGxaOvlYfAfyNkjd5/ViFNh5ZwTWJuhy
+ 0O3UC/4wOKxOjS7rbK34lyjs/d6LQ09PdSRaD7B5R4pFX5ky0I5NY8cmOkDSzyrIYiUU+QMws
+ whD5BMmlwzNhws3nqvly3+sO9w8V1Ai1cUhaNebsfrai98BJ6evUjaXQmOaxNFeGNLoZ4koli
+ B5PNYCHR2KfOgZtoWhCd1Qqon8eb+rnjsZcf+Buytn1tSKFkTWYZkveAPWz1/rfSe4jYk1XC+
+ qDLF2cWgh4Ksjjx8s07jbmguq3bMm2S8BeFAuUGOhRSg2yFY6IrpHusEZ4LMourHUgA7dSXrs
+ fpQl+QI6T7GokdCTpHzYl/o/bUjiu/I2zYPXsLmWVK3ARGrVFmYdbcNdNwFS2OgVbWMa7Vn2Q
+ k2wEq99B4WvON/qjA4dP/hopb2PKeBP9EVUCOIV37P6akLSHJDMewPzkdv/d2f2Vn/fMNb+Kp
+ A4PBlU6XCcbD3hauSZYHRHvpsEINOWaASm+dNvjjoE6w1aH/8KNwZwTxPPJI9UqOn8w5iASPU
+ FOMbT2f5650NJWq/mtNCvudq4xeLEpUMZ1JSKHmiFMM+bchkgd3pmI/0j2DznXsyKzQXWxh8c
+ Ma+I5of
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Lichee zero plus is a core board made by Sipeed, which includes on-board
-TF slot or SMT SD NAND, and optional SPI NOR or eMMC, a UART debug
-header, a microUSB slot and a gold finger connector for expansion. It
-can use either Sochip S3 or Allwinner S3L SoC.
+On 11.06.19 09:20, Lubomir Rintel wrote:
+> The original license text had a typo ("publishhed") which would be
+> likely to confuse automated licensing auditing tools. Let's just switch
+> to SPDX instead of fixing the wording.
 
-Add the basic device tree for the core board, w/o optional onboard
-storage, and with S3 SoC.
+Reviewed-By: Enrico Weigelt <info@metux.net>
 
-Signed-off-by: Icenowy Zheng <icenowy@aosc.io>
----
-New patch in v2.
+BTW: are you aware that there's a separate project for cleaning up
+those things ?
 
- arch/arm/boot/dts/Makefile                    |  1 +
- .../boot/dts/sun8i-s3-lichee-zero-plus.dts    |  8 ++++
- .../dts/sun8i-s3-s3l-lichee-zero-plus.dtsi    | 39 +++++++++++++++++++
- 3 files changed, 48 insertions(+)
- create mode 100644 arch/arm/boot/dts/sun8i-s3-lichee-zero-plus.dts
- create mode 100644 arch/arm/boot/dts/sun8i-s3-s3l-lichee-zero-plus.dtsi
+maillist: linux-spdx@vger.kernel.org
 
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index 5559028b770e..2b5e6a1d20ff 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -1110,6 +1110,7 @@ dtb-$(CONFIG_MACH_SUN8I) += \
- 	sun8i-r16-nintendo-super-nes-classic.dtb \
- 	sun8i-r16-parrot.dtb \
- 	sun8i-r40-bananapi-m2-ultra.dtb \
-+	sun8i-s3-lichee-zero-plus.dtb \
- 	sun8i-t3-cqa3t-bv3.dtb \
- 	sun8i-v3s-licheepi-zero.dtb \
- 	sun8i-v3s-licheepi-zero-dock.dtb \
-diff --git a/arch/arm/boot/dts/sun8i-s3-lichee-zero-plus.dts b/arch/arm/boot/dts/sun8i-s3-lichee-zero-plus.dts
-new file mode 100644
-index 000000000000..7d2f6b145190
---- /dev/null
-+++ b/arch/arm/boot/dts/sun8i-s3-lichee-zero-plus.dts
-@@ -0,0 +1,8 @@
-+// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-+/*
-+ * Copyright (C) 2019 Icenowy Zheng <icenowy@aosc.io>
-+ */
-+
-+/dts-v1/;
-+#include "sun8i-s3.dtsi"
-+#include "sun8i-s3-s3l-lichee-zero-plus.dtsi"
-diff --git a/arch/arm/boot/dts/sun8i-s3-s3l-lichee-zero-plus.dtsi b/arch/arm/boot/dts/sun8i-s3-s3l-lichee-zero-plus.dtsi
-new file mode 100644
-index 000000000000..bb148e796df7
---- /dev/null
-+++ b/arch/arm/boot/dts/sun8i-s3-s3l-lichee-zero-plus.dtsi
-@@ -0,0 +1,39 @@
-+// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-+/*
-+ * Copyright (C) 2019 Icenowy Zheng <icenowy@aosc.io>
-+ */
-+
-+#include "sunxi-common-regulators.dtsi"
-+
-+/ {
-+	aliases {
-+		serial0 = &uart0;
-+	};
-+
-+	chosen {
-+		stdout-path = "serial0:115200n8";
-+	};
-+};
-+
-+&mmc0 {
-+	broken-cd;
-+	bus-width = <4>;
-+	vmmc-supply = <&reg_vcc3v3>;
-+	status = "okay";
-+};
-+
-+&uart0 {
-+	pinctrl-0 = <&uart0_pb_pins>;
-+	pinctrl-names = "default";
-+	status = "okay";
-+};
-+
-+&usb_otg {
-+	dr_mode = "otg";
-+	status = "okay";
-+};
-+
-+&usbphy {
-+	usb0_id_det-gpios = <&pio 5 6 GPIO_ACTIVE_HIGH>;
-+	status = "okay";
-+};
+
+--mtx
+
 -- 
-2.21.0
-
+Enrico Weigelt, metux IT consult
+Free software and Linux embedded engineering
+info@metux.net -- +49-151-27565287
