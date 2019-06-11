@@ -2,100 +2,96 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id B0A2B3D749
-	for <lists+linux-gpio@lfdr.de>; Tue, 11 Jun 2019 21:55:30 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id F1A263D762
+	for <lists+linux-gpio@lfdr.de>; Tue, 11 Jun 2019 22:01:14 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405345AbfFKTzK (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 11 Jun 2019 15:55:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60936 "EHLO mail.kernel.org"
+        id S2406025AbfFKUAz (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 11 Jun 2019 16:00:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35698 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404282AbfFKTzK (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Tue, 11 Jun 2019 15:55:10 -0400
-Received: from mail-qk1-f180.google.com (mail-qk1-f180.google.com [209.85.222.180])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S2405168AbfFKUAz (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Tue, 11 Jun 2019 16:00:55 -0400
+Received: from earth.universe (unknown [185.62.205.103])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 41EE82173C;
-        Tue, 11 Jun 2019 19:55:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 130F120883;
+        Tue, 11 Jun 2019 20:00:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560282909;
-        bh=2jeSb/OUEFUwExRaSwm27O/BgcQGHGrpHx+20YxbtuM=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=WTgRZYFURDZsQb5+TwkIswCl5Zg+MioxluX+zL+ZzZWomQHLpkKCnGCZBynVvT1qo
-         IhlX7pJGYmtDRJgSbcHGZDxgB6fAqtkxiqBUXeZBjaaLoX/Byz2TW4otC/3mkYhXpw
-         65X0hL2dZitOE6NFf3oTd8sboqXvP/dDOSreRQBg=
-Received: by mail-qk1-f180.google.com with SMTP id m14so8466957qka.10;
-        Tue, 11 Jun 2019 12:55:09 -0700 (PDT)
-X-Gm-Message-State: APjAAAWtGlbF+oiyCNMLpRG50tYDM3e8ZC0c9vnLOXNr1iztlLJm/rg+
-        czWntOds4nHHjFQk/X07V0KvR2aB1AAHHvtbDQ==
-X-Google-Smtp-Source: APXvYqzDOaQFq9KRqVoTAyLrNcdmraacXiFjUvpNJC9DC1OsA19tDc1ngzzrggZx0+ae9yjZdwjNOgSx2r/OE2MEo4c=
-X-Received: by 2002:ae9:c208:: with SMTP id j8mr61663393qkg.264.1560282908475;
- Tue, 11 Jun 2019 12:55:08 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190514005033.15593-1-robh@kernel.org> <CACRpkdZabT3_vjkv0PR+GLC0ZXWzpMxfwJU6O9Y+omKJ=6zCaA@mail.gmail.com>
- <20190527064146.5rlm2audk6uojdxn@vireshk-i7>
-In-Reply-To: <20190527064146.5rlm2audk6uojdxn@vireshk-i7>
-From:   Rob Herring <robh@kernel.org>
-Date:   Tue, 11 Jun 2019 13:54:57 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqK3iS+Tv+0HYMApL6C6WQeVsf9hXgvpLpuR+dbDuygQdg@mail.gmail.com>
-Message-ID: <CAL_JsqK3iS+Tv+0HYMApL6C6WQeVsf9hXgvpLpuR+dbDuygQdg@mail.gmail.com>
-Subject: Re: [PATCH] dt-bindings: gpio: Convert Arm PL061 to json-schema
-To:     Viresh Kumar <viresh.kumar@linaro.org>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        s=default; t=1560283254;
+        bh=s/Ht5+9CPxynHvmNGgca4LVS0zf0kgpTAEg3mLddkn0=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=1UAFM7E6z32INie2ywpw1WxlvWw6gwAH+2ireN9vwA81UQSpOFkLHMVPrEzMmFQw2
+         UHWF+yTW2DbFptWnYRH5PbiVRaTx9FQ1l9HYpmzrVt3+fq0mqOTVo1ylBdok4j3RJR
+         0TsIk179NCnIeR/FUlhchmcMm98+HagiQBI57/Ko=
+Received: by earth.universe (Postfix, from userid 1000)
+        id C5AC53C0C77; Tue, 11 Jun 2019 22:00:43 +0200 (CEST)
+Date:   Tue, 11 Jun 2019 22:00:43 +0200
+From:   Sebastian Reichel <sre@kernel.org>
+To:     Lee Jones <lee.jones@linaro.org>
+Cc:     mazziesaccount@gmail.com, Lee Jones <lee.jones@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-pm@vger.kernel.org, linux-rtc@vger.kernel.org
+Subject: Re: [PATCH v15 0/7] support ROHM BD70528 PMIC
+Message-ID: <20190611200043.eib3g3acc7ilawsx@earth.universe>
+References: <cover.1559546139.git.matti.vaittinen@fi.rohmeurope.com>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="qfajaxb2wnhwswu6"
+Content-Disposition: inline
+In-Reply-To: <cover.1559546139.git.matti.vaittinen@fi.rohmeurope.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, May 27, 2019 at 12:41 AM Viresh Kumar <viresh.kumar@linaro.org> wrote:
->
-> On 24-05-19, 13:38, Linus Walleij wrote:
-> > On Tue, May 14, 2019 at 2:50 AM Rob Herring <robh@kernel.org> wrote:
-> >
-> > > Convert the Arm PL061 GPIO controller binding to json-schema format.
-> > >
-> > > As I'm the author for all but the gpio-ranges line, make the schema dual
-> > > GPL/BSD license.
-> > >
-> > > Cc: Linus Walleij <linus.walleij@linaro.org>
-> > > Cc: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> > > Cc: linux-gpio@vger.kernel.org
-> > > Signed-off-by: Rob Herring <robh@kernel.org>
-> >
-> > Patch applied. As you know I am already a big fan of this scheme.
-> >
-> > > This warns on a few platforms missing clocks, interrupt-controller
-> > > and/or #interrupt-cells. We could not make those required, but really
-> > > they should be IMO. OTOH, it's platforms like Spear and Calxeda which
-> > > aren't too active, so I don't know that we want to fix them.
-> >
-> > What works for you works for me.
-> >
-> > We could add dummy fixed clocks in the DTS files if
-> > we wanted I suppose. The #interrupt-cells and interrupt-controller
-> > things we can just fix, but I wonder what the maintainers of these
-> > platforms are up to? Isn't Calxeda yours, and could Viresh fix
-> > up the SPEAr?
 
-I was hoping to delete Calxeda rather than fix. I'm pretty sure none
-of the distros are using the systems anymore and they were the main
-users for a while. Otherwise, I would have converted all the bindings
-it uses.
+--qfajaxb2wnhwswu6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-> I checked SPEAr and it is missing interrupt-controller at few places and clocks
-> everywhere. Missing clocks should be fine as SPEAr doesn't get clocks from DT.
+Hi,
 
-Clocks not from DT was supposed to be a transitional thing...
+On Mon, Jun 03, 2019 at 10:23:37AM +0300, Matti Vaittinen wrote:
+> Patch series introducing support for ROHM BD70528 PMIC
+> [...]
 
->
-> And interrupt-controller can be just added, I don't think there would be any
-> platform dependent side-affects ?
+I think all patches have been reviewed by the respective subsystem
+maintainers. Lee, can you provide an immutable branch with the MFD
+patches (1, 2, 4)? Looks like the other patches only depend on those
+and can go through their respective subsystems.
 
-There shouldn't be.
+-- Sebastian
 
-Rob
+--qfajaxb2wnhwswu6
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAl0ACGsACgkQ2O7X88g7
++pqpvxAAiZzNy6zuuXZ4vjjMA7V17elDn9CTdWUe1RZBcvYxmFmOUWxTEPtRsmoC
+DSstvCVI3H0sOGanHoZ6WFe1R5cyV3jG4J9Xam7XQSQmVpWJPaQXSgQpSy4O6aMX
+3Hrs2E8Nv+zUuflVsm4yIOnX7avFBDxBdJlZzKNRzA2b3KOzmNvNr3Y/CbvS9IO4
+dTHBXDzcoo+XfrbOKD7Z/0LD6kPsVVkjI8qDiGMN0LCxVkkXV2IFFvMluaWzJHQl
+hDUheJRJkD1TXC6z1bCxHSzT4/DCDbWHXN191CnZSIeORMLeZxFFldSmKbYIvOV1
+DTJemYQUksIOl2usnvNvSl0GnxjrzZpw7PKbh3rXVlWaa52FEvRJJX++voIP3fNW
+zTHSYUTZrBqyLzC4Rp9AWeCy19ebFTrPjV3g3LZDIx0D37C3BeS71gNotRa9o91w
+aGBN/Um6Zm3PASbxAPk5TB9RIatlGSELFcVg4qa4of1Y7fY5+O/J5Civ/R1vQJkG
+iKE+ujAxYfKJkoUebhETYoHhonRh+naZuEgVC4yl9TsP2hGhz4rArD76kKTUnwNY
+g5rSpqb8LptHOkHdkP6ueQYIHavaNGfE6wJBfLqjG3uLU/8RU7YaOqZubQOH/WNT
+f2hxCJ76WfvTO5avZpYkykwOS0LwdP8MUoVz2tVnYLYm/q7DhB4=
+=2BRP
+-----END PGP SIGNATURE-----
+
+--qfajaxb2wnhwswu6--
