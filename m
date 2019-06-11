@@ -2,160 +2,96 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 31EF93D1F0
-	for <lists+linux-gpio@lfdr.de>; Tue, 11 Jun 2019 18:12:54 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AE82F3D1FA
+	for <lists+linux-gpio@lfdr.de>; Tue, 11 Jun 2019 18:14:47 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405473AbfFKQMd (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 11 Jun 2019 12:12:33 -0400
-Received: from ns.iliad.fr ([212.27.33.1]:34698 "EHLO ns.iliad.fr"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405466AbfFKQMd (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Tue, 11 Jun 2019 12:12:33 -0400
-Received: from ns.iliad.fr (localhost [127.0.0.1])
-        by ns.iliad.fr (Postfix) with ESMTP id 9C92620975;
-        Tue, 11 Jun 2019 18:12:30 +0200 (CEST)
-Received: from [192.168.108.49] (freebox.vlq16.iliad.fr [213.36.7.13])
-        by ns.iliad.fr (Postfix) with ESMTP id 8405B2077F;
-        Tue, 11 Jun 2019 18:12:30 +0200 (CEST)
-To:     Linus Walleij <linus.walleij@linaro.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     MSM <linux-arm-msm@vger.kernel.org>,
-        gpio <linux-gpio@vger.kernel.org>,
-        Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-From:   Marc Gonzalez <marc.w.gonzalez@free.fr>
-Subject: How to write "modern" pinctrl DT node
-Message-ID: <18ab4b1c-e74e-410a-a504-f524e46c42ac@free.fr>
-Date:   Tue, 11 Jun 2019 18:12:30 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        id S2405506AbfFKQOQ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 11 Jun 2019 12:14:16 -0400
+Received: from mout.kundenserver.de ([212.227.17.24]:38089 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2405393AbfFKQOQ (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 11 Jun 2019 12:14:16 -0400
+Received: from [192.168.1.110] ([95.118.191.213]) by mrelayeu.kundenserver.de
+ (mreue109 [212.227.15.183]) with ESMTPSA (Nemesis) id
+ 1MdNTy-1h1Oeo3XbU-00ZQ4b; Tue, 11 Jun 2019 18:14:02 +0200
+Subject: Re: [PATCH] RFC: fmc: Try to convert to GPIO descriptors
+To:     Alessandro Rubini <rubini@gnudd.com>
+Cc:     linus.walleij@linaro.org, federico.vaga@cern.ch,
+        linux-gpio@vger.kernel.org, bgolaszewski@baylibre.com,
+        riehecky@fnal.gov
+References: <fd1ad233-62aa-8545-a01e-511ea3db9f83@metux.net>
+ <CACRpkdaCFZcQ8VMjKJkXAm+TRH+=DY3j5Udh0mcYR7YcDr8VtA@mail.gmail.com>
+ <20190603230604.30938-1-linus.walleij@linaro.org>
+ <22282873.PltXLBtAh5@pcbe13614> <20190610061325.GA9668@mail.gnudd.com>
+ <20190611145850.GA15743@mail.gnudd.com>
+From:   "Enrico Weigelt, metux IT consult" <lkml@metux.net>
+Organization: metux IT consult
+Message-ID: <6006a8cd-ac80-93d0-bd61-cf2392655519@metux.net>
+Date:   Tue, 11 Jun 2019 18:14:00 +0200
+User-Agent: Mozilla/5.0 (X11; Linux i686 on x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.2.1
 MIME-Version: 1.0
+In-Reply-To: <20190611145850.GA15743@mail.gnudd.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Virus-Scanned: ClamAV using ClamSMTP ; ns.iliad.fr ; Tue Jun 11 18:12:30 2019 +0200 (CEST)
+X-Provags-ID: V03:K1:fej2J/qPxGVEgBSl7nQxdsyAEVnKErRg3so6lnPHbMlUEtB5ghg
+ 4Qsc+F/vyoiTbz6A6WHBb+gLO2Z40jVlAe3nzOrQv7ugRyfDf3HzbIhGNmRTVCw6n2SIq2O
+ jUF4IactWQV5wJlmIDFLhyiaRWlUwu4WenzuVTjQQJDuRr69EvL2qofTbyRByDlaqIT6lUO
+ I2LBsR2/pS2RPx5tFqdlQ==
+X-Spam-Flag: NO
+X-UI-Out-Filterresults: notjunk:1;V03:K0:sYEz/TW4UKs=:Dv0de4ETI7Xee8Xv78n0mw
+ dN33EhbpOudRdbCB+gOiN/zkgAu03bh5AaswZQHKyLGbpgrHB29+WYCM1XIT3BMvYZxkD4Dh2
+ F13k9cxSVLpDgxs5HOQCAUUiiu0hgY+a14CXa/THGvQ6PV/UInOVSG6mNKyJFGzCKb4XvgxVU
+ gzvS767Z5pYqR8460DOhb0oiRQl2l3ugxqHSucwHwfSK4XdTj1RSf0an9bQmddyDL7usa8F0R
+ wKF5H/yZaoJf/dIZrp5vv4Kyj8jRuoEPpK0F/GiA99j8WhlrmxkG/jVKGZKnTbbCGaxAw6843
+ WqkgBiOPQjSe9vWikpdfPH5/r6pNv+UA8DeKEY1rZDREQ3W1Mr52Neu01f0HfjIqazhsWVoem
+ XbwAJpO96XeYM12cFzeMRwlHkYhIJ5+MniL8Dc7RglUQG63Fs+hMlFzZ8S4PL3JKqhKDyJCNu
+ S8QUGksIzfaO3xEpPmyOPmBkKS0hv7sj+JEz2SFqtXVvMOoilOatxcTGvyV5GuuFBEQYn9hN5
+ kdgkzSsE7v7QsZqTPvAOXbXpDwMd99z3fbD4Et07r7TIIOcSLqUlEut02iOGRpMJTT7sqVeQF
+ nwqs/Wr5Np0a9TYxKwYJmryXzo18KjXaKdtf7Xa8CbiDweBw5/6Q0IAMqi0jPk4ok0078Ypba
+ 7xhGxqbb1+heT0J8wzpqgeLeLR3aKNTxPjU9T7CgwDn2cJJ1OQM0CZQSPeCulX79jYkoC46bt
+ xIRf0HSxbGlWZbtu7l+pC96nxpVbtjEpakHD7u4XXTmAlt8nsiEychTsYEM=
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hello,
+On 11.06.19 16:58, Alessandro Rubini wrote:
 
-I'm working with a device (TSIF0) which apparently drives 4 pins:
-(Or maybe 5... it seems gpio40 might be associated with TSIF0 as well.)
+Hi,
 
-https://source.codeaurora.org/quic/la/kernel/msm-4.4/tree/arch/arm/boot/dts/qcom/msm8998-pinctrl.dtsi?h=LE.UM.1.3.r3.25#n2258
+> This FMC (fpga mezzanine carrier) is a "slot" for peripheral boards.
+> Like shields for beaglebone or such stuff.  So there is a board
+> (and our own are actually pci-x and vme) with the FPGA, and the pins
+> are carried to this "mezzanine" where the I/O happens. The mezzanine
+> is usually just dumb, but it has the mandatory eeprom.
 
-I'll copy the downstream DT nodes here for discussion:
+Ah, the fpga directly terminates w/ pcix or vme ?
 
-		tsif0_signals_active: tsif0_signals_active {
-			tsif1_clk {
-				pins = "gpio89"; /* TSIF0 CLK */
-				function = "tsif1_clk";
-			};
-			tsif1_en {
-				pins = "gpio90"; /* TSIF0 Enable */
-				function = "tsif1_en";
-			};
-			tsif1_data {
-				pins = "gpio91"; /* TSIF0 DATA */
-				function = "tsif1_data";
-			};
-			signals_cfg {
-				pins = "gpio89", "gpio90", "gpio91";
-				drive_strength = <2>;	/* 2 mA */
-				bias-pull-down;		/* pull down */
-			};
-		};
+Okay, now I'm begining to get a picture ...
 
-		/* sync signal is only used if configured to mode-2 */
-		tsif0_sync_active: tsif0_sync_active {
-			tsif1_sync {
-				pins = "gpio9";	/* TSIF0 SYNC */
-				function = "tsif1_sync";
-				drive_strength = <2>;	/* 2 mA */
-				bias-pull-down;		/* pull down */
-			};
-		};
+So, from *logical* point of view (leaving aside the physical aspects),
+we have either pcix or vme cards, carrying an eepromp and an fpga ?
+The i2c and gpio controllers are also implemented in the fpga ?
+
+> So, our "fine delay" board, that can timestamp pulses and generate
+> other pulses at precise times) can plug in both the pcix and vme carrier.
+
+Do the bitfiles differ between pcix and vme case ?
+
+> The tow major ones, IIUC, are (1) the same mezzanine would require
+> different bitstreams according to external information and (2) the
+> fpga binary itself my expose different "devices" where a generalized
+> driver would benefit, instead of a mezzanine-specific driver.
+
+Have you already tried the MFD approach, where a board (in this case:
+bitfile) specific driver instantiates several generic ones ?
 
 
-Can I rewrite the first node as:
+--mtx
 
-	tsif0_default {
-		pins = "gpio89", "gpio90", "gpio91"; /* clk, enable, data */
-		function = "is_this_just_a_label?"; /* Can I just leave it out? */
-		drive-strength = <2>;
-		bias-pull-down;
-	}
-
-Is this enough information to configure the 3 pins? Probably not...
-There must be some information hard-coded in drivers/pinctrl/qcom/pinctrl-msm8998.c
-
-Can I merge pin 9 in the above node, since it has the same
-"hardware properties" (drive_strength and bias_direction) ?
-
-
-Looking at relevant parts of drivers/pinctrl/qcom/pinctrl-msm8998.c
-
-	PINCTRL_PIN(89, "GPIO_89"),
-	PINCTRL_PIN(90, "GPIO_90"),
-	PINCTRL_PIN(91, "GPIO_91"),
-
-DECLARE_MSM_GPIO_PINS(89);
-DECLARE_MSM_GPIO_PINS(90);
-DECLARE_MSM_GPIO_PINS(91);
-
-static const char * const tsif1_clk_groups[] = {
-	"gpio89",
-};
-static const char * const phase_flag10_groups[] = {
-	"gpio89",
-};
-static const char * const tsif1_en_groups[] = {
-	"gpio90",
-};
-static const char * const mdp_vsync0_groups[] = {
-	"gpio90",
-};
-static const char * const mdp_vsync1_groups[] = {
-	"gpio90",
-};
-static const char * const mdp_vsync2_groups[] = {
-	"gpio90",
-};
-static const char * const mdp_vsync3_groups[] = {
-	"gpio90",
-};
-static const char * const blsp1_spi_groups[] = {
-	"gpio90",
-};
-static const char * const tgu_ch0_groups[] = {
-	"gpio90",
-};
-static const char * const qdss_cti1_b_groups[] = {
-	"gpio90", "gpio91",
-};
-static const char * const tsif1_data_groups[] = {
-	"gpio91",
-};
-static const char * const sdc4_cmd_groups[] = {
-	"gpio91",
-};
-static const char * const tgu_ch1_groups[] = {
-	"gpio91",
-};
-static const char * const phase_flag1_groups[] = {
-	"gpio91",
-};
-
-	PINGROUP(89, EAST, tsif1_clk, phase_flag10, NA, NA, NA, NA, NA, NA, NA),
-	PINGROUP(90, EAST, tsif1_en, mdp_vsync0, mdp_vsync1, mdp_vsync2, mdp_vsync3, blsp1_spi, tgu_ch0, qdss_cti1_b, NA),
-	PINGROUP(91, EAST, tsif1_data, sdc4_cmd, tgu_ch1, phase_flag1, qdss_cti1_b, NA, NA, NA, NA),
-
-(It seems to me there is some redundancy in this driver?)
-
-These last 3 lines seem to summarize how each pin is muxed?
-I.e. it's used as one function, exclusively?
-So a proper driver should be unloadable, to let other drivers
-claim the shared pins?
-
-Regards.
+-- 
+Enrico Weigelt, metux IT consult
+Free software and Linux embedded engineering
+info@metux.net -- +49-151-27565287
