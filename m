@@ -2,226 +2,171 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 428FA3D4F7
-	for <lists+linux-gpio@lfdr.de>; Tue, 11 Jun 2019 20:05:21 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7CA853D59B
+	for <lists+linux-gpio@lfdr.de>; Tue, 11 Jun 2019 20:40:32 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406769AbfFKSFU (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 11 Jun 2019 14:05:20 -0400
-Received: from mail-pl1-f170.google.com ([209.85.214.170]:46865 "EHLO
-        mail-pl1-f170.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2406685AbfFKSFU (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 11 Jun 2019 14:05:20 -0400
-Received: by mail-pl1-f170.google.com with SMTP id e5so5437585pls.13
-        for <linux-gpio@vger.kernel.org>; Tue, 11 Jun 2019 11:05:19 -0700 (PDT)
+        id S2391854AbfFKSju (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 11 Jun 2019 14:39:50 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:39789 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2391848AbfFKSju (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 11 Jun 2019 14:39:50 -0400
+Received: by mail-pf1-f193.google.com with SMTP id j2so7979817pfe.6
+        for <linux-gpio@vger.kernel.org>; Tue, 11 Jun 2019 11:39:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=KsKxk7mWhnld6lqzDiFbfsJQ7V5kfiKkCUpMkhJ6QMo=;
-        b=rV92SEE1OzIHFKSqPBy6qmkBfcN2E2Z6LmooCmRH88pmbcFGqJ087T5UIuf4Co9Ipj
-         PFMEzNY6ZNcKljfUtkHdqWN9bP2CahKsUTGtxA5OzQgRLf6h/bA0FQsfpYt1DgeCn+4e
-         VXxrg4rj9pAQZf/AapbM6I0FoMd0Xam/E7TPtjnJMQTzpeUZ4sBBlXECTP860jih9ei2
-         KoIgdLKnUzDiE8xAVK/hYya3tVbdgkL/1YIwIvd90Bydyt9HmyQ38mHQZ4Dd2ecOa7bi
-         GT1h/jnmOp8E2CVwzjZ0D69KwJykw/iCwhRpSDGNhNaBJQT3boyYyNwtzUehNJSDkDxH
-         /cJA==
+        bh=zW6AynUQeh/d1MGikSw6rg9037amHgOpXgjZc/bYyo0=;
+        b=gtHTXVgSsCW+WzGSqP5jD5k72gd1VwNjkRGZ6kyTYVbl9OaWD2braqloLb++ZYFoaW
+         dbCaH+n3AgU4PKdA57lePWtbt4HHHDl1ElnATdqGqXSF9yVrYo76JPhNKS088vzV7GDN
+         1CJ9ag9coDwUukCnp8mQHRFG78or4KyQfmzxd4kqOkRAl4hT/CRoKK6A3i6xzLoNwdvE
+         62v61Cz/xHioGQvUIEttFjfCFwI47zsJvlj8yjxAo4u0cGbHPDcxEQxUy941mb/k5jTG
+         8Joplh3e5y46cHQeocodgZMMxMEeFdefwVPuwtV3pGGphvTDuMsWt0xAmXTH9035qn7M
+         KyYA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=KsKxk7mWhnld6lqzDiFbfsJQ7V5kfiKkCUpMkhJ6QMo=;
-        b=fDre7XaIb2zqnLyAEzluWZlDJPSCLsu6hdGjUM1YoX6fm1+0njxngPyfbtms4t2MsZ
-         LAkWBct++NtkNCs6gxmC2xMPO3ef9DsNo6wqXoUvxMFgP4/jfkWZMIYrCuFWawLvWmm/
-         bFAeuZbM/QQnIU2lZ5H2px0C2+OebqWG2joCHfnCMi1RoRTu01wR7UgQrL2YeFxhHzPU
-         lAp6c9RtWDxNl4t83zt5fqZ2hc8EPG+kKAWR7AjK2wzo4w6q4hx48RD1/rbNA7XAUJn8
-         bChLgOQe5WNfMZGU+XmPwlNwfAOvCONNsiGjU+x5H/uhLqoyHhu/0PUEt6DvocZYumOL
-         dISg==
-X-Gm-Message-State: APjAAAX01qy4nZMs1es9iAyBlP36ytpM72aCGV7TIzHjUxeMJiUvB+dm
-        G5hVtDQO/07WK/sckjWkR44FJg==
-X-Google-Smtp-Source: APXvYqwZZTF6tR/ssbbRzTwNqufP9IAlXnh1xiTE/tMVU/va6rYZJWy85UQ+dkAX6720o1ageMTxVg==
-X-Received: by 2002:a17:902:26c:: with SMTP id 99mr79262961plc.215.1560276319186;
-        Tue, 11 Jun 2019 11:05:19 -0700 (PDT)
+        bh=zW6AynUQeh/d1MGikSw6rg9037amHgOpXgjZc/bYyo0=;
+        b=QrLCodeY0x4bKNQndsUGRsb60KwZmqj8fWp1LGyyKlig8ZUfs4f9K2rrPVbM8i3nRz
+         bPV7h1xL9nzOAwMoIWBi8+298hj+0CppWvSpsM7vkmlh684sXCUMrbU7Ue7L+Rq1bg/y
+         +xXnNA8++SRrBYjMFHIR4ii2jqQc+09hot4+xy1CAe92AEfCBjR6rAaCzhgXLcYgCHxC
+         VprpX9BQN0oWyhIhXFdZAdlfadUMEEs5zZBWAfkg4qbjMnrIVaEjkAh5gIOAGC+A4Yrw
+         /bG2Bi3vkbRYgqvbX7Mc3j7odsvPHivzlmHIVCRecvldJ6LWzR6/ehjvcOY4GwkO75ZX
+         7eKQ==
+X-Gm-Message-State: APjAAAXqIuVIKs2qOaRwoudOMCZJs8StCi+yLCrWM3iZdIlEfQ76s0sE
+        UTWRpQng2MwD0B0WvT3ySMHJTg==
+X-Google-Smtp-Source: APXvYqy9pS4xgDWNZze0LOrbLEksodwMGCOdwtad24aELFBqknW6/q8wGUEyNWy9Ls67LZYFBEhhgw==
+X-Received: by 2002:a62:e511:: with SMTP id n17mr73761345pff.181.1560278388728;
+        Tue, 11 Jun 2019 11:39:48 -0700 (PDT)
 Received: from minitux (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id n21sm9068570pjo.0.2019.06.11.11.05.18
+        by smtp.gmail.com with ESMTPSA id y22sm23485517pfo.39.2019.06.11.11.39.47
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 11 Jun 2019 11:05:18 -0700 (PDT)
-Date:   Tue, 11 Jun 2019 11:05:16 -0700
+        Tue, 11 Jun 2019 11:39:48 -0700 (PDT)
+Date:   Tue, 11 Jun 2019 11:39:45 -0700
 From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Marc Gonzalez <marc.w.gonzalez@free.fr>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        MSM <linux-arm-msm@vger.kernel.org>,
-        gpio <linux-gpio@vger.kernel.org>,
-        Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-Subject: Re: How to write "modern" pinctrl DT node
-Message-ID: <20190611180516.GO4814@minitux>
-References: <18ab4b1c-e74e-410a-a504-f524e46c42ac@free.fr>
+To:     Lee Jones <lee.jones@linaro.org>
+Cc:     Ard Biesheuvel <ard.biesheuvel@linaro.org>, alokc@codeaurora.org,
+        Andy Gross <andy.gross@linaro.org>,
+        David Brown <david.brown@linaro.org>,
+        wsa+renesas@sang-engineering.com,
+        Linus Walleij <linus.walleij@linaro.org>, balbi@kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jeffrey Hugo <jlhugo@gmail.com>,
+        linux-i2c <linux-i2c@vger.kernel.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        linux-usb <linux-usb@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v3 4/8] pinctrl: qcom: sdm845: Provide ACPI support
+Message-ID: <20190611183945.GP4814@minitux>
+References: <20190610084213.1052-1-lee.jones@linaro.org>
+ <20190610084213.1052-4-lee.jones@linaro.org>
+ <CAKv+Gu_s7i8JC4cv-dJMvm1_0cGzzhzf+Dxu0rxcF7iugF=vHg@mail.gmail.com>
+ <20190610085542.GL4797@dell>
+ <CAKv+Gu8rhxciy1cOG3B3pda9+p4R_COGrrqa7S_Rj9y2HeBxYw@mail.gmail.com>
+ <20190610092245.GN4797@dell>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <18ab4b1c-e74e-410a-a504-f524e46c42ac@free.fr>
+In-Reply-To: <20190610092245.GN4797@dell>
 User-Agent: Mutt/1.12.0 (2019-05-25)
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue 11 Jun 09:12 PDT 2019, Marc Gonzalez wrote:
+On Mon 10 Jun 02:22 PDT 2019, Lee Jones wrote:
 
-> Hello,
+> On Mon, 10 Jun 2019, Ard Biesheuvel wrote:
 > 
-> I'm working with a device (TSIF0) which apparently drives 4 pins:
-> (Or maybe 5... it seems gpio40 might be associated with TSIF0 as well.)
+> > On Mon, 10 Jun 2019 at 10:55, Lee Jones <lee.jones@linaro.org> wrote:
+> > >
+> > > On Mon, 10 Jun 2019, Ard Biesheuvel wrote:
+> > >
+> > > > On Mon, 10 Jun 2019 at 10:42, Lee Jones <lee.jones@linaro.org> wrote:
+> > > > >
+> > > > > This patch provides basic support for booting with ACPI instead
+> > > > > of the currently supported Device Tree.  When doing so there are a
+> > > > > couple of differences which we need to taken into consideration.
+> > > > >
+> > > > > Firstly, the SDM850 ACPI tables omit information pertaining to the
+> > > > > 4 reserved GPIOs on the platform.  If Linux attempts to touch/
+> > > > > initialise any of these lines, the firmware will restart the
+> > > > > platform.
+> > > > >
+> > > > > Secondly, when booting with ACPI, it is expected that the firmware
+> > > > > will set-up things like; Regulators, Clocks, Pin Functions, etc in
+> > > > > their ideal configuration.  Thus, the possible Pin Functions
+> > > > > available to this platform are not advertised when providing the
+> > > > > higher GPIOD/Pinctrl APIs with pin information.
+> > > > >
+> > > > > Signed-off-by: Lee Jones <lee.jones@linaro.org>
+> > > >
+> > > > For the ACPI probing boilerplate:
+> > > > Acked-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+> > > >
+> > > > *However*, I really don't like hardcoding reserved GPIOs like this.
+> > > > What guarantee do we have that each and every ACPI system
+> > > > incorporating the QCOM0217 device has the exact same list of reserved
+> > > > GPIOs?
+> > >
+> > > This is SDM845 specific, so the chances are reduced.
+> > 
+> > You don't know that.
 > 
-> https://source.codeaurora.org/quic/la/kernel/msm-4.4/tree/arch/arm/boot/dts/qcom/msm8998-pinctrl.dtsi?h=LE.UM.1.3.r3.25#n2258
-> 
-> I'll copy the downstream DT nodes here for discussion:
-> 
-> 		tsif0_signals_active: tsif0_signals_active {
-
-This seems like the "default", "non-sleep" state. So I think a better
-name would be to make this:
-
-	tsif0_default: tsif0-default 
-
-(Note again, _ in label names, - in node names)
-
-> 			tsif1_clk {
-
-The namespace here is local to the tsif0-default state node, so there's
-no need to repeat the "tsif" prefix here. Just name it "clk".
-
-Also, what's up with tsif0 vs tsif1?
-
-> 				pins = "gpio89"; /* TSIF0 CLK */
-
-This comment doesn't add any value, if you give the label a good name
-(i.e.  name it clk and you know that this represents the clock pin)
-
-> 				function = "tsif1_clk";
-
-Rather than having clk, en, data and error as separate functions we
-should have made them just "tsif1", as there's no overlap. But this is
-correct - see msm8998_functions[] (or the DT binding) for available
-functions.
-
-> 			};
-> 			tsif1_en {
-> 				pins = "gpio90"; /* TSIF0 Enable */
-> 				function = "tsif1_en";
-> 			};
-> 			tsif1_data {
-> 				pins = "gpio91"; /* TSIF0 DATA */
-> 				function = "tsif1_data";
-> 			};
-> 			signals_cfg {
-
-This is written with the mindset that pinmux and pinconf properties
-should be kept separate, so here they specify the drive-strength and
-bias for the above 3 pins.
-
-I've come to prefer to have these properties added to the above nodes,
-rather than having this split.
-
-> 				pins = "gpio89", "gpio90", "gpio91";
-> 				drive_strength = <2>;	/* 2 mA */
-
-As Jonathan pointed out, - not _.
-
-And in contrast to the previous downstream solution each property is of
-standard units and self explaining, so no need for comments.
-
-> 				bias-pull-down;		/* pull down */
-> 			};
-> 		};
-> 
-> 		/* sync signal is only used if configured to mode-2 */
-> 		tsif0_sync_active: tsif0_sync_active {
-
-This looks reasonable if this is a dynamic thing (if it's static it
-should be one node), and you can in your tsif0 node do:
-
-pinctrl-names = "default", "mode-2";
-pinctrl-0 = <&tsif0_default>;
-pinctrl-1 = <&tsif0_default>, <&tsif0_sync_active>;
-
-The driver core will select "default" and your driver will have to use
-the pinctrl api to switch to the state "mode-2".
-
-> 			tsif1_sync {
-> 				pins = "gpio9";	/* TSIF0 SYNC */
-> 				function = "tsif1_sync";
-> 				drive_strength = <2>;	/* 2 mA */
-> 				bias-pull-down;		/* pull down */
-> 			};
-> 		};
-> 
-> 
-> Can I rewrite the first node as:
-> 
-> 	tsif0_default {
-> 		pins = "gpio89", "gpio90", "gpio91"; /* clk, enable, data */
-
-If you feel the need to add a comment then use subnodes to denote which
-is which instead.
-
-> 		function = "is_this_just_a_label?"; /* Can I just leave it out? */
-
-For each pins you need to select a matching function name, per the
-mapping in msm8998_groups in the driver (or datasheet).
-
-As there are no collisions between the various tsif functions we should
-have just made them all "tsif1", but now you need to describe each pin
-and its associated function individually - as the example above shows..
-
-> 		drive-strength = <2>;
-> 		bias-pull-down;
-> 	}
-
-Had we made the function name "tsif1" for all of them then you could
-definitely do this.
-
-> 
-> Is this enough information to configure the 3 pins? Probably not...
-> There must be some information hard-coded in drivers/pinctrl/qcom/pinctrl-msm8998.c
-> 
-> Can I merge pin 9 in the above node, since it has the same
-> "hardware properties" (drive_strength and bias_direction) ?
+> All the evidence I have to hand tells me that this is the case.  Even
+> on very closely related variants Qualcomm uses different H/W blocks
+> for GPIO.
 > 
 
-Had we made the tsif functions just "tsif1" then you could have done
-this. But based on the comment about mode-2 it seems like you still
-would like to keep this separate.
+I presume with this you mean that e.g. the 835 laptops doesn't sport a
+QCOM0217?
 
+> > > However, if another SDM845 variant does crop up, also lacking the
+> > > "gpios" property, we will have to find another differentiating factor
+> > > between them and conduct some matching.  What else can you do with
+> > > platforms supporting non-complete/non-forthcoming ACPI tables?
+> > >
+> > 
+> > Either we don't touch any pins at all if they are not referenced
+> > explicitly anywhere
 > 
-[..]
-> 
-> 	PINGROUP(89, EAST, tsif1_clk, phase_flag10, NA, NA, NA, NA, NA, NA, NA),
-> 	PINGROUP(90, EAST, tsif1_en, mdp_vsync0, mdp_vsync1, mdp_vsync2, mdp_vsync3, blsp1_spi, tgu_ch0, qdss_cti1_b, NA),
-> 	PINGROUP(91, EAST, tsif1_data, sdc4_cmd, tgu_ch1, phase_flag1, qdss_cti1_b, NA, NA, NA, NA),
-> 
-> (It seems to me there is some redundancy in this driver?)
-> 
-> These last 3 lines seem to summarize how each pin is muxed?
-> I.e. it's used as one function, exclusively?
-> So a proper driver should be unloadable, to let other drivers
-> claim the shared pins?
+> I guess this would require an API change, which is out of scope of
+> this patch-set.  Happy to change this implementation later if the
+> subsystem allows for it though.
 > 
 
-The common example of this is for drivers to jump between a function and
-the implicit "gpio" function when going in and our of sleep. A state is
-described for the "default" (active) state with appropriate pinmux and
-pinconf and a separate ("sleep") is used to e.g. pull the pins low while
-in suspend.
+Last time we discussed this the _only_ offender was the loop issuing a
+get_direction() on all descs towards the end of
+gpiochip_add_data_with_key()
 
-I can't think of an example where you would dynamically switch between
-the other functions; because note that for a given hardware design you
-have e.g. your tsif block soldered onto those pins.
+> > or we parse the PEP tables, which seem to cover
+> > some of this information (if Bjorn's analysis is correct)
+> 
+> Maybe someone can conduct some further work on this when we start to
+> enable or write a driver for the PEP (Windows-compatible System Power
+> Management Controller).  The tables for the PEP look pretty complex,
+> so this task would be extremely difficult if not impossible without
+> Qualcomm's help.  I wouldn't even know how to extrapolate this
+> information from the tables.
+> 
 
-
-PS. I would suggest that you send a patch to the MSM8998 pinctrl driver
-(and binding) where you squash tsifN_* to tsifN. It would break
-backwards compatibility, but I think we can take that risk now before
-someone starts to use it... And after that you can go with your proposed
-squashed node.
+Yeah that looks quite different, so I'm not sure how to tie that into
+the current driver. But I'm fine with adding this for now, if PEP brings
+a different approach we can always rip this out later.
 
 Regards,
 Bjorn
+
+> > (if Bjorn's analysis is correct)
+> 
+> Bjorn is about to provide his Reviewed-by for this implementation.
+> 
+> -- 
+> Lee Jones [?????????]
+> Linaro Services Technical Lead
+> Linaro.org ??? Open source software for ARM SoCs
+> Follow Linaro: Facebook | Twitter | Blog
