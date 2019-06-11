@@ -2,74 +2,106 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 440763CEA4
-	for <lists+linux-gpio@lfdr.de>; Tue, 11 Jun 2019 16:27:42 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0CDA53CEAC
+	for <lists+linux-gpio@lfdr.de>; Tue, 11 Jun 2019 16:28:04 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389566AbfFKO1j (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 11 Jun 2019 10:27:39 -0400
-Received: from mout.kundenserver.de ([217.72.192.73]:54807 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388676AbfFKO1i (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 11 Jun 2019 10:27:38 -0400
-Received: from [192.168.1.110] ([95.118.191.213]) by mrelayeu.kundenserver.de
- (mreue109 [212.227.15.183]) with ESMTPSA (Nemesis) id
- 1N63NW-1gUNeI3ip6-016NZw; Tue, 11 Jun 2019 16:27:34 +0200
-Subject: Re: [PATCH] pinctrl: lantiq: Switch to SPDX header
-To:     Lubomir Rintel <lkundrak@v3.sk>,
-        Linus Walleij <linus.walleij@linaro.org>
-Cc:     John Crispin <john@phrozen.org>, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20190611072004.2978373-1-lkundrak@v3.sk>
-From:   "Enrico Weigelt, metux IT consult" <lkml@metux.net>
-Organization: metux IT consult
-Message-ID: <9c4a0f59-1e3a-0c72-b9e7-a7978753a52b@metux.net>
-Date:   Tue, 11 Jun 2019 16:27:27 +0200
-User-Agent: Mozilla/5.0 (X11; Linux i686 on x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.2.1
+        id S2390228AbfFKO1t (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 11 Jun 2019 10:27:49 -0400
+Received: from relay4-d.mail.gandi.net ([217.70.183.196]:35815 "EHLO
+        relay4-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390032AbfFKO1t (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 11 Jun 2019 10:27:49 -0400
+X-Originating-IP: 90.88.159.246
+Received: from localhost (aaubervilliers-681-1-40-246.w90-88.abo.wanadoo.fr [90.88.159.246])
+        (Authenticated sender: maxime.ripard@bootlin.com)
+        by relay4-d.mail.gandi.net (Postfix) with ESMTPSA id 1965AE0011;
+        Tue, 11 Jun 2019 14:27:40 +0000 (UTC)
+Date:   Tue, 11 Jun 2019 16:27:40 +0200
+From:   Maxime Ripard <maxime.ripard@bootlin.com>
+To:     Icenowy Zheng <icenowy@aosc.io>
+Cc:     Rob Herring <robh+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-gpio@vger.kernel.org, linux-sunxi@googlegroups.com
+Subject: Re: [PATCH v2 03/11] pinctrl: sunxi: v3s: introduce support for V3
+Message-ID: <20190611142740.2gqm3nxq2nl6sz7w@flea>
+References: <20190611140940.14357-1-icenowy@aosc.io>
+ <20190611140940.14357-4-icenowy@aosc.io>
 MIME-Version: 1.0
-In-Reply-To: <20190611072004.2978373-1-lkundrak@v3.sk>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Provags-ID: V03:K1:PussVQk4+Tim9l3yHxtaW/xw3MAu2tJSQHgBiXBjwyJn3td4qd5
- DzAmcgkXFaVD5bU0mAirWCzHLXaqkq2nPJSDKP0Caf/anqMydAtp209jXXgXlbA4wqpTrk7
- qiASHhasELWfF9ZPOi0PPAlCgkxwuULwLUONBm4+CNeiV2/wD39EJq7g93H9u7X7gK16NOV
- uX8LfEAFqGpnUKrxEFt+Q==
-X-Spam-Flag: NO
-X-UI-Out-Filterresults: notjunk:1;V03:K0:gNwBp84gseg=:6NaPQe9wBqiSo3CYlIqCTa
- Mxv22qGmczPYNPO/hSeVlxSDRXIdPXhHnCeBjh3T3gO9PsU5AWp68fH8FDHNtH44ukkyAq8/l
- ZchOcpV8eIFE3nHmaLyBoF2kEYPSGhGEA79FG/prDr4nAJ6MdkNqFS55njmekO9x1PNpF3vBT
- cD/ab686Ul/+UJLt0FtblFYACWSadLdamMcdEZA28RGxaOvlYfAfyNkjd5/ViFNh5ZwTWJuhy
- 0O3UC/4wOKxOjS7rbK34lyjs/d6LQ09PdSRaD7B5R4pFX5ky0I5NY8cmOkDSzyrIYiUU+QMws
- whD5BMmlwzNhws3nqvly3+sO9w8V1Ai1cUhaNebsfrai98BJ6evUjaXQmOaxNFeGNLoZ4koli
- B5PNYCHR2KfOgZtoWhCd1Qqon8eb+rnjsZcf+Buytn1tSKFkTWYZkveAPWz1/rfSe4jYk1XC+
- qDLF2cWgh4Ksjjx8s07jbmguq3bMm2S8BeFAuUGOhRSg2yFY6IrpHusEZ4LMourHUgA7dSXrs
- fpQl+QI6T7GokdCTpHzYl/o/bUjiu/I2zYPXsLmWVK3ARGrVFmYdbcNdNwFS2OgVbWMa7Vn2Q
- k2wEq99B4WvON/qjA4dP/hopb2PKeBP9EVUCOIV37P6akLSHJDMewPzkdv/d2f2Vn/fMNb+Kp
- A4PBlU6XCcbD3hauSZYHRHvpsEINOWaASm+dNvjjoE6w1aH/8KNwZwTxPPJI9UqOn8w5iASPU
- FOMbT2f5650NJWq/mtNCvudq4xeLEpUMZ1JSKHmiFMM+bchkgd3pmI/0j2DznXsyKzQXWxh8c
- Ma+I5of
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="ttqlhhfclj7eb7xn"
+Content-Disposition: inline
+In-Reply-To: <20190611140940.14357-4-icenowy@aosc.io>
+User-Agent: NeoMutt/20180716
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 11.06.19 09:20, Lubomir Rintel wrote:
-> The original license text had a typo ("publishhed") which would be
-> likely to confuse automated licensing auditing tools. Let's just switch
-> to SPDX instead of fixing the wording.
 
-Reviewed-By: Enrico Weigelt <info@metux.net>
+--ttqlhhfclj7eb7xn
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-BTW: are you aware that there's a separate project for cleaning up
-those things ?
+Hi,
 
-maillist: linux-spdx@vger.kernel.org
+On Tue, Jun 11, 2019 at 10:09:32PM +0800, Icenowy Zheng wrote:
+> Introduce the GPIO pins that is only available on V3 (not on V3s) to the
+> V3s pinctrl driver.
+>
+> Signed-off-by: Icenowy Zheng <icenowy@aosc.io>
+> ---
+> Changes in v2:
+> - Dropped the driver rename patch and apply the changes directly on V3s
+>   driver.
+>
+>  drivers/pinctrl/sunxi/pinctrl-sun8i-v3s.c | 265 +++++++++++++++++++++-
+>  drivers/pinctrl/sunxi/pinctrl-sunxi.h     |   2 +
+>  2 files changed, 262 insertions(+), 5 deletions(-)
+>
+> diff --git a/drivers/pinctrl/sunxi/pinctrl-sun8i-v3s.c b/drivers/pinctrl/sunxi/pinctrl-sun8i-v3s.c
+> index 6704ce8e5e3d..9e82fd38cf21 100644
+> --- a/drivers/pinctrl/sunxi/pinctrl-sun8i-v3s.c
+> +++ b/drivers/pinctrl/sunxi/pinctrl-sun8i-v3s.c
+> @@ -1,5 +1,5 @@
+>  /*
+> - * Allwinner V3s SoCs pinctrl driver.
+> + * Allwinner V3/V3s SoCs pinctrl driver.
+>   *
+>   * Copyright (C) 2016 Icenowy Zheng <icenowy@aosc.xyz>
+>   *
+> @@ -77,6 +77,30 @@ static const struct sunxi_desc_pin sun8i_v3s_pins[] = {
+>  		  SUNXI_FUNCTION(0x2, "i2c1"),		/* SCK */
+>  		  SUNXI_FUNCTION(0x3, "uart0"),		/* RX */
+>  		  SUNXI_FUNCTION_IRQ_BANK(0x6, 0, 9)),	/* PB_EINT9 */
+> +	SUNXI_PIN_VARIANT(SUNXI_PINCTRL_PIN(B, 10),
+> +		  PINCTRL_SUN8I_V3,
+> +		  SUNXI_FUNCTION(0x0, "gpio_in"),
+> +		  SUNXI_FUNCTION(0x1, "gpio_out"),
+> +		  SUNXI_FUNCTION(0x2, "jtag"),		/* MS */
+> +		  SUNXI_FUNCTION_IRQ_BANK(0x6, 0, 10)),	/* PB_EINT10 */
 
+The alignment should be on the parenthesis
 
---mtx
+Looks good otherwise
 
--- 
-Enrico Weigelt, metux IT consult
-Free software and Linux embedded engineering
-info@metux.net -- +49-151-27565287
+maxime
+
+--
+Maxime Ripard, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
+
+--ttqlhhfclj7eb7xn
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXP+6WwAKCRDj7w1vZxhR
+xWvDAP4sUsS8lzwwMZirLseQPv9XAS76rNYD57+nctEZGaZNQwEAvNAXDoM60OLA
+47GX+cRJkvkgdUzlpDnXxMBujGw8qAA=
+=z2T/
+-----END PGP SIGNATURE-----
+
+--ttqlhhfclj7eb7xn--
