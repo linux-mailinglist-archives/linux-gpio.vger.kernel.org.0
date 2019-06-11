@@ -2,18 +2,18 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 1F6823CE5E
-	for <lists+linux-gpio@lfdr.de>; Tue, 11 Jun 2019 16:21:41 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C63A43CE6D
+	for <lists+linux-gpio@lfdr.de>; Tue, 11 Jun 2019 16:21:47 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389172AbfFKOTl (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 11 Jun 2019 10:19:41 -0400
-Received: from hermes.aosc.io ([199.195.250.187]:33445 "EHLO hermes.aosc.io"
+        id S2388789AbfFKOTp (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 11 Jun 2019 10:19:45 -0400
+Received: from hermes.aosc.io ([199.195.250.187]:33448 "EHLO hermes.aosc.io"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388808AbfFKOTl (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Tue, 11 Jun 2019 10:19:41 -0400
+        id S2389566AbfFKOTn (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Tue, 11 Jun 2019 10:19:43 -0400
 Received: from localhost (localhost [127.0.0.1]) (Authenticated sender: icenowy@aosc.io)
-        by hermes.aosc.io (Postfix) with ESMTPSA id 8FCE78229F;
-        Tue, 11 Jun 2019 14:12:36 +0000 (UTC)
+        by hermes.aosc.io (Postfix) with ESMTPSA id 6AFBA822A1;
+        Tue, 11 Jun 2019 14:12:42 +0000 (UTC)
 From:   Icenowy Zheng <icenowy@aosc.io>
 To:     Rob Herring <robh+dt@kernel.org>,
         Maxime Ripard <maxime.ripard@bootlin.com>,
@@ -23,44 +23,50 @@ Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
         linux-gpio@vger.kernel.org, linux-sunxi@googlegroups.com,
         Icenowy Zheng <icenowy@aosc.io>
-Subject: [PATCH v2 09/11] dt-bindings: vendor-prefixes: add Sipeed
-Date:   Tue, 11 Jun 2019 22:09:38 +0800
-Message-Id: <20190611140940.14357-10-icenowy@aosc.io>
+Subject: [PATCH v2 10/11] dt-bindings: arm: sunxi: add binding for Lichee Zero Plus core board
+Date:   Tue, 11 Jun 2019 22:09:39 +0800
+Message-Id: <20190611140940.14357-11-icenowy@aosc.io>
 In-Reply-To: <20190611140940.14357-1-icenowy@aosc.io>
 References: <20190611140940.14357-1-icenowy@aosc.io>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Shenzhen Sipeed Technology Co., Ltd. is a company focused on development
-kits, which also contains rebranded Lichee Pi series.
+The Lichee Zero Plus is a core board made by Sipeed, with a microUSB
+connector on it, TF slot or WSON8 SD chip, optional eMMC or SPI Flash.
+It has a gold finger connector for expansion, and UART is available from
+reserved pins w/ 2.54mm pitch. The board can use either SoChip S3 or
+Allwinner V3L SoCs.
 
-Add its vendor prefix binding.
+Add the device tree binding of the basic version of the core board --
+w/o eMMC or SPI Flash, w/ TF slot or WSON8 SD, and use S3 SoC.
 
 Signed-off-by: Icenowy Zheng <icenowy@aosc.io>
 ---
 New patch in v2.
 
- Documentation/devicetree/bindings/vendor-prefixes.yaml | 2 ++
- 1 file changed, 2 insertions(+)
+ Documentation/devicetree/bindings/arm/sunxi.yaml | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/vendor-prefixes.yaml b/Documentation/devicetree/bindings/vendor-prefixes.yaml
-index 2c8a8b195c07..c0cd22e5672a 100644
---- a/Documentation/devicetree/bindings/vendor-prefixes.yaml
-+++ b/Documentation/devicetree/bindings/vendor-prefixes.yaml
-@@ -791,6 +791,8 @@ patternProperties:
-     description: Silicon Mitus, Inc.
-   "^simtek,.*":
-     description: Cypress Semiconductor Corporation (Simtek Corporation)
-+  "^sipeed,.*":
-+    description: Shenzhen Sipeed Technology Co., Ltd.
-   "^sirf,.*":
-     description: SiRF Technology, Inc.
-   "^sis,.*":
+diff --git a/Documentation/devicetree/bindings/arm/sunxi.yaml b/Documentation/devicetree/bindings/arm/sunxi.yaml
+index 000a00d12d6a..48c126a7a848 100644
+--- a/Documentation/devicetree/bindings/arm/sunxi.yaml
++++ b/Documentation/devicetree/bindings/arm/sunxi.yaml
+@@ -353,6 +353,11 @@ properties:
+           - const: licheepi,licheepi-zero
+           - const: allwinner,sun8i-v3s
+ 
++      - description: Lichee Zero Plus (with S3, without eMMC/SPI Flash)
++        items:
++          - const: sipeed,lichee-zero-plus
++          - const: allwinner,sun8i-s3
++
+       - description: Linksprite PCDuino
+         items:
+           - const: linksprite,a10-pcduino
 -- 
 2.21.0
 
