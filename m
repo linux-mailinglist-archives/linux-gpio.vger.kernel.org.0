@@ -2,93 +2,84 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id C0B5D3D5B8
-	for <lists+linux-gpio@lfdr.de>; Tue, 11 Jun 2019 20:47:22 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CBC423D5D7
+	for <lists+linux-gpio@lfdr.de>; Tue, 11 Jun 2019 20:51:16 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392029AbfFKSrW (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 11 Jun 2019 14:47:22 -0400
-Received: from mout.kundenserver.de ([212.227.126.130]:46105 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2391484AbfFKSrV (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 11 Jun 2019 14:47:21 -0400
-Received: from [192.168.1.110] ([95.118.191.213]) by mrelayeu.kundenserver.de
- (mreue009 [212.227.15.167]) with ESMTPSA (Nemesis) id
- 1MgNlH-1gstWx27VH-00htGo for <linux-gpio@vger.kernel.org>; Tue, 11 Jun 2019
- 20:47:20 +0200
-To:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
-From:   "Enrico Weigelt, metux IT consult" <lkml@metux.net>
-Subject: RFC: generalizing gpio register set types
-Organization: metux IT consult
-Message-ID: <1512f451-8cb6-0f30-6640-27a22f1a505f@metux.net>
-Date:   Tue, 11 Jun 2019 20:47:18 +0200
-User-Agent: Mozilla/5.0 (X11; Linux i686 on x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.2.1
+        id S2392102AbfFKSvD (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 11 Jun 2019 14:51:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33348 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2389470AbfFKSvD (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Tue, 11 Jun 2019 14:51:03 -0400
+Received: from kernel.org (unknown [104.132.0.74])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 368ED21744;
+        Tue, 11 Jun 2019 18:51:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1560279062;
+        bh=eImiH0U2R9J23GU5acZAV8Hb7EeG17LzFiM7Nb4BDYQ=;
+        h=In-Reply-To:References:To:From:Cc:Subject:Date:From;
+        b=rfzC7eyFSl2rnamYq+e5oFdsnE0+XJDSNRNjSCHAChqv3ZrE2vSQBDpivAVbRv5jP
+         nk5wPdiLmDoMlmcVS0UFYNP3aNmDmtnbm5MYhqojR98C8PmjSZ8VMyuIOEssP+P6ue
+         63X9EX1KRTWzKQGg4mWfdfH6qE3bgDTOQmIwk69o=
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Provags-ID: V03:K1:hNEHvokux82pqCXaefBtiAav3iYh3Yt9f9Uqg2CZNqkfm+tDCyL
- wUvgqPWSR+5uV9k8h8S0vxtCEukUsXGV0bVur8KrPlA28nUu1h/bxdWEzG/e2TTxlgFie/z
- KgwUGJKZeRqp8FTvuhvireNFGjOGRYMFyOZtb1qtNE+ioPV5k8NbkrNb/uHW6nromxDmYxE
- Tn0dIsnpXAn22GeclH67w==
-X-Spam-Flag: NO
-X-UI-Out-Filterresults: notjunk:1;V03:K0:eitmiQSQtcU=:cBjmOFkoWRCDwIb5wJZgyk
- 4GUat6J3xcrCqwlRPYfYqZ+Nyl6Qa2v6mohuRzMZ6KNMjesLYocaY/Ufhvq4X256v/45clzGj
- MQ/y3HFaoHSA2/YGXI4HE8vwbjaTPWZaNtuHVFC/AiK8hGFrwtUHNygM8M5EkYGbjBXi4Dxs2
- T4UpI6bJH1+SypHAu3msboGIjYLhMUVvrVpEZfySI1WL25HIX3NpK0R/L84YjeblbmrR7DMt4
- nj77k0D9bSoTQ51Pjw3vDEiZ9HlNTM1tGXw/CSXOAvdb4xuYbWZzS1madK1ZJ10IJooYUDXCq
- sCkkhQMXo6NggF6a0x1c3dKU75rNjDGJM9Pk8jHB10otRSPNWmE8FfzAtH4rtILkF2F34sloF
- TAqyA7/iQOHw+6xcQh8dHXhpSJpmZV97kKqnd/qPyC7UF0OsxShhWlx+rIdqGKdrkBg0s+hTA
- T0EPtpsbIhKqJn3w02+r8TtMYwG1nnJ39a7O1BfAsrvwKzdjhDBVLrLFAwwHz+t3wlZUQrZWn
- cM4XrGy/FfTcvx2sbBo9g9cpkkqJhOd2Nc7TYtT/SvTXYXvP/56SBBlqg23UCSLiUlxFyCkm6
- nS7EcdWBl9x1VTQ3+0LsDGbe9qS/9GQo5IQLvBtn9PvJbd01W8lKDbwHKZc79AJw2KHw4SScm
- kZMl9y2oKSpOgemahDqXiNoTwQHL3VSqWoVhy9Xdbs3kGR5wHe2u1Ydb26v3BEYVaRBFwtnpa
- Sml/fC4d497CDic7Dmzj19Qka0gk2jrEuyc8Mg9TWmC9Lx2Xv7LPfKmfxz4=
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <46b715974766d5c557685a1ab9131abe@codeaurora.org>
+References: <1559285512-27784-1-git-send-email-tengfeif@codeaurora.org> <CACRpkdbdkbSofrvJ0hSV66DX+DcwWXp0ONDjx0265Pz50yE8TA@mail.gmail.com> <20190610145132.DD1132085A@mail.kernel.org> <46b715974766d5c557685a1ab9131abe@codeaurora.org>
+To:     tengfeif@codeaurora.org
+From:   Stephen Boyd <sboyd@kernel.org>
+Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Niklas Cassel <niklas.cassel@linaro.org>,
+        Andy Gross <andy.gross@linaro.org>,
+        David Brown <david.brown@linaro.org>,
+        MSM <linux-arm-msm@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] pinctrl: qcom: Clear status bit on irq_unmask
+User-Agent: alot/0.8.1
+Date:   Tue, 11 Jun 2019 11:51:01 -0700
+Message-Id: <20190611185102.368ED21744@mail.kernel.org>
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi folks,
+Quoting tengfeif@codeaurora.org (2019-06-11 03:41:26)
+> On 2019-06-10 22:51, Stephen Boyd wrote:
+> > Quoting Linus Walleij (2019-06-07 14:08:10)
+> >> On Fri, May 31, 2019 at 8:52 AM Tengfei Fan <tengfeif@codeaurora.org> =
 
+> >> wrote:
+> >>=20
+> >> > The gpio interrupt status bit is getting set after the
+> >> > irq is disabled and causing an immediate interrupt after
+> >> > enablling the irq, so clear status bit on irq_unmask.
+> >> >
+> >> > Signed-off-by: Tengfei Fan <tengfeif@codeaurora.org>
+> >>=20
+> >> This looks pretty serious, can one of the Qcom maintainers ACK
+> >> this?
+> >>=20
+> >> Should it be sent to fixes and even stable?
+> >>=20
+> >> Fixes: tag?
+> >>=20
+> >=20
+> > How is the interrupt status bit getting set after the irq is disabled?
+> > It looks like this is a level type interrupt? I thought that after
+> > commit b55326dc969e ("pinctrl: msm: Really mask level interrupts to
+> > prevent latching") this wouldn't be a problem. Am I wrong, or is qcom
+> > just clearing out patches on drivers and this is the last one that=20
+> > needs
+> > to be upstreamed?
+>=20
+> Your patch(commit b55326dc969e) can cover our issue, and my patch is no=20
+> longer needed.
+> Your patch isn't included in our code, so I submitted this patch.
 
-I'm curious about what types register sets the various gpio controllers
-have, in order to find out whether there's still room for a bit more
-generalization. Hopefully I'd like to find some formal description of
-(most) gpio controllers, so we could do many drivers pretty much in
-a declarative way. (eg. by just filling some structs)
+Alright cool. Sounds like this patch can be dropped then and you can
+pick up the patch from upstream into your vendor kernel.
 
-For example, the AMD FCH's gpio controller has one 32bit register per
-line, which includes control and data flags. The actual register banks
-don't seem to be linear, but that might be an misinterpretation of the
-rare information i've got - perhaps certain gpios are just used
-internally for not aren't wired.
-
-This is an example of an what I'd like to call "one-reg-per-line" class.
-The controller/device specific attributes here are:
-  * control register width (eg. 32bit)
-  * direction flag: bit# / mask, polarity
-  * io/data flag: bit# / mask, polarity
-  * map of gpio names/logical IDs <=> registers (relative to offset)
-When generalizing probe/setup code, also:
-  * register base address
-  * oftree / acpi match tables
-  * device name
-
-I'm planning to write a generic driver, if we have more consumers for
-that and solve the problem of generic passing of platform configuration
-data, w/o using driver specific pdata structs.
-
-There's another class, which we IMHO have a generalization for, is those
-devices that have one wide register for all direction and one for all
-data flags.
-
-Does anybody know other classes that I didn't mention here ?
-
-
---mtx
-
--- 
-Enrico Weigelt, metux IT consult
-Free software and Linux embedded engineering
-info@metux.net -- +49-151-27565287
