@@ -2,129 +2,82 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id DD88E3CEC8
-	for <lists+linux-gpio@lfdr.de>; Tue, 11 Jun 2019 16:33:16 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 167F03CEFB
+	for <lists+linux-gpio@lfdr.de>; Tue, 11 Jun 2019 16:39:33 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388492AbfFKOcy (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 11 Jun 2019 10:32:54 -0400
-Received: from relay9-d.mail.gandi.net ([217.70.183.199]:43911 "EHLO
-        relay9-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387551AbfFKOcy (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 11 Jun 2019 10:32:54 -0400
-X-Originating-IP: 90.88.159.246
-Received: from localhost (aaubervilliers-681-1-40-246.w90-88.abo.wanadoo.fr [90.88.159.246])
-        (Authenticated sender: maxime.ripard@bootlin.com)
-        by relay9-d.mail.gandi.net (Postfix) with ESMTPSA id 5C50FFF812;
-        Tue, 11 Jun 2019 14:32:45 +0000 (UTC)
-Date:   Tue, 11 Jun 2019 16:32:39 +0200
-From:   Maxime Ripard <maxime.ripard@bootlin.com>
-To:     Icenowy Zheng <icenowy@aosc.io>
-Cc:     Rob Herring <robh+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-gpio@vger.kernel.org, linux-sunxi@googlegroups.com
-Subject: Re: [PATCH v2 11/11] ARM: dts: sun8i: s3: add devicetree for Lichee
- zero plus w/ S3
-Message-ID: <20190611143239.zvganlwaiku3bs63@flea>
-References: <20190611140940.14357-1-icenowy@aosc.io>
- <20190611140940.14357-12-icenowy@aosc.io>
+        id S2389709AbfFKOj1 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 11 Jun 2019 10:39:27 -0400
+Received: from mout.kundenserver.de ([217.72.192.74]:50123 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389484AbfFKOj1 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 11 Jun 2019 10:39:27 -0400
+Received: from [192.168.1.110] ([95.118.191.213]) by mrelayeu.kundenserver.de
+ (mreue109 [212.227.15.183]) with ESMTPSA (Nemesis) id
+ 1MvbO4-1giBtv3yKM-00sbZc; Tue, 11 Jun 2019 16:39:14 +0200
+Subject: Re: [PATCH] RFC: fmc: Try to convert to GPIO descriptors
+To:     Federico Vaga <federico.vaga@cern.ch>,
+        Linus Walleij <linus.walleij@linaro.org>
+Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Pat Riehecky <riehecky@fnal.gov>,
+        Alessandro Rubini <rubini@gnudd.com>
+References: <20190603230604.30938-1-linus.walleij@linaro.org>
+ <22282873.PltXLBtAh5@pcbe13614>
+ <CACRpkdaCFZcQ8VMjKJkXAm+TRH+=DY3j5Udh0mcYR7YcDr8VtA@mail.gmail.com>
+ <1726027.xYMg8yrU2x@harkonnen>
+From:   "Enrico Weigelt, metux IT consult" <lkml@metux.net>
+Organization: metux IT consult
+Message-ID: <9705d2dd-106c-553e-e76c-c35e338f6bce@metux.net>
+Date:   Tue, 11 Jun 2019 16:39:11 +0200
+User-Agent: Mozilla/5.0 (X11; Linux i686 on x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.2.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="6e3io72tcrt3erkz"
-Content-Disposition: inline
-In-Reply-To: <20190611140940.14357-12-icenowy@aosc.io>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <1726027.xYMg8yrU2x@harkonnen>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Provags-ID: V03:K1:2Hz4GKeWUIqMxbftAnmECeOx2sE+FLNzD62MA3MQi0XNvbYDgWf
+ gamYzEGU6Rm+2H/HP2lr0vSzaMHWJpLnW74773hYYSKS7gcoe7CH8ZgHNryDcTwJa3Dujtb
+ lASkmR3m4rMLBBSc7PQHxNIGhXQrA0mpf1PBua+uSNBnvlM+OAhA3i76kTS6d9+K6OpolA8
+ p/P6tXxtP6FP8KJoWWoqA==
+X-Spam-Flag: NO
+X-UI-Out-Filterresults: notjunk:1;V03:K0:80ROkAbu7lE=:0gxWrGLgYRLZgYb8q9LMSH
+ 2ycKQ/T3A6tcuaK0ecidXpjVWL913OW23EtzMTZoSKkCByWLbOruL9oSUC7bGxEbWUDep6tIP
+ oYtrg6JjwXjLYgOKIsFUs9Q6P0Q/Yh4Nnd4fV5wM2Mxg4uSMwV9/ag0gs8ELEqUc1aw5cBWhm
+ LVma3+fdz8s4BZcdUxp99vkJHpssk0lnRCDHLZlTc4Fg1yMKldqRUPjh3eh4Ef59Ha8nMwgMv
+ e9I2O0VK8a4YGiHNSkQOEARgXJ6P8w6NlItHuW7AvnzXT+AH2pIP3y8w+X+mmar6sP1Xkt3O4
+ VJEUX+vHi1I6VgKfs9BrwoFTx8ecIqExw36ssgkuz/VjKldiesL8OiG3rAAJLg1kLi7nyJaO+
+ khFrBNAzVB0B/Y/CiOwGRZ3s9ga7XZQml/TP4P8B6RhW5I1CYHnwGT8sHBd8/uHs1eRoOpwtL
+ U254VGp5THNqNrmPcaZQ6BM2FA7SyTp1/zIuytyQL2Yi26HM3BzEEcf9EaoImysbTMQZfbLRZ
+ BtdWdgWDuO93UZfz/YgF9CyI9cUj/UTjKgag4ct2TczrjqSXRRgIyyu+tqygYdxe4Y67jLWmu
+ ZRE6s8n3LDS1QonNANir9DZtlF8pFt7rqTC/HO8HGdb7ypjkuOhY/npgnspDeAvcaHRCgj0e0
+ A1cSjMwlu/8CPOrXW3w0CMl0pyzZbSy3P0PdItrvqZKKm06QyyrmeC3W24o0G37s79UUuFHr8
+ FCChdBa4kC/JCY0w9Xzw/hqDgxuOyS771P4Ua80Z/WdFT4FtZYKJj0c6m10=
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-
---6e3io72tcrt3erkz
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+On 08.06.19 17:00, Federico Vaga wrote:
 
 Hi,
 
-On Tue, Jun 11, 2019 at 10:09:40PM +0800, Icenowy Zheng wrote:
-> Lichee zero plus is a core board made by Sipeed, which includes on-board
-> TF slot or SMT SD NAND, and optional SPI NOR or eMMC, a UART debug
-> header, a microUSB slot and a gold finger connector for expansion. It
-> can use either Sochip S3 or Allwinner S3L SoC.
->
-> Add the basic device tree for the core board, w/o optional onboard
-> storage, and with S3 SoC.
->
-> Signed-off-by: Icenowy Zheng <icenowy@aosc.io>
-> ---
-> New patch in v2.
->
->  arch/arm/boot/dts/Makefile                    |  1 +
->  .../boot/dts/sun8i-s3-lichee-zero-plus.dts    |  8 ++++
->  .../dts/sun8i-s3-s3l-lichee-zero-plus.dtsi    | 39 +++++++++++++++++++
->  3 files changed, 48 insertions(+)
->  create mode 100644 arch/arm/boot/dts/sun8i-s3-lichee-zero-plus.dts
->  create mode 100644 arch/arm/boot/dts/sun8i-s3-s3l-lichee-zero-plus.dtsi
->
-> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-> index 5559028b770e..2b5e6a1d20ff 100644
-> --- a/arch/arm/boot/dts/Makefile
-> +++ b/arch/arm/boot/dts/Makefile
-> @@ -1110,6 +1110,7 @@ dtb-$(CONFIG_MACH_SUN8I) += \
->  	sun8i-r16-nintendo-super-nes-classic.dtb \
->  	sun8i-r16-parrot.dtb \
->  	sun8i-r40-bananapi-m2-ultra.dtb \
-> +	sun8i-s3-lichee-zero-plus.dtb \
->  	sun8i-t3-cqa3t-bv3.dtb \
->  	sun8i-v3s-licheepi-zero.dtb \
->  	sun8i-v3s-licheepi-zero-dock.dtb \
-> diff --git a/arch/arm/boot/dts/sun8i-s3-lichee-zero-plus.dts b/arch/arm/boot/dts/sun8i-s3-lichee-zero-plus.dts
-> new file mode 100644
-> index 000000000000..7d2f6b145190
-> --- /dev/null
-> +++ b/arch/arm/boot/dts/sun8i-s3-lichee-zero-plus.dts
-> @@ -0,0 +1,8 @@
-> +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-> +/*
-> + * Copyright (C) 2019 Icenowy Zheng <icenowy@aosc.io>
-> + */
-> +
-> +/dts-v1/;
-> +#include "sun8i-s3.dtsi"
-> +#include "sun8i-s3-s3l-lichee-zero-plus.dtsi"
-> diff --git a/arch/arm/boot/dts/sun8i-s3-s3l-lichee-zero-plus.dtsi b/arch/arm/boot/dts/sun8i-s3-s3l-lichee-zero-plus.dtsi
-> new file mode 100644
-> index 000000000000..bb148e796df7
-> --- /dev/null
-> +++ b/arch/arm/boot/dts/sun8i-s3-s3l-lichee-zero-plus.dtsi
-> @@ -0,0 +1,39 @@
-> +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-> +/*
-> + * Copyright (C) 2019 Icenowy Zheng <icenowy@aosc.io>
-> + */
-> +
-> +#include "sunxi-common-regulators.dtsi"
+>> Hm, it looks from your proposal like the FMC device core
+>> is using its own hacks for i2c mastering, FPGA management
+>> and irqchips. Does it also have its own GPIO implementation
+>> not using struct gpio_chip from <linux/gpio/driver.h>?
+> 
+> The FMC subsystem has its own API for all those things.
 
-If possible, you should get rid of that include. What are you using it
-for?
+Any plans to change that in the forseeable future ?
 
-Maxime
+Is userland relying on that own implementation, or could it just
+use standard gpio subsystem ?
 
---
-Maxime Ripard, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
 
---6e3io72tcrt3erkz
-Content-Type: application/pgp-signature; name="signature.asc"
+--mtx
 
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXP+7hwAKCRDj7w1vZxhR
-xXD5AQDzzGjJuMYqZOH2bt2UEka6SvuIrYluNOH8x3D+7GOsJAEA2rH3UjHc3GPu
-kpIKRxDM2YMRW103wJicTaDDoRvXeQc=
-=ySX5
------END PGP SIGNATURE-----
-
---6e3io72tcrt3erkz--
+-- 
+Enrico Weigelt, metux IT consult
+Free software and Linux embedded engineering
+info@metux.net -- +49-151-27565287
