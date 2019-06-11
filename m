@@ -2,84 +2,102 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id CBC423D5D7
-	for <lists+linux-gpio@lfdr.de>; Tue, 11 Jun 2019 20:51:16 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E5F363D706
+	for <lists+linux-gpio@lfdr.de>; Tue, 11 Jun 2019 21:41:42 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392102AbfFKSvD (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 11 Jun 2019 14:51:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33348 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389470AbfFKSvD (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Tue, 11 Jun 2019 14:51:03 -0400
-Received: from kernel.org (unknown [104.132.0.74])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 368ED21744;
-        Tue, 11 Jun 2019 18:51:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560279062;
-        bh=eImiH0U2R9J23GU5acZAV8Hb7EeG17LzFiM7Nb4BDYQ=;
-        h=In-Reply-To:References:To:From:Cc:Subject:Date:From;
-        b=rfzC7eyFSl2rnamYq+e5oFdsnE0+XJDSNRNjSCHAChqv3ZrE2vSQBDpivAVbRv5jP
-         nk5wPdiLmDoMlmcVS0UFYNP3aNmDmtnbm5MYhqojR98C8PmjSZ8VMyuIOEssP+P6ue
-         63X9EX1KRTWzKQGg4mWfdfH6qE3bgDTOQmIwk69o=
-Content-Type: text/plain; charset="utf-8"
-MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <46b715974766d5c557685a1ab9131abe@codeaurora.org>
-References: <1559285512-27784-1-git-send-email-tengfeif@codeaurora.org> <CACRpkdbdkbSofrvJ0hSV66DX+DcwWXp0ONDjx0265Pz50yE8TA@mail.gmail.com> <20190610145132.DD1132085A@mail.kernel.org> <46b715974766d5c557685a1ab9131abe@codeaurora.org>
-To:     tengfeif@codeaurora.org
-From:   Stephen Boyd <sboyd@kernel.org>
-Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Niklas Cassel <niklas.cassel@linaro.org>,
-        Andy Gross <andy.gross@linaro.org>,
-        David Brown <david.brown@linaro.org>,
-        MSM <linux-arm-msm@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        id S2404408AbfFKTkx (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 11 Jun 2019 15:40:53 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:42126 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2391042AbfFKTkw (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 11 Jun 2019 15:40:52 -0400
+Received: by mail-pf1-f196.google.com with SMTP id q10so8058003pff.9
+        for <linux-gpio@vger.kernel.org>; Tue, 11 Jun 2019 12:40:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=2Tl9Z0NsfgrApufoe2WUbK2OeIisauNIixsAGf/fSmk=;
+        b=vsAEGERkAaoThhFQXBii705fmbt72E/99Uu7FZajp8SUf8GTc9LlYBfAC9HjBDp5sL
+         4EKL6GI9Rp7rOn2WJp0TItbwY1VpF5bcED6xmFO6HO1yjnxBmgJQRVff+Szsd7nDo52k
+         o1KbxC6jfKkSBlesArxZfIgVWHOPkeVNKjzoOo2dLBfe0tMVlsJMNhicCRnqqzah4M1p
+         nQ+X+wveo4NUY1wN8RdZqJ6VXO8ZpGZsQhfe115nX9JanaBCN6VcbYPC8c0LrFdvg90V
+         DNFLgkX/ED/WENER8nOIEnsilSeYqIY4TNFJg1PXRtIJq4SgPMjABUQl+T2ZO2lY8t8G
+         +ndA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=2Tl9Z0NsfgrApufoe2WUbK2OeIisauNIixsAGf/fSmk=;
+        b=AzPzogfKfS53EmYp8DDDxz4oq31F+VU21PIHO5o0p4RdweIVj2Nof+hsTJEwRH9EAx
+         DEvTXWJfuRLo0W8hAcae20KAwrey6WJPvNSsPEkFGwl2VgJJgmZmhri/aqG4SDRxcLc5
+         jR10sDudcOX1Comr0fI28fFPobrK6O/n5ml6Hv3sFxD+tLAZmnsCosvAxR3Y8K7+Vpz3
+         XheULE4PWtK7j3G6PTVTyQzMxitvJhk3LmflTzQhhR1O7UEuadLmcgDex8c3BYSdimmZ
+         WfSaLBK+lSJ3PCDWjcUkFOnnia312zUGpWmKz9EKBhFlBOfDvYL4OO92rpovGd2xEQtT
+         f5CQ==
+X-Gm-Message-State: APjAAAVyoLSTAm94iwqztN6l0qy1pghZYzUJ5ALOZpoL3kBLkjqoerJx
+        9eSea8va0J4igdmghiaOUXlvvQ==
+X-Google-Smtp-Source: APXvYqzXVcc6fXXOJJq5bogayd4145zzm/qfoD7KDrsL3o2QfDRsySAjhmLpJFJJtPni27dVTOe/2Q==
+X-Received: by 2002:a62:2a0a:: with SMTP id q10mr77972329pfq.79.1560282051640;
+        Tue, 11 Jun 2019 12:40:51 -0700 (PDT)
+Received: from minitux (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id c133sm18710319pfb.111.2019.06.11.12.40.50
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Tue, 11 Jun 2019 12:40:51 -0700 (PDT)
+Date:   Tue, 11 Jun 2019 12:40:48 -0700
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Lee Jones <lee.jones@linaro.org>
+Cc:     alokc@codeaurora.org, andy.gross@linaro.org,
+        david.brown@linaro.org, wsa+renesas@sang-engineering.com,
+        linus.walleij@linaro.org, balbi@kernel.org,
+        gregkh@linuxfoundation.org, ard.biesheuvel@linaro.org,
+        jlhugo@gmail.com, linux-i2c@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-usb@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] pinctrl: qcom: Clear status bit on irq_unmask
-User-Agent: alot/0.8.1
-Date:   Tue, 11 Jun 2019 11:51:01 -0700
-Message-Id: <20190611185102.368ED21744@mail.kernel.org>
+Subject: Re: [PATCH v3 2/8] i2c: i2c-qcom-geni: Signify successful driver
+ probe
+Message-ID: <20190611194048.GR4814@minitux>
+References: <20190610084213.1052-1-lee.jones@linaro.org>
+ <20190610084213.1052-2-lee.jones@linaro.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190610084213.1052-2-lee.jones@linaro.org>
+User-Agent: Mutt/1.12.0 (2019-05-25)
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Quoting tengfeif@codeaurora.org (2019-06-11 03:41:26)
-> On 2019-06-10 22:51, Stephen Boyd wrote:
-> > Quoting Linus Walleij (2019-06-07 14:08:10)
-> >> On Fri, May 31, 2019 at 8:52 AM Tengfei Fan <tengfeif@codeaurora.org> =
+On Mon 10 Jun 01:42 PDT 2019, Lee Jones wrote:
 
-> >> wrote:
-> >>=20
-> >> > The gpio interrupt status bit is getting set after the
-> >> > irq is disabled and causing an immediate interrupt after
-> >> > enablling the irq, so clear status bit on irq_unmask.
-> >> >
-> >> > Signed-off-by: Tengfei Fan <tengfeif@codeaurora.org>
-> >>=20
-> >> This looks pretty serious, can one of the Qcom maintainers ACK
-> >> this?
-> >>=20
-> >> Should it be sent to fixes and even stable?
-> >>=20
-> >> Fixes: tag?
-> >>=20
-> >=20
-> > How is the interrupt status bit getting set after the irq is disabled?
-> > It looks like this is a level type interrupt? I thought that after
-> > commit b55326dc969e ("pinctrl: msm: Really mask level interrupts to
-> > prevent latching") this wouldn't be a problem. Am I wrong, or is qcom
-> > just clearing out patches on drivers and this is the last one that=20
-> > needs
-> > to be upstreamed?
->=20
-> Your patch(commit b55326dc969e) can cover our issue, and my patch is no=20
-> longer needed.
-> Your patch isn't included in our code, so I submitted this patch.
+> The Qualcomm Geni I2C driver currently probes silently which can be
+> confusing when debugging potential issues.  Add a low level (INFO)
+> print when each I2C controller is successfully initially set-up.
+> 
 
-Alright cool. Sounds like this patch can be dropped then and you can
-pick up the patch from upstream into your vendor kernel.
+Acked-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 
+> Signed-off-by: Lee Jones <lee.jones@linaro.org>
+> Acked-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+> ---
+>  drivers/i2c/busses/i2c-qcom-geni.c | 2 ++
+>  1 file changed, 2 insertions(+)
+> 
+> diff --git a/drivers/i2c/busses/i2c-qcom-geni.c b/drivers/i2c/busses/i2c-qcom-geni.c
+> index 9e3b8a98688d..a89bfce5388e 100644
+> --- a/drivers/i2c/busses/i2c-qcom-geni.c
+> +++ b/drivers/i2c/busses/i2c-qcom-geni.c
+> @@ -596,6 +596,8 @@ static int geni_i2c_probe(struct platform_device *pdev)
+>  		return ret;
+>  	}
+>  
+> +	dev_dbg(&pdev->dev, "Geni-I2C adaptor successfully added\n");
+> +
+>  	return 0;
+>  }
+>  
+> -- 
+> 2.17.1
+> 
