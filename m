@@ -2,74 +2,89 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 5BEAD3CB28
-	for <lists+linux-gpio@lfdr.de>; Tue, 11 Jun 2019 14:24:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1DABA3CE70
+	for <lists+linux-gpio@lfdr.de>; Tue, 11 Jun 2019 16:21:49 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389037AbfFKMYH (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 11 Jun 2019 08:24:07 -0400
-Received: from inva021.nxp.com ([92.121.34.21]:52584 "EHLO inva021.nxp.com"
+        id S2390499AbfFKOTp (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 11 Jun 2019 10:19:45 -0400
+Received: from hermes.aosc.io ([199.195.250.187]:33450 "EHLO hermes.aosc.io"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388567AbfFKMYH (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Tue, 11 Jun 2019 08:24:07 -0400
-Received: from inva021.nxp.com (localhost [127.0.0.1])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id D03CB200A0F;
-        Tue, 11 Jun 2019 14:24:05 +0200 (CEST)
-Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id D471A200A07;
-        Tue, 11 Jun 2019 14:23:55 +0200 (CEST)
-Received: from localhost.localdomain (mega.ap.freescale.net [10.192.208.232])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 79E2B40319;
-        Tue, 11 Jun 2019 20:23:43 +0800 (SGT)
-From:   Anson.Huang@nxp.com
-To:     aisheng.dong@nxp.com, festevam@gmail.com, shawnguo@kernel.org,
-        stefan@agner.ch, kernel@pengutronix.de, linus.walleij@linaro.org,
-        robh+dt@kernel.org, mark.rutland@arm.com, s.hauer@pengutronix.de,
-        catalin.marinas@arm.com, will.deacon@arm.com,
-        maxime.ripard@bootlin.com, olof@lixom.net,
-        horms+renesas@verge.net.au, jagan@amarulasolutions.com,
-        bjorn.andersson@linaro.org, leonard.crestez@nxp.com,
-        dinguyen@kernel.org, enric.balletbo@collabora.com,
-        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc:     Linux-imx@nxp.com
-Subject: [PATCH V2 3/3] arm64: defconfig: Select CONFIG_PINCTRL_IMX8MN by default
-Date:   Tue, 11 Jun 2019 20:25:35 +0800
-Message-Id: <20190611122535.23583-3-Anson.Huang@nxp.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190611122535.23583-1-Anson.Huang@nxp.com>
-References: <20190611122535.23583-1-Anson.Huang@nxp.com>
-X-Virus-Scanned: ClamAV using ClamSMTP
+        id S2389510AbfFKOTn (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Tue, 11 Jun 2019 10:19:43 -0400
+Received: from localhost (localhost [127.0.0.1]) (Authenticated sender: icenowy@aosc.io)
+        by hermes.aosc.io (Postfix) with ESMTPSA id E9C69819F0;
+        Tue, 11 Jun 2019 14:10:35 +0000 (UTC)
+From:   Icenowy Zheng <icenowy@aosc.io>
+To:     Rob Herring <robh+dt@kernel.org>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Linus Walleij <linus.walleij@linaro.org>
+Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-gpio@vger.kernel.org, linux-sunxi@googlegroups.com,
+        Icenowy Zheng <icenowy@aosc.io>
+Subject: [PATCH v2 00/11] Support for Allwinner V3/S3L and Sochip S3
+Date:   Tue, 11 Jun 2019 22:09:29 +0800
+Message-Id: <20190611140940.14357-1-icenowy@aosc.io>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-From: Anson Huang <Anson.Huang@nxp.com>
+This patchset tries to add support for Allwinner V3/S3L and Sochip S3.
 
-Enable CONFIG_PINCTRL_IMX8MN by default to support i.MX8MN
-pinctrl driver.
+Allwinner V3/V3s/S3L and Sochip S3 share the same die, but with
+different package. V3 is BGA w/o co-packaged DDR, V3s is QFP w/ DDR2,
+S3L is BGA w/ DDR2 and S3 is BGA w/ DDR3. (S3 and S3L is compatible
+for pinout, but because of different DDR, DDR voltage is different
+between the two variants). Because of the pin count of V3s is
+restricted due to the package, some pins are not bound on V3s, but
+they're bound on V3/S3/S3L.
 
-Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
-Reviewed-by: Dong Aisheng <aisheng.dong@nxp.com>
----
-Changes since V1:
-	- sort the change in alphabet order.
----
- arch/arm64/configs/defconfig | 1 +
- 1 file changed, 1 insertion(+)
+Currently the kernel is only prepared for the features available on V3s.
+This patchset adds the features missing on V3s for using them on
+V3/S3/S3L, and add bindings for V3/S3/S3L. It also adds a S3 SoM by
+Sipeed, called Lichee Zero Plus.
 
-diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
-index 9e6e07e..a47b0d6 100644
---- a/arch/arm64/configs/defconfig
-+++ b/arch/arm64/configs/defconfig
-@@ -374,6 +374,7 @@ CONFIG_SPMI=y
- CONFIG_PINCTRL_SINGLE=y
- CONFIG_PINCTRL_MAX77620=y
- CONFIG_PINCTRL_IMX8MM=y
-+CONFIG_PINCTRL_IMX8MN=y
- CONFIG_PINCTRL_IMX8MQ=y
- CONFIG_PINCTRL_IMX8QXP=y
- CONFIG_PINCTRL_IPQ8074=y
+Icenowy Zheng (11):
+  dt-bindings: pinctrl: add missing compatible string for V3s
+  dt-bindings: pinctrl: add compatible string for Allwinner V3 pinctrl
+  pinctrl: sunxi: v3s: introduce support for V3
+  clk: sunxi-ng: v3s: add the missing PLL_DDR1
+  dt-bindings: clk: sunxi-ccu: add compatible string for V3 CCU
+  clk: sunxi-ng: v3s: add Allwinner V3 support
+  dt-bindings: vendor-prefixes: add SoChip
+  ARM: sunxi: dts: s3/s3l/v3: add DTSI files for S3/S3L/V3 SoCs
+  dt-bindings: vendor-prefixes: add Sipeed
+  dt-bindings: arm: sunxi: add binding for Lichee Zero Plus core board
+  ARM: dts: sun8i: s3: add devicetree for Lichee zero plus w/ S3
+
+ .../devicetree/bindings/arm/sunxi.yaml        |   5 +
+ .../clock/allwinner,sun4i-a10-ccu.yaml        |   1 +
+ .../pinctrl/allwinner,sunxi-pinctrl.txt       |   2 +
+ .../devicetree/bindings/vendor-prefixes.yaml  |   4 +
+ arch/arm/boot/dts/Makefile                    |   1 +
+ .../boot/dts/sun8i-s3-lichee-zero-plus.dts    |   8 +
+ .../dts/sun8i-s3-s3l-lichee-zero-plus.dtsi    |  39 +++
+ arch/arm/boot/dts/sun8i-s3.dtsi               |   6 +
+ arch/arm/boot/dts/sun8i-s3l.dtsi              |   6 +
+ arch/arm/boot/dts/sun8i-v3.dtsi               |  14 +
+ drivers/clk/sunxi-ng/ccu-sun8i-v3s.c          | 244 +++++++++++++++-
+ drivers/clk/sunxi-ng/ccu-sun8i-v3s.h          |   6 +-
+ drivers/pinctrl/sunxi/pinctrl-sun8i-v3s.c     | 265 +++++++++++++++++-
+ drivers/pinctrl/sunxi/pinctrl-sunxi.h         |   2 +
+ include/dt-bindings/clock/sun8i-v3s-ccu.h     |   4 +
+ include/dt-bindings/reset/sun8i-v3s-ccu.h     |   3 +
+ 16 files changed, 597 insertions(+), 13 deletions(-)
+ create mode 100644 arch/arm/boot/dts/sun8i-s3-lichee-zero-plus.dts
+ create mode 100644 arch/arm/boot/dts/sun8i-s3-s3l-lichee-zero-plus.dtsi
+ create mode 100644 arch/arm/boot/dts/sun8i-s3.dtsi
+ create mode 100644 arch/arm/boot/dts/sun8i-s3l.dtsi
+ create mode 100644 arch/arm/boot/dts/sun8i-v3.dtsi
+
 -- 
-2.7.4
+2.21.0
 
