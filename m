@@ -2,96 +2,111 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id AE82F3D1FA
-	for <lists+linux-gpio@lfdr.de>; Tue, 11 Jun 2019 18:14:47 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 760463D25E
+	for <lists+linux-gpio@lfdr.de>; Tue, 11 Jun 2019 18:38:09 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405506AbfFKQOQ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 11 Jun 2019 12:14:16 -0400
-Received: from mout.kundenserver.de ([212.227.17.24]:38089 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2405393AbfFKQOQ (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 11 Jun 2019 12:14:16 -0400
-Received: from [192.168.1.110] ([95.118.191.213]) by mrelayeu.kundenserver.de
- (mreue109 [212.227.15.183]) with ESMTPSA (Nemesis) id
- 1MdNTy-1h1Oeo3XbU-00ZQ4b; Tue, 11 Jun 2019 18:14:02 +0200
-Subject: Re: [PATCH] RFC: fmc: Try to convert to GPIO descriptors
-To:     Alessandro Rubini <rubini@gnudd.com>
+        id S2404352AbfFKQiB (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 11 Jun 2019 12:38:01 -0400
+Received: from mail.gnudd.com ([77.43.112.34]:52334 "EHLO mail.gnudd.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2404082AbfFKQiB (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Tue, 11 Jun 2019 12:38:01 -0400
+Received: from mail.gnudd.com (localhost [127.0.0.1])
+        by mail.gnudd.com (8.14.4/8.14.4/Debian-4+deb7u1) with ESMTP id x5BGbnSU022348;
+        Tue, 11 Jun 2019 18:37:49 +0200
+Received: (from rubini@localhost)
+        by mail.gnudd.com (8.14.4/8.14.4/Submit) id x5BGbnIm022347;
+        Tue, 11 Jun 2019 18:37:49 +0200
+Date:   Tue, 11 Jun 2019 18:37:48 +0200
+From:   Alessandro Rubini <rubini@gnudd.com>
+To:     lkml@metux.net
 Cc:     linus.walleij@linaro.org, federico.vaga@cern.ch,
         linux-gpio@vger.kernel.org, bgolaszewski@baylibre.com,
         riehecky@fnal.gov
-References: <fd1ad233-62aa-8545-a01e-511ea3db9f83@metux.net>
- <CACRpkdaCFZcQ8VMjKJkXAm+TRH+=DY3j5Udh0mcYR7YcDr8VtA@mail.gmail.com>
- <20190603230604.30938-1-linus.walleij@linaro.org>
- <22282873.PltXLBtAh5@pcbe13614> <20190610061325.GA9668@mail.gnudd.com>
- <20190611145850.GA15743@mail.gnudd.com>
-From:   "Enrico Weigelt, metux IT consult" <lkml@metux.net>
-Organization: metux IT consult
-Message-ID: <6006a8cd-ac80-93d0-bd61-cf2392655519@metux.net>
-Date:   Tue, 11 Jun 2019 18:14:00 +0200
-User-Agent: Mozilla/5.0 (X11; Linux i686 on x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.2.1
+Subject: Re: [PATCH] RFC: fmc: Try to convert to GPIO descriptors
+Message-ID: <20190611163748.GA22340@mail.gnudd.com>
 MIME-Version: 1.0
-In-Reply-To: <20190611145850.GA15743@mail.gnudd.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Provags-ID: V03:K1:fej2J/qPxGVEgBSl7nQxdsyAEVnKErRg3so6lnPHbMlUEtB5ghg
- 4Qsc+F/vyoiTbz6A6WHBb+gLO2Z40jVlAe3nzOrQv7ugRyfDf3HzbIhGNmRTVCw6n2SIq2O
- jUF4IactWQV5wJlmIDFLhyiaRWlUwu4WenzuVTjQQJDuRr69EvL2qofTbyRByDlaqIT6lUO
- I2LBsR2/pS2RPx5tFqdlQ==
-X-Spam-Flag: NO
-X-UI-Out-Filterresults: notjunk:1;V03:K0:sYEz/TW4UKs=:Dv0de4ETI7Xee8Xv78n0mw
- dN33EhbpOudRdbCB+gOiN/zkgAu03bh5AaswZQHKyLGbpgrHB29+WYCM1XIT3BMvYZxkD4Dh2
- F13k9cxSVLpDgxs5HOQCAUUiiu0hgY+a14CXa/THGvQ6PV/UInOVSG6mNKyJFGzCKb4XvgxVU
- gzvS767Z5pYqR8460DOhb0oiRQl2l3ugxqHSucwHwfSK4XdTj1RSf0an9bQmddyDL7usa8F0R
- wKF5H/yZaoJf/dIZrp5vv4Kyj8jRuoEPpK0F/GiA99j8WhlrmxkG/jVKGZKnTbbCGaxAw6843
- WqkgBiOPQjSe9vWikpdfPH5/r6pNv+UA8DeKEY1rZDREQ3W1Mr52Neu01f0HfjIqazhsWVoem
- XbwAJpO96XeYM12cFzeMRwlHkYhIJ5+MniL8Dc7RglUQG63Fs+hMlFzZ8S4PL3JKqhKDyJCNu
- S8QUGksIzfaO3xEpPmyOPmBkKS0hv7sj+JEz2SFqtXVvMOoilOatxcTGvyV5GuuFBEQYn9hN5
- kdgkzSsE7v7QsZqTPvAOXbXpDwMd99z3fbD4Et07r7TIIOcSLqUlEut02iOGRpMJTT7sqVeQF
- nwqs/Wr5Np0a9TYxKwYJmryXzo18KjXaKdtf7Xa8CbiDweBw5/6Q0IAMqi0jPk4ok0078Ypba
- 7xhGxqbb1+heT0J8wzpqgeLeLR3aKNTxPjU9T7CgwDn2cJJ1OQM0CZQSPeCulX79jYkoC46bt
- xIRf0HSxbGlWZbtu7l+pC96nxpVbtjEpakHD7u4XXTmAlt8nsiEychTsYEM=
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Organization: GnuDD, Device Drivers, Embedded Systems, Courses
+In-Reply-To: <6006a8cd-ac80-93d0-bd61-cf2392655519@metux.net>
+References: <6006a8cd-ac80-93d0-bd61-cf2392655519@metux.net>
+  <fd1ad233-62aa-8545-a01e-511ea3db9f83@metux.net>
+  <CACRpkdaCFZcQ8VMjKJkXAm+TRH+=DY3j5Udh0mcYR7YcDr8VtA@mail.gmail.com>
+  <20190603230604.30938-1-linus.walleij@linaro.org>
+  <22282873.PltXLBtAh5@pcbe13614> <20190610061325.GA9668@mail.gnudd.com>
+  <20190611145850.GA15743@mail.gnudd.com>
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 11.06.19 16:58, Alessandro Rubini wrote:
+>> This FMC (fpga mezzanine carrier) is a "slot" for peripheral boards.
+>> Like shields for beaglebone or such stuff.  So there is a board
+>> (and our own are actually pci-x and vme) with the FPGA, and the pins
+>> are carried to this "mezzanine" where the I/O happens. The mezzanine
+>> is usually just dumb, but it has the mandatory eeprom.
+> 
+> Ah, the fpga directly terminates w/ pcix or vme ?
 
-Hi,
+The FMC standard doesn't talk about this. In our devices (pcix and vme
+adapters), there is a bridge. If the fpga was directly connected, it
+could not speak vme or pcix.  Then there are standalone applications,
+but then it's not of interest for the linux kernel (there is no host).
 
-> This FMC (fpga mezzanine carrier) is a "slot" for peripheral boards.
-> Like shields for beaglebone or such stuff.  So there is a board
-> (and our own are actually pci-x and vme) with the FPGA, and the pins
-> are carried to this "mezzanine" where the I/O happens. The mezzanine
-> is usually just dumb, but it has the mandatory eeprom.
+> So, from *logical* point of view (leaving aside the physical aspects),
+> we have either pcix or vme cards, carrying an eepromp and an fpga ?
+> The i2c and gpio controllers are also implemented in the fpga ?
 
-Ah, the fpga directly terminates w/ pcix or vme ?
+No. There is a "carrier" that has the fpga and possible the bridge
+to be a slave of a host. And a connector where the "mezzanine" fits.
+The mezzanine is like a shield of arduino/raspberry: it usually
+only hosts the signa conditioning and adc/dac.  But it also has
+an eeprom.  In the use case I worked with, we had an oscilloscope
+(4 adc, hifh speed) and a fine-delay card, both plugging in the
+same carrier (the pcix carrier).
 
-Okay, now I'm begining to get a picture ...
+The pci driver for the carrier (which is a pci device) instantiates
+the fmc bus and loads a "generic" bitstream for the fpga. The
+bitstream is carrier-specific.  With this I could read the eeprom,
+and thus know what the mezzanine was.  This told me what "final"
+bitstream to load.  After that, we have a "device" (adc, fine-delay,
+whatever) and thus could load the appropriate driver.
 
-So, from *logical* point of view (leaving aside the physical aspects),
-we have either pcix or vme cards, carrying an eepromp and an fpga ?
-The i2c and gpio controllers are also implemented in the fpga ?
-
-> So, our "fine delay" board, that can timestamp pulses and generate
-> other pulses at precise times) can plug in both the pcix and vme carrier.
-
-Do the bitfiles differ between pcix and vme case ?
-
-> The tow major ones, IIUC, are (1) the same mezzanine would require
-> different bitstreams according to external information and (2) the
-> fpga binary itself my expose different "devices" where a generalized
-> driver would benefit, instead of a mezzanine-specific driver.
-
-Have you already tried the MFD approach, where a board (in this case:
-bitfile) specific driver instantiates several generic ones ?
+The eeprom is read-only. Only exported in sysfs for informational
+purposes. This is the current fmc-bus design. But if there are
+no users (besides people building it off-tree), it can go.
 
 
---mtx
 
--- 
-Enrico Weigelt, metux IT consult
-Free software and Linux embedded engineering
-info@metux.net -- +49-151-27565287
+About SDB:
+
+We used SDB because ipmi-fru is a pain of complexity.  Thus, we had a
+filesystem-like thing in the eeprom where we can store calibration
+parameters or whatever (we use SDB for mac addresses in flash, for
+example, with a barebox "driver" to read them). In fmc mezzanines
+we declare the "fru" information at offset 0 as a "file" within an
+sdb structure, whose magic number is at offset 256 or 512 in the eeprom.
+
+SDB was born to describe peripherals within a wishbone address space
+(so we autdetect peripherals from within our soft-core), and it lends
+itself ferfectly to describe an eeprom. It's more than a "partition
+table" thing and less than a filesystem. You can think about it as an
+array of "legacy uboot images", with subdirectories (wishbone
+crossbars) and relative addressing. Something very simple to parse
+from a microcontroller.
+
+Then we lacked the resources to properly advertize it, and it remained
+somehow an internal project. I don't know why federico says it's
+abandoned, becase it is still used to describe fpga address spaces in
+at least one german research center. Maybe it's just abandoned for
+fmc eeprom, I don't know.
+
+
+Please note that I'm not insisting to keep fmc-bus as is, i just try
+to explain the design choices, taken back when the world was easy.
+Now I'm basically out of these project, and whatever federico says
+is much more valuable than my out-of-date view of the issues.
+
+thanks
+/alessandro
