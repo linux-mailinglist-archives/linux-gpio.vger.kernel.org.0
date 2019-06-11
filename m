@@ -2,102 +2,100 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id E5F363D706
-	for <lists+linux-gpio@lfdr.de>; Tue, 11 Jun 2019 21:41:42 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B0A2B3D749
+	for <lists+linux-gpio@lfdr.de>; Tue, 11 Jun 2019 21:55:30 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404408AbfFKTkx (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 11 Jun 2019 15:40:53 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:42126 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2391042AbfFKTkw (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 11 Jun 2019 15:40:52 -0400
-Received: by mail-pf1-f196.google.com with SMTP id q10so8058003pff.9
-        for <linux-gpio@vger.kernel.org>; Tue, 11 Jun 2019 12:40:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=2Tl9Z0NsfgrApufoe2WUbK2OeIisauNIixsAGf/fSmk=;
-        b=vsAEGERkAaoThhFQXBii705fmbt72E/99Uu7FZajp8SUf8GTc9LlYBfAC9HjBDp5sL
-         4EKL6GI9Rp7rOn2WJp0TItbwY1VpF5bcED6xmFO6HO1yjnxBmgJQRVff+Szsd7nDo52k
-         o1KbxC6jfKkSBlesArxZfIgVWHOPkeVNKjzoOo2dLBfe0tMVlsJMNhicCRnqqzah4M1p
-         nQ+X+wveo4NUY1wN8RdZqJ6VXO8ZpGZsQhfe115nX9JanaBCN6VcbYPC8c0LrFdvg90V
-         DNFLgkX/ED/WENER8nOIEnsilSeYqIY4TNFJg1PXRtIJq4SgPMjABUQl+T2ZO2lY8t8G
-         +ndA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=2Tl9Z0NsfgrApufoe2WUbK2OeIisauNIixsAGf/fSmk=;
-        b=AzPzogfKfS53EmYp8DDDxz4oq31F+VU21PIHO5o0p4RdweIVj2Nof+hsTJEwRH9EAx
-         DEvTXWJfuRLo0W8hAcae20KAwrey6WJPvNSsPEkFGwl2VgJJgmZmhri/aqG4SDRxcLc5
-         jR10sDudcOX1Comr0fI28fFPobrK6O/n5ml6Hv3sFxD+tLAZmnsCosvAxR3Y8K7+Vpz3
-         XheULE4PWtK7j3G6PTVTyQzMxitvJhk3LmflTzQhhR1O7UEuadLmcgDex8c3BYSdimmZ
-         WfSaLBK+lSJ3PCDWjcUkFOnnia312zUGpWmKz9EKBhFlBOfDvYL4OO92rpovGd2xEQtT
-         f5CQ==
-X-Gm-Message-State: APjAAAVyoLSTAm94iwqztN6l0qy1pghZYzUJ5ALOZpoL3kBLkjqoerJx
-        9eSea8va0J4igdmghiaOUXlvvQ==
-X-Google-Smtp-Source: APXvYqzXVcc6fXXOJJq5bogayd4145zzm/qfoD7KDrsL3o2QfDRsySAjhmLpJFJJtPni27dVTOe/2Q==
-X-Received: by 2002:a62:2a0a:: with SMTP id q10mr77972329pfq.79.1560282051640;
-        Tue, 11 Jun 2019 12:40:51 -0700 (PDT)
-Received: from minitux (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id c133sm18710319pfb.111.2019.06.11.12.40.50
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 11 Jun 2019 12:40:51 -0700 (PDT)
-Date:   Tue, 11 Jun 2019 12:40:48 -0700
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Lee Jones <lee.jones@linaro.org>
-Cc:     alokc@codeaurora.org, andy.gross@linaro.org,
-        david.brown@linaro.org, wsa+renesas@sang-engineering.com,
-        linus.walleij@linaro.org, balbi@kernel.org,
-        gregkh@linuxfoundation.org, ard.biesheuvel@linaro.org,
-        jlhugo@gmail.com, linux-i2c@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-usb@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 2/8] i2c: i2c-qcom-geni: Signify successful driver
- probe
-Message-ID: <20190611194048.GR4814@minitux>
-References: <20190610084213.1052-1-lee.jones@linaro.org>
- <20190610084213.1052-2-lee.jones@linaro.org>
+        id S2405345AbfFKTzK (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 11 Jun 2019 15:55:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60936 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2404282AbfFKTzK (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Tue, 11 Jun 2019 15:55:10 -0400
+Received: from mail-qk1-f180.google.com (mail-qk1-f180.google.com [209.85.222.180])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 41EE82173C;
+        Tue, 11 Jun 2019 19:55:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1560282909;
+        bh=2jeSb/OUEFUwExRaSwm27O/BgcQGHGrpHx+20YxbtuM=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=WTgRZYFURDZsQb5+TwkIswCl5Zg+MioxluX+zL+ZzZWomQHLpkKCnGCZBynVvT1qo
+         IhlX7pJGYmtDRJgSbcHGZDxgB6fAqtkxiqBUXeZBjaaLoX/Byz2TW4otC/3mkYhXpw
+         65X0hL2dZitOE6NFf3oTd8sboqXvP/dDOSreRQBg=
+Received: by mail-qk1-f180.google.com with SMTP id m14so8466957qka.10;
+        Tue, 11 Jun 2019 12:55:09 -0700 (PDT)
+X-Gm-Message-State: APjAAAWtGlbF+oiyCNMLpRG50tYDM3e8ZC0c9vnLOXNr1iztlLJm/rg+
+        czWntOds4nHHjFQk/X07V0KvR2aB1AAHHvtbDQ==
+X-Google-Smtp-Source: APXvYqzDOaQFq9KRqVoTAyLrNcdmraacXiFjUvpNJC9DC1OsA19tDc1ngzzrggZx0+ae9yjZdwjNOgSx2r/OE2MEo4c=
+X-Received: by 2002:ae9:c208:: with SMTP id j8mr61663393qkg.264.1560282908475;
+ Tue, 11 Jun 2019 12:55:08 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190610084213.1052-2-lee.jones@linaro.org>
-User-Agent: Mutt/1.12.0 (2019-05-25)
+References: <20190514005033.15593-1-robh@kernel.org> <CACRpkdZabT3_vjkv0PR+GLC0ZXWzpMxfwJU6O9Y+omKJ=6zCaA@mail.gmail.com>
+ <20190527064146.5rlm2audk6uojdxn@vireshk-i7>
+In-Reply-To: <20190527064146.5rlm2audk6uojdxn@vireshk-i7>
+From:   Rob Herring <robh@kernel.org>
+Date:   Tue, 11 Jun 2019 13:54:57 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqK3iS+Tv+0HYMApL6C6WQeVsf9hXgvpLpuR+dbDuygQdg@mail.gmail.com>
+Message-ID: <CAL_JsqK3iS+Tv+0HYMApL6C6WQeVsf9hXgvpLpuR+dbDuygQdg@mail.gmail.com>
+Subject: Re: [PATCH] dt-bindings: gpio: Convert Arm PL061 to json-schema
+To:     Viresh Kumar <viresh.kumar@linaro.org>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon 10 Jun 01:42 PDT 2019, Lee Jones wrote:
+On Mon, May 27, 2019 at 12:41 AM Viresh Kumar <viresh.kumar@linaro.org> wrote:
+>
+> On 24-05-19, 13:38, Linus Walleij wrote:
+> > On Tue, May 14, 2019 at 2:50 AM Rob Herring <robh@kernel.org> wrote:
+> >
+> > > Convert the Arm PL061 GPIO controller binding to json-schema format.
+> > >
+> > > As I'm the author for all but the gpio-ranges line, make the schema dual
+> > > GPL/BSD license.
+> > >
+> > > Cc: Linus Walleij <linus.walleij@linaro.org>
+> > > Cc: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> > > Cc: linux-gpio@vger.kernel.org
+> > > Signed-off-by: Rob Herring <robh@kernel.org>
+> >
+> > Patch applied. As you know I am already a big fan of this scheme.
+> >
+> > > This warns on a few platforms missing clocks, interrupt-controller
+> > > and/or #interrupt-cells. We could not make those required, but really
+> > > they should be IMO. OTOH, it's platforms like Spear and Calxeda which
+> > > aren't too active, so I don't know that we want to fix them.
+> >
+> > What works for you works for me.
+> >
+> > We could add dummy fixed clocks in the DTS files if
+> > we wanted I suppose. The #interrupt-cells and interrupt-controller
+> > things we can just fix, but I wonder what the maintainers of these
+> > platforms are up to? Isn't Calxeda yours, and could Viresh fix
+> > up the SPEAr?
 
-> The Qualcomm Geni I2C driver currently probes silently which can be
-> confusing when debugging potential issues.  Add a low level (INFO)
-> print when each I2C controller is successfully initially set-up.
-> 
+I was hoping to delete Calxeda rather than fix. I'm pretty sure none
+of the distros are using the systems anymore and they were the main
+users for a while. Otherwise, I would have converted all the bindings
+it uses.
 
-Acked-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+> I checked SPEAr and it is missing interrupt-controller at few places and clocks
+> everywhere. Missing clocks should be fine as SPEAr doesn't get clocks from DT.
 
-> Signed-off-by: Lee Jones <lee.jones@linaro.org>
-> Acked-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
-> ---
->  drivers/i2c/busses/i2c-qcom-geni.c | 2 ++
->  1 file changed, 2 insertions(+)
-> 
-> diff --git a/drivers/i2c/busses/i2c-qcom-geni.c b/drivers/i2c/busses/i2c-qcom-geni.c
-> index 9e3b8a98688d..a89bfce5388e 100644
-> --- a/drivers/i2c/busses/i2c-qcom-geni.c
-> +++ b/drivers/i2c/busses/i2c-qcom-geni.c
-> @@ -596,6 +596,8 @@ static int geni_i2c_probe(struct platform_device *pdev)
->  		return ret;
->  	}
->  
-> +	dev_dbg(&pdev->dev, "Geni-I2C adaptor successfully added\n");
-> +
->  	return 0;
->  }
->  
-> -- 
-> 2.17.1
-> 
+Clocks not from DT was supposed to be a transitional thing...
+
+>
+> And interrupt-controller can be just added, I don't think there would be any
+> platform dependent side-affects ?
+
+There shouldn't be.
+
+Rob
