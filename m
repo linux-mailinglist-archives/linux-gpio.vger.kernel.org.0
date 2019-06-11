@@ -2,68 +2,129 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id EFA4F3CEB5
-	for <lists+linux-gpio@lfdr.de>; Tue, 11 Jun 2019 16:30:15 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DD88E3CEC8
+	for <lists+linux-gpio@lfdr.de>; Tue, 11 Jun 2019 16:33:16 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387767AbfFKO3y (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 11 Jun 2019 10:29:54 -0400
-Received: from mout.kundenserver.de ([217.72.192.73]:38931 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387551AbfFKO3x (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 11 Jun 2019 10:29:53 -0400
-Received: from [192.168.1.110] ([95.118.191.213]) by mrelayeu.kundenserver.de
- (mreue107 [212.227.15.183]) with ESMTPSA (Nemesis) id
- 1MX0TX-1h3RRu0fqz-00XK6T; Tue, 11 Jun 2019 16:29:51 +0200
-Subject: Re: [PATCH] pinctrl: xway: Switch to SPDX header
-To:     Lubomir Rintel <lkundrak@v3.sk>,
-        Linus Walleij <linus.walleij@linaro.org>
-Cc:     John Crispin <john@phrozen.org>,
-        Martin Schiller <mschiller@tdt.de>, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20190611072001.2978298-1-lkundrak@v3.sk>
-From:   "Enrico Weigelt, metux IT consult" <lkml@metux.net>
-Organization: metux IT consult
-Message-ID: <8870c141-c7f2-7529-5452-3e246697496b@metux.net>
-Date:   Tue, 11 Jun 2019 16:29:49 +0200
-User-Agent: Mozilla/5.0 (X11; Linux i686 on x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.2.1
+        id S2388492AbfFKOcy (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 11 Jun 2019 10:32:54 -0400
+Received: from relay9-d.mail.gandi.net ([217.70.183.199]:43911 "EHLO
+        relay9-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387551AbfFKOcy (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 11 Jun 2019 10:32:54 -0400
+X-Originating-IP: 90.88.159.246
+Received: from localhost (aaubervilliers-681-1-40-246.w90-88.abo.wanadoo.fr [90.88.159.246])
+        (Authenticated sender: maxime.ripard@bootlin.com)
+        by relay9-d.mail.gandi.net (Postfix) with ESMTPSA id 5C50FFF812;
+        Tue, 11 Jun 2019 14:32:45 +0000 (UTC)
+Date:   Tue, 11 Jun 2019 16:32:39 +0200
+From:   Maxime Ripard <maxime.ripard@bootlin.com>
+To:     Icenowy Zheng <icenowy@aosc.io>
+Cc:     Rob Herring <robh+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-gpio@vger.kernel.org, linux-sunxi@googlegroups.com
+Subject: Re: [PATCH v2 11/11] ARM: dts: sun8i: s3: add devicetree for Lichee
+ zero plus w/ S3
+Message-ID: <20190611143239.zvganlwaiku3bs63@flea>
+References: <20190611140940.14357-1-icenowy@aosc.io>
+ <20190611140940.14357-12-icenowy@aosc.io>
 MIME-Version: 1.0
-In-Reply-To: <20190611072001.2978298-1-lkundrak@v3.sk>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Provags-ID: V03:K1:fHL/tE8N4YuH7R23yxGsaf7pbX1UcbkqJHW1yuOymGJeRxopNEl
- +0Z876uzSpQ0J/FI8TJWienflt6tnrCqxZzirvM0ZIx0w6H+G3c+nCI4sHKeVuC8L/NmSld
- w4zIA7whXTAsWb6CcLACvjpIAep6wtpgxhqJ7xyjZd+nBnlvpGjg/KIEXgoN8lIW1bH1ikA
- 1OHCnrjRrdCZ3z+ue038g==
-X-Spam-Flag: NO
-X-UI-Out-Filterresults: notjunk:1;V03:K0:4UzKVJ+ntXY=:PPfSWDgvHJUo27CSJ+Dl+n
- u/NkRFQL2366sTeRpyTRZds7zCzSuSpx8dmMTVO/RyaaK3pV6v8IDJRdKsWBMq74gZ5lBtGOa
- zISQLgk4gVYWdZIqrxD9dgy2fSH/UJHmTH7uYC01KOfpdX9vDRqCQmAs4FdZPn0q13bOfSI5T
- KH1Ia21JSUjn9OieTDg4Xe5gJoDT/hn9hNvLRv+SPXJJJhNOpLplVeURNuvYOU/W1GM5/PLpf
- bNqOBjGLxFv8Dmv4EaoFDtoVHYFuxNjzpepaO1kQcBgoZftpPLrlR5ELbhODj+0eRsy1oQKCj
- b925Ynl3uDUiP8DgAu9NrniIb9GwhgtNCynvsOWeyoGZxp2mGYLiv+TKDDb/TfiM5sz/FTbxp
- HiaH++Ev2qtdJWdZafeze1yFHZlHCbQIOE+z5MaAACBHTh9SKKSgxFGcAtjLdFNI+p7iPnuqP
- +pYfq3qfMD+XXpD5Rlhb5LeZwUeFUPFib7UsXLAsqZrztwyM8ncgywi7nwpHwS1YoPC/PIWu1
- B8V6rEyyII52Mrkpj12WThwasIErNm+OazhqVUfi2TUYIwcXQ2tkHaYFpMzF/dNMpvQJNUtSv
- 9FikaZn1Gom8YyVpdXO6KvuwPsEy6i4FDjSNxdtNNptqgL0uKsdz195A4qfzk06B+LeCFR4OT
- +zhcyMYND+eIgam+4mKWs6PN6ZIefC7ekB46tXHCDp+cPoL7YMHgK7/NcPSFaM/wu0U/PqXQB
- gjhOpvybiinCPUBqzFV4yXKbKtO6Fi7T9bcekOlZfgPokIz+xbIPw+FyQ+4=
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="6e3io72tcrt3erkz"
+Content-Disposition: inline
+In-Reply-To: <20190611140940.14357-12-icenowy@aosc.io>
+User-Agent: NeoMutt/20180716
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 11.06.19 09:20, Lubomir Rintel wrote:
-> The original license text had a typo ("publishhed") which would be
-> likely to confuse automated licensing auditing tools. Let's just switch
-> to SPDX instead of fixing the wording.
-> 
-> Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
 
-Reviewed-By: Enrico Weigelt <info@metux.net>
+--6e3io72tcrt3erkz
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
--- 
-Enrico Weigelt, metux IT consult
-Free software and Linux embedded engineering
-info@metux.net -- +49-151-27565287
+Hi,
+
+On Tue, Jun 11, 2019 at 10:09:40PM +0800, Icenowy Zheng wrote:
+> Lichee zero plus is a core board made by Sipeed, which includes on-board
+> TF slot or SMT SD NAND, and optional SPI NOR or eMMC, a UART debug
+> header, a microUSB slot and a gold finger connector for expansion. It
+> can use either Sochip S3 or Allwinner S3L SoC.
+>
+> Add the basic device tree for the core board, w/o optional onboard
+> storage, and with S3 SoC.
+>
+> Signed-off-by: Icenowy Zheng <icenowy@aosc.io>
+> ---
+> New patch in v2.
+>
+>  arch/arm/boot/dts/Makefile                    |  1 +
+>  .../boot/dts/sun8i-s3-lichee-zero-plus.dts    |  8 ++++
+>  .../dts/sun8i-s3-s3l-lichee-zero-plus.dtsi    | 39 +++++++++++++++++++
+>  3 files changed, 48 insertions(+)
+>  create mode 100644 arch/arm/boot/dts/sun8i-s3-lichee-zero-plus.dts
+>  create mode 100644 arch/arm/boot/dts/sun8i-s3-s3l-lichee-zero-plus.dtsi
+>
+> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+> index 5559028b770e..2b5e6a1d20ff 100644
+> --- a/arch/arm/boot/dts/Makefile
+> +++ b/arch/arm/boot/dts/Makefile
+> @@ -1110,6 +1110,7 @@ dtb-$(CONFIG_MACH_SUN8I) += \
+>  	sun8i-r16-nintendo-super-nes-classic.dtb \
+>  	sun8i-r16-parrot.dtb \
+>  	sun8i-r40-bananapi-m2-ultra.dtb \
+> +	sun8i-s3-lichee-zero-plus.dtb \
+>  	sun8i-t3-cqa3t-bv3.dtb \
+>  	sun8i-v3s-licheepi-zero.dtb \
+>  	sun8i-v3s-licheepi-zero-dock.dtb \
+> diff --git a/arch/arm/boot/dts/sun8i-s3-lichee-zero-plus.dts b/arch/arm/boot/dts/sun8i-s3-lichee-zero-plus.dts
+> new file mode 100644
+> index 000000000000..7d2f6b145190
+> --- /dev/null
+> +++ b/arch/arm/boot/dts/sun8i-s3-lichee-zero-plus.dts
+> @@ -0,0 +1,8 @@
+> +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
+> +/*
+> + * Copyright (C) 2019 Icenowy Zheng <icenowy@aosc.io>
+> + */
+> +
+> +/dts-v1/;
+> +#include "sun8i-s3.dtsi"
+> +#include "sun8i-s3-s3l-lichee-zero-plus.dtsi"
+> diff --git a/arch/arm/boot/dts/sun8i-s3-s3l-lichee-zero-plus.dtsi b/arch/arm/boot/dts/sun8i-s3-s3l-lichee-zero-plus.dtsi
+> new file mode 100644
+> index 000000000000..bb148e796df7
+> --- /dev/null
+> +++ b/arch/arm/boot/dts/sun8i-s3-s3l-lichee-zero-plus.dtsi
+> @@ -0,0 +1,39 @@
+> +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
+> +/*
+> + * Copyright (C) 2019 Icenowy Zheng <icenowy@aosc.io>
+> + */
+> +
+> +#include "sunxi-common-regulators.dtsi"
+
+If possible, you should get rid of that include. What are you using it
+for?
+
+Maxime
+
+--
+Maxime Ripard, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
+
+--6e3io72tcrt3erkz
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXP+7hwAKCRDj7w1vZxhR
+xXD5AQDzzGjJuMYqZOH2bt2UEka6SvuIrYluNOH8x3D+7GOsJAEA2rH3UjHc3GPu
+kpIKRxDM2YMRW103wJicTaDDoRvXeQc=
+=ySX5
+-----END PGP SIGNATURE-----
+
+--6e3io72tcrt3erkz--
