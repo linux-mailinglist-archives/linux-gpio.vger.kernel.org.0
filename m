@@ -2,51 +2,51 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id D93F641F76
-	for <lists+linux-gpio@lfdr.de>; Wed, 12 Jun 2019 10:43:08 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6D64E41F7D
+	for <lists+linux-gpio@lfdr.de>; Wed, 12 Jun 2019 10:44:04 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731720AbfFLInI (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 12 Jun 2019 04:43:08 -0400
-Received: from mail-lj1-f173.google.com ([209.85.208.173]:44861 "EHLO
-        mail-lj1-f173.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729594AbfFLInI (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 12 Jun 2019 04:43:08 -0400
-Received: by mail-lj1-f173.google.com with SMTP id k18so14328413ljc.11
-        for <linux-gpio@vger.kernel.org>; Wed, 12 Jun 2019 01:43:07 -0700 (PDT)
+        id S1729826AbfFLIoD (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 12 Jun 2019 04:44:03 -0400
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:46502 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726887AbfFLIoD (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 12 Jun 2019 04:44:03 -0400
+Received: by mail-lj1-f195.google.com with SMTP id v24so9996412ljg.13
+        for <linux-gpio@vger.kernel.org>; Wed, 12 Jun 2019 01:44:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=x+EjlD1+T7CCrikjK1HAO5M7exqwmkOmFUVOPSS1Jzc=;
-        b=o2bm3iMtBobjXXtxNv1yFCOKCEhNUdN1OsTsR9YVk17KPGSUwu4aT0rnhkx69gbg95
-         e2jjaVb1Se7IrsCu31pdFspgjFlEuVi9fGbKbg5PlhWAR+3A8iphpCXysUy9RzLYddgl
-         aQNZlqA2yjNcOCK0yYlTihm0cVfIdW7csM0JGNjE93raaG/4HQLO9z5U0AY8tolh5QGv
-         E9IiagQROkDPg0Gek2RaF8qaGdek3UkTHykivSnaKNP2wVIHhAaH/Qzd5o65P2RAW7MQ
-         1LcaQk9sZ0sz5i9K0nXFhZxkqx8Xwd8rM86vTPKG20eZr4FXCJkN14MSO3s8wSzqj5B+
-         GLDA==
+        bh=NXPy6kD2gFwlUuId8WEznhJ1Poa05ZMGVOTjoPChSP8=;
+        b=PvWCd5zJz+0mVVuAXjRL/ND/2lhYSSE9llh3OtEzsQ0B61njuSUX9TrFg106OnDYXv
+         7MJTusmyWZAvT3tTcp6Y6hcTDZ30ekWrycGxhiG+s3YnCnBc6TXMenolVMwNjtThWRwn
+         8QdZRgK1OLDdg0GEMsCK2G498LR8XVOSs20TuFYCiBb4fNzLZgh7AswQFGS5fQD6gkfb
+         fFqAY+B0v+cIxSZt0wQMb9c422nvUSpo36CRYOvLf4Xy4l8fl8BOoZkLDnyzgoCWqwuZ
+         8/VR0udQEUJdd/3r91eIImhpxBe68w83hYEQj6dOdA0kbG8WbihXERC5SUy/Vu9Ja7YD
+         EQLg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=x+EjlD1+T7CCrikjK1HAO5M7exqwmkOmFUVOPSS1Jzc=;
-        b=GZFC7RmpoD/mwPy6lqGGzWHfFp48jVDi69f4LrpnK7ovVtS7HSOflfu6EiS8rSU2pi
-         NJiHrRHzruaeSkOUri33WlLYYITHipQTvbQ4lOMxsS8urC1xNeez5IBWvCg+xkCxD/fC
-         hkaLX7hgZCjf9gOoxEh5UkY2QfR6ehhFx5GMuyq3TgjiCr/FhghPT2q3qK8JPEga1fi9
-         ChQqdMjjDB4sTVg+eR0rU6gL+gcddpnKTG7S1yhem4trUtghDdeYlmLFF6Lfvh/Fadsi
-         0YhDifY4798hR4P5xFh/ywnJzi4EbQ8okcAqF1dIAQm2GPQ1jKFWzmcr8vn/iXiI71+p
-         EBXA==
-X-Gm-Message-State: APjAAAVV+O8SVjDlZgcdjrn4WTdgjSVenVzjUb++cBZplqoxDcScvG9Q
-        n2zIPzI4pvKqgFUQCEhSki6ZKJc7fkF32MzJPht3V95cn2WSNg==
-X-Google-Smtp-Source: APXvYqxcESdgBagFUM3+T7x4f4AJ5XZlAtn+aqs2xl9XMwCPhMnxciJL8Ij4vBzLWAJ5RBgDBwAgRsx8strN2LlYm58=
-X-Received: by 2002:a2e:7508:: with SMTP id q8mr26813533ljc.165.1560328986596;
- Wed, 12 Jun 2019 01:43:06 -0700 (PDT)
+        bh=NXPy6kD2gFwlUuId8WEznhJ1Poa05ZMGVOTjoPChSP8=;
+        b=I3EWNNfvcL215INqhX9Vy1VINd1Jk+7S/yVkkgd6LD9AIRzLVEFA7+vyopcLOgh58I
+         FD+FIB7c5j8oqe6ZuMfMKqAvWKuBbgqH75NbHjPmZStMZ37DGvuFs0GJH/LdU6oGR+sD
+         BvFerFdmgh9fOny9EbnjcWnidkstdG8JIz265hJHTzcNYohRvsKj0NCTPnhJwjm6lmQR
+         xmYLCN1T6tmIZe+5+745QpK8DZQmA3HyiKpF615bfrUty6mM8qepBiTlpYJ8uf0ccSQ3
+         OuufcFcpL7tbePovKdUp4z4oDSQZgaZuqSOo4mi7cfDafxDmoeeqc9wUBVU3LOWxQitm
+         aTxQ==
+X-Gm-Message-State: APjAAAUxo+hBOBcaAwngR2Qu4GaKjJUJPZpXOAYUTP4oLM/EK/L8ZHrq
+        p2PdkvWcz7Ma7cfukDNaYEJt7+iN5ymh8Ye/RZYhbA==
+X-Google-Smtp-Source: APXvYqwrPS8OsyBoY3vc54Mb2hWKOCvV7geC2RBav5pSRb1SLrflF9VirpQvaiOeoFCp8vBJ26VImCHonoZpxJ8bzlM=
+X-Received: by 2002:a2e:2f12:: with SMTP id v18mr42060237ljv.196.1560329040984;
+ Wed, 12 Jun 2019 01:44:00 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190610171103.30903-1-grygorii.strashko@ti.com> <20190610171103.30903-6-grygorii.strashko@ti.com>
-In-Reply-To: <20190610171103.30903-6-grygorii.strashko@ti.com>
+References: <20190610171103.30903-1-grygorii.strashko@ti.com> <20190610171103.30903-7-grygorii.strashko@ti.com>
+In-Reply-To: <20190610171103.30903-7-grygorii.strashko@ti.com>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Wed, 12 Jun 2019 10:42:54 +0200
-Message-ID: <CACRpkdbaXFZQ3d8pQJAxd2WaCJQbBHZZ4XKS3ovrq=ZOmP8o7w@mail.gmail.com>
-Subject: Re: [PATCH-next 05/20] gpio: gpio-omap: remove irq_ack method
+Date:   Wed, 12 Jun 2019 10:43:49 +0200
+Message-ID: <CACRpkdZy+j4bBV-0HPu4cdS3YppDxE6OAmqq9iTgcKOM1G9zSw@mail.gmail.com>
+Subject: Re: [PATCH-next 06/20] gpio: gpio-omap: move omap_gpio_request() and omap_gpio_free()
 To:     Grygorii Strashko <grygorii.strashko@ti.com>
 Cc:     Russell King <rmk@arm.linux.org.uk>,
         Tony Lindgren <tony@atomide.com>,
@@ -62,20 +62,14 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Jun 10, 2019 at 7:11 PM Grygorii Strashko
+On Mon, Jun 10, 2019 at 7:12 PM Grygorii Strashko
 <grygorii.strashko@ti.com> wrote:
 
 > From: Russell King <rmk+kernel@armlinux.org.uk>
 >
-> The irq_ack method does not fit our hardware requirements. Edge
-> interrupts must be cleared before we handle them, and level interrupts
-> must be cleared after handling them.
->
-> We handle the interrupt clearance in our interrupt handler for edge IRQs
-> and in the unmask method for level IRQs.
->
-> Replace the irq_ack method with the no-op method from the dummy irq
-> chip.
+> Move these two functions to live beside the rest of the gpio chip
+> implementation, rather than in the middle of the irq chip
+> implementation.
 >
 > Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
 > Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
