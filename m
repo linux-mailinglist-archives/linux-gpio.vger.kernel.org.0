@@ -2,132 +2,85 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id D4E2041F24
-	for <lists+linux-gpio@lfdr.de>; Wed, 12 Jun 2019 10:32:41 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D93F641F76
+	for <lists+linux-gpio@lfdr.de>; Wed, 12 Jun 2019 10:43:08 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2437196AbfFLIcl (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 12 Jun 2019 04:32:41 -0400
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:54095 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2437195AbfFLIck (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 12 Jun 2019 04:32:40 -0400
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <mfe@pengutronix.de>)
-        id 1haygN-0005Ql-0z; Wed, 12 Jun 2019 10:32:35 +0200
-Received: from mfe by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <mfe@pengutronix.de>)
-        id 1haygG-0006HR-L5; Wed, 12 Jun 2019 10:32:28 +0200
-Date:   Wed, 12 Jun 2019 10:32:28 +0200
-From:   Marco Felsch <m.felsch@pengutronix.de>
-To:     Phil Reid <preid@electromag.com.au>
-Cc:     linus.walleij@linaro.org, jkridner@gmail.com, poeschel@lemonage.de,
-        gustavo@embeddedor.com, linux-gpio@vger.kernel.org
-Subject: Re: [PATCH v2 1/1] pinctlr: mcp23s08: Fix add_data and
- irqchip_add_nested call order
-Message-ID: <20190612083228.jbs7ygn62q6twedp@pengutronix.de>
-References: <1560306258-54654-1-git-send-email-preid@electromag.com.au>
+        id S1731720AbfFLInI (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 12 Jun 2019 04:43:08 -0400
+Received: from mail-lj1-f173.google.com ([209.85.208.173]:44861 "EHLO
+        mail-lj1-f173.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729594AbfFLInI (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 12 Jun 2019 04:43:08 -0400
+Received: by mail-lj1-f173.google.com with SMTP id k18so14328413ljc.11
+        for <linux-gpio@vger.kernel.org>; Wed, 12 Jun 2019 01:43:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=x+EjlD1+T7CCrikjK1HAO5M7exqwmkOmFUVOPSS1Jzc=;
+        b=o2bm3iMtBobjXXtxNv1yFCOKCEhNUdN1OsTsR9YVk17KPGSUwu4aT0rnhkx69gbg95
+         e2jjaVb1Se7IrsCu31pdFspgjFlEuVi9fGbKbg5PlhWAR+3A8iphpCXysUy9RzLYddgl
+         aQNZlqA2yjNcOCK0yYlTihm0cVfIdW7csM0JGNjE93raaG/4HQLO9z5U0AY8tolh5QGv
+         E9IiagQROkDPg0Gek2RaF8qaGdek3UkTHykivSnaKNP2wVIHhAaH/Qzd5o65P2RAW7MQ
+         1LcaQk9sZ0sz5i9K0nXFhZxkqx8Xwd8rM86vTPKG20eZr4FXCJkN14MSO3s8wSzqj5B+
+         GLDA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=x+EjlD1+T7CCrikjK1HAO5M7exqwmkOmFUVOPSS1Jzc=;
+        b=GZFC7RmpoD/mwPy6lqGGzWHfFp48jVDi69f4LrpnK7ovVtS7HSOflfu6EiS8rSU2pi
+         NJiHrRHzruaeSkOUri33WlLYYITHipQTvbQ4lOMxsS8urC1xNeez5IBWvCg+xkCxD/fC
+         hkaLX7hgZCjf9gOoxEh5UkY2QfR6ehhFx5GMuyq3TgjiCr/FhghPT2q3qK8JPEga1fi9
+         ChQqdMjjDB4sTVg+eR0rU6gL+gcddpnKTG7S1yhem4trUtghDdeYlmLFF6Lfvh/Fadsi
+         0YhDifY4798hR4P5xFh/ywnJzi4EbQ8okcAqF1dIAQm2GPQ1jKFWzmcr8vn/iXiI71+p
+         EBXA==
+X-Gm-Message-State: APjAAAVV+O8SVjDlZgcdjrn4WTdgjSVenVzjUb++cBZplqoxDcScvG9Q
+        n2zIPzI4pvKqgFUQCEhSki6ZKJc7fkF32MzJPht3V95cn2WSNg==
+X-Google-Smtp-Source: APXvYqxcESdgBagFUM3+T7x4f4AJ5XZlAtn+aqs2xl9XMwCPhMnxciJL8Ij4vBzLWAJ5RBgDBwAgRsx8strN2LlYm58=
+X-Received: by 2002:a2e:7508:: with SMTP id q8mr26813533ljc.165.1560328986596;
+ Wed, 12 Jun 2019 01:43:06 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1560306258-54654-1-git-send-email-preid@electromag.com.au>
-X-Sent-From: Pengutronix Hildesheim
-X-URL:  http://www.pengutronix.de/
-X-IRC:  #ptxdist @freenode
-X-Accept-Language: de,en
-X-Accept-Content-Type: text/plain
-X-Uptime: 10:29:34 up 25 days, 14:47, 47 users,  load average: 0.02, 0.03,
- 0.00
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: mfe@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-gpio@vger.kernel.org
+References: <20190610171103.30903-1-grygorii.strashko@ti.com> <20190610171103.30903-6-grygorii.strashko@ti.com>
+In-Reply-To: <20190610171103.30903-6-grygorii.strashko@ti.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Wed, 12 Jun 2019 10:42:54 +0200
+Message-ID: <CACRpkdbaXFZQ3d8pQJAxd2WaCJQbBHZZ4XKS3ovrq=ZOmP8o7w@mail.gmail.com>
+Subject: Re: [PATCH-next 05/20] gpio: gpio-omap: remove irq_ack method
+To:     Grygorii Strashko <grygorii.strashko@ti.com>
+Cc:     Russell King <rmk@arm.linux.org.uk>,
+        Tony Lindgren <tony@atomide.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Linux-OMAP <linux-omap@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Santosh Shilimkar <ssantosh@kernel.org>,
+        Russell King <rmk+kernel@armlinux.org.uk>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Phil,
+On Mon, Jun 10, 2019 at 7:11 PM Grygorii Strashko
+<grygorii.strashko@ti.com> wrote:
 
-thanks for the patch. Can you check that the error which should be fixed
-by commit 02e389e6 ("pinctrl: mcp23s08: fix irq setup order") do not
-appear. If so we should also add a Fixes line.
+> From: Russell King <rmk+kernel@armlinux.org.uk>
+>
+> The irq_ack method does not fit our hardware requirements. Edge
+> interrupts must be cleared before we handle them, and level interrupts
+> must be cleared after handling them.
+>
+> We handle the interrupt clearance in our interrupt handler for edge IRQs
+> and in the unmask method for level IRQs.
+>
+> Replace the irq_ack method with the no-op method from the dummy irq
+> chip.
+>
+> Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
+> Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
 
-Regards,
-  Marco
+Patch applied.
 
-On 19-06-12 10:24, Phil Reid wrote:
-> Currently probing of the mcp23s08 results in an error message
-> "detected irqchip that is shared with multiple gpiochips:
-> please fix the driver"
-> 
-> This is due to the following:
-> 
-> Call to mcp23s08_irqchip_setup() with call hierarchy:
-> mcp23s08_irqchip_setup()
->   gpiochip_irqchip_add_nested()
->     gpiochip_irqchip_add_key()
->       gpiochip_set_irq_hooks()
-> 
-> Call to devm_gpiochip_add_data() with call hierarchy:
-> devm_gpiochip_add_data()
->   gpiochip_add_data_with_key()
->     gpiochip_add_irqchip()
->       gpiochip_set_irq_hooks()
-> 
-> The gpiochip_add_irqchip() returns immediately if there isn't a irqchip
-> but we added a irqchip due to the previous mcp23s08_irqchip_setup()
-> call. So it calls gpiochip_set_irq_hooks() a second time.
-> 
-> Fix this by moving the call to devm_gpiochip_add_data before
-> the call to mcp23s08_irqchip_setup
-> 
-> Suggested-by: Marco Felsch <m.felsch@pengutronix.de>
-> Signed-off-by: Phil Reid <preid@electromag.com.au>
-> ---
-> 
-> Notes:
->     v2:
->     - remove unrelated whitespace changes
-> 
->  drivers/pinctrl/pinctrl-mcp23s08.c | 8 ++++----
->  1 file changed, 4 insertions(+), 4 deletions(-)
-> 
-> diff --git a/drivers/pinctrl/pinctrl-mcp23s08.c b/drivers/pinctrl/pinctrl-mcp23s08.c
-> index 5d7a851..b727de56 100644
-> --- a/drivers/pinctrl/pinctrl-mcp23s08.c
-> +++ b/drivers/pinctrl/pinctrl-mcp23s08.c
-> @@ -881,6 +881,10 @@ static int mcp23s08_probe_one(struct mcp23s08 *mcp, struct device *dev,
->  	if (ret < 0)
->  		goto fail;
->  
-> +	ret = devm_gpiochip_add_data(dev, &mcp->chip, mcp);
-> +	if (ret < 0)
-> +		goto fail;
-> +
->  	mcp->irq_controller =
->  		device_property_read_bool(dev, "interrupt-controller");
->  	if (mcp->irq && mcp->irq_controller) {
-> @@ -922,10 +926,6 @@ static int mcp23s08_probe_one(struct mcp23s08 *mcp, struct device *dev,
->  			goto fail;
->  	}
->  
-> -	ret = devm_gpiochip_add_data(dev, &mcp->chip, mcp);
-> -	if (ret < 0)
-> -		goto fail;
-> -
->  	if (one_regmap_config) {
->  		mcp->pinctrl_desc.name = devm_kasprintf(dev, GFP_KERNEL,
->  				"mcp23xxx-pinctrl.%d", raw_chip_address);
-> -- 
-> 1.8.3.1
-> 
-> 
-
--- 
-Pengutronix e.K.                           |                             |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+Yours,
+Linus Walleij
