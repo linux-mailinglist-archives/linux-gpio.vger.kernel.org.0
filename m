@@ -2,70 +2,89 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 0A973427C2
-	for <lists+linux-gpio@lfdr.de>; Wed, 12 Jun 2019 15:38:31 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A40BB428DE
+	for <lists+linux-gpio@lfdr.de>; Wed, 12 Jun 2019 16:27:16 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730638AbfFLNhs (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 12 Jun 2019 09:37:48 -0400
-Received: from anchovy3.45ru.net.au ([203.30.46.155]:58369 "EHLO
-        anchovy3.45ru.net.au" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726822AbfFLNhr (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 12 Jun 2019 09:37:47 -0400
-Received: (qmail 22797 invoked by uid 5089); 12 Jun 2019 13:37:45 -0000
-Received: by simscan 1.2.0 ppid: 22733, pid: 22734, t: 0.0504s
-         scanners: regex: 1.2.0 attach: 1.2.0 clamav: 0.88.3/m:40/d:1950
-Received: from unknown (HELO ?10.1.1.129?) (preid@electromag.com.au@118.209.181.81)
-  by anchovy2.45ru.net.au with ESMTPA; 12 Jun 2019 13:37:45 -0000
-Subject: Re: [PATCH V1 1/2] gpio: inverter: Add virtual controller for gpio
- configuration
-To:     "Enrico Weigelt, metux IT consult" <lkml@metux.net>,
-        Harish Jenny K N <harish_kandiga@mentor.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Cc:     linux-gpio@vger.kernel.org,
-        Balasubramani Vivekanandan 
-        <balasubramani_vivekanandan@mentor.com>
-References: <1560315034-29712-1-git-send-email-harish_kandiga@mentor.com>
- <1560315034-29712-2-git-send-email-harish_kandiga@mentor.com>
- <09bd2a7d-3da5-3158-0fae-d80c4d3e9998@electromag.com.au>
- <9a9a7fc5-022d-340b-1bc1-c3e050f05b7e@metux.net>
-From:   Phil Reid <preid@electromag.com.au>
-Message-ID: <f3ade200-8a0f-ee61-bdce-551c2cb8779d@electromag.com.au>
-Date:   Wed, 12 Jun 2019 21:37:42 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
-MIME-Version: 1.0
-In-Reply-To: <9a9a7fc5-022d-340b-1bc1-c3e050f05b7e@metux.net>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-AU
-Content-Transfer-Encoding: 7bit
+        id S2407783AbfFLO1A (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 12 Jun 2019 10:27:00 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:33332 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2408678AbfFLO1A (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 12 Jun 2019 10:27:00 -0400
+Received: by mail-wm1-f68.google.com with SMTP id h19so4417839wme.0
+        for <linux-gpio@vger.kernel.org>; Wed, 12 Jun 2019 07:26:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=9RG/fmGuMFz1uOaOz5ph/6qVFWhsvvm2ZWfHtq97fow=;
+        b=U3aIc/V9L3ZOTcT3ZWJ5NsF/6YJWWwbbm7Swu0+HXiDryJ0hzaoC0d599o5c02/wfB
+         txsPmg5vnRsDnpHii3K7CcH9tVtBuEIkdV9yk511gxV2IUu/hByTGdjLnEToK/XiJHE7
+         bYZcR54RCc6PrTpqyWwk7GJrQbSS5LtM+vafuV6wypMDmfZcQoFrz6K6R8I+ykp0Rt4y
+         8lM3cxTB+ITbOMGxQ5pXG+QdGDoe6vDIeH6USCgqcUPtBUcR0QdM8FBxohykFAa8lpM/
+         MY6HXggENdNPtU2hgdyGDNiA19XvUd6/l3/AKJjHZikq1HOfB80J0UWPwDChonFerPvx
+         eX9A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=9RG/fmGuMFz1uOaOz5ph/6qVFWhsvvm2ZWfHtq97fow=;
+        b=M/vvDe4bBR7J0tFJT1taPbVJC3TsvOzZw9F5YjtWb7Rc4sanToruxMut0neLz3KyHT
+         6Uf/nwelAeIMfEg7wyKsVbt4lVOMxAG56xomyxBGkLs4QEKnMclg4FdWNqSY+H1rwgpZ
+         67YUZmchNEGRLBSDO7sUR+NFs4xk2TNksiQI75LIy4x6ZNqWgR0IaztECS85Rjbjcsfm
+         i1WQDHTnL9eWUgJ9LXLUqGW/Ez+dsFJAU5lwEASFsLDA8Cenuym7pF7AWpsVCv1MCCBs
+         KStl3a5DXFp0dXDlgu9mpa0ewV4Rb95FkuaDo6dDh82nsep3CmJoRbHwUe4UgibDvl/V
+         lp+A==
+X-Gm-Message-State: APjAAAXZc1Y+uP5reZPRKeMMFzL3oaMYfrrkJfjZtcNAZgpv7LsHQywH
+        5z1AiGy+sUmeeHU4o04TzYqGqA==
+X-Google-Smtp-Source: APXvYqy1cLtAIc09aYE/pTZ4C8baAoSIE+X5aqrXpGYtR24fXNVBaYjQ4r2OFfrIZUCykHgpUQaBCA==
+X-Received: by 2002:a7b:cb84:: with SMTP id m4mr23894630wmi.50.1560349618344;
+        Wed, 12 Jun 2019 07:26:58 -0700 (PDT)
+Received: from dell.watershed.co.uk ([185.80.132.160])
+        by smtp.gmail.com with ESMTPSA id y18sm203959wmd.29.2019.06.12.07.26.56
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 12 Jun 2019 07:26:57 -0700 (PDT)
+From:   Lee Jones <lee.jones@linaro.org>
+To:     alokc@codeaurora.org, agross@kernel.org, david.brown@linaro.org,
+        wsa+renesas@sang-engineering.com, bjorn.andersson@linaro.org,
+        balbi@kernel.org, gregkh@linuxfoundation.org,
+        ard.biesheuvel@linaro.org, jlhugo@gmail.com
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-i2c@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-gpio@vger.kernel.org, linux-usb@vger.kernel.or,
+        Lee Jones <lee.jones@linaro.org>
+Subject: [PATCH v4 0/6] I2C: DWC3 USB: Add support for ACPI based AArch64 Laptops
+Date:   Wed, 12 Jun 2019 15:26:48 +0100
+Message-Id: <20190612142654.9639-1-lee.jones@linaro.org>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 12/06/2019 20:32, Enrico Weigelt, metux IT consult wrote:
->>> +#include <linux/gpio.h>
->> This is a legacy header.
->> You probably want to include <linux/gpio/driver.h>
-> Just counted 754 cases of such includes, 289 in arch, 345 in drivers.
-> 
-> Shall them be replaced ? Or is the new include only meant for gpio
-> *drivers*  ?
-> 
-G'day Enrico,
+This patch-set ensures the kernel is bootable on the newly released
+AArch64 based Laptops using ACPI configuration tables.  The Pinctrl
+changes have been accepted, leaving only I2C (keyboard, touchpad,
+touchscreen, fingerprint, etc, HID device) and USB (root filesystem,
+camera, networking, etc) enablement.
 
-Yes they should all be replaced at some stage. from the header in question:
+v4:
+ * Collecting Acks
+ * Adding Andy Gross' new email
+ * Removing applied Pinctrl patches
+ 
+Lee Jones (6):
+  i2c: i2c-qcom-geni: Provide support for ACPI
+  i2c: i2c-qcom-geni: Signify successful driver probe
+  soc: qcom: geni: Add support for ACPI
+  usb: dwc3: qcom: Add support for booting with ACPI
+  usb: dwc3: qcom: Start USB in 'host mode' on the SDM845
+  usb: dwc3: qcom: Improve error handling
 
-  * <linux/gpio.h>
-  *
-  * This is the LEGACY GPIO bulk include file, including legacy APIs. It is
-  * used for GPIO drivers still referencing the global GPIO numberspace,
-  * and should not be included in new code.
-  *
-  * If you're implementing a GPIO driver, only include <linux/gpio/driver.h>
-  * If you're implementing a GPIO consumer, only include <linux/gpio/consumer.h>
+ drivers/i2c/busses/i2c-qcom-geni.c |  17 ++-
+ drivers/soc/qcom/qcom-geni-se.c    |  21 ++-
+ drivers/usb/dwc3/Kconfig           |   2 +-
+ drivers/usb/dwc3/dwc3-qcom.c       | 221 +++++++++++++++++++++++++----
+ 4 files changed, 225 insertions(+), 36 deletions(-)
 
 -- 
-Regards
-Phil Reid
+2.17.1
+
