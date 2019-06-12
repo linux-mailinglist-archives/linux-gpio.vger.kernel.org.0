@@ -2,174 +2,154 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 82FF4420C5
-	for <lists+linux-gpio@lfdr.de>; Wed, 12 Jun 2019 11:30:01 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id F13A54215B
+	for <lists+linux-gpio@lfdr.de>; Wed, 12 Jun 2019 11:49:11 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731532AbfFLJ3i (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 12 Jun 2019 05:29:38 -0400
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:35195 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731492AbfFLJ3i (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 12 Jun 2019 05:29:38 -0400
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <mfe@pengutronix.de>)
-        id 1hazZU-00041T-FD; Wed, 12 Jun 2019 11:29:32 +0200
-Received: from mfe by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <mfe@pengutronix.de>)
-        id 1hazZT-00089F-CE; Wed, 12 Jun 2019 11:29:31 +0200
-Date:   Wed, 12 Jun 2019 11:29:31 +0200
-From:   Marco Felsch <m.felsch@pengutronix.de>
-To:     Phil Reid <preid@electromag.com.au>
-Cc:     linus.walleij@linaro.org, jkridner@gmail.com, poeschel@lemonage.de,
-        gustavo@embeddedor.com, linux-gpio@vger.kernel.org
-Subject: Re: [PATCH v2 1/1] pinctlr: mcp23s08: Fix add_data and
- irqchip_add_nested call order
-Message-ID: <20190612092931.ntf77hhwyprmqvyo@pengutronix.de>
-References: <1560306258-54654-1-git-send-email-preid@electromag.com.au>
- <20190612083228.jbs7ygn62q6twedp@pengutronix.de>
- <8b8275d1-e0ba-a577-a48e-4a4b90dbd108@electromag.com.au>
+        id S2437637AbfFLJs4 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 12 Jun 2019 05:48:56 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:35540 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726636AbfFLJsz (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 12 Jun 2019 05:48:55 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id 91AE96020A; Wed, 12 Jun 2019 09:48:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1560332934;
+        bh=A5Q4nuwELYGPEsPIrnbKYM/7ycbeZUO8bLNEPplxKP4=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=EOISpQmtkRdbP7TYk/oMunKmp9D5WZQeue2/qI4s4fUHYLUI2np6EqiJXzsbCgxiI
+         +hNvMzvf3ZF8drF3xRrGeAofXI6+ZWWZW7qYJwLWiBMKSkrFBPd0C+w7HbGchpwv0R
+         9P7NXjypaMLC8dvkbdxUeaI9hoycPiMEQVDG1IuE=
+X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
+        pdx-caf-mail.web.codeaurora.org
+X-Spam-Level: 
+X-Spam-Status: No, score=-2.7 required=2.0 tests=ALL_TRUSTED,BAYES_00,
+        DKIM_INVALID,DKIM_SIGNED,SPF_NONE autolearn=no autolearn_force=no
+        version=3.4.0
+Received: from [10.201.2.161] (blr-c-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.19.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: sricharan@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 3C82E6020A;
+        Wed, 12 Jun 2019 09:48:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1560332933;
+        bh=A5Q4nuwELYGPEsPIrnbKYM/7ycbeZUO8bLNEPplxKP4=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=jUP7os4jcFN03veZ3Wr9rOflWS/Gv9t7t/DDs3/Phz04lxOI1I1IYZhP8GWkeKVLf
+         HwdmFVVwUwBkfujUQfRazwZlcnCSsh3JK/jcPiN7azOgsylP/3i5ZIk0LEfhyTemIo
+         AQ9C0FuhgdNv7w0foiPlGo4DXg4QIWDSUXVx6D30=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 3C82E6020A
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=sricharan@codeaurora.org
+Subject: Re: [PATCH 5/6] arm64: dts: Add ipq6018 SoC and CP01 board support
+To:     Christian Lamparter <chunkeey@gmail.com>
+Cc:     Rob Herring <robh+dt@kernel.org>, Stephen Boyd <sboyd@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>, agross@kernel.org,
+        devicetree <devicetree@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-clk@vger.kernel.org,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org,
+        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
+        =?UTF-8?B?0J/QsNCy0LXQuw==?= <be.dissent@gmail.com>
+References: <1559754961-26783-1-git-send-email-sricharan@codeaurora.org>
+ <CAAd0S9DKqAgFPgLzHiCBiJgE+OmUW7ainyjM_3-RyfCoKEa51A@mail.gmail.com>
+ <50231fba-7212-f8b9-9313-0c79294d4cc6@codeaurora.org>
+ <4056907.DrFocau5Ix@debian64>
+From:   Sricharan R <sricharan@codeaurora.org>
+Message-ID: <1a00e8c8-d07c-3b02-8ea5-6d5f3e2c7b1a@codeaurora.org>
+Date:   Wed, 12 Jun 2019 15:18:48 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <8b8275d1-e0ba-a577-a48e-4a4b90dbd108@electromag.com.au>
-X-Sent-From: Pengutronix Hildesheim
-X-URL:  http://www.pengutronix.de/
-X-IRC:  #ptxdist @freenode
-X-Accept-Language: de,en
-X-Accept-Content-Type: text/plain
-X-Uptime: 11:21:46 up 25 days, 15:39, 48 users,  load average: 0.14, 0.37,
- 0.26
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: mfe@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-gpio@vger.kernel.org
+In-Reply-To: <4056907.DrFocau5Ix@debian64>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 19-06-12 17:16, Phil Reid wrote:
-> On 12/06/2019 16:32, Marco Felsch wrote:
-> > Hi Phil,
-> > 
-> > thanks for the patch. Can you check that the error which should be fixed
-> > by commit 02e389e6 ("pinctrl: mcp23s08: fix irq setup order") do not
-> > appear. If so we should also add a Fixes line.
-> > 
-> G'day Marco,
-> 
-> I remember that one know.
-> I'm also using the mcp with gpio-keys driver.
-> I don't think I saw the same behaviour with my setup then.
-> 
-> I'm using the (spi) mcp23s16 (with gpio-keys), and Dmitry was using mcp23008 (i2c).
-> 
-> I noted at the time the difference in when
-> i2c_set_clientdata & spi_set_drvdata are called in the spi / i2c probe paths.
-> 
-> It seems wrong to call i2c_set_clientdata after devm_pinctrl_register is called.
-> But I'm by no means an expert.
-> 
-> I do have a system with an i2c variant now, but it doesn't use the gpio-keys driver.
-> 
-> Anyways I'm still not seeing any adverse behaviour with the patch so far.
+Hi Christian,
 
-Thanks for testing that, can you add a fixes line?
+On 6/10/2019 5:45 PM, Christian Lamparter wrote:
+> On Monday, June 10, 2019 12:09:56 PM CEST Sricharan R wrote:
+>> Hi Christian,
+>>
+>> On 6/6/2019 2:11 AM, Christian Lamparter wrote:
+>>> On Wed, Jun 5, 2019 at 7:16 PM Sricharan R <sricharan@codeaurora.org> wrote:
+>>>>
+>>>> Add initial device tree support for the Qualcomm IPQ6018 SoC and
+>>>> CP01 evaluation board.
+>>>>
+>>>> Signed-off-by: Sricharan R <sricharan@codeaurora.org>
+>>>> Signed-off-by: Abhishek Sahu <absahu@codeaurora.org>
+>>>> --- /dev/null
+>>>> +++ b/arch/arm64/boot/dts/qcom/ipq6018.dtsi
+>>>>
+>>>> +       clocks {
+>>>> +               sleep_clk: sleep_clk {
+>>>> +                       compatible = "fixed-clock";
+>>>> +                       clock-frequency = <32000>;
+>>>> +                       #clock-cells = <0>;
+>>>> +               };
+>>>> +
+>>> Recently-ish, we ran into an issue with the clock-frequency of the sleep_clk
+>>> on older IPQ40XX (and IPQ806x) on the OpenWrt Github and ML.
+>>> From what I know, the external "32KHz" crystals have 32768 Hz, but the QSDK
+>>> declares them at 32000 Hz. Since you probably have access to the BOM and
+>>> datasheets. Can you please confirm what's the real clock frequency for
+>>> the IPQ6018.
+>>> (And maybe also for the sleep_clk of the IPQ4018 as well?).
+>>>
+>>
+>> What exactly is the issue that you faced ?
+>> Looking in to the docs, it is <32000> only on ipq6018 and ipq40xx as well.
+> 
+> We need just a confirmation.
+> 
+> Then again, Currently the qcom-ipq4019.dtsi is using 32768 Hz.
+> 
+> |		sleep_clk: sleep_clk {
+> |			compatible = "fixed-clock";
+> |			clock-frequency = <32768>;
+> |			#clock-cells = <0>;
+> |		};
+> 
+> <https://github.com/torvalds/linux/blob/master/arch/arm/boot/dts/qcom-ipq4019.dtsi#L144>
+> 
+> Which makes sense, because all previous Qualcomm Atheros MIPS and the
+> future IPQ8072 SoCs have been either using or deriving a 32768 Hz clock.
+> 
+> For example: The AR9344 derives the clock from the 25MHz/40MHz external
+> oscillator. This is explained in "8.16.9 Derived RTC Clock (DERIVED_RTC_CLK)".
+> Which mentions that the "32KHz" clock interval is 30.5 usec / 30.48 usec
+> depending whenever the external reference crystal has 40MHz or 25MHz.
+> (1/30.5usec = 32.7868852 kilohertz!). The QCA9558 datasheet says the same
+> in "10.19.11 Derived RTC Clock". 
+> 
+> For IPQ8072: I point to the post by Sven Eckelmann on the OpenWrt ML:
+> <http://lists.infradead.org/pipermail/openwrt-devel/2019-May/017131.html>
+> "I was only able to verify for IPQ8072 that it had a 32.768 KHz
+> sleep clock." 
+> 
+> So this is pretty much "why there is an issue", it's confusing.
+> Is possible can you please look if there are (fixed) divisors values
+> listed in the documentation or the registers and bits that the values
+> are stored in? Because then we could just calculate it. 
+> 
+
+Really sorry for the confusion. So looking little more, SLEEP_CLK is derived
+from an external 38.4MHZ crystal, it is 32.768 KHZ. Somehow the
+clk freq plan etc seems to mention them only as .032 MHZ and misses
+out. That means i will correct the patch for 32768 and probably the
+ipq8074.dtsi as well
 
 Regards,
-  Marco
+  Sricharan
 
-> 
-> > Regards,
-> >    Marco
-> > 
-> > On 19-06-12 10:24, Phil Reid wrote:
-> > > Currently probing of the mcp23s08 results in an error message
-> > > "detected irqchip that is shared with multiple gpiochips:
-> > > please fix the driver"
-> > > 
-> > > This is due to the following:
-> > > 
-> > > Call to mcp23s08_irqchip_setup() with call hierarchy:
-> > > mcp23s08_irqchip_setup()
-> > >    gpiochip_irqchip_add_nested()
-> > >      gpiochip_irqchip_add_key()
-> > >        gpiochip_set_irq_hooks()
-> > > 
-> > > Call to devm_gpiochip_add_data() with call hierarchy:
-> > > devm_gpiochip_add_data()
-> > >    gpiochip_add_data_with_key()
-> > >      gpiochip_add_irqchip()
-> > >        gpiochip_set_irq_hooks()
-> > > 
-> > > The gpiochip_add_irqchip() returns immediately if there isn't a irqchip
-> > > but we added a irqchip due to the previous mcp23s08_irqchip_setup()
-> > > call. So it calls gpiochip_set_irq_hooks() a second time.
-> > > 
-> > > Fix this by moving the call to devm_gpiochip_add_data before
-> > > the call to mcp23s08_irqchip_setup
-> > > 
-> > > Suggested-by: Marco Felsch <m.felsch@pengutronix.de>
-> > > Signed-off-by: Phil Reid <preid@electromag.com.au>
-> > > ---
-> > > 
-> > > Notes:
-> > >      v2:
-> > >      - remove unrelated whitespace changes
-> > > 
-> > >   drivers/pinctrl/pinctrl-mcp23s08.c | 8 ++++----
-> > >   1 file changed, 4 insertions(+), 4 deletions(-)
-> > > 
-> > > diff --git a/drivers/pinctrl/pinctrl-mcp23s08.c b/drivers/pinctrl/pinctrl-mcp23s08.c
-> > > index 5d7a851..b727de56 100644
-> > > --- a/drivers/pinctrl/pinctrl-mcp23s08.c
-> > > +++ b/drivers/pinctrl/pinctrl-mcp23s08.c
-> > > @@ -881,6 +881,10 @@ static int mcp23s08_probe_one(struct mcp23s08 *mcp, struct device *dev,
-> > >   	if (ret < 0)
-> > >   		goto fail;
-> > > +	ret = devm_gpiochip_add_data(dev, &mcp->chip, mcp);
-> > > +	if (ret < 0)
-> > > +		goto fail;
-> > > +
-> > >   	mcp->irq_controller =
-> > >   		device_property_read_bool(dev, "interrupt-controller");
-> > >   	if (mcp->irq && mcp->irq_controller) {
-> > > @@ -922,10 +926,6 @@ static int mcp23s08_probe_one(struct mcp23s08 *mcp, struct device *dev,
-> > >   			goto fail;
-> > >   	}
-> > > -	ret = devm_gpiochip_add_data(dev, &mcp->chip, mcp);
-> > > -	if (ret < 0)
-> > > -		goto fail;
-> > > -
-> > >   	if (one_regmap_config) {
-> > >   		mcp->pinctrl_desc.name = devm_kasprintf(dev, GFP_KERNEL,
-> > >   				"mcp23xxx-pinctrl.%d", raw_chip_address);
-> > > -- 
-> > > 1.8.3.1
-> > > 
-> > > 
-> > 
-> 
-> 
-> -- 
-> Regards
-> Phil Reid
-> 
-> ElectroMagnetic Imaging Technology Pty Ltd
-> Development of Geophysical Instrumentation & Software
-> www.electromag.com.au
-> 
-> 3 The Avenue, Midland WA 6056, AUSTRALIA
-> Ph: +61 8 9250 8100
-> Fax: +61 8 9250 7100
-> Email: preid@electromag.com.au
-> 
 
 -- 
-Pengutronix e.K.                           |                             |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+"QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
