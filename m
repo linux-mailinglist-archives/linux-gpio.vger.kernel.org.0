@@ -2,99 +2,94 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 56A9341A5B
-	for <lists+linux-gpio@lfdr.de>; Wed, 12 Jun 2019 04:25:19 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id F102041AAA
+	for <lists+linux-gpio@lfdr.de>; Wed, 12 Jun 2019 05:19:38 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405684AbfFLCY1 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 11 Jun 2019 22:24:27 -0400
-Received: from anchovy1.45ru.net.au ([203.30.46.145]:41108 "EHLO
-        anchovy1.45ru.net.au" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2405523AbfFLCY1 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 11 Jun 2019 22:24:27 -0400
-Received: (qmail 1815 invoked by uid 5089); 12 Jun 2019 02:24:24 -0000
-Received: by simscan 1.2.0 ppid: 1795, pid: 1796, t: 0.0338s
-         scanners: regex: 1.2.0 attach: 1.2.0 clamav: 0.88.3/m:40/d:1950
-X-RBL:  $rbltext
-Received: from unknown (HELO preid-c7.electromag.com.au) (preid@electromag.com.au@203.59.235.95)
-  by anchovy1.45ru.net.au with ESMTPA; 12 Jun 2019 02:24:24 -0000
-Received: by preid-c7.electromag.com.au (Postfix, from userid 1000)
-        id AFF6D20078383; Wed, 12 Jun 2019 10:24:22 +0800 (AWST)
-From:   Phil Reid <preid@electromag.com.au>
-To:     linus.walleij@linaro.org, jkridner@gmail.com,
-        m.felsch@pengutronix.de, poeschel@lemonage.de,
-        preid@electromag.com.au, gustavo@embeddedor.com,
-        linux-gpio@vger.kernel.org
-Subject: [PATCH v2 1/1] pinctlr: mcp23s08: Fix add_data and irqchip_add_nested call order
-Date:   Wed, 12 Jun 2019 10:24:18 +0800
-Message-Id: <1560306258-54654-1-git-send-email-preid@electromag.com.au>
-X-Mailer: git-send-email 1.8.3.1
+        id S2406020AbfFLDTc (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 11 Jun 2019 23:19:32 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:35908 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387878AbfFLDTc (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 11 Jun 2019 23:19:32 -0400
+Received: by mail-pg1-f194.google.com with SMTP id f21so2081673pgi.3
+        for <linux-gpio@vger.kernel.org>; Tue, 11 Jun 2019 20:19:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=ate72NuJmVUI6S2BuZQCuvpskZE3U2N/nMIH2X9inqs=;
+        b=wONe3ABjpXyvX++muN+ZuuQPCqABZNEGqIqxYQ/Kt3+uMGojPLxRSIvfb/BY+fdwuG
+         KekIHVfMMPWEt2iVGpYLRtMDFlvWdWZQ5k1LeLMG6u/GZrzIezH7XP6vIhGcsBW+ii0L
+         gOnSHP9g6CBDUTxhU2oTLwRXVDlXsKmhEbPEYheQAqd7KVigbRcszf2ZesnwW85PE1dO
+         iyU20ncmowoBO3l8SVj5VyrMj5LmSNEaWqBtwhga5wxb4uKNqWI9n7cGRT4AetHicKKc
+         Aw/YlYfKfl5ziY0qdFhe1J71Org6PQArMHzDhgPN6gLNsPPoPq3bsND8qGL8LNA0flRp
+         9Seg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=ate72NuJmVUI6S2BuZQCuvpskZE3U2N/nMIH2X9inqs=;
+        b=TC4Sj9rg0FBzvtOxyHQ+OOAWhy/VzYYfbfG6J3+UOjtofegRFEgRduco7doRMNmiW0
+         O58n4Uwo3EJc94bvOnjmNxTTVFxvOoiu6MXdGZvuHj+phUwbtfRL2OdSt7IUdzQk41iY
+         zXndbrxu6SHQ9ypQvp+JIG99BmLkmY1FC3sFZCH2DwYvjveTuDTF7Kt+8rfjVb2wUbgr
+         HT3CZUkWKvvmEuUoPR+E5cJGgxn2FIJJEN6zCIFp1Te3v2MwR7yp2f7gMWzhTOCU46R/
+         er6MJswYAe79oD5R0nmUlYojlyJJB4mRINzHVEZxIa3h9pz0iv3jjJSeTzxGI/d0FlQz
+         LDeg==
+X-Gm-Message-State: APjAAAUyVDH5Vj+zk2PjceBWzk7wE0+aPzR5BJyAXtOwfcK3sBOTkB/k
+        AXzuQ+YqivyBUcF+UBg0iRgdzw==
+X-Google-Smtp-Source: APXvYqzHGgDNU6Vo6rIo/Aq12B4nqhPE19OxuX8C/VoLATKTH5QzhJS9otDk/sgsXlZcHlrej3ZyIg==
+X-Received: by 2002:a17:90a:22c6:: with SMTP id s64mr30744352pjc.5.1560309571012;
+        Tue, 11 Jun 2019 20:19:31 -0700 (PDT)
+Received: from localhost ([122.172.66.84])
+        by smtp.gmail.com with ESMTPSA id d9sm14160236pgj.34.2019.06.11.20.19.29
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 11 Jun 2019 20:19:30 -0700 (PDT)
+Date:   Wed, 12 Jun 2019 08:49:27 +0530
+From:   Viresh Kumar <viresh.kumar@linaro.org>
+To:     Rob Herring <robh@kernel.org>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
+Subject: Re: [PATCH] dt-bindings: gpio: Convert Arm PL061 to json-schema
+Message-ID: <20190612031927.mgr62xiirjqrzkeu@vireshk-i7>
+References: <20190514005033.15593-1-robh@kernel.org>
+ <CACRpkdZabT3_vjkv0PR+GLC0ZXWzpMxfwJU6O9Y+omKJ=6zCaA@mail.gmail.com>
+ <20190527064146.5rlm2audk6uojdxn@vireshk-i7>
+ <CAL_JsqK3iS+Tv+0HYMApL6C6WQeVsf9hXgvpLpuR+dbDuygQdg@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAL_JsqK3iS+Tv+0HYMApL6C6WQeVsf9hXgvpLpuR+dbDuygQdg@mail.gmail.com>
+User-Agent: NeoMutt/20180716-391-311a52
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Currently probing of the mcp23s08 results in an error message
-"detected irqchip that is shared with multiple gpiochips:
-please fix the driver"
+On 11-06-19, 13:54, Rob Herring wrote:
+> On Mon, May 27, 2019 at 12:41 AM Viresh Kumar <viresh.kumar@linaro.org> wrote:
+> > I checked SPEAr and it is missing interrupt-controller at few places and clocks
+> > everywhere. Missing clocks should be fine as SPEAr doesn't get clocks from DT.
+> 
+> Clocks not from DT was supposed to be a transitional thing...
 
-This is due to the following:
+Right, but by the time I left ST in 2012, mainline clock's DT support
+wasn't there and the SPEAr core team got fired soon after that. No one
+was left in ST to do the porting, but there are still people using the
+SPEAr boards and there are products in market, so we can't delete the
+platform as well.
 
-Call to mcp23s08_irqchip_setup() with call hierarchy:
-mcp23s08_irqchip_setup()
-  gpiochip_irqchip_add_nested()
-    gpiochip_irqchip_add_key()
-      gpiochip_set_irq_hooks()
+So, no one is going to add clock DT support now.
 
-Call to devm_gpiochip_add_data() with call hierarchy:
-devm_gpiochip_add_data()
-  gpiochip_add_data_with_key()
-    gpiochip_add_irqchip()
-      gpiochip_set_irq_hooks()
+> > And interrupt-controller can be just added, I don't think there would be any
+> > platform dependent side-affects ?
+> 
+> There shouldn't be.
 
-The gpiochip_add_irqchip() returns immediately if there isn't a irqchip
-but we added a irqchip due to the previous mcp23s08_irqchip_setup()
-call. So it calls gpiochip_set_irq_hooks() a second time.
+Okay, will send a patch for that then.
 
-Fix this by moving the call to devm_gpiochip_add_data before
-the call to mcp23s08_irqchip_setup
-
-Suggested-by: Marco Felsch <m.felsch@pengutronix.de>
-Signed-off-by: Phil Reid <preid@electromag.com.au>
----
-
-Notes:
-    v2:
-    - remove unrelated whitespace changes
-
- drivers/pinctrl/pinctrl-mcp23s08.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
-
-diff --git a/drivers/pinctrl/pinctrl-mcp23s08.c b/drivers/pinctrl/pinctrl-mcp23s08.c
-index 5d7a851..b727de56 100644
---- a/drivers/pinctrl/pinctrl-mcp23s08.c
-+++ b/drivers/pinctrl/pinctrl-mcp23s08.c
-@@ -881,6 +881,10 @@ static int mcp23s08_probe_one(struct mcp23s08 *mcp, struct device *dev,
- 	if (ret < 0)
- 		goto fail;
- 
-+	ret = devm_gpiochip_add_data(dev, &mcp->chip, mcp);
-+	if (ret < 0)
-+		goto fail;
-+
- 	mcp->irq_controller =
- 		device_property_read_bool(dev, "interrupt-controller");
- 	if (mcp->irq && mcp->irq_controller) {
-@@ -922,10 +926,6 @@ static int mcp23s08_probe_one(struct mcp23s08 *mcp, struct device *dev,
- 			goto fail;
- 	}
- 
--	ret = devm_gpiochip_add_data(dev, &mcp->chip, mcp);
--	if (ret < 0)
--		goto fail;
--
- 	if (one_regmap_config) {
- 		mcp->pinctrl_desc.name = devm_kasprintf(dev, GFP_KERNEL,
- 				"mcp23xxx-pinctrl.%d", raw_chip_address);
 -- 
-1.8.3.1
-
+viresh
