@@ -2,66 +2,55 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 2AE5C41DA9
-	for <lists+linux-gpio@lfdr.de>; Wed, 12 Jun 2019 09:26:12 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6733241E38
+	for <lists+linux-gpio@lfdr.de>; Wed, 12 Jun 2019 09:50:15 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731441AbfFLH0C (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 12 Jun 2019 03:26:02 -0400
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:42838 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2405552AbfFLH0A (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 12 Jun 2019 03:26:00 -0400
-Received: by mail-lj1-f195.google.com with SMTP id t28so14126361lje.9
-        for <linux-gpio@vger.kernel.org>; Wed, 12 Jun 2019 00:25:59 -0700 (PDT)
+        id S2408497AbfFLHuI (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 12 Jun 2019 03:50:08 -0400
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:44441 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2408492AbfFLHuH (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 12 Jun 2019 03:50:07 -0400
+Received: by mail-lj1-f194.google.com with SMTP id k18so14193551ljc.11
+        for <linux-gpio@vger.kernel.org>; Wed, 12 Jun 2019 00:50:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=msM4dgHT7OChSN8YMEnC/hlz7O4CQA3Qt/8x5kRoeWA=;
-        b=b/xNVmBGr774Ie44vkdUYzW5g96u3La3k0A9SkL3ZCvZkJF98mYXDQ6oP9LRZh7Wp/
-         2vvQhSHA3r4OQBrQ7F92Mofp94Op3kqIQEKS8O+hSDMP2fnYaKO61aP1PbwJcYdaNkud
-         Uyg/uruiDUcv2DAYwC7O9pg8remPu1Uh3BpmwKar4uCP4Sp2HYDx1JVC3VEx1wjMqJNo
-         bRXEiIeSR30mKPOoa8C77KYigxq3DHc3oCTvWo7Qzb1rVN30/VnNJ2zgp/VN1Is2rgqC
-         Y+sDCDqKg9uQcSI7N022tg6lqvie69RffAY9o34iLiLGyXRl91cmjVEhOhil7iISNP/k
-         aFrA==
+        bh=IEaEkHGgpzdEriV3OpBUDcZF+KYsAf8LOl6nPBOdL0I=;
+        b=MxOgXdPvNtfxAeQKrsT6Hhks3ZJt5BbhJTAVPBRxH2NTM0bwdeOB3XxaszrRVJ8l9+
+         VWsL6ISsBFvP+YlNVumKlbdeBsd+Vq8pbeA033UZIughCukKYSKF8MrVmIYZHq53An+P
+         l0wBipa1xKndvyvg0c7UF5i8yf5YpBtkZsSqPn6GdysoNn+e6HfsSyT7R3Hc9FyYmUms
+         lAHjkrVnZoVr8d3Iy/SeNcpqx4mJBq4WV5Ncbd+DHQQxYYu4ww6iSaeJ6VxbaIXPibCu
+         4QTq+nY14JrmffPXRcD6eoSD80Fu329m6RZWZEYnYUjyQx9jBka1uKNwyHZ2UB1vbM93
+         gdjw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=msM4dgHT7OChSN8YMEnC/hlz7O4CQA3Qt/8x5kRoeWA=;
-        b=YtJ6yHMD11yX+DVEfRONl/YSWLK15bSrDZPYGkW3csRhugX+e/3ISjVQoeRQJ8g9TB
-         2/2axuknO9otTEqQrl1ZkdDrFI/9vMFm4UGCin71gtJjgHfRPVs3EWAb2pcKLY67JxPB
-         KDe4wcl7rOIgjflY/EiM2ubwmqHI5TtOgDs307Zr+9Tfna2ced9lzZoF+bIPa0BC2y6S
-         hT5mD0zq3OHoTFu1muJrVWja2F6+oGxCkHuS700Wvq+wwNoeGoGknhaw8PaRst8GppFL
-         qiF3k3Yct2IClbOtMZHWs1mNX2s1k2QmPD5GXXzjY8bh551Fp9S1z1iPTf5o8A7Y1Fxh
-         ti/A==
-X-Gm-Message-State: APjAAAXDbOL6cJwarZMmJLOJ4+BuDgCKYqBeM4BQcrmTzdLnLrqYdfvH
-        3fzPYkTMfiYSR0S0e42TgH2H1LNB4GKpKkw6ah/+/Q==
-X-Google-Smtp-Source: APXvYqx5YwbEg0avWvoTtMnv22p8ShuveFC0J0UpmFk2uYfKnJ2tkg9tfFI9Py8uT6FyJuuL+H4KmQND6QpZjMGZBTE=
-X-Received: by 2002:a2e:7508:: with SMTP id q8mr26602026ljc.165.1560324358738;
- Wed, 12 Jun 2019 00:25:58 -0700 (PDT)
+        bh=IEaEkHGgpzdEriV3OpBUDcZF+KYsAf8LOl6nPBOdL0I=;
+        b=I7HhoUgaQQlBPsg8pyOJ2/LJsEc0Atg0cnHofrp+J4wkVS8lPNp1ji5m3Ue92D++qX
+         TADsgu/DH7SUwCJLJx+nC1c5ZaJsTEM8mzrr0NU3Xu0/EKSmX5+a1E/HAUUDZrdeOIM7
+         BeXMzCjJtVl4mWAOGxIqTuyApyVH5UbQJgXS0sxYF8/+HafphqgIczzwwdDfTfzn8Az/
+         mApa0z6K2vRQyiAqwKc+TPsyqzJtO/Nz0QHInWi1L60fgyWfi05jQRySjgkU2PrTDeYx
+         QjvpFQ3lMo1xLKUyZ3IQYTbFluuKFh/hr8KsWJYCsM4M1OVYDqLvYgIfb/krbVojOeKb
+         /YXQ==
+X-Gm-Message-State: APjAAAV6gPGEMTqKfuxDdG/dOEnfGEVofefvKqUxOIMzediZZkHwemw5
+        rIAvA4LY3xfh7jD3e4CwbzSo2Kir/YFzRpl9wKs/0A==
+X-Google-Smtp-Source: APXvYqzzh0lP2GP0zIA0B/CjEu8rHnPuiyl2/5JjJotWd+XukV1gNSf6KSOn2KcSDsb1T6tKaT1WrBmGn5bHZWiacxo=
+X-Received: by 2002:a2e:5bdd:: with SMTP id m90mr33630569lje.46.1560325806228;
+ Wed, 12 Jun 2019 00:50:06 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190610084213.1052-1-lee.jones@linaro.org> <20190610084213.1052-3-lee.jones@linaro.org>
-In-Reply-To: <20190610084213.1052-3-lee.jones@linaro.org>
+References: <20190610170523.26554-1-martin.blumenstingl@googlemail.com>
+In-Reply-To: <20190610170523.26554-1-martin.blumenstingl@googlemail.com>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Wed, 12 Jun 2019 09:25:47 +0200
-Message-ID: <CACRpkdaXHC6dfOMMOj-a8o1zCzqqZoeQLEEAZ=XpPWKN_nf=9w@mail.gmail.com>
-Subject: Re: [PATCH v3 3/8] pinctrl: msm: Add ability for drivers to supply a
- reserved GPIO list
-To:     Lee Jones <lee.jones@linaro.org>
-Cc:     alokc@codeaurora.org, Andy Gross <andy.gross@linaro.org>,
-        David Brown <david.brown@linaro.org>,
-        Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Felipe Balbi <balbi@kernel.org>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Jeffrey Hugo <jlhugo@gmail.com>,
-        linux-i2c <linux-i2c@vger.kernel.org>,
-        MSM <linux-arm-msm@vger.kernel.org>,
+Date:   Wed, 12 Jun 2019 09:49:54 +0200
+Message-ID: <CACRpkdboUO1iEipXTvhy2x6bxuVJuwxd5FduMdk-KtK3f8FeaA@mail.gmail.com>
+Subject: Re: [PATCH 0/1] gpio: of: prepare for switching stmmac to GPIO descriptors
+To:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        linux-usb <linux-usb@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Andrew Lunn <andrew@lunn.ch>, netdev <netdev@vger.kernel.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
@@ -69,27 +58,32 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Jun 10, 2019 at 10:42 AM Lee Jones <lee.jones@linaro.org> wrote:
+On Mon, Jun 10, 2019 at 7:05 PM Martin Blumenstingl
+<martin.blumenstingl@googlemail.com> wrote:
 
-> When booting MSM based platforms with Device Tree or some ACPI
-> implementations, it is possible to provide a list of reserved pins
-> via the 'gpio-reserved-ranges' and 'gpios' properties respectively.
-> However some ACPI tables are not populated with this information,
-> thus it has to come from a knowledgable device driver instead.
+> This is a preparation patch which is needed before we can switch stmmac
+> to GPIO descriptors. stmmac has a custom "snps,reset-active-low"
+> property because it has ignored the GPIO flags including the polarity.
 >
-> Here we provide the MSM common driver with additional support to
-> parse this informtion and correctly populate the widely used
-> 'valid_mask'.
+> Add the parsing to gpiolib-of so we can port stmmac over to GPIO
+> descriptors.
 >
-> Signed-off-by: Lee Jones <lee.jones@linaro.org>
-> Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+> This patch is split from my series at [0].
+>
+> Linus W.: please create an immutable branch as discussed so I can send
+> the stmmac patches to the net-next tree (which will then have to pull
+> in your immutable branch).
 
-I have queued patches 3 and 4 in the pin control tree on an
-immutable branch with Bjorn's ACKs:
-git://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git
-ib-qcom-acpi
+Thanks Martin!
+I have applied the patch and created an immutable branch:
+git://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-gpio.git
+ib-snps-reset-gpio
 
-I have also merge this to pinctrl's devel branch for next.
+https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-gpio.git/log/?h=ib-snps-reset-gpio
+
+Please refer to this so the network maintainer can pull it in.
+
+It is based on v5.2-rc1
 
 Yours,
 Linus Walleij
