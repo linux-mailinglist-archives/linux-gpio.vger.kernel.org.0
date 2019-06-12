@@ -2,168 +2,138 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 7998F43034
-	for <lists+linux-gpio@lfdr.de>; Wed, 12 Jun 2019 21:31:49 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 23B80430ED
+	for <lists+linux-gpio@lfdr.de>; Wed, 12 Jun 2019 22:21:42 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727879AbfFLTbj (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 12 Jun 2019 15:31:39 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:39707 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727826AbfFLTbi (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 12 Jun 2019 15:31:38 -0400
-Received: by mail-wm1-f67.google.com with SMTP id z23so7687286wma.4;
-        Wed, 12 Jun 2019 12:31:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=googlemail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=GRfoFY5xQdWZ+zyZrF8x4tIZrgk1L2WHamAGKM9+HbI=;
-        b=cW8ArLx8R6N5xr2r4LBArrHMDLSr4xhtVhXTwo3cyH0pZ/Ul6OiDLvY2QJnAMERvEa
-         9GrVEbOvQJLUAuXBKGRrL8k65d+/0f9Cjja/chMLJZhUR0raNc2wwZ47FKlQlN6Nbx/D
-         ejpOw4FfY3PrAM3/7MbYX81LqOGrDuDgiBOb/dwgC+53qCoR1xA1PNqMkd5YUX34sCoN
-         q49RuefrUfE/Onr+8uxvEZPe0Az08fWHcsYGxEKx1v6UfnZEeoMx2hg+uI/Png6MHmPd
-         us7w/AZSrYIVyB7zLRaZ1nX/1Hdx7saB9BgGgjZIZ2AAPqhn6lDoAVz5GoKKWx6ghSbE
-         a3NA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=GRfoFY5xQdWZ+zyZrF8x4tIZrgk1L2WHamAGKM9+HbI=;
-        b=lfrs9HnPTZMT5D9aIwvjj6QmrULM8AUqup+Sa0rYhmgJxJksytjkWdg0oI6Uc7Qe6D
-         zZm82lsDBo/+7EiDkPubD0Uoa5EQrrBT4SR8dilYLnxWynkj34MT6l4ZJ3uWAiDdoTl0
-         Wwm06lCQdp52dAkEHjMYqP+NfqLjNahUx5qayTkRXT73xQGFGdHfsoDqOGioLXA9sdbW
-         z5vprdEZbKUT4lV7Gv5q3/G1CL3q8uFbjKr/QcnHuw4iTKnt/4jxeJFS/oabD95LLywa
-         M6FBsX5njemGyOYU8ygS7jIpaUs0ITpMxPZmpYf3nZyKIUa8FK+/61T/Zau8RYdqNr3s
-         rn4A==
-X-Gm-Message-State: APjAAAXUZl8kib+ZmNrI/Ce677OHXyS9UTWgf7MQrsyXvLldtV4/jl+K
-        RPEc9abRYOXX+pnHYFzjC878g8S2
-X-Google-Smtp-Source: APXvYqzJTIuqNtlPTGYXYCdx+JjK4QSoXYxNTFy2H98HO1zZ/AhRoqP4/zsWF3ehw7sYe6DLw8k+1Q==
-X-Received: by 2002:a1c:f515:: with SMTP id t21mr573668wmh.39.1560367895665;
-        Wed, 12 Jun 2019 12:31:35 -0700 (PDT)
-Received: from blackbox.darklights.net (p200300F133DDA400428D5CFFFEB99DB8.dip0.t-ipconnect.de. [2003:f1:33dd:a400:428d:5cff:feb9:9db8])
-        by smtp.googlemail.com with ESMTPSA id q15sm379054wrr.19.2019.06.12.12.31.34
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Wed, 12 Jun 2019 12:31:35 -0700 (PDT)
-From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-To:     netdev@vger.kernel.org, peppe.cavallaro@st.com,
-        alexandre.torgue@st.com, joabreu@synopsys.com, davem@davemloft.net,
-        andrew@lunn.ch
-Cc:     linus.walleij@linaro.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-        maxime.ripard@bootlin.com,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Subject: [PATCH net-next v2 1/1] net: stmmac: use GPIO descriptors in stmmac_mdio_reset
-Date:   Wed, 12 Jun 2019 21:31:15 +0200
-Message-Id: <20190612193115.6751-2-martin.blumenstingl@googlemail.com>
-X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20190612193115.6751-1-martin.blumenstingl@googlemail.com>
-References: <20190612193115.6751-1-martin.blumenstingl@googlemail.com>
+        id S1728329AbfFLUVk (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 12 Jun 2019 16:21:40 -0400
+Received: from mga04.intel.com ([192.55.52.120]:3337 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727924AbfFLUVk (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Wed, 12 Jun 2019 16:21:40 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 12 Jun 2019 13:21:39 -0700
+X-ExtLoop1: 1
+Received: from lcarlos-mobl.amr.corp.intel.com ([10.252.140.234])
+  by orsmga007.jf.intel.com with ESMTP; 12 Jun 2019 13:21:39 -0700
+Message-ID: <5e818fb4bf253fc69259093e7ff68122e4a4044c.camel@intel.com>
+Subject: Re: [PATCH v1 09/31] docs: driver-model: convert docs to ReST and
+ rename to *.rst
+From:   Jeff Kirsher <jeffrey.t.kirsher@intel.com>
+To:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Linux Doc Mailing List <linux-doc@vger.kernel.org>
+Cc:     Mauro Carvalho Chehab <mchehab@infradead.org>,
+        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Jean Delvare <jdelvare@suse.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Julia Lawall <Julia.Lawall@lip6.fr>,
+        Gilles Muller <Gilles.Muller@lip6.fr>,
+        Nicolas Palix <nicolas.palix@imag.fr>,
+        Michal Marek <michal.lkml@markovi.net>,
+        linux-gpio@vger.kernel.org, linux-hwmon@vger.kernel.org,
+        intel-wired-lan@lists.osuosl.org, netdev@vger.kernel.org,
+        cocci@systeme.lip6.fr
+Date:   Wed, 12 Jun 2019 13:21:38 -0700
+In-Reply-To: <c90bb60d65aaba4ce5957894cc6890ebe5048d95.1560364494.git.mchehab+samsung@kernel.org>
+References: <cover.1560364493.git.mchehab+samsung@kernel.org>
+         <c90bb60d65aaba4ce5957894cc6890ebe5048d95.1560364494.git.mchehab+samsung@kernel.org>
+Content-Type: multipart/signed; micalg="pgp-sha512";
+        protocol="application/pgp-signature"; boundary="=-ty+pfSLvRBl9i77r2BhF"
+User-Agent: Evolution 3.32.2 (3.32.2-1.fc30) 
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Switch stmmac_mdio_reset to use GPIO descriptors. GPIO core handles the
-"snps,reset-gpio" for GPIO descriptors so we don't need to take care of
-it inside the driver anymore.
 
-The advantage of this is that we now preserve the GPIO flags which are
-passed via devicetree. This is required on some newer Amlogic boards
-which use an Open Drain pin for the reset GPIO. This pin can only output
-a LOW signal or switch to input mode but it cannot output a HIGH signal.
-There are already devicetree bindings for these special cases and GPIO
-core already takes care of them but only if we use GPIO descriptors
-instead of GPIO numbers.
+--=-ty+pfSLvRBl9i77r2BhF
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
----
- .../net/ethernet/stmicro/stmmac/stmmac_mdio.c | 27 +++++++++----------
- include/linux/stmmac.h                        |  2 +-
- 2 files changed, 14 insertions(+), 15 deletions(-)
+On Wed, 2019-06-12 at 15:38 -0300, Mauro Carvalho Chehab wrote:
+> Convert the various documents at the driver-model, preparing
+> them to be part of the driver-api book.
+>=20
+> The conversion is actually:
+>   - add blank lines and identation in order to identify paragraphs;
+>   - fix tables markups;
+>   - add some lists markups;
+>   - mark literal blocks;
+>   - adjust title markups.
+>=20
+> At its new index.rst, let's add a :orphan: while this is not linked to
+> the main index.rst file, in order to avoid build warnings.
+>=20
+> Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 
-diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_mdio.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_mdio.c
-index 093a223fe408..f1c39dd048e7 100644
---- a/drivers/net/ethernet/stmicro/stmmac/stmmac_mdio.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_mdio.c
-@@ -20,11 +20,11 @@
-   Maintainer: Giuseppe Cavallaro <peppe.cavallaro@st.com>
- *******************************************************************************/
- 
-+#include <linux/gpio/consumer.h>
- #include <linux/io.h>
- #include <linux/iopoll.h>
- #include <linux/mii.h>
- #include <linux/of.h>
--#include <linux/of_gpio.h>
- #include <linux/of_mdio.h>
- #include <linux/phy.h>
- #include <linux/slab.h>
-@@ -251,37 +251,36 @@ int stmmac_mdio_reset(struct mii_bus *bus)
- 
- #ifdef CONFIG_OF
- 	if (priv->device->of_node) {
-+		struct gpio_desc *reset_gpio;
-+
- 		if (data->reset_gpio < 0) {
- 			struct device_node *np = priv->device->of_node;
- 
- 			if (!np)
- 				return 0;
- 
--			data->reset_gpio = of_get_named_gpio(np,
--						"snps,reset-gpio", 0);
--			if (data->reset_gpio < 0)
--				return 0;
-+			reset_gpio = devm_gpiod_get_optional(priv->device,
-+							     "snps,reset",
-+							     GPIOD_OUT_LOW);
-+			if (IS_ERR(reset_gpio))
-+				return PTR_ERR(reset_gpio);
- 
--			data->active_low = of_property_read_bool(np,
--						"snps,reset-active-low");
- 			of_property_read_u32_array(np,
- 				"snps,reset-delays-us", data->delays, 3);
-+		} else {
-+			reset_gpio = gpio_to_desc(data->reset_gpio);
- 
--			if (devm_gpio_request(priv->device, data->reset_gpio,
--					      "mdio-reset"))
--				return 0;
-+			gpiod_direction_output(reset_gpio, 0);
- 		}
- 
--		gpio_direction_output(data->reset_gpio,
--				      data->active_low ? 1 : 0);
- 		if (data->delays[0])
- 			msleep(DIV_ROUND_UP(data->delays[0], 1000));
- 
--		gpio_set_value(data->reset_gpio, data->active_low ? 0 : 1);
-+		gpiod_set_value_cansleep(reset_gpio, 1);
- 		if (data->delays[1])
- 			msleep(DIV_ROUND_UP(data->delays[1], 1000));
- 
--		gpio_set_value(data->reset_gpio, data->active_low ? 1 : 0);
-+		gpiod_set_value_cansleep(reset_gpio, 0);
- 		if (data->delays[2])
- 			msleep(DIV_ROUND_UP(data->delays[2], 1000));
- 	}
-diff --git a/include/linux/stmmac.h b/include/linux/stmmac.h
-index 4335bd771ce5..816edb545592 100644
---- a/include/linux/stmmac.h
-+++ b/include/linux/stmmac.h
-@@ -97,7 +97,7 @@ struct stmmac_mdio_bus_data {
- 	int *irqs;
- 	int probed_phy_irq;
- #ifdef CONFIG_OF
--	int reset_gpio, active_low;
-+	int reset_gpio;
- 	u32 delays[3];
- #endif
- };
--- 
-2.22.0
+Acked-by: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
+
+For the ice driver comment change.
+
+> ---
+>  Documentation/driver-api/gpio/driver.rst      |   2 +-
+>  .../driver-model/{binding.txt =3D> binding.rst} |  20 +-
+>  .../driver-model/{bus.txt =3D> bus.rst}         |  69 ++--
+>  .../driver-model/{class.txt =3D> class.rst}     |  74 ++--
+>  ...esign-patterns.txt =3D> design-patterns.rst} | 106 +++---
+>  .../driver-model/{device.txt =3D> device.rst}   |  57 +--
+>  .../driver-model/{devres.txt =3D> devres.rst}   |  50 +--
+>  .../driver-model/{driver.txt =3D> driver.rst}   | 112 +++---
+>  Documentation/driver-model/index.rst          |  26 ++
+>  .../{overview.txt =3D> overview.rst}            |  37 +-
+>  .../{platform.txt =3D> platform.rst}            |  30 +-
+>  .../driver-model/{porting.txt =3D> porting.rst} | 333 +++++++++---------
+>  Documentation/eisa.txt                        |   4 +-
+>  Documentation/hwmon/submitting-patches.rst    |   2 +-
+>  drivers/base/platform.c                       |   2 +-
+>  drivers/gpio/gpio-cs5535.c                    |   2 +-
+>  drivers/net/ethernet/intel/ice/ice_main.c     |   2 +-
+>  scripts/coccinelle/free/devm_free.cocci       |   2 +-
+>  18 files changed, 489 insertions(+), 441 deletions(-)
+>  rename Documentation/driver-model/{binding.txt =3D> binding.rst} (92%)
+>  rename Documentation/driver-model/{bus.txt =3D> bus.rst} (76%)
+>  rename Documentation/driver-model/{class.txt =3D> class.rst} (75%)
+>  rename Documentation/driver-model/{design-patterns.txt =3D> design-
+> patterns.rst} (59%)
+>  rename Documentation/driver-model/{device.txt =3D> device.rst} (71%)
+>  rename Documentation/driver-model/{devres.txt =3D> devres.rst} (93%)
+>  rename Documentation/driver-model/{driver.txt =3D> driver.rst} (75%)
+>  create mode 100644 Documentation/driver-model/index.rst
+>  rename Documentation/driver-model/{overview.txt =3D> overview.rst} (90%)
+>  rename Documentation/driver-model/{platform.txt =3D> platform.rst} (95%)
+>  rename Documentation/driver-model/{porting.txt =3D> porting.rst} (62%)
+
+
+--=-ty+pfSLvRBl9i77r2BhF
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+Content-Transfer-Encoding: 7bit
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEiTyZWz+nnTrOJ1LZ5W/vlVpL7c4FAl0BXtIACgkQ5W/vlVpL
+7c4pqBAAjI5ICv0jNPfnf/dx8MCYTQgnqe5o0zbkpxSHIeNyftE7ga/fAa4J66pK
+yJP9+EJIO8IGMCFSZxybwq9AxxQOK2fzpm2zrm3AGZ3MFesW3u/zxqGzp88XgqBY
+uaqSUJIuYPlDkVay8iLBiUKm5StnPJ25soquD3pRqHCStCU5HPM7ML9AFbK4UgSA
+OMbmXcdKoJubrdWd/CPIgMdGwRBzHl0L072QPnapJLJBNfn8OwkeoO67N7mCvitG
+o/I05rRyNIeunWTmiqmwVe6j+DQ8QzKPvXSKGGBM3Dl7QxP+fcV9jXkVulrjlpa6
+HDOQMLdRX6T5+6JPGHDTnY5PfWXf/hsMIF+szh+iI9+ZaetLbA/OQYm12foIxcbr
+2qu1iOn6RrRS4COcCFq6oTUEXRBBrlTI9iPVImuRF2Jt2+g/dQvfwK9U4XWCd0vG
+s0BFVM5A4CGFCBMGI6jYrSm+Q8Z3IpvMC/l7CmzZW5YPhplS8mPud5eqllLmFfr/
+8y0YyBAxXFpm9ajncxSc6m3TyBAmSevKYdvoL31TfZKLDN+W6ZyM47U1z1baDJBu
+3RBxzmVNXxu+DScqKTxYKsW5UY06Grs3HuDWGthqSztzc2+H6gK7s7YfT2S2diKe
+4vi2AzHXn4ghgp0OW4Kcg1YC5aeP7xdjVYDhaIeLEaaYaB6IiGw=
+=Uy44
+-----END PGP SIGNATURE-----
+
+--=-ty+pfSLvRBl9i77r2BhF--
 
