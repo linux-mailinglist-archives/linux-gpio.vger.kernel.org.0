@@ -2,76 +2,72 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 7B06B4254D
-	for <lists+linux-gpio@lfdr.de>; Wed, 12 Jun 2019 14:15:18 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 84AAC4255A
+	for <lists+linux-gpio@lfdr.de>; Wed, 12 Jun 2019 14:17:17 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727790AbfFLMPD (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 12 Jun 2019 08:15:03 -0400
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:39160 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727511AbfFLMPD (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 12 Jun 2019 08:15:03 -0400
-Received: by mail-lf1-f66.google.com with SMTP id p24so11903680lfo.6
-        for <linux-gpio@vger.kernel.org>; Wed, 12 Jun 2019 05:15:02 -0700 (PDT)
+        id S2438744AbfFLMRO (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 12 Jun 2019 08:17:14 -0400
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:43073 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2438743AbfFLMRO (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 12 Jun 2019 08:17:14 -0400
+Received: by mail-lj1-f193.google.com with SMTP id 16so14875419ljv.10
+        for <linux-gpio@vger.kernel.org>; Wed, 12 Jun 2019 05:17:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=FFYjM9wk0Lz17ea9speLpvagwR++tad6Xn0EKWjFYrA=;
-        b=iz8jnCndeBkvP3p4bBUYrvrE0G6l+fnUrY4oU5MyfPxGojrx49R4TMU+njNn/7WkR1
-         KudRDNq6DwntOfaunGUQ2Ggo7LykQcAuySfJlCxT5juyhc3dBfB+pQf/5I311Unb61Ak
-         xDOd9SDmEBkAmthWSazEjw2aPFlUj9sFiYGMQb7c8R64IJKhJyDC763gJmHYUQHB2JEY
-         ObuDuPWxggur9qaAQOWrQNqbA61Jj83r369UjaHpdkGB+xj6tC2Oo2lQDj2219vXZZjC
-         WYTaixMFeNHwjcNo5OjrrHcq5pLGSx47JLd9HuGnPjcAo+4RnkSXgfEjH6OYMEiNgoEx
-         ztdg==
+        bh=2txdGGqAtBgtUiiIPP10i5KT2B4f0+7u5UH9LS7ouJg=;
+        b=dusx49mrCLSgU5t83nzKnjS+WluovaOxnHyWSgEcpeQJPi0w63Vjj0FYvbpHl8IZ0M
+         0Eg7mJFCz8lJciydS+e8UNQaC7r8ojgw9QaIwsF5onCMIfBQpqxcaGfmtdOVvxgAS1KJ
+         iZq25ceilSdWqf4legHqbrKpfWh4VKQT0VMk1AZzYWalsKzgxxO8bSpWHPJeScvgczFQ
+         UG9KdibBNgx/ir54+DcjvIdzr+rJjZpD58RkUmmiAXwcrcVgH4HS2cGQGBcFg8/U+PQZ
+         Sos5qV0IrsWvi+9ROxVD7rnYs9P3dEm3uBX6AprDgms9/N5jIdr73kQfNzUk9tpZsI4F
+         PxiA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=FFYjM9wk0Lz17ea9speLpvagwR++tad6Xn0EKWjFYrA=;
-        b=pL6Q1gG+YyAMYwUR84NhhtFFYnd1CkR+6BKtEtUj8OCfUJFrobm8H3+h7/da+bjPpl
-         MiTsjM3t+JKvx5ZOND8VRov8xho+xPO79XO4GnAg46TUZL6Z8jG9ZjLdSCMjdEm2xbxl
-         1WuoU8002ZOczXhoad3dGPip3MFuziucfFXXGgOgAgeJy7sui+zJml1I1ovOHlKcuU7N
-         Xcbh2XGSgIl500hEdZFGP+7sub23AxqeVwaU4+a5LkLXBiFBdwAORYqXCbntcDdbGLaX
-         MF4ETEOU2D/AIM6iaQu3e+LVfB4BEXKis0IaQLXLl9GFRQo/Zbd2YLWe69TZiyYA3rC5
-         pm7g==
-X-Gm-Message-State: APjAAAWQkKmrCHkiI9L9gbqE+sIvVlaqY5hYc2Y8oXK+WY2XP6YYmanV
-        HNMye3d83d4NQOklpQT9uKxPDDzJB2kadQyhO9QkbyOs
-X-Google-Smtp-Source: APXvYqwy0mZMiBNpW/oi3ASfqSMigvHqJvRnpIQvSh4m+n3Y5mdNL+QhoJDfGK8Ag45DTi2N8BZsC58UGSuJHBOr+eI=
-X-Received: by 2002:ac2:50c4:: with SMTP id h4mr27964836lfm.61.1560341701722;
- Wed, 12 Jun 2019 05:15:01 -0700 (PDT)
+        bh=2txdGGqAtBgtUiiIPP10i5KT2B4f0+7u5UH9LS7ouJg=;
+        b=BJnlwDW3YbT/NqJQZ+K9i3n9ZTKSXT3cktD02FmQV6kpmoD8bWtV9F/3l9cIR6/Iub
+         lX5p6afA2FwB+guJBlKW9PF1Kn9PwYEiFz2bdUAAik3UIEw4D6RgdO8z4brZ4hUW3ML8
+         7CyghXgrV0LBEj4NL2G2xJ6FA/gUH+0FnHPNFdU2+GDCAUuJzpvo+n65aN3iP790Z7by
+         wKNXCl8JRG8UKBiKj2iOW5sEsBQ85kcaSyOYAD95TH0nX3V3qUqQv5ghNvH4eN9UBSmF
+         9RESk0AR02tyM2T71BYCayJOt2XFBZxMNvERdcCt11K8L2j9qYHiJwpK8EuDIXqJX/Z/
+         lDGw==
+X-Gm-Message-State: APjAAAVvA027BrrSRodOMHcUUy3acWs1FMkBoTGehAW5yctjSVcKLI2w
+        GkFkKPO6GzU8MxGzx5DeEUY0DhtK8drlE4yJIfdcdg==
+X-Google-Smtp-Source: APXvYqyY0A/WfPrOeCNf6qf18ESfRNrBcrzXIRXu/sUdZWtDXsnEw4ymCliw3ZfYA/tTBPR2Wnzztl40Q8AA2XCcUE4=
+X-Received: by 2002:a2e:5dc4:: with SMTP id v65mr33483063lje.138.1560341832416;
+ Wed, 12 Jun 2019 05:17:12 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190611140940.14357-1-icenowy@aosc.io>
-In-Reply-To: <20190611140940.14357-1-icenowy@aosc.io>
+References: <20190611072004.2978373-1-lkundrak@v3.sk>
+In-Reply-To: <20190611072004.2978373-1-lkundrak@v3.sk>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Wed, 12 Jun 2019 14:14:50 +0200
-Message-ID: <CACRpkdbSo=oKh94GxmLX_FrhCuoZJyY27WeV8KJjBW6gTUrh=g@mail.gmail.com>
-Subject: Re: [PATCH v2 00/11] Support for Allwinner V3/S3L and Sochip S3
-To:     Icenowy Zheng <icenowy@aosc.io>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Chen-Yu Tsai <wens@csie.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        linux-clk <linux-clk@vger.kernel.org>,
+Date:   Wed, 12 Jun 2019 14:17:01 +0200
+Message-ID: <CACRpkdb7jZ3Hw3uH_hqGRhbsoreQW17ck_QPXKxqLA8ov9ffuQ@mail.gmail.com>
+Subject: Re: [PATCH] pinctrl: lantiq: Switch to SPDX header
+To:     Lubomir Rintel <lkundrak@v3.sk>
+Cc:     John Crispin <john@phrozen.org>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        linux-sunxi <linux-sunxi@googlegroups.com>
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Jun 11, 2019 at 4:10 PM Icenowy Zheng <icenowy@aosc.io> wrote:
+On Tue, Jun 11, 2019 at 9:20 AM Lubomir Rintel <lkundrak@v3.sk> wrote:
 
->   dt-bindings: pinctrl: add missing compatible string for V3s
->   dt-bindings: pinctrl: add compatible string for Allwinner V3 pinctrl
+> The original license text had a typo ("publishhed") which would be
+> likely to confuse automated licensing auditing tools. Let's just switch
+> to SPDX instead of fixing the wording.
+>
+> Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
 
-I applied these two so we get down the depth of the patch stack.
-
-Waiting for a v3 on the pinctrl patch.
+This is already fixed upstream in Torvald's tree, see
+commit 1d0ea0692ae3f909b22e99af3121bcf3142a5c5f
+"treewide: Replace GPLv2 boilerplate/reference with SPDX - rule 332"
 
 Yours,
 Linus Walleij
