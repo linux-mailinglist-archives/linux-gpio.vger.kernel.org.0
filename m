@@ -2,94 +2,72 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id F102041AAA
-	for <lists+linux-gpio@lfdr.de>; Wed, 12 Jun 2019 05:19:38 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3729C41B5A
+	for <lists+linux-gpio@lfdr.de>; Wed, 12 Jun 2019 06:51:04 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406020AbfFLDTc (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 11 Jun 2019 23:19:32 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:35908 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387878AbfFLDTc (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 11 Jun 2019 23:19:32 -0400
-Received: by mail-pg1-f194.google.com with SMTP id f21so2081673pgi.3
-        for <linux-gpio@vger.kernel.org>; Tue, 11 Jun 2019 20:19:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=ate72NuJmVUI6S2BuZQCuvpskZE3U2N/nMIH2X9inqs=;
-        b=wONe3ABjpXyvX++muN+ZuuQPCqABZNEGqIqxYQ/Kt3+uMGojPLxRSIvfb/BY+fdwuG
-         KekIHVfMMPWEt2iVGpYLRtMDFlvWdWZQ5k1LeLMG6u/GZrzIezH7XP6vIhGcsBW+ii0L
-         gOnSHP9g6CBDUTxhU2oTLwRXVDlXsKmhEbPEYheQAqd7KVigbRcszf2ZesnwW85PE1dO
-         iyU20ncmowoBO3l8SVj5VyrMj5LmSNEaWqBtwhga5wxb4uKNqWI9n7cGRT4AetHicKKc
-         Aw/YlYfKfl5ziY0qdFhe1J71Org6PQArMHzDhgPN6gLNsPPoPq3bsND8qGL8LNA0flRp
-         9Seg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=ate72NuJmVUI6S2BuZQCuvpskZE3U2N/nMIH2X9inqs=;
-        b=TC4Sj9rg0FBzvtOxyHQ+OOAWhy/VzYYfbfG6J3+UOjtofegRFEgRduco7doRMNmiW0
-         O58n4Uwo3EJc94bvOnjmNxTTVFxvOoiu6MXdGZvuHj+phUwbtfRL2OdSt7IUdzQk41iY
-         zXndbrxu6SHQ9ypQvp+JIG99BmLkmY1FC3sFZCH2DwYvjveTuDTF7Kt+8rfjVb2wUbgr
-         HT3CZUkWKvvmEuUoPR+E5cJGgxn2FIJJEN6zCIFp1Te3v2MwR7yp2f7gMWzhTOCU46R/
-         er6MJswYAe79oD5R0nmUlYojlyJJB4mRINzHVEZxIa3h9pz0iv3jjJSeTzxGI/d0FlQz
-         LDeg==
-X-Gm-Message-State: APjAAAUyVDH5Vj+zk2PjceBWzk7wE0+aPzR5BJyAXtOwfcK3sBOTkB/k
-        AXzuQ+YqivyBUcF+UBg0iRgdzw==
-X-Google-Smtp-Source: APXvYqzHGgDNU6Vo6rIo/Aq12B4nqhPE19OxuX8C/VoLATKTH5QzhJS9otDk/sgsXlZcHlrej3ZyIg==
-X-Received: by 2002:a17:90a:22c6:: with SMTP id s64mr30744352pjc.5.1560309571012;
-        Tue, 11 Jun 2019 20:19:31 -0700 (PDT)
-Received: from localhost ([122.172.66.84])
-        by smtp.gmail.com with ESMTPSA id d9sm14160236pgj.34.2019.06.11.20.19.29
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 11 Jun 2019 20:19:30 -0700 (PDT)
-Date:   Wed, 12 Jun 2019 08:49:27 +0530
-From:   Viresh Kumar <viresh.kumar@linaro.org>
-To:     Rob Herring <robh@kernel.org>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
-Subject: Re: [PATCH] dt-bindings: gpio: Convert Arm PL061 to json-schema
-Message-ID: <20190612031927.mgr62xiirjqrzkeu@vireshk-i7>
-References: <20190514005033.15593-1-robh@kernel.org>
- <CACRpkdZabT3_vjkv0PR+GLC0ZXWzpMxfwJU6O9Y+omKJ=6zCaA@mail.gmail.com>
- <20190527064146.5rlm2audk6uojdxn@vireshk-i7>
- <CAL_JsqK3iS+Tv+0HYMApL6C6WQeVsf9hXgvpLpuR+dbDuygQdg@mail.gmail.com>
+        id S1730255AbfFLEu6 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 12 Jun 2019 00:50:58 -0400
+Received: from relay1.mentorg.com ([192.94.38.131]:51258 "EHLO
+        relay1.mentorg.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730248AbfFLEu6 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 12 Jun 2019 00:50:58 -0400
+Received: from nat-ies.mentorg.com ([192.94.31.2] helo=svr-ies-mbx-01.mgc.mentorg.com)
+        by relay1.mentorg.com with esmtps (TLSv1.2:ECDHE-RSA-AES256-SHA384:256)
+        id 1havDn-0000fK-NC from Harish_Kandiga@mentor.com ; Tue, 11 Jun 2019 21:50:51 -0700
+Received: from hkandiga-VirtualBox.ina-wifi.mentorg.com (137.202.0.90) by
+ svr-ies-mbx-01.mgc.mentorg.com (139.181.222.1) with Microsoft SMTP Server
+ (TLS) id 15.0.1320.4; Wed, 12 Jun 2019 05:50:47 +0100
+From:   Harish Jenny K N <harish_kandiga@mentor.com>
+To:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+CC:     <linux-gpio@vger.kernel.org>,
+        Harish Jenny K N <harish_kandiga@mentor.com>,
+        Balasubramani Vivekanandan 
+        <balasubramani_vivekanandan@mentor.com>
+Subject: [PATCH V1 0/2] Add virtual controller for gpio configuration
+Date:   Wed, 12 Jun 2019 10:20:32 +0530
+Message-ID: <1560315034-29712-1-git-send-email-harish_kandiga@mentor.com>
+X-Mailer: git-send-email 2.7.4
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAL_JsqK3iS+Tv+0HYMApL6C6WQeVsf9hXgvpLpuR+dbDuygQdg@mail.gmail.com>
-User-Agent: NeoMutt/20180716-391-311a52
+Content-Type: text/plain
+X-Originating-IP: [137.202.0.90]
+X-ClientProxiedBy: SVR-IES-MBX-03.mgc.mentorg.com (139.181.222.3) To
+ svr-ies-mbx-01.mgc.mentorg.com (139.181.222.1)
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 11-06-19, 13:54, Rob Herring wrote:
-> On Mon, May 27, 2019 at 12:41 AM Viresh Kumar <viresh.kumar@linaro.org> wrote:
-> > I checked SPEAr and it is missing interrupt-controller at few places and clocks
-> > everywhere. Missing clocks should be fine as SPEAr doesn't get clocks from DT.
-> 
-> Clocks not from DT was supposed to be a transitional thing...
+The purpose of this patchset is to provide a new virtual
+gpio controller to configure the polarity of the gpio pins
+used by the userspace. When there is no kernel driver using
+the gpio pin, it becomes necessary for the userspace
+to configure the polarity of the gpio pin.
+This driver enables the userspace to directly use the gpio pin
+without worrying about the hardware level polarity configuration.
+Polarity configuration will be done by the virtual gpio controller
+based on device tree information.
 
-Right, but by the time I left ST in 2012, mainline clock's DT support
-wasn't there and the SPEAr core team got fired soon after that. No one
-was left in ST to do the porting, but there are still people using the
-SPEAr boards and there are products in market, so we can't delete the
-platform as well.
+This is created after the discussion in the thread
+"gpio: set active-state of GPIO lines using device tree"
+https://www.spinics.net/lists/linux-gpio/msg38829.html
+to model inverters in the device tree to describe the hardware.
 
-So, no one is going to add clock DT support now.
+Thanks,
+Harish.
 
-> > And interrupt-controller can be just added, I don't think there would be any
-> > platform dependent side-affects ?
-> 
-> There shouldn't be.
+Harish Jenny K N (2):
+  gpio: inverter: Add virtual controller for gpio configuration
+  gpio: inverter: document the inverter bindings
 
-Okay, will send a patch for that then.
+ .../devicetree/bindings/gpio/gpio-inverter.txt     |  30 +++++
+ drivers/gpio/Kconfig                               |   9 ++
+ drivers/gpio/Makefile                              |   1 +
+ drivers/gpio/gpio-inverter.c                       | 144 +++++++++++++++++++++
+ 4 files changed, 184 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/gpio/gpio-inverter.txt
+ create mode 100644 drivers/gpio/gpio-inverter.c
 
--- 
-viresh
+--
+2.7.4
+
