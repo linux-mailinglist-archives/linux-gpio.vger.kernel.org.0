@@ -2,52 +2,51 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 7BD3041D39
-	for <lists+linux-gpio@lfdr.de>; Wed, 12 Jun 2019 09:10:27 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CC3C141D3F
+	for <lists+linux-gpio@lfdr.de>; Wed, 12 Jun 2019 09:11:39 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727072AbfFLHK0 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 12 Jun 2019 03:10:26 -0400
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:45025 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726286AbfFLHK0 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 12 Jun 2019 03:10:26 -0400
-Received: by mail-lj1-f194.google.com with SMTP id k18so14100616ljc.11
-        for <linux-gpio@vger.kernel.org>; Wed, 12 Jun 2019 00:10:25 -0700 (PDT)
+        id S2407241AbfFLHLf (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 12 Jun 2019 03:11:35 -0400
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:37404 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2405024AbfFLHLe (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 12 Jun 2019 03:11:34 -0400
+Received: by mail-lf1-f65.google.com with SMTP id d11so3385325lfb.4
+        for <linux-gpio@vger.kernel.org>; Wed, 12 Jun 2019 00:11:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=qDfqw9BoikhPY0Dh3SwCqBjJ8PAOLKi854XNqLlMVzk=;
-        b=yZXhYOCTOo7pIE/Y6X1tztbts791vhqKWYR9ND6YurUQHkPpLW0lfVsBIo/XypbEnJ
-         PS2MiMZWypqPhQOItzAZUtxqHZLXCMwwT3RmMqaQ4Ujfa7971kep0Py1s3AUrRMm7hBA
-         x4dXsg+lsTj25JteAUKoPkjL+O4V7sBmqTFA1e89ZWfCs6AR5p25o4wfjdhLGT9yEs3r
-         22YZt2zh107nLueurni6ZAuHPhGS+kexlKmmjfRqiZLpMu01BLEZVvI6dr6guYGaoMh5
-         CqVxay7fjTn4xgX0HvpF2eapSf2Kl6xnOiH403W2RJTmFp38UQJ6p+44uTdlOGAYLMk5
-         gj4A==
+        bh=1KcMuzl2j9UlUMV+5bVICTUXl/nZCKqZLShOlWK6AIs=;
+        b=Aw/L4d8YErCBnWXwJfO00otZf3wDQGfZunv7P0vOQbVNoN7eMd3CVXEDRcX+z6n9Tk
+         /2euh4O9JfNrPHL31l92kA1LyI+Hf8IwF0mgT+eM06OcpGEZyrMz7ZOzPXbsEHQc1m/g
+         K4znn/UpX6u53bnerzHi6Xm0JOGOda+gBMZAvNGVRyDlVF7mXggr8DA0Do3O3uA/qhMb
+         u4JFf9yQixYhq8vpIkQEncJBgDhdJMQ7FH3ULz61HsO+U9tQk8rEnolE01nRQrKg/92F
+         DLMEdej/O6VZCTO6Q8UQ6ZTf4eeWDcd8p4MF/ztFLRW+/jn7f9O65II2rDLFUMfQu84b
+         SxWA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=qDfqw9BoikhPY0Dh3SwCqBjJ8PAOLKi854XNqLlMVzk=;
-        b=smkVJP0tPuhb8xoRCmhTKoaF6hopIH63gB2U4EzHrRu9cBa1z/ojyriAWHX37AhieI
-         tCFsHlkDU6ZjZjW1v6fmhIZT7Ch/8YCvmufSuERBUYDqn3/2KZ2njVnlAHoq9TR76rqm
-         x1GqvWwJEqHKQZdHZWDkZwe3hvtjbQU5y24CUjJGYGQKUjrbxlAY2YPabUASiKLuPZq6
-         1keUWV47aGg0jY5GgWdp7YNmmXztfUZwb7QGk4UAEfOfUdvYCIH/6ugKfrfgcRbuwLkp
-         nFJ/4v7M4GjNDEwfJXQAsHnvG4bOyqSPQmpPg5QslUima4/rDN1BetIR/8DnF2YxjbA3
-         HS6A==
-X-Gm-Message-State: APjAAAXLBClm+Og1h2u+JHubI4JMqHa7r+tjuDcQP7tphHFeLbFlKxQC
-        Ldfhh5EhUGOck0zjjslwSL3T51ESXBvZWWEgxHhSyb7Etcw=
-X-Google-Smtp-Source: APXvYqwNAOR28KWVsRSGhKRPpy6Cz1HQFUNpqvVydgFwWVjRazfmyZ2wGtlHtx3v5KLBIGZMOLibsHpRrNRfkw+PwWg=
-X-Received: by 2002:a2e:480a:: with SMTP id v10mr5288468lja.94.1560323424436;
- Wed, 12 Jun 2019 00:10:24 -0700 (PDT)
+        bh=1KcMuzl2j9UlUMV+5bVICTUXl/nZCKqZLShOlWK6AIs=;
+        b=jCwI9MN8sgSMkXtHGvePwDGH5sjAi//Rany07xib4v3T5kwcXFEHZU5aYAyMT7ctaz
+         7X/Uu+aqhgDn9oSkVgQztKwQWbOnXE+vQ+oTAY3vfr30SjxlftkYOVsM8mYrvDgdq634
+         fYXcavHpVsY8Bpm8bxHqTqIISjMPEAri/1hiP8oEvBrQS64Pc/oGhvSij5vvi+nGdoQ3
+         33vGU9BwN4JPNwEXkAPNgH1T9uLogrzuikq/xKELyEv/m9QJGGn7N3Anait4mAOcdWSK
+         w8O5pRu4unLUL0Qoci8EVIFf5y3ws3rOTVpiuqMZvNi5nDn38b6OtHu08Afg0yeVvKi4
+         PD6A==
+X-Gm-Message-State: APjAAAUPsi5Ne3yV/8gM3x/92py3rfj3Yg70SfqIlAWPSPxVY9Q3okZK
+        Lg0Lbjn+L1Hcn2KyEkIDz6WvGS0hcnkTHuhrFrOKBeDV9JE=
+X-Google-Smtp-Source: APXvYqxk29thQQE/BHKwINb4uefI2UckUUiQ3q2QTbipO6HIND/PFkyMs94HDPXUOnV0M1Ddkg6jgfptNouBMVw9dIU=
+X-Received: by 2002:ac2:50c4:: with SMTP id h4mr27109977lfm.61.1560323492832;
+ Wed, 12 Jun 2019 00:11:32 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190609145537.7953-1-yamada.masahiro@socionext.com>
-In-Reply-To: <20190609145537.7953-1-yamada.masahiro@socionext.com>
+References: <20190609150953.6432-1-yamada.masahiro@socionext.com>
+In-Reply-To: <20190609150953.6432-1-yamada.masahiro@socionext.com>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Wed, 12 Jun 2019 09:10:12 +0200
-Message-ID: <CACRpkdZ1B2b3DLdFrtYLfZgJH2QWBYmnX-mBHtO3C=EPc=UC_w@mail.gmail.com>
-Subject: Re: [PATCH] pinctrl: remove unneeded initializer for
- list_for_each_entry() iterator
+Date:   Wed, 12 Jun 2019 09:11:21 +0200
+Message-ID: <CACRpkdaSM4y_CEJH-MWx_7BqSP6PpTwQ21ZG++wfAT29RPcBHg@mail.gmail.com>
+Subject: Re: [PATCH] pinctrl: remove unused pin_is_valid()
 To:     Masahiro Yamada <yamada.masahiro@socionext.com>
 Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
@@ -57,13 +56,18 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Sun, Jun 9, 2019 at 4:55 PM Masahiro Yamada
+On Sun, Jun 9, 2019 at 5:10 PM Masahiro Yamada
 <yamada.masahiro@socionext.com> wrote:
 
-> The iterator is initialized in list_for_each_entry().
+> This function was used by pin_request() to pointlessly double-check
+> the pin validity, and it was the only user ever.
+>
+> Since commit d2f6a1c6fb0e ("pinctrl: remove double pin validity
+> check."), no one has ever used it.
 >
 > Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
 
+Good catch!
 Patch applied.
 
 Yours,
