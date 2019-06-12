@@ -2,151 +2,86 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 28D0342081
-	for <lists+linux-gpio@lfdr.de>; Wed, 12 Jun 2019 11:16:45 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id F0805420A1
+	for <lists+linux-gpio@lfdr.de>; Wed, 12 Jun 2019 11:23:39 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730353AbfFLJQn (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 12 Jun 2019 05:16:43 -0400
-Received: from anchovy2.45ru.net.au ([203.30.46.146]:53076 "EHLO
-        anchovy2.45ru.net.au" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730665AbfFLJQn (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 12 Jun 2019 05:16:43 -0400
-Received: (qmail 20541 invoked by uid 5089); 12 Jun 2019 09:16:41 -0000
-Received: by simscan 1.2.0 ppid: 20461, pid: 20465, t: 0.0787s
-         scanners: regex: 1.2.0 attach: 1.2.0 clamav: 0.88.3/m:40/d:1950
-Received: from unknown (HELO ?192.168.0.128?) (preid@electromag.com.au@203.59.235.95)
-  by anchovy3.45ru.net.au with ESMTPA; 12 Jun 2019 09:16:40 -0000
-Subject: Re: [PATCH v2 1/1] pinctlr: mcp23s08: Fix add_data and
- irqchip_add_nested call order
-To:     Marco Felsch <m.felsch@pengutronix.de>
-Cc:     linus.walleij@linaro.org, jkridner@gmail.com, poeschel@lemonage.de,
-        gustavo@embeddedor.com, linux-gpio@vger.kernel.org
-References: <1560306258-54654-1-git-send-email-preid@electromag.com.au>
- <20190612083228.jbs7ygn62q6twedp@pengutronix.de>
-From:   Phil Reid <preid@electromag.com.au>
-Message-ID: <8b8275d1-e0ba-a577-a48e-4a4b90dbd108@electromag.com.au>
-Date:   Wed, 12 Jun 2019 17:16:36 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        id S1731636AbfFLJXY (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 12 Jun 2019 05:23:24 -0400
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:35996 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727276AbfFLJXV (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 12 Jun 2019 05:23:21 -0400
+Received: by mail-lf1-f67.google.com with SMTP id q26so11527536lfc.3
+        for <linux-gpio@vger.kernel.org>; Wed, 12 Jun 2019 02:23:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=9xB4K2RyPS/R57/JJTkF3nS6D2VfQstRM6okCDkUpXk=;
+        b=pFDYhglDOvHhgTlm4JT6bDT8ASm+PtdFkhZg52zUouEDk4o0E4X4ZtbAOdJMAZ6iWl
+         O+uvDV5hgYuwyTXQoE+Kr9oMbpfQ7hmyJKMyhaN3GCM2N7mvAWId00sc1wDMtV3ao05I
+         8X9urtEYd+jcPPH620hZWB5B93f2ud+j35c0VpVa8kJ7OBsx2pB2J8LdcE0eRZYr4J/e
+         st1c3reb9iREpMlFnS01buN5ERtdWBLiYD8vBcbAQem7rXk8INOS+KUI7jDv37tnRw8n
+         BVl92fzUvYBE3g1WF4PDDj3kp5Uk0uS7Vs2bdThWC/PljF0RjE1nP2ntysaLq1oy0ZEU
+         BPwA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=9xB4K2RyPS/R57/JJTkF3nS6D2VfQstRM6okCDkUpXk=;
+        b=CiFsSe9tudqMSr9PHteU91u86IcSt99MNMfcvvbkl+ZPvkW9klARNT8km6hbj+mVZd
+         82+jR/+Yb1noTSUjZX/FFY2suc2tHegZnPUOvMaRIO8Y3nVx2Y1BO+q/VK08hbtCB/Sn
+         ow+abDNTX83Aa4zZq3KRJSLnE5UkYdcPO3hJ9OMQkUXTAkJI73whsWDwHQt9BX8dFgvC
+         9ReWhdg+tIfnh6Uz0ve3nSWxdZVg0lHOhuTqCSskqNorJljPPqxjnmrI8szon2DYEe7N
+         cUNPWvHQABM7dkjLQhalomx/iYIQoiCIf1WUiFNcVXmUjJHFiCO72qn8kw/YNnH0Dn5z
+         nIXQ==
+X-Gm-Message-State: APjAAAUHobOEGKm44iq8bQalygBHfHu5douqakq2RXcfd7d1w6La/5An
+        A6z+NjYfcMNvYugqMd9k1SXZiBIBT9+HWpbGEwQqfg==
+X-Google-Smtp-Source: APXvYqzpG6R8CuOm+a9rEIDx5UCqguZdACqHC7MEghETAfPC2KWCVJSCTTbd3ssSHHSl0L4f+vvy9uBtO7bg9b6ZZYA=
+X-Received: by 2002:ac2:4891:: with SMTP id x17mr5356875lfc.60.1560331399558;
+ Wed, 12 Jun 2019 02:23:19 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190612083228.jbs7ygn62q6twedp@pengutronix.de>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-AU
-Content-Transfer-Encoding: 7bit
+References: <20190610171103.30903-1-grygorii.strashko@ti.com>
+In-Reply-To: <20190610171103.30903-1-grygorii.strashko@ti.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Wed, 12 Jun 2019 11:23:07 +0200
+Message-ID: <CACRpkdamKFMrvfi4+L95KqJzPkX69er=CBC3ShUwj0VWArnQRg@mail.gmail.com>
+Subject: Re: [PATCH-next 00/20] gpio: gpio-omap: set of fixes and big clean-up
+To:     Grygorii Strashko <grygorii.strashko@ti.com>
+Cc:     Russell King <rmk@arm.linux.org.uk>,
+        Tony Lindgren <tony@atomide.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Linux-OMAP <linux-omap@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Santosh Shilimkar <ssantosh@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 12/06/2019 16:32, Marco Felsch wrote:
-> Hi Phil,
-> 
-> thanks for the patch. Can you check that the error which should be fixed
-> by commit 02e389e6 ("pinctrl: mcp23s08: fix irq setup order") do not
-> appear. If so we should also add a Fixes line.
-> 
-G'day Marco,
+On Mon, Jun 10, 2019 at 7:11 PM Grygorii Strashko
+<grygorii.strashko@ti.com> wrote:
 
-I remember that one know.
-I'm also using the mcp with gpio-keys driver.
-I don't think I saw the same behaviour with my setup then.
+> This series contains set of patches from Russell King which were circulated
+> internally for quite some time already and I fill it's reasonable to move
+> future discussion upstream (and also avoid rebasing).
+> Fisrt two patches are fixes and the rest are big, great clean up
+> from Russell King.
+>
+> Personally, I like this clean up and refactoring very much and don't want
+> it to be lost.
 
-I'm using the (spi) mcp23s16 (with gpio-keys), and Dmitry was using mcp23008 (i2c).
+I share your view, it is very nice to have Russell's attention to detail
+shaping up this driver.
 
-I noted at the time the difference in when
-i2c_set_clientdata & spi_set_drvdata are called in the spi / i2c probe paths.
+I vaguely remember at some point wondering why we were
+not using gpio-mmio.c at least partially
+for this driver, as it share this characteristic of keeping a shadow
+copy of the registers around and seem to have offsets from 0..n
+in the registers, but I guess there is some specific
+good reason for not using the library?
 
-It seems wrong to call i2c_set_clientdata after devm_pinctrl_register is called.
-But I'm by no means an expert.
-
-I do have a system with an i2c variant now, but it doesn't use the gpio-keys driver.
-
-Anyways I'm still not seeing any adverse behaviour with the patch so far.
-
-
-
-> Regards,
->    Marco
-> 
-> On 19-06-12 10:24, Phil Reid wrote:
->> Currently probing of the mcp23s08 results in an error message
->> "detected irqchip that is shared with multiple gpiochips:
->> please fix the driver"
->>
->> This is due to the following:
->>
->> Call to mcp23s08_irqchip_setup() with call hierarchy:
->> mcp23s08_irqchip_setup()
->>    gpiochip_irqchip_add_nested()
->>      gpiochip_irqchip_add_key()
->>        gpiochip_set_irq_hooks()
->>
->> Call to devm_gpiochip_add_data() with call hierarchy:
->> devm_gpiochip_add_data()
->>    gpiochip_add_data_with_key()
->>      gpiochip_add_irqchip()
->>        gpiochip_set_irq_hooks()
->>
->> The gpiochip_add_irqchip() returns immediately if there isn't a irqchip
->> but we added a irqchip due to the previous mcp23s08_irqchip_setup()
->> call. So it calls gpiochip_set_irq_hooks() a second time.
->>
->> Fix this by moving the call to devm_gpiochip_add_data before
->> the call to mcp23s08_irqchip_setup
->>
->> Suggested-by: Marco Felsch <m.felsch@pengutronix.de>
->> Signed-off-by: Phil Reid <preid@electromag.com.au>
->> ---
->>
->> Notes:
->>      v2:
->>      - remove unrelated whitespace changes
->>
->>   drivers/pinctrl/pinctrl-mcp23s08.c | 8 ++++----
->>   1 file changed, 4 insertions(+), 4 deletions(-)
->>
->> diff --git a/drivers/pinctrl/pinctrl-mcp23s08.c b/drivers/pinctrl/pinctrl-mcp23s08.c
->> index 5d7a851..b727de56 100644
->> --- a/drivers/pinctrl/pinctrl-mcp23s08.c
->> +++ b/drivers/pinctrl/pinctrl-mcp23s08.c
->> @@ -881,6 +881,10 @@ static int mcp23s08_probe_one(struct mcp23s08 *mcp, struct device *dev,
->>   	if (ret < 0)
->>   		goto fail;
->>   
->> +	ret = devm_gpiochip_add_data(dev, &mcp->chip, mcp);
->> +	if (ret < 0)
->> +		goto fail;
->> +
->>   	mcp->irq_controller =
->>   		device_property_read_bool(dev, "interrupt-controller");
->>   	if (mcp->irq && mcp->irq_controller) {
->> @@ -922,10 +926,6 @@ static int mcp23s08_probe_one(struct mcp23s08 *mcp, struct device *dev,
->>   			goto fail;
->>   	}
->>   
->> -	ret = devm_gpiochip_add_data(dev, &mcp->chip, mcp);
->> -	if (ret < 0)
->> -		goto fail;
->> -
->>   	if (one_regmap_config) {
->>   		mcp->pinctrl_desc.name = devm_kasprintf(dev, GFP_KERNEL,
->>   				"mcp23xxx-pinctrl.%d", raw_chip_address);
->> -- 
->> 1.8.3.1
->>
->>
-> 
-
-
--- 
-Regards
-Phil Reid
-
-ElectroMagnetic Imaging Technology Pty Ltd
-Development of Geophysical Instrumentation & Software
-www.electromag.com.au
-
-3 The Avenue, Midland WA 6056, AUSTRALIA
-Ph: +61 8 9250 8100
-Fax: +61 8 9250 7100
-Email: preid@electromag.com.au
+Yours,
+Linus Walleij
