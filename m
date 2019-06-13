@@ -2,84 +2,152 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 77B5644527
-	for <lists+linux-gpio@lfdr.de>; Thu, 13 Jun 2019 18:42:35 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8D0014427D
+	for <lists+linux-gpio@lfdr.de>; Thu, 13 Jun 2019 18:24:25 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727192AbfFMQm3 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 13 Jun 2019 12:42:29 -0400
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:38133 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730514AbfFMGtG (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 13 Jun 2019 02:49:06 -0400
-Received: by mail-lf1-f66.google.com with SMTP id b11so14160883lfa.5
-        for <linux-gpio@vger.kernel.org>; Wed, 12 Jun 2019 23:49:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=e1ul9q93DMTF9fOF4OTMBFxypkqDQ0BHDLiu4KuQL10=;
-        b=KMppsMt8BkVVt4uUqhw2SrdqTarwyhvpsyDtVhZldaP7nJBeyTfxEESTst6AqDJ1Oz
-         6vlRDsUGu3bl52pTbQV/5UjvRQxxrRthay47SayEDABR7JeE9JzAeHzeCgmggBu/yOVr
-         aD2jr/YAEbN2D/ewXOQw6MxO6BlPd/+6CL/3VgZ6iJbm/ZswnSg81IIqHxKPW7Kq6Sy0
-         ZL5F/AhWvLjo+ObSp1pHcuq6W3N691RZTOU9z9MHeT5t3JKe8p+Qxu+XjdmPZ0u1XW/2
-         8iQxGpcpeFLKxoB3wnmM39vVMeycEEpVa+Xo/3BteiKspNaJLPnGKE6tUxz9lHg0FF5N
-         d+EA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=e1ul9q93DMTF9fOF4OTMBFxypkqDQ0BHDLiu4KuQL10=;
-        b=L5QNI4+cn0pIvbcaYptFtyTbfDPKHqqGWEPRcqK9CUgu/D57l03AqVJZDQMkTEAWzw
-         PLFruG0UbYH57MHWQeOmWM/kzcmZR2MmOMRlZ0dvpJwFlOGaZ5GhVFJ10EzilKmTL2R/
-         41Tvbnkjz9qwe6uElJNPcMgOQAdLC1SUBkzcFe1pVcwCze+ALSmmO24gAjc/n+lD2B1G
-         mYezxZ6h8yO3NP3VhUbn2hY0TmvNLg3nRKMF+7nHO/gsMTKcAWn2ygecjVbueThUzbTh
-         SxaIDfsefid0LOBKrkU+qvLWkcfCclsFIqCb9O2jCQjYUEso2mAPsWGe78nAkxdLFPvS
-         dAUQ==
-X-Gm-Message-State: APjAAAW9rOHuUQQ1/TB3/2BW5micJIF73wDV+emcTKWbG+GdJ74oI98t
-        HSrhLe+diUo0BT4TWuBItOb1pG/j4V4lykoQCRBXbQ==
-X-Google-Smtp-Source: APXvYqzKtdLCW6OZTLopPf2ocC/MLTwV93BokjDpORyBw0FQUk/pTKnsuj1Pfvn2t+CFt4v0aTC7625m7Hvz61+ZKmg=
-X-Received: by 2002:a19:7616:: with SMTP id c22mr1160459lff.115.1560408544770;
- Wed, 12 Jun 2019 23:49:04 -0700 (PDT)
+        id S1731037AbfFMQXC (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 13 Jun 2019 12:23:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55352 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731033AbfFMIh4 (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Thu, 13 Jun 2019 04:37:56 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D405B2146F;
+        Thu, 13 Jun 2019 08:37:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1560415075;
+        bh=/a0mpmk+F++Irb56hdEMgOxXqHCddPGLkXPRjC/8KCM=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=jZqhXu/lwICh17TQReV4DrsFmZDObQ2hjBAUQbh2ZUMMFF3ZuyTeOkCRYMQ+WmaBp
+         2ixYS/R7WYNIS0eb1C9gmxd4iP35wG7Dyia9N56MbcCkK5pFbKoBOKSAnZyy7HbhqP
+         XL4MZddvNqHcDKRI6MRpWAPEtlbflbD98Lp0aNws=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Andrey Smirnov <andrew.smirnov@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Chris Healy <cphealy@gmail.com>, Andrew Lunn <andrew@lunn.ch>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Fabio Estevam <festevam@gmail.com>, linux-gpio@vger.kernel.org,
+        linux-imx@nxp.com, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 77/81] gpio: vf610: Do not share irq_chip
+Date:   Thu, 13 Jun 2019 10:34:00 +0200
+Message-Id: <20190613075654.646180331@linuxfoundation.org>
+X-Mailer: git-send-email 2.22.0
+In-Reply-To: <20190613075649.074682929@linuxfoundation.org>
+References: <20190613075649.074682929@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-References: <1560315034-29712-1-git-send-email-harish_kandiga@mentor.com> <1560315034-29712-2-git-send-email-harish_kandiga@mentor.com>
-In-Reply-To: <1560315034-29712-2-git-send-email-harish_kandiga@mentor.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Thu, 13 Jun 2019 08:48:53 +0200
-Message-ID: <CACRpkdbE5pFRr9vtd_OUCbRBz8H6HuvX0cxp83FBnZZsws5r5A@mail.gmail.com>
-Subject: Re: [PATCH V1 1/2] gpio: inverter: Add virtual controller for gpio configuration
-To:     Harish Jenny K N <harish_kandiga@mentor.com>
-Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Balasubramani Vivekanandan 
-        <balasubramani_vivekanandan@mentor.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Oops I missed one thing:
+[ Upstream commit 338aa10750ba24d04beeaf5dc5efc032e5cf343f ]
 
-On Wed, Jun 12, 2019 at 6:50 AM Harish Jenny K N
-<harish_kandiga@mentor.com> wrote:
+Fix the warning produced by gpiochip_set_irq_hooks() by allocating a
+dedicated IRQ chip per GPIO chip/port.
 
-> +struct gpio_inverter {
-> +       struct gpio_chip gpiochip;
-> +       int count;
-> +       struct gpio_desc *gpios[0];
+Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>
+Cc: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Cc: Chris Healy <cphealy@gmail.com>
+Cc: Andrew Lunn <andrew@lunn.ch>
+Cc: Heiner Kallweit <hkallweit1@gmail.com>
+Cc: Fabio Estevam <festevam@gmail.com>
+Cc: linux-gpio@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+Cc: linux-imx@nxp.com
+Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/gpio/gpio-vf610.c | 26 ++++++++++++--------------
+ 1 file changed, 12 insertions(+), 14 deletions(-)
 
-No [0] as Geert points out and:
+diff --git a/drivers/gpio/gpio-vf610.c b/drivers/gpio/gpio-vf610.c
+index 1309b444720e..3210fba16a9b 100644
+--- a/drivers/gpio/gpio-vf610.c
++++ b/drivers/gpio/gpio-vf610.c
+@@ -37,6 +37,7 @@ struct fsl_gpio_soc_data {
+ 
+ struct vf610_gpio_port {
+ 	struct gpio_chip gc;
++	struct irq_chip ic;
+ 	void __iomem *base;
+ 	void __iomem *gpio_base;
+ 	const struct fsl_gpio_soc_data *sdata;
+@@ -66,8 +67,6 @@ struct vf610_gpio_port {
+ #define PORT_INT_EITHER_EDGE	0xb
+ #define PORT_INT_LOGIC_ONE	0xc
+ 
+-static struct irq_chip vf610_gpio_irq_chip;
+-
+ static const struct fsl_gpio_soc_data imx_data = {
+ 	.have_paddr = true,
+ };
+@@ -243,15 +242,6 @@ static int vf610_gpio_irq_set_wake(struct irq_data *d, u32 enable)
+ 	return 0;
+ }
+ 
+-static struct irq_chip vf610_gpio_irq_chip = {
+-	.name		= "gpio-vf610",
+-	.irq_ack	= vf610_gpio_irq_ack,
+-	.irq_mask	= vf610_gpio_irq_mask,
+-	.irq_unmask	= vf610_gpio_irq_unmask,
+-	.irq_set_type	= vf610_gpio_irq_set_type,
+-	.irq_set_wake	= vf610_gpio_irq_set_wake,
+-};
+-
+ static int vf610_gpio_probe(struct platform_device *pdev)
+ {
+ 	const struct of_device_id *of_id = of_match_device(vf610_gpio_dt_ids,
+@@ -261,6 +251,7 @@ static int vf610_gpio_probe(struct platform_device *pdev)
+ 	struct vf610_gpio_port *port;
+ 	struct resource *iores;
+ 	struct gpio_chip *gc;
++	struct irq_chip *ic;
+ 	int i;
+ 	int ret;
+ 
+@@ -297,6 +288,14 @@ static int vf610_gpio_probe(struct platform_device *pdev)
+ 	gc->direction_output = vf610_gpio_direction_output;
+ 	gc->set = vf610_gpio_set;
+ 
++	ic = &port->ic;
++	ic->name = "gpio-vf610";
++	ic->irq_ack = vf610_gpio_irq_ack;
++	ic->irq_mask = vf610_gpio_irq_mask;
++	ic->irq_unmask = vf610_gpio_irq_unmask;
++	ic->irq_set_type = vf610_gpio_irq_set_type;
++	ic->irq_set_wake = vf610_gpio_irq_set_wake;
++
+ 	ret = gpiochip_add_data(gc, port);
+ 	if (ret < 0)
+ 		return ret;
+@@ -308,14 +307,13 @@ static int vf610_gpio_probe(struct platform_device *pdev)
+ 	/* Clear the interrupt status register for all GPIO's */
+ 	vf610_gpio_writel(~0, port->base + PORT_ISFR);
+ 
+-	ret = gpiochip_irqchip_add(gc, &vf610_gpio_irq_chip, 0,
+-				   handle_edge_irq, IRQ_TYPE_NONE);
++	ret = gpiochip_irqchip_add(gc, ic, 0, handle_edge_irq, IRQ_TYPE_NONE);
+ 	if (ret) {
+ 		dev_err(dev, "failed to add irqchip\n");
+ 		gpiochip_remove(gc);
+ 		return ret;
+ 	}
+-	gpiochip_set_chained_irqchip(gc, &vf610_gpio_irq_chip, port->irq,
++	gpiochip_set_chained_irqchip(gc, ic, port->irq,
+ 				     vf610_gpio_irq_handler);
+ 
+ 	return 0;
+-- 
+2.20.1
 
-> +       size = sizeof(*virt) + count * sizeof(struct gpio_desc *);
-> +       virt = devm_kzalloc(dev, size, GFP_KERNEL);
-> +       if (!virt)
-> +               return -ENOMEM;
 
-Use this:
 
-inv = devm_kzalloc(dev, struct_size(inv, gpios, count), GFP_KERNEL);
-
-We use struct_size() for dynamic structs with headroom in the tail.
-
-Yours,
-Linus Walleij
