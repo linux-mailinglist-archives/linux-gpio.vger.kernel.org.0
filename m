@@ -2,103 +2,89 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 828344463D
-	for <lists+linux-gpio@lfdr.de>; Thu, 13 Jun 2019 18:50:10 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DA63E44552
+	for <lists+linux-gpio@lfdr.de>; Thu, 13 Jun 2019 18:43:55 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725972AbfFMQuD (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 13 Jun 2019 12:50:03 -0400
-Received: from anchovy2.45ru.net.au ([203.30.46.146]:55054 "EHLO
-        anchovy2.45ru.net.au" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725835AbfFMEKd (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 13 Jun 2019 00:10:33 -0400
-Received: (qmail 16694 invoked by uid 5089); 13 Jun 2019 04:10:31 -0000
-Received: by simscan 1.2.0 ppid: 16625, pid: 16626, t: 0.0596s
-         scanners: regex: 1.2.0 attach: 1.2.0 clamav: 0.88.3/m:40/d:1950
-X-RBL:  $rbltext
-Received: from unknown (HELO preid-c7.electromag.com.au) (preid@electromag.com.au@203.59.235.95)
-  by anchovy3.45ru.net.au with ESMTPA; 13 Jun 2019 04:10:30 -0000
-Received: by preid-c7.electromag.com.au (Postfix, from userid 1000)
-        id 29984200A3930; Thu, 13 Jun 2019 12:10:26 +0800 (AWST)
-From:   Phil Reid <preid@electromag.com.au>
-To:     linus.walleij@linaro.org, jkridner@gmail.com,
-        m.felsch@pengutronix.de, poeschel@lemonage.de,
-        preid@electromag.com.au, gustavo@embeddedor.com,
-        linux-gpio@vger.kernel.org
-Subject: [PATCH v3 1/1] pinctlr: mcp23s08: Fix add_data and irqchip_add_nested call order
-Date:   Thu, 13 Jun 2019 12:10:23 +0800
-Message-Id: <1560399023-12638-1-git-send-email-preid@electromag.com.au>
-X-Mailer: git-send-email 1.8.3.1
+        id S1726379AbfFMQn1 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 13 Jun 2019 12:43:27 -0400
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:34013 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730476AbfFMGmd (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 13 Jun 2019 02:42:33 -0400
+Received: by mail-lf1-f65.google.com with SMTP id y198so14164047lfa.1
+        for <linux-gpio@vger.kernel.org>; Wed, 12 Jun 2019 23:42:32 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=qh1uEWluiWqtbtRKgMx/1lY6AHPu/gzYyIbyLQQfcNg=;
+        b=G4nlF8j55Z7xLO9Eg1hQZgQZ1LZNpqAwi+NsuZbY9FhzzEy4ZaNxJSaivX0T8f/NEW
+         2Q607vm5ss3+wbiZG3LsPnF/UaQsh2SF22Rf+Pr1W3db5gS/2wAqIIeeX1kwJTDz0Uv7
+         oEddHXCbz+8S+9JE0uXaW6GbefoyeMEwVBUcTFjbDuWkpOgSrmsI3Cwi/vto432KRkpR
+         s8NBJ2YpBYNFfAd5aIB+glfMRAxTkEhk7BuwJybk7c76iXSViuHzZhwTj8h3OjH0OJPY
+         N6tmAC297PEIFLtvq35PQQxX/mLO/94rz9c+FzAgqfZtTF7LEVGI4jVKrCuxrFxR7dnQ
+         pccg==
+X-Gm-Message-State: APjAAAW9sKHRFh9cKPU2DBhpVCPzeyl+fQ0nZfQ13Ek0EzB/Z0L4S/z+
+        Rc5mDqCuW3DSggl/W/8S9gCPXe/EKF7UqDczM58=
+X-Google-Smtp-Source: APXvYqzHJ4bUSqIvcAihbE6NdusegMuUQFu+WR1aLAGAv8Zwibdmi4Fnuf65CB2gtWz3SAlUpmxqU/PB2Xp+X2Qr82g=
+X-Received: by 2002:a19:4a49:: with SMTP id x70mr6143310lfa.151.1560408151391;
+ Wed, 12 Jun 2019 23:42:31 -0700 (PDT)
+MIME-Version: 1.0
+References: <1560315034-29712-1-git-send-email-harish_kandiga@mentor.com> <1560315034-29712-2-git-send-email-harish_kandiga@mentor.com>
+In-Reply-To: <1560315034-29712-2-git-send-email-harish_kandiga@mentor.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Thu, 13 Jun 2019 08:42:17 +0200
+Message-ID: <CAMuHMdWYxUOKPhXXe0CSQCO7cHC3QiqDA+AX7R7vyg8L9LZyJA@mail.gmail.com>
+Subject: Re: [PATCH V1 1/2] gpio: inverter: Add virtual controller for gpio configuration
+To:     Harish Jenny K N <harish_kandiga@mentor.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Balasubramani Vivekanandan 
+        <balasubramani_vivekanandan@mentor.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Currently probing of the mcp23s08 results in an error message
-"detected irqchip that is shared with multiple gpiochips:
-please fix the driver"
+Hi Harish,
 
-This is due to the following:
+On Wed, Jun 12, 2019 at 9:57 AM Harish Jenny K N
+<harish_kandiga@mentor.com> wrote:
+> Provides a new virtual gpio controller to configure the polarity
+> of the gpio pins used by the userspace. When there is no kernel
+> driver using the gpio pin, it becomes necessary for the userspace
+> to configure the polarity of the gpio pin.
+> This driver enables the userspace to directly use the gpio pin
+> without worrying about the hardware level polarity configuration.
+> Polarity configuration will be done by the virtual gpio controller
+> based on device tree information
+>
+> Signed-off-by: Balasubramani Vivekanandan <balasubramani_vivekanandan@mentor.com>
+> Signed-off-by: Harish Jenny K N <harish_kandiga@mentor.com>
 
-Call to mcp23s08_irqchip_setup() with call hierarchy:
-mcp23s08_irqchip_setup()
-  gpiochip_irqchip_add_nested()
-    gpiochip_irqchip_add_key()
-      gpiochip_set_irq_hooks()
+Thanks for your patch!
 
-Call to devm_gpiochip_add_data() with call hierarchy:
-devm_gpiochip_add_data()
-  gpiochip_add_data_with_key()
-    gpiochip_add_irqchip()
-      gpiochip_set_irq_hooks()
+> --- /dev/null
+> +++ b/drivers/gpio/gpio-inverter.c
+> @@ -0,0 +1,144 @@
 
-The gpiochip_add_irqchip() returns immediately if there isn't a irqchip
-but we added a irqchip due to the previous mcp23s08_irqchip_setup()
-call. So it calls gpiochip_set_irq_hooks() a second time.
+> +struct gpio_inverter {
+> +       struct gpio_chip gpiochip;
+> +       int count;
+> +       struct gpio_desc *gpios[0];
 
-Fix this by moving the call to devm_gpiochip_add_data before
-the call to mcp23s08_irqchip_setup
+Please use [] instead of [0] for denoting a flexible array, else
+gcc will not warn when it is no longer at the end of the struct.
 
-Fixes: 02e389e63 ("pinctrl: mcp23s08: fix irq setup order")
-Suggested-by: Marco Felsch <m.felsch@pengutronix.de>
-Signed-off-by: Phil Reid <preid@electromag.com.au>
----
+Gr{oetje,eeting}s,
 
-Notes:
-    v3:
-    - Add fixes tag
-    
-    v2:
-    - remove unrelated whitespace changes
+                        Geert
 
- drivers/pinctrl/pinctrl-mcp23s08.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
-
-diff --git a/drivers/pinctrl/pinctrl-mcp23s08.c b/drivers/pinctrl/pinctrl-mcp23s08.c
-index 5d7a851..b727de56 100644
---- a/drivers/pinctrl/pinctrl-mcp23s08.c
-+++ b/drivers/pinctrl/pinctrl-mcp23s08.c
-@@ -881,6 +881,10 @@ static int mcp23s08_probe_one(struct mcp23s08 *mcp, struct device *dev,
- 	if (ret < 0)
- 		goto fail;
- 
-+	ret = devm_gpiochip_add_data(dev, &mcp->chip, mcp);
-+	if (ret < 0)
-+		goto fail;
-+
- 	mcp->irq_controller =
- 		device_property_read_bool(dev, "interrupt-controller");
- 	if (mcp->irq && mcp->irq_controller) {
-@@ -922,10 +926,6 @@ static int mcp23s08_probe_one(struct mcp23s08 *mcp, struct device *dev,
- 			goto fail;
- 	}
- 
--	ret = devm_gpiochip_add_data(dev, &mcp->chip, mcp);
--	if (ret < 0)
--		goto fail;
--
- 	if (one_regmap_config) {
- 		mcp->pinctrl_desc.name = devm_kasprintf(dev, GFP_KERNEL,
- 				"mcp23xxx-pinctrl.%d", raw_chip_address);
 -- 
-1.8.3.1
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
