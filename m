@@ -2,107 +2,60 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id E56D1448D1
-	for <lists+linux-gpio@lfdr.de>; Thu, 13 Jun 2019 19:12:24 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C962844ABB
+	for <lists+linux-gpio@lfdr.de>; Thu, 13 Jun 2019 20:33:16 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729123AbfFMRL1 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 13 Jun 2019 13:11:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54514 "EHLO mail.kernel.org"
+        id S1725981AbfFMSdQ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 13 Jun 2019 14:33:16 -0400
+Received: from smtp3.ono.com ([62.42.230.163]:25973 "EHLO smtp3.ono.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729166AbfFMRLY (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Thu, 13 Jun 2019 13:11:24 -0400
-Received: from mail-qt1-f169.google.com (mail-qt1-f169.google.com [209.85.160.169])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B3C3C217D9;
-        Thu, 13 Jun 2019 17:11:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560445883;
-        bh=zXxn0DZZzDqw7OoZuqRBZa3+NRFbt9j4/8PtEklx0ks=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=z6QX77MEL+lVTwICJFn4lx/RYfLqUuktVzenVzi/xypIH3UcvaG4r71l7+wQ0UtEQ
-         77w8cr+DCRXNO+kGefwibUjePyZcggjFxjb/OyjvBNs0qX/ZCCaagbGAGepZh82Fb8
-         78Fi+KGZAlC2CadDDN6Mv/Pcqz8geGb2RALiMIUU=
-Received: by mail-qt1-f169.google.com with SMTP id 33so15260222qtr.8;
-        Thu, 13 Jun 2019 10:11:23 -0700 (PDT)
-X-Gm-Message-State: APjAAAUea2kZ2y2Pe/A/Yq8z9AOb7fC+1WMXG/ZEO/VDzH0I8ocpYILl
-        xoJTY2WsKz+H+srGn/wBhHZNmdWE/pr7QTwUPA==
-X-Google-Smtp-Source: APXvYqxPx+RzHImrfYff7rhrQ4nBX3av55NJRHWJ45TzZYNcBbf30JPqZBJ3v2N/ISXb3erZEUw1S75dSeXuFTMiFz8=
-X-Received: by 2002:aed:3b33:: with SMTP id p48mr69738055qte.143.1560445882940;
- Thu, 13 Jun 2019 10:11:22 -0700 (PDT)
+        id S1727058AbfFMSdP (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Thu, 13 Jun 2019 14:33:15 -0400
+X-Junkmail-Premium-Raw: score=16/50,refid=2.7.2:2019.6.13.175116:17:16.798,ip=62.42.230.144,rules=__HAS_MSGID,
+ __SANE_MSGID, MSGID_JMAIL_DEFAULT, INVALID_MSGID_NO_FQDN, __HAS_FROM,
+ __HAS_REPLYTO, __FRAUD_WEBMAIL_REPLYTO, __SUBJ_ALPHA_END, __MIME_VERSION,
+ __CT, __CT_TEXT_PLAIN, __CTE, MISSING_HEADERS, __ANY_URI,
+ __FRAUD_BODY_WEBMAIL, __URI_NO_WWW, __FRAUD_MONEY_FUNDS, ECARD_WORD,
+ __STOCK_PHRASE_7, __FRAUD_MONEY_BIG_COIN_DIG, __OEM_PRICE, __FRAUD_CONTACT,
+ __FRAUD_MONEY_CURRENCY_DOLLAR, __PHISH_SPEAR_ACCOUNT_1, __NO_HTML_TAG_RAW,
+ BODY_SIZE_600_699, BODYTEXTP_SIZE_3000_LESS, __MIME_TEXT_P1,
+ __MIME_TEXT_ONLY, __URI_NS, HTML_00_01, HTML_00_10, __FRAUD_MONEY_CURRENCY,
+ __FRAUD_MONEY_BIG_COIN, __FRAUD_MONEY_VALUE, __FRAUD_MONEY, FRAUD_X3,
+ BODY_SIZE_5000_LESS, __FRAUD_WEBMAIL, WEBMAIL_REPLYTO_NOT_FROM,
+ FRAUD_WEBMAIL_R_NOT_F, __FRAUD_COMMON, __MIME_TEXT_P,
+ __PHISH_SPEAR_STRUCTURE_1, BODY_SIZE_1000_LESS, BODY_SIZE_2000_LESS,
+ __PHISH_SPEAR_STRUCTURE_2, REPLYTO_FROM_DIFF_ADDY, NO_URI_HTTPS,
+ BODY_SIZE_7000_LESS, TO_MALFORMED
+Received: from resprs05 (62.42.230.144) by smtp3.ono.com (9.0.019.09-1)
+        id 5CC0A28F027D4432; Thu, 13 Jun 2019 20:32:34 +0200
+Received: from (149.126.75.6) by webmailcpr05n.ono.com;  Thu, 13 Jun 2019 20:32:28 +0200
+Message-ID: <1152764.527301560450748992.JavaMail.defaultUser@defaultHost>
+Date:   Thu, 13 Jun 2019 20:32:28 +0200 (CEST)
+From:   Kate Philips <o0fit@ono.com>
+Reply-To: atmvisa.dapartcard201@gmail.com
+Subject: Mrs: Kate Philips
 MIME-Version: 1.0
-References: <20190613170011.9647-1-thierry.reding@gmail.com>
-In-Reply-To: <20190613170011.9647-1-thierry.reding@gmail.com>
-From:   Rob Herring <robh@kernel.org>
-Date:   Thu, 13 Jun 2019 11:11:10 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqKiFzED-YaBFQ-PBnBBbDaC5yeri+pLG-PX=-wpaFfb=A@mail.gmail.com>
-Message-ID: <CAL_JsqKiFzED-YaBFQ-PBnBBbDaC5yeri+pLG-PX=-wpaFfb=A@mail.gmail.com>
-Subject: Re: [PATCH v2] driver: core: Allow subsystems to continue deferring probe
-To:     Thierry Reding <thierry.reding@gmail.com>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J . Wysocki" <rafael@kernel.org>,
-        Kevin Hilman <khilman@kernel.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Joerg Roedel <joro@8bytes.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        "open list:THERMAL" <linux-pm@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux IOMMU <iommu@lists.linux-foundation.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain;charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Jun 13, 2019 at 11:00 AM Thierry Reding
-<thierry.reding@gmail.com> wrote:
->
-> From: Thierry Reding <treding@nvidia.com>
->
-> Some subsystems, such as pinctrl, allow continuing to defer probe
-> indefinitely. This is useful for devices that depend on resources
-> provided by devices that are only probed after the init stage.
->
-> One example of this can be seen on Tegra, where the DPAUX hardware
-> contains pinmuxing controls for pins that it shares with an I2C
-> controller. The I2C controller is typically used for communication
-> with a monitor over HDMI (DDC). However, other instances of the I2C
-> controller are used to access system critical components, such as a
-> PMIC. The I2C controller driver will therefore usually be a builtin
-> driver, whereas the DPAUX driver is part of the display driver that
-> is loaded from a module to avoid bloating the kernel image with all
-> of the DRM/KMS subsystem.
->
-> In this particular case the pins used by this I2C/DDC controller
-> become accessible very late in the boot process. However, since the
-> controller is only used in conjunction with display, that's not an
-> issue.
->
-> Unfortunately the driver core currently outputs a warning message
-> when a device fails to get the pinctrl before the end of the init
-> stage. That can be confusing for the user because it may sound like
-> an unwanted error occurred, whereas it's really an expected and
-> harmless situation.
->
-> In order to eliminate this warning, this patch allows callers of the
-> driver_deferred_probe_check_state() helper to specify that they want
-> to continue deferring probe, regardless of whether we're past the
-> init stage or not. All of the callers of that function are updated
-> for the new signature, but only the pinctrl subsystem passes a true
-> value in the new persist parameter if appropriate.
->
-> Signed-off-by: Thierry Reding <treding@nvidia.com>
-> ---
-> Changes in v2:
-> - pass persist flag via flags parameter to make the function call easier
->   to understand
->
->  drivers/base/dd.c            | 19 ++++++++++++++-----
->  drivers/base/power/domain.c  |  2 +-
->  drivers/iommu/of_iommu.c     |  2 +-
->  drivers/pinctrl/devicetree.c |  9 +++++----
->  include/linux/device.h       | 18 +++++++++++++++++-
->  5 files changed, 38 insertions(+), 12 deletions(-)
+Am Mrs: Kate Philips 
 
-Acked-by: Rob Herring <robh@kernel.org>
+Sending this brief letter to for your partnership to transfer $ 6 
+million US Dollars. I shall send you more information and procedures 
+when I receive positive response from you. The fund
+Will be transfer to you through atm visa card, I have make a proper 
+arrangement with the bank so that they can transfer the fund to you 
+through atm visa card as soon as I receive your information I will
+Forward it to the bank so that the bank can send you the atm visa card, 
+contact me through my private email id
+(atmvisa.dapartcard201@gmail.com)call me if you are interested +226 65 
+36 97 57
+
+Mrs: Kate Philips
+
+
