@@ -2,73 +2,103 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id D26A9446F2
-	for <lists+linux-gpio@lfdr.de>; Thu, 13 Jun 2019 18:56:19 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 828344463D
+	for <lists+linux-gpio@lfdr.de>; Thu, 13 Jun 2019 18:50:10 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729994AbfFMQzt (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 13 Jun 2019 12:55:49 -0400
-Received: from conuserg-11.nifty.com ([210.131.2.78]:39797 "EHLO
-        conuserg-11.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729991AbfFMB4C (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 12 Jun 2019 21:56:02 -0400
-Received: from localhost.localdomain (p14092-ipngnfx01kyoto.kyoto.ocn.ne.jp [153.142.97.92]) (authenticated)
-        by conuserg-11.nifty.com with ESMTP id x5D1taul028457;
-        Thu, 13 Jun 2019 10:55:37 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-11.nifty.com x5D1taul028457
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1560390937;
-        bh=ScZXfHA5I2OdP0oKcfk/XaGT5+lYTeZZPKTtupuCqFo=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wGOQC5UfgE5jFShf/DcKOesKN/tflZU+OFAXLnTpi2DK00LmTchvDpv9kXYrRypvh
-         /MMn7w8kTUE69p/3XoqZQUwi7r74i72GoCRsHTFW4ZMzUyYOyXPfZElDDAda9f6JCd
-         X2N85gojmHqJQy6CBoYXnooIwQWAF6Y+6oJBEfr14Fs1VYWYJF28nhT88YodynHUvd
-         Lt/n7kuuFz92eSzfnufINmBoXWu5rNrS05pn4shVrEIrJJRMHJ10yMDpGCoNMKxJQU
-         FB8yDffdHwxSJXDVBLE5xWDr2YXwAI4T1Yy06O2jfK+SsMCNVApDJXcxqGuuO3n3vx
-         2nghYO0T9EwTg==
-X-Nifty-SrcIP: [153.142.97.92]
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-To:     linux-gpio@vger.kernel.org,
-        Linus Walleij <linus.walleij@linaro.org>
-Cc:     Masahiro Yamada <yamada.masahiro@socionext.com>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 2/2] pinctrl: make pinconf.h self-contained
-Date:   Thu, 13 Jun 2019 10:55:32 +0900
-Message-Id: <20190613015532.19685-2-yamada.masahiro@socionext.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190613015532.19685-1-yamada.masahiro@socionext.com>
-References: <20190613015532.19685-1-yamada.masahiro@socionext.com>
+        id S1725972AbfFMQuD (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 13 Jun 2019 12:50:03 -0400
+Received: from anchovy2.45ru.net.au ([203.30.46.146]:55054 "EHLO
+        anchovy2.45ru.net.au" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725835AbfFMEKd (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 13 Jun 2019 00:10:33 -0400
+Received: (qmail 16694 invoked by uid 5089); 13 Jun 2019 04:10:31 -0000
+Received: by simscan 1.2.0 ppid: 16625, pid: 16626, t: 0.0596s
+         scanners: regex: 1.2.0 attach: 1.2.0 clamav: 0.88.3/m:40/d:1950
+X-RBL:  $rbltext
+Received: from unknown (HELO preid-c7.electromag.com.au) (preid@electromag.com.au@203.59.235.95)
+  by anchovy3.45ru.net.au with ESMTPA; 13 Jun 2019 04:10:30 -0000
+Received: by preid-c7.electromag.com.au (Postfix, from userid 1000)
+        id 29984200A3930; Thu, 13 Jun 2019 12:10:26 +0800 (AWST)
+From:   Phil Reid <preid@electromag.com.au>
+To:     linus.walleij@linaro.org, jkridner@gmail.com,
+        m.felsch@pengutronix.de, poeschel@lemonage.de,
+        preid@electromag.com.au, gustavo@embeddedor.com,
+        linux-gpio@vger.kernel.org
+Subject: [PATCH v3 1/1] pinctlr: mcp23s08: Fix add_data and irqchip_add_nested call order
+Date:   Thu, 13 Jun 2019 12:10:23 +0800
+Message-Id: <1560399023-12638-1-git-send-email-preid@electromag.com.au>
+X-Mailer: git-send-email 1.8.3.1
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-This header uses 'bool', but it does not include any header by itself.
+Currently probing of the mcp23s08 results in an error message
+"detected irqchip that is shared with multiple gpiochips:
+please fix the driver"
 
-So, it could cause unknown type name error, depending on the header
-include order, although probably <linux/types.h> has been included by
-someone else.
+This is due to the following:
 
-Include <linux/types.h> to make it self-contained.
+Call to mcp23s08_irqchip_setup() with call hierarchy:
+mcp23s08_irqchip_setup()
+  gpiochip_irqchip_add_nested()
+    gpiochip_irqchip_add_key()
+      gpiochip_set_irq_hooks()
 
-Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+Call to devm_gpiochip_add_data() with call hierarchy:
+devm_gpiochip_add_data()
+  gpiochip_add_data_with_key()
+    gpiochip_add_irqchip()
+      gpiochip_set_irq_hooks()
+
+The gpiochip_add_irqchip() returns immediately if there isn't a irqchip
+but we added a irqchip due to the previous mcp23s08_irqchip_setup()
+call. So it calls gpiochip_set_irq_hooks() a second time.
+
+Fix this by moving the call to devm_gpiochip_add_data before
+the call to mcp23s08_irqchip_setup
+
+Fixes: 02e389e63 ("pinctrl: mcp23s08: fix irq setup order")
+Suggested-by: Marco Felsch <m.felsch@pengutronix.de>
+Signed-off-by: Phil Reid <preid@electromag.com.au>
 ---
 
- include/linux/pinctrl/pinconf.h | 2 ++
- 1 file changed, 2 insertions(+)
+Notes:
+    v3:
+    - Add fixes tag
+    
+    v2:
+    - remove unrelated whitespace changes
 
-diff --git a/include/linux/pinctrl/pinconf.h b/include/linux/pinctrl/pinconf.h
-index eb16a1e0bcfa..f8a8215e9021 100644
---- a/include/linux/pinctrl/pinconf.h
-+++ b/include/linux/pinctrl/pinconf.h
-@@ -11,6 +11,8 @@
- #ifndef __LINUX_PINCTRL_PINCONF_H
- #define __LINUX_PINCTRL_PINCONF_H
+ drivers/pinctrl/pinctrl-mcp23s08.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/drivers/pinctrl/pinctrl-mcp23s08.c b/drivers/pinctrl/pinctrl-mcp23s08.c
+index 5d7a851..b727de56 100644
+--- a/drivers/pinctrl/pinctrl-mcp23s08.c
++++ b/drivers/pinctrl/pinctrl-mcp23s08.c
+@@ -881,6 +881,10 @@ static int mcp23s08_probe_one(struct mcp23s08 *mcp, struct device *dev,
+ 	if (ret < 0)
+ 		goto fail;
  
-+#include <linux/types.h>
++	ret = devm_gpiochip_add_data(dev, &mcp->chip, mcp);
++	if (ret < 0)
++		goto fail;
 +
- struct pinctrl_dev;
- struct seq_file;
+ 	mcp->irq_controller =
+ 		device_property_read_bool(dev, "interrupt-controller");
+ 	if (mcp->irq && mcp->irq_controller) {
+@@ -922,10 +926,6 @@ static int mcp23s08_probe_one(struct mcp23s08 *mcp, struct device *dev,
+ 			goto fail;
+ 	}
  
+-	ret = devm_gpiochip_add_data(dev, &mcp->chip, mcp);
+-	if (ret < 0)
+-		goto fail;
+-
+ 	if (one_regmap_config) {
+ 		mcp->pinctrl_desc.name = devm_kasprintf(dev, GFP_KERNEL,
+ 				"mcp23xxx-pinctrl.%d", raw_chip_address);
 -- 
-2.17.1
+1.8.3.1
 
