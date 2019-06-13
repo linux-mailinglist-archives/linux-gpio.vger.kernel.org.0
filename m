@@ -2,173 +2,111 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 36C6A43A5E
-	for <lists+linux-gpio@lfdr.de>; Thu, 13 Jun 2019 17:21:01 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 80A9043A1E
+	for <lists+linux-gpio@lfdr.de>; Thu, 13 Jun 2019 17:19:26 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732019AbfFMPUk (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 13 Jun 2019 11:20:40 -0400
-Received: from mail-lf1-f67.google.com ([209.85.167.67]:32780 "EHLO
-        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732020AbfFMMwy (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 13 Jun 2019 08:52:54 -0400
-Received: by mail-lf1-f67.google.com with SMTP id y17so15002581lfe.0
-        for <linux-gpio@vger.kernel.org>; Thu, 13 Jun 2019 05:52:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=gwNxjWG8gQI5GgqIvq/lAc/Jdb6+55lVV208Tw8pEgk=;
-        b=oSjivdVlU9Sm07SzG22+RcLNFv+XUuw1bt1G54OlPCzmQieEZd/+Nr4sojeGWuTrgS
-         MuOWdPDVlBkOnAZDk08BA1CsYYbvLs4gCa5Q9LxP6Vl3YJGapkjO42aoTKCPcxz00wrh
-         KtJ4fB7I6HYQhVdOT/Fh2gISxa/87pc3R6a/3EVb5vRQj/Eojp4yd2WuEXjlgFhZdDBf
-         yNV+Z1HiCI0GjWl0vzWoJY1HOS4MptkwJBPKbYfs73t/rbmgUO1CY0FbuagchHMDuKzd
-         sBDG3TcZuW66KDCdRAYJu5hhamcemoMz9RG/nfWuESh/+AgGhoheq7CecDeQqgY6fSv9
-         24HA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=gwNxjWG8gQI5GgqIvq/lAc/Jdb6+55lVV208Tw8pEgk=;
-        b=W9xe0xKpYi9yNUUeKzYrgly5ex0+qRTeXjRnUIflC78u0QqWbMFUWvTxO7u0mdmtkj
-         5GAEYhgV+X5txRFEAYEHUM523YNwBJsMz89kNfaWg4fO0TlWddSHfBHFAVnAH3WSs/J7
-         8N7/mwQrToPnGIX63EtxVkdJ9ANXnibRS1Q1K/iRZx4KBD7tXnSrD6FU5LOIUuYoAC68
-         mzvg6VIf1t9ihIianABQiT9YNAJ9MMWxPBTtX4zWnbC45uQSk7+UC5QN8P1sD+qXMth3
-         oiS7tK1w0g01geQKPZnzwUwqVNKYatiPbTRb9zSW56ep7rQB22T1LMpGVbzwSGCFGdb/
-         dQQQ==
-X-Gm-Message-State: APjAAAXSrmbQaRwJ19paOGLokEt6nLznP2slBcJspb3BrTzuoQ5j5GPI
-        6idxgFp+VsfgSy/h9JkASNofWbYhcAczySade3zXKg==
-X-Google-Smtp-Source: APXvYqxaCjMi4oyf4GocqT+eEm1qxowC4wzM0YSXx7qe4cKDVB+5e6DRAwmbdgCmNzvKlpKfGIFH1kOriFPcaWrNIuo=
-X-Received: by 2002:ac2:5382:: with SMTP id g2mr43910753lfh.92.1560430372375;
- Thu, 13 Jun 2019 05:52:52 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190602205424.28674-1-linus.walleij@linaro.org>
- <20190603091045.GC27753@ulmo> <CACRpkda9AMOpLq=02qw_q9Kkr1osiLz3F=ikFATKCj5u84K2Bw@mail.gmail.com>
- <20190604125834.GQ16519@ulmo>
-In-Reply-To: <20190604125834.GQ16519@ulmo>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Thu, 13 Jun 2019 14:52:39 +0200
-Message-ID: <CACRpkdYm9Te5BGZH9nLdFEHGQ9kCH_qj98v4Dh69SroR6yMejQ@mail.gmail.com>
-Subject: Re: [PATCH 1/2] RFC: gpio: Add support for hierarchical IRQ domains
-To:     Thierry Reding <thierry.reding@gmail.com>
-Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        id S1732158AbfFMPSj (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 13 Jun 2019 11:18:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38886 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1732155AbfFMNFd (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Thu, 13 Jun 2019 09:05:33 -0400
+Received: from earth.universe (dyndsl-095-033-011-189.ewe-ip-backbone.de [95.33.11.189])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 67C3B205ED;
+        Thu, 13 Jun 2019 13:05:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1560431132;
+        bh=9nw7s7Y1QRBTXFeeD1F8tOL9Kaizm2l7e3Ph/Xz+h50=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=wzRm/x10/pYWTJzw5naJiqba5efR9LYMIKMLRdFAtvkvh4JkXIQ56p6+ZjI0kXE0E
+         4jpE1a6LzXszIazL6ARJUwzldZdqylsrebyOpqTNJ5qL7VHd/4wQCvVTMNCCqflaAB
+         cl/R3NEOjn2v+4zgAZE6fn0tBF9DEiTradMT58MI=
+Received: by earth.universe (Postfix, from userid 1000)
+        id 0F2303C0C77; Thu, 13 Jun 2019 15:05:30 +0200 (CEST)
+Date:   Thu, 13 Jun 2019 15:05:29 +0200
+From:   Sebastian Reichel <sre@kernel.org>
+To:     Lee Jones <lee.jones@linaro.org>
+Cc:     mazziesaccount@gmail.com, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Marc Zyngier <marc.zyngier@arm.com>,
-        Lina Iyer <ilina@codeaurora.org>,
-        Jon Hunter <jonathanh@nvidia.com>,
-        Sowjanya Komatineni <skomatineni@nvidia.com>,
-        Bitan Biswas <bbiswas@nvidia.com>, linux-tegra@vger.kernel.org,
-        Thierry Reding <treding@nvidia.com>
-Content-Type: text/plain; charset="UTF-8"
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-pm@vger.kernel.org, linux-rtc@vger.kernel.org
+Subject: Re: [PATCH v15 0/7] support ROHM BD70528 PMIC
+Message-ID: <20190613130529.kgswgbuszb24itxz@earth.universe>
+References: <cover.1559546139.git.matti.vaittinen@fi.rohmeurope.com>
+ <20190611200043.eib3g3acc7ilawsx@earth.universe>
+ <20190612060328.GQ4797@dell>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="z7gwwmvwfgzls6v6"
+Content-Disposition: inline
+In-Reply-To: <20190612060328.GQ4797@dell>
+User-Agent: NeoMutt/20180716
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Jun 4, 2019 at 2:58 PM Thierry Reding <thierry.reding@gmail.com> wrote:
 
-> The point that I'm trying to argue is that rather than find a
-> complicated data structure that can represent all sorts of possible
-> mappings, it'd be much simpler to just write code that can map from
-> one to another.
->
-> Some things are just much easier to write in code than in data.
+--z7gwwmvwfgzls6v6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-OK I get the point, but I wonder if it is really anything else than
-linear ranges here.
+Hi,
 
-> On Tegra for example, we use this code to compact the sparse DT number
-> space to the contiguous number space used by the GPIO chip:
->
->         port = fwspec->param[0] / 8;
->         pin = fwspec->param[0] % 8;
->
->         for (i = 0; i < port; i++)
->                 offset += gpio->soc->ports[i].pins;
+On Wed, Jun 12, 2019 at 07:03:28AM +0100, Lee Jones wrote:
+> On Tue, 11 Jun 2019, Sebastian Reichel wrote:
+> > On Mon, Jun 03, 2019 at 10:23:37AM +0300, Matti Vaittinen wrote:
+> > > Patch series introducing support for ROHM BD70528 PMIC
+> > > [...]
+> >=20
+> > I think all patches have been reviewed by the respective subsystem
+> > maintainers. Lee, can you provide an immutable branch with the MFD
+> > patches (1, 2, 4)? Looks like the other patches only depend on those
+> > and can go through their respective subsystems.
+>=20
+> Yes.  It's on my TODO list.
 
-That is a set of linear ranges.
+Thanks.
 
-> I've tested both ways, with just using plain gpiod_to_irq() or going via
-> the IRQ domain. Both times I tested with gpio-keys, so it all works as
-> expected.
+> Would you prefer this method over me just taking them all and sending
+> out a PR?  The latter is my usual flow, but I'm happy with either.
 
-OK then.
+Both methods are fine with me. I usually go with "my" method, since
+that results in less shared commits. It simplifies potential
+follow-up bug fixes, since there is only one tree to fix.
 
-> However, the problem with gpiochip_to_irq() is that it basically needs
-> to emulate as if data was coming from a device tree. That's basically
-> what you do in the twocell code as well. The only difference on Tegra,
-> again, is that we now need to expand the number space to the sparse DT
-> number space by filling in the holes again. This is needed to make sure
-> that when the IRQ fwspec is passed to the IRQ domain's .translate()
-> callback, the values in the fwspec actually correspond to the ones
-> defined by the DT.
+-- Sebastian
 
-Yeah I kind of get it now...
+--z7gwwmvwfgzls6v6
+Content-Type: application/pgp-signature; name="signature.asc"
 
-> > What would satisfy Tegra? I can think of trivial things like encoding a
-> > "range" (int n_hwirqs) in each entry if that makes things more
-> > convenient/faster when handling mapping of entire ranges.
->
-> Like I said, the above would work for Tegra. My only gripe with it is
-> that it's totally wasteful because we basically need 140 entries of the
-> above (that's roughly 1.5-2 KiB) to do what is essentially a 1:1
-> mapping.
+-----BEGIN PGP SIGNATURE-----
 
-It is not "totally wasteful" if the code can be reused with other
-SoCs.
+iQIzBAEBCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAl0CShYACgkQ2O7X88g7
++pr+dQ//UKZYRSKZHKIkw81U/LPaGmkXOWyyYGwVfxHDYeMyeHur/klljg+mU4bW
+gMCGCns23SP/L4c9lOc3aY/Ovkjuq2gjonKtMFo66fY9slf6MdnC4L9FNXXUqsPK
+oa8Fir0ful7FdJ4HxsxLqkiTT1wWDNRgchMI/iNEhcjMt14rlzwIM7wyktT8O/Zr
+9Om2Cx282JEE5hGbl2D98VPrR67vqNRqOwIhZ+lQBNgXiOUgvlh2UDqpXziOjdwX
+vxgmoxUB1v72itnyz0qf46L+ayqnPmBH6MSEdTYs5vYz4l64c4jIXoyyJ/pPr+ck
+rb6eygO0LkADnW6zab11yWn1HH/CYJG1TUNMNOw8a4RFPpCyDW17U5ksICi55hhx
+HrG1YXCPgpiGV2d0MawLwLhEbv3FXIYDPPt6xEne0FXUHg53apOQjmyPoGP404RN
+M7jJJlpkGyHd5N2iskFU79NBES64aHkc/uvmEZw56xHUVg0SZ9e/V7zLKWwxMYeM
+C0kaTjsN86xnoNwsMoVx94RiIjk38xDz1anaAafOtpkUxdFb2xL9qpGWiUlwZKVJ
+ALa7k8jleI0Mzv/fOFHGBZzkGoPCdqURkANKyCLHBA8Pi++nGR4RHF2Om/goK/mb
+pLme4LVfDKswR8HYUbrfCBLsG/uBNX1GfoEH9/CQ2gNKSphUZ90=
+=ScGm
+-----END PGP SIGNATURE-----
 
-> One one hand we need to translate the GPIO/IRQ specifier into the linear
-> domain of the GPIO/IRQ controller. Then in gpiochip_to_irq() we need to
-> go back and translate to the GPIO/IRQ specifier in order to please the
-> IRQ domain API. At the same time I don't think there's really a way
-> around that. Ultimately both the gpiochip_to_irq() and regular IRQ
-> mapping code paths end up calling irq_domain_ops.alloc(), which in turn
-> requires the struct irq_fwspec.
-
-Yeah I think you might need a custom .translate() function.
-Can I please implement it on the less complex ixp4xx first,
-before we move to the extra complicated Tegra186 problem?
-
-> The difference is that the *DT specifier* is *not* linear and *not* a
-> 1:1 mapping of the GPIO number space. That's the reason for doing the
-> back and forth conversion between the DT and GPIO number spaces.
-
-Yeah I get this... just hard to fit it in as it is evidently a bit
-of corner case. And it's not so good to design a generic
-feature in gpiolib (as I try to do) based on a corner case
-with strange DT specifiers.
-
-But let's add it when we need it, which may be step 2 then.
-
-> > Where is the gpiochip.irq.domain coming from in the Tegra186
-> > case?
->
-> Erm... this is using just the plain gpio_irq_chip helpers.
-> gpiochip_add_irqchip() ends up creating the IRQ domain.
-
-Actually this has become a real problem for me as maintainer
-now. And I'm talking about this:
-
-$ git grep add_simple drivers/gpio/gpiolib.c
-drivers/gpio/gpiolib.c:         gpiochip->irq.domain = irq_domain_add_simple(np,
-drivers/gpio/gpiolib.c: gpiochip->irq.domain = irq_domain_add_simple(of_node,
-
-There are two independent runpaths inside gpiolib for adding
-irqdomains and it is a mess and if it confuses me then it
-is going to confuse many others unless I'm entirely unfit
-for this maintenance job.
-
-We need to shrink gpiolib by initializing all gpio irqchips the
-same way before we start adding more fancy features.
-
-commit e0d89728981393b7d694bd3419b7794b9882c92d
-"gpio: Implement tighter IRQ chip integration"
-introduced these two runpaths, now we need to switch all
-existing irqchips over and delete the old code so that
-we don't mess things up even more and can't find our way
-out.
-
-Let's fix this first then move on to these new features.
-
-Yours,
-Linus Walleij
+--z7gwwmvwfgzls6v6--
