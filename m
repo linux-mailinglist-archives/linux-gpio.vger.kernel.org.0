@@ -2,27 +2,27 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 8D0014427D
-	for <lists+linux-gpio@lfdr.de>; Thu, 13 Jun 2019 18:24:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D8C3144119
+	for <lists+linux-gpio@lfdr.de>; Thu, 13 Jun 2019 18:12:25 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731037AbfFMQXC (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 13 Jun 2019 12:23:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55352 "EHLO mail.kernel.org"
+        id S1731233AbfFMQLz (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 13 Jun 2019 12:11:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60548 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731033AbfFMIh4 (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Thu, 13 Jun 2019 04:37:56 -0400
+        id S1731227AbfFMInW (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Thu, 13 Jun 2019 04:43:22 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D405B2146F;
-        Thu, 13 Jun 2019 08:37:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E6FC921479;
+        Thu, 13 Jun 2019 08:43:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560415075;
-        bh=/a0mpmk+F++Irb56hdEMgOxXqHCddPGLkXPRjC/8KCM=;
+        s=default; t=1560415401;
+        bh=0HMVUAE47VpSgxlNl7X88UEuX8X30qFoWHMuEMSiDW8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jZqhXu/lwICh17TQReV4DrsFmZDObQ2hjBAUQbh2ZUMMFF3ZuyTeOkCRYMQ+WmaBp
-         2ixYS/R7WYNIS0eb1C9gmxd4iP35wG7Dyia9N56MbcCkK5pFbKoBOKSAnZyy7HbhqP
-         XL4MZddvNqHcDKRI6MRpWAPEtlbflbD98Lp0aNws=
+        b=B8Adj9Rjj0gKOev/vcK6J2qgxx2GIdVOSCAUGHA68Vd/tkL7iNoG56lMrosJtIT4w
+         zwpkdkFbVhIboyq24KyrlSeTR5bCBOIiDDFo68T0Qpmrmu38yX+xfJoOaZjxOUfrnl
+         OAR3zfWZSLzNiEcQ7FImIsuj6C1xpWHOeW2OPH3Q=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -33,12 +33,12 @@ Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Heiner Kallweit <hkallweit1@gmail.com>,
         Fabio Estevam <festevam@gmail.com>, linux-gpio@vger.kernel.org,
         linux-imx@nxp.com, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 77/81] gpio: vf610: Do not share irq_chip
-Date:   Thu, 13 Jun 2019 10:34:00 +0200
-Message-Id: <20190613075654.646180331@linuxfoundation.org>
+Subject: [PATCH 4.19 112/118] gpio: vf610: Do not share irq_chip
+Date:   Thu, 13 Jun 2019 10:34:10 +0200
+Message-Id: <20190613075650.784121106@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20190613075649.074682929@linuxfoundation.org>
-References: <20190613075649.074682929@linuxfoundation.org>
+In-Reply-To: <20190613075643.642092651@linuxfoundation.org>
+References: <20190613075643.642092651@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -70,7 +70,7 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 12 insertions(+), 14 deletions(-)
 
 diff --git a/drivers/gpio/gpio-vf610.c b/drivers/gpio/gpio-vf610.c
-index 1309b444720e..3210fba16a9b 100644
+index 7e09ce75ffb2..a9cb5571de54 100644
 --- a/drivers/gpio/gpio-vf610.c
 +++ b/drivers/gpio/gpio-vf610.c
 @@ -37,6 +37,7 @@ struct fsl_gpio_soc_data {
@@ -105,8 +105,8 @@ index 1309b444720e..3210fba16a9b 100644
 -
  static int vf610_gpio_probe(struct platform_device *pdev)
  {
- 	const struct of_device_id *of_id = of_match_device(vf610_gpio_dt_ids,
-@@ -261,6 +251,7 @@ static int vf610_gpio_probe(struct platform_device *pdev)
+ 	struct device *dev = &pdev->dev;
+@@ -259,6 +249,7 @@ static int vf610_gpio_probe(struct platform_device *pdev)
  	struct vf610_gpio_port *port;
  	struct resource *iores;
  	struct gpio_chip *gc;
@@ -114,7 +114,7 @@ index 1309b444720e..3210fba16a9b 100644
  	int i;
  	int ret;
  
-@@ -297,6 +288,14 @@ static int vf610_gpio_probe(struct platform_device *pdev)
+@@ -295,6 +286,14 @@ static int vf610_gpio_probe(struct platform_device *pdev)
  	gc->direction_output = vf610_gpio_direction_output;
  	gc->set = vf610_gpio_set;
  
@@ -129,7 +129,7 @@ index 1309b444720e..3210fba16a9b 100644
  	ret = gpiochip_add_data(gc, port);
  	if (ret < 0)
  		return ret;
-@@ -308,14 +307,13 @@ static int vf610_gpio_probe(struct platform_device *pdev)
+@@ -306,14 +305,13 @@ static int vf610_gpio_probe(struct platform_device *pdev)
  	/* Clear the interrupt status register for all GPIO's */
  	vf610_gpio_writel(~0, port->base + PORT_ISFR);
  
