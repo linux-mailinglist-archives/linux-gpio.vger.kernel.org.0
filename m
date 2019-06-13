@@ -2,108 +2,118 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 31C5C4400E
-	for <lists+linux-gpio@lfdr.de>; Thu, 13 Jun 2019 18:02:55 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4868843F31
+	for <lists+linux-gpio@lfdr.de>; Thu, 13 Jun 2019 17:55:32 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732896AbfFMQCg (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 13 Jun 2019 12:02:36 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:40180 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731396AbfFMIrl (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 13 Jun 2019 04:47:41 -0400
-Received: by mail-wr1-f67.google.com with SMTP id p11so19817477wre.7;
-        Thu, 13 Jun 2019 01:47:39 -0700 (PDT)
+        id S1731551AbfFMPzb (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 13 Jun 2019 11:55:31 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:33764 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731545AbfFMIwJ (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 13 Jun 2019 04:52:09 -0400
+Received: by mail-wm1-f66.google.com with SMTP id h19so6092170wme.0
+        for <linux-gpio@vger.kernel.org>; Thu, 13 Jun 2019 01:52:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=linaro.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=wXnFbw2PnvR/3sq9KGlaSJyBR1d6hKrCN6HutVmQhHo=;
-        b=Xrc+XlYPouXlKqyLZADHlMsX4sJPL+nk1A5YiLSgf1IeAJ4uOp5GvZDKCYogM4W2jD
-         bHUq17sfziazSYJPcdPUPWl2bOV+4w2esMkk1cUJhuRfAGYsArKTpHg0T1K/Z1xL2DcN
-         1I7+yJmbMY3j3t62QlaAqlXE3EBmV4cqS+FEB7lUehQ7MkxbsPOMzmQXIc2pbuK+a4fI
-         Q7lVgeRNI+Ev0QsXDE/r+SRsaZVHh/oE1JyI+bHivqw1flFeF1aYyaK9ZU8ClYNI+xad
-         ZNuieNY3F/jQdjuOe/qQiWBRKBAvK70sq0SEITpFvagUCC2TwaXSoSWcwW+VOywtK5SE
-         pQNQ==
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=WVZ+rcl5b/TJbfPdwJog0AuENCxf5fDzdWtd1QjNORs=;
+        b=KhRHPOT+eeCOo3Rd17kUr4gESsUUD6oB/H9FuZEkVh5X07Q3459tvOQUJY/t2LgvNt
+         Y6UyMSWniCeuvWdTLwzXcrwj8Ag2k85/UAKnJIhY5spD8wVOGOY6Y8zvi4mW2VfDWbXe
+         vd8pGQ9f8dOsk6c2/n+PJ2/q8VFeGZ26/hoUpLv4E1XmnO0ExHLiiDk+i00pEEkL7uic
+         pxH9oKrv2e5eXF7YXI8BST1o0KYCgCjFx7reqdsSEcPxLCBbJ8GkRCoqCc4CNS9k83Gf
+         TBo2kDnqQIhU+z+sB42tEAztWO1cS9IGrfz6leTNKEN3uIj4+cngS7qju+ylhNPkEs5g
+         md5g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=wXnFbw2PnvR/3sq9KGlaSJyBR1d6hKrCN6HutVmQhHo=;
-        b=Y6zYBUZkU+1wAHoNnJ4XJHxgINvKrL8xeansXXw36tvedhPyq1PQI61+3NKk9Ey2sq
-         lVtVmCc+buqwzY7RVJJa0ElS5O+3EXHV4jv+FWNbm6XIVj0h/MxIwKmxlQW4Z4yArSuG
-         1GboxLQ678ilNazHb7d3uTEme3o6xKGkItk4V4wilT9f5wleG1gUziSvEWMn+8m7J8Oy
-         BKH1UjoNEayWWYeRDWoO3uIYMX5i2WdTGvfV+ZrvozM24Il2790wDFbLb+0aSsxaNx4y
-         pvWs9yYqQ3kAH8DofGhyo7jVWMdTufNnQD6KnxFmroKswQ/vz8zpVBzL1/O+vdh1iDH4
-         QaYg==
-X-Gm-Message-State: APjAAAWLpu9QahnsdP7WT6ZQIi/zPTYSIv76tv3YqthEazZ+rvnN5TwL
-        fvcjUsHjOl2YkyHK0xaAYzoX8m+w
-X-Google-Smtp-Source: APXvYqyieJMlQh1zYJusV9EMt5J3/JRv0A5KW6y2qJVYv7L+DGJAqn0xNHCGTaZ9cMqPUmEL2IM6TQ==
-X-Received: by 2002:adf:f7d0:: with SMTP id a16mr11798887wrq.246.1560415658589;
-        Thu, 13 Jun 2019 01:47:38 -0700 (PDT)
-Received: from localhost (p2E5BEF36.dip0.t-ipconnect.de. [46.91.239.54])
-        by smtp.gmail.com with ESMTPSA id l12sm1882585wmj.22.2019.06.13.01.47.37
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Thu, 13 Jun 2019 01:47:37 -0700 (PDT)
-Date:   Thu, 13 Jun 2019 10:47:36 +0200
-From:   Thierry Reding <thierry.reding@gmail.com>
-To:     Krishna Yarlagadda <kyarlagadda@nvidia.com>
-Cc:     linus.walleij@linaro.org, jonathanh@nvidia.com,
-        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-tegra@vger.kernel.org, devicetree@vger.kernel.org,
-        pdeschrijver@nvidia.com, josephl@nvidia.com, smangipudi@nvidia.com,
-        ldewangan@nvidia.com, vidyas@nvidia.com
-Subject: Re: [PATCH V3 4/4] soc/tegra: select pinctrl for Tegra194
-Message-ID: <20190613084736.GA30664@ulmo>
-References: <1558007594-14824-1-git-send-email-kyarlagadda@nvidia.com>
- <1558007594-14824-4-git-send-email-kyarlagadda@nvidia.com>
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=WVZ+rcl5b/TJbfPdwJog0AuENCxf5fDzdWtd1QjNORs=;
+        b=qZhH6ExzJOU9ttByXJ7gxNXE1824Kvcf1OOIqKa6+q7uOc1Wm/gKjOd8eW6snsSqtY
+         nWcNKptqVMxUNapc/yKO7ljGRXTO3qFHRg9zMlM+37bd+he1uKD7XC76vsvpW4DeIPcP
+         bJ8jgXB8qunZzVnHnlyorESP23N9Uq6Ib0avKX/gHWjYXt7zIlZvMQA3CqiLA+mLJuiv
+         y4UAhZZt7ImX+eM4Yd71j91VOzSwPfeXqSODz0elhOPcRlZHuYoAuU5mrOCdrbU7Qh44
+         Q5iL9HmVP8obWFm0zsX+Ty4KM/j/SYLHeprymVAlukOtm34jH1k4/xN/SijvrgJWf78a
+         w8KQ==
+X-Gm-Message-State: APjAAAXMUIWSH9on11p8AhI/7h2a/mtxDKGiBVo1+EyK2BQdvvi1h3kW
+        niNNT2cev2ffK2VIhT/+GdfCvg==
+X-Google-Smtp-Source: APXvYqwMM9q5lwGeSSVSnEBxvQ/pJDmMKfQGsGMfurbu78aCJ/K2e5YVPjas2AvJJWv2rHYYLvuXTw==
+X-Received: by 2002:a1c:9d86:: with SMTP id g128mr2931036wme.51.1560415927490;
+        Thu, 13 Jun 2019 01:52:07 -0700 (PDT)
+Received: from dell ([2.27.35.243])
+        by smtp.gmail.com with ESMTPSA id s7sm4929762wmc.2.2019.06.13.01.52.06
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 13 Jun 2019 01:52:06 -0700 (PDT)
+Date:   Thu, 13 Jun 2019 09:52:04 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Wolfram Sang <wsa@the-dreams.de>
+Cc:     alokc@codeaurora.org, andy.gross@linaro.org,
+        david.brown@linaro.org, wsa+renesas@sang-engineering.com,
+        bjorn.andersson@linaro.org, linus.walleij@linaro.org,
+        balbi@kernel.org, gregkh@linuxfoundation.org,
+        ard.biesheuvel@linaro.org, jlhugo@gmail.com,
+        linux-i2c@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-gpio@vger.kernel.org, linux-usb@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 1/8] i2c: i2c-qcom-geni: Provide support for ACPI
+Message-ID: <20190613085204.GF4660@dell>
+References: <20190610084213.1052-1-lee.jones@linaro.org>
+ <20190612103453.ccet2pneairnlpcc@ninjato>
+ <20190612104011.GA4660@dell>
+ <20190612104459.gvji3qxym5s4odfq@ninjato>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="SLDf9lqlvOQaIe6s"
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <1558007594-14824-4-git-send-email-kyarlagadda@nvidia.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190612104459.gvji3qxym5s4odfq@ninjato>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+On Wed, 12 Jun 2019, Wolfram Sang wrote:
 
---SLDf9lqlvOQaIe6s
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+> 
+> > There are no cross-subsystem build dependencies on any of these
+> > patches.  The only reason they are bundled together in the same
+> > patch-set is for cross-subsystem visibility and understanding.
+> > 
+> > There is wide interest in these devices.
+> 
+> I see. That would have been a great cover-letter, Lee ;) Thanks for the
+> heads up!
 
-On Thu, May 16, 2019 at 05:23:14PM +0530, Krishna Yarlagadda wrote:
-> Select PINCTRL_TEGRA194 by default for Tegra194 SOC needed
-> for dynamically controlling PCIe pins
->=20
-> Signed-off-by: Krishna Yarlagadda <kyarlagadda@nvidia.com>
-> ---
->  drivers/soc/tegra/Kconfig | 1 +
->  1 file changed, 1 insertion(+)
+:)
 
-Applied to for-5.3/soc, thanks.
+> > > Also, the current maintainer entry for this driver looks like:
+> > > 
+> > > drivers/i2c/busses/i2c-qcom-geni.c:
+> > >         Andy Gross <agross@kernel.org> (maintainer:ARM/QUALCOMM SUPPORT)
+> > >         David Brown <david.brown@linaro.org> (maintainer:ARM/QUALCOMM SUPPORT)
+> > >         Alok Chauhan <alokc@codeaurora.org> (supporter:QUALCOMM GENERIC INTERFACE I2C DRIVER)
+> > > 
+> > > I didn't hear from those people yet, would be great to have their acks.
+> > 
+> > I will see if I can rouse them from their slumber.
+> 
+> Please do. If they are not to reach, we probably need to update the
+> entry...
 
-Thierry
+I contacted both of them.
 
---SLDf9lqlvOQaIe6s
-Content-Type: application/pgp-signature; name="signature.asc"
+ Andy doesn't touch anything that isn't QUP based (8994 and older).
 
------BEGIN PGP SIGNATURE-----
+ David doesn't deal with MSM platforms if Andy is available. 
 
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl0CDaUACgkQ3SOs138+
-s6Gw+Q/9GEMCAGe1/osKqqMZNuojtuyy3aCNb+QVhJWlJVtLn/VtdBx0AqAuAf63
-2HPt17CnmoqKcToQFlPHma+uC0BEiNuPx7E0dPLCddNI9JrNxqNuU7JaPN81WsXi
-Spydy5O5ioyDK42BTkWtljUAVHT8KwUDuLDMlvoINV8pWGCRKmU6CuN4+7XraC5R
-kZRutq0uc0bILzcVxVbzbe449ZF3y2aZyHdayaEYwPWmpN0JXWkmFIr093TWK7li
-NE+KSHUQBxujoct5IkKzgDTHAHLn3edNlzxXDLM1aM3QVN1BIo0ADnybyyFBj69y
-bhiOeczT5iI74h8cuNGf5BwCsgk2CgeQX4M3DpQMXHfdkZchqC/xTbSuafI9BiAS
-X9sip1PaNzHJyPMrfefXtx2uZJFz8IU6LGUqKsOfomFS4JkvJ/DKJtBaTMU8C+yq
-U2FCfMJfm79zUe1Gii2dHK2BCjj2Op8LRW3vKOP9B+qL+EIdBk75VxwbJABAI2ly
-C7B2Rkjl4JZ/Q0Co8+vHQ6DSxjNPJB7xnaM0S4oF0TFz++ykcLrnEVZP5QsevWrk
-Hjdysh9Od2rXOKhr3NlFHlarY8ZcvQGg2KTLiKpa4IOrC8MAKabs2AmKlsCjxA24
-FgzBW5XkLVHGKkUy5SmJSgE2B2Xlb/k9denLDi1UotFiEAMBhZ8=
-=7+8+
------END PGP SIGNATURE-----
+So I guess the decision is yours.  Seeing at this patch is pretty
+trivial and has our ACPI expert's Ack, the decision shouldn't be a
+difficult one.
 
---SLDf9lqlvOQaIe6s--
+-- 
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
