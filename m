@@ -2,131 +2,103 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 91266460F6
-	for <lists+linux-gpio@lfdr.de>; Fri, 14 Jun 2019 16:36:45 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CDDA2461E6
+	for <lists+linux-gpio@lfdr.de>; Fri, 14 Jun 2019 17:00:48 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728313AbfFNOgk (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 14 Jun 2019 10:36:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35022 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728201AbfFNOgk (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Fri, 14 Jun 2019 10:36:40 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5B3C42064A;
-        Fri, 14 Jun 2019 14:36:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560522998;
-        bh=LMq/Sb352anykVPMDvbfaZbQVk5PdaiQxrm+VWdoXPA=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=VXXdGL8qWGjsbWS38tMiiBeKXuvQtjJMM8YxL6EZvTVr7+IshxL8aWkak4YPBdy7I
-         xlaNFx0B10KcjATD+ixICuTu95BuX7s0tiN4HUfFvGxKqOkjY91wsoRYYTne3DSpXa
-         of+fGHu5khkS/PMYStOw53xAKyVZ/wybwY3YdyJE=
-Date:   Fri, 14 Jun 2019 16:36:36 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     "Rafael J. Wysocki" <rafael@kernel.org>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Kevin Hilman <khilman@kernel.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Joerg Roedel <joro@8bytes.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Rob Herring <robh@kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        linux-gpio@vger.kernel.org,
-        "open list:AMD IOMMU (AMD-VI)" <iommu@lists.linux-foundation.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2] driver: core: Allow subsystems to continue deferring
- probe
-Message-ID: <20190614143636.GB11550@kroah.com>
-References: <20190613170011.9647-1-thierry.reding@gmail.com>
- <20190614091058.GA25912@kroah.com>
- <20190614093856.GC15526@ulmo>
- <CAJZ5v0jeH3x+kfAH9D5H6507-iBdVRhAfEKb-NOdhiutwR9O_Q@mail.gmail.com>
+        id S1725780AbfFNPAr (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 14 Jun 2019 11:00:47 -0400
+Received: from conssluserg-01.nifty.com ([210.131.2.80]:32538 "EHLO
+        conssluserg-01.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725789AbfFNPAr (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 14 Jun 2019 11:00:47 -0400
+Received: from mail-ua1-f52.google.com (mail-ua1-f52.google.com [209.85.222.52]) (authenticated)
+        by conssluserg-01.nifty.com with ESMTP id x5EF0NfZ011606;
+        Sat, 15 Jun 2019 00:00:23 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-01.nifty.com x5EF0NfZ011606
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1560524423;
+        bh=/s60AkWF0U1BOgzE1pN5P3jd9rwyhwm9G2111VynPfM=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=j3ka3syqoZGnKU6PIqP460OogrN7bfS2KlW/d0g1RrH94g8f+c0RcpyZzmFuWpRBX
+         u8Qduu0UTW/pmCa5kJbCdYYPVvlODQMsAAthu2I8+xS67NsZZ/enduH0BYVSE83YUB
+         +JEdn2Tiia9HBMDfbQNfrfK7J2DdrFFcSzK9LAdTRGsmCjEYu/PQDhhsOHRMVCL3qT
+         O6BmNfJbPNG//EriZjzWF0TuozRBPgbHEQJhKp2pL9JsQvgh96B2xHLji32qeWZ3bd
+         aVej2aN+08Nael3hI9B6Y93Y5B4A3iBBOSQiwvAPmBGzGniRn7D/+AVqgFMWJviQ82
+         mBDdSpdnmkbZA==
+X-Nifty-SrcIP: [209.85.222.52]
+Received: by mail-ua1-f52.google.com with SMTP id o2so995729uae.10;
+        Fri, 14 Jun 2019 08:00:23 -0700 (PDT)
+X-Gm-Message-State: APjAAAWiohvROaBHGZEChGfJz5JUSKLm/jlG68RD6xr8HpXzP4WofUUF
+        M8TPCYc5wwZBlGVKpvBIzvbFxXr1k2b11Rq05DQ=
+X-Google-Smtp-Source: APXvYqzUYCLJOr8aWbp0616zcs4Ga7lShn6QBAoUMQvxu9NG2N+7WApoM0G27MKsghofgy4I6fzNxJ9gMOI/ClIB1eQ=
+X-Received: by 2002:ab0:5ea6:: with SMTP id y38mr24152907uag.40.1560524422353;
+ Fri, 14 Jun 2019 08:00:22 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAJZ5v0jeH3x+kfAH9D5H6507-iBdVRhAfEKb-NOdhiutwR9O_Q@mail.gmail.com>
-User-Agent: Mutt/1.12.0 (2019-05-25)
+References: <20190613015532.19685-1-yamada.masahiro@socionext.com> <cc68b375-6011-6bbf-8f0b-c2963237a743@metux.net>
+In-Reply-To: <cc68b375-6011-6bbf-8f0b-c2963237a743@metux.net>
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+Date:   Fri, 14 Jun 2019 23:59:45 +0900
+X-Gmail-Original-Message-ID: <CAK7LNAQ4KmXd0J2UYfi9WiisnfGa4g62BH2S46ELn4fYG05UcA@mail.gmail.com>
+Message-ID: <CAK7LNAQ4KmXd0J2UYfi9WiisnfGa4g62BH2S46ELn4fYG05UcA@mail.gmail.com>
+Subject: Re: [PATCH 1/2] pinctrl: remove unneeded #ifdef around declarations
+To:     "Enrico Weigelt, metux IT consult" <lkml@metux.net>
+Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Jun 14, 2019 at 12:10:10PM +0200, Rafael J. Wysocki wrote:
-> On Fri, Jun 14, 2019 at 11:39 AM Thierry Reding
-> <thierry.reding@gmail.com> wrote:
+On Fri, Jun 14, 2019 at 10:21 PM Enrico Weigelt, metux IT consult
+<lkml@metux.net> wrote:
+>
+> On 13.06.19 03:55, Masahiro Yamada wrote:
+> > What is the point in surrounding the whole of declarations with
+> > ifdef like this?
 > >
-> > On Fri, Jun 14, 2019 at 11:10:58AM +0200, Greg Kroah-Hartman wrote:
-> > > On Thu, Jun 13, 2019 at 07:00:11PM +0200, Thierry Reding wrote:
-> > > > From: Thierry Reding <treding@nvidia.com>
-> > > >
-> 
-> [cut]
-> 
+> >   #ifdef CONFIG_FOO
+> >   int foo(void);
+> >   #endif
 > >
-> > To avoid further back and forth, what exactly is it that you would have
-> > me do? That is, what do you consider to be the correct way to do this?
+> > If CONFIG_FOO is not defined, all callers of foo() will fail
+> > with implicit declaration errors since the top Makefile adds
+> > -Werror-implicit-function-declaration to KBUILD_CFLAGS.
 > >
-> > Would you prefer me to add another function with a different name that
-> > reimplements the functionality only with the exception? Something along
-> > the lines of:
-> >
-> >         int driver_deferred_probe_check_state_continue(struct device *dev)
-> >         {
-> >                 int ret;
-> >
-> >                 ret = driver_deferred_probe_check_state(dev);
-> >                 if (ret == -ENODEV)
-> >                         return -EPROBE_DEFER;
-> >
-> >                 return ret;
-> >         }
-> >
-> > ? I'd need to split that up some more to avoid the warning that the
-> > inner function prints before returning -ENODEV, but that's a minor
-> > detail. Would that API be more to your liking?
-> 
-> Well, why don't you do
-> 
-> static int deferred_probe_check_state_internal(struct device *dev)
-> {
->         if (!initcalls_done)
->                 return -EPROBE_DEFER;
-> 
->         if (!deferred_probe_timeout) {
->                 dev_WARN(dev, "deferred probe timeout, ignoring dependency");
->                 return -ETIMEDOUT;
->         }
-> 
->         return 0;
-> }
-> 
-> int driver_deferred_probe_check_state(struct device *dev)
-> {
->         int ret = deferred_probe_check_state_internal(dev);
-> 
->         if (ret)
->                  return ret;
-> 
->         dev_warn(dev, "ignoring dependency for device, assuming no driver");
->         return -ENODEV;
-> }
-> 
-> int driver_deferred_probe_check_state_continue(struct device *dev)
-> {
->         int ret = deferred_probe_check_state_internal(dev);
-> 
->         if (ret)
->                  return ret;
-> 
->         return -EPROBE_DEFER;
-> }
+> > This breaks the build earlier when you are doing something wrong.
+> > That's it.
+>
+> hmm, in general I like the idea of breaking the build as early as
+> possible. depending on your available cpu power, a kernel build can
+> take a while, and it could be a huge waste of time when having to
+> wait for link stage, just to find out about missing functions.
+>
+> @linus: what's your oppinion ?
+>
+>
+> --mtx
+>
+> --
+> Enrico Weigelt, metux IT consult
+> Free software and Linux embedded engineering
+> info@metux.net -- +49-151-27565287
 
-Yes, that's much more sane.  Self-decribing apis are the key here, I did
-not want a boolean flag, or any other flag, as part of the public api as
-they do not describe what the call does at all.
 
-thanks,
+My previous clean-up (http://patchwork.ozlabs.org/patch/1112656/)
+broke this build.
 
-greg k-h
+And, this patch will fix the build issue.
+
+Did you realize the madness of
+surrounding the forward declarations with #ifdef ?
+
+
+All GPIO/pinctrl headers are written in a bad way.
+
+Linus Walleij must realize he was doing *wrong*.
+
+
+-- 
+Best Regards
+Masahiro Yamada
