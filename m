@@ -2,83 +2,87 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 2A13E45DFE
-	for <lists+linux-gpio@lfdr.de>; Fri, 14 Jun 2019 15:21:34 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 86D6E45FAE
+	for <lists+linux-gpio@lfdr.de>; Fri, 14 Jun 2019 15:56:45 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727696AbfFNNVd (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 14 Jun 2019 09:21:33 -0400
-Received: from mout.kundenserver.de ([212.227.17.13]:58123 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727686AbfFNNVd (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 14 Jun 2019 09:21:33 -0400
-Received: from [192.168.1.110] ([77.4.92.40]) by mrelayeu.kundenserver.de
- (mreue106 [212.227.15.183]) with ESMTPSA (Nemesis) id
- 1Mr8O8-1iOb1z0gXG-00oGea; Fri, 14 Jun 2019 15:21:29 +0200
-Subject: Re: [PATCH 1/2] pinctrl: remove unneeded #ifdef around declarations
-To:     Masahiro Yamada <yamada.masahiro@socionext.com>,
-        linux-gpio@vger.kernel.org,
-        Linus Walleij <linus.walleij@linaro.org>
-Cc:     linux-kernel@vger.kernel.org
-References: <20190613015532.19685-1-yamada.masahiro@socionext.com>
-From:   "Enrico Weigelt, metux IT consult" <lkml@metux.net>
-Organization: metux IT consult
-Message-ID: <cc68b375-6011-6bbf-8f0b-c2963237a743@metux.net>
-Date:   Fri, 14 Jun 2019 15:21:27 +0200
-User-Agent: Mozilla/5.0 (X11; Linux i686 on x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.2.1
+        id S1728268AbfFNNzi (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 14 Jun 2019 09:55:38 -0400
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:36448 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727382AbfFNNzi (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 14 Jun 2019 09:55:38 -0400
+Received: by mail-lf1-f68.google.com with SMTP id q26so1820410lfc.3
+        for <linux-gpio@vger.kernel.org>; Fri, 14 Jun 2019 06:55:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:from:date:message-id:subject:to:cc;
+        bh=toIQFVSDSnLPmWcb1vpYKt0Fmmr0QhOZJQ7tDGWKn10=;
+        b=dbcaPYnsG7DSaVGAjqnZVFOubE/+oLiRQA3TD1xTOPRoLdu/xQ9FflaH9XFDATVzqG
+         Rw3UqjQp9PA3U13wmws1ZbLQMPZJ6FpUGXHjo21mXdNLihamXYvC+ug+1cgpS/U/YBp3
+         tV5rXzpeY9TSplBoHRHiUphK1F6MIauP4BxMM27QNnym2HSOF1quqPQMDAnyNb5v4cum
+         UdMze1f747Io40j47fySFmcwsR4fq+AA816VO1WnYTCyPR9M6LmDS+A4LrzfYDRm6kaG
+         fz8TOvVT8hasrnZ1oSLxGhKbwJUc+6CgHknyihYEycaB9aOmx14G60ZNAQ9Jcvw6kCnZ
+         whqg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
+        bh=toIQFVSDSnLPmWcb1vpYKt0Fmmr0QhOZJQ7tDGWKn10=;
+        b=PYg/URVINLKi64FaT0+A9Q8wSxZKOUNdobKPmVVP1/babFQV8bSTRGGMCE4oNs14PU
+         i7wgVVN/GaeUJIs6fyKKEitEOhrFOBvAhCWLsF2o1ea+SUOda/1grOyGK4Mz2ZkJvNu3
+         1HS447Q7yyjxdIadq7hHS0tYG1VU+rLsBXaJ9qA05CVadYQDO4DFW3U8UApSg1xAtNsG
+         nH5xWGFKtg28l8Bjz96m3RtVIHXn4pBVLdHw3v4hEqsBjOpc2FyhockX+pOhCfkT2su0
+         rNVlwyI7aOdp4FRGsSqKsICbyYnWdW3S7Wo+G2e5IQABSNbcexF1gGloe5d8fzAUTq/S
+         8fBg==
+X-Gm-Message-State: APjAAAU1wss7BUakkoCqXGQ2n9pTqu/SuKk4PCuyp97mMEsqiiB6+Bj1
+        XaaGx0pmmKVghCPpak2AcNfRntFFp7dfAdmhgv1B0T427hs=
+X-Google-Smtp-Source: APXvYqwY5yHG57AOGkWyQsJ/ugoc/WLcOg9xPOJPMyOflpF1UTc4MZgbPz7uaP+uIegIZXrV0NA5KdbVRXAQx3nhvLc=
+X-Received: by 2002:ac2:5382:: with SMTP id g2mr46988976lfh.92.1560520536900;
+ Fri, 14 Jun 2019 06:55:36 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190613015532.19685-1-yamada.masahiro@socionext.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Provags-ID: V03:K1:168YjOKWpt67/p7AHoIIjNzDbPrZ7/yHr+w4DvyJOMOslvJZ2H3
- rGRIkE+3BWsG/5/48NVxYVofD6evB7tAxsHqPha/tpo5pCkWHhD2uPeMHXuDQJlGln0BeTW
- 0lVmjr6Hn75z4Nc7cUK/zLLWHOdoKmZxPkVLE25iKKj8w9R+yLhuz9YQ56Q+K/Txw6dO/OA
- reCUM6RRlcCiOpeIWCX2w==
-X-Spam-Flag: NO
-X-UI-Out-Filterresults: notjunk:1;V03:K0:iGUQU66y6io=:WLiyvShT7KDQuCnYlioR+/
- l5LUFmuxtWdQTrTOnmaq8Jmib65fXEFQj9K37JHxSo2OxhmOYY+hYNqZ/o62b/M+b8bwWLw1O
- sLCW46HC2T2JyP9xbYKjuFalX58k0oWQ28ydWTLN1z5DdfHo8zAC5duy2cTFpVPmwT72W349Z
- jbvZ8PZAfTKfnXE9avmQEqrtEBSZvV9S7mZjYITd2HXThidwGobnEvYVYAKkS0tqUBCUfsZu1
- xWvzZNYv4lnC0Ku/h0yRITVqLWQGolIheookTUXju+00yXt9W43alhCJoaF4hRjxPOvt+xU4X
- JE5KMZis0n5pEmQWSL9IXaFGAvY5uk12NDHYlBnVN3/nk76+piJHaY0KTTObzALuO/7x4HRGZ
- dnRqUU2tBTR9q2yN0AbKwDy/1cJaxm5e1PTCpN2I8EtrWgsMuVCiiWIFxGovNQQVeLI3BpeKp
- lchfUcbti3mxQo39x+iKtr/KLlIDWbQYKkDArc8fpmI9aiEMQYDXxYuxpp15Y9r6O6wzR/fox
- qZNmQ2joY2phJ6v9v5EnhXo6DIe9kZ3n/4hzn4GnFl6nkfRomDsiT8CMSAXFLQAoRQ7EuY9na
- voIquH2KjxOZUtMEUWvCmsldXxcIgeqAiMx9ReGejJd6RUlZu2jKdHslx2yLISr2QoLg7LLRF
- eh88g1SxoRVwqk5vzIA0o8rHvBdllJ6zNGUJ3poL7RasQnZw8e+vwFVesy8aJB4knLsElI6zo
- 9H7bk5QSkCKzN4bVLkCjG21/CxsEgQ8SqV3rJU52YQW3bsKFIiFNTK7Wvk8=
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Fri, 14 Jun 2019 15:55:25 +0200
+Message-ID: <CACRpkdbKHsO_dgbqg3J0Xqrj7K2tp2nM9=1-BY-mB1oHpSdnsw@mail.gmail.com>
+Subject: [GIT PULL] GPIO fix for the v5.2 cycle
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "Dr. H. Nikolaus Schaller" <hns@goldelico.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 13.06.19 03:55, Masahiro Yamada wrote:
-> What is the point in surrounding the whole of declarations with
-> ifdef like this?
-> 
->   #ifdef CONFIG_FOO
->   int foo(void);
->   #endif
-> 
-> If CONFIG_FOO is not defined, all callers of foo() will fail
-> with implicit declaration errors since the top Makefile adds
-> -Werror-implicit-function-declaration to KBUILD_CFLAGS.
-> 
-> This breaks the build earlier when you are doing something wrong.
-> That's it.
+Hi Linus,
 
-hmm, in general I like the idea of breaking the build as early as
-possible. depending on your available cpu power, a kernel build can
-take a while, and it could be a huge waste of time when having to
-wait for link stage, just to find out about missing functions.
+here is a single GPIO fix for the current development cycle.
 
-@linus: what's your oppinion ?
+Just some random snag in a certain GPIO driver.
 
+Please pull it in!
 
---mtx
+Yours,
+Linus Walleij
 
--- 
-Enrico Weigelt, metux IT consult
-Free software and Linux embedded engineering
-info@metux.net -- +49-151-27565287
+The following changes since commit f2c7c76c5d0a443053e94adb9f0918fa2fb85c3a:
+
+  Linux 5.2-rc3 (2019-06-02 13:55:33 -0700)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-gpio.git
+tags/gpio-v5.2-3
+
+for you to fetch changes up to 3b00691cc46a4089368a008b30655a8343411715:
+
+  gpio: pca953x: hack to fix 24 bit gpio expanders (2019-06-08 00:03:18 +0200)
+
+----------------------------------------------------------------
+A single fix for the PCA953x driver affecting some fringe
+variants of the chip.
+
+----------------------------------------------------------------
+H. Nikolaus Schaller (1):
+      gpio: pca953x: hack to fix 24 bit gpio expanders
+
+ drivers/gpio/gpio-pca953x.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
