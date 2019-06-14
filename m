@@ -2,153 +2,203 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 2C03E464FB
-	for <lists+linux-gpio@lfdr.de>; Fri, 14 Jun 2019 18:50:54 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B5ACC46B21
+	for <lists+linux-gpio@lfdr.de>; Fri, 14 Jun 2019 22:41:21 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725802AbfFNQun (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 14 Jun 2019 12:50:43 -0400
-Received: from mout.web.de ([212.227.15.4]:37853 "EHLO mout.web.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725812AbfFNQum (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Fri, 14 Jun 2019 12:50:42 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
-        s=dbaedf251592; t=1560531029;
-        bh=w21hW0UjOS9V/aSHu9UGGrfjEKoKC+6rxpIW2WiCcE8=;
-        h=X-UI-Sender-Class:To:Cc:References:Subject:From:Date:In-Reply-To;
-        b=L8D24imof7Pg+A6Zp3gnrUDv/D+dsDizadCqre3CjgyHmzp7Y6hfFJIiejUA3WNH6
-         iWE3hkiSi4aLnQcxbIBChkFXHtfnQvUkQQk57MXd35hJRfcagxts3sKLdJsda8Zbe5
-         /AuQuw0JsH9EuNilDKBBM/GJOOJFo6zvVydcmDGA=
-X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
-Received: from [192.168.1.2] ([93.133.126.132]) by smtp.web.de (mrweb002
- [213.165.67.108]) with ESMTPSA (Nemesis) id 0MfYTr-1hz7x02zIR-00P9at; Fri, 14
- Jun 2019 18:50:29 +0200
-To:     Bartosz Golaszewski <brgl@bgdev.pl>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Keerthy <j-keerthy@ti.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>
-Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        linux-gpio@vger.kernel.org, kernel-janitors@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20190221162627.3476-1-brgl@bgdev.pl>
-Subject: [PATCH] drivers: Adjust scope for CONFIG_HAS_IOMEM before
- devm_platform_ioremap_resource()
-From:   Markus Elfring <Markus.Elfring@web.de>
-Openpgp: preference=signencrypt
-Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
- 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 FEE=
-Message-ID: <9efcbce2-4d49-7197-a3d8-0e83850892d5@web.de>
-Date:   Fri, 14 Jun 2019 18:50:27 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.1
+        id S1728636AbfFNUlU (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 14 Jun 2019 16:41:20 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:44526 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728501AbfFNUlU (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 14 Jun 2019 16:41:20 -0400
+Received: by mail-wr1-f65.google.com with SMTP id r16so3810478wrl.11;
+        Fri, 14 Jun 2019 13:41:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=PhBFLtR+RLSKJI14k4b+jQmHTO5RvF7MzDB1Qhshvx8=;
+        b=ftuQRUKpikD7n5QznlRZZbq7usgvYFQ416m1PrvUhUF538CYvlq/QK6jyoYtoNnWsw
+         MRwyIFIyN0Y3TuLyMhcHl7ddX/Mr317fJl81I9DIRoQyMAvqv2koXhg8KvPaCKamqcP2
+         aBYfT6gFSlBiErpkn2WxIEkWE9u61fa/Xj1JuQTCUumr5kg/c6CGk8jB2/7+H6lm0KSq
+         gFzbDPjsWUmYvWO0TIAQB8z0lPZVQidOZewc3aC9N4zNbROYecw6BYG1XeOKhslZK3n8
+         GzEZHoPZE/6oImTu6Wv8IXjBPv3PFREb9+AN/jYPurfug4+5/OSaN1zaqgC/jCFYMZBs
+         /5kA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=PhBFLtR+RLSKJI14k4b+jQmHTO5RvF7MzDB1Qhshvx8=;
+        b=KDw6FLXKqtdasy+CSbtYvAeZfWJIYWfUVrRGe/HsZBnwVg+AKFWcNH8qF/4xXvk/oL
+         JJ/VH3YJomTVo+lQYW9PWIfkGGtuJoTSPkhrsPP6fxZBOLRL8OugL+O+I9JlY7JqXC+a
+         5M3ltPkF8Tc83xufMclMMSzzC9O3vI3pS1JrjHPulwOX7r8ZwtDwlaGOC/6iS7R77DSX
+         RWstbnxY2CZ6lErU5mjaoIsqLZLzZF3GuAoa3rAz2zYlyYL3C3oS5Gc0HbhkUWZKeWin
+         R07qbcU0z5WA+nDSAsjqV4lyF7Stym8bchttYB5EJniveEsWgCfBj3C5CxVYc7BNfFNu
+         aY3Q==
+X-Gm-Message-State: APjAAAVOU8eX06t4+o+2XUWTxCBfAO/NIWBfGHgqoHkJrNe1iRJe3sQ9
+        dzCrZZaLc7bBJfx1yQ52kl0=
+X-Google-Smtp-Source: APXvYqySesIUR8LqjdHWEANs0GRdseUo+3jR3YN1YK8cIoLD77upTGb9emt8vq0KuipvKZJ52rYjqA==
+X-Received: by 2002:adf:e84a:: with SMTP id d10mr1131305wrn.316.1560544876719;
+        Fri, 14 Jun 2019 13:41:16 -0700 (PDT)
+Received: from debian64.daheim (pD9E29824.dip0.t-ipconnect.de. [217.226.152.36])
+        by smtp.gmail.com with ESMTPSA id v24sm3041197wmj.26.2019.06.14.13.41.15
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Fri, 14 Jun 2019 13:41:15 -0700 (PDT)
+Received: from localhost.daheim ([127.0.0.1] helo=debian64.localnet)
+        by debian64.daheim with esmtp (Exim 4.92)
+        (envelope-from <chunkeey@gmail.com>)
+        id 1hbt0d-0008KE-8s; Fri, 14 Jun 2019 22:41:15 +0200
+From:   Christian Lamparter <chunkeey@gmail.com>
+To:     Sricharan R <sricharan@codeaurora.org>
+Cc:     Rob Herring <robh+dt@kernel.org>, Stephen Boyd <sboyd@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>, agross@kernel.org,
+        devicetree <devicetree@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-clk@vger.kernel.org,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org,
+        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
+        =?utf-8?B?0J/QsNCy0LXQuw==?= <be.dissent@gmail.com>
+Subject: Re: [PATCH 5/6] arm64: dts: Add ipq6018 SoC and CP01 board support
+Date:   Fri, 14 Jun 2019 22:41:15 +0200
+Message-ID: <1981742.H2rzviYcjI@debian64>
+In-Reply-To: <1a00e8c8-d07c-3b02-8ea5-6d5f3e2c7b1a@codeaurora.org>
+References: <1559754961-26783-1-git-send-email-sricharan@codeaurora.org> <4056907.DrFocau5Ix@debian64> <1a00e8c8-d07c-3b02-8ea5-6d5f3e2c7b1a@codeaurora.org>
 MIME-Version: 1.0
-In-Reply-To: <20190221162627.3476-1-brgl@bgdev.pl>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:CDUmOft4DVOQ0nItkPeEhljEaJ0EnGpyqzjKlXS8EM77gNnsI/N
- W9eGmgc5XNnCFgYf6xHUM4BFKj6uF0bOGGV+9eKa47L2q+ELfnHt4gFZOhwSWebTGnOkz9z
- V3Z4yvxQlPd8gZameHJYgMaqZ9CZzjLI3d5PgtKj24But+cg0vnGMlmz7XlcKgOiyhm8JHu
- YLpKsbZMmzJbW2Q8jqPCA==
-X-Spam-Flag: NO
-X-UI-Out-Filterresults: notjunk:1;V03:K0:W2PfOOkyf+g=:bIszttgVhTZFs9PnMSGGxx
- 3NAzcpzoSUesADLm5fn6Cylx/KvjyMl6sdNctR5Pt7Xz4yd1Za5K66pbt42q6JWtZPNCRA0uQ
- oCyFpEvkEWndM7n0ZwHfXqtwaZL4BFtjDj4tJZjjxjN2wvdAKAOq2As6PAmsEFIdDxt0IDj4W
- S65CoK3IdjeMLQDqdUR53vJf5Ilao/HU6U+IAwVhITxRib7fRpni5OVgCPBps/xpHfFsrFPfo
- dOwwWcK1l8VhRZDu542u9A19iDav4Zanf0e/XXRZfJ9DEadhfy5OVND0Rr5ReUC9CtQsEAnNP
- +cleowHQhnT4LsHrg2l+UzXwEV48pF89tBTRIBTFE+hW7NTUw6ACquOnjtqkzQe+GE2/n1u2g
- xjqXakNo+bNQOnFi7/7qhF5AHcyP8uMI91kKiHqMEC/tFwqMM9vH64CoryMt4vOYMtAYFrgFa
- jaEyl++24NtE+9uruP3okHxCxxblEk2lP8nMJFqhThRXrraBSys+WzSgT0XEuI/elAlkEAyb8
- WoD2DV3vXuSAHlv28ZZSnHSq0O19F6QXwdEs6KxRL/3wwaICzRthzxfi5r3zvWp0/QwlZTjDg
- P0GogRrUl+g2FNRdO+hsZkynasNwi/Ekj56cHkcrrkhcAtkmjDyFEQDyyu8vDtRQE2+XS0aP9
- 9r2khnrwbPVfDSklZ7V96Q+FZgAxGx9lkufVO8fybFutmINCtTbMom14bCn8CycscdWL0EebA
- 6zIh6G4Vx7fu1DIcdxiF75TyB2MvL+WUp7AxG0Ij+ssywXk7H+o12gaubpVeP35mADcTRxkvQ
- uxW/ct/yONbro7Vgg0NMwvMO9w3GkU59LTmQI1ypvH+YDTW443rXyV4XQsOs9mYEWvHRTgoZy
- YZXeIJBuueGxnMFTLoV2/xcxOz0fJlPZ9J6kopJRMmoo+P8td7MtvWOz01n3IOktV0k+fkziQ
- 7c5Jyg5jRS1RFvEXde6jtRK2k0oFSLO1YzaBYfu6C+BBhUfJKdJgx
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-From: Markus Elfring <elfring@users.sourceforge.net>
-Date: Fri, 14 Jun 2019 17:45:13 +0200
+On Wednesday, June 12, 2019 11:48:48 AM CEST Sricharan R wrote:
+> Hi Christian,
+> 
+> On 6/10/2019 5:45 PM, Christian Lamparter wrote:
+> > On Monday, June 10, 2019 12:09:56 PM CEST Sricharan R wrote:
+> >> Hi Christian,
+> >>
+> >> On 6/6/2019 2:11 AM, Christian Lamparter wrote:
+> >>> On Wed, Jun 5, 2019 at 7:16 PM Sricharan R <sricharan@codeaurora.org> wrote:
+> >>>>
+> >>>> Add initial device tree support for the Qualcomm IPQ6018 SoC and
+> >>>> CP01 evaluation board.
+> >>>>
+> >>>> Signed-off-by: Sricharan R <sricharan@codeaurora.org>
+> >>>> Signed-off-by: Abhishek Sahu <absahu@codeaurora.org>
+> >>>> --- /dev/null
+> >>>> +++ b/arch/arm64/boot/dts/qcom/ipq6018.dtsi
+> >>>>
+> >>>> +       clocks {
+> >>>> +               sleep_clk: sleep_clk {
+> >>>> +                       compatible = "fixed-clock";
+> >>>> +                       clock-frequency = <32000>;
+> >>>> +                       #clock-cells = <0>;
+> >>>> +               };
+> >>>> +
+> >>> Recently-ish, we ran into an issue with the clock-frequency of the sleep_clk
+> >>> on older IPQ40XX (and IPQ806x) on the OpenWrt Github and ML.
+> >>> From what I know, the external "32KHz" crystals have 32768 Hz, but the QSDK
+> >>> declares them at 32000 Hz. Since you probably have access to the BOM and
+> >>> datasheets. Can you please confirm what's the real clock frequency for
+> >>> the IPQ6018.
+> >>> (And maybe also for the sleep_clk of the IPQ4018 as well?).
+> >>>
+> >>
+> >> What exactly is the issue that you faced ?
+> >> Looking in to the docs, it is <32000> only on ipq6018 and ipq40xx as well.
+> > 
+> > We need just a confirmation.
+> > 
+> > Then again, Currently the qcom-ipq4019.dtsi is using 32768 Hz.
+> > 
+> > |		sleep_clk: sleep_clk {
+> > |			compatible = "fixed-clock";
+> > |			clock-frequency = <32768>;
+> > |			#clock-cells = <0>;
+> > |		};
+> > 
+> > <https://github.com/torvalds/linux/blob/master/arch/arm/boot/dts/qcom-ipq4019.dtsi#L144>
+> > 
+> > Which makes sense, because all previous Qualcomm Atheros MIPS and the
+> > future IPQ8072 SoCs have been either using or deriving a 32768 Hz clock.
+> > 
+> > For example: The AR9344 derives the clock from the 25MHz/40MHz external
+> > oscillator. This is explained in "8.16.9 Derived RTC Clock (DERIVED_RTC_CLK)".
+> > Which mentions that the "32KHz" clock interval is 30.5 usec / 30.48 usec
+> > depending whenever the external reference crystal has 40MHz or 25MHz.
+> > (1/30.5usec = 32.7868852 kilohertz!). The QCA9558 datasheet says the same
+> > in "10.19.11 Derived RTC Clock". 
+> > 
+> > For IPQ8072: I point to the post by Sven Eckelmann on the OpenWrt ML:
+> > <http://lists.infradead.org/pipermail/openwrt-devel/2019-May/017131.html>
+> > "I was only able to verify for IPQ8072 that it had a 32.768 KHz
+> > sleep clock." 
+> > 
+> > So this is pretty much "why there is an issue", it's confusing.
+> > Is possible can you please look if there are (fixed) divisors values
+> > listed in the documentation or the registers and bits that the values
+> > are stored in? Because then we could just calculate it. 
+> > 
+> 
+> Really sorry for the confusion. So looking little more, SLEEP_CLK is derived
+> from an external 38.4MHZ crystal, it is 32.768 KHZ.
+That's really valuable information to have. Thank you!
 
-Move the preprocessor statement =E2=80=9C#ifdef CONFIG_HAS_IOMEM=E2=80=9D =
-so that
-the corresponding scope for conditional compilation includes also comments
-for this function implementation.
+> Somehow the clk freq plan etc seems to mention them only as .032 MHZ and misses
+> out. That means i will correct the patch for 32768 and probably the
+> ipq8074.dtsi as well
 
-Signed-off-by: Markus Elfring <elfring@users.sourceforge.net>
-=2D--
- drivers/base/platform.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Ok, there's one more issue that Paul found (at least with the IPQ4019),
+https://patchwork.ozlabs.org/patch/1099482
 
-diff --git a/drivers/base/platform.c b/drivers/base/platform.c
-index 4d1729853d1a..a5f40974a6ef 100644
-=2D-- a/drivers/base/platform.c
-+++ b/drivers/base/platform.c
-@@ -78,6 +78,7 @@ struct resource *platform_get_resource(struct platform_d=
-evice *dev,
- 	return NULL;
- }
- EXPORT_SYMBOL_GPL(platform_get_resource);
-+#ifdef CONFIG_HAS_IOMEM
+it seems that the "sleep_clk" node in the qcom-ipq4019.dtsi is not used by
+the gcc-ipq4019.c clk driver. this causes both wifi rtc_clks and the usb sleep
+clks to dangle in the /sys/kernel/debug/clk/clk_summary (from a RT-AC58U)
 
- /**
-  * devm_platform_ioremap_resource - call devm_ioremap_resource() for a pl=
-atform
-@@ -87,7 +88,6 @@ EXPORT_SYMBOL_GPL(platform_get_resource);
-  *        resource management
-  * @index: resource index
-  */
--#ifdef CONFIG_HAS_IOMEM
- void __iomem *devm_platform_ioremap_resource(struct platform_device *pdev=
-,
- 					     unsigned int index)
- {
-=2D-
-2.22.0
+   clock                         enable_cnt  prepare_cnt        rate   accuracy   phase
+----------------------------------------------------------------------------------------
+ xo                                       9            9    48000000          0 0
+ [...]
+ sleep_clk                                1            1       32768          0 0  
+ gcc_wcss5g_rtc_clk                       1            1           0          0 0  
+ gcc_wcss2g_rtc_clk                       1            1           0          0 0  
+ gcc_usb3_sleep_clk                       1            1           0          0 0  
+ gcc_usb2_sleep_clk                       1            1           0          0 0  
+
+with his patch the /sys/kernel/debug/clk/clk_summary looks "better" 
+
+(something like this:)
+
+   clock                         enable_cnt  prepare_cnt        rate   accuracy   phase
+----------------------------------------------------------------------------------------
+ xo                                       9            9    48000000          0 0
+ [...] 
+ gcc_sleep_clk_src                        5            5       32000          0 0  
+    gcc_wcss5g_rtc_clk                    1            1       32000          0 0  
+    gcc_wcss2g_rtc_clk                    1            1       32000          0 0  
+    gcc_usb3_sleep_clk                    1            1       32000          0 0  
+    gcc_usb2_sleep_clk                    1            1       32000          0 0  
+
+but judging from your comment "SLEEP_CLK is derived from an
+external 38.4MHZ crystal" the gcc_sleep_clk_src / sleep_clk
+should have xo as the parent. so the ideal output should be:
+
+   clock                         enable_cnt  prepare_cnt        rate   accuracy   phase
+----------------------------------------------------------------------------------------
+ xo                                      10           10    48000000          0 0
+ [...] 
+    gcc_sleep_clk                         5            5       32768          0 0  
+       gcc_wcss5g_rtc_clk                 1            1       32768          0 0  
+       gcc_wcss2g_rtc_clk                 1            1       32768          0 0  
+       gcc_usb3_sleep_clk                 1            1       32768          0 0  
+       gcc_usb2_sleep_clk                 1            1       32768          0 0  
+
+or am I missing/skipping over something important? 
+
+Regards,
+Christian
+
+
 
