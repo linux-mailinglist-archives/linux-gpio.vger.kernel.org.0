@@ -2,85 +2,78 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id CA56C45D94
-	for <lists+linux-gpio@lfdr.de>; Fri, 14 Jun 2019 15:13:02 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2A13E45DFE
+	for <lists+linux-gpio@lfdr.de>; Fri, 14 Jun 2019 15:21:34 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727837AbfFNNNC (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 14 Jun 2019 09:13:02 -0400
-Received: from mout.kundenserver.de ([212.227.17.13]:37813 "EHLO
+        id S1727696AbfFNNVd (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 14 Jun 2019 09:21:33 -0400
+Received: from mout.kundenserver.de ([212.227.17.13]:58123 "EHLO
         mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726874AbfFNNNC (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 14 Jun 2019 09:13:02 -0400
+        with ESMTP id S1727686AbfFNNVd (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 14 Jun 2019 09:21:33 -0400
 Received: from [192.168.1.110] ([77.4.92.40]) by mrelayeu.kundenserver.de
- (mreue107 [212.227.15.183]) with ESMTPSA (Nemesis) id
- 1MekGB-1iBeay3CUf-00anMN; Fri, 14 Jun 2019 15:12:57 +0200
-Subject: Re: [PATCH V1 1/2] gpio: inverter: Add virtual controller for gpio
- configuration
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Harish Jenny K N <harish_kandiga@mentor.com>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Balasubramani Vivekanandan 
-        <balasubramani_vivekanandan@mentor.com>
-References: <1560315034-29712-1-git-send-email-harish_kandiga@mentor.com>
- <1560315034-29712-2-git-send-email-harish_kandiga@mentor.com>
- <CACRpkdaSLwELtWMiEvYRBRF1d6E_9ymupdiCe-rEaaJkCfOd4A@mail.gmail.com>
- <b56f84bd-6f31-95ff-427f-1bf0dfa27421@metux.net>
- <CACRpkdaGFw9XZSW7ise5EBun8ehikNMzw4BCs9hByme=6z4KDg@mail.gmail.com>
+ (mreue106 [212.227.15.183]) with ESMTPSA (Nemesis) id
+ 1Mr8O8-1iOb1z0gXG-00oGea; Fri, 14 Jun 2019 15:21:29 +0200
+Subject: Re: [PATCH 1/2] pinctrl: remove unneeded #ifdef around declarations
+To:     Masahiro Yamada <yamada.masahiro@socionext.com>,
+        linux-gpio@vger.kernel.org,
+        Linus Walleij <linus.walleij@linaro.org>
+Cc:     linux-kernel@vger.kernel.org
+References: <20190613015532.19685-1-yamada.masahiro@socionext.com>
 From:   "Enrico Weigelt, metux IT consult" <lkml@metux.net>
 Organization: metux IT consult
-Message-ID: <0bd09e2a-5006-4587-056e-9aeb6b05d18c@metux.net>
-Date:   Fri, 14 Jun 2019 15:12:56 +0200
+Message-ID: <cc68b375-6011-6bbf-8f0b-c2963237a743@metux.net>
+Date:   Fri, 14 Jun 2019 15:21:27 +0200
 User-Agent: Mozilla/5.0 (X11; Linux i686 on x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.2.1
 MIME-Version: 1.0
-In-Reply-To: <CACRpkdaGFw9XZSW7ise5EBun8ehikNMzw4BCs9hByme=6z4KDg@mail.gmail.com>
+In-Reply-To: <20190613015532.19685-1-yamada.masahiro@socionext.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Provags-ID: V03:K1:D6MGFCXgPfJDamb+/0oZSvJm8GgGCd04tB5JL3Sq+0TRUT7VmXI
- PDlOe8IK5wb5V8Ki0lMBrk6xdEcEePW+X4ZPOCyNZ8XZp0o1+RJm4QHT6/fYHyQRVNvI+1S
- FdtG6s+9E5SDITOeanCpzidGi+BGDlX8XV/INlx4VWYD+Hf+ZlFmbQafXQKA7M40+crfedu
- VWnAs1zMYBxd4o0vyyG0w==
+X-Provags-ID: V03:K1:168YjOKWpt67/p7AHoIIjNzDbPrZ7/yHr+w4DvyJOMOslvJZ2H3
+ rGRIkE+3BWsG/5/48NVxYVofD6evB7tAxsHqPha/tpo5pCkWHhD2uPeMHXuDQJlGln0BeTW
+ 0lVmjr6Hn75z4Nc7cUK/zLLWHOdoKmZxPkVLE25iKKj8w9R+yLhuz9YQ56Q+K/Txw6dO/OA
+ reCUM6RRlcCiOpeIWCX2w==
 X-Spam-Flag: NO
-X-UI-Out-Filterresults: notjunk:1;V03:K0:65YcqJmQ25Q=:m2Aj14aH25QKgfJl8NsvyU
- Q690luV/1CuHkmha0N+kdQV93Fu83iX0ecKUKYaigEVyxx+jkAJ2ER7jCk6Fpf35IPiiNK+1u
- 4luZc9u0JcrfaoxV6tq4lAG3GBrfD4PJ+edMzw7u93Ap3kX1QUdycdDqpignrSpFk6YGTZHql
- BQWwjM2WuMv0aF/xJT2KJQgf+NikQz4JJXO29mvTgCyGBCT1Kei9tdjGbqY9hnODOJ1/5Y6s1
- YJyrpCHhl5L8LWNcQcj+OvT5vEJi+Jgo1dcClEwlFv+WK+7rS4mh1VJE3jBWr2uZggQ+KEtkN
- nAhhPMOsjWzXIwQNKoYYCKlrVfWLTPuhkFzK2TY/BMI3a85S+HDbwse1vfQTRn+TBr6MKf4Ux
- 1KNrHgMbv5SAYIO5mH5RDEBy/w3+KxlB0jNjejBjDtlvtZUkSnD1tDvRoqxVCBjn6mPav5zvy
- jYsDYVWSrHzYGtlJo7t+uMS+lqIuByvpv/EexWwcDo8zmwFCRv45LaIiGCPfPjti7nZOCMoHz
- 3Ocu9d2GQwIn5Byr1UKlRjNbWwpwV4lNsCs8yJgGffpwLKga+XtRFDj+2jvTTOhaXNDREt/ZB
- Aohun1SAuk+D02q8AlqLzD2w/OmUZIpNXbteYxkNxp6b+cCLPuKjRtoPGYNrb2bDzidM5NptW
- eZUcdK3+V3nI5J3d3g7maNAPsWxBC5yaIUYeaS96P2ZdfURjMmSdO4btEp7QZa7K1Vnk+Vp6s
- OwkGWvnqX7PN713B995caG3pnHrPyrHpWQSu5qC2wFRiKmP1k36ZHGyIryI=
+X-UI-Out-Filterresults: notjunk:1;V03:K0:iGUQU66y6io=:WLiyvShT7KDQuCnYlioR+/
+ l5LUFmuxtWdQTrTOnmaq8Jmib65fXEFQj9K37JHxSo2OxhmOYY+hYNqZ/o62b/M+b8bwWLw1O
+ sLCW46HC2T2JyP9xbYKjuFalX58k0oWQ28ydWTLN1z5DdfHo8zAC5duy2cTFpVPmwT72W349Z
+ jbvZ8PZAfTKfnXE9avmQEqrtEBSZvV9S7mZjYITd2HXThidwGobnEvYVYAKkS0tqUBCUfsZu1
+ xWvzZNYv4lnC0Ku/h0yRITVqLWQGolIheookTUXju+00yXt9W43alhCJoaF4hRjxPOvt+xU4X
+ JE5KMZis0n5pEmQWSL9IXaFGAvY5uk12NDHYlBnVN3/nk76+piJHaY0KTTObzALuO/7x4HRGZ
+ dnRqUU2tBTR9q2yN0AbKwDy/1cJaxm5e1PTCpN2I8EtrWgsMuVCiiWIFxGovNQQVeLI3BpeKp
+ lchfUcbti3mxQo39x+iKtr/KLlIDWbQYKkDArc8fpmI9aiEMQYDXxYuxpp15Y9r6O6wzR/fox
+ qZNmQ2joY2phJ6v9v5EnhXo6DIe9kZ3n/4hzn4GnFl6nkfRomDsiT8CMSAXFLQAoRQ7EuY9na
+ voIquH2KjxOZUtMEUWvCmsldXxcIgeqAiMx9ReGejJd6RUlZu2jKdHslx2yLISr2QoLg7LLRF
+ eh88g1SxoRVwqk5vzIA0o8rHvBdllJ6zNGUJ3poL7RasQnZw8e+vwFVesy8aJB4knLsElI6zo
+ 9H7bk5QSkCKzN4bVLkCjG21/CxsEgQ8SqV3rJU52YQW3bsKFIiFNTK7Wvk8=
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 13.06.19 23:58, Linus Walleij wrote:
+On 13.06.19 03:55, Masahiro Yamada wrote:
+> What is the point in surrounding the whole of declarations with
+> ifdef like this?
+> 
+>   #ifdef CONFIG_FOO
+>   int foo(void);
+>   #endif
+> 
+> If CONFIG_FOO is not defined, all callers of foo() will fail
+> with implicit declaration errors since the top Makefile adds
+> -Werror-implicit-function-declaration to KBUILD_CFLAGS.
+> 
+> This breaks the build earlier when you are doing something wrong.
+> That's it.
 
-> For devicetree people mostly use the device tree cell flag
-> GPIO_ACTIVE_LOW on these to work around it. But there
-> are some cases where that isn't very readable.
+hmm, in general I like the idea of breaking the build as early as
+possible. depending on your available cpu power, a kernel build can
+take a while, and it could be a huge waste of time when having to
+wait for link stage, just to find out about missing functions.
 
-hmm, do you recall any such case where it isn't reliable ?
-What are the problems here ?
-
-Personally, I've never had any problems yet. And already had a bunch of
-cases where the gpio lines had been used by other drivers, eg. relais
-via LED subsystem (yeah, not really semantically correct, but we don't
-have an ralais subsystem yet ;-) or gpio-inputs, in opening contact
-circuits where logical 1 means electrical 0. Whether the new inverter
-device or good old GPIO_ACTIVE_LOW should be used here could easily
-turn into a long philosophical debate ;-)
-
-Perhaps the inverter driver could be the winner when variable/replacable
-peripherals and oftree overlays.
-
-Are there any plans for removing the GPIO_ACTIVE_LOW ?
+@linus: what's your oppinion ?
 
 
 --mtx
