@@ -2,156 +2,253 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 5093A45709
-	for <lists+linux-gpio@lfdr.de>; Fri, 14 Jun 2019 10:15:02 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2FCA745824
+	for <lists+linux-gpio@lfdr.de>; Fri, 14 Jun 2019 11:03:57 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726353AbfFNIPB (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 14 Jun 2019 04:15:01 -0400
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:44957 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725973AbfFNIPB (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 14 Jun 2019 04:15:01 -0400
-Received: by mail-lj1-f195.google.com with SMTP id k18so1422984ljc.11
-        for <linux-gpio@vger.kernel.org>; Fri, 14 Jun 2019 01:15:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=lFbiqfQknF0eJ3MG2qJQektDrQrX7sZNjc7Bl0wDXo4=;
-        b=rmfxbW+bdZywUhzkSxFlVgEiuaJonr1HaYuEj5RRrsCQp0SZu5+miXijjoXoZ3ICru
-         gRc4um4ggmMQPwX8rtFYPLEYU47RF3/g0c6eHzyz0EVHEscuRBiE0m51vGU3FcN2fMs/
-         Kqv6h115yy8/RxnO+N+IVyw4MBREcQyFu3mnapdkTi1gkihZ6/ioS8JUIvL4we9a5I8g
-         nS9Xm2XgaB8d6AJrpF7lTNQf70uEe+ayA6TlByiRjFUzGnY3WhouCB0ZCkkY2ZCVPphx
-         pm0HftCMkz8hbUWM2XLHvihUyWRTuR/1Iqoldxirmckf9mn82ZOJSXWUyphgSTmuTYce
-         MWVw==
+        id S1726545AbfFNJD4 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 14 Jun 2019 05:03:56 -0400
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:44200 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726420AbfFNJD4 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 14 Jun 2019 05:03:56 -0400
+Received: by mail-oi1-f193.google.com with SMTP id e189so1403473oib.11;
+        Fri, 14 Jun 2019 02:03:55 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=lFbiqfQknF0eJ3MG2qJQektDrQrX7sZNjc7Bl0wDXo4=;
-        b=DILA7WRnBNqmQmiEXeNq6O69VqeDdWGIoQ7AwWg+Q5J3xkeJgmU7V/0TVl0lXfbsYt
-         CLMiLTulpCbvRQNMawEpsGpGNlZeprQhoMAVYg71pyeGWJV7tj4GYgbRY5ZHWsDmAwYB
-         JC4vk9LDugGslsWCIL3YXS63jtDAsiYZRcXQHSEXvcjFN8jOXgsRpfvpEaAhTnQWHPNn
-         Zr1owLnZ3U7BaVqSMTR2R3zKvtpXRXelszx+O1eRCmQRrRbyCWgzhoDSv5qJV7czARnL
-         ShsJSYZP4BCpbSaL1Qn/xCnkKIC7Yyx1yIexNjZR0DjDzlBiRHBKcHWG/nOM7jPYxxNL
-         KOGw==
-X-Gm-Message-State: APjAAAXPldJyEpVhGDv4QWb/kg1WSsayaryJ/AtwpjMPsiwtIrDHTQq7
-        lKu8qk85v6q1ruYCd8ZUj5IWewY9Fvo=
-X-Google-Smtp-Source: APXvYqzvkmY5xDFD+C/KofR1i5mM/sSlBiSeE296/iT3uYp/TiZCkP01ZJjQYHse5JFCGmkFKQTDJw==
-X-Received: by 2002:a2e:8195:: with SMTP id e21mr28280664ljg.62.1560500099328;
-        Fri, 14 Jun 2019 01:14:59 -0700 (PDT)
-Received: from genomnajs.ideon.se ([85.235.10.227])
-        by smtp.gmail.com with ESMTPSA id b62sm439891ljb.71.2019.06.14.01.14.58
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Fri, 14 Jun 2019 01:14:58 -0700 (PDT)
-From:   Linus Walleij <linus.walleij@linaro.org>
-To:     linux-gpio@vger.kernel.org
-Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Linus Walleij <linus.walleij@linaro.org>
-Subject: [PATCH] gpio: Drop the parent_irq from gpio_irq_chip
-Date:   Fri, 14 Jun 2019 10:14:56 +0200
-Message-Id: <20190614081456.530-1-linus.walleij@linaro.org>
-X-Mailer: git-send-email 2.20.1
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=1N1H6TNo6f4nIbLuxfEqKMZkV+MXoVbdf9WCWp/BvUg=;
+        b=Uzg6+tVPtACjh5cGR11KXy3XRCJbHGlq0f43/RsjKlJtcamdOUewYkuzqhXGQiQsIV
+         DSzQhSp2bYQe+Osv45gAzD1iGNpD35actzqUiTSFkLPcRAlKk06+c18gUCriY+E5+2iO
+         xk33TbitkUlT7EXcciqLvKUKuEAo1/GDCHg/ICLuSKbhVf9hp/mi/hjbG8FPobVJWxr/
+         7zLGw7KZinc0AhL5OWVM1FYXgUgUFDuORq6l5n5odPvNMhorqUjwSxUFlswvSiPS8XRK
+         hg4Qs+1ZcgVaeDUo0Sv3yoQdlPuvxHpMqMtMcsK1oC2pRm3ZcQnE+IJOHAv8icqZJ/qq
+         D/hQ==
+X-Gm-Message-State: APjAAAWFm50HcNEdWuFmSoDHxqhXg7LO3PAqFrWxo1qqVfMlY32xaDfp
+        aiXG/wvlLwvkilq/g4FHZoN7QfxilZlGdfYpK1Y=
+X-Google-Smtp-Source: APXvYqyoTJUj0cSkq+6B084xlRGG7AVi28WOCDVgrRM9EaNZhPuZ2l/XUFPt/5sXPOlhl/DQQNCQLle5U60X9Cm7iQs=
+X-Received: by 2002:aca:4e89:: with SMTP id c131mr1212614oib.57.1560503035384;
+ Fri, 14 Jun 2019 02:03:55 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20190613170011.9647-1-thierry.reding@gmail.com>
+In-Reply-To: <20190613170011.9647-1-thierry.reding@gmail.com>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Fri, 14 Jun 2019 11:03:43 +0200
+Message-ID: <CAJZ5v0i5t_KjSwKdq+iXiJpNQHkNgn6OtwEkJOm0cG5yaHRaDQ@mail.gmail.com>
+Subject: Re: [PATCH v2] driver: core: Allow subsystems to continue deferring probe
+To:     Thierry Reding <thierry.reding@gmail.com>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J . Wysocki" <rafael@kernel.org>,
+        Kevin Hilman <khilman@kernel.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Joerg Roedel <joro@8bytes.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Rob Herring <robh@kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        linux-gpio@vger.kernel.org,
+        "open list:AMD IOMMU (AMD-VI)" <iommu@lists.linux-foundation.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-We already have an array named "parents" so instead
-of letting one point to the other, simply allocate a
-dynamic array to hold the parents, just one if desired
-and drop the number of members in gpio_irq_chip by
-1. Rename gpiochip to gc in the process.
+On Thu, Jun 13, 2019 at 7:00 PM Thierry Reding <thierry.reding@gmail.com> wrote:
+>
+> From: Thierry Reding <treding@nvidia.com>
+>
+> Some subsystems, such as pinctrl, allow continuing to defer probe
+> indefinitely. This is useful for devices that depend on resources
+> provided by devices that are only probed after the init stage.
+>
+> One example of this can be seen on Tegra, where the DPAUX hardware
+> contains pinmuxing controls for pins that it shares with an I2C
+> controller. The I2C controller is typically used for communication
+> with a monitor over HDMI (DDC). However, other instances of the I2C
+> controller are used to access system critical components, such as a
+> PMIC. The I2C controller driver will therefore usually be a builtin
+> driver, whereas the DPAUX driver is part of the display driver that
+> is loaded from a module to avoid bloating the kernel image with all
+> of the DRM/KMS subsystem.
+>
+> In this particular case the pins used by this I2C/DDC controller
+> become accessible very late in the boot process. However, since the
+> controller is only used in conjunction with display, that's not an
+> issue.
+>
+> Unfortunately the driver core currently outputs a warning message
+> when a device fails to get the pinctrl before the end of the init
+> stage. That can be confusing for the user because it may sound like
+> an unwanted error occurred, whereas it's really an expected and
+> harmless situation.
+>
+> In order to eliminate this warning, this patch allows callers of the
+> driver_deferred_probe_check_state() helper to specify that they want
+> to continue deferring probe, regardless of whether we're past the
+> init stage or not. All of the callers of that function are updated
+> for the new signature, but only the pinctrl subsystem passes a true
+> value in the new persist parameter if appropriate.
+>
+> Signed-off-by: Thierry Reding <treding@nvidia.com>
+> ---
+> Changes in v2:
+> - pass persist flag via flags parameter to make the function call easier
+>   to understand
+>
+>  drivers/base/dd.c            | 19 ++++++++++++++-----
+>  drivers/base/power/domain.c  |  2 +-
+>  drivers/iommu/of_iommu.c     |  2 +-
+>  drivers/pinctrl/devicetree.c |  9 +++++----
+>  include/linux/device.h       | 18 +++++++++++++++++-
+>  5 files changed, 38 insertions(+), 12 deletions(-)
+>
+> diff --git a/drivers/base/dd.c b/drivers/base/dd.c
+> index 0df9b4461766..0399a6f6c479 100644
+> --- a/drivers/base/dd.c
+> +++ b/drivers/base/dd.c
+> @@ -238,23 +238,32 @@ __setup("deferred_probe_timeout=", deferred_probe_timeout_setup);
+>  /**
+>   * driver_deferred_probe_check_state() - Check deferred probe state
+>   * @dev: device to check
+> + * @flags: Flags used to control the behavior of this function. Drivers can
+> + *   set the DRIVER_DEFER_PROBE_PERSIST flag to indicate that they want to
 
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
----
- drivers/gpio/gpiolib.c      | 30 +++++++++++++++++++-----------
- include/linux/gpio/driver.h |  7 -------
- 2 files changed, 19 insertions(+), 18 deletions(-)
+What about calling this flag DRIVER_DEFER_PROBE_CONTINUE ?
 
-diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
-index 4561cb39bdb4..71cd685ed6c4 100644
---- a/drivers/gpio/gpiolib.c
-+++ b/drivers/gpio/gpiolib.c
-@@ -1644,39 +1644,47 @@ EXPORT_SYMBOL_GPL(gpiochip_irqchip_irq_valid);
- 
- /**
-  * gpiochip_set_cascaded_irqchip() - connects a cascaded irqchip to a gpiochip
-- * @gpiochip: the gpiochip to set the irqchip chain to
-+ * @gc: the gpiochip to set the irqchip chain to
-  * @parent_irq: the irq number corresponding to the parent IRQ for this
-  * chained irqchip
-  * @parent_handler: the parent interrupt handler for the accumulated IRQ
-  * coming out of the gpiochip. If the interrupt is nested rather than
-  * cascaded, pass NULL in this handler argument
-  */
--static void gpiochip_set_cascaded_irqchip(struct gpio_chip *gpiochip,
-+static void gpiochip_set_cascaded_irqchip(struct gpio_chip *gc,
- 					  unsigned int parent_irq,
- 					  irq_flow_handler_t parent_handler)
- {
--	if (!gpiochip->irq.domain) {
--		chip_err(gpiochip, "called %s before setting up irqchip\n",
-+	struct gpio_irq_chip *girq = &gc->irq;
-+	struct device *dev = &gc->gpiodev->dev;
-+
-+	if (!girq->domain) {
-+		chip_err(gc, "called %s before setting up irqchip\n",
- 			 __func__);
- 		return;
- 	}
- 
- 	if (parent_handler) {
--		if (gpiochip->can_sleep) {
--			chip_err(gpiochip,
-+		if (gc->can_sleep) {
-+			chip_err(gc,
- 				 "you cannot have chained interrupts on a chip that may sleep\n");
- 			return;
- 		}
-+		girq->parents = devm_kcalloc(dev, 1,
-+					     sizeof(*girq->parents),
-+					     GFP_KERNEL);
-+		if (!girq->parents) {
-+			chip_err(gc, "out of memory allocating parent IRQ\n");
-+			return;
-+		}
-+		girq->parents[0] = parent_irq;
-+		girq->num_parents = 1;
- 		/*
- 		 * The parent irqchip is already using the chip_data for this
- 		 * irqchip, so our callbacks simply use the handler_data.
- 		 */
- 		irq_set_chained_handler_and_data(parent_irq, parent_handler,
--						 gpiochip);
--
--		gpiochip->irq.parent_irq = parent_irq;
--		gpiochip->irq.parents = &gpiochip->irq.parent_irq;
--		gpiochip->irq.num_parents = 1;
-+						 gc);
- 	}
- }
- 
-diff --git a/include/linux/gpio/driver.h b/include/linux/gpio/driver.h
-index 937c40fb61f7..02698c0f34ea 100644
---- a/include/linux/gpio/driver.h
-+++ b/include/linux/gpio/driver.h
-@@ -102,13 +102,6 @@ struct gpio_irq_chip {
- 	 */
- 	unsigned int num_parents;
- 
--	/**
--	 * @parent_irq:
--	 *
--	 * For use by gpiochip_set_cascaded_irqchip()
--	 */
--	unsigned int parent_irq;
--
- 	/**
- 	 * @parents:
- 	 *
--- 
-2.20.1
+Also, I would just say
 
+@flags: Flags used to control the behavior of this function.
+
+here and added the description of the flag below.
+
+> + *   keep trying to probe after built-in drivers have had a chance to probe.
+> + *   This is useful for built-in drivers that rely on resources provided by
+> + *   modular drivers.
+>   *
+>   * Returns -ENODEV if init is done and all built-in drivers have had a chance
+> - * to probe (i.e. initcalls are done), -ETIMEDOUT if deferred probe debug
+> - * timeout has expired, or -EPROBE_DEFER if none of those conditions are met.
+> + * to probe (i.e. initcalls are done) and unless the DRIVER_DEFER_PROBE_PERSIST
+
+"unless DRIVER_DEFER_PROBE_CONTINUE is set in @flags"
+
+> + * flag is set, -ETIMEDOUT if deferred probe debug timeout has expired, or
+> + * -EPROBE_DEFER if none of those conditions are met.
+>   *
+>   * Drivers or subsystems can opt-in to calling this function instead of directly
+>   * returning -EPROBE_DEFER.
+
+And here:
+
+"In that case, passing DRIVER_DEFER_PROBE_CONTINUE in @flags indicates
+that the caller wants to keep trying to probe after built-in drivers
+have had a chance to probe, which is useful for built-in drivers that
+rely on resources provided by modular drivers."
+
+>   */
+> -int driver_deferred_probe_check_state(struct device *dev)
+> +int driver_deferred_probe_check_state(struct device *dev, unsigned long flags)
+>  {
+>         if (initcalls_done) {
+>                 if (!deferred_probe_timeout) {
+>                         dev_WARN(dev, "deferred probe timeout, ignoring dependency");
+>                         return -ETIMEDOUT;
+>                 }
+> -               dev_warn(dev, "ignoring dependency for device, assuming no driver");
+> -               return -ENODEV;
+> +
+> +               if ((flags & DRIVER_DEFER_PROBE_PERSIST) == 0) {
+
+What about
+
+if (!(flags & DRIVER_DEFER_PROBE_PERSIST)) {
+
+> +                       dev_warn(dev, "ignoring dependency for device, assuming no driver");
+> +                       return -ENODEV;
+> +               }
+>         }
+>         return -EPROBE_DEFER;
+>  }
+> diff --git a/drivers/base/power/domain.c b/drivers/base/power/domain.c
+> index 33c30c1e6a30..6198c6a30fe2 100644
+> --- a/drivers/base/power/domain.c
+> +++ b/drivers/base/power/domain.c
+> @@ -2423,7 +2423,7 @@ static int __genpd_dev_pm_attach(struct device *dev, struct device *base_dev,
+>                 mutex_unlock(&gpd_list_lock);
+>                 dev_dbg(dev, "%s() failed to find PM domain: %ld\n",
+>                         __func__, PTR_ERR(pd));
+> -               return driver_deferred_probe_check_state(base_dev);
+> +               return driver_deferred_probe_check_state(base_dev, 0);
+>         }
+>
+>         dev_dbg(dev, "adding to PM domain %s\n", pd->name);
+> diff --git a/drivers/iommu/of_iommu.c b/drivers/iommu/of_iommu.c
+> index 614a93aa5305..b95d4342e414 100644
+> --- a/drivers/iommu/of_iommu.c
+> +++ b/drivers/iommu/of_iommu.c
+> @@ -105,7 +105,7 @@ static int of_iommu_xlate(struct device *dev,
+>          * a proper probe-ordering dependency mechanism in future.
+>          */
+>         if (!ops)
+> -               return driver_deferred_probe_check_state(dev);
+> +               return driver_deferred_probe_check_state(dev, 0);
+>
+>         return ops->of_xlate(dev, iommu_spec);
+>  }
+> diff --git a/drivers/pinctrl/devicetree.c b/drivers/pinctrl/devicetree.c
+> index f7e354f85518..43c0183fa23f 100644
+> --- a/drivers/pinctrl/devicetree.c
+> +++ b/drivers/pinctrl/devicetree.c
+> @@ -111,13 +111,14 @@ static int dt_to_map_one_config(struct pinctrl *p,
+>
+>                 np_pctldev = of_get_next_parent(np_pctldev);
+>                 if (!np_pctldev || of_node_is_root(np_pctldev)) {
+> +                       unsigned long flags = 0;
+> +
+>                         of_node_put(np_pctldev);
+> -                       ret = driver_deferred_probe_check_state(p->dev);
+>                         /* keep deferring if modules are enabled unless we've timed out */
+> -                       if (IS_ENABLED(CONFIG_MODULES) && !allow_default && ret == -ENODEV)
+> -                               ret = -EPROBE_DEFER;
+> +                       if (IS_ENABLED(CONFIG_MODULES) && !allow_default)
+> +                               flags |= DRIVER_DEFER_PROBE_PERSIST;
+>
+> -                       return ret;
+> +                       return driver_deferred_probe_check_state(p->dev, flags);
+>                 }
+>                 /* If we're creating a hog we can use the passed pctldev */
+>                 if (hog_pctldev && (np_pctldev == p->dev->of_node)) {
+> diff --git a/include/linux/device.h b/include/linux/device.h
+> index e0649f6adf2e..d364656a920c 100644
+> --- a/include/linux/device.h
+> +++ b/include/linux/device.h
+> @@ -340,7 +340,23 @@ struct device *driver_find_device(struct device_driver *drv,
+>                                   int (*match)(struct device *dev, void *data));
+>
+>  void driver_deferred_probe_add(struct device *dev);
+> -int driver_deferred_probe_check_state(struct device *dev);
+> +
+> +/*
+> + * This can be use to continue to defer probe after the init stage and after
+> + * all the built-in drivers have had a chance to probe. This is useful if a
+> + * built-in driver requires resources provided by a modular driver.
+> + *
+> + * One such example is the pinctrl subsystem, where for example the DPAUX
+> + * hardware on Tegra provides pinmuxing controls for pins shared between DPAUX
+> + * and I2C controllers. Only a subset of I2C controllers need the DPAUX
+> + * pinmuxing, and some I2C controllers are used during early boot for critical
+> + * tasks (such as communicating with the system PMIC). The I2C controllers
+> + * that don't share pins with a DPAUX block will want to be driven by a built-
+> + * in driver to make sure they are available early on.
+> + */
+> +#define DRIVER_DEFER_PROBE_PERSIST (1 << 0)
+
+Use BIT(1) ?
+
+> +
+> +int driver_deferred_probe_check_state(struct device *dev, unsigned long flags);
+>
+>  /**
+>   * struct subsys_interface - interfaces to device functions
+> --
