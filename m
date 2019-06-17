@@ -2,18 +2,18 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 7B62C48C94
-	for <lists+linux-gpio@lfdr.de>; Mon, 17 Jun 2019 20:43:18 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CC91748C89
+	for <lists+linux-gpio@lfdr.de>; Mon, 17 Jun 2019 20:43:05 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728464AbfFQSnG (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 17 Jun 2019 14:43:06 -0400
-Received: from mout.kundenserver.de ([217.72.192.73]:48503 "EHLO
+        id S1728656AbfFQSnA (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 17 Jun 2019 14:43:00 -0400
+Received: from mout.kundenserver.de ([217.72.192.73]:56873 "EHLO
         mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726001AbfFQSmS (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 17 Jun 2019 14:42:18 -0400
+        with ESMTP id S1728464AbfFQSmT (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 17 Jun 2019 14:42:19 -0400
 Received: from orion.localdomain ([77.2.173.233]) by mrelayeu.kundenserver.de
  (mreue109 [212.227.15.183]) with ESMTPSA (Nemesis) id
- 1MKbc2-1hvYpC0iuC-00Ktqk; Mon, 17 Jun 2019 20:42:02 +0200
+ 1MMXYH-1hsXkr46gZ-00JX4b; Mon, 17 Jun 2019 20:42:03 +0200
 From:   "Enrico Weigelt, metux IT consult" <info@metux.net>
 To:     linux-kernel@vger.kernel.org
 Cc:     thloh@altera.com, linus.walleij@linaro.org,
@@ -24,32 +24,29 @@ Cc:     thloh@altera.com, linus.walleij@linaro.org,
         alexandre.torgue@st.com, linux-gpio@vger.kernel.org,
         linux-omap@vger.kernel.org, linux-tegra@vger.kernel.org,
         patches@opensource.cirrus.com
-Subject: [PATCH 20/30] drivers: gpio: wm8994: use subsys_platform_driver()
-Date:   Mon, 17 Jun 2019 20:41:01 +0200
-Message-Id: <1560796871-18560-20-git-send-email-info@metux.net>
+Subject: [PATCH 21/30] drivers: gpio: xilinx: use subsys_platform_driver()
+Date:   Mon, 17 Jun 2019 20:41:02 +0200
+Message-Id: <1560796871-18560-21-git-send-email-info@metux.net>
 X-Mailer: git-send-email 1.9.1
 In-Reply-To: <1560796871-18560-1-git-send-email-info@metux.net>
 References: <1560796871-18560-1-git-send-email-info@metux.net>
-X-Provags-ID: V03:K1:pLNdmawIffiCHQrbod9BFFSHGoGtQwfKxyadnio7TVFPu1etlIZ
- kpNlfBy/TNxqX9C7n3M6Vh0yXfFYoeO3AGF7WfWkDJwsqaBOo327nq01hqQSUcp7UuNOzQE
- jbUrVqzqqvenQ9yiBAp8shSBHn5KZhB8BBMe6GTk26RqzKzO8WYUZSXr5ZDMjUVSBe1JfmD
- XvweC2TYSkottkmItC5DA==
+X-Provags-ID: V03:K1:jZQIPS/8kKBvumGOIeRZuEAZfBqep8NBgz3VKgJkgVxmn/2i+46
+ FLlq0UcVuWtpQwBDhlk7SchFPixQJXzIjLbhU4okNMK1xqofBeHvPHPLY1lvryE/VJUZ5yZ
+ rFpaYvh8TKkLlrnF+mXC4fh2PSaSPmSDCBZyCL7J6azaRKrLrxVaVLNMWOPj9JBztB686W6
+ VQxIKEaVuwqplatFtFqTA==
 X-Spam-Flag: NO
-X-UI-Out-Filterresults: notjunk:1;V03:K0:OPduHIDdewQ=:cN8bB2S93txpA7kXiDwIdQ
- DP0l3mQMPiEmqFwBJQ0WNDnT8fZ6QQfYpoNLqh/H1cOeHtL0pHKN3oYDfEtzecoS3mF3/fK3x
- bO+mV0fG2rk1evu1PJMU3/oJx4KoNwIPIWDb1fugeE55BT0eSRoOzXRvo3d8wzs4odQLrWts4
- +14akY3VEaVr1I/MwJfJ9wdKvmrWKh21WboORj55TfDVX76cUYAjAgsZGTykNzGTT19bzpVQS
- psgz4iqQjj2kDRrxtE32woF1LXMXfyAWF5rkSfSdzz8YRw1UhoZNT5GxmOjMgqwdpsrNAp7/R
- B0eooZIJ7Q5BTUNX6RGaEluZplKxF0mBz9KrQ0ThPAjA66859s05xZiyxJgEiqsNmXCPkDkFG
- Z6SkCjzXEWG6eFhVc5vStwya0rEmPI6myEkEacCiHyB4aLJM7lgi9LGksyDtmaoQR6kVSTFZo
- SpIKCslWfCUiWUOj9H2ZS3oUR3SUyOFgkEQ3UO51DcWWjiAehmsFa29SAE3+dW/diC93UnDWs
- /iV3vjYKVRotyXIwOKHvGWmdudP0Iw7oWHIjnZB9xnxYEC5NNPy7Vai+4Ect5RwN+g1JOKoU6
- 38pNeAzBN9QSl6akTXiKKeseAS9/Vbff53lCrqw5bezrSoHo8IPWZsWD3emFqN7ipsme16jBA
- H1iuVGbaQxbMkon/JA98nW9h+rHMCnQ+f2IG7H6h3Mi6trFYWjnQukzfkW8rrj9qpEuLR2qDe
- 5lYwdlzXExP+IRruurhUbX6i1HJyY4lUenhOCFZOoc/B7Xsg/oa7VLtM2AFI7HQ63HgK5fWXh
- s6hZZXhOBLOVFfPRFoKtKOA8+5PqEYaIDfky3Nukts7DvLRuKa87B4qQTJoUwk3uRTEdjqRiF
- dZwMAOb3omI15kxavj8jXD6gZk5gnB7QhwOIYhwl5bj3XNsBI/8jqm6DBUQwe26wl46h5jmtu
- VmGMur3UuZQ==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:WGfUmeSdphc=:LI3Ccf1BYHeuToQjrLXimx
+ NJP/R+hDLf5AShTxNufrxU8XyW23qnVylQVOV4vn7kOkI/ReczOdNefOBEmyS8qETuDFgvkYu
+ 90fVIssCcWjOYiJuWGnowlyh8HxdXfpxPEq9XDezHHKlqvZqLBds0F1i8ULidSzZCht0tOc5R
+ 1q0HgfWRosnVn3veP6zRG6nIH3WgjjMlOflt7UspIPMfejjdaspEBZxkavKcUJkY+uYuD7Yo0
+ Mwg//qezX8gGfxU/Dhxw+j3vijeXjI5DAR0kyprJlGl6lKnPvAYGypZtksCR7k3xUw/iU5eXM
+ RpWeJOfo9ULAchTpU/RcUUBLudJFEuz1xkJ4yQnb5242EndVJAofniOGO2MNec8BoQw7IYrza
+ b8XbbQJg09Qw+PPpwMOq6b9WII6NQ078iI9P6m9FYDWcf32ZEOqb35UsZqkIx5N4LumcPepmI
+ muHIEQbXV7R6opaMqvj4SzSoHgQtBdreSWJIYFCj0D7L+XpbeKTZLGPcTSm4n7f7ZYrY4jU3L
+ fRmi8WVCVPtRdCv/DJyOhr9NucYmBlZqs5UNktJR6G7XrAu1xf+qc65aXy3fYOUiVQ4CCG3+b
+ XfUqNTJuXstGwD6M4mAtari3bETGjNFS1XALzARL4X/okpDqlDEZxqSYi8+PTLz2WkTeGn79x
+ K1GhG7Xk1LODkC1t/PZrA8tFn6+Whw7q+trhFotAPXFriX1B+An5Sq4asIKtTecYzv8NBFAgq
+ t3ObVbdOcDOw3hw0GhdrSvYsRT6RQRUJqdzrZQ==
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
@@ -62,33 +59,34 @@ subsys_platform_driver() macro.
 
 Signed-off-by: Enrico Weigelt <info@metux.net>
 ---
- drivers/gpio/gpio-wm8994.c | 13 +------------
- 1 file changed, 1 insertion(+), 12 deletions(-)
+ drivers/gpio/gpio-xilinx.c | 14 +-------------
+ 1 file changed, 1 insertion(+), 13 deletions(-)
 
-diff --git a/drivers/gpio/gpio-wm8994.c b/drivers/gpio/gpio-wm8994.c
-index 9af89cf..d9f4572 100644
---- a/drivers/gpio/gpio-wm8994.c
-+++ b/drivers/gpio/gpio-wm8994.c
-@@ -296,18 +296,7 @@ static int wm8994_gpio_probe(struct platform_device *pdev)
- 	.driver.name	= "wm8994-gpio",
- 	.probe		= wm8994_gpio_probe,
+diff --git a/drivers/gpio/gpio-xilinx.c b/drivers/gpio/gpio-xilinx.c
+index 32944eb..255facc 100644
+--- a/drivers/gpio/gpio-xilinx.c
++++ b/drivers/gpio/gpio-xilinx.c
+@@ -376,19 +376,7 @@ static int xgpio_probe(struct platform_device *pdev)
+ 			.of_match_table	= xgpio_of_match,
+ 	},
  };
 -
--static int __init wm8994_gpio_init(void)
+-static int __init xgpio_init(void)
 -{
--	return platform_driver_register(&wm8994_gpio_driver);
+-	return platform_driver_register(&xgpio_plat_driver);
 -}
--subsys_initcall(wm8994_gpio_init);
 -
--static void __exit wm8994_gpio_exit(void)
+-subsys_initcall(xgpio_init);
+-
+-static void __exit xgpio_exit(void)
 -{
--	platform_driver_unregister(&wm8994_gpio_driver);
+-	platform_driver_unregister(&xgpio_plat_driver);
 -}
--module_exit(wm8994_gpio_exit);
-+subsys_platform_driver(wm8994_gpio_driver);
+-module_exit(xgpio_exit);
++subsys_platform_driver(xgpio_plat_driver);
  
- MODULE_AUTHOR("Mark Brown <broonie@opensource.wolfsonmicro.com>");
- MODULE_DESCRIPTION("GPIO interface for WM8994");
+ MODULE_AUTHOR("Xilinx, Inc.");
+ MODULE_DESCRIPTION("Xilinx GPIO driver");
 -- 
 1.9.1
 
