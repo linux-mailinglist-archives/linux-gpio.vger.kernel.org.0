@@ -2,89 +2,71 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id C1E83486C1
-	for <lists+linux-gpio@lfdr.de>; Mon, 17 Jun 2019 17:14:12 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DEB6448825
+	for <lists+linux-gpio@lfdr.de>; Mon, 17 Jun 2019 18:00:43 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728342AbfFQPOE (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 17 Jun 2019 11:14:04 -0400
-Received: from relay1.mentorg.com ([192.94.38.131]:55575 "EHLO
-        relay1.mentorg.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728170AbfFQPOE (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 17 Jun 2019 11:14:04 -0400
-Received: from nat-ies.mentorg.com ([192.94.31.2] helo=svr-ies-mbx-01.mgc.mentorg.com)
-        by relay1.mentorg.com with esmtps (TLSv1.2:ECDHE-RSA-AES256-SHA384:256)
-        id 1hctKc-000504-Ki from Harish_Kandiga@mentor.com ; Mon, 17 Jun 2019 08:14:02 -0700
-Received: from hkandiga-VirtualBox.ina-wifi.mentorg.com (137.202.0.90) by
- svr-ies-mbx-01.mgc.mentorg.com (139.181.222.1) with Microsoft SMTP Server
- (TLS) id 15.0.1320.4; Mon, 17 Jun 2019 16:13:58 +0100
-From:   Harish Jenny K N <harish_kandiga@mentor.com>
-To:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-CC:     <linux-gpio@vger.kernel.org>,
-        Harish Jenny K N <harish_kandiga@mentor.com>,
-        Balasubramani Vivekanandan 
-        <balasubramani_vivekanandan@mentor.com>
-Subject: [PATCH V2 2/2] gpio: inverter: document the inverter bindings
-Date:   Mon, 17 Jun 2019 20:43:45 +0530
-Message-ID: <1560784425-20227-3-git-send-email-harish_kandiga@mentor.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1560784425-20227-1-git-send-email-harish_kandiga@mentor.com>
-References: <1560784425-20227-1-git-send-email-harish_kandiga@mentor.com>
-MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [137.202.0.90]
-X-ClientProxiedBy: SVR-IES-MBX-07.mgc.mentorg.com (139.181.222.7) To
- svr-ies-mbx-01.mgc.mentorg.com (139.181.222.1)
+        id S1728526AbfFQQAP (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 17 Jun 2019 12:00:15 -0400
+Received: from mout.kundenserver.de ([212.227.126.134]:33497 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727936AbfFQQAO (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 17 Jun 2019 12:00:14 -0400
+Received: from orion.localdomain ([77.2.173.233]) by mrelayeu.kundenserver.de
+ (mreue011 [212.227.15.167]) with ESMTPSA (Nemesis) id
+ 1M2ep5-1hdAtn34bX-0049gR; Mon, 17 Jun 2019 18:00:12 +0200
+From:   "Enrico Weigelt, metux IT consult" <info@metux.net>
+To:     linux-kernel@vger.kernel.org
+Cc:     info@metux.net, linus.walleij@linaro.org,
+        bgolaszewski@baylibre.com, linux-gpio@vger.kernel.org
+Subject: [PATCH 1/2] drivers: gpio: amd-fch: make resource struct const
+Date:   Mon, 17 Jun 2019 18:00:10 +0200
+Message-Id: <1560787211-15443-1-git-send-email-info@metux.net>
+X-Mailer: git-send-email 1.9.1
+X-Provags-ID: V03:K1:wPmsjFPvebemUVprhSzRT4STymfnNwj1UR1GNgnCTPj0XnZqwUf
+ RSve1vtC+hi9EJZMgSynkJq5lj2du8LuYPTF1ceFOYnaUXGTrdGrLcCSSz7ZnF8cDUcsKvi
+ dox7mLCobE4tHBxhFSGoBXL07fGdxYxv2STKerKecFEmO+dVUyjstS3ftteosnsFPC4tscY
+ pl3ACAV8swfvcaHAxpJUw==
+X-Spam-Flag: NO
+X-UI-Out-Filterresults: notjunk:1;V03:K0:yv0UDtaIzwQ=:7qZTJQFySO87zUpQPfb7bP
+ zUPkotlha+hCzPX6zuCsEcebCqVaks/4JuWN+92DrX6jOtXl6uk2PKGVNCFLE7rAeYuuHLW6N
+ fOxU2R32h0eXvuAzuY5hhlSFc6M/U5a8XBCBCtUPuOyf3U6mW6M9OJb3vTDf2ktTIPdufHshQ
+ RXs/b3O8C9mWkq09nBg6Nci2ptMkl7cKpb9WrL870bALHHzRvQggmpx+qTiVmK7bmKe0QsGD/
+ 7xlFmFUrF+9DBZ1XQlin9FiY2Qz0htrn91PvAiSr7iIk3hmW7repCzzGEkG2ISZwYZlbqVSa1
+ 1W/j35qg53zuvG61ifHTrhiJMHYbbP2/lp9XVEma7gWp7fLxsCP0axipYwPhnCp63W3LzGpH4
+ c9THyl7Hf5ErwqqTaHZJ/Ww7QdGn3kKpl0WvzmTVokkE+GUd766aZsfhMhwDc6pgbUZcpG114
+ bf2ayO74TlpfmtML+etqCC5s5G+pue/Nn3cCSadIB2Ny8WoxRydrpEN26RDb7lDTQ/2Cqzerh
+ LstkTgx5ouHTb2kcCIceeKU8OrUHCQAQExQ33IxpNYlaikiLRlyBzjTHIjf9JX9mllkF5DC52
+ M6GblW+0fbftoUoyy1S6rOeTO/BHq9G4Q8yMN4w10BcrDMOsCWY0HIx4MKK8dtjXqcUukibhS
+ EowV/iVanB3WYG0ns/OjLbmYeoAW5Upn/UCmZ4CC79ZdKg8GA84gxZWEPUfpHR3q864Y53UPe
+ mi2QJgpLGzJuWqeZAQ+Bogp8ihBk1V77i/vRxg==
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Document the device tree binding for the inverter gpio
-controller to configure the polarity of the gpio pins
-used by the consumers.
+From: Enrico Weigelt <info@metux.net>
 
-Signed-off-by: Harish Jenny K N <harish_kandiga@mentor.com>
+The struct resource field is statically initialized
+and may never change. Therefore make it const.
+
+Signed-off-by: Enrico Weigelt <info@metux.net>
 ---
- .../devicetree/bindings/gpio/gpio-inverter.txt     | 29 ++++++++++++++++++++++
- 1 file changed, 29 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/gpio/gpio-inverter.txt
+ drivers/gpio/gpio-amd-fch.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/Documentation/devicetree/bindings/gpio/gpio-inverter.txt b/Documentation/devicetree/bindings/gpio/gpio-inverter.txt
-new file mode 100644
-index 0000000..cc8fe55
---- /dev/null
-+++ b/Documentation/devicetree/bindings/gpio/gpio-inverter.txt
-@@ -0,0 +1,29 @@
-+GPIO-INVERTER
-+======
-+This binding defines the gpio-inverter. The gpio-inverter is a driver that
-+allows to properly describe the gpio polarities on the hardware.
-+
-+Please refer to gpio.txt for generic information regarding GPIO bindings.
-+
-+Required properties:
-+- compatible : "gpio-inverter".
-+- gpio-controller: Marks the port as GPIO controller.
-+- #gpio-cells: Two. The first cell is the pin number and
-+   the second cell is used to specify the gpio polarity as defined in
-+   defined in <dt-bindings/gpio/gpio.h>:
-+      0 = GPIO_ACTIVE_HIGH
-+      1 = GPIO_ACTIVE_LOW
-+- mapped-gpios: Array of GPIO pins required from consumers, whose polarity has
-+  to be configured in the driver.
-+- gpio-line-names: This is an array of strings defining the names for the
-+  mapped-gpios correspondingly. Name should be defined for each gpio pin.
-+
-+Example:
-+
-+gpio_inv: gpio-inv {
-+	compatible = "gpio-inverter";
-+	gpio-controller;
-+	#gpio-cell = <2>;
-+	mapped-gpios = <&gpio5 24 1>, <&gpio7 0 1>, <&gpio7 1 1>;
-+	gpio-line-names = "JTAG_DNL_EN", "lvds-pwrdwn", "lcd-on";
-+};
---
-2.7.4
+diff --git a/drivers/gpio/gpio-amd-fch.c b/drivers/gpio/gpio-amd-fch.c
+index 38c3f4a..390a8b8 100644
+--- a/drivers/gpio/gpio-amd-fch.c
++++ b/drivers/gpio/gpio-amd-fch.c
+@@ -25,7 +25,7 @@
+ #define AMD_FCH_GPIO_FLAG_WRITE		BIT(22)
+ #define AMD_FCH_GPIO_FLAG_READ		BIT(16)
+ 
+-static struct resource amd_fch_gpio_iores =
++static const struct resource amd_fch_gpio_iores =
+ 	DEFINE_RES_MEM_NAMED(
+ 		AMD_FCH_MMIO_BASE + AMD_FCH_GPIO_BANK0_BASE,
+ 		AMD_FCH_GPIO_SIZE,
+-- 
+1.9.1
 
