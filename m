@@ -2,49 +2,49 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 1B24947915
-	for <lists+linux-gpio@lfdr.de>; Mon, 17 Jun 2019 06:23:17 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C7F2D47905
+	for <lists+linux-gpio@lfdr.de>; Mon, 17 Jun 2019 06:19:51 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725788AbfFQEWL (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 17 Jun 2019 00:22:11 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:46629 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725730AbfFQEWL (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 17 Jun 2019 00:22:11 -0400
-Received: by mail-pf1-f195.google.com with SMTP id 81so4906229pfy.13
-        for <linux-gpio@vger.kernel.org>; Sun, 16 Jun 2019 21:22:11 -0700 (PDT)
+        id S1725730AbfFQETs (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 17 Jun 2019 00:19:48 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:46947 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725919AbfFQETp (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 17 Jun 2019 00:19:45 -0400
+Received: by mail-pg1-f194.google.com with SMTP id v9so4997867pgr.13
+        for <linux-gpio@vger.kernel.org>; Sun, 16 Jun 2019 21:19:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=UTgKORxYG5bQtMDMiPkqviSD05JGi9gDjq8N3xnxamw=;
-        b=qQUI3+K0gHIw7nz+guUpHBX9fMs+hsaA0FjfBxgSVNPJSEry8yCkqKKWME9mdZHhht
-         TWmuzycwiJzXlqR7MojMhFY8kvCQ4fvZG3OKBlU8zFbCQ54ZUJHr0xPmQjMHG0GSZWgD
-         Q+mWlTqs2923Lm00ztv+IfclZsvF2eC1tfX9Sft9bURSFWnv6IzWj+wJsLaYjaBg9pEl
-         Th3fGIZ/Q5BKd4bmvOKNBbT2hGhC9zCc5A5bCex+Oo5m+PehYOCdRHPE2HIhPGlpwhz7
-         GVpzx9PJcJ8+OWfvQgLyx2S4396EJwR9U0J0aRmkmQykhbfwbqHL1Cd08l/5Us+MiOWH
-         m+LA==
+        bh=su04xXw6GGHIofn8gHd4eVNyLDpa8LxhUwEEkPCpQSc=;
+        b=YJhjCP+avzmLyCZ57MYpCElLTjwZ23ewu4kgW4XKVBE7MtmciCKZ1j3hIAmIE/XUxE
+         fcx2PDdatG4zisiSu7a2wrnHc7+C7A0ENUCoIB8gekNnJDRORrJr1SWUuEfD6JD6/qe+
+         SXfRlGxJ4kPCstyaTescr1Akp7yfq8ksLq8rRsT4M74j3SmkRrGPjhbDdllBSC1wiQTL
+         XYmhvwOeuJFQy/4ZqYQXAuoQrObbN8xIxamP6brJMwyt9o0DbISe6/p/ta0SRGsXqpGA
+         RkeYUipqaOmPfE0+VewVya4V4kZfJXYXeRlaKpra2II3mJa3h+gbmYYnkTHfR62kMiOY
+         zt2g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=UTgKORxYG5bQtMDMiPkqviSD05JGi9gDjq8N3xnxamw=;
-        b=cx0/BVBddq6WimUHd5wRq/Cl4SkgoN2J0D0FAT5xtzMBgzuDJXskFLV1v9f9L+1t3y
-         V7rIw2tZXXcMdOhrgcfb2i4Ua/8F+YotHAW4x+AAWOREJ8fsAD0AuOWHaJWkX74hecU8
-         UVTYBPlSBRNM03K6p1wCfnXhJqLkjAiiPuf26pb8GtJYYldjmB33rq+Amt0H9BrPT+nY
-         3ciGljwtPqhBHUfv+QbFSymEU8i49f+X1xKJLgZtYK+WKU13v/Cs6y9pWIqzAKhSwjb9
-         xnPblpCI30yonth5iXaBbJpVL/+yYnZrk8STBxvow2Try+m8/zi7JjHvgPZLaX04xkke
-         oKQA==
-X-Gm-Message-State: APjAAAVHQnRTbViVPxJphXzUCbyX+k4PXmPfPttPA4krQLA9phwt05fN
-        MHygBAuX88xRSdRIU1QcmodCoZ8x0rk=
-X-Google-Smtp-Source: APXvYqzrJdbUKh/3Wwj8kNObe7HfSNQKw5id+/SB2/39vE6OVkQZGyv98n8L5CFv94OTiALpYdhVXg==
-X-Received: by 2002:a63:a36f:: with SMTP id v47mr44586608pgn.117.1560745007995;
-        Sun, 16 Jun 2019 21:16:47 -0700 (PDT)
+        bh=su04xXw6GGHIofn8gHd4eVNyLDpa8LxhUwEEkPCpQSc=;
+        b=tdYCCAnpG9M4VBzkB3WzxmXAVwd9I09DLABkfnbz4p6jhRPXd8AFxWAuOwzrmLK3gE
+         8IEzL3vRjFVk6wD/qtyocXrzYWHrej7gDr5UkGAMR5g/B+xVYyCh+RMEm1nVU1Q6Wh7r
+         Kp/tF4SusVIUAGUxB83rPxIZqFRw1AX2qrie27XfdRrIiLvMCR6jhzpqWqHLZRwIsmS+
+         6WNVtYhJWfmcdAxfufe/9FBkQtg+QtbGL7fyiv0KvvWAvNjmXp57ut20XmgNfW7uynu+
+         X/oLC2aPRodLxRu7zF98V4UNVGo8c7gn/XBMsuq/p4mwDraYPu8sNglTs3KCpy9GC20c
+         HK7g==
+X-Gm-Message-State: APjAAAWBhMzCfbK6viZD86qgqO55sN7VTabEnQllDn1lCRA41WCyQAHv
+        RMu5qylUq8BJXh928UCSU1XfM1SXUcE=
+X-Google-Smtp-Source: APXvYqzv4B+xbIgPU1Wr28MlogF/SGpcxZD14TGttwkrvvwt0+IyKNSX+kQV7wtwLOWxFafGuZfk3Q==
+X-Received: by 2002:a17:90a:3225:: with SMTP id k34mr23875597pjb.31.1560745183911;
+        Sun, 16 Jun 2019 21:19:43 -0700 (PDT)
 Received: from tuxbook-pro (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id m31sm20040590pjb.6.2019.06.16.21.16.46
+        by smtp.gmail.com with ESMTPSA id j8sm9497867pfi.148.2019.06.16.21.19.42
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Sun, 16 Jun 2019 21:16:47 -0700 (PDT)
-Date:   Sun, 16 Jun 2019 21:17:36 -0700
+        Sun, 16 Jun 2019 21:19:43 -0700 (PDT)
+Date:   Sun, 16 Jun 2019 21:20:32 -0700
 From:   Bjorn Andersson <bjorn.andersson@linaro.org>
 To:     Vinod Koul <vkoul@kernel.org>
 Cc:     Linus Walleij <linus.walleij@linaro.org>,
@@ -52,16 +52,19 @@ Cc:     Linus Walleij <linus.walleij@linaro.org>,
         Prasad Sodagudi <psodagud@codeaurora.org>,
         Andy Gross <agross@kernel.org>,
         David Brown <david.brown@linaro.org>,
-        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
         "Isaac J . Manjarres" <isaacm@codeaurora.org>
-Subject: Re: [PATCH 2/2] pinctrl: qcom: Add SM8150 pinctrl driver
-Message-ID: <20190617041736.GD750@tuxbook-pro>
+Subject: Re: [PATCH 1/2] dt-bindings: pinctrl: qcom: Add SM8150 pinctrl
+ binding
+Message-ID: <20190617042032.GE750@tuxbook-pro>
 References: <20190614053032.24208-1-vkoul@kernel.org>
- <20190614053032.24208-2-vkoul@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190614053032.24208-2-vkoul@kernel.org>
+In-Reply-To: <20190614053032.24208-1-vkoul@kernel.org>
 User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
@@ -72,300 +75,232 @@ On Thu 13 Jun 22:30 PDT 2019, Vinod Koul wrote:
 
 > From: Prasad Sodagudi <psodagud@codeaurora.org>
 > 
-> Add initial pinctrl driver to support pin configuration with
-> pinctrl framework for SM8150
+> Add the binding for the TLMM pinctrl block found in the SM8150 platform.
 > 
 > Signed-off-by: Prasad Sodagudi <psodagud@codeaurora.org>
 > Signed-off-by: Isaac J. Manjarres <isaacm@codeaurora.org>
-
-I presume you did stuff to make it fit with my upstream tiling, mention
-that here.
-
-[..]
-> diff --git a/drivers/pinctrl/qcom/pinctrl-sm8150.c b/drivers/pinctrl/qcom/pinctrl-sm8150.c
-[..]
-> +static const struct pinctrl_pin_desc sm8150_pins[] = {
-[..]
-> +	PINCTRL_PIN(178, "UFS_RESET"),
-
-Please follow
-https://lore.kernel.org/linux-arm-msm/20190606010249.3538-2-bjorn.andersson@linaro.org/
-for ufs_reset.
-
-> +};
-[..]
-> +enum sm8150_functions {
-> +	msm_mux_phase_flag8,
-
-Please sort these alphabetically and please squash all the phase_flag*
-into msm_mux_phase_flag.
-
-> +	msm_mux_phase_flag7,
-> +	msm_mux_emac_pps,
-> +	msm_mux_qup12,
-> +	msm_mux_qup16,
-> +	msm_mux_tsif1_clk,
-
-Please squash all tsif1 into msm_mux_tsif1.
-
-> +	msm_mux_qup8,
-> +	msm_mux_qspi_cs,
-> +	msm_mux_tgu_ch3,
-> +	msm_mux_tsif1_en,
-> +	msm_mux_qspi0,
-> +	msm_mux_mdp_vsync0,
-> +	msm_mux_mdp_vsync1,
-> +	msm_mux_mdp_vsync2,
-> +	msm_mux_mdp_vsync3,
-> +	msm_mux_tgu_ch0,
-> +	msm_mux_tsif1_data,
-> +	msm_mux_qspi1,
-> +	msm_mux_sdc4_cmd,
-
-Squash sdc4_cmd, sdc4_clk and sdc4{0,1,2,3} into msm_mux_sdc4.
-
-> +	msm_mux_phase_flag31,
-> +	msm_mux_tgu_ch1,
-> +	msm_mux_wlan1_adc1,
-> +	msm_mux_tsif1_sync,
-> +	msm_mux_qspi2,
-> +	msm_mux_sdc43,
-> +	msm_mux_vfr_1,
-> +	msm_mux_phase_flag30,
-> +	msm_mux_tgu_ch2,
-> +	msm_mux_wlan1_adc0,
-> +	msm_mux_tsif2_clk,
-
-Please squash all tsif2
-
-> +	msm_mux_qup11,
-> +	msm_mux_qspi_clk,
-> +	msm_mux_sdc4_clk,
-> +	msm_mux_phase_flag27,
-> +	msm_mux_wlan2_adc1,
-> +	msm_mux_tsif2_en,
-> +	msm_mux_qspi3,
-> +	msm_mux_sdc42,
-> +	msm_mux_phase_flag26,
-> +	msm_mux_wlan2_adc0,
-> +	msm_mux_tsif2_data,
-> +	msm_mux_sdc41,
-> +	msm_mux_phase_flag25,
-> +	msm_mux_tsif2_sync,
-> +	msm_mux_sdc40,
-> +	msm_mux_tsif2_error,
-> +	msm_mux_phase_flag11,
-> +	msm_mux_sd_write,
-> +	msm_mux_tsif1_error,
-> +	msm_mux_qup7,
-> +	msm_mux_ddr_bist,
-> +	msm_mux_ddr_pxi3,
-> +	msm_mux_atest_usb13,
-> +	msm_mux_ddr_pxi1,
-> +	msm_mux_pll_bypassnl,
-> +	msm_mux_atest_usb12,
-> +	msm_mux_pll_reset,
-> +	msm_mux_pci_e1,
-> +	msm_mux_uim2_data,
-> +	msm_mux_uim2_clk,
-> +	msm_mux_uim2_reset,
-> +	msm_mux_uim2_present,
-
-Please squash uim2.
-
-> +	msm_mux_uim1_data,
-> +	msm_mux_uim1_clk,
-> +	msm_mux_uim1_reset,
-> +	msm_mux_uim1_present,
-
-Please squash uim1.
-
-> +	msm_mux_uim_batt,
-> +	msm_mux_usb2phy_ac,
-> +	msm_mux_aoss_cti,
-> +	msm_mux_qup1,
-> +	msm_mux_rgmii_txc,
-
-Please squash all the rmiii_*
-
-> +	msm_mux_phase_flag20,
-> +	msm_mux_rgmii_rxc,
-> +	msm_mux_phase_flag19,
-> +	msm_mux_adsp_ext,
-> +	msm_mux_rgmii_rx,
-> +	msm_mux_phase_flag18,
-> +	msm_mux_rgmii_rxd0,
-> +	msm_mux_phase_flag17,
-> +	msm_mux_rgmii_rxd1,
-> +	msm_mux_phase_flag16,
-> +	msm_mux_qup5,
-> +	msm_mux_rgmii_rxd2,
-> +	msm_mux_phase_flag15,
-> +	msm_mux_rgmii_rxd3,
-> +	msm_mux_phase_flag14,
-> +	msm_mux_rgmii_tx,
-> +	msm_mux_phase_flag13,
-> +	msm_mux_rgmii_txd0,
-> +	msm_mux_phase_flag12,
-> +	msm_mux_atest_usb22,
-> +	msm_mux_emac_phy,
-> +	msm_mux_hs3_mi2s,
-> +	msm_mux_sec_mi2s,
-> +	msm_mux_qup2,
-> +	msm_mux_phase_flag9,
-> +	msm_mux_phase_flag4,
-> +	msm_mux_phase_flag21,
-> +	msm_mux_jitter_bist,
-> +	msm_mux_atest_usb21,
-> +	msm_mux_pll_bist,
-> +	msm_mux_atest_usb20,
-> +	msm_mux_atest_char0,
-> +	msm_mux_ter_mi2s,
-> +	msm_mux_gcc_gp1,
-> +	msm_mux_atest_char1,
-> +	msm_mux_atest_char2,
-> +	msm_mux_atest_char3,
-> +	msm_mux_qua_mi2s,
-> +	msm_mux_pri_mi2s,
-> +	msm_mux_qup3,
-> +	msm_mux_phase_flag29,
-> +	msm_mux_ddr_pxi0,
-> +	msm_mux_pri_mi2s_ws,
-> +	msm_mux_phase_flag28,
-> +	msm_mux_vsense_trigger,
-> +	msm_mux_atest_usb1,
-> +	msm_mux_atest_usb11,
-> +	msm_mux_ddr_pxi2,
-> +	msm_mux_dbg_out,
-> +	msm_mux_atest_usb10,
-> +	msm_mux_spkr_i2s,
-> +	msm_mux_audio_ref,
-> +	msm_mux_lpass_slimbus,
-> +	msm_mux_tsense_pwm1,
-> +	msm_mux_tsense_pwm2,
-> +	msm_mux_btfm_slimbus,
-> +	msm_mux_hs1_mi2s,
-> +	msm_mux_cri_trng0,
-> +	msm_mux_hs2_mi2s,
-> +	msm_mux_cri_trng1,
-> +	msm_mux_cri_trng,
-> +	msm_mux_sp_cmu,
-> +	msm_mux_prng_rosc,
-> +	msm_mux_qup0,
-> +	msm_mux_gpio,
-> +	msm_mux_qup6,
-> +	msm_mux_rgmii_txd1,
-> +	msm_mux_rgmii_txd2,
-> +	msm_mux_rgmii_txd3,
-> +	msm_mux_qup_l6,
-> +	msm_mux_rgmii_mdc,
-> +	msm_mux_qup_l5,
-> +	msm_mux_mdp_vsync,
-> +	msm_mux_edp_lcd,
-> +	msm_mux_qup10,
-> +	msm_mux_m_voc,
-> +	msm_mux_edp_hot,
-> +	msm_mux_cam_mclk,
-> +	msm_mux_qdss_gpio0,
-
-Please squash all qdss_gpio into msm_mux_qdss (iirc qdss_cti is a
-separate thing).
-
-> +	msm_mux_qdss_gpio1,
-> +	msm_mux_qdss_gpio2,
-> +	msm_mux_qdss_gpio3,
-> +	msm_mux_cci_i2c,
-> +	msm_mux_qdss_gpio4,
-> +	msm_mux_phase_flag3,
-> +	msm_mux_qdss_gpio5,
-> +	msm_mux_phase_flag2,
-> +	msm_mux_qdss_gpio6,
-> +	msm_mux_phase_flag1,
-> +	msm_mux_qdss_gpio7,
-> +	msm_mux_cci_timer0,
-> +	msm_mux_gcc_gp2,
-> +	msm_mux_qdss_gpio8,
-> +	msm_mux_cci_timer1,
-> +	msm_mux_gcc_gp3,
-> +	msm_mux_qdss_gpio,
-> +	msm_mux_cci_timer2,
-> +	msm_mux_qup18,
-> +	msm_mux_qdss_gpio9,
-> +	msm_mux_cci_timer3,
-> +	msm_mux_cci_async,
-> +	msm_mux_qdss_gpio10,
-> +	msm_mux_cci_timer4,
-> +	msm_mux_qdss_gpio11,
-> +	msm_mux_qdss_gpio12,
-> +	msm_mux_qup15,
-> +	msm_mux_qdss_gpio15,
-> +	msm_mux_qdss_gpio13,
-> +	msm_mux_qdss_gpio14,
-> +	msm_mux_pci_e0,
-> +	msm_mux_qup_l4,
-> +	msm_mux_agera_pll,
-> +	msm_mux_usb_phy,
-> +	msm_mux_qup9,
-> +	msm_mux_qup13,
-> +	msm_mux_qdss_cti,
-> +	msm_mux_qup14,
-> +	msm_mux_qup4,
-> +	msm_mux_qup17,
-> +	msm_mux_qup19,
-> +	msm_mux_phase_flag5,
-> +	msm_mux_phase_flag0,
-> +	msm_mux_phase_flag22,
-> +	msm_mux_rgmii_mdio,
-> +	msm_mux_phase_flag10,
-> +	msm_mux_atest_char,
-> +	msm_mux_nav_pps,
-> +	msm_mux_atest_usb2,
-> +	msm_mux_qlink_request,
-> +	msm_mux_qlink_enable,
-> +	msm_mux_wmss_reset,
-> +	msm_mux_atest_usb23,
-> +	msm_mux_phase_flag6,
-> +	msm_mux_pa_indicator,
-> +	msm_mux_phase_flag23,
-> +	msm_mux_mss_lte,
-> +	msm_mux_phase_flag24,
-> +	msm_mux__,
-> +};
-[..]
-> +static const struct msm_function sm8150_functions[] = {
-> +	FUNCTION(phase_flag8),
-
-Please sort this array as well.
-
-> +	FUNCTION(phase_flag7),
-[..]
-> +};
+> Signed-off-by: Vinod Koul <vkoul@kernel.org>
+> ---
+>  .../bindings/pinctrl/qcom,sm8150-pinctrl      | 200 ++++++++++++++++++
+>  1 file changed, 200 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/pinctrl/qcom,sm8150-pinctrl
+> 
+> diff --git a/Documentation/devicetree/bindings/pinctrl/qcom,sm8150-pinctrl b/Documentation/devicetree/bindings/pinctrl/qcom,sm8150-pinctrl
+> new file mode 100644
+> index 000000000000..4f21d18b0be2
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/pinctrl/qcom,sm8150-pinctrl
+> @@ -0,0 +1,200 @@
+> +Qualcomm SM8150 TLMM block
 > +
-> +/*
-> + * Every pin is maintained as a single group, and missing or non-existing pin
-> + * would be maintained as dummy group to synchronize pin group index with
-> + * pin descriptor registered with pinctrl core.
-> + * Clients would not be able to request these dummy pin groups.
-> + */
-> +static const struct msm_pingroup sm8150_groups[] = {
-[..]
-> +	[58] = PINGROUP(58, SOUTH, qup17, qup19, qdss_cti, qdss_cti, _, _, _, _, _),
+> +This binding describes the Top Level Mode Multiplexer block found in the
+> +QCS404 platform.
+> +
+> +- compatible:
+> +	Usage: required
+> +	Value type: <string>
+> +	Definition: must be "qcom,sm8150-pinctrl"
+> +
+> +- reg:
+> +	Usage: required
+> +	Value type: <prop-encoded-array>
+> +	Definition: the base address and size of the north, south , west
 
-qdss_cti can't be both function 3 and 4 of a single pin.
+Extra space after south.
 
-[..]
-> +static struct platform_driver sm8150_pinctrl_driver = {
-> +	.driver = {
-> +		.name = "sm8150-pinctrl",
-> +		.owner = THIS_MODULE,
+> +		    and east TLMM tiles.
+> +
+> +- reg-names:
+> +	Usage: required
+> +	Value type: <prop-encoded-array>
+> +	Defintiion: names for the cells of reg, must contain "north", "south"
+> +		    "west" and "east".
+> +
+> +- interrupts:
+> +	Usage: required
+> +	Value type: <prop-encoded-array>
+> +	Definition: should specify the TLMM summary IRQ.
+> +
+> +- interrupt-controller:
+> +	Usage: required
+> +	Value type: <none>
+> +	Definition: identifies this node as an interrupt controller
+> +
+> +- #interrupt-cells:
+> +	Usage: required
+> +	Value type: <u32>
+> +	Definition: must be 2. Specifying the pin number and flags, as defined
+> +		    in <dt-bindings/interrupt-controller/irq.h>
+> +
+> +- gpio-controller:
+> +	Usage: required
+> +	Value type: <none>
+> +	Definition: identifies this node as a gpio controller
+> +
+> +- #gpio-cells:
+> +	Usage: required
+> +	Value type: <u32>
+> +	Definition: must be 2. Specifying the pin number and flags, as defined
+> +		    in <dt-bindings/gpio/gpio.h>
+> +
 
-No .owner in platform_driver
+Please also document gpio-ranges and gpio-reserved-ranges.
 
-> +		.of_match_table = sm8150_pinctrl_of_match,
-> +	},
-> +	.probe = sm8150_pinctrl_probe,
-> +	.remove = msm_pinctrl_remove,
-> +};
+> +Please refer to ../gpio/gpio.txt and ../interrupt-controller/interrupts.txt for
+> +a general description of GPIO and interrupt bindings.
+> +
+> +Please refer to pinctrl-bindings.txt in this directory for details of the
+> +common pinctrl bindings used by client devices, including the meaning of the
+> +phrase "pin configuration node".
+> +
+> +The pin configuration nodes act as a container for an arbitrary number of
+> +subnodes. Each of these subnodes represents some desired configuration for a
+> +pin, a group, or a list of pins or groups. This configuration can include the
+> +mux function to select on those pin(s)/group(s), and various pin configuration
+> +parameters, such as pull-up, drive strength, etc.
+> +
+> +
+> +PIN CONFIGURATION NODES:
+> +
+> +The name of each subnode is not important; all subnodes should be enumerated
+> +and processed purely based on their content.
+> +
+> +Each subnode only affects those parameters that are explicitly listed. In
+> +other words, a subnode that lists a mux function but no pin configuration
+> +parameters implies no information about any pin configuration parameters.
+> +Similarly, a pin subnode that describes a pullup parameter implies no
+> +information about e.g. the mux function.
+> +
+> +
+> +The following generic properties as defined in pinctrl-bindings.txt are valid
+> +to specify in a pin configuration subnode:
+> +
+> +- pins:
+> +	Usage: required
+> +	Value type: <string-array>
+> +	Definition: List of gpio pins affected by the properties specified in
+> +		    this subnode.
+> +
+> +		    Valid pins are:
+> +		      gpio0-gpio149
+> +		        Supports mux, bias and drive-strength
+> +
+> +		      sdc1_clk, sdc1_cmd, sdc1_data sdc2_clk, sdc2_cmd,
+> +		      sdc2_data sdc1_rclk
+> +		        Supports bias and drive-strength
+> +
+> +		      ufs_reset
+> +		        Supports bias and drive-strength
+> +
+> +- function:
+> +	Usage: required
+> +	Value type: <string>
+> +	Definition: Specify the alternative function to be configured for the
+> +		    specified pins. Functions are only valid for gpio pins.
+> +		    Valid values are:
+> +
+> +		    blsp_uart1, blsp_spi1, blsp_i2c1, blsp_uim1, atest_tsens,
+> +		    bimc_dte1, dac_calib0, blsp_spi8, blsp_uart8, blsp_uim8,
+> +		    qdss_cti_trig_out_b, bimc_dte0, dac_calib1, qdss_cti_trig_in_b,
+> +		    dac_calib2, atest_tsens2, atest_usb1, blsp_spi10, blsp_uart10,
+> +		    blsp_uim10, atest_bbrx1, atest_usb13, atest_bbrx0, atest_usb12,
+> +		    mdp_vsync, edp_lcd, blsp_i2c10, atest_gpsadc1, atest_usb11,
+> +		    atest_gpsadc0, edp_hot, atest_usb10, m_voc, dac_gpio, atest_char,
+> +		    cam_mclk, pll_bypassnl, qdss_stm7, blsp_i2c8, qdss_tracedata_b,
+> +		    pll_reset, qdss_stm6, qdss_stm5, qdss_stm4, atest_usb2, cci_i2c,
+> +		    qdss_stm3, dac_calib3, atest_usb23, atest_char3, dac_calib4,
+> +		    qdss_stm2, atest_usb22, atest_char2, qdss_stm1, dac_calib5,
+> +		    atest_usb21, atest_char1, dbg_out, qdss_stm0, dac_calib6,
+> +		    atest_usb20, atest_char0, dac_calib10, qdss_stm10,
+> +		    qdss_cti_trig_in_a, cci_timer4, blsp_spi6, blsp_uart6, blsp_uim6,
+> +		    blsp2_spi, qdss_stm9, qdss_cti_trig_out_a, dac_calib11,
+> +		    qdss_stm8, cci_timer0, qdss_stm13, dac_calib7, cci_timer1,
+> +		    qdss_stm12, dac_calib8, cci_timer2, blsp1_spi, qdss_stm11,
+> +		    dac_calib9, cci_timer3, cci_async, dac_calib12, blsp_i2c6,
+> +		    qdss_tracectl_a, dac_calib13, qdss_traceclk_a, dac_calib14,
+> +		    dac_calib15, hdmi_rcv, dac_calib16, hdmi_cec, pwr_modem,
+> +		    dac_calib17, hdmi_ddc, pwr_nav, dac_calib18, pwr_crypto,
+> +		    dac_calib19, hdmi_hot, dac_calib20, dac_calib21, pci_e0,
+> +		    dac_calib22, dac_calib23, dac_calib24, tsif1_sync, dac_calib25,
+> +		    sd_write, tsif1_error, blsp_spi2, blsp_uart2, blsp_uim2,
+> +		    qdss_cti, blsp_i2c2, blsp_spi3, blsp_uart3, blsp_uim3, blsp_i2c3,
+> +		    uim3, blsp_spi9, blsp_uart9, blsp_uim9, blsp10_spi, blsp_i2c9,
+> +		    blsp_spi7, blsp_uart7, blsp_uim7, qdss_tracedata_a, blsp_i2c7,
+> +		    qua_mi2s, gcc_gp1_clk_a, ssc_irq, uim4, blsp_spi11, blsp_uart11,
+> +		    blsp_uim11, gcc_gp2_clk_a, gcc_gp3_clk_a, blsp_i2c11, cri_trng0,
+> +		    cri_trng1, cri_trng, qdss_stm18, pri_mi2s, qdss_stm17, blsp_spi4,
+> +		    blsp_uart4, blsp_uim4, qdss_stm16, qdss_stm15, blsp_i2c4,
+> +		    qdss_stm14, dac_calib26, spkr_i2s, audio_ref, lpass_slimbus,
+> +		    isense_dbg, tsense_pwm1, tsense_pwm2, btfm_slimbus, ter_mi2s,
+> +		    qdss_stm22, qdss_stm21, qdss_stm20, qdss_stm19, gcc_gp1_clk_b,
+> +		    sec_mi2s, blsp_spi5, blsp_uart5, blsp_uim5, gcc_gp2_clk_b,
+> +		    gcc_gp3_clk_b, blsp_i2c5, blsp_spi12, blsp_uart12, blsp_uim12,
+> +		    qdss_stm25, qdss_stm31, blsp_i2c12, qdss_stm30, qdss_stm29,
+> +		    tsif1_clk, qdss_stm28, tsif1_en, tsif1_data, sdc4_cmd, qdss_stm27,
+> +		    qdss_traceclk_b, tsif2_error, sdc43, vfr_1, qdss_stm26, tsif2_clk,
+> +		    sdc4_clk, qdss_stm24, tsif2_en, sdc42, qdss_stm23, qdss_tracectl_b,
+> +		    sd_card, tsif2_data, sdc41, tsif2_sync, sdc40, mdp_vsync_p_b,
+> +		    ldo_en, mdp_vsync_s_b, ldo_update, blsp11_uart_tx_b, blsp11_uart_rx_b,
+> +		    blsp11_i2c_sda_b, prng_rosc, blsp11_i2c_scl_b, uim2, uim1, uim_batt,
+> +		    pci_e2, pa_indicator, adsp_ext, ddr_bist, qdss_tracedata_11,
+> +		    qdss_tracedata_12, modem_tsync, nav_dr, nav_pps, pci_e1, gsm_tx,
+> +		    qspi_cs, ssbi2, ssbi1, mss_lte, qspi_clk, qspi0, qspi1, qspi2, qspi3,
+> +		    gpio
+> +
+> +- bias-disable:
+> +	Usage: optional
+> +	Value type: <none>
+> +	Definition: The specified pins should be configued as no pull.
+> +
+> +- bias-pull-down:
+> +	Usage: optional
+> +	Value type: <none>
+> +	Definition: The specified pins should be configued as pull down.
+> +
+> +- bias-pull-up:
+> +	Usage: optional
+> +	Value type: <none>
+> +	Definition: The specified pins should be configued as pull up.
+> +
+> +- output-high:
+> +	Usage: optional
+> +	Value type: <none>
+> +	Definition: The specified pins are configured in output mode, driven
+> +		    high.
+> +		    Not valid for sdc pins.
+> +
+> +- output-low:
+> +	Usage: optional
+> +	Value type: <none>
+> +	Definition: The specified pins are configured in output mode, driven
+> +		    low.
+> +		    Not valid for sdc pins.
+> +
+> +- drive-strength:
+> +	Usage: optional
+> +	Value type: <u32>
+> +	Definition: Selects the drive strength for the specified pins, in mA.
+> +		    Valid values are: 2, 4, 6, 8, 10, 12, 14 and 16
+> +
+> +Example:
+> +
+> +	tlmm: pinctrl@3000000 {
+> +		compatible = "qcom,sm8150-pinctrl";
+> +		reg = <0x03100000 0x300000>,
+> +		      <0x03500000 0x300000>,
+> +		      <0x03900000 0x300000>,
+> +		      <0x03D00000 0x300000>;
+> +		reg-names = "west", "east", "north", "south";
+> +		interrupts = <GIC_SPI 208 IRQ_TYPE_LEVEL_HIGH>;
+> +		gpio-controller;
+> +		#gpio-cells = <2>;
+> +		interrupt-controller;
+> +		#interrupt-cells = <2>;
+
+You're missing the required gpio-ranges from the example, see e.g.
+msm8996 (and please send a patch to the binding you based this on).
+
+> +	};
 
 Regards,
 Bjorn
