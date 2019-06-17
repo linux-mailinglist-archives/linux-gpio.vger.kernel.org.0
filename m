@@ -2,95 +2,145 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 718D747D4A
-	for <lists+linux-gpio@lfdr.de>; Mon, 17 Jun 2019 10:38:37 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6611747E89
+	for <lists+linux-gpio@lfdr.de>; Mon, 17 Jun 2019 11:35:08 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727136AbfFQIig (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 17 Jun 2019 04:38:36 -0400
-Received: from anchovy3.45ru.net.au ([203.30.46.155]:44387 "EHLO
-        anchovy3.45ru.net.au" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726121AbfFQIig (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 17 Jun 2019 04:38:36 -0400
-Received: (qmail 9143 invoked by uid 5089); 17 Jun 2019 08:38:34 -0000
-Received: by simscan 1.2.0 ppid: 9085, pid: 9086, t: 0.0565s
-         scanners: regex: 1.2.0 attach: 1.2.0 clamav: 0.88.3/m:40/d:1950
-Received: from unknown (HELO ?192.168.0.128?) (preid@electromag.com.au@203.59.235.95)
-  by anchovy2.45ru.net.au with ESMTPA; 17 Jun 2019 08:38:33 -0000
-Subject: Re: [RFC] Addition of kernel
-To:     Martyn Welch <martyn.welch@collabora.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Cc:     linux-gpio@vger.kernel.org, kernel@collabora.com
-References: <dd30c34a83293926c072f6a3fe612dcf134b7620.camel@collabora.com>
-From:   Phil Reid <preid@electromag.com.au>
-Message-ID: <4e399cb4-189f-a690-8cd4-c2232cba22ea@electromag.com.au>
-Date:   Mon, 17 Jun 2019 16:38:30 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.1
-MIME-Version: 1.0
-In-Reply-To: <dd30c34a83293926c072f6a3fe612dcf134b7620.camel@collabora.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-AU
-Content-Transfer-Encoding: 7bit
+        id S1725919AbfFQJfH (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 17 Jun 2019 05:35:07 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:47804 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725837AbfFQJfH (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 17 Jun 2019 05:35:07 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id 7D9E7608BA; Mon, 17 Jun 2019 09:35:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1560764106;
+        bh=OJbahePcE2ec6ZxEJb8UDNZ0O+db2KmSKPFs24UUzRE=;
+        h=From:To:Cc:Subject:Date:From;
+        b=W1ZOcvRXsqJrU2jAsG2JlT2lsG5XC05Mb5P35CsQe9y+3au/pNLvVmNALeeeWc1R1
+         SHPCrQvsR1gu/4+inLNSHBuZ7Vw3UTSB/coiTp/baZSXvyxqnD0FvofGGPNeZH/zsb
+         FlBDaYGIHgedIS7bdbg7JY5J7SkCOoVmoooVPVWE=
+X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
+        pdx-caf-mail.web.codeaurora.org
+X-Spam-Level: 
+X-Spam-Status: No, score=-2.7 required=2.0 tests=ALL_TRUSTED,BAYES_00,
+        DKIM_INVALID,DKIM_SIGNED,SPF_NONE autolearn=no autolearn_force=no
+        version=3.4.0
+Received: from neeraju-linux.qualcomm.com (blr-c-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.19.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: neeraju@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 525A960867;
+        Mon, 17 Jun 2019 09:35:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1560764106;
+        bh=OJbahePcE2ec6ZxEJb8UDNZ0O+db2KmSKPFs24UUzRE=;
+        h=From:To:Cc:Subject:Date:From;
+        b=W1ZOcvRXsqJrU2jAsG2JlT2lsG5XC05Mb5P35CsQe9y+3au/pNLvVmNALeeeWc1R1
+         SHPCrQvsR1gu/4+inLNSHBuZ7Vw3UTSB/coiTp/baZSXvyxqnD0FvofGGPNeZH/zsb
+         FlBDaYGIHgedIS7bdbg7JY5J7SkCOoVmoooVPVWE=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 525A960867
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=neeraju@codeaurora.org
+From:   Neeraj Upadhyay <neeraju@codeaurora.org>
+To:     bjorn.andersson@linaro.org, sboyd@codeaurora.org,
+        linus.walleij@linaro.org, timur@codeaurora.org
+Cc:     linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Srinivas Ramana <sramana@codeaurora.org>,
+        Neeraj Upadhyay <neeraju@codeaurora.org>
+Subject: [PATCH v2] pinctrl: qcom: Add irq_enable callback for msm gpio
+Date:   Mon, 17 Jun 2019 15:04:50 +0530
+Message-Id: <1560764090-22740-1-git-send-email-neeraju@codeaurora.org>
+X-Mailer: git-send-email 1.9.1
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-G'day Martyn,
+From: Srinivas Ramana <sramana@codeaurora.org>
 
-On 17/06/2019 16:29, Martyn Welch wrote:
-> Hi Linus, Bartosz,
-> 
-> We are currently in the position that we would like to pre-configure
-> some GPIOs at boot time and be able to later affect the state of GPIOs
-> configured as outputs or read the state of GPIOs previously configured
-> as inputs.
-> 
-> The device tree property `gpios-line-names` gives a very useful
-> mechanism for identifying the correct GPIO to use/read for a given
-> purpose in user space, but doesn't provide any guidance on how that
-> line is expected to be used. The gpio-hogging functionality enables us
-> to configure GPIOs during boot, ensuring that the correct state is
-> present on the relevant GPIO lines, but does not provide the ability to
-> modify or read these GPIOs at runtime.
-> 
-> I understand that a lot of people have requested such functionality in
-> the past, but I'm not sure if anything concrete has ever been
-> submitted. I'm interested in determining what the general feeling
-> towards adding such functionality would be and to gain some input with
-> regards to how this should/could be implemented (assuming the general
-> concept is acceptable).
-> 
-> Initially we are thinking of providing a device-tree node containing a
-> "gpio-default" property and would contain a lot of the same properties
-> as "gpio-hog".
-> 
-> Code wise, it would seem to need to follow roughly the same flow as
-> gpio-hog, but avoid running "gpiod_request_commit()" so that the GPIO
-> line could later be requested by user space.
-> 
-> I suspect there's a whole load of details that I'm missing at this
-> stage and I've not fully thought through the implications for later
-> removal.
-> 
-> Does something like this seem viable upstream?
-> 
+Introduce the irq_enable callback which will be same as irq_unmask
+except that it will also clear the status bit before unmask.
 
-I'd find something like this useful.
-If we know enough to name the gpio lines, we more than likely also know enough
-to restrict the IO configuration to input only in the DT.
+This will help in clearing any erroneous interrupts that would
+have got latched when the interrupt is not in use.
 
-There's a new driver recently posted that solves some of this:
-"Add virtual controller for gpio configuration"
-https://www.spinics.net/lists/linux-gpio/msg39681.html
+There may be devices like UART which can use the same gpio line
+for data rx as well as a wakeup gpio when in suspend. The data that
+was flowing on the line may latch the interrupt and when we enable
+the interrupt before going to suspend, this would trigger the
+unexpected interrupt. This change helps clearing the interrupt
+so that these unexpected interrupts gets cleared.
 
-It solves a number of problems except for restricting user-space from
-configuring a pin for output that should never be an output.
+Signed-off-by: Srinivas Ramana <sramana@codeaurora.org>
+Signed-off-by: Neeraj Upadhyay <neeraju@codeaurora.org>
+---
 
+Changes since v1:
+- Extracted common code into __msm_gpio_irq_unmask().
 
+ drivers/pinctrl/qcom/pinctrl-msm.c | 25 ++++++++++++++++++++++++-
+ 1 file changed, 24 insertions(+), 1 deletion(-)
 
+diff --git a/drivers/pinctrl/qcom/pinctrl-msm.c b/drivers/pinctrl/qcom/pinctrl-msm.c
+index 6e319bc..2a127f0 100644
+--- a/drivers/pinctrl/qcom/pinctrl-msm.c
++++ b/drivers/pinctrl/qcom/pinctrl-msm.c
+@@ -729,7 +729,7 @@ static void msm_gpio_irq_mask(struct irq_data *d)
+ 	raw_spin_unlock_irqrestore(&pctrl->lock, flags);
+ }
+ 
+-static void msm_gpio_irq_unmask(struct irq_data *d)
++static void __msm_gpio_irq_unmask(struct irq_data *d, bool status_clear)
+ {
+ 	struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
+ 	struct msm_pinctrl *pctrl = gpiochip_get_data(gc);
+@@ -741,6 +741,17 @@ static void msm_gpio_irq_unmask(struct irq_data *d)
+ 
+ 	raw_spin_lock_irqsave(&pctrl->lock, flags);
+ 
++	if (status_clear) {
++		/*
++		 * clear the interrupt status bit before unmask to avoid
++		 * any erroneous interrupts that would have got latched
++		 * when the interrupt is not in use.
++		 */
++		val = msm_readl_intr_status(pctrl, g);
++		val &= ~BIT(g->intr_status_bit);
++		msm_writel_intr_status(val, pctrl, g);
++	}
++
+ 	val = msm_readl_intr_cfg(pctrl, g);
+ 	val |= BIT(g->intr_raw_status_bit);
+ 	val |= BIT(g->intr_enable_bit);
+@@ -751,6 +762,17 @@ static void msm_gpio_irq_unmask(struct irq_data *d)
+ 	raw_spin_unlock_irqrestore(&pctrl->lock, flags);
+ }
+ 
++static void msm_gpio_irq_enable(struct irq_data *d)
++{
++
++	__msm_gpio_irq_unmask(d, true);
++}
++
++static void msm_gpio_irq_unmask(struct irq_data *d)
++{
++	__msm_gpio_irq_unmask(d, false);
++}
++
+ static void msm_gpio_irq_ack(struct irq_data *d)
+ {
+ 	struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
+@@ -978,6 +1000,7 @@ static int msm_gpio_init(struct msm_pinctrl *pctrl)
+ 	chip->need_valid_mask = msm_gpio_needs_valid_mask(pctrl);
+ 
+ 	pctrl->irq_chip.name = "msmgpio";
++	pctrl->irq_chip.irq_enable = msm_gpio_irq_enable;
+ 	pctrl->irq_chip.irq_mask = msm_gpio_irq_mask;
+ 	pctrl->irq_chip.irq_unmask = msm_gpio_irq_unmask;
+ 	pctrl->irq_chip.irq_ack = msm_gpio_irq_ack;
 -- 
-Regards
-Phil Reid
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a
+member of the Code Aurora Forum, hosted by The Linux Foundation
 
