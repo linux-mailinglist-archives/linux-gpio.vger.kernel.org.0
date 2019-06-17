@@ -2,109 +2,77 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 8A83B4827D
-	for <lists+linux-gpio@lfdr.de>; Mon, 17 Jun 2019 14:32:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7F01D482A7
+	for <lists+linux-gpio@lfdr.de>; Mon, 17 Jun 2019 14:39:24 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726243AbfFQMcS (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 17 Jun 2019 08:32:18 -0400
-Received: from mga12.intel.com ([192.55.52.136]:57562 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726005AbfFQMcS (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Mon, 17 Jun 2019 08:32:18 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 17 Jun 2019 05:32:17 -0700
-X-ExtLoop1: 1
-Received: from pipin.fi.intel.com (HELO pipin) ([10.237.72.175])
-  by orsmga005.jf.intel.com with ESMTP; 17 Jun 2019 05:32:13 -0700
-From:   Felipe Balbi <balbi@kernel.org>
-To:     Lee Jones <lee.jones@linaro.org>, alokc@codeaurora.org,
-        agross@kernel.org, david.brown@linaro.org,
-        wsa+renesas@sang-engineering.com, bjorn.andersson@linaro.org,
-        gregkh@linuxfoundation.org, ard.biesheuvel@linaro.org,
-        jlhugo@gmail.com
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-i2c@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-gpio@vger.kernel.org, linux-usb@vger.kernel.org
-Subject: Re: [PATCH v4 4/6] usb: dwc3: qcom: Add support for booting with ACPI
-In-Reply-To: <20190617102146.GG16364@dell>
-References: <20190612142654.9639-1-lee.jones@linaro.org> <20190612142654.9639-5-lee.jones@linaro.org> <20190617102146.GG16364@dell>
-Date:   Mon, 17 Jun 2019 15:32:07 +0300
-Message-ID: <87y320gzp4.fsf@linux.intel.com>
+        id S1726121AbfFQMjV (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 17 Jun 2019 08:39:21 -0400
+Received: from mout.kundenserver.de ([212.227.126.133]:54515 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725884AbfFQMjV (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 17 Jun 2019 08:39:21 -0400
+Received: from [192.168.1.110] ([77.2.173.233]) by mrelayeu.kundenserver.de
+ (mreue009 [212.227.15.167]) with ESMTPSA (Nemesis) id
+ 1MDhpf-1hjlaq0Pup-00AlOY; Mon, 17 Jun 2019 14:39:19 +0200
+Subject: Re: [RFC] Addition of kernel
+To:     Martyn Welch <martyn.welch@collabora.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Cc:     linux-gpio@vger.kernel.org, kernel@collabora.com
+References: <dd30c34a83293926c072f6a3fe612dcf134b7620.camel@collabora.com>
+From:   "Enrico Weigelt, metux IT consult" <lkml@metux.net>
+Organization: metux IT consult
+Message-ID: <e6ca74e2-fc51-3f24-c5e9-18c22d6f87ef@metux.net>
+Date:   Mon, 17 Jun 2019 14:39:18 +0200
+User-Agent: Mozilla/5.0 (X11; Linux i686 on x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.2.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="=-=-=";
-        micalg=pgp-sha256; protocol="application/pgp-signature"
+In-Reply-To: <dd30c34a83293926c072f6a3fe612dcf134b7620.camel@collabora.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Provags-ID: V03:K1:JrqNXRo4+wsnS/6cfcspmC0MyKAv0lGN88wrOlO3ZdTiMBSzrvq
+ 0vdS5pqBSlZRXkVKfxiqpu9orkJh7e+MwEtV4smZe2l+nlMFUZr0qvFG5lOI8GxwU1x1tl/
+ rPpx4WmLPucYy4wb1T+HmgNWJRLfEytCTMVlUWBfoeYUO5aYv/3WkUl26Cx21i7W5wKbktz
+ 5+BmdiSwtKFeGg7jQLVDQ==
+X-Spam-Flag: NO
+X-UI-Out-Filterresults: notjunk:1;V03:K0:x6UjyeIbt8Y=:9ZBmmP3tWKr1ZD36Hj7XDb
+ wgfn2g09fZ/1hOizyO4oaNwFQKqEbouTysRirOJIRPFctw2gT2B7xPjwrea2aQ9JVeVskE7lc
+ Zh9k+nrrFkzilndYoQ5+568p4OoM4oRUsZhIOg+g6SmG3TOXVPXmNAinHju18Z5/T3g3WYaYh
+ LU7gYwNb/9YGGW4BwFa+zSK0OCY1hijl706Le1Cloo5vdQeh0aAKt3owjlF+2LY3InDiBU9sZ
+ Odb3oYaZLG7rcOOWWTmgQCIbzoPP+jkvnrhr/4E18kIkreDYxT6zgs3Z7VkVKla/2SrjRPP9c
+ ogntrHIbFpAvzK0IMop4mQvq5gP6C4UAZ4ce+XHHs0qneVwcQffng4ICis6BtZ4Y+MMc7N5ZT
+ 0BQMqbpIADi66Fcte6NGnDTA0LKOcu+ZbRPdd7oSfA3qZk+MjGm1WjhncnBrjSCPblICZxfTf
+ oeufuTptMzpUs8YnU6ZgXbZQF3PJkC/ajGf7LXgcnSyMggTZx9MEipJusf2sGoXCZc+W4gWiy
+ l3hTAcnZUiTMohcL1HWS5Se/wttn1iUYTFILEDAL4NkGYJweUizKQHYiGok3R0XlB1WyW/38T
+ QaIm+4b79RNOL7VRDpVMgCPZ38aiKpcWJN7f+Xa98YvBaf4w2cyEkhWXKZlzhGNOrQ3LLrlih
+ QMdVYG5iy6DkaLtjJNYUWdPxaNSG4wFDpSilC0vLHlKoCmrK9G/+uQx+YFuYN6YxhczzfbN5X
+ zrIyGev+Zl99KLHjyfnoYzuwA1zdcRY20q6v3XN9MUuufd1cGor9mb7/tcE=
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
---=-=-=
-Content-Type: text/plain
-Content-Transfer-Encoding: quoted-printable
+On 17.06.19 10:29, Martyn Welch wrote:
 
 Hi,
 
-Lee Jones <lee.jones@linaro.org> writes:
->> In Linux, the DWC3 core exists as its own independent platform device.
->> Thus when describing relationships in Device Tree, the current default
->> boot configuration table option, the DWC3 core often resides as a child
->> of the platform specific node.  Both of which are given their own
->> address space descriptions and the drivers can be mostly agnostic to
->> each other.
->>=20
->> However, other Operating Systems have taken a more monolithic approach,
->> which is evident in the configuration ACPI tables for the Qualcomm
->> Snapdragon SDM850, where all DWC3 (core and platform) components are
->> described under a single IO memory region.
->>=20
->> To ensure successful booting using the supplied ACPI tables, we need to
->> devise a way to chop up the address regions provided and subsequently
->> register the DWC3 core with the resultant information, which is
->> precisely what this patch aims to achieve.
->>=20
->> Signed-off-by: Lee Jones <lee.jones@linaro.org>
->> Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
->> ---
->>  drivers/usb/dwc3/Kconfig     |   2 +-
->>  drivers/usb/dwc3/dwc3-qcom.c | 206 ++++++++++++++++++++++++++++++-----
->>  2 files changed, 179 insertions(+), 29 deletions(-)
->
-> I'm starting to get a little twitchy about these patches now.  Due to
-> the release cadence of the larger Linux distros, it's pretty important
-> that these changes land in v5.3.  Without them, it is impossible to
-> install Linux on some pretty high profile emerging platforms.
->
-> It's already -rc5 and I'm concerned that we're going to miss the
-> merge-window.  Would you be kind enough to review these patches
-> please?  The Pinctrl and I2C parts of the set have already been
-> merged.
+> We are currently in the position that we would like to pre-configure
+> some GPIOs at boot time and be able to later affect the state of GPIOs
+> configured as outputs or read the state of GPIOs previously configured
+> as inputs.
 
-I don't seem to have this series in my inbox. This is the only email I
-have in this series.
+what's the actual use case you've got in mind ?
 
-=2D-=20
-balbi
+I've got the feeling that these lines aren't really so "generic" in
+your case, but attached to something that has a particular meaning.
 
---=-=-=
-Content-Type: application/pgp-signature; name="signature.asc"
+So, maybe something that deserves it's own driver ?
 
------BEGIN PGP SIGNATURE-----
 
-iQIzBAEBCAAdFiEElLzh7wn96CXwjh2IzL64meEamQYFAl0HiEkACgkQzL64meEa
-mQZgTg/+MvWLo+0fVFNR04KSqTX6nZcqLk/4KwBc7uy1RsD4WMFa3zcKE/jB8scd
-KN48Szwr6TxXj6/nboP7PeKF+u2ftbYw8L1Ggtd1Okq/Fn8mUcM+vY1xGotjgrao
-ZXbOLcI393gCADUuEgHbOZDXPeLtgF2K/RQ06CPJ+wPunpx3pDwJVaMumW5Inocu
-Yz/eMkd5XP2QXDfL8F+27ZfnZQ6oNbEa+RV0cakbyvjHWDbkeiCW2DN5YFM3gJpC
-T9RXeqzKIUkfWd3mLcBq54Z3wCh51nw2UfThE1bQK2XlPKPXnU9P/Oi7ZIJYn5X4
-hF9PoBRoYWoaS5v9TJxL+78F+salna/FVsr6jKtbmVQjr4t3H+2i3SKXUmcMtaP9
-/jXg8jRCni44640ri7F4xN52TdkE/K7eAShOTp2izyRydKkZRxCOgW0xPh1Yi6Yx
-DGFxy4TQPUc6uAchzWfB/DIQywLYMDChFGMc525vTiw3ATnWf5dK7c/G0FufNs+g
-YcXsD9HyhYs9puAp4DBUZmXZGiuPHT8Se78aTfYqAvY7oFH5puh2Mg8UDLeeiatr
-A67I1jpWh9RvTGFPpBABobbaItB4lMcitFy2MqxByxNmJt9l5bbExTRmdXLFzbZK
-db8+BiVaO0xw70s0j9BuGwO/YolXOiX2i4lP4Qzhc7WjniL3FPw=
-=l8qE
------END PGP SIGNATURE-----
---=-=-=--
+--mtx
+
+-- 
+Enrico Weigelt, metux IT consult
+Free software and Linux embedded engineering
+info@metux.net -- +49-151-27565287
