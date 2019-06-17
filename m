@@ -2,117 +2,109 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id CBC3648143
-	for <lists+linux-gpio@lfdr.de>; Mon, 17 Jun 2019 13:50:43 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8A83B4827D
+	for <lists+linux-gpio@lfdr.de>; Mon, 17 Jun 2019 14:32:57 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725983AbfFQLuX (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 17 Jun 2019 07:50:23 -0400
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:44271 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725763AbfFQLuW (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 17 Jun 2019 07:50:22 -0400
-Received: by mail-lj1-f194.google.com with SMTP id k18so8938551ljc.11
-        for <linux-gpio@vger.kernel.org>; Mon, 17 Jun 2019 04:50:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=jUC3oAv954DDdM3Qoub7t5o8CIOFNWz/tUxECd+JQ9s=;
-        b=BuTo/QN7Xsk7pkbu1e9KTEhJat0l1vZhloCRxm0xW7p0PHAtECvTmN4DyRUvWnjY7F
-         425/HzaReo/WGxA2vRP+9whOnA8l5R7G/hCUShepGlHEpyWlnF0+klfqxV0Zkhi8Bz+0
-         jV4gq1J37BAZ3kW71udx4PVHTSDbvB43bURTwX7+6ZvcQpXKeN2toNqRAhr7RformkLw
-         6pgUeq7MQcctyJamYjgMyuyaJSaXDbS9aSDe2bU6HRcHWNpFKZb1PUVZ5EBagKifKxOf
-         +jrOWqbqJ4KyIlrZlv7VHhbJJqtfvDqgRIULjvBBernbELvj0uJYjzQabAfqGTX916DY
-         uIWA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=jUC3oAv954DDdM3Qoub7t5o8CIOFNWz/tUxECd+JQ9s=;
-        b=eaRZiuUVDqiijmVr4bFwpmoLO14azIwgDi7AyYI0xAX/usjbtpYYn5fK+ai0rs/2ul
-         OO361ya82/Z/muppcNfpc/xJdg+q8Kq2s4Hjq7sQfScYSolf9EzOEwVmDki2G7rzPJAR
-         /2vY1ab4q+4lkJYF9VDgd2YGvWoMcYCuLrXbVAPTDz9To2ZZHfjf0oUfC44+vFPWMijh
-         TRsBK7Xyh7ubt+nrtLxjMnfqPQNqrrg0UWfE66yVujLh8g5ZikLFc426W2n10iY2Aa9c
-         rw6a9CXPKA7E7vgPqXIpq51kQQNZgVKgmya5nTIOO/lXw0JoIhL7i1exEK4q232busnK
-         cGQg==
-X-Gm-Message-State: APjAAAUhOoQfP6x4DMPhKBX2Tph++mQkO9ICyLICcuRpoYRtKSnIqTEC
-        G+bsMmqvcOK/fbWX2i0QpZaPeSL0uO6xhZeVzFfBNQ==
-X-Google-Smtp-Source: APXvYqxc9icfPV6JO31y7/yaQv+ExXgLV0eomSpNfThNBkfv0HxBRb+mT8ya0W5DCcu8LUONsl0ZC4+8TIbqz0JTEG0=
-X-Received: by 2002:a2e:a0cf:: with SMTP id f15mr29112501ljm.180.1560772220963;
- Mon, 17 Jun 2019 04:50:20 -0700 (PDT)
+        id S1726243AbfFQMcS (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 17 Jun 2019 08:32:18 -0400
+Received: from mga12.intel.com ([192.55.52.136]:57562 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726005AbfFQMcS (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Mon, 17 Jun 2019 08:32:18 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 17 Jun 2019 05:32:17 -0700
+X-ExtLoop1: 1
+Received: from pipin.fi.intel.com (HELO pipin) ([10.237.72.175])
+  by orsmga005.jf.intel.com with ESMTP; 17 Jun 2019 05:32:13 -0700
+From:   Felipe Balbi <balbi@kernel.org>
+To:     Lee Jones <lee.jones@linaro.org>, alokc@codeaurora.org,
+        agross@kernel.org, david.brown@linaro.org,
+        wsa+renesas@sang-engineering.com, bjorn.andersson@linaro.org,
+        gregkh@linuxfoundation.org, ard.biesheuvel@linaro.org,
+        jlhugo@gmail.com
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-i2c@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-gpio@vger.kernel.org, linux-usb@vger.kernel.org
+Subject: Re: [PATCH v4 4/6] usb: dwc3: qcom: Add support for booting with ACPI
+In-Reply-To: <20190617102146.GG16364@dell>
+References: <20190612142654.9639-1-lee.jones@linaro.org> <20190612142654.9639-5-lee.jones@linaro.org> <20190617102146.GG16364@dell>
+Date:   Mon, 17 Jun 2019 15:32:07 +0300
+Message-ID: <87y320gzp4.fsf@linux.intel.com>
 MIME-Version: 1.0
-References: <20190611185102.368ED21744@mail.kernel.org> <671f87d6-f4a4-6d2c-967b-e1aa0677d83e@codeaurora.org>
- <b0fdbcb1-4d5d-5c60-4150-7762a577cd10@codeaurora.org>
-In-Reply-To: <b0fdbcb1-4d5d-5c60-4150-7762a577cd10@codeaurora.org>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Mon, 17 Jun 2019 13:50:09 +0200
-Message-ID: <CACRpkdahUNNOhQdri3T86jHr+qOBmXH61_AMmoWpv_be2koMrw@mail.gmail.com>
-Subject: Re: Fwd: Re: [PATCH] pinctrl: qcom: Clear status bit on irq_unmask
-To:     Neeraj Upadhyay <neeraju@codeaurora.org>,
-        Hans Verkuil <hverkuil@xs4all.nl>
-Cc:     Stephen Boyd <sboyd@kernel.org>,
-        Tengfei Fan <tengfeif@codeaurora.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        MSM <linux-arm-msm@vger.kernel.org>, sramana@codeaurora.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; boundary="=-=-=";
+        micalg=pgp-sha256; protocol="application/pgp-signature"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Jun 17, 2019 at 12:35 PM Neeraj Upadhyay <neeraju@codeaurora.org> wrote:
+--=-=-=
+Content-Type: text/plain
+Content-Transfer-Encoding: quoted-printable
 
-> Hi Stephen, there is one use case with is not covered by commit
-> b55326dc969e (
+Hi,
+
+Lee Jones <lee.jones@linaro.org> writes:
+>> In Linux, the DWC3 core exists as its own independent platform device.
+>> Thus when describing relationships in Device Tree, the current default
+>> boot configuration table option, the DWC3 core often resides as a child
+>> of the platform specific node.  Both of which are given their own
+>> address space descriptions and the drivers can be mostly agnostic to
+>> each other.
+>>=20
+>> However, other Operating Systems have taken a more monolithic approach,
+>> which is evident in the configuration ACPI tables for the Qualcomm
+>> Snapdragon SDM850, where all DWC3 (core and platform) components are
+>> described under a single IO memory region.
+>>=20
+>> To ensure successful booting using the supplied ACPI tables, we need to
+>> devise a way to chop up the address regions provided and subsequently
+>> register the DWC3 core with the resultant information, which is
+>> precisely what this patch aims to achieve.
+>>=20
+>> Signed-off-by: Lee Jones <lee.jones@linaro.org>
+>> Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+>> ---
+>>  drivers/usb/dwc3/Kconfig     |   2 +-
+>>  drivers/usb/dwc3/dwc3-qcom.c | 206 ++++++++++++++++++++++++++++++-----
+>>  2 files changed, 179 insertions(+), 29 deletions(-)
 >
-> "pinctrl: msm: Really mask level interrupts to prevent latching"). That
-> happens when
+> I'm starting to get a little twitchy about these patches now.  Due to
+> the release cadence of the larger Linux distros, it's pretty important
+> that these changes land in v5.3.  Without them, it is impossible to
+> install Linux on some pretty high profile emerging platforms.
 >
-> gpio line is toggled between i/o mode and interrupt mode :
->
-> 1. GPIO is configured as irq line. Peripheral raises interrupt.
->
-> 2. IRQ handler runs and disables the irq line (through wq work).
->
-> 3. GPIO is configured for input and and data is received from the
-> peripheral.
+> It's already -rc5 and I'm concerned that we're going to miss the
+> merge-window.  Would you be kind enough to review these patches
+> please?  The Pinctrl and I2C parts of the set have already been
+> merged.
 
-There is no distinction between using a GPIO line as input
-and using it for IRQ. All input GPIOs can be used for IRQs,
-if the hardware supports it (has an irqchip).
+I don't seem to have this series in my inbox. This is the only email I
+have in this series.
 
-> 4. Now, when GPIO is re-enabled as irq, we see spurious irq, and there
-> isn't
->
-> any data received on the gpio line, when it is read back after
-> configuring as input.
+=2D-=20
+balbi
 
-That's an interesting usecase. Hans Verkuil reworked the
-GPIO irq support very elegantly exactly to support this type
-of usecase (irq switch on and off dynamically), where he
-was even switching the line into output mode between
-the IRQ trains. (one-wire transcactions for CEC).
+--=-=-=
+Content-Type: application/pgp-signature; name="signature.asc"
 
-> Patch https://lkml.org/lkml/2019/6/17/226 tries to cover this use case.
-> Can you please provide your comments?
+-----BEGIN PGP SIGNATURE-----
 
-What this patch does is clear all pending IRQs at irq
-unmask. This is usually safe, unless there may be cases
-where you *want* to catch any pending IRQs. I guess
-normally you don't so it should be safe?
-
-The corner case is when you start some transaction
-or whatever that gets ACKed by an IRQ and you actually
-get the IRQ back before you had time to execute the code
-enabling the IRQ.
-
-That would be racy and bad code, as you should clearly
-enable the IRQ first, then start the transaction. So I think
-this patch is safe.
-
-But let's see what Bjorn says.
-
-Yours,
-Linus Walleij
+iQIzBAEBCAAdFiEElLzh7wn96CXwjh2IzL64meEamQYFAl0HiEkACgkQzL64meEa
+mQZgTg/+MvWLo+0fVFNR04KSqTX6nZcqLk/4KwBc7uy1RsD4WMFa3zcKE/jB8scd
+KN48Szwr6TxXj6/nboP7PeKF+u2ftbYw8L1Ggtd1Okq/Fn8mUcM+vY1xGotjgrao
+ZXbOLcI393gCADUuEgHbOZDXPeLtgF2K/RQ06CPJ+wPunpx3pDwJVaMumW5Inocu
+Yz/eMkd5XP2QXDfL8F+27ZfnZQ6oNbEa+RV0cakbyvjHWDbkeiCW2DN5YFM3gJpC
+T9RXeqzKIUkfWd3mLcBq54Z3wCh51nw2UfThE1bQK2XlPKPXnU9P/Oi7ZIJYn5X4
+hF9PoBRoYWoaS5v9TJxL+78F+salna/FVsr6jKtbmVQjr4t3H+2i3SKXUmcMtaP9
+/jXg8jRCni44640ri7F4xN52TdkE/K7eAShOTp2izyRydKkZRxCOgW0xPh1Yi6Yx
+DGFxy4TQPUc6uAchzWfB/DIQywLYMDChFGMc525vTiw3ATnWf5dK7c/G0FufNs+g
+YcXsD9HyhYs9puAp4DBUZmXZGiuPHT8Se78aTfYqAvY7oFH5puh2Mg8UDLeeiatr
+A67I1jpWh9RvTGFPpBABobbaItB4lMcitFy2MqxByxNmJt9l5bbExTRmdXLFzbZK
+db8+BiVaO0xw70s0j9BuGwO/YolXOiX2i4lP4Qzhc7WjniL3FPw=
+=l8qE
+-----END PGP SIGNATURE-----
+--=-=-=--
