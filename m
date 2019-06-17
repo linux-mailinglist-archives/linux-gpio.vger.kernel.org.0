@@ -2,18 +2,18 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id CB8E948CC9
-	for <lists+linux-gpio@lfdr.de>; Mon, 17 Jun 2019 20:44:19 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1C4C648CCC
+	for <lists+linux-gpio@lfdr.de>; Mon, 17 Jun 2019 20:44:21 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728720AbfFQSlo (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 17 Jun 2019 14:41:44 -0400
-Received: from mout.kundenserver.de ([217.72.192.73]:55069 "EHLO
+        id S1726941AbfFQSln (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 17 Jun 2019 14:41:43 -0400
+Received: from mout.kundenserver.de ([217.72.192.75]:47939 "EHLO
         mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726095AbfFQSln (ORCPT
+        with ESMTP id S1726405AbfFQSln (ORCPT
         <rfc822;linux-gpio@vger.kernel.org>); Mon, 17 Jun 2019 14:41:43 -0400
 Received: from orion.localdomain ([77.2.173.233]) by mrelayeu.kundenserver.de
  (mreue109 [212.227.15.183]) with ESMTPSA (Nemesis) id
- 1MowSu-1iPkr60HhG-00qVKy; Mon, 17 Jun 2019 20:41:22 +0200
+ 1M3DBb-1hdkz93fAL-003e79; Mon, 17 Jun 2019 20:41:23 +0200
 From:   "Enrico Weigelt, metux IT consult" <info@metux.net>
 To:     linux-kernel@vger.kernel.org
 Cc:     thloh@altera.com, linus.walleij@linaro.org,
@@ -24,29 +24,32 @@ Cc:     thloh@altera.com, linus.walleij@linaro.org,
         alexandre.torgue@st.com, linux-gpio@vger.kernel.org,
         linux-omap@vger.kernel.org, linux-tegra@vger.kernel.org,
         patches@opensource.cirrus.com
-Subject: [PATCH 02/30] drivers: gpio: altera: use subsys_platform_driver()
-Date:   Mon, 17 Jun 2019 20:40:43 +0200
-Message-Id: <1560796871-18560-2-git-send-email-info@metux.net>
+Subject: [PATCH 03/30] drivers: gpio: da9055: use subsys_platform_driver()
+Date:   Mon, 17 Jun 2019 20:40:44 +0200
+Message-Id: <1560796871-18560-3-git-send-email-info@metux.net>
 X-Mailer: git-send-email 1.9.1
 In-Reply-To: <1560796871-18560-1-git-send-email-info@metux.net>
 References: <1560796871-18560-1-git-send-email-info@metux.net>
-X-Provags-ID: V03:K1:n6lNF/HiERfH9tPVBrtbF8cjwb9Kd5R4hEw89zBMMBUSS2AViuC
- 4gJyGnofyR32s6hyLipxjrmtm0hVyHI6gjievevJWOve7tRnvPBcIMtAJw7wKJhAWq5rDjj
- Iyj9m7RQrAUUKBSUGqHD1PBvmVAELc1atMNKegIh8gMZfgg4yV3opmtlH4Fg5chMY3jfnUb
- MdYDYDeTK0EIp4a8LH4YA==
+X-Provags-ID: V03:K1:Q5PltQXfiTOKHrKSj/Mo0rLI3IO7ONIoPXqcrcBIRXSnUAJ8vQ3
+ wn1jtR1xBNHqfmRS0rbCc116r5T7LrtGwvVWsxrPVqXea/YZ+pVMj1nPRE2rsfDfskBXB3t
+ 8Sndve/+Bc55xXUqoxgSYGiBcYrkPefxqHAChWvwJ9wKATWTH801QzMXNEgcGFdwiALljoc
+ r/1VvOX6UEa2O5X8ha6mw==
 X-Spam-Flag: NO
-X-UI-Out-Filterresults: notjunk:1;V03:K0:FubfsVQejOg=:hcx/YkqnedyIVid8oMi3jN
- yFOL1ldrSamVyPD1XqgcK7HgFK+YLZiUZ5yvtylcHhNZk5uHA+E7qZ88wMhHMfx/G6qICZD0t
- kUFz1TDSL2m3B39o8Io548h4eFN/QTaqpPmDIe0dunWwnR1niVaJ+u0P0aqZd25Dz4V8TegoU
- pnvj81x//YNVy2u9bJ0kzKQxjgLvAtc83GT8hRXOiDQFPm9mriTFPaw1bpeR1oNppt0pK83dJ
- dD3mH7BDynA0Q4gJRNVe3ofzSKpACg3mGS7U9Vq2lYVKtrr/SyraobT8ddVtOx3qWQIW4RD3v
- fjskP8Mt6UrUjEJDI1a4nmMvvYdD07zeobqRexYJCodR3kxAkE8iDK5liLpetva6eRoNkJjFX
- b9uKQXHWqbf4vnKcgKhkMLaddWIxFDwa4F2DxlBbqF9Z5OSAq8vVPA2y06vqu/VVEtOAra6v5
- K89jcHmBOGrt2YxGcaQO4ADJoAFw3n+DDbQL7f+fjeIJDS3PS0S3hoA0Wz14HnVEeV+yD6LSd
- rzL3OApCEIKrUxcGx9Z4W21lsMRMqPj7+3/YclHcYNUiad8gv47ZcU1aICcAME4tCBOv6a9Ko
- GGL12YFdJN5kIorHVpjmaAXnznWQPuaMSTNIur8CLGbRii4Vg63T6blfjBi4swjCMcib4ojaD
- 48A8xT3tkMu3KlL2VaZbvNvw/u0D38Ga6DgmOIxmWdQbhVbYsS4c09qzB2a/ebj+8aJS6Lcbk
- 3G/hwmRXYSg8ea7msahEPVimEv97KizsfoZKPw==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:UWp2ZL6PlN4=:2AH/c8BuRTW47BCMNdDqvv
+ yDVEK3Sv4llPKToTHOQF9SMBJIZb2gIqZ+qlt9lapxCJmy9hoXYI1IaNCNIRmYtyvdRIvxmfM
+ ui6NqAxXdTXfiOjsYp7VXNocwVi6KByYslGsgOTi4Vf2ZGW0KR9/1BqTK8R3kCveCp9r1piUe
+ MQCG9K0PcWW4DORT5Mq1WJHM2+EtfDlfetIjsUJec1T04gjF8BOiKMfzQMLPkucA01pCymdSk
+ UJD+eSoCMsj0CLHhDkHwwJO0KfWnoziwFNF2KIzhI0KxEmYTDGBSkT95mivFWNPXlhO5M0i8e
+ WFtkZ8HE9bADucd0aFdICO9KPPhN1UoeVfN7EhdvsCGm+dtwRDvMYab1T8fKI3P9ULDhLGiPs
+ DUyCsJxi6SmvFbV9McDe1bV3L/iyGS/1o9jTlMbnBBJULkTruOqNQ8ViAo3FaoNcnwwlqcarQ
+ tRqfkew9JOrFLtQVzLzSa3/3itNZ4QHjMsQdF5evdMVI2gBP+GQmNUS/upSlqNmrM40v+rd/m
+ scq/1nIJFUNzhBV5pA/JDqCru9IiWbw0D4DfpAp2EI78InNrxkmsFgbFQswJWLxHz1Z9nlBN5
+ WzOswPED15wnkSUOpZ1C/+IE8aSVSjYdjtCiKWFSdWEXDVO9T7YSbqz41O1aou9QOU0cBKgrv
+ OvFJhbVGlwvLY9Hxx82oEi4LIjFCB6ig8JM3d+EHGzKOCNa33TESzJSrCIqzpPRncZFBNGPnU
+ aI6WiZpqzYApZDDynptHCCxAyvi/wlJ5T1FfPGqJMhy1CMZVBzTUP4R8oQZPX1jBt0vOfnneT
+ UdQSn0whmPLAuIQpa2O0EATeqv7qvhc027itMVC+wv1DzEWhE2KBm07GQeCuGQll/T3BMuTJB
+ SUuDBQddwizJpxw0KcIlY63jUEU5U/cPmxKwokiATJYCGXc8l/0oXIhaJQMkdc1FSbqVbSoqb
+ kRmWLcTUP6Q==
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
@@ -59,33 +62,33 @@ subsys_platform_driver() macro.
 
 Signed-off-by: Enrico Weigelt <info@metux.net>
 ---
- drivers/gpio/gpio-altera.c | 13 +------------
+ drivers/gpio/gpio-da9055.c | 13 +------------
  1 file changed, 1 insertion(+), 12 deletions(-)
 
-diff --git a/drivers/gpio/gpio-altera.c b/drivers/gpio/gpio-altera.c
-index e088b90..b757c650 100644
---- a/drivers/gpio/gpio-altera.c
-+++ b/drivers/gpio/gpio-altera.c
-@@ -342,18 +342,7 @@ static int altera_gpio_remove(struct platform_device *pdev)
- 	.probe		= altera_gpio_probe,
- 	.remove		= altera_gpio_remove,
+diff --git a/drivers/gpio/gpio-da9055.c b/drivers/gpio/gpio-da9055.c
+index 6ad0c37..d93f8ba 100644
+--- a/drivers/gpio/gpio-da9055.c
++++ b/drivers/gpio/gpio-da9055.c
+@@ -163,18 +163,7 @@ static int da9055_gpio_probe(struct platform_device *pdev)
+ 		.name	= "da9055-gpio",
+ 	},
  };
 -
--static int __init altera_gpio_init(void)
+-static int __init da9055_gpio_init(void)
 -{
--	return platform_driver_register(&altera_gpio_driver);
+-	return platform_driver_register(&da9055_gpio_driver);
 -}
--subsys_initcall(altera_gpio_init);
+-subsys_initcall(da9055_gpio_init);
 -
--static void __exit altera_gpio_exit(void)
+-static void __exit da9055_gpio_exit(void)
 -{
--	platform_driver_unregister(&altera_gpio_driver);
+-	platform_driver_unregister(&da9055_gpio_driver);
 -}
--module_exit(altera_gpio_exit);
-+subsys_platform_driver(altera_gpio_driver);
+-module_exit(da9055_gpio_exit);
++subsys_platform_driver(da9055_gpio_driver);
  
- MODULE_AUTHOR("Tien Hock Loh <thloh@altera.com>");
- MODULE_DESCRIPTION("Altera GPIO driver");
+ MODULE_AUTHOR("David Dajun Chen <dchen@diasemi.com>");
+ MODULE_DESCRIPTION("DA9055 GPIO Device Driver");
 -- 
 1.9.1
 
