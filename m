@@ -2,18 +2,18 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id EE06548CCE
-	for <lists+linux-gpio@lfdr.de>; Mon, 17 Jun 2019 20:44:21 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7C66048CC6
+	for <lists+linux-gpio@lfdr.de>; Mon, 17 Jun 2019 20:44:18 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725764AbfFQSli (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 17 Jun 2019 14:41:38 -0400
-Received: from mout.kundenserver.de ([212.227.17.24]:60101 "EHLO
+        id S1728728AbfFQSlp (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 17 Jun 2019 14:41:45 -0400
+Received: from mout.kundenserver.de ([212.227.17.13]:33549 "EHLO
         mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726535AbfFQSli (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 17 Jun 2019 14:41:38 -0400
+        with ESMTP id S1726731AbfFQSlo (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 17 Jun 2019 14:41:44 -0400
 Received: from orion.localdomain ([77.2.173.233]) by mrelayeu.kundenserver.de
  (mreue109 [212.227.15.183]) with ESMTPSA (Nemesis) id
- 1MAORp-1hn8v92BXH-00Bvr3; Mon, 17 Jun 2019 20:41:24 +0200
+ 1My3AX-1iYB1C1P6F-00zTbF; Mon, 17 Jun 2019 20:41:29 +0200
 From:   "Enrico Weigelt, metux IT consult" <info@metux.net>
 To:     linux-kernel@vger.kernel.org
 Cc:     thloh@altera.com, linus.walleij@linaro.org,
@@ -24,29 +24,29 @@ Cc:     thloh@altera.com, linus.walleij@linaro.org,
         alexandre.torgue@st.com, linux-gpio@vger.kernel.org,
         linux-omap@vger.kernel.org, linux-tegra@vger.kernel.org,
         patches@opensource.cirrus.com
-Subject: [PATCH 05/30] drivers: gpio: lynxpoint: use subsys_platform_driver()
-Date:   Mon, 17 Jun 2019 20:40:46 +0200
-Message-Id: <1560796871-18560-5-git-send-email-info@metux.net>
+Subject: [PATCH 06/30] drivers: gpio: lantiq: use subsys_platform_driver()
+Date:   Mon, 17 Jun 2019 20:40:47 +0200
+Message-Id: <1560796871-18560-6-git-send-email-info@metux.net>
 X-Mailer: git-send-email 1.9.1
 In-Reply-To: <1560796871-18560-1-git-send-email-info@metux.net>
 References: <1560796871-18560-1-git-send-email-info@metux.net>
-X-Provags-ID: V03:K1:/j4c3FyWT7iNyjBM83hS+oirnyGOSBHrDy4mSedO3eOWbp294SX
- A+Ed8X11Ylq2mC41dad6tu9XDE3eB5sIetcv6lTw7L2rRsguhB5Jv0gBiufWxHdLJnH470I
- Jbxi+YCChbbgscoDecbvtrwBc3W9XqAiePBIZ6VDHC5IJbH6bwas7iwrFDGTyzN0/G5FpUk
- iCinY4J8YA07zTMcIQzpg==
+X-Provags-ID: V03:K1:GNYirr7jJEU69T27OYUit3DCM2eQ50qRxRzE0yyrJ7VYcGGI0FQ
+ tSb1LqO5HXvshCPpgNlHKsFwE9pjMgdLUghNSIZGWhdBKZUFPs/UX2lVoKqNPJd4OOOCyuu
+ QvH5XsWZrprwyKtNza7TVZrjRyaVDmsHXpdFouFyS4/1Wvo2ed3bxgLaZplkQlTvmOtZrTR
+ 2owe9fm1A5TvMl0zxZquw==
 X-Spam-Flag: NO
-X-UI-Out-Filterresults: notjunk:1;V03:K0:I69TDSvAHEk=:354x7iU3r/TnN7yyD7caOR
- mtV7+NWSZ7xIG6yHHD7tPPe8iOz/YzBVTvve28kblCC+rX63X8HuAc5LMzsF9O7MOmLdSo30j
- YZYISl3GofEDNbdLqYRbUFFiv49/pw3pqaGALJdwRZ2+l7w54/OSkDXFIPl3I02lUDmIzzMcB
- S4r7og5ohxiOuFoQfNuB307tS3Eis6r5zA3sjx0tmyBUIPqkG4nl0IMklORHolIsCIzJzdi6L
- i+Q9R5WRZpqcK7h4O/UtBtZe36mw54h5QBgkkGVnctk1G/JP740CwQOfmY7a1jup80EikYmgu
- F1nmXuwiabkAcVq2WAGmoKJdB9rNjsM133FYxz6P3fsdS+7z2WqKmM/PRwhKHZj6CEKLULvLM
- /10hl0Iz97n1N1zWWGCKiF2vkLbtZExF8rxIqqlhvcki40haTE8u0ICCvV9GXgjT8wCfeSLCP
- 1zNfMNKOPiML6rJFU6dSj/gpg2bh7/xcTgviQwV1by96jtLbvfdHo3kkCwjXytiYDqAz/u3dM
- kADOAt2BLFQiM9758631Fu/ml12cXkJqfyftZYWHNwyRLSDo7tsndy5wtZ2l5Iovg1dEgtc5V
- pl8hKEHhmVg8ciQGM2xgT/6W0dmU0I5Qs98JyvpNAOLp8bAF0w3JtKNFiaeh4Z+gJJZKZeHvl
- BhICMKtCnmu2MmvEZuT+UiouopvbByt4OX8hdd+M2ISTKsaA7ORP0+WHmqW094b8E7z+tv9z9
- 5TXBh76124MvoTFW6wLqAPAIZAzp1lPVLhJjLA==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:Mw4fZ2uihQA=:FMr4oJjRvghnAVG6L0uOCz
+ gQKTXO9RJ/eO3egisxNa+n460m7XGrsy+n9BK2yOXzE1H9RJuHD5SXncy5WXGIVkXK9/Zq56A
+ K6mhJCiCGm9z7uwg5CoZuZlgPnEKs+JByB2yI8eRgaJAFS3+qRGaZA/qrI+cjxcnXDxsXlIEi
+ 9bnOXrB0DQQsDhzFGf56uyicfyUjzNjkiyo+9CmGQZWsVytUtbIVQaq2TH5tDIgpLv55EbqbA
+ QB/iL3neyNeXqq4Ec8t6Oo0KUjZ2VAIXxlwHd7pJW6g+558sFg9+hYSFfD5eCbxbdDl31E9tT
+ 0IqxMJUOSds2Gyn1e50sx1nrtvQQQVaJRdxsHPdLgSFkHsreL3GXAlps88Ep+782300yWXsh1
+ 6BlhEhIny9fqeDz7PsHLNOgu06SRaIXTaOnw+jOfeG72GhWDyN1bM1Xiwk1nrxgmXVfWhvRdL
+ Qbg/1GIOXfNTB5dsEvooRieWO2vCM6Fp2CCFXkaontZ49YbOt450n5IxrvIcu+7bd6on+lGhF
+ d7sfcpXac9mfeI5FD6SK0xYrv2/vPzlajvGyX0h/laQzkYSbwJEE3RB8hi6AGsWPTY1ihS4xR
+ JjqwebsqEipXA9wneLyd4B2flndTmtIkWkoX9DY2gR5sWCT02pUTiBZMpiTy28uNYY3UsT7B3
+ VgLPCwiPkvqG2XuGdFYQJsI0PFD5QJUqFqlOhjOuTd2l2QI4+3Zc8Y3+O1gML9V6iy/2C9tnh
+ nyu4lDFtepgVaQxIPWB6M3vZ+Qu7DFcdxNIuPw==
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
@@ -59,34 +59,31 @@ subsys_platform_driver() macro.
 
 Signed-off-by: Enrico Weigelt <info@metux.net>
 ---
- drivers/gpio/gpio-lynxpoint.c | 14 +-------------
+ drivers/gpio/gpio-mm-lantiq.c | 14 +-------------
  1 file changed, 1 insertion(+), 13 deletions(-)
 
-diff --git a/drivers/gpio/gpio-lynxpoint.c b/drivers/gpio/gpio-lynxpoint.c
-index 31b4a09..8e6b998 100644
---- a/drivers/gpio/gpio-lynxpoint.c
-+++ b/drivers/gpio/gpio-lynxpoint.c
-@@ -438,19 +438,7 @@ static int lp_gpio_remove(struct platform_device *pdev)
- 		.acpi_match_table = ACPI_PTR(lynxpoint_gpio_acpi_match),
+diff --git a/drivers/gpio/gpio-mm-lantiq.c b/drivers/gpio/gpio-mm-lantiq.c
+index b0754fe..3e5ef46 100644
+--- a/drivers/gpio/gpio-mm-lantiq.c
++++ b/drivers/gpio/gpio-mm-lantiq.c
+@@ -146,16 +146,4 @@ static int ltq_mm_remove(struct platform_device *pdev)
+ 		.of_match_table = ltq_mm_match,
  	},
  };
 -
--static int __init lp_gpio_init(void)
+-static int __init ltq_mm_init(void)
 -{
--	return platform_driver_register(&lp_gpio_driver);
+-	return platform_driver_register(&ltq_mm_driver);
 -}
 -
--static void __exit lp_gpio_exit(void)
--{
--	platform_driver_unregister(&lp_gpio_driver);
--}
+-subsys_initcall(ltq_mm_init);
 -
--subsys_initcall(lp_gpio_init);
--module_exit(lp_gpio_exit);
-+subsys_platform_driver(lp_gpio_driver);
- 
- MODULE_AUTHOR("Mathias Nyman (Intel)");
- MODULE_DESCRIPTION("GPIO interface for Intel Lynxpoint");
+-static void __exit ltq_mm_exit(void)
+-{
+-	platform_driver_unregister(&ltq_mm_driver);
+-}
+-module_exit(ltq_mm_exit);
++subsys_platform_driver(ltq_mm_driver);
 -- 
 1.9.1
 
