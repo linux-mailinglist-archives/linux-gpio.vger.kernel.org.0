@@ -2,116 +2,154 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 1B29947F1C
-	for <lists+linux-gpio@lfdr.de>; Mon, 17 Jun 2019 12:04:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D1CE847F63
+	for <lists+linux-gpio@lfdr.de>; Mon, 17 Jun 2019 12:14:38 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727239AbfFQKEr (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 17 Jun 2019 06:04:47 -0400
-Received: from gate2.alliedtelesis.co.nz ([202.36.163.20]:50943 "EHLO
-        gate2.alliedtelesis.co.nz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728078AbfFQKEr (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 17 Jun 2019 06:04:47 -0400
-Received: from mmarshal3.atlnz.lc (mmarshal3.atlnz.lc [10.32.18.43])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id DFEF2891AB;
-        Mon, 17 Jun 2019 22:04:44 +1200 (NZST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alliedtelesis.co.nz;
-        s=mail181024; t=1560765884;
-        bh=wqBkEYXWtPPxu4J3I2mSTeb2gWRTtAdwWYpWsZ0Pz5w=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References;
-        b=kTFmqq8TYh5IsmqlGGqsjJuGggnRyLewB5suQn6SKcuuvkb9BgrP1R1bW9XVU3c9k
-         dx9OkXrMFR+Fcx+TmhFIPZSPifHMNkfG9hA9L4utzAxbt3hgcFxNfYqfNpjazhXYA+
-         sjp7FWA8dFtEkEjoswYzDjfWxEZcizWKZuIu/h60iTgjr8l/D5OTTqxSW1wB88UW1B
-         +wUx29ZtQQ1Y55KtKe5Z5uUqRvCyazqwxo1ICvYPrqsx54v1LPiuJfGeAbnQE2gW0H
-         e96D2nk1j+y/rsKo66nYN2jU6JIbosHbCr1VUUa1NvfLKd+lwalsw2PAKQ4VZIo/KW
-         qZzz5hWVpYtHA==
-Received: from smtp (Not Verified[10.32.16.33]) by mmarshal3.atlnz.lc with Trustwave SEG (v7,5,8,10121)
-        id <B5d0765bc0004>; Mon, 17 Jun 2019 22:04:44 +1200
-Received: from chrisp-dl.ws.atlnz.lc (chrisp-dl.ws.atlnz.lc [10.33.22.30])
-        by smtp (Postfix) with ESMTP id BAF9913EED3;
-        Mon, 17 Jun 2019 22:04:45 +1200 (NZST)
-Received: by chrisp-dl.ws.atlnz.lc (Postfix, from userid 1030)
-        id 921251E04F0; Mon, 17 Jun 2019 22:04:44 +1200 (NZST)
-From:   Chris Packham <chris.packham@alliedtelesis.co.nz>
-To:     mturquette@baylibre.com, sboyd@kernel.org, robh+dt@kernel.org,
-        mark.rutland@arm.com, linus.walleij@linaro.org,
-        jason@lakedaemon.net, andrew@lunn.ch, gregory.clement@bootlin.com,
-        sebastian.hesselbarth@gmail.com, linux-gpio@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc:     linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
-        Chris Packham <chris.packham@alliedtelesis.co.nz>
-Subject: [PATCH 4/4] clk: kirkwood: Add support for MV98DX1135
-Date:   Mon, 17 Jun 2019 22:04:32 +1200
-Message-Id: <20190617100432.13037-5-chris.packham@alliedtelesis.co.nz>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190617100432.13037-1-chris.packham@alliedtelesis.co.nz>
-References: <20190617100432.13037-1-chris.packham@alliedtelesis.co.nz>
+        id S1728088AbfFQKOh (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 17 Jun 2019 06:14:37 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:41827 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727594AbfFQKOh (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 17 Jun 2019 06:14:37 -0400
+Received: by mail-wr1-f65.google.com with SMTP id c2so9284931wrm.8
+        for <linux-gpio@vger.kernel.org>; Mon, 17 Jun 2019 03:14:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=0h7IM4lrz+H9Hm55K4LDe4S6XuzNxvQo2AKIRNvmLBw=;
+        b=Pr7pW/pDVfmnr1f95jMU1cjpSQB6d5bTyGiKUHuQmECYAAmlvQ2YmHiXyDHzGHWt6+
+         cXEDSmKaSOEcy4gxQX8e4uqO0XleQxrbMWtM/p2M7wbrleb/gJxdcfVA4QzH1AS7ljHo
+         dlXnrwUvlTmmn5PUk2gfTHyqFb55p4K/J/MTA99zw/pXDWZ2Vm5R8MIqQLdu+FsEJYHM
+         c9XX7Hny7i4JQgqqvxwpkMXV8Hlr8hYhuYuyGxSdco6PT/Szg/fVWye6R/EOZJsm8b21
+         5pkz82OGwz0MSywdlg8AnAe1OnItyssC/hAWvgcYqic959IYI2obFsLxC/PBOANecqjJ
+         JHiQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=0h7IM4lrz+H9Hm55K4LDe4S6XuzNxvQo2AKIRNvmLBw=;
+        b=mCpJ+z5H/rMe2PkVTaSoz6h3xcAZV1bWkbrMf4tTGbAVcnwfKtaJMFyJLmsVomlQJt
+         X12SYPSu87yQQ3Q6wrA3rEgxtOeKdSox+wzx8eqXDI4QAkQbUof+917WyPOSKkXSXpO2
+         XQpYXdU6z3r4XWat/Hh/t6FLXsv1IjlIaItoohhBx7bGDyYqG5tHiKN7bzHv5zeu9Mnn
+         MBZz+AdP/FLd8/DEMqNRE3UNUv2osLtCu+k2f3rju3Qw737Md4DEL1mluAh29CcwCnH+
+         sFbNzHkf5vjUvJ2k+DGC2dsT2McE7E8FOGWw2cg8ldLgdfiPLKaagseNNWcEPpXcGOPh
+         6kEw==
+X-Gm-Message-State: APjAAAX5yr7uZu4AoznrLchIPABIBKMaDJb0ObrEbNQaeh6FjDVS8eL2
+        s7a4FFRblZvItNF2w8czsA2iGg==
+X-Google-Smtp-Source: APXvYqxM183T4T8pUHIJPMxjfA6ieRjPgyyNwqF9AptFukBr31lpl3EdpNm5vAtxOqsCKbTl9IykQw==
+X-Received: by 2002:a5d:6449:: with SMTP id d9mr19355586wrw.192.1560766475722;
+        Mon, 17 Jun 2019 03:14:35 -0700 (PDT)
+Received: from dell ([2.27.35.243])
+        by smtp.gmail.com with ESMTPSA id b6sm10592370wrx.85.2019.06.17.03.14.34
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 17 Jun 2019 03:14:35 -0700 (PDT)
+Date:   Mon, 17 Jun 2019 11:14:33 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     alokc@codeaurora.org, agross@kernel.org, david.brown@linaro.org,
+        wsa+renesas@sang-engineering.com, bjorn.andersson@linaro.org,
+        balbi@kernel.org, gregkh@linuxfoundation.org,
+        ard.biesheuvel@linaro.org, jlhugo@gmail.com
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-i2c@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-gpio@vger.kernel.org, linux-usb@vger.kernel.or
+Subject: Re: [PATCH v4 3/6] soc: qcom: geni: Add support for ACPI
+Message-ID: <20190617101433.GF16364@dell>
+References: <20190612142654.9639-1-lee.jones@linaro.org>
+ <20190612142654.9639-4-lee.jones@linaro.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-x-atlnz-ls: pat
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190612142654.9639-4-lee.jones@linaro.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-The 98DX1135 is a switch chip with an integrated CPU. This is similar to
-the 98DX4122 except that the core clock speed is fixed to 166Mhz.
+David, Andy,
 
-Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
----
- drivers/clk/mvebu/kirkwood.c | 17 +++++++++++++++++
- 1 file changed, 17 insertions(+)
+Since there does not appear to be any other Maintainers for this
+file/subsystem, one of you guys are going to have to at least
+review/ack it.
 
-diff --git a/drivers/clk/mvebu/kirkwood.c b/drivers/clk/mvebu/kirkwood.c
-index 35af3aa18f1c..47680237d0be 100644
---- a/drivers/clk/mvebu/kirkwood.c
-+++ b/drivers/clk/mvebu/kirkwood.c
-@@ -185,6 +185,11 @@ static void __init mv88f6180_get_clk_ratio(
- 	}
- }
-=20
-+static u32 __init mv98dx1135_get_tclk_freq(void __iomem *sar)
-+{
-+	return 166666667;
-+}
-+
- static const struct coreclk_soc_desc kirkwood_coreclks =3D {
- 	.get_tclk_freq =3D kirkwood_get_tclk_freq,
- 	.get_cpu_freq =3D kirkwood_get_cpu_freq,
-@@ -201,6 +206,14 @@ static const struct coreclk_soc_desc mv88f6180_corec=
-lks =3D {
- 	.num_ratios =3D ARRAY_SIZE(kirkwood_coreclk_ratios),
- };
-=20
-+static const struct coreclk_soc_desc mv98dx1135_coreclks =3D {
-+	.get_tclk_freq =3D mv98dx1135_get_tclk_freq,
-+	.get_cpu_freq =3D kirkwood_get_cpu_freq,
-+	.get_clk_ratio =3D kirkwood_get_clk_ratio,
-+	.ratios =3D kirkwood_coreclk_ratios,
-+	.num_ratios =3D ARRAY_SIZE(kirkwood_coreclk_ratios),
-+};
-+
- /*
-  * Clock Gating Control
-  */
-@@ -325,6 +338,8 @@ static void __init kirkwood_clk_init(struct device_no=
-de *np)
-=20
- 	if (of_device_is_compatible(np, "marvell,mv88f6180-core-clock"))
- 		mvebu_coreclk_setup(np, &mv88f6180_coreclks);
-+	else if (of_device_is_compatible(np, "marvell,mv98dx1135-core-clock"))
-+		mvebu_coreclk_setup(np, &mv98dx1135_coreclks);
- 	else
- 		mvebu_coreclk_setup(np, &kirkwood_coreclks);
-=20
-@@ -339,3 +354,5 @@ CLK_OF_DECLARE(kirkwood_clk, "marvell,kirkwood-core-c=
-lock",
- 	       kirkwood_clk_init);
- CLK_OF_DECLARE(mv88f6180_clk, "marvell,mv88f6180-core-clock",
- 	       kirkwood_clk_init);
-+CLK_OF_DECLARE(98dx1135_clk, "marvell,mv98dx1135-core-clock",
-+	       kirkwood_clk_init);
---=20
-2.21.0
+Which route do changes to this file usually take?
 
+At worst I can take them, but I need maintainer Acks to do so.
+
+===========================
+
+> When booting with ACPI as the active set of configuration tables,
+> all; clocks, regulators, pin functions ect are expected to be at
+> their ideal values/levels/rates, thus the associated frameworks
+> are unavailable.  Ensure calls to these APIs are shielded when
+> ACPI is enabled.
+> 
+> Signed-off-by: Lee Jones <lee.jones@linaro.org>
+> Acked-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+> ---
+>  drivers/soc/qcom/qcom-geni-se.c | 21 +++++++++++++++------
+>  1 file changed, 15 insertions(+), 6 deletions(-)
+> 
+> diff --git a/drivers/soc/qcom/qcom-geni-se.c b/drivers/soc/qcom/qcom-geni-se.c
+> index 6b8ef01472e9..d5cf953b4337 100644
+> --- a/drivers/soc/qcom/qcom-geni-se.c
+> +++ b/drivers/soc/qcom/qcom-geni-se.c
+> @@ -1,6 +1,7 @@
+>  // SPDX-License-Identifier: GPL-2.0
+>  // Copyright (c) 2017-2018, The Linux Foundation. All rights reserved.
+>  
+> +#include <linux/acpi.h>
+>  #include <linux/clk.h>
+>  #include <linux/slab.h>
+>  #include <linux/dma-mapping.h>
+> @@ -450,6 +451,9 @@ int geni_se_resources_off(struct geni_se *se)
+>  {
+>  	int ret;
+>  
+> +	if (has_acpi_companion(se->dev))
+> +		return 0;
+> +
+>  	ret = pinctrl_pm_select_sleep_state(se->dev);
+>  	if (ret)
+>  		return ret;
+> @@ -487,6 +491,9 @@ int geni_se_resources_on(struct geni_se *se)
+>  {
+>  	int ret;
+>  
+> +	if (has_acpi_companion(se->dev))
+> +		return 0;
+> +
+>  	ret = geni_se_clks_on(se);
+>  	if (ret)
+>  		return ret;
+> @@ -724,12 +731,14 @@ static int geni_se_probe(struct platform_device *pdev)
+>  	if (IS_ERR(wrapper->base))
+>  		return PTR_ERR(wrapper->base);
+>  
+> -	wrapper->ahb_clks[0].id = "m-ahb";
+> -	wrapper->ahb_clks[1].id = "s-ahb";
+> -	ret = devm_clk_bulk_get(dev, NUM_AHB_CLKS, wrapper->ahb_clks);
+> -	if (ret) {
+> -		dev_err(dev, "Err getting AHB clks %d\n", ret);
+> -		return ret;
+> +	if (!has_acpi_companion(&pdev->dev)) {
+> +		wrapper->ahb_clks[0].id = "m-ahb";
+> +		wrapper->ahb_clks[1].id = "s-ahb";
+> +		ret = devm_clk_bulk_get(dev, NUM_AHB_CLKS, wrapper->ahb_clks);
+> +		if (ret) {
+> +			dev_err(dev, "Err getting AHB clks %d\n", ret);
+> +			return ret;
+> +		}
+>  	}
+>  
+>  	dev_set_drvdata(dev, wrapper);
+
+-- 
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
