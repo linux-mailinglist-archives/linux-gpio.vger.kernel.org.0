@@ -2,18 +2,18 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 9AFC748CC2
-	for <lists+linux-gpio@lfdr.de>; Mon, 17 Jun 2019 20:44:16 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 66B6348CAE
+	for <lists+linux-gpio@lfdr.de>; Mon, 17 Jun 2019 20:43:51 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728916AbfFQSoB (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 17 Jun 2019 14:44:01 -0400
-Received: from mout.kundenserver.de ([212.227.17.24]:44289 "EHLO
+        id S1728807AbfFQSlz (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 17 Jun 2019 14:41:55 -0400
+Received: from mout.kundenserver.de ([217.72.192.75]:58913 "EHLO
         mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728760AbfFQSlu (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 17 Jun 2019 14:41:50 -0400
+        with ESMTP id S1728799AbfFQSly (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 17 Jun 2019 14:41:54 -0400
 Received: from orion.localdomain ([77.2.173.233]) by mrelayeu.kundenserver.de
  (mreue109 [212.227.15.183]) with ESMTPSA (Nemesis) id
- 1MOzKk-1hzwXk1n6i-00PJha; Mon, 17 Jun 2019 20:41:36 +0200
+ 1MRTEp-1hxThR0fuX-00NOxf; Mon, 17 Jun 2019 20:41:40 +0200
 From:   "Enrico Weigelt, metux IT consult" <info@metux.net>
 To:     linux-kernel@vger.kernel.org
 Cc:     thloh@altera.com, linus.walleij@linaro.org,
@@ -24,29 +24,29 @@ Cc:     thloh@altera.com, linus.walleij@linaro.org,
         alexandre.torgue@st.com, linux-gpio@vger.kernel.org,
         linux-omap@vger.kernel.org, linux-tegra@vger.kernel.org,
         patches@opensource.cirrus.com
-Subject: [PATCH 10/30] drivers: gpio: spear-spics: use subsys_platform_driver()
-Date:   Mon, 17 Jun 2019 20:40:51 +0200
-Message-Id: <1560796871-18560-10-git-send-email-info@metux.net>
+Subject: [PATCH 11/30] drivers: gpio: stmpe: use subsys_platform_driver()
+Date:   Mon, 17 Jun 2019 20:40:52 +0200
+Message-Id: <1560796871-18560-11-git-send-email-info@metux.net>
 X-Mailer: git-send-email 1.9.1
 In-Reply-To: <1560796871-18560-1-git-send-email-info@metux.net>
 References: <1560796871-18560-1-git-send-email-info@metux.net>
-X-Provags-ID: V03:K1:4h6NwlU1DftNIO46WTLlIk1U9jeIrbC+0HB5ro+yUcwM9EiZs2/
- pDGYqRWRH0GUxeSGS90EtGopJnM/wqYUgcxkI3p8C92KBBLwFAdIlIUs6EEc+A7oaLjJSU/
- K17l1KHC59XsgPRYwCRH6LKV6AQKi7//FodS5pmevdbF3JxK9piYHCouAOa3k3cIzSeKHwe
- mx/r615pVKlQNOBBYiCgA==
+X-Provags-ID: V03:K1:7YUAmuuIb36tOmML+CuZG3gueQCIO11o+yMbjFCLCRWDWJnjITO
+ EE2RrNvSLPil8KexSJ6NLygnc/2xNpY1/8+ZW3xXQxoHinWM1O6n6e5lAa/iUJ8KKJWaS1V
+ aaAtHjPoGIi7q4vqIjXnzKdFH0Rf+r8InWPpZ9fCdT4lt337pcEEzclqjiAMrAtuJMsPXOC
+ A5iBq7ujXBkwYMlBHLknQ==
 X-Spam-Flag: NO
-X-UI-Out-Filterresults: notjunk:1;V03:K0:0th+QeGO5Oc=:LhQhQZkNQpC5fBq+Ljrj+r
- YFA65RxCxr2pBwmYxN+W8AZ1vMcmZKu9LPuu+xsxh5oMy0sseJ0kOq1yUk31OSdgkmu5OOtoq
- IRRUVI/fYBFgn1PbXDIxuozuqjiUxXKLFfNTnRHJrejWwDOHOYAQvOJ+4Qiam2buzacT7sOVB
- svTySllHcJGvKDMmLXw0pDrJNn7no9JLF1fVQheQ4rLnpIE4GJCqmvbmCSQR1xCznr4xi4yp+
- 9hWRtKFXpWjx+WqN0jH9nm0QisAfAstLsRSo11ZxJnPxZY+y3s+LFod1pFxq/SI8iKCP2YCtU
- wYs2SuzjR7RvG5i4RCE9W86wOTfQx2+869e/ffimo0cqLHS/JFVQe/t8FYYLFFeumvL/dHxSw
- icvfFjP9oMJyp9jP+FT2YQZFz8S99HyMlA5tnswKOEJydwe14LDMrQX3coUAQnmxCV8fpETPc
- 8qLvoQXV/YTGkHIlwfuD3cbJQGAMT09WfNgzKb8vesLvf+nABrm07HQ5xXDYS8/pNhdFcszN3
- for6/RnXlaFIw8IrakD1LR7SMb55y6eRoDh+f1RkQkvamJJ8cfQO4KiVkLUuqWrFhvdyTySvU
- QzUG6CCP78hsAODemukTtMWtlyzUm8OZXh3eEcZz63j8UprjujOyI3jPu7851h5MEy3k8fG7M
- c/m3JNQS0lO9DwNJic/LY4d3vCFDJ/woItYZ5tTuC38a4yDJiXmT9lrI00gOUAEcCSuGl0sGN
- FQUGu+jsF434wofSqZOWy7dMN2DRCQqWBRTiAg==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:1vqbZGDS+eg=:nLGYJ+RktPeqACPzOrNBld
+ OQBpWBTICAbRKNgWfqwP88ppIfh2N5aoF34MyGT798E9107cfm+tYBEaRv++qptby75DBfjO9
+ o3p1tuiHmJRV3ROCUT2Sux0+XdJUmJX9OBCUQYJWeCljwqTGcivBarCQg1SpmSPJNidY6b50R
+ +m2wGGo5d3HUR3CbZXncRUP20zH9JzxpKguv8gWvjVFzKNji9Ibh1NQ/AjWZP8JJvgQAAyR7+
+ 9lUf39AUizOInqywLyJKeA7NJWTKJA9BEczCm3VuPBOTzxKvv8JUfnDqzQV6t8pisl/bDzTdg
+ TMhOeQzTEyvh8gRyiqcGCyvnMJQeX9MiZOLpA08Ce24YfKNAQynexzfKTWw7krTr1EVNwRP6V
+ I8tBvqfX9k/ptCfSUBcJ/fzUQDwgDRVaMsXXj/OUKVzAgD3PVAZDvi8GPLmwBIgAzwQxWBFmq
+ rk4R/nof4WUW3JyStnSNpE0VlMxB/qQ2PQNsaZLEglxOi3GQlx3rIEYU8NvRs/XyTaR28Wt0H
+ Lz3yFqL0Rt6KpFjoPwPUqBwAAcWFDzSUdIIRPj09hDv5JZl4R4w7l2/UW58ejoRNQ9y2p8EWt
+ nVu9vPm9KiD0BEZFT9PsmRrPi4CQRpJD62rjtuuuCaVr4l3d99IniyQbGf2pA8+VtzuiLNNk6
+ taexxYgfa4jTqNNlzE61CLQcugUZLmr2ykalHhRjAEoX4dQzCRcDfvia7iwTyWkExYpMdt3g8
+ gnzYYaMAuj3kqcdPd1dV62pxtiTNrV9N0Nfucw==
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
@@ -59,24 +59,24 @@ subsys_platform_driver() macro.
 
 Signed-off-by: Enrico Weigelt <info@metux.net>
 ---
- drivers/gpio/gpio-spear-spics.c | 7 +------
+ drivers/gpio/gpio-stmpe.c | 7 +------
  1 file changed, 1 insertion(+), 6 deletions(-)
 
-diff --git a/drivers/gpio/gpio-spear-spics.c b/drivers/gpio/gpio-spear-spics.c
-index 6eca531..efb99f0 100644
---- a/drivers/gpio/gpio-spear-spics.c
-+++ b/drivers/gpio/gpio-spear-spics.c
-@@ -189,9 +189,4 @@ static int spics_gpio_probe(struct platform_device *pdev)
- 		.of_match_table = spics_gpio_of_match,
+diff --git a/drivers/gpio/gpio-stmpe.c b/drivers/gpio/gpio-stmpe.c
+index 65a2315..bb34f34 100644
+--- a/drivers/gpio/gpio-stmpe.c
++++ b/drivers/gpio/gpio-stmpe.c
+@@ -530,9 +530,4 @@ static int stmpe_gpio_probe(struct platform_device *pdev)
  	},
+ 	.probe		= stmpe_gpio_probe,
  };
 -
--static int __init spics_gpio_init(void)
+-static int __init stmpe_gpio_init(void)
 -{
--	return platform_driver_register(&spics_gpio_driver);
+-	return platform_driver_register(&stmpe_gpio_driver);
 -}
--subsys_initcall(spics_gpio_init);
-+subsys_platform_driver(spics_gpio_driver);
+-subsys_initcall(stmpe_gpio_init);
++subsys_platform_driver(stmpe_gpio_driver);
 -- 
 1.9.1
 
