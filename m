@@ -2,110 +2,117 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 8CBC24810D
-	for <lists+linux-gpio@lfdr.de>; Mon, 17 Jun 2019 13:41:34 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CBC3648143
+	for <lists+linux-gpio@lfdr.de>; Mon, 17 Jun 2019 13:50:43 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726215AbfFQLle (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 17 Jun 2019 07:41:34 -0400
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:44343 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725763AbfFQLld (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 17 Jun 2019 07:41:33 -0400
-Received: by mail-lj1-f195.google.com with SMTP id k18so8913947ljc.11
-        for <linux-gpio@vger.kernel.org>; Mon, 17 Jun 2019 04:41:32 -0700 (PDT)
+        id S1725983AbfFQLuX (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 17 Jun 2019 07:50:23 -0400
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:44271 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725763AbfFQLuW (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 17 Jun 2019 07:50:22 -0400
+Received: by mail-lj1-f194.google.com with SMTP id k18so8938551ljc.11
+        for <linux-gpio@vger.kernel.org>; Mon, 17 Jun 2019 04:50:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=Na1Ed2T2dhPFnaWUviqpm3OYjuC6SMG2eBpQPT7cawQ=;
-        b=X0wqe+gtpZKtAS9Wd51aF/SSv67I7fYv7D60ceoTbrf5gtHIrziFMUgJAEhI0YPSXg
-         lh1dTIAyioANUzsgB0x5G0atY1Ir8eSPPhIv9/IgntZiX6qJRbQ05TwqFi3FJpWMTygR
-         Uni7B5Uipa8ienRg4iGlykeD4N/4+h4vI9UTnWrPowy3hsh3E15or/2+50AdKMoHn7ve
-         n0FiauCMJu5DPXZt3onBf610Ja37Fj3tI6zn9+t+WjN/+eFxn8NfCOBBxu2PQv0wfeZD
-         CXq/aJT55vDj44UEt0XscXU+AolMDgnxEFnZ7TeE0371irOaUJ59Nq8oPVx+DgaHlIp1
-         wUMw==
+        bh=jUC3oAv954DDdM3Qoub7t5o8CIOFNWz/tUxECd+JQ9s=;
+        b=BuTo/QN7Xsk7pkbu1e9KTEhJat0l1vZhloCRxm0xW7p0PHAtECvTmN4DyRUvWnjY7F
+         425/HzaReo/WGxA2vRP+9whOnA8l5R7G/hCUShepGlHEpyWlnF0+klfqxV0Zkhi8Bz+0
+         jV4gq1J37BAZ3kW71udx4PVHTSDbvB43bURTwX7+6ZvcQpXKeN2toNqRAhr7RformkLw
+         6pgUeq7MQcctyJamYjgMyuyaJSaXDbS9aSDe2bU6HRcHWNpFKZb1PUVZ5EBagKifKxOf
+         +jrOWqbqJ4KyIlrZlv7VHhbJJqtfvDqgRIULjvBBernbELvj0uJYjzQabAfqGTX916DY
+         uIWA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=Na1Ed2T2dhPFnaWUviqpm3OYjuC6SMG2eBpQPT7cawQ=;
-        b=hC8yTyiABfjme6CkZpSOM/ao+i1v7ukOL/BOskxPjnYnK6rE6wEEfdlJjOo1++XCYL
-         NaW8o378GzC4CiIk3wm6N6k+pkzs9R4578x5N9lM6aFC/yjG9/8rV01aE3uwboeao9Tr
-         OHrL7/EKksLG9N//idgRELu0YOwkGbmjLbqA+81/OoAWXbSpNZjLyImw3y8rn8FHDh5o
-         urWT1YX6mdsvVly++XYi8lpa296mKUY9em2Kwtox5dyA32NxEND+X1ewCV9IszA2S4Fc
-         HXh2HiOMn6dcXwF0P6ViiIj6ORyOCcD/6SK7ZDclqHRbTJojJ/ZGyDtBkYSeB8c1cCaS
-         oksg==
-X-Gm-Message-State: APjAAAW9d+xdRdiPAfj1oWDTQjVzs3WhotMUEWt0ueVzqCR3jg8kn6ud
-        aSEEQJ6ylugOw4MOof0iTSjZZTeuG4E0UTZx9JAUXg==
-X-Google-Smtp-Source: APXvYqw3+blfIZqFKLSDzh1bVLhL77sXrVM8GAhtKj3HwtztrmVzjQlHWGVrbBJlGgiQkCbGUX3SnpczfhcOaQTuSZs=
-X-Received: by 2002:a2e:8756:: with SMTP id q22mr28861683ljj.108.1560771691741;
- Mon, 17 Jun 2019 04:41:31 -0700 (PDT)
+        bh=jUC3oAv954DDdM3Qoub7t5o8CIOFNWz/tUxECd+JQ9s=;
+        b=eaRZiuUVDqiijmVr4bFwpmoLO14azIwgDi7AyYI0xAX/usjbtpYYn5fK+ai0rs/2ul
+         OO361ya82/Z/muppcNfpc/xJdg+q8Kq2s4Hjq7sQfScYSolf9EzOEwVmDki2G7rzPJAR
+         /2vY1ab4q+4lkJYF9VDgd2YGvWoMcYCuLrXbVAPTDz9To2ZZHfjf0oUfC44+vFPWMijh
+         TRsBK7Xyh7ubt+nrtLxjMnfqPQNqrrg0UWfE66yVujLh8g5ZikLFc426W2n10iY2Aa9c
+         rw6a9CXPKA7E7vgPqXIpq51kQQNZgVKgmya5nTIOO/lXw0JoIhL7i1exEK4q232busnK
+         cGQg==
+X-Gm-Message-State: APjAAAUhOoQfP6x4DMPhKBX2Tph++mQkO9ICyLICcuRpoYRtKSnIqTEC
+        G+bsMmqvcOK/fbWX2i0QpZaPeSL0uO6xhZeVzFfBNQ==
+X-Google-Smtp-Source: APXvYqxc9icfPV6JO31y7/yaQv+ExXgLV0eomSpNfThNBkfv0HxBRb+mT8ya0W5DCcu8LUONsl0ZC4+8TIbqz0JTEG0=
+X-Received: by 2002:a2e:a0cf:: with SMTP id f15mr29112501ljm.180.1560772220963;
+ Mon, 17 Jun 2019 04:50:20 -0700 (PDT)
 MIME-Version: 1.0
-References: <dd30c34a83293926c072f6a3fe612dcf134b7620.camel@collabora.com>
-In-Reply-To: <dd30c34a83293926c072f6a3fe612dcf134b7620.camel@collabora.com>
+References: <20190611185102.368ED21744@mail.kernel.org> <671f87d6-f4a4-6d2c-967b-e1aa0677d83e@codeaurora.org>
+ <b0fdbcb1-4d5d-5c60-4150-7762a577cd10@codeaurora.org>
+In-Reply-To: <b0fdbcb1-4d5d-5c60-4150-7762a577cd10@codeaurora.org>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Mon, 17 Jun 2019 13:41:20 +0200
-Message-ID: <CACRpkdZj=MnmtPD6v14A8dBmN6kmsjyNihHQjr88E146B9hmNw@mail.gmail.com>
-Subject: Re: [RFC] Addition of kernel
-To:     Martyn Welch <martyn.welch@collabora.com>,
-        Rob Herring <robh+dt@kernel.org>
-Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+Date:   Mon, 17 Jun 2019 13:50:09 +0200
+Message-ID: <CACRpkdahUNNOhQdri3T86jHr+qOBmXH61_AMmoWpv_be2koMrw@mail.gmail.com>
+Subject: Re: Fwd: Re: [PATCH] pinctrl: qcom: Clear status bit on irq_unmask
+To:     Neeraj Upadhyay <neeraju@codeaurora.org>,
+        Hans Verkuil <hverkuil@xs4all.nl>
+Cc:     Stephen Boyd <sboyd@kernel.org>,
+        Tengfei Fan <tengfeif@codeaurora.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        LKML <linux-kernel@vger.kernel.org>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        kernel@collabora.com
+        MSM <linux-arm-msm@vger.kernel.org>, sramana@codeaurora.org
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Martyn,
+On Mon, Jun 17, 2019 at 12:35 PM Neeraj Upadhyay <neeraju@codeaurora.org> wrote:
 
-On Mon, Jun 17, 2019 at 10:29 AM Martyn Welch
-<martyn.welch@collabora.com> wrote:
-
-> We are currently in the position that we would like to pre-configure
-> some GPIOs at boot time and be able to later affect the state of GPIOs
-> configured as outputs or read the state of GPIOs previously configured
-> as inputs.
-
-I have discussed this several times in the past, I soon have to
-make a collection of links to the old discussions so we don't have
-to repeat ourselves :)
-
-Here are some:
-
-Discussion with Rob Herring:
-https://marc.info/?l=linux-gpio&m=145749645728713&w=2
-
-https://marc.info/?l=linux-gpio&m=153440711326259&w=2
-In response to:
-https://marc.info/?l=linux-kernel&m=153436471811875&w=2
-
-> Initially we are thinking of providing a device-tree node containing a
-> "gpio-default" property and would contain a lot of the same properties
-> as "gpio-hog".
+> Hi Stephen, there is one use case with is not covered by commit
+> b55326dc969e (
 >
-> Code wise, it would seem to need to follow roughly the same flow as
-> gpio-hog, but avoid running "gpiod_request_commit()" so that the GPIO
-> line could later be requested by user space.
+> "pinctrl: msm: Really mask level interrupts to prevent latching"). That
+> happens when
 >
-> I suspect there's a whole load of details that I'm missing at this
-> stage and I've not fully thought through the implications for later
-> removal.
+> gpio line is toggled between i/o mode and interrupt mode :
 >
-> Does something like this seem viable upstream?
+> 1. GPIO is configured as irq line. Peripheral raises interrupt.
+>
+> 2. IRQ handler runs and disables the irq line (through wq work).
+>
+> 3. GPIO is configured for input and and data is received from the
+> peripheral.
 
-I am all for it, the trick is to come up with a syntax that passes the
-review of the device tree people. They did not like the idea to extend
-the hogs, and dislike the way hogs were made in the first place.
+There is no distinction between using a GPIO line as input
+and using it for IRQ. All input GPIOs can be used for IRQs,
+if the hardware supports it (has an irqchip).
 
-I would suspect that something more similar to gpio-line-names
-sits better with them, like gpio-initial-states = in -, out 1, out 0, in -. ...
-however that would work.
+> 4. Now, when GPIO is re-enabled as irq, we see spurious irq, and there
+> isn't
+>
+> any data received on the gpio line, when it is read back after
+> configuring as input.
 
-There are some custom bindings for this already that should
-ideally be phased over to the generic bindings as part of the
-patch set.
+That's an interesting usecase. Hans Verkuil reworked the
+GPIO irq support very elegantly exactly to support this type
+of usecase (irq switch on and off dynamically), where he
+was even switching the line into output mode between
+the IRQ trains. (one-wire transcactions for CEC).
+
+> Patch https://lkml.org/lkml/2019/6/17/226 tries to cover this use case.
+> Can you please provide your comments?
+
+What this patch does is clear all pending IRQs at irq
+unmask. This is usually safe, unless there may be cases
+where you *want* to catch any pending IRQs. I guess
+normally you don't so it should be safe?
+
+The corner case is when you start some transaction
+or whatever that gets ACKed by an IRQ and you actually
+get the IRQ back before you had time to execute the code
+enabling the IRQ.
+
+That would be racy and bad code, as you should clearly
+enable the IRQ first, then start the transaction. So I think
+this patch is safe.
+
+But let's see what Bjorn says.
 
 Yours,
 Linus Walleij
