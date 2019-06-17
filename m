@@ -2,96 +2,116 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id C8DEB48C77
-	for <lists+linux-gpio@lfdr.de>; Mon, 17 Jun 2019 20:42:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 063AC48D1F
+	for <lists+linux-gpio@lfdr.de>; Mon, 17 Jun 2019 20:57:39 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728983AbfFQSm1 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 17 Jun 2019 14:42:27 -0400
-Received: from mout.kundenserver.de ([212.227.17.10]:37191 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728950AbfFQSm0 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 17 Jun 2019 14:42:26 -0400
-Received: from orion.localdomain ([77.2.173.233]) by mrelayeu.kundenserver.de
- (mreue109 [212.227.15.183]) with ESMTPSA (Nemesis) id
- 1MWiYo-1i9ske2RCq-00X3Ti; Mon, 17 Jun 2019 20:42:12 +0200
-From:   "Enrico Weigelt, metux IT consult" <info@metux.net>
-To:     linux-kernel@vger.kernel.org
-Cc:     thloh@altera.com, linus.walleij@linaro.org,
-        bgolaszewski@baylibre.com, andriy.shevchenko@linux.intel.com,
-        shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de,
-        festevam@gmail.com, linux-imx@nxp.com, grygorii.strashko@ti.com,
-        ssantosh@kernel.org, khilman@kernel.org, mcoquelin.stm32@gmail.com,
-        alexandre.torgue@st.com, linux-gpio@vger.kernel.org,
-        linux-omap@vger.kernel.org, linux-tegra@vger.kernel.org,
-        patches@opensource.cirrus.com
-Subject: [PATCH 30/30] drivers: gpio: max732x: use subsys_i2c_driver()
-Date:   Mon, 17 Jun 2019 20:41:11 +0200
-Message-Id: <1560796871-18560-30-git-send-email-info@metux.net>
-X-Mailer: git-send-email 1.9.1
-In-Reply-To: <1560796871-18560-1-git-send-email-info@metux.net>
-References: <1560796871-18560-1-git-send-email-info@metux.net>
-X-Provags-ID: V03:K1:cCDeCfM59RF90RxmymdnnTZyFuGyFovFw66CIcAmzljQAcUCv50
- GHZdz+78OGvTtCBTcKJL1JKtM2LAYUAGqkUZqHriMkIzaNvafUq+aNA3OY0YiHro69MDLZO
- dzbzbBXy+eMl7t+QG7QOmjCDfgqFoeDxvYkR8c8FaSIw1+kNxxx8GG2B93NHJBZFBODWVDA
- fWLGs8s2d7UAj+faSe7SQ==
-X-Spam-Flag: NO
-X-UI-Out-Filterresults: notjunk:1;V03:K0:f9JpWGPh8+Q=:Prle+yo3zB8vcfwdoAK2g8
- 2gzxvbqD4NKKJ2D+vj4cO6yWP8/PFEBRWr5iN+PXDLZyCbNsNXUxhNjPKPHLA/MleKDaAKAHq
- vRyvmeLVGHug2/ZCDG5xOg8Kfn/TuG9DIABDPhGru8LjN1ocaWeawNrBH0qdgMdtpLai+JCTq
- lHwZVLspVxps/zV8WoEQeGIMlyBc/+eJksIkDYaZZ6BbxFNmv1Zk+S5dkoacPYkWx7nVGKWmH
- A+KH1mOv7cbTvc8DJhJjSbHcHvhR7Xo3VLPASfFAEdtSkI7MFZRtc93r1RypaqwSRZHNU4zty
- hjoCIDx8p3cZer1X9VxiAQ8R6sIyth4oleJq6vYVmTFTpzBXpZaRRgPmhJl7XZUP0m3Kjjqan
- NYcTOPjLsplRrF4jzuOvB+kRMNlZPsKiyqNFhkrNUenAP7fQFViNMwupkjbrmGwkwA+2f2bL4
- fk99ZsSFhw9us+GK1fJBNNwY4ZHiX6+6O6gnmm9EjrKERGveNEEGehdRM9ibMts7hJ06T8Uvs
- uct1NQJDCExlFFiLE6sWZG+eEgtGzc6gfexFgnc/mNrqP0otK0WEplszhV4Cv6VdOrLPM5CKE
- gQpeep9J3O14sWRUXtFLlX+fCQXRIqWTfaUuBfA4EAE4kYrUNQ80fF8uCjWMZ0f4XEhE41Fio
- cE8tn3zxz3BV3B2GVly5P7ER/T9/5w3KX38GX49rjtPSfK0kAi1rocik3cLojD5kKNjvd2mja
- W73zWA9QHbNCRh2SMvxxy9fagBYWlWMNJ2RMxxa3TnERt6EaKgfI0NeeI5WOyZqw7eMOSR/ZI
- 31NIBLNdWnFGTJeFcRrHz/lEEY5fmQPR0BJDVFxsjJ8VwhI1RNzbLxltqhayQ/ftVC1LzoxT+
- cCQvpIJA8QBJ5MQkMLd/GpDXHnO7Z2LogOqS1JLOTo/H/4snP0zZfciNYNUb1k7PStVktEUNX
- fHkDDIqKqQg==
+        id S1726286AbfFQS5i (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 17 Jun 2019 14:57:38 -0400
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:41014 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725839AbfFQS5i (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 17 Jun 2019 14:57:38 -0400
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id x5HIvPLJ005706;
+        Mon, 17 Jun 2019 13:57:25 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1560797845;
+        bh=eXKVDlqZzqdlgcUJUU+jPPZepnuhi3ZTqQo/hbODeEM=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=oIw06plIitBYLiJdchxsmU0MSki7Rlx0JhmUTmr2teR4u91wdDsjNpjwIYjoeLg1n
+         Z+J4I5d3HwJ5wVpymWg0Ry7rhcxKNViibyTroUMRqLATNP9Du2Gqmccpq0tlg9E9tP
+         M1STJHAzAB8aN53HvWsfWtEqGZIA/bgLzLAMoRT4=
+Received: from DFLE115.ent.ti.com (dfle115.ent.ti.com [10.64.6.36])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x5HIvPdS082788
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Mon, 17 Jun 2019 13:57:25 -0500
+Received: from DFLE115.ent.ti.com (10.64.6.36) by DFLE115.ent.ti.com
+ (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Mon, 17
+ Jun 2019 13:57:24 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE115.ent.ti.com
+ (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Mon, 17 Jun 2019 13:57:24 -0500
+Received: from [10.250.96.121] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id x5HIvKQp019312;
+        Mon, 17 Jun 2019 13:57:21 -0500
+Subject: Re: [PATCH-next 20/20] gpio: gpio-omap: clean up register access in
+ omap2_set_gpio_debounce()
+To:     Linus Walleij <linus.walleij@linaro.org>
+CC:     Russell King <rmk@arm.linux.org.uk>,
+        Tony Lindgren <tony@atomide.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Linux-OMAP <linux-omap@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Santosh Shilimkar <ssantosh@kernel.org>,
+        Russell King <rmk+kernel@armlinux.org.uk>
+References: <20190610171103.30903-1-grygorii.strashko@ti.com>
+ <20190610171103.30903-21-grygorii.strashko@ti.com>
+ <CACRpkda2FhYNYA2TkVANOF5GWd3hE9cqM7N_pFDFj9nh-fh=iA@mail.gmail.com>
+From:   grygorii <grygorii.strashko@ti.com>
+Message-ID: <0ab98094-f8b2-69a3-e73c-1dfdf812d627@ti.com>
+Date:   Mon, 17 Jun 2019 21:57:13 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
+MIME-Version: 1.0
+In-Reply-To: <CACRpkda2FhYNYA2TkVANOF5GWd3hE9cqM7N_pFDFj9nh-fh=iA@mail.gmail.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-From: Enrico Weigelt <info@metux.net>
 
-Reduce driver init boilerplate by using the new
-subsys_i2c_driver() macro.
 
-Signed-off-by: Enrico Weigelt <info@metux.net>
----
- drivers/gpio/gpio-max732x.c | 13 +------------
- 1 file changed, 1 insertion(+), 12 deletions(-)
+On 12/06/2019 12:11, Linus Walleij wrote:
+> On Mon, Jun 10, 2019 at 7:13 PM Grygorii Strashko
+> <grygorii.strashko@ti.com> wrote:
+> 
+>> From: Russell King <rmk+kernel@armlinux.org.uk>
+>>
+>> Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
+>> Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
+> 
+> Patch applied.
 
-diff --git a/drivers/gpio/gpio-max732x.c b/drivers/gpio/gpio-max732x.c
-index 5e4102e..c340883 100644
---- a/drivers/gpio/gpio-max732x.c
-+++ b/drivers/gpio/gpio-max732x.c
-@@ -756,21 +756,10 @@ static int max732x_remove(struct i2c_client *client)
- 	.remove		= max732x_remove,
- 	.id_table	= max732x_id,
- };
--
--static int __init max732x_init(void)
--{
--	return i2c_add_driver(&max732x_driver);
--}
- /* register after i2c postcore initcall and before
-  * subsys initcalls that may rely on these GPIOs
-  */
--subsys_initcall(max732x_init);
--
--static void __exit max732x_exit(void)
--{
--	i2c_del_driver(&max732x_driver);
--}
--module_exit(max732x_exit);
-+subsys_i2c_driver(max732x_driver);
- 
- MODULE_AUTHOR("Eric Miao <eric.miao@marvell.com>");
- MODULE_DESCRIPTION("GPIO expander driver for MAX732X");
+Thanks Linus.
+
+> 
+> At your convenience please look at the debounce function a bit
+> closer because I think there is a bug/unpredictable behavior:
+> 
+> IIUC the whole bank/block of GPIOs share the same debounce
+> timer setting, and it is currently handled in a "last caller wins"
+> manner, so if the different GPIOs in the bank has different
+> debounce settings, the call order decides what debounce time
+> is used across all of them.
+
+Yeah. this is a "known" problem :(
+
+> 
+> In drivers/gpio/gpio-ftgpio.c function ftgpio_gpio_set_config()
+> I simply reject a dounce time setting
+> different from the currently configured if any GPIOs are
+> currently using the deounce feature.
+> 
+> (It's the semantic I came up with but maybe there are other
+> ideas here.)
+
+
+There is one more patch in int. queue for debounce, but I've
+decided to send it after this series as OMAP debounce changes are
+usually debatable.
+
+I'll look at gpio-ftgpio also.
+
+By the way, there seems no ABI for debounce cfg in gpio_dev interface.
+(or i'm missing smth?)
+
 -- 
-1.9.1
-
+Best regards,
+grygorii
