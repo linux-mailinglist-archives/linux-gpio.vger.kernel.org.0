@@ -2,49 +2,49 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id EDA4A48C42
-	for <lists+linux-gpio@lfdr.de>; Mon, 17 Jun 2019 20:40:58 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 31F8E48CCF
+	for <lists+linux-gpio@lfdr.de>; Mon, 17 Jun 2019 20:44:22 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726834AbfFQSkq (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 17 Jun 2019 14:40:46 -0400
-Received: from mout.kundenserver.de ([212.227.126.131]:55045 "EHLO
+        id S1726834AbfFQSlh (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 17 Jun 2019 14:41:37 -0400
+Received: from mout.kundenserver.de ([212.227.17.24]:35253 "EHLO
         mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726088AbfFQSkq (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 17 Jun 2019 14:40:46 -0400
+        with ESMTP id S1725764AbfFQSlh (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 17 Jun 2019 14:41:37 -0400
 Received: from orion.localdomain ([77.2.173.233]) by mrelayeu.kundenserver.de
- (mreue010 [212.227.15.167]) with ESMTPSA (Nemesis) id
- 1M72bv-1hhaSb2MWN-008X1c; Mon, 17 Jun 2019 20:40:42 +0200
+ (mreue109 [212.227.15.183]) with ESMTPSA (Nemesis) id
+ 1MhUDl-1iFYm80Vff-00eexp; Mon, 17 Jun 2019 20:41:15 +0200
 From:   "Enrico Weigelt, metux IT consult" <info@metux.net>
 To:     linux-kernel@vger.kernel.org
-Cc:     linus.walleij@linaro.org, bgolaszewski@baylibre.com,
-        broonie@kernel.org, linux-gpio@vger.kernel.org,
-        linux-spi@vger.kernel.org
-Subject: [PATCH 3/3] drivers: gpio: mc33880: use subsys_spi_driver()
-Date:   Mon, 17 Jun 2019 20:40:40 +0200
-Message-Id: <1560796840-18207-3-git-send-email-info@metux.net>
+Cc:     thloh@altera.com, linus.walleij@linaro.org,
+        bgolaszewski@baylibre.com, andriy.shevchenko@linux.intel.com,
+        shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de,
+        festevam@gmail.com, linux-imx@nxp.com, grygorii.strashko@ti.com,
+        ssantosh@kernel.org, khilman@kernel.org, mcoquelin.stm32@gmail.com,
+        alexandre.torgue@st.com, linux-gpio@vger.kernel.org,
+        linux-omap@vger.kernel.org, linux-tegra@vger.kernel.org,
+        patches@opensource.cirrus.com
+Subject: [PATCH 01/30] include: linux: platform_device: more helpers for declaring platform drivers
+Date:   Mon, 17 Jun 2019 20:40:42 +0200
+Message-Id: <1560796871-18560-1-git-send-email-info@metux.net>
 X-Mailer: git-send-email 1.9.1
-In-Reply-To: <1560796840-18207-1-git-send-email-info@metux.net>
-References: <1560796840-18207-1-git-send-email-info@metux.net>
-X-Provags-ID: V03:K1:IaUNo2LISoksoHpM067Yxxizrv4ia1vDNAPnlkCC16FLenVR/LQ
- 2nKdbvumgxiAy5amfyeRkCLUDjJ5YUkeI/Y6zQo9bMbqu2P1iWjxKAiDvP9nzMY76xNoAWu
- jE5IHsRJ4DJS2EYxJRa3taqOjZ3lFTgocePA5Bm+kqo2Jx0kjAOWlcheqMJmXE1Nk35bv9e
- n0S/ffXhfURKOhxJJLf2w==
+X-Provags-ID: V03:K1:vh3WgaKAfp/7utsDwGStG8lhMEJOLPpqeqqOIPZUy69iRDhMgUT
+ YLO0VVH9+WSHOOP9Z9lTkwLZQut5VFowC3UxPBimZV2gDZsASGuddTCo4Ns+x279im1k6P6
+ DvVmuitj/sUJGSikRzupru9N53/CfW5itFY6p4aDEVz9PvxnW7pBVq3Fmi/cVgqMjBnVHGa
+ GhxJ055QzOASmoYXb/xGw==
 X-Spam-Flag: NO
-X-UI-Out-Filterresults: notjunk:1;V03:K0:ymbqzy7Jl74=:71GHVSPQfr8zkDMir2bKNz
- kKntcIsG1RtG+fLZVgTO35auZOdan2142hoIlBPNEYLOPs+5xt1ur/MPNHtTYMxwAPOP+JjNG
- ACkGAmhCLWgVIFfMa1YRZg78D0X2WVzLhHJngHyPJYai3nyK4nJmJAd6Up71twKJSvCZhnBkJ
- Zo93b68bYpm9U3fSBsSAGh/wBFFS0FXpHBrlipDcgD0oCt2EJMudmJ6kde2GRpm3YR4ST7wfB
- qq3ZB9e2C2onAP1V+OEgt5JDqoupaY6fuV+y9hW0ozfAg9mva1XJBUrvT+l4E1+UgkZ38K4a7
- FUjEq+yZxJrTQMNcM/m3kSK/R2iv7eJBD09NrJYJHVePjzS9cw/az678GNBTzSTPBEdFqau7h
- IYnRBvnZR8+XJeoibstEvhUrzbQwsXYCUak/Rk9SRoFVd4pHo6qUcdeEWBceR/PAq/FgGKZHD
- wJH9CkTDArqr9FMHtUb5rJvysa1AdsQbe4WsZeHeB8rd3Nvw8GxbGntyavgHMIyQxcZ98CrIS
- peIO3XX0OJOwFqj73/aDlScRKZOYwgZlrvIyiC6MhXkZASzYLuLq4T6xVGGz4JjRG4Lu0aUaU
- GDE6s0ZhoqDfS8ZYNmdP4sNKQQg/hhW4OFdcr1+sQCY1r4Y+28Wzk2HEmImVVBjeThVVMYdkH
- PV6mYT8KOGT5uI7KD/2KuImp3zQnGuvxKoJQnMd2bPpYwBu4z4ewFM/2faiKgtQWkzxERKyFb
- jqJfEIV8cnUwzn1BsE1tTBU0dcIMICaUwd/1LTkKDVDCNJ+sJgju/v6BFfpEY7NKKpaZmugzX
- 2jf11ompMFwFkDywNmUlxAoh2QYxh6dXsPJeLeA5t179wzQcox36lOaaVeGW01OdFIggqPoWS
- 1G2xhwxEI9gUFaSsTHwj+lEcv9VCAxvo2gwzAMYRBusWm9jXAaialyBkjGwYCYrXquyce5LYa
- J+MdfmFvhEA==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:pncoYwVZfPU=:I4jSkF7FQyUU1Sq0ZMKvoJ
+ hrJzfvo2len4wsFtN0hwymlMcBge1MDGz+loqbRkJ8CW/uRDselgl9z8OUHkvxhAJwTUPCoK2
+ 5LRdxHWKDEVzf+MuRQjoI+ISMzc40B9oTOcQXNJn3uxLp24Zf0lG++O4eNVoKQJk32AVy3b6T
+ 7z80l+YlX2u6QXjMp2DzSlFJ5FwvWeJ2nTmoWP8EpQeg8OoAf/ecvdpSWa7ZjRgf3udyWH7Fm
+ YTcg2Rho7x7lehyZlIG+aFWHsQqBlWWsAa2cKA0/W8Nlk4QHva+ZiPenQ4qo+tavkhrew/M1J
+ 99WAeRqb8RxlmqjxXqIVewncVfPRIbnHN4lm53x1O4kYrdlRETFiqL3wsiLhsU6pb7OhSpcke
+ H01Gpa7OSgdd+7tbdwfSE2dnCuhFHgxdI9iP2KiBrO08v6ihVnsWKvCjCdsBr0wd0c/vmqaaD
+ cOC+hxmoLR4uO7790+Uwko4cRo813Uc1adwb/A7nrMNIWc3D1yWASdCxy0X14MJ5ewLUt3EMS
+ 04MllSWdEijwsXKnH9zr+YctR/GxkORREQwZab5xab0l6k+QY4bGbB1FH1I6l1cMBHHJ0EYMf
+ xUbRGtlHTBwRBpR7kHDfTij/AkHg00n1c4hTwOWu7/YHW1ud65SgcWkdAVvYU8Mr1ylUhXiUU
+ 1LeCBRSQvuBLsKgKGHNygUZdlvOtR7m3hQ+MhrZslo8e24+3/0fbPcwoAc1RtbmIk3gFaYxiZ
+ TlsWX1yXNmkScOxTVP7Gxd5Jxz50lkfGbbRVwQ==
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
@@ -52,41 +52,81 @@ X-Mailing-List: linux-gpio@vger.kernel.org
 
 From: Enrico Weigelt <info@metux.net>
 
-Reduce driver init boilerplate by using the new
-subsys_spi_driver() macro.
+Add more helper macros for trivial driver init cases, similar to the
+already existing module_platform_driver()+friends - now for those which
+are initialized at other stages. Lots of drivers couldn't use the existing
+macros, as they need to be called at different init stages, eg. subsys,
+postcore, arch.
+
+This helps to further reduce driver init boilerplate.
 
 Signed-off-by: Enrico Weigelt <info@metux.net>
 ---
- drivers/gpio/gpio-mc33880.c | 13 +------------
- 1 file changed, 1 insertion(+), 12 deletions(-)
+ include/linux/platform_device.h | 51 +++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 51 insertions(+)
 
-diff --git a/drivers/gpio/gpio-mc33880.c b/drivers/gpio/gpio-mc33880.c
-index f8194f7..1b9434c 100644
---- a/drivers/gpio/gpio-mc33880.c
-+++ b/drivers/gpio/gpio-mc33880.c
-@@ -156,21 +156,10 @@ static int mc33880_remove(struct spi_device *spi)
- 	.remove		= mc33880_remove,
- };
+diff --git a/include/linux/platform_device.h b/include/linux/platform_device.h
+index beb25f2..5f3a967 100644
+--- a/include/linux/platform_device.h
++++ b/include/linux/platform_device.h
+@@ -259,6 +259,57 @@ static inline void platform_set_drvdata(struct platform_device *pdev,
+ } \
+ module_exit(__platform_driver##_exit);
  
--static int __init mc33880_init(void)
--{
--	return spi_register_driver(&mc33880_driver);
--}
- /* register after spi postcore initcall and before
-  * subsys initcalls that may rely on these GPIOs
-  */
--subsys_initcall(mc33880_init);
--
--static void __exit mc33880_exit(void)
--{
--	spi_unregister_driver(&mc33880_driver);
--}
--module_exit(mc33880_exit);
-+subsys_spi_driver(mc33880_driver);
- 
- MODULE_AUTHOR("Mocean Laboratories <info@mocean-labs.com>");
- MODULE_LICENSE("GPL v2");
--
++/* postcore_platform_driver() - Helper macro for drivers that don't do
++ * anything special in module init/exit.  This eliminates a lot of
++ * boilerplate.  Each module may only use this macro once, and
++ * calling it replaces postcore_initcall() and module_exit()
++ */
++#define postcore_platform_driver(__platform_driver) \
++static int __init __platform_driver##_init(void) \
++{ \
++	return platform_driver_register(&(__platform_driver)); \
++} \
++postcore_initcall(__platform_driver##_init); \
++static void __exit __platform_driver##_exit(void) \
++{ \
++	platform_driver_unregister(&(__platform_driver)); \
++} \
++module_exit(__platform_driver##_exit);
++
++/* subsys_platform_driver() - Helper macro for drivers that don't do
++ * anything special in module init/exit.  This eliminates a lot of
++ * boilerplate.  Each module may only use this macro once, and
++ * calling it replaces subsys_initcall() and module_exit()
++ */
++#define subsys_platform_driver(__platform_driver) \
++static int __init __platform_driver##_init(void) \
++{ \
++	return platform_driver_register(&(__platform_driver)); \
++} \
++subsys_initcall(__platform_driver##_init); \
++static void __exit __platform_driver##_exit(void) \
++{ \
++	platform_driver_unregister(&(__platform_driver)); \
++} \
++module_exit(__platform_driver##_exit);
++
++/* arch_platform_driver() - Helper macro for drivers that don't do
++ * anything special in module init/exit.  This eliminates a lot of
++ * boilerplate.  Each module may only use this macro once, and
++ * calling it replaces arch_initcall() and module_exit()
++ */
++#define arch_platform_driver(__platform_driver) \
++static int __init __platform_driver##_init(void) \
++{ \
++	return platform_driver_register(&(__platform_driver)); \
++} \
++arch_initcall(__platform_driver##_init); \
++static void __exit __platform_driver##_exit(void) \
++{ \
++	platform_driver_unregister(&(__platform_driver)); \
++} \
++module_exit(__platform_driver##_exit);
++
+ /* builtin_platform_driver_probe() - Helper macro for drivers that don't do
+  * anything special in device init.  This eliminates some boilerplate.  Each
+  * driver may only use this macro once, and using it replaces device_initcall.
 -- 
 1.9.1
 
