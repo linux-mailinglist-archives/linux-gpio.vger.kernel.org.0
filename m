@@ -2,46 +2,44 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id AFF4B48C37
-	for <lists+linux-gpio@lfdr.de>; Mon, 17 Jun 2019 20:39:56 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CFE2648C46
+	for <lists+linux-gpio@lfdr.de>; Mon, 17 Jun 2019 20:41:00 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728283AbfFQSjn (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 17 Jun 2019 14:39:43 -0400
-Received: from mout.kundenserver.de ([212.227.17.24]:49895 "EHLO
+        id S1726671AbfFQSkq (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 17 Jun 2019 14:40:46 -0400
+Received: from mout.kundenserver.de ([212.227.126.131]:40089 "EHLO
         mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725839AbfFQSjn (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 17 Jun 2019 14:39:43 -0400
+        with ESMTP id S1725839AbfFQSkq (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 17 Jun 2019 14:40:46 -0400
 Received: from orion.localdomain ([77.2.173.233]) by mrelayeu.kundenserver.de
- (mreue107 [212.227.15.183]) with ESMTPSA (Nemesis) id
- 1M9nAB-1hfwoi06b7-005qYN; Mon, 17 Jun 2019 20:39:41 +0200
+ (mreue010 [212.227.15.167]) with ESMTPSA (Nemesis) id
+ 1MsI4Q-1iVAln3msE-00tltd; Mon, 17 Jun 2019 20:40:42 +0200
 From:   "Enrico Weigelt, metux IT consult" <info@metux.net>
 To:     linux-kernel@vger.kernel.org
 Cc:     linus.walleij@linaro.org, bgolaszewski@baylibre.com,
-        wsa@the-dreams.de, linux-gpio@vger.kernel.org,
-        linux-i2c@vger.kernel.org
-Subject: [PATCH 3/3] drivers: gpio: pcf857x: use subsys_i2c_driver()
-Date:   Mon, 17 Jun 2019 20:39:39 +0200
-Message-Id: <1560796779-17117-3-git-send-email-info@metux.net>
+        broonie@kernel.org, linux-gpio@vger.kernel.org,
+        linux-spi@vger.kernel.org
+Subject: [PATCH 1/3] include: linux: spi: more helpers for declaring spi drivers
+Date:   Mon, 17 Jun 2019 20:40:38 +0200
+Message-Id: <1560796840-18207-1-git-send-email-info@metux.net>
 X-Mailer: git-send-email 1.9.1
-In-Reply-To: <1560796779-17117-1-git-send-email-info@metux.net>
-References: <1560796779-17117-1-git-send-email-info@metux.net>
-X-Provags-ID: V03:K1:llSAjebDYGluuZiize11hDPpsvBQMhYG4De6irWqXpmrHFW04Ly
- 16HNNFKFZTlcAGOEjM3VXOjZFxqfKNcvtKacdROJ+cGjp+KyQoKZp6RRM1f992D8AajRfTH
- ubwHArQwNvStp54tgaocGmyvbXapqAM7qNDKhz2QRgL5qwPbQisxsuiE/XJdECl2+ebOz6T
- ITlmQqYFAR6uLzV5MrTEg==
+X-Provags-ID: V03:K1:05rIirEOuVh/P2GdhGgoALTibWMKzcYIYDli8Uu//ZC/3VBGI2w
+ +JIY4qGMr/KjTh0Ppz2vrXxXy41cx263AHETMbkXWAcydFrR/jKTiozF+AkwFY4RA6qyQ1K
+ LI3uMpGHuBiSXZ0GeZqOZ/65Qg9BNa1sGxKroYGElKDyvZvERJiKF/NWASU/ArGsW5bqcaJ
+ 4uNZhph5J1wMf9p1vjweg==
 X-Spam-Flag: NO
-X-UI-Out-Filterresults: notjunk:1;V03:K0:/EmVtBUJHQk=:0Lk+obK6sn9wuxf6NJ5WYU
- 2N3vh3G4xIS8Xv+4baEazkT2iJ/MRCrxQ7OZmSxMHMAWO6QteAWJKgC3RxmmisIcTTZpIOVN2
- nh6dkNWRBqEeWmeDfROuDTAKmaONjVk6C9Er9AwQ8i/+N0bEYuPYll6uJ+fXsWjs0KoYgg3cP
- 5O/Dpjr1Dwy454jQMZbzsyOE6TzVk1a5SRtVzwfjQnCs9QAnA+IpCTY0db46924mrs3RkpsOQ
- D9X9q9Iirffy+tKcFKSQVtmW7Sv1eZJhWgWUWfLjw3Z1FXf73SUTQbbWJ4tZTTRbe2pQ35XVU
- Svx0UoMsSyyRcDDK6YQ6VUlhynhaLPTO75ZEoggsV35m7DGyvwFHkR+jP5gu6Yo1A7cJ8M8bv
- AJaGBg8sfpC6vwk41zOP43SMEP57MOxWPrMGeB+GMCkdyU/NuPH2q28lVzpUu8SWuK/QOjYgr
- bisZIoETFYa7JDOxGz0zN3FIORGMaAzZHdjiyNCgb9Jrmc/HFLBmYjaIE3/PTnLnvj77CrdYT
- SqLs15lZq95H8vwmn4tH7JU/k1lr0/x4ilJjmxfHJvn41s47IbiChy0N+d/S7ztgez1Q2HxGL
- 0eg/2N9r8ImIMJmq2FGw+q0INVhrRKchX7VCA0HM7Nv5jclWscVg/qPOR5i1jKLbQgxAUmLlt
- oTDMOSo/yj6OT1bEEJmrAHtIpA9MXn4ygPpBQc3hHYGKRWywNvbpNTbPqC7gZnX7iH3pC3rB4
- A91VyeQi0T8SRG+3uSxJa6mekFpQWtCobrD+CA==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:DbZzcJp0H/g=:W4xpeF7mD2ihzuY4mz4zvV
+ Mz9o6ivmAQFHsM/1tyfdeMxNAZDi7t+3LNqty4ZeuajIz+U2oSfAPH2P0ZS4XyCV2Xayhl31P
+ egaXRNkJpZlROWmx+b2taN/QMksYOmTDkjBNp/Yw1Tbm5el1UPFkWE0L4U/aqC3OQ6R3g4osR
+ kX+uYV849Jxe41HHoyaxJxHZtxO92vr8or61zWPuKf/cYYDuZk/ZzuzVF5jkluL5j3y5X/awS
+ iJBRfTKIUlzevJGA4pvD9ICWW1wQ5dKX/t5pepqsDqn2uVBRVpTsroc/nanzrXrxWtzZM189d
+ 6TR8r0F0HvzALAn16IENWRDnjQdQDNKgO2/QNnbP4Eg3yBQxUFlByLdO/EO25OjWY0BmTskRQ
+ ndtfnOEJChtozu9D1u3U+ONHCDXHaLNVVFkKOz/bDjQSHfjFFBnouZAQkcI7gyDzxsV0ffeif
+ i82sCtCrJsDekSwAMumFmgjOlAiDQM/6simcBGLXqQEQeS4hmRiCMasPv3GiFcTOQWq66GMJA
+ V1DYoOg9Q/mRlqcfHbDU66g34t9YR/aIp19WF+LZQeW0soIzZr6RAfmehGTDlcmmlaQuwdNeY
+ ZWSmfhPPJWLvlzbFXmWETCP3qPn9DrnfQm7dUtH4cDIi9/5/aeHqbu4RTrCw32T83dvNFXmmc
+ W78gciRdLng6agaEH4nGGwrzAwZTAczz+hhHzWOl9L918q8I6AAhgEMq5GbKlNCRZPDB5zrE6
+ Lyk9Ofw7cVoGsQ7HgYVW7ElpIwzCBAMkzA3pew==
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
@@ -49,40 +47,45 @@ X-Mailing-List: linux-gpio@vger.kernel.org
 
 From: Enrico Weigelt <info@metux.net>
 
-Reduce driver init boilerplate by using the new
-subsys_i2c_driver() macro.
+Add more helper macros for trivial driver init cases, similar to the
+already existing module_spi_driver()+friends - now for those which
+are initialized at other stages (eg. by subsys_initcall()).
+
+This helps to further reduce driver init boilerplate.
 
 Signed-off-by: Enrico Weigelt <info@metux.net>
 ---
- drivers/gpio/gpio-pcf857x.c | 12 +-----------
- 1 file changed, 1 insertion(+), 11 deletions(-)
+ include/linux/spi/spi.h | 17 +++++++++++++++++
+ 1 file changed, 17 insertions(+)
 
-diff --git a/drivers/gpio/gpio-pcf857x.c b/drivers/gpio/gpio-pcf857x.c
-index 14fb8f6..554663e 100644
---- a/drivers/gpio/gpio-pcf857x.c
-+++ b/drivers/gpio/gpio-pcf857x.c
-@@ -430,20 +430,10 @@ static void pcf857x_shutdown(struct i2c_client *client)
- 	.id_table = pcf857x_id,
- };
+diff --git a/include/linux/spi/spi.h b/include/linux/spi/spi.h
+index 053abd2..f55ba34 100644
+--- a/include/linux/spi/spi.h
++++ b/include/linux/spi/spi.h
+@@ -296,6 +296,23 @@ static inline void spi_unregister_driver(struct spi_driver *sdrv)
+ 	module_driver(__spi_driver, spi_register_driver, \
+ 			spi_unregister_driver)
  
--static int __init pcf857x_init(void)
--{
--	return i2c_add_driver(&pcf857x_driver);
--}
- /* register after i2c postcore initcall and before
-  * subsys initcalls that may rely on these GPIOs
-  */
--subsys_initcall(pcf857x_init);
--
--static void __exit pcf857x_exit(void)
--{
--	i2c_del_driver(&pcf857x_driver);
--}
--module_exit(pcf857x_exit);
-+subsys_i2c_driver(pcf857x_driver);
- 
- MODULE_LICENSE("GPL");
- MODULE_AUTHOR("David Brownell");
++/* subsys_spi_driver() - Helper macro for drivers that don't do
++ * anything special in module init/exit.  This eliminates a lot of
++ * boilerplate.  Each module may only use this macro once, and
++ * calling it replaces subsys_initcall() and module_exit()
++ */
++#define subsys_spi_driver(__spi_driver) \
++static int __init __spi_driver##_init(void) \
++{ \
++	return spi_register_driver(&(__spi_driver)); \
++} \
++subsys_initcall(__spi_driver##_init); \
++static void __exit __spi_driver##_exit(void) \
++{ \
++	spi_unregister_driver(&(__spi_driver)); \
++} \
++module_exit(__spi_driver##_exit);
++
+ /**
+  * struct spi_controller - interface to SPI master or slave controller
+  * @dev: device interface to this driver
 -- 
 1.9.1
 
