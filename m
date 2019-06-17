@@ -2,99 +2,85 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 8F20E48581
-	for <lists+linux-gpio@lfdr.de>; Mon, 17 Jun 2019 16:34:13 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 51769486C0
+	for <lists+linux-gpio@lfdr.de>; Mon, 17 Jun 2019 17:14:12 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728047AbfFQOdm (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 17 Jun 2019 10:33:42 -0400
-Received: from michel.telenet-ops.be ([195.130.137.88]:35982 "EHLO
-        michel.telenet-ops.be" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728346AbfFQOdl (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 17 Jun 2019 10:33:41 -0400
-Received: from ramsan ([84.194.111.163])
-        by michel.telenet-ops.be with bizsmtp
-        id RqZQ200023XaVaC06qZQyw; Mon, 17 Jun 2019 16:33:34 +0200
-Received: from rox.of.borg ([192.168.97.57])
-        by ramsan with esmtp (Exim 4.90_1)
-        (envelope-from <geert@linux-m68k.org>)
-        id 1hcshH-0002Hv-01; Mon, 17 Jun 2019 16:33:23 +0200
-Received: from geert by rox.of.borg with local (Exim 4.90_1)
-        (envelope-from <geert@linux-m68k.org>)
-        id 1hcshG-000190-V2; Mon, 17 Jun 2019 16:33:22 +0200
-From:   Geert Uytterhoeven <geert+renesas@glider.be>
-To:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>
-Cc:     openbmc@lists.ozlabs.org, openipmi-developer@lists.sourceforge.net,
-        devicetree@vger.kernel.org, linux-gpio@vger.kernel.org,
-        alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
-        Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH] dt-bindings: Add missing newline at end of file
-Date:   Mon, 17 Jun 2019 16:33:22 +0200
-Message-Id: <20190617143322.4332-1-geert+renesas@glider.be>
-X-Mailer: git-send-email 2.17.1
+        id S1728322AbfFQPOB (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 17 Jun 2019 11:14:01 -0400
+Received: from relay1.mentorg.com ([192.94.38.131]:55568 "EHLO
+        relay1.mentorg.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728170AbfFQPOB (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 17 Jun 2019 11:14:01 -0400
+Received: from nat-ies.mentorg.com ([192.94.31.2] helo=svr-ies-mbx-01.mgc.mentorg.com)
+        by relay1.mentorg.com with esmtps (TLSv1.2:ECDHE-RSA-AES256-SHA384:256)
+        id 1hctKW-0004z2-Es from Harish_Kandiga@mentor.com ; Mon, 17 Jun 2019 08:13:56 -0700
+Received: from hkandiga-VirtualBox.ina-wifi.mentorg.com (137.202.0.90) by
+ svr-ies-mbx-01.mgc.mentorg.com (139.181.222.1) with Microsoft SMTP Server
+ (TLS) id 15.0.1320.4; Mon, 17 Jun 2019 16:13:52 +0100
+From:   Harish Jenny K N <harish_kandiga@mentor.com>
+To:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+CC:     <linux-gpio@vger.kernel.org>,
+        Harish Jenny K N <harish_kandiga@mentor.com>,
+        Balasubramani Vivekanandan 
+        <balasubramani_vivekanandan@mentor.com>
+Subject: [PATCH V2 0/2] Add Inverter controller for gpio configuration
+Date:   Mon, 17 Jun 2019 20:43:43 +0530
+Message-ID: <1560784425-20227-1-git-send-email-harish_kandiga@mentor.com>
+X-Mailer: git-send-email 2.7.4
+MIME-Version: 1.0
+Content-Type: text/plain
+X-Originating-IP: [137.202.0.90]
+X-ClientProxiedBy: SVR-IES-MBX-07.mgc.mentorg.com (139.181.222.7) To
+ svr-ies-mbx-01.mgc.mentorg.com (139.181.222.1)
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-"git diff" says:
+The purpose of this patchset is to provide a new inverter
+gpio controller to configure the polarity of the gpio pins.
+This driver enables the consumers to directly use the gpio pin
+without worrying about the hardware level polarity configuration.
+Polarity configuration will be done by the inverter gpio controller
+based on device tree information.
 
-    \ No newline at end of file
+This is created after the discussion in the thread
+"gpio: set active-state of GPIO lines using device tree"
+https://www.spinics.net/lists/linux-gpio/msg38829.html
+to model inverters in the device tree to describe the hardware.
 
-after modifying the files.
+Thanks,
+Harish.
 
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
 ---
- Documentation/devicetree/bindings/ipmi/npcm7xx-kcs-bmc.txt      | 2 +-
- .../devicetree/bindings/pinctrl/nuvoton,npcm7xx-pinctrl.txt     | 2 +-
- Documentation/devicetree/bindings/regulator/pv88060.txt         | 2 +-
- Documentation/devicetree/bindings/sound/cs42l73.txt             | 2 +-
- 4 files changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/ipmi/npcm7xx-kcs-bmc.txt b/Documentation/devicetree/bindings/ipmi/npcm7xx-kcs-bmc.txt
-index 3538a214fff156d4..352f5e9c759bc3f5 100644
---- a/Documentation/devicetree/bindings/ipmi/npcm7xx-kcs-bmc.txt
-+++ b/Documentation/devicetree/bindings/ipmi/npcm7xx-kcs-bmc.txt
-@@ -36,4 +36,4 @@ Example:
-             kcs_chan = <2>;
-             status = "disabled";
-         };
--    };
-\ No newline at end of file
-+    };
-diff --git a/Documentation/devicetree/bindings/pinctrl/nuvoton,npcm7xx-pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/nuvoton,npcm7xx-pinctrl.txt
-index 83f4bbac94bb19db..a1264cc8660dcd59 100644
---- a/Documentation/devicetree/bindings/pinctrl/nuvoton,npcm7xx-pinctrl.txt
-+++ b/Documentation/devicetree/bindings/pinctrl/nuvoton,npcm7xx-pinctrl.txt
-@@ -213,4 +213,4 @@ pinctrl: pinctrl@f0800000 {
- 		groups = "clkreq";
- 		function = "clkreq";
- 	};
--};
-\ No newline at end of file
-+};
-diff --git a/Documentation/devicetree/bindings/regulator/pv88060.txt b/Documentation/devicetree/bindings/regulator/pv88060.txt
-index 10a6dadc008eb38d..6a7c8a92fdb0bf1c 100644
---- a/Documentation/devicetree/bindings/regulator/pv88060.txt
-+++ b/Documentation/devicetree/bindings/regulator/pv88060.txt
-@@ -121,4 +121,4 @@ Example
- 				regulator-max-microvolt = <5000000>;
- 			};
- 		};
--	};
-\ No newline at end of file
-+	};
-diff --git a/Documentation/devicetree/bindings/sound/cs42l73.txt b/Documentation/devicetree/bindings/sound/cs42l73.txt
-index 80ae910dbf6c3880..47b868b5ab011470 100644
---- a/Documentation/devicetree/bindings/sound/cs42l73.txt
-+++ b/Documentation/devicetree/bindings/sound/cs42l73.txt
-@@ -19,4 +19,4 @@ codec: cs42l73@4a {
- 	reg = <0x4a>;
- 	reset_gpio = <&gpio 10 0>;
- 	chgfreq = <0x05>;
--};
-\ No newline at end of file
-+};
--- 
-2.17.1
+Changes in V2:
+- Addressed review findings from Linus Walleij, Phil Reid,
+  Geert Uytterhoeven and Enrico Weigelt
+- Implement can_sleep changes
+- Changes not included
+  Wrap some functions like .set_multiple/.get_multiple/.set_config.
+ Reason: Not completely certain of the necessity in this driver
+especially given gpio_chip_set_multiple and gpio_chip_get_multiple
+functions in gpiolib handles when the callbacks are not set.
+Also not sure of using gpiochip_generic_config as a callback function
+or with some other implementation.
+
+  Please let me know if they need to be implemented.
+
+Harish Jenny K N (2):
+  gpio: inverter: Add Inverter controller for gpio configuration
+  gpio: inverter: document the inverter bindings
+
+ .../devicetree/bindings/gpio/gpio-inverter.txt     |  29 +++++
+ drivers/gpio/Kconfig                               |   9 ++
+ drivers/gpio/Makefile                              |   1 +
+ drivers/gpio/gpio-inverter.c                       | 130 +++++++++++++++++++++
+ 4 files changed, 169 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/gpio/gpio-inverter.txt
+ create mode 100644 drivers/gpio/gpio-inverter.c
+
+--
+2.7.4
 
