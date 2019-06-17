@@ -2,130 +2,140 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 733B4482D7
-	for <lists+linux-gpio@lfdr.de>; Mon, 17 Jun 2019 14:45:54 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 73A1A483CE
+	for <lists+linux-gpio@lfdr.de>; Mon, 17 Jun 2019 15:22:45 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726121AbfFQMpx (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 17 Jun 2019 08:45:53 -0400
-Received: from mga17.intel.com ([192.55.52.151]:2718 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725995AbfFQMpx (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Mon, 17 Jun 2019 08:45:53 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 17 Jun 2019 05:45:52 -0700
-X-ExtLoop1: 1
-Received: from pipin.fi.intel.com (HELO pipin) ([10.237.72.175])
-  by orsmga008.jf.intel.com with ESMTP; 17 Jun 2019 05:45:48 -0700
-From:   Felipe Balbi <balbi@kernel.org>
-To:     Lee Jones <lee.jones@linaro.org>
-Cc:     alokc@codeaurora.org, agross@kernel.org, david.brown@linaro.org,
-        wsa+renesas@sang-engineering.com, bjorn.andersson@linaro.org,
-        gregkh@linuxfoundation.org, ard.biesheuvel@linaro.org,
-        jlhugo@gmail.com, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-usb@vger.kernel.org
-Subject: Re: [PATCH v4 4/6] usb: dwc3: qcom: Add support for booting with ACPI
-In-Reply-To: <20190617124329.GH16364@dell>
-References: <20190612142654.9639-1-lee.jones@linaro.org> <20190612142654.9639-5-lee.jones@linaro.org> <20190617102146.GG16364@dell> <87y320gzp4.fsf@linux.intel.com> <20190617124329.GH16364@dell>
-Date:   Mon, 17 Jun 2019 15:45:44 +0300
-Message-ID: <87r27sgz2f.fsf@linux.intel.com>
+        id S1726215AbfFQNWc (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 17 Jun 2019 09:22:32 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:47530 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726065AbfFQNWc (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 17 Jun 2019 09:22:32 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id 8324260254; Mon, 17 Jun 2019 13:22:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1560777750;
+        bh=ew/xbajXtVboXMA/g2sJySnJBP6r87Wf7tJKswJnaqs=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=jMkkk91rJHyKHUc8qdhdkxnNyBUBpMgikXZ9N35782cqteuJ+Xwi7CzdeQq7Zqcqk
+         flbAmjU4UdQ4glqfRCTixYWtV1KlJviVUyr+YJnj98lDnOLJj+7ZfdtkZXfJdRe4RI
+         wQGHzC1Cs36FFO0PNWaxdndHTc96p4IIiOPWSAMM=
+X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
+        pdx-caf-mail.web.codeaurora.org
+X-Spam-Level: 
+X-Spam-Status: No, score=-2.7 required=2.0 tests=ALL_TRUSTED,BAYES_00,
+        DKIM_INVALID,DKIM_SIGNED,SPF_NONE autolearn=no autolearn_force=no
+        version=3.4.0
+Received: from [10.204.78.89] (blr-c-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.19.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: neeraju@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 7624B60265;
+        Mon, 17 Jun 2019 13:22:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1560777750;
+        bh=ew/xbajXtVboXMA/g2sJySnJBP6r87Wf7tJKswJnaqs=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=jMkkk91rJHyKHUc8qdhdkxnNyBUBpMgikXZ9N35782cqteuJ+Xwi7CzdeQq7Zqcqk
+         flbAmjU4UdQ4glqfRCTixYWtV1KlJviVUyr+YJnj98lDnOLJj+7ZfdtkZXfJdRe4RI
+         wQGHzC1Cs36FFO0PNWaxdndHTc96p4IIiOPWSAMM=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 7624B60265
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=neeraju@codeaurora.org
+Subject: Re: Fwd: Re: [PATCH] pinctrl: qcom: Clear status bit on irq_unmask
+To:     Linus Walleij <linus.walleij@linaro.org>,
+        Hans Verkuil <hverkuil@xs4all.nl>
+Cc:     Stephen Boyd <sboyd@kernel.org>,
+        Tengfei Fan <tengfeif@codeaurora.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        MSM <linux-arm-msm@vger.kernel.org>, sramana@codeaurora.org
+References: <20190611185102.368ED21744@mail.kernel.org>
+ <671f87d6-f4a4-6d2c-967b-e1aa0677d83e@codeaurora.org>
+ <b0fdbcb1-4d5d-5c60-4150-7762a577cd10@codeaurora.org>
+ <CACRpkdahUNNOhQdri3T86jHr+qOBmXH61_AMmoWpv_be2koMrw@mail.gmail.com>
+From:   Neeraj Upadhyay <neeraju@codeaurora.org>
+Message-ID: <e88903a2-9b07-6eee-3776-0fc0ad429a2d@codeaurora.org>
+Date:   Mon, 17 Jun 2019 18:52:24 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.4.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="=-=-=";
-        micalg=pgp-sha256; protocol="application/pgp-signature"
+In-Reply-To: <CACRpkdahUNNOhQdri3T86jHr+qOBmXH61_AMmoWpv_be2koMrw@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
---=-=-=
-Content-Type: text/plain
-Content-Transfer-Encoding: quoted-printable
+Thanks for the review, Linus.
 
-
-Hi,
-
-Lee Jones <lee.jones@linaro.org> writes:
-> On Mon, 17 Jun 2019, Felipe Balbi wrote:
+On 6/17/19 5:20 PM, Linus Walleij wrote:
+> On Mon, Jun 17, 2019 at 12:35 PM Neeraj Upadhyay <neeraju@codeaurora.org> wrote:
 >
->> Hi,
->>=20
->> Lee Jones <lee.jones@linaro.org> writes:
->> >> In Linux, the DWC3 core exists as its own independent platform device.
->> >> Thus when describing relationships in Device Tree, the current default
->> >> boot configuration table option, the DWC3 core often resides as a chi=
-ld
->> >> of the platform specific node.  Both of which are given their own
->> >> address space descriptions and the drivers can be mostly agnostic to
->> >> each other.
->> >>=20
->> >> However, other Operating Systems have taken a more monolithic approac=
-h,
->> >> which is evident in the configuration ACPI tables for the Qualcomm
->> >> Snapdragon SDM850, where all DWC3 (core and platform) components are
->> >> described under a single IO memory region.
->> >>=20
->> >> To ensure successful booting using the supplied ACPI tables, we need =
-to
->> >> devise a way to chop up the address regions provided and subsequently
->> >> register the DWC3 core with the resultant information, which is
->> >> precisely what this patch aims to achieve.
->> >>=20
->> >> Signed-off-by: Lee Jones <lee.jones@linaro.org>
->> >> Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
->> >> ---
->> >>  drivers/usb/dwc3/Kconfig     |   2 +-
->> >>  drivers/usb/dwc3/dwc3-qcom.c | 206 ++++++++++++++++++++++++++++++---=
---
->> >>  2 files changed, 179 insertions(+), 29 deletions(-)
->> >
->> > I'm starting to get a little twitchy about these patches now.  Due to
->> > the release cadence of the larger Linux distros, it's pretty important
->> > that these changes land in v5.3.  Without them, it is impossible to
->> > install Linux on some pretty high profile emerging platforms.
->> >
->> > It's already -rc5 and I'm concerned that we're going to miss the
->> > merge-window.  Would you be kind enough to review these patches
->> > please?  The Pinctrl and I2C parts of the set have already been
->> > merged.
->>=20
->> I don't seem to have this series in my inbox. This is the only email I
->> have in this series.
+>> Hi Stephen, there is one use case with is not covered by commit
+>> b55326dc969e (
+>>
+>> "pinctrl: msm: Really mask level interrupts to prevent latching"). That
+>> happens when
+>>
+>> gpio line is toggled between i/o mode and interrupt mode :
+>>
+>> 1. GPIO is configured as irq line. Peripheral raises interrupt.
+>>
+>> 2. IRQ handler runs and disables the irq line (through wq work).
+>>
+>> 3. GPIO is configured for input and and data is received from the
+>> peripheral.
+> There is no distinction between using a GPIO line as input
+> and using it for IRQ. All input GPIOs can be used for IRQs,
+> if the hardware supports it (has an irqchip).
+
+Ok
+
 >
-> I did wonder, which is why I made sure I sent this to your Intel
-> address as well.  Is your @kernel.org address broken?
+>> 4. Now, when GPIO is re-enabled as irq, we see spurious irq, and there
+>> isn't
+>>
+>> any data received on the gpio line, when it is read back after
+>> configuring as input.
+> That's an interesting usecase. Hans Verkuil reworked the
+> GPIO irq support very elegantly exactly to support this type
+> of usecase (irq switch on and off dynamically), where he
+> was even switching the line into output mode between
+> the IRQ trains. (one-wire transcactions for CEC).
+>
+>> Patch https://lkml.org/lkml/2019/6/17/226 tries to cover this use case.
+>> Can you please provide your comments?
+> What this patch does is clear all pending IRQs at irq
+> unmask. This is usually safe, unless there may be cases
+> where you *want* to catch any pending IRQs. I guess
+> normally you don't so it should be safe?
 
-not really, that drops in a valid inbox. I didn't receive it in either,
-however. :-s
+We want to clear pending status at irq enable. Afaik, no,
 
-> Will re-send the patches to your Intel address, give me a few
-> minutes.
+we don't normally track these pending irqs. So, should be
 
-Thanks.
+fine here.
 
-=2D-=20
-balbi
+>
+> The corner case is when you start some transaction
+> or whatever that gets ACKed by an IRQ and you actually
+> get the IRQ back before you had time to execute the code
+> enabling the IRQ.
+>
+> That would be racy and bad code, as you should clearly
+> enable the IRQ first, then start the transaction. So I think
+> this patch is safe.
+>
+> But let's see what Bjorn says.
+>
+> Yours,
+> Linus Walleij
 
---=-=-=
-Content-Type: application/pgp-signature; name="signature.asc"
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a
+member of the Code Aurora Forum, hosted by The Linux Foundation
 
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCAAdFiEElLzh7wn96CXwjh2IzL64meEamQYFAl0Hi3gACgkQzL64meEa
-mQY6cw//UR0+y5aHXtLn2hjlVUhYgBlcnFJr3gT/bI+asF95lLJrC5erexaMReya
-oVXaqMIj1FicOrT8LH6BQrAO7pCkK1nzMRa1Zzz0eaP02V+4KBw2rQdY3DqPN2UR
-cFRTPiG3rLyKTtFvjGbbg7T4eA7x5sXsgW95up5xFl3xWNMNvwk0Lhem+sIZgFFW
-SdEyfrkdqOEmKTXvLS+4FuEt3SHvPRjNfqHLR//JRSpRa9JFYak2GvFiSeJUfj1o
-Slw074pz4bcsUa2XGXElFv2FqG0SbsTlYWS2D8u3s5XaKk2zAMo35Be9JT2uFvL5
-kQyHVoNowkSXm27o19tBiqaidyRhEnQUxs8sBLNyVvr5dI7rKzTAbXY3F5zr4nVd
-7BNohgUx1c+UDbagD3hYJ4uP40lGGTgLx8UjU0V/iigzOdIqNJLZm4vJ3CxkBDI4
-OS9Xgvg6keTCk/PwEoM6QevioGBta7+nlLYHkFZD2NaCoRc1u5iQqfLe0TmCuFJh
-pP+m7g0yCXX9BXikm1XnPBcaA4sZ1BsYx7JN9LczYM6paqPm4vWwnxVkAbIv0bwe
-baDR7JtlY9ISajgV40UArHLkcN7+2/XHVNxgrTHfnluw/AFUfGkCl+soPC/CrTg4
-gPuvGPbuYM2oRfaWRGJJNyW/7yz4FUutnBFGdmZqD3JubShRE34=
-=FCzN
------END PGP SIGNATURE-----
---=-=-=--
