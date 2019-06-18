@@ -2,99 +2,85 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id D214D4A5DE
-	for <lists+linux-gpio@lfdr.de>; Tue, 18 Jun 2019 17:51:05 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6D8F34A60B
+	for <lists+linux-gpio@lfdr.de>; Tue, 18 Jun 2019 18:01:23 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729412AbfFRPvF (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 18 Jun 2019 11:51:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37062 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729246AbfFRPvF (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Tue, 18 Jun 2019 11:51:05 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2B02420673;
-        Tue, 18 Jun 2019 15:51:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560873064;
-        bh=KG8fTQS3ciKEa3GeQARg2vuYlZu59EP0SpvlKNATg3g=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Z2MdnD626qeBFpl/f9/UCgzg/HDX5Em/u27HN2XxK8ZvtzmV3WkHX4cGh+u+Cb35l
-         Clyl5HY5uZlNJqnTw8Z6xxE1zrWDpjswjqZuKQbD0z1XUjefpu9RaZWZIW9fYxw+r3
-         4ZZNWqKa6VbqQbXsZ9Wu9fUO1986ZsrMZJTaUHK4=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     bamv2005@gmail.com, linus.walleij@linaro.org,
-        bgolaszewski@baylibre.com
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-gpio@vger.kernel.org
-Subject: [PATCH 3/3] gpio: mockup: no need to check return value of debugfs_create functions
-Date:   Tue, 18 Jun 2019 17:50:47 +0200
-Message-Id: <20190618155047.16894-3-gregkh@linuxfoundation.org>
-X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20190618155047.16894-1-gregkh@linuxfoundation.org>
-References: <20190618155047.16894-1-gregkh@linuxfoundation.org>
+        id S1729689AbfFRQBW (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 18 Jun 2019 12:01:22 -0400
+Received: from smtp-fw-4101.amazon.com ([72.21.198.25]:21858 "EHLO
+        smtp-fw-4101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729563AbfFRQBW (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 18 Jun 2019 12:01:22 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1560873681; x=1592409681;
+  h=from:to:cc:subject:date:message-id:mime-version;
+  bh=m5c+QxuC5TZHuXYLARbeSntlW7rvO+1YgCMe8NcYLYo=;
+  b=AWY6F9P55ufZNf3CyBk5pIfZquaC+9J5i2d0w3ix+EWW4a2vZZd39gog
+   DsvGIeHYwzoaQkVyusEbdVO3pzXxVC405Q6cHbqO2zzbqPyq0VeFffRzO
+   1u4aBTDjN07Uxqkro8Q/FXmWFZxaNtOGtqBCANP264WVnR0xwPKB4RHtM
+   w=;
+X-IronPort-AV: E=Sophos;i="5.62,389,1554768000"; 
+   d="scan'208";a="770859253"
+Received: from iad6-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-1e-c7c08562.us-east-1.amazon.com) ([10.124.125.6])
+  by smtp-border-fw-out-4101.iad4.amazon.com with ESMTP; 18 Jun 2019 16:01:20 +0000
+Received: from EX13MTAUWB001.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan2.iad.amazon.com [10.40.159.162])
+        by email-inbound-relay-1e-c7c08562.us-east-1.amazon.com (Postfix) with ESMTPS id A48A524209F;
+        Tue, 18 Jun 2019 16:01:17 +0000 (UTC)
+Received: from EX13D21UWB001.ant.amazon.com (10.43.161.108) by
+ EX13MTAUWB001.ant.amazon.com (10.43.161.207) with Microsoft SMTP Server (TLS)
+ id 15.0.1367.3; Tue, 18 Jun 2019 16:01:17 +0000
+Received: from EX13MTAUWB001.ant.amazon.com (10.43.161.207) by
+ EX13D21UWB001.ant.amazon.com (10.43.161.108) with Microsoft SMTP Server (TLS)
+ id 15.0.1367.3; Tue, 18 Jun 2019 16:01:16 +0000
+Received: from 8c859006a84e.ant.amazon.com (172.26.203.28) by
+ mail-relay.amazon.com (10.43.161.249) with Microsoft SMTP Server id
+ 15.0.1367.3 via Frontend Transport; Tue, 18 Jun 2019 16:01:15 +0000
+From:   <alpawi@amazon.com>
+CC:     Benjamin Herrenschmidt <benh@amazon.com>,
+        Patrick Williams <alpawi@amazon.com>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Gregory Clement <gregory.clement@bootlin.com>,
+        "Sebastian Hesselbarth" <sebastian.hesselbarth@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-gpio@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: [PATCH 0/2] pinctl: armada-37xx: fix for pins 32+
+Date:   Tue, 18 Jun 2019 11:01:03 -0500
+Message-ID: <20190618160105.26343-1-alpawi@amazon.com>
+X-Mailer: git-send-email 2.17.2 (Apple Git-113)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-When calling debugfs functions, there is no need to ever check the
-return value.  The function can work or not, but the code logic should
-never do something different based on this.
+From: Patrick Williams <alpawi@amazon.com>
 
-Cc: Bamvor Jian Zhang <bamv2005@gmail.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>
-Cc: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Cc: linux-gpio@vger.kernel.org
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- drivers/gpio/gpio-mockup.c | 13 ++-----------
- 1 file changed, 2 insertions(+), 11 deletions(-)
+The 37xx GPIO config registers are only 32 bits long and
+span 2 registers for the NB GPIO controller.  The function
+to calculate the offset was missing the increase to the
+config register.
 
-diff --git a/drivers/gpio/gpio-mockup.c b/drivers/gpio/gpio-mockup.c
-index b6a4efce7c92..f955aff6dd82 100644
---- a/drivers/gpio/gpio-mockup.c
-+++ b/drivers/gpio/gpio-mockup.c
-@@ -325,8 +325,6 @@ static void gpio_mockup_debugfs_setup(struct device *dev,
- 	devname = dev_name(&gc->gpiodev->dev);
- 
- 	chip->dbg_dir = debugfs_create_dir(devname, gpio_mockup_dbg_dir);
--	if (IS_ERR_OR_NULL(chip->dbg_dir))
--		goto err;
- 
- 	for (i = 0; i < gc->ngpio; i++) {
- 		name = devm_kasprintf(dev, GFP_KERNEL, "%d", i);
-@@ -341,16 +339,11 @@ static void gpio_mockup_debugfs_setup(struct device *dev,
- 		priv->offset = i;
- 		priv->desc = &gc->gpiodev->descs[i];
- 
--		evfile = debugfs_create_file(name, 0200, chip->dbg_dir, priv,
--					     &gpio_mockup_debugfs_ops);
--		if (IS_ERR_OR_NULL(evfile))
--			goto err;
-+		debugfs_create_file(name, 0200, chip->dbg_dir, priv,
-+				    &gpio_mockup_debugfs_ops);
- 	}
- 
- 	return;
--
--err:
--	dev_err(dev, "error creating debugfs files\n");
- }
- 
- static int gpio_mockup_name_lines(struct device *dev,
-@@ -501,8 +494,6 @@ static int __init gpio_mockup_init(void)
- 	}
- 
- 	gpio_mockup_dbg_dir = debugfs_create_dir("gpio-mockup", NULL);
--	if (IS_ERR_OR_NULL(gpio_mockup_dbg_dir))
--		gpio_mockup_err("error creating debugfs directory\n");
- 
- 	err = platform_driver_register(&gpio_mockup_driver);
- 	if (err) {
+I have tested both raw gpio access and interrupts using
+libgpiod utilities on an Espressonbin.
+
+The first patch is a simple rename of a function because
+the original name implied it was doing IO itself ("update
+reg").  This patch could be dropped if undesired.
+
+The second patch contains the fix for GPIOs 32+.
+
+Patrick Williams (2):
+  pinctrl: armada-37xx: rename reg-offset function
+  pinctrl: armada-37xx: fix control of pins 32 and up
+
+ drivers/pinctrl/mvebu/pinctrl-armada-37xx.c | 20 ++++++++++----------
+ 1 file changed, 10 insertions(+), 10 deletions(-)
+
 -- 
-2.22.0
+2.17.2 (Apple Git-113)
 
