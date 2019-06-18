@@ -2,109 +2,74 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 3B00449F71
-	for <lists+linux-gpio@lfdr.de>; Tue, 18 Jun 2019 13:42:35 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E1CE249F7F
+	for <lists+linux-gpio@lfdr.de>; Tue, 18 Jun 2019 13:45:51 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729728AbfFRLme (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 18 Jun 2019 07:42:34 -0400
-Received: from mail-lf1-f67.google.com ([209.85.167.67]:47022 "EHLO
-        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729689AbfFRLme (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 18 Jun 2019 07:42:34 -0400
-Received: by mail-lf1-f67.google.com with SMTP id z15so8975719lfh.13
-        for <linux-gpio@vger.kernel.org>; Tue, 18 Jun 2019 04:42:33 -0700 (PDT)
+        id S1729799AbfFRLpu (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 18 Jun 2019 07:45:50 -0400
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:39174 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729681AbfFRLpu (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 18 Jun 2019 07:45:50 -0400
+Received: by mail-lj1-f195.google.com with SMTP id v18so12788568ljh.6
+        for <linux-gpio@vger.kernel.org>; Tue, 18 Jun 2019 04:45:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=oIBwXK9dI3H4C6jCiFQOTvpSt7NpPT82uRdSNxuqa9Q=;
-        b=qPZThsTCWN1XW7k12h7QnaKGBg02dFFKUeJ6sW5MIPxdfNJNLdK6JbuO3saQSNJ2bA
-         akg1DCkD3XtZgILlFT43ed1pgXer/T3YzXgdZz4cNJvCVZ3FLNb8DvxwIvFvuS/BXpD5
-         T/XPk/lK/Tx0S6nhB7ipq94cnoTMtVGlMQgX6aVCpDQGNWv7JUo8L92sDnbFkONRwmQw
-         RxvkLcKufWjgCc9e03dqVGj/2JyNxx4+irb8RcN2/rRahdNNbRxve0A9mMVmKKk3SMl4
-         5NsQGMnO/02a94Dzw+E7gNcApohCslX92tPrYr7G+ApGIq9nVOk6LBYdvEQP6zaC4Jmg
-         V3rA==
+        bh=1rf7AWCdhvsdlYX1vGjLsRXGhLZLWagUfJ8IC6/ih9w=;
+        b=MOX+o7dc4nQUgrPXR6SRipHOnIbKnt2HYcx98CNXdoUAzFYWxUGdJl/ymQZ9NYJfDQ
+         vK0hCpbN99vUYn3KKtcTG3n1TKJAOZCXpHZqGKPkgIUW56guOXNso6T9zbOB41sDRzss
+         tjg5jghf/SW2jj1/7XwnC2j/bOfOnwmmB1ur5Vf3gb7u6fTeZyMD8D253oDxFioawO9S
+         wPckepNRqm8LrMIZtu769hBpiuNYjvEi3x+8nIyLtRgrMrXpZ7DcgX1n5KU6ps7U6Rxd
+         YOTGk3mXkdVYJetD23pE6UwfBo72YqI3Dae/v4aC3yLOCOTAWUJFGUd2nhqPEwI8DXA+
+         dqqw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=oIBwXK9dI3H4C6jCiFQOTvpSt7NpPT82uRdSNxuqa9Q=;
-        b=aqvQMO4n0fnrloOFnE6YghVE8dMF5XsAOuGb3MK8K8gifpe5XOAYoKXQvkjGVsNjhb
-         qKog5AsJIO3t6jKhMMoHuUXX2MYLYzjtYcjzKP8fEFjVJnvPnRSZ5dwRniYJUZM7OZrk
-         vG8ArH7UHzmXI15qJmAyBPQW/j+4vmTZ20BNI+FRvj8gIZIEtrvPedf90yWZOcYuyNn9
-         Si3xAE9jwAYczrVbu4SWq2VJyzVip+9TzGqIskWzPiIr+0HMFSatQEmijCXN0ja3p0E2
-         BzIMeosCkJxErNOCXmmcYxuOF8XjlJBqzba4J5g0HX57hlsE1mdeUD49eiT9fYfrbeNZ
-         yEkg==
-X-Gm-Message-State: APjAAAXrukWxBngBdq+graD9NsTklyWphLitmqhmsHVptsXBgatnp4Pm
-        bsrkvqTpX3dNo0mxjTO9h070YLzhQLJilUqMTfsuHA==
-X-Google-Smtp-Source: APXvYqxujUS24o1zdCMyG62CqS7+rnHcXfSb9zeo3v23q3hCeoy1MzIKYp0I3S/ATeAMpicp1vC/7OchmpdRYjQQPs8=
-X-Received: by 2002:a19:6a01:: with SMTP id u1mr56486049lfu.141.1560858152483;
- Tue, 18 Jun 2019 04:42:32 -0700 (PDT)
+        bh=1rf7AWCdhvsdlYX1vGjLsRXGhLZLWagUfJ8IC6/ih9w=;
+        b=nJGXErgqiKKT+xCJcu/qWyNQQWC4egC6qKSl/aNA9NY2/Mii66cMzoZyumtARm5Ksp
+         Uvtud+isWlCWdero0VaeGecwJRHPUa9i8kuaR37hIe/i8WiX3Tds8FnWvfu9i9SDmmXJ
+         RrLp0F2/YQbtdB1MRHDIi6JYP2tIcDVk8Egb6FwOYN8n510yUH1DzOQNqxgY2dwlhdr2
+         MMg/7QJcDXKoDlJiSS9lnaoJnCfaO1UTJL7zloK7aOr2EV7akJeYUuK2Yfh4ezq2GEeN
+         OEhjpl31OAzppvOTIB1N2T74loFzgCvNVAKWYX9Yemo29BUUuSaL8jro2zxdSYx2mHsn
+         +ZOw==
+X-Gm-Message-State: APjAAAWv32BF+vy+NvuEWImPSWDNQT1nvHYmst0p6DKYqJ1hBR0TYf+H
+        Il5At58fHq6CyHF7Y4jSISXizXX7EfumFGG/8a6UALNk
+X-Google-Smtp-Source: APXvYqxAK85u3378CbhOlOqgXBCoow4rwfeShnZdq8Wf/4Fq6yXWqFZNGGIR47IzFf/o7qxQ6z9tbWZ4onX27LCn+ss=
+X-Received: by 2002:a2e:650a:: with SMTP id z10mr22560572ljb.28.1560858348452;
+ Tue, 18 Jun 2019 04:45:48 -0700 (PDT)
 MIME-Version: 1.0
-References: <1560315034-29712-1-git-send-email-harish_kandiga@mentor.com>
- <1560315034-29712-2-git-send-email-harish_kandiga@mentor.com>
- <CACRpkdaSLwELtWMiEvYRBRF1d6E_9ymupdiCe-rEaaJkCfOd4A@mail.gmail.com>
- <b56f84bd-6f31-95ff-427f-1bf0dfa27421@metux.net> <CACRpkdaGFw9XZSW7ise5EBun8ehikNMzw4BCs9hByme=6z4KDg@mail.gmail.com>
- <0bd09e2a-5006-4587-056e-9aeb6b05d18c@metux.net>
-In-Reply-To: <0bd09e2a-5006-4587-056e-9aeb6b05d18c@metux.net>
+References: <20190613015532.19685-1-yamada.masahiro@socionext.com> <20190613015532.19685-2-yamada.masahiro@socionext.com>
+In-Reply-To: <20190613015532.19685-2-yamada.masahiro@socionext.com>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Tue, 18 Jun 2019 13:42:21 +0200
-Message-ID: <CACRpkdaQTaKATc2piWPQ5dY3zNdNh4QXh5GkXJuLU=deEhz4Yg@mail.gmail.com>
-Subject: Re: [PATCH V1 1/2] gpio: inverter: Add virtual controller for gpio configuration
-To:     "Enrico Weigelt, metux IT consult" <lkml@metux.net>
-Cc:     Harish Jenny K N <harish_kandiga@mentor.com>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Balasubramani Vivekanandan 
-        <balasubramani_vivekanandan@mentor.com>
+Date:   Tue, 18 Jun 2019 13:45:36 +0200
+Message-ID: <CACRpkdaHrKh3Ai1FyiJd0cZU=48R5XnfJ_oVdJWGQ4bQsWQgxw@mail.gmail.com>
+Subject: Re: [PATCH 2/2] pinctrl: make pinconf.h self-contained
+To:     Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Jun 14, 2019 at 3:13 PM Enrico Weigelt, metux IT consult
-<lkml@metux.net> wrote:
+On Thu, Jun 13, 2019 at 3:55 AM Masahiro Yamada
+<yamada.masahiro@socionext.com> wrote:
 
-> On 13.06.19 23:58, Linus Walleij wrote:
+> This header uses 'bool', but it does not include any header by itself.
 >
-> > For devicetree people mostly use the device tree cell flag
-> > GPIO_ACTIVE_LOW on these to work around it. But there
-> > are some cases where that isn't very readable.
+> So, it could cause unknown type name error, depending on the header
+> include order, although probably <linux/types.h> has been included by
+> someone else.
 >
-> hmm, do you recall any such case where it isn't reliable ?
-> What are the problems here ?
+> Include <linux/types.h> to make it self-contained.
+>
+> Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
 
-GPIO_ACTIVE_LOW is there to tell which way the consumer acts.
-If the line is counted as asserted when active low, it should be flagged
-as GPIO_ACTIVE_LOW, in the strict sense.
-
-So for example a reset line:
-
-reset-gpios = <&gpio 4 GPIO_ACTIVE_LOW>;
-
-Then inside Linux we assert this with
-gpiod_set_value(gpiod, 1);
-which will drive the line low, here "1" means "asserted".
-Then we release the reset and drive the line high with
-gpiod_set_value(gpiod, 0);
-
-On schematics this will be indicated by a line above the RESET
-rail or using the notation RESETN. (the N means inverted polarity).
-
-So as is the case with regulators, device tree properties should
-describe the electronic semantics of the consuming devices, not how
-some random software in the operating system want to interpret
-things, it is not there for software fixes, it is just being abused for
-that sometimes.
-
-> Are there any plans for removing the GPIO_ACTIVE_LOW ?
-
-We can't do that, it is ABI. Besides it should be used to describe how
-the component works.
-
-The fact that many people use this flag as a workaround doesn't mean
-it doesn't have a valid semantic when used right.
+Patch applied.
 
 Yours,
 Linus Walleij
