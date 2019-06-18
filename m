@@ -2,93 +2,73 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 3B23B49B24
-	for <lists+linux-gpio@lfdr.de>; Tue, 18 Jun 2019 09:47:28 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8D7F049C7A
+	for <lists+linux-gpio@lfdr.de>; Tue, 18 Jun 2019 10:57:39 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729258AbfFRHrW (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 18 Jun 2019 03:47:22 -0400
-Received: from hqemgate14.nvidia.com ([216.228.121.143]:9740 "EHLO
-        hqemgate14.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729251AbfFRHrW (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 18 Jun 2019 03:47:22 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate14.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5d0897080000>; Tue, 18 Jun 2019 00:47:20 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Tue, 18 Jun 2019 00:47:21 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Tue, 18 Jun 2019 00:47:21 -0700
-Received: from HQMAIL105.nvidia.com (172.20.187.12) by HQMAIL104.nvidia.com
- (172.18.146.11) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 18 Jun
- 2019 07:47:20 +0000
-Received: from hqnvemgw02.nvidia.com (172.16.227.111) by HQMAIL105.nvidia.com
- (172.20.187.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
- Transport; Tue, 18 Jun 2019 07:47:20 +0000
-Received: from skomatineni-linux.nvidia.com (Not Verified[10.2.168.217]) by hqnvemgw02.nvidia.com with Trustwave SEG (v7,5,8,10121)
-        id <B5d0897060003>; Tue, 18 Jun 2019 00:47:20 -0700
-From:   Sowjanya Komatineni <skomatineni@nvidia.com>
-To:     <thierry.reding@gmail.com>, <jonathanh@nvidia.com>,
-        <tglx@linutronix.de>, <jason@lakedaemon.net>,
-        <marc.zyngier@arm.com>, <linus.walleij@linaro.org>,
-        <stefan@agner.ch>, <mark.rutland@arm.com>
-CC:     <pdeschrijver@nvidia.com>, <pgaikwad@nvidia.com>,
-        <sboyd@kernel.org>, <linux-clk@vger.kernel.org>,
-        <linux-gpio@vger.kernel.org>, <jckuo@nvidia.com>,
-        <josephl@nvidia.com>, <talho@nvidia.com>, <skomatineni@nvidia.com>,
-        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <mperttunen@nvidia.com>, <spatra@nvidia.com>, <robh+dt@kernel.org>,
-        <digetx@gmail.com>, <devicetree@vger.kernel.org>
-Subject: [PATCH V3 17/17] arm64: dts: tegra210-p2180: Jetson TX1 SC7 timings
-Date:   Tue, 18 Jun 2019 00:46:31 -0700
-Message-ID: <1560843991-24123-18-git-send-email-skomatineni@nvidia.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1560843991-24123-1-git-send-email-skomatineni@nvidia.com>
-References: <1560843991-24123-1-git-send-email-skomatineni@nvidia.com>
-X-NVConfidentiality: public
+        id S1728792AbfFRI5e (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 18 Jun 2019 04:57:34 -0400
+Received: from mga05.intel.com ([192.55.52.43]:9223 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728385AbfFRI5e (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Tue, 18 Jun 2019 04:57:34 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 18 Jun 2019 01:57:34 -0700
+X-ExtLoop1: 1
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.145])
+  by orsmga001.jf.intel.com with ESMTP; 18 Jun 2019 01:57:28 -0700
+Received: from andy by smile with local (Exim 4.92)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1hd9vj-0007K4-1F; Tue, 18 Jun 2019 11:57:27 +0300
+Date:   Tue, 18 Jun 2019 11:57:27 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     "Enrico Weigelt, metux IT consult" <info@metux.net>
+Cc:     linux-kernel@vger.kernel.org, thloh@altera.com,
+        linus.walleij@linaro.org, bgolaszewski@baylibre.com,
+        shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de,
+        festevam@gmail.com, linux-imx@nxp.com, grygorii.strashko@ti.com,
+        ssantosh@kernel.org, khilman@kernel.org, mcoquelin.stm32@gmail.com,
+        alexandre.torgue@st.com, linux-gpio@vger.kernel.org,
+        linux-omap@vger.kernel.org, linux-tegra@vger.kernel.org,
+        patches@opensource.cirrus.com
+Subject: Re: [PATCH 01/30] include: linux: platform_device: more helpers for
+ declaring platform drivers
+Message-ID: <20190618085727.GJ9224@smile.fi.intel.com>
+References: <1560796871-18560-1-git-send-email-info@metux.net>
 MIME-Version: 1.0
-Content-Type: text/plain
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1560844041; bh=Vsp36/vqBLGzaHV4U5nFiJBH5J5qqVmQ31C7uPAHcPk=;
-        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
-         In-Reply-To:References:X-NVConfidentiality:MIME-Version:
-         Content-Type;
-        b=rKHUB+HqOYKLOeLs3gxU+2VJICl873Ak0DxOzwmFxJZtt4Rp0tDiqJwLoQAf2qHEe
-         bFfkRful2dQCxQoJuqpkTKOVj4/yD2dC6WT7xi8zRhobYnUS4uKcOa+Yzn3ey5QgUc
-         iSSNhOqqtjMwLwlrTl3kgmE/K7AW0VcJil7Z6O5Rspqz0LKi9ChNJwkIvBaYQMxG8F
-         +/yJ75T4Rigjpd8SWCxauF8IkDj+H9CfO3QTSOjKyE1FXg0TBAwt3gCM/rxMHKBkGq
-         kl71f1CHD6tzP7ABi5ojSXQHJQ1cZBpvdEve42/MNE67nkDNUDldpsob1DTwJxfo4X
-         Z88pVPot5Alnw==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1560796871-18560-1-git-send-email-info@metux.net>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-This patch has Jetson TX1 platform specific SC7 timing configuration
-in device tree.
+On Mon, Jun 17, 2019 at 08:40:42PM +0200, Enrico Weigelt, metux IT consult wrote:
+> From: Enrico Weigelt <info@metux.net>
+> 
+> Add more helper macros for trivial driver init cases, similar to the
+> already existing module_platform_driver()+friends - now for those which
+> are initialized at other stages. Lots of drivers couldn't use the existing
+> macros, as they need to be called at different init stages, eg. subsys,
+> postcore, arch.
+> 
+> This helps to further reduce driver init boilerplate.
 
-Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
----
- arch/arm64/boot/dts/nvidia/tegra210-p2180.dtsi | 7 +++++++
- 1 file changed, 7 insertions(+)
+> +/* postcore_platform_driver() - Helper macro for drivers that don't do
+> + * anything special in module init/exit.  This eliminates a lot of
+> + * boilerplate.  Each module may only use this macro once, and
+> + * calling it replaces postcore_initcall() and module_exit()
+> + */
 
-diff --git a/arch/arm64/boot/dts/nvidia/tegra210-p2180.dtsi b/arch/arm64/boot/dts/nvidia/tegra210-p2180.dtsi
-index e8654061ce03..f7c9332085f8 100644
---- a/arch/arm64/boot/dts/nvidia/tegra210-p2180.dtsi
-+++ b/arch/arm64/boot/dts/nvidia/tegra210-p2180.dtsi
-@@ -279,6 +279,13 @@
- 
- 	pmc@7000e400 {
- 		nvidia,invert-interrupt;
-+		nvidia,suspend-mode = <0>;
-+		nvidia,cpu-pwr-good-time = <0>;
-+		nvidia,cpu-pwr-off-time = <0>;
-+		nvidia,core-pwr-good-time = <4587 3876>;
-+		nvidia,core-pwr-off-time = <39065>;
-+		nvidia,core-power-req-active-high;
-+		nvidia,sys-clock-req-active-high;
- 	};
- 
- 	/* eMMC */
+Perhaps you meant kernel-doc format?
+
 -- 
-2.7.4
+With Best Regards,
+Andy Shevchenko
+
 
