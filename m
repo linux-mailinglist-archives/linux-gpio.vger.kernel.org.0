@@ -2,95 +2,74 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 5F8484A31B
-	for <lists+linux-gpio@lfdr.de>; Tue, 18 Jun 2019 15:59:14 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DB32C4A37C
+	for <lists+linux-gpio@lfdr.de>; Tue, 18 Jun 2019 16:10:27 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729494AbfFRN7B (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 18 Jun 2019 09:59:01 -0400
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:36940 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729253AbfFRN7A (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 18 Jun 2019 09:59:00 -0400
-Received: by mail-lj1-f196.google.com with SMTP id 131so13261981ljf.4
-        for <linux-gpio@vger.kernel.org>; Tue, 18 Jun 2019 06:58:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=X671JgdyLl76VG/wPtsNRxBwL9HcuB7R+9MrgrBq9Ws=;
-        b=dSWs2KALS1NSLhc30LVQ22tp4/bkp8dBi2AjwHTPnJdSt6mbQ3OhIwXprLCk2a64FV
-         Fs/9XO/posPxg18MRXh/BR79wVv4lEa2Eu2SvCs4GlDJvzJLonhJfAyS5IClyhEWS1I3
-         AnCYrON0sFTCSNA5gvO3BsWTCPZ1l/XDxFphXLY6Cc+yPVbRO37uR6h3bohaoth44g7n
-         7mDX5B1hM3qTVtXHd8piQf+WoM1wewZcmmeSuScy0kDupPpqONw/MrwzXKpUXAVsFw0B
-         jG+3z112WsEWa1BoiueKU8K5sHRhg/j/1bsR54IKpj9RYxMLLvMS7kBnQrylkCMz2mDH
-         PNeA==
+        id S1729281AbfFROK1 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 18 Jun 2019 10:10:27 -0400
+Received: from mail-qk1-f195.google.com ([209.85.222.195]:44719 "EHLO
+        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725919AbfFROK0 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 18 Jun 2019 10:10:26 -0400
+Received: by mail-qk1-f195.google.com with SMTP id p144so8593588qke.11;
+        Tue, 18 Jun 2019 07:10:26 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=X671JgdyLl76VG/wPtsNRxBwL9HcuB7R+9MrgrBq9Ws=;
-        b=t9RrGqpxzQQnJHZfI5U24DzGOiMPb7nogZ6+Ly3uaNNEhL0QIvQhZRthyCjNy8KvaA
-         yqLW/h0/9asEgKbNXhZRdAEM25xS3WkmL+LSEOjjdVY70c2HmaPzu5jsdx7HCTDtRH5A
-         dHOA3Y6lIOh8y+BaDtKKNrnBblvkUfk+b5ik6bkZbzxM6HAtffKiufc4FDjiXGSPe1B+
-         Y1JXfT0sexkWV6opYqmOsiMLvp57HpFJXKQXLLxpn73ZKfuPEWaJ1s63esjRrxtc2Zev
-         GBCNjUrydicasgifNnpu68webNfqGGhTIAD+n7hb/6rtQPCQcG4J81XwPhhb+IOg3beD
-         NYKQ==
-X-Gm-Message-State: APjAAAXSa/IP3/6h9jUwRu8rqC8dihO5+UBaBZAD4AMAQKDZ3yZyaYYf
-        3uFu1Zm7ZgyWhgdS2ei0zv5l1B4noEn1mmWFl5Mm9fKu/CQ=
-X-Google-Smtp-Source: APXvYqxsRLtfOl+1NSzAXmxwEWuh6Gjm6SRSSaE72JKrJcp1GOXyzno9yvsHIUIrz/3GOJHQuQT56Sw3UpleieU3sik=
-X-Received: by 2002:a2e:650a:: with SMTP id z10mr22952429ljb.28.1560866338833;
- Tue, 18 Jun 2019 06:58:58 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=ymzVRv+HbWASk9IbK9IR5jfXe4p30txsWn7MI2aWfko=;
+        b=DOOWp3vW4HwawykDQ1Pi4PSzyzJfFkgUpAfvf3igvw4gXZF41Mzo4LPMBc/wFuOxyj
+         E/2KT3DTrrLJ+sEeEXDFA7EpBmwI5jBOS/TYM08CsTGFQmWSFxaTueKQlgqylOxWgWe3
+         Spj7JsDpBU3rvPrzEO93Nexo0Zc1GM34St7cdpKA9YwHEiFGhEclq3L9+GpgFxO+LKRu
+         svzvOg+fZ9PFaxV67ZYcGW2o7+SkUt9jyOy3GhjF8vt/X+2nhdSJuSizZyF4CXe5R2Bt
+         4kmgX36oU8/3yA9m3KUBn/M2PaLTWftzs/4MXiei4dNijc5WKT/ZAdYmmsUUmEjsEePq
+         dfbg==
+X-Gm-Message-State: APjAAAWncFOW1ieSn3+JMmOVhYFVZn6YzLJ0qtz2gPRxP3p2Pa/Z1d7Q
+        FWVUbVEXcn3EF5gZ/a4XtQ==
+X-Google-Smtp-Source: APXvYqzTd+SUScnI+raBK375orxhwOZtIjBl7LTQ+SrdOuzX+fB6KoQ7w06WVT6SBK2QaP+LwnqcBg==
+X-Received: by 2002:a37:9ece:: with SMTP id h197mr75339469qke.50.1560867025673;
+        Tue, 18 Jun 2019 07:10:25 -0700 (PDT)
+Received: from localhost ([64.188.179.192])
+        by smtp.gmail.com with ESMTPSA id s11sm9602685qte.49.2019.06.18.07.10.24
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Tue, 18 Jun 2019 07:10:25 -0700 (PDT)
+Date:   Tue, 18 Jun 2019 08:10:23 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Geert Uytterhoeven <geert+renesas@glider.be>
+Cc:     Mark Rutland <mark.rutland@arm.com>, openbmc@lists.ozlabs.org,
+        openipmi-developer@lists.sourceforge.net,
+        devicetree@vger.kernel.org, linux-gpio@vger.kernel.org,
+        alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
+        Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: Re: [PATCH] dt-bindings: Add missing newline at end of file
+Message-ID: <20190618141023.GA20154@bogus>
+References: <20190617143322.4332-1-geert+renesas@glider.be>
 MIME-Version: 1.0
-References: <1560784425-20227-1-git-send-email-harish_kandiga@mentor.com> <1560784425-20227-2-git-send-email-harish_kandiga@mentor.com>
-In-Reply-To: <1560784425-20227-2-git-send-email-harish_kandiga@mentor.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Tue, 18 Jun 2019 15:58:47 +0200
-Message-ID: <CACRpkdZke9yGFai6ri1ThFC-HUj2UxdBzVFC+V=n8-Jt9E32PA@mail.gmail.com>
-Subject: Re: [PATCH V2 1/2] gpio: inverter: Add Inverter controller for gpio configuration
-To:     Harish Jenny K N <harish_kandiga@mentor.com>
-Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Balasubramani Vivekanandan 
-        <balasubramani_vivekanandan@mentor.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190617143322.4332-1-geert+renesas@glider.be>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Jun 17, 2019 at 5:14 PM Harish Jenny K N
-<harish_kandiga@mentor.com> wrote:
+On Mon, 17 Jun 2019 16:33:22 +0200, Geert Uytterhoeven wrote:
+> "git diff" says:
+> 
+>     \ No newline at end of file
+> 
+> after modifying the files.
+> 
+> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> ---
+>  Documentation/devicetree/bindings/ipmi/npcm7xx-kcs-bmc.txt      | 2 +-
+>  .../devicetree/bindings/pinctrl/nuvoton,npcm7xx-pinctrl.txt     | 2 +-
+>  Documentation/devicetree/bindings/regulator/pv88060.txt         | 2 +-
+>  Documentation/devicetree/bindings/sound/cs42l73.txt             | 2 +-
+>  4 files changed, 4 insertions(+), 4 deletions(-)
+> 
 
-> +static int gpio_inverter_get(struct gpio_chip *chip,
-> +                            unsigned int offset)
-> +{
-> +       struct gpio_inverter *inv = gpiochip_get_data(chip);
-> +
-> +       return gpiod_get_value(inv->gpios[offset]);
-> +}
-> +
-> +static void gpio_inverter_set(struct gpio_chip *chip,
-> +                             unsigned int offset, int value)
-> +{
-> +       struct gpio_inverter *inv = gpiochip_get_data(chip);
-> +
-> +       return gpiod_set_value(inv->gpios[offset], value);
-> +}
+Applied, thanks.
 
-The only reason this works is because you added GPIO_ACTIVE_LOW
-to all the lines in the device tree. But those are consumer flags, not
-producer flags.
-
-These should be removed, use GPIO_ACTIVE_HIGH and rewrite the
-code so that it actually does the inversion here:
-
-return !gpiod_get_value(inv->gpios[offset]);
-
-and
-
-return gpiod_set_value(inv->gpios[offset], !value);
-
-respectively (notice ! inversions)
-
-Yours,
-Linus Walleij
+Rob
