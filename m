@@ -2,93 +2,62 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 2CB714A650
-	for <lists+linux-gpio@lfdr.de>; Tue, 18 Jun 2019 18:11:05 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9FEBF4A654
+	for <lists+linux-gpio@lfdr.de>; Tue, 18 Jun 2019 18:13:06 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729414AbfFRQLE (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 18 Jun 2019 12:11:04 -0400
-Received: from ssl.serverraum.org ([176.9.125.105]:41253 "EHLO
-        ssl.serverraum.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729308AbfFRQLE (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 18 Jun 2019 12:11:04 -0400
-X-Greylist: delayed 534 seconds by postgrey-1.27 at vger.kernel.org; Tue, 18 Jun 2019 12:11:03 EDT
-Received: from ssl.serverraum.org (web.serverraum.org [172.16.0.2])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ssl.serverraum.org (Postfix) with ESMTPSA id 24CF922EEB;
-        Tue, 18 Jun 2019 18:02:08 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc;
-        s=mail2016061301; t=1560873728;
-        bh=IpVDsuBcLKMByzS+9jM10o6ARdsu4mYewMxUsA8XDYw=;
-        h=Date:From:To:Subject:From;
-        b=M+MUYr2LvqdVFlXqnTBxIPmKoh9W0chouZOaaJBWFP7ODii5odFpev7jTsy77+okv
-         tWsvSU+Q9bytxM58f4cR0bW1QlOTUDHZGHelCfMIBpkWhY84An/yKpJSlRyvXzANCO
-         +LoudOBbQYB+k17IKhFhscZHrL2HthEl4ajnnBAY=
+        id S1729249AbfFRQNF (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 18 Jun 2019 12:13:05 -0400
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:47053 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729272AbfFRQNE (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 18 Jun 2019 12:13:04 -0400
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1hdGjG-0000Qh-SE; Tue, 18 Jun 2019 18:13:02 +0200
+Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1hdGjG-0008F9-4m; Tue, 18 Jun 2019 18:13:02 +0200
+Date:   Tue, 18 Jun 2019 18:13:02 +0200
+From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+To:     "Enrico Weigelt, metux IT consult" <info@metux.net>
+Cc:     linux-kernel@vger.kernel.org, bgolaszewski@baylibre.com,
+        linus.walleij@linaro.org, kernel@pengutronix.de,
+        linux-gpio@vger.kernel.org
+Subject: Re: [PATCH v2 2/2] drivers: gpio: siox: use module_siox_driver()
+Message-ID: <20190618161302.hjo5tn3h5eki2q3c@pengutronix.de>
+References: <1560854427-27537-1-git-send-email-info@metux.net>
+ <1560854427-27537-3-git-send-email-info@metux.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Tue, 18 Jun 2019 18:02:08 +0200
-From:   Michael Walle <michael@walle.cc>
-To:     linux-gpio@vger.kernel.org,
-        Linus Walleij <linus.walleij@linaro.org>
-Subject: generic gpio-syscon
-Message-ID: <9e977d86db99153e413dc9099f3a70f4@walle.cc>
-X-Sender: michael@walle.cc
-User-Agent: Roundcube Webmail/1.2.3
-X-Virus-Scanned: clamav-milter 0.100.3 at web
-X-Virus-Status: Clean
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <1560854427-27537-3-git-send-email-info@metux.net>
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-gpio@vger.kernel.org
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi all, Hi Linus,
+On Tue, Jun 18, 2019 at 12:40:27PM +0200, Enrico Weigelt, metux IT consult wrote:
+> From: Enrico Weigelt <info@metux.net>
+> 
+> Reduce driver init boilerplate by using the new
+> module_siox_driver() macro.
+> 
+> Signed-off-by: Enrico Weigelt <info@metux.net>
+Acked-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
 
-Linus, I've especially added you because you've expressed some concerns 
-about using bits and offsets in the device-tree [1].
-
-I'd like to disuss adding a generic gpio-syscon (eg. compatible = 
-"gpio-syscon"). At the moment, if you have a board which could use the 
-gpio-syscon out-of-the-box, you still have to submit a patch to add 
-support to the gpio-syscon driver. Wouldn't it be easier to let the 
-user/board manufacturer configure the parameters through the dtb? I 
-understand your reasoning to have the information in two different 
-places, but isn't that alwas the case for any non trivial device tree 
-binding? On the other hand, if you'd have a generic gpio-syscon and the 
-actual hardware is compatible with it, all you have to do is to add the 
-devicetree fragment. You don't have to wait until your patch is approved 
-by the kernel maintainers, you don't have to wait until the kernel with 
-your patch actually makes it into the distributions, etc.
-
-I have thought about something like:
-    gpio0 {
-        compatible = "gpio-syscon";
-        syscon = <&syscon>;
-        gpio-controller;
-        flags = <GPIO_SYSCON_FEAT_IN | GPIO_SYSCON_FEAT_OUT | 
-GPIO_SYSCON_FEAT_DIR>;
-        offsets = <0 0 1>;
-        io-width = <4>;
-        mask = <0x0000ffff>;
-    };
-
-Where offsets is a tuple of (input register offset, output register 
-offset, direction register offset) and the driver would expose 16 GPIOs.
-
-For the flags there might be something like:
-
-#define GPIO_SYSCON_GPIO (GPIO_SYSCON_FEAT_IN | GPIO_SYSCON_FEAT_OUT | 
-GPIO_SYSCON_FEAT_DIR)
-#define GPIO_SYSCON_GPI  (GPIO_SYSCON_FEAT_IN)
-#define GPIO_SYSCON_GPO  (GPIO_SYSCON_FEAT_OUT)
+Thanks,
+Uwe
 
 
-TBH, I'm a newbie at what should be in the dts and what should be in the 
-driver, but I've seen the syscon-poweroff driver which can be used for 
-most use cases out-of-the-box.
-
--michael
-
-[1] 
-https://www.mail-archive.com/linux-gpio@vger.kernel.org/msg01660.html
+-- 
+Pengutronix e.K.                           | Uwe Kleine-König            |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
