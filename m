@@ -2,57 +2,62 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 3F6DE49506
-	for <lists+linux-gpio@lfdr.de>; Tue, 18 Jun 2019 00:19:08 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2510449957
+	for <lists+linux-gpio@lfdr.de>; Tue, 18 Jun 2019 08:51:26 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728014AbfFQWTA (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 17 Jun 2019 18:19:00 -0400
-Received: from vps0.lunn.ch ([185.16.172.187]:34980 "EHLO vps0.lunn.ch"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726116AbfFQWTA (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Mon, 17 Jun 2019 18:19:00 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=MmNUBAcapnWmnMp45QnWIpxu2KfpFe5ke1zaBCdGC+E=; b=xDyYRN65bP5x1n5lfLPDMUYTPP
-        4PotiD8auEcgLaKMHt9KNvt7nRvAmd1caTjVUqUBYEEW6obJCJp4x8M6U+o9wgRJRL7cHspqfb72e
-        IYN9krUqQ/JaoxuzXc+QwP4TmnlY59Ue+Xhi8rsbWUgI5FbvPiz0IfZLZpEMMMJBCA7A=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.89)
-        (envelope-from <andrew@lunn.ch>)
-        id 1hczxb-0004LJ-Om; Tue, 18 Jun 2019 00:18:43 +0200
-Date:   Tue, 18 Jun 2019 00:18:43 +0200
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Chris Packham <chris.packham@alliedtelesis.co.nz>
-Cc:     mturquette@baylibre.com, sboyd@kernel.org, robh+dt@kernel.org,
-        mark.rutland@arm.com, linus.walleij@linaro.org,
-        jason@lakedaemon.net, gregory.clement@bootlin.com,
-        sebastian.hesselbarth@gmail.com, linux-gpio@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-clk@vger.kernel.org, devicetree@vger.kernel.org
-Subject: Re: [PATCH v2 2/4] dt-bindings: clock: mvebu: Add compatible string
- for 98dx1135 core clock
-Message-ID: <20190617221843.GM25211@lunn.ch>
-References: <20190617215458.32688-1-chris.packham@alliedtelesis.co.nz>
- <20190617215458.32688-3-chris.packham@alliedtelesis.co.nz>
+        id S1726672AbfFRGvZ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 18 Jun 2019 02:51:25 -0400
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:48629 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725900AbfFRGvZ (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 18 Jun 2019 02:51:25 -0400
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1hd6x7-0003Mq-1S; Tue, 18 Jun 2019 07:46:41 +0200
+Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1hd6x5-0003Pm-CD; Tue, 18 Jun 2019 07:46:39 +0200
+Date:   Tue, 18 Jun 2019 07:46:39 +0200
+From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+To:     "Enrico Weigelt, metux IT consult" <info@metux.net>
+Cc:     linux-kernel@vger.kernel.org, bgolaszewski@baylibre.com,
+        linus.walleij@linaro.org, kernel@pengutronix.de,
+        linux-gpio@vger.kernel.org
+Subject: Re: [PATCH 2/2] drivers: gpio: pca953x: use module_siox_driver()
+Message-ID: <20190618054639.ovpb6jgzl45pkp3d@pengutronix.de>
+References: <1560795688-10496-1-git-send-email-info@metux.net>
+ <1560795688-10496-2-git-send-email-info@metux.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20190617215458.32688-3-chris.packham@alliedtelesis.co.nz>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <1560795688-10496-2-git-send-email-info@metux.net>
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-gpio@vger.kernel.org
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Jun 18, 2019 at 09:54:56AM +1200, Chris Packham wrote:
-> Add compatible string for the core clock on the 98dx1135 switch with
-> integrated CPU.
+On Mon, Jun 17, 2019 at 08:21:28PM +0200, Enrico Weigelt, metux IT consult wrote:
+> From: Enrico Weigelt <info@metux.net>
 > 
-> Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
+> Reduce driver init boilerplate by using the new
+> module_siox_driver() macro.
+> 
+> Signed-off-by: Enrico Weigelt <info@metux.net>
 
-Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+The subject is wrong, this isn't about pca953x.
 
-    Andrew
+Best regards
+Uwe
+
+-- 
+Pengutronix e.K.                           | Uwe Kleine-König            |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
