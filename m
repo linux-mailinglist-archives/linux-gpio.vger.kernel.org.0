@@ -2,49 +2,49 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 1236049F5A
-	for <lists+linux-gpio@lfdr.de>; Tue, 18 Jun 2019 13:40:56 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BFF4149F6D
+	for <lists+linux-gpio@lfdr.de>; Tue, 18 Jun 2019 13:41:55 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729727AbfFRLkv (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 18 Jun 2019 07:40:51 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:41096 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729110AbfFRLku (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 18 Jun 2019 07:40:50 -0400
-Received: by mail-wr1-f67.google.com with SMTP id c2so13586920wrm.8;
-        Tue, 18 Jun 2019 04:40:48 -0700 (PDT)
+        id S1729744AbfFRLly (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 18 Jun 2019 07:41:54 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:40713 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729689AbfFRLly (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 18 Jun 2019 07:41:54 -0400
+Received: by mail-wr1-f68.google.com with SMTP id p11so13610089wre.7;
+        Tue, 18 Jun 2019 04:41:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=bCHasR2xVFY7bhr2Gq07GCMJZsjM10TvNttwdRr0fis=;
-        b=ZywaZRDcf1I213mmH/b06o8HoRWpUfogxU23B4pdwYaGIKoZfHP9tb+v0cYY5kG6AR
-         S1JI9/oZrzn3cYqU7rzV/y2mmy51rW0nzdy1ZsP8dp0Kf5dqCr6Rxj7BeX7drSEkPv5g
-         rIPDQsPY/mAP61/0TJYBZsq0Kl2uonTilyjuQIYp/lEGFYn9K//T3yH5wu4qZC2mCqMS
-         PTPDqA0zK4gXB0q2EI2eA0lnYUb/HcoF6rfJJILN3+Pu5rVrNMfxp9K2rAv7k7aNep0t
-         78nCW2om6p5HesScCoTGI6JhDIBpRnBzsJqtxygCQAveCgI3zhOOO9i/VTAB9L/go5iG
-         9VTw==
+        bh=G40j/Nzkdl2CTqIXlYK3mXMlUbPHSgML6O47dCP4epg=;
+        b=iJDLWvDz41LVTFJYr5Q+jqbHPTSpZdcuG8zfIULf5az1I+qo3nUWK1o/1qxP6I+q/B
+         OibmUExajk1h6VOGuXy5cQda7PjOLZcRhmBOcPGufReQYlpEdQD2AYWzd4ranNvGXprI
+         RM6FZbXdcvPjK1En/AgMGAG0ai6OPMTl6ZJNLRFtzALxpjhApcaoDZGWpirG0m5xF9ZC
+         Mn5LkNpnExczuDlYThuFqNJZOIpNl+qVELd1ecY6HXxj3YRTi3+JfpK3rdthN5iYY9t/
+         R6QZ/AjPk+TQ6BP/48e6L/rg6pDfD/MYSXqJyzeqMBTmdBigWnv5acDaJel++pB1PR7E
+         ASjg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=bCHasR2xVFY7bhr2Gq07GCMJZsjM10TvNttwdRr0fis=;
-        b=f+7mAgek9WlzowBx/x3nFVS80tSWZEKKFUFMVAn/UBwX8JHz6QoCy3nn4sryK/W1Pg
-         ZGcGdr/Z0qcp+ATH1JhWsncZVBkTmYh7W88qrgwPBWtP9r67ExF859eVidhK9ovwZHTl
-         FSFCsVU7oOVXYY4ZoC1RhfgABlwMhOZ+Ggy2sGi4ZgP/iBJQGS2dQP1ZHeuoN9gdg5nz
-         Wf9sKLWQEgXjrL8nSWmrcejA13vZoEfdq7dNVMC8ncmD6zBS/xf/ccTQefSy0zYpt6LA
-         VjWywsnZs7mWCrsCxT7gHQkrIWqIIAgD7vNrq47UMVebCAaRR3D/CP49+9Hw/HuUhlKA
-         YmRQ==
-X-Gm-Message-State: APjAAAW5efwMWojK7PU+DHI/Vwz1iGHLlowDwhEZq9KkMqKYrEnhGclP
-        RguVgmbt1QuOBke7Tex4h1I=
-X-Google-Smtp-Source: APXvYqwsnH1G3+SK41XDKf2weMFtKPnZLD//7PNRLe0aBHvPAZdoAS0EtBs9+skMmd2fzgnhLFad8Q==
-X-Received: by 2002:adf:cc92:: with SMTP id p18mr35054723wrj.260.1560858048088;
-        Tue, 18 Jun 2019 04:40:48 -0700 (PDT)
+        bh=G40j/Nzkdl2CTqIXlYK3mXMlUbPHSgML6O47dCP4epg=;
+        b=AqSEN/Jy1Tv+PJ9QMIJRnxSdsRe07jI1f/cPTWXGfsbd4ZvThQn3wlp4yxDZYyzC7F
+         xtuJZPvTPz9gdU/Hf6PBvrEJ6NxbhQtLHArsoz1hjb5Hq1JXUSA4RvOz9mqinnHXuoxV
+         c6EYFWTOgb3hXPQSzgWNLZ8nyjXjTmQpbrsGJjV+RFn5XuV/GhfJFqfiAFaSubD4yGwG
+         s3c2aLtM9BIkrcTXVIvqC+Rp3ReSh4tEjBFGYwRTK+RcXyWIFzH9J2t2LtRtjvL4Owz8
+         Z/0k/5YJ+zgv0CqNf1nsCIT8rg2icdGhux+FBJ5SkPLH+d3QhMntk4J4pXdIRf8j7Kab
+         bIyA==
+X-Gm-Message-State: APjAAAXdaHgvmEmT2uGBKGbeDw4DcrxB1jyP8NQXn+jBAiN1O/USz3z1
+        5Uo9B9PP/xgRYYTnpiBP2LY=
+X-Google-Smtp-Source: APXvYqyWOrpkA2WysOQtPeiDDYUV6LJ5QgaxQ6Kb0Oov8r4fgD/jUb3GftkV6uzdO8MBzuXOGfZPPA==
+X-Received: by 2002:a05:6000:c9:: with SMTP id q9mr15571277wrx.208.1560858111547;
+        Tue, 18 Jun 2019 04:41:51 -0700 (PDT)
 Received: from localhost (p2E5BEF36.dip0.t-ipconnect.de. [46.91.239.54])
-        by smtp.gmail.com with ESMTPSA id u18sm1551136wmd.19.2019.06.18.04.40.47
+        by smtp.gmail.com with ESMTPSA id f204sm3904542wme.18.2019.06.18.04.41.50
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 18 Jun 2019 04:40:47 -0700 (PDT)
-Date:   Tue, 18 Jun 2019 13:40:46 +0200
+        Tue, 18 Jun 2019 04:41:50 -0700 (PDT)
+Date:   Tue, 18 Jun 2019 13:41:49 +0200
 From:   Thierry Reding <thierry.reding@gmail.com>
 To:     Sowjanya Komatineni <skomatineni@nvidia.com>
 Cc:     jonathanh@nvidia.com, tglx@linutronix.de, jason@lakedaemon.net,
@@ -56,15 +56,16 @@ Cc:     jonathanh@nvidia.com, tglx@linutronix.de, jason@lakedaemon.net,
         linux-kernel@vger.kernel.org, mperttunen@nvidia.com,
         spatra@nvidia.com, robh+dt@kernel.org, digetx@gmail.com,
         devicetree@vger.kernel.org
-Subject: Re: [PATCH V3 04/17] clk: tegra: save and restore divider rate
-Message-ID: <20190618114046.GG28892@ulmo>
+Subject: Re: [PATCH V3 05/17] clk: tegra: pllout: save and restore pllout
+ context
+Message-ID: <20190618114149.GH28892@ulmo>
 References: <1560843991-24123-1-git-send-email-skomatineni@nvidia.com>
- <1560843991-24123-5-git-send-email-skomatineni@nvidia.com>
+ <1560843991-24123-6-git-send-email-skomatineni@nvidia.com>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="DNUSDXU7R7AVVM8C"
+        protocol="application/pgp-signature"; boundary="FLPM4o+7JoHGki3m"
 Content-Disposition: inline
-In-Reply-To: <1560843991-24123-5-git-send-email-skomatineni@nvidia.com>
+In-Reply-To: <1560843991-24123-6-git-send-email-skomatineni@nvidia.com>
 User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
@@ -72,46 +73,49 @@ List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
 
---DNUSDXU7R7AVVM8C
+--FLPM4o+7JoHGki3m
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, Jun 18, 2019 at 12:46:18AM -0700, Sowjanya Komatineni wrote:
-> This patch implements context save and restore for clock divider.
+On Tue, Jun 18, 2019 at 12:46:19AM -0700, Sowjanya Komatineni wrote:
+> This patch implements save and restore of pllout context.
 >=20
 > During system suspend, core power goes off and looses the settings
 > of the Tegra CAR controller registers.
 >=20
-> So during suspend entry the context of clock divider is saved and
-> on resume context is restored back for normal operation.
+> So during suspend entry the state of pllout is saved and on resume
+> it is restored back to have pllout in same state as before suspend.
+>=20
+> pllout rate is saved and restore in clock divider so it will be at
+> same rate as before suspend when pllout state is restored.
 >=20
 > Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
 > ---
->  drivers/clk/tegra/clk-divider.c | 23 +++++++++++++++++++++++
->  drivers/clk/tegra/clk.h         |  2 ++
->  2 files changed, 25 insertions(+)
+>  drivers/clk/tegra/clk-pll-out.c | 28 ++++++++++++++++++++++++++++
+>  drivers/clk/tegra/clk.h         |  3 +++
+>  2 files changed, 31 insertions(+)
 
 Acked-by: Thierry Reding <treding@nvidia.com>
 
---DNUSDXU7R7AVVM8C
+--FLPM4o+7JoHGki3m
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl0Izb4ACgkQ3SOs138+
-s6GtwxAAviO/ThuX4ybgSd/ZL/GOirDmu02i4uTsQ5Wm4kTRBo3Jc8aeblP0Kszo
-Ox1mHplhKTN89iKlj3GmvojZg/xCWMgxvBwCuwQq4LFi/6gdqqOGswf8l3TTr6tT
-kKedG8pIp6ATttA9oj8OULPfNDgqvW9vllrCg9mMlHN97NwRND0QNQCiAML2WBV9
-BrH/idFUGJrbr/0rYDbtUt3laRIqh52D/iTT2SQyOmLySiqCMnYRL/X7t9sENj8u
-VS8CVRaOqOFDUMLhf8a8FULq03cmS003N39gWJ6MTmbF3CRpEFGoCtnWhkGeQ3Dh
-pjEqHfOVmLFxYweDIZApplLuQOPSiqQ939ylThCefvKfgDtjkNYVxOE6MK6KmLc1
-EYWf4vYx3OQhT8a3FhvPSvxkdeRkLQ/1B+YPFBG03//b5Dr3gc4hPssoLbMF5fYg
-IBY1iyX+9Iblg/pbGX89kSnC4fEuIwnKno0cs7X23r3sCINUSujTJ4loTNAt9cwJ
-V/kK3o4Znb0zNJkmM3tO+R/yyVZDIKZFvE8Rdzr08EtLYKxsDm8mN5b4u1uWlsg3
-OT+mdPggLc12ZEVaQ/TwHaFE3lYEMir8aDqfB0nLgIB97g12Dp+psgbAhuZd0193
-yocFb7wxUT5a7f3myqobBZF8oTmG3gTS5fDo7XoLd1sPUzyj+ok=
-=NUzB
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl0Izf0ACgkQ3SOs138+
+s6HACRAAoY2W4UsKZljxr2IYcO5jw3l6eed1Pi5LyaUGbDHH9gVYo2xPr4WVid2t
+MYuTEaFNH8Okh4+F8YC/HjfxcixZvmHCWRD7u3s89gdN3ElUv/jpHuQ9KKn7xsql
+AC5mdlK6pqlOJK3hlFFsiiWVxegzGKHoVpfOscMmWJS10SlyMbp2WVX0IhPmz7Bp
+swDcc18qxhHP7CVHBPf0CTosYqvwcBPQpY7/KnXyN4ayHJmAINl4xA1iZiuUxh/G
+IKC9c4mK1a3x6QPP4YL4XLtnIVdzbE4Aw7fwQ0YEz/bKPQzLoIk9ZT1id1YaoRXJ
+TGEVYVB42SmTpgIJxhOSIbjBxZl9m9KyCrTxAH2vJgRQ0f19mO9JFGzCG9vUKP6/
+deO9943vDMKAh72qxQPbwd1+QEqje/O1N56NTR2IedFoiuiax8SrgssXo7J64nGO
+62lzo7OSo3EAeipyK0kO74NP0K7BJ/3iae2ntE73u+1o25WlXRjsMzc9hfm8boIE
+oG16ybi1XGKxeaqIo9p7YjovIttveS76TRWv/CEXL1X6XPnbnejYPIzZdrTr4qIE
+ohLWgWKxu/zVuoPZtdn1QdS4sVo0bgWsBHzDSyeNEZxsSpRdJn3ZqRSjJgKlTRVt
+0ok9Wdv+5sxWqVPZf4puIloLQVD3QRbFWDGSfpo2yKNHFrqyjTk=
+=vltX
 -----END PGP SIGNATURE-----
 
---DNUSDXU7R7AVVM8C--
+--FLPM4o+7JoHGki3m--
