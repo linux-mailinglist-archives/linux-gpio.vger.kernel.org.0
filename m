@@ -2,189 +2,78 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id DCA754B5CB
-	for <lists+linux-gpio@lfdr.de>; Wed, 19 Jun 2019 12:02:13 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AFA4F4B71A
+	for <lists+linux-gpio@lfdr.de>; Wed, 19 Jun 2019 13:34:50 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727085AbfFSKCN convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-gpio@lfdr.de>); Wed, 19 Jun 2019 06:02:13 -0400
-Received: from mail.sensor-technik.de ([80.150.181.156]:40079 "EHLO
-        mail.sensor-technik.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726479AbfFSKCN (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 19 Jun 2019 06:02:13 -0400
-X-Greylist: delayed 426 seconds by postgrey-1.27 at vger.kernel.org; Wed, 19 Jun 2019 06:02:11 EDT
-Received: from stwz1.stww2k.local (HELO stwz1.sensor-technik.de) ([172.25.209.3])
-  by mail.sensor-technik.de with ESMTP; 19 Jun 2019 11:55:05 +0200
-Received: from stwz1.stww2k.local (localhost [127.0.0.1])
-        by stwz1.sensor-technik.de (Postfix) with ESMTP id 0C143B5ABC;
-        Wed, 19 Jun 2019 11:55:05 +0200 (CEST)
-Received: from mail.sensor-technik.de (stwex1.stww2k.local [172.25.2.103])
-        by stwz1.sensor-technik.de (Postfix) with ESMTP id 70A19B5AAC;
-        Wed, 19 Jun 2019 11:54:49 +0200 (CEST)
-Received: from STWEX1.stww2k.local (172.25.2.106) by STWEX1.stww2k.local
- (172.25.2.106) with Microsoft SMTP Server (TLS) id 15.0.1263.5; Wed, 19 Jun
- 2019 11:54:48 +0200
-Received: from STWEX1.stww2k.local ([172.25.5.24]) by STWEX1.stww2k.local
- ([172.25.5.24]) with mapi id 15.00.1263.000; Wed, 19 Jun 2019 11:54:48 +0200
-From:   Waibel Georg <Georg.Waibel@sensor-technik.de>
-To:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Support Opensource <support.opensource@diasemi.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        "Mark Brown" <broonie@kernel.org>,
-        Sangbeom Kim <sbkim73@samsung.com>,
-        "Krzysztof Kozlowski" <krzk@kernel.org>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-samsung-soc@vger.kernel.org" 
-        <linux-samsung-soc@vger.kernel.org>
-Subject: [PATCH] gpio: Fix return value mismatch of function
- gpiod_get_from_of_node()
-Thread-Topic: [PATCH] gpio: Fix return value mismatch of function
-  gpiod_get_from_of_node()
-Thread-Index: AQHVJoPK/trACdRS0kWwbOAIe3gb9A==
-Date:   Wed, 19 Jun 2019 09:54:48 +0000
-Message-ID: <1560938081892.33415@sensor-technik.de>
-Accept-Language: de-DE, en-US
-Content-Language: de-DE
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [172.30.230.15]
-x-c2processedorg: 71f8fb5e-29e9-40bb-a2d4-613e155b19df
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: 8BIT
+        id S1727552AbfFSLet (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 19 Jun 2019 07:34:49 -0400
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:36285 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727067AbfFSLet (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 19 Jun 2019 07:34:49 -0400
+Received: by mail-ot1-f66.google.com with SMTP id r6so18916388oti.3
+        for <linux-gpio@vger.kernel.org>; Wed, 19 Jun 2019 04:34:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=xRJsEYMCxjB/gQmt8AuT+dGCwVbVNWbR34Uqa5PFHNc=;
+        b=uvvJ6rQGY+is/2WOoc+TaiQfocmKFXSueUKUbErRcEGulHR9krcQw2bU6UimtemwP8
+         zVc8MPxJe5j39eMsjRfY2XzY0d0+FAYlaltFpmQ5nDLp+MUsGlGJuKOMbWaGpDwnQOz1
+         tei2q28xx1Reh4dudfFm6a+llFMQMOOY6gqboPKeAthSJ9U6lrYi0wVt2p4/dK8oBBbb
+         dWyuNdumCx+X0lLEwfKl/FzTB22lWjc9+iUabFgS8jKrReTDHcZ7OH0Y7QVXCHIwe76i
+         ISpiF2709549xZDgbq7l5lrPKPYUDlIyA7o2rFtBnZG/+a3xNtm17Vf4NxDvC1GHwdoK
+         gleg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=xRJsEYMCxjB/gQmt8AuT+dGCwVbVNWbR34Uqa5PFHNc=;
+        b=PFDBFRxVC59zA22Q4nlzJ+Uh59sqTt5jyot3qS1usRio/YBfBdIH01qvZWxVUeLRqb
+         6kt5g2LtZGV8WQ8k4G7taCg14M+w0kTWGZ3Sr50/BNpFWWA/JgGFM37G0T699wtz92p5
+         zhRt3cJAgwUw8H91aStr8iRvic5732g9HFyVZhTVSVmAVVxgkZg3fTiomkjHlpAY2R5Y
+         kttP7hXmAApvFwbuC+CyUK8ALR/pW32BoSRPVfyOOZ1EgN7qXt0qRpe2aBqHObeAtjJG
+         VRtVtDOlvU1sg8QFzxtdM5D2V7kBI5GZ22Urujgz+mwzFU2VI6/gKkpwEqrXRlP8PRnX
+         i7nA==
+X-Gm-Message-State: APjAAAWwe8sDJNcfJtNpmyzNshpzcWaX3k8cXWykA+e5TtcY0VhWLGtc
+        ODWZo+jbiPUdxLg6dEjjleJbXZs6tIC6eOEY9TXdHg==
+X-Google-Smtp-Source: APXvYqxoNAySE1fcoRZVkDaS2fHorMGb2u+HB0o+Gefw2u3xcm9sT8x6X/jnWHGXb08ZdcR4xMdOeQSCmvU8ioo8sdE=
+X-Received: by 2002:a9d:1718:: with SMTP id i24mr50671024ota.269.1560944088861;
+ Wed, 19 Jun 2019 04:34:48 -0700 (PDT)
 MIME-Version: 1.0
-X-TBoneOriginalFrom: Waibel Georg <Georg.Waibel@sensor-technik.de>
-X-TBoneOriginalTo: Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski
-        <bgolaszewski@baylibre.com>, Support Opensource
-        <support.opensource@diasemi.com>, Liam Girdwood <lgirdwood@gmail.com>, "Mark
- Brown" <broonie@kernel.org>, Sangbeom Kim <sbkim73@samsung.com>, "Krzysztof
- Kozlowski" <krzk@kernel.org>, Bartlomiej Zolnierkiewicz
-        <b.zolnierkie@samsung.com>, "linux-gpio@vger.kernel.org"
-        <linux-gpio@vger.kernel.org>, "linux-kernel@vger.kernel.org"
-        <linux-kernel@vger.kernel.org>, "linux-samsung-soc@vger.kernel.org"
-        <linux-samsung-soc@vger.kernel.org>
-X-TBoneDomainSigned: false
+References: <1560790160-3372-1-git-send-email-info@metux.net> <1560790160-3372-3-git-send-email-info@metux.net>
+In-Reply-To: <1560790160-3372-3-git-send-email-info@metux.net>
+From:   Baolin Wang <baolin.wang@linaro.org>
+Date:   Wed, 19 Jun 2019 19:34:37 +0800
+Message-ID: <CAMz4ku+3A=fcYpp++owPv8N5dbatHYTKNRtUiOrHqbXVONRn+w@mail.gmail.com>
+Subject: Re: [PATCH 3/7] drivers: gpio: eic-sprd: use devm_platform_ioremap_resource()
+To:     "Enrico Weigelt, metux IT consult" <info@metux.net>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Orson Zhai <orsonzhai@gmail.com>,
+        Chunyan Zhang <zhang.lyra@gmail.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-In case the requested gpio property is not found in the device tree, some
-callers of gpiod_get_from_of_node() expect a return value of NULL, others
-expect -ENOENT.
-In particular devm_fwnode_get_index_gpiod_from_child() expects -ENOENT.
-Currently it gets a NULL, which breaks the loop that tries all
-gpio_suffixes. The result is that a gpio property is not found, even
-though it is there.
+Hi,
 
-This patch changes gpiod_get_from_of_node() to return -ENOENT instead
-of NULL when the requested gpio property is not found in the device
-tree. Additionally it modifies all calling functions to properly
-evaluate the return value.
+On Tue, 18 Jun 2019 at 00:49, Enrico Weigelt, metux IT consult
+<info@metux.net> wrote:
+>
+> Use the new helper that wraps the calls to platform_get_resource()
+> and devm_ioremap_resource() together.
+>
+> Signed-off-by: Enrico Weigelt, metux IT consult <info@metux.net>
 
-Another approach would be to leave the return value of
-gpiod_get_from_of_node() as is and fix the bug in
-devm_fwnode_get_index_gpiod_from_child(). Other callers would still need
-to be reworked. The effort would be the same as with the chosen solution.
+Thanks.
 
-Signed-off-by: Georg Waibel <georg.waibel@sensor-technik.de>
----
- drivers/gpio/gpiolib.c                 | 6 +-----
- drivers/regulator/da9211-regulator.c   | 2 ++
- drivers/regulator/s2mps11.c            | 4 +++-
- drivers/regulator/s5m8767.c            | 4 +++-
- drivers/regulator/tps65090-regulator.c | 7 ++++---
- 5 files changed, 13 insertions(+), 10 deletions(-)
+Reviewed-by: Baolin Wang <baolin.wang@linaro.org>
 
-diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
-index e013d417a936..be1d1d2f8aaa 100644
---- a/drivers/gpio/gpiolib.c
-+++ b/drivers/gpio/gpiolib.c
-@@ -4244,8 +4244,7 @@ EXPORT_SYMBOL_GPL(gpiod_get_index);
-  *
-  * Returns:
-  * On successful request the GPIO pin is configured in accordance with
-- * provided @dflags. If the node does not have the requested GPIO
-- * property, NULL is returned.
-+ * provided @dflags.
-  *
-  * In case of error an ERR_PTR() is returned.
-  */
-@@ -4267,9 +4266,6 @@ struct gpio_desc *gpiod_get_from_of_node(struct device_node *node,
- 					index, &flags);
- 
- 	if (!desc || IS_ERR(desc)) {
--		/* If it is not there, just return NULL */
--		if (PTR_ERR(desc) == -ENOENT)
--			return NULL;
- 		return desc;
- 	}
- 
-diff --git a/drivers/regulator/da9211-regulator.c b/drivers/regulator/da9211-regulator.c
-index da37b4ccd834..0309823d2c72 100644
---- a/drivers/regulator/da9211-regulator.c
-+++ b/drivers/regulator/da9211-regulator.c
-@@ -289,6 +289,8 @@ static struct da9211_pdata *da9211_parse_regulators_dt(
- 				  0,
- 				  GPIOD_OUT_HIGH | GPIOD_FLAGS_BIT_NONEXCLUSIVE,
- 				  "da9211-enable");
-+		if (IS_ERR(pdata->gpiod_ren[n]))
-+			pdata->gpiod_ren[n] = NULL;
- 		n++;
- 	}
- 
-diff --git a/drivers/regulator/s2mps11.c b/drivers/regulator/s2mps11.c
-index 134c62db36c5..b518a81f75a3 100644
---- a/drivers/regulator/s2mps11.c
-+++ b/drivers/regulator/s2mps11.c
-@@ -821,7 +821,9 @@ static void s2mps14_pmic_dt_parse_ext_control_gpio(struct platform_device *pdev,
- 				0,
- 				GPIOD_OUT_HIGH | GPIOD_FLAGS_BIT_NONEXCLUSIVE,
- 				"s2mps11-regulator");
--		if (IS_ERR(gpio[reg])) {
-+		if (PTR_ERR(gpio[reg]) == -ENOENT)
-+			gpio[reg] = NULL;
-+		else if (IS_ERR(gpio[reg])) {
- 			dev_err(&pdev->dev, "Failed to get control GPIO for %d/%s\n",
- 				reg, rdata[reg].name);
- 			continue;
-diff --git a/drivers/regulator/s5m8767.c b/drivers/regulator/s5m8767.c
-index bb9d1a083299..6ca27e9d5ef7 100644
---- a/drivers/regulator/s5m8767.c
-+++ b/drivers/regulator/s5m8767.c
-@@ -574,7 +574,9 @@ static int s5m8767_pmic_dt_parse_pdata(struct platform_device *pdev,
- 			0,
- 			GPIOD_OUT_HIGH | GPIOD_FLAGS_BIT_NONEXCLUSIVE,
- 			"s5m8767");
--		if (IS_ERR(rdata->ext_control_gpiod))
-+		if (PTR_ERR(rdata->ext_control_gpiod) == -ENOENT)
-+			rdata->ext_control_gpiod = NULL;
-+		else if (IS_ERR(rdata->ext_control_gpiod))
- 			return PTR_ERR(rdata->ext_control_gpiod);
- 
- 		rdata->id = i;
-diff --git a/drivers/regulator/tps65090-regulator.c b/drivers/regulator/tps65090-regulator.c
-index ca39b3d55123..10ea4b5a0f55 100644
---- a/drivers/regulator/tps65090-regulator.c
-+++ b/drivers/regulator/tps65090-regulator.c
-@@ -371,11 +371,12 @@ static struct tps65090_platform_data *tps65090_parse_dt_reg_data(
- 								    "dcdc-ext-control-gpios", 0,
- 								    gflags,
- 								    "tps65090");
--			if (IS_ERR(rpdata->gpiod))
--				return ERR_CAST(rpdata->gpiod);
--			if (!rpdata->gpiod)
-+			if (PTR_ERR(rpdata->gpiod) == -ENOENT) {
- 				dev_err(&pdev->dev,
- 					"could not find DCDC external control GPIO\n");
-+				rpdata->gpiod = NULL;
-+			} else if (IS_ERR(rpdata->gpiod))
-+				return ERR_CAST(rpdata->gpiod);
- 		}
- 
- 		if (of_property_read_u32(tps65090_matches[idx].of_node,
 -- 
-2.21.0
-
+Baolin Wang
+Best Regards
