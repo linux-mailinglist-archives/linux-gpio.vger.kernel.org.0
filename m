@@ -2,90 +2,122 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 129774BC15
-	for <lists+linux-gpio@lfdr.de>; Wed, 19 Jun 2019 16:54:59 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 87ECD4C85D
+	for <lists+linux-gpio@lfdr.de>; Thu, 20 Jun 2019 09:25:24 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729494AbfFSOyy (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 19 Jun 2019 10:54:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50950 "EHLO mail.kernel.org"
+        id S1725966AbfFTHZY (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 20 Jun 2019 03:25:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51418 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725899AbfFSOyy (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Wed, 19 Jun 2019 10:54:54 -0400
-Received: from mail-qt1-f169.google.com (mail-qt1-f169.google.com [209.85.160.169])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1725875AbfFTHZX (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Thu, 20 Jun 2019 03:25:23 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D55352182B;
-        Wed, 19 Jun 2019 14:54:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 510192084B;
+        Thu, 20 Jun 2019 07:25:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560956093;
-        bh=1o2dMj31GORXJZyOFULgtIRqexZMCNTkB7pR8LOrtJ4=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=WNj4iaYt8/G5RaEDTSZfDsFjp6NVfp8+Eao8HcnQtl2WtIz059/SPsFZ4/w3uv6px
-         67wlVpxhLvDfoTpoFbQZQOAr/v7soTPuK6Nq2xYD/iP4ju2Ax69/FF6c5ubeEBqbUi
-         4WJLwK3hQRENzyYmfVF27jQgQQ9f/GPh1m75B4zw=
-Received: by mail-qt1-f169.google.com with SMTP id s15so20195623qtk.9;
-        Wed, 19 Jun 2019 07:54:52 -0700 (PDT)
-X-Gm-Message-State: APjAAAVAxoTRzbQzaweSqxVwyrC5mo06bdWQCc1JF5ZdL39QRzkjj1X+
-        0TywWYfga3YGMqgVkiAtEF+wR68xDK4k7bi8cA==
-X-Google-Smtp-Source: APXvYqyIsFoKeKt8JjG9xmjujYGTtwkYLYLaB8h+ix0Pl7lN0krfkUYZCEy8rme8HA3CdujMucRPRNSAzdKC1rAn+e4=
-X-Received: by 2002:aed:3fb0:: with SMTP id s45mr53667104qth.136.1560956092103;
- Wed, 19 Jun 2019 07:54:52 -0700 (PDT)
+        s=default; t=1561015522;
+        bh=TqUziFOecWZr7m4Cz2baTN25z+pXraW9FShc0dT53g4=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=erV/CFJZZZpYqly3cYIV9lk//f83LDNwTOZ1Ugf4EIV4Ho9XbHIFhJGHvrNtrSHhi
+         dWdHQPJTnFBuwHJAgvq96U7uitnjc4cZHcuyXrCuVpE8YhFCqZkFLjnnqNJwXyI8Zm
+         /QcBCiApTRGXxDuDonpJxNfS4i4NlOlvdiWkBL6U=
+Date:   Thu, 20 Jun 2019 09:25:19 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     bamv2005@gmail.com, linus.walleij@linaro.org,
+        bgolaszewski@baylibre.com
+Cc:     linux-gpio@vger.kernel.org
+Subject: [PATCH v2] gpio: mockup: no need to check return value of
+ debugfs_create functions
+Message-ID: <20190620072519.GA21046@kroah.com>
+References: <20190618155047.16894-1-gregkh@linuxfoundation.org>
+ <20190618155047.16894-3-gregkh@linuxfoundation.org>
 MIME-Version: 1.0
-References: <1559754961-26783-1-git-send-email-sricharan@codeaurora.org> <1559754961-26783-3-git-send-email-sricharan@codeaurora.org>
-In-Reply-To: <1559754961-26783-3-git-send-email-sricharan@codeaurora.org>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Wed, 19 Jun 2019 08:54:40 -0600
-X-Gmail-Original-Message-ID: <CAL_Jsq+0TLtLiX17nRSyVWrJM2_UvLEVMsp7Hf2e3hU7fh4WGg@mail.gmail.com>
-Message-ID: <CAL_Jsq+0TLtLiX17nRSyVWrJM2_UvLEVMsp7Hf2e3hU7fh4WGg@mail.gmail.com>
-Subject: Re: [PATCH 2/6] dt-bindings: qcom: Add ipq6018 bindings
-To:     Sricharan R <sricharan@codeaurora.org>
-Cc:     Stephen Boyd <sboyd@codeaurora.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Andy Gross <agross@kernel.org>, devicetree@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        linux-clk <linux-clk@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        "open list:ARM/QUALCOMM SUPPORT" <linux-soc@vger.kernel.org>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190618155047.16894-3-gregkh@linuxfoundation.org>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Jun 5, 2019 at 11:16 AM Sricharan R <sricharan@codeaurora.org> wrote:
->
-> Signed-off-by: Sricharan R <sricharan@codeaurora.org>
-> Signed-off-by: speriaka <speriaka@codeaurora.org>
-> ---
->  Documentation/devicetree/bindings/arm/qcom.yaml | 2 ++
->  1 file changed, 2 insertions(+)
->
-> diff --git a/Documentation/devicetree/bindings/arm/qcom.yaml b/Documentation/devicetree/bindings/arm/qcom.yaml
-> index f6316ab..7b19028 100644
-> --- a/Documentation/devicetree/bindings/arm/qcom.yaml
-> +++ b/Documentation/devicetree/bindings/arm/qcom.yaml
-> @@ -36,6 +36,7 @@ description: |
->         mdm9615
->         ipq8074
->         sdm845
-> +       ipq6018
+When calling debugfs functions, there is no need to ever check the
+return value.  The function can work or not, but the code logic should
+never do something different based on this.
 
-You need to add actual schema for this, not just a description.
+Cc: Bamvor Jian Zhang <bamv2005@gmail.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>
+Cc: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Cc: linux-gpio@vger.kernel.org
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+---
+v2: fix build warning found by kbuild
+    fix build error found by kbuild.  Did I even build this thing
+    myself???
 
->
->    The 'board' element must be one of the following strings:
->
-> @@ -45,6 +46,7 @@ description: |
->         mtp
->         sbc
->         hk01
-> +       cp01-c1
->
->    The 'soc_version' and 'board_version' elements take the form of v<Major>.<Minor>
->    where the minor number may be omitted when it's zero, i.e.  v1.0 is the same
-> --
-> QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
->
+ drivers/gpio/gpio-mockup.c | 18 ++++--------------
+ 1 file changed, 4 insertions(+), 14 deletions(-)
+
+diff --git a/drivers/gpio/gpio-mockup.c b/drivers/gpio/gpio-mockup.c
+index b6a4efce7c92..135dac099d1e 100644
+--- a/drivers/gpio/gpio-mockup.c
++++ b/drivers/gpio/gpio-mockup.c
+@@ -315,7 +315,6 @@ static void gpio_mockup_debugfs_setup(struct device *dev,
+ 				      struct gpio_mockup_chip *chip)
+ {
+ 	struct gpio_mockup_dbgfs_private *priv;
+-	struct dentry *evfile;
+ 	struct gpio_chip *gc;
+ 	const char *devname;
+ 	char *name;
+@@ -325,32 +324,25 @@ static void gpio_mockup_debugfs_setup(struct device *dev,
+ 	devname = dev_name(&gc->gpiodev->dev);
+ 
+ 	chip->dbg_dir = debugfs_create_dir(devname, gpio_mockup_dbg_dir);
+-	if (IS_ERR_OR_NULL(chip->dbg_dir))
+-		goto err;
+ 
+ 	for (i = 0; i < gc->ngpio; i++) {
+ 		name = devm_kasprintf(dev, GFP_KERNEL, "%d", i);
+ 		if (!name)
+-			goto err;
++			return;
+ 
+ 		priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
+ 		if (!priv)
+-			goto err;
++			return;
+ 
+ 		priv->chip = chip;
+ 		priv->offset = i;
+ 		priv->desc = &gc->gpiodev->descs[i];
+ 
+-		evfile = debugfs_create_file(name, 0200, chip->dbg_dir, priv,
+-					     &gpio_mockup_debugfs_ops);
+-		if (IS_ERR_OR_NULL(evfile))
+-			goto err;
++		debugfs_create_file(name, 0200, chip->dbg_dir, priv,
++				    &gpio_mockup_debugfs_ops);
+ 	}
+ 
+ 	return;
+-
+-err:
+-	dev_err(dev, "error creating debugfs files\n");
+ }
+ 
+ static int gpio_mockup_name_lines(struct device *dev,
+@@ -501,8 +493,6 @@ static int __init gpio_mockup_init(void)
+ 	}
+ 
+ 	gpio_mockup_dbg_dir = debugfs_create_dir("gpio-mockup", NULL);
+-	if (IS_ERR_OR_NULL(gpio_mockup_dbg_dir))
+-		gpio_mockup_err("error creating debugfs directory\n");
+ 
+ 	err = platform_driver_register(&gpio_mockup_driver);
+ 	if (err) {
+-- 
+2.22.0
+
