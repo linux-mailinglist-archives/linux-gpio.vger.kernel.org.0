@@ -2,194 +2,119 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id D1E764DCA7
-	for <lists+linux-gpio@lfdr.de>; Thu, 20 Jun 2019 23:37:39 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 721BE4DD62
+	for <lists+linux-gpio@lfdr.de>; Fri, 21 Jun 2019 00:20:43 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726339AbfFTVhj convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-gpio@lfdr.de>); Thu, 20 Jun 2019 17:37:39 -0400
-Received: from mail.sensor-technik.de ([80.150.181.156]:1266 "EHLO
-        mail.sensor-technik.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725815AbfFTVhj (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 20 Jun 2019 17:37:39 -0400
-Received: from stwz1.stww2k.local (HELO stwz1.sensor-technik.de) ([172.25.209.3])
-  by mail.sensor-technik.de with ESMTP; 20 Jun 2019 23:37:37 +0200
-Received: from stwz1.stww2k.local (localhost [127.0.0.1])
-        by stwz1.sensor-technik.de (Postfix) with ESMTP id 35BEEB5ABC;
-        Thu, 20 Jun 2019 23:37:37 +0200 (CEST)
-Received: from mail.sensor-technik.de (stwex1.stww2k.local [172.25.2.103])
-        by stwz1.sensor-technik.de (Postfix) with ESMTP id CE94AB5AAC;
-        Thu, 20 Jun 2019 23:37:09 +0200 (CEST)
-Received: from STWEX1.stww2k.local (172.25.2.106) by STWEX1.stww2k.local
- (172.25.2.106) with Microsoft SMTP Server (TLS) id 15.0.1263.5; Thu, 20 Jun
- 2019 23:37:09 +0200
-Received: from STWEX1.stww2k.local ([172.25.5.24]) by STWEX1.stww2k.local
- ([172.25.5.24]) with mapi id 15.00.1263.000; Thu, 20 Jun 2019 23:37:09 +0200
-From:   Waibel Georg <Georg.Waibel@sensor-technik.de>
-To:     Krzysztof Kozlowski <krzk@kernel.org>
-CC:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Support Opensource <support.opensource@diasemi.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        "Mark Brown" <broonie@kernel.org>,
-        Sangbeom Kim <sbkim73@samsung.com>,
-        "Bartlomiej Zolnierkiewicz" <b.zolnierkie@samsung.com>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-samsung-soc@vger.kernel.org" 
-        <linux-samsung-soc@vger.kernel.org>
-Subject: [PATCH V2] gpio: Fix return value mismatch of function
- gpiod_get_from_of_node()
-Thread-Topic: [PATCH V2] gpio: Fix return value mismatch of function
- gpiod_get_from_of_node()
-Thread-Index: AQHVJ6/07q3ULJnab0GDzhHQsxxhyg==
-Date:   Thu, 20 Jun 2019 21:37:08 +0000
-Message-ID: <1561066629320.13520@sensor-technik.de>
-References: <1560938081892.33415@sensor-technik.de>,<CAJKOXPej57MJKe6ShinG+VJdG+XM4qhpeD3rQ2ZHzRTmO43+GA@mail.gmail.com>
-In-Reply-To: <CAJKOXPej57MJKe6ShinG+VJdG+XM4qhpeD3rQ2ZHzRTmO43+GA@mail.gmail.com>
-Accept-Language: de-DE, en-US
-Content-Language: de-DE
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [172.25.209.16]
-x-c2processedorg: 71f8fb5e-29e9-40bb-a2d4-613e155b19df
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: 8BIT
+        id S1726135AbfFTWUm (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 20 Jun 2019 18:20:42 -0400
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:41203 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726115AbfFTWUl (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 20 Jun 2019 18:20:41 -0400
+Received: by mail-lf1-f66.google.com with SMTP id 136so3534774lfa.8;
+        Thu, 20 Jun 2019 15:20:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=ytb9Muk0Hu4DrHGYX2rIqBECoD0TVDIUCusyYv+Gdsc=;
+        b=idNsJsRUqy6U7ssGXzcjZuc1FUJihynWecsQ3enGHiJ++LY0zIq5p90lEbQ2OBuIyw
+         So+kOFF3AOmbcpIWdfqLZ6uZil+QegcSAW3H9J8+mMRskmA6IitefNRJdjPS6sbaDXMf
+         dto5nWKB838cVBu01Ie7uRayNogeBMlp0qf0VeppgiTqfZhwvY549hZs+HaL2pI4/gQ3
+         8FEvw8fsvQbjhJ4TYqWrCRZM62YvHYKoU3ZEYSqFpo1d4+yjE957R41CNPltOyVXpjiL
+         MtDnRx2OZ5aVBoVE3HW6dt+2NFiuaHWTEmyQ5SneCgqoShIVbA/l746Afgs0KUW0PHta
+         7mpQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=ytb9Muk0Hu4DrHGYX2rIqBECoD0TVDIUCusyYv+Gdsc=;
+        b=ugM4waIiNwnLNAF4uP7pI1VW9gBtKZ6zlRsZAMiP5MJcEGboTFeq9bo+CfIe144GE9
+         gggD9YsflE2YtQtx8xeWGTgsvGyur4aUHMTrBHCpiabJ5Ikpq0yN/HI2dZ9FDC44bNkP
+         9aVZHoOX0GZ+fL0uFhIuzkrDoGs0Y/2o9vddvAmSYWziCoNYRfpDTPOxKWoKmoDHkd0r
+         NiLWyNYoljmnF9JeVZ8aru5nFfNgjraoTNHWSRsf6260X+CyMFSDSxdN8RUOG311WGDF
+         tismaI9YkubHTAoBQndz5Mb5Wt9suOqjzKe6+GmzUkJsDXSLMx9cy8q+7n0HYvw9cqRe
+         A27w==
+X-Gm-Message-State: APjAAAVP0K3l13k17VgRXwZtyW7dpzq8HPu9HX0loqp7sG6jLp+o8i6z
+        O2XKjDili7JksnKGkRvwLJnrQWM4
+X-Google-Smtp-Source: APXvYqyq6TeRNLzHZ1lWEE6MnNHVP1O/Mj3m8XiADl7OpvF3XHE3TorZFqlO4EXUfE6aN1QSuxNawA==
+X-Received: by 2002:a19:5044:: with SMTP id z4mr5984546lfj.80.1561069239626;
+        Thu, 20 Jun 2019 15:20:39 -0700 (PDT)
+Received: from [192.168.2.145] (ppp91-79-162-197.pppoe.mtu-net.ru. [91.79.162.197])
+        by smtp.googlemail.com with ESMTPSA id i188sm123433lji.4.2019.06.20.15.20.38
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 20 Jun 2019 15:20:39 -0700 (PDT)
+Subject: Re: [PATCH 2/2] pinctrl: tegra: Add bitmask support for parked bits
+To:     Sowjanya Komatineni <skomatineni@nvidia.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>
+Cc:     Stephen Warren <swarren@wwwdotorg.org>,
+        Jon Hunter <jonathanh@nvidia.com>,
+        Stefan Agner <stefan@agner.ch>, linux-tegra@vger.kernel.org,
+        linux-gpio@vger.kernel.org
+References: <20190620170350.20224-1-thierry.reding@gmail.com>
+ <20190620170350.20224-2-thierry.reding@gmail.com>
+ <9324e541-7953-801e-4b7a-2075236ed054@nvidia.com>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <8af10354-1705-15b5-492a-cae8fd3f0537@gmail.com>
+Date:   Fri, 21 Jun 2019 01:20:37 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.1
 MIME-Version: 1.0
-X-TBoneOriginalFrom: Waibel Georg <Georg.Waibel@sensor-technik.de>
-X-TBoneOriginalTo: Krzysztof Kozlowski <krzk@kernel.org>
-X-TBoneOriginalCC: Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski
-        <bgolaszewski@baylibre.com>, Support Opensource
-        <support.opensource@diasemi.com>, Liam Girdwood <lgirdwood@gmail.com>, "Mark
- Brown" <broonie@kernel.org>, Sangbeom Kim <sbkim73@samsung.com>, "Bartlomiej
- Zolnierkiewicz" <b.zolnierkie@samsung.com>, "linux-gpio@vger.kernel.org"
-        <linux-gpio@vger.kernel.org>, "linux-kernel@vger.kernel.org"
-        <linux-kernel@vger.kernel.org>, "linux-samsung-soc@vger.kernel.org"
-        <linux-samsung-soc@vger.kernel.org>
-X-TBoneDomainSigned: false
+In-Reply-To: <9324e541-7953-801e-4b7a-2075236ed054@nvidia.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-In case the requested gpio property is not found in the device tree, some
-callers of gpiod_get_from_of_node() expect a return value of NULL, others
-expect -ENOENT.
-In particular devm_fwnode_get_index_gpiod_from_child() expects -ENOENT.
-Currently it gets a NULL, which breaks the loop that tries all
-gpio_suffixes. The result is that a gpio property is not found, even
-though it is there.
+20.06.2019 20:41, Sowjanya Komatineni пишет:
+> 
+> On 6/20/19 10:03 AM, Thierry Reding wrote:
+>> From: Thierry Reding <treding@nvidia.com>
+>>
+>> Some pin groups have park bits for multiple pins in one register.
+>> Support this by turning the parked bit field into a parked bitmask
+>> field. If no parked bits are supported, the bitmask can be 0.
+>>
+>> Update the pingroup table on Tegra210, which is the only generation
+>> where this is supported, with the parked bitmask.
+>>
+>> Signed-off-by: Thierry Reding <treding@nvidia.com>
+>> ---
+>>   drivers/pinctrl/tegra/pinctrl-tegra.c    |  4 +-
+>>   drivers/pinctrl/tegra/pinctrl-tegra.h    |  4 +-
+>>   drivers/pinctrl/tegra/pinctrl-tegra114.c |  4 +-
+>>   drivers/pinctrl/tegra/pinctrl-tegra124.c |  4 +-
+>>   drivers/pinctrl/tegra/pinctrl-tegra194.c |  4 +-
+>>   drivers/pinctrl/tegra/pinctrl-tegra20.c  |  6 +--
+>>   drivers/pinctrl/tegra/pinctrl-tegra210.c | 60 ++++++++++++------------
+>>   drivers/pinctrl/tegra/pinctrl-tegra30.c  |  4 +-
+>>   8 files changed, 45 insertions(+), 45 deletions(-)
+>>
+>> diff --git a/drivers/pinctrl/tegra/pinctrl-tegra.c
+>> b/drivers/pinctrl/tegra/pinctrl-tegra.c
+>> index 34596b246578..9df30809aaf6 100644
+>> --- a/drivers/pinctrl/tegra/pinctrl-tegra.c
+>> +++ b/drivers/pinctrl/tegra/pinctrl-tegra.c
+>> @@ -613,9 +613,9 @@ static void tegra_pinctrl_clear_parked_bits(struct
+>> tegra_pmx *pmx)
+>>         for (i = 0; i < pmx->soc->ngroups; ++i) {
+>>           g = &pmx->soc->groups[i];
+>> -        if (g->parked_bit >= 0) {
+>> +        if (g->parked_bitmask > 0) {
+>>               val = pmx_readl(pmx, g->mux_bank, g->mux_reg);
+>> -            val &= ~(1 << g->parked_bit);
+>> +            val &= ~g->parked_bitmask;
+>>               pmx_writel(pmx, val, g->mux_bank, g->mux_reg);
+>>           }
+> 
+> As parked_bit is now supported with DRV_PINGROUP, need to add check if
+> name preceeds with drive_ and should use drv_bank/drv_reg OR
+> 
+> mux_bank/mux_reg. Otherwise this will cause a crash.
 
-This patch changes gpiod_get_from_of_node() to return -ENOENT instead
-of NULL when the requested gpio property is not found in the device
-tree. Additionally it modifies all calling functions to properly
-evaluate the return value.
-
-Another approach would be to leave the return value of
-gpiod_get_from_of_node() as is and fix the bug in
-devm_fwnode_get_index_gpiod_from_child(). Other callers would still need
-to be reworked. The effort would be the same as with the chosen solution.
-
-Signed-off-by: Georg Waibel <georg.waibel@sensor-technik.de>
----
-
-V2: Rebased on top of [PATCH] regulator: s2mps11: Fix ERR_PTR dereference on GPIO lookup failure
-
----
- drivers/gpio/gpiolib.c                 | 6 +-----
- drivers/regulator/da9211-regulator.c   | 2 ++
- drivers/regulator/s2mps11.c            | 4 +++-
- drivers/regulator/s5m8767.c            | 4 +++-
- drivers/regulator/tps65090-regulator.c | 7 ++++---
- 5 files changed, 13 insertions(+), 10 deletions(-)
-
-diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
-index e013d41..be1d1d2 100644
---- a/drivers/gpio/gpiolib.c
-+++ b/drivers/gpio/gpiolib.c
-@@ -4244,8 +4244,7 @@ EXPORT_SYMBOL_GPL(gpiod_get_index);
-  *
-  * Returns:
-  * On successful request the GPIO pin is configured in accordance with
-- * provided @dflags. If the node does not have the requested GPIO
-- * property, NULL is returned.
-+ * provided @dflags.
-  *
-  * In case of error an ERR_PTR() is returned.
-  */
-@@ -4267,9 +4266,6 @@ struct gpio_desc *gpiod_get_from_of_node(struct device_node *node,
- 					index, &flags);
- 
- 	if (!desc || IS_ERR(desc)) {
--		/* If it is not there, just return NULL */
--		if (PTR_ERR(desc) == -ENOENT)
--			return NULL;
- 		return desc;
- 	}
- 
-diff --git a/drivers/regulator/da9211-regulator.c b/drivers/regulator/da9211-regulator.c
-index da37b4c..0309823 100644
---- a/drivers/regulator/da9211-regulator.c
-+++ b/drivers/regulator/da9211-regulator.c
-@@ -289,6 +289,8 @@ static struct da9211_pdata *da9211_parse_regulators_dt(
- 				  0,
- 				  GPIOD_OUT_HIGH | GPIOD_FLAGS_BIT_NONEXCLUSIVE,
- 				  "da9211-enable");
-+		if (IS_ERR(pdata->gpiod_ren[n]))
-+			pdata->gpiod_ren[n] = NULL;
- 		n++;
- 	}
- 
-diff --git a/drivers/regulator/s2mps11.c b/drivers/regulator/s2mps11.c
-index af9bf10..209d1ff 100644
---- a/drivers/regulator/s2mps11.c
-+++ b/drivers/regulator/s2mps11.c
-@@ -821,7 +821,9 @@ static void s2mps14_pmic_dt_parse_ext_control_gpio(struct platform_device *pdev,
- 				0,
- 				GPIOD_OUT_HIGH | GPIOD_FLAGS_BIT_NONEXCLUSIVE,
- 				"s2mps11-regulator");
--		if (IS_ERR(gpio[reg])) {
-+		if (PTR_ERR(gpio[reg]) == -ENOENT)
-+			gpio[reg] = NULL;
-+		else if (IS_ERR(gpio[reg])) {
- 			dev_err(&pdev->dev, "Failed to get control GPIO for %d/%s\n",
- 				reg, rdata[reg].name);
- 			gpio[reg] = NULL;
-diff --git a/drivers/regulator/s5m8767.c b/drivers/regulator/s5m8767.c
-index bb9d1a0..6ca27e9 100644
---- a/drivers/regulator/s5m8767.c
-+++ b/drivers/regulator/s5m8767.c
-@@ -574,7 +574,9 @@ static int s5m8767_pmic_dt_parse_pdata(struct platform_device *pdev,
- 			0,
- 			GPIOD_OUT_HIGH | GPIOD_FLAGS_BIT_NONEXCLUSIVE,
- 			"s5m8767");
--		if (IS_ERR(rdata->ext_control_gpiod))
-+		if (PTR_ERR(rdata->ext_control_gpiod) == -ENOENT)
-+			rdata->ext_control_gpiod = NULL;
-+		else if (IS_ERR(rdata->ext_control_gpiod))
- 			return PTR_ERR(rdata->ext_control_gpiod);
- 
- 		rdata->id = i;
-diff --git a/drivers/regulator/tps65090-regulator.c b/drivers/regulator/tps65090-regulator.c
-index ca39b3d..10ea4b5 100644
---- a/drivers/regulator/tps65090-regulator.c
-+++ b/drivers/regulator/tps65090-regulator.c
-@@ -371,11 +371,12 @@ static struct tps65090_platform_data *tps65090_parse_dt_reg_data(
- 								    "dcdc-ext-control-gpios", 0,
- 								    gflags,
- 								    "tps65090");
--			if (IS_ERR(rpdata->gpiod))
--				return ERR_CAST(rpdata->gpiod);
--			if (!rpdata->gpiod)
-+			if (PTR_ERR(rpdata->gpiod) == -ENOENT) {
- 				dev_err(&pdev->dev,
- 					"could not find DCDC external control GPIO\n");
-+				rpdata->gpiod = NULL;
-+			} else if (IS_ERR(rpdata->gpiod))
-+				return ERR_CAST(rpdata->gpiod);
- 		}
- 
- 		if (of_property_read_u32(tps65090_matches[idx].of_node,
--- 
-2.7.4
-
+Yes, you should check whether mux_reg == -1.
