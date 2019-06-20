@@ -2,122 +2,106 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 87ECD4C85D
-	for <lists+linux-gpio@lfdr.de>; Thu, 20 Jun 2019 09:25:24 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C84084CA1A
+	for <lists+linux-gpio@lfdr.de>; Thu, 20 Jun 2019 10:57:12 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725966AbfFTHZY (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 20 Jun 2019 03:25:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51418 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725875AbfFTHZX (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Thu, 20 Jun 2019 03:25:23 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 510192084B;
-        Thu, 20 Jun 2019 07:25:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561015522;
-        bh=TqUziFOecWZr7m4Cz2baTN25z+pXraW9FShc0dT53g4=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=erV/CFJZZZpYqly3cYIV9lk//f83LDNwTOZ1Ugf4EIV4Ho9XbHIFhJGHvrNtrSHhi
-         dWdHQPJTnFBuwHJAgvq96U7uitnjc4cZHcuyXrCuVpE8YhFCqZkFLjnnqNJwXyI8Zm
-         /QcBCiApTRGXxDuDonpJxNfS4i4NlOlvdiWkBL6U=
-Date:   Thu, 20 Jun 2019 09:25:19 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     bamv2005@gmail.com, linus.walleij@linaro.org,
-        bgolaszewski@baylibre.com
-Cc:     linux-gpio@vger.kernel.org
-Subject: [PATCH v2] gpio: mockup: no need to check return value of
- debugfs_create functions
-Message-ID: <20190620072519.GA21046@kroah.com>
-References: <20190618155047.16894-1-gregkh@linuxfoundation.org>
- <20190618155047.16894-3-gregkh@linuxfoundation.org>
+        id S1726082AbfFTI5K (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 20 Jun 2019 04:57:10 -0400
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:34886 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726072AbfFTI5K (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 20 Jun 2019 04:57:10 -0400
+Received: by mail-lf1-f65.google.com with SMTP id a25so1868442lfg.2
+        for <linux-gpio@vger.kernel.org>; Thu, 20 Jun 2019 01:57:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=zJCXm/9h6PeMdueB0M/u2oe869FcZvmqoKCRVSRLbXo=;
+        b=FHbpgkX4gTqDkmUWRNwqK3500pJt4AamSgYyiP2CaR122NAax0ARBlf/FPLQPVqTmc
+         rt4qPahud4qJDminBN6NCgOJA5SBisYCHadkxuBvFiDq28V6rmuZY+VgxVv2yusi2mwG
+         XeI0u5ArONbQlYuhHxRpD0I7q/vJ0IegtyeBelz3dTVNrVJ2BCIrkM8b8/35eZdgtrKE
+         r6NLRdM4VDddQC3Yc1gcFMyxGigsQXop/tPHWijiSNLuH1/zU6yv+tE3D86rg5EhDeNs
+         c80ikEzr5cPxtvTL0DKguZ4AxrxpBbeQ5Fas2t5fCALXJvHjmq1LvaVVeiPB20wPI4KC
+         Cacg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=zJCXm/9h6PeMdueB0M/u2oe869FcZvmqoKCRVSRLbXo=;
+        b=ddHInxrkhlJJ1kARhmMXSZ9P7cNtQUskbGUpk4DzYsjlRiulMU6WcTPy7DYtIPYo5V
+         4yVHOhn9HptBBhGNuxEoKHfirl8OyCHM84JFnlNKp0te2SETjiux3tQ55JRKUMCHGxRg
+         ulUJNvjipEFmQbcxfpz3zwNTKOnh9s3Co96/KlUrQ1WCBng/f0luWxi4VGSTcfR+Zgum
+         TfAMdntckKHcio5UwsfaO0jsZYD/1BeuTYAUqvsoy0J9vGl5w1V335+evjA4rARmNYSl
+         eBK1oGGnk1dEk4yq+Vme1yNXvsiui8nslTXFhZwaFT9eK3+L2sDGRpv1rSwZnjNoy1Nu
+         Bfyw==
+X-Gm-Message-State: APjAAAVf8pSdQZF5iDi/mqZylUnfDRC3Qet3nDUse5U//pyaWcfDvibR
+        YQXUoM29nFnp1hZGHW3X7fP21i1FQ44=
+X-Google-Smtp-Source: APXvYqxyQrqZUDFWvU/5DMjeRYRroJTky9loz8KOtTDAjynhT0UqULfHLeUqI8jqHn0YIMoK5Clx7A==
+X-Received: by 2002:a19:4a49:: with SMTP id x70mr26514335lfa.151.1561021028034;
+        Thu, 20 Jun 2019 01:57:08 -0700 (PDT)
+Received: from genomnajs.ideon.se ([85.235.10.227])
+        by smtp.gmail.com with ESMTPSA id i5sm3053941lfo.55.2019.06.20.01.57.06
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Thu, 20 Jun 2019 01:57:06 -0700 (PDT)
+From:   Linus Walleij <linus.walleij@linaro.org>
+To:     linux-gpio@vger.kernel.org
+Cc:     Linus Walleij <linus.walleij@linaro.org>
+Subject: [PATCH] pinctrl: Minimize SPDX hamming distance
+Date:   Thu, 20 Jun 2019 10:57:05 +0200
+Message-Id: <20190620085705.6012-1-linus.walleij@linaro.org>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190618155047.16894-3-gregkh@linuxfoundation.org>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+Content-Transfer-Encoding: 8bit
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-When calling debugfs functions, there is no need to ever check the
-return value.  The function can work or not, but the code logic should
-never do something different based on this.
+OK so some automatic scripts were fixing the SPDX tags in
+the mainline branch while we were patching other stuff,
+and yeah it is more correct to have "GPL-2.0-only" rather
+than "GPL-2.0" so let's conform to what is already upstream
+so we don't end up getting the wrong license on the merged
+result later.
 
-Cc: Bamvor Jian Zhang <bamv2005@gmail.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>
-Cc: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Cc: linux-gpio@vger.kernel.org
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
 ---
-v2: fix build warning found by kbuild
-    fix build error found by kbuild.  Did I even build this thing
-    myself???
+ drivers/pinctrl/nomadik/Kconfig  | 1 -
+ drivers/pinctrl/pinctrl-coh901.c | 2 +-
+ drivers/pinctrl/pinctrl-u300.c   | 2 +-
+ 3 files changed, 2 insertions(+), 3 deletions(-)
 
- drivers/gpio/gpio-mockup.c | 18 ++++--------------
- 1 file changed, 4 insertions(+), 14 deletions(-)
-
-diff --git a/drivers/gpio/gpio-mockup.c b/drivers/gpio/gpio-mockup.c
-index b6a4efce7c92..135dac099d1e 100644
---- a/drivers/gpio/gpio-mockup.c
-+++ b/drivers/gpio/gpio-mockup.c
-@@ -315,7 +315,6 @@ static void gpio_mockup_debugfs_setup(struct device *dev,
- 				      struct gpio_mockup_chip *chip)
- {
- 	struct gpio_mockup_dbgfs_private *priv;
--	struct dentry *evfile;
- 	struct gpio_chip *gc;
- 	const char *devname;
- 	char *name;
-@@ -325,32 +324,25 @@ static void gpio_mockup_debugfs_setup(struct device *dev,
- 	devname = dev_name(&gc->gpiodev->dev);
- 
- 	chip->dbg_dir = debugfs_create_dir(devname, gpio_mockup_dbg_dir);
--	if (IS_ERR_OR_NULL(chip->dbg_dir))
--		goto err;
- 
- 	for (i = 0; i < gc->ngpio; i++) {
- 		name = devm_kasprintf(dev, GFP_KERNEL, "%d", i);
- 		if (!name)
--			goto err;
-+			return;
- 
- 		priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
- 		if (!priv)
--			goto err;
-+			return;
- 
- 		priv->chip = chip;
- 		priv->offset = i;
- 		priv->desc = &gc->gpiodev->descs[i];
- 
--		evfile = debugfs_create_file(name, 0200, chip->dbg_dir, priv,
--					     &gpio_mockup_debugfs_ops);
--		if (IS_ERR_OR_NULL(evfile))
--			goto err;
-+		debugfs_create_file(name, 0200, chip->dbg_dir, priv,
-+				    &gpio_mockup_debugfs_ops);
- 	}
- 
- 	return;
+diff --git a/drivers/pinctrl/nomadik/Kconfig b/drivers/pinctrl/nomadik/Kconfig
+index 49c49fd6b853..d6d849e51c74 100644
+--- a/drivers/pinctrl/nomadik/Kconfig
++++ b/drivers/pinctrl/nomadik/Kconfig
+@@ -1,5 +1,4 @@
+ # SPDX-License-Identifier: GPL-2.0-only
 -
--err:
--	dev_err(dev, "error creating debugfs files\n");
- }
+ if ARCH_U8500
  
- static int gpio_mockup_name_lines(struct device *dev,
-@@ -501,8 +493,6 @@ static int __init gpio_mockup_init(void)
- 	}
- 
- 	gpio_mockup_dbg_dir = debugfs_create_dir("gpio-mockup", NULL);
--	if (IS_ERR_OR_NULL(gpio_mockup_dbg_dir))
--		gpio_mockup_err("error creating debugfs directory\n");
- 
- 	err = platform_driver_register(&gpio_mockup_driver);
- 	if (err) {
+ config PINCTRL_ABX500
+diff --git a/drivers/pinctrl/pinctrl-coh901.c b/drivers/pinctrl/pinctrl-coh901.c
+index d10704cc9318..08b9e909e917 100644
+--- a/drivers/pinctrl/pinctrl-coh901.c
++++ b/drivers/pinctrl/pinctrl-coh901.c
+@@ -1,4 +1,4 @@
+-// SPDX-License-Identifier: GPL-2.0
++// SPDX-License-Identifier: GPL-2.0-only
+ /*
+  * U300 GPIO module.
+  *
+diff --git a/drivers/pinctrl/pinctrl-u300.c b/drivers/pinctrl/pinctrl-u300.c
+index 6d59e3f836df..348423bb39dd 100644
+--- a/drivers/pinctrl/pinctrl-u300.c
++++ b/drivers/pinctrl/pinctrl-u300.c
+@@ -1,4 +1,4 @@
+-// SPDX-License-Identifier: GPL-2.0
++// SPDX-License-Identifier: GPL-2.0-only
+ /*
+  * Driver for the U300 pin controller
+  *
 -- 
-2.22.0
+2.20.1
 
