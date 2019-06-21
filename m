@@ -2,90 +2,79 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 5B4684E7BD
-	for <lists+linux-gpio@lfdr.de>; Fri, 21 Jun 2019 14:06:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0CC1E4E9CE
+	for <lists+linux-gpio@lfdr.de>; Fri, 21 Jun 2019 15:47:45 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726297AbfFUMGZ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 21 Jun 2019 08:06:25 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:46148 "EHLO
-        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726218AbfFUMGY (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 21 Jun 2019 08:06:24 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=6Xy5QXXBwxgPq6XWIndAOwXvjNxtgD83yFkqktAytVU=; b=sk+VLDjQ4XzED7IkqO695oVfl
-        bwg3tzlU1zAZDGoE4t1NXUU64XCbmYfAcTrjgXz4JiU8VdvyR6RV9cJ+jJeqTwh3fjk5M4CsKSpsJ
-        gDpUV1VVVPh21eb2ty1LnJhgKs8wU7C9PWClMZES13+IinHVnUuu53h4fA57Oun8/SUmQ=;
-Received: from [2001:470:1f1d:6b5:7e7a:91ff:fede:4a45] (helo=finisterre.sirena.org.uk)
-        by heliosphere.sirena.org.uk with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <broonie@sirena.org.uk>)
-        id 1heIJ2-0002R1-5K; Fri, 21 Jun 2019 12:06:12 +0000
-Received: by finisterre.sirena.org.uk (Postfix, from userid 1000)
-        id 3689A440046; Fri, 21 Jun 2019 13:06:11 +0100 (BST)
-Date:   Fri, 21 Jun 2019 13:06:10 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Waibel Georg <Georg.Waibel@sensor-technik.de>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        id S1726200AbfFUNrn (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 21 Jun 2019 09:47:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52758 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726135AbfFUNrn (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Fri, 21 Jun 2019 09:47:43 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id F07E2206B7;
+        Fri, 21 Jun 2019 13:47:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1561124862;
+        bh=pNldUrqmJvya/Uwu9bDRmh68i2HgU65QwS4iKeIec5c=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=oCKJQsAxHNH+eZZtSWdAK01ZD+7IvrRz9N0tstd1wnfuSwvYFeU40smNuMdeKIVTq
+         DH83XTjHwc5jLQEnTUBzj5OGl7VYS4dga6Adwzlz0s+q2BAxCGZrUvQGe0EuRQJofj
+         ZmoAtS0rnjTz1nWMkoe70INYL2oQmlD9uyy3Fql8=
+Date:   Fri, 21 Jun 2019 15:47:40 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Cc:     Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        Mauro Carvalho Chehab <mchehab@infradead.org>,
+        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
+        Linus Walleij <linus.walleij@linaro.org>,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Support Opensource <support.opensource@diasemi.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Sangbeom Kim <sbkim73@samsung.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-samsung-soc@vger.kernel.org" 
-        <linux-samsung-soc@vger.kernel.org>
-Subject: Re: [PATCH] gpio: Fix return value mismatch of function
- gpiod_get_from_of_node()
-Message-ID: <20190621120610.GG5316@sirena.org.uk>
-References: <1560938081892.33415@sensor-technik.de>
+        Jean Delvare <jdelvare@suse.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Julia Lawall <Julia.Lawall@lip6.fr>,
+        Gilles Muller <Gilles.Muller@lip6.fr>,
+        Nicolas Palix <nicolas.palix@imag.fr>,
+        Michal Marek <michal.lkml@markovi.net>,
+        linux-gpio@vger.kernel.org, linux-hwmon@vger.kernel.org,
+        intel-wired-lan@lists.osuosl.org, netdev@vger.kernel.org,
+        cocci@systeme.lip6.fr
+Subject: Re: [PATCH v2 09/29] docs: driver-model: convert docs to ReST and
+ rename to *.rst
+Message-ID: <20190621134740.GA26549@kroah.com>
+References: <cover.1560890800.git.mchehab+samsung@kernel.org>
+ <0ac41c7d682452cdbd867c4ae7729b6b34d79c0b.1560890800.git.mchehab+samsung@kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="3d1h++6StbrqEHAg"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1560938081892.33415@sensor-technik.de>
-X-Cookie: Editing is a rewording activity.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <0ac41c7d682452cdbd867c4ae7729b6b34d79c0b.1560890800.git.mchehab+samsung@kernel.org>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+On Tue, Jun 18, 2019 at 05:53:27PM -0300, Mauro Carvalho Chehab wrote:
+> Convert the various documents at the driver-model, preparing
+> them to be part of the driver-api book.
+> 
+> The conversion is actually:
+>   - add blank lines and identation in order to identify paragraphs;
+>   - fix tables markups;
+>   - add some lists markups;
+>   - mark literal blocks;
+>   - adjust title markups.
+> 
+> At its new index.rst, let's add a :orphan: while this is not linked to
+> the main index.rst file, in order to avoid build warnings.
+> 
+> Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+> Acked-by: Jeff Kirsher <jeffrey.t.kirsher@intel.com> # ice
 
---3d1h++6StbrqEHAg
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Now applied, thanks.
 
-On Wed, Jun 19, 2019 at 09:54:48AM +0000, Waibel Georg wrote:
-> In case the requested gpio property is not found in the device tree, some
-> callers of gpiod_get_from_of_node() expect a return value of NULL, others
-> expect -ENOENT.
-> In particular devm_fwnode_get_index_gpiod_from_child() expects -ENOENT.
-> Currently it gets a NULL, which breaks the loop that tries all
-> gpio_suffixes. The result is that a gpio property is not found, even
-> though it is there.
-
-Acked-by: Mark Brown <broonie@kernel.org>
-
---3d1h++6StbrqEHAg
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl0MyDIACgkQJNaLcl1U
-h9Ce/gf/YPxi8n+w5bYAPtpy4hSIHZ/x4vLS/FxaCkM3TdPBix4ZZyClGg1pQMb3
-/VzCXGrjhUGQ7SRmqEAPKnzhZZsPU7QwbMOWwdM6s0tNeTL3qR6s1ZupYXSo3M8P
-X62jCDKfmUFr7ilslBjtgljbsw95j5b5qKBt3rCnsvQP7zYR4go8NLxYD0hrPK2Z
-hnZherbhbmIZo1Dn5n0rpdK7Ci3mXR3E7Mt/qHVHgCR43xHk1QPIChvzzoC/G05Z
-Sz34TnSTJo2qukyYhzL7ThMpaVxgkUKSTGZJsT/p79oO8OHpRrW3QVvoRp9dj2cY
-bYGkcmlParaEOWVxkdXg2j3i4NNbLw==
-=cGhj
------END PGP SIGNATURE-----
-
---3d1h++6StbrqEHAg--
+greg k-h
