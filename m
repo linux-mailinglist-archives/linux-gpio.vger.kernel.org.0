@@ -2,119 +2,204 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 721BE4DD62
-	for <lists+linux-gpio@lfdr.de>; Fri, 21 Jun 2019 00:20:43 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 512294DE0A
+	for <lists+linux-gpio@lfdr.de>; Fri, 21 Jun 2019 02:22:59 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726135AbfFTWUm (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 20 Jun 2019 18:20:42 -0400
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:41203 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726115AbfFTWUl (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 20 Jun 2019 18:20:41 -0400
-Received: by mail-lf1-f66.google.com with SMTP id 136so3534774lfa.8;
-        Thu, 20 Jun 2019 15:20:40 -0700 (PDT)
+        id S1726115AbfFUAW6 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 20 Jun 2019 20:22:58 -0400
+Received: from mail-pf1-f182.google.com ([209.85.210.182]:35153 "EHLO
+        mail-pf1-f182.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725907AbfFUAW6 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 20 Jun 2019 20:22:58 -0400
+Received: by mail-pf1-f182.google.com with SMTP id d126so2604923pfd.2;
+        Thu, 20 Jun 2019 17:22:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=subject:to:cc:references:from:message-id:date:user-agent
          :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=ytb9Muk0Hu4DrHGYX2rIqBECoD0TVDIUCusyYv+Gdsc=;
-        b=idNsJsRUqy6U7ssGXzcjZuc1FUJihynWecsQ3enGHiJ++LY0zIq5p90lEbQ2OBuIyw
-         So+kOFF3AOmbcpIWdfqLZ6uZil+QegcSAW3H9J8+mMRskmA6IitefNRJdjPS6sbaDXMf
-         dto5nWKB838cVBu01Ie7uRayNogeBMlp0qf0VeppgiTqfZhwvY549hZs+HaL2pI4/gQ3
-         8FEvw8fsvQbjhJ4TYqWrCRZM62YvHYKoU3ZEYSqFpo1d4+yjE957R41CNPltOyVXpjiL
-         MtDnRx2OZ5aVBoVE3HW6dt+2NFiuaHWTEmyQ5SneCgqoShIVbA/l746Afgs0KUW0PHta
-         7mpQ==
+        bh=OfKMu2iAcPe+SgaPMfmOs4iKx9Rhc9WcDHM0DB8ECUY=;
+        b=WrE4Q5/u5xOSe2SX5QCQhxapxpvZmotpFqmMeQ1Aeq9d0STZdthw7JU1gCgElZH6Tv
+         TBvPtZxvtLRbHQhQvHbDdidGzvjxEVnXsgFhX60DEcQlPxXkl/A68j+U0BnZ+GQlTOdl
+         wm2X6rASGesN8Cv/QPJb6juZ5ZKVho+DUFzaHfPy+PJjKYZfb02H9NclKmhsCtyzrC2I
+         jK3N82eP2myUBbkJCiw/4nXI0+PlpBZwyjwdX+jaSqUnnCo4WqO+RvgtGzEPgP+mQn+B
+         tT8HrCFkCUVJYlA7JiKG8t1y4pI0NWiDVsnXPVD26v5yifDUvz07KKkOZIM407PZFRAk
+         cqXw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=ytb9Muk0Hu4DrHGYX2rIqBECoD0TVDIUCusyYv+Gdsc=;
-        b=ugM4waIiNwnLNAF4uP7pI1VW9gBtKZ6zlRsZAMiP5MJcEGboTFeq9bo+CfIe144GE9
-         gggD9YsflE2YtQtx8xeWGTgsvGyur4aUHMTrBHCpiabJ5Ikpq0yN/HI2dZ9FDC44bNkP
-         9aVZHoOX0GZ+fL0uFhIuzkrDoGs0Y/2o9vddvAmSYWziCoNYRfpDTPOxKWoKmoDHkd0r
-         NiLWyNYoljmnF9JeVZ8aru5nFfNgjraoTNHWSRsf6260X+CyMFSDSxdN8RUOG311WGDF
-         tismaI9YkubHTAoBQndz5Mb5Wt9suOqjzKe6+GmzUkJsDXSLMx9cy8q+7n0HYvw9cqRe
-         A27w==
-X-Gm-Message-State: APjAAAVP0K3l13k17VgRXwZtyW7dpzq8HPu9HX0loqp7sG6jLp+o8i6z
-        O2XKjDili7JksnKGkRvwLJnrQWM4
-X-Google-Smtp-Source: APXvYqyq6TeRNLzHZ1lWEE6MnNHVP1O/Mj3m8XiADl7OpvF3XHE3TorZFqlO4EXUfE6aN1QSuxNawA==
-X-Received: by 2002:a19:5044:: with SMTP id z4mr5984546lfj.80.1561069239626;
-        Thu, 20 Jun 2019 15:20:39 -0700 (PDT)
-Received: from [192.168.2.145] (ppp91-79-162-197.pppoe.mtu-net.ru. [91.79.162.197])
-        by smtp.googlemail.com with ESMTPSA id i188sm123433lji.4.2019.06.20.15.20.38
+        bh=OfKMu2iAcPe+SgaPMfmOs4iKx9Rhc9WcDHM0DB8ECUY=;
+        b=ZKz+owuAP8hXaENgLLjRZScheBYLK4YXiuTqd0Hf9xOcPelPT2gae6mjNSJmRgAQot
+         /H0UoWzUYs9AZEcLSAYcp9ZOFRV0FxmYD4I7gJ8VkEXqHzcroJyzNSPU/BFi2TC4l9kD
+         F1VyafDslDCYYWZd8BZs0aNThBjxE/ULY9ygyfw6B/Go6S14yNm/P7G9JxDHSAAG7e52
+         MAO6Tn5CRS/fetV11MKarrUNYWldCYHYfxBFvG6wHu9HnTwacCdqh6Rk89TDIUhRYEC+
+         IEOwzcjvdvdTdkxbRB4/TI6hEA0kBCTfuEk7s+HjdRxKhR5XEFlnR4kI4r5+DAMivAgi
+         lRew==
+X-Gm-Message-State: APjAAAXxMEOCZxif/7u7Jhfm0oYzWFf0U9qBAyZFZ7e/FJ/6iLldIkXS
+        ML28v36YjzqkO0eU9tn/NHA=
+X-Google-Smtp-Source: APXvYqxMrrgrDWCb6fLWKGsJn7A4fku1ruQeHqWX9BUEtDebV3r+9CBCQwK8Q6YUlhjaCi4XJ0BS+g==
+X-Received: by 2002:a65:620a:: with SMTP id d10mr15252567pgv.42.1561076577000;
+        Thu, 20 Jun 2019 17:22:57 -0700 (PDT)
+Received: from [192.168.1.70] (c-24-6-192-50.hsd1.ca.comcast.net. [24.6.192.50])
+        by smtp.gmail.com with ESMTPSA id j16sm735757pjz.31.2019.06.20.17.22.55
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 20 Jun 2019 15:20:39 -0700 (PDT)
-Subject: Re: [PATCH 2/2] pinctrl: tegra: Add bitmask support for parked bits
-To:     Sowjanya Komatineni <skomatineni@nvidia.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>
-Cc:     Stephen Warren <swarren@wwwdotorg.org>,
-        Jon Hunter <jonathanh@nvidia.com>,
-        Stefan Agner <stefan@agner.ch>, linux-tegra@vger.kernel.org,
-        linux-gpio@vger.kernel.org
-References: <20190620170350.20224-1-thierry.reding@gmail.com>
- <20190620170350.20224-2-thierry.reding@gmail.com>
- <9324e541-7953-801e-4b7a-2075236ed054@nvidia.com>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <8af10354-1705-15b5-492a-cae8fd3f0537@gmail.com>
-Date:   Fri, 21 Jun 2019 01:20:37 +0300
+        Thu, 20 Jun 2019 17:22:56 -0700 (PDT)
+Subject: Re: [RFC] Initial state for GPIOs
+To:     Martyn Welch <martyn.welch@collabora.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Frank Rowand <frowand.list@gmail.com>
+Cc:     devicetree@vger.kernel.org, linux-gpio@vger.kernel.org,
+        Linus Walleij <linus.walleij@linaro.org>, kernel@collabora.com
+References: <bee53b48c96603ae8970d42bc4bff386b876bc51.camel@collabora.com>
+From:   Frank Rowand <frowand.list@gmail.com>
+Message-ID: <9d9caeea-4f24-7951-3bb6-fa5890744f06@gmail.com>
+Date:   Thu, 20 Jun 2019 17:22:55 -0700
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.1
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-In-Reply-To: <9324e541-7953-801e-4b7a-2075236ed054@nvidia.com>
+In-Reply-To: <bee53b48c96603ae8970d42bc4bff386b876bc51.camel@collabora.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-20.06.2019 20:41, Sowjanya Komatineni пишет:
-> 
-> On 6/20/19 10:03 AM, Thierry Reding wrote:
->> From: Thierry Reding <treding@nvidia.com>
->>
->> Some pin groups have park bits for multiple pins in one register.
->> Support this by turning the parked bit field into a parked bitmask
->> field. If no parked bits are supported, the bitmask can be 0.
->>
->> Update the pingroup table on Tegra210, which is the only generation
->> where this is supported, with the parked bitmask.
->>
->> Signed-off-by: Thierry Reding <treding@nvidia.com>
->> ---
->>   drivers/pinctrl/tegra/pinctrl-tegra.c    |  4 +-
->>   drivers/pinctrl/tegra/pinctrl-tegra.h    |  4 +-
->>   drivers/pinctrl/tegra/pinctrl-tegra114.c |  4 +-
->>   drivers/pinctrl/tegra/pinctrl-tegra124.c |  4 +-
->>   drivers/pinctrl/tegra/pinctrl-tegra194.c |  4 +-
->>   drivers/pinctrl/tegra/pinctrl-tegra20.c  |  6 +--
->>   drivers/pinctrl/tegra/pinctrl-tegra210.c | 60 ++++++++++++------------
->>   drivers/pinctrl/tegra/pinctrl-tegra30.c  |  4 +-
->>   8 files changed, 45 insertions(+), 45 deletions(-)
->>
->> diff --git a/drivers/pinctrl/tegra/pinctrl-tegra.c
->> b/drivers/pinctrl/tegra/pinctrl-tegra.c
->> index 34596b246578..9df30809aaf6 100644
->> --- a/drivers/pinctrl/tegra/pinctrl-tegra.c
->> +++ b/drivers/pinctrl/tegra/pinctrl-tegra.c
->> @@ -613,9 +613,9 @@ static void tegra_pinctrl_clear_parked_bits(struct
->> tegra_pmx *pmx)
->>         for (i = 0; i < pmx->soc->ngroups; ++i) {
->>           g = &pmx->soc->groups[i];
->> -        if (g->parked_bit >= 0) {
->> +        if (g->parked_bitmask > 0) {
->>               val = pmx_readl(pmx, g->mux_bank, g->mux_reg);
->> -            val &= ~(1 << g->parked_bit);
->> +            val &= ~g->parked_bitmask;
->>               pmx_writel(pmx, val, g->mux_bank, g->mux_reg);
->>           }
-> 
-> As parked_bit is now supported with DRV_PINGROUP, need to add check if
-> name preceeds with drive_ and should use drv_bank/drv_reg OR
-> 
-> mux_bank/mux_reg. Otherwise this will cause a crash.
++frank (me)
 
-Yes, you should check whether mux_reg == -1.
+On 6/20/19 6:16 AM, Martyn Welch wrote:
+> Hi Rob, Mark,
+> 
+> Attempts have been made to define an approach for describing the
+> initial state of gpios (direction and value when driven as an output) a
+> number of times in the past, but a concensus on the approach to take
+> seems to have never been reached.
+> 
+> The aim is to be able to describe GPIOs which a definitive use exists
+> (i.e. are routed from an SoC to a pin on another device with a
+> definitive purpose) and which the desired, and possibly required, state
+> of the pin is known. This differs from gpio-hog in that there is an
+> expectation that a consumer of the gpio may appear at a later date,
+> which may take the form of the GPIO being exported to user space.
+> 
+> Previous attempts have suggested a variation of the gpio-hogs[1][2].
+> "gpio-hogs" uses a node for each GPIO containing the "gpio-hogs"
+> property, with which the Linux kernel will act as a consumer,
+> statically setting the provided state on the GPIO line, for example:
+> 
+>         qe_pio_a: gpio-controller@1400 {
+>                 compatible = "fsl,qe-pario-bank-a", 
+> 			     "fsl,qe-pario-bank";
+>                 reg = <0x1400 0x18>;
+>                 gpio-controller;
+>                 #gpio-cells = <2>;
+> 
+>                 line_b {
+>                         gpio-hog;
+>                         gpios = <6 0>;
+>                         output-low;
+>                         line-name = "foo-bar-gpio";
+>                 };
+>         };
+> 
+> It had been suggested to either replace "gpio-hogs" with "gpio-initval" 
+> or to include a node without the "gpio-hogs" property to set an inital
+> state, but allow another consumer to come along at a later date.
+> 
+> A previous related attempt to upstream a "gpio-switch" consumer[3] also
+> took the approach of defining nodes in the device tree. The
+> conversation pointed towards a suggestion of using nodes with
+> compatible properties, for example:
+> 
+>         &gpiochip {
+>                 some_led {
+>                         compatible = "gpio-leds";
+>                         default-state = "on";
+>                         gpios = <3 0>;
+>                         line-name = "leda";
+>                 };
+> 
+>                 some_switch {
+>                         compatible = "gpio-switch", "gpio-initval";
+>                         gpios = <4 0>;
+>                         line-name = "switch1";
+> 
+>                         /*
+> 			 * This is used by gpio-initval in case 
+> 			 * gpio-switch is not implemented
+> 			 */
+>                         output-low;
+>                 };
+> 
+>                 some_interrupt {
+>                         gpios = <5 0>;
+>                         line-name = "some_interrupt_line";
+>                 };
+> 
+>                 line_b {
+>                         gpios = <6 0>;
+>                         line-name = "line-b";
+>                 };
+>         };
+> 
+> An alternative that has been briefly raised[4] when I approached the
+> subject recently on the GPIO mailing list is to add a property to the
+> controller node, rather than child nodes, that listed the expected
+> initial states of the pins as an array, much like the line names are
+> handled through "gpio-line-names". I'm not quite sure how it would best
+> to treat offsets where no special initial state is required (gpio-line-
+> names uses empty strings). Something like this?:
+> 
+> --- gpio.h
+>         /* Bit 4 express initial state */
+>         #define GPIO_INPUT 0
+>         #define GPIO_OUTPUT 16
+> 
+>         /* Bit 5 express initial state */
+>         #define GPIO_INITIAL_LOW 0
+>         #define GPIO_INITIAL_HIGH 32
+>         
+>         #define GPIO_OUTPUT_LOW (GPIO_OUTPUT | GPIO_INITIAL_LOW)
+>         #define GPIO_OUTPUT_HIGH (GPIO_OUTPUT | GPIO_INITIAL_HIGH)
+> ---
+> 
+> --- device tree
+>         &gpiochip {
+>                 gpio-line-names = "", "", "", "widget_en",
+> 			"widget_signal";
+>                 gpio-initial-states = <>, <>, <>,
+> 			<GPIO_OUTPUT_HIGH | GPIO_LINE_OPEN_DRAIN>,
+> 			<GPIO_INPUT | GPIO_ACTIVE_LOW>;
+>         };
+> ---        
+> 
+> An alternative option may be to provide the offset as the first item
+> (though this is then different from "gpio-line-names"), so:
+> 
+> --- device tree
+>         &gpiochip {
+>                 gpio-line-names = "", "", "", "widget_en",
+> 			"widget_signal";
+>                 gpio-initial-states =
+> 			<3 GPIO_OUTPUT_HIGH | GPIO_LINE_OPEN_DRAIN>,
+> 			<4 GPIO_INPUT | GPIO_ACTIVE_LOW>;
+>         };
+> ---        
+> 
+> I'm interested in understanding what form would be acceptable as part
+> of the device tree binding.
+> 
+> Thanks in advance,
+> 
+> Martyn
+> 
+> [1] https://marc.info/?l=devicetree&m=145621411916777&w=2
+> [2] https://patchwork.ozlabs.org/patch/545493/
+> [3] https://lore.kernel.org/patchwork/patch/624195/
+> [4] https://www.spinics.net/lists/linux-gpio/msg39810.html
+> 
+> 
+
