@@ -2,204 +2,140 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 512294DE0A
-	for <lists+linux-gpio@lfdr.de>; Fri, 21 Jun 2019 02:22:59 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8B23F4DF8E
+	for <lists+linux-gpio@lfdr.de>; Fri, 21 Jun 2019 06:20:37 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726115AbfFUAW6 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 20 Jun 2019 20:22:58 -0400
-Received: from mail-pf1-f182.google.com ([209.85.210.182]:35153 "EHLO
-        mail-pf1-f182.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725907AbfFUAW6 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 20 Jun 2019 20:22:58 -0400
-Received: by mail-pf1-f182.google.com with SMTP id d126so2604923pfd.2;
-        Thu, 20 Jun 2019 17:22:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=OfKMu2iAcPe+SgaPMfmOs4iKx9Rhc9WcDHM0DB8ECUY=;
-        b=WrE4Q5/u5xOSe2SX5QCQhxapxpvZmotpFqmMeQ1Aeq9d0STZdthw7JU1gCgElZH6Tv
-         TBvPtZxvtLRbHQhQvHbDdidGzvjxEVnXsgFhX60DEcQlPxXkl/A68j+U0BnZ+GQlTOdl
-         wm2X6rASGesN8Cv/QPJb6juZ5ZKVho+DUFzaHfPy+PJjKYZfb02H9NclKmhsCtyzrC2I
-         jK3N82eP2myUBbkJCiw/4nXI0+PlpBZwyjwdX+jaSqUnnCo4WqO+RvgtGzEPgP+mQn+B
-         tT8HrCFkCUVJYlA7JiKG8t1y4pI0NWiDVsnXPVD26v5yifDUvz07KKkOZIM407PZFRAk
-         cqXw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=OfKMu2iAcPe+SgaPMfmOs4iKx9Rhc9WcDHM0DB8ECUY=;
-        b=ZKz+owuAP8hXaENgLLjRZScheBYLK4YXiuTqd0Hf9xOcPelPT2gae6mjNSJmRgAQot
-         /H0UoWzUYs9AZEcLSAYcp9ZOFRV0FxmYD4I7gJ8VkEXqHzcroJyzNSPU/BFi2TC4l9kD
-         F1VyafDslDCYYWZd8BZs0aNThBjxE/ULY9ygyfw6B/Go6S14yNm/P7G9JxDHSAAG7e52
-         MAO6Tn5CRS/fetV11MKarrUNYWldCYHYfxBFvG6wHu9HnTwacCdqh6Rk89TDIUhRYEC+
-         IEOwzcjvdvdTdkxbRB4/TI6hEA0kBCTfuEk7s+HjdRxKhR5XEFlnR4kI4r5+DAMivAgi
-         lRew==
-X-Gm-Message-State: APjAAAXxMEOCZxif/7u7Jhfm0oYzWFf0U9qBAyZFZ7e/FJ/6iLldIkXS
-        ML28v36YjzqkO0eU9tn/NHA=
-X-Google-Smtp-Source: APXvYqxMrrgrDWCb6fLWKGsJn7A4fku1ruQeHqWX9BUEtDebV3r+9CBCQwK8Q6YUlhjaCi4XJ0BS+g==
-X-Received: by 2002:a65:620a:: with SMTP id d10mr15252567pgv.42.1561076577000;
-        Thu, 20 Jun 2019 17:22:57 -0700 (PDT)
-Received: from [192.168.1.70] (c-24-6-192-50.hsd1.ca.comcast.net. [24.6.192.50])
-        by smtp.gmail.com with ESMTPSA id j16sm735757pjz.31.2019.06.20.17.22.55
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 20 Jun 2019 17:22:56 -0700 (PDT)
-Subject: Re: [RFC] Initial state for GPIOs
-To:     Martyn Welch <martyn.welch@collabora.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Frank Rowand <frowand.list@gmail.com>
-Cc:     devicetree@vger.kernel.org, linux-gpio@vger.kernel.org,
-        Linus Walleij <linus.walleij@linaro.org>, kernel@collabora.com
-References: <bee53b48c96603ae8970d42bc4bff386b876bc51.camel@collabora.com>
-From:   Frank Rowand <frowand.list@gmail.com>
-Message-ID: <9d9caeea-4f24-7951-3bb6-fa5890744f06@gmail.com>
-Date:   Thu, 20 Jun 2019 17:22:55 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        id S1726059AbfFUEUg (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 21 Jun 2019 00:20:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47590 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725818AbfFUEUg (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Fri, 21 Jun 2019 00:20:36 -0400
+Received: from mail-wr1-f46.google.com (mail-wr1-f46.google.com [209.85.221.46])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6E63D2089E;
+        Fri, 21 Jun 2019 04:20:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1561090835;
+        bh=prwIjTMabwEr3qse8OU5sFHLYf7QIq1SDJ61Unl5cu4=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=PUjtvdYnjRZ85n2+boZZ9k0pcAQpl5gbLH4chdr3VOnzC2ymZ6RTrHnXvI+Gfwi82
+         R3Wq3QS2QMN3ZaDeflueVH8b6m9BqBc9+mtgKpMq5r+KQilk3j5UqxZysFK9h2NWpM
+         C7IjdiJujJReLSrX1ny21nxoQJCsa4+GoIF4tzuc=
+Received: by mail-wr1-f46.google.com with SMTP id k11so5127991wrl.1;
+        Thu, 20 Jun 2019 21:20:35 -0700 (PDT)
+X-Gm-Message-State: APjAAAWcNySek6iTkyGD8yWIfBG7CSVzkBNaHpPWHsdiuqx6A3yk4N29
+        88EHVlWMt5P6BMjkMUUAQZHbFrY9d48k0kIMMJ4=
+X-Google-Smtp-Source: APXvYqyem6YyhVDjXx8VqeVnlAnT6mMzfo+2vIgBSpxxGHHIA0jqkRTx1R2WW6U4OzYACci7P3HmkWXjKBhpGjfJgS8=
+X-Received: by 2002:adf:afd5:: with SMTP id y21mr92511949wrd.12.1561090834068;
+ Thu, 20 Jun 2019 21:20:34 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <bee53b48c96603ae8970d42bc4bff386b876bc51.camel@collabora.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20190429035515.73611-1-drinkcat@chromium.org> <20190429035515.73611-3-drinkcat@chromium.org>
+In-Reply-To: <20190429035515.73611-3-drinkcat@chromium.org>
+From:   Sean Wang <sean.wang@kernel.org>
+Date:   Thu, 20 Jun 2019 21:20:22 -0700
+X-Gmail-Original-Message-ID: <CAGp9LzqyRQ0knQ8+NanTAC0VVqBudAFPuCQJiyymmabaT1Hyfw@mail.gmail.com>
+Message-ID: <CAGp9LzqyRQ0knQ8+NanTAC0VVqBudAFPuCQJiyymmabaT1Hyfw@mail.gmail.com>
+Subject: Re: [PATCH 2/2] pinctrl: mediatek: Update cur_mask in mask/mask ops
+To:     Nicolas Boichat <drinkcat@chromium.org>
+Cc:     "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Chuanjia Liu <Chuanjia.Liu@mediatek.com>,
+        Evan Green <evgreen@chromium.org>,
+        Stephen Boyd <swboyd@chromium.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-+frank (me)
+Hi, Nicolas
 
-On 6/20/19 6:16 AM, Martyn Welch wrote:
-> Hi Rob, Mark,
-> 
-> Attempts have been made to define an approach for describing the
-> initial state of gpios (direction and value when driven as an output) a
-> number of times in the past, but a concensus on the approach to take
-> seems to have never been reached.
-> 
-> The aim is to be able to describe GPIOs which a definitive use exists
-> (i.e. are routed from an SoC to a pin on another device with a
-> definitive purpose) and which the desired, and possibly required, state
-> of the pin is known. This differs from gpio-hog in that there is an
-> expectation that a consumer of the gpio may appear at a later date,
-> which may take the form of the GPIO being exported to user space.
-> 
-> Previous attempts have suggested a variation of the gpio-hogs[1][2].
-> "gpio-hogs" uses a node for each GPIO containing the "gpio-hogs"
-> property, with which the Linux kernel will act as a consumer,
-> statically setting the provided state on the GPIO line, for example:
-> 
->         qe_pio_a: gpio-controller@1400 {
->                 compatible = "fsl,qe-pario-bank-a", 
-> 			     "fsl,qe-pario-bank";
->                 reg = <0x1400 0x18>;
->                 gpio-controller;
->                 #gpio-cells = <2>;
-> 
->                 line_b {
->                         gpio-hog;
->                         gpios = <6 0>;
->                         output-low;
->                         line-name = "foo-bar-gpio";
->                 };
->         };
-> 
-> It had been suggested to either replace "gpio-hogs" with "gpio-initval" 
-> or to include a node without the "gpio-hogs" property to set an inital
-> state, but allow another consumer to come along at a later date.
-> 
-> A previous related attempt to upstream a "gpio-switch" consumer[3] also
-> took the approach of defining nodes in the device tree. The
-> conversation pointed towards a suggestion of using nodes with
-> compatible properties, for example:
-> 
->         &gpiochip {
->                 some_led {
->                         compatible = "gpio-leds";
->                         default-state = "on";
->                         gpios = <3 0>;
->                         line-name = "leda";
->                 };
-> 
->                 some_switch {
->                         compatible = "gpio-switch", "gpio-initval";
->                         gpios = <4 0>;
->                         line-name = "switch1";
-> 
->                         /*
-> 			 * This is used by gpio-initval in case 
-> 			 * gpio-switch is not implemented
-> 			 */
->                         output-low;
->                 };
-> 
->                 some_interrupt {
->                         gpios = <5 0>;
->                         line-name = "some_interrupt_line";
->                 };
-> 
->                 line_b {
->                         gpios = <6 0>;
->                         line-name = "line-b";
->                 };
->         };
-> 
-> An alternative that has been briefly raised[4] when I approached the
-> subject recently on the GPIO mailing list is to add a property to the
-> controller node, rather than child nodes, that listed the expected
-> initial states of the pins as an array, much like the line names are
-> handled through "gpio-line-names". I'm not quite sure how it would best
-> to treat offsets where no special initial state is required (gpio-line-
-> names uses empty strings). Something like this?:
-> 
-> --- gpio.h
->         /* Bit 4 express initial state */
->         #define GPIO_INPUT 0
->         #define GPIO_OUTPUT 16
-> 
->         /* Bit 5 express initial state */
->         #define GPIO_INITIAL_LOW 0
->         #define GPIO_INITIAL_HIGH 32
->         
->         #define GPIO_OUTPUT_LOW (GPIO_OUTPUT | GPIO_INITIAL_LOW)
->         #define GPIO_OUTPUT_HIGH (GPIO_OUTPUT | GPIO_INITIAL_HIGH)
+On Sun, Apr 28, 2019 at 8:55 PM Nicolas Boichat <drinkcat@chromium.org> wrote:
+>
+> During suspend/resume, mtk_eint_mask may be called while
+> wake_mask is active. For example, this happens if a wake-source
+> with an active interrupt handler wakes the system:
+> irq/pm.c:irq_pm_check_wakeup would disable the interrupt, so
+> that it can be handled later on in the resume flow.
+>
+> However, this may happen before mtk_eint_do_resume is called:
+> in this case, wake_mask is loaded, and cur_mask is restored
+> from an older copy, re-enabling the interrupt, and causing
+> an interrupt storm (especially for level interrupts).
+>
+> Instead, we just record mask/unmask changes in cur_mask. This
+> also avoids the need to read the current mask in eint_do_suspend,
+> and we can remove mtk_eint_chip_read_mask function.
+>
+
+The change is worth rewording the commit message you added above as an instance
+and adding Fixes tag as a fixup to mean you're fixing the existing
+problem in the driver.
+
+And then Acked-by: Sean Wang <sean.wang@kernel.org>
+
+> Signed-off-by: Nicolas Boichat <drinkcat@chromium.org>
 > ---
-> 
-> --- device tree
->         &gpiochip {
->                 gpio-line-names = "", "", "", "widget_en",
-> 			"widget_signal";
->                 gpio-initial-states = <>, <>, <>,
-> 			<GPIO_OUTPUT_HIGH | GPIO_LINE_OPEN_DRAIN>,
-> 			<GPIO_INPUT | GPIO_ACTIVE_LOW>;
->         };
-> ---        
-> 
-> An alternative option may be to provide the offset as the first item
-> (though this is then different from "gpio-line-names"), so:
-> 
-> --- device tree
->         &gpiochip {
->                 gpio-line-names = "", "", "", "widget_en",
-> 			"widget_signal";
->                 gpio-initial-states =
-> 			<3 GPIO_OUTPUT_HIGH | GPIO_LINE_OPEN_DRAIN>,
-> 			<4 GPIO_INPUT | GPIO_ACTIVE_LOW>;
->         };
-> ---        
-> 
-> I'm interested in understanding what form would be acceptable as part
-> of the device tree binding.
-> 
-> Thanks in advance,
-> 
-> Martyn
-> 
-> [1] https://marc.info/?l=devicetree&m=145621411916777&w=2
-> [2] https://patchwork.ozlabs.org/patch/545493/
-> [3] https://lore.kernel.org/patchwork/patch/624195/
-> [4] https://www.spinics.net/lists/linux-gpio/msg39810.html
-> 
-> 
-
+>  drivers/pinctrl/mediatek/mtk-eint.c | 18 ++++--------------
+>  1 file changed, 4 insertions(+), 14 deletions(-)
+>
+> diff --git a/drivers/pinctrl/mediatek/mtk-eint.c b/drivers/pinctrl/mediatek/mtk-eint.c
+> index 737385e86beb807..7e526bcf5e0b55c 100644
+> --- a/drivers/pinctrl/mediatek/mtk-eint.c
+> +++ b/drivers/pinctrl/mediatek/mtk-eint.c
+> @@ -113,6 +113,8 @@ static void mtk_eint_mask(struct irq_data *d)
+>         void __iomem *reg = mtk_eint_get_offset(eint, d->hwirq,
+>                                                 eint->regs->mask_set);
+>
+> +       eint->cur_mask[d->hwirq >> 5] &= ~mask;
+> +
+>         writel(mask, reg);
+>  }
+>
+> @@ -123,6 +125,8 @@ static void mtk_eint_unmask(struct irq_data *d)
+>         void __iomem *reg = mtk_eint_get_offset(eint, d->hwirq,
+>                                                 eint->regs->mask_clr);
+>
+> +       eint->cur_mask[d->hwirq >> 5] |= mask;
+> +
+>         writel(mask, reg);
+>
+>         if (eint->dual_edge[d->hwirq])
+> @@ -217,19 +221,6 @@ static void mtk_eint_chip_write_mask(const struct mtk_eint *eint,
+>         }
+>  }
+>
+> -static void mtk_eint_chip_read_mask(const struct mtk_eint *eint,
+> -                                   void __iomem *base, u32 *buf)
+> -{
+> -       int port;
+> -       void __iomem *reg;
+> -
+> -       for (port = 0; port < eint->hw->ports; port++) {
+> -               reg = base + eint->regs->mask + (port << 2);
+> -               buf[port] = ~readl_relaxed(reg);
+> -               /* Mask is 0 when irq is enabled, and 1 when disabled. */
+> -       }
+> -}
+> -
+>  static int mtk_eint_irq_request_resources(struct irq_data *d)
+>  {
+>         struct mtk_eint *eint = irq_data_get_irq_chip_data(d);
+> @@ -384,7 +375,6 @@ static void mtk_eint_irq_handler(struct irq_desc *desc)
+>
+>  int mtk_eint_do_suspend(struct mtk_eint *eint)
+>  {
+> -       mtk_eint_chip_read_mask(eint, eint->base, eint->cur_mask);
+>         mtk_eint_chip_write_mask(eint, eint->base, eint->wake_mask);
+>
+>         return 0;
+> --
+> 2.21.0.593.g511ec345e18-goog
+>
