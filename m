@@ -2,65 +2,86 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id EDD104F6E4
-	for <lists+linux-gpio@lfdr.de>; Sat, 22 Jun 2019 18:28:56 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B59104F9E5
+	for <lists+linux-gpio@lfdr.de>; Sun, 23 Jun 2019 06:39:04 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726424AbfFVQ2x (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sat, 22 Jun 2019 12:28:53 -0400
-Received: from sonic301-3.consmr.mail.bf2.yahoo.com ([74.6.129.42]:42421 "EHLO
-        sonic301-3.consmr.mail.bf2.yahoo.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726370AbfFVQ2u (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>);
-        Sat, 22 Jun 2019 12:28:50 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1561220929; bh=3fXYToOZXvh5MOJ1JSawYDThjnynC/Ekt2gucIg6zZg=; h=Date:From:Reply-To:Subject:From:Subject; b=FwrBLUl7u665XwQeVPTq5hUQ4Ptv5qPcwgE0MfCyAxPjQW66W+sBKlTITy95Xiak8M/9mL3k87XvuhuNYmdzjOXFqAsXXJ7ZeR0tr0xQhaR4qpp9+I79zHB4JVXDeOtUnrv/ni1DEn3m49tSMIml9+1SbDvUcui/xLYzcB7mOtvlwJJC6bBkcbOwJW8drH7WnSKYQVlUvO9PRg8+IWYABo4m/HoTrmg3JSd7+tfq1bmdsTjreC9G6uwJClVG1p8XyGEOijmNqXv9Ivunj8UzUvxVldTIg/taTAKdSlSG3i+xbnz28LKLpxSK2+M63p52Vf+hNJ0OycyVj1TkO+H8OQ==
-X-YMail-OSG: BClZlNgVM1mJa1pSUAMlnjmDwJQUKDn0osVKNVIeZ6AC0JZQ8NzrV_.P2vPToBw
- lk4l1yMYy0P1wu9iKWHPF1vwWtED.NCcY6jE.jXdELnZdUngnDzcX.f1Ik7TcPjN._6dUftCNvSG
- 0ilPDIIh6JKut3rld3EDzfXqVTEprJFL10dLfXEmdNXy8_9HzWnLN9Uxxh6FWr8nj4DbExyF48M8
- b8CzHn8AtWzh0fDjJqMRXb5UR1L1fHF.mq4wk_41bl8VHLLREhO8D9AiMB_Iou.TvP.xektI4Uzf
- lBotEg54S8nbe5a5a2eamKaLSiD6XaCIzSQkrGwkgk9qzk7J4361PG1C2lAWhSULJjGYH.uKi9SH
- 8omXh8MvwuZmVU7umqXbA4eIFWV8ruRR3qRFWtA.2B0Eer.D49EbNovsAu.wRPm8yYyL6YMdaoys
- 3vYAkjype1yPgR0gHAH3zObnNPMrtMzQfsTzcaha59dNYsVWPRo5EvcFgAIKXVIUqnKnooWuODru
- O4SgrdrM8PGEZGs5dJS.h.dJB3gwQ.0I1wf1Q_CLgJhbPMrumaMiWl3ifhN9G_CCxrGhRPRltqdB
- RyAvAXGENXKEJswzM.sYWHkLQyblOWaGX5TLKzeDGaJCZVu7CtZvQ0aNcyWtqrf4SAtE7MK9SqUH
- 7phABBxeBrGdyDkvdUQOX_EPh25.Hb3SncDKllMEIHjvEdwbQcMGmqMEDVCI8Jh0nfgpjh259ODl
- q.bGW_sz63_QvjPWXygjUQ4RzfXiei1bHIkvbkPAHc04dS.Qr8LP1Jyxp2QD0wtNtJgo5RScK99X
- P5NPqcNAR8eez8YgXpk3cKLQCR9JSylhL6QyUVACODhQSLMO_l73eEDpWzNQUeEQLrEwA53TFUO9
- BXx4lR26gADp4OeWMANR3pTNDn8J7Oc5G1l.tF8AqVFtdsoB5vgCdw0tzoX9_22cJzNNteihaN9H
- ktOSXaCeUY26x9DWNkYi7HTOCc9F4vHnioRwelB9Lv.KGDeGPUJBBPmfcn0xXC8MB2YTlUFeVHzN
- FJsHhvFz9eJx.VwEAdhJs3DHW6xmbj9a_RSOf.BoLPiAvMAdoBe_1sVY8nFOqhuBwpkbj17TOzIW
- ts0JEWafkyantIFw8kEnIr0AHDEAK4aB1fgOVS8TQpbEaj2tB4pKHPa4OOjXszQAPBozr7PYVj2f
- 6AcwHFYhcmsrFfliX20p43dgFMRY8GMXgvUWeegBAeAuOTxCoUC9WvAdL
-Received: from sonic.gate.mail.ne1.yahoo.com by sonic301.consmr.mail.bf2.yahoo.com with HTTP; Sat, 22 Jun 2019 16:28:49 +0000
-Date:   Sat, 22 Jun 2019 16:28:46 +0000 (UTC)
-From:   "Miss.Fatima Yusuf" <fatimayusuf5@outlook.fr>
-Reply-To: miss.fmayusuf11@gmail.com
-Message-ID: <270302503.296556.1561220926635@mail.yahoo.com>
-Subject: From:Miss: Fatima Yusuf.
+        id S1726050AbfFWEir (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sun, 23 Jun 2019 00:38:47 -0400
+Received: from hermes.aosc.io ([199.195.250.187]:52095 "EHLO hermes.aosc.io"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725268AbfFWEir (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Sun, 23 Jun 2019 00:38:47 -0400
+Received: from localhost (localhost [127.0.0.1]) (Authenticated sender: icenowy@aosc.io)
+        by hermes.aosc.io (Postfix) with ESMTPSA id 7AB836212D;
+        Sun, 23 Jun 2019 04:38:42 +0000 (UTC)
+From:   Icenowy Zheng <icenowy@aosc.io>
+To:     Rob Herring <robh+dt@kernel.org>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Linus Walleij <linus.walleij@linaro.org>
+Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-gpio@vger.kernel.org, linux-sunxi@googlegroups.com,
+        Icenowy Zheng <icenowy@aosc.io>
+Subject: [PATCH v3 0/9] Support for Allwinner V3/S3L and Sochip S3
+Date:   Sun, 23 Jun 2019 12:37:52 +0800
+Message-Id: <20190623043801.14040-1-icenowy@aosc.io>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-To:     unlisted-recipients:; (no To-header on input)
+Content-Transfer-Encoding: 8bit
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+This patchset tries to add support for Allwinner V3/S3L and Sochip S3.
 
+Allwinner V3/V3s/S3L and Sochip S3 share the same die, but with
+different package. V3 is BGA w/o co-packaged DDR, V3s is QFP w/ DDR2,
+S3L is BGA w/ DDR2 and S3 is BGA w/ DDR3. (S3 and S3L is compatible
+for pinout, but because of different DDR, DDR voltage is different
+between the two variants). Because of the pin count of V3s is
+restricted due to the package, some pins are not bound on V3s, but
+they're bound on V3/S3/S3L.
 
-From:Miss: Fatima Yusuf.
+Currently the kernel is only prepared for the features available on V3s.
+This patchset adds the features missing on V3s for using them on
+V3/S3/S3L, and add bindings for V3/S3/S3L. It also adds a S3 SoM by
+Sipeed, called Lichee Zero Plus.
 
-For sure this mail would definitely come to you as a surprise, but do take your good time to go through it, My name is Ms. Fatima Yusuf,i am from Ivory Coast.
+Icenowy Zheng (9):
+  pinctrl: sunxi: v3s: introduce support for V3
+  clk: sunxi-ng: v3s: add the missing PLL_DDR1
+  dt-bindings: clk: sunxi-ccu: add compatible string for V3 CCU
+  clk: sunxi-ng: v3s: add Allwinner V3 support
+  dt-bindings: vendor-prefixes: add SoChip
+  ARM: sunxi: dts: s3/s3l/v3: add DTSI files for S3/S3L/V3 SoCs
+  dt-bindings: vendor-prefixes: add Sipeed
+  dt-bindings: arm: sunxi: add binding for Lichee Zero Plus core board
+  ARM: dts: sun8i: s3: add devicetree for Lichee zero plus w/ S3
 
-I lost my parents a year and couple of months ago. My father was a serving director of the Agro-exporting board until his death. He was assassinated by his business partners.Before his death, he made a deposit of US$9.7 Million Dollars here in Cote d'ivoire which was for the purchase of cocoa processing machine and development of another factory before his untimely death.
+ .../devicetree/bindings/arm/sunxi.yaml        |   5 +
+ .../clock/allwinner,sun4i-a10-ccu.yaml        |   1 +
+ .../devicetree/bindings/vendor-prefixes.yaml  |   4 +
+ arch/arm/boot/dts/Makefile                    |   1 +
+ .../boot/dts/sun8i-s3-lichee-zero-plus.dts    |   8 +
+ .../dts/sun8i-s3-s3l-lichee-zero-plus.dtsi    |  44 ++
+ arch/arm/boot/dts/sun8i-s3.dtsi               |   6 +
+ arch/arm/boot/dts/sun8i-s3l.dtsi              |   6 +
+ arch/arm/boot/dts/sun8i-v3.dtsi               |  14 +
+ drivers/clk/sunxi-ng/ccu-sun8i-v3s.c          | 244 ++++++++-
+ drivers/clk/sunxi-ng/ccu-sun8i-v3s.h          |   6 +-
+ drivers/pinctrl/sunxi/pinctrl-sun8i-v3s.c     | 473 ++++++++++++++----
+ drivers/pinctrl/sunxi/pinctrl-sunxi.h         |   2 +
+ include/dt-bindings/clock/sun8i-v3s-ccu.h     |   4 +
+ include/dt-bindings/reset/sun8i-v3s-ccu.h     |   3 +
+ 15 files changed, 704 insertions(+), 117 deletions(-)
+ create mode 100644 arch/arm/boot/dts/sun8i-s3-lichee-zero-plus.dts
+ create mode 100644 arch/arm/boot/dts/sun8i-s3-s3l-lichee-zero-plus.dtsi
+ create mode 100644 arch/arm/boot/dts/sun8i-s3.dtsi
+ create mode 100644 arch/arm/boot/dts/sun8i-s3l.dtsi
+ create mode 100644 arch/arm/boot/dts/sun8i-v3.dtsi
 
-Being that this part of the world experiences political and crises time without number, there is no guarantee of lives and properties. I cannot invest this money here any long, despite the fact it had been my late father's industrial plans.
+-- 
+2.21.0
 
-I want you to do me a favor to receive this funds into your country or any safer place as the beneficiary, I have plans to invest this money in continuation with the investment vision of my late father, but not in this place again rather in your country. I have the vision of going into real estate and industrial production or any profitable business venture.
-
-I will be ready to compensate you with 20% of the total Amount, now all my hope is banked on you and i really wants to invest this money in your country, where there is stability of Government, political and economic welfare.
-
-My greatest worry now is how to move out of this country because my uncle is threatening to kill me as he killed my father,Please do not let anybody hear about this, it is between me and you alone because of my security reason.
-
-I am waiting to hear from you.
-Yours Sincerely,
-Miss.Fatima Yusuf.
