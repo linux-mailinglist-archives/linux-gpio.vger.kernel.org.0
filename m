@@ -2,54 +2,53 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 65E6451E5C
-	for <lists+linux-gpio@lfdr.de>; Tue, 25 Jun 2019 00:34:44 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D0CF951E62
+	for <lists+linux-gpio@lfdr.de>; Tue, 25 Jun 2019 00:36:52 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726422AbfFXWen (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 24 Jun 2019 18:34:43 -0400
-Received: from mail-lf1-f67.google.com ([209.85.167.67]:39665 "EHLO
-        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726388AbfFXWen (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 24 Jun 2019 18:34:43 -0400
-Received: by mail-lf1-f67.google.com with SMTP id p24so11183910lfo.6
-        for <linux-gpio@vger.kernel.org>; Mon, 24 Jun 2019 15:34:42 -0700 (PDT)
+        id S1726422AbfFXWgw (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 24 Jun 2019 18:36:52 -0400
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:43432 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726397AbfFXWgw (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 24 Jun 2019 18:36:52 -0400
+Received: by mail-lj1-f195.google.com with SMTP id 16so14171481ljv.10
+        for <linux-gpio@vger.kernel.org>; Mon, 24 Jun 2019 15:36:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=y8eI1qO6AFmOqg+DGNHTfaHm/FdxuE7uuuEzH8JMWmA=;
-        b=QSe0zP7x1PhqeFm5Pa1g378mzzZ9F4w1zBJn8qZeqnRDI9KV/yXGJRMQzdGKm8ZUgM
-         ixEcJO5JNi7MHG9Ry+Xmb17GQNKPjDakyNvN6vMbO3YS+BkBvuIF79xwNWqUM/hmufCH
-         1h2TXBqR7yMD4Bt5H3LvAyESbfAVNfgYjX5REfOYMLCxcd3rL6Xvka5TDM7zoSZH7tw+
-         FZJTaOQ4evD0HamcazF6LA7ghv7gapAci8IVBNM8TYj2DLbj3alkIPZMvTKbZznDfxiL
-         6OuJCyyot+2ls0X0JcFnRBfcW2kFMaZyaUs775cOcEXOOCGezhTRgUDYaR+3ZeZPt1Xj
-         +4NA==
+        bh=J6mvSj9HIBsk8EjLGW0hTzAQhZMarT0YB1g8io943NY=;
+        b=sUkqpU7CRPJa8WBRq9dbfWldit0lSlp++W1TdZzD9bsloqAAyiyEYnZaN9j8hCqVWl
+         GnY52VMS/EfwfuyHSPAbY8sXyWOlrq9hBe0WvJOkwiwUmSTxlvXQTQQD3hzW71xRMNlW
+         ARtdmVHxPGokOAbn1kaJQ1A6sdL/+y6PVTl+Sq1TETju8ACSE4oSpHruEkgvJmwHDOt4
+         l7eCeJjOSarS8Vu/mcSXrgxukP1PUYswqgCYOcFqC6ULrw6sb2Cwy4GF79yDm/UtFml9
+         TGKYDZYVHNSjsjlPkUPtS1QeFDe/laWx10l4FrczaNx+MKYryXO7+IBoAO4pb/KdpUXF
+         F3zw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=y8eI1qO6AFmOqg+DGNHTfaHm/FdxuE7uuuEzH8JMWmA=;
-        b=riEOWDhqp/Le2hzsCp50n+zhRYvQ/S59VY7HLLo9zKfrgjF8N4Qtipijw+bdDa+8nn
-         L12z1ykrtjXHHQpEZ8bGeq3ghOfuEK/bFBqkD0Bu4qCak9YZzmFijRirBPtotyjBEKeS
-         vSMOt1zV4W02LsB5zosauFypMLQpF+GzZjD028oXXr5PY8gbQqLootxYcMsOpQsKoYAk
-         GJXFXa4m7ugFexsH9BH2IkgvHY82rAQxK8wYwvvA8Q5MPitFnuMZ3et1RsIyofIJyQ9B
-         jChiW8kygK04PJiVjGkyUlCveYy1uYGnjnyAsJWP2/n11mn9H/c9590zRFH6Ik4D73eD
-         /JKA==
-X-Gm-Message-State: APjAAAU1otVI1ds9cKfBKuiyO6gKa7j4L8DAhN9mLyFRqm8+Zy273EyL
-        jREzGnaBCkvrq2xqkSvJZA8kqThc8fG1OB/ww0NrYg==
-X-Google-Smtp-Source: APXvYqxFHSmad1x1wi9PdCcVTpSY3IPLSnbObJWPfhnJk0sD/mXvfU9nvhf52ekQIxfe3n4jChqssFab3rPEkOYHe0M=
-X-Received: by 2002:ac2:598d:: with SMTP id w13mr74724539lfn.165.1561415681723;
- Mon, 24 Jun 2019 15:34:41 -0700 (PDT)
+        bh=J6mvSj9HIBsk8EjLGW0hTzAQhZMarT0YB1g8io943NY=;
+        b=Pmp47t3ImNcUEQJXFM0h8IYFKLbNSuqQZZTaOs3oyKgackhjNhw8COayJ1C/0yMWix
+         4io2SmBXbBgBO0V7JroVDNPFtEB6Go7v6fpTwHc75bRq5ZG8qlFVyHQGSuUkFOtw0Bcx
+         D79G3XXVp1Rt5zF0I+lhsM4p3R2cZWmLv4GLreilHeKVJ6DDkggWoXVW4FilaCHDqv52
+         beFoPLK2fYNXyJ8miPPljfQXB6OXPzgzQGzRPo1KpiiHeL7h0XlAYBmCkho3RcKKm09r
+         BUrHqCI5yDe8o+mlwoIuvc1Qdatp2xJ5w7NKM1FcK1jbPltDkOqxfzNfKjt2CqshSuIX
+         DWSw==
+X-Gm-Message-State: APjAAAV6LiVG0QSjOjV9Mq2B5BNSjmS/KdmqmCV4HGp9ol2F51IQFX/H
+        wXMCrRn5tsuX1M6QVZUhW0WXG6Kfi8tILccWc0/WSA==
+X-Google-Smtp-Source: APXvYqzwcsIfU2fhhMg3DeSXFdWRcU2jq1WdvPR6NAlR0GJdjSA/p8p4eNDenRfaMzxDWDGYenzTX1Bjfkox3wK+5/I=
+X-Received: by 2002:a2e:8756:: with SMTP id q22mr52904734ljj.108.1561415810154;
+ Mon, 24 Jun 2019 15:36:50 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190621152329.21072-1-thierry.reding@gmail.com>
-In-Reply-To: <20190621152329.21072-1-thierry.reding@gmail.com>
+References: <20190621152413.21361-1-thierry.reding@gmail.com>
+In-Reply-To: <20190621152413.21361-1-thierry.reding@gmail.com>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Tue, 25 Jun 2019 00:34:30 +0200
-Message-ID: <CACRpkdbKCOgJDYWx0hJ+tYyimXbShMNV00oHsVAskeJm1kT0Jg@mail.gmail.com>
-Subject: Re: [PATCH] gpio: Add device link support
+Date:   Tue, 25 Jun 2019 00:36:38 +0200
+Message-ID: <CACRpkdZMP3hfAdcJjs1EUMnB5naN7NHsrKFHi9xJ4k5XWCnFFw@mail.gmail.com>
+Subject: Re: [PATCH] pinctrl: Add device link between pin controller and GPIO
 To:     Thierry Reding <thierry.reding@gmail.com>
-Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
@@ -57,44 +56,28 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Jun 21, 2019 at 5:23 PM Thierry Reding <thierry.reding@gmail.com> wrote:
+On Fri, Jun 21, 2019 at 5:24 PM Thierry Reding <thierry.reding@gmail.com> wrote:
 
 > From: Thierry Reding <treding@nvidia.com>
 >
-> Create a device link between a GPIO consumer and the GPIO supplier (i.e.
-> the GPIO chip's parent). This makes the driver core aware of the
-> dependency between the two devices so that it can properly order the
-> suspend/resume sequence.
->
-> As a side-effect the GPIO consumer will be force unloaded when the GPIO
-> supplier goes away, which prevents the consumer from accessing dangling
-> GPIOs.
+> When a GPIO controller registers a pin range with a pin controller,
+> establish a device link between them in order to keep track of the
+> dependency, which will help keep the right suspend/resume ordering.
 >
 > Signed-off-by: Thierry Reding <treding@nvidia.com>
 
-I was thinking we were gonna see this soon :D
+This make sense.
 
-> +void gpiod_add_device_link(struct gpio_desc *desc, struct device *consumer)
-> +{
-> +       struct device_link *link;
-> +
-> +       link = device_link_add(consumer, desc->gdev->dev.parent,
-> +                              DL_FLAG_AUTOREMOVE_CONSUMER);
+> +               link = device_link_add(range->gc->parent, pctldev->dev,
+> +                                      DL_FLAG_AUTOREMOVE_CONSUMER);
 
-I think this needs a NULL check.
+What about parentless GPIO chips now again?
+The parent field is optional, sad to say (yes I wish I could just
+fix it all).
 
-Some GPIO chips still have NULL as parent here, they just
-register a gpio_chip right out of boardfile code without any
-corresponding device. MIPS does this for example IIRC.
+> +                       device_link_remove(range->gc->parent, pctldev->dev);
 
-> +               device_link_remove(desc->consumer, desc->gdev->dev.parent);
-
-And same on remove.
-
-But why not use desc->gdev->dev as link, simply?
-That device has the same lifetime as the gpio_chip, sometimes
-even longer I think, if e.g. there is userspace holding the
-GPIOs.
+And here again.
 
 Yours,
 Linus Walleij
