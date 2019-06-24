@@ -2,53 +2,143 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id F16B4517FB
-	for <lists+linux-gpio@lfdr.de>; Mon, 24 Jun 2019 18:06:04 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 533E651868
+	for <lists+linux-gpio@lfdr.de>; Mon, 24 Jun 2019 18:22:09 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731546AbfFXQGD (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 24 Jun 2019 12:06:03 -0400
-Received: from sonic315-53.consmr.mail.ne1.yahoo.com ([66.163.190.179]:36526
-        "EHLO sonic315-53.consmr.mail.ne1.yahoo.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727282AbfFXQGD (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>);
-        Mon, 24 Jun 2019 12:06:03 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1561392362; bh=Wn45IEVQxjYS/KJ/AenupJ6pixj3tpnk+IQw8lNF8Cw=; h=Date:From:Reply-To:Subject:References:From:Subject; b=adz+9T8AOWQF7cpX3UIJFgDbsGa0lPQOJBD2UMxhhLU92GhZPeqNH9sniYqhQQ0dF0VUlc5Hr9P2z/tzlClgzme+/T7j6wgLNIMLpXvZaEyw1ssSgi3HQLMINJhm9QaGM+XSPb0nqXs1GaaAkl7CJ/qm5Lz2ZklTt+sl3OTGU1CYYKW6BBAkVGjb+YnkNYcI1VWYvlJvXUfuy6Kzz57gfT38X0V/oc0FVnIQh2mmSr3sdch+ySho62hc6FEc4tABm9NOulo5eXZ9aRQwghL3vPpJlSs+cYGI5lPfUqRQ/LCDL5jms4dpIaHvUa0PjD5gY+9h5EuIMderXfJuJY4s2A==
-X-YMail-OSG: df8Hr4sVM1nQAOpsedsGwDE93k9EQHaKbpTdkv_ZjEX4z1dWIMJB.F5LPIDCwlA
- oZkPEFARJ0MnvZD_16HqBhebnBIpi7eGlh1xFVbmkXTSBr2qcKJ7KaXflKDpchCDebw5vcOr46p0
- oYwZEz4iUaG4G0wno3lYXbReJov.Gj459w95GB2bZGEhB2i.YyG1_RpEhZizN_bsjwX877V1B6XP
- cbdLGYCxQkYsO9G6Wu9neppUaB_OrGnbDHJHNPy3498BHWaL2eexOy8M2nikzdYOKq0VWeqePK0o
- mjncJLrwM4P536YZml58mgCuk0tkN_XXdYKEzlPGd2H52n9aLgo3sfZ.tC5L93kS9UFilrgKjEsQ
- geJCPMs1yMGR..amYJTKJRNvvLBXFas.lFO9kxa.1f4tP9HVzCtBveYs5A.Mzidki60bgvE16_WG
- 8c9or4W37PsKe.6hzeRd7HmK7N1NXuZ.wuZ41adqn6FOdMqBX1QFe6t._zlDS3Ixmu30tliUNqWc
- J5aSrqjOm3MaJl2HNt97vjQKCMzzj9Iq35ufJWjZdC1_3zE3h3jNdU9FaoArhweNXOpXYitQTtel
- 6If7PBPXBRPaPL_aVl2shjqbaG_KmBymOcZNb3b3p6u_8GWd3Q2TBwEY0yRo9BibDD.hob.ekkJg
- OWdGJwzU2VVPC7ueXJaQ2mRmmbLAOLlls2OLxubIwH8xI_1dzKLRwoMWFeCf6wSzEWbC8h4.V991
- fev5fAOQzEx6vNPQy61og_vjs0saS7NoM3AYblP2dTEiP6Ba8RjXf4ztYYfbd05lEKM38vyDtAwR
- s5BzoSx8hXQBpf93_JLoWxyY2NnAOjL6ukyjiM6Li.hwrMRazWn9ie81UwZKcNM7_Stk9ScteAoG
- S_jHGzU7KZtsCdTkCJEdntY2_gFOI8Uh3zDTz3vISBuBNkhbKdzVuqB1WAYHA2osYKBbonobPkW.
- j_DWgjtpt2ftKCyo.EVVxrErJr5oAWwk34L6VQwbN8kJNHaTCKzY_s8VvZ5.mVkhZ4vzlclAQEEU
- 33ZcpxesVzATdBk8LSVdu6HO7abscZ2P2MG7Sct0I8W4lw3QNMvbYE6wYqJxNOMdP8_FKfNcGIch
- LmLadgkXm8D3rJsC1k_f955FgEp47WUdTqvlD8e5cren4SjXMAjpGHZtUOdY2fPYk66d933onKdq
- bcDTc0PVd7jMYBKetqEHRc5CIrAwcCxWbframCstMBLQfoVlpGj_ajwTachApW38xM2G15Nhv7ZO
- 5Xub.Is.KC0vU0eHMjd5HjrI-
-Received: from sonic.gate.mail.ne1.yahoo.com by sonic315.consmr.mail.ne1.yahoo.com with HTTP; Mon, 24 Jun 2019 16:06:02 +0000
-Date:   Mon, 24 Jun 2019 16:04:01 +0000 (UTC)
-From:   "ij49 ." <ij49@gajdm.org.in>
-Reply-To: "ij49 ." <ij49@gajdm.org.in>
-Message-ID: <1179155815.1171075.1561392241619@mail.yahoo.com>
-Subject: 
+        id S1732041AbfFXQVs (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 24 Jun 2019 12:21:48 -0400
+Received: from hqemgate14.nvidia.com ([216.228.121.143]:18242 "EHLO
+        hqemgate14.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732017AbfFXQVr (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 24 Jun 2019 12:21:47 -0400
+Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqemgate14.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5d10f8970001>; Mon, 24 Jun 2019 09:21:43 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate102.nvidia.com (PGP Universal service);
+  Mon, 24 Jun 2019 09:21:45 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate102.nvidia.com on Mon, 24 Jun 2019 09:21:45 -0700
+Received: from [10.2.174.126] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 24 Jun
+ 2019 16:21:41 +0000
+Subject: Re: [PATCH V4 13/18] soc/tegra: pmc: allow support for more tegra
+ wake
+To:     Marc Zyngier <marc.zyngier@arm.com>
+CC:     <thierry.reding@gmail.com>, <jonathanh@nvidia.com>,
+        <tglx@linutronix.de>, <jason@lakedaemon.net>,
+        <linus.walleij@linaro.org>, <stefan@agner.ch>,
+        <mark.rutland@arm.com>, <pdeschrijver@nvidia.com>,
+        <pgaikwad@nvidia.com>, <sboyd@kernel.org>,
+        <linux-clk@vger.kernel.org>, <linux-gpio@vger.kernel.org>,
+        <jckuo@nvidia.com>, <josephl@nvidia.com>, <talho@nvidia.com>,
+        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <mperttunen@nvidia.com>, <spatra@nvidia.com>, <robh+dt@kernel.org>,
+        <digetx@gmail.com>, <devicetree@vger.kernel.org>
+References: <1561345379-2429-1-git-send-email-skomatineni@nvidia.com>
+ <1561345379-2429-14-git-send-email-skomatineni@nvidia.com>
+ <86d0j3pfga.wl-marc.zyngier@arm.com>
+From:   Sowjanya Komatineni <skomatineni@nvidia.com>
+Message-ID: <dc320c81-6601-4e6d-a7a0-57df8771bd99@nvidia.com>
+Date:   Mon, 24 Jun 2019 09:21:41 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+In-Reply-To: <86d0j3pfga.wl-marc.zyngier@arm.com>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"; format=flowed
 Content-Transfer-Encoding: 7bit
-References: <1179155815.1171075.1561392241619.ref@mail.yahoo.com>
-X-Mailer: WebService/1.1.13837 YahooMailBasic Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3683.103 Safari/537.36
-To:     unlisted-recipients:; (no To-header on input)
+Content-Language: en-US
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1561393303; bh=XARYCg4Be2F4cVbObRkOiXOwjOP0Mst/Yjb4BxYksk0=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
+         Content-Language;
+        b=pEd8vglzapKb+YjH1kGdq1VvI2uMA+mEhIyqxyWrXHKcbEabHER36cmfheBuAXH/+
+         vwgY3pHKBGeLWWTaPihZ7JnQckG/pIOcjGpxkG22i4HM/fv2VvmS1F751NssxwWs5q
+         yB1ylptYE7DJ09259Ltst/0zXgzj5VU0voWZe3SFKU5ZnE8Yyhr/rKGTYMb+GaYgbu
+         BQNNfXXuCKZElcuZOLzroNxOOAtdMv2S8BOeu/AA92VpmzH7QwZxjzqXk17B/lN5B/
+         apDiv7TaS+FHvQhgcDOylFeDL7wanZT2PtbhHQECsfolUVLfW3PDzKdo/quVC0BXQm
+         VYS4YczznrIJg==
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-I am in the military unit here in Afghanistan, we have some amount of funds that we want to move out of the country. My partners and I need a good partner someone we can trust. It is risk free and legal. Reply to this email: hornbeckmajordennis635@gmail.com
 
-Regards,
-Major Dennis Hornbeck.
+On 6/24/19 1:15 AM, Marc Zyngier wrote:
+> On Mon, 24 Jun 2019 04:02:54 +0100,
+> Sowjanya Komatineni <skomatineni@nvidia.com> wrote:
+>> This patch allows to create separate irq_set_wake and irq_set_type
+>> implementations for different tegra designs PMC that has different
+>> wake models which require difference wake registers and different
+>> programming sequence.
+>>
+>> AOWAKE model support is available for Tegra186 and Tegra194 only
+>> and it resides within PMC and supports tiered wake architecture.
+>>
+>> Tegra210 and prior tegra designs uses PMC directly to receive wake
+>> events and coordinate the wake sequence.
+>>
+>> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
+>> ---
+>>   drivers/soc/tegra/pmc.c | 14 ++++++++++----
+>>   1 file changed, 10 insertions(+), 4 deletions(-)
+>>
+>> diff --git a/drivers/soc/tegra/pmc.c b/drivers/soc/tegra/pmc.c
+>> index edd4fe06810f..e87f29a35fcf 100644
+>> --- a/drivers/soc/tegra/pmc.c
+>> +++ b/drivers/soc/tegra/pmc.c
+>> @@ -226,6 +226,8 @@ struct tegra_pmc_soc {
+>>   	void (*setup_irq_polarity)(struct tegra_pmc *pmc,
+>>   				   struct device_node *np,
+>>   				   bool invert);
+>> +	int (*irq_set_wake)(struct irq_data *data, unsigned int on);
+>> +	int (*irq_set_type)(struct irq_data *data, unsigned int type);
+>>   
+>>   	const char * const *reset_sources;
+>>   	unsigned int num_reset_sources;
+>> @@ -1919,7 +1921,7 @@ static const struct irq_domain_ops tegra_pmc_irq_domain_ops = {
+>>   	.alloc = tegra_pmc_irq_alloc,
+>>   };
+>>   
+>> -static int tegra_pmc_irq_set_wake(struct irq_data *data, unsigned int on)
+>> +static int tegra186_pmc_irq_set_wake(struct irq_data *data, unsigned int on)
+>>   {
+>>   	struct tegra_pmc *pmc = irq_data_get_irq_chip_data(data);
+>>   	unsigned int offset, bit;
+>> @@ -1951,7 +1953,7 @@ static int tegra_pmc_irq_set_wake(struct irq_data *data, unsigned int on)
+>>   	return 0;
+>>   }
+>>   
+>> -static int tegra_pmc_irq_set_type(struct irq_data *data, unsigned int type)
+>> +static int tegra186_pmc_irq_set_type(struct irq_data *data, unsigned int type)
+>>   {
+>>   	struct tegra_pmc *pmc = irq_data_get_irq_chip_data(data);
+>>   	u32 value;
+>> @@ -2005,8 +2007,10 @@ static int tegra_pmc_irq_init(struct tegra_pmc *pmc)
+>>   	pmc->irq.irq_unmask = irq_chip_unmask_parent;
+>>   	pmc->irq.irq_eoi = irq_chip_eoi_parent;
+>>   	pmc->irq.irq_set_affinity = irq_chip_set_affinity_parent;
+>> -	pmc->irq.irq_set_type = tegra_pmc_irq_set_type;
+>> -	pmc->irq.irq_set_wake = tegra_pmc_irq_set_wake;
+>> +	if (pmc->soc->irq_set_type)
+>> +		pmc->irq.irq_set_type = pmc->soc->irq_set_type;
+>> +	if (pmc->soc->irq_set_wake)
+>> +		pmc->irq.irq_set_wake = pmc->soc->irq_set_wake;
+> I already commented on how superfluous these 'if ()' where. If you
+> disagree, please let me know why.
+>
+> Thanks,
+>
+> 	M.
+
+Sorry Marc, missed it. Will fix in next version...
+
+
+Thanks
+
+Sowjanya
+
