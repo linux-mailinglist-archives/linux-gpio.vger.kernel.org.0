@@ -2,46 +2,46 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 1049D50110
-	for <lists+linux-gpio@lfdr.de>; Mon, 24 Jun 2019 07:40:51 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DA6515010F
+	for <lists+linux-gpio@lfdr.de>; Mon, 24 Jun 2019 07:40:48 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726890AbfFXFkl (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        id S1726930AbfFXFkl (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
         Mon, 24 Jun 2019 01:40:41 -0400
-Received: from mout.kundenserver.de ([212.227.126.131]:52767 "EHLO
+Received: from mout.kundenserver.de ([212.227.126.133]:43549 "EHLO
         mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726709AbfFXFkl (ORCPT
+        with ESMTP id S1726839AbfFXFkl (ORCPT
         <rfc822;linux-gpio@vger.kernel.org>); Mon, 24 Jun 2019 01:40:41 -0400
 Received: from orion.localdomain ([77.4.138.202]) by mrelayeu.kundenserver.de
  (mreue010 [212.227.15.167]) with ESMTPSA (Nemesis) id
- 1MRmwM-1i8Ktz3dWc-00TFa1; Mon, 24 Jun 2019 07:40:37 +0200
+ 1MA7X0-1hqo3A0sgc-00BaCj; Mon, 24 Jun 2019 07:40:38 +0200
 From:   "Enrico Weigelt, metux IT consult" <info@metux.net>
 To:     linux-kernel@vger.kernel.org
 Cc:     kernel@pengutronix.de, linus.walleij@linaro.org,
         bgolaszewski@baylibre.com, linux-gpio@vger.kernel.org,
         t.scherer@eckelmann.de
-Subject: [PATCH 1/2] siox: add helper macro to simplify driver registration
-Date:   Mon, 24 Jun 2019 07:40:33 +0200
-Message-Id: <1561354834-22617-2-git-send-email-info@metux.net>
+Subject: [PATCH 2/2] drivers: gpio: siox: use module_siox_driver()
+Date:   Mon, 24 Jun 2019 07:40:34 +0200
+Message-Id: <1561354834-22617-3-git-send-email-info@metux.net>
 X-Mailer: git-send-email 1.9.1
 In-Reply-To: <1561354834-22617-1-git-send-email-info@metux.net>
 References: <1561354834-22617-1-git-send-email-info@metux.net>
-X-Provags-ID: V03:K1:pu61IGV/1q4lpgLp+aBNG7OE4lWm55EcChTDsjKrvIxqyTLMk2a
- GfOtCtSvGCs8/+p+nGl64iadCag1mbmjMQHYwLaE1FSEN1yJGqOqGgG3uuYD2Bzi+4fEi0/
- f6kEYFyuKBvLSB00KYmoCAkK0jw3RFC862q35TOCVpvOhQ/ZRsGd7SfTnNFQpFZr0VBLXth
- q54oVYhPOGEnBNpG4bcEg==
+X-Provags-ID: V03:K1:NGkg9h4n5WFd9Dz8Y9bh4rSvV6psRZvE+7zlcGYFgJQTp8wa6F+
+ 45L/O+tdyJoPVNcLE+FeC0/v7V5FfGV/f6C2FCBKYEWA5ldEYGHAmaclzTWa4mmOnMGFWwh
+ 0IAjSgGk2DiZKtL/Z23+euT02kW41ZseYXFMnG8cznBTZj6txrJ37w/fVEbQxLsnN130Y9X
+ EZOdfrEGCUGWeMEKN+DtA==
 X-Spam-Flag: NO
-X-UI-Out-Filterresults: notjunk:1;V03:K0:5J8Hxi1ig1U=:5zv9ddOpsP1G1dUVB1bMr+
- K8M1NQzf/63jmBJMFl7vCZ/2VmBjGVZPM8RQhzd1pGmYqwlyJRh5JI1c9fPQBlQJ+4Zk1YG0p
- 2vjJ5sq1+hrgAboxoJ/bMVs7VI6Lr73xLBbssS7oYeV4DxnxkqQc8DWcOQp+hUvr5JFNIZuvj
- vwb8oWtZoEwXV9WmZBwh5aqBDytAM98jOlxJSy18QO84YJTuDHs5qWyVd2grtlUKitW2AiMAC
- L6RO/IaNZak2i/+dCrGspKDEmtI7tgTf7uYWyqBIF9SGUweFN5w5k6wC+Stew4ikP2ZZtf+3J
- T02bsnViOXIOTppVNgbOKyRgTPmxKJOK+sBKOfIDmKIUo4Z1+aVbQ8x7HDhWX3LbsSjqk/+qv
- iydugXEycHJ3dAx4fHuQVQ5KryM/0R4p/s80SghWO0wt5zD9+G8wAYeAjDGPegsW08iWhvtz3
- k/y1ppXn4j2lROyOXO8kgyvUxYQjoQZ1SjlcldeaeF6MRY0ta7Ei2j3yOuAAwtpB64FMRRvl9
- KVwk/9Y1pJplg4XTL6a/4g8M/Umyamd5gdulTah3vyxV9x6NFHLs80JNBSpl2OZhqNzk8dlWR
- XTCKovFEJgtLhDityIk69YcaXmsRu41kaw5lNCS7WbTKk/0sGRe0IMZD5OMzARVtV/Sbrp65I
- 6t1ayUGeYJopMsSZpBgbokDDlm1KHXsUAhUh9t6amuEgJHbC0eD00fgvbrDxzB39Och2q86id
- bgj69DT0jaMJ/TWBBFe+offc1EA16NpkL44cew==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:IIoj4F1nWws=:yMSRfeuGavw5Ah8l776Hdf
+ wMmoCtcnfGdXOFqdVAkwKQDYBTRr/Nf+Dt46oy9doHUMPRH1ItAe2ER7e/pI8YTj8pqMWAxeX
+ qsMgzl8chmxrrRzuIYegc8F+LZiErp9eRK4goAHQrCvo8kYXWP6YqMuavFDTFki5VGSe/3W8+
+ q0b6yoSlhPucnPuPHuxqDruZ1BOtGua3sIvyqahDWWN6zImnRIemykjTH5DOK8NMKe7ajPHwC
+ 03vY4RkRifzNKzeQeKHVIzm0D9tW74qPBgGBlRt6zuITLJvcqqnuIntonwXFgUMD4WH/Ig4QU
+ jnAUDL2LY4O4NALld3ScQhouvAWx0JqKM3EtmJEWKDsQpIY/d3brRXrAu17MYMyTTAyZ43TaF
+ UhoF7NPLI1Mb3nMWiCCVfb/pebNi1z3clU7/61HOoGYgup+HwM0cxfyjCtvLNnDn4mXmlpacD
+ LNIpwGgrgfb1zA7AHEnzHinrm7sboCOQFfW/ifhUahbxh6ICo4HPwXfsdTuwkOmIZO9Gq4qBk
+ 8mwHB88lrExUWY0ijdxhSkgXaYkrfwK1a6S1JUREKXHEOb6YiHrQnh7/82wlSMjCYnzkU0VAx
+ g/nC1yuqf2kT84FDugxXfDTm08dfhlCHtfe8xzas7ZFbZsjpoLk8bV5tAKHQ0mck4QMQeSCIv
+ wnwjbsOwMe+NFc8HTehxNxyeyuZS8ZGQX85Mxvcr1ym1aY5fjwzXGINSDZ1w1oNjfBqJHrvHj
+ dYZ0BJEgNmvIWQkmYvOIDOaMfrTCdtZeOnznSA==
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
@@ -49,34 +49,38 @@ X-Mailing-List: linux-gpio@vger.kernel.org
 
 From: Enrico Weigelt <info@metux.net>
 
-Add more helper macros for trivial driver init cases, similar to the
-already existing module_platform_driver() or module_i2c_driver().
-
-This helps to reduce driver init boilerplate.
+Reduce driver init boilerplate by using the new
+module_siox_driver() macro.
 
 Signed-off-by: Enrico Weigelt <info@metux.net>
 ---
- include/linux/siox.h | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+ drivers/gpio/gpio-siox.c | 13 +------------
+ 1 file changed, 1 insertion(+), 12 deletions(-)
 
-diff --git a/include/linux/siox.h b/include/linux/siox.h
-index a860cb8..da7225b 100644
---- a/include/linux/siox.h
-+++ b/include/linux/siox.h
-@@ -72,3 +72,13 @@ static inline void siox_driver_unregister(struct siox_driver *sdriver)
- {
- 	return driver_unregister(&sdriver->driver);
- }
-+
-+/*
-+ * module_siox_driver() - Helper macro for drivers that don't do
-+ * anything special in module init/exit.  This eliminates a lot of
-+ * boilerplate.  Each module may only use this macro once, and
-+ * calling it replaces module_init() and module_exit()
-+ */
-+#define module_siox_driver(__siox_driver) \
-+	module_driver(__siox_driver, siox_driver_register, \
-+			siox_driver_unregister)
+diff --git a/drivers/gpio/gpio-siox.c b/drivers/gpio/gpio-siox.c
+index 571b2a8..fb4e318 100644
+--- a/drivers/gpio/gpio-siox.c
++++ b/drivers/gpio/gpio-siox.c
+@@ -275,18 +275,7 @@ static int gpio_siox_remove(struct siox_device *sdevice)
+ 		.name = "gpio-siox",
+ 	},
+ };
+-
+-static int __init gpio_siox_init(void)
+-{
+-	return siox_driver_register(&gpio_siox_driver);
+-}
+-module_init(gpio_siox_init);
+-
+-static void __exit gpio_siox_exit(void)
+-{
+-	siox_driver_unregister(&gpio_siox_driver);
+-}
+-module_exit(gpio_siox_exit);
++module_siox_driver(gpio_siox_driver);
+ 
+ MODULE_AUTHOR("Uwe Kleine-Koenig <u.kleine-koenig@pengutronix.de>");
+ MODULE_DESCRIPTION("SIOX gpio driver");
 -- 
 1.9.1
 
