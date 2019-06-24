@@ -2,159 +2,53 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 3E50D5109E
-	for <lists+linux-gpio@lfdr.de>; Mon, 24 Jun 2019 17:35:40 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id F16B4517FB
+	for <lists+linux-gpio@lfdr.de>; Mon, 24 Jun 2019 18:06:04 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727170AbfFXPfj (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 24 Jun 2019 11:35:39 -0400
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:36009 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726263AbfFXPfj (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 24 Jun 2019 11:35:39 -0400
-Received: by mail-ot1-f68.google.com with SMTP id r6so13956799oti.3;
-        Mon, 24 Jun 2019 08:35:39 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=oDs8l0EqS99acnWR7VOY7oZc27cA1C7UyoMqytNjurQ=;
-        b=JR3hBzXMaRo6CTAjNnpok4EDPJgfGl8o1GfVDUn2zxDojA6vxPpWSOQj3l1NLs1LKY
-         FjiAg6fTKAl/3ojfNA6Nt6vyUHNS71uAatvGrhbfELc3FdtaFlmqy6CMBASKPt9+koPm
-         OnbiqBJOyLpf1zRlQ8l6+6LZPfr6/AL9SJ3BcbLFNPAymMGJ69HDPq6vZyMC3zCIiG4L
-         by1jf9gQRBRpUNUxB2pf5ab/2p1HnuotWAQXdtDZlg92yOhMVGRyCMfnELVdhO4h++ZS
-         lbB+G/MMpWl8Nz1g1BDh19Xm2Kt+XCk1Mr+2VoXaFlJljevdaIktSL2WE7aK9DjzBJgn
-         RfRg==
-X-Gm-Message-State: APjAAAUvPe6kPWcapGPbsolKagjln++q/zshAu7hqLU6uzqtkrOSlDdt
-        v+lf+QBV10wV+qMKe+HXXxGi8CJf5C3i0roYnB2RJB4c
-X-Google-Smtp-Source: APXvYqyCfTccALRL7UUQdCywFtvUJdVbHF8z4IjuBjMFvn94y0cAWWP2IP8qtQBBYVSaFzJ0isSgfKa/yy7C3VUHaN4=
-X-Received: by 2002:a9d:69ce:: with SMTP id v14mr17440403oto.39.1561390538697;
- Mon, 24 Jun 2019 08:35:38 -0700 (PDT)
+        id S1731546AbfFXQGD (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 24 Jun 2019 12:06:03 -0400
+Received: from sonic315-53.consmr.mail.ne1.yahoo.com ([66.163.190.179]:36526
+        "EHLO sonic315-53.consmr.mail.ne1.yahoo.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727282AbfFXQGD (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>);
+        Mon, 24 Jun 2019 12:06:03 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1561392362; bh=Wn45IEVQxjYS/KJ/AenupJ6pixj3tpnk+IQw8lNF8Cw=; h=Date:From:Reply-To:Subject:References:From:Subject; b=adz+9T8AOWQF7cpX3UIJFgDbsGa0lPQOJBD2UMxhhLU92GhZPeqNH9sniYqhQQ0dF0VUlc5Hr9P2z/tzlClgzme+/T7j6wgLNIMLpXvZaEyw1ssSgi3HQLMINJhm9QaGM+XSPb0nqXs1GaaAkl7CJ/qm5Lz2ZklTt+sl3OTGU1CYYKW6BBAkVGjb+YnkNYcI1VWYvlJvXUfuy6Kzz57gfT38X0V/oc0FVnIQh2mmSr3sdch+ySho62hc6FEc4tABm9NOulo5eXZ9aRQwghL3vPpJlSs+cYGI5lPfUqRQ/LCDL5jms4dpIaHvUa0PjD5gY+9h5EuIMderXfJuJY4s2A==
+X-YMail-OSG: df8Hr4sVM1nQAOpsedsGwDE93k9EQHaKbpTdkv_ZjEX4z1dWIMJB.F5LPIDCwlA
+ oZkPEFARJ0MnvZD_16HqBhebnBIpi7eGlh1xFVbmkXTSBr2qcKJ7KaXflKDpchCDebw5vcOr46p0
+ oYwZEz4iUaG4G0wno3lYXbReJov.Gj459w95GB2bZGEhB2i.YyG1_RpEhZizN_bsjwX877V1B6XP
+ cbdLGYCxQkYsO9G6Wu9neppUaB_OrGnbDHJHNPy3498BHWaL2eexOy8M2nikzdYOKq0VWeqePK0o
+ mjncJLrwM4P536YZml58mgCuk0tkN_XXdYKEzlPGd2H52n9aLgo3sfZ.tC5L93kS9UFilrgKjEsQ
+ geJCPMs1yMGR..amYJTKJRNvvLBXFas.lFO9kxa.1f4tP9HVzCtBveYs5A.Mzidki60bgvE16_WG
+ 8c9or4W37PsKe.6hzeRd7HmK7N1NXuZ.wuZ41adqn6FOdMqBX1QFe6t._zlDS3Ixmu30tliUNqWc
+ J5aSrqjOm3MaJl2HNt97vjQKCMzzj9Iq35ufJWjZdC1_3zE3h3jNdU9FaoArhweNXOpXYitQTtel
+ 6If7PBPXBRPaPL_aVl2shjqbaG_KmBymOcZNb3b3p6u_8GWd3Q2TBwEY0yRo9BibDD.hob.ekkJg
+ OWdGJwzU2VVPC7ueXJaQ2mRmmbLAOLlls2OLxubIwH8xI_1dzKLRwoMWFeCf6wSzEWbC8h4.V991
+ fev5fAOQzEx6vNPQy61og_vjs0saS7NoM3AYblP2dTEiP6Ba8RjXf4ztYYfbd05lEKM38vyDtAwR
+ s5BzoSx8hXQBpf93_JLoWxyY2NnAOjL6ukyjiM6Li.hwrMRazWn9ie81UwZKcNM7_Stk9ScteAoG
+ S_jHGzU7KZtsCdTkCJEdntY2_gFOI8Uh3zDTz3vISBuBNkhbKdzVuqB1WAYHA2osYKBbonobPkW.
+ j_DWgjtpt2ftKCyo.EVVxrErJr5oAWwk34L6VQwbN8kJNHaTCKzY_s8VvZ5.mVkhZ4vzlclAQEEU
+ 33ZcpxesVzATdBk8LSVdu6HO7abscZ2P2MG7Sct0I8W4lw3QNMvbYE6wYqJxNOMdP8_FKfNcGIch
+ LmLadgkXm8D3rJsC1k_f955FgEp47WUdTqvlD8e5cren4SjXMAjpGHZtUOdY2fPYk66d933onKdq
+ bcDTc0PVd7jMYBKetqEHRc5CIrAwcCxWbframCstMBLQfoVlpGj_ajwTachApW38xM2G15Nhv7ZO
+ 5Xub.Is.KC0vU0eHMjd5HjrI-
+Received: from sonic.gate.mail.ne1.yahoo.com by sonic315.consmr.mail.ne1.yahoo.com with HTTP; Mon, 24 Jun 2019 16:06:02 +0000
+Date:   Mon, 24 Jun 2019 16:04:01 +0000 (UTC)
+From:   "ij49 ." <ij49@gajdm.org.in>
+Reply-To: "ij49 ." <ij49@gajdm.org.in>
+Message-ID: <1179155815.1171075.1561392241619@mail.yahoo.com>
+Subject: 
 MIME-Version: 1.0
-References: <20190620062420.11650-1-sr@denx.de> <CAMuHMdXMpS_pg9N0qSW=Li0QavAMRG79RJcS4s0w6NTCxv_zzg@mail.gmail.com>
- <24bfb52c-6f77-b7cd-7421-9e6e4b0aa7d3@denx.de>
-In-Reply-To: <24bfb52c-6f77-b7cd-7421-9e6e4b0aa7d3@denx.de>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Mon, 24 Jun 2019 17:35:26 +0200
-Message-ID: <CAMuHMdWeX6=SuSPVUB=WaYMsUbrmg5sraM=APeXsqr_Yv6u4AA@mail.gmail.com>
-Subject: Re: [PATCH 1/2 v9] serial: mctrl_gpio: Check if GPIO property exisits
- before requesting it
-To:     Stefan Roese <sr@denx.de>
-Cc:     "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Yegor Yefremov <yegorslists@googlemail.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Giulio Benetti <giulio.benetti@micronovasrl.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+References: <1179155815.1171075.1561392241619.ref@mail.yahoo.com>
+X-Mailer: WebService/1.1.13837 YahooMailBasic Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3683.103 Safari/537.36
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Stefan,
+I am in the military unit here in Afghanistan, we have some amount of funds that we want to move out of the country. My partners and I need a good partner someone we can trust. It is risk free and legal. Reply to this email: hornbeckmajordennis635@gmail.com
 
-On Mon, Jun 24, 2019 at 5:29 PM Stefan Roese <sr@denx.de> wrote:
-> On 24.06.19 10:42, Geert Uytterhoeven wrote:
-> > On Thu, Jun 20, 2019 at 8:24 AM Stefan Roese <sr@denx.de> wrote:
-> >> This patch adds a check for the GPIOs property existence, before the
-> >> GPIO is requested. This fixes an issue seen when the 8250 mctrl_gpio
-> >> support is added (2nd patch in this patch series) on x86 platforms using
-> >> ACPI.
-> >>
-> >> Here Mika's comments from 2016-08-09:
-> >>
-> >> "
-> >> I noticed that with v4.8-rc1 serial console of some of our Broxton
-> >> systems does not work properly anymore. I'm able to see output but input
-> >> does not work.
-> >>
-> >> I bisected it down to commit 4ef03d328769eddbfeca1f1c958fdb181a69c341
-> >> ("tty/serial/8250: use mctrl_gpio helpers").
-> >>
-> >> The reason why it fails is that in ACPI we do not have names for GPIOs
-> >> (except when _DSD is used) so we use the "idx" to index into _CRS GPIO
-> >> resources. Now mctrl_gpio_init_noauto() goes through a list of GPIOs
-> >> calling devm_gpiod_get_index_optional() passing "idx" of 0 for each. The
-> >> UART device in Broxton has following (simplified) ACPI description:
-> >>
-> >>      Device (URT4)
-> >>      {
-> >>          ...
-> >>          Name (_CRS, ResourceTemplate () {
-> >>              GpioIo (Exclusive, PullDefault, 0x0000, 0x0000, IoRestrictionOutputOnly,
-> >>                      "\\_SB.GPO0", 0x00, ResourceConsumer)
-> >>              {
-> >>                  0x003A
-> >>              }
-> >>              GpioIo (Exclusive, PullDefault, 0x0000, 0x0000, IoRestrictionOutputOnly,
-> >>                      "\\_SB.GPO0", 0x00, ResourceConsumer)
-> >>              {
-> >>                  0x003D
-> >>              }
-> >>          })
-> >>
-> >> In this case it finds the first GPIO (0x003A which happens to be RX pin
-> >> for that UART), turns it into GPIO which then breaks input for the UART
-> >> device. This also breaks systems with bluetooth connected to UART (those
-> >> typically have some GPIOs in their _CRS).
-> >>
-> >> Any ideas how to fix this?
-> >>
-> >> We cannot just drop the _CRS index lookup fallback because that would
-> >> break many existing machines out there so maybe we can limit this to
-> >> only DT enabled machines. Or alternatively probe if the property first
-> >> exists before trying to acquire the GPIOs (using
-> >> device_property_present()).
-> >> "
-> >>
-> >> This patch implements the fix suggested by Mika in his statement above.
-> >>
-> >> Signed-off-by: Stefan Roese <sr@denx.de>
-
-> >> --- a/drivers/tty/serial/serial_mctrl_gpio.c
-> >> +++ b/drivers/tty/serial/serial_mctrl_gpio.c
-
-> >> @@ -116,6 +117,19 @@ struct mctrl_gpios *mctrl_gpio_init_noauto(struct device *dev, unsigned int idx)
-> >>
-> >>          for (i = 0; i < UART_GPIO_MAX; i++) {
-> >>                  enum gpiod_flags flags;
-> >> +               char *gpio_str;
-> >> +               bool present;
-> >> +
-> >> +               /* Check if GPIO property exists and continue if not */
-> >> +               gpio_str = kasprintf(GFP_KERNEL, "%s-gpios",
-> >> +                                    mctrl_gpios_desc[i].name);
-> >
-> > This will silently break DTBs using "(cts|dsr|dcd|rng|rts|dtr)-gpio" instead
-> > of "(cts|dsr|dcd|rng|rts|dtr)-gpios".
->
-> Should both options be supported ("cts-gpio" vs "cts-gpios")?
-> Documentation/devicetree/bindings/serial/serial.txt only mentions
-> the "-gpios" variant.
-
-Well, the "-gpio" variant is deprecated, but still supported by
-devm_gpiod_get_index_optional(), and there are active users in upstream
-DTS files.
-
-My main objection is (trying to) replicate the matching logic inside
-gpiolib.c, causing subtle semantic differences. And keeping it consistent,
-of course.
-
-It would be nice if this could be fixed inside acpi_find_gpio(), so
-users don't need to be updated.  There may be other subsystems where
-the difference between DT and ACPI may cause issues, unbeknownst.
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Regards,
+Major Dennis Hornbeck.
