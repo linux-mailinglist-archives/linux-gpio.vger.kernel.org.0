@@ -2,167 +2,103 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id BE0E350AFC
-	for <lists+linux-gpio@lfdr.de>; Mon, 24 Jun 2019 14:43:08 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6AE2C50B20
+	for <lists+linux-gpio@lfdr.de>; Mon, 24 Jun 2019 14:51:44 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727315AbfFXMnI (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 24 Jun 2019 08:43:08 -0400
-Received: from relay8-d.mail.gandi.net ([217.70.183.201]:37979 "EHLO
-        relay8-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726631AbfFXMnH (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 24 Jun 2019 08:43:07 -0400
-X-Originating-IP: 90.88.16.156
-Received: from localhost (aaubervilliers-681-1-41-156.w90-88.abo.wanadoo.fr [90.88.16.156])
-        (Authenticated sender: maxime.ripard@bootlin.com)
-        by relay8-d.mail.gandi.net (Postfix) with ESMTPSA id 111EC1BF206;
-        Mon, 24 Jun 2019 12:43:01 +0000 (UTC)
-Date:   Mon, 24 Jun 2019 14:43:01 +0200
-From:   Maxime Ripard <maxime.ripard@bootlin.com>
-To:     Icenowy Zheng <icenowy@aosc.io>
-Cc:     Rob Herring <robh+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
+        id S1728414AbfFXMvn (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 24 Jun 2019 08:51:43 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:37632 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728129AbfFXMvn (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 24 Jun 2019 08:51:43 -0400
+Received: by mail-wm1-f65.google.com with SMTP id f17so13267363wme.2
+        for <linux-gpio@vger.kernel.org>; Mon, 24 Jun 2019 05:51:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=V3PN7+Kr/tucktHOq459ffhVuFT8vFVeNdn3CWQcOqs=;
+        b=TvXMMqynMJ9F3R8PSllCw3D53Zv+6ul3QP1YWFwld//r+zWK/6tW2Cg1h4EEU5f2az
+         na4AjvEKtFLrIPOSdpBSAGuAgvhEeRkZ7S/iQlwZ1vFDkqqgfvOZ+FLpkHVwgj6nC7pU
+         nuL/7FbuLNJ514VttRDd9EvuasI4d1R7u+5vz0gEjKWjANT2gVGfOcxe07DIG2e7w+q0
+         4o8hgviHyZN9wIXbr63XDzpmLEvB8p+ffPJiRKyr6ci7o2jM3nEg5OmlvOOCnwXvMzW+
+         /tK/hki6IwlCPeqrFvT6/a+BbGyewJWs561wIY77L7lA1zWMJhdGlyjVbT5eCwlcSOPF
+         +A7A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=V3PN7+Kr/tucktHOq459ffhVuFT8vFVeNdn3CWQcOqs=;
+        b=H8OFLMjzrNtAMjPk5hHovvSPQZUXVKy9dSNG69fzt/EccI2rZOe+4QBwdb/3UuguyP
+         2vDue3fyYO2XSBxeAuvVwyzkyY0hvwKsY/jF2W7Qmf4+kDk2i+u9Eg2pXBIYT3hqnZCL
+         f4OS6uKJrmxZBjnUUfZdTj19yeRTDud9w1cit/i4GG9xBMGYgzpsg81TLUbRVWyGUnB/
+         tEDUUKbc30bLS/E9x0Kv+cUQRICbZRBx3cebXYe6aLdtzfYfv2kjv0a1DKtkt3C4JYts
+         Z1Eok9IoBV1qQud8N0lPse2X5pxgNGSLrOLlkhqqRhLJSiXugJ73HN3hDxJdorEqhZc7
+         GrSg==
+X-Gm-Message-State: APjAAAV+x/EGBDm0ZhLJLHjn6grOpbOShBb4tBoeCjaHd925GjU+Yiu9
+        Cg7r1Cc4GXr3m2xuWh5IyiWpdw==
+X-Google-Smtp-Source: APXvYqzSzSl6fHZHf0Jw53i1jb2T7E8JBP2SWlv/T63vVd+AKTU/rUYev6uqlIbbsKy+8FkpZfvlqQ==
+X-Received: by 2002:a7b:c748:: with SMTP id w8mr15115318wmk.36.1561380701751;
+        Mon, 24 Jun 2019 05:51:41 -0700 (PDT)
+Received: from dell ([2.27.35.164])
+        by smtp.gmail.com with ESMTPSA id 203sm7917884wmc.30.2019.06.24.05.51.32
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 24 Jun 2019 05:51:40 -0700 (PDT)
+Date:   Mon, 24 Jun 2019 13:51:26 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Nick Desaulniers <ndesaulniers@google.com>
+Cc:     Nathan Chancellor <natechancellor@gmail.com>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
         Linus Walleij <linus.walleij@linaro.org>,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-gpio@vger.kernel.org, linux-sunxi@googlegroups.com
-Subject: Re: [PATCH v3 9/9] ARM: dts: sun8i: s3: add devicetree for Lichee
- zero plus w/ S3
-Message-ID: <20190624124301.chwhfalk5o53fm5x@flea>
-References: <20190623043801.14040-1-icenowy@aosc.io>
- <20190623043801.14040-10-icenowy@aosc.io>
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        linux-gpio@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>
+Subject: Re: [PATCH] pinctrl: qcom: sdm845: Fix CONFIG preprocessor guard
+Message-ID: <20190624125126.GF4699@dell>
+References: <20190621202043.95967-1-natechancellor@gmail.com>
+ <CAKwvOdnP+XMn4BMHRcFeO=TCLxjhKk5NBrpmSyZnsAtwFj+gTw@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="py4hwz3wgnzkb3bv"
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20190623043801.14040-10-icenowy@aosc.io>
-User-Agent: NeoMutt/20180716
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAKwvOdnP+XMn4BMHRcFeO=TCLxjhKk5NBrpmSyZnsAtwFj+gTw@mail.gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+On Fri, 21 Jun 2019, Nick Desaulniers wrote:
 
---py4hwz3wgnzkb3bv
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+> On Fri, Jun 21, 2019 at 1:21 PM Nathan Chancellor
+> <natechancellor@gmail.com> wrote:
+> >
+> > Clang warns when CONFIG_ACPI is unset:
+> >
+> >  drivers/pinctrl/qcom/pinctrl-sdm845.c:1320:5: warning: 'CONFIG_ACPI' is
+> >  not defined, evaluates to 0 [-Wundef]
+> >  #if CONFIG_ACPI
+> >      ^
+> >  1 warning generated.
+> >
+> > Use ifdef instead of if to resolve this.
+> >
+> > Fixes: a229105d7a1e ("pinctrl: qcom: sdm845: Provide ACPI support")
+> > Link: https://github.com/ClangBuiltLinux/linux/issues/569
+> > Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+> 
+> Thanks for the patch.
+> Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
 
-On Sun, Jun 23, 2019 at 12:38:01PM +0800, Icenowy Zheng wrote:
-> Lichee zero plus is a core board made by Sipeed, which includes on-board
-> TF slot or SMT SD NAND, and optional SPI NOR or eMMC, a UART debug
-> header, a microUSB slot and a gold finger connector for expansion. It
-> can use either Sochip S3 or Allwinner S3L SoC.
->
-> Add the basic device tree for the core board, w/o optional onboard
-> storage, and with S3 SoC.
->
-> Signed-off-by: Icenowy Zheng <icenowy@aosc.io>
-> ---
-> Changes in v3:
-> - Drop common regulator DTSI usage and added vcc3v3 regulator.
->
->  arch/arm/boot/dts/Makefile                    |  1 +
->  .../boot/dts/sun8i-s3-lichee-zero-plus.dts    |  8 ++++
->  .../dts/sun8i-s3-s3l-lichee-zero-plus.dtsi    | 44 +++++++++++++++++++
->  3 files changed, 53 insertions(+)
->  create mode 100644 arch/arm/boot/dts/sun8i-s3-lichee-zero-plus.dts
->  create mode 100644 arch/arm/boot/dts/sun8i-s3-s3l-lichee-zero-plus.dtsi
->
-> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-> index c4742afe41a7..d24dec29245e 100644
-> --- a/arch/arm/boot/dts/Makefile
-> +++ b/arch/arm/boot/dts/Makefile
-> @@ -1113,6 +1113,7 @@ dtb-$(CONFIG_MACH_SUN8I) += \
->  	sun8i-r16-nintendo-super-nes-classic.dtb \
->  	sun8i-r16-parrot.dtb \
->  	sun8i-r40-bananapi-m2-ultra.dtb \
-> +	sun8i-s3-lichee-zero-plus.dtb \
->  	sun8i-t3-cqa3t-bv3.dtb \
->  	sun8i-v3s-licheepi-zero.dtb \
->  	sun8i-v3s-licheepi-zero-dock.dtb \
-> diff --git a/arch/arm/boot/dts/sun8i-s3-lichee-zero-plus.dts b/arch/arm/boot/dts/sun8i-s3-lichee-zero-plus.dts
-> new file mode 100644
-> index 000000000000..7d2f6b145190
-> --- /dev/null
-> +++ b/arch/arm/boot/dts/sun8i-s3-lichee-zero-plus.dts
-> @@ -0,0 +1,8 @@
-> +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-> +/*
-> + * Copyright (C) 2019 Icenowy Zheng <icenowy@aosc.io>
-> + */
-> +
-> +/dts-v1/;
-> +#include "sun8i-s3.dtsi"
-> +#include "sun8i-s3-s3l-lichee-zero-plus.dtsi"
-> diff --git a/arch/arm/boot/dts/sun8i-s3-s3l-lichee-zero-plus.dtsi b/arch/arm/boot/dts/sun8i-s3-s3l-lichee-zero-plus.dtsi
-> new file mode 100644
-> index 000000000000..e68f738c3046
-> --- /dev/null
-> +++ b/arch/arm/boot/dts/sun8i-s3-s3l-lichee-zero-plus.dtsi
-> @@ -0,0 +1,46 @@
-> +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-> +/*
-> + * Copyright (C) 2019 Icenowy Zheng <icenowy@aosc.io>
-> + */
-> +
-> +#include <dt-bindings/gpio/gpio.h>
-> +
-> +/ {
-> +	aliases {
-> +		serial0 = &uart0;
-> +	};
-> +
-> +	chosen {
-> +		stdout-path = "serial0:115200n8";
-> +	};
-> +
-> +	reg_vcc3v3: vcc3v3 {
-> +		compatible = "regulator-fixed";
-> +		regulator-name = "vcc3v3";
-> +		regulator-min-microvolt = <3300000>;
-> +		regulator-max-microvolt = <3300000>;
-> +	};
-> +};
-> +
-> +&mmc0 {
-> +	broken-cd;
-> +	bus-width = <4>;
-> +	vmmc-supply = <&reg_vcc3v3>;
-> +	status = "okay";
-> +};
-> +
-> +&uart0 {
-> +	pinctrl-0 = <&uart0_pb_pins>;
-> +	pinctrl-names = "default";
-> +	status = "okay";
-> +};
-> +
-> +&usb_otg {
-> +	dr_mode = "otg";
-> +	status = "okay";
-> +};
-> +
-> +&usbphy {
-> +	usb0_id_det-gpios = <&pio 5 6 GPIO_ACTIVE_HIGH>;
-> +	status = "okay";
-> +};
+Interesting.  Thanks for fixing.
 
-How can it do OTG if there's no controllable VBUS regulator?
+Acked-by: Lee Jones <lee.jones@linaro.org>
 
-Maxime
-
---
-Maxime Ripard, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
-
---py4hwz3wgnzkb3bv
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXRDFVQAKCRDj7w1vZxhR
-xVyPAQC4xoOkF/OU5Ri3MaNxHNBSJU4jKHG3k6wvxxc8ao76IAD/dTJSG1W8lufw
-RayEbaAS6Ujh3FgQv7u22QzXoCOe9w0=
-=ip3c
------END PGP SIGNATURE-----
-
---py4hwz3wgnzkb3bv--
+-- 
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
