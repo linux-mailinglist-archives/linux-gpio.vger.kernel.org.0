@@ -2,85 +2,97 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 8A04851A69
-	for <lists+linux-gpio@lfdr.de>; Mon, 24 Jun 2019 20:23:18 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7C8AD51D4F
+	for <lists+linux-gpio@lfdr.de>; Mon, 24 Jun 2019 23:46:50 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732776AbfFXSXR (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 24 Jun 2019 14:23:17 -0400
-Received: from mout.kundenserver.de ([212.227.126.134]:44361 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725268AbfFXSXR (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 24 Jun 2019 14:23:17 -0400
-Received: from [192.168.1.110] ([77.4.138.202]) by mrelayeu.kundenserver.de
- (mreue009 [212.227.15.167]) with ESMTPSA (Nemesis) id
- 1M9Wqa-1hc9gp1oDk-005WqO; Mon, 24 Jun 2019 20:22:47 +0200
-Subject: Re: [PATCH] drivers: Adjust scope for CONFIG_HAS_IOMEM before
- devm_platform_ioremap_resource()
-To:     Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Markus Elfring <Markus.Elfring@web.de>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Keerthy <j-keerthy@ti.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        linux-gpio <linux-gpio@vger.kernel.org>,
-        kernel-janitors@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>
-References: <20190221162627.3476-1-brgl@bgdev.pl>
- <9efcbce2-4d49-7197-a3d8-0e83850892d5@web.de>
- <CAMpxmJX-wXQ-ff1RWkPmJBWSsP_v2MjZrA3fhj3HQX0_zM0eZA@mail.gmail.com>
- <39ae399a-c606-c6de-f84d-35e39d0410c0@metux.net>
- <CAMRc=McepqowJNi6ay6x9KKoHOC8aCxP_ob12SgbsnJU_sKQng@mail.gmail.com>
-From:   "Enrico Weigelt, metux IT consult" <lkml@metux.net>
-Organization: metux IT consult
-Message-ID: <1dd52704-0e41-db31-33f4-c9f446a47344@metux.net>
-Date:   Mon, 24 Jun 2019 20:22:45 +0200
-User-Agent: Mozilla/5.0 (X11; Linux i686 on x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.2.1
+        id S1732418AbfFXVqu (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 24 Jun 2019 17:46:50 -0400
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:44353 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727855AbfFXVqt (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 24 Jun 2019 17:46:49 -0400
+Received: by mail-lj1-f194.google.com with SMTP id k18so14086964ljc.11
+        for <linux-gpio@vger.kernel.org>; Mon, 24 Jun 2019 14:46:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=TvObU7IWK148mugv+8YLoxj2pHtdD8wDjralc1eZ820=;
+        b=eVyKqSIuQKAaekM0EmHtxuljE+XvuFuqrCH3w4eVu4uH4gQY/lL63E07pCzcpneENN
+         MbU7ILZsJsAXJiCJYoAs7tGqmLGU+8VLAMvnvuEpJ/D7kVhU1B2PhW45XdvQNJ6AAgDs
+         Ak9PEfhkgZLi/pyETtdR+k2eoGG39VnWmVa5QOym+EeDfOeJ0Q1XYD4HQjpTrEM775ex
+         4VntPKQXC+tb08A/XRAWmjdtqSWgnZ8TRZQiPr/bjy20qZ74XZWLMKuCTtG2CAmoUEst
+         ttb9VJ70e1q9U+6ClJyRpuzdE3MGR00uJCUtWLaOKlAMSUZ//E4eQUYflW1tmSCrQwCo
+         4TNA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=TvObU7IWK148mugv+8YLoxj2pHtdD8wDjralc1eZ820=;
+        b=Z3J4HNiFdck8dkFankSX4KphmDO1kGo31aqkjYHhqudw2ailkerjTrQMO9W0UymVI+
+         +t+wwaj4yZPxoyJfyXM2BboQQaW9elu1PhqcKp/yXbOfbVoklXl0m879YOwXYz7mpBtn
+         tgT4SX8XF6PcYrhRJCPgBhuPDe6YI05XCWEYBcKmGhcLQ32dX0tmI4jKqM806hALJCbU
+         Eze4sjjWc/r49Fh5I+4wvse6aP652dikzWkROuCycxzxEjo9iBiz58WBsV+/nahqja1b
+         Ia3wmlibgkUIKEtwgMxy6QnixCcUV2SE1Citma1+IL51eeGAOA114MtsmSY0Fqdp06hu
+         Fo0Q==
+X-Gm-Message-State: APjAAAWoxwphwpA99Hp1qDRApa7UfNQh961fuNwKmLhriePvLVXRSd/s
+        O1WvDaq/pI+jrQfjfW8AheFzX6kNGQ4/2e8UgxqdeCgJmfw=
+X-Google-Smtp-Source: APXvYqyB9J5h/adP0i/pNpLqsTGYXEE2AV7J1lLS89yxmzcik9O406p6N6fHizeTKD6/qXhj5wF/FzTcYlAojDcxqWw=
+X-Received: by 2002:a2e:8195:: with SMTP id e21mr59397998ljg.62.1561412807863;
+ Mon, 24 Jun 2019 14:46:47 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <CAMRc=McepqowJNi6ay6x9KKoHOC8aCxP_ob12SgbsnJU_sKQng@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Provags-ID: V03:K1:ZgmkRGHs7Dk+by07gKqk33wnZnw8jFOEY7Mzgtc3URhPyCvBCsp
- L7tXD4MeY3Xax46GIB0/blF9/NGjT6pAdIcNuaiXYy+qpAvnxV38nbKkqLmxD5l1e0ffUxg
- cGc1gvVDpkaV2vKyS+EHGXs00cgG7Bp6N5otI5l/92GnSozO9QX52qTDnFOzOAHaLVbEztt
- yimvgXuW6f0pYDq6sgQvg==
-X-Spam-Flag: NO
-X-UI-Out-Filterresults: notjunk:1;V03:K0:JQHY8EkLn+M=:lJVSEKZy2Nz4CNNSOqZUni
- EqeYGj7M4IwCCw1HCbCW3SUiu7ZTdr7RPEedoSpwkDfh13u5+kQSble5vLGiCAiK0teAIkOI7
- llvxXVKhZXASP0VcRyPao9P21+vNMyOKoub8/JrM1YhDERUMe3pXNpi96YwHB9abnjK2EnrLW
- zuTEPB2A7QLq9RSeDh2mTbGps1v9B3bGdpC8W7b1cwmI3NhHD6JWH0OY8czisXQt/GKrTz64/
- MYfi/0mKuzwT9FaITglKSHfH1YakogstwdpPj6OAElm3PW6DaVdBl0vF6C4jWPZeczqsNc+2d
- Guk1BCLf5Skdl1PdW/sk1oszu8DcEawwqZS52osidlchQNxeHJBrIyVIXidlK46tRF+JGNRKV
- vaxHjrPds05TGoQa7NiKIhp19eldmo6o+77fVnHrFhWQ70ccJrd6TZXnTOoxhCxVz+Z18hqQc
- Ox/OKf6XnAWhze2iTRyV04Of3IroXksK/VazvPdCl4CgFIQsNzE4jQLufL0nvnF/kpcNS5aza
- t5bTvRbUSYmKtXwaEyGgWCeP4+vlqAts+/BZhQLXmrc08sNUKCDggXa+fi7RiB/M83shvNzHR
- aqQ/V8vqkSAcDXWu1FlZ9dHqG9DkcLuk7ib4qZf15xbvXNHP4E4A0qgLRVl0DxXVMw+G1zRkU
- IFRtpyPnNmRoVgYpyr/eFvTCZ+RyExHBlbh3HUL5h5EnX/GNb7dntJskgj4ZTMPatHHlUinJ8
- mqHEgn3KBHEbmn7MvQWhWAaS9oly8yjDi9T/7ZpzNpTaniJUupJ71kFvkuU=
+References: <dd30c34a83293926c072f6a3fe612dcf134b7620.camel@collabora.com>
+ <e6ca74e2-fc51-3f24-c5e9-18c22d6f87ef@metux.net> <e344f5a35e314ebcea110ba082b74659de5b0e5e.camel@collabora.com>
+In-Reply-To: <e344f5a35e314ebcea110ba082b74659de5b0e5e.camel@collabora.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Mon, 24 Jun 2019 23:46:35 +0200
+Message-ID: <CACRpkdaLEDmJ49m_fpuuA1e33hTtyB-LsyZeOmpRybbULgmHDA@mail.gmail.com>
+Subject: Re: [RFC] Addition of kernel
+To:     Martyn Welch <martyn.welch@collabora.com>
+Cc:     "Enrico Weigelt, metux IT consult" <lkml@metux.net>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        kernel@collabora.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 24.06.19 12:46, Bartosz Golaszewski wrote:
+On Wed, Jun 19, 2019 at 1:54 PM Martyn Welch <martyn.welch@collabora.com> wrote:
 
->> The patch seems pretty trivial and doesn't change any actual code, so
->> I don't see hard resons for rejecting it.
->>
-> 
-> In its current form it makes the code even less readable. The #ifdef
-> should actually be one line lower and touch the comment instead of the
-> EXPORT_SYMBOL() related to a different function.
+> You're right, the lines we wish to use this with aren't generic gpios,
+> they are primarily control lines for specific peripherals on the
+> device. I believe you are right, in an ideal world we could write
+> drivers for some of the functionality currently being exposed to user
+> space. But I'm fairly sure some of the lines don't have a sensible
+> driver model in which to fit them, specifically I can think of the
+> reset, boot mode control and interrupt lines for the GPS unit embedded
+> in the device I'm working on.
 
-Okay, that missing newline should be fixed (as well as the extra one
-after the #ifdef). Besides that, I don't see any further problems.
+A GPS unit should be handled using the GNSS subsystem in
+drivers/gnss:
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/gnss
 
---mtx
+The device tree bindings actually mention some of what you
+already line up (timepulse-gpios for example):
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/devicetree/bindings/gnss
 
--- 
-Enrico Weigelt, metux IT consult
-Free software and Linux embedded engineering
-info@metux.net -- +49-151-27565287
+> We are also not in the position to make major changes to how
+> functionality on this device has already been implemented and whilst we
+> are hoping to move to using proper drivers in some places, this is not
+> going to be tenable in all cases and we would ideally like to avoid
+> utilising a home grown (and certainly unlikely to be upstreamable)
+> solution for exposing these GPIOs.
+
+While we do encourage to use the right subsystems for this kind
+of stuff there are certain cases we do defer to be handled in userspace,
+but not many. These include one-off things like prototypes and
+factory lines with a myriad of relays (some PLC usecases),
+door openers (we don't want drivers/dooropener) or fire
+alarm button (but definately any elaborate IIO sensors
+goes into drivers/iio) so it is a bit on case-by-case intuition
+here.
+
+Yours,
+Linus Walleij
