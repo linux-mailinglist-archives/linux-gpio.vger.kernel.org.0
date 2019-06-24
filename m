@@ -2,211 +2,121 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 3397E50609
-	for <lists+linux-gpio@lfdr.de>; Mon, 24 Jun 2019 11:46:35 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D4303507E8
+	for <lists+linux-gpio@lfdr.de>; Mon, 24 Jun 2019 12:13:13 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726774AbfFXJqd (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 24 Jun 2019 05:46:33 -0400
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:37544 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726716AbfFXJqd (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 24 Jun 2019 05:46:33 -0400
-Received: by mail-lf1-f65.google.com with SMTP id d11so9546681lfb.4;
-        Mon, 24 Jun 2019 02:46:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=Ev9Tj2wrV2sHVa78lJSUKLNtj813pnRYEFAtRIvugjE=;
-        b=qSCxSb4WXeoEdWJZpY6yBNK8LXScRMNlFQ6qW4vetx44ieE7bfXpvvHAA9dVyGi6W0
-         CkXlZVeJ6Xyz60NBJHmRkxeu60aF9Pmh1rLzqqpvUJ/J60YEk0b7O6F/yzgnKUHkMl3r
-         kSNAhNA0ozuVh4xziklAIjJ7ns5zqobvE0Z3I5SsdcXpc2MJM9jkpt55hD8UX98RjocV
-         Ay5xrZK/YLYBdbtMPBGacuWXzKMSsfDpEX7jhBfWUgInyyJi3DkMwMDM+XA+/4/2rnBm
-         3ZhfaUXVPaEKQQnlb1bL1Yft4giSc7pfAiB53860HM0iLNlHPY78Jov5uUZGTV/Mq2pI
-         sxOQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=Ev9Tj2wrV2sHVa78lJSUKLNtj813pnRYEFAtRIvugjE=;
-        b=Zm4dJUm/ViY1+n/hC6GJHb5weR5KeYLtdJ2Vvs4YXDkj5l42+o/YOYxRN/0AUK3enh
-         KUIP1opHVQuITyHfSbgmmEwhTAGcTboj6xJRA7VmHMRnzD2KeIfokTmTpansB43DlWVM
-         E77bbu71oAemMpo4Ta9VjUiCO+fKWhf9xfd3VZ+bASQY46rHKEpR2q4zSptPMzzNAww0
-         RPea3h1NSLWda4rV5Q7I0tNxVCtIhkNgL4ICbtaf05jKGMgviIFn5YbZPVCDPwYzxEWu
-         oew2e4R1jwBkoKAMJRbyRdZBW1gB9P0H8O3d7s0LEBzcrUlZCHiD9oEbr4JqDcw+dr6z
-         Pi4w==
-X-Gm-Message-State: APjAAAVas0V/XpGsgSmXW/PQgK/MfQRYWPLoOB/XqWT9njEzWuT+4w3M
-        P0E4uhUMuzxe02s71Uz1V4vyxB7w
-X-Google-Smtp-Source: APXvYqzsFhhIEFfn6HM3ZO8SBA4KV8ZzTlRkGff2B0yMJxryYKBTwQTW/XWgiiIfqrsVyzbYuiKkow==
-X-Received: by 2002:a19:550f:: with SMTP id n15mr3464871lfe.34.1561369590174;
-        Mon, 24 Jun 2019 02:46:30 -0700 (PDT)
-Received: from [192.168.2.145] (ppp91-79-162-197.pppoe.mtu-net.ru. [91.79.162.197])
-        by smtp.googlemail.com with ESMTPSA id z26sm1643515ljz.64.2019.06.24.02.46.28
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 24 Jun 2019 02:46:29 -0700 (PDT)
-Subject: Re: [PATCH V4 02/18] pinctrl: tegra: add suspend and resume support
-To:     Sowjanya Komatineni <skomatineni@nvidia.com>,
-        thierry.reding@gmail.com, jonathanh@nvidia.com, tglx@linutronix.de,
-        jason@lakedaemon.net, marc.zyngier@arm.com,
-        linus.walleij@linaro.org, stefan@agner.ch, mark.rutland@arm.com
-Cc:     pdeschrijver@nvidia.com, pgaikwad@nvidia.com, sboyd@kernel.org,
-        linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org,
-        jckuo@nvidia.com, josephl@nvidia.com, talho@nvidia.com,
-        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org,
-        mperttunen@nvidia.com, spatra@nvidia.com, robh+dt@kernel.org,
-        devicetree@vger.kernel.org
-References: <1561345379-2429-1-git-send-email-skomatineni@nvidia.com>
- <1561345379-2429-3-git-send-email-skomatineni@nvidia.com>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <a03ce644-5efd-e721-fb06-16de097171bb@gmail.com>
-Date:   Mon, 24 Jun 2019 12:46:28 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.1
+        id S1730040AbfFXKLw (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 24 Jun 2019 06:11:52 -0400
+Received: from mout.kundenserver.de ([212.227.126.130]:42609 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730103AbfFXKG2 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 24 Jun 2019 06:06:28 -0400
+Received: from [192.168.1.110] ([77.4.138.202]) by mrelayeu.kundenserver.de
+ (mreue009 [212.227.15.167]) with ESMTPSA (Nemesis) id
+ 1MirfI-1iB8Md1MgO-00er3h; Mon, 24 Jun 2019 12:05:43 +0200
+Subject: Re: [PATCH] drivers: Adjust scope for CONFIG_HAS_IOMEM before
+ devm_platform_ioremap_resource()
+To:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Markus Elfring <Markus.Elfring@web.de>
+Cc:     Bartosz Golaszewski <brgl@bgdev.pl>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Keerthy <j-keerthy@ti.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        linux-gpio <linux-gpio@vger.kernel.org>,
+        kernel-janitors@vger.kernel.org,
+        LKML <linux-kernel@vger.kernel.org>
+References: <20190221162627.3476-1-brgl@bgdev.pl>
+ <9efcbce2-4d49-7197-a3d8-0e83850892d5@web.de>
+ <CAMpxmJX-wXQ-ff1RWkPmJBWSsP_v2MjZrA3fhj3HQX0_zM0eZA@mail.gmail.com>
+From:   "Enrico Weigelt, metux IT consult" <lkml@metux.net>
+Organization: metux IT consult
+Message-ID: <39ae399a-c606-c6de-f84d-35e39d0410c0@metux.net>
+Date:   Mon, 24 Jun 2019 12:05:42 +0200
+User-Agent: Mozilla/5.0 (X11; Linux i686 on x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.2.1
 MIME-Version: 1.0
-In-Reply-To: <1561345379-2429-3-git-send-email-skomatineni@nvidia.com>
+In-Reply-To: <CAMpxmJX-wXQ-ff1RWkPmJBWSsP_v2MjZrA3fhj3HQX0_zM0eZA@mail.gmail.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 8bit
+X-Provags-ID: V03:K1:Y5KmhAuGYBWpz63kWCoOrWjQppi2GCM7nw4zwIl5goqEXlJ5BbX
+ t8ubaYngOokp6Z8xrfJZdvOg8jSkCfYvjScNX1xaVigp3qfACw0j20K6xuf4CANZ46Nq9me
+ q08dSj4GKou4/MPmMnT9912RJMpzT2PhiqIUQy8YOCHkkeHk9RA7GVcmp4d+Al1H+rYRXPs
+ 32V86gxzCU6XHurLGQZkA==
+X-Spam-Flag: NO
+X-UI-Out-Filterresults: notjunk:1;V03:K0:EhlFrXnRRgs=:/a8XyZ7CEl2MasOCthdPtj
+ GHPmIV3VKUQE9+3JzxCKgOABObymqWS20d1W1RBSBjOszBrrtsH9gfXYJYPn76gflfz2vENlz
+ f7yuhlrfbJvb/GmOQW0IF0Mio5exilcACOo3xQHJXqqHp2i5N1BXXYS7k5+XdcYDSCfPKS+ZU
+ 8pYNFguDUshvnjh2oUJ80YdL8blZUSa08lYuap5dZtqw4LAgNmuJmpzRltz/125xVxwPE8Ccl
+ 1Yd2YmZ2kfhnd1EmwVn6OeN3Fj/zeuXq+aJq3F0QHpUP+K5mPhlEs7h+RJwooknu04BCD+VsR
+ nUr+BfT1xIWR/sTJJ4WgIJ64t1dTTangFgfUiadeSMwaEV6OvOaOpvR4JQ5h5+phkGo24n6LD
+ QC+KNoTH/n4wDIHzqMyqX5Ev35mg9SvjSrIwoSmBx2aCHvX0tGazcolLApMyZx4Nmrx79iQiD
+ uoOz6UVo0p5K2+W/qigonOACW2LdYozDvoaePPP/4F9CMdG/79hvp5Qjk02aSHpy+ki18VXH+
+ CFLv6ygB+oMEAVxl4EvuffVb5WYkGHvkUjQMspnD7rc5mGFJllTXRsrLoB4h+8InP6OTM9w8l
+ khKa6p00oEoCBymM8BKqFu0Zr+ZcHWEiXSpJUzLkoob77+hG+k3WltUeg0zOCcED/lLOJPKsf
+ 2BkRkkh3rMPoy3a/iusG2prGte2LUVNt5UBGA1Yr3ry2YBA2rsYbudm44rtCdPpzZgaU6K/h9
+ D/eNKp1aT1PhRS9h7Kuoi1K+0coK98p/mkx00aFfY0souEtU/PI3+UTZ3QvcWfKkaIgS8MpQ3
+ eLPWthYy3Xf2gooeBE1FiY5qhbOertn8d6oftV/J6aDRj0kTdaFsDmFZfHJNuGW4qQlnHAF
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-24.06.2019 6:02, Sowjanya Komatineni пишет:
-> This patch adds support for Tegra pinctrl driver suspend and resume.
+On 24.06.19 10:29, Bartosz Golaszewski wrote:
+> pt., 14 cze 2019 o 18:50 Markus Elfring <Markus.Elfring@web.de> napisał(a):
+>>
+>> From: Markus Elfring <elfring@users.sourceforge.net>
+>> Date: Fri, 14 Jun 2019 17:45:13 +0200
+>>
+>> Move the preprocessor statement “#ifdef CONFIG_HAS_IOMEM” so that
+>> the corresponding scope for conditional compilation includes also comments
+>> for this function implementation.
+>>
+>> Signed-off-by: Markus Elfring <elfring@users.sourceforge.net>
+>> ---
+>>  drivers/base/platform.c | 2 +-
+>>  1 file changed, 1 insertion(+), 1 deletion(-)
+>>
+>> diff --git a/drivers/base/platform.c b/drivers/base/platform.c
+>> index 4d1729853d1a..a5f40974a6ef 100644
+>> --- a/drivers/base/platform.c
+>> +++ b/drivers/base/platform.c
+>> @@ -78,6 +78,7 @@ struct resource *platform_get_resource(struct platform_device *dev,
+>>         return NULL;
+>>  }
+>>  EXPORT_SYMBOL_GPL(platform_get_resource);
+>> +#ifdef CONFIG_HAS_IOMEM
+>>
+>>  /**
+>>   * devm_platform_ioremap_resource - call devm_ioremap_resource() for a platform
+>> @@ -87,7 +88,6 @@ EXPORT_SYMBOL_GPL(platform_get_resource);
+>>   *        resource management
+>>   * @index: resource index
+>>   */
+>> -#ifdef CONFIG_HAS_IOMEM
+>>  void __iomem *devm_platform_ioremap_resource(struct platform_device *pdev,
+>>                                              unsigned int index)
+>>  {
+>> --
+>> 2.22.0
+>>
 > 
-> During suspend, context of all pinctrl registers are stored and
-> on resume they are all restored to have all the pinmux and pad
-> configuration for normal operation.
-> 
-> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
-> ---
->  drivers/pinctrl/tegra/pinctrl-tegra.c    | 47 ++++++++++++++++++++++++++++++++
->  drivers/pinctrl/tegra/pinctrl-tegra.h    |  4 +++
->  drivers/pinctrl/tegra/pinctrl-tegra210.c |  6 ++++
->  3 files changed, 57 insertions(+)
-> 
-> diff --git a/drivers/pinctrl/tegra/pinctrl-tegra.c b/drivers/pinctrl/tegra/pinctrl-tegra.c
-> index b03c465917b8..c0ba6fa63ad1 100644
-> --- a/drivers/pinctrl/tegra/pinctrl-tegra.c
-> +++ b/drivers/pinctrl/tegra/pinctrl-tegra.c
-> @@ -631,6 +631,38 @@ static void tegra_pinctrl_clear_parked_bits(struct tegra_pmx *pmx)
->  	}
->  }
->  
-> +int __maybe_unused tegra_pinctrl_suspend(struct device *dev)
+> And what is the purpose of that?
 
-The "maybe_unused" attribute isn't needed for global functions because
-compiler always assumes that such functions are used somewhere outside.
+I can imagine that this could improve readability a little bit. Maybe if
+one uses same fancy ide/editor that can fold code blocks like functions
+and conditionals, this patch could make the code prettier.
 
-> +{
-> +	struct tegra_pmx *pmx = dev_get_drvdata(dev);
-> +	u32 *backup_regs = pmx->backup_regs;
-> +	u32 *regs;
-> +	unsigned int i, j;
-> +
-> +	for (i = 0; i < pmx->nbanks; i++) {
-> +		regs = pmx->regs[i];
-> +		for (j = 0; j < pmx->reg_bank_size[i] / 4; j++)
-> +			*backup_regs++ = readl(regs++);
-> +	}
-> +
-> +	return pinctrl_force_sleep(pmx->pctl);
-> +}
-> +
-> +int __maybe_unused tegra_pinctrl_resume(struct device *dev)
-> +{
-> +	struct tegra_pmx *pmx = dev_get_drvdata(dev);
-> +	u32 *backup_regs = pmx->backup_regs;
-> +	u32 *regs;
-> +	unsigned int i, j;
-> +
-> +	for (i = 0; i < pmx->nbanks; i++) {
-> +		regs = pmx->regs[i];
-> +		for (j = 0; j < pmx->reg_bank_size[i] / 4; j++)
-> +			writel(*backup_regs++, regs++);
-> +	}
-> +
-> +	return 0;
-> +}
-> +
->  static bool gpio_node_has_range(const char *compatible)
->  {
->  	struct device_node *np;
-> @@ -655,6 +687,7 @@ int tegra_pinctrl_probe(struct platform_device *pdev,
->  	int i;
->  	const char **group_pins;
->  	int fn, gn, gfn;
-> +	unsigned long backup_regs_size = 0;
->  
->  	pmx = devm_kzalloc(&pdev->dev, sizeof(*pmx), GFP_KERNEL);
->  	if (!pmx)
-> @@ -707,6 +740,7 @@ int tegra_pinctrl_probe(struct platform_device *pdev,
->  		res = platform_get_resource(pdev, IORESOURCE_MEM, i);
->  		if (!res)
->  			break;
-> +		backup_regs_size += resource_size(res);
->  	}
->  	pmx->nbanks = i;
->  
-> @@ -715,11 +749,24 @@ int tegra_pinctrl_probe(struct platform_device *pdev,
->  	if (!pmx->regs)
->  		return -ENOMEM;
->  
-> +	pmx->reg_bank_size = devm_kcalloc(&pdev->dev, pmx->nbanks,
-> +					  sizeof(*pmx->reg_bank_size),
-> +					  GFP_KERNEL);
-> +	if (!pmx->reg_bank_size)
-> +		return -ENOMEM;
-> +
-> +	pmx->backup_regs = devm_kzalloc(&pdev->dev, backup_regs_size,
-> +					GFP_KERNEL);
-> +	if (!pmx->backup_regs)
-> +		return -ENOMEM;
-> +
->  	for (i = 0; i < pmx->nbanks; i++) {
->  		res = platform_get_resource(pdev, IORESOURCE_MEM, i);
->  		pmx->regs[i] = devm_ioremap_resource(&pdev->dev, res);
->  		if (IS_ERR(pmx->regs[i]))
->  			return PTR_ERR(pmx->regs[i]);
-> +
-> +		pmx->reg_bank_size[i] = resource_size(res);
->  	}
->  
->  	pmx->pctl = devm_pinctrl_register(&pdev->dev, &tegra_pinctrl_desc, pmx);
-> diff --git a/drivers/pinctrl/tegra/pinctrl-tegra.h b/drivers/pinctrl/tegra/pinctrl-tegra.h
-> index 32642af3f871..65fcbf8c7579 100644
-> --- a/drivers/pinctrl/tegra/pinctrl-tegra.h
-> +++ b/drivers/pinctrl/tegra/pinctrl-tegra.h
-> @@ -17,6 +17,8 @@ struct tegra_pmx {
->  
->  	int nbanks;
->  	void __iomem **regs;
-> +	size_t *reg_bank_size;
-> +	u32 *backup_regs;
->  };
->  
->  enum tegra_pinconf_param {
-> @@ -195,4 +197,6 @@ struct tegra_pinctrl_soc_data {
->  
->  int tegra_pinctrl_probe(struct platform_device *pdev,
->  			const struct tegra_pinctrl_soc_data *soc_data);
-> +int __maybe_unused tegra_pinctrl_suspend(struct device *dev);
-> +int __maybe_unused tegra_pinctrl_resume(struct device *dev);
->  #endif
-> diff --git a/drivers/pinctrl/tegra/pinctrl-tegra210.c b/drivers/pinctrl/tegra/pinctrl-tegra210.c
-> index 617ad963f5ad..4616bbc2efba 100644
-> --- a/drivers/pinctrl/tegra/pinctrl-tegra210.c
-> +++ b/drivers/pinctrl/tegra/pinctrl-tegra210.c
-> @@ -1562,6 +1562,11 @@ static int tegra210_pinctrl_probe(struct platform_device *pdev)
->  	return tegra_pinctrl_probe(pdev, &tegra210_pinctrl);
->  }
->  
-> +static const struct dev_pm_ops tegra_pinctrl_pm = {
-> +	.suspend = &tegra_pinctrl_suspend,
-> +	.resume = &tegra_pinctrl_resume
-> +};
+The patch seems pretty trivial and doesn't change any actual code, so
+I don't see hard resons for rejecting it.
 
-What about to move tegra_pinctrl_pm out into pinctrl-tegra.c to make it
-common for all of the drivers?
+
+--mtx
+
+
+-- 
+Enrico Weigelt, metux IT consult
+Free software and Linux embedded engineering
+info@metux.net -- +49-151-27565287
