@@ -2,93 +2,100 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id E4DD64FFCB
-	for <lists+linux-gpio@lfdr.de>; Mon, 24 Jun 2019 05:04:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A335250101
+	for <lists+linux-gpio@lfdr.de>; Mon, 24 Jun 2019 07:33:48 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727627AbfFXDD5 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sun, 23 Jun 2019 23:03:57 -0400
-Received: from hqemgate16.nvidia.com ([216.228.121.65]:13267 "EHLO
-        hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727617AbfFXDD4 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sun, 23 Jun 2019 23:03:56 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5d103d9b0001>; Sun, 23 Jun 2019 20:03:55 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Sun, 23 Jun 2019 20:03:55 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Sun, 23 Jun 2019 20:03:55 -0700
-Received: from HQMAIL105.nvidia.com (172.20.187.12) by HQMAIL104.nvidia.com
- (172.18.146.11) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 24 Jun
- 2019 03:03:55 +0000
-Received: from hqnvemgw02.nvidia.com (172.16.227.111) by HQMAIL105.nvidia.com
- (172.20.187.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
- Transport; Mon, 24 Jun 2019 03:03:55 +0000
-Received: from skomatineni-linux.nvidia.com (Not Verified[10.2.174.126]) by hqnvemgw02.nvidia.com with Trustwave SEG (v7,5,8,10121)
-        id <B5d103d980002>; Sun, 23 Jun 2019 20:03:55 -0700
-From:   Sowjanya Komatineni <skomatineni@nvidia.com>
-To:     <thierry.reding@gmail.com>, <jonathanh@nvidia.com>,
-        <tglx@linutronix.de>, <jason@lakedaemon.net>,
-        <marc.zyngier@arm.com>, <linus.walleij@linaro.org>,
-        <stefan@agner.ch>, <mark.rutland@arm.com>
-CC:     <pdeschrijver@nvidia.com>, <pgaikwad@nvidia.com>,
-        <sboyd@kernel.org>, <linux-clk@vger.kernel.org>,
-        <linux-gpio@vger.kernel.org>, <jckuo@nvidia.com>,
-        <josephl@nvidia.com>, <talho@nvidia.com>, <skomatineni@nvidia.com>,
-        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <mperttunen@nvidia.com>, <spatra@nvidia.com>, <robh+dt@kernel.org>,
-        <digetx@gmail.com>, <devicetree@vger.kernel.org>
-Subject: [PATCH V4 18/18] arm64: dts: tegra210-p2180: Jetson TX1 SC7 timings
-Date:   Sun, 23 Jun 2019 20:02:59 -0700
-Message-ID: <1561345379-2429-19-git-send-email-skomatineni@nvidia.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1561345379-2429-1-git-send-email-skomatineni@nvidia.com>
-References: <1561345379-2429-1-git-send-email-skomatineni@nvidia.com>
-X-NVConfidentiality: public
+        id S1726469AbfFXFdr (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 24 Jun 2019 01:33:47 -0400
+Received: from mout.kundenserver.de ([212.227.17.13]:38219 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726304AbfFXFdr (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 24 Jun 2019 01:33:47 -0400
+Received: from [192.168.1.110] ([77.4.138.202]) by mrelayeu.kundenserver.de
+ (mreue106 [212.227.15.183]) with ESMTPSA (Nemesis) id
+ 1MvaO8-1iXnw932v8-00sfNC; Mon, 24 Jun 2019 07:33:43 +0200
+Subject: Re: [PATCH v2 1/2] include: linux: siox: more for declaring siox
+ drivers
+To:     =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>,
+        "Enrico Weigelt, metux IT consult" <info@metux.net>
+Cc:     linux-kernel@vger.kernel.org, bgolaszewski@baylibre.com,
+        linus.walleij@linaro.org, kernel@pengutronix.de,
+        linux-gpio@vger.kernel.org, t.scherer@eckelmann.de
+References: <1560854427-27537-1-git-send-email-info@metux.net>
+ <1560854427-27537-2-git-send-email-info@metux.net>
+ <20190618161747.65y52fqr6toavdtb@pengutronix.de>
+From:   "Enrico Weigelt, metux IT consult" <lkml@metux.net>
+Organization: metux IT consult
+Message-ID: <33a51598-bf79-90a4-5cd8-906498d264e1@metux.net>
+Date:   Mon, 24 Jun 2019 07:33:42 +0200
+User-Agent: Mozilla/5.0 (X11; Linux i686 on x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.2.1
 MIME-Version: 1.0
-Content-Type: text/plain
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1561345435; bh=3ikE8x0cNN1fPtdTTddMKObVTKhfyEJPwIrj8ksa4Wg=;
-        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
-         In-Reply-To:References:X-NVConfidentiality:MIME-Version:
-         Content-Type;
-        b=NJDNIdtgFCnSUNvZiIZyyoYq1MWL9GEcD/rJdXw/+TFyNHK0D8uab/04bae25LrUk
-         hu0quJxkUQhU6l9Zc6HE448Vdi+Ze21BYW3dJQ22g95Xp/wRccKQ/UWuHnnU0xabj9
-         I4TG90+yg0sPZnCo4TZ17nUr/oLJExjB6SE0ETOtZKaXY38weSTY2Yw8Hn2Q8zNP4v
-         vRGRS7XsMCWFIsVRE+c7bHU400IxlGM4hnaEN+S+h7y2ku+LDHVPrF+FYhwxcmVIqB
-         SI1nqT2QU46yMOK8Oj50NrTQtBQ5N+vHxQxR2UYuvceFQrsAK4nHh94nwaUqnPWBEr
-         z5tKKIND8eUAg==
+In-Reply-To: <20190618161747.65y52fqr6toavdtb@pengutronix.de>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-Provags-ID: V03:K1:ttQ0DNsB4PXv7hh8eeoe97pj/lSopBnCBLsYfA74MXIW6ErCJyD
+ be3WUs6JEULh4bu1BjiMcMCb1ZrOPqB5fxLcNBgWghYHoWMo2+XWf3WTTnPKHsbVxh4zF7n
+ 2SdzegIBGENUgh0T7d2BZqDGScPTQ+4h26W+MDzdKgOXEyhmrQvU83sOZ1RmqH9iJfnr7iQ
+ 2xvFcCcvFIcSBzkaqj1HA==
+X-Spam-Flag: NO
+X-UI-Out-Filterresults: notjunk:1;V03:K0:98874X0gkJ4=:U/fimL8PjsZ2FDYpggj2EJ
+ 4E2prPaYrvO92XhO1z0lqOgBnubhuv6qxyzuMsRFOTpAp5mjKD/JcnJey+L3VHGsZi/wl1mbg
+ 8cAQDBzKJwd7uv0RRx14o2greVqMiFtvPhrzjZuflb3qKxhJu579dMzwnr40/0ASIjVYlVQs7
+ i5Q+jBiuGaI01qB82zL0gc5x/TZnB1t2yjAF2gRvSNcS1Y4R8nSw8WCVmJq+53TYqvSBuYQb4
+ 065K/Nj27gTcysX6ksK9HdMPpTFKqHCda1SACAxyxEs9LT0LF8bi+lhgalWOe8rVCpJZi2wpl
+ KRRHnhRjTZubOjt+ELjA0D6ob2ZN1Id4TxrRpjULdnXrHjH7Ckph35SUr7wjZIlcF930fLB6m
+ uN9UT3pCo7Qg+CzkPtUXxpKhFRnjXPGuGIYu2RwQZ/TtGr79SfNR7crpBYmeIoy+KgmAH41WM
+ sVb47+aMKb9S75d8y/46ncdvlSpUfZW69RiYJ5x5QenBPm3KVVHCRtexVX3mgu7KfDDU1wbem
+ Q3shF8G8rNn7EPrZ5qh90XTiZ4onsRYMQbX77xF9NbA0wfcKT+m8tK9YTbkoJJjTKPgTjRY1z
+ nCFzNm9ZAdJxXSTTvKnfgkgr07WvJ4Ur6f/flbeEsQB8423h5dSefiKFWFDy/L5MrxPZfevdp
+ v+mjiTnJr2UNgDlgMei4oyNSf1c4qdiLh/XyxxCMNrwd9vyOTfuIbsTv0J2PeCj8R4SkLamfm
+ ZONhp1sDOnCJ4SYjyHww7PeEGhx+lnxuuV8aWWUhorCEoz5kPtBauBuVTc8=
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-This patch has Jetson TX1 platform specific SC7 timing configuration
-in device tree.
+On 18.06.19 18:17, Uwe Kleine-König wrote:
 
-Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
----
- arch/arm64/boot/dts/nvidia/tegra210-p2180.dtsi | 7 +++++++
- 1 file changed, 7 insertions(+)
+Hi,
 
-diff --git a/arch/arm64/boot/dts/nvidia/tegra210-p2180.dtsi b/arch/arm64/boot/dts/nvidia/tegra210-p2180.dtsi
-index 27723829d033..cb58f79deb48 100644
---- a/arch/arm64/boot/dts/nvidia/tegra210-p2180.dtsi
-+++ b/arch/arm64/boot/dts/nvidia/tegra210-p2180.dtsi
-@@ -279,6 +279,13 @@
- 
- 	pmc@7000e400 {
- 		nvidia,invert-interrupt;
-+		nvidia,suspend-mode = <0>;
-+		nvidia,cpu-pwr-good-time = <0>;
-+		nvidia,cpu-pwr-off-time = <0>;
-+		nvidia,core-pwr-good-time = <4587 3876>;
-+		nvidia,core-pwr-off-time = <39065>;
-+		nvidia,core-power-req-active-high;
-+		nvidia,sys-clock-req-active-high;
- 	};
- 
- 	/* eMMC */
+> I like the change. Just noticed that the Subject line is a bit strange> though. if "more for" is proper English then it's news to me. I'd
+write:> > 	siox: add helper macro to simplify driver registration
+Good point, seems I've must have been totally under-coffeined, and
+some words on nasty phone interrupts :o
+
+I'll fix that.
+
+<snip>
+
+>> diff --git a/include/linux/siox.h b/include/linux/siox.h>> index d79624e..d53b2b2 100644>> --- a/include/linux/siox.h>> +++
+b/include/linux/siox.h>> @@ -75,3 +75,12 @@ static inline void
+siox_driver_unregister(struct siox_driver *sdriver)>>  {>>  	return
+driver_unregister(&sdriver->driver);>>  }>> +>> +/* module_siox_driver()
+- Helper macro for drivers that don't do> > I'd prefer /* on a separate
+line as documented in> Documentation/process/coding-style.rst (for
+non-net code).
+Done.
+
+Do we have a tool to check for that ? checkpatch doesn't seem to care
+about it.
+
+>> + * anything special in module init/exit.  This eliminates a lot of>> + * boilerplate.  Each module may only use this macro once, and>> + *
+calling it replaces module_init() and module_exit()>> + */>> +#define
+module_siox_driver(__siox_driver) \>> +	module_driver(__siox_driver,
+siox_driver_register, \>> +			siox_driver_unregister)>> -- > > Sorry I
+didn't notice these two things in the first round already.
+No problem, that's why we have multiple rounds :)
+
+
+I'll send v3 in a few minutes ...
+
+
+--mtx
+
 -- 
-2.7.4
-
+Enrico Weigelt, metux IT consult
+Free software and Linux embedded engineering
+info@metux.net -- +49-151-27565287
