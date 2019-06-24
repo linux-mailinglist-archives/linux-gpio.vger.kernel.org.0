@@ -2,85 +2,82 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id DA6515010F
-	for <lists+linux-gpio@lfdr.de>; Mon, 24 Jun 2019 07:40:48 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2869350134
+	for <lists+linux-gpio@lfdr.de>; Mon, 24 Jun 2019 07:44:08 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726930AbfFXFkl (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 24 Jun 2019 01:40:41 -0400
-Received: from mout.kundenserver.de ([212.227.126.133]:43549 "EHLO
+        id S1727529AbfFXFoH (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 24 Jun 2019 01:44:07 -0400
+Received: from mout.kundenserver.de ([217.72.192.75]:45721 "EHLO
         mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726839AbfFXFkl (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 24 Jun 2019 01:40:41 -0400
-Received: from orion.localdomain ([77.4.138.202]) by mrelayeu.kundenserver.de
- (mreue010 [212.227.15.167]) with ESMTPSA (Nemesis) id
- 1MA7X0-1hqo3A0sgc-00BaCj; Mon, 24 Jun 2019 07:40:38 +0200
-From:   "Enrico Weigelt, metux IT consult" <info@metux.net>
-To:     linux-kernel@vger.kernel.org
-Cc:     kernel@pengutronix.de, linus.walleij@linaro.org,
+        with ESMTP id S1727528AbfFXFoG (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 24 Jun 2019 01:44:06 -0400
+Received: from [192.168.1.110] ([77.4.138.202]) by mrelayeu.kundenserver.de
+ (mreue108 [212.227.15.183]) with ESMTPSA (Nemesis) id
+ 1Mirb8-1iBLL42bbQ-00ernJ; Mon, 24 Jun 2019 07:44:02 +0200
+Subject: Re: [PATCH 1/3] include: linux: i2c: more helpers for declaring i2c
+ drivers
+To:     Wolfram Sang <wsa@the-dreams.de>,
+        "Enrico Weigelt, metux IT consult" <info@metux.net>
+Cc:     linux-kernel@vger.kernel.org, linus.walleij@linaro.org,
         bgolaszewski@baylibre.com, linux-gpio@vger.kernel.org,
-        t.scherer@eckelmann.de
-Subject: [PATCH 2/2] drivers: gpio: siox: use module_siox_driver()
-Date:   Mon, 24 Jun 2019 07:40:34 +0200
-Message-Id: <1561354834-22617-3-git-send-email-info@metux.net>
-X-Mailer: git-send-email 1.9.1
-In-Reply-To: <1561354834-22617-1-git-send-email-info@metux.net>
-References: <1561354834-22617-1-git-send-email-info@metux.net>
-X-Provags-ID: V03:K1:NGkg9h4n5WFd9Dz8Y9bh4rSvV6psRZvE+7zlcGYFgJQTp8wa6F+
- 45L/O+tdyJoPVNcLE+FeC0/v7V5FfGV/f6C2FCBKYEWA5ldEYGHAmaclzTWa4mmOnMGFWwh
- 0IAjSgGk2DiZKtL/Z23+euT02kW41ZseYXFMnG8cznBTZj6txrJ37w/fVEbQxLsnN130Y9X
- EZOdfrEGCUGWeMEKN+DtA==
+        linux-i2c@vger.kernel.org
+References: <1560796779-17117-1-git-send-email-info@metux.net>
+ <20190621211744.GC950@kunai>
+From:   "Enrico Weigelt, metux IT consult" <lkml@metux.net>
+Organization: metux IT consult
+Message-ID: <c669a041-f025-693a-492a-80ce888db737@metux.net>
+Date:   Mon, 24 Jun 2019 07:44:01 +0200
+User-Agent: Mozilla/5.0 (X11; Linux i686 on x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.2.1
+MIME-Version: 1.0
+In-Reply-To: <20190621211744.GC950@kunai>
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Provags-ID: V03:K1:FvDrHSFA8yM3VTo9ZSCraAJ6BwDwCFk9ahYKWgsP4DDZkk6r8ky
+ YFwhJqRRev+bQQvSYnqRJ90sIt6HfVrJ4Bb47ltZXGJ88avFYlgHZ+qCH1NjHAf9+tQC6Vm
+ W11tVZdPEFw5OhhXUqDmP9fBpb9UiaBpeM6oRcWZBL71fQfYGypQ0n49np14OS1JRe37L8A
+ EaU5Wc/r33jgiYVpdodpQ==
 X-Spam-Flag: NO
-X-UI-Out-Filterresults: notjunk:1;V03:K0:IIoj4F1nWws=:yMSRfeuGavw5Ah8l776Hdf
- wMmoCtcnfGdXOFqdVAkwKQDYBTRr/Nf+Dt46oy9doHUMPRH1ItAe2ER7e/pI8YTj8pqMWAxeX
- qsMgzl8chmxrrRzuIYegc8F+LZiErp9eRK4goAHQrCvo8kYXWP6YqMuavFDTFki5VGSe/3W8+
- q0b6yoSlhPucnPuPHuxqDruZ1BOtGua3sIvyqahDWWN6zImnRIemykjTH5DOK8NMKe7ajPHwC
- 03vY4RkRifzNKzeQeKHVIzm0D9tW74qPBgGBlRt6zuITLJvcqqnuIntonwXFgUMD4WH/Ig4QU
- jnAUDL2LY4O4NALld3ScQhouvAWx0JqKM3EtmJEWKDsQpIY/d3brRXrAu17MYMyTTAyZ43TaF
- UhoF7NPLI1Mb3nMWiCCVfb/pebNi1z3clU7/61HOoGYgup+HwM0cxfyjCtvLNnDn4mXmlpacD
- LNIpwGgrgfb1zA7AHEnzHinrm7sboCOQFfW/ifhUahbxh6ICo4HPwXfsdTuwkOmIZO9Gq4qBk
- 8mwHB88lrExUWY0ijdxhSkgXaYkrfwK1a6S1JUREKXHEOb6YiHrQnh7/82wlSMjCYnzkU0VAx
- g/nC1yuqf2kT84FDugxXfDTm08dfhlCHtfe8xzas7ZFbZsjpoLk8bV5tAKHQ0mck4QMQeSCIv
- wnwjbsOwMe+NFc8HTehxNxyeyuZS8ZGQX85Mxvcr1ym1aY5fjwzXGINSDZ1w1oNjfBqJHrvHj
- dYZ0BJEgNmvIWQkmYvOIDOaMfrTCdtZeOnznSA==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:q6wwMcoSqTc=:htisqL60GOqxnfeGPCSIZn
+ UJmJhGBi0BgHHnYj8q1iSAR/lqlgPRdCgELgPdPoh3MUsaQB22sU4hAPzHRcU5bJuinye4Piv
+ DfHiq4aIzeI0TBOGqvMxxvEc6FAOypHr89MZDA3MbMr8lkvjGGProSXW3t21CNxDHceO8vbog
+ AtSbo35dKdRc/QRVXsMY4L0OwM7Zn4zOlbRWDHVFebmfe8xNhG+mE1gX1L3rbOgrhIdH0UrVS
+ iGxLLsRWC4W/sHQ1auGy9qMFzwR0hNSN06UUJVLh34vgP1Q0MAyeS+Eb7nX9YjB5tZyYOQNkT
+ yztCYLQXsYJ4+i3saQaCmv+KGHemO6hQiDqz746Ip2Dq1TkhsgCxJCkWAQE+AyW/igwJZdxtX
+ kvwmljNdd/ybBtg3eC8u4wrLKrHPFS2C33VGPFxf8PyMnKZWvGxQWgtKljWnkVNcZaj7Moml8
+ gH2m5bW6b6ERSN33wc1A2YaVIAKMXDCCWxrq2sAokOHkV7ibq8BnVBgj9HjrhHuj3uEZ66IO7
+ yzTPAV4pxY7pRyO2uXuuVHYsvzGAH/NKUKjFuwD6wCcKfddVAUCkV598vU7AV8BONsbO6l+hm
+ r6/8vQV4eciWiOHbmuhiW0ZstbU/9/D7DIoryOtuQKOmtT8Ve3jgv9ozaKUXupEWD5+TeT4NJ
+ gSUPdHrl6kpMvbtxaLlKYagL3XuJjWK5ZHGIKnO5mxdQT8w/0zDCx3gOdtPLu2vWHxBKo5A6z
+ OTaLIuuvpDca82Nfxbq5IrwleGpB9tTjBcZNhkpjt5yXA9R/Qngu8dnh9kA=
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-From: Enrico Weigelt <info@metux.net>
+On 21.06.19 23:17, Wolfram Sang wrote:
+> On Mon, Jun 17, 2019 at 08:39:37PM +0200, Enrico Weigelt, metux IT consult wrote:
+>> From: Enrico Weigelt <info@metux.net>
+>>
+>> Add more helper macros for trivial driver init cases, similar to the
+>> already existing module_i2c_driver()+friends - now for those which
+>> are initialized at other stages (eg. by subsys_initcall()).
+>>
+>> This helps to further reduce driver init boilerplate.
+> 
+> Uh, no! Using subsys_initcall is an old fashioned hack to work around
+> boot time dependencies. Unless there are very strong arguments, I
+> usually do not accept them anymore. So, any simplification of that sends
+> out the wrong message.
 
-Reduce driver init boilerplate by using the new
-module_siox_driver() macro.
+Okay, what's the correct initialization method then ?
+Just convert it to already existing module_i2c_driver() ?
 
-Signed-off-by: Enrico Weigelt <info@metux.net>
----
- drivers/gpio/gpio-siox.c | 13 +------------
- 1 file changed, 1 insertion(+), 12 deletions(-)
 
-diff --git a/drivers/gpio/gpio-siox.c b/drivers/gpio/gpio-siox.c
-index 571b2a8..fb4e318 100644
---- a/drivers/gpio/gpio-siox.c
-+++ b/drivers/gpio/gpio-siox.c
-@@ -275,18 +275,7 @@ static int gpio_siox_remove(struct siox_device *sdevice)
- 		.name = "gpio-siox",
- 	},
- };
--
--static int __init gpio_siox_init(void)
--{
--	return siox_driver_register(&gpio_siox_driver);
--}
--module_init(gpio_siox_init);
--
--static void __exit gpio_siox_exit(void)
--{
--	siox_driver_unregister(&gpio_siox_driver);
--}
--module_exit(gpio_siox_exit);
-+module_siox_driver(gpio_siox_driver);
- 
- MODULE_AUTHOR("Uwe Kleine-Koenig <u.kleine-koenig@pengutronix.de>");
- MODULE_DESCRIPTION("SIOX gpio driver");
+--mtx
+
 -- 
-1.9.1
-
+Enrico Weigelt, metux IT consult
+Free software and Linux embedded engineering
+info@metux.net -- +49-151-27565287
