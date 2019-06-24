@@ -2,30 +2,33 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 42F1D4FFEF
-	for <lists+linux-gpio@lfdr.de>; Mon, 24 Jun 2019 05:04:41 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1704C4FFA4
+	for <lists+linux-gpio@lfdr.de>; Mon, 24 Jun 2019 05:03:25 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727406AbfFXDDU (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sun, 23 Jun 2019 23:03:20 -0400
-Received: from hqemgate16.nvidia.com ([216.228.121.65]:13191 "EHLO
-        hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727388AbfFXDDQ (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sun, 23 Jun 2019 23:03:16 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5d103d720000>; Sun, 23 Jun 2019 20:03:14 -0700
+        id S1727417AbfFXDDV (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sun, 23 Jun 2019 23:03:21 -0400
+Received: from hqemgate14.nvidia.com ([216.228.121.143]:17263 "EHLO
+        hqemgate14.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726917AbfFXDDU (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sun, 23 Jun 2019 23:03:20 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate14.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5d103d740000>; Sun, 23 Jun 2019 20:03:16 -0700
 Received: from hqmail.nvidia.com ([172.20.161.6])
   by hqpgpgate101.nvidia.com (PGP Universal service);
-  Sun, 23 Jun 2019 20:03:15 -0700
+  Sun, 23 Jun 2019 20:03:18 -0700
 X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Sun, 23 Jun 2019 20:03:15 -0700
-Received: from HQMAIL106.nvidia.com (172.18.146.12) by HQMAIL104.nvidia.com
+        by hqpgpgate101.nvidia.com on Sun, 23 Jun 2019 20:03:18 -0700
+Received: from HQMAIL111.nvidia.com (172.20.187.18) by HQMAIL104.nvidia.com
  (172.18.146.11) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 24 Jun
- 2019 03:03:14 +0000
-Received: from hqnvemgw02.nvidia.com (172.16.227.111) by HQMAIL106.nvidia.com
- (172.18.146.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
- Transport; Mon, 24 Jun 2019 03:03:14 +0000
+ 2019 03:03:17 +0000
+Received: from HQMAIL107.nvidia.com (172.20.187.13) by HQMAIL111.nvidia.com
+ (172.20.187.18) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 24 Jun
+ 2019 03:03:17 +0000
+Received: from hqnvemgw02.nvidia.com (172.16.227.111) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
+ Transport; Mon, 24 Jun 2019 03:03:17 +0000
 Received: from skomatineni-linux.nvidia.com (Not Verified[10.2.174.126]) by hqnvemgw02.nvidia.com with Trustwave SEG (v7,5,8,10121)
-        id <B5d103d700002>; Sun, 23 Jun 2019 20:03:14 -0700
+        id <B5d103d730000>; Sun, 23 Jun 2019 20:03:17 -0700
 From:   Sowjanya Komatineni <skomatineni@nvidia.com>
 To:     <thierry.reding@gmail.com>, <jonathanh@nvidia.com>,
         <tglx@linutronix.de>, <jason@lakedaemon.net>,
@@ -38,9 +41,9 @@ CC:     <pdeschrijver@nvidia.com>, <pgaikwad@nvidia.com>,
         <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         <mperttunen@nvidia.com>, <spatra@nvidia.com>, <robh+dt@kernel.org>,
         <digetx@gmail.com>, <devicetree@vger.kernel.org>
-Subject: [PATCH V4 04/18] clk: tegra: save and restore divider rate
-Date:   Sun, 23 Jun 2019 20:02:45 -0700
-Message-ID: <1561345379-2429-5-git-send-email-skomatineni@nvidia.com>
+Subject: [PATCH V4 05/18] clk: tegra: pllout: save and restore pllout context
+Date:   Sun, 23 Jun 2019 20:02:46 -0700
+Message-ID: <1561345379-2429-6-git-send-email-skomatineni@nvidia.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1561345379-2429-1-git-send-email-skomatineni@nvidia.com>
 References: <1561345379-2429-1-git-send-email-skomatineni@nvidia.com>
@@ -48,94 +51,103 @@ X-NVConfidentiality: public
 MIME-Version: 1.0
 Content-Type: text/plain
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1561345394; bh=Nd1v90bh7Ho/ojHQIob7we6JLN3yOOpS5vD9L3b3q98=;
+        t=1561345397; bh=ycvqvQuDZMmSCDGioXrw9dbuEJexSVefYb0uyI8Uy7A=;
         h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
          In-Reply-To:References:X-NVConfidentiality:MIME-Version:
          Content-Type;
-        b=MplzL5Sy+cFLkXGahIi3ELLVQytcpLS2O5KHdS0NsyraQlkCQb0Ser7MhKHRunzXY
-         0Y5MMDg1hv9A9CpUN74yhyTuD/4kCgsWYXKZu2BTqvYukubN6qIx9Aw0jqCcVveOtA
-         knBsytf1OxUfsl4b+kixKm+UZuc4x+5xnNAQJHCeNUU5WINqjqhKLOmQ7qLlp0XD0o
-         K2C7CFVYb5sWSGx0plIo7wvLfBgwa1xDBWevvbLLYyTshk22oHNYLIxP/q+sgEviQc
-         WD4c+mZU6bSIuvxVMd/suWqLZR5OatDLisnQseSvAWiYErbNmcqCNnHcilC8r7hNvx
-         dd/PdtOLEnHDQ==
+        b=XD4x4ifi5/8zXkhvg37FlFSJ/ZWAjsCDu54veAGpJGc0+JWs5vK7n5WzwwDwQIVgH
+         YJgJaOzU/RDoTjL2/QLQ3Qshme1c7QOjtOggZByHGTJBNTjPRfpW0c+OHwAPKU8+S1
+         yinoZ4NRjV0K0SaQhl1vGASlzwSMTz8Y0QdKn4WtRZitMVFxcYZUPkfVGGPgm0LRb6
+         Hrrcg1mNa852JZinv7cWwBvdN5udGuBRX5xOdU2e8gfaPxRpi5M/qB0Bq7cNdRBU9m
+         MBsAtJg/NMcrT+p7PjRy25T8fBjAwoAMhZlVITTm3FcN+/MkptN/n0e2QKdpz2eUbH
+         T0UQBb3I3R8nQ==
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-This patch implements context save and restore for clock divider.
+This patch implements save and restore of pllout context.
 
 During system suspend, core power goes off and looses the settings
 of the Tegra CAR controller registers.
 
-So during suspend entry the context of clock divider is saved and
-on resume context is restored back for normal operation.
+So during suspend entry the state of pllout is saved and on resume
+it is restored back to have pllout in same state as before suspend.
+
+pllout rate is saved and restore in clock divider so it will be at
+same rate as before suspend when pllout state is restored.
 
 Acked-by: Thierry Reding <treding@nvidia.com>
 Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
 ---
- drivers/clk/tegra/clk-divider.c | 23 +++++++++++++++++++++++
- drivers/clk/tegra/clk.h         |  2 ++
- 2 files changed, 25 insertions(+)
+ drivers/clk/tegra/clk-pll-out.c | 28 ++++++++++++++++++++++++++++
+ drivers/clk/tegra/clk.h         |  3 +++
+ 2 files changed, 31 insertions(+)
 
-diff --git a/drivers/clk/tegra/clk-divider.c b/drivers/clk/tegra/clk-divider.c
-index e76731fb7d69..ecb7ff9ce97e 100644
---- a/drivers/clk/tegra/clk-divider.c
-+++ b/drivers/clk/tegra/clk-divider.c
-@@ -109,10 +109,33 @@ static int clk_frac_div_set_rate(struct clk_hw *hw, unsigned long rate,
- 	return 0;
+diff --git a/drivers/clk/tegra/clk-pll-out.c b/drivers/clk/tegra/clk-pll-out.c
+index 35f2bf00e1e6..52d140379ce3 100644
+--- a/drivers/clk/tegra/clk-pll-out.c
++++ b/drivers/clk/tegra/clk-pll-out.c
+@@ -69,10 +69,38 @@ static void clk_pll_out_disable(struct clk_hw *hw)
+ 		spin_unlock_irqrestore(pll_out->lock, flags);
  }
  
-+static int clk_divider_save_context(struct clk_hw *hw)
++static int tegra_clk_pll_out_save_context(struct clk_hw *hw)
 +{
-+	struct tegra_clk_frac_div *divider = to_clk_frac_div(hw);
-+	struct clk_hw *parent = clk_hw_get_parent(hw);
-+	unsigned long parent_rate = clk_hw_get_rate(parent);
++	struct tegra_clk_pll_out *pll_out = to_clk_pll_out(hw);
 +
-+	divider->rate = clk_frac_div_recalc_rate(hw, parent_rate);
++	if (!strcmp(__clk_get_name(hw->clk), "pll_re_out1"))
++		pll_out->pllout_ctx = readl_relaxed(pll_out->reg);
++	else
++		pll_out->pllout_ctx = clk_hw_get_rate(hw);
 +
 +	return 0;
 +}
 +
-+static void clk_divider_restore_context(struct clk_hw *hw)
++static void tegra_clk_pll_out_restore_context(struct clk_hw *hw)
 +{
-+	struct tegra_clk_frac_div *divider = to_clk_frac_div(hw);
-+	struct clk_hw *parent = clk_hw_get_parent(hw);
-+	unsigned long parent_rate = clk_hw_get_rate(parent);
++	struct tegra_clk_pll_out *pll_out = to_clk_pll_out(hw);
 +
-+	if (clk_frac_div_set_rate(hw, divider->rate, parent_rate) < 0)
-+		WARN_ON(1);
++	if (!strcmp(__clk_get_name(hw->clk), "pll_re_out1")) {
++		writel_relaxed(pll_out->pllout_ctx, pll_out->reg);
++	} else {
++		if (!__clk_get_enable_count(hw->clk))
++			clk_pll_out_disable(hw);
++		else
++			clk_pll_out_enable(hw);
++	}
 +}
 +
- const struct clk_ops tegra_clk_frac_div_ops = {
- 	.recalc_rate = clk_frac_div_recalc_rate,
- 	.set_rate = clk_frac_div_set_rate,
- 	.round_rate = clk_frac_div_round_rate,
-+	.save_context = clk_divider_save_context,
-+	.restore_context = clk_divider_restore_context,
+ const struct clk_ops tegra_clk_pll_out_ops = {
+ 	.is_enabled = clk_pll_out_is_enabled,
+ 	.enable = clk_pll_out_enable,
+ 	.disable = clk_pll_out_disable,
++	.save_context = tegra_clk_pll_out_save_context,
++	.restore_context = tegra_clk_pll_out_restore_context,
  };
  
- struct clk *tegra_clk_register_divider(const char *name,
+ struct clk *tegra_clk_register_pll_out(const char *name,
 diff --git a/drivers/clk/tegra/clk.h b/drivers/clk/tegra/clk.h
-index 905bf1096558..83623f5f55f3 100644
+index 83623f5f55f3..b47f373c35ad 100644
 --- a/drivers/clk/tegra/clk.h
 +++ b/drivers/clk/tegra/clk.h
-@@ -42,6 +42,7 @@ struct clk *tegra_clk_register_sync_source(const char *name,
-  * @width:	width of the divider bit field
-  * @frac_width:	width of the fractional bit field
-  * @lock:	register lock
-+ * @rate:	rate during suspend and resume
-  *
-  * Flags:
-  * TEGRA_DIVIDER_ROUND_UP - This flags indicates to round up the divider value.
-@@ -62,6 +63,7 @@ struct tegra_clk_frac_div {
- 	u8		width;
- 	u8		frac_width;
+@@ -439,6 +439,8 @@ struct clk *tegra_clk_register_pllu_tegra210(const char *name,
+  * @rst_bit_idx:	bit to reset PLL divider
+  * @lock:		register lock
+  * @flags:		hardware-specific flags
++ * @pllout_ctx:		pllout context to save and restore during suspend
++ *			and resume
+  */
+ struct tegra_clk_pll_out {
+ 	struct clk_hw	hw;
+@@ -447,6 +449,7 @@ struct tegra_clk_pll_out {
+ 	u8		rst_bit_idx;
  	spinlock_t	*lock;
-+	unsigned long	rate;
+ 	u8		flags;
++	unsigned int	pllout_ctx;
  };
  
- #define to_clk_frac_div(_hw) container_of(_hw, struct tegra_clk_frac_div, hw)
+ #define to_clk_pll_out(_hw) container_of(_hw, struct tegra_clk_pll_out, hw)
 -- 
 2.7.4
 
