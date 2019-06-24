@@ -2,133 +2,107 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 1D3E751E2D
-	for <lists+linux-gpio@lfdr.de>; Tue, 25 Jun 2019 00:24:48 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A117951E36
+	for <lists+linux-gpio@lfdr.de>; Tue, 25 Jun 2019 00:27:11 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726421AbfFXWYr (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 24 Jun 2019 18:24:47 -0400
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:43493 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726301AbfFXWYr (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 24 Jun 2019 18:24:47 -0400
-Received: by mail-lj1-f195.google.com with SMTP id 16so14149827ljv.10
-        for <linux-gpio@vger.kernel.org>; Mon, 24 Jun 2019 15:24:46 -0700 (PDT)
+        id S1726263AbfFXW1L (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 24 Jun 2019 18:27:11 -0400
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:44292 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726407AbfFXW1K (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 24 Jun 2019 18:27:10 -0400
+Received: by mail-lf1-f66.google.com with SMTP id r15so11151144lfm.11
+        for <linux-gpio@vger.kernel.org>; Mon, 24 Jun 2019 15:27:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=RJ/2kCUFqt0p/B8wH1ducrJXpRHD9Vd6UXD6eBdK5zo=;
-        b=vwlK2G28iGSTX/mLKanEVw9OvnDhLwi6UXaP2hX51CLLI0HSzYdn77mn/RmqiYl6mW
-         CXVNWQJq2Y6m4JNAPCnzwC3jx+ABB3bEJfd7Ex6+90WTQgrgfpXS5uArKoPYzrlBPLWn
-         TBar6NvVfyTlkAgiAbggVAo8Sqml0eNQXCnpKZikmrZOsoiI1FEDqj7DgA0/8KWHu936
-         bihW3r9kMySDEs+cslLHX8Lntkgwcqp95tdQOtVjGMRE8+NWpeledtFLbGtFhVrofDiV
-         J6FvSKMD0R8uaXGt9tQHU6k2X9umBkLZdaxYAzPSlBGijZQFe/caAq9vnri98wA2nV2Q
-         6l0w==
+         :cc;
+        bh=D1Rlg1a8ZKYuDCntE03T6/myds69XNXDdwDRLbB08rM=;
+        b=W0+65RFplxg7FJBqvGyEEYhcSSHIXtuCxUV3EOx4sCMAy1E/tGXaw619uogXQlf4/v
+         arI1Noxe+VFGQcFPeo0uXk/yPQV0OsGTTtYL59YzaSLDKhfbrOPo3FfdUjbBaf1qF+A9
+         DIdX+DjwBZkBuZaAqq4gEnBSJAtFoIHTnZ6ee50APMVKSU5ZaTmn1pi6zKdcUZz5brHa
+         d2YLv81hdQWWEKw9g3wBqJkQrmvp9ht2bdfD+dHy017j/b2rLZZAnQ3kdl0aUS+tMo3R
+         Q2bFou//IQURdOneN5ESjWah4+8ZpHc2+nGU3Z4Y2li3AX25x3PHqVMQGpG3GkaFQ5G0
+         yYTA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=RJ/2kCUFqt0p/B8wH1ducrJXpRHD9Vd6UXD6eBdK5zo=;
-        b=Hh3qAOvJqQcSgNzT0MQfc2RuIezYLfdxqW5IH4NcvP70Tudb1VNmtUo15dOlP//1NC
-         9o1IMO3/OWAvIHGMWcXRDY9xdKrj+4Y/119ma9FVi84a7CXkO9DL4RkW9VdCFvu/l8w2
-         38lW7qfxPl06kXc3gtX5N0/gD84F2oaf/EfcNdhL8ky2aFPCeMiLSnBrQnA/QUTSSQdO
-         0Ylt3lQUOUHnR8on7gXLxBh2B2hfEwbZojZkkMiRR3EqSe8vxrDVep8BrMXYKOGOGsLH
-         BL0+9fMwNpjTTQ7sDa4ATSTYJPfkgcJJHS7FBpz4wOxvKBaRIt4mMS+kCKJ6Z6pmhF6x
-         LTTw==
-X-Gm-Message-State: APjAAAUExgIbDAEz8YGGbKbPkGpi14w7ldbU0lOyOLSImmLAVV2z7Ees
-        jwq/zhXoPaNw+vnE8s/AEbMLs/AvTZyAkoPsWl2zbUvmU0k=
-X-Google-Smtp-Source: APXvYqyj9SWN55Ra6slAJalJXB9mI/2jhCNU0xMT8hU+a2Rt1JjRex0Jx9/li/PopExkS9619juMJUl218+p6e5/e70=
-X-Received: by 2002:a2e:a0cf:: with SMTP id f15mr6893176ljm.180.1561415085502;
- Mon, 24 Jun 2019 15:24:45 -0700 (PDT)
+         :message-id:subject:to:cc;
+        bh=D1Rlg1a8ZKYuDCntE03T6/myds69XNXDdwDRLbB08rM=;
+        b=tiCWyn2INWserSy1wrUzjSSJsyhfb7ueUjyYctR1oluSxNhUBBCRY5QXr4i8Qz25Qq
+         5HJNinOy9aJ4ozsdtmpRjikb785Sv29Vrsuoz7miXpGzhR90xdjmqGAywKEQKLtzsn0I
+         CiFGrx2uK8avrEFOgZTkzjuLt1qyOA0HxkHqgNRHyaZcgBwUg5sWxKEjVWuTnF+0f0q5
+         IC+f2qCzAC2NZuPOICEgzOglCPIDUUWPGgCU1Gb0hBpfJs/n4IMeWwYuzQzzoqxEWaCA
+         H8XHdKPzNF2YEwQOfZxD8nrMaO6G7DD4h+YLUVVd2ywH6Ga+pI6tz+ZzBKhr4BD5RpLR
+         +7QA==
+X-Gm-Message-State: APjAAAWqCXN9UO4QHpM9lGEAYPBdtTf6F0RrCcGxxweXZCqnUjSWqHLN
+        7PJBxVFNxxDY4EzKuhUH4bU8vem4Cv2aSfqnc/ZsrQ==
+X-Google-Smtp-Source: APXvYqzoxXxGolVXHsGr5DX1bR7Oc/15VXiuxkHWINNtUCFObv1LwJeDEVUzXneuF6ixTRhkIKr218mXmzBCHyIvfis=
+X-Received: by 2002:ac2:4891:: with SMTP id x17mr27237792lfc.60.1561415228788;
+ Mon, 24 Jun 2019 15:27:08 -0700 (PDT)
 MIME-Version: 1.0
-References: <CGME20190530183941epcas5p4688d5fa80df649e4184a296ea78e6256@epcas5p4.samsung.com>
- <20190530183932.4132-1-linus.walleij@linaro.org> <28b92b86-19ac-0bf3-57d8-c7ab4557a45b@samsung.com>
- <CACRpkdaCaZyzfr9=QRz6uRZpK6mw_zDeVmBwgH7=FPbNGKB9tQ@mail.gmail.com> <547eacd4-e4b9-e9a9-9f89-aa33b05cb674@samsung.com>
-In-Reply-To: <547eacd4-e4b9-e9a9-9f89-aa33b05cb674@samsung.com>
+References: <20190621151725.20414-1-thierry.reding@gmail.com>
+In-Reply-To: <20190621151725.20414-1-thierry.reding@gmail.com>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Tue, 25 Jun 2019 00:24:33 +0200
-Message-ID: <CACRpkdaiXcuygPfN-D848zTzs4+d5euquFKO3njHPhWvf_dasw@mail.gmail.com>
-Subject: Re: [PATCH] extcon: gpio: Request reasonable interrupts
-To:     Chanwoo Choi <cw00.choi@samsung.com>
-Cc:     MyungJoo Ham <myungjoo.ham@samsung.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
+Date:   Tue, 25 Jun 2019 00:26:56 +0200
+Message-ID: <CACRpkdY-07VEn1YU42Ris6mpw+hj4TJOWfgzykc57Ai8t+G_5A@mail.gmail.com>
+Subject: Re: [PATCH v3] driver: core: Allow subsystems to continue deferring probe
+To:     Thierry Reding <thierry.reding@gmail.com>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J . Wysocki" <rafael@kernel.org>,
+        Rob Herring <robh@kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Jun 24, 2019 at 2:08 AM Chanwoo Choi <cw00.choi@samsung.com> wrote:
-> On 19. 6. 8. =EC=98=A4=EC=A0=84 6:24, Linus Walleij wrote:
-> > On Tue, Jun 4, 2019 at 3:30 AM Chanwoo Choi <cw00.choi@samsung.com> wro=
-te:
-> >> On 19. 5. 31. =EC=98=A4=EC=A0=84 3:39, Linus Walleij wrote:
-> >
-> >>> +     /*
-> >>> +      * It is unlikely that this is an acknowledged interrupt that g=
-oes
-> >>> +      * away after handling, what we are looking for are falling edg=
-es
-> >>> +      * if the signal is active low, and rising edges if the signal =
-is
-> >>> +      * active high.
-> >>> +      */
-> >>> +     if (gpiod_is_active_low(data->gpiod))
-> >>> +             irq_flags =3D IRQF_TRIGGER_FALLING;
-> >>
-> >> If gpiod_is_active_low(data->gpiod) is true, irq_flags might be
-> >> IRQF_TRIGGER_LOW instead of IRQF_TRIGGER_FALLING. How can we sure
-> >> that irq_flags is always IRQF_TRIGGER_FALLING?
-> >
-> > OK correct me if I'm wrong, but this is an external connector and
-> > the GPIO goes low/high when the connector is physically inserted.
-> > If it was level trigged, it would lock up the CPU with interrupts until
-> > it was unplugged again, since there is no way to acknowledge a
-> > level IRQ.
-> >
-> > I think level IRQ on GPIOs are only used for logic peripherals
-> > such as ethernet controllers etc where you can talk to the peripheral
-> > and get it to deassert the line and thus acknowledge the IRQ.
-> >
-> > So the way I see it only edge triggering makes sense for extcon.
-> >
-> > Correct me if I'm wrong.
+On Fri, Jun 21, 2019 at 5:17 PM Thierry Reding <thierry.reding@gmail.com> wrote:
+
+> From: Thierry Reding <treding@nvidia.com>
 >
-> Sorry for late reply because of vacation.
-
-Don't worry I am not in a hurry. This is clean-up work :)
-
-> Actually, I have not thought that the kind of irq_flags are fixed
-> according to the category of specific h/w device. Until now, as I knew,
-> the h/w device have to initialize the the kind of irq_flags
-> for each peripheral device dependency. The each vendor of peripheral devi=
-ce
-> might design the kind of the kind of irq-flags for detection.
+> Some subsystems, such as pinctrl, allow continuing to defer probe
+> indefinitely. This is useful for devices that depend on resources
+> provided by devices that are only probed after the init stage.
 >
-> If possible, could you provide some example on mainline kernel?
+> One example of this can be seen on Tegra, where the DPAUX hardware
+> contains pinmuxing controls for pins that it shares with an I2C
+> controller. The I2C controller is typically used for communication
+> with a monitor over HDMI (DDC). However, other instances of the I2C
+> controller are used to access system critical components, such as a
+> PMIC. The I2C controller driver will therefore usually be a builtin
+> driver, whereas the DPAUX driver is part of the display driver that
+> is loaded from a module to avoid bloating the kernel image with all
+> of the DRM/KMS subsystem.
+>
+> In this particular case the pins used by this I2C/DDC controller
+> become accessible very late in the boot process. However, since the
+> controller is only used in conjunction with display, that's not an
+> issue.
+>
+> Unfortunately the driver core currently outputs a warning message
+> when a device fails to get the pinctrl before the end of the init
+> stage. That can be confusing for the user because it may sound like
+> an unwanted error occurred, whereas it's really an expected and
+> harmless situation.
+>
+> In order to eliminate this warning, this patch allows callers of the
+> driver_deferred_probe_check_state() helper to specify that they want
+> to continue deferring probe, regardless of whether we're past the
+> init stage or not. All of the callers of that function are updated
+> for the new signature, but only the pinctrl subsystem passes a true
+> value in the new persist parameter if appropriate.
+>
+> Signed-off-by: Thierry Reding <treding@nvidia.com>
+> ---
+> Changes in v3:
+> - add new function rather than extend the existing function with flags
 
-I don't know exactly what kind of example you are looking
-for, but in e.g. drivers/input/keyboard/gpio_keys.c
-you find this code:
-
-                isr =3D gpio_keys_gpio_isr;
-                irqflags =3D IRQF_TRIGGER_RISING | IRQF_TRIGGER_FALLING;
-
-                switch (button->wakeup_event_action) {
-                case EV_ACT_ASSERTED:
-                        bdata->wakeup_trigger_type =3D active_low ?
-                                IRQ_TYPE_EDGE_FALLING : IRQ_TYPE_EDGE_RISIN=
-G;
-                        break;
-                case EV_ACT_DEASSERTED:
-                        bdata->wakeup_trigger_type =3D active_low ?
-                                IRQ_TYPE_EDGE_RISING : IRQ_TYPE_EDGE_FALLIN=
-G;
-                        break;
-
-Is this what you're looking for?
+I see you need something like this and I can't think of anything
+better so:
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 
 Yours,
 Linus Walleij
