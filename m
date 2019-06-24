@@ -2,42 +2,44 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id B6DCB50934
-	for <lists+linux-gpio@lfdr.de>; Mon, 24 Jun 2019 12:51:36 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 465C15095C
+	for <lists+linux-gpio@lfdr.de>; Mon, 24 Jun 2019 13:01:12 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729177AbfFXKvg (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 24 Jun 2019 06:51:36 -0400
-Received: from mout.web.de ([212.227.15.14]:48183 "EHLO mout.web.de"
+        id S1729528AbfFXLBL (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 24 Jun 2019 07:01:11 -0400
+Received: from mout.web.de ([212.227.15.3]:37073 "EHLO mout.web.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726960AbfFXKvg (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Mon, 24 Jun 2019 06:51:36 -0400
+        id S1727732AbfFXLBL (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Mon, 24 Jun 2019 07:01:11 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
-        s=dbaedf251592; t=1561373475;
-        bh=va9X6BekHg4ryvxfPgkOEdcMF+Bqg1ca0r0893l0PBY=;
+        s=dbaedf251592; t=1561374051;
+        bh=668PFCKfgNnHFeA3Jh+s9CPdAlSdTM8Gfho9n45xMts=;
         h=X-UI-Sender-Class:Subject:To:Cc:References:From:Date:In-Reply-To;
-        b=Uu22pwaN4+5xknNs7InlX0w2gHMPwIByLFOJSKrNGgeC0Xp6jiX3cUSMWKZGJ2yRy
-         sxlre9Zr6XNHA57Jlh2cA4Kx1e7qf5bd3h2U+nzWckvTOUcSznUrawVDym/JMdRWvO
-         y8JUscKuJ1oidyBv2DUX2XNk5gFQ9ijxAP3qpLEk=
+        b=UhqVSdSGox9TOE0cf50tk62bApsr53B0sjMh2mp/sTkuSi07IS4HioBiuhAECcxQY
+         UPG8IMFzsz6kBA8l4QIUcFLQBbvTDhKCQRMXBkyVpFrExhAyp4Uu8TWsl4vLvl2O9a
+         0gq7r+UDgGis6f1XU2tBezorm/Xsbih2DRwihOQA=
 X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
-Received: from [192.168.1.2] ([93.131.148.79]) by smtp.web.de (mrweb002
- [213.165.67.108]) with ESMTPSA (Nemesis) id 0MZDki-1i0KIZ2CD6-00KyK0; Mon, 24
- Jun 2019 12:51:15 +0200
-Subject: Re: [PATCH] drivers: Adjust scope for CONFIG_HAS_IOMEM before
+Received: from [192.168.1.2] ([93.131.148.79]) by smtp.web.de (mrweb004
+ [213.165.67.108]) with ESMTPSA (Nemesis) id 0MEIQq-1hlwHy3my8-00FS7g; Mon, 24
+ Jun 2019 13:00:51 +0200
+Subject: Re: drivers: Adjust scope for CONFIG_HAS_IOMEM before
  devm_platform_ioremap_resource()
-To:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+To:     Bartosz Golaszewski <brgl@bgdev.pl>,
         kernel-janitors@vger.kernel.org
-Cc:     Bartosz Golaszewski <brgl@bgdev.pl>,
+Cc:     Enrico Weigelt <lkml@metux.net>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
         Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Keerthy <j-keerthy@ti.com>,
         Linus Walleij <linus.walleij@linaro.org>,
         "Rafael J. Wysocki" <rafael@kernel.org>,
         linux-gpio <linux-gpio@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Enrico Weigelt <lkml@metux.net>
+        LKML <linux-kernel@vger.kernel.org>
 References: <20190221162627.3476-1-brgl@bgdev.pl>
  <9efcbce2-4d49-7197-a3d8-0e83850892d5@web.de>
  <CAMpxmJX-wXQ-ff1RWkPmJBWSsP_v2MjZrA3fhj3HQX0_zM0eZA@mail.gmail.com>
+ <39ae399a-c606-c6de-f84d-35e39d0410c0@metux.net>
+ <CAMRc=McepqowJNi6ay6x9KKoHOC8aCxP_ob12SgbsnJU_sKQng@mail.gmail.com>
 From:   Markus Elfring <Markus.Elfring@web.de>
 Openpgp: preference=signencrypt
 Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
@@ -83,66 +85,53 @@ Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
  Z/wsLiWTgKlih2QYULvW61XU+mWsK8+ZlYUrRMpkauN4CJ5yTpvp+Orcz5KixHQmc5tbkLWf
  x0n1QFc1xxJhbzN+r9djSGGN/5IBDfUqSANC8cWzHpWaHmSuU3JSAMB/N+yQjIad2ztTckZY
  pwT6oxng29LzZspTYUEzMz3wK2jQHw+U66qBFk8whA7B2uAU1QdGyPgahLYSOa4XAEGb6wbI FEE=
-Message-ID: <a2c9c7f2-0efb-e56c-517e-f5c3fda4ee92@web.de>
-Date:   Mon, 24 Jun 2019 12:51:06 +0200
+Message-ID: <258fa411-43a7-14dc-95c2-6a3b336b3871@web.de>
+Date:   Mon, 24 Jun 2019 13:00:39 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.7.2
 MIME-Version: 1.0
-In-Reply-To: <CAMpxmJX-wXQ-ff1RWkPmJBWSsP_v2MjZrA3fhj3HQX0_zM0eZA@mail.gmail.com>
+In-Reply-To: <CAMRc=McepqowJNi6ay6x9KKoHOC8aCxP_ob12SgbsnJU_sKQng@mail.gmail.com>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:SqOgSxHrt6dq/y7gRUAEPzZElRsr/T3ememjHK+/oMkPS6lp/SD
- OuFWPYvagOXRFzVT6ybVuJ2YO9n6udB1QHqlSQ+CCXF09AHN4kctBunIBgftYpQafUhUBD6
- fE7I3bsF9guCqsNR3NoBbajjXsKwYCjPLe5bryRHdXLmjwil44gBAuaR39ONUC+N+RZtvtf
- TvIilNX2vfl6wODwrYjYA==
+Content-Language: en-US
+X-Provags-ID: V03:K1:hioMROpffmLYsNGFghPiaV+NHLzv+F39HKdpxRH8ZecBZjAxHxb
+ al+hJENq68XQ1kZCe1zH4U0bzleYvtFUCqyWETMTGuom/t0SchTV8ICQY2sTwlO3SCeIs+2
+ qODnO5U+on1vKjYDMAv8cpn+LYKqaVn/r8zQCjnTchgPp+7SZPmL9FT/Tf6aILl16M2B+RW
+ C5ZvP0wwLIgxvoLLEFy/Q==
 X-Spam-Flag: NO
-X-UI-Out-Filterresults: notjunk:1;V03:K0:+QnH5MqNw/4=:dezmi0lf2NjALPJGln6okK
- 10jMxBREH57lkYP6zkZ3ht84U8xpsQa4wVju7lMSa3xeap2ceZYpZeoRg9zNSz31F97JhROK+
- cdnM8hmF35Ead7lnSxAasH8rlVMKsANzeTXSGZAqTAuuW3gGgD8Dn/HeX/rmrs6+J6EfJGmyF
- By3X/D+KfMHqZOSL5J54qiyCYHF7i24dOCkCBX+omT8URUE0fmAtsnfz/A0c+mlfg9UxNAAt9
- AIbzjFng0FIJ5tf3N2FYQeLON2IWfiCBncQi34oHXDkJS2Zvgw9Ue7eNfWNQdyRWGBcWVBa4C
- YbdtPHleHsxVV9pMV1qGCW6TDnFONgFB4RF0eTez13JIDS/37CcYUpg/Axe28CdRAog9RvjLR
- E75V0y52GypbB/1rRLMrgBnlSPCe047NDdY3+zPKVJ8o1gAQ31rbouzvpxQLvlM22M/tNsb3l
- JFm6Jf00eflT59JIAqXhXBHAonshsFGkW0XaaQvSBWddrH2lOHodVwzeCF+pGqRNEe6aPorNJ
- NH3zeboLYV+AYvc98SePtOWF2FHT4hXCLH9DnzDdUIBbhLsqRTpNVKpsN3NJl51ODD9QIxpej
- wzX8VkRlKivnoFHpKPMSpNdgMeGGX+JpJb/E6QIZdYMqYpiOsX4u7AywsByLfarifLDhjyrRG
- eCVm0uUZiWzS6821BMigVm3whac61LQtFvdnTh4+MncsLXezgEp0CNHw67hxmBoaGBQ3SQIdq
- FHd0CnA3RDVCZON/0Zac6t2W0y32Xo0FSqsynDSPEZiZV1EklhkMWDNU5pbWhoEuTWiSg19a1
- FytcGQkpeGKYXdgZ6Vaj1w8FNwCuS1SXirv1UKDL23UTlv63WjHI7GdG/TiX7nh71mOUo9MOS
- LA6NBdc+ncywss3SE8l1tO+8meFkg+kRxBQhjB7STBrNragCusS9L2IU+IE3qYvVINfok2rey
- ojJwaeY8ydHE0uPnCEd9U4Xp6Q+wakpp5dq4zf/OzVyfKg2M0PYEy
+X-UI-Out-Filterresults: notjunk:1;V03:K0:wuAcCm+e9/o=:izzphoXgZUllcux4KTpLEG
+ rWztScDVk3UQtDA6bDjeo08PFWBpfy76+bpWK5/zwLk+/kljOlm/Gvdj6I2LTp3ML9A1R6qR5
+ MrWmaZI8za9zhrR/q2xFjXouQVL2PDFfs2VCJTn/d+F/XzvvD1gBib8M5PHqgx56WDTUh7i5W
+ o8GyJl8RDT/ICA36wUbAjA1KbAEPeIOpvpYQXLMU/eWJpOdgWuTicGl36YBTyp+HL61gtKZWR
+ nOUji5ol+wIplr71E3MXXnD7PVGNTy/720OxjSRFPNY3SMen8tECzU8aw/CXD5ENYfCM9jJk7
+ F0sA4523MTc7BXNE8OyWX+bqWmZD+ToBL4SZD444Bjj7A+bRPdZPagJJJE+aPP0WkUiStLm/r
+ dL+u4Tq6/rAV6bmEzzHdwOvOf92sdxPEHBIn8bu0i8oRZwnuuv6b3PIi/OwaIxqOPN1TttOVy
+ Wwrl9EKJiDFWcve2h0lusN6vAGeKqxfjGleN485C2TtX6TX7oc65HDuPVbkeLyqFpk4foYfF1
+ j6On0m5YjjOCO/3lo2E8L/iGj5862MlD27POv2WGhJtCNOXeUwC/1CXai3/iW65tbvdXfwmQP
+ NvTiox14PtoLhlXMS/S4AuHpiK1S2br0F7MlBtCMXc2ZZXIB1YqyeIN9093M1zYrXqfHvAs+l
+ kH5DvrM6VUayta1wKZuA0aQ2HzzUqxGqyufqrBNKyNySkZqG2ekr3giFt0yaKKBD8UvyOuxFO
+ VWBX09obyE875Ybw82iWvD76s6iVmx2Hkv6IJO8vg8MQZtcXvIk/Zg3fN4lCjV7iLPfbwVlxz
+ R7fd4+kqgNibxqPw51RePQ7+g7/W5Jz2bB7n10EAh+rQNKoyEa8v5THBlpA/ms/r5ya4Uy48t
+ H/ZM2WzN2x0EW5UC+AEBPLSFbY73a2tRCEgAmq4bN2l4qkDF5ayFAvRb1mF0JKjRZTcIOFmLd
+ MTdfAj2If3+yN9SjTTaxw9F1m6J17akDkY0rCnqqlJMKaCD/m2Fc5
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
->> +++ b/drivers/base/platform.c
->> @@ -78,6 +78,7 @@ struct resource *platform_get_resource(struct platfor=
-m_device *dev,
->>         return NULL;
->>  }
->>  EXPORT_SYMBOL_GPL(platform_get_resource);
->> +#ifdef CONFIG_HAS_IOMEM
->>
->>  /**
->>   * devm_platform_ioremap_resource - call devm_ioremap_resource() for a=
- platform
->> @@ -87,7 +88,6 @@ EXPORT_SYMBOL_GPL(platform_get_resource);
->>   *        resource management
->>   * @index: resource index
->>   */
->> -#ifdef CONFIG_HAS_IOMEM
->>  void __iomem *devm_platform_ioremap_resource(struct platform_device *p=
-dev,
->>                                              unsigned int index)
->>  {
-=E2=80=A6
-> And what is the purpose of that?
+> In its current form it makes the code even less readable.
 
-I recommend to let the availability of additional documentation for this f=
-unction
-depend also on the mentioned preprocessor symbol
+This can be your development opinion.
+
+
+> The #ifdef should actually be one line lower
+
+I suggested that the conditional compilation can contain also a blank line
+together with a comment block.
+
+
+> and touch the comment instead of the EXPORT_SYMBOL() related to a different function.
+
+I find that this macro call was kept unchanged.
 
 Regards,
 Markus
