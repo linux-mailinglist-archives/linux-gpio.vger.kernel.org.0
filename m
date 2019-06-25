@@ -2,136 +2,89 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id DE73854D5C
-	for <lists+linux-gpio@lfdr.de>; Tue, 25 Jun 2019 13:18:30 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1C74E54D67
+	for <lists+linux-gpio@lfdr.de>; Tue, 25 Jun 2019 13:19:55 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729587AbfFYLSa (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 25 Jun 2019 07:18:30 -0400
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:43668 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727964AbfFYLSa (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 25 Jun 2019 07:18:30 -0400
-Received: by mail-lj1-f195.google.com with SMTP id 16so15822293ljv.10
-        for <linux-gpio@vger.kernel.org>; Tue, 25 Jun 2019 04:18:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=+R91olza62R92mGPd18XWhzqCeYD6MJApyTtJVndtV8=;
-        b=C+svq5Eg5oghWryhZBQoNfhzkI0LJKvWt1LgZrYiphCJUgA0Smi4mG/r1/6+SX/jvl
-         gpZxq3TKQfbd/PgqAJFmJGMFp3w5t64DcZ8mfOZ1SQdn/2Pi0qYrWz+t3WKB0+nkRHZZ
-         Dy+TkD9EbNSmLaIhQrzVETfx87FHCc5WsyHYcJGeBkm7Pr0DlPuMjCXSKbqHYMJn8Wli
-         2wbccNkrWcr5t8MlSAkmh8qlpzhmt9XBIo/cA1LUX9Oabvlk327XBfHUnOQ6m1bR3sZS
-         M8CHhzcGZ0QdIogSE7rjNRQJ550rRcIRHRMTCaqaedOlHQduBQ5Wm7v0Kx40HMn+h2G2
-         M2gg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=+R91olza62R92mGPd18XWhzqCeYD6MJApyTtJVndtV8=;
-        b=kc166W6mmRxJV40NHSZbqwVGiSKtlJbErGbehOPC+UG+HMji9QYBdDxmKc0knwMgz5
-         NVtg2WVxtbUDc153tnqR69UbokWfyOhbR5qCd5BFCNgQwovHSXld4oDGw3D6qNkvpQeL
-         mbjmjeX3ldB82PSwwKQolozYG7i27Cl2RqUsS5dgWWopBtv5063TihI5ez/JX2pe4FMr
-         dc7r0V7QiH2d56jv3ObpI0fpjshvupRY7IZgq1+VaPYkC1/yXqUmifuNieuDq+U+xbeH
-         w+NjUqq3EvydPKRPTe4EXJobeG+YJLX8+90gz5RrMean0n8Qz+R0e4Vf1zzjMOeMr5LL
-         1adA==
-X-Gm-Message-State: APjAAAWb2iEhe7PyxZgLxDHrImSgz3guxKqOhGagEUZcwpxjUs+vPe7m
-        11ks75EVPuUQcQCPIIqICUM6UpB0QAQ=
-X-Google-Smtp-Source: APXvYqz8RIpBqGhlPR/Cs4CRVt/55/53spZMfg2Pc90Xd2U76LLniYk99+QgmmDZCdt1NJaGFhucGA==
-X-Received: by 2002:a2e:9c41:: with SMTP id t1mr35072597ljj.6.1561461507958;
-        Tue, 25 Jun 2019 04:18:27 -0700 (PDT)
-Received: from genomnajs.ideon.se ([85.235.10.227])
-        by smtp.gmail.com with ESMTPSA id w28sm2201770ljd.12.2019.06.25.04.18.26
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 25 Jun 2019 04:18:27 -0700 (PDT)
-From:   Linus Walleij <linus.walleij@linaro.org>
-To:     linux-gpio@vger.kernel.org
-Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        id S1730551AbfFYLTy (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 25 Jun 2019 07:19:54 -0400
+Received: from mga14.intel.com ([192.55.52.115]:20382 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727138AbfFYLTx (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Tue, 25 Jun 2019 07:19:53 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 25 Jun 2019 04:19:53 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.63,415,1557212400"; 
+   d="scan'208";a="155480989"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.145])
+  by orsmga008.jf.intel.com with ESMTP; 25 Jun 2019 04:19:50 -0700
+Received: from andy by smile with local (Exim 4.92)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1hfjUK-0001Ze-G7; Tue, 25 Jun 2019 14:19:48 +0300
+Date:   Tue, 25 Jun 2019 14:19:48 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Stefan Roese <sr@denx.de>
+Cc:     Geert Uytterhoeven <geert@linux-m68k.org>,
+        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Yegor Yefremov <yegorslists@googlemail.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Giulio Benetti <giulio.benetti@micronovasrl.com>,
         Linus Walleij <linus.walleij@linaro.org>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Subject: [PATCH] gpio: pl061: Pass irqchip when adding gpiochip
-Date:   Tue, 25 Jun 2019 13:18:24 +0200
-Message-Id: <20190625111824.28482-1-linus.walleij@linaro.org>
-X-Mailer: git-send-email 2.20.1
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
+Subject: Re: [PATCH 1/2 v9] serial: mctrl_gpio: Check if GPIO property
+ exisits before requesting it
+Message-ID: <20190625111948.GV9224@smile.fi.intel.com>
+References: <20190620062420.11650-1-sr@denx.de>
+ <CAMuHMdXMpS_pg9N0qSW=Li0QavAMRG79RJcS4s0w6NTCxv_zzg@mail.gmail.com>
+ <24bfb52c-6f77-b7cd-7421-9e6e4b0aa7d3@denx.de>
+ <CAMuHMdWeX6=SuSPVUB=WaYMsUbrmg5sraM=APeXsqr_Yv6u4AA@mail.gmail.com>
+ <d8ae626b-e574-be33-f698-3cb992653683@denx.de>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <d8ae626b-e574-be33-f698-3cb992653683@denx.de>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-We need to convert all old gpio irqchips to pass the irqchip
-setup along when adding the gpio_chip.
+On Tue, Jun 25, 2019 at 07:27:33AM +0200, Stefan Roese wrote:
+> On 24.06.19 17:35, Geert Uytterhoeven wrote:
+> > On Mon, Jun 24, 2019 at 5:29 PM Stefan Roese <sr@denx.de> wrote:
+> > > On 24.06.19 10:42, Geert Uytterhoeven wrote:
 
-For chained irqchips this is a pretty straight-forward
-conversion.
+> > > Should both options be supported ("cts-gpio" vs "cts-gpios")?
+> > > Documentation/devicetree/bindings/serial/serial.txt only mentions
+> > > the "-gpios" variant.
+> > 
+> > Well, the "-gpio" variant is deprecated, but still supported by
+> > devm_gpiod_get_index_optional(), and there are active users in upstream
+> > DTS files.
+> > 
+> > My main objection is (trying to) replicate the matching logic inside
+> > gpiolib.c, causing subtle semantic differences. And keeping it consistent,
+> > of course.
+> > 
+> > It would be nice if this could be fixed inside acpi_find_gpio(), so
+> > users don't need to be updated.  There may be other subsystems where
+> > the difference between DT and ACPI may cause issues, unbeknownst.
+> 
+> Sure, I can fix this. I would prefer to do this in a follow-up patch
+> though, if nobody objects.
 
-Cc: Sudeep Holla <sudeep.holla@arm.com>
-Cc: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
----
- drivers/gpio/gpio-pl061.c | 30 ++++++++++++++++--------------
- 1 file changed, 16 insertions(+), 14 deletions(-)
+In case if you are going to do this, use approach from GPIO library. Perhaps,
+it may require to create something like for_each_gpio_suffix() helper.
 
-diff --git a/drivers/gpio/gpio-pl061.c b/drivers/gpio/gpio-pl061.c
-index dc42571e6fdc..84af248f5172 100644
---- a/drivers/gpio/gpio-pl061.c
-+++ b/drivers/gpio/gpio-pl061.c
-@@ -286,6 +286,7 @@ static int pl061_probe(struct amba_device *adev, const struct amba_id *id)
- {
- 	struct device *dev = &adev->dev;
- 	struct pl061 *pl061;
-+	struct gpio_irq_chip *girq;
- 	int ret, irq;
- 
- 	pl061 = devm_kzalloc(dev, sizeof(*pl061), GFP_KERNEL);
-@@ -313,10 +314,6 @@ static int pl061_probe(struct amba_device *adev, const struct amba_id *id)
- 	pl061->gc.parent = dev;
- 	pl061->gc.owner = THIS_MODULE;
- 
--	ret = gpiochip_add_data(&pl061->gc, pl061);
--	if (ret)
--		return ret;
--
- 	/*
- 	 * irq_chip support
- 	 */
-@@ -335,19 +332,24 @@ static int pl061_probe(struct amba_device *adev, const struct amba_id *id)
- 	}
- 	pl061->parent_irq = irq;
- 
--	ret = gpiochip_irqchip_add(&pl061->gc, &pl061->irq_chip,
--				   0, handle_bad_irq,
--				   IRQ_TYPE_NONE);
--	if (ret) {
--		dev_info(&adev->dev, "could not add irqchip\n");
-+	girq = &pl061->gc.irq;
-+	girq->chip = &pl061->irq_chip;
-+	girq->parent_handler = pl061_irq_handler;
-+	girq->num_parents = 1;
-+	girq->parents = devm_kcalloc(dev, 1, sizeof(*girq->parents),
-+				     GFP_KERNEL);
-+	if (!girq->parents)
-+		return -ENOMEM;
-+	girq->parents[0] = irq;
-+	girq->default_type = IRQ_TYPE_NONE;
-+	girq->handler = handle_bad_irq;
-+
-+	ret = devm_gpiochip_add_data(dev, &pl061->gc, pl061);
-+	if (ret)
- 		return ret;
--	}
--	gpiochip_set_chained_irqchip(&pl061->gc, &pl061->irq_chip,
--				     irq, pl061_irq_handler);
- 
- 	amba_set_drvdata(adev, pl061);
--	dev_info(&adev->dev, "PL061 GPIO chip @%pa registered\n",
--		 &adev->res.start);
-+	dev_info(dev, "PL061 GPIO chip %s registered\n", dev_name(dev));
- 
- 	return 0;
- }
 -- 
-2.20.1
+With Best Regards,
+Andy Shevchenko
+
 
