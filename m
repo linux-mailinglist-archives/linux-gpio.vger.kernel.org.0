@@ -2,87 +2,103 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 5D0B554EE7
-	for <lists+linux-gpio@lfdr.de>; Tue, 25 Jun 2019 14:31:18 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AFA0054F16
+	for <lists+linux-gpio@lfdr.de>; Tue, 25 Jun 2019 14:42:05 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729722AbfFYMbO (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 25 Jun 2019 08:31:14 -0400
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:36333 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726414AbfFYMbO (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 25 Jun 2019 08:31:14 -0400
-Received: by mail-lf1-f65.google.com with SMTP id q26so12526827lfc.3
-        for <linux-gpio@vger.kernel.org>; Tue, 25 Jun 2019 05:31:13 -0700 (PDT)
+        id S1727730AbfFYMmF (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 25 Jun 2019 08:42:05 -0400
+Received: from mail-lf1-f49.google.com ([209.85.167.49]:33630 "EHLO
+        mail-lf1-f49.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726414AbfFYMmF (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 25 Jun 2019 08:42:05 -0400
+Received: by mail-lf1-f49.google.com with SMTP id y17so12539930lfe.0
+        for <linux-gpio@vger.kernel.org>; Tue, 25 Jun 2019 05:42:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=kDFY+QTqqiMEOnTov2xDeNaIk7HwyPkPWyRkRRHSyzk=;
-        b=Vii5TMev7BoCq2nTcUAUy4RbuYP5eF8K02+yxiVUgFGihW7crvsellgGLrySBn9T4t
-         +ZkRMd97gjWfE+XgGd8lum0sPzBVxoZ2K816B9DvAM0Ki/jqLCcrmv3VTVxg7HhnpGJp
-         SBMWg7UYzZhnl+uubEvGQjLsZDamg4LCVbD6Z8taj5/U/uA//cusuoJF11bC0dy+/Uiz
-         qplUPH0xN3gxA8LErE1J7X4fM8KBREa80NElm64vR/wg1VorhA73iqTMYiSCRzSdyLv5
-         UYsxileELIgN9UTwdRejFzAe9xZTj31cPdZ1M5xPnuAKfukfgIw6HyLcOEoajwel5ji6
-         Xmnw==
+        bh=rB6Tm78ZyDlaBUyUjgUXKM4p8D1Nnd0QbvlWGOzoLrY=;
+        b=mvCm1Nmk+nxjvagq/anuwNpEzuUXlRYSaUf+wtKFM5ow9J0imTACEJdK9FLKyGz9Bg
+         TvejTLkRQbpsX50ajHn0nLOsrYPoOc27SF/FhrJsP3PU5+s2XOtyLTpeAUlnOj5Z9V1R
+         /BfxXSzU0YWvEZ8clijEOel4lePYYTqSPAnEF/gb8k8g17OgNP6V91uAokxhSqyObHav
+         b6BTE1v5SQZHFuFpYKWASGLULtjMDDMpmYEJltTu+wOwitECmoCtvfM5sdIWcR0xqroT
+         Xj/VWbcqi8EVfK63D6MYalBkVD7FXTjT95Y/mm4ZM0jxF0/DOLQ721n+JnEXou9K4aG6
+         KySg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=kDFY+QTqqiMEOnTov2xDeNaIk7HwyPkPWyRkRRHSyzk=;
-        b=RQksR7NEAT8x1HbKuYViPnsPHpbLdARtII10yzOUL4l89YZTOwHyHdu6AMiQhVa5AQ
-         5yKXdndVT3nwQNATI6qONumJ7g/C6SGpGDlhgcA6nuHtaSS3rlYh90O6u1hnSnaNVIEe
-         /Cw9ZcTXcxjCJhqF4CqPWi+7upLsg31Rho9epxu8Rr6fs+8KCPIu5P2+MCLKHbg+ZqIF
-         89j79ZhxC030kFOhWr/zcfpOXzMxjeZMoiXJyV3Yw1n+s5TYqGShe5+/40TzJp3gBhSR
-         X0L692afZ2LD/Ae/6dPE3NmteMZW+1tkJ1oxExmmDJPOBtbwXgFxl4fCgIEwoBWWt6kd
-         FUuw==
-X-Gm-Message-State: APjAAAXPaP+8Rkvgyl9rkQqhoiGKvKH/rcA/9fPpwj9Nn+/4sBk554vX
-        T24hX7SpkMfA07dqNf8HlTJN6zf63iFYPJ8Tmq+oZA==
-X-Google-Smtp-Source: APXvYqxJtx+kv4xSwtZ2Oh9SZIkuBtLHG+NnPvuNmG5fGRPD0rBSI3dyCsgfek9QsPqek/vYbO/dzGax8Uzv7n1exuo=
-X-Received: by 2002:a19:dc0d:: with SMTP id t13mr52002001lfg.152.1561465872654;
- Tue, 25 Jun 2019 05:31:12 -0700 (PDT)
+        bh=rB6Tm78ZyDlaBUyUjgUXKM4p8D1Nnd0QbvlWGOzoLrY=;
+        b=I2rCwsVVB7ebqfVaYN9eJrV8LhQtn0ybuuUpzLZ1n66BL4rcLNOvT4Lcj6O3kVl6cj
+         EdUi/C9vvE+reCFVJ7RrO2QaRb3tXQBHsqkSOJOHoIA4ut6rgW5WYzYFEjlMaf5lAu6V
+         lJQMQvwjReikbPLlsWRDqpGRbHtjbWIkc85HX42hb5Dur6qjNUUPkeNw5aB+geM8z5Hm
+         MDTrb7cok/LAKY+YQ7Jf+e1LJECn273IakHlr97Q7K0xmmWzDxl0Wmvcr1wTCorcfpXY
+         FgUoGx28uPPrO8EfsS803GgqUp//lcBWXs313Pqv/4oAr8rPz6rcCsxVJnK69rCg5+f2
+         RbhQ==
+X-Gm-Message-State: APjAAAUOVVJs6tOiXJT1c6Ss0sY1NrzfN33LjsZYlqB/4xuqepYnN2Vd
+        NAtKZTylC5gnDY7knX3wn3SL0EfgSJU+skrA0pJh1hGhPnY=
+X-Google-Smtp-Source: APXvYqyBGq8dbrhzLaL2XHvbnGkWSnUDIvLvR3/ibYNidMhqtEQTlDjfZ+H/zFA+29/84l1TW6VlYv0Q5OpCxs3AaVo=
+X-Received: by 2002:a19:6a01:: with SMTP id u1mr13991909lfu.141.1561466522953;
+ Tue, 25 Jun 2019 05:42:02 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190618160105.26343-1-alpawi@amazon.com>
-In-Reply-To: <20190618160105.26343-1-alpawi@amazon.com>
+References: <9e977d86db99153e413dc9099f3a70f4@walle.cc>
+In-Reply-To: <9e977d86db99153e413dc9099f3a70f4@walle.cc>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Tue, 25 Jun 2019 14:31:00 +0200
-Message-ID: <CACRpkdYgXZzvFKyvySWnsJ2_1pA1e_VHEY-QNzNYCikMUc_WVg@mail.gmail.com>
-Subject: Re: [PATCH 0/2] pinctl: armada-37xx: fix for pins 32+
-To:     alpawi@amazon.com
-Cc:     Benjamin Herrenschmidt <benh@amazon.com>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Gregory Clement <gregory.clement@bootlin.com>,
-        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Date:   Tue, 25 Jun 2019 14:41:51 +0200
+Message-ID: <CACRpkdb1NAbZxhC43__MCqh8e4xUumgG-aj5qJVAt7i1x7UBHg@mail.gmail.com>
+Subject: Re: generic gpio-syscon
+To:     Michael Walle <michael@walle.cc>
+Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Jun 18, 2019 at 6:01 PM <alpawi@amazon.com> wrote:
+On Tue, Jun 18, 2019 at 6:02 PM Michael Walle <michael@walle.cc> wrote:
 
-> From: Patrick Williams <alpawi@amazon.com>
->
-> The 37xx GPIO config registers are only 32 bits long and
-> span 2 registers for the NB GPIO controller.  The function
-> to calculate the offset was missing the increase to the
-> config register.
->
-> I have tested both raw gpio access and interrupts using
-> libgpiod utilities on an Espressonbin.
->
-> The first patch is a simple rename of a function because
-> the original name implied it was doing IO itself ("update
-> reg").  This patch could be dropped if undesired.
->
-> The second patch contains the fix for GPIOs 32+.
+> I'd like to disuss adding a generic gpio-syscon (eg. compatible =
+> "gpio-syscon"). At the moment, if you have a board which could use the
+> gpio-syscon out-of-the-box, you still have to submit a patch to add
+> support to the gpio-syscon driver. Wouldn't it be easier to let the
+> user/board manufacturer configure the parameters through the dtb?
 
-This looks good overall. I am waiting for a maintainer review.
-If nothing happens in a week, poke me and I'll just apply
-the patches.
+I don't know about that. I have written a binding:
+Documentation/devicetree/bindings/leds/register-bit-led.txt
+which does something like this. So then I would say
+be inspired by that.
 
-Yours,
+It kind of depends on how complex the hardware really is.
+If this is "just" a register in the syscon then I guess yes.
+And then I mean ONE register. One register only, e.g.
+an output-only thing.
+
+If it is supposed to hide an actually more complex hardware
+with separate input and output registers and direction setting
+I'm not so happy with it.
+
+Compare to drivers/gpio/gpio-mmio.c that rather takes
+the idea of Linux supporting several simpler GPIO controllers
+by using several compatible strings. For anything that is
+a complex enough piece of hardware, that should have its
+own compatible string.
+
+>    gpio0 {
+>        compatible = "gpio-syscon";
+>       syscon = <&syscon>;
+>        gpio-controller;
+(...)
+>        offsets = <0 0 1>;
+
+I don't understand this...
+
+>        io-width = <4>;
+
+In bytes?
+
+>       mask = <0x0000ffff>;
+
+Isn't this synonymous to using the standard "ngpios" property,
+indexed from 0?
+
 Linus Walleij
