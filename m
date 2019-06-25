@@ -2,30 +2,31 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 3FFBC5250C
-	for <lists+linux-gpio@lfdr.de>; Tue, 25 Jun 2019 09:43:22 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D897052541
+	for <lists+linux-gpio@lfdr.de>; Tue, 25 Jun 2019 09:51:28 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727446AbfFYHnV (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 25 Jun 2019 03:43:21 -0400
-Received: from mout.web.de ([212.227.15.3]:49643 "EHLO mout.web.de"
+        id S1726637AbfFYHv2 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 25 Jun 2019 03:51:28 -0400
+Received: from mout.web.de ([212.227.15.4]:45563 "EHLO mout.web.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726668AbfFYHnV (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Tue, 25 Jun 2019 03:43:21 -0400
+        id S1726422AbfFYHv1 (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Tue, 25 Jun 2019 03:51:27 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
-        s=dbaedf251592; t=1561448570;
-        bh=mxsK/Q3yh+HbCMrd3ZV9922DvmB/ieej60+vQvCk2pA=;
+        s=dbaedf251592; t=1561449071;
+        bh=zu3hRAdjnw3ODToqm1kzxjDlmqiZXYiID2ai8KyGLV0=;
         h=X-UI-Sender-Class:Subject:To:Cc:References:From:Date:In-Reply-To;
-        b=m5pTnCX2kKDQgD61VbOn6JTYlu1jg5L2Bm6FyY2UeF34UXc1Vn895TigwKqCgQjX/
-         NiWEXF/GEzrdi2Xq0Of2XmNoLzXPfap6lWv2RO7v4FTv/QImG+hEbLF13JeK93QVve
-         8j2mH5mG+Wo41/Pvap2VYmTMku7G1sdfMF8Nm3/g=
+        b=pCAFUeEmLDSADy/3NOPexuqLqaL3S712RBbhj8DJp40ORyUg8cr3CyCatWjvRc914
+         ZM7lu5XscJmHwJ406lYWs+hOuGJOVCBhxNBktIg/bXiNzCZhu5mkQK/5S1EopkkeW5
+         lEEpKkmzZ/fVonfwRpZTiIqU8sCY5/Xh2+bNijcQ=
 X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
 Received: from [192.168.1.2] ([2.244.103.88]) by smtp.web.de (mrweb003
- [213.165.67.108]) with ESMTPSA (Nemesis) id 0LaCWE-1iRRAq1m3y-00m1kz; Tue, 25
- Jun 2019 09:42:50 +0200
+ [213.165.67.108]) with ESMTPSA (Nemesis) id 0MF3iV-1hmZyn3Ueh-00GHvK; Tue, 25
+ Jun 2019 09:51:10 +0200
 Subject: Re: drivers: Adjust scope for CONFIG_HAS_IOMEM before
  devm_platform_ioremap_resource()
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Bartosz Golaszewski <brgl@bgdev.pl>,
+To:     Bartosz Golaszewski <brgl@bgdev.pl>,
+        kernel-janitors@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Enrico Weigelt <lkml@metux.net>,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>,
         Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
@@ -33,7 +34,6 @@ Cc:     Bartosz Golaszewski <brgl@bgdev.pl>,
         Linus Walleij <linus.walleij@linaro.org>,
         "Rafael J. Wysocki" <rafael@kernel.org>,
         linux-gpio <linux-gpio@vger.kernel.org>,
-        kernel-janitors@vger.kernel.org,
         LKML <linux-kernel@vger.kernel.org>
 References: <20190221162627.3476-1-brgl@bgdev.pl>
  <9efcbce2-4d49-7197-a3d8-0e83850892d5@web.de>
@@ -43,6 +43,7 @@ References: <20190221162627.3476-1-brgl@bgdev.pl>
  <1dd52704-0e41-db31-33f4-c9f446a47344@metux.net>
  <CAMRc=Mfp85diy849r_8UHKS9eao26djrsMF0_iwE--d62mQ5jg@mail.gmail.com>
  <20190625073016.GA18381@kroah.com>
+ <CAMRc=McPjPtDFL2m=n5fWm-fHvVbDzMopb9r=RkzS+TshMJBAQ@mail.gmail.com>
 From:   Markus Elfring <Markus.Elfring@web.de>
 Openpgp: preference=signencrypt
 Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
@@ -88,55 +89,50 @@ Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
  Z/wsLiWTgKlih2QYULvW61XU+mWsK8+ZlYUrRMpkauN4CJ5yTpvp+Orcz5KixHQmc5tbkLWf
  x0n1QFc1xxJhbzN+r9djSGGN/5IBDfUqSANC8cWzHpWaHmSuU3JSAMB/N+yQjIad2ztTckZY
  pwT6oxng29LzZspTYUEzMz3wK2jQHw+U66qBFk8whA7B2uAU1QdGyPgahLYSOa4XAEGb6wbI FEE=
-Message-ID: <cc61e17a-1a0f-1839-8200-a36ddfdc2a39@web.de>
-Date:   Tue, 25 Jun 2019 09:42:39 +0200
+Message-ID: <9b1a9bd6-d44a-0e08-5f4f-df1252d6efad@web.de>
+Date:   Tue, 25 Jun 2019 09:51:09 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.7.2
 MIME-Version: 1.0
-In-Reply-To: <20190625073016.GA18381@kroah.com>
+In-Reply-To: <CAMRc=McPjPtDFL2m=n5fWm-fHvVbDzMopb9r=RkzS+TshMJBAQ@mail.gmail.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:dG5GkGxuHYc1stMrypODNoVmKP2MVXxv6zhB6w/1HhsrSWJ/Mul
- 3IZ+xFVkwLhkMjmqYheLq7nm/1esQIsHzDCBjtxSXZysQiqE7Cc566I0tptbYRT65+1F8Ub
- vvx5jECK5o72g+EPDESPZlyh2BHdS+Bhg+kENG6Y5annfONNIvCZ2NfQNr0NmYtGkgUSUls
- hL/rhyZlZuSECk+43fmBA==
+X-Provags-ID: V03:K1:rExePbp2DYjK66vOvSf8kDmWhkwaOOGVX+Pl2PALS9+i4qyMbk7
+ KIIy1HUBZKbyQbvLNDddUM4IXCrMphVyJmDY+P0g5y4z95bTS5cM9nqZawmBDjjRC1UZpBS
+ mYh13GGF8oCTRUWnxMNIQVTrVhUGvJLKG8GAWJPq5V+j63qZjUZk/iH2zfF/rMdlcgx+PLP
+ CFEz98e6NUM9NrQpBItfg==
 X-Spam-Flag: NO
-X-UI-Out-Filterresults: notjunk:1;V03:K0:cmx+J05A6xg=:b+8B/iTzAfOPcuc+Nb+E1f
- z592W9Zidy5L2Lb93I/I85t7AC6P4sYgzAIAoAi6iWTaetiSX94apamh8v2kz6/jfsxDv8Sih
- XOCsHjTgjac+p6Qc1s8eQL7m6qVtYVXTjGq/2Yhkv6DrOLhM5OIERNBw2ZbYtxl7jsu2ATFgZ
- VZ1mRTUUkctTf1iw9ai8NDVOFQpS6p71QdWWQcObJpn2Sqc/0LPSceuHIW9fP3Ha75WGiLOeM
- qI8xUAv+dyFrkYj6vnl92iIqqPfX5pl4UKl3zPTD3fcm6XQBCqF4JDfmlD/iGJZQpLvQfmWN3
- uCuvgnOuu0QdKkahogP6VzhpOe8e/TS/nryVcaqsaunrvd/Cl8Hs0cStyhq7lCQ1Vg6XKoCyf
- OTEBWAASX2fUkP3NdamgiE5GlSkqdf0taTed0AC8r+fo/Tmy32tCcuBAxujPkvtrJUr2eqiER
- JWf2jtcn6SvEWFnZHYURX0LjZh4HHbfT71LZwF9dWxif/GP/I4EhO2kQ+emq90Beh38gnU3cR
- pn1m8KI/14by0TFPGG1QMUIhsyIWTSq2lnzQ5ihgEai28+MQ9+39y1j/8w8DVoomUAh8wyRnW
- 1Ox4V89GC8WZB4Kx55ANYLePvsxiEsdn1W/oQHnoYqqWy1UQqVMlOgW8mdf0m378J+pHjGXsO
- U5pwvS/WPFw4OjxW1CM2BFqYC7eEs7s2ClQKHI916klfRJAnN8knXHtCrKuZGQUnfZU/iEXhT
- vjlxepHdAfMjJMlbUrfFPuJhHT5pJO1y7EeJpr9WNwNaxwIVW5GMbybRxmM0wqMZ/8XmnPGHb
- gqWxqGwuSIBMQ07CrNXAkhOB/icKWBtwGhIIIh+5fu78h/XUhZOL6lx7jSial9ex8J6d8MKOV
- PLo1LTwx5dXInj+U5qE5yirr9j3dx/sD9iC2w+Rsdk2ZY1LIBLKoOHoa2l88V31N32To1oFZ/
- DlXcE+MleeJwUcg+0o2keVsIlUZbtb8IeylWy/FIDUFuzeduSooCcqYjBYQRcudHmGibpJz5Z
- YemwD7JEqHWYxIogo7N18UMCt9dbIwEtc4TmZm4R/1czSeALqxCBQnohX8aHUe5glgNBCgzui
- wMck6GaHXZXy7h013UUgxW41GwJqVaWf3Ah
+X-UI-Out-Filterresults: notjunk:1;V03:K0:fSp+oz5rzFo=:ClygUlOIGO8cIID7Q3cbm+
+ O3W7yKR0Ub2cHAzgmiI+IrYlOtne6izim+ENz8WSasqqucALEa9EmArvtEBcfs1pl7Luv8IRG
+ V8y02gJeiycKD+jx2ClT49TRz3eGhcbDlZiShUT163QSu3ghAZml8GYomOp2yepkE3fobMUBU
+ naRj3DRdPeabhOqLYHsaeWHJ2a7fIsZ/ZssmYRndoa4qpnnFcYO1Udta3kM+3YpgM7QzQEu0I
+ Luc08fHw9t/qDE8mav2DqvD9xclcYGVRuZzAJVErjg3DI5bOjZwYNFQBFVrKjn2PwYyabSgFS
+ GK6pZwRig6FcVkDekNvbNU3GpGQS7hoR2iSp+vcUSHCsqPyiGr3v53KJXgjHp+o6xI3LvQRQS
+ 35Zbliyrm+3tfVAJnbiivnS376mvyfQdVmO6litB2n7ooLoE2gmsW0DlfRBzwQ2lNSG/al14G
+ 3eGdBjYnM4E2hrWGxfA5P7Xv2fMjCZkFNL+SOyBUFfgxEmIMZ54lYD8Zi//JbS4yJIfDrsWBi
+ j4WygXci2R3mNH/yZac2CUIZr0A3x0Cj/FZmKHde414/+zQudkviSsJg5ROeWEpejoh5e09ia
+ IMTFPru+Tz5xDnpZuTAQneHnUJ/IITHJxN9IK5iT4WD4hF+VtpD8npDRE+OwUf3Meh4eiU2JZ
+ VhD3H32kLsXBWhBfQkpeJru7M5BSfubnX6dJUJtoYAkAIFDGb6YTaZHSWr3fSDUbB5RXU1Vwe
+ poi+Elq8ug2zmugEUqiOON2tjFju2/bIraYrw/fqjUZbe6ua2X9TyrG+kfmcQNGbagUkZFcIC
+ fwmyDt467Hu16v2hACL3idjUrSLC4jtQ3BDkUo5zamOlQoLpGW1O2Z7tOUwkxp951LgF2P7tq
+ 7uLuY+tbIK2pJctvufEVbp7ydsK48eojJPfPrU3FWLZnvsvjEmU1k28pvdC5qtVXJgKD6dItC
+ WUlscGtTOdDOmx+rSvjG1zzIgeHh14XYxDo8FNxqmWxgmqRNvv7KF
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-> Why are you all arguing with a all-but-instinguishable-from-a-bot person=
-a
+> Oh so it's another troll then?
 
-I am curious if another meeting at a Linux conference
-can adjust this view.
+I am just a contributor.
 
 
-> about a patch that I will never apply?
+> Good to know, ignoring from now on.
 
-I hope that you can get into a more constructive mood a bit later
-for the reconsideration of the position for the preprocessor
-statement =E2=80=9C#ifdef CONFIG_HAS_IOMEM=E2=80=9D before a function impl=
-ementation.
+The opinions can vary for my contributions as usual.
+
+I hope that the software development attention can evolve in more
+positive ways again.
 
 Regards,
 Markus
