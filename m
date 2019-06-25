@@ -2,97 +2,98 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 90D6D5507E
-	for <lists+linux-gpio@lfdr.de>; Tue, 25 Jun 2019 15:38:44 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E460F55087
+	for <lists+linux-gpio@lfdr.de>; Tue, 25 Jun 2019 15:39:10 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729762AbfFYNin (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 25 Jun 2019 09:38:43 -0400
-Received: from mail-lf1-f67.google.com ([209.85.167.67]:41106 "EHLO
-        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727223AbfFYNin (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 25 Jun 2019 09:38:43 -0400
-Received: by mail-lf1-f67.google.com with SMTP id 136so12664161lfa.8
-        for <linux-gpio@vger.kernel.org>; Tue, 25 Jun 2019 06:38:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=LSvTpOLyyXh49qYBGomCHftsOmnYZkhBKlFO4JP7Wco=;
-        b=M1mbYUFtUWy7KV2CuQ8M5nj8o/ooJsFihAJz7osC5AgX0PriOKLOv/57c+Ud2pPZYz
-         WabUrZRYC8iJuFTzI+CQWCu+xBqiuAf8oRQcslmGumQMVZ8/HwBktQVUQspZBYce1zfd
-         taGw+T6bJepqGs0Y5bw2kZRLDxW4ifJKz3myqKSs5EOoMyqCaY61mJtrIZyu7pBjOPZg
-         m6FQARBJw27QQbskEvQ3AdcukASou0VIzpTSRdz1ayrC68xRuw55bhY/bfgKdqRJoDng
-         cO9dQwy4TpzMe3SEJovusplELhe37+JoMC9g22TShMSob/tkCjfUqp2LJKCayQgtTFzk
-         DOLw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=LSvTpOLyyXh49qYBGomCHftsOmnYZkhBKlFO4JP7Wco=;
-        b=Ujbm2OXwjnphfRtKq+RxcBrLG+RO2/YW5oxPGP8kEbVd9VLBQvt6XQVtVV+NxJBtLb
-         nrmJZwijeTlffzW7fJqBOdYk0DozjE6fandST9mj8LGJKOll8z8wYXTJ+jMTgoA+IMXW
-         /Q33gULfUHmAatEBGgom8MRe9NtpY2HAIAZUk9ag54CvY4/V/fJo2MYTm4IYDeQMZE/m
-         AwOgvRRDniQ6MwyaU3VvtK1H6j4mS5kTdamvesHiArgLWh+tghRdWVVW2CgD0RJ9Ta0V
-         glbJVvm+WClwJEEBIbRmoD043t752gAyDyctQwVVy+Nk+kX0scn1JzvnBu+fN6pv1wRP
-         2Dfw==
-X-Gm-Message-State: APjAAAWAGUAQSp61w9+TB/R2sPR8N/9OjPmXH6JX6aRaKIgOAnZZlqxk
-        +TYHGbv94y5X7t73a36qs7BdsO80grLeh0XqAcA+Kw==
-X-Google-Smtp-Source: APXvYqw1szRm5IYELBubgoE074wOtxRYIQ93MVfFMiHW+jrrnby9r1otXbCpvLC/2ZO07gSJ2SF1xJN/82oqxqNsyBo=
-X-Received: by 2002:ac2:50c4:: with SMTP id h4mr25221480lfm.61.1561469921507;
- Tue, 25 Jun 2019 06:38:41 -0700 (PDT)
-MIME-Version: 1.0
-References: <1561345379-2429-1-git-send-email-skomatineni@nvidia.com> <1561345379-2429-4-git-send-email-skomatineni@nvidia.com>
-In-Reply-To: <1561345379-2429-4-git-send-email-skomatineni@nvidia.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Tue, 25 Jun 2019 15:38:29 +0200
-Message-ID: <CACRpkda0=HeRco8kExdf6TmiLOnCec3Ek06s-MdjNJvVGw3ZNQ@mail.gmail.com>
-Subject: Re: [PATCH V4 03/18] gpio: tegra: use resume_noirq for tegra gpio resume
-To:     Sowjanya Komatineni <skomatineni@nvidia.com>
-Cc:     "thierry.reding@gmail.com" <thierry.reding@gmail.com>,
-        Jon Hunter <jonathanh@nvidia.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
+        id S1730159AbfFYNjK (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 25 Jun 2019 09:39:10 -0400
+Received: from relay2-d.mail.gandi.net ([217.70.183.194]:35129 "EHLO
+        relay2-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727406AbfFYNjK (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 25 Jun 2019 09:39:10 -0400
+X-Originating-IP: 92.137.69.152
+Received: from localhost (alyon-656-1-672-152.w92-137.abo.wanadoo.fr [92.137.69.152])
+        (Authenticated sender: gregory.clement@bootlin.com)
+        by relay2-d.mail.gandi.net (Postfix) with ESMTPSA id 1C7AD4000C;
+        Tue, 25 Jun 2019 13:38:59 +0000 (UTC)
+From:   Gregory CLEMENT <gregory.clement@bootlin.com>
+To:     Linus Walleij <linus.walleij@linaro.org>, alpawi@amazon.com
+Cc:     Benjamin Herrenschmidt <benh@amazon.com>,
         Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <marc.zyngier@arm.com>,
-        Stefan Agner <stefan@agner.ch>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Peter De Schrijver <pdeschrijver@nvidia.com>,
-        Prashant Gaikwad <pgaikwad@nvidia.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        linux-clk <linux-clk@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        jckuo@nvidia.com, Joseph Lo <josephl@nvidia.com>, talho@nvidia.com,
-        linux-tegra@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Mikko Perttunen <mperttunen@nvidia.com>, spatra@nvidia.com,
-        Rob Herring <robh+dt@kernel.org>,
-        Dmitry Osipenko <digetx@gmail.com>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Andrew Lunn <andrew@lunn.ch>,
+        "linux-kernel\@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "open list\:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Subject: Re: [PATCH 0/2] pinctl: armada-37xx: fix for pins 32+
+In-Reply-To: <CACRpkdYgXZzvFKyvySWnsJ2_1pA1e_VHEY-QNzNYCikMUc_WVg@mail.gmail.com>
+References: <20190618160105.26343-1-alpawi@amazon.com> <CACRpkdYgXZzvFKyvySWnsJ2_1pA1e_VHEY-QNzNYCikMUc_WVg@mail.gmail.com>
+Date:   Tue, 25 Jun 2019 15:38:59 +0200
+Message-ID: <871rzhlr7w.fsf@FE-laptop>
+MIME-Version: 1.0
+Content-Type: text/plain
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Jun 24, 2019 at 5:03 AM Sowjanya Komatineni
-<skomatineni@nvidia.com> wrote:
+Hi,
 
-> During SC7 resume, PARKED bit clear from the pinmux registers may
-> cause a glitch on the GPIO lines.
+> On Tue, Jun 18, 2019 at 6:01 PM <alpawi@amazon.com> wrote:
 >
-> So, Tegra GPIOs restore should happen prior to restoring Tegra pinmux
-> to keep the GPIO lines in a known good state prior to clearing PARKED
-> bit.
+>> From: Patrick Williams <alpawi@amazon.com>
+>>
+>> The 37xx GPIO config registers are only 32 bits long and
+>> span 2 registers for the NB GPIO controller.  The function
+>> to calculate the offset was missing the increase to the
+>> config register.
+>>
+>> I have tested both raw gpio access and interrupts using
+>> libgpiod utilities on an Espressonbin.
+>>
+>> The first patch is a simple rename of a function because
+>> the original name implied it was doing IO itself ("update
+>> reg").  This patch could be dropped if undesired.
+>>
+>> The second patch contains the fix for GPIOs 32+.
+
+First you can add my
+Acked-by: Gregory CLEMENT <gregory.clement@bootlin.com>
+
+Then as the second patch is a fix, you should add the fix tag: "Fixes:
+5715092a458c ("pinctrl: armada-37xx: Add gpio support") " as well as the
+'CC: <stable@vger.kernel.org>" tags.
+
+But your change in the first patch made this second patch more difficult
+to backport.
+
+Actually, when I wrote "_update_reg" I was thinking to the update of the
+variable, whereas with a function named "_calculate_reg" I am expecting
+having the result as a return of the function.
+
+However I am not against your change, as I pointed my main concern is
+about the backport of the patch to the stable branch.
+
+Maybe you could change the order of those 2 patches?
+
+Thanks,
+
+Gregory
+
 >
-> This patch has fix for this by moving Tegra GPIOs restore to happen
-> very early than pinctrl resume.
+> This looks good overall. I am waiting for a maintainer review.
+> If nothing happens in a week, poke me and I'll just apply
+> the patches.
 >
-> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
+> Yours,
+> Linus Walleij
+>
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
 
-Can this patch be applied in isolation from the other patches?
-
-WOuld be nice to have at least Thierry's ACK on it before I
-apply it.
-
-Yours,
-Linus Walleij
+-- 
+Gregory Clement, Bootlin
+Embedded Linux and Kernel engineering
+http://bootlin.com
