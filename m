@@ -2,100 +2,103 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id CAD5452726
-	for <lists+linux-gpio@lfdr.de>; Tue, 25 Jun 2019 10:53:00 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id F0EDA52754
+	for <lists+linux-gpio@lfdr.de>; Tue, 25 Jun 2019 10:59:03 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730978AbfFYIwx (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 25 Jun 2019 04:52:53 -0400
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:43822 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730781AbfFYIwx (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 25 Jun 2019 04:52:53 -0400
-Received: by mail-lf1-f66.google.com with SMTP id j29so12023773lfk.10
-        for <linux-gpio@vger.kernel.org>; Tue, 25 Jun 2019 01:52:52 -0700 (PDT)
+        id S1730903AbfFYI7A (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 25 Jun 2019 04:59:00 -0400
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:46428 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730858AbfFYI67 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 25 Jun 2019 04:58:59 -0400
+Received: by mail-lf1-f65.google.com with SMTP id z15so12013486lfh.13
+        for <linux-gpio@vger.kernel.org>; Tue, 25 Jun 2019 01:58:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=6sVy1ZdjISYZ4x2JdrMT9LI1XuB2hh4y/prk76ssgW8=;
-        b=G3KRAhAGe1qA98XT+tNHwa6bfkqWZJ5R3S16P7b1ifCEGfzYc3qRb9OR5cQ1pA/RAD
-         sbtplkiwf81OLc1zT+WYjzWFq2429RCTZOnLkcf4QinyL/0XQ1lkYPiWnOCt0jOpliOo
-         yhcyXb2W1TyqBurZptQzuoYglnr+ocZF0b6rUitx9tlT23mwMsz41LZrAbd/h98BZGXu
-         YRDc8ns+UFRDXEk7nIKRpIJckJt2v5cEP4Mnwi1YeO1sXDVdVzo5vIsEFdDMZYf9Levx
-         tNjVXQJK9c3sLR59Hfb2xcviF5y9fxomKTljgGSey8+PPsn/LjsTdnytJS+AbSvsTmgA
-         TY5Q==
+        bh=V+kChTzQrd3nmy4kJUu2g6Bqv0SUkWeG4jA8/ofAZg8=;
+        b=PDip88KV2Zc0xPh+7nuBk+Uw1g8JiP1Xh9eJnc2f+YFDb1bpGtSFn7QQd0iA1UwJ3A
+         AZHjwKXC3kVfpk0xM1DH31wKIp/mqDhcqw8gu2IZCM5MAbxqvbtg4LFWLDGsP6gFMkWO
+         ua8XZFGsQ3HzZorGf+8s6cMRsY/Ci0OCClzOJBXp3T/QW0oi8tVkBhTZ1Uo6uAb8uosy
+         D7hamd540RRzTjo/BWFXXJby4XkOSdu/ZSXBDI6CAcoHJMsi8596yHU2LKkynOQBFVw8
+         /5McPRI/hncwobKG6fZdGueR/hChNnaSPRCKQPBOaobG0cyisKp/A7Wvo1/5CPanekFL
+         b2Xg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=6sVy1ZdjISYZ4x2JdrMT9LI1XuB2hh4y/prk76ssgW8=;
-        b=Vse/OcUD4TCQtQZ99q1dTMjOu10DhoZU5AP8TkYyxXbtHAVj6aAdaF4XjgtgvDmBzB
-         o/3Mg/SEYzrqdQnDOFXpnHuVDNtQY2OdPt5O6hpUnxAAwYBCdVPcGkhddOSaPzj0aFGo
-         Hlbv/EL7s9HKuPOdIRMbAMgAiY5r/BzJahQwVd9EeyAyxPXK1D7yMIzAhrneEW1aIJ/3
-         xbRltip2kH9hLHHazzzO+vtHgQekpd7eMpFMammVBxXomzqxloP3znuQp8WBmhDR3VQR
-         s9yFnF+48+3p9fPn+rdAZrdBeHSHVEIob7JRAdVT1zn1UMA7rPz73CUlcmjcB65wAecY
-         EMdQ==
-X-Gm-Message-State: APjAAAVn69dFwVpVxzI+i8jZivs5XS88wW2QSd7vDInjCEe1F0izn4aH
-        7NsNRP4u5qUpol1NbMslqdLiJqNKz1ap9bNGGsQT7Bpg
-X-Google-Smtp-Source: APXvYqyE2yJaybeR4mT7wbfZf/tS94S/SlU0cAeCtceLJiDRJCRt6joGVNWjbcfYTBxGjyPWLwAjVeBQRiHmFRfChkI=
-X-Received: by 2002:ac2:4891:: with SMTP id x17mr28602618lfc.60.1561452771554;
- Tue, 25 Jun 2019 01:52:51 -0700 (PDT)
+        bh=V+kChTzQrd3nmy4kJUu2g6Bqv0SUkWeG4jA8/ofAZg8=;
+        b=DJqNyOrOxz++YwOIVq9HwwlZkSFZGHWVCjoL+jh3/0tzv0PBGlCwg26cqBOyhGy1Vj
+         twluJ0vyd0a+b+/p0yk7cVoG+6HByPf9Ac9QPd3JucH10bxh9Q2Hs5xdlBcKs5t5iJdx
+         QtvgLvE/uIGamTar1JfXIShyJtnSpu7spPBiCXBBe5rgBmypzRTZridVpKVF1R0s7fdn
+         hGC551s5Mt/LOco/6i93KBTC8PVrJy9q4ByLQ8RWXB2F4Fde7hQEifmJHNTp+FuyQh7b
+         8VPcxYMpSLK0U5YWdeihFuzdKv8NqIfpVy2b3G4YO6QUkkFCbS2p9CZPGZkyjyfhO7W/
+         qheg==
+X-Gm-Message-State: APjAAAU7mVT5ycKSih7c5j6qke4w2LazdDO4+lduRgUxAOSsvNxv0RSq
+        rGIKqW7Dj03DPjcfjocC8+TYp1nISRpd2u4lvnviQw==
+X-Google-Smtp-Source: APXvYqzzb40u6wurDlM2Fjs+HJlarr9mnj7e3anmVcuTqtUwuM5vMPDwJECaz/ZcV29P/oMJ6JU05Pf1Rj7u2PKHDOI=
+X-Received: by 2002:ac2:50c4:: with SMTP id h4mr24507877lfm.61.1561453137773;
+ Tue, 25 Jun 2019 01:58:57 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190613015532.19685-1-yamada.masahiro@socionext.com>
-In-Reply-To: <20190613015532.19685-1-yamada.masahiro@socionext.com>
+References: <1560764090-22740-1-git-send-email-neeraju@codeaurora.org>
+In-Reply-To: <1560764090-22740-1-git-send-email-neeraju@codeaurora.org>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Tue, 25 Jun 2019 10:52:40 +0200
-Message-ID: <CACRpkdb1MySnzCVGb6v1KovmgJtagKeSe+mrPvsVOJz_s198eA@mail.gmail.com>
-Subject: Re: [PATCH 1/2] pinctrl: remove unneeded #ifdef around declarations
-To:     Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Date:   Tue, 25 Jun 2019 10:58:45 +0200
+Message-ID: <CACRpkdZ4BoZzX7pVw4HYBzSMvhnyu_oVNoiiLk3ME05nnG1T3Q@mail.gmail.com>
+Subject: Re: [PATCH v2] pinctrl: qcom: Add irq_enable callback for msm gpio
+To:     Neeraj Upadhyay <neeraju@codeaurora.org>
+Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Stephen Boyd <sboyd@codeaurora.org>,
+        Timur Tabi <timur@codeaurora.org>,
+        MSM <linux-arm-msm@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Srinivas Ramana <sramana@codeaurora.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Masahiro,
+On Mon, Jun 17, 2019 at 11:35 AM Neeraj Upadhyay <neeraju@codeaurora.org> wrote:
 
-thanks for your patch. For some reason I managed to pick up
-patch 2 before patch 1. I applied this now with some fuzzing.
-(Please check the result.)
-
-On Thu, Jun 13, 2019 at 3:55 AM Masahiro Yamada
-<yamada.masahiro@socionext.com> wrote:
-
-> What is the point in surrounding the whole of declarations with
-> ifdef like this?
-
-I don't know if it is generally good to have phrases posed as
-questions in a commit message, we prefer to have statements
-about the change not a polemic dialog.
-
->   #ifdef CONFIG_FOO
->   int foo(void);
->   #endif
+> From: Srinivas Ramana <sramana@codeaurora.org>
 >
-> If CONFIG_FOO is not defined, all callers of foo() will fail
-> with implicit declaration errors since the top Makefile adds
-> -Werror-implicit-function-declaration to KBUILD_CFLAGS.
-
-Maybe this flag was not in the top Makefile when the #ifdefs
-where introduced?
-
-> This breaks the build earlier when you are doing something wrong.
-> That's it.
-
-Good idea.
-
-> Anyway, it will fail to link since the definition of foo() is not
-> compiled.
+> Introduce the irq_enable callback which will be same as irq_unmask
+> except that it will also clear the status bit before unmask.
 >
-> In summary, these ifdef are unneeded.
+> This will help in clearing any erroneous interrupts that would
+> have got latched when the interrupt is not in use.
 >
-> Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+> There may be devices like UART which can use the same gpio line
+> for data rx as well as a wakeup gpio when in suspend. The data that
+> was flowing on the line may latch the interrupt and when we enable
+> the interrupt before going to suspend, this would trigger the
+> unexpected interrupt. This change helps clearing the interrupt
+> so that these unexpected interrupts gets cleared.
+>
+> Signed-off-by: Srinivas Ramana <sramana@codeaurora.org>
+> Signed-off-by: Neeraj Upadhyay <neeraju@codeaurora.org>
 
-Pushing this to the zeroday builders and let's see what happens!
+Overall this looks good to me, waiting for Bjorn's review.
+
+> Changes since v1:
+> - Extracted common code into __msm_gpio_irq_unmask().
+
+Please don't name functions __like __that.
+
+> -static void msm_gpio_irq_unmask(struct irq_data *d)
+> +static void __msm_gpio_irq_unmask(struct irq_data *d, bool status_clear)
+
+Instead of __unclear __underscore __semantic use something
+really descriptive like
+
+static void msm_gpio_irq_clear_irq()
+
+That is what it does, right?
+
+Other than that it looks fine.
 
 Yours,
 Linus Walleij
