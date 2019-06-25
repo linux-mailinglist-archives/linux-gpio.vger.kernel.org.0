@@ -2,72 +2,106 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 69F0F550A9
-	for <lists+linux-gpio@lfdr.de>; Tue, 25 Jun 2019 15:43:20 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D0300550B3
+	for <lists+linux-gpio@lfdr.de>; Tue, 25 Jun 2019 15:48:02 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726448AbfFYNnT (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 25 Jun 2019 09:43:19 -0400
-Received: from mail-lf1-f67.google.com ([209.85.167.67]:45407 "EHLO
-        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726009AbfFYNnT (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 25 Jun 2019 09:43:19 -0400
-Received: by mail-lf1-f67.google.com with SMTP id u10so12636429lfm.12
-        for <linux-gpio@vger.kernel.org>; Tue, 25 Jun 2019 06:43:18 -0700 (PDT)
+        id S1727016AbfFYNsB (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 25 Jun 2019 09:48:01 -0400
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:35511 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726532AbfFYNr6 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 25 Jun 2019 09:47:58 -0400
+Received: by mail-lj1-f195.google.com with SMTP id x25so16362595ljh.2
+        for <linux-gpio@vger.kernel.org>; Tue, 25 Jun 2019 06:47:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=mouyUCijCL0qaXgD+khfJSX4dSqV3MXsNvU/q7OjoAo=;
-        b=qCSEdeAMP1sIwlguOGRG+Qsdia7kp2b8qGsMUU4xlun0eAZSyCEmhXYCVuHgvaMjI2
-         8C3dzpordUFcSQYrc1jzhemxVSWjvcAu/vA6XhWLbdlV3dPMDoVzv51D+eKpcrcXu+RW
-         vNUduaqe+bhcZRp2V1dGBmVSigH5LtcenKIoTmJioMoYZDDHPEtHHB1eAarOZ4Uivgtd
-         mkpDOGwFIrpfl8BlRs5WS/ebRelPxb/LPb0xs/c34QZnKMVrZ4wClccGWUnlwZsEpidI
-         68sC4SHCBn3x8oYsdMqWBQbVGSPU9/YkGAr6zrUkn3/8Hda5mnPOacnDvD2VtXmrdyjO
-         wGdg==
+        bh=vqj9RJTLU6a7u47c/a2XupnA9jHEjvrlPTNwz8/pAYI=;
+        b=e4iqcuL7UrUFxNJnOOaBzdgx3YrvjL/tcddqVNmyBvq77sJiTTcqtICftMEIq6Xz50
+         dXwomMLX65/Vcbqhe+UrqDl1OYzzMfRzHrK/9BGOuPWRfhesBx7TwiuvaRiL1jPsswCT
+         pZqJKU3UDGIuh44/ThJik0yQIp+yEn+CvGEnXci1tOkWH0x5QUktV+j73tF9g6CetwYi
+         eNeGjmOp4S3GlttW7lbz/+sE5QsyOTFPZkrPWe7h8bSOyc9c7m/jclIe3UI+33lc5a8p
+         nyRlgT4zSZUYc8IlfMvS+IMXIBLVBJ3D1ZnAJqMTgLr28tG/uS2yfKvqximd2wbSaYth
+         jumw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=mouyUCijCL0qaXgD+khfJSX4dSqV3MXsNvU/q7OjoAo=;
-        b=YkN3GXS2/7phuJZY335QcQuIURqFG3uFJt6IAbxUhyQCWCy25fOd4ODy/Re1TBXrds
-         OFRCvXHwdxFcIhLvekYDnkTVQ4cmh0LMej9bHGCTLuTBRs6ZXfQnob7aDftsuaue1TtL
-         3DwXByZ2UcFqkOT8vaRCjNWMAXcXroFoDnKq8gWSdneba59Lhcdx70IXvW0buqcw/fsi
-         zSC9TrU6g4mrSfdEfUXZtd58UP6Ib/a7cAcVi4B6CleiMNS0/2dCCyZCMpKn1FvowqYX
-         FkgULftKImbd4BQ8F4dgCO+67hFr3Riqa3VNYsmw3A/MZLbUxGq5GDJt1tt2GOvo4yBu
-         UX/A==
-X-Gm-Message-State: APjAAAVe0UFAT2Rro9tRKfVhwupEZOzOn1KwwCIBo8Rt1wfgZ9NEQdrS
-        Jz/7aRjQxjDEFzWidDT/wA0KP/FG8eJWHmjhTwRPyf0Z
-X-Google-Smtp-Source: APXvYqy0OxjHtBjby60RKNT2mppx7IQj99qwo5vUrxXCVqpZ9vVC9kx8mcvbkSQbadmIjLPI9EicniZ5HrnXpHS6BFI=
-X-Received: by 2002:ac2:4891:: with SMTP id x17mr29353055lfc.60.1561470197405;
- Tue, 25 Jun 2019 06:43:17 -0700 (PDT)
+        bh=vqj9RJTLU6a7u47c/a2XupnA9jHEjvrlPTNwz8/pAYI=;
+        b=sioAWJwxDyuz4QLvoQJZY/NnQo9/0VkXNMUwQk+kTkQSGf1B0Pf0J5rgeRC9Rvxk5f
+         wB5gV56OdLPrSwHLMGbJjzWU70dNS8AcM7GElSvQunB+ZmQ43e1t7jh6Hh/PeY3PgnSV
+         w+aog9ffToe86hoVEIxqbj2a9YEnJ+JWXncLARIlIszGqbXjdnpL94dk7WMqaHYvhlBq
+         ll4GAkd3tIgLirmHQXgsM0gkEDu6tsVGyYuGqXRyAxPhsd90WmJRYKppzdgCqOMX+qtf
+         i1fytb27h4vmm/m6ZP+6o6qpi38Kr6/PvDmANvjsmZq4xjdiXh3pi11OM7F2oAKpEnzk
+         Cr1Q==
+X-Gm-Message-State: APjAAAU2cAve2ZIRxHd6Znd7esGkuByNuFs8I15YJ839jZgAvCqDajj5
+        cYD0cu3WLr4N2NXrb6nETPueNHvGtgWo8T4BOgRE4A==
+X-Google-Smtp-Source: APXvYqxcWfEyG7sNk/JkRaYtPGwrWAkli7OwDCO7bqYoL3jX7uJ8UgDBQAE4GreAMx83t0VEuJIiv4peaDl4sX/yZ64=
+X-Received: by 2002:a2e:a0d5:: with SMTP id f21mr52570827ljm.69.1561470476420;
+ Tue, 25 Jun 2019 06:47:56 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190620183037.29652-1-alexandre.belloni@bootlin.com> <20190620183037.29652-2-alexandre.belloni@bootlin.com>
-In-Reply-To: <20190620183037.29652-2-alexandre.belloni@bootlin.com>
+References: <1560938081892.33415@sensor-technik.de> <CAJKOXPej57MJKe6ShinG+VJdG+XM4qhpeD3rQ2ZHzRTmO43+GA@mail.gmail.com>
+ <1561066629320.13520@sensor-technik.de>
+In-Reply-To: <1561066629320.13520@sensor-technik.de>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Tue, 25 Jun 2019 15:43:06 +0200
-Message-ID: <CACRpkdb1AzgUf0go=q9uDN2QdH6Gs-K-CT9h=y1T4YZgqKrF8Q@mail.gmail.com>
-Subject: Re: [PATCH 2/2] pinctrl: ocelot: fix pinmuxing for pins after 31
-To:     Alexandre Belloni <alexandre.belloni@bootlin.com>
-Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Date:   Tue, 25 Jun 2019 15:47:44 +0200
+Message-ID: <CACRpkdbPxHgyTAnE12PrMRu9XQqdoXmS+SWXYrSKXgL_SWOzcw@mail.gmail.com>
+Subject: Re: [PATCH V2] gpio: Fix return value mismatch of function gpiod_get_from_of_node()
+To:     Waibel Georg <Georg.Waibel@sensor-technik.de>
+Cc:     Krzysztof Kozlowski <krzk@kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Support Opensource <support.opensource@diasemi.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Sangbeom Kim <sbkim73@samsung.com>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-samsung-soc@vger.kernel.org" 
+        <linux-samsung-soc@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Jun 20, 2019 at 8:30 PM Alexandre Belloni
-<alexandre.belloni@bootlin.com> wrote:
+Hi Georg,
 
-> The actual layout for OCELOT_GPIO_ALT[01] when there are more than 32 pins
-> is interleaved, i.e. OCELOT_GPIO_ALT0[0], OCELOT_GPIO_ALT1[0],
-> OCELOT_GPIO_ALT0[1], OCELOT_GPIO_ALT1[1]. Introduce a new REG_ALT macro to
-> facilitate the register offset calculation and use it where necessary.
+first: good catch! Sorry for breaking this, and kudos for fixing it!
+
+On Thu, Jun 20, 2019 at 11:37 PM Waibel Georg
+<Georg.Waibel@sensor-technik.de> wrote:
+
+> In case the requested gpio property is not found in the device tree, some
+> callers of gpiod_get_from_of_node() expect a return value of NULL, others
+> expect -ENOENT.
+> In particular devm_fwnode_get_index_gpiod_from_child() expects -ENOENT.
+> Currently it gets a NULL, which breaks the loop that tries all
+> gpio_suffixes. The result is that a gpio property is not found, even
+> though it is there.
 >
-> Fixes: da801ab56ad8 pinctrl: ocelot: add MSCC Jaguar2 support
-> Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+> This patch changes gpiod_get_from_of_node() to return -ENOENT instead
+> of NULL when the requested gpio property is not found in the device
+> tree. Additionally it modifies all calling functions to properly
+> evaluate the return value.
+>
+> Another approach would be to leave the return value of
+> gpiod_get_from_of_node() as is and fix the bug in
+> devm_fwnode_get_index_gpiod_from_child(). Other callers would still need
+> to be reworked. The effort would be the same as with the chosen solution.
+>
+> Signed-off-by: Georg Waibel <georg.waibel@sensor-technik.de>
+> ---
+>
+> V2: Rebased on top of [PATCH] regulator: s2mps11: Fix ERR_PTR dereference on GPIO lookup failure
 
-Patch applied for fixes.
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+
+Mark: as most of the changed lines are in the regulator tree,
+would you please pick this patch up?
+
+(Else tell me and I will take care of it.)
 
 Yours,
 Linus Walleij
