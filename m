@@ -2,85 +2,81 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id CA16E54EAB
-	for <lists+linux-gpio@lfdr.de>; Tue, 25 Jun 2019 14:19:04 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E955654EBF
+	for <lists+linux-gpio@lfdr.de>; Tue, 25 Jun 2019 14:25:29 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727442AbfFYMTE (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 25 Jun 2019 08:19:04 -0400
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:43871 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727893AbfFYMTA (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 25 Jun 2019 08:19:00 -0400
-Received: by mail-lj1-f194.google.com with SMTP id 16so16009207ljv.10
-        for <linux-gpio@vger.kernel.org>; Tue, 25 Jun 2019 05:18:59 -0700 (PDT)
+        id S1730435AbfFYMZ2 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 25 Jun 2019 08:25:28 -0400
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:41750 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730427AbfFYMZ2 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 25 Jun 2019 08:25:28 -0400
+Received: by mail-lf1-f65.google.com with SMTP id 136so12483758lfa.8
+        for <linux-gpio@vger.kernel.org>; Tue, 25 Jun 2019 05:25:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=jALhUuHnRMGGpmpdlDb0HIhW7kZ/qK9Mq/evTmTkD00=;
-        b=I48yWJwGiioj2FgBHsgEqo+h9ie0rIphzW/pO7El8g0Ve0FckbkZNMUB367r5J1WCU
-         /cp9KZzBY2nwMFG8rx5wAWI3vxwowVuqV3/DhgJsA/mAau+OXwxd52Z31Uo/CcD719oD
-         ddSYF/1nj92zTIcEfhIDG6VdaKTFVkOLK70ziTnrdpYIUhIJ1xtv1Tign5rn2dAyJN/V
-         n/uaJ9MMqHk0Zffw7LvtEWm60FzmpXVsPeqxEqH1IatZUK0UyjDSnMUbm7iXIQQcxioF
-         Fp+ZtWzAYNpPGOy04scBl/bQPaBfMkr6h0ztFmvx3nacYkph9QHVVk5TbIhDP2ncAWDY
-         Joaw==
+        bh=VXFxBqw289PiWNcgire0HT3ql8msXi7Wbz9KDkqpi9s=;
+        b=MRAi30L3bCnSstOAPK/5ckcFQXdc0wInrW51IaGWdmmXBFt61il5F8ZihENHrES6Sz
+         A2gfTv6F6/mUQ1hGF0IliwV+O0FoVXmnwA27MN1197oDkrwe0Hi/euIeh0I/e8zRwLgI
+         B96q10pu6xOvJvT96ewCQmj7xRCeReAq/kigc7RqYiguG/g1LmS2U+Jqm5eZcB10V30P
+         n1xKUvlYhN7Wnj+Yn6gNqa//q0nip2EJKCYm4ov9IZvxiKcc17gouzhVRXMZya7Iff4C
+         lW2YQjDxDHSucaIJuJ9qvDTzQoa0DUBHFUUnsRd1LRv4Ks9d9wHsSNTg7RA2sbTLxnRZ
+         +rTQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=jALhUuHnRMGGpmpdlDb0HIhW7kZ/qK9Mq/evTmTkD00=;
-        b=J6qeizjVbt9Fof35l1ycMGBZD2EnLY09JWLVa3a0sk/KRRLYnqfOlTBATF6EMkYtF8
-         eqSyhSjgrdso4+LxGbGZo7dAqrgozI5ZpttT2s1e7MUeu9bX1ODkeH9kCNvenD1OZG33
-         fTaWtogu4HAAa1bPFagy7pRRi7JnVu1Co0/8dlzOJoP+VxHkgxd/i1SDadp2yhjHJOQV
-         w+qGWeUK+ws5aAyxy0ppmjg/e2eAcdlYd5HQ5TNrEqVJOaRlM4xBiNX1YE9Xhts+eaLc
-         AIJJpvTlWL5SvBCVSA0ylZ4LACfBDSBjzSEO2Kec46xXY3GCdWigaGDYekLeEOXSKejl
-         msfw==
-X-Gm-Message-State: APjAAAVlfJabETFPDdhIYe2Vfuw1ZLowfEQZJtsZcLKig7xj+CN9bYgi
-        TvIj0YN/V1VgM1mwJ6KnHfQ+4MbhD5vx6qrqx8pHqwVm
-X-Google-Smtp-Source: APXvYqwJlShOUGzSJYy1EdHq8lnqlJ7DfvQSdzbDHyFXLiG7jgfjQp4H2cmef6cUs212VQhxBDPSZv9UmUqJAyI51+o=
-X-Received: by 2002:a2e:81d8:: with SMTP id s24mr33236100ljg.37.1561465138557;
- Tue, 25 Jun 2019 05:18:58 -0700 (PDT)
+        bh=VXFxBqw289PiWNcgire0HT3ql8msXi7Wbz9KDkqpi9s=;
+        b=aQFVdxa4VJAFgKNn4ypRGSkOcrqhAUdRQ1H+vDEJjtl+uEKp+ga07DU9hyyXktFKZ4
+         NgUkxlODQkmEZ6uB8LBMLFso6DZoFG6vHbQp6bDU3H00zG5MIualQ+mnH7AopedlR2M2
+         xSUrOAQCuGUV9qkJFGq1lgUw/wirnpFStsRO9b34xzgcII0gtxnUeCPJw+uz7Kh+Z3pn
+         EuJcHpYHE6XqiFFXU3GqnZr0QFixcbLXhzNTTYdPWvcBIXAPmfpY7vudwNLOPj0sG9/F
+         zSwP4Gh9f0flCHfb/Y2MiW63Ygg7UXLXpQyz+5/F9Jn9G2ya9mV03I684+xGmLFBy3ZD
+         C/cQ==
+X-Gm-Message-State: APjAAAW+sIXgP8Z4HnWSps9v28bsPC1y99UaMOdJ8EzL09DkIeXQVlaC
+        m/sw8j9CHpJK76N21cYrZLCc3fh4zLbrMQiNruGk9A==
+X-Google-Smtp-Source: APXvYqwMJafEsEK9ql82gdFybiq+Gag7JQbBkAhot7eiscPpABkzdiTqqeOrWV0XFwZvPlNTuzHyscjkjG+lDDOrlRA=
+X-Received: by 2002:a19:6a01:: with SMTP id u1mr13951212lfu.141.1561465526510;
+ Tue, 25 Jun 2019 05:25:26 -0700 (PDT)
 MIME-Version: 1.0
-References: <1560764090-22740-1-git-send-email-neeraju@codeaurora.org>
- <CACRpkdZ4BoZzX7pVw4HYBzSMvhnyu_oVNoiiLk3ME05nnG1T3Q@mail.gmail.com> <c9eb6bfc-a8d1-75df-159b-3f2304fdb8ea@codeaurora.org>
-In-Reply-To: <c9eb6bfc-a8d1-75df-159b-3f2304fdb8ea@codeaurora.org>
+References: <20190617215458.32688-1-chris.packham@alliedtelesis.co.nz> <20190617215458.32688-2-chris.packham@alliedtelesis.co.nz>
+In-Reply-To: <20190617215458.32688-2-chris.packham@alliedtelesis.co.nz>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Tue, 25 Jun 2019 14:18:46 +0200
-Message-ID: <CACRpkdYMW8TiK3jBfgVhmST_S8CHuyY2rTD=ZZ37eckdrJ2uTw@mail.gmail.com>
-Subject: Re: [PATCH v2] pinctrl: qcom: Add irq_enable callback for msm gpio
-To:     Neeraj Upadhyay <neeraju@codeaurora.org>
-Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Stephen Boyd <sboyd@codeaurora.org>,
-        Timur Tabi <timur@codeaurora.org>,
-        MSM <linux-arm-msm@vger.kernel.org>,
+Date:   Tue, 25 Jun 2019 14:25:15 +0200
+Message-ID: <CACRpkdbg3ewD0gexLk3+nF0ihyhnPPpWj13YDqxgvT_4urhbzg@mail.gmail.com>
+Subject: Re: [PATCH v2 1/4] dt-bindings: pinctrl: mvebu: Document bindings for 98DX1135
+To:     Chris Packham <chris.packham@alliedtelesis.co.nz>
+Cc:     Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Gregory Clement <gregory.clement@bootlin.com>,
+        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Srinivas Ramana <sramana@codeaurora.org>
+        linux-clk <linux-clk@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Jun 25, 2019 at 12:29 PM Neeraj Upadhyay <neeraju@codeaurora.org> wrote:
-> On 6/25/19 2:28 PM, Linus Walleij wrote:
+On Mon, Jun 17, 2019 at 11:55 PM Chris Packham
+<chris.packham@alliedtelesis.co.nz> wrote:
 
-> > Please don't name functions __like __that.
-> >
-> >> -static void msm_gpio_irq_unmask(struct irq_data *d)
-> >> +static void __msm_gpio_irq_unmask(struct irq_data *d, bool status_clear)
-> > Instead of __unclear __underscore __semantic use something
-> > really descriptive like
-> >
-> > static void msm_gpio_irq_clear_irq()
-> >
-> > That is what it does, right?
+> The 98DX1135 is similar to the 98DX4122 except the MPP options differ.
 >
-> Is below ok? as it clears (if status_clear set) and then unmasks irq
->
-> static void msm_gpio_irq_clear_unmask()
+> Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
+> Reviewed-by: Andrew Lunn <andrew@lunn.ch>
 
-Sure thing! Thanks.
+Patch applied as uncontroversial.
 
 Yours,
 Linus Walleij
