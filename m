@@ -2,94 +2,81 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 3176755394
-	for <lists+linux-gpio@lfdr.de>; Tue, 25 Jun 2019 17:39:20 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A05EE55614
+	for <lists+linux-gpio@lfdr.de>; Tue, 25 Jun 2019 19:39:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728823AbfFYPjT (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 25 Jun 2019 11:39:19 -0400
-Received: from mx0a-001ae601.pphosted.com ([67.231.149.25]:5528 "EHLO
-        mx0b-001ae601.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1730803AbfFYPjT (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>);
-        Tue, 25 Jun 2019 11:39:19 -0400
-Received: from pps.filterd (m0077473.ppops.net [127.0.0.1])
-        by mx0a-001ae601.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x5PFcqtZ003292;
-        Tue, 25 Jun 2019 10:39:16 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cirrus.com; h=from : to : cc :
- subject : date : message-id : in-reply-to : references : mime-version :
- content-type; s=PODMain02222019;
- bh=ZV2R8PUZI/CteOlyNwQxI6iEVuU5Z+bXtIB/FEY2zU8=;
- b=H4BEnw4eLy4zr6QcbsZUQpS2z7K6lBI4bx/E3aWYFh0NkiSbexnyBLsw0jDYPlONwrVE
- A5jK9aYPc5P2nI7EuDuvVzOhUvgfhFMvLKCOtBkDLIkPTqe6E3mObkQ45BJpGrLKLwPs
- mHDGeRTpYGkM3lEjck7BtoDlowh0soO14f7x1tcup2pBv0/YMXbjSByY3jCSfutyKWEg
- BGRoHDIYQaoDPuccTbOzsf6L37wjEs4Lx/sZCrykyyZjZVQQVk/rcE0qrgmeJjPMPNfq
- EM/7laatFzN4nIfsOo0kL2cUqtxKxYdX25CnTF7XdvK9TJNWhG+2hZvANlOoVd/oJKJU rA== 
-Authentication-Results: ppops.net;
-        spf=none smtp.mailfrom=ckeepax@opensource.cirrus.com
-Received: from mail1.cirrus.com (mail1.cirrus.com [141.131.3.20])
-        by mx0a-001ae601.pphosted.com with ESMTP id 2t9hr2dd3h-1;
-        Tue, 25 Jun 2019 10:39:16 -0500
-Received: from EDIEX02.ad.cirrus.com (unknown [198.61.84.81])
-        by mail1.cirrus.com (Postfix) with ESMTP id CB4A3611C8B2;
-        Tue, 25 Jun 2019 10:39:15 -0500 (CDT)
-Received: from EDIEX01.ad.cirrus.com (198.61.84.80) by EDIEX02.ad.cirrus.com
- (198.61.84.81) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1591.10; Tue, 25 Jun
- 2019 16:39:15 +0100
-Received: from ediswmail.ad.cirrus.com (198.61.86.93) by EDIEX01.ad.cirrus.com
- (198.61.84.80) with Microsoft SMTP Server id 15.1.1591.10 via Frontend
- Transport; Tue, 25 Jun 2019 16:39:15 +0100
-Received: from algalon.ad.cirrus.com (algalon.ad.cirrus.com [198.90.251.122])
-        by ediswmail.ad.cirrus.com (Postfix) with ESMTP id 3AFF144;
-        Tue, 25 Jun 2019 16:39:15 +0100 (BST)
-From:   Charles Keepax <ckeepax@opensource.cirrus.com>
-To:     <linus.walleij@linaro.org>
-CC:     <bgolaszewski@baylibre.com>, <linux-gpio@vger.kernel.org>,
-        <patches@opensource.cirrus.com>
-Subject: [PATCH 2/2] gpio: madera: Fixup SPDX headers
-Date:   Tue, 25 Jun 2019 16:39:15 +0100
-Message-ID: <20190625153915.28424-2-ckeepax@opensource.cirrus.com>
-X-Mailer: git-send-email 2.11.0
-In-Reply-To: <20190625153915.28424-1-ckeepax@opensource.cirrus.com>
-References: <20190625153915.28424-1-ckeepax@opensource.cirrus.com>
+        id S1732095AbfFYRjQ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 25 Jun 2019 13:39:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58462 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726521AbfFYRjQ (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Tue, 25 Jun 2019 13:39:16 -0400
+Received: from mail-qt1-f173.google.com (mail-qt1-f173.google.com [209.85.160.173])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B5318208CA;
+        Tue, 25 Jun 2019 17:39:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1561484354;
+        bh=uN+wDDacNJwqx+v/3/n9nLahoHqzeiFAwdlzYipdI4Q=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=DZClxw/ihopBvtSbOR8Z1H0A4Pac9E37GVJDGLb5uGZFu+kZDSY5rK6XQLgx77MGu
+         PZWac+VgZuLeOQlZkw5MTWkK76V3Cvn5l724U3UUKKRahQ4StmpEdHw7+tMuFEZ35w
+         f0pAHmJoix4gJmL4t9ALd8FeAQUbyBDdcKOUDJ8U=
+Received: by mail-qt1-f173.google.com with SMTP id p15so19354822qtl.3;
+        Tue, 25 Jun 2019 10:39:14 -0700 (PDT)
+X-Gm-Message-State: APjAAAVO5ney6DEo3qabSQJNJcu36eDXk52uhyQKMPG96eD5MtkSrRbV
+        j/61dSEllkxBdWFljIcko+TjbjjxLYbO6gtv0g==
+X-Google-Smtp-Source: APXvYqyklRzybJRVDTEpfp0SeahUkH+awTTyyTlDMslpGY15qipWFkQLHnSeins0DWa3Bf2iY4HJCCw2GsgIen75KcU=
+X-Received: by 2002:a0c:b627:: with SMTP id f39mr65154134qve.72.1561484354003;
+ Tue, 25 Jun 2019 10:39:14 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=3 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=792 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1906250118
+References: <20190623043801.14040-1-icenowy@aosc.io> <20190623043801.14040-6-icenowy@aosc.io>
+ <CACRpkdbbxgeGPh1oKfyKKOMhpXiz4sQWjZv23FbYaafCz6NyCQ@mail.gmail.com>
+In-Reply-To: <CACRpkdbbxgeGPh1oKfyKKOMhpXiz4sQWjZv23FbYaafCz6NyCQ@mail.gmail.com>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Tue, 25 Jun 2019 11:39:01 -0600
+X-Gmail-Original-Message-ID: <CAL_Jsq+w-+cRwfAMu=kZPK=e85ujq8hu9Lh=jjf+Qy=R7C-AQA@mail.gmail.com>
+Message-ID: <CAL_Jsq+w-+cRwfAMu=kZPK=e85ujq8hu9Lh=jjf+Qy=R7C-AQA@mail.gmail.com>
+Subject: Re: [PATCH v3 5/9] dt-bindings: vendor-prefixes: add SoChip
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     Icenowy Zheng <icenowy@aosc.io>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Chen-Yu Tsai <wens@csie.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        linux-clk <linux-clk@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        linux-sunxi <linux-sunxi@googlegroups.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-GPL-2.0-only is the preferred way of expressing v2 of the GPL, so switch
-to that and remove some redundant copyright notices.
+On Tue, Jun 25, 2019 at 7:55 AM Linus Walleij <linus.walleij@linaro.org> wrote:
+>
+> On Sun, Jun 23, 2019 at 6:39 AM Icenowy Zheng <icenowy@aosc.io> wrote:
+>
+> > Shenzhen SoChip Technology Co., Ltd. is a hardware vendor that produces
+> > EVBs with Allwinner chips. There's also a SoC named S3 that is developed
+> > by Allwinner (based on Allwinner V3/V3s) but branded SoChip.
+> >
+> > Add the vendor prefix for SoChip.
+> >
+> > Signed-off-by: Icenowy Zheng <icenowy@aosc.io>
+> > Reviewed-by: Rob Herring <robh@kernel.org>
+> > ---
+> > No changes in v3.
+> >
+> > Changes in v2:
+> > - Add the review tag by Rob.
+>
+> Should I apply this to the pinctrl tree? Rob?
 
-Signed-off-by: Charles Keepax <ckeepax@opensource.cirrus.com>
----
- drivers/gpio/gpio-madera.c | 6 +-----
- 1 file changed, 1 insertion(+), 5 deletions(-)
+I'd like to take these 2 because we have lots of vendor prefix changes
+(adding a bunch of undocumented ones) this cycle.
 
-diff --git a/drivers/gpio/gpio-madera.c b/drivers/gpio/gpio-madera.c
-index c9dad0543672a..4dbc837d12155 100644
---- a/drivers/gpio/gpio-madera.c
-+++ b/drivers/gpio/gpio-madera.c
-@@ -1,12 +1,8 @@
--// SPDX-License-Identifier: GPL-2.0
-+// SPDX-License-Identifier: GPL-2.0-only
- /*
-  * GPIO support for Cirrus Logic Madera codecs
-  *
-  * Copyright (C) 2015-2018 Cirrus Logic
-- *
-- * This program is free software; you can redistribute it and/or modify
-- * it under the terms of the GNU General Public License as published by the
-- * Free Software Foundation; version 2.
-  */
- 
- #include <linux/gpio/driver.h>
--- 
-2.11.0
-
+Rob
