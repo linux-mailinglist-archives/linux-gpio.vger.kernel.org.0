@@ -2,51 +2,51 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 762AA526DD
-	for <lists+linux-gpio@lfdr.de>; Tue, 25 Jun 2019 10:41:03 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2DFED526F1
+	for <lists+linux-gpio@lfdr.de>; Tue, 25 Jun 2019 10:42:01 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730742AbfFYIlD (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 25 Jun 2019 04:41:03 -0400
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:40201 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730634AbfFYIlC (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 25 Jun 2019 04:41:02 -0400
-Received: by mail-lf1-f66.google.com with SMTP id a9so12028881lff.7
-        for <linux-gpio@vger.kernel.org>; Tue, 25 Jun 2019 01:41:01 -0700 (PDT)
+        id S1730782AbfFYIl7 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 25 Jun 2019 04:41:59 -0400
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:42314 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730668AbfFYIlh (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 25 Jun 2019 04:41:37 -0400
+Received: by mail-lj1-f193.google.com with SMTP id t28so15358889lje.9
+        for <linux-gpio@vger.kernel.org>; Tue, 25 Jun 2019 01:41:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=F+Ki1qmJ5eAYa7yLUWjWU9Nv/mbLfvJhA0V0d9PA+8E=;
-        b=rAWNyHEHEaCNvRsh5wPaYUtzUB3cAGDkLwRIzl40TysW8RkU/swQ8kySGKpi4sOKQs
-         fIeen3XxnFkLEPa9x5VOmp8OwFyw83x+UbkI8uu3851gKMJ1VO7vqI3QsJWqQGycq/fV
-         nEpHLD++m1/6YY/q9kM/lHDlrC1JPUN8y6O5ZApXnQR/nxJ43G03XHOIWCQuPs/qQoy3
-         /xEWHx4f8xym92jqMChrXqmRXm4eYeCWUwhgAX/ou/HFqAUzfU89mErWSzTCvgZVW0tE
-         Ri/gd8Al0RGUTtJvMCVx9TeC8T/9Dq6vEI82wVBarh95pdf0g/VRS9yUBmUr6VhKn2ZF
-         OUXA==
+        bh=yY87oqTTD0Lxu/Nod5+FQjpzkb9Bg3pO2iG7HQ35E9E=;
+        b=jy18i/ewXTLgSvPyNLRaupblj/y1T6RuSuzYOmPX9Rgd5ez/9RF4JcwCLM01Ki7+VD
+         Mw5HQ7AHG8KHsR5lDtc5F0J+vvOHsVnN8x7Z0VxqkiQBcWFPRj0tKwvNTVFWT7+kwa1o
+         CEz4MKcqB2akH4600BMlytNemC6KpfZ33ALUx0+guDJ1Mi3r13EBkSR1eYCAzLR4vLW6
+         5k1HUIjZywUQ5iTZwCWcARRV4pNq1caXQH1Z1u88Dg/rbv/Zbka2U5D1RwqR3Io1AUGC
+         CfJiRiBAVFDvL+akBMKt/EM4x1oAIOFHEABhAVVZBiPpfsZMNL+2AM65JSiPMyuwqe8R
+         45ow==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=F+Ki1qmJ5eAYa7yLUWjWU9Nv/mbLfvJhA0V0d9PA+8E=;
-        b=BWZa8uoe4/pmZ1eAYpcnE0wKeiQ/H1hTGmSgnu6Db9UH53mZRyYGoPhPTTKX9bp4TW
-         P+/qwXhfl6ElgSafijlLtikaeBzTe9hDR+yvMC/c+u6w+JnJHd+hSd402Rsq+uhlAKzc
-         /URgUFPvLEoXFWc2/BbafMcoOgpffyO1J7menMub8BfeeHAhWcPntuBCRnUL7QpAxumm
-         eIVR+sVco8ujK/G9abT8Alv0D5FD/qs3sOE1kIrT9CaIhsve9cWdW6lvtOFebfa3e/Ij
-         Pn+D+wUhJKUTF7T5SSMigdchzlpquyhyrab6Ujxixu9yLIqjz7lfPvV4JJNYEUTXxhmD
-         vfhA==
-X-Gm-Message-State: APjAAAV3Aa0BDtzGOUOwr17mDTJaZzGIHagZ+Gax2j/MjpgDWZINq/+n
-        Xq+JhYs3VShg/2G2q7t3XJPT7au180UMW0NXvXr+Iw==
-X-Google-Smtp-Source: APXvYqz77Z3Mlo0zQC0urLqRnamltUCd0egBwhvs7M18tlhawrJdORa2pZ6fQz9y4Utqsjds40jeglQU0O0j2VJGOwo=
-X-Received: by 2002:a19:dc0d:: with SMTP id t13mr51472630lfg.152.1561452060873;
- Tue, 25 Jun 2019 01:41:00 -0700 (PDT)
+        bh=yY87oqTTD0Lxu/Nod5+FQjpzkb9Bg3pO2iG7HQ35E9E=;
+        b=ZwQ3wktjJx9e3jlFthV1vMDGIn2eY/AitJOz/Ng2ybmUg51VNNrdz7xwbuUHlrEjf+
+         SNa5kHPatOKxdH8EYjKu5yQ2uVLAR+vxzoA7+44Wj2yz9QhsAyOx9TZNo/INwCmnEvP5
+         pVuT5w+APMiTgQ9sDJn2fjW4a89ZYyWIhciZpsyl9+fIJLXmATJNQAbx/d7fByZ7/y83
+         7MpJOnDqq0iqvGqBgk7qa0Pi6rGQnD15WJhX+V3unwAwflexPoe3AoFWoO1rmVVK0Z03
+         5aasl/otqKY40ALgCr6HWbsO28pgudbIAh4MjSRhNeHPNtQvNJTIwJxWBeSZ1dNBpDLA
+         6Gmg==
+X-Gm-Message-State: APjAAAW26UDVWL0fHXR3izaiGEF5OT8ziuf7JiW5aL3Js1Ecgi2VY/7A
+        RxRqJQSIv6SIBJj+iMGnQhVcPYQDi0iziScVLtYmpQ==
+X-Google-Smtp-Source: APXvYqy6jIwHwap88t5Oaa18Ta0HSwKvS14nJn1eTrjidyPzk7gb5fytFaXhj7sVmPkrE39Kdr2drRh47kPrl+2xWxs=
+X-Received: by 2002:a2e:a0cf:: with SMTP id f15mr8401315ljm.180.1561452095250;
+ Tue, 25 Jun 2019 01:41:35 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190611122535.23583-1-Anson.Huang@nxp.com> <20190611122535.23583-2-Anson.Huang@nxp.com>
-In-Reply-To: <20190611122535.23583-2-Anson.Huang@nxp.com>
+References: <20190611122535.23583-1-Anson.Huang@nxp.com> <20190611122535.23583-3-Anson.Huang@nxp.com>
+In-Reply-To: <20190611122535.23583-3-Anson.Huang@nxp.com>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Tue, 25 Jun 2019 10:40:49 +0200
-Message-ID: <CACRpkdZhaAxP1rYdXx88zd=13Z_OZU8Ze_+zQegywkTp7N+QtA@mail.gmail.com>
-Subject: Re: [PATCH V2 2/3] pinctrl: freescale: Add i.MX8MN pinctrl driver support
+Date:   Tue, 25 Jun 2019 10:41:24 +0200
+Message-ID: <CACRpkdZoySkQHc7sbHchR6O0UqxAjp8FS+ubdbXqESGnotDDpA@mail.gmail.com>
+Subject: Re: [PATCH V2 3/3] arm64: defconfig: Select CONFIG_PINCTRL_IMX8MN by default
 To:     Anson Huang <Anson.Huang@nxp.com>
 Cc:     Dong Aisheng <aisheng.dong@nxp.com>,
         Fabio Estevam <festevam@gmail.com>,
@@ -82,16 +82,18 @@ On Tue, Jun 11, 2019 at 2:24 PM <Anson.Huang@nxp.com> wrote:
 
 > From: Anson Huang <Anson.Huang@nxp.com>
 >
-> Add the pinctrl driver support for i.MX8MN.
+> Enable CONFIG_PINCTRL_IMX8MN by default to support i.MX8MN
+> pinctrl driver.
 >
 > Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
-> Acked-by: Dong Aisheng <aisheng.dong@nxp.com>
+> Reviewed-by: Dong Aisheng <aisheng.dong@nxp.com>
 > ---
 > Changes since V1:
->         - Fix some nitpicks like sorting the change in alphabet order
->           and improve the headfile included.
+>         - sort the change in alphabet order.
 
-Patch applied.
+Acked-by: Linus Walleij <linus.walleij@linaro.org>
+
+Please merge this through the ARM SoC tree.
 
 Yours,
 Linus Walleij
