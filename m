@@ -2,87 +2,119 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id BD91F52832
-	for <lists+linux-gpio@lfdr.de>; Tue, 25 Jun 2019 11:38:39 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AC7F25296E
+	for <lists+linux-gpio@lfdr.de>; Tue, 25 Jun 2019 12:29:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731373AbfFYJij (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 25 Jun 2019 05:38:39 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:36709 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729163AbfFYJij (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 25 Jun 2019 05:38:39 -0400
-Received: by mail-wr1-f67.google.com with SMTP id n4so15852068wrs.3
-        for <linux-gpio@vger.kernel.org>; Tue, 25 Jun 2019 02:38:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:reply-to:from:date:message-id:subject:to;
-        bh=+bllI+uhX4ifvIS1PickYrW1huvdTbgr8Lv09pVb6FU=;
-        b=qGxAYu0Kc8a8QY81cpAL/vOs7zUNruOUSdBRb4/Y7HKovLSdoDG/DiAaFRzPayZr3x
-         PRu8itVSbPTpwqKwopbWNOFC8GFoI642nQaC3eVrliaJqXdgR/Pa37oMb03KDS9QzED4
-         oZt1r9UQGCngckqw7LRqBoAFDXA9tdxUNa0wFOyQSLWSb5rW/mt/TYWlijzhfYJPGmgx
-         UsUbSSz3CSLGF/2PC2k0Nc/2tn+WCwzTZ5Jbsp+d88G52hGeCnDxfw/eWTytDb6sxCQk
-         aZj9iy8kRedoYJBURiMtiqSATb91DnSJLnNvtEr7T6d+vziU+mlA3U1Xexo+1Mnr4SJ/
-         EFzg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
-         :subject:to;
-        bh=+bllI+uhX4ifvIS1PickYrW1huvdTbgr8Lv09pVb6FU=;
-        b=LFlmBDPInKgYMTkBmNfwuPO+OEatdEbNE43JwCN67O30Q33vunW06s8EqpxeIZTmLM
-         0T0cHwjVRJsFKeZF9IJI8MCo17eJmp+O6J7Ge8QfOb46qIIKKXT/W4oKO9/YG+/vh7n6
-         yBGaBLPuunfFZ6zJKw3hE2HbL1kOhYFCmETaVbxz5aOBSGg2gcX2TYsJmAKZGUz9Su3l
-         x4G8C1c/TTsQ69xX8Xyi3C/RJwlkB3V1tp6+Dobse0E2D6WeOclWB+ueWdYGL4AWP/tu
-         Bz6WY+dTJFiOA+98MXHxT0Ic0FOa+Tc6zfHJbPWmyzn32UMtcPKkvh+//+7cA8BzSiG8
-         Conw==
-X-Gm-Message-State: APjAAAXx1jJGgGgUmCrD/CUDdpFx8s8dc4k0AQa6j9f6tdqFH8njFDHw
-        rZZo1J7QVNhyo71W0uZLXVQqlLCuQ6cUnftOFFk=
-X-Google-Smtp-Source: APXvYqw0M6+69Cx78Pb2WgjNR/GcV376Kk13F8KBQFWAO9Cvr1SVrvRen9G4vPtV0pEqqeC6LcTpKLVnqq7yVStYPgA=
-X-Received: by 2002:adf:ec0f:: with SMTP id x15mr26815133wrn.165.1561455517240;
- Tue, 25 Jun 2019 02:38:37 -0700 (PDT)
+        id S1726506AbfFYK3U (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 25 Jun 2019 06:29:20 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:36912 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726450AbfFYK3U (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 25 Jun 2019 06:29:20 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id 9143B6028D; Tue, 25 Jun 2019 10:29:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1561458558;
+        bh=BCA2m2EDttizL1A7WMCfrSo2P/383TvoBmUFUGVg/ZU=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=Syd3W+CIctgNf4j9/Jyu09VjziFwHSAzzZ4OWTV/cNVSgN7q8/Ei6igMA3HeuCNrF
+         kBES8tsru1ZVUwAdTYT5gdSO3IwW7Jrgnt3VDCGjh5x4srhKmP99vdT0Eg8PDFK99N
+         xZAFpSlJ7sQe39Uy3pgj+ik11mcvWgSPnWdmQBI0=
+X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
+        pdx-caf-mail.web.codeaurora.org
+X-Spam-Level: 
+X-Spam-Status: No, score=-2.7 required=2.0 tests=ALL_TRUSTED,BAYES_00,
+        DKIM_INVALID,DKIM_SIGNED,SPF_NONE autolearn=no autolearn_force=no
+        version=3.4.0
+Received: from [10.204.78.89] (blr-c-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.19.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: neeraju@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id D9CB060255;
+        Tue, 25 Jun 2019 10:29:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1561458558;
+        bh=BCA2m2EDttizL1A7WMCfrSo2P/383TvoBmUFUGVg/ZU=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=Syd3W+CIctgNf4j9/Jyu09VjziFwHSAzzZ4OWTV/cNVSgN7q8/Ei6igMA3HeuCNrF
+         kBES8tsru1ZVUwAdTYT5gdSO3IwW7Jrgnt3VDCGjh5x4srhKmP99vdT0Eg8PDFK99N
+         xZAFpSlJ7sQe39Uy3pgj+ik11mcvWgSPnWdmQBI0=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org D9CB060255
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=neeraju@codeaurora.org
+Subject: Re: [PATCH v2] pinctrl: qcom: Add irq_enable callback for msm gpio
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Stephen Boyd <sboyd@codeaurora.org>,
+        Timur Tabi <timur@codeaurora.org>,
+        MSM <linux-arm-msm@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Srinivas Ramana <sramana@codeaurora.org>
+References: <1560764090-22740-1-git-send-email-neeraju@codeaurora.org>
+ <CACRpkdZ4BoZzX7pVw4HYBzSMvhnyu_oVNoiiLk3ME05nnG1T3Q@mail.gmail.com>
+From:   Neeraj Upadhyay <neeraju@codeaurora.org>
+Message-ID: <c9eb6bfc-a8d1-75df-159b-3f2304fdb8ea@codeaurora.org>
+Date:   Tue, 25 Jun 2019 15:59:13 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.4.0
 MIME-Version: 1.0
-Received: by 2002:a5d:4d44:0:0:0:0:0 with HTTP; Tue, 25 Jun 2019 02:38:36
- -0700 (PDT)
-Reply-To: arnettdavid2030@gmail.com
-From:   "Sgt,Arnett David" <alasanahmad200@gmail.com>
-Date:   Tue, 25 Jun 2019 14:08:36 +0430
-Message-ID: <CACLpcxwKYFjwfXOUx=mhkNRK=hRM=nTCYageT7H34PpFeF+gsQ@mail.gmail.com>
-Subject: Assist Request From You
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <CACRpkdZ4BoZzX7pVw4HYBzSMvhnyu_oVNoiiLk3ME05nnG1T3Q@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+
+On 6/25/19 2:28 PM, Linus Walleij wrote:
+> On Mon, Jun 17, 2019 at 11:35 AM Neeraj Upadhyay <neeraju@codeaurora.org> wrote:
+>
+>> From: Srinivas Ramana <sramana@codeaurora.org>
+>>
+>> Introduce the irq_enable callback which will be same as irq_unmask
+>> except that it will also clear the status bit before unmask.
+>>
+>> This will help in clearing any erroneous interrupts that would
+>> have got latched when the interrupt is not in use.
+>>
+>> There may be devices like UART which can use the same gpio line
+>> for data rx as well as a wakeup gpio when in suspend. The data that
+>> was flowing on the line may latch the interrupt and when we enable
+>> the interrupt before going to suspend, this would trigger the
+>> unexpected interrupt. This change helps clearing the interrupt
+>> so that these unexpected interrupts gets cleared.
+>>
+>> Signed-off-by: Srinivas Ramana <sramana@codeaurora.org>
+>> Signed-off-by: Neeraj Upadhyay <neeraju@codeaurora.org>
+> Overall this looks good to me, waiting for Bjorn's review.
+>
+>> Changes since v1:
+>> - Extracted common code into __msm_gpio_irq_unmask().
+> Please don't name functions __like __that.
+>
+>> -static void msm_gpio_irq_unmask(struct irq_data *d)
+>> +static void __msm_gpio_irq_unmask(struct irq_data *d, bool status_clear)
+> Instead of __unclear __underscore __semantic use something
+> really descriptive like
+>
+> static void msm_gpio_irq_clear_irq()
+>
+> That is what it does, right?
+
+Is below ok? as it clears (if status_clear set) and then unmasks irq
+
+static void msm_gpio_irq_clear_unmask()
+
+>
+> Other than that it looks fine.
+>
+> Yours,
+> Linus Walleij
+
 -- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a
+member of the Code Aurora Forum, hosted by The Linux Foundation
 
-Accept my greetings to you
-
-Assist Request From You
-
-I am 28 years old single an orphan my parents died when I am five
-years old nobody to help me,I send you my business proposal with tears
-and sorrow,Please let this not be a surprised message to you because I
-decided to contact you on this magnitude and lucrative transaction for
-our present and future survival in life. Moreover, I have laid all the
-solemn trust in you before i decided to disclose this successful and
-confidential transaction to you.
-
-I am  Arnett David ,I hope all is well with you? I am female soldier
-working as United Nations peace keeping troop in Afghanistan on war
-against terrorism. I have in my possession the sum of $3.5million USD
-Which I made here in Afghanistan 2014,I deposited this money with a
-Red Cross agent. I want you to stand as my beneficiary and receive the
-fund And keep it safe so that as soon as am through with my mission
-here in Afghanistan.
-
-You will assist me to invest it in a good profitable Venture or you
-keep it for me until I arrive your country, I will give You 40% of the
-total money for your assistance after you have receive The money.
-Please reply back to me via my private email address
-(arnettdavid2030@gmail.com ) if you are willing to work with me so
-that I can send you the information where the money is been deposited,
-your urgent reply is needed  so i can send you more details.
-
-Thank Yours
-Sgt,Arnett David
