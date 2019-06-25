@@ -2,73 +2,87 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 31E3554EDC
-	for <lists+linux-gpio@lfdr.de>; Tue, 25 Jun 2019 14:29:43 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5D0B554EE7
+	for <lists+linux-gpio@lfdr.de>; Tue, 25 Jun 2019 14:31:18 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727485AbfFYM3m (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 25 Jun 2019 08:29:42 -0400
-Received: from mail-lf1-f67.google.com ([209.85.167.67]:46654 "EHLO
-        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726599AbfFYM3m (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 25 Jun 2019 08:29:42 -0400
-Received: by mail-lf1-f67.google.com with SMTP id z15so12450670lfh.13
-        for <linux-gpio@vger.kernel.org>; Tue, 25 Jun 2019 05:29:41 -0700 (PDT)
+        id S1729722AbfFYMbO (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 25 Jun 2019 08:31:14 -0400
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:36333 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726414AbfFYMbO (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 25 Jun 2019 08:31:14 -0400
+Received: by mail-lf1-f65.google.com with SMTP id q26so12526827lfc.3
+        for <linux-gpio@vger.kernel.org>; Tue, 25 Jun 2019 05:31:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=G0Luw6kS3rtmPHyXIdp7WMOp1bPiSBAU3LeaiAX/EN0=;
-        b=K6lvWqHQpd3miV1mWXICKy+NYshDX8pKbTnjkrUtEov+KkP5iAVpTThjISpndNgBMk
-         sFh2aaMEWhtCgL4+oVzIZ0FbuUs3/hu/ztKQauj5szQpPqcCqJ/YusxczDImJOh9ofmt
-         5Bi3GLd7t2zDQIBDq3v1lBpDfCoNbCG9taQdzQB2TZim5MBOccEeuOPbvpH43skp9P3c
-         oXROF8JMi8renaToVycTML/26UnWj8S+rgI64csH/zVgzESWbhSLP+IgLdv/fdU6dx+q
-         eq7zZ/VaWgyPIBDbnmHu+YpfRM5q8NTSTXmA34JTZa5enJ/b0YFDcmY54xw24WiJUDiy
-         LhXA==
+        bh=kDFY+QTqqiMEOnTov2xDeNaIk7HwyPkPWyRkRRHSyzk=;
+        b=Vii5TMev7BoCq2nTcUAUy4RbuYP5eF8K02+yxiVUgFGihW7crvsellgGLrySBn9T4t
+         +ZkRMd97gjWfE+XgGd8lum0sPzBVxoZ2K816B9DvAM0Ki/jqLCcrmv3VTVxg7HhnpGJp
+         SBMWg7UYzZhnl+uubEvGQjLsZDamg4LCVbD6Z8taj5/U/uA//cusuoJF11bC0dy+/Uiz
+         qplUPH0xN3gxA8LErE1J7X4fM8KBREa80NElm64vR/wg1VorhA73iqTMYiSCRzSdyLv5
+         UYsxileELIgN9UTwdRejFzAe9xZTj31cPdZ1M5xPnuAKfukfgIw6HyLcOEoajwel5ji6
+         Xmnw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=G0Luw6kS3rtmPHyXIdp7WMOp1bPiSBAU3LeaiAX/EN0=;
-        b=QppTGKcKIEg/AzIwbug/Li2xHapgYMZIQFc6qMiyxffiGpa+Do0Jr3GBYTtNmp9c0w
-         S9nSomu0veqsj013ueTy98Pr/aOM5Oev/Y6dOAQVFR+X7JukOfEqz6tSbYZSzU5pst3f
-         T7kwFUaJ8RWNTCm5sBrS5Z8Lb2G/jAh3Onc9muJWGrn+YSoh11XRIct99Wv96ARJnKh9
-         PWKvuiXO5zfETffeZu0gBFC1CX8W9ONxVCigv7eFdek9uBCrCsOx1rvvr9M7gIbbGjZl
-         L33mAwOY28NwlWQgZUlP24ujWs75gZKKs/w5kZgMJsXDsnuXLFewhQtQEtJYxCFqGCIw
-         4VCw==
-X-Gm-Message-State: APjAAAXEtxoud0VT2UbvAJTJOW7yt3nIvJzrDONoJS6W1L02/iBegPHP
-        96h5i6hRVKIV93BFqlrlhjSTa/q3K7GMWdgIo3XFZw==
-X-Google-Smtp-Source: APXvYqxp4Ybz6xLVOuXOQ4VdxIJTjntcvEBOufrhMb6lXYdwk7tEE5wJsxyV5ft2eb6OhoodZqr0/tV2TMEMo3G2/2M=
-X-Received: by 2002:ac2:5382:: with SMTP id g2mr2458147lfh.92.1561465780431;
- Tue, 25 Jun 2019 05:29:40 -0700 (PDT)
+        bh=kDFY+QTqqiMEOnTov2xDeNaIk7HwyPkPWyRkRRHSyzk=;
+        b=RQksR7NEAT8x1HbKuYViPnsPHpbLdARtII10yzOUL4l89YZTOwHyHdu6AMiQhVa5AQ
+         5yKXdndVT3nwQNATI6qONumJ7g/C6SGpGDlhgcA6nuHtaSS3rlYh90O6u1hnSnaNVIEe
+         /Cw9ZcTXcxjCJhqF4CqPWi+7upLsg31Rho9epxu8Rr6fs+8KCPIu5P2+MCLKHbg+ZqIF
+         89j79ZhxC030kFOhWr/zcfpOXzMxjeZMoiXJyV3Yw1n+s5TYqGShe5+/40TzJp3gBhSR
+         X0L692afZ2LD/Ae/6dPE3NmteMZW+1tkJ1oxExmmDJPOBtbwXgFxl4fCgIEwoBWWt6kd
+         FUuw==
+X-Gm-Message-State: APjAAAXPaP+8Rkvgyl9rkQqhoiGKvKH/rcA/9fPpwj9Nn+/4sBk554vX
+        T24hX7SpkMfA07dqNf8HlTJN6zf63iFYPJ8Tmq+oZA==
+X-Google-Smtp-Source: APXvYqxJtx+kv4xSwtZ2Oh9SZIkuBtLHG+NnPvuNmG5fGRPD0rBSI3dyCsgfek9QsPqek/vYbO/dzGax8Uzv7n1exuo=
+X-Received: by 2002:a19:dc0d:: with SMTP id t13mr52002001lfg.152.1561465872654;
+ Tue, 25 Jun 2019 05:31:12 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190618155047.16894-1-gregkh@linuxfoundation.org>
-In-Reply-To: <20190618155047.16894-1-gregkh@linuxfoundation.org>
+References: <20190618160105.26343-1-alpawi@amazon.com>
+In-Reply-To: <20190618160105.26343-1-alpawi@amazon.com>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Tue, 25 Jun 2019 14:29:28 +0200
-Message-ID: <CACRpkdbLOjEL6MQUYw=9yNyNRr0tsSp0pqZPGLb8vnrNEvD1og@mail.gmail.com>
-Subject: Re: [PATCH 1/3] gpiolib: no need to cast away return value of debugfs_create_file()
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Bamvor Jian Zhang <bamv2005@gmail.com>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
+Date:   Tue, 25 Jun 2019 14:31:00 +0200
+Message-ID: <CACRpkdYgXZzvFKyvySWnsJ2_1pA1e_VHEY-QNzNYCikMUc_WVg@mail.gmail.com>
+Subject: Re: [PATCH 0/2] pinctl: armada-37xx: fix for pins 32+
+To:     alpawi@amazon.com
+Cc:     Benjamin Herrenschmidt <benh@amazon.com>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Gregory Clement <gregory.clement@bootlin.com>,
+        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Jun 18, 2019 at 5:50 PM Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
+On Tue, Jun 18, 2019 at 6:01 PM <alpawi@amazon.com> wrote:
 
-> It is fine to ignore the return value (and encouraged), so need to cast
-> away the return value, you will not get a build warning at all.
+> From: Patrick Williams <alpawi@amazon.com>
 >
-> Cc: Linus Walleij <linus.walleij@linaro.org>
-> Cc: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> Cc: linux-gpio@vger.kernel.org
-> Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> The 37xx GPIO config registers are only 32 bits long and
+> span 2 registers for the NB GPIO controller.  The function
+> to calculate the offset was missing the increase to the
+> config register.
+>
+> I have tested both raw gpio access and interrupts using
+> libgpiod utilities on an Espressonbin.
+>
+> The first patch is a simple rename of a function because
+> the original name implied it was doing IO itself ("update
+> reg").  This patch could be dropped if undesired.
+>
+> The second patch contains the fix for GPIOs 32+.
 
-Patch applied.
+This looks good overall. I am waiting for a maintainer review.
+If nothing happens in a week, poke me and I'll just apply
+the patches.
 
 Yours,
 Linus Walleij
