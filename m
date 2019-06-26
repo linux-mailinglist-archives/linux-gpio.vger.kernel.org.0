@@ -2,97 +2,169 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 7251656099
-	for <lists+linux-gpio@lfdr.de>; Wed, 26 Jun 2019 05:52:43 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CDBEA56102
+	for <lists+linux-gpio@lfdr.de>; Wed, 26 Jun 2019 05:54:56 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727218AbfFZDnA (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 25 Jun 2019 23:43:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54010 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726736AbfFZDm6 (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Tue, 25 Jun 2019 23:42:58 -0400
-Received: from sasha-vm.mshome.net (mobile-107-77-172-74.mobile.att.net [107.77.172.74])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2C92C21655;
-        Wed, 26 Jun 2019 03:42:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561520577;
-        bh=l4wRp0ciZsdiP8bdq+krdoTNEqZRrCAe8x8ByEs1JDA=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MsEO1GsDeK7aGxCPC/nqo31EXl+JeSukNeQD+PKE88kVUZrnlgA8ifaH9fZhu6ySS
-         r1KkBQ/OCgzhm0tN71vSFRUwSLh1WKyrL3jrPzvsfPdXCwA/vu8A95kOHI8Vk2qviV
-         ExQrauKHSne3NEfmTP1r8XdjBpYWgimhiEyjp+8Q=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     "H. Nikolaus Schaller" <hns@goldelico.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Sasha Levin <sashal@kernel.org>, linux-gpio@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.1 35/51] gpio: pca953x: hack to fix 24 bit gpio expanders
-Date:   Tue, 25 Jun 2019 23:40:51 -0400
-Message-Id: <20190626034117.23247-35-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190626034117.23247-1-sashal@kernel.org>
-References: <20190626034117.23247-1-sashal@kernel.org>
+        id S1726558AbfFZDyz (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 25 Jun 2019 23:54:55 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:37682 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726525AbfFZDyz (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 25 Jun 2019 23:54:55 -0400
+Received: by mail-pg1-f194.google.com with SMTP id y8so508239pgl.4
+        for <linux-gpio@vger.kernel.org>; Tue, 25 Jun 2019 20:54:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=719FaO+aWRnw4XYLOoRXM4pdoeDNZsMJ0pALAIoQ1Wo=;
+        b=lA6OWLRPXyboTpNjyNCaECY2SHWENw5Pj9/nFMod/706hmcpKd+bkwMZUWfmQvemq3
+         8eUVJaZwJr9DNvZSnAN0EJBKihi3EV7t2PWPc50kfQA/rKpwEfmZ+GJ741fN06ComEEH
+         Hsgxo1XaNrWg1Mx+02QItB0Ft2JXCa2VdPriA=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=719FaO+aWRnw4XYLOoRXM4pdoeDNZsMJ0pALAIoQ1Wo=;
+        b=dPjxDqnSxQGkYUhSPpplv5S5Wn0d4VDJLbk5BlcBW/V9LED0QPQNHeZDuiIOO30kFV
+         YRsIoFqlQgA2h/L6eIakxR7kJkYhNKKpRK+/WHdN15gpV0gwV8HtSPnQCNz9g9I8JyVR
+         Q5jd60gr1O9XkQH5Rik0Rs5rbpxTGEqMMUtpqC/Kg9i3aV6Ejjm3rVttZablmN9lqglH
+         sUQIqJE5JRHoClC9eXYn9gJ7v6Y/4ZeGObgQJf0lXrDVnp33UmHWaI4EZZ3s7W8ll0lq
+         rnRDvMxYFRGok0g17L04dCL+76uXLS6StggOk14drnhjScEQe6LUYkSQtgi/zb7QnlZC
+         aaAg==
+X-Gm-Message-State: APjAAAUgulgohbj8fiPPjDt5z6NAXTGmeUwZLwqrj9ArKrP3yk6JoP2r
+        WdoshfulPEK0zjONkNSEEeWrJA==
+X-Google-Smtp-Source: APXvYqzEr4WarL5EQWcWiyFDaW7OQxJFmSAIRXLv347QjxmkHy1Yf6fmqfZUNLYsCAeo4B8P7muyMw==
+X-Received: by 2002:a17:90a:37ac:: with SMTP id v41mr1815513pjb.6.1561521294178;
+        Tue, 25 Jun 2019 20:54:54 -0700 (PDT)
+Received: from drinkcat2.tpe.corp.google.com ([2401:fa00:1:b:d8b7:33af:adcb:b648])
+        by smtp.gmail.com with ESMTPSA id b17sm19000599pgk.85.2019.06.25.20.54.51
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Tue, 25 Jun 2019 20:54:53 -0700 (PDT)
+From:   Nicolas Boichat <drinkcat@chromium.org>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     Sean Wang <sean.wang@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        linux-mediatek@lists.infradead.org, linux-gpio@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Chuanjia Liu <Chuanjia.Liu@mediatek.com>, evgreen@chromium.org,
+        swboyd@chromium.org
+Subject: [PATCH v2] pinctrl: mediatek: Update cur_mask in mask/mask ops
+Date:   Wed, 26 Jun 2019 11:54:45 +0800
+Message-Id: <20190626035445.236406-1-drinkcat@chromium.org>
+X-Mailer: git-send-email 2.22.0.410.gd8fdbe21b5-goog
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-From: "H. Nikolaus Schaller" <hns@goldelico.com>
+During suspend/resume, mtk_eint_mask may be called while
+wake_mask is active. For example, this happens if a wake-source
+with an active interrupt handler wakes the system:
+irq/pm.c:irq_pm_check_wakeup would disable the interrupt, so
+that it can be handled later on in the resume flow.
 
-[ Upstream commit 3b00691cc46a4089368a008b30655a8343411715 ]
+However, this may happen before mtk_eint_do_resume is called:
+in this case, wake_mask is loaded, and cur_mask is restored
+from an older copy, re-enabling the interrupt, and causing
+an interrupt storm (especially for level interrupts).
 
-24 bit expanders use REG_ADDR_AI in combination with register addressing. This
-conflicts with regmap which takes this bit as part of the register number,
-i.e. a second cache entry is defined for accessed with REG_ADDR_AI being
-set although on the chip it is the same register as with REG_ADDR_AI being
-cleared.
+Step by step, for a line that has both wake and interrupt enabled:
+ 1. cur_mask[irq] = 1; wake_mask[irq] = 1; EINT_EN[irq] = 1 (interrupt
+    enabled at hardware level)
+ 2. System suspends, resumes due to that line (at this stage EINT_EN
+    == wake_mask)
+ 3. irq_pm_check_wakeup is called, and disables the interrupt =>
+    EINT_EN[irq] = 0, but we still have cur_mask[irq] = 1
+ 4. mtk_eint_do_resume is called, and restores EINT_EN = cur_mask, so
+    it reenables EINT_EN[irq] = 1 => interrupt storm as the driver
+    is not yet ready to handle the interrupt.
 
-The problem was introduced by
+This patch fixes the issue in step 3, by recording all mask/unmask
+changes in cur_mask. This also avoids the need to read the current
+mask in eint_do_suspend, and we can remove mtk_eint_chip_read_mask
+function.
 
-	commit b32cecb46bdc ("gpio: pca953x: Extract the register address mangling to single function")
+The interrupt will be re-enabled properly later on, sometimes after
+mtk_eint_do_resume, when the driver is ready to handle it.
 
-but only became visible by
+Fixes: 58a5e1b64b ("pinctrl: mediatek: Implement wake handler and suspend resume")
+Signed-off-by: Nicolas Boichat <drinkcat@chromium.org>
+Acked-by: Sean Wang <sean.wang@kernel.org>
 
-	commit 8b9f9d4dc511 ("regmap: verify if register is writeable before writing operations")
-
-because before, the regmap size was effectively ignored and
-pca953x_writeable_register() did know to ignore REG_ADDR_AI. Still, there
-were two separate cache entries created.
-
-Since the use of REG_ADDR_AI seems to be static we can work around this
-issue by simply increasing the size of the regmap to cover the "virtual"
-registers with REG_ADDR_AI being set. This only means that half of the
-regmap buffer will be unused.
-
-Reported-by: H. Nikolaus Schaller <hns@goldelico.com>
-Suggested-by: Linus Walleij <linus.walleij@linaro.org>
-Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpio/gpio-pca953x.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/gpio/gpio-pca953x.c b/drivers/gpio/gpio-pca953x.c
-index 7e76830b3368..b6f10e56dfa0 100644
---- a/drivers/gpio/gpio-pca953x.c
-+++ b/drivers/gpio/gpio-pca953x.c
-@@ -306,7 +306,8 @@ static const struct regmap_config pca953x_i2c_regmap = {
- 	.volatile_reg = pca953x_volatile_register,
+Applies on top of linux-pinctrl.git/fixes.
+
+Changes from v2:
+ - Added Fixes tag
+ - Reworded the commit message, added an example. Sean: I hope
+   that's what you had in mind, I can reword further, if needed.
+
+Note that IRQCHIP_MASK_ON_SUSPEND does not work here, as it does
+not handle lines that are enabled as a wake source, but without
+interrupt enabled (e.g. cros_ec driver does that), which we do want
+to support.
+
+Also, Stephen Boyd suggested refactoring the genirq layer to make
+it aware of such IRQ controllers. I may try to look at this in the
+future, but don't have the cycles right now ,-(
+
+ drivers/pinctrl/mediatek/mtk-eint.c | 18 ++++--------------
+ 1 file changed, 4 insertions(+), 14 deletions(-)
+
+diff --git a/drivers/pinctrl/mediatek/mtk-eint.c b/drivers/pinctrl/mediatek/mtk-eint.c
+index 737385e86beb807..7e526bcf5e0b55c 100644
+--- a/drivers/pinctrl/mediatek/mtk-eint.c
++++ b/drivers/pinctrl/mediatek/mtk-eint.c
+@@ -113,6 +113,8 @@ static void mtk_eint_mask(struct irq_data *d)
+ 	void __iomem *reg = mtk_eint_get_offset(eint, d->hwirq,
+ 						eint->regs->mask_set);
  
- 	.cache_type = REGCACHE_RBTREE,
--	.max_register = 0x7f,
-+	/* REVISIT: should be 0x7f but some 24 bit chips use REG_ADDR_AI */
-+	.max_register = 0xff,
- };
++	eint->cur_mask[d->hwirq >> 5] &= ~mask;
++
+ 	writel(mask, reg);
+ }
  
- static u8 pca953x_recalc_addr(struct pca953x_chip *chip, int reg, int off,
+@@ -123,6 +125,8 @@ static void mtk_eint_unmask(struct irq_data *d)
+ 	void __iomem *reg = mtk_eint_get_offset(eint, d->hwirq,
+ 						eint->regs->mask_clr);
+ 
++	eint->cur_mask[d->hwirq >> 5] |= mask;
++
+ 	writel(mask, reg);
+ 
+ 	if (eint->dual_edge[d->hwirq])
+@@ -217,19 +221,6 @@ static void mtk_eint_chip_write_mask(const struct mtk_eint *eint,
+ 	}
+ }
+ 
+-static void mtk_eint_chip_read_mask(const struct mtk_eint *eint,
+-				    void __iomem *base, u32 *buf)
+-{
+-	int port;
+-	void __iomem *reg;
+-
+-	for (port = 0; port < eint->hw->ports; port++) {
+-		reg = base + eint->regs->mask + (port << 2);
+-		buf[port] = ~readl_relaxed(reg);
+-		/* Mask is 0 when irq is enabled, and 1 when disabled. */
+-	}
+-}
+-
+ static int mtk_eint_irq_request_resources(struct irq_data *d)
+ {
+ 	struct mtk_eint *eint = irq_data_get_irq_chip_data(d);
+@@ -384,7 +375,6 @@ static void mtk_eint_irq_handler(struct irq_desc *desc)
+ 
+ int mtk_eint_do_suspend(struct mtk_eint *eint)
+ {
+-	mtk_eint_chip_read_mask(eint, eint->base, eint->cur_mask);
+ 	mtk_eint_chip_write_mask(eint, eint->base, eint->wake_mask);
+ 
+ 	return 0;
 -- 
-2.20.1
+2.22.0.410.gd8fdbe21b5-goog
 
