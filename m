@@ -2,119 +2,139 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 3EE3F561BA
-	for <lists+linux-gpio@lfdr.de>; Wed, 26 Jun 2019 07:33:20 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id EF1585622D
+	for <lists+linux-gpio@lfdr.de>; Wed, 26 Jun 2019 08:14:24 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725790AbfFZFdT (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 26 Jun 2019 01:33:19 -0400
-Received: from mga12.intel.com ([192.55.52.136]:51024 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725536AbfFZFdT (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Wed, 26 Jun 2019 01:33:19 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 25 Jun 2019 22:33:18 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.63,418,1557212400"; 
-   d="scan'208";a="155755170"
-Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
-  by orsmga008.jf.intel.com with ESMTP; 25 Jun 2019 22:33:17 -0700
-Received: from kbuild by lkp-server01 with local (Exim 4.89)
-        (envelope-from <lkp@intel.com>)
-        id 1hg0YW-000HWh-HF; Wed, 26 Jun 2019 13:33:16 +0800
-Date:   Wed, 26 Jun 2019 13:32:56 +0800
-From:   kbuild test robot <lkp@intel.com>
-To:     Enrico Weigelt <info@metux.net>
-Cc:     kbuild-all@01.org, linux-gpio@vger.kernel.org,
-        Linus Walleij <linus.walleij@linaro.org>
-Subject: [gpio:devel-hierarchical-irqchip 44/62]
- drivers/gpio/gpio-amd-fch.c:173:57: sparse: sparse: incorrect type in
- argument 2 (different modifiers)
-Message-ID: <201906261354.IkP8zN1J%lkp@intel.com>
+        id S1726722AbfFZGOX (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 26 Jun 2019 02:14:23 -0400
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:33025 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726686AbfFZGOW (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 26 Jun 2019 02:14:22 -0400
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1hg1C5-0005zD-Ll; Wed, 26 Jun 2019 08:14:09 +0200
+Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1hg1C1-0003D1-Jo; Wed, 26 Jun 2019 08:14:05 +0200
+Date:   Wed, 26 Jun 2019 08:14:05 +0200
+From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+To:     "Enrico Weigelt, metux IT consult" <info@metux.net>
+Cc:     linux-kernel@vger.kernel.org, grygorii.strashko@ti.com,
+        mcoquelin.stm32@gmail.com, thloh@altera.com, festevam@gmail.com,
+        linus.walleij@linaro.org, khilman@kernel.org,
+        patches@opensource.cirrus.com, bgolaszewski@baylibre.com,
+        linux-omap@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-imx@nxp.com, kernel@pengutronix.de, ssantosh@kernel.org,
+        linux-tegra@vger.kernel.org, andriy.shevchenko@linux.intel.com,
+        shawnguo@kernel.org, s.hauer@pengutronix.de,
+        alexandre.torgue@st.com
+Subject: Re: [PATCH 01/30] include: linux: platform_device: more helpers for
+ declaring platform drivers
+Message-ID: <20190626061405.qsqq5na4oactuo6f@pengutronix.de>
+References: <1560796871-18560-1-git-send-email-info@metux.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-X-Patchwork-Hint: ignore
-User-Agent: Mutt/1.5.23 (2014-03-12)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <1560796871-18560-1-git-send-email-info@metux.net>
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-gpio@vger.kernel.org
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-tree:   https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-gpio.git devel-hierarchical-irqchip
-head:   9b22e3be56602f4f7b2a1a05414d093ed607e6cf
-commit: 9bb2e04525087b7d9f786aa5e68a167187576dbe [44/62] gpio: amd: Make resource struct const
-reproduce:
-        # apt-get install sparse
-        # sparse version: v0.6.1-rc1-7-g2b96cd8-dirty
-        git checkout 9bb2e04525087b7d9f786aa5e68a167187576dbe
-        make ARCH=x86_64 allmodconfig
-        make C=1 CF='-fdiagnostic-prefix -D__CHECK_ENDIAN__'
+Hello,
 
-If you fix the issue, kindly add following tag
-Reported-by: kbuild test robot <lkp@intel.com>
+On Mon, Jun 17, 2019 at 08:40:42PM +0200, Enrico Weigelt, metux IT consult wrote:
+> From: Enrico Weigelt <info@metux.net>
+> 
+> Add more helper macros for trivial driver init cases, similar to the
+> already existing module_platform_driver()+friends - now for those which
+> are initialized at other stages. Lots of drivers couldn't use the existing
+> macros, as they need to be called at different init stages, eg. subsys,
+> postcore, arch.
+> 
+> This helps to further reduce driver init boilerplate.
+> 
+> Signed-off-by: Enrico Weigelt <info@metux.net>
+> ---
+>  include/linux/platform_device.h | 51 +++++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 51 insertions(+)
+> 
+> diff --git a/include/linux/platform_device.h b/include/linux/platform_device.h
+> index beb25f2..5f3a967 100644
+> --- a/include/linux/platform_device.h
+> +++ b/include/linux/platform_device.h
+> @@ -259,6 +259,57 @@ static inline void platform_set_drvdata(struct platform_device *pdev,
+>  } \
+>  module_exit(__platform_driver##_exit);
+>  
+> +/* postcore_platform_driver() - Helper macro for drivers that don't do
+> + * anything special in module init/exit.  This eliminates a lot of
+> + * boilerplate.  Each module may only use this macro once, and
+> + * calling it replaces postcore_initcall() and module_exit()
+> + */
+> +#define postcore_platform_driver(__platform_driver) \
+> +static int __init __platform_driver##_init(void) \
+> +{ \
+> +	return platform_driver_register(&(__platform_driver)); \
+> +} \
+> +postcore_initcall(__platform_driver##_init); \
+> +static void __exit __platform_driver##_exit(void) \
+> +{ \
+> +	platform_driver_unregister(&(__platform_driver)); \
+> +} \
+> +module_exit(__platform_driver##_exit);
+> +
+> +/* subsys_platform_driver() - Helper macro for drivers that don't do
+> + * anything special in module init/exit.  This eliminates a lot of
+> + * boilerplate.  Each module may only use this macro once, and
+> + * calling it replaces subsys_initcall() and module_exit()
+> + */
+> +#define subsys_platform_driver(__platform_driver) \
+> +static int __init __platform_driver##_init(void) \
+> +{ \
+> +	return platform_driver_register(&(__platform_driver)); \
+> +} \
+> +subsys_initcall(__platform_driver##_init); \
+> +static void __exit __platform_driver##_exit(void) \
+> +{ \
+> +	platform_driver_unregister(&(__platform_driver)); \
+> +} \
+> +module_exit(__platform_driver##_exit);
 
+Would it make sense to do something like:
 
-sparse warnings: (new ones prefixed by >>)
+	#define __module_platform_driver(__platform_driver, __initlvl) \
+	static int __init __platform_driver##_init(void) \
+	{ \
+		return platform_driver_register(&(__platform_driver)); \
+	} \
+	__initlvl ## _initcall(__platform_driver##_init); \
+	static void __exit __platform_driver##_exit(void) \
+	{ \
+		platform_driver_unregister(&(__platform_driver)); \
+	} \
+	module_exit(__platform_driver##_exit);
 
->> drivers/gpio/gpio-amd-fch.c:173:57: sparse: sparse: incorrect type in argument 2 (different modifiers) @@    expected struct resource *res @@    got structstruct resource *res @@
->> drivers/gpio/gpio-amd-fch.c:173:57: sparse:    expected struct resource *res
->> drivers/gpio/gpio-amd-fch.c:173:57: sparse:    got struct resource const *
+	#define postcore_platform_driver(__platform_driver) __module_platform_driver(__platform_driver, postcore)
+	#define subsys_platform_driver(__platform_driver) __module_platform_driver(__platform_driver, subsys)
+	...
 
-vim +173 drivers/gpio/gpio-amd-fch.c
+Which would be more compact and makes the difference between these
+macros a bit more obvious.
 
-e09d168f Enrico Weigelt, metux IT consult 2019-02-22  139  
-e09d168f Enrico Weigelt, metux IT consult 2019-02-22  140  static int amd_fch_gpio_probe(struct platform_device *pdev)
-e09d168f Enrico Weigelt, metux IT consult 2019-02-22  141  {
-e09d168f Enrico Weigelt, metux IT consult 2019-02-22  142  	struct amd_fch_gpio_priv *priv;
-e09d168f Enrico Weigelt, metux IT consult 2019-02-22  143  	struct amd_fch_gpio_pdata *pdata;
-e09d168f Enrico Weigelt, metux IT consult 2019-02-22  144  
-e09d168f Enrico Weigelt, metux IT consult 2019-02-22  145  	pdata = dev_get_platdata(&pdev->dev);
-e09d168f Enrico Weigelt, metux IT consult 2019-02-22  146  	if (!pdata) {
-e09d168f Enrico Weigelt, metux IT consult 2019-02-22  147  		dev_err(&pdev->dev, "no platform_data\n");
-e09d168f Enrico Weigelt, metux IT consult 2019-02-22  148  		return -ENOENT;
-e09d168f Enrico Weigelt, metux IT consult 2019-02-22  149  	}
-e09d168f Enrico Weigelt, metux IT consult 2019-02-22  150  
-e09d168f Enrico Weigelt, metux IT consult 2019-02-22  151  	priv = devm_kzalloc(&pdev->dev, sizeof(*priv), GFP_KERNEL);
-e09d168f Enrico Weigelt, metux IT consult 2019-02-22  152  	if (!priv)
-e09d168f Enrico Weigelt, metux IT consult 2019-02-22  153  		return -ENOMEM;
-e09d168f Enrico Weigelt, metux IT consult 2019-02-22  154  
-e09d168f Enrico Weigelt, metux IT consult 2019-02-22  155  	priv->pdata	= pdata;
-e09d168f Enrico Weigelt, metux IT consult 2019-02-22  156  	priv->pdev	= pdev;
-e09d168f Enrico Weigelt, metux IT consult 2019-02-22  157  
-e09d168f Enrico Weigelt, metux IT consult 2019-02-22  158  	priv->gc.owner			= THIS_MODULE;
-e09d168f Enrico Weigelt, metux IT consult 2019-02-22  159  	priv->gc.parent			= &pdev->dev;
-e09d168f Enrico Weigelt, metux IT consult 2019-02-22  160  	priv->gc.label			= dev_name(&pdev->dev);
-e09d168f Enrico Weigelt, metux IT consult 2019-02-22  161  	priv->gc.ngpio			= priv->pdata->gpio_num;
-e09d168f Enrico Weigelt, metux IT consult 2019-02-22  162  	priv->gc.names			= priv->pdata->gpio_names;
-e09d168f Enrico Weigelt, metux IT consult 2019-02-22  163  	priv->gc.base			= -1;
-e09d168f Enrico Weigelt, metux IT consult 2019-02-22  164  	priv->gc.request		= amd_fch_gpio_request;
-e09d168f Enrico Weigelt, metux IT consult 2019-02-22  165  	priv->gc.direction_input	= amd_fch_gpio_direction_input;
-e09d168f Enrico Weigelt, metux IT consult 2019-02-22  166  	priv->gc.direction_output	= amd_fch_gpio_direction_output;
-e09d168f Enrico Weigelt, metux IT consult 2019-02-22  167  	priv->gc.get_direction		= amd_fch_gpio_get_direction;
-e09d168f Enrico Weigelt, metux IT consult 2019-02-22  168  	priv->gc.get			= amd_fch_gpio_get;
-e09d168f Enrico Weigelt, metux IT consult 2019-02-22  169  	priv->gc.set			= amd_fch_gpio_set;
-e09d168f Enrico Weigelt, metux IT consult 2019-02-22  170  
-e09d168f Enrico Weigelt, metux IT consult 2019-02-22  171  	spin_lock_init(&priv->lock);
-e09d168f Enrico Weigelt, metux IT consult 2019-02-22  172  
-e09d168f Enrico Weigelt, metux IT consult 2019-02-22 @173  	priv->base = devm_ioremap_resource(&pdev->dev, &amd_fch_gpio_iores);
-e09d168f Enrico Weigelt, metux IT consult 2019-02-22  174  	if (IS_ERR(priv->base))
-e09d168f Enrico Weigelt, metux IT consult 2019-02-22  175  		return PTR_ERR(priv->base);
-e09d168f Enrico Weigelt, metux IT consult 2019-02-22  176  
-e09d168f Enrico Weigelt, metux IT consult 2019-02-22  177  	platform_set_drvdata(pdev, priv);
-e09d168f Enrico Weigelt, metux IT consult 2019-02-22  178  
-e09d168f Enrico Weigelt, metux IT consult 2019-02-22  179  	return devm_gpiochip_add_data(&pdev->dev, &priv->gc, priv);
-e09d168f Enrico Weigelt, metux IT consult 2019-02-22  180  }
-e09d168f Enrico Weigelt, metux IT consult 2019-02-22  181  
+Best regards
+Uwe
 
-:::::: The code at line 173 was first introduced by commit
-:::::: e09d168f13f0d63df7fe095d52be04c16cbe1cef gpio: AMD G-Series PCH gpio driver
-
-:::::: TO: Enrico Weigelt, metux IT consult <info@metux.net>
-:::::: CC: Linus Walleij <linus.walleij@linaro.org>
-
----
-0-DAY kernel test infrastructure                Open Source Technology Center
-https://lists.01.org/pipermail/kbuild-all                   Intel Corporation
+-- 
+Pengutronix e.K.                           | Uwe Kleine-König            |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
