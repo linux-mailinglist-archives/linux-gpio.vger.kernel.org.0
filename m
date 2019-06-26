@@ -2,109 +2,157 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 2F7EC564CB
-	for <lists+linux-gpio@lfdr.de>; Wed, 26 Jun 2019 10:44:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C03BA564DC
+	for <lists+linux-gpio@lfdr.de>; Wed, 26 Jun 2019 10:46:05 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726851AbfFZIoZ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 26 Jun 2019 04:44:25 -0400
-Received: from mail-lf1-f67.google.com ([209.85.167.67]:41522 "EHLO
-        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726006AbfFZIoZ (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 26 Jun 2019 04:44:25 -0400
-Received: by mail-lf1-f67.google.com with SMTP id 136so984652lfa.8
-        for <linux-gpio@vger.kernel.org>; Wed, 26 Jun 2019 01:44:24 -0700 (PDT)
+        id S1727114AbfFZIqD (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 26 Jun 2019 04:46:03 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:33015 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726851AbfFZIqD (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 26 Jun 2019 04:46:03 -0400
+Received: by mail-wm1-f66.google.com with SMTP id h19so4088644wme.0
+        for <linux-gpio@vger.kernel.org>; Wed, 26 Jun 2019 01:46:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=/Thv0yruwmmup3gZPVBMby8+N9UFFpu3/fAgwAoU8xE=;
-        b=knnu9IX3AnghdmjiUVHJy9jxcgNpjMBB66zzyDAghznBI8N7ROY8lSn4mf2RTQexKt
-         7vETLu1V5IfVMrlInrD/CUsAgxv0diehd/u7LJTVq25G1VE5Aw8msLh8zeNaNdxK2ZG8
-         7MmH3QNXZ+t0ntocSvlPczy7FtqUvv0PIeNz/+6O/5AAwwb3W+RjTdA6IvFpAZd9KxVn
-         hnamNT9zrlqgpnOCgYHJHMaex6nGCS/9OpZi4JOD4uEMj8t8YphkegkEpNDbOUJSWie3
-         pd6nXFcqsX+4Z6pY9YSzrrfkNdGjTmjWy9n3jDlohh9S4Sqis98yLW4O97r5LCYyK8TW
-         H4+Q==
+        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=8W5vMi9MdrqpXAU5Ufa9GPoycXyS4HH7ZnprQ1k/xT4=;
+        b=HdWr1UCkK+SdQQlojDzl40R1zx7OoQrR6zxFq6o7GBW/Rr7kOKEBkWLqqvbAj7FJ7q
+         1E/7hAqK7FymCxRho9h7Puo3OA3c+KBf1t8pCC4LrsCxytS5+908kOBx9SAbyr+eQ26r
+         2CpZafsOxYgG7VhXjmuK4+7EvK2HhJuaPfNkwx0Hc8PdWe8VuwKaUFtpKjbD2gKSW82D
+         I2K8nk9TrPyQq6+YYoeYIpHVOM96UUKcl5R8PoZle1hhHEY1jWUyt99zeiSJGufWHAF4
+         W0KMHahBWXjKLSXchOOGTnNC1U/4RNPdCC0G8jumdobBD9C8SqOkVa9rHciamo7FalHp
+         cMxg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=/Thv0yruwmmup3gZPVBMby8+N9UFFpu3/fAgwAoU8xE=;
-        b=HkyzON4jy5spYid7Xoif7exnicY3k8vaW0FkJwVQwAY08AF9T00SJp649TsCT08Jdv
-         3TO8BGnTLpda04DavkGA/MRDrPKHOqWx64h1gZBiETVOLw238cZwgC3hV1khsRBZHdJp
-         OPGAvxFgq4k0EfPLTln0LqJuyIyTOZq2GUGmT8PToqWBvxjJXs5K9X7x56V2skbN5h/D
-         W5AHg2aAbfo9TqN08RTIsIylbZuTcpf2h0dMWZYrXk3NrFw4nTlY7InjuTL/H+3sP4vT
-         1PS1huSvdEQMKyQT/yJxs/88QtWqd1wycvNgrANXXN4RXwBp6AiEBSjGw90Y0BJZqW6D
-         3mog==
-X-Gm-Message-State: APjAAAXNS0E7uDxcA/9daJ41H6vaz6Q5hMdLmc0dqFtCGV6oLIHnTpgd
-        keaW/vygUR1rG7aLpuGgjTYJJMZnZyU=
-X-Google-Smtp-Source: APXvYqwfBMtpnh1EKTNcGvOqOF/gb+1q3FFl3UM+oXG2ZmqDkcTMdKQ0jlP+OmQoSZOZ/f9UX3txvQ==
-X-Received: by 2002:a19:7607:: with SMTP id c7mr2108961lff.28.1561538663409;
-        Wed, 26 Jun 2019 01:44:23 -0700 (PDT)
-Received: from genomnajs.ideon.se ([85.235.10.227])
-        by smtp.gmail.com with ESMTPSA id y5sm2683635ljj.5.2019.06.26.01.44.21
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Wed, 26 Jun 2019 01:44:22 -0700 (PDT)
-From:   Linus Walleij <linus.walleij@linaro.org>
-To:     linux-gpio@vger.kernel.org
-Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-Subject: [PATCH 5/5] gpio: siox: Use devm_ managed gpiochip
-Date:   Wed, 26 Jun 2019 10:44:07 +0200
-Message-Id: <20190626084407.27976-5-linus.walleij@linaro.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190626084407.27976-1-linus.walleij@linaro.org>
-References: <20190626084407.27976-1-linus.walleij@linaro.org>
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=8W5vMi9MdrqpXAU5Ufa9GPoycXyS4HH7ZnprQ1k/xT4=;
+        b=uI1wEmTAMD7ee0Nzer8qNIDK1lyIcDeW8+qL3fkwigcA7Ob3pYjnpOAP86/JZ18tD6
+         NLtFAtgbC4+T1I8PA77Q5QVN1dm/E6fYRYOOWhudFrx8hB/iW3GisHevyuupGxaSfdWl
+         myrrnsyM1uMXmxuGlzsViwthENYlx+7+cwp6Q5mbb+S9bw9TZ4EhS8IjaRwWZeW2eyD6
+         XTyETt6Ru3SUo2l7lOtaIePv6zVKo3KNfZuFj26mBdeNudJcIstIsW9gGHSr69or3TUl
+         5Zm2CvqZpGzALimAqdjJburg+Q0t0dPc4I7TGiW6ZO6TQGMlBTNPym8gfXkPAB+ZTD8h
+         oohQ==
+X-Gm-Message-State: APjAAAWGUYCOfeOyGfzR4jUX+gVI7i8k1ctkTIRJMgGFD7pBddZMzkWm
+        70ZBXdFsOC65PA6SBk6V1TacZA==
+X-Google-Smtp-Source: APXvYqwV1p7sn9iItWJLAmJOQoTeWjrx2419LxfBi0SgwbNq/Dyd11Gt8JoLHH3NtSQoCcXHrISSYw==
+X-Received: by 2002:a7b:c74a:: with SMTP id w10mr1751412wmk.99.1561538760632;
+        Wed, 26 Jun 2019 01:46:00 -0700 (PDT)
+Received: from debian-brgl.home ([2a01:cb1d:af:5b00:6d6c:8493:1ab5:dad7])
+        by smtp.gmail.com with ESMTPSA id v204sm1383715wma.20.2019.06.26.01.45.59
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 26 Jun 2019 01:46:00 -0700 (PDT)
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+To:     Linus Walleij <linus.walleij@linaro.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Bamvor Jian Zhang <bamv2005@gmail.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Subject: [PATCH v3] gpio: mockup: no need to check return value of debugfs_create functions
+Date:   Wed, 26 Jun 2019 10:45:57 +0200
+Message-Id: <20190626084557.11847-1-brgl@bgdev.pl>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-By using devm_gpiochip_add_data() we can get rid of the
-remove() callback. As this driver doesn't use the
-gpiochip data pointer we simply pass in NULL.
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-Cc: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+When calling debugfs functions, there is no need to ever check the
+return value.  The function can work or not, but the code logic should
+never do something different based on this.
+
+Cc: Bamvor Jian Zhang <bamv2005@gmail.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>
+Cc: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Cc: linux-gpio@vger.kernel.org
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+[Bartosz: removed one more check for debugfs return value]
+Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 ---
- drivers/gpio/gpio-siox.c | 11 +----------
- 1 file changed, 1 insertion(+), 10 deletions(-)
+v1 -> v2:
+- fix build warning found by kbuild
+- fix build error found by kbuild
 
-diff --git a/drivers/gpio/gpio-siox.c b/drivers/gpio/gpio-siox.c
-index f85f1fab781f..5e3861c1ad99 100644
---- a/drivers/gpio/gpio-siox.c
-+++ b/drivers/gpio/gpio-siox.c
-@@ -246,7 +246,7 @@ static int gpio_siox_probe(struct siox_device *sdevice)
- 	girq->default_type = IRQ_TYPE_NONE;
- 	girq->handler = handle_level_irq;
+v2 -> v3:
+- remove one more unnecessary ifdef
+
+ drivers/gpio/gpio-mockup.c | 21 +++++----------------
+ 1 file changed, 5 insertions(+), 16 deletions(-)
+
+diff --git a/drivers/gpio/gpio-mockup.c b/drivers/gpio/gpio-mockup.c
+index b6a4efce7c92..f1a9c0544e3f 100644
+--- a/drivers/gpio/gpio-mockup.c
++++ b/drivers/gpio/gpio-mockup.c
+@@ -315,7 +315,6 @@ static void gpio_mockup_debugfs_setup(struct device *dev,
+ 				      struct gpio_mockup_chip *chip)
+ {
+ 	struct gpio_mockup_dbgfs_private *priv;
+-	struct dentry *evfile;
+ 	struct gpio_chip *gc;
+ 	const char *devname;
+ 	char *name;
+@@ -325,32 +324,25 @@ static void gpio_mockup_debugfs_setup(struct device *dev,
+ 	devname = dev_name(&gc->gpiodev->dev);
  
--	ret = gpiochip_add(&ddata->gchip);
-+	ret = devm_gpiochip_add_data(dev, &ddata->gchip, NULL);
- 	if (ret) {
- 		dev_err(dev, "Failed to register gpio chip (%d)\n", ret);
- 		return ret;
-@@ -255,17 +255,8 @@ static int gpio_siox_probe(struct siox_device *sdevice)
- 	return 0;
+ 	chip->dbg_dir = debugfs_create_dir(devname, gpio_mockup_dbg_dir);
+-	if (IS_ERR_OR_NULL(chip->dbg_dir))
+-		goto err;
+ 
+ 	for (i = 0; i < gc->ngpio; i++) {
+ 		name = devm_kasprintf(dev, GFP_KERNEL, "%d", i);
+ 		if (!name)
+-			goto err;
++			return;
+ 
+ 		priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
+ 		if (!priv)
+-			goto err;
++			return;
+ 
+ 		priv->chip = chip;
+ 		priv->offset = i;
+ 		priv->desc = &gc->gpiodev->descs[i];
+ 
+-		evfile = debugfs_create_file(name, 0200, chip->dbg_dir, priv,
+-					     &gpio_mockup_debugfs_ops);
+-		if (IS_ERR_OR_NULL(evfile))
+-			goto err;
++		debugfs_create_file(name, 0200, chip->dbg_dir, priv,
++				    &gpio_mockup_debugfs_ops);
+ 	}
+ 
+ 	return;
+-
+-err:
+-	dev_err(dev, "error creating debugfs files\n");
  }
  
--static int gpio_siox_remove(struct siox_device *sdevice)
--{
--	struct gpio_siox_ddata *ddata = dev_get_drvdata(&sdevice->dev);
--
--	gpiochip_remove(&ddata->gchip);
--	return 0;
--}
--
- static struct siox_driver gpio_siox_driver = {
- 	.probe = gpio_siox_probe,
--	.remove = gpio_siox_remove,
- 	.set_data = gpio_siox_set_data,
- 	.get_data = gpio_siox_get_data,
- 	.driver = {
+ static int gpio_mockup_name_lines(struct device *dev,
+@@ -447,8 +439,7 @@ static int gpio_mockup_probe(struct platform_device *pdev)
+ 	if (rv)
+ 		return rv;
+ 
+-	if (!IS_ERR_OR_NULL(gpio_mockup_dbg_dir))
+-		gpio_mockup_debugfs_setup(dev, chip);
++	gpio_mockup_debugfs_setup(dev, chip);
+ 
+ 	return 0;
+ }
+@@ -501,8 +492,6 @@ static int __init gpio_mockup_init(void)
+ 	}
+ 
+ 	gpio_mockup_dbg_dir = debugfs_create_dir("gpio-mockup", NULL);
+-	if (IS_ERR_OR_NULL(gpio_mockup_dbg_dir))
+-		gpio_mockup_err("error creating debugfs directory\n");
+ 
+ 	err = platform_driver_register(&gpio_mockup_driver);
+ 	if (err) {
 -- 
-2.20.1
+2.21.0
 
