@@ -2,80 +2,92 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id C8427567E4
-	for <lists+linux-gpio@lfdr.de>; Wed, 26 Jun 2019 13:50:07 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7DA0056808
+	for <lists+linux-gpio@lfdr.de>; Wed, 26 Jun 2019 13:54:33 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726157AbfFZLuH (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 26 Jun 2019 07:50:07 -0400
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:45524 "EHLO
+        id S1726104AbfFZLyc (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 26 Jun 2019 07:54:32 -0400
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:46991 "EHLO
         mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726104AbfFZLuH (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 26 Jun 2019 07:50:07 -0400
-Received: by mail-lj1-f193.google.com with SMTP id m23so1842555lje.12
-        for <linux-gpio@vger.kernel.org>; Wed, 26 Jun 2019 04:50:05 -0700 (PDT)
+        with ESMTP id S1726242AbfFZLyc (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 26 Jun 2019 07:54:32 -0400
+Received: by mail-lj1-f193.google.com with SMTP id v24so1852535ljg.13
+        for <linux-gpio@vger.kernel.org>; Wed, 26 Jun 2019 04:54:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=tjB6x/YHKyQp+3JT3QUuR9JR/DZ5Tu8sBXRch8BieQU=;
-        b=CUovzAiFnW7tSI5EOrd7iIrxNOC1fZZ3ZyyNgAH40V2tdF00VdisVuCDdKgPpNkil/
-         1/6SbmPatYAZGxC24ZceHGDUuJrNK5P0nJ0cFxao3Xf472RhjBacbY07oLD1BXmPDj0m
-         q5Hs9Cr8fIKmONhqQE4PeaZQAikg1W6jtje7u+508OSp7b5jZ9AE6EOFboxOv/UoUeEh
-         8zLDmYVQwltpkgugXvnVFs1JfrHjTgozVVLsRxuCRW4uQK3GmKBhbFipe+LCpJE7wIN2
-         GVRT5Q3Mn+cPgCqsc5BJ93OhkTHTYZnrCluUhSppFZTaA66K6eKQiubBC7hR1tTMNl3x
-         lOpA==
+         :cc;
+        bh=O68+gWYy+AAHpHVbze86ikYo+1+/Ck9AaofTpRQedkU=;
+        b=auXDGfbyfXKdkslrXQ3vyDA6Do1xehiwmgcsq+apkyS6KFRp4gvGgxSNpUggbe7lGP
+         +OjWq/S6lK4gUEcRir7c1ieo9YSoSK6X7kqb7A+Rsvk7DtVq7d+M9a0OfLgequxAuw0R
+         J18f9O34hClg3SQNfGBUPiAN4Q4RkNTEPeU0nTBRQo3rRtoy9n9NrWsaXXaveSl784KT
+         rf0/2ZrmA5rLeUMoUrHQhfKp1AA7z7TrR34tU9B+8WpY3QE9afY8/NybnGsIghwZuUad
+         jcIFnEjyahkVTsKkjYtGI5/YO9bNH+/yR5F71SY2fQzAJt1IMwSejwdjs3lJ3IlAhOTY
+         zeHg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=tjB6x/YHKyQp+3JT3QUuR9JR/DZ5Tu8sBXRch8BieQU=;
-        b=n7lnICOGkgKkiycj7LGILDiUpbUb4uH5GNUDKTZqqcV7TLVvKDefm5WGP8ZATfPnSR
-         H4Ofgw33R5pSVjHc5oegeq1Mi/oFhq/NSJZ/zvmo4cSfmqPjPrHaxgfmMCRGrH9wYyHq
-         sfAh7LBO4rpfbOZ/c9ymCD9zHXrY2kMr+6lionWJVWpqXu5/MMKbLqPWRG3uQbsHum/s
-         SOKyEcW6Qg/p89cwWJ6c5z/gKi+6S6+aYcNzBaNE8aQQrpdyeWIPlRGDSAeGqgdn54nZ
-         Mn/f6soMc7H6JTozozRWlSVjyUe++Nu0HBRHY6h5PG6o+G3Qb9V/FO16AHvzulssX+GC
-         O0Vw==
-X-Gm-Message-State: APjAAAV3BsMiUNMuTIRWcBX+HiMvlaI7ToaSHQuFsBb1OjiIYS9DaZ7l
-        BelqXZU+2dcll6rRYTy3iT2gmVygEZoMeY3LqYnyZg==
-X-Google-Smtp-Source: APXvYqziecWKXA90xY4PNAcsVEsukAXZn05Dif08Hd5lAC4jMrqR/HQ8VtJKccNCeWh9Ny5E1dfToi4Pjjjoh1ouTGc=
-X-Received: by 2002:a2e:a0d5:: with SMTP id f21mr2642699ljm.69.1561549805000;
- Wed, 26 Jun 2019 04:50:05 -0700 (PDT)
+         :message-id:subject:to:cc;
+        bh=O68+gWYy+AAHpHVbze86ikYo+1+/Ck9AaofTpRQedkU=;
+        b=OK7Z86bJKLav89dlZXaxZvgQCbstlTR9ZithySMjsDTyurZlyceOep0BgXg5GZVNsP
+         dWIfjPBUUA9U5e5isrmhDshDuCAcUgeIb6rkc0soVTVosX4QzEgvxFhtxstmuhabTPNF
+         s3ZZwDBNQ6t0B2veFcZu8+JJg+kiWNi1xXeIhrBl0GHWIU+lEU3UWP50/y6V7cdShSjU
+         w6FAYREdNY+cvme7TJYAg1pJQhEFtQi+I83qF4liiZ6lEbqdJnptDEAOzcuvg/xmq/WE
+         vIVTcbvJ/Lyt29yeGnOFEFRzLY8qV8DRWc/g4htFTnJF6YEZJuOqvj/EVMFoQt5HvgHf
+         A7dg==
+X-Gm-Message-State: APjAAAXVrf7MuqKePfSL/LAwVyW4fcXNJUag27fRaa9PlMWWY9tXpkfQ
+        oQQHVqWGnXKffPgCZ+FEiVCjx5/Gv3Gp6g9iNUh+eQ==
+X-Google-Smtp-Source: APXvYqyUysv3OBilFHl0NElzx3G/IF+JCRwcIQ/ctFIklfhsx8tecZrt6RY8uuYINYKFtanN3OMzdtNH5QKw7QHsogU=
+X-Received: by 2002:a2e:2c14:: with SMTP id s20mr2665141ljs.54.1561550070403;
+ Wed, 26 Jun 2019 04:54:30 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190626084407.27976-1-linus.walleij@linaro.org> <20190626091220.zemlwyf4ubaawvds@pengutronix.de>
-In-Reply-To: <20190626091220.zemlwyf4ubaawvds@pengutronix.de>
+References: <20190626084557.11847-1-brgl@bgdev.pl>
+In-Reply-To: <20190626084557.11847-1-brgl@bgdev.pl>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Wed, 26 Jun 2019 13:49:53 +0200
-Message-ID: <CACRpkdY0iJwPuPZ9SqEzm+GCBzcEP5=Y+w4te=q709=QUupaOg@mail.gmail.com>
-Subject: Re: [PATCH 1/5] gpio: siox: Do not call gpiochip_remove() on errorpath
-To:     =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+Date:   Wed, 26 Jun 2019 13:54:19 +0200
+Message-ID: <CACRpkdZXtFUimMATgKA6Qdo4-mTLW5xV3XvdcBShpO9c32_gbQ@mail.gmail.com>
+Subject: Re: [PATCH v3] gpio: mockup: no need to check return value of
+ debugfs_create functions
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Bamvor Jian Zhang <bamv2005@gmail.com>,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Jun 26, 2019 at 11:12 AM Uwe Kleine-K=C3=B6nig
-<u.kleine-koenig@pengutronix.de> wrote:
-> On Wed, Jun 26, 2019 at 10:44:03AM +0200, Linus Walleij wrote:
-> > gpiochip_remove() was called on the errorpath if
-> > gpiochip_add() failed: this is wrong, if the chip failed
-> > to add it is not there so it should not be removed.
-> >
-> > Cc: Uwe Kleine-K=C3=B6nig <u.kleine-koenig@pengutronix.de>
-> > Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
->
-> Acked-by: Uwe Kleine-K=C3=B6nig <u.kleine-koenig@pengutronix.de>
->
-> Does this warrant a
->
->         Fixes: be8c8facc707 ("gpio: new driver to work with a 8x12 siox")
+On Wed, Jun 26, 2019 at 10:46 AM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
 
-Thanks yeah I put the fixes in as a lowprio fix that goes
-in with the rest of the v5.3 patches.
+> From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+>
+> When calling debugfs functions, there is no need to ever check the
+> return value.  The function can work or not, but the code logic should
+> never do something different based on this.
+>
+> Cc: Bamvor Jian Zhang <bamv2005@gmail.com>
+> Cc: Linus Walleij <linus.walleij@linaro.org>
+> Cc: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> Cc: linux-gpio@vger.kernel.org
+> Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> [Bartosz: removed one more check for debugfs return value]
+> Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> ---
+> v1 -> v2:
+> - fix build warning found by kbuild
+> - fix build error found by kbuild
+>
+> v2 -> v3:
+> - remove one more unnecessary ifdef
+
+Looks good
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+
+Will you send me this in a pull request with the rest of
+the stuff you have queued?
 
 Yours,
 Linus Walleij
