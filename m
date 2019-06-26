@@ -2,79 +2,104 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 1978C56F84
-	for <lists+linux-gpio@lfdr.de>; Wed, 26 Jun 2019 19:31:37 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4F6645706B
+	for <lists+linux-gpio@lfdr.de>; Wed, 26 Jun 2019 20:16:23 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726239AbfFZRbf (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 26 Jun 2019 13:31:35 -0400
-Received: from mout.kundenserver.de ([217.72.192.74]:54289 "EHLO
+        id S1726369AbfFZSQW (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 26 Jun 2019 14:16:22 -0400
+Received: from mout.kundenserver.de ([212.227.126.187]:38811 "EHLO
         mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726042AbfFZRbf (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 26 Jun 2019 13:31:35 -0400
+        with ESMTP id S1726239AbfFZSQW (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 26 Jun 2019 14:16:22 -0400
 Received: from [192.168.1.110] ([77.4.50.183]) by mrelayeu.kundenserver.de
- (mreue106 [212.227.15.183]) with ESMTPSA (Nemesis) id
- 1MfZ9C-1iD3bn302q-00fxyE; Wed, 26 Jun 2019 19:31:31 +0200
-Subject: Re: [PATCH 1/2] siox: add helper macro to simplify driver
- registration
+ (mreue009 [212.227.15.167]) with ESMTPSA (Nemesis) id
+ 1MD9Kj-1hoguT0A41-0097SG; Wed, 26 Jun 2019 20:16:20 +0200
+Subject: Re: [RFC] Addition of kernel
 To:     Linus Walleij <linus.walleij@linaro.org>,
-        "Enrico Weigelt, metux IT consult" <info@metux.net>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Sascha Hauer <kernel@pengutronix.de>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Martyn Welch <martyn.welch@collabora.com>
+Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        t.scherer@eckelmann.de
-References: <1561354834-22617-1-git-send-email-info@metux.net>
- <1561354834-22617-2-git-send-email-info@metux.net>
- <CACRpkdbZ68O41dx7uCccUF_jvmC3_YVvWEEo9igknMC95QEXhQ@mail.gmail.com>
+        kernel@collabora.com
+References: <dd30c34a83293926c072f6a3fe612dcf134b7620.camel@collabora.com>
+ <e6ca74e2-fc51-3f24-c5e9-18c22d6f87ef@metux.net>
+ <e344f5a35e314ebcea110ba082b74659de5b0e5e.camel@collabora.com>
+ <CACRpkdaLEDmJ49m_fpuuA1e33hTtyB-LsyZeOmpRybbULgmHDA@mail.gmail.com>
 From:   "Enrico Weigelt, metux IT consult" <lkml@metux.net>
 Organization: metux IT consult
-Message-ID: <c59bfd61-e6f2-2434-0085-f75e85b5deb0@metux.net>
-Date:   Wed, 26 Jun 2019 19:31:30 +0200
+Message-ID: <c80c67e8-ed4c-d4eb-9655-9fbb4a6a4cd8@metux.net>
+Date:   Wed, 26 Jun 2019 20:16:18 +0200
 User-Agent: Mozilla/5.0 (X11; Linux i686 on x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.2.1
 MIME-Version: 1.0
-In-Reply-To: <CACRpkdbZ68O41dx7uCccUF_jvmC3_YVvWEEo9igknMC95QEXhQ@mail.gmail.com>
+In-Reply-To: <CACRpkdaLEDmJ49m_fpuuA1e33hTtyB-LsyZeOmpRybbULgmHDA@mail.gmail.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Provags-ID: V03:K1:D+qaod/gY3lxTsAGn7wxZA/4ZJMGxEPhRPb4cAtIK9dTVoHeULo
- 9r5GA/tOo/N5TfjrQf2yuz5/PiWTnPYq+0ZlAHgw2kUCAtYDWtBbeYIck6ysZVjEl61lsXV
- 57OGScr6eAQ3n8QoJVvXRKG4HxY4RXzjCJDXD2ulmJ/aOiDcQhsKfogVzDUF8wjODvQiGO+
- BVxg8bICsSaYNwMyQWalQ==
+X-Provags-ID: V03:K1:stXr7zNxTEE19r3e55Uc/69AOoaWMzK9hvTEKeQrhGNUZctgZgH
+ RkPBF3zwyHl2SVlLG31NGJI3nsRgIjtJQLL6kh3G3DqPq3+4XrylmxXF3NZN3M/8qGzggUe
+ gVJ9P7NmUMlMVFmAPgdOTe5qrsaSaq2ijyQFjGEASFSZit3++YhxvISWhZZ2s5THGYkH49u
+ 3cqwXSZIaShhM7/uMK7Lw==
 X-Spam-Flag: NO
-X-UI-Out-Filterresults: notjunk:1;V03:K0:Y/6NBZ6zpTI=:5kr/Jaw8pAeb09qLSQetrr
- Pt/y8jIU0DL4yEcXIZuhFyUIWdyq9jWqj/PHjjzcUfYQVUSNWi/zDAR9Kg8d6vr/bwlPeWMfW
- EEdNILCZPU6tA+IeD7O6nXkWWFMZ9c8PasoAK4rrtFSepHBjsYrazp39LlFOqNsidwiBqdc+V
- sBMYPonBh8HmZhcbgFhvqiX8PrY+uk1MTNYPH+g5m/JJopVOjOirxBeYk0GnnxcdIFzLkX9JU
- EINKP4nTBldzEDbnYwhYjPT1RXcNZvGStVXicIE/0Dd/PGIrA2dAN8Qf+Q5riL+pAOIBIhw92
- lHU5+/qAhvTifS2Vk/FTb4wCvdIgbfJ0bIsYiVmMfQAJTzpxz49Cr14R58M6YB6YG8iP6kx2F
- D08DWETEXk9YagkWyH3XXTS67m2Fqf3YtzOLxok18Fg5qEVNoz0M6oKMn5zh/Or3u2RElBMY/
- fBalxpNx8lHepaMaIZ3jhvlPZmPqMXXaQ84FD+B8LZpufXGnj1BXnndu6OZx7tF9Zyv97aagD
- uLeS2WMfy9KVqQJiLRhSzQeEaPwfL9zRWRiBrurxItjof4ejHUbuuFKeDG7IgoxyOxiaWHKOj
- r5mEigYO0FJLE1MOV0f+zWncB/54L35qvn0SQn3SVr1ma9scBQdFkSpfqG72sjIn4zGqg672W
- ORDthyTXTcqTcXH4BTvc/1iXi92DOba5OPjZMOb7kVeQnowFYbTCjUvpNFPTRWVwy1ahsNAy6
- tOVoFVRoOKMhXXgRQAAC9B8b4lawoy2AviP4/c/vwFj5W5Sg+hXdFlbXQJQ=
+X-UI-Out-Filterresults: notjunk:1;V03:K0:HBZETcKOX04=:jpk5G5p50Lh7dbnRTjyPDE
+ qLCsKvsfhYLYnaiBPj/kIMnUbNU9p/Vx+adwkfqMz7FFxG5IuZrojZnkI2x+fYap3kjwqHqAI
+ QlDIYt68PPS3e5i6XCdYbdDFIUJ1re+NPPaHHYvsyAE0ZclIlh4OzJHDzrJb62cruERL+GM5o
+ P9Bc6OJm75bUAYe+K63KKJX5NTbBbk5Nn5HVpfnblFSQlZJ7vvA77CZfIfDdpd96TDyf3P8VK
+ Y7EuWX6uhX4EgRsmQ/dcZ9D94S8Oudobpulpt2onVwUc2zCKB7q+lPVr7rTahSLSrlXqS3uSR
+ NLypxQvwY/m9HY58H9lOhEpZf1rbsJUoWughWcjuZDB94jbUGVPDZHmttowlOSrABIcwrWqIR
+ 4Cd0nj4FiWyhNYTxOOriYAmn02qtbg9ZrGM5WOjJ5n2VKnq/8JBE3Ua0bVXqCPvokZFpIJFQj
+ UsUUsTGnWgARi6Hu7nKbF7eYBOPg5sgbwXxGfWVrQrON9WwWj6Tk8d94fcuqgyqhILEE/tR6T
+ fjsdtEgHi4BNeMS0eckN6yg0rplreGNTUwNcin83wVGe+MgKixaoEs/X6LP5axAbqCIpVBYSW
+ eWqjf+YIOMD62S82h0L/9ZN6sXNMQhcSHWGIGzS/Pld+Uy/uDKljTzLl87R1iUd8yG07EsU+E
+ XGWqkJkH7cMt/HrJrTnwqUqklnZqDHJSxeEdeEg/o+jG2cr+bhpYtL/2OO15LhyxSV9ydGpPa
+ rjAafVumaD8mj/z2Wk5oSCiDpLX5kUof4Vu1V8bxY4jcayzRI8pGBamaH0U=
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 25.06.19 11:26, Linus Walleij wrote:
-> On Mon, Jun 24, 2019 at 7:40 AM Enrico Weigelt, metux IT consult
-> <info@metux.net> wrote:
-> 
->> From: Enrico Weigelt <info@metux.net>
->>
->> Add more helper macros for trivial driver init cases, similar to the
->> already existing module_platform_driver() or module_i2c_driver().
->>
->> This helps to reduce driver init boilerplate.
->>
->> Signed-off-by: Enrico Weigelt <info@metux.net>
-> 
-> Patch applied with Uwe's ACK.
+On 24.06.19 23:46, Linus Walleij wrote:
 
-thanks to both of you :)
+> A GPS unit should be handled using the GNSS subsystem in
+> drivers/gnss:
+> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/gnss
+
+yes, since serdev we can also easily drive serial-connected devices
+(which many gps receivers are) from inside the kernel. there're also
+composite devices (eg. combined basebands) which also have gps amongst
+other things, so an own subsystem for gps devices is the way to go.
+
+> While we do encourage to use the right subsystems for this kind
+> of stuff there are certain cases we do defer to be handled in userspace,
+> but not many. These include one-off things like prototypes and
+
+Those are cases which probably nobody wants to have special support
+in the mainline kernel ... i recall some rules about no kernel drivers
+without corresponding free userland ...
+
+> factory lines with a myriad of relays (some PLC usecases),
+> door openers (we don't want drivers/dooropener) 
+
+Actually, I've got something like that in the pipeline: a generic relais
+subsystem for anything that just switches on/off. Haven't gathered all
+requirements yet - for now just abusing LED for that (yes, also actually
+door openers). Okay, door openers could be a complex matter on their
+own, depending on how it electrically/mechanically works - some devices
+let motors spin until an end reached, etc. ... but haven't had an
+actual usecase for putting such things into the kernel.
+
+> or fire alarm button
+
+Button -> input subsystem ?
+
+> (but definately any elaborate IIO sensors
+> goes into drivers/iio) so it is a bit on case-by-case intuition
+> here.
+
+yes, and it's primarily about high level functionality. in industrial
+world we often have composite devices that span multiple subsystems.
+
+I any case, for a good decision we need to know what exactly some
+individual device actually does.
 
 --mtx
 
