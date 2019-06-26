@@ -2,48 +2,48 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 4E97056546
-	for <lists+linux-gpio@lfdr.de>; Wed, 26 Jun 2019 11:08:14 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C86A056519
+	for <lists+linux-gpio@lfdr.de>; Wed, 26 Jun 2019 11:06:46 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727283AbfFZJHk (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 26 Jun 2019 05:07:40 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:37047 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726339AbfFZJGl (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 26 Jun 2019 05:06:41 -0400
-Received: by mail-wr1-f65.google.com with SMTP id v14so1786668wrr.4
-        for <linux-gpio@vger.kernel.org>; Wed, 26 Jun 2019 02:06:40 -0700 (PDT)
+        id S1726991AbfFZJGn (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 26 Jun 2019 05:06:43 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:35970 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726907AbfFZJGn (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 26 Jun 2019 05:06:43 -0400
+Received: by mail-wr1-f66.google.com with SMTP id n4so1795786wrs.3
+        for <linux-gpio@vger.kernel.org>; Wed, 26 Jun 2019 02:06:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baylibre-com.20150623.gappssmtp.com; s=20150623;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=QF6xtFv2zQ8ZUqjO9Cs7FIQcWQGqk9AuakROnInyaSE=;
-        b=EOIDTbSRmHPt/lFJvqYWsxI4pCg4Dy45ntsrrp31zEPhOT03iRH3/jj/+1rogovQ67
-         NfjLB2W6EYnIYpDdLL9uCHUB0IyHXlPgD8/DxDTjtFcCd9Jo0zNs9K74n3aMIuRMrsTM
-         qOr3PdCuf1nS8zWejXEnvxM3cwTfNnMjQ5m8P2QwHnXzYrgsfac8mYdLqk47BYfChLEu
-         SYydOMncB/OrY/E76Su6Y0BpV2DOT4JJcO4hz/DoDnLdIGx8cvfPjBib2bQx27yOU/sE
-         tCVV60jH13P9vnamKEDQzkLqltVVWmMY1hBbqNr6y0bKUcQPvL5JIVOneYSQTVJ5f3HS
-         PyTw==
+        bh=0YLGRK88mV5vZE4LqM30CD7m71X58sUA87fhljEjqxY=;
+        b=OI251nwwamcbJiqoK+UB/Xvd/6flu0o1NsCNHXMNnGjCJucGdtYeU2BAOR5pxbDyIf
+         3pcHb7SWZ7lgPOjn1NIwpQYiA7oY+GdaCy6w/RtniLVSjwqYJ5cEFwjlahGpDEOakzRp
+         HojdXsl4mFeJdV8ZNlbA6T0vu90xrCXQbrOlfVFNH4oBIt7JPA9v1saJYXvJx+/PtD2E
+         MC0CU7+d0AYzSPCQ1tTqW5c8DYy437GAzhZxBp4YLmEvRW9MPhLqvd1wbk6SvPNkE/Eh
+         6GEhofow4tZR9QuXfCR3+WMeVfmXi2KdOOKX3T/LxYMsFKsELkXaDRSxvQIm3Bm66Esk
+         MM0Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=QF6xtFv2zQ8ZUqjO9Cs7FIQcWQGqk9AuakROnInyaSE=;
-        b=I+0oUJPwW9tBCKZtY24ZaKF4cDbvksiHPO5CzrQ9cuircZIyi9GGIdJ3esj6N6DKvA
-         vl6MVsVRq81/y/EnBV8iMORptVhP48YIBP7H8iBy2bmLb2JD4IdEiozFfGT8vR1tRr+2
-         A/fDMMoWZjt37U0oyFPvPU78QfXTi8B/KXMjqqtSheGQv5T3jUv7lR+nOAcyKzCFBDv8
-         M/wiU2qg+258n88gKn1B6jinEU2x3jI9Ha4ipaS+uXS1Q5HLOaxqDaB4nRFHpw07kquy
-         YKe27vY77jqSH5mu6/ti6xX64P4ICj62ejGkmfd/JOSGgqu/Izkv9GJy3OewcVNjOKqN
-         wB+w==
-X-Gm-Message-State: APjAAAXojA0n/7t+GzWeaCRgzNWjOeDupMMPU9/CkkUZIjykDIPq6OHh
-        1LHbzwC+eCs3DrkRUD+JdDxBwQ==
-X-Google-Smtp-Source: APXvYqyOJTQLTQr5UOlvihb2uvDm1M8Bu0G5R2D6gXBw7OAcDmhWQNRUOM5NXcNu+psXLHm/tUm3aQ==
-X-Received: by 2002:adf:afd5:: with SMTP id y21mr2687630wrd.12.1561540000020;
-        Wed, 26 Jun 2019 02:06:40 -0700 (PDT)
+        bh=0YLGRK88mV5vZE4LqM30CD7m71X58sUA87fhljEjqxY=;
+        b=VAFBxM+hnxLLvbv/5FF+uSlq3bXJY2XfGPxGZnE8pSrKIV9QgF1b+Oc4SnD5CF+lTQ
+         V0/wOmtMvZeGGjB03OQLdPevVshEjn2i7/t1TZ/6nJKWOSOXBIRFgJ2dgYddKsU2QGiw
+         /sunyzqnhdjQ8DSah5VrUR9LAl3RmhgN7WdKvyIiuFm94UH4pXgUz+1jYSUFnWY/Kj0X
+         cncs2JbVuD/if69lDyBk9uCUf74K5qSzz5H/jnDSTURiIHecBY5EuKKMpRArPOHY4uzM
+         pX7/WJ3Kq7Ie4+evYKelmRAaYF2kFDbewTKIHhYZZQfNHjxlwGIZhGoiL+iUkvR9ok3u
+         a4gw==
+X-Gm-Message-State: APjAAAW1Xu8bY7Bb1Spl7TEMCR5DzY7I0TAIedhICQtCCD4QLErUkkZG
+        fawWki+fGf1gD7fRfCtnoCpArQ==
+X-Google-Smtp-Source: APXvYqz3vdyXnAtP1SpNLPKWrEQyz94x72h+b+vO8Fr71mlivyvfBRlVQGi5Jlk1VZVxT9rHkUqXTA==
+X-Received: by 2002:a5d:518c:: with SMTP id k12mr2735671wrv.322.1561540001249;
+        Wed, 26 Jun 2019 02:06:41 -0700 (PDT)
 Received: from bender.baylibre.local (lmontsouris-657-1-212-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
-        by smtp.gmail.com with ESMTPSA id o6sm1925797wmc.46.2019.06.26.02.06.39
+        by smtp.gmail.com with ESMTPSA id o6sm1925797wmc.46.2019.06.26.02.06.40
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Wed, 26 Jun 2019 02:06:39 -0700 (PDT)
+        Wed, 26 Jun 2019 02:06:40 -0700 (PDT)
 From:   Neil Armstrong <narmstrong@baylibre.com>
 To:     jbrunet@baylibre.com, khilman@baylibre.com
 Cc:     linux-arm-kernel@lists.infradead.org,
@@ -51,9 +51,9 @@ Cc:     linux-arm-kernel@lists.infradead.org,
         linux-clk@vger.kernel.org, martin.blumenstingl@googlemail.com,
         linux-gpio@vger.kernel.org,
         Neil Armstrong <narmstrong@baylibre.com>
-Subject: [RFC/RFT v2 03/14] clk: meson: regmap: export regmap_div ops functions
-Date:   Wed, 26 Jun 2019 11:06:21 +0200
-Message-Id: <20190626090632.7540-4-narmstrong@baylibre.com>
+Subject: [RFC/RFT v2 04/14] clk: meson: eeclk: add setup callback
+Date:   Wed, 26 Jun 2019 11:06:22 +0200
+Message-Id: <20190626090632.7540-5-narmstrong@baylibre.com>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190626090632.7540-1-narmstrong@baylibre.com>
 References: <20190626090632.7540-1-narmstrong@baylibre.com>
@@ -64,69 +64,46 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-The G12A CPU Clock Postmux divider needs a custom div_set_rate() call.
+Add a setup() callback in the eeclk structure, to call an optional
+call() function at end of eeclk probe to setup clocks.
 
-Export the clk_regmap_div_round_rate() and clk_regmap_div_recalc_rate()
-to be able to override the default clk_regmap_div_set_rate() callback.
+It's used for the G12A clock controller to setup the CPU clock notifiers.
 
 Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
 ---
- drivers/clk/meson/clk-regmap.c | 10 ++++++----
- drivers/clk/meson/clk-regmap.h |  5 +++++
- 2 files changed, 11 insertions(+), 4 deletions(-)
+ drivers/clk/meson/meson-eeclk.c | 6 ++++++
+ drivers/clk/meson/meson-eeclk.h | 1 +
+ 2 files changed, 7 insertions(+)
 
-diff --git a/drivers/clk/meson/clk-regmap.c b/drivers/clk/meson/clk-regmap.c
-index dcd1757cc5df..26c8c74a8cf0 100644
---- a/drivers/clk/meson/clk-regmap.c
-+++ b/drivers/clk/meson/clk-regmap.c
-@@ -56,8 +56,8 @@ const struct clk_ops clk_regmap_gate_ro_ops = {
- };
- EXPORT_SYMBOL_GPL(clk_regmap_gate_ro_ops);
+diff --git a/drivers/clk/meson/meson-eeclk.c b/drivers/clk/meson/meson-eeclk.c
+index 6ba2094be257..81fd2abcd173 100644
+--- a/drivers/clk/meson/meson-eeclk.c
++++ b/drivers/clk/meson/meson-eeclk.c
+@@ -61,6 +61,12 @@ int meson_eeclkc_probe(struct platform_device *pdev)
+ 		}
+ 	}
  
--static unsigned long clk_regmap_div_recalc_rate(struct clk_hw *hw,
--						unsigned long prate)
-+unsigned long clk_regmap_div_recalc_rate(struct clk_hw *hw,
-+					 unsigned long prate)
- {
- 	struct clk_regmap *clk = to_clk_regmap(hw);
- 	struct clk_regmap_div_data *div = clk_get_regmap_div_data(clk);
-@@ -74,9 +74,10 @@ static unsigned long clk_regmap_div_recalc_rate(struct clk_hw *hw,
- 	return divider_recalc_rate(hw, prate, val, div->table, div->flags,
- 				   div->width);
- }
-+EXPORT_SYMBOL_GPL(clk_regmap_div_recalc_rate);
- 
--static long clk_regmap_div_round_rate(struct clk_hw *hw, unsigned long rate,
--				      unsigned long *prate)
-+long clk_regmap_div_round_rate(struct clk_hw *hw, unsigned long rate,
-+			       unsigned long *prate)
- {
- 	struct clk_regmap *clk = to_clk_regmap(hw);
- 	struct clk_regmap_div_data *div = clk_get_regmap_div_data(clk);
-@@ -100,6 +101,7 @@ static long clk_regmap_div_round_rate(struct clk_hw *hw, unsigned long rate,
- 	return divider_round_rate(hw, rate, prate, div->table, div->width,
- 				  div->flags);
- }
-+EXPORT_SYMBOL_GPL(clk_regmap_div_round_rate);
- 
- static int clk_regmap_div_set_rate(struct clk_hw *hw, unsigned long rate,
- 				   unsigned long parent_rate)
-diff --git a/drivers/clk/meson/clk-regmap.h b/drivers/clk/meson/clk-regmap.h
-index 1dd0abe3ba91..d22b83fb9bad 100644
---- a/drivers/clk/meson/clk-regmap.h
-+++ b/drivers/clk/meson/clk-regmap.h
-@@ -78,6 +78,11 @@ clk_get_regmap_div_data(struct clk_regmap *clk)
- 	return (struct clk_regmap_div_data *)clk->data;
- }
- 
-+unsigned long clk_regmap_div_recalc_rate(struct clk_hw *hw,
-+					 unsigned long prate);
-+long clk_regmap_div_round_rate(struct clk_hw *hw, unsigned long rate,
-+			       unsigned long *prate);
++	if (data->setup) {
++		ret = data->setup(pdev);
++		if (ret)
++			return ret;
++	}
 +
- extern const struct clk_ops clk_regmap_divider_ops;
- extern const struct clk_ops clk_regmap_divider_ro_ops;
+ 	return devm_of_clk_add_hw_provider(dev, of_clk_hw_onecell_get,
+ 					   data->hw_onecell_data);
+ }
+diff --git a/drivers/clk/meson/meson-eeclk.h b/drivers/clk/meson/meson-eeclk.h
+index 9ab5d6fa7ccb..7fdf424f71a6 100644
+--- a/drivers/clk/meson/meson-eeclk.h
++++ b/drivers/clk/meson/meson-eeclk.h
+@@ -20,6 +20,7 @@ struct meson_eeclkc_data {
+ 	const struct reg_sequence	*init_regs;
+ 	unsigned int			init_count;
+ 	struct clk_hw_onecell_data	*hw_onecell_data;
++	int				(*setup)(struct platform_device *pdev);
+ };
  
+ int meson_eeclkc_probe(struct platform_device *pdev);
 -- 
 2.21.0
 
