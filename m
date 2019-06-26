@@ -2,97 +2,100 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id B2ACB56404
-	for <lists+linux-gpio@lfdr.de>; Wed, 26 Jun 2019 10:10:55 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5C121564C5
+	for <lists+linux-gpio@lfdr.de>; Wed, 26 Jun 2019 10:44:16 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726339AbfFZIKy (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 26 Jun 2019 04:10:54 -0400
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:36647 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725954AbfFZIKy (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 26 Jun 2019 04:10:54 -0400
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1hg312-0001Wk-QE; Wed, 26 Jun 2019 10:10:52 +0200
-Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1hg311-0007Gu-6Q; Wed, 26 Jun 2019 10:10:51 +0200
-Date:   Wed, 26 Jun 2019 10:10:51 +0200
-From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        id S1726042AbfFZIoP (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 26 Jun 2019 04:44:15 -0400
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:45120 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725876AbfFZIoP (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 26 Jun 2019 04:44:15 -0400
+Received: by mail-lf1-f65.google.com with SMTP id u10so970983lfm.12
+        for <linux-gpio@vger.kernel.org>; Wed, 26 Jun 2019 01:44:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=SLIBh+4MeOX6wUrIInCjt/HbzpPX6JHV6NhcclCEZTI=;
+        b=OwsEGB0pjtQFE/SvBONQLCejvBkNpt4cPrYH69cH5zav0dLbnapBPv3zDqyWCj8kNw
+         UqS7sghR5dQ/+jEx2tkbW3hQ+EjCivswmgcsX24Xbfj+yauEc5ob/O/CpthJX8vRDqwU
+         92HLHZhhN+G5/hPWKxzI9Qm0GaKUIyw2enCXGii2QvWS9dNF+8FZlf7w82OnKFZoU6n1
+         kGoRtYbu7mvD8QLC0p4NvdHiWyI82EVo2VFZCzgpvEC4H3grAES3see4nfJnBO9KsXXD
+         z5cutm/XH6Daf7XRremxLMSiJLwJzNLl4N29VAxybSac99JLwVU1vKjujUerKeJ7M0kt
+         731A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=SLIBh+4MeOX6wUrIInCjt/HbzpPX6JHV6NhcclCEZTI=;
+        b=EoqwqRoiDslK0SgHMpHfoe1dpeebx0APfPraGlBmwfbqUoWMAi8wrHWHi2SRjm66TK
+         h5CG4Ms8yAWTNXoQKcK+aLwcvbM0VzzY7vlX0Sn34ujxOkwIT1u31f7dq2RoliJCz5bj
+         lqZ0YbBJXsg84M+Mw5rfbUjQGLRkH39OmXATpmq7rcIh9mCa+TVME/cqCPphaeDFSlHg
+         EfGioKGE88DBK+WGC3HdiWRh5vG+W3HNanJQ/89vGy2iVkhraPgrnFtjUK3SNTt0bwoA
+         lhBslqQeGh+82DfMAnYpj7i2FHnVRbFVp5qnVTAJqmO84LMdxGNpdwJ+YX8FQ6CLf2QT
+         /ytA==
+X-Gm-Message-State: APjAAAVG7nG58vNFXqJLolPNpT6pc3Pc7Qaj6WjkeTbHTeqpt9YoVSyr
+        Dm65YuXTM2Jj7sDJM8IyGcttX3I8nI4=
+X-Google-Smtp-Source: APXvYqzz/92zBThDreOsKpWnB6V04Fv6/cy89cfKK8Jc9WKk+VWLPDDq6S2C+uffuHHoeFplpSNmiA==
+X-Received: by 2002:ac2:52b7:: with SMTP id r23mr2044277lfm.120.1561538653168;
+        Wed, 26 Jun 2019 01:44:13 -0700 (PDT)
+Received: from genomnajs.ideon.se ([85.235.10.227])
+        by smtp.gmail.com with ESMTPSA id y5sm2683635ljj.5.2019.06.26.01.44.11
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Wed, 26 Jun 2019 01:44:12 -0700 (PDT)
+From:   Linus Walleij <linus.walleij@linaro.org>
+To:     linux-gpio@vger.kernel.org
+Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
         <u.kleine-koenig@pengutronix.de>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Thierry Reding <treding@nvidia.com>,
-        Thorsten Scherer <t.scherer@eckelmann.de>
-Subject: Re: [PATCH] gpio: siox: Pass irqchip when adding gpiochip
-Message-ID: <20190626081051.bw5qlimpmrrcanam@pengutronix.de>
-References: <20190625105346.3267-1-linus.walleij@linaro.org>
- <20190625193328.sxvhastsatc62msh@pengutronix.de>
- <CACRpkdaKY-SScLRrOGQbZwRX5sYP=A9ABKxwj3YA_XLp839FEw@mail.gmail.com>
+Subject: [PATCH 1/5] gpio: siox: Do not call gpiochip_remove() on errorpath
+Date:   Wed, 26 Jun 2019 10:44:03 +0200
+Message-Id: <20190626084407.27976-1-linus.walleij@linaro.org>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CACRpkdaKY-SScLRrOGQbZwRX5sYP=A9ABKxwj3YA_XLp839FEw@mail.gmail.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-gpio@vger.kernel.org
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hello Linus,
+gpiochip_remove() was called on the errorpath if
+gpiochip_add() failed: this is wrong, if the chip failed
+to add it is not there so it should not be removed.
 
-On Wed, Jun 26, 2019 at 10:05:42AM +0200, Linus Walleij wrote:
-> On Tue, Jun 25, 2019 at 9:33 PM Uwe Kleine-König
-> <u.kleine-koenig@pengutronix.de> wrote:
-> > On Tue, Jun 25, 2019 at 12:53:46PM +0200, Linus Walleij wrote:
-> 
-> > > The siox GPIO driver passes a IRQ_TYPE_EDGE_RISING as
-> > > default IRQ trigger type which seems wrong, as consumers
-> > > should explicitly set this up, so set IRQ_TYPE_NONE instead.
-> > >
-> > > Also gpiochip_remove() was called on the errorpath if
-> > > gpiochip_add() failed: this is wrong, if the chip failed
-> > > to add it is not there so it should not be removed.
-> >
-> > So we have a bugfix (gpiochip_remove() in error path), a change of
-> > default behaviour (IRQ_TYPE_EDGE_RISING -> IRQ_TYPE_NONE) and a cleanup
-> > for an API change (I'm guessing here) in a single patch. :-|
-> 
-> Yes I tend to do that to save time because I am a bit overwhelmed
-> by all the stuff that falls upwards to the GPIO maintainer.
-> 
-> More often than not there is zero feedback from the maintainer(s)
-> of the drivers, and the kernel looks better after than before.
-> 
-> But since you provide some feedback I'll just go and split
-> the patch.
+Cc: Uwe Kleine-KÃ¶nig <u.kleine-koenig@pengutronix.de>
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+---
+ drivers/gpio/gpio-siox.c | 7 ++-----
+ 1 file changed, 2 insertions(+), 5 deletions(-)
 
-\o/, thanks.
-
-> > @Thorsten: I'm not entirely sure if there is code relying on the default
-> > IRQ_TYPE_EDGE_RISING. Do you know off-hand?
-> 
-> I saw that the driver has #include <linux/of.h> (hm seems unused) so
-> if this is used on devicetree systems with normal twocell irqchips then
-> there shouldn't be a need for any default type. The default type
-> is only used with board files. The siox seems not even possible
-> to use with board files (no platform data path).
-
-I think the gpio irq is used from userspace. If you're convinced it
-doesn't matter (and you describe that in the commit log) I'm willing to
-believe you :-)
-
-Best regards
-Uwe
-
+diff --git a/drivers/gpio/gpio-siox.c b/drivers/gpio/gpio-siox.c
+index fb4e318ab028..0b4450118865 100644
+--- a/drivers/gpio/gpio-siox.c
++++ b/drivers/gpio/gpio-siox.c
+@@ -243,17 +243,14 @@ static int gpio_siox_probe(struct siox_device *sdevice)
+ 	if (ret) {
+ 		dev_err(&sdevice->dev,
+ 			"Failed to register gpio chip (%d)\n", ret);
+-		goto err_gpiochip;
++		return ret;
+ 	}
+ 
+ 	ret = gpiochip_irqchip_add(&ddata->gchip, &ddata->ichip,
+ 				   0, handle_level_irq, IRQ_TYPE_EDGE_RISING);
+-	if (ret) {
++	if (ret)
+ 		dev_err(&sdevice->dev,
+ 			"Failed to register irq chip (%d)\n", ret);
+-err_gpiochip:
+-		gpiochip_remove(&ddata->gchip);
+-	}
+ 
+ 	return ret;
+ }
 -- 
-Pengutronix e.K.                           | Uwe Kleine-König            |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+2.20.1
+
