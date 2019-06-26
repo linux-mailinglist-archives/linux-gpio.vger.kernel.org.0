@@ -2,114 +2,201 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 66D5A56DAC
-	for <lists+linux-gpio@lfdr.de>; Wed, 26 Jun 2019 17:30:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3918956E94
+	for <lists+linux-gpio@lfdr.de>; Wed, 26 Jun 2019 18:20:47 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728316AbfFZPaZ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 26 Jun 2019 11:30:25 -0400
-Received: from mout.gmx.net ([212.227.17.21]:37303 "EHLO mout.gmx.net"
+        id S1726307AbfFZQUq (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 26 Jun 2019 12:20:46 -0400
+Received: from ns.iliad.fr ([212.27.33.1]:47826 "EHLO ns.iliad.fr"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728226AbfFZPaZ (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Wed, 26 Jun 2019 11:30:25 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1561563023;
-        bh=+m1bpti3Gm94lggBQ3rdBE4ZilC3ZLl2mherlB/r4ds=;
-        h=X-UI-Sender-Class:Date:From:To:Cc:Subject:References:In-Reply-To;
-        b=gUUgP9G1fXL1+9rPiVryhgFsHb8tPX0T/6z8SFPiaPh66cwKSWVIeAVZ1KbEInMAc
-         TMmriyrPdT3tPU9eFHESIJw1D7luIOLOVjraROkRcxkhuEcFugyIXEaccS0R0DF05t
-         RRTNTuh/x6dvZFxJE3zXMqBt+rYskLvo8edEVcFk=
-X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from longitude ([109.90.233.87]) by mail.gmx.com (mrgmx105
- [212.227.17.168]) with ESMTPSA (Nemesis) id 1MI5QF-1hksRt3E4V-00FBqG; Wed, 26
- Jun 2019 17:30:22 +0200
-Date:   Wed, 26 Jun 2019 17:30:22 +0200
-From:   Jonathan =?utf-8?Q?Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>
-To:     Marc Gonzalez <marc.w.gonzalez@free.fr>
-Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
+        id S1726227AbfFZQUq (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Wed, 26 Jun 2019 12:20:46 -0400
+Received: from ns.iliad.fr (localhost [127.0.0.1])
+        by ns.iliad.fr (Postfix) with ESMTP id 193562097A;
+        Wed, 26 Jun 2019 18:20:44 +0200 (CEST)
+Received: from [192.168.108.49] (freebox.vlq16.iliad.fr [213.36.7.13])
+        by ns.iliad.fr (Postfix) with ESMTP id B77C220307;
+        Wed, 26 Jun 2019 18:20:43 +0200 (CEST)
+Subject: Re: [PATCH v1] arm64: dts: qcom: msm8998: Add i2c5 pins
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Jeffrey Hugo <jeffrey.l.hugo@gmail.com>,
+        Andy Gross <agross@kernel.org>,
         MSM <linux-arm-msm@vger.kernel.org>,
         gpio <linux-gpio@vger.kernel.org>,
-        Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-Subject: Re: [PATCH v1] pinctrl: msm8998: Squash TSIF pins together
-Message-ID: <20190626153022.GA22408@latitude>
-References: <18ab4b1c-e74e-410a-a504-f524e46c42ac@free.fr>
- <20190611180516.GO4814@minitux>
- <be298c01-53b8-a954-5de0-3f302265f1cb@free.fr>
- <20190620184124.GB24205@tuxbook-pro>
- <57d0644d-164f-58e7-6c07-9608da4233a3@free.fr>
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        I2C <linux-i2c@vger.kernel.org>
+References: <ed5b1b55-285a-1c6d-c562-a965119000a5@free.fr>
+ <20190427045151.GE3137@builder>
+ <fcc97e67-3b8e-5b31-866e-6bee62a88fd9@free.fr>
+ <20190502151244.GM2938@tuxbook-pro>
+From:   Marc Gonzalez <marc.w.gonzalez@free.fr>
+Message-ID: <db923066-2684-b768-c750-92b82c1bb656@free.fr>
+Date:   Wed, 26 Jun 2019 18:20:42 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="RnlQjJ0d97Da+TV1"
-Content-Disposition: inline
-In-Reply-To: <57d0644d-164f-58e7-6c07-9608da4233a3@free.fr>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Provags-ID: V03:K1:j/CN9N+39HsynZ7uVMWJoio99G56bQzgetJdotIVDZEIqYtPopx
- RFZan9bRqQiMaP+mqlczQv3YK7Q6qe3g6q+skVUIWWcwVPnDOmdGblLC39ZzllmW7NE2cKW
- 68o/5St05eojiet+HHktXDpoe24BkrK32Au2O18pn4NnhHDWzesWDD9MHYJvxVQG/6niSL4
- tlYduzYHJG2x2gYzgwS2A==
-X-Spam-Flag: NO
-X-UI-Out-Filterresults: notjunk:1;V03:K0:Z6LMXHIlIOM=:ERRUntw1rai1b+07aH0zuT
- n3+Q1/mGxttoUV9dBFOxpttd9xl4gHx/VhLQ1H5pVKORYh/WU0ec9SGw5DGtWpaCo9B/B13Oi
- LIogdSbjOJxTuNwGMsPz/SioNA/IP3bo/ISU5oORUz+Wbket6Dd8v7u9mVKr6WoylTmj8MkYs
- 4jnv0aYerHLpk7vTbq51x1Evd0wzx+dDr4ZMRvfM/h/3eil6GMxW0TfsuTCcXqHjXHqC8FAIw
- ZVTJveRyl03vle054QS6Ouq8Q74/u44XsxS23Y0hfzX9MJHmPTMgU2ShcR1eGrTF5CE3byLgG
- N6LFCLT55jmI8FY8AUSBnw0L5zG+LVUygSgjZSIJL9oaEpjAHOYto/6Zdli1BkARVBTPsPKbS
- 87CyXuUyDyMBqSnzA7F1JpB3GUzNn7sLLtg3vmdzLLSPIhczMzktCM4IOAIQ9EdbYzs64VMvT
- W58JaYgrQMpI4hipUZ8/r1ZJhc8IVmfAXoP6InFkZNoaMmFVRxZtC1ZKLd0q3FpjGoHA0A3jW
- b9S7hMYm+NngPbk2D7+UNkJxM1chhrR2a49ypJS2PBW1HadHXcIoIV+TJdnMC7ApGvIBSYr1j
- P34CGQ2jae8rcFkf42hsaaDVmWG1ZLje7lVaxvtypwgfoKSe4snZJyd8yyjFAA7D1O7cx5CLI
- Wbe5Czq78LOiOr8NsI38ItpbQkv2c51xSNVmhJ1DJiDhzzfEy9jUjGKbtjtdtdo//4Gi5RiEA
- S0c15XGL4EOLiGwIbieT7l61K0MMN2u+PgHr1gypWYHplhgriwNNeueGjLO3YxbIweEP3T4bY
- okMbB+akijOal6qgVzfBt+n9+hkhu2pGd9OrEO9aN7VglLEWH9Y6QZUe4t8Aua8LgvD08hyRu
- 7hOAJ4PVpE1Mj65XqO2NaRZ3fqhILEz2WW6GvHuegAV4CqD1w+Z/DP6Brr8uMllH1PO9GFBLA
- IGP8OOuLVpBgKpHf6Mpsr7Cin+oYUdE8=
+In-Reply-To: <20190502151244.GM2938@tuxbook-pro>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Virus-Scanned: ClamAV using ClamSMTP ; ns.iliad.fr ; Wed Jun 26 18:20:44 2019 +0200 (CEST)
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+On 02/05/2019 17:12, Bjorn Andersson wrote:
 
---RnlQjJ0d97Da+TV1
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+> On Mon 29 Apr 01:38 PDT 2019, Marc Gonzalez wrote:
+> 
+>> On 27/04/2019 06:51, Bjorn Andersson wrote:
+>>
+>>> On Thu 25 Apr 09:06 PDT 2019, Marc Gonzalez wrote:
+>>>
+>>>> Downstream source:
+>>>> https://source.codeaurora.org/quic/la/kernel/msm-4.4/tree/arch/arm/boot/dts/qcom/msm8998-pinctrl.dtsi?h=LE.UM.1.3.r3.25#n165
+>>>>
+>>>> Signed-off-by: Marc Gonzalez <marc.w.gonzalez@free.fr>
+>>>> ---
+>>>>  arch/arm64/boot/dts/qcom/msm8998-pins.dtsi | 7 +++++++
+>>>>  1 file changed, 7 insertions(+)
+>>>>
+>>>> diff --git a/arch/arm64/boot/dts/qcom/msm8998-pins.dtsi b/arch/arm64/boot/dts/qcom/msm8998-pins.dtsi
+>>>> index 6db70acd38ee..d0a95c70d1e7 100644
+>>>> --- a/arch/arm64/boot/dts/qcom/msm8998-pins.dtsi
+>>>> +++ b/arch/arm64/boot/dts/qcom/msm8998-pins.dtsi
+>>>> @@ -2,6 +2,13 @@
+>>>>  /* Copyright (c) 2018, The Linux Foundation. All rights reserved. */
+>>>>  
+>>>>  &tlmm {
+>>>> +	i2c5_default: i2c5_default {
+>>>> +		pins = "gpio87", "gpio88";
+>>>> +		function = "blsp_i2c5";
+>>>> +		drive-strength = <2>;
+>>>> +		bias-disable;
+>>>> +	};
+>>>
+>>> You need to reference this node for it to make a difference.
+>>
+>> Right. I do have a local board file referencing i2c5_default, which I plan
+>> to submit at some point. It contains:
+>>
+>> &blsp1_i2c5 {
+>> 	status = "ok";
+>> 	clock-frequency = <100000>;
+>> 	pinctrl-names = "default";
+>> 	pinctrl-0 = <&i2c5_default>;
+>> };
+>>
+>>> Also the drive-strength and bias are board specific, so please move this
+>>> to your board dts (and reference the node).
+>>
+>> Wait... Are you saying there should be no drive-strength nor bias definitions
+>> inside msm8998-pins.dtsi?
+>>
+>> $ grep -c 'strength\|bias' arch/arm64/boot/dts/qcom/msm8998-pins.dtsi
+>> 18
+>>
+>> Why are the SDHC pins different than the I2C pins?
+>>
+>> i2c5 is "tied" to gpio87 and gpio88. Could my board designer "reassign"
+>> these pins to a different HW block? Or is that immutable?
+>>
+> 
+> Right, so it makes a lot of sense to have a node in msm8998.dtsi that
+> says that if i2c5 is probed then the associated pinmux should be set up.
+> 
+> But the pinconf (drive-strenght, internal vs external bias) are board
+> specific, so this part better go in the board.dts.
+> 
+> 
+> On sdm845 we put a node with pinmux in the platform.dtsi and then in the
+> board we extend this node with the electrical properties of the board.
+> This works out pretty well, but we haven't gone back and updated the
+> older platforms/boards yet.
 
-Hi,
+Wow, I had completely lost track of this thread...
 
-On Wed, Jun 26, 2019 at 04:38:58PM +0200, Marc Gonzalez wrote:
-> Preamble: Rename tsif1 to tsif0, tsif2 to tsif1.
-> Squash tsif0 pins into a single function. Same for tsif1.
+OK, I think what you had in mind is the following:
+(Please confirm before I spin a v2)
 
-"Preamble:"? What does this mean in context?
+diff --git a/arch/arm64/boot/dts/qcom/msm8998-mtp.dtsi b/arch/arm64/boot/dts/qcom/msm8998-mtp.dtsi
+index f09f3e03f708..9cd1f96dc3c8 100644
+--- a/arch/arm64/boot/dts/qcom/msm8998-mtp.dtsi
++++ b/arch/arm64/boot/dts/qcom/msm8998-mtp.dtsi
+@@ -27,6 +27,18 @@
+ 	status = "okay";
+ };
+ 
++&blsp1_i2c5 {
++	status = "ok";
++	clock-frequency = <100000>; /*** NOT SURE... This depends on which devices are on the I2C bus? ***/
++	pinctrl-names = "default";
++	pinctrl-0 = <&i2c5_default>;
++};
++
++&i2c5_default {
++	drive-strength = <2>;
++	bias-disable;
++};
++
+ &qusb2phy {
+ 	status = "okay";
+ 
+diff --git a/arch/arm64/boot/dts/qcom/msm8998-pins.dtsi b/arch/arm64/boot/dts/qcom/msm8998-pins.dtsi
+index 6db70acd38ee..dad175a52d03 100644
+--- a/arch/arm64/boot/dts/qcom/msm8998-pins.dtsi
++++ b/arch/arm64/boot/dts/qcom/msm8998-pins.dtsi
+@@ -2,6 +2,11 @@
+ /* Copyright (c) 2018, The Linux Foundation. All rights reserved. */
+ 
+ &tlmm {
++	i2c5_default: i2c5-default {
++		pins = "gpio87", "gpio88";
++		function = "blsp_i2c5";
++	};
++
+ 	sdc2_clk_on: sdc2_clk_on {
+ 		config {
+ 			pins = "sdc2_clk";
 
-BTW, the devicetree people (devicetree@vger.kernel.org, Rob Herring
-<robh+dt@kernel.org>), seem to be missing from the Cc list; they are at
-least printed when I run "scripts/get_maintainer.pl -f
-Documentation/devicetree/bindings/pinctrl/qcom,msm8998-pinctrl.txt" on
-v5.2-rc4.
 
 
-thanks and greetings,
-Jonathan Neusch=C3=A4fer
 
---RnlQjJ0d97Da+TV1
-Content-Type: application/pgp-signature; name="signature.asc"
+Well, except that there don't seem to be any devices on the i2c5 bus
+on the mediabox...
 
------BEGIN PGP SIGNATURE-----
+# i2cdetect -r 0
+i2cdetect: WARNING! This program can confuse your I2C bus
+Continue? [y/N] y
+     0  1  2  3  4  5  6  7  8  9  a  b  c  d  e  f
+00:          -- -- -- -- -- -- -- -- -- -- -- -- --
+10: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --
+20: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --
+30: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --
+40: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --
+50: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --
+60: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --
+70: -- -- -- -- -- -- -- --
 
-iQIzBAABCgAdFiEEvHAHGBBjQPVy+qvDCDBEmo7zX9sFAl0Tj2wACgkQCDBEmo7z
-X9smHQ/8CUD0ylkawz7HJUX/aRPZRVqzKJcQOADyZCsbFW4M1CXA9DdomaeaA2Dz
-k81ZzPP9ZVExsN5ex/IRvt5Tc4DHySVPAHehdh15kvsQUee6fktH0Dc8PapHMqGm
-KkHIqc9i6rhn8JCijElQHmm8kFXAe+SbnMuZzLMHlsGZCT4BGddbep+oFAkyioyw
-WwDt47Y4mCMiycbCFO7s2aKts93EtdB+bj5AafSm84ja8VivyfM64/3vXm8K5IDP
-B0i3Gt+DjWKJPL8GjyQ70WIK6oC4udJMExtI/vGC2f4NYOqDhBwiZWzFI6vP32Ux
-w1TM7ovoia45ZUkNITEvYZI+WX09pImKFWHhnvaIXUwrmZB0G92qCHH/9/SJePEQ
-HSyyxWXdVJVT4O8WUCbWgMJPdUbKhrurCrq33yeerrRy4ApMwi8WGuc77pj8O6tr
-dph5bMJ/hndHFBM0oLnu1/esAfxSsJLLTKHEutTqXvQZdMI41eevS+OHl5BWh1oa
-MW6v5FDnlrwz5izozXltz0H3V9vVPr0ge2oL63/9Q21lk+BXUockD+V95ZzhMQ/P
-2h0vAezDdAz20sXSBH0/mKXVf6RLzpEPGUkMucwLAUTkz4xyABMWBHgTMgGBgsnH
-C6zhr3j5I1LRcany563G2M9JJ9ilC0vasFJ4MfDme1eKj6Ep1nA=
-=A69Y
------END PGP SIGNATURE-----
+But there are on several on my batfish board:
 
---RnlQjJ0d97Da+TV1--
+# i2cdetect -r 0
+i2cdetect: WARNING! This program can confuse your I2C bus
+Continue? [y/N] y
+     0  1  2  3  4  5  6  7  8  9  a  b  c  d  e  f
+00:          -- -- -- -- -- -- -- -- -- -- -- -- --
+10: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --
+20: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --
+30: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --
+40: -- -- -- -- 44 -- -- 47 -- -- -- -- -- -- -- --
+50: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --
+60: -- -- -- -- -- -- -- -- 68 -- -- -- -- -- -- --
+70: -- -- -- -- -- -- -- --
+
+
+Can I submit the arch/arm64/boot/dts/qcom/msm8998-pins.dtsi alone?
+
+Regards.
