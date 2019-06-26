@@ -2,57 +2,58 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id C03BA564DC
-	for <lists+linux-gpio@lfdr.de>; Wed, 26 Jun 2019 10:46:05 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 63F2056516
+	for <lists+linux-gpio@lfdr.de>; Wed, 26 Jun 2019 11:06:39 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727114AbfFZIqD (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 26 Jun 2019 04:46:03 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:33015 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726851AbfFZIqD (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 26 Jun 2019 04:46:03 -0400
-Received: by mail-wm1-f66.google.com with SMTP id h19so4088644wme.0
-        for <linux-gpio@vger.kernel.org>; Wed, 26 Jun 2019 01:46:01 -0700 (PDT)
+        id S1726462AbfFZJGi (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 26 Jun 2019 05:06:38 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:43457 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726006AbfFZJGi (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 26 Jun 2019 05:06:38 -0400
+Received: by mail-wr1-f66.google.com with SMTP id p13so1752581wru.10
+        for <linux-gpio@vger.kernel.org>; Wed, 26 Jun 2019 02:06:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
         h=from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=8W5vMi9MdrqpXAU5Ufa9GPoycXyS4HH7ZnprQ1k/xT4=;
-        b=HdWr1UCkK+SdQQlojDzl40R1zx7OoQrR6zxFq6o7GBW/Rr7kOKEBkWLqqvbAj7FJ7q
-         1E/7hAqK7FymCxRho9h7Puo3OA3c+KBf1t8pCC4LrsCxytS5+908kOBx9SAbyr+eQ26r
-         2CpZafsOxYgG7VhXjmuK4+7EvK2HhJuaPfNkwx0Hc8PdWe8VuwKaUFtpKjbD2gKSW82D
-         I2K8nk9TrPyQq6+YYoeYIpHVOM96UUKcl5R8PoZle1hhHEY1jWUyt99zeiSJGufWHAF4
-         W0KMHahBWXjKLSXchOOGTnNC1U/4RNPdCC0G8jumdobBD9C8SqOkVa9rHciamo7FalHp
-         cMxg==
+        bh=mNkBOhUSKZktXVzPgYHzPfOcBUciHYL1qLyKm8m40Ho=;
+        b=EmhhuBkjS/9rAtIkcIwpIcgZ3Gwn0zrnRkXyLjCQGmjeXCOilfqZFNx1wo3/FJFa7U
+         9Zf3mWYjuMWiSMztjZ+t0JkNLNA6+0NxTB0hHImzdVdROhyBF+N/VFwugbb1cfquvnDM
+         GigBE7k6TeDt+uMKPhQ6uMbUFN9qCJoBpsLPJXOVwMC1otSloUNC73MuEtir+kHO0GpJ
+         tf6H17PB/xAW7OUvxq1AdK5eoVwnr8vjho6yMVp+WQGfyPxn3AUJX6jitZCBLI+iwgR1
+         Yv64S3XIM0zji9dq5d9l+SNyhHmrsz6JnPZIiYZwTnGRwGDwbOdd2uQvWaS+1r9FPz7r
+         kYxQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=8W5vMi9MdrqpXAU5Ufa9GPoycXyS4HH7ZnprQ1k/xT4=;
-        b=uI1wEmTAMD7ee0Nzer8qNIDK1lyIcDeW8+qL3fkwigcA7Ob3pYjnpOAP86/JZ18tD6
-         NLtFAtgbC4+T1I8PA77Q5QVN1dm/E6fYRYOOWhudFrx8hB/iW3GisHevyuupGxaSfdWl
-         myrrnsyM1uMXmxuGlzsViwthENYlx+7+cwp6Q5mbb+S9bw9TZ4EhS8IjaRwWZeW2eyD6
-         XTyETt6Ru3SUo2l7lOtaIePv6zVKo3KNfZuFj26mBdeNudJcIstIsW9gGHSr69or3TUl
-         5Zm2CvqZpGzALimAqdjJburg+Q0t0dPc4I7TGiW6ZO6TQGMlBTNPym8gfXkPAB+ZTD8h
-         oohQ==
-X-Gm-Message-State: APjAAAWGUYCOfeOyGfzR4jUX+gVI7i8k1ctkTIRJMgGFD7pBddZMzkWm
-        70ZBXdFsOC65PA6SBk6V1TacZA==
-X-Google-Smtp-Source: APXvYqwV1p7sn9iItWJLAmJOQoTeWjrx2419LxfBi0SgwbNq/Dyd11Gt8JoLHH3NtSQoCcXHrISSYw==
-X-Received: by 2002:a7b:c74a:: with SMTP id w10mr1751412wmk.99.1561538760632;
-        Wed, 26 Jun 2019 01:46:00 -0700 (PDT)
-Received: from debian-brgl.home ([2a01:cb1d:af:5b00:6d6c:8493:1ab5:dad7])
-        by smtp.gmail.com with ESMTPSA id v204sm1383715wma.20.2019.06.26.01.45.59
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 26 Jun 2019 01:46:00 -0700 (PDT)
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-To:     Linus Walleij <linus.walleij@linaro.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Bamvor Jian Zhang <bamv2005@gmail.com>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: [PATCH v3] gpio: mockup: no need to check return value of debugfs_create functions
-Date:   Wed, 26 Jun 2019 10:45:57 +0200
-Message-Id: <20190626084557.11847-1-brgl@bgdev.pl>
+        bh=mNkBOhUSKZktXVzPgYHzPfOcBUciHYL1qLyKm8m40Ho=;
+        b=jigFN7j1lPX1q1RBOOigHFw5dsuD9e+FTPXXsQ9bl4/jYHeD2uA6HKIjEVQSPq2tOJ
+         RXS6yVPRRIpg7UhyJmNJHgg4sFHdtjQRb5e5cu7QU5TDDNbuD98R910DaPUhTq2xCE3A
+         Cujrm86ZTexuqQ8O0kjyqv8i9moPZ4QVcFGXvmfj/yuf/RBJdOlLEipo4wLuI4Rre9tw
+         pI/Fbq3AwnPS//DiaFSFPlEAPEUsK5OwQQdJc1WOi4+ZeTq2M3I3E6FHzqN33c6KQXK+
+         AD5XPRq0bIQe2nVaoYdd0/9f+D8xdv/GFtAQr5CcWDsxGmNukGQotthPnbSn9xzSyWy6
+         bQhA==
+X-Gm-Message-State: APjAAAVZ+hQ7+Ql/HQwfsqFe/ApxImgNJWofWGOjOPrIS+Fegg0XYvgd
+        AZyTlGTpfq66zfQqKb43YO8dQg==
+X-Google-Smtp-Source: APXvYqwkO8aDGnvu8iP8rFMRwxiWuy/j1doyJakOZ/B3vub9BJrH3obe1f2ZF8drEhnPsKEo5ODJtQ==
+X-Received: by 2002:adf:afde:: with SMTP id y30mr2683421wrd.197.1561539996153;
+        Wed, 26 Jun 2019 02:06:36 -0700 (PDT)
+Received: from bender.baylibre.local (lmontsouris-657-1-212-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
+        by smtp.gmail.com with ESMTPSA id o6sm1925797wmc.46.2019.06.26.02.06.35
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Wed, 26 Jun 2019 02:06:35 -0700 (PDT)
+From:   Neil Armstrong <narmstrong@baylibre.com>
+To:     jbrunet@baylibre.com, khilman@baylibre.com
+Cc:     linux-arm-kernel@lists.infradead.org,
+        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-clk@vger.kernel.org, martin.blumenstingl@googlemail.com,
+        linux-gpio@vger.kernel.org,
+        Neil Armstrong <narmstrong@baylibre.com>
+Subject: [RFC/RFT v2 00/14] arm64: g12a: add support for DVFS
+Date:   Wed, 26 Jun 2019 11:06:18 +0200
+Message-Id: <20190626090632.7540-1-narmstrong@baylibre.com>
 X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -61,98 +62,88 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+The G12A/G12B Socs embeds a specific clock tree for each CPU cluster :
+cpu_clk / cpub_clk
+|   \- cpu_clk_dyn
+|      |  \- cpu_clk_premux0
+|      |        |- cpu_clk_postmux0
+|      |        |    |- cpu_clk_dyn0_div
+|      |        |    \- xtal/fclk_div2/fclk_div3
+|      |        \- xtal/fclk_div2/fclk_div3
+|      \- cpu_clk_premux1
+|            |- cpu_clk_postmux1
+|            |    |- cpu_clk_dyn1_div
+|            |    \- xtal/fclk_div2/fclk_div3
+|            \- xtal/fclk_div2/fclk_div3
+\ sys_pll / sys1_pll
 
-When calling debugfs functions, there is no need to ever check the
-return value.  The function can work or not, but the code logic should
-never do something different based on this.
+This patchset adds notifiers on cpu_clk / cpub_clk, cpu_clk_dyn,
+cpu_clk_premux0 and sys_pll / sys1_pll to permit change frequency of
+the CPU clock in a safe way as recommended by the vendor Documentation
+and reference code.
 
-Cc: Bamvor Jian Zhang <bamv2005@gmail.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>
-Cc: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Cc: linux-gpio@vger.kernel.org
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-[Bartosz: removed one more check for debugfs return value]
-Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
----
-v1 -> v2:
-- fix build warning found by kbuild
-- fix build error found by kbuild
+This patchset :
+- introduces needed core and meson clk changes
+- adds support for the G12B second cluster clock measurer ids
+- protects clock measurer from cooncurent measures
+- adds the clock notifiers
+- moves the G12A DT to a common g12a-common dtsi
+- adds the G12A and G12B OPPs
+- enables DVFS on all supported boards
 
-v2 -> v3:
-- remove one more unnecessary ifdef
+Dependencies:
+- PWM AO input order fix at [1]
+- PWM enhancements from Martin at [2]
 
- drivers/gpio/gpio-mockup.c | 21 +++++----------------
- 1 file changed, 5 insertions(+), 16 deletions(-)
+Changes since RFT/RFC v1 at [3]:
+- Added EXPORT_SYMBOL_GPL() to clk_hw_set_parent
+- Added missing static to g12b_cpub_clk_mux0_div_ops and g12a_cpu_clk_mux_nb
+- Simplified g12a_cpu_clk_mux_notifier_cb() without switch/case
+- Fixed typo in "this the current path" in g12a.c
+- Fixed G12B dtsi by adding back the sdio quirk
+- Fixed G12A dtsi unwanted sdio quirk removal
+- Fixed various checkpatch errors
 
-diff --git a/drivers/gpio/gpio-mockup.c b/drivers/gpio/gpio-mockup.c
-index b6a4efce7c92..f1a9c0544e3f 100644
---- a/drivers/gpio/gpio-mockup.c
-+++ b/drivers/gpio/gpio-mockup.c
-@@ -315,7 +315,6 @@ static void gpio_mockup_debugfs_setup(struct device *dev,
- 				      struct gpio_mockup_chip *chip)
- {
- 	struct gpio_mockup_dbgfs_private *priv;
--	struct dentry *evfile;
- 	struct gpio_chip *gc;
- 	const char *devname;
- 	char *name;
-@@ -325,32 +324,25 @@ static void gpio_mockup_debugfs_setup(struct device *dev,
- 	devname = dev_name(&gc->gpiodev->dev);
- 
- 	chip->dbg_dir = debugfs_create_dir(devname, gpio_mockup_dbg_dir);
--	if (IS_ERR_OR_NULL(chip->dbg_dir))
--		goto err;
- 
- 	for (i = 0; i < gc->ngpio; i++) {
- 		name = devm_kasprintf(dev, GFP_KERNEL, "%d", i);
- 		if (!name)
--			goto err;
-+			return;
- 
- 		priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
- 		if (!priv)
--			goto err;
-+			return;
- 
- 		priv->chip = chip;
- 		priv->offset = i;
- 		priv->desc = &gc->gpiodev->descs[i];
- 
--		evfile = debugfs_create_file(name, 0200, chip->dbg_dir, priv,
--					     &gpio_mockup_debugfs_ops);
--		if (IS_ERR_OR_NULL(evfile))
--			goto err;
-+		debugfs_create_file(name, 0200, chip->dbg_dir, priv,
-+				    &gpio_mockup_debugfs_ops);
- 	}
- 
- 	return;
--
--err:
--	dev_err(dev, "error creating debugfs files\n");
- }
- 
- static int gpio_mockup_name_lines(struct device *dev,
-@@ -447,8 +439,7 @@ static int gpio_mockup_probe(struct platform_device *pdev)
- 	if (rv)
- 		return rv;
- 
--	if (!IS_ERR_OR_NULL(gpio_mockup_dbg_dir))
--		gpio_mockup_debugfs_setup(dev, chip);
-+	gpio_mockup_debugfs_setup(dev, chip);
- 
- 	return 0;
- }
-@@ -501,8 +492,6 @@ static int __init gpio_mockup_init(void)
- 	}
- 
- 	gpio_mockup_dbg_dir = debugfs_create_dir("gpio-mockup", NULL);
--	if (IS_ERR_OR_NULL(gpio_mockup_dbg_dir))
--		gpio_mockup_err("error creating debugfs directory\n");
- 
- 	err = platform_driver_register(&gpio_mockup_driver);
- 	if (err) {
+[1] https://patchwork.kernel.org/patch/11006835/
+[2] https://patchwork.kernel.org/patch/11006835/
+[3] https://patchwork.kernel.org/cover/11006929/
+
+Neil Armstrong (14):
+  pinctrl: meson-g12a: add pwm_a on GPIOE_2 pinmux
+  clk: core: introduce clk_hw_set_parent()
+  clk: meson: regmap: export regmap_div ops functions
+  clk: meson: eeclk: add setup callback
+  soc: amlogic: meson-clk-measure: protect measure with a mutex
+  soc: amlogic: meson-clk-measure: add G12B second cluster cpu clk
+  clk: meson: g12a: add notifiers to handle cpu clock change
+  clk: meson: g12a: expose CPUB clock ID for G12B
+  arm64: dts: move common G12A & G12B modes to meson-g12-common.dtsi
+  arm64: dts: meson-g12-common: add pwm_a on GPIOE_2 pinmux
+  arm64: dts: meson-g12a: add cpus OPP table
+  arm64: dts: meson-g12a: enable DVFS on G12A boards
+  arm64: dts: meson-g12b: add cpus OPP tables
+  arm64: dts: meson-g12b-odroid-n2: enable DVFS
+
+ .../boot/dts/amlogic/meson-g12-common.dtsi    | 2464 ++++++++++++++++
+ .../boot/dts/amlogic/meson-g12a-sei510.dts    |   55 +
+ .../boot/dts/amlogic/meson-g12a-u200.dts      |   55 +
+ .../boot/dts/amlogic/meson-g12a-x96-max.dts   |   52 +
+ arch/arm64/boot/dts/amlogic/meson-g12a.dtsi   | 2502 +----------------
+ .../boot/dts/amlogic/meson-g12b-odroid-n2.dts |   96 +
+ arch/arm64/boot/dts/amlogic/meson-g12b.dtsi   |  145 +-
+ drivers/clk/clk.c                             |    6 +
+ drivers/clk/meson/clk-regmap.c                |   10 +-
+ drivers/clk/meson/clk-regmap.h                |    5 +
+ drivers/clk/meson/g12a.c                      |  500 +++-
+ drivers/clk/meson/meson-eeclk.c               |    6 +
+ drivers/clk/meson/meson-eeclk.h               |    1 +
+ drivers/pinctrl/meson/pinctrl-meson-g12a.c    |    9 +
+ drivers/soc/amlogic/meson-clk-measure.c       |   14 +-
+ include/dt-bindings/clock/g12a-clkc.h         |    1 +
+ include/linux/clk-provider.h                  |    1 +
+ 17 files changed, 3439 insertions(+), 2483 deletions(-)
+ create mode 100644 arch/arm64/boot/dts/amlogic/meson-g12-common.dtsi
+
 -- 
 2.21.0
 
