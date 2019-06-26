@@ -2,49 +2,49 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 5201B56644
-	for <lists+linux-gpio@lfdr.de>; Wed, 26 Jun 2019 12:09:07 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E9DBD56657
+	for <lists+linux-gpio@lfdr.de>; Wed, 26 Jun 2019 12:12:31 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726550AbfFZKJB (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 26 Jun 2019 06:09:01 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:51392 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725379AbfFZKJB (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 26 Jun 2019 06:09:01 -0400
-Received: by mail-wm1-f67.google.com with SMTP id 207so1462713wma.1;
-        Wed, 26 Jun 2019 03:08:58 -0700 (PDT)
+        id S1726931AbfFZKMS (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 26 Jun 2019 06:12:18 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:46930 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725930AbfFZKMS (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 26 Jun 2019 06:12:18 -0400
+Received: by mail-wr1-f66.google.com with SMTP id n4so1992150wrw.13;
+        Wed, 26 Jun 2019 03:12:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=eh72jYgq1NzpoJM5GSmuS2w6GC2KJuJcmy3C/KF8pOo=;
-        b=NxWG7d2hsU8+G8B+sd6acROP9qiVfzFqGwM5+Um+4E31aiHqecuQHX0sSBikcOx5o9
-         D9KplpB0Fae5BYlPx52E9MOxMDTcdPR1AInrtZBQDq2GJu9iMqf1ZXKucGQAxlddk2/7
-         tlyyGPJ3FHP0s5CfM6sTrwZcQbM2fgeRNqaVEZgEt0uIVoQ6Bkalav+oCi9hEXe7cLhz
-         N/WkMm3QNiCo+0DujMxzMp6ceKZTHTn2vO7LP967BkFSroigY1abp481PGaWEWiXzDNd
-         Rvnh/v+lcHrrExVLppPy9HAJCg2sX1RKfNQJIfY7yPvXBhzrprtFM1zI0stHcP1/wfQe
-         nKow==
+        bh=Dibq7+zbPZLIpwPHa4nvk1UvCebsATcld77EwT73l8c=;
+        b=h3F2vgosynP1Knelmy5Gmqhsk7vUJK9xKEMeaMdR6n8sY9R2YElOv+IFBAU6toZwEt
+         EEebPXGmzj135SUmx7ofG0AS81/4h7dSEDPi4vD3WncXbx3riaL5TBmbAAobXhj67HKS
+         4IrjVzkIfLejBP/cu1Zr1tOMF0U6GPRpoHnDXyyCoQrB6WAnDy8r26yZnY2fXGCFDmbl
+         qek2IvmUgXx1PRWaPgo4xN9i1el7k11MctecdMrnsACy3IN0YvOPGG1DG5eqjDayRxYJ
+         irrWYwVOz7DXZ873njHWt48GaYIcCXw7tAMR3r7Ma0N8xxc2fbNA8Xw2QitZUhTWK1mU
+         lXfw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=eh72jYgq1NzpoJM5GSmuS2w6GC2KJuJcmy3C/KF8pOo=;
-        b=fd63sfQOdK6e8cOPTtk5PD12Jr6nf9xdlxZQkSXpIqoP3chjhzTukOnioS9r4uA2cs
-         qsvfb43Xf5ifwYgHN6nq20VI8BSdtxLXgimMfOwnjfJ8b8B8J+Ik1LmVsTGKqeAgDAK7
-         kG1aTbl07xSekb3Sfn+nC2KsV7KihzxO88Jlb1p2sM3KKGtEHoCpzSvcssWctfz1rnIR
-         nyxNhPHatGbyMLsXVJgA7cQg93WkdyeL/6U1pqn2OMrMD5xCfy2lp32p4UzCzweEFfZ5
-         A0KVbQqN/mETZdVUSZqxM1PdmkZPgaaJePpAQ72n1pZnvfWr2p8SB3RH2XMXvbsvS/mU
-         ndWQ==
-X-Gm-Message-State: APjAAAWMhzA9PKGOIKYFVpI5bVK9TIFiNpl7xcp1gTS3gLWFfZIl2gGZ
-        6UJ5CMu+/Pxf1ja5/O+LdWM=
-X-Google-Smtp-Source: APXvYqzoA6QrxagizSCN3/1xiuVTfua3S6di9JlBeGe8VSiJJ/5Vd7rsm01UbWZyaC21FwnCwR7IKQ==
-X-Received: by 2002:a1c:9813:: with SMTP id a19mr2097774wme.11.1561543738215;
-        Wed, 26 Jun 2019 03:08:58 -0700 (PDT)
+        bh=Dibq7+zbPZLIpwPHa4nvk1UvCebsATcld77EwT73l8c=;
+        b=ICkRKxfn4JmOh4zgKl/JXBtJCBRXX8073wB0mKefvOohg6ND9Wr/f2ZHcGf75Ch6nP
+         79tFLYbOmIlDBgmLuiHvpexM4+haZKO6Io8x7TWPciSL6cD8KPkcmbbBP3ysmfrRqqff
+         dIWumWpgTRJ/tjEN5bahtaFzQ8bPPbNpBVTS1KXJUWXSuRZ4Dq9bUDWfQVfIJxucYb7e
+         1ikrgcQhtGaKbXPaKbUB2Vic5Yaden+JJsv8nKAsYl5EI7hgEl5kBi0Y0kTJlrP77T+x
+         2ByiHNiSdxXvtMgDvpFzf1JjGAO2xHF3WP/83T6gTZmb/TzWa07bCGY42yV6kHsoRNUq
+         lZEQ==
+X-Gm-Message-State: APjAAAVpAjzZrlCzqwtwwVZdBnlCIXlFbbwxakDRoCxdm5lKdcyhqcwE
+        C9aysMPkFf947Y3MC+hteKs=
+X-Google-Smtp-Source: APXvYqy/ki8Ln90KvN3IcTp8a007eI8cPfnHLI2q5Mmu15NZXsoILdrxtact8/Faz40GvWLmZg+1gw==
+X-Received: by 2002:a5d:42ca:: with SMTP id t10mr3214670wrr.202.1561543935270;
+        Wed, 26 Jun 2019 03:12:15 -0700 (PDT)
 Received: from localhost (p2E5BEF36.dip0.t-ipconnect.de. [46.91.239.54])
-        by smtp.gmail.com with ESMTPSA id x17sm15782750wrq.64.2019.06.26.03.08.57
+        by smtp.gmail.com with ESMTPSA id j189sm1923150wmb.48.2019.06.26.03.12.14
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Wed, 26 Jun 2019 03:08:57 -0700 (PDT)
-Date:   Wed, 26 Jun 2019 12:08:56 +0200
+        Wed, 26 Jun 2019 03:12:14 -0700 (PDT)
+Date:   Wed, 26 Jun 2019 12:12:13 +0200
 From:   Thierry Reding <thierry.reding@gmail.com>
 To:     Sowjanya Komatineni <skomatineni@nvidia.com>
 Cc:     jonathanh@nvidia.com, tglx@linutronix.de, jason@lakedaemon.net,
@@ -56,15 +56,16 @@ Cc:     jonathanh@nvidia.com, tglx@linutronix.de, jason@lakedaemon.net,
         linux-kernel@vger.kernel.org, mperttunen@nvidia.com,
         spatra@nvidia.com, robh+dt@kernel.org, digetx@gmail.com,
         devicetree@vger.kernel.org
-Subject: Re: [PATCH V4 02/18] pinctrl: tegra: add suspend and resume support
-Message-ID: <20190626100856.GB6362@ulmo>
+Subject: Re: [PATCH V4 10/18] clk: tegra: add save and restore context
+ support for peripheral clocks
+Message-ID: <20190626101213.GC6362@ulmo>
 References: <1561345379-2429-1-git-send-email-skomatineni@nvidia.com>
- <1561345379-2429-3-git-send-email-skomatineni@nvidia.com>
+ <1561345379-2429-11-git-send-email-skomatineni@nvidia.com>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="WhfpMioaduB5tiZL"
+        protocol="application/pgp-signature"; boundary="uh9ZiVrAOUUm9fzH"
 Content-Disposition: inline
-In-Reply-To: <1561345379-2429-3-git-send-email-skomatineni@nvidia.com>
+In-Reply-To: <1561345379-2429-11-git-send-email-skomatineni@nvidia.com>
 User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
@@ -72,48 +73,53 @@ List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
 
---WhfpMioaduB5tiZL
+--uh9ZiVrAOUUm9fzH
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Sun, Jun 23, 2019 at 08:02:43PM -0700, Sowjanya Komatineni wrote:
-> This patch adds support for Tegra pinctrl driver suspend and resume.
+On Sun, Jun 23, 2019 at 08:02:51PM -0700, Sowjanya Komatineni wrote:
+> This patch implements save and restore context for peripheral fixed
+> clock ops, peripheral gate clock ops, sdmmc mux clock ops, and
+> peripheral clock ops.
 >=20
-> During suspend, context of all pinctrl registers are stored and
-> on resume they are all restored to have all the pinmux and pad
-> configuration for normal operation.
+> During system suspend, core power goes off and looses the settings
+> of the Tegra CAR controller registers.
+>=20
+> So during suspend entry clock and reset state of peripherals is saved
+> and on resume they are restored to have clocks back to same rate and
+> state as before suspend.
 >=20
 > Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
 > ---
->  drivers/pinctrl/tegra/pinctrl-tegra.c    | 47 ++++++++++++++++++++++++++=
+>  drivers/clk/tegra/clk-periph-fixed.c | 31 ++++++++++++++++++++++++++
+>  drivers/clk/tegra/clk-periph-gate.c  | 34 ++++++++++++++++++++++++++++
+>  drivers/clk/tegra/clk-periph.c       | 43 ++++++++++++++++++++++++++++++=
 ++++++
->  drivers/pinctrl/tegra/pinctrl-tegra.h    |  4 +++
->  drivers/pinctrl/tegra/pinctrl-tegra210.c |  6 ++++
->  3 files changed, 57 insertions(+)
-
-With Dmitry's comments addressed, this is:
+>  drivers/clk/tegra/clk-sdmmc-mux.c    | 30 +++++++++++++++++++++++++
+>  drivers/clk/tegra/clk.h              |  8 +++++++
+>  5 files changed, 146 insertions(+)
 
 Acked-by: Thierry Reding <treding@nvidia.com>
 
---WhfpMioaduB5tiZL
+--uh9ZiVrAOUUm9fzH
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl0TRDUACgkQ3SOs138+
-s6GvzxAAiFH/gYSVcwCuGy396VD5pJeLGEfJDzcnWqlSTP7KjyLuPUbzCaT79xLd
-d3YULAplbjAKrhKnlWQJdI/8yFkOUB8fVsj1Dsxw6uMsPvh9UeRjGS7QV1a5ophH
-xLTPD3WuXqY8BHmQ2uTQ8gTGq2/6JT3F+wNl/Uv7jj3i0EieUo0/o1nvUhkX6obL
-hW1quyskaRdTtJDGlGwOqbV/eqCSoW1nRoCGHL/4JTcuVa6hovz86g0jgl2ugMxu
-Rn2jHHHhVoq3WA856YGzSGn453Oj7ddh1gCX8ZG0NfjA2JfBLjb6s1EB35FNtot/
-jI68p7QZV0AVwE4CFjEy4Dc7YUP/I8xQvwOeaFu3/++v6EPckyNP00grYhsf42GW
-oZQoQ0LgyCL1BGzxfD3AoioDVIxqtI4H8jCObu1Hond7B+4FI+mXa+SGf+vm25y4
-doXsqjgv4Nu1QkFd+xToWK1irVnQoXYIYsub96XnX6+AsPb6EOB50rtl6zXfCzZn
-ZWa8KCk00T/ur2CI2Sk12rHxlQ0nA9IDq2eFeEuQwz3O2R6+ZUwISeLLRvI1bGji
-dhwO65R/a9FQc5PM0tzkrfhoxKatl/vVxmBFIeEIVpFBhaJ7rA1HlPoscQQ5J50C
-lv+T2xtIODfuEchmgf4tZc4QMnZ8gw1UG+2n71EZZRX3qp5QQ6s=
-=iW3N
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl0TRP0ACgkQ3SOs138+
+s6HUlxAAg/MnASD5SEdQ3qYEq3xg2eWTdZZD+3JhKSO+AJM87Pcw4Q+k+vAaG5fC
+iZ1QPSnJwL6M8iyjlOwM+J9ZJR+0ZtrHlBZ2Ru+wvKbUCN3fBXg0n7iFEwtWfRwe
+6nut9ykShtaLtoq7bg3XFJr4OmZONSj+tsXBDJnCYwHSHSerV/+ElJhB9U94I34s
+52DayIuq6xO2DOqo3HCP6nOFRsev73+vFJSZHFxANWiDcMW4XzZ62wZJ6DQLUmuC
+vsdEE0SbCuUhPoAsC4G1sqB39EIg8eIgBKPgOlLuCc5TazZdglt3eGfjmsw+/AR9
+6ezH/g9lKZ3h9JtZkkM1gckkj8TLpToP00VFV1m6KD3xLGsslhwPLAQT171Sphia
+pyLO8rxqaYyX9boAHOGsq03kFmlr6/uVHn3bxa/vhcsX5/iOzVGZUHwqC50ATm5R
+yHPx38hJIAQuFcv+OfSigkAOkXHhPAOSICisE/Mp8v5Ecb4bNF4H+GDpcgkSvrFp
+luAmTT/PLaixvu6B+r+BKbRpp8llcaAzMNS2I6YsnLGHupt6LuIzprwTxDQ1xcDm
+eZZH5kjMP8wBrynMHGdhnAYUIXgADVz07RLZ9E3Tr1Ur4yHBIJRHD5sUU/u5ILJI
+CLOaAS+4RVlCizUE7ILijzsWb19EmLpwcbB1GLCgK7FW3nae51s=
+=Fq1s
 -----END PGP SIGNATURE-----
 
---WhfpMioaduB5tiZL--
+--uh9ZiVrAOUUm9fzH--
