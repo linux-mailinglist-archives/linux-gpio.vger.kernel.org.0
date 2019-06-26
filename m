@@ -2,319 +2,96 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id DF57156348
-	for <lists+linux-gpio@lfdr.de>; Wed, 26 Jun 2019 09:26:14 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id EA2375639D
+	for <lists+linux-gpio@lfdr.de>; Wed, 26 Jun 2019 09:45:27 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726468AbfFZH0O (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 26 Jun 2019 03:26:14 -0400
-Received: from new4-smtp.messagingengine.com ([66.111.4.230]:41333 "EHLO
-        new4-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725876AbfFZH0O (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>);
-        Wed, 26 Jun 2019 03:26:14 -0400
-Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailnew.nyi.internal (Postfix) with ESMTP id 81BAE1DA9;
-        Wed, 26 Jun 2019 03:16:15 -0400 (EDT)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute4.internal (MEProxy); Wed, 26 Jun 2019 03:16:15 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aj.id.au; h=from
-        :to:cc:subject:date:message-id:in-reply-to:references
-        :mime-version:content-transfer-encoding; s=fm3; bh=o/ghzHrj1X7yl
-        XihRgJKS1cvGXzCMJPgUc8IsbXlG3Q=; b=R79Ha6g++rC7IaCm+ifBfu9AD4+HS
-        v6GGRSKsTtS7ugDI5UdKYaTtDy2gTxtzW+MqbOSpB388R3UsOwQqQR7YFl5T3qMG
-        n5D11EUlqlAVPQ6+NEPU+mYIMImldiljtGXCWhL6BtNhHIXSOAvfZQ1biu6EtPat
-        WXBcl2bAjlRdSxEDB39omtihY5RItwtAjf5QBh8ac6MgG4DxMNPguF0RU4RfI4Xv
-        9hfk9SLrd0P77WmoC8xIkkkjvptur33cFOE/tybPcHzcZL9gx/rX5O6NHGaDrLdz
-        TrsxAFTtIOO/Myyb/nLYeh+DYtar7lZfuZVVdsw9m4iejnOPBm7Zn/P7w==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-transfer-encoding:date:from
-        :in-reply-to:message-id:mime-version:references:subject:to
-        :x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-        fm3; bh=o/ghzHrj1X7ylXihRgJKS1cvGXzCMJPgUc8IsbXlG3Q=; b=Diw36Rcy
-        C67TKYNy3OGM7AKpQ33NK7XrePCJcMe0hrhWmYWnaHpo6LJZSbGl+93l7U+9GsA3
-        gYLP0oAFKzsyPwy/kwkP+8U00bBNoRYTztK94zGnsrW88epl1e9kv9CBR3kZjRh+
-        zqX3SuAIFjDrhlKF5CEkxTuJkfwpWJ4fxIOQwLwQ92WerfFsDS9YqssfZesIp/Vq
-        f1Tt+OJ4swXssWg+rJXiUSu/PfTn+ApYzFU4hSj7DCp3OkO8aHvFxyVaNUS26tsp
-        HkkrHYI3CCXiZqYaakiwM+6f9t4iRKfquq9wXpImxvolDca7NJYBatWWtWKRmm3x
-        kE7QkV3IL/sMWw==
-X-ME-Sender: <xms:vxsTXWift_nnqs93kIhr5EVsWEIJ7KOvC9n4_6I5ClyO4MQFzQAhNQ>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduvddrudehgdduudejucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucenucfjughrpefhvffufffkofgjfhgggfestdekre
-    dtredttdenucfhrhhomheptehnughrvgifucflvghffhgvrhihuceorghnughrvgifsegr
-    jhdrihgurdgruheqnecukfhppedvtddvrdekuddrudekrdeftdenucfrrghrrghmpehmrg
-    hilhhfrhhomheprghnughrvgifsegrjhdrihgurdgruhenucevlhhushhtvghrufhiiigv
-    peeg
-X-ME-Proxy: <xmx:vxsTXXNrmy0-aJmKmgvVLp57PdCV-bF8NdAoBE72L3Nd7Fznkoje8w>
-    <xmx:vxsTXQt3nSkqVXCzQ7tm-ldhCykfxbc5e8SvN1HJF5uRqsxWwHEAhw>
-    <xmx:vxsTXa2Io89txAQTgXj9VAvHcSA3d_VvbYQBtsCZL2_uZ8_xjePkRw>
-    <xmx:vxsTXfh2mXauXZfoz-4GdDpMNjstImZDGkmM94TZqM3o26nXnweAdg>
-Received: from mistburn.au.ibm.com (bh02i525f01.au.ibm.com [202.81.18.30])
-        by mail.messagingengine.com (Postfix) with ESMTPA id A5594380076;
-        Wed, 26 Jun 2019 03:16:11 -0400 (EDT)
-From:   Andrew Jeffery <andrew@aj.id.au>
-To:     linux-gpio@vger.kernel.org
-Cc:     ryan_chen@aspeedtech.com, Andrew Jeffery <andrew@aj.id.au>,
-        linus.walleij@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com,
-        joel@jms.id.au, linux-aspeed@lists.ozlabs.org,
-        openbmc@lists.ozlabs.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 8/8] pinctrl: aspeed: Add implementation-related documentation
-Date:   Wed, 26 Jun 2019 16:44:30 +0930
-Message-Id: <20190626071430.28556-9-andrew@aj.id.au>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190626071430.28556-1-andrew@aj.id.au>
-References: <20190626071430.28556-1-andrew@aj.id.au>
+        id S1726823AbfFZHp1 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 26 Jun 2019 03:45:27 -0400
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:39330 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725876AbfFZHp1 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 26 Jun 2019 03:45:27 -0400
+Received: by mail-ot1-f65.google.com with SMTP id r21so1582017otq.6
+        for <linux-gpio@vger.kernel.org>; Wed, 26 Jun 2019 00:45:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=Vlsf9GvS+RoA9yjo+zy35lXcVFVFTK8sik+ld3DEIhA=;
+        b=JwYUYDfFq92gNHudM1vQhoBBNb0ZqKKmDTNu5ZixbVdDx8Vpa/Xqbc0ZrIIMte3n/g
+         S8lRFThDhS/G8vZkzbW17jaFdUZQWwN1OgPTFRlKiUgoJS17OzG81QJ7e89/XqubZ4/u
+         AA+Z6tIAUBsvRRlxAAC9QQPbpEiM/ZWGsSxwYxXwN2ltlEqpk48aAj970n9B2FDB42JX
+         sdFPIo27kdqiwd3ljBYYd7wfk29r+rLmbavPis7wGYNXQKOrWtQ5Hy5xTbCRdbgkf+7f
+         QbZThkasqErV7n5NWref06NpUqOEK8BooZ7I8fR0cm9CiwfFwKNyfoKEvcCNR9KeIRuB
+         1ssQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=Vlsf9GvS+RoA9yjo+zy35lXcVFVFTK8sik+ld3DEIhA=;
+        b=K7x3Iv7SZQ0mmKKDieYgoKyWE0R3Wymbo1DcOeiqD+cb88AdTDp3h7aJqpzz1M8T2u
+         wlczfkGgdTCJA3VuZtnurX1gqklqFK8wosqJoecXsCLRI7Igd0nA/UCMv9MwP/6n36Qs
+         OnP61obLbXdNg/B+cvdhvh1XW5yJEENci0VkYCNDaDoWVORX2Cxy9IkOw+Cqky+xlvlv
+         Xs4pLozdneUp4ZlGoEaAMnnPTOHjNydPMAO/3DcFdl7+R/7vKxS6OFjgD+63iLNIKlee
+         8F91mW4qTP62C3zn7hHd7R+jlgcZYb6eVC7J08hjOSyZFqcI4x0fjpPS6FIPAx7S8jQv
+         zAQg==
+X-Gm-Message-State: APjAAAU1rP4iy2iW1hoTlrCh+767VAKJ2suCiGSX4uwDpF/8uCb8PJFh
+        wl6MI1AJK81DL9VJvkJgTa/dnTxL5Z1Kt4regC60tg==
+X-Google-Smtp-Source: APXvYqwbwFBszV0lqL7f2V9fgvETkTT3LTkcy2p5b4vbWsnWnhWcyzC5rm4zgjR7Ytb1RCdVTeUXElHm/udJ+n9b7qM=
+X-Received: by 2002:a9d:2969:: with SMTP id d96mr2174841otb.85.1561535126477;
+ Wed, 26 Jun 2019 00:45:26 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20190625153915.28424-1-ckeepax@opensource.cirrus.com> <20190625153915.28424-2-ckeepax@opensource.cirrus.com>
+In-Reply-To: <20190625153915.28424-2-ckeepax@opensource.cirrus.com>
+From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Date:   Wed, 26 Jun 2019 09:45:15 +0200
+Message-ID: <CAMpxmJXK50tMXfKfXR2=tPgRLfGH-3jm-NUB65Kf8gg8mQQCuA@mail.gmail.com>
+Subject: Re: [PATCH 2/2] gpio: madera: Fixup SPDX headers
+To:     Charles Keepax <ckeepax@opensource.cirrus.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        linux-gpio <linux-gpio@vger.kernel.org>,
+        patches@opensource.cirrus.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-The ASPEED pinctrl driver implementations make heavy use of macros to
-minimise tedium of implementation and maximise the chance that the
-compiler will catch errors in defining signal and pin configurations.
-While the goal of minimising errors is achieved, it is at the cost of
-the complexity of the macros.
+wt., 25 cze 2019 o 17:39 Charles Keepax
+<ckeepax@opensource.cirrus.com> napisa=C5=82(a):
+>
+> GPL-2.0-only is the preferred way of expressing v2 of the GPL, so switch
+> to that and remove some redundant copyright notices.
+>
+> Signed-off-by: Charles Keepax <ckeepax@opensource.cirrus.com>
+> ---
+>  drivers/gpio/gpio-madera.c | 6 +-----
+>  1 file changed, 1 insertion(+), 5 deletions(-)
+>
+> diff --git a/drivers/gpio/gpio-madera.c b/drivers/gpio/gpio-madera.c
+> index c9dad0543672a..4dbc837d12155 100644
+> --- a/drivers/gpio/gpio-madera.c
+> +++ b/drivers/gpio/gpio-madera.c
+> @@ -1,12 +1,8 @@
+> -// SPDX-License-Identifier: GPL-2.0
+> +// SPDX-License-Identifier: GPL-2.0-only
+>  /*
+>   * GPIO support for Cirrus Logic Madera codecs
+>   *
+>   * Copyright (C) 2015-2018 Cirrus Logic
+> - *
+> - * This program is free software; you can redistribute it and/or modify
+> - * it under the terms of the GNU General Public License as published by =
+the
+> - * Free Software Foundation; version 2.
+>   */
+>
+>  #include <linux/gpio/driver.h>
+> --
+> 2.11.0
+>
 
-Document examples of the expanded form of pin declarations to
-demonstrate the operation of the macros.
+Patch applied, thanks!
 
-Signed-off-by: Andrew Jeffery <andrew@aj.id.au>
----
- drivers/pinctrl/aspeed/pinmux-aspeed.h | 204 ++++++++++++++++++++++++-
- 1 file changed, 200 insertions(+), 4 deletions(-)
-
-diff --git a/drivers/pinctrl/aspeed/pinmux-aspeed.h b/drivers/pinctrl/aspeed/pinmux-aspeed.h
-index a036ce8f1571..329d54d48667 100644
---- a/drivers/pinctrl/aspeed/pinmux-aspeed.h
-+++ b/drivers/pinctrl/aspeed/pinmux-aspeed.h
-@@ -18,7 +18,8 @@
-  * priority level are frequently not the same (i.e. cannot just flip a bit to
-  * change from a high to low priority signal), or even in the same register.
-  * Further, not all signals can be unmuxed, as some expressions depend on
-- * values in the hardware strapping register (which is treated as read-only).
-+ * values in the hardware strapping register (which may be treated as
-+ * read-only).
-  *
-  * SoC Multi-function Pin Expression Examples
-  * ------------------------------------------
-@@ -172,9 +173,9 @@
-  * * A signal expression is the smallest set of signal descriptors whose
-  *   comparisons must evaluate 'true' for a signal to be enabled on a pin.
-  *
-- * * A function's signal is active on a pin if evaluating all signal
-- *   descriptors in the pin's signal expression for the function yields a 'true'
-- *   result
-+ * * A signal participating in a function is active on a pin if evaluating all
-+ *   signal descriptors in the pin's signal expression for the function yields
-+ *   a 'true' result
-  *
-  * * A signal at a given priority on a given pin is active if any of the
-  *   functions in which the signal participates are active, and no higher
-@@ -221,6 +222,201 @@
-  * well as pins) required for the group's configuration will already be in use,
-  * likely in a way that's inconsistent with the requirements of the failed
-  * group.
-+ *
-+ * Implementation
-+ * --------------
-+ *
-+ * Beyond the documentation below the various structures and helper macros that
-+ * allow the implementation to hang together are defined. The macros are fairly
-+ * dense, so below we walk through some raw examples of the configuration
-+ * tables in an effort to clarify the concepts.
-+ *
-+ * The complexity of configuring the mux combined with the scale of the pins
-+ * and functions was a concern, so the table design along with the macro jungle
-+ * is an attempt to address it. The rough principles of the approach are:
-+ *
-+ * 1. Use a data-driven solution rather than embedding state into code
-+ * 2. Minimise editing to the specifics of the given mux configuration
-+ * 3. Detect as many errors as possible at compile time
-+ *
-+ * Addressing point 3 leads to naming of symbols in terms of the four
-+ * properties associated with a given mux configuration: The pin, the signal,
-+ * the group and the function. In this way copy/paste errors cause duplicate
-+ * symbols to be defined, which prevents successful compilation. Failing to
-+ * properly parent the tables leads to unused symbol warnings, and use of
-+ * designated initialisers and additional warnings ensures that there are
-+ * no override errors in the pin, group and function arrays.
-+ *
-+ * Addressing point 2 drives the development of the macro jungle, as it
-+ * centralises the definition noise at the cost of taking some time to
-+ * understand.
-+ *
-+ * Here's a complete, concrete "pre-processed" example of the table structures
-+ * used to describe the D6 ball from the examples above:
-+ *
-+ * ```
-+ * static const struct aspeed_sig_desc sig_descs_MAC1LINK_MAC1LINK[] = {
-+ *     {
-+ *         .ip = ASPEED_IP_SCU,
-+ *         .reg = 0x80,
-+ *         .mask = BIT(0),
-+ *         .enable = 1,
-+ *         .disable = 0
-+ *     },
-+ * };
-+ *
-+ * static const struct aspeed_sig_expr sig_expr_MAC1LINK_MAC1LINK = {
-+ *     .signal = "MAC1LINK",
-+ *     .function = "MAC1LINK",
-+ *     .ndescs = ARRAY_SIZE(sig_descs_MAC1LINK_MAC1LINK),
-+ *     .descs = &(sig_descs_MAC1LINK_MAC1LINK)[0],
-+ * };
-+ *
-+ * static const struct aspeed_sig_expr *sig_exprs_MAC1LINK_MAC1LINK[] = {
-+ *     &sig_expr_MAC1LINK_MAC1LINK,
-+ *     NULL,
-+ * };
-+ *
-+ * static const struct aspeed_sig_desc sig_descs_GPIOA0_GPIOA0[] = { };
-+ *
-+ * static const struct aspeed_sig_expr sig_expr_GPIOA0_GPIOA0 = {
-+ *     .signal = "GPIOA0",
-+ *     .function = "GPIOA0",
-+ *     .ndescs = ARRAY_SIZE(sig_descs_GPIOA0_GPIOA0),
-+ *     .descs = &(sig_descs_GPIOA0_GPIOA0)[0],
-+ * };
-+ *
-+ * static const struct aspeed_sig_expr *sig_exprs_GPIOA0_GPIOA0[] = {
-+ *     &sig_expr_GPIOA0_GPIOA0,
-+ *     NULL
-+ * };
-+ *
-+ * static const struct aspeed_sig_expr **pin_exprs_0[] = {
-+ *     sig_exprs_MAC1LINK_MAC1LINK,
-+ *     sig_exprs_GPIOA0_GPIOA0,
-+ *     NULL
-+ * };
-+ *
-+ * static const struct aspeed_pin_desc pin_0 = { "0", (&pin_exprs_0[0]) };
-+ * static const int group_pins_MAC1LINK[] = { 0 };
-+ * static const char *func_groups_MAC1LINK[] = { "MAC1LINK" };
-+ *
-+ * static struct pinctrl_pin_desc aspeed_g4_pins[] = {
-+ *     [0] = { .number = 0, .name = "D6", .drv_data = &pin_0 },
-+ * };
-+ *
-+ * static const struct aspeed_pin_group aspeed_g4_groups[] = {
-+ *     {
-+ *         .name = "MAC1LINK",
-+ *         .pins = &(group_pins_MAC1LINK)[0],
-+ *         .npins = ARRAY_SIZE(group_pins_MAC1LINK),
-+ *     },
-+ * };
-+ *
-+ * static const struct aspeed_pin_function aspeed_g4_functions[] = {
-+ *     {
-+ *         .name = "MAC1LINK",
-+ *         .groups = &func_groups_MAC1LINK[0],
-+ *         .ngroups = ARRAY_SIZE(func_groups_MAC1LINK),
-+ *     },
-+ * };
-+ * ```
-+ *
-+ * At the end of the day much of the above code is compressed into the
-+ * following two lines:
-+ *
-+ * ```
-+ * #define D6 0
-+ * SSSF_PIN_DECL(D6, GPIOA0, MAC1LINK, SIG_DESC_SET(SCU80, 0));
-+ * ```
-+ *
-+ * The two examples below show just the differences from the example above.
-+ *
-+ * Ball E18 demonstrates a function, EXTRST, that requires multiple descriptors
-+ * be set for it to be muxed:
-+ *
-+ * ```
-+ * static const struct aspeed_sig_desc sig_descs_EXTRST_EXTRST[] = {
-+ *     {
-+ *         .ip = ASPEED_IP_SCU,
-+ *         .reg = 0x3C,
-+ *         .mask = BIT(3),
-+ *         .enable = 1,
-+ *         .disable = 0
-+ *     },
-+ *     {
-+ *         .ip = ASPEED_IP_SCU,
-+ *         .reg = 0x80,
-+ *         .mask = BIT(15),
-+ *         .enable = 1,
-+ *         .disable = 0
-+ *     },
-+ *     {
-+ *         .ip = ASPEED_IP_SCU,
-+ *         .reg = 0x90,
-+ *         .mask = BIT(31),
-+ *         .enable = 0,
-+ *         .disable = 1
-+ *     },
-+ * };
-+ *
-+ * static const struct aspeed_sig_expr sig_expr_EXTRST_EXTRST = {
-+ *     .signal = "EXTRST",
-+ *     .function = "EXTRST",
-+ *     .ndescs = ARRAY_SIZE(sig_descs_EXTRST_EXTRST),
-+ *     .descs = &(sig_descs_EXTRST_EXTRST)[0],
-+ * };
-+ * ...
-+ * ```
-+ *
-+ * For ball E19, we have multiple functions enabling a single signal, LPCRST#.
-+ * The data structures look like:
-+ *
-+ * static const struct aspeed_sig_desc sig_descs_LPCRST_LPCRST[] = {
-+ *     {
-+ *         .ip = ASPEED_IP_SCU,
-+ *         .reg = 0x80,
-+ *         .mask = BIT(12),
-+ *         .enable = 1,
-+ *         .disable = 0
-+ *     },
-+ * };
-+ *
-+ * static const struct aspeed_sig_expr sig_expr_LPCRST_LPCRST = {
-+ *     .signal = "LPCRST",
-+ *     .function = "LPCRST",
-+ *     .ndescs = ARRAY_SIZE(sig_descs_LPCRST_LPCRST),
-+ *     .descs = &(sig_descs_LPCRST_LPCRST)[0],
-+ * };
-+ *
-+ * static const struct aspeed_sig_desc sig_descs_LPCRST_LPCRSTS[] = {
-+ *     {
-+ *         .ip = ASPEED_IP_SCU,
-+ *         .reg = 0x70,
-+ *         .mask = BIT(14),
-+ *         .enable = 1,
-+ *         .disable = 0
-+ *     },
-+ * };
-+ *
-+ * static const struct aspeed_sig_expr sig_expr_LPCRST_LPCRSTS = {
-+ *     .signal = "LPCRST",
-+ *     .function = "LPCRSTS",
-+ *     .ndescs = ARRAY_SIZE(sig_descs_LPCRST_LPCRSTS),
-+ *     .descs = &(sig_descs_LPCRST_LPCRSTS)[0],
-+ * };
-+ *
-+ * static const struct aspeed_sig_expr *sig_exprs_LPCRST_LPCRST[] = {
-+ *     &sig_expr_LPCRST_LPCRST,
-+ *     &sig_expr_LPCRST_LPCRSTS,
-+ *     NULL,
-+ * };
-+ * ...
-+ * ```
-+ *
-+ * Both expressions listed in the sig_exprs_LPCRST_LPCRST array need to be set
-+ * to disabled for the associated GPIO to be muxed.
-+ *
-  */
- 
- #define ASPEED_IP_SCU		0
--- 
-2.20.1
-
+Bart
