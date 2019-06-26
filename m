@@ -2,105 +2,132 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id D8B3456EB3
-	for <lists+linux-gpio@lfdr.de>; Wed, 26 Jun 2019 18:28:35 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A66D156EED
+	for <lists+linux-gpio@lfdr.de>; Wed, 26 Jun 2019 18:38:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726544AbfFZQ2e (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 26 Jun 2019 12:28:34 -0400
-Received: from hqemgate16.nvidia.com ([216.228.121.65]:9428 "EHLO
-        hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726042AbfFZQ2e (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 26 Jun 2019 12:28:34 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5d139d300001>; Wed, 26 Jun 2019 09:28:32 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Wed, 26 Jun 2019 09:28:33 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Wed, 26 Jun 2019 09:28:33 -0700
-Received: from [10.2.169.244] (172.20.13.39) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 26 Jun
- 2019 16:28:30 +0000
-Subject: Re: [PATCH V4 18/18] arm64: dts: tegra210-p2180: Jetson TX1 SC7
- timings
-To:     Thierry Reding <thierry.reding@gmail.com>
-CC:     <jonathanh@nvidia.com>, <tglx@linutronix.de>,
-        <jason@lakedaemon.net>, <marc.zyngier@arm.com>,
-        <linus.walleij@linaro.org>, <stefan@agner.ch>,
-        <mark.rutland@arm.com>, <pdeschrijver@nvidia.com>,
-        <pgaikwad@nvidia.com>, <sboyd@kernel.org>,
-        <linux-clk@vger.kernel.org>, <linux-gpio@vger.kernel.org>,
-        <jckuo@nvidia.com>, <josephl@nvidia.com>, <talho@nvidia.com>,
-        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <mperttunen@nvidia.com>, <spatra@nvidia.com>, <robh+dt@kernel.org>,
-        <digetx@gmail.com>, <devicetree@vger.kernel.org>
-References: <1561345379-2429-1-git-send-email-skomatineni@nvidia.com>
- <1561345379-2429-19-git-send-email-skomatineni@nvidia.com>
- <20190626102824.GG6362@ulmo>
-From:   Sowjanya Komatineni <skomatineni@nvidia.com>
-Message-ID: <908eb03e-3b08-4e48-e64e-56cf6e66b5f2@nvidia.com>
-Date:   Wed, 26 Jun 2019 09:28:28 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.1
+        id S1726341AbfFZQiT (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 26 Jun 2019 12:38:19 -0400
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:35429 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726042AbfFZQiT (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 26 Jun 2019 12:38:19 -0400
+Received: by mail-ot1-f66.google.com with SMTP id j19so3205014otq.2
+        for <linux-gpio@vger.kernel.org>; Wed, 26 Jun 2019 09:38:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=VBRKLMNnew2mAl5lIdVMoybk2oV1VXiiYqZRyzqHBdo=;
+        b=eyDR8rkG0ge7UHggaO+7uQlA8ddppzLkCDIJzKTuhgQNrqd9CArY8kZbyxEBjNr7PL
+         m4FG1zMybMGnUiOLaREQ6y99pMP8rGtxArcEElQAOI6vn4kv8BPe0xdU5Xd7wNrei0jg
+         n/lcFpyOB1marUqSxLMFot3SZDpQ099d2yjVrK2HQqILG/l35lA2fBaiJntq7bPhdxZT
+         IJNiK+f9ZxzDW+WOEpJS8spaZantLdFUojTfQZR0halT0DeVlXrh4J8x35A2EWVEGKxL
+         hH/OWunwPI3lMLO13rUSikjhzr21DH3BWJF37GPs/1Y5rBpK115x7R/7FyQ1BeZ2Ybi2
+         pE7w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=VBRKLMNnew2mAl5lIdVMoybk2oV1VXiiYqZRyzqHBdo=;
+        b=AggWA6Yn3e3+5Nm0sS6peR/jrr9dsZl8yT29pG0PtkFl6GmtUiv3kws6AFSxEYxJ+s
+         QDngGmXGzcEjVCEJDo4QUVy9QW5DEUrIZycNSJexY0kMDrpXsSlg5Y1qz63BUPHu8aaF
+         asVj+mHyIEP+lo0W8N+iup/JFDUb3vxuNGJLO1ve4XKnHMoNKTm40ru1YpI/YVFPHE4d
+         kaKcQepfcJ0/SaqDioczbLsBTpmL60fOseZXtilhPOOTgPvQgwfzbuscoR2alR6QQ/w8
+         q4QZwJpN24FpVo43tShpFloqLwWrCA5kr7ZWnEEkk8bXzdA2FzlABmznX6d6vPG6tfJm
+         RvYQ==
+X-Gm-Message-State: APjAAAXrSvfMHhZYYlN7O+aJVBLze6xQE8aWRYRUc6mJlmWnSm//S+x3
+        qSIXtcY4czql7OQ/DoeRhM81oNmNaY/JKYlQgLeEYQ==
+X-Google-Smtp-Source: APXvYqzjfmfHK/LXt4jvWDX3mUhy79eUv7kwAx1wmrThQyaZB7xsTr6jBQj+e1LwpiUMznmPVts1R47D6ZevqUGQCmI=
+X-Received: by 2002:a9d:2969:: with SMTP id d96mr4053777otb.85.1561567098916;
+ Wed, 26 Jun 2019 09:38:18 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190626102824.GG6362@ulmo>
-X-Originating-IP: [172.20.13.39]
-X-ClientProxiedBy: HQMAIL106.nvidia.com (172.18.146.12) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1561566512; bh=Ks04MbI5FEcRhxVamqMYukNzlx6rUh4PyXjSXplcqd0=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
-         Content-Language;
-        b=P+xba7G+GO7cWamMT0lspBGjwvv0pgmp2SHgytizdpSEqDOzAWu61q6v0NXCzmVHT
-         X/5nXTxuRtQuGjsPwjeJ4LjhdcyIW2ys7lqW9RDlUn99FT5G1ns/aNC9ck4t6dV6Au
-         8hN4CAUwjrQBTeApYwJkOH7A+ockMVjtQpsLIZwW8ime17v2ZArOMi7NF/BA6338KR
-         O7A6+ehbY9Pi3N70YBbL1Pvnvthz0q7Cw7UX5udfuEP8LrQEeltiRIIf1k6mjv7M/M
-         pRLXThbXwSOXLvt/21RDtUuVibndQqRfBQ33PDxU/oAiXOk/wZNsoE90fyYszaBMTI
-         bObroxuPNW1wQ==
+References: <20190626134258.26991-1-jonathanh@nvidia.com>
+In-Reply-To: <20190626134258.26991-1-jonathanh@nvidia.com>
+From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Date:   Wed, 26 Jun 2019 18:38:08 +0200
+Message-ID: <CAMpxmJUEGgVP2r_phmdXZNWAGikuBG5pNQ7rU-bUr_No8W7o8g@mail.gmail.com>
+Subject: Re: [PATCH] gpio: tegra: Clean-up debugfs initialisation
+To:     Jon Hunter <jonathanh@nvidia.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        linux-gpio <linux-gpio@vger.kernel.org>,
+        linux-tegra@vger.kernel.org, Greg KH <gregkh@linuxfoundation.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+=C5=9Br., 26 cze 2019 o 15:43 Jon Hunter <jonathanh@nvidia.com> napisa=C5=
+=82(a):
+>
+> The function tegra_gpio_debuginit() just calls debugfs_create_file()
+> and given that there is already a stub function implemented for
+> debugfs_create_file() when CONFIG_DEBUG_FS is not enabled, there is
+> no need for the function tegra_gpio_debuginit() and so remove it.
+>
+> Finally, use a space and not a tab between the #ifdef and
+> CONFIG_DEBUG_FS.
+>
+> Signed-off-by: Jon Hunter <jonathanh@nvidia.com>
+> ---
+>  drivers/gpio/gpio-tegra.c | 18 +++---------------
+>  1 file changed, 3 insertions(+), 15 deletions(-)
+>
+> diff --git a/drivers/gpio/gpio-tegra.c b/drivers/gpio/gpio-tegra.c
+> index 0f59161a4701..59b99d8c3647 100644
+> --- a/drivers/gpio/gpio-tegra.c
+> +++ b/drivers/gpio/gpio-tegra.c
+> @@ -508,7 +508,7 @@ static int tegra_gpio_irq_set_wake(struct irq_data *d=
+, unsigned int enable)
+>  }
+>  #endif
+>
+> -#ifdef CONFIG_DEBUG_FS
+> +#ifdef CONFIG_DEBUG_FS
+>
+>  #include <linux/debugfs.h>
+>  #include <linux/seq_file.h>
+> @@ -538,19 +538,6 @@ static int tegra_dbg_gpio_show(struct seq_file *s, v=
+oid *unused)
+>  }
+>
+>  DEFINE_SHOW_ATTRIBUTE(tegra_dbg_gpio);
+> -
+> -static void tegra_gpio_debuginit(struct tegra_gpio_info *tgi)
+> -{
+> -       debugfs_create_file("tegra_gpio", 0444, NULL, tgi,
+> -                           &tegra_dbg_gpio_fops);
+> -}
+> -
+> -#else
+> -
+> -static inline void tegra_gpio_debuginit(struct tegra_gpio_info *tgi)
+> -{
+> -}
+> -
+>  #endif
+>
+>  static const struct dev_pm_ops tegra_gpio_pm_ops =3D {
+> @@ -675,7 +662,8 @@ static int tegra_gpio_probe(struct platform_device *p=
+dev)
+>                 }
+>         }
+>
+> -       tegra_gpio_debuginit(tgi);
+> +       debugfs_create_file("tegra_gpio", 0444, NULL, tgi,
+> +                           &tegra_dbg_gpio_fops);
+>
+>         return 0;
+>  }
+> --
+> 2.17.1
+>
 
-On 6/26/19 3:28 AM, Thierry Reding wrote:
-> On Sun, Jun 23, 2019 at 08:02:59PM -0700, Sowjanya Komatineni wrote:
->> This patch has Jetson TX1 platform specific SC7 timing configuration
->> in device tree.
->>
->> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
->> ---
->>   arch/arm64/boot/dts/nvidia/tegra210-p2180.dtsi | 7 +++++++
->>   1 file changed, 7 insertions(+)
-> Can you provide a similar patch for Jetson Nano (p3450-0000)? It'd be
-> great if we can make new features like this available across all boards.
->
-> Thierry
->
-Will add patch for Nano in V5...
->> diff --git a/arch/arm64/boot/dts/nvidia/tegra210-p2180.dtsi b/arch/arm64/boot/dts/nvidia/tegra210-p2180.dtsi
->> index 27723829d033..cb58f79deb48 100644
->> --- a/arch/arm64/boot/dts/nvidia/tegra210-p2180.dtsi
->> +++ b/arch/arm64/boot/dts/nvidia/tegra210-p2180.dtsi
->> @@ -279,6 +279,13 @@
->>   
->>   	pmc@7000e400 {
->>   		nvidia,invert-interrupt;
->> +		nvidia,suspend-mode = <0>;
->> +		nvidia,cpu-pwr-good-time = <0>;
->> +		nvidia,cpu-pwr-off-time = <0>;
->> +		nvidia,core-pwr-good-time = <4587 3876>;
->> +		nvidia,core-pwr-off-time = <39065>;
->> +		nvidia,core-power-req-active-high;
->> +		nvidia,sys-clock-req-active-high;
->>   	};
->>   
->>   	/* eMMC */
->> -- 
->> 2.7.4
->>
+Reviewed-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+
+This depends on changes queued by Linus, so I'll let him pick it up directl=
+y.
+
+Bart
