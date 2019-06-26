@@ -2,108 +2,172 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 4F6645706B
-	for <lists+linux-gpio@lfdr.de>; Wed, 26 Jun 2019 20:16:23 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BD951571EF
+	for <lists+linux-gpio@lfdr.de>; Wed, 26 Jun 2019 21:42:32 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726369AbfFZSQW (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 26 Jun 2019 14:16:22 -0400
-Received: from mout.kundenserver.de ([212.227.126.187]:38811 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726239AbfFZSQW (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 26 Jun 2019 14:16:22 -0400
-Received: from [192.168.1.110] ([77.4.50.183]) by mrelayeu.kundenserver.de
- (mreue009 [212.227.15.167]) with ESMTPSA (Nemesis) id
- 1MD9Kj-1hoguT0A41-0097SG; Wed, 26 Jun 2019 20:16:20 +0200
-Subject: Re: [RFC] Addition of kernel
-To:     Linus Walleij <linus.walleij@linaro.org>,
-        Martyn Welch <martyn.welch@collabora.com>
-Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        kernel@collabora.com
-References: <dd30c34a83293926c072f6a3fe612dcf134b7620.camel@collabora.com>
- <e6ca74e2-fc51-3f24-c5e9-18c22d6f87ef@metux.net>
- <e344f5a35e314ebcea110ba082b74659de5b0e5e.camel@collabora.com>
- <CACRpkdaLEDmJ49m_fpuuA1e33hTtyB-LsyZeOmpRybbULgmHDA@mail.gmail.com>
-From:   "Enrico Weigelt, metux IT consult" <lkml@metux.net>
-Organization: metux IT consult
-Message-ID: <c80c67e8-ed4c-d4eb-9655-9fbb4a6a4cd8@metux.net>
-Date:   Wed, 26 Jun 2019 20:16:18 +0200
-User-Agent: Mozilla/5.0 (X11; Linux i686 on x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.2.1
+        id S1726104AbfFZTmZ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 26 Jun 2019 15:42:25 -0400
+Received: from mail.delivery-170-eu-central-1.prod.hydra.sophos.com ([35.159.27.250]:49982
+        "EHLO mail.delivery-170-eu-central-1.prod.hydra.sophos.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726407AbfFZTmZ (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Wed, 26 Jun 2019 15:42:25 -0400
+X-Greylist: delayed 366 seconds by postgrey-1.27 at vger.kernel.org; Wed, 26 Jun 2019 15:42:23 EDT
+Received: from mail.delivery-59-eu-central-1.prod.hydra.sophos.com (ip-172-20-0-142.eu-central-1.compute.internal [172.20.0.142])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.delivery-170-eu-central-1.prod.hydra.sophos.com (Postfix) with ESMTPS id 45YtYs3RYpz1f7
+        for <linux-gpio@vger.kernel.org>; Wed, 26 Jun 2019 19:36:17 +0000 (UTC)
+Received: from ip-172-20-0-46.eu-central-1.compute.internal (ip-172-20-0-46.eu-central-1.compute.internal [127.0.0.1])
+        by mail.delivery-59-eu-central-1.prod.hydra.sophos.com (Postfix) with ESMTP id 45YtYr0kvHzFpVS;
+        Wed, 26 Jun 2019 19:36:16 +0000 (UTC)
+X-Sophos-Email-ID: d91b1c268f334557ac3a76ff5e120cd6
+Received: from smtp.eckelmann.de (smtp.eckelmann.de [217.19.183.80])
+ (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+ (No client certificate requested)
+ by relay-eu-central-1.prod.hydra.sophos.com (Postfix) with ESMTPS id
+ 45YtYn64jpzgY8F; Wed, 26 Jun 2019 19:36:13 +0000 (UTC)
+Received: from NB041 (2a00:1f08:4007:f0de::1) by EX-SRV2.eckelmann.group
+ (2a00:1f08:4007:e035:172:18:35:5) with Microsoft SMTP Server (version=TLS1_2, 
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1591.10; Wed, 26 Jun
+ 2019 21:36:12 +0200
+Date:   Wed, 26 Jun 2019 21:36:07 +0200
+From:   Thorsten Scherer <thorsten.scherer@eckelmann.de>
+To:     Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+CC:     Linus Walleij <linus.walleij@linaro.org>,
+        <linux-gpio@vger.kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Thierry Reding <treding@nvidia.com>
+Subject: Re: [PATCH] gpio: siox: Pass irqchip when adding gpiochip
+Message-ID: <20190626193607.GA9834@NB041>
+References: <20190625105346.3267-1-linus.walleij@linaro.org>
+ <20190625193328.sxvhastsatc62msh@pengutronix.de>
 MIME-Version: 1.0
-In-Reply-To: <CACRpkdaLEDmJ49m_fpuuA1e33hTtyB-LsyZeOmpRybbULgmHDA@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Provags-ID: V03:K1:stXr7zNxTEE19r3e55Uc/69AOoaWMzK9hvTEKeQrhGNUZctgZgH
- RkPBF3zwyHl2SVlLG31NGJI3nsRgIjtJQLL6kh3G3DqPq3+4XrylmxXF3NZN3M/8qGzggUe
- gVJ9P7NmUMlMVFmAPgdOTe5qrsaSaq2ijyQFjGEASFSZit3++YhxvISWhZZ2s5THGYkH49u
- 3cqwXSZIaShhM7/uMK7Lw==
-X-Spam-Flag: NO
-X-UI-Out-Filterresults: notjunk:1;V03:K0:HBZETcKOX04=:jpk5G5p50Lh7dbnRTjyPDE
- qLCsKvsfhYLYnaiBPj/kIMnUbNU9p/Vx+adwkfqMz7FFxG5IuZrojZnkI2x+fYap3kjwqHqAI
- QlDIYt68PPS3e5i6XCdYbdDFIUJ1re+NPPaHHYvsyAE0ZclIlh4OzJHDzrJb62cruERL+GM5o
- P9Bc6OJm75bUAYe+K63KKJX5NTbBbk5Nn5HVpfnblFSQlZJ7vvA77CZfIfDdpd96TDyf3P8VK
- Y7EuWX6uhX4EgRsmQ/dcZ9D94S8Oudobpulpt2onVwUc2zCKB7q+lPVr7rTahSLSrlXqS3uSR
- NLypxQvwY/m9HY58H9lOhEpZf1rbsJUoWughWcjuZDB94jbUGVPDZHmttowlOSrABIcwrWqIR
- 4Cd0nj4FiWyhNYTxOOriYAmn02qtbg9ZrGM5WOjJ5n2VKnq/8JBE3Ua0bVXqCPvokZFpIJFQj
- UsUUsTGnWgARi6Hu7nKbF7eYBOPg5sgbwXxGfWVrQrON9WwWj6Tk8d94fcuqgyqhILEE/tR6T
- fjsdtEgHi4BNeMS0eckN6yg0rplreGNTUwNcin83wVGe+MgKixaoEs/X6LP5axAbqCIpVBYSW
- eWqjf+YIOMD62S82h0L/9ZN6sXNMQhcSHWGIGzS/Pld+Uy/uDKljTzLl87R1iUd8yG07EsU+E
- XGWqkJkH7cMt/HrJrTnwqUqklnZqDHJSxeEdeEg/o+jG2cr+bhpYtL/2OO15LhyxSV9ydGpPa
- rjAafVumaD8mj/z2Wk5oSCiDpLX5kUof4Vu1V8bxY4jcayzRI8pGBamaH0U=
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190625193328.sxvhastsatc62msh@pengutronix.de>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Originating-IP: [2a00:1f08:4007:f0de::1]
+X-ClientProxiedBy: EX-SRV2.eckelmann.group (2a00:1f08:4007:e035:172:18:35:5)
+ To EX-SRV2.eckelmann.group (2a00:1f08:4007:e035:172:18:35:5)
+X-LASED-Pver: 0000002
+X-Sophos-Email: [eu-central-1] Antispam-Engine: 3.1.5,
+ AntispamData: 2019.6.26.193016
+X-LASED-SpamProbabilty: 0.083173
+X-LASED-Hits: BODYTEXTP_SIZE_3000_LESS 0.000000, BODY_SIZE_2000_2999 0.000000,
+ BODY_SIZE_5000_LESS 0.000000, BODY_SIZE_7000_LESS 0.000000,
+ HTML_00_01 0.050000, HTML_00_10 0.050000, INVALID_MSGID_NO_FQDN 0.000000,
+ IN_REP_TO 0.000000, LEGITIMATE_SIGNS 0.000000, MSG_THREAD 0.000000,
+ MULTIPLE_RCPTS 0.100000, OUTBOUND 0.000000, OUTBOUND_SOPHOS 0.000000,
+ REFERENCES 0.000000, WEBMAIL_SOURCE 0.000000, __ANY_URI 0.000000,
+ __BOUNCE_CHALLENGE_SUBJ 0.000000, __BOUNCE_NDR_SUBJ_EXEMPT 0.000000,
+ __CC_NAME 0.000000, __CC_NAME_DIFF_FROM_ACC 0.000000, __CC_REAL_NAMES 0.000000,
+ __CD 0.000000, __CP_URI_IN_BODY 0.000000, __CT 0.000000, __CTE 0.000000,
+ __CT_TEXT_PLAIN 0.000000, __DQ_NEG_HEUR 0.000000, __DQ_NEG_IP 0.000000,
+ __FORWARDED_MSG 0.000000, __HAS_CC_HDR 0.000000, __HAS_FROM 0.000000,
+ __HAS_MSGID 0.000000, __HAS_REFERENCES 0.000000, __HAS_XOIP 0.000000,
+ __HTTPS_URI 0.000000, __IN_REP_TO 0.000000, __MIME_TEXT_ONLY 0.000000,
+ __MIME_TEXT_P 0.000000, __MIME_TEXT_P1 0.000000, __MIME_VERSION 0.000000,
+ __MULTIPLE_RCPTS_CC_X2 0.000000, __MULTIPLE_URI_TEXT 0.000000,
+ __NO_HTML_TAG_RAW 0.000000, __REFERENCES 0.000000, __SANE_MSGID 0.000000,
+ __SUBJ_ALPHA_END 0.000000, __SUBJ_ALPHA_NEGATE 0.000000, __SUBJ_REPLY 0.000000,
+ __TO_MALFORMED_2 0.000000, __TO_NAME 0.000000,
+ __TO_NAME_DIFF_FROM_ACC 0.000000, __TO_REAL_NAMES 0.000000,
+ __URI_IN_BODY 0.000000, __URI_NOT_IMG 0.000000, __URI_NO_MAILTO 0.000000,
+ __URI_NO_PATH 0.000000, __URI_NS 0.000000, __URI_WITHOUT_PATH 0.000000,
+ __USER_AGENT 0.000000
+X-LASED-Authed: 1
+X-LASED-Spam: NonSpam
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 24.06.19 23:46, Linus Walleij wrote:
+Hello,
 
-> A GPS unit should be handled using the GNSS subsystem in
-> drivers/gnss:
-> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/gnss
+On Tue, Jun 25, 2019 at 09:33:28PM +0200, Uwe Kleine-König wrote:
+> Hello Linus,
+> 
+> On Tue, Jun 25, 2019 at 12:53:46PM +0200, Linus Walleij wrote:
+> > We need to convert all old gpio irqchips to pass the irqchip
+> > setup along when adding the gpio_chip.
+> > 
+> > For chained irqchips this is a pretty straight-forward
+> > conversion.
+> > 
+> > The siox GPIO driver passes a IRQ_TYPE_EDGE_RISING as
+> > default IRQ trigger type which seems wrong, as consumers
+> > should explicitly set this up, so set IRQ_TYPE_NONE instead.
+> > 
+> > Also gpiochip_remove() was called on the errorpath if
+> > gpiochip_add() failed: this is wrong, if the chip failed
+> > to add it is not there so it should not be removed.
+> 
+> So we have a bugfix (gpiochip_remove() in error path), a change of
+> default behaviour (IRQ_TYPE_EDGE_RISING -> IRQ_TYPE_NONE) and a cleanup
+> for an API change (I'm guessing here) in a single patch. :-|
+> 
+> @Thorsten: I'm not entirely sure if there is code relying on the default
+> IRQ_TYPE_EDGE_RISING. Do you know off-hand?
 
-yes, since serdev we can also easily drive serial-connected devices
-(which many gps receivers are) from inside the kernel. there're also
-composite devices (eg. combined basebands) which also have gps amongst
-other things, so an own subsystem for gps devices is the way to go.
+Didn't know off the top of my head.  So I dug through some application
+code.  As far as I can tell, nothing relies on edge rising.  But I would
+not bet on it.  And I don't know about code in the other departments.
 
-> While we do encourage to use the right subsystems for this kind
-> of stuff there are certain cases we do defer to be handled in userspace,
-> but not many. These include one-off things like prototypes and
+> 
+> Best regards
+> Uwe
 
-Those are cases which probably nobody wants to have special support
-in the mainline kernel ... i recall some rules about no kernel drivers
-without corresponding free userland ...
+Best regards
+Thorsten
 
-> factory lines with a myriad of relays (some PLC usecases),
-> door openers (we don't want drivers/dooropener) 
-
-Actually, I've got something like that in the pipeline: a generic relais
-subsystem for anything that just switches on/off. Haven't gathered all
-requirements yet - for now just abusing LED for that (yes, also actually
-door openers). Okay, door openers could be a complex matter on their
-own, depending on how it electrically/mechanically works - some devices
-let motors spin until an end reached, etc. ... but haven't had an
-actual usecase for putting such things into the kernel.
-
-> or fire alarm button
-
-Button -> input subsystem ?
-
-> (but definately any elaborate IIO sensors
-> goes into drivers/iio) so it is a bit on case-by-case intuition
-> here.
-
-yes, and it's primarily about high level functionality. in industrial
-world we often have composite devices that span multiple subsystems.
-
-I any case, for a good decision we need to know what exactly some
-individual device actually does.
-
---mtx
+> 
+> > diff --git a/drivers/gpio/gpio-siox.c b/drivers/gpio/gpio-siox.c
+> > index fb4e318ab028..e5c85dc932e8 100644
+> > --- a/drivers/gpio/gpio-siox.c
+> > +++ b/drivers/gpio/gpio-siox.c
+> > @@ -211,6 +211,7 @@ static int gpio_siox_get_direction(struct gpio_chip *chip, unsigned int offset)
+> >  static int gpio_siox_probe(struct siox_device *sdevice)
+> >  {
+> >  	struct gpio_siox_ddata *ddata;
+> > +	struct gpio_irq_chip *girq;
+> >  	int ret;
+> >  
+> >  	ddata = devm_kzalloc(&sdevice->dev, sizeof(*ddata), GFP_KERNEL);
+> > @@ -239,20 +240,16 @@ static int gpio_siox_probe(struct siox_device *sdevice)
+> >  	ddata->ichip.irq_unmask = gpio_siox_irq_unmask;
+> >  	ddata->ichip.irq_set_type = gpio_siox_irq_set_type;
+> >  
+> > +	girq = &ddata->gchip.irq;
+> > +	girq->chip = &ddata->ichip;
+> > +	girq->default_type = IRQ_TYPE_NONE;
+> > +	girq->handler = handle_level_irq;
+> > +
+> >  	ret = gpiochip_add(&ddata->gchip);
+> >  	if (ret) {
+> >  		dev_err(&sdevice->dev,
+> >  			"Failed to register gpio chip (%d)\n", ret);
+> > -		goto err_gpiochip;
+> > -	}
+> > -
+> > -	ret = gpiochip_irqchip_add(&ddata->gchip, &ddata->ichip,
+> > -				   0, handle_level_irq, IRQ_TYPE_EDGE_RISING);
+> > -	if (ret) {
+> > -		dev_err(&sdevice->dev,
+> > -			"Failed to register irq chip (%d)\n", ret);
+> > -err_gpiochip:
+> > -		gpiochip_remove(&ddata->gchip);
+> > +		return ret;
+> >  	}
+> >  
+> >  	return ret;
+> 
+> -- 
+> Pengutronix e.K.                           | Uwe Kleine-König            |
+> Industrial Linux Solutions                 | http://www.pengutronix.de/  |
 
 -- 
-Enrico Weigelt, metux IT consult
-Free software and Linux embedded engineering
-info@metux.net -- +49-151-27565287
+Thorsten Scherer - Eckelmann AG
+https://www.eckelmann.de
