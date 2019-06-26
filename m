@@ -2,56 +2,57 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id D9A815632E
-	for <lists+linux-gpio@lfdr.de>; Wed, 26 Jun 2019 09:21:42 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DD9EC56333
+	for <lists+linux-gpio@lfdr.de>; Wed, 26 Jun 2019 09:21:44 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726963AbfFZHVO (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        id S1726953AbfFZHVO (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
         Wed, 26 Jun 2019 03:21:14 -0400
-Received: from new4-smtp.messagingengine.com ([66.111.4.230]:47443 "EHLO
+Received: from new4-smtp.messagingengine.com ([66.111.4.230]:40337 "EHLO
         new4-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726416AbfFZHVO (ORCPT
+        by vger.kernel.org with ESMTP id S1725930AbfFZHVN (ORCPT
         <rfc822;linux-gpio@vger.kernel.org>);
-        Wed, 26 Jun 2019 03:21:14 -0400
+        Wed, 26 Jun 2019 03:21:13 -0400
+X-Greylist: delayed 332 seconds by postgrey-1.27 at vger.kernel.org; Wed, 26 Jun 2019 03:21:12 EDT
 Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailnew.nyi.internal (Postfix) with ESMTP id 64A061C2F;
-        Wed, 26 Jun 2019 03:15:54 -0400 (EDT)
+        by mailnew.nyi.internal (Postfix) with ESMTP id 7E04E1C22;
+        Wed, 26 Jun 2019 03:15:58 -0400 (EDT)
 Received: from mailfrontend2 ([10.202.2.163])
-  by compute4.internal (MEProxy); Wed, 26 Jun 2019 03:15:54 -0400
+  by compute4.internal (MEProxy); Wed, 26 Jun 2019 03:15:58 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aj.id.au; h=from
         :to:cc:subject:date:message-id:in-reply-to:references
-        :mime-version:content-transfer-encoding; s=fm3; bh=oz9nzXXJtXOsj
-        DawosTjQOYjxymW8TyIxLOQSIxaK8s=; b=J6oz/6pfAD3HJ+N8+aMVfCPqjmywY
-        OxjSeDBP8ITwwW8un3lsQaCu7t+PH0LaPaPHVebs/Vrakz7IPb/2FIEjCZjVs+xI
-        /JOI3byihkuA1tyHAmLm/BrTOaiDbc7e80Hvwbs4S+CFfvl2SN90vI4Of9/cWTL+
-        Zd1xFJmdbmhM4UhnFdimNhTLSFrTUyCATWAvcEgbxxwtI8xhItPpWtw4XMPBHVWB
-        +O6maLX2N/5EjpRruw1/jBQ1hjZqbxk4PUjwLRiaA9PeEcnR0ot0eS19M8xmCbh3
-        plrUURZkIzkLndcwe9Lx7z8WtFdPtyezWHvGWUiMC0cEdM4AyfVVKpbuA==
+        :mime-version:content-transfer-encoding; s=fm3; bh=fWlD1uewNsuOv
+        vJeyP+mMa6JLokQU6xzkQsW9nl9tuI=; b=lNDZe0OwrWhjUfAq+Ykf7egxE5PT+
+        TlpMZA8Aqdm9GKfmbzNSHzFTLTqiVth6hkZInumC9IlQvLXrRrLRRh/Nhmy2I2Oh
+        huZJy0QqifGtdjxtqD3DwAg+g4FX95lbpaSewrK7PzdPUYqL/oPHEE2Eh2ZGfcHh
+        DlEcUYWm6Agp/5fhcS+p5mgkBwGnXArZZwMtgD4MZuaS0AF4UDD9bh6szqY3WRBR
+        nAw3MHI8xYWqL7z7eVpn5FpiwCIHrKzXT6T+4EMtkyZFy+oWciefDbJmMJsLPoF4
+        B7D7d/qlqFLLT/if/Ja5aaNIPj7opctGOicwctW59RkcXYHZDRMBr++YA==
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
         messagingengine.com; h=cc:content-transfer-encoding:date:from
         :in-reply-to:message-id:mime-version:references:subject:to
         :x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-        fm3; bh=oz9nzXXJtXOsjDawosTjQOYjxymW8TyIxLOQSIxaK8s=; b=xXS1MKRd
-        gZ1ZQeznjCBd0r6gfIDhCIV/wGywd26pRjqx4cxGMTK8Ei1CR5I7haDSNUMIC30d
-        xRUFxW1OoSN/FbDjXQMgjyMc+v7N595Echtyo74Eh0ZaqllNzAgeWKqWvLF4EdK5
-        nLR39x2uCp+6AUfnCy0Y1pZZoJdVOqfAsdroE+MtfGvZrooyP2pMNdulimbgzrGO
-        HdMXJ/HXhEG0zV4/u3HAIS7rIHZWR9rMPwqqvA+k2msT/OmqB6cmA6/LAZ+C/eFG
-        vdXl2lC20j0PMqgq0dl+sttw3fVcOuoFLSzjktfiNqk2GYXOvNaNsEJVYgF4T08z
-        1dTt3WwwxY1HGw==
-X-ME-Sender: <xms:qhsTXd_SCN1XE7M1OqtmppqIOZJppIb_68AyJxyAeeg89-thL1GBeg>
+        fm3; bh=fWlD1uewNsuOvvJeyP+mMa6JLokQU6xzkQsW9nl9tuI=; b=puLWPAjq
+        whxH/c7QidyFvKjgWRqCymc6vEDpiIa/O0wlvq32w+ldyywucvsmSIJJ1JgNNkxa
+        VxsubG6LyhdPmq7RttIWL3pPJT/IBCAF8ZYbaPcw8TVBEG4wKCV/fkzuskhOg4HE
+        0cW7eE8wFvA7QXeVkEEsoU1LZ6MtbkWVEPbxYWUBuzt+ah6Dfc4Ey1LU8j9C62vx
+        fElrkRFsEZzQJeBDULfIE27y7zLAKabz4F7yIeWBC/H1a7giGl7u5sB9L9vOsRzh
+        xGVxNUmF4FkvO4Y2q6hKvkamFUihRcB1o1KlhLRnEkikoBk8pWMPp8OQ6dh5sR8z
+        GC+1YP3iDF1hfw==
+X-ME-Sender: <xms:rhsTXWlP9ws_PPZRzyZx3jZQVpTxB6KyWfzOBAM3H8MP0NYYodpJdA>
 X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduvddrudehgdduudejucetufdoteggodetrfdotf
     fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
     uceurghilhhouhhtmecufedttdenucenucfjughrpefhvffufffkofgjfhgggfestdekre
     dtredttdenucfhrhhomheptehnughrvgifucflvghffhgvrhihuceorghnughrvgifsegr
-    jhdrihgurdgruheqnecuffhomhgrihhnpeguvghvihgtvghtrhgvvgdrohhrghenucfkph
-    epvddtvddrkedurddukedrfedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegrnhgurhgv
-    fiesrghjrdhiugdrrghunecuvehluhhsthgvrhfuihiivgepud
-X-ME-Proxy: <xmx:qhsTXQweM2CkI2WJXoReP2A6trHpQLW6j9vkWjoX1zMrJKDXhPn1XA>
-    <xmx:qhsTXRNRX5Epn-tyffb-7cVF_Y4BDhmga5g69UQGyFvXCJnN-zugFg>
-    <xmx:qhsTXd-02TRe8fSTQ7ZoqJUvQZAvfJQaaEgLkORkos3uKnu0BF_Y3g>
-    <xmx:qhsTXae2LW3JGbI8R5iYDd8ub8wtjNPK5xetmGP49-npEOiAoZXfDA>
+    jhdrihgurdgruheqnecukfhppedvtddvrdekuddrudekrdeftdenucfrrghrrghmpehmrg
+    hilhhfrhhomheprghnughrvgifsegrjhdrihgurdgruhenucevlhhushhtvghrufhiiigv
+    pedu
+X-ME-Proxy: <xmx:rhsTXea8AUim3q9k60F2hy0ukk1inKBD5-vkK0e7z1dtpVOUvq3qoQ>
+    <xmx:rhsTXV0gWSQ-XQyewoq0qSiXREhxFsnm6gkfUEnHub6LDw4V2gglIg>
+    <xmx:rhsTXURq--Q-jb9A_GChcDNgbzCXGK7AgsCwSSqBU7pyudU9rftbvg>
+    <xmx:rhsTXe1FVeEOkH_6ZkGh_RmuGM_dxyrquAVFKMSeErk5f_NxzwBhoQ>
 Received: from mistburn.au.ibm.com (bh02i525f01.au.ibm.com [202.81.18.30])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 41686380076;
-        Wed, 26 Jun 2019 03:15:50 -0400 (EDT)
+        by mail.messagingengine.com (Postfix) with ESMTPA id 9CDFB380076;
+        Wed, 26 Jun 2019 03:15:54 -0400 (EDT)
 From:   Andrew Jeffery <andrew@aj.id.au>
 To:     linux-gpio@vger.kernel.org
 Cc:     ryan_chen@aspeedtech.com, Andrew Jeffery <andrew@aj.id.au>,
@@ -59,9 +60,9 @@ Cc:     ryan_chen@aspeedtech.com, Andrew Jeffery <andrew@aj.id.au>,
         joel@jms.id.au, linux-aspeed@lists.ozlabs.org,
         openbmc@lists.ozlabs.org, devicetree@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 3/8] dt-bindings: pinctrl: aspeed: Convert AST2500 bindings to json-schema
-Date:   Wed, 26 Jun 2019 16:44:25 +0930
-Message-Id: <20190626071430.28556-4-andrew@aj.id.au>
+Subject: [PATCH 4/8] MAINTAINERS: Add entry for ASPEED pinctrl drivers
+Date:   Wed, 26 Jun 2019 16:44:26 +0930
+Message-Id: <20190626071430.28556-5-andrew@aj.id.au>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190626071430.28556-1-andrew@aj.id.au>
 References: <20190626071430.28556-1-andrew@aj.id.au>
@@ -72,271 +73,33 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Convert ASPEED pinctrl bindings to DT schema format using json-schema.
+Add myself as maintainer to avoid burdening others with the madness.
 
 Signed-off-by: Andrew Jeffery <andrew@aj.id.au>
 ---
- .../pinctrl/aspeed,ast2500-pinctrl.txt        | 119 -----------------
- .../pinctrl/aspeed,ast2500-pinctrl.yaml       | 124 ++++++++++++++++++
- 2 files changed, 124 insertions(+), 119 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/pinctrl/aspeed,ast2500-pinctrl.txt
- create mode 100644 Documentation/devicetree/bindings/pinctrl/aspeed,ast2500-pinctrl.yaml
+ MAINTAINERS | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/pinctrl/aspeed,ast2500-pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/aspeed,ast2500-pinctrl.txt
-deleted file mode 100644
-index 2f16e401338a..000000000000
---- a/Documentation/devicetree/bindings/pinctrl/aspeed,ast2500-pinctrl.txt
-+++ /dev/null
-@@ -1,119 +0,0 @@
--=============================
--Aspeed AST2500 Pin Controller
--=============================
--
--Required properties for g5:
--- compatible : 			Should be one of the following:
--				"aspeed,ast2500-pinctrl"
--				"aspeed,g5-pinctrl"
--
--- aspeed,external-nodes:	A cell of phandles to external controller nodes:
--				0: compatible with "aspeed,ast2500-gfx", "syscon"
--				1: compatible with "aspeed,ast2500-lhc", "syscon"
--
--The pin controller node should be the child of a syscon node with the required
--property:
--
--- compatible : 		Should be one of the following:
--			"aspeed,ast2500-scu", "syscon", "simple-mfd"
--			"aspeed,g5-scu", "syscon", "simple-mfd"
--
--Refer to the the bindings described in
--Documentation/devicetree/bindings/mfd/syscon.txt
--
--Subnode Format
--==============
--
--The required properties of pinmux child nodes are:
--- function: the mux function to select
--- groups  : the list of groups to select with this function
--
--Required properties of pinconf child nodes are:
--- groups: A list of groups to select (either this or "pins" must be
--          specified)
--- pins  : A list of ball names as strings, eg "D14" (either this or "groups"
--          must be specified)
--
--Optional properties of pinconf child nodes are:
--- bias-disable  : disable any pin bias
--- bias-pull-down: pull down the pin
--- drive-strength: sink or source at most X mA
--
--Definitions are as specified in
--Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt, with any
--further limitations as described above.
--
--For pinmux, each mux function has only one associated pin group. Each group is
--named by its function. The following values for the function and groups
--properties are supported:
--
--ACPI ADC0 ADC1 ADC10 ADC11 ADC12 ADC13 ADC14 ADC15 ADC2 ADC3 ADC4 ADC5 ADC6
--ADC7 ADC8 ADC9 BMCINT DDCCLK DDCDAT ESPI FWSPICS1 FWSPICS2 GPID0 GPID2 GPID4
--GPID6 GPIE0 GPIE2 GPIE4 GPIE6 I2C10 I2C11 I2C12 I2C13 I2C14 I2C3 I2C4 I2C5 I2C6
--I2C7 I2C8 I2C9 LAD0 LAD1 LAD2 LAD3 LCLK LFRAME LPCHC LPCPD LPCPLUS LPCPME
--LPCRST LPCSMI LSIRQ MAC1LINK MAC2LINK MDIO1 MDIO2 NCTS1 NCTS2 NCTS3 NCTS4 NDCD1
--NDCD2 NDCD3 NDCD4 NDSR1 NDSR2 NDSR3 NDSR4 NDTR1 NDTR2 NDTR3 NDTR4 NRI1 NRI2
--NRI3 NRI4 NRTS1 NRTS2 NRTS3 NRTS4 OSCCLK PEWAKE PNOR PWM0 PWM1 PWM2 PWM3 PWM4
--PWM5 PWM6 PWM7 RGMII1 RGMII2 RMII1 RMII2 RXD1 RXD2 RXD3 RXD4 SALT1 SALT10
--SALT11 SALT12 SALT13 SALT14 SALT2 SALT3 SALT4 SALT5 SALT6 SALT7 SALT8 SALT9
--SCL1 SCL2 SD1 SD2 SDA1 SDA2 SGPS1 SGPS2 SIOONCTRL SIOPBI SIOPBO SIOPWREQ
--SIOPWRGD SIOS3 SIOS5 SIOSCI SPI1 SPI1CS1 SPI1DEBUG SPI1PASSTHRU SPI2CK SPI2CS0
--SPI2CS1 SPI2MISO SPI2MOSI TIMER3 TIMER4 TIMER5 TIMER6 TIMER7 TIMER8 TXD1 TXD2
--TXD3 TXD4 UART6 USB11BHID USB2AD USB2AH USB2BD USB2BH USBCKI VGABIOSROM VGAHS
--VGAVS VPI24 VPO WDTRST1 WDTRST2
--
--Example
--=======
--
--ahb {
--	apb {
--		syscon: scu@1e6e2000 {
--			compatible = "aspeed,ast2500-scu", "syscon", "simple-mfd";
--			reg = <0x1e6e2000 0x1a8>;
--
--			pinctrl: pinctrl {
--				compatible = "aspeed,g5-pinctrl";
--				aspeed,external-nodes = <&gfx &lhc>;
--
--				pinctrl_i2c3_default: i2c3_default {
--					function = "I2C3";
--					groups = "I2C3";
--				};
--
--				pinctrl_gpioh0_unbiased_default: gpioh0 {
--					pins = "A18";
--					bias-disable;
--				};
--			};
--		};
--
--		gfx: display@1e6e6000 {
--			compatible = "aspeed,ast2500-gfx", "syscon";
--			reg = <0x1e6e6000 0x1000>;
--		};
--	};
--
--	lpc: lpc@1e789000 {
--		compatible = "aspeed,ast2500-lpc", "simple-mfd";
--		reg = <0x1e789000 0x1000>;
--
--		#address-cells = <1>;
--		#size-cells = <1>;
--		ranges = <0x0 0x1e789000 0x1000>;
--
--		lpc_host: lpc-host@80 {
--			compatible = "aspeed,ast2500-lpc-host", "simple-mfd", "syscon";
--			reg = <0x80 0x1e0>;
--			reg-io-width = <4>;
--
--			#address-cells = <1>;
--			#size-cells = <1>;
--			ranges = <0x0 0x80 0x1e0>;
--
--			lhc: lhc@20 {
--			       compatible = "aspeed,ast2500-lhc";
--			       reg = <0x20 0x24 0x48 0x8>;
--			};
--		};
--	};
--};
-diff --git a/Documentation/devicetree/bindings/pinctrl/aspeed,ast2500-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/aspeed,ast2500-pinctrl.yaml
-new file mode 100644
-index 000000000000..bf4d1e3bb23d
---- /dev/null
-+++ b/Documentation/devicetree/bindings/pinctrl/aspeed,ast2500-pinctrl.yaml
-@@ -0,0 +1,124 @@
-+# SPDX-License-Identifier: GPL-2.0+
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/pinctrl/aspeed,ast2500-pinctrl.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
+diff --git a/MAINTAINERS b/MAINTAINERS
+index a6954776a37e..978383f5c1ab 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -2586,6 +2586,15 @@ S:	Maintained
+ F:	Documentation/hwmon/asc7621.rst
+ F:	drivers/hwmon/asc7621.c
+ 
++ASPEED PINCTRL DRIVERS
++M:	Andrew Jeffery <andrew@aj.id.au>
++L:	linux-aspeed@lists.ozlabs.org (moderated for non-subscribers)
++L:	openbmc@lists.ozlabs.org (moderated for non-subscribers)
++L:	linux-gpio@vger.kernel.org
++S:	Maintained
++F:	drivers/pinctrl/aspeed/
++F:	Documentation/devicetree/bindings/pinctrl/aspeed,*
 +
-+title: ASPEED AST2500 Pin Controller
-+
-+maintainers:
-+  - Andrew Jeffery <andrew@aj.id.au>
-+
-+properties:
-+  compatible:
-+    oneOf:
-+      - items:
-+        - enum:
-+          - aspeed,ast2500-pinctrl
-+      - items:
-+        - enum:
-+          - aspeed,g5-pinctrl
-+  aspeed,external-nodes:
-+    minItems: 2
-+    maxItems: 2
-+    allOf:
-+      - $ref: /schemas/types.yaml#/definitions/phandle-array
-+    description: |
-+      A cell of phandles to external controller nodes:
-+      0: compatible with "aspeed,ast2500-gfx", "syscon"
-+      1: compatible with "aspeed,ast2500-lhc", "syscon"
-+
-+required:
-+  - compatible
-+  - aspeed,external-nodes
-+
-+description: |+
-+  The pin controller node should be the child of a syscon node with the required
-+  property:
-+
-+  - compatible: 	Should be one of the following:
-+  			"aspeed,ast2500-scu", "syscon", "simple-mfd"
-+  			"aspeed,g5-scu", "syscon", "simple-mfd"
-+
-+  Refer to the the bindings described in
-+  Documentation/devicetree/bindings/mfd/syscon.txt
-+
-+  For the AST2500 pinmux, each mux function has only one associated pin group.
-+  Each group is named by its function. The following values for the function
-+  and groups properties are supported:
-+
-+  ACPI ADC0 ADC1 ADC10 ADC11 ADC12 ADC13 ADC14 ADC15 ADC2 ADC3 ADC4 ADC5 ADC6
-+  ADC7 ADC8 ADC9 BMCINT DDCCLK DDCDAT ESPI FWSPICS1 FWSPICS2 GPID0 GPID2 GPID4
-+  GPID6 GPIE0 GPIE2 GPIE4 GPIE6 I2C10 I2C11 I2C12 I2C13 I2C14 I2C3 I2C4 I2C5
-+  I2C6 I2C7 I2C8 I2C9 LAD0 LAD1 LAD2 LAD3 LCLK LFRAME LPCHC LPCPD LPCPLUS
-+  LPCPME LPCRST LPCSMI LSIRQ MAC1LINK MAC2LINK MDIO1 MDIO2 NCTS1 NCTS2 NCTS3
-+  NCTS4 NDCD1 NDCD2 NDCD3 NDCD4 NDSR1 NDSR2 NDSR3 NDSR4 NDTR1 NDTR2 NDTR3 NDTR4
-+  NRI1 NRI2 NRI3 NRI4 NRTS1 NRTS2 NRTS3 NRTS4 OSCCLK PEWAKE PNOR PWM0 PWM1 PWM2
-+  PWM3 PWM4 PWM5 PWM6 PWM7 RGMII1 RGMII2 RMII1 RMII2 RXD1 RXD2 RXD3 RXD4 SALT1
-+  SALT10 SALT11 SALT12 SALT13 SALT14 SALT2 SALT3 SALT4 SALT5 SALT6 SALT7 SALT8
-+  SALT9 SCL1 SCL2 SD1 SD2 SDA1 SDA2 SGPS1 SGPS2 SIOONCTRL SIOPBI SIOPBO
-+  SIOPWREQ SIOPWRGD SIOS3 SIOS5 SIOSCI SPI1 SPI1CS1 SPI1DEBUG SPI1PASSTHRU
-+  SPI2CK SPI2CS0 SPI2CS1 SPI2MISO SPI2MOSI TIMER3 TIMER4 TIMER5 TIMER6 TIMER7
-+  TIMER8 TXD1 TXD2 TXD3 TXD4 UART6 USB11BHID USB2AD USB2AH USB2BD USB2BH USBCKI
-+  VGABIOSROM VGAHS VGAVS VPI24 VPO WDTRST1 WDTRST2
-+
-+examples:
-+  - |
-+    compatible = "simple-bus";
-+    ranges;
-+
-+    apb {
-+        compatible = "simple-bus";
-+        #address-cells = <1>;
-+        #size-cells = <1>;
-+        ranges;
-+
-+        syscon: scu@1e6e2000 {
-+            compatible = "aspeed,ast2500-scu", "syscon", "simple-mfd";
-+            reg = <0x1e6e2000 0x1a8>;
-+
-+            pinctrl: pinctrl {
-+                compatible = "aspeed,g5-pinctrl";
-+                aspeed,external-nodes = <&gfx &lhc>;
-+
-+                pinctrl_i2c3_default: i2c3_default {
-+                    function = "I2C3";
-+                    groups = "I2C3";
-+                };
-+
-+                pinctrl_gpioh0_unbiased_default: gpioh0 {
-+                    pins = "A18";
-+                    bias-disable;
-+                };
-+            };
-+        };
-+
-+        gfx: display@1e6e6000 {
-+            compatible = "aspeed,ast2500-gfx", "syscon";
-+            reg = <0x1e6e6000 0x1000>;
-+        };
-+    };
-+
-+    lpc: lpc@1e789000 {
-+        compatible = "aspeed,ast2500-lpc", "simple-mfd";
-+        reg = <0x1e789000 0x1000>;
-+
-+        #address-cells = <1>;
-+        #size-cells = <1>;
-+        ranges = <0x0 0x1e789000 0x1000>;
-+
-+        lpc_host: lpc-host@80 {
-+            compatible = "aspeed,ast2500-lpc-host", "simple-mfd", "syscon";
-+            reg = <0x80 0x1e0>;
-+            reg-io-width = <4>;
-+
-+            #address-cells = <1>;
-+            #size-cells = <1>;
-+            ranges = <0x0 0x80 0x1e0>;
-+
-+            lhc: lhc@20 {
-+                   compatible = "aspeed,ast2500-lhc";
-+                   reg = <0x20 0x24 0x48 0x8>;
-+            };
-+        };
-+    };
+ ASPEED VIDEO ENGINE DRIVER
+ M:	Eddie James <eajames@linux.ibm.com>
+ L:	linux-media@vger.kernel.org
 -- 
 2.20.1
 
