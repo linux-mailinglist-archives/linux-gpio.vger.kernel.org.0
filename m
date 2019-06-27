@@ -2,218 +2,113 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 3883958480
-	for <lists+linux-gpio@lfdr.de>; Thu, 27 Jun 2019 16:32:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2532C584B9
+	for <lists+linux-gpio@lfdr.de>; Thu, 27 Jun 2019 16:45:08 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726689AbfF0OcZ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 27 Jun 2019 10:32:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34008 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726422AbfF0OcZ (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Thu, 27 Jun 2019 10:32:25 -0400
-Received: from mail-qt1-f182.google.com (mail-qt1-f182.google.com [209.85.160.182])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 50A942086D;
-        Thu, 27 Jun 2019 14:32:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561645944;
-        bh=5gJW6fGPom2YZXQO7oraQBq3Ezn53za/ZomUeOryuos=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=L84JxVPONwTSWDeE2j2Txu83VK3qGUsMBySI/HbGywHTCcrAsWiftM/7yeAW3kyDy
-         X/dnZasddSr3Kotsqll9NSWUhR8RKxMNh03Y4hMBDc1zsQvCaz/VyWaMCKGcKaB1ok
-         GGelQUWMYzx0Gg6ZfHX71pJuCimyD1IAtW3Bmg/0=
-Received: by mail-qt1-f182.google.com with SMTP id x47so2613264qtk.11;
-        Thu, 27 Jun 2019 07:32:24 -0700 (PDT)
-X-Gm-Message-State: APjAAAWgF5I3NZgYE7IodxLmh6XcQP23xhquQBmYyvjdy7cZCpVhQ13Z
-        dy+Mk7Xgon1z5iLJKnYwdueaJn8xd8FqD55y0w==
-X-Google-Smtp-Source: APXvYqxCriH4LIaua+ro0nEzcOl+UHtCcZ9e0ZZlsjRTUIGNCXkYM/ZEkGcn66TVjEXD/NEZLSfavgIvkuGoTx14AGg=
-X-Received: by 2002:ac8:3908:: with SMTP id s8mr3407669qtb.224.1561645943537;
- Thu, 27 Jun 2019 07:32:23 -0700 (PDT)
+        id S1726425AbfF0OpH (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 27 Jun 2019 10:45:07 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:45655 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726498AbfF0OpH (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 27 Jun 2019 10:45:07 -0400
+Received: by mail-wr1-f68.google.com with SMTP id f9so2866240wre.12
+        for <linux-gpio@vger.kernel.org>; Thu, 27 Jun 2019 07:45:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=x8kEpDDiyoQQfqoIfxlk3XDbLqF5zKGQe12tuJLF760=;
+        b=yQfgwU4mF8eYDOboPUbWVZUIuNMgNWr5lvj78HmA8NUVqL7x7+rBb06eJf+T5n95nB
+         OdSO6yerX93YXlvqa8J3RruX6H0kiEbR/cDsPx5dhLg8usSqZpBxE9U+NfhvEvOQXsq2
+         K3sJ7n/owpvEalRriHvSebpDlLImmo1w/1LcLkL4Cd9uYTnElrDIM5ZqPSWp/8P6Q0D9
+         yfY/8KZ4qm4q8N88vbMTk91W0EiQVCdikPiJStWWW1Ndc7thlV54YMuYdmvYZbrUxTuz
+         mQdHezmk0pHiPct/iHu9gfdOJ4DE1GB1cld3quzegUUKSgTiky6YdbYhJFM6WiHWtJmJ
+         BMrQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=x8kEpDDiyoQQfqoIfxlk3XDbLqF5zKGQe12tuJLF760=;
+        b=dSQhsJkJUYi5tOdGLAn0lfBJYGwJFcQTxS3D7x5yuj69WyTMSd4g9rjfu8huzc/TaN
+         4GHen9+gvXit9KUXz8mRr0tfbGNKYtqcjbn4Ap+Wml/bJELzpz7PgBy26zcey/ruus8b
+         eJbSln9aRAs+4b4m3JA/vpYcOrx9TXVy3wp01HtyCUUXO1Lnb3EjS2k+UZvmjSaqArEo
+         jKb7ta2qACNULZx1BYvDgAkXm+DZJYGpCtfmVK//QjC6RcinH45za/dwyHUPw4kA6dyD
+         86WDlY8QfTWgQ9hKlwA7rcVhfV0kueeTKjCI/VgCa7iM+3/TJw8FwDqUt0UgYl2mYdHW
+         GiYg==
+X-Gm-Message-State: APjAAAUHEEYVvpgLTyVWQvkv2LS84S62wfdWKCxmO1dyC7WAAErrV+Mi
+        /ooIFiPb1HHUQFOV1H/A0eZSuA==
+X-Google-Smtp-Source: APXvYqyOUguRse92M16eu+FbLEW4RtzgWGhUV0jLBXtSAoN1d9rL1J8YkcGIkOMBbu2jJ0W9t37L+g==
+X-Received: by 2002:adf:ea45:: with SMTP id j5mr3803389wrn.281.1561646705232;
+        Thu, 27 Jun 2019 07:45:05 -0700 (PDT)
+Received: from debian-brgl.baylibre.local (lmontsouris-657-1-212-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
+        by smtp.gmail.com with ESMTPSA id j7sm3477632wru.54.2019.06.27.07.45.04
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 27 Jun 2019 07:45:04 -0700 (PDT)
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     linux-gpio@vger.kernel.org,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Subject: [GIT PULL] gpio: updates for v5.3
+Date:   Thu, 27 Jun 2019 16:45:01 +0200
+Message-Id: <20190627144501.11063-1-brgl@bgdev.pl>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-References: <20190626071430.28556-1-andrew@aj.id.au> <20190626071430.28556-3-andrew@aj.id.au>
- <CAL_JsqKXPzFYTHos-uvCUtBj-bcsNfrzt5GjxQ=PmgeXpp5J-A@mail.gmail.com> <30d5585b-7591-4149-87c4-816e4c18fb9d@www.fastmail.com>
-In-Reply-To: <30d5585b-7591-4149-87c4-816e4c18fb9d@www.fastmail.com>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Thu, 27 Jun 2019 08:32:12 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqJo37LQV9WKx_Zqy8KZ52=37TiGcNbFah6MsJmMYP23XA@mail.gmail.com>
-Message-ID: <CAL_JsqJo37LQV9WKx_Zqy8KZ52=37TiGcNbFah6MsJmMYP23XA@mail.gmail.com>
-Subject: Re: [PATCH 2/8] dt-bindings: pinctrl: aspeed: Convert AST2400
- bindings to json-schema
-To:     Andrew Jeffery <andrew@aj.id.au>
-Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Ryan Chen <ryan_chen@aspeedtech.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Joel Stanley <joel@jms.id.au>, linux-aspeed@lists.ozlabs.org,
-        OpenBMC Maillist <openbmc@lists.ozlabs.org>,
-        devicetree@vger.kernel.org,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Jun 26, 2019 at 9:55 PM Andrew Jeffery <andrew@aj.id.au> wrote:
->
->
->
-> On Wed, 26 Jun 2019, at 23:17, Rob Herring wrote:
-> > On Wed, Jun 26, 2019 at 1:21 AM Andrew Jeffery <andrew@aj.id.au> wrote:
-> > > +  The pin controller node should be the child of a syscon node with the
-> > > +  required property:
-> > > +
-> > > +  - compatible:     Should be one of the following:
-> > > +                    "aspeed,ast2400-scu", "syscon", "simple-mfd"
-> > > +                    "aspeed,g4-scu", "syscon", "simple-mfd"
-> > > +
-> > > +  Refer to the the bindings described in
-> > > +  Documentation/devicetree/bindings/mfd/syscon.txt
-> > > +
-> > > +  For the AST2400 pinmux, each mux function has only one associated pin group.
-> > > +  Each group is named by its function. The following values for the function
-> > > +  and groups properties are supported:
-> > > +
-> > > +  ACPI ADC0 ADC1 ADC10 ADC11 ADC12 ADC13 ADC14 ADC15 ADC2 ADC3 ADC4 ADC5 ADC6
-> > > +  ADC7 ADC8 ADC9 BMCINT DDCCLK DDCDAT EXTRST FLACK FLBUSY FLWP GPID GPID0 GPID2
-> > > +  GPID4 GPID6 GPIE0 GPIE2 GPIE4 GPIE6 I2C10 I2C11 I2C12 I2C13 I2C14 I2C3 I2C4
-> > > +  I2C5 I2C6 I2C7 I2C8 I2C9 LPCPD LPCPME LPCRST LPCSMI MAC1LINK MAC2LINK MDIO1
-> > > +  MDIO2 NCTS1 NCTS2 NCTS3 NCTS4 NDCD1 NDCD2 NDCD3 NDCD4 NDSR1 NDSR2 NDSR3 NDSR4
-> > > +  NDTR1 NDTR2 NDTR3 NDTR4 NDTS4 NRI1 NRI2 NRI3 NRI4 NRTS1 NRTS2 NRTS3 OSCCLK
-> > > +  PWM0 PWM1 PWM2 PWM3 PWM4 PWM5 PWM6 PWM7 RGMII1 RGMII2 RMII1 RMII2 ROM16 ROM8
-> > > +  ROMCS1 ROMCS2 ROMCS3 ROMCS4 RXD1 RXD2 RXD3 RXD4 SALT1 SALT2 SALT3 SALT4 SD1
-> > > +  SD2 SGPMCK SGPMI SGPMLD SGPMO SGPSCK SGPSI0 SGPSI1 SGPSLD SIOONCTRL SIOPBI
-> > > +  SIOPBO SIOPWREQ SIOPWRGD SIOS3 SIOS5 SIOSCI SPI1 SPI1DEBUG SPI1PASSTHRU
-> > > +  SPICS1 TIMER3 TIMER4 TIMER5 TIMER6 TIMER7 TIMER8 TXD1 TXD2 TXD3 TXD4 UART6
-> > > +  USB11D1 USB11H2 USB2D1 USB2H1 USBCKI VGABIOS_ROM VGAHS VGAVS VPI18 VPI24
-> > > +  VPI30 VPO12 VPO24 WDTRST1 WDTRST2
-> >
-> > This should be a schema. You need to define child nodes and list these
-> > as values for 'function' and 'group'. Ideally, the child nodes would
-> > have some sort of pattern, but if not, you can just match on '^.*$'
-> > under patternProperties.
->
-> The children don't have any pattern in their node name, which drives
-> me towards the '^.*$' pattern match, however, what I've found is that
-> I get the following errors for some of the relevant dts files:
->
-> ```
-> /home/andrew/src/linux/aspeed/arch/arm/boot/dts/aspeed-bmc-opp-palmetto.dt.yaml: compatible: ['aspeed,g4-pinctrl'] is not of type 'object'
-> /home/andrew/src/linux/aspeed/arch/arm/boot/dts/aspeed-bmc-opp-palmetto.dt.yaml: pinctrl-names: ['default'] is not of type 'object'
-> /home/andrew/src/linux/aspeed/arch/arm/boot/dts/aspeed-bmc-opp-palmetto.dt.yaml: pinctrl-0: [[7, 8, 9, 10, 11, 12]] is not of type 'object'
-> /home/andrew/src/linux/aspeed/arch/arm/boot/dts/aspeed-bmc-opp-palmetto.dt.yaml: phandle: [[13]] is not of type 'object'
-> /home/andrew/src/linux/aspeed/arch/arm/boot/dts/aspeed-bmc-opp-palmetto.dt.yaml: $nodename: ['pinctrl'] is not of type 'object'
-> /home/andrew/src/linux/aspeed/arch/arm/boot/dts/aspeed-bmc-quanta-q71l.dt.yaml: compatible: ['aspeed,g4-pinctrl'] is not of type 'object'
-> /home/andrew/src/linux/aspeed/arch/arm/boot/dts/aspeed-bmc-quanta-q71l.dt.yaml: pinctrl-names: ['default'] is not of type 'object'
-> /home/andrew/src/linux/aspeed/arch/arm/boot/dts/aspeed-bmc-quanta-q71l.dt.yaml: pinctrl-0: [[9, 10, 11, 12]] is not of type 'object'
-> /home/andrew/src/linux/aspeed/arch/arm/boot/dts/aspeed-bmc-quanta-q71l.dt.yaml: phandle: [[13]] is not of type 'object'
-> /home/andrew/src/linux/aspeed/arch/arm/boot/dts/aspeed-bmc-quanta-q71l.dt.yaml: $nodename: ['pinctrl'] is not of type 'object'
-> ```
->
+From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 
-The problem is "^.*$" matches both properties and child nodes.
+Hi Linus,
 
-> We shouldn't be expecting these properties in the child nodes, so
-> something is busted. Looking at processed-schema.yaml, we have:
->
-> ```
-> - $filename: /home/andrew/src/linux/aspeed/Documentation/devicetree/bindings/pinctrl/aspeed,ast2400-pinctrl.yaml
->   $id: http://devicetree.org/schemas/pinctrl/aspeed,ast2400-pinctrl.yaml#
->   $schema: http://devicetree.org/meta-schemas/core.yaml#
->   patternProperties:
->     ^.*$:
->       patternProperties:
->         ^function|groups$:
->           allOf:
->           - {$ref: /schemas/types.yaml#/definitions/string}
->           - additionalItems: false
->             items:
->               enum: [ACPI, ADC0, ADC1, ADC10, ADC11, ADC12, ADC13, ADC14, ADC15, ADC2,
->                 ADC3, ADC4, ADC5, ADC6, ADC7, ADC8, ADC9, BMCINT, DDCCLK, DDCDAT,
->                 EXTRST, FLACK, FLBUSY, FLWP, GPID, GPID0, GPID2, GPID4, GPID6, GPIE0,
->                 GPIE2, GPIE4, GPIE6, I2C10, I2C11, I2C12, I2C13, I2C14, I2C3, I2C4,
->                 I2C5, I2C6, I2C7, I2C8, I2C9, LPCPD, LPCPME, LPCRST, LPCSMI, MAC1LINK,
->                 MAC2LINK, MDIO1, MDIO2, NCTS1, NCTS2, NCTS3, NCTS4, NDCD1, NDCD2,
->                 NDCD3, NDCD4, NDSR1, NDSR2, NDSR3, NDSR4, NDTR1, NDTR2, NDTR3, NDTR4,
->                 NDTS4, NRI1, NRI2, NRI3, NRI4, NRTS1, NRTS2, NRTS3, OSCCLK, PWM0,
->                 PWM1, PWM2, PWM3, PWM4, PWM5, PWM6, PWM7, RGMII1, RGMII2, RMII1, RMII2,
->                 ROM16, ROM8, ROMCS1, ROMCS2, ROMCS3, ROMCS4, RXD1, RXD2, RXD3, RXD4,
->                 SALT1, SALT2, SALT3, SALT4, SD1, SD2, SGPMCK, SGPMI, SGPMLD, SGPMO,
->                 SGPSCK, SGPSI0, SGPSI1, SGPSLD, SIOONCTRL, SIOPBI, SIOPBO, SIOPWREQ,
->                 SIOPWRGD, SIOS3, SIOS5, SIOSCI, SPI1, SPI1DEBUG, SPI1PASSTHRU, SPICS1,
->                 TIMER3, TIMER4, TIMER5, TIMER6, TIMER7, TIMER8, TXD1, TXD2, TXD3,
->                 TXD4, UART6, USB11D1, USB11H2, USB2D1, USB2H1, USBCKI, VGABIOS_ROM,
->                 VGAHS, VGAVS, VPI18, VPI24, VPI30, VPO12, VPO24, WDTRST1, WDTRST2]
->             maxItems: 1
->             minItems: 1
->             type: array
->         pinctrl-[0-9]+: true
->       properties: {phandle: true, pinctrl-names: true, status: true}
->       type: object
->     pinctrl-[0-9]+: true
->   properties:
->     $nodename: true
->     compatible:
->       additionalItems: false
->       items:
->       - enum: ['aspeed,ast2400-pinctrl', 'aspeed,g4-pinctrl']
->       maxItems: 1
->       minItems: 1
->       type: array
->     phandle: true
->     pinctrl-names: true
->     status: true
->   required: [compatible]
->   select:
->     properties:
->       compatible:
->         contains:
->           enum: ['aspeed,ast2400-pinctrl', 'aspeed,g4-pinctrl']
->     required: [compatible]
->   title: ASPEED AST2400 Pin Controller
-> ```
->
-> `properties: {phandle: true, pinctrl-names: true, status: true}` has been
-> merged into my '^.*$' patternProperty, presumably partly from
-> pinctrl-consumer.yaml, and this seems to be the source of the bad
-> output. If as a hack I change my pattern to '^.*_default$' the problem
-> goes away as we no longer try to enforce the constraints on properties
-> provided by other bindings, but the problem is the node names are
-> largely freeform[1] (unless I enforce a naming constraint as part of my
-> bindings?).
->
-> [1] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt?h=v5.2-rc6#n112
->
-> >
-> > BTW, You can put the names under a 'definitions' key and then use
-> > '$ref' to reference them from function and group to avoid duplicating
-> > the names. Or use patternProperties with '^(function|group)$'.
->
-> I've used the patternProperties approach above as I couldn't get the
-> definitions/$ref approach to work. I did the following:
+please pull the following patches I have in my tree for v5.3.
 
-The problem is we'd need to process the schema under definitions. The
-YAML encoding we validate against always encodes strings as arrays as
-dtc has no way of knowing if a given property is a string array or
-single string. So to avoid a bunch of boilerplate in every binding, we
-process the schema to transform single strings into arrays of length
-1.
+The following changes since commit a188339ca5a396acc588e5851ed7e19f66b0ebd9:
 
-It's probably best to stick with the patternProperties approach. I
-think you can do something like this:
+  Linux 5.2-rc1 (2019-05-19 15:47:09 -0700)
 
-"^.*$":
-  if:
-    type: object
-  then:
-    patternProperties:
-       '^(function|group)$':
-         ...
+are available in the Git repository at:
 
-I'm not completely certain this works though, so if you can send me an
-updated binding with what you have so far I can test it out.
+  git://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git tags/gpio-v5.3-updates-for-linus
 
-Rob
+for you to fetch changes up to f360dcd4ef7fbaec774a64c54b402b4c8a4cffb2:
+
+  gpio: mockup: no need to check return value of debugfs_create functions (2019-06-27 15:54:19 +0200)
+
+----------------------------------------------------------------
+gpio: updates for v5.3
+
+- add include/linux/gpio.h to .gitignore in /tools
+- improve and simplify code in the em driver
+- simplify code in max732x by using devm helpers (including the new
+  devm_i2c_new_dummy_device())
+- fix SPDX header for madera
+- remove checking of return values of debugfs routines in gpio-mockup
+
+----------------------------------------------------------------
+Bartosz Golaszewski (3):
+      gpio: em: use the managed version of gpiochip_add_data()
+      gpio: max732x: use i2c_new_dummy_device()
+      gpio: max732x: use devm_gpiochip_add_data()
+
+Charles Keepax (1):
+      gpio: madera: Fixup SPDX headers
+
+Geert Uytterhoeven (2):
+      gpio: em: Remove error messages on out-of-memory conditions
+      gpio: em: Return early on error in em_gio_probe()
+
+Greg Kroah-Hartman (1):
+      gpio: mockup: no need to check return value of debugfs_create functions
+
+Kelsey Skunberg (1):
+      tools: gpio: Add include/linux/gpio.h to .gitignore
+
+ drivers/gpio/gpio-em.c      | 34 ++++++++++------------------------
+ drivers/gpio/gpio-madera.c  |  6 +-----
+ drivers/gpio/gpio-max732x.c | 45 ++++++++++++++++-----------------------------
+ drivers/gpio/gpio-mockup.c  | 21 +++++----------------
+ tools/gpio/.gitignore       |  2 +-
+ 5 files changed, 33 insertions(+), 75 deletions(-)
