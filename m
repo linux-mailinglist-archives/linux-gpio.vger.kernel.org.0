@@ -2,79 +2,140 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 8E85258173
-	for <lists+linux-gpio@lfdr.de>; Thu, 27 Jun 2019 13:26:24 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C0BD35837B
+	for <lists+linux-gpio@lfdr.de>; Thu, 27 Jun 2019 15:30:32 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726686AbfF0L0X (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 27 Jun 2019 07:26:23 -0400
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:37635 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726431AbfF0L0X (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 27 Jun 2019 07:26:23 -0400
-Received: by mail-lf1-f68.google.com with SMTP id d11so1327619lfb.4
-        for <linux-gpio@vger.kernel.org>; Thu, 27 Jun 2019 04:26:22 -0700 (PDT)
+        id S1726443AbfF0Nac (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 27 Jun 2019 09:30:32 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:40935 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726441AbfF0Nac (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 27 Jun 2019 09:30:32 -0400
+Received: by mail-wm1-f65.google.com with SMTP id v19so5690243wmj.5
+        for <linux-gpio@vger.kernel.org>; Thu, 27 Jun 2019 06:30:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=yf/4QsQz71xnsufXmplIhM5PQjWjtA8iRNvCLywUsCI=;
-        b=HiozRSV9jjoEd8lgVneXDXnUBP1+IEYIg+jfVj3yu3YE2rDCh0mQf6PCltXafOZuRQ
-         wgzquUBxyhWo7PDBS9m/LWFwnCANPBpvCZrQYE2oHj20GZq/2E9ThKk3E8NPw81Lz1IR
-         6wqLETMA8WyJzKNmXnDzqbNY6sUIuKzxUMVE+GnlYNfor+m9ZCB+VLKecag/t5wKJ6Jd
-         T9zmH0RwA2Aq86TTmuzE2Qjhpw0IXYMX8T1nY+VIb685SluVHK84SiGlfHixp33uk0NX
-         kmZSALvd+oLO52Ab1ZdDT5vg1sdlJ8tHsJXVo/3VFxdWskcobVYms8f/hqACvEI3a+uf
-         LmpA==
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=xbq4KdqxHucz+vpFUkxO4MJyaiD5Od/cLcCD3lID9E4=;
+        b=mjwcbA9iklldSmepid2v8Chbd3qYrKNJjxW/rysKzF2eNQzTZRNoDbYGiOL/IfD82N
+         6gW7Qz76lf72OpVkr3jA4yWGkm9ThBjr/2Zpzl3DAzw8ODl+jFCDeaXMvHNcE4N/oZJU
+         RKKMBMNHJyu+2raEIPRtXKIlq+ZTdD2zqPy6cgwgxd1gPXDIFC18gKH2kIhsLa1tAQaU
+         sYzv/QIymUiCNQd2TJO7f9Ubb9eVMfCeLMyKbdD9mbZJAa2JuUFThhzJKuxTAH22kcnJ
+         b3hOZoLePhBrkm5moeRivcOzrs2VEwcVOVtKUoiqCkESy6tY37RP0kqFakRFDS3LCzBv
+         i6xw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=yf/4QsQz71xnsufXmplIhM5PQjWjtA8iRNvCLywUsCI=;
-        b=BsubYQjOc4ltWwkZ6DyoKTgSN4MAZPgYZpNKDJ3BHqbVFuysWaiMnm762DZvSoDpum
-         b4M4Bp6APKzYqwNUkhgkVZkqbPmtLWrb3HCxTBCi+ZJ61SJMB3nqKxKPx6jT94N90+co
-         sM8Ff/iv9KSLs80Kx5FtXwakGtjH+b0QpzvFbvMubF10+GsdOSAg7dqyS+uuV3jlPU+J
-         MUBcj7l2UcEp5nbWcepD/BfDVGrn/8TMy5bvnlls6gPcisIopmTj9Psy+nzAn65L8CQE
-         Ot8AswB01J0R/W/907YsgQ8WIXw4hd+M71JphQ2v8QCmDD4RYAU/KEppZBquY2ebY4Lh
-         NhEA==
-X-Gm-Message-State: APjAAAXWPQAxZsFCvqyrdfOdyIfbSWGp2le5Ty9XdMyfEBg0NJvhCgAO
-        eAwMIPWI6JfngtK7e6MouKpZBeLSz3FiiVFXk02rKg==
-X-Google-Smtp-Source: APXvYqzeLT9m0qZPhFXMQe7bGeM0G0YNhFKZNBdroL1getpvV13XvxWgav2h1PfavnIunwZFc7NAtBe9miLt5qxA34s=
-X-Received: by 2002:a19:dc0d:: with SMTP id t13mr1687908lfg.152.1561634781537;
- Thu, 27 Jun 2019 04:26:21 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190626071430.28556-1-andrew@aj.id.au> <20190626071430.28556-2-andrew@aj.id.au>
- <CACPK8Xfdd1ReAHr9f6zRbZ-WJRquDJsTdUQeT_JuEBhOzS8tig@mail.gmail.com>
-In-Reply-To: <CACPK8Xfdd1ReAHr9f6zRbZ-WJRquDJsTdUQeT_JuEBhOzS8tig@mail.gmail.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Thu, 27 Jun 2019 12:26:10 +0100
-Message-ID: <CACRpkdZtTy-HHu2O4aOaqV5ZdxcYYPFRuxK2jjnw+_O1xcF1rg@mail.gmail.com>
-Subject: Re: [PATCH 1/8] dt-bindings: pinctrl: aspeed: Split bindings document
- in two
-To:     Joel Stanley <joel@jms.id.au>
-Cc:     Andrew Jeffery <andrew@aj.id.au>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Ryan Chen <ryan_chen@aspeedtech.com>,
-        Rob Herring <robh+dt@kernel.org>,
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=xbq4KdqxHucz+vpFUkxO4MJyaiD5Od/cLcCD3lID9E4=;
+        b=BnPWn3HigJEl8by2jX/OvZkhiUB2AJTcpPvo5L+SAJNDHmL6L3DGy59c7dds1UkSmf
+         2fxlrbK70kVKEtQTNtXRsbYrA8rMkFxPcfE0ibtN6fqM7YKysWaWGOrlPJClPRuna7Bk
+         wLVbPNvUNZQNzVXqgF0sTCvhhO7FmYpNaQQZqUZ9qz3U4b6iSwYENGWWdNG0S0zVhsma
+         b4S9oRcIxVId1PuNYDAk15hcbnzzivB/sLeX6lYmbswwEkyY3u/3UeAYvBME+JBiSDhu
+         cZolsTBrtrldIniWP+DgXJceL+lXqMXmGuaokdUgzRcGDPSCTSC1eDINEzsr34y5lXCO
+         N9yA==
+X-Gm-Message-State: APjAAAXoQiKu9V5GjqRH70YBcYXWmSSkdbqPZb5Mpz7D6BO/4H0JePvx
+        3sS22nF+9MuoGFwx4gtfnCHjMg==
+X-Google-Smtp-Source: APXvYqwnCtGtIHU6oxnjOXis56rx3dsxnAGKNuysbzf/1YRh5Mc7ST2Z50KP/cLbucVnbJzfyj8BNA==
+X-Received: by 2002:a1c:d10c:: with SMTP id i12mr3277916wmg.152.1561642230011;
+        Thu, 27 Jun 2019 06:30:30 -0700 (PDT)
+Received: from dell ([2.27.35.164])
+        by smtp.gmail.com with ESMTPSA id c6sm7876851wma.25.2019.06.27.06.30.28
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 27 Jun 2019 06:30:29 -0700 (PDT)
+Date:   Thu, 27 Jun 2019 14:30:27 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+Cc:     mazziesaccount@gmail.com, Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        linux-aspeed@lists.ozlabs.org,
-        OpenBMC Maillist <openbmc@lists.ozlabs.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Sebastian Reichel <sre@kernel.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-pm@vger.kernel.org, linux-rtc@vger.kernel.org
+Subject: [GIT PULL] Immutable branch between MFD, Clk, GPIO, Power, Regulator
+ and RTC due for the v5.3 merge window
+Message-ID: <20190627133027.GC2000@dell>
+References: <cover.1559546139.git.matti.vaittinen@fi.rohmeurope.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <cover.1559546139.git.matti.vaittinen@fi.rohmeurope.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Jun 27, 2019 at 4:32 AM Joel Stanley <joel@jms.id.au> wrote:
+Enjoy!
 
-> I think we can use this as an opportunity to drop the unused g4-scu
-> compatible from the bindings. Similarly for the g5.
->
-> Acked-by: Joel Stanley <joel@jms.id.au>
+The following changes since commit a188339ca5a396acc588e5851ed7e19f66b0ebd9:
 
-I assume I should wait for a new version of the patches that does
-this?
+  Linux 5.2-rc1 (2019-05-19 15:47:09 -0700)
 
-Yours,
-Linus Walleij
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/lee/mfd.git ib-mfd-clk-gpio-power-regulator-rtc-v5.3
+
+for you to fetch changes up to f8c7f7ddd8ef0855d06cff5d1cc7713b556006a7:
+
+  power: supply: Initial support for ROHM BD70528 PMIC charger block (2019-06-27 10:57:24 +0100)
+
+----------------------------------------------------------------
+Immutable branch between MFD, Clk, GPIO, Power, Regulator and RTC due for the v5.3 merge window
+
+----------------------------------------------------------------
+Matti Vaittinen (7):
+      mfd: regulator: clk: Split rohm-bd718x7.h
+      mfd: bd70528: Support ROHM bd70528 PMIC core
+      clk: bd718x7: Support ROHM BD70528 clk block
+      dt-bindings: mfd: Document first ROHM BD70528 bindings
+      gpio: Initial support for ROHM bd70528 GPIO block
+      rtc: bd70528: Initial support for ROHM bd70528 RTC
+      power: supply: Initial support for ROHM BD70528 PMIC charger block
+
+ .../devicetree/bindings/mfd/rohm,bd70528-pmic.txt  | 102 +++
+ drivers/clk/Kconfig                                |   6 +-
+ drivers/clk/clk-bd718x7.c                          |  24 +-
+ drivers/gpio/Kconfig                               |  11 +
+ drivers/gpio/Makefile                              |   1 +
+ drivers/gpio/gpio-bd70528.c                        | 232 +++++++
+ drivers/mfd/Kconfig                                |  17 +
+ drivers/mfd/Makefile                               |   2 +
+ drivers/mfd/rohm-bd70528.c                         | 316 +++++++++
+ drivers/mfd/rohm-bd718x7.c                         |  23 +-
+ drivers/power/supply/Kconfig                       |   9 +
+ drivers/power/supply/Makefile                      |   1 +
+ drivers/power/supply/bd70528-charger.c             | 743 +++++++++++++++++++++
+ drivers/regulator/bd718x7-regulator.c              |  25 +-
+ drivers/rtc/Kconfig                                |   8 +
+ drivers/rtc/Makefile                               |   1 +
+ drivers/rtc/rtc-bd70528.c                          | 500 ++++++++++++++
+ include/linux/mfd/rohm-bd70528.h                   | 408 +++++++++++
+ include/linux/mfd/rohm-bd718x7.h                   |  22 +-
+ include/linux/mfd/rohm-generic.h                   |  20 +
+ 20 files changed, 2425 insertions(+), 46 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/mfd/rohm,bd70528-pmic.txt
+ create mode 100644 drivers/gpio/gpio-bd70528.c
+ create mode 100644 drivers/mfd/rohm-bd70528.c
+ create mode 100644 drivers/power/supply/bd70528-charger.c
+ create mode 100644 drivers/rtc/rtc-bd70528.c
+ create mode 100644 include/linux/mfd/rohm-bd70528.h
+ create mode 100644 include/linux/mfd/rohm-generic.h
+
+-- 
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
