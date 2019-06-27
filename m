@@ -2,90 +2,105 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 4DBDD5812E
-	for <lists+linux-gpio@lfdr.de>; Thu, 27 Jun 2019 13:11:35 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 96E265815E
+	for <lists+linux-gpio@lfdr.de>; Thu, 27 Jun 2019 13:24:03 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726315AbfF0LLe (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 27 Jun 2019 07:11:34 -0400
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:46422 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726187AbfF0LLe (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 27 Jun 2019 07:11:34 -0400
-Received: by mail-lf1-f66.google.com with SMTP id z15so1245117lfh.13
-        for <linux-gpio@vger.kernel.org>; Thu, 27 Jun 2019 04:11:33 -0700 (PDT)
+        id S1726422AbfF0LYD (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 27 Jun 2019 07:24:03 -0400
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:34362 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726315AbfF0LYC (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 27 Jun 2019 07:24:02 -0400
+Received: by mail-lf1-f67.google.com with SMTP id y198so1326388lfa.1
+        for <linux-gpio@vger.kernel.org>; Thu, 27 Jun 2019 04:24:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=sCSEYBRzMbpAwHcX/a8Pm9HRgNx15iTEthxNyfijwlg=;
-        b=HOoUIo857t6R+JHYVh9YLWHAmEnYgtscOC93EjjHS/tW4k04MLBCZOwsSIA9hOLnSh
-         jg1c/fyNjP9bi3Y7+WRP+QE44PkTJ46izSZUsOwBCvc1xNHIYM++2CynVm8gznz06smH
-         WZAkad1yp9oW2YVxnOlCN4eWAkoX0H09dQna+IvUsd5lx9SksFmP3HYrY8tIvkxYrQ2/
-         cFagJ2aEXg6KEPkPNHprywjmpPgqdNT3lOF8hr5mrABnVbMGFDBCgLhQgP96AzG4WUe1
-         flszJJbTQWfEhlSquqTFiOLOGEtbzvCGNBVbYLvRvEUMYeknOMA+uhi9Tcg3sWLPeRvL
-         CfIg==
+        bh=F4KskJ1NAl/aeAMSSANWZVmj0vaROvOll7pDHlQvKrE=;
+        b=nENRI+O/Sos7OKNBFX4fcuIjQJRwvWzpnQUI823OhuXy+g5L/2I06M0BvsD+EPBkBU
+         jnMzz/8KF3lE8zGW4CZDHMmVSPuFkrs5D4b92ModrlnG7TNh9x/cgwb45aONOdqKlEec
+         qS39kC+nzP1BDmIUzDeRmazx/dGoP61W2XHfSAtWn3ha5bU5t+BZA1+MNUIR4nBz4tOl
+         NAX57XZMuQsMyPqhE+DroIbq+/20QvpPbo+0VMKO0XfCbCXNeQGCCgQ1pIrfPwdKeTta
+         XzBI5e2tKYh0r3WdeMUnXmSkKv+DdJ5WiGWdmeTlnDcanzuEXZ+F1JSocegrhnetAmjw
+         IkyA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=sCSEYBRzMbpAwHcX/a8Pm9HRgNx15iTEthxNyfijwlg=;
-        b=C4G5BaNapRMdBnxMJ7hczaBO8ylueQtn6vF7ECrDV/n8GpG7qoWbDv1xsxmSxvf+D0
-         Rw+9QhSbWRMD3E+irV6ElpB4RYgNjT0xGXFyc35wFyVG9G59wSh918Or5D7gifjdCW16
-         DoW3+dQ73Dcyoxlk6HPNlQUPUaCo6ROoij5y3RiGfflPXhrRZBrPZi1C2vG9SU3zxCTK
-         tk70jPWsuW08Zlx2E09sZRC/67yD7wp8ThuAzkK642DfcK0CIB07CaB9/YTBpRrytqwg
-         rPy76xzdEnA3KUNl7rUApCkLgu5pZXzCzJc0B5oGabhLwRtT/1vG3QLxIYqN04JM3q28
-         SuiA==
-X-Gm-Message-State: APjAAAXqJS8sJAPka8BMlFGUwXiSmDQsWjr9A6PT3A3U/SbMxi75STjU
-        yfOLms5QDvGZN8Lcv05t5bIqlHT+P6bWNYx5phUoMDVTgNE=
-X-Google-Smtp-Source: APXvYqwuLXdp+goyQiXclCsYYyc1IErzdG08aXVirfB+H9yYBWlz1uzdiV6XW/EmVvfRLlxe6mN1vBchhzJ6IebKPfg=
-X-Received: by 2002:ac2:598d:: with SMTP id w13mr1712677lfn.165.1561633892155;
- Thu, 27 Jun 2019 04:11:32 -0700 (PDT)
+        bh=F4KskJ1NAl/aeAMSSANWZVmj0vaROvOll7pDHlQvKrE=;
+        b=gCoPQijSR9bggu8M+sDYeOHatDEFWTIAA+4pzzuNhk8T2gHvKq0G3PHmmeEXu/brIK
+         cgkwE4gLq/iO62lhHplOV8ZcG8AajGjRJQeMKPfxmlsLHPg84zETDjmSnu6SH9ORb9Pj
+         u3jPxOngGJLumebVLaYlUR8rp4dRzKjzJqJytCDI0bxLO+h/MNu0hlG86ot26pAhjb7Z
+         tYI/jM7pLRM6PUekW/hQx+m7TuLHijQTqxwwhKIbJgCKr5a9+/8k7gFZ3u+BiREAdf1C
+         SoE/Pb+Yt2EDA/uaw9eTqJQ0Bojzs8GEl73CjcCs90AKZqooM5iRjavHFlbbgHqXuAvI
+         fnPQ==
+X-Gm-Message-State: APjAAAX2vDWvbGI3qs2YuwlSNohsn70Srads0jemRmf796s77fDN5h8a
+        ONzCe0a7PZrg9C4BYqcM3p9g5K5o3dm3FwuH4GwwuQ==
+X-Google-Smtp-Source: APXvYqyeGnTnUh82XE5crL0FuoMFaSxBuAjA0pp9mZU9u9i/T+re4EBzmrybXpa77YjcTHZpDZQGFRLaagUdWo7XHdQ=
+X-Received: by 2002:a19:6a01:: with SMTP id u1mr1788889lfu.141.1561634640859;
+ Thu, 27 Jun 2019 04:24:00 -0700 (PDT)
 MIME-Version: 1.0
-References: <1560948344-6543-1-git-send-email-harish_kandiga@mentor.com> <1560948344-6543-2-git-send-email-harish_kandiga@mentor.com>
-In-Reply-To: <1560948344-6543-2-git-send-email-harish_kandiga@mentor.com>
+References: <20190626035445.236406-1-drinkcat@chromium.org>
+In-Reply-To: <20190626035445.236406-1-drinkcat@chromium.org>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Thu, 27 Jun 2019 12:11:19 +0100
-Message-ID: <CACRpkdawgYCPh3yBVix_sf51_+jt4_tcKWu9s5T+s+wVbUOZXw@mail.gmail.com>
-Subject: Re: [PATCH V3 1/2] gpio: inverter: Add Inverter controller for gpio configuration
-To:     Harish Jenny K N <harish_kandiga@mentor.com>
-Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+Date:   Thu, 27 Jun 2019 12:23:49 +0100
+Message-ID: <CACRpkdaK1A2eS5_5Fg40hTV3bwRNvRmqfWidVMpNkxFkzVEVmw@mail.gmail.com>
+Subject: Re: [PATCH v2] pinctrl: mediatek: Update cur_mask in mask/mask ops
+To:     Nicolas Boichat <drinkcat@chromium.org>
+Cc:     Sean Wang <sean.wang@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Balasubramani Vivekanandan 
-        <balasubramani_vivekanandan@mentor.com>
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Chuanjia Liu <Chuanjia.Liu@mediatek.com>,
+        Evan Green <evgreen@chromium.org>,
+        Stephen Boyd <swboyd@chromium.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Harish,
+On Wed, Jun 26, 2019 at 4:54 AM Nicolas Boichat <drinkcat@chromium.org> wrote:
 
-second pass, I think the DT review is the most important thing now.
+> During suspend/resume, mtk_eint_mask may be called while
+> wake_mask is active. For example, this happens if a wake-source
+> with an active interrupt handler wakes the system:
+> irq/pm.c:irq_pm_check_wakeup would disable the interrupt, so
+> that it can be handled later on in the resume flow.
+>
+> However, this may happen before mtk_eint_do_resume is called:
+> in this case, wake_mask is loaded, and cur_mask is restored
+> from an older copy, re-enabling the interrupt, and causing
+> an interrupt storm (especially for level interrupts).
+>
+> Step by step, for a line that has both wake and interrupt enabled:
+>  1. cur_mask[irq] = 1; wake_mask[irq] = 1; EINT_EN[irq] = 1 (interrupt
+>     enabled at hardware level)
+>  2. System suspends, resumes due to that line (at this stage EINT_EN
+>     == wake_mask)
+>  3. irq_pm_check_wakeup is called, and disables the interrupt =>
+>     EINT_EN[irq] = 0, but we still have cur_mask[irq] = 1
+>  4. mtk_eint_do_resume is called, and restores EINT_EN = cur_mask, so
+>     it reenables EINT_EN[irq] = 1 => interrupt storm as the driver
+>     is not yet ready to handle the interrupt.
+>
+> This patch fixes the issue in step 3, by recording all mask/unmask
+> changes in cur_mask. This also avoids the need to read the current
+> mask in eint_do_suspend, and we can remove mtk_eint_chip_read_mask
+> function.
+>
+> The interrupt will be re-enabled properly later on, sometimes after
+> mtk_eint_do_resume, when the driver is ready to handle it.
+>
+> Fixes: 58a5e1b64b ("pinctrl: mediatek: Implement wake handler and suspend resume")
+> Signed-off-by: Nicolas Boichat <drinkcat@chromium.org>
+> Acked-by: Sean Wang <sean.wang@kernel.org>
 
-On Wed, Jun 19, 2019 at 1:45 PM Harish Jenny K N
-<harish_kandiga@mentor.com> wrote:
-
-> +#include <linux/of_gpio.h>
-
-Please don't use these old interfaces.
-Use this:
-
-#include <linux/gpio/consumer.h>
-
-I'll show more details of that.
-
-> +       count = of_gpio_named_count(dev->of_node, "inverted-gpios");
-
-count = gpiod_count(dev, "inverted");
-
-> +       while (index < count) {
-> +               gpio = devm_gpiod_get_index(dev, "inverted", index, GPIOD_ASIS);
-> +
-> +               if (gpio == ERR_PTR(-ENOENT)) {
-> +                       devm_kfree(dev, inv);
-
-I think devm_ i guaranteed to free any allocated memory if probe()
-fails.
+Patch applied after extending the has for Fixes: to 12 digits.
 
 Yours,
 Linus Walleij
