@@ -2,33 +2,33 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 13F2D590B6
-	for <lists+linux-gpio@lfdr.de>; Fri, 28 Jun 2019 04:16:20 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DC3E7590A4
+	for <lists+linux-gpio@lfdr.de>; Fri, 28 Jun 2019 04:16:11 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726622AbfF1CO6 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 27 Jun 2019 22:14:58 -0400
-Received: from hqemgate14.nvidia.com ([216.228.121.143]:19578 "EHLO
-        hqemgate14.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726574AbfF1CNg (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 27 Jun 2019 22:13:36 -0400
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqemgate14.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5d1577cc0001>; Thu, 27 Jun 2019 19:13:33 -0700
+        id S1726961AbfF1COh (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 27 Jun 2019 22:14:37 -0400
+Received: from hqemgate16.nvidia.com ([216.228.121.65]:17614 "EHLO
+        hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726572AbfF1CNh (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 27 Jun 2019 22:13:37 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5d1577ce0000>; Thu, 27 Jun 2019 19:13:34 -0700
 Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate102.nvidia.com (PGP Universal service);
+  by hqpgpgate101.nvidia.com (PGP Universal service);
   Thu, 27 Jun 2019 19:13:35 -0700
 X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Thu, 27 Jun 2019 19:13:35 -0700
-Received: from HQMAIL110.nvidia.com (172.18.146.15) by HQMAIL108.nvidia.com
- (172.18.146.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 28 Jun
+        by hqpgpgate101.nvidia.com on Thu, 27 Jun 2019 19:13:35 -0700
+Received: from HQMAIL102.nvidia.com (172.18.146.10) by HQMAIL101.nvidia.com
+ (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 28 Jun
  2019 02:13:34 +0000
-Received: from HQMAIL108.nvidia.com (172.18.146.13) by hqmail110.nvidia.com
- (172.18.146.15) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 28 Jun
+Received: from HQMAIL107.nvidia.com (172.20.187.13) by HQMAIL102.nvidia.com
+ (172.18.146.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 28 Jun
  2019 02:13:34 +0000
-Received: from hqnvemgw02.nvidia.com (172.16.227.111) by HQMAIL108.nvidia.com
- (172.18.146.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
- Transport; Fri, 28 Jun 2019 02:13:33 +0000
+Received: from hqnvemgw02.nvidia.com (172.16.227.111) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
+ Transport; Fri, 28 Jun 2019 02:13:34 +0000
 Received: from skomatineni-linux.nvidia.com (Not Verified[10.110.102.155]) by hqnvemgw02.nvidia.com with Trustwave SEG (v7,5,8,10121)
-        id <B5d1577ce0001>; Thu, 27 Jun 2019 19:13:34 -0700
+        id <B5d1577ce0002>; Thu, 27 Jun 2019 19:13:34 -0700
 From:   Sowjanya Komatineni <skomatineni@nvidia.com>
 To:     <thierry.reding@gmail.com>, <jonathanh@nvidia.com>,
         <tglx@linutronix.de>, <jason@lakedaemon.net>,
@@ -41,9 +41,9 @@ CC:     <pdeschrijver@nvidia.com>, <pgaikwad@nvidia.com>,
         <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         <mperttunen@nvidia.com>, <spatra@nvidia.com>, <robh+dt@kernel.org>,
         <digetx@gmail.com>, <devicetree@vger.kernel.org>
-Subject: [PATCH V5 07/18] clk: tegra: Support for saving and restoring OSC context
-Date:   Thu, 27 Jun 2019 19:12:41 -0700
-Message-ID: <1561687972-19319-8-git-send-email-skomatineni@nvidia.com>
+Subject: [PATCH V5 08/18] clk: tegra: Add suspend resume support for DFLL
+Date:   Thu, 27 Jun 2019 19:12:42 -0700
+Message-ID: <1561687972-19319-9-git-send-email-skomatineni@nvidia.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1561687972-19319-1-git-send-email-skomatineni@nvidia.com>
 References: <1561687972-19319-1-git-send-email-skomatineni@nvidia.com>
@@ -51,84 +51,144 @@ X-NVConfidentiality: public
 MIME-Version: 1.0
 Content-Type: text/plain
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1561688013; bh=2YFtJYfYZEkx9Rsc+PePUh2qyM9iqhHjKzUjU/RdnjE=;
+        t=1561688014; bh=dps+xdpNYqPp4cSiwoi1+rWcYiqKiL43QEvLjCGhFJY=;
         h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
          In-Reply-To:References:X-NVConfidentiality:MIME-Version:
          Content-Type;
-        b=ru2F0sXyh8TG8aU8SgAnqEObkpZejB+BCea1b9og7ZdN4iE/v87ZYy5gSa1GIkXrz
-         9SKFvyCMUlfXiLyYKy3dJ1SftIWWlXbZWzLU7kzztUjJWIDPYAp6ay+Vbr/mHRTRiE
-         lRc/TAwSPEOvECwL4dajrFXcftD5b5jZ/5H2J5DcV0RnJcqXdQFNEMBO2YOTLpfYZX
-         fNoFb+n6exbQOwV+6/UEUOC+XdSMhwQ4FVLMoWA8dwYd0WtdN4kBNvzEVvdHOUzgSt
-         l0/Z2km643rWaGpb/T4ADmkS/+JQZPgYshOcPI6GLjaLZhcaaUtxFghVTvOMANbQc5
-         GdlQQ0TyT7K/Q==
+        b=njilldqndHtEh9BLnwi0r+GhoSuQpcuNohDMCN8MwQDfHyooYR10Hs/teKY3E8LAQ
+         hRPzmidxR71jdttUwIdZnFWEyuqWbQHirDZraeVMJcQj8/TiPBpintC+dvQUBAJ+tc
+         qW2EM+Zdne/10N+uSqBilqG+TUwknAy5Qgd5kBgo8hlz07vfMAsGVHSI3Hp3pqWXbT
+         RsKz8W0U+O3DUiLQESy4w19oLYuOqBXkmeFEPtVFnlnR4ik8d8ZyLHYyuJJQBjy7F0
+         0icroQtj8p3MTGOnmqC0dsl6bxaRuEfLAGwS9y/Pr6yrFWDkxmMPtnVvCrEcQqL40x
+         RkRvayrYU2kgQ==
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-This patch adds support for storing OSC clock frequency and the
-drive-strength during OSC clock init and creates an API to restore
-OSC control register value from the saved context.
+This patch creates APIs for supporting Tegra210 clock driver to
+perform DFLL suspend and resume operation.
 
-This API is invoked by Tegra210 clock driver during system resume
-to restore the  OSC clock settings.
+During suspend, DFLL mode is saved and on resume Tegra210 clock driver
+invokes DFLL resume API to re-initialize DFLL to enable target device
+clock in open loop mode or closed loop mode.
 
 Acked-by: Thierry Reding <treding@nvidia.com>
 Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
 ---
- drivers/clk/tegra/clk-tegra-fixed.c | 14 ++++++++++++++
- drivers/clk/tegra/clk.h             |  1 +
- 2 files changed, 15 insertions(+)
+ drivers/clk/tegra/clk-dfll.c | 78 ++++++++++++++++++++++++++++++++++++++++++++
+ drivers/clk/tegra/clk-dfll.h |  2 ++
+ 2 files changed, 80 insertions(+)
 
-diff --git a/drivers/clk/tegra/clk-tegra-fixed.c b/drivers/clk/tegra/clk-tegra-fixed.c
-index 8d91b2b191cf..e8df0ccbffd0 100644
---- a/drivers/clk/tegra/clk-tegra-fixed.c
-+++ b/drivers/clk/tegra/clk-tegra-fixed.c
-@@ -17,7 +17,10 @@
- #define OSC_CTRL			0x50
- #define OSC_CTRL_OSC_FREQ_SHIFT		28
- #define OSC_CTRL_PLL_REF_DIV_SHIFT	26
-+#define OSC_CTRL_MASK			(0x3f2 |	\
-+					(0xf << OSC_CTRL_OSC_FREQ_SHIFT))
+diff --git a/drivers/clk/tegra/clk-dfll.c b/drivers/clk/tegra/clk-dfll.c
+index f8688c2ddf1a..a1f37cf99b00 100644
+--- a/drivers/clk/tegra/clk-dfll.c
++++ b/drivers/clk/tegra/clk-dfll.c
+@@ -277,6 +277,7 @@ struct tegra_dfll {
+ 	unsigned long			dvco_rate_min;
  
-+static u32 osc_ctrl_ctx;
- int __init tegra_osc_clk_init(void __iomem *clk_base, struct tegra_clk *clks,
- 			      unsigned long *input_freqs, unsigned int num,
- 			      unsigned int clk_m_div, unsigned long *osc_freq,
-@@ -29,6 +32,7 @@ int __init tegra_osc_clk_init(void __iomem *clk_base, struct tegra_clk *clks,
- 	unsigned osc_idx;
- 
- 	val = readl_relaxed(clk_base + OSC_CTRL);
-+	osc_ctrl_ctx = val & OSC_CTRL_MASK;
- 	osc_idx = val >> OSC_CTRL_OSC_FREQ_SHIFT;
- 
- 	if (osc_idx < num)
-@@ -96,3 +100,13 @@ void __init tegra_fixed_clk_init(struct tegra_clk *tegra_clks)
- 		*dt_clk = clk;
- 	}
+ 	enum dfll_ctrl_mode		mode;
++	enum dfll_ctrl_mode		resume_mode;
+ 	enum dfll_tune_range		tune_range;
+ 	struct dentry			*debugfs_dir;
+ 	struct clk_hw			dfll_clk_hw;
+@@ -1864,6 +1865,83 @@ static int dfll_fetch_common_params(struct tegra_dfll *td)
  }
-+
-+void tegra_clk_osc_resume(void __iomem *clk_base)
-+{
-+	u32 val;
-+
-+	val = readl_relaxed(clk_base + OSC_CTRL) & ~OSC_CTRL_MASK;
-+	val |= osc_ctrl_ctx;
-+	writel_relaxed(val, clk_base + OSC_CTRL);
-+	fence_udelay(2, clk_base);
-+}
-diff --git a/drivers/clk/tegra/clk.h b/drivers/clk/tegra/clk.h
-index c66b0a73bb01..a687ed6127b6 100644
---- a/drivers/clk/tegra/clk.h
-+++ b/drivers/clk/tegra/clk.h
-@@ -863,6 +863,7 @@ void tegra_cclkg_burst_policy_save_context(void);
- void tegra_cclkg_burst_policy_restore_context(void);
- void tegra_sclk_cclklp_burst_policy_save_context(void);
- void tegra_sclk_cpulp_burst_policy_restore_context(void);
-+void tegra_clk_osc_resume(void __iomem *clk_base);
  
- /* Combined read fence with delay */
- #define fence_udelay(delay, reg)	\
+ /*
++ * tegra_dfll_suspend
++ * @pdev: DFLL instance
++ *
++ * dfll controls clock/voltage to other devices, including CPU. Therefore,
++ * dfll driver pm suspend callback does not stop cl-dvfs operations.
++ */
++void tegra_dfll_suspend(struct platform_device *pdev)
++{
++	struct tegra_dfll *td = dev_get_drvdata(&pdev->dev);
++
++	if (!td)
++		return;
++
++	if (td->mode <= DFLL_DISABLED)
++		return;
++
++	td->resume_mode = td->mode;
++	switch (td->mode) {
++	case DFLL_CLOSED_LOOP:
++		dfll_set_mode(td, DFLL_CLOSED_LOOP);
++		dfll_set_frequency_request(td, &td->last_req);
++
++		dfll_unlock(td);
++		break;
++	default:
++		break;
++	}
++}
++
++/**
++ * tegra_dfll_resume - reprogram the DFLL after context-loss
++ * @pdev: DFLL instance
++ *
++ * Re-initialize and enable target device clock in open loop mode. Called
++ * directly from SoC clock resume syscore operation. Closed loop will be
++ * re-entered in platform syscore ops as well after CPU clock source is
++ * switched to DFLL in open loop.
++ */
++void tegra_dfll_resume(struct platform_device *pdev, bool on_dfll)
++{
++	struct tegra_dfll *td = dev_get_drvdata(&pdev->dev);
++
++	if (!td)
++		return;
++
++	if (on_dfll) {
++		if (td->resume_mode == DFLL_CLOSED_LOOP)
++			dfll_lock(td);
++		td->resume_mode = DFLL_DISABLED;
++		return;
++	}
++
++	reset_control_deassert(td->dvco_rst);
++
++	pm_runtime_get(td->dev);
++
++	/* Re-init DFLL */
++	dfll_init_out_if(td);
++	dfll_set_default_params(td);
++	dfll_set_open_loop_config(td);
++
++	pm_runtime_put(td->dev);
++
++	/* Restore last request and mode up to open loop */
++	switch (td->resume_mode) {
++	case DFLL_CLOSED_LOOP:
++	case DFLL_OPEN_LOOP:
++		dfll_set_mode(td, DFLL_OPEN_LOOP);
++		if (td->pmu_if == TEGRA_DFLL_PMU_I2C)
++			dfll_i2c_set_output_enabled(td, false);
++		break;
++	default:
++		break;
++	}
++}
++
++/*
+  * API exported to per-SoC platform drivers
+  */
+ 
+diff --git a/drivers/clk/tegra/clk-dfll.h b/drivers/clk/tegra/clk-dfll.h
+index 1b14ebe7268b..c21fc2061a20 100644
+--- a/drivers/clk/tegra/clk-dfll.h
++++ b/drivers/clk/tegra/clk-dfll.h
+@@ -40,6 +40,8 @@ struct tegra_dfll_soc_data {
+ int tegra_dfll_register(struct platform_device *pdev,
+ 			struct tegra_dfll_soc_data *soc);
+ struct tegra_dfll_soc_data *tegra_dfll_unregister(struct platform_device *pdev);
++void tegra_dfll_suspend(struct platform_device *pdev);
++void tegra_dfll_resume(struct platform_device *pdev, bool on_dfll);
+ int tegra_dfll_runtime_suspend(struct device *dev);
+ int tegra_dfll_runtime_resume(struct device *dev);
+ 
 -- 
 2.7.4
 
