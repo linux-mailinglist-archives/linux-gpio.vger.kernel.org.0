@@ -2,89 +2,78 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id D4D2059354
-	for <lists+linux-gpio@lfdr.de>; Fri, 28 Jun 2019 07:20:59 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 18F3059694
+	for <lists+linux-gpio@lfdr.de>; Fri, 28 Jun 2019 10:55:41 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726843AbfF1FU6 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 28 Jun 2019 01:20:58 -0400
-Received: from relay1.mentorg.com ([192.94.38.131]:42325 "EHLO
-        relay1.mentorg.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726816AbfF1FU6 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 28 Jun 2019 01:20:58 -0400
-Received: from nat-ies.mentorg.com ([192.94.31.2] helo=svr-ies-mbx-01.mgc.mentorg.com)
-        by relay1.mentorg.com with esmtps (TLSv1.2:ECDHE-RSA-AES256-SHA384:256)
-        id 1hgjJf-0003Zb-Pz from Harish_Kandiga@mentor.com ; Thu, 27 Jun 2019 22:20:55 -0700
-Received: from hkandiga-VirtualBox.ina-wifi.mentorg.com (137.202.0.90) by
- svr-ies-mbx-01.mgc.mentorg.com (139.181.222.1) with Microsoft SMTP Server
- (TLS) id 15.0.1320.4; Fri, 28 Jun 2019 06:20:51 +0100
-From:   Harish Jenny K N <harish_kandiga@mentor.com>
-To:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-CC:     <linux-gpio@vger.kernel.org>,
-        Harish Jenny K N <harish_kandiga@mentor.com>,
+        id S1726385AbfF1Izk (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 28 Jun 2019 04:55:40 -0400
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:38835 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725873AbfF1Izk (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 28 Jun 2019 04:55:40 -0400
+Received: by mail-lj1-f196.google.com with SMTP id r9so5203161ljg.5
+        for <linux-gpio@vger.kernel.org>; Fri, 28 Jun 2019 01:55:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=6SDXvLF6WGLeyRshJ4F68qdUEnT/yo0TXC3eJQ5oViY=;
+        b=bvLvrtfOCRsDAbMbfqoawBL8qsAlSFfvYELFJJamjkbF9KGdm5UbBdrJLuWTBwlfoL
+         k8HgEeVZqt/Zg6IHOPjzMiqQ7RJ3fvfGgW7Zk0sLsZUgnGR9WpLh8cPSrRXgDwG8hvKz
+         AJzo8zrlu4SZHnxfCIR17X4+2FN8DGrfFoxNNPt5nNHrJ7/wxdat4RNT24R58aEPnvOH
+         kKaK1p88OVc9as0BZ0euyIGN0kweoZs7MxEEyzJARwd+NSjM/h9tX9lMly1Ov6/xRHEn
+         YsDX6L/hUdlxSinDUKCKZ9SZ0wd+8hizfmrUWsSMckFdJsfA3bUA5KbFO8k2sqCs3zD1
+         +4lQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=6SDXvLF6WGLeyRshJ4F68qdUEnT/yo0TXC3eJQ5oViY=;
+        b=Z4FFzKUw2Td7chGSkjqQf2CVOzm/vzd6WC3zlAAbpQ4Kc5zKacWw0MGAID+o1DQfJd
+         XRJAMtDiuQYO/54EVEavIQGWdLSof5peGR3SvvzT0Tp3sfXyC8MGQ6xzqCAkpS3nVy0r
+         0AlK4KVnoip3+eWC7zPtwSlUFaBOAm7JnXoMo0ee1dkrD+WcdT4vCE2Ely3ngn8HzYFM
+         1wTl3k56M+SNPFgYaPgskNEPwCW9MFYN+UaScReVfaLrPUby+a4k83xu9tkMTzzvYN4Z
+         1lUxHAtoDRBpwveC419fADajGPG605NbCuQ9XbIrWDsY9D6acWwT/IIgaCekWjh73bI1
+         jYpw==
+X-Gm-Message-State: APjAAAV/j3a6UwldYPz38+5PjSc+biKkAgS29Ha5pxGwK5lZGD/DqsIb
+        MHR99TTjm25zQ/tr7hbfjDvqOSCoFBeKdUE5SoJBlw==
+X-Google-Smtp-Source: APXvYqyrrpEwTUchSPESqzYoxtYOm3sJzDtertH7H0sUSkVbFiwz86m6fZBNCReNx09AlSfQxXSZcoK7BQX1NPz1uUs=
+X-Received: by 2002:a2e:8756:: with SMTP id q22mr5617189ljj.108.1561712137792;
+ Fri, 28 Jun 2019 01:55:37 -0700 (PDT)
+MIME-Version: 1.0
+References: <1561699236-18620-1-git-send-email-harish_kandiga@mentor.com> <1561699236-18620-2-git-send-email-harish_kandiga@mentor.com>
+In-Reply-To: <1561699236-18620-2-git-send-email-harish_kandiga@mentor.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Fri, 28 Jun 2019 09:55:26 +0100
+Message-ID: <CACRpkdZQpr78=ZzBQEkbjS714W0HPEurO8haM8PpmpvYFivm-A@mail.gmail.com>
+Subject: Re: [PATCH V4 1/2] gpio: inverter: Add Inverter controller for gpio configuration
+To:     Harish Jenny K N <harish_kandiga@mentor.com>
+Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
         Balasubramani Vivekanandan 
         <balasubramani_vivekanandan@mentor.com>
-Subject: [PATCH V4 2/2] gpio: inverter: document the inverter bindings
-Date:   Fri, 28 Jun 2019 10:50:36 +0530
-Message-ID: <1561699236-18620-3-git-send-email-harish_kandiga@mentor.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1561699236-18620-1-git-send-email-harish_kandiga@mentor.com>
-References: <1561699236-18620-1-git-send-email-harish_kandiga@mentor.com>
-MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [137.202.0.90]
-X-ClientProxiedBy: svr-ies-mbx-06.mgc.mentorg.com (139.181.222.6) To
- svr-ies-mbx-01.mgc.mentorg.com (139.181.222.1)
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Document the device tree binding for the inverter gpio
-controller to configure the polarity of the gpio pins
-used by the consumers.
+On Fri, Jun 28, 2019 at 6:20 AM Harish Jenny K N
+<harish_kandiga@mentor.com> wrote:
 
-Signed-off-by: Harish Jenny K N <harish_kandiga@mentor.com>
----
- .../devicetree/bindings/gpio/gpio-inverter.txt     | 29 ++++++++++++++++++++++
- 1 file changed, 29 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/gpio/gpio-inverter.txt
+> Provides a new inverter gpio controller to configure the polarity
+> of the gpio pins. This driver enables the consumers to directly
+> use the gpio pin without worrying about the hardware level
+> polarity configuration. Polarity configuration will be done by
+> the inverter gpio controller based on device tree information.
+>
+> Signed-off-by: Balasubramani Vivekanandan <balasubramani_vivekanandan@mentor.com>
+> Signed-off-by: Harish Jenny K N <harish_kandiga@mentor.com>
 
-diff --git a/Documentation/devicetree/bindings/gpio/gpio-inverter.txt b/Documentation/devicetree/bindings/gpio/gpio-inverter.txt
-new file mode 100644
-index 0000000..8bb6b2e
---- /dev/null
-+++ b/Documentation/devicetree/bindings/gpio/gpio-inverter.txt
-@@ -0,0 +1,29 @@
-+GPIO-INVERTER
-+======
-+This binding defines the gpio-inverter. The gpio-inverter is a driver that
-+allows to properly describe the gpio polarities on the hardware.
-+
-+Please refer to gpio.txt for generic information regarding GPIO bindings.
-+
-+Required properties:
-+- compatible : "gpio-inverter".
-+- gpio-controller: Marks the port as GPIO controller.
-+- #gpio-cells: One. This is the pin number.
-+- inverted-gpios: Array of GPIO pins required from consumers, whose polarity
-+  has to be inverted in the driver.
-+Note: gpio flag should be set as GPIO_ACTIVE_HIGH. Using GPIO_ACTICE_LOW will
-+cause double inversion.
-+
-+Optional properties:
-+- gpio-line-names: Refer to gpio.txt for details regarding this property.
-+
-+Example:
-+
-+gpio_inv: gpio-inv {
-+	compatible = "gpio-inverter";
-+	gpio-controller;
-+	#gpio-cells = <1>;
-+	inverted-gpios = <&gpio5 24 GPIO_ACTIVE_HIGH>,
-+	<&gpio7 0 GPIO_ACTIVE_HIGH>, <&gpio7 1 GPIO_ACTIVE_HIGH>;
-+	gpio-line-names = "JTAG_DNL_EN", "lvds-pwrdwn", "lcd-on";
-+};
---
-2.7.4
+This code is finished, very nice.
 
+We still need some review from the DT people before I
+apply it.
+
+Yours,
+Linus Walleij
