@@ -2,117 +2,212 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 8C32E58BEC
-	for <lists+linux-gpio@lfdr.de>; Thu, 27 Jun 2019 22:44:35 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 14CA858F2B
+	for <lists+linux-gpio@lfdr.de>; Fri, 28 Jun 2019 02:48:26 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726426AbfF0Uof (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 27 Jun 2019 16:44:35 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:44704 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726384AbfF0Uoe (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 27 Jun 2019 16:44:34 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 85AA66085C; Thu, 27 Jun 2019 20:44:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1561668273;
-        bh=fqJngYFZovJRH4LMJ9rXXIBSC2Q0Q4+IE1S7MgXNT2o=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=OaT98YmwswqhoFLvu9AAkYbhBabxkEqrBa1LHx48b2kTEb8B2k/7AFB5jGrrHc67S
-         4yjpnpKOq6iSe/VPgWnABZVlIG0rfFpLFmtn35NzTuLGgfEZPu3Ol5s3kyXuFRhxaM
-         q991sETK0apliQ7J977RqXAdzq08EGCDyXAq5Kvo=
-X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
-        pdx-caf-mail.web.codeaurora.org
-X-Spam-Level: 
-X-Spam-Status: No, score=-2.7 required=2.0 tests=ALL_TRUSTED,BAYES_00,
-        DKIM_INVALID,DKIM_SIGNED,SPF_NONE autolearn=no autolearn_force=no
-        version=3.4.0
-Received: from localhost (i-global254.qualcomm.com [199.106.103.254])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: ilina@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 73A396085C;
-        Thu, 27 Jun 2019 20:44:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1561668272;
-        bh=fqJngYFZovJRH4LMJ9rXXIBSC2Q0Q4+IE1S7MgXNT2o=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=X54MxjAhz2wrbSvg/wIVYblS4krMWyFR1F95IWCZUV44O9np7mvGW/0bSdpNVjFj+
-         /hLSy/wzJVuHkdqSMf9WS8+2Hj+w13qxo0AQ3f4d8BneNI5T4AqMykeLNSKO3+4x21
-         XRDk/bsNuclyJzCYcEEkHPnMUurA8J6ka0LCwFW0=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 73A396085C
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=ilina@codeaurora.org
-Date:   Thu, 27 Jun 2019 14:44:31 -0600
-From:   Lina Iyer <ilina@codeaurora.org>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     linux-gpio@vger.kernel.org,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Marc Zyngier <marc.zyngier@arm.com>,
-        Jon Hunter <jonathanh@nvidia.com>,
-        Sowjanya Komatineni <skomatineni@nvidia.com>,
-        Bitan Biswas <bbiswas@nvidia.com>, linux-tegra@vger.kernel.org,
-        David Daney <david.daney@cavium.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Brian Masney <masneyb@onstation.org>,
-        Thierry Reding <treding@nvidia.com>
-Subject: Re: [PATCH 1/4 v1] gpio: Add support for hierarchical IRQ domains
-Message-ID: <20190627204431.GA24030@codeaurora.org>
-References: <20190624132531.6184-1-linus.walleij@linaro.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <20190624132531.6184-1-linus.walleij@linaro.org>
-User-Agent: Mutt/1.11.3 (2019-02-01)
+        id S1726632AbfF1AsZ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 27 Jun 2019 20:48:25 -0400
+Received: from new1-smtp.messagingengine.com ([66.111.4.221]:60369 "EHLO
+        new1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726601AbfF1AsZ (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>);
+        Thu, 27 Jun 2019 20:48:25 -0400
+Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
+        by mailnew.nyi.internal (Postfix) with ESMTP id 6B66A1A78;
+        Thu, 27 Jun 2019 20:48:21 -0400 (EDT)
+Received: from imap2 ([10.202.2.52])
+  by compute4.internal (MEProxy); Thu, 27 Jun 2019 20:48:21 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aj.id.au; h=
+        mime-version:message-id:in-reply-to:references:date:from:to:cc
+        :subject:content-type; s=fm3; bh=M2zdMuVXrO3RS7mphjNsozbVtL93heO
+        H6wA/NOHeb+0=; b=BAelTGQdCOAoWnKgT4nPGmV09/oxDSrIMYG0yGTKzPDLRdS
+        A1kF29+nQO+5Bht8vmcJseivJ5+K5NcDr34J6KEjOKASvwWZ3HA8bYKC4J+YtFBj
+        m5FeOGOFRnH5lJuOEOgaCe/lLG9Tj+HSmWrFB8w0HrgQ9y+TtoCmTtybNXL6GiGs
+        2sGHl8u5r26oweibUscllP04sLPqo3Tap/iTrdnLojETEj1wd0b4NKNcFC/8tjrP
+        SUnjrRS3lGPYs/EMzxpKI46V/hagG6eMJCu1433IMiUj4RV4r0zesKg/1VIsEnkn
+        7w0g+cPJ5Pfzj0ewIqfUMM+6UoxssWuYC4t7vXg==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=M2zdMu
+        VXrO3RS7mphjNsozbVtL93heOH6wA/NOHeb+0=; b=VAghNPWMpfYQAih/+t1B7h
+        TM5h0Cmp8xF2l6IqUzaLabOyXKQVDwa1nMKBDsm40TdCJ17oYOn26qWAeM0Zmn4b
+        mIpgoD8dzm3+/2O/5R/THItQC1+T4Ohw3MaAYpx32znHpCAsEituY8MuC8GmMA++
+        +BhtO0/vYfgRgvXqQrBB8M2Bg19OoYstd87+4qB8m+k4BLi+1gup1urE/2KlQHEC
+        8ER4CaNxbxDIhrBhYQnqf+FMhfp4FZjwg/90rArk+1UMKRa5tUyiMkgMkedykTmX
+        xlpSmhRCvC647fo4tsN/psw7GQadIyvQTBG1t+qUhtx+grivSwAXQr60zzRslnuA
+        ==
+X-ME-Sender: <xms:02MVXWNEEvUvgCmT9Rp_U7WUCE_s-OHhIqirMRNhk4vacMdYbvuOJw>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduvddrudelgdeflecutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
+    fjughrpefofgggkfgjfhffhffvufgtsehttdertderreejnecuhfhrohhmpedftehnughr
+    vgifucflvghffhgvrhihfdcuoegrnhgurhgvfiesrghjrdhiugdrrghuqeenucfrrghrrg
+    hmpehmrghilhhfrhhomheprghnughrvgifsegrjhdrihgurdgruhenucevlhhushhtvghr
+    ufhiiigvpedt
+X-ME-Proxy: <xmx:02MVXb5tX7wtiQ9Nn8tlbvYa4tHLKwcSlmUFTTMN-utY_5oDvGhNmw>
+    <xmx:02MVXSXAUZLXEP5_EeyTtNY0fzpaWNMTsXy6QK2Y21TeqAKNwbbmsw>
+    <xmx:02MVXd1FQhyP2jlBRPc9TZQc8LupomSHtV1nM2mtOTJJo_FTD4Wdxw>
+    <xmx:1WMVXe3pXluupymUHxOiZzcWvVaASLutrERE5TF2c17qhyUFV12FSw>
+Received: by mailuser.nyi.internal (Postfix, from userid 501)
+        id BA943E00A2; Thu, 27 Jun 2019 20:48:19 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
+User-Agent: Cyrus-JMAP/3.1.6-731-g19d3b16-fmstable-20190627v1
+Mime-Version: 1.0
+Message-Id: <d3291d9d-241b-40dc-b645-21f49f98da28@www.fastmail.com>
+In-Reply-To: <CAL_JsqLiZzkJZ+CeaMDer=Arm9vFdG1Y_6F0M=AZV=82EqORFg@mail.gmail.com>
+References: <20190626071430.28556-1-andrew@aj.id.au>
+ <20190626071430.28556-3-andrew@aj.id.au>
+ <CAL_JsqKXPzFYTHos-uvCUtBj-bcsNfrzt5GjxQ=PmgeXpp5J-A@mail.gmail.com>
+ <ee0cac9e-4b39-4900-87a8-3dabb58ed883@www.fastmail.com>
+ <CAL_JsqLiZzkJZ+CeaMDer=Arm9vFdG1Y_6F0M=AZV=82EqORFg@mail.gmail.com>
+Date:   Fri, 28 Jun 2019 10:17:39 +0930
+From:   "Andrew Jeffery" <andrew@aj.id.au>
+To:     "Rob Herring" <robh+dt@kernel.org>
+Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "Ryan Chen" <ryan_chen@aspeedtech.com>,
+        "Linus Walleij" <linus.walleij@linaro.org>,
+        "Mark Rutland" <mark.rutland@arm.com>,
+        "Joel Stanley" <joel@jms.id.au>, linux-aspeed@lists.ozlabs.org,
+        "OpenBMC Maillist" <openbmc@lists.ozlabs.org>,
+        devicetree@vger.kernel.org,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: =?UTF-8?Q?Re:_[PATCH_2/8]_dt-bindings:_pinctrl:_aspeed:_Convert_AST2400_?=
+ =?UTF-8?Q?bindings_to_json-schema?=
+Content-Type: text/plain
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Jun 24 2019 at 07:29 -0600, Linus Walleij wrote:
->+static const struct irq_domain_ops gpiochip_hierarchy_domain_ops = {
->+	.activate = gpiochip_irq_domain_activate,
->+	.deactivate = gpiochip_irq_domain_deactivate,
->+	.translate = gpiochip_hierarchy_irq_domain_translate,
->+	.alloc = gpiochip_hierarchy_irq_domain_alloc,
->+	.free = irq_domain_free_irqs_common,
->+};
->+
->+static int gpiochip_hierarchy_add_domain(struct gpio_chip *gc)
->+{
->+	if (!gc->irq.parent_domain) {
->+		chip_err(gc, "missing parent irqdomain\n");
->+		return -EINVAL;
->+	}
->+
->+	if (!gc->irq.parent_domain ||
->+	    !gc->irq.child_to_parent_hwirq ||
->+	    !gc->irq.fwnode) {
->+		chip_err(gc, "missing irqdomain vital data\n");
->+		return -EINVAL;
->+	}
->+
->+	gc->irq.domain = irq_domain_create_hierarchy(
->+		gc->irq.parent_domain,
->+		IRQ_DOMAIN_FLAG_HIERARCHY,
->+		gc->ngpio,
->+		gc->irq.fwnode,
->+		&gpiochip_hierarchy_domain_ops,
-This should probably be used only if gc->irq.domain_ops is not set.
->+		gc);
->+
->+	if (!gc->irq.domain) {
->+		chip_err(gc, "failed to add hierarchical domain\n");
->+		return -EINVAL;
->+	}
->+
->+	gpiochip_set_hierarchical_irqchip(gc, gc->irq.chip);
->+
->+	chip_info(gc, "set up hierarchical irqdomain\n");
->+
->+	return 0;
->+}
->+
 
-Thanks,
-Lina
+
+On Thu, 27 Jun 2019, at 23:40, Rob Herring wrote:
+> On Wed, Jun 26, 2019 at 6:44 PM Andrew Jeffery <andrew@aj.id.au> wrote:
+> >
+> >
+> >
+> > On Wed, 26 Jun 2019, at 23:17, Rob Herring wrote:
+> > > On Wed, Jun 26, 2019 at 1:21 AM Andrew Jeffery <andrew@aj.id.au> wrote:
+> > > >
+> > > > Convert ASPEED pinctrl bindings to DT schema format using json-schema
+> > >
+> > > BTW, ASPEED is one of the remaining platforms needing the top-level
+> > > board bindings converted.
+> >
+> > Okay, I'll put together patches to fix that.
+> >
+> > >
+> > > >
+> > > > Signed-off-by: Andrew Jeffery <andrew@aj.id.au>
+> > > > ---
+> > > >  .../pinctrl/aspeed,ast2400-pinctrl.txt        | 80 -------------------
+> > > >  .../pinctrl/aspeed,ast2400-pinctrl.yaml       | 73 +++++++++++++++++
+> > > >  2 files changed, 73 insertions(+), 80 deletions(-)
+> > > >  delete mode 100644 Documentation/devicetree/bindings/pinctrl/aspeed,ast2400-pinctrl.txt
+> > > >  create mode 100644 Documentation/devicetree/bindings/pinctrl/aspeed,ast2400-pinctrl.yaml
+> > >
+> > > > diff --git a/Documentation/devicetree/bindings/pinctrl/aspeed,ast2400-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/aspeed,ast2400-pinctrl.yaml
+> > > > new file mode 100644
+> > > > index 000000000000..3b8cf3e51506
+> > > > --- /dev/null
+> > > > +++ b/Documentation/devicetree/bindings/pinctrl/aspeed,ast2400-pinctrl.yaml
+> > > > @@ -0,0 +1,73 @@
+> > > > +# SPDX-License-Identifier: GPL-2.0+
+> > >
+> > > Do you have rights to change the license?
+> >
+> > Where are you coming from with this question? The bindings previously didn't list a
+> > license, is there some implicit license for them? I would have thought it was GPL-2.0?
+> 
+> Yes, it is implicitly GPL-2.0 since it is in the kernel tree and has
+> no other license text.
+> 
+> > IBM's (my employer's) preferred contribution license is GPL 2.0-or-later, so I was just
+> > adding the SPDX marker to clarify.
+> 
+> Adding 'or-later' is a licensing change. If IBM is the copyright
+> holder on all this file, then that is fine.
+
+I authored the file for IBM and they hold the copyright, so the change is permitted.
+
+> 
+> > > If so, the preference is to
+> > > dual license with (GPL-2.0 OR BSD-2-Clause).
+> >
+> > You're asking if I have the power to relicense so I can dual license it this way?
+> 
+> It would probably be up to your company. If that's an issue, then not
+> dual licensing is fine. I don't want to hold things up on that.
+
+Okay. I've asked and the query is being resolved internally. I'm not sure when
+that will occur though, so I'll relicense it in a future patch if the request gets
+the go ahead. Just for the record, what's the motivation for the dual license?
+Understanding why will likely help resolve the request.
+
+> 
+> [...]
+> 
+> > > > +required:
+> > > > +  - compatible
+> > > > +
+> > > > +description: |+
+> > >
+> > > description goes before properties.
+> >
+> > Okay. I wouldn't have thought the ordering mattered. Is this just a preference?
+> 
+> Yes, just a preference.
+> 
+> > The tools seemed to run fine as is.
+> >
+> > I'll re-order it regardless.
+> >
+> > >
+> > > > +  The pin controller node should be the child of a syscon node with the
+> > > > +  required property:
+> > > > +
+> > > > +  - compatible:     Should be one of the following:
+> > > > +                    "aspeed,ast2400-scu", "syscon", "simple-mfd"
+> > > > +                    "aspeed,g4-scu", "syscon", "simple-mfd"
+> > > > +
+> > > > +  Refer to the the bindings described in
+> > > > +  Documentation/devicetree/bindings/mfd/syscon.txt
+> > > > +
+> > > > +  For the AST2400 pinmux, each mux function has only one associated pin group.
+> > > > +  Each group is named by its function. The following values for the function
+> > > > +  and groups properties are supported:
+> > > > +
+> > > > +  ACPI ADC0 ADC1 ADC10 ADC11 ADC12 ADC13 ADC14 ADC15 ADC2 ADC3 ADC4 ADC5 ADC6
+> > > > +  ADC7 ADC8 ADC9 BMCINT DDCCLK DDCDAT EXTRST FLACK FLBUSY FLWP GPID GPID0 GPID2
+> > > > +  GPID4 GPID6 GPIE0 GPIE2 GPIE4 GPIE6 I2C10 I2C11 I2C12 I2C13 I2C14 I2C3 I2C4
+> > > > +  I2C5 I2C6 I2C7 I2C8 I2C9 LPCPD LPCPME LPCRST LPCSMI MAC1LINK MAC2LINK MDIO1
+> > > > +  MDIO2 NCTS1 NCTS2 NCTS3 NCTS4 NDCD1 NDCD2 NDCD3 NDCD4 NDSR1 NDSR2 NDSR3 NDSR4
+> > > > +  NDTR1 NDTR2 NDTR3 NDTR4 NDTS4 NRI1 NRI2 NRI3 NRI4 NRTS1 NRTS2 NRTS3 OSCCLK
+> > > > +  PWM0 PWM1 PWM2 PWM3 PWM4 PWM5 PWM6 PWM7 RGMII1 RGMII2 RMII1 RMII2 ROM16 ROM8
+> > > > +  ROMCS1 ROMCS2 ROMCS3 ROMCS4 RXD1 RXD2 RXD3 RXD4 SALT1 SALT2 SALT3 SALT4 SD1
+> > > > +  SD2 SGPMCK SGPMI SGPMLD SGPMO SGPSCK SGPSI0 SGPSI1 SGPSLD SIOONCTRL SIOPBI
+> > > > +  SIOPBO SIOPWREQ SIOPWRGD SIOS3 SIOS5 SIOSCI SPI1 SPI1DEBUG SPI1PASSTHRU
+> > > > +  SPICS1 TIMER3 TIMER4 TIMER5 TIMER6 TIMER7 TIMER8 TXD1 TXD2 TXD3 TXD4 UART6
+> > > > +  USB11D1 USB11H2 USB2D1 USB2H1 USBCKI VGABIOS_ROM VGAHS VGAVS VPI18 VPI24
+> > > > +  VPI30 VPO12 VPO24 WDTRST1 WDTRST2
+> > >
+> > > This should be a schema.
+> >
+> > Yeah, I covered this in my cover letter. I was hoping to get away without
+> > that for the moment as this seems like the first pinctrl binding to be
+> > converted, however if you insist...
+> 
+> That generally doesn't matter. You can assume common properties will
+> have a schema and you don't need to define common constraints (like
+> 'function' is a string array). You only need what is specific to this
+> binding which is possible values.
+
+Right, it just wasn't clear to me how much effort was involved. Having
+hacked around a bit now I've found it's not so much.
+
+Thanks for your feedback.
+
+Andrew
