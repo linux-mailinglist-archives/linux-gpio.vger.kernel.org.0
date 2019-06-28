@@ -2,89 +2,107 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 170B15977E
-	for <lists+linux-gpio@lfdr.de>; Fri, 28 Jun 2019 11:31:06 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C59D5597A5
+	for <lists+linux-gpio@lfdr.de>; Fri, 28 Jun 2019 11:35:59 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726528AbfF1JbF (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 28 Jun 2019 05:31:05 -0400
-Received: from relay1.mentorg.com ([192.94.38.131]:51497 "EHLO
-        relay1.mentorg.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726385AbfF1JbF (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 28 Jun 2019 05:31:05 -0400
-Received: from nat-ies.mentorg.com ([192.94.31.2] helo=svr-ies-mbx-01.mgc.mentorg.com)
-        by relay1.mentorg.com with esmtps (TLSv1.2:ECDHE-RSA-AES256-SHA384:256)
-        id 1hgnDj-0002lR-A5 from Harish_Kandiga@mentor.com ; Fri, 28 Jun 2019 02:31:03 -0700
-Received: from hkandiga-VirtualBox.ina-wifi.mentorg.com (137.202.0.90) by
- svr-ies-mbx-01.mgc.mentorg.com (139.181.222.1) with Microsoft SMTP Server
- (TLS) id 15.0.1320.4; Fri, 28 Jun 2019 10:30:57 +0100
-From:   Harish Jenny K N <harish_kandiga@mentor.com>
-To:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>
-CC:     <devicetree@vger.kernel.org>, <linux-gpio@vger.kernel.org>,
-        Harish Jenny K N <harish_kandiga@mentor.com>,
-        Balasubramani Vivekanandan 
-        <balasubramani_vivekanandan@mentor.com>
-Subject: [PATCH V4 2/2] gpio: inverter: document the inverter bindings
-Date:   Fri, 28 Jun 2019 15:00:50 +0530
-Message-ID: <1561714250-19613-1-git-send-email-harish_kandiga@mentor.com>
-X-Mailer: git-send-email 2.7.4
+        id S1726709AbfF1Jf7 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 28 Jun 2019 05:35:59 -0400
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:41962 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726681AbfF1Jf7 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 28 Jun 2019 05:35:59 -0400
+Received: by mail-lj1-f194.google.com with SMTP id 205so5302248ljj.8
+        for <linux-gpio@vger.kernel.org>; Fri, 28 Jun 2019 02:35:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:from:date:message-id:subject:to:cc;
+        bh=gm81eQXirqjQ8ir5W1mh/MO4CE2jStCNfLLn6pKP+mE=;
+        b=Me3TL758RRm+ZooMTytttUvmF+hc1jb8D/jfkVz9b19dkkWHYgqnW/mBLcgiA7cYZS
+         zuuhJ0sMQCj72GTTK24NETz6bIwj26Rc8pCfxLv2x2AohpOZPbmyP6mOlpZ6YWBEmily
+         DkS6bSFQQRVKcNGEC6fRJrTSKvftsC1zCyWjQ9ftXCLA8c2EDkLitxNMHKZ1fHgab2lE
+         HE72Zcqo9zWv6tU1LFarRIsNHQ8rumMUh61EDaioegjaLOuc9HKiU04ZWkD1G73vO8lf
+         n+0ITHbfacSkxycFTRUgAZY0h78QHmguLFgMvurVVFSlCWhqA6+Ghrf2fqFTbojmrVw0
+         2PZQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
+        bh=gm81eQXirqjQ8ir5W1mh/MO4CE2jStCNfLLn6pKP+mE=;
+        b=cGmpp3ZiIcvjM6LogGFVOyv/g2yJeo8zqVBik0CCqzrNuDh3lcXajD1NyvaFOyuV3B
+         4N6anRwADMR0GzWDjZbRCOaIoUv3A2Za48aJG0KH9Fwn6dP02+j+gqoTc15ppn/mDnvG
+         od/4DxbaKR1tNQVK6/QnA2NAgO4Ck3sOcyUd+J/u8JSxN/X2pFJgcgdjGbSxfipL6nIf
+         8Aya0KAW4D1pkIUij7mNHdvYSmauo1XdoIYfmWnqXRRXsZP+7k3llLtDzpFImqM9WBxV
+         pxdgb1TRY1Isf0fArKnS0gMyCAxbnP1e19RBCLn3M49C3w7H+8zyIXe3YnCZM+BO3E/a
+         GgBA==
+X-Gm-Message-State: APjAAAVbuqk8sQ1nZrzTK2+p2A7OVfYjjVX9SHkGG0eQDkM+N+cboGIL
+        rDU7zd2qzCzw0z3UHC5zSHwottOEmFhkxwVya4uq4w==
+X-Google-Smtp-Source: APXvYqyCRplnbdfueknv2w+rIqQfd/hR36KbMNU3YvRG5O2rZ8mWhRYuIhtOKpoEiLQn/QiwaIWlheLq5Fd/Jb/KPHQ=
+X-Received: by 2002:a2e:8756:: with SMTP id q22mr5727021ljj.108.1561714556904;
+ Fri, 28 Jun 2019 02:35:56 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [137.202.0.90]
-X-ClientProxiedBy: SVR-IES-MBX-07.mgc.mentorg.com (139.181.222.7) To
- svr-ies-mbx-01.mgc.mentorg.com (139.181.222.1)
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Fri, 28 Jun 2019 10:35:45 +0100
+Message-ID: <CACRpkdaiMrQyaxrLhy=Az5SCoz_C3NWRSYiQFqr=_BsD+qugMQ@mail.gmail.com>
+Subject: [GIT PULL] pin control fixes for v5.2
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Phil Reid <preid@electromag.com.au>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Nicolas Boichat <drinkcat@chromium.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Document the device tree binding for the inverter gpio
-controller to configure the polarity of the gpio pins
-used by the consumers.
+Hi Linus,
 
-Signed-off-by: Harish Jenny K N <harish_kandiga@mentor.com>
----
- .../devicetree/bindings/gpio/gpio-inverter.txt     | 29 ++++++++++++++++++++++
- 1 file changed, 29 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/gpio/gpio-inverter.txt
+sorry to bomb in fixes this late. Maybe I can comfort you
+by saying it is only driver fixes, and mostly IRQ handling
+which is something GPIO and pin control drivers never get
+right. You think it works and then it doesn't.
 
-diff --git a/Documentation/devicetree/bindings/gpio/gpio-inverter.txt b/Documentation/devicetree/bindings/gpio/gpio-inverter.txt
-new file mode 100644
-index 0000000..8bb6b2e
---- /dev/null
-+++ b/Documentation/devicetree/bindings/gpio/gpio-inverter.txt
-@@ -0,0 +1,29 @@
-+GPIO-INVERTER
-+======
-+This binding defines the gpio-inverter. The gpio-inverter is a driver that
-+allows to properly describe the gpio polarities on the hardware.
-+
-+Please refer to gpio.txt for generic information regarding GPIO bindings.
-+
-+Required properties:
-+- compatible : "gpio-inverter".
-+- gpio-controller: Marks the port as GPIO controller.
-+- #gpio-cells: One. This is the pin number.
-+- inverted-gpios: Array of GPIO pins required from consumers, whose polarity
-+  has to be inverted in the driver.
-+Note: gpio flag should be set as GPIO_ACTIVE_HIGH. Using GPIO_ACTICE_LOW will
-+cause double inversion.
-+
-+Optional properties:
-+- gpio-line-names: Refer to gpio.txt for details regarding this property.
-+
-+Example:
-+
-+gpio_inv: gpio-inv {
-+	compatible = "gpio-inverter";
-+	gpio-controller;
-+	#gpio-cells = <1>;
-+	inverted-gpios = <&gpio5 24 GPIO_ACTIVE_HIGH>,
-+	<&gpio7 0 GPIO_ACTIVE_HIGH>, <&gpio7 1 GPIO_ACTIVE_HIGH>;
-+	gpio-line-names = "JTAG_DNL_EN", "lvds-pwrdwn", "lcd-on";
-+};
---
-2.7.4
+It also took some time because we smoked out commit
+message syntax issues in linux-next.
 
+Please pull it in!
+
+Yours,
+Linus Walleij
+
+The following changes since commit f2c7c76c5d0a443053e94adb9f0918fa2fb85c3a:
+
+  Linux 5.2-rc3 (2019-06-02 13:55:33 -0700)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git
+tags/pinctrl-v5.2-3
+
+for you to fetch changes up to 9d957a959bc8c3dfe37572ac8e99affb5a885965:
+
+  pinctrl: mediatek: Update cur_mask in mask/mask ops (2019-06-27
+12:22:11 +0100)
+
+----------------------------------------------------------------
+Pin control fixes for the v5.2 cycle:
+- Fix IRQ setup in the MCP23s08.
+- Fix pin setup on pins > 31 in the Ocelot driver.
+- Fix IRQs in the Mediatek driver.
+
+----------------------------------------------------------------
+Alexandre Belloni (2):
+      pinctrl: ocelot: fix gpio direction for pins after 31
+      pinctrl: ocelot: fix pinmuxing for pins after 31
+
+Nicolas Boichat (2):
+      pinctrl: mediatek: Ignore interrupts that are wake only during resume
+      pinctrl: mediatek: Update cur_mask in mask/mask ops
+
+Phil Reid (1):
+      pinctrl: mcp23s08: Fix add_data and irqchip_add_nested call order
+
+ drivers/pinctrl/mediatek/mtk-eint.c | 34 +++++++++++++++++++---------------
+ drivers/pinctrl/pinctrl-mcp23s08.c  |  8 ++++----
+ drivers/pinctrl/pinctrl-ocelot.c    | 18 ++++++++++--------
+ 3 files changed, 33 insertions(+), 27 deletions(-)
