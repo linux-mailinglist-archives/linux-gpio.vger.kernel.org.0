@@ -2,78 +2,159 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 18F3059694
-	for <lists+linux-gpio@lfdr.de>; Fri, 28 Jun 2019 10:55:41 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0384159718
+	for <lists+linux-gpio@lfdr.de>; Fri, 28 Jun 2019 11:14:36 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726385AbfF1Izk (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 28 Jun 2019 04:55:40 -0400
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:38835 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725873AbfF1Izk (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 28 Jun 2019 04:55:40 -0400
-Received: by mail-lj1-f196.google.com with SMTP id r9so5203161ljg.5
-        for <linux-gpio@vger.kernel.org>; Fri, 28 Jun 2019 01:55:38 -0700 (PDT)
+        id S1726484AbfF1JOe (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 28 Jun 2019 05:14:34 -0400
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:36464 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726508AbfF1JOe (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 28 Jun 2019 05:14:34 -0400
+Received: by mail-lj1-f195.google.com with SMTP id i21so5271089ljj.3
+        for <linux-gpio@vger.kernel.org>; Fri, 28 Jun 2019 02:14:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=6SDXvLF6WGLeyRshJ4F68qdUEnT/yo0TXC3eJQ5oViY=;
-        b=bvLvrtfOCRsDAbMbfqoawBL8qsAlSFfvYELFJJamjkbF9KGdm5UbBdrJLuWTBwlfoL
-         k8HgEeVZqt/Zg6IHOPjzMiqQ7RJ3fvfGgW7Zk0sLsZUgnGR9WpLh8cPSrRXgDwG8hvKz
-         AJzo8zrlu4SZHnxfCIR17X4+2FN8DGrfFoxNNPt5nNHrJ7/wxdat4RNT24R58aEPnvOH
-         kKaK1p88OVc9as0BZ0euyIGN0kweoZs7MxEEyzJARwd+NSjM/h9tX9lMly1Ov6/xRHEn
-         YsDX6L/hUdlxSinDUKCKZ9SZ0wd+8hizfmrUWsSMckFdJsfA3bUA5KbFO8k2sqCs3zD1
-         +4lQ==
+        bh=uznwEwrkA1WxOpPXx1Qs1nC3MJdNO44F8qkdWkJ+eWA=;
+        b=Dw6osl4lChKJIdc5ihTOWdIykVTBBv1r71/QuNAsX0AIj1XlxfSZFAR6OsNmTvyjMb
+         MCTXi+Sn6wSuCZ4yq31AcHJ6jJby18QXHUF+riuelGP416y9+a0ZPN/ejIsaXOvWrBgP
+         9Jc7GQbzskBBd6F4cKn2T5CgAZQD0rMGfZVDkN3hAZI3mL6zuIwyrFhlIGSMFsWos1zW
+         zHqA0kFatz/ATiemywJAqIkV8CBqBe7WXQWLHfYQNHgziCFra3oolxJaW/rlSbpM9u3R
+         kYke8lNK5BkCQysPOfZGT8teSP35hksLaZ3xNUxyti1TLA//CqJo2yNYLo+nFzUiysAN
+         CQGA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=6SDXvLF6WGLeyRshJ4F68qdUEnT/yo0TXC3eJQ5oViY=;
-        b=Z4FFzKUw2Td7chGSkjqQf2CVOzm/vzd6WC3zlAAbpQ4Kc5zKacWw0MGAID+o1DQfJd
-         XRJAMtDiuQYO/54EVEavIQGWdLSof5peGR3SvvzT0Tp3sfXyC8MGQ6xzqCAkpS3nVy0r
-         0AlK4KVnoip3+eWC7zPtwSlUFaBOAm7JnXoMo0ee1dkrD+WcdT4vCE2Ely3ngn8HzYFM
-         1wTl3k56M+SNPFgYaPgskNEPwCW9MFYN+UaScReVfaLrPUby+a4k83xu9tkMTzzvYN4Z
-         1lUxHAtoDRBpwveC419fADajGPG605NbCuQ9XbIrWDsY9D6acWwT/IIgaCekWjh73bI1
-         jYpw==
-X-Gm-Message-State: APjAAAV/j3a6UwldYPz38+5PjSc+biKkAgS29Ha5pxGwK5lZGD/DqsIb
-        MHR99TTjm25zQ/tr7hbfjDvqOSCoFBeKdUE5SoJBlw==
-X-Google-Smtp-Source: APXvYqyrrpEwTUchSPESqzYoxtYOm3sJzDtertH7H0sUSkVbFiwz86m6fZBNCReNx09AlSfQxXSZcoK7BQX1NPz1uUs=
-X-Received: by 2002:a2e:8756:: with SMTP id q22mr5617189ljj.108.1561712137792;
- Fri, 28 Jun 2019 01:55:37 -0700 (PDT)
+        bh=uznwEwrkA1WxOpPXx1Qs1nC3MJdNO44F8qkdWkJ+eWA=;
+        b=U1Ds3C2amkUPKlXHVJ4F9N4E/zA7aRyXzgJ9XGLmQz90EbmsaAajOmfbI3O7zo3daE
+         g+ZHFpuSBU17nm6z9+/UmWRObYLUENhtfGkesY7wtP+eNGyUPh3L+XgTsfG9/XMZ9892
+         yQXSwA0TYf2fdam42a8zZ+X6bUTfrjF0hZM6LTTNRMgYH/slZcacwxvhpbiY26enWhjc
+         l96J1WNzaZS7tahpCFSn2L6fIsO9KDn5wDXFEvlodNu6EMNBSMg/63goqJzEvurGePwn
+         44N+GWsR9y6bqBsaLWyJZR/eQvHuVbJyIo7F8lBVdKpjRumKSdgYklUPP5ObDX9QYbKp
+         gE6A==
+X-Gm-Message-State: APjAAAUVSymisFT/if5MRntqMFYitL9/755gUmKkiGhxNiaP48GhhiLu
+        w/7fHd0kJj5ngUiAe+nDADIB/NdmQ4cC6A/GD3S8Gg==
+X-Google-Smtp-Source: APXvYqycHcj90kraQFODoJwFpy4ZpOMmJz0R9U8j9TWPajh/F2Q0ju0N595YB1frnXjW1PpRD1d+SIltiE5c/PFW5CU=
+X-Received: by 2002:a2e:2c14:: with SMTP id s20mr5489914ljs.54.1561713272207;
+ Fri, 28 Jun 2019 02:14:32 -0700 (PDT)
 MIME-Version: 1.0
-References: <1561699236-18620-1-git-send-email-harish_kandiga@mentor.com> <1561699236-18620-2-git-send-email-harish_kandiga@mentor.com>
-In-Reply-To: <1561699236-18620-2-git-send-email-harish_kandiga@mentor.com>
+References: <20190624132531.6184-1-linus.walleij@linaro.org> <20190626210900.GA1629@codeaurora.org>
+In-Reply-To: <20190626210900.GA1629@codeaurora.org>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Fri, 28 Jun 2019 09:55:26 +0100
-Message-ID: <CACRpkdZQpr78=ZzBQEkbjS714W0HPEurO8haM8PpmpvYFivm-A@mail.gmail.com>
-Subject: Re: [PATCH V4 1/2] gpio: inverter: Add Inverter controller for gpio configuration
-To:     Harish Jenny K N <harish_kandiga@mentor.com>
-Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Balasubramani Vivekanandan 
-        <balasubramani_vivekanandan@mentor.com>
+Date:   Fri, 28 Jun 2019 10:14:20 +0100
+Message-ID: <CACRpkdbxicUbg9NSaYsRMQG0Qo-WysdU07qD_T3rDEe7cjCcUw@mail.gmail.com>
+Subject: Re: [PATCH 1/4 v1] gpio: Add support for hierarchical IRQ domains
+To:     Lina Iyer <ilina@codeaurora.org>
+Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Marc Zyngier <marc.zyngier@arm.com>,
+        Jon Hunter <jonathanh@nvidia.com>,
+        Sowjanya Komatineni <skomatineni@nvidia.com>,
+        Bitan Biswas <bbiswas@nvidia.com>, linux-tegra@vger.kernel.org,
+        David Daney <david.daney@cavium.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Brian Masney <masneyb@onstation.org>,
+        Thierry Reding <treding@nvidia.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Jun 28, 2019 at 6:20 AM Harish Jenny K N
-<harish_kandiga@mentor.com> wrote:
+Hi Lina,
 
-> Provides a new inverter gpio controller to configure the polarity
-> of the gpio pins. This driver enables the consumers to directly
-> use the gpio pin without worrying about the hardware level
-> polarity configuration. Polarity configuration will be done by
-> the inverter gpio controller based on device tree information.
+thanks for your comments!
+
+On Wed, Jun 26, 2019 at 10:09 PM Lina Iyer <ilina@codeaurora.org> wrote:
+
+> Thanks for the patch Linus. I was running into the warning in
+> gpiochip_set_irq_hooks(), because it was called from two places.
+> Hopefully, this will fix that as well. I will give it a try.
+
+That's usually when creating two irqchips from a static config.
+The most common solution is to put struct irq_chip into the
+driver state container and assign all functions dynamically so
+the irqchip is a "live" struct if you see how I mean. This is
+needed because the gpiolib irqchip core will augment some
+of the pointers in the irqchip, so if that is done twice, it feels
+a bit shaky.
+
+> On Mon, Jun 24 2019 at 07:29 -0600, Linus Walleij wrote:
+
+> >+  girq->num_parents = 1;
+> >+  girq->parents = devm_kcalloc(dev, 1, sizeof(*girq->parents),
+> >+                               GFP_KERNEL);
 >
-> Signed-off-by: Balasubramani Vivekanandan <balasubramani_vivekanandan@mentor.com>
-> Signed-off-by: Harish Jenny K N <harish_kandiga@mentor.com>
+> Could this be folded into the gpiolib?
 
-This code is finished, very nice.
+It is part of the existing API for providing an irq_chip along
+with the gpio_chip but you are right, it's kludgy. I do have
+a patch like this, making the parents a static sized field
+simply:
+https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-gpio.git/commit/?h=devel-gpio-irqchip
 
-We still need some review from the DT people before I
-apply it.
+So I might go on this approach. (In a separate patch.)
+
+> >+  /* Get a pointer to the gpio_irq_chip */
+> >+  girq = &g->gc.irq;
+> >+  girq->chip = &g->irq;
+> >+  girq->default_type = IRQ_TYPE_NONE;
+> >+  girq->handler = handle_bad_irq;
+> >+  girq->fwnode = g->fwnode;
+> >+  girq->parent_domain = parent;
+> >+  girq->child_to_parent_hwirq = my_gpio_child_to_parent_hwirq;
+> >+
+> Should be the necessary, if the driver implements it's own .alloc?
+
+The idea is that when using GPIOLIB_IRQCHIP and
+IRQ_DOMAIN_HIERARCHY together, the drivers utilizing
+GPIOLIB_IRQCHIP will rely on the .alloc() and .translate()
+implementations in gpiolib so the ambition is that these should
+cover all hierarchical use cases.
+
+> >+static int gpiochip_hierarchy_add_domain(struct gpio_chip *gc)
+> >+{
+> >+      if (!gc->irq.parent_domain) {
+> >+              chip_err(gc, "missing parent irqdomain\n");
+> >+              return -EINVAL;
+> >+      }
+> >+
+> >+      if (!gc->irq.parent_domain ||
+> >+          !gc->irq.child_to_parent_hwirq ||
+>
+> This should probably be validated if the .ops have not been set.
+
+Yeah the idea here is a pretty imperialistic one: the gpiolib
+always provide the ops for hierarchical IRQ. The library
+implementation should cover all needs of all consumers,
+for the hierarchical case.
+
+I might be wrong, but then I need to see some example
+of hierarchies that need something more than what the
+gpiolib core is providing and idiomatic enough that it can't
+be rewritten and absolutely must have its own ops.
+
+> >+      int (*child_to_parent_hwirq)(struct gpio_chip *chip,
+> >+                                   unsigned int child_hwirq,
+> >+                                   unsigned int child_type,
+> >+                                   unsigned int *parent_hwirq,
+> >+                                   unsigned int *parent_type);
+>
+> Would irq_fwspec(s) be better than passing all these arguments around?
+
+I looked over these three drivers that I patched in the series
+and they all seemed to need pretty much these arguments,
+so wrapping it into fwspec would probably just make all
+drivers have to unwrap them to get child (I guess not parent)
+back out.
+
+But we can patch it later if it proves this is too much arguments
+for some drivers. Its the right amount for those I changed,
+AFAICT.
 
 Yours,
 Linus Walleij
