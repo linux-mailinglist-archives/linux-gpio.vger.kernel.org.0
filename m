@@ -2,30 +2,33 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id C1A375905E
-	for <lists+linux-gpio@lfdr.de>; Fri, 28 Jun 2019 04:14:14 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 96A72590AA
+	for <lists+linux-gpio@lfdr.de>; Fri, 28 Jun 2019 04:16:14 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726716AbfF1CNl (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 27 Jun 2019 22:13:41 -0400
-Received: from hqemgate14.nvidia.com ([216.228.121.143]:19612 "EHLO
-        hqemgate14.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726694AbfF1CNk (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 27 Jun 2019 22:13:40 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate14.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5d1577cb0001>; Thu, 27 Jun 2019 19:13:31 -0700
+        id S1726992AbfF1COs (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 27 Jun 2019 22:14:48 -0400
+Received: from hqemgate16.nvidia.com ([216.228.121.65]:17594 "EHLO
+        hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726426AbfF1CNg (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 27 Jun 2019 22:13:36 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5d1577cd0000>; Thu, 27 Jun 2019 19:13:33 -0700
 Received: from hqmail.nvidia.com ([172.20.161.6])
   by hqpgpgate101.nvidia.com (PGP Universal service);
-  Thu, 27 Jun 2019 19:13:33 -0700
+  Thu, 27 Jun 2019 19:13:34 -0700
 X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Thu, 27 Jun 2019 19:13:33 -0700
-Received: from HQMAIL104.nvidia.com (172.18.146.11) by HQMAIL103.nvidia.com
- (172.20.187.11) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 28 Jun
+        by hqpgpgate101.nvidia.com on Thu, 27 Jun 2019 19:13:34 -0700
+Received: from HQMAIL112.nvidia.com (172.18.146.18) by HQMAIL101.nvidia.com
+ (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 28 Jun
  2019 02:13:33 +0000
-Received: from hqnvemgw02.nvidia.com (172.16.227.111) by HQMAIL104.nvidia.com
- (172.18.146.11) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
+Received: from HQMAIL106.nvidia.com (172.18.146.12) by HQMAIL112.nvidia.com
+ (172.18.146.18) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 28 Jun
+ 2019 02:13:33 +0000
+Received: from hqnvemgw02.nvidia.com (172.16.227.111) by HQMAIL106.nvidia.com
+ (172.18.146.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
  Transport; Fri, 28 Jun 2019 02:13:33 +0000
 Received: from skomatineni-linux.nvidia.com (Not Verified[10.110.102.155]) by hqnvemgw02.nvidia.com with Trustwave SEG (v7,5,8,10121)
-        id <B5d1577cd0001>; Thu, 27 Jun 2019 19:13:33 -0700
+        id <B5d1577cd0002>; Thu, 27 Jun 2019 19:13:33 -0700
 From:   Sowjanya Komatineni <skomatineni@nvidia.com>
 To:     <thierry.reding@gmail.com>, <jonathanh@nvidia.com>,
         <tglx@linutronix.de>, <jason@lakedaemon.net>,
@@ -38,9 +41,9 @@ CC:     <pdeschrijver@nvidia.com>, <pgaikwad@nvidia.com>,
         <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         <mperttunen@nvidia.com>, <spatra@nvidia.com>, <robh+dt@kernel.org>,
         <digetx@gmail.com>, <devicetree@vger.kernel.org>
-Subject: [PATCH V5 01/18] irqchip: tegra: Do not disable COP IRQ during suspend
-Date:   Thu, 27 Jun 2019 19:12:35 -0700
-Message-ID: <1561687972-19319-2-git-send-email-skomatineni@nvidia.com>
+Subject: [PATCH V5 02/18] pinctrl: tegra: Add suspend and resume support
+Date:   Thu, 27 Jun 2019 19:12:36 -0700
+Message-ID: <1561687972-19319-3-git-send-email-skomatineni@nvidia.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1561687972-19319-1-git-send-email-skomatineni@nvidia.com>
 References: <1561687972-19319-1-git-send-email-skomatineni@nvidia.com>
@@ -48,95 +51,157 @@ X-NVConfidentiality: public
 MIME-Version: 1.0
 Content-Type: text/plain
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1561688011; bh=s1XnuLcDk97/CuRHD9/IW+GAX3pxhADV42EQBIG7j4Y=;
+        t=1561688013; bh=6XVtmPiEo6fFZCuCiwnb+UkS0vaYrf4FcEseKnc+izw=;
         h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
          In-Reply-To:References:X-NVConfidentiality:MIME-Version:
          Content-Type;
-        b=ETTtTjjfEu+L/wxeVVmd8cYksQbkCX1BAC6i3+R7aQOT6CazTXhXqr/531Ks2g6KO
-         uREF9fi+9zjcQZAyWJ8JWoRotKLI4tDvnUWh7S8Nzy1NDxZGm/4o72vvkJPRV1d32a
-         wpkjOREkFvio444O0ZKyL3dC8zfLAR47pk52qnE4OrGDllugTIYXun+ziZahauLueM
-         rXnswh8xu0LtGxWfwJk6+gdjw7Oy5jsPS5krxyBdcUgWtUiQDInEewOQRk8Uqfrf91
-         hTNC7uDbIz66YhPZi/A2KzLIkZqb7afAHwgPm+F8Wu+g/g1AULWN057B2lOCDNGrOj
-         Czlv7qR+FuL3A==
+        b=Um3OwDcVHDIRK3fw70C6JDSsK7KNL+Be94prmyNCuyuDnCI43A5Rh6oDEcTMG63Kz
+         TsOce2FU6YyUW0HAQ72qXwWXofnsNc98mbliOdeXwxxK2cfJ/cSMRV8bC+dvKt9nyu
+         Y89O0CS7G1QhcNjeQKLmh3NXruppoumz80bfrTZd6hBEvPtot2I1dwL9sHsmXEN3/v
+         0Wj1dw8+9Tleh12YGFBqelgsBrz6N8DBVtiaEOP29eshytynzSOIC91gvLv5+0Iju+
+         73jNbTW8/lVUHkuXG1JiywOxQFAG/cGqBTMnWCPqMtbm97ec9bvWBe1DI7HU/gAgZJ
+         wNhJLBAQhYNTg==
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Tegra210 platforms use sc7 entry firmware to program Tegra LP0/SC7 entry
-sequence and sc7 entry firmware is run from COP/BPMP-Lite.
+This patch adds support for Tegra pinctrl driver suspend and resume.
 
-So, COP/BPMP-Lite still need IRQ function to finish SC7 suspend sequence
-for Tegra210.
-
-This patch has fix for leaving the COP IRQ enabled for Tegra210 during
-interrupt controller suspend operation.
+During suspend, context of all pinctrl registers are stored and
+on resume they are all restored to have all the pinmux and pad
+configuration for normal operation.
 
 Acked-by: Thierry Reding <treding@nvidia.com>
 Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
 ---
- drivers/irqchip/irq-tegra.c | 20 ++++++++++++++++++--
- 1 file changed, 18 insertions(+), 2 deletions(-)
+ drivers/pinctrl/tegra/pinctrl-tegra.c    | 52 ++++++++++++++++++++++++++++++++
+ drivers/pinctrl/tegra/pinctrl-tegra.h    |  3 ++
+ drivers/pinctrl/tegra/pinctrl-tegra210.c |  1 +
+ 3 files changed, 56 insertions(+)
 
-diff --git a/drivers/irqchip/irq-tegra.c b/drivers/irqchip/irq-tegra.c
-index e1f771c72fc4..851f88cef508 100644
---- a/drivers/irqchip/irq-tegra.c
-+++ b/drivers/irqchip/irq-tegra.c
-@@ -44,6 +44,7 @@ static unsigned int num_ictlrs;
+diff --git a/drivers/pinctrl/tegra/pinctrl-tegra.c b/drivers/pinctrl/tegra/pinctrl-tegra.c
+index 34596b246578..e7c0a1011cba 100644
+--- a/drivers/pinctrl/tegra/pinctrl-tegra.c
++++ b/drivers/pinctrl/tegra/pinctrl-tegra.c
+@@ -621,6 +621,43 @@ static void tegra_pinctrl_clear_parked_bits(struct tegra_pmx *pmx)
+ 	}
+ }
  
- struct tegra_ictlr_soc {
- 	unsigned int num_ictlrs;
-+	bool supports_sc7;
- };
++static int tegra_pinctrl_suspend(struct device *dev)
++{
++	struct tegra_pmx *pmx = dev_get_drvdata(dev);
++	u32 *backup_regs = pmx->backup_regs;
++	u32 *regs;
++	unsigned int i, j;
++
++	for (i = 0; i < pmx->nbanks; i++) {
++		regs = pmx->regs[i];
++		for (j = 0; j < pmx->reg_bank_size[i] / 4; j++)
++			*backup_regs++ = readl(regs++);
++	}
++
++	return pinctrl_force_sleep(pmx->pctl);
++}
++
++static int tegra_pinctrl_resume(struct device *dev)
++{
++	struct tegra_pmx *pmx = dev_get_drvdata(dev);
++	u32 *backup_regs = pmx->backup_regs;
++	u32 *regs;
++	unsigned int i, j;
++
++	for (i = 0; i < pmx->nbanks; i++) {
++		regs = pmx->regs[i];
++		for (j = 0; j < pmx->reg_bank_size[i] / 4; j++)
++			writel(*backup_regs++, regs++);
++	}
++
++	return 0;
++}
++
++const struct dev_pm_ops tegra_pinctrl_pm = {
++	.suspend = &tegra_pinctrl_suspend,
++	.resume = &tegra_pinctrl_resume
++};
++
+ static bool gpio_node_has_range(const char *compatible)
+ {
+ 	struct device_node *np;
+@@ -645,6 +682,7 @@ int tegra_pinctrl_probe(struct platform_device *pdev,
+ 	int i;
+ 	const char **group_pins;
+ 	int fn, gn, gfn;
++	unsigned long backup_regs_size = 0;
  
- static const struct tegra_ictlr_soc tegra20_ictlr_soc = {
-@@ -56,6 +57,7 @@ static const struct tegra_ictlr_soc tegra30_ictlr_soc = {
+ 	pmx = devm_kzalloc(&pdev->dev, sizeof(*pmx), GFP_KERNEL);
+ 	if (!pmx)
+@@ -697,6 +735,7 @@ int tegra_pinctrl_probe(struct platform_device *pdev,
+ 		res = platform_get_resource(pdev, IORESOURCE_MEM, i);
+ 		if (!res)
+ 			break;
++		backup_regs_size += resource_size(res);
+ 	}
+ 	pmx->nbanks = i;
  
- static const struct tegra_ictlr_soc tegra210_ictlr_soc = {
- 	.num_ictlrs = 6,
-+	.supports_sc7 = true,
- };
+@@ -705,11 +744,24 @@ int tegra_pinctrl_probe(struct platform_device *pdev,
+ 	if (!pmx->regs)
+ 		return -ENOMEM;
  
- static const struct of_device_id ictlr_matches[] = {
-@@ -67,6 +69,7 @@ static const struct of_device_id ictlr_matches[] = {
- 
- struct tegra_ictlr_info {
- 	void __iomem *base[TEGRA_MAX_NUM_ICTLRS];
-+	const struct tegra_ictlr_soc *soc;
- #ifdef CONFIG_PM_SLEEP
- 	u32 cop_ier[TEGRA_MAX_NUM_ICTLRS];
- 	u32 cop_iep[TEGRA_MAX_NUM_ICTLRS];
-@@ -147,8 +150,20 @@ static int tegra_ictlr_suspend(void)
- 		lic->cop_ier[i] = readl_relaxed(ictlr + ICTLR_COP_IER);
- 		lic->cop_iep[i] = readl_relaxed(ictlr + ICTLR_COP_IEP_CLASS);
- 
--		/* Disable COP interrupts */
--		writel_relaxed(~0ul, ictlr + ICTLR_COP_IER_CLR);
-+		/*
-+		 * AVP/COP/BPMP-Lite is the Tegra boot processor.
-+		 *
-+		 * Tegra210 system suspend flow uses sc7entry firmware which
-+		 * is executed by COP/BPMP and it includes disabling COP IRQ,
-+		 * clamping CPU rail, turning off VDD_CPU, and preparing the
-+		 * system to go to SC7/LP0.
-+		 *
-+		 * COP/BPMP wakes up when COP IRQ is triggered and runs
-+		 * sc7entry-firmware. So need to keep COP interrupt enabled.
-+		 */
-+		if (!lic->soc->supports_sc7)
-+			/* Disable COP interrupts if SC7 is not supported */
-+			writel_relaxed(~0ul, ictlr + ICTLR_COP_IER_CLR);
- 
- 		/* Disable CPU interrupts */
- 		writel_relaxed(~0ul, ictlr + ICTLR_CPU_IER_CLR);
-@@ -339,6 +354,7 @@ static int __init tegra_ictlr_init(struct device_node *node,
- 		goto out_unmap;
++	pmx->reg_bank_size = devm_kcalloc(&pdev->dev, pmx->nbanks,
++					  sizeof(*pmx->reg_bank_size),
++					  GFP_KERNEL);
++	if (!pmx->reg_bank_size)
++		return -ENOMEM;
++
++	pmx->backup_regs = devm_kzalloc(&pdev->dev, backup_regs_size,
++					GFP_KERNEL);
++	if (!pmx->backup_regs)
++		return -ENOMEM;
++
+ 	for (i = 0; i < pmx->nbanks; i++) {
+ 		res = platform_get_resource(pdev, IORESOURCE_MEM, i);
+ 		pmx->regs[i] = devm_ioremap_resource(&pdev->dev, res);
+ 		if (IS_ERR(pmx->regs[i]))
+ 			return PTR_ERR(pmx->regs[i]);
++
++		pmx->reg_bank_size[i] = resource_size(res);
  	}
  
-+	lic->soc = soc;
- 	tegra_ictlr_syscore_init();
+ 	pmx->pctl = devm_pinctrl_register(&pdev->dev, &tegra_pinctrl_desc, pmx);
+diff --git a/drivers/pinctrl/tegra/pinctrl-tegra.h b/drivers/pinctrl/tegra/pinctrl-tegra.h
+index 287702660783..55456f8d44cf 100644
+--- a/drivers/pinctrl/tegra/pinctrl-tegra.h
++++ b/drivers/pinctrl/tegra/pinctrl-tegra.h
+@@ -17,6 +17,8 @@ struct tegra_pmx {
  
- 	pr_info("%pOF: %d interrupts forwarded to %pOF\n",
+ 	int nbanks;
+ 	void __iomem **regs;
++	size_t *reg_bank_size;
++	u32 *backup_regs;
+ };
+ 
+ enum tegra_pinconf_param {
+@@ -193,6 +195,7 @@ struct tegra_pinctrl_soc_data {
+ 	bool drvtype_in_mux;
+ };
+ 
++extern const struct dev_pm_ops tegra_pinctrl_pm;
+ int tegra_pinctrl_probe(struct platform_device *pdev,
+ 			const struct tegra_pinctrl_soc_data *soc_data);
+ #endif
+diff --git a/drivers/pinctrl/tegra/pinctrl-tegra210.c b/drivers/pinctrl/tegra/pinctrl-tegra210.c
+index 0b56ad5c9c1c..edd3f4606cdb 100644
+--- a/drivers/pinctrl/tegra/pinctrl-tegra210.c
++++ b/drivers/pinctrl/tegra/pinctrl-tegra210.c
+@@ -1571,6 +1571,7 @@ static struct platform_driver tegra210_pinctrl_driver = {
+ 	.driver = {
+ 		.name = "tegra210-pinctrl",
+ 		.of_match_table = tegra210_pinctrl_of_match,
++		.pm = &tegra_pinctrl_pm,
+ 	},
+ 	.probe = tegra210_pinctrl_probe,
+ };
 -- 
 2.7.4
 
