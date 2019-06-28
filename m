@@ -2,138 +2,119 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 984075A48D
-	for <lists+linux-gpio@lfdr.de>; Fri, 28 Jun 2019 20:53:08 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D24FA5A755
+	for <lists+linux-gpio@lfdr.de>; Sat, 29 Jun 2019 01:01:39 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726905AbfF1SxH (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 28 Jun 2019 14:53:07 -0400
-Received: from mga07.intel.com ([134.134.136.100]:56007 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726563AbfF1SxH (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Fri, 28 Jun 2019 14:53:07 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 28 Jun 2019 11:53:06 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.63,428,1557212400"; 
-   d="asc'?scan'208";a="314213610"
-Received: from rarober1-mobl.amr.corp.intel.com ([10.251.157.137])
-  by orsmga004.jf.intel.com with ESMTP; 28 Jun 2019 11:53:03 -0700
-Message-ID: <fee5dd422d88806ee0b5a6b84f14cd6d50351343.camel@intel.com>
-Subject: Re: [PATCH 24/39] docs: driver-model: move it to the driver-api book
-From:   Jeff Kirsher <jeffrey.t.kirsher@intel.com>
-To:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Linux Doc Mailing List <linux-doc@vger.kernel.org>
-Cc:     Mauro Carvalho Chehab <mchehab@infradead.org>,
-        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Jean Delvare <jdelvare@suse.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Harry Wei <harryxiyou@gmail.com>,
-        Alex Shi <alex.shi@linux.alibaba.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        David Kershner <david.kershner@unisys.com>,
-        Julia Lawall <Julia.Lawall@lip6.fr>,
-        Gilles Muller <Gilles.Muller@lip6.fr>,
-        Nicolas Palix <nicolas.palix@imag.fr>,
-        Michal Marek <michal.lkml@markovi.net>,
-        linux-gpio@vger.kernel.org, linux-hwmon@vger.kernel.org,
-        intel-wired-lan@lists.osuosl.org, netdev@vger.kernel.org,
-        sparmaintainer@unisys.com, devel@driverdev.osuosl.org,
-        cocci@systeme.lip6.fr
-Date:   Fri, 28 Jun 2019 11:53:03 -0700
-In-Reply-To: <920ff36c66233113b1825ab504fe675ed5a5bd7b.1561724493.git.mchehab+samsung@kernel.org>
-References: <cover.1561724493.git.mchehab+samsung@kernel.org>
-         <920ff36c66233113b1825ab504fe675ed5a5bd7b.1561724493.git.mchehab+samsung@kernel.org>
-Content-Type: multipart/signed; micalg="pgp-sha512";
-        protocol="application/pgp-signature"; boundary="=-K11StWmkFkExVL88vQz+"
-User-Agent: Evolution 3.32.3 (3.32.3-1.fc30) 
+        id S1726897AbfF1XBd (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 28 Jun 2019 19:01:33 -0400
+Received: from hqemgate15.nvidia.com ([216.228.121.64]:6500 "EHLO
+        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726672AbfF1XBd (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 28 Jun 2019 19:01:33 -0400
+Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5d169c4e0002>; Fri, 28 Jun 2019 16:01:35 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate102.nvidia.com (PGP Universal service);
+  Fri, 28 Jun 2019 16:01:32 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate102.nvidia.com on Fri, 28 Jun 2019 16:01:32 -0700
+Received: from [10.2.170.163] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 28 Jun
+ 2019 23:01:28 +0000
+Subject: Re: [PATCH V5 02/18] pinctrl: tegra: Add suspend and resume support
+To:     Dmitry Osipenko <digetx@gmail.com>, <thierry.reding@gmail.com>,
+        <jonathanh@nvidia.com>, <tglx@linutronix.de>,
+        <jason@lakedaemon.net>, <marc.zyngier@arm.com>,
+        <linus.walleij@linaro.org>, <stefan@agner.ch>,
+        <mark.rutland@arm.com>
+CC:     <pdeschrijver@nvidia.com>, <pgaikwad@nvidia.com>,
+        <sboyd@kernel.org>, <linux-clk@vger.kernel.org>,
+        <linux-gpio@vger.kernel.org>, <jckuo@nvidia.com>,
+        <josephl@nvidia.com>, <talho@nvidia.com>,
+        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <mperttunen@nvidia.com>, <spatra@nvidia.com>, <robh+dt@kernel.org>,
+        <devicetree@vger.kernel.org>
+References: <1561687972-19319-1-git-send-email-skomatineni@nvidia.com>
+ <1561687972-19319-3-git-send-email-skomatineni@nvidia.com>
+ <0409f478-e425-4e7f-5fff-8c3a94f47ee8@gmail.com>
+ <ca8199af-43db-c878-a93f-66c275acf864@gmail.com>
+From:   Sowjanya Komatineni <skomatineni@nvidia.com>
+Message-ID: <99403cb1-aaef-4dd4-68a0-67864ca7ce6c@nvidia.com>
+Date:   Fri, 28 Jun 2019 16:00:49 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.1
 MIME-Version: 1.0
+In-Reply-To: <ca8199af-43db-c878-a93f-66c275acf864@gmail.com>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL108.nvidia.com (172.18.146.13) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: quoted-printable
+Content-Language: en-US
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1561762895; bh=aZPjidkvt159Y1MlR25AZKLnSpkr1g2vQ76FONNdB1Q=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
+         Content-Language;
+        b=TngsqlhbXI3lxjG0tIi7SiikP3nxfWP/IXevXHZU1hy4iGjkbLN9oHiHb9MRjlCi0
+         u6U5nmerqTk5xHMj1PrOJfpyJi/nT9Oto8lvPQknQG3LiDc8audlyubqw9fv+PrayF
+         JjZmAPKr7Rm7GtJsyqsad+nkhthHl7ahX1jPRJw57v6Hi4/3QtAQ0liR/zQs5ST7QZ
+         yevuS/YS57bBnQ0/ubmFTaLxBe39ziLd3TVUK0y/L8AqSHOszp76x+1aZ/qSmFt+Ni
+         VdoXyxwQlh3BNZijdmZucTKHRabf7WM52MZw9xMpYhEelcNDjFYrdTSfCYPyrxzcTY
+         FF4tFxdRwy/hA==
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
 
---=-K11StWmkFkExVL88vQz+
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+On 6/28/19 5:05 AM, Dmitry Osipenko wrote:
+> 28.06.2019 14:56, Dmitry Osipenko =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+>> 28.06.2019 5:12, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+>>> This patch adds support for Tegra pinctrl driver suspend and resume.
+>>>
+>>> During suspend, context of all pinctrl registers are stored and
+>>> on resume they are all restored to have all the pinmux and pad
+>>> configuration for normal operation.
+>>>
+>>> Acked-by: Thierry Reding <treding@nvidia.com>
+>>> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
+>>> ---
+>>>   int tegra_pinctrl_probe(struct platform_device *pdev,
+>>>   			const struct tegra_pinctrl_soc_data *soc_data);
+>>>   #endif
+>>> diff --git a/drivers/pinctrl/tegra/pinctrl-tegra210.c b/drivers/pinctrl=
+/tegra/pinctrl-tegra210.c
+>>> index 0b56ad5c9c1c..edd3f4606cdb 100644
+>>> --- a/drivers/pinctrl/tegra/pinctrl-tegra210.c
+>>> +++ b/drivers/pinctrl/tegra/pinctrl-tegra210.c
+>>> @@ -1571,6 +1571,7 @@ static struct platform_driver tegra210_pinctrl_dr=
+iver =3D {
+>>>   	.driver =3D {
+>>>   		.name =3D "tegra210-pinctrl",
+>>>   		.of_match_table =3D tegra210_pinctrl_of_match,
+>>> +		.pm =3D &tegra_pinctrl_pm,
+>>>   	},
+>>>   	.probe =3D tegra210_pinctrl_probe,
+>>>   };
+>>>
+>> Could you please address my comments in the next revision if there will =
+be one?
+>>
+> Also, what about adding ".pm' for other Tegras? I'm sure Jon could test t=
+hem for you.
 
-On Fri, 2019-06-28 at 09:30 -0300, Mauro Carvalho Chehab wrote:
-> The audience for the Kernel driver-model is clearly Kernel hackers.
->=20
-> Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+This series is for Tegra210 SC7 entry/exit along with clocks and pinctrl=20
+suspend resume needed for Tegra210 basic sc7 entry and exit.
 
-Acked-by: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
+This includes pinctrl, pmc changes, clock-tegra210 driver changes all=20
+w.r.t Tegra210 platforms specific.
 
-For the 'ice' driver changes.
-
-> ---
->  Documentation/{ =3D> driver-api}/driver-model/binding.rst       | 0
->  Documentation/{ =3D> driver-api}/driver-model/bus.rst           | 0
->  Documentation/{ =3D> driver-api}/driver-model/class.rst         | 0
->  .../{ =3D> driver-api}/driver-model/design-patterns.rst         | 0
->  Documentation/{ =3D> driver-api}/driver-model/device.rst        | 0
->  Documentation/{ =3D> driver-api}/driver-model/devres.rst        | 0
->  Documentation/{ =3D> driver-api}/driver-model/driver.rst        | 0
->  Documentation/{ =3D> driver-api}/driver-model/index.rst         | 2 --
->  Documentation/{ =3D> driver-api}/driver-model/overview.rst      | 0
->  Documentation/{ =3D> driver-api}/driver-model/platform.rst      | 0
->  Documentation/{ =3D> driver-api}/driver-model/porting.rst       | 2 +-
->  Documentation/driver-api/gpio/driver.rst                      | 2 +-
->  Documentation/driver-api/index.rst                            | 1 +
->  Documentation/eisa.txt                                        | 4 ++--
->  Documentation/filesystems/sysfs.txt                           | 2 +-
->  Documentation/hwmon/submitting-patches.rst                    | 2 +-
->  Documentation/translations/zh_CN/filesystems/sysfs.txt        | 2 +-
->  drivers/base/platform.c                                       | 2 +-
->  drivers/gpio/gpio-cs5535.c                                    | 2 +-
->  drivers/net/ethernet/intel/ice/ice_main.c                     | 2 +-
->  drivers/staging/unisys/Documentation/overview.txt             | 4 ++--
->  include/linux/device.h                                        | 2 +-
->  include/linux/platform_device.h                               | 2 +-
->  scripts/coccinelle/free/devm_free.cocci                       | 2 +-
->  24 files changed, 16 insertions(+), 17 deletions(-)
->  rename Documentation/{ =3D> driver-api}/driver-model/binding.rst (100%)
->  rename Documentation/{ =3D> driver-api}/driver-model/bus.rst (100%)
->  rename Documentation/{ =3D> driver-api}/driver-model/class.rst (100%)
->  rename Documentation/{ =3D> driver-api}/driver-model/design-patterns.rst
-> (100%)
->  rename Documentation/{ =3D> driver-api}/driver-model/device.rst (100%)
->  rename Documentation/{ =3D> driver-api}/driver-model/devres.rst (100%)
->  rename Documentation/{ =3D> driver-api}/driver-model/driver.rst (100%)
->  rename Documentation/{ =3D> driver-api}/driver-model/index.rst (96%)
->  rename Documentation/{ =3D> driver-api}/driver-model/overview.rst (100%)
->  rename Documentation/{ =3D> driver-api}/driver-model/platform.rst (100%)
->  rename Documentation/{ =3D> driver-api}/driver-model/porting.rst (99%)
+Suspend/resume support for other Tegras will be in separate patch series.
 
 
---=-K11StWmkFkExVL88vQz+
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
+thanks
 
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEiTyZWz+nnTrOJ1LZ5W/vlVpL7c4FAl0WYg8ACgkQ5W/vlVpL
-7c71FA//aLp3imbzpY3ovZhJWfkCedgU23P55ANWPX+9LogGHwK/qtSXQlpOFKet
-AKb3TrRqbgzziAdpNGCgC9phQ5qo56UwhI6PAf+WweUQV0Q1y5VX9Uvis12Zut4i
-CiScVqBx3+Fgaj1KRXxoZKTmpdqsGCgQAr4BsqQUxYBWYk9al+iBz4YlqS2kQtyr
-HClWQ4taQ6T6xaVHnCkIZA5NaSvOnaQClg33sPyvWTXrXbnlcBnJ3pXttlOKpXRA
-ImO2jo16IYZFDpqCzlQpC1WjXz6vvFrHb2ukosXmYvNPBj33a//vD5PTvn6WUPkX
-euZ5dRMaHjCY6XA9lZ5/KgHgckHO7TuzNzOP1VNCfit1lszA5M4p74nAFeL4XfYy
-EKvosns0N5hrxl0M3VqtLfi4vqyC0S52SHeGzQ9Jugfi3Ey4f+RfGU1bqRlWu1SI
-4g/JtpDavi2dT/jer5JSX55XMnSPpHEGl5I7M8osiMSqUx1wsnubuT4StxBu5U5y
-MY11YSpOWwq1ufPph3M6Bd05gJxQxfY9mbQojyHl+gQm88PlF6tSvgKRyvFChfK1
-eBb+uyphD9mFl06ZVtimDSW8C/X7uCylET5CPahyh6Cb/Z2QfRuh07V1t7Jr0nox
-KZLcjeAWq2BLZnk+TBikfnYQZ+/29kyml3N+Dm/cP7JByhm53bo=
-=wwuU
------END PGP SIGNATURE-----
-
---=-K11StWmkFkExVL88vQz+--
+Sowjanya
 
