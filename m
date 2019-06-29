@@ -2,154 +2,66 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 6B3995AC8A
-	for <lists+linux-gpio@lfdr.de>; Sat, 29 Jun 2019 18:28:24 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 276BF5ACC5
+	for <lists+linux-gpio@lfdr.de>; Sat, 29 Jun 2019 19:57:15 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726851AbfF2Q2T (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sat, 29 Jun 2019 12:28:19 -0400
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:47009 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726837AbfF2Q2T (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sat, 29 Jun 2019 12:28:19 -0400
-Received: by mail-lj1-f196.google.com with SMTP id v24so8881800ljg.13;
-        Sat, 29 Jun 2019 09:28:17 -0700 (PDT)
+        id S1726865AbfF2R5O (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sat, 29 Jun 2019 13:57:14 -0400
+Received: from mail-qt1-f194.google.com ([209.85.160.194]:42417 "EHLO
+        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726864AbfF2R5O (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sat, 29 Jun 2019 13:57:14 -0400
+Received: by mail-qt1-f194.google.com with SMTP id s15so10041629qtk.9
+        for <linux-gpio@vger.kernel.org>; Sat, 29 Jun 2019 10:57:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=subject:from:to:cc:references:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=UHacZalSuCYOHZspYGAnQfamsfWZBNs56bktpU32GpA=;
-        b=eeOSf24YZrPztGoI0/WgmJ/cvqtjVp4w4sFh89J2mKh0EyWBYY6W5rSwJ4E9F1ZGEp
-         Ak9aSwK0TDD47ZufOblgj7g7W/mkJ2qTC7X0jPoWJB1zVt6o8BqjEp55k5V9FaiyE//O
-         hApyaM0U0IunEym+y9r+H3Ppw9wCWsehad5GUPf345UERtSAL00rRm7tvyZesU6A6AD0
-         d7hFN4nZvy08+tE241GXbWeMLQ8FTgCdcJGqo65q/ep7eeq8t3dtvJzIlYAWl7q21/54
-         5onPD6s0cuTZhDbWVY4hQEuKAxDCZOBi+qTbVT5ohebuHBrbiUDdvgBZLTJLPIQE/Z3k
-         79UQ==
+        h=mime-version:reply-to:from:date:message-id:subject:to;
+        bh=Hfqu4oPxXglsTXPW2C4AM13IzCDUfDsvNwffZFFCxjw=;
+        b=In4WsP0clZb8GPzNkyh7XKO1EExkm0hqnRFg8tBdSLTMW5CIq6pppbRXBx0/7HK5WO
+         awUhaUOsyTx1z3hkXMvVQgKX0EMysgvZ9n/F2wOyhRXklOk8/E42xdmRkKOAkGG4zySJ
+         X43Lox4QoAMHS5ahXPNEudv5kOo1ssXjfkBr6og1/dsJkOTNCvqPSdxYuk41INLKkOKc
+         oiT30uzXf94GGJL18fWR3Dcb+W1/LCVD+szv6V3FQFZ9lyAS0ANhs7n+RxWdAMLW2ZW2
+         i8mv64q3Iu9M/aOW0iW/B6ifPQhqSc5AR/nHj7xrUMAut/fn5ypT37vI99R1JXPDpVbe
+         Nc6Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=UHacZalSuCYOHZspYGAnQfamsfWZBNs56bktpU32GpA=;
-        b=Bcm808T7vKfF40r5vATvlHgpF0l4jrIdfNpM1E911F4oHD5LG9A/tGIHfy6c3epIG4
-         be2f+21EIqTuTJy4Sl13tWgALbEWemzMo4zTF0ZaiX3HUfQMoBJz23h3l6JKHPrjIIH9
-         aDCyfO6/xjVe/mjKKcSZ3ClW9EySURD3FG/NxsaDr3/agGeJOWFM404P8BQBmanIlG4t
-         BNH23aZSvDrHQmtEIPZS3YGpsB90kW5y8pHeJIaOuANKGEO8Rc/KDz6EVFAAhbJdiGPQ
-         MLLQ12m25CBfh8kQVLDRoUa5A1ulaEokmHSO883RcdpXRNhRaPyzFXAHLL1rCudZWE8Y
-         U+BA==
-X-Gm-Message-State: APjAAAWIXTAnUsFdqL30Mqt3ydKO7u3h10NxIOs6FQF+aeroAZRQZeaR
-        LShQ8BQqNvqfgD4MD1T9NOyLYP5l
-X-Google-Smtp-Source: APXvYqyE/K9bJgpn1ckbdvDl2gXW6sWLRckeurkBvCQqCRqB99DArcU2kKVYH4CAYs0RdteVT0zaTQ==
-X-Received: by 2002:a2e:80c8:: with SMTP id r8mr9262458ljg.168.1561825696039;
-        Sat, 29 Jun 2019 09:28:16 -0700 (PDT)
-Received: from [192.168.2.145] (ppp79-139-233-208.pppoe.spdop.ru. [79.139.233.208])
-        by smtp.googlemail.com with ESMTPSA id m25sm1472959lfp.97.2019.06.29.09.28.14
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sat, 29 Jun 2019 09:28:15 -0700 (PDT)
-Subject: Re: [PATCH V5 02/18] pinctrl: tegra: Add suspend and resume support
-From:   Dmitry Osipenko <digetx@gmail.com>
-To:     Sowjanya Komatineni <skomatineni@nvidia.com>,
-        thierry.reding@gmail.com, jonathanh@nvidia.com, tglx@linutronix.de,
-        jason@lakedaemon.net, marc.zyngier@arm.com,
-        linus.walleij@linaro.org, stefan@agner.ch, mark.rutland@arm.com
-Cc:     pdeschrijver@nvidia.com, pgaikwad@nvidia.com, sboyd@kernel.org,
-        linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org,
-        jckuo@nvidia.com, josephl@nvidia.com, talho@nvidia.com,
-        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org,
-        mperttunen@nvidia.com, spatra@nvidia.com, robh+dt@kernel.org,
-        devicetree@vger.kernel.org
-References: <1561687972-19319-1-git-send-email-skomatineni@nvidia.com>
- <1561687972-19319-3-git-send-email-skomatineni@nvidia.com>
- <a262cbb3-845c-3ad1-16cc-375a24b9f7e9@gmail.com>
- <822867d6-4a4d-5f68-9b21-84a20d73c589@gmail.com>
-Message-ID: <b7bfe578-69d3-bbe6-9613-bf5e98359703@gmail.com>
-Date:   Sat, 29 Jun 2019 19:28:13 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.1
+        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
+         :subject:to;
+        bh=Hfqu4oPxXglsTXPW2C4AM13IzCDUfDsvNwffZFFCxjw=;
+        b=XoDMkZJizFZzN2G3bjcRqpaf+TLZbVupQnj7AQsmV8xsFzjD7kfVHeWWbqu0Csh2B/
+         jH36hi2Gq2q6AuHh9PJEExSur1+geSMRt2+A/mU9amOu13f/+gUx8GUCqZbhYpxiRtWB
+         3IynDkT/Xj8jmJPQnS2gRoWfBTht28KGaOh2AAUAjGDNmJzrLjXSX/ky+SBQ5/3uyJd/
+         rFQh4DVKXA7ff1UfUxJd9rUtHAwjN3YTfWqw+7MJVZSntD11fVpkeS+hnEl23sOhAjnM
+         R6LXFuXiwmsHF9Gwozb89ILVdMoHfX68lIXPS2zVgixMyIjjyNooELLMa65MDrUL3tM/
+         Z+QA==
+X-Gm-Message-State: APjAAAU6fN0hdxx9mR7wINnTVM6vLih3Z5jgjtAcsj96qo3kS9imZ01z
+        YBen/ESThQTcM02g5MeUlE+BQ9nTDEpN/V38Q3Q=
+X-Google-Smtp-Source: APXvYqzOn6IwMlFFnUTFccWg7dBYZPLph3Nlqr5VqWd6Bkm+gPsc7Di4ZGErLNzoiFC+miQc4ydjaYlKTEp1Q0Z9MCo=
+X-Received: by 2002:a0c:c711:: with SMTP id w17mr13359823qvi.97.1561831033713;
+ Sat, 29 Jun 2019 10:57:13 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <822867d6-4a4d-5f68-9b21-84a20d73c589@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Received: by 2002:aed:386a:0:0:0:0:0 with HTTP; Sat, 29 Jun 2019 10:57:13
+ -0700 (PDT)
+Reply-To: mrs.madinaabdoulaziz@gmail.com
+From:   "Mrs. Madina Abdoul Aziz" <jij7525@gmail.com>
+Date:   Sat, 29 Jun 2019 18:57:13 +0100
+Message-ID: <CALRnWVSrwkjKqrnXvr8WprKc7FYrR_qcWPKu_oDk3mtdyJXfJw@mail.gmail.com>
+Subject: Hello,
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-29.06.2019 18:58, Dmitry Osipenko пишет:
-> 29.06.2019 18:46, Dmitry Osipenko пишет:
->> 28.06.2019 5:12, Sowjanya Komatineni пишет:
->>> This patch adds support for Tegra pinctrl driver suspend and resume.
->>>
->>> During suspend, context of all pinctrl registers are stored and
->>> on resume they are all restored to have all the pinmux and pad
->>> configuration for normal operation.
->>>
->>> Acked-by: Thierry Reding <treding@nvidia.com>
->>> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
->>> ---
->>>  drivers/pinctrl/tegra/pinctrl-tegra.c    | 52 ++++++++++++++++++++++++++++++++
->>>  drivers/pinctrl/tegra/pinctrl-tegra.h    |  3 ++
->>>  drivers/pinctrl/tegra/pinctrl-tegra210.c |  1 +
->>>  3 files changed, 56 insertions(+)
->>>
->>> diff --git a/drivers/pinctrl/tegra/pinctrl-tegra.c b/drivers/pinctrl/tegra/pinctrl-tegra.c
->>> index 34596b246578..e7c0a1011cba 100644
->>> --- a/drivers/pinctrl/tegra/pinctrl-tegra.c
->>> +++ b/drivers/pinctrl/tegra/pinctrl-tegra.c
->>> @@ -621,6 +621,43 @@ static void tegra_pinctrl_clear_parked_bits(struct tegra_pmx *pmx)
->>>  	}
->>>  }
->>>  
->>> +static int tegra_pinctrl_suspend(struct device *dev)
->>> +{
->>> +	struct tegra_pmx *pmx = dev_get_drvdata(dev);
->>> +	u32 *backup_regs = pmx->backup_regs;
->>> +	u32 *regs;
->>> +	unsigned int i, j;
->>> +
->>> +	for (i = 0; i < pmx->nbanks; i++) {
->>> +		regs = pmx->regs[i];
->>> +		for (j = 0; j < pmx->reg_bank_size[i] / 4; j++)
->>> +			*backup_regs++ = readl(regs++);
->>> +	}
->>> +
->>> +	return pinctrl_force_sleep(pmx->pctl);
->>> +}
->>> +
->>> +static int tegra_pinctrl_resume(struct device *dev)
->>> +{
->>> +	struct tegra_pmx *pmx = dev_get_drvdata(dev);
->>> +	u32 *backup_regs = pmx->backup_regs;
->>> +	u32 *regs;
->>> +	unsigned int i, j;
->>> +
->>> +	for (i = 0; i < pmx->nbanks; i++) {
->>> +		regs = pmx->regs[i];
->>> +		for (j = 0; j < pmx->reg_bank_size[i] / 4; j++)
->>> +			writel(*backup_regs++, regs++);
->>> +	}
->>> +
->>> +	return 0;
->>> +}
->>> +
->>> +const struct dev_pm_ops tegra_pinctrl_pm = {
->>> +	.suspend = &tegra_pinctrl_suspend,
->>> +	.resume = &tegra_pinctrl_resume
->>> +};
->>
->> Hm, so this are the generic platform-driver suspend-resume OPS here, which is very
->> nice! But.. shouldn't pinctrl be resumed before the CLK driver (which is syscore_ops
->> in this version of the series)? .. Given that "clock" function may need to be
->> selected for some of the pins.
->>
-> 
-> Oh, also what about GPIO-pinctrl suspend resume ordering .. is it okay that pinctrl
-> will be resumed after GPIO? Shouldn't a proper pin-muxing be selected at first?
-> 
-> This also looks to me very unsafe in a context of older Tegras which are initializing
-> the static muxing very early during of the boot, otherwise things won't work well for
-> the drivers.
-> 
+Hello,
 
-Although, scratch what I wrote about older Tegras. We are probing pinctl driver very
-early, hence it should suspend last and resume first. Should be okay.
+I have a personal Project in which i need your assistance I would like
+to be sure of your willingness, trustworthiness and commitment to
+execute this transaction with me. I seek your partnership in
+transferring  this fund {$US6,000,000}. If interested
+(234ty456@gmail.com ) for more details about the fund.
+
+, thank you.
+
+Mrs madina
