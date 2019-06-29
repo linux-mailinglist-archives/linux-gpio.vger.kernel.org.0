@@ -2,57 +2,62 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 0D3675A9DB
-	for <lists+linux-gpio@lfdr.de>; Sat, 29 Jun 2019 11:30:31 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2FB525AAF5
+	for <lists+linux-gpio@lfdr.de>; Sat, 29 Jun 2019 14:33:13 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726909AbfF2JaH (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sat, 29 Jun 2019 05:30:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45408 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726872AbfF2JaG (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Sat, 29 Jun 2019 05:30:06 -0400
-Subject: Re: [GIT PULL] pin control fixes for v5.2
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561800604;
-        bh=+D19obzEwtKVsEVBO3ftjkaUQN+a1Uh7qaiEvVSyqlA=;
-        h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=JucM3lMMAeBfE+nML3Oj3KWrjioMNF8vJUsnQrvLl3Y7pvorgmmc+2fl7x1TYqfTw
-         tIDgi8aSDeNwFllXCFZ56zx3HzLdWFNqEsF+UBzUmf3NJEe6dJZvvn6BI1OziPwnaI
-         LrTELI9wAtyyPyyp5Qc3trpeqeNceHZEwHkPaPak=
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <CACRpkdaiMrQyaxrLhy=Az5SCoz_C3NWRSYiQFqr=_BsD+qugMQ@mail.gmail.com>
-References: <CACRpkdaiMrQyaxrLhy=Az5SCoz_C3NWRSYiQFqr=_BsD+qugMQ@mail.gmail.com>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <CACRpkdaiMrQyaxrLhy=Az5SCoz_C3NWRSYiQFqr=_BsD+qugMQ@mail.gmail.com>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git
- tags/pinctrl-v5.2-3
-X-PR-Tracked-Commit-Id: 9d957a959bc8c3dfe37572ac8e99affb5a885965
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 061913712d6ab77c77192584912afdbd8267c54c
-Message-Id: <156180060395.8003.13899648496600477143.pr-tracker-bot@kernel.org>
-Date:   Sat, 29 Jun 2019 09:30:03 +0000
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Phil Reid <preid@electromag.com.au>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Nicolas Boichat <drinkcat@chromium.org>
+        id S1726909AbfF2MdJ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sat, 29 Jun 2019 08:33:09 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:34309 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726906AbfF2MdJ (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sat, 29 Jun 2019 08:33:09 -0400
+Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
+        by youngberry.canonical.com with esmtpsa (TLS1.0:RSA_AES_256_CBC_SHA1:32)
+        (Exim 4.76)
+        (envelope-from <colin.king@canonical.com>)
+        id 1hhCXS-0006RS-P7; Sat, 29 Jun 2019 12:33:06 +0000
+From:   Colin King <colin.king@canonical.com>
+To:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        linux-gpio@vger.kernel.org
+Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH][next] gpio: bd70528: remove redundant assignment to variable ret
+Date:   Sat, 29 Jun 2019 13:33:06 +0100
+Message-Id: <20190629123306.12519-1-colin.king@canonical.com>
+X-Mailer: git-send-email 2.20.1
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-The pull request you sent on Fri, 28 Jun 2019 10:35:45 +0100:
+From: Colin Ian King <colin.king@canonical.com>
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git tags/pinctrl-v5.2-3
+Variable ret is being initialized with a value that is never read
+and ret is being re-assigned a little later on. The assignment is
+redundant and hence can be removed.
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/061913712d6ab77c77192584912afdbd8267c54c
+Addresses-Coverity: ("Unused value")
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
+---
+ drivers/gpio/gpio-bd70528.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Thank you!
-
+diff --git a/drivers/gpio/gpio-bd70528.c b/drivers/gpio/gpio-bd70528.c
+index 633422b430b4..0c1ead12d883 100644
+--- a/drivers/gpio/gpio-bd70528.c
++++ b/drivers/gpio/gpio-bd70528.c
+@@ -153,7 +153,7 @@ static int bd70528_gpio_get_i(struct bd70528_gpio *bdgpio, unsigned int offset)
+ 
+ static int bd70528_gpio_get(struct gpio_chip *chip, unsigned int offset)
+ {
+-	int ret = -EINVAL;
++	int ret;
+ 	struct bd70528_gpio *bdgpio = gpiochip_get_data(chip);
+ 
+ 	/*
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.wiki.kernel.org/userdoc/prtracker
+2.20.1
+
