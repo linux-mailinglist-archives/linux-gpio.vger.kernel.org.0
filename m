@@ -2,49 +2,49 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id F15B95AB27
-	for <lists+linux-gpio@lfdr.de>; Sat, 29 Jun 2019 15:00:14 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D8C8E5AB38
+	for <lists+linux-gpio@lfdr.de>; Sat, 29 Jun 2019 15:02:10 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726801AbfF2NAK (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sat, 29 Jun 2019 09:00:10 -0400
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:37044 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726716AbfF2NAK (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sat, 29 Jun 2019 09:00:10 -0400
-Received: by mail-lf1-f68.google.com with SMTP id d11so5779627lfb.4;
-        Sat, 29 Jun 2019 06:00:08 -0700 (PDT)
+        id S1726859AbfF2NCK (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sat, 29 Jun 2019 09:02:10 -0400
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:37934 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726828AbfF2NCJ (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sat, 29 Jun 2019 09:02:09 -0400
+Received: by mail-lj1-f194.google.com with SMTP id r9so8604550ljg.5;
+        Sat, 29 Jun 2019 06:02:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=subject:to:cc:references:from:message-id:date:user-agent
          :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=VKVuTi76X6U619/beNsDjryTD1vSHBxznB5zvfLdXhY=;
-        b=g30ZHbmDx+vQ5DE5DZrWz+RF5OzrHJddPi3j24GSdBkfsnB/0bxJsf47GQFgvtJY7G
-         +4y/7ROXDZ40KFU/ZJPXfPFSamVfwtNZfOYk/0S4QTSgv5M9ybx/VJoanqQp/0LBZ0N0
-         L0OxiNzkoml3yVt+7LMwfXVJ1Ck9oeRkhBZ8NppMah+/P3AkDWuSOy74JLtCxkIMLjyA
-         IDWTxD+b6Es7kfGX1ysnhj9V7ob+IX4p/cM4jJKDCgiVtHMf4jY70dqU/bOVjLUsRaFq
-         0tluSPYT351alVvndxmkzWvtd5LHtmFoJoBXnJaB1sOTEOdR9iqDGOXfKWtxJBZhlWym
-         AA/A==
+        bh=ElMV5kfQRWNSHmnKy0nA7dWYtgHHYXlf1LlwoG/GExU=;
+        b=pDSQMNtum3zKwv7gQNTf8Ma5x7pi3yE8YcGVrvvzmXdtxD9u3RulvLZWdUrjBEdE2i
+         7sBFi9u1fQhQf25YUEANORqrMhLPkw+qHF9dQ3AT9uFmRlFzDffILaCNQWUGeTjLI8E6
+         VVM54xpxHUcWXZCYB7+wzdb0NbYIyDLepWE4PhLv4VTmMY539Db3fcRRbEpGbvlLTPC1
+         AloI4PmiVD4TAi9LuxJcUeyDW13lCOq2883r1LI4pmVt3e3Ck1zFjNwh5k7l8sxxPVKo
+         NHdOBN7869ITBzV57Z+FE/w66ExiQiD+3+5r8xfP4Mk9gdjy4Gwxf2qJsRibfb/NmlbY
+         u2qA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=VKVuTi76X6U619/beNsDjryTD1vSHBxznB5zvfLdXhY=;
-        b=hTd0U0lCzdJ9AofCau1UZquNII0IW86fRwHY59h0LCbVj0twFm5G+uBf7YRKixJDkK
-         yr9NagE61GQxThHYjvfTT2P2biRbeU2HVJg2MGwG2xXg2sEbsaBlLiHW2IMTAWnwDd8R
-         x2GtL6N7DteXVCDtFFKB5F+c35fBacc2cEqla0sLoGkYlZbfYYerWDjmFRIPRYBEv4GK
-         nTTV9HjfZnl7BHNtbTVcoAnLyqZLk+HJsSPJ0j2GJe2ido9LSX1XnH7XnDvshpEKWJif
-         PTQuZ22MWn0jLfG62IkGBM7I+chWe2o3BGWyMaFM019a2fj3wz3gpALsygwQgN/RAZQH
-         gRuQ==
-X-Gm-Message-State: APjAAAVFU+c2bWsQDCa6JG0qIP6flW59Y0DFn206gK1RQznsA8W7htTJ
-        B16t1iKvznmjnD2UY9myzJwkAxgn
-X-Google-Smtp-Source: APXvYqxBuJpM5eHvd6ZbNXRtzcuP+WGIXSdtE3qbqLiccUq4meBY9tGzVPm828k31YiBVDLCsfUfug==
-X-Received: by 2002:a19:41cc:: with SMTP id o195mr6784256lfa.166.1561813207557;
-        Sat, 29 Jun 2019 06:00:07 -0700 (PDT)
+        bh=ElMV5kfQRWNSHmnKy0nA7dWYtgHHYXlf1LlwoG/GExU=;
+        b=YWpiNcdNMPwKm2px7/rKfqHBm1IarhMOnNruo7oFipCD+GJ+VQ7r7ONk2EAq5bvmgF
+         YHCHCt9sNFgSDdwtMY6R9O/t4jIk9a9KYKyUIqBhVNwZKQiaoNEVZjMIhh/qsMk8vIJG
+         hu9ZxaS8k7VaTLBO36EWZDn44CmHMEOpOo5tEqbzax3I2wybBXThNJw6f7JZJm1tjhW8
+         ilSPiKrftJhkhhOGneVOt37k/4IXe1rxyMBylcQiiBCj7n0U8HWSLB6dPk7BIwnZP09o
+         o1V7YBgW2GhefzFNmBEAhpc3VHM2hcWxQ+Lg1fhAMnEZjuvpjTFvlIqQasbFto2sw15k
+         Wnyw==
+X-Gm-Message-State: APjAAAVn01B2VRSQkyekhl8o5mk/x1R0Z92Tj7+Q4/DoqusICVqBTqW9
+        EBVxJLJ93cg6VyTWAolRSu8/hULg
+X-Google-Smtp-Source: APXvYqyn1WaW4ewJK4I5+8lbjM7wD0X5/UwFZvdN/XqiHXg/GCoMHovTmOZ4yjJVtEl/vb4m6pBJaQ==
+X-Received: by 2002:a2e:5b1b:: with SMTP id p27mr8659452ljb.97.1561813326956;
+        Sat, 29 Jun 2019 06:02:06 -0700 (PDT)
 Received: from [192.168.2.145] (ppp79-139-233-208.pppoe.spdop.ru. [79.139.233.208])
-        by smtp.googlemail.com with ESMTPSA id n131sm1306815lfd.70.2019.06.29.06.00.05
+        by smtp.googlemail.com with ESMTPSA id j23sm1383434lfb.93.2019.06.29.06.02.05
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sat, 29 Jun 2019 06:00:06 -0700 (PDT)
+        Sat, 29 Jun 2019 06:02:06 -0700 (PDT)
 Subject: Re: [PATCH V5 16/18] soc/tegra: pmc: Configure deep sleep control
  settings
 To:     Sowjanya Komatineni <skomatineni@nvidia.com>,
@@ -60,8 +60,8 @@ Cc:     pdeschrijver@nvidia.com, pgaikwad@nvidia.com, sboyd@kernel.org,
 References: <1561687972-19319-1-git-send-email-skomatineni@nvidia.com>
  <1561687972-19319-17-git-send-email-skomatineni@nvidia.com>
 From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <cfdda2e4-2f9e-6228-7ae9-17c2fbce7fb0@gmail.com>
-Date:   Sat, 29 Jun 2019 16:00:05 +0300
+Message-ID: <27fdeee4-7dbe-2562-ea11-750c6fd3b952@gmail.com>
+Date:   Sat, 29 Jun 2019 16:02:04 +0300
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.7.1
 MIME-Version: 1.0
@@ -119,27 +119,9 @@ X-Mailing-List: linux-gpio@vger.kernel.org
 >  {
 >  	u32 value;
 > +	unsigned long osc, pmu, off;
->  
->  	/* Always enable CPU power request */
->  	value = tegra_pmc_readl(pmc, PMC_CNTRL);
-> @@ -2316,6 +2319,15 @@ static void tegra20_pmc_init(struct tegra_pmc *pmc)
->  	value = tegra_pmc_readl(pmc, PMC_CNTRL);
->  	value |= PMC_CNTRL_SYSCLK_OE;
->  	tegra_pmc_writel(pmc, value, PMC_CNTRL);
-> +
-> +	osc = DIV_ROUND_UP_ULL(pmc->core_osc_time * 8192, 1000000);
-> +	pmu = DIV_ROUND_UP_ULL(pmc->core_pmu_time * 32768, 1000000);
-> +	off = DIV_ROUND_UP_ULL(pmc->core_off_time * 32768, 1000000);
 
-IIUC, the first argument shall be explicitly of a type "long long", shouldn't it?
-Otherwise the multiplication will overflow before division happens.
+I'd write this as:
 
-Thus:
+ 	u32 value, osc, pmu, off;
 
-	osc = DIV_ROUND_UP_ULL((u64)pmc->core_osc_time * 8192, 1000000);
-	pmu = DIV_ROUND_UP_ULL((u64)pmc->core_pmu_time * 32768, 1000000);
-	off = DIV_ROUND_UP_ULL((u64)pmc->core_off_time * 32768, 1000000);
-
-Also, could you please tell what of the above multiplications could overflow u32 in
-the first place? Maybe DIV_ROUND_UP_ULL isn't needed at all and DIV_ROUND_UP could be
-use instead?
+Because "unsigned long" has the same size as u32 in this case.
