@@ -2,51 +2,51 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 7557A5AC26
-	for <lists+linux-gpio@lfdr.de>; Sat, 29 Jun 2019 17:26:18 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8437D5AC36
+	for <lists+linux-gpio@lfdr.de>; Sat, 29 Jun 2019 17:40:40 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726860AbfF2P0Q (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sat, 29 Jun 2019 11:26:16 -0400
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:38479 "EHLO
+        id S1726836AbfF2Pkj (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sat, 29 Jun 2019 11:40:39 -0400
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:38723 "EHLO
         mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726828AbfF2P0Q (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sat, 29 Jun 2019 11:26:16 -0400
-Received: by mail-lj1-f193.google.com with SMTP id r9so8808865ljg.5;
-        Sat, 29 Jun 2019 08:26:14 -0700 (PDT)
+        with ESMTP id S1726819AbfF2Pkj (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sat, 29 Jun 2019 11:40:39 -0400
+Received: by mail-lj1-f193.google.com with SMTP id r9so8828984ljg.5;
+        Sat, 29 Jun 2019 08:40:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
+        h=subject:from:to:cc:references:message-id:date:user-agent
          :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=MAISvrZEFKf3K6sQaaEzdG1/Hb09pTM6bSrULCKOUP4=;
-        b=MynHykDHkWoq2B8MMxowF7bRzEEJcEkYquho70+f8Vq5+sqJStUmGDk9nOUVL5IkW5
-         Uxo+f0TmAovXKd12EC7K19pYw/38yPdAEaL1E140IQPC334tsSkU6AOxslkSAVQaQpMN
-         YmjicIydABFuITwj2id6uswmN8FURbQc8Vu+KMYhwcr0SRb8Pgoh+R2ZV6zFHhbKck86
-         1K/T3Qgq8RBpgwtnDlnFCojc9ZODs2UkJDyrJ+lcFWEeOrI/xDQyO9skpBxRf0t3nCdJ
-         zighWnVtl06XrRC9oBvvJFeNiJ5vUytiYyTI06QM27Iy5MOufSX7ur5yrEoo9Cnme2QU
-         jpoQ==
+        bh=XMv95h7PvzqJGn4e1p6N1/DUxaWRpggi5N+BdiEEdBU=;
+        b=Wgndi82TOGLLU7o/HZ6iW8lbCH7JirxRBWgEFMThNz9WtK7yJaDuS6rRiZannS3wys
+         WinulJG5LhjHKhtVapaDKTvow6ZvpxFOWd/PNn2nn5edOlIQv+QkOGlt0y+7FW3pFrZr
+         ko/xRXnAMPis3rilYrcpkgfzdksE7q9weeDHDcH1GyGA1l9lXnv1Gvsz+yFwUhJVkS7q
+         Ji37ob8XN9Zbh3qG6QNQpxYx/aKTH+lK0+M1ira7p/il/ZynYb0bPytPwcfnIerF2rJY
+         mjqsVpxRx6hxFu1qpAiQynEdlId5noq2Kuchptyb6Lmj2yUcsoj3ycunyuNW7ZsOydCN
+         S94g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=MAISvrZEFKf3K6sQaaEzdG1/Hb09pTM6bSrULCKOUP4=;
-        b=TO5PZ+9yDJQ76DeGZkyeecfpYgcr2wQ7Zh2h7T91cHcXQ/N2GsmEZiAkdJ8X2k2RW5
-         oqM62uPPRyhGvxdWrQrH04gYBGoui4b69y6E6LO2BgfAxyjE7giPCDHbeyE3eeFARGIR
-         sKnSJl4zhoVb7mDT01eAzbvpQw6Wb41xKckRrN2Dm+r6vPjWiH2NJFCFSXtrPedWacTL
-         UoltRJIwr06JPMHpmB1y2vWhytdVAYPg1NSNNEd65WTpI30GKS1NsKXKLhkas1uBrQM/
-         Q8hzgwLX0rH8hjMC8x39UiYGnKweT62Rd0/NqEypf3wETtiFxncv5+2AmFfrau/g8GAR
-         ofaQ==
-X-Gm-Message-State: APjAAAV81lQkyNhQWEoFpPlEVAXve0RVR5SQ5oBzzGEwR1SC7YaSR8Iv
-        ItCXtXICXU73FjJKrjOPGIOoBuLl
-X-Google-Smtp-Source: APXvYqw93tmA6VN/oXwhmxYZTNS5ln9SvC9oIx14Mo9lLK+NjqRxQv8p8GF2ZQfRS2Ywa3NzRGlduw==
-X-Received: by 2002:a2e:8583:: with SMTP id b3mr9316878lji.171.1561821973102;
-        Sat, 29 Jun 2019 08:26:13 -0700 (PDT)
+        bh=XMv95h7PvzqJGn4e1p6N1/DUxaWRpggi5N+BdiEEdBU=;
+        b=X/l6VofTXkeDH8sbCe9TOfw3D1EeF+jh5mGXnalRY41pnSxD+6iFBRu01N1nw5IVLW
+         siJOuP8ask2Rg5NaLyaCaSQDNuYLmOczwgE69XdK/LPq4VnEDkWudTzpzMBXC5mBrKqP
+         PT+PfIta7oM4l+dGWk0YvGhz/HLY5TNrmzsVXit627jLL36jWkPH+9uXUeveL225YZVM
+         cihZXVu6IonBACJ9uEGNXyUdzHmoJKV/IM0ZS4ua5EXCcCq51GqVxZISm2Qpr0ldnyfD
+         +Hbaqmj0keGXCMZiwfkvbB3NT4qPu6N8kLl2PA1+Zo50KTbBRRftJYhnYUrCTdMqaXfx
+         ALqQ==
+X-Gm-Message-State: APjAAAXkLf0aB/zkcMhNQsMAXrgX/LhZ0vA6P2AFytS8KIx01pnfXo0b
+        /f/AlUqNn+XrnLZR2fcCIq/j9yev
+X-Google-Smtp-Source: APXvYqzL9CBSBNNjZ2m0OcDwSYbJiF2iWyvB096BDAPPiJ29stmMjms9pHQscLjWfkcQKdchv0ZmAw==
+X-Received: by 2002:a2e:3c1a:: with SMTP id j26mr9361160lja.230.1561822835986;
+        Sat, 29 Jun 2019 08:40:35 -0700 (PDT)
 Received: from [192.168.2.145] (ppp79-139-233-208.pppoe.spdop.ru. [79.139.233.208])
-        by smtp.googlemail.com with ESMTPSA id w15sm1984880ljh.0.2019.06.29.08.26.11
+        by smtp.googlemail.com with ESMTPSA id 24sm2000483ljs.63.2019.06.29.08.40.34
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sat, 29 Jun 2019 08:26:12 -0700 (PDT)
-Subject: Re: [PATCH V5 06/18] clk: tegra: Save and restore CPU and System
- clocks context
+        Sat, 29 Jun 2019 08:40:35 -0700 (PDT)
+Subject: Re: [PATCH V5 02/18] pinctrl: tegra: Add suspend and resume support
+From:   Dmitry Osipenko <digetx@gmail.com>
 To:     Sowjanya Komatineni <skomatineni@nvidia.com>,
         thierry.reding@gmail.com, jonathanh@nvidia.com, tglx@linutronix.de,
         jason@lakedaemon.net, marc.zyngier@arm.com,
@@ -58,14 +58,17 @@ Cc:     pdeschrijver@nvidia.com, pgaikwad@nvidia.com, sboyd@kernel.org,
         mperttunen@nvidia.com, spatra@nvidia.com, robh+dt@kernel.org,
         devicetree@vger.kernel.org
 References: <1561687972-19319-1-git-send-email-skomatineni@nvidia.com>
- <1561687972-19319-7-git-send-email-skomatineni@nvidia.com>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <1054682d-5cab-2997-6795-f777d074d972@gmail.com>
-Date:   Sat, 29 Jun 2019 18:26:11 +0300
+ <1561687972-19319-3-git-send-email-skomatineni@nvidia.com>
+ <0409f478-e425-4e7f-5fff-8c3a94f47ee8@gmail.com>
+ <ca8199af-43db-c878-a93f-66c275acf864@gmail.com>
+ <99403cb1-aaef-4dd4-68a0-67864ca7ce6c@nvidia.com>
+ <fbfb2167-d0b3-b66a-d1ba-378c877817ed@gmail.com>
+Message-ID: <364c7381-1431-1f0d-b162-3da9706fdcb8@gmail.com>
+Date:   Sat, 29 Jun 2019 18:40:34 +0300
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.7.1
 MIME-Version: 1.0
-In-Reply-To: <1561687972-19319-7-git-send-email-skomatineni@nvidia.com>
+In-Reply-To: <fbfb2167-d0b3-b66a-d1ba-378c877817ed@gmail.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 8bit
@@ -74,163 +77,56 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-28.06.2019 5:12, Sowjanya Komatineni пишет:
-> During system suspend state, core power goes off and looses all the
-> CAR controller register settings.
+29.06.2019 15:38, Dmitry Osipenko пишет:
+> 29.06.2019 2:00, Sowjanya Komatineni пишет:
+>>
+>> On 6/28/19 5:05 AM, Dmitry Osipenko wrote:
+>>> 28.06.2019 14:56, Dmitry Osipenko пишет:
+>>>> 28.06.2019 5:12, Sowjanya Komatineni пишет:
+>>>>> This patch adds support for Tegra pinctrl driver suspend and resume.
+>>>>>
+>>>>> During suspend, context of all pinctrl registers are stored and
+>>>>> on resume they are all restored to have all the pinmux and pad
+>>>>> configuration for normal operation.
+>>>>>
+>>>>> Acked-by: Thierry Reding <treding@nvidia.com>
+>>>>> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
+>>>>> ---
+>>>>>   int tegra_pinctrl_probe(struct platform_device *pdev,
+>>>>>               const struct tegra_pinctrl_soc_data *soc_data);
+>>>>>   #endif
+>>>>> diff --git a/drivers/pinctrl/tegra/pinctrl-tegra210.c
+>>>>> b/drivers/pinctrl/tegra/pinctrl-tegra210.c
+>>>>> index 0b56ad5c9c1c..edd3f4606cdb 100644
+>>>>> --- a/drivers/pinctrl/tegra/pinctrl-tegra210.c
+>>>>> +++ b/drivers/pinctrl/tegra/pinctrl-tegra210.c
+>>>>> @@ -1571,6 +1571,7 @@ static struct platform_driver tegra210_pinctrl_driver = {
+>>>>>       .driver = {
+>>>>>           .name = "tegra210-pinctrl",
+>>>>>           .of_match_table = tegra210_pinctrl_of_match,
+>>>>> +        .pm = &tegra_pinctrl_pm,
+>>>>>       },
+>>>>>       .probe = tegra210_pinctrl_probe,
+>>>>>   };
+>>>>>
+>>>> Could you please address my comments in the next revision if there will be one?
+>>>>
+>>> Also, what about adding ".pm' for other Tegras? I'm sure Jon could test them for you.
+>>
+>> This series is for Tegra210 SC7 entry/exit along with clocks and pinctrl suspend
+>> resume needed for Tegra210 basic sc7 entry and exit.
+>>
+>> This includes pinctrl, pmc changes, clock-tegra210 driver changes all w.r.t Tegra210
+>> platforms specific.
+>>
+>> Suspend/resume support for other Tegras will be in separate patch series.
 > 
-> This patch creates APIs for saving and restoring the context of Tegra
-> CPUG, CPULP and SCLK.
+> Okay, fair enough.
 > 
-> CPU and System clock context includes
-> - CPUG, CPULP, and SCLK burst policy settings for clock sourcea of all
->   their normal states.
-> - SCLK divisor and System clock rate for restoring SCLK, AHB and APB
->   rates on resume.
-> - OSC_DIV settings which are used as reference clock input to some PLLs.
-> - SPARE_REG and CLK_MASK settings.
-> 
-> These APIs are used in Tegra210 clock driver during suspend and resume
-> operation.
-> 
-> Acked-by: Thierry Reding <treding@nvidia.com>
-> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
-> ---
->  drivers/clk/tegra/clk-tegra-super-gen4.c |  4 --
->  drivers/clk/tegra/clk.c                  | 80 ++++++++++++++++++++++++++++++++
->  drivers/clk/tegra/clk.h                  | 14 ++++++
->  3 files changed, 94 insertions(+), 4 deletions(-)
-> 
-> diff --git a/drivers/clk/tegra/clk-tegra-super-gen4.c b/drivers/clk/tegra/clk-tegra-super-gen4.c
-> index cdfe7c9697e1..ed69ec4d883e 100644
-> --- a/drivers/clk/tegra/clk-tegra-super-gen4.c
-> +++ b/drivers/clk/tegra/clk-tegra-super-gen4.c
-> @@ -19,10 +19,6 @@
->  #define PLLX_MISC2 0x514
->  #define PLLX_MISC3 0x518
->  
-> -#define CCLKG_BURST_POLICY 0x368
-> -#define CCLKLP_BURST_POLICY 0x370
-> -#define SCLK_BURST_POLICY 0x028
-> -#define SYSTEM_CLK_RATE 0x030
->  #define SCLK_DIVIDER 0x2c
->  
->  static DEFINE_SPINLOCK(sysrate_lock);
-> diff --git a/drivers/clk/tegra/clk.c b/drivers/clk/tegra/clk.c
-> index 573e3c967ae1..9e863362d2bf 100644
-> --- a/drivers/clk/tegra/clk.c
-> +++ b/drivers/clk/tegra/clk.c
-> @@ -70,6 +70,12 @@ static struct clk **clks;
->  static int clk_num;
->  static struct clk_onecell_data clk_data;
->  
-> +static u32 cclkg_burst_policy_ctx[2];
-> +static u32 cclklp_burst_policy_ctx[2];
-> +static u32 sclk_burst_policy_ctx[2];
-> +static u32 sys_clk_divisor_ctx, system_rate_ctx;
-> +static u32 spare_ctx, misc_clk_enb_ctx, clk_arm_ctx;
-> +
->  /* Handlers for SoC-specific reset lines */
->  static int (*special_reset_assert)(unsigned long);
->  static int (*special_reset_deassert)(unsigned long);
-> @@ -199,6 +205,80 @@ const struct tegra_clk_periph_regs *get_reg_bank(int clkid)
->  	}
->  }
->  
-> +void tegra_cclkg_burst_policy_save_context(void)
-> +{
-> +	unsigned int i;
-> +
-> +	for (i = 0; i < BURST_POLICY_REG_SIZE; i++)
-> +		cclkg_burst_policy_ctx[i] = readl_relaxed(clk_base +
-> +							  CCLKG_BURST_POLICY +
-> +							  (i * 4));
-> +}
-> +
-> +void tegra_cclkg_burst_policy_restore_context(void)
-> +{
-> +	unsigned int i;
-> +
-> +	for (i = 0; i < BURST_POLICY_REG_SIZE; i++)
-> +		writel_relaxed(cclkg_burst_policy_ctx[i],
-> +			       clk_base + CCLKG_BURST_POLICY + (i * 4));
-> +
-> +	fence_udelay(2, clk_base);
-> +}
-> +
-> +void tegra_sclk_cclklp_burst_policy_save_context(void)
-> +{
-> +	unsigned int i;
-> +
-> +	for (i = 0; i < BURST_POLICY_REG_SIZE; i++) {
-> +		cclklp_burst_policy_ctx[i] = readl_relaxed(clk_base +
-> +							  CCLKLP_BURST_POLICY +
-> +							  (i * 4));
-> +
-> +		sclk_burst_policy_ctx[i] = readl_relaxed(clk_base +
-> +							  SCLK_BURST_POLICY +
-> +							  (i * 4));
-> +	}
-> +
-> +	sys_clk_divisor_ctx = readl_relaxed(clk_base + SYS_CLK_DIV);
-> +	system_rate_ctx = readl_relaxed(clk_base + SYSTEM_CLK_RATE);
-> +	spare_ctx = readl_relaxed(clk_base + SPARE_REG0);
-> +	misc_clk_enb_ctx = readl_relaxed(clk_base + MISC_CLK_ENB);
-> +	clk_arm_ctx = readl_relaxed(clk_base + CLK_MASK_ARM);
-> +}
-> +
-> +void tegra_sclk_cpulp_burst_policy_restore_context(void)
-> +{
-> +	unsigned int i;
-> +	u32 val;
-> +
-> +	/*
-> +	 * resume SCLK and CPULP clocks
-> +	 * for SCLk, set safe dividers values first and then restore source
-> +	 * and dividers
-> +	 */
-> +
-> +	writel_relaxed(0x1, clk_base + SYSTEM_CLK_RATE);
-> +	val = readl_relaxed(clk_base + SYS_CLK_DIV);
-> +	if (val < sys_clk_divisor_ctx)
-> +		writel_relaxed(sys_clk_divisor_ctx, clk_base + SYS_CLK_DIV);
-> +
-> +	fence_udelay(2, clk_base);
-> +
-> +	for (i = 0; i < BURST_POLICY_REG_SIZE; i++) {
-> +		writel_relaxed(cclklp_burst_policy_ctx[i],
-> +			       clk_base + CCLKLP_BURST_POLICY + (i * 4));
-> +		writel_relaxed(sclk_burst_policy_ctx[i],
-> +			       clk_base + SCLK_BURST_POLICY + (i * 4));
-> +	}
-> +
-> +	writel_relaxed(sys_clk_divisor_ctx, clk_base + SYS_CLK_DIV);
-> +	writel_relaxed(system_rate_ctx, clk_base + SYSTEM_CLK_RATE);
-> +	writel_relaxed(spare_ctx, clk_base + SPARE_REG0);
-> +	writel_relaxed(misc_clk_enb_ctx, clk_base + MISC_CLK_ENB);
-> +	writel_relaxed(clk_arm_ctx, clk_base + CLK_MASK_ARM);
-> +}
-> +
->  struct clk ** __init tegra_clk_init(void __iomem *regs, int num, int banks)
->  {
->  	clk_base = regs;
-> diff --git a/drivers/clk/tegra/clk.h b/drivers/clk/tegra/clk.h
-> index 8532f5150091..c66b0a73bb01 100644
-> --- a/drivers/clk/tegra/clk.h
-> +++ b/drivers/clk/tegra/clk.h
-> @@ -10,6 +10,16 @@
->  #include <linux/clkdev.h>
->  #include <linux/delay.h>
->  
-> +#define SCLK_BURST_POLICY	0x28
-> +#define SYSTEM_CLK_RATE		0x30
-> +#define CLK_MASK_ARM		0x44
-> +#define MISC_CLK_ENB		0x48
-> +#define CCLKG_BURST_POLICY	0x368
-> +#define CCLKLP_BURST_POLICY	0x370
-> +#define SYS_CLK_DIV		0x400
-> +#define SPARE_REG0		0x55c
-> +#define BURST_POLICY_REG_SIZE	2
 
-"clk-tegra30.c",  "clk-tegra114.c" and "clk-tegra124.c" also define the
-CCLKG_BURST_POLICY .. apparently you haven't tried to compile ARM32 kernel because I
-assume that compile should bark at the re-definitions.
+It may also make some sense to split this patch into two:
+
+ 1) add generic tegra-pinctrl suspend-resume support
+ 2) add suspend-resume OPS to the pinctrl-tegra210
+
+For consistency.
