@@ -2,48 +2,48 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 338EF5B7AB
-	for <lists+linux-gpio@lfdr.de>; Mon,  1 Jul 2019 11:14:15 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DEB745B7A8
+	for <lists+linux-gpio@lfdr.de>; Mon,  1 Jul 2019 11:14:05 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728359AbfGAJOE (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        id S1728535AbfGAJOE (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
         Mon, 1 Jul 2019 05:14:04 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:51882 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728377AbfGAJNQ (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 1 Jul 2019 05:13:16 -0400
-Received: by mail-wm1-f65.google.com with SMTP id 207so15008704wma.1
-        for <linux-gpio@vger.kernel.org>; Mon, 01 Jul 2019 02:13:15 -0700 (PDT)
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:34631 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728359AbfGAJNR (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 1 Jul 2019 05:13:17 -0400
+Received: by mail-wr1-f65.google.com with SMTP id u18so4751909wru.1
+        for <linux-gpio@vger.kernel.org>; Mon, 01 Jul 2019 02:13:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baylibre-com.20150623.gappssmtp.com; s=20150623;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=0YLGRK88mV5vZE4LqM30CD7m71X58sUA87fhljEjqxY=;
-        b=X3BPQb1oIV2x3Nt6jna67Clm8NfVyqvfwFA5grXCGNefyz+/yhFp29J7UxF350H1uB
-         2A/KSsEjBPVrHmtNTaeVwZfi+LVJYzfdusQbg1SMyERh2CMHUewA7njbMAKXXbEWXqnw
-         YIaqY4q70csEqv/5ucwnlOpRGHKzNggjQFQX+Ji4MMkG4ldiTmX1OrmmWnIQBZh5z6uT
-         B+9B133Dk9rtO6vSMAUSlpAOf/XFsJ3J6I1Y4ikwsbti/NHvU/FmVHpxXmSEQATSrXd7
-         9SiMeOTc34vpOtnfAoYiIJUANQXu3JyxsRXxVI3DG0fs4fqdic/CDqMSb3RxGpbKj8EQ
-         gElw==
+        bh=UjWYkkIZxFPFv0EhClixGF6nOSS0O5IaIRSoIWr4uvE=;
+        b=OBTityny8NehxM86CMotZmVqU4h7f1j91UFQ3Ng4d88mxR7xGes+5JtDYbHuiXgfvl
+         tZ1DtseVHRrFkLhNeNfy84n1y/nWP6R+6KaQM/2rLaEHRMDMZEnBQkY/zmfBe/LqGEYU
+         KAjH1b00DjcrHy11zu847kt7uN4Y4cBTJ8jQLszkSYN02rJRdxFwV9w+S6G/WcKzAXwF
+         tKAa0iMJgcrApKQiymYS7qy8OQdrE1CnXCVg7F/I9U4gUIB92lFDzusgoPB7NBXqUaYC
+         DZAgRgksY81lE2PdxnTefmyUnGVTcPtiAnG/rQ3LZ7H4Jmzz1+49UQldqp4nmwCNvND0
+         4Mpw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=0YLGRK88mV5vZE4LqM30CD7m71X58sUA87fhljEjqxY=;
-        b=kFg3y+go6yHcuF9c7wAHVks5d5E3iSxtxXz49bic7UhXH2xhWXeejA005kGabPJS3W
-         Xc2vXGQja1kz357WmcxHkqqMa3xeBqY28tnP2CLfF02WlHEUqLSnHNcox0zXw2ZRkP57
-         TG/96YlkTQZtR6rRwwgNI8lj1/etBeaEv/rZrB3jULzune5qvIcDscXYs6DsytecgXmw
-         TEFJpAnlMcUCHBMMFXV/6zRlGdWw00Km++TN4u57oh9EROBg20cAmiEphWZ6/RLp6Sue
-         3W4b6OFt1CXfGAO3ovaHwgs6dTW/s+TlUwo87M37TGXHvpmSGVqpAPnCGUU12ofsgn5q
-         Q3mg==
-X-Gm-Message-State: APjAAAUrh2HPHgdBrJvx2o+z40ndoMI9Hzzh1nAXA+rVu1QrUsAYmTgd
-        lL7k2ZAjRl0NWKls6e3raCWrGg==
-X-Google-Smtp-Source: APXvYqxo5Z8WiwiSIqfSVLsBg4/Fz465U9hGUrecgfM0bpcIhpYoQ8Z0JjUAK9SoDzeRMVjsViWAzA==
-X-Received: by 2002:a05:600c:254b:: with SMTP id e11mr15128659wma.171.1561972394998;
-        Mon, 01 Jul 2019 02:13:14 -0700 (PDT)
+        bh=UjWYkkIZxFPFv0EhClixGF6nOSS0O5IaIRSoIWr4uvE=;
+        b=pUkPKKQNHpAFnxW6qpGP4bcyOD6m2HO+eCPyBA2IoCyuiqKJ2IwzAypsJxt3ym367q
+         Erc28P9nx77RiOutWARwdJofOwDgtBzyompkER6fMnd3cjKbTc/5G4M3fwomcrfdIqhd
+         xiUkzxmFdBKt4V/BcNlbqghF8qQA8IRs+fL2TGs6b2IXOj+EpjyCYC8v07KznM/ENLMb
+         HXpenIyLGlHMmwEs+0LrxWc+FAVdcII2SWUYUXi+vmqRO/+U7wP9+5ZenensV1hAoCIl
+         SAN/T/4xf/Sza/uzusF4I2/jQpFpUK2BUR8YOl/4G+m3+0q1majssRn6sqWj0Mlus19Y
+         4XEA==
+X-Gm-Message-State: APjAAAVWgmL/hstNX9EAYEHjZOk4YmhhYDK5bJJzlytWwAAmv0cktfWG
+        a1Jqwk5AYGYxbjUE31T78piRNw==
+X-Google-Smtp-Source: APXvYqwBMTcbw5rlap0jViAbnSmrPSuRWsUL0g7rV9xchUwDtgLw5W194G1AFcFz013gxJR1rX643w==
+X-Received: by 2002:a5d:554b:: with SMTP id g11mr16183465wrw.10.1561972395925;
+        Mon, 01 Jul 2019 02:13:15 -0700 (PDT)
 Received: from localhost.localdomain (176-150-251-154.abo.bbox.fr. [176.150.251.154])
-        by smtp.gmail.com with ESMTPSA id i16sm6305659wrm.37.2019.07.01.02.13.13
+        by smtp.gmail.com with ESMTPSA id i16sm6305659wrm.37.2019.07.01.02.13.15
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Mon, 01 Jul 2019 02:13:14 -0700 (PDT)
+        Mon, 01 Jul 2019 02:13:15 -0700 (PDT)
 From:   Neil Armstrong <narmstrong@baylibre.com>
 To:     jbrunet@baylibre.com, khilman@baylibre.com
 Cc:     linux-arm-kernel@lists.infradead.org,
@@ -51,9 +51,9 @@ Cc:     linux-arm-kernel@lists.infradead.org,
         linux-clk@vger.kernel.org, martin.blumenstingl@googlemail.com,
         linux-gpio@vger.kernel.org,
         Neil Armstrong <narmstrong@baylibre.com>
-Subject: [RFC/RFT v3 04/14] clk: meson: eeclk: add setup callback
-Date:   Mon,  1 Jul 2019 11:12:48 +0200
-Message-Id: <20190701091258.3870-5-narmstrong@baylibre.com>
+Subject: [RFC/RFT v3 05/14] soc: amlogic: meson-clk-measure: protect measure with a mutex
+Date:   Mon,  1 Jul 2019 11:12:49 +0200
+Message-Id: <20190701091258.3870-6-narmstrong@baylibre.com>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190701091258.3870-1-narmstrong@baylibre.com>
 References: <20190701091258.3870-1-narmstrong@baylibre.com>
@@ -64,46 +64,60 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Add a setup() callback in the eeclk structure, to call an optional
-call() function at end of eeclk probe to setup clocks.
+In order to protect clock measuring when multiple process asks for
+a measure, protect the main measure function with mutexes.
 
-It's used for the G12A clock controller to setup the CPU clock notifiers.
-
+Reviewed-by: Kevin Hilman <khilman@baylibre.com>
 Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
 ---
- drivers/clk/meson/meson-eeclk.c | 6 ++++++
- drivers/clk/meson/meson-eeclk.h | 1 +
- 2 files changed, 7 insertions(+)
+ drivers/soc/amlogic/meson-clk-measure.c | 12 +++++++++++-
+ 1 file changed, 11 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/clk/meson/meson-eeclk.c b/drivers/clk/meson/meson-eeclk.c
-index 6ba2094be257..81fd2abcd173 100644
---- a/drivers/clk/meson/meson-eeclk.c
-+++ b/drivers/clk/meson/meson-eeclk.c
-@@ -61,6 +61,12 @@ int meson_eeclkc_probe(struct platform_device *pdev)
- 		}
- 	}
+diff --git a/drivers/soc/amlogic/meson-clk-measure.c b/drivers/soc/amlogic/meson-clk-measure.c
+index 19d4cbc93a17..c470e24f1dfa 100644
+--- a/drivers/soc/amlogic/meson-clk-measure.c
++++ b/drivers/soc/amlogic/meson-clk-measure.c
+@@ -11,6 +11,8 @@
+ #include <linux/debugfs.h>
+ #include <linux/regmap.h>
  
-+	if (data->setup) {
-+		ret = data->setup(pdev);
-+		if (ret)
-+			return ret;
-+	}
++static DEFINE_MUTEX(measure_lock);
 +
- 	return devm_of_clk_add_hw_provider(dev, of_clk_hw_onecell_get,
- 					   data->hw_onecell_data);
- }
-diff --git a/drivers/clk/meson/meson-eeclk.h b/drivers/clk/meson/meson-eeclk.h
-index 9ab5d6fa7ccb..7fdf424f71a6 100644
---- a/drivers/clk/meson/meson-eeclk.h
-+++ b/drivers/clk/meson/meson-eeclk.h
-@@ -20,6 +20,7 @@ struct meson_eeclkc_data {
- 	const struct reg_sequence	*init_regs;
- 	unsigned int			init_count;
- 	struct clk_hw_onecell_data	*hw_onecell_data;
-+	int				(*setup)(struct platform_device *pdev);
- };
+ #define MSR_CLK_DUTY		0x0
+ #define MSR_CLK_REG0		0x4
+ #define MSR_CLK_REG1		0x8
+@@ -360,6 +362,10 @@ static int meson_measure_id(struct meson_msr_id *clk_msr_id,
+ 	unsigned int val;
+ 	int ret;
  
- int meson_eeclkc_probe(struct platform_device *pdev);
++	ret = mutex_lock_interruptible(&measure_lock);
++	if (ret)
++		return ret;
++
+ 	regmap_write(priv->regmap, MSR_CLK_REG0, 0);
+ 
+ 	/* Set measurement duration */
+@@ -377,8 +383,10 @@ static int meson_measure_id(struct meson_msr_id *clk_msr_id,
+ 
+ 	ret = regmap_read_poll_timeout(priv->regmap, MSR_CLK_REG0,
+ 				       val, !(val & MSR_BUSY), 10, 10000);
+-	if (ret)
++	if (ret) {
++		mutex_unlock(&measure_lock);
+ 		return ret;
++	}
+ 
+ 	/* Disable */
+ 	regmap_update_bits(priv->regmap, MSR_CLK_REG0, MSR_ENABLE, 0);
+@@ -386,6 +394,8 @@ static int meson_measure_id(struct meson_msr_id *clk_msr_id,
+ 	/* Get the value in multiple of gate time counts */
+ 	regmap_read(priv->regmap, MSR_CLK_REG2, &val);
+ 
++	mutex_unlock(&measure_lock);
++
+ 	if (val >= MSR_VAL_MASK)
+ 		return -EINVAL;
+ 
 -- 
 2.21.0
 
