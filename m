@@ -2,52 +2,309 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id B48765C1ED
-	for <lists+linux-gpio@lfdr.de>; Mon,  1 Jul 2019 19:25:46 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 67A1F5C1F0
+	for <lists+linux-gpio@lfdr.de>; Mon,  1 Jul 2019 19:25:48 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728998AbfGARZp (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 1 Jul 2019 13:25:45 -0400
-Received: from sonic306-36.consmr.mail.bf2.yahoo.com ([74.6.132.235]:43135
-        "EHLO sonic306-36.consmr.mail.bf2.yahoo.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727702AbfGARZp (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 1 Jul 2019 13:25:45 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1562001944; bh=QFQXNGn0FJohU3l97Cng3z90qjIEAqAKmbCVyMu/adQ=; h=Date:From:Reply-To:Subject:References:From:Subject; b=Io9NL4lnVvdtK8VRVGLxZ8rA/ytXf2PNU5x/h3MaFo7Hb7b2OPZLVGspmb61RE5rZ9PqqoN1esVCurf9vURU1fjUxFGdAfc1RP+6pIbuELIQsK6YEJvvo9XUz3UNWqC3A/I9SefoNQdRZowftz07ZMnSkG8l03MloiJDh7QJ2T8QFH+mg8e/eEvw0BnTX2KY+deFfnko+W6uhvmkfV7pEH7HsszQ4x7ofbhXn5ez0Ih/xKPBScb+g9lMQnvCoIpH5kwRfY8Bstg2pwgjZOVHQ9fT6mYWO6pWyjnmk5gfUvD4t2BFtSskDEvgHrgZkd/7+lyE2xVEsbkGOAtAsNtNLA==
-X-YMail-OSG: owEhKTEVM1mxv1RUXQTuBXbn0W9dKpRWFvq52iZw927uEW2d0GbhsKKoutdQ5mg
- dGU1saTEaeA1Ua4tez5.glnlbkxwkjyj8xoYPT0Norx64ugkaR2JYtG3x_e24hoeB2_pzMN._KTN
- csaS1TLRinota2PsamLloCauxznnv8gK7VFbDTkT4kFnB93ENGfyq7Cw61vcR.nZfwpzWuuOivgh
- NbpzlwDzUw10slcKItdm5pHiwFFU6PCpH5NfPYkvFk7E_ziSe7C_7yQvr2L2j8tZ7lfjOeBN6lI5
- l8aR6HAIx1WTilOL7VPA12AY_eEGHnmS1h4gONIxQQwTI3kXzV8xg8AB7sPecjDYlzOjIO5uvOd1
- Wj94UDglNfEi2NCqyR9wdfWT39rP23z8uU0KXdk9q2x6vVxuaDawvdZ1sTwGBmzkYxzurZZXc_J_
- 33i7POi0DVCPwTqhnbZrud1BWXsActRCNQqmPuZejfXpZ8vABmW7dwq4qZjXnjNhCXoCu2UxHczf
- 7qt.xqlJwGM3VzgpFoM.rXq8ZueI1HWHCDH4S_2YlMoUEEpSt4JPmeXtI7Ra1Vb2UNXR0brHzJfF
- KfQ_mXPoAauW28R2As0GzLupY0G636TEKi7fBJ.IO16rO5052oteu.ytXVZKABNrOrgbnwR42xCK
- 3muMi3FxqqKhtNKHNJtbe7IreDxQcxYivAgLayMg0H34OgwCufWCBT2jawMGSb2MJ.kzFG4x_4xX
- gaTFy05qOaOti2xY3XGfklWDlPCGolBij_39hsMR5mwcDn7d9vKYGJ2CqafP52e8TZr2QYN2312u
- t4OUsc6MXuDF4bXFWajw4fWtFoabYxpwG696d5lA9F4Mg.sIIv1HCVX.Hdhp1eKWhFfbsY5p4.ON
- FrgrUnrjTyFU5q14Vr6d19NJ48V7JXsgXE1DtAkOPHM3ZJJ4jVfLDn2YbScldfYFySMaBnySKrrF
- rRsxPI1JCZku9W5alhmadWIrAYEKuWTvd0whTblF6P3eUb36U9a1aE_JsoSai3vnJK3Xg2oEnTpJ
- _13MQFLB19xZdPC.wApMJ36M0mI48khQdUtxnEXKpDPhSb5OzkDt7rswiJQBdyehWnkG_9pysHB0
- MGtsheKxCDoAgJNdoTNFh2SYI0_iOewtvN0nHtYg342EbgcIuktrJsdCRx.xNwJm6sVTkHSPrVeK
- oWqY_Mv.f77QEUGU.UJKWrwdwykVQhz6bzCRI48_TSS.iOCcRirarGmQDskknQhsjYqx4h8dfJbh
- aByTVMD_ziSGfLJC4sn2e3NU-
-Received: from sonic.gate.mail.ne1.yahoo.com by sonic306.consmr.mail.bf2.yahoo.com with HTTP; Mon, 1 Jul 2019 17:25:44 +0000
-Date:   Mon, 1 Jul 2019 17:23:43 +0000 (UTC)
-From:   Major Dennis Hornbeck <bc65@bacman.online>
-Reply-To: Major Dennis Hornbeck <hornbeckmajordennis637@gmail.com>
-Message-ID: <1468183126.914512.1562001823079@mail.yahoo.com>
-Subject: 
+        id S1728591AbfGARZr (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 1 Jul 2019 13:25:47 -0400
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:33256 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728903AbfGARZq (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 1 Jul 2019 13:25:46 -0400
+Received: by mail-lj1-f193.google.com with SMTP id h10so14063321ljg.0
+        for <linux-gpio@vger.kernel.org>; Mon, 01 Jul 2019 10:25:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=YwvMPY077x2xjVlR4TXWeWzMKnsAAJ9OWSd/bo+8wa8=;
+        b=s8U8YdZhxJjumvqJY/qvVyVvJv2HoAsl0bQnmR/fdzOKd7nHYJ56I0JuIaaS3Tit63
+         6F4vSnMfnZmSHFmk/widuJextgcJtS84TvMnfwgM+Bx+V5fcTq36zufy9w5l373P/7Bv
+         578v3xipOKSjSYy9rP1ojlplmq5EnJE4ST4scy7sKeFbjwlGsI3xltE439F3qRSRSDXP
+         U0PuwtCU2z6VhDpPkNUYjGLydbbe4CgkdJWof44ISaxc9bMdInsC9UovOqt2x1wESAFt
+         VtFuYXextOpr8ENSrVffPY/U4Sh43ib4J40AI2D/wosFbAOKC7lFaEOZp28H864njF+K
+         0Y6Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=YwvMPY077x2xjVlR4TXWeWzMKnsAAJ9OWSd/bo+8wa8=;
+        b=KYtoTna0RUF4P6iiYgsn/T31PcajIUAOGGad0yVtwGOUMkllENuchhfkErQTZwoHiW
+         nJNhXPlFKkSLJ6tDOetfTZjciHvb8MQLZvX0NxEWWcnvxNK83e1vTHcX/05uMEvq97qx
+         LYsOIa7JEVSbkETgKaHpP1wDrabdeY6ELMTuxwQOf/lqmLF8SgG5rLzns6PI6JHYH0zU
+         qMKuz8f4XrdhFxj4dzb0CS3pYexKfzZOXntRy/jb6mxH3Bpsi+jABjAfrCKxs9vTFYH1
+         9UjtMvdNmaccSmfz/TM2HBLIi8bm3imy/IuY8oeUiOWBbFm/XE72KV7y5QT8KHCaW+kr
+         Khuw==
+X-Gm-Message-State: APjAAAXjPp1NPymv6VVvO4+azsUNuuuXqUH8TV+g76wmQJNStlSGQ77q
+        Yng/f9U1iCUChuUcMNJJnwTAag==
+X-Google-Smtp-Source: APXvYqwzXMou0PbEq2okkk6P5LSDp6FHGS9eBbw1VyOe8SgwYD8PDRU6itDDBCaw1bpcxzTrkVfJoQ==
+X-Received: by 2002:a2e:7604:: with SMTP id r4mr14756942ljc.225.1562001943406;
+        Mon, 01 Jul 2019 10:25:43 -0700 (PDT)
+Received: from localhost.bredbandsbolaget (c-22cd225c.014-348-6c756e10.bbcust.telenor.se. [92.34.205.34])
+        by smtp.gmail.com with ESMTPSA id w15sm3740386ljh.0.2019.07.01.10.25.41
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Mon, 01 Jul 2019 10:25:41 -0700 (PDT)
+From:   Linus Walleij <linus.walleij@linaro.org>
+To:     Mark Brown <broonie@kernel.org>, linux-spi@vger.kernel.org
+Cc:     linux-gpio@vger.kernel.org,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Andrey Smirnov <andrew.smirnov@gmail.com>
+Subject: [PATCH] Revert "spi: gpio: Don't request CS GPIO in DT use-case"
+Date:   Mon,  1 Jul 2019 19:25:17 +0200
+Message-Id: <20190701172517.31641-1-linus.walleij@linaro.org>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-References: <1468183126.914512.1562001823079.ref@mail.yahoo.com>
-X-Mailer: WebService/1.1.13913 YahooMailBasic Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3683.103 Safari/537.36
-To:     unlisted-recipients:; (no To-header on input)
+Content-Transfer-Encoding: 8bit
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-I am in the military unit here in Afghanistan, we have some amount of funds that we want to move out of the country. My partners and I need a good partner someone we can trust. It is risk free and legal. Reply to this email: hornbeckmajordennis637@gmail.com
+This reverts commit 249e2632dcd0509b8f8f296f5aabf4d48dfd6da8.
 
-Regards,
-Major Dennis Hornbeck.
+After this commit drivers/net/dsa/vitesse-vsc73xx.c stopped
+working. Apparently CS is not working because the reads
+from the device is just returning just 1:s or just 0:s at
+all bisection points, so it is a complete regression and
+I think spi-gpio CS is essentially broken.
+
+The revert had to be hand-crafted to preserve all the other
+cleanup and changes to this driver, but now it works.
+
+I'm sad to revert the change because it is a nice cleanup
+but with the short time before v5.2 is released this is
+probably the best idea, so we can figure out the right way
+to do this in the next kernel cycle.
+
+Fixes: 249e2632dcd0 ("spi: gpio: Don't request CS GPIO in DT use-case")
+Cc: Andrey Smirnov <andrew.smirnov@gmail.com>
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+---
+ drivers/spi/spi-gpio.c | 137 +++++++++++++++++++++++------------------
+ 1 file changed, 78 insertions(+), 59 deletions(-)
+
+diff --git a/drivers/spi/spi-gpio.c b/drivers/spi/spi-gpio.c
+index eca9d52ecf65..7cf800efef93 100644
+--- a/drivers/spi/spi-gpio.c
++++ b/drivers/spi/spi-gpio.c
+@@ -36,6 +36,7 @@ struct spi_gpio {
+ 	struct gpio_desc		*miso;
+ 	struct gpio_desc		*mosi;
+ 	struct gpio_desc		**cs_gpios;
++	bool				has_cs;
+ };
+ 
+ /*----------------------------------------------------------------------*/
+@@ -205,7 +206,7 @@ static void spi_gpio_chipselect(struct spi_device *spi, int is_active)
+ 		gpiod_set_value_cansleep(spi_gpio->sck, spi->mode & SPI_CPOL);
+ 
+ 	/* Drive chip select line, if we have one */
+-	if (spi_gpio->cs_gpios) {
++	if (spi_gpio->has_cs) {
+ 		struct gpio_desc *cs = spi_gpio->cs_gpios[spi->chip_select];
+ 
+ 		/* SPI chip selects are normally active-low */
+@@ -223,12 +224,10 @@ static int spi_gpio_setup(struct spi_device *spi)
+ 	 * The CS GPIOs have already been
+ 	 * initialized from the descriptor lookup.
+ 	 */
+-	if (spi_gpio->cs_gpios) {
+-		cs = spi_gpio->cs_gpios[spi->chip_select];
+-		if (!spi->controller_state && cs)
+-			status = gpiod_direction_output(cs,
+-						  !(spi->mode & SPI_CS_HIGH));
+-	}
++	cs = spi_gpio->cs_gpios[spi->chip_select];
++	if (!spi->controller_state && cs)
++		status = gpiod_direction_output(cs,
++						!(spi->mode & SPI_CS_HIGH));
+ 
+ 	if (!status)
+ 		status = spi_bitbang_setup(spi);
+@@ -279,8 +278,12 @@ static void spi_gpio_cleanup(struct spi_device *spi)
+  * floating signals.  (A weak pulldown would save power too, but many
+  * drivers expect to see all-ones data as the no slave "response".)
+  */
+-static int spi_gpio_request(struct device *dev, struct spi_gpio *spi_gpio)
++static int spi_gpio_request(struct device *dev,
++			    struct spi_gpio *spi_gpio,
++			    unsigned int num_chipselects)
+ {
++	int i;
++
+ 	spi_gpio->mosi = devm_gpiod_get_optional(dev, "mosi", GPIOD_OUT_LOW);
+ 	if (IS_ERR(spi_gpio->mosi))
+ 		return PTR_ERR(spi_gpio->mosi);
+@@ -293,6 +296,13 @@ static int spi_gpio_request(struct device *dev, struct spi_gpio *spi_gpio)
+ 	if (IS_ERR(spi_gpio->sck))
+ 		return PTR_ERR(spi_gpio->sck);
+ 
++	for (i = 0; i < num_chipselects; i++) {
++		spi_gpio->cs_gpios[i] = devm_gpiod_get_index(dev, "cs",
++							     i, GPIOD_OUT_HIGH);
++		if (IS_ERR(spi_gpio->cs_gpios[i]))
++			return PTR_ERR(spi_gpio->cs_gpios[i]);
++	}
++
+ 	return 0;
+ }
+ 
+@@ -303,55 +313,44 @@ static const struct of_device_id spi_gpio_dt_ids[] = {
+ };
+ MODULE_DEVICE_TABLE(of, spi_gpio_dt_ids);
+ 
+-static int spi_gpio_probe_dt(struct platform_device *pdev,
+-			     struct spi_master *master)
++static int spi_gpio_probe_dt(struct platform_device *pdev)
+ {
+-	master->dev.of_node = pdev->dev.of_node;
+-	master->use_gpio_descriptors = true;
+-
+-	return 0;
+-}
+-#else
+-static inline int spi_gpio_probe_dt(struct platform_device *pdev,
+-				    struct spi_master *master)
+-{
+-	return 0;
+-}
+-#endif
+-
+-static int spi_gpio_probe_pdata(struct platform_device *pdev,
+-				struct spi_master *master)
+-{
+-	struct device *dev = &pdev->dev;
+-	struct spi_gpio_platform_data *pdata = dev_get_platdata(dev);
+-	struct spi_gpio *spi_gpio = spi_master_get_devdata(master);
+-	int i;
++	int ret;
++	u32 tmp;
++	struct spi_gpio_platform_data	*pdata;
++	struct device_node *np = pdev->dev.of_node;
++	const struct of_device_id *of_id =
++			of_match_device(spi_gpio_dt_ids, &pdev->dev);
+ 
+-#ifdef GENERIC_BITBANG
+-	if (!pdata || !pdata->num_chipselect)
+-		return -ENODEV;
+-#endif
+-	/*
+-	 * The master needs to think there is a chipselect even if not
+-	 * connected
+-	 */
+-	master->num_chipselect = pdata->num_chipselect ?: 1;
++	if (!of_id)
++		return 0;
+ 
+-	spi_gpio->cs_gpios = devm_kcalloc(dev, master->num_chipselect,
+-					  sizeof(*spi_gpio->cs_gpios),
+-					  GFP_KERNEL);
+-	if (!spi_gpio->cs_gpios)
++	pdata = devm_kzalloc(&pdev->dev, sizeof(*pdata), GFP_KERNEL);
++	if (!pdata)
+ 		return -ENOMEM;
+ 
+-	for (i = 0; i < master->num_chipselect; i++) {
+-		spi_gpio->cs_gpios[i] = devm_gpiod_get_index(dev, "cs", i,
+-							     GPIOD_OUT_HIGH);
+-		if (IS_ERR(spi_gpio->cs_gpios[i]))
+-			return PTR_ERR(spi_gpio->cs_gpios[i]);
++
++	ret = of_property_read_u32(np, "num-chipselects", &tmp);
++	if (ret < 0) {
++		dev_err(&pdev->dev, "num-chipselects property not found\n");
++		goto error_free;
+ 	}
+ 
++	pdata->num_chipselect = tmp;
++	pdev->dev.platform_data = pdata;
++
++	return 1;
++
++error_free:
++	devm_kfree(&pdev->dev, pdata);
++	return ret;
++}
++#else
++static inline int spi_gpio_probe_dt(struct platform_device *pdev)
++{
+ 	return 0;
+ }
++#endif
+ 
+ static void spi_gpio_put(void *data)
+ {
+@@ -363,11 +362,22 @@ static int spi_gpio_probe(struct platform_device *pdev)
+ 	int				status;
+ 	struct spi_master		*master;
+ 	struct spi_gpio			*spi_gpio;
++	struct spi_gpio_platform_data	*pdata;
+ 	struct device			*dev = &pdev->dev;
+ 	struct spi_bitbang		*bb;
+-	const struct of_device_id	*of_id;
++	bool use_of = 0;
+ 
+-	of_id = of_match_device(spi_gpio_dt_ids, &pdev->dev);
++	status = spi_gpio_probe_dt(pdev);
++	if (status < 0)
++		return status;
++	if (status > 0)
++		use_of = 1;
++
++	pdata = dev_get_platdata(dev);
++#ifdef GENERIC_BITBANG
++	if (!pdata || (!use_of && !pdata->num_chipselect))
++		return -ENODEV;
++#endif
+ 
+ 	master = spi_alloc_master(dev, sizeof(*spi_gpio));
+ 	if (!master)
+@@ -377,17 +387,22 @@ static int spi_gpio_probe(struct platform_device *pdev)
+ 	if (status)
+ 		return status;
+ 
+-	if (of_id)
+-		status = spi_gpio_probe_dt(pdev, master);
+-	else
+-		status = spi_gpio_probe_pdata(pdev, master);
++	spi_gpio = spi_master_get_devdata(master);
+ 
+-	if (status)
+-		return status;
++	spi_gpio->cs_gpios = devm_kcalloc(dev,
++				pdata->num_chipselect,
++				sizeof(*spi_gpio->cs_gpios),
++				GFP_KERNEL);
++	if (!spi_gpio->cs_gpios)
++		return -ENOMEM;
+ 
+-	spi_gpio = spi_master_get_devdata(master);
++	platform_set_drvdata(pdev, spi_gpio);
++
++	/* Determine if we have chip selects connected */
++	spi_gpio->has_cs = !!pdata->num_chipselect;
+ 
+-	status = spi_gpio_request(dev, spi_gpio);
++	status = spi_gpio_request(dev, spi_gpio,
++				  pdata->num_chipselect);
+ 	if (status)
+ 		return status;
+ 
+@@ -405,9 +420,13 @@ static int spi_gpio_probe(struct platform_device *pdev)
+ 	}
+ 
+ 	master->bus_num = pdev->id;
++	/* The master needs to think there is a chipselect even if not connected */
++	master->num_chipselect = spi_gpio->has_cs ? pdata->num_chipselect : 1;
+ 	master->setup = spi_gpio_setup;
+ 	master->cleanup = spi_gpio_cleanup;
+-
++#ifdef CONFIG_OF
++	master->dev.of_node = dev->of_node;
++#endif
+ 	bb = &spi_gpio->bitbang;
+ 	bb->master = master;
+ 	bb->chipselect = spi_gpio_chipselect;
+-- 
+2.21.0
+
