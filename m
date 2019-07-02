@@ -2,56 +2,56 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id E9BDF5DA77
-	for <lists+linux-gpio@lfdr.de>; Wed,  3 Jul 2019 03:12:32 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id F0DE25D915
+	for <lists+linux-gpio@lfdr.de>; Wed,  3 Jul 2019 02:34:13 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726963AbfGCBMc (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 2 Jul 2019 21:12:32 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:43181 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726329AbfGCBMc (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 2 Jul 2019 21:12:32 -0400
-Received: by mail-wr1-f67.google.com with SMTP id p13so713011wru.10;
-        Tue, 02 Jul 2019 18:12:30 -0700 (PDT)
+        id S1727065AbfGCAeF (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 2 Jul 2019 20:34:05 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:54041 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726652AbfGCAeF (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 2 Jul 2019 20:34:05 -0400
+Received: by mail-wm1-f67.google.com with SMTP id x15so372792wmj.3;
+        Tue, 02 Jul 2019 17:34:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=googlemail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=K7ni9UM28FpD/k7nkpFsWw7aGdJuOADK0tvwXCdIFII=;
-        b=XUQwjWyCmFtubExU8PzLfrARKbRw0z6VjMVgtYU+nuxrdym1bhC67W5aqZ0gvRp2RA
-         Y4QWsxI5SX8pExi6QbbpNea2gV0wgrrowlSJD162cBQ8hrAlEUwZJ6jda65+Zw33aycH
-         Bc8BEhLoPQ1HqSu743IaGvR59natR4WKtzKZlCtC7Oo1YZE9trffuFxEi49iEc8RCe2Y
-         W+fdIzsAH5jFAJotXlGdNxgq+fq2UDAASRRPmKbOdyIUXH4UPZygJMzJzTUsedDVNw8L
-         cqMGNk56GQfMOrA2HQW6S/tM146UXAwA0LJ6Q/UiLKdYfpaSKxHF2JO1Yo95MzwmMU6h
-         oSNw==
+        bh=TGoqpi8eTuf/N4Y6xU5hQJ3LkSfTnTRxjGlzchSiNoo=;
+        b=iJzLgUkaf/kITE4bgtlY7bRYzyMu418HQO39xYh5QhykMUkbA7iuGAEPIkd5OA23oJ
+         IV/QNiGjxXVWfUF/bOXvMfR7spHQ4DHr8DpZa8s0o9eRRTtPhJj8JDjtKnHPbSPs5tC3
+         jTbxSo0AraxUKtNkaMNehTDcIkl1QGaOp1pu38PhAp6MW0NYPuysWVyCGpAFM1B5KdAK
+         XZ6ov3TmN9MBV3uDyXf8TlLmqrAW+A4xHYIUr3iLnrOhelsx5+2ijz/pMtBuQveMFwj7
+         MUMwlm+N/RADtZ8rtGNu8I/pE+2mScENf3NPQJ4aWUgBU2r/z155Lkcw4c6RwhkmvPBG
+         tSWA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=K7ni9UM28FpD/k7nkpFsWw7aGdJuOADK0tvwXCdIFII=;
-        b=LJaHLe3Vn+1XpKVADLHMKBluSK+yUXW7Hli6ptxRdZjTdso+usVv3CgJgJKFyaIRd8
-         1lbYBCzgf8NIEvKbr4rW5vt4p+3VXIYr74C1fPwQT5ciS/PIdahPjxSVCOxq9IkOqEt6
-         fVYGY+mRUIP6JhGvAW//eQiQQ9w/OXfbjngiFkVe2RwQ0s+LPhlhiSiyAXPIUrSWhEsk
-         JbjTsBBS6teO3crPOFbxsDipRcz+jtRqcXNA4iWdkNYlULXlQN0oDC1UFYfUiTdd/q4V
-         eLzIfwJaSGY4n+fXaXri3ogSOC5tPEn4poQishdOWYKYacPTlTzNXVJAxEmfRPggfMVL
-         l6Rg==
-X-Gm-Message-State: APjAAAXLek65CEn2UIrzNa9u4liaV74D7NfLYcVpDYO6JcNkHUFn951W
-        2PGgBUTdLIYhYH1mt1xYe5TB1Qy/
-X-Google-Smtp-Source: APXvYqxuWTZ6QLovwtI+F2WWdSLMlSfZ3cTk0wHb/ZmTptUJUfUzP7v+CkTEDhHX8agLoms9Ecm8CQ==
-X-Received: by 2002:adf:e9c6:: with SMTP id l6mr4014wrn.216.1562106790356;
-        Tue, 02 Jul 2019 15:33:10 -0700 (PDT)
+        bh=TGoqpi8eTuf/N4Y6xU5hQJ3LkSfTnTRxjGlzchSiNoo=;
+        b=qKn4efvMbY+lUKFDEXtsbBTUJclnXJ1nVy47oVgj9w3Cg/1p97b9lDbTbrNOqXPlsM
+         Iy5lZHA3S0bPD8xOA21y80GKzSYc4m3DDezv+FcQXekF3Y7R1jk2suCHUiJtiRAXrnmI
+         PS4y2+oWAIeFxz63+yHhSCE4Ojtfn5EGpfbz9wx5Z0bBgKiua//wH91908jYqjxfZT5T
+         bbW2ELLsOqFXW3n383Zgi9PUzxsEct1lnv888f2VMekGuLcpbYh8/mbImn+5uEjhDKng
+         12sInHyF4A4vf1+SxPSdQJyIvpnm3PCx8gZzfnZhVm7ZrsDOJ3apU2P/xPwX7n9VpROT
+         Dk+A==
+X-Gm-Message-State: APjAAAW+jxdEkfDS0VoubRClucIuEu9RFJh77Xp2x7nieYJwC+w6O90a
+        mpBoKgpLlTQYhTXzanynDGaL6Pp+
+X-Google-Smtp-Source: APXvYqyooLUdpD1x6HJlyZAkAlxvY6nD8KekDIR8WttCJQ6A3tTSLOeJLUZ0B7DLdI7FkWi8Nr6Btw==
+X-Received: by 2002:a1c:c145:: with SMTP id r66mr4721581wmf.139.1562106791814;
+        Tue, 02 Jul 2019 15:33:11 -0700 (PDT)
 Received: from blackbox.darklights.net (p200300F133D62000A09003363445C98E.dip0.t-ipconnect.de. [2003:f1:33d6:2000:a090:336:3445:c98e])
-        by smtp.googlemail.com with ESMTPSA id 18sm253513wmg.43.2019.07.02.15.33.09
+        by smtp.googlemail.com with ESMTPSA id 18sm253513wmg.43.2019.07.02.15.33.10
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 02 Jul 2019 15:33:09 -0700 (PDT)
+        Tue, 02 Jul 2019 15:33:10 -0700 (PDT)
 From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 To:     blogic@openwrt.org, linus.walleij@linaro.org,
         bgolaszewski@baylibre.com, linux-gpio@vger.kernel.org
 Cc:     dev@kresin.me, linux-kernel@vger.kernel.org,
         Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Subject: [PATCH 2/4] gpio: stp-xway: improve module clock error handling
-Date:   Wed,  3 Jul 2019 00:32:46 +0200
-Message-Id: <20190702223248.31934-3-martin.blumenstingl@googlemail.com>
+Subject: [PATCH 3/4] gpio: stp-xway: get rid of the #include <lantiq_soc.h> dependency
+Date:   Wed,  3 Jul 2019 00:32:47 +0200
+Message-Id: <20190702223248.31934-4-martin.blumenstingl@googlemail.com>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190702223248.31934-1-martin.blumenstingl@googlemail.com>
 References: <20190702223248.31934-1-martin.blumenstingl@googlemail.com>
@@ -62,54 +62,39 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Three module clock error handling improvements:
-- use devm_clk_get() so the clock instance can be freed if
-  devm_gpiochip_add_data() fails later on
-- switch to clk_prepare_enable() so the driver is ready whenever the
-  lantiq target switches to the common clock framework
-- disable the clock again (using clk_disable_unprepare()) if
-  devm_gpiochip_add_data()
-
-All of these are virtually no-ops with the current lantiq target.
-However, these will be relevant if we switch to the common clock
-framework.
+Use the xway_stp_{r,w}32 helpers in xway_stp_w32_mask instead of relying
+on ltq_{r,w}32 from the architecture specific <lantiq_soc.h>.
+This will allow the driver to be compile-tested on all architectures
+that support MMIO.
 
 Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 ---
- drivers/gpio/gpio-stp-xway.c | 11 ++++++++---
- 1 file changed, 8 insertions(+), 3 deletions(-)
+ drivers/gpio/gpio-stp-xway.c | 5 +----
+ 1 file changed, 1 insertion(+), 4 deletions(-)
 
 diff --git a/drivers/gpio/gpio-stp-xway.c b/drivers/gpio/gpio-stp-xway.c
-index a3326255ce3c..b31e08f84681 100644
+index b31e08f84681..9e23a5ae8108 100644
 --- a/drivers/gpio/gpio-stp-xway.c
 +++ b/drivers/gpio/gpio-stp-xway.c
-@@ -256,18 +256,23 @@ static int xway_stp_probe(struct platform_device *pdev)
- 	if (!of_find_property(pdev->dev.of_node, "lantiq,rising", NULL))
- 		chip->edge = XWAY_STP_FALLING;
+@@ -15,8 +15,6 @@
+ #include <linux/clk.h>
+ #include <linux/err.h>
  
--	clk = clk_get(&pdev->dev, NULL);
-+	clk = devm_clk_get(&pdev->dev, NULL);
- 	if (IS_ERR(clk)) {
- 		dev_err(&pdev->dev, "Failed to get clock\n");
- 		return PTR_ERR(clk);
- 	}
--	clk_enable(clk);
-+
-+	ret = clk_prepare_enable(clk);
-+	if (ret)
-+		return ret;
+-#include <lantiq_soc.h>
+-
+ /*
+  * The Serial To Parallel (STP) is found on MIPS based Lantiq socs. It is a
+  * peripheral controller used to drive external shift register cascades. At most
+@@ -71,8 +69,7 @@
+ #define xway_stp_r32(m, reg)		__raw_readl(m + reg)
+ #define xway_stp_w32(m, val, reg)	__raw_writel(val, m + reg)
+ #define xway_stp_w32_mask(m, clear, set, reg) \
+-		ltq_w32((ltq_r32(m + reg) & ~(clear)) | (set), \
+-		m + reg)
++		xway_stp_w32(m, (xway_stp_r32(m, reg) & ~(clear)) | (set), reg)
  
- 	xway_stp_hw_init(chip);
- 
- 	ret = devm_gpiochip_add_data(&pdev->dev, &chip->gc, chip);
--	if (ret)
-+	if (ret) {
-+		clk_disable_unprepare(clk);
- 		return ret;
-+	}
- 
- 	dev_info(&pdev->dev, "Init done\n");
- 
+ struct xway_stp {
+ 	struct gpio_chip gc;
 -- 
 2.22.0
 
