@@ -2,51 +2,51 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 892EA5D9BB
-	for <lists+linux-gpio@lfdr.de>; Wed,  3 Jul 2019 02:51:55 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AD5E15D970
+	for <lists+linux-gpio@lfdr.de>; Wed,  3 Jul 2019 02:43:24 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727387AbfGCAvu (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 2 Jul 2019 20:51:50 -0400
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:43788 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727364AbfGCAvs (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 2 Jul 2019 20:51:48 -0400
-Received: by mail-ot1-f66.google.com with SMTP id q10so484800otk.10;
-        Tue, 02 Jul 2019 17:51:47 -0700 (PDT)
+        id S1727069AbfGCAnU (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 2 Jul 2019 20:43:20 -0400
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:38562 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726736AbfGCAnT (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 2 Jul 2019 20:43:19 -0400
+Received: by mail-oi1-f193.google.com with SMTP id v186so580144oie.5;
+        Tue, 02 Jul 2019 17:43:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=googlemail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=ByhsgyjfPRCaYRtGVf0X74WgyTuKcSf1bOHMoBSZqlM=;
-        b=DoR1ThEgGbjv19cCdz5BE+R5n05F1pnqjFfoBynSpfmBlQXLCSunPFhbew6NEfAxPs
-         hvktSZdshjCkXciJetywqYC7halqVs7rQ//KLFsw2G6zRA5AsIWS+MKAiB3BahXdsdnG
-         3pcSjZaiZgcd8FrveXvr89fZ0fLQgFuSogZ9Keg4qmRLU/wDp3HL5P22/Mw1kYoZQ5+G
-         fuMux96KZ77382ZmWkZNoWLAaBNs9Wxu3z9DmmEm1nfFS9MPhHQDYbiOF++COdVen6EM
-         7Bk7sB7xgr9U92H4vgfSCaES5Uuh91WVyRugW9AD2JAN7CGio1F23wG2jEvDRRzT8tfR
-         wLqQ==
+        bh=WW5toOARIQ7duYOFcBhdjxTG2zu+PE3OJ8IsJFKcDaY=;
+        b=YWDFyFReOw5A20APKlPQm/STRGBj1lG8LHOh65917g5mJ3CVlnwLCbF3t8dJye81lq
+         oBJDlbCvbynivEGV4PL+f6H1f+PwDRR2RC/aizii/HSO9X3qXEQC6DPoDrUfkBwl7Fop
+         KmwDaeMAHWqt98M95ZV8rrFrjSD+TKIEmZefdO31XSn3yR15GT7keP1JvWMCx22492B6
+         FYUCfHIAxRzKnEFDA3X37E4vpLk2rp4sNL3+/JIE41uTisDieiRtHKV3CGYtQrRlDNEc
+         Y3WJl3IN0GHOQ2mesZlcHEbpaiy3jLjvP+baLuRY0ouxYEb0aUDLd/4e/1DBL/UVmzci
+         swfQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=ByhsgyjfPRCaYRtGVf0X74WgyTuKcSf1bOHMoBSZqlM=;
-        b=AbBJ5Hf5VLOiGy0ijgtAXlcJWJ4IXuu6MrNs3zBYgg9qnoSD59HHOQ2aMVYiUUFc2O
-         LxXcX32WmOLPxWqcVVzS37hNZzBq/9MNf8a2L5LCpulyYKGHQJtNRz/AlE7Y3NvzN+0u
-         q/vczSzK07IBWEjVGq8cQ4IFTwj9yDTRxs85koEDyh9rnHmCueAg6UenK6PqYatv+uWj
-         BFXjQ7Gzck1EGt2gdmjXwFpmUAq26uF1M96L2LsBhJi5tddu84pZskNMTyhZP7tHCudU
-         okdPbToO8BF5T2pRzneCxa52R1aZaDLwOUbMiFyCSVtW6c3w5h3LH3wsh4JDin2P2v+h
-         fuFw==
-X-Gm-Message-State: APjAAAVuOpXUJHOgUu9p6ChPVxuUYaNFzhF85lI2EK8uCjvoHtYovZVg
-        rcisKdpQeKSrB+MQZasML6SqEq02hRTUYs9wzWh0Lowc
-X-Google-Smtp-Source: APXvYqzMU6LhYLtDxe6IzTmM1WolsPD+74qKOzIux1HcUkzeXscSddhWfH+OlTyFXLefL/eH9LreXfId+iDH0UNqUbY=
-X-Received: by 2002:a9d:6d8d:: with SMTP id x13mr4126550otp.6.1562108605726;
- Tue, 02 Jul 2019 16:03:25 -0700 (PDT)
+        bh=WW5toOARIQ7duYOFcBhdjxTG2zu+PE3OJ8IsJFKcDaY=;
+        b=X9DpjZboItSmzeTr7VjHIftPeXGGK+kXJ2IgHrduyYqEwcheh74CJbZ466bhjyXS2M
+         qSrPx61CXRPzG21MUSwmrolxFil2ZwTjgCk1APfnUcqJWk6IFwIL4uJl95k6HB8QDbzy
+         C84v2QVPhYMT0K9mwV84YJQWenTuSb89Wu1GzAlfJlbIFMkiuDdXlc9+RLtk2PgI/U5U
+         Da5PsOJ5M2xfv5uDB2eMUiVV8hVAEPTRbOlwDRT1vUdaD76ZFFlu0cnnHOIhgRnf8JbA
+         u9RauEWUzZERAbmDjQ+lKTEW70k/aYaYK9mRz5gW0s9qHeZtg7um9w5ablW1gS6WjrWY
+         DhBA==
+X-Gm-Message-State: APjAAAXnoy+Es9sNwMWwysUmR142Fhdzlj44gTX6qubAYSgnjPpQB2lJ
+        jTPG4F5iYyIn79OovR7ZdH0B/9lsDBdCNkV/PYdBp56V
+X-Google-Smtp-Source: APXvYqxlJf85RIzJ3+TzKp9rzx1O65T6vzrzCJARARCucN2vc1cY/g5Vzo1gF94okc60g5IoCN8PVau32fspA3+GGy0=
+X-Received: by 2002:aca:5c55:: with SMTP id q82mr1435225oib.15.1562108742686;
+ Tue, 02 Jul 2019 16:05:42 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190701091258.3870-1-narmstrong@baylibre.com> <20190701091258.3870-9-narmstrong@baylibre.com>
-In-Reply-To: <20190701091258.3870-9-narmstrong@baylibre.com>
+References: <20190701091258.3870-1-narmstrong@baylibre.com> <20190701091258.3870-3-narmstrong@baylibre.com>
+In-Reply-To: <20190701091258.3870-3-narmstrong@baylibre.com>
 From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Date:   Wed, 3 Jul 2019 01:03:14 +0200
-Message-ID: <CAFBinCAwvAb42uitinRr0k_Hkb_cDOc9dygQgg54E5nO69h=fg@mail.gmail.com>
-Subject: Re: [RFC/RFT v3 08/14] clk: meson: g12a: expose CPUB clock ID for G12B
+Date:   Wed, 3 Jul 2019 01:05:31 +0200
+Message-ID: <CAFBinCCVCd1OT1AUCRtm2FB=ZzjuD3Gfs0vcQYLWd=gFqTHugQ@mail.gmail.com>
+Subject: Re: [RFC/RFT v3 02/14] clk: core: introduce clk_hw_set_parent()
 To:     Neil Armstrong <narmstrong@baylibre.com>
 Cc:     jbrunet@baylibre.com, khilman@baylibre.com,
         linux-arm-kernel@lists.infradead.org,
@@ -60,8 +60,13 @@ X-Mailing-List: linux-gpio@vger.kernel.org
 
 On Mon, Jul 1, 2019 at 11:13 AM Neil Armstrong <narmstrong@baylibre.com> wrote:
 >
-> Expose the CPUB clock id to add DVFS to the second CPU cluster of
-> the Amlogic G12B SoC.
+> Introduce the clk_hw_set_parent() provider call to change parent of
+> a clock by using the clk_hw pointers.
+>
+> This eases the clock reparenting from clock rate notifiers and
+> implementing DVFS with simpler code avoiding the boilerplates
+> functions as __clk_lookup(clk_hw_get_name()) then clk_set_parent().
 >
 > Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
-Reviewed-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+for the same reason this is handy for the meson8b clock driver as well, so:
+Acked-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
