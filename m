@@ -2,52 +2,51 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id E8CE75D922
-	for <lists+linux-gpio@lfdr.de>; Wed,  3 Jul 2019 02:35:20 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 892EA5D9BB
+	for <lists+linux-gpio@lfdr.de>; Wed,  3 Jul 2019 02:51:55 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727294AbfGCAfI (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 2 Jul 2019 20:35:08 -0400
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:46944 "EHLO
+        id S1727387AbfGCAvu (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 2 Jul 2019 20:51:50 -0400
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:43788 "EHLO
         mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727229AbfGCAfI (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 2 Jul 2019 20:35:08 -0400
-Received: by mail-ot1-f66.google.com with SMTP id z23so431952ote.13;
-        Tue, 02 Jul 2019 17:35:08 -0700 (PDT)
+        with ESMTP id S1727364AbfGCAvs (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 2 Jul 2019 20:51:48 -0400
+Received: by mail-ot1-f66.google.com with SMTP id q10so484800otk.10;
+        Tue, 02 Jul 2019 17:51:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=googlemail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=Qbrn6+3X47dwhyUkAWXte8J+fjd+tHfpJpFHgAD+S58=;
-        b=TtsFiJatyqjLoJBxRVt34oXzoLGjO+FToXJtmv6CMHqLJ1J83PkR6QLrCwLHwZJnDn
-         rctTXjH0uAqvaRXNTUMUyew3QYxk8VGHKOJx53ikFwb5551GicsjHXcHFydA3g2ygLLm
-         qUGMeUdNAuAwkIfZf0Xdyzf7BNKslpY47cG4HmIReOIUhHcoNfXFQGvf7od4YcjkIT0x
-         xfigNk7ibXc0Nk50OjWAz5Hnkma8gjHVw6gkyxtRaWT80undWb/Xshw9gtH2ElUj2U6b
-         xNHQG6Gf3IEUxRhcTkGmBLtMbJiauTEClCyOKiARxVaySyOrgn6brYMqadKyW+9xVZ78
-         6kng==
+        bh=ByhsgyjfPRCaYRtGVf0X74WgyTuKcSf1bOHMoBSZqlM=;
+        b=DoR1ThEgGbjv19cCdz5BE+R5n05F1pnqjFfoBynSpfmBlQXLCSunPFhbew6NEfAxPs
+         hvktSZdshjCkXciJetywqYC7halqVs7rQ//KLFsw2G6zRA5AsIWS+MKAiB3BahXdsdnG
+         3pcSjZaiZgcd8FrveXvr89fZ0fLQgFuSogZ9Keg4qmRLU/wDp3HL5P22/Mw1kYoZQ5+G
+         fuMux96KZ77382ZmWkZNoWLAaBNs9Wxu3z9DmmEm1nfFS9MPhHQDYbiOF++COdVen6EM
+         7Bk7sB7xgr9U92H4vgfSCaES5Uuh91WVyRugW9AD2JAN7CGio1F23wG2jEvDRRzT8tfR
+         wLqQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=Qbrn6+3X47dwhyUkAWXte8J+fjd+tHfpJpFHgAD+S58=;
-        b=f4gxwhGxUjo3niQhJVlsG0kZkWIFZR/51ztYJA2hFyhbtLeb0BXv7kMIuGAkjo7tWl
-         VHvt5lOjpfBxZ9Ps/LH7o1wJyWhstKF+CvtZKKxeHHHmOeyp5lDvsfMcfzY62looSKJr
-         B5eWUJFIlCWJIj98g80TFQbC1qygNCnnARIr+bmy6eWdjLxCR3YNHtJ3sGC/kTuoPfv1
-         B/AH0OCNMuUZnvTp/ef3cVlddTjvDnGXtvZHDLFlZ0KSE2MUxwWipMPkQM2Az+cXC1VO
-         gaZwddATfFOc38kpKvu7mDlIN9L+OUja2CM04m++ukD1QagFEVXIUz9TVtZ7W0WJVpEF
-         ReyQ==
-X-Gm-Message-State: APjAAAWMeYzMoD4mZc0P3anNqE2vh3Tj3jjHvGm/TBeetPK5S6YxQbtd
-        rnzk4SoTieMRqmKAhKafMRBcTqwUf+3S1ePQycq1ER7Q
-X-Google-Smtp-Source: APXvYqwyhHHZpYKTd+W1EP2ObsG3A5HTjaf6wiigNc78pHsXxw86smXpidtCkCRHFB9PyazmH3UOEt3pYpO/+Mr8cF0=
-X-Received: by 2002:a9d:23ca:: with SMTP id t68mr26119392otb.98.1562108518402;
- Tue, 02 Jul 2019 16:01:58 -0700 (PDT)
+        bh=ByhsgyjfPRCaYRtGVf0X74WgyTuKcSf1bOHMoBSZqlM=;
+        b=AbBJ5Hf5VLOiGy0ijgtAXlcJWJ4IXuu6MrNs3zBYgg9qnoSD59HHOQ2aMVYiUUFc2O
+         LxXcX32WmOLPxWqcVVzS37hNZzBq/9MNf8a2L5LCpulyYKGHQJtNRz/AlE7Y3NvzN+0u
+         q/vczSzK07IBWEjVGq8cQ4IFTwj9yDTRxs85koEDyh9rnHmCueAg6UenK6PqYatv+uWj
+         BFXjQ7Gzck1EGt2gdmjXwFpmUAq26uF1M96L2LsBhJi5tddu84pZskNMTyhZP7tHCudU
+         okdPbToO8BF5T2pRzneCxa52R1aZaDLwOUbMiFyCSVtW6c3w5h3LH3wsh4JDin2P2v+h
+         fuFw==
+X-Gm-Message-State: APjAAAVuOpXUJHOgUu9p6ChPVxuUYaNFzhF85lI2EK8uCjvoHtYovZVg
+        rcisKdpQeKSrB+MQZasML6SqEq02hRTUYs9wzWh0Lowc
+X-Google-Smtp-Source: APXvYqzMU6LhYLtDxe6IzTmM1WolsPD+74qKOzIux1HcUkzeXscSddhWfH+OlTyFXLefL/eH9LreXfId+iDH0UNqUbY=
+X-Received: by 2002:a9d:6d8d:: with SMTP id x13mr4126550otp.6.1562108605726;
+ Tue, 02 Jul 2019 16:03:25 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190701091258.3870-1-narmstrong@baylibre.com> <20190701091258.3870-6-narmstrong@baylibre.com>
-In-Reply-To: <20190701091258.3870-6-narmstrong@baylibre.com>
+References: <20190701091258.3870-1-narmstrong@baylibre.com> <20190701091258.3870-9-narmstrong@baylibre.com>
+In-Reply-To: <20190701091258.3870-9-narmstrong@baylibre.com>
 From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Date:   Wed, 3 Jul 2019 01:01:47 +0200
-Message-ID: <CAFBinCD8WfhgcjKfstvVoDaLWm9yoZUg4SJpj-i1R+KgZ17aKg@mail.gmail.com>
-Subject: Re: [RFC/RFT v3 05/14] soc: amlogic: meson-clk-measure: protect
- measure with a mutex
+Date:   Wed, 3 Jul 2019 01:03:14 +0200
+Message-ID: <CAFBinCAwvAb42uitinRr0k_Hkb_cDOc9dygQgg54E5nO69h=fg@mail.gmail.com>
+Subject: Re: [RFC/RFT v3 08/14] clk: meson: g12a: expose CPUB clock ID for G12B
 To:     Neil Armstrong <narmstrong@baylibre.com>
 Cc:     jbrunet@baylibre.com, khilman@baylibre.com,
         linux-arm-kernel@lists.infradead.org,
@@ -59,29 +58,10 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Neil,
-
 On Mon, Jul 1, 2019 at 11:13 AM Neil Armstrong <narmstrong@baylibre.com> wrote:
 >
-> In order to protect clock measuring when multiple process asks for
-> a measure, protect the main measure function with mutexes.
+> Expose the CPUB clock id to add DVFS to the second CPU cluster of
+> the Amlogic G12B SoC.
 >
-> Reviewed-by: Kevin Hilman <khilman@baylibre.com>
 > Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
-> ---
->  drivers/soc/amlogic/meson-clk-measure.c | 12 +++++++++++-
->  1 file changed, 11 insertions(+), 1 deletion(-)
->
-> diff --git a/drivers/soc/amlogic/meson-clk-measure.c b/drivers/soc/amlogic/meson-clk-measure.c
-> index 19d4cbc93a17..c470e24f1dfa 100644
-> --- a/drivers/soc/amlogic/meson-clk-measure.c
-> +++ b/drivers/soc/amlogic/meson-clk-measure.c
-> @@ -11,6 +11,8 @@
->  #include <linux/debugfs.h>
->  #include <linux/regmap.h>
->
-> +static DEFINE_MUTEX(measure_lock);
-I wonder if that should be part of struct meson_msr for consistency reasons
-
-apart from that:
 Reviewed-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
