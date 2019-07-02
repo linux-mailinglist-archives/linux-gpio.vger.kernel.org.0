@@ -2,53 +2,52 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id E9EED5D8EB
-	for <lists+linux-gpio@lfdr.de>; Wed,  3 Jul 2019 02:31:06 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 328125D9A3
+	for <lists+linux-gpio@lfdr.de>; Wed,  3 Jul 2019 02:49:15 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727036AbfGCAax (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 2 Jul 2019 20:30:53 -0400
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:35051 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726457AbfGCAaw (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 2 Jul 2019 20:30:52 -0400
-Received: by mail-ot1-f65.google.com with SMTP id j19so489506otq.2;
-        Tue, 02 Jul 2019 17:30:52 -0700 (PDT)
+        id S1727189AbfGCAtJ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 2 Jul 2019 20:49:09 -0400
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:40410 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727090AbfGCAtJ (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 2 Jul 2019 20:49:09 -0400
+Received: by mail-oi1-f196.google.com with SMTP id w196so578786oie.7;
+        Tue, 02 Jul 2019 17:49:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=googlemail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=Q0DTSEoJfAoRh/DNOfvOIAUC0JkelgBbLHyDpxdWx4k=;
-        b=aW71dvXzx3/OZ2dyur8K2R3t59hdwnCvtsuhJGdee/nm9r6PCmqTtx+JWgAIJLo2/d
-         Y21AhbIEphVmstcZOwfTGkQASbWx10y4fsfburjD7qorfBw7J73NAYnWdXDN5k5epES2
-         9xsxotFn9XmfaHw9GsQaebN96U6pHmRUkIvbu0rqpCA3ltYn9AaqBA81bvwfZWb2bRXK
-         PGExbAEeQJBbEYszopwMOpV+S9XN0z12R0Vy2r2L+ErpKfnQnxV/0MIwpTrNI/wPBJUQ
-         Q4OJpy3R867Yl9+XNBz9RWRkL9MFWnLifF6/SdKW9uCH6tpmnrx4YKPqcv3J2LmnI790
-         wFfg==
+        bh=PmEB/x0Lo8kjE6XO29I6yQcxMJdkJpBobZcgW1H9skM=;
+        b=dQE6ToJhgtp1wCfPTOfOeyy3Wlzl33q0h9WcnIJA48XtbfKqzHONGYC3W61NGQfNim
+         wJaXkOCEQLLrI2TSIZQwvLCc1Rqhy7tkKbFJItgpBZmmCqqY0TzvUJ2rx0vWwv7zrFmZ
+         kZ5OII7eqEx3/ovCXbefJGBE8F7LYBJp3Eh1m81WkMA/alEl+TNmkxdUWAI5Udj6A0C+
+         vsbKbIDFDrMiyP7vv46AElwnFPDzMcamevSZp3I5khh3FwrFUuoHiTauuxpXCu4bPH8a
+         8Vi37k2YDn8vy9Meo0Fcg75al7N0hdAtajz3wPYu473GTV9bU6aDJ8XppI7nkwKlrfGl
+         vp9w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=Q0DTSEoJfAoRh/DNOfvOIAUC0JkelgBbLHyDpxdWx4k=;
-        b=JyqDon+pTlje8hOecDtTi3T1tCiHKDoBqevjUXlT0QD1tKYWqRkUhzQiOIu46AsPOC
-         7aEf+Xw9mBFZUaueoCQX03NjIg/mlgCQN66hA9SCfLWjrYM8QSL6IdNH75pkWwUq7ngY
-         d1S0PqqAoGWjWunvwVCQUeWOgO8l14EX9uVWxX8UK2Y+AysM+Gcvx5al4rBFhQSoYV0/
-         YMYyOcenwhKEv3jIepvyC7HlqUf5aNOSLmr6SJvJq3q9aGZs6m5Anom1Xh3RPtXWj34s
-         uo8X2+8vK5qH8FaxvIBvC3x3euBkezXX7O073ONwiEhwFWO026xvKCOecHHhB55A+8Wj
-         Yc1A==
-X-Gm-Message-State: APjAAAXy6O1lSAnOZ4zZQfXUjHvcjK0SaQK1tqhBtMl1fn73k6DskWNj
-        OlsdcuHptjogpcmfkBxc3T4yQWJMEOqtsOostw1gH1bH
-X-Google-Smtp-Source: APXvYqy/QQUN0J6b4O2bTl3SYceaajLNKXdMQ4/wzOnMkRg4M4DkLByhdEGK3wJrQJDIJWZll9ZaCAX1i1L6mFoN5Ec=
-X-Received: by 2002:a9d:39a6:: with SMTP id y35mr27395004otb.81.1562110146329;
- Tue, 02 Jul 2019 16:29:06 -0700 (PDT)
+        bh=PmEB/x0Lo8kjE6XO29I6yQcxMJdkJpBobZcgW1H9skM=;
+        b=Nkge5JFPMbBhxkKLnomdjb0OuYJasblpM6mVT3pkNPasJZwukEVqumayLJE+9MKRlm
+         IWLgGQloBjmF5O55JR8BH+mxSXvNiV+rz3tKOI3eQ2SyJ31Z2O9trS4YwB9IUiD/DAVM
+         m8uPLVBb7du/jTeBy3mfc8Ifq5Pg1Q+Fcz3O7VTYoE8GRTufM00muyYnkGrhPChek8RH
+         yL5bVy/wpaq/yMwAQn/3ohwh55iikhcM7l6MUI7JF0FMujwkkrhI3oUXVVaj2DUst5lp
+         rdi5Vq2RUdMJ4R70UVQCp6LfdgRsK3YrPG+jKDiSBzWtNPIg3KSg3PfmHRYDLs4iC67t
+         Eo0A==
+X-Gm-Message-State: APjAAAW9bSRK9yobiTm9ANnrAmvLtSpLv7K4bEpIJ4eMaU4kY2TtH0CO
+        yLsPsALcKtgTJXy7Pg7IyxP3wesklckhrsu626LwR8jD
+X-Google-Smtp-Source: APXvYqwGO400fcqFqegu43ZWYESJ1x0EcFHLkunurhz/yLrGFeET/1sUvrRHA32DeHN9rz4+lxZGWrgg9XsKuY7U36c=
+X-Received: by 2002:aca:5c55:: with SMTP id q82mr1514748oib.15.1562111016670;
+ Tue, 02 Jul 2019 16:43:36 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190701091258.3870-1-narmstrong@baylibre.com> <20190701091258.3870-8-narmstrong@baylibre.com>
-In-Reply-To: <20190701091258.3870-8-narmstrong@baylibre.com>
+References: <20190701091258.3870-1-narmstrong@baylibre.com> <20190701091258.3870-13-narmstrong@baylibre.com>
+In-Reply-To: <20190701091258.3870-13-narmstrong@baylibre.com>
 From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Date:   Wed, 3 Jul 2019 01:28:55 +0200
-Message-ID: <CAFBinCAnKeGYkyCmEMugWuQaSxgBp4DqtHN3b0rLJY6jwOF0QA@mail.gmail.com>
-Subject: Re: [RFC/RFT v3 07/14] clk: meson: g12a: add notifiers to handle cpu
- clock change
-To:     sboyd@codeaurora.org, Neil Armstrong <narmstrong@baylibre.com>
+Date:   Wed, 3 Jul 2019 01:43:25 +0200
+Message-ID: <CAFBinCByCn1NMz4ATnR66114jYj8=KG-tY5S4iRfoPEw3uLF8g@mail.gmail.com>
+Subject: Re: [RFC/RFT v3 12/14] arm64: dts: meson-g12a: enable DVFS on G12A boards
+To:     Neil Armstrong <narmstrong@baylibre.com>
 Cc:     jbrunet@baylibre.com, khilman@baylibre.com,
         linux-arm-kernel@lists.infradead.org,
         linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org,
@@ -59,111 +58,20 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Stephen, Hi Neil,
-
 On Mon, Jul 1, 2019 at 11:13 AM Neil Armstrong <narmstrong@baylibre.com> wrote:
 >
-> In order to implement clock switching for the CLKID_CPU_CLK and
-> CLKID_CPUB_CLK, notifiers are added on specific points of the
-> clock tree :
+> Enable DVFS for the U200, SEI520 and X96-Max Amlogic G12A based board
+> by setting the clock, OPP and supply for each CPU cores.
 >
-> cpu_clk / cpub_clk
-> |   \- cpu_clk_dyn
-> |      |  \- cpu_clk_premux0
-> |      |        |- cpu_clk_postmux0
-> |      |        |    |- cpu_clk_dyn0_div
-> |      |        |    \- xtal/fclk_div2/fclk_div3
-> |      |        \- xtal/fclk_div2/fclk_div3
-> |      \- cpu_clk_premux1
-> |            |- cpu_clk_postmux1
-> |            |    |- cpu_clk_dyn1_div
-> |            |    \- xtal/fclk_div2/fclk_div3
-> |            \- xtal/fclk_div2/fclk_div3
-> \ sys_pll / sys1_pll
+> The CPU cluster power supply can achieve 0.73V to 1.01V using a PWM
+> output clocked at 800KHz with an inverse duty-cycle.
 >
-> This for each cluster, a single one for G12A, two for G12B.
+> DVFS has been tested by running the arm64 cpuburn at [1] and cycling
+> between all the possible cpufreq translations and checking the final
+> frequency using the clock-measurer, script at [2].
 >
-> Each cpu_clk_premux1 tree is marked as read-only and CLK_SET_RATE_NO_REPARENT,
-> to be used as "parking" clock in a safe clock frequency.
-it seems that this is one case where the "coordinated clocks" feature
-would come handy: [0]
-Stephen, do you know if those patches stopped in March or if there's
-still some ongoing effort to get them ready?
-
-[...]
-> -/*
-> - * Internal sys pll emulation configuration parameters
-> - */
-> -static const struct reg_sequence g12a_sys_init_regs[] = {
-> -       { .reg = HHI_SYS_PLL_CNTL1,     .def = 0x00000000 },
-> -       { .reg = HHI_SYS_PLL_CNTL2,     .def = 0x00000000 },
-> -       { .reg = HHI_SYS_PLL_CNTL3,     .def = 0x48681c00 },
-> -       { .reg = HHI_SYS_PLL_CNTL4,     .def = 0x88770290 },
-> -       { .reg = HHI_SYS_PLL_CNTL5,     .def = 0x39272000 },
-> -       { .reg = HHI_SYS_PLL_CNTL6,     .def = 0x56540000 },
-> +static const struct pll_mult_range g12a_sys_pll_mult_range = {
-> +       .min = 128,
-> +       .max = 250,
->  };
+> [1] https://github.com/ssvb/cpuburn-arm/blob/master/cpuburn-a53.S
+> [2] https://gist.github.com/superna9999/d4de964dbc0f84b7d527e1df2ddea25f
 >
->  static struct clk_regmap g12a_sys_pll_dco = {
-> @@ -124,14 +118,15 @@ static struct clk_regmap g12a_sys_pll_dco = {
->                         .shift   = 29,
->                         .width   = 1,
->                 },
-> -               .init_regs = g12a_sys_init_regs,
-> -               .init_count = ARRAY_SIZE(g12a_sys_init_regs),
-> +               .range = &g12a_sys_pll_mult_range,
-Neil, I believe that this should be a separate patch with a
-description which explains why we don't need the "init regs" anymore
-
->         },
->         .hw.init = &(struct clk_init_data){
->                 .name = "sys_pll_dco",
-> -               .ops = &meson_clk_pll_ro_ops,
-> +               .ops = &meson_clk_pll_ops,
->                 .parent_names = (const char *[]){ IN_PREFIX "xtal" },
->                 .num_parents = 1,
-> +               /* This clock feeds the CPU, avoid disabling it */
-> +               .flags = CLK_IS_CRITICAL,
-maybe we should have a separate patch for making the CPU clock tree
-mutable as well
-
-[...]
-> +/* This divider uses bit 26 to take change in account */
-> +static int g12b_cpub_clk_mux0_div_set_rate(struct clk_hw *hw,
-> +                                          unsigned long rate,
-> +                                          unsigned long parent_rate)
-> +{
-> +       struct clk_regmap *clk = to_clk_regmap(hw);
-> +       struct clk_regmap_div_data *div = clk_get_regmap_div_data(clk);
-> +       unsigned int val;
-> +       int ret;
-> +
-> +       ret = divider_get_val(rate, parent_rate, div->table, div->width,
-> +                             div->flags);
-> +       if (ret < 0)
-> +               return ret;
-> +
-> +       val = (unsigned int)ret << div->shift;
-> +
-> +       regmap_update_bits(clk->map, HHI_SYS_CPUB_CLK_CNTL,
-> +                          SYS_CPU_DYN_ENABLE, SYS_CPU_DYN_ENABLE);
-> +
-> +       return regmap_update_bits(clk->map, div->offset,
-> +                                 clk_div_mask(div->width) << div->shift |
-> +                                 SYS_CPU_DYN_ENABLE, val);
-> +};
-the public S922X datasheet doesn't mention bit 26
-do I understand the semantics correctly?:
-- set SYS_CPU_DYN_ENABLE
-- update the divider
-- unset SYS_CPU_DYN_ENABLE
-
-too bad it's not a gate which we could model with
-CLK_SET_RATE_GATE/CLK_SET_RATE_UNGATE
-
-
-Martin
-
-[0] https://patchwork.kernel.org/patch/10838949/
+> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+Reviewed-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
