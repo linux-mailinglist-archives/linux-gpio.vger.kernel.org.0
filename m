@@ -2,84 +2,71 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 71DC55E108
-	for <lists+linux-gpio@lfdr.de>; Wed,  3 Jul 2019 11:29:43 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CFC035E12E
+	for <lists+linux-gpio@lfdr.de>; Wed,  3 Jul 2019 11:42:28 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727008AbfGCJ3n (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 3 Jul 2019 05:29:43 -0400
-Received: from gate2.alliedtelesis.co.nz ([202.36.163.20]:50730 "EHLO
-        gate2.alliedtelesis.co.nz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725820AbfGCJ3m (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 3 Jul 2019 05:29:42 -0400
-Received: from mmarshal3.atlnz.lc (mmarshal3.atlnz.lc [10.32.18.43])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id 2EC93886BF;
-        Wed,  3 Jul 2019 21:29:38 +1200 (NZST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alliedtelesis.co.nz;
-        s=mail181024; t=1562146178;
-        bh=q26NCBw9sLxULZ0JTIknvP+aIXhhiOI/0USWW1Ql7UI=;
-        h=From:To:CC:Subject:Date:References;
-        b=WTBsDFtZCsqYseTva5LKw4FjFWBRjbW9PvYTv4xhs+6bQH57h190HSfklKcmqM1NC
-         zkJs27saBTZInE4TL9gCsI0s79Ct4rbg9HWL2Fr1AdTU4X0aep3YVllERBKJpq0HMt
-         lAmT3nvsZ5ffcK9sxpAHrl6yqo9GfUOj6sZ3gSF2VVH9pcnb7uYikWPD4jL6kpp8Zu
-         DjrFZhCBumrdeaPLQrv1KubLC4sJhZkKTx8o4pIc74H1sHOjq/TkTSlQq8W+A48fh0
-         Am3FojCpFPszpXkxFk/FBmP7ZPJyOi/edHppQ2Vua+Z1iZv9A9f8DTexpVMhfhM5QE
-         O/9WXi9AMS/sg==
-Received: from svr-chch-ex1.atlnz.lc (Not Verified[10.32.16.77]) by mmarshal3.atlnz.lc with Trustwave SEG (v7,5,8,10121)
-        id <B5d1c75810000>; Wed, 03 Jul 2019 21:29:37 +1200
-Received: from svr-chch-ex1.atlnz.lc (2001:df5:b000:bc8:409d:36f5:8899:92e8)
- by svr-chch-ex1.atlnz.lc (2001:df5:b000:bc8:409d:36f5:8899:92e8) with
- Microsoft SMTP Server (TLS) id 15.0.1156.6; Wed, 3 Jul 2019 21:29:32 +1200
-Received: from svr-chch-ex1.atlnz.lc ([fe80::409d:36f5:8899:92e8]) by
- svr-chch-ex1.atlnz.lc ([fe80::409d:36f5:8899:92e8%12]) with mapi id
- 15.00.1156.000; Wed, 3 Jul 2019 21:29:32 +1200
-From:   Chris Packham <Chris.Packham@alliedtelesis.co.nz>
-To:     Linus Walleij <linus.walleij@linaro.org>
-CC:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: gpio desc flags being lost
-Thread-Topic: gpio desc flags being lost
-Thread-Index: AQHVMWEqVhtjrKesFkiEOodI/qBrrg==
-Date:   Wed, 3 Jul 2019 09:29:32 +0000
-Message-ID: <f9eb3387ed384676b0b298e4da7eeaf0@svr-chch-ex1.atlnz.lc>
-References: <d4724d7ec8ab4f95884ea947d9467e26@svr-chch-ex1.atlnz.lc>
- <CACRpkdZD7x1eeatXRTtU5k7Zoj5tfG8V98SjaO=xubwaa9teTQ@mail.gmail.com>
-Accept-Language: en-NZ, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.32.1.10]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
-MIME-Version: 1.0
+        id S1725820AbfGCJm2 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 3 Jul 2019 05:42:28 -0400
+Received: from mout.kundenserver.de ([212.227.126.187]:42709 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725796AbfGCJm1 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 3 Jul 2019 05:42:27 -0400
+Received: from orion.localdomain ([95.114.150.241]) by
+ mrelayeu.kundenserver.de (mreue012 [212.227.15.167]) with ESMTPSA (Nemesis)
+ id 1MZSJa-1i3wZD2yyE-00WZIe; Wed, 03 Jul 2019 11:42:25 +0200
+From:   "Enrico Weigelt, metux IT consult" <info@metux.net>
+To:     linux-kernel@vger.kernel.org
+Cc:     linus.walleij@linaro.org, bgolaszewski@baylibre.com,
+        linux-gpio@vger.kernel.org
+Subject: [PATCH] gpio: pl061: drop duplicate printing of device name
+Date:   Wed,  3 Jul 2019 11:42:24 +0200
+Message-Id: <1562146944-4162-1-git-send-email-info@metux.net>
+X-Mailer: git-send-email 1.9.1
+X-Provags-ID: V03:K1:+1vQXFykhGB75zGAweFB11S8tsj2ZEYSeBTunoSwjvd/la1fZiu
+ WPa5VvnXgVCmc5jksDFYq00k7MgD591Ovr/fvJJE0//WyR5va/3KMrmvIzWfmbU9t6YX+Lr
+ XMPa3ZbZAOqBuqgCtB6mQKozWKOy2Kl/ezjKohSlgv+4IyaRv/ihKVUNXPvKlibFKzk/834
+ nVu1iqnWejSVn66Z4Y+3Q==
+X-Spam-Flag: NO
+X-UI-Out-Filterresults: notjunk:1;V03:K0:nlK2QIBgKlc=:nn2MuhzPwDMwLQzUdLMClo
+ psgekGUF1LnstZlGhJ6zkiFGj2YNhZzKBLzD7huD//ymk/cfQRKxReMiYf02cIekGc8kY5tys
+ lBBixNq82OPC2BVRhJXzo3e7hcDHZQtVmMK/rJkK3SpHIZalcXjIenyt0LucK3pRSYEsap2Rv
+ sGXQjlOYKx8fEOXSxKefiB9GGU9aldLA6XPTqICn0qR7FpfkDPmfzsR13J0V8eKGFgcfq2CFi
+ naVOpaRtIT740tECrKmDglIFq+EiQPfBl3/54YTtnsEHZIN5mMHsDk3LEJDjg1HsI/6xUwUx+
+ 2NA+YQufYRFF4EPUa4lrMyI66hVkUCl+5MgVUlqkW2SJJANUr/dZyZhGYP5d7Cne5K553ilLT
+ M3cLpknCGVDtcQLnb4/+/bxIM632R4/bGfLLRCLprVm7aRiUjlcU0fy7/II4vFfZZ86ZAhIR+
+ 8x6ci3bG4KzVV77CoHJP63GG7my6YMm0ISlhKMt6ZRrQ2UiKF2ihkG+XRYw9ChBGyly+/Zn7P
+ exPRRhK6ugWECg6gW51XGv6+aMh0dz9mX8ipzaSO44QoPl1X47EFlhn4ADnMu61nrKvR7krXU
+ 7EY4yhj2HzDwDVCxqYdOFpijdbxGIJseLquQ9Ncvab6KkL0orPBWliGMXFOmjt3X7ISSaCQz5
+ NldkobxLqm1sByw1NDe8npXosflTadtLcz1NBqlc1gLn17pf+rpqAoA70XiBUq5oR0eUrbYjD
+ iuI29WLexssXY5R+BB/YU1U1ki4X0/fMs8EUbQ==
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 3/07/19 6:28 PM, Linus Walleij wrote:=0A=
-> On Wed, Jul 3, 2019 at 7:35 AM Chris Packham=0A=
-> <Chris.Packham@alliedtelesis.co.nz> wrote:=0A=
-> =0A=
->> Doing a bit of debugging so far I see that after startup the desc->flags=
-=0A=
->> for those gpios is 0. But for the hogged ones it should be 0x800 (or 0x8=
-01).=0A=
-> =0A=
-> Yeah that is wrong.=0A=
-> =0A=
->> I'll do some proper bisecting tomorrow, but figured you might want to=0A=
->> know sooner rather than later.=0A=
-> =0A=
-> Thanks, I have another critical GPIO fix queued so would be great if we=
-=0A=
-> can fix this too before v5.2 is released.=0A=
-=0A=
-Bit of an update. v4.19.54 works, v5.1.15 is broken. I'll keep bisecting =
-=0A=
-between those tomorrow.=0A=
-=0A=
-=0A=
+From: Enrico Weigelt <info@metux.net>
+
+The dev_info() call already prints the device name, so there's
+no need to explicitly include it in the message for second time.
+
+Signed-off-by: Enrico Weigelt <info@metux.net>
+---
+ drivers/gpio/gpio-pl061.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/gpio/gpio-pl061.c b/drivers/gpio/gpio-pl061.c
+index 84af248..83a44dd 100644
+--- a/drivers/gpio/gpio-pl061.c
++++ b/drivers/gpio/gpio-pl061.c
+@@ -349,7 +349,7 @@ static int pl061_probe(struct amba_device *adev, const struct amba_id *id)
+ 		return ret;
+ 
+ 	amba_set_drvdata(adev, pl061);
+-	dev_info(dev, "PL061 GPIO chip %s registered\n", dev_name(dev));
++	dev_info(dev, "PL061 GPIO chip registered\n");
+ 
+ 	return 0;
+ }
+-- 
+1.9.1
+
