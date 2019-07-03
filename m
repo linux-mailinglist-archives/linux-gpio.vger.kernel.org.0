@@ -2,79 +2,82 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 9B8FD5E019
-	for <lists+linux-gpio@lfdr.de>; Wed,  3 Jul 2019 10:44:53 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 063FC5E01F
+	for <lists+linux-gpio@lfdr.de>; Wed,  3 Jul 2019 10:46:07 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726400AbfGCIow (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 3 Jul 2019 04:44:52 -0400
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:41105 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727019AbfGCIow (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 3 Jul 2019 04:44:52 -0400
-Received: by mail-lf1-f68.google.com with SMTP id 62so1157664lfa.8
-        for <linux-gpio@vger.kernel.org>; Wed, 03 Jul 2019 01:44:50 -0700 (PDT)
+        id S1726400AbfGCIqG (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 3 Jul 2019 04:46:06 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:51224 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726670AbfGCIqG (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 3 Jul 2019 04:46:06 -0400
+Received: by mail-wm1-f65.google.com with SMTP id 207so1307621wma.1
+        for <linux-gpio@vger.kernel.org>; Wed, 03 Jul 2019 01:46:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=3liKSolgNOTE0GO6IdqkLmeCAukfMd1RtJ82seDneCg=;
-        b=TmUaRfQcHU6KZT/cQUt6QOxeQIOmubJNjMDOl7pLw+/8d0f81LQdh16APBrRJD1ll8
-         3KrYOintkQSt0/NllvbDH3Rgv1zD9W4R3xpsuAmYrRvdHqEIyys0WFSEGAeGt1XPt9Xq
-         O10SRFgV4U3cyP+1an1xbtinGQAcwi8x0rF+HQGukVdUw7vXh4lgY3tTB6Nb1FJJu7Dp
-         RWi9aI+fTsmz+Ix/vo5gxCWIlpvoWPfBYIHRIhQcggpQxKJQL23xSe/OQ3RccWFEzOWP
-         R67JQTELtNjHwZiE4RRJpC1ZMay7TqxCankYT6ZwbfotxHeA4ii+oOG5IiCejkyBbzr4
-         Ki6w==
+        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=8oSZZkf9+HhSTIcXD28cpIDkxUL7Flqx1lOkrHfDaJo=;
+        b=Bxa2zv4hc9MjRWlz4xIp+xIhFqVqw5HAZ45E85IwMO6bTgMXNVQM1v07c3Dcmb7DJ0
+         YBHG3ZGNkTSfkE6edc9O8h1/PErBPXhmp2C3mUZkFZRenqkyL2wgieJiYQaHEKjplQQJ
+         yNrHnyR34fN887a2age1pNQnvaFJ9OxOTchWwYX8cCjEybFbYhylYgU0XtdaXQaRFQcW
+         eiLsItMP7gdXYBnB7We1xbfUZ7uQKg/MUvS2nSE4AuCB3hFp3i04yLPa+CNOevzjM1ar
+         B9Cu+JpPO0JTqCX53WZ+5D1l8IVG6crKHbE1Lp+uusUdS0yo8K60v8h9zNhh2jrvwaVt
+         Q5pA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=3liKSolgNOTE0GO6IdqkLmeCAukfMd1RtJ82seDneCg=;
-        b=OJSyyCIXlbXm27GLqVBL1n11NkfHUxO3XJvIRjaHnMC7l1Ae5mxofRDzbyvjWktDfC
-         bp+onMC9FztX95kxpWhhOaZUn/QEqUx9PUo6T+RUhnEA2xsF2b1rQXdzrBKVkVvKXYnB
-         XOoTUnD479OwGYSUY7Tf2SvWj05mw/51Cgn0y1U242kggykuNwxe90l+0pbN08f40IbW
-         +FwUr0PCxFS+6m8FG5hRiwS2KzgbkiYeriSh81kc8/Ju7vJPm3L1PckgbIxtowfdRmny
-         cApbtl9hsYJ5oUHe9iYe85h+eST7q5NLaRfAS5qQ6fuqFCO9tAHjv29Xul3k5oJJ0df3
-         DOKQ==
-X-Gm-Message-State: APjAAAW/YgG1lbWp4A7Y8JNGTVo9lFqVPO8tI5srqEkTWi1+USGtj6Ra
-        Nc066yz6ETW5x7/42tDmr0haRdDeA94Kue2Md2XRvw==
-X-Google-Smtp-Source: APXvYqxWRQ/VeThlBgH3MQ4LJT9QQxmtwYkQ5a+vzEcAovmaaXojX+Uogeaf6aYaQIvSxuRtNJKs/sN3ZEYWfOppjeA=
-X-Received: by 2002:a19:6a01:: with SMTP id u1mr2537391lfu.141.1562143489851;
- Wed, 03 Jul 2019 01:44:49 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=8oSZZkf9+HhSTIcXD28cpIDkxUL7Flqx1lOkrHfDaJo=;
+        b=oXc6G28Pv9oawQlPoZsHQaKd0QPvBOKi8J5MGNru1NVqrfjyN0T5GWK1HRcslNbsCD
+         FBCRmASADhOpb5vBbt9ClpKP8QMroK4xjzPHFIDl8lcSFfqfwkCJ8GE7vgS4KaGyHJbq
+         pvnFaBOA68XmMP9S+ZBWVKVq5xNxTIX/1rNRcTOwyy2M5+pNpWTGFNpmoTFKFq2bdcMd
+         J9Q0WYxI4S1CDojFMeTBwS2qB/8qx8OXJPQN25Kq+Rw3JuK7ztwm92q290Fz7YNKwnpD
+         5HMeKG6hRrECn1ei6XW4ZV8HlNyERodmhbSwtH69IMyYmXq2ujEwhg3OMEEqzhnlNJZv
+         lxnw==
+X-Gm-Message-State: APjAAAW5Xjs+y9uIz9zswsgz2EsvCxNtOz6Th3t4UPDakOGdVh5ThyNX
+        SyWOn5Ql35pfvTGzxswqkf8=
+X-Google-Smtp-Source: APXvYqybglpaAkn2C7cQ2/72v2N7w7a8LlbLKknhGEtpLbl2SOTkYO1fp06cIw6zakg1NnVIMv4ghQ==
+X-Received: by 2002:a1c:a6d1:: with SMTP id p200mr7234812wme.169.1562143564210;
+        Wed, 03 Jul 2019 01:46:04 -0700 (PDT)
+Received: from debian-brgl.home ([2a01:cb1d:af:5b00:6d6c:8493:1ab5:dad7])
+        by smtp.gmail.com with ESMTPSA id m24sm1715477wmi.39.2019.07.03.01.46.03
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 03 Jul 2019 01:46:03 -0700 (PDT)
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Subject: [PATCH] gpio: max77650: add MODULE_ALIAS()
+Date:   Wed,  3 Jul 2019 10:46:01 +0200
+Message-Id: <20190703084601.9276-1-brgl@bgdev.pl>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-References: <cover.1561724493.git.mchehab+samsung@kernel.org> <1ecff14ec37c0c434f003d93c4b86b1cd3dac834.1561724493.git.mchehab+samsung@kernel.org>
-In-Reply-To: <1ecff14ec37c0c434f003d93c4b86b1cd3dac834.1561724493.git.mchehab+samsung@kernel.org>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Wed, 3 Jul 2019 10:44:38 +0200
-Message-ID: <CACRpkdbBA612W0x6Y-dwe3E4dhH2ospmn+m2YJ8Sh_Um6XGYhA@mail.gmail.com>
-Subject: Re: [PATCH 39/39] docs: gpio: add sysfs interface to the admin-guide
-To:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-Cc:     Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        Mauro Carvalho Chehab <mchehab@infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>, Harry Wei <harryxiyou@gmail.com>,
-        Alex Shi <alex.shi@linux.alibaba.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Jun 28, 2019 at 2:30 PM Mauro Carvalho Chehab
-<mchehab+samsung@kernel.org> wrote:
+From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 
-> While this is stated as obsoleted, the sysfs interface described
-> there is still valid, and belongs to the admin-guide.
->
-> Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Define a MODULE_ALIAS() in the gpio sub-driver for max77650 so that
+the appropriate module gets loaded together with the core mfd driver.
 
-This doesn't apply to my tree because of dependencies in the
-index so I guess it's best if you merge it:
-Acked-by: Linus Walleij <linus.walleij@linaro.org>
+Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+---
+ drivers/gpio/gpio-max77650.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-Yours,
-Linus Walleij
+diff --git a/drivers/gpio/gpio-max77650.c b/drivers/gpio/gpio-max77650.c
+index 3f03f4e8956c..3075f2513c6f 100644
+--- a/drivers/gpio/gpio-max77650.c
++++ b/drivers/gpio/gpio-max77650.c
+@@ -188,3 +188,4 @@ module_platform_driver(max77650_gpio_driver);
+ MODULE_DESCRIPTION("MAXIM 77650/77651 GPIO driver");
+ MODULE_AUTHOR("Bartosz Golaszewski <bgolaszewski@baylibre.com>");
+ MODULE_LICENSE("GPL v2");
++MODULE_ALIAS("platform:max77650-gpio");
+-- 
+2.21.0
+
