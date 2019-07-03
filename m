@@ -2,60 +2,61 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 8350A5E30D
-	for <lists+linux-gpio@lfdr.de>; Wed,  3 Jul 2019 13:46:05 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1FED05E321
+	for <lists+linux-gpio@lfdr.de>; Wed,  3 Jul 2019 13:50:10 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727012AbfGCLqB (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 3 Jul 2019 07:46:01 -0400
-Received: from mail-wm1-f49.google.com ([209.85.128.49]:36049 "EHLO
-        mail-wm1-f49.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726550AbfGCLqB (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 3 Jul 2019 07:46:01 -0400
-Received: by mail-wm1-f49.google.com with SMTP id u8so2048257wmm.1
-        for <linux-gpio@vger.kernel.org>; Wed, 03 Jul 2019 04:45:58 -0700 (PDT)
+        id S1727116AbfGCLuF (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 3 Jul 2019 07:50:05 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:37395 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726621AbfGCLuF (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 3 Jul 2019 07:50:05 -0400
+Received: by mail-wr1-f68.google.com with SMTP id v14so2461913wrr.4
+        for <linux-gpio@vger.kernel.org>; Wed, 03 Jul 2019 04:50:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baylibre-com.20150623.gappssmtp.com; s=20150623;
         h=subject:to:cc:references:from:openpgp:autocrypt:organization
          :message-id:date:user-agent:mime-version:in-reply-to
          :content-language:content-transfer-encoding;
-        bh=GOBgbpxojxMl8coS8J3cq4yo2RoH1jW/e7h/wxggz4c=;
-        b=ykrBiKDZ51FcAY735DtHGeIYEPrwR/4jtBD/q5JY+AXGKOFDRQ5B+CPwXu+OCuibRt
-         GhGIS8Qw0R6gbW8wgKA+ami4A2cbrtgCTd+WAxQwT2YzIWLIai1ieek/BgeGtiLu1JAY
-         +43EQoCC94+kipR1XJoab2Xfl2kAIRgLvgPhoGOF7pURLSGx0gW+EA7qGtXPdrW+kAW7
-         Yz6eqjvgIQ5leHLc8u9ayuz3Ow0Q8RisuJNz6jBGm+1DMBh1IhcyBR8gmrI7OTBUnR6N
-         stvlF2wPN7PprcPJyvcoR9x/CbARLrpc9LkxEkl2+JmuGK0m/cbgQDhKKG324fnPD0Z7
-         1EgQ==
+        bh=7uvBYhEU4nI128pEYv9ytFvk53eb5435th+fm03iKcg=;
+        b=DF/MFQ6MyohAUyQB2wmDmAbZiJgzfmk8k3Dx5wuKjOqnkBkYXOacFlm9t/CjjsIh1J
+         evCwgD5PqOt6Z4bxpDCttR3ylIAyjOtAHUi7dIvqKvipf9pyi/1PPUvdPAFZqZkQXvJ1
+         aQ8WAJWotfS9Z3BYLvuExGSceD7EhMpij4qtLo+iA0MRFCoXywBCAt5Wr/6oJTheDqw2
+         BrbbdzdvVOV27geEvbpljdzf6v9ZdWRRmEgWuc3/FUicZrUMMtAphstTsZ5ILoxZHrm3
+         IVER9PwQZ+dBfxWOXghi1GwFz/fhSeBZfWjxT+ee5tjKz+b2oE8Er65AR2SWMfUvR8Md
+         qaSQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
          :organization:message-id:date:user-agent:mime-version:in-reply-to
          :content-language:content-transfer-encoding;
-        bh=GOBgbpxojxMl8coS8J3cq4yo2RoH1jW/e7h/wxggz4c=;
-        b=OvVgYLRSeSkVP8fawunO1tSTr7+LNj8QJoZKqXhWtl44H+t0a8xR205gHHmt5LKT5B
-         +GXoe/XpR1d/1r12q/gHTKdya8Yz5Yye0ATI5ghqc4CsRfmvogF8Chqhzr0jxvIBdGnS
-         l5VxEUHdlXLBynKKgVeV8X3ae0DWozUyAUj9H+HUIUPtcECk/K84k5ggY9IGQxWA9FUP
-         fQHCMl9DPwPd4xPkEzR4kQrBFmOWnszCToMj1ZsrxvSny3V+KI2xL65YfmGbl+cl1ujA
-         MBP4MgDhms3QcfSwZxY3nN2jpXZHjRg+KMwRmNWbumKNZc0et+cVEzuMqoiKMTMZF5pE
-         57GA==
-X-Gm-Message-State: APjAAAUq34OdROgbWN9KFgVa0iPv3iLldSJirEA4rLtqrHXLHolJx1UL
-        7zVff/bRuvRjEOr/mks2dNy9tg==
-X-Google-Smtp-Source: APXvYqw+skoO2LrF8gWtsaxalNiHg0yjnfbTvFDIZ518EQIeqbT4UgASAm+Yr22eQXGR43xzLm+8wA==
-X-Received: by 2002:a1c:cf0b:: with SMTP id f11mr8111165wmg.138.1562154357836;
-        Wed, 03 Jul 2019 04:45:57 -0700 (PDT)
+        bh=7uvBYhEU4nI128pEYv9ytFvk53eb5435th+fm03iKcg=;
+        b=IN3IQXq8eNxIgMVls+Vzc8rGc4aaI7IkOhQkGJq2uQwSo5FuPFmP7CbP+HndExyf2v
+         u7bxxcvBiXqciTsrndVFtBkREszK5Xdc5Yz9YVFrzQ0PzcVtWyoGvbEBY/bkzx4dkWtv
+         xvtcm6waBA0kdee4GmHDTAwgMDus1qpCRKo/MNIuuNr2H+DkmLYTQhGwh9sLLcv08XEd
+         swj4mlcnosCtSwQGR8h5/bhxGpDCouAzFmhj4Tu34iT+M1OJZk7J5RKgCDSGkru8YXdv
+         7wwVcJqRVr5gmjjfNf2aT6wiOD3np7LlINmrZsRDJmaHKKSSJo1UWYcFBeI5tJOoxO8n
+         WaLw==
+X-Gm-Message-State: APjAAAUwQS/dCH4zB5VqRdja6QNFKYNc78AL4u53vMJEiMe+8TE3G3jM
+        gcpj5Eb5U+tdAxYnTx0pE6VeXV2HMHg=
+X-Google-Smtp-Source: APXvYqzi0wTHbPFiBrdoZu2OelnCAbLZIwrt4pfCou5ILbK1Fv7JdHGkIwxmjqqLpFmGcgxHUgKUmw==
+X-Received: by 2002:adf:ec12:: with SMTP id x18mr28390898wrn.145.1562154601634;
+        Wed, 03 Jul 2019 04:50:01 -0700 (PDT)
 Received: from [10.1.2.12] (lmontsouris-657-1-212-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
-        by smtp.gmail.com with ESMTPSA id q12sm1271288wrp.83.2019.07.03.04.45.57
+        by smtp.gmail.com with ESMTPSA id v204sm3152548wma.20.2019.07.03.04.50.00
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 03 Jul 2019 04:45:57 -0700 (PDT)
-Subject: Re: [RFC/RFT v3 04/14] clk: meson: eeclk: add setup callback
-To:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+        Wed, 03 Jul 2019 04:50:01 -0700 (PDT)
+Subject: Re: [RFC/RFT v3 07/14] clk: meson: g12a: add notifiers to handle cpu
+ clock change
+To:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        sboyd@codeaurora.org
 Cc:     jbrunet@baylibre.com, khilman@baylibre.com,
         linux-arm-kernel@lists.infradead.org,
         linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org,
-        amergnat@baylibre.com
+        linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org
 References: <20190701091258.3870-1-narmstrong@baylibre.com>
- <20190701091258.3870-5-narmstrong@baylibre.com>
- <CAFBinCA1gUUbEj=++1rGcFQ1RdyxSheofAo=TKw3-UaenFAcug@mail.gmail.com>
+ <20190701091258.3870-8-narmstrong@baylibre.com>
+ <CAFBinCAnKeGYkyCmEMugWuQaSxgBp4DqtHN3b0rLJY6jwOF0QA@mail.gmail.com>
 From:   Neil Armstrong <narmstrong@baylibre.com>
 Openpgp: preference=signencrypt
 Autocrypt: addr=narmstrong@baylibre.com; prefer-encrypt=mutual; keydata=
@@ -108,12 +109,12 @@ Autocrypt: addr=narmstrong@baylibre.com; prefer-encrypt=mutual; keydata=
  VsbXrP9BZ6snXyHfebPnno/te5XRqZTL9aJOytB/1iUna+1MAwBxGFPvqeEUUyT+gx1l3Acl
  ZaTUOEkgIor5losDrePdPgE=
 Organization: Baylibre
-Message-ID: <301695b6-52ba-92b1-ca1a-d4d587b33eeb@baylibre.com>
-Date:   Wed, 3 Jul 2019 13:45:56 +0200
+Message-ID: <369f5e9b-b02a-5f5c-25a7-49803650e9c5@baylibre.com>
+Date:   Wed, 3 Jul 2019 13:50:00 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.7.0
 MIME-Version: 1.0
-In-Reply-To: <CAFBinCA1gUUbEj=++1rGcFQ1RdyxSheofAo=TKw3-UaenFAcug@mail.gmail.com>
+In-Reply-To: <CAFBinCAnKeGYkyCmEMugWuQaSxgBp4DqtHN3b0rLJY6jwOF0QA@mail.gmail.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -122,30 +123,133 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 03/07/2019 01:16, Martin Blumenstingl wrote:
-> +Cc Alexandre Mergnat
+On 03/07/2019 01:28, Martin Blumenstingl wrote:
+> Hi Stephen, Hi Neil,
 > 
 > On Mon, Jul 1, 2019 at 11:13 AM Neil Armstrong <narmstrong@baylibre.com> wrote:
 >>
->> Add a setup() callback in the eeclk structure, to call an optional
->> call() function at end of eeclk probe to setup clocks.
+>> In order to implement clock switching for the CLKID_CPU_CLK and
+>> CLKID_CPUB_CLK, notifiers are added on specific points of the
+>> clock tree :
 >>
->> It's used for the G12A clock controller to setup the CPU clock notifiers.
+>> cpu_clk / cpub_clk
+>> |   \- cpu_clk_dyn
+>> |      |  \- cpu_clk_premux0
+>> |      |        |- cpu_clk_postmux0
+>> |      |        |    |- cpu_clk_dyn0_div
+>> |      |        |    \- xtal/fclk_div2/fclk_div3
+>> |      |        \- xtal/fclk_div2/fclk_div3
+>> |      \- cpu_clk_premux1
+>> |            |- cpu_clk_postmux1
+>> |            |    |- cpu_clk_dyn1_div
+>> |            |    \- xtal/fclk_div2/fclk_div3
+>> |            \- xtal/fclk_div2/fclk_div3
+>> \ sys_pll / sys1_pll
 >>
->> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
-> this will probably work fine, but I want do double check first
-> 
-> are we planning to get rid of meson-eeclk (mid-term)?
+>> This for each cluster, a single one for G12A, two for G12B.
+>>
+>> Each cpu_clk_premux1 tree is marked as read-only and CLK_SET_RATE_NO_REPARENT,
+>> to be used as "parking" clock in a safe clock frequency.
+> it seems that this is one case where the "coordinated clocks" feature
+> would come handy: [0]
 
-AFAIK no, but maybe I'm not aware of it !
+We could still migrate over it later on.
+
+> Stephen, do you know if those patches stopped in March or if there's
+> still some ongoing effort to get them ready?
+> 
+> [...]
+>> -/*
+>> - * Internal sys pll emulation configuration parameters
+>> - */
+>> -static const struct reg_sequence g12a_sys_init_regs[] = {
+>> -       { .reg = HHI_SYS_PLL_CNTL1,     .def = 0x00000000 },
+>> -       { .reg = HHI_SYS_PLL_CNTL2,     .def = 0x00000000 },
+>> -       { .reg = HHI_SYS_PLL_CNTL3,     .def = 0x48681c00 },
+>> -       { .reg = HHI_SYS_PLL_CNTL4,     .def = 0x88770290 },
+>> -       { .reg = HHI_SYS_PLL_CNTL5,     .def = 0x39272000 },
+>> -       { .reg = HHI_SYS_PLL_CNTL6,     .def = 0x56540000 },
+>> +static const struct pll_mult_range g12a_sys_pll_mult_range = {
+>> +       .min = 128,
+>> +       .max = 250,
+>>  };
+>>
+>>  static struct clk_regmap g12a_sys_pll_dco = {
+>> @@ -124,14 +118,15 @@ static struct clk_regmap g12a_sys_pll_dco = {
+>>                         .shift   = 29,
+>>                         .width   = 1,
+>>                 },
+>> -               .init_regs = g12a_sys_init_regs,
+>> -               .init_count = ARRAY_SIZE(g12a_sys_init_regs),
+>> +               .range = &g12a_sys_pll_mult_range,
+> Neil, I believe that this should be a separate patch with a
+> description which explains why we don't need the "init regs" anymore
+
+Sure
+
+> 
+>>         },
+>>         .hw.init = &(struct clk_init_data){
+>>                 .name = "sys_pll_dco",
+>> -               .ops = &meson_clk_pll_ro_ops,
+>> +               .ops = &meson_clk_pll_ops,
+>>                 .parent_names = (const char *[]){ IN_PREFIX "xtal" },
+>>                 .num_parents = 1,
+>> +               /* This clock feeds the CPU, avoid disabling it */
+>> +               .flags = CLK_IS_CRITICAL,
+> maybe we should have a separate patch for making the CPU clock tree
+> mutable as well
+
+Indeed
+
+> 
+> [...]
+>> +/* This divider uses bit 26 to take change in account */
+>> +static int g12b_cpub_clk_mux0_div_set_rate(struct clk_hw *hw,
+>> +                                          unsigned long rate,
+>> +                                          unsigned long parent_rate)
+>> +{
+>> +       struct clk_regmap *clk = to_clk_regmap(hw);
+>> +       struct clk_regmap_div_data *div = clk_get_regmap_div_data(clk);
+>> +       unsigned int val;
+>> +       int ret;
+>> +
+>> +       ret = divider_get_val(rate, parent_rate, div->table, div->width,
+>> +                             div->flags);
+>> +       if (ret < 0)
+>> +               return ret;
+>> +
+>> +       val = (unsigned int)ret << div->shift;
+>> +
+>> +       regmap_update_bits(clk->map, HHI_SYS_CPUB_CLK_CNTL,
+>> +                          SYS_CPU_DYN_ENABLE, SYS_CPU_DYN_ENABLE);
+>> +
+>> +       return regmap_update_bits(clk->map, div->offset,
+>> +                                 clk_div_mask(div->width) << div->shift |
+>> +                                 SYS_CPU_DYN_ENABLE, val);
+>> +};
+> the public S922X datasheet doesn't mention bit 26
+> do I understand the semantics correctly?:
+> - set SYS_CPU_DYN_ENABLE
+> - update the divider
+> - unset SYS_CPU_DYN_ENABLE
+
+Exact, it's how Amlogic uses it, seems the HW takes the divider value
+only on the "falling edge" of this bit !
+
+> 
+> too bad it's not a gate which we could model with
+> CLK_SET_RATE_GATE/CLK_SET_RATE_UNGATE
+
+Yep, but it only works when I write the new divider value *and* I remove the bit.
+It must be a glitch-free divider mechanism.
 
 Neil
 
-> Alex has some patches to get rid of all these IN_PREFIX logic.
-> I'm asking because if we want to get rid of meson-eeclk it may be the
-> time to do so now to have less logic to migrate later on
 > 
 > 
 > Martin
+> 
+> [0] https://patchwork.kernel.org/patch/10838949/
 > 
 
