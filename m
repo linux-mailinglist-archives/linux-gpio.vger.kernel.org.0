@@ -2,39 +2,39 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 478765DB85
-	for <lists+linux-gpio@lfdr.de>; Wed,  3 Jul 2019 04:16:55 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9F51B5DBB6
+	for <lists+linux-gpio@lfdr.de>; Wed,  3 Jul 2019 04:18:18 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727860AbfGCCQQ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 2 Jul 2019 22:16:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54574 "EHLO mail.kernel.org"
+        id S1727025AbfGCCRi (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 2 Jul 2019 22:17:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55176 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727881AbfGCCQQ (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Tue, 2 Jul 2019 22:16:16 -0400
+        id S1728048AbfGCCQq (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Tue, 2 Jul 2019 22:16:46 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C979E218A3;
-        Wed,  3 Jul 2019 02:16:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BF29021873;
+        Wed,  3 Jul 2019 02:16:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562120175;
-        bh=p1XCA/irewpiugjrYL5BJdM0CofSQTCBty11OIsla2A=;
+        s=default; t=1562120206;
+        bh=xuDko2Kvy6nVBXl4m0duI21ACo6zyJn/Se4GyDooj/k=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=U5k3So/N5f/gLUMZHrhjA0OTwoiS8DTRTcfFW87v806Okln4+80BQ1YaAF23Hwtac
-         IFnuH3bDZL6fRgj/lL64qZ9OnktVLfkq5oCY2ll9BBVQ/aRXuchKMl2zvs7GgjwPhU
-         2BR9Tbv53nk5gYeFIWz40mRmeAxYm7Cv9ptuMYnA=
+        b=XZON/nKn3jUVkBLCDcbG2xulQw1uAcsmuZqSQsvJ4Tv1uEyBo+b8xmOi4IRVXqOmu
+         uIzIZhlzKHicYgcDEYersimzHL88/OlNV2lV/jDGDTQIMu91EG9HmQrr0Bpp7gdh3l
+         vnAjgeuw/t0ywszIlwbUwEMpOfYbcy9fHCMn/LQ8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Nicolas Boichat <drinkcat@chromium.org>,
-        Sean Wang <sean.wang@kernel.org>,
+Cc:     Phil Reid <preid@electromag.com.au>,
+        Marco Felsch <m.felsch@pengutronix.de>,
         Linus Walleij <linus.walleij@linaro.org>,
         Sasha Levin <sashal@kernel.org>, linux-gpio@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.1 36/39] pinctrl: mediatek: Update cur_mask in mask/mask ops
-Date:   Tue,  2 Jul 2019 22:15:11 -0400
-Message-Id: <20190703021514.17727-36-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 16/26] pinctrl: mcp23s08: Fix add_data and irqchip_add_nested call order
+Date:   Tue,  2 Jul 2019 22:16:15 -0400
+Message-Id: <20190703021625.18116-16-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190703021514.17727-1-sashal@kernel.org>
-References: <20190703021514.17727-1-sashal@kernel.org>
+In-Reply-To: <20190703021625.18116-1-sashal@kernel.org>
+References: <20190703021625.18116-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -44,99 +44,70 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-From: Nicolas Boichat <drinkcat@chromium.org>
+From: Phil Reid <preid@electromag.com.au>
 
-[ Upstream commit 9d957a959bc8c3dfe37572ac8e99affb5a885965 ]
+[ Upstream commit 6dbc6e6f58556369bf999cd7d9793586f1b0e4b4 ]
 
-During suspend/resume, mtk_eint_mask may be called while
-wake_mask is active. For example, this happens if a wake-source
-with an active interrupt handler wakes the system:
-irq/pm.c:irq_pm_check_wakeup would disable the interrupt, so
-that it can be handled later on in the resume flow.
+Currently probing of the mcp23s08 results in an error message
+"detected irqchip that is shared with multiple gpiochips:
+please fix the driver"
 
-However, this may happen before mtk_eint_do_resume is called:
-in this case, wake_mask is loaded, and cur_mask is restored
-from an older copy, re-enabling the interrupt, and causing
-an interrupt storm (especially for level interrupts).
+This is due to the following:
 
-Step by step, for a line that has both wake and interrupt enabled:
- 1. cur_mask[irq] = 1; wake_mask[irq] = 1; EINT_EN[irq] = 1 (interrupt
-    enabled at hardware level)
- 2. System suspends, resumes due to that line (at this stage EINT_EN
-    == wake_mask)
- 3. irq_pm_check_wakeup is called, and disables the interrupt =>
-    EINT_EN[irq] = 0, but we still have cur_mask[irq] = 1
- 4. mtk_eint_do_resume is called, and restores EINT_EN = cur_mask, so
-    it reenables EINT_EN[irq] = 1 => interrupt storm as the driver
-    is not yet ready to handle the interrupt.
+Call to mcp23s08_irqchip_setup() with call hierarchy:
+mcp23s08_irqchip_setup()
+  gpiochip_irqchip_add_nested()
+    gpiochip_irqchip_add_key()
+      gpiochip_set_irq_hooks()
 
-This patch fixes the issue in step 3, by recording all mask/unmask
-changes in cur_mask. This also avoids the need to read the current
-mask in eint_do_suspend, and we can remove mtk_eint_chip_read_mask
-function.
+Call to devm_gpiochip_add_data() with call hierarchy:
+devm_gpiochip_add_data()
+  gpiochip_add_data_with_key()
+    gpiochip_add_irqchip()
+      gpiochip_set_irq_hooks()
 
-The interrupt will be re-enabled properly later on, sometimes after
-mtk_eint_do_resume, when the driver is ready to handle it.
+The gpiochip_add_irqchip() returns immediately if there isn't a irqchip
+but we added a irqchip due to the previous mcp23s08_irqchip_setup()
+call. So it calls gpiochip_set_irq_hooks() a second time.
 
-Fixes: 58a5e1b64bb0 ("pinctrl: mediatek: Implement wake handler and suspend resume")
-Signed-off-by: Nicolas Boichat <drinkcat@chromium.org>
-Acked-by: Sean Wang <sean.wang@kernel.org>
+Fix this by moving the call to devm_gpiochip_add_data before
+the call to mcp23s08_irqchip_setup
+
+Fixes: 02e389e63e35 ("pinctrl: mcp23s08: fix irq setup order")
+Suggested-by: Marco Felsch <m.felsch@pengutronix.de>
+Signed-off-by: Phil Reid <preid@electromag.com.au>
 Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pinctrl/mediatek/mtk-eint.c | 18 ++++--------------
- 1 file changed, 4 insertions(+), 14 deletions(-)
+ drivers/pinctrl/pinctrl-mcp23s08.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/pinctrl/mediatek/mtk-eint.c b/drivers/pinctrl/mediatek/mtk-eint.c
-index 737385e86beb..7e526bcf5e0b 100644
---- a/drivers/pinctrl/mediatek/mtk-eint.c
-+++ b/drivers/pinctrl/mediatek/mtk-eint.c
-@@ -113,6 +113,8 @@ static void mtk_eint_mask(struct irq_data *d)
- 	void __iomem *reg = mtk_eint_get_offset(eint, d->hwirq,
- 						eint->regs->mask_set);
+diff --git a/drivers/pinctrl/pinctrl-mcp23s08.c b/drivers/pinctrl/pinctrl-mcp23s08.c
+index cecbce21d01f..33c3eca0ece9 100644
+--- a/drivers/pinctrl/pinctrl-mcp23s08.c
++++ b/drivers/pinctrl/pinctrl-mcp23s08.c
+@@ -889,6 +889,10 @@ static int mcp23s08_probe_one(struct mcp23s08 *mcp, struct device *dev,
+ 	if (ret < 0)
+ 		goto fail;
  
-+	eint->cur_mask[d->hwirq >> 5] &= ~mask;
++	ret = devm_gpiochip_add_data(dev, &mcp->chip, mcp);
++	if (ret < 0)
++		goto fail;
 +
- 	writel(mask, reg);
- }
- 
-@@ -123,6 +125,8 @@ static void mtk_eint_unmask(struct irq_data *d)
- 	void __iomem *reg = mtk_eint_get_offset(eint, d->hwirq,
- 						eint->regs->mask_clr);
- 
-+	eint->cur_mask[d->hwirq >> 5] |= mask;
-+
- 	writel(mask, reg);
- 
- 	if (eint->dual_edge[d->hwirq])
-@@ -217,19 +221,6 @@ static void mtk_eint_chip_write_mask(const struct mtk_eint *eint,
+ 	mcp->irq_controller =
+ 		device_property_read_bool(dev, "interrupt-controller");
+ 	if (mcp->irq && mcp->irq_controller) {
+@@ -930,10 +934,6 @@ static int mcp23s08_probe_one(struct mcp23s08 *mcp, struct device *dev,
+ 			goto fail;
  	}
- }
  
--static void mtk_eint_chip_read_mask(const struct mtk_eint *eint,
--				    void __iomem *base, u32 *buf)
--{
--	int port;
--	void __iomem *reg;
+-	ret = devm_gpiochip_add_data(dev, &mcp->chip, mcp);
+-	if (ret < 0)
+-		goto fail;
 -
--	for (port = 0; port < eint->hw->ports; port++) {
--		reg = base + eint->regs->mask + (port << 2);
--		buf[port] = ~readl_relaxed(reg);
--		/* Mask is 0 when irq is enabled, and 1 when disabled. */
--	}
--}
--
- static int mtk_eint_irq_request_resources(struct irq_data *d)
- {
- 	struct mtk_eint *eint = irq_data_get_irq_chip_data(d);
-@@ -384,7 +375,6 @@ static void mtk_eint_irq_handler(struct irq_desc *desc)
- 
- int mtk_eint_do_suspend(struct mtk_eint *eint)
- {
--	mtk_eint_chip_read_mask(eint, eint->base, eint->cur_mask);
- 	mtk_eint_chip_write_mask(eint, eint->base, eint->wake_mask);
- 
- 	return 0;
+ 	if (one_regmap_config) {
+ 		mcp->pinctrl_desc.name = devm_kasprintf(dev, GFP_KERNEL,
+ 				"mcp23xxx-pinctrl.%d", raw_chip_address);
 -- 
 2.20.1
 
