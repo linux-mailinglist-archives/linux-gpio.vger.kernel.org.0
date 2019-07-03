@@ -2,141 +2,125 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id B11AC5DBAB
-	for <lists+linux-gpio@lfdr.de>; Wed,  3 Jul 2019 04:18:13 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id ACF235DDC6
+	for <lists+linux-gpio@lfdr.de>; Wed,  3 Jul 2019 07:35:56 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727572AbfGCCRK (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 2 Jul 2019 22:17:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55420 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728126AbfGCCRB (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Tue, 2 Jul 2019 22:17:01 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4781321897;
-        Wed,  3 Jul 2019 02:16:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562120220;
-        bh=aDN70qcwkeDqPdAinBSB8dWscJxpUhdC/Ecsaa5kelI=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=l8dVMOpBO3vY2IM4ZhmytHl+I8Hz9mg36iNi4lPoJQ3T+cpKARJ7z4UcdN/AllnBJ
-         Hv6sgYROtACMTc5052fHK8c4Kpfs3uEzqjf5YYuOhgwQml6PqFMPnHsVTd5lDqkl5n
-         b8MoHT7Y8voXsp/0DD9/JixaL1b8nwJwA9OEkDG8=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Nicolas Boichat <drinkcat@chromium.org>,
-        Sean Wang <sean.wang@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Sasha Levin <sashal@kernel.org>, linux-gpio@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 25/26] pinctrl: mediatek: Update cur_mask in mask/mask ops
-Date:   Tue,  2 Jul 2019 22:16:24 -0400
-Message-Id: <20190703021625.18116-25-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190703021625.18116-1-sashal@kernel.org>
-References: <20190703021625.18116-1-sashal@kernel.org>
+        id S1726236AbfGCFfz (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 3 Jul 2019 01:35:55 -0400
+Received: from gate2.alliedtelesis.co.nz ([202.36.163.20]:50437 "EHLO
+        gate2.alliedtelesis.co.nz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725999AbfGCFfz (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 3 Jul 2019 01:35:55 -0400
+Received: from mmarshal3.atlnz.lc (mmarshal3.atlnz.lc [10.32.18.43])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id 703D0886BF;
+        Wed,  3 Jul 2019 17:35:52 +1200 (NZST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alliedtelesis.co.nz;
+        s=mail181024; t=1562132152;
+        bh=KQWnpm9RproF/VxwuhPLKuKDVgFcnFTyTJg/2G04uVU=;
+        h=From:To:CC:Subject:Date;
+        b=oDlYrGwv/RC5Kh5tAamwn7p9oZzOalNOh7k4C/TVa9ipax086Kl0F1vXzTnWO2K5z
+         ffIp82w8FeBWli1zyTN5JFJJysTiKDs+FXmUARSw1mv5y+5n20MVigrRPK6FIOPLrR
+         W/p9LhlIFjnKrrOQeel68boCCAzVRE/sVfjZbrVXKQbg7XXCj0eJmMGfLk7Opyy0I2
+         kfcQiLrx0wAfQyvJT3nm6sGm6LZlY7MGPpGN48uMdKmcSaRsP8f7kRmH/fhmI9eGLK
+         EtikRp4NpgfirpEjXXeewy5B25iTZjwhQESgdoG09HyAsBabB3q+zz1kPqi8gwd3BD
+         X1JiP1Av+Fueg==
+Received: from svr-chch-ex1.atlnz.lc (Not Verified[10.32.16.77]) by mmarshal3.atlnz.lc with Trustwave SEG (v7,5,8,10121)
+        id <B5d1c3eb70000>; Wed, 03 Jul 2019 17:35:51 +1200
+Received: from svr-chch-ex1.atlnz.lc (2001:df5:b000:bc8:409d:36f5:8899:92e8)
+ by svr-chch-ex1.atlnz.lc (2001:df5:b000:bc8:409d:36f5:8899:92e8) with
+ Microsoft SMTP Server (TLS) id 15.0.1156.6; Wed, 3 Jul 2019 17:35:47 +1200
+Received: from svr-chch-ex1.atlnz.lc ([fe80::409d:36f5:8899:92e8]) by
+ svr-chch-ex1.atlnz.lc ([fe80::409d:36f5:8899:92e8%12]) with mapi id
+ 15.00.1156.000; Wed, 3 Jul 2019 17:35:47 +1200
+From:   Chris Packham <Chris.Packham@alliedtelesis.co.nz>
+To:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+CC:     "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: gpio desc flags being lost
+Thread-Topic: gpio desc flags being lost
+Thread-Index: AQHVMWEqVhtjrKesFkiEOodI/qBrrg==
+Date:   Wed, 3 Jul 2019 05:35:46 +0000
+Message-ID: <d4724d7ec8ab4f95884ea947d9467e26@svr-chch-ex1.atlnz.lc>
+Accept-Language: en-NZ, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [2001:df5:b000:22:3a2c:4aff:fe70:2b02]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-From: Nicolas Boichat <drinkcat@chromium.org>
-
-[ Upstream commit 9d957a959bc8c3dfe37572ac8e99affb5a885965 ]
-
-During suspend/resume, mtk_eint_mask may be called while
-wake_mask is active. For example, this happens if a wake-source
-with an active interrupt handler wakes the system:
-irq/pm.c:irq_pm_check_wakeup would disable the interrupt, so
-that it can be handled later on in the resume flow.
-
-However, this may happen before mtk_eint_do_resume is called:
-in this case, wake_mask is loaded, and cur_mask is restored
-from an older copy, re-enabling the interrupt, and causing
-an interrupt storm (especially for level interrupts).
-
-Step by step, for a line that has both wake and interrupt enabled:
- 1. cur_mask[irq] = 1; wake_mask[irq] = 1; EINT_EN[irq] = 1 (interrupt
-    enabled at hardware level)
- 2. System suspends, resumes due to that line (at this stage EINT_EN
-    == wake_mask)
- 3. irq_pm_check_wakeup is called, and disables the interrupt =>
-    EINT_EN[irq] = 0, but we still have cur_mask[irq] = 1
- 4. mtk_eint_do_resume is called, and restores EINT_EN = cur_mask, so
-    it reenables EINT_EN[irq] = 1 => interrupt storm as the driver
-    is not yet ready to handle the interrupt.
-
-This patch fixes the issue in step 3, by recording all mask/unmask
-changes in cur_mask. This also avoids the need to read the current
-mask in eint_do_suspend, and we can remove mtk_eint_chip_read_mask
-function.
-
-The interrupt will be re-enabled properly later on, sometimes after
-mtk_eint_do_resume, when the driver is ready to handle it.
-
-Fixes: 58a5e1b64bb0 ("pinctrl: mediatek: Implement wake handler and suspend resume")
-Signed-off-by: Nicolas Boichat <drinkcat@chromium.org>
-Acked-by: Sean Wang <sean.wang@kernel.org>
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/pinctrl/mediatek/mtk-eint.c | 18 ++++--------------
- 1 file changed, 4 insertions(+), 14 deletions(-)
-
-diff --git a/drivers/pinctrl/mediatek/mtk-eint.c b/drivers/pinctrl/mediatek/mtk-eint.c
-index b9f3c02ba59d..564cfaee129d 100644
---- a/drivers/pinctrl/mediatek/mtk-eint.c
-+++ b/drivers/pinctrl/mediatek/mtk-eint.c
-@@ -113,6 +113,8 @@ static void mtk_eint_mask(struct irq_data *d)
- 	void __iomem *reg = mtk_eint_get_offset(eint, d->hwirq,
- 						eint->regs->mask_set);
- 
-+	eint->cur_mask[d->hwirq >> 5] &= ~mask;
-+
- 	writel(mask, reg);
- }
- 
-@@ -123,6 +125,8 @@ static void mtk_eint_unmask(struct irq_data *d)
- 	void __iomem *reg = mtk_eint_get_offset(eint, d->hwirq,
- 						eint->regs->mask_clr);
- 
-+	eint->cur_mask[d->hwirq >> 5] |= mask;
-+
- 	writel(mask, reg);
- 
- 	if (eint->dual_edge[d->hwirq])
-@@ -217,19 +221,6 @@ static void mtk_eint_chip_write_mask(const struct mtk_eint *eint,
- 	}
- }
- 
--static void mtk_eint_chip_read_mask(const struct mtk_eint *eint,
--				    void __iomem *base, u32 *buf)
--{
--	int port;
--	void __iomem *reg;
--
--	for (port = 0; port < eint->hw->ports; port++) {
--		reg = base + eint->regs->mask + (port << 2);
--		buf[port] = ~readl_relaxed(reg);
--		/* Mask is 0 when irq is enabled, and 1 when disabled. */
--	}
--}
--
- static int mtk_eint_irq_request_resources(struct irq_data *d)
- {
- 	struct mtk_eint *eint = irq_data_get_irq_chip_data(d);
-@@ -384,7 +375,6 @@ static void mtk_eint_irq_handler(struct irq_desc *desc)
- 
- int mtk_eint_do_suspend(struct mtk_eint *eint)
- {
--	mtk_eint_chip_read_mask(eint, eint->base, eint->cur_mask);
- 	mtk_eint_chip_write_mask(eint, eint->base, eint->wake_mask);
- 
- 	return 0;
--- 
-2.20.1
-
+Hi LinusW, Bartosz,=0A=
+=0A=
+I was debugging something else and I noticed a problem with the gpio =0A=
+framework or the gpio-mmio driver (or both) in 5.2.0-rc6.=0A=
+=0A=
+I have some gpio hogs in my device tree which seem to get requested at =0A=
+startup as expected=0A=
+=0A=
+...=0A=
+GPIO line 456 (sw-reset) hogged as output/low=0A=
+GPIO line 459 (phy-1g-reset) hogged as output/low=0A=
+GPIO line 460 (i2c-reset) hogged as output/low=0A=
+GPIO line 461 (lm81-reset) hogged as output/low=0A=
+GPIO line 462 (phy-led-reset) hogged as output/low=0A=
+GPIO line 448 (pcie-reset) hogged as output/low=0A=
+..=0A=
+=0A=
+I wanted to see what state these lines were in=0A=
+=0A=
+# cat /sys/kernel/debug/gpio=0A=
+gpiochip4: GPIOs 448-455, parent: platform/fffa00029.dev-reset-ctl-2, =0A=
+fffa00029.dev-reset-ctl-2:=0A=
+=0A=
+gpiochip3: GPIOs 456-463, parent: platform/fffa00020.dev-reset-ctl, =0A=
+fffa00020.dev-reset-ctl:=0A=
+=0A=
+I expected the hogs to show up here.=0A=
+=0A=
+# echo 448 >/sys/class/gpio/export=0A=
+=0A=
+Now I'm pretty sure I shouldn't be allowed to do that.=0A=
+=0A=
+# cat /sys/kernel/debug/gpio=0A=
+gpiochip4: GPIOs 448-455, parent: platform/fffa00029.dev-reset-ctl-2, =0A=
+fffa00029.dev-reset-ctl-2:gpio-448 (                    |sysfs =0A=
+     ) in  lo=0A=
+=0A=
+Doing a bit of debugging so far I see that after startup the desc->flags =
+=0A=
+for those gpios is 0. But for the hogged ones it should be 0x800 (or 0x801)=
+.=0A=
+=0A=
+I happen to have a 4.8.17 kernel for the board I'm using. Testing with =0A=
+that seems to be OK.=0A=
+=0A=
+[root@linuxbox ~]# uname -a=0A=
+Linux linuxbox 4.8.17-at1+ #3 SMP Wed Jul 3 05:30:55 UTC 2019 ppc GNU/Linux=
+=0A=
+[root@linuxbox ~]# cat /sys/kernel/debug/gpio=0A=
+gpiochip4: GPIOs 448-455, parent: platform/fffa00029.dev-reset-ctl-2, =0A=
+fffa00029.dev-reset-ctl-2:=0A=
+  gpio-448 (                    |pcie-reset          ) out lo=0A=
+=0A=
+gpiochip3: GPIOs 456-463, parent: platform/fffa00020.dev-reset-ctl, =0A=
+fffa00020.dev-reset-ctl:=0A=
+  gpio-456 (                    |sw-reset            ) out lo=0A=
+  gpio-459 (                    |phy-1g-reset        ) out lo=0A=
+  gpio-460 (                    |i2c-reset           ) out lo=0A=
+  gpio-461 (                    |lm81-reset          ) out lo=0A=
+  gpio-462 (                    |phy-led-reset       ) out lo=0A=
+=0A=
+[root@linuxbox ~]# echo 448 >/sys/class/gpio/export=0A=
+sh: write error: Device or resource busy=0A=
+=0A=
+I'll do some proper bisecting tomorrow, but figured you might want to =0A=
+know sooner rather than later.=0A=
