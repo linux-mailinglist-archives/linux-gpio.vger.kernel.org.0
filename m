@@ -2,71 +2,66 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id CFC035E12E
-	for <lists+linux-gpio@lfdr.de>; Wed,  3 Jul 2019 11:42:28 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C9EE25E135
+	for <lists+linux-gpio@lfdr.de>; Wed,  3 Jul 2019 11:44:21 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725820AbfGCJm2 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 3 Jul 2019 05:42:28 -0400
-Received: from mout.kundenserver.de ([212.227.126.187]:42709 "EHLO
+        id S1725847AbfGCJoV (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 3 Jul 2019 05:44:21 -0400
+Received: from mout.kundenserver.de ([212.227.17.24]:41161 "EHLO
         mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725796AbfGCJm1 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 3 Jul 2019 05:42:27 -0400
-Received: from orion.localdomain ([95.114.150.241]) by
- mrelayeu.kundenserver.de (mreue012 [212.227.15.167]) with ESMTPSA (Nemesis)
- id 1MZSJa-1i3wZD2yyE-00WZIe; Wed, 03 Jul 2019 11:42:25 +0200
-From:   "Enrico Weigelt, metux IT consult" <info@metux.net>
-To:     linux-kernel@vger.kernel.org
-Cc:     linus.walleij@linaro.org, bgolaszewski@baylibre.com,
-        linux-gpio@vger.kernel.org
-Subject: [PATCH] gpio: pl061: drop duplicate printing of device name
-Date:   Wed,  3 Jul 2019 11:42:24 +0200
-Message-Id: <1562146944-4162-1-git-send-email-info@metux.net>
-X-Mailer: git-send-email 1.9.1
-X-Provags-ID: V03:K1:+1vQXFykhGB75zGAweFB11S8tsj2ZEYSeBTunoSwjvd/la1fZiu
- WPa5VvnXgVCmc5jksDFYq00k7MgD591Ovr/fvJJE0//WyR5va/3KMrmvIzWfmbU9t6YX+Lr
- XMPa3ZbZAOqBuqgCtB6mQKozWKOy2Kl/ezjKohSlgv+4IyaRv/ihKVUNXPvKlibFKzk/834
- nVu1iqnWejSVn66Z4Y+3Q==
+        with ESMTP id S1725796AbfGCJoU (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 3 Jul 2019 05:44:20 -0400
+Received: from [192.168.1.110] ([95.114.150.241]) by mrelayeu.kundenserver.de
+ (mreue109 [212.227.15.183]) with ESMTPSA (Nemesis) id
+ 1MsYzF-1iY5pm2ERP-00tzyN; Wed, 03 Jul 2019 11:44:05 +0200
+Subject: Re: [PATCH v1 1/2] pinctrl: baytrail: Use defined macro instead of
+ magic in byt_get_gpio_mux()
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-gpio@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>
+References: <20190703003018.75186-1-andriy.shevchenko@linux.intel.com>
+From:   "Enrico Weigelt, metux IT consult" <lkml@metux.net>
+Organization: metux IT consult
+Message-ID: <2357806f-5ff5-965e-6853-da3bbad24f38@metux.net>
+Date:   Wed, 3 Jul 2019 11:44:03 +0200
+User-Agent: Mozilla/5.0 (X11; Linux i686 on x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.2.1
+MIME-Version: 1.0
+In-Reply-To: <20190703003018.75186-1-andriy.shevchenko@linux.intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Provags-ID: V03:K1:1nQ4ipN1AIatCG54zGzO1Mc/z+yBxvCgTXO1UEKRQRxdr4GrJFf
+ dopC6PG2zE1+pvNMmbiPtfS/dQHoPFS0+118GNxRt6WasIagJrVC8XdX1r2yeQ5WtBOCLIj
+ PUqYzHCtrOQpPK5NC7s/7IuBzfFi/l2taH85N8hupzIUxrkEJUnnp4j1RVEd9nJxorTDqsF
+ t8W2o4vp0AHz4KjQh+lpw==
 X-Spam-Flag: NO
-X-UI-Out-Filterresults: notjunk:1;V03:K0:nlK2QIBgKlc=:nn2MuhzPwDMwLQzUdLMClo
- psgekGUF1LnstZlGhJ6zkiFGj2YNhZzKBLzD7huD//ymk/cfQRKxReMiYf02cIekGc8kY5tys
- lBBixNq82OPC2BVRhJXzo3e7hcDHZQtVmMK/rJkK3SpHIZalcXjIenyt0LucK3pRSYEsap2Rv
- sGXQjlOYKx8fEOXSxKefiB9GGU9aldLA6XPTqICn0qR7FpfkDPmfzsR13J0V8eKGFgcfq2CFi
- naVOpaRtIT740tECrKmDglIFq+EiQPfBl3/54YTtnsEHZIN5mMHsDk3LEJDjg1HsI/6xUwUx+
- 2NA+YQufYRFF4EPUa4lrMyI66hVkUCl+5MgVUlqkW2SJJANUr/dZyZhGYP5d7Cne5K553ilLT
- M3cLpknCGVDtcQLnb4/+/bxIM632R4/bGfLLRCLprVm7aRiUjlcU0fy7/II4vFfZZ86ZAhIR+
- 8x6ci3bG4KzVV77CoHJP63GG7my6YMm0ISlhKMt6ZRrQ2UiKF2ihkG+XRYw9ChBGyly+/Zn7P
- exPRRhK6ugWECg6gW51XGv6+aMh0dz9mX8ipzaSO44QoPl1X47EFlhn4ADnMu61nrKvR7krXU
- 7EY4yhj2HzDwDVCxqYdOFpijdbxGIJseLquQ9Ncvab6KkL0orPBWliGMXFOmjt3X7ISSaCQz5
- NldkobxLqm1sByw1NDe8npXosflTadtLcz1NBqlc1gLn17pf+rpqAoA70XiBUq5oR0eUrbYjD
- iuI29WLexssXY5R+BB/YU1U1ki4X0/fMs8EUbQ==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:M8wlMSyVbXE=:PsmGlw/wsUyJES5XC/7H/N
+ W9YO0o0my63r1phjrXtKV9cmbKBEJpyhYvBWSY1ffSTFPXYvyCba9+QGiVT0X1EKWjVTuwHOS
+ WP1S9iK3PVDer1hWFkYjlCmpXR/Sdat+jMXX59I1AEWUYcZzl1sIbgKWPEMob30isGQfOFl42
+ n4GpLiyeabTNPXfiuHVDA02QK7m4ZUcagIF1KOfpTyqSBZeJMChHEzVtqnfI6OHADJuPtDWPV
+ 59Xzh27oZ0bkv9eFzsKa2gQEqbywroXaobMPuZfBmjh+5sxfwDwDmjk3zAemK2klqTwP6yxcr
+ UI1V2s7ngRkl/E9PDWMWZLtxf+pG8dPLbn+M+IA69A/WihggfeXzpJZCPRinfFeJhBN1JCfcY
+ 6de1VZQuU2+stagf5xXoxyooOE6Oai4A7Krk7Q6/aBtUSHV7b72uFWO6/n2kF5EvB0KF2sgQI
+ rV+K9IR3VsJuTnrFusnJcRW8wvrXGCQdKu1w39jYlP0WqA/MCBOWTbrSXav2VQvLz8pkh5HYX
+ /5mOgHpIPAWhSBJ3VxdeLdnqdHiJtDLSaSYY5l5YTceSS6YIN78D1IkvX9RupIrDrPrOaCFrg
+ 4EkABJUD7X9wuv2uVkApI4rOOW5dj2LgXXwrlmHgkXNO8sYQBo1ZGhNCAt02IBzblGjPDbesn
+ mfLgYuWdW9W9jBpZEsTutgTGuuQ0rxBjpNS0WWllIZoFrBV2vOG0UXQBtENOcqV5LjGtfLBQL
+ i+m/FT1zdrI4wxW8kTMseeOLWnHiTJxQc4+hfOkavQM0nA00Rvp3tBTlQ50=
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-From: Enrico Weigelt <info@metux.net>
+On 03.07.19 02:30, Andy Shevchenko wrote:
+> By the fact byt_get_gpio_mux() returns a value of mux settings as
+> it is represented in hardware. Use defined macro instead of magic numbers
+> to clarify this.
 
-The dev_info() call already prints the device name, so there's
-no need to explicitly include it in the message for second time.
+Reviewed-By: Enrico Weigelt <info@metux.net>
 
-Signed-off-by: Enrico Weigelt <info@metux.net>
----
- drivers/gpio/gpio-pl061.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/gpio/gpio-pl061.c b/drivers/gpio/gpio-pl061.c
-index 84af248..83a44dd 100644
---- a/drivers/gpio/gpio-pl061.c
-+++ b/drivers/gpio/gpio-pl061.c
-@@ -349,7 +349,7 @@ static int pl061_probe(struct amba_device *adev, const struct amba_id *id)
- 		return ret;
- 
- 	amba_set_drvdata(adev, pl061);
--	dev_info(dev, "PL061 GPIO chip %s registered\n", dev_name(dev));
-+	dev_info(dev, "PL061 GPIO chip registered\n");
- 
- 	return 0;
- }
 -- 
-1.9.1
-
+Enrico Weigelt, metux IT consult
+Free software and Linux embedded engineering
+info@metux.net -- +49-151-27565287
