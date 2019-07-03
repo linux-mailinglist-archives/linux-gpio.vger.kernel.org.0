@@ -2,100 +2,87 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 18EDA5E38B
-	for <lists+linux-gpio@lfdr.de>; Wed,  3 Jul 2019 14:12:35 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4C4805E3FE
+	for <lists+linux-gpio@lfdr.de>; Wed,  3 Jul 2019 14:31:06 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725847AbfGCMMe (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 3 Jul 2019 08:12:34 -0400
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:43718 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725830AbfGCMMd (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 3 Jul 2019 08:12:33 -0400
-Received: by mail-ot1-f68.google.com with SMTP id q10so2065270otk.10;
-        Wed, 03 Jul 2019 05:12:33 -0700 (PDT)
+        id S1726825AbfGCMbF (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 3 Jul 2019 08:31:05 -0400
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:39699 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725943AbfGCMbF (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 3 Jul 2019 08:31:05 -0400
+Received: by mail-lj1-f195.google.com with SMTP id v18so2211658ljh.6
+        for <linux-gpio@vger.kernel.org>; Wed, 03 Jul 2019 05:31:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=googlemail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=mH2lyxDMkrD7XdLOxAFWGZyjvyOXaNVi0/ntCaxja1Y=;
-        b=CtYhWINebh0TkuL+oXcaXo183wNNBg6jq4kBnoqD4X5Lt4Vhcyoochri/u/cY6y6El
-         y76PWe4b0agnkFCB5lWeO8QXTRw3iGVqZZnJYEKjpsmZ7tJHeLFeqpuaVad8p+SH1MBj
-         uRdE5wjDx/nrBSZ10/v1tsRnVD0XmuND8FsBFiZ72mPWKT3YUGrtXrR5nB8bxKuHNoPn
-         qI1/geq5LfbEluFVoreQC/bhwvWszF4iHfZxMBPzbpfQC78N0z9RQ42vIMUgGFw7Wozb
-         EbeOWgaoRnO3AqXqn0PXEC1DwnGGeQXLqJy8UQguQvty39kol54Blk3MoAAsxP7g2Olj
-         18cA==
+        d=linaro.org; s=google;
+        h=mime-version:from:date:message-id:subject:to:cc;
+        bh=OKyfJtOIrTtrcXiKdrFl82qYRA8oFsDa8OFy//DbwT0=;
+        b=vL5qa2AxRk4yNCXYnY2hu3ejEhwEeBXf5U+CTeE+UjFgLrNxFHJ/Z1X6Sj3e7rNnoI
+         qb8N7frPLoHAeTW8dgTnS53LdHmHGE9TXRvsGTL0BA/iVqOfIBDwBr2c1owuul1YVOM/
+         QKxADvn+5/zOW3olQFu3ygQHl+ekZ8eoqxCRDVGh7Pf1YCSb626YKl4tvtv/oP7howJa
+         k2ZkIbcOz4cnBmIfC66vVZkCIzHMSXDQiaWJuIXhkBKg448jomsePGpfR9MDEYH15gp1
+         bPfOAi+z2klXIfjzPK2CPYwvcd4nTsG9Sb8JAKejYqijK7wrp9dDSkNDY1hNcevvEKMA
+         0TSg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=mH2lyxDMkrD7XdLOxAFWGZyjvyOXaNVi0/ntCaxja1Y=;
-        b=UtCd+xiV3G0sgCRB7tOL0pA6rgS3HwcI/QKp1KjWDtvO9wS4iLo+dUuwYhio9e6i90
-         o1RP7hQ0v5p2Vt/cVEg/kOQGtJMMmdYqwFFFEODEbW+qtL/XhQizTujRMXn4Hg/fEK9m
-         ghLNcQ2cJ0GUvEAlRHdiVbFWYhw79EVSGZQSmPK5/vGU089QhOPlJ38cYbGmzuHKK+p2
-         EC7/Q5subiriR8MOtQfeND1ebgx/DTOIzcJHgs6e61wPMuxK/PSjJEICCX0fZTWQ72/X
-         tbRh4RJks22CTicZFrPEca6ogsPNm80DFaEt9QFck3JHxlN1IKdtu+NcfhiCQz/RVDjP
-         CQhA==
-X-Gm-Message-State: APjAAAVVbONO+b+vv+e3ejkMQbSSuaIMjauWp5Nm0xo+IXnKPnPyqXux
-        25/+t/sThUuLs8oRWvHi5dCxdBlTG2Qj5Du9GeM=
-X-Google-Smtp-Source: APXvYqyHjGppN3tIIiaPddI2WT4l1OOcds5DkRdEgJQOZDr9uZ31b+RJY1XmKW37lEvv3kuJ9imk6UwFGNQZzxqlDPY=
-X-Received: by 2002:a9d:226c:: with SMTP id o99mr27745852ota.42.1562155952743;
- Wed, 03 Jul 2019 05:12:32 -0700 (PDT)
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
+        bh=OKyfJtOIrTtrcXiKdrFl82qYRA8oFsDa8OFy//DbwT0=;
+        b=ViKqMaG6Jo6+nwTAiYz042yTdaEwbXrKnP1Kpk9qaKCtlYjibq8c0DLTxqP9EGrX8x
+         tHL0TF5S8PZitBuTcpJYRokSqGSryR22xYClRQ5TC126EdPRiP12nsgj2kN+VsmEbDIn
+         GUvs6+07xkWeD65bvhO2Lr96Zp42aVNIA2pMwlth0p+WaM9flAfP9zrvZZVsZSh77sRE
+         ja35qRm3Dt7qqWkscuqRgmKrK13hlsa7YqtEfdzJjq1dVu1iXEEap51ykv5n56//mYZc
+         WMESq51lHI9XAzEVNYgtFTxw2wikEHexZaUqbMA0JK2p3LZGMclDc28sQzv1PMsu6fck
+         TBdg==
+X-Gm-Message-State: APjAAAUv6FiF4s4s/rr0iPYlY99kfPESAN79SHXAo5BDljvhiXhF3wd6
+        UJ4je0keRZjqfj9lLIjY+nUJX50dV9/I4mI3aQ20l8USu1c=
+X-Google-Smtp-Source: APXvYqz16tXQY7gwwzYAJQ0Io8yONIUhwBcxtZ1TJNjprFJvqYdxFLlUGbX00ke1r99DpVN20uQQMLx0vwcqJuRhSmI=
+X-Received: by 2002:a2e:650a:: with SMTP id z10mr21044108ljb.28.1562157062976;
+ Wed, 03 Jul 2019 05:31:02 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190701091258.3870-1-narmstrong@baylibre.com>
- <20190701091258.3870-12-narmstrong@baylibre.com> <CAFBinCBg57gh1x3CKs-YrCvTD0WR2s5zVGWtycb=RGqMiQ-VgA@mail.gmail.com>
- <7acdafc1-39e7-a2ec-886f-ca337c60dfe7@baylibre.com>
-In-Reply-To: <7acdafc1-39e7-a2ec-886f-ca337c60dfe7@baylibre.com>
-From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Date:   Wed, 3 Jul 2019 14:12:21 +0200
-Message-ID: <CAFBinCC1sJxBA8NgDNzLaWJV7Y+fARVczy31rHkbtkj58XKUUQ@mail.gmail.com>
-Subject: Re: [RFC/RFT v3 11/14] arm64: dts: meson-g12a: add cpus OPP table
-To:     Neil Armstrong <narmstrong@baylibre.com>
-Cc:     jbrunet@baylibre.com, khilman@baylibre.com,
-        linux-arm-kernel@lists.infradead.org,
-        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Wed, 3 Jul 2019 14:30:51 +0200
+Message-ID: <CACRpkdZBhUF7C_+vPc6tkasBk5DAGh01g3eu8OYQ16QBehUZWw@mail.gmail.com>
+Subject: [GIT PULL] GPIO fix for v5.2
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Neil,
+Hi Linus,
 
-On Wed, Jul 3, 2019 at 1:53 PM Neil Armstrong <narmstrong@baylibre.com> wrote:
->
-> On 03/07/2019 01:47, Martin Blumenstingl wrote:
-> > Hi Neil,
-> >
-> > On Mon, Jul 1, 2019 at 11:13 AM Neil Armstrong <narmstrong@baylibre.com> wrote:
-> >>
-> >> Add the OPP table taken from the vendor u200 and u211 DTS.
-> >>
-> >> The Amlogic G12A SoC seems to available in 3 types :
-> >> - low-speed: up to 1,8GHz
-> >> - mid-speed: up to 1,908GHz
-> >> - high-speed: up to 2.1GHz
-> >>
-> >> And the S905X2 opp voltages are slightly higher than the S905D2
-> >> OPP voltages for the low-speed table.
-> >>
-> >> This adds the conservative OPP table with the S905X2 higher voltages
-> >> and the maximum low-speed OPP frequency.
-> > have you considered all three as separate voltage tables?
-> > you're other patches are assigning the OPP table to the CPU in the
-> > board.dts anyways, so it's easy to use different OPP tables for
-> > different boards
->
-> We can't assume the board and the CPU type :-/
-OK, should we assign the OPP table to the CPU cores then in the
-soc.dtsi (instead of board.dts like the other patches from this series
-do)?
+last minute regressions galore. Here is a fixup for an
+issue I found monday when testing unrelated patches.
 
-> Kevin told me about cpufreq policy, where we could add a policy reading the
-> eFUSE and changing the max frequency, then we could add the whole OPP table.
-we can still do that in a second step, so I'm all for starting with
-the "conservative" OPP table and then improve performance (by having
-detecting the SoC and using the correct OPP table)
+Please pull it in!
 
+Yours,
+Linus Walleij
 
-Martin
+The following changes since commit 4b972a01a7da614b4796475f933094751a295a2f:
+
+  Linux 5.2-rc6 (2019-06-22 16:01:36 -0700)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-gpio.git
+tags/gpio-v5.2-4
+
+for you to fetch changes up to fbbf145a0e0a0177e089c52275fbfa55763e7d1d:
+
+  gpio/spi: Fix spi-gpio regression on active high CS (2019-07-02
+22:31:37 +0200)
+
+----------------------------------------------------------------
+A single fixup for the SPI CS gpios that regressed
+in the current kernel cycle.
+
+----------------------------------------------------------------
+Linus Walleij (1):
+      gpio/spi: Fix spi-gpio regression on active high CS
+
+ drivers/gpio/gpiolib-of.c | 9 ++++++++-
+ 1 file changed, 8 insertions(+), 1 deletion(-)
