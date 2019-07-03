@@ -2,91 +2,98 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 81C975E480
-	for <lists+linux-gpio@lfdr.de>; Wed,  3 Jul 2019 14:49:14 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3EF605E4A5
+	for <lists+linux-gpio@lfdr.de>; Wed,  3 Jul 2019 14:57:29 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727166AbfGCMtD (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 3 Jul 2019 08:49:03 -0400
-Received: from mail-wr1-f45.google.com ([209.85.221.45]:41039 "EHLO
-        mail-wr1-f45.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727147AbfGCMtC (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 3 Jul 2019 08:49:02 -0400
-Received: by mail-wr1-f45.google.com with SMTP id c2so2653139wrm.8
-        for <linux-gpio@vger.kernel.org>; Wed, 03 Jul 2019 05:49:01 -0700 (PDT)
+        id S1726217AbfGCM52 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 3 Jul 2019 08:57:28 -0400
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:45914 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725847AbfGCM52 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 3 Jul 2019 08:57:28 -0400
+Received: by mail-ot1-f65.google.com with SMTP id x21so2187423otq.12;
+        Wed, 03 Jul 2019 05:57:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:in-reply-to:references:date:message-id
-         :mime-version;
-        bh=FuvWmI2Ac2pIZhwnDICxrWfsRIUJnwbmAdcXZhrnIuk=;
-        b=RVVGw0F7gOGZQ4TEpiyVQ85EpiJgXCb6jLFkfKamOa6QYuyFWojlAQNggohYTdzr2d
-         9q2ep+cHOl6daAeiE6MSXobfTG5aGX49Tvu2IO5enl0jIOe6+Fyc7YPKt62Lp3z//l+t
-         5afqY4Jrp15R8g77nUuJE0zNLnB+tFRaJJvPrdtgVU2z1eELcxW59gMb5Oc4lSJZx/bT
-         yrhnSvteITwxxjIIy0k5vLmKmkPekYMDBmwxbyS+P7F+r3r29MkFd6jsS4TkM4huPNnH
-         M1SHjrbF1o55wajA4Td86/gDNbl3yNNhwWYJOd8Rqh38DRdqqOeBuQVLho6nh0gafS1M
-         9Y8g==
+        d=googlemail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=+Almj/mPu2GGnzdAauKcQzrTaJcvUxIHQhCGQ8lryKk=;
+        b=YKHtBzDUjhxaZ28aPgECznKWhEmMjsPYoA0rjIqlStH4xfxBMJSjkrVCLzE29wBoUh
+         /3YCQocdYjHDiFtyb0w0cxPatipE8ciQqO1uaVhuS4DJzbDM5O587UYoL0MLqkZgymGe
+         PRzf5+n0/5bVCBmQtEe2aaDVCej3UAoKuuar8f3MebbwiyOdjUwJFHWiE/B9hWPfY7B7
+         DTC7cbppK7jJTCYbCERDMBHTvJfgoV7/wHcTn8LP44lhNbwd4+kOgG2E+omW5B3hh0ic
+         e/tGwhZYLB0qP9Z7ZROtzzv8SXriY+sbCoBiObrpeBU0bJXIB4dbA2IJk+rfSFwgNH8x
+         wrlQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version;
-        bh=FuvWmI2Ac2pIZhwnDICxrWfsRIUJnwbmAdcXZhrnIuk=;
-        b=gjOzCZrA7e9UMuQznkNUH2xXBPtpNR+4wB7TO4IQuDKuR2T6TxTlWfLxq0zOHvIA9G
-         vDeQrTgAjjlzyAKVe8DMNoS9w5Q9wND20SqCk8aecdDb0BRlCo0cBghBiMJgAHpYhIVU
-         J30yf7o2RgaV6nFQsg1HSVreouanJe8O8q9Qiz/SIFeWY/8msD/ctLO9pWx2Awf5GeF/
-         fdSNh0Qq9nOBgD189ZXXWAYsWrzxsT+Rc8LOyq3TamEP98msE4S3cZ7bfNl3FaSU0/JY
-         +Ye0nwx0EmkaGegtLNC0qFBuJU0TJCwrMf18GuuUOSxRzrM+ccpcKGXsKO2BBHYobvn/
-         rJQQ==
-X-Gm-Message-State: APjAAAUg9jokE9+0orHQqhxtG7ZjAo6F1Goae/BCbqeV6iOPiOqdZYMT
-        gqlAUbWIRdFHfF/7GsuxQlrVRg==
-X-Google-Smtp-Source: APXvYqyDAfOGOAjcImm7vz1haXRMsa83iykN2nsIK77a4bhegzF3S2j2rg4Wk9JFZ82wUNU8F7il6Q==
-X-Received: by 2002:adf:b64b:: with SMTP id i11mr29086502wre.205.1562158140924;
-        Wed, 03 Jul 2019 05:49:00 -0700 (PDT)
-Received: from localhost (lmontsouris-657-1-212-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
-        by smtp.gmail.com with ESMTPSA id q1sm1504594wmq.25.2019.07.03.05.49.00
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Wed, 03 Jul 2019 05:49:00 -0700 (PDT)
-From:   Jerome Brunet <jbrunet@baylibre.com>
-To:     Neil Armstrong <narmstrong@baylibre.com>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Cc:     khilman@baylibre.com, linux-arm-kernel@lists.infradead.org,
-        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org
-Subject: Re: [RFC/RFT v3 09/14] arm64: dts: move common G12A & G12B modes to meson-g12-common.dtsi
-In-Reply-To: <e49bfb8f-23e9-c834-62c7-a40528a2ef06@baylibre.com>
-References: <20190701091258.3870-1-narmstrong@baylibre.com> <20190701091258.3870-10-narmstrong@baylibre.com> <CAFBinCA537EV9kzz+5syaF1Q-stTJ4no+NBdcYD3QL-FJSoWfQ@mail.gmail.com> <e49bfb8f-23e9-c834-62c7-a40528a2ef06@baylibre.com>
-Date:   Wed, 03 Jul 2019 14:48:59 +0200
-Message-ID: <1jlfxf7078.fsf@starbuckisacylon.baylibre.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=+Almj/mPu2GGnzdAauKcQzrTaJcvUxIHQhCGQ8lryKk=;
+        b=KxTv0QS3JTlia2PjXRIKVuqhC6JsTVS1XBuenrCHi29pwpxiiYqk18ooFwJGBqmUie
+         0+yG4IwM6j7XSlQjzDHw0k/GFzXTlxcMohZ0YYS/pjwnOMR88oHtUVyQrZnQAqZDVrXN
+         wTIoxUWpdccCgSw48eAJGdi1V5BZL+gGSd3whjDj9MBfRMCj8qDIjUA4vtbYRjOfhuJL
+         RYzp7jNUQgfXY4cjCSgk40Nn4a1FFlfx2Y09gA5XYWvBoeq6wKWAmrOV9UBTI41C14ep
+         0hSY8f7xsMoL0RczeHjQJoENKb9FV5ednboBH1dKCx3OfhkxAVJdW7LkIAZJzU97hJOE
+         e6Rg==
+X-Gm-Message-State: APjAAAXEMAQ7ULNctcMI4KLfHPOP9GIBjlVkPbCCfLB6qE1kRSjwtR4j
+        TtygDLQ7nD1OjKtsU5PbR4rIsnfx2wV1Sd2rYQw=
+X-Google-Smtp-Source: APXvYqwx8FO+d2S1YP0ZeOa6b/jwOvDRoFFG8LiT5wh9lheOLPk0uLlsHBYrkyTFF84DqkcEiFFiIuupCEIeurWzIqw=
+X-Received: by 2002:a9d:226c:: with SMTP id o99mr27944279ota.42.1562158647652;
+ Wed, 03 Jul 2019 05:57:27 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
+References: <20190701091258.3870-1-narmstrong@baylibre.com>
+ <20190701091258.3870-5-narmstrong@baylibre.com> <CAFBinCA1gUUbEj=++1rGcFQ1RdyxSheofAo=TKw3-UaenFAcug@mail.gmail.com>
+ <301695b6-52ba-92b1-ca1a-d4d587b33eeb@baylibre.com> <1jo92b70ko.fsf@starbuckisacylon.baylibre.com>
+In-Reply-To: <1jo92b70ko.fsf@starbuckisacylon.baylibre.com>
+From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Date:   Wed, 3 Jul 2019 14:57:16 +0200
+Message-ID: <CAFBinCA5RrTM8Ws_0goDqipi90KbhaXhwKGPVXj+dCoi7P-OFA@mail.gmail.com>
+Subject: Re: [RFC/RFT v3 04/14] clk: meson: eeclk: add setup callback
+To:     Jerome Brunet <jbrunet@baylibre.com>
+Cc:     Neil Armstrong <narmstrong@baylibre.com>, khilman@baylibre.com,
+        linux-arm-kernel@lists.infradead.org,
+        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org,
+        amergnat@baylibre.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed 03 Jul 2019 at 13:51, Neil Armstrong <narmstrong@baylibre.com> wrote:
-
-> On 03/07/2019 01:54, Martin Blumenstingl wrote:
->> Hi Neil,
->> 
-[...]
->> does it make sense to name this file "meson-g12a-g12b-sm1-common.dtsi" instead?
->> do you know whether there will be a successor to G12B and what it's
->> code-name will be?
+On Wed, Jul 3, 2019 at 2:40 PM Jerome Brunet <jbrunet@baylibre.com> wrote:
 >
-> meson-g12a-g12b-sm1-common seems a bit long to me...
-
-+1 ... and what if the generation after that is compatible as well ? We
-extend the name again ? Such naming scheme does not scale.
-
-meson-g12-common.dtsi looks good to me. IMO, The fact the sm1 dtsi includes
-the file is enough to understand that sm1 derive from the g12a/b
-
+> On Wed 03 Jul 2019 at 13:45, Neil Armstrong <narmstrong@baylibre.com> wrote:
 >
-> We don't have naming of the future SoCs, since SM1 is only available on
-> prototypes yet.
+> > On 03/07/2019 01:16, Martin Blumenstingl wrote:
+> >> +Cc Alexandre Mergnat
+> >>
+> >> On Mon, Jul 1, 2019 at 11:13 AM Neil Armstrong <narmstrong@baylibre.com> wrote:
+> >>>
+> >>> Add a setup() callback in the eeclk structure, to call an optional
+> >>> call() function at end of eeclk probe to setup clocks.
+> >>>
+> >>> It's used for the G12A clock controller to setup the CPU clock notifiers.
+> >>>
+> >>> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+> >> this will probably work fine, but I want do double check first
+> >>
+> >> are we planning to get rid of meson-eeclk (mid-term)?
+> >
+> > AFAIK no, but maybe I'm not aware of it !
+> >
+> > Neil
+> >
+> >> Alex has some patches to get rid of all these IN_PREFIX logic.
 >
-> Neil
+> The prefix logic will go away with Alex's rework, so are the input clock
+> But meson-eeclk, which is just a common probe function do avoid
+> repeating the same things over and over, will stay
+OK, thank you for clarifying this
+
+> >> I'm asking because if we want to get rid of meson-eeclk it may be the
 >
->> 
->> 
->> Martin
->> 
+> May I ask why ?
+I only remember that Stephen asked us to get rid of something in our clock code
+I was under the impression that it was meson-eeclk, but I cannot find
+it anymore (that means I'm mixing it up with some other topic)
