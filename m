@@ -2,59 +2,59 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 316B75E33A
-	for <lists+linux-gpio@lfdr.de>; Wed,  3 Jul 2019 13:53:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 826425E349
+	for <lists+linux-gpio@lfdr.de>; Wed,  3 Jul 2019 13:55:05 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726762AbfGCLxU (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 3 Jul 2019 07:53:20 -0400
-Received: from mail-wm1-f52.google.com ([209.85.128.52]:38870 "EHLO
-        mail-wm1-f52.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726404AbfGCLxU (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 3 Jul 2019 07:53:20 -0400
-Received: by mail-wm1-f52.google.com with SMTP id s15so2063858wmj.3
-        for <linux-gpio@vger.kernel.org>; Wed, 03 Jul 2019 04:53:17 -0700 (PDT)
+        id S1727127AbfGCLzB (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 3 Jul 2019 07:55:01 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:41631 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726473AbfGCLzB (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 3 Jul 2019 07:55:01 -0400
+Received: by mail-wr1-f65.google.com with SMTP id c2so2451978wrm.8
+        for <linux-gpio@vger.kernel.org>; Wed, 03 Jul 2019 04:54:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baylibre-com.20150623.gappssmtp.com; s=20150623;
         h=subject:to:cc:references:from:openpgp:autocrypt:organization
          :message-id:date:user-agent:mime-version:in-reply-to
          :content-language:content-transfer-encoding;
-        bh=ECYcI8AlM2+Up/9U9dhONTZIuaFVroymFXWiMWPGvhA=;
-        b=Lo998VzvGouMh4VaHm3pLpdC8XOaBts7PQecaj21Fj9ykSqkytbOHmWEHR/xa/XM2Q
-         m12klRrbHu6kFGbfGpU6YcyM1Vx0SywqPrcGUud+p67+r+FBP413FPAZeeTzkQMb5b6K
-         5diORxd/AlYNhcAGRNaP+MB5StUHBcRKWkqzuoADPICZfKVTmc0X99fHnTquMn4HaAVi
-         ws9XvLVo11qAE0qVeAuq5at6M68rPd5cx7IwPLoPL+qX58tfv7oCpukPnfEEa7L0URRY
-         9voXuft/bbTLaVXm4pnm94Yvy79QB634ZVvTTcY6GPhsA0RkrtaqIRnoyG7gGdAtMIT7
-         1xCg==
+        bh=41RVFdcNQvnRsKqPg1U9eudlNWQIRgVPzn/HKOGBhKE=;
+        b=ATr5Lsat3KeAJkm3a38/Zlbev2eOni1V/FD1IbdOMP2ag6fdCxsU/euxVCwKk9YrCM
+         JDtN0/CzMWyKKzGsV53z0HKB9UezuUDQLOjkN3ztdgjY0Z5AA5kwuaLlJHnMxB4+IKYY
+         /0ngegXBWHBdVGWY/qOL231xsxlFnG1+DNInvzo6JigkW+Vv4PAfyqbUOBhp0YLB1EAR
+         45Q5tT7QvgpdmDepRoldrROLib/O+TYC6Q5ad3+iGuYrBjcRZ5wr+6ja67QH/LAYUs72
+         /tAxz/Fi/qyB58eMyZkG/YK1DvnWatBrDO4cw/2LbtTQC6QiMyb2tiQdywtAwKk4Jrxw
+         9Eww==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
          :organization:message-id:date:user-agent:mime-version:in-reply-to
          :content-language:content-transfer-encoding;
-        bh=ECYcI8AlM2+Up/9U9dhONTZIuaFVroymFXWiMWPGvhA=;
-        b=lN/1zQ7Pp+JiO3HAIo3CkEhGBot33LMZwjE9t7a2A39AyOONFvfpqFn0tcdXJkVJN8
-         3FhlXGF45+L3YzbbHZEEkd8hJITm89o4dTfG6+8lSr5PKK8B2+v0mXwhQUKLCwsQHtVo
-         ciojOxwgQ11CWnkGLJ+aAD18Ht4Wmvjjk69q/m0LIEMHLneNAzt06+QtIFK71lI7TZDC
-         OPuSAD2x+fIo0kdXiBuHsSI1pZucAlg3Z5/RFYZGEuaMJ9qxbvgWm2s7QFx98nxRcNAR
-         3Ys/6kQf9n0xbrLXGct/qiuUs61cXy0t+LOuvDrWj14mgF3mKd918fZZ2KVKuhyMVZCn
-         KL/Q==
-X-Gm-Message-State: APjAAAXlYceW7T9dDo1OFubN/V9UGgxVVUAYn3JiLWm3euhGM3tuQPOK
-        XFwfCeD6zkvb3WoWUPCChEKwjNh2xE8=
-X-Google-Smtp-Source: APXvYqw1UydkA6XdM3tn/Mh6Trc55NumI7hz88+bOC34gP3xPxq6ffraSlp3cxtYo3lA+fJa+NR25g==
-X-Received: by 2002:a7b:cf27:: with SMTP id m7mr8004579wmg.7.1562154796842;
-        Wed, 03 Jul 2019 04:53:16 -0700 (PDT)
+        bh=41RVFdcNQvnRsKqPg1U9eudlNWQIRgVPzn/HKOGBhKE=;
+        b=l8OTEVMLhVmikV9sIOPExi6s5wkBUYSDro7cd5U3aVFvOEqtQGsN4qSidyUE/FFmmm
+         WcG1zcdBmbJp2PsfMI0zYZGjENtzO0pb8O/V7kllUJSYuK/pi2qvPLSpc0ZufEKUjxjv
+         UEU0/uzy95OuFhJ36XVGK2Z8iunFuQ4G0N5DmEyGmDa78anG51xv6svlO6EiRfHABlZ3
+         pW3huTolL3plEXH3soifPXwCsufiuktfCv+sfgTHD4iLnGwlCq784Yb6H3qRgW8f1FQY
+         B+j9bcizc7p8ScDsP/vtS54Df2fwfzE3F4T2tD5U78tIW+cdvlZN3Csz7O030qSzW0uC
+         rGEw==
+X-Gm-Message-State: APjAAAXKVE/gcwXr8i8O3GtcErc41RQSwye+1ELnUPZdpnnqbY9ffBC6
+        /POeY024purg7QqiICzHIz6owzIOOzg=
+X-Google-Smtp-Source: APXvYqwIe3GI7EUPeLNqVHRFnPN3BTxJXBpLGBwc1JLvK12ZO9P99slT3Hfqtmn4vYDfrjVO3QGifg==
+X-Received: by 2002:a05:6000:146:: with SMTP id r6mr29293765wrx.237.1562154898252;
+        Wed, 03 Jul 2019 04:54:58 -0700 (PDT)
 Received: from [10.1.2.12] (lmontsouris-657-1-212-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
-        by smtp.gmail.com with ESMTPSA id h8sm2000695wmf.12.2019.07.03.04.53.16
+        by smtp.gmail.com with ESMTPSA id j132sm2759889wmj.21.2019.07.03.04.54.57
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 03 Jul 2019 04:53:16 -0700 (PDT)
-Subject: Re: [RFC/RFT v3 11/14] arm64: dts: meson-g12a: add cpus OPP table
+        Wed, 03 Jul 2019 04:54:57 -0700 (PDT)
+Subject: Re: [RFC/RFT v3 14/14] arm64: dts: meson-g12b-odroid-n2: enable DVFS
 To:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 Cc:     jbrunet@baylibre.com, khilman@baylibre.com,
         linux-arm-kernel@lists.infradead.org,
         linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org,
         linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org
 References: <20190701091258.3870-1-narmstrong@baylibre.com>
- <20190701091258.3870-12-narmstrong@baylibre.com>
- <CAFBinCBg57gh1x3CKs-YrCvTD0WR2s5zVGWtycb=RGqMiQ-VgA@mail.gmail.com>
+ <20190701091258.3870-15-narmstrong@baylibre.com>
+ <CAFBinCA5-5kbD-0e7Lm7FwRneWsKeW4yQrucd1PAk=s2PrtxJQ@mail.gmail.com>
 From:   Neil Armstrong <narmstrong@baylibre.com>
 Openpgp: preference=signencrypt
 Autocrypt: addr=narmstrong@baylibre.com; prefer-encrypt=mutual; keydata=
@@ -107,12 +107,12 @@ Autocrypt: addr=narmstrong@baylibre.com; prefer-encrypt=mutual; keydata=
  VsbXrP9BZ6snXyHfebPnno/te5XRqZTL9aJOytB/1iUna+1MAwBxGFPvqeEUUyT+gx1l3Acl
  ZaTUOEkgIor5losDrePdPgE=
 Organization: Baylibre
-Message-ID: <7acdafc1-39e7-a2ec-886f-ca337c60dfe7@baylibre.com>
-Date:   Wed, 3 Jul 2019 13:53:15 +0200
+Message-ID: <e5db811b-a86d-dffa-9036-48aade87f77d@baylibre.com>
+Date:   Wed, 3 Jul 2019 13:54:57 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.7.0
 MIME-Version: 1.0
-In-Reply-To: <CAFBinCBg57gh1x3CKs-YrCvTD0WR2s5zVGWtycb=RGqMiQ-VgA@mail.gmail.com>
+In-Reply-To: <CAFBinCA5-5kbD-0e7Lm7FwRneWsKeW4yQrucd1PAk=s2PrtxJQ@mail.gmail.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -121,34 +121,40 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 03/07/2019 01:47, Martin Blumenstingl wrote:
-> Hi Neil,
-> 
+On 03/07/2019 01:45, Martin Blumenstingl wrote:
 > On Mon, Jul 1, 2019 at 11:13 AM Neil Armstrong <narmstrong@baylibre.com> wrote:
 >>
->> Add the OPP table taken from the vendor u200 and u211 DTS.
+>> Enable DVFS for the Odroid-N2 by setting the clock, OPP and supply
+>> for each cores of each CPU clusters.
 >>
->> The Amlogic G12A SoC seems to available in 3 types :
->> - low-speed: up to 1,8GHz
->> - mid-speed: up to 1,908GHz
->> - high-speed: up to 2.1GHz
+>> The first cluster uses the "VDDCPU_B" power supply, and the second
+>> cluster uses the "VDDCPU_A" power supply.
 >>
->> And the S905X2 opp voltages are slightly higher than the S905D2
->> OPP voltages for the low-speed table.
+>> Each power supply can achieve 0.73V to 1.01V using 2 distinct PWM
+>> outputs clocked at 800KHz with an inverse duty-cycle.
 >>
->> This adds the conservative OPP table with the S905X2 higher voltages
->> and the maximum low-speed OPP frequency.
-> have you considered all three as separate voltage tables?
-> you're other patches are assigning the OPP table to the CPU in the
-> board.dts anyways, so it's easy to use different OPP tables for
-> different boards
-
-We can't assume the board and the CPU type :-/
-
-Kevin told me about cpufreq policy, where we could add a policy reading the
-eFUSE and changing the max frequency, then we could add the whole OPP table.
-
-Neil
-
+>> DVFS has been tested by running the arm64 cpuburn at [1] and cycling
+>> between all the possible cpufreq translations of each cluster and
+>> checking the final frequency using the clock-measurer, script at [2].
+>>
+>> [1] https://github.com/ssvb/cpuburn-arm/blob/master/cpuburn-a53.S
+>> [2] https://gist.github.com/superna9999/d4de964dbc0f84b7d527e1df2ddea25f
+>>
+>> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+> Reviewed-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+> 
+> [...]
+>> +       vddcpu_b: regulator-vddcpu-b {
+>> +               /*
+>> +                * Silergy SY8120B1ABC Regulator.
+>> +                */
+> interesting that they use different regulator ICs for CPU A and CPU B
+> the public schematics confirm your comments
 > 
 
+Yep they use a Silergy one for VDDCPU_B on every schematics I have.
+
+The A311D VIM3 have a slightly different one, but still Silergy for VDDCPU_B.
+https://dl.khadas.com/Hardware/VIM3/Schematic/VIM3_V11_Sch.pdf
+
+Neil
