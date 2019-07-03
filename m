@@ -2,87 +2,72 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 4C4805E3FE
-	for <lists+linux-gpio@lfdr.de>; Wed,  3 Jul 2019 14:31:06 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DBCCB5E40F
+	for <lists+linux-gpio@lfdr.de>; Wed,  3 Jul 2019 14:35:36 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726825AbfGCMbF (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 3 Jul 2019 08:31:05 -0400
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:39699 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725943AbfGCMbF (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 3 Jul 2019 08:31:05 -0400
-Received: by mail-lj1-f195.google.com with SMTP id v18so2211658ljh.6
-        for <linux-gpio@vger.kernel.org>; Wed, 03 Jul 2019 05:31:03 -0700 (PDT)
+        id S1726217AbfGCMfg (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 3 Jul 2019 08:35:36 -0400
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:44221 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725847AbfGCMff (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 3 Jul 2019 08:35:35 -0400
+Received: by mail-lf1-f66.google.com with SMTP id r15so1635773lfm.11
+        for <linux-gpio@vger.kernel.org>; Wed, 03 Jul 2019 05:35:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=mime-version:from:date:message-id:subject:to:cc;
-        bh=OKyfJtOIrTtrcXiKdrFl82qYRA8oFsDa8OFy//DbwT0=;
-        b=vL5qa2AxRk4yNCXYnY2hu3ejEhwEeBXf5U+CTeE+UjFgLrNxFHJ/Z1X6Sj3e7rNnoI
-         qb8N7frPLoHAeTW8dgTnS53LdHmHGE9TXRvsGTL0BA/iVqOfIBDwBr2c1owuul1YVOM/
-         QKxADvn+5/zOW3olQFu3ygQHl+ekZ8eoqxCRDVGh7Pf1YCSb626YKl4tvtv/oP7howJa
-         k2ZkIbcOz4cnBmIfC66vVZkCIzHMSXDQiaWJuIXhkBKg448jomsePGpfR9MDEYH15gp1
-         bPfOAi+z2klXIfjzPK2CPYwvcd4nTsG9Sb8JAKejYqijK7wrp9dDSkNDY1hNcevvEKMA
-         0TSg==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=9yjZLyM9JOHe1yZ3T3nibJuov33+lgCxQ34IkJ3YWoQ=;
+        b=MBKUEIk7naz4Y3fvvU65OzmlKtCI30NENWTo+afhiNMK5znd4Y1eQOnkDJOcg0aY+v
+         ++7it044iEA0/FnqXRy9uVMCF6MR0sNynwBDdD22xtV+hNHMNNgjCEQ7U9rlh2JYeWWM
+         ewuMGRi59rNUvNyn7PxpkrglasWGXAJsTnxIqrYGrHBtU2YQ1mcV/erApCDaFvkfJ6DQ
+         i31VHZa80MLy32I5VNuyfBI7GYE900zLgxPQbbTlZ40LoCUOyotjP3R5q6l7SryAy4qi
+         WQevM0L80vkOVIsX3mZUNJ2TZL463RUKjeI7Cpcgj//LRodNH7QyTRygpFWHsLjxAtqT
+         qOQg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
-        bh=OKyfJtOIrTtrcXiKdrFl82qYRA8oFsDa8OFy//DbwT0=;
-        b=ViKqMaG6Jo6+nwTAiYz042yTdaEwbXrKnP1Kpk9qaKCtlYjibq8c0DLTxqP9EGrX8x
-         tHL0TF5S8PZitBuTcpJYRokSqGSryR22xYClRQ5TC126EdPRiP12nsgj2kN+VsmEbDIn
-         GUvs6+07xkWeD65bvhO2Lr96Zp42aVNIA2pMwlth0p+WaM9flAfP9zrvZZVsZSh77sRE
-         ja35qRm3Dt7qqWkscuqRgmKrK13hlsa7YqtEfdzJjq1dVu1iXEEap51ykv5n56//mYZc
-         WMESq51lHI9XAzEVNYgtFTxw2wikEHexZaUqbMA0JK2p3LZGMclDc28sQzv1PMsu6fck
-         TBdg==
-X-Gm-Message-State: APjAAAUv6FiF4s4s/rr0iPYlY99kfPESAN79SHXAo5BDljvhiXhF3wd6
-        UJ4je0keRZjqfj9lLIjY+nUJX50dV9/I4mI3aQ20l8USu1c=
-X-Google-Smtp-Source: APXvYqz16tXQY7gwwzYAJQ0Io8yONIUhwBcxtZ1TJNjprFJvqYdxFLlUGbX00ke1r99DpVN20uQQMLx0vwcqJuRhSmI=
-X-Received: by 2002:a2e:650a:: with SMTP id z10mr21044108ljb.28.1562157062976;
- Wed, 03 Jul 2019 05:31:02 -0700 (PDT)
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=9yjZLyM9JOHe1yZ3T3nibJuov33+lgCxQ34IkJ3YWoQ=;
+        b=PmzQLqxGQfUOqV8WqEKU1l9gCHDGrLaa0H+OiG6HIc/n/ogWgXSKDujF+n/dsaCV8o
+         9ZJPi4k6rhUQLLyQEs3OmOe9OLmX7eML6pdP839m/+ud3ZO1KCkeYzk+792okwkCsZ/s
+         6NugW1i5jQXMgpdVPfLq0patTpEDoxcggeKD143UCw4+ix1mXXnHY235zVa9Zsp9DAvo
+         IAihuJgzn3V3nqq4Zb2yn5MwRjPf6leWeAJUs5qwuI9xA2+5U6BOYmJSPEeiUt/G1Pi3
+         409v1w9YIxRUh+v6Rze01e9sRII3Upj+8lgNg/2IaCYL31P0Tpwm2slXGXwKJK2N/Of5
+         0wPQ==
+X-Gm-Message-State: APjAAAVj3AP0wlPfBwZnOXAglt3rDAo6Q4wmpuhpJ3FRQ920gSxsqcGm
+        XJ39XSuoi1LVbzl2Hcq2cIk1qfGBGrMI9cK+bVNv1zLG
+X-Google-Smtp-Source: APXvYqz7dH1dOhL9GPZ3rezQELsJyZdenNecNAinD3cs2wH7cnyReBlZqciqoJFvA3uBaX6sgLuWduWNDyfTkk2F5yk=
+X-Received: by 2002:ac2:598d:: with SMTP id w13mr5964199lfn.165.1562157333469;
+ Wed, 03 Jul 2019 05:35:33 -0700 (PDT)
 MIME-Version: 1.0
+References: <1562146944-4162-1-git-send-email-info@metux.net>
+In-Reply-To: <1562146944-4162-1-git-send-email-info@metux.net>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Wed, 3 Jul 2019 14:30:51 +0200
-Message-ID: <CACRpkdZBhUF7C_+vPc6tkasBk5DAGh01g3eu8OYQ16QBehUZWw@mail.gmail.com>
-Subject: [GIT PULL] GPIO fix for v5.2
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
+Date:   Wed, 3 Jul 2019 14:35:22 +0200
+Message-ID: <CACRpkdbtwXYiKOo6LwNm2bQnEMSUoi2UutP4DKXzt=_jOcRkLg@mail.gmail.com>
+Subject: Re: [PATCH] gpio: pl061: drop duplicate printing of device name
+To:     "Enrico Weigelt, metux IT consult" <info@metux.net>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Linus,
+On Wed, Jul 3, 2019 at 11:42 AM Enrico Weigelt, metux IT consult
+<info@metux.net> wrote:
 
-last minute regressions galore. Here is a fixup for an
-issue I found monday when testing unrelated patches.
+> From: Enrico Weigelt <info@metux.net>
+>
+> The dev_info() call already prints the device name, so there's
+> no need to explicitly include it in the message for second time.
+>
+> Signed-off-by: Enrico Weigelt <info@metux.net>
 
-Please pull it in!
+True. Patch applied.
 
 Yours,
 Linus Walleij
-
-The following changes since commit 4b972a01a7da614b4796475f933094751a295a2f:
-
-  Linux 5.2-rc6 (2019-06-22 16:01:36 -0700)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-gpio.git
-tags/gpio-v5.2-4
-
-for you to fetch changes up to fbbf145a0e0a0177e089c52275fbfa55763e7d1d:
-
-  gpio/spi: Fix spi-gpio regression on active high CS (2019-07-02
-22:31:37 +0200)
-
-----------------------------------------------------------------
-A single fixup for the SPI CS gpios that regressed
-in the current kernel cycle.
-
-----------------------------------------------------------------
-Linus Walleij (1):
-      gpio/spi: Fix spi-gpio regression on active high CS
-
- drivers/gpio/gpiolib-of.c | 9 ++++++++-
- 1 file changed, 8 insertions(+), 1 deletion(-)
