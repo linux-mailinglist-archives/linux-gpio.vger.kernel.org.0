@@ -2,66 +2,81 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id C9EE25E135
-	for <lists+linux-gpio@lfdr.de>; Wed,  3 Jul 2019 11:44:21 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 57D2F5E266
+	for <lists+linux-gpio@lfdr.de>; Wed,  3 Jul 2019 12:58:38 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725847AbfGCJoV (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 3 Jul 2019 05:44:21 -0400
-Received: from mout.kundenserver.de ([212.227.17.24]:41161 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725796AbfGCJoU (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 3 Jul 2019 05:44:20 -0400
-Received: from [192.168.1.110] ([95.114.150.241]) by mrelayeu.kundenserver.de
- (mreue109 [212.227.15.183]) with ESMTPSA (Nemesis) id
- 1MsYzF-1iY5pm2ERP-00tzyN; Wed, 03 Jul 2019 11:44:05 +0200
-Subject: Re: [PATCH v1 1/2] pinctrl: baytrail: Use defined macro instead of
- magic in byt_get_gpio_mux()
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-gpio@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>
-References: <20190703003018.75186-1-andriy.shevchenko@linux.intel.com>
-From:   "Enrico Weigelt, metux IT consult" <lkml@metux.net>
-Organization: metux IT consult
-Message-ID: <2357806f-5ff5-965e-6853-da3bbad24f38@metux.net>
-Date:   Wed, 3 Jul 2019 11:44:03 +0200
-User-Agent: Mozilla/5.0 (X11; Linux i686 on x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.2.1
+        id S1726686AbfGCK6h (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 3 Jul 2019 06:58:37 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:45202 "EHLO
+        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725820AbfGCK6g (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 3 Jul 2019 06:58:36 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=PG2bf0edoEcnz2ppC4vPEpg3+2/gMBmBU2MzXxCLKV0=; b=B/FOloOB6LoYAkokWBztUtGHb
+        VSXxG5+mZkSFEKPPtZSVZLM4dRcG/jeErI2RS+FkAzd/7O6KqLBYp8yCMgkbacnsoJjMFus8XZEyi
+        EDnhkg1uSBt4Ngd6iY0/M74oAiVq+2IwMha81QhzKCybicqCh4Bz634etOdZDxTfNYAn4=;
+Received: from [2001:470:1f1d:6b5:7e7a:91ff:fede:4a45] (helo=finisterre.sirena.org.uk)
+        by heliosphere.sirena.org.uk with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <broonie@sirena.org.uk>)
+        id 1hicyA-0005mt-Ae; Wed, 03 Jul 2019 10:58:34 +0000
+Received: by finisterre.sirena.org.uk (Postfix, from userid 1000)
+        id BD761440046; Wed,  3 Jul 2019 11:58:32 +0100 (BST)
+Date:   Wed, 3 Jul 2019 11:58:32 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     linux-spi@vger.kernel.org, linux-gpio@vger.kernel.org,
+        Andrey Smirnov <andrew.smirnov@gmail.com>
+Subject: Re: [PATCH] gpio/spi: Fix spi-gpio regression on active high CS
+Message-ID: <20190703105832.GS2793@sirena.org.uk>
+References: <20190702193959.11150-1-linus.walleij@linaro.org>
 MIME-Version: 1.0
-In-Reply-To: <20190703003018.75186-1-andriy.shevchenko@linux.intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Provags-ID: V03:K1:1nQ4ipN1AIatCG54zGzO1Mc/z+yBxvCgTXO1UEKRQRxdr4GrJFf
- dopC6PG2zE1+pvNMmbiPtfS/dQHoPFS0+118GNxRt6WasIagJrVC8XdX1r2yeQ5WtBOCLIj
- PUqYzHCtrOQpPK5NC7s/7IuBzfFi/l2taH85N8hupzIUxrkEJUnnp4j1RVEd9nJxorTDqsF
- t8W2o4vp0AHz4KjQh+lpw==
-X-Spam-Flag: NO
-X-UI-Out-Filterresults: notjunk:1;V03:K0:M8wlMSyVbXE=:PsmGlw/wsUyJES5XC/7H/N
- W9YO0o0my63r1phjrXtKV9cmbKBEJpyhYvBWSY1ffSTFPXYvyCba9+QGiVT0X1EKWjVTuwHOS
- WP1S9iK3PVDer1hWFkYjlCmpXR/Sdat+jMXX59I1AEWUYcZzl1sIbgKWPEMob30isGQfOFl42
- n4GpLiyeabTNPXfiuHVDA02QK7m4ZUcagIF1KOfpTyqSBZeJMChHEzVtqnfI6OHADJuPtDWPV
- 59Xzh27oZ0bkv9eFzsKa2gQEqbywroXaobMPuZfBmjh+5sxfwDwDmjk3zAemK2klqTwP6yxcr
- UI1V2s7ngRkl/E9PDWMWZLtxf+pG8dPLbn+M+IA69A/WihggfeXzpJZCPRinfFeJhBN1JCfcY
- 6de1VZQuU2+stagf5xXoxyooOE6Oai4A7Krk7Q6/aBtUSHV7b72uFWO6/n2kF5EvB0KF2sgQI
- rV+K9IR3VsJuTnrFusnJcRW8wvrXGCQdKu1w39jYlP0WqA/MCBOWTbrSXav2VQvLz8pkh5HYX
- /5mOgHpIPAWhSBJ3VxdeLdnqdHiJtDLSaSYY5l5YTceSS6YIN78D1IkvX9RupIrDrPrOaCFrg
- 4EkABJUD7X9wuv2uVkApI4rOOW5dj2LgXXwrlmHgkXNO8sYQBo1ZGhNCAt02IBzblGjPDbesn
- mfLgYuWdW9W9jBpZEsTutgTGuuQ0rxBjpNS0WWllIZoFrBV2vOG0UXQBtENOcqV5LjGtfLBQL
- i+m/FT1zdrI4wxW8kTMseeOLWnHiTJxQc4+hfOkavQM0nA00Rvp3tBTlQ50=
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="gXx2FYK2AghGE4Yq"
+Content-Disposition: inline
+In-Reply-To: <20190702193959.11150-1-linus.walleij@linaro.org>
+X-Cookie: This sentence no verb.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 03.07.19 02:30, Andy Shevchenko wrote:
-> By the fact byt_get_gpio_mux() returns a value of mux settings as
-> it is represented in hardware. Use defined macro instead of magic numbers
-> to clarify this.
 
-Reviewed-By: Enrico Weigelt <info@metux.net>
+--gXx2FYK2AghGE4Yq
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
--- 
-Enrico Weigelt, metux IT consult
-Free software and Linux embedded engineering
-info@metux.net -- +49-151-27565287
+On Tue, Jul 02, 2019 at 09:39:59PM +0200, Linus Walleij wrote:
+
+> Mark: I will apply this to the GPIO tree, so I think it is
+> safe for you to drop my revert of Andrey's patch once this
+> hits mainline. I will try to expediate it, I feel a bit
+> responsible.
+
+No worries, thanks for getting to the bottom of this!  Could you
+send a revert to me after the merge window if I forget to drop
+the patch?  I'll hold off on sending the current fix to Linus for
+now.
+
+--gXx2FYK2AghGE4Yq
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl0cilcACgkQJNaLcl1U
+h9A7Iwf/QvG7sh4qhzykROKDwQFEimlunpOneO5qS+x+cqL7y51XcywGLfhZqkCg
+qH3kyxZYwDVH6EcZvYyyR1wN5anAlDechz+dxlvWct2DmU30SaJyQtWzPAZL9osm
+dg1lZBtF8akZMhzHtnqh+HxMmDYUV+6ekaqpGlq1fH8QrcWUD9FOm7qqy/c6menl
+7zYzJ9dk2dl2uxFmD2NwvQsGdi1wbo6dy6I9sQSScJmwNmHvcIZEx9ptHnq93kIu
+1SZiB3TxE/XKM8ffHkeKuV7EeOGoapdsh/dxJs9gF4EWbFPqeuZfpcFFplpBX0BF
+v4qyXYv5/jfUskS0r0qISRTX13/7AQ==
+=ztuG
+-----END PGP SIGNATURE-----
+
+--gXx2FYK2AghGE4Yq--
