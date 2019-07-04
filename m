@@ -2,113 +2,80 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id EDAC95F6BF
-	for <lists+linux-gpio@lfdr.de>; Thu,  4 Jul 2019 12:40:53 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 315575F772
+	for <lists+linux-gpio@lfdr.de>; Thu,  4 Jul 2019 13:49:45 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727580AbfGDKki (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 4 Jul 2019 06:40:38 -0400
-Received: from mail-qt1-f195.google.com ([209.85.160.195]:35770 "EHLO
-        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727524AbfGDKkh (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 4 Jul 2019 06:40:37 -0400
-Received: by mail-qt1-f195.google.com with SMTP id d23so7553015qto.2;
-        Thu, 04 Jul 2019 03:40:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=J75O2ZYm/AIRp38Aj0T7xtVwqkjaGCkxGvM6r7neVEo=;
-        b=svb8eN7znP/WGdtT3CrWT/7VclWevgOLXH+ZMAI+DC5wM3BXGnt/u6lc/RE+8iDWfw
-         liiW9ZYL607XBo6qnD1lpUXoPDUdioXWw/QKbHmoNOlVMnjHgEf/OR6/CNQFnchp65cI
-         JFhf5SKwp/K1XSyb+i76xI+4IWvnfjFE41buuQVjjfCguncDCNHAvrkZzQpLGiJT0kgb
-         JoK7NVI67JRxQFX3fxfRan0bcYG0bOy7TqDV+5zuDFAuy2AeT/9MXv9mR4K7iAxBp8kn
-         b3wSRfUEgsQlsZoVJ7Fsfno3dfay2OdhPT3OkFpDa9U+3h+PoPnKO2Q7RJPE3CTqI7Q4
-         Mpdg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=J75O2ZYm/AIRp38Aj0T7xtVwqkjaGCkxGvM6r7neVEo=;
-        b=kB8Okg9geItCbpuDjE2ubpSUWnboA5Uk4fWU6OyQ/Qer94kWLp2S4vbXp4ypKrf34e
-         3h9YvbgFT/Cr+3NZ/5D9GROHwbizyXpPht618QWVsZGSDb2U0Yjkua9X2x3LNTqHfwmk
-         a3uwKZETgUjXOs1nvLhdP7iBgWjf44IIo1XzoCmJGJ1IsJo+AGj1ycZkBVwuc6jSEyd4
-         r6Kxxe/vBUBxyZ4UgfftFiDUkhqWQWoxIMaNl0gBRaJ2O8olPn5havmezPGWHur6akbb
-         ldTmnMpoGQlBEmpOmjmPZKG0lhbqL9+S9ft0HBCHMjK2A9oE5z9pr75WMGDku1IUuoXQ
-         Mngg==
-X-Gm-Message-State: APjAAAXwdh1AqRLjM+wSjesbzEYDFM1a9W7gfsZ3J5iqktuYXPddW3jU
-        1s8SR9b/8nnUfJpWAouXCLtatHOW
-X-Google-Smtp-Source: APXvYqz+yPk+2MUL4Psf0OlCLMqisNELh1oDhrrNJ46MfRnYY8Jr2unJvbo1n+PNfKtsECoRc7/Sdg==
-X-Received: by 2002:a0c:d1f0:: with SMTP id k45mr37041274qvh.69.1562236836520;
-        Thu, 04 Jul 2019 03:40:36 -0700 (PDT)
-Received: from [192.168.2.145] (ppp79-139-233-208.pppoe.spdop.ru. [79.139.233.208])
-        by smtp.googlemail.com with ESMTPSA id s7sm980077qtq.8.2019.07.04.03.40.32
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 04 Jul 2019 03:40:35 -0700 (PDT)
-Subject: Re: [PATCH V5 02/18] pinctrl: tegra: Add suspend and resume support
+        id S1727613AbfGDLto (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 4 Jul 2019 07:49:44 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:60732 "EHLO
+        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727574AbfGDLto (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 4 Jul 2019 07:49:44 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=gyCs/nA5eKBN9nIxIZxciZu6wf47aLszN/2CVvW3ASA=; b=v/D7JWrVzCjax5ynTEho8BdpN
+        O8UkyS0eKK7edyvD6uEz17IUpUa+OpnHeIZGfho5Yis65r6ZYaN4d4JVMozSszrB6k3HCPGlLVbqB
+        gadGw3VgFx/tWuDfuCfsbMDUQCbjXXVHLiX3aNUerKFqN0sMiitTArKXCde51rSawSJQU=;
+Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=ypsilon.sirena.org.uk)
+        by heliosphere.sirena.org.uk with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <broonie@sirena.org.uk>)
+        id 1hj0FC-0000fR-Ff; Thu, 04 Jul 2019 11:49:42 +0000
+Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
+        id E29D72742D99; Thu,  4 Jul 2019 12:49:41 +0100 (BST)
+Date:   Thu, 4 Jul 2019 12:49:41 +0100
+From:   Mark Brown <broonie@kernel.org>
 To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Sowjanya Komatineni <skomatineni@nvidia.com>,
-        "thierry.reding@gmail.com" <thierry.reding@gmail.com>,
-        Jon Hunter <jonathanh@nvidia.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <marc.zyngier@arm.com>,
-        Stefan Agner <stefan@agner.ch>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Peter De Schrijver <pdeschrijver@nvidia.com>,
-        Prashant Gaikwad <pgaikwad@nvidia.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        linux-clk <linux-clk@vger.kernel.org>,
+Cc:     linux-spi <linux-spi@vger.kernel.org>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        jckuo@nvidia.com, Joseph Lo <josephl@nvidia.com>, talho@nvidia.com,
-        linux-tegra@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Mikko Perttunen <mperttunen@nvidia.com>, spatra@nvidia.com,
-        Rob Herring <robh+dt@kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>
-References: <1561687972-19319-1-git-send-email-skomatineni@nvidia.com>
- <1561687972-19319-3-git-send-email-skomatineni@nvidia.com>
- <a262cbb3-845c-3ad1-16cc-375a24b9f7e9@gmail.com>
- <822867d6-4a4d-5f68-9b21-84a20d73c589@gmail.com>
- <CACRpkdYdCmT0ErTuewYbv7bPkjoFLrK9KSVuKVMkAXNQYAGV7g@mail.gmail.com>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <66b5e81b-d468-e2aa-7336-3d4854c234ab@gmail.com>
-Date:   Thu, 4 Jul 2019 13:40:30 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Andrey Smirnov <andrew.smirnov@gmail.com>
+Subject: Re: [PATCH] Revert "spi: gpio: Don't request CS GPIO in DT use-case"
+Message-ID: <20190704114941.GA4513@sirena.org.uk>
+References: <20190701172517.31641-1-linus.walleij@linaro.org>
+ <CACRpkdaUTvMJ3tbuA7moyLjn_+6QbfJwm3UhLxA1-nh+A5y_KA@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <CACRpkdYdCmT0ErTuewYbv7bPkjoFLrK9KSVuKVMkAXNQYAGV7g@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="AhhlLboLdkugWU4S"
+Content-Disposition: inline
+In-Reply-To: <CACRpkdaUTvMJ3tbuA7moyLjn_+6QbfJwm3UhLxA1-nh+A5y_KA@mail.gmail.com>
+X-Cookie: The revolution will not be televised.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-04.07.2019 10:31, Linus Walleij пишет:
-> On Sat, Jun 29, 2019 at 5:58 PM Dmitry Osipenko <digetx@gmail.com> wrote:
-> 
->> Oh, also what about GPIO-pinctrl suspend resume ordering .. is it okay that pinctrl
->> will be resumed after GPIO? Shouldn't a proper pin-muxing be selected at first?
-> 
-> Thierry sent some initial patches about this I think. We need to use
-> device links for this to work properly so he adds support for
-> linking the pinctrl and GPIO devices through the ranges.
-> 
-> For links between pin control handles and their consumers, see also:
-> 036f394dd77f pinctrl: Enable device link creation for pin control
-> c6045b4e3cad pinctrl: stmfx: enable links creations
-> 489b64d66325 pinctrl: stm32: Add links to consumers
-> 
-> I am using STM32 as guinea pig for this, consider adding links also
-> from the Tegra pinctrl. I might simply make these pinctrl consumer
-> to producer links default because I think it makes a lot sense.
 
-IIUC, currently the plan is to resume pinctrl *after* GPIO for Tegra210 [1]. But this
-contradicts to what was traditionally done for older Tegras where pinctrl was always
-resumed first and apparently it won't work well for the GPIO ranges as well. I think this
-and the other patchsets related to suspend-resume still need some more thought.
+--AhhlLboLdkugWU4S
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-[1] https://patchwork.kernel.org/patch/11012077/
+On Thu, Jul 04, 2019 at 09:00:17AM +0200, Linus Walleij wrote:
+> Hi Mark,
+>=20
+> the proper fix is now upstream in Torvald's tree so you can drop/revert
+> this patch.
+
+Great, thanks.
+
+--AhhlLboLdkugWU4S
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl0d59UACgkQJNaLcl1U
+h9DVGggAhOf9BX6fiO/I7j3sJPMmbRatr3ZmJg7CKL/9D7fuOd2QXAM/+ngmNuI2
+qKPLnNgSx/1QloSgMAdHHjnLruQPJJP7to6FiloKl40m67oygmHAznr+cWLlzDbk
+O4jPVV4sS/bmCBSxI3VCgVtVZXqojRQNkEulxyjo5AJDq9+Kt3rtbX2IOAijYHn2
+FsumJhxGNH1/5+4yaSmZG7E+f3TZ+CNwNi9ExnEqLnr3onAP9HeKp//3N3DQlbrh
+2/YGs9MGibxgbGvxk6l8T5ndMAOGhpjmFsHFu58qgv2JFWmK+0+Liw9EJ0eoFWyE
+X8+UYvov4FpZSvNOUZBVaKEv5eYjqw==
+=j8Jp
+-----END PGP SIGNATURE-----
+
+--AhhlLboLdkugWU4S--
