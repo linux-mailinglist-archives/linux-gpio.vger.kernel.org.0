@@ -2,54 +2,53 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 696CD5F3CD
-	for <lists+linux-gpio@lfdr.de>; Thu,  4 Jul 2019 09:34:43 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 11C6D5F3D1
+	for <lists+linux-gpio@lfdr.de>; Thu,  4 Jul 2019 09:35:52 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726085AbfGDHem (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 4 Jul 2019 03:34:42 -0400
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:37603 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725945AbfGDHem (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 4 Jul 2019 03:34:42 -0400
-Received: by mail-lf1-f66.google.com with SMTP id c9so1791681lfh.4
-        for <linux-gpio@vger.kernel.org>; Thu, 04 Jul 2019 00:34:41 -0700 (PDT)
+        id S1726199AbfGDHfv (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 4 Jul 2019 03:35:51 -0400
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:38654 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725920AbfGDHfv (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 4 Jul 2019 03:35:51 -0400
+Received: by mail-lf1-f65.google.com with SMTP id b11so3553869lfa.5
+        for <linux-gpio@vger.kernel.org>; Thu, 04 Jul 2019 00:35:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=3Hg/OzgYff2zZVyVZhRe3CSo4vz7vDcSjMj5u9XKRBc=;
-        b=fvw4InV7Xrh30ZZSoTB30kuoVn11+FBcGxu8IajJvWwcQPcAFRB8+Wb1fAbfsCP3Dd
-         i9ZXFeDK2fhOkMNlG1R9xRC1dYRODxk+c3ifPmqPvXcQ7TgpfpnJA9DJ149w2PGd1opE
-         bruSfRy6No3axplr2CN/Bo/cL64vAxZgfORvAUVtvCr0j1qxgXq6carH4QgxHzPcrjuJ
-         H+r1Kwelri9T2Q0irWD1ctZ48qB9thzhwhnncgEntj+u3G1IB5+nMueCD1re1HfPtwuM
-         gkp9DaJiYjJvxPJoFeP/rQNb/zvLtJ/uRnfdzglEwkw6lK882UI0Q0GC/Oatp2vb1TmC
-         8Wpg==
+        bh=skb5LCybXQHRXMU6OjavL+iyC8UWM2nZJNdVafsEZGU=;
+        b=jwlfKmPNxGZs8zcqzYdTuBfm11HSTs3AsI4pNJzktt8Wg3rNfaiX+rsmXpciUtwThM
+         xd0ueI8OEFz4kIP7ekpGmgjjL3n3ep2ogNHhV0sCP+Ch49N9YDDEJn2rt4BhrkWxmDqm
+         lIJcUjZclWEeO+W/0kskufD0eJI7m/F8TM9yqcdvv4313TtC7qjNnLRDru9PuAEdcq5j
+         tO+CFwTZYFvSjjMPazMFEYPRVp66yXzEGBJl/eTW1gg0TZ0+7lo1Km/yStwlkKRfybVc
+         4C90gFITFC41aNvC4z79xiNRsXdLdKosCuvhApdQ9xw53la8RSMmRMOCh0mZPqqabdJP
+         hJ5w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=3Hg/OzgYff2zZVyVZhRe3CSo4vz7vDcSjMj5u9XKRBc=;
-        b=ipg9/Ta8FgW3YFcVp0utwvKQn0LqhmN0Ahgps1E03BpPworNFJSt6Bd8AExy1gzO8+
-         GEYxU/ILn7WsknpbmtiWbWNpYt95ijcOc3evCPevgEbknHC4L5EEvsrS3bnsn1PLY4+I
-         kybMwn9cCiuIFItz7amak2WLymLf2eBcQGHcP40D3S6tawPLInLJTSxDimqybJj2uaHv
-         S88u9ZK5/Vhs/n2dVLL0I6XpK2w1ZlI/ycheMa+iB0Wtlep1W3x/q8yHNtBgZY1XAT+2
-         qn5jNv15msQGk344lRzJOq1UiHCcY4tPr6bQZCBPvviVA6fZkF5pTaq7GIQ/zCoLSPyp
-         /rrQ==
-X-Gm-Message-State: APjAAAWY/sCv2a+bSvP46ajIpHI6wH9M7kozvMCWdYgGRe6lKxNThyb7
-        SZnraQp1fDDevALjxm2/KFXiCmViEVSi3xvpuvD6Sg==
-X-Google-Smtp-Source: APXvYqz9jKSdQHqdcCLr4daSvcS7ZzdPvZymwRQWhwjjTbjz949nTsYJRG/zvKF2/lIB1eCk1XVePn0LFINzCWM3Tuk=
-X-Received: by 2002:ac2:5c42:: with SMTP id s2mr4234270lfp.61.1562225680360;
- Thu, 04 Jul 2019 00:34:40 -0700 (PDT)
+        bh=skb5LCybXQHRXMU6OjavL+iyC8UWM2nZJNdVafsEZGU=;
+        b=j4iDNTwCoe5yAXNMKI/T70RcwZbksGB1UHOXzfxTzTfAf/hF4BaTXfKsRCx4qeMSMd
+         +UP+3X/ppYqLAiYfW89FLw4TC8DIDBTcVtrdkXJCkC90rd0AHeZR3fTWasj606e0t7Re
+         e0N2ADEJ5fs3Ky3sN+J/NZFQi1/GQB8JxVoBjpmuxEv+CJ7GQb3fradc5yJ14mhJePzV
+         kZVPC3XArvxa2/MjJpGA9mvseGPHItZv5wVSi1mRkOrrnTehDCRTFOGPZp/UeUG7DL2+
+         TgKe5FlLuiCy4jy6R12DI0xvEgRU33BAGxQNIHt6xAbWC6fgQKLrnI0EquV+tWH/aaix
+         kUUg==
+X-Gm-Message-State: APjAAAUFuCwuLGuknIuDPfoVybTQfzI68nGE0dBzAvPzpkkD71K5hbaW
+        69PYmo4MtpnMf1ota+X4TtxNkCOcoOeLBQs9UgOOuw==
+X-Google-Smtp-Source: APXvYqyTvlqNDXXYJs40fHcHZAjgIK2KrVDPoFah8oL/0tZ8wYIjKqWgE36q48owGJY6iDSW03MKSlFppsyr9QEnM3Y=
+X-Received: by 2002:a19:6a01:: with SMTP id u1mr5288996lfu.141.1562225749043;
+ Thu, 04 Jul 2019 00:35:49 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190701142650.25122-1-geert+renesas@glider.be>
-In-Reply-To: <20190701142650.25122-1-geert+renesas@glider.be>
+References: <20190701142738.25219-1-geert+renesas@glider.be>
+In-Reply-To: <20190701142738.25219-1-geert+renesas@glider.be>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Thu, 4 Jul 2019 09:34:29 +0200
-Message-ID: <CACRpkdYRcmp=k=v8eQ9gjhSr13uoXQqCBKf=Fc8LWzKExhs_ZQ@mail.gmail.com>
-Subject: Re: [PATCH] gpiolib: Document new gpio_chip.init_valid_mask field
+Date:   Thu, 4 Jul 2019 09:35:37 +0200
+Message-ID: <CACRpkdbq9ruVK+Yo73x3rM_396nGSV3q99=iJWqdtbX2xAFnQw@mail.gmail.com>
+Subject: Re: [PATCH] gpiolib: Fix references to gpiod_[gs]et_*value_cansleep() variants
 To:     Geert Uytterhoeven <geert+renesas@glider.be>
 Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Ricardo Ribalda Delgado <ricardo.ribalda@gmail.com>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
@@ -58,13 +57,18 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Jul 1, 2019 at 4:26 PM Geert Uytterhoeven
+On Mon, Jul 1, 2019 at 4:27 PM Geert Uytterhoeven
 <geert+renesas@glider.be> wrote:
 
-> A new field init_valid_mask was added to struct gpio_chip, but it was
-> not documented.
+> Commit 372e722ea4dd4ca1 ("gpiolib: use descriptors internally") renamed
+> the functions to use a "gpiod" prefix, and commit 79a9becda8940deb
+> ("gpiolib: export descriptor-based GPIO interface") introduced the "raw"
+> variants, but both changes forgot to update the comments.
 >
-> Fixes: f8ec92a9f63b3b11 ("gpiolib: Add init_valid_mask exported function")
+> Readd a similar reference to gpiod_set_value(), which was accidentally
+> removed by commit 1e77fc82110ac36f ("gpio: Add missing open drain/source
+> handling to gpiod_set_value_cansleep()").
+>
 > Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
 Patch applied.
