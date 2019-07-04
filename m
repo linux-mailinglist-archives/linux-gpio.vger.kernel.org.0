@@ -2,52 +2,51 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id C7D2B5F3FD
-	for <lists+linux-gpio@lfdr.de>; Thu,  4 Jul 2019 09:41:42 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6095D5F403
+	for <lists+linux-gpio@lfdr.de>; Thu,  4 Jul 2019 09:44:21 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727116AbfGDHlm (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 4 Jul 2019 03:41:42 -0400
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:40344 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726199AbfGDHlm (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 4 Jul 2019 03:41:42 -0400
-Received: by mail-lj1-f196.google.com with SMTP id a21so5172019ljh.7
-        for <linux-gpio@vger.kernel.org>; Thu, 04 Jul 2019 00:41:40 -0700 (PDT)
+        id S1727205AbfGDHoS (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 4 Jul 2019 03:44:18 -0400
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:37130 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725945AbfGDHoS (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 4 Jul 2019 03:44:18 -0400
+Received: by mail-lj1-f195.google.com with SMTP id 131so5173063ljf.4
+        for <linux-gpio@vger.kernel.org>; Thu, 04 Jul 2019 00:44:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=JtSGWtPnsqSX1qy+qOE/bF3OjtUMWO0hzBLVZbI64kA=;
-        b=Gl0uZAl2rLycKWXswdE0hKAGnsELyqL2erOHGwEGn4LGDS69O/NYTzdXwx82qF6Mto
-         y+D5vAOBcYpiLzMNWlmakK71/25Q4lpoytjb/TbodJbl3Xs/FfdF3tvWM8+JGDY4nrmz
-         wW1QaHkN/H66xlJgGit1sPMJnTC66WcauYmUsUyEJo7LoQjMpX08T8MRjlP3hltZWzVD
-         S/cjA0JbKcAJnMyXKlmgiLxwDZozXFVD28SFoDHXHAYybPffSh6o+MWL8NQOiyd5uFa6
-         BrBnx07Xbb/KrXbEXW29rIP9T8XozdThfHEgiEwRtNqyJoPwK6finaLlN1m8VB/egY0J
-         iqpg==
+        bh=TpdCeLUoBh4DNHtAtSr77HOQTlACCI/6Pjsw5SZSdjg=;
+        b=wTuDj32P4i6zb27aRMtS65T3OIeBp5OCqxQ8bqEVrOCKQBzq0qeh0SPeMIohcNOSne
+         jfSd2pab1IdXLS2D1kjdAHRX/Gkn8tbC/b00lt2SJ/9bt4SmyV3jeJVysFrLJ3tLIxtB
+         WzRmxJ2z3oH98kCCcQNjQVn+bWP1onMMBzybF9yezab+Xqhzy2fIV/p9hTzraljDjp8W
+         rdD0FMiTt7dAaI5T0rZmdEjff/601jcVwFlcMu5N2mCMroPlOQfS5rzSxEejlIGVYGvT
+         DuvQLUWj/7zRJ99j2kUfyfX8NCUwv79jQ8HveklU4RT7vxzocCCRdWrZkeLQUs5saT7Z
+         h/8A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=JtSGWtPnsqSX1qy+qOE/bF3OjtUMWO0hzBLVZbI64kA=;
-        b=IwVWLgBPnOGcdsUEPSQvOF0pWBwiMp/ma/JPvNp3R3yUo9FOnweDl3wbq66ccFsH5m
-         aLBC8ik66Quybu+Sg3gXIsQU+/yH/sLgQHIeKzA0U9U54/KE2rihOan6ok3Z9h32p0Vk
-         ksVWV50kcG97RjOdXx7riaV0Iinw+V0aCXYcGlMr3ZAOiJJU+fS7PzZnqraFcXo86bQZ
-         l2kl0S233oA86EQXxIqEyyybHDryIAz/j5PbPkc60PVAXiRSglaxLlIvj6CeC5P/Z1Fo
-         bdvDvQTVhQIk3ntYK/K9AIsFz7dmeS4mRxVWufcA7NVKwsTofFuaNOfrDvJjqTN7jDTc
-         XRZg==
-X-Gm-Message-State: APjAAAX3U9ny5EItuy0exNns5CNtu0ql7govsGnWVi/bhMUywQ/bhqem
-        M2qXoSnLISCEkDwB0OmE+wdcxERVT3x+qwtizjx8tQ==
-X-Google-Smtp-Source: APXvYqxqI0SxqTCpnza6dJ3zLkQg0tGMx6p/W/BX79omMIjAQPchR7Hv2qy4lpBM6NGQKfImevFJRrvpmxEERxYge1g=
-X-Received: by 2002:a2e:a0d5:: with SMTP id f21mr24150394ljm.69.1562226100168;
- Thu, 04 Jul 2019 00:41:40 -0700 (PDT)
+        bh=TpdCeLUoBh4DNHtAtSr77HOQTlACCI/6Pjsw5SZSdjg=;
+        b=Iq56MlNj3qCFYJVGG/CoxuiRdAtgESc8kIRIZbdv7hXnV0V//NJVNVIT5IlDFuSHAa
+         RyNj7Cfc4d0ugJ9ZMk13Mz3Vy6n4OgtLT5sGh4geNaN8ymUuU8UNZNbypeWyawhD7oUV
+         Kx1S/tKuuYJ2NDvOaEMEuDVbPpp5IxNeEBeoF5kt737uCtNzgjLODESjKLAxn5C0Da2/
+         fVXT2B9JUdU+hbmVwFuBzFHyW3KQ6J2kFL+kMYskQgqH8vBXIA3djJymISIdZvKKb49b
+         WNlHy17ajq/6HHECnmnxsssMAWAHzzpMLlKxEolixeHakPToGVJvPPyC0TT6pMht1CcW
+         DRpA==
+X-Gm-Message-State: APjAAAUOeeE8J7X9HbHcxkHfPFxwfajZ+ku5f3gyWfeGxWv6mFiONy+m
+        zFi/Rj6k3TSxyCpo3mbo4Joyz5GuJVOYJ6h2mDoJiQ==
+X-Google-Smtp-Source: APXvYqwXEkssJqbTmDrqvNywyodc/3AMhglFknj69Veuy+PImsyE8rqZmPtOkLWguna6Qh+Z4KDTdg2glDqKSmMUx6Y=
+X-Received: by 2002:a2e:a0cf:: with SMTP id f15mr24023400ljm.180.1562226255809;
+ Thu, 04 Jul 2019 00:44:15 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190702223248.31934-1-martin.blumenstingl@googlemail.com> <20190702223248.31934-4-martin.blumenstingl@googlemail.com>
-In-Reply-To: <20190702223248.31934-4-martin.blumenstingl@googlemail.com>
+References: <20190702223248.31934-1-martin.blumenstingl@googlemail.com> <20190702223248.31934-5-martin.blumenstingl@googlemail.com>
+In-Reply-To: <20190702223248.31934-5-martin.blumenstingl@googlemail.com>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Thu, 4 Jul 2019 09:41:28 +0200
-Message-ID: <CACRpkdZDicvUNg6P5m1t4G4-7yX77sfdU_spGb19tRoNzVMsfw@mail.gmail.com>
-Subject: Re: [PATCH 3/4] gpio: stp-xway: get rid of the #include
- <lantiq_soc.h> dependency
+Date:   Thu, 4 Jul 2019 09:44:03 +0200
+Message-ID: <CACRpkda+f2o+S25dHFLV+1Mui0-=ShiBSp_8J0W-ptNxTRLW+Q@mail.gmail.com>
+Subject: Re: [PATCH 4/4] gpio: stp-xway: allow compile-testing
 To:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 Cc:     John Crispin <blogic@openwrt.org>,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>,
@@ -63,10 +62,8 @@ X-Mailing-List: linux-gpio@vger.kernel.org
 On Wed, Jul 3, 2019 at 12:33 AM Martin Blumenstingl
 <martin.blumenstingl@googlemail.com> wrote:
 
-> Use the xway_stp_{r,w}32 helpers in xway_stp_w32_mask instead of relying
-> on ltq_{r,w}32 from the architecture specific <lantiq_soc.h>.
-> This will allow the driver to be compile-tested on all architectures
-> that support MMIO.
+> Enable compile-testing of the stp-xway GPIO driver now that it does not
+> depend on any architecture specific includes anymore.
 >
 > Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 
