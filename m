@@ -2,76 +2,65 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 8331D5F2CC
-	for <lists+linux-gpio@lfdr.de>; Thu,  4 Jul 2019 08:27:54 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E53FB5F327
+	for <lists+linux-gpio@lfdr.de>; Thu,  4 Jul 2019 09:00:31 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726120AbfGDG1u (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 4 Jul 2019 02:27:50 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:37182 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725879AbfGDG1u (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Thu, 4 Jul 2019 02:27:50 -0400
-Received: from DGGEMS404-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id E32053DD455490766B38;
-        Thu,  4 Jul 2019 14:27:47 +0800 (CST)
-Received: from localhost (10.133.213.239) by DGGEMS404-HUB.china.huawei.com
- (10.3.19.204) with Microsoft SMTP Server id 14.3.439.0; Thu, 4 Jul 2019
- 14:27:38 +0800
-From:   YueHaibing <yuehaibing@huawei.com>
-To:     <dvhart@infradead.org>, <andy@infradead.org>,
-        <linus.walleij@linaro.org>, <rdunlap@infradead.org>,
-        <info@metux.net>
-CC:     <linux-kernel@vger.kernel.org>,
-        <platform-driver-x86@vger.kernel.org>,
-        <linux-gpio@vger.kernel.org>, YueHaibing <yuehaibing@huawei.com>
-Subject: [PATCH] platform/x86: Fix PCENGINES_APU2 Kconfig warning
-Date:   Thu, 4 Jul 2019 14:27:25 +0800
-Message-ID: <20190704062725.50400-1-yuehaibing@huawei.com>
-X-Mailer: git-send-email 2.10.2.windows.1
+        id S1726139AbfGDHAa (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 4 Jul 2019 03:00:30 -0400
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:46753 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726087AbfGDHAa (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 4 Jul 2019 03:00:30 -0400
+Received: by mail-lf1-f66.google.com with SMTP id z15so3448140lfh.13
+        for <linux-gpio@vger.kernel.org>; Thu, 04 Jul 2019 00:00:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=nFhFhaoBN7wHqqVu4wu7F+jb79uqvxMnu2JV5e2t1u8=;
+        b=UMNElB82eIqxhJ5JedFraCufuiuVKtZYaQlCegRi2TjvR+KJNr/g+f8JkxSoF1nja4
+         TiJzkdRBAXX2p08TfnVilM5MD9Gfy8xXwP9+88cmb+ZsLxOIcq9K+5OJh9AXe0wQEsAT
+         r8hx9ciWk9LZr1wYgI/uShZ9RDiEXswK5bBvpZQSBN6QabLfYY7jG4EoaZwvM8mHwIYb
+         0PiVv8r7cNKA/o5stbrmIAtSBO75wZZz9H8lS1t2NZ48VtY3RSyJ1/gWyiWa+qifchji
+         G1qeoOCa6TLsaCXaPg/HmZAF0tttOJN161Efiwmiq3R/vXSTGoRX44wTsCDIfLUFEy9u
+         i+SQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=nFhFhaoBN7wHqqVu4wu7F+jb79uqvxMnu2JV5e2t1u8=;
+        b=uQ+MoQtTp9hg7lJFsn61t0hHOQRj0zJRuwSdvpXhy3YrSCXtzqjJzuSqrfcF5axR1L
+         Mc4hP9BNaeAuy2etV2C1L3vbB1RizhNmolcAAwWcOIW468fQPqzGnI5sZzrMcCQPuEE1
+         TqJzRhjO3AA1pl5VvfeAILVcQ0p81GOT+1cQJ726nX85TL+5c9Tqp8X2az7xdhJvto+I
+         pJDIAwDFfKyfqm+9A/Cbp62opmTY/IzK8ZSryML6oaF2UmJ5O8XDsWfGmhfVypM3w4vd
+         /A0KkNToMy6qXQBLvJr8An2oPCuhbGuUcGvLyM4UB/8pEodOuS5sJyD/n3dleZXta9RT
+         SJ9g==
+X-Gm-Message-State: APjAAAUCIo12JChzg684zBNVnJ/Utm5PNKNjj/L57cHCoEbR3JTBf5tz
+        E3Qv4Aa0pTncnDaypVicHfDbyCCBw+8AuhaIXJPSzg==
+X-Google-Smtp-Source: APXvYqxECK5pts7QUjN8OM+gDIMSkQ+1U5Taq40OHzXtr54kM6ak66pDTcZS3KSfoXOJYJt9pa3rzeEE9OZm+UyocGg=
+X-Received: by 2002:a19:e006:: with SMTP id x6mr215391lfg.165.1562223628546;
+ Thu, 04 Jul 2019 00:00:28 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.133.213.239]
-X-CFilter-Loop: Reflected
+References: <20190701172517.31641-1-linus.walleij@linaro.org>
+In-Reply-To: <20190701172517.31641-1-linus.walleij@linaro.org>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Thu, 4 Jul 2019 09:00:17 +0200
+Message-ID: <CACRpkdaUTvMJ3tbuA7moyLjn_+6QbfJwm3UhLxA1-nh+A5y_KA@mail.gmail.com>
+Subject: Re: [PATCH] Revert "spi: gpio: Don't request CS GPIO in DT use-case"
+To:     Mark Brown <broonie@kernel.org>,
+        linux-spi <linux-spi@vger.kernel.org>
+Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Andrey Smirnov <andrew.smirnov@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Fix Kconfig warning for PCENGINES_APU2 symbol:
+Hi Mark,
 
-WARNING: unmet direct dependencies detected for GPIO_AMD_FCH
-  Depends on [n]: GPIOLIB [=n] && HAS_IOMEM [=y]
-  Selected by [y]:
-  - PCENGINES_APU2 [=y] && X86 [=y] && X86_PLATFORM_DEVICES [=y] && INPUT [=y] && INPUT_KEYBOARD [=y] && LEDS_CLASS [=y]
+the proper fix is now upstream in Torvald's tree so you can drop/revert
+this patch.
 
-WARNING: unmet direct dependencies detected for KEYBOARD_GPIO_POLLED
-  Depends on [n]: !UML && INPUT [=y] && INPUT_KEYBOARD [=y] && GPIOLIB [=n]
-  Selected by [y]:
-  - PCENGINES_APU2 [=y] && X86 [=y] && X86_PLATFORM_DEVICES [=y] && INPUT [=y] && INPUT_KEYBOARD [=y] && LEDS_CLASS [=y]
-
-Add GPIOLIB dependency to fix it.
-
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Fixes: f8eb0235f659 ("x86: pcengines apuv2 gpio/leds/keys platform driver")
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
----
- drivers/platform/x86/Kconfig | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
-index 8c8bd45..2409d26 100644
---- a/drivers/platform/x86/Kconfig
-+++ b/drivers/platform/x86/Kconfig
-@@ -1322,7 +1322,7 @@ config HUAWEI_WMI
- 
- config PCENGINES_APU2
- 	tristate "PC Engines APUv2/3 front button and LEDs driver"
--	depends on INPUT && INPUT_KEYBOARD
-+	depends on INPUT && INPUT_KEYBOARD && GPIOLIB
- 	depends on LEDS_CLASS
- 	select GPIO_AMD_FCH
- 	select KEYBOARD_GPIO_POLLED
--- 
-2.7.4
-
-
+Yours,
+Linus Walleij
