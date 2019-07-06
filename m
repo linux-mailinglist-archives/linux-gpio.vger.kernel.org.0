@@ -2,87 +2,85 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 727F66108E
-	for <lists+linux-gpio@lfdr.de>; Sat,  6 Jul 2019 13:43:15 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DF11E610D4
+	for <lists+linux-gpio@lfdr.de>; Sat,  6 Jul 2019 15:34:35 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726177AbfGFLnN (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sat, 6 Jul 2019 07:43:13 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:43394 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726023AbfGFLnN (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sat, 6 Jul 2019 07:43:13 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Subject:Cc:To:
-        From:Date:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=h4V3ZBI0FoiW9U4A7MoCEA3P8Nxtu03FgBYGvwN2wds=; b=dZWNuWG7t17scVwtDp0hcELzP
-        7FuWeX0o1hkpcP8DTnZBpv6YgADHytOoYFCbz5md5XR9RmiXkUI4P+Ur1+qi3wFffcM5UQMx0UZG7
-        zZ0IK5/xT9VlTU8+3hBxHv7AXatlkDMxvIFy25hDjxYn9z+AIDXp0Uhl3iOIEk7gdiHqneLCYhF3q
-        5NPHERrSRvyvWG0EtDfVqWp6EGbshR6kyMgzZfMNkNHfK5VjfEREeDJg5Gvb62k1knnCwhuqXUAF+
-        8mfU036WJ8o369L4yDJ5h6OBCT7Q9krOnXb+u+02wq5SpvFTqYhGmdc39Amo4PdvibPDujGEI6w5U
-        OmnRQnm+g==;
-Received: from 177.205.70.5.dynamic.adsl.gvt.net.br ([177.205.70.5] helo=coco.lan)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hjj5y-0000yv-Uf; Sat, 06 Jul 2019 11:43:11 +0000
-Date:   Sat, 6 Jul 2019 08:43:05 -0300
-From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        Mauro Carvalho Chehab <mchehab@infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>, Harry Wei <harryxiyou@gmail.com>,
-        Alex Shi <alex.shi@linux.alibaba.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>
-Subject: Re: [PATCH 39/39] docs: gpio: add sysfs interface to the
- admin-guide
-Message-ID: <20190706084305.010f2d77@coco.lan>
-In-Reply-To: <CACRpkdbBA612W0x6Y-dwe3E4dhH2ospmn+m2YJ8Sh_Um6XGYhA@mail.gmail.com>
-References: <cover.1561724493.git.mchehab+samsung@kernel.org>
-        <1ecff14ec37c0c434f003d93c4b86b1cd3dac834.1561724493.git.mchehab+samsung@kernel.org>
-        <CACRpkdbBA612W0x6Y-dwe3E4dhH2ospmn+m2YJ8Sh_Um6XGYhA@mail.gmail.com>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+        id S1726177AbfGFNef (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sat, 6 Jul 2019 09:34:35 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:46667 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726065AbfGFNef (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sat, 6 Jul 2019 09:34:35 -0400
+Received: by mail-pf1-f194.google.com with SMTP id c73so799516pfb.13
+        for <linux-gpio@vger.kernel.org>; Sat, 06 Jul 2019 06:34:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=2T6CvqzI1H9VaIH3rEjm5s4R95w0LQDCU4vj4GJ8N1E=;
+        b=EKeg0KQfzrM/UrTsQvyA3fBIEP95gPCFq0LX06Z3A66wYcPo2Ec9XsDfYGs5QAmXfx
+         aPft/muTdH/8Z02dUrLxf/dv4h5yp/FwxNhHmfkDdR6AVoNErqET1NNa32ypyz4BKwOn
+         UZy2urj87e6XLNV5NjaM0EMy75xaoBU2hjM7xbrTFr1j3du2WUn9VWGAnIDoGZSNZxjA
+         MnqE8gh3tbKdd5++JHth4lELOVuT2bKVZCpOslGswBg9xEJ0himQ5sUxyB/bzdqxBnnN
+         3H6jdK9OHdqgoVx0c0VAGtH0JsG5+Kustntft+fq+xrQ94ZIgNU7dWViSW4u8PK/z7Md
+         suZQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=2T6CvqzI1H9VaIH3rEjm5s4R95w0LQDCU4vj4GJ8N1E=;
+        b=ssPrxEhwFReuWxsGhr+hzqW9IQMi/Ht+cUTEn1S5YN0WN3coF1VhfX2Uk0GeNRmQN7
+         96NdsnJ0vBd+tPskxuUFQLNvMe9nKrvYD5QO8L+6alyYAXvYS+urn9h72ZGIfbFRdSa1
+         eBJ01VS+LW8VmVDwtcjKp1yS++p4/HPHakaZhCFpvBBWHpyyJCidC6ZUTYL6Z+sF6hoY
+         N8XdO/HrhGxfne4iimWOQPHTY0OzYmJCoODzxD3XSyVxicejZIZ5q7erreXjo+kqhiC3
+         uL6aUTODOcWScgXshWW6embtfXIFrGybarbUiNQ6ZI0DEidpIhY/UQghqOB51xHVrtkc
+         AfvA==
+X-Gm-Message-State: APjAAAUGSlZvr49riEkJryDz0gH1+HNlBFsdVNeJThWZ4Jvp+FGTO23v
+        jdrgFxIprf5O+ybSYwIb1Eo=
+X-Google-Smtp-Source: APXvYqyF+oo1RsJ58Hx0mLzxQw20UbvAY5s7MuXeOcnjftnAriITpavNI84AsfeBUw61LuDsWPJlRg==
+X-Received: by 2002:a17:90a:9a83:: with SMTP id e3mr11538725pjp.105.1562420074824;
+        Sat, 06 Jul 2019 06:34:34 -0700 (PDT)
+Received: from localhost.localdomain ([122.163.64.117])
+        by smtp.gmail.com with ESMTPSA id b36sm25390035pjc.16.2019.07.06.06.34.32
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Sat, 06 Jul 2019 06:34:34 -0700 (PDT)
+From:   Nishka Dasgupta <nishkadg.linux@gmail.com>
+To:     linus.walleij@linaro.org, bgolaszewski@baylibre.com,
+        linux-gpio@vger.kernel.org
+Cc:     Nishka Dasgupta <nishkadg.linux@gmail.com>
+Subject: [PATCH] gpio: gpiolib-of.c: Add of_node_put() before break
+Date:   Sat,  6 Jul 2019 19:04:22 +0530
+Message-Id: <20190706133422.3372-1-nishkadg.linux@gmail.com>
+X-Mailer: git-send-email 2.19.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Em Wed, 3 Jul 2019 10:44:38 +0200
-Linus Walleij <linus.walleij@linaro.org> escreveu:
+Each iteration of for_each_child_of_node puts the previous node, but in
+the case of a break from the middle of the loop, there is no put, thus
+causing a memory leak. Hence add an of_node_put before the break.
+Issue found with Coccinelle.
 
-> On Fri, Jun 28, 2019 at 2:30 PM Mauro Carvalho Chehab
-> <mchehab+samsung@kernel.org> wrote:
-> 
-> > While this is stated as obsoleted, the sysfs interface described
-> > there is still valid, and belongs to the admin-guide.
-> >
-> > Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>  
-> 
-> This doesn't apply to my tree because of dependencies in the
-> index 
+Signed-off-by: Nishka Dasgupta <nishkadg.linux@gmail.com>
+---
+ drivers/gpio/gpiolib-of.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-Yeah, this /39 patch series heavily touch the index files.
-Better to merge them altogether.
+diff --git a/drivers/gpio/gpiolib-of.c b/drivers/gpio/gpiolib-of.c
+index aec7bd86ae7e..c9325efc1783 100644
+--- a/drivers/gpio/gpiolib-of.c
++++ b/drivers/gpio/gpiolib-of.c
+@@ -154,6 +154,7 @@ static void of_gpio_flags_quirks(struct device_node *np,
+ 							of_node_full_name(child));
+ 					*flags |= OF_GPIO_ACTIVE_LOW;
+ 				}
++				of_node_put(child);
+ 				break;
+ 			}
+ 		}
+-- 
+2.19.1
 
-> so I guess it's best if you merge it:
-> Acked-by: Linus Walleij <linus.walleij@linaro.org>
-
-Thanks!
-Mauro
-
-> 
-> Yours,
-> Linus Walleij
-
-
-
-Thanks,
-Mauro
