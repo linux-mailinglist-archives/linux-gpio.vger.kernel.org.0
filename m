@@ -2,100 +2,87 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 78E5A60D61
-	for <lists+linux-gpio@lfdr.de>; Fri,  5 Jul 2019 23:56:08 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 727F66108E
+	for <lists+linux-gpio@lfdr.de>; Sat,  6 Jul 2019 13:43:15 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726177AbfGEV4G (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 5 Jul 2019 17:56:06 -0400
-Received: from mail-lf1-f67.google.com ([209.85.167.67]:38390 "EHLO
-        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727390AbfGEV4F (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 5 Jul 2019 17:56:05 -0400
-Received: by mail-lf1-f67.google.com with SMTP id h28so2828583lfj.5
-        for <linux-gpio@vger.kernel.org>; Fri, 05 Jul 2019 14:56:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=XgKC08iiEaNapEt8oecESiRwrLkTQTJmIfIX4GB6LAo=;
-        b=MGDGDqvlWi1VmpjxiAjxE8n12n9Zt/Hu1m/27IujOA15048scaVNqKGwFrfcu5/97S
-         arY+icppvf6BGGkP3fZXw4APZBKgnCVYTwzXU7pQAKIhBESuKgT0CMHHskpH0VAn0xjq
-         dGeK5Czy7CocvUPvqAgQyCl3l7yc7SOJb7BbNSAkPjvwa83cELO0xt0Bt5IZOFgw1cQH
-         MNyRr002c46SDSVziYSlDsQguBEwJib/Y/ApMu+wJhLo6Kt/o2EvPJhhsjTm2eJMH8O0
-         e8DtWK5V+f4y/bZm36kxr4mtv2niMywmiF8DaC/UOyH9CIhkAhtH6Z9S2i/TQIyP5nt8
-         UW5Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=XgKC08iiEaNapEt8oecESiRwrLkTQTJmIfIX4GB6LAo=;
-        b=EjK9ZzHYbje2QHDE/HndD4Him+QVyxJ7TAFVSMhDl12BG0r8Sz/50Li5M/Dn73y2KN
-         LxuLxj9EqH3e45bvlfQNqavih7GFx+ER3iyVx/6OXxNqh0C61om1vNdZgU6kdtjxI2ol
-         G12jKEC/iGJzUt1Jxs7+SWHu1W8Qb/7tn+pZDRos+pNKfnHzfjNd5L7A9nZ0f1J+wysq
-         KXpEW4Hh9Okl1VbBjp8RwpnlH/6rwefBxSft0bHjtTUwUx571Gb0Lv6ehiVFXt37omfm
-         zmYWI7nD3QIvkgNhyx3mZmY4UzcMqVeZRnYVMH49+p7jfWFqK5hXLinSe0RsBOr7vNvA
-         UXWA==
-X-Gm-Message-State: APjAAAUACrfc/odPNiqQnO96Jiw74aJJEZFKgL+++1AhzhOFkF3dDoK0
-        yOlkQkDewfpaI07MCQTKiW8urRW0CMsXdnnaFyXYFQ==
-X-Google-Smtp-Source: APXvYqwMkXMyOGNxusvNtzdRCvnI5J43hplKIhDlLunGWI5KYF1VSpVsFZX9oMXvfjTIHq2L2mfIqHeqxPVAqPcbsK8=
-X-Received: by 2002:ac2:4891:: with SMTP id x17mr3096454lfc.60.1562363762981;
- Fri, 05 Jul 2019 14:56:02 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190704042027.18966-1-chris.packham@alliedtelesis.co.nz>
-In-Reply-To: <20190704042027.18966-1-chris.packham@alliedtelesis.co.nz>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Fri, 5 Jul 2019 23:55:51 +0200
-Message-ID: <CACRpkdbWWWhQ5V5tc0FkQSx80ZXZ+ki-mn9Cc_Vm-jOwVu0R3A@mail.gmail.com>
-Subject: Re: [PATCH v2] gpiolib: Preserve desc->flags when setting state
-To:     Chris Packham <chris.packham@alliedtelesis.co.nz>
-Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Ricardo Ribalda Delgado <ricardo.ribalda@gmail.com>,
+        id S1726177AbfGFLnN (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sat, 6 Jul 2019 07:43:13 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:43394 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726023AbfGFLnN (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sat, 6 Jul 2019 07:43:13 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Subject:Cc:To:
+        From:Date:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=h4V3ZBI0FoiW9U4A7MoCEA3P8Nxtu03FgBYGvwN2wds=; b=dZWNuWG7t17scVwtDp0hcELzP
+        7FuWeX0o1hkpcP8DTnZBpv6YgADHytOoYFCbz5md5XR9RmiXkUI4P+Ur1+qi3wFffcM5UQMx0UZG7
+        zZ0IK5/xT9VlTU8+3hBxHv7AXatlkDMxvIFy25hDjxYn9z+AIDXp0Uhl3iOIEk7gdiHqneLCYhF3q
+        5NPHERrSRvyvWG0EtDfVqWp6EGbshR6kyMgzZfMNkNHfK5VjfEREeDJg5Gvb62k1knnCwhuqXUAF+
+        8mfU036WJ8o369L4yDJ5h6OBCT7Q9krOnXb+u+02wq5SpvFTqYhGmdc39Amo4PdvibPDujGEI6w5U
+        OmnRQnm+g==;
+Received: from 177.205.70.5.dynamic.adsl.gvt.net.br ([177.205.70.5] helo=coco.lan)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1hjj5y-0000yv-Uf; Sat, 06 Jul 2019 11:43:11 +0000
+Date:   Sat, 6 Jul 2019 08:43:05 -0300
+From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        Mauro Carvalho Chehab <mchehab@infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>, Harry Wei <harryxiyou@gmail.com>,
+        Alex Shi <alex.shi@linux.alibaba.com>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>
+Subject: Re: [PATCH 39/39] docs: gpio: add sysfs interface to the
+ admin-guide
+Message-ID: <20190706084305.010f2d77@coco.lan>
+In-Reply-To: <CACRpkdbBA612W0x6Y-dwe3E4dhH2ospmn+m2YJ8Sh_Um6XGYhA@mail.gmail.com>
+References: <cover.1561724493.git.mchehab+samsung@kernel.org>
+        <1ecff14ec37c0c434f003d93c4b86b1cd3dac834.1561724493.git.mchehab+samsung@kernel.org>
+        <CACRpkdbBA612W0x6Y-dwe3E4dhH2ospmn+m2YJ8Sh_Um6XGYhA@mail.gmail.com>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Chris,
+Em Wed, 3 Jul 2019 10:44:38 +0200
+Linus Walleij <linus.walleij@linaro.org> escreveu:
 
-thanks for your patch!
+> On Fri, Jun 28, 2019 at 2:30 PM Mauro Carvalho Chehab
+> <mchehab+samsung@kernel.org> wrote:
+> 
+> > While this is stated as obsoleted, the sysfs interface described
+> > there is still valid, and belongs to the admin-guide.
+> >
+> > Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>  
+> 
+> This doesn't apply to my tree because of dependencies in the
+> index 
 
-On Thu, Jul 4, 2019 at 6:21 AM Chris Packham
-<chris.packham@alliedtelesis.co.nz> wrote:
+Yeah, this /39 patch series heavily touch the index files.
+Better to merge them altogether.
 
-> desc->flags may already have values set by of_gpiochip_add() so make
-> sure that this isn't undone when setting the initial direction.
->
-> Fixes: 3edfb7bd76bd1cba ("gpiolib: Show correct direction from the beginning")
-> Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
-> ---
->
-> Notes:
->     Changes in v2:
->     - add braces to avoid ambiguious else warning
+> so I guess it's best if you merge it:
+> Acked-by: Linus Walleij <linus.walleij@linaro.org>
 
-This is almost the solution!
+Thanks!
+Mauro
 
-> -               if (chip->get_direction && gpiochip_line_is_valid(chip, i))
-> -                       desc->flags = !chip->get_direction(chip, i) ?
-> -                                       (1 << FLAG_IS_OUT) : 0;
-> -               else
-> -                       desc->flags = !chip->direction_input ?
-> -                                       (1 << FLAG_IS_OUT) : 0;
-> +               if (chip->get_direction && gpiochip_line_is_valid(chip, i)) {
-> +                       if (!chip->get_direction(chip, i))
-> +                               set_bit(FLAG_IS_OUT, &desc->flags);
+> 
+> Yours,
+> Linus Walleij
 
-You need to clear_bit() in the reverse case. We just learned we can't
-assume anything about the flags here, like just assign them.
 
-> +               } else {
-> +                       if (!chip->direction_input)
-> +                               set_bit(FLAG_IS_OUT, &desc->flags);
 
-Same here.
-
-Yours,
-Linus Walleij
+Thanks,
+Mauro
