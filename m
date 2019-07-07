@@ -2,168 +2,157 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 684996137C
-	for <lists+linux-gpio@lfdr.de>; Sun,  7 Jul 2019 04:31:49 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 978AF6146E
+	for <lists+linux-gpio@lfdr.de>; Sun,  7 Jul 2019 10:10:13 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726974AbfGGCbq (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sat, 6 Jul 2019 22:31:46 -0400
-Received: from conuserg-10.nifty.com ([210.131.2.77]:37340 "EHLO
-        conuserg-10.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726869AbfGGCbq (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sat, 6 Jul 2019 22:31:46 -0400
-Received: from grover.flets-west.jp (softbank126026094249.bbtec.net [126.26.94.249]) (authenticated)
-        by conuserg-10.nifty.com with ESMTP id x672V2Y2005347;
-        Sun, 7 Jul 2019 11:31:02 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-10.nifty.com x672V2Y2005347
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1562466662;
-        bh=96sCi4Xhf5ToirAMAVRIfkn1VYysxqZV7yw6UAwTGuM=;
-        h=From:To:Cc:Subject:Date:From;
-        b=MMJIL9mZv3SUsXX9VzDhRPbVmvTjRG/MTHgrsQaIjjml9OcFQSGyARcWjrLMR/2xT
-         LP7TkuY9WWJnbrPkUWWvFkjdP4TOmnOHI+7b6KsuOOHCo4m/GHFxB4iMJGK03UMAZk
-         jHyo58czIN+sMAUN3CdJXy09XfyYs98y7aAeJdkoLJeOQoKtSyuu0CiyRIkxt3v10d
-         gqcHBf/hfw91Ltin5nqIJqLR1tRqsadlua6fuhPBptwmLB35w4TyaxYyxizX2DnR+V
-         1C7Li5xpZGEszbgZIYqUY7nEDt8Zcb1ydnuZZAzwoBuunntttMsMNYcBzJXIO9uMjp
-         BpTYm85cWz1Xw==
-X-Nifty-SrcIP: [126.26.94.249]
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-To:     linux-gpio@vger.kernel.org,
-        Linus Walleij <linus.walleij@linaro.org>
-Cc:     Masahiro Yamada <yamada.masahiro@socionext.com>,
+        id S1726325AbfGGIKM (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sun, 7 Jul 2019 04:10:12 -0400
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:43103 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727127AbfGGIKM (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sun, 7 Jul 2019 04:10:12 -0400
+Received: by mail-lf1-f66.google.com with SMTP id c19so3218555lfm.10
+        for <linux-gpio@vger.kernel.org>; Sun, 07 Jul 2019 01:10:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Og+1ZMEbhyV3WkQcVL8uCE7LlGWe+B5LDW/MNApWX1Y=;
+        b=S1Ri51ACwXiJMsz2WwUSg2J/xsP0BTp5sA8ch2iWa1+lHQrGaK1Y+Jwh1LDGzxbZaL
+         L7MNooFvJq4ZjNqhtLqpIjGn+/wwp4r3BR0/mG63AZCsix8oJTVLLEPgZG1yFxyEV5Fo
+         UIsrlNiop6OhKKnltnEi+bkxLXCDkI3Rear1Ry0JaJ4Pz9fO6y+avnY45+1gGOAYTYk5
+         2hM8/bs/AOG7rRnhEqn0/Tu+HrF0cLop37FrpHnFslu0VukxToPHqZ1tuIQEyE2w1ny5
+         ofMA+mkcAsf4Y22/l56JbnSeX6O8Pct3X+uu5A1tznXkxy5HRYIVSe+Eo8uBz/odh718
+         MW1g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Og+1ZMEbhyV3WkQcVL8uCE7LlGWe+B5LDW/MNApWX1Y=;
+        b=Q0clLgv+rwu8A9GGwbng/gZ2iztFEzhT7+jpKP/UnVDBRrQl/kkKNBQSOYfg/HlnBH
+         EdsmYAX2o35piehkO7hbbnh2Ph/K3Wf6kn48ZM9yPEjhHR/AzXDBlclR8sI+TK94IfGW
+         v9NY3xuuhFBauplrpOXgtmUJ+yzgYQogkreuvn52047O1tIQP0gQ2JzkejQCv35NHv/G
+         EmKzJYEeZg7UX0u5wqZKJm+xWUDM6rF4bx9TYNEkH8ecXwrbvRHYLjVf83qyNIq8Yo8y
+         RK3fpr+tAN/Z9hhlazLnJ75TH9jFPA92xKprtHdlbQ8ArbqgZ4dlGJZ6Nlsk3TAnAN9J
+         o2ng==
+X-Gm-Message-State: APjAAAVcFQlmNslDZrMfu7v6FxxYFDZVfGWvFxCkctUnc3jMIVMAMjCp
+        9jKLR74Vbq1U49zAEdNQXgz/7uZswIPLgf+L/b00lA==
+X-Google-Smtp-Source: APXvYqxoHHmUVZdcgQBEOQn+LeoqbK4jG7rRaLTFboV1selGXXe7TJPonCkYixwGCn7jRaj0WJKy6ko1zRXlE/GqdJs=
+X-Received: by 2002:a19:7616:: with SMTP id c22mr5869043lff.115.1562487010498;
+ Sun, 07 Jul 2019 01:10:10 -0700 (PDT)
+MIME-Version: 1.0
+References: <20190624132531.6184-1-linus.walleij@linaro.org> <20190707014620.GA9690@onstation.org>
+In-Reply-To: <20190707014620.GA9690@onstation.org>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Sun, 7 Jul 2019 10:09:58 +0200
+Message-ID: <CACRpkdY7ydVi90JpNKJy2nPXxm0N2Ji5PmQu1gWbmifFnbpFYA@mail.gmail.com>
+Subject: Re: [PATCH 1/4 v1] gpio: Add support for hierarchical IRQ domains
+To:     Brian Masney <masneyb@onstation.org>
+Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] gpio: remove less important #ifdef around declarations
-Date:   Sun,  7 Jul 2019 11:30:37 +0900
-Message-Id: <20190707023037.21496-1-yamada.masahiro@socionext.com>
-X-Mailer: git-send-email 2.17.1
+        Thomas Gleixner <tglx@linutronix.de>,
+        Marc Zyngier <marc.zyngier@arm.com>,
+        Lina Iyer <ilina@codeaurora.org>,
+        Jon Hunter <jonathanh@nvidia.com>,
+        Sowjanya Komatineni <skomatineni@nvidia.com>,
+        Bitan Biswas <bbiswas@nvidia.com>, linux-tegra@vger.kernel.org,
+        David Daney <david.daney@cavium.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Thierry Reding <treding@nvidia.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-The whole struct/function declarations in this header are surrounded
-by #ifdef.
+On Sun, Jul 7, 2019 at 3:46 AM Brian Masney <masneyb@onstation.org> wrote:
 
-As far as I understood, the motivation of doing so is probably to break
-the build earlier if a driver misses to select or depend on correct
-CONFIG options in Kconfig.
+> I got this working with spmi-gpio with two additional changes. See below
+> for details. Hopefully I'll have time tomorrow evening (GMT-4) to finish
+> cleaning up what I have so I can send out my series.
 
-Since commit 94bed2a9c4ae ("Add -Werror-implicit-function-declaration")
-no one cannot call functions that have not been declared.
+Awesome! No hurry because it is v5.4 material at this point but I'm
+hoping to get to something you, Lina and Thierry can all use for early
+merge and smoke test.
 
-So, I see some benefit in doing this in the cost of uglier headers.
+> > +static const struct irq_domain_ops gpiochip_hierarchy_domain_ops = {
+> > +     .activate = gpiochip_irq_domain_activate,
+> > +     .deactivate = gpiochip_irq_domain_deactivate,
+> > +     .translate = gpiochip_hierarchy_irq_domain_translate,
+> > +     .alloc = gpiochip_hierarchy_irq_domain_alloc,
+> > +     .free = irq_domain_free_irqs_common,
+> > +};
+>
+> spmi and ssbi gpio both need to subtract one from the hwirq in the
+> translate function.
+>
+> https://elixir.bootlin.com/linux/latest/source/drivers/pinctrl/qcom/pinctrl-spmi-gpio.c#L956
+>
+> I'm going to optionally allow overriding the translate() function
+> pointer as well.
 
-In reality, it would not be so easy to catch missed 'select' or
-'depends on' because GPIOLIB, GPIOLIB_IRQCHIP etc. are already selected
-by someone else eventually. So, this kind of error, if any, will be
-caught by randconfig bots.
+Hm was more thinking to let gpiolib call out to an optional translate
+function (on top of the template) but this is maybe cleaner.
 
-In summary, I am not a big fan of cluttered #ifdef nesting, and this
-does not matter for normal developers. The code readability wins.
+> > +             /*
+> > +              * We set handle_bad_irq because the .set_type() should
+> > +              * always be invoked and set the right type of handler.
+> > +              */
+> > +             irq_domain_set_info(d,
+> > +                                 irq + i,
+> > +                                 hwirq + i,
+> > +                                 gc->irq.chip,
+> > +                                 gc,
+> > +                                 handle_bad_irq,
+>                                     ^^^^^^^^^^
+> In order to get this working, I had to change handle_bad_irq to
+> handle_level_irq otherwise I get this attempted NULL pointer
+> dereference:
 
-Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
----
+Hmmmmmmmm that should not happen, we need to get to the
+bottom of this.
 
-FYI,
-If you want replace the commit log of the pinctrl variant,
-the better log is available:
-https://lkml.org/lkml/2019/6/26/1344
+> [    2.624430] [<c0372af4>] (irq_chip_ack_parent) from [<c0373f6c>] (__irq_do_set_handler+0x1b4/0x1bc)
+> [    2.632584] [<c0373f6c>] (__irq_do_set_handler) from [<c0373fc0>] (__irq_set_handler+0x4c/0x78)
+> [    2.641441] [<c0373fc0>] (__irq_set_handler) from [<c0375d44>] (irq_domain_set_info+0x38/0x4c)
+> [    2.650126] [<c0375d44>] (irq_domain_set_info) from [<c06cf28c>] (gpiochip_hierarchy_irq_domain_alloc+0x16c/0x22c)
+> [    2.658808] [<c06cf28c>] (gpiochip_hierarchy_irq_domain_alloc) from [<c0376bac>] (__irq_domain_alloc_irqs+0x12c/0x320)
 
- include/linux/gpio/driver.h | 24 +++++++-----------------
- 1 file changed, 7 insertions(+), 17 deletions(-)
+I wonder why irq_chip_ack_parent() is called there.
+Like there is some pending IRQ or something.
 
-diff --git a/include/linux/gpio/driver.h b/include/linux/gpio/driver.h
-index a1d273c96016..845d657f2431 100644
---- a/include/linux/gpio/driver.h
-+++ b/include/linux/gpio/driver.h
-@@ -19,9 +19,6 @@ struct gpio_device;
- struct module;
- enum gpiod_flags;
- 
--#ifdef CONFIG_GPIOLIB
--
--#ifdef CONFIG_GPIOLIB_IRQCHIP
- /**
-  * struct gpio_irq_chip - GPIO interrupt controller
-  */
-@@ -167,7 +164,6 @@ struct gpio_irq_chip {
- 	 */
- 	void		(*irq_disable)(struct irq_data *data);
- };
--#endif
- 
- /**
-  * struct gpio_chip - abstract a GPIO controller
-@@ -445,16 +441,12 @@ bool gpiochip_line_is_valid(const struct gpio_chip *chip, unsigned int offset);
- /* get driver data */
- void *gpiochip_get_data(struct gpio_chip *chip);
- 
--struct gpio_chip *gpiod_to_chip(const struct gpio_desc *desc);
--
- struct bgpio_pdata {
- 	const char *label;
- 	int base;
- 	int ngpio;
- };
- 
--#if IS_ENABLED(CONFIG_GPIO_GENERIC)
--
- int bgpio_init(struct gpio_chip *gc, struct device *dev,
- 	       unsigned long sz, void __iomem *dat, void __iomem *set,
- 	       void __iomem *clr, void __iomem *dirout, void __iomem *dirin,
-@@ -467,10 +459,6 @@ int bgpio_init(struct gpio_chip *gc, struct device *dev,
- #define BGPIOF_READ_OUTPUT_REG_SET	BIT(4) /* reg_set stores output value */
- #define BGPIOF_NO_OUTPUT		BIT(5) /* only input */
- 
--#endif
--
--#ifdef CONFIG_GPIOLIB_IRQCHIP
--
- int gpiochip_irq_map(struct irq_domain *d, unsigned int irq,
- 		     irq_hw_number_t hwirq);
- void gpiochip_irq_unmap(struct irq_domain *d, unsigned int irq);
-@@ -559,15 +547,11 @@ static inline int gpiochip_irqchip_add_nested(struct gpio_chip *gpiochip,
- }
- #endif /* CONFIG_LOCKDEP */
- 
--#endif /* CONFIG_GPIOLIB_IRQCHIP */
--
- int gpiochip_generic_request(struct gpio_chip *chip, unsigned offset);
- void gpiochip_generic_free(struct gpio_chip *chip, unsigned offset);
- int gpiochip_generic_config(struct gpio_chip *chip, unsigned offset,
- 			    unsigned long config);
- 
--#ifdef CONFIG_PINCTRL
--
- /**
-  * struct gpio_pin_range - pin range controlled by a gpio chip
-  * @node: list for maintaining set of pin ranges, used internally
-@@ -580,6 +564,8 @@ struct gpio_pin_range {
- 	struct pinctrl_gpio_range range;
- };
- 
-+#ifdef CONFIG_PINCTRL
-+
- int gpiochip_add_pin_range(struct gpio_chip *chip, const char *pinctl_name,
- 			   unsigned int gpio_offset, unsigned int pin_offset,
- 			   unsigned int npins);
-@@ -620,6 +606,10 @@ void gpiochip_free_own_desc(struct gpio_desc *desc);
- void devprop_gpiochip_set_names(struct gpio_chip *chip,
- 				const struct fwnode_handle *fwnode);
- 
-+#ifdef CONFIG_GPIOLIB
-+
-+struct gpio_chip *gpiod_to_chip(const struct gpio_desc *desc);
-+
- #else /* CONFIG_GPIOLIB */
- 
- static inline struct gpio_chip *gpiod_to_chip(const struct gpio_desc *desc)
-@@ -631,4 +621,4 @@ static inline struct gpio_chip *gpiod_to_chip(const struct gpio_desc *desc)
- 
- #endif /* CONFIG_GPIOLIB */
- 
--#endif
-+#endif /* __LINUX_GPIO_DRIVER_H */
--- 
-2.17.1
+> The parent's irq_chip struct isn't populated yet and the error occurs
+> here:
+>
+>     void irq_chip_ack_parent(struct irq_data *data)
+>     {
+>             data = data->parent_data;
+>             data->chip->irq_ack(data);
+>                   ^^^^
+>
+> We haven't called irq_domain_alloc_irqs_parent() yet, which is fine.
+>
+> __irq_do_set_handler() has a special check for handle_bad_irq():
+>
+> https://elixir.bootlin.com/linux/latest/source/kernel/irq/chip.c#L974
+>
+> I'm not sure what the proper fix is here and not going to dig into this
+> anymore this evening.
 
+I'm a bit puzzled too. :/
+
+> > diff --git a/Documentation/driver-api/gpio/driver.rst b/Documentation/driver-api/gpio/driver.rst
+> > index 1ce7fcd0f989..3099c7fbefdb 100644
+> > --- a/Documentation/driver-api/gpio/driver.rst
+> > +++ b/Documentation/driver-api/gpio/driver.rst
+>
+> I'm still on linux next-20190701. Does this patch series of yours
+> require any other patches? I get a merge conflict against driver.rst.
+> Everything else applies cleanly. I honestly haven't looked in detail
+> about the conflicts.
+
+I have some pending documentation patch I think.
+Sorry about that.
+
+Yours,
+Linus Walleij
