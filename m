@@ -2,94 +2,71 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 29CC961D2C
-	for <lists+linux-gpio@lfdr.de>; Mon,  8 Jul 2019 12:43:40 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 960A661D6C
+	for <lists+linux-gpio@lfdr.de>; Mon,  8 Jul 2019 13:02:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728499AbfGHKnj (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 8 Jul 2019 06:43:39 -0400
-Received: from mout.kundenserver.de ([212.227.17.13]:44657 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725836AbfGHKni (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 8 Jul 2019 06:43:38 -0400
-Received: from [192.168.1.110] ([95.117.164.184]) by mrelayeu.kundenserver.de
- (mreue107 [212.227.15.183]) with ESMTPSA (Nemesis) id
- 1N8nrc-1iXbIp3f9y-015u8i; Mon, 08 Jul 2019 12:43:25 +0200
-Subject: Re: [PATCH] platform/x86: Fix PCENGINES_APU2 Kconfig warning
-To:     YueHaibing <yuehaibing@huawei.com>, dvhart@infradead.org,
-        andy@infradead.org, linus.walleij@linaro.org,
-        rdunlap@infradead.org, info@metux.net
-Cc:     linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-        linux-gpio@vger.kernel.org
-References: <20190704062725.50400-1-yuehaibing@huawei.com>
-From:   "Enrico Weigelt, metux IT consult" <lkml@metux.net>
-Organization: metux IT consult
-Message-ID: <603661e6-8694-4787-6cee-61cc6ba61fc2@metux.net>
-Date:   Mon, 8 Jul 2019 12:43:24 +0200
-User-Agent: Mozilla/5.0 (X11; Linux i686 on x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.2.1
+        id S1730122AbfGHLB5 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 8 Jul 2019 07:01:57 -0400
+Received: from onstation.org ([52.200.56.107]:56098 "EHLO onstation.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725836AbfGHLB4 (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Mon, 8 Jul 2019 07:01:56 -0400
+Received: from localhost.localdomain (c-98-239-145-235.hsd1.wv.comcast.net [98.239.145.235])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: masneyb)
+        by onstation.org (Postfix) with ESMTPSA id 009DE3E912;
+        Mon,  8 Jul 2019 11:01:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=onstation.org;
+        s=default; t=1562583716;
+        bh=Qm/4+Z0/sz1rCO9MskaUatf9RSxxFsoX4hvz0Scz0wo=;
+        h=From:To:Cc:Subject:Date:From;
+        b=lWSxrK30kwh+TjTMBFonMQCYwFPlJ0SeNYUzF6nJyzLDvnOf1IbNg+wdOStKLus8S
+         ZU5MDFgGkK35t6IhWxM9f7GeBJb9bwT9iW7Ya/+9sollmo91dJ0/x45oD3BKRlhwEW
+         q862w4up8QzG6e+7MhBnuFBeHFu5mDPjahF8QmaI=
+From:   Brian Masney <masneyb@onstation.org>
+To:     linus.walleij@linaro.org
+Cc:     linux-gpio@vger.kernel.org, bgolaszewski@baylibre.com,
+        tglx@linutronix.de, marc.zyngier@arm.com, ilina@codeaurora.org,
+        jonathanh@nvidia.com, skomatineni@nvidia.com, bbiswas@nvidia.com,
+        linux-tegra@vger.kernel.org, david.daney@cavium.com,
+        yamada.masahiro@socionext.com, treding@nvidia.com,
+        bjorn.andersson@linaro.org, agross@kernel.org,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 0/4] gpio: hierarchical IRQ improvements
+Date:   Mon,  8 Jul 2019 07:01:34 -0400
+Message-Id: <20190708110138.24657-1-masneyb@onstation.org>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-In-Reply-To: <20190704062725.50400-1-yuehaibing@huawei.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Provags-ID: V03:K1:k1ASFLMCv+5OWSYUYYtaraIfKomT4nTCcaVf4oT+GAFdybzzBGA
- PMb83RA+PAxxOKE0M8vADo5wuHV1V/hOEXU5l+aZkjda3H4wt8MadTRAVhSMVQqlfXX5wXE
- a+v+66cBXAt2x41H8wI8Yro2gERQGLi6T6V8YQd1IX6QBHvD5CMJLd4BOj3YoWuUstGPf/F
- 1kAO0j4X3EQCrgCNrqGrA==
-X-Spam-Flag: NO
-X-UI-Out-Filterresults: notjunk:1;V03:K0:Pkz+poKC/9g=:RQzTbx4w0e9jQQHrKZwyOK
- S+jIiWDIfD8snEe3ikdQ3qPoVvo4Xypssgid430xCNfykbAuuGXrrFcO5kUtNsBAAj/VWPtT3
- oasB7iSchd8DoF9OiKKa8LTIILFXQMIgYxrPutmXaECL4np2FESPe0ta7egNgf9Rk4iXBXvzE
- ktl9nXyExrYYIu/0O1b1+72zn8gO6hR54yMUImSBoCfu+H9IZ7Ufx3JZAoYXHew739kjhlOil
- ow5hccagNxFoVO3ekxB14bblysTE9MRpsr4uQrYsc3QqQ6Ho4staeQbG4RPyKK0+5AoyZnkGi
- KKhD2162g7E/59YB/OVpgkuaftPmB0r4H15dgywkQU2uEvtOe2BrH1sbjUbz6AdxXpZxky8XR
- WBNX+F47SHc+iIS3hes2fzMNkMTwGHM3XAi2yXm88wd2jyh976R4ultLTnQUlGz521i/KJQL6
- Cr/iGv9LTbGNE8n0H9tlD1F8FjqUtQ2s/pNDfQPruSVLHlKrED/5+npsaKbEzAWI5yD2866OQ
- m7XNLTZtdQ8MjerXFWgZ2sq1x4A8eeaiwWAIXQgMHfdoia12j9ef2eHAw5A9UxD06q0pI3Chz
- ZQs8qRexnrY+AUJVoPp+3wQsI952+HtfPiLl8SVCAnPvMq0jb3F5bsBibQ0J2gkEwmY+c+bGd
- cwNpe5SdjArjOIKbBAKCFHTNRi9hCI+3CWUcrXBzELjEZL4bx/q3TveG9GlaS4P6g0dNnRjOB
- C1mcgoTbxzFeRkAG4kMamxuzgrM4jkc/QiyB31aZScT485Fj8S8CVAKtjw0=
+Content-Transfer-Encoding: 8bit
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 04.07.19 08:27, YueHaibing wrote:
-> Fix Kconfig warning for PCENGINES_APU2 symbol:
-> 
-> WARNING: unmet direct dependencies detected for GPIO_AMD_FCH
->   Depends on [n]: GPIOLIB [=n] && HAS_IOMEM [=y]
->   Selected by [y]:
->   - PCENGINES_APU2 [=y] && X86 [=y] && X86_PLATFORM_DEVICES [=y] && INPUT [=y] && INPUT_KEYBOARD [=y] && LEDS_CLASS [=y]
-> 
-> WARNING: unmet direct dependencies detected for KEYBOARD_GPIO_POLLED
->   Depends on [n]: !UML && INPUT [=y] && INPUT_KEYBOARD [=y] && GPIOLIB [=n]
->   Selected by [y]:
->   - PCENGINES_APU2 [=y] && X86 [=y] && X86_PLATFORM_DEVICES [=y] && INPUT [=y] && INPUT_KEYBOARD [=y] && LEDS_CLASS [=y]
-> 
-> Add GPIOLIB dependency to fix it.
+This builds on top of Linus Walleij's existing patches that adds
+hierarchical IRQ support to the GPIO core [1] so that Qualcomm's
+spmi-gpio and ssbi-gpio can be converted to use these new helpers.
 
-hmm, I'm not really happy w/ the kernel config system at that point:
+Linus: Feel free to squash these into your existing patches if you'd
+like to use any of this code. Just give me some kind of mention in the
+commit description.
 
-If the select on the gpio driver would just subsequently enable gpiolib,
-everything would be fine. But that contradicts how subsystems are
-currently handled - you first have to enable gpio subsystem before
-choosing anything that depends on it :(
+[1] https://lore.kernel.org/linux-gpio/20190624132531.6184-1-linus.walleij@linaro.org/
 
-Could it make sense to refactor gpiolib in a way that pieces directly
-needed by gpio consumers or drivers (hmm, perhaps have separate
-dependency symbols for consumer vs driver) can be selected directly,
-even if the big gpio subsystem knob is disabled ? (but the other things
-like userland interfaces would remain disabled) ?
+Brian Masney (4):
+  gpio: introduce gpiochip_populate_parent_fwspec_{two,four}cell
+    functions
+  gpio: allow customizing hierarchical IRQ chips
+  gpio: use handler in gpio_irq_chip instead of handle_bad_irq
+  qcom: spmi-gpio: convert to hierarchical IRQ helpers in gpio core
 
-OTOH, for this particular patch:
-
-Ack-By: Enrico Weigelt <info@metux.net>
-
-
---mtx
+ drivers/gpio/gpiolib.c                   | 78 ++++++++++++++++----
+ drivers/pinctrl/qcom/Kconfig             |  1 +
+ drivers/pinctrl/qcom/pinctrl-spmi-gpio.c | 92 +++++++-----------------
+ include/linux/gpio/driver.h              | 65 +++++++++++++++++
+ 4 files changed, 154 insertions(+), 82 deletions(-)
 
 -- 
-Enrico Weigelt, metux IT consult
-Free software and Linux embedded engineering
-info@metux.net -- +49-151-27565287
+2.20.1
+
