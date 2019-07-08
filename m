@@ -2,100 +2,114 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 0F50861772
-	for <lists+linux-gpio@lfdr.de>; Sun,  7 Jul 2019 22:36:09 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3962561A4E
+	for <lists+linux-gpio@lfdr.de>; Mon,  8 Jul 2019 07:23:39 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727429AbfGGUgH (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sun, 7 Jul 2019 16:36:07 -0400
-Received: from gate2.alliedtelesis.co.nz ([202.36.163.20]:55976 "EHLO
-        gate2.alliedtelesis.co.nz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727456AbfGGUgH (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sun, 7 Jul 2019 16:36:07 -0400
-Received: from mmarshal3.atlnz.lc (mmarshal3.atlnz.lc [10.32.18.43])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id 268038364E;
-        Mon,  8 Jul 2019 08:36:05 +1200 (NZST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alliedtelesis.co.nz;
-        s=mail181024; t=1562531765;
-        bh=ip95pvT/MENdDX9ljvlE3O/xZmTn56E0COWj53gsn+U=;
-        h=From:To:Cc:Subject:Date;
-        b=vVAhNuVCRdWDOZTWZcT6OCfk4jWNCpkS4GAx1eXBhZkLwWCX5dleIRbQCxoZa2hC1
-         9aapr1ARjFDsDXa3FPJHowJ0eOpaYqECy9VX7NkUPurjR4IUYoTYb05iu72WYzdCyP
-         vtHlhE7vrvZCLH7gfsgqtW8s4BJXFNu3grq20PeUO9gEWY1gmmzxqw1ECToo5ZxDD+
-         VcJAe0aeBBqIb+kMZGkJUuYnJkxxaG/mPRwzBxr9Usp2cvaTQFKuiRBqVLBMNRSNv9
-         4B5OQuQb8Om3VAtXg84b7eso1simIQX0AJ7d1FO5LK1ZmHDzFb+dhdjxoZUrbTDkW3
-         zUXUYtets/FRg==
-Received: from smtp (Not Verified[10.32.16.33]) by mmarshal3.atlnz.lc with Trustwave SEG (v7,5,8,10121)
-        id <B5d2257af0000>; Mon, 08 Jul 2019 08:36:03 +1200
-Received: from chrisp-dl.ws.atlnz.lc (chrisp-dl.ws.atlnz.lc [10.33.22.30])
-        by smtp (Postfix) with ESMTP id 5370813EECF;
-        Mon,  8 Jul 2019 08:36:02 +1200 (NZST)
-Received: by chrisp-dl.ws.atlnz.lc (Postfix, from userid 1030)
-        id 9932C1E0BBE; Mon,  8 Jul 2019 08:36:00 +1200 (NZST)
-From:   Chris Packham <chris.packham@alliedtelesis.co.nz>
-To:     linus.walleij@linaro.org, bgolaszewski@baylibre.com,
-        ricardo.ribalda@gmail.com
-Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Chris Packham <chris.packham@alliedtelesis.co.nz>
-Subject: [PATCH v3] gpiolib: Preserve desc->flags when setting state
-Date:   Mon,  8 Jul 2019 08:35:58 +1200
-Message-Id: <20190707203558.10993-1-chris.packham@alliedtelesis.co.nz>
-X-Mailer: git-send-email 2.22.0
+        id S1727811AbfGHFXi (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 8 Jul 2019 01:23:38 -0400
+Received: from mail.vivotek.com ([60.248.39.150]:49538 "EHLO mail.vivotek.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727286AbfGHFXi (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Mon, 8 Jul 2019 01:23:38 -0400
+Received: from pps.filterd (vivotekpps.vivotek.com [127.0.0.1])
+        by vivotekpps.vivotek.com (8.16.0.22/8.16.0.22) with SMTP id x685MZlM025500;
+        Mon, 8 Jul 2019 13:23:23 +0800
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=vivotek.com; h=from : to : cc :
+ subject : date : message-id : mime-version : content-type; s=dkim;
+ bh=zi7h8BLqmWEo/Z3srkGQhYbbOAKvfqg0vBi17vSUil8=;
+ b=Adx0F6ezhMxVIIptEfA5rPG46jj1FPYfXb8sTpCLtLqNFH4pMGuxWVUGLzIjq4Gni2cD
+ 2G7eBWc/88AtkAruGc6iLIU/FuRMiULHvKwvzmtYSu21qjn3y/krSsrQdDazdcTUB3+w
+ hRTXg9Tf47ZsCI665I+UTIYi9e7/veLmD3w= 
+Received: from cas01.vivotek.tw ([192.168.0.58])
+        by vivotekpps.vivotek.com with ESMTP id 2tkyevr0by-1
+        (version=TLSv1 cipher=ECDHE-RSA-AES256-SHA bits=256 verify=NOT);
+        Mon, 08 Jul 2019 13:23:23 +0800
+Received: from localhost.localdomain (192.168.17.134) by CAS01.vivotek.tw
+ (192.168.0.58) with Microsoft SMTP Server (TLS) id 14.3.319.2; Mon, 8 Jul
+ 2019 13:23:22 +0800
+From:   Michael Wu <michael.wu@vatics.com>
+To:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        <linux-gpio@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+CC:     <morgan.chang@vatics.com>, <stable@vger.kernel.org>
+Subject: [PATCH v2] gpiolib: fix incorrect IRQ requesting of an active-low lineevent
+Date:   Mon, 8 Jul 2019 13:23:08 +0800
+Message-ID: <20190708052308.27802-1-michael.wu@vatics.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-x-atlnz-ls: pat
+Content-Type: text/plain
+X-Originating-IP: [192.168.17.134]
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-07-08_01:,,
+ signatures=0
+X-Proofpoint-Spam-Reason: safe
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-desc->flags may already have values set by of_gpiochip_add() so make
-sure that this isn't undone when setting the initial direction.
+When a pin is active-low, logical trigger edge should be inverted to match
+the same interrupt opportunity.
 
-Fixes: 3edfb7bd76bd1cba ("gpiolib: Show correct direction from the beginn=
-ing")
-Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
+For example, a button pushed triggers falling edge in ACTIVE_HIGH case; in
+ACTIVE_LOW case, the button pushed triggers rising edge. For user space the
+IRQ requesting doesn't need to do any modification except to configuring
+GPIOHANDLE_REQUEST_ACTIVE_LOW.
+
+For example, we want to catch the event when the button is pushed. The
+button on the original board drives level to be low when it is pushed, and
+drives level to be high when it is released.
+
+In user space we can do:
+
+	req.handleflags = GPIOHANDLE_REQUEST_INPUT;
+	req.eventflags = GPIOEVENT_REQUEST_FALLING_EDGE;
+
+	while (1) {
+		read(fd, &dat, sizeof(dat));
+		if (dat.id == GPIOEVENT_EVENT_FALLING_EDGE)
+			printf("button pushed\n");
+	}
+
+Run the same logic on another board which the polarity of the button is
+inverted; it drives level to be high when pushed, and level to be low when
+released. For this inversion we add flag GPIOHANDLE_REQUEST_ACTIVE_LOW:
+
+	req.handleflags = GPIOHANDLE_REQUEST_INPUT |
+		GPIOHANDLE_REQUEST_ACTIVE_LOW;
+	req.eventflags = GPIOEVENT_REQUEST_FALLING_EDGE;
+
+At the result, there are no any events caught when the button is pushed.
+By the way, button releasing will emit a "falling" event. The timing of
+"falling" catching is not expected.
+
+Cc: stable@vger.kernel.org
+Signed-off-by: Michael Wu <michael.wu@vatics.com>
 ---
-
-Notes:
-    Changes in v2:
-    - add braces to avoid ambiguious else warning
-    Changes in v3:
-    - clear the direction output in the negative case
-
- drivers/gpio/gpiolib.c | 17 +++++++++++------
- 1 file changed, 11 insertions(+), 6 deletions(-)
+Changes from v1:
+- Correct undeclared 'IRQ_TRIGGER_RISING'
+- Add an example to descibe the issue
+---
+ drivers/gpio/gpiolib.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
 diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
-index e013d417a936..dbd1180316a0 100644
+index e013d417a936..9c9597f929d7 100644
 --- a/drivers/gpio/gpiolib.c
 +++ b/drivers/gpio/gpiolib.c
-@@ -1392,12 +1392,17 @@ int gpiochip_add_data_with_key(struct gpio_chip *=
-chip, void *data,
- 	for (i =3D 0; i < chip->ngpio; i++) {
- 		struct gpio_desc *desc =3D &gdev->descs[i];
-=20
--		if (chip->get_direction && gpiochip_line_is_valid(chip, i))
--			desc->flags =3D !chip->get_direction(chip, i) ?
--					(1 << FLAG_IS_OUT) : 0;
--		else
--			desc->flags =3D !chip->direction_input ?
--					(1 << FLAG_IS_OUT) : 0;
-+		if (chip->get_direction && gpiochip_line_is_valid(chip, i)) {
-+			if (!chip->get_direction(chip, i))
-+				set_bit(FLAG_IS_OUT, &desc->flags);
-+			else
-+				clear_bit(FLAG_IS_OUT, &desc->flags);
-+		} else {
-+			if (!chip->direction_input)
-+				set_bit(FLAG_IS_OUT, &desc->flags);
-+			else
-+				clear_bit(FLAG_IS_OUT, &desc->flags);
-+		}
+@@ -956,9 +956,11 @@ static int lineevent_create(struct gpio_device *gdev, void __user *ip)
  	}
-=20
- 	acpi_gpiochip_add(chip);
---=20
-2.22.0
+ 
+ 	if (eflags & GPIOEVENT_REQUEST_RISING_EDGE)
+-		irqflags |= IRQF_TRIGGER_RISING;
++		irqflags |= test_bit(FLAG_ACTIVE_LOW, &desc->flags) ?
++			IRQF_TRIGGER_FALLING : IRQF_TRIGGER_RISING;
+ 	if (eflags & GPIOEVENT_REQUEST_FALLING_EDGE)
+-		irqflags |= IRQF_TRIGGER_FALLING;
++		irqflags |= test_bit(FLAG_ACTIVE_LOW, &desc->flags) ?
++			IRQF_TRIGGER_RISING : IRQF_TRIGGER_FALLING;
+ 	irqflags |= IRQF_ONESHOT;
+ 
+ 	INIT_KFIFO(le->events);
+-- 
+2.17.1
 
