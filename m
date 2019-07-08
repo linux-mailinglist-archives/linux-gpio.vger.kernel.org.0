@@ -2,112 +2,92 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 2E93E61E8B
-	for <lists+linux-gpio@lfdr.de>; Mon,  8 Jul 2019 14:38:54 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 97EDA61E92
+	for <lists+linux-gpio@lfdr.de>; Mon,  8 Jul 2019 14:40:44 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729605AbfGHMiw (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 8 Jul 2019 08:38:52 -0400
-Received: from mout.kundenserver.de ([212.227.126.130]:49197 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727544AbfGHMiw (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 8 Jul 2019 08:38:52 -0400
-Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
- (mreue012 [212.227.15.129]) with ESMTPA (Nemesis) id
- 1MFsAJ-1hiUBN3Zux-00HNox; Mon, 08 Jul 2019 14:38:46 +0200
-From:   Arnd Bergmann <arnd@arndb.de>
-To:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>
-Cc:     Arnd Bergmann <arnd@arndb.de>, Dmitry Osipenko <digetx@gmail.com>,
-        linux-gpio@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] gpio: tegra: fix debugfs compile error
-Date:   Mon,  8 Jul 2019 14:38:17 +0200
-Message-Id: <20190708123843.3302581-1-arnd@arndb.de>
-X-Mailer: git-send-email 2.20.0
+        id S1729037AbfGHMko (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 8 Jul 2019 08:40:44 -0400
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:33720 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727544AbfGHMko (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 8 Jul 2019 08:40:44 -0400
+Received: by mail-ot1-f67.google.com with SMTP id q20so16045233otl.0
+        for <linux-gpio@vger.kernel.org>; Mon, 08 Jul 2019 05:40:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=m9Xg4Qn8tFnQxXrHl7OVjLR7fOy3SQFQX0fconzTi8c=;
+        b=gtLtQGC2EpIv4b/GrB8wnBa+rpWBpDeQfQ1b5nD/XLMnH4YNOvW5wnU4t9Mu173Lu4
+         x9TmbKsvuTJnL9XB1LjokqOIfWLfJhDCxBb3Bd0HUpZW5OLIqLxsDwR+InajemXD9Bxs
+         9knn8OoqthnJ3qFFAkuo4+SmiPqk41oUBll/e6WN3CVEvSj3p/CLhZO6LDDXwCATPGj7
+         St306kz5TwY0bTpfeS8FBMSuVh4iENDYDp3A7cp9Vsht0MpKDtPG5oOF5vnyGRQkPxfd
+         f81bZKFV6U1RcxdyZWHVedzee7SXmxQ0ADbiQLHCqUjzL9U0in9Te0kptn/2fB3eiWpR
+         DHiw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=m9Xg4Qn8tFnQxXrHl7OVjLR7fOy3SQFQX0fconzTi8c=;
+        b=QC3GHumvwLzcnfPWQL1MA6/uWD86ug42NDAug98Ex2o2ImDW2Jo15BE8/S1ckD5c2+
+         082JD14SvgS19Evlc6Ou1F5eU49qzc1Yw/4oqFiuyLv47oR1MKWNFd84NAtDdIApPOlb
+         TQuHYNv8Q6sU71bl5XNZ9NnsWceYJIycQPSBEsrkhvfLjvF162pPJIcfZT8JmtkZEAlW
+         s6Ltto+aPyCABXHgxSqbZWyFbzeWJBdN1jCdHS1ArPUfvGdOpPszO+PBL2rGsvptyH98
+         IcFqWxofLaCYyPG9s5zppyae+2LqSwqYFvNiXVYcCIQD5NY6LNtHRwBZLekBT/fIvaMc
+         MJXA==
+X-Gm-Message-State: APjAAAWvQS63KOxrxmJqt/rB/ov4v5r1TbooHYOaIzhhu/lOEJmDjvNG
+        65qnQFkVlUeENo2T9Tu/Zyc/8BPRHGA4hoUBa5QJ+Q==
+X-Google-Smtp-Source: APXvYqxa8WvfWz+f/PLMCb8cNku0Qczyz5yFtAv+JmsA4QL3EN72u8+PQd+QQ0TiSD+bjLhMmJPC5pck47jXa56ec1I=
+X-Received: by 2002:a05:6830:1681:: with SMTP id k1mr14111089otr.256.1562589643485;
+ Mon, 08 Jul 2019 05:40:43 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:MSFUKXJPI4w10gi5nIw9N7d6gTewK6MnUXHlro7LaCUr6eFZ32c
- CVfIwEp/Yeh2OhpLrwyRjgIVMO5VvpaD6HE4pdXXoesHctLKVesrcGNX3JbJ6V3xjVERn4J
- HOMNBm2NYE9hdU2W600TMEH9qHk6BmEGTny9CIIUUpNcQIOXNYjfwNPvwMo8T72gXkgDl7p
- /yuw1mdSJjFQ3zuMGWqxg==
-X-Spam-Flag: NO
-X-UI-Out-Filterresults: notjunk:1;V03:K0:mtajkxsIi98=:gEYCd7m+A0QSVqeIysMG6+
- I8KyaNRiW26n1eB4lByLWF3jJDDBdojMUsI8iWNqG5k14EE4JQjWZQ9EmVlVcvnxnQsxdZ2wu
- FNorKrqPUQugWbe/QePFvtdkYuJzJnmiermFLrmcVmerxfgluQ6TvLBO7XeOL5DU6O2bweKMt
- QjnyHD/caoKBS0idl3Fe7rNHZJYKjtR2HcRHwgcxK5sfDOVu/Uvy5gXv2OC2nDbXGTVDVfMjl
- kteR5fl9+Pg26kS94OxE1Yte7HjN8fE1kOJyci1ZeLyLqWBFnVnIbcFtSRvxGPvdomm8bsNqT
- wKFkMIb8fsu33boEPOKVabhv8CtTpCjeTZNzFYlKs9uov/q36g1sh1jBrmIA9a/Zv7fjPZBvZ
- HZFjfgvLkKXmM46gLB5MnHr5k580PHUxeXC/JU2fEQ9EeeA4qO9KOUjAgaFRdUzsM1Kpq/il+
- iYJ/k+CTAWbS+rJ4tnFbvJjjpZk4JdGgJArWxWyTmDObvIKiQQ7jgUxD66jei+D7mNDP/fIcU
- Z+l8SVz/wzV26Swqw4hjwH1DNYpWoIf4DSXwnyfq3lg7Bn1XmOJt8taMG/LWZkbmq7Mmk5Bkh
- WeThMPl4iiExHOuV9hjB40mqH9kmJD074vp6D7VltBZ8CEm41qR1G2Tn+xKT6c1uaCC4f11dN
- A87qC0mjojL7s73TRNLtqdfDs9KS3d4DAYrnGRrynd+FV0Fp7lVjyNe0lMx1jMBl4hVtl6B+N
- e9g0ypuomU8RZxnrqaMknmUTJbgRJaGrglSwwQ==
+References: <20190706133422.3372-1-nishkadg.linux@gmail.com>
+In-Reply-To: <20190706133422.3372-1-nishkadg.linux@gmail.com>
+From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Date:   Mon, 8 Jul 2019 14:40:32 +0200
+Message-ID: <CAMpxmJUX5Oe6yDyRbfyDOkxQyeuabbceF8Dt0uBOQA1TRjD2-A@mail.gmail.com>
+Subject: Re: [PATCH] gpio: gpiolib-of.c: Add of_node_put() before break
+To:     Nishka Dasgupta <nishkadg.linux@gmail.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        linux-gpio <linux-gpio@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Without this header, some configurations now run into a build failure:
+sob., 6 lip 2019 o 15:34 Nishka Dasgupta <nishkadg.linux@gmail.com> napisa=
+=C5=82(a):
+>
+> Each iteration of for_each_child_of_node puts the previous node, but in
+> the case of a break from the middle of the loop, there is no put, thus
+> causing a memory leak. Hence add an of_node_put before the break.
+> Issue found with Coccinelle.
+>
+> Signed-off-by: Nishka Dasgupta <nishkadg.linux@gmail.com>
+> ---
+>  drivers/gpio/gpiolib-of.c | 1 +
+>  1 file changed, 1 insertion(+)
+>
+> diff --git a/drivers/gpio/gpiolib-of.c b/drivers/gpio/gpiolib-of.c
+> index aec7bd86ae7e..c9325efc1783 100644
+> --- a/drivers/gpio/gpiolib-of.c
+> +++ b/drivers/gpio/gpiolib-of.c
+> @@ -154,6 +154,7 @@ static void of_gpio_flags_quirks(struct device_node *=
+np,
+>                                                         of_node_full_name=
+(child));
+>                                         *flags |=3D OF_GPIO_ACTIVE_LOW;
+>                                 }
+> +                               of_node_put(child);
+>                                 break;
+>                         }
+>                 }
+> --
+> 2.19.1
+>
 
-drivers/gpio/gpio-tegra.c:665:2: error: implicit declaration of function 'debugfs_create_file'
-      [-Werror,-Wimplicit-function-declaration]
-        debugfs_create_file("tegra_gpio", 0444, NULL, tgi,
-        ^
-drivers/gpio/gpio-tegra.c:665:2: error: this function declaration is not a prototype [-Werror,-Wstrict-prototypes]
-drivers/gpio/gpio-tegra.c:666:9: error: use of undeclared identifier 'tegra_dbg_gpio_fops'
+Applied for fixes with a slightly changed commit message. Thanks!
 
-Remove the #ifdef here and let the compiler drop the unused
-functions itself when debugfs_create_file() is an empty inline
-function.
-
-Fixes: a4de43049a1d ("gpio: tegra: Clean-up debugfs initialisation")
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
----
- drivers/gpio/gpio-tegra.c | 7 ++-----
- 1 file changed, 2 insertions(+), 5 deletions(-)
-
-diff --git a/drivers/gpio/gpio-tegra.c b/drivers/gpio/gpio-tegra.c
-index 59b99d8c3647..dbcecbe5f52f 100644
---- a/drivers/gpio/gpio-tegra.c
-+++ b/drivers/gpio/gpio-tegra.c
-@@ -9,6 +9,7 @@
-  *	Erik Gilling <konkers@google.com>
-  */
- 
-+#include <linux/debugfs.h>
- #include <linux/err.h>
- #include <linux/init.h>
- #include <linux/irq.h>
-@@ -22,6 +23,7 @@
- #include <linux/irqchip/chained_irq.h>
- #include <linux/pinctrl/consumer.h>
- #include <linux/pm.h>
-+#include <linux/seq_file.h>
- 
- #define GPIO_BANK(x)		((x) >> 5)
- #define GPIO_PORT(x)		(((x) >> 3) & 0x3)
-@@ -508,10 +510,6 @@ static int tegra_gpio_irq_set_wake(struct irq_data *d, unsigned int enable)
- }
- #endif
- 
--#ifdef CONFIG_DEBUG_FS
--
--#include <linux/debugfs.h>
--#include <linux/seq_file.h>
- 
- static int tegra_dbg_gpio_show(struct seq_file *s, void *unused)
- {
-@@ -538,7 +536,6 @@ static int tegra_dbg_gpio_show(struct seq_file *s, void *unused)
- }
- 
- DEFINE_SHOW_ATTRIBUTE(tegra_dbg_gpio);
--#endif
- 
- static const struct dev_pm_ops tegra_gpio_pm_ops = {
- 	SET_SYSTEM_SLEEP_PM_OPS(tegra_gpio_suspend, tegra_gpio_resume)
--- 
-2.20.0
-
+Bartosz
