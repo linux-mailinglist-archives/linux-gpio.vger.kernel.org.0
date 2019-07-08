@@ -2,56 +2,182 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 46C6E6255F
-	for <lists+linux-gpio@lfdr.de>; Mon,  8 Jul 2019 17:51:27 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 44A7962687
+	for <lists+linux-gpio@lfdr.de>; Mon,  8 Jul 2019 18:42:06 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387972AbfGHPv0 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 8 Jul 2019 11:51:26 -0400
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:41958 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731329AbfGHPv0 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 8 Jul 2019 11:51:26 -0400
-Received: by mail-lj1-f196.google.com with SMTP id d24so7333989ljg.8
-        for <linux-gpio@vger.kernel.org>; Mon, 08 Jul 2019 08:51:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:sender:from:date:message-id:subject:to;
-        bh=47DEQpj8HBSa+/TImW+5JCeuQeRkm5NMpJWZG3hSuFU=;
-        b=tU/hlWqDm6TEwDWxf6MemIfT5kWDb1MASwAI9cKzFfK6DegDGNoWX2M7r3Oz+XDtJT
-         nBr+h6OuBY9evShSP3E2yXQvNUxQyGnLe/e9grJK7JB2Gjs1bIVi1I7rsO24/hJcCXF9
-         /KEncxbb1TuZNC/7DKW2hvJh1P1dBDugY+f+lNDLxTJnmLq2touVjQf6fPRQxzeXXr9j
-         1jL1AU+xWZxdy4EDlGbv2i605EgOsMPu77TPjKvxHW4cc6v2QJZnLKWk4kcP8sbKdbU/
-         r8SISkl+qyhcoLS/15n6BQUFZDrzOWB+baooa0lXvYsh4OYvD9EVoWMUQYGaVLyeoAKL
-         s+wg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:sender:from:date:message-id:subject
-         :to;
-        bh=47DEQpj8HBSa+/TImW+5JCeuQeRkm5NMpJWZG3hSuFU=;
-        b=hs8BYPFJswNeKPzgLq29FSZNBaKcBH7qMlPyI5YDmEMeL5Ncjui4FN9LCUjGQdOHTh
-         z/drGvHb4U6OWNszpoS84Ioc/F6LoU/+42RGYE1pUiWGutvi995KDempA/hpsAVIE76V
-         JpULuIJgjZN6X3aIYeg4IaEPPbS6hdoTZsW2UXydDurOGqRFDihssJhw3y77HkH16ZP8
-         WxOY+WcQ+3GuhI9EhCoZtJCcLnD7Vb1rHMxPv79RtWtr79AZmNu8BNddswokon6UVFca
-         mKRqZjStnBR1tBQBKNrHEI9cRVwY7GPUggVTUsOvmeDFg1ezcCgCy+Bf9zpYY87TtHf5
-         QzhA==
-X-Gm-Message-State: APjAAAW3uu/F0BNhJ2PlhqbMEvheL7mjSBrk6S4Eo67rUkl4gjxGbhVM
-        A9Q1iooBauV63y3LNcpJbjpo88HPVIpjTNEgvrM=
-X-Google-Smtp-Source: APXvYqxSwRFOkZuH5vPkAVZrTFhl70DzvFH63v5R0K6e5oIv3nwEhkVMZOfWZ4YAGZNFaVBzqOYreCjqEFuqD2ia7r8=
-X-Received: by 2002:a2e:8ed2:: with SMTP id e18mr10839395ljl.235.1562601084265;
- Mon, 08 Jul 2019 08:51:24 -0700 (PDT)
+        id S1730416AbfGHQmF (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 8 Jul 2019 12:42:05 -0400
+Received: from ns.iliad.fr ([212.27.33.1]:46746 "EHLO ns.iliad.fr"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730383AbfGHQmF (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Mon, 8 Jul 2019 12:42:05 -0400
+Received: from ns.iliad.fr (localhost [127.0.0.1])
+        by ns.iliad.fr (Postfix) with ESMTP id 979F920BC5;
+        Mon,  8 Jul 2019 18:42:02 +0200 (CEST)
+Received: from [192.168.108.49] (freebox.vlq16.iliad.fr [213.36.7.13])
+        by ns.iliad.fr (Postfix) with ESMTP id 72279208E6;
+        Mon,  8 Jul 2019 18:42:02 +0200 (CEST)
+Subject: Re: [RFC] SW connection between DVB Transport Stream demuxer and
+ I2C-based frontend
+From:   Marc Gonzalez <marc.w.gonzalez@free.fr>
+To:     I2C <linux-i2c@vger.kernel.org>,
+        linux-media <linux-media@vger.kernel.org>,
+        GPIO <linux-gpio@vger.kernel.org>
+Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
+        =?UTF-8?Q?Jonathan_Neusch=c3=a4fer?= <j.neuschaefer@gmx.net>,
+        Brad Love <brad@nextdimension.cc>,
+        Antti Palosaari <crope@iki.fi>,
+        Olli Salonen <olli.salonen@iki.fi>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Jeffrey Hugo <jeffrey.l.hugo@gmail.com>,
+        Wolfram Sang <wsa@the-dreams.de>,
+        Simon Horman <horms+renesas@verge.net.au>,
+        Peter Korsgaard <peter@korsgaard.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>
+References: <5e35b4fb-646d-6428-f372-ee47d7352cd6@free.fr>
+Message-ID: <4b9c5a48-aaed-5f1f-1835-167fcdcb7655@free.fr>
+Date:   Mon, 8 Jul 2019 18:42:02 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Received: by 2002:ac2:519c:0:0:0:0:0 with HTTP; Mon, 8 Jul 2019 08:51:23 -0700 (PDT)
-From:   charity foundation <idrissdaouda@gmail.com>
-Date:   Mon, 8 Jul 2019 16:51:23 +0100
-X-Google-Sender-Auth: ygQ8FFv5e94h6uehcVbT2IkeqN0
-Message-ID: <CAOu5phZye-ii1qu4tKKRrweFPDWGCxUHTRSs8zVk8XUNGgyThA@mail.gmail.com>
-Subject: ''```';;Donation, I will like to work with you to touch life of
- people through humanitarian foundation in your country''''```';;
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <5e35b4fb-646d-6428-f372-ee47d7352cd6@free.fr>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Virus-Scanned: ClamAV using ClamSMTP ; ns.iliad.fr ; Mon Jul  8 18:42:02 2019 +0200 (CEST)
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+On 08/07/2019 13:08, Marc Gonzalez wrote:
 
+> PROBLEM #1
+> 
+> The media framework requires that the TSIF and demod be "tied" together,
+> by calling dvb_register_frontend(). If I do that in tsif.c, then I need to
+> get the frontend pointer from the demod at some point. There is no such
+> callback presently. Since si2168 lives on an I2C bus, I can get a
+> struct i2c_client pointer, through the DT phandle. But some kind of
+> abstraction is missing to query the i2c_client object to make sure it
+> is a demodulator and request its frontend pointer.
+> 
+> For the time being, I have added a very generic pointer to struct i2c_client
+> but I feel this is not quite right... (though it gets the job done)
+
+As far as PROBLEM #1 is concerned, I think I have a better solution;
+one that doesn't involve messing with struct i2c_client.
+
+Basically, we embed a common struct in every demod driver, at the
+beginning of their private control struct. That way, demod consumers
+have a generic/common data type to inspect, and don't need to know
+the specific demod they are working with. (I left the removals in
+the diff below, to show the two proposed solutions so far.)
+
+@linux-media maintainers, I think this solution is acceptable for
+mainline, right?
+
+Regards.
+
+
+
+diff --git a/drivers/media/dvb-frontends/si2168.c b/drivers/media/dvb-frontends/si2168.c
+index 726bb6759315..692f3207cd9d 100644
+--- a/drivers/media/dvb-frontends/si2168.c
++++ b/drivers/media/dvb-frontends/si2168.c
+@@ -666,12 +666,6 @@ struct si2168_config si2168_config;
+ struct si2157_config si2157_config;
+ struct i2c_client *tuner;
+ 
+-static void *get_fe(struct i2c_client *client)
+-{
+-	struct si2168_dev *dev = i2c_get_clientdata(client);
+-	return &dev->fe;
+-}
+-
+ static int si2168_probe(struct i2c_client *client,
+ 		const struct i2c_device_id *id)
+ {
+@@ -700,7 +694,7 @@ static int si2168_probe(struct i2c_client *client,
+ 		goto err;
+ 	}
+ 
+-	client->get_something = get_fe;
++	dev->common.fe = &dev->fe;
+ 	i2c_set_clientdata(client, dev);
+ 	mutex_init(&dev->i2c_mutex);
+ 
+diff --git a/drivers/media/dvb-frontends/si2168_priv.h b/drivers/media/dvb-frontends/si2168_priv.h
+index 804d5b30c697..2e69080f8a1c 100644
+--- a/drivers/media/dvb-frontends/si2168_priv.h
++++ b/drivers/media/dvb-frontends/si2168_priv.h
+@@ -22,6 +22,7 @@
+ 
+ /* state struct */
+ struct si2168_dev {
++	struct dvb_demod_common common;
+ 	struct mutex i2c_mutex;
+ 	struct i2c_mux_core *muxc;
+ 	struct dvb_frontend fe;
+diff --git a/drivers/media/platform/tsif.c b/drivers/media/platform/tsif.c
+index a0118c2ee870..c13fa19c9779 100644
+--- a/drivers/media/platform/tsif.c
++++ b/drivers/media/platform/tsif.c
+@@ -237,6 +237,7 @@ static int msm_tspp_probe(struct platform_device *pdev)
+ 	{
+ 		struct device_node *tsif_node, *demod_node;
+ 		struct i2c_client *demod;
++		struct dvb_demod_common *demod_data;
+ 
+ 		tsif_node = pdev->dev.of_node;
+ 		demod_node = of_parse_phandle(tsif_node, "demod", 0);
+@@ -244,10 +245,8 @@ static int msm_tspp_probe(struct platform_device *pdev)
+ 		demod = of_find_i2c_device_by_node(demod_node);
+ 		if (!demod) panic("of_find_i2c_device_by_node");
+ 
+-		/*** TODO: Improve callback naming & handling ***/
+-		if (!demod->get_something)
+-			panic("Wrong i2c_client");
+-		my_dvb_frontend = demod->get_something(demod);
++		demod_data = i2c_get_clientdata(demod);
++		my_dvb_frontend = demod_data->fe;
+ 		of_node_put(demod_node);
+ 	}
+ 
+diff --git a/include/linux/i2c.h b/include/linux/i2c.h
+index 5fca596e0dd0..e982b8913b73 100644
+--- a/include/linux/i2c.h
++++ b/include/linux/i2c.h
+@@ -295,8 +295,6 @@ struct i2c_driver {
+ };
+ #define to_i2c_driver(d) container_of(d, struct i2c_driver, driver)
+ 
+-typedef void *generic_func(struct i2c_client *this);
+-
+ /**
+  * struct i2c_client - represent an I2C slave device
+  * @flags: I2C_CLIENT_TEN indicates the device uses a ten bit chip address;
+@@ -330,7 +328,6 @@ struct i2c_client {
+ #if IS_ENABLED(CONFIG_I2C_SLAVE)
+ 	i2c_slave_cb_t slave_cb;	/* callback for slave mode	*/
+ #endif
+-	generic_func *get_something;
+ };
+ #define to_i2c_client(d) container_of(d, struct i2c_client, dev)
+ 
+diff --git a/include/media/dvb_frontend.h b/include/media/dvb_frontend.h
+index f05cd7b94a2c..087486bc027e 100644
+--- a/include/media/dvb_frontend.h
++++ b/include/media/dvb_frontend.h
+@@ -73,6 +73,10 @@ struct dvb_frontend_tune_settings {
+ 
+ struct dvb_frontend;
+ 
++struct dvb_demod_common {
++	struct dvb_frontend *fe;
++};
++
+ /**
+  * struct dvb_tuner_info - Frontend name and min/max ranges/bandwidths
+  *
