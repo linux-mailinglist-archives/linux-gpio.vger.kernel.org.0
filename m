@@ -2,235 +2,613 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id CA54F61D67
-	for <lists+linux-gpio@lfdr.de>; Mon,  8 Jul 2019 13:02:08 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D24EA61DA7
+	for <lists+linux-gpio@lfdr.de>; Mon,  8 Jul 2019 13:08:46 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730284AbfGHLCD (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 8 Jul 2019 07:02:03 -0400
-Received: from onstation.org ([52.200.56.107]:56190 "EHLO onstation.org"
+        id S1730329AbfGHLIp (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 8 Jul 2019 07:08:45 -0400
+Received: from ns.iliad.fr ([212.27.33.1]:41250 "EHLO ns.iliad.fr"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730266AbfGHLB6 (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Mon, 8 Jul 2019 07:01:58 -0400
-Received: from localhost.localdomain (c-98-239-145-235.hsd1.wv.comcast.net [98.239.145.235])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: masneyb)
-        by onstation.org (Postfix) with ESMTPSA id 9E60048975;
-        Mon,  8 Jul 2019 11:01:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=onstation.org;
-        s=default; t=1562583718;
-        bh=DgaHBZzlEyqiB3ritaN8n33SgsqcrBxMo8HWSjWaz0k=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=R1W8KCUrDNvaDFW0VvoF6RuvHAmiufdyCW1EKHA1QGGOvkJ/g79ehdd3LSyCwkLdH
-         WNQMvwLojw/0TLaau0mNyl4XdF/yUA4xvLv7jY+PYSpGEZeLL8Rkgl4Sxlkj25O859
-         8v4Tl70fvCWeCsaIYIMhXfUcBmktrz1Yo7vswcao=
-From:   Brian Masney <masneyb@onstation.org>
-To:     linus.walleij@linaro.org
-Cc:     linux-gpio@vger.kernel.org, bgolaszewski@baylibre.com,
-        tglx@linutronix.de, marc.zyngier@arm.com, ilina@codeaurora.org,
-        jonathanh@nvidia.com, skomatineni@nvidia.com, bbiswas@nvidia.com,
-        linux-tegra@vger.kernel.org, david.daney@cavium.com,
-        yamada.masahiro@socionext.com, treding@nvidia.com,
-        bjorn.andersson@linaro.org, agross@kernel.org,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 4/4] qcom: spmi-gpio: convert to hierarchical IRQ helpers in gpio core
-Date:   Mon,  8 Jul 2019 07:01:38 -0400
-Message-Id: <20190708110138.24657-5-masneyb@onstation.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190708110138.24657-1-masneyb@onstation.org>
-References: <20190708110138.24657-1-masneyb@onstation.org>
+        id S1730246AbfGHLIo (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Mon, 8 Jul 2019 07:08:44 -0400
+Received: from ns.iliad.fr (localhost [127.0.0.1])
+        by ns.iliad.fr (Postfix) with ESMTP id 052B12090E;
+        Mon,  8 Jul 2019 13:08:40 +0200 (CEST)
+Received: from [192.168.108.49] (freebox.vlq16.iliad.fr [213.36.7.13])
+        by ns.iliad.fr (Postfix) with ESMTP id D1DC22090C;
+        Mon,  8 Jul 2019 13:08:39 +0200 (CEST)
+To:     I2C <linux-i2c@vger.kernel.org>,
+        linux-media <linux-media@vger.kernel.org>,
+        GPIO <linux-gpio@vger.kernel.org>
+Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
+        =?UTF-8?Q?Jonathan_Neusch=c3=a4fer?= <j.neuschaefer@gmx.net>,
+        Brad Love <brad@nextdimension.cc>,
+        Antti Palosaari <crope@iki.fi>,
+        Olli Salonen <olli.salonen@iki.fi>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Jeffrey Hugo <jeffrey.l.hugo@gmail.com>,
+        Wolfram Sang <wsa@the-dreams.de>,
+        Simon Horman <horms+renesas@verge.net.au>,
+        Peter Korsgaard <peter@korsgaard.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>
+From:   Marc Gonzalez <marc.w.gonzalez@free.fr>
+Subject: [RFC] SW connection between DVB Transport Stream demuxer and
+ I2C-based frontend
+Message-ID: <5e35b4fb-646d-6428-f372-ee47d7352cd6@free.fr>
+Date:   Mon, 8 Jul 2019 13:08:39 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Virus-Scanned: ClamAV using ClamSMTP ; ns.iliad.fr ; Mon Jul  8 13:08:40 2019 +0200 (CEST)
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Now that the GPIO core has support for hierarchical IRQ chips, convert
-Qualcomm's spmi-gpio over to use these new helpers to reduce duplicated
-code across drivers.
+Hello everyone,
 
-This change was tested on a LG Nexus 5 (hammerhead) phone.
+My first message(*) might have been too vague. Let me try explaining
+the goal in a different way, using code this time. (Provided at the
+end of this message.)
 
-Signed-off-by: Brian Masney <masneyb@onstation.org>
----
- drivers/pinctrl/qcom/Kconfig             |  1 +
- drivers/pinctrl/qcom/pinctrl-spmi-gpio.c | 92 +++++++-----------------
- 2 files changed, 26 insertions(+), 67 deletions(-)
+(*) https://www.spinics.net/lists/arm-kernel/msg739657.html
 
-diff --git a/drivers/pinctrl/qcom/Kconfig b/drivers/pinctrl/qcom/Kconfig
-index 27ab585a639c..9b36da702925 100644
---- a/drivers/pinctrl/qcom/Kconfig
-+++ b/drivers/pinctrl/qcom/Kconfig
-@@ -138,6 +138,7 @@ config PINCTRL_QCOM_SPMI_PMIC
-        select PINMUX
-        select PINCONF
-        select GENERIC_PINCONF
-+       select GPIOLIB_IRQCHIP
-        select IRQ_DOMAIN_HIERARCHY
-        help
-          This is the pinctrl, pinmux, pinconf and gpiolib driver for the
-diff --git a/drivers/pinctrl/qcom/pinctrl-spmi-gpio.c b/drivers/pinctrl/qcom/pinctrl-spmi-gpio.c
-index f39da87ea185..0bef149c2f16 100644
---- a/drivers/pinctrl/qcom/pinctrl-spmi-gpio.c
-+++ b/drivers/pinctrl/qcom/pinctrl-spmi-gpio.c
-@@ -170,8 +170,6 @@ struct pmic_gpio_state {
- 	struct regmap	*map;
- 	struct pinctrl_dev *ctrl;
- 	struct gpio_chip chip;
--	struct fwnode_handle *fwnode;
--	struct irq_domain *domain;
+Background: I'm working with a SoC that provides a TSIF HW block,
+and I'm trying to write a driver for it.
+
+The purpose of this "Transport Stream Interface" is to merge incoming
+bits together into a 188-byte TS packet, add a timestamp, then raise
+an interrupt to notify the system that a new packet is ready.
+(Driver for this HW block is tsif.c)
+
+Pretty basic stuff so far...
+
+While the TSIF block is embedded in the SoC, the block that feeds the
+TSIF (a demodulator) is not, therefore the demod is provided on the
+board. (On the board I have, demod=si2168, tuner=2141). Different boards
+may have different demods/tuners.
+
+So, I have a DT node for the TSIF in the SoC DTSI, and a DT node for
+the si2168 in the board DTSI; and the TSIF node has a phandle to the
+demod node. The system communicates with si2168 over an I2C bus.
+The si2168 is connected to the TSIF using 3 GPIO pins.
+
+
+PROBLEM #1
+
+The media framework requires that the TSIF and demod be "tied" together,
+by calling dvb_register_frontend(). If I do that in tsif.c, then I need to
+get the frontend pointer from the demod at some point. There is no such
+callback presently. Since si2168 lives on an I2C bus, I can get a
+struct i2c_client pointer, through the DT phandle. But some kind of
+abstraction is missing to query the i2c_client object to make sure it
+is a demodulator and request its frontend pointer.
+
+For the time being, I have added a very generic pointer to struct i2c_client
+but I feel this is not quite right... (though it gets the job done)
+
+
+PROBLEM #2
+
+The tuner (si2157) is not on the i2c5 bus, instead it is on a private
+i2c bus *behind* si2168, which routes requests to the proper client.
+For the time being, I don't know how to model this relationship in DT.
+(TODO: check i2c_slave_cb_t slave_cb in struct i2c_client)
+I have initialized si2157 in the si2168 driver, but this doesn't feel
+right. (Though it seems all(?) users pair 2168 with 2157.)
+
+
+It would really help if I could get some guidance from media and i2c
+people for these two issues. (I'd like to upstream the driver in time
+for 5.3)
+
+Regards.
+
+
+
+diff --git a/arch/arm64/boot/dts/qcom/apq8098-batfish.dts b/arch/arm64/boot/dts/qcom/apq8098-batfish.dts
+index 29d59ecad138..9353e62375a7 100644
+--- a/arch/arm64/boot/dts/qcom/apq8098-batfish.dts
++++ b/arch/arm64/boot/dts/qcom/apq8098-batfish.dts
+@@ -30,6 +30,28 @@
+ 	status = "ok";
  };
  
- static const struct pinconf_generic_params pmic_gpio_bindings[] = {
-@@ -751,23 +749,6 @@ static int pmic_gpio_of_xlate(struct gpio_chip *chip,
- 	return gpio_desc->args[0] - PMIC_GPIO_PHYSICAL_OFFSET;
- }
++&blsp1_i2c5 {
++	status = "ok";
++	clock-frequency = <100000>;
++	pinctrl-names = "default";
++	pinctrl-0 = <&i2c5_default>;
++
++	dvb_demod: si2168@64 {
++		compatible = "silabs,si2168";
++		reg = <0x64>;
++		reset-gpios = <&tlmm 84 GPIO_ACTIVE_LOW>;
++	};
++};
++
++&tsif {
++	demod = <&dvb_demod>;
++};
++
++&i2c5_default {
++	drive-strength = <2>;
++	bias-disable;
++};
++
+ &qusb2phy {
+ 	status = "ok";
+ 	vdda-pll-supply = <&vreg_l12a_1p8>;
+diff --git a/arch/arm64/boot/dts/qcom/msm8998-pins.dtsi b/arch/arm64/boot/dts/qcom/msm8998-pins.dtsi
+index 6db70acd38ee..22ef4dfddb15 100644
+--- a/arch/arm64/boot/dts/qcom/msm8998-pins.dtsi
++++ b/arch/arm64/boot/dts/qcom/msm8998-pins.dtsi
+@@ -2,6 +2,18 @@
+ /* Copyright (c) 2018, The Linux Foundation. All rights reserved. */
  
--static int pmic_gpio_to_irq(struct gpio_chip *chip, unsigned pin)
--{
--	struct pmic_gpio_state *state = gpiochip_get_data(chip);
--	struct irq_fwspec fwspec;
--
--	fwspec.fwnode = state->fwnode;
--	fwspec.param_count = 2;
--	fwspec.param[0] = pin + PMIC_GPIO_PHYSICAL_OFFSET;
--	/*
--	 * Set the type to a safe value temporarily. This will be overwritten
--	 * later with the proper value by irq_set_type.
--	 */
--	fwspec.param[1] = IRQ_TYPE_EDGE_RISING;
--
--	return irq_create_fwspec_mapping(&fwspec);
--}
--
- static void pmic_gpio_dbg_show(struct seq_file *s, struct gpio_chip *chip)
- {
- 	struct pmic_gpio_state *state = gpiochip_get_data(chip);
-@@ -787,7 +768,6 @@ static const struct gpio_chip pmic_gpio_gpio_template = {
- 	.request		= gpiochip_generic_request,
- 	.free			= gpiochip_generic_free,
- 	.of_xlate		= pmic_gpio_of_xlate,
--	.to_irq			= pmic_gpio_to_irq,
- 	.dbg_show		= pmic_gpio_dbg_show,
+ &tlmm {
++	i2c5_default: i2c5-default {
++		pins = "gpio87", "gpio88";
++		function = "blsp_i2c5";
++	};
++
++	tsif0_default: tsif0-default {
++		pins = "gpio89", "gpio90", "gpio91";
++		function = "tsif0";
++		drive-strength = <2>;
++		bias-pull-down;
++	};
++
+ 	sdc2_clk_on: sdc2_clk_on {
+ 		config {
+ 			pins = "sdc2_clk";
+diff --git a/arch/arm64/boot/dts/qcom/msm8998.dtsi b/arch/arm64/boot/dts/qcom/msm8998.dtsi
+index f8671a46392d..72b5d3e094c0 100644
+--- a/arch/arm64/boot/dts/qcom/msm8998.dtsi
++++ b/arch/arm64/boot/dts/qcom/msm8998.dtsi
+@@ -1206,6 +1206,21 @@
+ 			status = "disabled";
+ 		};
+ 
++		tsif: tsif@c1e7000 {
++			compatible = "qcom,msm8998-tsif";
++			reg = <0x0c1e7000 0x200>;
++			reg-names = "MSM_TSIF0_PHYS";
++
++			interrupts = <GIC_SPI 119 IRQ_TYPE_LEVEL_HIGH>;
++			interrupt-names = "TSIF0_IRQ";
++
++			clocks = <&gcc GCC_TSIF_AHB_CLK>;
++			clock-names = "iface_clk";
++
++			pinctrl-0 = <&tsif0_default>;
++			pinctrl-names = "default";
++		};
++
+ 		timer@17920000 {
+ 			#address-cells = <1>;
+ 			#size-cells = <1>;
+diff --git a/drivers/media/dvb-frontends/si2168.c b/drivers/media/dvb-frontends/si2168.c
+index 48e8a376766e..726bb6759315 100644
+--- a/drivers/media/dvb-frontends/si2168.c
++++ b/drivers/media/dvb-frontends/si2168.c
+@@ -6,7 +6,9 @@
+  */
+ 
+ #include <linux/delay.h>
++#include <linux/gpio/consumer.h>
+ 
++#include "si2157.h"
+ #include "si2168_priv.h"
+ 
+ static const struct dvb_frontend_ops si2168_ops;
+@@ -660,9 +662,20 @@ static const struct dvb_frontend_ops si2168_ops = {
+ 	.read_status = si2168_read_status,
  };
  
-@@ -964,46 +944,24 @@ static int pmic_gpio_domain_translate(struct irq_domain *domain,
- 	return 0;
- }
- 
--static int pmic_gpio_domain_alloc(struct irq_domain *domain, unsigned int virq,
--				  unsigned int nr_irqs, void *data)
-+static unsigned int pmic_gpio_child_pin_to_irq(struct gpio_chip *chip,
-+					       unsigned int pin)
- {
--	struct pmic_gpio_state *state = container_of(domain->host_data,
--						     struct pmic_gpio_state,
--						     chip);
--	struct irq_fwspec *fwspec = data;
--	struct irq_fwspec parent_fwspec;
--	irq_hw_number_t hwirq;
--	unsigned int type;
--	int ret, i;
--
--	ret = pmic_gpio_domain_translate(domain, fwspec, &hwirq, &type);
--	if (ret)
--		return ret;
--
--	for (i = 0; i < nr_irqs; i++)
--		irq_domain_set_info(domain, virq + i, hwirq + i,
--				    &pmic_gpio_irq_chip, state,
--				    handle_level_irq, NULL, NULL);
-+	return pin + PMIC_GPIO_PHYSICAL_OFFSET;
-+}
- 
--	parent_fwspec.fwnode = domain->parent->fwnode;
--	parent_fwspec.param_count = 4;
--	parent_fwspec.param[0] = 0;
--	parent_fwspec.param[1] = hwirq + 0xc0;
--	parent_fwspec.param[2] = 0;
--	parent_fwspec.param[3] = fwspec->param[1];
-+static int pmic_gpio_child_to_parent_hwirq(struct gpio_chip *chip,
-+					   unsigned int child_hwirq,
-+					   unsigned int child_type,
-+					   unsigned int *parent_hwirq,
-+					   unsigned int *parent_type)
++struct si2168_config si2168_config;
++struct si2157_config si2157_config;
++struct i2c_client *tuner;
++
++static void *get_fe(struct i2c_client *client)
 +{
-+	*parent_hwirq = child_hwirq + 0xc0;
-+	*parent_type = child_type;
- 
--	return irq_domain_alloc_irqs_parent(domain, virq, nr_irqs,
--					    &parent_fwspec);
-+	return 0;
- }
- 
--static const struct irq_domain_ops pmic_gpio_domain_ops = {
--	.activate = gpiochip_irq_domain_activate,
--	.alloc = pmic_gpio_domain_alloc,
--	.deactivate = gpiochip_irq_domain_deactivate,
--	.free = irq_domain_free_irqs_common,
--	.translate = pmic_gpio_domain_translate,
--};
--
- static int pmic_gpio_probe(struct platform_device *pdev)
++	struct si2168_dev *dev = i2c_get_clientdata(client);
++	return &dev->fe;
++}
++
+ static int si2168_probe(struct i2c_client *client,
+ 		const struct i2c_device_id *id)
  {
- 	struct irq_domain *parent_domain;
-@@ -1013,6 +971,7 @@ static int pmic_gpio_probe(struct platform_device *pdev)
- 	struct pinctrl_desc *pctrldesc;
- 	struct pmic_gpio_pad *pad, *pads;
- 	struct pmic_gpio_state *state;
-+	struct gpio_irq_chip *girq;
- 	int ret, npins, i;
- 	u32 reg;
++	struct device *cdev = &client->dev;
+ 	struct si2168_config *config = client->dev.platform_data;
+ 	struct si2168_dev *dev;
+ 	int ret;
+@@ -670,12 +683,24 @@ static int si2168_probe(struct i2c_client *client,
  
-@@ -1092,19 +1051,21 @@ static int pmic_gpio_probe(struct platform_device *pdev)
- 	if (!parent_domain)
- 		return -ENXIO;
+ 	dev_dbg(&client->dev, "\n");
  
--	state->fwnode = of_node_to_fwnode(state->dev->of_node);
--	state->domain = irq_domain_create_hierarchy(parent_domain, 0,
--						    state->chip.ngpio,
--						    state->fwnode,
--						    &pmic_gpio_domain_ops,
--						    &state->chip);
--	if (!state->domain)
--		return -ENODEV;
-+	girq = &state->chip.irq;
-+	girq->chip = &pmic_gpio_irq_chip;
-+	girq->default_type = IRQ_TYPE_NONE;
-+	girq->handler = handle_level_irq;
-+	girq->fwnode = of_node_to_fwnode(state->dev->of_node);
-+	girq->parent_domain = parent_domain;
-+	girq->child_to_parent_hwirq = pmic_gpio_child_to_parent_hwirq;
-+	girq->populate_parent_fwspec = gpiochip_populate_parent_fwspec_fourcell;
-+	girq->child_pin_to_irq = pmic_gpio_child_pin_to_irq;
-+	girq->child_irq_domain_ops.translate = pmic_gpio_domain_translate;
- 
- 	ret = gpiochip_add_data(&state->chip, state);
- 	if (ret) {
- 		dev_err(state->dev, "can't add gpio chip\n");
--		goto err_chip_add_data;
-+		return ret;
++	if (!config) {
++		config = &si2168_config;
++		config->ts_mode = SI2168_TS_SERIAL;
++	}
++
++	if (cdev->of_node) {
++		struct gpio_desc *desc;
++		desc = devm_gpiod_get_optional(cdev, "reset", GPIOD_OUT_LOW);
++		if (IS_ERR(desc)) return PTR_ERR(desc);
++	}
++
+ 	dev = kzalloc(sizeof(*dev), GFP_KERNEL);
+ 	if (!dev) {
+ 		ret = -ENOMEM;
+ 		goto err;
  	}
  
- 	/*
-@@ -1130,8 +1091,6 @@ static int pmic_gpio_probe(struct platform_device *pdev)
++	client->get_something = get_fe;
+ 	i2c_set_clientdata(client, dev);
+ 	mutex_init(&dev->i2c_mutex);
  
- err_range:
- 	gpiochip_remove(&state->chip);
--err_chip_add_data:
--	irq_domain_remove(state->domain);
- 	return ret;
- }
+@@ -739,8 +764,10 @@ static int si2168_probe(struct i2c_client *client,
+ 	/* create dvb_frontend */
+ 	memcpy(&dev->fe.ops, &si2168_ops, sizeof(struct dvb_frontend_ops));
+ 	dev->fe.demodulator_priv = client;
+-	*config->i2c_adapter = dev->muxc->adapter[0];
+-	*config->fe = &dev->fe;
++	if (config->i2c_adapter)
++		*config->i2c_adapter = dev->muxc->adapter[0];
++	if (config->fe)
++		*config->fe = &dev->fe;
+ 	dev->ts_mode = config->ts_mode;
+ 	dev->ts_clock_inv = config->ts_clock_inv;
+ 	dev->ts_clock_gapped = config->ts_clock_gapped;
+@@ -753,6 +780,12 @@ static int si2168_probe(struct i2c_client *client,
+ 		 dev->version >> 24 & 0xff, dev->version >> 16 & 0xff,
+ 		 dev->version >> 8 & 0xff, dev->version >> 0 & 0xff);
  
-@@ -1140,7 +1099,6 @@ static int pmic_gpio_remove(struct platform_device *pdev)
- 	struct pmic_gpio_state *state = platform_get_drvdata(pdev);
- 
- 	gpiochip_remove(&state->chip);
--	irq_domain_remove(state->domain);
++	if (cdev->of_node) {
++		struct i2c_adapter *si2168_bus = dev->muxc->adapter[0];
++		si2157_config.fe = &dev->fe;
++		tuner = dvb_module_probe("si2157", "si2141", si2168_bus, 0x60, &si2157_config);
++	}
++
  	return 0;
- }
+ err_kfree:
+ 	kfree(dev);
+diff --git a/drivers/media/platform/Makefile b/drivers/media/platform/Makefile
+index 7cbbd925124c..b24fc530e875 100644
+--- a/drivers/media/platform/Makefile
++++ b/drivers/media/platform/Makefile
+@@ -101,3 +101,8 @@ obj-y					+= meson/
+ obj-y					+= cros-ec-cec/
  
--- 
-2.20.1
-
+ obj-$(CONFIG_VIDEO_SUN6I_CSI)		+= sunxi/sun6i-csi/
++
++obj-y += tsif.o
++ccflags-y += -I$(srctree)/drivers/media/dvb-frontends
++ccflags-y += -I$(srctree)/drivers/media/tuners
++ccflags-y += -I$(srctree)/drivers/media/common
+diff --git a/drivers/media/platform/tsif.c b/drivers/media/platform/tsif.c
+new file mode 100644
+index 000000000000..a0118c2ee870
+--- /dev/null
++++ b/drivers/media/platform/tsif.c
+@@ -0,0 +1,294 @@
++#include <linux/init.h>
++#include <linux/module.h>
++#include <linux/kthread.h>
++#include <linux/vmalloc.h>
++
++#include <media/dvb_demux.h>
++#include <media/dmxdev.h>
++
++#include "si2168.h"
++#include "si2157.h"
++
++#include <linux/module.h>        /* Just for modules */
++#include <linux/kernel.h>        /* Only for KERN_INFO */
++#include <linux/err.h>           /* Error macros */
++#include <linux/cdev.h>
++#include <linux/init.h>          /* Needed for the macros */
++#include <linux/io.h>            /* IO macros */
++#include <linux/device.h>        /* Device drivers need this */
++#include <linux/sched.h>         /* Externally defined globals */
++#include <linux/fs.h>
++#include <linux/uaccess.h>       /* copy_to_user */
++#include <linux/slab.h>          /* kfree, kzalloc */
++#include <linux/ioport.h>        /* XXX_ mem_region */
++#include <linux/dma-mapping.h>   /* dma_XXX */
++#include <linux/delay.h>         /* msleep */
++#include <linux/platform_device.h>
++#include <linux/clk.h>
++#include <linux/poll.h>          /* poll() file op */
++#include <linux/wait.h>          /* wait() macros, sleeping */
++#include <linux/bitops.h>        /* BIT() macro */
++#include <linux/regulator/consumer.h>
++#include <linux/timer.h>         /* Timer services */
++#include <linux/jiffies.h>       /* Jiffies counter */
++#include <linux/i2c.h>
++#include <linux/of.h>
++#include <linux/of_gpio.h>
++#include <linux/string.h>
++#include <linux/interrupt.h>	/* tasklet */
++
++/* Max number of section filters */
++#define TSPP_MAX_SECTION_FILTER_NUM	128
++
++/*
++ * General defines
++ */
++#define TSPP_TSIF_INSTANCES            1
++
++/*
++ * TSIF register offsets
++ */
++#define TSIF_STS_CTL	0x0
++#define TSIF_DATA_PORT	0x100
++
++/* bits for TSIF_STS_CTL register */
++#define TSIF_STS_CTL_EN_IRQ       BIT(28)
++#define TSIF_STS_CTL_PACK_AVAIL   BIT(27)
++#define TSIF_STS_CTL_1ST_PACKET   BIT(26)
++#define TSIF_STS_CTL_OVERFLOW     BIT(25)
++#define TSIF_STS_CTL_LOST_SYNC    BIT(24)
++#define TSIF_STS_CTL_TIMEOUT      BIT(23)
++#define TSIF_STS_CTL_INV_SYNC     BIT(21)
++#define TSIF_STS_CTL_INV_NULL     BIT(20)
++#define TSIF_STS_CTL_INV_ERROR    BIT(19)
++#define TSIF_STS_CTL_INV_ENABLE   BIT(18)
++#define TSIF_STS_CTL_INV_DATA     BIT(17)
++#define TSIF_STS_CTL_INV_CLOCK    BIT(16)
++#define TSIF_STS_CTL_SPARE        BIT(15)
++#define TSIF_STS_CTL_EN_NULL      BIT(11)
++#define TSIF_STS_CTL_EN_ERROR     BIT(10)
++#define TSIF_STS_CTL_LAST_BIT     BIT(9)
++#define TSIF_STS_CTL_EN_TIME_LIM  BIT(8)
++#define TSIF_STS_CTL_EN_TCR       BIT(7)
++#define TSIF_STS_CTL_TEST_MODE    BIT(6)
++#define TSIF_STS_CTL_MODE_2       BIT(5)
++#define TSIF_STS_CTL_EN_DM        BIT(4)
++#define TSIF_STS_CTL_STOP         BIT(3)
++#define TSIF_STS_CTL_START        BIT(0)
++
++/* this represents the actual hardware device */
++struct tspp_device {
++	struct platform_device *pdev;
++	struct clk *tsif_pclk;
++};
++
++static struct batfish_dvb_adapter {
++	struct device *dev;
++} batfish_dvb_adapter;
++
++struct tsif_device {
++	void __iomem *base;
++	u32 ref_count;
++};
++
++/*** GLOBALS ***/
++/*** TODO: move them all to a properly kalloc'ed struct ***/
++static struct dvb_frontend *my_dvb_frontend;
++static struct dmx_frontend my_dmx_frontend;
++static struct dvb_adapter my_dvb_adapter;
++static struct dvb_demux my_dvb_demux;
++static struct dmxdev my_dmxdev;
++static struct tsif_device my_tsif_device;
++
++static int start_tsif(struct dvb_demux_feed *feed)
++{
++	printk("%s: feed PID=%u\n", __func__, feed->pid);
++
++	if (my_tsif_device.ref_count++ == 0) {
++		u32 val = TSIF_STS_CTL_EN_IRQ + TSIF_STS_CTL_START;
++		writel_relaxed(val, my_tsif_device.base + TSIF_STS_CTL);
++	}
++
++	return 0;
++}
++
++static int stop_tsif(struct dvb_demux_feed *feed)
++{
++	printk("%s: feed PID=%u\n", __func__, feed->pid);
++
++	if (my_tsif_device.ref_count == 0) panic(__func__);
++
++	if (--my_tsif_device.ref_count == 0)
++		writel_relaxed(TSIF_STS_CTL_STOP, my_tsif_device.base + TSIF_STS_CTL);
++
++	return 0;
++}
++
++static void batfish_init(struct batfish_dvb_adapter *adapter)
++{
++	int ret;
++	short int ids[] = { -1 };
++
++	ret = dvb_register_adapter(&my_dvb_adapter, "MSM TSPP", THIS_MODULE, adapter->dev, ids);
++	if (ret < 0) panic("dvb_register_adapter");
++
++	my_dvb_demux.dmx.capabilities = DMX_TS_FILTERING | DMX_SECTION_FILTERING;
++
++	my_dvb_demux.priv = (void *)0xdeadbeef;
++	my_dvb_demux.filternum = TSPP_MAX_SECTION_FILTER_NUM;
++	my_dvb_demux.feednum = 128;
++	my_dvb_demux.start_feed = start_tsif;
++	my_dvb_demux.stop_feed = stop_tsif;
++
++	ret = dvb_dmx_init(&my_dvb_demux);
++	if (ret < 0) panic("dvb_dmx_init");
++
++	my_dmxdev.filternum = 128;
++	my_dmxdev.demux = &my_dvb_demux.dmx;
++	my_dmxdev.capabilities = 0;
++
++	ret = dvb_dmxdev_init(&my_dmxdev, &my_dvb_adapter);
++	if (ret < 0) panic("dvb_dmxdev_init");
++
++	my_dmx_frontend.source = DMX_FRONTEND_0;
++
++	ret = my_dvb_demux.dmx.add_frontend(&my_dvb_demux.dmx, &my_dmx_frontend);
++	if (ret < 0) panic("add_frontend");
++
++	ret = my_dvb_demux.dmx.connect_frontend(&my_dvb_demux.dmx, &my_dmx_frontend);
++	if (ret < 0) panic("connect_frontend");
++
++	ret = dvb_register_frontend(&my_dvb_adapter, my_dvb_frontend);
++	if (ret < 0) panic("dvb_register_frontend");
++}
++
++static void batfish_deinit(struct batfish_dvb_adapter *adapter)
++{
++	dvb_unregister_frontend(my_dvb_frontend);
++	my_dvb_demux.dmx.remove_frontend(&my_dvb_demux.dmx, &my_dmx_frontend);
++	dvb_dmxdev_release(&my_dmxdev);
++	dvb_dmx_release(&my_dvb_demux);
++	dvb_unregister_adapter(&my_dvb_adapter);
++}
++
++static void tspp_plugin_init(struct device *dev)
++{
++	batfish_dvb_adapter.dev = dev;
++	batfish_init(&batfish_dvb_adapter);
++}
++
++static void tspp_plugin_exit(void)
++{
++	batfish_deinit(&batfish_dvb_adapter);
++}
++
++void dvb_dmx_swfilter_packets(struct dvb_demux *demux, const u8 *buf, size_t count);
++
++static irqreturn_t tsif_isr(int irq, void *dev)
++{
++	int i;
++	void __iomem *tsif = my_tsif_device.base;
++	unsigned int status = readl_relaxed(tsif + TSIF_STS_CTL);
++	u32 buf[48];
++
++	status = readl_relaxed(tsif + 0);
++	writel_relaxed(status, tsif + 0);
++
++	for (i = 0; i < 48; ++i)
++		buf[i] = readl_relaxed(tsif + TSIF_DATA_PORT);
++
++	dvb_dmx_swfilter_packets(&my_dvb_demux, (void *)buf, 1);
++
++	return IRQ_HANDLED;
++}
++
++static int msm_tspp_probe(struct platform_device *pdev)
++{
++	int rc = -ENODEV;
++	struct tspp_device *device;
++	struct resource *mem_tsif0;
++	int tsif_irq;
++
++	/*** TODO: Use devm versions everywhere ***/
++
++	/* OK, we will use this device */
++	device = kzalloc(sizeof(struct tspp_device), GFP_KERNEL);
++	if (!device) panic("kzalloc");
++
++	/* set up references */
++	device->pdev = pdev;
++	platform_set_drvdata(pdev, device);
++
++	/* map clocks */
++	device->tsif_pclk = clk_get(&pdev->dev, "iface_clk");
++	if (IS_ERR(device->tsif_pclk)) panic("clk_get iface_clk");
++
++	/* map I/O memory */
++	mem_tsif0 = platform_get_resource_byname(pdev, IORESOURCE_MEM, "MSM_TSIF0_PHYS");
++	if (!mem_tsif0) panic("get mem_tsif0");
++	my_tsif_device.base = ioremap(mem_tsif0->start, resource_size(mem_tsif0));
++	if (!my_tsif_device.base) panic("ioremap mem_tsif0");
++
++	tsif_irq = platform_get_irq_byname(pdev, "TSIF0_IRQ");
++	if (tsif_irq <= 0) panic("platform_get_irq_byname");
++	rc = devm_request_irq(&pdev->dev, tsif_irq, tsif_isr, IRQF_SHARED, "toto", device);
++	if (rc) panic("devm_request_irq");
++
++	{
++		struct device_node *tsif_node, *demod_node;
++		struct i2c_client *demod;
++
++		tsif_node = pdev->dev.of_node;
++		demod_node = of_parse_phandle(tsif_node, "demod", 0);
++
++		demod = of_find_i2c_device_by_node(demod_node);
++		if (!demod) panic("of_find_i2c_device_by_node");
++
++		/*** TODO: Improve callback naming & handling ***/
++		if (!demod->get_something)
++			panic("Wrong i2c_client");
++		my_dvb_frontend = demod->get_something(demod);
++		of_node_put(demod_node);
++	}
++
++	clk_prepare_enable(device->tsif_pclk);
++
++	tspp_plugin_init(&pdev->dev);
++
++	return 0;
++}
++
++static int msm_tspp_remove(struct platform_device *pdev)
++{
++	struct tspp_device *device = platform_get_drvdata(pdev);
++
++	tspp_plugin_exit();
++
++	iounmap(my_tsif_device.base);
++
++	if (device->tsif_pclk)
++		clk_put(device->tsif_pclk);
++
++	kfree(device);
++
++	return 0;
++}
++
++static const struct of_device_id msm_match_table[] = {
++	{ .compatible = "qcom,msm8998-tsif" },
++	{ /* sentinel */ }
++};
++
++static struct platform_driver msm_tspp_driver = {
++	.probe          = msm_tspp_probe,
++	.remove         = msm_tspp_remove,
++	.driver         = {
++		.name   = "msm_tspp",
++		.of_match_table = msm_match_table,
++	},
++};
++
++module_platform_driver(msm_tspp_driver);
++
++MODULE_DESCRIPTION("MSM TSPP DVB Driver");
++MODULE_LICENSE("GPL v2");
+diff --git a/include/linux/i2c.h b/include/linux/i2c.h
+index e982b8913b73..5fca596e0dd0 100644
+--- a/include/linux/i2c.h
++++ b/include/linux/i2c.h
+@@ -295,6 +295,8 @@ struct i2c_driver {
+ };
+ #define to_i2c_driver(d) container_of(d, struct i2c_driver, driver)
+ 
++typedef void *generic_func(struct i2c_client *this);
++
+ /**
+  * struct i2c_client - represent an I2C slave device
+  * @flags: I2C_CLIENT_TEN indicates the device uses a ten bit chip address;
+@@ -328,6 +330,7 @@ struct i2c_client {
+ #if IS_ENABLED(CONFIG_I2C_SLAVE)
+ 	i2c_slave_cb_t slave_cb;	/* callback for slave mode	*/
+ #endif
++	generic_func *get_something;
+ };
+ #define to_i2c_client(d) container_of(d, struct i2c_client, dev)
+ 
