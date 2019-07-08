@@ -2,64 +2,82 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 740AD61F77
-	for <lists+linux-gpio@lfdr.de>; Mon,  8 Jul 2019 15:19:46 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 46DEB620C1
+	for <lists+linux-gpio@lfdr.de>; Mon,  8 Jul 2019 16:45:08 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731270AbfGHNTp convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-gpio@lfdr.de>); Mon, 8 Jul 2019 09:19:45 -0400
-Received: from mail-qk1-f195.google.com ([209.85.222.195]:46789 "EHLO
-        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727352AbfGHNTp (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 8 Jul 2019 09:19:45 -0400
-Received: by mail-qk1-f195.google.com with SMTP id r4so13166247qkm.13;
-        Mon, 08 Jul 2019 06:19:44 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=SzbhuV/R5taZNptI2ygE950lIemU0Db18Xrnu/N80Ms=;
-        b=TFIj4WrTZbwUuFW59QihtT38QwlNrWOS3yfe6WB9v/XmotdI7crfXsd8zgmhgACVjT
-         e8fkVzBdeBAf6/MDU/vyWaKPNCkWI33Mm8UxPMYs9PmJVsdkRAoLrNqKFB8yR+l7OCHg
-         +icqHrWBhdk9PYvr7a1+07zMatl+MgC58N2COmrnEM+ijMBV/ufr2k+g0txoEYu4ir3+
-         dQeFJCvN6IDIm+2tabZI991NDEc/pfdfe+6p1qUMs2fOs1gbLtVU2JzWuE8QjKzOin6b
-         +5KgzkYgmDmNgAU1R2YcpjcKCxBOPNR0Ejs8CU67J5OSwZq5gWyAjKiWDmqut1uD5D6d
-         JT5w==
-X-Gm-Message-State: APjAAAWh3XeiV35+pfLKx1lAU6+Xu/S0xi/C96atzvLIIqInTGIvTlQV
-        q/HuLgo+5IQDbRonBm5LG/sr4ERU4yxBGjTdSio=
-X-Google-Smtp-Source: APXvYqyWMbI3aMnuYlyu/Ox1IffphTH+LvZqJH0Foq2cj6a51UdOphd5OwiQr9EqCu3tWjnBP4Hoy2gaxLwVDA4T2UI=
-X-Received: by 2002:a05:620a:b:: with SMTP id j11mr10525816qki.352.1562591984354;
- Mon, 08 Jul 2019 06:19:44 -0700 (PDT)
+        id S1730098AbfGHOpG (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 8 Jul 2019 10:45:06 -0400
+Received: from mout.kundenserver.de ([212.227.17.10]:56281 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725869AbfGHOpG (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 8 Jul 2019 10:45:06 -0400
+Received: from [192.168.1.110] ([95.117.164.184]) by mrelayeu.kundenserver.de
+ (mreue109 [212.227.15.183]) with ESMTPSA (Nemesis) id
+ 1N0X4c-1igq9K0K28-00wTJK; Mon, 08 Jul 2019 16:44:06 +0200
+Subject: Re: [RFC] SW connection between DVB Transport Stream demuxer and
+ I2C-based frontend
+To:     Marc Gonzalez <marc.w.gonzalez@free.fr>,
+        I2C <linux-i2c@vger.kernel.org>,
+        linux-media <linux-media@vger.kernel.org>,
+        GPIO <linux-gpio@vger.kernel.org>
+Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
+        =?UTF-8?Q?Jonathan_Neusch=c3=a4fer?= <j.neuschaefer@gmx.net>,
+        Brad Love <brad@nextdimension.cc>,
+        Antti Palosaari <crope@iki.fi>,
+        Olli Salonen <olli.salonen@iki.fi>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Jeffrey Hugo <jeffrey.l.hugo@gmail.com>,
+        Wolfram Sang <wsa@the-dreams.de>,
+        Simon Horman <horms+renesas@verge.net.au>,
+        Peter Korsgaard <peter@korsgaard.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>
+References: <5e35b4fb-646d-6428-f372-ee47d7352cd6@free.fr>
+From:   "Enrico Weigelt, metux IT consult" <lkml@metux.net>
+Organization: metux IT consult
+Message-ID: <b6abf5a2-3151-29e5-8eb7-c960580fd4ea@metux.net>
+Date:   Mon, 8 Jul 2019 16:44:00 +0200
+User-Agent: Mozilla/5.0 (X11; Linux i686 on x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.2.1
 MIME-Version: 1.0
-References: <20190708123843.3302581-1-arnd@arndb.de> <d30c122c-297e-3370-86d6-039388b48cea@gmail.com>
-In-Reply-To: <d30c122c-297e-3370-86d6-039388b48cea@gmail.com>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Mon, 8 Jul 2019 15:19:28 +0200
-Message-ID: <CAK8P3a3NBrBRuRQawJqZr+awRVfqNsMmDw7qw7oRjWKhKOjPkg@mail.gmail.com>
-Subject: Re: [PATCH] gpio: tegra: fix debugfs compile error
-To:     Dmitry Osipenko <digetx@gmail.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "open list:TEGRA ARCHITECTURE SUPPORT" <linux-tegra@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
+In-Reply-To: <5e35b4fb-646d-6428-f372-ee47d7352cd6@free.fr>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Provags-ID: V03:K1:2jvRaVlfIBbTWqmqs0v71/intYTyRlJx4arYouNLUMLImoa4JE8
+ Due+PYAz9HHlV+Oh+JGvJQEVWaMqdW8Uon8bE6aHmyP8jq9DMorJEvkmsLYY+Y0Qhs4zwbv
+ y7HQMEjNaeKMhE2X4e5YLDubhQW/BSnmjtMmJ0aTTdDAmP18wIi5s3lNhDqQs+e+WaQDOxX
+ AADgUj4XIC3nDfJfDfgyw==
+X-Spam-Flag: NO
+X-UI-Out-Filterresults: notjunk:1;V03:K0:BNa//kL+MSA=:/U9k6JExtxUNSL7QQzrsVO
+ Qc/YmJFqFi09e6T66lH+eMgVWarfdks/PkAbhyQSktly45MzYnQ/s0DecPsTJhutefvm2VPNm
+ BCMRR7bsmjcQQjkDgIdf4xHk+1c6xMilKnXtdnfDMXpLyBXSFAbS+CeBEWLqwqg6IMvfOiEPG
+ TeXkmT31LlnLRirAyV21Ukz1h2ZNsLo/NAG7Ca6VcoSYx4Fjd1IfLON0F5/5SGTKjNV+HlgIU
+ 4MZSLWYhGjywPlPOdguG924KONrEzbE6D00X7MKuS0vvvmbsp2SN/+1ddSuFqOSO5YPToO7OO
+ z2WVRY1fPvJC9eyLIsKuLhWcNOxVnvMClIMPmNS58Nh/1nxhf0RJFOk1DL8e6T6CP4tcHvxx9
+ wSMXRQ/sohx+GsBr1KQRnKxEGky965NbmzBsFydKdioBZBH0wWf8cFDyvhjD/pTZmqEDrAwpb
+ j9XByJy8tLYTTeqk/Sv9OGOZ6KYW0dztaQ/JW52ntYX+VDhgkOVRha04v/DB9YXks9FbCUiWA
+ KNNcl3u9Fe8ag8l/GItK1aMpzTndlSInXTFhy4BsIkNmmL1gukAmSKU85++AM8Fodg4DDTpJh
+ DQVkgDKbnZUxRcYqx1NGSuT6tPyVLnSy6Hjc47WTUUqCD3IPgJyj+3SIIe3BmcO4CfbspoeRA
+ 9r4I7e9GvgSlCYfeS2jkSrc8ulDdK5oSWZxOso/tj52W1AzLqwfqf2+R51B1HtkS+WT55N6Hp
+ YnzujFdSNwMrvyhmlmWS9KPxKeBdKdw4o4yq+nokVHMPRqwhRrvgB9Crp5Kmz0fMfGIGHRXv1
+ jXVRq9ud3voStvHFMZCXWHqw49Vmwhds5x4uGs5GrIDnc5MS0B1CEjGDMSzp5Y59Mz0qyif
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Jul 8, 2019 at 3:06 PM Dmitry Osipenko <digetx@gmail.com> wrote:
-> 08.07.2019 15:38, Arnd Bergmann пишет:
->
-> The offending patch should be reverted already, please see [1].
->
-> [1] https://patchwork.ozlabs.org/patch/1128007/#2210871
+On 08.07.19 13:08, Marc Gonzalez wrote:
 
-Ok,  sounds good. With my patch on top, the other version is a little
-nicer, but the revert is correct as well, and probably the safe choice
-during the merge window.
+> The tuner (si2157) is not on the i2c5 bus, instead it is on a private
+> i2c bus *behind* si2168, which routes requests to the proper client.
 
-         Arnd
+Should the si2168 make up it's own i2c controller ?
+
+
+--mtx
+
+-- 
+Enrico Weigelt, metux IT consult
+Free software and Linux embedded engineering
+info@metux.net -- +49-151-27565287
