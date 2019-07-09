@@ -2,73 +2,123 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 8ECAE6351C
-	for <lists+linux-gpio@lfdr.de>; Tue,  9 Jul 2019 13:45:09 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 137DA636F6
+	for <lists+linux-gpio@lfdr.de>; Tue,  9 Jul 2019 15:30:36 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726043AbfGILpJ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 9 Jul 2019 07:45:09 -0400
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:42016 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726010AbfGILpI (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 9 Jul 2019 07:45:08 -0400
-Received: by mail-lf1-f66.google.com with SMTP id s19so12476632lfb.9
-        for <linux-gpio@vger.kernel.org>; Tue, 09 Jul 2019 04:45:07 -0700 (PDT)
+        id S1726523AbfGINaf (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 9 Jul 2019 09:30:35 -0400
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:44044 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726411AbfGINaf (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 9 Jul 2019 09:30:35 -0400
+Received: by mail-lf1-f67.google.com with SMTP id r15so13419066lfm.11
+        for <linux-gpio@vger.kernel.org>; Tue, 09 Jul 2019 06:30:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=seSzBj7AVM5QAXmTv+Gol7Pcz0p7LUdYuUhosI+3OMk=;
-        b=IIni4gkwnjWLWCyUw1SdCL25sb64vL0YCG20t+qjKZU2aG8OHTv4Map8ZoiYxfoSAr
-         dSZiRr8g1HPLIceVx+A7oA8o7YR85fzdcjp+agRhQQ2YMmBYVYC77S5XRJaxq8+pdFiL
-         Br44M5cTSEqno5Wo3p08ugG7lAW/ZecDoB0IuV0OTzQEDEQ7+sGLlIXyCW+9RJzbX6G1
-         pJRfumDWsnM9F25A/nwLs1uFEXbTgy5BaHAh2KwLsc8QE5YuwVqcRLHPprMG3lmwu3h7
-         CqBJGDwARV32389VNVOzhXPN+5Phff3eq4z8Fzge8n7dpVD9fuq7YlJdT1BhcWqf2jqB
-         uPMw==
+        bh=0aUhy01MvjYTIuBK0AjDqzuZqZYxgG2aAS7wxVUO+Ws=;
+        b=JoYm0A/NaqY/RJJ8uj0MbIJYXDsl5MJCKrhp/jp2LS2zO6pysb/Mb9/byTuAK7zFr9
+         X2eynOziS6C8SBX5vVQYnNem1NIY4zlXXQBpszyorhkYABCI/XqVSrJjXM8YSG0nmEUT
+         lp7XJcaLcGLKkscah7/ZYbCliLd6Uvob9249QwNYQ59W6zGUYZ4Yxq3McUtmmD65917K
+         oE3sM2HHEMG1nOfOscOoQ1BkhvdioxCnKxhcc/BsQxVyJFhJFgEaFwjX1gKpjnwzbq63
+         ZFyyHSsHwqJMfB7g0hhp36b5QJkY5Yj/jWTS+CWthz18hOQzNFfz41N49VXBuRvNt/wt
+         1tKQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=seSzBj7AVM5QAXmTv+Gol7Pcz0p7LUdYuUhosI+3OMk=;
-        b=Rm1ZCN+8xHyaxYXg9XWhIkLqjlryhuL0U2xJ9iAZxvrAI1ed7DnMjW+U20vyhXMd2E
-         DgmR3iSaqhHy1xt+t3NmlIqm66WCXIdRE1+aG3YIYeE772O5x+D53C7ydRQ8mH/I5s0W
-         nx0ZEKAKpnQdyxL5Tn0gpDcy/WrLhXP2nOqi2amDYUNv88TzJBfRU5DG909ar/W/QJ5C
-         j4mysNyMJN7sBPAIhDtE7+kgugtCnlYwCPOj8TM7mCbMa+hXi7WSRO2WKbGHk7p1FCvU
-         FRGLJj3TCCKehvijLylgkWqkY0VJaswnK71Hbvadb1lQCgCyhmtMLlLacupIKWM5OS/i
-         1NiQ==
-X-Gm-Message-State: APjAAAX8mXCa/35EHZkb4pxMC7PAyqa3qiatM1Roca3ZlDJdFOYctsOF
-        uK5Ke2Duxg/M1BFsBfLy3KmYuJAZUQJOEF10Cr94aQ==
-X-Google-Smtp-Source: APXvYqy/8XcCvB7nFODWD7OENtnuJiJybM+yNUBuqGnuVouCx9mUgPQgu2w6rIbgvNniO8PCprZNbAC9qXzmLQHXU80=
-X-Received: by 2002:ac2:5c42:: with SMTP id s2mr11675399lfp.61.1562672706813;
- Tue, 09 Jul 2019 04:45:06 -0700 (PDT)
+        bh=0aUhy01MvjYTIuBK0AjDqzuZqZYxgG2aAS7wxVUO+Ws=;
+        b=WY82lrlQVr2GNv0BYHdSx2LyUgnB14gHgeEzyAoiBCTsBWyfPkv8GStYBiFUFGDK3T
+         XDaakr+Wd3QxpKcqrnCBsVu28xfHDNGZEnzPj5/7pmi7KDnNVyuJFMPdJHjVEGsikdnz
+         XqrU9qUpt8m2HgpNesjkuCdlHf8rMn2iTI9yyfzt6Ww3P7W2aab3sbzgcNtgmSxd8iZ/
+         gqpdZXSZeYN5NDjIv7g9GuaOsoGaO8BP2S4fMoBxzUeZv7cxeR3cmE/oktMR2X2JIJBc
+         wpyJ55DNpC1Z8UEzi/REZn+SxCh4ZFGeFl/J93zLDK22zcCOq9Nmlt6NYIPeq+tzIJAt
+         ueUQ==
+X-Gm-Message-State: APjAAAV/cs5Prj+qDN5Q8Z43fYpt+rVXrzCDOf7Fs7kXEBbd+1nazdj/
+        IbWL9R4IZJ3wBoo4Pt15CRkNHQd0TYAR4OUYZpyFWw==
+X-Google-Smtp-Source: APXvYqyvmS/ah3xdKBS2SMnUvhVq3tVc6azhTV9Dh7OiscP4kyOJBs9BHR3v7HDEhjl+V/9EVEJBcrBmIptZAfL6/vU=
+X-Received: by 2002:a19:7616:: with SMTP id c22mr2897636lff.115.1562679033241;
+ Tue, 09 Jul 2019 06:30:33 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190626134258.26991-1-jonathanh@nvidia.com> <CACRpkdaFOs24DJbXg4eKVOAzdGOx__X9rbHPcPUzpTJpZ-jbVw@mail.gmail.com>
- <f5e711a6-4472-8dcb-56b2-b789733231c2@nvidia.com>
-In-Reply-To: <f5e711a6-4472-8dcb-56b2-b789733231c2@nvidia.com>
+References: <20190708082343.30726-1-brgl@bgdev.pl>
+In-Reply-To: <20190708082343.30726-1-brgl@bgdev.pl>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Tue, 9 Jul 2019 13:44:54 +0200
-Message-ID: <CACRpkdbGoh-rHpiKzp+QKirSRdE8uE3nGoUDCxx7USvOkES-kg@mail.gmail.com>
-Subject: Re: [PATCH] gpio: tegra: Clean-up debugfs initialisation
-To:     Jon Hunter <jonathanh@nvidia.com>
-Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        linux-tegra@vger.kernel.org, Greg KH <gregkh@linuxfoundation.org>
+Date:   Tue, 9 Jul 2019 15:30:22 +0200
+Message-ID: <CACRpkdb5xKHZja0mkd-wZJ+YHZpGJaDrkA0dv60MNYKXFcPK4w@mail.gmail.com>
+Subject: Re: [PATCH] gpio: don't WARN() on NULL descs if gpiolib is disabled
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        "Claus H . Stovgaard" <cst@phaseone.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Jul 9, 2019 at 12:11 PM Jon Hunter <jonathanh@nvidia.com> wrote:
-> On 08/07/2019 08:04, Linus Walleij wrote:
+Hi Bartosz,
 
-> > Sadly I've had to revert this commit because of build errors, but
-> > let's see if we can figure it out after the merge window.
+On Mon, Jul 8, 2019 at 10:25 AM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
+
+> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 >
-> Sorry about that. I will be more thorough in future.
+> If gpiolib is disabled, we use the inline stubs from gpio/consumer.h
+> instead of regular definitions of GPIO API. The stubs for 'optional'
+> variants of gpiod_get routines return NULL in this case as if the
+> relevant GPIO wasn't found. This is correct so far.
+>
+> Calling other (non-gpio_get) stubs from this header triggers a warning
+> because the GPIO descriptor couldn't have been requested. The warning
+> however is unconditional (WARN_ON(1)) and is emitted even if the passed
+> descriptor pointer is NULL.
+>
+> We don't want to force the users of 'optional' gpio_get to check the
+> returned pointer before calling e.g. gpiod_set_value() so let's only
+> WARN on non-NULL descriptors.
+>
+> Reported-by: Claus H. Stovgaard <cst@phaseone.com>
+> Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 
-Don't beat yourself up about it, happens all the time. I saw Arnd
-sent some suggested fixups BTW!
+I remember I had this discussion in the past, and I made a large
+refactoring to make it possible for drivers that need gpiod_*
+calls to simply do:
+
+select GPIOLIB
+
+in Kconfig.
+
+This should solve also this problem I think.
+
+However I do realize that there may be situations where people
+simply want to make GPIO support entirely optional without
+having to e.g. create custom stubs and encapsulate things
+inside if IS_ENABLED(CONFIG_GPIOLIB).
+
+I was thinking something like this in the stubs:
+
+gpiod_get[_index]() {
+    return POISON;
+}
+
+gpiod_get[_index]_optional() {
+   return NULL;
+}
+
+This way all gpiod_get() and optional calls are properly
+handled and the semantic that only _optional calls
+can return NULL is preserved. (Your patch would
+violate this.)
+
+Then other stubs can do:
+
+gpiod_set_value() {
+  WARN_ON(desc);
+}
+
+As in your patch, and all will be smooth provided the
+_optional calls have been used to obtain the desc.
 
 Yours,
 Linus Walleij
