@@ -2,81 +2,95 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 214DE62E41
-	for <lists+linux-gpio@lfdr.de>; Tue,  9 Jul 2019 04:41:16 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B6FEC62FE6
+	for <lists+linux-gpio@lfdr.de>; Tue,  9 Jul 2019 07:25:42 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727382AbfGIChd (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 8 Jul 2019 22:37:33 -0400
-Received: from onstation.org ([52.200.56.107]:59956 "EHLO onstation.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726394AbfGIChd (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Mon, 8 Jul 2019 22:37:33 -0400
-Received: from localhost (c-98-239-145-235.hsd1.wv.comcast.net [98.239.145.235])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: masneyb)
-        by onstation.org (Postfix) with ESMTPSA id E0FFA3E913;
-        Tue,  9 Jul 2019 02:37:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=onstation.org;
-        s=default; t=1562639852;
-        bh=PpL4jIvEjNzv0fxPAfTOwE/hxjYf0rAQKipDsAuTYws=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=fwRCB0OqaOQjWUxd8vRgEGzftdGwaiIVW0UeqSnzKogs2DtFbStjItsTsSPSDEBN7
-         Mqlh4HuO1IdORbCwNvEx94+EM/WNJ/cR8fdeahMgfotRkQ9lUIZMdeYKnj7CzPB1pi
-         lLqcaOUIEttTAPFUfF0G7aghmTDrrMh0UHfs9+cU=
-Date:   Mon, 8 Jul 2019 22:37:31 -0400
-From:   Brian Masney <masneyb@onstation.org>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     linux-gpio@vger.kernel.org,
+        id S1726027AbfGIFZl (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 9 Jul 2019 01:25:41 -0400
+Received: from relay1.mentorg.com ([192.94.38.131]:43871 "EHLO
+        relay1.mentorg.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726010AbfGIFZl (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 9 Jul 2019 01:25:41 -0400
+Received: from nat-ies.mentorg.com ([192.94.31.2] helo=svr-ies-mbx-01.mgc.mentorg.com)
+        by relay1.mentorg.com with esmtps (TLSv1.2:ECDHE-RSA-AES256-SHA384:256)
+        id 1hkidE-0007iy-MU from Harish_Kandiga@mentor.com ; Mon, 08 Jul 2019 22:25:36 -0700
+Received: from [10.0.3.15] (137.202.0.90) by svr-ies-mbx-01.mgc.mentorg.com
+ (139.181.222.1) with Microsoft SMTP Server (TLS) id 15.0.1320.4; Tue, 9 Jul
+ 2019 06:25:31 +0100
+Subject: Re: [PATCH V4 2/2] gpio: inverter: document the inverter bindings
+To:     Rob Herring <robh+dt@kernel.org>
+CC:     Linus Walleij <linus.walleij@linaro.org>,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Marc Zyngier <marc.zyngier@arm.com>,
-        Lina Iyer <ilina@codeaurora.org>,
-        Jon Hunter <jonathanh@nvidia.com>,
-        Sowjanya Komatineni <skomatineni@nvidia.com>,
-        Bitan Biswas <bbiswas@nvidia.com>, linux-tegra@vger.kernel.org,
-        David Daney <david.daney@cavium.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Thierry Reding <treding@nvidia.com>
-Subject: Re: [PATCH 1/4 v1] gpio: Add support for hierarchical IRQ domains
-Message-ID: <20190709023731.GA7401@onstation.org>
-References: <20190624132531.6184-1-linus.walleij@linaro.org>
+        Mark Rutland <mark.rutland@arm.com>,
+        <devicetree@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Balasubramani Vivekanandan 
+        <balasubramani_vivekanandan@mentor.com>
+References: <1561714250-19613-1-git-send-email-harish_kandiga@mentor.com>
+ <CAL_Jsq+-xWLkvku-nLmJnFvbuS=dSD=9dG=GS4uBUqL50tdcDg@mail.gmail.com>
+From:   Harish Jenny K N <harish_kandiga@mentor.com>
+Message-ID: <06c95f15-d577-e43d-e046-ee222f86c406@mentor.com>
+Date:   Tue, 9 Jul 2019 10:55:22 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190624132531.6184-1-linus.walleij@linaro.org>
+In-Reply-To: <CAL_Jsq+-xWLkvku-nLmJnFvbuS=dSD=9dG=GS4uBUqL50tdcDg@mail.gmail.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Originating-IP: [137.202.0.90]
+X-ClientProxiedBy: SVR-IES-MBX-08.mgc.mentorg.com (139.181.222.8) To
+ svr-ies-mbx-01.mgc.mentorg.com (139.181.222.1)
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Linus,
+Hi Rob,
 
-On Mon, Jun 24, 2019 at 03:25:28PM +0200, Linus Walleij wrote:
-> +associated irqdomain and resource allocation callbacks. These are activated
-> +by selecting the Kconfig symbol GPIOLIB_IRQCHIP. If the symbol
-> +IRQ_DOMAIN_HIERARCHY is also selected, hierarchical helpers will also be
-> +provided. A big portion of overhead code will be managed by gpiolib,
-> +under the assumption that your interrupts are 1-to-1-mapped to the
-> +GPIO line index:
-> +
-> +  GPIO line offset   Hardware IRQ
-> +  0                  0
-> +  1                  1
-> +  2                  2
-> +  ...                ...
-> +  ngpio-1            ngpio-1
-> +
-> +If some GPIO lines do not have corresponding IRQs, the bitmask valid_mask
-> +and the flag need_valid_mask in gpio_irq_chip can be used to mask off some
-> +lines as invalid for associating with IRQs.
 
-I forgot to call out in my patch series that the GPIOs are numbered
-1..ngpio on Qualcomm and the existing to_irq and translate callbacks
-in mainline take care of adding and subtracting one to / from the
-offset.
+On 09/07/19 4:06 AM, Rob Herring wrote:
+> On Fri, Jun 28, 2019 at 3:31 AM Harish Jenny K N
+> <harish_kandiga@mentor.com> wrote:
+>> Document the device tree binding for the inverter gpio
+>> controller to configure the polarity of the gpio pins
+>> used by the consumers.
+>>
+>> Signed-off-by: Harish Jenny K N <harish_kandiga@mentor.com>
+>> ---
+>>  .../devicetree/bindings/gpio/gpio-inverter.txt     | 29 ++++++++++++++++++++++
+>>  1 file changed, 29 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/gpio/gpio-inverter.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/gpio/gpio-inverter.txt b/Documentation/devicetree/bindings/gpio/gpio-inverter.txt
+>> new file mode 100644
+>> index 0000000..8bb6b2e
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/gpio/gpio-inverter.txt
+>> @@ -0,0 +1,29 @@
+>> +GPIO-INVERTER
+>> +======
+>> +This binding defines the gpio-inverter. The gpio-inverter is a driver that
+>> +allows to properly describe the gpio polarities on the hardware.
+> I don't understand. Please explain this in terms of the hardware, not a driver.
 
-I was under the (false?) assumption that GPIO numbering on all platforms
-start at one. Is that not the case?
 
-Brian
+gpio inverters can be used on different hardware to alter the polarity of gpio chips.
+The polarity of pins can change from hardware to hardware with the use of inverters.
+This device tree binding models gpio inverters in the device tree to properly describe the hardware.
+
+Please let me know if this is enough and needs to be updated in the documentation patch.
+
+
+I am sorry I did not include device tree list in the original discussion ( i.e first version of the patch
+https://www.spinics.net/lists/linux-gpio/msg39681.html).
+
+
+Thanks.
+
+
+Best Regards,
+
+Harish Jenny K N
+
+
