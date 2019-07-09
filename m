@@ -2,80 +2,74 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 65FF762BC1
-	for <lists+linux-gpio@lfdr.de>; Tue,  9 Jul 2019 00:36:51 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C5FD462D9B
+	for <lists+linux-gpio@lfdr.de>; Tue,  9 Jul 2019 03:47:51 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728342AbfGHWgp (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 8 Jul 2019 18:36:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60662 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728331AbfGHWgm (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Mon, 8 Jul 2019 18:36:42 -0400
-Received: from mail-qk1-f178.google.com (mail-qk1-f178.google.com [209.85.222.178])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D993C2171F;
-        Mon,  8 Jul 2019 22:36:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562625401;
-        bh=etQZxdD3jWFIiCxrDW0HQwr5UqBYy63rTWHPnocVmu4=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=BgWdhM6si1+2SOjmlc2UNExPoZL6SZ23FdT2Ttm4VNDRyA4emXndsMAJw9hhWPpqH
-         X2c3w819OKT0rg+KKTO2B6GrZESOZH45oF8Y86patOlvFzwoRhODiJVODg0h82l3K1
-         c6zVPzhqQF6EJt+n66WzJwzVglvg0NkqyG133rTw=
-Received: by mail-qk1-f178.google.com with SMTP id g18so14604416qkl.3;
-        Mon, 08 Jul 2019 15:36:40 -0700 (PDT)
-X-Gm-Message-State: APjAAAXZqDeUwUyqSMcfympX9UI6YZH9uwguC6Q10jJPOJU5h/2rZKKl
-        bMwq7yTbxJrFwzAbJaV593zVSmKOV62PCpk5Jw==
-X-Google-Smtp-Source: APXvYqwvtLTmIrH/mZK3DlmCt9rMsWjVnFKMZZK8zbC/QWKJ4wGC/qrPDbXUVjjOfj81Ygpndm1RRGGampcUfPrxjPg=
-X-Received: by 2002:a37:a010:: with SMTP id j16mr16508145qke.152.1562625400068;
- Mon, 08 Jul 2019 15:36:40 -0700 (PDT)
+        id S1726072AbfGIBoj (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 8 Jul 2019 21:44:39 -0400
+Received: from mail-io1-f66.google.com ([209.85.166.66]:46188 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725905AbfGIBoj (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 8 Jul 2019 21:44:39 -0400
+Received: by mail-io1-f66.google.com with SMTP id i10so39615931iol.13;
+        Mon, 08 Jul 2019 18:44:38 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=Kd+R8U7AeHQK+dVVAxxx/vKyVP0OoTL7mSnz079YKZg=;
+        b=dn9OahJKlFcsiA3jGkmkYcKpKDnDkMvKLYlpSYEpv3TtHv0CSSOgyAD5OLNGAbJZ8B
+         FgzLGGq5IC7y1mV2YpeeHTWG+mOENhtnoY/XNRX11He/UG4Ya9PSFT6Pze57DfA81LF5
+         BHjxaBpf3cZu9pnkXWVgszeaYmsTbVVWC9w9bvT08HjS/zSRAkb59dFX4eYnThOwfhDG
+         SNw70NHJLjDf3cFFmFztgOcQZB9L7CR0pOozFuMKErRF0JV6B2i6yI/H7/zIPYBirUJh
+         2jwL9r2Gcs43LojXymmXbikkEglKio32c1Qq5fG9FgxfT4jMcg49pJTaaMMdE1a6ZaK6
+         hb7A==
+X-Gm-Message-State: APjAAAVJWsEDG0Ho4Q4+mUyiukYwbpTmn7CWJqlVi7QEn7CYxinc5iP0
+        u1V7+TTMWzjWCSEclU+GoXovf4c=
+X-Google-Smtp-Source: APXvYqwUZNHjJqnSaa51TzsLuv0W/Pd+sulwtIXpORaf4ssy3jNRBSvXFrt+gjlJKE0rUraKSVmSEw==
+X-Received: by 2002:a6b:8bcb:: with SMTP id n194mr17670842iod.194.1562636677804;
+        Mon, 08 Jul 2019 18:44:37 -0700 (PDT)
+Received: from localhost ([64.188.179.252])
+        by smtp.gmail.com with ESMTPSA id m4sm31452340iok.68.2019.07.08.18.44.36
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Mon, 08 Jul 2019 18:44:37 -0700 (PDT)
+Date:   Mon, 8 Jul 2019 19:44:36 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Sricharan R <sricharan@codeaurora.org>
+Cc:     sboyd@kernel.org, linus.walleij@linaro.org, agross@kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH 1/6] pinctrl: qcom: Add ipq6018 pinctrl driver
+Message-ID: <20190709014436.GA9055@bogus>
+References: <1559755738-28643-1-git-send-email-sricharan@codeaurora.org>
+ <1559755738-28643-2-git-send-email-sricharan@codeaurora.org>
 MIME-Version: 1.0
-References: <1561714250-19613-1-git-send-email-harish_kandiga@mentor.com>
-In-Reply-To: <1561714250-19613-1-git-send-email-harish_kandiga@mentor.com>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Mon, 8 Jul 2019 16:36:27 -0600
-X-Gmail-Original-Message-ID: <CAL_Jsq+-xWLkvku-nLmJnFvbuS=dSD=9dG=GS4uBUqL50tdcDg@mail.gmail.com>
-Message-ID: <CAL_Jsq+-xWLkvku-nLmJnFvbuS=dSD=9dG=GS4uBUqL50tdcDg@mail.gmail.com>
-Subject: Re: [PATCH V4 2/2] gpio: inverter: document the inverter bindings
-To:     Harish Jenny K N <harish_kandiga@mentor.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        devicetree@vger.kernel.org,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Balasubramani Vivekanandan 
-        <balasubramani_vivekanandan@mentor.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1559755738-28643-2-git-send-email-sricharan@codeaurora.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Jun 28, 2019 at 3:31 AM Harish Jenny K N
-<harish_kandiga@mentor.com> wrote:
->
-> Document the device tree binding for the inverter gpio
-> controller to configure the polarity of the gpio pins
-> used by the consumers.
->
-> Signed-off-by: Harish Jenny K N <harish_kandiga@mentor.com>
+On Wed, Jun 05, 2019 at 10:58:53PM +0530, Sricharan R wrote:
+> Add initial pinctrl driver to support pin configuration with
+> pinctrl framework for ipq6018.
+> 
+> Signed-off-by: Sricharan R <sricharan@codeaurora.org>
+> Signed-off-by: Rajkumar Ayyasamy <arajkuma@codeaurora.org>
+> Signed-off-by: speriaka <speriaka@codeaurora.org>
 > ---
->  .../devicetree/bindings/gpio/gpio-inverter.txt     | 29 ++++++++++++++++++++++
->  1 file changed, 29 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/gpio/gpio-inverter.txt
->
-> diff --git a/Documentation/devicetree/bindings/gpio/gpio-inverter.txt b/Documentation/devicetree/bindings/gpio/gpio-inverter.txt
-> new file mode 100644
-> index 0000000..8bb6b2e
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/gpio/gpio-inverter.txt
-> @@ -0,0 +1,29 @@
-> +GPIO-INVERTER
-> +======
-> +This binding defines the gpio-inverter. The gpio-inverter is a driver that
-> +allows to properly describe the gpio polarities on the hardware.
+>  .../bindings/pinctrl/qcom,ipq6018-pinctrl.txt      |  186 +++
 
-I don't understand. Please explain this in terms of the hardware, not a driver.
+Please split bindings to separate patch. Using DT schema would be nice.
 
-Rob
+>  drivers/pinctrl/qcom/Kconfig                       |   10 +
+>  drivers/pinctrl/qcom/Makefile                      |    1 +
+>  drivers/pinctrl/qcom/pinctrl-ipq6018.c             | 1183 ++++++++++++++++++++
+>  4 files changed, 1380 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/pinctrl/qcom,ipq6018-pinctrl.txt
+>  create mode 100644 drivers/pinctrl/qcom/pinctrl-ipq6018.c
