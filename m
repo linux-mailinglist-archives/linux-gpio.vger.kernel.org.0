@@ -2,119 +2,101 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id E4925638FB
-	for <lists+linux-gpio@lfdr.de>; Tue,  9 Jul 2019 18:00:00 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2CAE063910
+	for <lists+linux-gpio@lfdr.de>; Tue,  9 Jul 2019 18:08:38 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726211AbfGIP77 convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-gpio@lfdr.de>); Tue, 9 Jul 2019 11:59:59 -0400
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:36426 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726154AbfGIP77 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 9 Jul 2019 11:59:59 -0400
-Received: by mail-ot1-f68.google.com with SMTP id r6so20465645oti.3;
-        Tue, 09 Jul 2019 08:59:58 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=z1mIOFo8Yb9qP+Xw6RYXcy8nIe448VjUC8u9ee+We+c=;
-        b=DN1Yz6XZQGdg8wm3bC6Y92cUilI9MVDcNvrseB4ITW5Ruf3tKPRdPtW5RtoR81X9UN
-         F1Jwu6UGTz1vE3Hq4YoChLudvzcAZanEMH2yoSJlKMEQDT555mQ1x/nHe+xCMB8MY3T7
-         M6eLcZkBq65RRRnkERz3rvsEgDexkCgv5EBUayxUMV97iL5opDZfuKso4rzbWmxmhrte
-         XGyT3hx6y8QQW9XVquNHCvIhyNU7+H1skmWgdzzpyF413X/cGwmKaqaHkSZayAYQsuFD
-         m4hrgqMbk+hTA8rgwZrza9S/pvIceiGSlURqk3PKWZx1VPhcPhJepO2xHpx6Mz1wqPIa
-         IfLQ==
-X-Gm-Message-State: APjAAAWFEv/IpSy2+wLVPRWGNPnxGal1qow6TIgr73dk5M2++aZHs0es
-        b/K1k5UwPSUEldbo+d2W8bMZme7umzPann+quRA=
-X-Google-Smtp-Source: APXvYqwKIGFzgXhLsG7x1Ibj/zqO9Ml43UWKnLOrH2GD2U0KJFvJPE3d3t4YQY0+Ry5zNqEpFNq7esdkQCqbfLmXXoM=
-X-Received: by 2002:a05:6830:210f:: with SMTP id i15mr2448511otc.250.1562687998070;
- Tue, 09 Jul 2019 08:59:58 -0700 (PDT)
+        id S1726435AbfGIQIh (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 9 Jul 2019 12:08:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46130 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726428AbfGIQIh (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Tue, 9 Jul 2019 12:08:37 -0400
+Received: from mail-qk1-f177.google.com (mail-qk1-f177.google.com [209.85.222.177])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3F28921707;
+        Tue,  9 Jul 2019 16:08:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1562688516;
+        bh=7G04If6utmtPjNzVDfxUufKY34dDgpvovPzQqyazXb8=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=cTrgdmMJcvTCuNw1nfm04tZ5/5CpDMD5AhFJoEF2tsh6UPKJ5ToYiTbvx2IU2Gil/
+         UQ9NlU+6Mlh94lnUVLQGrfUqhDPBzkjCfhd3aHNzxo3CnoGw3dQrh1yKSfUy9DgGAE
+         Ad9Ez7HNcYjBLlVPZUz7wS56OK/nfjfcCHs6px4I=
+Received: by mail-qk1-f177.google.com with SMTP id d15so16430068qkl.4;
+        Tue, 09 Jul 2019 09:08:36 -0700 (PDT)
+X-Gm-Message-State: APjAAAU40XUJy8jk/OtECED4ZGyZ36ON/uUj1/nx+i10nmqqqly+wLpi
+        QDtFfFu93MNRpmMPfMcNOLQDr7b1Kek+iZ7DAw==
+X-Google-Smtp-Source: APXvYqyArqBcWiLb04f/lmcNo1mBs4Ui/VJwoNEOVLGeCirWfaiYQyFlnPu1fW9GNCsgvVbCvwbAlnXBHnQu5FtG0M0=
+X-Received: by 2002:a37:6944:: with SMTP id e65mr17596167qkc.119.1562688515464;
+ Tue, 09 Jul 2019 09:08:35 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190705160536.12047-1-geert+renesas@glider.be>
- <CAMpxmJXOrDLdw6ZPBHxzsDRYiLmhRNCb-s_Z=Gu=Ecg1XA5ONQ@mail.gmail.com>
- <CAMuHMdWdb0dcS8Nvk-Poz2dT7nuHjFhqpsRPZZnSKsc3VffcRA@mail.gmail.com> <CAMpxmJUF1s1zyXVtoUGfbV7Yk+heua4rNjY=DrX=jr-v8UfNxA@mail.gmail.com>
-In-Reply-To: <CAMpxmJUF1s1zyXVtoUGfbV7Yk+heua4rNjY=DrX=jr-v8UfNxA@mail.gmail.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Tue, 9 Jul 2019 17:59:47 +0200
-Message-ID: <CAMuHMdUkF32+wOLkfd2BL4h-=0nZjPDMtVOpOcyDYzBbhWXteQ@mail.gmail.com>
-Subject: Re: [PATCH RFC] gpio: Add Virtual Aggregator GPIO Driver
-To:     Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Alexander Graf <agraf@suse.de>,
-        Peter Maydell <peter.maydell@linaro.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        linux-gpio <linux-gpio@vger.kernel.org>,
-        QEMU Developers <qemu-devel@nongnu.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
+References: <1561714250-19613-1-git-send-email-harish_kandiga@mentor.com>
+ <CAL_Jsq+-xWLkvku-nLmJnFvbuS=dSD=9dG=GS4uBUqL50tdcDg@mail.gmail.com> <06c95f15-d577-e43d-e046-ee222f86c406@mentor.com>
+In-Reply-To: <06c95f15-d577-e43d-e046-ee222f86c406@mentor.com>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Tue, 9 Jul 2019 10:08:24 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqLQvjtnfUsZ2RP4eozvdwMLzNxtgmT+XFaxW4xzoFjL=w@mail.gmail.com>
+Message-ID: <CAL_JsqLQvjtnfUsZ2RP4eozvdwMLzNxtgmT+XFaxW4xzoFjL=w@mail.gmail.com>
+Subject: Re: [PATCH V4 2/2] gpio: inverter: document the inverter bindings
+To:     Harish Jenny K N <harish_kandiga@mentor.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        devicetree@vger.kernel.org,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Balasubramani Vivekanandan 
+        <balasubramani_vivekanandan@mentor.com>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Bartosz,
-
-On Tue, Jul 9, 2019 at 4:59 PM Bartosz Golaszewski
-<bgolaszewski@baylibre.com> wrote:
-> pon., 8 lip 2019 o 12:24 Geert Uytterhoeven <geert@linux-m68k.org> napisał(a):
-> > On Mon, Jul 8, 2019 at 11:45 AM Bartosz Golaszewski
-> > <bgolaszewski@baylibre.com> wrote:
-> > > pt., 5 lip 2019 o 18:05 Geert Uytterhoeven <geert+renesas@glider.be> napisał(a):
-> > > > GPIO controllers are exported to userspace using /dev/gpiochip*
-> > > > character devices.  Access control to these devices is provided by
-> > > > standard UNIX file system permissions, on an all-or-nothing basis:
-> > > > either a GPIO controller is accessible for a user, or it is not.
-> > > > Currently no mechanism exists to control access to individual GPIOs.
-> > > >
-> > > > Hence add a virtual GPIO driver to aggregate existing GPIOs (up to 32),
-> > > > and expose them as a new gpiochip.  This is useful for implementing
-> > > > access control, and assigning a set of GPIOs to a specific user.
-> > > > Furthermore, it would simplify and harden exporting GPIOs to a virtual
-> > > > machine, as the VM can just grab the full virtual GPIO controller, and
-> > > > no longer needs to care about which GPIOs to grab and which not,
-> > > > reducing the attack surface.
-> > > >
-> > > > Virtual GPIO controllers are instantiated by writing to the "new_device"
-> > > > attribute file in sysfs:
-> > > >
-> > > >     $ echo "<gpiochipA> <gpioA1> [<gpioA2> ...]"
-> > > >            "[, <gpiochipB> <gpioB1> [<gpioB2> ...]] ...]"
-> > > >             > /sys/bus/platform/drivers/gpio-virt-agg/new_device
-> > > >
-> > > > Likewise, virtual GPIO controllers can be destroyed after use:
-> > > >
-> > > >     $ echo gpio-virt-agg.<N> \
-> > > >             > /sys/bus/platform/drivers/gpio-virt-agg/delete_device
-
-> Am I doing it right? I'm trying to create a device and am only getting this:
+On Mon, Jul 8, 2019 at 11:25 PM Harish Jenny K N
+<harish_kandiga@mentor.com> wrote:
 >
-> # echo gpiochip2 23 > new_device
-> [  707.507039] gpio-virt-agg gpio-virt-agg.0: Cannot find gpiochip gpiochip2
+> Hi Rob,
 >
-> gpiochip2 *does* exist in the system.
+>
+> On 09/07/19 4:06 AM, Rob Herring wrote:
+> > On Fri, Jun 28, 2019 at 3:31 AM Harish Jenny K N
+> > <harish_kandiga@mentor.com> wrote:
+> >> Document the device tree binding for the inverter gpio
+> >> controller to configure the polarity of the gpio pins
+> >> used by the consumers.
+> >>
+> >> Signed-off-by: Harish Jenny K N <harish_kandiga@mentor.com>
+> >> ---
+> >>  .../devicetree/bindings/gpio/gpio-inverter.txt     | 29 ++++++++++++++++++++++
+> >>  1 file changed, 29 insertions(+)
+> >>  create mode 100644 Documentation/devicetree/bindings/gpio/gpio-inverter.txt
+> >>
+> >> diff --git a/Documentation/devicetree/bindings/gpio/gpio-inverter.txt b/Documentation/devicetree/bindings/gpio/gpio-inverter.txt
+> >> new file mode 100644
+> >> index 0000000..8bb6b2e
+> >> --- /dev/null
+> >> +++ b/Documentation/devicetree/bindings/gpio/gpio-inverter.txt
+> >> @@ -0,0 +1,29 @@
+> >> +GPIO-INVERTER
+> >> +======
+> >> +This binding defines the gpio-inverter. The gpio-inverter is a driver that
+> >> +allows to properly describe the gpio polarities on the hardware.
+> > I don't understand. Please explain this in terms of the hardware, not a driver.
+>
+>
+> gpio inverters can be used on different hardware to alter the polarity of gpio chips.
+> The polarity of pins can change from hardware to hardware with the use of inverters.
 
-Please try the name of the platform device instead.
-I.e. for my koelsch (R-Car M2-W), it needs "e6052000.gpio" instead
-of "gpiochip2".
+Yes, I know what an inverter is.
 
-Probably the driver should match on both.
+> This device tree binding models gpio inverters in the device tree to properly describe the hardware.
 
-> I see. I'll try to review it more thoroughly once I get to play with
-> it. So far I'm stuck on creating the virtual chip.
+We already define the active state of GPIOs in the consumers. If
+there's an inverter in the middle, the consumer active state is simply
+inverted. I don't agree that that is a hack as Linus said without some
+reasoning why an inverter needs to be modeled in DT. Anything about
+what 'userspace' needs is not a reason. That's a Linux thing that has
+little to do with hardware description.
 
-Thanks, good luck!
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Rob
