@@ -2,95 +2,83 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id B6FEC62FE6
-	for <lists+linux-gpio@lfdr.de>; Tue,  9 Jul 2019 07:25:42 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6E3DF633FA
+	for <lists+linux-gpio@lfdr.de>; Tue,  9 Jul 2019 12:11:06 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726027AbfGIFZl (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 9 Jul 2019 01:25:41 -0400
-Received: from relay1.mentorg.com ([192.94.38.131]:43871 "EHLO
-        relay1.mentorg.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726010AbfGIFZl (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 9 Jul 2019 01:25:41 -0400
-Received: from nat-ies.mentorg.com ([192.94.31.2] helo=svr-ies-mbx-01.mgc.mentorg.com)
-        by relay1.mentorg.com with esmtps (TLSv1.2:ECDHE-RSA-AES256-SHA384:256)
-        id 1hkidE-0007iy-MU from Harish_Kandiga@mentor.com ; Mon, 08 Jul 2019 22:25:36 -0700
-Received: from [10.0.3.15] (137.202.0.90) by svr-ies-mbx-01.mgc.mentorg.com
- (139.181.222.1) with Microsoft SMTP Server (TLS) id 15.0.1320.4; Tue, 9 Jul
- 2019 06:25:31 +0100
-Subject: Re: [PATCH V4 2/2] gpio: inverter: document the inverter bindings
-To:     Rob Herring <robh+dt@kernel.org>
-CC:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        <devicetree@vger.kernel.org>,
+        id S1726018AbfGIKLF (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 9 Jul 2019 06:11:05 -0400
+Received: from hqemgate15.nvidia.com ([216.228.121.64]:3761 "EHLO
+        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725989AbfGIKLF (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 9 Jul 2019 06:11:05 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5d24683d0000>; Tue, 09 Jul 2019 03:11:09 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Tue, 09 Jul 2019 03:11:04 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Tue, 09 Jul 2019 03:11:04 -0700
+Received: from [10.21.132.148] (172.20.13.39) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 9 Jul
+ 2019 10:11:00 +0000
+Subject: Re: [PATCH] gpio: tegra: Clean-up debugfs initialisation
+To:     Linus Walleij <linus.walleij@linaro.org>
+CC:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Balasubramani Vivekanandan 
-        <balasubramani_vivekanandan@mentor.com>
-References: <1561714250-19613-1-git-send-email-harish_kandiga@mentor.com>
- <CAL_Jsq+-xWLkvku-nLmJnFvbuS=dSD=9dG=GS4uBUqL50tdcDg@mail.gmail.com>
-From:   Harish Jenny K N <harish_kandiga@mentor.com>
-Message-ID: <06c95f15-d577-e43d-e046-ee222f86c406@mentor.com>
-Date:   Tue, 9 Jul 2019 10:55:22 +0530
+        <linux-tegra@vger.kernel.org>, Greg KH <gregkh@linuxfoundation.org>
+References: <20190626134258.26991-1-jonathanh@nvidia.com>
+ <CACRpkdaFOs24DJbXg4eKVOAzdGOx__X9rbHPcPUzpTJpZ-jbVw@mail.gmail.com>
+From:   Jon Hunter <jonathanh@nvidia.com>
+Message-ID: <f5e711a6-4472-8dcb-56b2-b789733231c2@nvidia.com>
+Date:   Tue, 9 Jul 2019 11:10:58 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.7.2
 MIME-Version: 1.0
-In-Reply-To: <CAL_Jsq+-xWLkvku-nLmJnFvbuS=dSD=9dG=GS4uBUqL50tdcDg@mail.gmail.com>
+In-Reply-To: <CACRpkdaFOs24DJbXg4eKVOAzdGOx__X9rbHPcPUzpTJpZ-jbVw@mail.gmail.com>
+X-Originating-IP: [172.20.13.39]
+X-ClientProxiedBy: HQMAIL106.nvidia.com (172.18.146.12) To
+ HQMAIL107.nvidia.com (172.20.187.13)
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
 Content-Language: en-US
-X-Originating-IP: [137.202.0.90]
-X-ClientProxiedBy: SVR-IES-MBX-08.mgc.mentorg.com (139.181.222.8) To
- svr-ies-mbx-01.mgc.mentorg.com (139.181.222.1)
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1562667069; bh=6fNmm7kUJzUHvZ1fbCr1sr5Retr+BtaSN8qhB6Q733g=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=cXygdqz7rZ5U8EZJm+G65m4sc+y3onxftSwo9n5GBkt47M8fgrGze25+6UBtqcMJU
+         RrIG9R+jJirJl8qp1N48C6w7Ntt9rsrMMlRt6a0j4UvUJAnVIn93JVgF7opKG+PnLE
+         Q5SVBbTuFPCRWUQ5Qch8oOMYfHlevQjnd7e4N8Hfe5BWQ/aUNpiOhOoPHW2EOTwwj9
+         JE+M57kCfI50qO2BVYtTWAxQyPfpN3q5sm7hsqZiyQQRVc8GA+6trNWOwX0Ipo6wI3
+         hHF5SEy7yKK4s+F63qZGjKR8N3NJw5Rx6dh053f5NCYDPQ68oQcSHC7ItSpQjaoMrU
+         54N5tRKg004mQ==
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Rob,
 
-
-On 09/07/19 4:06 AM, Rob Herring wrote:
-> On Fri, Jun 28, 2019 at 3:31 AM Harish Jenny K N
-> <harish_kandiga@mentor.com> wrote:
->> Document the device tree binding for the inverter gpio
->> controller to configure the polarity of the gpio pins
->> used by the consumers.
+On 08/07/2019 08:04, Linus Walleij wrote:
+> On Wed, Jun 26, 2019 at 3:43 PM Jon Hunter <jonathanh@nvidia.com> wrote:
+> 
+>> The function tegra_gpio_debuginit() just calls debugfs_create_file()
+>> and given that there is already a stub function implemented for
+>> debugfs_create_file() when CONFIG_DEBUG_FS is not enabled, there is
+>> no need for the function tegra_gpio_debuginit() and so remove it.
 >>
->> Signed-off-by: Harish Jenny K N <harish_kandiga@mentor.com>
->> ---
->>  .../devicetree/bindings/gpio/gpio-inverter.txt     | 29 ++++++++++++++++++++++
->>  1 file changed, 29 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/gpio/gpio-inverter.txt
+>> Finally, use a space and not a tab between the #ifdef and
+>> CONFIG_DEBUG_FS.
 >>
->> diff --git a/Documentation/devicetree/bindings/gpio/gpio-inverter.txt b/Documentation/devicetree/bindings/gpio/gpio-inverter.txt
->> new file mode 100644
->> index 0000000..8bb6b2e
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/gpio/gpio-inverter.txt
->> @@ -0,0 +1,29 @@
->> +GPIO-INVERTER
->> +======
->> +This binding defines the gpio-inverter. The gpio-inverter is a driver that
->> +allows to properly describe the gpio polarities on the hardware.
-> I don't understand. Please explain this in terms of the hardware, not a driver.
+>> Signed-off-by: Jon Hunter <jonathanh@nvidia.com>
+> 
+> Sadly I've had to revert this commit because of build errors, but
+> let's see if we can figure it out after the merge window.
 
+Sorry about that. I will be more thorough in future.
 
-gpio inverters can be used on different hardware to alter the polarity of gpio chips.
-The polarity of pins can change from hardware to hardware with the use of inverters.
-This device tree binding models gpio inverters in the device tree to properly describe the hardware.
+Jon
 
-Please let me know if this is enough and needs to be updated in the documentation patch.
-
-
-I am sorry I did not include device tree list in the original discussion ( i.e first version of the patch
-https://www.spinics.net/lists/linux-gpio/msg39681.html).
-
-
-Thanks.
-
-
-Best Regards,
-
-Harish Jenny K N
-
-
+-- 
+nvpublic
