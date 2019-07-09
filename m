@@ -2,86 +2,141 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 85FB8636FD
-	for <lists+linux-gpio@lfdr.de>; Tue,  9 Jul 2019 15:31:41 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0A4F4637BB
+	for <lists+linux-gpio@lfdr.de>; Tue,  9 Jul 2019 16:20:40 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726345AbfGINbl (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 9 Jul 2019 09:31:41 -0400
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:45822 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725947AbfGINbl (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 9 Jul 2019 09:31:41 -0400
-Received: by mail-lj1-f196.google.com with SMTP id m23so19547262lje.12
-        for <linux-gpio@vger.kernel.org>; Tue, 09 Jul 2019 06:31:40 -0700 (PDT)
+        id S1726444AbfGIOUg (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 9 Jul 2019 10:20:36 -0400
+Received: from mail-io1-f66.google.com ([209.85.166.66]:35355 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726377AbfGIOUg (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 9 Jul 2019 10:20:36 -0400
+Received: by mail-io1-f66.google.com with SMTP id m24so34032641ioo.2
+        for <linux-gpio@vger.kernel.org>; Tue, 09 Jul 2019 07:20:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=4WbD3hcaDn1BfG/Ja5p7aRO1UgtIkLxYNpjULSulK7M=;
-        b=N1HVBzEWybI77xIwHVChIDoowZZ9ZsRZ2aWRWGegBgaUYWyy+MzGsT6Vb+4Pvh1HJs
-         HaPesePZlna/n2BMENvRPq0Qr0n/6KSzlZi4c8riewkwgX93rgpbNJ7dxfuinwrd90on
-         YtJ98CVycq/mNrXg9Fwty93HYi8g74AblS6XqoYtQMu5s2tmT1912xqvL08sOYiRhF9+
-         +6wgpz19JcMbNPMcQt0tTWFC7SBjd9vuOZkWGXtfFRjdPf4fPm/IGWZs9j/jhZel9cfu
-         hjNX4UrAfPB1ShL9yQKx4LL5jDaU34I0civNTZwZO0yXSWQe65kF8veWUopr/c4TbDh0
-         AZ4w==
+        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=XTag6E0HRY5pOM5AumSCXipohqiU4rMp+bu0B7wd10U=;
+        b=ph8QN36Brvz4GaO1lsbpAF+S34pEG3KOZn6OCqqyV1r0b+nSHJmHs7L5iApZcmsVSv
+         ONf5pK1IYRZTeE67/2OjKhJHRZCppo+3gWxUhmDXn4+yhq1jps7zacdDz6o6mLUYFUHs
+         CVlO6upXOLgmWTmrKu7/BwNkp9MuXH50C2ZvDFjidCtZMLY7PRpw1O61qy/t3FX+ehSd
+         UPrjkFnjsJ1ogTjp/UKUxSg1d+xfwMMJIPB1w+b4TR0TkpSOXaopRjZqhSd6V07a9Nxo
+         rkLl/VbzpFAsJT3woNWB36gFV7OlFYWRb3Mfody3109YK+h5qrJBFZ+2wqms8DRrsZ87
+         lPvg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=4WbD3hcaDn1BfG/Ja5p7aRO1UgtIkLxYNpjULSulK7M=;
-        b=fjyQWgnwafSTX7cfziE/kaL4178hvUF+LpQLVEQbnV8W2LswPBAABdo0nJmH0Y0I1n
-         T4l4Aint2KLX37QrWkm3DQ3kqSblFVCmZSP3n2AIuOyA7EsChWcACJSal6cstiCpj36l
-         Me1F/V3YylBtQD0qE3mBdwX+knG/jc8Y2Gai8rZZw0LwJbT5VVrc01mKyW2UJL0iuCaW
-         cwhamsajGgsn+37jwKdVvPm4dX1eIZEPFaWVCNmdRIhp3bTZCWRk29ZmD16+6qRByOU+
-         YRedUYBsi+Fdn30gkyqY6cs9cuJGE4X8C+sduNeXG2ep9KbHorunSpkDHuDj0Ey+TtF4
-         6KUQ==
-X-Gm-Message-State: APjAAAWvwg1mZf93Btt8TeuCEbXcNhzwxTb9tmMhGH38kxwvN41nn0ht
-        yp+WIWCHT0g2ijQeGVOFk3yhvTMbfEM=
-X-Google-Smtp-Source: APXvYqzIWEVDa3pFsbkLV0jqu9fo2YSOtjBuZ0377VtdupEFUSliM33d3q0juoSWIBN5B9S4Ra6MSA==
-X-Received: by 2002:a2e:89ca:: with SMTP id c10mr13820182ljk.106.1562679099031;
-        Tue, 09 Jul 2019 06:31:39 -0700 (PDT)
-Received: from genomnajs.ideon.se ([85.235.10.227])
-        by smtp.gmail.com with ESMTPSA id m17sm4355523lji.16.2019.07.09.06.31.37
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 09 Jul 2019 06:31:38 -0700 (PDT)
-From:   Linus Walleij <linus.walleij@linaro.org>
-To:     linux-gpio@vger.kernel.org
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Andrew Jeffery <andrew@aj.id.au>
-Subject: [PATCH] pinctrl: aspeed: Fix missed include
-Date:   Tue,  9 Jul 2019 15:31:36 +0200
-Message-Id: <20190709133136.2807-1-linus.walleij@linaro.org>
-X-Mailer: git-send-email 2.21.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=XTag6E0HRY5pOM5AumSCXipohqiU4rMp+bu0B7wd10U=;
+        b=WRKFEXyyfCFjJcB3Kq3o40kY/xyLMJEo+lZxK9mNKFzv+UBLCdDFktkQ3U2EZAZSE5
+         FSNubsNhlScrnn+BhE96gk9Ua76AJhouyLoJRzUgEjYfEWbeFG4O5pPIka2vKDGQwjvD
+         3/v670Fzf3ApkNCMIxcTNB4KQ7LfZg8y4+XT9A79rIgiO8aMNJCNW9eNqoD3Qxn4CSsQ
+         7sWzGyZd/o3tnXt6IKEX7euhhTK25vH2+li7aNbiPyhE+rAMc9PDUObvlsjAmVBsKBvH
+         pGqas9tEaCdnrmSvBfeDQhHdC8ZCKwuXw9gexZYlrt3oABoyelIJOGBSlVgU1RaerAuX
+         Zpgw==
+X-Gm-Message-State: APjAAAW95zpYyOtItvJTNzlzY9/BUgb4rovgFSYadK0mWDsi1UXoODKT
+        /tRXDL21rC1HwyNPs2HJaXSEo+eSjDo7QmqYLSnhXEvU
+X-Google-Smtp-Source: APXvYqwwrSRPNbn4TV83T9qqax53T5vJC4cuF7WYiJ/hbHx2RKwKXAKBF/PLOuBrRswRmAipW/TcA3SeRyefBbzged4=
+X-Received: by 2002:a5e:8b43:: with SMTP id z3mr516301iom.287.1562682035066;
+ Tue, 09 Jul 2019 07:20:35 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20190708082343.30726-1-brgl@bgdev.pl> <CACRpkdb5xKHZja0mkd-wZJ+YHZpGJaDrkA0dv60MNYKXFcPK4w@mail.gmail.com>
+In-Reply-To: <CACRpkdb5xKHZja0mkd-wZJ+YHZpGJaDrkA0dv60MNYKXFcPK4w@mail.gmail.com>
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+Date:   Tue, 9 Jul 2019 16:20:24 +0200
+Message-ID: <CAMRc=MfB9R70QDqtjG5a5Roq1roeL78Ss5noytrY-7P=tY1OHA@mail.gmail.com>
+Subject: Re: [PATCH] gpio: don't WARN() on NULL descs if gpiolib is disabled
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        "Claus H . Stovgaard" <cst@phaseone.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Some SPDX churn made my fixes drop an important include
-from the Aspeed pinctrl header. Fix it up.
+wt., 9 lip 2019 o 15:30 Linus Walleij <linus.walleij@linaro.org> napisa=C5=
+=82(a):
+>
+> Hi Bartosz,
+>
+> On Mon, Jul 8, 2019 at 10:25 AM Bartosz Golaszewski <brgl@bgdev.pl> wrote=
+:
+>
+> > From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> >
+> > If gpiolib is disabled, we use the inline stubs from gpio/consumer.h
+> > instead of regular definitions of GPIO API. The stubs for 'optional'
+> > variants of gpiod_get routines return NULL in this case as if the
+> > relevant GPIO wasn't found. This is correct so far.
+> >
+> > Calling other (non-gpio_get) stubs from this header triggers a warning
+> > because the GPIO descriptor couldn't have been requested. The warning
+> > however is unconditional (WARN_ON(1)) and is emitted even if the passed
+> > descriptor pointer is NULL.
+> >
+> > We don't want to force the users of 'optional' gpio_get to check the
+> > returned pointer before calling e.g. gpiod_set_value() so let's only
+> > WARN on non-NULL descriptors.
+> >
+> > Reported-by: Claus H. Stovgaard <cst@phaseone.com>
+> > Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+>
+> I remember I had this discussion in the past, and I made a large
+> refactoring to make it possible for drivers that need gpiod_*
+> calls to simply do:
+>
+> select GPIOLIB
+>
+> in Kconfig.
+>
+> This should solve also this problem I think.
+>
+> However I do realize that there may be situations where people
+> simply want to make GPIO support entirely optional without
+> having to e.g. create custom stubs and encapsulate things
+> inside if IS_ENABLED(CONFIG_GPIOLIB).
+>
 
-Cc: Andrew Jeffery <andrew@aj.id.au>
-Reported-by: Andrew Jeffery <andrew@aj.id.au>
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
----
- drivers/pinctrl/aspeed/pinctrl-aspeed.h | 2 ++
- 1 file changed, 2 insertions(+)
+In this case the board doesn't provide any GPIO controller at all so
+there's simply no need to select GPIOLIB - it would only add bloat.
 
-diff --git a/drivers/pinctrl/aspeed/pinctrl-aspeed.h b/drivers/pinctrl/aspeed/pinctrl-aspeed.h
-index 9b20b1c03802..b7790395aead 100644
---- a/drivers/pinctrl/aspeed/pinctrl-aspeed.h
-+++ b/drivers/pinctrl/aspeed/pinctrl-aspeed.h
-@@ -16,6 +16,8 @@
- #include <linux/pinctrl/pinconf-generic.h>
- #include <linux/regmap.h>
- 
-+#include "pinmux-aspeed.h"
-+
- /*
-  * The ASPEED SoCs provide typically more than 200 pins for GPIO and other
-  * functions. The SoC function enabled on a pin is determined on a priority
--- 
-2.21.0
+> I was thinking something like this in the stubs:
+>
+> gpiod_get[_index]() {
+>     return POISON;
+> }
+>
+> gpiod_get[_index]_optional() {
+>    return NULL;
+> }
 
+This is already being done.
+
+>
+> This way all gpiod_get() and optional calls are properly
+> handled and the semantic that only _optional calls
+> can return NULL is preserved. (Your patch would
+> violate this.)
+>
+
+Maybe I'm missing something, but I don't quite see how my patch
+violates this behavior. :(
+
+> Then other stubs can do:
+>
+> gpiod_set_value() {
+>   WARN_ON(desc);
+> }
+>
+> As in your patch, and all will be smooth provided the
+> _optional calls have been used to obtain the desc.
+>
+> Yours,
+> Linus Walleij
+
+Bart
