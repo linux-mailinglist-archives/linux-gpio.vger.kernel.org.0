@@ -2,128 +2,78 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 1959963BE2
-	for <lists+linux-gpio@lfdr.de>; Tue,  9 Jul 2019 21:27:11 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id EF8A363E0F
+	for <lists+linux-gpio@lfdr.de>; Wed, 10 Jul 2019 00:57:03 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727796AbfGIT1K (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 9 Jul 2019 15:27:10 -0400
-Received: from mail-io1-f67.google.com ([209.85.166.67]:37248 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726491AbfGIT1K (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 9 Jul 2019 15:27:10 -0400
-Received: by mail-io1-f67.google.com with SMTP id q22so23831765iog.4
-        for <linux-gpio@vger.kernel.org>; Tue, 09 Jul 2019 12:27:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=T97Y7Xhc+iNinb7J95m1ClDnpftj8xDW9+inLk5U/ys=;
-        b=vA9eHWFFKZzn9UHXFg38aVO/i848nLoffBQU9YEjFhMbM7Nezm1bh2liAketQATXM9
-         oFVv5w54Ln9LfK3riZFBO+0ULgKfV2bp6BoFjTeufJdUOv7ch7ndYnhKP1QrX2FnW2GG
-         HlcJeWJjtqrZeznsnxFdH/NXF1ml7owpMNnkMK81W23wPNlFQ77YiS3//QEtdH6iQLjp
-         Yfc5aU2WKPjXfW04uYI2oZXmyq8VD5ekXN7e9x2p1PR539ix1WNM1DYNiPtrkvb9sQUo
-         p8BIFuiCa83cCe2g+XKHFU7/79D2XUs/Ducv1bITj8cS0OeAmKB/Akfm5ejqQEUBcmiL
-         VeQw==
+        id S1726767AbfGIW4u (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 9 Jul 2019 18:56:50 -0400
+Received: from mail-io1-f66.google.com ([209.85.166.66]:39624 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726284AbfGIW4u (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 9 Jul 2019 18:56:50 -0400
+Received: by mail-io1-f66.google.com with SMTP id f4so555523ioh.6;
+        Tue, 09 Jul 2019 15:56:49 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=T97Y7Xhc+iNinb7J95m1ClDnpftj8xDW9+inLk5U/ys=;
-        b=pkC0p3op7+piVKOdSTCzWNQUzYwx3jiOGUUoriumPYyWb1XUIQQCveS/pBb3V+pg6j
-         vmf/lySvfLqGNy3GhJvNlJYgarAF+AMAtifVjjDyNFdiwhFkRV5TXTtYF/OBTgYYJeJ1
-         bdhefhmGoEY5jrdqRoXjZXi3Mh/t+6s8wtqkWOyGOeWbvr99t521Aup5v/Gi5e0SOsBU
-         F9CFvzf+NOpnwoONa9uTtQ3F0lkDgjUpWLz08x0Bbiexv4RyX8x/g2PGKaLr/3Ogwbyc
-         ygfDHRfoKzqKclOo4Lf0R/5VEVeZ1DwdCMallVak7KsAZke9B5jBnTq/M04HqodncGEj
-         YdQQ==
-X-Gm-Message-State: APjAAAVsOVy6VjwWCxjAAxKekwdC9mpHv7vFn32Op8Cgo+9eDRnyewej
-        QNCnnEnaGIDHgOGRudHX36QGgy41b5VEwjFVqmM0ew==
-X-Google-Smtp-Source: APXvYqxV7yiLjk3v4LoPbcmdRk8c+zTn6LbS+P4RQ9YJ9CNx6wJD13fR3jqidFhcTLiOP8moLpZ9fZSElhLLLP/iTxA=
-X-Received: by 2002:a5e:a712:: with SMTP id b18mr26557129iod.220.1562700429190;
- Tue, 09 Jul 2019 12:27:09 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=9BNTOCR0FAJ2g4YYe8k6aNoK5Zx/TmcNqpSKDP9NSpM=;
+        b=JKwjnzc7ZXJ3L4TohNvh5xoziMmkK0wdWuVjogXu3CBpa+SzWczaTK9/xR5NmOMmac
+         o/ZKkrTPCYtaRXLgubN5960VryWjjTATKDYGvDAErySHPa2B5P1FMmsJWQ9UNbgPMNR+
+         ZLEkyNiy14ZtItVyKr2N/qPrqEZ6yDtfXspPmddIjkmPllQGTtEF+EohqWuM8Ku3bQyf
+         ApMLW6GWZlWaotLCgAFdhua3mGtYzpLfmw6Y+ZkhLC+O2TfXxY83K+J0qxCyys1qKWsZ
+         AWeli9chSAhWlVOwqhmCvF3fIBQ5YnPHb3nYPmXabqi9hZ3XA615hJWv3EnUu3ngKKQX
+         qGQQ==
+X-Gm-Message-State: APjAAAUXmxY2Nyqc1MZAF38YK5urWxVxVE1STr6t1j5j910/dG7i0bJr
+        UMrXH5fYQ4+9kaXKs7sQNA==
+X-Google-Smtp-Source: APXvYqz+xwp1piJzrTHGP/QMIunspYfZSL/+DEFIMhBsaktuEIuhUeLCHzrMlf2OFmjZyQikva4G0g==
+X-Received: by 2002:a02:8663:: with SMTP id e90mr23520924jai.98.1562713009260;
+        Tue, 09 Jul 2019 15:56:49 -0700 (PDT)
+Received: from localhost ([64.188.179.251])
+        by smtp.gmail.com with ESMTPSA id n2sm304558ioa.27.2019.07.09.15.56.48
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Tue, 09 Jul 2019 15:56:48 -0700 (PDT)
+Date:   Tue, 9 Jul 2019 16:56:47 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Icenowy Zheng <icenowy@aosc.io>
+Cc:     Maxime Ripard <maxime.ripard@bootlin.com>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-gpio@vger.kernel.org, linux-sunxi@googlegroups.com
+Subject: Re: [PATCH v3 4/9] clk: sunxi-ng: v3s: add Allwinner V3 support
+Message-ID: <20190709225647.GA12966@bogus>
+References: <20190623043801.14040-1-icenowy@aosc.io>
+ <20190623043801.14040-5-icenowy@aosc.io>
 MIME-Version: 1.0
-References: <20190528154601.7597-1-brgl@bgdev.pl> <CAMuHMdV=eVJKVENkLUi1pj7MY8RGwUGZEt=MG4fdfvToZZquNQ@mail.gmail.com>
-In-Reply-To: <CAMuHMdV=eVJKVENkLUi1pj7MY8RGwUGZEt=MG4fdfvToZZquNQ@mail.gmail.com>
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Tue, 9 Jul 2019 21:26:58 +0200
-Message-ID: <CAMRc=Mf0--Yc+S_EEiFxSXbip7JX3y8Qz1fsxFPTUt_fR6dOTg@mail.gmail.com>
-Subject: Re: [PATCH] gpio: em: use the managed version of gpiochip_add_data()
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190623043801.14040-5-icenowy@aosc.io>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-wt., 9 lip 2019 o 20:49 Geert Uytterhoeven <geert@linux-m68k.org> napisa=C5=
-=82(a):
->
-> Hi Bartosz,
->
-> On Tue, May 28, 2019 at 5:46 PM Bartosz Golaszewski <brgl@bgdev.pl> wrote=
-:
-> > From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> >
-> > Use the managed variant of gpiochip_add_data() and remove the call to
-> > gpiochip_remove().
-> >
-> > Cc: Geert Uytterhoeven <geert+renesas@glider.be>
-> > Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> > ---
-> >  drivers/gpio/gpio-em.c | 4 +---
-> >  1 file changed, 1 insertion(+), 3 deletions(-)
-> >
-> > diff --git a/drivers/gpio/gpio-em.c b/drivers/gpio/gpio-em.c
-> > index 40f8c38bec1c..299101d25fa8 100644
-> > --- a/drivers/gpio/gpio-em.c
-> > +++ b/drivers/gpio/gpio-em.c
-> > @@ -359,7 +359,7 @@ static int em_gio_probe(struct platform_device *pde=
-v)
-> >                 goto err1;
-> >         }
-> >
-> > -       ret =3D gpiochip_add_data(gpio_chip, p);
-> > +       ret =3D devm_gpiochip_add_data(&pdev->dev, gpio_chip, p);
-> >         if (ret) {
-> >                 dev_err(&pdev->dev, "failed to add GPIO controller\n");
-> >                 goto err1;
-> > @@ -376,8 +376,6 @@ static int em_gio_remove(struct platform_device *pd=
-ev)
-> >  {
-> >         struct em_gio_priv *p =3D platform_get_drvdata(pdev);
-> >
-> > -       gpiochip_remove(&p->gpio_chip);
-> > -
-> >         irq_domain_remove(p->irq_domain);
->
-> On a second thought, is it safe to call irq_domain_remove() before
-> gpiochip_remove() (which calls gpiochip_irqchip_remove())?
->
+On Sun, Jun 23, 2019 at 12:37:56PM +0800, Icenowy Zheng wrote:
+> Allwinner V3 has the same main die with V3s, but with more pins wired.
+> There's a I2S bus on V3 that is not available on V3s.
+> 
+> Add the V3-only peripheral's clocks and reset to the V3s CCU driver,
+> bound to a new V3 compatible string. The driver name is not changed
+> because it's part of the device tree binding (the header file name).
+> 
+> Signed-off-by: Icenowy Zheng <icenowy@aosc.io>
+> ---
+> No changes in v3/v2.
+> 
+>  drivers/clk/sunxi-ng/ccu-sun8i-v3s.c      | 225 +++++++++++++++++++++-
+>  drivers/clk/sunxi-ng/ccu-sun8i-v3s.h      |   2 +-
 
-Good call. I think the most elegant solution here would be to use
-devm_add_action() to keep the ordering right. I'll send a follow-up
-tomorrow morning.
+>  include/dt-bindings/clock/sun8i-v3s-ccu.h |   4 +
+>  include/dt-bindings/reset/sun8i-v3s-ccu.h |   3 +
 
-Bart
+Acked-by: Rob Herring <robh@kernel.org>
 
-> >         return 0;
->
-> >  }
->
-> Gr{oetje,eeting}s,
->
->                         Geert
->
-> --
-> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m6=
-8k.org
->
-> In personal conversations with technical people, I call myself a hacker. =
-But
-> when I'm talking to journalists I just say "programmer" or something like=
- that.
->                                 -- Linus Torvalds
+>  4 files changed, 231 insertions(+), 3 deletions(-)
