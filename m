@@ -2,55 +2,100 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 475B963A90
-	for <lists+linux-gpio@lfdr.de>; Tue,  9 Jul 2019 20:06:37 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 538CC63B65
+	for <lists+linux-gpio@lfdr.de>; Tue,  9 Jul 2019 20:50:00 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727719AbfGISGN (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 9 Jul 2019 14:06:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36106 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727360AbfGISFI (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Tue, 9 Jul 2019 14:05:08 -0400
-Subject: Re: [GIT PULL] bulk GPIO changes for v5.3
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562695508;
-        bh=qvM0afr/s4GLXs/4HLboaJ/wWsE7WBUL5bD+8PFYeGw=;
-        h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=dec5kEyX6Ki7K/q/lmxi7PM48Ai5f5x89m6qoeptCBP78naaJ/1SoK1AuBQhRu8Sj
-         GoBEW/DlgSqLeXgdnXYcrD+I1WMEPsNs4CxXZ9n9087hc+A6E1EG1t3/CBJLC+44xw
-         RCgnqHD5BXMQMkW3aiHJrOrXMU4sIF+glMOpamTU=
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <CACRpkdYAJNVj98VjpmhY+suKfjH+WA4KWOvoHNAQvD60hzStbQ@mail.gmail.com>
-References: <CACRpkdYAJNVj98VjpmhY+suKfjH+WA4KWOvoHNAQvD60hzStbQ@mail.gmail.com>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <CACRpkdYAJNVj98VjpmhY+suKfjH+WA4KWOvoHNAQvD60hzStbQ@mail.gmail.com>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-gpio.git
- tags/gpio-v5.3-1
-X-PR-Tracked-Commit-Id: 9b3b623804a67d2274ee372c1587926ab0275833
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 2ec98f567888501df0140c858af5f5ea10216a6f
-Message-Id: <156269550857.14383.8389829429625869463.pr-tracker-bot@kernel.org>
-Date:   Tue, 09 Jul 2019 18:05:08 +0000
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        id S1728984AbfGIStj (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 9 Jul 2019 14:49:39 -0400
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:41383 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726133AbfGISti (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 9 Jul 2019 14:49:38 -0400
+Received: by mail-ot1-f67.google.com with SMTP id o101so20986806ota.8;
+        Tue, 09 Jul 2019 11:49:38 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=rhxO6zJT4kRA59/IE9s5VDYziBesrtC+fZUNEZkjtko=;
+        b=gBJO1isCIiP+YinNQDOtEByiDAIVlFe0gYZMVIsSBdfCfI55vV35d08PclcbGd9xRN
+         Kd5/gYW+sBZufftojyWncqoXBulOPsPpAJBJhO/AC2eJDsF1E8TKROHSCe+8LB38CC2a
+         gso9qiEhckdpMTXCasR0Xps5TmKtAAlftOx0uB8DW9sq14Cu8K+ZgwHcCh+ceWpOuVAA
+         XlD/SesliZVmXyZY3Xc0Jy61n5L31oLGqLHqXhWsmL8S5F2gocypJzQgbyTmWhAQpvfY
+         1hbuJNWz3ffdRQhUwRwqnAlGr9WoHxCuAfzMVXRwG1Ogd4+t0OGFFDTDP7nkVmHDkJgR
+         5iWg==
+X-Gm-Message-State: APjAAAWTjhsl4nQ5lz/KmgOSlf4l61zDYtbiwAvry+LvkqgMpWmVzsaY
+        E33lLTBNI6cLV0aSnOw4fwDLXaqFDcC2s0Zhs1Q=
+X-Google-Smtp-Source: APXvYqyL3dMbX2i3nej8DK/ZmGllJsd3RJyRbEKEzUYfxJu+XFcPm+IWp2Bxk++nSFFXCeSNzisYGHWavSJL4Bp5h3A=
+X-Received: by 2002:a05:6830:210f:: with SMTP id i15mr3012583otc.250.1562698177652;
+ Tue, 09 Jul 2019 11:49:37 -0700 (PDT)
+MIME-Version: 1.0
+References: <20190528154601.7597-1-brgl@bgdev.pl>
+In-Reply-To: <20190528154601.7597-1-brgl@bgdev.pl>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Tue, 9 Jul 2019 20:49:23 +0200
+Message-ID: <CAMuHMdV=eVJKVENkLUi1pj7MY8RGwUGZEt=MG4fdfvToZZquNQ@mail.gmail.com>
+Subject: Re: [PATCH] gpio: em: use the managed version of gpiochip_add_data()
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-The pull request you sent on Mon, 8 Jul 2019 09:26:55 +0200:
+Hi Bartosz,
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-gpio.git tags/gpio-v5.3-1
+On Tue, May 28, 2019 at 5:46 PM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
+> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+>
+> Use the managed variant of gpiochip_add_data() and remove the call to
+> gpiochip_remove().
+>
+> Cc: Geert Uytterhoeven <geert+renesas@glider.be>
+> Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> ---
+>  drivers/gpio/gpio-em.c | 4 +---
+>  1 file changed, 1 insertion(+), 3 deletions(-)
+>
+> diff --git a/drivers/gpio/gpio-em.c b/drivers/gpio/gpio-em.c
+> index 40f8c38bec1c..299101d25fa8 100644
+> --- a/drivers/gpio/gpio-em.c
+> +++ b/drivers/gpio/gpio-em.c
+> @@ -359,7 +359,7 @@ static int em_gio_probe(struct platform_device *pdev)
+>                 goto err1;
+>         }
+>
+> -       ret = gpiochip_add_data(gpio_chip, p);
+> +       ret = devm_gpiochip_add_data(&pdev->dev, gpio_chip, p);
+>         if (ret) {
+>                 dev_err(&pdev->dev, "failed to add GPIO controller\n");
+>                 goto err1;
+> @@ -376,8 +376,6 @@ static int em_gio_remove(struct platform_device *pdev)
+>  {
+>         struct em_gio_priv *p = platform_get_drvdata(pdev);
+>
+> -       gpiochip_remove(&p->gpio_chip);
+> -
+>         irq_domain_remove(p->irq_domain);
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/2ec98f567888501df0140c858af5f5ea10216a6f
+On a second thought, is it safe to call irq_domain_remove() before
+gpiochip_remove() (which calls gpiochip_irqchip_remove())?
 
-Thank you!
+>         return 0;
 
--- 
-Deet-doot-dot, I am a bot.
-https://korg.wiki.kernel.org/userdoc/prtracker
+>  }
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
