@@ -2,152 +2,187 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id DF8276447A
-	for <lists+linux-gpio@lfdr.de>; Wed, 10 Jul 2019 11:37:28 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3F68C6449D
+	for <lists+linux-gpio@lfdr.de>; Wed, 10 Jul 2019 11:47:31 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727047AbfGJJh2 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 10 Jul 2019 05:37:28 -0400
-Received: from anchovy3.45ru.net.au ([203.30.46.155]:40124 "EHLO
-        anchovy3.45ru.net.au" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726080AbfGJJh2 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 10 Jul 2019 05:37:28 -0400
-Received: (qmail 20338 invoked by uid 5089); 10 Jul 2019 09:37:26 -0000
-Received: by simscan 1.2.0 ppid: 20261, pid: 20262, t: 0.0524s
-         scanners: regex: 1.2.0 attach: 1.2.0 clamav: 0.88.3/m:40/d:1950
-Received: from unknown (HELO ?192.168.0.128?) (preid@electromag.com.au@203.59.235.95)
-  by anchovy2.45ru.net.au with ESMTPA; 10 Jul 2019 09:37:25 -0000
-Subject: Re: [PATCH 1/2] gpio: em: remove the gpiochip before removing the irq
- domain
-To:     Bartosz Golaszewski <brgl@bgdev.pl>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Geert Uytterhoeven <geert@linux-m68k.org>
-Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        stable@vger.kernel.org
-References: <20190710090852.9239-1-brgl@bgdev.pl>
-From:   Phil Reid <preid@electromag.com.au>
-Message-ID: <510f14c9-fc3b-734c-53ff-cbf4a7579e32@electromag.com.au>
-Date:   Wed, 10 Jul 2019 17:37:24 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        id S1727222AbfGJJra (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 10 Jul 2019 05:47:30 -0400
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:39399 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725941AbfGJJra (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 10 Jul 2019 05:47:30 -0400
+Received: by mail-oi1-f196.google.com with SMTP id m202so1126447oig.6
+        for <linux-gpio@vger.kernel.org>; Wed, 10 Jul 2019 02:47:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=bzV97ZdiERZ42rZWsWCb0hOAee1RiY7/NGaFmcVPNbo=;
+        b=mstsLCtHadyks31Z9lCGNHdmPIycOBkJOxqQ5UkKwFgG9lMmu0w9BPn9D0HPMZ3pm2
+         mOjKgMR7/aBkKvMue+fDtVvZYHlidhvGfkYHFnNv8JbHIDL5t29vnLkw/TU63aMhrzXq
+         z4SWpOhnjBibihvBajL0LC4cl0UnpJ5h+2c8nvhq48ZSb/yalpK5eo6iE0iX/P/LRfPg
+         aDPSZMxdnHc9KgzwPR8tGtKJG6JpPAodrmvGicGP2c6tdC37mwqj4OYZZN5WarddV1RO
+         Hi6yP3DlQFxeF/y6paTYMsVxwo0f32bmcDJ+vTDTBth1O8khr/viW7UXy21EXlknraqO
+         jbcA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=bzV97ZdiERZ42rZWsWCb0hOAee1RiY7/NGaFmcVPNbo=;
+        b=TWspqa7K09kbJeeU4LwVLF0dBhXjNdsInzqTkE+VKM0uklagDLRG6sOCA6Lvdu0gH+
+         QOX39qKwFRJK/KW9wqXcD1XD+dKbO7MAAvnZYC/+gpjZgTFJSoG3NcgzCyaY+hsn3EMg
+         lZq6nP/neWi2alScvfVTouZ9fyBE2MmHCm0XbPmqJhYtjSJL7TAm9HBEcfsdNZ+yJ01Z
+         m+4IcRdMDiSAt9DKIgmn9XvVL2v8ABPrDp9d1/4ST4nGY0iU91IjZvzsNAjH0mXjVMLT
+         ZrrNzdei/AobROcU4g8D15++EySU5KQEg81PxbYgdfp+1ksrO4kXjQqx+LEVm60osAEK
+         9JTQ==
+X-Gm-Message-State: APjAAAWLrXoTyc9B4nlAoCDP952wyGOOh1dtOXUv2W004ZZg6iCBQ9CD
+        kSE9PE4rdc4ABe+/8b45q2yKxaKNj2NIukPE++UvKw==
+X-Google-Smtp-Source: APXvYqznfFks6r5S5buZ9JmChEVpkgAFdEaVMCeevNK+H6vq3wW6vKxhG9d1P9GI7IKoNPDDVwjFdqGtsDhlz2syNG4=
+X-Received: by 2002:aca:b06:: with SMTP id 6mr2926203oil.175.1562752049415;
+ Wed, 10 Jul 2019 02:47:29 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190710090852.9239-1-brgl@bgdev.pl>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-AU
-Content-Transfer-Encoding: 7bit
+References: <20190710090852.9239-1-brgl@bgdev.pl> <510f14c9-fc3b-734c-53ff-cbf4a7579e32@electromag.com.au>
+In-Reply-To: <510f14c9-fc3b-734c-53ff-cbf4a7579e32@electromag.com.au>
+From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Date:   Wed, 10 Jul 2019 11:47:18 +0200
+Message-ID: <CAMpxmJUFEoVZOL++SxshUr3rH0pCzML_at0dji8smqVtpGpqsw@mail.gmail.com>
+Subject: Re: [PATCH 1/2] gpio: em: remove the gpiochip before removing the irq domain
+To:     Phil Reid <preid@electromag.com.au>
+Cc:     Bartosz Golaszewski <brgl@bgdev.pl>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        linux-gpio <linux-gpio@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "Stable # 4 . 20+" <stable@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-G'day Bartosz,
+=C5=9Br., 10 lip 2019 o 11:37 Phil Reid <preid@electromag.com.au> napisa=C5=
+=82(a):
+>
+> G'day Bartosz,
+>
+> One comment below
+>
+> On 10/07/2019 17:08, Bartosz Golaszewski wrote:
+> > From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> >
+> > In commit 8764c4ca5049 ("gpio: em: use the managed version of
+> > gpiochip_add_data()") we implicitly altered the ordering of resource
+> > freeing: since gpiochip_remove() calls gpiochip_irqchip_remove()
+> > internally, we now can potentially use the irq_domain after it was
+> > destroyed in the remove() callback (as devm resources are freed after
+> > remove() has returned).
+> >
+> > Use devm_add_action() to keep the ordering right and entirely kill
+> > the remove() callback in the driver.
+> >
+> > Reported-by: Geert Uytterhoeven <geert@linux-m68k.org>
+> > Fixes: 8764c4ca5049 ("gpio: em: use the managed version of gpiochip_add=
+_data()")
+> > Cc: stable@vger.kernel.org
+> > Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> > ---
+> >   drivers/gpio/gpio-em.c | 35 +++++++++++++++++------------------
+> >   1 file changed, 17 insertions(+), 18 deletions(-)
+> >
+> > diff --git a/drivers/gpio/gpio-em.c b/drivers/gpio/gpio-em.c
+> > index b6af705a4e5f..c88028ac66f2 100644
+> > --- a/drivers/gpio/gpio-em.c
+> > +++ b/drivers/gpio/gpio-em.c
+> > @@ -259,6 +259,13 @@ static const struct irq_domain_ops em_gio_irq_doma=
+in_ops =3D {
+> >       .xlate  =3D irq_domain_xlate_twocell,
+> >   };
+> >
+> > +static void em_gio_irq_domain_remove(void *data)
+> > +{
+> > +     struct irq_domain *domain =3D data;
+> > +
+> > +     irq_domain_remove(domain);
+> > +}
+> > +
+> >   static int em_gio_probe(struct platform_device *pdev)
+> >   {
+> >       struct em_gio_priv *p;
+> > @@ -333,39 +340,32 @@ static int em_gio_probe(struct platform_device *p=
+dev)
+> >               return -ENXIO;
+> >       }
+> >
+> > +     ret =3D devm_add_action(&pdev->dev,
+> > +                           em_gio_irq_domain_remove, p->irq_domain);
+>
+> Could devm_add_action_or_reset be used?
+>
 
-One comment below
+Of course it could and it should. :)
 
-On 10/07/2019 17:08, Bartosz Golaszewski wrote:
-> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> 
-> In commit 8764c4ca5049 ("gpio: em: use the managed version of
-> gpiochip_add_data()") we implicitly altered the ordering of resource
-> freeing: since gpiochip_remove() calls gpiochip_irqchip_remove()
-> internally, we now can potentially use the irq_domain after it was
-> destroyed in the remove() callback (as devm resources are freed after
-> remove() has returned).
-> 
-> Use devm_add_action() to keep the ordering right and entirely kill
-> the remove() callback in the driver.
-> 
-> Reported-by: Geert Uytterhoeven <geert@linux-m68k.org>
-> Fixes: 8764c4ca5049 ("gpio: em: use the managed version of gpiochip_add_data()")
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> ---
->   drivers/gpio/gpio-em.c | 35 +++++++++++++++++------------------
->   1 file changed, 17 insertions(+), 18 deletions(-)
-> 
-> diff --git a/drivers/gpio/gpio-em.c b/drivers/gpio/gpio-em.c
-> index b6af705a4e5f..c88028ac66f2 100644
-> --- a/drivers/gpio/gpio-em.c
-> +++ b/drivers/gpio/gpio-em.c
-> @@ -259,6 +259,13 @@ static const struct irq_domain_ops em_gio_irq_domain_ops = {
->   	.xlate	= irq_domain_xlate_twocell,
->   };
->   
-> +static void em_gio_irq_domain_remove(void *data)
-> +{
-> +	struct irq_domain *domain = data;
-> +
-> +	irq_domain_remove(domain);
-> +}
-> +
->   static int em_gio_probe(struct platform_device *pdev)
->   {
->   	struct em_gio_priv *p;
-> @@ -333,39 +340,32 @@ static int em_gio_probe(struct platform_device *pdev)
->   		return -ENXIO;
->   	}
->   
-> +	ret = devm_add_action(&pdev->dev,
-> +			      em_gio_irq_domain_remove, p->irq_domain);
+I'll resend tomorrow to not spam the mailing list.
 
-Could devm_add_action_or_reset be used?
+Thanks,
+Bart
 
-> +	if (ret) {
-> +		irq_domain_remove(p->irq_domain);
-> +		return ret;
-> +	}
-> +
->   	if (devm_request_irq(&pdev->dev, irq[0]->start,
->   			     em_gio_irq_handler, 0, name, p)) {
->   		dev_err(&pdev->dev, "failed to request low IRQ\n");
-> -		ret = -ENOENT;
-> -		goto err1;
-> +		return -ENOENT;
->   	}
->   
->   	if (devm_request_irq(&pdev->dev, irq[1]->start,
->   			     em_gio_irq_handler, 0, name, p)) {
->   		dev_err(&pdev->dev, "failed to request high IRQ\n");
-> -		ret = -ENOENT;
-> -		goto err1;
-> +		return -ENOENT;
->   	}
->   
->   	ret = devm_gpiochip_add_data(&pdev->dev, gpio_chip, p);
->   	if (ret) {
->   		dev_err(&pdev->dev, "failed to add GPIO controller\n");
-> -		goto err1;
-> +		return ret;
->   	}
->   
->   	return 0;
-> -
-> -err1:
-> -	irq_domain_remove(p->irq_domain);
-> -	return ret;
-> -}
-> -
-> -static int em_gio_remove(struct platform_device *pdev)
-> -{
-> -	struct em_gio_priv *p = platform_get_drvdata(pdev);
-> -
-> -	irq_domain_remove(p->irq_domain);
-> -	return 0;
->   }
->   
->   static const struct of_device_id em_gio_dt_ids[] = {
-> @@ -376,7 +376,6 @@ MODULE_DEVICE_TABLE(of, em_gio_dt_ids);
->   
->   static struct platform_driver em_gio_device_driver = {
->   	.probe		= em_gio_probe,
-> -	.remove		= em_gio_remove,
->   	.driver		= {
->   		.name	= "em_gio",
->   		.of_match_table = em_gio_dt_ids,
-> 
-
-
--- 
-Regards
-Phil Reid
-
+> > +     if (ret) {
+> > +             irq_domain_remove(p->irq_domain);
+> > +             return ret;
+> > +     }
+> > +
+> >       if (devm_request_irq(&pdev->dev, irq[0]->start,
+> >                            em_gio_irq_handler, 0, name, p)) {
+> >               dev_err(&pdev->dev, "failed to request low IRQ\n");
+> > -             ret =3D -ENOENT;
+> > -             goto err1;
+> > +             return -ENOENT;
+> >       }
+> >
+> >       if (devm_request_irq(&pdev->dev, irq[1]->start,
+> >                            em_gio_irq_handler, 0, name, p)) {
+> >               dev_err(&pdev->dev, "failed to request high IRQ\n");
+> > -             ret =3D -ENOENT;
+> > -             goto err1;
+> > +             return -ENOENT;
+> >       }
+> >
+> >       ret =3D devm_gpiochip_add_data(&pdev->dev, gpio_chip, p);
+> >       if (ret) {
+> >               dev_err(&pdev->dev, "failed to add GPIO controller\n");
+> > -             goto err1;
+> > +             return ret;
+> >       }
+> >
+> >       return 0;
+> > -
+> > -err1:
+> > -     irq_domain_remove(p->irq_domain);
+> > -     return ret;
+> > -}
+> > -
+> > -static int em_gio_remove(struct platform_device *pdev)
+> > -{
+> > -     struct em_gio_priv *p =3D platform_get_drvdata(pdev);
+> > -
+> > -     irq_domain_remove(p->irq_domain);
+> > -     return 0;
+> >   }
+> >
+> >   static const struct of_device_id em_gio_dt_ids[] =3D {
+> > @@ -376,7 +376,6 @@ MODULE_DEVICE_TABLE(of, em_gio_dt_ids);
+> >
+> >   static struct platform_driver em_gio_device_driver =3D {
+> >       .probe          =3D em_gio_probe,
+> > -     .remove         =3D em_gio_remove,
+> >       .driver         =3D {
+> >               .name   =3D "em_gio",
+> >               .of_match_table =3D em_gio_dt_ids,
+> >
+>
+>
+> --
+> Regards
+> Phil Reid
+>
