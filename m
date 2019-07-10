@@ -2,86 +2,152 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 6D67B64449
-	for <lists+linux-gpio@lfdr.de>; Wed, 10 Jul 2019 11:21:44 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DF8276447A
+	for <lists+linux-gpio@lfdr.de>; Wed, 10 Jul 2019 11:37:28 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726284AbfGJJVo (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 10 Jul 2019 05:21:44 -0400
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:34604 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726264AbfGJJVn (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 10 Jul 2019 05:21:43 -0400
-Received: by mail-lf1-f66.google.com with SMTP id b29so1103366lfq.1
-        for <linux-gpio@vger.kernel.org>; Wed, 10 Jul 2019 02:21:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=dUlokGp/KL+rm7zIFZwyZaj687yjExkx7G3CCtG1RyY=;
-        b=lXjUjM/hRPl5vMP/STv3Of3RZWbgJqhaLjopPiE0m16FSLH/Yg/52kpmpXaBuJElyC
-         POYcEhK+WE7sWrEePHJfn+3wlJQzDso2tOY4h3p6Uc4G9ueRBAiu/D8uaMeJ8gk6+eUY
-         MlE1D7sJY3WXVNRrmfz6E5X9XtOLa1QcUxxoVYMwZxIPKIXKBJicFGoLGAP/vYHEYh0Z
-         raiQCyHJvmCjIkwL/kpmbTZsqaahdSavKqyW9R3PsNzdEgT1+i9xD2jtLpM4m0LAadL1
-         Wa6dkQB+hSW35l3A8e1TeAWrDlTxu0aTCn0jGKwaYDO01waTH7fvQy9NQ0W3HeJuSGxb
-         J8hg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=dUlokGp/KL+rm7zIFZwyZaj687yjExkx7G3CCtG1RyY=;
-        b=maYALJ8/4FPaOV1s6aVaet6OxWc/EdDvgJRaaZHZ9aR/ytMCGNsSe0bvVqyaw+C4Oc
-         0cAfbvj+K/6xMhPBiCHfEFA+eZI8vYsbZXrHDA/fTHEyvIqPznIEj3x/jADCPcTHWIp4
-         jIryNygtz+WREGMg3N5igCO+x6fwJG7DeA7NfvZo+ZJYC6aP7KQzIGBqjbAe6PcQ4faq
-         GFpTFModTwCWpH0ng/YOGYXXokad1j4HnHb1NIT+lLQKFF4CMqwGOfJbhxybaPNiOlIp
-         tdS6W2+SUpXwmsCZB/HTopuN9h+mK48YerjyVfoMMK3LN/8ZY5ci+GICnLjiLyVfsgN2
-         g9jA==
-X-Gm-Message-State: APjAAAVxymADdAe3soJdyDesIKBnmbotGze11NeQNDIz64D/+Er5uF72
-        FV8VBUHvQ21LzaIMs8WUa8wglwgX1dtPrCSdGJjWC1vc
-X-Google-Smtp-Source: APXvYqw0wyUXmLiGLOCwP9mj+HVQe7W/60r3zFp1JV6/XEcKBUO5T07Si2wJMQC0S1u8DPQ9y9TlzLqeoOqnp6gCyt4=
-X-Received: by 2002:a19:7616:: with SMTP id c22mr5698967lff.115.1562750501769;
- Wed, 10 Jul 2019 02:21:41 -0700 (PDT)
+        id S1727047AbfGJJh2 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 10 Jul 2019 05:37:28 -0400
+Received: from anchovy3.45ru.net.au ([203.30.46.155]:40124 "EHLO
+        anchovy3.45ru.net.au" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726080AbfGJJh2 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 10 Jul 2019 05:37:28 -0400
+Received: (qmail 20338 invoked by uid 5089); 10 Jul 2019 09:37:26 -0000
+Received: by simscan 1.2.0 ppid: 20261, pid: 20262, t: 0.0524s
+         scanners: regex: 1.2.0 attach: 1.2.0 clamav: 0.88.3/m:40/d:1950
+Received: from unknown (HELO ?192.168.0.128?) (preid@electromag.com.au@203.59.235.95)
+  by anchovy2.45ru.net.au with ESMTPA; 10 Jul 2019 09:37:25 -0000
+Subject: Re: [PATCH 1/2] gpio: em: remove the gpiochip before removing the irq
+ domain
+To:     Bartosz Golaszewski <brgl@bgdev.pl>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        stable@vger.kernel.org
+References: <20190710090852.9239-1-brgl@bgdev.pl>
+From:   Phil Reid <preid@electromag.com.au>
+Message-ID: <510f14c9-fc3b-734c-53ff-cbf4a7579e32@electromag.com.au>
+Date:   Wed, 10 Jul 2019 17:37:24 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-References: <20190710032216.4088-1-andrew@aj.id.au>
-In-Reply-To: <20190710032216.4088-1-andrew@aj.id.au>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Wed, 10 Jul 2019 11:21:30 +0200
-Message-ID: <CACRpkdZXdOADDYkKfqSq8iDosw60U2XeHmFpRBuDKo_t-4XVZA@mail.gmail.com>
-Subject: Re: [PATCH] pinctrl: aspeed: Strip moved macros and structs from
- private header
-To:     Andrew Jeffery <andrew@aj.id.au>
-Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20190710090852.9239-1-brgl@bgdev.pl>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-AU
+Content-Transfer-Encoding: 7bit
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Jul 10, 2019 at 5:22 AM Andrew Jeffery <andrew@aj.id.au> wrote:
+G'day Bartosz,
 
-> Further cleanup from the SPDX fixup fallout for the recent ASPEED
-> series. aspeed_g4_defconfig, aspeed_g5_defconfig and multi_v5_defconfig
-> now compile. Smoke tested the g4 and g5 kernels under QEMU's
-> palmetto-bmc and romulus-bmc machines respectively.
->
-> Fixes: 35d8510ea3ad ("pinctrl: aspeed: Fix missed include")
-> Signed-off-by: Andrew Jeffery <andrew@aj.id.au>
+One comment below
+
+On 10/07/2019 17:08, Bartosz Golaszewski wrote:
+> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> 
+> In commit 8764c4ca5049 ("gpio: em: use the managed version of
+> gpiochip_add_data()") we implicitly altered the ordering of resource
+> freeing: since gpiochip_remove() calls gpiochip_irqchip_remove()
+> internally, we now can potentially use the irq_domain after it was
+> destroyed in the remove() callback (as devm resources are freed after
+> remove() has returned).
+> 
+> Use devm_add_action() to keep the ordering right and entirely kill
+> the remove() callback in the driver.
+> 
+> Reported-by: Geert Uytterhoeven <geert@linux-m68k.org>
+> Fixes: 8764c4ca5049 ("gpio: em: use the managed version of gpiochip_add_data()")
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 > ---
->
-> Sorry Linus, I guess I should have just sent the fixup patch rather than
-> waiting for your response about which way to handle the break. That way I would
-> have actually fixed the problem rather than just eyeballing it and making
-> half-baked suggestions.
->
-> The content stripped in this patch was moved to aspeed-pinmux.h, so with
-> 35d8510ea3ad ("pinctrl: aspeed: Fix missed include") we hit
-> duplicate-declaration problems. Trivially resolved by removing the moved
-> content.
+>   drivers/gpio/gpio-em.c | 35 +++++++++++++++++------------------
+>   1 file changed, 17 insertions(+), 18 deletions(-)
+> 
+> diff --git a/drivers/gpio/gpio-em.c b/drivers/gpio/gpio-em.c
+> index b6af705a4e5f..c88028ac66f2 100644
+> --- a/drivers/gpio/gpio-em.c
+> +++ b/drivers/gpio/gpio-em.c
+> @@ -259,6 +259,13 @@ static const struct irq_domain_ops em_gio_irq_domain_ops = {
+>   	.xlate	= irq_domain_xlate_twocell,
+>   };
+>   
+> +static void em_gio_irq_domain_remove(void *data)
+> +{
+> +	struct irq_domain *domain = data;
+> +
+> +	irq_domain_remove(domain);
+> +}
+> +
+>   static int em_gio_probe(struct platform_device *pdev)
+>   {
+>   	struct em_gio_priv *p;
+> @@ -333,39 +340,32 @@ static int em_gio_probe(struct platform_device *pdev)
+>   		return -ENXIO;
+>   	}
+>   
+> +	ret = devm_add_action(&pdev->dev,
+> +			      em_gio_irq_domain_remove, p->irq_domain);
 
-I applied it and now it compiles so I'm happy :)
+Could devm_add_action_or_reset be used?
 
-There was inevitably going to be some fallout from the SPDX stuff
-in this merge window, but tglx has me convinced that it is worth
-the effort and merge mess, so we just hash it out and carry on.
+> +	if (ret) {
+> +		irq_domain_remove(p->irq_domain);
+> +		return ret;
+> +	}
+> +
+>   	if (devm_request_irq(&pdev->dev, irq[0]->start,
+>   			     em_gio_irq_handler, 0, name, p)) {
+>   		dev_err(&pdev->dev, "failed to request low IRQ\n");
+> -		ret = -ENOENT;
+> -		goto err1;
+> +		return -ENOENT;
+>   	}
+>   
+>   	if (devm_request_irq(&pdev->dev, irq[1]->start,
+>   			     em_gio_irq_handler, 0, name, p)) {
+>   		dev_err(&pdev->dev, "failed to request high IRQ\n");
+> -		ret = -ENOENT;
+> -		goto err1;
+> +		return -ENOENT;
+>   	}
+>   
+>   	ret = devm_gpiochip_add_data(&pdev->dev, gpio_chip, p);
+>   	if (ret) {
+>   		dev_err(&pdev->dev, "failed to add GPIO controller\n");
+> -		goto err1;
+> +		return ret;
+>   	}
+>   
+>   	return 0;
+> -
+> -err1:
+> -	irq_domain_remove(p->irq_domain);
+> -	return ret;
+> -}
+> -
+> -static int em_gio_remove(struct platform_device *pdev)
+> -{
+> -	struct em_gio_priv *p = platform_get_drvdata(pdev);
+> -
+> -	irq_domain_remove(p->irq_domain);
+> -	return 0;
+>   }
+>   
+>   static const struct of_device_id em_gio_dt_ids[] = {
+> @@ -376,7 +376,6 @@ MODULE_DEVICE_TABLE(of, em_gio_dt_ids);
+>   
+>   static struct platform_driver em_gio_device_driver = {
+>   	.probe		= em_gio_probe,
+> -	.remove		= em_gio_remove,
+>   	.driver		= {
+>   		.name	= "em_gio",
+>   		.of_match_table = em_gio_dt_ids,
+> 
 
-Yours,
-Linus Walleij
+
+-- 
+Regards
+Phil Reid
+
