@@ -2,69 +2,81 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id D336665352
-	for <lists+linux-gpio@lfdr.de>; Thu, 11 Jul 2019 10:48:45 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E4CC56536A
+	for <lists+linux-gpio@lfdr.de>; Thu, 11 Jul 2019 11:02:33 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727974AbfGKIsp (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 11 Jul 2019 04:48:45 -0400
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:37277 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725963AbfGKIso (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 11 Jul 2019 04:48:44 -0400
-Received: by mail-ot1-f65.google.com with SMTP id s20so5060519otp.4;
-        Thu, 11 Jul 2019 01:48:44 -0700 (PDT)
+        id S1727595AbfGKJCd (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 11 Jul 2019 05:02:33 -0400
+Received: from mail-io1-f52.google.com ([209.85.166.52]:44035 "EHLO
+        mail-io1-f52.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725963AbfGKJCc (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 11 Jul 2019 05:02:32 -0400
+Received: by mail-io1-f52.google.com with SMTP id s7so10843593iob.11
+        for <linux-gpio@vger.kernel.org>; Thu, 11 Jul 2019 02:02:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=go/0XC3yz6vXoIDJ0RdfnfND3LfeW+PuAbJVbQvJ66I=;
+        b=vC6FoYFjyiZnqlIk3ar5Wsda7HD/xsJNN5B4x52uQRtM/shfVNF+m5nlk0/zaw9taZ
+         3P6odZWCwdqgvVOmiSH6vwNkmd/KYyDcr7hznFDqB/280pwIui95rCgzfiJYldTzbuwV
+         7QAJpFACYCA8VQwTmHMduhmLNWZsw4nPeaM3caUtR8pHHlGk7kICPCIkQAJ8RqAR9PZr
+         3FMQfBPKdeCnH/hIuN0hyezzBMPJ3PNEnKKuBiO47ExM02bU1qbHRJ0Udd+szRzrgtu2
+         NkUMdJSKX4WA331xX6qlBQPtzIhGCguVDWVfZbP/ARV/0jkdaL8btzh8q9wPWdsGnBtH
+         bhIg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=J1BTRqg67XXSfvgmNFOIpOtczOF1eVzxlxx4pnprNZA=;
-        b=nKbdFla3X4xpDgHvXbdZNZt2d4MdeZmI7IWNJz0Sxe1hFubrGSsPM3JId3/ptv67ba
-         rbsMXpkENpM5kK4KiG+mbvXV60C0YF7qLrVR6k/oAycBBP0H9giojT38KOSTdX6Z1y+f
-         wHVCakj+EkHx2y6gEYTZ9zfmZ75AWn9IcRQ4Z0Wz1HdUH0JOYFeZiuQLj3Wcotqg1Mae
-         COQse64/MVATzUyJQTZX6kMswrm4SOdR3Bxq5Mu0otNVHQbvapJIFJULr5WFgOuT9vqr
-         C/gAnsuhrEKG8JzV+GSm6xY365uw1E7J6eNlwEuttlNcOOhPpN0IFUAqsBg54f5KOOYf
-         U+wQ==
-X-Gm-Message-State: APjAAAVDvwvr4GrbXbqZd2E0eCHzB5giq0dnI7bpfdlE8zi9pBJmpnTl
-        HqZ+WV7C9/PVrYtwPWT9/+EdBbr2F92L53wciYc=
-X-Google-Smtp-Source: APXvYqz1+IYt8MUEu6MIeuFXQ4Ts2re9Myf+njmhHhzmWTkFgoe6g/LcJpaEGs83Pujk0OMeRL7jjaXMr2nbos0pIDc=
-X-Received: by 2002:a9d:7a90:: with SMTP id l16mr2480550otn.297.1562834924118;
- Thu, 11 Jul 2019 01:48:44 -0700 (PDT)
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=go/0XC3yz6vXoIDJ0RdfnfND3LfeW+PuAbJVbQvJ66I=;
+        b=nuJD5+FqSwfgbTqVRkE/h/OBleyNd6tJYxW92e68V+cQ7QeJDicKH1voZOaw2iRRyV
+         gUN0CkGfF7TlHYLscwr2ICPmq7Ow1I56Qk818Be6TnPVc/9ldkS3p9GFQZpMAVPlovaH
+         ZaRAMoJkHvHw89AVhtbAz4KOg4SoeLlF1X4w0Jz0tzOgc69HjidALZdf+ea7lKWcjPyl
+         S6u6Ihy8AkSV/fiYO6NwTp7lO7GiRAEtfmImc8uMzSh83p043NYvPajem4N/lVjAFv8f
+         i8AfclMdmVy/MatOr8PxvwkZj/Bqq7QoJXKD+zgND0GLShejFBDCB7pG78Dz4N1U2eSr
+         03ZA==
+X-Gm-Message-State: APjAAAWZbnxs9Lh+26EYUXAvNQtrDrqHtZNF6tmB/6nvuc8lpyAKFqSN
+        ByXeyBy68fxRWnfpACgwyQzJwWJbgeBnNSPhRDPbiQ==
+X-Google-Smtp-Source: APXvYqwBMSdVvu8RT/aHrXAKN1JZW5D7unl0V4pBKZcQ/Gj2jfB+n2QZTPMJmf5EbLWNNDGon1H6Kb4H+QatEUHM+fU=
+X-Received: by 2002:a02:cc6c:: with SMTP id j12mr3176494jaq.102.1562835751603;
+ Thu, 11 Jul 2019 02:02:31 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190711082936.8706-1-brgl@bgdev.pl> <20190711082936.8706-2-brgl@bgdev.pl>
-In-Reply-To: <20190711082936.8706-2-brgl@bgdev.pl>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Thu, 11 Jul 2019 10:48:33 +0200
-Message-ID: <CAMuHMdUp3YMMzhYRBnHFDrf3w7GDK8HY5aAXdjVZ_oMd_n6xdQ@mail.gmail.com>
-Subject: Re: [PATCH v2 2/2] gpio: em: use a helper variable for &pdev->dev
-To:     Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Phil Reid <preid@electromag.com.au>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+References: <BN7PR13MB2532728B9B6D7E73875DFCF1DE140@BN7PR13MB2532.namprd13.prod.outlook.com>
+ <BN7PR13MB25322B3D67DFC0E8787E79C6DE140@BN7PR13MB2532.namprd13.prod.outlook.com>
+In-Reply-To: <BN7PR13MB25322B3D67DFC0E8787E79C6DE140@BN7PR13MB2532.namprd13.prod.outlook.com>
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+Date:   Thu, 11 Jul 2019 11:02:20 +0200
+Message-ID: <CAMRc=MdzA7pkT8=uEymLizoRSQnB4bNpbW4DG-HfADhgVthUiw@mail.gmail.com>
+Subject: Re: [libgpiod]
+To:     Kevin Welsh <kwelsh@welshtechnologies.com>
+Cc:     "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Jul 11, 2019 at 10:29 AM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
-> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+pon., 3 cze 2019 o 14:24 Kevin Welsh <kwelsh@welshtechnologies.com> napisa=
+=C5=82(a):
 >
-> Instead of always dereferencing &pdev->dev, just assign a helper local
-> variable of type struct device * and use it where applicable.
+> I am trying to make gpiomon into a daemon using busybox. (start-stop-daem=
+on -b) Instead of writing a message to stdout, I need it to execute a scrip=
+t. My use case is that I need a button press (gpio) to undo setting a stati=
+c IP.
 >
-> Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> If I set - -format=3D"touch buttton-was-pressed|sh"
+>
+> Is this a valid command to make into a daemon? If not, can I submit a pat=
+ch to include a parameter for executing a script?
 
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Hi Kevin,
 
-Gr{oetje,eeting}s,
+I didn't see this message because you didn't Cc me personally.
 
-                        Geert
+Yes your example would work i.e. gpiomon would print this string on a
+GPIO event. Executing scripts is on my TODO list, but your
+contribution will be more than welcome. :)
 
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Best regards,
+Bartosz Golaszewski
