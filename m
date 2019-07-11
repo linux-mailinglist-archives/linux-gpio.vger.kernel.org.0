@@ -2,81 +2,118 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id E4CC56536A
-	for <lists+linux-gpio@lfdr.de>; Thu, 11 Jul 2019 11:02:33 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E9745653B6
+	for <lists+linux-gpio@lfdr.de>; Thu, 11 Jul 2019 11:24:57 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727595AbfGKJCd (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 11 Jul 2019 05:02:33 -0400
-Received: from mail-io1-f52.google.com ([209.85.166.52]:44035 "EHLO
-        mail-io1-f52.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725963AbfGKJCc (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 11 Jul 2019 05:02:32 -0400
-Received: by mail-io1-f52.google.com with SMTP id s7so10843593iob.11
-        for <linux-gpio@vger.kernel.org>; Thu, 11 Jul 2019 02:02:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=go/0XC3yz6vXoIDJ0RdfnfND3LfeW+PuAbJVbQvJ66I=;
-        b=vC6FoYFjyiZnqlIk3ar5Wsda7HD/xsJNN5B4x52uQRtM/shfVNF+m5nlk0/zaw9taZ
-         3P6odZWCwdqgvVOmiSH6vwNkmd/KYyDcr7hznFDqB/280pwIui95rCgzfiJYldTzbuwV
-         7QAJpFACYCA8VQwTmHMduhmLNWZsw4nPeaM3caUtR8pHHlGk7kICPCIkQAJ8RqAR9PZr
-         3FMQfBPKdeCnH/hIuN0hyezzBMPJ3PNEnKKuBiO47ExM02bU1qbHRJ0Udd+szRzrgtu2
-         NkUMdJSKX4WA331xX6qlBQPtzIhGCguVDWVfZbP/ARV/0jkdaL8btzh8q9wPWdsGnBtH
-         bhIg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=go/0XC3yz6vXoIDJ0RdfnfND3LfeW+PuAbJVbQvJ66I=;
-        b=nuJD5+FqSwfgbTqVRkE/h/OBleyNd6tJYxW92e68V+cQ7QeJDicKH1voZOaw2iRRyV
-         gUN0CkGfF7TlHYLscwr2ICPmq7Ow1I56Qk818Be6TnPVc/9ldkS3p9GFQZpMAVPlovaH
-         ZaRAMoJkHvHw89AVhtbAz4KOg4SoeLlF1X4w0Jz0tzOgc69HjidALZdf+ea7lKWcjPyl
-         S6u6Ihy8AkSV/fiYO6NwTp7lO7GiRAEtfmImc8uMzSh83p043NYvPajem4N/lVjAFv8f
-         i8AfclMdmVy/MatOr8PxvwkZj/Bqq7QoJXKD+zgND0GLShejFBDCB7pG78Dz4N1U2eSr
-         03ZA==
-X-Gm-Message-State: APjAAAWZbnxs9Lh+26EYUXAvNQtrDrqHtZNF6tmB/6nvuc8lpyAKFqSN
-        ByXeyBy68fxRWnfpACgwyQzJwWJbgeBnNSPhRDPbiQ==
-X-Google-Smtp-Source: APXvYqwBMSdVvu8RT/aHrXAKN1JZW5D7unl0V4pBKZcQ/Gj2jfB+n2QZTPMJmf5EbLWNNDGon1H6Kb4H+QatEUHM+fU=
-X-Received: by 2002:a02:cc6c:: with SMTP id j12mr3176494jaq.102.1562835751603;
- Thu, 11 Jul 2019 02:02:31 -0700 (PDT)
+        id S1727595AbfGKJYx (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 11 Jul 2019 05:24:53 -0400
+Received: from anchovy1.45ru.net.au ([203.30.46.145]:34124 "EHLO
+        anchovy1.45ru.net.au" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727680AbfGKJYu (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 11 Jul 2019 05:24:50 -0400
+Received: (qmail 30049 invoked by uid 5089); 11 Jul 2019 09:24:48 -0000
+Received: by simscan 1.2.0 ppid: 29900, pid: 29902, t: 0.0630s
+         scanners: regex: 1.2.0 attach: 1.2.0 clamav: 0.88.3/m:40/d:1950
+Received: from unknown (HELO ?192.168.0.128?) (preid@electromag.com.au@203.59.235.95)
+  by anchovy1.45ru.net.au with ESMTPA; 11 Jul 2019 09:24:47 -0000
+Subject: Re: [PATCH RFC] gpio: Add Virtual Aggregator GPIO Driver
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Alexander Graf <agraf@suse.de>,
+        Peter Maydell <peter.maydell@linaro.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        QEMU Developers <qemu-devel@nongnu.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <20190705160536.12047-1-geert+renesas@glider.be>
+ <8500a069-9e29-d6ad-e5e4-22d5a3eead59@electromag.com.au>
+ <CAMuHMdWLcr0pf-ZM3+iWQGwDLB2xoHAZaeCKAjtEVEaiNed63Q@mail.gmail.com>
+From:   Phil Reid <preid@electromag.com.au>
+Message-ID: <1fc3a5ad-6eb6-3356-5fd4-93ce0482bb7e@electromag.com.au>
+Date:   Thu, 11 Jul 2019 17:24:40 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-References: <BN7PR13MB2532728B9B6D7E73875DFCF1DE140@BN7PR13MB2532.namprd13.prod.outlook.com>
- <BN7PR13MB25322B3D67DFC0E8787E79C6DE140@BN7PR13MB2532.namprd13.prod.outlook.com>
-In-Reply-To: <BN7PR13MB25322B3D67DFC0E8787E79C6DE140@BN7PR13MB2532.namprd13.prod.outlook.com>
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Thu, 11 Jul 2019 11:02:20 +0200
-Message-ID: <CAMRc=MdzA7pkT8=uEymLizoRSQnB4bNpbW4DG-HfADhgVthUiw@mail.gmail.com>
-Subject: Re: [libgpiod]
-To:     Kevin Welsh <kwelsh@welshtechnologies.com>
-Cc:     "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <CAMuHMdWLcr0pf-ZM3+iWQGwDLB2xoHAZaeCKAjtEVEaiNed63Q@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-AU
+Content-Transfer-Encoding: 7bit
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-pon., 3 cze 2019 o 14:24 Kevin Welsh <kwelsh@welshtechnologies.com> napisa=
-=C5=82(a):
->
-> I am trying to make gpiomon into a daemon using busybox. (start-stop-daem=
-on -b) Instead of writing a message to stdout, I need it to execute a scrip=
-t. My use case is that I need a button press (gpio) to undo setting a stati=
-c IP.
->
-> If I set - -format=3D"touch buttton-was-pressed|sh"
->
-> Is this a valid command to make into a daemon? If not, can I submit a pat=
-ch to include a parameter for executing a script?
+On 10/07/2019 18:21, Geert Uytterhoeven wrote:
+> Hi Phil,
+> 
+> On Wed, Jul 10, 2019 at 4:00 AM Phil Reid <preid@electromag.com.au> wrote:
+>> On 6/07/2019 00:05, Geert Uytterhoeven wrote:
+>>> GPIO controllers are exported to userspace using /dev/gpiochip*
+>>> character devices.  Access control to these devices is provided by
+>>> standard UNIX file system permissions, on an all-or-nothing basis:
+>>> either a GPIO controller is accessible for a user, or it is not.
+>>> Currently no mechanism exists to control access to individual GPIOs.
+>>>
+>>> Hence add a virtual GPIO driver to aggregate existing GPIOs (up to 32),
+>>> and expose them as a new gpiochip.  This is useful for implementing
+>>> access control, and assigning a set of GPIOs to a specific user.
+>>> Furthermore, it would simplify and harden exporting GPIOs to a virtual
+>>> machine, as the VM can just grab the full virtual GPIO controller, and
+>>> no longer needs to care about which GPIOs to grab and which not,
+>>> reducing the attack surface.
+>>>
+>>> Virtual GPIO controllers are instantiated by writing to the "new_device"
+>>> attribute file in sysfs:
+>>>
+>>>       $ echo "<gpiochipA> <gpioA1> [<gpioA2> ...]"
+>>>              "[, <gpiochipB> <gpioB1> [<gpioB2> ...]] ...]"
+>>>               > /sys/bus/platform/drivers/gpio-virt-agg/new_device
+>>>
+>>> Likewise, virtual GPIO controllers can be destroyed after use:
+>>>
+>>>       $ echo gpio-virt-agg.<N> \
+>>>               > /sys/bus/platform/drivers/gpio-virt-agg/delete_device
+>>>
+>>
+>> Nice.
+>> This provides similar functionality to the "gpio inverter" driver currently on the list.
+>> Other than being just a buffer.
+> 
+> Indeed, both drivers forward GPIO calls, but the gpio inverter modifies
+> some parameters passed.
+> 
+> The way the drivers obtain references to GPIOs is different, though: the
+> inverter driver obtains a fixed description from DT, while the virtual
+> aggregator receives the description at runtime, from sysfs.
+> 
+> But perhaps both drivers could share some code?
+Other than probing they're almost the same, except the inversion.
+This one's more complete for set / get multiple etc.
 
-Hi Kevin,
+> 
+>> Would it be possible to do the lookup via line names?
+> 
+> Doesn't the fact that a GPIO has a line name means that it is in use, and
+> thus cannot be aggregated and exported to another user?
+> 
 
-I didn't see this message because you didn't Cc me personally.
+They can be given line names via the dt property gpio-line-names.
+Which can be used by user space to find a gpio. Not sure if there's an equivalent api inkerenl.
+But it looks like we can find the info via struct gpiochip_info / gpioline_info linfo and work
+out the chip name and line offsets. So probably not required.
 
-Yes your example would work i.e. gpiomon would print this string on a
-GPIO event. Executing scripts is on my TODO list, but your
-contribution will be more than welcome. :)
+Find the right gpio always seems tricky.
+We have systems with multiple i2c gpio behind muxes that may or may not be present.
+So i2c bus numbers are never consistent. And then different board revisions move the
+same gpio line to a different pin (or cahnge the gpio chip type completely) to make routing easier etc.
 
-Best regards,
-Bartosz Golaszewski
+
+
+
+-- 
+Regards
+Phil Reid
