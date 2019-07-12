@@ -2,195 +2,95 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id E200C666DC
-	for <lists+linux-gpio@lfdr.de>; Fri, 12 Jul 2019 08:17:47 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7721666965
+	for <lists+linux-gpio@lfdr.de>; Fri, 12 Jul 2019 10:54:56 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725807AbfGLGRr (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 12 Jul 2019 02:17:47 -0400
-Received: from out1-smtp.messagingengine.com ([66.111.4.25]:41281 "EHLO
-        out1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725791AbfGLGRq (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>);
-        Fri, 12 Jul 2019 02:17:46 -0400
-Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailout.nyi.internal (Postfix) with ESMTP id 1EB192223A;
-        Fri, 12 Jul 2019 02:17:45 -0400 (EDT)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute4.internal (MEProxy); Fri, 12 Jul 2019 02:17:45 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aj.id.au; h=from
-        :to:cc:subject:date:message-id:mime-version
-        :content-transfer-encoding; s=fm3; bh=LxE0mQurpNi+Nw2gFJjTVSZyJ5
-        bmZmtxq8G3mOjaB4Y=; b=cOhV8JN4QdIbJq6mnKkWb3psnXYiBgz6yYy6uCPRNb
-        kUjYrUdSF1OYULFdZn2ycjAx9I4m4uHz+62bSnC3+4iMgZVqtufuDx1eCPuL6ucc
-        RvGrH1K0RBLg+2oe/4ZSfZasKD5pmHUmDyGKl4t97xxuAhHSCYsUb8zuAtISmE1C
-        nrq7gpmiyAc5KsMq/5tNNaKLlnnh0rqMg/F08175gMipURW5Vx514N26FfTPCpvV
-        asTmMOOb2jSqohbA0qPOGXdfm08gws3cDv47oLt5P1gs/FXOa+RAKAj5su/HGfS4
-        4MxnJesrSDca+9d2zJnKH9ZLgCJRhH1qtDH0tobFKmBQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-transfer-encoding:date:from
-        :message-id:mime-version:subject:to:x-me-proxy:x-me-proxy
-        :x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=LxE0mQurpNi+Nw2gF
-        JjTVSZyJ5bmZmtxq8G3mOjaB4Y=; b=Ekaet4pKp7NOusIIXUjozF3wXk5SH7ITl
-        g5xXkkjizrwxfXQSpwgw+7ahsYcN/xJvTbhfFFsR2viWv3q3dgbqbR4A0rdNi9Qr
-        rhj4XDNJ5qrpNITkuqGczINkrdSwmK+eUndGT/8ib+dDdGEJMhnuDNNjMWL4YC5K
-        E3USkl19fhqi5XU3OQ/sigSZMNswj++PW7xbxgijRd7YgsLMrXAVt3+U4A6yYojl
-        p3AdIbjtzSbjCo0ETH4AGQHrAL02ysljnDSy/tM2pn1O/3nyqSkn+Ib1HWpXbyRX
-        yqn0Q/fG9IpaaK0yZNBHHqwmtef67oHe2A5KV4yCAft1J6sHIDcPw==
-X-ME-Sender: <xms:ByYoXcmxA-4Wr3Jy0LkJne05TdZA9b7mn5sMJLPNnxhuQAfDrO6F0g>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduvddrgeelgddutdejucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucenucfjughrpefhvffufffkofgggfestdekredtre
-    dttdenucfhrhhomheptehnughrvgifucflvghffhgvrhihuceorghnughrvgifsegrjhdr
-    ihgurdgruheqnecuffhomhgrihhnpehoiihlrggsshdrohhrghenucfkphepvddtvddrke
-    durddukedrfedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegrnhgurhgvfiesrghjrdhi
-    ugdrrghunecuvehluhhsthgvrhfuihiivgeptd
-X-ME-Proxy: <xmx:ByYoXS0JyD-YpmQ7qxRvKTO_gFcrLUklHGdqlr_WUziHQ4PXX0h6KA>
-    <xmx:ByYoXfpj0Mk3dS2kzyOsoOcyYJzZd1-daKLsnhpKvHm_sqzzVi_ArA>
-    <xmx:ByYoXXc7JfeCZRCuUaV1wbfMws6ALoyMRTjk5hEWPLSR7O7ee-5Qmw>
-    <xmx:CSYoXTBVGv1m8K6A49B6Ul33Qco8-a4X_ro3VAb0grJXbSa7pGTkYA>
-Received: from mistburn.au.ibm.com (bh02i525f01.au.ibm.com [202.81.18.30])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 4A26D380074;
-        Fri, 12 Jul 2019 02:17:40 -0400 (EDT)
-From:   Andrew Jeffery <andrew@aj.id.au>
-To:     linux-gpio@vger.kernel.org
-Cc:     Andrew Jeffery <andrew@aj.id.au>, linus.walleij@linaro.org,
-        robh+dt@kernel.org, mark.rutland@arm.com, joel@jms.id.au,
-        linux-aspeed@lists.ozlabs.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] dt-bindings: pinctrl: aspeed: Strip unnecessary quotes
-Date:   Fri, 12 Jul 2019 15:47:21 +0930
-Message-Id: <20190712061721.26645-1-andrew@aj.id.au>
-X-Mailer: git-send-email 2.20.1
+        id S1725935AbfGLIyz (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 12 Jul 2019 04:54:55 -0400
+Received: from mout.kundenserver.de ([212.227.126.133]:39351 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725913AbfGLIyz (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 12 Jul 2019 04:54:55 -0400
+Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
+ (mreue012 [212.227.15.129]) with ESMTPA (Nemesis) id
+ 1MC0HF-1hcGYX1ygP-00CUbG; Fri, 12 Jul 2019 10:54:40 +0200
+From:   Arnd Bergmann <arnd@arndb.de>
+To:     Darren Hart <dvhart@infradead.org>,
+        Andy Shevchenko <andy@infradead.org>
+Cc:     Arnd Bergmann <arnd@arndb.de>, linux-gpio@vger.kernel.org,
+        linus.walleij@linaro.org, bgolaszewski@baylibre.com,
+        platform-driver-x86@vger.kernel.org,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        "Enrico Weigelt, metux IT consult" <info@metux.net>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] platform/x86: pcengines-apu2 needs gpiolib
+Date:   Fri, 12 Jul 2019 10:54:16 +0200
+Message-Id: <20190712085437.4007720-1-arnd@arndb.de>
+X-Mailer: git-send-email 2.20.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-Provags-ID: V03:K1:q5tPZJu9QNhMvB+Wjc3nD4+lt6P94lxXdaRle25TJJYOM/GHoiD
+ /Ck9YlzlpO5LarKonCtXtY6s32D3RHStZ/uUlKcxN5hl6/5Q8d/8zFb2B4tCpX3rh/3EC7F
+ prAVYFM+3zsSaFDP4Yf0HX1G1fSaPq787L7KWXquFwxEpl0DIvcpTwdL62bd+OPqmI3BF3W
+ V5C2Cui+oFBnuSwh3lXeg==
+X-Spam-Flag: NO
+X-UI-Out-Filterresults: notjunk:1;V03:K0:UryBGBMeQx4=:kSGxr+DizaqVDm43tZ3n4N
+ 1/ubNIVL20pMkt/p5VJw0mi1kSmHkbWNqF1KNp/+CdZ7CtN9NyLpnwAkyl/ZqodCHm4de/IpB
+ r1uA5TZZazzo0Pr4dqco8Mn7EJW/C7joDbzjB/RklUZpiIWmSt4GutOOagb028hift7Js602J
+ WZZ6G694HH44qLQQ6ba5fb7ofpQ3bY6u/sWC35PoSCDLM/fmrhFaVBpyd8wRpeef1TZkdVPtH
+ E+MBT+ergUp39Q+6HEhf6V4XWfcJifcVk+yWyW8sc2oK8kBf2aIV68i+jxERDjDwKSb9BYNpe
+ m7z+XmVRrzbDDj7NSqvqIoUqfv1Hzykf5/kNuYE0o/04VkPZBxPILkc1TZm1gAK5AXduhxddb
+ j+D5R5hNmharF2JSQrAEi9jmgDSHY6haYX5ghczeXbOsQCi+6dgX2qa9+o3c3acqQ+6ToWO+E
+ 8njWP05diZlWuu2RNw83lTew3NQBysGjkG7n+UqTiXuKQmcFJ9Wvdavfu5F/DdyzGmH9uWcJK
+ JnRBLrUm/2Gpu1SGTZgGmp611f5rNQjtp+f3TF1ipq8QCbC6vUrGQiKv0Rz9GUaL3E+FkPnfq
+ i9ONNp8WCM7kelzX/rIB6z8t1KnK7kqXaHULkK6CHgxUNQOG2O5Y6f8GMScvupRh44c9dVgBW
+ wiWTHD4luwvayUctO4hxX3SjbTupBAeGozktuTdq11NQTCD91ixWsd+GG5Xi9P06pV7smJJee
+ 3PnvsgeYyL3rORargUuokfIjbkCnQp/hOtDA3w==
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Rob pointed out that we didn't need the noise of the quotes in a
-separate review[1], so strip them out for consistency and avoid setting
-a bad example.
+I ran into another build issue in randconfig testing for this driver,
+when CONFIG_GPIOLIB is not set:
 
-[1] https://lists.ozlabs.org/pipermail/linux-aspeed/2019-July/002009.html
+WARNING: unmet direct dependencies detected for GPIO_AMD_FCH
+  Depends on [n]: GPIOLIB [=n] && HAS_IOMEM [=y]
+  Selected by [y]:
+  - PCENGINES_APU2 [=y] && X86 [=y] && X86_PLATFORM_DEVICES [=y] && INPUT [=y] && INPUT_KEYBOARD [=y] && LEDS_CLASS [=y]
 
-Signed-off-by: Andrew Jeffery <andrew@aj.id.au>
+WARNING: unmet direct dependencies detected for KEYBOARD_GPIO_POLLED
+  Depends on [n]: !UML && INPUT [=y] && INPUT_KEYBOARD [=y] && GPIOLIB [=n]
+  Selected by [y]:
+  - PCENGINES_APU2 [=y] && X86 [=y] && X86_PLATFORM_DEVICES [=y] && INPUT [=y] && INPUT_KEYBOARD [=y] && LEDS_CLASS [=y]
+
+Make the 'select' statements conditional on that so we don't have to
+introduce another 'select'.
+
+Fixes: f8eb0235f659 ("x86: pcengines apuv2 gpio/leds/keys platform driver")
+Fixes: a422bf11bdb4 ("platform/x86: fix PCENGINES_APU2 Kconfig warning")
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 ---
+ drivers/platform/x86/Kconfig | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-This patch applies to the tip of pinctrl/devel where the aspeed pinctrl binding
-conversion patches have already landed.
-
- .../pinctrl/aspeed,ast2400-pinctrl.yaml       | 40 ++++++++---------
- .../pinctrl/aspeed,ast2500-pinctrl.yaml       | 45 +++++++++----------
- 2 files changed, 38 insertions(+), 47 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/pinctrl/aspeed,ast2400-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/aspeed,ast2400-pinctrl.yaml
-index 61a110a7db8a..faedfed0769c 100644
---- a/Documentation/devicetree/bindings/pinctrl/aspeed,ast2400-pinctrl.yaml
-+++ b/Documentation/devicetree/bindings/pinctrl/aspeed,ast2400-pinctrl.yaml
-@@ -33,28 +33,24 @@ patternProperties:
-         "^function|groups$":
-           allOf:
-             - $ref: "/schemas/types.yaml#/definitions/string"
--            - enum: [ "ACPI", "ADC0", "ADC1", "ADC10", "ADC11", "ADC12", "ADC13",
--              "ADC14", "ADC15", "ADC2", "ADC3", "ADC4", "ADC5", "ADC6", "ADC7",
--              "ADC8", "ADC9", "BMCINT", "DDCCLK", "DDCDAT", "EXTRST", "FLACK",
--              "FLBUSY", "FLWP", "GPID", "GPID0", "GPID2", "GPID4", "GPID6",
--              "GPIE0", "GPIE2", "GPIE4", "GPIE6", "I2C10", "I2C11", "I2C12",
--              "I2C13", "I2C14", "I2C3", "I2C4", "I2C5", "I2C6", "I2C7", "I2C8",
--              "I2C9", "LPCPD", "LPCPME", "LPCRST", "LPCSMI", "MAC1LINK",
--              "MAC2LINK", "MDIO1", "MDIO2", "NCTS1", "NCTS2", "NCTS3", "NCTS4",
--              "NDCD1", "NDCD2", "NDCD3", "NDCD4", "NDSR1", "NDSR2", "NDSR3",
--              "NDSR4", "NDTR1", "NDTR2", "NDTR3", "NDTR4", "NDTS4", "NRI1",
--              "NRI2", "NRI3", "NRI4", "NRTS1", "NRTS2", "NRTS3", "OSCCLK",
--              "PWM0", "PWM1", "PWM2", "PWM3", "PWM4", "PWM5", "PWM6", "PWM7",
--              "RGMII1", "RGMII2", "RMII1", "RMII2", "ROM16", "ROM8", "ROMCS1",
--              "ROMCS2", "ROMCS3", "ROMCS4", "RXD1", "RXD2", "RXD3", "RXD4",
--              "SALT1", "SALT2", "SALT3", "SALT4", "SD1", "SD2", "SGPMCK",
--              "SGPMI", "SGPMLD", "SGPMO", "SGPSCK", "SGPSI0", "SGPSI1", "SGPSLD",
--              "SIOONCTRL", "SIOPBI", "SIOPBO", "SIOPWREQ", "SIOPWRGD", "SIOS3",
--              "SIOS5", "SIOSCI", "SPI1", "SPI1DEBUG", "SPI1PASSTHRU", "SPICS1",
--              "TIMER3", "TIMER4", "TIMER5", "TIMER6", "TIMER7", "TIMER8", "TXD1",
--              "TXD2", "TXD3", "TXD4", "UART6", "USB11D1", "USB11H2", "USB2D1",
--              "USB2H1", "USBCKI", "VGABIOS_ROM", "VGAHS", "VGAVS", "VPI18",
--              "VPI24", "VPI30", "VPO12", "VPO24", "WDTRST1", "WDTRST2" ]
-+            - enum: [ ACPI, ADC0, ADC1, ADC10, ADC11, ADC12, ADC13, ADC14,
-+              ADC15, ADC2, ADC3, ADC4, ADC5, ADC6, ADC7, ADC8, ADC9, BMCINT,
-+              DDCCLK, DDCDAT, EXTRST, FLACK, FLBUSY, FLWP, GPID, GPID0, GPID2,
-+              GPID4, GPID6, GPIE0, GPIE2, GPIE4, GPIE6, I2C10, I2C11, I2C12,
-+              I2C13, I2C14, I2C3, I2C4, I2C5, I2C6, I2C7, I2C8, I2C9, LPCPD,
-+              LPCPME, LPCRST, LPCSMI, MAC1LINK, MAC2LINK, MDIO1, MDIO2, NCTS1,
-+              NCTS2, NCTS3, NCTS4, NDCD1, NDCD2, NDCD3, NDCD4, NDSR1, NDSR2,
-+              NDSR3, NDSR4, NDTR1, NDTR2, NDTR3, NDTR4, NDTS4, NRI1, NRI2,
-+              NRI3, NRI4, NRTS1, NRTS2, NRTS3, OSCCLK, PWM0, PWM1, PWM2, PWM3,
-+              PWM4, PWM5, PWM6, PWM7, RGMII1, RGMII2, RMII1, RMII2, ROM16,
-+              ROM8, ROMCS1, ROMCS2, ROMCS3, ROMCS4, RXD1, RXD2, RXD3, RXD4,
-+              SALT1, SALT2, SALT3, SALT4, SD1, SD2, SGPMCK, SGPMI, SGPMLD,
-+              SGPMO, SGPSCK, SGPSI0, SGPSI1, SGPSLD, SIOONCTRL, SIOPBI, SIOPBO,
-+              SIOPWREQ, SIOPWRGD, SIOS3, SIOS5, SIOSCI, SPI1, SPI1DEBUG,
-+              SPI1PASSTHRU, SPICS1, TIMER3, TIMER4, TIMER5, TIMER6, TIMER7,
-+              TIMER8, TXD1, TXD2, TXD3, TXD4, UART6, USB11D1, USB11H2, USB2D1,
-+              USB2H1, USBCKI, VGABIOS_ROM, VGAHS, VGAVS, VPI18, VPI24, VPI30,
-+              VPO12, VPO24, WDTRST1, WDTRST2 ]
- 
- required:
-   - compatible
-diff --git a/Documentation/devicetree/bindings/pinctrl/aspeed,ast2500-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/aspeed,ast2500-pinctrl.yaml
-index cf561bd55128..d1984f619b74 100644
---- a/Documentation/devicetree/bindings/pinctrl/aspeed,ast2500-pinctrl.yaml
-+++ b/Documentation/devicetree/bindings/pinctrl/aspeed,ast2500-pinctrl.yaml
-@@ -42,31 +42,26 @@ patternProperties:
-         "^function|groups$":
-           allOf:
-             - $ref: "/schemas/types.yaml#/definitions/string"
--            - enum: [ "ACPI", "ADC0", "ADC1", "ADC10", "ADC11", "ADC12", "ADC13",
--              "ADC14", "ADC15", "ADC2", "ADC3", "ADC4", "ADC5", "ADC6", "ADC7",
--              "ADC8", "ADC9", "BMCINT", "DDCCLK", "DDCDAT", "ESPI", "FWSPICS1",
--              "FWSPICS2", "GPID0", "GPID2", "GPID4", "GPID6", "GPIE0", "GPIE2",
--              "GPIE4", "GPIE6", "I2C10", "I2C11", "I2C12", "I2C13", "I2C14",
--              "I2C3", "I2C4", "I2C5", "I2C6", "I2C7", "I2C8", "I2C9", "LAD0",
--              "LAD1", "LAD2", "LAD3", "LCLK", "LFRAME", "LPCHC", "LPCPD",
--              "LPCPLUS", "LPCPME", "LPCRST", "LPCSMI", "LSIRQ", "MAC1LINK",
--              "MAC2LINK", "MDIO1", "MDIO2", "NCTS1", "NCTS2", "NCTS3", "NCTS4",
--              "NDCD1", "NDCD2", "NDCD3", "NDCD4", "NDSR1", "NDSR2", "NDSR3",
--              "NDSR4", "NDTR1", "NDTR2", "NDTR3", "NDTR4", "NRI1", "NRI2",
--              "NRI3", "NRI4", "NRTS1", "NRTS2", "NRTS3", "NRTS4", "OSCCLK",
--              "PEWAKE", "PNOR", "PWM0", "PWM1", "PWM2", "PWM3", "PWM4", "PWM5",
--              "PWM6", "PWM7", "RGMII1", "RGMII2", "RMII1", "RMII2", "RXD1",
--              "RXD2", "RXD3", "RXD4", "SALT1", "SALT10", "SALT11", "SALT12",
--              "SALT13", "SALT14", "SALT2", "SALT3", "SALT4", "SALT5", "SALT6",
--              "SALT7", "SALT8", "SALT9", "SCL1", "SCL2", "SD1", "SD2", "SDA1",
--              "SDA2", "SGPS1", "SGPS2", "SIOONCTRL", "SIOPBI", "SIOPBO",
--              "SIOPWREQ", "SIOPWRGD", "SIOS3", "SIOS5", "SIOSCI", "SPI1",
--              "SPI1CS1", "SPI1DEBUG", "SPI1PASSTHRU", "SPI2CK", "SPI2CS0",
--              "SPI2CS1", "SPI2MISO", "SPI2MOSI", "TIMER3", "TIMER4", "TIMER5",
--              "TIMER6", "TIMER7", "TIMER8", "TXD1", "TXD2", "TXD3", "TXD4",
--              "UART6", "USB11BHID", "USB2AD", "USB2AH", "USB2BD", "USB2BH",
--              "USBCKI", "VGABIOSROM", "VGAHS", "VGAVS", "VPI24", "VPO",
--              "WDTRST1", "WDTRST2", ]
-+            - enum: [ ACPI, ADC0, ADC1, ADC10, ADC11, ADC12, ADC13, ADC14,
-+              ADC15, ADC2, ADC3, ADC4, ADC5, ADC6, ADC7, ADC8, ADC9, BMCINT,
-+              DDCCLK, DDCDAT, ESPI, FWSPICS1, FWSPICS2, GPID0, GPID2, GPID4,
-+              GPID6, GPIE0, GPIE2, GPIE4, GPIE6, I2C10, I2C11, I2C12, I2C13,
-+              I2C14, I2C3, I2C4, I2C5, I2C6, I2C7, I2C8, I2C9, LAD0, LAD1,
-+              LAD2, LAD3, LCLK, LFRAME, LPCHC, LPCPD, LPCPLUS, LPCPME, LPCRST,
-+              LPCSMI, LSIRQ, MAC1LINK, MAC2LINK, MDIO1, MDIO2, NCTS1, NCTS2,
-+              NCTS3, NCTS4, NDCD1, NDCD2, NDCD3, NDCD4, NDSR1, NDSR2, NDSR3,
-+              NDSR4, NDTR1, NDTR2, NDTR3, NDTR4, NRI1, NRI2, NRI3, NRI4, NRTS1,
-+              NRTS2, NRTS3, NRTS4, OSCCLK, PEWAKE, PNOR, PWM0, PWM1, PWM2,
-+              PWM3, PWM4, PWM5, PWM6, PWM7, RGMII1, RGMII2, RMII1, RMII2, RXD1,
-+              RXD2, RXD3, RXD4, SALT1, SALT10, SALT11, SALT12, SALT13, SALT14,
-+              SALT2, SALT3, SALT4, SALT5, SALT6, SALT7, SALT8, SALT9, SCL1,
-+              SCL2, SD1, SD2, SDA1, SDA2, SGPS1, SGPS2, SIOONCTRL, SIOPBI,
-+              SIOPBO, SIOPWREQ, SIOPWRGD, SIOS3, SIOS5, SIOSCI, SPI1, SPI1CS1,
-+              SPI1DEBUG, SPI1PASSTHRU, SPI2CK, SPI2CS0, SPI2CS1, SPI2MISO,
-+              SPI2MOSI, TIMER3, TIMER4, TIMER5, TIMER6, TIMER7, TIMER8, TXD1,
-+              TXD2, TXD3, TXD4, UART6, USB11BHID, USB2AD, USB2AH, USB2BD,
-+              USB2BH, USBCKI, VGABIOSROM, VGAHS, VGAVS, VPI24, VPO, WDTRST1,
-+              WDTRST2, ]
- 
- required:
-   - compatible
+diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
+index e869a5c760b6..cf48b9068843 100644
+--- a/drivers/platform/x86/Kconfig
++++ b/drivers/platform/x86/Kconfig
+@@ -1324,8 +1324,8 @@ config PCENGINES_APU2
+ 	tristate "PC Engines APUv2/3 front button and LEDs driver"
+ 	depends on INPUT && INPUT_KEYBOARD
+ 	depends on LEDS_CLASS
+-	select GPIO_AMD_FCH
+-	select KEYBOARD_GPIO_POLLED
++	select GPIO_AMD_FCH if GPIOLIB
++	select KEYBOARD_GPIO_POLLED if GPIOLIB
+ 	select LEDS_GPIO
+ 	help
+ 	  This driver provides support for the front button and LEDs on
 -- 
-2.20.1
+2.20.0
 
