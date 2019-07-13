@@ -2,89 +2,87 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id EEC9067A9E
-	for <lists+linux-gpio@lfdr.de>; Sat, 13 Jul 2019 16:36:55 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id ADDEE67AEF
+	for <lists+linux-gpio@lfdr.de>; Sat, 13 Jul 2019 17:35:05 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727626AbfGMOgz (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sat, 13 Jul 2019 10:36:55 -0400
-Received: from mout.kundenserver.de ([217.72.192.74]:34607 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727504AbfGMOgz (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sat, 13 Jul 2019 10:36:55 -0400
-Received: from [192.168.1.110] ([95.114.35.189]) by mrelayeu.kundenserver.de
- (mreue107 [212.227.15.183]) with ESMTPSA (Nemesis) id
- 1MEmpp-1hfxbZ3JOt-00GLtU; Sat, 13 Jul 2019 16:36:38 +0200
+        id S1727784AbfGMPfC (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sat, 13 Jul 2019 11:35:02 -0400
+Received: from mail-qt1-f195.google.com ([209.85.160.195]:46960 "EHLO
+        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727711AbfGMPfC (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sat, 13 Jul 2019 11:35:02 -0400
+Received: by mail-qt1-f195.google.com with SMTP id h21so11326583qtn.13;
+        Sat, 13 Jul 2019 08:35:01 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=/VYOF52fJvexeKbOu9BKHZH1XPWQ9fg20nK1W0PVBPU=;
+        b=N6ZDCY84nmzm9o9fc7+bE+lRW3ZudNjOdihqZm35ZDybQ2EK7Uw+a5GsYJII3bHlrU
+         EsfdA3RToVDtZqZbfMEcpsSVGZGv3CFPjk5YjDp13LsuKbz9eemIVTH6NKm4i8kmKHPZ
+         aLrdI0Pnl71pTcafFbqwq+CpgyDNsglyHeIoPkfhPWe8QVxQwc1XXvC4fc/aUJcfQ7we
+         mIWm0vTPRSfRxvCOtxr+MlZUmokd8d48ZeY9KeN74APgzxN38aNcVdFAYeY8ANyj/V/F
+         wO2RLlZIzC499COdaI9tI+cLPuTOsZ3ZR/q/ejSog28ZoUGuPfvy/EADynjoElSFbeEG
+         iOfA==
+X-Gm-Message-State: APjAAAVONo95XOuRy1gfwTtFQVEPStdc49UQMkHJQWFN0KwKpVxjKHXY
+        v7KzCqCvVOORi14AwRJmfGgnW6xn4HyY/b9lJ44=
+X-Google-Smtp-Source: APXvYqx27JWKTE5WBop/U7bMtyQP/Kzr2bIFkryE+f5lOFq7JP5QSUbQfKs8QOW9ZjZHS4O4f+3uLloLQ3C7fGXHhRU=
+X-Received: by 2002:a0c:b88e:: with SMTP id y14mr11211808qvf.93.1563032100815;
+ Sat, 13 Jul 2019 08:35:00 -0700 (PDT)
+MIME-Version: 1.0
+References: <20190712085437.4007720-1-arnd@arndb.de> <fb36b507-e637-e4d9-fdd4-2947eb7faf14@metux.net>
+In-Reply-To: <fb36b507-e637-e4d9-fdd4-2947eb7faf14@metux.net>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Sat, 13 Jul 2019 17:34:44 +0200
+Message-ID: <CAK8P3a3SPpQAbXu5+rHjEaF-MSVxVmG9sWy9hxu844HKn8JgLg@mail.gmail.com>
 Subject: Re: [PATCH] platform/x86: pcengines-apu2 needs gpiolib
-To:     Arnd Bergmann <arnd@arndb.de>, Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andy@infradead.org>
-Cc:     linux-gpio@vger.kernel.org, linus.walleij@linaro.org,
-        bgolaszewski@baylibre.com, platform-driver-x86@vger.kernel.org,
+To:     "Enrico Weigelt, metux IT consult" <lkml@metux.net>
+Cc:     Darren Hart <dvhart@infradead.org>,
+        Andy Shevchenko <andy@infradead.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Platform Driver <platform-driver-x86@vger.kernel.org>,
         Andy Shevchenko <andy.shevchenko@gmail.com>,
         "Enrico Weigelt, metux IT consult" <info@metux.net>,
         Randy Dunlap <rdunlap@infradead.org>,
         "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        linux-kernel@vger.kernel.org
-References: <20190712085437.4007720-1-arnd@arndb.de>
-From:   "Enrico Weigelt, metux IT consult" <lkml@metux.net>
-Organization: metux IT consult
-Message-ID: <fb36b507-e637-e4d9-fdd4-2947eb7faf14@metux.net>
-Date:   Sat, 13 Jul 2019 16:36:36 +0200
-User-Agent: Mozilla/5.0 (X11; Linux i686 on x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.2.1
-MIME-Version: 1.0
-In-Reply-To: <20190712085437.4007720-1-arnd@arndb.de>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Provags-ID: V03:K1:F7Bx1iEZ00JHjygR9CYKTD/F5605d0pFDcWaxn95S/PAyp3hxEu
- UhrALD/kDGETh91QL+CLArgovGI5jvHFpDE315r684R/9HdQBsfNO94teG1gdgkcDMTlsa6
- D/9RpuO0V74lqkluprvr10GH0XtYdCwzHAKlkB0kO8BlLzCZXx/bfw+kPrs/TQ6uWwso4Lj
- 7f91K33um10ysGW4rqL8g==
-X-Spam-Flag: NO
-X-UI-Out-Filterresults: notjunk:1;V03:K0:FCEWFvElarQ=:ecKfbDh8tqANzzRfepbk+8
- lFD3DwMrEvYRmSqY1PvotZA7Zca0hqcK/EcGLhXXlJv5amv65ryvRsxr6HWRYA3D3TCxmuT/4
- pTOpj0hSB299DR+944uhPt5EC/kauFVxI/Tu7nPB3ulu1VU37hmGXhU/sEHlYJy7EYit3wxNk
- dkvWns1zMioVeV3qjOEWlE2QKMipYT1qedF9ZzFP2btmrj3Acb5FVqFhu2t3UUJ9seUunDrVu
- ywXR7XN9aaLtTCl5miIJ9YO+A0QVl6HeaUIkQkUwAeTSqWh2sZK+mOW3ydk+3zs7xCKeuaMu/
- oWJNlTzMyv8zr7oBNaTcokMdXMA27618xdNijW6NiG52Von1j0h+06zMjNZZDUNSv+IxaAJ2o
- fPv5i2C1zNYwUXyw+B+Bo7qN6gmCP+bx8mTDIpkFXgKA7A8zQCiSplJ/I5R8BmVvAQdxckwDz
- NJjGt+5OiFvD77hYhUwiL4tLS4nMejtvf/4FK+ygnz7Eju8w3sI7uV1dQP5JZ26+OZ3mqOMXw
- bJpMbyrTs9PirwtLsn4S8yfikBcnliZiyo974YtbeDbCfF2VLvjnz48jKak8ewXAUuZfxB0NH
- PK5X2PYAOqQDOmBRE3VZQMraMv7fiOEPi+1BJwapy4p/MTsEzePoFSeVAeOKbgFlcdA+Yb4E0
- 6DZHU6dXwUXoDqhP1RWMVOj+en40KPjgb22FxZm1BDIK0L/McATYZPutFBGufRhjYsk3U5LDD
- NtYlEp1aN3pUwiXpc4raOYlR5Ba3cdcj519OmY73mVBd80Lm/jl5kD8CyRc=
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 12.07.19 10:54, Arnd Bergmann wrote:
+On Sat, Jul 13, 2019 at 4:36 PM Enrico Weigelt, metux IT consult
+<lkml@metux.net> wrote:
+> On 12.07.19 10:54, Arnd Bergmann wrote:
+> > diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
+> > index e869a5c760b6..cf48b9068843 100644
+> > --- a/drivers/platform/x86/Kconfig
+> > +++ b/drivers/platform/x86/Kconfig
+> > @@ -1324,8 +1324,8 @@ config PCENGINES_APU2
+> >       tristate "PC Engines APUv2/3 front button and LEDs driver"
+> >       depends on INPUT && INPUT_KEYBOARD
+> >       depends on LEDS_CLASS
+> > -     select GPIO_AMD_FCH
+> > -     select KEYBOARD_GPIO_POLLED
+> > +     select GPIO_AMD_FCH if GPIOLIB
+> > +     select KEYBOARD_GPIO_POLLED if GPIOLIB
+> >       select LEDS_GPIO
+> >       help
+> >         This driver provides support for the front button and LEDs on
+>
+> That might compile but the driver won't work, if KEYBOARD_GPIO_POLLED
+> or GPIO_AMD_FCH isn't there.
 
-Hi,
+Right, I agree it's a bit inconsistent. A better way would probably
+be to turn all of the 'select' statements into 'depends on' here, or
+possibly just remove them and document in the help text what others
+are required.
 
-> diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
-> index e869a5c760b6..cf48b9068843 100644
-> --- a/drivers/platform/x86/Kconfig
-> +++ b/drivers/platform/x86/Kconfig
-> @@ -1324,8 +1324,8 @@ config PCENGINES_APU2
->  	tristate "PC Engines APUv2/3 front button and LEDs driver"
->  	depends on INPUT && INPUT_KEYBOARD
->  	depends on LEDS_CLASS
-> -	select GPIO_AMD_FCH
-> -	select KEYBOARD_GPIO_POLLED
-> +	select GPIO_AMD_FCH if GPIOLIB
-> +	select KEYBOARD_GPIO_POLLED if GPIOLIB
->  	select LEDS_GPIO
->  	help
->  	  This driver provides support for the front button and LEDs on
+Generally using 'select' in order to save users from thinking causes
+more problems than it helps, as the build problems in this driver
+have already illustrated.
 
-That might compile but the driver won't work, if KEYBOARD_GPIO_POLLED
-or GPIO_AMD_FCH isn't there.
-
-
---mtx
-
--- 
-Enrico Weigelt, metux IT consult
-Free software and Linux embedded engineering
-info@metux.net -- +49-151-27565287
+      Arnd
