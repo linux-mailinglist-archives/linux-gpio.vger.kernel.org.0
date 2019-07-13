@@ -2,48 +2,48 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id D6CC867912
-	for <lists+linux-gpio@lfdr.de>; Sat, 13 Jul 2019 09:53:14 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B43B267914
+	for <lists+linux-gpio@lfdr.de>; Sat, 13 Jul 2019 09:53:15 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727474AbfGMHxE (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sat, 13 Jul 2019 03:53:04 -0400
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:35551 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726421AbfGMHxD (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sat, 13 Jul 2019 03:53:03 -0400
-Received: by mail-pl1-f195.google.com with SMTP id w24so5891489plp.2;
-        Sat, 13 Jul 2019 00:53:03 -0700 (PDT)
+        id S1727584AbfGMHxI (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sat, 13 Jul 2019 03:53:08 -0400
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:38835 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726301AbfGMHxE (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sat, 13 Jul 2019 03:53:04 -0400
+Received: by mail-pl1-f196.google.com with SMTP id az7so5878836plb.5;
+        Sat, 13 Jul 2019 00:53:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=tL8zpLf1AfgFUBw93f85JwsM3od1tn4L5if6plQqteM=;
-        b=ZfCUscVfGjU0IF53blN6KslSY9z3o5jmTfUFo1PN1PaS2lHdMwcXVEb+dDSQihRn+L
-         7REL1VeQ1Jd81PuhXXIG++/XRNls2nK3RvTtbKqHr7YakpyLlCJgoUKi+a74hea1ErH1
-         g9hGOW4rdBCGrh62iz2SaDNbdan8Yq2y82wVvKTbbdkSzT7Hqg6ljEzS8rMYk09rW61v
-         tmVVTAM6dWSKosSfRsHiKGJKOFaR3nyb98I5yojMqSpmUFBw05lP1yS+YeOfIdwrPXjG
-         gHeXUS6U2nu2afdVWEjX2la+Qd7mv30LX4wbEwdGixq6cdhzCPPV0fgrL9m/OhGxxFbm
-         mSqA==
+        bh=4GchPCWsR4HmyC1Kr0ODpGJwzLd9b23UZa5dsEm903g=;
+        b=UQ8JQwHmm0y0RyXdUpSQ97Q7ou/FXxskdj8cw4R/XEoFKXN/zfgTXfHzoxKArXJwz3
+         cbzFEVIo5QtkWqcGCcQ9/u98qlH5vZU3JWMYthYv+Revz8Yg+ihro3TKXZIwxuhKFmOw
+         VFc1da82Bg8CnAjQv+VV1byDiC+PUjupxPAHSeztoT12VXvvs9imone+f9FEJwF377c8
+         qaSQD0VEEhq+fG2SYSrtYyQ2L+0BDGgRe23kkFZM0JqdVioOf7EENCITDc6NHK2Waa/U
+         tSM9c131nrYYbL816Qnmnuq4hCTvxfAbR9+nut8JI8k23g5bt528dhtzfI8np4tfJKM6
+         QZ+g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=tL8zpLf1AfgFUBw93f85JwsM3od1tn4L5if6plQqteM=;
-        b=ibFCT981QCIVB2nlSeBmtJH9ka/kIfM6SHDHsKl3tmeur0IMWYXd5dsuGso4J96vqQ
-         0MVaB5P6Rh4E9c8tU5jhvYa7n/YF80SDhfcJ9PT3F11ONl1gJEBVYd+cqPJKPm6Jriuq
-         e0vSy4PvacO881IPD0Zy4gj0WUErOawFOqYqKhlstca5wH4FBAVbtq8ela5Rbc/1paZR
-         tA9VC5XbHpT1AvZcv3KWV2B8eGCg+iLORs7BC9fzGFIwsTSYO8XI8LOyutBtVY2EWILc
-         GVfBPR/0NlyLFXJaR4i7c4r5awa95xNyGujZzaZaxDu9TblNH3ufZl/y+sqOC2OJkVdK
-         w6lg==
-X-Gm-Message-State: APjAAAUiXz8uty8+kp7sGpKpkVFF9jqZfsRvplOHhRTA/b+Psa6WHJFP
-        DdgDa3WIHQWUXOhgfQdU1iw=
-X-Google-Smtp-Source: APXvYqwOTPf3sUJc2ItMb8LWrbXBBU7BNxrh+k4/VbF5L0/kfDQQTnG4ippgvH4ZYi9yxkuSle2FGw==
-X-Received: by 2002:a17:902:7083:: with SMTP id z3mr16604369plk.278.1563004382849;
-        Sat, 13 Jul 2019 00:53:02 -0700 (PDT)
+        bh=4GchPCWsR4HmyC1Kr0ODpGJwzLd9b23UZa5dsEm903g=;
+        b=d27OKuaYkPwpzcWYvUL3slv5g/aeov1J+kqgvWMwk1ltjOy0n+FWlsT46Ii/lSik9V
+         twnMktV4eJZq9y2+LbOepCk+tPYrMDZuzqXp1nA8w0Pk/XsdG8kWRyowFpIfGmfkPf7p
+         t8m0XJbrUGP3OfAsoBhuX+QMqFlmrefYaLgAXiXxyS9PIsiP/lXxGurMVw6xUy5OUVwf
+         ekEo1eD+tGiaNz2X8HH+OzfOSkQ7ARvBoyVcKD8Zep0LRdVUic4UQKnQqXz4zrHHKdFh
+         vctnA4QdoIw4rfyjaHXoZvhXZWvO4rUude2nP85N/L8PbDtZQ78Wv3ZN5gVC1j+EvYTE
+         1O8A==
+X-Gm-Message-State: APjAAAX7ou3trd3edVMiN/6aIH+lk7Y4066kNNYWjpvuHJK/GplZvEmw
+        3DfIpws3nJMWzRvplzaA0y0=
+X-Google-Smtp-Source: APXvYqxgbfWi/L3jUcbQd8qLC0lkY+zI7ieIqmnd8So+e5N9IY96XlogUeUsG3TeZRu0670PWjm/Jw==
+X-Received: by 2002:a17:902:a60d:: with SMTP id u13mr16588025plq.144.1563004383597;
+        Sat, 13 Jul 2019 00:53:03 -0700 (PDT)
 Received: from dtor-ws.mtv.corp.google.com ([2620:15c:202:201:3adc:b08c:7acc:b325])
         by smtp.gmail.com with ESMTPSA id q1sm19004518pfn.178.2019.07.13.00.53.02
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Sat, 13 Jul 2019 00:53:02 -0700 (PDT)
+        Sat, 13 Jul 2019 00:53:03 -0700 (PDT)
 From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
 To:     Linus Walleij <linus.walleij@linaro.org>,
         "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
@@ -52,9 +52,9 @@ Cc:     linux-input@vger.kernel.org, linux-gpio@vger.kernel.org,
         linux-kernel@vger.kernel.org,
         Andy Shevchenko <andy.shevchenko@gmail.com>,
         Heikki Krogerus <heikki.krogerus@linux.intel.com>
-Subject: [PATCH 1/2] drivers: base: swnode: link devices to software nodes
-Date:   Sat, 13 Jul 2019 00:52:58 -0700
-Message-Id: <20190713075259.243565-2-dmitry.torokhov@gmail.com>
+Subject: [PATCH 2/2] gpiolib: add support for fetching descriptors from static properties
+Date:   Sat, 13 Jul 2019 00:52:59 -0700
+Message-Id: <20190713075259.243565-3-dmitry.torokhov@gmail.com>
 X-Mailer: git-send-email 2.22.0.510.g264f2c817a-goog
 In-Reply-To: <20190713075259.243565-1-dmitry.torokhov@gmail.com>
 References: <20190713075259.243565-1-dmitry.torokhov@gmail.com>
@@ -65,109 +65,175 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-It is helpful to know what device, if any, a software node is tied to, so
-let's store a pointer to the device in software node structure. Note that
-children software nodes will inherit their parent's device pointer, so we
-do not have to traverse hierarchy to see what device the [sub]tree belongs
-to.
+Now that static device properties understand notion of child nodes, let's
+teach gpiolib to tie such children and machine GPIO descriptor tables.
+We will continue using a single table for entire device, but instead of
+using connection ID as a lookup key in the GPIO descriptor table directly,
+we will perform additional translation: fwnode_get_named_gpiod() when
+dealing with property_set-backed fwnodes will try parsing string property
+with name matching connection ID and use result of the lookup as the key in
+the table:
 
-We will be using the device pointer to locate GPIO lookup tables for
-devices with static properties.
+static const struct property_entry dev_child1_props[] __initconst = {
+	...
+	PROPERTY_ENTRY_STRING("gpios",		"child-1-gpios"),
+	{ }
+};
+
+static struct gpiod_lookup_table dev_gpiod_table = {
+	.dev_id = "some-device",
+	.table = {
+		...
+		GPIO_LOOKUP_IDX("B", 1, "child-1-gpios", 1, GPIO_ACTIVE_LOW),
+		...
+	},
+};
 
 Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 ---
- drivers/base/property.c  |  1 +
- drivers/base/swnode.c    | 35 ++++++++++++++++++++++++++++++++++-
- include/linux/property.h |  5 +++++
- 3 files changed, 40 insertions(+), 1 deletion(-)
+ drivers/gpio/gpiolib.c | 108 ++++++++++++++++++++++++++++++-----------
+ 1 file changed, 79 insertions(+), 29 deletions(-)
 
-diff --git a/drivers/base/property.c b/drivers/base/property.c
-index 348b37e64944..3bc93d4b35c4 100644
---- a/drivers/base/property.c
-+++ b/drivers/base/property.c
-@@ -527,6 +527,7 @@ int device_add_properties(struct device *dev,
- 	if (IS_ERR(fwnode))
- 		return PTR_ERR(fwnode);
- 
-+	software_node_link_device(fwnode, dev);
- 	set_secondary_fwnode(dev, fwnode);
- 	return 0;
+diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
+index e013d417a936..b6574febe2b8 100644
+--- a/drivers/gpio/gpiolib.c
++++ b/drivers/gpio/gpiolib.c
+@@ -4307,39 +4307,44 @@ struct gpio_desc *gpiod_get_from_of_node(struct device_node *node,
  }
-diff --git a/drivers/base/swnode.c b/drivers/base/swnode.c
-index 7fc5a18e02ad..fd12eea539b6 100644
---- a/drivers/base/swnode.c
-+++ b/drivers/base/swnode.c
-@@ -24,6 +24,9 @@ struct software_node {
+ EXPORT_SYMBOL(gpiod_get_from_of_node);
  
- 	/* properties */
- 	const struct property_entry *properties;
-+
-+	/* device this node is associated with */
+-/**
+- * fwnode_get_named_gpiod - obtain a GPIO from firmware node
+- * @fwnode:	handle of the firmware node
+- * @propname:	name of the firmware property representing the GPIO
+- * @index:	index of the GPIO to obtain for the consumer
+- * @dflags:	GPIO initialization flags
+- * @label:	label to attach to the requested GPIO
+- *
+- * This function can be used for drivers that get their configuration
+- * from opaque firmware.
+- *
+- * The function properly finds the corresponding GPIO using whatever is the
+- * underlying firmware interface and then makes sure that the GPIO
+- * descriptor is requested before it is returned to the caller.
+- *
+- * Returns:
+- * On successful request the GPIO pin is configured in accordance with
+- * provided @dflags.
+- *
+- * In case of error an ERR_PTR() is returned.
+- */
+-struct gpio_desc *fwnode_get_named_gpiod(struct fwnode_handle *fwnode,
+-					 const char *propname, int index,
+-					 enum gpiod_flags dflags,
+-					 const char *label)
++static struct gpio_desc *
++software_node_get_gpiod(struct fwnode_handle *fwnode,
++			const char *propname, int index, unsigned long *flags)
++{
 +	struct device *dev;
- };
- 
- static DEFINE_IDA(swnode_root_ids);
-@@ -607,8 +610,14 @@ fwnode_create_software_node(const struct property_entry *properties,
- 	INIT_LIST_HEAD(&swnode->children);
- 	swnode->parent = p;
- 
--	if (p)
-+	if (p) {
- 		list_add_tail(&swnode->entry, &p->children);
-+		/*
-+		 * We want to maintain the same association as the parent node,
-+		 * so we can easily locate corresponding device.
-+		 */
-+		swnode->dev = p->dev;
-+	}
- 
- 	ret = kobject_init_and_add(&swnode->kobj, &software_node_type,
- 				   p ? &p->kobj : NULL, "node%d", swnode->id);
-@@ -639,6 +648,30 @@ void fwnode_remove_software_node(struct fwnode_handle *fwnode)
- }
- EXPORT_SYMBOL_GPL(fwnode_remove_software_node);
- 
-+int software_node_link_device(struct fwnode_handle *fwnode, struct device *dev)
-+{
-+	struct software_node *swnode = to_software_node(fwnode);
++	const char *con_id;
 +
-+	if (!swnode)
-+		return -EINVAL;
-+
-+	swnode->dev = dev;
-+	return 0;
-+}
-+EXPORT_SYMBOL_GPL(software_node_link_device);
-+
-+struct device *
-+software_node_get_linked_device(const struct fwnode_handle *fwnode)
-+{
-+	const struct software_node *swnode = to_software_node(fwnode);
-+
-+	if (!swnode)
++	dev = software_node_get_linked_device(fwnode);
++	if (IS_ERR_OR_NULL(dev))
 +		return ERR_PTR(-EINVAL);
 +
-+	return swnode->dev;
++	if (fwnode_property_read_string(fwnode, propname, &con_id)) {
++		/*
++		 * We could not find string mapping property name to
++		 * entry in gpio lookup table. Let's see if we are
++		 * dealing with firmware node corresponding to the
++		 * device (and not a child node): for such nodes we can
++		 * try doing lookup directly with property name.
++		 */
++		if (fwnode_get_parent(fwnode))
++			return ERR_PTR(-ENOENT);
++
++		con_id = propname;
++	}
++
++	return gpiod_find(dev, con_id, index, flags);
 +}
-+EXPORT_SYMBOL_GPL(software_node_get_linked_device);
 +
- int software_node_notify(struct device *dev, unsigned long action)
++static struct gpio_desc *__fwnode_get_named_gpiod(struct fwnode_handle *fwnode,
++						  const char *propname,
++						  int index,
++						  enum gpiod_flags dflags,
++						  const char *label)
  {
- 	struct fwnode_handle *fwnode = dev_fwnode(dev);
-diff --git a/include/linux/property.h b/include/linux/property.h
-index e9caa290cda5..754188cfd9db 100644
---- a/include/linux/property.h
-+++ b/include/linux/property.h
-@@ -338,4 +338,9 @@ fwnode_create_software_node(const struct property_entry *properties,
- 			    const struct fwnode_handle *parent);
- void fwnode_remove_software_node(struct fwnode_handle *fwnode);
+ 	unsigned long lflags = GPIO_LOOKUP_FLAGS_DEFAULT;
+ 	struct gpio_desc *desc = ERR_PTR(-ENODEV);
+ 	int ret;
  
-+int software_node_link_device(struct fwnode_handle *fwnode,
-+			      struct device *device);
-+struct device *
-+software_node_get_linked_device(const struct fwnode_handle *fwnode);
+-	if (!fwnode)
+-		return ERR_PTR(-EINVAL);
+-
+ 	if (is_of_node(fwnode)) {
+ 		desc = gpiod_get_from_of_node(to_of_node(fwnode),
+ 					      propname, index,
+@@ -4355,9 +4360,13 @@ struct gpio_desc *fwnode_get_named_gpiod(struct fwnode_handle *fwnode,
+ 
+ 		acpi_gpio_update_gpiod_flags(&dflags, &info);
+ 		acpi_gpio_update_gpiod_lookup_flags(&lflags, &info);
++	} else if (is_software_node(fwnode)) {
++		desc = software_node_get_gpiod(fwnode, propname, index,
++					       &lflags);
++		if (IS_ERR(desc))
++			return desc;
+ 	}
+ 
+-	/* Currently only ACPI takes this path */
+ 	ret = gpiod_request(desc, label);
+ 	if (ret)
+ 		return ERR_PTR(ret);
+@@ -4370,6 +4379,47 @@ struct gpio_desc *fwnode_get_named_gpiod(struct fwnode_handle *fwnode,
+ 
+ 	return desc;
+ }
 +
- #endif /* _LINUX_PROPERTY_H_ */
++/**
++ * fwnode_get_named_gpiod - obtain a GPIO from firmware node
++ * @fwnode:	handle of the firmware node
++ * @propname:	name of the firmware property representing the GPIO
++ * @index:	index of the GPIO to obtain for the consumer
++ * @dflags:	GPIO initialization flags
++ * @label:	label to attach to the requested GPIO
++ *
++ * This function can be used for drivers that get their configuration
++ * from opaque firmware.
++ *
++ * The function properly finds the corresponding GPIO using whatever is the
++ * underlying firmware interface and then makes sure that the GPIO
++ * descriptor is requested before it is returned to the caller.
++ *
++ * Returns:
++ * On successful request the GPIO pin is configured in accordance with
++ * provided @dflags.
++ *
++ * In case of error an ERR_PTR() is returned.
++ */
++struct gpio_desc *fwnode_get_named_gpiod(struct fwnode_handle *fwnode,
++					 const char *propname, int index,
++					 enum gpiod_flags dflags,
++					 const char *label)
++{
++	struct gpio_desc *desc;
++
++	if (!fwnode)
++		return ERR_PTR(-EINVAL);
++
++	desc = __fwnode_get_named_gpiod(fwnode, propname, index, dflags, label);
++	if (IS_ERR(desc) && PTR_ERR(desc) == -ENOENT &&
++	    !IS_ERR_OR_NULL(fwnode->secondary)) {
++		desc = __fwnode_get_named_gpiod(fwnode->secondary,
++						propname, index, dflags, label);
++	}
++
++	return desc;
++}
+ EXPORT_SYMBOL_GPL(fwnode_get_named_gpiod);
+ 
+ /**
 -- 
 2.22.0.510.g264f2c817a-goog
 
