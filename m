@@ -2,27 +2,27 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 69AF76965E
-	for <lists+linux-gpio@lfdr.de>; Mon, 15 Jul 2019 17:04:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2E8E0697A8
+	for <lists+linux-gpio@lfdr.de>; Mon, 15 Jul 2019 17:12:43 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388538AbfGOOIf (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 15 Jul 2019 10:08:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59016 "EHLO mail.kernel.org"
+        id S1731447AbfGONwa (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 15 Jul 2019 09:52:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46694 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388532AbfGOOIf (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Mon, 15 Jul 2019 10:08:35 -0400
+        id S1730833AbfGONwa (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Mon, 15 Jul 2019 09:52:30 -0400
 Received: from sasha-vm.mshome.net (unknown [73.61.17.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 47C512081C;
-        Mon, 15 Jul 2019 14:08:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DFC83206B8;
+        Mon, 15 Jul 2019 13:52:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563199714;
-        bh=3YxNeA0EItrPRLbclVhF+tWlgJuoC2IPRnUm6bApOto=;
+        s=default; t=1563198749;
+        bh=VOSQxaS8QH9Uu9S+4LLMySN9bxmh7Guc+cGqsMHE+Mw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ca3BOMU6YrFmk3onNWRX74oXcRYTWRlMAKqm94UJo5Z1bL5Al+Gq/ioz5yHDoy2xT
-         xZRk1Jsj10Aot9ZgUBsOXThvGgyA3uPjYwdTh6cSE0PA3KFGj0zX8615erV/j3Dgp8
-         zbJk3ropWRz/8DVgQ7KmVJXc/nbd1yTeA8CRm33Y=
+        b=aEGQ97nl+AO2OCRzndceulCJIJRcOVJK94mHfZ9EAtgEzYdDkZg0mFfovAZJ4mMh0
+         VH9iklF9s50RGVTzYVJ6H+blUoAYrpXoLdX2AMvi55v5mo/xNhKJeJ7R/Quzd1pFX/
+         DadY5JVFW32L6pT6U7xLU9Wfm5FsdcTqnJMUS3Ls=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Tony Lindgren <tony@atomide.com>,
@@ -36,12 +36,12 @@ Cc:     Tony Lindgren <tony@atomide.com>,
         Linus Walleij <linus.walleij@linaro.org>,
         Sasha Levin <sashal@kernel.org>, linux-omap@vger.kernel.org,
         linux-gpio@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.1 081/219] gpio: omap: Fix lost edge wake-up interrupts
-Date:   Mon, 15 Jul 2019 10:01:22 -0400
-Message-Id: <20190715140341.6443-81-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.2 093/249] gpio: omap: Fix lost edge wake-up interrupts
+Date:   Mon, 15 Jul 2019 09:44:18 -0400
+Message-Id: <20190715134655.4076-93-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190715140341.6443-1-sashal@kernel.org>
-References: <20190715140341.6443-1-sashal@kernel.org>
+In-Reply-To: <20190715134655.4076-1-sashal@kernel.org>
+References: <20190715134655.4076-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -96,10 +96,10 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 11 insertions(+), 1 deletion(-)
 
 diff --git a/drivers/gpio/gpio-omap.c b/drivers/gpio/gpio-omap.c
-index 233245bc693c..1ddc872b4e4b 100644
+index 746aa9caf934..8591c410ecaa 100644
 --- a/drivers/gpio/gpio-omap.c
 +++ b/drivers/gpio/gpio-omap.c
-@@ -1455,7 +1455,7 @@ static void omap_gpio_idle(struct gpio_bank *bank, bool may_lose_context)
+@@ -1275,13 +1275,23 @@ static void omap_gpio_idle(struct gpio_bank *bank, bool may_lose_context)
  {
  	struct device *dev = bank->chip.parent;
  	void __iomem *base = bank->base;
@@ -108,7 +108,6 @@ index 233245bc693c..1ddc872b4e4b 100644
  
  	bank->saved_datain = readl_relaxed(base + bank->regs->datain);
  
-@@ -1465,6 +1465,16 @@ static void omap_gpio_idle(struct gpio_bank *bank, bool may_lose_context)
  	if (!bank->enabled_non_wakeup_gpios)
  		goto update_gpio_context_count;
  
