@@ -2,57 +2,47 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id AF5FD69D02
-	for <lists+linux-gpio@lfdr.de>; Mon, 15 Jul 2019 22:45:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CC9D269F03
+	for <lists+linux-gpio@lfdr.de>; Tue, 16 Jul 2019 00:37:34 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729875AbfGOUp4 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 15 Jul 2019 16:45:56 -0400
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:45884 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729660AbfGOUp4 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 15 Jul 2019 16:45:56 -0400
-Received: by mail-lj1-f196.google.com with SMTP id m23so17610997lje.12
-        for <linux-gpio@vger.kernel.org>; Mon, 15 Jul 2019 13:45:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=ZYBOs3aLnhuf2faNdh8yo+pXx5Re8ii69AgHIOGgYXM=;
-        b=xXQ84woWd6JtRurNXZ+LWho0SzsWefI+syk6IeKlgUlmeeUzs2BjNwuqUnKZRddNm8
-         R/8MscBULhDQ1LucF1wVgpmPD8/8h5jeWM0nMeujOR+KiL/JYABHQvqO+DmUCKXmJd3W
-         8NGP3HVRZDsy5/Q5qSkwGTa4n5cCwOH9BxJhC+D6ekrNFgmjbIGDlEAJvUlaDOrcCcBz
-         0kuXdZAxbkGS4LgqZV6J3UWgk3Hy86LFvW+88jvM96vIadGu6OQ1SMHAOgV1VtEQDbCx
-         /HIym52XN0QAkAKAwAcY4Jk1wKEAu2GCw956zXsOW8N4785cyOzUwmZLAh/IspxzWyv/
-         vLBw==
+        id S1731167AbfGOWh3 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 15 Jul 2019 18:37:29 -0400
+Received: from mail-io1-f66.google.com ([209.85.166.66]:35483 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731014AbfGOWh3 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 15 Jul 2019 18:37:29 -0400
+Received: by mail-io1-f66.google.com with SMTP id m24so36846242ioo.2;
+        Mon, 15 Jul 2019 15:37:28 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=ZYBOs3aLnhuf2faNdh8yo+pXx5Re8ii69AgHIOGgYXM=;
-        b=AbM4UIsmfNwJ56RiaD1Jnbf4cmdcdRneTwMoHTPZf4zexzsiNtQUVltMQOT0L+u0Zk
-         nbjMmmjPYKYd1hYQbvzjsZD5DB6o+okVlr7vHK1nSkQKQQ3cw6adpOH1znz1JYT2zBJ0
-         gvzdixlGwL+Xwe4LWzmyoiykKVz7gvK62en6Li2CXHacsOtE7eRTaUYsPhbvoMEWjQJY
-         WgmLrlhK3buM9i9PCRDvYf18lXxJQLsVA5cDPrNcIDL8YG22UU3VAcTEgbmIKJH2WCA1
-         U2C9vjtWiDX1pU0XWQUfiRGNQRkX4zYtmlp4EAmfiZiKyVQARuSjxS5Tnjj9EaNJxhnm
-         vStw==
-X-Gm-Message-State: APjAAAXMREJFyvlHIFmd6mS3dPG+ziMTWqnw9yDRkjPO3/gKuXh5pRxX
-        aaysBX/Rfxq7YUic+3DF2ZEnz27/YqM=
-X-Google-Smtp-Source: APXvYqycBzyi6XjJyj5PoLiqzXEqn1fJu1mTyuzyCrEWAPx1KE6EEg0I/5C7kPkBB2DAM4DfT3Zgbg==
-X-Received: by 2002:a2e:5b0f:: with SMTP id p15mr14682754ljb.82.1563223554303;
-        Mon, 15 Jul 2019 13:45:54 -0700 (PDT)
-Received: from localhost.bredbandsbolaget (c-22cd225c.014-348-6c756e10.bbcust.telenor.se. [92.34.205.34])
-        by smtp.gmail.com with ESMTPSA id b1sm3338326ljj.26.2019.07.15.13.45.52
+        bh=WXbxpjTO0OeI6MuUUKX3Eklg6COj9IISlKB84zUoyLo=;
+        b=gldnTgBfP/UoVHKEyS2UtELXwMKReKvQhQO+dSsy93/vUaxwYoaU41MwNE/S8vApPc
+         AUvM6uYp165wkXQQyoKMhK2Kittj49Jp2aGp6n0BbBZIzwUPjkdr3fgA/k18vEzlRuk1
+         U4d+ZDOu4SpOARFbZ7t9E0PGVLuUw1cswbJK8Ecn1WHC/p6UuVx8o7uuW6w3KAgzZnTh
+         4Fy2YPgZwFaSZ5IvUrl98zhdHO4ZUxefs+oncQ+ZsqaZIDXf6cJLqD7KZB5QUzWY+w1d
+         qzEQ8iSmseXA5RSaxLNMYqZ+3uXhqoETdpo/PhomWInH8tQ0yOo8ItYzalEj+posgOBH
+         D+1A==
+X-Gm-Message-State: APjAAAVqpXOGUcwBlRjVhPuVjrSW3z/leRakM4FYfJA40OOVwdY9qVBw
+        RaPHg3QZi7HCPgPSIA2noREtLRw=
+X-Google-Smtp-Source: APXvYqxpaPu9UCGLAK8cqFKFRAwnJVxKaxtB+Ov7U8QDlsE1ae268Oy/Kl1oMN//CPx5c9hmTs3slw==
+X-Received: by 2002:a5d:9d90:: with SMTP id 16mr27939554ion.132.1563230247894;
+        Mon, 15 Jul 2019 15:37:27 -0700 (PDT)
+Received: from xps15.herring.priv ([64.188.179.249])
+        by smtp.googlemail.com with ESMTPSA id e26sm15751180iod.10.2019.07.15.15.37.26
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Mon, 15 Jul 2019 13:45:53 -0700 (PDT)
-From:   Linus Walleij <linus.walleij@linaro.org>
-To:     linux-gpio@vger.kernel.org
-Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Mon, 15 Jul 2019 15:37:26 -0700 (PDT)
+From:   Rob Herring <robh@kernel.org>
+To:     devicetree@vger.kernel.org,
         Linus Walleij <linus.walleij@linaro.org>,
-        linux-spi@vger.kernel.org, stable@vger.kernel.org
-Subject: [PATCH] Revert "gpio/spi: Fix spi-gpio regression on active high CS"
-Date:   Mon, 15 Jul 2019 22:45:29 +0200
-Message-Id: <20190715204529.9539-1-linus.walleij@linaro.org>
-X-Mailer: git-send-email 2.21.0
+        Andrew Jeffery <andrew@aj.id.au>
+Cc:     Joel Stanley <joel@jms.id.au>, linux-aspeed@lists.ozlabs.org,
+        linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Subject: [PATCH] dt-bindings: pinctrl: aspeed: Fix 'compatible' schema errors
+Date:   Mon, 15 Jul 2019 16:37:25 -0600
+Message-Id: <20190715223725.12924-1-robh@kernel.org>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-gpio-owner@vger.kernel.org
@@ -60,63 +50,60 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-This reverts commit fbbf145a0e0a0177e089c52275fbfa55763e7d1d.
+The Aspeed pinctl schema have errors in the 'compatible' schema:
 
-It seems I was misguided in my fixup, which was working at the
-time but did not work on the final v5.2.
+Documentation/devicetree/bindings/pinctrl/aspeed,ast2400-pinctrl.yaml: \
+properties:compatible:enum: ['aspeed', 'ast2400-pinctrl', 'aspeed', 'g4-pinctrl'] has non-unique elements
+Documentation/devicetree/bindings/pinctrl/aspeed,ast2500-pinctrl.yaml: \
+properties:compatible:enum: ['aspeed', 'ast2500-pinctrl', 'aspeed', 'g5-pinctrl'] has non-unique elements
 
-The patch tried to avoid a quirk the gpiolib code not to treat
-"spi-gpio" CS gpios "special" by enforcing them to be active
-low, in the belief that since the "spi-gpio" driver was
-parsing the device tree on its own, it did not care to inspect
-the "spi-cs-high" attribute on the device nodes.
+Flow style sequences have to be quoted if the vales contain ','. Fix
+this by using the more common one line per entry formatting.
 
-That's wrong. The SPI core was inspecting them inside the
-of_spi_parse_dt() funtion and setting SPI_CS_HIGH on the
-nodes, and the driver inspected this flag when driving the
-line.
-
-As of now, the core handles the GPIO and it will consistently
-set the GPIO descriptor to 1 to enable CS, strictly requireing
-the gpiolib to invert it. And the gpiolib should indeed
-enforce active low on the CS line.
-
-Device trees should of course put the right flag on the GPIO
-handles, but it used to not matter. If we don't enforce active
-low on "gpio-gpio" we may run into ABI backward compatibility
-issues, so revert this.
-
-Cc: linux-spi@vger.kernel.org
-Cc: stable@vger.kernel.org
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+Fixes: 0a617de16730 ("dt-bindings: pinctrl: aspeed: Convert AST2500 bindings to json-schema")
+Fixes: 07457937bb5c ("dt-bindings: pinctrl: aspeed: Convert AST2400 bindings to json-schema")
+Cc: Andrew Jeffery <andrew@aj.id.au>
+Cc: Linus Walleij <linus.walleij@linaro.org>
+Cc: Joel Stanley <joel@jms.id.au>
+Cc: linux-aspeed@lists.ozlabs.org
+Cc: linux-gpio@vger.kernel.org
+Cc: linux-arm-kernel@lists.infradead.org
+Signed-off-by: Rob Herring <robh@kernel.org>
 ---
-I am sorry that this at one point fixed a problem for me, it
-doesn't anymore and I don't know why it ever did. :(
----
- drivers/gpio/gpiolib-of.c | 9 +--------
- 1 file changed, 1 insertion(+), 8 deletions(-)
+ .../devicetree/bindings/pinctrl/aspeed,ast2400-pinctrl.yaml   | 4 +++-
+ .../devicetree/bindings/pinctrl/aspeed,ast2500-pinctrl.yaml   | 4 +++-
+ 2 files changed, 6 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/gpio/gpiolib-of.c b/drivers/gpio/gpiolib-of.c
-index f974075ff00e..a8f02f551d6b 100644
---- a/drivers/gpio/gpiolib-of.c
-+++ b/drivers/gpio/gpiolib-of.c
-@@ -118,15 +118,8 @@ static void of_gpio_flags_quirks(struct device_node *np,
- 	 * Legacy handling of SPI active high chip select. If we have a
- 	 * property named "cs-gpios" we need to inspect the child node
- 	 * to determine if the flags should have inverted semantics.
--	 *
--	 * This does not apply to an SPI device named "spi-gpio", because
--	 * these have traditionally obtained their own GPIOs by parsing
--	 * the device tree directly and did not respect any "spi-cs-high"
--	 * property on the SPI bus children.
- 	 */
--	if (IS_ENABLED(CONFIG_SPI_MASTER) &&
--	    !strcmp(propname, "cs-gpios") &&
--	    !of_device_is_compatible(np, "spi-gpio") &&
-+	if (IS_ENABLED(CONFIG_SPI_MASTER) && !strcmp(propname, "cs-gpios") &&
- 	    of_property_read_bool(np, "cs-gpios")) {
- 		struct device_node *child;
- 		u32 cs;
+diff --git a/Documentation/devicetree/bindings/pinctrl/aspeed,ast2400-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/aspeed,ast2400-pinctrl.yaml
+index 61a110a7db8a..125599a2dc5e 100644
+--- a/Documentation/devicetree/bindings/pinctrl/aspeed,ast2400-pinctrl.yaml
++++ b/Documentation/devicetree/bindings/pinctrl/aspeed,ast2400-pinctrl.yaml
+@@ -22,7 +22,9 @@ description: |+
+ 
+ properties:
+   compatible:
+-    enum: [ aspeed,ast2400-pinctrl, aspeed,g4-pinctrl ]
++    enum:
++      - aspeed,ast2400-pinctrl
++      - aspeed,g4-pinctrl
+ 
+ patternProperties:
+   '^.*$':
+diff --git a/Documentation/devicetree/bindings/pinctrl/aspeed,ast2500-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/aspeed,ast2500-pinctrl.yaml
+index cf561bd55128..a464cfa0cba3 100644
+--- a/Documentation/devicetree/bindings/pinctrl/aspeed,ast2500-pinctrl.yaml
++++ b/Documentation/devicetree/bindings/pinctrl/aspeed,ast2500-pinctrl.yaml
+@@ -22,7 +22,9 @@ description: |+
+ 
+ properties:
+   compatible:
+-    enum: [ aspeed,ast2500-pinctrl, aspeed,g5-pinctrl ]
++    enum:
++      - aspeed,ast2500-pinctrl
++      - aspeed,g5-pinctrl
+   aspeed,external-nodes:
+     minItems: 2
+     maxItems: 2
 -- 
-2.21.0
+2.20.1
 
