@@ -2,38 +2,35 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 2EE4C69069
-	for <lists+linux-gpio@lfdr.de>; Mon, 15 Jul 2019 16:21:54 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 88DF769137
+	for <lists+linux-gpio@lfdr.de>; Mon, 15 Jul 2019 16:27:36 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390296AbfGOOVZ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 15 Jul 2019 10:21:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47304 "EHLO mail.kernel.org"
+        id S1732068AbfGOO1a (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 15 Jul 2019 10:27:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36734 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390277AbfGOOVX (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Mon, 15 Jul 2019 10:21:23 -0400
+        id S2390351AbfGOO13 (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Mon, 15 Jul 2019 10:27:29 -0400
 Received: from sasha-vm.mshome.net (unknown [73.61.17.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 77C3820868;
-        Mon, 15 Jul 2019 14:21:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2C88B21842;
+        Mon, 15 Jul 2019 14:27:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563200482;
-        bh=3TnNcnGmbLBj4xFdkRKtQmgSBitRAxeaVM2Kpj2E0uo=;
+        s=default; t=1563200848;
+        bh=vQchrjEMQsmWJx/HONoUfde2+hN/g83S5iGj7XJsXPQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=F1mVYv5lXak/KcxjPBU3j/STvuhXzDySmGvQgcTBF7sh71h+1gEHCjh51M4IqRreF
-         WrfU/FbtZlPcGNJzxv043U5tlV8U93RRxLOsPhQUMrVnRi2KXE0h5PU2O0bujn5V3A
-         2dYTyS2YVHEciVE48n7RDqawe142H3V1/CQ3F4eA=
+        b=O8zHQ4kWSFXGKKXHaWdXEprlf4VU3ZpQXpD9RXdKvKYrJ1VIu6WvotQnKjyYxNcZA
+         0Mi4cHnKVG5mv+GpJWwjBljO5TFxzebe90oZ2Hx8phyGGqK7gNhhyk0g2SPqN4fEOR
+         S+vIdAFRXuyKqWi1d1BeMw+VvralY1RFwl5/n5V8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Russell King <rmk+kernel@armlinux.org.uk>,
-        Grygorii Strashko <grygorii.strashko@ti.com>,
-        Tony Lindgren <tony@atomide.com>,
+Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
         Linus Walleij <linus.walleij@linaro.org>,
-        Sasha Levin <sashal@kernel.org>, linux-omap@vger.kernel.org,
-        linux-gpio@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 060/158] gpio: omap: ensure irq is enabled before wakeup
-Date:   Mon, 15 Jul 2019 10:16:31 -0400
-Message-Id: <20190715141809.8445-60-sashal@kernel.org>
+        Sasha Levin <sashal@kernel.org>, linux-gpio@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 144/158] gpiolib: Fix references to gpiod_[gs]et_*value_cansleep() variants
+Date:   Mon, 15 Jul 2019 10:17:55 -0400
+Message-Id: <20190715141809.8445-144-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190715141809.8445-1-sashal@kernel.org>
 References: <20190715141809.8445-1-sashal@kernel.org>
@@ -46,85 +43,66 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-From: Russell King <rmk+kernel@armlinux.org.uk>
+From: Geert Uytterhoeven <geert+renesas@glider.be>
 
-[ Upstream commit c859e0d479b3b4f6132fc12637c51e01492f31f6 ]
+[ Upstream commit 3285170f28a850638794cdfe712eb6d93e51e706 ]
 
-Documentation states:
+Commit 372e722ea4dd4ca1 ("gpiolib: use descriptors internally") renamed
+the functions to use a "gpiod" prefix, and commit 79a9becda8940deb
+("gpiolib: export descriptor-based GPIO interface") introduced the "raw"
+variants, but both changes forgot to update the comments.
 
-  NOTE: There must be a correlation between the wake-up enable and
-  interrupt-enable registers. If a GPIO pin has a wake-up configured
-  on it, it must also have the corresponding interrupt enabled (on
-  one of the two interrupt lines).
+Readd a similar reference to gpiod_set_value(), which was accidentally
+removed by commit 1e77fc82110ac36f ("gpio: Add missing open drain/source
+handling to gpiod_set_value_cansleep()").
 
-Ensure that this condition is always satisfied by enabling the detection
-events after enabling the interrupt, and disabling the detection before
-disabling the interrupt.  This ensures interrupt/wakeup events can not
-happen until both the wakeup and interrupt enables correlate.
-
-If we do any clearing, clear between the interrupt enable/disable and
-trigger setting.
-
-Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
-Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
-Tested-by: Tony Lindgren <tony@atomide.com>
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Link: https://lore.kernel.org/r/20190701142738.25219-1-geert+renesas@glider.be
 Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpio/gpio-omap.c | 15 ++++++++-------
- 1 file changed, 8 insertions(+), 7 deletions(-)
+ drivers/gpio/gpiolib.c | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/gpio/gpio-omap.c b/drivers/gpio/gpio-omap.c
-index 9254bcf7f647..feabac40743e 100644
---- a/drivers/gpio/gpio-omap.c
-+++ b/drivers/gpio/gpio-omap.c
-@@ -837,9 +837,9 @@ static void omap_gpio_irq_shutdown(struct irq_data *d)
- 
- 	raw_spin_lock_irqsave(&bank->lock, flags);
- 	bank->irq_usage &= ~(BIT(offset));
--	omap_set_gpio_irqenable(bank, offset, 0);
--	omap_clear_gpio_irqstatus(bank, offset);
- 	omap_set_gpio_triggering(bank, offset, IRQ_TYPE_NONE);
-+	omap_clear_gpio_irqstatus(bank, offset);
-+	omap_set_gpio_irqenable(bank, offset, 0);
- 	if (!LINE_USED(bank->mod_usage, offset))
- 		omap_clear_gpio_debounce(bank, offset);
- 	omap_disable_gpio_module(bank, offset);
-@@ -881,8 +881,8 @@ static void omap_gpio_mask_irq(struct irq_data *d)
- 	unsigned long flags;
- 
- 	raw_spin_lock_irqsave(&bank->lock, flags);
--	omap_set_gpio_irqenable(bank, offset, 0);
- 	omap_set_gpio_triggering(bank, offset, IRQ_TYPE_NONE);
-+	omap_set_gpio_irqenable(bank, offset, 0);
- 	raw_spin_unlock_irqrestore(&bank->lock, flags);
+diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
+index fd713326dcfc..4a48c7c47709 100644
+--- a/drivers/gpio/gpiolib.c
++++ b/drivers/gpio/gpiolib.c
+@@ -2877,7 +2877,7 @@ int gpiod_get_array_value_complex(bool raw, bool can_sleep,
+ int gpiod_get_raw_value(const struct gpio_desc *desc)
+ {
+ 	VALIDATE_DESC(desc);
+-	/* Should be using gpio_get_value_cansleep() */
++	/* Should be using gpiod_get_raw_value_cansleep() */
+ 	WARN_ON(desc->gdev->chip->can_sleep);
+ 	return gpiod_get_raw_value_commit(desc);
  }
+@@ -2898,7 +2898,7 @@ int gpiod_get_value(const struct gpio_desc *desc)
+ 	int value;
  
-@@ -894,9 +894,6 @@ static void omap_gpio_unmask_irq(struct irq_data *d)
- 	unsigned long flags;
+ 	VALIDATE_DESC(desc);
+-	/* Should be using gpio_get_value_cansleep() */
++	/* Should be using gpiod_get_value_cansleep() */
+ 	WARN_ON(desc->gdev->chip->can_sleep);
  
- 	raw_spin_lock_irqsave(&bank->lock, flags);
--	if (trigger)
--		omap_set_gpio_triggering(bank, offset, trigger);
--
- 	omap_set_gpio_irqenable(bank, offset, 1);
- 
- 	/*
-@@ -904,9 +901,13 @@ static void omap_gpio_unmask_irq(struct irq_data *d)
- 	 * is cleared, thus after the handler has run. OMAP4 needs this done
- 	 * after enabing the interrupt to clear the wakeup status.
- 	 */
--	if (bank->level_mask & BIT(offset))
-+	if (bank->regs->leveldetect0 && bank->regs->wkup_en &&
-+	    trigger & (IRQ_TYPE_LEVEL_HIGH | IRQ_TYPE_LEVEL_LOW))
- 		omap_clear_gpio_irqstatus(bank, offset);
- 
-+	if (trigger)
-+		omap_set_gpio_triggering(bank, offset, trigger);
-+
- 	raw_spin_unlock_irqrestore(&bank->lock, flags);
+ 	value = gpiod_get_raw_value_commit(desc);
+@@ -3123,7 +3123,7 @@ int gpiod_set_array_value_complex(bool raw, bool can_sleep,
+ void gpiod_set_raw_value(struct gpio_desc *desc, int value)
+ {
+ 	VALIDATE_DESC_VOID(desc);
+-	/* Should be using gpiod_set_value_cansleep() */
++	/* Should be using gpiod_set_raw_value_cansleep() */
+ 	WARN_ON(desc->gdev->chip->can_sleep);
+ 	gpiod_set_raw_value_commit(desc, value);
  }
- 
+@@ -3164,6 +3164,7 @@ static void gpiod_set_value_nocheck(struct gpio_desc *desc, int value)
+ void gpiod_set_value(struct gpio_desc *desc, int value)
+ {
+ 	VALIDATE_DESC_VOID(desc);
++	/* Should be using gpiod_set_value_cansleep() */
+ 	WARN_ON(desc->gdev->chip->can_sleep);
+ 	gpiod_set_value_nocheck(desc, value);
+ }
 -- 
 2.20.1
 
