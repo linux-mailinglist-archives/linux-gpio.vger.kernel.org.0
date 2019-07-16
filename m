@@ -2,85 +2,115 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 073AA6B161
-	for <lists+linux-gpio@lfdr.de>; Tue, 16 Jul 2019 23:52:34 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DDD4C6B169
+	for <lists+linux-gpio@lfdr.de>; Tue, 16 Jul 2019 23:56:21 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728681AbfGPVwd (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 16 Jul 2019 17:52:33 -0400
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:35782 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728587AbfGPVwd (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 16 Jul 2019 17:52:33 -0400
-Received: by mail-lf1-f65.google.com with SMTP id p197so14832000lfa.2
-        for <linux-gpio@vger.kernel.org>; Tue, 16 Jul 2019 14:52:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=sChX2tjZXXzFm/FF0+gISHJ8+I30zgl6h1ocaPpSr4w=;
-        b=TVDnEiknWAcRrVYjpkVEp+7UlZza/YL/doDnWkXLRwGqJ9YS6xQoSpx94TtYwkM0Zm
-         9JcQMIFbg+AGr5yblr8fIfyWGtAiWjIILXfM7IITLcHbJNA9fCyb6PLAg+BasgvkoPqY
-         mOu8Q8JEY5ecE/Co/dtC9Acv0384Ahf5uv5clQz+i59KnETYFC1wsz8UK5PiDYs/T9n1
-         cgi/EyRXEgBnePqIEVvybyK+Lmko4rVlZEkLGBTQU7Ct2fceE6jFBcW+cy4RZHOvyaT4
-         yK6DJECW1VMyuUV4EO4RpgP01Zcz3GnzbCKe0KHKjUI5P8ZOseBMqWLKAA5U3ku+AEek
-         v3mA==
+        id S1728235AbfGPV4V (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 16 Jul 2019 17:56:21 -0400
+Received: from mail-io1-f67.google.com ([209.85.166.67]:38368 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726555AbfGPV4U (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 16 Jul 2019 17:56:20 -0400
+Received: by mail-io1-f67.google.com with SMTP id j6so10217154ioa.5;
+        Tue, 16 Jul 2019 14:56:20 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=sChX2tjZXXzFm/FF0+gISHJ8+I30zgl6h1ocaPpSr4w=;
-        b=lkLUoCY6OzrrzfBEkFL4x+taxCYRjx4u3oNqWWMfPlvys48sgY3xuPhhMjm4AfKFm1
-         inVA8iexcAgnUinJbxEM9BCmY09JWkZMHpLBgk+WU3W+Ku802xHdepJeJgpCRu3TqG+5
-         8NehynnH0KRH0jS8ttfrJLW7wJ7UVFyD6fUgqAVrMUjFaiR7w4RD+Jpf7d9XrgMeT2jP
-         gvEOI7HvtqQ6xO6FIdbXPlb/pteIe5D9fmQz70VgEBZSIRIk9BE4iiZfZkN3/tU3OEPg
-         dF2cxW0qQ2OZtnAfx+OfBZWY8+No8Lz4MhpwdQzYhrRCHqCB8Ie68f1hLDRlcC7L3vAB
-         U+0g==
-X-Gm-Message-State: APjAAAVxjCJ1zJ9n6lCtmZETSdloTxfS+z87GqOnoJ50MYKdAF2+wDDc
-        t2bBjLdEBvyK6rjKIgBrWlQjb0gIdr+VJLolry6LAA==
-X-Google-Smtp-Source: APXvYqxF5LGbIM5rW+0/RUz7xG/c4ekdZJIfr+EH8zBCsdrd9zerb9uo3Zsk8A9BlRzj6R313IgBGYMpeLNcjo9YvBk=
-X-Received: by 2002:a19:6a01:: with SMTP id u1mr15820032lfu.141.1563313950958;
- Tue, 16 Jul 2019 14:52:30 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=kADd+NQKUgWUED+820fdDO7gVP7dDmGj1gYm9p5p3sw=;
+        b=ByNn6JN1wwQPUNvt8Gy1n+za6LarrICzIm/WJiOfVT2E1YCot47DwaMpiGAYAUlfXB
+         iEmRiOx31C/TBviezpQzIYIEwd+qEtxTP/2BxrNTV1VXMkBZy/4v/YPA84xEfaTUMBpg
+         EAAlNy0CvO7x8rTMn1ixPtGNO7MdDBP+qg45JxkKpJB+eGUA5qVtBqctkheDTutsbpjK
+         tK/DuBqAiordSAN0P3E/osixbaEpYroA4sR+aYBZUQ6wwvW7cvjK2iI8bfB49duIhOYP
+         xTEya26w2gDombfWo8NPvR15xDgkn7j0kfxPaT5o1THesvFD0/OANd4yKNLk+h9AQRQs
+         iLfg==
+X-Gm-Message-State: APjAAAUcO4uYnqNL8zbFPIYkeStOw8Xb5Q+6BfqRamZFvf0gAlK+NTp8
+        wrywa37MiP7Y9MDQWjL/5A==
+X-Google-Smtp-Source: APXvYqwDMRb0ggHvOfuex4HW4eSe1qMvzAf6AwQILMzFafLTkg23I/dov4glX6kdigbpojvrSAFSjQ==
+X-Received: by 2002:a5e:d51a:: with SMTP id e26mr26126978iom.71.1563314179727;
+        Tue, 16 Jul 2019 14:56:19 -0700 (PDT)
+Received: from xps15.herring.priv ([64.188.179.249])
+        by smtp.googlemail.com with ESMTPSA id f17sm20074646ioc.2.2019.07.16.14.56.18
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Tue, 16 Jul 2019 14:56:19 -0700 (PDT)
+From:   Rob Herring <robh@kernel.org>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        linux-gpio@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com
+Subject: [PATCH] dt-bindings: pinctrl: stm32: Fix missing 'clocks' property in examples
+Date:   Tue, 16 Jul 2019 15:56:18 -0600
+Message-Id: <20190716215618.29757-1-robh@kernel.org>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-References: <000000000000a55d7d058d51ad4f@google.com>
-In-Reply-To: <000000000000a55d7d058d51ad4f@google.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Tue, 16 Jul 2019 23:52:19 +0200
-Message-ID: <CACRpkdYbuJ_yJ+UKtvWrkmBCbQzfk-1mn1-A836dkNMrmTtZow@mail.gmail.com>
-Subject: Re: WARNING in gpio_to_desc
-To:     syzbot <syzbot+cf35b76f35e068a1107f@syzkaller.appspotmail.com>,
-        Johan Hovold <johan@kernel.org>,
-        Vincent Cuissard <cuissard@marvell.com>
-Cc:     Andrey Konovalov <andreyknvl@google.com>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        linux-usb <linux-usb@vger.kernel.org>,
-        syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Jul 10, 2019 at 1:07 PM syzbot
-<syzbot+cf35b76f35e068a1107f@syzkaller.appspotmail.com> wrote:
+Now that examples are validated against the DT schema, an error with
+required 'clocks' property missing is exposed:
 
-> HEAD commit:    7829a896 usb-fuzzer: main usb gadget fuzzer driver
-(...)
->   __gpio_set_value include/asm-generic/gpio.h:104 [inline]
->   gpio_set_value include/linux/gpio.h:71 [inline]
->   nfcmrvl_chip_halt+0x4e/0x70 drivers/nfc/nfcmrvl/main.c:259
->   nfcmrvl_nci_register_dev+0x2d4/0x378 drivers/nfc/nfcmrvl/main.c:176
->   nfcmrvl_probe+0x4e9/0x5e0 drivers/nfc/nfcmrvl/usb.c:344
+Documentation/devicetree/bindings/pinctrl/st,stm32-pinctrl.example.dt.yaml: \
+pinctrl@40020000: gpio@0: 'clocks' is a required property
+Documentation/devicetree/bindings/pinctrl/st,stm32-pinctrl.example.dt.yaml: \
+pinctrl@50020000: gpio@1000: 'clocks' is a required property
+Documentation/devicetree/bindings/pinctrl/st,stm32-pinctrl.example.dt.yaml: \
+pinctrl@50020000: gpio@2000: 'clocks' is a required property
 
-This bug is somewhere in the drivers/nfc/nfcmrvl* code handling
-GPIOs.
+Add the missing 'clocks' properties to the examples to fix the errors.
 
-It should be converted to GPIO descriptors and fixed up, see
-drivers/gpio/TODO for details on how to do this.
+Fixes: 2c9239c125f0 ("dt-bindings: pinctrl: Convert stm32 pinctrl bindings to json-schema")
+Cc: Linus Walleij <linus.walleij@linaro.org>
+Cc: Maxime Coquelin <mcoquelin.stm32@gmail.com>
+Cc: Alexandre Torgue <alexandre.torgue@st.com>
+Cc: linux-gpio@vger.kernel.org
+Cc: linux-stm32@st-md-mailman.stormreply.com
+Signed-off-by: Rob Herring <robh@kernel.org>
+---
+ .../devicetree/bindings/pinctrl/st,stm32-pinctrl.yaml         | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-Johan/Vincent, tell me if you want me to forward the full fuzzing
-robot crash dump.
+diff --git a/Documentation/devicetree/bindings/pinctrl/st,stm32-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/st,stm32-pinctrl.yaml
+index 3ac5d2088e49..91d3e78b3395 100644
+--- a/Documentation/devicetree/bindings/pinctrl/st,stm32-pinctrl.yaml
++++ b/Documentation/devicetree/bindings/pinctrl/st,stm32-pinctrl.yaml
+@@ -197,6 +197,7 @@ required:
+ examples:
+   - |
+     #include <dt-bindings/pinctrl/stm32-pinfunc.h>
++    #include <dt-bindings/mfd/stm32f4-rcc.h>
+     //Example 1
+       pinctrl@40020000 {
+               #address-cells = <1>;
+@@ -210,6 +211,7 @@ examples:
+                       #gpio-cells = <2>;
+                       reg = <0x0 0x400>;
+                       resets = <&reset_ahb1 0>;
++                      clocks = <&rcc 0 STM32F4_AHB1_CLOCK(GPIOA)>;
+                       st,bank-name = "GPIOA";
+               };
+        };
+@@ -227,6 +229,7 @@ examples:
+                       #gpio-cells = <2>;
+                       reg = <0x1000 0x400>;
+                       resets = <&reset_ahb1 0>;
++                      clocks = <&rcc 0 STM32F4_AHB1_CLOCK(GPIOB)>;
+                       st,bank-name = "GPIOB";
+                       gpio-ranges = <&pinctrl 0 0 16>;
+               };
+@@ -236,6 +239,7 @@ examples:
+                       #gpio-cells = <2>;
+                       reg = <0x2000 0x400>;
+                       resets = <&reset_ahb1 0>;
++                      clocks = <&rcc 0 STM32F4_AHB1_CLOCK(GPIOC)>;
+                       st,bank-name = "GPIOC";
+                       ngpios = <5>;
+                       gpio-ranges = <&pinctrl 0 16 3>,
+-- 
+2.20.1
 
-Yours,
-Linus Walleij
