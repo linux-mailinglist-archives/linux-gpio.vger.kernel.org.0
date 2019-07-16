@@ -2,1050 +2,302 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 0AEB26B10E
-	for <lists+linux-gpio@lfdr.de>; Tue, 16 Jul 2019 23:24:38 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 992766B126
+	for <lists+linux-gpio@lfdr.de>; Tue, 16 Jul 2019 23:37:11 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728781AbfGPVYg (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 16 Jul 2019 17:24:36 -0400
-Received: from atlmailgw1.ami.com ([63.147.10.40]:47795 "EHLO
-        atlmailgw1.ami.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729031AbfGPVYg (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 16 Jul 2019 17:24:36 -0400
-X-AuditID: ac1060b2-3fdff70000003a7d-39-5d2e409f6701
-Received: from atlms1.us.megatrends.com (atlms1.us.megatrends.com [172.16.96.144])
-        (using TLS with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by atlmailgw1.ami.com (Symantec Messaging Gateway) with SMTP id AA.C2.14973.F904E2D5; Tue, 16 Jul 2019 17:24:47 -0400 (EDT)
-Received: from hongweiz-Ubuntu-AMI.us.megatrends.com (172.16.98.93) by
- atlms1.us.megatrends.com (172.16.96.144) with Microsoft SMTP Server (TLS) id
- 14.3.408.0; Tue, 16 Jul 2019 17:24:34 -0400
-From:   Hongwei Zhang <hongweiz@ami.com>
-To:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Joel Stanley <joel@jms.id.au>,
-        Andrew Jeffery <andrew@aj.id.au>,
-        Linus Walleij <linus.walleij@linaro.org>
-CC:     Hongwei Zhang <hongweiz@ami.com>, <linux-gpio@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-aspeed@lists.ozlabs.org>, <linux-kernel@vger.kernel.org>
-Subject: [PATCH 2/3 v3] ARM: dts: aspeed: Add SGPIO driver
-Date:   Tue, 16 Jul 2019 17:24:31 -0400
-Message-ID: <1563312271-17509-1-git-send-email-hongweiz@ami.com>
-X-Mailer: git-send-email 2.7.4
+        id S1729031AbfGPVfu (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 16 Jul 2019 17:35:50 -0400
+Received: from hqemgate14.nvidia.com ([216.228.121.143]:9317 "EHLO
+        hqemgate14.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728294AbfGPVfu (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 16 Jul 2019 17:35:50 -0400
+Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqemgate14.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5d2e43330002>; Tue, 16 Jul 2019 14:35:47 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate102.nvidia.com (PGP Universal service);
+  Tue, 16 Jul 2019 14:35:47 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate102.nvidia.com on Tue, 16 Jul 2019 14:35:47 -0700
+Received: from [10.2.164.12] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 16 Jul
+ 2019 21:35:45 +0000
+Subject: Re: [PATCH V5 11/18] clk: tegra210: Add support for Tegra210 clocks
+To:     Dmitry Osipenko <digetx@gmail.com>,
+        Peter De Schrijver <pdeschrijver@nvidia.com>,
+        Joseph Lo <josephl@nvidia.com>
+CC:     <thierry.reding@gmail.com>, <jonathanh@nvidia.com>,
+        <tglx@linutronix.de>, <jason@lakedaemon.net>,
+        <marc.zyngier@arm.com>, <linus.walleij@linaro.org>,
+        <stefan@agner.ch>, <mark.rutland@arm.com>, <pgaikwad@nvidia.com>,
+        <sboyd@kernel.org>, <linux-clk@vger.kernel.org>,
+        <linux-gpio@vger.kernel.org>, <jckuo@nvidia.com>,
+        <talho@nvidia.com>, <linux-tegra@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <mperttunen@nvidia.com>,
+        <spatra@nvidia.com>, <robh+dt@kernel.org>,
+        <devicetree@vger.kernel.org>
+References: <a5e1a6df-dff7-9e0c-9551-f78103a5462f@gmail.com>
+ <e9d4bc0e-fd5d-ae02-2d67-86c7f7c9620f@gmail.com>
+ <3938092a-bbc7-b304-641d-31677539598d@nvidia.com>
+ <932d4d50-120c-9191-6a9a-23bf9c96633b@nvidia.com>
+ <0ee055ad-d397-32e5-60ee-d62c14c6f77b@gmail.com>
+ <86fc07d5-ab2e-a52a-a570-b1dfff4c20fe@nvidia.com>
+ <20190716083701.225f0fd9@dimatab>
+ <21266e4f-16b1-4c87-067a-16c07c803b6e@nvidia.com>
+ <c5853e1a-d812-2dbd-3bec-0a9b0b0f6f3e@nvidia.com>
+ <20190716080610.GE12715@pdeschrijver-desktop.Nvidia.com>
+ <d908d3a2-3013-7f92-0852-115f428d1c5f@gmail.com>
+ <72b5df8c-8acb-d0d0-ebcf-b406e8404973@nvidia.com>
+ <2b701832-5548-7c83-7c17-05cc2f1470c8@nvidia.com>
+ <76e341be-6f38-2bc1-048e-1aa6883f9b88@gmail.com>
+ <0706576a-ce61-1cf3-bed1-05f54a1e2489@nvidia.com>
+ <5b2945c5-fcb2-2ac0-2bf2-df869dc9c713@gmail.com>
+ <ef63f72a-db03-ef28-a371-e578f351c713@nvidia.com>
+ <27641e30-fdd1-e53a-206d-71e1f23343fd@gmail.com>
+ <10c4b9a2-a857-d124-c22d-7fd71a473079@nvidia.com>
+ <fd8bad73-464b-54f1-be94-fe3ac8b23e6e@gmail.com>
+From:   Sowjanya Komatineni <skomatineni@nvidia.com>
+Message-ID: <0ee06d1a-310d-59f7-0aa6-b688b33447f5@nvidia.com>
+Date:   Tue, 16 Jul 2019 14:35:44 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [172.16.98.93]
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrBLMWRmVeSWpSXmKPExsWyRiBhgu58B71Yg2ePFC12Xeaw+DL3FIvF
-        7/N/mS2m/FnOZLHp8TVWi+bV55gtNs//w2hxedccNgcOj6vtu9g93t9oZfe4+PEYs8eda3vY
-        PDYvqfc4P2Mho8fnTXIB7FFcNimpOZllqUX6dglcGRf2bGEr+P+QseLm2RNsDYxvNzF2MXJy
-        SAiYSMyd9ICpi5GLQ0hgF5PE1MufoZzDjBK/d29mAaliE1CT2Lt5DlhCRGARo8TX3zPZQRxm
-        gfWMEl3Ll7OBVAkLWElcmnIObC6LgKrEky1rWUFsXgEHiSXf3zJB7JOTuHmukxkiLihxcuYT
-        sA3MAhISB1+8AIsLCchK3Dr0GKpeQeJ532OWCYx8s5C0zELSsoCRaRWjUGJJTm5iZk56uaFe
-        Ym6mXnJ+7iZGSOhu2sHYctH8ECMTB+MhRgkOZiURXtuv2rFCvCmJlVWpRfnxRaU5qcWHGKU5
-        WJTEeVeu+RYjJJCeWJKanZpakFoEk2Xi4JRqYNTRf3ugdV5Ww4R3Mn9T38b/mCW9gCNY3b6y
-        wWaRb8IiHh3O61Y8nqKGPQbvzSYleC4+GVCqwXhB9aNIdXDk1TlrdRi4lxZNSCx8vtMsfpdi
-        6vOpbI9VdqRveLn8/hVHxev7v1YnXjfmLn7AZ2B1WXLLh4UqJ496Tr3Jkr368u3djD93JE08
-        qK/EUpyRaKjFXFScCADX9kb5SwIAAA==
+In-Reply-To: <fd8bad73-464b-54f1-be94-fe3ac8b23e6e@gmail.com>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: quoted-printable
+Content-Language: en-US
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1563312947; bh=TbH2Sg2RNKnHnNv+Rv8LAiRrZ+5qlm8tym2Z+em68No=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
+         Content-Language;
+        b=sPS3ZCw9ZW36xlabFWZcP8L6TfefysKXaizPB6uxMqp55Nk+E4Wn7DvnxKFooHJX1
+         FDbrk/u4Bpz/FbjVC4vOiYEeGipjRiUjF2RLovABxGwrleviWIIV1qGDmuOLdKjbvC
+         AJkE97wzUikXteaT1ZaG3d6Ub53OUWUCj4F504eBaY+AZ7Fjbp7ANqgOQe6/86AYT9
+         vD7MfGQxeuosWV61QEhPrFlEr1TlBs9zVdRhB2wFSgZ0a6GWsncmLFQQQHkcz+w7Zg
+         DSlm/a0aY4nfm2ahz1XI9VrDEUSuD53YqtVICPcGty7xbFxd+WuOjvNo5lXdRGPCcE
+         xAoFea1rMDwXA==
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Add SGPIO driver support for Aspeed AST2500 SoC.
 
-Signed-off-by: Hongwei Zhang <hongweiz@ami.com>
----
- drivers/gpio/sgpio-aspeed.c | 487 ++++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 487 insertions(+)
- create mode 100644 drivers/gpio/sgpio-aspeed.c
-
-diff --git a/drivers/gpio/sgpio-aspeed.c b/drivers/gpio/sgpio-aspeed.c
-new file mode 100644
-index 0000000..ade2cb7
---- /dev/null
-+++ b/drivers/gpio/sgpio-aspeed.c
-@@ -0,0 +1,487 @@
-+// SPDX-License-Identifier: GPL-2.0+
-+/*
-+ * Copyright 2019 American Megatrends International LLC.
-+ *
-+ * Author: Karthikeyan Mani <karthikeyanm@amiindia.co.in>
-+ */
-+
-+#include <linux/gpio/driver.h>
-+#include <linux/gpio/aspeed.h>
-+#include <linux/hashtable.h>
-+#include <linux/bitfield.h>
-+#include <linux/init.h>
-+#include <linux/clk.h>
-+#include <linux/io.h>
-+#include <linux/kernel.h>
-+#include <linux/module.h>
-+#include <linux/pinctrl/consumer.h>
-+#include <linux/platform_device.h>
-+#include <linux/spinlock.h>
-+#include <linux/string.h>
-+#include <linux/gpio.h>
-+
-+#define MAX_NR_SGPIO			80
-+
-+#define ASPEED_SGPIO_CTRL		0x54
-+
-+#define ASPEED_SGPIO_PINS_MASK		GENMASK(9, 6)
-+#define ASPEED_SGPIO_CLK_DIV_MASK	GENMASK(31, 16)
-+#define ASPEED_SGPIO_ENABLE		BIT(0)
-+
-+// default sgpio direction is input.
-+static uint32_t sgpio_dir_val[3] = {0xffffffff, 0xffffffff, 0xffffffff };
-+
-+struct aspeed_sgpio {
-+	struct gpio_chip chip;
-+	struct clk *pclk;
-+	spinlock_t lock;
-+	void __iomem *base;
-+	int irq;
-+};
-+
-+struct aspeed_sgpio_bank {
-+	uint16_t    val_regs;
-+	uint16_t    rdata_reg;
-+	uint16_t    irq_regs;
-+	const char  names[4][3];
-+};
-+
-+/*
-+ * Note: The "value" register returns the input value sampled on the
-+ *       line even when the GPIO is configured as an output. Since
-+ *       that input goes through synchronizers, writing, then reading
-+ *       back may not return the written value right away.
-+ *
-+ *       The "rdata" register returns the content of the write latch
-+ *       and thus can be used to read back what was last written
-+ *       reliably.
-+ */
-+static const struct aspeed_sgpio_bank aspeed_sgpio_banks[] = {
-+	{
-+		.val_regs = 0x0000,
-+		.rdata_reg = 0x0070,
-+		.irq_regs = 0x0004,
-+		.names = { "A", "B", "C", "D" },
-+	},
-+	{
-+		.val_regs = 0x001C,
-+		.rdata_reg = 0x0074,
-+		.irq_regs = 0x0020,
-+		.names = { "E", "F", "G", "H" },
-+	},
-+	{
-+		.val_regs = 0x0038,
-+		.rdata_reg = 0x0078,
-+		.irq_regs = 0x003C,
-+		.names = { "I", "J" },
-+	},
-+};
-+
-+enum aspeed_sgpio_reg {
-+	reg_val,
-+	reg_rdata,
-+	reg_irq_enable,
-+	reg_irq_type0,
-+	reg_irq_type1,
-+	reg_irq_type2,
-+	reg_irq_status,
-+};
-+
-+#define GPIO_VAL_VALUE      0x00
-+#define GPIO_VAL_DIR        0x04
-+#define GPIO_IRQ_ENABLE     0x00
-+#define GPIO_IRQ_TYPE0      0x04
-+#define GPIO_IRQ_TYPE1      0x08
-+#define GPIO_IRQ_TYPE2      0x0C
-+#define GPIO_IRQ_STATUS     0x10
-+
-+/* This will be resolved at compile time */
-+static inline void __iomem *bank_reg(struct aspeed_sgpio *gpio,
-+				     const struct aspeed_sgpio_bank *bank,
-+				     const enum aspeed_sgpio_reg reg)
-+{
-+	switch (reg) {
-+	case reg_val:
-+		return gpio->base + bank->val_regs + GPIO_VAL_VALUE;
-+	case reg_rdata:
-+		return gpio->base + bank->rdata_reg;
-+	case reg_irq_enable:
-+		return gpio->base + bank->irq_regs + GPIO_IRQ_ENABLE;
-+	case reg_irq_type0:
-+		return gpio->base + bank->irq_regs + GPIO_IRQ_TYPE0;
-+	case reg_irq_type1:
-+		return gpio->base + bank->irq_regs + GPIO_IRQ_TYPE1;
-+	case reg_irq_type2:
-+		return gpio->base + bank->irq_regs + GPIO_IRQ_TYPE2;
-+	case reg_irq_status:
-+		return gpio->base + bank->irq_regs + GPIO_IRQ_STATUS;
-+	default:
-+		/* acturally if code runs to here, it's an error case */
-+		BUG_ON(1);
-+	}
-+}
-+
-+#define GPIO_BANK(x)    ((x) >> 5)
-+#define GPIO_OFFSET(x)  ((x) & 0x1f)
-+#define GPIO_BIT(x)     BIT(GPIO_OFFSET(x))
-+
-+static const struct aspeed_sgpio_bank *to_bank(unsigned int offset)
-+{
-+	unsigned int bank = GPIO_BANK(offset);
-+
-+	WARN_ON(bank >= ARRAY_SIZE(aspeed_sgpio_banks));
-+	return &aspeed_sgpio_banks[bank];
-+}
-+
-+static int aspeed_sgpio_get(struct gpio_chip *gc, unsigned int offset)
-+{
-+	struct aspeed_sgpio *gpio = gpiochip_get_data(gc);
-+	const struct aspeed_sgpio_bank *bank = to_bank(offset);
-+
-+	if (sgpio_dir_val[GPIO_BANK(offset)] & GPIO_BIT(offset))
-+		return !!(ioread32(bank_reg(gpio, bank, reg_val)) & GPIO_BIT(offset));
-+	else
-+		return !!(ioread32(bank_reg(gpio, bank, reg_rdata)) & GPIO_BIT(offset));
-+
-+}
-+
-+static void aspeed_sgpio_set(struct gpio_chip *gc, unsigned int offset, int val)
-+{
-+	struct aspeed_sgpio *gpio = gpiochip_get_data(gc);
-+	const struct aspeed_sgpio_bank *bank = to_bank(offset);
-+	unsigned long flags;
-+	void __iomem *addr;
-+	u32 reg = 0;
-+
-+	spin_lock_irqsave(&gpio->lock, flags);
-+
-+	addr = bank_reg(gpio, bank, reg_val);
-+
-+	if (val)
-+		reg |= GPIO_BIT(offset);
-+	else
-+		reg &= ~GPIO_BIT(offset);
-+
-+	iowrite32(reg, addr);
-+	spin_unlock_irqrestore(&gpio->lock, flags);
-+}
-+
-+static int aspeed_sgpio_dir_in(struct gpio_chip *gc, unsigned int offset)
-+{
-+	sgpio_dir_val[GPIO_BANK(offset)] |= GPIO_BIT(offset);
-+	return 0;
-+}
-+
-+static int aspeed_sgpio_dir_out(struct gpio_chip *gc, unsigned int offset, int val)
-+{
-+	sgpio_dir_val[GPIO_BANK(offset)] &= ~GPIO_BIT(offset);
-+	return 0;
-+}
-+
-+static int aspeed_sgpio_get_direction(struct gpio_chip *gc, unsigned int offset)
-+{
-+	return sgpio_dir_val[GPIO_BANK(offset)] & GPIO_BIT(offset);
-+
-+}
-+
-+static inline int irqd_to_aspeed_sgpio_data(struct irq_data *d,
-+					    struct aspeed_sgpio **gpio,
-+					    const struct aspeed_sgpio_bank **bank,
-+					    u32 *bit, int *offset)
-+{
-+	struct aspeed_sgpio *internal;
-+
-+	*offset = irqd_to_hwirq(d);
-+
-+	internal = irq_data_get_irq_chip_data(d);
-+
-+	*gpio = internal;
-+	*bank = to_bank(*offset);
-+	*bit = GPIO_BIT(*offset);
-+
-+	return 0;
-+}
-+
-+static void aspeed_sgpio_irq_ack(struct irq_data *d)
-+{
-+	const struct aspeed_sgpio_bank *bank;
-+	struct aspeed_sgpio *gpio;
-+	unsigned long flags;
-+	void __iomem *status_addr;
-+	int rc, offset;
-+	u32 bit;
-+
-+	rc = irqd_to_aspeed_sgpio_data(d, &gpio, &bank, &bit, &offset);
-+	if (rc)
-+		return;
-+
-+	status_addr = bank_reg(gpio, bank, reg_irq_status);
-+
-+	spin_lock_irqsave(&gpio->lock, flags);
-+
-+	iowrite32(bit, status_addr);
-+
-+	spin_unlock_irqrestore(&gpio->lock, flags);
-+}
-+
-+static void aspeed_sgpio_irq_set_mask(struct irq_data *d, bool set)
-+{
-+	const struct aspeed_sgpio_bank *bank;
-+	struct aspeed_sgpio *gpio;
-+	unsigned long flags;
-+	u32 reg, bit;
-+	void __iomem *addr;
-+	int rc, offset;
-+
-+	rc = irqd_to_aspeed_sgpio_data(d, &gpio, &bank, &bit, &offset);
-+	if (rc)
-+		return;
-+
-+	addr = bank_reg(gpio, bank, reg_irq_enable);
-+
-+	spin_lock_irqsave(&gpio->lock, flags);
-+
-+	reg = ioread32(addr);
-+	if (set)
-+		reg |= bit;
-+	else
-+		reg &= ~bit;
-+
-+	iowrite32(reg, addr);
-+
-+	spin_unlock_irqrestore(&gpio->lock, flags);
-+}
-+
-+static void aspeed_sgpio_irq_mask(struct irq_data *d)
-+{
-+	aspeed_sgpio_irq_set_mask(d, false);
-+}
-+
-+static void aspeed_sgpio_irq_unmask(struct irq_data *d)
-+{
-+	aspeed_sgpio_irq_set_mask(d, true);
-+}
-+
-+static int aspeed_sgpio_set_type(struct irq_data *d, unsigned int type)
-+{
-+	u32 type0 = 0;
-+	u32 type1 = 0;
-+	u32 type2 = 0;
-+	u32 bit, reg;
-+	const struct aspeed_sgpio_bank *bank;
-+	irq_flow_handler_t handler;
-+	struct aspeed_sgpio *gpio;
-+	unsigned long flags;
-+	void __iomem *addr;
-+	int rc, offset;
-+
-+	rc = irqd_to_aspeed_sgpio_data(d, &gpio, &bank, &bit, &offset);
-+	if (rc)
-+		return -EINVAL;
-+
-+	switch (type & IRQ_TYPE_SENSE_MASK) {
-+	case IRQ_TYPE_EDGE_BOTH:
-+		type2 |= bit;
-+		/* fall through */
-+	case IRQ_TYPE_EDGE_RISING:
-+		type0 |= bit;
-+		/* fall through */
-+	case IRQ_TYPE_EDGE_FALLING:
-+		handler = handle_edge_irq;
-+		break;
-+	case IRQ_TYPE_LEVEL_HIGH:
-+		type0 |= bit;
-+		/* fall through */
-+	case IRQ_TYPE_LEVEL_LOW:
-+		type1 |= bit;
-+		handler = handle_level_irq;
-+		break;
-+	default:
-+		return -EINVAL;
-+	}
-+
-+	spin_lock_irqsave(&gpio->lock, flags);
-+
-+	addr = bank_reg(gpio, bank, reg_irq_type0);
-+	reg = ioread32(addr);
-+	reg = (reg & ~bit) | type0;
-+	iowrite32(reg, addr);
-+
-+	addr = bank_reg(gpio, bank, reg_irq_type1);
-+	reg = ioread32(addr);
-+	reg = (reg & ~bit) | type1;
-+	iowrite32(reg, addr);
-+
-+	addr = bank_reg(gpio, bank, reg_irq_type2);
-+	reg = ioread32(addr);
-+	reg = (reg & ~bit) | type2;
-+	iowrite32(reg, addr);
-+
-+	spin_unlock_irqrestore(&gpio->lock, flags);
-+
-+	irq_set_handler_locked(d, handler);
-+
-+	return 0;
-+}
-+
-+static void aspeed_sgpio_irq_handler(struct irq_desc *desc)
-+{
-+	struct gpio_chip *gc = irq_desc_get_handler_data(desc);
-+	struct irq_chip *ic = irq_desc_get_chip(desc);
-+	struct aspeed_sgpio *data = gpiochip_get_data(gc);
-+	unsigned int i, p, girq;
-+	unsigned long reg;
-+
-+	chained_irq_enter(ic, desc);
-+
-+	for (i = 0; i < ARRAY_SIZE(aspeed_sgpio_banks); i++) {
-+		const struct aspeed_sgpio_bank *bank = &aspeed_sgpio_banks[i];
-+
-+		reg = ioread32(bank_reg(data, bank, reg_irq_status));
-+
-+		for_each_set_bit(p, &reg, 32) {
-+			girq = irq_find_mapping(gc->irq.domain, i * 32 + p);
-+			generic_handle_irq(girq);
-+		}
-+
-+	}
-+
-+	chained_irq_exit(ic, desc);
-+}
-+
-+static struct irq_chip aspeed_sgpio_irqchip = {
-+	.name       = "aspeed-sgpio",
-+	.irq_ack    = aspeed_sgpio_irq_ack,
-+	.irq_mask   = aspeed_sgpio_irq_mask,
-+	.irq_unmask = aspeed_sgpio_irq_unmask,
-+	.irq_set_type   = aspeed_sgpio_set_type,
-+};
-+
-+static int aspeed_sgpio_setup_irqs(struct aspeed_sgpio *gpio,
-+				   struct platform_device *pdev)
-+{
-+	int rc, i;
-+	const struct aspeed_sgpio_bank *bank;
-+
-+	rc = platform_get_irq(pdev, 0);
-+	if (rc < 0)
-+		return rc;
-+
-+	gpio->irq = rc;
-+
-+	/* Disable IRQ and clear Interrupt status registers for all SPGIO Pins. */
-+	for (i = 0; i < ARRAY_SIZE(aspeed_sgpio_banks); i++) {
-+		bank =  &aspeed_sgpio_banks[i];
-+		/* disable irq enable bits */
-+		iowrite32(0x00000000, bank_reg(gpio, bank, reg_irq_enable));
-+		/* clear status bits */
-+		iowrite32(0xffffffff, bank_reg(gpio, bank, reg_irq_status));
-+	}
-+
-+	rc = gpiochip_irqchip_add(&gpio->chip, &aspeed_sgpio_irqchip,
-+				  0, handle_bad_irq, IRQ_TYPE_NONE);
-+	if (rc) {
-+		dev_info(&pdev->dev, "Could not add irqchip\n");
-+		return rc;
-+	}
-+
-+	gpiochip_set_chained_irqchip(&gpio->chip, &aspeed_sgpio_irqchip,
-+				     gpio->irq, aspeed_sgpio_irq_handler);
-+
-+	/* set IRQ settings and Enable Interrupt */
-+	for (i = 0; i < ARRAY_SIZE(aspeed_sgpio_banks); i++) {
-+		bank = &aspeed_sgpio_banks[i];
-+		/* set falling or level-low irq */
-+		iowrite32(0x00000000, bank_reg(gpio, bank, reg_irq_type0));
-+		/* trigger type is edge */
-+		iowrite32(0x00000000, bank_reg(gpio, bank, reg_irq_type1));
-+		/* dual edge trigger mode. */
-+		iowrite32(0xffffffff, bank_reg(gpio, bank, reg_irq_type2));
-+		/* enable irq */
-+		iowrite32(0xffffffff, bank_reg(gpio, bank, reg_irq_enable));
-+	}
-+
-+	return 0;
-+}
-+
-+static const struct of_device_id aspeed_sgpio_of_table[] = {
-+	{ .compatible = "aspeed,ast2400-sgpio" },
-+	{ .compatible = "aspeed,ast2500-sgpio" },
-+	{}
-+};
-+MODULE_DEVICE_TABLE(of, aspeed_sgpio_of_table);
-+
-+static int __init aspeed_sgpio_probe(struct platform_device *pdev)
-+{
-+	struct aspeed_sgpio *gpio;
-+	struct resource *res;
-+	u32 nr_gpios, sgpio_freq;
-+	int rc;
-+	u16 sgpio_clk_div;
-+	unsigned long apb_freq;
-+
-+	gpio = devm_kzalloc(&pdev->dev, sizeof(*gpio), GFP_KERNEL);
-+	if (!gpio)
-+		return -ENOMEM;
-+
-+	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-+	gpio->base = devm_ioremap_resource(&pdev->dev, res);
-+	if (IS_ERR(gpio->base))
-+		return PTR_ERR(gpio->base);
-+
-+	rc = of_property_read_u32(pdev->dev.of_node, "nr-gpios", &nr_gpios);
-+	if ((rc < 0) || (nr_gpios > MAX_NR_SGPIO))
-+		nr_gpios = MAX_NR_SGPIO;
-+
-+	rc = of_property_read_u32(pdev->dev.of_node, "bus-frequency", &sgpio_freq);
-+	if (rc < 0) {
-+		dev_err(&pdev->dev, "Could not read bus-frequency property\n");
-+		sgpio_freq = 12000000;
-+	}
-+
-+	gpio->pclk = devm_clk_get(&pdev->dev, NULL);
-+	if (IS_ERR(gpio->pclk)) {
-+		dev_err(&pdev->dev, "devm_clk_get failed\n");
-+		return PTR_ERR(gpio->pclk);
-+	}
-+
-+	apb_freq = clk_get_rate(gpio->pclk);
-+	sgpio_clk_div = 2 * ((apb_freq % sgpio_freq == 0) ?
-+			     (apb_freq / sgpio_freq) - 1 : (apb_freq / sgpio_freq));
-+	iowrite32(FIELD_PREP(ASPEED_SGPIO_CLK_DIV_MASK, sgpio_clk_div) |
-+		  FIELD_PREP(ASPEED_SGPIO_PINS_MASK, (nr_gpios / 8)) |
-+		  ASPEED_SGPIO_ENABLE,
-+		  gpio->base + ASPEED_SGPIO_CTRL);
-+
-+	spin_lock_init(&gpio->lock);
-+
-+	gpio->chip.parent = &pdev->dev;
-+	gpio->chip.ngpio = nr_gpios;
-+	gpio->chip.direction_input = aspeed_sgpio_dir_in;
-+	gpio->chip.direction_output = aspeed_sgpio_dir_out;
-+	gpio->chip.get_direction = aspeed_sgpio_get_direction;
-+	gpio->chip.request = NULL;
-+	gpio->chip.free = NULL;
-+	gpio->chip.get = aspeed_sgpio_get;
-+	gpio->chip.set = aspeed_sgpio_set;
-+	gpio->chip.set_config = NULL;
-+	gpio->chip.label = dev_name(&pdev->dev);
-+	gpio->chip.base =  ARCH_NR_GPIOS - MAX_NR_SGPIO;
-+
-+	rc = devm_gpiochip_add_data(&pdev->dev, &gpio->chip, gpio);
-+	if (rc < 0)
-+		return rc;
-+
-+	return aspeed_sgpio_setup_irqs(gpio, pdev);
-+}
-+
-+static struct platform_driver aspeed_sgpio_driver = {
-+	.driver = {
-+		.name = KBUILD_MODNAME,
-+		.of_match_table = aspeed_sgpio_of_table,
-+	},
-+};
-+
-+module_platform_driver_probe(aspeed_sgpio_driver, aspeed_sgpio_probe);
-+MODULE_DESCRIPTION("Aspeed Serial GPIO Driver");
-+MODULE_LICENSE("GPL");
--- 
-2.7.4
-
->
-
-thanks Anrew, please review v3 at above and also inline comments at below.
-
->
-> From:	Andrew Jeffery <andrew@aj.id.au>
-> Sent:	Wednesday, July 10, 2019 9:46 PM
-> To:	Hongwei Zhang; Bartosz Golaszewski; Joel Stanley; Linus Walleij
-> Cc:	linux-gpio@vger.kernel.org; linux-arm-kernel@lists.infradead.org; linux-aspeed@lists.ozlabs.org; 
-> linux-kernel@vger.kernel.org
-> Subject:	Re: [PATCH 2/3 v2] ARM: dts: aspeed: Add SGPIO driver
-> 
-> 
-> 
-> On Thu, 11 Jul 2019, at 00:56, Hongwei Zhang wrote:
-> > Add SGPIO driver support for Aspeed AST2500 SoC.
-> > 
-> > Signed-off-by: Hongwei Zhang <hongweiz@ami.com>
-> > ---
-> >  drivers/gpio/sgpio-aspeed.c | 450 
-> > ++++++++++++++++++++++++++++++++++++++++++++
-> >  1 file changed, 450 insertions(+)
-> >  create mode 100644 drivers/gpio/sgpio-aspeed.c
-> > 
-> > diff --git a/drivers/gpio/sgpio-aspeed.c b/drivers/gpio/sgpio-aspeed.c 
-> > new file mode 100644 index 0000000..0743d22
-> > --- /dev/null
-> > +++ b/drivers/gpio/sgpio-aspeed.c
-> > @@ -0,0 +1,450 @@
-> > +// SPDX-License-Identifier: GPL-2.0+
-> > +/*
-> > + * Copyright 2019 American Megatrends International LLC.
-> > + *
-> > + * Author: Karthikeyan Mani <karthikeyanm@amiindia.co.in>  */
-> > +
-> > +#include <linux/gpio/driver.h>
-> > +#include <linux/gpio/aspeed.h>
-> > +#include <linux/hashtable.h>
-> > +#include <linux/init.h>
-> > +#include <linux/io.h>
-> > +#include <linux/kernel.h>
-> > +#include <linux/module.h>
-> > +#include <linux/pinctrl/consumer.h>
-> > +#include <linux/platform_device.h>
-> > +#include <linux/spinlock.h>
-> > +#include <linux/string.h>
-> > +
-> > +#define NR_SGPIO        80
-> > +
-> > +struct aspeed_sgpio {
-> > +	struct gpio_chip chip;
-> > +	spinlock_t lock;
-> > +	void __iomem *base;
-> > +	int irq;
-> > +};
-> > +
-> > +struct aspeed_sgpio_bank {
-> > +	uint16_t    val_regs;
-> > +	uint16_t    rdata_reg;
-> > +	uint16_t    irq_regs;
-> > +	const char  names[4][3];
-> > +};
-> > +
-> > +/*
-> > + * Note: The "value" register returns the input value sampled on the
-> > + *       line even when the GPIO is configured as an output. Since
-> > + *       that input goes through synchronizers, writing, then reading
-> > + *       back may not return the written value right away.
-> > + *
-> > + *       The "rdata" register returns the content of the write latch
-> > + *       and thus can be used to read back what was last written
-> > + *       reliably.
-> > + */
-> > +
-> > +static const struct aspeed_sgpio_bank aspeed_sgpio_banks[] = {
-> > +	{
-> > +		.val_regs = 0x0000,
-> > +		.rdata_reg = 0x0070,
-> > +		.irq_regs = 0x0004,
-> > +		.names = { "A", "B", "C", "D" },
-> > +	},
-> > +	{
-> > +		.val_regs = 0x001C,
-> > +		.rdata_reg = 0x0074,
-> > +		.irq_regs = 0x0020,
-> > +		.names = { "E", "F", "G", "H" },
-> > +	},
-> > +	{
-> > +		.val_regs = 0x0038,
-> > +		.rdata_reg = 0x0078,
-> > +		.irq_regs = 0x003C,
-> > +		.names = { "I", "J" },
-> > +	},
-> > +};
-> > +
-> > +enum aspeed_sgpio_reg {
-> > +	reg_val,
-> > +	reg_rdata,
-> > +	reg_irq_enable,
-> > +	reg_irq_type0,
-> > +	reg_irq_type1,
-> > +	reg_irq_type2,
-> > +	reg_irq_status,
-> > +};
-> > +
-> > +#define GPIO_VAL_VALUE      0x00
-> > +#define GPIO_VAL_DIR        0x04
-> > +#define GPIO_IRQ_ENABLE     0x00
-> > +#define GPIO_IRQ_TYPE0      0x04
-> > +#define GPIO_IRQ_TYPE1      0x08
-> > +#define GPIO_IRQ_TYPE2      0x0C
-> > +#define GPIO_IRQ_STATUS     0x10
-> > +
-> > +/* This will be resolved at compile time */ static inline void 
-> > +__iomem *bank_reg(struct aspeed_sgpio *gpio,
-> > +				     const struct aspeed_sgpio_bank *bank,
-> > +				     const enum aspeed_sgpio_reg reg) {
-> > +	switch (reg) {
-> > +	case reg_val:
-> > +		return gpio->base + bank->val_regs + GPIO_VAL_VALUE;
-> > +	case reg_rdata:
-> > +		return gpio->base + bank->rdata_reg;
-> > +	case reg_irq_enable:
-> > +		return gpio->base + bank->irq_regs + GPIO_IRQ_ENABLE;
-> > +	case reg_irq_type0:
-> > +		return gpio->base + bank->irq_regs + GPIO_IRQ_TYPE0;
-> > +	case reg_irq_type1:
-> > +		return gpio->base + bank->irq_regs + GPIO_IRQ_TYPE1;
-> > +	case reg_irq_type2:
-> > +		return gpio->base + bank->irq_regs + GPIO_IRQ_TYPE2;
-> > +	case reg_irq_status:
-> > +		return gpio->base + bank->irq_regs + GPIO_IRQ_STATUS;
-> > +	default:
-> > +		/* acturally if code runs to here, it's an error case */
-> > +		WARN_ON(reg);
-> > +		return gpio->base;
-> > +	}
-> > +}
-> > +
-
-updated to use BUG_ON(1), please see v3.
-
-> > +#define GPIO_BANK(x)    ((x) >> 5)
-> > +#define GPIO_OFFSET(x)  ((x) & 0x1f)
-> > +#define GPIO_BIT(x)     BIT(GPIO_OFFSET(x))
-> > +
-> > +static const struct aspeed_sgpio_bank *to_bank(unsigned int offset) {
-> > +	unsigned int bank = GPIO_BANK(offset);
-> > +
-> > +	WARN_ON(bank >= ARRAY_SIZE(aspeed_sgpio_banks));
-> > +	return &aspeed_sgpio_banks[bank];
-> > +}
-> > +
-> > +static int aspeed_sgpio_get(struct gpio_chip *gc, unsigned int 
-> > +offset) {
-> > +	struct aspeed_sgpio *gpio = gpiochip_get_data(gc);
-> > +	const struct aspeed_sgpio_bank *bank = to_bank(offset);
-> > +
-> > +	return !!(ioread32(bank_reg(gpio, bank, reg_val)) & 
-> > +GPIO_BIT(offset)); }
-> > +
-> > +static void aspeed_sgpio_set(struct gpio_chip *gc, unsigned int
-> > offset, int val)
-> > +{
-> > +	struct aspeed_sgpio *gpio = gpiochip_get_data(gc);
-> > +	const struct aspeed_sgpio_bank *bank = to_bank(offset);
-> > +	unsigned long flags;
-> > +	void __iomem *addr;
-> > +	u32 reg = 0;
-> > +
-> > +	spin_lock_irqsave(&gpio->lock, flags);
-> > +
-> > +	addr = bank_reg(gpio, bank, reg_val);
-> > +
-> > +	if (val)
-> > +		reg |= GPIO_BIT(offset);
-> > +	else
-> > +		reg &= ~GPIO_BIT(offset);
-> > +
-> > +	iowrite32(reg, addr);
-> > +	spin_unlock_irqrestore(&gpio->lock, flags); }
-> > +
-> > +static int aspeed_sgpio_dir_in(struct gpio_chip *gc, unsigned int
-> > offset)
-> > +{
-> > +	/* By default all SGPIO Pins are input */
-> > +	return 0;
-> > +}
-> > +
-> > +static int aspeed_sgpio_dir_out(struct gpio_chip *gc, unsigned int
-> > offset, int val)
-> > +{
-> > +	return 0;
-> > +}
-> > +
-> > +static int aspeed_sgpio_get_direction(struct gpio_chip *gc, unsigned
-> > int offset)
-> > +{
-> > +	/* By default all SGPIO Pins are input */
-> > +	return 1;
-> > +
-> > +}
-> 
-> Please see my follow-up reply on v1 that helps clarify what we should do with the 
-> dir_in()/dir_out()/get_direction() implementations. The implementation here will confuse everything in 
-> the stack above it.
-> 
-
-updated, please see v3.
-
-> > +
-> > +static inline int irqd_to_aspeed_sgpio_data(struct irq_data *d,
-> > +					    struct aspeed_sgpio **gpio,
-> > +					    const struct aspeed_sgpio_bank **bank,
-> > +					    u32 *bit, int *offset)
-> > +{
-> > +	struct aspeed_sgpio *internal;
-> > +
-> > +	*offset = irqd_to_hwirq(d);
-> > +
-> > +	internal = irq_data_get_irq_chip_data(d);
-> > +
-> > +	*gpio = internal;
-> > +	*bank = to_bank(*offset);
-> > +	*bit = GPIO_BIT(*offset);
-> > +
-> > +	return 0;
-> > +}
-> > +
-> > +static void aspeed_sgpio_irq_ack(struct irq_data *d) {
-> > +	const struct aspeed_sgpio_bank *bank;
-> > +	struct aspeed_sgpio *gpio;
-> > +	unsigned long flags;
-> > +	void __iomem *status_addr;
-> > +	int rc, offset;
-> > +	u32 bit;
-> > +
-> > +	rc = irqd_to_aspeed_sgpio_data(d, &gpio, &bank, &bit, &offset);
-> > +	if (rc)
-> > +		return;
-> > +
-> > +	status_addr = bank_reg(gpio, bank, reg_irq_status);
-> > +
-> > +	spin_lock_irqsave(&gpio->lock, flags);
-> > +
-> > +	iowrite32(bit, status_addr);
-> > +
-> > +	spin_unlock_irqrestore(&gpio->lock, flags); }
-> > +
-> > +static void aspeed_sgpio_irq_set_mask(struct irq_data *d, bool set) {
-> > +	const struct aspeed_sgpio_bank *bank;
-> > +	struct aspeed_sgpio *gpio;
-> > +	unsigned long flags;
-> > +	u32 reg, bit;
-> > +	void __iomem *addr;
-> > +	int rc, offset;
-> > +
-> > +	rc = irqd_to_aspeed_sgpio_data(d, &gpio, &bank, &bit, &offset);
-> > +	if (rc)
-> > +		return;
-> > +
-> > +	addr = bank_reg(gpio, bank, reg_irq_enable);
-> > +
-> > +	spin_lock_irqsave(&gpio->lock, flags);
-> > +
-> > +	reg = ioread32(addr);
-> > +	if (set)
-> > +		reg |= bit;
-> > +	else
-> > +		reg &= ~bit;
-> > +
-> > +	iowrite32(reg, addr);
-> > +
-> > +	spin_unlock_irqrestore(&gpio->lock, flags); }
-> > +
-> > +static void aspeed_sgpio_irq_mask(struct irq_data *d) {
-> > +	aspeed_sgpio_irq_set_mask(d, false); }
-> > +
-> > +static void aspeed_sgpio_irq_unmask(struct irq_data *d) {
-> > +	aspeed_sgpio_irq_set_mask(d, true);
-> > +}
-> > +
-> > +static int aspeed_sgpio_set_type(struct irq_data *d, unsigned int 
-> > +type) {
-> > +	u32 type0 = 0;
-> > +	u32 type1 = 0;
-> > +	u32 type2 = 0;
-> > +	u32 bit, reg;
-> > +	const struct aspeed_sgpio_bank *bank;
-> > +	irq_flow_handler_t handler;
-> > +	struct aspeed_sgpio *gpio;
-> > +	unsigned long flags;
-> > +	void __iomem *addr;
-> > +	int rc, offset;
-> > +
-> > +	rc = irqd_to_aspeed_sgpio_data(d, &gpio, &bank, &bit, &offset);
-> > +	if (rc)
-> > +		return -EINVAL;
-> > +
-> > +	switch (type & IRQ_TYPE_SENSE_MASK) {
-> > +	case IRQ_TYPE_EDGE_BOTH:
-> > +		type2 |= bit;
-> > +		/* fall through */
-> > +	case IRQ_TYPE_EDGE_RISING:
-> > +		type0 |= bit;
-> > +		/* fall through */
-> > +	case IRQ_TYPE_EDGE_FALLING:
-> > +		handler = handle_edge_irq;
-> > +		break;
-> > +	case IRQ_TYPE_LEVEL_HIGH:
-> > +		type0 |= bit;
-> > +		/* fall through */
-> > +	case IRQ_TYPE_LEVEL_LOW:
-> > +		type1 |= bit;
-> > +		handler = handle_level_irq;
-> > +		break;
-> > +	default:
-> > +		return -EINVAL;
-> > +	}
-> > +
-> > +	spin_lock_irqsave(&gpio->lock, flags);
-> > +
-> > +	addr = bank_reg(gpio, bank, reg_irq_type0);
-> > +	reg = ioread32(addr);
-> > +	reg = (reg & ~bit) | type0;
-> > +	iowrite32(reg, addr);
-> > +
-> > +	addr = bank_reg(gpio, bank, reg_irq_type1);
-> > +	reg = ioread32(addr);
-> > +	reg = (reg & ~bit) | type1;
-> > +	iowrite32(reg, addr);
-> > +
-> > +	addr = bank_reg(gpio, bank, reg_irq_type2);
-> > +	reg = ioread32(addr);
-> > +	reg = (reg & ~bit) | type2;
-> > +	iowrite32(reg, addr);
-> > +
-> > +	spin_unlock_irqrestore(&gpio->lock, flags);
-> > +
-> > +	irq_set_handler_locked(d, handler);
-> > +
-> > +	return 0;
-> > +}
-> > +
-> > +static void aspeed_sgpio_irq_handler(struct irq_desc *desc) {
-> > +	struct gpio_chip *gc = irq_desc_get_handler_data(desc);
-> > +	struct irq_chip *ic = irq_desc_get_chip(desc);
-> > +	struct aspeed_sgpio *data = gpiochip_get_data(gc);
-> > +	unsigned int i, p, girq;
-> > +	unsigned long reg;
-> > +
-> > +	chained_irq_enter(ic, desc);
-> > +
-> > +	for (i = 0; i < ARRAY_SIZE(aspeed_sgpio_banks); i++) {
-> > +		const struct aspeed_sgpio_bank *bank = &aspeed_sgpio_banks[i];
-> > +
-> > +		reg = ioread32(bank_reg(data, bank, reg_irq_status));
-> > +
-> > +		for_each_set_bit(p, &reg, 32) {
-> > +			girq = irq_find_mapping(gc->irq.domain, i * 32 + p);
-> > +			generic_handle_irq(girq);
-> > +		}
-> > +
-> > +	}
-> > +
-> > +	chained_irq_exit(ic, desc);
-> > +}
-> > +
-> > +static struct irq_chip aspeed_sgpio_irqchip = {
-> > +	.name       = "aspeed-sgpio",
-> > +	.irq_ack    = aspeed_sgpio_irq_ack,
-> > +	.irq_mask   = aspeed_sgpio_irq_mask,
-> > +	.irq_unmask = aspeed_sgpio_irq_unmask,
-> > +	.irq_set_type   = aspeed_sgpio_set_type,
-> > +};
-> > +
-> > +static int aspeed_sgpio_setup_irqs(struct aspeed_sgpio *gpio,
-> > +				   struct platform_device *pdev)
-> > +{
-> > +	int rc, i;
-> > +	const struct aspeed_sgpio_bank *bank;
-> > +
-> > +	rc = platform_get_irq(pdev, 0);
-> > +	if (rc < 0)
-> > +		return rc;
-> > +
-> > +	gpio->irq = rc;
-> > +
-> > +	/* Disable IRQ and clear Interrupt status registers for all SPGIO
-> > Pins. */
-> > +	for (i = 0; i < ARRAY_SIZE(aspeed_sgpio_banks); i++) {
-> > +		bank =  &aspeed_sgpio_banks[i];
-> > +		/* disable irq enable bits */
-> > +		iowrite32(0x00000000, bank_reg(gpio, bank, reg_irq_enable));
-> > +		/* clear status bits */
-> > +		iowrite32(0xffffffff, bank_reg(gpio, bank, reg_irq_status));
-> > +	}
-> > +
-> > +	rc = gpiochip_irqchip_add(&gpio->chip, &aspeed_sgpio_irqchip,
-> > +				  0, handle_bad_irq, IRQ_TYPE_NONE);
-> > +	if (rc) {
-> > +		dev_info(&pdev->dev, "Could not add irqchip\n");
-> > +		return rc;
-> > +	}
-> > +
-> > +	gpiochip_set_chained_irqchip(&gpio->chip, &aspeed_sgpio_irqchip,
-> > +				     gpio->irq, aspeed_sgpio_irq_handler);
-> > +
-> > +	/* set IRQ settings and Enable Interrupt */
-> > +	for (i = 0; i < ARRAY_SIZE(aspeed_sgpio_banks); i++) {
-> > +		bank = &aspeed_sgpio_banks[i];
-> > +		/* set falling or level-low irq */
-> > +		iowrite32(0x00000000, bank_reg(gpio, bank, reg_irq_type0));
-> > +		/* trigger type is edge */
-> > +		iowrite32(0x00000000, bank_reg(gpio, bank, reg_irq_type1));
-> > +		/* dual edge trigger mode. */
-> > +		iowrite32(0xffffffff, bank_reg(gpio, bank, reg_irq_type2));
-> > +		/* enable irq */
-> > +		iowrite32(0xffffffff, bank_reg(gpio, bank, reg_irq_enable));
-> > +	}
-> > +
-> > +	return 0;
-> > +}
-> > +
-> > +static int aspeed_sgpio_request(struct gpio_chip *chip, unsigned int
-> > offset)
-> > +{
-> > +	return (offset < NR_SGPIO);
-> > +}
-> 
-> I don't think this request() implementation is helpful, especially as it stands in the face of needing to pull 
-> the number of GPIOs to serialise from the devicetree.
-> 
-> request() is an optional callback, lets just drop it.
-> 
-
-updated, please see v3.
-
-> > +
-> > +static const struct of_device_id aspeed_sgpio_of_table[] = {
-> > +	{ .compatible = "aspeed,ast2400-sgpio" },
-> > +	{ .compatible = "aspeed,ast2500-sgpio" },
-> > +	{}
-> > +};
-> > +MODULE_DEVICE_TABLE(of, aspeed_sgpio_of_table);
-> > +
-> > +static int __init aspeed_sgpio_probe(struct platform_device *pdev) {
-> > +	struct aspeed_sgpio *gpio;
-> > +	struct resource *res;
-> > +	int rc;
-> > +
-> > +	gpio = devm_kzalloc(&pdev->dev, sizeof(*gpio), GFP_KERNEL);
-> > +	if (!gpio)
-> > +		return -ENOMEM;
-> > +
-> > +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> > +	gpio->base = devm_ioremap_resource(&pdev->dev, res);
-> > +	if (IS_ERR(gpio->base))
-> > +		return PTR_ERR(gpio->base);
-> > +
-> > +	spin_lock_init(&gpio->lock);
-> > +
-> > +	gpio->chip.parent = &pdev->dev;
-> > +	gpio->chip.ngpio = NR_SGPIO;
-> > +	gpio->chip.direction_input = aspeed_sgpio_dir_in;
-> > +	gpio->chip.direction_output = aspeed_sgpio_dir_out;
-> > +	gpio->chip.get_direction = aspeed_sgpio_get_direction;
-> > +	gpio->chip.request = aspeed_sgpio_request;
-> > +	gpio->chip.free = NULL;
-> > +	gpio->chip.get = aspeed_sgpio_get;
-> > +	gpio->chip.set = aspeed_sgpio_set;
-> > +	gpio->chip.set_config = NULL;
-> > +	gpio->chip.label = dev_name(&pdev->dev);
-> > +	gpio->chip.base = -1;
-> > +
-> > +	rc = devm_gpiochip_add_data(&pdev->dev, &gpio->chip, gpio);
-> > +	if (rc < 0)
-> > +		return rc;
-> > +
-> > +	return aspeed_sgpio_setup_irqs(gpio, pdev); }
-> > +
-> > +static struct platform_driver aspeed_sgpio_driver = {
-> > +	.driver = {
-> > +		.name = KBUILD_MODNAME,
-> > +		.of_match_table = aspeed_sgpio_of_table,
-> > +	},
-> > +};
-> > +
-> > +module_platform_driver_probe(aspeed_sgpio_driver, 
-> > +aspeed_sgpio_probe); MODULE_DESCRIPTION("Aspeed Serial GPIO Driver"); 
-> > +MODULE_LICENSE("GPL");
-> > --
-> > 2.7.4
-> > 
-> >
+On 7/16/19 2:21 PM, Dmitry Osipenko wrote:
+> 17.07.2019 0:12, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+>> On 7/16/19 1:47 PM, Dmitry Osipenko wrote:
+>>> 16.07.2019 22:26, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+>>>> On 7/16/19 11:43 AM, Dmitry Osipenko wrote:
+>>>>> 16.07.2019 21:30, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+>>>>>> On 7/16/19 11:25 AM, Dmitry Osipenko wrote:
+>>>>>>> 16.07.2019 21:19, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=
+=82:
+>>>>>>>> On 7/16/19 9:50 AM, Sowjanya Komatineni wrote:
+>>>>>>>>> On 7/16/19 8:00 AM, Dmitry Osipenko wrote:
+>>>>>>>>>> 16.07.2019 11:06, Peter De Schrijver =D0=BF=D0=B8=D1=88=D0=B5=D1=
+=82:
+>>>>>>>>>>> On Tue, Jul 16, 2019 at 03:24:26PM +0800, Joseph Lo wrote:
+>>>>>>>>>>>>> OK, Will add to CPUFreq driver...
+>>>>>>>>>>>>>> The other thing that also need attention is that T124 CPUFre=
+q
+>>>>>>>>>>>>>> driver
+>>>>>>>>>>>>>> implicitly relies on DFLL driver to be probed first, which i=
+s
+>>>>>>>>>>>>>> icky.
+>>>>>>>>>>>>>>
+>>>>>>>>>>>>> Should I add check for successful dfll clk register
+>>>>>>>>>>>>> explicitly in
+>>>>>>>>>>>>> CPUFreq driver probe and defer till dfll clk registers?
+>>>>>>>>>> Probably you should use the "device links". See [1][2] for the
+>>>>>>>>>> example.
+>>>>>>>>>>
+>>>>>>>>>> [1]
+>>>>>>>>>> https://elixir.bootlin.com/linux/v5.2.1/source/drivers/gpu/drm/t=
+egra/dc.c#L2383
+>>>>>>>>>>
+>>>>>>>>>>
+>>>>>>>>>>
+>>>>>>>>>>
+>>>>>>>>>>
+>>>>>>>>>> [2]
+>>>>>>>>>> https://www.kernel.org/doc/html/latest/driver-api/device_link.ht=
+ml
+>>>>>>>>>>
+>>>>>>>>>> Return EPROBE_DEFER instead of EINVAL if device_link_add() fails=
+.
+>>>>>>>>>> And
+>>>>>>>>>> use of_find_device_by_node() to get the DFLL's device, see [3].
+>>>>>>>>>>
+>>>>>>>>>> [3]
+>>>>>>>>>> https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.=
+git/tree/drivers/devfreq/tegra20-devfreq.c#n100
+>>>>>>>>>>
+>>>>>>>>>>
+>>>>>>>>>>
+>>>>>>>>>>
+>>>>>>>>> Will go thru and add...
+>>>>>>> Looks like I initially confused this case with getting orphaned
+>>>>>>> clock.
+>>>>>>> I'm now seeing that the DFLL driver registers the clock and then
+>>>>>>> clk_get(dfll) should be returning EPROBE_DEFER until DFLL driver is
+>>>>>>> probed, hence everything should be fine as-is and there is no real
+>>>>>>> need
+>>>>>>> for the 'device link'. Sorry for the confusion!
+>>>>>>>
+>>>>>>>>>>>> Sorry, I didn't follow the mail thread. Just regarding the DFL=
+L
+>>>>>>>>>>>> part.
+>>>>>>>>>>>>
+>>>>>>>>>>>> As you know it, the DFLL clock is one of the CPU clock
+>>>>>>>>>>>> sources and
+>>>>>>>>>>>> integrated with DVFS control logic with the regulator. We
+>>>>>>>>>>>> will not
+>>>>>>>>>>>> switch
+>>>>>>>>>>>> CPU to other clock sources once we switched to DFLL. Because t=
+he
+>>>>>>>>>>>> CPU has
+>>>>>>>>>>>> been regulated by the DFLL HW with the DVFS table (CVB or OPP
+>>>>>>>>>>>> table
+>>>>>>>>>>>> you see
+>>>>>>>>>>>> in the driver.). We shouldn't reparent it to other sources wit=
+h
+>>>>>>>>>>>> unknew
+>>>>>>>>>>>> freq/volt pair. That's not guaranteed to work. We allow
+>>>>>>>>>>>> switching to
+>>>>>>>>>>>> open-loop mode but different sources.
+>>>>>>>>>> Okay, then the CPUFreq driver will have to enforce DFLL freq to
+>>>>>>>>>> PLLP's
+>>>>>>>>>> rate before switching to PLLP in order to have a proper CPU
+>>>>>>>>>> voltage.
+>>>>>>>>> PLLP freq is safe to work for any CPU voltage. So no need to
+>>>>>>>>> enforce
+>>>>>>>>> DFLL freq to PLLP rate before changing CCLK_G source to PLLP duri=
+ng
+>>>>>>>>> suspend
+>>>>>>>>>
+>>>>>>>> Sorry, please ignore my above comment. During suspend, need to
+>>>>>>>> change
+>>>>>>>> CCLK_G source to PLLP when dfll is in closed loop mode first and
+>>>>>>>> then
+>>>>>>>> dfll need to be set to open loop.
+>>>>>>> Okay.
+>>>>>>>
+>>>>>>>>>>>> And I don't exactly understand why we need to switch to PLLP i=
+n
+>>>>>>>>>>>> CPU
+>>>>>>>>>>>> idle
+>>>>>>>>>>>> driver. Just keep it on CL-DVFS mode all the time.
+>>>>>>>>>>>>
+>>>>>>>>>>>> In SC7 entry, the dfll suspend function moves it the open-loop
+>>>>>>>>>>>> mode. That's
+>>>>>>>>>>>> all. The sc7-entryfirmware will handle the rest of the
+>>>>>>>>>>>> sequence to
+>>>>>>>>>>>> turn off
+>>>>>>>>>>>> the CPU power.
+>>>>>>>>>>>>
+>>>>>>>>>>>> In SC7 resume, the warmboot code will handle the sequence to
+>>>>>>>>>>>> turn on
+>>>>>>>>>>>> regulator and power up the CPU cluster. And leave it on PLL_P.
+>>>>>>>>>>>> After
+>>>>>>>>>>>> resuming to the kernel, we re-init DFLL, restore the CPU clock
+>>>>>>>>>>>> policy (CPU
+>>>>>>>>>>>> runs on DFLL open-loop mode) and then moving to close-loop mod=
+e.
+>>>>>>>>>> The DFLL is re-inited after switching CCLK to DFLL parent
+>>>>>>>>>> during of
+>>>>>>>>>> the
+>>>>>>>>>> early clocks-state restoring by CaR driver. Hence instead of
+>>>>>>>>>> having
+>>>>>>>>>> odd
+>>>>>>>>>> hacks in the CaR driver, it is much nicer to have a proper
+>>>>>>>>>> suspend-resume sequencing of the device drivers. In this case
+>>>>>>>>>> CPUFreq
+>>>>>>>>>> driver is the driver that enables DFLL and switches CPU to that
+>>>>>>>>>> clock
+>>>>>>>>>> source, which means that this driver is also should be
+>>>>>>>>>> responsible for
+>>>>>>>>>> management of the DFLL's state during of suspend/resume
+>>>>>>>>>> process. If
+>>>>>>>>>> CPUFreq driver disables DFLL during suspend and re-enables it
+>>>>>>>>>> during
+>>>>>>>>>> resume, then looks like the CaR driver hacks around DFLL are not
+>>>>>>>>>> needed.
+>>>>>>>>>>
+>>>>>>>>>>>> The DFLL part looks good to me. BTW, change the patch subject =
+to
+>>>>>>>>>>>> "Add
+>>>>>>>>>>>> suspend-resume support" seems more appropriate to me.
+>>>>>>>>>>>>
+>>>>>>>>>>> To clarify this, the sequences for DFLL use are as follows
+>>>>>>>>>>> (assuming
+>>>>>>>>>>> all
+>>>>>>>>>>> required DFLL hw configuration has been done)
+>>>>>>>>>>>
+>>>>>>>>>>> Switch to DFLL:
+>>>>>>>>>>> 0) Save current parent and frequency
+>>>>>>>>>>> 1) Program DFLL to open loop mode
+>>>>>>>>>>> 2) Enable DFLL
+>>>>>>>>>>> 3) Change cclk_g parent to DFLL
+>>>>>>>>>>> For OVR regulator:
+>>>>>>>>>>> 4) Change PWM output pin from tristate to output
+>>>>>>>>>>> 5) Enable DFLL PWM output
+>>>>>>>>>>> For I2C regulator:
+>>>>>>>>>>> 4) Enable DFLL I2C output
+>>>>>>>>>>> 6) Program DFLL to closed loop mode
+>>>>>>>>>>>
+>>>>>>>>>>> Switch away from DFLL:
+>>>>>>>>>>> 0) Change cclk_g parent to PLLP so the CPU frequency is ok for
+>>>>>>>>>>> any
+>>>>>>>>>>> vdd_cpu voltage
+>>>>>>>>>>> 1) Program DFLL to open loop mode
+>>>>>>>>>>>
+>>>>>>>> I see during switch away from DFLL (suspend), cclk_g parent is not
+>>>>>>>> changed to PLLP before changing dfll to open loop mode.
+>>>>>>>>
+>>>>>>>> Will add this ...
+>>>>>>> The CPUFreq driver switches parent to PLLP during the probe, simila=
+r
+>>>>>>> should be done on suspend.
+>>>>>>>
+>>>>>>> I'm also wondering if it's always safe to switch to PLLP in the
+>>>>>>> probe.
+>>>>>>> If CPU is running on a lower freq than PLLP, then some other more
+>>>>>>> appropriate intermediate parent should be selected.
+>>>>>>>
+>>>>>> CPU parents are PLL_X, PLL_P, and dfll. PLL_X always runs at higher
+>>>>>> rate
+>>>>>> so switching to PLL_P during CPUFreq probe prior to dfll clock enabl=
+e
+>>>>>> should be safe.
+>>>>> AFAIK, PLLX could run at ~200MHz. There is also a divided output of
+>>>>> PLLP
+>>>>> which CCLKG supports, the PLLP_OUT4.
+>>>>>
+>>>>> Probably, realistically, CPU is always running off a fast PLLX during
+>>>>> boot, but I'm wondering what may happen on KEXEC. I guess ideally
+>>>>> CPUFreq driver should also have a 'shutdown' callback to teardown DFL=
+L
+>>>>> on a reboot, but likely that there are other clock-related problems a=
+s
+>>>>> well that may break KEXEC and thus it is not very important at the
+>>>>> moment.
+>>>>>
+>>>>> [snip]
+>>>> During bootup CPUG sources from PLL_X. By PLL_P source above I meant
+>>>> PLL_P_OUT4.
+>>>>
+>>>> As per clock policies, PLL_X is always used for high freq like >800Mhz
+>>>> and for low frequency it will be sourced from PLLP.
+>>> Alright, then please don't forget to pre-initialize PLLP_OUT4 rate to a
+>>> reasonable value using tegra_clk_init_table or assigned-clocks.
+>> PLLP_OUT4 rate update is not needed as it is safe to run at 408Mhz
+>> because it is below fmax @ Vmin
+> So even 204MHz CVB entries are having the same voltage as 408MHz,
+> correct? It's not instantly obvious to me from the DFLL driver's code
+> where the fmax @ Vmin is defined, I see that there is the min_millivolts
+> and frequency entries starting from 204MHZ defined per-table.
+Yes at Vmin CPU Fmax is ~800Mhz. So anything below that will work at=20
+Vmin voltage and PLLP max is 408Mhz.
