@@ -2,89 +2,115 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 6E3956A706
-	for <lists+linux-gpio@lfdr.de>; Tue, 16 Jul 2019 13:10:37 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CAEEE6A7D6
+	for <lists+linux-gpio@lfdr.de>; Tue, 16 Jul 2019 13:59:00 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387591AbfGPLJz (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 16 Jul 2019 07:09:55 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:45160 "EHLO
-        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1733200AbfGPLJz (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 16 Jul 2019 07:09:55 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=GTNttLKfykU0fMB8TWGXww71EUURBDV6zbj9y9y9CVY=; b=Stdaqrb4Nzvjz4Bj7OxsqHHhD
-        +Td7CdZOlzO+ek+Wlj1/FC/WJHeQ9gSPUYQBkEz/5sipVYr/hPyWPqlS7cSDQnO+iL3ns21zEDaGi
-        3VvzwyAvDJ+Chvj8tqRy5yeKmx6ZrWTp1EMApgzMNqNyFnCUcN19Mpy6CuXjZ4JswoqRQ=;
-Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=ypsilon.sirena.org.uk)
-        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <broonie@sirena.org.uk>)
-        id 1hnLKz-0004Sl-R4; Tue, 16 Jul 2019 11:09:37 +0000
-Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
-        id 9164A2742C01; Tue, 16 Jul 2019 12:09:36 +0100 (BST)
-Date:   Tue, 16 Jul 2019 12:09:36 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Rob Herring <robh@kernel.org>
-Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Chen-Yu Tsai <wens@csie.org>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Brian Norris <computersforpeace@gmail.com>,
-        Marek Vasut <marek.vasut@gmail.com>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Richard Weinberger <richard@nod.at>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        linux-mtd@lists.infradead.org, linux-gpio@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com, linux-spi@vger.kernel.org
-Subject: Re: [PATCH] dt-bindings: Ensure child nodes are of type 'object'
-Message-ID: <20190716110936.GA5428@sirena.org.uk>
-References: <20190715230457.3901-1-robh@kernel.org>
+        id S1728004AbfGPL67 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 16 Jul 2019 07:58:59 -0400
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:37930 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727796AbfGPL66 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 16 Jul 2019 07:58:58 -0400
+Received: by mail-lf1-f66.google.com with SMTP id h28so13487367lfj.5
+        for <linux-gpio@vger.kernel.org>; Tue, 16 Jul 2019 04:58:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=gkc1jh95nH4uGus8z54x8VuUUo1FvsfXXyLOz9roJ1M=;
+        b=POnvnwEDfT8XQ8UCwYrg2njlc66GKHcwNkunnk28IsHNUl0/+iKJ3+FeTlEBzNPerJ
+         kbaxYF2uot0fwUO/wdb6d2ygQGwzW5q1Syj6vt2k//L/2jo8691cz/SoaVhy1eyTvDsN
+         nVD3coRsD7PfeHQh+gAhRpWrHW+D+3Zm6BsyPGS/HHal2ZttBtrWw0v2P48V/YE2TkYs
+         1He2GJ3o3rR7E11/rUqTBOJCMQD1H32us4Y5YxMUcMskW44Er9PVYDHBpo3F7knA8HCl
+         KOmiNQ/hDMIJjEgT+XRrkMcHkoamsEk27ctF/7d3h3dseb7/oZm7TiuUACKH4wqkQuCj
+         byDA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=gkc1jh95nH4uGus8z54x8VuUUo1FvsfXXyLOz9roJ1M=;
+        b=cHcRj+bCHPlLftjKubatqy2ddZxpzag5RnngN3YBGWMGv2YHE8kjLJioWCp+/P9VRc
+         lFGgxUwvNhLNeloBZwcpbjs6Xj6duI3EiZLgNRsZ1W99ezwO8/wjkV4gJi6FP3gESZOq
+         mUW7x5nHB0eXXHYIm5/lr7FsdNo1w0UwDUGgOBNGk0e/Sa1Rd4z3RY8mXEIUS8pfzUHD
+         0OxXcmBRViuT5atqDBaK0TPquGf1MHua7VYShtfWfPG39MgAEYB3zGJsFvoGW33+3xcQ
+         JResyyjY5UsnWk3iLTOruxCEZng9WKjIa9UlTxzp7YJOnhvTKfzh0pVd8OB+Wx6vyMJL
+         WZkg==
+X-Gm-Message-State: APjAAAXarBnHnlWamBWrA7aeea9V4CmH31V7SzoqXSwc0fwK2sAwv2Qb
+        6dBhlVVDZmT6dBtS7ztwCpVsvXumpuA=
+X-Google-Smtp-Source: APXvYqwnjWfl9vY0mVb/w0tzCcI9i9u5GBxuDmnOXuhEzboxD3a4pj9Znp6tS8jldOn1meqtQAHUfA==
+X-Received: by 2002:ac2:518d:: with SMTP id u13mr14567102lfi.40.1563278336909;
+        Tue, 16 Jul 2019 04:58:56 -0700 (PDT)
+Received: from genomnajs.ideon.se ([85.235.10.227])
+        by smtp.gmail.com with ESMTPSA id o17sm3723706ljg.71.2019.07.16.04.58.55
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Tue, 16 Jul 2019 04:58:55 -0700 (PDT)
+From:   Linus Walleij <linus.walleij@linaro.org>
+To:     linux-gpio@vger.kernel.org
+Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Linus Walleij <linus.walleij@linaro.org>
+Subject: [PATCH] gpio: of: Normalize return code variable name
+Date:   Tue, 16 Jul 2019 13:58:54 +0200
+Message-Id: <20190716115854.12098-1-linus.walleij@linaro.org>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="UugvWAfsgieZRqgk"
-Content-Disposition: inline
-In-Reply-To: <20190715230457.3901-1-robh@kernel.org>
-X-Cookie: May be too intense for some viewers.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+It is confusing to name return variables mixedly "status",
+"err" or "ret". I just changed them all to "ret", by personal
+preference, to lower cognitive stress.
 
---UugvWAfsgieZRqgk
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+---
+ drivers/gpio/gpiolib-of.c | 14 +++++++-------
+ 1 file changed, 7 insertions(+), 7 deletions(-)
 
-On Mon, Jul 15, 2019 at 05:04:57PM -0600, Rob Herring wrote:
-> Properties which are child node definitions need to have an explict
-> type. Otherwise, a matching (DT) property can silently match when an
-> error is desired. Fix this up tree-wide. Once this is fixed, the
-> meta-schema will enforce this on any child node definitions.
+diff --git a/drivers/gpio/gpiolib-of.c b/drivers/gpio/gpiolib-of.c
+index f974075ff00e..2bc0bcd7a410 100644
+--- a/drivers/gpio/gpiolib-of.c
++++ b/drivers/gpio/gpiolib-of.c
+@@ -740,7 +740,7 @@ static int of_gpiochip_add_pin_range(struct gpio_chip *chip) { return 0; }
+ 
+ int of_gpiochip_add(struct gpio_chip *chip)
+ {
+-	int status;
++	int ret;
+ 
+ 	if (!chip->of_node)
+ 		return 0;
+@@ -755,9 +755,9 @@ int of_gpiochip_add(struct gpio_chip *chip)
+ 
+ 	of_gpiochip_init_valid_mask(chip);
+ 
+-	status = of_gpiochip_add_pin_range(chip);
+-	if (status)
+-		return status;
++	ret = of_gpiochip_add_pin_range(chip);
++	if (ret)
++		return ret;
+ 
+ 	/* If the chip defines names itself, these take precedence */
+ 	if (!chip->names)
+@@ -766,13 +766,13 @@ int of_gpiochip_add(struct gpio_chip *chip)
+ 
+ 	of_node_get(chip->of_node);
+ 
+-	status = of_gpiochip_scan_gpios(chip);
+-	if (status) {
++	ret = of_gpiochip_scan_gpios(chip);
++	if (ret) {
+ 		of_node_put(chip->of_node);
+ 		gpiochip_remove_pin_ranges(chip);
+ 	}
+ 
+-	return status;
++	return ret;
+ }
+ 
+ void of_gpiochip_remove(struct gpio_chip *chip)
+-- 
+2.21.0
 
-Acked-by: Mark Brown <broonie@kernel.org>
-
---UugvWAfsgieZRqgk
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl0tsG0ACgkQJNaLcl1U
-h9DgRwf/RVQwM4uJZfc77Bg1QUPRV93uCJ6maAGlUjFImP1U0fpoRuD/zNm5kiIp
-hJhe5TMTX5ua+ajO5DV9S4HD4tRJBv5imHYgx7edGX0XnD6uBhO/Fx91okJhKb54
-hmWEPpZyjursasR/A6HjQi6+OYEnCqrMoTenaZQZ/R7MlS8Z57C5m8slR9m1tSBp
-xam5qvxG3pn5oNarJlCWF9VcVmZckekdU+qutRLVc3xH8bCF6pjfyR5E1M+qRJV6
-av5KFLsTopgBECl4QPHGqIXqhegIjWyeqeMC69s7Nh8pDFpLIwFJfXd7x7UGStgS
-RrPGZDcB2vfMfsXwQAGfu5lyMqkYJA==
-=IEmg
------END PGP SIGNATURE-----
-
---UugvWAfsgieZRqgk--
