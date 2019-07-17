@@ -2,59 +2,59 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 413186BF92
-	for <lists+linux-gpio@lfdr.de>; Wed, 17 Jul 2019 18:23:36 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D8D686C010
+	for <lists+linux-gpio@lfdr.de>; Wed, 17 Jul 2019 19:08:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726494AbfGQQXf (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 17 Jul 2019 12:23:35 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:54734 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726081AbfGQQXf (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 17 Jul 2019 12:23:35 -0400
-Received: by mail-wm1-f66.google.com with SMTP id p74so22767637wme.4
-        for <linux-gpio@vger.kernel.org>; Wed, 17 Jul 2019 09:23:33 -0700 (PDT)
+        id S1726889AbfGQRIU (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 17 Jul 2019 13:08:20 -0400
+Received: from mail-wm1-f53.google.com ([209.85.128.53]:33558 "EHLO
+        mail-wm1-f53.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725873AbfGQRIT (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 17 Jul 2019 13:08:19 -0400
+Received: by mail-wm1-f53.google.com with SMTP id h19so19634031wme.0
+        for <linux-gpio@vger.kernel.org>; Wed, 17 Jul 2019 10:08:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=kernelci-org.20150623.gappssmtp.com; s=20150623;
         h=message-id:date:mime-version:content-transfer-encoding:subject:to
          :from;
-        bh=QMI9/tfdPwQ1e3SX2bPDN5UupuevmOeYzDBdhUT0hj8=;
-        b=VbrPxDWmmbobwELZJEoFo0I/XNJRHknuuslLUjBTXMnjb9spEb4anjVf1LKBNIYsu+
-         HeFs005wYwil2zLatYx4y7siw7K+kETi/Zzkhzd6BlQ3H92cxsgkm8yJHoQ0z2KPLo8i
-         Xr+jCmU4xGZISArd253gJ0o3Z4ncE4wNJTapN9kqojHYCV0IJEFcTm70t7M18ohDN8vd
-         74UqZ5Eh5RCGqK+HJAF0GpdKZunfdpxqtseBYTf8CVcdJ6W0K8ko+L5b2mMdI7Oqg001
-         o471cN6HjCWWVlBsPzpY/rS3l+Rf6WpqRcifP5QJ4nkoFEUhsbEWYNOX7bI3/kcKHED5
-         STHw==
+        bh=QKUXF+OL1TM+XEORqH/4rY79YO9ZJxpbwgFoGRTBy6E=;
+        b=zlhYKLriX1c2iVrs0QYP6M8AONHUQcP+jVbGlPwN5j5nO1blKrKL2usZipEtrbUSTB
+         iqTkIIEt8f9tYyyGODUFVFVuQ5K3Kcmx4sbN82EeWY8qoYXavPDSN0m4EnKx8Bc6psUK
+         GtxCcYLUtBgtoHJ4Abc3ssQAp8HRsbYYUYiHs04pO1++WeBOq/4+2N7LUJIGy4DR40ge
+         tk9kBdOB03UBt6Dy6JEivurjXg1DmP1MShce5ePUesHl1d8so5RMnond+wil+TSq6JFS
+         hLSVYX35y+FLA+rIyr5PhtKDmnuYCDTYBGc+NFHARKmtc40nIqT7k7Fq8gm404DZSrs5
+         HCQQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:message-id:date:mime-version
          :content-transfer-encoding:subject:to:from;
-        bh=QMI9/tfdPwQ1e3SX2bPDN5UupuevmOeYzDBdhUT0hj8=;
-        b=GyqlRjKprc5kAvTjrx12tx0H74cvADYadI3F6odtNzZMdVfa5KT3QWK1KcMvzueWMi
-         5f1l0Lrhcm8MK2LwZrl6H7NJXXmRI+N4wINCJPQeGwIkIGw42xg2w+bChyECeSe19Bos
-         iWDp79YU4HrY7N8JGt9nIFE5kqiAXhUYMS9Ibn4qN+iM3dQfADhXumnxq6ZHA59D25d8
-         1geUCKeaamAiUzHBXT4AjmXPR+RRgVFxrWB2fbrhuV5YwcY16aDxq/QIuIGIpHCVNNpb
-         Ia7mgkFK2Y0hKtmEV1OI6BEQCVvD1Hqkpbx5ij2e1Tv+vziRr8wn/0uNYiqrxsXKQa7P
-         unWA==
-X-Gm-Message-State: APjAAAVUx64HZ8AcXzaV8khJ7ALqqdpaetp5+3rrcCDxlkB1RXnWHQC1
-        Yu2ihR/9iT6Khh9rEKO5GUkxeFUbYeQ=
-X-Google-Smtp-Source: APXvYqzSNknGfBAHW3WYcpNLyuSsFLtyirLKivfXN3HHpShJsdKW1w6AHbDA0Ejh/8VQ24zgYgpBKg==
-X-Received: by 2002:a1c:7310:: with SMTP id d16mr36403658wmb.107.1563380613036;
-        Wed, 17 Jul 2019 09:23:33 -0700 (PDT)
+        bh=QKUXF+OL1TM+XEORqH/4rY79YO9ZJxpbwgFoGRTBy6E=;
+        b=Q4CzM2lkiUTTj1hj4jvhpVUuUJzG8LnEbkPvXfvU3dJUZMYM3+nVwWMaR33ZtX0D/0
+         alCwn7c7GDYQkoBSgKLooCyHqmPhOycysF+Fm9OHybcpU8QPm1BJB5TMzExCWpUXJ5j5
+         ZOBex00DvdK25MyXMvlF5wNoe6DkUBosIKcS98aMgKCO6vse7lm3VIex9wOtV4MPQVVH
+         04HPNL28wlBqwKsUU8EYTpPMvu8Qv+QNns0Nc7E8UyYh4w3loHpri53nkggbPvofQMX1
+         +0yWDWEqo/woqE3jyMu36rtOZgGoZMvUKUW9mNscnO8n1Toa94i7w4fyXe3p4QG6+6Ly
+         FjNw==
+X-Gm-Message-State: APjAAAWUOlp0CSaqdVm3n2jWeZwwqLo5r0Rs5AdmsSu3JAk1H6ObWC4t
+        IFWHNfQot6OxNAXtlafEOqUtvYYaW9w=
+X-Google-Smtp-Source: APXvYqxW4koO62boNc3WCoIDhISX0LcyjZr3hZmrH0Ismqe1dCh6cyCDbtxTZMu7rpmlAJtG7VjsNg==
+X-Received: by 2002:a7b:c751:: with SMTP id w17mr39395441wmk.127.1563383297570;
+        Wed, 17 Jul 2019 10:08:17 -0700 (PDT)
 Received: from [148.251.42.114] ([2a01:4f8:201:9271::2])
-        by smtp.gmail.com with ESMTPSA id a2sm25080026wmj.9.2019.07.17.09.23.31
+        by smtp.gmail.com with ESMTPSA id b8sm28879591wmh.46.2019.07.17.10.08.16
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 17 Jul 2019 09:23:31 -0700 (PDT)
-Message-ID: <5d2f4b83.1c69fb81.4eff3.f7e5@mx.google.com>
-Date:   Wed, 17 Jul 2019 09:23:31 -0700 (PDT)
+        Wed, 17 Jul 2019 10:08:16 -0700 (PDT)
+Message-ID: <5d2f5600.1c69fb81.843ee.6bb5@mx.google.com>
+Date:   Wed, 17 Jul 2019 10:08:16 -0700 (PDT)
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 X-Kernelci-Kernel: v5.2-10808-g9637d517347e
-X-Kernelci-Report-Type: build
+X-Kernelci-Report-Type: boot
 X-Kernelci-Tree: linusw
 X-Kernelci-Branch: devel
-Subject: linusw/devel build: 6 builds: 0 failed, 6 passed,
- 3 warnings (v5.2-10808-g9637d517347e)
+Subject: linusw/devel boot: 49 boots: 0 failed,
+ 49 passed (v5.2-10808-g9637d517347e)
 To:     linux-gpio@vger.kernel.org, fellows@kernelci.org
 From:   "kernelci.org bot" <bot@kernelci.org>
 Sender: linux-gpio-owner@vger.kernel.org
@@ -62,9 +62,10 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-linusw/devel build: 6 builds: 0 failed, 6 passed, 3 warnings (v5.2-10808-g9=
-637d517347e)
+linusw/devel boot: 49 boots: 0 failed, 49 passed (v5.2-10808-g9637d517347e)
 
+Full Boot Summary: https://kernelci.org/boot/all/job/linusw/branch/devel/ke=
+rnel/v5.2-10808-g9637d517347e/
 Full Build Summary: https://kernelci.org/build/linusw/branch/devel/kernel/v=
 5.2-10808-g9637d517347e/
 
@@ -74,70 +75,7 @@ Git Describe: v5.2-10808-g9637d517347e
 Git Commit: 9637d517347e80ee2fe1c5d8ce45ba1b88d8b5cd
 Git URL: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-gpio.=
 git/
-Built: 6 unique architectures
-
-Warnings Detected:
-
-arc:
-
-arm64:
-
-arm:
-
-mips:
-    32r2el_defconfig (gcc-8): 3 warnings
-
-riscv:
-
-x86_64:
-
-
-Warnings summary:
-
-    3    <stdin>:1511:2: warning: #warning syscall clone3 not implemented [=
--Wcpp]
-
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D
-
-Detailed per-defconfig build reports:
-
----------------------------------------------------------------------------=
------
-32r2el_defconfig (mips, gcc-8) =E2=80=94 PASS, 0 errors, 3 warnings, 0 sect=
-ion mismatches
-
-Warnings:
-    <stdin>:1511:2: warning: #warning syscall clone3 not implemented [-Wcpp]
-    <stdin>:1511:2: warning: #warning syscall clone3 not implemented [-Wcpp]
-    <stdin>:1511:2: warning: #warning syscall clone3 not implemented [-Wcpp]
-
----------------------------------------------------------------------------=
------
-defconfig (riscv, gcc-8) =E2=80=94 PASS, 0 errors, 0 warnings, 0 section mi=
-smatches
-
----------------------------------------------------------------------------=
------
-defconfig (arm64, gcc-8) =E2=80=94 PASS, 0 errors, 0 warnings, 0 section mi=
-smatches
-
----------------------------------------------------------------------------=
------
-multi_v7_defconfig (arm, gcc-8) =E2=80=94 PASS, 0 errors, 0 warnings, 0 sec=
-tion mismatches
-
----------------------------------------------------------------------------=
------
-nsim_hs_defconfig (arc, gcc-8) =E2=80=94 PASS, 0 errors, 0 warnings, 0 sect=
-ion mismatches
-
----------------------------------------------------------------------------=
------
-x86_64_defconfig (x86_64, gcc-8) =E2=80=94 PASS, 0 errors, 0 warnings, 0 se=
-ction mismatches
+Tested: 33 unique boards, 15 SoC families, 3 builds out of 6
 
 ---
 For more info write to <info@kernelci.org>
