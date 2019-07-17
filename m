@@ -2,736 +2,771 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 651A56C29C
-	for <lists+linux-gpio@lfdr.de>; Wed, 17 Jul 2019 23:30:49 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9BAB96C2A4
+	for <lists+linux-gpio@lfdr.de>; Wed, 17 Jul 2019 23:30:52 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727315AbfGQVaD convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-gpio@lfdr.de>); Wed, 17 Jul 2019 17:30:03 -0400
-Received: from atlmailgw1.ami.com ([63.147.10.40]:64078 "EHLO
-        atlmailgw1.ami.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726917AbfGQVaD (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 17 Jul 2019 17:30:03 -0400
-X-AuditID: ac1060b2-413ff70000003a7d-4d-5d2f93673523
-Received: from atlms1.us.megatrends.com (atlms1.us.megatrends.com [172.16.96.144])
-        (using TLS with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by atlmailgw1.ami.com (Symantec Messaging Gateway) with SMTP id 50.26.14973.7639F2D5; Wed, 17 Jul 2019 17:30:15 -0400 (EDT)
-Received: from ATLMS2.us.megatrends.com ([fe80::29dc:a91e:ea0c:cdeb]) by
- atlms1.us.megatrends.com ([fe80::8c55:daf0:ef05:5605%12]) with mapi id
- 14.03.0415.000; Wed, 17 Jul 2019 17:30:01 -0400
-From:   Hongwei Zhang <Hongweiz@ami.com>
-To:     Andrew Jeffery <andrew@aj.id.au>, Joel Stanley <joel@jms.id.au>,
-        "Linus Walleij" <linus.walleij@linaro.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
-CC:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        "linux-aspeed@lists.ozlabs.org" <linux-aspeed@lists.ozlabs.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>
-Subject: RE: [PATCH 2/3 v3] dt-bindings: gpio: aspeed: Add SGPIO support
-Thread-Topic: [PATCH 2/3 v3] dt-bindings: gpio: aspeed: Add SGPIO support
-Thread-Index: AQHVPCA9xk4+FoHpyUSSpCgW8q92M6bOb/iAgADg2/A=
-Date:   Wed, 17 Jul 2019 21:30:00 +0000
-Message-ID: <14D3C8298A3B0F42A1EB31EE961CFF82AA8F4B3C@atlms2.us.megatrends.com>
-References: <1563313711-17961-1-git-send-email-hongweiz@ami.com>
- <91ebb817-3cc6-4b87-8c2b-cfcd66f4c284@www.fastmail.com>
-In-Reply-To: <91ebb817-3cc6-4b87-8c2b-cfcd66f4c284@www.fastmail.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [172.16.100.241]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+        id S1728149AbfGQVaZ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 17 Jul 2019 17:30:25 -0400
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:43796 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726917AbfGQVaY (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 17 Jul 2019 17:30:24 -0400
+Received: by mail-lj1-f194.google.com with SMTP id y17so550277ljk.10;
+        Wed, 17 Jul 2019 14:30:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=gnmCl3y3yRtNWEz8xO6eCK15veaVvEA21qIJHecDBSQ=;
+        b=hzouoCAFYKS7P0MB5lTVlIbcoueUUFDT6RdGyHL3aZUxlarF7FdIv7FS0t+30GiTaW
+         GWYZlFlFnsm8SyViOJkLwbqMw4YNVyTuxZ+DQC+veG8LLauGQGswOizBCaOrTrgbObtn
+         O/IOVkSZfVN4CNhr2+s6tINqwq8TSsBA9mhmgFEmXECTvXlfmHgHx4Q5brs56Mqyk4Xy
+         VBLUWSI3nIVUPaBGwdyBtV/YnyPAgfuJHUTBzNHw8fE+wqFjrXh7KPx4JBGShnqH5D8w
+         Q1x0x2MZ2dMVwz3C4n15L1LNsBCD811wcSxCsXah8voJ69nqiyDSd6Ze/iD/uyo9ja/M
+         pJjw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=gnmCl3y3yRtNWEz8xO6eCK15veaVvEA21qIJHecDBSQ=;
+        b=o/bPvPbO7ZmUoZocmqBfwLjdwM7vaa7C5uffJWyhDRDg0PB0Gdgu4/k6DsitGMORnV
+         UlpJNVEERAY2mWWghgxplw9RfVDiApoXbY6/MV9otOm+j071zddsHPy4I4yTB2OgZWnW
+         ZkGfz2RWHmWX4dua+AWHieXJypWmUAR7VWAuYeZQsTiZl8hTqR2ZRaCAAQKe2SplsFnn
+         wvvKk+SxQIwRgFmnzf6B3nlNxOFwxnRuIyhjiqqt4YwNyT/yzQJodhrDvocNnFMR+ns8
+         oKVUooBy+XgFaZGqF16ERLrQnz44EvGA+8Ts43wYiia8WRFLuVt3ItR/huoy3ZOhmCSk
+         HQSQ==
+X-Gm-Message-State: APjAAAXYQ7k+VKpAzF+DbyihxEUxMyWrZbRuuwsuh2ceEkq5Ur/9Um7J
+        Zn0qY6w1J1+Wos1/L3E8e5mU0eT2
+X-Google-Smtp-Source: APXvYqxf0nMuFpQjmCq6MERrwm4xPpKNHS4rZRe/oaZxp11KbdNexgS9La5+APwhL+bArtB2lqcE4w==
+X-Received: by 2002:a2e:3a05:: with SMTP id h5mr7152001lja.114.1563399019244;
+        Wed, 17 Jul 2019 14:30:19 -0700 (PDT)
+Received: from [192.168.2.145] (ppp79-139-233-208.pppoe.spdop.ru. [79.139.233.208])
+        by smtp.googlemail.com with ESMTPSA id 63sm4764812ljs.84.2019.07.17.14.30.17
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 17 Jul 2019 14:30:18 -0700 (PDT)
+Subject: Re: [PATCH V5 11/18] clk: tegra210: Add support for Tegra210 clocks
+To:     Sowjanya Komatineni <skomatineni@nvidia.com>
+Cc:     Peter De Schrijver <pdeschrijver@nvidia.com>,
+        Joseph Lo <josephl@nvidia.com>, thierry.reding@gmail.com,
+        jonathanh@nvidia.com, tglx@linutronix.de, jason@lakedaemon.net,
+        marc.zyngier@arm.com, linus.walleij@linaro.org, stefan@agner.ch,
+        mark.rutland@arm.com, pgaikwad@nvidia.com, sboyd@kernel.org,
+        linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org,
+        jckuo@nvidia.com, talho@nvidia.com, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org, mperttunen@nvidia.com,
+        spatra@nvidia.com, robh+dt@kernel.org, devicetree@vger.kernel.org
+References: <a5e1a6df-dff7-9e0c-9551-f78103a5462f@gmail.com>
+ <0ee06d1a-310d-59f7-0aa6-b688b33447f5@nvidia.com>
+ <cedfafd0-4114-0821-0c4b-efc17c213449@gmail.com>
+ <707c4679-fde6-1714-ced0-dcf7ca8380a9@nvidia.com>
+ <c6c0a205-c083-fd46-361c-175bd8840c6e@nvidia.com>
+ <055457fd-621b-6c93-b671-d5e5380698c6@nvidia.com>
+ <20190717071105.3750a021@dimatab>
+ <77df234f-aa40-0319-a593-f1f19f0f1c2a@nvidia.com>
+ <20190717084221.2e9af56c@dimatab>
+ <093462f3-8c6d-d084-9822-ae4eff041c64@nvidia.com>
+ <20190717093317.70fefb27@dimatab>
+ <6e73dcee-6e24-b646-97a4-4b34aedd231d@nvidia.com>
+ <16f8b146-2581-a842-4997-53ab05b62c70@gmail.com>
+ <d7892bfc-2cbf-27af-518d-dc7e243815b8@nvidia.com>
+ <71272e9a-0f2a-c20d-6532-7e9057ad985c@gmail.com>
+ <78fd19b9-b652-8ac3-1f57-3b4adadee03f@nvidia.com>
+ <351a07d4-ba90-4793-129b-b1a733f95531@nvidia.com>
+ <e3e9beaf-b195-305e-4010-66e824813472@gmail.com>
+ <9271ae75-5663-e26e-df26-57cba94dab75@nvidia.com>
+ <7ae3df9a-c0e9-cf71-8e90-4284db8df82f@nvidia.com>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <b01e37aa-f14e-e628-ceef-b25a845c6359@gmail.com>
+Date:   Thu, 18 Jul 2019 00:30:17 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrFIsWRmVeSWpSXmKPExsWyRiBhgm76ZP1Yg8WnJCx2Xeaw+DL3FIvF
-        /CPnWC1+n//LbDHlz3Imi02Pr7FaNK8+x2yxef4fRovLu+awWSy9fpHJonXvEXYHbo+r7bvY
-        PdbMW8Po8f5GK7vHxY/HmD02repk87hzbQ+bx+Yl9R7nZyxk9Pi8SS6AM4rLJiU1J7MstUjf
-        LoErY91Ul4JFCxkrZm5/z9TA+LK2i5GTQ0LAROLdh4XMXYxcHEICu5gkuq4sY4dwDjNKLH+2
-        hRmkik1ATeLpnwawhIjAOkaJ6V/62UAcZoEJzBJ9S6+wglQJC3hInDg6mQ3EFhHwlNjRdxDK
-        tpLo6pnMBGKzCKhKNPd1sYDYvAL+Ep+mtQBN5QBaVyUx8R9YmFPARWLJ11tgixkFxCS+n1oD
-        1sosIC5x68l8JoizBSSW7DnPDGGLSrx8/I8VwlaSaFjxD6peR2LB7k9sELa2xLKFr5kh1gpK
-        nJz5hGUCo+gsJGNnIWmZhaRlFpKWBYwsqxiFEktychMzc9LLDfUSczP1kvNzNzFC4nfTDsaW
-        i+aHGJk4GA8xSnAwK4nw2n7VjhXiTUmsrEotyo8vKs1JLT7EKM3BoiTOu3LNtxghgfTEktTs
-        1NSC1CKYLBMHp1QDY2T0masrdfuPLo+KYp37uWhHW6zmCs4Wd0fnFT8YLuw7csxoWrWNnJ3U
-        +bCJ1dv/Mh/oXta0ZPXEnZW/F4XWrNS98Py3plj/Vd793WeCN01g/8VY8UzD49PUUFmBJ92/
-        eQXOiewps1DsNZgcIebNeUCQu8Hxv+yO+n32Yh0HPz49t+j5ntVMZkosxRmJhlrMRcWJAG2d
-        f5/NAgAA
+In-Reply-To: <7ae3df9a-c0e9-cf71-8e90-4284db8df82f@nvidia.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hello Andrew,
-Thanks for your review, please find the v4 in separate email. We merged all your suggestion in v4.
+17.07.2019 23:11, Sowjanya Komatineni пишет:
+> 
+> On 7/17/19 1:01 PM, Sowjanya Komatineni wrote:
+>>
+>> On 7/17/19 12:43 PM, Dmitry Osipenko wrote:
+>>> 17.07.2019 21:54, Sowjanya Komatineni пишет:
+>>>> On 7/17/19 11:51 AM, Sowjanya Komatineni wrote:
+>>>>> On 7/17/19 11:32 AM, Dmitry Osipenko wrote:
+>>>>>> 17.07.2019 20:29, Sowjanya Komatineni пишет:
+>>>>>>> On 7/17/19 8:17 AM, Dmitry Osipenko wrote:
+>>>>>>>> 17.07.2019 9:36, Sowjanya Komatineni пишет:
+>>>>>>>>> On 7/16/19 11:33 PM, Dmitry Osipenko wrote:
+>>>>>>>>>> В Tue, 16 Jul 2019 22:55:52 -0700
+>>>>>>>>>> Sowjanya Komatineni <skomatineni@nvidia.com> пишет:
+>>>>>>>>>>
+>>>>>>>>>>> On 7/16/19 10:42 PM, Dmitry Osipenko wrote:
+>>>>>>>>>>>> В Tue, 16 Jul 2019 22:25:25 -0700
+>>>>>>>>>>>> Sowjanya Komatineni <skomatineni@nvidia.com> пишет:
+>>>>>>>>>>>>> On 7/16/19 9:11 PM, Dmitry Osipenko wrote:
+>>>>>>>>>>>>>> В Tue, 16 Jul 2019 19:35:49 -0700
+>>>>>>>>>>>>>> Sowjanya Komatineni <skomatineni@nvidia.com> пишет:
+>>>>>>>>>>>>>>> On 7/16/19 7:18 PM, Sowjanya Komatineni wrote:
+>>>>>>>>>>>>>>>> On 7/16/19 3:06 PM, Sowjanya Komatineni wrote:
+>>>>>>>>>>>>>>>>> On 7/16/19 3:00 PM, Dmitry Osipenko wrote:
+>>>>>>>>>>>>>>>>>> 17.07.2019 0:35, Sowjanya Komatineni пишет:
+>>>>>>>>>>>>>>>>>>> On 7/16/19 2:21 PM, Dmitry Osipenko wrote:
+>>>>>>>>>>>>>>>>>>>> 17.07.2019 0:12, Sowjanya Komatineni пишет:
+>>>>>>>>>>>>>>>>>>>>> On 7/16/19 1:47 PM, Dmitry Osipenko wrote:
+>>>>>>>>>>>>>>>>>>>>>> 16.07.2019 22:26, Sowjanya Komatineni пишет:
+>>>>>>>>>>>>>>>>>>>>>>> On 7/16/19 11:43 AM, Dmitry Osipenko wrote:
+>>>>>>>>>>>>>>>>>>>>>>>> 16.07.2019 21:30, Sowjanya Komatineni пишет:
+>>>>>>>>>>>>>>>>>>>>>>>>> On 7/16/19 11:25 AM, Dmitry Osipenko wrote:
+>>>>>>>>>>>>>>>>>>>>>>>>>> 16.07.2019 21:19, Sowjanya Komatineni пишет:
+>>>>>>>>>>>>>>>>>>>>>>>>>>> On 7/16/19 9:50 AM, Sowjanya Komatineni wrote:
+>>>>>>>>>>>>>>>>>>>>>>>>>>>> On 7/16/19 8:00 AM, Dmitry Osipenko wrote:
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>> 16.07.2019 11:06, Peter De Schrijver пишет:
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> On Tue, Jul 16, 2019 at 03:24:26PM +0800,
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Joseph
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Lo wrote:
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> OK, Will add to CPUFreq driver...
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> The other thing that also need
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> attention is
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> that T124 CPUFreq
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> driver
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> implicitly relies on DFLL driver to be
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> probed
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> first, which is
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> icky.
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Should I add check for successful dfll clk
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> register explicitly in
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> CPUFreq driver probe and defer till dfll
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> clk
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> registers?
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Probably you should use the "device links".
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>> See
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>> [1][2] for the
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>> example.
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>> [1]
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>> https://elixir.bootlin.com/linux/v5.2.1/source/drivers/gpu/drm/tegra/dc.c#L2383
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>> [2]
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>> https://www.kernel.org/doc/html/latest/driver-api/device_link.html
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Return EPROBE_DEFER instead of EINVAL if
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>> device_link_add() fails.
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>> And
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>> use of_find_device_by_node() to get the DFLL's
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>> device, see [3].
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>> [3]
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>> https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/tree/drivers/devfreq/tegra20-devfreq.c#n100
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+>>>>>>>>>>>>>>>>>>>>>>>>>>>> Will go thru and add...
+>>>>>>>>>>>>>>>>>>>>>>>>>> Looks like I initially confused this case with
+>>>>>>>>>>>>>>>>>>>>>>>>>> getting
+>>>>>>>>>>>>>>>>>>>>>>>>>> orphaned clock.
+>>>>>>>>>>>>>>>>>>>>>>>>>> I'm now seeing that the DFLL driver registers the
+>>>>>>>>>>>>>>>>>>>>>>>>>> clock and then
+>>>>>>>>>>>>>>>>>>>>>>>>>> clk_get(dfll) should be returning EPROBE_DEFER
+>>>>>>>>>>>>>>>>>>>>>>>>>> until
+>>>>>>>>>>>>>>>>>>>>>>>>>> DFLL driver is
+>>>>>>>>>>>>>>>>>>>>>>>>>> probed, hence everything should be fine as-is and
+>>>>>>>>>>>>>>>>>>>>>>>>>> there is no real
+>>>>>>>>>>>>>>>>>>>>>>>>>> need
+>>>>>>>>>>>>>>>>>>>>>>>>>> for the 'device link'. Sorry for the confusion!
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Sorry, I didn't follow the mail thread. Just
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> regarding the DFLL
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> part.
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> As you know it, the DFLL clock is one of the
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> CPU
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> clock sources and
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> integrated with DVFS control logic with the
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> regulator. We will not
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> switch
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> CPU to other clock sources once we
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> switched to
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> DFLL. Because the
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> CPU has
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> been regulated by the DFLL HW with the DVFS
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> table
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> (CVB or OPP
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> table
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> you see
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> in the driver.). We shouldn't reparent it to
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> other sources with
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> unknew
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> freq/volt pair. That's not guaranteed to
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> work. We
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> allow switching to
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> open-loop mode but different sources.
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Okay, then the CPUFreq driver will have to
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>> enforce
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>> DFLL freq to
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>> PLLP's
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>> rate before switching to PLLP in order to
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>> have a
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>> proper CPU voltage.
+>>>>>>>>>>>>>>>>>>>>>>>>>>>> PLLP freq is safe to work for any CPU voltage.
+>>>>>>>>>>>>>>>>>>>>>>>>>>>> So no
+>>>>>>>>>>>>>>>>>>>>>>>>>>>> need to enforce
+>>>>>>>>>>>>>>>>>>>>>>>>>>>> DFLL freq to PLLP rate before changing CCLK_G
+>>>>>>>>>>>>>>>>>>>>>>>>>>>> source
+>>>>>>>>>>>>>>>>>>>>>>>>>>>> to PLLP during
+>>>>>>>>>>>>>>>>>>>>>>>>>>>> suspend
+>>>>>>>>>>>>>>>>>>>>>>>>>>> Sorry, please ignore my above comment. During
+>>>>>>>>>>>>>>>>>>>>>>>>>>> suspend, need to change
+>>>>>>>>>>>>>>>>>>>>>>>>>>> CCLK_G source to PLLP when dfll is in closed
+>>>>>>>>>>>>>>>>>>>>>>>>>>> loop
+>>>>>>>>>>>>>>>>>>>>>>>>>>> mode first and
+>>>>>>>>>>>>>>>>>>>>>>>>>>> then
+>>>>>>>>>>>>>>>>>>>>>>>>>>> dfll need to be set to open loop.
+>>>>>>>>>>>>>>>>>>>>>>>>>> Okay.
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> And I don't exactly understand why we
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> need to
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> switch to PLLP in
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> CPU
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> idle
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> driver. Just keep it on CL-DVFS mode all the
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> time.
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> In SC7 entry, the dfll suspend function
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> moves it
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> the open-loop
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> mode. That's
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> all. The sc7-entryfirmware will handle
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> the rest
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> of the sequence to
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> turn off
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> the CPU power.
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> In SC7 resume, the warmboot code will handle
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> the
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> sequence to
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> turn on
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> regulator and power up the CPU cluster. And
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> leave
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> it on PLL_P.
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> After
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> resuming to the kernel, we re-init DFLL,
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> restore
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> the CPU clock
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> policy (CPU
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> runs on DFLL open-loop mode) and then
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> moving to
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> close-loop mode.
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>> The DFLL is re-inited after switching CCLK to
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>> DFLL
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>> parent during of
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>> the
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>> early clocks-state restoring by CaR driver.
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Hence
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>> instead of having
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>> odd
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>> hacks in the CaR driver, it is much nicer to
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>> have a
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>> proper suspend-resume sequencing of the device
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>> drivers. In this case
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>> CPUFreq
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>> driver is the driver that enables DFLL and
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>> switches
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>> CPU to that
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>> clock
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>> source, which means that this driver is also
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>> should
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>> be responsible for
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>> management of the DFLL's state during of
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>> suspend/resume process. If
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>> CPUFreq driver disables DFLL during suspend
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>> and
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>> re-enables it
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>> during
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>> resume, then looks like the CaR driver hacks
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>> around
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>> DFLL are not
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>> needed.
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> The DFLL part looks good to me. BTW,
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> change the
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> patch subject to
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> "Add
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> suspend-resume support" seems more
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> appropriate to
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> me.
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> To clarify this, the sequences for DFLL use
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> are as
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> follows (assuming
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> all
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> required DFLL hw configuration has been done)
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Switch to DFLL:
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> 0) Save current parent and frequency
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> 1) Program DFLL to open loop mode
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> 2) Enable DFLL
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> 3) Change cclk_g parent to DFLL
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> For OVR regulator:
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> 4) Change PWM output pin from tristate to
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> output
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> 5) Enable DFLL PWM output
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> For I2C regulator:
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> 4) Enable DFLL I2C output
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> 6) Program DFLL to closed loop mode
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Switch away from DFLL:
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> 0) Change cclk_g parent to PLLP so the CPU
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> frequency is ok for
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> any
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> vdd_cpu voltage
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> 1) Program DFLL to open loop mode
+>>>>>>>>>>>>>>>>>>>>>>>>>>> I see during switch away from DFLL (suspend),
+>>>>>>>>>>>>>>>>>>>>>>>>>>> cclk_g
+>>>>>>>>>>>>>>>>>>>>>>>>>>> parent is not
+>>>>>>>>>>>>>>>>>>>>>>>>>>> changed to PLLP before changing dfll to open
+>>>>>>>>>>>>>>>>>>>>>>>>>>> loop
+>>>>>>>>>>>>>>>>>>>>>>>>>>> mode.
+>>>>>>>>>>>>>>>>>>>>>>>>>>>
+>>>>>>>>>>>>>>>>>>>>>>>>>>> Will add this ...
+>>>>>>>>>>>>>>>>>>>>>>>>>> The CPUFreq driver switches parent to PLLP during
+>>>>>>>>>>>>>>>>>>>>>>>>>> the
+>>>>>>>>>>>>>>>>>>>>>>>>>> probe, similar
+>>>>>>>>>>>>>>>>>>>>>>>>>> should be done on suspend.
+>>>>>>>>>>>>>>>>>>>>>>>>>>
+>>>>>>>>>>>>>>>>>>>>>>>>>> I'm also wondering if it's always safe to
+>>>>>>>>>>>>>>>>>>>>>>>>>> switch to
+>>>>>>>>>>>>>>>>>>>>>>>>>> PLLP in the probe.
+>>>>>>>>>>>>>>>>>>>>>>>>>> If CPU is running on a lower freq than PLLP, then
+>>>>>>>>>>>>>>>>>>>>>>>>>> some
+>>>>>>>>>>>>>>>>>>>>>>>>>> other more
+>>>>>>>>>>>>>>>>>>>>>>>>>> appropriate intermediate parent should be
+>>>>>>>>>>>>>>>>>>>>>>>>>> selected.
+>>>>>>>>>>>>>>>>>>>>>>>>> CPU parents are PLL_X, PLL_P, and dfll. PLL_X
+>>>>>>>>>>>>>>>>>>>>>>>>> always
+>>>>>>>>>>>>>>>>>>>>>>>>> runs at higher
+>>>>>>>>>>>>>>>>>>>>>>>>> rate
+>>>>>>>>>>>>>>>>>>>>>>>>> so switching to PLL_P during CPUFreq probe
+>>>>>>>>>>>>>>>>>>>>>>>>> prior to
+>>>>>>>>>>>>>>>>>>>>>>>>> dfll clock enable
+>>>>>>>>>>>>>>>>>>>>>>>>> should be safe.
+>>>>>>>>>>>>>>>>>>>>>>>> AFAIK, PLLX could run at ~200MHz. There is also a
+>>>>>>>>>>>>>>>>>>>>>>>> divided output of
+>>>>>>>>>>>>>>>>>>>>>>>> PLLP
+>>>>>>>>>>>>>>>>>>>>>>>> which CCLKG supports, the PLLP_OUT4.
+>>>>>>>>>>>>>>>>>>>>>>>>
+>>>>>>>>>>>>>>>>>>>>>>>> Probably, realistically, CPU is always running
+>>>>>>>>>>>>>>>>>>>>>>>> off a
+>>>>>>>>>>>>>>>>>>>>>>>> fast PLLX during
+>>>>>>>>>>>>>>>>>>>>>>>> boot, but I'm wondering what may happen on KEXEC. I
+>>>>>>>>>>>>>>>>>>>>>>>> guess ideally CPUFreq driver should also have a
+>>>>>>>>>>>>>>>>>>>>>>>> 'shutdown' callback to teardown DFLL
+>>>>>>>>>>>>>>>>>>>>>>>> on a reboot, but likely that there are other
+>>>>>>>>>>>>>>>>>>>>>>>> clock-related problems as
+>>>>>>>>>>>>>>>>>>>>>>>> well that may break KEXEC and thus it is not very
+>>>>>>>>>>>>>>>>>>>>>>>> important at the
+>>>>>>>>>>>>>>>>>>>>>>>> moment.
+>>>>>>>>>>>>>>>>>>>>>>>>
+>>>>>>>>>>>>>>>>>>>>>>>> [snip]
+>>>>>>>>>>>>>>>>>>>>>>> During bootup CPUG sources from PLL_X. By PLL_P
+>>>>>>>>>>>>>>>>>>>>>>> source
+>>>>>>>>>>>>>>>>>>>>>>> above I meant
+>>>>>>>>>>>>>>>>>>>>>>> PLL_P_OUT4.
+>>>>>>>>>>>>>>>>>>>>>>>
+>>>>>>>>>>>>>>>>>>>>>>> As per clock policies, PLL_X is always used for high
+>>>>>>>>>>>>>>>>>>>>>>> freq
+>>>>>>>>>>>>>>>>>>>>>>> like
+>>>>>>>>>>>>>>>>>>>>>>>> 800Mhz
+>>>>>>>>>>>>>>>>>>>>>>> and for low frequency it will be sourced from PLLP.
+>>>>>>>>>>>>>>>>>>>>>> Alright, then please don't forget to pre-initialize
+>>>>>>>>>>>>>>>>>>>>>> PLLP_OUT4 rate to a
+>>>>>>>>>>>>>>>>>>>>>> reasonable value using tegra_clk_init_table or
+>>>>>>>>>>>>>>>>>>>>>> assigned-clocks.
+>>>>>>>>>>>>>>>>>>>>> PLLP_OUT4 rate update is not needed as it is safe to
+>>>>>>>>>>>>>>>>>>>>> run at
+>>>>>>>>>>>>>>>>>>>>> 408Mhz because it is below fmax @ Vmin
+>>>>>>>>>>>>>>>>>>>> So even 204MHz CVB entries are having the same
+>>>>>>>>>>>>>>>>>>>> voltage as
+>>>>>>>>>>>>>>>>>>>> 408MHz, correct? It's not instantly obvious to me
+>>>>>>>>>>>>>>>>>>>> from the
+>>>>>>>>>>>>>>>>>>>> DFLL driver's code where the fmax @ Vmin is defined,
+>>>>>>>>>>>>>>>>>>>> I see
+>>>>>>>>>>>>>>>>>>>> that there is the min_millivolts
+>>>>>>>>>>>>>>>>>>>> and frequency entries starting from 204MHZ defined
+>>>>>>>>>>>>>>>>>>>> per-table.
+>>>>>>>>>>>>>>>>>>> Yes at Vmin CPU Fmax is ~800Mhz. So anything below that
+>>>>>>>>>>>>>>>>>>> will
+>>>>>>>>>>>>>>>>>>> work at Vmin voltage and PLLP max is 408Mhz.
+>>>>>>>>>>>>>>>>>> Thank you for the clarification. It would be good to have
+>>>>>>>>>>>>>>>>>> that
+>>>>>>>>>>>>>>>>>> commented
+>>>>>>>>>>>>>>>>>> in the code as well.
+>>>>>>>>>>>>>>>>> OK, Will add...
+>>>>>>>>>>>>>>>> Regarding, adding suspend/resume to CPUFreq, CPUFreq
+>>>>>>>>>>>>>>>> suspend
+>>>>>>>>>>>>>>>> happens very early even before disabling non-boot CPUs and
+>>>>>>>>>>>>>>>> also
+>>>>>>>>>>>>>>>> need to export clock driver APIs to CPUFreq.
+>>>>>>>>>>>>>>>>
+>>>>>>>>>>>>>>>> Was thinking of below way of implementing this...
+>>>>>>>>>>>>>>>>
+>>>>>>>>>>>>>>>>
+>>>>>>>>>>>>>>>> Clock DFLL driver Suspend:
+>>>>>>>>>>>>>>>>
+>>>>>>>>>>>>>>>>               - Save CPU clock policy registers, and
+>>>>>>>>>>>>>>>> Perform
+>>>>>>>>>>>>>>>> dfll
+>>>>>>>>>>>>>>>> suspend which sets in open loop mode
+>>>>>>>>>>>>>>>>
+>>>>>>>>>>>>>>>> CPU Freq driver Suspend: does nothing
+>>>>>>>>>>>>>>>>
+>>>>>>>>>>>>>>>>
+>>>>>>>>>>>>>>>> Clock DFLL driver Resume:
+>>>>>>>>>>>>>>>>
+>>>>>>>>>>>>>>>>               - Re-init DFLL, Set in Open-Loop mode,
+>>>>>>>>>>>>>>>> restore
+>>>>>>>>>>>>>>>> CPU
+>>>>>>>>>>>>>>>> Clock policy registers which actually sets source to DFLL
+>>>>>>>>>>>>>>>> along
+>>>>>>>>>>>>>>>> with other CPU Policy register restore.
+>>>>>>>>>>>>>>>>
+>>>>>>>>>>>>>>>> CPU Freq driver Resume:
+>>>>>>>>>>>>>>>>
+>>>>>>>>>>>>>>>>               - do clk_prepare_enable which acutally sets
+>>>>>>>>>>>>>>>> DFLL in
+>>>>>>>>>>>>>>>> Closed loop mode
+>>>>>>>>>>>>>>>>
+>>>>>>>>>>>>>>>>
+>>>>>>>>>>>>>>>> Adding one more note: Switching CPU Clock to PLLP is not
+>>>>>>>>>>>>>>>> needed
+>>>>>>>>>>>>>>>> as CPU CLock can be from dfll in open-loop mode as DFLL
+>>>>>>>>>>>>>>>> is not
+>>>>>>>>>>>>>>>> disabled anywhere throught the suspend/resume path and SC7
+>>>>>>>>>>>>>>>> entry
+>>>>>>>>>>>>>>>> FW and Warm boot code will switch CPU source to PLLP.
+>>>>>>>>>>>>>> Since CPU resumes on PLLP, it will be cleaner to suspend
+>>>>>>>>>>>>>> it on
+>>>>>>>>>>>>>> PLLP as well. And besides, seems that currently disabling
+>>>>>>>>>>>>>> DFLL
+>>>>>>>>>>>>>> clock will disable DFLL completely and then you'd want to
+>>>>>>>>>>>>>> re-init
+>>>>>>>>>>>>>> the DFLL on resume any ways. So better to just disable DFLL
+>>>>>>>>>>>>>> completely on suspend, which should happen on
+>>>>>>>>>>>>>> clk_disable(dfll).
+>>>>>>>>>>>>> Will switch to PLLP during CPUFreq suspend. With decision of
+>>>>>>>>>>>>> using
+>>>>>>>>>>>>> clk_disable during suspend, its mandatory to switch to PLLP as
+>>>>>>>>>>>>> DFLL
+>>>>>>>>>>>>> is completely disabled.
+>>>>>>>>>>>>>
+>>>>>>>>>>>>> My earlier concern was on restoring CPU policy as we can't do
+>>>>>>>>>>>>> that
+>>>>>>>>>>>>> from CPUFreq driver and need export from clock driver.
+>>>>>>>>>>>>>
+>>>>>>>>>>>>> Clear now and will do CPU clock policy restore in after dfll
+>>>>>>>>>>>>> re-init.
+>>>>>>>>>>>> Why the policy can't be saved/restored by the CaR driver as a
+>>>>>>>>>>>> context of any other clock?
+>>>>>>>>>>> restoring cpu clock policy involves programming source and
+>>>>>>>>>>> super_cclkg_divider.
+>>>>>>>>>>>
+>>>>>>>>>>> cclk_g is registered as clk_super_mux and it doesn't use
+>>>>>>>>>>> frac_div ops
+>>>>>>>>>>> to do save/restore its divider.
+>>>>>>>>>> That can be changed of course and I guess it also could be as
+>>>>>>>>>> simple as
+>>>>>>>>>> saving and restoring of two raw u32 values of the policy/divider
+>>>>>>>>>> registers.
+>>>>>>>>>>
+>>>>>>>>>>> Also, during clock context we cant restore cclk_g as cclk_g
+>>>>>>>>>>> source
+>>>>>>>>>>> will be dfll and dfll will not be resumed/re-initialized by the
+>>>>>>>>>>> time
+>>>>>>>>>>> clk_super_mux save/restore happens.
+>>>>>>>>>>>
+>>>>>>>>>>> we can't use save/restore context for dfll clk_ops because
+>>>>>>>>>>> dfllCPU_out parent to CCLK_G is first in the clock tree and
+>>>>>>>>>>> dfll_ref
+>>>>>>>>>>> and dfll_soc peripheral clocks are not restored by the time dfll
+>>>>>>>>>>> restore happens. Also dfll peripheral clock enables need to be
+>>>>>>>>>>> restored before dfll restore happens which involves programming
+>>>>>>>>>>> dfll
+>>>>>>>>>>> controller for re-initialization.
+>>>>>>>>>>>
+>>>>>>>>>>> So dfll resume/re-init is done in clk-tegra210 at end of all
+>>>>>>>>>>> clocks
+>>>>>>>>>>> restore in V5 series but instead of in clk-tegra210 driver I
+>>>>>>>>>>> moved
+>>>>>>>>>>> now to dfll-fcpu driver pm_ops as all dfll dependencies will be
+>>>>>>>>>>> restored thru clk_restore_context by then. This will be in V6.
+>>>>>>>>>> Since DFLL is now guaranteed to be disabled across CaR
+>>>>>>>>>> suspend/resume
+>>>>>>>>>> (hence it has nothing to do in regards to CCLK) and given that
+>>>>>>>>>> PLLs
+>>>>>>>>>> state is restored before the rest of the clocks, I don't see why
+>>>>>>>>>> not to
+>>>>>>>>>> implement CCLK save/restore in a generic fasion. CPU policy
+>>>>>>>>>> wull be
+>>>>>>>>>> restored to either PLLP or PLLX (if CPUFreq driver is disabled).
+>>>>>>>>>>
+>>>>>>>>> CCLK_G save/restore should happen in clk_super_mux ops
+>>>>>>>>> save/context and
+>>>>>>>>> clk_super_mux save/restore happens very early as cclk_g is first
+>>>>>>>>> in the
+>>>>>>>>> clock tree and save/restore traverses through the tree top-bottom
+>>>>>>>>> order.
+>>>>>>>> If CCLK_G is restored before the PLLs, then just change the clocks
+>>>>>>>> order
+>>>>>>>> such that it won't happen.
+>>>>>>>>
+>>>>>>> I dont think we can change clocks order for CCLK_G.
+>>>>>>>
+>>>>>>> During bootup, cclk_g is registered after all pll's and peripheral
+>>>>>>> clocks which is the way we wanted, So cclk_g will be the first
+>>>>>>> one in
+>>>>>>> the clk list as clk_register adds new clock first in the list.
+>>>>>>>
+>>>>>>> When clk_save_context and clk_restore_context APIs iterates over the
+>>>>>>> list, cclk_g is the first
+>>>>>> Looking at clk_core_restore_context(), I see that it walks up CLKs
+>>>>>> list
+>>>>>> from parent to children, hence I don't understand how it can ever
+>>>>>> happen
+>>>>>> that CCLK will be restored before the parent. The clocks registration
+>>>>>> order doesn't matter at all in that case.
+>>>>> yes from parent to children and dfllCPU_out is the top in the list and
+>>>>> its child is cclk_g.
+>>>>>
+>>>>> the way clocks are registered is the order I see in the clock list and
+>>>>> looking into clk_register API it adds new node first in the list.
+>>>>>
+>>>> cclkg_g & dfll register happens after all plls and peripheral clocks as
+>>>> it need ref, soc and peripheral clocks to be enabled.
+>>>>> So they are the last to get registered and so becomes first in the
+>>>>> list.
+>>>>>
+>>>>> During save/restore context, it traverses thru this list and first in
+>>>>> the list is dfllcpu_OUT (parent) and its child (cclk_g)
+>>>>>
+>>>>> saving should not be an issue at all but we cant restore cclk_g/dfll
+>>>>> in normal way thru clk_ops restore as plls and peripherals restore
+>>>>> doesn't happen by that time.
+>>>>>
+>>>> I was referring to clk_restore_context where it iterates thru root list
+>>>> and for each core from the root list clk_core_restore does restore of
+>>>> parent and children.
+>>>>
+>>>> dfllCPU_Out gets first in the list and its child is cclk_g
+>>>>
+>>>> https://elixir.bootlin.com/linux/v5.2.1/source/drivers/clk/clk.c#L1105
+>>> What list you're talking about? clk_summary? It shows current *active*
+>>> clocks configuration, if you'll try to disable CPUFreq driver then the
+>>> parent of CCLK_G should be PLLX. Similarly when CPU is reparented to
+>>> PLLP on driver's suspend, then PLLP is the parent.
+>>>
+>>>>>>>>> DFLL enable thru CPUFreq resume happens after all
+>>>>>>>>> clk_restore_context
+>>>>>>>>> happens. So during clk_restore_context, dfll re-init doesnt happen
+>>>>>>>>> and
+>>>>>>>>> doing cpu clock policy restore during super_mux clk_ops will
+>>>>>>>>> crash as
+>>>>>>>>> DFLL is not initialized and its clock is not enabled but CPU clock
+>>>>>>>>> restore sets source to DFLL if we restore during super_clk_mux
+>>>>>>>> If CPU was suspended on PLLP, then it will be restored on PLLP by
+>>>>>>>> CaR. I
+>>>>>>>> don't understand what DFLL has to do with the CCLK in that case
+>>>>>>>> during
+>>>>>>>> the clocks restore.
+>>>>>>> My above comment is in reference to your request of doing
+>>>>>>> save/restore
+>>>>>>> for cclk_g in normal fashion thru save/restore context. Because
+>>>>>>> of the
+>>>>>>> clk order I mentioned above, we cclk_g will be the first one to
+>>>>>>> go thru
+>>>>>>> save/context.
+>>>>>>>
+>>>>>>> During save_context of cclk_g, source can be from PLLX, dfll.
+>>>>>>>
+>>>>>>> Issue will be when we do restore during clk_restore_context of
+>>>>>>> cclk_g as
+>>>>>>> by that time PLLX/dfll will not be restored.
+>>>>>>>
+>>>>>> Seems we already agreed that DFLL will be disabled by the CPUFreq
+>>>>>> driver
+>>>>>> on suspend. Hence CCLK can't be from DFLL if CPU is reparented to
+>>>>>> PLLP
+>>>>>> on CPUFreq driver's suspend, otherwise CPU keeps running from a
+>>>>>> boot-state PLLX if CPUFreq driver is disabled.
+>>>>> Yes suspend should not be an issue but issue will be during resume
+>>>>> where if we do cclk_g restore in normal way thru clk_restore_context,
+>>>>> cclk_g restore happens very early as dfllCPU out is the first one that
+>>>>> goes thru restore context and plls/peripherals are not resumed by
+>>>>> then.
+>>>>>
+>>>>> CPU runs from PLLX if dfll clock enable fails during boot. So when it
+>>>>> gets to suspend, we save CPU running clock source as either PLLX or
+>>>>> DFLL and then we switch to PLLP.
+>>>>>
+>>>>>
+>>>>> On resume, CPU runs from PLLP by warm boot code and we need to restore
+>>>>> back its source to the one it was using from saved source context
+>>>>> (which can be either PLLX or DFLL)
+>>>>>
+>>>>> So PLLs & DFLL resume need to happen before CCLKG restore/resume.
+>>>>>
+>>>>>
+>>>>> With all above discussions, we do DFLL disable in CPUFreq driver on
+>>>>> suspend and on CPUFreq resume we enable DFLL back and restore CPU
+>>>>> clock source it was using during suspend (which will be either PLLX if
+>>>>> dfll enable fails during probe or it will be using DFLL).
+>>> During suspend CPU's parent shall be PLLP and not DFLL (note that it is
+>>> disabled) after reparenting to PLLP by the CPUFreq driver.
+>>>
+>> CPU source context should be saved before switching to safe source of
+>> PLLP as on resume we need to restore back to source it was using
+>> before we switch to safe source during suspend entry.
+>>
+>> So saved context for CPU Source will be either dfll or PLLX
+>>
+> PLLP reparenting is only during suspend/entry to have it as safe source
+> but actual CPU source it was running from before suspending is either
+> dfll/pllx which should be the one to be restored on CPUFreq resume.
+> Resume happens with CPU running from PLLP till it gets to the point of
+> restoring its original source (dfll or pllx)
 
-Best Regards,
---Hongwei
------Original Message-----
+CaR should restore CPU to PLLP or PLLX, while CPUFreq driver restores
+CPU to DFLL. Please see more comments below.
 
-> From:	Andrew Jeffery <andrew@aj.id.au>
-> Sent:	Tuesday, July 16, 2019 11:26 PM
-> To:	Hongwei Zhang; Bartosz Golaszewski; Joel Stanley; Linus Walleij
-> Cc:	linux-gpio@vger.kernel.org; linux-arm-kernel@lists.infradead.org; linux-aspeed@lists.ozlabs.org; 
-> linux-kernel@vger.kernel.org
-> Subject:	Re: [PATCH 2/3 v3] ARM: dts: aspeed: Add SGPIO driver
-> 
-> Hello Hongwei,
-> 
-> Please send patches and feedback on prior iterations separately. Please send the output of `git format-
-> patch ...`directly; format-patch spits the patch out in email form ready to go and can be fed straight to 
-> `git send-email`.
-> 
-> On Wed, 17 Jul 2019, at 06:54, Hongwei Zhang wrote:
-> > Add SGPIO driver support for Aspeed AST2500 SoC.
-> > 
-> > Signed-off-by: Hongwei Zhang <hongweiz@ami.com>
-> > ---
-> >  drivers/gpio/sgpio-aspeed.c | 487 
-> > ++++++++++++++++++++++++++++++++++++++++++++
-> >  1 file changed, 487 insertions(+)
-> >  create mode 100644 drivers/gpio/sgpio-aspeed.c
-> > 
-> > diff --git a/drivers/gpio/sgpio-aspeed.c b/drivers/gpio/sgpio-aspeed.c 
-> > new file mode 100644 index 0000000..ade2cb7
-> > --- /dev/null
-> > +++ b/drivers/gpio/sgpio-aspeed.c
-> > @@ -0,0 +1,487 @@
-> > +// SPDX-License-Identifier: GPL-2.0+
-> > +/*
-> > + * Copyright 2019 American Megatrends International LLC.
-> > + *
-> > + * Author: Karthikeyan Mani <karthikeyanm@amiindia.co.in>  */
-> > +
-> > +#include <linux/gpio/driver.h>
-> > +#include <linux/gpio/aspeed.h>
-> 
-> linux/gpio/aspeed.h is specific to the parallel GPIO driver, please drop this include.
-> 
+>>>>> So i was trying to say dfll/cclk_g restore can't be done in normal way
+>>>>> thru clk_ops save/restore context
+>>> Let's see what happens if CPUFreq is active:
+>>>
+>>> 1. CPUFreq driver probe happens
+>>>     2. CPU is reparented to PLLP
+>>>     3. DFLL inited
+>>>     4. CPU is reparented to DFLL
+>>>
+>>> 5. CPUFreq driver suspend happens
+>>>     6. CPU is reparented to PLLP
+>>>     7. DFLL is disabled
+>>>
+>>> 8. Car suspend happens
+>>>     9. DFLL context saved
+>>>     10. PLLP/PLLX context saved
+>>>     11. CCLK context saved
+>>>
+>>> 12. Car resume happens
+>>>     13. DFLL context restored
+>>>     14. PLLP/PLLX context restored
+>>>     15. CCLK context restored
+>>>
+>>> 16. CPUFreq driver resume happens
+>>>     17. DFLL re-inited
+>>>     18. CPU is reparented to DFLL
+>>
+>>
+>> Below is the order of sequence it should be based on the order of clk
+>> register.
+>>
+>> My comments inline in this sequence.
+>>
+>> 1. CPUFreq driver probe happens
+>>     2. CPU is reparented to PLLP
+>>     3. DFLL inited
+>>     4. CPU is reparented to DFLL
+>>
+>>
+>> 5. CPUFreq driver suspend happens
+>>     6. Save CPU source which could be either dfll or pllx
 
-Removed it.
+Please see my next comment.
 
-> > +#include <linux/hashtable.h>
-> > +#include <linux/bitfield.h>
-> > +#include <linux/init.h>
-> > +#include <linux/clk.h>
-> > +#include <linux/io.h>
-> > +#include <linux/kernel.h>
-> > +#include <linux/module.h>
-> > +#include <linux/pinctrl/consumer.h>
-> 
-> This driver doesn't have any direct interaction with pinctrl, so I think we can remove this header
-> 
+>>     7. CPU is reparented to safe known source PLLP
+>>     8. DFLL is disabled
+>>
+>> 8. Car suspend happens
+>>     9. DFLL context saved (With DFLL disabled in CPUFreq suspend,
+>> nothing to be saved here as last freq req will always be saved).
+>>     10. CCLK context saved (CPU clock source will be saved in CPUFreq
+>> driver suspend which could be either dfll or pllx)
 
-Removed it.
+That I don't understand. The CPU's clock source state should be saved at
+the moment of the CaR's suspending (i.e. CCLK policy will be set to PLLP
+or PLLX) and then CCLK state should be also restored by the CaR in step 14.
 
-> > +#include <linux/platform_device.h>
-> > +#include <linux/spinlock.h>
-> > +#include <linux/string.h>
-> > +#include <linux/gpio.h>
-> > +
-> > +#define MAX_NR_SGPIO			80
-> > +
-> > +#define ASPEED_SGPIO_CTRL		0x54
-> > +
-> > +#define ASPEED_SGPIO_PINS_MASK		GENMASK(9, 6)
-> > +#define ASPEED_SGPIO_CLK_DIV_MASK	GENMASK(31, 16)
-> > +#define ASPEED_SGPIO_ENABLE		BIT(0)
-> > +
-> > +// default sgpio direction is input.
-> > +static uint32_t sgpio_dir_val[3] = {0xffffffff, 0xffffffff, 
-> > +0xffffffff
-> > };
-> 
-> Why not make it a member of struct aspeed_sgpio (below)? I'd prefer we encode the comment in the 
-> variable name as well, e.g.
-> sgpio_dir_in`- this way when reading the code that uses it we know which bit state means what (set is 
-> input, clear is output).
-> 
+CPUFreq driver should only switch CPU to PLLP and disable DFLL on
+suspend in step 5, that's it. On resume CPUFreq driver will restore CPU
+to DFLL in step 18.
 
-Done.
+>>     11. PLLP/PLLX context saved
+>>     12. Peripheral Clock saved
+>>
+>> 12. Car resume happens
+>>     13. DFLL context restored : No DFLL context to be restored and we
+>> only need to reinitialize DFLL and re-initialize can't be done here as
+>> this is the 1st to get restored and PLL/Peripheral clocks are not
+>> restored by this time. So we can't use clk_ops restore for DFLL
 
-> > +
-> > +struct aspeed_sgpio {
-> > +	struct gpio_chip chip;
-> > +	struct clk *pclk;
-> > +	spinlock_t lock;
-> > +	void __iomem *base;
-> > +	int irq;
-> > +};
-> > +
-> > +struct aspeed_sgpio_bank {
-> > +	uint16_t    val_regs;
-> > +	uint16_t    rdata_reg;
-> > +	uint16_t    irq_regs;
-> > +	const char  names[4][3];
-> > +};
-> > +
-> > +/*
-> > + * Note: The "value" register returns the input value sampled on the
-> > + *       line even when the GPIO is configured as an output. Since
-> > + *       that input goes through synchronizers, writing, then reading
-> > + *       back may not return the written value right away.
-> 
-> The paragraph above is somewhat specific to the parallel GPIO driver.
-> It would be good to rework it for the context of the SGPIO driver.
-> Documenting the split of the "value" and "rdata" register is a good thing.
-> 
-> > + *
-> > + *       The "rdata" register returns the content of the write latch
-> > + *       and thus can be used to read back what was last written
-> > + *       reliably.
-> > + */
-> > +static const struct aspeed_sgpio_bank aspeed_sgpio_banks[] = {
-> > +	{
-> > +		.val_regs = 0x0000,
-> > +		.rdata_reg = 0x0070,
-> > +		.irq_regs = 0x0004,
-> > +		.names = { "A", "B", "C", "D" },
-> > +	},
-> > +	{
-> > +		.val_regs = 0x001C,
-> > +		.rdata_reg = 0x0074,
-> > +		.irq_regs = 0x0020,
-> > +		.names = { "E", "F", "G", "H" },
-> > +	},
-> > +	{
-> > +		.val_regs = 0x0038,
-> > +		.rdata_reg = 0x0078,
-> > +		.irq_regs = 0x003C,
-> > +		.names = { "I", "J" },
-> > +	},
-> > +};
-> > +
-> > +enum aspeed_sgpio_reg {
-> > +	reg_val,
-> > +	reg_rdata,
-> > +	reg_irq_enable,
-> > +	reg_irq_type0,
-> > +	reg_irq_type1,
-> > +	reg_irq_type2,
-> > +	reg_irq_status,
-> > +};
-> > +
-> > +#define GPIO_VAL_VALUE      0x00
-> > +#define GPIO_VAL_DIR        0x04
-> > +#define GPIO_IRQ_ENABLE     0x00
-> > +#define GPIO_IRQ_TYPE0      0x04
-> > +#define GPIO_IRQ_TYPE1      0x08
-> > +#define GPIO_IRQ_TYPE2      0x0C
-> > +#define GPIO_IRQ_STATUS     0x10
-> > +
-> > +/* This will be resolved at compile time */ static inline void 
-> > +__iomem *bank_reg(struct aspeed_sgpio *gpio,
-> > +				     const struct aspeed_sgpio_bank *bank,
-> > +				     const enum aspeed_sgpio_reg reg) {
-> > +	switch (reg) {
-> > +	case reg_val:
-> > +		return gpio->base + bank->val_regs + GPIO_VAL_VALUE;
-> > +	case reg_rdata:
-> > +		return gpio->base + bank->rdata_reg;
-> > +	case reg_irq_enable:
-> > +		return gpio->base + bank->irq_regs + GPIO_IRQ_ENABLE;
-> > +	case reg_irq_type0:
-> > +		return gpio->base + bank->irq_regs + GPIO_IRQ_TYPE0;
-> > +	case reg_irq_type1:
-> > +		return gpio->base + bank->irq_regs + GPIO_IRQ_TYPE1;
-> > +	case reg_irq_type2:
-> > +		return gpio->base + bank->irq_regs + GPIO_IRQ_TYPE2;
-> > +	case reg_irq_status:
-> > +		return gpio->base + bank->irq_regs + GPIO_IRQ_STATUS;
-> > +	default:
-> > +		/* acturally if code runs to here, it's an error case */
-> > +		BUG_ON(1);
-> > +	}
-> > +}
-> > +
-> > +#define GPIO_BANK(x)    ((x) >> 5)
-> > +#define GPIO_OFFSET(x)  ((x) & 0x1f)
-> > +#define GPIO_BIT(x)     BIT(GPIO_OFFSET(x))
-> > +
-> > +static const struct aspeed_sgpio_bank *to_bank(unsigned int offset) {
-> > +	unsigned int bank = GPIO_BANK(offset);
-> > +
-> > +	WARN_ON(bank >= ARRAY_SIZE(aspeed_sgpio_banks));
-> > +	return &aspeed_sgpio_banks[bank];
-> > +}
-> > +
-> > +static int aspeed_sgpio_get(struct gpio_chip *gc, unsigned int 
-> > +offset) {
-> > +	struct aspeed_sgpio *gpio = gpiochip_get_data(gc);
-> > +	const struct aspeed_sgpio_bank *bank = to_bank(offset);
-> > +
-> > +	if (sgpio_dir_val[GPIO_BANK(offset)] & GPIO_BIT(offset))
-> > +		return !!(ioread32(bank_reg(gpio, bank, reg_val)) &
-> > GPIO_BIT(offset));
-> > +	else
-> > +		return !!(ioread32(bank_reg(gpio, bank, reg_rdata)) &
-> > GPIO_BIT(offset));
-> 
-> We don't need the else because we return from the body of the true case,
-> and this could be written in a less redundant fashion. Also we need to do
-> the read under gpio.lock for consistency with aspeed_sgpio_set().
-> 
-> enum aspeed_sgpio_reg from;
-> unsigned long flags;
-> bool input;
-> int rc;
-> 
-> ...
-> 
-> spin_lock_irqsave(&gpio->lock, flags);
-> input = sgpio_dir_val[GPIO_BANK(offset)] & GPIO_BIT(offset);
-> from = input ? reg_val : reg_rdata;
-> rc = !!(ioread32(bank_reg(gpio, bank, from)) & GPIO_BIT(offset));
-> spin_unlock_irqrestore(&gpio->lock, flags);
-> 
-> return rc;
-> 
+It looks to me that clk_core_restore_context() should just do
+hlist_for_each_entry *_reverse*. Don't you think so?
 
-Updated code accordingly.
+>>     14. CCLK context restored
+>> CCLK cant be restored here as context could be either dfll or pllx
+>> which is the source orginally it was actually using before we force
+>> switch to safe PLLP for suspend entry. So we can't use clk_ops restore
+>> for DFLL
 
-> > +
-> > +}
-> > +
-> > +static void aspeed_sgpio_set(struct gpio_chip *gc, unsigned int 
-> > offset, int val)
-> > +{
-> > +	struct aspeed_sgpio *gpio = gpiochip_get_data(gc);
-> > +	const struct aspeed_sgpio_bank *bank = to_bank(offset);
-> > +	unsigned long flags;
-> > +	void __iomem *addr;
-> > +	u32 reg = 0;
-> > +
-> > +	spin_lock_irqsave(&gpio->lock, flags);
-> > +
-> > +	addr = bank_reg(gpio, bank, reg_val);
-> > +
-> > +	if (val)
-> > +		reg |= GPIO_BIT(offset);
-> > +	else
-> > +		reg &= ~GPIO_BIT(offset);
-> > +
-> > +	iowrite32(reg, addr);
-> > +	spin_unlock_irqrestore(&gpio->lock, flags);
-> > +}
-> > +
-> > +static int aspeed_sgpio_dir_in(struct gpio_chip *gc, unsigned int 
-> > offset)
-> > +{
-> > +	sgpio_dir_val[GPIO_BANK(offset)] |= GPIO_BIT(offset);
-> 
-> Also do all manipulations of sgpio_dir_val under the spinlock.
-> 
+See my comment to step 10. CCLK should be restored to the *CaR's saved*
+context, which is either PLLX or PLLP policy.
 
-Added spinlock as you suggested.
+>> 15. PLLP/PLLX context restored
+>>     16. Peripheral context restored
+>>
+>> 16. CPUFreq driver resume happens
+>>     17. DFLL re-inited (Invoking DFLL re-init in CPUFreq resume need
+>> exporting DFLL reinit from Clock driver to CPUFreq driver)
 
-> > +	return 0;
-> > +}
-> > +
-> > +static int aspeed_sgpio_dir_out(struct gpio_chip *gc, unsigned int 
-> > offset, int val)
-> > +{
-> > +	sgpio_dir_val[GPIO_BANK(offset)] &= ~GPIO_BIT(offset);
-> 
-> Again here.
-> 
-> > +	return 0;
-> > +}
-> > +
-> > +static int aspeed_sgpio_get_direction(struct gpio_chip *gc, unsigned 
-> > int offset)
-> > +{
-> > +	return sgpio_dir_val[GPIO_BANK(offset)] & GPIO_BIT(offset);
-> 
-> Again here.
-> 
-> > +
-> > +}
-> > +
-> > +static inline int irqd_to_aspeed_sgpio_data(struct irq_data *d,
-> > +					    struct aspeed_sgpio **gpio,
-> > +					    const struct aspeed_sgpio_bank **bank,
-> > +					    u32 *bit, int *offset)
-> > +{
-> > +	struct aspeed_sgpio *internal;
-> > +
-> > +	*offset = irqd_to_hwirq(d);
-> > +
-> > +	internal = irq_data_get_irq_chip_data(d);
-> > +
-> > +	*gpio = internal;
-> > +	*bank = to_bank(*offset);
-> > +	*bit = GPIO_BIT(*offset);
-> > +
-> > +	return 0;
-> 
-> It looks like this function could be a void function instead, and we
-> could eliminate error checking from the callsites. If you're feeling
-> paranoid you could `WARN_ON(!internal);` after the call to
-> `irq_data_get_irq_chip_data(d)`.
-> 
+Will be nice if clk_enable(dfll) could be enough to re-init DFLL. That
+should achievable with my next comment to step 18.
 
-Updated.
+>>     18. CPU is reparented to DFLL or PLLX based on saved context from
+>> step 9.
+>>
+>> Note: instead of exporting, we can do DFLL re-init from clock-dfll
+>> driver itself thru dfll-fcpu pm_ops resume. So dfll will be
+>> re-initialized by the time CPUFreq driver resumes and switches to use
+>> DFLL source.
+>>
 
-> > +}
-> > +
-> > +static void aspeed_sgpio_irq_ack(struct irq_data *d)
-> > +{
-> > +	const struct aspeed_sgpio_bank *bank;
-> > +	struct aspeed_sgpio *gpio;
-> > +	unsigned long flags;
-> > +	void __iomem *status_addr;
-> > +	int rc, offset;
-> > +	u32 bit;
-> > +
-> > +	rc = irqd_to_aspeed_sgpio_data(d, &gpio, &bank, &bit, &offset);
-> > +	if (rc)
-> > +		return;
-> > +
-> > +	status_addr = bank_reg(gpio, bank, reg_irq_status);
-> > +
-> > +	spin_lock_irqsave(&gpio->lock, flags);
-> > +
-> > +	iowrite32(bit, status_addr);
-> > +
-> > +	spin_unlock_irqrestore(&gpio->lock, flags);
-> > +}
-> > +
-> > +static void aspeed_sgpio_irq_set_mask(struct irq_data *d, bool set)
-> > +{
-> > +	const struct aspeed_sgpio_bank *bank;
-> > +	struct aspeed_sgpio *gpio;
-> > +	unsigned long flags;
-> > +	u32 reg, bit;
-> > +	void __iomem *addr;
-> > +	int rc, offset;
-> > +
-> > +	rc = irqd_to_aspeed_sgpio_data(d, &gpio, &bank, &bit, &offset);
-> > +	if (rc)
-> > +		return;
-> > +
-> > +	addr = bank_reg(gpio, bank, reg_irq_enable);
-> > +
-> > +	spin_lock_irqsave(&gpio->lock, flags);
-> > +
-> > +	reg = ioread32(addr);
-> > +	if (set)
-> > +		reg |= bit;
-> > +	else
-> > +		reg &= ~bit;
-> > +
-> > +	iowrite32(reg, addr);
-> > +
-> > +	spin_unlock_irqrestore(&gpio->lock, flags);
-> > +}
-> > +
-> > +static void aspeed_sgpio_irq_mask(struct irq_data *d)
-> > +{
-> > +	aspeed_sgpio_irq_set_mask(d, false);
-> > +}
-> > +
-> > +static void aspeed_sgpio_irq_unmask(struct irq_data *d)
-> > +{
-> > +	aspeed_sgpio_irq_set_mask(d, true);
-> > +}
-> > +
-> > +static int aspeed_sgpio_set_type(struct irq_data *d, unsigned int type)
-> > +{
-> > +	u32 type0 = 0;
-> > +	u32 type1 = 0;
-> > +	u32 type2 = 0;
-> > +	u32 bit, reg;
-> > +	const struct aspeed_sgpio_bank *bank;
-> > +	irq_flow_handler_t handler;
-> > +	struct aspeed_sgpio *gpio;
-> > +	unsigned long flags;
-> > +	void __iomem *addr;
-> > +	int rc, offset;
-> > +
-> > +	rc = irqd_to_aspeed_sgpio_data(d, &gpio, &bank, &bit, &offset);
-> > +	if (rc)
-> > +		return -EINVAL;
-> > +
-> > +	switch (type & IRQ_TYPE_SENSE_MASK) {
-> > +	case IRQ_TYPE_EDGE_BOTH:
-> > +		type2 |= bit;
-> > +		/* fall through */
-> > +	case IRQ_TYPE_EDGE_RISING:
-> > +		type0 |= bit;
-> > +		/* fall through */
-> > +	case IRQ_TYPE_EDGE_FALLING:
-> > +		handler = handle_edge_irq;
-> > +		break;
-> > +	case IRQ_TYPE_LEVEL_HIGH:
-> > +		type0 |= bit;
-> > +		/* fall through */
-> > +	case IRQ_TYPE_LEVEL_LOW:
-> > +		type1 |= bit;
-> > +		handler = handle_level_irq;
-> > +		break;
-> > +	default:
-> > +		return -EINVAL;
-> > +	}
-> > +
-> > +	spin_lock_irqsave(&gpio->lock, flags);
-> > +
-> > +	addr = bank_reg(gpio, bank, reg_irq_type0);
-> > +	reg = ioread32(addr);
-> > +	reg = (reg & ~bit) | type0;
-> > +	iowrite32(reg, addr);
-> > +
-> > +	addr = bank_reg(gpio, bank, reg_irq_type1);
-> > +	reg = ioread32(addr);
-> > +	reg = (reg & ~bit) | type1;
-> > +	iowrite32(reg, addr);
-> > +
-> > +	addr = bank_reg(gpio, bank, reg_irq_type2);
-> > +	reg = ioread32(addr);
-> > +	reg = (reg & ~bit) | type2;
-> > +	iowrite32(reg, addr);
-> > +
-> > +	spin_unlock_irqrestore(&gpio->lock, flags);
-> > +
-> > +	irq_set_handler_locked(d, handler);
-> > +
-> > +	return 0;
-> > +}
-> > +
-> > +static void aspeed_sgpio_irq_handler(struct irq_desc *desc)
-> > +{
-> > +	struct gpio_chip *gc = irq_desc_get_handler_data(desc);
-> > +	struct irq_chip *ic = irq_desc_get_chip(desc);
-> > +	struct aspeed_sgpio *data = gpiochip_get_data(gc);
-> > +	unsigned int i, p, girq;
-> > +	unsigned long reg;
-> > +
-> > +	chained_irq_enter(ic, desc);
-> > +
-> > +	for (i = 0; i < ARRAY_SIZE(aspeed_sgpio_banks); i++) {
-> > +		const struct aspeed_sgpio_bank *bank = &aspeed_sgpio_banks[i];
-> > +
-> > +		reg = ioread32(bank_reg(data, bank, reg_irq_status));
-> > +
-> > +		for_each_set_bit(p, &reg, 32) {
-> > +			girq = irq_find_mapping(gc->irq.domain, i * 32 + p);
-> > +			generic_handle_irq(girq);
-> > +		}
-> > +
-> > +	}
-> > +
-> > +	chained_irq_exit(ic, desc);
-> > +}
-> > +
-> > +static struct irq_chip aspeed_sgpio_irqchip = {
-> > +	.name       = "aspeed-sgpio",
-> > +	.irq_ack    = aspeed_sgpio_irq_ack,
-> > +	.irq_mask   = aspeed_sgpio_irq_mask,
-> > +	.irq_unmask = aspeed_sgpio_irq_unmask,
-> > +	.irq_set_type   = aspeed_sgpio_set_type,
-> > +};
-> > +
-> > +static int aspeed_sgpio_setup_irqs(struct aspeed_sgpio *gpio,
-> > +				   struct platform_device *pdev)
-> > +{
-> > +	int rc, i;
-> > +	const struct aspeed_sgpio_bank *bank;
-> > +
-> > +	rc = platform_get_irq(pdev, 0);
-> > +	if (rc < 0)
-> > +		return rc;
-> > +
-> > +	gpio->irq = rc;
-> > +
-> > +	/* Disable IRQ and clear Interrupt status registers for all SPGIO 
-> > Pins. */
-> > +	for (i = 0; i < ARRAY_SIZE(aspeed_sgpio_banks); i++) {
-> > +		bank =  &aspeed_sgpio_banks[i];
-> > +		/* disable irq enable bits */
-> > +		iowrite32(0x00000000, bank_reg(gpio, bank, reg_irq_enable));
-> > +		/* clear status bits */
-> > +		iowrite32(0xffffffff, bank_reg(gpio, bank, reg_irq_status));
-> > +	}
-> > +
-> > +	rc = gpiochip_irqchip_add(&gpio->chip, &aspeed_sgpio_irqchip,
-> > +				  0, handle_bad_irq, IRQ_TYPE_NONE);
-> > +	if (rc) {
-> > +		dev_info(&pdev->dev, "Could not add irqchip\n");
-> > +		return rc;
-> > +	}
-> > +
-> > +	gpiochip_set_chained_irqchip(&gpio->chip, &aspeed_sgpio_irqchip,
-> > +				     gpio->irq, aspeed_sgpio_irq_handler);
-> > +
-> > +	/* set IRQ settings and Enable Interrupt */
-> > +	for (i = 0; i < ARRAY_SIZE(aspeed_sgpio_banks); i++) {
-> > +		bank = &aspeed_sgpio_banks[i];
-> > +		/* set falling or level-low irq */
-> > +		iowrite32(0x00000000, bank_reg(gpio, bank, reg_irq_type0));
-> > +		/* trigger type is edge */
-> > +		iowrite32(0x00000000, bank_reg(gpio, bank, reg_irq_type1));
-> > +		/* dual edge trigger mode. */
-> > +		iowrite32(0xffffffff, bank_reg(gpio, bank, reg_irq_type2));
-> > +		/* enable irq */
-> > +		iowrite32(0xffffffff, bank_reg(gpio, bank, reg_irq_enable));
-> > +	}
-> > +
-> > +	return 0;
-> > +}
-> > +
-> > +static const struct of_device_id aspeed_sgpio_of_table[] = {
-> > +	{ .compatible = "aspeed,ast2400-sgpio" },
-> > +	{ .compatible = "aspeed,ast2500-sgpio" },
-> > +	{}
-> > +};
-> > +MODULE_DEVICE_TABLE(of, aspeed_sgpio_of_table);
-> > +
-> > +static int __init aspeed_sgpio_probe(struct platform_device *pdev)
-> > +{
-> > +	struct aspeed_sgpio *gpio;
-> > +	struct resource *res;
-> > +	u32 nr_gpios, sgpio_freq;
-> > +	int rc;
-> > +	u16 sgpio_clk_div;
-> 
-> Lets make this a u32 as it will help error detection below.
-> 
-> > +	unsigned long apb_freq;
-> > +
-> > +	gpio = devm_kzalloc(&pdev->dev, sizeof(*gpio), GFP_KERNEL);
-> > +	if (!gpio)
-> > +		return -ENOMEM;
-> > +
-> > +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> > +	gpio->base = devm_ioremap_resource(&pdev->dev, res);
-> 
-> Please use devm_platform_ioremap_resource() here.
-> 
-> > +	if (IS_ERR(gpio->base))
-> > +		return PTR_ERR(gpio->base);
-> > +
-> > +	rc = of_property_read_u32(pdev->dev.of_node, "nr-gpios", &nr_gpios);
-> > +	if ((rc < 0) || (nr_gpios > MAX_NR_SGPIO))
-> > +		nr_gpios = MAX_NR_SGPIO;
-> 
-> This is an error state, not something we should paper over. This should be
-> `return -EINVAL;`
-> 
+Yes, I guess DFLL hardware should be fully reset on DFLL's driver resume
+to be on a safe side any ways.
 
-Updated.
-
-> > +
-> > +	rc = of_property_read_u32(pdev->dev.of_node, "bus-frequency", 
-> > &sgpio_freq);
-> > +	if (rc < 0) {
-> > +		dev_err(&pdev->dev, "Could not read bus-frequency property\n");
-> > +		sgpio_freq = 12000000;
-> 
-> Again, I suggested previously that this is a required property, not optional.
-> As such there should not be fall-back code here. This is another case of
-> `return -EINVAL;`.
-> 
-
-Updated.
-
-> > +	}
-> > +
-> > +	gpio->pclk = devm_clk_get(&pdev->dev, NULL);
-> > +	if (IS_ERR(gpio->pclk)) {
-> > +		dev_err(&pdev->dev, "devm_clk_get failed\n");
-> > +		return PTR_ERR(gpio->pclk);
-> > +	}
-> > +
-> > +	apb_freq = clk_get_rate(gpio->pclk);
-> > +	sgpio_clk_div = 2 * ((apb_freq % sgpio_freq == 0) ?
-> > +			     (apb_freq / sgpio_freq) - 1 : (apb_freq / sgpio_freq));
-> 
-> This calculation seems overly complex and possibly incorrect (need to
-> multiply the denominator or divide the result, not multiply the result)?
-> 
-> From the datasheet, the SGPM clock period calculation is:
-> 
-> period = 1/PCLK * 2 * (GPIO254[31:16] + 1)
-> 
-> rearranging:
-> 
-> period = 2 * (GPIO254[31:16] + 1) / PCLK
-> 
-> Converting back to bus frequency:
-> 
-> frequency = 1 / (2 * (GPIO254[31:16] + 1) / PCLK)
-> 
-> Which rearranges to:
-> 
-> frequency = PCLK / (2 * (GPIO254[31:16] + 1))
-> 
-> Extracting GPIO254[31:16] in terms of PCLK / frequency from above:
-> 
-> frequency * 2 * (GPIO254[31:16] + 1) = PCLK
-> 
-> And so:
-> 
-> GPIO254[31:16] = PCLK / (frequency * 2) - 1
-> 
-> From that, the code should look something like:
-> 
-> if (sgpio_freq == 0)
->         return -EINVAL;
-> 
-> sgpio_clk_div = apb_freq / (sgpio_freq * 2) - 1;
-> 
-> if (sgpio_clk_div > (1 << 16) - 1)
->         return -EINVAL;
-> 
-> This seems to work at the extremes (sgpio_clk_div = 0 and
-> sgpio_clk_div = 65535), and we get 32766.99 on a round-trip of
-> the divider value 32768, which if we truncate gives an error of 0.023Hz
-> with an APB of 24.75MHz (value reported from one of our boards).
-> 
-> Andrew
-> 
-
-Thanks for the formula and detailed suggestion, really appreciated.
-
-> > +	iowrite32(FIELD_PREP(ASPEED_SGPIO_CLK_DIV_MASK, sgpio_clk_div) |
-> > +		  FIELD_PREP(ASPEED_SGPIO_PINS_MASK, (nr_gpios / 8)) |
-> > +		  ASPEED_SGPIO_ENABLE,
-> > +		  gpio->base + ASPEED_SGPIO_CTRL);
-> > +
-> > +	spin_lock_init(&gpio->lock);
-> > +
-> > +	gpio->chip.parent = &pdev->dev;
-> > +	gpio->chip.ngpio = nr_gpios;
-> > +	gpio->chip.direction_input = aspeed_sgpio_dir_in;
-> > +	gpio->chip.direction_output = aspeed_sgpio_dir_out;
-> > +	gpio->chip.get_direction = aspeed_sgpio_get_direction;
-> > +	gpio->chip.request = NULL;
-> > +	gpio->chip.free = NULL;
-> > +	gpio->chip.get = aspeed_sgpio_get;
-> > +	gpio->chip.set = aspeed_sgpio_set;
-> > +	gpio->chip.set_config = NULL;
-> > +	gpio->chip.label = dev_name(&pdev->dev);
-> > +	gpio->chip.base =  ARCH_NR_GPIOS - MAX_NR_SGPIO;
-> > +
-> > +	rc = devm_gpiochip_add_data(&pdev->dev, &gpio->chip, gpio);
-> > +	if (rc < 0)
-> > +		return rc;
-> > +
-> > +	return aspeed_sgpio_setup_irqs(gpio, pdev);
-> > +}
-> > +
-> > +static struct platform_driver aspeed_sgpio_driver = {
-> > +	.driver = {
-> > +		.name = KBUILD_MODNAME,
-> > +		.of_match_table = aspeed_sgpio_of_table,
-> > +	},
-> > +};
-> > +
-> > +module_platform_driver_probe(aspeed_sgpio_driver, aspeed_sgpio_probe);
-> > +MODULE_DESCRIPTION("Aspeed Serial GPIO Driver");
-> > +MODULE_LICENSE("GPL");
-> > -- 
-> > 2.7.4
+But(!) we could probably just fix clk_core_restore_context(), like I
+suggested in step 13. Then DFLL clock could use generic save / restore
+context and CPUFreq driver won't have to do anything at all because DFLL
+clock will be saved first and resumed *after* all of the peripherals by
+the CCF. In the end CCLK will be switched to DFLL by the CCF restore as
+well.
