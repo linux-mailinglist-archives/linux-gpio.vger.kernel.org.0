@@ -2,109 +2,142 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 3510F6BEF6
-	for <lists+linux-gpio@lfdr.de>; Wed, 17 Jul 2019 17:24:53 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 413186BF92
+	for <lists+linux-gpio@lfdr.de>; Wed, 17 Jul 2019 18:23:36 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726260AbfGQPYw (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 17 Jul 2019 11:24:52 -0400
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:45447 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725948AbfGQPYw (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 17 Jul 2019 11:24:52 -0400
-Received: by mail-lj1-f193.google.com with SMTP id m23so23998827lje.12
-        for <linux-gpio@vger.kernel.org>; Wed, 17 Jul 2019 08:24:50 -0700 (PDT)
+        id S1726494AbfGQQXf (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 17 Jul 2019 12:23:35 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:54734 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726081AbfGQQXf (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 17 Jul 2019 12:23:35 -0400
+Received: by mail-wm1-f66.google.com with SMTP id p74so22767637wme.4
+        for <linux-gpio@vger.kernel.org>; Wed, 17 Jul 2019 09:23:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:from:date:message-id:subject:to:cc;
-        bh=RiBxeDla5S+W1dOK7Khr8uPhoGXyMITDyRV+d4Gpttw=;
-        b=WaqzP2Oaflu33Wr9zVrugsUqwIcrHOC6d1INoBgDeGzkUUzC6C1UQ5XLpyMA7c1uu0
-         Yj8PHMAR69KBRiYNMncEc5F+Y4WjalukgGpDzO8ps/VqVRnZy8+3icmjMzKiRCcbOI/i
-         otXJNpfRwoAbHZ6kFyUoXSJidXDiKagyn4x7tQ/xB4e381VNUXbRfH3KUuGJsxDuxGFj
-         K/1ce/gafL5dUYRoqzbvgDMouuwkwlvBu+lrTRuoOc449W86vJtgD4KkyeKTE61FmF6Q
-         MHjji/RO3xgkV2ehxOPnf7sDpFyHWyIqWa7+ZgehWk8pfhsFvgfH/Ai7u5sNs1J1HehU
-         vpbQ==
+        d=kernelci-org.20150623.gappssmtp.com; s=20150623;
+        h=message-id:date:mime-version:content-transfer-encoding:subject:to
+         :from;
+        bh=QMI9/tfdPwQ1e3SX2bPDN5UupuevmOeYzDBdhUT0hj8=;
+        b=VbrPxDWmmbobwELZJEoFo0I/XNJRHknuuslLUjBTXMnjb9spEb4anjVf1LKBNIYsu+
+         HeFs005wYwil2zLatYx4y7siw7K+kETi/Zzkhzd6BlQ3H92cxsgkm8yJHoQ0z2KPLo8i
+         Xr+jCmU4xGZISArd253gJ0o3Z4ncE4wNJTapN9kqojHYCV0IJEFcTm70t7M18ohDN8vd
+         74UqZ5Eh5RCGqK+HJAF0GpdKZunfdpxqtseBYTf8CVcdJ6W0K8ko+L5b2mMdI7Oqg001
+         o471cN6HjCWWVlBsPzpY/rS3l+Rf6WpqRcifP5QJ4nkoFEUhsbEWYNOX7bI3/kcKHED5
+         STHw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
-        bh=RiBxeDla5S+W1dOK7Khr8uPhoGXyMITDyRV+d4Gpttw=;
-        b=BSVfj0DcolqL+A2LAi3pJXaOFD81jWCvzHVZkBFBGk3g6JjRLudCqWiu30kTU57FME
-         oZTY3MK0Cj93/uhf2p+1Xsr/AklNvHnVgReHIZCLZQ9SHIOnB/MGlRtElrRj8swD1YaD
-         v5xCj45cJx61bYb33578q8cRQt3JRyMWk8vEELzAQ6xBsQl/HI1ed5/dYlIVTQyUCJhF
-         t8alpfhF+oOxLZZXM+G53GV44hhTEGFMF57aQgUJWdSDOUW5BaO3s/UlBhUCl8SS4nnW
-         jJza9dS8ueDj3rFyL2/jrUcoJOiAUWWi6lGyTnw1dr7FJP0qYhAnBP+01EAr5ipSt80G
-         wbwg==
-X-Gm-Message-State: APjAAAULdoYOYCweNzi1k7QBmM1tmVQrQdyXLaWgDumTNn2z5LKGLWNN
-        WtfKask3aCJBakBeppJcMxFmH0sQ8gDelbqlLLBoow==
-X-Google-Smtp-Source: APXvYqwtOm+KRiLvQOXdvGCwtGiYezXbs0zHjP2TQOlPCu8ncjrv1uFE3puMuifvkG/6TI4TgDJaXgpjY8GJ8Mqin2g=
-X-Received: by 2002:a2e:8756:: with SMTP id q22mr21546133ljj.108.1563377090216;
- Wed, 17 Jul 2019 08:24:50 -0700 (PDT)
+        h=x-gm-message-state:message-id:date:mime-version
+         :content-transfer-encoding:subject:to:from;
+        bh=QMI9/tfdPwQ1e3SX2bPDN5UupuevmOeYzDBdhUT0hj8=;
+        b=GyqlRjKprc5kAvTjrx12tx0H74cvADYadI3F6odtNzZMdVfa5KT3QWK1KcMvzueWMi
+         5f1l0Lrhcm8MK2LwZrl6H7NJXXmRI+N4wINCJPQeGwIkIGw42xg2w+bChyECeSe19Bos
+         iWDp79YU4HrY7N8JGt9nIFE5kqiAXhUYMS9Ibn4qN+iM3dQfADhXumnxq6ZHA59D25d8
+         1geUCKeaamAiUzHBXT4AjmXPR+RRgVFxrWB2fbrhuV5YwcY16aDxq/QIuIGIpHCVNNpb
+         Ia7mgkFK2Y0hKtmEV1OI6BEQCVvD1Hqkpbx5ij2e1Tv+vziRr8wn/0uNYiqrxsXKQa7P
+         unWA==
+X-Gm-Message-State: APjAAAVUx64HZ8AcXzaV8khJ7ALqqdpaetp5+3rrcCDxlkB1RXnWHQC1
+        Yu2ihR/9iT6Khh9rEKO5GUkxeFUbYeQ=
+X-Google-Smtp-Source: APXvYqzSNknGfBAHW3WYcpNLyuSsFLtyirLKivfXN3HHpShJsdKW1w6AHbDA0Ejh/8VQ24zgYgpBKg==
+X-Received: by 2002:a1c:7310:: with SMTP id d16mr36403658wmb.107.1563380613036;
+        Wed, 17 Jul 2019 09:23:33 -0700 (PDT)
+Received: from [148.251.42.114] ([2a01:4f8:201:9271::2])
+        by smtp.gmail.com with ESMTPSA id a2sm25080026wmj.9.2019.07.17.09.23.31
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 17 Jul 2019 09:23:31 -0700 (PDT)
+Message-ID: <5d2f4b83.1c69fb81.4eff3.f7e5@mx.google.com>
+Date:   Wed, 17 Jul 2019 09:23:31 -0700 (PDT)
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Wed, 17 Jul 2019 17:24:38 +0200
-Message-ID: <CACRpkdYOahn84UxZ_-YAQsP+4W+HQCAL7xEJieEDd53xLgaWfw@mail.gmail.com>
-Subject: [GIT PULL] GPIO fixes for v5.3 take one
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Kernelci-Kernel: v5.2-10808-g9637d517347e
+X-Kernelci-Report-Type: build
+X-Kernelci-Tree: linusw
+X-Kernelci-Branch: devel
+Subject: linusw/devel build: 6 builds: 0 failed, 6 passed,
+ 3 warnings (v5.2-10808-g9637d517347e)
+To:     linux-gpio@vger.kernel.org, fellows@kernelci.org
+From:   "kernelci.org bot" <bot@kernelci.org>
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Linus,
+linusw/devel build: 6 builds: 0 failed, 6 passed, 3 warnings (v5.2-10808-g9=
+637d517347e)
 
-some fixes arrived early so let's merge them early so we
-have as little problems as possible in -rc1.
+Full Build Summary: https://kernelci.org/build/linusw/branch/devel/kernel/v=
+5.2-10808-g9637d517347e/
 
-This is based on the most recent HEAD commit that day.
+Tree: linusw
+Branch: devel
+Git Describe: v5.2-10808-g9637d517347e
+Git Commit: 9637d517347e80ee2fe1c5d8ce45ba1b88d8b5cd
+Git URL: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-gpio.=
+git/
+Built: 6 unique architectures
 
-Please pull it in, details in the signed tag.
+Warnings Detected:
 
-Yours,
-Linus Walleij
+arc:
 
-The following changes since commit 9637d517347e80ee2fe1c5d8ce45ba1b88d8b5cd:
+arm64:
 
-  Merge tag 'for-linus-20190715' of git://git.kernel.dk/linux-block
-(2019-07-15 21:20:52 -0700)
+arm:
 
-are available in the Git repository at:
+mips:
+    32r2el_defconfig (gcc-8): 3 warnings
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-gpio.git
-tags/gpio-v5.3-2
+riscv:
 
-for you to fetch changes up to 88785b7fa74ae2dc52f879140b976984b5374c79:
+x86_64:
 
-  Merge tag 'gpio-v5.3-rc1-fixes-for-linus' of
-git://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux into fixes
-(2019-07-16 11:12:14 +0200)
 
-----------------------------------------------------------------
-GPIO fixes for the v5.3 merge window:
-- Revert a SPIO GPIO fix that didn't fix anything instead created new
-  problems.
-- Remove the EM GPIO irqdomain in a safe manner.
-- Fix a memory leak in the gpio quirks.
-- Make the DaVinci error path silent on probe deferral.
+Warnings summary:
 
-----------------------------------------------------------------
-Bartosz Golaszewski (1):
-      gpio: em: remove the gpiochip before removing the irq domain
+    3    <stdin>:1511:2: warning: #warning syscall clone3 not implemented [=
+-Wcpp]
 
-Keerthy (1):
-      gpio: davinci: silence error prints in case of EPROBE_DEFER
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D
 
-Linus Walleij (2):
-      Revert "gpio/spi: Fix spi-gpio regression on active high CS"
-      Merge tag 'gpio-v5.3-rc1-fixes-for-linus' of
-git://git.kernel.org/.../brgl/linux into fixes
+Detailed per-defconfig build reports:
 
-Nishka Dasgupta (1):
-      gpiolib: of: fix a memory leak in of_gpio_flags_quirks()
+---------------------------------------------------------------------------=
+-----
+32r2el_defconfig (mips, gcc-8) =E2=80=94 PASS, 0 errors, 3 warnings, 0 sect=
+ion mismatches
 
- drivers/gpio/gpio-davinci.c |  5 +++--
- drivers/gpio/gpio-em.c      | 33 +++++++++++++++------------------
- drivers/gpio/gpiolib-of.c   | 10 ++--------
- 3 files changed, 20 insertions(+), 28 deletions(-)
+Warnings:
+    <stdin>:1511:2: warning: #warning syscall clone3 not implemented [-Wcpp]
+    <stdin>:1511:2: warning: #warning syscall clone3 not implemented [-Wcpp]
+    <stdin>:1511:2: warning: #warning syscall clone3 not implemented [-Wcpp]
+
+---------------------------------------------------------------------------=
+-----
+defconfig (riscv, gcc-8) =E2=80=94 PASS, 0 errors, 0 warnings, 0 section mi=
+smatches
+
+---------------------------------------------------------------------------=
+-----
+defconfig (arm64, gcc-8) =E2=80=94 PASS, 0 errors, 0 warnings, 0 section mi=
+smatches
+
+---------------------------------------------------------------------------=
+-----
+multi_v7_defconfig (arm, gcc-8) =E2=80=94 PASS, 0 errors, 0 warnings, 0 sec=
+tion mismatches
+
+---------------------------------------------------------------------------=
+-----
+nsim_hs_defconfig (arc, gcc-8) =E2=80=94 PASS, 0 errors, 0 warnings, 0 sect=
+ion mismatches
+
+---------------------------------------------------------------------------=
+-----
+x86_64_defconfig (x86_64, gcc-8) =E2=80=94 PASS, 0 errors, 0 warnings, 0 se=
+ction mismatches
+
+---
+For more info write to <info@kernelci.org>
