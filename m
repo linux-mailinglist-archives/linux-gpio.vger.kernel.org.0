@@ -2,75 +2,116 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 59E466D128
-	for <lists+linux-gpio@lfdr.de>; Thu, 18 Jul 2019 17:30:37 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A04D26D1F4
+	for <lists+linux-gpio@lfdr.de>; Thu, 18 Jul 2019 18:21:39 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727687AbfGRPag (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 18 Jul 2019 11:30:36 -0400
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:34648 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726608AbfGRPag (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 18 Jul 2019 11:30:36 -0400
-Received: by mail-pl1-f195.google.com with SMTP id i2so14082119plt.1
-        for <linux-gpio@vger.kernel.org>; Thu, 18 Jul 2019 08:30:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=message-id:mime-version:content-transfer-encoding:in-reply-to
-         :references:subject:to:cc:from:user-agent:date;
-        bh=enTxUkUzWwDVJKls4jnHiVkcuCVL3Z4nxXwF8v+fVOY=;
-        b=MWl276meOjKDs2ZS61poZVM2fiDXKc6ShVWsOBZzjVtWKusvdwhSesvk7MvjqjkoyL
-         g1rWRtaUPlMy/4rS4zBg1y7kfjnCaxe/N7x5YSaEwh/xVHHkACf2EW3e4Qx1v0E6NogR
-         zXri1kaUUKJ9QcZk/OmRUkOalB6Cb57IwqzQ8=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:mime-version
-         :content-transfer-encoding:in-reply-to:references:subject:to:cc:from
-         :user-agent:date;
-        bh=enTxUkUzWwDVJKls4jnHiVkcuCVL3Z4nxXwF8v+fVOY=;
-        b=nEIf7ivcv7I/rP9ZucAK4KhRhSdcuyrHzt+6cJH08yIPMT41CjNQ2dPnYw0LEZTclS
-         h4RV+JyAXY+Qwq+dEl/7/nT01orBcqaAk4zYLdLo+uzmgLI9bkP/zbDDphZsq/fKgGx9
-         9FkYG12HwyC80Pnn3O/ucke2NX9DsPV1q2QkZZNSL6CTxnL80IiMh1f0I0T7UNq6BYUc
-         PZ703aDz3v+IRHzSfLRMY+7qPj2rUk7RBql8/DS2/H5LhPQFk1qQt6l8bu1QPr//BtEU
-         AIjtvBSwonfPGPF1RFNhPwqhbfOwl16EJJWt7iPozn0KKUmbVynLW9tRctKnKyvkI1Ot
-         QcvQ==
-X-Gm-Message-State: APjAAAWw+r4klCTeWxB8oQEheilCUAAGV8puSpNLbra/zCbRgdxjxM1I
-        mNnDzthHo/OjNi+qsfgglHcegA==
-X-Google-Smtp-Source: APXvYqwwHOdtFI3g0e9QUZENq+nEdLyWEtPqwnAB8Ja1AUOSKTg5KC9sGrRwnscxa+7h15LnEJpM1Q==
-X-Received: by 2002:a17:902:26c:: with SMTP id 99mr52459455plc.215.1563463835657;
-        Thu, 18 Jul 2019 08:30:35 -0700 (PDT)
-Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
-        by smtp.gmail.com with ESMTPSA id s5sm2217471pfm.97.2019.07.18.08.30.34
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Thu, 18 Jul 2019 08:30:34 -0700 (PDT)
-Message-ID: <5d30909a.1c69fb81.23a02.413d@mx.google.com>
-Content-Type: text/plain; charset="utf-8"
+        id S1728008AbfGRQVf (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 18 Jul 2019 12:21:35 -0400
+Received: from mx07-00178001.pphosted.com ([62.209.51.94]:39303 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727767AbfGRQVe (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>);
+        Thu, 18 Jul 2019 12:21:34 -0400
+Received: from pps.filterd (m0046037.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x6IGFrdN029373;
+        Thu, 18 Jul 2019 18:20:54 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=STMicroelectronics;
+ bh=AvBlOX1aAMndwD1rjimEhtxf+389A11U97y4vAzgGfA=;
+ b=IqUh0TsabC6t4UVUgILGQJoOnGYPHB6A9sgdy0pQo0YpyX/k0K+8YOgbM62oj46PUEBJ
+ VMHguLTLKZpuhT50f3d3RdXVGyF6kTjYCTSiuj7JCt62pTWtW+EftpVJO0uKnK5h3dgH
+ uZnzPwTGIRwk8vdR15Qs1c5hol+P+o8kq7CP5JhemBuKrKvBzIHhJYsxKGT+Ddw/h21B
+ j98b1HPDnN1ApI4H7+rkes6BE+l99ewV37Isjstx4PCWsvOfhcF/UXPKHt0mKp/gySQV
+ tcRIFPIFRmwjG4O2rwT4RoGmyQ/Qp5JDAGIHxwJD/t+/cWs402vzqVLTHxAxLDMp4hFU QQ== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 2tsdeppqs2-1
+        (version=TLSv1 cipher=ECDHE-RSA-AES256-SHA bits=256 verify=NOT);
+        Thu, 18 Jul 2019 18:20:54 +0200
+Received: from zeta.dmz-eu.st.com (zeta.dmz-eu.st.com [164.129.230.9])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 4439038;
+        Thu, 18 Jul 2019 16:20:44 +0000 (GMT)
+Received: from Webmail-eu.st.com (sfhdag3node2.st.com [10.75.127.8])
+        by zeta.dmz-eu.st.com (STMicroelectronics) with ESMTP id DBBA9533C;
+        Thu, 18 Jul 2019 16:20:43 +0000 (GMT)
+Received: from lmecxl0912.lme.st.com (10.75.127.48) by SFHDAG3NODE2.st.com
+ (10.75.127.8) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Thu, 18 Jul
+ 2019 18:20:42 +0200
+Subject: Re: [PATCH] dt-bindings: Ensure child nodes are of type 'object'
+To:     Rob Herring <robh@kernel.org>, <devicetree@vger.kernel.org>
+CC:     <linux-kernel@vger.kernel.org>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Chen-Yu Tsai <wens@csie.org>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Brian Norris <computersforpeace@gmail.com>,
+        Marek Vasut <marek.vasut@gmail.com>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Richard Weinberger <richard@nod.at>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        <linux-mtd@lists.infradead.org>, <linux-gpio@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-spi@vger.kernel.org>
+References: <20190715230457.3901-1-robh@kernel.org>
+From:   Alexandre Torgue <alexandre.torgue@st.com>
+Message-ID: <66b45e4e-31b1-f878-5042-2282a5e8334f@st.com>
+Date:   Thu, 18 Jul 2019 18:20:42 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20190718065101.26994-1-yamada.masahiro@socionext.com>
-References: <20190718065101.26994-1-yamada.masahiro@socionext.com>
-Subject: Re: [PATCH] gpio: refactor gpiochip_allocate_mask() with bitmap_alloc()
-To:     Linus Walleij <linus.walleij@linaro.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        linux-gpio@vger.kernel.org
-Cc:     Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        linux-kernel@vger.kernel.org
-From:   Stephen Boyd <swboyd@chromium.org>
-User-Agent: alot/0.8.1
-Date:   Thu, 18 Jul 2019 08:30:33 -0700
+In-Reply-To: <20190715230457.3901-1-robh@kernel.org>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.75.127.48]
+X-ClientProxiedBy: SFHDAG2NODE1.st.com (10.75.127.4) To SFHDAG3NODE2.st.com
+ (10.75.127.8)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-07-18_08:,,
+ signatures=0
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Quoting Masahiro Yamada (2019-07-17 23:51:01)
-> Refactor gpiochip_allocate_mask() slightly by using bitmap_alloc().
->=20
-> I used bitmap_free() for the corresponding free parts. Actually,
-> bitmap_free() is a wrapper of kfree(), but I did this for consistency.
->=20
-> Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+Hi Rob
+
+On 7/16/19 1:04 AM, Rob Herring wrote:
+> Properties which are child node definitions need to have an explict
+> type. Otherwise, a matching (DT) property can silently match when an
+> error is desired. Fix this up tree-wide. Once this is fixed, the
+> meta-schema will enforce this on any child node definitions.
+> 
+> Cc: Maxime Ripard <maxime.ripard@bootlin.com>
+> Cc: Chen-Yu Tsai <wens@csie.org>
+> Cc: David Woodhouse <dwmw2@infradead.org>
+> Cc: Brian Norris <computersforpeace@gmail.com>
+> Cc: Marek Vasut <marek.vasut@gmail.com>
+> Cc: Miquel Raynal <miquel.raynal@bootlin.com>
+> Cc: Richard Weinberger <richard@nod.at>
+> Cc: Vignesh Raghavendra <vigneshr@ti.com>
+> Cc: Linus Walleij <linus.walleij@linaro.org>
+> Cc: Maxime Coquelin <mcoquelin.stm32@gmail.com>
+> Cc: Alexandre Torgue <alexandre.torgue@st.com>
+> Cc: Mark Brown <broonie@kernel.org>
+> Cc: linux-mtd@lists.infradead.org
+> Cc: linux-gpio@vger.kernel.org
+> Cc: linux-stm32@st-md-mailman.stormreply.com
+> Cc: linux-spi@vger.kernel.org
+> Signed-off-by: Rob Herring <robh@kernel.org>
 > ---
+> Please ack. I will take this via the DT tree.
+>
 
-Reviewed-by: Stephen Boyd <swboyd@chromium.org>
+For pinctrl STM32:
 
+Acked-by: Alexandre TORGUE <alexandre.torgue@st.com>
+
+thanks
+
+Alexandre
+
+> Rob
+> 
+>
