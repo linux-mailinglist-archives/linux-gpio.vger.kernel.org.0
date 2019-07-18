@@ -2,63 +2,40 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id CA80C6D20D
-	for <lists+linux-gpio@lfdr.de>; Thu, 18 Jul 2019 18:34:55 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A6CC76D2B0
+	for <lists+linux-gpio@lfdr.de>; Thu, 18 Jul 2019 19:23:26 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727740AbfGRQe1 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 18 Jul 2019 12:34:27 -0400
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:37538 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726040AbfGRQe1 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 18 Jul 2019 12:34:27 -0400
-Received: by mail-lj1-f195.google.com with SMTP id z28so28057139ljn.4;
-        Thu, 18 Jul 2019 09:34:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=7sdnxABL2xPJ1BT3vVLYE3iU7uI16k3jZkqBzR97jTQ=;
-        b=cen6g959dfojbGiV/QspDJOO6Gs7RLZFB+4O3ZKZEdQQqAOeYkmFUms3pB/eMgE5o8
-         qBOvVSO5ot+qs3SQ4XU1ekimkokBiBMf2LRs2vKz4vYLN4L2iPiU+1ExPZCrYUdW57jF
-         WBlp+XHehQx2GiI0KARR32em40ZrvUYkdolVRrUZRNKozjsAXmKRiDkAML0Rc+RVOSVm
-         1yN/Q2wA4jG6U2j9YaOixzl7VZ48RP4+BRUfLlNMkqrbO5qnb1/MPtnkDVw8dedZcvwU
-         x2Yowz9A5zSBEWyqoZuomdLFIh9P6PnfMRZyQNkiEmBW7bNqapLg0qooXhE8hZijYcLr
-         nPtQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=7sdnxABL2xPJ1BT3vVLYE3iU7uI16k3jZkqBzR97jTQ=;
-        b=HbbxWgTMagJjmZ0XeMOk4997EyAo3wSPi/HAXNd2HwKhM53Y9ISAjGln3a6dq78Y6k
-         JGbSFfAmTaelCq4cj+e8Z9fpA/xjlry9948s4YOVcsjOC0DLznVnJDeRj3GYniZBXnMp
-         ivIgtLbhW/OX/OmwPVZcUuICJvOjPLrTeY9pdcdk2NgWgBAxJIIFEXGFYOuUfvCDMVwl
-         Sfct2A4UVerLV1l1cFYP4a5+M+LENRwcdyOHpOhphnjr/Uqwj+k+f8/GimhoLjqUg7r+
-         n2BG23Ho3YRr/ZSCsTQcvvuEdl0g/NV40o+g/ShpT+Aqvw9/fhrkEJ0lrYP0Bml8eTuK
-         i7zg==
-X-Gm-Message-State: APjAAAWPiN40nza+R0kFn0WEZBDe6b3DQ9MuanG46EgI3xGBXB8NWctq
-        VezaQxwAdxO+B45AZm9/o8lnH3y7
-X-Google-Smtp-Source: APXvYqx6/gY1TDM+kcuOEoQiqDcS4zflCNHE6TZ0pNO9Z6U02VdPHipI+OLScjYKudQpiC2NXBek0w==
-X-Received: by 2002:a2e:870f:: with SMTP id m15mr24928245lji.223.1563467664208;
-        Thu, 18 Jul 2019 09:34:24 -0700 (PDT)
-Received: from [192.168.2.145] (ppp79-139-233-208.pppoe.spdop.ru. [79.139.233.208])
-        by smtp.googlemail.com with ESMTPSA id r68sm4070738lff.52.2019.07.18.09.34.22
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 18 Jul 2019 09:34:23 -0700 (PDT)
+        id S1727817AbfGRRWa (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 18 Jul 2019 13:22:30 -0400
+Received: from hqemgate15.nvidia.com ([216.228.121.64]:1703 "EHLO
+        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726715AbfGRRW3 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 18 Jul 2019 13:22:29 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5d30aadb0001>; Thu, 18 Jul 2019 10:22:35 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Thu, 18 Jul 2019 10:22:28 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Thu, 18 Jul 2019 10:22:28 -0700
+Received: from [10.110.103.56] (172.20.13.39) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 18 Jul
+ 2019 17:22:28 +0000
 Subject: Re: [PATCH V5 11/18] clk: tegra210: Add support for Tegra210 clocks
-To:     Sowjanya Komatineni <skomatineni@nvidia.com>, sboyd@kernel.org,
+To:     Dmitry Osipenko <digetx@gmail.com>, <sboyd@kernel.org>,
         Michael Turquette <mturquette@baylibre.com>
-Cc:     Peter De Schrijver <pdeschrijver@nvidia.com>,
-        Joseph Lo <josephl@nvidia.com>, thierry.reding@gmail.com,
-        jonathanh@nvidia.com, tglx@linutronix.de, jason@lakedaemon.net,
-        marc.zyngier@arm.com, linus.walleij@linaro.org, stefan@agner.ch,
-        mark.rutland@arm.com, pgaikwad@nvidia.com,
-        linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org,
-        jckuo@nvidia.com, talho@nvidia.com, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org, mperttunen@nvidia.com,
-        spatra@nvidia.com, robh+dt@kernel.org, devicetree@vger.kernel.org
+CC:     Peter De Schrijver <pdeschrijver@nvidia.com>,
+        Joseph Lo <josephl@nvidia.com>, <thierry.reding@gmail.com>,
+        <jonathanh@nvidia.com>, <tglx@linutronix.de>,
+        <jason@lakedaemon.net>, <marc.zyngier@arm.com>,
+        <linus.walleij@linaro.org>, <stefan@agner.ch>,
+        <mark.rutland@arm.com>, <pgaikwad@nvidia.com>,
+        <linux-clk@vger.kernel.org>, <linux-gpio@vger.kernel.org>,
+        <jckuo@nvidia.com>, <talho@nvidia.com>,
+        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <mperttunen@nvidia.com>, <spatra@nvidia.com>, <robh+dt@kernel.org>,
+        <devicetree@vger.kernel.org>
 References: <a5e1a6df-dff7-9e0c-9551-f78103a5462f@gmail.com>
- <093462f3-8c6d-d084-9822-ae4eff041c64@nvidia.com>
  <20190717093317.70fefb27@dimatab>
  <6e73dcee-6e24-b646-97a4-4b34aedd231d@nvidia.com>
  <16f8b146-2581-a842-4997-53ab05b62c70@gmail.com>
@@ -77,54 +54,79 @@ References: <a5e1a6df-dff7-9e0c-9551-f78103a5462f@gmail.com>
  <89f23878-d4b2-2305-03e5-8a3e781c2b02@gmail.com>
  <c759d71b-1549-2562-f0cf-db5f9e51329e@nvidia.com>
  <ef7928ad-239d-eca8-41bf-f76e72a9841d@nvidia.com>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <4141181d-7162-0321-71b6-33abf11f631c@gmail.com>
-Date:   Thu, 18 Jul 2019 19:34:21 +0300
+ <4141181d-7162-0321-71b6-33abf11f631c@gmail.com>
+From:   Sowjanya Komatineni <skomatineni@nvidia.com>
+Message-ID: <ab8f2441-8f4b-3a2b-5bcd-1a889555176a@nvidia.com>
+Date:   Thu, 18 Jul 2019 10:22:27 -0700
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.7.2
 MIME-Version: 1.0
-In-Reply-To: <ef7928ad-239d-eca8-41bf-f76e72a9841d@nvidia.com>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <4141181d-7162-0321-71b6-33abf11f631c@gmail.com>
+X-Originating-IP: [172.20.13.39]
+X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: quoted-printable
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1563470555; bh=jIASJ9SYb600mfURp86GaKddTrmg/84js512J8nlJ/Y=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
+         Content-Language;
+        b=j4B2n/jhgWI6HXVrnXvH4RgWuVjZ6un1SJ0nSzXPf7kkFjDKYtFU/ZpEm4tDygIUX
+         QTR/Wx+2SYdrGkedx+ZvJuplTSNpj6iNFyEDLjA0kVBO1wU5eWJrZ3eBgP3N9f9pFu
+         X9OZZD09QUZQBUUSYc5jH69ycY1UlPx/BThF9VCR6wCfC1vguIk1yFCN8d60QdcyCB
+         CtdfptLSiIToVW7XJc2QJ0VhLbVlK24acOsXiGQb+fa3hg2CVkIgN96nu9U7bh24xS
+         DpmmNYDIef8OuGIrnMNxzw1S+DFGaHR175ixvpJXsCvodAhapG4LSL0Td88qeTgVfP
+         Y3yZVehuzgF/g==
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-18.07.2019 4:15, Sowjanya Komatineni пишет:
 
-[snip]
+On 7/18/19 9:34 AM, Dmitry Osipenko wrote:
+> 18.07.2019 4:15, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+>
+> [snip]
+>
+>>>> Please try to fix all missing dependencies and orderings.
+>>> Peter,
+>>>
+>>> dfllCPU_OUT is the first one to go thru restore when
+>>> clk_restore_context traverses thru the list.
+>>>
+>>> dfllCPU_OUT has dependency on DFLL_ref and DFLL_SOC but this
+>>> dependency is unknown to clock-tree.
+>>>
+>>> We can add DFLL_REF and DFLL_SOC as parents to dfllCPU_OUT during
+>>> register so dfllCPU_OUT save/restore happens after their parents are
+>>> restored.
+>>>
+>>> But DFLL needs both of these to be restored before DFLLCPU_Out and as
+>>> DFLL_SOC restore always happens after the REF, thinking to add
+>>> DFLL_SOC as parent to dfllCPU_OUT so save/restore follows after their
+>>> dependencies.
+>>>
+>>> Please comment.
+>>>
+>> Did quick try and I see by adding dfll-soc as parent to dfllCPU_OUT, its
+>> in proper order after all its dependencies.
+>>
+>> Can now add dfll save/restore to do dfll reinit during restore..
+>>
+> If dfllCPU_OUT can work properly with dfll-soc being disabled, then this
+> kind of dependency isn't very correct and just papers over the real
+> problem, which is that there should be a way for CCF to specify multiple
+> dependencies for the clock or the reverse ordering should be used for
+> the restoring.
 
->>> Please try to fix all missing dependencies and orderings.
->>
->> Peter,
->>
->> dfllCPU_OUT is the first one to go thru restore when
->> clk_restore_context traverses thru the list.
->>
->> dfllCPU_OUT has dependency on DFLL_ref and DFLL_SOC but this
->> dependency is unknown to clock-tree.
->>
->> We can add DFLL_REF and DFLL_SOC as parents to dfllCPU_OUT during
->> register so dfllCPU_OUT save/restore happens after their parents are
->> restored.
->>
->> But DFLL needs both of these to be restored before DFLLCPU_Out and as
->> DFLL_SOC restore always happens after the REF, thinking to add
->> DFLL_SOC as parent to dfllCPU_OUT so save/restore follows after their
->> dependencies.
->>
->> Please comment.
->>
-> Did quick try and I see by adding dfll-soc as parent to dfllCPU_OUT, its
-> in proper order after all its dependencies.
-> 
-> Can now add dfll save/restore to do dfll reinit during restore..
-> 
+dfll will not work without dfll-soc enabled.
 
-If dfllCPU_OUT can work properly with dfll-soc being disabled, then this
-kind of dependency isn't very correct and just papers over the real
-problem, which is that there should be a way for CCF to specify multiple
-dependencies for the clock or the reverse ordering should be used for
-the restoring.
+CLDVFS control logic is split into 2 clock domains. dvfs_ref_clk and=20
+dvfs_soc_clk.
+
+Majority of the control logic is clocked from dvfs_soc_clk for=20
+interfacing control registers.
+
