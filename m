@@ -2,94 +2,93 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 9B7976EF35
-	for <lists+linux-gpio@lfdr.de>; Sat, 20 Jul 2019 13:32:05 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 117406EF3A
+	for <lists+linux-gpio@lfdr.de>; Sat, 20 Jul 2019 13:39:15 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728047AbfGTLcE (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sat, 20 Jul 2019 07:32:04 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:36057 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728037AbfGTLcE (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sat, 20 Jul 2019 07:32:04 -0400
-Received: by mail-wr1-f65.google.com with SMTP id n4so34727957wrs.3
-        for <linux-gpio@vger.kernel.org>; Sat, 20 Jul 2019 04:32:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=y1DgajEy2wBaMjnleDlKvTbnzQUhSLoATqVXxMZ4yOY=;
-        b=mhIvRWJ9id5PxUoR1fNC9fdbFAtS/0PM4qAytnpMw48tlTwce2QCbWvgv1+Xb01i/o
-         mU5qHuG+NCUvlgcE+zbcdOZNg2hFd5hzQGCiOqOl880HP2a8OaXS3wWHbdMRGhxpqlSH
-         /4xHMJI3QLL9z6yzyp/YGc8Me0onYVPdJPh8G1sa0WWJbx61YU46MEqXSHloBSS0oG9D
-         87A6Zi7D+xz2tiqBBaiLDs5YVA+ADKmaOJSmFj8K8wjcjpBut9GduxqAXC36QhXpWWN1
-         r+sX47VwNamoZ6IJQNkZncZwF9YDu7mZr0Gccl0TNewXXxstrFSC3oDmP+ItLa2OIWAW
-         PBCA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=y1DgajEy2wBaMjnleDlKvTbnzQUhSLoATqVXxMZ4yOY=;
-        b=LWldP8zfdX0/9sEvIhS07Ew5KePaowbTBEFTwMXxWmgAqqi9hvtYgkyw+ne0WPr1Io
-         XyOB0fMvE9aFt09lHwBPKc6/d/ymxL4MPhNFXaWH1h6NvNs18d0iRftQOG2oSVtWtrBS
-         ZrclxBaf7UbvKxTeQbVYR8UpFwsb010K0CyejCFTngEkhMWl8vHapqoK2WSwfkfRMFan
-         Ef4lBJ0d8q7xQbLQoiFe5esFEYAZsGRAMOcghReJ1HsDuAHtkSZNOkwiMNgW2S05xLWf
-         aH9upTIGr01g4YiHLeDjwA8kMZ/QZZn6jNYVMu5eG/H8RAkCRJnz8X1NpXILFsBch7+Y
-         UPOg==
-X-Gm-Message-State: APjAAAWts6E9IIYUtFASJ14eRR0TCdMKckP2GQMJEsLWQAnGTZMWqO17
-        /XFxS4Rwln7sM/rhGMEGLRA=
-X-Google-Smtp-Source: APXvYqzp3Hzx3u8EMCqrr1ygV7S+rEv2vYBK5SsRnzGwZf78z9C0/XekZWLSxBd1kBR8JkKEFbfajw==
-X-Received: by 2002:a5d:5012:: with SMTP id e18mr34029874wrt.166.1563622322585;
-        Sat, 20 Jul 2019 04:32:02 -0700 (PDT)
-Received: from smtp.gmail.com (86-43-168-87-dynamic.b-ras2.prp.dublin.eircom.net. [86.43.168.87])
-        by smtp.gmail.com with ESMTPSA id j189sm35657661wmb.48.2019.07.20.04.32.00
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Sat, 20 Jul 2019 04:32:01 -0700 (PDT)
-From:   Tomasz Kazimierz Motyl <tomasz.motyl666@gmail.com>
-X-Google-Original-From: Tomasz Kazimierz Motyl <tomasz.motyl@se.com>
-To:     linus.walleij@linaro.org, bgolaszewski@baylibre.com,
-        linux-gpio@vger.kernel.org
-Cc:     butterfly_tm666@yahoo.com,
-        Tomasz Kazimierz Motyl <tomasz.motyl@se.com>
-Subject: [PATCH] Record interrupt status when an IRQ is masked
-Date:   Sat, 20 Jul 2019 04:31:55 -0700
-Message-Id: <20190720113155.12276-1-tomasz.motyl@se.com>
-X-Mailer: git-send-email 2.17.1
+        id S1728080AbfGTLjL convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-gpio@lfdr.de>); Sat, 20 Jul 2019 07:39:11 -0400
+Received: from hermes.aosc.io ([199.195.250.187]:38469 "EHLO hermes.aosc.io"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728078AbfGTLjL (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Sat, 20 Jul 2019 07:39:11 -0400
+Received: from localhost (localhost [127.0.0.1]) (Authenticated sender: icenowy@aosc.io)
+        by hermes.aosc.io (Postfix) with ESMTPSA id E210C6F0CC;
+        Sat, 20 Jul 2019 11:39:00 +0000 (UTC)
+Date:   Sat, 20 Jul 2019 19:39:08 +0800
+In-Reply-To: <20190720101318.cwrvv5r42wxx5k4r@flea>
+References: <20190713034634.44585-1-icenowy@aosc.io> <20190713034634.44585-8-icenowy@aosc.io> <20190720101318.cwrvv5r42wxx5k4r@flea>
+MIME-Version: 1.0
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: 8BIT
+Subject: Re: [PATCH v4 7/8] dt-bindings: arm: sunxi: add binding for Lichee Zero Plus core board
+To:     linux-arm-kernel@lists.infradead.org,
+        Maxime Ripard <maxime.ripard@bootlin.com>
+CC:     devicetree@vger.kernel.org,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-sunxi@googlegroups.com, linux-kernel@vger.kernel.org,
+        linux-gpio@vger.kernel.org, Chen-Yu Tsai <wens@csie.org>,
+        Rob Herring <robh+dt@kernel.org>, linux-clk@vger.kernel.org
+From:   Icenowy Zheng <icenowy@aosc.io>
+Message-ID: <BDF0C9F6-DD0D-4343-8E24-06A07055004C@aosc.io>
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
- When one changes the state of any input pins of a PCA9555 chip before
- setting up the IRQ mask through i.e. SysFS e.g. echo "both" >
- /sys/class/gpio/gpioXYZ/edge the epoll_wait shall not exit on the subsequent
- change of the GPIO state. The reason behind it is that the IRQ status is not
- being saved when the IRQ is masked.
 
----
- drivers/gpio/gpio-pca953x.c | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/gpio/gpio-pca953x.c b/drivers/gpio/gpio-pca953x.c
-index 7e76830b3368..088bef902156 100644
---- a/drivers/gpio/gpio-pca953x.c
-+++ b/drivers/gpio/gpio-pca953x.c
-@@ -716,13 +716,16 @@ static bool pca953x_irq_pending(struct pca953x_chip *chip, u8 *pending)
- 		trigger[i] = (cur_stat[i] ^ old_stat[i]) & chip->irq_mask[i];
- 		if (trigger[i])
- 			trigger_seen = true;
-+
-+    /* We want the current status recorded in the chip->irq stat regardless the
-+     * chip->irq_mask setting in order to have a change detected when the interrupt
-+     * mask gets changed i.e. echo "both" > /sys/class/gpioXYZ/edge */
-+    chip->irq_stat[i] = cur_stat[i];
- 	}
- 
- 	if (!trigger_seen)
- 		return false;
- 
--	memcpy(chip->irq_stat, cur_stat, NBANK(chip));
--
- 	for (i = 0; i < NBANK(chip); i++) {
- 		pending[i] = (old_stat[i] & chip->irq_trig_fall[i]) |
- 			(cur_stat[i] & chip->irq_trig_raise[i]);
+于 2019年7月20日 GMT+08:00 下午6:13:18, Maxime Ripard <maxime.ripard@bootlin.com> 写到:
+>On Sat, Jul 13, 2019 at 11:46:33AM +0800, Icenowy Zheng wrote:
+>> The Lichee Zero Plus is a core board made by Sipeed, with a microUSB
+>> connector on it, TF slot or WSON8 SD chip, optional eMMC or SPI
+>Flash.
+>> It has a gold finger connector for expansion, and UART is available
+>from
+>> reserved pins w/ 2.54mm pitch. The board can use either SoChip S3 or
+>> Allwinner V3L SoCs.
+>>
+>> Add the device tree binding of the basic version of the core board --
+>> w/o eMMC or SPI Flash, w/ TF slot or WSON8 SD, and use S3 SoC.
+>>
+>> Signed-off-by: Icenowy Zheng <icenowy@aosc.io>
+>> ---
+>> No changes since v3.
+>>
+>> Patch introduced in v2.
+>>
+>>  Documentation/devicetree/bindings/arm/sunxi.yaml | 5 +++++
+>>  1 file changed, 5 insertions(+)
+>>
+>> diff --git a/Documentation/devicetree/bindings/arm/sunxi.yaml
+>b/Documentation/devicetree/bindings/arm/sunxi.yaml
+>> index 000a00d12d6a..48c126a7a848 100644
+>> --- a/Documentation/devicetree/bindings/arm/sunxi.yaml
+>> +++ b/Documentation/devicetree/bindings/arm/sunxi.yaml
+>> @@ -353,6 +353,11 @@ properties:
+>>            - const: licheepi,licheepi-zero
+>>            - const: allwinner,sun8i-v3s
+>>
+>> +      - description: Lichee Zero Plus (with S3, without eMMC/SPI
+>Flash)
+>> +        items:
+>> +          - const: sipeed,lichee-zero-plus
+>> +          - const: allwinner,sun8i-s3
+>
+>If the S3 is just a rebranded V3, then we should have the v3 compatile
+>in that list too.
+
+S3 is V3 with copackaged DDR3 DRAM.
+
+It's pin incompatible w/ V3.
+
+>
+>Maxime
+>
+>--
+>Maxime Ripard, Bootlin
+>Embedded Linux and Kernel engineering
+>https://bootlin.com
+
 -- 
-2.17.1
-
+使用 K-9 Mail 发送自我的Android设备。
