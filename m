@@ -2,103 +2,106 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 5FF2C6F046
-	for <lists+linux-gpio@lfdr.de>; Sat, 20 Jul 2019 20:03:30 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 921976F07F
+	for <lists+linux-gpio@lfdr.de>; Sat, 20 Jul 2019 21:42:51 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726779AbfGTSD0 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sat, 20 Jul 2019 14:03:26 -0400
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:46534 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726489AbfGTSDZ (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sat, 20 Jul 2019 14:03:25 -0400
-Received: by mail-oi1-f194.google.com with SMTP id 65so26671505oid.13
-        for <linux-gpio@vger.kernel.org>; Sat, 20 Jul 2019 11:03:25 -0700 (PDT)
+        id S1726144AbfGTTmt (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sat, 20 Jul 2019 15:42:49 -0400
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:37312 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725995AbfGTTmt (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sat, 20 Jul 2019 15:42:49 -0400
+Received: by mail-lf1-f68.google.com with SMTP id c9so23906154lfh.4
+        for <linux-gpio@vger.kernel.org>; Sat, 20 Jul 2019 12:42:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=fV6Yxz5phWkhQA6DReninzloQxSLe34uuPheQWujNzU=;
-        b=VXbYG3+WE8sblpJmTKNLu27EzPYP1iHM+AmcY9VHfuzbAgVjQkz9y0QKaeEEfwrAHz
-         rVGvnj49z5kKX5trEK7cFHuxIwjHd2Xf+FBoXjf39hoWGusOH86ZLwQ/G+OBWkAHHxIq
-         7gX7zpJWMe4dxmb4EuIA/vnipwgiWI7bmoBaPnvp2OjDy+ID06w0UouPwCIPV6qRTZSn
-         u1RUZ4fJzRwfmG+fMyFsNxKodWBMVTDcHHpYmnNdPeGr+KB2Dpskra3FjhMQ44ed8YWK
-         ZM5YZlk6fHu/Ju6bkiJH8X/ojj+BsYCRbIMW2iItZ08jFMsy88worwZIg8QRRE/p/cXe
-         M3ow==
+         :cc;
+        bh=5wxLUVMBR/zhPyqgOSmQfeegjBCW9DpO2ol/hRExeoQ=;
+        b=gga+VS+/u4EJm3VE+yHZ/TZ41uutwb0+J7wKN8gvePC+CHASnf9pDhrvZdZbD5TTrJ
+         WVNHjjZKeFCguiclD3qTqWYiepIWMQ5kg9JuPIubTCKZmBZkNT71WZtDC6Y6PqvJfYLN
+         s8Cqpq0OPQjWc7oRw+Ifz7NUCkbTbMUmfoGGViavce88mr+Menx4D4esiV8ZJduVS+j8
+         9ENR+9OURsTwZHU7ShFmLFZCQmmtpA7xxWYyWyd/XgEkNBBzB9VUkLodf+YWn23bn5tJ
+         WDXaunkcd3m7jiyGoEnXZDIvowo34gSOMtB5pDSh0XQRPTPREUdKaoDeO6DzfloYIl4t
+         CvdQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=fV6Yxz5phWkhQA6DReninzloQxSLe34uuPheQWujNzU=;
-        b=EzQwIEc4pQEOgBmvYyacoUVwsiz79EhaW8ssC/Db2OFzwfFM8HkIAbuNNl2KHqc8UN
-         hTv83rqy+6UGI7+zT0dZqKB26XrQVe4SOxAycZqovf6WpyfEmduNnDHAvJYaz70waz8T
-         Mk6M0vtprut0Th4CB7AygUo0/A2UTJOqtRicEXC8u2TZjvGK41ADy2yzWGfB3Vl8bGvZ
-         SwrYvCFWkGJxBr34ZdVit2YxsaIA+Shl6GHv6kLb51Qif3O4aV18PSi6ob53/qLBnAoy
-         1tqfFvdiS7wslguTGkJasOt3LPG5e+/gp/8EZh8jcJcg1fFBx/4vYWE634FBTSEeGnrT
-         S3RQ==
-X-Gm-Message-State: APjAAAWHDf3RyXPTWXT2+eB67fBWq7wu8D40zAxIHXlFjFNMtgggdjgk
-        cbaqNpy9eDx3uYvfHYveSybVZt/vCFgrIIC8V2/+oA==
-X-Google-Smtp-Source: APXvYqwHVk7vHOw+xBU078uF3hkUUhazrYDOeBwuccwt3X+aE2K5ej+DaAT8WkGp2/wh8W/LqW7Xq6xnV+k898hUyjo=
-X-Received: by 2002:a05:6808:d4:: with SMTP id t20mr9504688oic.170.1563645804556;
- Sat, 20 Jul 2019 11:03:24 -0700 (PDT)
+         :message-id:subject:to:cc;
+        bh=5wxLUVMBR/zhPyqgOSmQfeegjBCW9DpO2ol/hRExeoQ=;
+        b=LHhDRnnUki8NiTofjKdeYgaVWXDjoG/aYCDDxfAKvYWcVg0Ntp3DElzABaBaY/Wpwn
+         BnS6GWYlsK950SrEOw2G4m6rb8uWjSH7EsHYt3aMoXqgcRUI3io2RptvHTgXBrGoi5gU
+         lxlCzS9WjydUG3VyCtdx74/Anvak3TwSm45lyt42AhcLSDqrZPMSjuVj8HdPyDE/+rE3
+         5Zb9txx2A+1I2FqjGKARHyyN5V0pvye9RlJP2fuFbdL8lhphuGydTDbv2dt19KE+LEA0
+         UayHxwP/cg3aHP8oODeW8aZEj3KgaqSROxYQ1c19lOY8OXisl5sfA6fFeeJlKzn73LMo
+         Xcng==
+X-Gm-Message-State: APjAAAVx80goAZ/MXHvNCTeGxn4HQ+076iE58GWV+B63xOJdW6FpKT4u
+        Hvf6tXIqssWQbhsnzJ1l/enGR4Hx0rN7RJnRdicXkw==
+X-Google-Smtp-Source: APXvYqxhKMOSxFcygiS5NRhp2xvFkULQyeB73rsH2wirHwD2+UVba03mszT4vFMFEDoInQytDxULE9PvROzPcvLys+k=
+X-Received: by 2002:a19:e006:: with SMTP id x6mr26678689lfg.165.1563651767021;
+ Sat, 20 Jul 2019 12:42:47 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190708082343.30726-1-brgl@bgdev.pl> <CACRpkdb5xKHZja0mkd-wZJ+YHZpGJaDrkA0dv60MNYKXFcPK4w@mail.gmail.com>
- <CAMRc=MfB9R70QDqtjG5a5Roq1roeL78Ss5noytrY-7P=tY1OHA@mail.gmail.com> <CACRpkdaiZgK1EoaUxDtbm_GJHVjZU56e_qBQ-OF0mmwb5W8+tg@mail.gmail.com>
-In-Reply-To: <CACRpkdaiZgK1EoaUxDtbm_GJHVjZU56e_qBQ-OF0mmwb5W8+tg@mail.gmail.com>
-From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Date:   Sat, 20 Jul 2019 20:03:13 +0200
-Message-ID: <CAMpxmJWDTkhuWhfSJ-fkJ6r+7a3kErXafQ_sJLVgMf=cA=1+aQ@mail.gmail.com>
-Subject: Re: [PATCH] gpio: don't WARN() on NULL descs if gpiolib is disabled
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Bartosz Golaszewski <brgl@bgdev.pl>,
+References: <20190720113155.12276-1-tomasz.motyl@se.com>
+In-Reply-To: <20190720113155.12276-1-tomasz.motyl@se.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Sat, 20 Jul 2019 21:42:35 +0200
+Message-ID: <CACRpkdaUpfnWkqK4jCrV3SCPtZk07Q=FydhvM2COye7QRCvEZA@mail.gmail.com>
+Subject: Re: [PATCH] Record interrupt status when an IRQ is masked
+To:     Tomasz Kazimierz Motyl <tomasz.motyl666@gmail.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Marek Vasut <marek.vasut@gmail.com>
+Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "Claus H . Stovgaard" <cst@phaseone.com>
+        butterfly_tm666@yahoo.com,
+        Tomasz Kazimierz Motyl <tomasz.motyl@se.com>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-wt., 16 lip 2019 o 23:46 Linus Walleij <linus.walleij@linaro.org> napisa=C5=
-=82(a):
->
-> On Tue, Jul 9, 2019 at 4:20 PM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
-> > wt., 9 lip 2019 o 15:30 Linus Walleij <linus.walleij@linaro.org> napisa=
-=C5=82(a):
->
-> > > I was thinking something like this in the stubs:
-> > >
-> > > gpiod_get[_index]() {
-> > >     return POISON;
-> > > }
-> > >
-> > > gpiod_get[_index]_optional() {
-> > >    return NULL;
-> > > }
-> >
-> > This is already being done.
->
-> Ah it is.
->
-> > > This way all gpiod_get() and optional calls are properly
-> > > handled and the semantic that only _optional calls
-> > > can return NULL is preserved. (Your patch would
-> > > violate this.)
-> > >
-> >
-> > Maybe I'm missing something, but I don't quite see how my patch
-> > violates this behavior. :(
->
-> I missed that we actually do pass a poison from the strict
-> *get functions, mea culpa.
->
-> Let's apply this, will you send me a pull request or shall I
-> just try to apply it?
->
-> Yours,
-> Linus Walleij
+Looping in some experts on PCA953xx by top posting, sorry.
 
-I'll apply it to my local tree and send it for v5.3-rc2.
+Linus Walleij
 
-Bart
+On Sat, Jul 20, 2019 at 1:32 PM Tomasz Kazimierz Motyl
+<tomasz.motyl666@gmail.com> wrote:
+>
+>  When one changes the state of any input pins of a PCA9555 chip before
+>  setting up the IRQ mask through i.e. SysFS e.g. echo "both" >
+>  /sys/class/gpio/gpioXYZ/edge the epoll_wait shall not exit on the subsequent
+>  change of the GPIO state. The reason behind it is that the IRQ status is not
+>  being saved when the IRQ is masked.
+>
+> ---
+>  drivers/gpio/gpio-pca953x.c | 7 +++++--
+>  1 file changed, 5 insertions(+), 2 deletions(-)
+>
+> diff --git a/drivers/gpio/gpio-pca953x.c b/drivers/gpio/gpio-pca953x.c
+> index 7e76830b3368..088bef902156 100644
+> --- a/drivers/gpio/gpio-pca953x.c
+> +++ b/drivers/gpio/gpio-pca953x.c
+> @@ -716,13 +716,16 @@ static bool pca953x_irq_pending(struct pca953x_chip *chip, u8 *pending)
+>                 trigger[i] = (cur_stat[i] ^ old_stat[i]) & chip->irq_mask[i];
+>                 if (trigger[i])
+>                         trigger_seen = true;
+> +
+> +    /* We want the current status recorded in the chip->irq stat regardless the
+> +     * chip->irq_mask setting in order to have a change detected when the interrupt
+> +     * mask gets changed i.e. echo "both" > /sys/class/gpioXYZ/edge */
+> +    chip->irq_stat[i] = cur_stat[i];
+>         }
+>
+>         if (!trigger_seen)
+>                 return false;
+>
+> -       memcpy(chip->irq_stat, cur_stat, NBANK(chip));
+> -
+>         for (i = 0; i < NBANK(chip); i++) {
+>                 pending[i] = (old_stat[i] & chip->irq_trig_fall[i]) |
+>                         (cur_stat[i] & chip->irq_trig_raise[i]);
+> --
+> 2.17.1
+>
