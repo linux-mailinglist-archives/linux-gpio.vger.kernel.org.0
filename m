@@ -2,71 +2,103 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 2FE476EF43
-	for <lists+linux-gpio@lfdr.de>; Sat, 20 Jul 2019 13:59:23 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5FF2C6F046
+	for <lists+linux-gpio@lfdr.de>; Sat, 20 Jul 2019 20:03:30 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728142AbfGTL7U (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sat, 20 Jul 2019 07:59:20 -0400
-Received: from conuserg-10.nifty.com ([210.131.2.77]:23497 "EHLO
-        conuserg-10.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728119AbfGTL7U (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sat, 20 Jul 2019 07:59:20 -0400
-Received: from grover.flets-west.jp (softbank126026094249.bbtec.net [126.26.94.249]) (authenticated)
-        by conuserg-10.nifty.com with ESMTP id x6KBx4Gd028252;
-        Sat, 20 Jul 2019 20:59:04 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-10.nifty.com x6KBx4Gd028252
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1563623945;
-        bh=GFDvRP9bqIHxNECOxKtmvkjwLEmjaFRIEJAa+wgV2uw=;
-        h=From:To:Cc:Subject:Date:From;
-        b=o/4Pg1Be2urdgK4+mEqW1SNA66LavvsYpb1uRoQeNZSs1WY6HrkhYpRSYGgwTyFaj
-         b2cQLNWnXbN0ZFNg/x9Nr9Mb2zRH8I80NiQMkSnu/2E/aIkO2VCOfkilfXZ2MDPmvV
-         4Nq3gIxhpBUWKPMcSpcIW7GZcVI1bw30FzUtraRBQi+faYeBSWfdUCe7zaAuuj4aHn
-         DbaD18nuD5weeZCLNVO+8IkuJDLDSwNwJKwL6iUm0K7HkpuGDq1zXFNBmP76syPN7i
-         cqS9SKuk1Arv+TO2mVhFF3KiOIWv0ZUjGyEkU1OAAwKLdKrWv0TO7Hm2AR0E93rS3R
-         lzb+iT1bShJsw==
-X-Nifty-SrcIP: [126.26.94.249]
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-To:     linux-gpio@vger.kernel.org,
-        Linus Walleij <linus.walleij@linaro.org>
-Cc:     Masahiro Yamada <yamada.masahiro@socionext.com>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] pinctrl: pinctrl-single: add header include guard
-Date:   Sat, 20 Jul 2019 20:58:58 +0900
-Message-Id: <20190720115858.7015-1-yamada.masahiro@socionext.com>
-X-Mailer: git-send-email 2.17.1
+        id S1726779AbfGTSD0 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sat, 20 Jul 2019 14:03:26 -0400
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:46534 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726489AbfGTSDZ (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sat, 20 Jul 2019 14:03:25 -0400
+Received: by mail-oi1-f194.google.com with SMTP id 65so26671505oid.13
+        for <linux-gpio@vger.kernel.org>; Sat, 20 Jul 2019 11:03:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=fV6Yxz5phWkhQA6DReninzloQxSLe34uuPheQWujNzU=;
+        b=VXbYG3+WE8sblpJmTKNLu27EzPYP1iHM+AmcY9VHfuzbAgVjQkz9y0QKaeEEfwrAHz
+         rVGvnj49z5kKX5trEK7cFHuxIwjHd2Xf+FBoXjf39hoWGusOH86ZLwQ/G+OBWkAHHxIq
+         7gX7zpJWMe4dxmb4EuIA/vnipwgiWI7bmoBaPnvp2OjDy+ID06w0UouPwCIPV6qRTZSn
+         u1RUZ4fJzRwfmG+fMyFsNxKodWBMVTDcHHpYmnNdPeGr+KB2Dpskra3FjhMQ44ed8YWK
+         ZM5YZlk6fHu/Ju6bkiJH8X/ojj+BsYCRbIMW2iItZ08jFMsy88worwZIg8QRRE/p/cXe
+         M3ow==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=fV6Yxz5phWkhQA6DReninzloQxSLe34uuPheQWujNzU=;
+        b=EzQwIEc4pQEOgBmvYyacoUVwsiz79EhaW8ssC/Db2OFzwfFM8HkIAbuNNl2KHqc8UN
+         hTv83rqy+6UGI7+zT0dZqKB26XrQVe4SOxAycZqovf6WpyfEmduNnDHAvJYaz70waz8T
+         Mk6M0vtprut0Th4CB7AygUo0/A2UTJOqtRicEXC8u2TZjvGK41ADy2yzWGfB3Vl8bGvZ
+         SwrYvCFWkGJxBr34ZdVit2YxsaIA+Shl6GHv6kLb51Qif3O4aV18PSi6ob53/qLBnAoy
+         1tqfFvdiS7wslguTGkJasOt3LPG5e+/gp/8EZh8jcJcg1fFBx/4vYWE634FBTSEeGnrT
+         S3RQ==
+X-Gm-Message-State: APjAAAWHDf3RyXPTWXT2+eB67fBWq7wu8D40zAxIHXlFjFNMtgggdjgk
+        cbaqNpy9eDx3uYvfHYveSybVZt/vCFgrIIC8V2/+oA==
+X-Google-Smtp-Source: APXvYqwHVk7vHOw+xBU078uF3hkUUhazrYDOeBwuccwt3X+aE2K5ej+DaAT8WkGp2/wh8W/LqW7Xq6xnV+k898hUyjo=
+X-Received: by 2002:a05:6808:d4:: with SMTP id t20mr9504688oic.170.1563645804556;
+ Sat, 20 Jul 2019 11:03:24 -0700 (PDT)
+MIME-Version: 1.0
+References: <20190708082343.30726-1-brgl@bgdev.pl> <CACRpkdb5xKHZja0mkd-wZJ+YHZpGJaDrkA0dv60MNYKXFcPK4w@mail.gmail.com>
+ <CAMRc=MfB9R70QDqtjG5a5Roq1roeL78Ss5noytrY-7P=tY1OHA@mail.gmail.com> <CACRpkdaiZgK1EoaUxDtbm_GJHVjZU56e_qBQ-OF0mmwb5W8+tg@mail.gmail.com>
+In-Reply-To: <CACRpkdaiZgK1EoaUxDtbm_GJHVjZU56e_qBQ-OF0mmwb5W8+tg@mail.gmail.com>
+From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Date:   Sat, 20 Jul 2019 20:03:13 +0200
+Message-ID: <CAMpxmJWDTkhuWhfSJ-fkJ6r+7a3kErXafQ_sJLVgMf=cA=1+aQ@mail.gmail.com>
+Subject: Re: [PATCH] gpio: don't WARN() on NULL descs if gpiolib is disabled
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     Bartosz Golaszewski <brgl@bgdev.pl>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "Claus H . Stovgaard" <cst@phaseone.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Add a header include guard just in case.
+wt., 16 lip 2019 o 23:46 Linus Walleij <linus.walleij@linaro.org> napisa=C5=
+=82(a):
+>
+> On Tue, Jul 9, 2019 at 4:20 PM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
+> > wt., 9 lip 2019 o 15:30 Linus Walleij <linus.walleij@linaro.org> napisa=
+=C5=82(a):
+>
+> > > I was thinking something like this in the stubs:
+> > >
+> > > gpiod_get[_index]() {
+> > >     return POISON;
+> > > }
+> > >
+> > > gpiod_get[_index]_optional() {
+> > >    return NULL;
+> > > }
+> >
+> > This is already being done.
+>
+> Ah it is.
+>
+> > > This way all gpiod_get() and optional calls are properly
+> > > handled and the semantic that only _optional calls
+> > > can return NULL is preserved. (Your patch would
+> > > violate this.)
+> > >
+> >
+> > Maybe I'm missing something, but I don't quite see how my patch
+> > violates this behavior. :(
+>
+> I missed that we actually do pass a poison from the strict
+> *get functions, mea culpa.
+>
+> Let's apply this, will you send me a pull request or shall I
+> just try to apply it?
+>
+> Yours,
+> Linus Walleij
 
-Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
----
+I'll apply it to my local tree and send it for v5.3-rc2.
 
- include/linux/platform_data/pinctrl-single.h | 6 ++++++
- 1 file changed, 6 insertions(+)
-
-diff --git a/include/linux/platform_data/pinctrl-single.h b/include/linux/platform_data/pinctrl-single.h
-index 1cf36fdf9510..7473d3c4cabf 100644
---- a/include/linux/platform_data/pinctrl-single.h
-+++ b/include/linux/platform_data/pinctrl-single.h
-@@ -1,4 +1,8 @@
- /* SPDX-License-Identifier: GPL-2.0 */
-+
-+#ifndef _PINCTRL_SINGLE_H
-+#define _PINCTRL_SINGLE_H
-+
- /**
-  * irq:		optional wake-up interrupt
-  * rearm:	optional soc specific rearm function
-@@ -11,3 +15,5 @@ struct pcs_pdata {
- 	int irq;
- 	void (*rearm)(void);
- };
-+
-+#endif /* _PINCTRL_SINGLE_H */
--- 
-2.17.1
-
+Bart
