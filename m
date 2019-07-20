@@ -2,106 +2,73 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 921976F07F
-	for <lists+linux-gpio@lfdr.de>; Sat, 20 Jul 2019 21:42:51 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 16DFE6F081
+	for <lists+linux-gpio@lfdr.de>; Sat, 20 Jul 2019 21:45:06 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726144AbfGTTmt (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sat, 20 Jul 2019 15:42:49 -0400
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:37312 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725995AbfGTTmt (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sat, 20 Jul 2019 15:42:49 -0400
-Received: by mail-lf1-f68.google.com with SMTP id c9so23906154lfh.4
-        for <linux-gpio@vger.kernel.org>; Sat, 20 Jul 2019 12:42:47 -0700 (PDT)
+        id S1726174AbfGTTpF (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sat, 20 Jul 2019 15:45:05 -0400
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:39488 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726166AbfGTTpF (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sat, 20 Jul 2019 15:45:05 -0400
+Received: by mail-lf1-f67.google.com with SMTP id v85so23911912lfa.6
+        for <linux-gpio@vger.kernel.org>; Sat, 20 Jul 2019 12:45:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=5wxLUVMBR/zhPyqgOSmQfeegjBCW9DpO2ol/hRExeoQ=;
-        b=gga+VS+/u4EJm3VE+yHZ/TZ41uutwb0+J7wKN8gvePC+CHASnf9pDhrvZdZbD5TTrJ
-         WVNHjjZKeFCguiclD3qTqWYiepIWMQ5kg9JuPIubTCKZmBZkNT71WZtDC6Y6PqvJfYLN
-         s8Cqpq0OPQjWc7oRw+Ifz7NUCkbTbMUmfoGGViavce88mr+Menx4D4esiV8ZJduVS+j8
-         9ENR+9OURsTwZHU7ShFmLFZCQmmtpA7xxWYyWyd/XgEkNBBzB9VUkLodf+YWn23bn5tJ
-         WDXaunkcd3m7jiyGoEnXZDIvowo34gSOMtB5pDSh0XQRPTPREUdKaoDeO6DzfloYIl4t
-         CvdQ==
+        bh=6zi7BGBWDPGh6+puaMo5hMFaiBo8zOmKwcrHdzWtJnI=;
+        b=WPXXCaubYskoj0QPIylH3h/PU0qkADg9GQ2CMh1s3TeaDb9Mgl1E01DxhMDDCzfcEk
+         IfG1v0WAhQ+ftspq3X0DbR5rN1MZfa2xvlsk8S6EkrTyl+3PYZXmy49Snfl1aSMSpmwK
+         F492Yh4bsXqn4dvNqD/XpdVhdcLp0ys1809+ocqvQ3dva/O6m5M8d4BWH6l8i5NEr1MB
+         HUfkHYhufQG0ULYI8pgFsD+XV6G9zn/taapi4j5dDeFahwKWCaYbwLesuxBCzlfep4ZN
+         WmUX/MjGIQzD41kmM5hnkw8stXamB70KsxaAP7colBGs6YTtK3R9urmFDIXsNdeXmuNC
+         pluA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=5wxLUVMBR/zhPyqgOSmQfeegjBCW9DpO2ol/hRExeoQ=;
-        b=LHhDRnnUki8NiTofjKdeYgaVWXDjoG/aYCDDxfAKvYWcVg0Ntp3DElzABaBaY/Wpwn
-         BnS6GWYlsK950SrEOw2G4m6rb8uWjSH7EsHYt3aMoXqgcRUI3io2RptvHTgXBrGoi5gU
-         lxlCzS9WjydUG3VyCtdx74/Anvak3TwSm45lyt42AhcLSDqrZPMSjuVj8HdPyDE/+rE3
-         5Zb9txx2A+1I2FqjGKARHyyN5V0pvye9RlJP2fuFbdL8lhphuGydTDbv2dt19KE+LEA0
-         UayHxwP/cg3aHP8oODeW8aZEj3KgaqSROxYQ1c19lOY8OXisl5sfA6fFeeJlKzn73LMo
-         Xcng==
-X-Gm-Message-State: APjAAAVx80goAZ/MXHvNCTeGxn4HQ+076iE58GWV+B63xOJdW6FpKT4u
-        Hvf6tXIqssWQbhsnzJ1l/enGR4Hx0rN7RJnRdicXkw==
-X-Google-Smtp-Source: APXvYqxhKMOSxFcygiS5NRhp2xvFkULQyeB73rsH2wirHwD2+UVba03mszT4vFMFEDoInQytDxULE9PvROzPcvLys+k=
-X-Received: by 2002:a19:e006:: with SMTP id x6mr26678689lfg.165.1563651767021;
- Sat, 20 Jul 2019 12:42:47 -0700 (PDT)
+        bh=6zi7BGBWDPGh6+puaMo5hMFaiBo8zOmKwcrHdzWtJnI=;
+        b=GrxwNCaRvageUmezKnb/G5C+ZxdflOIBJocA8E1jSxiw7ttV2Qick5cSPN1K832t7e
+         tOnYIlAQnD0UcpGPIaKGGhrrIE3zn6qOt3AUyOxt23owuaLRXp9Dikc/9kadneO2oicF
+         YANSGBEDkgnWDRqIes0b5yP38Qj1WhVkD7SJFPRV/XAU9nDXsxYHWqTe60/OtUgT0Qdi
+         2VCL4FI21yiqtIkx7Nn9PQjZSrfU2uy0z+GlCfQGllJjBILFEBS1b3ejXhlvwuIoSo/e
+         OsShbw0TlRE5gDT7a09Al3eG36AJgDBQa6/9kgNNxn37iNlVD23lydNOnAKzZO66KxPj
+         qK3Q==
+X-Gm-Message-State: APjAAAUDe++B+1FU6rsjxG2s+9wjcMLzTQA1BQWnKRfz/hY+6v/blInl
+        rTW/J/EyVQ1uPUb2HZphBAz6qtlaMNn82VVnKb2EFw==
+X-Google-Smtp-Source: APXvYqzb3bkDxrmC1HJ9+imxHHXo9dcFetsG7dzHr+D7Yh2y0AVltjBSzjJnf420eKfj0dcdWKcRWI5Ipg10zWVFyfI=
+X-Received: by 2002:ac2:4891:: with SMTP id x17mr28037262lfc.60.1563651902910;
+ Sat, 20 Jul 2019 12:45:02 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190720113155.12276-1-tomasz.motyl@se.com>
-In-Reply-To: <20190720113155.12276-1-tomasz.motyl@se.com>
+References: <20190708082343.30726-1-brgl@bgdev.pl> <CACRpkdb5xKHZja0mkd-wZJ+YHZpGJaDrkA0dv60MNYKXFcPK4w@mail.gmail.com>
+ <CAMRc=MfB9R70QDqtjG5a5Roq1roeL78Ss5noytrY-7P=tY1OHA@mail.gmail.com>
+ <CACRpkdaiZgK1EoaUxDtbm_GJHVjZU56e_qBQ-OF0mmwb5W8+tg@mail.gmail.com> <CAMpxmJWDTkhuWhfSJ-fkJ6r+7a3kErXafQ_sJLVgMf=cA=1+aQ@mail.gmail.com>
+In-Reply-To: <CAMpxmJWDTkhuWhfSJ-fkJ6r+7a3kErXafQ_sJLVgMf=cA=1+aQ@mail.gmail.com>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Sat, 20 Jul 2019 21:42:35 +0200
-Message-ID: <CACRpkdaUpfnWkqK4jCrV3SCPtZk07Q=FydhvM2COye7QRCvEZA@mail.gmail.com>
-Subject: Re: [PATCH] Record interrupt status when an IRQ is masked
-To:     Tomasz Kazimierz Motyl <tomasz.motyl666@gmail.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Marek Vasut <marek.vasut@gmail.com>
-Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+Date:   Sat, 20 Jul 2019 21:44:51 +0200
+Message-ID: <CACRpkdYkp0OnyEiUX_VQF_nu5JumkupdsX9fG4rWCf0apNtX5A@mail.gmail.com>
+Subject: Re: [PATCH] gpio: don't WARN() on NULL descs if gpiolib is disabled
+To:     Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Cc:     Bartosz Golaszewski <brgl@bgdev.pl>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        butterfly_tm666@yahoo.com,
-        Tomasz Kazimierz Motyl <tomasz.motyl@se.com>
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "Claus H . Stovgaard" <cst@phaseone.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Looping in some experts on PCA953xx by top posting, sorry.
+On Sat, Jul 20, 2019 at 8:03 PM Bartosz Golaszewski
+<bgolaszewski@baylibre.com> wrote:
 
-Linus Walleij
+> I'll apply it to my local tree and send it for v5.3-rc2.
 
-On Sat, Jul 20, 2019 at 1:32 PM Tomasz Kazimierz Motyl
-<tomasz.motyl666@gmail.com> wrote:
->
->  When one changes the state of any input pins of a PCA9555 chip before
->  setting up the IRQ mask through i.e. SysFS e.g. echo "both" >
->  /sys/class/gpio/gpioXYZ/edge the epoll_wait shall not exit on the subsequent
->  change of the GPIO state. The reason behind it is that the IRQ status is not
->  being saved when the IRQ is masked.
->
-> ---
->  drivers/gpio/gpio-pca953x.c | 7 +++++--
->  1 file changed, 5 insertions(+), 2 deletions(-)
->
-> diff --git a/drivers/gpio/gpio-pca953x.c b/drivers/gpio/gpio-pca953x.c
-> index 7e76830b3368..088bef902156 100644
-> --- a/drivers/gpio/gpio-pca953x.c
-> +++ b/drivers/gpio/gpio-pca953x.c
-> @@ -716,13 +716,16 @@ static bool pca953x_irq_pending(struct pca953x_chip *chip, u8 *pending)
->                 trigger[i] = (cur_stat[i] ^ old_stat[i]) & chip->irq_mask[i];
->                 if (trigger[i])
->                         trigger_seen = true;
-> +
-> +    /* We want the current status recorded in the chip->irq stat regardless the
-> +     * chip->irq_mask setting in order to have a change detected when the interrupt
-> +     * mask gets changed i.e. echo "both" > /sys/class/gpioXYZ/edge */
-> +    chip->irq_stat[i] = cur_stat[i];
->         }
->
->         if (!trigger_seen)
->                 return false;
->
-> -       memcpy(chip->irq_stat, cur_stat, NBANK(chip));
-> -
->         for (i = 0; i < NBANK(chip); i++) {
->                 pending[i] = (old_stat[i] & chip->irq_trig_fall[i]) |
->                         (cur_stat[i] & chip->irq_trig_raise[i]);
-> --
-> 2.17.1
->
+OK! Do you see it as bug fix so it should go in the rcs?
+
+It pretty much needs to be a regression to go in there,
+because this stub stuff blew up in my face before :/
+
+Thanks,
+Linus
