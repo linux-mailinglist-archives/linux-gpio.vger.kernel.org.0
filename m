@@ -2,185 +2,181 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id E756D6F358
-	for <lists+linux-gpio@lfdr.de>; Sun, 21 Jul 2019 15:14:08 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B8CBC6F56D
+	for <lists+linux-gpio@lfdr.de>; Sun, 21 Jul 2019 21:42:58 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726275AbfGUNOI (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sun, 21 Jul 2019 09:14:08 -0400
-Received: from de-outgoing-6-14.antispam.co.za ([88.99.16.45]:46921 "EHLO
-        de-outgoing-6-14.antispam.co.za" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726188AbfGUNOH (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>);
-        Sun, 21 Jul 2019 09:14:07 -0400
-X-Greylist: delayed 1225 seconds by postgrey-1.27 at vger.kernel.org; Sun, 21 Jul 2019 09:14:06 EDT
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=out.zamailgate.com; s=default; h=Content-Transfer-Encoding:MIME-Version:
-        Message-Id:Date:Subject:Cc:To:From:reply-to:sender:bcc:in-reply-to:references
-        :content-type; bh=J0cRu8FR64IlVCsITEjWx54lwokJlooa+VUMdoJwBZ8=; b=vP5SZOW/xmY
-        0fOzgSDd989MW5yuleQzrdodSGoTDUkm3Yh6XgV9F+w2weC7cE473rofxSNCGIvdbCNJ/NaAzh3RW
-        DYBlJJbxVhZSDcB4WJ7l/FkX95pkgZ6T3C33CsyqdwOM6TGlLZ2Idz7EfZnySXV6EqxRxGewpvPcJ
-        ELxiRs=;
-Received: from cp46-jhb.za-dns.com ([164.160.91.39])
-        by server6.antispam.co.za with esmtps (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.89)
-        (envelope-from <hm@bitlabs.co.za>)
-        id 1hpBLO-0004n0-27; Sun, 21 Jul 2019 14:53:38 +0200
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=bitlabs.co.za; s=default; h=Content-Transfer-Encoding:MIME-Version:
-        Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
-        List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=J0cRu8FR64IlVCsITEjWx54lwokJlooa+VUMdoJwBZ8=; b=dCoBYaURpx3GvFnKv4iG4gKarP
-        Diuwd++dIq+RQwPQS5JgvoC4FnZY7UeFfpAI0sv4ampoXFmyv1PBNCsPnUpaAKze/4+pSwEpEa+0d
-        G6wZDK/Bpae58FnAQRrjMcb7lALIhJZMCCHHyzVhfhHyaRbeAnA7gLgFXU7xv6l0zgOe+msk2gzoN
-        qBpJaaBLlghakeYkwLT2iYV1A+jaNpW4LJC9LbAC/wtf6SoSc4xc94xTuWIpRdgRH9stZgb9BXUDn
-        RI+kmA5A0HkkJdg+U400BeIUTcnO5EJkpJVD71t5QgOWNcIySzWKQ+bePI0PLmFLYVEs75OBUAgNK
-        WQdQfiNw==;
-Received: from [45.56.148.82] (port=49478 helo=localhost.localdomain)
-        by cp46-jhb.za-dns.com with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
-        (Exim 4.92)
-        (envelope-from <hm@bitlabs.co.za>)
-        id 1hpBLI-0006Fx-C2; Sun, 21 Jul 2019 14:53:33 +0200
-From:   Hennie Muller <hm@bitlabs.co.za>
-To:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Hennie Muller <hm@bitlabs.co.za>
-Subject: [PATCH 1/2] [PATCH] gpio: Replace usage of bare 'unsigned' with 'unsigned int'
-Date:   Sun, 21 Jul 2019 14:52:58 +0200
-Message-Id: <20190721125259.13990-1-hm@bitlabs.co.za>
-X-Mailer: git-send-email 2.22.0
+        id S1727405AbfGUTk7 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sun, 21 Jul 2019 15:40:59 -0400
+Received: from hqemgate14.nvidia.com ([216.228.121.143]:12456 "EHLO
+        hqemgate14.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727021AbfGUTk6 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sun, 21 Jul 2019 15:40:58 -0400
+Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqemgate14.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5d34bfc30000>; Sun, 21 Jul 2019 12:40:56 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate102.nvidia.com (PGP Universal service);
+  Sun, 21 Jul 2019 12:40:55 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate102.nvidia.com on Sun, 21 Jul 2019 12:40:55 -0700
+Received: from HQMAIL110.nvidia.com (172.18.146.15) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Sun, 21 Jul
+ 2019 19:40:50 +0000
+Received: from HQMAIL104.nvidia.com (172.18.146.11) by hqmail110.nvidia.com
+ (172.18.146.15) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Sun, 21 Jul
+ 2019 19:40:50 +0000
+Received: from hqnvemgw02.nvidia.com (172.16.227.111) by HQMAIL104.nvidia.com
+ (172.18.146.11) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
+ Transport; Sun, 21 Jul 2019 19:40:50 +0000
+Received: from skomatineni-linux.nvidia.com (Not Verified[10.2.164.85]) by hqnvemgw02.nvidia.com with Trustwave SEG (v7,5,8,10121)
+        id <B5d34bfc00000>; Sun, 21 Jul 2019 12:40:50 -0700
+From:   Sowjanya Komatineni <skomatineni@nvidia.com>
+To:     <thierry.reding@gmail.com>, <jonathanh@nvidia.com>,
+        <tglx@linutronix.de>, <jason@lakedaemon.net>,
+        <marc.zyngier@arm.com>, <linus.walleij@linaro.org>,
+        <stefan@agner.ch>, <mark.rutland@arm.com>
+CC:     <pdeschrijver@nvidia.com>, <pgaikwad@nvidia.com>,
+        <sboyd@kernel.org>, <linux-clk@vger.kernel.org>,
+        <linux-gpio@vger.kernel.org>, <jckuo@nvidia.com>,
+        <josephl@nvidia.com>, <talho@nvidia.com>, <skomatineni@nvidia.com>,
+        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <mperttunen@nvidia.com>, <spatra@nvidia.com>, <robh+dt@kernel.org>,
+        <digetx@gmail.com>, <devicetree@vger.kernel.org>
+Subject: [PATCH V6 00/21] SC7 entry and exit support for Tegra210
+Date:   Sun, 21 Jul 2019 12:40:39 -0700
+Message-ID: <1563738060-30213-1-git-send-email-skomatineni@nvidia.com>
+X-Mailer: git-send-email 2.7.4
+X-NVConfidentiality: public
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Get-Message-Sender-Via: cp46-jhb.za-dns.com: authenticated_id: hm@bitlabs.co.za
-X-Authenticated-Sender: cp46-jhb.za-dns.com: hm@bitlabs.co.za
-X-AuthUser: hm@bitlabs.co.za
-X-AuthUsername: 
-X-AuthDomain: @
-X-Originating-IP: 164.160.91.39
-X-SpamExperts-Domain: out.zamailgate.com
-X-SpamExperts-Username: 164.160.91.39
-Authentication-Results: antispam.co.za; auth=pass smtp.auth=164.160.91.39@out.zamailgate.com
-X-SpamExperts-Outgoing-Class: ham
-X-SpamExperts-Outgoing-Evidence: SB/global_tokens (0.00194809870042)
-X-Recommended-Action: accept
-X-Filter-ID: Mvzo4OR0dZXEDF/gcnlw0STiPCilqAig5bem4hJMKBmpSDasLI4SayDByyq9LIhVQ33prlyF+zzt
- fD84S268FkTNWdUk1Ol2OGx3IfrIJKyP9eGNFz9TW9u+Jt8z2T3KEwPbPfm46SVmcjKGg/vvJcjg
- psH8EURDj2+nvfVvd2OCDRc7mE6FGcH4GWh0rcZNjb5Y4yyK4cVMCLdgtg9oswvP6sgp/Cgm9hg+
- aKQBPsK+N5nG6G/3iwkegTmD8LVCYCTwuapYHJC4Tg2AsI28yjI08kz8IMGRUJ+wCrJ2OtY00I4e
- jIXnqYa5AVtRR2tLjjPEWb6iCVLQ9/3YJnY0urQECoD7tXk5DWl5CthSgMiL6MkaMp8wmQonzS4S
- mVPe9uuzeWEPXD/+vbO7+ZPQHhHmBDjB5dBfrKK6brkLGEEAi1fNjOTGPw1WbSK2CLHT1DazhdmC
- tripa4vix9d+LDxIPj1UU4msT2Odp9D6f/NhwcWHRC6wZYUOUOFbYTyLX+GM6unUtNX7p31A+jrv
- 1Q5FeC4tytch5aOT5kkeKlgYR0M9co5K3vHM563cCqjVgYaek/ieoycx5b/lM6HtBzqsOfS1M5Vy
- YnCojwm7ad63wOzweEy7wCy4L5c/QhZ1XQWYbcBfinc9U65Z+pgHiL7i+r8eP7hvhRqtk9Ph7Vcg
- r/U0flMcy2Vi/IcBgY4a4nD4ixtEBgLUs9VA8/4/8xQgoW7Jlml5bhJtfEFIJGv3fC9lMKE9bB8O
- BO2UvN9slvu3OYGmYzZYDfN8qv3mxOBkuUNCzvByHVVRZV1+iolfYLeyrZ3u6v2kN950u2CtIn51
- ZJswLlsWTRVBLcs4Ieylot/0lnPV9b8kDW67MfgFojv4S2FgEBbaLcJN3hGmceaYrWk6Xy16ieyL
- BOf+heCOGHvN1U/wae2O6OiWBfO9kSUzYaL89bSzp9UN8wd+2lyXP3FCjYAwz5IpUkJGwR/ieAuY
- rQs5ttmJcF7JASmZYYlAkKI8DQHsmtRSCvwkSCyiHgGOYO4l5G8kEKfY/Q++xPPelMXS6aSC0kge
- hbHbdN3jqUo47OzICHSG0roIkCaPansa6p5kMuXPHaXSAMVGrgrADVqLkCmG9o9OgRqBmKo17aOO
- u4q8VqJ4N/c49dLX6qBpW3U5Ey2lggFy2ga+u6snHbxri2kdsYaFFMjJDteus1I6gIQ+Ke7Ir9sX
-X-Report-Abuse-To: spam@server1.antispam.co.za
+Content-Type: text/plain
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1563738056; bh=MfIKsreVhJ1u3mpmTwqU/Oh0iS/9VlKOiJ8ud8kUytU=;
+        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
+         X-NVConfidentiality:MIME-Version:Content-Type;
+        b=HyW8NdF0WtstbL8EFgZgL9fspTh2v7sMqQYsOhVIQ0nRzAKKpZFELYSIspVu5xn3o
+         hjUEBIMwiuHVMjPERnjLFOPtFhvWImdrFJRXtzIZ8l5lUjKYUl8RN3RNNBNTRwYMiQ
+         XqvVSvUeJS3gNMr6iSo8KXVgh1KN2IDgzsmwxt2gVWO9CrffxvqBSi63FRSp3UAhX/
+         VcU9R8u5hwQRErMCxOtbiLgGxzw3bo/7ikpYfVLMjFFTjN4oCWPwO2Ys6h6eEc42tQ
+         QAV3juCG7QyhxhFD5V6N6p3goNHmcjALoMa5V4vU+QdEdENmFfkVG0cu3aB3sDrTB8
+         WlRVjvHQX6koQ==
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Fixes a couple of warnings by checkpatch and sparse.
+This patch series includes Tegra210 deepsleep support with RTC alarm
+wake event.
 
-Signed-off-by: Hennie Muller <hm@bitlabs.co.za>
----
- drivers/gpio/gpio-viperboard.c | 20 ++++++++++----------
- 1 file changed, 10 insertions(+), 10 deletions(-)
+This series also includes save and restore of PLLs, clocks, OSC contexts
+for deepsleep exit to normal operation.
 
-diff --git a/drivers/gpio/gpio-viperboard.c b/drivers/gpio/gpio-viperboard.c
-index 9b604f13e302..c301c1d56dd2 100644
---- a/drivers/gpio/gpio-viperboard.c
-+++ b/drivers/gpio/gpio-viperboard.c
-@@ -79,7 +79,7 @@ MODULE_PARM_DESC(gpioa_freq,
- /* ----- begin of gipo a chip -------------------------------------------- */
- 
- static int vprbrd_gpioa_get(struct gpio_chip *chip,
--		unsigned offset)
-+		unsigned int offset)
- {
- 	int ret, answer, error = 0;
- 	struct vprbrd_gpio *gpio = gpiochip_get_data(chip);
-@@ -129,7 +129,7 @@ static int vprbrd_gpioa_get(struct gpio_chip *chip,
- }
- 
- static void vprbrd_gpioa_set(struct gpio_chip *chip,
--		unsigned offset, int value)
-+		unsigned int offset, int value)
- {
- 	int ret;
- 	struct vprbrd_gpio *gpio = gpiochip_get_data(chip);
-@@ -170,7 +170,7 @@ static void vprbrd_gpioa_set(struct gpio_chip *chip,
- }
- 
- static int vprbrd_gpioa_direction_input(struct gpio_chip *chip,
--			unsigned offset)
-+			unsigned int offset)
- {
- 	int ret;
- 	struct vprbrd_gpio *gpio = gpiochip_get_data(chip);
-@@ -207,7 +207,7 @@ static int vprbrd_gpioa_direction_input(struct gpio_chip *chip,
- }
- 
- static int vprbrd_gpioa_direction_output(struct gpio_chip *chip,
--			unsigned offset, int value)
-+			unsigned int offset, int value)
- {
- 	int ret;
- 	struct vprbrd_gpio *gpio = gpiochip_get_data(chip);
-@@ -251,8 +251,8 @@ static int vprbrd_gpioa_direction_output(struct gpio_chip *chip,
- 
- /* ----- begin of gipo b chip -------------------------------------------- */
- 
--static int vprbrd_gpiob_setdir(struct vprbrd *vb, unsigned offset,
--	unsigned dir)
-+static int vprbrd_gpiob_setdir(struct vprbrd *vb, unsigned int offset,
-+	unsigned int dir)
- {
- 	struct vprbrd_gpiob_msg *gbmsg = (struct vprbrd_gpiob_msg *)vb->buf;
- 	int ret;
-@@ -273,7 +273,7 @@ static int vprbrd_gpiob_setdir(struct vprbrd *vb, unsigned offset,
- }
- 
- static int vprbrd_gpiob_get(struct gpio_chip *chip,
--		unsigned offset)
-+		unsigned int offset)
- {
- 	int ret;
- 	u16 val;
-@@ -305,7 +305,7 @@ static int vprbrd_gpiob_get(struct gpio_chip *chip,
- }
- 
- static void vprbrd_gpiob_set(struct gpio_chip *chip,
--		unsigned offset, int value)
-+		unsigned int offset, int value)
- {
- 	int ret;
- 	struct vprbrd_gpio *gpio = gpiochip_get_data(chip);
-@@ -338,7 +338,7 @@ static void vprbrd_gpiob_set(struct gpio_chip *chip,
- }
- 
- static int vprbrd_gpiob_direction_input(struct gpio_chip *chip,
--			unsigned offset)
-+			unsigned int offset)
- {
- 	int ret;
- 	struct vprbrd_gpio *gpio = gpiochip_get_data(chip);
-@@ -359,7 +359,7 @@ static int vprbrd_gpiob_direction_input(struct gpio_chip *chip,
- }
- 
- static int vprbrd_gpiob_direction_output(struct gpio_chip *chip,
--			unsigned offset, int value)
-+			unsigned int offset, int value)
- {
- 	int ret;
- 	struct vprbrd_gpio *gpio = gpiochip_get_data(chip);
+This patch series doesn't support 100% suspend/resume to allow fully
+functional state upon resume and we are working on some more drivers suspend
+and resume implementations.
+
+[V6]: Changes between V5 & V6 are
+	- V5 feedback fixes
+	- DFLL suspend and resume moved to DFLL clock driver
+	- Add suspend and resume support for CPUFreq driver to explicitly
+	  switch source to safe source of PLLP and disable DFLL clock.
+	- Fix to super clock driver to enable PLLP branch to CPU before
+	  source switch to PLLP.
+	- Added save and restore support for super clock driver.
+
+[V5]: Changes between V4 & V5 are
+	- V4 feedback fixes
+
+[V4]: Changes between V3 & V4 are
+	- V3 feedback fixes
+	- Removed park bits clear for EMMC pads in pinctrl-tegra driver
+	  function tegra_pinctrl_clear_parked_bits as based on V3 feedback
+	  parked_bit is updated to parked_bitmask to use with DRV_PINGROUP
+	  as well and thierry posted patch series for this.
+	- Implemented all peripheral clocks save and restore through their
+	  corresponding clk_ops save_context and restore_context and removed
+	  all direct registers store and restore in clk-tegra210 driver.
+	- Created separate patch for fence_delay update during PLLU init based
+	  on V3 feedback.
+	- Added more comments in tegra210_clk_resume regarding dfll restore
+	  sequence and its dependency on peripheral clocks restore.
+
+[V3]: Changes between V2 & V3 are
+	- V2 feedback fixes
+	- GPIO restore should happen prior to Pinctrl restore to prevent
+	  glitch on GPIO lines. So using resume_noirq for gpio tegra to allow
+	  gpio resume prior to pinctrl resume.
+	- Implemented save_context and restore_context callbacks for clock
+	  plls, pll outs and dividers in corresponding drivers.
+	  Note: Peripheral clocks and clock enable and reset need to be in
+	  Tegra210 clock suspend/resume as they need to be in proper sequence
+	  w.r.t DFLL resume for restoring CPU clock.
+	- Removed gpio-tegra changes for hierarchical support to have PMC as
+	  parent to GPIOs for GPIO wake event support. Thierry is working on
+	  gpiolib for some cleanup before adding hierarchical support. So
+	  holding on to GPIO wake support for now.
+
+[V2] : V1 feedback fixes
+	Patch 0002: This version still using syscore. Thierry suggest not to
+	use syscore and waiting on suggestion from Linux Walleij for any better
+	way of storing current state of pins before suspend entry and restoring
+	them on resume at very early stage. So left this the same way as V1 and
+	will address once I get more feedback on this.
+	Also need to findout and implement proper way of forcing resume order
+	between pinctrl and gpio driver.
+
+[V1]:	Tegra210 SC7 entry and exit thru RTC wake and Power button GPIO wake
+	using hierarchical IRQ with PMC as parent to GPIO.
+
+
+Sowjanya Komatineni (21):
+  irqchip: tegra: Do not disable COP IRQ during suspend
+  pinctrl: tegra: Add suspend and resume support
+  pinctrl: tegra210: Add Tegra210 pinctrl pm ops
+  clk: tegra: Save and restore divider rate
+  clk: tegra: pllout: Save and restore pllout context
+  clk: tegra: pll: Save and restore pll context
+  clk: tegra: Support for OSC context save and restore
+  clk: tegra: clk-periph: Add save and restore support
+  clk: tegra: clk-super: Fix to enable PLLP branches to CPU
+  clk: tegra: clk-super: Add save and restore support
+  clk: tegra: clk-dfll: Add suspend and resume support
+  cpufreq: tegra124: Add suspend and resume support
+  clk: tegra210: Use fence_udelay during PLLU init
+  clk: tegra210: Add suspend and resume support
+  soc/tegra: pmc: Allow to support more tegras wake
+  soc/tegra: pmc: Add pmc wake support for tegra210
+  arm64: tegra: Enable wake from deep sleep on RTC alarm.
+  soc/tegra: pmc: Configure core power request polarity
+  soc/tegra: pmc: Configure deep sleep control settings
+  arm64: dts: tegra210-p2180: Jetson TX1 SC7 timings
+  arm64: dts: tegra210-p3450: Jetson nano SC7 timings
+
+ arch/arm64/boot/dts/nvidia/tegra210-p2180.dtsi     |   7 +
+ arch/arm64/boot/dts/nvidia/tegra210-p3450-0000.dts |   7 +
+ arch/arm64/boot/dts/nvidia/tegra210.dtsi           |   5 +-
+ drivers/clk/tegra/clk-dfll.c                       |  44 +++++++
+ drivers/clk/tegra/clk-dfll.h                       |   2 +
+ drivers/clk/tegra/clk-divider.c                    |  23 ++++
+ drivers/clk/tegra/clk-periph-fixed.c               |  33 +++++
+ drivers/clk/tegra/clk-periph-gate.c                |  34 +++++
+ drivers/clk/tegra/clk-periph.c                     |  43 +++++++
+ drivers/clk/tegra/clk-pll-out.c                    |  28 ++++
+ drivers/clk/tegra/clk-pll.c                        | 121 +++++++++++++-----
+ drivers/clk/tegra/clk-sdmmc-mux.c                  |  30 +++++
+ drivers/clk/tegra/clk-super.c                      |  51 ++++++++
+ drivers/clk/tegra/clk-tegra-fixed.c                |  15 +++
+ drivers/clk/tegra/clk-tegra-super-gen4.c           |   4 +-
+ drivers/clk/tegra/clk-tegra124-dfll-fcpu.c         |   1 +
+ drivers/clk/tegra/clk-tegra210.c                   |  81 ++++++++++--
+ drivers/clk/tegra/clk.c                            |  14 ++
+ drivers/clk/tegra/clk.h                            |  36 +++++-
+ drivers/cpufreq/tegra124-cpufreq.c                 |  46 +++++++
+ drivers/irqchip/irq-tegra.c                        |  20 ++-
+ drivers/pinctrl/tegra/pinctrl-tegra.c              |  59 +++++++++
+ drivers/pinctrl/tegra/pinctrl-tegra.h              |   3 +
+ drivers/pinctrl/tegra/pinctrl-tegra210.c           |   1 +
+ drivers/soc/tegra/pmc.c                            | 142 ++++++++++++++++++++-
+ 25 files changed, 798 insertions(+), 52 deletions(-)
+
 -- 
-2.22.0
+2.7.4
 
