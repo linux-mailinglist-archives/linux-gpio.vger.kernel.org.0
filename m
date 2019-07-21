@@ -2,51 +2,50 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id F2BDA6F64D
-	for <lists+linux-gpio@lfdr.de>; Mon, 22 Jul 2019 00:09:51 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 686AC6F655
+	for <lists+linux-gpio@lfdr.de>; Mon, 22 Jul 2019 00:15:04 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726952AbfGUWJO (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sun, 21 Jul 2019 18:09:14 -0400
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:38535 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725989AbfGUWJO (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sun, 21 Jul 2019 18:09:14 -0400
-Received: by mail-lf1-f68.google.com with SMTP id h28so25155561lfj.5;
-        Sun, 21 Jul 2019 15:09:11 -0700 (PDT)
+        id S1727092AbfGUWPA (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sun, 21 Jul 2019 18:15:00 -0400
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:40743 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725989AbfGUWPA (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sun, 21 Jul 2019 18:15:00 -0400
+Received: by mail-lf1-f67.google.com with SMTP id b17so25193894lff.7;
+        Sun, 21 Jul 2019 15:14:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=subject:from:to:cc:references:message-id:date:user-agent
+        h=subject:to:cc:references:from:message-id:date:user-agent
          :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=3rTzL5QATtobDUnSqUYyJdUPDYJjvS1OkcV6MfOW5EQ=;
-        b=lnIRZ8TJc/Z9gKrm686ayagpOlg44fo4607fLcEjbCTkiG+83wQ8GsZDUycQyHwKgt
-         V6tnloqzvwoLBfXH2gGOJg74DZFzA2eU1H1H6nmU7RIq9XIWJqfAOh/Ce4zpd5q0hdVX
-         ErBqRv6t1Y7FhoaEzpmmpapZSQynyp2B0tpdlqPLMDD6k0ZDoN0qF+tPu0ozyN8XxBzR
-         E9UqzrldyrifLTgMC25n0N3uz9UpS43DjGb8rIbpb6fyPQUFFSdalEbzDQSD4PEsalVk
-         g0FZCZjDTgBJph2c7kX3Nxrse8+JG5kB5QOk6McvTbASElOnhc8m5T7SQk94hxKear2S
-         JD0g==
+        bh=u5vwBrczH3pqHYjrJBk9McgfzQ7jMbFeq2+Xy/9jSHs=;
+        b=seI3F9fpPffbFnxlS/u3ukpoPc9HsX4lOzM+fyQUPgtSVtuNrNrvURScnkiEVoxjXX
+         yNXBKagCb9FNcs/j24x3vUbjA86Xke4z7GWx+KjZ8Oc5HQ5Uh74JkaZGtJWRU7zdWAmY
+         3MBswB/RyxOIVk22u1T63wxeAQL3DF5UIcoOe7cIfRolzj52HpWKu6GKp3A9ZRtUN6q0
+         0HTj7m9aSvqCzPy6qQQQVcDV59N2OFCCnQmjPE7a0wazr/4lM+fz/d0rWIPmEp3UcXtX
+         Q9exuBZKNls6daZ7XSVKOHSgk9/2uK3epeVIIP8Hni8IKeSVPPZ6b3Qa8s7WXv9z4lOB
+         5Shw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=3rTzL5QATtobDUnSqUYyJdUPDYJjvS1OkcV6MfOW5EQ=;
-        b=B3e9MKug3QM71yoKKZfAnxCkhFuyQ8Nvsl7Mk54zsN6+0y55MAWd1pcFCgWiqxIjD9
-         pRF/Y7vmOLjksoOLJ6w3AnYRlZ6Yjq4NN7iNxL9iSOAQ5zRdWn8hmJsKtDz5lMbag0MF
-         p47LtdYBCmEnUZinYZEWeZtsKaKx+Aaa9MWARFGVaBbmyos3lBWTuvzGxY8DiJJpjyJD
-         hIbCWoWyVFbQI4/4W/iOeHRR6dCbk0S0aFBk2KpSkhzgCcmsr77Zf3tsFO7f5Vp6aXZE
-         oAm4h44obSHFfqFCyGP9Qkz2XbAXcN5xxo3mZ5j3+2XMw8YMT4n07G4rjmzRnLNH1tsC
-         sboQ==
-X-Gm-Message-State: APjAAAWK8m9J5unWKiUV/cDW5sH0LXhdwNrffE4+CFyXAyFpkTiNAMs3
-        DfEDuEXSYxI1K+/dOdRnmSgBZdQ9
-X-Google-Smtp-Source: APXvYqwWrH63kDOfQl/lL+jLdHQWBn2t7g5nppBxCuLdr2WXP0tKIoIOlZmXUlpXgPdhDmerlhrhMQ==
-X-Received: by 2002:ac2:4c84:: with SMTP id d4mr30028072lfl.1.1563746950588;
-        Sun, 21 Jul 2019 15:09:10 -0700 (PDT)
+        bh=u5vwBrczH3pqHYjrJBk9McgfzQ7jMbFeq2+Xy/9jSHs=;
+        b=FquRMH4oFQtBB5HE6p8+CNL+ECp+W4rE+Fo51P+fftkGxnGofNx8HIZohpaXPl6E1h
+         V0N2hF3wIxspUqdnDjbgJ0Lz5mQpFrXAMksev+s3iyx32q1rxMSIzwdG8IJ79BBL5S1T
+         3NqemcS0gVtQUEu/bYrS9EBI2SpHEqNdPj3ZpS/2PDtOHvS99zs06uWvdT6K01w4Tq6i
+         24C4DiUJndksZfl5RhXgBll3Vo9VVp3jsDCPODzyzdhCp8tGeAGOiZnoEuwHwxmO5Xvd
+         6NdpNUZSBOsN/lecQqY3lEtXJtOhq9XHgRtk+m4KRn376ei4V/Mi6glD/LrN0PVa2har
+         Am/g==
+X-Gm-Message-State: APjAAAWZqtJ3fccAQ0WwX4sh3kX2rQ7sXpneuVbVBonMAs61jikG4ubn
+        d/85YsdDPl5C/9xHcSRBMQVhKz5Q
+X-Google-Smtp-Source: APXvYqzTYLJFwYhimRTdw312FnuK794BLQJrOZ0paj+cb7R/tUhPy3OOPX0RYbel9oW2PE7iAPLJvg==
+X-Received: by 2002:ac2:4839:: with SMTP id 25mr30187483lft.79.1563747296901;
+        Sun, 21 Jul 2019 15:14:56 -0700 (PDT)
 Received: from [192.168.2.145] (ppp91-78-220-99.pppoe.mtu-net.ru. [91.78.220.99])
-        by smtp.googlemail.com with ESMTPSA id z22sm7263982ljz.20.2019.07.21.15.09.09
+        by smtp.googlemail.com with ESMTPSA id d3sm5743130lfb.92.2019.07.21.15.14.55
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 21 Jul 2019 15:09:09 -0700 (PDT)
-Subject: Re: [PATCH V6 02/21] pinctrl: tegra: Add suspend and resume support
-From:   Dmitry Osipenko <digetx@gmail.com>
+        Sun, 21 Jul 2019 15:14:56 -0700 (PDT)
+Subject: Re: [PATCH V6 04/21] clk: tegra: Save and restore divider rate
 To:     Sowjanya Komatineni <skomatineni@nvidia.com>,
         thierry.reding@gmail.com, jonathanh@nvidia.com, tglx@linutronix.de,
         jason@lakedaemon.net, marc.zyngier@arm.com,
@@ -58,14 +57,14 @@ Cc:     pdeschrijver@nvidia.com, pgaikwad@nvidia.com, sboyd@kernel.org,
         mperttunen@nvidia.com, spatra@nvidia.com, robh+dt@kernel.org,
         devicetree@vger.kernel.org
 References: <1563738060-30213-1-git-send-email-skomatineni@nvidia.com>
- <1563738060-30213-3-git-send-email-skomatineni@nvidia.com>
- <d837e4e0-947b-2b90-c680-ab913e70e587@gmail.com>
-Message-ID: <9c844d55-0bc0-471c-6c49-1febe799ebf2@gmail.com>
-Date:   Mon, 22 Jul 2019 01:09:08 +0300
+ <1563738060-30213-5-git-send-email-skomatineni@nvidia.com>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <88a6a8ea-df4e-4cdf-4723-6e16d645218c@gmail.com>
+Date:   Mon, 22 Jul 2019 01:14:55 +0300
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.7.2
 MIME-Version: 1.0
-In-Reply-To: <d837e4e0-947b-2b90-c680-ab913e70e587@gmail.com>
+In-Reply-To: <1563738060-30213-5-git-send-email-skomatineni@nvidia.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 8bit
@@ -74,141 +73,91 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-22.07.2019 1:03, Dmitry Osipenko пишет:
-> 21.07.2019 22:40, Sowjanya Komatineni пишет:
->> This patch adds support for Tegra pinctrl driver suspend and resume.
->>
->> During suspend, context of all pinctrl registers are stored and
->> on resume they are all restored to have all the pinmux and pad
->> configuration for normal operation.
->>
->> Acked-by: Thierry Reding <treding@nvidia.com>
->> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
->> ---
->>  drivers/pinctrl/tegra/pinctrl-tegra.c | 59 +++++++++++++++++++++++++++++++++++
->>  drivers/pinctrl/tegra/pinctrl-tegra.h |  3 ++
->>  2 files changed, 62 insertions(+)
->>
->> diff --git a/drivers/pinctrl/tegra/pinctrl-tegra.c b/drivers/pinctrl/tegra/pinctrl-tegra.c
->> index 186ef98e7b2b..e3a237534281 100644
->> --- a/drivers/pinctrl/tegra/pinctrl-tegra.c
->> +++ b/drivers/pinctrl/tegra/pinctrl-tegra.c
->> @@ -631,6 +631,58 @@ static void tegra_pinctrl_clear_parked_bits(struct tegra_pmx *pmx)
->>  	}
->>  }
->>  
->> +static size_t tegra_pinctrl_get_bank_size(struct device *dev,
->> +					  unsigned int bank_id)
->> +{
->> +	struct platform_device *pdev = to_platform_device(dev);
->> +	struct resource *res;
->> +
->> +	res = platform_get_resource(pdev, IORESOURCE_MEM, bank_id);
->> +
->> +	return resource_size(res) / 4;
->> +}
->> +
->> +static int tegra_pinctrl_suspend(struct device *dev)
->> +{
->> +	struct tegra_pmx *pmx = dev_get_drvdata(dev);
->> +	u32 *backup_regs = pmx->backup_regs;
->> +	u32 *regs;
->> +	size_t bank_size;
->> +	unsigned int i, k;
->> +
->> +	for (i = 0; i < pmx->nbanks; i++) {
->> +		bank_size = tegra_pinctrl_get_bank_size(dev, i);
->> +		regs = pmx->regs[i];
->> +		for (k = 0; k < bank_size; k++)
->> +			*backup_regs++ = readl_relaxed(regs++);
->> +	}
->> +
->> +	return pinctrl_force_sleep(pmx->pctl);
->> +}
->> +
->> +static int tegra_pinctrl_resume(struct device *dev)
->> +{
->> +	struct tegra_pmx *pmx = dev_get_drvdata(dev);
->> +	u32 *backup_regs = pmx->backup_regs;
->> +	u32 *regs;
->> +	size_t bank_size;
->> +	unsigned int i, k;
->> +
->> +	for (i = 0; i < pmx->nbanks; i++) {
->> +		bank_size = tegra_pinctrl_get_bank_size(dev, i);
->> +		regs = pmx->regs[i];
->> +		for (k = 0; k < bank_size; k++)
->> +			writel_relaxed(*backup_regs++, regs++);
->> +	}
->> +
->> +	return 0;
->> +}
->> +
->> +const struct dev_pm_ops tegra_pinctrl_pm = {
->> +	.suspend = &tegra_pinctrl_suspend,
->> +	.resume = &tegra_pinctrl_resume
->> +};
->> +
->>  static bool gpio_node_has_range(const char *compatible)
->>  {
->>  	struct device_node *np;
->> @@ -655,6 +707,7 @@ int tegra_pinctrl_probe(struct platform_device *pdev,
->>  	int i;
->>  	const char **group_pins;
->>  	int fn, gn, gfn;
->> +	unsigned long backup_regs_size = 0;
->>  
->>  	pmx = devm_kzalloc(&pdev->dev, sizeof(*pmx), GFP_KERNEL);
->>  	if (!pmx)
->> @@ -707,6 +760,7 @@ int tegra_pinctrl_probe(struct platform_device *pdev,
->>  		res = platform_get_resource(pdev, IORESOURCE_MEM, i);
->>  		if (!res)
->>  			break;
->> +		backup_regs_size += resource_size(res);
->>  	}
->>  	pmx->nbanks = i;
->>  
->> @@ -715,6 +769,11 @@ int tegra_pinctrl_probe(struct platform_device *pdev,
->>  	if (!pmx->regs)
->>  		return -ENOMEM;
->>  
->> +	pmx->backup_regs = devm_kzalloc(&pdev->dev, backup_regs_size,
->> +					GFP_KERNEL);
->> +	if (!pmx->backup_regs)
->> +		return -ENOMEM;
->> +
->>  	for (i = 0; i < pmx->nbanks; i++) {
->>  		res = platform_get_resource(pdev, IORESOURCE_MEM, i);
->>  		pmx->regs[i] = devm_ioremap_resource(&pdev->dev, res);
->> diff --git a/drivers/pinctrl/tegra/pinctrl-tegra.h b/drivers/pinctrl/tegra/pinctrl-tegra.h
->> index 105309774079..0fc82eea9cf1 100644
->> --- a/drivers/pinctrl/tegra/pinctrl-tegra.h
->> +++ b/drivers/pinctrl/tegra/pinctrl-tegra.h
->> @@ -17,6 +17,7 @@ struct tegra_pmx {
->>  
->>  	int nbanks;
->>  	void __iomem **regs;
->> +	u32 *backup_regs;
->>  };
->>  
->>  enum tegra_pinconf_param {
->> @@ -193,6 +194,8 @@ struct tegra_pinctrl_soc_data {
->>  	bool drvtype_in_mux;
->>  };
->>  
->> +extern const struct dev_pm_ops tegra_pinctrl_pm;
->> +
->>  int tegra_pinctrl_probe(struct platform_device *pdev,
->>  			const struct tegra_pinctrl_soc_data *soc_data);
->>  #endif
->>
+21.07.2019 22:40, Sowjanya Komatineni пишет:
+> This patch implements context save and restore for clock divider.
 > 
-> Reviewed-by: Dmitry Osipenko <digetx@gmail.com>
+> During system suspend, core power goes off and looses the settings
+> of the Tegra CAR controller registers.
+> 
+> So during suspend entry the context of clock divider is saved and
+> on resume context is restored back for normal operation.
+> 
+> Acked-by: Thierry Reding <treding@nvidia.com>
+> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
+> ---
+>  drivers/clk/tegra/clk-divider.c | 23 +++++++++++++++++++++++
+>  drivers/clk/tegra/clk.h         |  2 ++
+>  2 files changed, 25 insertions(+)
+> 
+> diff --git a/drivers/clk/tegra/clk-divider.c b/drivers/clk/tegra/clk-divider.c
+> index e76731fb7d69..ecb7ff9ce97e 100644
+> --- a/drivers/clk/tegra/clk-divider.c
+> +++ b/drivers/clk/tegra/clk-divider.c
+> @@ -109,10 +109,33 @@ static int clk_frac_div_set_rate(struct clk_hw *hw, unsigned long rate,
+>  	return 0;
+>  }
+>  
+> +static int clk_divider_save_context(struct clk_hw *hw)
+> +{
+> +	struct tegra_clk_frac_div *divider = to_clk_frac_div(hw);
+> +	struct clk_hw *parent = clk_hw_get_parent(hw);
+> +	unsigned long parent_rate = clk_hw_get_rate(parent);
+> +
+> +	divider->rate = clk_frac_div_recalc_rate(hw, parent_rate);
+
+I'm not sure what's the point of this, because clk_hw_get_rate() returns
+cached value.
+
+> +	return 0;
+> +}
+> +
+> +static void clk_divider_restore_context(struct clk_hw *hw)
+> +{
+> +	struct tegra_clk_frac_div *divider = to_clk_frac_div(hw);
+> +	struct clk_hw *parent = clk_hw_get_parent(hw);
+> +	unsigned long parent_rate = clk_hw_get_rate(parent);
+> +
+> +	if (clk_frac_div_set_rate(hw, divider->rate, parent_rate) < 0)
+> +		WARN_ON(1);
+
+Hence this could be:
+
+	unsigned long parent_rate = clk_hw_get_rate(parent);
+	unsigned long rate = clk_hw_get_rate(hw);
+
+	if (clk_frac_div_set_rate(hw, rate, parent_rate) < 0)
+		WARN_ON(1);
+
+> +}
+> +
+>  const struct clk_ops tegra_clk_frac_div_ops = {
+>  	.recalc_rate = clk_frac_div_recalc_rate,
+>  	.set_rate = clk_frac_div_set_rate,
+>  	.round_rate = clk_frac_div_round_rate,
+> +	.save_context = clk_divider_save_context,
+> +	.restore_context = clk_divider_restore_context,
+>  };
+>  
+>  struct clk *tegra_clk_register_divider(const char *name,
+> diff --git a/drivers/clk/tegra/clk.h b/drivers/clk/tegra/clk.h
+> index 905bf1096558..83623f5f55f3 100644
+> --- a/drivers/clk/tegra/clk.h
+> +++ b/drivers/clk/tegra/clk.h
+> @@ -42,6 +42,7 @@ struct clk *tegra_clk_register_sync_source(const char *name,
+>   * @width:	width of the divider bit field
+>   * @frac_width:	width of the fractional bit field
+>   * @lock:	register lock
+> + * @rate:	rate during suspend and resume
+>   *
+>   * Flags:
+>   * TEGRA_DIVIDER_ROUND_UP - This flags indicates to round up the divider value.
+> @@ -62,6 +63,7 @@ struct tegra_clk_frac_div {
+>  	u8		width;
+>  	u8		frac_width;
+>  	spinlock_t	*lock;
+> +	unsigned long	rate;
+>  };
+>  
+>  #define to_clk_frac_div(_hw) container_of(_hw, struct tegra_clk_frac_div, hw)
 > 
 
-BTW, you should remove Thierry's ACK from all patches that were modified
-if he didn't re-ACK the new version.
-
-Also, it looks to me that you're manually adding versioning to the
-patches because git usually uses lowercase for 'v'. You could use "git
-format-patch -v6 ..".
