@@ -2,212 +2,178 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id D2DAE6F8FD
-	for <lists+linux-gpio@lfdr.de>; Mon, 22 Jul 2019 07:42:24 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 640836F925
+	for <lists+linux-gpio@lfdr.de>; Mon, 22 Jul 2019 07:56:21 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726701AbfGVFmY (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 22 Jul 2019 01:42:24 -0400
-Received: from de-outgoing-9-9.antispam.co.za ([176.9.211.72]:57471 "EHLO
-        de-outgoing-9-9.antispam.co.za" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725821AbfGVFmY (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>);
-        Mon, 22 Jul 2019 01:42:24 -0400
-X-Greylist: delayed 3006 seconds by postgrey-1.27 at vger.kernel.org; Mon, 22 Jul 2019 01:42:22 EDT
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=out.zamailgate.com; s=default; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:reply-to:sender:bcc:
-        content-transfer-encoding; bh=64rd6IcL4fIvhgRr6XOO4DL/7sQXmNzxzRnPBY2jfQk=;
-         b=L3CjuWDHIwShCB5bpxjSJht8oQixNBj5slrqtGgfANKSNvjuJUINVVyC+D5V5dXbR/FqG205S9
-        L6QeM6RHvUV0GNfv1Zv69qRL8MTidc6MMvKnqrm4KvTIdzFuIxntoKFsLTWz9C/BduV64a3n2/Y0G
-        qR14EPTd0Cag7LB9SqP0=;
-Received: from cp46-jhb.za-dns.com ([164.160.91.39])
-        by server9.antispam.co.za with esmtps (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.89)
-        (envelope-from <hm@bitlabs.co.za>)
-        id 1hpQJ2-00056O-1l; Mon, 22 Jul 2019 06:52:12 +0200
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=bitlabs.co.za; s=default; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=64rd6IcL4fIvhgRr6XOO4DL/7sQXmNzxzRnPBY2jfQk=; b=EowshLDlwAR1WpTaG97aiXoD8
-        Wpza/OlzRTwNpaHk5+qGSMFHtYBaY1xkpAKtaInXgJt5HnI9Yukq1iCjPpGkK8gYYCu+dzhEGeOYX
-        CvtDZLaxKwqJATXuOff2MD4meOmPaS5OqDAmuukmoM3Oo1EEW8fIDe2CjqF2AVlsIjAZl07DN9m2O
-        iGSk6riwjQS2QTLiYZ+qiY3bOxuDJbKkdkEvRiZngddOHTS6hiiGtlx2J3OHyycXdVckxsmNaNoVz
-        IxHy44H2ha4rfefRM4VWE4VRfIgBq9yhct0G7XFdWHEg/ZQUUJY0bTDxTqziBLtjKIQTj2kGrSgWY
-        TGmMgVVVQ==;
-Received: from [45.56.148.82] (port=48840 helo=manjaro-1)
-        by cp46-jhb.za-dns.com with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.92)
-        (envelope-from <hm@bitlabs.co.za>)
-        id 1hpQIt-000838-Ls; Mon, 22 Jul 2019 06:52:04 +0200
-Date:   Mon, 22 Jul 2019 06:51:54 +0200
-From:   Hennie Muller <hm@bitlabs.co.za>
-To:     Phil Reid <preid@electromag.com.au>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/2] [PATCH] gpio: Replace usage of bare 'unsigned' with
- 'unsigned int'
-Message-ID: <20190722045154.rp2sqr2mxdmfn5qj@manjaro-1>
-References: <20190721125259.13990-1-hm@bitlabs.co.za>
- <61045f29-73ca-cb62-ba6f-5b12970735a9@electromag.com.au>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <61045f29-73ca-cb62-ba6f-5b12970735a9@electromag.com.au>
-X-Get-Message-Sender-Via: cp46-jhb.za-dns.com: authenticated_id: hm@bitlabs.co.za
-X-Authenticated-Sender: cp46-jhb.za-dns.com: hm@bitlabs.co.za
-X-AuthUser: hm@bitlabs.co.za
-X-AuthUsername: 
-X-AuthDomain: @
-X-Originating-IP: 164.160.91.39
-X-SpamExperts-Domain: out.zamailgate.com
-X-SpamExperts-Username: 164.160.91.39
-Authentication-Results: antispam.co.za; auth=pass smtp.auth=164.160.91.39@out.zamailgate.com
-X-SpamExperts-Outgoing-Class: ham
-X-SpamExperts-Outgoing-Evidence: SB/global_tokens (0.00588500935121)
-X-Recommended-Action: accept
-X-Filter-ID: Mvzo4OR0dZXEDF/gcnlw0STiPCilqAig5bem4hJMKBmpSDasLI4SayDByyq9LIhV4Y5n+wxaLJoa
- DjtgDawDEUTNWdUk1Ol2OGx3IfrIJKyP9eGNFz9TW9u+Jt8z2T3KhT7D3SX4MPtDgdWqsPqh67fj
- DY1qm2QZcrcs82VGliYm1p42ppTj+dVCw4Ez5pDLW0+mKt/G7vFc2Qym1x4kT+asgSOJwXvEa88/
- nEEOQ8atQbfoTroPoLSOwm9gb/v9t8C9mOBdONdnsxgsk1D2py+4lO+qZiszEkuaXWZuy9K3wL2Y
- 4F0412ezGCyTUPanTFg5blXwux8esyOqcBiI3QW3/JG4NvcugjYnCALrCN0QSvHD20fXtmqWXghn
- 7qhhLHdtIZerlbr9J0URPm3qGw6xHJ+5XfpywqqK/49f0grSo+JqHSJMzPV2SO5XAS47CrfmSf0L
- i45/NZ9SxHqOKEOsySokoPKwLoxkVVV2B0lpzAs8/Yb7du19qZoD72lvi0rkK5IlwQ7ImbK6V1qP
- /QW1G9+Xy7Q00JXKZ6AIc+S4RopuYbYWODZPMXR7gq11OuEY1HqEhaucdkac1B9pHVpyEaauzOzF
- HT8EncIT+dZvUeASWefCYj15CRjPEXcLxvV0HqsoxHSXAJzPhyRQPuWBOXp8nHKe0R+FkIqN7hlK
- iJTN7QRHyTxFZxda0sg2lg6p7O4N5ohxmAZntqjk6urdeG3055AJ+1ulZSV7bJ5HZdYXq9nbB9YL
- buEdlZGH5xC0aagmRmHsEsxeqg0lAf3L1YQsC1MBMpAYEHWLAHlagrnUtxvpfJmdlkqpO2zU8mIy
- AWDzMaiksSFXUf2/opd7/V3RJl1jWFHiAL9S1hROvVB8ln8Gbd1wEveB/JxEFfQbvlTi88xSc9Qi
- UhgH3fdjzQ6YC7Heg3Xf7O1TOd4H0jB6orFsm4lpjwE/4C3BAcgNpD8B6zIYQ/YUyeje5GqgtqOb
- CvohvKzPGrrDEZtEzEL62+pmygRM4z6UNMVeXcEObgAeXh0ac70JoNe6uMV8Zu+UhKPbnYIx5kLg
- TOFM8jeeJSytG/Wf88r2kBub8U3Gy13zcBdnsFzxld/ykvUvuXdE8A+FdNrjckL3mHJSR5JV9DHC
- csU/tK0CUl/DxCo1rgS3Q2ym4AIoOdq5ermHZmPglR+swmDUp2F8oUst+qf6sGr/I71pJ09COraL
- SYuMFtB17GvS7LLvVpYvNA==
-X-Report-Abuse-To: spam@server1.antispam.co.za
+        id S1727421AbfGVF4V (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 22 Jul 2019 01:56:21 -0400
+Received: from mout.gmx.net ([212.227.17.22]:34927 "EHLO mout.gmx.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727407AbfGVF4U (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Mon, 22 Jul 2019 01:56:20 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+        s=badeba3b8450; t=1563774934;
+        bh=nTl109vyOUBR2zyRol9VTmFHR6gjS2AXS/Pgcx0bQTY=;
+        h=X-UI-Sender-Class:From:To:Cc:Subject:Date;
+        b=jfvqjgCISbf+Pa+4ERn3aG+TLMc5aEPOQ3Ya5vwgAUfV7o7TGBrneL2PgT5gWeXWD
+         AbfRMW8zQMEfxM7un7lZWl84atKOgysssowkyeqkxsL7PSHciqe1hMZ31lhVQvXhDb
+         pa0BQJLf0Vfhm/GWwfwPPoLknl0SY2ZHIi7W6K3E=
+X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
+Received: from localhost.localdomain ([37.4.249.98]) by mail.gmx.com (mrgmx102
+ [212.227.17.168]) with ESMTPSA (Nemesis) id 0Lurin-1iXGMB16Fl-01063s; Mon, 22
+ Jul 2019 07:55:34 +0200
+From:   Stefan Wahren <wahrenst@gmx.net>
+To:     Eric Anholt <eric@anholt.net>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Ray Jui <rjui@broadcom.com>,
+        Scott Branden <sbranden@broadcom.com>,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        Matthias Brugger <mbrugger@suse.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Adrian Hunter <adrian.hunter@intel.com>
+Cc:     bcm-kernel-feedback-list@broadcom.com,
+        linux-arm-kernel@lists.infradead.org,
+        linux-rpi-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
+        linux-mmc@vger.kernel.org, Stefan Wahren <wahrenst@gmx.net>
+Subject: [PATCH 00/18] ARM: Add minimal Raspberry Pi 4 support
+Date:   Mon, 22 Jul 2019 07:54:31 +0200
+Message-Id: <1563774880-8061-1-git-send-email-wahrenst@gmx.net>
+X-Mailer: git-send-email 2.7.4
+X-Provags-ID: V03:K1:nFbHXC3fhyDvHOK156rPlI/cNhYflJ/Mq9kOF5ukfMQHr/MP8Xg
+ /WzrjIdPAsrrY1Krk7yAn2KGUOz+yI+aZNDXc72ZqDctEvoZInuoZLO1+9a6kam6ycWKLBy
+ a16E4sUXp+tq1kW9tlRHjN4oCeX+BJqhNuCOfHRYFDIgTeg1pZbx9OLN0LsHARTIRA8k3sb
+ i0Ns448tqkluxVdwyDcDA==
+X-Spam-Flag: NO
+X-UI-Out-Filterresults: notjunk:1;V03:K0:Uldo6zz6IjY=:ga4Bk0EAggcaniosdxi3TY
+ BgQyrQ/Wkn2YpDgu7u7b8ifl7wnfTANjECLKncwQDvzaSAWMk7izDeEH72fc75g6LPW0WODLI
+ YLQvm79Bt7xPXTF0xpfsMPMkPUxW6i3VW6U5EIkCiCW5KXEBrq0qhW9/QcBraTqYvtditq/sq
+ ZgbqDmDf4pSHfL4zGPYH5CiamfU7uGDvi/zAWp7hYSSgolLaUXP2ryaTrHeVlIYI1SpS4sRZP
+ XuQFTA1xVV/R9P4VrtQjzVnHEQvg+BFkzTCqUMuTRIbw4VGuMvbZwrC9HjS5H2cRlbOWdA3fl
+ xGXEIWen1XTvSXoXubZqvenCp2NrixbbLO9A5LH0Ob/xH+lP16ZxDLNvsskQPYunGo1dN7gfN
+ MyGdPoQepoivceGY8b12ZOv0ygiJnZBIQDDxZunWvzZiRfWNsVQWs2EgZV2Wco3q/bhowjtAr
+ y5oeXMjFiAVJBthnny3IOzEaLBpVeKPSkePSsglBIcD1qr3Cd1AdxdvpTLYdvwmekv93Uil+A
+ F3JwYjPF0DZp8ZkVkoekXsrLt2gyBDGiOfL4gu5TA6phJ9p9uk6Yq16WFmrC7fqZ77glL9puN
+ XKkQQZfjP8Qf0AM4B0FfZs1kKyHtfQX/gkFN4fD2gts9/YBxPkLeycqD7uuosqzjVGcCmoXQx
+ 8nuvWU51P89VsYXBzfJux5457i2tL7qan84KBSxhpoDDk2TQrtBbHsppDoryF8AmN1Hj4mLe6
+ AcO17zpKaLND0FEChvMS0+4KxuTkF3iuX5yZFNaNSjFRUkcSwQzTtEcS/rWsLYxLLyiAn0gDX
+ 8Ns/aldail14qEJBSyyVye31qAusvon7Wjv5iE/+fXzzzUK4RfohAs+a5Oz5RsdYSjPnedM+g
+ NfUi6Broc0jG8Hwya3g01GKrfoRRJeQhbxiQZl+ihHQjV6L7YnqH8Nrf4WqCL3swLO7oJvcrd
+ bSy82RJvZOPr9tY8NQOdPTTUgMi6wmYZEt5QHTELstfSqTjD5cEX0hf+28p9b1oJmmS9DBaKQ
+ UJBRHKf65g3qrzsQ+Arz/YMxZkKHiH0WkV+HhTcPvTWykl0YYKnQbXgsApS4PJGWF3ytrk4Tx
+ VUNxcUIbZYGdso=
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Jul 22, 2019 at 10:05:00AM +0800, Phil Reid wrote:
-> G'day Hennie,
-> 
-> patch title should be:
-> gpio: viperboard: Replace usage of bare 'unsigned' with 'unsigned int'
-Thanks Phil.
+This series adds minimal support for the new Raspberry Pi 4, so we are abl=
+e
+to login via debug UART.
 
-I'll go read up a bit on amending commit messages for review.
+Patch 1-5:   Prepare platform and DTS for the new SoC BMC2711
+Patch 6-10:  Enable support for emmc2 on BCM2711
+Patch 11-12: Enable pinctrl for BCM2711
+Patch 13-17: Add Raspberry Pi 4 DTS support
+Patch 18:    Update MAINTAINERS
 
-> 
-> On 21/07/2019 20:52, Hennie Muller wrote:
-> > Fixes a couple of warnings by checkpatch and sparse.
-> > 
-> > Signed-off-by: Hennie Muller <hm@bitlabs.co.za>
-> > ---
-> >   drivers/gpio/gpio-viperboard.c | 20 ++++++++++----------
-> >   1 file changed, 10 insertions(+), 10 deletions(-)
-> > 
-> > diff --git a/drivers/gpio/gpio-viperboard.c b/drivers/gpio/gpio-viperboard.c
-> > index 9b604f13e302..c301c1d56dd2 100644
-> > --- a/drivers/gpio/gpio-viperboard.c
-> > +++ b/drivers/gpio/gpio-viperboard.c
-> > @@ -79,7 +79,7 @@ MODULE_PARM_DESC(gpioa_freq,
-> >   /* ----- begin of gipo a chip -------------------------------------------- */
-> >   static int vprbrd_gpioa_get(struct gpio_chip *chip,
-> > -		unsigned offset)
-> > +		unsigned int offset)
-> 
-> I've encountered these checkpatch warnings as well.
-> 
-> However 'struct gpio_chip' callbacks define the function signatures
-> as 'unsigned', not 'unsigned int'. So I've also left them as is, to explicitly
-> match the struct definition.
-> 
-> Be interested to know what the official take on this is.
-In hindsight, I saw most of the other gpio drivers follow the same
-convention as the viperboard driver. which means
-a) my changes add no value and just creates inconsistency.
-or
-b) there's an opportunity to fix up the rest of the gpio drivers as
-well? Which I'll be happy to do.
+Unfortunately the Raspberry Pi Foundation didn't released a
+peripheral documentation for the new SoC yet. So we only have a preliminar=
+y
+datasheet [1] and reduced schematics [2].
 
-I'll be eagerly awaiting feedback.
-> 
-> 
-> >   {
-> >   	int ret, answer, error = 0;
-> >   	struct vprbrd_gpio *gpio = gpiochip_get_data(chip);
-> > @@ -129,7 +129,7 @@ static int vprbrd_gpioa_get(struct gpio_chip *chip,
-> >   }
-> >   static void vprbrd_gpioa_set(struct gpio_chip *chip,
-> > -		unsigned offset, int value)
-> > +		unsigned int offset, int value)
-> >   {
-> >   	int ret;
-> >   	struct vprbrd_gpio *gpio = gpiochip_get_data(chip);
-> > @@ -170,7 +170,7 @@ static void vprbrd_gpioa_set(struct gpio_chip *chip,
-> >   }
-> >   static int vprbrd_gpioa_direction_input(struct gpio_chip *chip,
-> > -			unsigned offset)
-> > +			unsigned int offset)
-> >   {
-> >   	int ret;
-> >   	struct vprbrd_gpio *gpio = gpiochip_get_data(chip);
-> > @@ -207,7 +207,7 @@ static int vprbrd_gpioa_direction_input(struct gpio_chip *chip,
-> >   }
-> >   static int vprbrd_gpioa_direction_output(struct gpio_chip *chip,
-> > -			unsigned offset, int value)
-> > +			unsigned int offset, int value)
-> >   {
-> >   	int ret;
-> >   	struct vprbrd_gpio *gpio = gpiochip_get_data(chip);
-> > @@ -251,8 +251,8 @@ static int vprbrd_gpioa_direction_output(struct gpio_chip *chip,
-> >   /* ----- begin of gipo b chip -------------------------------------------- */
-> > -static int vprbrd_gpiob_setdir(struct vprbrd *vb, unsigned offset,
-> > -	unsigned dir)
-> > +static int vprbrd_gpiob_setdir(struct vprbrd *vb, unsigned int offset,
-> > +	unsigned int dir)
-> >   {
-> >   	struct vprbrd_gpiob_msg *gbmsg = (struct vprbrd_gpiob_msg *)vb->buf;
-> >   	int ret;
-> > @@ -273,7 +273,7 @@ static int vprbrd_gpiob_setdir(struct vprbrd *vb, unsigned offset,
-> >   }
-> >   static int vprbrd_gpiob_get(struct gpio_chip *chip,
-> > -		unsigned offset)
-> > +		unsigned int offset)
-> >   {
-> >   	int ret;
-> >   	u16 val;
-> > @@ -305,7 +305,7 @@ static int vprbrd_gpiob_get(struct gpio_chip *chip,
-> >   }
-> >   static void vprbrd_gpiob_set(struct gpio_chip *chip,
-> > -		unsigned offset, int value)
-> > +		unsigned int offset, int value)
-> >   {
-> >   	int ret;
-> >   	struct vprbrd_gpio *gpio = gpiochip_get_data(chip);
-> > @@ -338,7 +338,7 @@ static void vprbrd_gpiob_set(struct gpio_chip *chip,
-> >   }
-> >   static int vprbrd_gpiob_direction_input(struct gpio_chip *chip,
-> > -			unsigned offset)
-> > +			unsigned int offset)
-> >   {
-> >   	int ret;
-> >   	struct vprbrd_gpio *gpio = gpiochip_get_data(chip);
-> > @@ -359,7 +359,7 @@ static int vprbrd_gpiob_direction_input(struct gpio_chip *chip,
-> >   }
-> >   static int vprbrd_gpiob_direction_output(struct gpio_chip *chip,
-> > -			unsigned offset, int value)
-> > +			unsigned int offset, int value)
-> >   {
-> >   	int ret;
-> >   	struct vprbrd_gpio *gpio = gpiochip_get_data(chip);
-> > 
-> 
-> 
-> -- 
-> Regards
-> Phil Reid
+Changes since RFC:
+- change BCM2838 -> BCM2711 as discussed in RFC
+- update MAINTAINERS accordingly
+- drop "spi: bcm2835: enable shared interrupt support" from series
+- squash all pinctrl-bcm2835 changes into one patch
+- introduce SoC specific clock registration as suggested by Florian
+- fix watchdog probing for Raspberry Pi 4
+- convert brcm,bcm2835.txt to json-schema
+- move VC4 node to bcm2835-common.dtsi
+- fallback to legacy pull config for Raspberry Pi 4
+- revert unintended change of mailbox in bcm283x.dtsi
+- add reference for arm64
+
+[1] - https://www.raspberrypi.org/documentation/hardware/raspberrypi/bcm27=
+11/rpi_DATA_2711_1p0_preliminary.pdf
+[2] - https://www.raspberrypi.org/documentation/hardware/raspberrypi/schem=
+atics/rpi_SCH_4b_4p0_reduced.pdf
+
+Phil Elwell (1):
+  ARM: bcm2835: DMA can only address 1GB
+
+Stefan Wahren (17):
+  ARM: bcm283x: Reduce register ranges for UART, SPI and I2C
+  ARM: dts: bcm283x: Move BCM2835/6/7 specific to bcm2835-common.dtsi
+  ARM: dts: bcm283x: Define MMC interfaces at board level
+  ARM: dts: bcm283x: Define memory at board level
+  dt-bindings: bcm2835-cprman: Add bcm2711 support
+  clk: bcm2835: Introduce SoC specific clock registration
+  clk: bcm2835: Add BCM2711_CLOCK_EMMC2 support
+  dt-bindings: sdhci-iproc: Add brcm,bcm2711-emmc2
+  mmc: sdhci-iproc: Add support for emmc2 of the BCM2711
+  dt-bindings: pinctrl: bcm2835: Add brcm,bcm2711 compatible
+  pinctrl: bcm2835: Add support for BCM2711 pull-up functionality
+  dt-bindings: arm: Convert BCM2835 board/soc bindings to json-schema
+  dt-bindings: arm: bcm2835: Add Raspberry Pi 4 to DT schema
+  ARM: bcm2835: Add bcm2711 compatible string
+  ARM: dts: Add minimal Raspberry Pi 4 support
+  arm64: dts: broadcom: Add reference to RPi 4 B
+  MAINTAINERS: Add BCM2711 to BCM2835 ARCH
+
+ .../devicetree/bindings/arm/bcm/bcm2835.yaml       |  51 ++
+ .../devicetree/bindings/arm/bcm/brcm,bcm2835.txt   |  67 ---
+ .../bindings/clock/brcm,bcm2835-cprman.txt         |   4 +-
+ .../devicetree/bindings/mmc/brcm,sdhci-iproc.txt   |   4 +-
+ .../bindings/pinctrl/brcm,bcm2835-gpio.txt         |   1 +
+ MAINTAINERS                                        |   3 +-
+ arch/arm/boot/dts/Makefile                         |   1 +
+ arch/arm/boot/dts/bcm2711-rpi-4-b.dts              | 120 ++++
+ arch/arm/boot/dts/bcm2711.dtsi                     | 667 ++++++++++++++++=
++++++
+ arch/arm/boot/dts/bcm2835-common.dtsi              | 177 ++++++
+ arch/arm/boot/dts/bcm2835-rpi-a-plus.dts           |  12 +
+ arch/arm/boot/dts/bcm2835-rpi-a.dts                |  12 +
+ arch/arm/boot/dts/bcm2835-rpi-b-plus.dts           |  12 +
+ arch/arm/boot/dts/bcm2835-rpi-b-rev2.dts           |  12 +
+ arch/arm/boot/dts/bcm2835-rpi-b.dts                |  12 +
+ arch/arm/boot/dts/bcm2835-rpi-cm1-io1.dts          |   7 +
+ arch/arm/boot/dts/bcm2835-rpi-cm1.dtsi             |   5 +
+ arch/arm/boot/dts/bcm2835-rpi-zero-w.dts           |  12 +
+ arch/arm/boot/dts/bcm2835-rpi-zero.dts             |  12 +
+ arch/arm/boot/dts/bcm2835-rpi.dtsi                 |  18 -
+ arch/arm/boot/dts/bcm2835.dtsi                     |   1 +
+ arch/arm/boot/dts/bcm2836-rpi-2-b.dts              |   8 +
+ arch/arm/boot/dts/bcm2836.dtsi                     |   1 +
+ arch/arm/boot/dts/bcm2837-rpi-3-a-plus.dts         |   1 +
+ arch/arm/boot/dts/bcm2837-rpi-3-b-plus.dts         |   1 +
+ arch/arm/boot/dts/bcm2837-rpi-3-b.dts              |   1 +
+ arch/arm/boot/dts/bcm2837-rpi-cm3-io3.dts          |   7 +
+ arch/arm/boot/dts/bcm2837-rpi-cm3.dtsi             |   1 +
+ arch/arm/boot/dts/bcm2837.dtsi                     |   1 +
+ arch/arm/boot/dts/bcm283x.dtsi                     | 160 +----
+ arch/arm/mach-bcm/board_bcm2835.c                  |   2 +
+ arch/arm64/boot/dts/broadcom/Makefile              |   3 +-
+ arch/arm64/boot/dts/broadcom/bcm2711-rpi-4-b.dts   |   2 +
+ drivers/clk/bcm/clk-bcm2835.c                      | 117 +++-
+ drivers/mmc/host/sdhci-iproc.c                     |   9 +
+ drivers/pinctrl/bcm/pinctrl-bcm2835.c              | 105 +++-
+ include/dt-bindings/clock/bcm2835.h                |   2 +
+ 37 files changed, 1365 insertions(+), 266 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/arm/bcm/bcm2835.yaml
+ delete mode 100644 Documentation/devicetree/bindings/arm/bcm/brcm,bcm2835=
+.txt
+ create mode 100644 arch/arm/boot/dts/bcm2711-rpi-4-b.dts
+ create mode 100644 arch/arm/boot/dts/bcm2711.dtsi
+ create mode 100644 arch/arm/boot/dts/bcm2835-common.dtsi
+ create mode 100644 arch/arm64/boot/dts/broadcom/bcm2711-rpi-4-b.dts
+
+=2D-
+2.7.4
+
