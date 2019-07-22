@@ -2,299 +2,240 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 489F870ACB
-	for <lists+linux-gpio@lfdr.de>; Mon, 22 Jul 2019 22:37:53 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7C53270D6C
+	for <lists+linux-gpio@lfdr.de>; Tue, 23 Jul 2019 01:36:22 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730127AbfGVUhw (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 22 Jul 2019 16:37:52 -0400
-Received: from atlmailgw2.ami.com ([63.147.10.42]:51156 "EHLO
-        atlmailgw2.ami.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728712AbfGVUhw (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 22 Jul 2019 16:37:52 -0400
-X-AuditID: ac10606f-d27ff70000003324-a9-5d361e9f8f3d
-Received: from atlms1.us.megatrends.com (atlms1.us.megatrends.com [172.16.96.144])
-        (using TLS with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by atlmailgw2.ami.com (Symantec Messaging Gateway) with SMTP id 54.A2.13092.F9E163D5; Mon, 22 Jul 2019 16:37:51 -0400 (EDT)
-Received: from hongweiz-Ubuntu-AMI.us.megatrends.com (172.16.98.93) by
- atlms1.us.megatrends.com (172.16.96.144) with Microsoft SMTP Server (TLS) id
- 14.3.408.0; Mon, 22 Jul 2019 16:37:50 -0400
-From:   Hongwei Zhang <hongweiz@ami.com>
-To:     Linus Walleij <linus.walleij@linaro.org>,
-        Andrew Jeffery <andrew@aj.id.au>,
-        linux-gpio <linux-gpio@vger.kernel.org>,
-        Joel Stanley <joel@jms.id.au>
-CC:     linux-aspeed <linux-aspeed@lists.ozlabs.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        Hongwei Zhang <hongweiz@ami.com>
-Subject: [v5 2/2] gpio: aspeed: Add SGPIO driver
-Date:   Mon, 22 Jul 2019 16:36:55 -0400
-Message-ID: <1563827815-15092-1-git-send-email-hongweiz@ami.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1563564291-9692-3-git-send-email-hongweiz@ami.com>
-References: <1563564291-9692-3-git-send-email-hongweiz@ami.com>
+        id S1731123AbfGVXfv (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 22 Jul 2019 19:35:51 -0400
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:42357 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727157AbfGVXfv (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 22 Jul 2019 19:35:51 -0400
+Received: by mail-lf1-f65.google.com with SMTP id s19so27929811lfb.9;
+        Mon, 22 Jul 2019 16:35:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=SyN4PMS8VdJuZtYAYv7/mZHuR7T+1K3l9M3mMacsc+A=;
+        b=AzLi2KP23pmRxkwmIXlrISi/NKbSONyUgYkBZNbaJO73EszX4dS22lkiDWZswJ8h0g
+         aqjGTP4d32ZROrCSBAGYEHTvhDDGgiJvAfswDyoqhbRm3auRD/2iqPYjf3vmjnfFyb8r
+         dk/UMF5YEMeE4+CwefO4LGjTZHLbknFadqOFc/V+rqJhrJlDmZWAO1kXNvluSP73gQNm
+         qDJPLf/3h9j5c4jISKA1CflIrbV/mfHQQnbCDlYoO/hVwqRVnJGGB/tzRefIsicJj1E4
+         HDOyiy5ScyHevG8RNYIoYCbaxNzzSneWSXfG7BNc8ZBBcO0TRtDvH8UIQdaZUSDBJ1if
+         isrw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=SyN4PMS8VdJuZtYAYv7/mZHuR7T+1K3l9M3mMacsc+A=;
+        b=MqkvhqpeC3GR8eng4IBZND9dt+2nvwXL5oefgNsg8NXcfskWOtIUoffYd74S+G2mE8
+         WFSXPkA569VYKavtwze8kyQdJiSEUCGpbM4gBWu34V4Vzl5r8ijOT/pLIgWSb9IXgi9Y
+         cwGA0zxJ5+OREWoI/P3iB2XQaXczB6jzkCsg9F6LzTZSiArOAuzdGN5JkW42nC01ZLxx
+         iohryfLYOkKCSG85fidg2nc+GKl7zyYaQhF28w9qNPENTyyAyWgi/gGjmmw5oicFkMFL
+         w3A/P41ktVszjp23rHhMdfzBrQ3z/Plg3mRPQK3XlEoWNwECm+mdTCOnoQVm+ARNyNjo
+         qrNw==
+X-Gm-Message-State: APjAAAUS5A4Wx96bb3E3jiKh0ydu3SDKQQnv4oSJJJv+trwxnPv2OKy7
+        jj0CTEnx50d6J803eRwc8ilHD5/2
+X-Google-Smtp-Source: APXvYqxnqujN01Dh+F4vReSd0zY91B9eV6mNZEOjyfpmuNHfRfxbCUMyYCnJzFeafdbDaOnXsdqYjg==
+X-Received: by 2002:a19:f00a:: with SMTP id p10mr32218584lfc.68.1563838547818;
+        Mon, 22 Jul 2019 16:35:47 -0700 (PDT)
+Received: from [192.168.2.145] (ppp91-78-220-99.pppoe.mtu-net.ru. [91.78.220.99])
+        by smtp.googlemail.com with ESMTPSA id b68sm8751413ljb.0.2019.07.22.16.35.45
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 22 Jul 2019 16:35:46 -0700 (PDT)
+Subject: Re: [PATCH V6 01/21] irqchip: tegra: Do not disable COP IRQ during
+ suspend
+To:     Marc Zyngier <marc.zyngier@arm.com>,
+        Sowjanya Komatineni <skomatineni@nvidia.com>
+Cc:     thierry.reding@gmail.com, jonathanh@nvidia.com, tglx@linutronix.de,
+        jason@lakedaemon.net, linus.walleij@linaro.org, stefan@agner.ch,
+        mark.rutland@arm.com, pdeschrijver@nvidia.com, pgaikwad@nvidia.com,
+        sboyd@kernel.org, linux-clk@vger.kernel.org,
+        linux-gpio@vger.kernel.org, jckuo@nvidia.com, josephl@nvidia.com,
+        talho@nvidia.com, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org, mperttunen@nvidia.com,
+        spatra@nvidia.com, robh+dt@kernel.org, devicetree@vger.kernel.org
+References: <1563738060-30213-1-git-send-email-skomatineni@nvidia.com>
+ <1563738060-30213-2-git-send-email-skomatineni@nvidia.com>
+ <f6582e43-168e-1b7e-9db8-3d263bc3ba0d@gmail.com>
+ <20c1d733-60f5-6375-c03c-639de5e41739@arm.com>
+ <0bee8775-756f-adad-4597-8cad53017718@gmail.com>
+ <a2ecc3ad-b7e9-9398-d59b-c7d3fbbd10bb@nvidia.com>
+ <20190722193838.0d7cd2ad@why>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <8e9f821c-3717-510d-c64f-8a1cc2452c25@gmail.com>
+Date:   Tue, 23 Jul 2019 02:35:44 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [172.16.98.93]
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrDLMWRmVeSWpSXmKPExsWyRiBhgu58ObNYgymTFCx2Xeaw+DL3FIvF
-        7/N/mS2m/FnOZLHp8TVWi+bV55gtNs//w2hxedccNgcOj6vtu9g93t9oZfe4+PEYs8eda3vY
-        PDYvqfc4P2Mho8fnTXIB7FFcNimpOZllqUX6dglcGQ8+bGIp6POqWLrwLlMDY4dJFyMnh4SA
-        icSWg9eZuxi5OIQEdjFJPPr/irGLkQPIOcwo8U4QpIZNQE1i7+Y5TCA1IgKzGCXu3trDBuIw
-        C7xnlOieNpURpEpYwEBi1Y3F7CA2i4CqxK/Xz1hAbF4BB4m9J3+wQ2yTk7h5rpMZxOYEiv/q
-        aWECsYUE7CWe79rLBFEvKHFy5hOwXmYBCYmDL14wQ9TIStw69JgJYo6CxPO+xywTGIHOQWiZ
-        haRlASPTKkahxJKc3MTMnPRyI73E3Ey95PzcTYyQEM/fwfjxo/khRiYOxkOMEhzMSiK8eQam
-        sUK8KYmVValF+fFFpTmpxYcYpTlYlMR5V635FiMkkJ5YkpqdmlqQWgSTZeLglGpgrKz+5R+/
-        IVbA6tT7nqyJqXW1/3S0lHgy9fbad15fODk97P5z1YfN+3xamhfvDvSxu3L5QpPSiYoy7YSY
-        tUeap/zTyv+8LT76vvOjZ0dCPzzKPBJz8lPJpo23apIT/OesObC20vtuhb3X9i3qKrs+qbB5
-        yZUV3IjfsncqT8ARcVGZP7Wy77wWK7EUZyQaajEXFScCANEZGdVfAgAA
+In-Reply-To: <20190722193838.0d7cd2ad@why>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hello Linus,
+22.07.2019 21:38, Marc Zyngier пишет:
+> On Mon, 22 Jul 2019 09:21:21 -0700
+> Sowjanya Komatineni <skomatineni@nvidia.com> wrote:
+> 
+>> On 7/22/19 3:57 AM, Dmitry Osipenko wrote:
+>>> 22.07.2019 13:13, Marc Zyngier пишет:  
+>>>> On 22/07/2019 10:54, Dmitry Osipenko wrote:  
+>>>>> 21.07.2019 22:40, Sowjanya Komatineni пишет:  
+>>>>>> Tegra210 platforms use sc7 entry firmware to program Tegra LP0/SC7 entry
+>>>>>> sequence and sc7 entry firmware is run from COP/BPMP-Lite.
+>>>>>>
+>>>>>> So, COP/BPMP-Lite still need IRQ function to finish SC7 suspend sequence
+>>>>>> for Tegra210.
+>>>>>>
+>>>>>> This patch has fix for leaving the COP IRQ enabled for Tegra210 during
+>>>>>> interrupt controller suspend operation.
+>>>>>>
+>>>>>> Acked-by: Thierry Reding <treding@nvidia.com>
+>>>>>> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
+>>>>>> ---
+>>>>>>   drivers/irqchip/irq-tegra.c | 20 ++++++++++++++++++--
+>>>>>>   1 file changed, 18 insertions(+), 2 deletions(-)
+>>>>>>
+>>>>>> diff --git a/drivers/irqchip/irq-tegra.c b/drivers/irqchip/irq-tegra.c
+>>>>>> index e1f771c72fc4..851f88cef508 100644
+>>>>>> --- a/drivers/irqchip/irq-tegra.c
+>>>>>> +++ b/drivers/irqchip/irq-tegra.c
+>>>>>> @@ -44,6 +44,7 @@ static unsigned int num_ictlrs;
+>>>>>>   
+>>>>>>   struct tegra_ictlr_soc {
+>>>>>>   	unsigned int num_ictlrs;
+>>>>>> +	bool supports_sc7;
+>>>>>>   };
+>>>>>>   
+>>>>>>   static const struct tegra_ictlr_soc tegra20_ictlr_soc = {
+>>>>>> @@ -56,6 +57,7 @@ static const struct tegra_ictlr_soc tegra30_ictlr_soc = {
+>>>>>>   
+>>>>>>   static const struct tegra_ictlr_soc tegra210_ictlr_soc = {
+>>>>>>   	.num_ictlrs = 6,
+>>>>>> +	.supports_sc7 = true,
+>>>>>>   };
+>>>>>>   
+>>>>>>   static const struct of_device_id ictlr_matches[] = {
+>>>>>> @@ -67,6 +69,7 @@ static const struct of_device_id ictlr_matches[] = {
+>>>>>>   
+>>>>>>   struct tegra_ictlr_info {
+>>>>>>   	void __iomem *base[TEGRA_MAX_NUM_ICTLRS];
+>>>>>> +	const struct tegra_ictlr_soc *soc;
+>>>>>>   #ifdef CONFIG_PM_SLEEP
+>>>>>>   	u32 cop_ier[TEGRA_MAX_NUM_ICTLRS];
+>>>>>>   	u32 cop_iep[TEGRA_MAX_NUM_ICTLRS];
+>>>>>> @@ -147,8 +150,20 @@ static int tegra_ictlr_suspend(void)
+>>>>>>   		lic->cop_ier[i] = readl_relaxed(ictlr + ICTLR_COP_IER);
+>>>>>>   		lic->cop_iep[i] = readl_relaxed(ictlr + ICTLR_COP_IEP_CLASS);
+>>>>>>   
+>>>>>> -		/* Disable COP interrupts */
+>>>>>> -		writel_relaxed(~0ul, ictlr + ICTLR_COP_IER_CLR);
+>>>>>> +		/*
+>>>>>> +		 * AVP/COP/BPMP-Lite is the Tegra boot processor.
+>>>>>> +		 *
+>>>>>> +		 * Tegra210 system suspend flow uses sc7entry firmware which
+>>>>>> +		 * is executed by COP/BPMP and it includes disabling COP IRQ,
+>>>>>> +		 * clamping CPU rail, turning off VDD_CPU, and preparing the
+>>>>>> +		 * system to go to SC7/LP0.
+>>>>>> +		 *
+>>>>>> +		 * COP/BPMP wakes up when COP IRQ is triggered and runs
+>>>>>> +		 * sc7entry-firmware. So need to keep COP interrupt enabled.
+>>>>>> +		 */
+>>>>>> +		if (!lic->soc->supports_sc7)
+>>>>>> +			/* Disable COP interrupts if SC7 is not supported */  
+>>>>> All Tegra SoCs support SC7, hence the 'supports_sc7' and the comment
+>>>>> doesn't sound correct to me. Something like 'firmware_sc7' should suit
+>>>>> better here.  
+>>>> If what you're saying is true, then the whole patch is wrong, and the
+>>>> SC7 property should come from DT.  
+>>> It should be safe to assume that all of existing Tegra210 devices use
+>>> the firmware for SC7, hence I wouldn't say that the patch is entirely
+>>> wrong. To me it's not entirely correct.  
+>>
+>> Yes, all existing Tegra210 platforms uses sc7 entry firmware for SC7 and 
+>> AVP/COP IRQ need to be kept enabled as during suspend ATF triggers IRQ 
+>> to COP for SC7 entry fw execution.
 
-Thanks for your reviewing, please find my inline comment on why we group the 
-("A", "B", "C", "D") etc. together at below. We will address other concerns 
-separately.
---Hongwei
+Okay, as I already wrote before, it looks to me that a more proper
+solution should be to just remove everything related to COP from this
+driver instead of adding custom quirks for T210.
 
-> From:	Linus Walleij <linus.walleij@linaro.org>
-> Sent:	Saturday, July 20, 2019 3:37 AM
-> To:	Hongwei Zhang
-> Cc:	Andrew Jeffery; open list:GPIO SUBSYSTEM; Joel Stanley; linux-aspeed@lists.ozlabs.org; Bartosz 
-> Golaszewski; linux-kernel@vger.kernel.org; Linux ARM
-> Subject:	Re: [v5 2/2] gpio: aspeed: Add SGPIO driver
-> 
-> Hi Hongwei,
-> 
-> thanks for your patch!
-> 
-> some comments and nitpicking below:
-> 
-> On Fri, Jul 19, 2019 at 9:25 PM Hongwei Zhang <hongweiz@ami.com> wrote:
-> 
-> > Add SGPIO driver support for Aspeed AST2500 SoC.
-> >
-> > Signed-off-by: Hongwei Zhang <hongweiz@ami.com>
-> 
-> > +// SPDX-License-Identifier: GPL-2.0+
-> 
-> I think the SPDX people prefer GPL-2.0-or-later
-> 
-> > +#include <linux/gpio.h>
-> 
-> Do not include this header in any new code using or providing GPIOs.
-> 
-> > +#include <linux/gpio/driver.h>
-> 
-> This should be enough.
-> 
-> > +/*
-> > + * Note: The "value" register returns the input value when the GPIO is
-> > + *      configured as an input.
-> > + *
-> > + *      The "rdata" register returns the output value when the GPIO is
-> > + *      configured as an output.
-> > + */
-> > +static const struct aspeed_sgpio_bank aspeed_sgpio_banks[] = {
-> > +       {
-> > +               .val_regs = 0x0000,
-> > +               .rdata_reg = 0x0070,
-> > +               .irq_regs = 0x0004,
-> > +               .names = { "A", "B", "C", "D" },
-> > +       },
-> > +       {
-> > +               .val_regs = 0x001C,
-> > +               .rdata_reg = 0x0074,
-> > +               .irq_regs = 0x0020,
-> > +               .names = { "E", "F", "G", "H" },
-> > +       },
-> > +       {
-> > +               .val_regs = 0x0038,
-> > +               .rdata_reg = 0x0078,
-> > +               .irq_regs = 0x003C,
-> > +               .names = { "I", "J" },
-> > +       },
-> > +};
-> 
-> I guess you have been over the reasons why this is one big GPIO chip instead of  10 individual gpio_chips?
-> 
-> It is usally better to have the individual chips, because it is easier to just cut down the code to handle 
-> one instance and not having to offset around the different address ranges.
-> 
-> Even if they all have the same clock, the clocks are reference counted so it will just be referenced 10 
-> times at most.
-> 
-> If they share a few common registers it is not good to split it though. So there may be a compelling 
-> argument for keeping them all together.
-> 
+The disabling / restoring of COP interrupts should be relevant only for
+the multimedia firmware on older Tegra SoCs. That firmware won't be ever
+supported in the upstream simply because NVIDIA abandoned the support
+for older hardware in the downstream and because it is not possible due
+to some legal weirdness (IIUC). The only variant for upstream is
+reverse-engineering of hardware (not the firmware BLOB) and writing
+proper opensource drivers for the upstream kernel, which we're already
+doing and have success to a some extent.
 
-As you suspected it correctly, AST2500 utilizes all the 32 bits of the registers 
-(data value, interrupt, etc...), such that using 8-bit bands
-[7:0]/[15:8]/23:16]/[31:24] of GPIO_200H for SGPIO_A/B/C/D . 
-so registering 10 gpiochip drivers separately will make code more 
-complicated, for example gpio_200 register (data_value reg) has to be 
-shared by 4 gpiochip instances, and the same is true for gpio204 (interrupt reg), 
-and other more registers.
-So we would prefer to keeping current implementation.
+> That's not the question. Dmitry says that the SC7 support is not a
+> property of the SoC, but mostly a platform decision on whether the
+> firmware supports SC7 or not.
+> 
+> To me, that's a clear indication that this should not be hardcoded in
+> the driver, but instead obtained dynamically, via DT or otherwise.
 
-> > +/* This will be resolved at compile time */
+We already have an nvidia,suspend-mode property in the device-tree of
+the Power Management Controller node (all Tegra SoCs) which defines what
+suspending type is supported by a particular board.
+
+>>>>>> +			writel_relaxed(~0ul, ictlr + ICTLR_COP_IER_CLR);  
+>>>>> Secondly, I'm also not sure why COP interrupts need to be disabled for
+>>>>> pre-T210 at all, since COP is unused. This looks to me like it was
+>>>>> cut-n-pasted from downstream kernel without a good reason and could be
+>>>>> simply removed.  
+>>>> Please verify that this is actually the case. Tegra-2 definitely needed
+>>>> some level of poking, and I'm not keen on changing anything there until
+>>>> you (or someone else) has verified it on actual HW (see e307cc8941fc).  
+>>> Tested on Tegra20 and Tegra30, LP1 suspend-resume works perfectly fine
+>>> with all COP bits removed from the driver.
+>>>
+>>> AFAIK, the reason why downstream needed that disabling is that it uses
+>>> proprietary firmware which is running on the COP and that firmware is
+>>> usually a BLOB audio/video DEC-ENC driver which doesn't cleanup
+>>> interrupts after itself. That firmware is not applicable for the
+>>> upstream kernel, hence there is no need to care about it.
+>>>  
+>>>> Joseph, can you please shed some light here?  
+>>
+>> SC7 entry flow uses 3rd party ATF (arm-trusted FW) blob which is the
+>> one that actually loads SC7 entry firmware and triggers IRQ to
+>> AVP/COP which causes COP to wakeup and run SC7 entry FW.
+>>
+>> So when SC7 support is enabled, IRQ need to be kept enabled and when
+>> SC7 FW starts execution, it will disable COP IRQ.
 > 
-> I don't see why that matters.
+> This looks like a lot of undocumented assumptions on what firmware
+> does, as well as what firmware *is*. What I gather from this thread is
+> that there is at least two versions of firmware (a "proprietary
+> firmware" for "downstream kernels", and another one for mainline), and
+> that they do different things.
 > 
-> > +static inline void __iomem *bank_reg(struct aspeed_sgpio *gpio,
-> > +                                    const struct aspeed_sgpio_bank *bank,
-> > +                                    const enum aspeed_sgpio_reg reg)
-> 
-> You don't need inline. The compiler will inline it anyway if it see the need for it.
-> 
-> The only time we really use inline is in header files, where we want to point out that this function will be 
-> inlined as there is no compiled code in header files.
-> 
-> > +#define GPIO_BANK(x)    ((x) >> 5)
-> > +#define GPIO_OFFSET(x)  ((x) & 0x1f)
-> > +#define GPIO_BIT(x)     BIT(GPIO_OFFSET(x))
-> 
-> OK seems fairly standard.
-> 
-> > +static int aspeed_sgpio_get(struct gpio_chip *gc, unsigned int 
-> > +offset) static void aspeed_sgpio_set(struct gpio_chip *gc, unsigned 
-> > +int offset, int val) static int aspeed_sgpio_dir_in(struct gpio_chip 
-> > +*gc, unsigned int offset)
-> 
-> These are fairly standard.
-> 
-> > +static int aspeed_sgpio_dir_out(struct gpio_chip *gc, unsigned int 
-> > +offset, int val) {
-> > +       struct aspeed_sgpio *gpio = gpiochip_get_data(gc);
-> > +       unsigned long flags;
-> > +
-> > +       spin_lock_irqsave(&gpio->lock, flags);
-> > +       gpio->dir_in[GPIO_BANK(offset)] &= ~GPIO_BIT(offset);
-> > +       spin_unlock_irqrestore(&gpio->lock, flags);
-> > +
-> > +       return 0;
-> > +}
-> 
-> There is a bug here. You fail to write the "val" to the output line, which is the expected semantic of this 
-> call.
-> 
-> > +static int aspeed_sgpio_get_direction(struct gpio_chip *gc, unsigned 
-> > +int offset)
-> 
-> These are all very simple MMIO accessors.
-> 
-> If you made one gpio_chip per bank, you could just use gpio-mmio.c to control the lines by
-> 
-> select GPIO_GENERIC
-> 
->         ret = bgpio_init(chip, dev, 4,
->                          base + GPIO_VAL_VALUE ,
->                          NULL,
->                          NULL,
->                          NULL,
->                          NULL,
->                          0);
-> 
-> The MMIO gpio library takes care of shadowing the direction and all.
-> It also will implement get/set_multiple() for you for free.
-> 
-> So seriously consider making one gpio_chip per bank.
-> 
-> > +static inline void irqd_to_aspeed_sgpio_data(struct irq_data *d, 
-> > +static void aspeed_sgpio_irq_ack(struct irq_data *d) static void 
-> > +aspeed_sgpio_irq_set_mask(struct irq_data *d, bool set) static void 
-> > +aspeed_sgpio_irq_mask(struct irq_data *d) static void 
-> > +aspeed_sgpio_irq_unmask(struct irq_data *d) static int 
-> > +aspeed_sgpio_set_type(struct irq_data *d, unsigned int type) static 
-> > +void aspeed_sgpio_irq_handler(struct irq_desc *desc) {
-> > +       struct gpio_chip *gc = irq_desc_get_handler_data(desc);
-> > +       struct irq_chip *ic = irq_desc_get_chip(desc);
-> > +       struct aspeed_sgpio *data = gpiochip_get_data(gc);
-> > +       unsigned int i, p, girq;
-> > +       unsigned long reg;
-> > +
-> > +       chained_irq_enter(ic, desc);
-> > +
-> > +       for (i = 0; i < ARRAY_SIZE(aspeed_sgpio_banks); i++) {
-> > +               const struct aspeed_sgpio_bank *bank = 
-> > + &aspeed_sgpio_banks[i];
-> > +
-> > +               reg = ioread32(bank_reg(data, bank, reg_irq_status));
-> > +
-> > +               for_each_set_bit(p, &reg, 32) {
-> > +                       girq = irq_find_mapping(gc->irq.domain, i * 32 + p);
-> > +                       generic_handle_irq(girq);
-> > +               }
-> > +
-> > +       }
-> 
-> This also gets really complex with one driver for all the banks.
-> 
-> > +       /* Disable IRQ and clear Interrupt status registers for all SPGIO Pins. */
-> > +       for (i = 0; i < ARRAY_SIZE(aspeed_sgpio_banks); i++) {
-> 
-> (...)
-> > +static int __init aspeed_sgpio_probe(struct platform_device *pdev) {
-> > +       struct aspeed_sgpio *gpio;
-> > +       u32 nr_gpios, sgpio_freq, sgpio_clk_div;
-> > +       int rc;
-> > +       unsigned long apb_freq;
-> > +
-> > +       /* initialize allocated memory with zeros */
-> 
-> No need for this comment, developers know what "kzalloc" means.
-> 
-> > +       rc = of_property_read_u32(pdev->dev.of_node, "bus-frequency", &sgpio_freq);
-> > +       if (rc < 0) {
-> > +               dev_err(&pdev->dev, "Could not read bus-frequency property\n");
-> > +               return -EINVAL;
-> > +       }
-> > +
-> > +       gpio->pclk = devm_clk_get(&pdev->dev, NULL);
-> > +       if (IS_ERR(gpio->pclk)) {
-> > +               dev_err(&pdev->dev, "devm_clk_get failed\n");
-> > +               return PTR_ERR(gpio->pclk);
-> > +       }
-> > +
-> > +       apb_freq = clk_get_rate(gpio->pclk);
-> > +
-> > +       /*
-> > +        * From the datasheet,
-> > +        *      SGPIO period = 1/PCLK * 2 * (GPIO254[31:16] + 1)
-> > +        *      period = 2 * (GPIO254[31:16] + 1) / PCLK
-> > +        *      frequency = 1 / (2 * (GPIO254[31:16] + 1) / PCLK)
-> > +        *      frequency = PCLK / (2 * (GPIO254[31:16] + 1))
-> > +        *      frequency * 2 * (GPIO254[31:16] + 1) = PCLK
-> > +        *      GPIO254[31:16] = PCLK / (frequency * 2) - 1
-> > +        */
-> > +       if (sgpio_freq == 0)
-> > +               return -EINVAL;
-> > +
-> > +       sgpio_clk_div = (apb_freq / (sgpio_freq * 2)) - 1;
-> > +
-> > +       if (sgpio_clk_div > (1 << 16) - 1)
-> > +               return -EINVAL;
-> > +
-> > +       iowrite32(FIELD_PREP(ASPEED_SGPIO_CLK_DIV_MASK, sgpio_clk_div) |
-> > +                 FIELD_PREP(ASPEED_SGPIO_PINS_MASK, (nr_gpios / 8)) |
-> > +                 ASPEED_SGPIO_ENABLE,
-> > +                 gpio->base + ASPEED_SGPIO_CTRL);
-> 
-> This is a separate clock driver.
-> 
-> Break this out as a separate clk device that the other GPIOs grab.
-> 
-> Put this in drivers/clk/clk-aspeed-gpio.c or wherever appropriate with some reg = <0xnnnnnn54 4>;
-> 
-> Then let the GPIO driver grab this clock. This makes it possible to use a per-gpio-bank split of the GPIO 
-> chips.
-> 
-> It looks a bit complicated but this will work so much better because the clock code is in the clock 
-> subsystem and the GPIO is split up and becomes a very small driver since it can use gpio MMIO.
-> 
-> Yours,
-> Linus Walleij
+> Given that we cannot know what people actually run, I don't think we
+> can safely remove anything unless this gets tested on the full spectrum
+> of HW/FW combination.
+
+I'm not sure whether multiple firmware variations exist in the wild for
+Tegra210. Maybe Sowjanya or somebody else from NVIDIA could clarify. I
+think there should be some efforts in regards to a fully opensource
+firmware on Tegra210, but I'm not following it and have no idea about
+the status.
+
+You're right that there are multiple variants of suspend-resuming flow
+on Tegra SoCs. The older 32bit Tegra SoC generations have a variety of
+options in regards to suspend-resuming, including firmware-less variants
+on platforms that are having kernel running in secure mode (dev boards,
+most of Tegra20 consumer devices) and Trusted-Foundations firmware
+variant for insecure platforms (consumer devices). And yes, vendor
+firmware creates a lot of headache in regards to bringing support into
+upstream because it usually does a lot of odd undocumented things which
+may also vary depending on a firmware version (bootloader, etc) and it
+also usually difficult to replace it with an opensource alternative due
+to a crypto signing.
