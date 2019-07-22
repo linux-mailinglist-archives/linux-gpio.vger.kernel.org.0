@@ -2,139 +2,184 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 99C46701C2
-	for <lists+linux-gpio@lfdr.de>; Mon, 22 Jul 2019 15:53:46 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CF9A17054C
+	for <lists+linux-gpio@lfdr.de>; Mon, 22 Jul 2019 18:20:54 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730589AbfGVNxq (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 22 Jul 2019 09:53:46 -0400
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:45470 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727805AbfGVNxp (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 22 Jul 2019 09:53:45 -0400
-Received: by mail-oi1-f193.google.com with SMTP id m206so29608175oib.12
-        for <linux-gpio@vger.kernel.org>; Mon, 22 Jul 2019 06:53:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=g1UMNJz38FJKA8VfoTulETIw691BfDACZOimxcCXK/o=;
-        b=fGNAYXMEMQLi61dS/BX669E7XdeJVBqAP/po6W0f/plWm3Ag7TmVrwhbmZteGpcd42
-         D08dufbOML0rLUeOodYQgaMv6jyBh3tRkFtbIrhsgt0Pje6GSJvRC6YIRDUmhOrSwonZ
-         hlBbBHEI9nH4H80aLinD09Y8JniQTngsNyPoRegNf1LVnXJlUHGlTn0o03A7pO40X4vo
-         TCR7+RH68UxHyyUDH0unVSP8nfWKTOneUMziMoYbIx9Yc2p89+n/4H7ehB1TOCq3BkS6
-         oM04WZJRb4UlHU+AIKfU0Fb76AB7ykQjASxlCvXNRYN5lJH790D8mZV1SO+IgWOEsk7P
-         eV4Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=g1UMNJz38FJKA8VfoTulETIw691BfDACZOimxcCXK/o=;
-        b=W/ohO0gxvoeJGkUPgQXqxNecE+7WQIvPMNoTzqPIJXR45oAWlyW2XWz5/yHnGGnK+H
-         Robx3m4kMT43t3mbToxdCUuX5QRLpPsTC0jBhs5JZxbBy9cpadJBWLA2vHSA1ucJOtpJ
-         WUNpIKcVyeMMVx6mFz6tZjdNYPEwEE+HlmxKJdoHxEdGoFHn3YcqJWhmYa43PrxlJ3yq
-         rSPUsQU+9daCWolDlbsef+qem6cMyQRBj7fQquqHWS60fnlq/dvtQTa9FZAqy0yEzB6n
-         ImaGezDBxnH1SJrwqcilo1rxLWf/Pv5lalgwRmLa8F/LYSTgtLpHOecWycUpYv6dHnB5
-         W9yg==
-X-Gm-Message-State: APjAAAUkzwCvJkOYMSW2i9K/PXCr/V752s9p3NZYlZv18Gz73x0tKZdd
-        2UPRwEnbWm9CSHKNWxZNp/cUnKCGAQ3FZW53Utk2EA==
-X-Google-Smtp-Source: APXvYqwhbUEk+tIJupY1mSA2+5y37L/UfPZ1TUPnGPBXdX0IN0j3vyiGWacxFaSuSqrMBogc4X9YCsSdXEY2kVKjlrA=
-X-Received: by 2002:aca:450:: with SMTP id 77mr35802547oie.114.1563803625135;
- Mon, 22 Jul 2019 06:53:45 -0700 (PDT)
+        id S1728765AbfGVQUs (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 22 Jul 2019 12:20:48 -0400
+Received: from hqemgate16.nvidia.com ([216.228.121.65]:13460 "EHLO
+        hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727743AbfGVQUs (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 22 Jul 2019 12:20:48 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5d35e25c0000>; Mon, 22 Jul 2019 09:20:44 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Mon, 22 Jul 2019 09:20:46 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Mon, 22 Jul 2019 09:20:46 -0700
+Received: from [10.2.164.85] (172.20.13.39) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 22 Jul
+ 2019 16:20:44 +0000
+Subject: Re: [PATCH V6 01/21] irqchip: tegra: Do not disable COP IRQ during
+ suspend
+To:     Dmitry Osipenko <digetx@gmail.com>,
+        Marc Zyngier <marc.zyngier@arm.com>,
+        <thierry.reding@gmail.com>, <jonathanh@nvidia.com>,
+        <tglx@linutronix.de>, <jason@lakedaemon.net>,
+        <linus.walleij@linaro.org>, <stefan@agner.ch>,
+        <mark.rutland@arm.com>
+CC:     <pdeschrijver@nvidia.com>, <pgaikwad@nvidia.com>,
+        <sboyd@kernel.org>, <linux-clk@vger.kernel.org>,
+        <linux-gpio@vger.kernel.org>, <jckuo@nvidia.com>,
+        <josephl@nvidia.com>, <talho@nvidia.com>,
+        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <mperttunen@nvidia.com>, <spatra@nvidia.com>, <robh+dt@kernel.org>,
+        <devicetree@vger.kernel.org>
+References: <1563738060-30213-1-git-send-email-skomatineni@nvidia.com>
+ <1563738060-30213-2-git-send-email-skomatineni@nvidia.com>
+ <f6582e43-168e-1b7e-9db8-3d263bc3ba0d@gmail.com>
+ <20c1d733-60f5-6375-c03c-639de5e41739@arm.com>
+ <0bee8775-756f-adad-4597-8cad53017718@gmail.com>
+From:   Sowjanya Komatineni <skomatineni@nvidia.com>
+Message-ID: <a2ecc3ad-b7e9-9398-d59b-c7d3fbbd10bb@nvidia.com>
+Date:   Mon, 22 Jul 2019 09:21:21 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-References: <20190708052308.27802-1-michael.wu@vatics.com>
-In-Reply-To: <20190708052308.27802-1-michael.wu@vatics.com>
-From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Date:   Mon, 22 Jul 2019 15:53:34 +0200
-Message-ID: <CAMpxmJVks=teMX1T3pUOO4zomhyhEPWedoiChW00whi40v-VQw@mail.gmail.com>
-Subject: Re: [PATCH v2] gpiolib: fix incorrect IRQ requesting of an active-low lineevent
-To:     Michael Wu <michael.wu@vatics.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        linux-gpio <linux-gpio@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>, morgan.chang@vatics.com,
-        "Stable # 4 . 20+" <stable@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <0bee8775-756f-adad-4597-8cad53017718@gmail.com>
+X-Originating-IP: [172.20.13.39]
+X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"; format=flowed
 Content-Transfer-Encoding: quoted-printable
+Content-Language: en-US
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1563812444; bh=KoPOkUCxjwGMbG3Gc8WkHlcbvUciHbZClFWJEPeqvKI=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
+         Content-Language;
+        b=ZeKcmgRLqAEbKk/9mE2fo50mf6Mjn37p2pZwD5io4uj4T1brt7Eej/zHrd9sZDgTo
+         amTsFQ/aMMHwPtQQjnII++OF+hGNIwNn2FRRuZJ/Vf8AQ319NYmZbNNA6YGKIF7JhD
+         mm+Cn5O01FtI6GuCqCfVECWL0ds+VnuqIt+ukTiiC0qAU6lK1D6cXFSJn7fK81jICP
+         6k2XJqTj+VQEFI7x4F049l2w3z/2vv6h9ma4Zw6qh9fkkjrfVK/vtwQgvwSVToC1rg
+         avtfIzbPemIRLYP8bnEsT7Re6LOvJZcgdc0lj9GzWO0Mo3tAZOXgOZluQlI0WWDj/2
+         OKz3YiDwVLrCw==
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-pon., 8 lip 2019 o 07:23 Michael Wu <michael.wu@vatics.com> napisa=C5=82(a)=
-:
->
-> When a pin is active-low, logical trigger edge should be inverted to matc=
-h
-> the same interrupt opportunity.
->
-> For example, a button pushed triggers falling edge in ACTIVE_HIGH case; i=
-n
-> ACTIVE_LOW case, the button pushed triggers rising edge. For user space t=
-he
-> IRQ requesting doesn't need to do any modification except to configuring
-> GPIOHANDLE_REQUEST_ACTIVE_LOW.
->
-> For example, we want to catch the event when the button is pushed. The
-> button on the original board drives level to be low when it is pushed, an=
-d
-> drives level to be high when it is released.
->
-> In user space we can do:
->
->         req.handleflags =3D GPIOHANDLE_REQUEST_INPUT;
->         req.eventflags =3D GPIOEVENT_REQUEST_FALLING_EDGE;
->
->         while (1) {
->                 read(fd, &dat, sizeof(dat));
->                 if (dat.id =3D=3D GPIOEVENT_EVENT_FALLING_EDGE)
->                         printf("button pushed\n");
->         }
->
-> Run the same logic on another board which the polarity of the button is
-> inverted; it drives level to be high when pushed, and level to be low whe=
-n
-> released. For this inversion we add flag GPIOHANDLE_REQUEST_ACTIVE_LOW:
->
->         req.handleflags =3D GPIOHANDLE_REQUEST_INPUT |
->                 GPIOHANDLE_REQUEST_ACTIVE_LOW;
->         req.eventflags =3D GPIOEVENT_REQUEST_FALLING_EDGE;
->
-> At the result, there are no any events caught when the button is pushed.
-> By the way, button releasing will emit a "falling" event. The timing of
-> "falling" catching is not expected.
->
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Michael Wu <michael.wu@vatics.com>
-> ---
-> Changes from v1:
-> - Correct undeclared 'IRQ_TRIGGER_RISING'
-> - Add an example to descibe the issue
-> ---
->  drivers/gpio/gpiolib.c | 6 ++++--
->  1 file changed, 4 insertions(+), 2 deletions(-)
->
-> diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
-> index e013d417a936..9c9597f929d7 100644
-> --- a/drivers/gpio/gpiolib.c
-> +++ b/drivers/gpio/gpiolib.c
-> @@ -956,9 +956,11 @@ static int lineevent_create(struct gpio_device *gdev=
-, void __user *ip)
->         }
->
->         if (eflags & GPIOEVENT_REQUEST_RISING_EDGE)
-> -               irqflags |=3D IRQF_TRIGGER_RISING;
-> +               irqflags |=3D test_bit(FLAG_ACTIVE_LOW, &desc->flags) ?
-> +                       IRQF_TRIGGER_FALLING : IRQF_TRIGGER_RISING;
->         if (eflags & GPIOEVENT_REQUEST_FALLING_EDGE)
-> -               irqflags |=3D IRQF_TRIGGER_FALLING;
-> +               irqflags |=3D test_bit(FLAG_ACTIVE_LOW, &desc->flags) ?
-> +                       IRQF_TRIGGER_RISING : IRQF_TRIGGER_FALLING;
->         irqflags |=3D IRQF_ONESHOT;
->
->         INIT_KFIFO(le->events);
-> --
-> 2.17.1
->
 
-Applied to fixes.
+On 7/22/19 3:57 AM, Dmitry Osipenko wrote:
+> 22.07.2019 13:13, Marc Zyngier =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+>> On 22/07/2019 10:54, Dmitry Osipenko wrote:
+>>> 21.07.2019 22:40, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+>>>> Tegra210 platforms use sc7 entry firmware to program Tegra LP0/SC7 ent=
+ry
+>>>> sequence and sc7 entry firmware is run from COP/BPMP-Lite.
+>>>>
+>>>> So, COP/BPMP-Lite still need IRQ function to finish SC7 suspend sequen=
+ce
+>>>> for Tegra210.
+>>>>
+>>>> This patch has fix for leaving the COP IRQ enabled for Tegra210 during
+>>>> interrupt controller suspend operation.
+>>>>
+>>>> Acked-by: Thierry Reding <treding@nvidia.com>
+>>>> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
+>>>> ---
+>>>>   drivers/irqchip/irq-tegra.c | 20 ++++++++++++++++++--
+>>>>   1 file changed, 18 insertions(+), 2 deletions(-)
+>>>>
+>>>> diff --git a/drivers/irqchip/irq-tegra.c b/drivers/irqchip/irq-tegra.c
+>>>> index e1f771c72fc4..851f88cef508 100644
+>>>> --- a/drivers/irqchip/irq-tegra.c
+>>>> +++ b/drivers/irqchip/irq-tegra.c
+>>>> @@ -44,6 +44,7 @@ static unsigned int num_ictlrs;
+>>>>  =20
+>>>>   struct tegra_ictlr_soc {
+>>>>   	unsigned int num_ictlrs;
+>>>> +	bool supports_sc7;
+>>>>   };
+>>>>  =20
+>>>>   static const struct tegra_ictlr_soc tegra20_ictlr_soc =3D {
+>>>> @@ -56,6 +57,7 @@ static const struct tegra_ictlr_soc tegra30_ictlr_so=
+c =3D {
+>>>>  =20
+>>>>   static const struct tegra_ictlr_soc tegra210_ictlr_soc =3D {
+>>>>   	.num_ictlrs =3D 6,
+>>>> +	.supports_sc7 =3D true,
+>>>>   };
+>>>>  =20
+>>>>   static const struct of_device_id ictlr_matches[] =3D {
+>>>> @@ -67,6 +69,7 @@ static const struct of_device_id ictlr_matches[] =3D=
+ {
+>>>>  =20
+>>>>   struct tegra_ictlr_info {
+>>>>   	void __iomem *base[TEGRA_MAX_NUM_ICTLRS];
+>>>> +	const struct tegra_ictlr_soc *soc;
+>>>>   #ifdef CONFIG_PM_SLEEP
+>>>>   	u32 cop_ier[TEGRA_MAX_NUM_ICTLRS];
+>>>>   	u32 cop_iep[TEGRA_MAX_NUM_ICTLRS];
+>>>> @@ -147,8 +150,20 @@ static int tegra_ictlr_suspend(void)
+>>>>   		lic->cop_ier[i] =3D readl_relaxed(ictlr + ICTLR_COP_IER);
+>>>>   		lic->cop_iep[i] =3D readl_relaxed(ictlr + ICTLR_COP_IEP_CLASS);
+>>>>  =20
+>>>> -		/* Disable COP interrupts */
+>>>> -		writel_relaxed(~0ul, ictlr + ICTLR_COP_IER_CLR);
+>>>> +		/*
+>>>> +		 * AVP/COP/BPMP-Lite is the Tegra boot processor.
+>>>> +		 *
+>>>> +		 * Tegra210 system suspend flow uses sc7entry firmware which
+>>>> +		 * is executed by COP/BPMP and it includes disabling COP IRQ,
+>>>> +		 * clamping CPU rail, turning off VDD_CPU, and preparing the
+>>>> +		 * system to go to SC7/LP0.
+>>>> +		 *
+>>>> +		 * COP/BPMP wakes up when COP IRQ is triggered and runs
+>>>> +		 * sc7entry-firmware. So need to keep COP interrupt enabled.
+>>>> +		 */
+>>>> +		if (!lic->soc->supports_sc7)
+>>>> +			/* Disable COP interrupts if SC7 is not supported */
+>>> All Tegra SoCs support SC7, hence the 'supports_sc7' and the comment
+>>> doesn't sound correct to me. Something like 'firmware_sc7' should suit
+>>> better here.
+>> If what you're saying is true, then the whole patch is wrong, and the
+>> SC7 property should come from DT.
+> It should be safe to assume that all of existing Tegra210 devices use
+> the firmware for SC7, hence I wouldn't say that the patch is entirely
+> wrong. To me it's not entirely correct.
 
-Bart
+Yes, all existing Tegra210 platforms uses sc7 entry firmware for SC7 and=20
+AVP/COP IRQ need to be kept enabled as during suspend ATF triggers IRQ=20
+to COP for SC7 entry fw execution.
+
+
+>>>> +			writel_relaxed(~0ul, ictlr + ICTLR_COP_IER_CLR);
+>>> Secondly, I'm also not sure why COP interrupts need to be disabled for
+>>> pre-T210 at all, since COP is unused. This looks to me like it was
+>>> cut-n-pasted from downstream kernel without a good reason and could be
+>>> simply removed.
+>> Please verify that this is actually the case. Tegra-2 definitely needed
+>> some level of poking, and I'm not keen on changing anything there until
+>> you (or someone else) has verified it on actual HW (see e307cc8941fc).
+> Tested on Tegra20 and Tegra30, LP1 suspend-resume works perfectly fine
+> with all COP bits removed from the driver.
+>
+> AFAIK, the reason why downstream needed that disabling is that it uses
+> proprietary firmware which is running on the COP and that firmware is
+> usually a BLOB audio/video DEC-ENC driver which doesn't cleanup
+> interrupts after itself. That firmware is not applicable for the
+> upstream kernel, hence there is no need to care about it.
+>
+>> Joseph, can you please shed some light here?
+
+SC7 entry flow uses 3rd party ATF (arm-trusted FW) blob which is the one th=
+at actually loads SC7 entry firmware and triggers IRQ to AVP/COP which caus=
+es COP to wakeup and run SC7 entry FW.
+
+So when SC7 support is enabled, IRQ need to be kept enabled and when SC7 FW=
+ starts execution, it will disable COP IRQ.
+
+
