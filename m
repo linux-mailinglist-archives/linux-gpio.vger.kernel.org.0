@@ -2,361 +2,212 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 6AAC26F7E7
-	for <lists+linux-gpio@lfdr.de>; Mon, 22 Jul 2019 05:22:45 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D2DAE6F8FD
+	for <lists+linux-gpio@lfdr.de>; Mon, 22 Jul 2019 07:42:24 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727811AbfGVDWh (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sun, 21 Jul 2019 23:22:37 -0400
-Received: from hqemgate16.nvidia.com ([216.228.121.65]:12192 "EHLO
-        hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726749AbfGVDWg (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sun, 21 Jul 2019 23:22:36 -0400
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5d352bf80002>; Sun, 21 Jul 2019 20:22:32 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate102.nvidia.com (PGP Universal service);
-  Sun, 21 Jul 2019 20:22:34 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Sun, 21 Jul 2019 20:22:34 -0700
-Received: from [10.2.164.85] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 22 Jul
- 2019 03:22:31 +0000
-Subject: Re: [PATCH V6 06/21] clk: tegra: pll: Save and restore pll context
-To:     Dmitry Osipenko <digetx@gmail.com>, <thierry.reding@gmail.com>,
-        <jonathanh@nvidia.com>, <tglx@linutronix.de>,
-        <jason@lakedaemon.net>, <marc.zyngier@arm.com>,
-        <linus.walleij@linaro.org>, <stefan@agner.ch>,
-        <mark.rutland@arm.com>
-CC:     <pdeschrijver@nvidia.com>, <pgaikwad@nvidia.com>,
-        <sboyd@kernel.org>, <linux-clk@vger.kernel.org>,
-        <linux-gpio@vger.kernel.org>, <jckuo@nvidia.com>,
-        <josephl@nvidia.com>, <talho@nvidia.com>,
-        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <mperttunen@nvidia.com>, <spatra@nvidia.com>, <robh+dt@kernel.org>,
-        <devicetree@vger.kernel.org>
-References: <1563738060-30213-1-git-send-email-skomatineni@nvidia.com>
- <1563738060-30213-7-git-send-email-skomatineni@nvidia.com>
- <e383bf0e-fee7-3aa2-a9af-c0fb36c44219@gmail.com>
-From:   Sowjanya Komatineni <skomatineni@nvidia.com>
-Message-ID: <c0dd29cc-0a97-46ec-8025-23edb931a182@nvidia.com>
-Date:   Sun, 21 Jul 2019 20:22:53 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        id S1726701AbfGVFmY (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 22 Jul 2019 01:42:24 -0400
+Received: from de-outgoing-9-9.antispam.co.za ([176.9.211.72]:57471 "EHLO
+        de-outgoing-9-9.antispam.co.za" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725821AbfGVFmY (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>);
+        Mon, 22 Jul 2019 01:42:24 -0400
+X-Greylist: delayed 3006 seconds by postgrey-1.27 at vger.kernel.org; Mon, 22 Jul 2019 01:42:22 EDT
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=out.zamailgate.com; s=default; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:reply-to:sender:bcc:
+        content-transfer-encoding; bh=64rd6IcL4fIvhgRr6XOO4DL/7sQXmNzxzRnPBY2jfQk=;
+         b=L3CjuWDHIwShCB5bpxjSJht8oQixNBj5slrqtGgfANKSNvjuJUINVVyC+D5V5dXbR/FqG205S9
+        L6QeM6RHvUV0GNfv1Zv69qRL8MTidc6MMvKnqrm4KvTIdzFuIxntoKFsLTWz9C/BduV64a3n2/Y0G
+        qR14EPTd0Cag7LB9SqP0=;
+Received: from cp46-jhb.za-dns.com ([164.160.91.39])
+        by server9.antispam.co.za with esmtps (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.89)
+        (envelope-from <hm@bitlabs.co.za>)
+        id 1hpQJ2-00056O-1l; Mon, 22 Jul 2019 06:52:12 +0200
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=bitlabs.co.za; s=default; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=64rd6IcL4fIvhgRr6XOO4DL/7sQXmNzxzRnPBY2jfQk=; b=EowshLDlwAR1WpTaG97aiXoD8
+        Wpza/OlzRTwNpaHk5+qGSMFHtYBaY1xkpAKtaInXgJt5HnI9Yukq1iCjPpGkK8gYYCu+dzhEGeOYX
+        CvtDZLaxKwqJATXuOff2MD4meOmPaS5OqDAmuukmoM3Oo1EEW8fIDe2CjqF2AVlsIjAZl07DN9m2O
+        iGSk6riwjQS2QTLiYZ+qiY3bOxuDJbKkdkEvRiZngddOHTS6hiiGtlx2J3OHyycXdVckxsmNaNoVz
+        IxHy44H2ha4rfefRM4VWE4VRfIgBq9yhct0G7XFdWHEg/ZQUUJY0bTDxTqziBLtjKIQTj2kGrSgWY
+        TGmMgVVVQ==;
+Received: from [45.56.148.82] (port=48840 helo=manjaro-1)
+        by cp46-jhb.za-dns.com with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.92)
+        (envelope-from <hm@bitlabs.co.za>)
+        id 1hpQIt-000838-Ls; Mon, 22 Jul 2019 06:52:04 +0200
+Date:   Mon, 22 Jul 2019 06:51:54 +0200
+From:   Hennie Muller <hm@bitlabs.co.za>
+To:     Phil Reid <preid@electromag.com.au>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/2] [PATCH] gpio: Replace usage of bare 'unsigned' with
+ 'unsigned int'
+Message-ID: <20190722045154.rp2sqr2mxdmfn5qj@manjaro-1>
+References: <20190721125259.13990-1-hm@bitlabs.co.za>
+ <61045f29-73ca-cb62-ba6f-5b12970735a9@electromag.com.au>
 MIME-Version: 1.0
-In-Reply-To: <e383bf0e-fee7-3aa2-a9af-c0fb36c44219@gmail.com>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL104.nvidia.com (172.18.146.11) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: quoted-printable
-Content-Language: en-US
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1563765752; bh=/IoeqtMMeEx+cCKF2qUcb4A1TnakN6kYpZkZK1qpYsk=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
-         Content-Language;
-        b=Y07mo8+dIpX1PXinPE2pcsWsGA/XrQzzcrBtABEGxS/rKGa9KKU0/wbknQFhs5FTW
-         bR6A4/NeC/D6V65Di2chYoCtuWkPHizlGrQKJfq5rcS13eJw1CshQfwz5eYGgKe6bC
-         qK0qimmGwPCmuKR2FVbXloNLwuf4HTZMCjjB6sdH+UzxFO/LXTWU+T3AF/cve1bciA
-         /mtwThcU5dQsLma0O9KpxTQvZHQylH9CG1vsMGp7ipqfvYt+PZ7IHqyB6gwf+lRmQ5
-         nHCxOdHeqVw3LILd+StDuY7PdaWxyfup+mDHvA8vewTTBp0cfx1ywfBX3GSzFBS9r6
-         0fFOGd84qPGoQ==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <61045f29-73ca-cb62-ba6f-5b12970735a9@electromag.com.au>
+X-Get-Message-Sender-Via: cp46-jhb.za-dns.com: authenticated_id: hm@bitlabs.co.za
+X-Authenticated-Sender: cp46-jhb.za-dns.com: hm@bitlabs.co.za
+X-AuthUser: hm@bitlabs.co.za
+X-AuthUsername: 
+X-AuthDomain: @
+X-Originating-IP: 164.160.91.39
+X-SpamExperts-Domain: out.zamailgate.com
+X-SpamExperts-Username: 164.160.91.39
+Authentication-Results: antispam.co.za; auth=pass smtp.auth=164.160.91.39@out.zamailgate.com
+X-SpamExperts-Outgoing-Class: ham
+X-SpamExperts-Outgoing-Evidence: SB/global_tokens (0.00588500935121)
+X-Recommended-Action: accept
+X-Filter-ID: Mvzo4OR0dZXEDF/gcnlw0STiPCilqAig5bem4hJMKBmpSDasLI4SayDByyq9LIhV4Y5n+wxaLJoa
+ DjtgDawDEUTNWdUk1Ol2OGx3IfrIJKyP9eGNFz9TW9u+Jt8z2T3KhT7D3SX4MPtDgdWqsPqh67fj
+ DY1qm2QZcrcs82VGliYm1p42ppTj+dVCw4Ez5pDLW0+mKt/G7vFc2Qym1x4kT+asgSOJwXvEa88/
+ nEEOQ8atQbfoTroPoLSOwm9gb/v9t8C9mOBdONdnsxgsk1D2py+4lO+qZiszEkuaXWZuy9K3wL2Y
+ 4F0412ezGCyTUPanTFg5blXwux8esyOqcBiI3QW3/JG4NvcugjYnCALrCN0QSvHD20fXtmqWXghn
+ 7qhhLHdtIZerlbr9J0URPm3qGw6xHJ+5XfpywqqK/49f0grSo+JqHSJMzPV2SO5XAS47CrfmSf0L
+ i45/NZ9SxHqOKEOsySokoPKwLoxkVVV2B0lpzAs8/Yb7du19qZoD72lvi0rkK5IlwQ7ImbK6V1qP
+ /QW1G9+Xy7Q00JXKZ6AIc+S4RopuYbYWODZPMXR7gq11OuEY1HqEhaucdkac1B9pHVpyEaauzOzF
+ HT8EncIT+dZvUeASWefCYj15CRjPEXcLxvV0HqsoxHSXAJzPhyRQPuWBOXp8nHKe0R+FkIqN7hlK
+ iJTN7QRHyTxFZxda0sg2lg6p7O4N5ohxmAZntqjk6urdeG3055AJ+1ulZSV7bJ5HZdYXq9nbB9YL
+ buEdlZGH5xC0aagmRmHsEsxeqg0lAf3L1YQsC1MBMpAYEHWLAHlagrnUtxvpfJmdlkqpO2zU8mIy
+ AWDzMaiksSFXUf2/opd7/V3RJl1jWFHiAL9S1hROvVB8ln8Gbd1wEveB/JxEFfQbvlTi88xSc9Qi
+ UhgH3fdjzQ6YC7Heg3Xf7O1TOd4H0jB6orFsm4lpjwE/4C3BAcgNpD8B6zIYQ/YUyeje5GqgtqOb
+ CvohvKzPGrrDEZtEzEL62+pmygRM4z6UNMVeXcEObgAeXh0ac70JoNe6uMV8Zu+UhKPbnYIx5kLg
+ TOFM8jeeJSytG/Wf88r2kBub8U3Gy13zcBdnsFzxld/ykvUvuXdE8A+FdNrjckL3mHJSR5JV9DHC
+ csU/tK0CUl/DxCo1rgS3Q2ym4AIoOdq5ermHZmPglR+swmDUp2F8oUst+qf6sGr/I71pJ09COraL
+ SYuMFtB17GvS7LLvVpYvNA==
+X-Report-Abuse-To: spam@server1.antispam.co.za
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+On Mon, Jul 22, 2019 at 10:05:00AM +0800, Phil Reid wrote:
+> G'day Hennie,
+> 
+> patch title should be:
+> gpio: viperboard: Replace usage of bare 'unsigned' with 'unsigned int'
+Thanks Phil.
 
-On 7/21/19 3:21 PM, Dmitry Osipenko wrote:
-> 21.07.2019 22:40, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
->> This patch implements save and restore of PLL context.
->>
->> During system suspend, core power goes off and looses the settings
->> of the Tegra CAR controller registers.
->>
->> So during suspend entry pll rate is stored and on resume it is
->> restored back along with its state.
->>
->> Acked-by: Thierry Reding <treding@nvidia.com>
->> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
->> ---
->>   drivers/clk/tegra/clk-pll.c      | 121 ++++++++++++++++++++++++++++---=
---------
->>   drivers/clk/tegra/clk-tegra210.c |   2 +-
->>   drivers/clk/tegra/clk.h          |  10 +++-
->>   3 files changed, 99 insertions(+), 34 deletions(-)
->>
->> diff --git a/drivers/clk/tegra/clk-pll.c b/drivers/clk/tegra/clk-pll.c
->> index 1583f5fc992f..f136964e6c44 100644
->> --- a/drivers/clk/tegra/clk-pll.c
->> +++ b/drivers/clk/tegra/clk-pll.c
->> @@ -1008,6 +1008,59 @@ static unsigned long clk_plle_recalc_rate(struct =
-clk_hw *hw,
->>   	return rate;
->>   }
->>  =20
->> +void tegra_clk_sync_state_pll(struct clk_hw *hw)
->> +{
->> +	if (!__clk_get_enable_count(hw->clk))
->> +		clk_pll_disable(hw);
->> +	else
->> +		clk_pll_enable(hw);
->> +}
->> +
->> +static int tegra_clk_pll_save_context(struct clk_hw *hw)
->> +{
->> +	struct tegra_clk_pll *pll =3D to_clk_pll(hw);
->> +	u32 val =3D 0;
->> +
->> +	pll->rate =3D clk_hw_get_rate(hw);
-> Again, clk_hw_get_rate() returns cached value. Why do you need to
-> duplicate it?
-true, will remove storing in next version. thanks.
->> +	if (pll->params->flags & TEGRA_PLLMB)
->> +		val =3D pll_readl_base(pll);
->> +	else if (pll->params->flags & TEGRA_PLLRE)
->> +		val =3D pll_readl_base(pll) & divp_mask_shifted(pll);
->> +
->> +	pll->pllbase_ctx =3D val;
->> +
->> +	return 0;
->> +}
->> +
->> +static void tegra_clk_pll_restore_context(struct clk_hw *hw)
->> +{
->> +	struct tegra_clk_pll *pll =3D to_clk_pll(hw);
->> +	struct clk_hw *parent =3D clk_hw_get_parent(hw);
->> +	unsigned long parent_rate =3D clk_hw_get_rate(parent);
->> +	u32 val;
->> +
->> +	if (clk_pll_is_enabled(hw))
->> +		return;
->> +
->> +	if (pll->params->flags & TEGRA_PLLMB) {
->> +		pll_writel_base(pll->pllbase_ctx, pll);
->> +	} else if (pll->params->flags & TEGRA_PLLRE) {
->> +		val =3D pll_readl_base(pll);
->> +		val &=3D ~(divp_mask_shifted(pll));
->> +		pll_writel_base(pll->pllbase_ctx | val, pll);
->> +	}
->> +
->> +	if (pll->params->set_defaults)
->> +		pll->params->set_defaults(pll);
->> +
->> +	clk_pll_set_rate(hw, pll->rate, parent_rate);
->> +
->> +	/* do not sync pllx state here. pllx is sync'd after dfll resume */
->> +	if (!(pll->params->flags & TEGRA_PLLX))
->> +		tegra_clk_sync_state_pll(hw);
->> +}
->> +
->>   const struct clk_ops tegra_clk_pll_ops =3D {
->>   	.is_enabled =3D clk_pll_is_enabled,
->>   	.enable =3D clk_pll_enable,
->> @@ -1015,6 +1068,8 @@ const struct clk_ops tegra_clk_pll_ops =3D {
->>   	.recalc_rate =3D clk_pll_recalc_rate,
->>   	.round_rate =3D clk_pll_round_rate,
->>   	.set_rate =3D clk_pll_set_rate,
->> +	.save_context =3D tegra_clk_pll_save_context,
->> +	.restore_context =3D tegra_clk_pll_restore_context,
->>   };
->>  =20
->>   const struct clk_ops tegra_clk_plle_ops =3D {
->> @@ -1802,6 +1857,27 @@ static int clk_pllu_tegra114_enable(struct clk_hw=
- *hw)
->>  =20
->>   	return ret;
->>   }
->> +
->> +static void _clk_plle_tegra_init_parent(struct tegra_clk_pll *pll)
->> +{
->> +	u32 val, val_aux;
->> +
->> +	/* ensure parent is set to pll_ref */
->> +	val =3D pll_readl_base(pll);
->> +	val_aux =3D pll_readl(pll->params->aux_reg, pll);
->> +
->> +	if (val & PLL_BASE_ENABLE) {
->> +		if ((val_aux & PLLE_AUX_PLLRE_SEL) ||
->> +		    (val_aux & PLLE_AUX_PLLP_SEL))
->> +			WARN(1, "pll_e enabled with unsupported parent %s\n",
->> +			     (val_aux & PLLE_AUX_PLLP_SEL) ? "pllp_out0" :
->> +			     "pll_re_vco");
->> +	} else {
->> +		val_aux &=3D ~(PLLE_AUX_PLLRE_SEL | PLLE_AUX_PLLP_SEL);
->> +		pll_writel(val_aux, pll->params->aux_reg, pll);
->> +		fence_udelay(1, pll->clk_base);
->> +	}
->> +}
->>   #endif
->>  =20
->>   static struct tegra_clk_pll *_tegra_init_pll(void __iomem *clk_base,
->> @@ -2214,27 +2290,12 @@ struct clk *tegra_clk_register_plle_tegra114(con=
-st char *name,
->>   {
->>   	struct tegra_clk_pll *pll;
->>   	struct clk *clk;
->> -	u32 val, val_aux;
->>  =20
->>   	pll =3D _tegra_init_pll(clk_base, NULL, pll_params, lock);
->>   	if (IS_ERR(pll))
->>   		return ERR_CAST(pll);
->>  =20
->> -	/* ensure parent is set to pll_re_vco */
->> -
->> -	val =3D pll_readl_base(pll);
->> -	val_aux =3D pll_readl(pll_params->aux_reg, pll);
->> -
->> -	if (val & PLL_BASE_ENABLE) {
->> -		if ((val_aux & PLLE_AUX_PLLRE_SEL) ||
->> -			(val_aux & PLLE_AUX_PLLP_SEL))
->> -			WARN(1, "pll_e enabled with unsupported parent %s\n",
->> -			  (val_aux & PLLE_AUX_PLLP_SEL) ? "pllp_out0" :
->> -					"pll_re_vco");
->> -	} else {
->> -		val_aux &=3D ~(PLLE_AUX_PLLRE_SEL | PLLE_AUX_PLLP_SEL);
->> -		pll_writel(val_aux, pll_params->aux_reg, pll);
->> -	}
->> +	_clk_plle_tegra_init_parent(pll);
->>  =20
->>   	clk =3D _tegra_clk_register_pll(pll, name, parent_name, flags,
->>   				      &tegra_clk_plle_tegra114_ops);
->> @@ -2276,6 +2337,8 @@ static const struct clk_ops tegra_clk_pllss_ops =
-=3D {
->>   	.recalc_rate =3D clk_pll_recalc_rate,
->>   	.round_rate =3D clk_pll_ramp_round_rate,
->>   	.set_rate =3D clk_pllxc_set_rate,
->> +	.save_context =3D tegra_clk_pll_save_context,
->> +	.restore_context =3D tegra_clk_pll_restore_context,
->>   };
->>  =20
->>   struct clk *tegra_clk_register_pllss(const char *name, const char *par=
-ent_name,
->> @@ -2375,6 +2438,7 @@ struct clk *tegra_clk_register_pllre_tegra210(cons=
-t char *name,
->>   		pll_params->vco_min =3D pll_params->adjust_vco(pll_params,
->>   							     parent_rate);
->>  =20
->> +	pll_params->flags |=3D TEGRA_PLLRE;
->>   	pll =3D _tegra_init_pll(clk_base, pmc, pll_params, lock);
->>   	if (IS_ERR(pll))
->>   		return ERR_CAST(pll);
->> @@ -2520,11 +2584,19 @@ static void clk_plle_tegra210_disable(struct clk=
-_hw *hw)
->>   		spin_unlock_irqrestore(pll->lock, flags);
->>   }
->>  =20
->> +static void tegra_clk_plle_t210_restore_context(struct clk_hw *hw)
->> +{
->> +	struct tegra_clk_pll *pll =3D to_clk_pll(hw);
->> +
->> +	_clk_plle_tegra_init_parent(pll);
->> +}
->> +
->>   static const struct clk_ops tegra_clk_plle_tegra210_ops =3D {
->>   	.is_enabled =3D  clk_plle_tegra210_is_enabled,
->>   	.enable =3D clk_plle_tegra210_enable,
->>   	.disable =3D clk_plle_tegra210_disable,
->>   	.recalc_rate =3D clk_pll_recalc_rate,
->> +	.restore_context =3D tegra_clk_plle_t210_restore_context,
->>   };
->>  =20
->>   struct clk *tegra_clk_register_plle_tegra210(const char *name,
->> @@ -2535,27 +2607,12 @@ struct clk *tegra_clk_register_plle_tegra210(con=
-st char *name,
->>   {
->>   	struct tegra_clk_pll *pll;
->>   	struct clk *clk;
->> -	u32 val, val_aux;
->>  =20
->>   	pll =3D _tegra_init_pll(clk_base, NULL, pll_params, lock);
->>   	if (IS_ERR(pll))
->>   		return ERR_CAST(pll);
->>  =20
->> -	/* ensure parent is set to pll_re_vco */
->> -
->> -	val =3D pll_readl_base(pll);
->> -	val_aux =3D pll_readl(pll_params->aux_reg, pll);
->> -
->> -	if (val & PLLE_BASE_ENABLE) {
->> -		if ((val_aux & PLLE_AUX_PLLRE_SEL) ||
->> -			(val_aux & PLLE_AUX_PLLP_SEL))
->> -			WARN(1, "pll_e enabled with unsupported parent %s\n",
->> -			  (val_aux & PLLE_AUX_PLLP_SEL) ? "pllp_out0" :
->> -					"pll_re_vco");
->> -	} else {
->> -		val_aux &=3D ~(PLLE_AUX_PLLRE_SEL | PLLE_AUX_PLLP_SEL);
->> -		pll_writel(val_aux, pll_params->aux_reg, pll);
->> -	}
->> +	_clk_plle_tegra_init_parent(pll);
->>  =20
->>   	clk =3D _tegra_clk_register_pll(pll, name, parent_name, flags,
->>   				      &tegra_clk_plle_tegra210_ops);
->> diff --git a/drivers/clk/tegra/clk-tegra210.c b/drivers/clk/tegra/clk-te=
-gra210.c
->> index 4721ee030d1c..58397f93166c 100644
->> --- a/drivers/clk/tegra/clk-tegra210.c
->> +++ b/drivers/clk/tegra/clk-tegra210.c
->> @@ -1602,7 +1602,7 @@ static struct tegra_clk_pll_params pll_x_params =
-=3D {
->>   	.pdiv_tohw =3D pll_qlin_pdiv_to_hw,
->>   	.div_nmp =3D &pllx_nmp,
->>   	.freq_table =3D pll_x_freq_table,
->> -	.flags =3D TEGRA_PLL_USE_LOCK | TEGRA_PLL_HAS_LOCK_ENABLE,
->> +	.flags =3D TEGRA_PLL_USE_LOCK | TEGRA_PLL_HAS_LOCK_ENABLE | TEGRA_PLLX=
-,
->>   	.dyn_ramp =3D tegra210_pllx_dyn_ramp,
->>   	.set_defaults =3D tegra210_pllx_set_defaults,
->>   	.calc_rate =3D tegra210_pll_fixed_mdiv_cfg,
->> diff --git a/drivers/clk/tegra/clk.h b/drivers/clk/tegra/clk.h
->> index fb29a8c27873..8532f5150091 100644
->> --- a/drivers/clk/tegra/clk.h
->> +++ b/drivers/clk/tegra/clk.h
->> @@ -235,6 +235,8 @@ struct tegra_clk_pll;
->>    * TEGRA_PLLMB - PLLMB has should be treated similar to PLLM. This
->>    *     flag indicated that it is PLLMB.
->>    * TEGRA_PLL_VCO_OUT - Used to indicate that the PLL has a VCO output
->> + * TEGRA_PLLRE - Used to indicate that it is PLLRE.
->> + * TEGRA_PLLX - Used to indicate that it is PLLX.
->>    */
->>   struct tegra_clk_pll_params {
->>   	unsigned long	input_min;
->> @@ -301,6 +303,8 @@ struct tegra_clk_pll_params {
->>   #define TEGRA_MDIV_NEW BIT(11)
->>   #define TEGRA_PLLMB BIT(12)
->>   #define TEGRA_PLL_VCO_OUT BIT(13)
->> +#define TEGRA_PLLRE BIT(14)
->> +#define TEGRA_PLLX BIT(15)
->>  =20
->>   /**
->>    * struct tegra_clk_pll - Tegra PLL clock
->> @@ -310,6 +314,8 @@ struct tegra_clk_pll_params {
->>    * @pmc:	address of PMC, required to read override bits
->>    * @lock:	register lock
->>    * @params:	PLL parameters
->> + * @rate:	rate during system suspend and resume
->> + * @pllbase_ctx: pll base register value during suspend and resume
->>    */
->>   struct tegra_clk_pll {
->>   	struct clk_hw	hw;
->> @@ -317,6 +323,8 @@ struct tegra_clk_pll {
->>   	void __iomem	*pmc;
->>   	spinlock_t	*lock;
->>   	struct tegra_clk_pll_params	*params;
->> +	unsigned long	rate;
->> +	u32	pllbase_ctx;
->>   };
->>  =20
->>   #define to_clk_pll(_hw) container_of(_hw, struct tegra_clk_pll, hw)
->> @@ -840,7 +848,7 @@ u16 tegra_pll_get_fixed_mdiv(struct clk_hw *hw, unsi=
-gned long input_rate);
->>   int tegra_pll_p_div_to_hw(struct tegra_clk_pll *pll, u8 p_div);
->>   int div_frac_get(unsigned long rate, unsigned parent_rate, u8 width,
->>   		 u8 frac_width, u8 flags);
->> -
->> +void tegra_clk_sync_state_pll(struct clk_hw *hw);
->>  =20
->>   /* Combined read fence with delay */
->>   #define fence_udelay(delay, reg)	\
->>
+I'll go read up a bit on amending commit messages for review.
+
+> 
+> On 21/07/2019 20:52, Hennie Muller wrote:
+> > Fixes a couple of warnings by checkpatch and sparse.
+> > 
+> > Signed-off-by: Hennie Muller <hm@bitlabs.co.za>
+> > ---
+> >   drivers/gpio/gpio-viperboard.c | 20 ++++++++++----------
+> >   1 file changed, 10 insertions(+), 10 deletions(-)
+> > 
+> > diff --git a/drivers/gpio/gpio-viperboard.c b/drivers/gpio/gpio-viperboard.c
+> > index 9b604f13e302..c301c1d56dd2 100644
+> > --- a/drivers/gpio/gpio-viperboard.c
+> > +++ b/drivers/gpio/gpio-viperboard.c
+> > @@ -79,7 +79,7 @@ MODULE_PARM_DESC(gpioa_freq,
+> >   /* ----- begin of gipo a chip -------------------------------------------- */
+> >   static int vprbrd_gpioa_get(struct gpio_chip *chip,
+> > -		unsigned offset)
+> > +		unsigned int offset)
+> 
+> I've encountered these checkpatch warnings as well.
+> 
+> However 'struct gpio_chip' callbacks define the function signatures
+> as 'unsigned', not 'unsigned int'. So I've also left them as is, to explicitly
+> match the struct definition.
+> 
+> Be interested to know what the official take on this is.
+In hindsight, I saw most of the other gpio drivers follow the same
+convention as the viperboard driver. which means
+a) my changes add no value and just creates inconsistency.
+or
+b) there's an opportunity to fix up the rest of the gpio drivers as
+well? Which I'll be happy to do.
+
+I'll be eagerly awaiting feedback.
+> 
+> 
+> >   {
+> >   	int ret, answer, error = 0;
+> >   	struct vprbrd_gpio *gpio = gpiochip_get_data(chip);
+> > @@ -129,7 +129,7 @@ static int vprbrd_gpioa_get(struct gpio_chip *chip,
+> >   }
+> >   static void vprbrd_gpioa_set(struct gpio_chip *chip,
+> > -		unsigned offset, int value)
+> > +		unsigned int offset, int value)
+> >   {
+> >   	int ret;
+> >   	struct vprbrd_gpio *gpio = gpiochip_get_data(chip);
+> > @@ -170,7 +170,7 @@ static void vprbrd_gpioa_set(struct gpio_chip *chip,
+> >   }
+> >   static int vprbrd_gpioa_direction_input(struct gpio_chip *chip,
+> > -			unsigned offset)
+> > +			unsigned int offset)
+> >   {
+> >   	int ret;
+> >   	struct vprbrd_gpio *gpio = gpiochip_get_data(chip);
+> > @@ -207,7 +207,7 @@ static int vprbrd_gpioa_direction_input(struct gpio_chip *chip,
+> >   }
+> >   static int vprbrd_gpioa_direction_output(struct gpio_chip *chip,
+> > -			unsigned offset, int value)
+> > +			unsigned int offset, int value)
+> >   {
+> >   	int ret;
+> >   	struct vprbrd_gpio *gpio = gpiochip_get_data(chip);
+> > @@ -251,8 +251,8 @@ static int vprbrd_gpioa_direction_output(struct gpio_chip *chip,
+> >   /* ----- begin of gipo b chip -------------------------------------------- */
+> > -static int vprbrd_gpiob_setdir(struct vprbrd *vb, unsigned offset,
+> > -	unsigned dir)
+> > +static int vprbrd_gpiob_setdir(struct vprbrd *vb, unsigned int offset,
+> > +	unsigned int dir)
+> >   {
+> >   	struct vprbrd_gpiob_msg *gbmsg = (struct vprbrd_gpiob_msg *)vb->buf;
+> >   	int ret;
+> > @@ -273,7 +273,7 @@ static int vprbrd_gpiob_setdir(struct vprbrd *vb, unsigned offset,
+> >   }
+> >   static int vprbrd_gpiob_get(struct gpio_chip *chip,
+> > -		unsigned offset)
+> > +		unsigned int offset)
+> >   {
+> >   	int ret;
+> >   	u16 val;
+> > @@ -305,7 +305,7 @@ static int vprbrd_gpiob_get(struct gpio_chip *chip,
+> >   }
+> >   static void vprbrd_gpiob_set(struct gpio_chip *chip,
+> > -		unsigned offset, int value)
+> > +		unsigned int offset, int value)
+> >   {
+> >   	int ret;
+> >   	struct vprbrd_gpio *gpio = gpiochip_get_data(chip);
+> > @@ -338,7 +338,7 @@ static void vprbrd_gpiob_set(struct gpio_chip *chip,
+> >   }
+> >   static int vprbrd_gpiob_direction_input(struct gpio_chip *chip,
+> > -			unsigned offset)
+> > +			unsigned int offset)
+> >   {
+> >   	int ret;
+> >   	struct vprbrd_gpio *gpio = gpiochip_get_data(chip);
+> > @@ -359,7 +359,7 @@ static int vprbrd_gpiob_direction_input(struct gpio_chip *chip,
+> >   }
+> >   static int vprbrd_gpiob_direction_output(struct gpio_chip *chip,
+> > -			unsigned offset, int value)
+> > +			unsigned int offset, int value)
+> >   {
+> >   	int ret;
+> >   	struct vprbrd_gpio *gpio = gpiochip_get_data(chip);
+> > 
+> 
+> 
+> -- 
+> Regards
+> Phil Reid
