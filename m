@@ -2,25 +2,25 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 178E86F91F
-	for <lists+linux-gpio@lfdr.de>; Mon, 22 Jul 2019 07:56:07 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8258F6F922
+	for <lists+linux-gpio@lfdr.de>; Mon, 22 Jul 2019 07:56:08 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725811AbfGVF4F (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 22 Jul 2019 01:56:05 -0400
-Received: from mout.gmx.net ([212.227.17.20]:49711 "EHLO mout.gmx.net"
+        id S1727395AbfGVF4H (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 22 Jul 2019 01:56:07 -0400
+Received: from mout.gmx.net ([212.227.17.21]:58793 "EHLO mout.gmx.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727359AbfGVF4E (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Mon, 22 Jul 2019 01:56:04 -0400
+        id S1727407AbfGVF4G (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Mon, 22 Jul 2019 01:56:06 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
         s=badeba3b8450; t=1563774938;
-        bh=f172zsKe8yNWds5ywNLrH91B/sTzHWIKm+VpqMgCJDM=;
+        bh=bMN5HaH7xs5OZI3fgydBkJ1gPM3MHOTFQvPIB1gYS7c=;
         h=X-UI-Sender-Class:From:To:Cc:Subject:Date:In-Reply-To:References;
-        b=Ybeb0TcFGtRyIal+8MgzFGfkwMU1sxdLcHz0xTomsuBA7KEsHM/I2wFXJMbX4yjzL
-         8w1pzuapzfPVl6ovylYHjPt0GfYv0TEBFi9vy9s0AlHbRU1fwDtNPmyV85OyRNfZl4
-         It2UXBQhGN7Vx75ZTp6lpOJT9547XtfjOjB9WDrU=
+        b=AwFDE/YySr0GdGHIZmfP53fgwqRgOCKx16WpA6xGERQjIWtRG6aGsfOirYqDxVL0e
+         /GcVyBML+tKD+IuozYeUfUHfUUbf6n84gIiDGEZJ6Rbd7OQXtPNggk0cWjqwygCF5q
+         Cb3neq5NA5ocuE9smWmu82nzSAUampsAQfUqwZu8=
 X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
 Received: from localhost.localdomain ([37.4.249.98]) by mail.gmx.com (mrgmx102
- [212.227.17.168]) with ESMTPSA (Nemesis) id 0LzHZ7-1iSsdU3S2T-014Tm4; Mon, 22
+ [212.227.17.168]) with ESMTPSA (Nemesis) id 0MFz0E-1hbjeW2byg-00Eqxb; Mon, 22
  Jul 2019 07:55:38 +0200
 From:   Stefan Wahren <wahrenst@gmx.net>
 To:     Eric Anholt <eric@anholt.net>,
@@ -40,277 +40,280 @@ Cc:     bcm-kernel-feedback-list@broadcom.com,
         linux-arm-kernel@lists.infradead.org,
         linux-rpi-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
         linux-mmc@vger.kernel.org, Stefan Wahren <wahrenst@gmx.net>
-Subject: [PATCH 04/18] ARM: dts: bcm283x: Define MMC interfaces at board level
-Date:   Mon, 22 Jul 2019 07:54:35 +0200
-Message-Id: <1563774880-8061-5-git-send-email-wahrenst@gmx.net>
+Subject: [PATCH 05/18] ARM: dts: bcm283x: Define memory at board level
+Date:   Mon, 22 Jul 2019 07:54:36 +0200
+Message-Id: <1563774880-8061-6-git-send-email-wahrenst@gmx.net>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1563774880-8061-1-git-send-email-wahrenst@gmx.net>
 References: <1563774880-8061-1-git-send-email-wahrenst@gmx.net>
-X-Provags-ID: V03:K1:AXy4t8CxDUNd15b3CCEUgH+gIkCfO0Qm9Fz8w70RGONbuZsEztq
- qBu5Px4rWSx/Ng7D2yPwnCIFyZdPj/0ji+DQZ3YSXuvpSYS+N+sAZ0p85mFQ7o8XRRHw0iK
- /FtqxsVBxW2rcrknt7pz7/0UditF+dkSen/SHbyUd4zNhvITYb0VjYWOjH8kWAbr7MKkzBI
- /Yu0ioD3oL2ymU0mP7tUw==
+X-Provags-ID: V03:K1:X3xwkgbaTPJx1LgEFk4hJ11u0bJ5hSD3ydEnoGP91/5YDumjkEq
+ 7xTve7hfbhDN9BqwDcmMKCrrjTWl2bXMtvUMiiJbYQrmeUwPdyPTsmaALS1mpbhSVBdD/s0
+ TtdUXg7SX+RnRbOBcNpb69Ykzzd/waAkbKAStqt6cA8UZ0mgzB6ShkRCYwooyjII1XctQLS
+ TYqmXtE/GJRNVs1tYRGdw==
 X-Spam-Flag: NO
-X-UI-Out-Filterresults: notjunk:1;V03:K0:ScrwUdDYiSA=:bSCt8W9lfYgPUCA8uQCa1m
- GZOP7x65nEu7JfNyPqqhs8D21K2VIqwU7ZdrWtns2Dou3QjyEMdkDS6T4l3PdzP2EsYhWR2HS
- qF+YiYRJXfDHC0wVsBuvMTKlyizTk8QQxwY4BzTXavUpNPJ/jpBzUCocs2VrGZaRUA3IhJHJn
- 0Skv7SiykRzbY/i0jKk+eBm+y7YIZe3hKlcV8+F41rplvE+W4okoIjs9C6fzgC3wGnHYT9NKt
- 8NzOo+KcPmqf88zTz5+9JlgHy4zNfAUo+McX1Txxax+YbH15bCNRZia4g1cVwjh9qGItShGhZ
- 0zNsWR3Ih/hXUYjm39HabqX/DadaqsGkavet3MYiWkFZ/5pGIfZQz0qktUXrnnGPlivesrIe0
- RNUHp3u48aELT8+uWnnuWJZcdUdP7/Q8sxiXsXGhnrnlAx+Ijiy1ykWmH4ysDgGXrQGONuEw7
- YDDJ8gw8ATlmAx9G2A1hDc4NwDeabuC/+xeQCyC+Rm5pTcecoFAUWPLF9nd6w/Wo2Z1N+1e2n
- vDiCtfCzfXWZbvR/F17qgOE1snUDEYQPgQESCPWDiq2sSD/RztUVCyq+rXBj0Xrydx1WI2DCk
- Uwtfdzl7rKs2DpiYLW2n7Tnbh8dnxKbAgaltDDOaLC1LyIRtf1NU0VgCr5ZkgsRnzxAHMwWEr
- DZCgk7Jxhgszwg0DttTpP613HCkVVFKjFSii20dbXjvrLMWdKvtXdJwvvFl40pGoM5CeLXIq3
- Cz70Wa6X/ZWAHvo8R5BJZDEqcxivG01lKCwREwJXfjaTDWW3rSj+G5MsCiXYf3WV3++YHMi2G
- EjJbL2y/G47DFj6joRReGL9yIpVCX9Tufw5DN9UdjJlDliXxdYO9c2damQfnhs2Ozr+bE1w05
- ANOo0QBwuJ2eEWW15uh4ea2x8LtFuTvAz0PD0tDY0ecfr4DfeeajN9YpGa6Xc/t39w8myZgro
- psutpJwihMPeE+UjRDIW6iprD3Bosyvt9JhRyKUEzqe1KDg2oAiJJgm1XyrhFa3xlyRYi7+9m
- GYsC0mCxeNXgP4MFHmHCE88g0/X1tkcUsbA/T30f4N1RvZqLrGsXv5/SAsbE7vc2KQ3QCu5MB
- 652VLbOPxVYq8Y=
+X-UI-Out-Filterresults: notjunk:1;V03:K0:p0bBXSMhw48=:pR4PKOamJEV9esR7U1N/Ac
+ k9OSI1+vFb3GFbkolnEtJUAJ3bhHAX2W/CR7xEMOh+4V5MIysIByCFpMAcOH9bGl6gmtCrlxG
+ HrFgVdDmmTvvzNi+WxHsCDfpE678EcJ3Xs7Wjp1ty9S2tr4FMx4V4+TEafpV06RiriCfTN5xZ
+ P+XXG39LhB0usd+GN3CLw7fCt93KEBCP1zdUlAVrC8nerl/WC2fmQSGMWrsvEweKKK7/7AGpK
+ ZPuz4LcLj4olHRGjdMDMwO8XKaOhA46w0AoPv7IPxx6IKZ+Se668Ypjm9OSAe+ikInliFUCOI
+ 8oW81u1v5jGpezwOgAlNtjag9QuLgNrQquEMNkRBVV+nOzBqFoXTJqexe9huxfZxQ2bO7UhHj
+ gLcP4reRZsnxHtZ/mgrD7mORoF95h2o1v84xn7v2Kwt/oGr4DnQLRupzwxAf5YhYSvuL2xSKy
+ rnanLzasj1AaTNpVJpVcqULFbH9guRIJ0XCmx/7wa7u5JwCUh+b4D703DHxVXTVGCGr9BQYNP
+ s+YkpX/W9dIfMdrM6vhJN36P1lmYen2sv7LRw2t59Uf3E6OoozHewAqz6CjjXD+P+m47EGyy3
+ 4tBjFfVYcquppLiHOUWpnlnSlGLSvCdX03lnNLgq6tcnf5eHm34XYdAtuAj2DdSQfBP+ouqef
+ V5Zx1IG7eAr341zwPTx9mcS146L6/4Yv3ztZ4QJ8Ne/FovSvAJkyVwobhQ5WcaAG/IirVZWfa
+ uSGonTbIKJ3dfdkAaeWIGpq7+OFGpgCipENmNuTponND5rWcEpLgAIEtnBK18ZjddyFefDLvg
+ +Sm7bHGmtNuonXKw8FOhwlqvjHuDyEDpfrTNlOtfzpBiyeP/mSliAVmStQUL0e/MdIGUIjDVr
+ sD1Ie6LGJ3pLpUlKSOg/hDFEivhbRfwa3c/JWk3OyiYReHoGRNN1Coieo6LTvxr/JPYqztAiF
+ x6+/QFrkIW+WMBjco4RW3akDMuHQLYSjIn4ZYWEnV+fSfZDaTgO2y1jLnt0AqZ3z6xrgABDr6
+ 2xw7JfZisu5Z/EuFLpjUdBFmgbKhwvsSIvc3CUVbCdx1H35PafIZfKExVU/AFcqrJs0MCv2rl
+ mOSsEDlEFmgh0I=
 Content-Transfer-Encoding: quoted-printable
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Starting with RPi 4 this is the first board, which doesn't use sdhost
-as default SD interface. So the MMC interfaces should be defined finally a=
-t
-board level. Since all boards using sdhci already does this, we can drop t=
-he
-pinctrl part from bcm2835-rpi.dtsi.
+Now with the varity of several RPi boards, the memory should be defined
+at board level. This step gives us the chance to fix the memory size
+of the RPi 1 B+, Zero (incl. W) and Compute Module 1.
 
 Signed-off-by: Stefan Wahren <wahrenst@gmx.net>
 =2D--
- arch/arm/boot/dts/bcm2835-rpi-a-plus.dts  |  7 +++++++
- arch/arm/boot/dts/bcm2835-rpi-a.dts       |  7 +++++++
- arch/arm/boot/dts/bcm2835-rpi-b-plus.dts  |  7 +++++++
- arch/arm/boot/dts/bcm2835-rpi-b-rev2.dts  |  7 +++++++
- arch/arm/boot/dts/bcm2835-rpi-b.dts       |  7 +++++++
- arch/arm/boot/dts/bcm2835-rpi-cm1-io1.dts |  7 +++++++
- arch/arm/boot/dts/bcm2835-rpi-zero-w.dts  |  7 +++++++
- arch/arm/boot/dts/bcm2835-rpi-zero.dts    |  7 +++++++
- arch/arm/boot/dts/bcm2835-rpi.dtsi        | 13 -------------
- arch/arm/boot/dts/bcm2836-rpi-2-b.dts     |  7 +++++++
- arch/arm/boot/dts/bcm2837-rpi-cm3-io3.dts |  7 +++++++
- 11 files changed, 70 insertions(+), 13 deletions(-)
+ arch/arm/boot/dts/bcm2835-rpi-a-plus.dts   | 5 +++++
+ arch/arm/boot/dts/bcm2835-rpi-a.dts        | 5 +++++
+ arch/arm/boot/dts/bcm2835-rpi-b-plus.dts   | 5 +++++
+ arch/arm/boot/dts/bcm2835-rpi-b-rev2.dts   | 5 +++++
+ arch/arm/boot/dts/bcm2835-rpi-b.dts        | 5 +++++
+ arch/arm/boot/dts/bcm2835-rpi-cm1.dtsi     | 5 +++++
+ arch/arm/boot/dts/bcm2835-rpi-zero-w.dts   | 5 +++++
+ arch/arm/boot/dts/bcm2835-rpi-zero.dts     | 5 +++++
+ arch/arm/boot/dts/bcm2835-rpi.dtsi         | 5 -----
+ arch/arm/boot/dts/bcm2836-rpi-2-b.dts      | 1 +
+ arch/arm/boot/dts/bcm2837-rpi-3-a-plus.dts | 1 +
+ arch/arm/boot/dts/bcm2837-rpi-3-b-plus.dts | 1 +
+ arch/arm/boot/dts/bcm2837-rpi-3-b.dts      | 1 +
+ arch/arm/boot/dts/bcm2837-rpi-cm3.dtsi     | 1 +
+ 14 files changed, 45 insertions(+), 5 deletions(-)
 
 diff --git a/arch/arm/boot/dts/bcm2835-rpi-a-plus.dts b/arch/arm/boot/dts/=
 bcm2835-rpi-a-plus.dts
-index db8a601..cb3f08d 100644
+index cb3f08d..5b42e9a 100644
 =2D-- a/arch/arm/boot/dts/bcm2835-rpi-a-plus.dts
 +++ b/arch/arm/boot/dts/bcm2835-rpi-a-plus.dts
-@@ -107,6 +107,13 @@
- 	status =3D "okay";
- };
+@@ -8,6 +8,11 @@
+ 	compatible =3D "raspberrypi,model-a-plus", "brcm,bcm2835";
+ 	model =3D "Raspberry Pi Model A+";
 
-+&sdhost {
-+	pinctrl-names =3D "default";
-+	pinctrl-0 =3D <&sdhost_gpio48>;
-+	bus-width =3D <4>;
-+	status =3D "okay";
-+};
++	memory@0 {
++		device_type =3D "memory";
++		reg =3D <0 0x10000000>;
++	};
 +
- &uart0 {
- 	pinctrl-names =3D "default";
- 	pinctrl-0 =3D <&uart0_gpio14>;
+ 	leds {
+ 		act {
+ 			gpios =3D <&gpio 47 GPIO_ACTIVE_HIGH>;
 diff --git a/arch/arm/boot/dts/bcm2835-rpi-a.dts b/arch/arm/boot/dts/bcm28=
 35-rpi-a.dts
-index 067d1f0..2d167d9 100644
+index 2d167d9..b716214 100644
 =2D-- a/arch/arm/boot/dts/bcm2835-rpi-a.dts
 +++ b/arch/arm/boot/dts/bcm2835-rpi-a.dts
-@@ -102,6 +102,13 @@
- 	status =3D "okay";
- };
+@@ -8,6 +8,11 @@
+ 	compatible =3D "raspberrypi,model-a", "brcm,bcm2835";
+ 	model =3D "Raspberry Pi Model A";
 
-+&sdhost {
-+	pinctrl-names =3D "default";
-+	pinctrl-0 =3D <&sdhost_gpio48>;
-+	bus-width =3D <4>;
-+	status =3D "okay";
-+};
++	memory@0 {
++		device_type =3D "memory";
++		reg =3D <0 0x10000000>;
++	};
 +
- &uart0 {
- 	pinctrl-names =3D "default";
- 	pinctrl-0 =3D <&uart0_gpio14>;
+ 	leds {
+ 		act {
+ 			gpios =3D <&gpio 16 GPIO_ACTIVE_LOW>;
 diff --git a/arch/arm/boot/dts/bcm2835-rpi-b-plus.dts b/arch/arm/boot/dts/=
 bcm2835-rpi-b-plus.dts
-index 1e40d67..83a3a60 100644
+index 83a3a60..3318082 100644
 =2D-- a/arch/arm/boot/dts/bcm2835-rpi-b-plus.dts
 +++ b/arch/arm/boot/dts/bcm2835-rpi-b-plus.dts
-@@ -109,6 +109,13 @@
- 	status =3D "okay";
- };
+@@ -9,6 +9,11 @@
+ 	compatible =3D "raspberrypi,model-b-plus", "brcm,bcm2835";
+ 	model =3D "Raspberry Pi Model B+";
 
-+&sdhost {
-+	pinctrl-names =3D "default";
-+	pinctrl-0 =3D <&sdhost_gpio48>;
-+	bus-width =3D <4>;
-+	status =3D "okay";
-+};
++	memory@0 {
++		device_type =3D "memory";
++		reg =3D <0 0x20000000>;
++	};
 +
- &uart0 {
- 	pinctrl-names =3D "default";
- 	pinctrl-0 =3D <&uart0_gpio14>;
+ 	leds {
+ 		act {
+ 			gpios =3D <&gpio 47 GPIO_ACTIVE_HIGH>;
 diff --git a/arch/arm/boot/dts/bcm2835-rpi-b-rev2.dts b/arch/arm/boot/dts/=
 bcm2835-rpi-b-rev2.dts
-index 28e7513..b6b4fea 100644
+index b6b4fea..97d7eb5 100644
 =2D-- a/arch/arm/boot/dts/bcm2835-rpi-b-rev2.dts
 +++ b/arch/arm/boot/dts/bcm2835-rpi-b-rev2.dts
-@@ -102,6 +102,13 @@
- 	status =3D "okay";
- };
+@@ -9,6 +9,11 @@
+ 	compatible =3D "raspberrypi,model-b-rev2", "brcm,bcm2835";
+ 	model =3D "Raspberry Pi Model B rev2";
 
-+&sdhost {
-+	pinctrl-names =3D "default";
-+	pinctrl-0 =3D <&sdhost_gpio48>;
-+	bus-width =3D <4>;
-+	status =3D "okay";
-+};
++	memory@0 {
++		device_type =3D "memory";
++		reg =3D <0 0x10000000>;
++	};
 +
- &uart0 {
- 	pinctrl-names =3D "default";
- 	pinctrl-0 =3D <&uart0_gpio14>;
+ 	leds {
+ 		act {
+ 			gpios =3D <&gpio 16 GPIO_ACTIVE_LOW>;
 diff --git a/arch/arm/boot/dts/bcm2835-rpi-b.dts b/arch/arm/boot/dts/bcm28=
 35-rpi-b.dts
-index 31ff602..b5782fa 100644
+index b5782fa..37e02a1 100644
 =2D-- a/arch/arm/boot/dts/bcm2835-rpi-b.dts
 +++ b/arch/arm/boot/dts/bcm2835-rpi-b.dts
-@@ -97,6 +97,13 @@
- 	status =3D "okay";
- };
+@@ -9,6 +9,11 @@
+ 	compatible =3D "raspberrypi,model-b", "brcm,bcm2835";
+ 	model =3D "Raspberry Pi Model B";
 
-+&sdhost {
-+	pinctrl-names =3D "default";
-+	pinctrl-0 =3D <&sdhost_gpio48>;
-+	bus-width =3D <4>;
-+	status =3D "okay";
-+};
++	memory@0 {
++		device_type =3D "memory";
++		reg =3D <0 0x10000000>;
++	};
 +
- &uart0 {
- 	pinctrl-names =3D "default";
- 	pinctrl-0 =3D <&uart0_gpio14>;
-diff --git a/arch/arm/boot/dts/bcm2835-rpi-cm1-io1.dts b/arch/arm/boot/dts=
-/bcm2835-rpi-cm1-io1.dts
-index 4764a25..41afea4 100644
-=2D-- a/arch/arm/boot/dts/bcm2835-rpi-cm1-io1.dts
-+++ b/arch/arm/boot/dts/bcm2835-rpi-cm1-io1.dts
-@@ -81,6 +81,13 @@
- 	hpd-gpios =3D <&gpio 46 GPIO_ACTIVE_LOW>;
- };
+ 	leds {
+ 		act {
+ 			gpios =3D <&gpio 16 GPIO_ACTIVE_LOW>;
+diff --git a/arch/arm/boot/dts/bcm2835-rpi-cm1.dtsi b/arch/arm/boot/dts/bc=
+m2835-rpi-cm1.dtsi
+index ef22c2d..58059c2 100644
+=2D-- a/arch/arm/boot/dts/bcm2835-rpi-cm1.dtsi
++++ b/arch/arm/boot/dts/bcm2835-rpi-cm1.dtsi
+@@ -10,6 +10,11 @@
+ 		};
+ 	};
 
-+&sdhost {
-+	pinctrl-names =3D "default";
-+	pinctrl-0 =3D <&sdhost_gpio48>;
-+	bus-width =3D <4>;
-+	status =3D "okay";
-+};
++	memory@0 {
++		device_type =3D "memory";
++		reg =3D <0 0x20000000>;
++	};
 +
- &uart0 {
- 	pinctrl-names =3D "default";
- 	pinctrl-0 =3D <&uart0_gpio14>;
+ 	reg_3v3: fixed-regulator {
+ 		compatible =3D "regulator-fixed";
+ 		regulator-name =3D "3V3";
 diff --git a/arch/arm/boot/dts/bcm2835-rpi-zero-w.dts b/arch/arm/boot/dts/=
 bcm2835-rpi-zero-w.dts
-index ba0167d..5ecc403 100644
+index 5ecc403..f38f388 100644
 =2D-- a/arch/arm/boot/dts/bcm2835-rpi-zero-w.dts
 +++ b/arch/arm/boot/dts/bcm2835-rpi-zero-w.dts
-@@ -116,6 +116,13 @@
- 	};
- };
+@@ -12,6 +12,11 @@
+ 	compatible =3D "raspberrypi,model-zero-w", "brcm,bcm2835";
+ 	model =3D "Raspberry Pi Zero W";
 
-+&sdhost {
-+	pinctrl-names =3D "default";
-+	pinctrl-0 =3D <&sdhost_gpio48>;
-+	bus-width =3D <4>;
-+	status =3D "okay";
-+};
++	memory@0 {
++		device_type =3D "memory";
++		reg =3D <0 0x20000000>;
++	};
 +
- &uart0 {
- 	pinctrl-names =3D "default";
- 	pinctrl-0 =3D <&uart0_gpio32 &uart0_ctsrts_gpio30>;
+ 	chosen {
+ 		/* 8250 auxiliary UART instead of pl011 */
+ 		stdout-path =3D "serial1:115200n8";
 diff --git a/arch/arm/boot/dts/bcm2835-rpi-zero.dts b/arch/arm/boot/dts/bc=
 m2835-rpi-zero.dts
-index 3b35a8a..84c7035 100644
+index 84c7035..5fd0686 100644
 =2D-- a/arch/arm/boot/dts/bcm2835-rpi-zero.dts
 +++ b/arch/arm/boot/dts/bcm2835-rpi-zero.dts
-@@ -98,6 +98,13 @@
- 	hpd-gpios =3D <&gpio 46 GPIO_ACTIVE_LOW>;
- };
+@@ -12,6 +12,11 @@
+ 	compatible =3D "raspberrypi,model-zero", "brcm,bcm2835";
+ 	model =3D "Raspberry Pi Zero";
 
-+&sdhost {
-+	pinctrl-names =3D "default";
-+	pinctrl-0 =3D <&sdhost_gpio48>;
-+	bus-width =3D <4>;
-+	status =3D "okay";
-+};
++	memory@0 {
++		device_type =3D "memory";
++		reg =3D <0 0x20000000>;
++	};
 +
- &uart0 {
- 	pinctrl-names =3D "default";
- 	pinctrl-0 =3D <&uart0_gpio14>;
+ 	leds {
+ 		act {
+ 			gpios =3D <&gpio 47 GPIO_ACTIVE_HIGH>;
 diff --git a/arch/arm/boot/dts/bcm2835-rpi.dtsi b/arch/arm/boot/dts/bcm283=
 5-rpi.dtsi
-index 715d50c..40bac52e 100644
+index 40bac52e..f5125b7 100644
 =2D-- a/arch/arm/boot/dts/bcm2835-rpi.dtsi
 +++ b/arch/arm/boot/dts/bcm2835-rpi.dtsi
-@@ -68,19 +68,6 @@
- 	status =3D "okay";
- };
+@@ -1,11 +1,6 @@
+ #include <dt-bindings/power/raspberrypi-power.h>
 
--&sdhci {
--	pinctrl-names =3D "default";
--	pinctrl-0 =3D <&emmc_gpio48>;
--	bus-width =3D <4>;
--};
+ / {
+-	memory@0 {
+-		device_type =3D "memory";
+-		reg =3D <0 0x10000000>;
+-	};
 -
--&sdhost {
--	pinctrl-names =3D "default";
--	pinctrl-0 =3D <&sdhost_gpio48>;
--	status =3D "okay";
--	bus-width =3D <4>;
--};
--
- &usb {
- 	power-domains =3D <&power RPI_POWER_DOMAIN_USB>;
- };
+ 	leds {
+ 		compatible =3D "gpio-leds";
+
 diff --git a/arch/arm/boot/dts/bcm2836-rpi-2-b.dts b/arch/arm/boot/dts/bcm=
 2836-rpi-2-b.dts
-index 7b4e651..f97ec95 100644
+index f97ec95..6a89999 100644
 =2D-- a/arch/arm/boot/dts/bcm2836-rpi-2-b.dts
 +++ b/arch/arm/boot/dts/bcm2836-rpi-2-b.dts
-@@ -113,6 +113,13 @@
- 	status =3D "okay";
- };
+@@ -10,6 +10,7 @@
+ 	model =3D "Raspberry Pi 2 Model B";
 
-+&sdhost {
-+	pinctrl-names =3D "default";
-+	pinctrl-0 =3D <&sdhost_gpio48>;
-+	bus-width =3D <4>;
-+	status =3D "okay";
-+};
-+
- &uart0 {
- 	pinctrl-names =3D "default";
- 	pinctrl-0 =3D <&uart0_gpio14>;
-diff --git a/arch/arm/boot/dts/bcm2837-rpi-cm3-io3.dts b/arch/arm/boot/dts=
-/bcm2837-rpi-cm3-io3.dts
-index 6c8233a..433e306 100644
-=2D-- a/arch/arm/boot/dts/bcm2837-rpi-cm3-io3.dts
-+++ b/arch/arm/boot/dts/bcm2837-rpi-cm3-io3.dts
-@@ -80,6 +80,13 @@
- 	hpd-gpios =3D <&expgpio 1 GPIO_ACTIVE_LOW>;
- };
+ 	memory@0 {
++		device_type =3D "memory";
+ 		reg =3D <0 0x40000000>;
+ 	};
 
-+&sdhost {
-+	pinctrl-names =3D "default";
-+	pinctrl-0 =3D <&sdhost_gpio48>;
-+	bus-width =3D <4>;
-+	status =3D "okay";
-+};
-+
- &uart0 {
- 	pinctrl-names =3D "default";
- 	pinctrl-0 =3D <&uart0_gpio14>;
+diff --git a/arch/arm/boot/dts/bcm2837-rpi-3-a-plus.dts b/arch/arm/boot/dt=
+s/bcm2837-rpi-3-a-plus.dts
+index 7f4437a..0e29aaa 100644
+=2D-- a/arch/arm/boot/dts/bcm2837-rpi-3-a-plus.dts
++++ b/arch/arm/boot/dts/bcm2837-rpi-3-a-plus.dts
+@@ -14,6 +14,7 @@
+ 	};
+
+ 	memory@0 {
++		device_type =3D "memory";
+ 		reg =3D <0 0x20000000>;
+ 	};
+
+diff --git a/arch/arm/boot/dts/bcm2837-rpi-3-b-plus.dts b/arch/arm/boot/dt=
+s/bcm2837-rpi-3-b-plus.dts
+index c6fa34c..a1487ae 100644
+=2D-- a/arch/arm/boot/dts/bcm2837-rpi-3-b-plus.dts
++++ b/arch/arm/boot/dts/bcm2837-rpi-3-b-plus.dts
+@@ -15,6 +15,7 @@
+ 	};
+
+ 	memory@0 {
++		device_type =3D "memory";
+ 		reg =3D <0 0x40000000>;
+ 	};
+
+diff --git a/arch/arm/boot/dts/bcm2837-rpi-3-b.dts b/arch/arm/boot/dts/bcm=
+2837-rpi-3-b.dts
+index ce71f57..a36bfdb 100644
+=2D-- a/arch/arm/boot/dts/bcm2837-rpi-3-b.dts
++++ b/arch/arm/boot/dts/bcm2837-rpi-3-b.dts
+@@ -15,6 +15,7 @@
+ 	};
+
+ 	memory@0 {
++		device_type =3D "memory";
+ 		reg =3D <0 0x40000000>;
+ 	};
+
+diff --git a/arch/arm/boot/dts/bcm2837-rpi-cm3.dtsi b/arch/arm/boot/dts/bc=
+m2837-rpi-cm3.dtsi
+index 81399b2..7c3cb7e 100644
+=2D-- a/arch/arm/boot/dts/bcm2837-rpi-cm3.dtsi
++++ b/arch/arm/boot/dts/bcm2837-rpi-cm3.dtsi
+@@ -5,6 +5,7 @@
+
+ / {
+ 	memory@0 {
++		device_type =3D "memory";
+ 		reg =3D <0 0x40000000>;
+ 	};
+
 =2D-
 2.7.4
 
