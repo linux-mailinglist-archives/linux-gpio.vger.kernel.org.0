@@ -2,184 +2,85 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id CF9A17054C
-	for <lists+linux-gpio@lfdr.de>; Mon, 22 Jul 2019 18:20:54 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BBE7270661
+	for <lists+linux-gpio@lfdr.de>; Mon, 22 Jul 2019 19:07:24 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728765AbfGVQUs (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 22 Jul 2019 12:20:48 -0400
-Received: from hqemgate16.nvidia.com ([216.228.121.65]:13460 "EHLO
-        hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727743AbfGVQUs (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 22 Jul 2019 12:20:48 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5d35e25c0000>; Mon, 22 Jul 2019 09:20:44 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Mon, 22 Jul 2019 09:20:46 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Mon, 22 Jul 2019 09:20:46 -0700
-Received: from [10.2.164.85] (172.20.13.39) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 22 Jul
- 2019 16:20:44 +0000
-Subject: Re: [PATCH V6 01/21] irqchip: tegra: Do not disable COP IRQ during
- suspend
-To:     Dmitry Osipenko <digetx@gmail.com>,
-        Marc Zyngier <marc.zyngier@arm.com>,
-        <thierry.reding@gmail.com>, <jonathanh@nvidia.com>,
-        <tglx@linutronix.de>, <jason@lakedaemon.net>,
-        <linus.walleij@linaro.org>, <stefan@agner.ch>,
-        <mark.rutland@arm.com>
-CC:     <pdeschrijver@nvidia.com>, <pgaikwad@nvidia.com>,
-        <sboyd@kernel.org>, <linux-clk@vger.kernel.org>,
-        <linux-gpio@vger.kernel.org>, <jckuo@nvidia.com>,
-        <josephl@nvidia.com>, <talho@nvidia.com>,
-        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <mperttunen@nvidia.com>, <spatra@nvidia.com>, <robh+dt@kernel.org>,
-        <devicetree@vger.kernel.org>
-References: <1563738060-30213-1-git-send-email-skomatineni@nvidia.com>
- <1563738060-30213-2-git-send-email-skomatineni@nvidia.com>
- <f6582e43-168e-1b7e-9db8-3d263bc3ba0d@gmail.com>
- <20c1d733-60f5-6375-c03c-639de5e41739@arm.com>
- <0bee8775-756f-adad-4597-8cad53017718@gmail.com>
-From:   Sowjanya Komatineni <skomatineni@nvidia.com>
-Message-ID: <a2ecc3ad-b7e9-9398-d59b-c7d3fbbd10bb@nvidia.com>
-Date:   Mon, 22 Jul 2019 09:21:21 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        id S1730746AbfGVRHX (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 22 Jul 2019 13:07:23 -0400
+Received: from mail-io1-f66.google.com ([209.85.166.66]:44224 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730055AbfGVRHX (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 22 Jul 2019 13:07:23 -0400
+Received: by mail-io1-f66.google.com with SMTP id s7so75449637iob.11;
+        Mon, 22 Jul 2019 10:07:23 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=0TKHVmpYowYp+z8r1gzs39hyeM5llWsZFOmeR/oEPIw=;
+        b=WCT7ypccdr7tTW6UDiQVUDeux9CYtBGplN+h6ZYGl8qJ/2mLkE7ibRllbaVSvfnHS7
+         g1lIFwxZglQvX5HoK7yiU5VhNrBUgZ6Dg5asWEHF7PsoG1deX3vnnV5qozYxaZTBMz2l
+         zv3nGsh1TxyuZRpJMu7KClCPZG0kEwt9WF4Eif7mbHUxrXQF8/Tiejf0wTLzk3GiNaav
+         Xtg84hRjl4yyhnXS1AzSTLvK8MqJ6+KYS8E69o6QVFAcVXOS7P7I2i1H0H3yQv+yxYS7
+         lDjgTg1qkecHOSx9bHp88pFBTwP7df13g7nSYhL+eqtNhIkmjDDLvyFV7oNHUUX2Fogr
+         keLQ==
+X-Gm-Message-State: APjAAAVfYkpi1DK2pCKWQKUlkBECwGZWJQ6qHZ6RoqK6BYpPbsvXx6uX
+        fdgA3FZzIalsZtUkzH3LvA==
+X-Google-Smtp-Source: APXvYqywlOe9Bln+H5VDBcuJ2G9N9BSSNYkN/W6yLk3BvElGQtwQj/aF4fSQmFJDY/Yn5HQE6kkASg==
+X-Received: by 2002:a02:9991:: with SMTP id a17mr46589517jal.1.1563815242458;
+        Mon, 22 Jul 2019 10:07:22 -0700 (PDT)
+Received: from localhost ([64.188.179.254])
+        by smtp.gmail.com with ESMTPSA id e22sm30446659iob.66.2019.07.22.10.07.21
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Mon, 22 Jul 2019 10:07:21 -0700 (PDT)
+Date:   Mon, 22 Jul 2019 11:07:21 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Icenowy Zheng <icenowy@aosc.io>
+Cc:     Maxime Ripard <maxime.ripard@bootlin.com>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-gpio@vger.kernel.org, linux-sunxi@googlegroups.com,
+        Icenowy Zheng <icenowy@aosc.io>
+Subject: Re: [PATCH v4 5/8] clk: sunxi-ng: v3s: add Allwinner V3 support
+Message-ID: <20190722170721.GA6216@bogus>
+References: <20190713034634.44585-1-icenowy@aosc.io>
+ <20190713034634.44585-6-icenowy@aosc.io>
 MIME-Version: 1.0
-In-Reply-To: <0bee8775-756f-adad-4597-8cad53017718@gmail.com>
-X-Originating-IP: [172.20.13.39]
-X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: quoted-printable
-Content-Language: en-US
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1563812444; bh=KoPOkUCxjwGMbG3Gc8WkHlcbvUciHbZClFWJEPeqvKI=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
-         Content-Language;
-        b=ZeKcmgRLqAEbKk/9mE2fo50mf6Mjn37p2pZwD5io4uj4T1brt7Eej/zHrd9sZDgTo
-         amTsFQ/aMMHwPtQQjnII++OF+hGNIwNn2FRRuZJ/Vf8AQ319NYmZbNNA6YGKIF7JhD
-         mm+Cn5O01FtI6GuCqCfVECWL0ds+VnuqIt+ukTiiC0qAU6lK1D6cXFSJn7fK81jICP
-         6k2XJqTj+VQEFI7x4F049l2w3z/2vv6h9ma4Zw6qh9fkkjrfVK/vtwQgvwSVToC1rg
-         avtfIzbPemIRLYP8bnEsT7Re6LOvJZcgdc0lj9GzWO0Mo3tAZOXgOZluQlI0WWDj/2
-         OKz3YiDwVLrCw==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190713034634.44585-6-icenowy@aosc.io>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+On Sat, 13 Jul 2019 11:46:31 +0800, Icenowy Zheng wrote:
+> Allwinner V3 has the same main die with V3s, but with more pins wired.
+> There's a I2S bus on V3 that is not available on V3s.
+> 
+> Add the V3-only peripheral's clocks and reset to the V3s CCU driver,
+> bound to a new V3 compatible string. The driver name is not changed
+> because it's part of the device tree binding (the header file name).
+> 
+> Signed-off-by: Icenowy Zheng <icenowy@aosc.io>
+> ---
+> Changes in v4:
+> - Add the missing MMC2 clock slices.
+> 
+> No changes in v3/v2.
+> 
+>  drivers/clk/sunxi-ng/ccu-sun8i-v3s.c      | 228 +++++++++++++++++++++-
+>  drivers/clk/sunxi-ng/ccu-sun8i-v3s.h      |   2 +-
+>  include/dt-bindings/clock/sun8i-v3s-ccu.h |   4 +
+>  include/dt-bindings/reset/sun8i-v3s-ccu.h |   3 +
+>  4 files changed, 234 insertions(+), 3 deletions(-)
+> 
 
-On 7/22/19 3:57 AM, Dmitry Osipenko wrote:
-> 22.07.2019 13:13, Marc Zyngier =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
->> On 22/07/2019 10:54, Dmitry Osipenko wrote:
->>> 21.07.2019 22:40, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
->>>> Tegra210 platforms use sc7 entry firmware to program Tegra LP0/SC7 ent=
-ry
->>>> sequence and sc7 entry firmware is run from COP/BPMP-Lite.
->>>>
->>>> So, COP/BPMP-Lite still need IRQ function to finish SC7 suspend sequen=
-ce
->>>> for Tegra210.
->>>>
->>>> This patch has fix for leaving the COP IRQ enabled for Tegra210 during
->>>> interrupt controller suspend operation.
->>>>
->>>> Acked-by: Thierry Reding <treding@nvidia.com>
->>>> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
->>>> ---
->>>>   drivers/irqchip/irq-tegra.c | 20 ++++++++++++++++++--
->>>>   1 file changed, 18 insertions(+), 2 deletions(-)
->>>>
->>>> diff --git a/drivers/irqchip/irq-tegra.c b/drivers/irqchip/irq-tegra.c
->>>> index e1f771c72fc4..851f88cef508 100644
->>>> --- a/drivers/irqchip/irq-tegra.c
->>>> +++ b/drivers/irqchip/irq-tegra.c
->>>> @@ -44,6 +44,7 @@ static unsigned int num_ictlrs;
->>>>  =20
->>>>   struct tegra_ictlr_soc {
->>>>   	unsigned int num_ictlrs;
->>>> +	bool supports_sc7;
->>>>   };
->>>>  =20
->>>>   static const struct tegra_ictlr_soc tegra20_ictlr_soc =3D {
->>>> @@ -56,6 +57,7 @@ static const struct tegra_ictlr_soc tegra30_ictlr_so=
-c =3D {
->>>>  =20
->>>>   static const struct tegra_ictlr_soc tegra210_ictlr_soc =3D {
->>>>   	.num_ictlrs =3D 6,
->>>> +	.supports_sc7 =3D true,
->>>>   };
->>>>  =20
->>>>   static const struct of_device_id ictlr_matches[] =3D {
->>>> @@ -67,6 +69,7 @@ static const struct of_device_id ictlr_matches[] =3D=
- {
->>>>  =20
->>>>   struct tegra_ictlr_info {
->>>>   	void __iomem *base[TEGRA_MAX_NUM_ICTLRS];
->>>> +	const struct tegra_ictlr_soc *soc;
->>>>   #ifdef CONFIG_PM_SLEEP
->>>>   	u32 cop_ier[TEGRA_MAX_NUM_ICTLRS];
->>>>   	u32 cop_iep[TEGRA_MAX_NUM_ICTLRS];
->>>> @@ -147,8 +150,20 @@ static int tegra_ictlr_suspend(void)
->>>>   		lic->cop_ier[i] =3D readl_relaxed(ictlr + ICTLR_COP_IER);
->>>>   		lic->cop_iep[i] =3D readl_relaxed(ictlr + ICTLR_COP_IEP_CLASS);
->>>>  =20
->>>> -		/* Disable COP interrupts */
->>>> -		writel_relaxed(~0ul, ictlr + ICTLR_COP_IER_CLR);
->>>> +		/*
->>>> +		 * AVP/COP/BPMP-Lite is the Tegra boot processor.
->>>> +		 *
->>>> +		 * Tegra210 system suspend flow uses sc7entry firmware which
->>>> +		 * is executed by COP/BPMP and it includes disabling COP IRQ,
->>>> +		 * clamping CPU rail, turning off VDD_CPU, and preparing the
->>>> +		 * system to go to SC7/LP0.
->>>> +		 *
->>>> +		 * COP/BPMP wakes up when COP IRQ is triggered and runs
->>>> +		 * sc7entry-firmware. So need to keep COP interrupt enabled.
->>>> +		 */
->>>> +		if (!lic->soc->supports_sc7)
->>>> +			/* Disable COP interrupts if SC7 is not supported */
->>> All Tegra SoCs support SC7, hence the 'supports_sc7' and the comment
->>> doesn't sound correct to me. Something like 'firmware_sc7' should suit
->>> better here.
->> If what you're saying is true, then the whole patch is wrong, and the
->> SC7 property should come from DT.
-> It should be safe to assume that all of existing Tegra210 devices use
-> the firmware for SC7, hence I wouldn't say that the patch is entirely
-> wrong. To me it's not entirely correct.
+Please add Acked-by/Reviewed-by tags when posting new versions. However,
+there's no need to repost patches *only* to add the tags. The upstream
+maintainer will do that for acks received on the version they apply.
 
-Yes, all existing Tegra210 platforms uses sc7 entry firmware for SC7 and=20
-AVP/COP IRQ need to be kept enabled as during suspend ATF triggers IRQ=20
-to COP for SC7 entry fw execution.
-
-
->>>> +			writel_relaxed(~0ul, ictlr + ICTLR_COP_IER_CLR);
->>> Secondly, I'm also not sure why COP interrupts need to be disabled for
->>> pre-T210 at all, since COP is unused. This looks to me like it was
->>> cut-n-pasted from downstream kernel without a good reason and could be
->>> simply removed.
->> Please verify that this is actually the case. Tegra-2 definitely needed
->> some level of poking, and I'm not keen on changing anything there until
->> you (or someone else) has verified it on actual HW (see e307cc8941fc).
-> Tested on Tegra20 and Tegra30, LP1 suspend-resume works perfectly fine
-> with all COP bits removed from the driver.
->
-> AFAIK, the reason why downstream needed that disabling is that it uses
-> proprietary firmware which is running on the COP and that firmware is
-> usually a BLOB audio/video DEC-ENC driver which doesn't cleanup
-> interrupts after itself. That firmware is not applicable for the
-> upstream kernel, hence there is no need to care about it.
->
->> Joseph, can you please shed some light here?
-
-SC7 entry flow uses 3rd party ATF (arm-trusted FW) blob which is the one th=
-at actually loads SC7 entry firmware and triggers IRQ to AVP/COP which caus=
-es COP to wakeup and run SC7 entry FW.
-
-So when SC7 support is enabled, IRQ need to be kept enabled and when SC7 FW=
- starts execution, it will disable COP IRQ.
-
-
+If a tag was not added on purpose, please state why and what changed.
