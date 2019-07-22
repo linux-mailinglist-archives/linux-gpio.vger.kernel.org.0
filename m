@@ -2,51 +2,51 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 84BE16FD2D
-	for <lists+linux-gpio@lfdr.de>; Mon, 22 Jul 2019 11:55:19 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D24B96FD6F
+	for <lists+linux-gpio@lfdr.de>; Mon, 22 Jul 2019 12:12:10 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729587AbfGVJy6 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 22 Jul 2019 05:54:58 -0400
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:42193 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729327AbfGVJy5 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 22 Jul 2019 05:54:57 -0400
-Received: by mail-lj1-f193.google.com with SMTP id t28so36969638lje.9;
-        Mon, 22 Jul 2019 02:54:55 -0700 (PDT)
+        id S1729143AbfGVKMG (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 22 Jul 2019 06:12:06 -0400
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:38678 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726846AbfGVKMF (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 22 Jul 2019 06:12:05 -0400
+Received: by mail-lj1-f194.google.com with SMTP id r9so37018472ljg.5;
+        Mon, 22 Jul 2019 03:12:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=subject:to:cc:references:from:message-id:date:user-agent
          :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=0Bz0B3znRkzN1aaFEIYtkZkLNv7SC5uYBJx9GcgvIbo=;
-        b=VyEAdJ9u8WWneLydpX8Bd+0pO+roYUg07OcNb8qu5Sg4AabJ+sNVtDsHffSGPA3OYD
-         Gx95JME7Xf4Wx7Cz8UB1JwqqFAoPRdshuJwIAnHk/vFHgI3/1KYIJPRqRbHIffR4DlcO
-         Vm+T4KP2K1ZRuR3RWltbC53T0WbdxvZB5po7/FJ7HnWJX0b8Bgskb8ew4NimOJRndFmD
-         BrVygFj2+LSmBndycp1HRHUKjqyrhnnLLQnhG65IjxQE+vR5YnC5bNAql0iV6p/EnGNf
-         5qA22Yi4T+YoYLTiWXwhQc2fdbIk5Ti7wqXr1LpnVOWzSaq92Eyy/L7f4/ScdkJ7BrS/
-         T1SA==
+        bh=RjdfovW3RHoFfEQZVfWIAkagwO9INai7vl2K1tgY6dU=;
+        b=Ry9pFjl7mELzYNNqBO1IT08fXTWooiRV/vaqzmeCAQ0f8+zInO9tqPKSYodHRPuVKx
+         YzZWuH38d6Hhzf/7yuUACKGZCOTl3QAyZdd++I132dcqAq66nb9dw1fY7LCgf94d/LUZ
+         JRAdU8mjBuNgbPuh4YTxG0rRnVmE2TGqgy+iRoa83uwLQMZE5d6eh4FEGws++HNmiRng
+         yAFpg8PMeDIomcigQmEhmnYc/eAVLXukdQrJ4uag3Ejbxjp1qVqUfgxsvBmeQIW5xVWN
+         +rIDtwxwm5/ACGtJtKo4iqv0M13Z/qPV9NKy5mSHYLtKB4CLbMiaaQB2mQHFp4IZYkmt
+         lVKA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=0Bz0B3znRkzN1aaFEIYtkZkLNv7SC5uYBJx9GcgvIbo=;
-        b=EljAupdm+n52dU8C6eIkdLs7ZEGZ38by46gfvYY6ArE3AqsbJc51AtYMYZdOWa38y5
-         5gAuzUXwwk/IazWHgltzMGreORWeoZ+uXMshqWeucLs6eF9J7y9m53ddZbLGn8lQn0yH
-         i37P4zqMBJI61uJv1IX4VkCElUim2m1oJy3cgBgtymWwuHi9XHgTwzRpn8sXW+CJVxjp
-         dXG8uZ1oAkB7+hHLr1jMdia2iFRCcAPrbfF02YIyNoVxgrBqD6NION4KOvYBg8+vfgCM
-         bVDlMVHeMYDawoBzC673Q2s1Ha6zfJyGyQq47XgakY4u99cfELzvoJbuiu6nP7JsYT0q
-         5k+Q==
-X-Gm-Message-State: APjAAAXbScJNNz6tsDcGp03rh4MoNO7I2jIuYg8aD+LQFn6S2jtnBFQA
-        O2BL/HXlztv54lN47QO93m9iIzTp
-X-Google-Smtp-Source: APXvYqxY/YvLFYLne+VP2QqRsaaLYHKAFFp28j2d6BRsG1OoG7yHU03akGcUAWdgtDmSUHqQXfPk3Q==
-X-Received: by 2002:a2e:8007:: with SMTP id j7mr35985709ljg.191.1563789294111;
-        Mon, 22 Jul 2019 02:54:54 -0700 (PDT)
+        bh=RjdfovW3RHoFfEQZVfWIAkagwO9INai7vl2K1tgY6dU=;
+        b=KuvQmCwXuhe5bvn5X/9DhG/GhseUCBzJU5i/wghzP4ZPgmeTd3Y5Y+vc9mr20wOA7C
+         oZt+UCLIgKL6jnlXlA1kAO00lbAhYEdNWVcmUlYjME9zeWMLn8r6/GWb1PugsWPrFjV8
+         DO6wgwdvJW/9V72TfSCIBYBNP0qusCzCQ881WOl3ZYYJwBudiTANE/K9PXQUqgvjQFyv
+         ARasX/sVouvTOJSW3SyOa1d5WhMZ3O8tOnbV213Qz58u+IB8oUUgTJvrkJFXEfF5xXwm
+         XrStDOhRrI4Nhanct0R8DEXvsd2i682PY3ES8umUkLeST+zeYdtcmTQKVEHGzxZ8gKQE
+         H/Vg==
+X-Gm-Message-State: APjAAAUuev2v8COADW7/pzEStAuBL611Jy0bSR+eWCAZRzkxnubN3a+a
+        zhG5feiz2QUlBwDCGeiz3ZPVC8li
+X-Google-Smtp-Source: APXvYqz11iKxwnCtLwIZ3UTOrjhnKBtVkUcrvXm4WVqWHxYhLUxPzuv5GbwR71unpR5xAOLwKlJwkA==
+X-Received: by 2002:a2e:2d12:: with SMTP id t18mr18767228ljt.175.1563790322657;
+        Mon, 22 Jul 2019 03:12:02 -0700 (PDT)
 Received: from [192.168.2.145] (ppp91-78-220-99.pppoe.mtu-net.ru. [91.78.220.99])
-        by smtp.googlemail.com with ESMTPSA id c30sm5992003lfp.70.2019.07.22.02.54.52
+        by smtp.googlemail.com with ESMTPSA id y2sm7442646ljj.40.2019.07.22.03.12.01
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 22 Jul 2019 02:54:53 -0700 (PDT)
-Subject: Re: [PATCH V6 01/21] irqchip: tegra: Do not disable COP IRQ during
- suspend
+        Mon, 22 Jul 2019 03:12:02 -0700 (PDT)
+Subject: Re: [PATCH V6 07/21] clk: tegra: Support for OSC context save and
+ restore
 To:     Sowjanya Komatineni <skomatineni@nvidia.com>,
         thierry.reding@gmail.com, jonathanh@nvidia.com, tglx@linutronix.de,
         jason@lakedaemon.net, marc.zyngier@arm.com,
@@ -58,14 +58,14 @@ Cc:     pdeschrijver@nvidia.com, pgaikwad@nvidia.com, sboyd@kernel.org,
         mperttunen@nvidia.com, spatra@nvidia.com, robh+dt@kernel.org,
         devicetree@vger.kernel.org
 References: <1563738060-30213-1-git-send-email-skomatineni@nvidia.com>
- <1563738060-30213-2-git-send-email-skomatineni@nvidia.com>
+ <1563738060-30213-8-git-send-email-skomatineni@nvidia.com>
 From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <f6582e43-168e-1b7e-9db8-3d263bc3ba0d@gmail.com>
-Date:   Mon, 22 Jul 2019 12:54:51 +0300
+Message-ID: <5d521102-83a5-ff5d-2301-4c6669bd7327@gmail.com>
+Date:   Mon, 22 Jul 2019 13:12:00 +0300
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.7.2
 MIME-Version: 1.0
-In-Reply-To: <1563738060-30213-2-git-send-email-skomatineni@nvidia.com>
+In-Reply-To: <1563738060-30213-8-git-send-email-skomatineni@nvidia.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 8bit
@@ -75,89 +75,72 @@ List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
 21.07.2019 22:40, Sowjanya Komatineni пишет:
-> Tegra210 platforms use sc7 entry firmware to program Tegra LP0/SC7 entry
-> sequence and sc7 entry firmware is run from COP/BPMP-Lite.
+> X-NVConfidentiality: public
+
+What's that?
+
+> This patch adds support for saving OSC clock frequency and the
+> drive-strength during OSC clock init and creates an API to restore
+> OSC control register value from the saved context.
 > 
-> So, COP/BPMP-Lite still need IRQ function to finish SC7 suspend sequence
-> for Tegra210.
-> 
-> This patch has fix for leaving the COP IRQ enabled for Tegra210 during
-> interrupt controller suspend operation.
+> This API is invoked by Tegra210 clock driver during system resume
+> to restore the  OSC clock settings.
 > 
 > Acked-by: Thierry Reding <treding@nvidia.com>
 > Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
 > ---
->  drivers/irqchip/irq-tegra.c | 20 ++++++++++++++++++--
->  1 file changed, 18 insertions(+), 2 deletions(-)
+>  drivers/clk/tegra/clk-tegra-fixed.c | 15 +++++++++++++++
+>  drivers/clk/tegra/clk.h             |  1 +
+>  2 files changed, 16 insertions(+)
 > 
-> diff --git a/drivers/irqchip/irq-tegra.c b/drivers/irqchip/irq-tegra.c
-> index e1f771c72fc4..851f88cef508 100644
-> --- a/drivers/irqchip/irq-tegra.c
-> +++ b/drivers/irqchip/irq-tegra.c
-> @@ -44,6 +44,7 @@ static unsigned int num_ictlrs;
+> diff --git a/drivers/clk/tegra/clk-tegra-fixed.c b/drivers/clk/tegra/clk-tegra-fixed.c
+> index 8d91b2b191cf..7c6c8abfcde6 100644
+> --- a/drivers/clk/tegra/clk-tegra-fixed.c
+> +++ b/drivers/clk/tegra/clk-tegra-fixed.c
+> @@ -17,6 +17,10 @@
+>  #define OSC_CTRL			0x50
+>  #define OSC_CTRL_OSC_FREQ_SHIFT		28
+>  #define OSC_CTRL_PLL_REF_DIV_SHIFT	26
+> +#define OSC_CTRL_MASK			(0x3f2 |	\
+> +					(0xf << OSC_CTRL_OSC_FREQ_SHIFT))
+> +
+> +static u32 osc_ctrl_ctx;
 >  
->  struct tegra_ictlr_soc {
->  	unsigned int num_ictlrs;
-> +	bool supports_sc7;
->  };
+>  int __init tegra_osc_clk_init(void __iomem *clk_base, struct tegra_clk *clks,
+>  			      unsigned long *input_freqs, unsigned int num,
+> @@ -29,6 +33,7 @@ int __init tegra_osc_clk_init(void __iomem *clk_base, struct tegra_clk *clks,
+>  	unsigned osc_idx;
 >  
->  static const struct tegra_ictlr_soc tegra20_ictlr_soc = {
-> @@ -56,6 +57,7 @@ static const struct tegra_ictlr_soc tegra30_ictlr_soc = {
+>  	val = readl_relaxed(clk_base + OSC_CTRL);
+> +	osc_ctrl_ctx = val & OSC_CTRL_MASK;
+>  	osc_idx = val >> OSC_CTRL_OSC_FREQ_SHIFT;
 >  
->  static const struct tegra_ictlr_soc tegra210_ictlr_soc = {
->  	.num_ictlrs = 6,
-> +	.supports_sc7 = true,
->  };
->  
->  static const struct of_device_id ictlr_matches[] = {
-> @@ -67,6 +69,7 @@ static const struct of_device_id ictlr_matches[] = {
->  
->  struct tegra_ictlr_info {
->  	void __iomem *base[TEGRA_MAX_NUM_ICTLRS];
-> +	const struct tegra_ictlr_soc *soc;
->  #ifdef CONFIG_PM_SLEEP
->  	u32 cop_ier[TEGRA_MAX_NUM_ICTLRS];
->  	u32 cop_iep[TEGRA_MAX_NUM_ICTLRS];
-> @@ -147,8 +150,20 @@ static int tegra_ictlr_suspend(void)
->  		lic->cop_ier[i] = readl_relaxed(ictlr + ICTLR_COP_IER);
->  		lic->cop_iep[i] = readl_relaxed(ictlr + ICTLR_COP_IEP_CLASS);
->  
-> -		/* Disable COP interrupts */
-> -		writel_relaxed(~0ul, ictlr + ICTLR_COP_IER_CLR);
-> +		/*
-> +		 * AVP/COP/BPMP-Lite is the Tegra boot processor.
-> +		 *
-> +		 * Tegra210 system suspend flow uses sc7entry firmware which
-> +		 * is executed by COP/BPMP and it includes disabling COP IRQ,
-> +		 * clamping CPU rail, turning off VDD_CPU, and preparing the
-> +		 * system to go to SC7/LP0.
-> +		 *
-> +		 * COP/BPMP wakes up when COP IRQ is triggered and runs
-> +		 * sc7entry-firmware. So need to keep COP interrupt enabled.
-> +		 */
-> +		if (!lic->soc->supports_sc7)
-> +			/* Disable COP interrupts if SC7 is not supported */
-
-All Tegra SoCs support SC7, hence the 'supports_sc7' and the comment
-doesn't sound correct to me. Something like 'firmware_sc7' should suit
-better here.
-
-> +			writel_relaxed(~0ul, ictlr + ICTLR_COP_IER_CLR);
-
-Secondly, I'm also not sure why COP interrupts need to be disabled for
-pre-T210 at all, since COP is unused. This looks to me like it was
-cut-n-pasted from downstream kernel without a good reason and could be
-simply removed.
-
->  		/* Disable CPU interrupts */
->  		writel_relaxed(~0ul, ictlr + ICTLR_CPU_IER_CLR);
-> @@ -339,6 +354,7 @@ static int __init tegra_ictlr_init(struct device_node *node,
->  		goto out_unmap;
+>  	if (osc_idx < num)
+> @@ -96,3 +101,13 @@ void __init tegra_fixed_clk_init(struct tegra_clk *tegra_clks)
+>  		*dt_clk = clk;
 >  	}
+>  }
+> +
+> +void tegra_clk_osc_resume(void __iomem *clk_base)
+> +{
+> +	u32 val;
+> +
+> +	val = readl_relaxed(clk_base + OSC_CTRL) & ~OSC_CTRL_MASK;
+> +	val |= osc_ctrl_ctx;
+> +	writel_relaxed(val, clk_base + OSC_CTRL);
+> +	fence_udelay(2, clk_base);
+> +}
+> diff --git a/drivers/clk/tegra/clk.h b/drivers/clk/tegra/clk.h
+> index 8532f5150091..3cd003b7512a 100644
+> --- a/drivers/clk/tegra/clk.h
+> +++ b/drivers/clk/tegra/clk.h
+> @@ -849,6 +849,7 @@ int tegra_pll_p_div_to_hw(struct tegra_clk_pll *pll, u8 p_div);
+>  int div_frac_get(unsigned long rate, unsigned parent_rate, u8 width,
+>  		 u8 frac_width, u8 flags);
+>  void tegra_clk_sync_state_pll(struct clk_hw *hw);
+> +void tegra_clk_osc_resume(void __iomem *clk_base);
 >  
-> +	lic->soc = soc;
->  	tegra_ictlr_syscore_init();
->  
->  	pr_info("%pOF: %d interrupts forwarded to %pOF\n",
+>  /* Combined read fence with delay */
+>  #define fence_udelay(delay, reg)	\
 > 
 
