@@ -2,28 +2,26 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id ABBDF6F7D6
-	for <lists+linux-gpio@lfdr.de>; Mon, 22 Jul 2019 05:16:58 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6AAC26F7E7
+	for <lists+linux-gpio@lfdr.de>; Mon, 22 Jul 2019 05:22:45 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727733AbfGVDQ5 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sun, 21 Jul 2019 23:16:57 -0400
-Received: from hqemgate15.nvidia.com ([216.228.121.64]:9967 "EHLO
-        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726106AbfGVDQ5 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sun, 21 Jul 2019 23:16:57 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5d352aad0002>; Sun, 21 Jul 2019 20:17:01 -0700
+        id S1727811AbfGVDWh (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sun, 21 Jul 2019 23:22:37 -0400
+Received: from hqemgate16.nvidia.com ([216.228.121.65]:12192 "EHLO
+        hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726749AbfGVDWg (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sun, 21 Jul 2019 23:22:36 -0400
+Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5d352bf80002>; Sun, 21 Jul 2019 20:22:32 -0700
 Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Sun, 21 Jul 2019 20:16:54 -0700
+  by hqpgpgate102.nvidia.com (PGP Universal service);
+  Sun, 21 Jul 2019 20:22:34 -0700
 X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Sun, 21 Jul 2019 20:16:54 -0700
+        by hqpgpgate102.nvidia.com on Sun, 21 Jul 2019 20:22:34 -0700
 Received: from [10.2.164.85] (10.124.1.5) by HQMAIL107.nvidia.com
  (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 22 Jul
- 2019 03:16:52 +0000
-Subject: Re: [PATCH V6 09/21] clk: tegra: clk-super: Fix to enable PLLP
- branches to CPU
-From:   Sowjanya Komatineni <skomatineni@nvidia.com>
+ 2019 03:22:31 +0000
+Subject: Re: [PATCH V6 06/21] clk: tegra: pll: Save and restore pll context
 To:     Dmitry Osipenko <digetx@gmail.com>, <thierry.reding@gmail.com>,
         <jonathanh@nvidia.com>, <tglx@linutronix.de>,
         <jason@lakedaemon.net>, <marc.zyngier@arm.com>,
@@ -37,15 +35,15 @@ CC:     <pdeschrijver@nvidia.com>, <pgaikwad@nvidia.com>,
         <mperttunen@nvidia.com>, <spatra@nvidia.com>, <robh+dt@kernel.org>,
         <devicetree@vger.kernel.org>
 References: <1563738060-30213-1-git-send-email-skomatineni@nvidia.com>
- <1563738060-30213-10-git-send-email-skomatineni@nvidia.com>
- <0c86cd7f-81b5-40c5-6f1e-796e8f13b522@gmail.com>
- <042f4b43-7b9c-533d-2548-d903b34363da@nvidia.com>
-Message-ID: <7933a83c-3208-b551-d41d-70285ae528e3@nvidia.com>
-Date:   Sun, 21 Jul 2019 20:17:14 -0700
+ <1563738060-30213-7-git-send-email-skomatineni@nvidia.com>
+ <e383bf0e-fee7-3aa2-a9af-c0fb36c44219@gmail.com>
+From:   Sowjanya Komatineni <skomatineni@nvidia.com>
+Message-ID: <c0dd29cc-0a97-46ec-8025-23edb931a182@nvidia.com>
+Date:   Sun, 21 Jul 2019 20:22:53 -0700
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.7.2
 MIME-Version: 1.0
-In-Reply-To: <042f4b43-7b9c-533d-2548-d903b34363da@nvidia.com>
+In-Reply-To: <e383bf0e-fee7-3aa2-a9af-c0fb36c44219@gmail.com>
 X-Originating-IP: [10.124.1.5]
 X-ClientProxiedBy: HQMAIL104.nvidia.com (172.18.146.11) To
  HQMAIL107.nvidia.com (172.20.187.13)
@@ -53,174 +51,312 @@ Content-Type: text/plain; charset="utf-8"; format=flowed
 Content-Transfer-Encoding: quoted-printable
 Content-Language: en-US
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1563765421; bh=8sVnQ/4zGuAaXWIz/4isitHwmnSHc4tEP7Z9snt1URk=;
-        h=X-PGP-Universal:Subject:From:To:CC:References:Message-ID:Date:
+        t=1563765752; bh=/IoeqtMMeEx+cCKF2qUcb4A1TnakN6kYpZkZK1qpYsk=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
          User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
          X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
          Content-Language;
-        b=BzYZPPoDHXx+xcoodn4VvtVZ5poLZiwnZS1Ib45d3EgpcZEFsy0UV8Ol16VKGYXN0
-         8+jA8yhktzr5g3cJ+oCZFH+r3HQuqWyvLZV53IVZ4O/ScFqm1m4nYxXrHnpQf9IjHG
-         uQUQ9oQkpp+ema0Q+lYZi2XhiLb6Np03SIS1UyMOLOr9iG6QQ+l+azmDu0UHDZY66A
-         B0ROpjQe46egUBq5wFxTSt9qQqlgqC/rq24jw1FjW/L5T1cxAspamaIm7Va4ObneEh
-         vrsulFdgEecY6RCdeojKQgq5hcc3JQwXrLjQEaloLZU2vS1J32//USmTZNGXURaom8
-         oU8H5kPdGVsxA==
+        b=Y07mo8+dIpX1PXinPE2pcsWsGA/XrQzzcrBtABEGxS/rKGa9KKU0/wbknQFhs5FTW
+         bR6A4/NeC/D6V65Di2chYoCtuWkPHizlGrQKJfq5rcS13eJw1CshQfwz5eYGgKe6bC
+         qK0qimmGwPCmuKR2FVbXloNLwuf4HTZMCjjB6sdH+UzxFO/LXTWU+T3AF/cve1bciA
+         /mtwThcU5dQsLma0O9KpxTQvZHQylH9CG1vsMGp7ipqfvYt+PZ7IHqyB6gwf+lRmQ5
+         nHCxOdHeqVw3LILd+StDuY7PdaWxyfup+mDHvA8vewTTBp0cfx1ywfBX3GSzFBS9r6
+         0fFOGd84qPGoQ==
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
 
-On 7/21/19 3:39 PM, Sowjanya Komatineni wrote:
->
-> On 7/21/19 2:16 PM, Dmitry Osipenko wrote:
->> 21.07.2019 22:40, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
->>> This patch has a fix to enable PLLP branches to CPU before changing
->>> the CPU clusters clock source to PLLP for Gen5 Super clock.
->>>
->>> During system suspend entry and exit, CPU source will be switched
->>> to PLLP and this needs PLLP branches to be enabled to CPU prior to
->>> the switch.
->>>
->>> On system resume, warmboot code enables PLLP branches to CPU and
->>> powers up the CPU with PLLP clock source.
->>>
->>> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
->>> ---
->>> =C2=A0 drivers/clk/tegra/clk-super.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 | 11 +++++++++++
->>> =C2=A0 drivers/clk/tegra/clk-tegra-super-gen4.c |=C2=A0 4 ++--
->>> =C2=A0 drivers/clk/tegra/clk.h=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0 4 +=
-+++
->>> =C2=A0 3 files changed, 17 insertions(+), 2 deletions(-)
->>>
->>> diff --git a/drivers/clk/tegra/clk-super.c=20
->>> b/drivers/clk/tegra/clk-super.c
->>> index 39ef31b46df5..d73c587e4853 100644
->>> --- a/drivers/clk/tegra/clk-super.c
->>> +++ b/drivers/clk/tegra/clk-super.c
->>> @@ -28,6 +28,9 @@
->>> =C2=A0 #define super_state_to_src_shift(m, s) ((m->width * s))
->>> =C2=A0 #define super_state_to_src_mask(m) (((1 << m->width) - 1))
->>> =C2=A0 +#define CCLK_SRC_PLLP_OUT0 4
->>> +#define CCLK_SRC_PLLP_OUT4 5
->>> +
->>> =C2=A0 static u8 clk_super_get_parent(struct clk_hw *hw)
->>> =C2=A0 {
->>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 struct tegra_clk_super_mux *mux =3D to_c=
-lk_super_mux(hw);
->>> @@ -97,6 +100,14 @@ static int clk_super_set_parent(struct clk_hw=20
->>> *hw, u8 index)
->>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (index =3D=3D=
- mux->div2_index)
->>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0 index =3D mux->pllx_index;
->>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 }
->>> +
->>> +=C2=A0=C2=A0=C2=A0 /*
->>> +=C2=A0=C2=A0=C2=A0=C2=A0 * Enable PLLP branches to CPU before selectin=
-g PLLP source
->>> +=C2=A0=C2=A0=C2=A0=C2=A0 */
->>> +=C2=A0=C2=A0=C2=A0 if ((mux->flags & TEGRA_CPU_CLK) &&
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ((index =3D=3D CCLK_SRC_PLL=
-P_OUT0) || (index =3D=3D=20
->>> CCLK_SRC_PLLP_OUT4)))
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 tegra_clk_set_pllp_out_cpu(=
-true);
->> Should somewhere here be tegra_clk_set_pllp_out_cpu(false) when
->> switching from PLLP?
-> PLLP may be used for other CPU clusters.
-
-Though to avoid flag and check needed to make sure other CPU is not=20
-using before disabling PLLP branch to CPU.
-
-But leaving it enabled shouldn't impact much as clock source mux is=20
-after this in design anyway.
-
-But can add as well if its clear that way.
-
->>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 val &=3D ~((super_state_to_src_mask(mux)=
-) << shift);
->>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 val |=3D (index & (super_state_to_src_ma=
-sk(mux))) << shift;
->>> =C2=A0 diff --git a/drivers/clk/tegra/clk-tegra-super-gen4.c=20
->>> b/drivers/clk/tegra/clk-tegra-super-gen4.c
->>> index cdfe7c9697e1..cd208d0eca2a 100644
->>> --- a/drivers/clk/tegra/clk-tegra-super-gen4.c
->>> +++ b/drivers/clk/tegra/clk-tegra-super-gen4.c
->>> @@ -180,7 +180,7 @@ static void __init tegra_super_clk_init(void=20
->>> __iomem *clk_base,
->>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 gen_info->num_ccl=
-k_g_parents,
->>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 CLK_SET_RATE_PARE=
-NT,
->>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 clk_base + CCLKG_=
-BURST_POLICY,
->>> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 0, 4, 8, 0, NULL);
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 TEGRA_CPU_CLK, 4, 8, 0, NULL)=
-;
->>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 } else {
->>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0 clk =3D tegra_clk_register_super_mux("cclk_g",
->>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 gen_info->cclk_g_=
-parents,
->>> @@ -201,7 +201,7 @@ static void __init tegra_super_clk_init(void=20
->>> __iomem *clk_base,
->>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 gen_info->num_ccl=
-k_lp_parents,
->>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 CLK_SET_RATE_PARE=
-NT,
->>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 clk_base + CCLKLP=
-_BURST_POLICY,
->>> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 0, 4, 8, 0, NULL);
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 TEGRA_CPU_CLK, 4, 8, 0, NULL)=
-;
->>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 } else {
->>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0 clk =3D tegra_clk_register_super_mux("cclk_lp",
->>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 gen_info->cclk_lp=
-_parents,
->>> diff --git a/drivers/clk/tegra/clk.h b/drivers/clk/tegra/clk.h
->>> index ac6de3a0b91f..c357b49e49b0 100644
->>> --- a/drivers/clk/tegra/clk.h
->>> +++ b/drivers/clk/tegra/clk.h
->>> @@ -694,6 +694,9 @@ struct clk *tegra_clk_register_periph_data(void=20
->>> __iomem *clk_base,
->>> =C2=A0=C2=A0 * Flags:
->>> =C2=A0=C2=A0 * TEGRA_DIVIDER_2 - LP cluster has additional divider. Thi=
-s flag=20
->>> indicates
->>> =C2=A0=C2=A0 *=C2=A0=C2=A0=C2=A0=C2=A0 that this is LP cluster clock.
->>> + * TEGRA_CPU_CLK - This flag indicates this is CPU cluster clock.=20
->>> To use PLLP
->>> + * for CPU clock source, need to enable PLLP branches to CPU by=20
->>> setting the
->>> + * additional bit PLLP_OUT_CPU for gen5 super clock.
->>> =C2=A0=C2=A0 */
->>> =C2=A0 struct tegra_clk_super_mux {
->>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 struct clk_hw=C2=A0=C2=A0=C2=A0 hw;
->>> @@ -710,6 +713,7 @@ struct tegra_clk_super_mux {
->>> =C2=A0 #define to_clk_super_mux(_hw) container_of(_hw, struct=20
->>> tegra_clk_super_mux, hw)
->>> =C2=A0 =C2=A0 #define TEGRA_DIVIDER_2 BIT(0)
->>> +#define TEGRA_CPU_CLK=C2=A0=C2=A0=C2=A0 BIT(1)
->> I'd name this TEGRA210_CPU_CLK for clarity.
+On 7/21/19 3:21 PM, Dmitry Osipenko wrote:
+> 21.07.2019 22:40, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+>> This patch implements save and restore of PLL context.
 >>
->>> =C2=A0 extern const struct clk_ops tegra_clk_super_ops;
->>> =C2=A0 struct clk *tegra_clk_register_super_mux(const char *name,
->>>
->> Will be better to move the tegra_clk_set_pllp_out_cpu() definition into
->> this patch, otherwise this looks inconsistent for reviewer.
-> ok, Will move to this patch
+>> During system suspend, core power goes off and looses the settings
+>> of the Tegra CAR controller registers.
+>>
+>> So during suspend entry pll rate is stored and on resume it is
+>> restored back along with its state.
+>>
+>> Acked-by: Thierry Reding <treding@nvidia.com>
+>> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
+>> ---
+>>   drivers/clk/tegra/clk-pll.c      | 121 ++++++++++++++++++++++++++++---=
+--------
+>>   drivers/clk/tegra/clk-tegra210.c |   2 +-
+>>   drivers/clk/tegra/clk.h          |  10 +++-
+>>   3 files changed, 99 insertions(+), 34 deletions(-)
+>>
+>> diff --git a/drivers/clk/tegra/clk-pll.c b/drivers/clk/tegra/clk-pll.c
+>> index 1583f5fc992f..f136964e6c44 100644
+>> --- a/drivers/clk/tegra/clk-pll.c
+>> +++ b/drivers/clk/tegra/clk-pll.c
+>> @@ -1008,6 +1008,59 @@ static unsigned long clk_plle_recalc_rate(struct =
+clk_hw *hw,
+>>   	return rate;
+>>   }
+>>  =20
+>> +void tegra_clk_sync_state_pll(struct clk_hw *hw)
+>> +{
+>> +	if (!__clk_get_enable_count(hw->clk))
+>> +		clk_pll_disable(hw);
+>> +	else
+>> +		clk_pll_enable(hw);
+>> +}
+>> +
+>> +static int tegra_clk_pll_save_context(struct clk_hw *hw)
+>> +{
+>> +	struct tegra_clk_pll *pll =3D to_clk_pll(hw);
+>> +	u32 val =3D 0;
+>> +
+>> +	pll->rate =3D clk_hw_get_rate(hw);
+> Again, clk_hw_get_rate() returns cached value. Why do you need to
+> duplicate it?
+true, will remove storing in next version. thanks.
+>> +	if (pll->params->flags & TEGRA_PLLMB)
+>> +		val =3D pll_readl_base(pll);
+>> +	else if (pll->params->flags & TEGRA_PLLRE)
+>> +		val =3D pll_readl_base(pll) & divp_mask_shifted(pll);
+>> +
+>> +	pll->pllbase_ctx =3D val;
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +static void tegra_clk_pll_restore_context(struct clk_hw *hw)
+>> +{
+>> +	struct tegra_clk_pll *pll =3D to_clk_pll(hw);
+>> +	struct clk_hw *parent =3D clk_hw_get_parent(hw);
+>> +	unsigned long parent_rate =3D clk_hw_get_rate(parent);
+>> +	u32 val;
+>> +
+>> +	if (clk_pll_is_enabled(hw))
+>> +		return;
+>> +
+>> +	if (pll->params->flags & TEGRA_PLLMB) {
+>> +		pll_writel_base(pll->pllbase_ctx, pll);
+>> +	} else if (pll->params->flags & TEGRA_PLLRE) {
+>> +		val =3D pll_readl_base(pll);
+>> +		val &=3D ~(divp_mask_shifted(pll));
+>> +		pll_writel_base(pll->pllbase_ctx | val, pll);
+>> +	}
+>> +
+>> +	if (pll->params->set_defaults)
+>> +		pll->params->set_defaults(pll);
+>> +
+>> +	clk_pll_set_rate(hw, pll->rate, parent_rate);
+>> +
+>> +	/* do not sync pllx state here. pllx is sync'd after dfll resume */
+>> +	if (!(pll->params->flags & TEGRA_PLLX))
+>> +		tegra_clk_sync_state_pll(hw);
+>> +}
+>> +
+>>   const struct clk_ops tegra_clk_pll_ops =3D {
+>>   	.is_enabled =3D clk_pll_is_enabled,
+>>   	.enable =3D clk_pll_enable,
+>> @@ -1015,6 +1068,8 @@ const struct clk_ops tegra_clk_pll_ops =3D {
+>>   	.recalc_rate =3D clk_pll_recalc_rate,
+>>   	.round_rate =3D clk_pll_round_rate,
+>>   	.set_rate =3D clk_pll_set_rate,
+>> +	.save_context =3D tegra_clk_pll_save_context,
+>> +	.restore_context =3D tegra_clk_pll_restore_context,
+>>   };
+>>  =20
+>>   const struct clk_ops tegra_clk_plle_ops =3D {
+>> @@ -1802,6 +1857,27 @@ static int clk_pllu_tegra114_enable(struct clk_hw=
+ *hw)
+>>  =20
+>>   	return ret;
+>>   }
+>> +
+>> +static void _clk_plle_tegra_init_parent(struct tegra_clk_pll *pll)
+>> +{
+>> +	u32 val, val_aux;
+>> +
+>> +	/* ensure parent is set to pll_ref */
+>> +	val =3D pll_readl_base(pll);
+>> +	val_aux =3D pll_readl(pll->params->aux_reg, pll);
+>> +
+>> +	if (val & PLL_BASE_ENABLE) {
+>> +		if ((val_aux & PLLE_AUX_PLLRE_SEL) ||
+>> +		    (val_aux & PLLE_AUX_PLLP_SEL))
+>> +			WARN(1, "pll_e enabled with unsupported parent %s\n",
+>> +			     (val_aux & PLLE_AUX_PLLP_SEL) ? "pllp_out0" :
+>> +			     "pll_re_vco");
+>> +	} else {
+>> +		val_aux &=3D ~(PLLE_AUX_PLLRE_SEL | PLLE_AUX_PLLP_SEL);
+>> +		pll_writel(val_aux, pll->params->aux_reg, pll);
+>> +		fence_udelay(1, pll->clk_base);
+>> +	}
+>> +}
+>>   #endif
+>>  =20
+>>   static struct tegra_clk_pll *_tegra_init_pll(void __iomem *clk_base,
+>> @@ -2214,27 +2290,12 @@ struct clk *tegra_clk_register_plle_tegra114(con=
+st char *name,
+>>   {
+>>   	struct tegra_clk_pll *pll;
+>>   	struct clk *clk;
+>> -	u32 val, val_aux;
+>>  =20
+>>   	pll =3D _tegra_init_pll(clk_base, NULL, pll_params, lock);
+>>   	if (IS_ERR(pll))
+>>   		return ERR_CAST(pll);
+>>  =20
+>> -	/* ensure parent is set to pll_re_vco */
+>> -
+>> -	val =3D pll_readl_base(pll);
+>> -	val_aux =3D pll_readl(pll_params->aux_reg, pll);
+>> -
+>> -	if (val & PLL_BASE_ENABLE) {
+>> -		if ((val_aux & PLLE_AUX_PLLRE_SEL) ||
+>> -			(val_aux & PLLE_AUX_PLLP_SEL))
+>> -			WARN(1, "pll_e enabled with unsupported parent %s\n",
+>> -			  (val_aux & PLLE_AUX_PLLP_SEL) ? "pllp_out0" :
+>> -					"pll_re_vco");
+>> -	} else {
+>> -		val_aux &=3D ~(PLLE_AUX_PLLRE_SEL | PLLE_AUX_PLLP_SEL);
+>> -		pll_writel(val_aux, pll_params->aux_reg, pll);
+>> -	}
+>> +	_clk_plle_tegra_init_parent(pll);
+>>  =20
+>>   	clk =3D _tegra_clk_register_pll(pll, name, parent_name, flags,
+>>   				      &tegra_clk_plle_tegra114_ops);
+>> @@ -2276,6 +2337,8 @@ static const struct clk_ops tegra_clk_pllss_ops =
+=3D {
+>>   	.recalc_rate =3D clk_pll_recalc_rate,
+>>   	.round_rate =3D clk_pll_ramp_round_rate,
+>>   	.set_rate =3D clk_pllxc_set_rate,
+>> +	.save_context =3D tegra_clk_pll_save_context,
+>> +	.restore_context =3D tegra_clk_pll_restore_context,
+>>   };
+>>  =20
+>>   struct clk *tegra_clk_register_pllss(const char *name, const char *par=
+ent_name,
+>> @@ -2375,6 +2438,7 @@ struct clk *tegra_clk_register_pllre_tegra210(cons=
+t char *name,
+>>   		pll_params->vco_min =3D pll_params->adjust_vco(pll_params,
+>>   							     parent_rate);
+>>  =20
+>> +	pll_params->flags |=3D TEGRA_PLLRE;
+>>   	pll =3D _tegra_init_pll(clk_base, pmc, pll_params, lock);
+>>   	if (IS_ERR(pll))
+>>   		return ERR_CAST(pll);
+>> @@ -2520,11 +2584,19 @@ static void clk_plle_tegra210_disable(struct clk=
+_hw *hw)
+>>   		spin_unlock_irqrestore(pll->lock, flags);
+>>   }
+>>  =20
+>> +static void tegra_clk_plle_t210_restore_context(struct clk_hw *hw)
+>> +{
+>> +	struct tegra_clk_pll *pll =3D to_clk_pll(hw);
+>> +
+>> +	_clk_plle_tegra_init_parent(pll);
+>> +}
+>> +
+>>   static const struct clk_ops tegra_clk_plle_tegra210_ops =3D {
+>>   	.is_enabled =3D  clk_plle_tegra210_is_enabled,
+>>   	.enable =3D clk_plle_tegra210_enable,
+>>   	.disable =3D clk_plle_tegra210_disable,
+>>   	.recalc_rate =3D clk_pll_recalc_rate,
+>> +	.restore_context =3D tegra_clk_plle_t210_restore_context,
+>>   };
+>>  =20
+>>   struct clk *tegra_clk_register_plle_tegra210(const char *name,
+>> @@ -2535,27 +2607,12 @@ struct clk *tegra_clk_register_plle_tegra210(con=
+st char *name,
+>>   {
+>>   	struct tegra_clk_pll *pll;
+>>   	struct clk *clk;
+>> -	u32 val, val_aux;
+>>  =20
+>>   	pll =3D _tegra_init_pll(clk_base, NULL, pll_params, lock);
+>>   	if (IS_ERR(pll))
+>>   		return ERR_CAST(pll);
+>>  =20
+>> -	/* ensure parent is set to pll_re_vco */
+>> -
+>> -	val =3D pll_readl_base(pll);
+>> -	val_aux =3D pll_readl(pll_params->aux_reg, pll);
+>> -
+>> -	if (val & PLLE_BASE_ENABLE) {
+>> -		if ((val_aux & PLLE_AUX_PLLRE_SEL) ||
+>> -			(val_aux & PLLE_AUX_PLLP_SEL))
+>> -			WARN(1, "pll_e enabled with unsupported parent %s\n",
+>> -			  (val_aux & PLLE_AUX_PLLP_SEL) ? "pllp_out0" :
+>> -					"pll_re_vco");
+>> -	} else {
+>> -		val_aux &=3D ~(PLLE_AUX_PLLRE_SEL | PLLE_AUX_PLLP_SEL);
+>> -		pll_writel(val_aux, pll_params->aux_reg, pll);
+>> -	}
+>> +	_clk_plle_tegra_init_parent(pll);
+>>  =20
+>>   	clk =3D _tegra_clk_register_pll(pll, name, parent_name, flags,
+>>   				      &tegra_clk_plle_tegra210_ops);
+>> diff --git a/drivers/clk/tegra/clk-tegra210.c b/drivers/clk/tegra/clk-te=
+gra210.c
+>> index 4721ee030d1c..58397f93166c 100644
+>> --- a/drivers/clk/tegra/clk-tegra210.c
+>> +++ b/drivers/clk/tegra/clk-tegra210.c
+>> @@ -1602,7 +1602,7 @@ static struct tegra_clk_pll_params pll_x_params =
+=3D {
+>>   	.pdiv_tohw =3D pll_qlin_pdiv_to_hw,
+>>   	.div_nmp =3D &pllx_nmp,
+>>   	.freq_table =3D pll_x_freq_table,
+>> -	.flags =3D TEGRA_PLL_USE_LOCK | TEGRA_PLL_HAS_LOCK_ENABLE,
+>> +	.flags =3D TEGRA_PLL_USE_LOCK | TEGRA_PLL_HAS_LOCK_ENABLE | TEGRA_PLLX=
+,
+>>   	.dyn_ramp =3D tegra210_pllx_dyn_ramp,
+>>   	.set_defaults =3D tegra210_pllx_set_defaults,
+>>   	.calc_rate =3D tegra210_pll_fixed_mdiv_cfg,
+>> diff --git a/drivers/clk/tegra/clk.h b/drivers/clk/tegra/clk.h
+>> index fb29a8c27873..8532f5150091 100644
+>> --- a/drivers/clk/tegra/clk.h
+>> +++ b/drivers/clk/tegra/clk.h
+>> @@ -235,6 +235,8 @@ struct tegra_clk_pll;
+>>    * TEGRA_PLLMB - PLLMB has should be treated similar to PLLM. This
+>>    *     flag indicated that it is PLLMB.
+>>    * TEGRA_PLL_VCO_OUT - Used to indicate that the PLL has a VCO output
+>> + * TEGRA_PLLRE - Used to indicate that it is PLLRE.
+>> + * TEGRA_PLLX - Used to indicate that it is PLLX.
+>>    */
+>>   struct tegra_clk_pll_params {
+>>   	unsigned long	input_min;
+>> @@ -301,6 +303,8 @@ struct tegra_clk_pll_params {
+>>   #define TEGRA_MDIV_NEW BIT(11)
+>>   #define TEGRA_PLLMB BIT(12)
+>>   #define TEGRA_PLL_VCO_OUT BIT(13)
+>> +#define TEGRA_PLLRE BIT(14)
+>> +#define TEGRA_PLLX BIT(15)
+>>  =20
+>>   /**
+>>    * struct tegra_clk_pll - Tegra PLL clock
+>> @@ -310,6 +314,8 @@ struct tegra_clk_pll_params {
+>>    * @pmc:	address of PMC, required to read override bits
+>>    * @lock:	register lock
+>>    * @params:	PLL parameters
+>> + * @rate:	rate during system suspend and resume
+>> + * @pllbase_ctx: pll base register value during suspend and resume
+>>    */
+>>   struct tegra_clk_pll {
+>>   	struct clk_hw	hw;
+>> @@ -317,6 +323,8 @@ struct tegra_clk_pll {
+>>   	void __iomem	*pmc;
+>>   	spinlock_t	*lock;
+>>   	struct tegra_clk_pll_params	*params;
+>> +	unsigned long	rate;
+>> +	u32	pllbase_ctx;
+>>   };
+>>  =20
+>>   #define to_clk_pll(_hw) container_of(_hw, struct tegra_clk_pll, hw)
+>> @@ -840,7 +848,7 @@ u16 tegra_pll_get_fixed_mdiv(struct clk_hw *hw, unsi=
+gned long input_rate);
+>>   int tegra_pll_p_div_to_hw(struct tegra_clk_pll *pll, u8 p_div);
+>>   int div_frac_get(unsigned long rate, unsigned parent_rate, u8 width,
+>>   		 u8 frac_width, u8 flags);
+>> -
+>> +void tegra_clk_sync_state_pll(struct clk_hw *hw);
+>>  =20
+>>   /* Combined read fence with delay */
+>>   #define fence_udelay(delay, reg)	\
+>>
