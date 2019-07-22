@@ -2,26 +2,26 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id CB2A170667
-	for <lists+linux-gpio@lfdr.de>; Mon, 22 Jul 2019 19:08:29 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8A2D47066B
+	for <lists+linux-gpio@lfdr.de>; Mon, 22 Jul 2019 19:08:35 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729835AbfGVRI3 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 22 Jul 2019 13:08:29 -0400
-Received: from mout.gmx.net ([212.227.17.20]:38761 "EHLO mout.gmx.net"
+        id S1730055AbfGVRIf (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 22 Jul 2019 13:08:35 -0400
+Received: from mout.gmx.net ([212.227.17.22]:38515 "EHLO mout.gmx.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728887AbfGVRI3 (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Mon, 22 Jul 2019 13:08:29 -0400
+        id S1729199AbfGVRIf (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Mon, 22 Jul 2019 13:08:35 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1563815283;
-        bh=pOipip/7SqtkvUBVosuhUW8StWC6Eq11sbfDOvaTu7Q=;
+        s=badeba3b8450; t=1563815284;
+        bh=6nS7Lf6FNdVUYXGMd00gzIso1Z3I8h5vATfhDbo1HWw=;
         h=X-UI-Sender-Class:From:To:Cc:Subject:Date:In-Reply-To:References;
-        b=ZwYF0nDMAeBRG23gIr8vph6vCHmXVzh5Oc6eXpUPa26K85FB2T54eaZmGl4Mclv2U
-         MAOabspJXe6JPy5J/ddNUTyoKPRxpgqvFeJBSVSgO14mpcBGnqpysJB/G0JTRej5ho
-         8XxXImAFo5cnTHpVlmVCNjkJNSeyg4PIVos6l0kE=
+        b=CwL8GCHtNFhZegQ5GJpGixfEKuZAW3OvKeo6E8p1XLU49IO/VtcHztedrkMhfhcG/
+         wSWePnRucp/is/KGyfMub4XAW7F93RWzU+CwSLAMi4UPHcihzYKxdwP6YwzIzGO0pd
+         hIZHZvczmZ8AwMOvkP9ZMBlh9P4C8l3myls8HC0A=
 X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
 Received: from localhost.localdomain ([37.4.249.131]) by mail.gmx.com
  (mrgmx103 [212.227.17.168]) with ESMTPSA (Nemesis) id
- 0LqQTl-1iK0iw2bjd-00e836; Mon, 22 Jul 2019 19:08:03 +0200
+ 0MSdRI-1hxCTY1BPo-00RWdx; Mon, 22 Jul 2019 19:08:04 +0200
 From:   Stefan Wahren <wahrenst@gmx.net>
 To:     Eric Anholt <eric@anholt.net>,
         Florian Fainelli <f.fainelli@gmail.com>,
@@ -40,64 +40,60 @@ Cc:     bcm-kernel-feedback-list@broadcom.com,
         linux-arm-kernel@lists.infradead.org,
         linux-rpi-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
         linux-mmc@vger.kernel.org, Stefan Wahren <wahrenst@gmx.net>
-Subject: [PATCH 14/18] dt-bindings: arm: bcm2835: Add Raspberry Pi 4 to DT schema
-Date:   Mon, 22 Jul 2019 19:07:33 +0200
-Message-Id: <1563815257-2648-2-git-send-email-wahrenst@gmx.net>
+Subject: [PATCH 15/18] ARM: bcm2835: Add bcm2711 compatible string
+Date:   Mon, 22 Jul 2019 19:07:34 +0200
+Message-Id: <1563815257-2648-3-git-send-email-wahrenst@gmx.net>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1563815257-2648-1-git-send-email-wahrenst@gmx.net>
 References: <1563815257-2648-1-git-send-email-wahrenst@gmx.net>
-X-Provags-ID: V03:K1:tO/RDLStxpBhSjI1Yvpz+5kIM9YY1HHCUcN1/0HPyCye/v1766M
- dUboVfHUppGM2laRPxmJ9p4clRdI+r8cKyEfUJAYlxhgtufM1SQUbq57V2XeOgPwG97pmn6
- hv1S8Q/w+SkPySkFVdtASHwD5ZJWe7FRz2IySKhn8bMxOMi71BqjQ1Mhn3M5AC+7b0WmO38
- JKEJ4JvfbgF3tXTBvDoWg==
+X-Provags-ID: V03:K1:Ozi+ow31HYFixm+4tvpLjYLuEY8a4Oa9cmfUylPS1EPl7hgn+hu
+ b/GDHJJiJIvw67knfV5u6EemfRwXcCus7QkJ/+doBkq1EH0ErKqEItVtvRu0wSP5wE6MyJN
+ RtnKax7+8pku7MuqFTOU3FH4yQwcnYUzscDM5w2yyFFcka2Yr2sVvVD0WYmvx6sMCpcsRCX
+ miPEpEqAyUCkLZ8K8Dz1Q==
 X-Spam-Flag: NO
-X-UI-Out-Filterresults: notjunk:1;V03:K0:zjxQ1KMgLug=:bfvv6r+DDraqyjvFqBBjPS
- YsTOefVQWL/J+48TcXkjaff5GfVDeb+Tah6l/Vd+W54jG7SNsXF57krrl+r6MxXK9VlAdMo8S
- s0nO8a7GpIY4AAFf8mJqZ/dGPiD0EoVaP/LU0Y+JTd/laZfuXgsXfJmDZ7MCW0o6ggdzT0Z+0
- IloG1T6ZD43C2ZdEbsYesgFAklAZ/R2mv/E+2dXpEKnuwb52gZZLkXfdoZs+5w19sCK7Tc9jx
- qLgMb/oJBHAGHgqGiEB3LGRbbwd3o2INW41rmL3zfwWRtP9KOQopRKCEDs53vz+V2IL+JwcCL
- NlvbZrkBAVT2/PLg/cZ5czNZLrZKB6muQ3RslgFq5T4fYEKgoGRHNdJakkabkZvLZIKO3snBD
- x1MsKSlHeqV3aGCGDTRwlNPgzNoPlpYw/ADvg+7IO/u8SIE85w48XSPUrA2KRy02OdYagE0Mq
- nwi9D7vEmIN126abhIBCzKxlrjhHyXoWVJ17Do0faABNv100SDzUHNCusB8cA3j7rcQbF79mT
- SLv4JA6duJ5J7+7nM4jCvWCQ0Yk+1q07kyJgDfxE5d+V0RCCygZdiYOs8tFNdggP+H0ImWzc0
- /r4YJyLeqNFpM+JzAm3sERhWgNrcwJb46GhxoB5U2jlgf0+dXSGVXIWPrc+Y7d4ZJNW2o2t1m
- CafN2uzea+XJdWnWCEENBKNUWv6KN+khx+t8/mXV1X/6uyiUHiDiwo1SAPydvzPtiwM8z+5MG
- gYHoqmEeMCeSh74qJUC4Sw8Mzkwpdf+FVR9Dli+7BpP6uiPVOIGIbceq7gcZYCJDoFYuc8jyp
- ykQ8wcRzReuAb/JtoFcbj5Xm6tqIEUpu0bAk9Fw0j6tiCF7f+PK5xscPKmdOLXFtlJridSiKQ
- b1eU9bJ3Lrx9BhNw6s2DP8lYMJJtNb6z57WoGKmueGnBvhOK2284VMSqHvXwFTYt04QoK4eb1
- 8C7r+COQ1GzgNRTEr8/F2L50H0ZOD4KAvLUmRtpHRfLnzsSFxmG5nNYGdxw3cPMTL4kXjZqw3
- tEDoWmytBNsDXtTpf+xBE8NRKQ2ymZVGKVcWPJAe+HN8oCqbDuT77skql+K9P54GBvr/S8UQs
- WG+3WE0ioDojQg=
+X-UI-Out-Filterresults: notjunk:1;V03:K0:8gfPkhoX25A=:wSjmZWPeWuCf/BgF5Ueu/h
+ gwIst7D0FoUnVfKeiJgl4xzL+WE5aLGhk0armELJB1K1NMR9tla/hP8MCu7Yuz4QmpygAw/ud
+ B8ZnAEf/pDv8peBME+XreO6t4IWQ7PkJkWnnJMrOfSPfDqykk1tv7/7VjfagqvzmfUxlCjotU
+ kVJbDhkvRUDSF4OM8LE81vsdv5Rybzx+Wu2+ubAP0l2FjBvIWkWoRv9IAMPGgMy0qhIkGHCAg
+ oEPyaT7C19sW0PPstUnqRJvLinZbY2o/bbZEjR5LFDnRefyYajSD5Z7yedBrqr19qSyKEgYZJ
+ lF5edJmbMRDIEAhtSewjwhi0RCRtYGVYNj+TBNB8zzmcXnCOYes+aI6IJtAuacupM4iRE+2cD
+ +D91aSEZ7vTUUM6dRE5OHfj+rKDMm57IwTRkNySWzko+pBy2vYFvTZ5cT2g+kYkYTFrfwropc
+ egaal02UXqU9xrH31HXixDwtsSO5SQ8OyN+Kgu5VxRqmMmpXOLNRC9t6/h3Saa6Dxl5vzBWFV
+ sJJCKcDKLzZDR9e1nGH0IOFK0ABtESI1TzKutKHL0KWTGBlIxBI3X0tP/QzoOoJ00zdoJ3AHo
+ dGACzjLnfhNQ0bqMv/pDJRpFy1OgyLJtcly/xT0yrw+SKGCqarw/SIAMlUsdO79v/ktDBlE5B
+ AgWKeJEP02QbhzPZ8IsONhMkWw2vwbGCYXAtw7B3g8g2gT2JTbLuDosgEf//dmf/ZeXH0WLKl
+ GFdYVyB9EjSLRyaMtiVd0IDsEDpJD2V1ZGDat6x6gI8gErcmhXjEo1yz+Ut0tKFN7VlsNFQ6B
+ kaA+K2whJYcv1H2MiX7zNtA4AdwDRTBx0QvJOfnf12/ucS2yX+GR0XVLXc0c5RJiAiWVsKkGY
+ E08e3Tr6rlI/T4iDafFsd7ey1sLd9JwIq+mpL6OdmSzEqfgq5GhBNYzVBhbMpJGinovfdZZFK
+ 4/j9umBEY243or8RCOY9iiGb4P+VWbxppV1mrMwzekVPA3mlk8Zv9ilcyWJdHqqNSpRqc7twM
+ Rco/Jz3vCE3c/yoGNf0PMwzgJpGLB8Z8P1Xj/5qXzi5c/T8T1mTzRjTPFjgA1P8fgdTT94GDs
+ jJFBthqHiXNC+U=
 Content-Transfer-Encoding: quoted-printable
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Add new Raspberry Pi 4 to DT schema.
+This adds support for the new BCM2711 SoC found on the Raspberry Pi 4.
 
 Signed-off-by: Stefan Wahren <wahrenst@gmx.net>
 =2D--
- Documentation/devicetree/bindings/arm/bcm/bcm2835.yaml | 5 +++++
- 1 file changed, 5 insertions(+)
+ arch/arm/mach-bcm/board_bcm2835.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/Documentation/devicetree/bindings/arm/bcm/bcm2835.yaml b/Docu=
-mentation/devicetree/bindings/arm/bcm/bcm2835.yaml
-index 1a4be26..8c3bbad 100644
-=2D-- a/Documentation/devicetree/bindings/arm/bcm/bcm2835.yaml
-+++ b/Documentation/devicetree/bindings/arm/bcm/bcm2835.yaml
-@@ -15,6 +15,11 @@ properties:
-     const: '/'
-   compatible:
-     oneOf:
-+      - description: BCM2711 based Boards
-+        items:
-+          - enum:
-+              - raspberrypi,4-model-b
-+
-       - description: BCM2835 based Boards
-         items:
-           - enum:
+diff --git a/arch/arm/mach-bcm/board_bcm2835.c b/arch/arm/mach-bcm/board_b=
+cm2835.c
+index d2b31a9..c09cf25 100644
+=2D-- a/arch/arm/mach-bcm/board_bcm2835.c
++++ b/arch/arm/mach-bcm/board_bcm2835.c
+@@ -17,6 +17,7 @@ static const char * const bcm2835_compat[] =3D {
+ 	"brcm,bcm2835",
+ #endif
+ #ifdef CONFIG_ARCH_MULTI_V7
++	"brcm,bcm2711",
+ 	"brcm,bcm2836",
+ 	"brcm,bcm2837",
+ #endif
 =2D-
 2.7.4
 
