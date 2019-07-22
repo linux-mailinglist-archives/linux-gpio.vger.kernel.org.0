@@ -2,183 +2,135 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 63AC76FD79
-	for <lists+linux-gpio@lfdr.de>; Mon, 22 Jul 2019 12:13:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A37C86FDD8
+	for <lists+linux-gpio@lfdr.de>; Mon, 22 Jul 2019 12:32:56 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729422AbfGVKNX (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 22 Jul 2019 06:13:23 -0400
-Received: from foss.arm.com ([217.140.110.172]:35016 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726846AbfGVKNX (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Mon, 22 Jul 2019 06:13:23 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 236F328;
-        Mon, 22 Jul 2019 03:13:22 -0700 (PDT)
-Received: from [10.1.197.61] (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 73BB73F71A;
-        Mon, 22 Jul 2019 03:13:17 -0700 (PDT)
-Subject: Re: [PATCH V6 01/21] irqchip: tegra: Do not disable COP IRQ during
- suspend
-To:     Dmitry Osipenko <digetx@gmail.com>,
-        Sowjanya Komatineni <skomatineni@nvidia.com>,
-        thierry.reding@gmail.com, jonathanh@nvidia.com, tglx@linutronix.de,
-        jason@lakedaemon.net, linus.walleij@linaro.org, stefan@agner.ch,
-        mark.rutland@arm.com
-Cc:     pdeschrijver@nvidia.com, pgaikwad@nvidia.com, sboyd@kernel.org,
-        linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org,
-        jckuo@nvidia.com, josephl@nvidia.com, talho@nvidia.com,
-        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org,
-        mperttunen@nvidia.com, spatra@nvidia.com, robh+dt@kernel.org,
-        devicetree@vger.kernel.org
-References: <1563738060-30213-1-git-send-email-skomatineni@nvidia.com>
- <1563738060-30213-2-git-send-email-skomatineni@nvidia.com>
- <f6582e43-168e-1b7e-9db8-3d263bc3ba0d@gmail.com>
-From:   Marc Zyngier <marc.zyngier@arm.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=marc.zyngier@arm.com; prefer-encrypt=mutual; keydata=
- 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
- Z46HaNmN2hZS/oJ69c1DI5Rcww==
-Organization: ARM Ltd
-Message-ID: <20c1d733-60f5-6375-c03c-639de5e41739@arm.com>
-Date:   Mon, 22 Jul 2019 11:13:16 +0100
-User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
-MIME-Version: 1.0
-In-Reply-To: <f6582e43-168e-1b7e-9db8-3d263bc3ba0d@gmail.com>
-Content-Type: text/plain; charset=utf-8
+        id S1728294AbfGVKc4 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 22 Jul 2019 06:32:56 -0400
+Received: from m9a0002g.houston.softwaregrp.com ([15.124.64.67]:45129 "EHLO
+        m9a0002g.houston.softwaregrp.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726120AbfGVKcz (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>);
+        Mon, 22 Jul 2019 06:32:55 -0400
+Received: FROM m9a0002g.houston.softwaregrp.com (15.121.0.191) BY m9a0002g.houston.softwaregrp.com WITH ESMTP;
+ Mon, 22 Jul 2019 10:32:42 +0000
+Received: from M4W0335.microfocus.com (2002:f78:1193::f78:1193) by
+ M9W0068.microfocus.com (2002:f79:bf::f79:bf) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
+ 15.1.1591.10; Mon, 22 Jul 2019 10:31:56 +0000
+Received: from NAM03-CO1-obe.outbound.protection.outlook.com (15.124.8.14) by
+ M4W0335.microfocus.com (15.120.17.147) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
+ 15.1.1591.10 via Frontend Transport; Mon, 22 Jul 2019 10:31:56 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=mvfGPX/0exAx4oT9CSrLHXSg5XKPnMURRH7o2lXBOqAOe0/VLDZP16W+2JivXNOKYwDjY+Za3ENLpZzdPcRDRcXMtqHPyRFLcSW07yj6Sfz4JAlFZVvgIJ/kXXpWdHoV/lBGgBO/qY30hOzmHNzxh/G6dqc064Bohf9wz7ibqpHP+RDzf4yQ1Y5uhas27EPpDvvPUAK6rHgX0i5cxnnBnzmlJqYQjlcpAsrLTIbu3bGh2usdeaB6mPSkj3vEW4JaxUYIGGfYT2jPbtWwys5/niahdZYewP4aqrFHyt1XwjaB56exWRtFZCNbCKhoW9/w5x9J48ByrAdhcNsFBRx1Tg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=CQwfBvzLc/OiDgYEzNXLxGg41GAEFqF8eRwMcDHC9W0=;
+ b=mSc7d09LNdouuJX187ZfmwnDtbAeBsJHgmhASvbo7OjFJGraqDFWril6kdqBgmKqnvBJ/uinLrhIthTQ27PLPfqVkfIXE5R/JEs6E/CIu1/+yTHc+d5D3Jae9uWpcB69cjdRsKuXGUeCoEG1ER2shlWcaW3sIvKlUjlcsw3iYTUBsJYvmAyIvl+MAQ7pzbppiF74egKIwwRpYrOT+YFq6zHHjHPyCJQ08dwuorn0vNo7kFHsC7NWX5TVM5F+6I3DVpCZzJWb9+C2q7Nn4NxA/f8GGqhEGcIPrMqmLaQcqgQohA5GVebOQwggXPz3wuXV8ZAjSzGUkBwoR26KSOWU0A==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1;spf=pass
+ smtp.mailfrom=suse.com;dmarc=pass action=none header.from=suse.com;dkim=pass
+ header.d=suse.com;arc=none
+Received: from CY4PR1801MB1909.namprd18.prod.outlook.com (10.171.255.24) by
+ CY4PR1801MB1814.namprd18.prod.outlook.com (10.165.88.23) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2073.14; Mon, 22 Jul 2019 10:31:55 +0000
+Received: from CY4PR1801MB1909.namprd18.prod.outlook.com
+ ([fe80::1d84:4a66:a3f4:97f8]) by CY4PR1801MB1909.namprd18.prod.outlook.com
+ ([fe80::1d84:4a66:a3f4:97f8%3]) with mapi id 15.20.2094.013; Mon, 22 Jul 2019
+ 10:31:55 +0000
+From:   Matthias Brugger <mbrugger@suse.com>
+To:     Stefan Wahren <wahrenst@gmx.net>, Eric Anholt <eric@anholt.net>,
+        "Mark Rutland" <mark.rutland@arm.com>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Ray Jui <rjui@broadcom.com>,
+        Scott Branden <sbranden@broadcom.com>,
+        "Florian Fainelli" <f.fainelli@gmail.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        "Rob Herring" <robh+dt@kernel.org>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        "Nicolas Saenz Julienne" <nsaenzjulienne@suse.de>
+CC:     "bcm-kernel-feedback-list@broadcom.com" 
+        <bcm-kernel-feedback-list@broadcom.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-rpi-kernel@lists.infradead.org" 
+        <linux-rpi-kernel@lists.infradead.org>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>
+Subject: Re: [PATCH 09/18] dt-bindings: sdhci-iproc: Add brcm,bcm2711-emmc2
+Thread-Topic: [PATCH 09/18] dt-bindings: sdhci-iproc: Add brcm,bcm2711-emmc2
+Thread-Index: AQHVQFIyxpmlkhauX06v5OScSoKtrKbWcK+A
+Date:   Mon, 22 Jul 2019 10:31:55 +0000
+Message-ID: <4749e256-69a2-bf42-e1ec-4dbbdee6c967@suse.com>
+References: <1563774880-8061-1-git-send-email-wahrenst@gmx.net>
+ <1563774880-8061-10-git-send-email-wahrenst@gmx.net>
+In-Reply-To: <1563774880-8061-10-git-send-email-wahrenst@gmx.net>
+Accept-Language: en-GB, en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: LO2P265CA0197.GBRP265.PROD.OUTLOOK.COM
+ (2603:10a6:600:9e::17) To CY4PR1801MB1909.namprd18.prod.outlook.com
+ (2603:10b6:910:7a::24)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=mbrugger@suse.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [37.223.144.190]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: a81eea29-7972-4d7b-d4e4-08d70e8fd155
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:CY4PR1801MB1814;
+x-ms-traffictypediagnostic: CY4PR1801MB1814:
+x-microsoft-antispam-prvs: <CY4PR1801MB18148FB344F6EC6AEE8439DDBAC40@CY4PR1801MB1814.namprd18.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:6108;
+x-forefront-prvs: 01068D0A20
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(366004)(346002)(39860400002)(396003)(136003)(376002)(199004)(189003)(7416002)(76176011)(31686004)(86362001)(446003)(2906002)(52116002)(31696002)(478600001)(486006)(186003)(11346002)(2616005)(476003)(7736002)(3846002)(6116002)(66066001)(305945005)(71190400001)(6506007)(229853002)(71200400001)(53546011)(26005)(53936002)(54906003)(386003)(25786009)(14444005)(256004)(36756003)(110136005)(8676002)(99286004)(102836004)(66946007)(316002)(6436002)(66556008)(66476007)(6486002)(81156014)(81166006)(4326008)(8936002)(6512007)(68736007)(66446008)(64756008)(14454004)(6246003)(5660300002)(142933001)(921003)(1121003);DIR:OUT;SFP:1102;SCL:1;SRVR:CY4PR1801MB1814;H:CY4PR1801MB1909.namprd18.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: suse.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: FcE9qQ5lfcbGaPm603/WZeMJoYyicq80GII/3L+BfkdJ6PfgSSk/RBO4ir96Xb75dHxH3R1VH/84n+HjA06ej59Kl4nCQe8Rf4drSZG3fdxHXG1LkvxaX7YCW3FKfNxBIuxdSt30fXSmH5N97nxHfk9JNT09Sj328ZB5rpD341nuTcY/sBirMtZvOiKSiN5lIzOmCXNAhamMkaakHb+yQhOsDtQpBZQCr2pasui+9UktLjjtVs1X0ATRjccEKEqFSQmIXHkFou0LSXgmXvzIc1ijLGTBAstnWCiAT4RVXz0FHhwXZdURBkyZ2MR9olIlZA0eYh/t+WZAcgql9xkPj1/35rFtNJlUoNE1XWm7Fry5Qlhe5n10REqYYluFPQ2ToBnv7mJcS/YmBHjuBl3kE2b3yM06xbQD1w2QGPICanA=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <D8D2F9593A16FE408812D088287C3219@namprd18.prod.outlook.com>
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-MS-Exchange-CrossTenant-Network-Message-Id: a81eea29-7972-4d7b-d4e4-08d70e8fd155
+X-MS-Exchange-CrossTenant-originalarrivaltime: 22 Jul 2019 10:31:55.2279
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 856b813c-16e5-49a5-85ec-6f081e13b527
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: mbrugger@suse.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY4PR1801MB1814
+X-OriginatorOrg: suse.com
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 22/07/2019 10:54, Dmitry Osipenko wrote:
-> 21.07.2019 22:40, Sowjanya Komatineni пишет:
->> Tegra210 platforms use sc7 entry firmware to program Tegra LP0/SC7 entry
->> sequence and sc7 entry firmware is run from COP/BPMP-Lite.
->>
->> So, COP/BPMP-Lite still need IRQ function to finish SC7 suspend sequence
->> for Tegra210.
->>
->> This patch has fix for leaving the COP IRQ enabled for Tegra210 during
->> interrupt controller suspend operation.
->>
->> Acked-by: Thierry Reding <treding@nvidia.com>
->> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
->> ---
->>  drivers/irqchip/irq-tegra.c | 20 ++++++++++++++++++--
->>  1 file changed, 18 insertions(+), 2 deletions(-)
->>
->> diff --git a/drivers/irqchip/irq-tegra.c b/drivers/irqchip/irq-tegra.c
->> index e1f771c72fc4..851f88cef508 100644
->> --- a/drivers/irqchip/irq-tegra.c
->> +++ b/drivers/irqchip/irq-tegra.c
->> @@ -44,6 +44,7 @@ static unsigned int num_ictlrs;
->>  
->>  struct tegra_ictlr_soc {
->>  	unsigned int num_ictlrs;
->> +	bool supports_sc7;
->>  };
->>  
->>  static const struct tegra_ictlr_soc tegra20_ictlr_soc = {
->> @@ -56,6 +57,7 @@ static const struct tegra_ictlr_soc tegra30_ictlr_soc = {
->>  
->>  static const struct tegra_ictlr_soc tegra210_ictlr_soc = {
->>  	.num_ictlrs = 6,
->> +	.supports_sc7 = true,
->>  };
->>  
->>  static const struct of_device_id ictlr_matches[] = {
->> @@ -67,6 +69,7 @@ static const struct of_device_id ictlr_matches[] = {
->>  
->>  struct tegra_ictlr_info {
->>  	void __iomem *base[TEGRA_MAX_NUM_ICTLRS];
->> +	const struct tegra_ictlr_soc *soc;
->>  #ifdef CONFIG_PM_SLEEP
->>  	u32 cop_ier[TEGRA_MAX_NUM_ICTLRS];
->>  	u32 cop_iep[TEGRA_MAX_NUM_ICTLRS];
->> @@ -147,8 +150,20 @@ static int tegra_ictlr_suspend(void)
->>  		lic->cop_ier[i] = readl_relaxed(ictlr + ICTLR_COP_IER);
->>  		lic->cop_iep[i] = readl_relaxed(ictlr + ICTLR_COP_IEP_CLASS);
->>  
->> -		/* Disable COP interrupts */
->> -		writel_relaxed(~0ul, ictlr + ICTLR_COP_IER_CLR);
->> +		/*
->> +		 * AVP/COP/BPMP-Lite is the Tegra boot processor.
->> +		 *
->> +		 * Tegra210 system suspend flow uses sc7entry firmware which
->> +		 * is executed by COP/BPMP and it includes disabling COP IRQ,
->> +		 * clamping CPU rail, turning off VDD_CPU, and preparing the
->> +		 * system to go to SC7/LP0.
->> +		 *
->> +		 * COP/BPMP wakes up when COP IRQ is triggered and runs
->> +		 * sc7entry-firmware. So need to keep COP interrupt enabled.
->> +		 */
->> +		if (!lic->soc->supports_sc7)
->> +			/* Disable COP interrupts if SC7 is not supported */
-> 
-> All Tegra SoCs support SC7, hence the 'supports_sc7' and the comment
-> doesn't sound correct to me. Something like 'firmware_sc7' should suit
-> better here.
-
-If what you're saying is true, then the whole patch is wrong, and the
-SC7 property should come from DT.
-
-> 
->> +			writel_relaxed(~0ul, ictlr + ICTLR_COP_IER_CLR);
-> 
-> Secondly, I'm also not sure why COP interrupts need to be disabled for
-> pre-T210 at all, since COP is unused. This looks to me like it was
-> cut-n-pasted from downstream kernel without a good reason and could be
-> simply removed.
-
-Please verify that this is actually the case. Tegra-2 definitely needed
-some level of poking, and I'm not keen on changing anything there until
-you (or someone else) has verified it on actual HW (see e307cc8941fc).
-
-Joseph, can you please shed some light here?
-
-	M.
--- 
-Jazz is not dead. It just smells funny...
+DQoNCk9uIDIyLzA3LzIwMTkgMDc6NTQsIFN0ZWZhbiBXYWhyZW4gd3JvdGU6DQo+IEFkZCBhIG5l
+dyBjb21wYXRpYmxlIGZvciB0aGUgYWRkaXRpb25hbCBlbW1jMiBjb250cm9sbGVyDQo+IG9uIEJD
+TTI3MTEgYW5kIGNsZWFyaWZ5IHVzYWdlLg0KPiANCj4gU2lnbmVkLW9mZi1ieTogU3RlZmFuIFdh
+aHJlbiA8d2FocmVuc3RAZ214Lm5ldD4NCg0KUmV2aWV3ZWQtYnk6IE1hdHRoaWFzIEJydWdnZXIg
+PG1icnVnZ2VyQHN1c2UuY29tPg0KDQo+IC0tLQ0KPiAgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVl
+L2JpbmRpbmdzL21tYy9icmNtLHNkaGNpLWlwcm9jLnR4dCB8IDQgKysrLQ0KPiAgMSBmaWxlIGNo
+YW5nZWQsIDMgaW5zZXJ0aW9ucygrKSwgMSBkZWxldGlvbigtKQ0KPiANCj4gZGlmZiAtLWdpdCBh
+L0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9tbWMvYnJjbSxzZGhjaS1pcHJvYy50
+eHQgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvbW1jL2JyY20sc2RoY2ktaXBy
+b2MudHh0DQo+IGluZGV4IGZhOTBkMjUuLjA5ZDg3Y2MgMTAwNjQ0DQo+IC0tLSBhL0RvY3VtZW50
+YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9tbWMvYnJjbSxzZGhjaS1pcHJvYy50eHQNCj4gKysr
+IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL21tYy9icmNtLHNkaGNpLWlwcm9j
+LnR4dA0KPiBAQCAtNiwxMCArNiwxMiBAQCBieSBtbWMudHh0IGFuZCB0aGUgcHJvcGVydGllcyB0
+aGF0IHJlcHJlc2VudCB0aGUgSVBST0MgU0RIQ0kgY29udHJvbGxlci4NCj4gIFJlcXVpcmVkIHBy
+b3BlcnRpZXM6DQo+ICAtIGNvbXBhdGlibGUgOiBTaG91bGQgYmUgb25lIG9mIHRoZSBmb2xsb3dp
+bmcNCj4gIAkgICAgICAgImJyY20sYmNtMjgzNS1zZGhjaSINCj4gKwkgICAgICAgImJyY20sYmNt
+MjcxMS1lbW1jMiINCj4gIAkgICAgICAgImJyY20sc2RoY2ktaXByb2MtY3lnbnVzIg0KPiAgCSAg
+ICAgICAiYnJjbSxzZGhjaS1pcHJvYyINCj4gDQo+IC1Vc2UgYnJjbTI4MzUtc2RoY2kgZm9yIFJh
+c3BlcnJ5IFBJLg0KPiArVXNlIGJyY20yODM1LXNkaGNpIGZvciB0aGUgZU1NQyBjb250cm9sbGVy
+IG9uIHRoZSBCQ00yODM1IChSYXNwYmVycnkgUGkpIGFuZA0KPiArYmNtMjcxMS1lbW1jMiBmb3Ig
+dGhlIGFkZGl0aW9uYWwgZU1NQzIgY29udHJvbGxlciBvbiBCQ00yNzExLg0KPiANCj4gIFVzZSBz
+ZGhjaS1pcHJvYy1jeWdudXMgZm9yIEJyb2FkY29tIFNESENJIENvbnRyb2xsZXJzDQo+ICByZXN0
+cmljdGVkIHRvIDMyYml0IGhvc3QgYWNjZXNzZXMgdG8gU0RIQ0kgcmVnaXN0ZXJzLg0KPiAtLQ0K
+PiAyLjcuNA0KPiANCj4gDQo=
