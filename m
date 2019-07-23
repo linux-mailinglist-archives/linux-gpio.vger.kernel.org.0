@@ -2,247 +2,139 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 9251A71031
-	for <lists+linux-gpio@lfdr.de>; Tue, 23 Jul 2019 05:43:20 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D8171712BC
+	for <lists+linux-gpio@lfdr.de>; Tue, 23 Jul 2019 09:23:11 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726606AbfGWDnP (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 22 Jul 2019 23:43:15 -0400
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:43397 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727251AbfGWDnP (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 22 Jul 2019 23:43:15 -0400
-Received: by mail-lj1-f195.google.com with SMTP id y17so15034788ljk.10;
-        Mon, 22 Jul 2019 20:43:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=V//tCajy1nYjfoBG1maUhg9pKFrL7iNQvVjasnCSY2g=;
-        b=av/iwaNlvbLd48jRkgNOXxZZlZSO1di4EaIi8glutJpIJFBCQY4ZugSwEfagtqdGy6
-         w2r/Wn2Ms7EMnklPSxaxks7hI1b9GRnkzJ4/PglY6MyTdYX0qwcagG0HrogjECi9iTk/
-         BjFEvpVihYysrv5FtIpk+V6uOZkiAFcagoMiPjrRaHvrcj/LthZjJHVhW8bmeaM89iyJ
-         OiRDZNBVxjZc7SyCT/aDkWaMq4KlZyaNq6e3dBqQ/vVYHh6KGMIAO8YWc1PlZOEVi1Hy
-         uyr26a9qJjNqgPoXvu2RuP108GcZuyyQxHsqr4HiYjWGPlk4x7guPxqEHz0wpFuwHTnD
-         wLGw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=V//tCajy1nYjfoBG1maUhg9pKFrL7iNQvVjasnCSY2g=;
-        b=TBIG8Ik4YwpMWoOBHhQRmXfUpF8MEgDMBy+hOUXKmcTlWpR70v1RQFqJVyjBsFgiBT
-         zqAgPzzf54dGvnpSjis4FJ5qWSfbvogH/4Td4l5GG/xRZDJhzfSVbdUgABJXxJ9I5OLV
-         7L0dzHjYRZ7wjzKh4/kAivBdI1jVa9pNpsKBe+C7xeRYUpFLHCE6gEKu2SiByEdTpNQH
-         oUjkFwqhhHo3NoFo70bhZimFSgxp71Z7TPaiu+TWh7DalffDqpe+Pz3mv7LRJiQUzf1O
-         tZgYeD2fq/S9HgJGYwZG9ozJ4LIEF1GAMXtra/TNVy3ZBmb1J5t0usUArai9C6O3Mp0q
-         onQg==
-X-Gm-Message-State: APjAAAUCmBiofuZsk/d+nApBY0xWvf+JyZlYb+ZutJbG2VFl2oyK8lER
-        u8MxQ9H5IYWt1xkcSTA3NYgUab/t
-X-Google-Smtp-Source: APXvYqxqYXhOIE6r64GsWx91mbCJKLkO5FoPgoFUQIc6HnskjIQ8NhkvuX/39vQhatgDbnxNmSffqQ==
-X-Received: by 2002:a2e:1290:: with SMTP id 16mr36782173ljs.88.1563853390941;
-        Mon, 22 Jul 2019 20:43:10 -0700 (PDT)
-Received: from [192.168.2.145] (ppp91-78-220-99.pppoe.mtu-net.ru. [91.78.220.99])
-        by smtp.googlemail.com with ESMTPSA id w1sm6318603lfe.50.2019.07.22.20.43.09
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 22 Jul 2019 20:43:10 -0700 (PDT)
-Subject: Re: [PATCH V6 16/21] soc/tegra: pmc: Add pmc wake support for
- tegra210
-To:     Sowjanya Komatineni <skomatineni@nvidia.com>,
-        thierry.reding@gmail.com, jonathanh@nvidia.com, tglx@linutronix.de,
-        jason@lakedaemon.net, marc.zyngier@arm.com,
-        linus.walleij@linaro.org, stefan@agner.ch, mark.rutland@arm.com
-Cc:     pdeschrijver@nvidia.com, pgaikwad@nvidia.com, sboyd@kernel.org,
-        linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org,
-        jckuo@nvidia.com, josephl@nvidia.com, talho@nvidia.com,
-        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org,
-        mperttunen@nvidia.com, spatra@nvidia.com, robh+dt@kernel.org,
-        devicetree@vger.kernel.org
-References: <1563738060-30213-1-git-send-email-skomatineni@nvidia.com>
- <1563738060-30213-17-git-send-email-skomatineni@nvidia.com>
- <0b3d08ea-4633-8a54-ba66-c3f3146a1ece@gmail.com>
- <ca32c2d8-d752-3ecd-3a3f-232366730c7b@gmail.com>
- <b575ca93-9f34-b07a-1234-ef1ea2a6ddee@gmail.com>
- <71a88a9c-a542-557a-0eaa-3c90112dee0e@nvidia.com>
- <70ad28cb-c268-cbbe-36f5-39df26617d8e@gmail.com>
- <629826f9-c453-386a-9e88-bd64d23b8eab@nvidia.com>
- <71c8cab1-bf72-c073-be30-4263c6b7c871@gmail.com>
- <97096b6c-f2f5-b82a-b172-802f4a06d1af@nvidia.com>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <a58de350-f6ce-9308-1ae0-885e732b575d@gmail.com>
-Date:   Tue, 23 Jul 2019 06:43:08 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
-MIME-Version: 1.0
-In-Reply-To: <97096b6c-f2f5-b82a-b172-802f4a06d1af@nvidia.com>
-Content-Type: text/plain; charset=utf-8
+        id S1732744AbfGWHXL (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 23 Jul 2019 03:23:11 -0400
+Received: from m4a0040g.houston.softwaregrp.com ([15.124.2.86]:59156 "EHLO
+        m4a0040g.houston.softwaregrp.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1732617AbfGWHXL (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>);
+        Tue, 23 Jul 2019 03:23:11 -0400
+Received: FROM m4a0040g.houston.softwaregrp.com (15.120.17.146) BY m4a0040g.houston.softwaregrp.com WITH ESMTP;
+ Tue, 23 Jul 2019 07:19:12 +0000
+Received: from M9W0067.microfocus.com (2002:f79:be::f79:be) by
+ M4W0334.microfocus.com (2002:f78:1192::f78:1192) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
+ 15.1.1591.10; Tue, 23 Jul 2019 07:20:31 +0000
+Received: from NAM01-SN1-obe.outbound.protection.outlook.com (15.124.72.12) by
+ M9W0067.microfocus.com (15.121.0.190) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
+ 15.1.1591.10 via Frontend Transport; Tue, 23 Jul 2019 07:20:31 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=K+vJTsKIX4khYAAWTSbdRr+XG1z0hWDykotT6rcZ5rRDJeMYPM8IAXJ3J5cKiOuSAnYTSoYhy+a+R33ZVWfsDzcwfqqF6aKJwPqYLYuR30XaPM1pGVIDjbgVC1/snCYsSW1B2lC0SgWcUXPT76SrHD0hAJDtJchLjDfoE/faw6wux3Zpf/mvjaRsfvsEla4OQsAbN5yHfprH/o8pwpBC3rb0ktGqTajqTNXTumsNnY+GZU+h50CGEQz0FiMUA2/CWyOVoVpFKOTdM51SR8TdtGOFBtSTBTkoseK9SeDSTr/CZ9Zo1PN+w/BZvMNdHcXu/i1YPvAqYkL/WugBh1/gOg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=n8NDwWJ2B1OnsZI9Ijh5acuX/g2XgAm+Z2RPzW2CdPg=;
+ b=VS1OmMAw6NlsPbsRYT4Rw6X+fsXuu2O/brnhA1QYJ/V8M+0GhoQuqjMnVuyBnTvdXgxl4z+CfRrLwXb/H4Dqnxq0XWkKoMyf+7OzNnCbYV35Ww2lNbdWl7/8NH31Qa2Ac/DsDEex/BD+yz4tMUefqsXO/YwsWRpa8ArqhJ1BFLh6Vhtg/UyoDldBqdLlf+mX3QZ1wO94luW4gpjYom5GBMwnHepyjq9YOaAn7Pcm3vUJQPkH5sBbYKgdj/cZiXLizCrDZk+Z+nxglGEf3G358GoIpErl5DgutjgbbqOwyeXybN0xUr6QqCbK0tOiXjI0PoHBG6l94UyMblNf6jZ3ow==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1;spf=pass
+ smtp.mailfrom=suse.com;dmarc=pass action=none header.from=suse.com;dkim=pass
+ header.d=suse.com;arc=none
+Received: from CY4PR1801MB1909.namprd18.prod.outlook.com (10.171.255.24) by
+ CY4PR1801MB1912.namprd18.prod.outlook.com (10.171.255.27) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2094.16; Tue, 23 Jul 2019 07:20:29 +0000
+Received: from CY4PR1801MB1909.namprd18.prod.outlook.com
+ ([fe80::1d84:4a66:a3f4:97f8]) by CY4PR1801MB1909.namprd18.prod.outlook.com
+ ([fe80::1d84:4a66:a3f4:97f8%3]) with mapi id 15.20.2094.013; Tue, 23 Jul 2019
+ 07:20:29 +0000
+From:   Matthias Brugger <mbrugger@suse.com>
+To:     Stefan Wahren <wahrenst@gmx.net>, Eric Anholt <eric@anholt.net>,
+        "Mark Rutland" <mark.rutland@arm.com>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Ray Jui <rjui@broadcom.com>,
+        Scott Branden <sbranden@broadcom.com>,
+        "Florian Fainelli" <f.fainelli@gmail.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        "Rob Herring" <robh+dt@kernel.org>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        "Nicolas Saenz Julienne" <nsaenzjulienne@suse.de>
+CC:     "bcm-kernel-feedback-list@broadcom.com" 
+        <bcm-kernel-feedback-list@broadcom.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-rpi-kernel@lists.infradead.org" 
+        <linux-rpi-kernel@lists.infradead.org>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>
+Subject: Re: [PATCH 17/18] arm64: dts: broadcom: Add reference to RPi 4 B
+Thread-Topic: [PATCH 17/18] arm64: dts: broadcom: Add reference to RPi 4 B
+Thread-Index: AQHVQLAa9uAZSIZRFEiZtdOeOePOmabXzMgA
+Date:   Tue, 23 Jul 2019 07:20:29 +0000
+Message-ID: <7dc61967-cf76-f898-e28f-97d3d7df0506@suse.com>
+References: <1563815257-2648-1-git-send-email-wahrenst@gmx.net>
+ <1563815257-2648-5-git-send-email-wahrenst@gmx.net>
+In-Reply-To: <1563815257-2648-5-git-send-email-wahrenst@gmx.net>
+Accept-Language: en-GB, en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: LO2P265CA0206.GBRP265.PROD.OUTLOOK.COM
+ (2603:10a6:600:9e::26) To CY4PR1801MB1909.namprd18.prod.outlook.com
+ (2603:10b6:910:7a::24)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=mbrugger@suse.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [37.223.144.190]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 0039a7b5-cb6b-4181-7335-08d70f3e3dd5
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:CY4PR1801MB1912;
+x-ms-traffictypediagnostic: CY4PR1801MB1912:
+x-microsoft-antispam-prvs: <CY4PR1801MB1912B19BA7EB1547CAA8DEC8BAC70@CY4PR1801MB1912.namprd18.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:6430;
+x-forefront-prvs: 0107098B6C
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(39860400002)(366004)(396003)(346002)(136003)(376002)(189003)(199004)(81156014)(66556008)(66946007)(81166006)(5660300002)(14454004)(66446008)(8676002)(66476007)(71190400001)(8936002)(4326008)(64756008)(3846002)(6512007)(71200400001)(68736007)(53936002)(6246003)(86362001)(386003)(53546011)(229853002)(6486002)(102836004)(76176011)(305945005)(31696002)(2906002)(110136005)(7736002)(36756003)(316002)(66066001)(54906003)(6436002)(256004)(446003)(31686004)(14444005)(25786009)(7416002)(99286004)(6116002)(478600001)(486006)(11346002)(6506007)(26005)(52116002)(2616005)(186003)(476003)(921003)(1121003);DIR:OUT;SFP:1102;SCL:1;SRVR:CY4PR1801MB1912;H:CY4PR1801MB1909.namprd18.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: suse.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: Y8O0YgP13RLtmCDaT08ol5MH0WaZ0cZ3IYSoQ5+qKwPTNd7VltpkObdJ5zVTitgI/KHkpd4sPRP4vdXY/ng3xgpVgGZe2fiPJxk/FyLTt2ZuEEhv3JzrFPRMwpMa0I0WSa62p/hM02Jne5Xtajku7IxIkuDzCNMBW4n93runZJokNwWKj7xgNQTI7lTV8vUK9WuzY9E+A3YNhVttrRuvFlYJSH2L6TOhb23FC03pP/KpDsN8bO+2vzGb+7N9SEiB0cFYo6FcEZHa9w+kFUUlQrg1HmI3gQPQ+6b3JzX0VYA+wFzJ6RyWzyXl6+mh3vDPR7lNYl22I9e/04PDEa7m8ggJwv+pHf2jsvb4upxEqgyjSo4QdNSAX2KjkjS81gZj9IFlyTSVENINFYmr9ReFohrixvG1E6nXq4QZ8MdR9cI=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <ED339DE5CBE7E5458891B23E9F5588BB@namprd18.prod.outlook.com>
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-MS-Exchange-CrossTenant-Network-Message-Id: 0039a7b5-cb6b-4181-7335-08d70f3e3dd5
+X-MS-Exchange-CrossTenant-originalarrivaltime: 23 Jul 2019 07:20:29.8530
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 856b813c-16e5-49a5-85ec-6f081e13b527
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: mbrugger@suse.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY4PR1801MB1912
+X-OriginatorOrg: suse.com
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-23.07.2019 6:31, Sowjanya Komatineni пишет:
-> 
-> On 7/22/19 8:25 PM, Dmitry Osipenko wrote:
->> 23.07.2019 6:09, Sowjanya Komatineni пишет:
->>> On 7/22/19 8:03 PM, Dmitry Osipenko wrote:
->>>> 23.07.2019 4:52, Sowjanya Komatineni пишет:
->>>>> On 7/22/19 6:41 PM, Dmitry Osipenko wrote:
->>>>>> 23.07.2019 4:08, Dmitry Osipenko пишет:
->>>>>>> 23.07.2019 3:58, Dmitry Osipenko пишет:
->>>>>>>> 21.07.2019 22:40, Sowjanya Komatineni пишет:
->>>>>>>>> This patch implements PMC wakeup sequence for Tegra210 and defines
->>>>>>>>> common used RTC alarm wake event.
->>>>>>>>>
->>>>>>>>> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
->>>>>>>>> ---
->>>>>>>>>    drivers/soc/tegra/pmc.c | 111
->>>>>>>>> ++++++++++++++++++++++++++++++++++++++++++++++++
->>>>>>>>>    1 file changed, 111 insertions(+)
->>>>>>>>>
->>>>>>>>> diff --git a/drivers/soc/tegra/pmc.c b/drivers/soc/tegra/pmc.c
->>>>>>>>> index 91c84d0e66ae..c556f38874e1 100644
->>>>>>>>> --- a/drivers/soc/tegra/pmc.c
->>>>>>>>> +++ b/drivers/soc/tegra/pmc.c
->>>>>>>>> @@ -57,6 +57,12 @@
->>>>>>>>>    #define  PMC_CNTRL_SYSCLK_OE        BIT(11) /* system clock
->>>>>>>>> enable */
->>>>>>>>>    #define  PMC_CNTRL_SYSCLK_POLARITY    BIT(10) /* sys clk
->>>>>>>>> polarity */
->>>>>>>>>    #define  PMC_CNTRL_MAIN_RST        BIT(4)
->>>>>>>>> +#define  PMC_CNTRL_LATCH_WAKEUPS    BIT(5)
->>>>>>> Please follow the TRM's bits naming.
->>>>>>>
->>>>>>> PMC_CNTRL_LATCHWAKE_EN
->>>>>>>
->>>>>>>>> +#define PMC_WAKE_MASK            0x0c
->>>>>>>>> +#define PMC_WAKE_LEVEL            0x10
->>>>>>>>> +#define PMC_WAKE_STATUS            0x14
->>>>>>>>> +#define PMC_SW_WAKE_STATUS        0x18
->>>>>>>>>      #define DPD_SAMPLE            0x020
->>>>>>>>>    #define  DPD_SAMPLE_ENABLE        BIT(0)
->>>>>>>>> @@ -87,6 +93,11 @@
->>>>>>>>>      #define PMC_SCRATCH41            0x140
->>>>>>>>>    +#define PMC_WAKE2_MASK            0x160
->>>>>>>>> +#define PMC_WAKE2_LEVEL            0x164
->>>>>>>>> +#define PMC_WAKE2_STATUS        0x168
->>>>>>>>> +#define PMC_SW_WAKE2_STATUS        0x16c
->>>>>>>>> +
->>>>>>>>>    #define PMC_SENSOR_CTRL            0x1b0
->>>>>>>>>    #define  PMC_SENSOR_CTRL_SCRATCH_WRITE    BIT(2)
->>>>>>>>>    #define  PMC_SENSOR_CTRL_ENABLE_RST    BIT(1)
->>>>>>>>> @@ -1922,6 +1933,55 @@ static const struct irq_domain_ops
->>>>>>>>> tegra_pmc_irq_domain_ops = {
->>>>>>>>>        .alloc = tegra_pmc_irq_alloc,
->>>>>>>>>    };
->>>>>>>>>    +static int tegra210_pmc_irq_set_wake(struct irq_data *data,
->>>>>>>>> unsigned int on)
->>>>>>>>> +{
->>>>>>>>> +    struct tegra_pmc *pmc = irq_data_get_irq_chip_data(data);
->>>>>>>>> +    unsigned int offset, bit;
->>>>>>>>> +    u32 value;
->>>>>>>>> +
->>>>>>>>> +    if (data->hwirq == ULONG_MAX)
->>>>>>>>> +        return 0;
->>>>>>>>> +
->>>>>>>>> +    offset = data->hwirq / 32;
->>>>>>>>> +    bit = data->hwirq % 32;
->>>>>>>>> +
->>>>>>>>> +    /*
->>>>>>>>> +     * Latch wakeups to SW_WAKE_STATUS register to capture events
->>>>>>>>> +     * that would not make it into wakeup event register during
->>>>>>>>> LP0 exit.
->>>>>>>>> +     */
->>>>>>>>> +    value = tegra_pmc_readl(pmc, PMC_CNTRL);
->>>>>>>>> +    value |= PMC_CNTRL_LATCH_WAKEUPS;
->>>>>>>>> +    tegra_pmc_writel(pmc, value, PMC_CNTRL);
->>>>>>>>> +    udelay(120);
->>>>>>>> Why it takes so much time to latch the values? Shouldn't some
->>>>>>>> status-bit
->>>>>>>> be polled for the completion of latching?
->>>>>>>>
->>>>>>>> Is this register-write really getting buffered in the PMC?
->>>>>>>>
->>>>>>>>> +    value &= ~PMC_CNTRL_LATCH_WAKEUPS;
->>>>>>>>> +    tegra_pmc_writel(pmc, value, PMC_CNTRL);
->>>>>>>>> +    udelay(120);
->>>>>>>> 120 usecs to remove latching, really?
->>>>>>>>
->>>>>>>>> +    tegra_pmc_writel(pmc, 0, PMC_SW_WAKE_STATUS);
->>>>>>>>> +    tegra_pmc_writel(pmc, 0, PMC_SW_WAKE2_STATUS);
->>>>>>>>> +
->>>>>>>>> +    tegra_pmc_writel(pmc, 0, PMC_WAKE_STATUS);
->>>>>>>>> +    tegra_pmc_writel(pmc, 0, PMC_WAKE2_STATUS);
->>>>>>>>> +
->>>>>>>>> +    /* enable PMC wake */
->>>>>>>>> +    if (data->hwirq >= 32)
->>>>>>>>> +        offset = PMC_WAKE2_MASK;
->>>>>>>>> +    else
->>>>>>>>> +        offset = PMC_WAKE_MASK;
->>>>>>>>> +
->>>>>>>>> +    value = tegra_pmc_readl(pmc, offset);
->>>>>>>>> +
->>>>>>>>> +    if (on)
->>>>>>>>> +        value |= 1 << bit;
->>>>>>>>> +    else
->>>>>>>>> +        value &= ~(1 << bit);
->>>>>>>>> +
->>>>>>>>> +    tegra_pmc_writel(pmc, value, offset);
->>>>>>>> Why the latching is done *before* writing into the WAKE registers?
->>>>>>>> What
->>>>>>>> it is latching then?
->>>>>>> I'm looking at the TRM doc and it says that latching should be done
->>>>>>> *after* writing to the WAKE_MASK / LEVEL registers.
->>>>>>>
->>>>>>> Secondly it says that it's enough to do:
->>>>>>>
->>>>>>> value = tegra_pmc_readl(pmc, PMC_CNTRL);
->>>>>>> value |= PMC_CNTRL_LATCH_WAKEUPS;
->>>>>>> tegra_pmc_writel(pmc, value, PMC_CNTRL);
->>>>>>>
->>>>>>> in order to latch. There is no need for the delay and to remove the
->>>>>>> "LATCHWAKE_EN" bit, it should be a oneshot action.
->>>>>> Although, no. TRM says "stops latching on transition from 1
->>>>>> to 0 (sequence - set to 1,set to 0)", so it's not a oneshot action.
->>>>>>
->>>>>> Have you tested this code at all? I'm wondering how it happens to
->>>>>> work
->>>>>> without a proper latching.
->>>>> Yes, ofcourse its tested and this sequence to do transition is
->>>>> recommendation from Tegra designer.
->>>>> Will check if TRM doesn't have update properly or will re-confirm
->>>>> internally on delay time...
->>>>>
->>>>> On any of the wake event PMC wakeup happens and WAKE_STATUS register
->>>>> will have bits set for all events that triggered wake.
->>>>> After wakeup PMC doesn't update SW_WAKE_STATUS register as per PMC
->>>>> design.
->>>>> SW latch register added in design helps to provide a way to capture
->>>>> those events that happen right during wakeup time and didnt make it to
->>>>> SW_WAKE_STATUS register.
->>>>> So before next suspend entry, latching all prior wake events into SW
->>>>> WAKE_STATUS and then clearing them.
->>>> I'm now wondering whether the latching cold be turned ON permanently
->>>> during of the PMC's probe, for simplicity.
->>> latching should be done on suspend-resume cycle as wake events gets
->>> generates on every suspend-resume cycle.
->> You're saying that PMC "doesn't update SW_WAKE_STATUS" after wake-up,
->> then I don't quite understand what's the point of disabling the latching
->> at all.
-> When latch wake enable is set, events are latched and during 1 to 0
-> transition latching is disabled.
-> 
-> This is to avoid sw_wake_status and wake_status showing diff events.
-
-Okay.
-
-> Currently driver is not relying on SW_WAKE_STATUS but its good to latch
-> and clear so even at some point for some reason when SW_WAKE_STATUS is
-> used, this wlil not cause mismatch with wake_status.
-
-Then the latching need to be enabled on suspend and disabled early on
-resume to get a proper WAKE status.
-
-[snip]
-
+DQoNCk9uIDIyLzA3LzIwMTkgMTk6MDcsIFN0ZWZhbiBXYWhyZW4gd3JvdGU6DQo+IFRoaXMgYWRk
+cyBhIHJlZmVyZW5jZSB0byB0aGUgZHRzIG9mIHRoZSBSYXNwYmVycnkgUGkgNCBCLA0KPiBzbyB3
+ZSBkb24ndCBuZWVkIHRvIG1haW50YWluIHRoZSBjb250ZW50IGluIGFybTY0Lg0KPiANCj4gU2ln
+bmVkLW9mZi1ieTogU3RlZmFuIFdhaHJlbiA8d2FocmVuc3RAZ214Lm5ldD4NCg0KQUZBSUsgYXJt
+NjQgZG9lc24ndCBib290IHdpdGhvdXQgdGhlIERNQSBSRkMgcGF0Y2ggc2VyaWVzIGZyb20gTmlj
+b2xhcy4gU28gbWF5YmUNCndlIHNob3VsZCB3YWl0IHVudGlsIHRoaXMgaXMgZml4ZWQgYmVmb3Jl
+IGFkZGluZyBhIGZvciBub3cgYnJva2VuIGRldmljZS4NCg0KUmVnYXJkcywNCk1hdHRoaWFzDQoN
+Cj4gLS0tDQo+ICBhcmNoL2FybTY0L2Jvb3QvZHRzL2Jyb2FkY29tL01ha2VmaWxlICAgICAgICAg
+ICAgfCAzICsrLQ0KPiAgYXJjaC9hcm02NC9ib290L2R0cy9icm9hZGNvbS9iY20yNzExLXJwaS00
+LWIuZHRzIHwgMiArKw0KPiAgMiBmaWxlcyBjaGFuZ2VkLCA0IGluc2VydGlvbnMoKyksIDEgZGVs
+ZXRpb24oLSkNCj4gIGNyZWF0ZSBtb2RlIDEwMDY0NCBhcmNoL2FybTY0L2Jvb3QvZHRzL2Jyb2Fk
+Y29tL2JjbTI3MTEtcnBpLTQtYi5kdHMNCj4gDQo+IGRpZmYgLS1naXQgYS9hcmNoL2FybTY0L2Jv
+b3QvZHRzL2Jyb2FkY29tL01ha2VmaWxlIGIvYXJjaC9hcm02NC9ib290L2R0cy9icm9hZGNvbS9N
+YWtlZmlsZQ0KPiBpbmRleCBkMWQzMWNjLi5jYjdkZThkIDEwMDY0NA0KPiAtLS0gYS9hcmNoL2Fy
+bTY0L2Jvb3QvZHRzL2Jyb2FkY29tL01ha2VmaWxlDQo+ICsrKyBiL2FyY2gvYXJtNjQvYm9vdC9k
+dHMvYnJvYWRjb20vTWFrZWZpbGUNCj4gQEAgLTEsNSArMSw2IEBADQo+ICAjIFNQRFgtTGljZW5z
+ZS1JZGVudGlmaWVyOiBHUEwtMi4wDQo+IC1kdGItJChDT05GSUdfQVJDSF9CQ00yODM1KSArPSBi
+Y20yODM3LXJwaS0zLWEtcGx1cy5kdGIgXA0KPiArZHRiLSQoQ09ORklHX0FSQ0hfQkNNMjgzNSkg
+Kz0gYmNtMjcxMS1ycGktNC1iLmR0YiBcDQo+ICsJCQkgICAgICBiY20yODM3LXJwaS0zLWEtcGx1
+cy5kdGIgXA0KPiAgCQkJICAgICAgYmNtMjgzNy1ycGktMy1iLmR0YiBcDQo+ICAJCQkgICAgICBi
+Y20yODM3LXJwaS0zLWItcGx1cy5kdGIgXA0KPiAgCQkJICAgICAgYmNtMjgzNy1ycGktY20zLWlv
+My5kdGINCj4gZGlmZiAtLWdpdCBhL2FyY2gvYXJtNjQvYm9vdC9kdHMvYnJvYWRjb20vYmNtMjcx
+MS1ycGktNC1iLmR0cyBiL2FyY2gvYXJtNjQvYm9vdC9kdHMvYnJvYWRjb20vYmNtMjcxMS1ycGkt
+NC1iLmR0cw0KPiBuZXcgZmlsZSBtb2RlIDEwMDY0NA0KPiBpbmRleCAwMDAwMDAwLi5kMjRjNTM2
+DQo+IC0tLSAvZGV2L251bGwNCj4gKysrIGIvYXJjaC9hcm02NC9ib290L2R0cy9icm9hZGNvbS9i
+Y20yNzExLXJwaS00LWIuZHRzDQo+IEBAIC0wLDAgKzEsMiBAQA0KPiArLy8gU1BEWC1MaWNlbnNl
+LUlkZW50aWZpZXI6IEdQTC0yLjANCj4gKyNpbmNsdWRlICJhcm0vYmNtMjcxMS1ycGktNC1iLmR0
+cyINCj4gLS0NCj4gMi43LjQNCj4gDQo+IA0K
