@@ -2,44 +2,42 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id C90AB71BF9
-	for <lists+linux-gpio@lfdr.de>; Tue, 23 Jul 2019 17:40:09 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 422DD71C34
+	for <lists+linux-gpio@lfdr.de>; Tue, 23 Jul 2019 17:51:36 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728822AbfGWPj7 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 23 Jul 2019 11:39:59 -0400
-Received: from mga11.intel.com ([192.55.52.93]:24246 "EHLO mga11.intel.com"
+        id S1732233AbfGWPvf (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 23 Jul 2019 11:51:35 -0400
+Received: from mga12.intel.com ([192.55.52.136]:12845 "EHLO mga12.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388432AbfGWPj7 (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Tue, 23 Jul 2019 11:39:59 -0400
+        id S1730008AbfGWPvf (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Tue, 23 Jul 2019 11:51:35 -0400
 X-Amp-Result: UNKNOWN
 X-Amp-Original-Verdict: FILE UNKNOWN
 X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 23 Jul 2019 08:39:58 -0700
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 23 Jul 2019 08:51:34 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.64,299,1559545200"; 
-   d="scan'208";a="193104316"
+   d="scan'208";a="169598099"
 Received: from smile.fi.intel.com (HELO smile) ([10.237.68.145])
-  by fmsmga004.fm.intel.com with ESMTP; 23 Jul 2019 08:39:57 -0700
+  by fmsmga008.fm.intel.com with ESMTP; 23 Jul 2019 08:51:34 -0700
 Received: from andy by smile with local (Exim 4.92)
         (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1hpwtQ-0004OM-5z; Tue, 23 Jul 2019 18:39:56 +0300
-Date:   Tue, 23 Jul 2019 18:39:56 +0300
+        id 1hpx4e-0004aZ-Rg; Tue, 23 Jul 2019 18:51:32 +0300
+Date:   Tue, 23 Jul 2019 18:51:32 +0300
 From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Cc:     Chuhong Yuan <hslester96@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-gpio <linux-gpio@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] gpio: Use dev_get_drvdata
-Message-ID: <20190723153956.GN9224@smile.fi.intel.com>
-References: <20190723082933.21134-1-hslester96@gmail.com>
- <CAMpxmJUCPCyC-n9V+o5veMTm-yui8H2vdn1ceqZN=VG+yosLOw@mail.gmail.com>
+To:     Mika Westerberg <mika.westerberg@linux.intel.com>
+Cc:     linux-gpio@vger.kernel.org,
+        Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH v1 1/4] pinctrl: baytrail: Use
+ devm_platform_ioremap_resource()
+Message-ID: <20190723155132.GO9224@smile.fi.intel.com>
+References: <20190703145615.74768-1-andriy.shevchenko@linux.intel.com>
+ <20190703163630.GY2640@lahna.fi.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAMpxmJUCPCyC-n9V+o5veMTm-yui8H2vdn1ceqZN=VG+yosLOw@mail.gmail.com>
+In-Reply-To: <20190703163630.GY2640@lahna.fi.intel.com>
 Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-gpio-owner@vger.kernel.org
@@ -47,48 +45,18 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Jul 23, 2019 at 10:34:28AM +0200, Bartosz Golaszewski wrote:
-> wt., 23 lip 2019 o 10:29 Chuhong Yuan <hslester96@gmail.com> napisał(a):
-> >
-> > Instead of using to_pci_dev + pci_get_drvdata,
-> > use dev_get_drvdata to make code simpler.
-> >
-> > Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
-> > ---
-> >  drivers/gpio/gpio-pch.c | 6 ++----
-> >  1 file changed, 2 insertions(+), 4 deletions(-)
-> >
-> > diff --git a/drivers/gpio/gpio-pch.c b/drivers/gpio/gpio-pch.c
-> > index 1d99293096f2..3f3d9a94b709 100644
-> > --- a/drivers/gpio/gpio-pch.c
-> > +++ b/drivers/gpio/gpio-pch.c
-> > @@ -409,8 +409,7 @@ static int pch_gpio_probe(struct pci_dev *pdev,
-> >
-> >  static int __maybe_unused pch_gpio_suspend(struct device *dev)
-> >  {
-> > -       struct pci_dev *pdev = to_pci_dev(dev);
-> > -       struct pch_gpio *chip = pci_get_drvdata(pdev);
-> > +       struct pch_gpio *chip = dev_get_drvdata(dev);
-> >         unsigned long flags;
-> >
-> >         spin_lock_irqsave(&chip->spinlock, flags);
-> > @@ -422,8 +421,7 @@ static int __maybe_unused pch_gpio_suspend(struct device *dev)
-> >
-> >  static int __maybe_unused pch_gpio_resume(struct device *dev)
-> >  {
-> > -       struct pci_dev *pdev = to_pci_dev(dev);
-> > -       struct pch_gpio *chip = pci_get_drvdata(pdev);
-> > +       struct pch_gpio *chip = dev_get_drvdata(dev);
-> >         unsigned long flags;
-> >
-> >         spin_lock_irqsave(&chip->spinlock, flags);
-> > --
-> > 2.20.1
-> >
+On Wed, Jul 03, 2019 at 07:36:30PM +0300, Mika Westerberg wrote:
+> On Wed, Jul 03, 2019 at 05:56:12PM +0300, Andy Shevchenko wrote:
+> > Use the new helper that wraps the calls to platform_get_resource()
+> > and devm_ioremap_resource() together.
+> > 
+> > Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 > 
-> The subject line should start with gpio: pch: ...
+> For the whole series,
+> 
+> Acked-by: Mika Westerberg <mika.westerberg@linux.intel.com>
 
-I can change it when apply to gpio-intel tree.
+Pushed to my review and testing queue, thanks!
 
 -- 
 With Best Regards,
