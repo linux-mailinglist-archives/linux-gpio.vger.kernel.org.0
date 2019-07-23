@@ -2,52 +2,51 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 7662070EF7
-	for <lists+linux-gpio@lfdr.de>; Tue, 23 Jul 2019 04:10:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 57C7B70F7D
+	for <lists+linux-gpio@lfdr.de>; Tue, 23 Jul 2019 05:04:03 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727043AbfGWCKt (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 22 Jul 2019 22:10:49 -0400
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:46081 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726947AbfGWCKt (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 22 Jul 2019 22:10:49 -0400
-Received: by mail-lf1-f66.google.com with SMTP id z15so23847258lfh.13;
-        Mon, 22 Jul 2019 19:10:46 -0700 (PDT)
+        id S1732299AbfGWDEC (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 22 Jul 2019 23:04:02 -0400
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:36028 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729393AbfGWDEC (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 22 Jul 2019 23:04:02 -0400
+Received: by mail-lj1-f196.google.com with SMTP id i21so39571715ljj.3;
+        Mon, 22 Jul 2019 20:03:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=subject:from:to:cc:references:message-id:date:user-agent
+        h=subject:to:cc:references:from:message-id:date:user-agent
          :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=IyrvOSRKCivOMvILIO2BZMozvcKDGXoXX6egNu4aymQ=;
-        b=gV4ZyBuEdaIC2hftjZoSW7BNZo2VtXPZXPSxAfvplJgEtThCxif7qvsmYWpdikFYjT
-         Jn3USvtd8PJCx7wHTUEgP5+WsgjKmtmBRiV6Z3Ly0vM7gbyvyItBZ5mFTzd4FuSe8NpY
-         8P13iS5kfkoOTxUZMJB+EOaaUggmFcC7kV+pVmE+Q4oAlVUa1Q7p46lvihSzbucyU2wq
-         4D868op1/4sX3AGFWvqK2EU6dbw/xl9s6OWSpWyTYrs9mw3gzqko2PyQiTQKuvo4eRKk
-         Ddij/sTlffz8h10INnOaZuE3hbbIh8oJ00vdwKdxIstOPRIqUlGItZ4J4XuiIvs13fDY
-         mLBg==
+        bh=8xbcKJy29W9G+6XFE1SC4ZEJ7ZY2qDVosxzEJUyDA3k=;
+        b=dhH0Wq6jctTT0KZfsJddhvq1G1G44ETwwJwZUYIanj2xXEYbrAAAGzOiQx9XRTPg19
+         KK5/aOPuox9Mpc82+wFVtl6vPFiNA3RFMK3twfyHscqP5p+QELoM3nISicyqTupMupYR
+         yioRDPw9zIwc1t5MfHFB0RRavezCI+n3iimYR+Z1MqhGH+GcTKGtX0GwfyToWKkLJTRi
+         ZjGD+Vk5t9T6dlK67Q6wGlFHQfn7hPn6ebs4XJj99aohtFryRVjGrcvBb8noeDYpw+WI
+         Lze88rtPHrVo8yLWzVG4k5eQerAGVBOQBriuC78hGx+/pzKEIkCezt0/kMUrqsWTHs3g
+         05lg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=IyrvOSRKCivOMvILIO2BZMozvcKDGXoXX6egNu4aymQ=;
-        b=cw+tOmh/OP827zsoli6X21Ku8de+f4yRgugcKXrfkZ/C8P+ugbdR4sxz13kK3XE+jT
-         qiLkmTCn/S+KkAzAjEz+O15DnFCOFTPpMiBTr2sGcWlAeydF+lFWHRi4wYsAWKvqYUL9
-         yEpTQEywNWTZ8JvpNsQEQrSL+yJ9A442CTpgCCSA2qYyz2vVZKtw6lQFpU+EDkItRgvg
-         1ZHm5M/A9/DvN2n4bYQ35fxpxMFo5lOC0lscRRlfS81I8ckgk9O7nK3w01pbxS6PvinO
-         bpjmVHRkoq+guWjBGurcYNE/ATKO+7I1x3yXZ8Bgmd7rn0BP0qzKNPCqOyZvz92BhUtW
-         kvRQ==
-X-Gm-Message-State: APjAAAWYDtL4HmcbGbusf/NAzSDCkYOnNpvp5IQZ77fSxBIl9HNb5ol+
-        mNAdFwIazDPXHC2rfMKfgDXcm8RJ
-X-Google-Smtp-Source: APXvYqy9hIqdiQUuv5Zq1wXUGllm9AiHi7FBtM/XDmXTDaHOJqunH34c8QFVe5E2xO8SY8P2OHfawA==
-X-Received: by 2002:a05:6512:c1:: with SMTP id c1mr10560867lfp.35.1563847845803;
-        Mon, 22 Jul 2019 19:10:45 -0700 (PDT)
+        bh=8xbcKJy29W9G+6XFE1SC4ZEJ7ZY2qDVosxzEJUyDA3k=;
+        b=I131ca3UuYhE7ok2mTJM2RNKd5S85UqMp4e1Yd0/32Etwk7nKnozomql6lg8thO/07
+         5th4pvQ3UZWip0j14nE9M08mBV8iWMbgIuJE96QSxJzDCInje85pyYTy2nkIKL7esR8V
+         ItaFIRdDN+8T0x3sWLqopJiKONUsf+cwEsRDQlsd8nW7H+SmfwRkA8jRt7GobiqUia4i
+         tROz3RKkDSIt8Q+nNNK9dUQ4xJmGlV05D+TEc6YtXqJLsx6vDzIFtD5Jcfqu4JYuvYdY
+         wkw7J/2HvGX1Vw6P135Hw5TVBk86HusSOEjk8lkskcu6CDZY2iU/XDSwa4EfneJCSZ+3
+         6IOQ==
+X-Gm-Message-State: APjAAAXsgdwktaJA8GyNh+2wUqprlGoSk7gfPf8d66S5jWoZILv7hF2x
+        o5pMH1hWbTH+Y58D55Ul+t3u4vQx
+X-Google-Smtp-Source: APXvYqyeyyE61yAzRlbwRkjixJ+MzgQknlzT+x38lMna/B3NIntesYyRiOe7y8U6JuyVtOoznHY7MA==
+X-Received: by 2002:a2e:534a:: with SMTP id t10mr967702ljd.109.1563851037966;
+        Mon, 22 Jul 2019 20:03:57 -0700 (PDT)
 Received: from [192.168.2.145] (ppp91-78-220-99.pppoe.mtu-net.ru. [91.78.220.99])
-        by smtp.googlemail.com with ESMTPSA id c19sm6179683lfi.39.2019.07.22.19.10.44
+        by smtp.googlemail.com with ESMTPSA id m10sm6182450lfd.32.2019.07.22.20.03.55
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 22 Jul 2019 19:10:45 -0700 (PDT)
+        Mon, 22 Jul 2019 20:03:56 -0700 (PDT)
 Subject: Re: [PATCH V6 16/21] soc/tegra: pmc: Add pmc wake support for
  tegra210
-From:   Dmitry Osipenko <digetx@gmail.com>
 To:     Sowjanya Komatineni <skomatineni@nvidia.com>,
         thierry.reding@gmail.com, jonathanh@nvidia.com, tglx@linutronix.de,
         jason@lakedaemon.net, marc.zyngier@arm.com,
@@ -63,13 +62,14 @@ References: <1563738060-30213-1-git-send-email-skomatineni@nvidia.com>
  <0b3d08ea-4633-8a54-ba66-c3f3146a1ece@gmail.com>
  <ca32c2d8-d752-3ecd-3a3f-232366730c7b@gmail.com>
  <b575ca93-9f34-b07a-1234-ef1ea2a6ddee@gmail.com>
- <66535c01-7079-0192-c992-c25a4d7cdbb9@gmail.com>
-Message-ID: <b3326073-23f0-9a8d-535e-e6475b17a56e@gmail.com>
-Date:   Tue, 23 Jul 2019 05:10:43 +0300
+ <71a88a9c-a542-557a-0eaa-3c90112dee0e@nvidia.com>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <70ad28cb-c268-cbbe-36f5-39df26617d8e@gmail.com>
+Date:   Tue, 23 Jul 2019 06:03:55 +0300
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.7.2
 MIME-Version: 1.0
-In-Reply-To: <66535c01-7079-0192-c992-c25a4d7cdbb9@gmail.com>
+In-Reply-To: <71a88a9c-a542-557a-0eaa-3c90112dee0e@nvidia.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 8bit
@@ -78,8 +78,9 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-23.07.2019 4:52, Dmitry Osipenko пишет:
-> 23.07.2019 4:41, Dmitry Osipenko пишет:
+23.07.2019 4:52, Sowjanya Komatineni пишет:
+> 
+> On 7/22/19 6:41 PM, Dmitry Osipenko wrote:
 >> 23.07.2019 4:08, Dmitry Osipenko пишет:
 >>> 23.07.2019 3:58, Dmitry Osipenko пишет:
 >>>> 21.07.2019 22:40, Sowjanya Komatineni пишет:
@@ -100,7 +101,6 @@ X-Mailing-List: linux-gpio@vger.kernel.org
 >>>>>  #define  PMC_CNTRL_SYSCLK_POLARITY	BIT(10) /* sys clk polarity */
 >>>>>  #define  PMC_CNTRL_MAIN_RST		BIT(4)
 >>>>> +#define  PMC_CNTRL_LATCH_WAKEUPS	BIT(5)
->>>
 >>> Please follow the TRM's bits naming.
 >>>
 >>> PMC_CNTRL_LATCHWAKE_EN
@@ -148,7 +148,6 @@ X-Mailing-List: linux-gpio@vger.kernel.org
 >>>>> +	value |= PMC_CNTRL_LATCH_WAKEUPS;
 >>>>> +	tegra_pmc_writel(pmc, value, PMC_CNTRL);
 >>>>> +	udelay(120);
->>>>
 >>>> Why it takes so much time to latch the values? Shouldn't some status-bit
 >>>> be polled for the completion of latching?
 >>>>
@@ -157,7 +156,6 @@ X-Mailing-List: linux-gpio@vger.kernel.org
 >>>>> +	value &= ~PMC_CNTRL_LATCH_WAKEUPS;
 >>>>> +	tegra_pmc_writel(pmc, value, PMC_CNTRL);
 >>>>> +	udelay(120);
->>>>
 >>>> 120 usecs to remove latching, really?
 >>>>
 >>>>> +	tegra_pmc_writel(pmc, 0, PMC_SW_WAKE_STATUS);
@@ -180,10 +178,8 @@ X-Mailing-List: linux-gpio@vger.kernel.org
 >>>>> +		value &= ~(1 << bit);
 >>>>> +
 >>>>> +	tegra_pmc_writel(pmc, value, offset);
->>>>
 >>>> Why the latching is done *before* writing into the WAKE registers? What
 >>>> it is latching then?
->>>
 >>> I'm looking at the TRM doc and it says that latching should be done
 >>> *after* writing to the WAKE_MASK / LEVEL registers.
 >>>
@@ -195,29 +191,34 @@ X-Mailing-List: linux-gpio@vger.kernel.org
 >>>
 >>> in order to latch. There is no need for the delay and to remove the
 >>> "LATCHWAKE_EN" bit, it should be a oneshot action.
->>
 >> Although, no. TRM says "stops latching on transition from 1
 >> to 0 (sequence - set to 1,set to 0)", so it's not a oneshot action.
 >>
 >> Have you tested this code at all? I'm wondering how it happens to work
 >> without a proper latching.
+> Yes, ofcourse its tested and this sequence to do transition is
+> recommendation from Tegra designer.
+> Will check if TRM doesn't have update properly or will re-confirm
+> internally on delay time...
 > 
-> Okay, I re-read the TRM and apparently "latching" just means storing of
-> WAKE-event bit in the WAKE-status register if latching is enabled. Hence
-> the PMC_CNTRL_LATCHWAKE_EN should be enabled in tegra_pmc_suspend() and
-> unset in tegra_pmc_resume().
-> 
-> Also, apparently, on resume from suspend the interrupt should be
-> re-triggered in accordance to the WAKE-status, then the WAKE-status need
-> to be cleared.
+> On any of the wake event PMC wakeup happens and WAKE_STATUS register
+> will have bits set for all events that triggered wake.
+> After wakeup PMC doesn't update SW_WAKE_STATUS register as per PMC design.
+> SW latch register added in design helps to provide a way to capture
+> those events that happen right during wakeup time and didnt make it to
+> SW_WAKE_STATUS register.
+> So before next suspend entry, latching all prior wake events into SW
+> WAKE_STATUS and then clearing them.
 
-I'm now also recalling that downstream kernel had some problems in
-regards to missing power-button presses on resume from suspend because
-input driver reads the GPIO-key state in order to determine the press
-status and the GPIO state in already unset at the time when input driver
-resumes. Hence it happened sometime that after pressing power button,
-device waked up from LP0 and then immediately went into suspend (due to
-android's wakelocks).
+I'm now wondering whether the latching cold be turned ON permanently
+during of the PMC's probe, for simplicity.
+
+> LATCHWAKE_EN - When set, enables latching and stops latching on
+> transition from 1 to 0
+> There is recommendation of min 120uSec for this transition to stop
+> latching. Will double-check why 120uSec
+
+Yes, please check.
 
 >>>>> +	return 0;
 >>>>> +}
@@ -268,44 +269,10 @@ android's wakelocks).
 >>>>> +	}
 >>>>> +
 >>>>> +	tegra_pmc_writel(pmc, value, offset);
->>>>
 >>>> Shouldn't the WAKE_LEVEL be latched as well?
->>>>
->>>>> +	return 0;
->>>>> +}
->>>>> +
->>>>>  static int tegra186_pmc_irq_set_type(struct irq_data *data, unsigned int type)
->>>>>  {
->>>>>  	struct tegra_pmc *pmc = irq_data_get_irq_chip_data(data);
->>>>> @@ -2540,6 +2643,10 @@ static const struct pinctrl_pin_desc tegra210_pin_descs[] = {
->>>>>  	TEGRA210_IO_PAD_TABLE(TEGRA_IO_PIN_DESC)
->>>>>  };
->>>>>  
->>>>> +static const struct tegra_wake_event tegra210_wake_events[] = {
->>>>> +	TEGRA_WAKE_IRQ("rtc", 16, 2),
->>>>> +};
->>>>> +
->>>>>  static const struct tegra_pmc_soc tegra210_pmc_soc = {
->>>>>  	.num_powergates = ARRAY_SIZE(tegra210_powergates),
->>>>>  	.powergates = tegra210_powergates,
->>>>> @@ -2557,10 +2664,14 @@ static const struct tegra_pmc_soc tegra210_pmc_soc = {
->>>>>  	.regs = &tegra20_pmc_regs,
->>>>>  	.init = tegra20_pmc_init,
->>>>>  	.setup_irq_polarity = tegra20_pmc_setup_irq_polarity,
->>>>> +	.irq_set_wake = tegra210_pmc_irq_set_wake,
->>>>> +	.irq_set_type = tegra210_pmc_irq_set_type,
->>>>>  	.reset_sources = tegra210_reset_sources,
->>>>>  	.num_reset_sources = ARRAY_SIZE(tegra210_reset_sources),
->>>>>  	.reset_levels = NULL,
->>>>>  	.num_reset_levels = 0,
->>>>> +	.num_wake_events = ARRAY_SIZE(tegra210_wake_events),
->>>>> +	.wake_events = tegra210_wake_events,
->>>>>  };
->>>>>  
->>>>>  #define TEGRA186_IO_PAD_TABLE(_pad)					     \
->>>>>
->>>>
->>>
->>
-> 
+> WAKE_LEVELs dont need any latch as they are the levels SW sets for wake
+> trigger and they are not status
 
+Okay.
+
+[snip]
