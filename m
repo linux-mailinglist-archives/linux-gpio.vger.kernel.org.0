@@ -2,104 +2,196 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 276A171581
-	for <lists+linux-gpio@lfdr.de>; Tue, 23 Jul 2019 11:49:59 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7242B71940
+	for <lists+linux-gpio@lfdr.de>; Tue, 23 Jul 2019 15:32:17 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730780AbfGWJt6 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 23 Jul 2019 05:49:58 -0400
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:37003 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730761AbfGWJt6 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 23 Jul 2019 05:49:58 -0400
-Received: by mail-ot1-f65.google.com with SMTP id s20so43385295otp.4
-        for <linux-gpio@vger.kernel.org>; Tue, 23 Jul 2019 02:49:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=sh8Gc/dDBQF/6zDo3pKFTalGj99cpIcGxIJ53WfTdj0=;
-        b=nke0MrUX3OvwZpA1bB9noPZ3vMbhXdQw+Cz3LO/mmo/787/8QWtACjGrTkwx8pggC0
-         x0MzMTWbECWPn/YZ1n4y+tzbUdlwpZFUXDBGX2Nqlcd8APDfD/jilQGorn3ax9AtXNlv
-         ex6ECuI1kIPDkry1PxIyIIWG4V3buANHA6NGp41bQaq1sT5vHdzq+6rsB4qQH5wkpowi
-         dQhYNRDEiJQvkD7dvdr/F1wHeXIFbdB0R4ybMnh/D2som7n+C5pN2wEdn4AvlgDlmnmI
-         IvD082Y3295uyUC5JuH8yCaFpVWpHnhuljaRwWGGUoj75LBwhqRbiqk5fliVQaCSXk1Q
-         sY3g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=sh8Gc/dDBQF/6zDo3pKFTalGj99cpIcGxIJ53WfTdj0=;
-        b=P5SBgHfplHEkkRt96t0B3FQmHCkEw8lhxm94M8DOP0SsR0k5QZ/ao/FMGEINMLvUQW
-         GoeF8BZ8d5vOkGFvtB3SyxFjXYt0oDycp2v67FC3B5igTSs/gZpMAU5iCHYBP7dX3Dv/
-         e2IFADwVdZtvV3dnMSsb1lzvShJg+IifJuuwt3a2BfXJm1od7mTLrV7p0UhUvWTuV5pU
-         VnoTwQEkuRPKZEPDuoJBEmuWuopDbKDFXeG6qeI6J2qnQ105LY6hVVZdFJZxW0AL0EwX
-         eS4i3ROCKr3ZqfA+tWnZfzDJCUbRyQWlkneMTUm6aOPwIX/QfQrpRVXwbAqQ6WabBnxr
-         cCnA==
-X-Gm-Message-State: APjAAAXo8ovw12/d72NXx8z69zgX9jOFigARH932whPGghnO68sSTyHf
-        cyPL45vXyd+8GKwzfvbx4FxVfxlOG3RqFGJgs0KH+g==
-X-Google-Smtp-Source: APXvYqxoGqbzcMIgzth28GEyHqRvFwSXNNCEIipw0pQipVSlS7MWKe0DATd4V4qHqhQUT8PK/ZL2FxatleMtVIqj/5M=
-X-Received: by 2002:a9d:7352:: with SMTP id l18mr51709290otk.292.1563875397393;
- Tue, 23 Jul 2019 02:49:57 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190723083923.21392-1-hslester96@gmail.com>
-In-Reply-To: <20190723083923.21392-1-hslester96@gmail.com>
-From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Date:   Tue, 23 Jul 2019 11:49:46 +0200
-Message-ID: <CAMpxmJXkg8wiLOj9rQs+aNx+_oqb_tUWeELmrWQd7GXi-qAueA@mail.gmail.com>
-Subject: Re: [PATCH v2] gpio: pch: Use dev_get_drvdata
-To:     Chuhong Yuan <hslester96@gmail.com>
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        id S2390254AbfGWNcQ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 23 Jul 2019 09:32:16 -0400
+Received: from mx2.suse.de ([195.135.220.15]:33496 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725827AbfGWNcQ (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Tue, 23 Jul 2019 09:32:16 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 1E57CAEFC;
+        Tue, 23 Jul 2019 13:32:14 +0000 (UTC)
+Message-ID: <04c5eaa03f3a124dbbce6186e11e19acc4539cc8.camel@suse.de>
+Subject: Re: [PATCH 00/18] ARM: Add minimal Raspberry Pi 4 support
+From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+To:     Christoph Hellwig <hch@lst.de>, Stefan Wahren <wahrenst@gmx.net>
+Cc:     Eric Anholt <eric@anholt.net>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Ray Jui <rjui@broadcom.com>,
+        Scott Branden <sbranden@broadcom.com>,
+        Matthias Brugger <mbrugger@suse.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
         Linus Walleij <linus.walleij@linaro.org>,
-        linux-gpio <linux-gpio@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        bcm-kernel-feedback-list@broadcom.com,
+        linux-arm-kernel@lists.infradead.org,
+        linux-rpi-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
+        linux-mmc@vger.kernel.org
+Date:   Tue, 23 Jul 2019 15:32:11 +0200
+In-Reply-To: <20190723093442.GA27239@lst.de>
+References: <1563774880-8061-1-git-send-email-wahrenst@gmx.net>
+         <96113adb5fcab9c2f4bb5fa82b84ff5f9c07fd07.camel@suse.de>
+         <bc650090-db86-ccac-01dc-23f08ad7b19b@gmx.net>
+         <20190723093442.GA27239@lst.de>
+Content-Type: multipart/signed; micalg="pgp-sha256";
+        protocol="application/pgp-signature"; boundary="=-3BnHBRqm9Yrvkdvr/sj8"
+User-Agent: Evolution 3.32.3 
+MIME-Version: 1.0
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-wt., 23 lip 2019 o 10:39 Chuhong Yuan <hslester96@gmail.com> napisa=C5=82(a=
-):
->
-> Instead of using to_pci_dev + pci_get_drvdata,
-> use dev_get_drvdata to make code simpler.
->
-> Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
-> ---
-> Changes in v2:
->   - Change the subject line to gpio: pch: ...
->
->  drivers/gpio/gpio-pch.c | 6 ++----
->  1 file changed, 2 insertions(+), 4 deletions(-)
->
-> diff --git a/drivers/gpio/gpio-pch.c b/drivers/gpio/gpio-pch.c
-> index 1d99293096f2..3f3d9a94b709 100644
-> --- a/drivers/gpio/gpio-pch.c
-> +++ b/drivers/gpio/gpio-pch.c
-> @@ -409,8 +409,7 @@ static int pch_gpio_probe(struct pci_dev *pdev,
->
->  static int __maybe_unused pch_gpio_suspend(struct device *dev)
->  {
-> -       struct pci_dev *pdev =3D to_pci_dev(dev);
-> -       struct pch_gpio *chip =3D pci_get_drvdata(pdev);
-> +       struct pch_gpio *chip =3D dev_get_drvdata(dev);
->         unsigned long flags;
->
->         spin_lock_irqsave(&chip->spinlock, flags);
-> @@ -422,8 +421,7 @@ static int __maybe_unused pch_gpio_suspend(struct dev=
-ice *dev)
->
->  static int __maybe_unused pch_gpio_resume(struct device *dev)
->  {
-> -       struct pci_dev *pdev =3D to_pci_dev(dev);
-> -       struct pch_gpio *chip =3D pci_get_drvdata(pdev);
-> +       struct pch_gpio *chip =3D dev_get_drvdata(dev);
->         unsigned long flags;
->
->         spin_lock_irqsave(&chip->spinlock, flags);
-> --
-> 2.20.1
->
 
-Acked-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+--=-3BnHBRqm9Yrvkdvr/sj8
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+
+On Tue, 2019-07-23 at 11:34 +0200, Christoph Hellwig wrote:
+> On Mon, Jul 22, 2019 at 08:10:17PM +0200, Stefan Wahren wrote:
+> > i rebased this series also and got this only on the RPi 4.
+> >=20
+> > After reverting the following:
+> >=20
+> > 79a986721de dma-mapping: remove dma_max_pfn
+> > 7559d612dff0 mmc: core: let the dma map ops handle bouncing
+> >=20
+> > This crash disappear, but wifi seems to be still broken.
+> >=20
+> > Would be nice, if you can investigate further.
+>=20
+> That means dma addressing on this system doesn't just work for some
+> memory, and the mmc bounce buffering was papering over that just for
+> mmc.  Do you have highmem on this system?=20
+>=20
+> You might want to try this series, which has been submitted upstream:
+>=20
+> http://git.infradead.org/users/hch/misc.git/shortlog/refs/heads/arm-swiot=
+lb
+
+Hi Christoph,
+I tried your series on top of Stefan's, it has no effect. I guess it's no
+surprise as with mult_v7_defconfig, you get SWIOTLB=3Dn & LPAE=3Dn.
+
+FYI DMA addressing constraints for RPi4 are the following: devices can only
+access the first GB of ram even though the board might have up to 4GB of ra=
+m.
+The DMA addresses are aliased with a 0xc0000000 offset. So 0x00000000 phys =
+is
+aliased to 0xc0000000 in DMA. This is the same as for an RFC you commented =
+last
+week trying to fix similar issues for arm64.
+
+You state in "arm: use swiotlb for bounce buffer on LPAE configs" that "The=
+ DMA
+API requires that 32-bit DMA masks are always supported". If I understand i=
+t
+correctly this device breaks that assumption. Which implies we need a bounc=
+e
+buffer system in place for any straming DMA user.
+
+It seems we're unable to use dma-direct/swiotlb, so I enabled arm's dmaboun=
+ce
+on all devices hooked into RPi's limited interconnect, which fixes this iss=
+ue.
+Any thoughts on this?
+
+diff --git a/arch/arm/mach-bcm/Kconfig b/arch/arm/mach-bcm/Kconfig
+index 5e5f1fabc3d4..3db8deed83a6 100644
+--- a/arch/arm/mach-bcm/Kconfig
++++ b/arch/arm/mach-bcm/Kconfig
+@@ -168,6 +168,7 @@ config ARCH_BCM2835
+        select PINCTRL
+        select PINCTRL_BCM2835
+        select MFD_CORE
++       select DMABOUNCE
+        help
+          This enables support for the Broadcom BCM2835 and BCM2836 SoCs.
+          This SoC is used in the Raspberry Pi and Roku 2 devices.
+diff --git a/arch/arm/mach-bcm/board_bcm2835.c b/arch/arm/mach-bcm/board_bc=
+m2835.c
+index c09cf25596af..be788849c4bb 100644
+--- a/arch/arm/mach-bcm/board_bcm2835.c
++++ b/arch/arm/mach-bcm/board_bcm2835.c
+@@ -3,6 +3,8 @@
+  * Copyright (C) 2010 Broadcom
+  */
+=20
++#include <linux/device.h>
++#include <linux/dma-mapping.h>
+ #include <linux/init.h>
+ #include <linux/irqchip.h>
+ #include <linux/of_address.h>
+@@ -24,8 +26,37 @@ static const char * const bcm2835_compat[] =3D {
+        NULL
+ };
+=20
++static int bcm2835_needs_bounce(struct device *dev, dma_addr_t dma_addr, s=
+ize_t size)
++{
++       /*
++        * The accepted dma addresses are [0xc0000000, 0xffffffff] which ma=
+p to
++        * ram's [0x00000000, 0x3fffffff].
++        */
++       return dma_addr < 3ULL * SZ_1G;
++}
++
++/*
++ * Setup DMA mask to 1GB on devices hanging from soc interconnect
++ */
++static int bcm2835_platform_notify(struct device *dev)
++{
++       if (dev->parent && !strcmp("soc", dev_name(dev->parent))) {
++               dev->dma_mask =3D &dev->coherent_dma_mask;
++               dev->coherent_dma_mask =3D DMA_BIT_MASK(30); /* 1GB */
++               dmabounce_register_dev(dev, 2048, 4096, bcm2835_needs_bounc=
+e);
++       }
++
++       return 0;
++}
++
++void __init bcm2835_init_early(void)
++{
++       platform_notify =3D bcm2835_platform_notify;
++}
++
+ DT_MACHINE_START(BCM2835, "BCM2835")
+        .dma_zone_size  =3D SZ_1G,
+        .dt_compat =3D bcm2835_compat,
+        .smp =3D smp_ops(bcm2836_smp_ops),
++       .init_early =3D bcm2835_init_early,
+ MACHINE_END
+
+ Regards,
+ Nicolas
+
+
+--=-3BnHBRqm9Yrvkdvr/sj8
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+Content-Transfer-Encoding: 7bit
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCAAdFiEErOkkGDHCg2EbPcGjlfZmHno8x/4FAl03DFsACgkQlfZmHno8
+x/7E7wgAg5ZRyyHT+Sv4XB1YCgc3dStZGLkySlCiLAKb9xI4p+UkRQxZrY302Msy
+nhA2fjeqEDh/uPimRPi+Zq6B6R+Eq+QLthsYCItdSVDTnlkT4+tMhQzAevLgoTc+
+cnrw4mMyvGMxS1XaR71HROZMw2f0Nc6gE9M8UHSIEv6priSerUb6yqEirkyFg1NA
+/1UguxmSGM2/RKf1U24bFpZhWHVrX9BXB1fR/9xriMUHNofZJrqgUNabZNzSWxbM
+kJjehqaGzMTATGya8Q4rjWNBcdzHr0H7xr+yI3G9tnwsbBruLBFDfZ+lITwSz8wI
+C3HoZjs8IJRAclbo8Au1SK2GpvCLJA==
+=5u5q
+-----END PGP SIGNATURE-----
+
+--=-3BnHBRqm9Yrvkdvr/sj8--
+
