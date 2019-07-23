@@ -2,59 +2,36 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 84C4971DEE
-	for <lists+linux-gpio@lfdr.de>; Tue, 23 Jul 2019 19:43:42 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D619172015
+	for <lists+linux-gpio@lfdr.de>; Tue, 23 Jul 2019 21:27:42 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388703AbfGWRnl (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 23 Jul 2019 13:43:41 -0400
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:38663 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388642AbfGWRnl (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 23 Jul 2019 13:43:41 -0400
-Received: by mail-lf1-f68.google.com with SMTP id h28so29928360lfj.5
-        for <linux-gpio@vger.kernel.org>; Tue, 23 Jul 2019 10:43:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=QFTwoXxJunT2kH1Ot9eM9+cX7DrsPRtBTLu8N/TMz/U=;
-        b=eEWJN/qpGbjQbRIR4evYZVPpITZL50hcxujFO284JFDN+o3or8Ykgaev/bDTqBYMLO
-         FftCk6Gh8j/cq3c6CqHei6MWD+r+FFxRv+qL1ans9Hrl9BASeuwVTOpQdjCUEnI87171
-         5vj/zAmE13otAcjYNbvKgxwG9GjkSvDR5tpE/EBMgTDGgJTVxCJ3rqiACh0NcP5TW0iO
-         CnrcSS58UKLgrPdijY5tHH4QdSvLbqMaArahKdXEIEC/bHdvqMdFy8K6WE7gyI8RhZCH
-         N0+UKXtR3D3+5DTbSBhiaPoMOQZy3kZ5LRjVWJuiv0MYvsl612AvoHtkxIcK7mcLNWpH
-         g2JA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=QFTwoXxJunT2kH1Ot9eM9+cX7DrsPRtBTLu8N/TMz/U=;
-        b=YA2xZ/aAHXiGGespN+YAVGGAN96zV6NOp4tSr75MlqnHk1Xc7Yxk3CRdYSMPhQV5x5
-         CdvFnVFSrOJiBaikW0SeYdLQT0gu9kU5Y+jcV8fqmJq09g18XkvYf8C9pgTuyu9G53Sw
-         HDS2d2ppJVkH6LrBoNLqKP4VgAsazPYmmdctZvw+FUEFrBpsJUl9s2mjUjZM/AQjpzZ3
-         OF3tWY1aOdhpU7SOYA4cQq5hJCFHPrPh6pO3CTecb6QGwIb33RAiE9JOyLnmZ8y+bwtK
-         4J6BFDIC+LdBQMcw8FTpCGrBWrFLm/NoLgaFKOIspM9ibbBi5LrZgdE7bsnYtxLhMbMd
-         BqWQ==
-X-Gm-Message-State: APjAAAVv4rcgDvfXUuwmxhr4b7csbkJABgzbQ8cnSjiF4cDbrozv2HNv
-        WI4J7GAw7GgqoCinGVyqrWnZYg==
-X-Google-Smtp-Source: APXvYqwd1iXuZOIg6pMeytpJ6SoWUlo+7PrxeBtnYDqZeiCllLeRrRdw302zNWrWvjzA+NmGjRjMuw==
-X-Received: by 2002:a19:e006:: with SMTP id x6mr35088127lfg.165.1563903819260;
-        Tue, 23 Jul 2019 10:43:39 -0700 (PDT)
-Received: from linux.local (c-2ccd225c.014-348-6c756e10.bbcust.telenor.se. [92.34.205.44])
-        by smtp.gmail.com with ESMTPSA id j7sm9042247lji.27.2019.07.23.10.43.37
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 23 Jul 2019 10:43:38 -0700 (PDT)
-From:   Linus Walleij <linus.walleij@linaro.org>
-To:     MyungJoo Ham <myungjoo.ham@samsung.com>,
-        Chanwoo Choi <cw00.choi@samsung.com>
-Cc:     linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-        Mike Lockwood <lockwood@google.com>,
+        id S1726610AbfGWT1m (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 23 Jul 2019 15:27:42 -0400
+Received: from mga06.intel.com ([134.134.136.31]:43122 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725372AbfGWT1l (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Tue, 23 Jul 2019 15:27:41 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 23 Jul 2019 12:27:41 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,300,1559545200"; 
+   d="scan'208";a="368536075"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by fmsmga005.fm.intel.com with ESMTP; 23 Jul 2019 12:27:39 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1003)
+        id 0CB1881; Tue, 23 Jul 2019 22:27:38 +0300 (EEST)
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Andy Gross <agross@kernel.org>, linux-arm-msm@vger.kernel.org,
         Linus Walleij <linus.walleij@linaro.org>,
-        devicetree@vger.kernel.org
-Subject: [PATCH] extcon: fsa9480: Support the FSA880 variant
-Date:   Tue, 23 Jul 2019 19:43:01 +0200
-Message-Id: <20190723174301.31278-1-linus.walleij@linaro.org>
-X-Mailer: git-send-email 2.21.0
+        linux-gpio@vger.kernel.org
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: [PATCH v1 1/2] pinctrl: msm: Switch to use device_property_count_uXX()
+Date:   Tue, 23 Jul 2019 22:27:37 +0300
+Message-Id: <20190723192738.68486-1-andriy.shevchenko@linux.intel.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-gpio-owner@vger.kernel.org
@@ -62,44 +39,36 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-The older compatible variant of this chip is called FSA880
-and works the same way, if we need some quirks in the future,
-it is good to let it have its own compatible string.
+Use use device_property_count_uXX() directly, that makes code neater.
 
-Cc: devicetree@vger.kernel.org
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 ---
- Documentation/devicetree/bindings/extcon/extcon-fsa9480.txt | 4 +++-
- drivers/extcon/extcon-fsa9480.c                             | 1 +
- 2 files changed, 4 insertions(+), 1 deletion(-)
+ drivers/pinctrl/qcom/pinctrl-msm.c | 5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/extcon/extcon-fsa9480.txt b/Documentation/devicetree/bindings/extcon/extcon-fsa9480.txt
-index d592c21245f2..624bd76f468e 100644
---- a/Documentation/devicetree/bindings/extcon/extcon-fsa9480.txt
-+++ b/Documentation/devicetree/bindings/extcon/extcon-fsa9480.txt
-@@ -5,7 +5,9 @@ controlled using I2C and enables USB data, stereo and mono audio, video,
- microphone, and UART data to use a common connector port.
+diff --git a/drivers/pinctrl/qcom/pinctrl-msm.c b/drivers/pinctrl/qcom/pinctrl-msm.c
+index 7f35c196bb3e..90bc667139e0 100644
+--- a/drivers/pinctrl/qcom/pinctrl-msm.c
++++ b/drivers/pinctrl/qcom/pinctrl-msm.c
+@@ -617,8 +617,7 @@ static int msm_gpio_init_valid_mask(struct gpio_chip *chip)
+ 	}
  
- Required properties:
-- - compatible : Must be "fcs,fsa9480"
-+ - compatible : Must be one of
-+   "fcs,fsa9480"
-+   "fcs,fsa880"
-  - reg : Specifies i2c slave address. Must be 0x25.
-  - interrupts : Should contain one entry specifying interrupt signal of
-    interrupt parent to which interrupt pin of the chip is connected.
-diff --git a/drivers/extcon/extcon-fsa9480.c b/drivers/extcon/extcon-fsa9480.c
-index 350fb34abfa0..8405512f5199 100644
---- a/drivers/extcon/extcon-fsa9480.c
-+++ b/drivers/extcon/extcon-fsa9480.c
-@@ -363,6 +363,7 @@ MODULE_DEVICE_TABLE(i2c, fsa9480_id);
+ 	/* The number of GPIOs in the ACPI tables */
+-	len = ret = device_property_read_u16_array(pctrl->dev, "gpios", NULL,
+-						   0);
++	len = ret = device_property_count_u16(pctrl->dev, "gpios");
+ 	if (ret < 0)
+ 		return 0;
  
- static const struct of_device_id fsa9480_of_match[] = {
- 	{ .compatible = "fcs,fsa9480", },
-+	{ .compatible = "fcs,fsa880", },
- 	{ },
- };
- MODULE_DEVICE_TABLE(of, fsa9480_of_match);
+@@ -996,7 +995,7 @@ static bool msm_gpio_needs_valid_mask(struct msm_pinctrl *pctrl)
+ 	if (pctrl->soc->reserved_gpios)
+ 		return true;
+ 
+-	return device_property_read_u16_array(pctrl->dev, "gpios", NULL, 0) > 0;
++	return device_property_count_u16(pctrl->dev, "gpios") > 0;
+ }
+ 
+ static int msm_gpio_init(struct msm_pinctrl *pctrl)
 -- 
-2.21.0
+2.20.1
 
