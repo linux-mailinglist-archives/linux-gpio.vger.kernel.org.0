@@ -2,112 +2,68 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 844E372F91
-	for <lists+linux-gpio@lfdr.de>; Wed, 24 Jul 2019 15:09:08 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0CC8B73012
+	for <lists+linux-gpio@lfdr.de>; Wed, 24 Jul 2019 15:40:15 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728474AbfGXNJD (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 24 Jul 2019 09:09:03 -0400
-Received: from hermes.aosc.io ([199.195.250.187]:51846 "EHLO hermes.aosc.io"
+        id S1726574AbfGXNkO (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 24 Jul 2019 09:40:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33828 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726535AbfGXNJD (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Wed, 24 Jul 2019 09:09:03 -0400
-Received: from localhost (localhost [127.0.0.1]) (Authenticated sender: icenowy@aosc.io)
-        by hermes.aosc.io (Postfix) with ESMTPSA id 9615D6DF8F;
-        Wed, 24 Jul 2019 13:09:01 +0000 (UTC)
+        id S1725826AbfGXNkO (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Wed, 24 Jul 2019 09:40:14 -0400
+Received: from mail-qt1-f178.google.com (mail-qt1-f178.google.com [209.85.160.178])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D1AEF22BE9;
+        Wed, 24 Jul 2019 13:40:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1563975613;
+        bh=bhFiWmjAtAurAZfHqqApK5Lonkxgn8fire9Ml19llMA=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=Kh2EK3z7boQ1vFzHVTtQyVdIJMc6U2hDBVe8wqCnfwr/Hkq0R4qBgmqyaPSzIxjJ9
+         Xr1slRXnvy3YItOg31pHypuA2fqiFL8HZUtgFP5jfVu9oB30TySWqzWeGnHnInC6j2
+         NmyRVDFA+u1DAqNSYM9uAncBaOxeJxqW5VGR8HA4=
+Received: by mail-qt1-f178.google.com with SMTP id y26so45485228qto.4;
+        Wed, 24 Jul 2019 06:40:12 -0700 (PDT)
+X-Gm-Message-State: APjAAAXkPQfM+dV73OJA5JlHq+E2FipacxD7pSgVgl91ALVnv1VUaF8+
+        gmV9CyGx9lhr7y706yY4m5W5YyKiBK5btZrgJQ==
+X-Google-Smtp-Source: APXvYqz8sLIH6MUVejBtheayK4y6FI9z7gtA6QpNEl7sUb8Pwb3fG+kRlf3uBz6GM3u3CxWrCbXWR7M2XCCDu0l0MGk=
+X-Received: by 2002:ac8:36b9:: with SMTP id a54mr58656327qtc.300.1563975612019;
+ Wed, 24 Jul 2019 06:40:12 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
- format=flowed
-Content-Transfer-Encoding: 8bit
-Date:   Wed, 24 Jul 2019 21:09:01 +0800
-From:   Icenowy Zheng <icenowy@aosc.io>
-To:     Maxime Ripard <maxime.ripard@bootlin.com>
-Cc:     devicetree@vger.kernel.org,
+References: <20190724081313.12934-1-andrew@aj.id.au> <20190724081313.12934-4-andrew@aj.id.au>
+In-Reply-To: <20190724081313.12934-4-andrew@aj.id.au>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Wed, 24 Jul 2019 07:40:00 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqLEb3QSLAhm9BsFa+A_Jmgr4gDtV2nUCKkgwwQaMLBk9g@mail.gmail.com>
+Message-ID: <CAL_JsqLEb3QSLAhm9BsFa+A_Jmgr4gDtV2nUCKkgwwQaMLBk9g@mail.gmail.com>
+Subject: Re: [PATCH 3/3] dt-bindings: aspeed: Remove mention of deprecated compatibles
+To:     Andrew Jeffery <andrew@aj.id.au>
+Cc:     linux-aspeed@lists.ozlabs.org, Lee Jones <lee.jones@linaro.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Joel Stanley <joel@jms.id.au>,
         Linus Walleij <linus.walleij@linaro.org>,
-        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-sunxi@googlegroups.com, Rob Herring <robh+dt@kernel.org>,
-        Chen-Yu Tsai <wens@csie.org>, linux-clk@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v4 7/8] dt-bindings: arm: sunxi: add binding for Lichee
- Zero Plus core board
-In-Reply-To: <20190722192934.3jaf3r4rnyeslqyw@flea>
-References: <20190713034634.44585-1-icenowy@aosc.io>
- <20190713034634.44585-8-icenowy@aosc.io>
- <20190720101318.cwrvv5r42wxx5k4r@flea>
- <BDF0C9F6-DD0D-4343-8E24-06A07055004C@aosc.io>
- <20190722192934.3jaf3r4rnyeslqyw@flea>
-Message-ID: <7d24576697521f4985617113dbc4cc41@aosc.io>
-X-Sender: icenowy@aosc.io
+        devicetree@vger.kernel.org,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-在 2019-07-23 03:29，Maxime Ripard 写道：
-> On Sat, Jul 20, 2019 at 07:39:08PM +0800, Icenowy Zheng wrote:
->> 
->> 
->> 于 2019年7月20日 GMT+08:00 下午6:13:18, Maxime Ripard 
->> <maxime.ripard@bootlin.com> 写到:
->> >On Sat, Jul 13, 2019 at 11:46:33AM +0800, Icenowy Zheng wrote:
->> >> The Lichee Zero Plus is a core board made by Sipeed, with a microUSB
->> >> connector on it, TF slot or WSON8 SD chip, optional eMMC or SPI
->> >Flash.
->> >> It has a gold finger connector for expansion, and UART is available
->> >from
->> >> reserved pins w/ 2.54mm pitch. The board can use either SoChip S3 or
->> >> Allwinner V3L SoCs.
->> >>
->> >> Add the device tree binding of the basic version of the core board --
->> >> w/o eMMC or SPI Flash, w/ TF slot or WSON8 SD, and use S3 SoC.
->> >>
->> >> Signed-off-by: Icenowy Zheng <icenowy@aosc.io>
->> >> ---
->> >> No changes since v3.
->> >>
->> >> Patch introduced in v2.
->> >>
->> >>  Documentation/devicetree/bindings/arm/sunxi.yaml | 5 +++++
->> >>  1 file changed, 5 insertions(+)
->> >>
->> >> diff --git a/Documentation/devicetree/bindings/arm/sunxi.yaml
->> >b/Documentation/devicetree/bindings/arm/sunxi.yaml
->> >> index 000a00d12d6a..48c126a7a848 100644
->> >> --- a/Documentation/devicetree/bindings/arm/sunxi.yaml
->> >> +++ b/Documentation/devicetree/bindings/arm/sunxi.yaml
->> >> @@ -353,6 +353,11 @@ properties:
->> >>            - const: licheepi,licheepi-zero
->> >>            - const: allwinner,sun8i-v3s
->> >>
->> >> +      - description: Lichee Zero Plus (with S3, without eMMC/SPI
->> >Flash)
->> >> +        items:
->> >> +          - const: sipeed,lichee-zero-plus
->> >> +          - const: allwinner,sun8i-s3
->> >
->> >If the S3 is just a rebranded V3, then we should have the v3 compatile
->> >in that list too.
->> 
->> S3 is V3 with copackaged DDR3 DRAM.
->> 
->> It's pin incompatible w/ V3.
-> 
-> Does it matter though?
-> 
-> If the only thing that changes is the package, we're not manipulating
-> that, and any software that deals with the v3 can deal with the
-> s3. Which is what the compatible is about.
+On Wed, Jul 24, 2019 at 2:13 AM Andrew Jeffery <andrew@aj.id.au> wrote:
+>
+> Guide readers away from using the aspeed,g[45].* compatible patterns.
+>
+> Signed-off-by: Andrew Jeffery <andrew@aj.id.au>
+> ---
+>  Documentation/devicetree/bindings/mfd/aspeed-scu.txt         | 2 --
+>  Documentation/devicetree/bindings/misc/aspeed-p2a-ctrl.txt   | 2 --
+>  .../devicetree/bindings/pinctrl/aspeed,ast2400-pinctrl.yaml  | 5 +----
+>  .../devicetree/bindings/pinctrl/aspeed,ast2500-pinctrl.yaml  | 4 +---
+>  4 files changed, 2 insertions(+), 11 deletions(-)
 
-Okay. Should the S3 compatible be kept befoer the V3 one?
-
-> 
-> Maxime
-> 
-> --
-> Maxime Ripard, Bootlin
-> Embedded Linux and Kernel engineering
-> https://bootlin.com
-> 
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+Reviewed-by: Rob Herring <robh@kernel.org>
