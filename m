@@ -2,86 +2,90 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 3C06C74A77
-	for <lists+linux-gpio@lfdr.de>; Thu, 25 Jul 2019 11:55:11 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9F55374A89
+	for <lists+linux-gpio@lfdr.de>; Thu, 25 Jul 2019 11:56:50 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728234AbfGYJzG (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 25 Jul 2019 05:55:06 -0400
-Received: from hqemgate16.nvidia.com ([216.228.121.65]:16966 "EHLO
-        hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725808AbfGYJzG (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 25 Jul 2019 05:55:06 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5d397c760004>; Thu, 25 Jul 2019 02:55:02 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Thu, 25 Jul 2019 02:55:05 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Thu, 25 Jul 2019 02:55:05 -0700
-Received: from tbergstrom-lnx.Nvidia.com (172.20.13.39) by
- HQMAIL107.nvidia.com (172.20.187.13) with Microsoft SMTP Server (TLS) id
- 15.0.1473.3; Thu, 25 Jul 2019 09:55:04 +0000
-Received: by tbergstrom-lnx.Nvidia.com (Postfix, from userid 1000)
-        id 8EF8E4286A; Thu, 25 Jul 2019 12:55:02 +0300 (EEST)
-Date:   Thu, 25 Jul 2019 12:55:02 +0300
-From:   Peter De Schrijver <pdeschrijver@nvidia.com>
-To:     Dmitry Osipenko <digetx@gmail.com>
-CC:     Sowjanya Komatineni <skomatineni@nvidia.com>,
-        <thierry.reding@gmail.com>, <jonathanh@nvidia.com>,
-        <tglx@linutronix.de>, <jason@lakedaemon.net>,
-        <marc.zyngier@arm.com>, <linus.walleij@linaro.org>,
-        <stefan@agner.ch>, <mark.rutland@arm.com>, <pgaikwad@nvidia.com>,
-        <sboyd@kernel.org>, <linux-clk@vger.kernel.org>,
-        <linux-gpio@vger.kernel.org>, <jckuo@nvidia.com>,
-        <josephl@nvidia.com>, <talho@nvidia.com>,
-        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <mperttunen@nvidia.com>, <spatra@nvidia.com>, <robh+dt@kernel.org>,
-        <devicetree@vger.kernel.org>
-Subject: Re: [PATCH V6 01/21] irqchip: tegra: Do not disable COP IRQ during
- suspend
-Message-ID: <20190725095502.GM12715@pdeschrijver-desktop.Nvidia.com>
-References: <1563738060-30213-1-git-send-email-skomatineni@nvidia.com>
- <1563738060-30213-2-git-send-email-skomatineni@nvidia.com>
- <f6582e43-168e-1b7e-9db8-3d263bc3ba0d@gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <f6582e43-168e-1b7e-9db8-3d263bc3ba0d@gmail.com>
-X-NVConfidentiality: public
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Originating-IP: [172.20.13.39]
-X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
- HQMAIL107.nvidia.com (172.20.187.13)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1564048503; bh=ssTZBE+UvhxmRscb1bfFWkAue53y1Iqmywo1qz9iIgE=;
-        h=X-PGP-Universal:Date:From:To:CC:Subject:Message-ID:References:
-         MIME-Version:Content-Type:Content-Disposition:In-Reply-To:
-         X-NVConfidentiality:User-Agent:X-Originating-IP:X-ClientProxiedBy;
-        b=G0VLQQDUsh89ujpB7kNRnhX8LTxDvmLjwLern2fdpLIa7ywejvMlg4se10jcnfOLD
-         C+ylHNnfkSRtwQ/bOfYoZZpbdnnRbVFP2keOiR81Al2jdH4DwybrOnxreVYmz8xbgP
-         YMFrbSI6NNAsWW+d7jMeI8D6nTzJq2LNafeQ4xS8GcCmUeqRt7NNeqQjYVoJl8l4Sc
-         iI8F4gmdsKdfHp1+QhEhzptQosW8c71p0JK9HgUP/nSyc1PeK3Mly/3hdzv5aEDO5Q
-         Fxuq6XFE+P4jOPeQ6vwLfUHRLlNbIt609ThbLD1lQMqvxga4R6ZQisIcNyVj7w5D/U
-         32KNTGavqPdkQ==
+        id S1728834AbfGYJ4t (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 25 Jul 2019 05:56:49 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:43733 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728186AbfGYJ4t (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 25 Jul 2019 05:56:49 -0400
+Received: by mail-pg1-f196.google.com with SMTP id f25so22765574pgv.10
+        for <linux-gpio@vger.kernel.org>; Thu, 25 Jul 2019 02:56:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=WbY06pGx4xfBMBjQ3bM8KhDBbMliaCTCe0/xa/K2Ezk=;
+        b=IH7fJaRbcSgL+CYKVO82kjihUDaMMuveROBAAcl0U58wpsySgNR4ZbgQ8HzLV1opPe
+         PlINuCAXy0AE3sUUejcUdgVSld2I1sUgazyK4JPuAYeiV9O8jaOWg1zUAU+rmMNZlChU
+         jGZr9aqKxGNrUbO9YG6VA5q/nMJirmLnjKW9TE8D+Swko05OX4FWRG6O/mtN+UU52bCp
+         eexyRSUN9G5GlDXaTn7MPP1wCJE+XHlptKtO7IFLC51rhbe/gVwcU4OoPymaDrooew9A
+         XFr7qHyvbXFA09qtZKFb9PVOrhK5Ra2zEBG9vgNv59oU5BmHJuh2u9pDz5+SVtOWI//f
+         S1ow==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=WbY06pGx4xfBMBjQ3bM8KhDBbMliaCTCe0/xa/K2Ezk=;
+        b=CCsKlcBrnj+vYXmvxvyJFTz4mpOBLFIFpQiJihW3JxIpJMdUPhLVwW0H8/jp+ICAxA
+         AHbfzE6QmRRtqf81+H1fcHV1Jkx112Rg+5FxMqt87Bb2dWqkYlVvOFiitCBGhCxlmkmZ
+         umgA2wkjrHC+pFYRmSM0QIxvedwOML377HJF8ettwz820uVodP9Wgf0wndN7MI7RBYzv
+         1V8rFS0bdWxrqiW1VEX/yphT+Sgv5qOBRsBIYaPHFlgRPMOvotx+T62K16aF040p5zTU
+         q7CrNCKeY+5dm5iuqAKP1JP9MidojU8fNHcKwaWA0huhski4dV3u2WKMPb0wvw23qe8u
+         U2uw==
+X-Gm-Message-State: APjAAAXNy2HCMviyX8DnOkEG1sM8n+OntOn4HJAS3DifxumezccZZWdD
+        x8Ea9d0FqNxA2ieOleB8k7ibaA==
+X-Google-Smtp-Source: APXvYqyuG8cSKtYKaq8SMZvcaSnlLN88gS7Vc2pHbKryBUh9RET50OhDriRg8rg6qipLaUuuEdEw/A==
+X-Received: by 2002:a62:b408:: with SMTP id h8mr15431548pfn.46.1564048608476;
+        Thu, 25 Jul 2019 02:56:48 -0700 (PDT)
+Received: from baolinwangubtpc.spreadtrum.com ([117.18.48.82])
+        by smtp.gmail.com with ESMTPSA id l26sm44006103pgb.90.2019.07.25.02.56.45
+        (version=TLS1 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Thu, 25 Jul 2019 02:56:48 -0700 (PDT)
+From:   Baolin Wang <baolin.wang@linaro.org>
+To:     linus.walleij@linaro.org, orsonzhai@gmail.com, zhang.lyra@gmail.com
+Cc:     baolin.wang@linaro.org, vincent.guittot@linaro.org,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 1/2] pinctrl: sprd: Change to use devm_platform_ioremap_resource()
+Date:   Thu, 25 Jul 2019 17:56:30 +0800
+Message-Id: <ff410d312ed0047b5a36e5113daf7df78bcf1aa8.1564048446.git.baolin.wang@linaro.org>
+X-Mailer: git-send-email 1.7.9.5
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Jul 22, 2019 at 12:54:51PM +0300, Dmitry Osipenko wrote:
-> 
-> All Tegra SoCs support SC7, hence the 'supports_sc7' and the comment
-> doesn't sound correct to me. Something like 'firmware_sc7' should suit
-> better here.
-> 
-> > +			writel_relaxed(~0ul, ictlr + ICTLR_COP_IER_CLR);
-> 
-> Secondly, I'm also not sure why COP interrupts need to be disabled for
-> pre-T210 at all, since COP is unused. This looks to me like it was
-> cut-n-pasted from downstream kernel without a good reason and could be
-> simply removed.
+The devm_platform_ioremap_resource() function wraps platform_get_resource()
+and devm_ioremap_resource() in a single helper, thus use it to simplify
+the code.
 
-I don't think we can rely on the fact that COP is unused. People can
-write their own code to run on COP.
+Signed-off-by: Baolin Wang <baolin.wang@linaro.org>
+---
+ drivers/pinctrl/sprd/pinctrl-sprd.c |    4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
-Peter.
+diff --git a/drivers/pinctrl/sprd/pinctrl-sprd.c b/drivers/pinctrl/sprd/pinctrl-sprd.c
+index c31b581..a32e809 100644
+--- a/drivers/pinctrl/sprd/pinctrl-sprd.c
++++ b/drivers/pinctrl/sprd/pinctrl-sprd.c
+@@ -1020,7 +1020,6 @@ int sprd_pinctrl_core_probe(struct platform_device *pdev,
+ 	struct sprd_pinctrl *sprd_pctl;
+ 	struct sprd_pinctrl_soc_info *pinctrl_info;
+ 	struct pinctrl_pin_desc *pin_desc;
+-	struct resource *res;
+ 	int ret, i;
+ 
+ 	sprd_pctl = devm_kzalloc(&pdev->dev, sizeof(struct sprd_pinctrl),
+@@ -1028,8 +1027,7 @@ int sprd_pinctrl_core_probe(struct platform_device *pdev,
+ 	if (!sprd_pctl)
+ 		return -ENOMEM;
+ 
+-	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+-	sprd_pctl->base = devm_ioremap_resource(&pdev->dev, res);
++	sprd_pctl->base = devm_platform_ioremap_resource(pdev, 0);
+ 	if (IS_ERR(sprd_pctl->base))
+ 		return PTR_ERR(sprd_pctl->base);
+ 
+-- 
+1.7.9.5
+
