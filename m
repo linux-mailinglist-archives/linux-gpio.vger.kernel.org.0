@@ -2,126 +2,98 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 930A374A8B
-	for <lists+linux-gpio@lfdr.de>; Thu, 25 Jul 2019 11:57:00 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DBF5574B22
+	for <lists+linux-gpio@lfdr.de>; Thu, 25 Jul 2019 12:07:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390868AbfGYJ4x (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 25 Jul 2019 05:56:53 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:38799 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390848AbfGYJ4w (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 25 Jul 2019 05:56:52 -0400
-Received: by mail-pl1-f196.google.com with SMTP id az7so23199608plb.5
-        for <linux-gpio@vger.kernel.org>; Thu, 25 Jul 2019 02:56:51 -0700 (PDT)
+        id S2387577AbfGYKFS (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 25 Jul 2019 06:05:18 -0400
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:33639 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725852AbfGYKFS (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 25 Jul 2019 06:05:18 -0400
+Received: by mail-lf1-f67.google.com with SMTP id x3so34197420lfc.0;
+        Thu, 25 Jul 2019 03:05:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :in-reply-to:references;
-        bh=wGIOx2ZODgRgyhhgae8GNFfwXxuLnbwMBvSKjL+qA8U=;
-        b=Dg8+eY6sEeX4Svfxq3ZXeCAVFwUSOvLkr2TZslK6hNH9VYkcyJFgk2U7Bb/EhInHst
-         2HasqGVvHwaBOJ7tyZw4POF7h+pTlFidhFdxxMwXZUGV//dP8TgYaUt72RJGLgw79AbA
-         /eeXLcz/8U8fgo/BkmWee/JRAOt931a7OJOE4X70Bt6pKU4v3dz4njo2bMujfbd5xPHU
-         fNMlFYDC5CjGg5sI29HjWYXLlJa36VtEGHhsXXkqKrJ2N/z4KDMy5en9fe8RxHoIpHuM
-         fB2KSlGOQjcpdle8iYfFOYWJKt6ML6GaxA3AfpgLZUdiVaULtwVCZLjlbx5IDYJw7o5X
-         Nnzw==
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=EKGBnPRNMQNc9c9kgqMJBhw6DFuZQGwpCZJogF2MaZg=;
+        b=Mbxv8ci6nzGefUESUHjOMV75rUO6ArywAbipEhmQEBOp2AusXaN/t21VxPDrwZj0zX
+         tg1cgl2dELyEoQLCcpexXw8GiEr3n302aNCdComu76SMygLRp0NxdblIWVc4DZ9SM0xV
+         70KzquV0sF/IvmFBB5ymQesH3vQYHz23J3+ke/H5/uU//mPcSBjQRBQwqjjtZnrzQg12
+         gckxCpw5zQKTyO/eIr6P365O7Ni0Vxwobf9WcrB+y9j7mLJsTK6zc/F0TkoZmJpX4mju
+         nRHj1ht+R4AmFKtEsj1lLfxjjUbpo1CME6UdEcgY6QPKyXyoO5BUGJsCv5aI/ToMGZiO
+         Eaog==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:in-reply-to:references;
-        bh=wGIOx2ZODgRgyhhgae8GNFfwXxuLnbwMBvSKjL+qA8U=;
-        b=n3lxMOheMCt0LhW07StVPikAnDwrWTafWTxIZmhgMrI14EGbeBRj26akGFwKxDLjIo
-         VU3ParRwux8Zg5eOdc6g1ERf35nuHanr33SshLDW2MtOyxYR1ORlDGlbqiK+utV8vfQ1
-         rSjfreruRqajeQz0ZmQIW7O/PeiLF5n308MbWRZO/vzKUo+w/0jF9v+EFV8gIFjwzDxV
-         5Cn8gQbccrbaeS6oewVm002ftSqjyShZjCYTcln2Oh/7t3ZhitNoXGpGaTSAV4mFYfQr
-         2n5o7mzTl06PlcrqM4N+giaeL0mLHIwLXHaxdOq/ZX9SWGei6Lnw1WL8LYwIe/s/h7Tc
-         4DlA==
-X-Gm-Message-State: APjAAAUAqTm4nN1ptQv0j0T1mGUzVxqNx1SH1nQYg24OtLz6tYtnXURb
-        LMS1KLtqi8VUr1XCwfoMcnn+zg==
-X-Google-Smtp-Source: APXvYqwBj9/c/LAM6Cz2TVyKyofKrk5bExYMC9nZViMSUk4acnHikg0z3qLrEI5x29+w17fR9KjyVA==
-X-Received: by 2002:a17:902:2ec5:: with SMTP id r63mr89047089plb.21.1564048611409;
-        Thu, 25 Jul 2019 02:56:51 -0700 (PDT)
-Received: from baolinwangubtpc.spreadtrum.com ([117.18.48.82])
-        by smtp.gmail.com with ESMTPSA id l26sm44006103pgb.90.2019.07.25.02.56.48
-        (version=TLS1 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Thu, 25 Jul 2019 02:56:51 -0700 (PDT)
-From:   Baolin Wang <baolin.wang@linaro.org>
-To:     linus.walleij@linaro.org, orsonzhai@gmail.com, zhang.lyra@gmail.com
-Cc:     baolin.wang@linaro.org, vincent.guittot@linaro.org,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 2/2] pinctrl: sprd: Combine the condition of MISC_PIN and COMMON_PIN
-Date:   Thu, 25 Jul 2019 17:56:31 +0800
-Message-Id: <17af5e761e0515d288a7ea4078ac9aa4a82a7a4e.1564048446.git.baolin.wang@linaro.org>
-X-Mailer: git-send-email 1.7.9.5
-In-Reply-To: <ff410d312ed0047b5a36e5113daf7df78bcf1aa8.1564048446.git.baolin.wang@linaro.org>
-References: <ff410d312ed0047b5a36e5113daf7df78bcf1aa8.1564048446.git.baolin.wang@linaro.org>
-In-Reply-To: <ff410d312ed0047b5a36e5113daf7df78bcf1aa8.1564048446.git.baolin.wang@linaro.org>
-References: <ff410d312ed0047b5a36e5113daf7df78bcf1aa8.1564048446.git.baolin.wang@linaro.org>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=EKGBnPRNMQNc9c9kgqMJBhw6DFuZQGwpCZJogF2MaZg=;
+        b=iHzvB+tcnxMZWAeiIgiyIYHXBeAFRiYkj2E8GgXxqLRSB3OWe2CcK2zaf81ywrVQXh
+         5g+NEos4iQa4z4lk4StnMm9Akbl/MC8brmqYDgeNVWmS7apa96gMZg9yIaUbTAxlbiiu
+         AgHP7xjaobGJ4B16jGmMF/aR7FMXV5OKKkci1oMhBTMXtYHQHdLt3kKxQX5fyZZcjgBL
+         HBHYiRWvaKs5uKe+IaFC5B6EVL3uWuA2fsOdcrL88f4kXThtr/uH3+rVnS3hW4H3P15a
+         ml6M2sc913gQJ655yI7Fpd+gmbbuPlS0KuIktyNIsIsf+JTRF0J7HhmMNURn8nJBsSYU
+         8GZg==
+X-Gm-Message-State: APjAAAUZg8MjJ3Xrjisebt2JKiWz/p5HL6Y5RF2O7gkuPCxbbEqaYvPT
+        M+EOM9rrpmerlmBnqFSqxQtA7hEb
+X-Google-Smtp-Source: APXvYqyKGrgx4KlLtWLdFzerbA6rG1TqKd5VD2bcY2S2vM2ra+b4zFkApoBC/JVpk0sKzJa3r5MVXg==
+X-Received: by 2002:ac2:43bb:: with SMTP id t27mr6127331lfl.187.1564049115258;
+        Thu, 25 Jul 2019 03:05:15 -0700 (PDT)
+Received: from [192.168.2.145] (ppp91-78-220-99.pppoe.mtu-net.ru. [91.78.220.99])
+        by smtp.googlemail.com with ESMTPSA id q22sm9107599lje.75.2019.07.25.03.05.13
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 25 Jul 2019 03:05:14 -0700 (PDT)
+Subject: Re: [PATCH V6 01/21] irqchip: tegra: Do not disable COP IRQ during
+ suspend
+To:     Peter De Schrijver <pdeschrijver@nvidia.com>
+Cc:     Sowjanya Komatineni <skomatineni@nvidia.com>,
+        thierry.reding@gmail.com, jonathanh@nvidia.com, tglx@linutronix.de,
+        jason@lakedaemon.net, marc.zyngier@arm.com,
+        linus.walleij@linaro.org, stefan@agner.ch, mark.rutland@arm.com,
+        pgaikwad@nvidia.com, sboyd@kernel.org, linux-clk@vger.kernel.org,
+        linux-gpio@vger.kernel.org, jckuo@nvidia.com, josephl@nvidia.com,
+        talho@nvidia.com, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org, mperttunen@nvidia.com,
+        spatra@nvidia.com, robh+dt@kernel.org, devicetree@vger.kernel.org
+References: <1563738060-30213-1-git-send-email-skomatineni@nvidia.com>
+ <1563738060-30213-2-git-send-email-skomatineni@nvidia.com>
+ <f6582e43-168e-1b7e-9db8-3d263bc3ba0d@gmail.com>
+ <20190725095502.GM12715@pdeschrijver-desktop.Nvidia.com>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <dd01be5d-bab9-1329-c7ac-c3c893d49dd1@gmail.com>
+Date:   Thu, 25 Jul 2019 13:05:13 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
+MIME-Version: 1.0
+In-Reply-To: <20190725095502.GM12715@pdeschrijver-desktop.Nvidia.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Since the follow-up pin design on Spreadtrum platform has some changes,
-some configuration of MISC_PIN moved to COMMON_PIN. To support current
-pin design and keep backward compatibility, we should combine the
-condition of MISC_PIN and COMMON_PIN to configure an individual pin.
+25.07.2019 12:55, Peter De Schrijver пишет:
+> On Mon, Jul 22, 2019 at 12:54:51PM +0300, Dmitry Osipenko wrote:
+>>
+>> All Tegra SoCs support SC7, hence the 'supports_sc7' and the comment
+>> doesn't sound correct to me. Something like 'firmware_sc7' should suit
+>> better here.
+>>
+>>> +			writel_relaxed(~0ul, ictlr + ICTLR_COP_IER_CLR);
+>>
+>> Secondly, I'm also not sure why COP interrupts need to be disabled for
+>> pre-T210 at all, since COP is unused. This looks to me like it was
+>> cut-n-pasted from downstream kernel without a good reason and could be
+>> simply removed.
+> 
+> I don't think we can rely on the fact that COP is unused. People can
+> write their own code to run on COP.
 
-Signed-off-by: Baolin Wang <baolin.wang@linaro.org>
----
- drivers/pinctrl/sprd/pinctrl-sprd.c |   19 ++-----------------
- 1 file changed, 2 insertions(+), 17 deletions(-)
+1. Not upstream - doesn't matter.
 
-diff --git a/drivers/pinctrl/sprd/pinctrl-sprd.c b/drivers/pinctrl/sprd/pinctrl-sprd.c
-index a32e809..5d40bab 100644
---- a/drivers/pinctrl/sprd/pinctrl-sprd.c
-+++ b/drivers/pinctrl/sprd/pinctrl-sprd.c
-@@ -454,7 +454,7 @@ static int sprd_pinconf_get(struct pinctrl_dev *pctldev, unsigned int pin_id,
- 	if (pin->type == GLOBAL_CTRL_PIN &&
- 	    param == SPRD_PIN_CONFIG_CONTROL) {
- 		arg = reg;
--	} else if (pin->type == COMMON_PIN) {
-+	} else if (pin->type == COMMON_PIN || pin->type == MISC_PIN) {
- 		switch (param) {
- 		case SPRD_PIN_CONFIG_SLEEP_MODE:
- 			arg = (reg >> SLEEP_MODE_SHIFT) & SLEEP_MODE_MASK;
-@@ -465,14 +465,6 @@ static int sprd_pinconf_get(struct pinctrl_dev *pctldev, unsigned int pin_id,
- 		case PIN_CONFIG_OUTPUT:
- 			arg = reg & SLEEP_OUTPUT_MASK;
- 			break;
--		case PIN_CONFIG_SLEEP_HARDWARE_STATE:
--			arg = 0;
--			break;
--		default:
--			return -ENOTSUPP;
--		}
--	} else if (pin->type == MISC_PIN) {
--		switch (param) {
- 		case PIN_CONFIG_DRIVE_STRENGTH:
- 			arg = (reg >> DRIVE_STRENGTH_SHIFT) &
- 				DRIVE_STRENGTH_MASK;
-@@ -606,7 +598,7 @@ static int sprd_pinconf_set(struct pinctrl_dev *pctldev, unsigned int pin_id,
- 		if (pin->type == GLOBAL_CTRL_PIN &&
- 		    param == SPRD_PIN_CONFIG_CONTROL) {
- 			val = arg;
--		} else if (pin->type == COMMON_PIN) {
-+		} else if (pin->type == COMMON_PIN || pin->type == MISC_PIN) {
- 			switch (param) {
- 			case SPRD_PIN_CONFIG_SLEEP_MODE:
- 				if (arg & AP_SLEEP)
-@@ -639,13 +631,6 @@ static int sprd_pinconf_set(struct pinctrl_dev *pctldev, unsigned int pin_id,
- 					shift = SLEEP_OUTPUT_SHIFT;
- 				}
- 				break;
--			case PIN_CONFIG_SLEEP_HARDWARE_STATE:
--				continue;
--			default:
--				return -ENOTSUPP;
--			}
--		} else if (pin->type == MISC_PIN) {
--			switch (param) {
- 			case PIN_CONFIG_DRIVE_STRENGTH:
- 				if (arg < 2 || arg > 60)
- 					return -EINVAL;
--- 
-1.7.9.5
-
+2. That's not very good if something unknown is running on COP and then
+kernel suddenly intervenes, don't you think so?
