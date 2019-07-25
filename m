@@ -2,122 +2,141 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 4072474C53
-	for <lists+linux-gpio@lfdr.de>; Thu, 25 Jul 2019 12:59:17 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 946EA74CB4
+	for <lists+linux-gpio@lfdr.de>; Thu, 25 Jul 2019 13:17:10 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390154AbfGYK7O (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 25 Jul 2019 06:59:14 -0400
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:40162 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388173AbfGYK7N (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 25 Jul 2019 06:59:13 -0400
-Received: by mail-lf1-f66.google.com with SMTP id b17so34226213lff.7;
-        Thu, 25 Jul 2019 03:59:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=in+uhLNoAVMX7g79xLZTX1hc7a9qUD9IZCQozQ9Y+QM=;
-        b=h/fnwdgM/220zVB3iVelIJjx6IfbhzI3JKZGW+HdHH1HXvGy5/6qo+t2togqzGfAcw
-         vaRtd6wTOcBONySmiCFIzwY5x4GZ8D4Hd0G164kj11Z1U/NPSfq118CV6YdPvk+JmhD9
-         u5/F14d/Go01/WZMsKxpDL3zWLx8gKifY+rUrzD+NBiHATXPEi1rc9Id9GZTjPSrs7Bu
-         DNrXATsNkSATg5TzNYX7KkZfpnvL4+5jy2wKYO0f+GyAxNrPlDRgSCcbPesuU7JZ/JZo
-         FnZnIUa6WYDEdiy6MPacp0vdv6Ie/r2i7Ek4gxrbU02P9XmGSVvJs4e4x87YK9byli2A
-         EkHg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=in+uhLNoAVMX7g79xLZTX1hc7a9qUD9IZCQozQ9Y+QM=;
-        b=ItCU/QpDXcmLJGkUTAaTPTC3af/rdUWv5MiwXzBfuBe+mkK58YxC0bcplV3naUT/aF
-         yNawcxxIeHPamZGqDtzCDmNsK7YvAo96wZ5trDKbukRmFoATAfS+dnxhiB3DDGUDtAij
-         i30oYWhBSUx8Kaljz0/aHLDOgoCcMURU3tvrBKYszCaFlWUD0DzUHTwEqjw1j+a2x+v1
-         0Vlii2cPQSpkfQ917xMB2OVCWxW9hTfMQO8Sx7RqfZMX8E+GBAAtkU0djWz6/v83ngtN
-         fFCwsYH0q1aFfdRXcVvShz/kbTp3Uh/g8g+VkSAv2MUePLVQoe74/dc+cv7elgQyBo9J
-         XqGw==
-X-Gm-Message-State: APjAAAXBxZsdJslqiQQUlFzDA+5P/FFKzHQMezJb8gzFUPecYQNzmSaL
-        fIKWmuCeY3evdGYsB1SC50MoBoHO
-X-Google-Smtp-Source: APXvYqzTPtFFXfWIzfb8qOb6LwXtn6YVcFl8mbh6BLqKCdfKlz5e8OtxTj+NXVey3Hju5TT7JNKf+g==
-X-Received: by 2002:ac2:5a01:: with SMTP id q1mr27672447lfn.46.1564052351219;
-        Thu, 25 Jul 2019 03:59:11 -0700 (PDT)
-Received: from [192.168.2.145] (ppp91-78-220-99.pppoe.mtu-net.ru. [91.78.220.99])
-        by smtp.googlemail.com with ESMTPSA id i17sm7483217lfp.94.2019.07.25.03.59.09
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 25 Jul 2019 03:59:10 -0700 (PDT)
-Subject: Re: [PATCH V6 01/21] irqchip: tegra: Do not disable COP IRQ during
- suspend
-To:     Peter De Schrijver <pdeschrijver@nvidia.com>
-Cc:     Sowjanya Komatineni <skomatineni@nvidia.com>,
-        thierry.reding@gmail.com, jonathanh@nvidia.com, tglx@linutronix.de,
-        jason@lakedaemon.net, marc.zyngier@arm.com,
-        linus.walleij@linaro.org, stefan@agner.ch, mark.rutland@arm.com,
-        pgaikwad@nvidia.com, sboyd@kernel.org, linux-clk@vger.kernel.org,
-        linux-gpio@vger.kernel.org, jckuo@nvidia.com, josephl@nvidia.com,
-        talho@nvidia.com, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org, mperttunen@nvidia.com,
-        spatra@nvidia.com, robh+dt@kernel.org, devicetree@vger.kernel.org
-References: <1563738060-30213-1-git-send-email-skomatineni@nvidia.com>
- <1563738060-30213-2-git-send-email-skomatineni@nvidia.com>
- <f6582e43-168e-1b7e-9db8-3d263bc3ba0d@gmail.com>
- <20190725095502.GM12715@pdeschrijver-desktop.Nvidia.com>
- <dd01be5d-bab9-1329-c7ac-c3c893d49dd1@gmail.com>
- <20190725103348.GN12715@pdeschrijver-desktop.Nvidia.com>
- <20190725103813.GO12715@pdeschrijver-desktop.Nvidia.com>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <de1723df-8580-32fb-eb9d-e4c02f2b4306@gmail.com>
-Date:   Thu, 25 Jul 2019 13:59:09 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        id S2390301AbfGYLRJ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 25 Jul 2019 07:17:09 -0400
+Received: from mx08-00178001.pphosted.com ([91.207.212.93]:53548 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2388479AbfGYLRJ (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>);
+        Thu, 25 Jul 2019 07:17:09 -0400
+Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
+        by mx08-00178001.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x6PBGKKY029109;
+        Thu, 25 Jul 2019 13:16:58 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-type; s=STMicroelectronics;
+ bh=0lUCfEK3ONxg/NNCAgs3L5jocem76yi9BMRZQfOjHd8=;
+ b=g6aBzlx7Y1CVz3yBYoHW1xxxNxME/UDCiStUnlGjRhsSgI7bvyFBjW8FB3wcLdmrn3vz
+ U2J7wnY4KUQlV5VBdpvS10TpiOxVof2XFfk4EbPYBjPOF4SKu39HtaGv+LQGxGKpS+Yt
+ BBqT8W3tARzEbisvSkYqvoyirPYOSAye/Us9g/sXuYoIgCUCORQtx86d4lXpg9rhk4Lw
+ 1JBEft1YrX7uMXGGYl9Jq/5TqDd8rCCqKOkHIzENSaMlaeFGnIXZevOPhAzRoPPEa9g4
+ wKcJLNdnjawSPsZ/ZfiovRzdS/5LDNEXd24lDmRtAp3yOKJYu2iXS1J+g/G9yrZioZ82 Eg== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx08-00178001.pphosted.com with ESMTP id 2tx6083kb5-1
+        (version=TLSv1 cipher=ECDHE-RSA-AES256-SHA bits=256 verify=NOT);
+        Thu, 25 Jul 2019 13:16:58 +0200
+Received: from zeta.dmz-eu.st.com (zeta.dmz-eu.st.com [164.129.230.9])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id CE3FC31;
+        Thu, 25 Jul 2019 11:16:57 +0000 (GMT)
+Received: from Webmail-eu.st.com (Safex1hubcas24.st.com [10.75.90.94])
+        by zeta.dmz-eu.st.com (STMicroelectronics) with ESMTP id AB4142AC2;
+        Thu, 25 Jul 2019 11:16:57 +0000 (GMT)
+Received: from SAFEX1HUBCAS22.st.com (10.75.90.93) by Safex1hubcas24.st.com
+ (10.75.90.94) with Microsoft SMTP Server (TLS) id 14.3.439.0; Thu, 25 Jul
+ 2019 13:16:57 +0200
+Received: from localhost (10.201.20.5) by Webmail-ga.st.com (10.75.90.48) with
+ Microsoft SMTP Server (TLS) id 14.3.439.0; Thu, 25 Jul 2019 13:16:56 +0200
+From:   Amelie Delaunay <amelie.delaunay@st.com>
+To:     Linus Walleij <linus.walleij@linaro.org>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>
+CC:     <linux-gpio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        Amelie Delaunay <amelie.delaunay@st.com>
+Subject: [PATCH] pinctrl: stmfx: update pinconf settings
+Date:   Thu, 25 Jul 2019 13:16:56 +0200
+Message-ID: <1564053416-32192-1-git-send-email-amelie.delaunay@st.com>
+X-Mailer: git-send-email 2.7.4
 MIME-Version: 1.0
-In-Reply-To: <20190725103813.GO12715@pdeschrijver-desktop.Nvidia.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Originating-IP: [10.201.20.5]
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-07-25_04:,,
+ signatures=0
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-25.07.2019 13:38, Peter De Schrijver пишет:
-> On Thu, Jul 25, 2019 at 01:33:48PM +0300, Peter De Schrijver wrote:
->> On Thu, Jul 25, 2019 at 01:05:13PM +0300, Dmitry Osipenko wrote:
->>> 25.07.2019 12:55, Peter De Schrijver пишет:
->>>> On Mon, Jul 22, 2019 at 12:54:51PM +0300, Dmitry Osipenko wrote:
->>>>>
->>>>> All Tegra SoCs support SC7, hence the 'supports_sc7' and the comment
->>>>> doesn't sound correct to me. Something like 'firmware_sc7' should suit
->>>>> better here.
->>>>>
->>>>>> +			writel_relaxed(~0ul, ictlr + ICTLR_COP_IER_CLR);
->>>>>
->>>>> Secondly, I'm also not sure why COP interrupts need to be disabled for
->>>>> pre-T210 at all, since COP is unused. This looks to me like it was
->>>>> cut-n-pasted from downstream kernel without a good reason and could be
->>>>> simply removed.
->>>>
->>>> I don't think we can rely on the fact that COP is unused. People can
->>>> write their own code to run on COP.
->>>
->>> 1. Not upstream - doesn't matter.
->>>
->>
->> The code is not part of the kernel, so obviously it's not upstream?
->>
->>> 2. That's not very good if something unknown is running on COP and then
->>> kernel suddenly intervenes, don't you think so?
->>
->> Unless the code was written with this in mind.
->>
+From: Alexandre Torgue <alexandre.torgue@st.com>
 
-In that case, please see 1. ;)
+According to the following tab (coming from STMFX datasheet), updates
+have to done in stmfx_pinconf_set function:
 
-> 
-> Looking at this again, I don't think we need to enable the IRQ at all.
+-"type" has to be set when "bias" is configured as "pull-up or pull-down"
+-PIN_CONFIG_DRIVE_PUSH_PULL should only be used when gpio is configured as
+ output. There is so no need to check direction.
 
-Could you please clarify? The code only saves/restores COP's interrupts
-context across suspend-resume.
+DIR | TYPE | PUPD | MFX GPIO configuration
+----|------|------|---------------------------------------------------
+1   | 1    | 1    | OUTPUT open drain with internal pull-up resistor
+----|------|------|---------------------------------------------------
+1   | 1    | 0    | OUTPUT open drain with internal pull-down resistor
+----|------|------|---------------------------------------------------
+1   | 0    | 0/1  | OUTPUT push pull no pull
+----|------|------|---------------------------------------------------
+0   | 1    | 1    | INPUT with internal pull-up resistor
+----|------|------|---------------------------------------------------
+0   | 1    | 0    | INPUT with internal pull-down resistor
+----|------|------|---------------------------------------------------
+0   | 0    | 1    | INPUT floating
+----|------|------|---------------------------------------------------
+0   | 0    | 0    | analog (GPIO not used, default setting)
 
-Again, that's absolutely useless code for the upstream kernel which
-could be removed safely to avoid the confusion, IMHO. I can type a patch
-if you're agreeing.
+Signed-off-by: Alexandre Torgue <alexandre.torgue@st.com>
+Signed-off-by: Amelie Delaunay <amelie.delaunay@st.com>
+---
+ drivers/pinctrl/pinctrl-stmfx.c | 24 ++++++++++++------------
+ 1 file changed, 12 insertions(+), 12 deletions(-)
+
+diff --git a/drivers/pinctrl/pinctrl-stmfx.c b/drivers/pinctrl/pinctrl-stmfx.c
+index d3332da..31b6e51 100644
+--- a/drivers/pinctrl/pinctrl-stmfx.c
++++ b/drivers/pinctrl/pinctrl-stmfx.c
+@@ -296,29 +296,29 @@ static int stmfx_pinconf_set(struct pinctrl_dev *pctldev, unsigned int pin,
+ 		switch (param) {
+ 		case PIN_CONFIG_BIAS_PULL_PIN_DEFAULT:
+ 		case PIN_CONFIG_BIAS_DISABLE:
++		case PIN_CONFIG_DRIVE_PUSH_PULL:
++			ret = stmfx_pinconf_set_type(pctl, pin, 0);
++			if (ret)
++				return ret;
++			break;
+ 		case PIN_CONFIG_BIAS_PULL_DOWN:
++			ret = stmfx_pinconf_set_type(pctl, pin, 1);
++			if (ret)
++				return ret;
+ 			ret = stmfx_pinconf_set_pupd(pctl, pin, 0);
+ 			if (ret)
+ 				return ret;
+ 			break;
+ 		case PIN_CONFIG_BIAS_PULL_UP:
+-			ret = stmfx_pinconf_set_pupd(pctl, pin, 1);
++			ret = stmfx_pinconf_set_type(pctl, pin, 1);
+ 			if (ret)
+ 				return ret;
+-			break;
+-		case PIN_CONFIG_DRIVE_OPEN_DRAIN:
+-			if (!dir)
+-				ret = stmfx_pinconf_set_type(pctl, pin, 1);
+-			else
+-				ret = stmfx_pinconf_set_type(pctl, pin, 0);
++			ret = stmfx_pinconf_set_pupd(pctl, pin, 1);
+ 			if (ret)
+ 				return ret;
+ 			break;
+-		case PIN_CONFIG_DRIVE_PUSH_PULL:
+-			if (!dir)
+-				ret = stmfx_pinconf_set_type(pctl, pin, 0);
+-			else
+-				ret = stmfx_pinconf_set_type(pctl, pin, 1);
++		case PIN_CONFIG_DRIVE_OPEN_DRAIN:
++			ret = stmfx_pinconf_set_type(pctl, pin, 1);
+ 			if (ret)
+ 				return ret;
+ 			break;
+-- 
+2.7.4
+
