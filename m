@@ -2,83 +2,99 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id B848075F02
-	for <lists+linux-gpio@lfdr.de>; Fri, 26 Jul 2019 08:26:54 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6BFAE7646B
+	for <lists+linux-gpio@lfdr.de>; Fri, 26 Jul 2019 13:28:29 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725955AbfGZG0x (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 26 Jul 2019 02:26:53 -0400
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:35409 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725864AbfGZG0x (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 26 Jul 2019 02:26:53 -0400
-Received: by mail-lf1-f66.google.com with SMTP id p197so36241838lfa.2;
-        Thu, 25 Jul 2019 23:26:51 -0700 (PDT)
+        id S1726535AbfGZL2X (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 26 Jul 2019 07:28:23 -0400
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:43601 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726191AbfGZL2T (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 26 Jul 2019 07:28:19 -0400
+Received: by mail-lf1-f67.google.com with SMTP id c19so36844451lfm.10
+        for <linux-gpio@vger.kernel.org>; Fri, 26 Jul 2019 04:28:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=nnLng03yKzoOCov75qSA3MqCcOmyhGOuTFn/YZRC6bw=;
-        b=QY77d0thwiUD4ElvhVAy5MKyD6fafSxKbtUv9VmsptPFHHlvme/Z5bDd9kco83+dOz
-         CJ1t8DkfHzgcMv66CGkufSFrQ6n5xX1QBja5olBDwVAevTLMlXef1BbefBr3tHHrLpFK
-         XK01aB7P2BDn2Bn8YP/I4KGqK7/vKpw7Qf7Q6C7hz31pREPZpTvVdpMWcJGUILzoTv+T
-         QM6N/YfrpJzm0vXuptrAaE2BUOax/gA9Y3ArgX4Lhrqb9QsDVllkWQd5TBNvmVWvVc/a
-         dMXl4XuC6Dq3uFjwMkRbaAVeIAnCwIOoXUe76JsyaUS7+cqO1ASTJmQDItIWMIvv+66A
-         tbVQ==
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=yms7A0Dj/ss/bfob7fvSwoSoaN3YOnXapMDkDt2JkGk=;
+        b=dI3W3+aYZkRhr2cVhzUptcUM2pwVVATteZ4VZ3NtR71AqBqGIYfrf8yrxzStuM+3nE
+         tya5Wiu6pzLKkBX88Pc9jxDP11Kp2Nb7gJvFfjHY3wHbyJTa9MjgkhXMMSLglyktzkm3
+         rtfP0GDsu4nDfg7oDxj6j5NfrKRKG9nFa1yKVgkG+vm4TleEGCA4h4MB8cJEZeWnFrVx
+         66ajVkJqxzTBxoq8QcMEGK7KzPudl9gdTSkKZ9JTKZKCDGv4Ao7DdYIPa5uPBiKKxwIV
+         QUSwtaEwhzZ9sq1FGfEOxB2hVT7HFBdpqVMA8nbZVRahng8T1uE6i7OUfifFilHWGBbe
+         be7w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=nnLng03yKzoOCov75qSA3MqCcOmyhGOuTFn/YZRC6bw=;
-        b=oArE1I4lE9NBJ91fqswpzYjAt80Zj4u+z34Oj5Bzg0fZbuXtOSWgjc4tU047gvnuHu
-         i9MIqMLyXd2NLkBotlWhYo96Cf//9ZiAoqffohWAVa0FZ9R2bnhPLrnKg00nKD5LN3se
-         zprugjYnNh494kywRxdt5Zvnfbxg55aI/+DlFOLy/6Pw6Gr8k38UAMSAVOvmXw5s6U7g
-         9+3VLZXce2xI3JZEji5IYPzY4TB8ozIQz1aZ74vRaYBg5koxvOiZQvKXPbOrChaURFc0
-         aOo5hhME2CxEVOM7t5oO/67/fnG6tBjdHBldZlSNvXI7kNXyJZjGTV8g1lbWRTdFaDl8
-         CUhg==
-X-Gm-Message-State: APjAAAWdo0I/zJ3VjjhZZi6cQuFw1HZj/Wdb7F4odKzGCi/k25xNTmnw
-        U4LRZYU5lVSSK8s+k+Eys2Q=
-X-Google-Smtp-Source: APXvYqxQGcfDkp5SBeDAZqV+MRX5iBECRKA/CnzStUstMtYBdbgt64kzQ037siw3JTVdCCysd7N8QQ==
-X-Received: by 2002:ac2:59c6:: with SMTP id x6mr8532542lfn.169.1564122411084;
-        Thu, 25 Jul 2019 23:26:51 -0700 (PDT)
-Received: from dimatab (ppp91-78-220-99.pppoe.mtu-net.ru. [91.78.220.99])
-        by smtp.gmail.com with ESMTPSA id z12sm8129347lfe.2.2019.07.25.23.26.49
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=yms7A0Dj/ss/bfob7fvSwoSoaN3YOnXapMDkDt2JkGk=;
+        b=i5ITgSWGjD3A68Y4jEbpYYxb35nUjbcEZntg0GgTlPTTLjfYWwhhIowYa0asN50Lbp
+         8qsFM1nu3okJLtXNR5T3aCdb3bXwi9BfdSO04JhMZM+RrmaWVchF64KIEfAkpH6a2Ksn
+         kozEH6cbGGX5qY5XNFbQ0tB71qkpZkVahI377C7IPoIo8bwYPcVtifS5UxYSwIhsDFA5
+         7gVBMiZ8c5kwsYAGDDdc8yoLYW4/TEJgnGgCR66XdZSHj7Auj0wQMNp4mGrWsN7h0l+s
+         4rCLel/0msD7lop3X4TJZREhNDxWMLIEkuq6p9IUQhBAEOf9uZ8fQPUR7QVSM1WdW8HL
+         V5Lg==
+X-Gm-Message-State: APjAAAX7my8sZQuVpOI0PkgtSsGlU+wMojCVGE9347vptIhzm8gE0pX4
+        +M2syvLqF5z8wikaowHL6Wiu0w==
+X-Google-Smtp-Source: APXvYqx05CPqPaf24TqfXHUET5OwIsXvhc0hYDuun6wEBRgaKaaGpBp1xs/Z6Ozl1ehbTYYA+0UBew==
+X-Received: by 2002:a19:be03:: with SMTP id o3mr43992429lff.88.1564140496719;
+        Fri, 26 Jul 2019 04:28:16 -0700 (PDT)
+Received: from localhost (c-243c70d5.07-21-73746f28.bbcust.telenor.se. [213.112.60.36])
+        by smtp.gmail.com with ESMTPSA id b27sm10020400ljb.11.2019.07.26.04.28.15
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Thu, 25 Jul 2019 23:26:50 -0700 (PDT)
-Date:   Fri, 26 Jul 2019 09:30:55 +0300
-From:   Dmitry Osipenko <digetx@gmail.com>
-To:     Sowjanya Komatineni <skomatineni@nvidia.com>
-Cc:     <thierry.reding@gmail.com>, <jonathanh@nvidia.com>,
-        <tglx@linutronix.de>, <jason@lakedaemon.net>,
-        <marc.zyngier@arm.com>, <linus.walleij@linaro.org>,
-        <stefan@agner.ch>, <mark.rutland@arm.com>,
-        <pdeschrijver@nvidia.com>, <pgaikwad@nvidia.com>,
-        <sboyd@kernel.org>, <linux-clk@vger.kernel.org>,
-        <linux-gpio@vger.kernel.org>, <jckuo@nvidia.com>,
-        <josephl@nvidia.com>, <talho@nvidia.com>,
-        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <mperttunen@nvidia.com>, <spatra@nvidia.com>, <robh+dt@kernel.org>,
-        <devicetree@vger.kernel.org>
-Subject: Re: [PATCH V6 17/21] arm64: tegra: Enable wake from deep sleep on
- RTC alarm.
-Message-ID: <20190726093055.4d8fe3ff@dimatab>
-In-Reply-To: <1563738060-30213-18-git-send-email-skomatineni@nvidia.com>
-References: <1563738060-30213-1-git-send-email-skomatineni@nvidia.com>
-        <1563738060-30213-18-git-send-email-skomatineni@nvidia.com>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; arm-unknown-linux-gnueabihf)
+        Fri, 26 Jul 2019 04:28:16 -0700 (PDT)
+From:   Anders Roxell <anders.roxell@linaro.org>
+To:     linus.walleij@linaro.org, heiko@sntech.de
+Cc:     bjorn.andersson@linaro.org, agross@kernel.org,
+        linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Anders Roxell <anders.roxell@linaro.org>
+Subject: [PATCH 1/2] pinctrl: rockchip: Mark expected switch fall-through
+Date:   Fri, 26 Jul 2019 13:28:12 +0200
+Message-Id: <20190726112812.19665-1-anders.roxell@linaro.org>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-=D0=92 Sun, 21 Jul 2019 12:40:56 -0700
-Sowjanya Komatineni <skomatineni@nvidia.com> =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+When fall-through warnings was enabled by default the following warning
+was starting to show up:
 
-> This patch updates device tree for RTC and PMC to allow system wake
-> from deep sleep on RTC alarm.
->=20
-> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
+../drivers/pinctrl/pinctrl-rockchip.c: In function ‘rockchip_gpio_set_config’:
+../drivers/pinctrl/pinctrl-rockchip.c:2783:3: warning: this statement may fall
+ through [-Wimplicit-fallthrough=]
+   rockchip_gpio_set_debounce(gc, offset, true);
+   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../drivers/pinctrl/pinctrl-rockchip.c:2795:2: note: here
+  default:
+  ^~~~~~~
 
-The dot in the end of the commit's title is unnecessary.
+Rework so that the compiler doesn't warn about fall-through. Add
+'return -ENOTSUPP;' to match the comment.
+
+Fixes: d93512ef0f0e ("Makefile: Globally enable fall-through warning")
+Signed-off-by: Anders Roxell <anders.roxell@linaro.org>
+---
+ drivers/pinctrl/pinctrl-rockchip.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/drivers/pinctrl/pinctrl-rockchip.c b/drivers/pinctrl/pinctrl-rockchip.c
+index 62a622159006..dc0bbf198cbc 100644
+--- a/drivers/pinctrl/pinctrl-rockchip.c
++++ b/drivers/pinctrl/pinctrl-rockchip.c
+@@ -2792,6 +2792,7 @@ static int rockchip_gpio_set_config(struct gpio_chip *gc, unsigned int offset,
+ 		 * still return -ENOTSUPP as before, to make sure the caller
+ 		 * of gpiod_set_debounce won't change its behaviour.
+ 		 */
++		return -ENOTSUPP;
+ 	default:
+ 		return -ENOTSUPP;
+ 	}
+-- 
+2.20.1
+
