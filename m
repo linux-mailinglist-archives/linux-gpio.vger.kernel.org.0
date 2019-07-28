@@ -2,73 +2,80 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 2AE5778244
-	for <lists+linux-gpio@lfdr.de>; Mon, 29 Jul 2019 01:10:52 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1EF6A78249
+	for <lists+linux-gpio@lfdr.de>; Mon, 29 Jul 2019 01:14:52 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726171AbfG1XKv (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sun, 28 Jul 2019 19:10:51 -0400
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:41106 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726163AbfG1XKv (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sun, 28 Jul 2019 19:10:51 -0400
-Received: by mail-lj1-f196.google.com with SMTP id d24so56679853ljg.8
-        for <linux-gpio@vger.kernel.org>; Sun, 28 Jul 2019 16:10:49 -0700 (PDT)
+        id S1726191AbfG1XOv (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sun, 28 Jul 2019 19:14:51 -0400
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:38253 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726171AbfG1XOu (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sun, 28 Jul 2019 19:14:50 -0400
+Received: by mail-lj1-f193.google.com with SMTP id r9so56696569ljg.5
+        for <linux-gpio@vger.kernel.org>; Sun, 28 Jul 2019 16:14:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=inLCD3+8WT2ZIeP3j9ljz8tWvfGd7KXHJKqKulp52u8=;
-        b=DzeGYhgu5mrYTF7BC/exdYhltYo20EvxLeeSJqANw/w5t76P5/bI4QdSyqdDZhqSUm
-         lbL+0uwo80XKdIo0+mpJyVf3RqPYXRKjxGItKGaJWK0mP2uCdmuMw0juOg3JymNIWKSY
-         7jCq19M5rRmE2gx3dwIEkhTpxc3Z+6siO6RdVbem/AvLuk9J6Rha+h4uVEyn6NZ6uuAI
-         qS7MrYIXug/01A7huPqmmgM71pQ49/ldbFtPNFfkfnNVO1xMuIuIJzNzO5V8A1E/GY6Z
-         mM0wRjyjmKkfMUr8UywjR0260gIm0+Kf+3jn8AVTE44W8Zp0pMtW5EU8F4drmNQKfddB
-         Cxxg==
+        bh=uqbaLb+DoYfmkQkeju/D4dfpefzvGhqE/NA7IyXYHDs=;
+        b=mecH4VhtykhjOehOVm7m8Pa5YP6LbhZHxuLFQA2XocGjWKuVwaUD5JKujEe9aVixYW
+         cawoMpzpCuo6PsH/Y5+Y7tXwV3d7SoDRDfjjcoukQScCk9CzzHAMPo1pS4yrzvyXmqyJ
+         2yMjXxSUUQvzemHru0Os3ufWRvyApCPQMYjePIqEYdIr8dqIpeHbncxd/W99X2KbFg2j
+         jbwANzOROhAvP10F0iLcxqbviHMgDbZ6aAMO7bHOLzMbrE+YgCLY6qUQqtoboNujm0Gj
+         U73hnvjkMlVYKlUDbpdLF67Z+MpbkHJo3vfCQ+e8YPRfhiYgmC3LZ5+TDpH4eiTfU3zX
+         7Iyg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=inLCD3+8WT2ZIeP3j9ljz8tWvfGd7KXHJKqKulp52u8=;
-        b=nYFZVOTaY9rhKHwa15Cy4GCm/cmRnsRIfjnpdZQ59IIIsbKCo+kfe/bq0AgO31XYZs
-         Y4ES7VnrAnfR9PZyzb+kUb1ifaqm9pGgxCFM4XloVcE+KZrE1Mp69xEUyWwxzHX6/iRO
-         aV092y8Dpz1f6LEq8Db833yIWQKjJpfwScJMMB1Yn15ntxU/xZRrm/UW1fefmEOODsxY
-         3Pk5fL8tV6auJX/+R6JuwE/XJetAHZwOaGyBGV7mrKqSovlF1l+CGeZDFIZ2qAuBM1+Q
-         +FOEjM+g5z5iDuZ2ZsW7Gp1nEdfohxhvHBiqYRVigfkvZxKDhBwiEkLFrqd3xGgpCB0J
-         ZEpg==
-X-Gm-Message-State: APjAAAWqoDnecVC5RKLSpn4pBoQFANR866OTLZ+Qv0A4E60fv3meNml/
-        RfieTy3SBBlhjTyNXi/1Rl2n6PMzt1VELjC/yuk67Q==
-X-Google-Smtp-Source: APXvYqzdnaN6NlzK2l6UqWrWZ8Iji17BG0xcGdQL3jp2DkCjwg3y1mK9EYub9VekCTIj2L+kpBmKPMz4zN44NFHInE8=
-X-Received: by 2002:a2e:9048:: with SMTP id n8mr9255442ljg.37.1564355449182;
- Sun, 28 Jul 2019 16:10:49 -0700 (PDT)
+        bh=uqbaLb+DoYfmkQkeju/D4dfpefzvGhqE/NA7IyXYHDs=;
+        b=Wba50EMxdxHt1yGT2u3T6P4EQyYuXezbwdmG2P0O2VmYee4u05VQD5DItSZH+4PI8q
+         +iyJD7JRrT4vJZY5XUJbs+ULTErN2nY7zoE9yVDpytjWFaXmWDpob6j4Mm0rgLoa84bu
+         d8SnltylIdCAndn/rR5a3b74+kiMIwt2UNHC2Lnpk1BK/EqI6hKgxTVPGZEDiQL+zciV
+         xj3kTYrJU+cPsTUoW+L+Q5rDh8KIr6lLPrPfLYifci0iQdpWnj1azjG23RenxR5noHSH
+         WHMSI7U/lI0WT60d1GYtZL1JDuvpfVJY2EF/rLCB/cB4QES0HM57gvgxwNiTV3hdTgD/
+         VHzw==
+X-Gm-Message-State: APjAAAXCE8a+FGioY9VmRiXrZZHc59wjXX1gsufSZWlOgTRTGLuMmaVa
+        H0MhmESIudOGMY1sEz3bzsDpgQNbAEPjecUPl15i3g==
+X-Google-Smtp-Source: APXvYqxZn/ye7KzmbCXTelv16sXPVMTT2jnKOOv6eVhlkoDzFB17aRJoEaL7U1kzdaeMP7q7K+fcGcM99btdobKE65w=
+X-Received: by 2002:a2e:9593:: with SMTP id w19mr8822011ljh.69.1564355688739;
+ Sun, 28 Jul 2019 16:14:48 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190710090852.9239-1-brgl@bgdev.pl> <20190710090852.9239-2-brgl@bgdev.pl>
-In-Reply-To: <20190710090852.9239-2-brgl@bgdev.pl>
+References: <20190711041942.23202-1-andrew@aj.id.au>
+In-Reply-To: <20190711041942.23202-1-andrew@aj.id.au>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Mon, 29 Jul 2019 01:10:37 +0200
-Message-ID: <CACRpkdZODndkJuvJaGCcyY7OONvu88aU_F1EKzkJNAW6Dxfi4g@mail.gmail.com>
-Subject: Re: [PATCH 2/2] gpio: em: use a helper variable for &pdev->dev
-To:     Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     Geert Uytterhoeven <geert@linux-m68k.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Date:   Mon, 29 Jul 2019 01:14:37 +0200
+Message-ID: <CACRpkdb4pEdPHbo=3+fJXe9WG8K7A2_xVMtKWCJCfEawDO5wBw@mail.gmail.com>
+Subject: Re: [PATCH 0/6] pinctrl: aspeed: Add AST2600 pinmux support
+To:     Andrew Jeffery <andrew@aj.id.au>
+Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Joel Stanley <joel@jms.id.au>, ryanchen.aspeed@gmail.com,
+        johnny_huang@aspeedtech.com, linux-aspeed@lists.ozlabs.org,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Jul 10, 2019 at 11:08 AM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
+On Thu, Jul 11, 2019 at 6:19 AM Andrew Jeffery <andrew@aj.id.au> wrote:
 
-> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> This series adds pinmux support for the AST2600. Some more rework was required
+> on top of the previous cleanup series, but this rework was focussed on
+> supporting features of the AST2600 pinmux rather than fixing issues with the
+> existing infrastructure for the ASPEED drivers. Due to the dependences it's
+> based on top of pinctrl/devel, so should avoid any more SPDX issues.
 >
-> Instead of always dereferencing &pdev->dev, just assign a helper local
-> variable of type struct device * and use it where applicable.
->
-> Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> ASPEED have been testing the patches on hardware, so even for an initial pass
+> there's some confidence in the implementation.
 
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
-I expect I get this and other EM patches in a pull request from you.
+I'm unsure if I need to wait for the DT bindings to be fixed on this
+series?
 
 Yours,
 Linus Walleij
