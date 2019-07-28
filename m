@@ -2,18 +2,18 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id BB64977D60
-	for <lists+linux-gpio@lfdr.de>; Sun, 28 Jul 2019 05:14:10 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 868C877D62
+	for <lists+linux-gpio@lfdr.de>; Sun, 28 Jul 2019 05:14:17 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725872AbfG1DOG (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sat, 27 Jul 2019 23:14:06 -0400
-Received: from hermes.aosc.io ([199.195.250.187]:52418 "EHLO hermes.aosc.io"
+        id S1726319AbfG1DOL (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sat, 27 Jul 2019 23:14:11 -0400
+Received: from hermes.aosc.io ([199.195.250.187]:52434 "EHLO hermes.aosc.io"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725440AbfG1DOG (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Sat, 27 Jul 2019 23:14:06 -0400
+        id S1725440AbfG1DOL (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Sat, 27 Jul 2019 23:14:11 -0400
 Received: from localhost (localhost [127.0.0.1]) (Authenticated sender: icenowy@aosc.io)
-        by hermes.aosc.io (Postfix) with ESMTPSA id 5345D6F8D3;
-        Sun, 28 Jul 2019 03:14:02 +0000 (UTC)
+        by hermes.aosc.io (Postfix) with ESMTPSA id 9D1716F929;
+        Sun, 28 Jul 2019 03:14:06 +0000 (UTC)
 From:   Icenowy Zheng <icenowy@aosc.io>
 To:     Rob Herring <robh+dt@kernel.org>,
         Maxime Ripard <mripard@kernel.org>,
@@ -21,10 +21,11 @@ To:     Rob Herring <robh+dt@kernel.org>,
         Linus Walleij <linus.walleij@linaro.org>
 Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-sunxi@googlegroups.com, Icenowy Zheng <icenowy@aosc.io>
-Subject: [PATCH v5 4/6] ARM: sunxi: dts: s3/s3l/v3: add DTSI files for S3/S3L/V3 SoCs
-Date:   Sun, 28 Jul 2019 11:12:25 +0800
-Message-Id: <20190728031227.49140-5-icenowy@aosc.io>
+        linux-sunxi@googlegroups.com, Icenowy Zheng <icenowy@aosc.io>,
+        Rob Herring <robh@kernel.org>
+Subject: [PATCH v5 5/6] dt-bindings: arm: sunxi: add binding for Lichee Zero Plus core board
+Date:   Sun, 28 Jul 2019 11:12:26 +0800
+Message-Id: <20190728031227.49140-6-icenowy@aosc.io>
 In-Reply-To: <20190728031227.49140-1-icenowy@aosc.io>
 References: <20190728031227.49140-1-icenowy@aosc.io>
 MIME-Version: 1.0
@@ -34,44 +35,46 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-The Allwinner S3/S3L/V3 SoCs all share the same die with the V3s SoC,
-but with more GPIO wired out of the package.
+The Lichee Zero Plus is a core board made by Sipeed, with a microUSB
+connector on it, TF slot or WSON8 SD chip, optional eMMC or SPI Flash.
+It has a gold finger connector for expansion, and UART is available from
+reserved pins w/ 2.54mm pitch. The board can use either SoChip S3 or
+Allwinner V3L SoCs.
 
-Add a DTSI file for these SoCs. It just replaces some compatible strings
-of the V3s DTSI now. As these SoCs share the same feature set on Linux,
-we use the first known chip (V3) as the file's name.
+Add the device tree binding of the basic version of the core board --
+w/o eMMC or SPI Flash, w/ TF slot or WSON8 SD, and use S3 SoC.
 
 Signed-off-by: Icenowy Zheng <icenowy@aosc.io>
+Reviewed-by: Rob Herring <robh@kernel.org>
 ---
 Changes in v5:
-- Dropped dedicated S3/S3L DTSIs.
+- Added V3 compatible to S3 board.
+- Fixed S3 compatible string.
 
 No changes until v5.
 
- arch/arm/boot/dts/sun8i-v3.dtsi | 14 ++++++++++++++
- 1 file changed, 14 insertions(+)
- create mode 100644 arch/arm/boot/dts/sun8i-v3.dtsi
+Patch introduced in v2.
 
-diff --git a/arch/arm/boot/dts/sun8i-v3.dtsi b/arch/arm/boot/dts/sun8i-v3.dtsi
-new file mode 100644
-index 000000000000..6ae8645ade50
---- /dev/null
-+++ b/arch/arm/boot/dts/sun8i-v3.dtsi
-@@ -0,0 +1,14 @@
-+// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-+/*
-+ * Copyright (C) 2019 Icenowy Zheng <icenowy@aosc.io>
-+ */
+ Documentation/devicetree/bindings/arm/sunxi.yaml | 6 ++++++
+ 1 file changed, 6 insertions(+)
+
+diff --git a/Documentation/devicetree/bindings/arm/sunxi.yaml b/Documentation/devicetree/bindings/arm/sunxi.yaml
+index 000a00d12d6a..8888f6fc68ad 100644
+--- a/Documentation/devicetree/bindings/arm/sunxi.yaml
++++ b/Documentation/devicetree/bindings/arm/sunxi.yaml
+@@ -353,6 +353,12 @@ properties:
+           - const: licheepi,licheepi-zero
+           - const: allwinner,sun8i-v3s
+ 
++      - description: Lichee Zero Plus (with S3, without eMMC/SPI Flash)
++        items:
++          - const: sipeed,lichee-zero-plus
++          - const: sochip,s3
++          - const: allwinner,sun8i-v3
 +
-+#include "sun8i-v3s.dtsi"
-+
-+&ccu {
-+	compatible = "allwinner,sun8i-v3-ccu";
-+};
-+
-+&pio {
-+	compatible = "allwinner,sun8i-v3-pinctrl";
-+};
+       - description: Linksprite PCDuino
+         items:
+           - const: linksprite,a10-pcduino
 -- 
 2.21.0
 
