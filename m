@@ -2,55 +2,54 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 4BCC278208
-	for <lists+linux-gpio@lfdr.de>; Mon, 29 Jul 2019 00:21:02 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8393578214
+	for <lists+linux-gpio@lfdr.de>; Mon, 29 Jul 2019 00:30:25 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726211AbfG1WVB (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sun, 28 Jul 2019 18:21:01 -0400
-Received: from mail-lf1-f67.google.com ([209.85.167.67]:45796 "EHLO
-        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726097AbfG1WVB (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sun, 28 Jul 2019 18:21:01 -0400
-Received: by mail-lf1-f67.google.com with SMTP id u10so1908117lfm.12
-        for <linux-gpio@vger.kernel.org>; Sun, 28 Jul 2019 15:21:00 -0700 (PDT)
+        id S1726139AbfG1WaX (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sun, 28 Jul 2019 18:30:23 -0400
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:38752 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726120AbfG1WaX (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sun, 28 Jul 2019 18:30:23 -0400
+Received: by mail-lj1-f193.google.com with SMTP id r9so56639278ljg.5
+        for <linux-gpio@vger.kernel.org>; Sun, 28 Jul 2019 15:30:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=FLmMIDcIizWuPvrBmc4gpk3vuXYj+LUn4VJhWeYY47A=;
-        b=SpW8mh5JmaUwmCYAUiN6Zc6xExwWIrOtwzT3K6hskMbzzxct7PtclBGvCvTicitGLf
-         LIzVOV0uPD66YFu/1HFK3iDlSyDK23Jgtip/94zAhM2rxdAo1tepVdNhCYUZDIGh/Zzo
-         AMwOoJSB6mqBJ2OBODr6Dy1qT1t9ROJGLge8btIfLcKdTqXA6ztYBiIMsZoBozdQvRzb
-         03+n5uoHji2Mfc7XW7d0s5d65Nrbin1rZOdh4CTw/hisxod3/t/KDSj62K1vDV/2hkyi
-         DeDRQYCwlhNSblnZMWJAOuEl7ChJr7jVyVmhC0BV64NRbICQFM08LxvXrkocTi15E/Xa
-         3svA==
+        bh=zdX9YrMQVaxUpfOTBX1O7pLAKJ90DiMSNYDDgK4w6MY=;
+        b=uzHn7y7a0Y0/qlrn0YKzbEZHsMJUT2XOGNwHEDmiall7D/hRi7/Pa0PXDWsMKK8M/x
+         +T5Ufs0bPMV5NZn4UKxhRQJRiV7HioFeyz42N5YxMlqpe0otIap7wBnrRHIXRlabL6F+
+         tIw+FW06ASnNiOMxsazFNARFAoQxhXCx8mVUKVQUiwc6s8eKSGDQ+wV6xvlP+RKVCx69
+         AthGteqAMcNz4kes7DpXDFFTXyZdf1plXIwdX4VvK4RzT+DjLMcAtCpSZs6JrLBP3hiD
+         AjyFEwNvD7QVeh3gFADQG7mUdVU4Krzz3Mz+hC8ImhnfZx9OK6NL+asd76M5rif4Ggir
+         TO/Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=FLmMIDcIizWuPvrBmc4gpk3vuXYj+LUn4VJhWeYY47A=;
-        b=lpl7NeBXm9Vd2KWI8N06N8tQJblG1HXciqBHz2Ju/hrApnNB7F1gULCd+5S2aCnTma
-         /5ocl2XHOAmnZho9Ffg6fKY6u3hgiPy7RjkVJQX9mbrgJd350G+vw57fTFvXUAHl5kkL
-         oYj9xIaxfPziv+WVRZpCSpVAqEboZFqg9BmY/Fvp8/Uhl6/40lwe+OSMuzg23aX9udak
-         7n9mcRUQRI5+8IU8EFfZttUOHxzt3hTGJpqcpvKWtWHtG6mcfTjQp5CCpYMcJKFv6g4n
-         KjL6P6ryw6SgSevtO+htOsMf7UjNDHZ1AnXsncmuS8vRVS4+RA6M3hE2Z9P+PsWtN6rr
-         99Bg==
-X-Gm-Message-State: APjAAAWz2GlVLGjKwply/LFlLIl6dqEutdfolU1ib5ifIVQZCje4o2Dg
-        mQi3OFxwmapCTS02fKreKzsaUpqFUwDNLCCfINFyTuVD
-X-Google-Smtp-Source: APXvYqy9tXaK3FvDKV/nxxLTpRbvelziBiCAwnZac43l2iiP91Bvr49N28LMVps7+NvxEUQsozJwed2O5clCXGQ2s/Q=
-X-Received: by 2002:a19:e006:: with SMTP id x6mr48865881lfg.165.1564352459718;
- Sun, 28 Jul 2019 15:20:59 -0700 (PDT)
+        bh=zdX9YrMQVaxUpfOTBX1O7pLAKJ90DiMSNYDDgK4w6MY=;
+        b=D1fnSo+LxNUotvB6vnBp1LKuhkAcQFYAh9zRBG3xF+pa4sjYNMoyC6Rxh0r9rKrehH
+         yGy+Opt1XKRc05+0OKHW5TJwP/e+98rCW8TI3RW4P8shfmiwgGvm6qFnPuohZS7cYItO
+         zQxRBy0AkpTuREDpp5w09SUFSQSr9uKR3vCDP54oXi4oPYegYUEWJZ7PyiMLx66xJdUD
+         kJnEGEhgv/EshvzY4L24M2eO0dUO6qmZ9fhtHoCy4ZqLRdA9MVQh5s7Q8aplmuephqJk
+         8vFtO9V54b7huKQ9tj+aFvaxHgZ9N6GQB7h/4J6pdlwPmQ8p7PrEvHM1JGzTE/QkDhBW
+         IqUw==
+X-Gm-Message-State: APjAAAWqZaDhJT2Sltrm9qKCYc1LJjfzUpKz4eSYfhAWxvTdM38R2K9c
+        rj+YTaYRQFtlAzit+fpY1BY5CLCxy/hIyShbo1dp7fsO
+X-Google-Smtp-Source: APXvYqyNNR8/uF69NmdXmI2Xz8NIUyywV1VbobmDCsvJZxej/NwUjEoBbVcZtYq2KHv7AytYbnmLcq/B2nAMEoUr/1A=
+X-Received: by 2002:a2e:2c14:: with SMTP id s20mr8075769ljs.54.1564353021137;
+ Sun, 28 Jul 2019 15:30:21 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190705143043.1929-1-luca@lucaceresoli.net>
-In-Reply-To: <20190705143043.1929-1-luca@lucaceresoli.net>
+References: <20190707023037.21496-1-yamada.masahiro@socionext.com>
+In-Reply-To: <20190707023037.21496-1-yamada.masahiro@socionext.com>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Mon, 29 Jul 2019 00:20:48 +0200
-Message-ID: <CACRpkdbJHPz78YfwRtbnmw_8Rk-Te4GHFvrL4MLCy1xTvjKGAg@mail.gmail.com>
-Subject: Re: [PATCH] docs/pinctrl: fix compile errors in example code
-To:     Luca Ceresoli <luca@lucaceresoli.net>
+Date:   Mon, 29 Jul 2019 00:30:09 +0200
+Message-ID: <CACRpkdYSDT3pQzNTiHoDdtwMQn32jZ83Q71G=soQ1ycdg+F1ag@mail.gmail.com>
+Subject: Re: [PATCH] gpio: remove less important #ifdef around declarations
+To:     Masahiro Yamada <yamada.masahiro@socionext.com>
 Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
@@ -58,15 +57,35 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Jul 5, 2019 at 4:30 PM Luca Ceresoli <luca@lucaceresoli.net> wrote:
+On Sun, Jul 7, 2019 at 4:31 AM Masahiro Yamada
+<yamada.masahiro@socionext.com> wrote:
 
-> The code in the example does not build for a few trivial errors: type
-> mismatch in callback, missing semicolon. Fix them to help newcomers using
-> the example as a starting point.
+> The whole struct/function declarations in this header are surrounded
+> by #ifdef.
 >
-> Signed-off-by: Luca Ceresoli <luca@lucaceresoli.net>
+> As far as I understood, the motivation of doing so is probably to break
+> the build earlier if a driver misses to select or depend on correct
+> CONFIG options in Kconfig.
+>
+> Since commit 94bed2a9c4ae ("Add -Werror-implicit-function-declaration")
+> no one cannot call functions that have not been declared.
+>
+> So, I see some benefit in doing this in the cost of uglier headers.
+>
+> In reality, it would not be so easy to catch missed 'select' or
+> 'depends on' because GPIOLIB, GPIOLIB_IRQCHIP etc. are already selected
+> by someone else eventually. So, this kind of error, if any, will be
+> caught by randconfig bots.
+>
+> In summary, I am not a big fan of cluttered #ifdef nesting, and this
+> does not matter for normal developers. The code readability wins.
+>
+> Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
 
-Patch applied.
+Hm I guess you're right.
+
+This patch does not apply cleanly on v5.3-rc1, could you rebase it
+and resend?
 
 Yours,
 Linus Walleij
