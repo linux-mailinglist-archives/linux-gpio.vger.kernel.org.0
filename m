@@ -2,71 +2,73 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id B381277EE4
-	for <lists+linux-gpio@lfdr.de>; Sun, 28 Jul 2019 11:58:22 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 560CA77EE6
+	for <lists+linux-gpio@lfdr.de>; Sun, 28 Jul 2019 11:59:40 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726129AbfG1J6V (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sun, 28 Jul 2019 05:58:21 -0400
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:38107 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726082AbfG1J6U (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sun, 28 Jul 2019 05:58:20 -0400
-Received: by mail-lf1-f66.google.com with SMTP id h28so39925206lfj.5
-        for <linux-gpio@vger.kernel.org>; Sun, 28 Jul 2019 02:58:19 -0700 (PDT)
+        id S1726001AbfG1J7j (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sun, 28 Jul 2019 05:59:39 -0400
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:34185 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725985AbfG1J7j (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sun, 28 Jul 2019 05:59:39 -0400
+Received: by mail-lf1-f68.google.com with SMTP id b29so32723290lfq.1
+        for <linux-gpio@vger.kernel.org>; Sun, 28 Jul 2019 02:59:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=5MsmPMvNEdE/+CaVmYals2fkAWGS05U+0XvqfczgdYk=;
-        b=A6H4EHb8owjFLAmKtesVsURGlBcOtedOZD/gLWYQNFMKoBLwC8v2vbQfldC0DEmrYl
-         hWo0zkZug78OOqK/4hUNIt5DsYh+NYzgL4Wd9/WlLRhAIz0XYj40tXcCE5R6QHx8AF7i
-         P6Fvp0OxMlvf903kOBluhhMRSHRzgc08RiA+xkXzDyFImbweOayL+NpH8I+GzZmkCdgk
-         Ni28XajAAMGQ1BBsTuueBo61kmVZP1EKeCilxCsgS227ubB2uxaZ7xRqec1ZkJOpqeIG
-         hlnIpBAs3pjzp4MX816L966bHH+9p6OShIOBDzBdFUFbpOJ1guZWBjyyl92r6/bYOiuX
-         GFnA==
+        bh=TT2iQ+fh+yLVfA5XCASIgHgqymw+iJWW639N0+0UQAE=;
+        b=FRl0zJAKpwfKOlbX9Q5cPuWYSDRbmQE6DNbukn1h3ogrfsflueUFSgzjLc2SzfKJmR
+         E+m+RKFJGXHGTQxCbHHEAUyvrMW/i27uOzMblM7E39IlLXNUZipq1sxXEr1Ao0deWM61
+         TGd1Y3wy9ZkJPV1km0kHVQPpc60PiIcjgjN1kqdkGKmSX4gtr3WNxQ/oUIpud41n0A0z
+         2WMIZKD+ZSBh3LQUlMhvfTu+Wqewi0XFx2CrquUtFg2bV6LD/CUto6RiC6XIFhhKnWrQ
+         NXoh3Wji7vjpIauRm10bkwehuX0zeLTsL8XU3nQZMZkod6NRP4C6u/6Okl1ooGbx/yI9
+         1Lcg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=5MsmPMvNEdE/+CaVmYals2fkAWGS05U+0XvqfczgdYk=;
-        b=DOH8rK0syMDXTSgfZoF8fXsArFrlT++Sho8syLZr9xMycS7GceT9KEKsnr/f0UwHK9
-         j5p7gpQP9vmMYl2O1ufPR2X+lR/PdtpHTQQSJoJrziYQZZIkQmuFPZy63okW0UwwJ7SF
-         0zqFf03URu7Y0jbrqo8dIJWGib3qxufbdnoKkQlYU7SKWjZXlZ9EHZ/3r+I3/6zsPlDR
-         rsDasroh4fwxV4PFYSEDFpMJ1bALhR401ATVEivIda/dB1tNvExRgK5mhlm7qUvzaX54
-         N4NWnQ2pCDu47086B+oc612+jMDRbjtGVFvU/Wc3CptMUhsSyv1ift1irwPAAYIwTjyU
-         qa4A==
-X-Gm-Message-State: APjAAAXuhFQV2zimkkfbReqELy+ED7MPrFfHzZer7TZU4C7hVRxBSrYi
-        jPlMA+jgKV+/SPZj3R0LKu2aMA0+fsBRVIET1DjNZhkE
-X-Google-Smtp-Source: APXvYqwYDUarIwiPKZLRBIOPqr92S5R7alFFIKPFZUs1D/w/qhFPEXKDMDmZd4l3F25HBwhvAoAJ3cGaJQcEgr9G+3Y=
-X-Received: by 2002:a19:dc0d:: with SMTP id t13mr44730714lfg.152.1564307898402;
- Sun, 28 Jul 2019 02:58:18 -0700 (PDT)
+        bh=TT2iQ+fh+yLVfA5XCASIgHgqymw+iJWW639N0+0UQAE=;
+        b=oGO7FFEecqYeR3BQg3vaOxsUZb2dlLRbG21F4OeZBMJut2bVX8C4xh0T+F9DJObwsQ
+         Ygx2D01aW2LkKz1rVqnvm5up0b2mPmIiXh28meA0lphqEuWkRUWDQccDQekyD4LdInis
+         Tp3HQ/ovXnH+yG9v9paVEijlWvPM/c18ZMAKANDaUiWUtPAk3dtfowpVVpdJEPp1IlNi
+         bMZR9e4VpTgjl6n3eYZeaV/IJiBrMsa2EeHTDsZ3R9a1IvJcRU//ESt/8YtjJ1hBRdWI
+         FsrI4Hi/1B1XmWPp73cMJ2J5Dakz6NwLEKXJSJq1lwRfCmk8NgsgODA9F5Qr7+i/1bHE
+         WgmA==
+X-Gm-Message-State: APjAAAXXslYTmcttu50PNV9RPxVoylzBagxSdm/J73Qr/c59PDOWtMJB
+        qitgr33l0vPTI+VefHdBCdjhbp7h+V03J4QezidhAg==
+X-Google-Smtp-Source: APXvYqxkR2GcWRl3K2H831/69AeuP+bZxZIVeB/0pJPp/XlfvJyMah1IjsUVQhTN/o7bF6FNas2xCMlAk3GX6qDHTY0=
+X-Received: by 2002:a19:6a01:: with SMTP id u1mr48506198lfu.141.1564307977519;
+ Sun, 28 Jul 2019 02:59:37 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190626093418.6263-1-linus.walleij@linaro.org>
-In-Reply-To: <20190626093418.6263-1-linus.walleij@linaro.org>
+References: <20190628161419.26439-1-colin.king@canonical.com>
+In-Reply-To: <20190628161419.26439-1-colin.king@canonical.com>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Sun, 28 Jul 2019 11:58:07 +0200
-Message-ID: <CACRpkdZopsThNSzaYfWg0C2mNwYHDqJu+8pjhTOjaKydkQWWow@mail.gmail.com>
-Subject: Re: [PATCH] unicore: Drop pointless include
-To:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
-Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Guan Xuetao <gxt@pku.edu.cn>
+Date:   Sun, 28 Jul 2019 11:59:26 +0200
+Message-ID: <CACRpkdZvmbCkfCn=PqREp=v7bB7OaGG9+B8_PG5+nK_=CRWM8w@mail.gmail.com>
+Subject: Re: [PATCH][next] gpio: bd70528: fix spelling misstake "debouce" -> "debounce"
+To:     Colin King <colin.king@canonical.com>
+Cc:     Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        kernel-janitors@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Jun 26, 2019 at 11:34 AM Linus Walleij <linus.walleij@linaro.org> wrote:
+On Fri, Jun 28, 2019 at 6:14 PM Colin King <colin.king@canonical.com> wrote:
 
-> I can't see why this file includes <linux/gpio.h>, it is not
-> using any of the interfaces. Lots of things are named "gpio"
-> in the file but it is an irqchip driver and has nothing to
-> do with the GPIO interfaces.
+> From: Colin Ian King <colin.king@canonical.com>
 >
-> Cc: Guan Xuetao <gxt@pku.edu.cn>
-> Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+> There is a spelling mistake in a dev_err message. Fix it.
+>
+> Signed-off-by: Colin Ian King <colin.king@canonical.com>
 
-Patch applied to the GPIO tree.
+Patch applied.
 
 Yours,
 Linus Walleij
