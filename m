@@ -2,74 +2,71 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 147E3781EA
-	for <lists+linux-gpio@lfdr.de>; Mon, 29 Jul 2019 00:02:51 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D406B781EB
+	for <lists+linux-gpio@lfdr.de>; Mon, 29 Jul 2019 00:04:29 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726097AbfG1WCu (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sun, 28 Jul 2019 18:02:50 -0400
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:40146 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726103AbfG1WCt (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sun, 28 Jul 2019 18:02:49 -0400
-Received: by mail-lf1-f66.google.com with SMTP id b17so40672994lff.7
-        for <linux-gpio@vger.kernel.org>; Sun, 28 Jul 2019 15:02:48 -0700 (PDT)
+        id S1726129AbfG1WE3 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sun, 28 Jul 2019 18:04:29 -0400
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:43886 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726103AbfG1WE2 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sun, 28 Jul 2019 18:04:28 -0400
+Received: by mail-lj1-f196.google.com with SMTP id y17so32038382ljk.10
+        for <linux-gpio@vger.kernel.org>; Sun, 28 Jul 2019 15:04:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=D97GiV2zjliG05FCmmKHimhjxGqrt+6hvc46zTJ3N/g=;
-        b=M++hQSZT088Q+I7VrthayIDJusWd0Q9cTsyvmgd05II5PpwvsIXEWEtkKsb7zUR4jk
-         BxuOxyeSgHoEOvZkzRhXl/n1KklgMksJGGMsDIdBbJ01ssxWpq58eBN39X9GlISHS1zp
-         YrpH22J8Aj4mfDD4SP8tz7KzVDea2F9+w6NvcqhS/jpaKWg/C0RiD5+8FTA9ItWSHnM+
-         +zGYm62H+CZMdfxdt2s6ZyO1GjYbNUVXX1b7x4QXnKFn7CBX6kv2GYBUrH/C5+Pt0WTu
-         nOYkhpuy2llh054WbHAFjJ3OysnnQkK2nR6CSanRbPYdGDBx4/7piyLCkOz/+uWHP9ji
-         VH5w==
+        bh=Kk27LH34PvQToQHwpyl6iPwl02xFmMQ5j5Bomd4bUHA=;
+        b=BIE6GziPZgEJnAyvDHQ/i7eiVhYicQ+4TGYL3LIZ1FGo79J+EfngkwIAKGo7x7NlYx
+         uLCC5+gAO6q9Uhtwb6RgprtR6y/kTocq0f84tH7frmUx3H0jcC2iC6oWlSoktycvoyaW
+         eMGybC8RqnaYGn9Pqx68Hw5x+H4puqFM4DKTQQzAhiuLk4kz+cg0i0wqjvZ7SskX6IuN
+         0IMoFuYnQyTMsQMR8cCLiWCZs7FvmyyO7tshL3za8/UCqyLiKuZHuq7WV5JLRC9FZCHK
+         WwdduQZTZbvDiBPUwpWeXKqwkjLVNI5QaG2JROmFYSgod2FbizfdUHzT+jcPDK8k/f8A
+         LcUA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=D97GiV2zjliG05FCmmKHimhjxGqrt+6hvc46zTJ3N/g=;
-        b=J6D7h37J/jdBQzfVxY8zUuXEsjYLYEu1c6mzXvW+jJZlMYJzLL29kyidFm6IEell22
-         2LYaSPeRi5MZKJqrCEYh3PrwhL5Yu2qaYTDwpJpt8PI/7yw9fOF9E2vDTiFLNSYIG+yc
-         fbrs9LYtMipWr9JZMAm362oBxY2bPFSGz+gGTwYJ/BKbBdFfHyqrFSYAex/F0MaxoVDE
-         3DczqZ87x9AAUwRlLEVlqlDvG5GMKTkqVAYPHBKdlgaXRm+HgCaygDxbxFKx2btZADC/
-         km0jUThGkg+AXxI+49NOLqjvEJPojVmXFF8XEh2fyiS617BiP7OMbSzRbJatU168NaHe
-         IhEQ==
-X-Gm-Message-State: APjAAAW3JzI1PJCD741zgn7ruo3TVH9MAem3Oozb7G68M5Sz1Zp98wpA
-        IqlMIlFdmAeZ63ft63RMPiMWKt36tzdHaTxE9Btaow==
-X-Google-Smtp-Source: APXvYqx++MDRFL3YR0qvlj/ZonTl8VxH9hzquyKvc86+3nJZNfQ68/uCC51c02cFBjWHL9vmbLKxf5BYkKaaSiGbLCk=
-X-Received: by 2002:a19:e006:: with SMTP id x6mr48839895lfg.165.1564351367853;
- Sun, 28 Jul 2019 15:02:47 -0700 (PDT)
+        bh=Kk27LH34PvQToQHwpyl6iPwl02xFmMQ5j5Bomd4bUHA=;
+        b=SMWjRiOBLeyzHIAZ5lG4wGcG8rzMqPwbIx9LEMQNKElwj6seFkJHOrLSX8eCl0VFG6
+         +arElZu59DT+HaEgMvD3/d4JLc797ii0uNS5HtKoxOzJARTlosAG4LYI5zwBo1ZVZm0z
+         irlx4bJ/nmHsRViRNAJ+pvkV/nPlkdpnWXMk9e7O+lCahjAjWEu/RKIgKGZIbPc+tA5B
+         PM7VP2kXILDnucOsWxdtYq+yy1+W9z01y0cfTaLiLlxalBH2X23IkMBXL4Y61ZVUwUj/
+         x+Aor8h5ikGKnPDNXVmcubfLAREWfg8yOeS4rOBMB8wnIHBP8or9mgNfzX1UXUQaHA/T
+         jXZA==
+X-Gm-Message-State: APjAAAXAbZ/rbjbZhow+X7xIgnJf5E3o+VEgT+04I3PJNpKB4mEwDxTZ
+        5/9jVDuhoFI5rZRr+0H56jQrPev9Z8uOr12tFqVUGw==
+X-Google-Smtp-Source: APXvYqzEhjR0PDkOZOsttahgmoIEM11iCTzzKxH0WYJApEBsjU9EY8w/dgGBwLo3VXwLXHoSfi94hrofG2r5gwj5+Ys=
+X-Received: by 2002:a2e:2c14:: with SMTP id s20mr8034907ljs.54.1564351466852;
+ Sun, 28 Jul 2019 15:04:26 -0700 (PDT)
 MIME-Version: 1.0
-References: <cover.1563360659.git.mchehab+samsung@kernel.org> <07b6de638cb80767dd3ea2fdec8b19ee3ceb60a7.1563360659.git.mchehab+samsung@kernel.org>
-In-Reply-To: <07b6de638cb80767dd3ea2fdec8b19ee3ceb60a7.1563360659.git.mchehab+samsung@kernel.org>
+References: <20190703084601.9276-1-brgl@bgdev.pl>
+In-Reply-To: <20190703084601.9276-1-brgl@bgdev.pl>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Mon, 29 Jul 2019 00:02:36 +0200
-Message-ID: <CACRpkdbSssyXo-2tzjPGDhfhVt6rEuD0NBV2t3XwM54g-xR82A@mail.gmail.com>
-Subject: Re: [PATCH v3 18/20] docs: ABI: don't escape ReST-incompatible chars
- from obsolete and removed
-To:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-Cc:     Greg KH <gregkh@linuxfoundation.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Jonathan Corbet <corbet@lwn.net>,
+Date:   Mon, 29 Jul 2019 00:04:15 +0200
+Message-ID: <CACRpkdbcNAe1_cKgObDqODND6h87Jnz_jbGy-XAGDANf1D8Gvg@mail.gmail.com>
+Subject: Re: [PATCH] gpio: max77650: add MODULE_ALIAS()
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux Doc Mailing List <linux-doc@vger.kernel.org>
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Jul 17, 2019 at 1:05 PM Mauro Carvalho Chehab
-<mchehab+samsung@kernel.org> wrote:
+On Wed, Jul 3, 2019 at 10:46 AM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
 
-> With just a single fix, the contents there can be parsed properly
-> without the need to escape any ReST incompatible stuff.
+> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 >
-> Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+> Define a MODULE_ALIAS() in the gpio sub-driver for max77650 so that
+> the appropriate module gets loaded together with the core mfd driver.
+>
+> Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 
-This seems to depend on other stuff so:
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+Patch applied.
 
 Yours,
 Linus Walleij
