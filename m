@@ -2,70 +2,79 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id BF1D779B59
-	for <lists+linux-gpio@lfdr.de>; Mon, 29 Jul 2019 23:42:59 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C4B9179B8E
+	for <lists+linux-gpio@lfdr.de>; Mon, 29 Jul 2019 23:53:19 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388402AbfG2Vm6 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 29 Jul 2019 17:42:58 -0400
-Received: from mail-lf1-f51.google.com ([209.85.167.51]:42758 "EHLO
-        mail-lf1-f51.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388320AbfG2Vm6 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 29 Jul 2019 17:42:58 -0400
-Received: by mail-lf1-f51.google.com with SMTP id s19so43126953lfb.9
-        for <linux-gpio@vger.kernel.org>; Mon, 29 Jul 2019 14:42:57 -0700 (PDT)
+        id S2388941AbfG2VxS (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 29 Jul 2019 17:53:18 -0400
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:42545 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388888AbfG2VxS (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 29 Jul 2019 17:53:18 -0400
+Received: by mail-lf1-f66.google.com with SMTP id s19so43142505lfb.9
+        for <linux-gpio@vger.kernel.org>; Mon, 29 Jul 2019 14:53:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=6nCAhqsVRTUbfSc3zueaP6/rAmu54qp6S7qtfkPndZw=;
-        b=XQ5H57KC2m9zzV1YUZO2/UWUGFWXuv+sLFLOwg3sjsZ6WLSFSMgjzgd3Or7LhL54M2
-         bYe1qUnhOKBgSiDnPFf6lV8dAf84PqVI4ee6Xpy83AkPlQDtVFSemPu+rRyjXmwAty+E
-         3LFTUHJcG2rDwKZTufp1Mup/u3IMlCyDSlo6szx2MlgadTZzuNsXgb0JEiB1z4kLZh56
-         1vyyRdPUD7f25dKVqz7jJrjHA4KWNZm6Wx7lYNaXU+pJbStQRT2i9rI+cRUHGORPQkY7
-         83n6/YiPNSQpL+03K9Juot7d6QLspBvmI1FgIZDAf8bwBTMJ6H1NVGCxwYkPu3ivASn7
-         pNpA==
+        bh=Hr9lqY2qIqoidNcb1If245IBNP+0DnlTQyMBCAdK+Ik=;
+        b=HyKoqtCfFxuQVsAb5+vFCCMS0YilOQ1m3ow3QG9i/222LTjAwb0dTsHGlPD+wgv5xz
+         yxGmG2uQ+GXy8aVfTb8iVnwyvC/tFZrzdYTE/IZ4sxhoD+JyDgZyLo7es1i3GvdlHBsQ
+         9KgXU0BH2XWgII/r1JW3XwxEm3xlRUdaD2PMugZ8eAgETdmbyqtgWltBwZADfZ/JOgK8
+         KGO+bVSe18/XMctvQdt5o+uFkTKAodeWoduSv9MReky4YEXExt/yAYz8vY8G82yiywnH
+         zQxG63/KMWFy9NT3upE0a37RA41t81MOhYrxs1P+JPFnQ5o1xJWIKRx+3guc5NFy4d/Y
+         LVww==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=6nCAhqsVRTUbfSc3zueaP6/rAmu54qp6S7qtfkPndZw=;
-        b=DrDPXEuRu5LmVK7ecPicK4gES4ZsPmu4s74AzVynqdb3N5NQv7sMRkrGMniHcJ6TyW
-         lA8CRkAkM6zGJOboUZPgqTnd+v2rV5ilBPDwnPoR6xQx4onGYEt0B28HI92NMjDyZX/U
-         SxXvgu5LLOl6PhTGFLGZwOUPLPtggRlJMWte1/Wliy9U9GSrqEn4OEGawkVBsZ2Fx8ln
-         yhrtozaInD2OEU6fgqseOzrY0amUcJVVxX6ZusFoO1fi0JSG6y2pccKimO1V7OKME2Wv
-         3RxUHqLB0ZG4ERXCmfMDQ4y7NN1AHXZ/Yf4KTku/tiu4A1AdMEzVspWRjz9Zv9WYwan2
-         BtHw==
-X-Gm-Message-State: APjAAAVj/qwGssYc/qbo56YfESz3EUfFxQNPgebhQNp56/vQL7LDaczx
-        EcOedgSXlyfRjFFxQQpHWuFH16Wvs/g76Wg5/WRVyQ==
-X-Google-Smtp-Source: APXvYqwPPJD/EfvWSQiiprO7ycqY+wqwRXmEiafD8nOfeRaXHuKlzj+ngqiBVCA5U0tcxLAepJhz+O+oI8uWKeXtDz0=
-X-Received: by 2002:ac2:4891:: with SMTP id x17mr54417470lfc.60.1564436577047;
- Mon, 29 Jul 2019 14:42:57 -0700 (PDT)
+        bh=Hr9lqY2qIqoidNcb1If245IBNP+0DnlTQyMBCAdK+Ik=;
+        b=hUsdB+v0UtICHFODEq6Ys+qgLDJ7IdoGU1oIkdFzS+AThoXZtM80LchtU7NGfmkdSs
+         4W+P/k7C6MsOPwc/UvcOM0akPaPvFZQKFlEE8dlk9bxuY3URXg4UW+QVg7DQ4duGNFmB
+         1BXvwuxVzBR3dxSBl0DC4apC+T194rFxWzJ5AXc+4PkeXMwupVbV9DZkE7rqmCDONVMi
+         emMgXWIJA7OKMEVMrjrAlW8b29k87I3U9YK39BiZtWOzlF/FLsSvUfCq3MXQn4Gt4IL0
+         j0ayO3ovyJ5ok9apkDDsPaH7hfevbc5/Ih3paf1VUd5zA9nyinFcpIuhCvdbqJOTO/ad
+         tXVw==
+X-Gm-Message-State: APjAAAVJnE0Raiu3Obip0ynrS0Knv1AurKnd4qUsdmTVGbJhJXS2qsvU
+        TWiBpui5p3QzBrVIBjmOxfRFF4docVzh6FnHL/y8HQ==
+X-Google-Smtp-Source: APXvYqxrcwQ2xt2eOrJdooqGsibkSjjLkGu0LUS1zOLSFKz3m+Xi0j4+Rh01BXuTGe2jOXpQKVloomM4o+1wiK44pnk=
+X-Received: by 2002:ac2:5c42:: with SMTP id s2mr42403912lfp.61.1564437196737;
+ Mon, 29 Jul 2019 14:53:16 -0700 (PDT)
 MIME-Version: 1.0
-References: <1563076436-5338-1-git-send-email-zhouyanjie@zoho.com>
-In-Reply-To: <1563076436-5338-1-git-send-email-zhouyanjie@zoho.com>
+References: <20190724081313.12934-1-andrew@aj.id.au>
+In-Reply-To: <20190724081313.12934-1-andrew@aj.id.au>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Mon, 29 Jul 2019 23:42:46 +0200
-Message-ID: <CACRpkdb630mbyV8n+6meo6ooEe_Lg+p66CX3PBTm5P78Lc5qJw@mail.gmail.com>
-Subject: Re: Ingenic pinctrl patchs.
-To:     Zhou Yanjie <zhouyanjie@zoho.com>
-Cc:     linux-mips@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, Paul Burton <paul.burton@mips.com>,
+Date:   Mon, 29 Jul 2019 23:53:04 +0200
+Message-ID: <CACRpkdapypySGPrLgSMSNy1fzkca2BfMUGzf3koFWQZ-M5VOvg@mail.gmail.com>
+Subject: Re: [PATCH 0/3] ARM: dts: aspeed: Deprecate g[45]-style compatibles
+To:     Andrew Jeffery <andrew@aj.id.au>
+Cc:     linux-aspeed <linux-aspeed@lists.ozlabs.org>,
+        Lee Jones <lee.jones@linaro.org>,
         Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>
+        Mark Rutland <mark.rutland@arm.com>,
+        Joel Stanley <joel@jms.id.au>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Sun, Jul 14, 2019 at 8:55 AM Zhou Yanjie <zhouyanjie@zoho.com> wrote:
+On Wed, Jul 24, 2019 at 10:13 AM Andrew Jeffery <andrew@aj.id.au> wrote:
 
-> Add support for Ingenic JZ4760, JZ4760B, X1000, X1000E and X1500.
+> It's probably best if we push the three patches all through one tree rather
+> than fragmenting. Is everyone happy if Joel applies them to the aspeed tree?
 
-All 6 patches applied. Seems very straight-forward thanks for fixing this!
+If you are sure it will not collide with parallell work in the
+pinctrl tree, yes.
+Acked-by: Linus Walleij <linus.walleij@linaro.org>
+
+(If it does collide I'd prefer to take the pinctrl patches and fix the
+conflicts in my tree.)
 
 Yours,
 Linus Walleij
