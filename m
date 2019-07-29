@@ -2,144 +2,124 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 551DC782C3
-	for <lists+linux-gpio@lfdr.de>; Mon, 29 Jul 2019 02:19:17 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BA9167845C
+	for <lists+linux-gpio@lfdr.de>; Mon, 29 Jul 2019 07:16:41 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726248AbfG2ATQ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sun, 28 Jul 2019 20:19:16 -0400
-Received: from new3-smtp.messagingengine.com ([66.111.4.229]:60179 "EHLO
-        new3-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726238AbfG2ATQ (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>);
-        Sun, 28 Jul 2019 20:19:16 -0400
-Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailnew.nyi.internal (Postfix) with ESMTP id 36537275C;
-        Sun, 28 Jul 2019 20:19:15 -0400 (EDT)
-Received: from imap2 ([10.202.2.52])
-  by compute4.internal (MEProxy); Sun, 28 Jul 2019 20:19:15 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aj.id.au; h=
-        mime-version:message-id:in-reply-to:references:date:from:to:cc
-        :subject:content-type; s=fm3; bh=ZaBV2C4kcU2j90Xx9xhANj1+D6R+dqi
-        /cMwH32iQiLk=; b=AN2Jn6aj3Ndb7FDQKdqY+7+0Kov53aEYqBfngMb+BEPdGxZ
-        5IaURHicr7mJry4jUn/1K6WmhFsNgmMG1W8VqD3hQmkwRUb29ZOHU/8ICHyUMtOY
-        5Z64SKwwuUnb/R3jopwHiCwr5mTO2sdDckb0NGGOZj2iQ7wRCMMpF7NRBMIi9qQd
-        DMFHerb4KZMWpg8f8sThl7dvwTuuggBL5Q5orbsvmtbTgDPM7/3M1kn5+I2p9W2d
-        oye1BHk8pSGlBlXCrOrPwFroREeDbj/b0ahJkCKmtG084Rip8w6Jhu71bIASBkJu
-        mdBqH6b4cM2pmiVIJiehmGaoCxsSk/6lIYKq6Zg==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=ZaBV2C
-        4kcU2j90Xx9xhANj1+D6R+dqi/cMwH32iQiLk=; b=RvL5HyBh0DUD0RIRe1PzDp
-        pWPYq/kpMQNA5WHRHfD6UJeJuWqQigmNndntwRLEZKWFeNO3m5r9Q6/pcRpC/4Vx
-        5nrkx8psO3rGIgMtosIjBm03FHtP1lUkm5833FzrGSKZd9DwAwIum6BFgapcihtw
-        wKCACSHxUSjzmcd/7f4YQzhDb/S63injf7j17YsCLm9ppknDA9K/RLitKElsJwah
-        OdT8Z0liDVwcUB38KiqFE5YARTaVv5kYngmOf5V6rtJj29Ke+LZe9Ni61UupgXLe
-        1xgrN7aeKadMhDfoiZIr/XVqOM4F0xfNw6mUbIBuj5uFTWyt3kd5r2ngah15JxcQ
-        ==
-X-ME-Sender: <xms:gDs-XRTA3sOVdKQ_PvnYsBzcW-JEsEPYEp8wPASR1Ckvwzq0a8GfsQ>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduvddrledtgdefvdcutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpefofgggkfgjfhffhffvufgtsehttdertderredtnecuhfhrohhmpedftehnughr
-    vgifucflvghffhgvrhihfdcuoegrnhgurhgvfiesrghjrdhiugdrrghuqeenucffohhmrg
-    hinhepghhithhhuhgsrdgtohhmnecurfgrrhgrmhepmhgrihhlfhhrohhmpegrnhgurhgv
-    fiesrghjrdhiugdrrghunecuvehluhhsthgvrhfuihiivgeptd
-X-ME-Proxy: <xmx:gDs-XYrGrmm6FT4UYtSWbpr9FAZ_oVdHrBC3ZZfJRtAIMewJc8kcSQ>
-    <xmx:gDs-Xf7412SKBdRpBdv-oWG9Yb1U-HaI7l_XXdTj2lkkq5k1xKdELg>
-    <xmx:gDs-XaSV42JjLyUGDTW780FSW72zPKrWPfN-r0y6e7cu-hNHqoYIYA>
-    <xmx:gzs-Xc23kcZgumQfrQXfszx1Wy7cOzCTOZ4SmZOvMLj8td_z_NQwgA>
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-        id ABD1DE00A5; Sun, 28 Jul 2019 20:19:12 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.1.6-736-gdfb8e44-fmstable-20190718v2
-Mime-Version: 1.0
-Message-Id: <f2875111-9ba9-43b7-b2a4-d00c8725f5a0@www.fastmail.com>
-In-Reply-To: <CACRpkdZxsF9gQj0VicVLsPKXg6rKA1mLwbywmazOf0w8PLnOfA@mail.gmail.com>
-References: <1563564291-9692-1-git-send-email-hongweiz@ami.com>
- <1563564291-9692-2-git-send-email-hongweiz@ami.com>
- <CACRpkdYhVoP75ZDfASW+DH5yf-a5diitiXsh7eLsJx5hsTC9sQ@mail.gmail.com>
- <ef9d9c17-6e2d-4a4e-ac44-f8da4bb3b8eb@www.fastmail.com>
- <CACRpkdZxsF9gQj0VicVLsPKXg6rKA1mLwbywmazOf0w8PLnOfA@mail.gmail.com>
-Date:   Mon, 29 Jul 2019 09:49:31 +0930
-From:   "Andrew Jeffery" <andrew@aj.id.au>
-To:     "Linus Walleij" <linus.walleij@linaro.org>
-Cc:     "Hongwei Zhang" <hongweiz@ami.com>,
+        id S1726539AbfG2FQj (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 29 Jul 2019 01:16:39 -0400
+Received: from mail-eopbgr1410135.outbound.protection.outlook.com ([40.107.141.135]:6073
+        "EHLO JPN01-OS2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726048AbfG2FQj (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Mon, 29 Jul 2019 01:16:39 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=XhTmeeVdEj8rqOVQqUD41SuYXGQeao3wxc7rrdz317o+rkXKki9yMjlP3kcbKmpq3yUzR4HlFuyiTI9KrWkJoRnGnNAwlrn5ChXt07esXt8Gr3Eh/PQXbuwKXeOyJrkK07vg6vT08/Z06SJKjI6LZrjemChtSRhn+7u/hqUto6eBWZnB2x7RT4MisD0GLZ4MK38CzSLZ1oTT7cOCr372APnQ0tPKVhoZzjt/3I/NvXH5NQL/qyw8XJUojtTCkKsLBonbZZMsfUZAUD0VrB45kN3IXtsXLWbtzw5fU3zzkWScxfbRkYGPOFZl0jSHjhDKYI9eNnmjONbN5bBEYOSW0w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=/ZxArvStRWHX7FSi0rJPXxfbOedP9Jm6KJTFeG7FxyM=;
+ b=OlgtBNSeSb0Io2A0VxKaZWRDF5XSkk5eGpz7rzpokkrmDgN8lB2h7bqyj6ImQT3Te1vGRA5EoKHW3IEqMp0taeiF56VDVKP7cJ7ycKXeSZX5vhsMueTyOTyEQ7uscgjN6c0WUURQPftgxbedwFCfooryAPxdcotttZQ8QJyhvs6MHB6a0Vbe3PPguSOWP1jWZ6BIPGcvLc04CGHFPKMg2ED1DuxGYrPUjhm3GeXvOdDa2V0/LpT7ooMxpvdeBCJZtB8RqL80zVDxf6tYcEEX8fP7HirAYDMCabh0cFt7MWNNRwHdFndUmhA/lnkEvmeVdbA7JVDSDgG9c6ZIspDIOg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1;spf=pass
+ smtp.mailfrom=renesas.com;dmarc=pass action=none
+ header.from=renesas.com;dkim=pass header.d=renesas.com;arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=renesasgroup.onmicrosoft.com; s=selector2-renesasgroup-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=/ZxArvStRWHX7FSi0rJPXxfbOedP9Jm6KJTFeG7FxyM=;
+ b=h4SBMJAeNMlsCsBxGnSkS+qisogV6DL2f6fMHheAf0q9OhG+RaAcmzHwHhotG7c1awDJKR/vgZYsNVNE2hgvNjrQUKzyl3TEQL9Ibb2M915f1OAiqDArQ1R6xfZauiDQHtQMXlh6lcHpwzKixyhyOBKxj1UE5dzMq9HxnOS9KGc=
+Received: from TYAPR01MB4544.jpnprd01.prod.outlook.com (20.179.174.85) by
+ TYAPR01MB1965.jpnprd01.prod.outlook.com (52.133.178.145) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2115.15; Mon, 29 Jul 2019 05:16:33 +0000
+Received: from TYAPR01MB4544.jpnprd01.prod.outlook.com
+ ([fe80::5c8d:f422:6a44:57a9]) by TYAPR01MB4544.jpnprd01.prod.outlook.com
+ ([fe80::5c8d:f422:6a44:57a9%5]) with mapi id 15.20.2115.005; Mon, 29 Jul 2019
+ 05:16:33 +0000
+From:   Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+To:     Linus Walleij <linus.walleij@linaro.org>,
+        Geert Uytterhoeven <geert+renesas@glider.be>
+CC:     "thierry.reding@gmail.com" <thierry.reding@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "Joel Stanley" <joel@jms.id.au>,
+        "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>,
         "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, linux-aspeed@lists.ozlabs.org,
-        "Bartosz Golaszewski" <bgolaszewski@baylibre.com>,
-        "Rob Herring" <robh+dt@kernel.org>,
-        "Mark Rutland" <mark.rutland@arm.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "Linux ARM" <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [v5 1/2] dt-bindings: gpio: aspeed: Add SGPIO support
-Content-Type: text/plain
+        <devicetree@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>
+Subject: RE: [PATCH RFC 2/7] pinctrl: sh-pfc: remove incomplete flag
+ "cfg->type"
+Thread-Topic: [PATCH RFC 2/7] pinctrl: sh-pfc: remove incomplete flag
+ "cfg->type"
+Thread-Index: AQHVNWy6yAT6N18acUCgmyJX7u1APKbgxiMAgABnjvA=
+Date:   Mon, 29 Jul 2019 05:16:33 +0000
+Message-ID: <TYAPR01MB4544031C6A027A3690FFFB77D8DD0@TYAPR01MB4544.jpnprd01.prod.outlook.com>
+References: <1562576868-8124-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+ <1562576868-8124-3-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+ <CACRpkdZqTaA04bja16xh338JiwoSqFpH_2rV95FaF7YhawQzMg@mail.gmail.com>
+In-Reply-To: <CACRpkdZqTaA04bja16xh338JiwoSqFpH_2rV95FaF7YhawQzMg@mail.gmail.com>
+Accept-Language: ja-JP, en-US
+Content-Language: ja-JP
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=yoshihiro.shimoda.uh@renesas.com; 
+x-originating-ip: [118.238.235.108]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: d7fe0ef2-ce7e-4e27-5b2b-08d713e3ec1d
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:TYAPR01MB1965;
+x-ms-traffictypediagnostic: TYAPR01MB1965:
+x-microsoft-antispam-prvs: <TYAPR01MB1965EE414199868BE3BB6C16D8DD0@TYAPR01MB1965.jpnprd01.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:6430;
+x-forefront-prvs: 01136D2D90
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(366004)(396003)(376002)(39860400002)(136003)(346002)(189003)(199004)(14454004)(76116006)(71190400001)(7696005)(6246003)(68736007)(229853002)(53546011)(110136005)(26005)(53936002)(6506007)(316002)(52536014)(478600001)(76176011)(66446008)(64756008)(66556008)(66476007)(71200400001)(54906003)(2906002)(99286004)(86362001)(5660300002)(66946007)(102836004)(186003)(256004)(14444005)(9686003)(66066001)(55016002)(7736002)(486006)(25786009)(476003)(74316002)(33656002)(446003)(11346002)(81156014)(81166006)(8676002)(6436002)(8936002)(305945005)(6116002)(3846002)(4326008);DIR:OUT;SFP:1102;SCL:1;SRVR:TYAPR01MB1965;H:TYAPR01MB4544.jpnprd01.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: renesas.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: NdAjSKH5M0Z28WYEXG87w6Coepihco2FXjNzuQyLej6m+IPv1Dor5zZ5oP/ooax+mS55PfyN6TX/fBTwKw1EsT8+Dg4ol5EljkgizJgmB4iMuYWsPn/47QCLy+Utp6ruoLpcsScyq4fx1oGVT4ufjWJFuGQXmXCUn1b5G668ABBUc89D2xXAEENQitg8gbDZMj7j5vrZMF7eqmqCsqd+qys5g7WIR8IajFYP9NxupXNoWTO7x2r6IQ4GFzu8sOhpMnlEGqUrfqEgU+IxZucAbivEIreJpnIfV/Tzdm0rD8lBP9XyOQIh59P2xpI/PgdSMRH0VO9iv8exM3a0CH6vVNYYqY7P9Em5Q1SrQ5vj54ILCbYdSWNgh71/2+KQ0M7KRbi3aYI4pvmRIBWzpWHyvY1EFzPoQ8ivDwTC1EEI0YE=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-OriginatorOrg: renesas.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: d7fe0ef2-ce7e-4e27-5b2b-08d713e3ec1d
+X-MS-Exchange-CrossTenant-originalarrivaltime: 29 Jul 2019 05:16:33.4945
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 53d82571-da19-47e4-9cb4-625a166a4a2a
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: yoshihiro.shimoda.uh@renesas.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: TYAPR01MB1965
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-
-
-On Mon, 29 Jul 2019, at 09:04, Linus Walleij wrote:
-> On Mon, Jul 22, 2019 at 3:42 AM Andrew Jeffery <andrew@aj.id.au> wrote:
-> 
-> > If the clock driver owns the control register, it also needs to know how
-> > many GPIOs we want to emit on the bus. This seems like an awkward
-> > configuration parameter for a clock driver.
-> >
-> > To avoid the weird parameter we could protect the control register
-> > with a lock shared between the clock driver and the SGPIO driver. This
-> > way the SGPIO driver could have the ngpios parameter, and request
-> > the clock after its written the ngpios value to the control register. A
-> > regmap would be useful here to avoid the resource clash and it also
-> > provides the required lock.
-> 
-> Nah. Too complicated.
-> 
-> What about using the clock API locally (in the singleton driver,
-> much as it is today) though, to give the right abstraction?
-> 
-> See
-> drivers/gpu/drm/pl111/pl111_display.c
-> pl111_init_clock_divider() for an example of a local
-> clock.
-
-Thanks, I'll take a look at that.
-
-> 
-> > However, that aside, we can't simply enable the bus in the clock
-> > enable callback if enable is called per-bank, as it is called once on
-> > the first request with further requests simply refcounted as you
-> > mentioned. This is exactly the behaviour we can't tolerate with the
-> > bus: it must only be enabled after the last GPIO bank is registered,
-> > when we know the total number of GPIOs to emit.
-> 
-> So the bus needs to know the total number of GPIOs or
-> everything breaks, and that is the blocker for this
-> divide-and-conquer approach.
-> 
-> Why does the bus need to know the total number of GPIOs?
-> 
-> (Maybe the answer is elsewhere in the thread...)
-
-I didn't answer it explicitly, my apologies.
-
-The behaviour is to periodically emit the state of all enabled GPIOs
-(i.e. the ngpios value), one per bus clock cycle. There's no explicit
-addressing scheme, the protocol encodes the value for a given GPIO
-by its position in the data stream relative to a pulse on the "load data"
-(LD) line, whose envelope covers the clock cycle for the last GPIO in
-the sequence. Similar to SPI the bus has both out and in lines, which
-cater to output/input GPIOs.
-
-A rough timing diagram for a 16-GPIO configuration looks like what
-I've pasted here:
-
-https://gist.github.com/amboar/c9543af1957854474b8c05ab357f0675
-
-Hope that helps.
-
-Andrew
+SGkgTGludXMsIEdlZXJ0LA0KDQo+IEZyb206IExpbnVzIFdhbGxlaWosIFNlbnQ6IE1vbmRheSwg
+SnVseSAyOSwgMjAxOSA4OjAyIEFNDQo+IA0KPiBPbiBNb24sIEp1bCA4LCAyMDE5IGF0IDExOjA4
+IEFNIFlvc2hpaGlybyBTaGltb2RhDQo+IDx5b3NoaWhpcm8uc2hpbW9kYS51aEByZW5lc2FzLmNv
+bT4gd3JvdGU6DQo+IA0KPiA+IFRoZSBvbGQgY29tbWl0IGM1OGQ5YzFiMjZlMyAoInNoLXBmYzog
+SW1wbGVtZW50IGdlbmVyaWMgcGluY29uZg0KPiA+IHN1cHBvcnQiKSBicm9rZSB0aGUgY2ZnLT50
+eXBlIGZsYWcgdG8gUElOTVVYX1RZUEVfRlVOQ1RJT04gYmVjYXVzZQ0KPiA+IHNoX3BmY19waW5j
+b25mX3NldCgpIGRpZG4ndCBjYWxsIHNoX3BmY19yZWNvbmZpZ19waW4oKS4NCj4gPiBOb3cgaWYg
+d2UgZml4IHRoZSBjZmctPnR5cGUgY29uZGl0aW9uLCBpdCBnZXRzIHdvcnNlIGJlY2F1c2U6DQo+
+ID4gIC0gU29tZSBkcml2ZXJzIG1pZ2h0IGJlIGRlZmVycmVkIHNvIHRoYXQgLnNldF9tdXgoKSB3
+aWxsIGJlIGNhbGxlZA0KPiA+ICAgIG11bHRpcGxlIHRpbWVzLg0KPiA+ICAtIEluIHN1Y2ggdGhl
+IGNhc2UsIHRoZSBzaC1wZmMgZHJpdmVyIHJldHVybnMgLUVCVVNZIGV2ZW4gaWYNCj4gPiAgICB0
+aGUgZ3JvdXAgaXMgdGhlIHNhbWUsIGFuZCB0aGVuIHRoYXQgZHJpdmVyIGZhaWxzIHRvIHByb2Jl
+Lg0KPiA+DQo+ID4gU2luY2UgdGhlIHBpbmN0cmwgc3Vic3lzdGVtIGFscmVhZHkgaGFzIHN1Y2gg
+Y29uZGl0aW9ucyBhY2NvcmRpbmcNCj4gPiB0byBAc2V0X211eCBhbmQgQGdwaW9fcmVxdWVzdF9l
+bmFibGUsIHRoaXMgcGF0Y2gganVzdCByZW1vdmUNCj4gPiB0aGUgaW5jb21wbGV0ZSBmbGFnIGZy
+b20gc2gtcGZjL3BpbmN0cmwuYy4NCj4gPg0KPiA+IFNpZ25lZC1vZmYtYnk6IFlvc2hpaGlybyBT
+aGltb2RhIDx5b3NoaWhpcm8uc2hpbW9kYS51aEByZW5lc2FzLmNvbT4NCj4gDQo+IFRoaXMgbG9v
+a3MgbGlrZSBpdCBzaG91bGQgaGF2ZSBhIEZpeGVzOiB0YWcgYXMgd2VsbC4NCg0KSSBnb3QgaXQu
+IFRoZSBGaXhlcyB0YWcgc2hvdWxkIGJlOg0KDQpGaXhlczogYzU4ZDljMWIyNmUzICgic2gtcGZj
+OiBJbXBsZW1lbnQgZ2VuZXJpYyBwaW5jb25mIHN1cHBvcnQiKQ0KDQo+IEdlZXJ0IHdpbGwgZGVj
+aWRlIHdoYXQgdG8gZG8gd2l0aCB0aGlzLg0KDQpJIGdvdCBpdC4NCg0KPiBDYW4gYWxsIHRoZSBw
+aW5jdHJsIHBhdGNoZXMgYmUgYXBwbGllZCBpbmRlcGVuZGVudGx5IG9mIHRoZSBvdGhlcg0KPiBj
+aGFuZ2VzIHNvIEdlZXJ0IGNhbiBhcHBseSBhbmQgc2VuZCBtZSB0aG9zZSBwYXRjaGVzIGluIGhp
+cyBwdWxsDQo+IHJlcXVlc3RzPw0KDQpUaGUgcGluY3RybCBwYXRjaGVzICgxLzcgdGhyb3VnaCAz
+LzcpIGNhbiBiZSBhcHBsaWVkIG9uIG5leHQtMjAxOTA3MjYNCnNvIEkgdGhpbmsgR2VlcnQgY2Fu
+IGFwcGx5IHRoZXNlIHBhdGNoZXMgaW50byBoaXMgcmVwby4NCg0KR2VlcnQsIGlmIEkgc2hvdWxk
+IHJlc2VuZCB0aGUgcGluY3RybCBwYXRjaGVzLCBwbGVhc2UgbGV0IG1lIGtub3chDQoNCkJlc3Qg
+cmVnYXJkcywNCllvc2hpaGlybyBTaGltb2RhDQoNCj4gWW91cnMsDQo+IExpbnVzIFdhbGxlaWoN
+Cg==
