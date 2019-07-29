@@ -2,80 +2,75 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 711BE79B11
-	for <lists+linux-gpio@lfdr.de>; Mon, 29 Jul 2019 23:30:22 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9B93179B2F
+	for <lists+linux-gpio@lfdr.de>; Mon, 29 Jul 2019 23:36:32 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728405AbfG2VaV (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 29 Jul 2019 17:30:21 -0400
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:39234 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728744AbfG2VaV (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 29 Jul 2019 17:30:21 -0400
-Received: by mail-lj1-f196.google.com with SMTP id v18so59960358ljh.6
-        for <linux-gpio@vger.kernel.org>; Mon, 29 Jul 2019 14:30:20 -0700 (PDT)
+        id S2388692AbfG2Vgb (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 29 Jul 2019 17:36:31 -0400
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:41731 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388522AbfG2Vgb (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 29 Jul 2019 17:36:31 -0400
+Received: by mail-lj1-f194.google.com with SMTP id d24so60017485ljg.8
+        for <linux-gpio@vger.kernel.org>; Mon, 29 Jul 2019 14:36:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=HKkIBvCgiYwjQhYFTYEAh/Mb6txeYN6WDDQ/uj2gFUI=;
-        b=OVWD6wHlg/XSy1nOvWhd7RWa8UEN/Oef6ahYwW3GYqAbC3Jb8IYHyZz3Qv7guhv+ke
-         ayQu1zm+nihPVb0TxklyfIsxxgs7QLFgrnETgq5hPDxJR+Xq3gHaM8a71PJDigK3Mzas
-         KZtfwpERVnDnylTN3Kbty4zkw5EKnSCvzP0E8qgOSh9dABQwlX6tg1RvuR8Le0WyFLJy
-         9MtK9kmmj3iapk/x10PWP9721MYBi2Zs1XcGoZH/gyCCpqaQAysmUGeep+ay3jjQDQow
-         zm+h113ufbLccs2ZGo6v+zPMlUYQysd+GBvCM4N5JVd7lF/52GK8gDQYSQqHbQKVoasj
-         SUPQ==
+        bh=m+uKl3DmiY8dW8TGLrxGk/fNxMPrGaMpCCMkd3OfZgg=;
+        b=XiIC1pelgzO+M5iJgoHNGaFTyBt4JyMKlOsZ+f6+nAfV9oBGWKwb7dU3vhdcbctnq4
+         VCEcyn7DrLpIeckFKbi/1dLpgiJtSsuxe2S9dKXC/RJ85kB5lYrKh0T7ZZ2A+Lsc96lj
+         RZiZhzpeU87NdQRdREAH+PhFluvzgtMhf4R85gbIovSIzVN07VdPFBUZ2DymoY4rkNq4
+         t6ipq/cHvX4AzeY+CiEFb87Q6Dkc26eS4keDhi13IS/16+QXJpHdfi7+Nw7ttGvzKd41
+         Jghzth8iqGKCq40V9ct1stdODtFsAPaRDLUJcHC+kuGT94mQMJ25XhbNwswKtuNkNFaR
+         f6Ng==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=HKkIBvCgiYwjQhYFTYEAh/Mb6txeYN6WDDQ/uj2gFUI=;
-        b=A8gW47XcxXN9aqgx0vOvsV44Bv+HL/Jme2r/CxQjDM/qzb/TjmEL87EU29R4Q3Nta3
-         SgxHTX28ozGPPQD+adQugqL3+mDbNMGE+4PRKbBYSI+V5JT/kokOJ+IwmQfqpF1n2I6h
-         +r3h/hnK+sZ+066s4709oxwjTuB4Xv6laIACvHCRSzFuSwCB1PExSpzQVSvxfaAU8vlX
-         lZmZejDkf1RIiJOjdbioEbT6Q07pCsf7xL+pyu/bIslH62WbNtFVNaMORhZerl2SvAJ1
-         T1svnIIFfN+xYe9t30en40h1btvM57IbqD6nv5GKBudnKmThfIlIVlgmFPc24MtmOGeM
-         eMWw==
-X-Gm-Message-State: APjAAAXnP59cdY1qBYoCIKy1U68c8tYh/wQw/F9Ty708JYUCKFK6E0i8
-        XVX8ajWbOFtoTsPMVCw8DkrC6DRfDKpHKteifJkaCA==
-X-Google-Smtp-Source: APXvYqwUhL9uJMcJBMf5PD9Q2tJQYMHtg2CF0rvUKzbc9I7QW0dTFe+hQ+z0pJ0FnCmvAz8JSJ5iGwWObU6G3+Peq0E=
-X-Received: by 2002:a2e:9048:: with SMTP id n8mr12436136ljg.37.1564435819389;
- Mon, 29 Jul 2019 14:30:19 -0700 (PDT)
+        bh=m+uKl3DmiY8dW8TGLrxGk/fNxMPrGaMpCCMkd3OfZgg=;
+        b=Q8JLnsJe9AvZuGHc0JXHDsnvtWeXTW4Tt4KDQ72kFIgHjJzJeSlqtl96rjFePIwTnt
+         TqeMMu08Cyngrs8Qsh9G2PW856q9Xp/hkYVNfHokGKFz0vKLGSIIY5C+8GM1ry63Ir3f
+         oXE0eIMPtwQ0Uuib11zu21EoKt+jpXdZAKIRrmKZxt09AERsRA+BgtN2mImZTs/ghnyM
+         ngYyUdN9Y+Jo5RBTRk/xJIYoKQ3Cs+FoyCbsl1S/xR0DkEI/aixNs9/FGcWhhkHEUFw5
+         m/lAMDVJvVeUdqnOsAL/zHjryP7izJy0DeAAXLD/RsX2tUAvdLNDq2NE2vN5OYrRJrlQ
+         xtBg==
+X-Gm-Message-State: APjAAAXTFVpw6LgMGvXPoFUb1qQyYSyvlMr1GL9r6lNyXenYvgBV+1Sp
+        /RV0PcjB1HAZOctyqC5afZwdwtO/dKm152oDq/C1wA==
+X-Google-Smtp-Source: APXvYqzpGev1ZgT7UDoBmrvnEtfYU3dY7RXU+9rHQOkrcjsAH41AmeGJd40sfREgQBCjTHKjCZUWI87ScfuEsB+15wM=
+X-Received: by 2002:a2e:9593:: with SMTP id w19mr12040674ljh.69.1564436189593;
+ Mon, 29 Jul 2019 14:36:29 -0700 (PDT)
 MIME-Version: 1.0
-References: <503b2ae8-ead6-70cd-7b21-ce5f5166a23a@free.fr>
-In-Reply-To: <503b2ae8-ead6-70cd-7b21-ce5f5166a23a@free.fr>
+References: <20190711142457.37028-1-yuehaibing@huawei.com>
+In-Reply-To: <20190711142457.37028-1-yuehaibing@huawei.com>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Mon, 29 Jul 2019 23:30:08 +0200
-Message-ID: <CACRpkdYrrpfGwTVHLbOwOWVxReAnH4q-bf5hTz_xFoM63sJoKA@mail.gmail.com>
-Subject: Re: [PATCH v2] pinctrl: msm8998: Squash TSIF pins together
-To:     Marc Gonzalez <marc.w.gonzalez@free.fr>
-Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
-        =?UTF-8?Q?Jonathan_Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>,
-        Jeffrey Hugo <jeffrey.l.hugo@gmail.com>,
-        MSM <linux-arm-msm@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        gpio <linux-gpio@vger.kernel.org>,
-        DT <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>
+Date:   Mon, 29 Jul 2019 23:36:18 +0200
+Message-ID: <CACRpkdbBWPN8px=5gxeXWifDz5gCdbqWvgk6ZPdXS6Pa_hKO0g@mail.gmail.com>
+Subject: Re: [PATCH -next] pinctrl: aspeed: Make aspeed_pinmux_ips static
+To:     YueHaibing <yuehaibing@huawei.com>
+Cc:     Andrew Jeffery <andrew@aj.id.au>, Joel Stanley <joel@jms.id.au>,
+        linux-aspeed <linux-aspeed@lists.ozlabs.org>,
+        OpenBMC Maillist <openbmc@lists.ozlabs.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Jul 4, 2019 at 10:57 AM Marc Gonzalez <marc.w.gonzalez@free.fr> wrote:
+On Thu, Jul 11, 2019 at 4:25 PM YueHaibing <yuehaibing@huawei.com> wrote:
 
-> TSIF is the Transport Stream Interface.
-> First, rename tsif1 to tsif0, and tsif2 to tsif1.
-> Then squash all 5 tsif0 pins into a single function.
-> Same for tsif1.
+> Fix sparse warning:
 >
-> Signed-off-by: Marc Gonzalez <marc.w.gonzalez@free.fr>
-> ---
-> Changes from v1:
-> - Reword commit message for clarity (hopefully)
-> - Drop unrelated change in qcom,msm8998-pinctrl.txt
-> - CC DT
+> drivers/pinctrl/aspeed/pinmux-aspeed.c:8:12: warning:
+>  symbol 'aspeed_pinmux_ips' was not declared. Should it be static?
+>
+> Reported-by: Hulk Robot <hulkci@huawei.com>
+> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
 
-Patch applied with the ACKs.
+Patch applied with Andrew's ACK.
 
 Yours,
 Linus Walleij
