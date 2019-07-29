@@ -2,92 +2,85 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id E169278E25
-	for <lists+linux-gpio@lfdr.de>; Mon, 29 Jul 2019 16:37:44 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D810E797F5
+	for <lists+linux-gpio@lfdr.de>; Mon, 29 Jul 2019 22:04:33 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727165AbfG2Ohk (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 29 Jul 2019 10:37:40 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:58540 "EHLO mx1.redhat.com"
+        id S2389972AbfG2Tpi (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 29 Jul 2019 15:45:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34518 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726478AbfG2Ohk (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Mon, 29 Jul 2019 10:37:40 -0400
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        id S2389684AbfG2Tpe (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Mon, 29 Jul 2019 15:45:34 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 96013796EB;
-        Mon, 29 Jul 2019 14:37:39 +0000 (UTC)
-Received: from laptop.jcline.org (ovpn-125-161.rdu2.redhat.com [10.10.125.161])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 6628460C4C;
-        Mon, 29 Jul 2019 14:37:39 +0000 (UTC)
-Received: from laptop.jcline.org.com (localhost [IPv6:::1])
-        by laptop.jcline.org (Postfix) with ESMTP id 71A4F7044064;
-        Mon, 29 Jul 2019 10:37:38 -0400 (EDT)
-From:   Jeremy Cline <jcline@redhat.com>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Jonathan Corbet <corbet@lwn.net>, linux-gpio@vger.kernel.org,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Jeremy Cline <jcline@redhat.com>
-Subject: [PATCH v2] Documentation: gpio: fix function links in the HTML docs
-Date:   Mon, 29 Jul 2019 10:37:30 -0400
-Message-Id: <20190729143730.18660-1-jcline@redhat.com>
+        by mail.kernel.org (Postfix) with ESMTPSA id 103592054F;
+        Mon, 29 Jul 2019 19:45:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1564429533;
+        bh=8JFWAouRfci5VnEtp4/OWU62qL5P6hS03Li64OSWmEY=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=h4DRSkQB6iRxr+bTP19zVolf7/L4TevBPdWTMdulWc4ZFHC091/sf6HGZDFCH4Fjd
+         caDpODQyGoVtcHKzoyQrpYBK5TcKgQKCrzxJDGH2ASr5se/U/XezVlQpuoeLw24iZd
+         si55W6HenwIn2BrSMNw5EPkzOUJe6Qoxurc1B1Ac=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Wen Yang <wen.yang99@zte.com.cn>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Heiko Stuebner <heiko@sntech.de>, linux-gpio@vger.kernel.org,
+        linux-rockchip@lists.infradead.org, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.2 015/215] pinctrl: rockchip: fix leaked of_node references
+Date:   Mon, 29 Jul 2019 21:20:11 +0200
+Message-Id: <20190729190742.091745059@linuxfoundation.org>
+X-Mailer: git-send-email 2.22.0
+In-Reply-To: <20190729190739.971253303@linuxfoundation.org>
+References: <20190729190739.971253303@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.25]); Mon, 29 Jul 2019 14:37:39 +0000 (UTC)
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-The shorthand [_data] and [devm_] cause the HTML documentation to not
-link to the function documentation properly. This expands the references
-to the complete function names with the exception of
-devm_gpiochip_remove() which was dropped by commit 48207d7595d2 ("gpio:
-drop devm_gpiochip_remove()").
+[ Upstream commit 3c89c70634bb0b6f48512de873e7a45c7e1fbaa5 ]
 
-Signed-off-by: Jeremy Cline <jcline@redhat.com>
+The call to of_parse_phandle returns a node pointer with refcount
+incremented thus it must be explicitly decremented after the last
+usage.
+
+Detected by coccinelle with the following warnings:
+./drivers/pinctrl/pinctrl-rockchip.c:3221:2-8: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 3196, but without a corresponding object release within this function.
+./drivers/pinctrl/pinctrl-rockchip.c:3223:1-7: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 3196, but without a corresponding object release within this function.
+
+Signed-off-by: Wen Yang <wen.yang99@zte.com.cn>
+Cc: Linus Walleij <linus.walleij@linaro.org>
+Cc: Heiko Stuebner <heiko@sntech.de>
+Cc: linux-gpio@vger.kernel.org
+Cc: linux-rockchip@lists.infradead.org
+Cc: linux-kernel@vger.kernel.org
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
-New in v2:
-  - Rebased onto v5.3-rc2
+ drivers/pinctrl/pinctrl-rockchip.c | 1 +
+ 1 file changed, 1 insertion(+)
 
- Documentation/driver-api/gpio/driver.rst | 16 ++++++++--------
- 1 file changed, 8 insertions(+), 8 deletions(-)
-
-diff --git a/Documentation/driver-api/gpio/driver.rst b/Documentation/driver-api/gpio/driver.rst
-index 921c71a3d683..906af220b164 100644
---- a/Documentation/driver-api/gpio/driver.rst
-+++ b/Documentation/driver-api/gpio/driver.rst
-@@ -69,9 +69,9 @@ driver code:
+diff --git a/drivers/pinctrl/pinctrl-rockchip.c b/drivers/pinctrl/pinctrl-rockchip.c
+index 807a3263d849..62a622159006 100644
+--- a/drivers/pinctrl/pinctrl-rockchip.c
++++ b/drivers/pinctrl/pinctrl-rockchip.c
+@@ -3204,6 +3204,7 @@ static int rockchip_get_bank_data(struct rockchip_pin_bank *bank,
+ 						    base,
+ 						    &rockchip_regmap_config);
+ 		}
++		of_node_put(node);
+ 	}
  
- The code implementing a gpio_chip should support multiple instances of the
- controller, preferably using the driver model. That code will configure each
--gpio_chip and issue ``gpiochip_add[_data]()`` or ``devm_gpiochip_add_data()``.
--Removing a GPIO controller should be rare; use ``[devm_]gpiochip_remove()``
--when it is unavoidable.
-+gpio_chip and issue gpiochip_add(), gpiochip_add_data(), or
-+devm_gpiochip_add_data().  Removing a GPIO controller should be rare; use
-+gpiochip_remove() when it is unavoidable.
- 
- Often a gpio_chip is part of an instance-specific structure with states not
- exposed by the GPIO interfaces, such as addressing, power management, and more.
-@@ -418,11 +418,11 @@ symbol:
- 
- If there is a need to exclude certain GPIO lines from the IRQ domain handled by
- these helpers, we can set .irq.need_valid_mask of the gpiochip before
--``[devm_]gpiochip_add_data()`` is called. This allocates an .irq.valid_mask with as
--many bits set as there are GPIO lines in the chip, each bit representing line
--0..n-1. Drivers can exclude GPIO lines by clearing bits from this mask. The mask
--must be filled in before gpiochip_irqchip_add() or gpiochip_irqchip_add_nested()
--is called.
-+devm_gpiochip_add_data() or gpiochip_add_data() is called. This allocates an
-+.irq.valid_mask with as many bits set as there are GPIO lines in the chip, each
-+bit representing line 0..n-1. Drivers can exclude GPIO lines by clearing bits
-+from this mask. The mask must be filled in before gpiochip_irqchip_add() or
-+gpiochip_irqchip_add_nested() is called.
- 
- To use the helpers please keep the following in mind:
- 
+ 	bank->irq = irq_of_parse_and_map(bank->of_node, 0);
 -- 
-2.21.0
+2.20.1
+
+
 
