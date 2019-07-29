@@ -2,23 +2,23 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id A6E8F799FC
-	for <lists+linux-gpio@lfdr.de>; Mon, 29 Jul 2019 22:30:15 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6948A79A6E
+	for <lists+linux-gpio@lfdr.de>; Mon, 29 Jul 2019 22:57:15 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727086AbfG2UaK (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 29 Jul 2019 16:30:10 -0400
-Received: from atlmailgw1.ami.com ([63.147.10.40]:64149 "EHLO
+        id S1727320AbfG2U5K (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 29 Jul 2019 16:57:10 -0400
+Received: from atlmailgw1.ami.com ([63.147.10.40]:52520 "EHLO
         atlmailgw1.ami.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726713AbfG2UaK (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 29 Jul 2019 16:30:10 -0400
-X-AuditID: ac1060b2-413ff70000003a7d-16-5d3f57514cc9
+        with ESMTP id S1726635AbfG2U5K (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 29 Jul 2019 16:57:10 -0400
+X-AuditID: ac1060b2-3fdff70000003a7d-dd-5d3f5da6fa88
 Received: from atlms1.us.megatrends.com (atlms1.us.megatrends.com [172.16.96.144])
         (using TLS with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
         (Client did not present a certificate)
-        by atlmailgw1.ami.com (Symantec Messaging Gateway) with SMTP id 34.6A.14973.1575F3D5; Mon, 29 Jul 2019 16:30:09 -0400 (EDT)
+        by atlmailgw1.ami.com (Symantec Messaging Gateway) with SMTP id EA.6A.14973.6AD5F3D5; Mon, 29 Jul 2019 16:57:10 -0400 (EDT)
 Received: from hongweiz-Ubuntu-AMI.us.megatrends.com (172.16.98.93) by
  atlms1.us.megatrends.com (172.16.96.144) with Microsoft SMTP Server (TLS) id
- 14.3.408.0; Mon, 29 Jul 2019 16:30:08 -0400
+ 14.3.408.0; Mon, 29 Jul 2019 16:57:08 -0400
 From:   Hongwei Zhang <hongweiz@ami.com>
 To:     Andrew Jeffery <andrew@aj.id.au>,
         Linus Walleij <linus.walleij@linaro.org>,
@@ -28,26 +28,26 @@ CC:     Hongwei Zhang <hongweiz@ami.com>, Joel Stanley <joel@jms.id.au>,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>,
         <linux-kernel@vger.kernel.org>,
         <linux-arm-kernel@lists.infradead.org>
-Subject: [v6 2/2] gpio: aspeed: Add SGPIO driver
-Date:   Mon, 29 Jul 2019 16:29:41 -0400
-Message-ID: <1564432181-31992-1-git-send-email-hongweiz@ami.com>
+Subject: [v5 2/2] gpio: aspeed: Add SGPIO driver
+Date:   Mon, 29 Jul 2019 16:56:10 -0400
+Message-ID: <1564433770-32283-1-git-send-email-hongweiz@ami.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1563564291-9692-3-git-send-email-hongweiz@ami.com>
 References: <1563564291-9692-3-git-send-email-hongweiz@ami.com>
 MIME-Version: 1.0
 Content-Type: text/plain
 X-Originating-IP: [172.16.98.93]
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrILMWRmVeSWpSXmKPExsWyRiBhgm5guH2sweqpNha7LnNYfJl7isVi
-        /pFzrBa/z/9ltpjyZzmTxabH11gtmlefY7bYPP8Po8XlXXPYHDg9rrbvYvd4f6OV3ePix2PM
-        Hneu7WHz2Lyk3uP8jIWMHp83yQWwR3HZpKTmZJalFunbJXBlzNw3k7XgUUHFn8vJDYzfo7sY
-        OTkkBEwkDsyaw9bFyMUhJLCLSWLu94OMEM5hRok1G16yg1SxCahJ7N08hwnEFhHIkzi8/i0r
-        SBGzQCOTxM/XB5hBEsICBhI/Fz8Fa2ARUJVYO7mFFcTmFXCQeHr3HTvEOjmJm+c6weo5geK/
-        elrAhgoJ2Es837WXCaJeUOLkzCcsIDazgITEwRcvmCFqZCVuHXrMBDFHQeJ532OWCYwCs5C0
-        zELSsoCRaRWjUGJJTm5iZk56uaFeYm6mXnJ+7iZGSLBv2sHYctH8ECMTB+MhRgkOZiUR3sXi
-        9rFCvCmJlVWpRfnxRaU5qcWHGKU5WJTEeVeu+RYjJJCeWJKanZpakFoEk2Xi4JRqYHz6nOXw
-        071Tk0uED/D/vNRUoHKz4P/pDev8eLxapk5ilV5r/e/a/iD7hRtNmrvc+BewnkgoVWC5nv/t
-        1GlHXiUvYYu63OMGfO/31Cp1sJ89YLhQ7HWaxdrir/3bf5v+dpWwZtOVmtr6VU/w5dFJklxH
-        ilUPvG6wujnt9/z7xs+uXpJ/2inh16zEUpyRaKjFXFScCABLmIZCZAIAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrPLMWRmVeSWpSXmKPExsWyRiBhgu6yWPtYg41zxCx2Xeaw+DL3FIvF
+        /CPnWC1+n//LbDHlz3Imi02Pr7FaNK8+x2yxef4fRovLu+awOXB6XG3fxe7x/kYru8fFj8eY
+        Pe5c28PmsXlJvcf5GQsZPT5vkgtgj+KySUnNySxLLdK3S+DKmLlvJmvBo4KKP5eTGxi/R3cx
+        cnJICJhInLk+n72LkYtDSGAXk8TEjh5GCOcwo8SJpXcYQarYBNQk9m6ewwRiiwjkSRxe/5YV
+        pIhZoJFJ4ufrA8wgCWEBA4lVNxYDjeLgYBFQlfjzTRTE5BVwkHh71AhimZzEzXOdYNWcQOFf
+        PS1gI4UE7CWe79oLZvMKCEqcnPmEBcRmFpCQOPjiBTNEjazErUOPmSDmKEg873vMMoFRYBaS
+        lllIWhYwMq1iFEosyclNzMxJLzfUS8zN1EvOz93ECAn0TTsYWy6aH2Jk4mA8xCjBwawkwrtY
+        3D5WiDclsbIqtSg/vqg0J7X4EKM0B4uSOO/KNd9ihATSE0tSs1NTC1KLYLJMHJxSDYyRvFpO
+        PausX9cH7JvkFnEj2Gm9g6R6xCxxpyd59au5vNaem8+b9kp4TZXwHF2en3Psas/vYek6ZfeX
+        8yKr93P51us20Y0izHWbMlRP1MwJbLxV+/Hi8plbDyar1aytOzV/SfzKZ07XNd+FVaRNMFGe
+        7z/JZ8crydItu+YtNv8TwyR7TPhEo5MSS3FGoqEWc1FxIgDJ8AyaYgIAAA==
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
