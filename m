@@ -2,83 +2,92 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id B736778E1F
-	for <lists+linux-gpio@lfdr.de>; Mon, 29 Jul 2019 16:36:42 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E169278E25
+	for <lists+linux-gpio@lfdr.de>; Mon, 29 Jul 2019 16:37:44 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728528AbfG2Ogg (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 29 Jul 2019 10:36:36 -0400
-Received: from mout.kundenserver.de ([212.227.17.24]:42397 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727404AbfG2Ogg (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 29 Jul 2019 10:36:36 -0400
-Received: from orion.localdomain ([77.4.29.213]) by mrelayeu.kundenserver.de
- (mreue107 [212.227.15.183]) with ESMTPSA (Nemesis) id
- 1MOiU5-1i1H9Z0xtX-00Q9FW; Mon, 29 Jul 2019 16:36:34 +0200
-From:   "Enrico Weigelt, metux IT consult" <info@metux.net>
-To:     linux-kernel@vger.kernel.org
-Cc:     linus.walleij@linaro.org, bgolaszewski@baylibre.com,
-        linux-gpio@vger.kernel.org
-Subject: [PATCH] gpio: just plain warning when nonexisting gpio requested
-Date:   Mon, 29 Jul 2019 16:36:33 +0200
-Message-Id: <1564410993-22101-1-git-send-email-info@metux.net>
-X-Mailer: git-send-email 1.9.1
-X-Provags-ID: V03:K1:9JWgj9p0cDCFvXkzCyyPTFFHU5yanSU3CHvxiYNkCzHElSYEbkv
- tPRRuhjIdRM6PCuiJSu+21ero9peOygXrTw1QQL2eANlCXW1Cx8F3NcDzDA8EATPG4dcc9F
- wxGn2EVQdZLjtVenRfAubE5+IBjjmFdwWPAcFnCLuoKL3rzIijZz8dNkxyNCajkkKrpgxlA
- E9ZDcM+kjTQM2hLpdKCIw==
-X-Spam-Flag: NO
-X-UI-Out-Filterresults: notjunk:1;V03:K0:0nLuBilCz5M=:SyyZ91KbkxCbaNkDCFH0F6
- TiLZDQ6jyqIT+Lyd8/zK/JN9IDiNcuo4muXwBWHIONfvyPtCcUrPb6xGn2PXjZm8RRGv4hrrk
- yD4TV53hPrFEkoBRQ20RXJgvrA0cN3bDf1qa8sx8fFffbWnF1zNoyjo97SQWWUY1RxHfZCQyD
- F2g3vix3FIJ1vHKJ/iI9mkKyUKm0U5fflFwo9YH1Uf3/bU59s9eUO6RnjELgClYB7KYSerWgr
- A/U10ZlIh6k6h5bfu3X6woziwbx1REehB2u+eclTo5kl9DrqiUoUL4ATETEaA3z6ExPTsayVw
- LN6dE1PcKW+PSESZ7D8ptqyiV4ifLF44oKqsMJRwxlYemG0xhb2p8HAbuojCatrE8iRXS/xKo
- 1ljDzfTaXqExNs6bJkB6j6aTWETY3fxlCw/9uh1S7f2zYk0Lzngnv5cSKKddPmf3dwvKoKSoi
- XXJHvHacv1tW9tzSf2WRVhssRQAAKB2lPPJ9/fZFWiP1o/ckMH4i79ES9hJSyiN8EAWN2ek9A
- gHDfyicvZ9tv7eHyMLX9YfiDFeDRdrJpypPU8c7PXajyBPgU+/iw1uchJXjOfvJ5gF7mucUro
- Xdx8ReVJFUNnxTONws7kK7G0XBLsWCngQL8sPAQXKUKnonsmN7/488oCY4Ef7UuPSKP6/kiDo
- RmKDqNWTgfSmeA9JrAnKNzvZS4m1zpzABuUZe6/dyTg2iginaoc6lNylBT5I3M/nRQhCdTi4h
- qEl0SX5bTZGFdMdARGeWyrIcM16dKZ16QbvouQ==
+        id S1727165AbfG2Ohk (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 29 Jul 2019 10:37:40 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:58540 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726478AbfG2Ohk (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Mon, 29 Jul 2019 10:37:40 -0400
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 96013796EB;
+        Mon, 29 Jul 2019 14:37:39 +0000 (UTC)
+Received: from laptop.jcline.org (ovpn-125-161.rdu2.redhat.com [10.10.125.161])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 6628460C4C;
+        Mon, 29 Jul 2019 14:37:39 +0000 (UTC)
+Received: from laptop.jcline.org.com (localhost [IPv6:::1])
+        by laptop.jcline.org (Postfix) with ESMTP id 71A4F7044064;
+        Mon, 29 Jul 2019 10:37:38 -0400 (EDT)
+From:   Jeremy Cline <jcline@redhat.com>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Jonathan Corbet <corbet@lwn.net>, linux-gpio@vger.kernel.org,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Jeremy Cline <jcline@redhat.com>
+Subject: [PATCH v2] Documentation: gpio: fix function links in the HTML docs
+Date:   Mon, 29 Jul 2019 10:37:30 -0400
+Message-Id: <20190729143730.18660-1-jcline@redhat.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.25]); Mon, 29 Jul 2019 14:37:39 +0000 (UTC)
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-From: Enrico Weigelt <info@metux.net>
+The shorthand [_data] and [devm_] cause the HTML documentation to not
+link to the function documentation properly. This expands the references
+to the complete function names with the exception of
+devm_gpiochip_remove() which was dropped by commit 48207d7595d2 ("gpio:
+drop devm_gpiochip_remove()").
 
-When trying to export an nonexisting gpio ID, the kernel prints
-outs a big warning w/ stacktrace, sounding like a huge problem.
-In fact it's a pretty normal situation, like file or device not
-found.
-
-So, just print a more relaxed warning instead.
-
-Signed-off-by: Enrico Weigelt <info@metux.net>
+Signed-off-by: Jeremy Cline <jcline@redhat.com>
 ---
- drivers/gpio/gpiolib.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+New in v2:
+  - Rebased onto v5.3-rc2
 
-diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
-index 3ee99d0..06eeedd 100644
---- a/drivers/gpio/gpiolib.c
-+++ b/drivers/gpio/gpiolib.c
-@@ -1,4 +1,7 @@
- // SPDX-License-Identifier: GPL-2.0
-+
-+#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
-+
- #include <linux/bitmap.h>
- #include <linux/kernel.h>
- #include <linux/module.h>
-@@ -121,7 +124,7 @@ struct gpio_desc *gpio_to_desc(unsigned gpio)
- 	spin_unlock_irqrestore(&gpio_lock, flags);
+ Documentation/driver-api/gpio/driver.rst | 16 ++++++++--------
+ 1 file changed, 8 insertions(+), 8 deletions(-)
+
+diff --git a/Documentation/driver-api/gpio/driver.rst b/Documentation/driver-api/gpio/driver.rst
+index 921c71a3d683..906af220b164 100644
+--- a/Documentation/driver-api/gpio/driver.rst
++++ b/Documentation/driver-api/gpio/driver.rst
+@@ -69,9 +69,9 @@ driver code:
  
- 	if (!gpio_is_valid(gpio))
--		WARN(1, "invalid GPIO %d\n", gpio);
-+		pr_warn("invalid GPIO %d\n", gpio);
+ The code implementing a gpio_chip should support multiple instances of the
+ controller, preferably using the driver model. That code will configure each
+-gpio_chip and issue ``gpiochip_add[_data]()`` or ``devm_gpiochip_add_data()``.
+-Removing a GPIO controller should be rare; use ``[devm_]gpiochip_remove()``
+-when it is unavoidable.
++gpio_chip and issue gpiochip_add(), gpiochip_add_data(), or
++devm_gpiochip_add_data().  Removing a GPIO controller should be rare; use
++gpiochip_remove() when it is unavoidable.
  
- 	return NULL;
- }
+ Often a gpio_chip is part of an instance-specific structure with states not
+ exposed by the GPIO interfaces, such as addressing, power management, and more.
+@@ -418,11 +418,11 @@ symbol:
+ 
+ If there is a need to exclude certain GPIO lines from the IRQ domain handled by
+ these helpers, we can set .irq.need_valid_mask of the gpiochip before
+-``[devm_]gpiochip_add_data()`` is called. This allocates an .irq.valid_mask with as
+-many bits set as there are GPIO lines in the chip, each bit representing line
+-0..n-1. Drivers can exclude GPIO lines by clearing bits from this mask. The mask
+-must be filled in before gpiochip_irqchip_add() or gpiochip_irqchip_add_nested()
+-is called.
++devm_gpiochip_add_data() or gpiochip_add_data() is called. This allocates an
++.irq.valid_mask with as many bits set as there are GPIO lines in the chip, each
++bit representing line 0..n-1. Drivers can exclude GPIO lines by clearing bits
++from this mask. The mask must be filled in before gpiochip_irqchip_add() or
++gpiochip_irqchip_add_nested() is called.
+ 
+ To use the helpers please keep the following in mind:
+ 
 -- 
-1.9.1
+2.21.0
 
