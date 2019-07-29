@@ -2,116 +2,137 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 7AC4F78C1C
-	for <lists+linux-gpio@lfdr.de>; Mon, 29 Jul 2019 14:58:55 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BC29778C7F
+	for <lists+linux-gpio@lfdr.de>; Mon, 29 Jul 2019 15:15:52 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387423AbfG2M6z (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 29 Jul 2019 08:58:55 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:39542 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727335AbfG2M6z (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 29 Jul 2019 08:58:55 -0400
-Received: by mail-wm1-f68.google.com with SMTP id u25so43026143wmc.4
-        for <linux-gpio@vger.kernel.org>; Mon, 29 Jul 2019 05:58:53 -0700 (PDT)
+        id S1728547AbfG2NPw (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 29 Jul 2019 09:15:52 -0400
+Received: from mail-io1-f65.google.com ([209.85.166.65]:35852 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726973AbfG2NPv (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 29 Jul 2019 09:15:51 -0400
+Received: by mail-io1-f65.google.com with SMTP id o9so16255077iom.3;
+        Mon, 29 Jul 2019 06:15:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=zgZeKxOrrqWjvML06wf3e+bjI2MpHSypq9WO6/xcbOs=;
-        b=b1XehoO/Qpmy7h8cLHnGcdHcn9QNU8V3wbMeh5Y369UoTvBxlEztW/B0FnchCtEz0n
-         /+CeTaNXTliBGVc2tSMxeqCTBExvzxi/MEHNO7z2CUzZcG+aWMVZks5jUnaU2BXC1jtC
-         kLk3c8CUtdhzWSYqaVZlIyp9o7fOKEY5wtus/rr/VtRIxVbcHNHYSBLKEh/6uIyu6Q/n
-         HMEHmDVr1rajNjGuzjX5GUcyUfpJvkXLXq2EiYCxmQOMgEp9xw6pXWeXBVwoG6FM6TG/
-         FSKsZnB0IkvpuLV2T5LvNjCCtUnpVSQB3xy4FpkI0KiYQ2HoT0VDp7b9X3tsoK6vMZ1+
-         0c2g==
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=hesoZG+TcuR2ee3ESupVuTZ9BAyVWJDa4N1y2VQSFbA=;
+        b=dxlI/uKS1x/I62djieCFmuyPj9xjbstOXhRIT8tlirULC+Cfrf57qeguUW32ksAFai
+         0cCDFsrNt6NNxY7+AW3VzzbTEZNcBvxoMRSPIrPQMdenQIG4v5CDboDBA4A3XsfXTVLU
+         HFmb9d54USSK1Jw7k3B8Nk+OXD7+PF3vBjayG1RUASPYxvowPUKmw65c6Q0TyRWurLb/
+         ZOXNTgFWYirtvTvDlKr8AK+7nRHxZeUs5ARsC8Afvqza6XSWdMt+7VqM6SCYfvidaxsL
+         ivcnl5ug5bRl4IE6nxW7vpF3qTqnze7ewJaaTGMvMs7zYv1UYY4MDdG2WH0qJZZSgMwS
+         KTvQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=zgZeKxOrrqWjvML06wf3e+bjI2MpHSypq9WO6/xcbOs=;
-        b=NcZakG343ieNwmkWC/qc6mYn5z/1FbLUq0W6dIKcoLfYf+WQrOesNHif7u45dWJg1+
-         y4iy6/QO9n5PyaB0XnPgd7fq5BHkiM1oC6CjLyqpBRve2QEfe82VAq0kjugKurkEzuYp
-         s1MlDZICGrLC7jTaHUhWVKoLdiD5wn/20cQH8y0MuRbGOQOSB7SKEXQVvlm3opreuPAK
-         NWCa2UsmKhBFya5eL1jLaYRZBmNdit2w7AgEhMEUo+HyjmJzsfkyK0f+Dus78+d7ewn7
-         0VyaGSqokQyKRSNCTIEym0dMVrHQid7W+/zn14MlS4Mk/Fap6S0kTNMx0+NZvLzQF216
-         JKXA==
-X-Gm-Message-State: APjAAAVVpSaGMN90MijZx94qYmQnbpmaDM3SwWDdtfHHO5isIWwxErnv
-        b8mf+7eUfqj1i5F0Xk2VEZ//Xpn02z8=
-X-Google-Smtp-Source: APXvYqxTYhDqa6nBd6gkMoZq4dBfgw47+AH3bqKhNvPMkWAuzMonrOkTE6yj1F3cKty7qTwSwxAGDQ==
-X-Received: by 2002:a1c:618a:: with SMTP id v132mr34306997wmb.17.1564405132425;
-        Mon, 29 Jul 2019 05:58:52 -0700 (PDT)
-Received: from bender.baylibre.local (lmontsouris-657-1-212-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
-        by smtp.gmail.com with ESMTPSA id g19sm115217270wrb.52.2019.07.29.05.58.51
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Mon, 29 Jul 2019 05:58:51 -0700 (PDT)
-From:   Neil Armstrong <narmstrong@baylibre.com>
-To:     linus.walleij@linaro.org
-Cc:     Neil Armstrong <narmstrong@baylibre.com>,
-        linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Kevin Hilman <khilman@baylibre.com>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Subject: [PATCH] pinctrl: meson-g12a: add pwm_a on GPIOE_2 pinmux
-Date:   Mon, 29 Jul 2019 14:58:38 +0200
-Message-Id: <20190729125838.6498-1-narmstrong@baylibre.com>
-X-Mailer: git-send-email 2.22.0
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=hesoZG+TcuR2ee3ESupVuTZ9BAyVWJDa4N1y2VQSFbA=;
+        b=LNcHsfSYZJv6KkgwbeVuhZu3IL1zzD8ZybAmiLgOthE2m0QnKkg6/whD+daHaARy73
+         Sei70dTDST+DVzgj//RLdSvgI4UGn7pNbGzMlvEYdPDbrWY6GUcoPbm4BYfwpTGTL5sE
+         8q+lBzA+OWtgW+BAtGS5uN61ZY9DPbknFxVyb4h9U3WVvAM2fK/f8p08R6x+fApPSy10
+         jFIPOBB6vi0sRD1ZJF69apeawq9cYxyQBV+pAnvs8uZ70Az5ErLRBb+E6GHePW35n9Wg
+         5Joi8trPfVFoWbjmdKmSMlFCzkPKOqgpwUEL7z7gNQCCvAky//LIpVmEA79+GvPGa+Oj
+         KHqw==
+X-Gm-Message-State: APjAAAWlHdKq8QdDyKJ79k+FHgpeddsWyxTz0e9pe1IalS5NLmqnAU9F
+        7B/o0T/ZgJoH+XsywbsNxnU=
+X-Google-Smtp-Source: APXvYqwoWQTwF5tIsbtyIfsCRBRQp5dFcjhYZlqA4xw1kFYGOW8RBewbcLjn8mmgVWtwQYUdZPRcCA==
+X-Received: by 2002:a5d:8347:: with SMTP id q7mr95370134ior.277.1564406150592;
+        Mon, 29 Jul 2019 06:15:50 -0700 (PDT)
+Received: from localhost ([8.46.76.96])
+        by smtp.gmail.com with ESMTPSA id n22sm100665148iob.37.2019.07.29.06.15.48
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 29 Jul 2019 06:15:49 -0700 (PDT)
+Date:   Mon, 29 Jul 2019 15:15:32 +0200
+From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
+To:     Heikki Krogerus <heikki.krogerus@linux.intel.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+        "Enrico Weigelt, metux IT consult" <info@metux.net>,
+        linux-input@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Andy Shevchenko <andy.shevchenko@gmail.com>
+Subject: Re: [PATCH 1/2] drivers: base: swnode: link devices to software nodes
+Message-ID: <20190729131532.GA1201@penguin>
+References: <20190713075259.243565-1-dmitry.torokhov@gmail.com>
+ <20190713075259.243565-2-dmitry.torokhov@gmail.com>
+ <20190729120715.GA28600@kuha.fi.intel.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190729120715.GA28600@kuha.fi.intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Add the missing pinmux for the pwm_a function on the GPIOE_2 pin.
+On Mon, Jul 29, 2019 at 03:07:15PM +0300, Heikki Krogerus wrote:
+> On Sat, Jul 13, 2019 at 12:52:58AM -0700, Dmitry Torokhov wrote:
+> > It is helpful to know what device, if any, a software node is tied to, so
+> > let's store a pointer to the device in software node structure. Note that
+> > children software nodes will inherit their parent's device pointer, so we
+> > do not have to traverse hierarchy to see what device the [sub]tree belongs
+> > to.
+> > 
+> > We will be using the device pointer to locate GPIO lookup tables for
+> > devices with static properties.
+> > 
+> > Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+> > ---
+> >  drivers/base/property.c  |  1 +
+> >  drivers/base/swnode.c    | 35 ++++++++++++++++++++++++++++++++++-
+> >  include/linux/property.h |  5 +++++
+> >  3 files changed, 40 insertions(+), 1 deletion(-)
+> > 
+> > diff --git a/drivers/base/property.c b/drivers/base/property.c
+> > index 348b37e64944..3bc93d4b35c4 100644
+> > --- a/drivers/base/property.c
+> > +++ b/drivers/base/property.c
+> > @@ -527,6 +527,7 @@ int device_add_properties(struct device *dev,
+> >  	if (IS_ERR(fwnode))
+> >  		return PTR_ERR(fwnode);
+> >  
+> > +	software_node_link_device(fwnode, dev);
+> >  	set_secondary_fwnode(dev, fwnode);
+> >  	return 0;
+> >  }
+> > diff --git a/drivers/base/swnode.c b/drivers/base/swnode.c
+> > index 7fc5a18e02ad..fd12eea539b6 100644
+> > --- a/drivers/base/swnode.c
+> > +++ b/drivers/base/swnode.c
+> > @@ -24,6 +24,9 @@ struct software_node {
+> >  
+> >  	/* properties */
+> >  	const struct property_entry *properties;
+> > +
+> > +	/* device this node is associated with */
+> > +	struct device *dev;
+> >  };
+> 
+> Let's not do that! The nodes can be, and in many cases are, associated
+> with multiple devices.
 
-Reviewed-by: Kevin Hilman <khilman@baylibre.com>
-Reviewed-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
----
- drivers/pinctrl/meson/pinctrl-meson-g12a.c | 9 +++++++++
- 1 file changed, 9 insertions(+)
+They do? Where? I see that set of properties can be shared between
+several devices, but when we instantiate SW node we create a new
+instance for device. This is also how ACPI and OF properties work; they
+not shared between devices (or, rather, the kernel creates distinct _and
+single_ devices for instance of ACPI or OF node). I do not think we want
+swnodes work differently from the other firmware nodes.
 
-diff --git a/drivers/pinctrl/meson/pinctrl-meson-g12a.c b/drivers/pinctrl/meson/pinctrl-meson-g12a.c
-index 3475cd7bd2af..582665fd362a 100644
---- a/drivers/pinctrl/meson/pinctrl-meson-g12a.c
-+++ b/drivers/pinctrl/meson/pinctrl-meson-g12a.c
-@@ -801,6 +801,9 @@ static const unsigned int remote_ao_input_pins[]	= { GPIOAO_5 };
- /* ir_out */
- static const unsigned int remote_ao_out_pins[]		= { GPIOAO_4 };
- 
-+/* pwm_a_e */
-+static const unsigned int pwm_a_e_pins[]		= { GPIOE_2 };
-+
- /* pwm_ao_a */
- static const unsigned int pwm_ao_a_pins[]		= { GPIOAO_11 };
- static const unsigned int pwm_ao_a_hiz_pins[]		= { GPIOAO_11 };
-@@ -888,6 +891,7 @@ static struct meson_pmx_group meson_g12a_aobus_groups[] = {
- 	GROUP(i2c_ao_slave_sda,		3),
- 	GROUP(remote_ao_input,		1),
- 	GROUP(remote_ao_out,		1),
-+	GROUP(pwm_a_e,			3),
- 	GROUP(pwm_ao_a,			3),
- 	GROUP(pwm_ao_a_hiz,		2),
- 	GROUP(pwm_ao_b,			3),
-@@ -1192,6 +1196,10 @@ static const char * const remote_ao_out_groups[] = {
- 	"remote_ao_out",
- };
- 
-+static const char * const pwm_a_e_groups[] = {
-+	"pwm_a_e",
-+};
-+
- static const char * const pwm_ao_a_groups[] = {
- 	"pwm_ao_a", "pwm_ao_a_hiz",
- };
-@@ -1290,6 +1298,7 @@ static struct meson_pmx_func meson_g12a_aobus_functions[] = {
- 	FUNCTION(i2c_ao_slave),
- 	FUNCTION(remote_ao_input),
- 	FUNCTION(remote_ao_out),
-+	FUNCTION(pwm_a_e),
- 	FUNCTION(pwm_ao_a),
- 	FUNCTION(pwm_ao_b),
- 	FUNCTION(pwm_ao_c),
+> 
+> Every device is already linked with the software node kobject, so
+> isn't it possible to simply walk trough those links in order to check
+> the devices associated with the node?
+
+No, we need to know the exact instance of a device, not a set of
+devices, because even though some properties can be shared, others can
+not. For example, even if 2 exactly same touch controllers in the system
+have "reset-gpios" property, they won't be the same GPIO for the both of
+them.
+
+Thanks.
+
 -- 
-2.22.0
-
+Dmitry
