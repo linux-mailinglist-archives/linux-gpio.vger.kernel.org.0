@@ -2,26 +2,26 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 094777A6F5
-	for <lists+linux-gpio@lfdr.de>; Tue, 30 Jul 2019 13:30:39 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5D6BF7A751
+	for <lists+linux-gpio@lfdr.de>; Tue, 30 Jul 2019 13:52:52 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730083AbfG3Lai (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 30 Jul 2019 07:30:38 -0400
-Received: from mga02.intel.com ([134.134.136.20]:20371 "EHLO mga02.intel.com"
+        id S1728215AbfG3Lwv (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 30 Jul 2019 07:52:51 -0400
+Received: from mga03.intel.com ([134.134.136.65]:50252 "EHLO mga03.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730101AbfG3Lai (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Tue, 30 Jul 2019 07:30:38 -0400
+        id S1726078AbfG3Lwv (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Tue, 30 Jul 2019 07:52:51 -0400
 X-Amp-Result: UNSCANNABLE
 X-Amp-File-Uploaded: False
 Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 30 Jul 2019 04:30:37 -0700
+  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 30 Jul 2019 04:52:50 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.64,326,1559545200"; 
-   d="scan'208";a="190841166"
+   d="scan'208";a="190845479"
 Received: from kuha.fi.intel.com ([10.237.72.189])
-  by fmsmga001.fm.intel.com with SMTP; 30 Jul 2019 04:30:33 -0700
-Received: by kuha.fi.intel.com (sSMTP sendmail emulation); Tue, 30 Jul 2019 14:30:33 +0300
-Date:   Tue, 30 Jul 2019 14:30:33 +0300
+  by fmsmga001.fm.intel.com with SMTP; 30 Jul 2019 04:52:47 -0700
+Received: by kuha.fi.intel.com (sSMTP sendmail emulation); Tue, 30 Jul 2019 14:52:47 +0300
+Date:   Tue, 30 Jul 2019 14:52:47 +0300
 From:   Heikki Krogerus <heikki.krogerus@linux.intel.com>
 To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
 Cc:     Linus Walleij <linus.walleij@linaro.org>,
@@ -30,132 +30,106 @@ Cc:     Linus Walleij <linus.walleij@linaro.org>,
         linux-input@vger.kernel.org, linux-gpio@vger.kernel.org,
         linux-kernel@vger.kernel.org,
         Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH 2/2] gpiolib: add support for fetching descriptors from
- static properties
-Message-ID: <20190730113033.GJ28600@kuha.fi.intel.com>
+Subject: Re: [PATCH 1/2] drivers: base: swnode: link devices to software nodes
+Message-ID: <20190730115247.GK28600@kuha.fi.intel.com>
 References: <20190713075259.243565-1-dmitry.torokhov@gmail.com>
- <20190713075259.243565-3-dmitry.torokhov@gmail.com>
+ <20190713075259.243565-2-dmitry.torokhov@gmail.com>
+ <20190729120715.GA28600@kuha.fi.intel.com>
+ <20190729131532.GA1201@penguin>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190713075259.243565-3-dmitry.torokhov@gmail.com>
+In-Reply-To: <20190729131532.GA1201@penguin>
 User-Agent: Mutt/1.12.0 (2019-05-25)
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Dmitry,
-
-On Sat, Jul 13, 2019 at 12:52:59AM -0700, Dmitry Torokhov wrote:
-> Now that static device properties understand notion of child nodes, let's
-> teach gpiolib to tie such children and machine GPIO descriptor tables.
-> We will continue using a single table for entire device, but instead of
-> using connection ID as a lookup key in the GPIO descriptor table directly,
-> we will perform additional translation: fwnode_get_named_gpiod() when
-> dealing with property_set-backed fwnodes will try parsing string property
-> with name matching connection ID and use result of the lookup as the key in
-> the table:
+On Mon, Jul 29, 2019 at 03:15:32PM +0200, Dmitry Torokhov wrote:
+> On Mon, Jul 29, 2019 at 03:07:15PM +0300, Heikki Krogerus wrote:
+> > On Sat, Jul 13, 2019 at 12:52:58AM -0700, Dmitry Torokhov wrote:
+> > > It is helpful to know what device, if any, a software node is tied to, so
+> > > let's store a pointer to the device in software node structure. Note that
+> > > children software nodes will inherit their parent's device pointer, so we
+> > > do not have to traverse hierarchy to see what device the [sub]tree belongs
+> > > to.
+> > > 
+> > > We will be using the device pointer to locate GPIO lookup tables for
+> > > devices with static properties.
+> > > 
+> > > Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+> > > ---
+> > >  drivers/base/property.c  |  1 +
+> > >  drivers/base/swnode.c    | 35 ++++++++++++++++++++++++++++++++++-
+> > >  include/linux/property.h |  5 +++++
+> > >  3 files changed, 40 insertions(+), 1 deletion(-)
+> > > 
+> > > diff --git a/drivers/base/property.c b/drivers/base/property.c
+> > > index 348b37e64944..3bc93d4b35c4 100644
+> > > --- a/drivers/base/property.c
+> > > +++ b/drivers/base/property.c
+> > > @@ -527,6 +527,7 @@ int device_add_properties(struct device *dev,
+> > >  	if (IS_ERR(fwnode))
+> > >  		return PTR_ERR(fwnode);
+> > >  
+> > > +	software_node_link_device(fwnode, dev);
+> > >  	set_secondary_fwnode(dev, fwnode);
+> > >  	return 0;
+> > >  }
+> > > diff --git a/drivers/base/swnode.c b/drivers/base/swnode.c
+> > > index 7fc5a18e02ad..fd12eea539b6 100644
+> > > --- a/drivers/base/swnode.c
+> > > +++ b/drivers/base/swnode.c
+> > > @@ -24,6 +24,9 @@ struct software_node {
+> > >  
+> > >  	/* properties */
+> > >  	const struct property_entry *properties;
+> > > +
+> > > +	/* device this node is associated with */
+> > > +	struct device *dev;
+> > >  };
+> > 
+> > Let's not do that! The nodes can be, and in many cases are, associated
+> > with multiple devices.
 > 
-> static const struct property_entry dev_child1_props[] __initconst = {
-> 	...
-> 	PROPERTY_ENTRY_STRING("gpios",		"child-1-gpios"),
-> 	{ }
-> };
+> They do? Where? I see that set of properties can be shared between
+> several devices, but when we instantiate SW node we create a new
+> instance for device. This is also how ACPI and OF properties work; they
+> not shared between devices (or, rather, the kernel creates distinct _and
+> single_ devices for instance of ACPI or OF node). I do not think we want
+> swnodes work differently from the other firmware nodes.
+
+Having multiple devices linked to a single node is quite normal. Most
+multifunctional devices will share a single node. The USB port devices
+will share their node (if they have one) with any device that is
+attached to them. Etc.
+
+If you want to check how this works with ACPI, then find
+"physical_node" named files from sysfs. The ACPI node folders in sysfs
+have symlinks named "physical_node<n>" for every device they are bind
+to. The first one is named just "physical_node", the second
+"physical_node1", the third "physical_node2", and so on.
+
+> > Every device is already linked with the software node kobject, so
+> > isn't it possible to simply walk trough those links in order to check
+> > the devices associated with the node?
 > 
-> static struct gpiod_lookup_table dev_gpiod_table = {
-> 	.dev_id = "some-device",
-> 	.table = {
-> 		...
-> 		GPIO_LOOKUP_IDX("B", 1, "child-1-gpios", 1, GPIO_ACTIVE_LOW),
-> 		...
-> 	},
-> };
+> No, we need to know the exact instance of a device, not a set of
+> devices, because even though some properties can be shared, others can
+> not. For example, even if 2 exactly same touch controllers in the system
+> have "reset-gpios" property, they won't be the same GPIO for the both of
+> them.
 
-We don't need struct gpiod_lookup_table anymore. We can mimic DT with
-the software nodes now that we have those "reference properties". A
-gpio reference with the software nodes would look something like this:
+I don't think I completely understand the use case you had in mind for
+this API, but since you planned to use it with the GPIO lookup tables,
+I'm going to assume it's not needed after all. Let's replace those
+with the references instead like I proposed in my reply to the 2/2
+patch.
 
-        enum {
-                GPIO_CONTROLLER,
-                MY_DEVICE
-        };
+Linking a single device with a node like that is in any case not
+acceptable nor possible.
 
-        static const struct software_node nodes[];
-
-        static const struct software_node_ref_args reset_gpio_ref = {
-                .node = &nodes[GPIO_CONTROLLER],
-                .nargs = 2,
-                .args = {
-                        14,                     /* line number */
-                        GPIO_ACTIVE_HIGH        /* flags */
-                }
-        };
-
-        static const struct software_node_reference my_refs[] = {
-                { "reset-gpios", 1, &reset_gpio_ref }
-        };
-
-        /* Optionally, we could support gpiochip finding by name... */
-        static const struct property_entry my_props[] = {
-                PROPERTY_ENTRY_STRING("gpio-controller", "name_of_the_controller")
-        };
-
-        static const struct software_node nodes[] = {
-                [GPIO_CONTROLLER]       = { "gpio_controller" },
-                [MY_DEVICE]             = { "my_device", NULL, my_props, my_refs }
-        };
-
-        void my_init(void)
-        {
-                ...
-                ret = software_node_register_nodes(nodes);
-                ...
-        }
-
-In gpiolib we should now be able to access that reference with
-fwnode_property_get_references_args():
-
-        static int gpiochip_match_fwnode(struct gpio_chip *chip, void *fwnode)
-        {
-                /* The fwnode member needs to be added to struct gpio_chip */
-                return chip->fwnode == fwnode;
-        }
-
-        static struct gpio_desc *gpiod_find(struct device *dev,
-                                            const char *con_id,
-                                            unsigned int idx,
-                                            unsigned long flags)
-        {
-                struct fwnode_reference_args args;
-                struct gpio_chip *chip;
-                struct gpio_desc *desc;
-                const char *name;
-                int ret;
-
-                ret = fwnode_property_get_refernce_args(dev_fwnode(dev), con_id,
-                                                        NULL, idx, &args);
-                ...
-
-                /* Let's find the gpiochip */
-                chip = gpiochip_find(args.fwnode, gpiochip_match_fwnode);
-                ...
-
-                /* Or optionally with find_chip_by_name() */
-                //ret = device_property_read_string(dev, "gpio-controller", &name);
-                ...
-                //chip = find_chip_by_name(name);
-                ...
-
-                /* I'm assuming hwnum is the same as line number? */
-                desc = gpiochip_get_desc(chip, args.args[0]);
-                *flags = args.args[1];
-
-                return desc;
-        }
-
-The above is just an example, but I'm pretty sure that something like
-it (with a little bit of tuning) is all that we need.
 
 thanks,
 
