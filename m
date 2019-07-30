@@ -2,96 +2,88 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 902D67B335
-	for <lists+linux-gpio@lfdr.de>; Tue, 30 Jul 2019 21:25:49 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 51D377B5EF
+	for <lists+linux-gpio@lfdr.de>; Wed, 31 Jul 2019 00:56:57 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727776AbfG3TZt (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 30 Jul 2019 15:25:49 -0400
-Received: from atlmailgw1.ami.com ([63.147.10.40]:47963 "EHLO
-        atlmailgw1.ami.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725840AbfG3TZs (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 30 Jul 2019 15:25:48 -0400
-X-AuditID: ac1060b2-3fdff70000003a7d-40-5d4099bccabf
-Received: from atlms1.us.megatrends.com (atlms1.us.megatrends.com [172.16.96.144])
-        (using TLS with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by atlmailgw1.ami.com (Symantec Messaging Gateway) with SMTP id C0.6E.14973.CB9904D5; Tue, 30 Jul 2019 15:25:49 -0400 (EDT)
-Received: from hongweiz-Ubuntu-AMI.us.megatrends.com (172.16.98.93) by
- atlms1.us.megatrends.com (172.16.96.144) with Microsoft SMTP Server (TLS) id
- 14.3.408.0; Tue, 30 Jul 2019 15:25:47 -0400
-From:   Hongwei Zhang <hongweiz@ami.com>
-To:     Andrew Jeffery <andrew@aj.id.au>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        <linux-gpio@vger.kernel.org>
-CC:     Hongwei Zhang <hongweiz@ami.com>, Joel Stanley <joel@jms.id.au>,
-        <devicetree@vger.kernel.org>, <linux-aspeed@lists.ozlabs.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>
-Subject: [v5 1/2] dt-bindings: gpio: aspeed: Add SGPIO support
-Date:   Tue, 30 Jul 2019 15:25:37 -0400
-Message-ID: <1564514737-4638-1-git-send-email-hongweiz@ami.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1563564291-9692-2-git-send-email-hongweiz@ami.com>
-References: <1563564291-9692-2-git-send-email-hongweiz@ami.com>
+        id S1726518AbfG3W44 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 30 Jul 2019 18:56:56 -0400
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:35801 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726267AbfG3W4z (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 30 Jul 2019 18:56:55 -0400
+Received: by mail-lj1-f196.google.com with SMTP id x25so63741263ljh.2
+        for <linux-gpio@vger.kernel.org>; Tue, 30 Jul 2019 15:56:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=+wN4+Z8EREwCReGzTsl/8rDGQQqk+naMOiOedp6zWJ8=;
+        b=ZAkqDL2WcRbEdbMCJfQ4ECnHrL3z9ekD2j9BetxyfB9dxe3kPqE6rzzpWXPQ4RazWz
+         fkNO9gMIEKquR8OTHMphn6TH28OV/6L3wVIEOhYMMuqkvlPsarUt2xgCkB2qQal7P2ua
+         lOXzYgq2/52OT3d6sooWP/JwIyogxYJQTAwX7OKTUXKwcz6l2jaSLrMVBViuEllp7+9H
+         yiKrTvoAX5zKhd/M7ED3HdtbwIPJ0jrDTmKnSWu5VbBGfGUQuJq21umrdXUDPemTilTJ
+         bd3/ieRg6cStN5wWN9gc/aYUOCv5VcH2HSBLCFiyzUX6EyayebKsyzQuHnxFefSveKvG
+         j9mQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=+wN4+Z8EREwCReGzTsl/8rDGQQqk+naMOiOedp6zWJ8=;
+        b=be/4pHuwZ6nGlzZCI2BcUfOtueD9Wj+STplWhr2U6bqcmiW6ddP1KFYlihOSy+2C7I
+         FYt8EYJQHAJhsAhO7kkBuDp9ILIhT/SmkpLbFDhbRKQ+MOT1KimOHiTZSJm2w3zBa5Ft
+         A58ygFza3usljp1IEofUpr92jQUNef9notLVqR3BbnvMUKTeQrBsnxdiMCGmU1G6g757
+         km/q2EdLy5/TDJjepLAdc5lqrI3iHnRkaor/hiQkeV8pNKWfXaptKvXj3G4P//XSToYT
+         KbiQ+cL8h4yHImYW3tryQ0f7Dyc4Y5O+iuqIJYVb3M/7mvLb6/zJ/1A+j1jKwrrwRdnV
+         SiYg==
+X-Gm-Message-State: APjAAAV4CiJNnC33OdBamEsUER4fGhlP886LwHhZscXteJ4XeQoepT6C
+        o/XM8GS9EqH7DY0vHKH0HHBro4XRXye4kDb2VVzB8g==
+X-Google-Smtp-Source: APXvYqwgS2kvfds6buKdfqOySHYCa8XdVeMDL2lQfLz5OmrNB5zEBhwjL3FIjxO+wKpUnAP2aRtqcANGhUidIP+h+AE=
+X-Received: by 2002:a2e:8195:: with SMTP id e21mr59317626ljg.62.1564527413858;
+ Tue, 30 Jul 2019 15:56:53 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [172.16.98.93]
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrKLMWRmVeSWpSXmKPExsWyRiBhgu7emQ6xBoe2s1vsusxh8WXuKRaL
-        +UfOsVr8Pv+X2WLKn+VMFpseX2O1aF59jtli8/w/jBaXd81hs1h6/SKTReveI+wO3B5X23ex
-        e6yZt4bR4/2NVnaPix+PMXtsWtXJ5nHn2h42j81L6j3Oz1jI6PF5k1wAZxSXTUpqTmZZapG+
-        XQJXxpPbDxkLnvJUvJr5nKWBcT1XFyMnh4SAicSdr61sXYxcHEICu5gktq+ewg7hHGaUePRr
-        KiNIFZuAmsTezXOYQGwRgTyJw+vfsoIUMQucYpKYsa+TFSQhLGAnsX72MWYQm0VAVWLT8s1g
-        zbwC9hKHt6xgg1gnJ3HzXCdYDaeAg8Tzy11A2ziAttlLrG4ShygXlDg58wkLiM0sICFx8MUL
-        sHIhAVmJW4ceM0GMUZB43veYZQKjwCwkLbOQtCxgZFrFKJRYkpObmJmTXm6ol5ibqZecn7uJ
-        ERIVm3Ywtlw0P8TIxMF4iFGCg1lJhHexuH2sEG9KYmVValF+fFFpTmrxIUZpDhYlcd6Va77F
-        CAmkJ5akZqemFqQWwWSZODilGhgT9ku+CJGXXdVbJtz580GtjNLRVUcruy2vNFusMj41ufj/
-        nPL3O8T+NCVcSPvQxKtyXfvK2UiFS9un6vrtNDY+kRjevcamj1137rHgS2siZrJU17j53G57
-        rrnp22K2N8bCXgESNyOlHT/f4wrgXbn1XlfCs9dt26xeps7peFXEtuVV6c81lppKLMUZiYZa
-        zEXFiQBMtJWHeAIAAA==
+References: <20190730104337.21235-1-andriy.shevchenko@linux.intel.com>
+In-Reply-To: <20190730104337.21235-1-andriy.shevchenko@linux.intel.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Wed, 31 Jul 2019 00:56:41 +0200
+Message-ID: <CACRpkdaxC_b+U4gao9_Mf0XZKVWsyComUn0Z9KrQ88m_WW_LRw@mail.gmail.com>
+Subject: Re: [PATCH v2 1/3] gpiolib: of: Reshuffle contents of consumer.h for
+ new library layout
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        kbuild test robot <lkp@intel.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hello Linus and Andrew,
+On Tue, Jul 30, 2019 at 12:43 PM Andy Shevchenko
+<andriy.shevchenko@linux.intel.com> wrote:
 
-Thanks for your detailed comments, I just submitted v6 of our update:
-_http://patchwork.ozlabs.org/cover/1139035/
-_http://patchwork.ozlabs.org/patch/1139038/
-_http://patchwork.ozlabs.org/patch/1139040/
+> Kernel build bot reported a compilation error after the commit
+>
+>   f626d6dfb709 ("gpio: of: Break out OF-only code"):
+>
+> drivers/gpio/gpiolib-devres.o: In function `devm_gpiod_get_from_of_node':
+> gpiolib-devres.c:(.text+0x19a): undefined reference to `gpiod_get_from_of_node'
+>
+> This happens due to move the latter under umbrella of CONFIG_OF_GPIO while
+> customer.h contains staled data.
+>
+> Fix it by reshuffling contents of consumer.h to satisfy build dependencies.
+>
+> Reported-by: kbuild test robot <lkp@intel.com>
+> Fixes: f626d6dfb709 ("gpio: of: Break out OF-only code"):
+> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> ---
+> v2: no change
 
-please ignore my previous patches sent on 07/28, they does not have proper serial
-title and one of the patch is missing.
+Patch applied. THANKS for fixing this, I am on vacation so working
+on this a bit left-handedly.
 
---Hongwei
-
-> From:	Linus Walleij <linus.walleij@linaro.org>
-> Sent:	Monday, July 29, 2019 5:57 PM
-> To:	Andrew Jeffery
-> Cc:	Hongwei Zhang; open list:GPIO SUBSYSTEM; Joel Stanley; open list:OPEN FIRMWARE AND 
-> FLATTENED DEVICE TREE BINDINGS; linux-aspeed; Bartosz Golaszewski; Rob Herring; Mark Rutland; 
-> linux-kernel@vger.kernel.org; Linux ARM
-> Subject:	Re: [v5 1/2] dt-bindings: gpio: aspeed: Add SGPIO support
-> 
-> On Mon, Jul 29, 2019 at 2:19 AM Andrew Jeffery <andrew@aj.id.au> wrote:
-> 
-> > The behaviour is to periodically emit the state of all enabled GPIOs 
-> > (i.e. the ngpios value), one per bus clock cycle. There's no explicit 
-> > addressing scheme, the protocol encodes the value for a given GPIO by 
-> > its position in the data stream relative to a pulse on the "load data"
-> > (LD) line, whose envelope covers the clock cycle for the last GPIO in 
-> > the sequence. Similar to SPI the bus has both out and in lines, which 
-> > cater to output/input GPIOs.
-> >
-> > A rough timing diagram for a 16-GPIO configuration looks like what 
-> > I've pasted here:
-> >
-> > https://gist.github.com/amboar/c9543af1957854474b8c05ab357f0675
-> 
-> OK that is complex. I agree we need to keep this driver together.
-> 
-> Yours,
-> Linus Walleij
+Yours,
+Linus Walleij
