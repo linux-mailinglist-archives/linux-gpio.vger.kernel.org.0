@@ -2,181 +2,185 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id D179279DBE
-	for <lists+linux-gpio@lfdr.de>; Tue, 30 Jul 2019 03:09:36 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BE84179E88
+	for <lists+linux-gpio@lfdr.de>; Tue, 30 Jul 2019 04:16:25 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728594AbfG3BJg (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 29 Jul 2019 21:09:36 -0400
-Received: from new3-smtp.messagingengine.com ([66.111.4.229]:58955 "EHLO
-        new3-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728351AbfG3BJf (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>);
-        Mon, 29 Jul 2019 21:09:35 -0400
-Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailnew.nyi.internal (Postfix) with ESMTP id 3E9B01BF6;
-        Mon, 29 Jul 2019 21:09:34 -0400 (EDT)
-Received: from imap2 ([10.202.2.52])
-  by compute4.internal (MEProxy); Mon, 29 Jul 2019 21:09:34 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aj.id.au; h=
-        mime-version:message-id:in-reply-to:references:date:from:to:cc
-        :subject:content-type; s=fm3; bh=eN6StjwqcbFvBGm255dFKEDbANWqniw
-        k/QHr4l2B8Yk=; b=f9JjiX8oQOMQXV/cuozHUCB4pzOqt3MgGW5j+ieLKBluIxW
-        9qTwq16SPmkbKZ2pU0uVnnexkGeGhPnlufG7wmA9iOB42se/Uf/FR/SHRk5vwHMb
-        rQ0Kj3wnv5HEKZnzXLIyQSCyTI2BpBfwflzcNYzctlZqmI+CiNJ4l4JgrgYy6r1m
-        NJ9miZpWKnckdH5OlyCDvoQhsp3Kvkw/0tg7IdjqtutG3J+VFry8r4NtTXuQMCpM
-        Y6Et7QDm66hADgvC81l39Y6KDmUmhQwayD2oFZUbxxLT5/9WVXrd39o8b0C+4VIy
-        iVWvG6oFint2AoFBApfI8FzvRiWseYT3VPb+7zg==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=eN6Stj
-        wqcbFvBGm255dFKEDbANWqniwk/QHr4l2B8Yk=; b=RSnK+zp5XQ2Pj5z+B23X3U
-        FxtVThX/Pze3piInoA1RfkTO/LJ0EGEq98eNVSd1eayua0j3DZTD7yqo/zuzj9Hz
-        BJWf2XEEi2wSi2MjH8aXEb8hcpxabAx/M0QK+2q9n9lpZ9NWpF3alykQ+Bv6xtgx
-        /XWZAievp2xWgqhiB2Ym8D5RZ+YPNw4BrNm2whyqOcknssCzFWm/Z3P1yuBzQNoj
-        11ctvzcg61B2PnNNPi7X5dSMMmi9/DyZdlAGJb8biY1URabakNUt7sRc807uNwMX
-        itWgUD4bHFSaAjDddJCQ1vLncAc4VDDt0s59RTrrMKeF8c9RXtnLxt12QtMWj8fg
-        ==
-X-ME-Sender: <xms:ypg_XWD0fvgphH0bKAtdbmjhhV4XR9GAIDKsRB10kWINyjXLH4Wc0g>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduvddrledvgdegvdcutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpefofgggkfgjfhffhffvufgtsehttdertderredtnecuhfhrohhmpedftehnughr
-    vgifucflvghffhgvrhihfdcuoegrnhgurhgvfiesrghjrdhiugdrrghuqeenucfrrghrrg
-    hmpehmrghilhhfrhhomheprghnughrvgifsegrjhdrihgurdgruhenucevlhhushhtvghr
-    ufhiiigvpedt
-X-ME-Proxy: <xmx:ypg_XaL_sEFBx_mHFMgwgdfWYKnqPOJC6LSyKiv9-P9kg1toiahNEg>
-    <xmx:ypg_XZlbMtW5I8SQZPxmkF3EJHXElDHsuPGNjGotVFbMyyLiQfev6w>
-    <xmx:ypg_XYF-Rlh1zv2TKQf5VjLD5Ztb6lISs-krArhgwH0JB916oBBO-A>
-    <xmx:zpg_XY3LE8XATRTj3ADjatzlERoBIPOZF0DQiunqP5xql6r5inXSmQ>
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-        id C726FE00A2; Mon, 29 Jul 2019 21:09:30 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.1.6-736-gdfb8e44-fmstable-20190718v2
-Mime-Version: 1.0
-Message-Id: <fd8e57f0-aee2-403e-b6fb-76d0c18fe306@www.fastmail.com>
-In-Reply-To: <CAL_JsqJ+sFDG8eKbV3gvmqVHx+otWbki4dY213apzXgfhbXXEw@mail.gmail.com>
-References: <20190726053959.2003-1-andrew@aj.id.au>
- <CAL_JsqJ+sFDG8eKbV3gvmqVHx+otWbki4dY213apzXgfhbXXEw@mail.gmail.com>
-Date:   Tue, 30 Jul 2019 10:39:50 +0930
-From:   "Andrew Jeffery" <andrew@aj.id.au>
-To:     "Rob Herring" <robh+dt@kernel.org>
-Cc:     linux-aspeed@lists.ozlabs.org,
-        "Mark Rutland" <mark.rutland@arm.com>,
-        "Joel Stanley" <joel@jms.id.au>, devicetree@vger.kernel.org,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "Adriana Kobylak" <anoo@us.ibm.com>,
-        "Alexander A. Filippov" <a.filippov@yadro.com>,
-        "Arnd Bergmann" <arnd@arndb.de>,
-        =?UTF-8?Q?YangBrianC=2EW_=E6=A5=8A=E5=98=89=E5=81=89_TAO?= 
-        <yang.brianc.w@inventec.com>, "Corey Minyard" <minyard@acm.org>,
-        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
-        "Haiyue Wang" <haiyue.wang@linux.intel.com>,
-        "John Wang" <wangzqbj@inspur.com>,
-        "Ken Chen" <chen.kenyy@inventec.com>,
-        "Linus Walleij" <linus.walleij@linaro.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        openipmi-developer@lists.sourceforge.net,
-        "Patrick Venture" <venture@google.com>,
-        "Stefan M Schaeckeler" <sschaeck@cisco.com>,
-        "Tao Ren" <taoren@fb.com>, "Xo Wang" <xow@google.com>,
-        yao.yuan@linaro.org
-Subject: Re: [RFC-ish PATCH 00/17] Clean up ASPEED devicetree warnings
-Content-Type: text/plain
+        id S1731175AbfG3CQY (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 29 Jul 2019 22:16:24 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:51786 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729020AbfG3CQY (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 29 Jul 2019 22:16:24 -0400
+Received: by mail-wm1-f65.google.com with SMTP id 207so55557532wma.1
+        for <linux-gpio@vger.kernel.org>; Mon, 29 Jul 2019 19:16:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernelci-org.20150623.gappssmtp.com; s=20150623;
+        h=message-id:date:mime-version:content-transfer-encoding:subject:to
+         :from;
+        bh=YcpX1iAuUd0pNUtAgZdcMrTJ1oUgoLuJvAlFq2eZh0I=;
+        b=neNTFq+Vx9l4h8NPyvwars/A76FJqeD8Sf3K/yYHK8SjiE6vWQty79tyv8Vjf2Asq/
+         6Bx4nwl8bHzmOj43G/k2SPRprwrc3sckRmzDelfw27A3b0It9kRzHmn1M8IxloiTPxDZ
+         t3LIDsAPtP5sy7bN/B7zPFD+gDl3BuKc6qZuNTADnxE0txC1ONegsBFv8ccqKf9gFJDN
+         cVjRHw1xA88nYMJEReqs8GcF6HQwvhs5MZge4Z8gzBuwaL8bD38RMQJC8PD/wGhYmgM3
+         hQHjDpEFF/gL9D5Eqn1gAfk+RDppsLqePK4qskU3HB5waVGKdj/bOvRpqrEqj9gZhooM
+         aXIw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:date:mime-version
+         :content-transfer-encoding:subject:to:from;
+        bh=YcpX1iAuUd0pNUtAgZdcMrTJ1oUgoLuJvAlFq2eZh0I=;
+        b=Kcz8XCAQNTZD1gZNR5uJIj2nTMz/P79PpRl9fCxIlj8eXsbXpPOVSll0TsM1D8MQN8
+         596aqaw7PxbYkcl+w2vp2I4m8xr3gqA9Q9wIGDYCeUmTiiJpmtB6JZNj/zNpxeNdk6ER
+         J13A/scJs80K26VV6M//Izp860vH92qq1wXfWJYarX4eCAMNVaH0idbEbYvzMI8BCjSi
+         MycvzCyKupazVW4XFwIZUwYIIaJFqkweIuv3D4FLcm3A8eA7ADJF5TIkAzGZasH5XE6C
+         Lw0eDdeBcCnZ38VaP6jlqXFDTc63aLvlK08qYhubmkJ8ShdQgQPgYObdGsch9a5j/qm0
+         7FPg==
+X-Gm-Message-State: APjAAAU4WG2yeMqlwpld+WIVf9jM8VQK6CJYpejp30bnxsC3hqIdnFFm
+        kHaEepcYSsVzC5Dhh5mhcJNt/Ukf86Q=
+X-Google-Smtp-Source: APXvYqyfiQ7p+W5Ti91BFuHJXurIq3yVZixzkMr4LTdihMT+V76OCqe+S/mYT/JZBoTWwd8RS2m6Tw==
+X-Received: by 2002:a7b:c857:: with SMTP id c23mr107569658wml.51.1564452981326;
+        Mon, 29 Jul 2019 19:16:21 -0700 (PDT)
+Received: from [148.251.42.114] ([2a01:4f8:201:9271::2])
+        by smtp.gmail.com with ESMTPSA id q1sm48431963wmq.25.2019.07.29.19.16.20
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 29 Jul 2019 19:16:20 -0700 (PDT)
+Message-ID: <5d3fa874.1c69fb81.ec48.8c95@mx.google.com>
+Date:   Mon, 29 Jul 2019 19:16:20 -0700 (PDT)
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+X-Kernelci-Tree: linusw
+X-Kernelci-Kernel: v5.3-rc1-4-gd95da993383c
+X-Kernelci-Branch: fixes
+X-Kernelci-Report-Type: build
+Subject: linusw/fixes build: 6 builds: 0 failed, 6 passed,
+ 13 warnings (v5.3-rc1-4-gd95da993383c)
+To:     linux-gpio@vger.kernel.org, fellows@kernelci.org
+From:   "kernelci.org bot" <bot@kernelci.org>
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+linusw/fixes build: 6 builds: 0 failed, 6 passed, 13 warnings (v5.3-rc1-4-g=
+d95da993383c)
+
+Full Build Summary: https://kernelci.org/build/linusw/branch/fixes/kernel/v=
+5.3-rc1-4-gd95da993383c/
+
+Tree: linusw
+Branch: fixes
+Git Describe: v5.3-rc1-4-gd95da993383c
+Git Commit: d95da993383c78f7efd25957ba3af23af4b1c613
+Git URL: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-gpio.=
+git/
+Built: 6 unique architectures
+
+Warnings Detected:
+
+arc:
+    nsim_hs_defconfig (gcc-8): 2 warnings
+
+arm64:
+
+arm:
+    multi_v7_defconfig (gcc-8): 6 warnings
+
+mips:
+    32r2el_defconfig (gcc-8): 3 warnings
+
+riscv:
+    defconfig (gcc-8): 2 warnings
+
+x86_64:
 
 
-On Tue, 30 Jul 2019, at 10:23, Rob Herring wrote:
-> On Thu, Jul 25, 2019 at 11:40 PM Andrew Jeffery <andrew@aj.id.au> wrote:
-> >
-> > Hello,
-> >
-> > The aim of this series is to minimise/eliminate all the warnings from the
-> > ASPEED devicetrees. It mostly achieves its goal, as outlined below.
-> >
-> > Using `aspeed_g5_defconfig` we started with the follow warning count:
-> >
-> >     $ make dtbs 2>&1 >/dev/null | wc -l
-> >     218
-> >
-> > and after the full series is applied we have:
-> >
-> >     $ make dtbs 2>&1 >/dev/null | wc -l
-> >     2
-> >
-> > for a 100x reduction.
-> >
-> > Getting there though isn't without some potential controversy, which I've saved
-> > for the last half of the series. The following patches I think are in pretty
-> > good shape:
-> >
-> >   ARM: dts: aspeed-g5: Move EDAC node to APB
-> >   ARM: dts: aspeed-g5: Use recommended generic node name for SDMC
-> >   ARM: dts: aspeed-g5: Fix aspeed,external-nodes description
-> >   ARM: dts: vesnin: Add unit address for memory node
-> >   ARM: dts: fp5280g2: Cleanup gpio-keys-polled properties
-> >   ARM: dts: swift: Cleanup gpio-keys-polled properties
-> >   ARM: dts: witherspoon: Cleanup gpio-keys-polled properties
-> >   ARM: dts: aspeed: Cleanup lpc-ctrl and snoop regs
-> >   ARM: dts: ibm-power9-dual: Add a unit address for OCC nodes
-> >
-> > With these patches applied we get to:
-> >
-> >     $ make dtbs 2>&1 >/dev/null | wc -l
-> >     144
-> >
-> > So they make a dent, but fail to clean up the bulk of the issues. From here
-> > I've mixed in some binding and driver changes with subsequent updates to the
-> > devicetrees:
-> >
-> >   dt-bindings: pinctrl: aspeed: Add reg property as a hint
-> >   dt-bindings: misc: Document reg for aspeed,p2a-ctrl nodes
-> >   ARM: dts: aspeed: Add reg hints to syscon children
-> >   dt-bindings: ipmi: aspeed: Introduce a v2 binding for KCS
-> >   ipmi: kcs: Finish configuring ASPEED KCS device before enable
-> >   ipmi: kcs: aspeed: Implement v2 bindings
-> >   ARM: dts: aspeed-g5: Change KCS nodes to v2 binding
-> >   ARM: dts: aspeed-g5: Sort LPC child nodes by unit address
-> >
-> > By `dt-bindings: ipmi: aspeed: Introduce a v2 binding for KCS` the warnings are
-> > reduced to:
-> >
-> >     $ make dtbs 2>&1 >/dev/null | wc -l
-> >     125
-> >
-> > The bang-for-buck is in fixing up the KCS bindings which removes all-but-two of
-> > the remaining warnings (which we can't feasibly remove), but doing so forces
-> > code changes (which I'd avoided up until this point).
-> >
-> > Reflecting broadly on the fixes, I think I've made a mistake way back by using
-> > syscon/simple-mfds to expose the innards of the SCU and LPC controllers in the
-> > devicetree. This series cleans up what's currently there, but I have half a
-> > mind to rev the SCU and LPC bindings to not use simple-mfd and instead have a
-> > driver implementation that uses `platform_device_register_full()` or similar to
-> > deal with the mess.
-> >
-> > Rob - I'm looking for your thoughts here and on the series, I've never felt
-> > entirely comfortable with what I cooked up. Your advice would be appreciated.
-> 
-> The series generally looks fine to me from a quick scan. As far as
-> dropping 'simple-mfd', having less fine grained description in DT is
-> generally my preference. It comes down to whether what you have
-> defined is maintainable. As most of it is just additions, I think what
-> you have is fine. Maybe keep all this in mind for the next chip
-> depending how the SCU and LPC change.
+Warnings summary:
 
-Okay, I think the timing of that suggestion is good given where things are with
-the AST2600. I'll keep that in mind.
+    7    <stdin>:1511:2: warning: #warning syscall clone3 not implemented [=
+-Wcpp]
+    1    arch/arm/boot/dts/bcm47094-linksys-panamera.dts:129.4-18: Warning =
+(reg_format): /mdio-bus-mux/mdio@200:reg: property has invalid length (4 by=
+tes) (#address-cells =3D=3D 2, #size-cells =3D=3D 1)
+    1    arch/arm/boot/dts/bcm47094-linksys-panamera.dts:128.22-132.5: Warn=
+ing (avoid_default_addr_size): /mdio-bus-mux/mdio@200: Relying on default #=
+size-cells value
+    1    arch/arm/boot/dts/bcm47094-linksys-panamera.dts:128.22-132.5: Warn=
+ing (avoid_default_addr_size): /mdio-bus-mux/mdio@200: Relying on default #=
+address-cells value
+    1    arch/arm/boot/dts/bcm47094-linksys-panamera.dtb: Warning (spi_bus_=
+reg): Failed prerequisite 'reg_format'
+    1    arch/arm/boot/dts/bcm47094-linksys-panamera.dtb: Warning (pci_devi=
+ce_bus_num): Failed prerequisite 'reg_format'
+    1    arch/arm/boot/dts/bcm47094-linksys-panamera.dtb: Warning (i2c_bus_=
+reg): Failed prerequisite 'reg_format'
 
-Consensus so far seems to be that the series is fine. I'll split it up and send out
-the sub-series to the relevant lists with the acks accumulated here.
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D
 
-Thanks all for taking a look.
+Detailed per-defconfig build reports:
 
-Andrew
+---------------------------------------------------------------------------=
+-----
+32r2el_defconfig (mips, gcc-8) =E2=80=94 PASS, 0 errors, 3 warnings, 0 sect=
+ion mismatches
+
+Warnings:
+    <stdin>:1511:2: warning: #warning syscall clone3 not implemented [-Wcpp]
+    <stdin>:1511:2: warning: #warning syscall clone3 not implemented [-Wcpp]
+    <stdin>:1511:2: warning: #warning syscall clone3 not implemented [-Wcpp]
+
+---------------------------------------------------------------------------=
+-----
+defconfig (riscv, gcc-8) =E2=80=94 PASS, 0 errors, 2 warnings, 0 section mi=
+smatches
+
+Warnings:
+    <stdin>:1511:2: warning: #warning syscall clone3 not implemented [-Wcpp]
+    <stdin>:1511:2: warning: #warning syscall clone3 not implemented [-Wcpp]
+
+---------------------------------------------------------------------------=
+-----
+defconfig (arm64, gcc-8) =E2=80=94 PASS, 0 errors, 0 warnings, 0 section mi=
+smatches
+
+---------------------------------------------------------------------------=
+-----
+multi_v7_defconfig (arm, gcc-8) =E2=80=94 PASS, 0 errors, 6 warnings, 0 sec=
+tion mismatches
+
+Warnings:
+    arch/arm/boot/dts/bcm47094-linksys-panamera.dts:129.4-18: Warning (reg_=
+format): /mdio-bus-mux/mdio@200:reg: property has invalid length (4 bytes) =
+(#address-cells =3D=3D 2, #size-cells =3D=3D 1)
+    arch/arm/boot/dts/bcm47094-linksys-panamera.dtb: Warning (pci_device_bu=
+s_num): Failed prerequisite 'reg_format'
+    arch/arm/boot/dts/bcm47094-linksys-panamera.dtb: Warning (i2c_bus_reg):=
+ Failed prerequisite 'reg_format'
+    arch/arm/boot/dts/bcm47094-linksys-panamera.dtb: Warning (spi_bus_reg):=
+ Failed prerequisite 'reg_format'
+    arch/arm/boot/dts/bcm47094-linksys-panamera.dts:128.22-132.5: Warning (=
+avoid_default_addr_size): /mdio-bus-mux/mdio@200: Relying on default #addre=
+ss-cells value
+    arch/arm/boot/dts/bcm47094-linksys-panamera.dts:128.22-132.5: Warning (=
+avoid_default_addr_size): /mdio-bus-mux/mdio@200: Relying on default #size-=
+cells value
+
+---------------------------------------------------------------------------=
+-----
+nsim_hs_defconfig (arc, gcc-8) =E2=80=94 PASS, 0 errors, 2 warnings, 0 sect=
+ion mismatches
+
+Warnings:
+    <stdin>:1511:2: warning: #warning syscall clone3 not implemented [-Wcpp]
+    <stdin>:1511:2: warning: #warning syscall clone3 not implemented [-Wcpp]
+
+---------------------------------------------------------------------------=
+-----
+x86_64_defconfig (x86_64, gcc-8) =E2=80=94 PASS, 0 errors, 0 warnings, 0 se=
+ction mismatches
+
+---
+For more info write to <info@kernelci.org>
