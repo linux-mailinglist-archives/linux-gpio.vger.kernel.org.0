@@ -2,142 +2,90 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id C84947B205
-	for <lists+linux-gpio@lfdr.de>; Tue, 30 Jul 2019 20:33:00 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2B8327B2D6
+	for <lists+linux-gpio@lfdr.de>; Tue, 30 Jul 2019 21:04:24 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387565AbfG3Scz (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 30 Jul 2019 14:32:55 -0400
-Received: from mga18.intel.com ([134.134.136.126]:50992 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387563AbfG3Scw (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Tue, 30 Jul 2019 14:32:52 -0400
-X-Amp-Result: UNSCANNABLE
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 30 Jul 2019 11:32:51 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,327,1559545200"; 
-   d="scan'208";a="176911387"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.145])
-  by orsmga006.jf.intel.com with ESMTP; 30 Jul 2019 11:32:49 -0700
-Received: from andy by smile with local (Exim 4.92)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1hsWvX-0007II-UA; Tue, 30 Jul 2019 21:32:47 +0300
-Date:   Tue, 30 Jul 2019 21:32:47 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Stephen Boyd <swboyd@chromium.org>
-Cc:     linux-kernel@vger.kernel.org,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-gpio@vger.kernel.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>
-Subject: Re: [PATCH v6 34/57] pinctrl: intel: Remove dev_err() usage after
- platform_get_irq()
-Message-ID: <20190730183247.GI23480@smile.fi.intel.com>
-References: <20190730181557.90391-1-swboyd@chromium.org>
- <20190730181557.90391-35-swboyd@chromium.org>
+        id S1727625AbfG3TEW (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 30 Jul 2019 15:04:22 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:43442 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726133AbfG3TEW (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 30 Jul 2019 15:04:22 -0400
+Received: by mail-wr1-f66.google.com with SMTP id p13so66911291wru.10
+        for <linux-gpio@vger.kernel.org>; Tue, 30 Jul 2019 12:04:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=YByX/MIEikMo6y+/BsApUfFIwT5Nds6qeZI/FLz+iII=;
+        b=WJ+4MQqoD9Q3uf+EAOcOO8aRe05TiQmbFfTElKl33AA8RZrjfXZ+aG8+irnIj+XI4Q
+         LBETQTjaFuYsoLAUGd63TFC4yAWQk6UdApDMkFZjEckz/3CXhb4HubQa6xt4y6BeRADT
+         bVu4BRzhzWdnWtkMxAamu061nZFREfmqXVbBSpujNOi9vCL4XYLfdWRJI6ALHIQTm6Qb
+         T2qsQSJ88fgsMdTG+uvLm/uSeqYHMBTGVQGUDYINQuRmz5nBH+lq8K5+MEe0ACdtdMeH
+         71Jm4zZeMeZ2ABoIuLrOgK7N+e/jLRSW7gx6XSO5vC1pvEGpCX7EFKPYpAN2PPuvxFS2
+         g/wg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=YByX/MIEikMo6y+/BsApUfFIwT5Nds6qeZI/FLz+iII=;
+        b=mFSzWdN/FbNvqnFkAxVr8apyEaJPsrCws5bW1p3yF6LbyMTJiXXDzZodyVBUJ/GEzW
+         GHKftqO0FpE3wZdo9E3ysvlNSqs1fNgaIEJAD2dyV60IZ5qqlR+X19u/YKasgDkMeksY
+         YXvcG2N6+U43y92RdKBrBTWHWg0aFB3Vao6mgmDOugoWEwtJ/sNHXO1/y/c5vd+kDq9Z
+         jAFMu1lRD/KJpoQ0NQ/2AgOtnDYDFpOazGuXwtagBR9xd65y0DMGzXkj2Vhs4B8VVsLK
+         qHGN1ixRds2qlcEEi1CFZm4QlHpNaYUNl6WZf4j5afNUwLiN1OymIpgmBkJVweBfhgEW
+         UdZg==
+X-Gm-Message-State: APjAAAW7ZE0sHvwxpP/st9MLldTPIGd9K91vaNNsrTqqj7IzzqacHb7T
+        D3O4Mev8K//PYthAzYSXGtg=
+X-Google-Smtp-Source: APXvYqyn9kR5ox2tUYNuHCQwQ0oJJf99Zz5HJW+MbxcGa1UsxCTY2cv5FAD75cN3D3eVQsJgpVvCRw==
+X-Received: by 2002:a5d:5348:: with SMTP id t8mr24009159wrv.159.1564513460919;
+        Tue, 30 Jul 2019 12:04:20 -0700 (PDT)
+Received: from localhost.localdomain ([141.226.31.91])
+        by smtp.gmail.com with ESMTPSA id a84sm82414251wmf.29.2019.07.30.12.04.19
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Tue, 30 Jul 2019 12:04:20 -0700 (PDT)
+From:   Ramon Fried <rfried.dev@gmail.com>
+To:     bgolaszewski@baylibre.com
+Cc:     linus.walleij@linaro.org, linux-gpio@vger.kernel.org,
+        Ramon Fried <rfried.dev@gmail.com>
+Subject: [libgpiod] [PATCH] gpioinfo: mark kernel claimed lines as used
+Date:   Tue, 30 Jul 2019 22:04:10 +0300
+Message-Id: <20190730190410.24786-1-rfried.dev@gmail.com>
+X-Mailer: git-send-email 2.22.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190730181557.90391-35-swboyd@chromium.org>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Jul 30, 2019 at 11:15:34AM -0700, Stephen Boyd wrote:
-> We don't need dev_err() messages when platform_get_irq() fails now that
-> platform_get_irq() prints an error message itself when something goes
-> wrong. Let's remove these prints with a simple semantic patch.
-> 
-> // <smpl>
-> @@
-> expression ret;
-> struct platform_device *E;
-> @@
-> 
-> ret =
-> (
-> platform_get_irq(E, ...)
-> |
-> platform_get_irq_byname(E, ...)
-> );
-> 
-> if ( \( ret < 0 \| ret <= 0 \) )
-> {
-> (
-> -if (ret != -EPROBE_DEFER)
-> -{ ...
-> -dev_err(...);
-> -... }
-> |
-> ...
-> -dev_err(...);
-> )
-> ...
-> }
-> // </smpl>
-> 
-> While we're here, remove braces on if statements that only have one
-> statement (manually).
+In case where the GPIOLINE_FLAG_KERNEL flag was set because of muxing,
+The used column was still showing the pin as "unused"
+Fix that by writing "used".
 
-Also, per file, but I will do it myself when applying, thanks!
+Signed-off-by: Ramon Fried <rfried.dev@gmail.com>
+---
+ tools/gpioinfo.c | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
 
-> 
-> Cc: Linus Walleij <linus.walleij@linaro.org>
-> Cc: linux-gpio@vger.kernel.org
-> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Cc: Mika Westerberg <mika.westerberg@linux.intel.com>
-> Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> Signed-off-by: Stephen Boyd <swboyd@chromium.org>
-> ---
-> 
-> Please apply directly to subsystem trees
-> 
->  drivers/pinctrl/intel/pinctrl-cherryview.c | 4 +---
->  drivers/pinctrl/intel/pinctrl-intel.c      | 4 +---
->  2 files changed, 2 insertions(+), 6 deletions(-)
-> 
-> diff --git a/drivers/pinctrl/intel/pinctrl-cherryview.c b/drivers/pinctrl/intel/pinctrl-cherryview.c
-> index 03ec7a5d9d0b..cd4a69b4c5a8 100644
-> --- a/drivers/pinctrl/intel/pinctrl-cherryview.c
-> +++ b/drivers/pinctrl/intel/pinctrl-cherryview.c
-> @@ -1703,10 +1703,8 @@ static int chv_pinctrl_probe(struct platform_device *pdev)
->  		return PTR_ERR(pctrl->regs);
->  
->  	irq = platform_get_irq(pdev, 0);
-> -	if (irq < 0) {
-> -		dev_err(&pdev->dev, "failed to get interrupt number\n");
-> +	if (irq < 0)
->  		return irq;
-> -	}
->  
->  	pctrl->pctldesc = chv_pinctrl_desc;
->  	pctrl->pctldesc.name = dev_name(&pdev->dev);
-> diff --git a/drivers/pinctrl/intel/pinctrl-intel.c b/drivers/pinctrl/intel/pinctrl-intel.c
-> index a18d6eefe672..0487e8dc7654 100644
-> --- a/drivers/pinctrl/intel/pinctrl-intel.c
-> +++ b/drivers/pinctrl/intel/pinctrl-intel.c
-> @@ -1354,10 +1354,8 @@ static int intel_pinctrl_probe(struct platform_device *pdev,
->  	}
->  
->  	irq = platform_get_irq(pdev, 0);
-> -	if (irq < 0) {
-> -		dev_err(&pdev->dev, "failed to get interrupt number\n");
-> +	if (irq < 0)
->  		return irq;
-> -	}
->  
->  	ret = intel_pinctrl_pm_init(pctrl);
->  	if (ret)
-> -- 
-> Sent by a computer through tubes
-> 
-
+diff --git a/tools/gpioinfo.c b/tools/gpioinfo.c
+index bb17262..85f8758 100644
+--- a/tools/gpioinfo.c
++++ b/tools/gpioinfo.c
+@@ -119,8 +119,11 @@ static void list_lines(struct gpiod_chip *chip)
+ 		     : prinfo(&of, 12, "unnamed");
+ 		printf(" ");
+ 
+-		consumer ? prinfo(&of, 12, "\"%s\"", consumer)
+-			 : prinfo(&of, 12, "unused");
++		if (gpiod_line_is_used(line) && !consumer)
++			prinfo(&of, 12, "used");
++		else
++			consumer ? prinfo(&of, 12, "\"%s\"", consumer)
++				 : prinfo(&of, 12, "unused");
+ 		printf(" ");
+ 
+ 		prinfo(&of, 8, "%s ", direction == GPIOD_LINE_DIRECTION_INPUT
 -- 
-With Best Regards,
-Andy Shevchenko
-
+2.22.0
 
