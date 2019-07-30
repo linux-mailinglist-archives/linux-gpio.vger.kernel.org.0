@@ -2,266 +2,68 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id CCE6F7A62B
-	for <lists+linux-gpio@lfdr.de>; Tue, 30 Jul 2019 12:43:43 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AB6DA7A63F
+	for <lists+linux-gpio@lfdr.de>; Tue, 30 Jul 2019 12:50:09 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728574AbfG3Knm (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 30 Jul 2019 06:43:42 -0400
-Received: from mga04.intel.com ([192.55.52.120]:35851 "EHLO mga04.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726751AbfG3Knm (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Tue, 30 Jul 2019 06:43:42 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 30 Jul 2019 03:43:42 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,326,1559545200"; 
-   d="scan'208";a="346949225"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by orsmga005.jf.intel.com with ESMTP; 30 Jul 2019 03:43:38 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1003)
-        id DC83F254; Tue, 30 Jul 2019 13:43:37 +0300 (EEST)
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        linux-gpio@vger.kernel.org,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>, linux-acpi@vger.kernel.org
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        Liam Girdwood <liam.r.girdwood@linux.intel.com>,
-        Jie Yang <yang.jie@linux.intel.com>,
-        Mark Brown <broonie@kernel.org>, alsa-devel@alsa-project.org
-Subject: [PATCH v2 3/3] gpiolib-acpi: Move acpi_dev_add_driver_gpios() et al to consumer.h
-Date:   Tue, 30 Jul 2019 13:43:37 +0300
-Message-Id: <20190730104337.21235-3-andriy.shevchenko@linux.intel.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190730104337.21235-1-andriy.shevchenko@linux.intel.com>
-References: <20190730104337.21235-1-andriy.shevchenko@linux.intel.com>
+        id S1729661AbfG3KuJ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 30 Jul 2019 06:50:09 -0400
+Received: from mail-lf1-f44.google.com ([209.85.167.44]:41996 "EHLO
+        mail-lf1-f44.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727868AbfG3KuJ (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 30 Jul 2019 06:50:09 -0400
+Received: by mail-lf1-f44.google.com with SMTP id s19so44367895lfb.9
+        for <linux-gpio@vger.kernel.org>; Tue, 30 Jul 2019 03:50:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:from:date:message-id:subject:to:cc;
+        bh=F31cQ0ne3p3xFuaSlxROjZYeTvKp+9tCo1IZnDyB5kc=;
+        b=HRkCSNByu31f39s+lOU22nTucb6QbcbWxwwj2ZbJu2tlOmUkF6O1+iJIl6/diz7cjg
+         VJ144Pqm1gbPTn1+ZPtAKLEjE7uhacH6kI7XZaj5nsEooGsiyEsFUT2qdQqLNRMurpZA
+         NGSIC3XDmnQdAJOWMInyzabVKWoeGcS/K3+4nJ7RcucAwhGOpxPVD2pZfD4+1slua4f4
+         ZwN9ay3V3Jgh6yIYHl+k6FMe66BVMzDCRsvS7wpUqsXSaswZbsSls5E28EfPSZEO6wcN
+         LfzadRc9jB/AVts4r+OUvrgBhohfoKa+tsEuimsamKkhxylbovNJwMwJmdclpDIuTMj0
+         lMjA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
+        bh=F31cQ0ne3p3xFuaSlxROjZYeTvKp+9tCo1IZnDyB5kc=;
+        b=h9gIJmSQ8CUtRcpAkOp6Yt7Wew295Y2UDgYxybgf1TeVfr5UfmJXyw7i3jAo9Xygjl
+         NfitLRD5pvoRZhxvkUdVEe7Spjt2QaYKbUsSfO9yzaugIM1M8tQOhB9gY7qcZRFibSZn
+         frlLhv6w5A4j9NE0rpAQX2BhfLiFhJ6W9GOQOZWE1opftrxQ2WBeikVIEuqFa3qzLHNI
+         VhomlU9Q7MXMYle3Kbhd4Ttb8H/7ImX9RHZGHXsqegrZoTGJW8LLz83nsfDQ1EwBsFuD
+         ia39xa4cp1uT8h2lBPx3SFNwvb/zt25eRY/Z0TXv/sRsteg8Mp3XlWQXL1ZqpKzDAzAC
+         Wq7w==
+X-Gm-Message-State: APjAAAUVz7CXE7CxbfzG/zSdSBdbOi7QJffRqQzAxpHQM65HA2CX9b6I
+        tJaVwASo/SWGJ+jaeHZOLrf2NOrsIMLXwBTHHyCb4g==
+X-Google-Smtp-Source: APXvYqy3j01W1DiK77paO5P6wAyETN2Q1v+EqaF8qkc9KhP+lBvg1oeHOI1YhDj6KVh1ScwmIbAm5j/jergMRP5DZrE=
+X-Received: by 2002:a19:ed0c:: with SMTP id y12mr246679lfy.191.1564483806778;
+ Tue, 30 Jul 2019 03:50:06 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+From:   Naresh Kamboju <naresh.kamboju@linaro.org>
+Date:   Tue, 30 Jul 2019 16:19:55 +0530
+Message-ID: <CA+G9fYtWFhak1_N1sAJk=HGo+yzYvrU9DDfZRV_3a8C9JUMT0Q@mail.gmail.com>
+Subject: linux-next 20190730: undefined reference to `gpiod_get_from_of_node'
+To:     Linux-Next Mailing List <linux-next@vger.kernel.org>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        open list <linux-kernel@vger.kernel.org>,
+        bgolaszewski@baylibre.com, linux-gpio@vger.kernel.org,
+        lkft-triage@lists.linaro.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-The API, which belongs to GPIO library, is foreign to ACPI headers. Earlier
-we moved out I²C out of the latter, and now it's time for
-acpi_dev_add_driver_gpios() et al.
+Today's linux next 20190730 build broken for x86_64 and i386.
 
-For time being the acpi_gpio_get_irq_resource() and acpi_dev_gpio_irq_get()
-are left untouched as they need more thought about.
+drivers/gpio/gpiolib-devres.o: In function `devm_gpiod_get_from_of_node':
+gpiolib-devres.c:(.text+0x203): undefined reference to `gpiod_get_from_of_node'
+Makefile:1063: recipe for target 'vmlinux' failed
+make[1]: *** [vmlinux] Error 1
 
-Note, it requires uninline acpi_dev_remove_driver_gpios() to keep purity of
-consumer.h.
+Full build log link,
+https://ci.linaro.org/job/openembedded-lkft-linux-next/DISTRO=lkft,MACHINE=intel-corei7-64,label=docker-lkft/574/consoleText
 
-Cc: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Cc: Liam Girdwood <liam.r.girdwood@linux.intel.com>
-Cc: Jie Yang <yang.jie@linux.intel.com>
-Cc: Mark Brown <broonie@kernel.org>
-Cc: alsa-devel@alsa-project.org (moderated list:INTEL ASoC DRIVERS)
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
----
-v2: new patch
- drivers/gpio/gpiolib-acpi.c                  |  7 +++
- include/linux/acpi.h                         | 51 ------------------
- include/linux/gpio/consumer.h                | 57 ++++++++++++++++++++
- sound/soc/intel/boards/bytcht_cx2072x.c      |  1 +
- sound/soc/intel/boards/cht_bsw_max98090_ti.c |  1 +
- sound/soc/intel/boards/cht_bsw_rt5672.c      |  1 +
- 6 files changed, 67 insertions(+), 51 deletions(-)
-
-diff --git a/drivers/gpio/gpiolib-acpi.c b/drivers/gpio/gpiolib-acpi.c
-index d54fc6e7c8a9..fdee8afa5339 100644
---- a/drivers/gpio/gpiolib-acpi.c
-+++ b/drivers/gpio/gpiolib-acpi.c
-@@ -383,6 +383,13 @@ int acpi_dev_add_driver_gpios(struct acpi_device *adev,
- }
- EXPORT_SYMBOL_GPL(acpi_dev_add_driver_gpios);
- 
-+void acpi_dev_remove_driver_gpios(struct acpi_device *adev)
-+{
-+	if (adev)
-+		adev->driver_gpios = NULL;
-+}
-+EXPORT_SYMBOL_GPL(acpi_dev_remove_driver_gpios);
-+
- static void devm_acpi_dev_release_driver_gpios(struct device *dev, void *res)
- {
- 	acpi_dev_remove_driver_gpios(ACPI_COMPANION(dev));
-diff --git a/include/linux/acpi.h b/include/linux/acpi.h
-index 9426b9aaed86..e40e1e27ed8e 100644
---- a/include/linux/acpi.h
-+++ b/include/linux/acpi.h
-@@ -994,62 +994,11 @@ void __acpi_handle_debug(struct _ddebug *descriptor, acpi_handle handle, const c
- #endif
- #endif
- 
--struct acpi_gpio_params {
--	unsigned int crs_entry_index;
--	unsigned int line_index;
--	bool active_low;
--};
--
--struct acpi_gpio_mapping {
--	const char *name;
--	const struct acpi_gpio_params *data;
--	unsigned int size;
--
--/* Ignore IoRestriction field */
--#define ACPI_GPIO_QUIRK_NO_IO_RESTRICTION	BIT(0)
--/*
-- * When ACPI GPIO mapping table is in use the index parameter inside it
-- * refers to the GPIO resource in _CRS method. That index has no
-- * distinction of actual type of the resource. When consumer wants to
-- * get GpioIo type explicitly, this quirk may be used.
-- */
--#define ACPI_GPIO_QUIRK_ONLY_GPIOIO		BIT(1)
--
--	unsigned int quirks;
--};
--
- #if defined(CONFIG_ACPI) && defined(CONFIG_GPIOLIB)
--int acpi_dev_add_driver_gpios(struct acpi_device *adev,
--			      const struct acpi_gpio_mapping *gpios);
--
--static inline void acpi_dev_remove_driver_gpios(struct acpi_device *adev)
--{
--	if (adev)
--		adev->driver_gpios = NULL;
--}
--
--int devm_acpi_dev_add_driver_gpios(struct device *dev,
--				   const struct acpi_gpio_mapping *gpios);
--void devm_acpi_dev_remove_driver_gpios(struct device *dev);
--
- bool acpi_gpio_get_irq_resource(struct acpi_resource *ares,
- 				struct acpi_resource_gpio **agpio);
- int acpi_dev_gpio_irq_get(struct acpi_device *adev, int index);
- #else
--static inline int acpi_dev_add_driver_gpios(struct acpi_device *adev,
--			      const struct acpi_gpio_mapping *gpios)
--{
--	return -ENXIO;
--}
--static inline void acpi_dev_remove_driver_gpios(struct acpi_device *adev) {}
--
--static inline int devm_acpi_dev_add_driver_gpios(struct device *dev,
--			      const struct acpi_gpio_mapping *gpios)
--{
--	return -ENXIO;
--}
--static inline void devm_acpi_dev_remove_driver_gpios(struct device *dev) {}
--
- static inline bool acpi_gpio_get_irq_resource(struct acpi_resource *ares,
- 					      struct acpi_resource_gpio **agpio)
- {
-diff --git a/include/linux/gpio/consumer.h b/include/linux/gpio/consumer.h
-index b548a3fb5eee..b70af921c614 100644
---- a/include/linux/gpio/consumer.h
-+++ b/include/linux/gpio/consumer.h
-@@ -602,6 +602,63 @@ struct gpio_desc *devm_gpiod_get_from_of_node(struct device *dev,
- 
- #endif /* CONFIG_GPIOLIB */
- 
-+struct acpi_gpio_params {
-+	unsigned int crs_entry_index;
-+	unsigned int line_index;
-+	bool active_low;
-+};
-+
-+struct acpi_gpio_mapping {
-+	const char *name;
-+	const struct acpi_gpio_params *data;
-+	unsigned int size;
-+
-+/* Ignore IoRestriction field */
-+#define ACPI_GPIO_QUIRK_NO_IO_RESTRICTION	BIT(0)
-+/*
-+ * When ACPI GPIO mapping table is in use the index parameter inside it
-+ * refers to the GPIO resource in _CRS method. That index has no
-+ * distinction of actual type of the resource. When consumer wants to
-+ * get GpioIo type explicitly, this quirk may be used.
-+ */
-+#define ACPI_GPIO_QUIRK_ONLY_GPIOIO		BIT(1)
-+
-+	unsigned int quirks;
-+};
-+
-+#if IS_ENABLED(CONFIG_GPIOLIB) && IS_ENABLED(CONFIG_ACPI)
-+
-+struct acpi_device;
-+
-+int acpi_dev_add_driver_gpios(struct acpi_device *adev,
-+			      const struct acpi_gpio_mapping *gpios);
-+void acpi_dev_remove_driver_gpios(struct acpi_device *adev);
-+
-+int devm_acpi_dev_add_driver_gpios(struct device *dev,
-+				   const struct acpi_gpio_mapping *gpios);
-+void devm_acpi_dev_remove_driver_gpios(struct device *dev);
-+
-+#else  /* CONFIG_GPIOLIB && CONFIG_ACPI */
-+
-+struct acpi_device;
-+
-+static inline int acpi_dev_add_driver_gpios(struct acpi_device *adev,
-+			      const struct acpi_gpio_mapping *gpios)
-+{
-+	return -ENXIO;
-+}
-+static inline void acpi_dev_remove_driver_gpios(struct acpi_device *adev) {}
-+
-+static inline int devm_acpi_dev_add_driver_gpios(struct device *dev,
-+			      const struct acpi_gpio_mapping *gpios)
-+{
-+	return -ENXIO;
-+}
-+static inline void devm_acpi_dev_remove_driver_gpios(struct device *dev) {}
-+
-+#endif /* CONFIG_GPIOLIB && CONFIG_ACPI */
-+
-+
- #if IS_ENABLED(CONFIG_GPIOLIB) && IS_ENABLED(CONFIG_GPIO_SYSFS)
- 
- int gpiod_export(struct gpio_desc *desc, bool direction_may_change);
-diff --git a/sound/soc/intel/boards/bytcht_cx2072x.c b/sound/soc/intel/boards/bytcht_cx2072x.c
-index 54ac2fd41925..67f06c95eec5 100644
---- a/sound/soc/intel/boards/bytcht_cx2072x.c
-+++ b/sound/soc/intel/boards/bytcht_cx2072x.c
-@@ -6,6 +6,7 @@
- 
- #include <linux/acpi.h>
- #include <linux/device.h>
-+#include <linux/gpio/consumer.h>
- #include <linux/module.h>
- #include <linux/platform_device.h>
- #include <linux/slab.h>
-diff --git a/sound/soc/intel/boards/cht_bsw_max98090_ti.c b/sound/soc/intel/boards/cht_bsw_max98090_ti.c
-index 33eb72545be6..05db311b579e 100644
---- a/sound/soc/intel/boards/cht_bsw_max98090_ti.c
-+++ b/sound/soc/intel/boards/cht_bsw_max98090_ti.c
-@@ -12,6 +12,7 @@
-  */
- 
- #include <linux/dmi.h>
-+#include <linux/gpio/consumer.h>
- #include <linux/module.h>
- #include <linux/platform_device.h>
- #include <linux/slab.h>
-diff --git a/sound/soc/intel/boards/cht_bsw_rt5672.c b/sound/soc/intel/boards/cht_bsw_rt5672.c
-index 4977b5a65eb8..9d657421730a 100644
---- a/sound/soc/intel/boards/cht_bsw_rt5672.c
-+++ b/sound/soc/intel/boards/cht_bsw_rt5672.c
-@@ -8,6 +8,7 @@
-  *          Mengdong Lin <mengdong.lin@intel.com>
-  */
- 
-+#include <linux/gpio/consumer.h>
- #include <linux/input.h>
- #include <linux/module.h>
- #include <linux/platform_device.h>
--- 
-2.20.1
-
+Best regards
+Naresh Kamboju
