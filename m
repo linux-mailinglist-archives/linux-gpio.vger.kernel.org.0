@@ -2,99 +2,169 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 24F7C7B5FE
-	for <lists+linux-gpio@lfdr.de>; Wed, 31 Jul 2019 01:02:29 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2AFAB7B66F
+	for <lists+linux-gpio@lfdr.de>; Wed, 31 Jul 2019 01:59:07 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726842AbfG3XC2 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 30 Jul 2019 19:02:28 -0400
-Received: from mail-lf1-f67.google.com ([209.85.167.67]:46978 "EHLO
-        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726593AbfG3XC2 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 30 Jul 2019 19:02:28 -0400
-Received: by mail-lf1-f67.google.com with SMTP id z15so41679024lfh.13
-        for <linux-gpio@vger.kernel.org>; Tue, 30 Jul 2019 16:02:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=T9/kCG+kgWmWyocQ8aukdYNszqXmy4B/FV1srsKD6M4=;
-        b=M/KBtxYZd/o/LS6luyddmmyRKh1YviRHkFXBh42UtAD70mFwuVs9cxNvFwMQlv41Nb
-         4p3l0XJlEMHCvqPlJkCLQDsNABMaHVe3sB5QYn8iK5QRyPK7OI3wVfnnsWk3GZcKf4Mc
-         C4dn4WbtHT2LTe56EX03vkrH6oZ6t3hbPPxoVVNjARNgIDXcgpSEB5Sb5CGhaJN2P39K
-         2B1tC9ujDP50NBBbl3vyrodHmjFR5tE+8E/S6tKJbCFzVLy8ce+XVxeYX/ZS2f7rN+na
-         /ETirSjISrdNXcGtjeOWBNwrs5D5UVqhJIMJamtGQ/7auBkUnU3MSvS0keMMdbpv5Yfu
-         hWMw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=T9/kCG+kgWmWyocQ8aukdYNszqXmy4B/FV1srsKD6M4=;
-        b=Mj2yZhAisli9MRlwFDfBlYWLknyg4L6zr9RJA5+GVRmfNQJYi1I8iRil9UP6AGJnSz
-         uIUvKDG/dKzozbWIW7lGoiaJHR8HKvELvu9rZuIXaafOnZKz/Zz/VFGkYuC4Id5KqiwD
-         8tzV7ZlmbnzByL0XxAbETqZ8YOByFkYMtJ0FiunZtb5U6Ekn2SlciLmGwUu1tsH8GVDf
-         T8Js0EW4dl37nikJfNRIFf5h/9aMER9e+1idmedFGQ+2b9kQJH48AaxZRaaW1/n4O0v8
-         Bbs/V+o/J14gF0cbZM7rn6IE+r5mL+N4VUhVaQHKfcZF06O3oXFw/PfSxlxom5BKTeLT
-         XEkQ==
-X-Gm-Message-State: APjAAAWBUN5jKauUn+trOdgA4HpTtu+al6M3k39MBuVysp5bfNoxqGzV
-        yECj/oFw2cSrP1TeqRxJs//v+p8sNZUYJ4lPa9zNEg==
-X-Google-Smtp-Source: APXvYqyUifC+ugNDNCn76iknQT/jAoMfy5FjFx/PMiUhBnzuvz04jorFGrHiYe2Ue694maiy7sSl8MZcm9C0DMRdmew=
-X-Received: by 2002:ac2:5382:: with SMTP id g2mr54299529lfh.92.1564527746494;
- Tue, 30 Jul 2019 16:02:26 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190730104337.21235-1-andriy.shevchenko@linux.intel.com> <20190730104337.21235-3-andriy.shevchenko@linux.intel.com>
-In-Reply-To: <20190730104337.21235-3-andriy.shevchenko@linux.intel.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Wed, 31 Jul 2019 01:02:14 +0200
-Message-ID: <CACRpkdZXTRENogogOxrB6F5aXQSd5qehXFP1R3ax0um1XU93Aw@mail.gmail.com>
-Subject: Re: [PATCH v2 3/3] gpiolib-acpi: Move acpi_dev_add_driver_gpios() et
- al to consumer.h
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        Liam Girdwood <liam.r.girdwood@linux.intel.com>,
-        Jie Yang <yang.jie@linux.intel.com>,
-        Mark Brown <broonie@kernel.org>,
-        "moderated list:SOUND - SOC LAYER / DYNAMIC AUDIO POWER MANAGEM..." 
-        <alsa-devel@alsa-project.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        id S1727959AbfG3X7G (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 30 Jul 2019 19:59:06 -0400
+Received: from out1-smtp.messagingengine.com ([66.111.4.25]:44919 "EHLO
+        out1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725975AbfG3X7G (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>);
+        Tue, 30 Jul 2019 19:59:06 -0400
+Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
+        by mailout.nyi.internal (Postfix) with ESMTP id 649912222B;
+        Tue, 30 Jul 2019 19:59:02 -0400 (EDT)
+Received: from imap2 ([10.202.2.52])
+  by compute4.internal (MEProxy); Tue, 30 Jul 2019 19:59:02 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aj.id.au; h=
+        mime-version:message-id:in-reply-to:references:date:from:to:cc
+        :subject:content-type; s=fm3; bh=LbhKQoZqdxV+FyL2mwG35/QPyn9PEC7
+        JgRbmiOeNOKs=; b=H/N9ZWWAUoC7TI+7xDGE7x5/qU/3kpM3kb6ukIpLrQHhohe
+        ZoCfxAEiFHDCRjlH90i+M328gC7z51eoLkUBSxn9H+a93dOAQCha99Cc2HZZqQw7
+        4i5OJ3OuQ7L1Zf51aIvS16QWLRucjRcOKfWfQocczxpaIuernv6HlLBtEyPzCc83
+        uKpB9e04kiTtnBIEtYbzpLuFDcXMPOUrf9CSpMJZKOFDMuT4Ty0s6Ek0Ax2NZdgI
+        CO6GBzzTyd48YbQGOs63RaETWQ+qBrSYpdwtACcCN/3+AsmHIEwwooOeFoI9mi/u
+        SSYVO86Et4skrL9py6S48FminHiFVh/bL57pLPg==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=LbhKQo
+        ZqdxV+FyL2mwG35/QPyn9PEC7JgRbmiOeNOKs=; b=RtkoNgbZl4NxnK2LXMZkiB
+        6pLZKctXFK7NPqiaPEmiQ2AmS1tnhzZtV729zAW0JcP3ShQ7H6epxCE5yrzEqE8y
+        jS7ipNLQgrpyY9iFURWL8ATKvp+yiMgelBn84QaLOlXkypnLVHUpL0VHTqI+9hl7
+        /3N7iG+GnHvRXvvjWnQUJQBXW6yM+kEbrORhBnHV9GfTbVe2HlErAKq9z15X6ihq
+        SSYQlX5w80nMhfnvr+v/yYvysRRIFvXxoci+gsHry92/sSG/Ouwc/EPg95M8TpGJ
+        RdwX91Iwg1vcPQ0an78HsihBzT1/SpADpI+1ovfIi0SuZ5up6GCGuRkW10QTTTiw
+        ==
+X-ME-Sender: <xms:xNlAXe17BXmoxBo25Ez3iPBdJTxezcLyjRfcvI5ZCkxbVpiDWgld1Q>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduvddrleeggddvlecutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
+    fjughrpefofgggkfgjfhffhffvufgtsehttdertderredtnecuhfhrohhmpedftehnughr
+    vgifucflvghffhgvrhihfdcuoegrnhgurhgvfiesrghjrdhiugdrrghuqeenucfrrghrrg
+    hmpehmrghilhhfrhhomheprghnughrvgifsegrjhdrihgurdgruhenucevlhhushhtvghr
+    ufhiiigvpedt
+X-ME-Proxy: <xmx:xNlAXXOVszbMbFu48LtMPfYbKIOD6I8TLlalhsUxC84AkMgjsmr_vQ>
+    <xmx:xNlAXdal8ewJPHdGPcyg4vtK36wpQxiUY9sj4hxpHGhuCb6I3h9oUA>
+    <xmx:xNlAXZ11wkN97U0OsYSrsvzFs1fndP2bfvyTbPgaA1qiAR5HkYSJew>
+    <xmx:xtlAXSrdFGXaWAroQYZagEcubiQWf4Qvjh_NPUFjlbF8k7awnhntMA>
+Received: by mailuser.nyi.internal (Postfix, from userid 501)
+        id AF4B6E00A2; Tue, 30 Jul 2019 19:59:00 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
+User-Agent: Cyrus-JMAP/3.1.6-799-g925e343-fmstable-20190729v1
+Mime-Version: 1.0
+Message-Id: <f22b671a-2968-41cb-b158-372663fa6843@www.fastmail.com>
+In-Reply-To: <1564500268-2627-2-git-send-email-hongweiz@ami.com>
+References: <1564500268-2627-1-git-send-email-hongweiz@ami.com>
+ <1564500268-2627-2-git-send-email-hongweiz@ami.com>
+Date:   Wed, 31 Jul 2019 09:28:49 +0930
+From:   "Andrew Jeffery" <andrew@aj.id.au>
+To:     "Hongwei Zhang" <hongweiz@ami.com>,
+        "Linus Walleij" <linus.walleij@linaro.org>,
+        "Joel Stanley" <joel@jms.id.au>, devicetree@vger.kernel.org
+Cc:     "Rob Herring" <robh+dt@kernel.org>,
+        "Bartosz Golaszewski" <bgolaszewski@baylibre.com>,
+        linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org
+Subject: Re: [v6 1/2] dt-bindings: gpio: aspeed: Add SGPIO support
+Content-Type: text/plain
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Jul 30, 2019 at 12:43 PM Andy Shevchenko
-<andriy.shevchenko@linux.intel.com> wrote:
 
-> The API, which belongs to GPIO library, is foreign to ACPI headers. Earli=
-er
-> we moved out I=C2=B2C out of the latter, and now it's time for
-> acpi_dev_add_driver_gpios() et al.
+
+On Wed, 31 Jul 2019, at 00:55, Hongwei Zhang wrote:
+> Add bindings to support SGPIO on AST2400 or AST2500.
+> 
+> Signed-off-by: Hongwei Zhang <hongweiz@ami.com>
+> ---
+>  .../devicetree/bindings/gpio/sgpio-aspeed.txt      | 55 ++++++++++++++++++++++
+>  1 file changed, 55 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/gpio/sgpio-aspeed.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/gpio/sgpio-aspeed.txt 
+> b/Documentation/devicetree/bindings/gpio/sgpio-aspeed.txt
+> new file mode 100644
+> index 0000000..f9ed438
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/gpio/sgpio-aspeed.txt
+> @@ -0,0 +1,55 @@
+> +Aspeed SGPIO controller Device Tree Bindings
+> +-------------------------------------------
+> +
+> +This SGPIO controller is for ASPEED AST2500 SoC, it supports up to 80 
+> full 
+> +featured Serial GPIOs. Each of the Serial GPIO pins can be programmed 
+> to 
+> +support the following options:
+> +- Support interrupt option for each input port and various interrupt 
+> +  sensitivity option (level-high, level-low, edge-high, edge-low)
+> +- Support reset tolerance option for each output port
+> +- Directly connected to APB bus and its shift clock is from APB bus 
+> clock
+> +  divided by a programmable value.
+> +- Co-work with external signal-chained TTL components (74LV165/74LV595)
+> +
+> +
+> +Required properties:
+> +
+> +- compatible		: Either "aspeed,ast2400-sgpio" or "aspeed,ast2500-sgpio"
+> +
+> +- #gpio-cells 		: Should be two
+> +			  - First cell is the GPIO line number
+> +			  - Second cell is used to specify optional
+> +			    parameters (unused)
+> +
+> +- reg			: Address and length of the register set for the device
+> +- gpio-controller	: Marks the device node as a GPIO controller
+> +- interrupts		: Interrupt specifier (see interrupt bindings for
+> +			  details)
+> +
+> +- interrupt-controller	: Mark the GPIO controller as an 
+> interrupt-controller
+> +
+> +- ngpios		: number of GPIO pins to serialise. 
+> +			  (should be multiple of 8, up to 80 pins)
+> +
+> +- clocks                : A phandle to the APB clock for SGPM clock 
+> division
+> +
+> +- bus-frequency		: SGPM CLK frequency
+> +
+> +
+> +The sgpio and interrupt properties are further described in their 
+> respective bindings documentation:
+> +
+> +- Documentation/devicetree/bindings/sgpio/gpio.txt
+
+This isn't a file? This one is (s/sgpio/gpio/):
+
+ Documentation/devicetree/bindings/gpio/gpio.txt
+
+I assume this was the result of a stray search/replace?
+
+With that fixed you can add: Reviewed-by: Andrew Jeffery <andrew@aj.id.au>
+
+Andrew
+
+> +- Documentation/devicetree/bindings/interrupt-controller/interrupts.txt
+> +
+> +  Example:
+> +	sgpio: sgpio@1e780200 {
+> +		#gpio-cells = <2>;
+> +		compatible = "aspeed,ast2500-sgpio";
+> +		gpio-controller;
+> +		interrupts = <40>;
+> +		reg = <0x1e780200 0x0100>;
+> +		clocks = <&syscon ASPEED_CLK_APB>;
+> +		interrupt-controller;
+> +		ngpios = <8>;
+> +		bus-frequency = <12000000>;
+> +	};
+> -- 
+> 2.7.4
+> 
 >
-> For time being the acpi_gpio_get_irq_resource() and acpi_dev_gpio_irq_get=
-()
-> are left untouched as they need more thought about.
->
-> Note, it requires uninline acpi_dev_remove_driver_gpios() to keep purity =
-of
-> consumer.h.
->
-> Cc: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-> Cc: Liam Girdwood <liam.r.girdwood@linux.intel.com>
-> Cc: Jie Yang <yang.jie@linux.intel.com>
-> Cc: Mark Brown <broonie@kernel.org>
-> Cc: alsa-devel@alsa-project.org (moderated list:INTEL ASoC DRIVERS)
-> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-
-Patch applied!
-
-Just a bit worried that this will collide with Masahiro's #ifdef-reduction,
-but I wanted to keep your series together.
-
-Yours,
-Linus Walleij
