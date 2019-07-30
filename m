@@ -2,101 +2,68 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id E607879F7D
-	for <lists+linux-gpio@lfdr.de>; Tue, 30 Jul 2019 05:19:20 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DB1CE7A06B
+	for <lists+linux-gpio@lfdr.de>; Tue, 30 Jul 2019 07:43:43 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726327AbfG3DTU (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 29 Jul 2019 23:19:20 -0400
-Received: from mail-wm1-f48.google.com ([209.85.128.48]:35699 "EHLO
-        mail-wm1-f48.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726208AbfG3DTT (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 29 Jul 2019 23:19:19 -0400
-Received: by mail-wm1-f48.google.com with SMTP id l2so55210426wmg.0
-        for <linux-gpio@vger.kernel.org>; Mon, 29 Jul 2019 20:19:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernelci-org.20150623.gappssmtp.com; s=20150623;
-        h=message-id:date:mime-version:content-transfer-encoding:subject:to
-         :from;
-        bh=56Le+MRlQJAhCFwYzK1pywCt7N1/PTdA6+X8HYtkANo=;
-        b=qSy7xtQ9tknhrWVEJyLCC9aIMFi69MKd+tw7ynXzw96gujQn2o51/9KLidkLztL3CQ
-         OGV+ERdLTqRNCq3XH+tzdd5MoPEb5h3KGDnd3DvaopxdmOhVGQ7a24UGMriXcX1fHEhJ
-         1SDH/NxM/GFe221eFk+fV2loEIXSeYOXUjJbwRjbyoVgsRvp2+HMC01cwlZ0TIF0nCZt
-         N8CyOz4H2ZElSA06IlQ+Fm9pZTgBpkiGIq2JfKDkVjf0F1FLL5cj8upQx5Pew3ZVBGl3
-         8o6KliIN3FluJ4d8odxjru4GZwMpHTyOmU6dkftofViCCZG8fPkmjSV3ICAL1mRZRlXu
-         KLag==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:date:mime-version
-         :content-transfer-encoding:subject:to:from;
-        bh=56Le+MRlQJAhCFwYzK1pywCt7N1/PTdA6+X8HYtkANo=;
-        b=TCR4fM9Fh5py2efnAR7l4xPxrqIZ4v4YJKrgJgxtSqcYR3d5qwXY0h+8F5dS838vFz
-         vPJJlnSKunudRylw7kbdWmDEnDI5BDFq/o9+uA18jwqQ2bn6/3vYhZoik29sDvhEIDd5
-         xVQCojhymPsI8OFM+VRC/rzn3+j/pQsmsbIJ73VZ0vCoDTlopHynoukKNJmnsEbKj/7H
-         JqdEf6Bl/ErxKB/xJBmbT8lF8NEIFY35rPPZt25d4lggKmQap7WKGNZZVhLwr5ct8lJg
-         QB8yd/dUSDRP84gTvUtdsJC8t7WIVfrgqrne1p1zjiBu1AZ5IvH7flZ9/bcJgHq0rB3S
-         Ty3Q==
-X-Gm-Message-State: APjAAAVWj3rUhX8IU3l9/yNHLXTH2GqeA6gs/+3gFiCVMKEDOQ6HN5iD
-        WX79BOZlmReMb/XiXS7O827OaHkv5U8=
-X-Google-Smtp-Source: APXvYqy0RjwqrHGHIU8e50mzVF/vagGYoHBFWwfiEh002H27oO35KFskfJBTV7EMJg+0dMWe4k/5WA==
-X-Received: by 2002:a1c:1d08:: with SMTP id d8mr99128335wmd.22.1564456757805;
-        Mon, 29 Jul 2019 20:19:17 -0700 (PDT)
-Received: from [148.251.42.114] ([2a01:4f8:201:9271::2])
-        by smtp.gmail.com with ESMTPSA id y16sm138468660wrg.85.2019.07.29.20.19.16
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 29 Jul 2019 20:19:17 -0700 (PDT)
-Message-ID: <5d3fb735.1c69fb81.39b2e.863c@mx.google.com>
-Date:   Mon, 29 Jul 2019 20:19:17 -0700 (PDT)
-Content-Type: text/plain; charset="utf-8"
-MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-Kernelci-Tree: linusw
-X-Kernelci-Kernel: v5.3-rc1-10-gd2a561ae1961
-X-Kernelci-Branch: for-next
-X-Kernelci-Report-Type: boot
-Subject: linusw/for-next boot: 37 boots: 2 failed,
- 35 passed (v5.3-rc1-10-gd2a561ae1961)
-To:     linux-gpio@vger.kernel.org, fellows@kernelci.org
-From:   "kernelci.org bot" <bot@kernelci.org>
+        id S1727086AbfG3Fnn (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 30 Jul 2019 01:43:43 -0400
+Received: from mx.socionext.com ([202.248.49.38]:57329 "EHLO mx.socionext.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725209AbfG3Fnn (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Tue, 30 Jul 2019 01:43:43 -0400
+Received: from unknown (HELO iyokan-ex.css.socionext.com) ([172.31.9.54])
+  by mx.socionext.com with ESMTP; 30 Jul 2019 14:43:41 +0900
+Received: from mail.mfilter.local (m-filter-1 [10.213.24.61])
+        by iyokan-ex.css.socionext.com (Postfix) with ESMTP id 8CA3A60629;
+        Tue, 30 Jul 2019 14:43:41 +0900 (JST)
+Received: from 172.31.9.51 (172.31.9.51) by m-FILTER with ESMTP; Tue, 30 Jul 2019 14:43:41 +0900
+Received: from plum.e01.socionext.com (unknown [10.213.132.32])
+        by kinkan.css.socionext.com (Postfix) with ESMTP id 21B5C1A04FC;
+        Tue, 30 Jul 2019 14:43:41 +0900 (JST)
+From:   Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+To:     Linus Walleij <linus.walleij@linaro.org>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        linux-gpio@vger.kernel.org
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Masami Hiramatsu <masami.hiramatsu@linaro.org>,
+        Jassi Brar <jaswinder.singh@linaro.org>,
+        Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+Subject: [PATCH v2 0/5] pinctrl: uniphier: Add some improvements and new settings
+Date:   Tue, 30 Jul 2019 14:43:25 +0900
+Message-Id: <1564465410-9165-1-git-send-email-hayashi.kunihiko@socionext.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-linusw/for-next boot: 37 boots: 2 failed, 35 passed (v5.3-rc1-10-gd2a561ae1=
-961)
+This series adds some improvements and new settings for pin-mux.
 
-Full Boot Summary: https://kernelci.org/boot/all/job/linusw/branch/for-next=
-/kernel/v5.3-rc1-10-gd2a561ae1961/
-Full Build Summary: https://kernelci.org/build/linusw/branch/for-next/kerne=
-l/v5.3-rc1-10-gd2a561ae1961/
+Changes since v1:
+- sort arrays in alphabetical order
+- sort pin numbers in ascending order
+- merge "aout1b" pin-mux to aout1_group
+- change "4th" in the subject to "5th"
+- add Acked-by: lines
 
-Tree: linusw
-Branch: for-next
-Git Describe: v5.3-rc1-10-gd2a561ae1961
-Git Commit: d2a561ae19613c14bfbc437bc9dbdb2c9d1d1b95
-Git URL: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-gpio.=
-git/
-Tested: 27 unique boards, 13 SoC families, 3 builds out of 6
+Kunihiko Hayashi (5):
+  pinctrl: uniphier: Separate modem group from UART ctsrts group
+  pinctrl: uniphier: Add another audio I/O pin-mux settings for LD20
+  pinctrl: uniphier: Add 5th LD20 MPEG2-TS input pin-mux setting
+  pinctrl: uniphier: Add Pro5 PCIe pin-mux settings
+  pinctrl: uniphier: Fix Pro5 SD pin-mux setting
 
-Boot Regressions Detected:
+ drivers/pinctrl/uniphier/pinctrl-uniphier-ld11.c | 10 +++++++---
+ drivers/pinctrl/uniphier/pinctrl-uniphier-ld20.c | 20 ++++++++++++++++----
+ drivers/pinctrl/uniphier/pinctrl-uniphier-ld4.c  | 10 +++++++---
+ drivers/pinctrl/uniphier/pinctrl-uniphier-ld6b.c | 10 +++++++---
+ drivers/pinctrl/uniphier/pinctrl-uniphier-pro4.c | 10 +++++++---
+ drivers/pinctrl/uniphier/pinctrl-uniphier-pro5.c | 17 +++++++++++++----
+ drivers/pinctrl/uniphier/pinctrl-uniphier-pxs2.c | 10 +++++++---
+ drivers/pinctrl/uniphier/pinctrl-uniphier-pxs3.c | 10 +++++++---
+ drivers/pinctrl/uniphier/pinctrl-uniphier-sld8.c | 10 +++++++---
+ 9 files changed, 78 insertions(+), 29 deletions(-)
 
-arm64:
+-- 
+2.7.4
 
-    defconfig:
-        gcc-8:
-          apq8016-sbc:
-              lab-mhart: new failure (last pass: v5.2-10813-g88785b7fa74a)
-          meson-gxm-khadas-vim2:
-              lab-baylibre: new failure (last pass: v5.2-rc2-89-g9b3b623804=
-a6)
-
-Boot Failures Detected:
-
-arm64:
-    defconfig:
-        gcc-8:
-            apq8016-sbc: 1 failed lab
-            meson-gxm-khadas-vim2: 1 failed lab
-
----
-For more info write to <info@kernelci.org>
