@@ -2,59 +2,59 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id BE84179E88
-	for <lists+linux-gpio@lfdr.de>; Tue, 30 Jul 2019 04:16:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2DD4F79E8A
+	for <lists+linux-gpio@lfdr.de>; Tue, 30 Jul 2019 04:17:18 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731175AbfG3CQY (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 29 Jul 2019 22:16:24 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:51786 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729020AbfG3CQY (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 29 Jul 2019 22:16:24 -0400
-Received: by mail-wm1-f65.google.com with SMTP id 207so55557532wma.1
-        for <linux-gpio@vger.kernel.org>; Mon, 29 Jul 2019 19:16:22 -0700 (PDT)
+        id S1730537AbfG3CRR (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 29 Jul 2019 22:17:17 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:35178 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730481AbfG3CRR (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 29 Jul 2019 22:17:17 -0400
+Received: by mail-wm1-f66.google.com with SMTP id l2so55137637wmg.0
+        for <linux-gpio@vger.kernel.org>; Mon, 29 Jul 2019 19:17:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=kernelci-org.20150623.gappssmtp.com; s=20150623;
         h=message-id:date:mime-version:content-transfer-encoding:subject:to
          :from;
-        bh=YcpX1iAuUd0pNUtAgZdcMrTJ1oUgoLuJvAlFq2eZh0I=;
-        b=neNTFq+Vx9l4h8NPyvwars/A76FJqeD8Sf3K/yYHK8SjiE6vWQty79tyv8Vjf2Asq/
-         6Bx4nwl8bHzmOj43G/k2SPRprwrc3sckRmzDelfw27A3b0It9kRzHmn1M8IxloiTPxDZ
-         t3LIDsAPtP5sy7bN/B7zPFD+gDl3BuKc6qZuNTADnxE0txC1ONegsBFv8ccqKf9gFJDN
-         cVjRHw1xA88nYMJEReqs8GcF6HQwvhs5MZge4Z8gzBuwaL8bD38RMQJC8PD/wGhYmgM3
-         hQHjDpEFF/gL9D5Eqn1gAfk+RDppsLqePK4qskU3HB5waVGKdj/bOvRpqrEqj9gZhooM
-         aXIw==
+        bh=qpWi/ppKngD4ysRZR2rTIwLwOQkgxqMIJDiZbqfkxkI=;
+        b=c5ss8x8/b5hE8q854hqJY9vK+UVrz/189pfA6JddyMnf4SO76vk+rMNLbIJmceqNBN
+         uLBJj3Jrplh5gkE6NEOIwhnRKxxC/fs++Q/a8ytNHcb+Eif0uqJ9CYAkBMIowyrQZV6l
+         hZ4WS4jasisRgQxWFZsaaLEZpm2uUGY0kRIFrG0fCHC4DeeovEyViSzulSJv1MrXDNPK
+         wIXS4Y+ZeyU5By89ni0rdDGf3He3467TfWE9oMXLps10gDe7wyo4r2SnYWHmw9nm0Pvo
+         6C8IB7cePGi2yyo8OzVgwvq9BKDAdPQeH8ihvNrtLiwT9B69oFtzRQ85fGtU8lgyn9q8
+         gQTw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:message-id:date:mime-version
          :content-transfer-encoding:subject:to:from;
-        bh=YcpX1iAuUd0pNUtAgZdcMrTJ1oUgoLuJvAlFq2eZh0I=;
-        b=Kcz8XCAQNTZD1gZNR5uJIj2nTMz/P79PpRl9fCxIlj8eXsbXpPOVSll0TsM1D8MQN8
-         596aqaw7PxbYkcl+w2vp2I4m8xr3gqA9Q9wIGDYCeUmTiiJpmtB6JZNj/zNpxeNdk6ER
-         J13A/scJs80K26VV6M//Izp860vH92qq1wXfWJYarX4eCAMNVaH0idbEbYvzMI8BCjSi
-         MycvzCyKupazVW4XFwIZUwYIIaJFqkweIuv3D4FLcm3A8eA7ADJF5TIkAzGZasH5XE6C
-         Lw0eDdeBcCnZ38VaP6jlqXFDTc63aLvlK08qYhubmkJ8ShdQgQPgYObdGsch9a5j/qm0
-         7FPg==
-X-Gm-Message-State: APjAAAU4WG2yeMqlwpld+WIVf9jM8VQK6CJYpejp30bnxsC3hqIdnFFm
-        kHaEepcYSsVzC5Dhh5mhcJNt/Ukf86Q=
-X-Google-Smtp-Source: APXvYqyfiQ7p+W5Ti91BFuHJXurIq3yVZixzkMr4LTdihMT+V76OCqe+S/mYT/JZBoTWwd8RS2m6Tw==
-X-Received: by 2002:a7b:c857:: with SMTP id c23mr107569658wml.51.1564452981326;
-        Mon, 29 Jul 2019 19:16:21 -0700 (PDT)
+        bh=qpWi/ppKngD4ysRZR2rTIwLwOQkgxqMIJDiZbqfkxkI=;
+        b=A6CVRkK+BcrpHn6aojvy1/VNakRbIs2QKHHtb4vNCJV+x5T8d3PNguXf4JuuQi4N9G
+         nXH5drzghNRPe1QPE7m+xxh7nobR3nQSGYnIBM6YX29ACHwvh31mXwxVWxqJgL68/Ksl
+         uorK49f7GRsb9TIrrSouMT5C+dNilQNinNQZAH4w1G3lYnRmefz8mIt64F43+L+WkWYS
+         fxL4zp2fU1A8VWmh4BpypKbryHiFevpLtVevsLQF1Mr9nnRmEqLO4X/CYmTBUkOqwMTf
+         aVn7U+Gyo7IKkCRZwaM5yT389Fkptr2Ek9P4FJzQWa83aQRtadlnnUaw8qzg7Un4wSZd
+         co+Q==
+X-Gm-Message-State: APjAAAUEfwAtk7ml6N2UtlVGltx7RdRtOdqliBlfTKl66FbXKoGXjyw7
+        EA0cZyxnsbMJmgvUG6KAVO1Nn4DxPtU=
+X-Google-Smtp-Source: APXvYqzp53Hd+CE0lT/zitue+ehn7EoUy7Es9AjHxaY4gdP5XTIQmP/CJoryfdhsc2nGaZ/dfyk3yQ==
+X-Received: by 2002:a7b:c1da:: with SMTP id a26mr102164636wmj.128.1564453034178;
+        Mon, 29 Jul 2019 19:17:14 -0700 (PDT)
 Received: from [148.251.42.114] ([2a01:4f8:201:9271::2])
-        by smtp.gmail.com with ESMTPSA id q1sm48431963wmq.25.2019.07.29.19.16.20
+        by smtp.gmail.com with ESMTPSA id d16sm55813578wrv.55.2019.07.29.19.17.13
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 29 Jul 2019 19:16:20 -0700 (PDT)
-Message-ID: <5d3fa874.1c69fb81.ec48.8c95@mx.google.com>
-Date:   Mon, 29 Jul 2019 19:16:20 -0700 (PDT)
+        Mon, 29 Jul 2019 19:17:13 -0700 (PDT)
+Message-ID: <5d3fa8a9.1c69fb81.186f4.27e3@mx.google.com>
+Date:   Mon, 29 Jul 2019 19:17:13 -0700 (PDT)
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 X-Kernelci-Tree: linusw
-X-Kernelci-Kernel: v5.3-rc1-4-gd95da993383c
-X-Kernelci-Branch: fixes
+X-Kernelci-Kernel: v5.3-rc1-5-ga299726da44f
+X-Kernelci-Branch: devel
 X-Kernelci-Report-Type: build
-Subject: linusw/fixes build: 6 builds: 0 failed, 6 passed,
- 13 warnings (v5.3-rc1-4-gd95da993383c)
+Subject: linusw/devel build: 6 builds: 0 failed, 6 passed,
+ 13 warnings (v5.3-rc1-5-ga299726da44f)
 To:     linux-gpio@vger.kernel.org, fellows@kernelci.org
 From:   "kernelci.org bot" <bot@kernelci.org>
 Sender: linux-gpio-owner@vger.kernel.org
@@ -62,16 +62,16 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-linusw/fixes build: 6 builds: 0 failed, 6 passed, 13 warnings (v5.3-rc1-4-g=
-d95da993383c)
+linusw/devel build: 6 builds: 0 failed, 6 passed, 13 warnings (v5.3-rc1-5-g=
+a299726da44f)
 
-Full Build Summary: https://kernelci.org/build/linusw/branch/fixes/kernel/v=
-5.3-rc1-4-gd95da993383c/
+Full Build Summary: https://kernelci.org/build/linusw/branch/devel/kernel/v=
+5.3-rc1-5-ga299726da44f/
 
 Tree: linusw
-Branch: fixes
-Git Describe: v5.3-rc1-4-gd95da993383c
-Git Commit: d95da993383c78f7efd25957ba3af23af4b1c613
+Branch: devel
+Git Describe: v5.3-rc1-5-ga299726da44f
+Git Commit: a299726da44fd679ce805aa80d7d6b559bac9874
 Git URL: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-gpio.=
 git/
 Built: 6 unique architectures
