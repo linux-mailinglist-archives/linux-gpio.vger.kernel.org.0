@@ -2,88 +2,113 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 037827AFCB
-	for <lists+linux-gpio@lfdr.de>; Tue, 30 Jul 2019 19:26:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E6C4D7B0DB
+	for <lists+linux-gpio@lfdr.de>; Tue, 30 Jul 2019 19:50:25 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727303AbfG3R0Z (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 30 Jul 2019 13:26:25 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:41376 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726071AbfG3R0Z (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 30 Jul 2019 13:26:25 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 91CF2606FC; Tue, 30 Jul 2019 17:26:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1564507584;
-        bh=8StxuggoIs45HX8ym7rEZ3Hw73lcJ9iRCwmyC3/vdbQ=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=m6ti1UufnfRNIGjgKGB9lvqQzblzSCsPUHxIGr3FgkBrQggE6RDtsx1lxiSHlc8Dr
-         UhUcJtCWJRt+xBEtRq3eWGpUD2tpHGe/eI07DwjZRl9Qeiu5wzp9cIBS5GYLqZoBDY
-         tYgFZ0PAC9V5rrDKvwZVYg/KsQfIpD2HN/eL2xMM=
-X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
-        pdx-caf-mail.web.codeaurora.org
-X-Spam-Level: 
-X-Spam-Status: No, score=-2.7 required=2.0 tests=ALL_TRUSTED,BAYES_00,
-        DKIM_INVALID,DKIM_SIGNED,SPF_NONE autolearn=no autolearn_force=no
-        version=3.4.0
-Received: from localhost (i-global254.qualcomm.com [199.106.103.254])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: ilina@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id B501260258;
-        Tue, 30 Jul 2019 17:26:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1564507584;
-        bh=8StxuggoIs45HX8ym7rEZ3Hw73lcJ9iRCwmyC3/vdbQ=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=m6ti1UufnfRNIGjgKGB9lvqQzblzSCsPUHxIGr3FgkBrQggE6RDtsx1lxiSHlc8Dr
-         UhUcJtCWJRt+xBEtRq3eWGpUD2tpHGe/eI07DwjZRl9Qeiu5wzp9cIBS5GYLqZoBDY
-         tYgFZ0PAC9V5rrDKvwZVYg/KsQfIpD2HN/eL2xMM=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org B501260258
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=ilina@codeaurora.org
-Date:   Tue, 30 Jul 2019 11:26:23 -0600
-From:   Lina Iyer <ilina@codeaurora.org>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Thierry Reding <treding@nvidia.com>
-Subject: Re: [PATCH] pinctrl: qcom: Pass irqchip when adding gpiochip
-Message-ID: <20190730172623.GI18620@codeaurora.org>
-References: <20190724083828.7496-1-linus.walleij@linaro.org>
- <20190724200007.GO7234@tuxbook-pro>
- <20190725151603.GF18620@codeaurora.org>
- <CACRpkdY=LdfOMc2Cnw23hZA5-WZ0trFewSzHGyq9j4soNqtPTQ@mail.gmail.com>
+        id S1726713AbfG3RuR (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 30 Jul 2019 13:50:17 -0400
+Received: from mga12.intel.com ([192.55.52.136]:44536 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725935AbfG3RuR (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Tue, 30 Jul 2019 13:50:17 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 30 Jul 2019 10:50:15 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,327,1559545200"; 
+   d="scan'208";a="162674040"
+Received: from rfried-mobl.ger.corp.intel.com (HELO [10.255.195.53]) ([10.255.195.53])
+  by orsmga007.jf.intel.com with ESMTP; 30 Jul 2019 10:50:14 -0700
+Subject: Re: gpiolib and pinmux interaction
+From:   "Fried, Ramon" <ramon.fried@linux.intel.com>
+To:     Stefan Wahren <stefan.wahren@i2se.com>,
+        Linus Walleij <linus.walleij@linaro.org>, brgl@bgdev.pl
+Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
+References: <d031ce76-252a-9388-17fa-8a52f81f22f1@linux.intel.com>
+ <CACRpkdZUA33i+OVMH2KeKaBF368oGi9nW_GLawr+x9t=Gc67Ug@mail.gmail.com>
+ <bab378aa-8fb2-849c-9b73-3ed55ef9643e@linux.intel.com>
+ <2a08855b-9df2-e536-60c3-07770a9162b1@i2se.com>
+ <2218697f-8cb2-e20c-b8c9-c0386257aebf@linux.intel.com>
+ <1ccdacac-c39b-cc99-3426-7682dc2baada@linux.intel.com>
+Message-ID: <2790b597-25c9-82a5-9455-dbc7abbb5178@linux.intel.com>
+Date:   Tue, 30 Jul 2019 20:50:13 +0300
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <CACRpkdY=LdfOMc2Cnw23hZA5-WZ0trFewSzHGyq9j4soNqtPTQ@mail.gmail.com>
-User-Agent: Mutt/1.11.3 (2019-02-01)
+In-Reply-To: <1ccdacac-c39b-cc99-3426-7682dc2baada@linux.intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Jul 29 2019 at 16:43 -0600, Linus Walleij wrote:
->On Thu, Jul 25, 2019 at 5:16 PM Lina Iyer <ilina@codeaurora.org> wrote:
->> On Wed, Jul 24 2019 at 14:00 -0600, Bjorn Andersson wrote:
->> >On Wed 24 Jul 01:38 PDT 2019, Linus Walleij wrote:
->
->> I had something similar in mind [1] as part of my series reworked on top
->> of Linus's GPIO hierarchy series. This patch is not far from it.
->
->Sorry for constantly doubleworking and stepping on your toes here :(
->Adding a Co-developed-by: since it is pretty much the same.
->
-Oh, no worries, it is not necessary. :)
 
->Indeed the hierarchical irqchip will need that the set-up is done
->with this contemporary method.
+On 7/30/2019 19:54, Fried, Ramon wrote:
 >
->I will try to respin the hierarchical GPIO too with Brians changes
->so we can get that merged and create a Perfect (fingers crossed)
->base for your development.
+> On 3/18/2019 13:41, Ramon Fried wrote:
+>> On 3/18/19 11:21 AM, Stefan Wahren wrote:
+>>> Hi Ramon,
+>>>
+>>> Am 17.03.19 um 10:09 schrieb Ramon Fried:
+>>>> Hi Linus, Stefan,
+>>>>
+>>>> Great patch, If you need help testing it on other HW tell me.
+>>> yes, please. I didn't get what kind of hardware you are using.
+>> Hi.
+>>
+>> custom mips based SOC with sta2x11 gpio driver & proprietary pin 
+>> muxing ip allowing every pin to be muxed as gpio.
+>>
+>>> Regards
+>>> Stefan
 >
-Waiting on your series to post my next revision.
+> Hey Linus, Stefan,
+>
+> I'm not sure where are we standing with the patch.
+> I didn't find it merged, so I just took it and tested it. (It took my 
+> a while, hehe)
+> It's working, but not as I would expect, instead of marking the gpio 
+> as used,
+> it adds [kernel] flag. Which is OK, but I think it's clearer to also 
+> make the "used" column. (see below)
+>
+> What do you think ?
+>
+> Thanks,
+>
+> Ramon.
+>
+> See below:
+>
+> # gpioinfo
+> gpiochip1 - 23 lines:
+>         line   0:      unnamed       unused   input  active-high
+>         line   1:      unnamed       unused   input  active-high
+>         line   2:      unnamed       unused   input  active-high
+>         line   3:      unnamed       unused   input  active-high
+>         line   4:      unnamed       unused   input  active-high
+>         line   5:      unnamed       unused   input  active-high
+>         line   6:      unnamed       unused   input  active-high
+>         line   7:      unnamed       unused   input  active-high
+>         line   8:      unnamed       unused   input  active-high [kernel]
+>         line   9:      unnamed       unused   input  active-high [kernel]
+>         line  10:      unnamed       unused   input  active-high [kernel]
+>         line  11:      unnamed       unused   input  active-high [kernel]
+>         line  12:      unnamed       unused   input  active-high
+>         line  13:      unnamed       unused   input  active-high
+>
+Adding Bartosz.
+Turns out I was running and old version of libgpiod, in current version 
+it's printed "[used] instead of [kernel].
+The patch from Stefan is perfectly fine from my standpoint, but the 
+output of gpioinfo can be improved,
 
---Lina
+I'll post a patch to LIBGPIOD.
+
+Thanks.
+Ramon
+
+
