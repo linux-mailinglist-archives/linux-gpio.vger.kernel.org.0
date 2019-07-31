@@ -2,87 +2,102 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id AE5137CD5B
-	for <lists+linux-gpio@lfdr.de>; Wed, 31 Jul 2019 21:59:06 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 89A557CD76
+	for <lists+linux-gpio@lfdr.de>; Wed, 31 Jul 2019 22:00:15 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730125AbfGaT7B (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 31 Jul 2019 15:59:01 -0400
-Received: from mail-io1-f66.google.com ([209.85.166.66]:44228 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726448AbfGaT7A (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 31 Jul 2019 15:59:00 -0400
-Received: by mail-io1-f66.google.com with SMTP id s7so138878770iob.11
-        for <linux-gpio@vger.kernel.org>; Wed, 31 Jul 2019 12:59:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:reply-to:from:date:message-id:subject:to;
-        bh=+bllI+uhX4ifvIS1PickYrW1huvdTbgr8Lv09pVb6FU=;
-        b=n2RK4hasNMQTyK5hWNecK/zYczKvf8cO6+lp6FKADSNgFe09GLIiDZjh/vZTMO+1wG
-         dChU45BSvmQFop57YKmh+ULSXcJXe30bNmtj3z8thKseec2KEI4+Q6YSFUP+ZnY73+y7
-         bkK2FrOgZtial3Stx+25sB5vXC+0uvPChJw76gbQ0eO7h1tGB/X4Ss/uiJSpjO7Q4t6/
-         6kN5SX7CCnq7FXqMlt/pahRuZuAUJvAQ4d0edMymno4TNRH9iVT6oRv4II2OBQ3goa8e
-         jZajGp5DyyxTUDLc9EKwIj2ZUWcZicfeDdulmCsdxq94C5eB0DCpvwwMu0CtJCKGVObX
-         5UUg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
-         :subject:to;
-        bh=+bllI+uhX4ifvIS1PickYrW1huvdTbgr8Lv09pVb6FU=;
-        b=gBAEp1+N6JVhLx1MPrZT1giCR60PbY1wBr6ixib+5QQjGc+StkUjxBe5/sXmYLO5Ky
-         wYzKHs/67NtN2dJ35NXdusnxbpn7E3OjZLYNvq8EQ2RwCF9mbwoeWpsnveWqA/sOvsJ4
-         vy8xQgDXqGQNVc1mzXzHY7Z7pJ/bMoCAxIHizOFAcxVAA9G7/D5AriCGXnJavxcQxPLz
-         3zoFGFuLOnGG5bOa1Ma2ylq7mKDpl6ORWkE54vHR/dwFIw1FSDyGCw9+LuoGm3c+FVH0
-         Y1CD0smMiPapc8dsR58MII/kXdTtAPxG0TzjKzg6byq4HrdCQJJRNsgsErE3YfVGJARE
-         sixQ==
-X-Gm-Message-State: APjAAAXJ3hL2UcmBWQFBxIDWxAzQxx6+RLpWudrAaixWxmsrehEknqyg
-        m1b1OoZR1SicDL3p/6Fu3T/gtwLOzneG0X5pug==
-X-Google-Smtp-Source: APXvYqwMq70T6YaUTtUi9GGwvK8dPqnpJJ1YcNmDHCZm10GmgYA7nUcCRfBKuRlJEjvebWXXlV0gRTyhU/hELlYorA8=
-X-Received: by 2002:a6b:d008:: with SMTP id x8mr109490163ioa.129.1564603140093;
- Wed, 31 Jul 2019 12:59:00 -0700 (PDT)
+        id S1726556AbfGaUAI (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 31 Jul 2019 16:00:08 -0400
+Received: from mout.kundenserver.de ([212.227.126.130]:34817 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725793AbfGaUAI (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 31 Jul 2019 16:00:08 -0400
+Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
+ (mreue012 [212.227.15.129]) with ESMTPA (Nemesis) id
+ 1Mo6WJ-1ihbS32Skt-00pgri; Wed, 31 Jul 2019 21:59:24 +0200
+From:   Arnd Bergmann <arnd@arndb.de>
+To:     soc@kernel.org, linux-arm-kernel@lists.infradead.org,
+        Vladimir Zapolskiy <vz@mleia.com>,
+        Sylvain Lemieux <slemieux.tyco@gmail.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Gregory Clement <gregory.clement@bootlin.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jslaby@suse.com>
+Cc:     Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>,
+        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        Guenter Roeck <linux@roeck-us.net>, linux-gpio@vger.kernel.org,
+        netdev@vger.kernel.org, linux-serial@vger.kernel.org,
+        linux-usb@vger.kernel.org, linux-watchdog@vger.kernel.org,
+        Arnd Bergmann <arnd@arndb.de>, linux-kernel@vger.kernel.org
+Subject: [PATCH 04/14] serial: lpc32xx_hs: allow compile-testing
+Date:   Wed, 31 Jul 2019 21:56:46 +0200
+Message-Id: <20190731195713.3150463-5-arnd@arndb.de>
+X-Mailer: git-send-email 2.20.0
+In-Reply-To: <20190731195713.3150463-1-arnd@arndb.de>
+References: <20190731195713.3150463-1-arnd@arndb.de>
 MIME-Version: 1.0
-Received: by 2002:a02:b08a:0:0:0:0:0 with HTTP; Wed, 31 Jul 2019 12:58:59
- -0700 (PDT)
-Reply-To: arnettdavid2030@gmail.com
-From:   "Sgt,Arnett David" <alasanahmad300@gmail.com>
-Date:   Thu, 1 Aug 2019 00:28:59 +0430
-Message-ID: <CAAhE2CqCVc12LR8vn03YV6sjp8_FMDOe7aNx8RPwjrVBupSK5w@mail.gmail.com>
-Subject: Assist Request From You
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-Provags-ID: V03:K1:FgQXWHBg8JwiLqFUWJflxqSabbAP8JCw6bQWgIJ0su4bbGS+nRK
+ 0kUqcrfqJfWTc10p+TkInneDvk18LhtSmF5HyllYlbCgM6NIe2ax1LYFHpLJUPtftTqVfHY
+ LT8kDYequkxI5Lbi1wDejhDPoHyerdsb7xvK8eoFciT5n0YokYA8TO/pNPuR18xFg1KR67C
+ ohO68gbXz9QjaHkKemAWQ==
+X-Spam-Flag: NO
+X-UI-Out-Filterresults: notjunk:1;V03:K0:9zXs2NceyDg=:N9NkeMAe628aOvT2TIb/xb
+ PWR1SJ+Jn/xnW7MzNM80nxT0HFhj0IH9hRJO7YpP3nO1nzkVmMIuBW8MfuEjzvna4yYuw/NrN
+ Xdgphu9Ry1EE8S2qqTWWjhUDz545qonpnL1oJEOm/Hr5xdROH7H2WeLZJpQCtnxVxQ8Wh5hqY
+ nU5h7ie3lhbyDKd1IWAhOejvlfNepdIKHF1pDyXuAnlgQUVMople/U1mBLmt0NoxdvF/6Mcer
+ 8tH++YghoErbfk2yDkMI2HYS3ZeTBZRbPO2ZX3iDLbDarWtrQvzDqEVMyG8Y6EUmP0b4qyFjN
+ PwLeOGDMs4lB0+cFHs97ILEblNeqmOzk14Ox/7D0BPmUuVaxPFJuCwl6Uh4bTDBi8TlEtcnsF
+ qKLNzlhsV4qv+KM3IKY+XI8kOnePo6K95sFf+QHEEqVuX8oAp63/X9aVVWFpNTIHW6Va2GEm5
+ rWdpIHl6eOJoB+r3wgOJizmqDyGRWK5+D7E47X3Bac211kWk2upDTiYsqftygCXSHNH6sKjd1
+ AQJoQbtKh20u9ADOyh9GW2ko1Az6jrllCmcnPqt1XDs9uHtH/ygJG0Gn7GWFngWKjOpGMOcj0
+ CGy7SaTzt3GuiyKDn9gHxUEXhOjsb4aCnEX5bWyLhHzocWJcLWujmLb48VzchIKZJgwZWu7lf
+ UkS5FB881G9+x8p0cLogi/HR4km/FxXNvseAnDybpGdJN33PMpOBWTcW0/y9Clg0W5ImRhw22
+ ktX8KghGubpyC+mg1c2YtkHDcs3NhemMbCnviw==
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+The only thing that prevents building this driver on other
+platforms is the mach/hardware.h include, which is not actually
+used here at all, so remove the line and allow CONFIG_COMPILE_TEST.
+
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+---
+ drivers/tty/serial/Kconfig      | 3 ++-
+ drivers/tty/serial/lpc32xx_hs.c | 2 --
+ 2 files changed, 2 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/tty/serial/Kconfig b/drivers/tty/serial/Kconfig
+index 3083dbae35f7..518aac902e4b 100644
+--- a/drivers/tty/serial/Kconfig
++++ b/drivers/tty/serial/Kconfig
+@@ -739,7 +739,8 @@ config SERIAL_PNX8XXX_CONSOLE
+ 
+ config SERIAL_HS_LPC32XX
+ 	tristate "LPC32XX high speed serial port support"
+-	depends on ARCH_LPC32XX && OF
++	depends on ARCH_LPC32XX || COMPILE_TEST
++	depends on OF
+ 	select SERIAL_CORE
+ 	help
+ 	  Support for the LPC32XX high speed serial ports (up to 900kbps).
+diff --git a/drivers/tty/serial/lpc32xx_hs.c b/drivers/tty/serial/lpc32xx_hs.c
+index f4e27d0ad947..7f14cd8fac47 100644
+--- a/drivers/tty/serial/lpc32xx_hs.c
++++ b/drivers/tty/serial/lpc32xx_hs.c
+@@ -25,8 +25,6 @@
+ #include <linux/irq.h>
+ #include <linux/gpio.h>
+ #include <linux/of.h>
+-#include <mach/platform.h>
+-#include <mach/hardware.h>
+ 
+ /*
+  * High Speed UART register offsets
 -- 
+2.20.0
 
-Accept my greetings to you
-
-Assist Request From You
-
-I am 28 years old single an orphan my parents died when I am five
-years old nobody to help me,I send you my business proposal with tears
-and sorrow,Please let this not be a surprised message to you because I
-decided to contact you on this magnitude and lucrative transaction for
-our present and future survival in life. Moreover, I have laid all the
-solemn trust in you before i decided to disclose this successful and
-confidential transaction to you.
-
-I am  Arnett David ,I hope all is well with you? I am female soldier
-working as United Nations peace keeping troop in Afghanistan on war
-against terrorism. I have in my possession the sum of $3.5million USD
-Which I made here in Afghanistan 2014,I deposited this money with a
-Red Cross agent. I want you to stand as my beneficiary and receive the
-fund And keep it safe so that as soon as am through with my mission
-here in Afghanistan.
-
-You will assist me to invest it in a good profitable Venture or you
-keep it for me until I arrive your country, I will give You 40% of the
-total money for your assistance after you have receive The money.
-Please reply back to me via my private email address
-(arnettdavid2030@gmail.com ) if you are willing to work with me so
-that I can send you the information where the money is been deposited,
-your urgent reply is needed  so i can send you more details.
-
-Thank Yours
-Sgt,Arnett David
