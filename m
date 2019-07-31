@@ -2,184 +2,115 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id DFB9F7BF12
-	for <lists+linux-gpio@lfdr.de>; Wed, 31 Jul 2019 13:15:43 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1FC7C7C0C4
+	for <lists+linux-gpio@lfdr.de>; Wed, 31 Jul 2019 14:09:51 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387466AbfGaLPh (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 31 Jul 2019 07:15:37 -0400
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:37201 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728739AbfGaLPh (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 31 Jul 2019 07:15:37 -0400
-Received: by mail-lj1-f194.google.com with SMTP id z28so10956383ljn.4;
-        Wed, 31 Jul 2019 04:15:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:from:to:cc:references:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=6z0jtE10XtL+WjLPVGjCGsdJe3oZV5LH8j0ivYKyCt4=;
-        b=m7LSUnp2AKhEQPzsHUvNhCfeivbslGOTTAPSQoRg7tdq7CIrz5928vLy3BEFklBZKb
-         RYXkVnRMp23ntLIEhvMtMZrcd/Ce4fPXS+ynw8gQenwGm1bTumBxKI/MaJRzgyPLMDxX
-         u/0yC8NkQzIM6IV3dmzlwhP9GZsu84ErcUZxqyWcMd8CzgAspDM5apcrk5bzLXUI9leu
-         cqC0VYHrqkQiV3hO4/Dw39WZxwWK6kbUnkO47TgCjcOmMaU7eAdCeNd7Fi9GnaRZVU0H
-         SRjohnKlGTx2VRYURDVWQZlhXaigAHCcPhkwf6bCvE4hOiWyKDVYNMPHGL+xXjfSjj9g
-         tjcg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=6z0jtE10XtL+WjLPVGjCGsdJe3oZV5LH8j0ivYKyCt4=;
-        b=GWCIqVk3pL8IRuqKBpLcDQ2SATFIzRIlP/lOjE32iIGcjNsGyI43X3eEFE0rWUvaEa
-         H6uqkIDHlPnwYReJ6/Aq0YW0jRzzzY56gL09aH0VpyFXS/OTnruwfcCnbSIzzgBtwCik
-         /9BKHl5477kxculrCWOiS4vUmaYC9N9hz098I5oU32WAGhhiWqetel85g0p9xdZdc2GX
-         TQ7iCObrj30Uy5tpWK2b0DjTTmvjC8OmuJAG93cZX9d6RRZq70q7+y+OayUEEOkX+tnJ
-         qLqmOdgV2+GJYBpEQ08JdGq7jnPBCMotrpYGtL+Vc4wlT6LavWNo4SRFjnP9m4C6mlYP
-         oCvw==
-X-Gm-Message-State: APjAAAWZh4slE8mObPkZGxL8B1xR5zz2U862jFhOsbpnKQVZBQhAs8H6
-        5geiKXDp0GlAd6d4wMzUO/SXciu7
-X-Google-Smtp-Source: APXvYqw91V/d9X1aLzic6f0zRJ0w1EuOIfqVFc+gfTo/wK4IYGv/9BDAISF90iCiwdueJAcscGgXWQ==
-X-Received: by 2002:a2e:9643:: with SMTP id z3mr65172467ljh.43.1564571734209;
-        Wed, 31 Jul 2019 04:15:34 -0700 (PDT)
-Received: from [192.168.2.145] (ppp91-78-220-99.pppoe.mtu-net.ru. [91.78.220.99])
-        by smtp.googlemail.com with ESMTPSA id s20sm11611282lfb.95.2019.07.31.04.15.32
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 31 Jul 2019 04:15:33 -0700 (PDT)
-Subject: Re: [PATCH v7 11/20] cpufreq: tegra124: Add suspend and resume
- support
-From:   Dmitry Osipenko <digetx@gmail.com>
-To:     Sowjanya Komatineni <skomatineni@nvidia.com>,
-        thierry.reding@gmail.com, jonathanh@nvidia.com, tglx@linutronix.de,
-        jason@lakedaemon.net, marc.zyngier@arm.com,
-        linus.walleij@linaro.org, stefan@agner.ch, mark.rutland@arm.com
-Cc:     pdeschrijver@nvidia.com, pgaikwad@nvidia.com, sboyd@kernel.org,
-        linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org,
-        jckuo@nvidia.com, josephl@nvidia.com, talho@nvidia.com,
-        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org,
-        mperttunen@nvidia.com, spatra@nvidia.com, robh+dt@kernel.org,
-        devicetree@vger.kernel.org
-References: <1564532424-10449-1-git-send-email-skomatineni@nvidia.com>
- <1564532424-10449-12-git-send-email-skomatineni@nvidia.com>
- <98aae4b7-d95a-90ba-0d55-7512b3712f54@gmail.com>
-Message-ID: <505bbdc0-c48a-8583-3838-ec5c128f375f@gmail.com>
-Date:   Wed, 31 Jul 2019 14:14:37 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        id S1726853AbfGaMJe (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 31 Jul 2019 08:09:34 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:3671 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725793AbfGaMJd (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Wed, 31 Jul 2019 08:09:33 -0400
+Received: from DGGEMS410-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id CD03E15202C67FF2B54E;
+        Wed, 31 Jul 2019 20:09:30 +0800 (CST)
+Received: from [127.0.0.1] (10.133.213.239) by DGGEMS410-HUB.china.huawei.com
+ (10.3.19.210) with Microsoft SMTP Server id 14.3.439.0; Wed, 31 Jul 2019
+ 20:09:26 +0800
+Subject: Re: [PATCH] gpio: remove duplicated function definition
+To:     <linus.walleij@linaro.org>, <bgolaszewski@baylibre.com>,
+        <yamada.masahiro@socionext.com>
+References: <20190731100028.48884-1-yuehaibing@huawei.com>
+CC:     <linux-kernel@vger.kernel.org>, <linux-gpio@vger.kernel.org>
+From:   Yuehaibing <yuehaibing@huawei.com>
+Message-ID: <1ce6b018-fca4-7b5e-7ddf-e55be9cdb221@huawei.com>
+Date:   Wed, 31 Jul 2019 20:09:25 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:45.0) Gecko/20100101
+ Thunderbird/45.2.0
 MIME-Version: 1.0
-In-Reply-To: <98aae4b7-d95a-90ba-0d55-7512b3712f54@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190731100028.48884-1-yuehaibing@huawei.com>
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.133.213.239]
+X-CFilter-Loop: Reflected
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-31.07.2019 13:23, Dmitry Osipenko пишет:
-> 31.07.2019 3:20, Sowjanya Komatineni пишет:
->> This patch adds suspend and resume pm ops for cpufreq driver.
->>
->> PLLP is the safe clock source for CPU during system suspend and
->> resume as PLLP rate is below the CPU Fmax at Vmin.
->>
->> CPUFreq driver suspend switches the CPU clock source to PLLP and
->> disables the DFLL clock.
->>
->> During system resume, warmboot code powers up the CPU with PLLP
->> clock source. So CPUFreq driver resume enabled DFLL clock and
->> switches CPU back to DFLL clock source.
->>
->> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
->> ---
->>  drivers/cpufreq/tegra124-cpufreq.c | 60 ++++++++++++++++++++++++++++++++++++++
->>  1 file changed, 60 insertions(+)
->>
->> diff --git a/drivers/cpufreq/tegra124-cpufreq.c b/drivers/cpufreq/tegra124-cpufreq.c
->> index 4f0c637b3b49..e979a3370988 100644
->> --- a/drivers/cpufreq/tegra124-cpufreq.c
->> +++ b/drivers/cpufreq/tegra124-cpufreq.c
->> @@ -6,6 +6,7 @@
->>  #define pr_fmt(fmt)	KBUILD_MODNAME ": " fmt
->>  
->>  #include <linux/clk.h>
->> +#include <linux/cpufreq.h>
->>  #include <linux/err.h>
->>  #include <linux/init.h>
->>  #include <linux/kernel.h>
->> @@ -128,8 +129,67 @@ static int tegra124_cpufreq_probe(struct platform_device *pdev)
->>  	return ret;
->>  }
->>  
->> +static int __maybe_unused tegra124_cpufreq_suspend(struct device *dev)
->> +{
->> +	struct tegra124_cpufreq_priv *priv = dev_get_drvdata(dev);
->> +	int err;
->> +
->> +	/*
->> +	 * PLLP rate 408Mhz is below the CPU Fmax at Vmin and is safe to
->> +	 * use during suspend and resume. So, switch the CPU clock source
->> +	 * to PLLP and disable DFLL.
->> +	 */
->> +	err = clk_set_parent(priv->cpu_clk, priv->pllp_clk);
->> +	if (err < 0) {
->> +		dev_err(dev, "failed to reparent to PLLP: %d\n", err);
->> +		return err;
->> +	}
->> +
->> +	/* disable DFLL clock */
->> +	clk_disable_unprepare(priv->dfll_clk);
->> +
->> +	return 0;
->> +}
->> +
->> +static int __maybe_unused tegra124_cpufreq_resume(struct device *dev)
->> +{
->> +	struct tegra124_cpufreq_priv *priv = dev_get_drvdata(dev);
->> +	int err;
->> +
->> +	/*
->> +	 * Warmboot code powers up the CPU with PLLP clock source.
->> +	 * Enable DFLL clock and switch CPU clock source back to DFLL.
->> +	 */
->> +	err = clk_prepare_enable(priv->dfll_clk);
->> +	if (err < 0) {
->> +		dev_err(dev, "failed to enable DFLL clock for CPU: %d\n", err);
->> +		goto disable_cpufreq;
->> +	}
->> +
->> +	err = clk_set_parent(priv->cpu_clk, priv->dfll_clk);
->> +	if (err < 0) {
->> +		dev_err(dev, "failed to reparent to DFLL clock: %d\n", err);
->> +		goto disable_dfll;
->> +	}
->> +
->> +	return 0;
->> +
->> +disable_dfll:
->> +	clk_disable_unprepare(priv->dfll_clk);
->> +disable_cpufreq:
->> +	disable_cpufreq();
->> +
->> +	return err;
->> +}
->> +
->> +static const struct dev_pm_ops tegra124_cpufreq_pm_ops = {
->> +	SET_SYSTEM_SLEEP_PM_OPS(tegra124_cpufreq_suspend,
->> +				tegra124_cpufreq_resume)
->> +};
->> +
->>  static struct platform_driver tegra124_cpufreq_platdrv = {
->>  	.driver.name	= "cpufreq-tegra124",
->> +	.driver.pm	= &tegra124_cpufreq_pm_ops,
->>  	.probe		= tegra124_cpufreq_probe,
->>  };
->>  
->>
+Pls drop this
+
+On 2019/7/31 18:00, YueHaibing wrote:
+> when building without CONFIG_PINCTRL:
 > 
-> Looks good,
+> In file included from drivers/hwmon/pmbus/ucd9000.c:19:0:
+> ./include/linux/gpio/driver.h:576:1: error: redefinition of gpiochip_add_pin_range
+>  gpiochip_add_pin_range(struct gpio_chip *chip, const char *pinctl_name,
+>  ^~~~~~~~~~~~~~~~~~~~~~
+> In file included from drivers/hwmon/pmbus/ucd9000.c:18:0:
+> ./include/linux/gpio.h:245:1: note: previous definition of gpiochip_add_pin_range was here
+>  gpiochip_add_pin_range(struct gpio_chip *chip, const char *pinctl_name,
+>  ^~~~~~~~~~~~~~~~~~~~~~
 > 
-> Reviewed-by: Dmitry Osipenko <digetx@gmail.com>
+> Reported-by: Hulk Robot <hulkci@huawei.com>
+> Fixes: 964cb341882f ("gpio: move pincontrol calls to <linux/gpio/driver.h>")
+> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+> ---
+>  include/linux/gpio/driver.h | 35 +----------------------------------
+>  1 file changed, 1 insertion(+), 34 deletions(-)
+> 
+> diff --git a/include/linux/gpio/driver.h b/include/linux/gpio/driver.h
+> index f28f534..09f96ec 100644
+> --- a/include/linux/gpio/driver.h
+> +++ b/include/linux/gpio/driver.h
+> @@ -10,6 +10,7 @@
+>  #include <linux/lockdep.h>
+>  #include <linux/pinctrl/pinctrl.h>
+>  #include <linux/pinctrl/pinconf-generic.h>
+> +#include <linux/gpio.h>
+>  
+>  struct gpio_desc;
+>  struct of_phandle_args;
+> @@ -560,40 +561,6 @@ struct gpio_pin_range {
+>  	struct pinctrl_gpio_range range;
+>  };
+>  
+> -#ifdef CONFIG_PINCTRL
+> -
+> -int gpiochip_add_pin_range(struct gpio_chip *chip, const char *pinctl_name,
+> -			   unsigned int gpio_offset, unsigned int pin_offset,
+> -			   unsigned int npins);
+> -int gpiochip_add_pingroup_range(struct gpio_chip *chip,
+> -			struct pinctrl_dev *pctldev,
+> -			unsigned int gpio_offset, const char *pin_group);
+> -void gpiochip_remove_pin_ranges(struct gpio_chip *chip);
+> -
+> -#else /* ! CONFIG_PINCTRL */
+> -
+> -static inline int
+> -gpiochip_add_pin_range(struct gpio_chip *chip, const char *pinctl_name,
+> -		       unsigned int gpio_offset, unsigned int pin_offset,
+> -		       unsigned int npins)
+> -{
+> -	return 0;
+> -}
+> -static inline int
+> -gpiochip_add_pingroup_range(struct gpio_chip *chip,
+> -			struct pinctrl_dev *pctldev,
+> -			unsigned int gpio_offset, const char *pin_group)
+> -{
+> -	return 0;
+> -}
+> -
+> -static inline void
+> -gpiochip_remove_pin_ranges(struct gpio_chip *chip)
+> -{
+> -}
+> -
+> -#endif /* CONFIG_PINCTRL */
+> -
+>  struct gpio_desc *gpiochip_request_own_desc(struct gpio_chip *chip, u16 hwnum,
+>  					    const char *label,
+>  					    enum gpio_lookup_flags lflags,
 > 
 
-BTW, you should also CC the CPUFreq maintainers because this patch can't
-be applied without theirs ACK.
