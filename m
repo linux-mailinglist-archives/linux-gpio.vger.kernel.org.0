@@ -2,32 +2,32 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 013567C37A
+	by mail.lfdr.de (Postfix) with ESMTP id 79F847C37B
 	for <lists+linux-gpio@lfdr.de>; Wed, 31 Jul 2019 15:30:05 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729507AbfGaN30 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 31 Jul 2019 09:29:26 -0400
-Received: from albert.telenet-ops.be ([195.130.137.90]:33492 "EHLO
-        albert.telenet-ops.be" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726096AbfGaN30 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 31 Jul 2019 09:29:26 -0400
+        id S2387759AbfGaN3a (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 31 Jul 2019 09:29:30 -0400
+Received: from andre.telenet-ops.be ([195.130.132.53]:33478 "EHLO
+        andre.telenet-ops.be" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729350AbfGaN3a (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 31 Jul 2019 09:29:30 -0400
 Received: from ramsan ([84.194.98.4])
-        by albert.telenet-ops.be with bizsmtp
-        id jRVQ2000E05gfCL06RVQUN; Wed, 31 Jul 2019 15:29:24 +0200
+        by andre.telenet-ops.be with bizsmtp
+        id jRVU2000Q05gfCL01RVVon; Wed, 31 Jul 2019 15:29:29 +0200
 Received: from rox.of.borg ([192.168.97.57])
         by ramsan with esmtp (Exim 4.90_1)
         (envelope-from <geert@linux-m68k.org>)
-        id 1hsofU-0001Aj-D5; Wed, 31 Jul 2019 15:29:24 +0200
+        id 1hsofY-0001Am-TI; Wed, 31 Jul 2019 15:29:28 +0200
 Received: from geert by rox.of.borg with local (Exim 4.90_1)
         (envelope-from <geert@linux-m68k.org>)
-        id 1hsofU-0004ao-Bg; Wed, 31 Jul 2019 15:29:24 +0200
+        id 1hsofY-0004au-SP; Wed, 31 Jul 2019 15:29:28 +0200
 From:   Geert Uytterhoeven <geert+renesas@glider.be>
 To:     Linus Walleij <linus.walleij@linaro.org>
 Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
         Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH 1/3] pinctrl: devicetree: Use strlen() instead of hardcoded number
-Date:   Wed, 31 Jul 2019 15:29:15 +0200
-Message-Id: <20190731132917.17607-2-geert+renesas@glider.be>
+Subject: [PATCH 2/3] pinctrl: lantiq: Use kasprintf() instead of fixed buffer formatting
+Date:   Wed, 31 Jul 2019 15:29:16 +0200
+Message-Id: <20190731132917.17607-3-geert+renesas@glider.be>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190731132917.17607-1-geert+renesas@glider.be>
 References: <20190731132917.17607-1-geert+renesas@glider.be>
@@ -36,34 +36,32 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Improve readability by replacing a hardcoded number requiring a comment
-by strlen().
-
-Gcc is smart enough to evaluate the length of a constant string at
-compile-time.
+Improve readability and maintainability by replacing a hardcoded string
+allocation and formatting by the use of the kasprintf() helper.
 
 Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
 ---
- drivers/pinctrl/devicetree.c | 6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
+ drivers/pinctrl/pinctrl-falcon.c | 6 +-----
+ 1 file changed, 1 insertion(+), 5 deletions(-)
 
-diff --git a/drivers/pinctrl/devicetree.c b/drivers/pinctrl/devicetree.c
-index 88ddbb2e30de10f6..5d6d8b1e906203af 100644
---- a/drivers/pinctrl/devicetree.c
-+++ b/drivers/pinctrl/devicetree.c
-@@ -228,10 +228,8 @@ int pinctrl_dt_to_map(struct pinctrl *p, struct pinctrl_dev *pctldev)
- 		 * than dynamically allocate it and have to free it later,
- 		 * just point part way into the property name for the string.
- 		 */
--		if (ret < 0) {
--			/* strlen("pinctrl-") == 8 */
--			statename = prop->name + 8;
--		}
-+		if (ret < 0)
-+			statename = prop->name + strlen("pinctrl-");
+diff --git a/drivers/pinctrl/pinctrl-falcon.c b/drivers/pinctrl/pinctrl-falcon.c
+index ef133a82e612544a..4a3b8d2677fd498f 100644
+--- a/drivers/pinctrl/pinctrl-falcon.c
++++ b/drivers/pinctrl/pinctrl-falcon.c
+@@ -96,12 +96,8 @@ static void lantiq_load_pin_desc(struct pinctrl_pin_desc *d, int bank, int len)
+ 	int i;
  
- 		/* For every referenced pin configuration node in it */
- 		for (config = 0; config < size; config++) {
+ 	for (i = 0; i < len; i++) {
+-		/* strlen("ioXYZ") + 1 = 6 */
+-		char *name = kzalloc(6, GFP_KERNEL);
+-
+-		snprintf(name, 6, "io%d", base + i);
+ 		d[i].number = base + i;
+-		d[i].name = name;
++		d[i].name = kasprintf(GFP_KERNEL, "io%d", base + i);
+ 	}
+ 	pad_count[bank] = len;
+ }
 -- 
 2.17.1
 
