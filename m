@@ -2,97 +2,122 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 1A3A37CAAD
-	for <lists+linux-gpio@lfdr.de>; Wed, 31 Jul 2019 19:38:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8AE7C7CC04
+	for <lists+linux-gpio@lfdr.de>; Wed, 31 Jul 2019 20:31:30 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727614AbfGaRiZ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 31 Jul 2019 13:38:25 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:40088 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727506AbfGaRiZ (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 31 Jul 2019 13:38:25 -0400
-Received: by mail-wr1-f67.google.com with SMTP id r1so70583643wrl.7
-        for <linux-gpio@vger.kernel.org>; Wed, 31 Jul 2019 10:38:23 -0700 (PDT)
+        id S1730227AbfGaSb3 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 31 Jul 2019 14:31:29 -0400
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:35542 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726901AbfGaSb2 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 31 Jul 2019 14:31:28 -0400
+Received: by mail-lj1-f196.google.com with SMTP id x25so66687009ljh.2
+        for <linux-gpio@vger.kernel.org>; Wed, 31 Jul 2019 11:31:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=q2yhFAEkO6lMSQpCsgHEGq+cZiBtUUzEZmb1bOp5l+g=;
-        b=H1X60bvibDXzul0sr+XrbN20SMSx+BKZMgDz272uYbZik5rYwc1bRz37siYS6KuUiO
-         aLphZ+YJO9Hw4Y06r+XnJpFfxC5gu9x9qlFxGApWJtJ0qyMgwe7j+43rjMmr4lOPJw4A
-         A2djUP7mhHXd1uIbDuS9loaoB3k5g8Q+GDvAXOdzI/xqROaXpzeTnAyS9926AxHhTwAv
-         qE9PipwsNWbdCYoik9Dp7nG/g4kHrZsiRtpMgw/p7Lf3FyT7pLl6i6i7nIFwXS0LgFwP
-         tUw4gz7uH5qvU5PK2KqUhW+IiJG4GjucWrOp4lSyNypfYtx3nlnS/iIaWjRYG9/nKA1m
-         TbDg==
+        d=ragnatech-se.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=vJsDdz97Zw8TmBEYszzsJ8gyO9JaskPZ5TL5se9kcjA=;
+        b=ZtzyL0pke78WEoqcC1HmSkoKajJIDVMZeoe+5p+yaAmx3hD1xuoyzPkVkKjl8TmGjQ
+         XC4pS7GjBwcmXhs7bWlqGDFa63FIbp6mh+52eJBo2HIdEY5z8GOlovv1IdNxyH/NYxMk
+         Jx/re55xJAdBYszVzmOCGgVfsV3boxFF63AkE+tyz0hIpUbRdcUVKNMzgfyulgb5WhL9
+         mof3sr9k3RHxdsMTdzLIXSPT61//tGAIe9dDTgFR5ak7leoMC2citpECb8nc7F983vUZ
+         zXtTJlXNdZajRLk+IAj1xHuLbs0/ORQwlWec1U+v0hOOI9uyHT2j7LXc3GKgjJpNznTQ
+         Y+tA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=q2yhFAEkO6lMSQpCsgHEGq+cZiBtUUzEZmb1bOp5l+g=;
-        b=SqTCc8YKUPHzd/PVg8JZbwEmunja83t7HcB221XXMzACCEJBTRa46gJzAe0xLLMhg+
-         9J0Dr1euWA2il1ecbemMOdMq8mtq+gJ6kww8ozOIyNJ25tgtHQsvxLXJuyi9lFyn9oR1
-         1TZtDRIXNjpearip0D/YtVMYKESJZLx7dYByG8Pb5rn4JqctchMH4l9jnY//ru2gmhRE
-         L72zZ3ZJ9R3fD9KVILU1kkErZB7kCbFrlcE74i7Cuv+zf3yt4bDXgFNp/eeJxf40Qf7u
-         bpUI3K6GkeYvI46TCGDWso1QfyR2wf87RGCm5RUAq7KhXUe5BOmp/dTgA0Rpa6XjjLY2
-         iISw==
-X-Gm-Message-State: APjAAAX2tK54vjOo8YJx9TRIjpch7H2s7tod26YMPO4S6za7wc7P5tn/
-        Imak3ec9FJYNemKslxcmjo4=
-X-Google-Smtp-Source: APXvYqyWReY2iqo4u8KqLw4+vbJh5k5sA6/WTKKrkhZk2zVPJxVK53IpVaN3rrZwtLq/+CUmq6HmJQ==
-X-Received: by 2002:a5d:4206:: with SMTP id n6mr68723670wrq.110.1564594703336;
-        Wed, 31 Jul 2019 10:38:23 -0700 (PDT)
-Received: from localhost.localdomain ([141.226.31.91])
-        by smtp.gmail.com with ESMTPSA id x11sm49016343wmi.26.2019.07.31.10.38.22
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=vJsDdz97Zw8TmBEYszzsJ8gyO9JaskPZ5TL5se9kcjA=;
+        b=b6kL70IDLutqo8IrlKaBHgGY+PZvNAgAkcYzCLDqKyRQ4g9ZVgpdRljJhGEXZ+R1Sn
+         TBxnKa4AbKLqya4qnYW9TC5bBnerufzkSx2H/pn/Z9gu6aSQcgPBo1sfc4ukMtFkmBjF
+         lboBHZwhwhDhdpgzN13v6WO3DX2bLQ35yPUGloVQeby0lBh06De7qFb2mM5uIO5Wy/Ur
+         iyeKVlq3kL0rraxwZi858v4OVx5pD4YrA7NHtpSEl6nXlYsYLL+izifH/UyjAorObQGD
+         lqmGqG5wvrUo2aRP1x2txHhV4Kx27lJRqAeJUQyv/zWghGiw02Q8y9wfoWjb7dN+arGd
+         usbg==
+X-Gm-Message-State: APjAAAX/o2ewfkPAzyKnOQvc+yEGCUqJn5UrDlgrpcVrqrOoXL5ol0Sd
+        dvBxSSKhysuyUoQDkW3ypaA=
+X-Google-Smtp-Source: APXvYqyMRZvxrjpzkGKYM5vNarRToNAYiMIQoNVYAKKWF6rx8DqNWkHQU9ZXrUOjSK/HVBfnxh5GEg==
+X-Received: by 2002:a2e:9dd7:: with SMTP id x23mr67030510ljj.160.1564597886166;
+        Wed, 31 Jul 2019 11:31:26 -0700 (PDT)
+Received: from localhost (customer-145-14-112-32.stosn.net. [145.14.112.32])
+        by smtp.gmail.com with ESMTPSA id 27sm14067933ljw.97.2019.07.31.11.31.24
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Wed, 31 Jul 2019 10:38:22 -0700 (PDT)
-From:   Ramon Fried <rfried.dev@gmail.com>
-To:     bgolaszewski@baylibre.com
-Cc:     linus.walleij@linaro.org, linux-gpio@vger.kernel.org,
-        Ramon Fried <rfried.dev@gmail.com>
-Subject: [libgpiod] [PATCH v2] gpioinfo: mark kernel claimed lines as used
-Date:   Wed, 31 Jul 2019 20:38:14 +0300
-Message-Id: <20190731173814.3400-1-rfried.dev@gmail.com>
-X-Mailer: git-send-email 2.22.0
+        Wed, 31 Jul 2019 11:31:24 -0700 (PDT)
+Date:   Wed, 31 Jul 2019 20:31:24 +0200
+From:   Niklas =?iso-8859-1?Q?S=F6derlund?= 
+        <niklas.soderlund@ragnatech.se>
+To:     Geert Uytterhoeven <geert+renesas@glider.be>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        linux-renesas-soc@vger.kernel.org, linux-gpio@vger.kernel.org
+Subject: Re: [PATCH] pinctrl: sh-pfc: Use dev_notice_once() instead of
+ open-coding
+Message-ID: <20190731183124.GK3186@bigcity.dyn.berto.se>
+References: <20190731132406.17381-1-geert+renesas@glider.be>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190731132406.17381-1-geert+renesas@glider.be>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-In case where the GPIOLINE_FLAG_KERNEL flag was set
-and no consumer string is provided by the kernel,
-the used column was still showing the pin as "unused"
-Fix that by writing "kernel".
+Hi Geert,
 
-Signed-off-by: Ramon Fried <rfried.dev@gmail.com>
----
-v2:
-  * Restructure for clarity
-  * Print "kernel" if line is used by kernel.
-  * Update commit message
+Thanks for your work.
 
- tools/gpioinfo.c | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+On 2019-07-31 15:24:06 +0200, Geert Uytterhoeven wrote:
+> At the time of commit 9a643c9a11259955 ("sh-pfc: Convert message
+> printing from pr_* to dev_*"), the dev_*_once() variants didn't exist
+> yet, so the once behavior was open-coded.
+> 
+> Since commit e135303bd5bebcd2 ("device: Add dev_<level>_once variants")
+> they do, so "revert" to the good practice of using a helper.
+> 
+> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-diff --git a/tools/gpioinfo.c b/tools/gpioinfo.c
-index bb17262..ba0327b 100644
---- a/tools/gpioinfo.c
-+++ b/tools/gpioinfo.c
-@@ -119,8 +119,12 @@ static void list_lines(struct gpiod_chip *chip)
- 		     : prinfo(&of, 12, "unnamed");
- 		printf(" ");
- 
--		consumer ? prinfo(&of, 12, "\"%s\"", consumer)
--			 : prinfo(&of, 12, "unused");
-+		if (!gpiod_line_is_used(line))
-+		      prinfo(&of, 12, "unused");
-+		else
-+			consumer ? prinfo(&of, 12, "\"%s\"", consumer)
-+				: prinfo(&of, 12, "kernel");
-+
- 		printf(" ");
- 
- 		prinfo(&of, 8, "%s ", direction == GPIOD_LINE_DIRECTION_INPUT
+Reviewed-by: Niklas Söderlund <niklas.soderlund+renesas@ragnatech.se>
+
+> ---
+> To be queued in sh-pfc-for-v5.4.
+> 
+>  drivers/pinctrl/sh-pfc/gpio.c | 9 ++-------
+>  1 file changed, 2 insertions(+), 7 deletions(-)
+> 
+> diff --git a/drivers/pinctrl/sh-pfc/gpio.c b/drivers/pinctrl/sh-pfc/gpio.c
+> index 97c1332c1045739a..64c09aa374ae011f 100644
+> --- a/drivers/pinctrl/sh-pfc/gpio.c
+> +++ b/drivers/pinctrl/sh-pfc/gpio.c
+> @@ -255,18 +255,13 @@ static int gpio_pin_setup(struct sh_pfc_chip *chip)
+>  #ifdef CONFIG_PINCTRL_SH_FUNC_GPIO
+>  static int gpio_function_request(struct gpio_chip *gc, unsigned offset)
+>  {
+> -	static bool __print_once;
+>  	struct sh_pfc *pfc = gpio_to_pfc(gc);
+>  	unsigned int mark = pfc->info->func_gpios[offset].enum_id;
+>  	unsigned long flags;
+>  	int ret;
+>  
+> -	if (!__print_once) {
+> -		dev_notice(pfc->dev,
+> -			   "Use of GPIO API for function requests is deprecated."
+> -			   " Convert to pinctrl\n");
+> -		__print_once = true;
+> -	}
+> +	dev_notice_once(pfc->dev,
+> +			"Use of GPIO API for function requests is deprecated, convert to pinctrl\n");
+>  
+>  	if (mark == 0)
+>  		return -EINVAL;
+> -- 
+> 2.17.1
+> 
+
 -- 
-2.22.0
-
+Regards,
+Niklas Söderlund
