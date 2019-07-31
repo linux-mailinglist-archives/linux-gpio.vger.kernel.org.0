@@ -2,93 +2,185 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 03C3D7B6C2
-	for <lists+linux-gpio@lfdr.de>; Wed, 31 Jul 2019 02:20:56 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BE1287B726
+	for <lists+linux-gpio@lfdr.de>; Wed, 31 Jul 2019 02:23:23 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728666AbfGaAUo (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 30 Jul 2019 20:20:44 -0400
-Received: from hqemgate16.nvidia.com ([216.228.121.65]:1933 "EHLO
-        hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728515AbfGaAUo (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 30 Jul 2019 20:20:44 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5d40dedb0000>; Tue, 30 Jul 2019 17:20:43 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Tue, 30 Jul 2019 17:20:42 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Tue, 30 Jul 2019 17:20:42 -0700
-Received: from HQMAIL105.nvidia.com (172.20.187.12) by HQMAIL105.nvidia.com
- (172.20.187.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 31 Jul
- 2019 00:20:32 +0000
-Received: from hqnvemgw01.nvidia.com (172.20.150.20) by HQMAIL105.nvidia.com
- (172.20.187.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
- Transport; Wed, 31 Jul 2019 00:20:32 +0000
-Received: from skomatineni-linux.nvidia.com (Not Verified[10.110.103.107]) by hqnvemgw01.nvidia.com with Trustwave SEG (v7,5,8,10121)
-        id <B5d40ded00008>; Tue, 30 Jul 2019 17:20:32 -0700
-From:   Sowjanya Komatineni <skomatineni@nvidia.com>
-To:     <thierry.reding@gmail.com>, <jonathanh@nvidia.com>,
-        <tglx@linutronix.de>, <jason@lakedaemon.net>,
-        <marc.zyngier@arm.com>, <linus.walleij@linaro.org>,
-        <stefan@agner.ch>, <mark.rutland@arm.com>
-CC:     <pdeschrijver@nvidia.com>, <pgaikwad@nvidia.com>,
-        <sboyd@kernel.org>, <linux-clk@vger.kernel.org>,
-        <linux-gpio@vger.kernel.org>, <jckuo@nvidia.com>,
-        <josephl@nvidia.com>, <talho@nvidia.com>, <skomatineni@nvidia.com>,
-        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <mperttunen@nvidia.com>, <spatra@nvidia.com>, <robh+dt@kernel.org>,
-        <digetx@gmail.com>, <devicetree@vger.kernel.org>
-Subject: [PATCH v7 20/20] arm64: dts: tegra210-p3450: Jetson Nano SC7 timings
-Date:   Tue, 30 Jul 2019 17:20:24 -0700
-Message-ID: <1564532424-10449-21-git-send-email-skomatineni@nvidia.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1564532424-10449-1-git-send-email-skomatineni@nvidia.com>
-References: <1564532424-10449-1-git-send-email-skomatineni@nvidia.com>
-X-NVConfidentiality: public
+        id S1726050AbfGaAXW (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 30 Jul 2019 20:23:22 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:39760 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725947AbfGaAXW (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 30 Jul 2019 20:23:22 -0400
+Received: by mail-wm1-f68.google.com with SMTP id u25so47828003wmc.4
+        for <linux-gpio@vger.kernel.org>; Tue, 30 Jul 2019 17:23:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernelci-org.20150623.gappssmtp.com; s=20150623;
+        h=message-id:date:mime-version:content-transfer-encoding:subject:to
+         :from;
+        bh=QXqPsrdZ2jzkQQsNFGYKiiVDgpptA9a8Q8K9En5QLp8=;
+        b=R98vohnbP5uBNmkNEAdJL3jCu3QmwB5T8fnIqS4Bej7Jz0TAW1q4Vnyi5mndrDqu89
+         WePis9pNQI5MAfq4wLiOKM0WZAb3zxk3tLR5XFaZFdcrmziCujcBv6Rjo+E6UnN2FQxt
+         yXJsFsjXUp+dSP1BTqclcMw5RpLoRqie44NNrQ4rqgKOKmsC6aCsQfgjg9tWkOE+6omk
+         uWhEvVhoU/LjPdpkJsogGHVCuBUoFBf8FtriKdsqvRX4m6i8/UtxODiF9JsNk9rTbNiE
+         7h7PRVxRaXt0xnHpBsG/MEc5+yqxzDWX6jhbOmQCIPYifYLT4W3t1DgMjZ1noKOaVHms
+         ENMw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:date:mime-version
+         :content-transfer-encoding:subject:to:from;
+        bh=QXqPsrdZ2jzkQQsNFGYKiiVDgpptA9a8Q8K9En5QLp8=;
+        b=uBJtWzW494nxVNyDgpwC6V28Qlzf6CxoFN//UQOe2NiHe+B/BzrHpIflthadZQyAiN
+         alioGEgROXepyOyec3rubcENeSc3hHjtQmh7KmheYG0TKDC9wYMali+Ur9s/1OX/HdNS
+         2yPhirG4ig3vxqzlfyd2Vx8F0t8x0OVNADvtyMAaJIBkX5Mu3GqA75V1a7cRy+iqzj9V
+         lCb/uiltecI42kgnCUw9jfQEGGQZo3F8tBzHb1x4af0tRUMEyzzc4UoY3DI/xhsqBNfF
+         7VurzKeoFZ+LI4yrNuw+ucwLVTT9298g2LE9kztjX4iuN67sfqTp7kFVozMoeyoSAIxb
+         KDGQ==
+X-Gm-Message-State: APjAAAWpdNtLKgF0/BjYXfScacrnWnKohFjCeGltfJvpkduHf70tsA2m
+        KOmGReFIx/oZIvoV3EzKGyIkizMvIgs=
+X-Google-Smtp-Source: APXvYqwoLJaiAlKymW0Fn/g/i3t5Kghmb/WOetYo/BAsIshaqjjAi/LToiKEMH4KOxC57781PjD7ig==
+X-Received: by 2002:a1c:f009:: with SMTP id a9mr5565609wmb.32.1564532600247;
+        Tue, 30 Jul 2019 17:23:20 -0700 (PDT)
+Received: from [148.251.42.114] ([2a01:4f8:201:9271::2])
+        by smtp.gmail.com with ESMTPSA id u18sm52775218wmd.19.2019.07.30.17.23.19
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 30 Jul 2019 17:23:19 -0700 (PDT)
+Message-ID: <5d40df77.1c69fb81.ae4ad.1402@mx.google.com>
+Date:   Tue, 30 Jul 2019 17:23:19 -0700 (PDT)
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1564532443; bh=IAZSdScPMp/Ip7Sf+sfNEWrp2xlTiRUarz1Aolfu/RA=;
-        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
-         In-Reply-To:References:X-NVConfidentiality:MIME-Version:
-         Content-Type;
-        b=VuYjBv+Z+BRNwhlxmCNlzTTak0GT3+qol3Xczel4t9wnMRm7nCxIGajRmarWnwXPD
-         ryhqBrCUJ2MSIHoXug3YXhLXfwX3LzJW0oZ3x+FigGCazGZmY+KEhr9GO+4pf2tC1f
-         zendWdxG2lxGd9FWlGobh8G86TIIBFNij8GArfUxwDtmjq9+QCUDgsHoDdb+xvHxG3
-         KrxEJXYWptr5CRSZyK2sAvTHXwomyTHY9Dta04rAfGA5O5Ptyt0UJh6QJ8FD3AR0/k
-         biSWfW0d07u75VlwV+ONB39wz04+/ti2TQoRgXpEEw9Kpp7QWsHwiqHaV+MpbemuDZ
-         bdL+CAwAfYb1w==
+Content-Transfer-Encoding: quoted-printable
+X-Kernelci-Tree: linusw
+X-Kernelci-Kernel: v5.3-rc1-8-g2838bf941b12
+X-Kernelci-Branch: devel
+X-Kernelci-Report-Type: build
+Subject: linusw/devel build: 6 builds: 0 failed, 6 passed,
+ 13 warnings (v5.3-rc1-8-g2838bf941b12)
+To:     linux-gpio@vger.kernel.org, fellows@kernelci.org
+From:   "kernelci.org bot" <bot@kernelci.org>
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-This patch adds Jetson Nano platform specific SC7 timing configuration
-in the device tree.
+linusw/devel build: 6 builds: 0 failed, 6 passed, 13 warnings (v5.3-rc1-8-g=
+2838bf941b12)
 
-Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
+Full Build Summary: https://kernelci.org/build/linusw/branch/devel/kernel/v=
+5.3-rc1-8-g2838bf941b12/
+
+Tree: linusw
+Branch: devel
+Git Describe: v5.3-rc1-8-g2838bf941b12
+Git Commit: 2838bf941b120ec846a3903db13e319368d51b08
+Git URL: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-gpio.=
+git/
+Built: 6 unique architectures
+
+Warnings Detected:
+
+arc:
+    nsim_hs_defconfig (gcc-8): 2 warnings
+
+arm64:
+
+arm:
+    multi_v7_defconfig (gcc-8): 6 warnings
+
+mips:
+    32r2el_defconfig (gcc-8): 3 warnings
+
+riscv:
+    defconfig (gcc-8): 2 warnings
+
+x86_64:
+
+
+Warnings summary:
+
+    7    <stdin>:1511:2: warning: #warning syscall clone3 not implemented [=
+-Wcpp]
+    1    arch/arm/boot/dts/bcm47094-linksys-panamera.dts:129.4-18: Warning =
+(reg_format): /mdio-bus-mux/mdio@200:reg: property has invalid length (4 by=
+tes) (#address-cells =3D=3D 2, #size-cells =3D=3D 1)
+    1    arch/arm/boot/dts/bcm47094-linksys-panamera.dts:128.22-132.5: Warn=
+ing (avoid_default_addr_size): /mdio-bus-mux/mdio@200: Relying on default #=
+size-cells value
+    1    arch/arm/boot/dts/bcm47094-linksys-panamera.dts:128.22-132.5: Warn=
+ing (avoid_default_addr_size): /mdio-bus-mux/mdio@200: Relying on default #=
+address-cells value
+    1    arch/arm/boot/dts/bcm47094-linksys-panamera.dtb: Warning (spi_bus_=
+reg): Failed prerequisite 'reg_format'
+    1    arch/arm/boot/dts/bcm47094-linksys-panamera.dtb: Warning (pci_devi=
+ce_bus_num): Failed prerequisite 'reg_format'
+    1    arch/arm/boot/dts/bcm47094-linksys-panamera.dtb: Warning (i2c_bus_=
+reg): Failed prerequisite 'reg_format'
+
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D
+
+Detailed per-defconfig build reports:
+
+---------------------------------------------------------------------------=
+-----
+32r2el_defconfig (mips, gcc-8) =E2=80=94 PASS, 0 errors, 3 warnings, 0 sect=
+ion mismatches
+
+Warnings:
+    <stdin>:1511:2: warning: #warning syscall clone3 not implemented [-Wcpp]
+    <stdin>:1511:2: warning: #warning syscall clone3 not implemented [-Wcpp]
+    <stdin>:1511:2: warning: #warning syscall clone3 not implemented [-Wcpp]
+
+---------------------------------------------------------------------------=
+-----
+defconfig (riscv, gcc-8) =E2=80=94 PASS, 0 errors, 2 warnings, 0 section mi=
+smatches
+
+Warnings:
+    <stdin>:1511:2: warning: #warning syscall clone3 not implemented [-Wcpp]
+    <stdin>:1511:2: warning: #warning syscall clone3 not implemented [-Wcpp]
+
+---------------------------------------------------------------------------=
+-----
+defconfig (arm64, gcc-8) =E2=80=94 PASS, 0 errors, 0 warnings, 0 section mi=
+smatches
+
+---------------------------------------------------------------------------=
+-----
+multi_v7_defconfig (arm, gcc-8) =E2=80=94 PASS, 0 errors, 6 warnings, 0 sec=
+tion mismatches
+
+Warnings:
+    arch/arm/boot/dts/bcm47094-linksys-panamera.dts:129.4-18: Warning (reg_=
+format): /mdio-bus-mux/mdio@200:reg: property has invalid length (4 bytes) =
+(#address-cells =3D=3D 2, #size-cells =3D=3D 1)
+    arch/arm/boot/dts/bcm47094-linksys-panamera.dtb: Warning (pci_device_bu=
+s_num): Failed prerequisite 'reg_format'
+    arch/arm/boot/dts/bcm47094-linksys-panamera.dtb: Warning (i2c_bus_reg):=
+ Failed prerequisite 'reg_format'
+    arch/arm/boot/dts/bcm47094-linksys-panamera.dtb: Warning (spi_bus_reg):=
+ Failed prerequisite 'reg_format'
+    arch/arm/boot/dts/bcm47094-linksys-panamera.dts:128.22-132.5: Warning (=
+avoid_default_addr_size): /mdio-bus-mux/mdio@200: Relying on default #addre=
+ss-cells value
+    arch/arm/boot/dts/bcm47094-linksys-panamera.dts:128.22-132.5: Warning (=
+avoid_default_addr_size): /mdio-bus-mux/mdio@200: Relying on default #size-=
+cells value
+
+---------------------------------------------------------------------------=
+-----
+nsim_hs_defconfig (arc, gcc-8) =E2=80=94 PASS, 0 errors, 2 warnings, 0 sect=
+ion mismatches
+
+Warnings:
+    <stdin>:1511:2: warning: #warning syscall clone3 not implemented [-Wcpp]
+    <stdin>:1511:2: warning: #warning syscall clone3 not implemented [-Wcpp]
+
+---------------------------------------------------------------------------=
+-----
+x86_64_defconfig (x86_64, gcc-8) =E2=80=94 PASS, 0 errors, 0 warnings, 0 se=
+ction mismatches
+
 ---
- arch/arm64/boot/dts/nvidia/tegra210-p3450-0000.dts | 7 +++++++
- 1 file changed, 7 insertions(+)
-
-diff --git a/arch/arm64/boot/dts/nvidia/tegra210-p3450-0000.dts b/arch/arm64/boot/dts/nvidia/tegra210-p3450-0000.dts
-index 9d17ec707bce..b525e69c172a 100644
---- a/arch/arm64/boot/dts/nvidia/tegra210-p3450-0000.dts
-+++ b/arch/arm64/boot/dts/nvidia/tegra210-p3450-0000.dts
-@@ -382,6 +382,13 @@
- 
- 	pmc@7000e400 {
- 		nvidia,invert-interrupt;
-+		nvidia,suspend-mode = <0>;
-+		nvidia,cpu-pwr-good-time = <0>;
-+		nvidia,cpu-pwr-off-time = <0>;
-+		nvidia,core-pwr-good-time = <4587 3876>;
-+		nvidia,core-pwr-off-time = <39065>;
-+		nvidia,core-power-req-active-high;
-+		nvidia,sys-clock-req-active-high;
- 	};
- 
- 	hda@70030000 {
--- 
-2.7.4
-
+For more info write to <info@kernelci.org>
