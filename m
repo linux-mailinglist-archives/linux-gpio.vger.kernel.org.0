@@ -2,111 +2,96 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 1A5617BDE5
-	for <lists+linux-gpio@lfdr.de>; Wed, 31 Jul 2019 12:02:11 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 33EBF7BDF9
+	for <lists+linux-gpio@lfdr.de>; Wed, 31 Jul 2019 12:05:17 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387598AbfGaKAv (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 31 Jul 2019 06:00:51 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:3268 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2387612AbfGaKAv (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Wed, 31 Jul 2019 06:00:51 -0400
-Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id EA85F9BBF657C09B2632;
-        Wed, 31 Jul 2019 18:00:48 +0800 (CST)
-Received: from localhost (10.133.213.239) by DGGEMS402-HUB.china.huawei.com
- (10.3.19.202) with Microsoft SMTP Server id 14.3.439.0; Wed, 31 Jul 2019
- 18:00:39 +0800
-From:   YueHaibing <yuehaibing@huawei.com>
-To:     <linus.walleij@linaro.org>, <bgolaszewski@baylibre.com>,
-        <yamada.masahiro@socionext.com>
-CC:     <linux-kernel@vger.kernel.org>, <linux-gpio@vger.kernel.org>,
-        YueHaibing <yuehaibing@huawei.com>
-Subject: [PATCH] gpio: remove duplicated function definition
-Date:   Wed, 31 Jul 2019 18:00:28 +0800
-Message-ID: <20190731100028.48884-1-yuehaibing@huawei.com>
-X-Mailer: git-send-email 2.10.2.windows.1
+        id S1726520AbfGaKFQ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 31 Jul 2019 06:05:16 -0400
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:43186 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726378AbfGaKFQ (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 31 Jul 2019 06:05:16 -0400
+Received: by mail-ot1-f68.google.com with SMTP id j11so12275028otp.10
+        for <linux-gpio@vger.kernel.org>; Wed, 31 Jul 2019 03:05:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=+1oHf1+ErP2HL7hVOGccTTUzsvFfZGUFo4kLW3/NF74=;
+        b=V4wjj7k//NOYAnpNAy96d0VR3zxB/qYbLmdYJlrlx0nf+bmL39DVNQc/aRXm7+14Id
+         PRhm47KopeSw/zRX9YujsBjwurOMNyRArBrMcO+4PVWv9/YoJEewX7M3rp6sBlkT5poE
+         Lw7+yeT4e2/pjmdK4Rp+CK7UaMbXrRIPKlX/0lLBU3osLmjUg6j2dUhXAp3+FHUnib8n
+         VLrjR/DC1z5Nx4pcVMj3mDFFdkRItDwZSDrRw39UzVjSc6p9hhMhztFlQvQ/WdfGgpl0
+         LsRicLctxiARRIw8wpN9xzzeS2+TT5nIbWW0twE2svcmdPwDEmgbFlYvm0RT6HYPOfAW
+         K5mw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=+1oHf1+ErP2HL7hVOGccTTUzsvFfZGUFo4kLW3/NF74=;
+        b=G7d15wMQK2ZXUSRY683/TYq+CWw0ewOHFiv3sAteG6afKZF1Vu/odOtnTyDygpXzax
+         PWLwziY1jDF++YXraxVZ2OMUKbRvRoHzIPFeo6N8Nv6F0+1HNXO+6IlKswfIQ160li/e
+         h4idGDQcaV73nExWnrxLzX91w2LLeWDbAOm9NtjFfuUq2MowH9MAbMFCIImguvVaYu7F
+         3iYBLV/X3+UZqNIWgll3s2j3DSz5yiyR7puf2hiOM3BhNNciqy9IdGT3SyqhNdQ/s6vW
+         KD3V6EAT6VSdbTbDDdzp7EQRaV5r9wTyEjYCVZB4l9AAnwpOx7vDG2qqhwZyRmyW5pru
+         3yyA==
+X-Gm-Message-State: APjAAAVF2f3CwMPimerqj6ZefryD0Hq48h28NDyBuUZ7SYzoEAidnwoh
+        QtqONep2OvWs73ejoPAJBb10Xz+0SBFE3eU54CW9zg==
+X-Google-Smtp-Source: APXvYqz5jnxUo8M7IbSxK0LhJprE4y7hCuX1ujLyNA1InAolL8RUQuVGlHq6hYe8FOBh+P3mZT3Ka7f3nLqQT5diftM=
+X-Received: by 2002:a9d:7352:: with SMTP id l18mr27744113otk.292.1564567515226;
+ Wed, 31 Jul 2019 03:05:15 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.133.213.239]
-X-CFilter-Loop: Reflected
+References: <1564566474-18294-1-git-send-email-dingxiang@cmss.chinamobile.com>
+In-Reply-To: <1564566474-18294-1-git-send-email-dingxiang@cmss.chinamobile.com>
+From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Date:   Wed, 31 Jul 2019 12:05:04 +0200
+Message-ID: <CAMpxmJXmvcbU5JD6qjEpJfdyWhDMtPbzMsmFHgASuDYzWBWGqA@mail.gmail.com>
+Subject: Re: [PATCH] gpio: ixp4xx: remove redundant dev_err message
+To:     Ding Xiang <dingxiang@cmss.chinamobile.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        linux-gpio <linux-gpio@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-when building without CONFIG_PINCTRL:
+=C5=9Br., 31 lip 2019 o 11:48 Ding Xiang <dingxiang@cmss.chinamobile.com> n=
+apisa=C5=82(a):
+>
+> devm_ioremap_resource already contains error message, so remove
+> the redundant dev_err message
+>
+> Signed-off-by: Ding Xiang <dingxiang@cmss.chinamobile.com>
+> ---
+>  drivers/gpio/gpio-ixp4xx.c | 4 +---
+>  1 file changed, 1 insertion(+), 3 deletions(-)
+>
+> diff --git a/drivers/gpio/gpio-ixp4xx.c b/drivers/gpio/gpio-ixp4xx.c
+> index 670c2a8..2b2b89b 100644
+> --- a/drivers/gpio/gpio-ixp4xx.c
+> +++ b/drivers/gpio/gpio-ixp4xx.c
+> @@ -321,10 +321,8 @@ static int ixp4xx_gpio_probe(struct platform_device =
+*pdev)
+>
+>         res =3D platform_get_resource(pdev, IORESOURCE_MEM, 0);
+>         g->base =3D devm_ioremap_resource(dev, res);
+> -       if (IS_ERR(g->base)) {
+> -               dev_err(dev, "ioremap error\n");
+> +       if (IS_ERR(g->base))
+>                 return PTR_ERR(g->base);
+> -       }
+>
+>         /*
+>          * Make sure GPIO 14 and 15 are NOT used as clocks but GPIO on
+> --
+> 1.9.1
+>
+>
+>
 
-In file included from drivers/hwmon/pmbus/ucd9000.c:19:0:
-./include/linux/gpio/driver.h:576:1: error: redefinition of gpiochip_add_pin_range
- gpiochip_add_pin_range(struct gpio_chip *chip, const char *pinctl_name,
- ^~~~~~~~~~~~~~~~~~~~~~
-In file included from drivers/hwmon/pmbus/ucd9000.c:18:0:
-./include/linux/gpio.h:245:1: note: previous definition of gpiochip_add_pin_range was here
- gpiochip_add_pin_range(struct gpio_chip *chip, const char *pinctl_name,
- ^~~~~~~~~~~~~~~~~~~~~~
+Patch applied, thanks!
 
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Fixes: 964cb341882f ("gpio: move pincontrol calls to <linux/gpio/driver.h>")
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
----
- include/linux/gpio/driver.h | 35 +----------------------------------
- 1 file changed, 1 insertion(+), 34 deletions(-)
-
-diff --git a/include/linux/gpio/driver.h b/include/linux/gpio/driver.h
-index f28f534..09f96ec 100644
---- a/include/linux/gpio/driver.h
-+++ b/include/linux/gpio/driver.h
-@@ -10,6 +10,7 @@
- #include <linux/lockdep.h>
- #include <linux/pinctrl/pinctrl.h>
- #include <linux/pinctrl/pinconf-generic.h>
-+#include <linux/gpio.h>
- 
- struct gpio_desc;
- struct of_phandle_args;
-@@ -560,40 +561,6 @@ struct gpio_pin_range {
- 	struct pinctrl_gpio_range range;
- };
- 
--#ifdef CONFIG_PINCTRL
--
--int gpiochip_add_pin_range(struct gpio_chip *chip, const char *pinctl_name,
--			   unsigned int gpio_offset, unsigned int pin_offset,
--			   unsigned int npins);
--int gpiochip_add_pingroup_range(struct gpio_chip *chip,
--			struct pinctrl_dev *pctldev,
--			unsigned int gpio_offset, const char *pin_group);
--void gpiochip_remove_pin_ranges(struct gpio_chip *chip);
--
--#else /* ! CONFIG_PINCTRL */
--
--static inline int
--gpiochip_add_pin_range(struct gpio_chip *chip, const char *pinctl_name,
--		       unsigned int gpio_offset, unsigned int pin_offset,
--		       unsigned int npins)
--{
--	return 0;
--}
--static inline int
--gpiochip_add_pingroup_range(struct gpio_chip *chip,
--			struct pinctrl_dev *pctldev,
--			unsigned int gpio_offset, const char *pin_group)
--{
--	return 0;
--}
--
--static inline void
--gpiochip_remove_pin_ranges(struct gpio_chip *chip)
--{
--}
--
--#endif /* CONFIG_PINCTRL */
--
- struct gpio_desc *gpiochip_request_own_desc(struct gpio_chip *chip, u16 hwnum,
- 					    const char *label,
- 					    enum gpio_lookup_flags lflags,
--- 
-2.7.4
-
-
+Bart
