@@ -2,122 +2,159 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 8AE7C7CC04
-	for <lists+linux-gpio@lfdr.de>; Wed, 31 Jul 2019 20:31:30 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AA5CC7CD4A
+	for <lists+linux-gpio@lfdr.de>; Wed, 31 Jul 2019 21:58:14 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730227AbfGaSb3 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 31 Jul 2019 14:31:29 -0400
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:35542 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726901AbfGaSb2 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 31 Jul 2019 14:31:28 -0400
-Received: by mail-lj1-f196.google.com with SMTP id x25so66687009ljh.2
-        for <linux-gpio@vger.kernel.org>; Wed, 31 Jul 2019 11:31:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ragnatech-se.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=vJsDdz97Zw8TmBEYszzsJ8gyO9JaskPZ5TL5se9kcjA=;
-        b=ZtzyL0pke78WEoqcC1HmSkoKajJIDVMZeoe+5p+yaAmx3hD1xuoyzPkVkKjl8TmGjQ
-         XC4pS7GjBwcmXhs7bWlqGDFa63FIbp6mh+52eJBo2HIdEY5z8GOlovv1IdNxyH/NYxMk
-         Jx/re55xJAdBYszVzmOCGgVfsV3boxFF63AkE+tyz0hIpUbRdcUVKNMzgfyulgb5WhL9
-         mof3sr9k3RHxdsMTdzLIXSPT61//tGAIe9dDTgFR5ak7leoMC2citpECb8nc7F983vUZ
-         zXtTJlXNdZajRLk+IAj1xHuLbs0/ORQwlWec1U+v0hOOI9uyHT2j7LXc3GKgjJpNznTQ
-         Y+tA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=vJsDdz97Zw8TmBEYszzsJ8gyO9JaskPZ5TL5se9kcjA=;
-        b=b6kL70IDLutqo8IrlKaBHgGY+PZvNAgAkcYzCLDqKyRQ4g9ZVgpdRljJhGEXZ+R1Sn
-         TBxnKa4AbKLqya4qnYW9TC5bBnerufzkSx2H/pn/Z9gu6aSQcgPBo1sfc4ukMtFkmBjF
-         lboBHZwhwhDhdpgzN13v6WO3DX2bLQ35yPUGloVQeby0lBh06De7qFb2mM5uIO5Wy/Ur
-         iyeKVlq3kL0rraxwZi858v4OVx5pD4YrA7NHtpSEl6nXlYsYLL+izifH/UyjAorObQGD
-         lqmGqG5wvrUo2aRP1x2txHhV4Kx27lJRqAeJUQyv/zWghGiw02Q8y9wfoWjb7dN+arGd
-         usbg==
-X-Gm-Message-State: APjAAAX/o2ewfkPAzyKnOQvc+yEGCUqJn5UrDlgrpcVrqrOoXL5ol0Sd
-        dvBxSSKhysuyUoQDkW3ypaA=
-X-Google-Smtp-Source: APXvYqyMRZvxrjpzkGKYM5vNarRToNAYiMIQoNVYAKKWF6rx8DqNWkHQU9ZXrUOjSK/HVBfnxh5GEg==
-X-Received: by 2002:a2e:9dd7:: with SMTP id x23mr67030510ljj.160.1564597886166;
-        Wed, 31 Jul 2019 11:31:26 -0700 (PDT)
-Received: from localhost (customer-145-14-112-32.stosn.net. [145.14.112.32])
-        by smtp.gmail.com with ESMTPSA id 27sm14067933ljw.97.2019.07.31.11.31.24
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Wed, 31 Jul 2019 11:31:24 -0700 (PDT)
-Date:   Wed, 31 Jul 2019 20:31:24 +0200
-From:   Niklas =?iso-8859-1?Q?S=F6derlund?= 
-        <niklas.soderlund@ragnatech.se>
-To:     Geert Uytterhoeven <geert+renesas@glider.be>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        linux-renesas-soc@vger.kernel.org, linux-gpio@vger.kernel.org
-Subject: Re: [PATCH] pinctrl: sh-pfc: Use dev_notice_once() instead of
- open-coding
-Message-ID: <20190731183124.GK3186@bigcity.dyn.berto.se>
-References: <20190731132406.17381-1-geert+renesas@glider.be>
+        id S1728933AbfGaT6L (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 31 Jul 2019 15:58:11 -0400
+Received: from mout.kundenserver.de ([212.227.126.135]:37177 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728336AbfGaT6K (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 31 Jul 2019 15:58:10 -0400
+Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
+ (mreue012 [212.227.15.129]) with ESMTPA (Nemesis) id
+ 1N5CMP-1iJtxV2cYX-0119Cu; Wed, 31 Jul 2019 21:57:28 +0200
+From:   Arnd Bergmann <arnd@arndb.de>
+To:     soc@kernel.org, linux-arm-kernel@lists.infradead.org,
+        Vladimir Zapolskiy <vz@mleia.com>,
+        Sylvain Lemieux <slemieux.tyco@gmail.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Gregory Clement <gregory.clement@bootlin.com>,
+        Linus Walleij <linus.walleij@linaro.org>
+Cc:     Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>,
+        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        Guenter Roeck <linux@roeck-us.net>, linux-gpio@vger.kernel.org,
+        netdev@vger.kernel.org, linux-serial@vger.kernel.org,
+        linux-usb@vger.kernel.org, linux-watchdog@vger.kernel.org,
+        Arnd Bergmann <arnd@arndb.de>
+Subject: [PATCH 00/14] ARM: move lpc32xx and dove to multiplatform
+Date:   Wed, 31 Jul 2019 21:56:42 +0200
+Message-Id: <20190731195713.3150463-1-arnd@arndb.de>
+X-Mailer: git-send-email 2.20.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190731132406.17381-1-geert+renesas@glider.be>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+X-Provags-ID: V03:K1:1DhJgllZnoaEPYGs1RPUPXgQ/oF4uTuXo6cjjEDlbbMgcBjoaAv
+ /4Gqy5waGt8kWlKhcISqSvbWy0PqMUozbeltyk8i/JLnrBG/MVV5i1YTE1nD7PThG9QNAmS
+ 9iyG0heOlxZNdw6cfYwcabbQ4ypVIGuPXXQgozREfFxzQ2zdx45uahc4xbAtdP9o5sKxvCC
+ QICiay/kY46x1cxToEO+Q==
+X-Spam-Flag: NO
+X-UI-Out-Filterresults: notjunk:1;V03:K0:mD1LaNfCPok=:FewDXWtPUyzX3X8MXpV7JW
+ LaqXUelWhb8EMKM9tjVsXF3uv3rGnLUQLTL3SIhUo5xti4RrQb4v+7ZE9yZYkDT/kQUFglWBF
+ lvLzinWKjjV6sSbqWJx4qfC9UWznfZPTYFC0lU7lQvUiwKDJFULnI39CJPnfNf8oV1md80F+/
+ hRIBJf7UroozZKWXZBvCj6qhyUyZ/FiHCNNW2NDEdbLHw+RzE7exwMnGT1w0lIBEpoAGv2Dr0
+ PBNGV7aQ6xzA0jg4iovZdBo/K95EQQ01IeAqK8r5l+nAyvyv2QvsAJQ14dqS5qi25TZ1HWgbW
+ y4QfqDfSHyPqf/ou/tBXJfUqNTtkEHqRHevOyCywjUO6/+vmF0vXcTWkvwaAm4sGIptdKDXWf
+ vtBI71SeOlShLuGqMsOjWNfuDgHE1L/lu7MthTfzB10WFgxJcNmRo4s9WeGLQ70M32rGTuxj0
+ fSYfbzci3w+xK0+XnbveZhY0YH1dlePkcvm5RcBHfqcDSZeaxvZOEWZuQBdL5qA+OiCoOBHN/
+ TXPne5Yf1BBWIvVnrwfM04RWKmQCqibG92YYGeZ5RbfG0SnyxVH9lpvMOdClQg6oaUfXe5PDO
+ i0ClE84DAfmzelDecUQRNORb73/EiNmERpGmA3zwXKqxfIyWnfZ2quBv5cM9S7o9G+R4W+KSC
+ gcyOjCbSLMmxXz5/jt8neKqYJ0JYW7vreycPeVeKJaw2+fgZVKgvFFPHKu2AnGnd6ZR49ZNAT
+ gfRkW3tCbcUDHer3OPC2tLmSu8Ryf7Wm0PaGnw==
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Geert,
+I revisited some older patches here, getting two of the remaining
+ARM platforms to build with ARCH_MULTIPLATFORM like most others do.
 
-Thanks for your work.
+In case of lpc32xx, I created a new set of patches, which seemed
+easier than digging out what I did for an older release many
+years ago.
 
-On 2019-07-31 15:24:06 +0200, Geert Uytterhoeven wrote:
-> At the time of commit 9a643c9a11259955 ("sh-pfc: Convert message
-> printing from pr_* to dev_*"), the dev_*_once() variants didn't exist
-> yet, so the once behavior was open-coded.
-> 
-> Since commit e135303bd5bebcd2 ("device: Add dev_<level>_once variants")
-> they do, so "revert" to the good practice of using a helper.
-> 
-> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+For dove, the patches are basically what I had proposed back in
+2015 when all other ARMv6/ARMv7 machines became part of a single
+kernel build. I don't know what the state is mach-dove support is,
+compared to the DT based support in mach-mvebu for the same
+hardware. If they are functionally the same, we could also just
+remove mach-dove rather than applying my patches.
 
-Reviewed-by: Niklas Söderlund <niklas.soderlund+renesas@ragnatech.se>
+I also created patches to remove the w90x900 and ks8695 platforms
+that seem to have lost their last users a few years ago.
+I will post them separately, but plan to apply them in the same
+branch for linux-5.4 if there are no objections.
 
-> ---
-> To be queued in sh-pfc-for-v5.4.
-> 
->  drivers/pinctrl/sh-pfc/gpio.c | 9 ++-------
->  1 file changed, 2 insertions(+), 7 deletions(-)
-> 
-> diff --git a/drivers/pinctrl/sh-pfc/gpio.c b/drivers/pinctrl/sh-pfc/gpio.c
-> index 97c1332c1045739a..64c09aa374ae011f 100644
-> --- a/drivers/pinctrl/sh-pfc/gpio.c
-> +++ b/drivers/pinctrl/sh-pfc/gpio.c
-> @@ -255,18 +255,13 @@ static int gpio_pin_setup(struct sh_pfc_chip *chip)
->  #ifdef CONFIG_PINCTRL_SH_FUNC_GPIO
->  static int gpio_function_request(struct gpio_chip *gc, unsigned offset)
->  {
-> -	static bool __print_once;
->  	struct sh_pfc *pfc = gpio_to_pfc(gc);
->  	unsigned int mark = pfc->info->func_gpios[offset].enum_id;
->  	unsigned long flags;
->  	int ret;
->  
-> -	if (!__print_once) {
-> -		dev_notice(pfc->dev,
-> -			   "Use of GPIO API for function requests is deprecated."
-> -			   " Convert to pinctrl\n");
-> -		__print_once = true;
-> -	}
-> +	dev_notice_once(pfc->dev,
-> +			"Use of GPIO API for function requests is deprecated, convert to pinctrl\n");
->  
->  	if (mark == 0)
->  		return -EINVAL;
-> -- 
-> 2.17.1
-> 
+      Arnd
+
+Arnd Bergmann (14):
+  usb: ohci-nxp: enable compile-testing
+  usb: udc: lpc32xx: allow compile-testing
+  watchdog: pnx4008_wdt: allow compile-testing
+  serial: lpc32xx_hs: allow compile-testing
+  gpio: lpc32xx: allow building on non-lpc32xx targets
+  net: lpc-enet: factor out iram access
+  net: lpc-enet: move phy setup into platform code
+  net: lpc-enet: allow compile testing
+  serial: lpc32xx: allow compile testing
+  ARM: lpc32xx: clean up header files
+  ARM: lpc32xx: allow multiplatform build
+  ARM: dove: clean up mach/*.h headers
+  ARM: orion/mvebu: unify debug-ll virtual addresses
+  ARM: dove: multiplatform support
+
+ arch/arm/Kconfig                              | 33 +---------
+ arch/arm/Kconfig.debug                        |  5 +-
+ arch/arm/configs/dove_defconfig               |  2 +
+ arch/arm/configs/lpc32xx_defconfig            |  1 +
+ arch/arm/mach-dove/Kconfig                    | 16 +++--
+ arch/arm/mach-dove/Makefile                   |  2 +
+ .../{include/mach => }/bridge-regs.h          |  4 +-
+ arch/arm/mach-dove/cm-a510.c                  |  3 +-
+ arch/arm/mach-dove/common.c                   |  4 +-
+ arch/arm/mach-dove/dove-db-setup.c            |  2 +-
+ arch/arm/mach-dove/{include/mach => }/dove.h  | 14 ++---
+ arch/arm/mach-dove/include/mach/hardware.h    | 19 ------
+ arch/arm/mach-dove/include/mach/uncompress.h  | 36 -----------
+ arch/arm/mach-dove/irq.c                      |  5 +-
+ arch/arm/mach-dove/{include/mach => }/irqs.h  |  2 -
+ arch/arm/mach-dove/mpp.c                      |  2 +-
+ arch/arm/mach-dove/pcie.c                     |  4 +-
+ arch/arm/mach-dove/{include/mach => }/pm.h    |  4 +-
+ arch/arm/mach-lpc32xx/Kconfig                 | 11 ++++
+ arch/arm/mach-lpc32xx/common.c                | 24 +++++--
+ arch/arm/mach-lpc32xx/common.h                |  1 -
+ arch/arm/mach-lpc32xx/include/mach/board.h    | 15 -----
+ .../mach-lpc32xx/include/mach/entry-macro.S   | 28 ---------
+ arch/arm/mach-lpc32xx/include/mach/hardware.h | 25 --------
+ .../mach-lpc32xx/include/mach/uncompress.h    | 50 ---------------
+ .../{include/mach/platform.h => lpc32xx.h}    | 18 +++++-
+ arch/arm/mach-lpc32xx/pm.c                    |  3 +-
+ arch/arm/mach-lpc32xx/serial.c                | 33 +++++++++-
+ arch/arm/mach-lpc32xx/suspend.S               |  3 +-
+ arch/arm/mach-mv78xx0/mv78xx0.h               |  4 +-
+ arch/arm/mach-orion5x/orion5x.h               |  4 +-
+ drivers/gpio/Kconfig                          |  8 +++
+ drivers/gpio/Makefile                         |  2 +-
+ drivers/gpio/gpio-lpc32xx.c                   | 63 ++++++++++++-------
+ drivers/net/ethernet/nxp/Kconfig              |  2 +-
+ drivers/net/ethernet/nxp/lpc_eth.c            | 30 +++------
+ drivers/tty/serial/Kconfig                    |  3 +-
+ drivers/tty/serial/lpc32xx_hs.c               | 37 ++---------
+ drivers/usb/gadget/udc/Kconfig                |  3 +-
+ drivers/usb/gadget/udc/lpc32xx_udc.c          |  2 -
+ drivers/usb/host/Kconfig                      |  3 +-
+ drivers/usb/host/ohci-nxp.c                   | 25 +++++---
+ drivers/watchdog/Kconfig                      |  2 +-
+ drivers/watchdog/pnx4008_wdt.c                |  1 -
+ include/linux/soc/nxp/lpc32xx-misc.h          | 33 ++++++++++
+ 45 files changed, 246 insertions(+), 345 deletions(-)
+ rename arch/arm/mach-dove/{include/mach => }/bridge-regs.h (96%)
+ rename arch/arm/mach-dove/{include/mach => }/dove.h (95%)
+ delete mode 100644 arch/arm/mach-dove/include/mach/hardware.h
+ delete mode 100644 arch/arm/mach-dove/include/mach/uncompress.h
+ rename arch/arm/mach-dove/{include/mach => }/irqs.h (98%)
+ rename arch/arm/mach-dove/{include/mach => }/pm.h (97%)
+ create mode 100644 arch/arm/mach-lpc32xx/Kconfig
+ delete mode 100644 arch/arm/mach-lpc32xx/include/mach/board.h
+ delete mode 100644 arch/arm/mach-lpc32xx/include/mach/entry-macro.S
+ delete mode 100644 arch/arm/mach-lpc32xx/include/mach/hardware.h
+ delete mode 100644 arch/arm/mach-lpc32xx/include/mach/uncompress.h
+ rename arch/arm/mach-lpc32xx/{include/mach/platform.h => lpc32xx.h} (98%)
+ create mode 100644 include/linux/soc/nxp/lpc32xx-misc.h
 
 -- 
-Regards,
-Niklas Söderlund
+2.20.0
+
