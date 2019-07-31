@@ -2,92 +2,160 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id B08A47CE26
-	for <lists+linux-gpio@lfdr.de>; Wed, 31 Jul 2019 22:23:47 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C0DF57CE4A
+	for <lists+linux-gpio@lfdr.de>; Wed, 31 Jul 2019 22:27:16 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727273AbfGaUXq (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 31 Jul 2019 16:23:46 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:35051 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726514AbfGaUXq (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 31 Jul 2019 16:23:46 -0400
-Received: by mail-pf1-f194.google.com with SMTP id u14so32514440pfn.2;
-        Wed, 31 Jul 2019 13:23:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=jg6LpuBlwiakTWn00cF7QTchO6WVnUEalrcWh+rhFhQ=;
-        b=NetebDi8LWfmYil4wII+z77FnbFXJrjJqOfJE4yfRYhEVtTZLt0dex72fQtD/WEivo
-         /cFJJLveBYmqagG7fk1H4+lHfg/LtNxk7WkoxkBuV4gmVerwWMAyUcLKbQBX+G2CYtjX
-         Jjk9ChdMFfdGYK/808Bqq9CtgLiB2k7ZLAfYZse6R+Lqnk5J4XX1LGdiIEhNflC1nHQi
-         4Iwyle5nvbsRHP6DEii6yd3f3BCQmkkoZLrc4Jo3PJbHrZLSO67TMHPDl5QeMHBijXwM
-         D7PJZaL60jhLYBx325ryS5L8KKWdN+zuXjZCgGtjCxhFFdU5VlqxmK7kE55ourydCBAL
-         ZBvg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=jg6LpuBlwiakTWn00cF7QTchO6WVnUEalrcWh+rhFhQ=;
-        b=enSHLAUkPs2uiPXbaxrWhaLRn16L0K2Iw0gblwa5zIB7pTrLKJLd6RKFwMOahn8VsT
-         ul/gViLZHhU7dmIalpuj+hPw+wnnlHGKBRITvf6yIVeue5LZls+HAUy7yL/lPvRXMA5z
-         JG/BxqHqaO/FreJLZCgOcUizlVxlmxaEEi9qNSZ2LfWykzEzHUPPvFZTpi3WZoatiGeD
-         CtsKxntVzORiTqibEzg/El3elsX7RDKAfWGmMCom6JDiMVltL9N4OVBBCPmlrWqDy+Qi
-         mLobhPuuu+cK+mxRc08COBN+j7b/bawIL9m038KZ6YA+nc5k/Is8nclSh/kYbINamT95
-         wqaA==
-X-Gm-Message-State: APjAAAX+DorHvLR2IKijPCFCiFV5IctCvi+5kB8KTnhcADGUZO+0oVDE
-        9/e+SKFq0te2jmWJB+//X6U=
-X-Google-Smtp-Source: APXvYqxFP/F/KABOC41QDxnZEEDUlVlMeFDkQJOJGDPiDWt7Gv7V95ma+jPFVW4RjNICCcKISset4w==
-X-Received: by 2002:aa7:8e10:: with SMTP id c16mr48041020pfr.124.1564604625848;
-        Wed, 31 Jul 2019 13:23:45 -0700 (PDT)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id g2sm112378919pfq.88.2019.07.31.13.23.44
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 31 Jul 2019 13:23:44 -0700 (PDT)
-Date:   Wed, 31 Jul 2019 13:23:43 -0700
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     soc@kernel.org, linux-arm-kernel@lists.infradead.org,
-        Vladimir Zapolskiy <vz@mleia.com>,
-        Sylvain Lemieux <slemieux.tyco@gmail.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Gregory Clement <gregory.clement@bootlin.com>,
+        id S1728292AbfGaU1Q (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 31 Jul 2019 16:27:16 -0400
+Received: from atlmailgw2.ami.com ([63.147.10.42]:60257 "EHLO
+        atlmailgw2.ami.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728136AbfGaU1Q (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 31 Jul 2019 16:27:16 -0400
+X-AuditID: ac10606f-d11ff70000003324-75-5d41f9a38aec
+Received: from atlms1.us.megatrends.com (atlms1.us.megatrends.com [172.16.96.144])
+        (using TLS with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by atlmailgw2.ami.com (Symantec Messaging Gateway) with SMTP id AC.A0.13092.3A9F14D5; Wed, 31 Jul 2019 16:27:15 -0400 (EDT)
+Received: from hongweiz-Ubuntu-AMI.us.megatrends.com (172.16.98.93) by
+ atlms1.us.megatrends.com (172.16.96.144) with Microsoft SMTP Server (TLS) id
+ 14.3.408.0; Wed, 31 Jul 2019 16:27:14 -0400
+From:   Hongwei Zhang <hongweiz@ami.com>
+To:     Andrew Jeffery <andrew@aj.id.au>,
         Linus Walleij <linus.walleij@linaro.org>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Alan Stern <stern@rowland.harvard.edu>,
-        linux-gpio@vger.kernel.org, netdev@vger.kernel.org,
-        linux-serial@vger.kernel.org, linux-usb@vger.kernel.org,
-        linux-watchdog@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 03/14] watchdog: pnx4008_wdt: allow compile-testing
-Message-ID: <20190731202343.GA14817@roeck-us.net>
-References: <20190731195713.3150463-1-arnd@arndb.de>
- <20190731195713.3150463-4-arnd@arndb.de>
+        linux-gpio <linux-gpio@vger.kernel.org>,
+        Joel Stanley <joel@jms.id.au>
+CC:     linux-aspeed <linux-aspeed@lists.ozlabs.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        Hongwei Zhang <hongweiz@ami.com>
+Subject: [v6 2/2] gpio: aspeed: Add SGPIO driver
+Date:   Wed, 31 Jul 2019 16:25:45 -0400
+Message-ID: <1564604745-1639-1-git-send-email-hongweiz@ami.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1564500268-2627-3-git-send-email-hongweiz@ami.com>
+References: <1564500268-2627-3-git-send-email-hongweiz@ami.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190731195713.3150463-4-arnd@arndb.de>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+Content-Type: text/plain
+X-Originating-IP: [172.16.98.93]
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrDLMWRmVeSWpSXmKPExsWyRiBhgu7in46xBqv3KVjsusxh8WXuKRaL
+        3+f/MltM+bOcyWLT42usFs2rzzFbbJ7/h9Hi8q45bA4cHlfbd7F7vL/Ryu5x8eMxZo871/aw
+        eWxeUu9xfsZCRo/Pm+QC2KO4bFJSczLLUov07RK4Mto+/GYruCtRcfn/ctYGxgvCXYycHBIC
+        JhKtS84wdTFycQgJ7GKSeLtsCQuEc5hRYue3u4wgVWwCahJ7N88BqxIRmMUocevJLDaQBLPA
+        HUaJDd3ZILawgIHEz8VP2bsYOThYBFQltj2SAgnzCthLXOg8wASxTU7i5rlOZhCbU8BBYv6V
+        frC4EEjNi3UsEPWCEidnPmGBGC8hcfDFC2aIGlmJW4ceQ81RkHje95hlAiPQMQgts5C0LGBk
+        WsUolFiSk5uYmZNebqSXmJupl5yfu4kREuL5Oxg/fjQ/xMjEwXiIUYKDWUmEd7G4fawQb0pi
+        ZVVqUX58UWlOavEhRmkOFiVx3lVrvsUICaQnlqRmp6YWpBbBZJk4OKUaGNk0O9+mbH/U0dLm
+        9kJg8hLdiVrTQ+senJu/PCgv4FhQ+xbZf7Yin2esuST96fnD15oz7MwXzPzsu7h5d3i69pV9
+        9Tybvx7KYBVzSfdeJCr9xEq4YWbwHssw/6cpnZ/SI03YJlzQmaQ2/ap37OPVxwOUOX7O32OT
+        k514jvf3ti9R6l/3Xb+Y2qzEUpyRaKjFXFScCAD4HFqxXwIAAA==
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Jul 31, 2019 at 09:56:45PM +0200, Arnd Bergmann wrote:
-> The only thing that prevents building this driver on other
-> platforms is the mach/hardware.h include, which is not actually
-> used here at all, so remove the line and allow CONFIG_COMPILE_TEST.
+Hello Andrew,
+Thanks so much for your help.
+
+> From:	Andrew Jeffery <andrew@aj.id.au>
+> Sent:	Tuesday, July 30, 2019 8:19 PM
+> To:	Hongwei Zhang; Linus Walleij; linux-gpio@vger.kernel.org
+> Cc:	Joel Stanley; linux-aspeed@lists.ozlabs.org; Bartosz Golaszewski; linux-kernel@vger.kernel.org; 
+> linux-arm-kernel@lists.infradead.org
+> Subject:	Re: [v6 2/2] gpio: aspeed: Add SGPIO driver
 > 
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> 
+> 
+> On Wed, 31 Jul 2019, at 00:55, Hongwei Zhang wrote:
+> > Add SGPIO driver support for Aspeed AST2500 SoC.
+> > 
+> > Signed-off-by: Hongwei Zhang <hongweiz@ami.com>
+> > ---
+> >  drivers/gpio/sgpio-aspeed.c | 521 
+> > ++++++++++++++++++++++++++++++++++++++++++++
+> >  1 file changed, 521 insertions(+)
+> >  create mode 100644 drivers/gpio/sgpio-aspeed.c
+> > 
+> > diff --git a/drivers/gpio/sgpio-aspeed.c b/drivers/gpio/sgpio-aspeed.c 
+> > new file mode 100644 index 0000000..9a17b1a
+> > --- /dev/null
+> > +++ b/drivers/gpio/sgpio-aspeed.c
+> > @@ -0,0 +1,521 @@
+> > +// SPDX-License-Identifier: GPL-2.0-or-later
+> > +/*
+> > + * Copyright 2019 American Megatrends International LLC.
+> > + *
+> > + * Author: Karthikeyan Mani <karthikeyanm@amiindia.co.in>  */
+> > +
+> > +#include <linux/bitfield.h>
+> > +#include <linux/clk.h>
+> > +#include <linux/gpio/driver.h>
+> > +#include <linux/hashtable.h>
+> > +#include <linux/init.h>
+> > +
+> > +static void aspeed_sgpio_set(struct gpio_chip *gc, unsigned int
+> > offset, int val)
+> > +{
+> > +	struct aspeed_sgpio *gpio = gpiochip_get_data(gc);
+> > +	const struct aspeed_sgpio_bank *bank = to_bank(offset);
+> > +	unsigned long flags;
+> > +	void __iomem *addr;
+> > +	u32 reg = 0;
+> > +
+> > +	spin_lock_irqsave(&gpio->lock, flags);
+> > +
+> > +	addr = bank_reg(gpio, bank, reg_val);
+> > +
+> > +	if (val)
+> > +		reg |= GPIO_BIT(offset);
+> > +	else
+> > +		reg &= ~GPIO_BIT(offset);
+> 
+> reg is zero-initialised above and you haven't read from addr to assign to reg, so the else branch is 
+> redundant (reg is already zeroed). This path has a bug - you're clearing the state of all GPIOs associated 
+> with addr rather than just the GPIO associated with offset.
+> 
 
-Reviewed-by: Guenter Roeck <linux@roeck-us.net>
+you're correct, this is fixed in v7.
 
-What is the plan for this patch ? Push through watchdog
-or through your branch ?
+> > +
+> > +	iowrite32(reg, addr);
+> > +
+> > +	spin_unlock_irqrestore(&gpio->lock, flags); }
+> > +
+> > +
+> > +static int aspeed_sgpio_dir_out(struct gpio_chip *gc, unsigned int
+> > offset, int val)
+> > +{
+> > +	struct aspeed_sgpio *gpio = gpiochip_get_data(gc);
+> > +	unsigned long flags;
+> > +
+> > +	spin_lock_irqsave(&gpio->lock, flags);
+> > +	gpio->dir_in[GPIO_BANK(offset)] &= ~GPIO_BIT(offset);
+> > +	spin_unlock_irqrestore(&gpio->lock, flags);
+> > +
+> > +	aspeed_sgpio_set(gc, offset, val);
+> 
+> In this case you should probably have an unlocked variant of aspeed_sgpio_set() so you can call it inside 
+> the the critical section above instead of needing to acquire/release the lock twice (once above and again 
+> in aspeed_sgpio_set() as it stands).
+> 
+
+moved _sgpio_set() so only one pair of acquire/release lock used.
+
+> Cheers,
+> 
+> Andrew
+> 
 
 Thanks,
-Guenter
+--Hongwei
+
+> > +
+> > +	return 0;
+> > +}
+> > +
+> > --
+> > 2.7.4
+> > 
+> >
