@@ -2,110 +2,191 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id EE4A67CF5F
-	for <lists+linux-gpio@lfdr.de>; Wed, 31 Jul 2019 23:08:58 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DD3F37CFE4
+	for <lists+linux-gpio@lfdr.de>; Wed, 31 Jul 2019 23:13:09 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729861AbfGaVIk (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 31 Jul 2019 17:08:40 -0400
-Received: from hqemgate16.nvidia.com ([216.228.121.65]:10353 "EHLO
-        hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726960AbfGaVIk (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 31 Jul 2019 17:08:40 -0400
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5d4203570002>; Wed, 31 Jul 2019 14:08:39 -0700
+        id S1730708AbfGaVM4 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 31 Jul 2019 17:12:56 -0400
+Received: from hqemgate14.nvidia.com ([216.228.121.143]:17129 "EHLO
+        hqemgate14.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726421AbfGaVLI (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 31 Jul 2019 17:11:08 -0400
+Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqemgate14.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5d4203eb0000>; Wed, 31 Jul 2019 14:11:07 -0700
 Received: from hqmail.nvidia.com ([172.20.161.6])
   by hqpgpgate102.nvidia.com (PGP Universal service);
-  Wed, 31 Jul 2019 14:08:39 -0700
+  Wed, 31 Jul 2019 14:11:06 -0700
 X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Wed, 31 Jul 2019 14:08:39 -0700
-Received: from [10.110.102.167] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 31 Jul
- 2019 21:08:38 +0000
-Subject: Re: [PATCH v7 16/20] arm64: tegra: Enable wake from deep sleep on RTC
- alarm
-To:     Dmitry Osipenko <digetx@gmail.com>, <thierry.reding@gmail.com>,
-        <jonathanh@nvidia.com>, <tglx@linutronix.de>,
-        <jason@lakedaemon.net>, <marc.zyngier@arm.com>,
-        <linus.walleij@linaro.org>, <stefan@agner.ch>,
-        <mark.rutland@arm.com>
+        by hqpgpgate102.nvidia.com on Wed, 31 Jul 2019 14:11:06 -0700
+Received: from HQMAIL101.nvidia.com (172.20.187.10) by HQMAIL108.nvidia.com
+ (172.18.146.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 31 Jul
+ 2019 21:11:05 +0000
+Received: from hqnvemgw01.nvidia.com (172.20.150.20) by HQMAIL101.nvidia.com
+ (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
+ Transport; Wed, 31 Jul 2019 21:11:05 +0000
+Received: from skomatineni-linux.nvidia.com (Not Verified[10.110.102.167]) by hqnvemgw01.nvidia.com with Trustwave SEG (v7,5,8,10121)
+        id <B5d4203e90002>; Wed, 31 Jul 2019 14:11:05 -0700
+From:   Sowjanya Komatineni <skomatineni@nvidia.com>
+To:     <thierry.reding@gmail.com>, <jonathanh@nvidia.com>,
+        <tglx@linutronix.de>, <jason@lakedaemon.net>,
+        <marc.zyngier@arm.com>, <linus.walleij@linaro.org>,
+        <stefan@agner.ch>, <mark.rutland@arm.com>
 CC:     <pdeschrijver@nvidia.com>, <pgaikwad@nvidia.com>,
         <sboyd@kernel.org>, <linux-clk@vger.kernel.org>,
         <linux-gpio@vger.kernel.org>, <jckuo@nvidia.com>,
-        <josephl@nvidia.com>, <talho@nvidia.com>,
+        <josephl@nvidia.com>, <talho@nvidia.com>, <skomatineni@nvidia.com>,
         <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         <mperttunen@nvidia.com>, <spatra@nvidia.com>, <robh+dt@kernel.org>,
-        <devicetree@vger.kernel.org>
-References: <1564532424-10449-1-git-send-email-skomatineni@nvidia.com>
- <1564532424-10449-17-git-send-email-skomatineni@nvidia.com>
- <1233ad49-22eb-a90a-d7cf-5fe133ded177@gmail.com>
-From:   Sowjanya Komatineni <skomatineni@nvidia.com>
-Message-ID: <d4709085-f705-2608-08a8-65b238ae8844@nvidia.com>
-Date:   Wed, 31 Jul 2019 14:08:38 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        <digetx@gmail.com>, <devicetree@vger.kernel.org>,
+        <rjw@rjwysocki.net>, <viresh.kumar@linaro.org>,
+        <linux-pm@vger.kernel.org>
+Subject: [PATCH v7 00/20] SC7 entry and exit support for Tegra210
+Date:   Wed, 31 Jul 2019 14:10:43 -0700
+Message-ID: <1564607463-28802-1-git-send-email-skomatineni@nvidia.com>
+X-Mailer: git-send-email 2.7.4
+X-NVConfidentiality: public
 MIME-Version: 1.0
-In-Reply-To: <1233ad49-22eb-a90a-d7cf-5fe133ded177@gmail.com>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: quoted-printable
-Content-Language: en-US
+Content-Type: text/plain
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1564607319; bh=XlHpdHbtbxW+pGHBpUV41umA2n21IWFw4wGwv1QIPi0=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
-         Content-Language;
-        b=UenDJ17yUxeK7zkDG7Pkq2W+yM57LLyemW5S81Fdy6R8p1oyT8DorQkbzRjPJ+VA3
-         kKqSdsHynICnxC9SZFU/RdKJ2+k1jt6h9n6o5u6++a8qBAt/CREyG2MPWJk0bAb+tI
-         VYK9AhlG1WWjcSqm4R3MwvZIsZujMkJ4GJJoGq6AMxb6KJQtBge9+wtn3i4PVVIIf7
-         EqsGODGKqpsIEQ/Z7xC6x5E5eN1ityGNdtlNxIUJlXtGBRfyUvYDs5pHAKB9FdtD/o
-         nZToRjbS8WQjxumSeWJ6w2iiWEO2vv/bggrSyR1n3KmP9s3+e3F6kcOvS4BcyNWrd9
-         ub4d3Q9hL4vAg==
+        t=1564607467; bh=Paohd/0GlwDFo6d1zfjma7o1lYrzLZvAjiGOjwr/xbo=;
+        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
+         X-NVConfidentiality:MIME-Version:Content-Type;
+        b=Qpqk2JwnYnhBhs+kUrVQOYjO8yu58Jd70ohO51KcuNLBs57hp4WKAFq0epnhphNSf
+         IToJyrtwl5LbNcgaaB36hAvnUzyApRCGVOEURZlo0BYLVNnY5SYEaPMNkfdKrw3Zmr
+         BvPJ+AGS4AX2MU5d/GRdZ5VD7DJix5FzV0NNXv8BJv5aRN6HFij0MfURpLL7lZN+LE
+         3ESCI3zQsEfvale1xxMOxVmIVrzdndextoJzTlzFcIzBR2/MC6yg8fhx++WR0CtBlm
+         EILvHcdz2Sy6rrvgSP2ipBzCQEnuKi8dHHrQ4BaiWOTtXyOnlx+yzxhZ4x+5ybHLqz
+         kTFyMf/u9PzAw==
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+This patch series includes Tegra210 deepsleep (SC7) support with RTC alarm
+wake event.
 
-On 7/31/19 4:04 AM, Dmitry Osipenko wrote:
-> 31.07.2019 3:20, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
->> This patch updates device tree for RTC and PMC to allow system wake
->> from deep sleep on RTC alarm.
->>
->> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
->> ---
->>   arch/arm64/boot/dts/nvidia/tegra210.dtsi | 5 ++++-
->>   1 file changed, 4 insertions(+), 1 deletion(-)
->>
->> diff --git a/arch/arm64/boot/dts/nvidia/tegra210.dtsi b/arch/arm64/boot/=
-dts/nvidia/tegra210.dtsi
->> index 659753118e96..30a7c48385a2 100644
->> --- a/arch/arm64/boot/dts/nvidia/tegra210.dtsi
->> +++ b/arch/arm64/boot/dts/nvidia/tegra210.dtsi
->> @@ -768,7 +768,8 @@
->>   	rtc@7000e000 {
->>   		compatible =3D "nvidia,tegra210-rtc", "nvidia,tegra20-rtc";
->>   		reg =3D <0x0 0x7000e000 0x0 0x100>;
->> -		interrupts =3D <GIC_SPI 2 IRQ_TYPE_LEVEL_HIGH>;
->> +		interrupts =3D <16 IRQ_TYPE_LEVEL_HIGH>;
->> +		interrupt-parent =3D <&pmc>;
->>   		clocks =3D <&tegra_car TEGRA210_CLK_RTC>;
->>   		clock-names =3D "rtc";
->>   	};
->> @@ -778,6 +779,8 @@
->>   		reg =3D <0x0 0x7000e400 0x0 0x400>;
->>   		clocks =3D <&tegra_car TEGRA210_CLK_PCLK>, <&clk32k_in>;
->>   		clock-names =3D "pclk", "clk32k_in";
->> +		#interrupt-cells =3D <2>;
->> +		interrupt-controller;
->>  =20
->>   		powergates {
->>   			pd_audio: aud {
->>
-> Is this a backwards-compatible change? Or it's not really worth to care
-> about the compatibility with older kernel versions, I'm not sure about
-> overall state of T210 in the upstream kernel.
-I don't think its required to be backwards-compatible as SC7 entry/exit=20
-implementation for T210 is with this patch series onwards..
+This series also includes save and restore of PLLs, clocks, OSC contexts
+for deepsleep exit to normal operation.
+
+This patch series doesn't support 100% suspend/resume to allow fully
+functional state upon resume and we are working on some more drivers suspend
+and resume implementations.
+
+[V7]: Changes between V6 & V7 are
+	- V6 feedback fixes
+	- Removed patch-0001 from V6 which keeps COP IRQ enabled. Looking
+	  more into ATF FW, it loads SC7 entry FW into IRAM and sets the
+	  COP reset vector to SC7 FW load address and resets COP. So, COP
+	  IRQ can be cleared during suspend.
+
+	Note:
+	  Below patch is also needed for SC7 support as GPIO restore need
+	  to happen prior to pinctrl.
+	  https://patchwork.kernel.org/patch/11012077/
+
+[V6]: Changes between V5 & V6 are
+	- V5 feedback fixes
+	- DFLL suspend and resume moved to DFLL clock driver
+	- Add suspend and resume support for CPUFreq driver to explicitly
+	  switch source to safe source of PLLP and disable DFLL clock.
+	- Fix to super clock driver to enable PLLP branch to CPU before
+	  source switch to PLLP.
+	- Added save and restore support for super clock driver.
+
+[V5]: Changes between V4 & V5 are
+	- V4 feedback fixes
+
+[V4]: Changes between V3 & V4 are
+	- V3 feedback fixes
+	- Removed park bits clear for EMMC pads in pinctrl-tegra driver
+	  function tegra_pinctrl_clear_parked_bits as based on V3 feedback
+	  parked_bit is updated to parked_bitmask to use with DRV_PINGROUP
+	  as well and thierry posted patch series for this.
+	- Implemented all peripheral clocks save and restore through their
+	  corresponding clk_ops save_context and restore_context and removed
+	  all direct registers store and restore in clk-tegra210 driver.
+	- Created separate patch for fence_delay update during PLLU init based
+	  on V3 feedback.
+	- Added more comments in tegra210_clk_resume regarding dfll restore
+	  sequence and its dependency on peripheral clocks restore.
+
+[V3]: Changes between V2 & V3 are
+	- V2 feedback fixes
+	- GPIO restore should happen prior to Pinctrl restore to prevent
+	  glitch on GPIO lines. So using resume_noirq for gpio tegra to allow
+	  gpio resume prior to pinctrl resume.
+	- Implemented save_context and restore_context callbacks for clock
+	  plls, pll outs and dividers in corresponding drivers.
+	  Note: Peripheral clocks and clock enable and reset need to be in
+	  Tegra210 clock suspend/resume as they need to be in proper sequence
+	  w.r.t DFLL resume for restoring CPU clock.
+	- Removed gpio-tegra changes for hierarchical support to have PMC as
+	  parent to GPIOs for GPIO wake event support. Thierry is working on
+	  gpiolib for some cleanup before adding hierarchical support. So
+	  holding on to GPIO wake support for now.
+
+[V2] : V1 feedback fixes
+	Patch 0002: This version still using syscore. Thierry suggest not to
+	use syscore and waiting on suggestion from Linux Walleij for any better
+	way of storing current state of pins before suspend entry and restoring
+	them on resume at very early stage. So left this the same way as V1 and
+	will address once I get more feedback on this.
+	Also need to findout and implement proper way of forcing resume order
+	between pinctrl and gpio driver.
+
+[V1]:	Tegra210 SC7 entry and exit thru RTC wake and Power button GPIO wake
+	using hierarchical IRQ with PMC as parent to GPIO.
+
+
+
+Sowjanya Komatineni (20):
+  pinctrl: tegra: Add suspend and resume support
+  pinctrl: tegra210: Add Tegra210 pinctrl pm ops
+  clk: tegra: divider: Save and restore divider rate
+  clk: tegra: pllout: Save and restore pllout context
+  clk: tegra: pll: Save and restore pll context
+  clk: tegra: Support for OSC context save and restore
+  clk: tegra: clk-periph: Add save and restore support
+  clk: tegra: clk-super: Fix to enable PLLP branches to CPU
+  clk: tegra: clk-super: Add save and restore support
+  clk: tegra: clk-dfll: Add suspend and resume support
+  cpufreq: tegra124: Add suspend and resume support
+  clk: tegra210: Use fence_udelay during PLLU init
+  clk: tegra210: Add suspend and resume support
+  soc/tegra: pmc: Allow to support more tegras wake
+  soc/tegra: pmc: Add pmc wake support for tegra210
+  arm64: tegra: Enable wake from deep sleep on RTC alarm
+  soc/tegra: pmc: Configure core power request polarity
+  soc/tegra: pmc: Configure deep sleep control settings
+  arm64: dts: tegra210-p2180: Jetson TX1 SC7 timings
+  arm64: dts: tegra210-p3450: Jetson Nano SC7 timings
+
+ arch/arm64/boot/dts/nvidia/tegra210-p2180.dtsi     |   7 ++
+ arch/arm64/boot/dts/nvidia/tegra210-p3450-0000.dts |   7 ++
+ arch/arm64/boot/dts/nvidia/tegra210.dtsi           |   5 +-
+ drivers/clk/tegra/clk-dfll.c                       |  56 +++++++++
+ drivers/clk/tegra/clk-dfll.h                       |   2 +
+ drivers/clk/tegra/clk-divider.c                    |  11 ++
+ drivers/clk/tegra/clk-periph-fixed.c               |  33 ++++++
+ drivers/clk/tegra/clk-periph-gate.c                |  34 ++++++
+ drivers/clk/tegra/clk-periph.c                     |  37 ++++++
+ drivers/clk/tegra/clk-pll-out.c                    |  26 +++++
+ drivers/clk/tegra/clk-pll.c                        | 112 +++++++++++++-----
+ drivers/clk/tegra/clk-sdmmc-mux.c                  |  28 +++++
+ drivers/clk/tegra/clk-super.c                      |  53 +++++++++
+ drivers/clk/tegra/clk-tegra-fixed.c                |  15 +++
+ drivers/clk/tegra/clk-tegra-super-gen4.c           |   2 +-
+ drivers/clk/tegra/clk-tegra124-dfll-fcpu.c         |   1 +
+ drivers/clk/tegra/clk-tegra210.c                   |  86 ++++++++++++--
+ drivers/clk/tegra/clk.c                            |  14 +++
+ drivers/clk/tegra/clk.h                            |  26 +++++
+ drivers/cpufreq/tegra124-cpufreq.c                 |  60 ++++++++++
+ drivers/pinctrl/tegra/pinctrl-tegra.c              |  59 ++++++++++
+ drivers/pinctrl/tegra/pinctrl-tegra.h              |   3 +
+ drivers/pinctrl/tegra/pinctrl-tegra210.c           |   1 +
+ drivers/soc/tegra/pmc.c                            | 129 ++++++++++++++++++++-
+ 24 files changed, 759 insertions(+), 48 deletions(-)
+
+-- 
+2.7.4
+
