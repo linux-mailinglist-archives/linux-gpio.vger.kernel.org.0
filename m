@@ -2,50 +2,50 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 133E37D1BF
-	for <lists+linux-gpio@lfdr.de>; Thu,  1 Aug 2019 01:17:24 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B058A7D1C8
+	for <lists+linux-gpio@lfdr.de>; Thu,  1 Aug 2019 01:20:07 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728417AbfGaXRX (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 31 Jul 2019 19:17:23 -0400
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:35073 "EHLO
+        id S1730343AbfGaXTn (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 31 Jul 2019 19:19:43 -0400
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:34099 "EHLO
         mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725793AbfGaXRX (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 31 Jul 2019 19:17:23 -0400
-Received: by mail-ot1-f68.google.com with SMTP id j19so33552435otq.2;
-        Wed, 31 Jul 2019 16:17:22 -0700 (PDT)
+        with ESMTP id S1729885AbfGaXTm (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 31 Jul 2019 19:19:42 -0400
+Received: by mail-ot1-f68.google.com with SMTP id n5so72105851otk.1;
+        Wed, 31 Jul 2019 16:19:42 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=kSejrbwgUdMQ99bQrxJUA8zIPWxPSd8aucGAjk9aCgY=;
-        b=bH+8O8VJFaTCmEBvljLo0b/Qv1bkCQxEdcJeke7+zSZYcmJ4Krfc4rsOKoruhvMIwY
-         ybvjRmTUUkzTlrhhNp/bVgTMpxy3NgITtJ5qvYriP5gEbIw9byPMqHi/Q7scRSIlQ8W2
-         rzUJFPAzFtSPfImPz5/lK6uAtayQ6Z0NSXx4JRrL5r1uSzKr2V9SfshmQ+wssK9xBHUN
-         OLZJSh9XY95OxiiQTlGmJyJ5f22nt5cVjois1GLoHzDSWhsBMHYeBJ3Faw1e0szHMNTp
-         UK9+vqeFqERvOAVO9v2loIcjrEyrPCIofTQm0x4/WpfjWbYH7Ra8xEd05jWSSKlh8noC
-         6ZRg==
-X-Gm-Message-State: APjAAAUjd3eGjRG0pXjQv/z6iyaaW4s5PMfLZ3/xmiVWLFwQTLSrogR2
-        6B3N9ehhBT8osIUvOAVqTiXftsimwCs=
-X-Google-Smtp-Source: APXvYqxyTX07lvKBrxanly5ckKsAan9H+TZlg2y5CpeD3cgEC5Jcn0c5YUdLZNDVSjDTfUkOd6URYA==
-X-Received: by 2002:a9d:6959:: with SMTP id p25mr10360425oto.118.1564615041816;
-        Wed, 31 Jul 2019 16:17:21 -0700 (PDT)
-Received: from mail-ot1-f51.google.com (mail-ot1-f51.google.com. [209.85.210.51])
-        by smtp.gmail.com with ESMTPSA id e78sm24753741oib.50.2019.07.31.16.17.20
+        bh=RR0iaPSwLXzlYnEnnE6sJ2Z50c2cBYsQK/byKd2lzSQ=;
+        b=XghrIVe/ANewP7KvtDUMyMdYaFBsiH9ofCvLR0iGIO7BjPcmCE25oVeVou9qmzACcy
+         0HOkufZE9bP+j4UGjc/DSIvEM5iVj59ZjaPUauX8dZJJUXTx8bHVZe3rUb6P3C+CqNNB
+         HUCzSt3oHzv9lYC+MYuJL7T2uU4RQTMVUPa1TbjfxBZcqVazVdP59gHATDlo5x5O8yjm
+         4IyElNpSqk7AO77dCHtUhf1ZV/dU0SERjUieu9tBh5bP1a0bzcEzJJi3lE7AleWmxaQN
+         UYydpeYh1G9CeLCR5A36NFiPMSZqAyvSO3hiyVvkjmqza/a9HUHiYIkZS9VpbpOuTKKH
+         ijMg==
+X-Gm-Message-State: APjAAAUSbg5LXAzqReTmNqC6zBmoMqZC4iWYsTMUUmYUtiq0xU3FEUT/
+        YLbM12TG2vVLzvrQROvO9u4cgJdVtNI=
+X-Google-Smtp-Source: APXvYqzp4daYfecNm3P1UHhEbQTdllzv002BXy73fOcBPOY/q2+FUDhRaica1roP+SWNcshLj/4hxw==
+X-Received: by 2002:a9d:39a6:: with SMTP id y35mr29454206otb.81.1564615181909;
+        Wed, 31 Jul 2019 16:19:41 -0700 (PDT)
+Received: from mail-ot1-f46.google.com (mail-ot1-f46.google.com. [209.85.210.46])
+        by smtp.gmail.com with ESMTPSA id q20sm23508788otm.32.2019.07.31.16.19.41
         (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Wed, 31 Jul 2019 16:17:21 -0700 (PDT)
-Received: by mail-ot1-f51.google.com with SMTP id o101so72017209ota.8;
-        Wed, 31 Jul 2019 16:17:20 -0700 (PDT)
-X-Received: by 2002:a9d:6d0e:: with SMTP id o14mr55638119otp.205.1564615040807;
- Wed, 31 Jul 2019 16:17:20 -0700 (PDT)
+        Wed, 31 Jul 2019 16:19:41 -0700 (PDT)
+Received: by mail-ot1-f46.google.com with SMTP id l15so72019433otn.9;
+        Wed, 31 Jul 2019 16:19:41 -0700 (PDT)
+X-Received: by 2002:a9d:6d0e:: with SMTP id o14mr55644910otp.205.1564615181289;
+ Wed, 31 Jul 2019 16:19:41 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190718094902.15562-1-hui.song_1@nxp.com>
-In-Reply-To: <20190718094902.15562-1-hui.song_1@nxp.com>
+References: <20190529083254.39581-1-chuanhua.han@nxp.com> <20190529083254.39581-3-chuanhua.han@nxp.com>
+In-Reply-To: <20190529083254.39581-3-chuanhua.han@nxp.com>
 From:   Li Yang <leoyang.li@nxp.com>
-Date:   Wed, 31 Jul 2019 18:17:09 -0500
-X-Gmail-Original-Message-ID: <CADRPPNT3A_1apr3FNjRbQhCHWLqvAQC0Oz8cGbOjNetAF8zghw@mail.gmail.com>
-Message-ID: <CADRPPNT3A_1apr3FNjRbQhCHWLqvAQC0Oz8cGbOjNetAF8zghw@mail.gmail.com>
-Subject: Re: [PATCH 1/2] arm64: dts: ls1028a: Fix GPIO work fail.
-To:     Hui Song <hui.song_1@nxp.com>
+Date:   Wed, 31 Jul 2019 18:19:30 -0500
+X-Gmail-Original-Message-ID: <CADRPPNQhRjEx=0Rr-XkHXtLTaWGM_b5zsjrL7vhhzzmQc35j9A@mail.gmail.com>
+Message-ID: <CADRPPNQhRjEx=0Rr-XkHXtLTaWGM_b5zsjrL7vhhzzmQc35j9A@mail.gmail.com>
+Subject: Re: [PATCH 3/3] arm64: dts: ls1088a: Revise gpio registers to little-endian
+To:     Chuanhua Han <chuanhua.han@nxp.com>
 Cc:     Shawn Guo <shawnguo@kernel.org>, Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Linus Walleij <linus.walleij@linaro.org>,
@@ -61,73 +61,55 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Jul 18, 2019 at 4:59 AM Hui Song <hui.song_1@nxp.com> wrote:
+On Wed, May 29, 2019 at 3:32 AM Chuanhua Han <chuanhua.han@nxp.com> wrote:
 >
-
-Change the title to be something like:
-arm64: dts: ls1028a: fix gpio nodes
-
-> From: Song Hui <hui.song_1@nxp.com>
+> Since fsl-ls1088a Soc GPIO registers are used as little endian,
+> the patch adds the little-endian attribute to each gpio node.
 >
-> Add ls1028a device specify compatible.
+> Signed-off-by: Chuanhua Han <chuanhua.han@nxp.com>
 
-Please submit a separate patch to update the device tree binding too.
+Acked-by: Li Yang <leoyang.li@nxp.com>
 
-> Make gpio as little-endian deal.
-
-"Update the nodes to include little-endian property to be consistent
-with the hardware."
-
->
-> Signed-off-by: Song Hui <hui.song_1@nxp.com>
 > ---
->  arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi | 9 ++++++---
->  1 file changed, 6 insertions(+), 3 deletions(-)
+>  arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi | 4 ++++
+>  1 file changed, 4 insertions(+)
 >
-> diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
-> index 7975519..488602b 100644
-> --- a/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
-> +++ b/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
-> @@ -277,33 +277,36 @@
->                 };
->
->                 gpio1: gpio@2300000 {
-> -                       compatible = "fsl,qoriq-gpio";
-> +                       compatible = "fsl,ls1028a-gpio","fsl,qoriq-gpio";
+> diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
+> index 661137ffa319..3e6d20d065bd 100644
+> --- a/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
+> +++ b/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
+> @@ -272,6 +272,7 @@
+>                         compatible = "fsl,qoriq-gpio";
 >                         reg = <0x0 0x2300000 0x0 0x10000>;
->                         interrupts = <GIC_SPI 36 IRQ_TYPE_LEVEL_HIGH>;
+>                         interrupts = <0 36 IRQ_TYPE_LEVEL_HIGH>;
+> +                       little-endian;
 >                         gpio-controller;
 >                         #gpio-cells = <2>;
 >                         interrupt-controller;
->                         #interrupt-cells = <2>;
-> +                       little-endian;
->                 };
->
->                 gpio2: gpio@2310000 {
-> -                       compatible = "fsl,qoriq-gpio";
-> +                       compatible = "fsl,ls1028a-gpio","fsl,qoriq-gpio";
+> @@ -282,6 +283,7 @@
+>                         compatible = "fsl,qoriq-gpio";
 >                         reg = <0x0 0x2310000 0x0 0x10000>;
->                         interrupts = <GIC_SPI 36 IRQ_TYPE_LEVEL_HIGH>;
+>                         interrupts = <0 36 IRQ_TYPE_LEVEL_HIGH>;
+> +                       little-endian;
 >                         gpio-controller;
 >                         #gpio-cells = <2>;
 >                         interrupt-controller;
->                         #interrupt-cells = <2>;
-> +                       little-endian;
->                 };
->
->                 gpio3: gpio@2320000 {
-> -                       compatible = "fsl,qoriq-gpio";
-> +                       compatible = "fsl,ls1028a-gpio","fsl,qoriq-gpio";
+> @@ -292,6 +294,7 @@
+>                         compatible = "fsl,qoriq-gpio";
 >                         reg = <0x0 0x2320000 0x0 0x10000>;
->                         interrupts = <GIC_SPI 37 IRQ_TYPE_LEVEL_HIGH>;
+>                         interrupts = <0 37 IRQ_TYPE_LEVEL_HIGH>;
+> +                       little-endian;
 >                         gpio-controller;
 >                         #gpio-cells = <2>;
 >                         interrupt-controller;
->                         #interrupt-cells = <2>;
+> @@ -302,6 +305,7 @@
+>                         compatible = "fsl,qoriq-gpio";
+>                         reg = <0x0 0x2330000 0x0 0x10000>;
+>                         interrupts = <0 37 IRQ_TYPE_LEVEL_HIGH>;
 > +                       little-endian;
->                 };
->
->                 usb0: usb@3100000 {
+>                         gpio-controller;
+>                         #gpio-cells = <2>;
+>                         interrupt-controller;
 > --
-> 2.9.5
+> 2.17.1
 >
