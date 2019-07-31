@@ -2,160 +2,83 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id C0DF57CE4A
-	for <lists+linux-gpio@lfdr.de>; Wed, 31 Jul 2019 22:27:16 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6529C7CE43
+	for <lists+linux-gpio@lfdr.de>; Wed, 31 Jul 2019 22:26:54 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728292AbfGaU1Q (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 31 Jul 2019 16:27:16 -0400
-Received: from atlmailgw2.ami.com ([63.147.10.42]:60257 "EHLO
-        atlmailgw2.ami.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728136AbfGaU1Q (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 31 Jul 2019 16:27:16 -0400
-X-AuditID: ac10606f-d11ff70000003324-75-5d41f9a38aec
-Received: from atlms1.us.megatrends.com (atlms1.us.megatrends.com [172.16.96.144])
-        (using TLS with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by atlmailgw2.ami.com (Symantec Messaging Gateway) with SMTP id AC.A0.13092.3A9F14D5; Wed, 31 Jul 2019 16:27:15 -0400 (EDT)
-Received: from hongweiz-Ubuntu-AMI.us.megatrends.com (172.16.98.93) by
- atlms1.us.megatrends.com (172.16.96.144) with Microsoft SMTP Server (TLS) id
- 14.3.408.0; Wed, 31 Jul 2019 16:27:14 -0400
-From:   Hongwei Zhang <hongweiz@ami.com>
-To:     Andrew Jeffery <andrew@aj.id.au>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-gpio <linux-gpio@vger.kernel.org>,
-        Joel Stanley <joel@jms.id.au>
-CC:     linux-aspeed <linux-aspeed@lists.ozlabs.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        Hongwei Zhang <hongweiz@ami.com>
-Subject: [v6 2/2] gpio: aspeed: Add SGPIO driver
-Date:   Wed, 31 Jul 2019 16:25:45 -0400
-Message-ID: <1564604745-1639-1-git-send-email-hongweiz@ami.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1564500268-2627-3-git-send-email-hongweiz@ami.com>
-References: <1564500268-2627-3-git-send-email-hongweiz@ami.com>
+        id S1728195AbfGaU0x (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 31 Jul 2019 16:26:53 -0400
+Received: from mail-qt1-f194.google.com ([209.85.160.194]:37360 "EHLO
+        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728136AbfGaU0x (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 31 Jul 2019 16:26:53 -0400
+Received: by mail-qt1-f194.google.com with SMTP id y26so67873946qto.4;
+        Wed, 31 Jul 2019 13:26:52 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Nexwj/gyEdfGcFhtgJkuEvqAxLsbVQicvOBgvCJpGfM=;
+        b=D9jgJbYsefhU1bp4dHus8py68/b5IqFtti2ZA0IWtdNeTXXzgHoSvZgwyATaRbMo1I
+         Y2ZCvsQkNKiv3MfwEoO16AvmHiVqDynglfC0pMvczN8idqyL5Mue63+1gp7WH8Ey6Zl5
+         q4otDS5gwreCRXddS9examugoB0OmqicTmHXCzevjo/B0Z4WIaAQvRK0HHiWWSKDv73h
+         SJNPXEYWiUALSViuZZDV6klbePjHei9zkLbp/WMrrRTy1DJyXpb4s8CuT0xBMAgxVSWJ
+         I2H6gKlCtVeQZYR2tKUDWHpUvstIUcQNUuXHWepTCde40wxp4JGtVGFZ0yiepChrzfAm
+         y4ww==
+X-Gm-Message-State: APjAAAXxEtv4W0WR0m/laJUHCGRRHEsNz2JcwmRfQqSc+67bMUvLcr9w
+        YNYoizlbjZMkCq1Q4gfVD8Z0/nUP5Rd4r7OdTvQ=
+X-Google-Smtp-Source: APXvYqxrQwILyzcU6or5m1F0P2T2g+2d1hVZgeveWHo/LNI028WFf469HVX7i9p/CxTB96w3vHftaMn2P+OT3OV3MzY=
+X-Received: by 2002:aed:33a4:: with SMTP id v33mr84957899qtd.18.1564604812113;
+ Wed, 31 Jul 2019 13:26:52 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [172.16.98.93]
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrDLMWRmVeSWpSXmKPExsWyRiBhgu7in46xBqv3KVjsusxh8WXuKRaL
-        3+f/MltM+bOcyWLT42usFs2rzzFbbJ7/h9Hi8q45bA4cHlfbd7F7vL/Ryu5x8eMxZo871/aw
-        eWxeUu9xfsZCRo/Pm+QC2KO4bFJSczLLUov07RK4Mto+/GYruCtRcfn/ctYGxgvCXYycHBIC
-        JhKtS84wdTFycQgJ7GKSeLtsCQuEc5hRYue3u4wgVWwCahJ7N88BqxIRmMUocevJLDaQBLPA
-        HUaJDd3ZILawgIHEz8VP2bsYOThYBFQltj2SAgnzCthLXOg8wASxTU7i5rlOZhCbU8BBYv6V
-        frC4EEjNi3UsEPWCEidnPmGBGC8hcfDFC2aIGlmJW4ceQ81RkHje95hlAiPQMQgts5C0LGBk
-        WsUolFiSk5uYmZNebqSXmJupl5yfu4kREuL5Oxg/fjQ/xMjEwXiIUYKDWUmEd7G4fawQb0pi
-        ZVVqUX58UWlOavEhRmkOFiVx3lVrvsUICaQnlqRmp6YWpBbBZJk4OKUaGNk0O9+mbH/U0dLm
-        9kJg8hLdiVrTQ+senJu/PCgv4FhQ+xbZf7Yin2esuST96fnD15oz7MwXzPzsu7h5d3i69pV9
-        9Tybvx7KYBVzSfdeJCr9xEq4YWbwHssw/6cpnZ/SI03YJlzQmaQ2/ap37OPVxwOUOX7O32OT
-        k514jvf3ti9R6l/3Xb+Y2qzEUpyRaKjFXFScCAD4HFqxXwIAAA==
+References: <20190731195713.3150463-1-arnd@arndb.de> <20190731195713.3150463-4-arnd@arndb.de>
+ <20190731202343.GA14817@roeck-us.net>
+In-Reply-To: <20190731202343.GA14817@roeck-us.net>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Wed, 31 Jul 2019 22:26:35 +0200
+Message-ID: <CAK8P3a2=gqeCMtdzdqg4d1n6v1-cdaHObeUoVXeB+=Okwd1rqA@mail.gmail.com>
+Subject: Re: [PATCH 03/14] watchdog: pnx4008_wdt: allow compile-testing
+To:     Guenter Roeck <linux@roeck-us.net>
+Cc:     soc@kernel.org, Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Vladimir Zapolskiy <vz@mleia.com>,
+        Sylvain Lemieux <slemieux.tyco@gmail.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Gregory Clement <gregory.clement@bootlin.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Networking <netdev@vger.kernel.org>,
+        linux-serial@vger.kernel.org, USB list <linux-usb@vger.kernel.org>,
+        LINUXWATCHDOG <linux-watchdog@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hello Andrew,
-Thanks so much for your help.
-
-> From:	Andrew Jeffery <andrew@aj.id.au>
-> Sent:	Tuesday, July 30, 2019 8:19 PM
-> To:	Hongwei Zhang; Linus Walleij; linux-gpio@vger.kernel.org
-> Cc:	Joel Stanley; linux-aspeed@lists.ozlabs.org; Bartosz Golaszewski; linux-kernel@vger.kernel.org; 
-> linux-arm-kernel@lists.infradead.org
-> Subject:	Re: [v6 2/2] gpio: aspeed: Add SGPIO driver
-> 
-> 
-> 
-> On Wed, 31 Jul 2019, at 00:55, Hongwei Zhang wrote:
-> > Add SGPIO driver support for Aspeed AST2500 SoC.
-> > 
-> > Signed-off-by: Hongwei Zhang <hongweiz@ami.com>
-> > ---
-> >  drivers/gpio/sgpio-aspeed.c | 521 
-> > ++++++++++++++++++++++++++++++++++++++++++++
-> >  1 file changed, 521 insertions(+)
-> >  create mode 100644 drivers/gpio/sgpio-aspeed.c
-> > 
-> > diff --git a/drivers/gpio/sgpio-aspeed.c b/drivers/gpio/sgpio-aspeed.c 
-> > new file mode 100644 index 0000000..9a17b1a
-> > --- /dev/null
-> > +++ b/drivers/gpio/sgpio-aspeed.c
-> > @@ -0,0 +1,521 @@
-> > +// SPDX-License-Identifier: GPL-2.0-or-later
-> > +/*
-> > + * Copyright 2019 American Megatrends International LLC.
-> > + *
-> > + * Author: Karthikeyan Mani <karthikeyanm@amiindia.co.in>  */
-> > +
-> > +#include <linux/bitfield.h>
-> > +#include <linux/clk.h>
-> > +#include <linux/gpio/driver.h>
-> > +#include <linux/hashtable.h>
-> > +#include <linux/init.h>
-> > +
-> > +static void aspeed_sgpio_set(struct gpio_chip *gc, unsigned int
-> > offset, int val)
-> > +{
-> > +	struct aspeed_sgpio *gpio = gpiochip_get_data(gc);
-> > +	const struct aspeed_sgpio_bank *bank = to_bank(offset);
-> > +	unsigned long flags;
-> > +	void __iomem *addr;
-> > +	u32 reg = 0;
-> > +
-> > +	spin_lock_irqsave(&gpio->lock, flags);
-> > +
-> > +	addr = bank_reg(gpio, bank, reg_val);
-> > +
-> > +	if (val)
-> > +		reg |= GPIO_BIT(offset);
-> > +	else
-> > +		reg &= ~GPIO_BIT(offset);
-> 
-> reg is zero-initialised above and you haven't read from addr to assign to reg, so the else branch is 
-> redundant (reg is already zeroed). This path has a bug - you're clearing the state of all GPIOs associated 
-> with addr rather than just the GPIO associated with offset.
-> 
-
-you're correct, this is fixed in v7.
-
-> > +
-> > +	iowrite32(reg, addr);
-> > +
-> > +	spin_unlock_irqrestore(&gpio->lock, flags); }
-> > +
-> > +
-> > +static int aspeed_sgpio_dir_out(struct gpio_chip *gc, unsigned int
-> > offset, int val)
-> > +{
-> > +	struct aspeed_sgpio *gpio = gpiochip_get_data(gc);
-> > +	unsigned long flags;
-> > +
-> > +	spin_lock_irqsave(&gpio->lock, flags);
-> > +	gpio->dir_in[GPIO_BANK(offset)] &= ~GPIO_BIT(offset);
-> > +	spin_unlock_irqrestore(&gpio->lock, flags);
-> > +
-> > +	aspeed_sgpio_set(gc, offset, val);
-> 
-> In this case you should probably have an unlocked variant of aspeed_sgpio_set() so you can call it inside 
-> the the critical section above instead of needing to acquire/release the lock twice (once above and again 
-> in aspeed_sgpio_set() as it stands).
-> 
-
-moved _sgpio_set() so only one pair of acquire/release lock used.
-
-> Cheers,
-> 
-> Andrew
-> 
-
-Thanks,
---Hongwei
-
-> > +
-> > +	return 0;
-> > +}
-> > +
-> > --
-> > 2.7.4
-> > 
+On Wed, Jul 31, 2019 at 10:23 PM Guenter Roeck <linux@roeck-us.net> wrote:
+>
+> On Wed, Jul 31, 2019 at 09:56:45PM +0200, Arnd Bergmann wrote:
+> > The only thing that prevents building this driver on other
+> > platforms is the mach/hardware.h include, which is not actually
+> > used here at all, so remove the line and allow CONFIG_COMPILE_TEST.
 > >
+> > Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+>
+> Reviewed-by: Guenter Roeck <linux@roeck-us.net>
+>
+> What is the plan for this patch ? Push through watchdog
+> or through your branch ?
+
+I would prefer my branch so I can apply the final patch without waiting
+for another release. Not in a hurry though, so if some other maintainer
+wants to take the respective driver patch through their tree instead of the
+arm-soc one, I'll just wait anyway.
+
+        Arnd
