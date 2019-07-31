@@ -2,88 +2,83 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id EB7B97D189
-	for <lists+linux-gpio@lfdr.de>; Thu,  1 Aug 2019 00:51:17 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 966EC7D191
+	for <lists+linux-gpio@lfdr.de>; Thu,  1 Aug 2019 00:53:52 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726334AbfGaWvR (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 31 Jul 2019 18:51:17 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:44640 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725942AbfGaWvR (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 31 Jul 2019 18:51:17 -0400
-Received: by mail-pf1-f193.google.com with SMTP id t16so32641829pfe.11
-        for <linux-gpio@vger.kernel.org>; Wed, 31 Jul 2019 15:51:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=message-id:mime-version:content-transfer-encoding:in-reply-to
-         :references:cc:from:to:subject:user-agent:date;
-        bh=kNom0XDDyLvYo0L/sHUAP/xcvFkJFIZFIiAZ17RPWiA=;
-        b=L+aUySrckI5fz5GvFvDqsgG7QB2ta++ZEzEpeSZ+7w4FJ11HvjeBK9WPX6iJXl0A5j
-         qA3/N0zeiEd1aLWkwS+JYWT6Xuv5KAdTAOMcJ6ODPSsQ5bIHb5kjiFQSVD2RdgxlgGI3
-         fqUi/t6n/Mid8quRZBdKyoPfSpvRB7SX5i/oo=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:mime-version
-         :content-transfer-encoding:in-reply-to:references:cc:from:to:subject
-         :user-agent:date;
-        bh=kNom0XDDyLvYo0L/sHUAP/xcvFkJFIZFIiAZ17RPWiA=;
-        b=J7Siq4A7zSuAafcjIzaK3m72fEi2XIjR9TqHqx5u0ZWS3gw45v5WpXjHh/pLbzHkkb
-         ZtSSAZlCe1e9DKMVxpuP/v669KN48s8+B50ZK58gFXIDMyZQMjJeqA5YmMPxmrRa8//D
-         ngpHvCUAM2yI1QNQl5L6x6vaMcOB0RCZNmRSBmRtjw0NHPASS36clUIgT3JP3D/V7KrZ
-         AbD9RCMaJhx1fYSAxWtlO39ALfYw6/2n1zEngDDcnCWwHKeyMt2NFYhNk1rKUkvdMTry
-         lYuV5OzekyCDhrZsMrxE9YUnTiAlcO2PDkkJKpR5rNy1PPTSHDzNrwrNz3slqPsMMACR
-         jUkQ==
-X-Gm-Message-State: APjAAAXg8Osww958JVRHfufSP0AB1avOT8obAEEzOIMbysAx0qm38WEG
-        Cf1NzVNJPsTqI6SYeWppSltQNw==
-X-Google-Smtp-Source: APXvYqx2liEocjlZKr6QTWJsnoeGNpQnUOEh4JxWaifc+x8sJVNvubnOZ9bz3H3Qcl83p1f09QQwGQ==
-X-Received: by 2002:a65:6448:: with SMTP id s8mr116415479pgv.223.1564613476167;
-        Wed, 31 Jul 2019 15:51:16 -0700 (PDT)
-Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
-        by smtp.gmail.com with ESMTPSA id k64sm50628498pge.65.2019.07.31.15.51.15
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Wed, 31 Jul 2019 15:51:15 -0700 (PDT)
-Message-ID: <5d421b63.1c69fb81.e3ed.32c2@mx.google.com>
-Content-Type: text/plain; charset="utf-8"
+        id S1730357AbfGaWxp (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 31 Jul 2019 18:53:45 -0400
+Received: from pandora.armlinux.org.uk ([78.32.30.218]:54532 "EHLO
+        pandora.armlinux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726232AbfGaWxo (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 31 Jul 2019 18:53:44 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=ATvYdNztPV3VRoATCZ+XXKdGjFdgKnY+Oq7E+6cYRLw=; b=aLWTKr5D4Rlk7ktmm3LE29Dbo
+        /taejBAF/fXWYBc+QVYYMIDzXl057wk3SyDWKz4hs+4iwydnV48UnmAg/XzlUTXhwOUIdnYrHWh0/
+        TWYVtv1avZ0FLXQm3YUQU2tYjr44orLV+M/V+ZhoQV3bDFScKO/OTTOMFAIaPnogFjiuG8ThozLND
+        tdsnZMyYD3CGn1c5rBlIGRDrN4R282d8kjN05QVoIfOD2Inz1RIm/eToT6V6qRWJPSqewWytQAGLm
+        OzOBhKPMd4feDMZu+M5tm5g0jqYDFq2FqDS8oZmuSAXX+PkFIlzTyr+EM50T1csY0ZV1uPbDrJsnc
+        F5zemaCyA==;
+Received: from shell.armlinux.org.uk ([2002:4e20:1eda:1:5054:ff:fe00:4ec]:46960)
+        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.90_1)
+        (envelope-from <linux@armlinux.org.uk>)
+        id 1hsxT5-0005ur-J6; Wed, 31 Jul 2019 23:53:11 +0100
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
+        (envelope-from <linux@shell.armlinux.org.uk>)
+        id 1hsxSy-0003Z5-38; Wed, 31 Jul 2019 23:53:04 +0100
+Date:   Wed, 31 Jul 2019 23:53:04 +0100
+From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     soc@kernel.org, linux-arm-kernel@lists.infradead.org,
+        Vladimir Zapolskiy <vz@mleia.com>,
+        Sylvain Lemieux <slemieux.tyco@gmail.com>,
+        Gregory Clement <gregory.clement@bootlin.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        Guenter Roeck <linux@roeck-us.net>, linux-gpio@vger.kernel.org,
+        netdev@vger.kernel.org, linux-serial@vger.kernel.org,
+        linux-usb@vger.kernel.org, linux-watchdog@vger.kernel.org
+Subject: Re: [PATCH 00/14] ARM: move lpc32xx and dove to multiplatform
+Message-ID: <20190731225303.GC1330@shell.armlinux.org.uk>
+References: <20190731195713.3150463-1-arnd@arndb.de>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20190731224208.30429-1-linus.walleij@linaro.org>
-References: <20190731224208.30429-1-linus.walleij@linaro.org>
-Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Mark Brown <broonie@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Linus Walleij <linus.walleij@linaro.org>
-From:   Stephen Boyd <swboyd@chromium.org>
-To:     Linus Walleij <linus.walleij@linaro.org>,
-        linux-gpio@vger.kernel.org
-Subject: Re: [PATCH] gpio: of: Fix hard-assigned valid_mask for OF case
-User-Agent: alot/0.8.1
-Date:   Wed, 31 Jul 2019 15:51:14 -0700
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190731195713.3150463-1-arnd@arndb.de>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Quoting Linus Walleij (2019-07-31 15:42:08)
-> From: Stephen Boyd <swboyd@chromium.org>
->=20
-> The recent refactoring to break out OF code to its own file
-> contained a bug by yours truly letting the need_valid_mask
+On Wed, Jul 31, 2019 at 09:56:42PM +0200, Arnd Bergmann wrote:
+> For dove, the patches are basically what I had proposed back in
+> 2015 when all other ARMv6/ARMv7 machines became part of a single
+> kernel build. I don't know what the state is mach-dove support is,
+> compared to the DT based support in mach-mvebu for the same
+> hardware. If they are functionally the same, we could also just
+> remove mach-dove rather than applying my patches.
 
-I'm not yours truly :)
+Well, the good news is that I'm down to a small board support file
+for the Dove Cubox now - but the bad news is, that there's still a
+board support file necessary to support everything the Dove SoC has
+to offer.
 
-> be overridden by the need of the device tree range check,
-> and if there were no ranges, but device tree was active
-> and the reserved GPIO used in another way, things likely
-> crash.
->=20
-> Cc: Mark Brown <broonie@kernel.org>
-> Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
-> Cc: Stephen Boyd <swboyd@chromium.org>
-> Reported-by: Mark Brown <broonie@kernel.org>
-> Suggested-by: Stephen Boyd <swboyd@chromium.org>
-> Signed-off-by: Stephen Boyd <swboyd@chromium.org>
-> Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
-> ---
+Even for a DT based Dove Cubox, I'm still using mach-dove, but it
+may be possible to drop most of mach-dove now.  Without spending a
+lot of time digging through it, it's impossible to really know.
 
-Thanks for taking care of writing up the commit text for me.
-
+-- 
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
+According to speedtest.net: 11.9Mbps down 500kbps up
