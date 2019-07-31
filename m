@@ -2,103 +2,150 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id BC1A17CEB7
-	for <lists+linux-gpio@lfdr.de>; Wed, 31 Jul 2019 22:36:49 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A65687CF4E
+	for <lists+linux-gpio@lfdr.de>; Wed, 31 Jul 2019 23:04:58 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729280AbfGaUgt (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 31 Jul 2019 16:36:49 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:35339 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727857AbfGaUgs (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 31 Jul 2019 16:36:48 -0400
-Received: by mail-pg1-f196.google.com with SMTP id s1so26339538pgr.2;
-        Wed, 31 Jul 2019 13:36:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=+3m34La6ccE3Dbo0nKkW6PAk5aFsT9gCe5QCc84QY/M=;
-        b=EFmwE6xHJZlI7fbJj4ayQvxsXiguUUOE/YUP+QGUdsdsqzIBCNFzDXIfMHIIReAeq0
-         YxhAhukgJsf9Zk6f6yV8s2LP8u0sSr3FNuF8EyxKSURPID2YZC8Lbo6cduEjaNrfdCwf
-         DDLHx35Gdmi2wKQrsQFGdxEic/BLubYM2PdbA3n+K81Up9x+c+BTo+EUmFexA3wLK1m3
-         HTdCvaEPFAiwwj9xS/aDlE76GEOL8mwW7ic1UhN2QVquK+WFAQH9I/3g+WFQQCGFh/i7
-         YgzaMh2a0V/ot/+SNV3Vet++cuduT7j8egp6XJg1gKkL7jCKsSeeDqSN4CHI6M9V8jx9
-         7pRA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=+3m34La6ccE3Dbo0nKkW6PAk5aFsT9gCe5QCc84QY/M=;
-        b=FoQwXb2Gd4fRQC3kd1b2VQ1KEJks1rGHoyJPJtOl9fz5dT2smrp2je2LCVpDRx8oGp
-         n3a8Th9bpxbdYV6upCl7M5vXT8bZJ0rG6uzqTG+bujq2tMVDzllKCApuC2M8lL4j2sUf
-         xDj5cD2sN+6yVlsNjbESKoAxaY8M224KynxrVViQYUxRDtzzmzl6aJfRUetDGFPIjgB+
-         d+SDev05KcL0hGvcMYlsidLr0Pwfg1Bmo6xaS5v59dyj+YRPmE+l+FPrPKNm7sR+hvyL
-         kaTCIYHvDAyq/n3c+QvOxxWhqc3xZcfSi3mcpLaOXaEZVPcvlZVQTYjhwf0He0lg/2TS
-         C12w==
-X-Gm-Message-State: APjAAAUJHMxv/QuhNpH6cwqz9Ke2QpUrj8n7l5HFfn95ewOrgT/A4ilU
-        VzqFPu6/IZY5O9PRfNfRjx0=
-X-Google-Smtp-Source: APXvYqybC01d0TByWxoDrJxw7C9lUUE3ShsoXGzUiQlHPWLWfdxiLqpUEK75wQICNDQ0Ydie1eRIGg==
-X-Received: by 2002:a63:e907:: with SMTP id i7mr113621516pgh.84.1564605407843;
-        Wed, 31 Jul 2019 13:36:47 -0700 (PDT)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id h16sm77972581pfo.34.2019.07.31.13.36.46
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 31 Jul 2019 13:36:47 -0700 (PDT)
-Date:   Wed, 31 Jul 2019 13:36:46 -0700
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     soc@kernel.org, Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Vladimir Zapolskiy <vz@mleia.com>,
-        Sylvain Lemieux <slemieux.tyco@gmail.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Gregory Clement <gregory.clement@bootlin.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Alan Stern <stern@rowland.harvard.edu>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Networking <netdev@vger.kernel.org>,
-        linux-serial@vger.kernel.org, USB list <linux-usb@vger.kernel.org>,
-        LINUXWATCHDOG <linux-watchdog@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 03/14] watchdog: pnx4008_wdt: allow compile-testing
-Message-ID: <20190731203646.GB14817@roeck-us.net>
-References: <20190731195713.3150463-1-arnd@arndb.de>
- <20190731195713.3150463-4-arnd@arndb.de>
- <20190731202343.GA14817@roeck-us.net>
- <CAK8P3a2=gqeCMtdzdqg4d1n6v1-cdaHObeUoVXeB+=Okwd1rqA@mail.gmail.com>
+        id S1727870AbfGaVEx (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 31 Jul 2019 17:04:53 -0400
+Received: from hqemgate15.nvidia.com ([216.228.121.64]:8803 "EHLO
+        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726755AbfGaVEx (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 31 Jul 2019 17:04:53 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5d42027c0002>; Wed, 31 Jul 2019 14:05:00 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Wed, 31 Jul 2019 14:04:51 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Wed, 31 Jul 2019 14:04:51 -0700
+Received: from [10.110.102.167] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 31 Jul
+ 2019 21:04:50 +0000
+Subject: Re: [PATCH v7 06/20] clk: tegra: Support for OSC context save and
+ restore
+To:     Dmitry Osipenko <digetx@gmail.com>, <thierry.reding@gmail.com>,
+        <jonathanh@nvidia.com>, <tglx@linutronix.de>,
+        <jason@lakedaemon.net>, <marc.zyngier@arm.com>,
+        <linus.walleij@linaro.org>, <stefan@agner.ch>,
+        <mark.rutland@arm.com>
+CC:     <pdeschrijver@nvidia.com>, <pgaikwad@nvidia.com>,
+        <sboyd@kernel.org>, <linux-clk@vger.kernel.org>,
+        <linux-gpio@vger.kernel.org>, <jckuo@nvidia.com>,
+        <josephl@nvidia.com>, <talho@nvidia.com>,
+        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <mperttunen@nvidia.com>, <spatra@nvidia.com>, <robh+dt@kernel.org>,
+        <devicetree@vger.kernel.org>
+References: <1564532424-10449-1-git-send-email-skomatineni@nvidia.com>
+ <1564532424-10449-7-git-send-email-skomatineni@nvidia.com>
+ <16cca6aa-1034-f38a-49d1-d87b37fb6bbb@gmail.com>
+From:   Sowjanya Komatineni <skomatineni@nvidia.com>
+Message-ID: <b5a58bfc-c777-886f-d902-f499ec38e2ae@nvidia.com>
+Date:   Wed, 31 Jul 2019 14:04:51 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAK8P3a2=gqeCMtdzdqg4d1n6v1-cdaHObeUoVXeB+=Okwd1rqA@mail.gmail.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <16cca6aa-1034-f38a-49d1-d87b37fb6bbb@gmail.com>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: quoted-printable
+Content-Language: en-US
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1564607100; bh=5rrpy+cn1KnA3JbJVL1tKlVMXhmWssvFAJuR/U8+9e8=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
+         Content-Language;
+        b=WS8MF5eKhGbOte36YkWSpNh9xhWM82n79UA8DnM36gXW+YMUOEMtWt3nIIDMwtTlq
+         pqTIPXMSv/oGMxkFOKXfu5UXpqKQKQ5y0UJkpkOyDekFCFXA+RHOPpx4ywwy32DzHs
+         LLa3YA1LOVNr3nX+24At6RJPfB74LzYkFNg5cYklVkH+8wwMnzg37irjhpZc82QI0M
+         f4lQ9e5HZGOt5TuF2o2akyotU+XiUsMOWd/3NJVftyTKg75H/eETNinmL/4HvAbVPn
+         tC+X9D2fmOML2s57yKFpEqIG8vcFCazukwV8Qczd0/pEAWa8lW+Ui46Ws+RaO7siJs
+         aJeDjsKzwyiyw==
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Jul 31, 2019 at 10:26:35PM +0200, Arnd Bergmann wrote:
-> On Wed, Jul 31, 2019 at 10:23 PM Guenter Roeck <linux@roeck-us.net> wrote:
-> >
-> > On Wed, Jul 31, 2019 at 09:56:45PM +0200, Arnd Bergmann wrote:
-> > > The only thing that prevents building this driver on other
-> > > platforms is the mach/hardware.h include, which is not actually
-> > > used here at all, so remove the line and allow CONFIG_COMPILE_TEST.
-> > >
-> > > Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-> >
-> > Reviewed-by: Guenter Roeck <linux@roeck-us.net>
-> >
-> > What is the plan for this patch ? Push through watchdog
-> > or through your branch ?
-> 
-> I would prefer my branch so I can apply the final patch without waiting
-> for another release. Not in a hurry though, so if some other maintainer
 
-Ok with me.
+On 7/31/19 4:11 AM, Dmitry Osipenko wrote:
+> 31.07.2019 3:20, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+>> This patch adds support for saving OSC clock frequency and the
+>> drive-strength during OSC clock init and creates an API to restore
+>> OSC control register value from the saved context.
+>>
+>> This API is invoked by Tegra210 clock driver during system resume
+>> to restore the  OSC clock settings.
+>>
+>> Acked-by: Thierry Reding <treding@nvidia.com>
+>> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
+>> ---
+>>   drivers/clk/tegra/clk-tegra-fixed.c | 15 +++++++++++++++
+>>   drivers/clk/tegra/clk.h             |  1 +
+>>   2 files changed, 16 insertions(+)
+>>
+>> diff --git a/drivers/clk/tegra/clk-tegra-fixed.c b/drivers/clk/tegra/clk=
+-tegra-fixed.c
+>> index 8d91b2b191cf..7c6c8abfcde6 100644
+>> --- a/drivers/clk/tegra/clk-tegra-fixed.c
+>> +++ b/drivers/clk/tegra/clk-tegra-fixed.c
+>> @@ -17,6 +17,10 @@
+>>   #define OSC_CTRL			0x50
+>>   #define OSC_CTRL_OSC_FREQ_SHIFT		28
+>>   #define OSC_CTRL_PLL_REF_DIV_SHIFT	26
+>> +#define OSC_CTRL_MASK			(0x3f2 |	\
+>> +					(0xf << OSC_CTRL_OSC_FREQ_SHIFT))
+>> +
+>> +static u32 osc_ctrl_ctx;
+>>  =20
+>>   int __init tegra_osc_clk_init(void __iomem *clk_base, struct tegra_clk=
+ *clks,
+>>   			      unsigned long *input_freqs, unsigned int num,
+>> @@ -29,6 +33,7 @@ int __init tegra_osc_clk_init(void __iomem *clk_base, =
+struct tegra_clk *clks,
+>>   	unsigned osc_idx;
+>>  =20
+>>   	val =3D readl_relaxed(clk_base + OSC_CTRL);
+>> +	osc_ctrl_ctx =3D val & OSC_CTRL_MASK;
+>>   	osc_idx =3D val >> OSC_CTRL_OSC_FREQ_SHIFT;
+>>  =20
+>>   	if (osc_idx < num)
+>> @@ -96,3 +101,13 @@ void __init tegra_fixed_clk_init(struct tegra_clk *t=
+egra_clks)
+>>   		*dt_clk =3D clk;
+>>   	}
+>>   }
+>> +
+>> +void tegra_clk_osc_resume(void __iomem *clk_base)
+>> +{
+>> +	u32 val;
+>> +
+>> +	val =3D readl_relaxed(clk_base + OSC_CTRL) & ~OSC_CTRL_MASK;
+>> +	val |=3D osc_ctrl_ctx;
+>> +	writel_relaxed(val, clk_base + OSC_CTRL);
+> Why a full raw u32 OSC_CTRL value couldn't be simply saved and restored?
 
-Guenter
+Storing and restoring only required fields to avoid accidental=20
+misconfiguration.
+
+OSC_CTRL register has other bits (PLL_REF_DIV) which are configured by=20
+BR depending on OSC_FREQ and also setting PLL_REF_DIV while PLLS are in=20
+use is not safe.
+
+>> +	fence_udelay(2, clk_base);
+>> +}
+>> diff --git a/drivers/clk/tegra/clk.h b/drivers/clk/tegra/clk.h
+>> index f1ef6ae8c979..abba6d8a04cd 100644
+>> --- a/drivers/clk/tegra/clk.h
+>> +++ b/drivers/clk/tegra/clk.h
+>> @@ -842,6 +842,7 @@ u16 tegra_pll_get_fixed_mdiv(struct clk_hw *hw, unsi=
+gned long input_rate);
+>>   int tegra_pll_p_div_to_hw(struct tegra_clk_pll *pll, u8 p_div);
+>>   int div_frac_get(unsigned long rate, unsigned parent_rate, u8 width,
+>>   		 u8 frac_width, u8 flags);
+>> +void tegra_clk_osc_resume(void __iomem *clk_base);
+>>  =20
+>>  =20
+>>   /* Combined read fence with delay */
+>>
