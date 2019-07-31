@@ -2,93 +2,77 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id E5D027C251
-	for <lists+linux-gpio@lfdr.de>; Wed, 31 Jul 2019 14:55:08 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C0EED7C363
+	for <lists+linux-gpio@lfdr.de>; Wed, 31 Jul 2019 15:24:23 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726672AbfGaMzI (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 31 Jul 2019 08:55:08 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:51670 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726300AbfGaMzI (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Wed, 31 Jul 2019 08:55:08 -0400
-Received: from DGGEMS408-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id D5D83FBF895ADF134FA0;
-        Wed, 31 Jul 2019 20:39:35 +0800 (CST)
-Received: from localhost (10.133.213.239) by DGGEMS408-HUB.china.huawei.com
- (10.3.19.208) with Microsoft SMTP Server id 14.3.439.0; Wed, 31 Jul 2019
- 20:39:27 +0800
-From:   YueHaibing <yuehaibing@huawei.com>
-To:     <linus.walleij@linaro.org>, <bgolaszewski@baylibre.com>,
-        <yamada.masahiro@socionext.com>
-CC:     <linux-kernel@vger.kernel.org>, <linux-gpio@vger.kernel.org>,
-        YueHaibing <yuehaibing@huawei.com>
-Subject: [PATCH] gpio: Fix build error of function redefinition
-Date:   Wed, 31 Jul 2019 20:38:14 +0800
-Message-ID: <20190731123814.46624-1-yuehaibing@huawei.com>
-X-Mailer: git-send-email 2.10.2.windows.1
-MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.133.213.239]
-X-CFilter-Loop: Reflected
+        id S1729397AbfGaNYJ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 31 Jul 2019 09:24:09 -0400
+Received: from michel.telenet-ops.be ([195.130.137.88]:33174 "EHLO
+        michel.telenet-ops.be" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727161AbfGaNYJ (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 31 Jul 2019 09:24:09 -0400
+Received: from ramsan ([84.194.98.4])
+        by michel.telenet-ops.be with bizsmtp
+        id jRQ82000C05gfCL06RQ80t; Wed, 31 Jul 2019 15:24:08 +0200
+Received: from rox.of.borg ([192.168.97.57])
+        by ramsan with esmtp (Exim 4.90_1)
+        (envelope-from <geert@linux-m68k.org>)
+        id 1hsoaO-000190-6Z; Wed, 31 Jul 2019 15:24:08 +0200
+Received: from geert by rox.of.borg with local (Exim 4.90_1)
+        (envelope-from <geert@linux-m68k.org>)
+        id 1hsoaO-0004X4-57; Wed, 31 Jul 2019 15:24:08 +0200
+From:   Geert Uytterhoeven <geert+renesas@glider.be>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     linux-renesas-soc@vger.kernel.org, linux-gpio@vger.kernel.org,
+        Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: [PATCH] pinctrl: sh-pfc: Use dev_notice_once() instead of open-coding
+Date:   Wed, 31 Jul 2019 15:24:06 +0200
+Message-Id: <20190731132406.17381-1-geert+renesas@glider.be>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-when do randbuilding, I got this error:
+At the time of commit 9a643c9a11259955 ("sh-pfc: Convert message
+printing from pr_* to dev_*"), the dev_*_once() variants didn't exist
+yet, so the once behavior was open-coded.
 
-In file included from drivers/hwmon/pmbus/ucd9000.c:19:0:
-./include/linux/gpio/driver.h:576:1: error: redefinition of gpiochip_add_pin_range
- gpiochip_add_pin_range(struct gpio_chip *chip, const char *pinctl_name,
- ^~~~~~~~~~~~~~~~~~~~~~
-In file included from drivers/hwmon/pmbus/ucd9000.c:18:0:
-./include/linux/gpio.h:245:1: note: previous definition of gpiochip_add_pin_range was here
- gpiochip_add_pin_range(struct gpio_chip *chip, const char *pinctl_name,
- ^~~~~~~~~~~~~~~~~~~~~~
+Since commit e135303bd5bebcd2 ("device: Add dev_<level>_once variants")
+they do, so "revert" to the good practice of using a helper.
 
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Fixes: 964cb341882f ("gpio: move pincontrol calls to <linux/gpio/driver.h>")
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
 ---
- include/linux/gpio.h | 24 ------------------------
- 1 file changed, 24 deletions(-)
+To be queued in sh-pfc-for-v5.4.
 
-diff --git a/include/linux/gpio.h b/include/linux/gpio.h
-index 40915b4..f757a58 100644
---- a/include/linux/gpio.h
-+++ b/include/linux/gpio.h
-@@ -241,30 +241,6 @@ static inline int irq_to_gpio(unsigned irq)
- 	return -EINVAL;
- }
- 
--static inline int
--gpiochip_add_pin_range(struct gpio_chip *chip, const char *pinctl_name,
--		       unsigned int gpio_offset, unsigned int pin_offset,
--		       unsigned int npins)
--{
--	WARN_ON(1);
--	return -EINVAL;
--}
--
--static inline int
--gpiochip_add_pingroup_range(struct gpio_chip *chip,
--			struct pinctrl_dev *pctldev,
--			unsigned int gpio_offset, const char *pin_group)
--{
--	WARN_ON(1);
--	return -EINVAL;
--}
--
--static inline void
--gpiochip_remove_pin_ranges(struct gpio_chip *chip)
--{
--	WARN_ON(1);
--}
--
- static inline int devm_gpio_request(struct device *dev, unsigned gpio,
- 				    const char *label)
+ drivers/pinctrl/sh-pfc/gpio.c | 9 ++-------
+ 1 file changed, 2 insertions(+), 7 deletions(-)
+
+diff --git a/drivers/pinctrl/sh-pfc/gpio.c b/drivers/pinctrl/sh-pfc/gpio.c
+index 97c1332c1045739a..64c09aa374ae011f 100644
+--- a/drivers/pinctrl/sh-pfc/gpio.c
++++ b/drivers/pinctrl/sh-pfc/gpio.c
+@@ -255,18 +255,13 @@ static int gpio_pin_setup(struct sh_pfc_chip *chip)
+ #ifdef CONFIG_PINCTRL_SH_FUNC_GPIO
+ static int gpio_function_request(struct gpio_chip *gc, unsigned offset)
  {
+-	static bool __print_once;
+ 	struct sh_pfc *pfc = gpio_to_pfc(gc);
+ 	unsigned int mark = pfc->info->func_gpios[offset].enum_id;
+ 	unsigned long flags;
+ 	int ret;
+ 
+-	if (!__print_once) {
+-		dev_notice(pfc->dev,
+-			   "Use of GPIO API for function requests is deprecated."
+-			   " Convert to pinctrl\n");
+-		__print_once = true;
+-	}
++	dev_notice_once(pfc->dev,
++			"Use of GPIO API for function requests is deprecated, convert to pinctrl\n");
+ 
+ 	if (mark == 0)
+ 		return -EINVAL;
 -- 
-2.7.4
-
+2.17.1
 
