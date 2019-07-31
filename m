@@ -2,96 +2,195 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 33EBF7BDF9
-	for <lists+linux-gpio@lfdr.de>; Wed, 31 Jul 2019 12:05:17 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 59B7E7BE1F
+	for <lists+linux-gpio@lfdr.de>; Wed, 31 Jul 2019 12:14:34 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726520AbfGaKFQ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 31 Jul 2019 06:05:16 -0400
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:43186 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726378AbfGaKFQ (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 31 Jul 2019 06:05:16 -0400
-Received: by mail-ot1-f68.google.com with SMTP id j11so12275028otp.10
-        for <linux-gpio@vger.kernel.org>; Wed, 31 Jul 2019 03:05:15 -0700 (PDT)
+        id S1727489AbfGaKNa (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 31 Jul 2019 06:13:30 -0400
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:44950 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725914AbfGaKNa (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 31 Jul 2019 06:13:30 -0400
+Received: by mail-lf1-f68.google.com with SMTP id r15so30052886lfm.11;
+        Wed, 31 Jul 2019 03:13:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=+1oHf1+ErP2HL7hVOGccTTUzsvFfZGUFo4kLW3/NF74=;
-        b=V4wjj7k//NOYAnpNAy96d0VR3zxB/qYbLmdYJlrlx0nf+bmL39DVNQc/aRXm7+14Id
-         PRhm47KopeSw/zRX9YujsBjwurOMNyRArBrMcO+4PVWv9/YoJEewX7M3rp6sBlkT5poE
-         Lw7+yeT4e2/pjmdK4Rp+CK7UaMbXrRIPKlX/0lLBU3osLmjUg6j2dUhXAp3+FHUnib8n
-         VLrjR/DC1z5Nx4pcVMj3mDFFdkRItDwZSDrRw39UzVjSc6p9hhMhztFlQvQ/WdfGgpl0
-         LsRicLctxiARRIw8wpN9xzzeS2+TT5nIbWW0twE2svcmdPwDEmgbFlYvm0RT6HYPOfAW
-         K5mw==
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=7SxGuds9OQOVwnoD/O7wV/C951qTVXKAusYltSAWo2E=;
+        b=kU8NnR4lHdxPexUj2w7TRQ2ONxWzKF3ORsM4eaFWLT59cjDHRSreT8XsNuEhGejPYj
+         LNIKPBdlQtfRJM3BmStlhZgFp86wdbAh7CjGZEQx6IOkfnIfC3zKLJWz3TAiN/7BlRQN
+         JvmedyTOsw3HKwUNIrBq4C+rIxCvc5Xjo+mT/fR3HurISEmMzFpLphaQSSeYWEGgwF5q
+         cE1J8C8kvbD/ztj+tHOLAPfb1wPEs5MEPelOoUo+GVdoVXt4fZT4hztr2BFCADMQrf/9
+         lr9marqa5gYK77OjPy115xAlFw1uBUlG8bL8Q6ZLrzpNEEbvt25RZLVmI2Z/hxVV88M2
+         ijYg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=+1oHf1+ErP2HL7hVOGccTTUzsvFfZGUFo4kLW3/NF74=;
-        b=G7d15wMQK2ZXUSRY683/TYq+CWw0ewOHFiv3sAteG6afKZF1Vu/odOtnTyDygpXzax
-         PWLwziY1jDF++YXraxVZ2OMUKbRvRoHzIPFeo6N8Nv6F0+1HNXO+6IlKswfIQ160li/e
-         h4idGDQcaV73nExWnrxLzX91w2LLeWDbAOm9NtjFfuUq2MowH9MAbMFCIImguvVaYu7F
-         3iYBLV/X3+UZqNIWgll3s2j3DSz5yiyR7puf2hiOM3BhNNciqy9IdGT3SyqhNdQ/s6vW
-         KD3V6EAT6VSdbTbDDdzp7EQRaV5r9wTyEjYCVZB4l9AAnwpOx7vDG2qqhwZyRmyW5pru
-         3yyA==
-X-Gm-Message-State: APjAAAVF2f3CwMPimerqj6ZefryD0Hq48h28NDyBuUZ7SYzoEAidnwoh
-        QtqONep2OvWs73ejoPAJBb10Xz+0SBFE3eU54CW9zg==
-X-Google-Smtp-Source: APXvYqz5jnxUo8M7IbSxK0LhJprE4y7hCuX1ujLyNA1InAolL8RUQuVGlHq6hYe8FOBh+P3mZT3Ka7f3nLqQT5diftM=
-X-Received: by 2002:a9d:7352:: with SMTP id l18mr27744113otk.292.1564567515226;
- Wed, 31 Jul 2019 03:05:15 -0700 (PDT)
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=7SxGuds9OQOVwnoD/O7wV/C951qTVXKAusYltSAWo2E=;
+        b=qkz8YU5OrUedp6k/Q7vK76s83ibxrYk2pIzHstzNCf7Antk6HKGtm/BIn7F1mqZhgi
+         E+ULP0cFkkIxx5b9PZ53xeOwcnoaCOD0ejbwUwqV3UB6fOhpKNc1BprMEebbH4oe75Kx
+         RKJ3HNoJoq3sTSDtTWpG4LihkaVWJoFA+FwiISmGBbR7YHnlYHBVClABf+cBVLOcJl+u
+         qmiiMFsIWKgTWBwXiCZCJeC+F4UXXdL3oyFSdttXHeqrk9gTNd5B2czTgRwDhshB2Nor
+         lFabmneCSKLbM8Rk991Fk1bVY9dXNtAWsPKpL+C3/mdZNaVj1X/a6332rpWuUbQjdV/L
+         ls8w==
+X-Gm-Message-State: APjAAAVx/DkiScFk3IlQg8+TBVv5rck6fLvGZQRbWwy07UoLDrFE8JCA
+        ckzJpTfIq8xm5TMvHfQZcdzsV7QM
+X-Google-Smtp-Source: APXvYqzZ1UHd829MHPvXhuhYL3vcX7dTb78E05fpBFoBXx5+vBVCQb1Gl2IFQWf9tkeN6BtavgrZdQ==
+X-Received: by 2002:a19:6e41:: with SMTP id q1mr47761072lfk.20.1564568006447;
+        Wed, 31 Jul 2019 03:13:26 -0700 (PDT)
+Received: from [192.168.2.145] (ppp91-78-220-99.pppoe.mtu-net.ru. [91.78.220.99])
+        by smtp.googlemail.com with ESMTPSA id m17sm13150783lfb.9.2019.07.31.03.13.24
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 31 Jul 2019 03:13:25 -0700 (PDT)
+Subject: Re: [PATCH v7 10/20] clk: tegra: clk-dfll: Add suspend and resume
+ support
+To:     Sowjanya Komatineni <skomatineni@nvidia.com>,
+        thierry.reding@gmail.com, jonathanh@nvidia.com, tglx@linutronix.de,
+        jason@lakedaemon.net, marc.zyngier@arm.com,
+        linus.walleij@linaro.org, stefan@agner.ch, mark.rutland@arm.com
+Cc:     pdeschrijver@nvidia.com, pgaikwad@nvidia.com, sboyd@kernel.org,
+        linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org,
+        jckuo@nvidia.com, josephl@nvidia.com, talho@nvidia.com,
+        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org,
+        mperttunen@nvidia.com, spatra@nvidia.com, robh+dt@kernel.org,
+        devicetree@vger.kernel.org
+References: <1564532424-10449-1-git-send-email-skomatineni@nvidia.com>
+ <1564532424-10449-11-git-send-email-skomatineni@nvidia.com>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <523ba069-5663-6593-d954-475720864eab@gmail.com>
+Date:   Wed, 31 Jul 2019 13:12:29 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-References: <1564566474-18294-1-git-send-email-dingxiang@cmss.chinamobile.com>
-In-Reply-To: <1564566474-18294-1-git-send-email-dingxiang@cmss.chinamobile.com>
-From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Date:   Wed, 31 Jul 2019 12:05:04 +0200
-Message-ID: <CAMpxmJXmvcbU5JD6qjEpJfdyWhDMtPbzMsmFHgASuDYzWBWGqA@mail.gmail.com>
-Subject: Re: [PATCH] gpio: ixp4xx: remove redundant dev_err message
-To:     Ding Xiang <dingxiang@cmss.chinamobile.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        linux-gpio <linux-gpio@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <1564532424-10449-11-git-send-email-skomatineni@nvidia.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-=C5=9Br., 31 lip 2019 o 11:48 Ding Xiang <dingxiang@cmss.chinamobile.com> n=
-apisa=C5=82(a):
->
-> devm_ioremap_resource already contains error message, so remove
-> the redundant dev_err message
->
-> Signed-off-by: Ding Xiang <dingxiang@cmss.chinamobile.com>
+31.07.2019 3:20, Sowjanya Komatineni пишет:
+> This patch implements DFLL suspend and resume operation.
+> 
+> During system suspend entry, CPU clock will switch CPU to safe
+> clock source of PLLP and disables DFLL clock output.
+> 
+> DFLL driver suspend confirms DFLL disable state and errors out on
+> being active.
+> 
+> DFLL is re-initialized during the DFLL driver resume as it goes
+> through complete reset during suspend entry.
+> 
+> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
 > ---
->  drivers/gpio/gpio-ixp4xx.c | 4 +---
->  1 file changed, 1 insertion(+), 3 deletions(-)
->
-> diff --git a/drivers/gpio/gpio-ixp4xx.c b/drivers/gpio/gpio-ixp4xx.c
-> index 670c2a8..2b2b89b 100644
-> --- a/drivers/gpio/gpio-ixp4xx.c
-> +++ b/drivers/gpio/gpio-ixp4xx.c
-> @@ -321,10 +321,8 @@ static int ixp4xx_gpio_probe(struct platform_device =
-*pdev)
->
->         res =3D platform_get_resource(pdev, IORESOURCE_MEM, 0);
->         g->base =3D devm_ioremap_resource(dev, res);
-> -       if (IS_ERR(g->base)) {
-> -               dev_err(dev, "ioremap error\n");
-> +       if (IS_ERR(g->base))
->                 return PTR_ERR(g->base);
-> -       }
->
->         /*
->          * Make sure GPIO 14 and 15 are NOT used as clocks but GPIO on
-> --
-> 1.9.1
->
->
->
+>  drivers/clk/tegra/clk-dfll.c               | 56 ++++++++++++++++++++++++++++++
+>  drivers/clk/tegra/clk-dfll.h               |  2 ++
+>  drivers/clk/tegra/clk-tegra124-dfll-fcpu.c |  1 +
+>  3 files changed, 59 insertions(+)
+> 
+> diff --git a/drivers/clk/tegra/clk-dfll.c b/drivers/clk/tegra/clk-dfll.c
+> index f8688c2ddf1a..9900097ec2aa 100644
+> --- a/drivers/clk/tegra/clk-dfll.c
+> +++ b/drivers/clk/tegra/clk-dfll.c
+> @@ -1513,6 +1513,62 @@ static int dfll_init(struct tegra_dfll *td)
+>  	return ret;
+>  }
+>  
+> +/**
+> + * tegra_dfll_suspend - check DFLL is disabled
+> + * @dev: DFLL device *
+> + *
+> + * DFLL clock should be disabled by the CPUFreq driver. So, make
+> + * sure it is disabled and disable all clocks needed by the DFLL.
+> + */
+> +int tegra_dfll_suspend(struct device *dev)
+> +{
+> +	struct tegra_dfll *td = dev_get_drvdata(dev);
+> +
+> +	if (dfll_is_running(td)) {
+> +		dev_err(td->dev, "dfll is enabled while shouldn't be\n");
+> +		return -EBUSY;
+> +	}
+> +
+> +	reset_control_assert(td->dvco_rst);
+> +
+> +	return 0;
+> +}
+> +EXPORT_SYMBOL(tegra_dfll_suspend);
+> +
+> +/**
+> + * tegra_dfll_resume - reinitialize DFLL on resume
+> + * @dev: DFLL instance
+> + *
+> + * DFLL is disabled and reset during suspend and resume.
+> + * So, reinitialize the DFLL IP block back for use.
+> + * DFLL clock is enabled later in closed loop mode by CPUFreq
+> + * driver before switching its clock source to DFLL output.
+> + */
+> +int tegra_dfll_resume(struct device *dev)
+> +{
+> +	struct tegra_dfll *td = dev_get_drvdata(dev);
+> +
+> +	reset_control_deassert(td->dvco_rst);
+> +
+> +	pm_runtime_irq_safe(td->dev);
 
-Patch applied, thanks!
+1. Interrupts are allowed here.
+2. It's enough to invoke that function once during probe.
+3. That function bumps runtime-enable count of the parent, which
+immediately should raise some questions.
 
-Bart
+Corollary: you should remove pm_runtime_irq_safe() because it is not needed.
+
+> +	pm_runtime_get_sync(td->dev);
+> +
+> +	dfll_set_mode(td, DFLL_DISABLED);
+> +	dfll_set_default_params(td);
+> +
+> +	if (td->soc->init_clock_trimmers)
+> +		td->soc->init_clock_trimmers();
+> +
+> +	dfll_set_open_loop_config(td);
+> +
+> +	dfll_init_out_if(td);
+> +
+> +	pm_runtime_put_sync(td->dev);
+> +
+> +	return 0;
+> +}
+> +EXPORT_SYMBOL(tegra_dfll_resume);
+> +
+>  /*
+>   * DT data fetch
+>   */
+> diff --git a/drivers/clk/tegra/clk-dfll.h b/drivers/clk/tegra/clk-dfll.h
+> index 1b14ebe7268b..fb209eb5f365 100644
+> --- a/drivers/clk/tegra/clk-dfll.h
+> +++ b/drivers/clk/tegra/clk-dfll.h
+> @@ -42,5 +42,7 @@ int tegra_dfll_register(struct platform_device *pdev,
+>  struct tegra_dfll_soc_data *tegra_dfll_unregister(struct platform_device *pdev);
+>  int tegra_dfll_runtime_suspend(struct device *dev);
+>  int tegra_dfll_runtime_resume(struct device *dev);
+> +int tegra_dfll_suspend(struct device *dev);
+> +int tegra_dfll_resume(struct device *dev);
+>  
+>  #endif /* __DRIVERS_CLK_TEGRA_CLK_DFLL_H */
+> diff --git a/drivers/clk/tegra/clk-tegra124-dfll-fcpu.c b/drivers/clk/tegra/clk-tegra124-dfll-fcpu.c
+> index e84b6d52cbbd..2ac2679d696d 100644
+> --- a/drivers/clk/tegra/clk-tegra124-dfll-fcpu.c
+> +++ b/drivers/clk/tegra/clk-tegra124-dfll-fcpu.c
+> @@ -631,6 +631,7 @@ static int tegra124_dfll_fcpu_remove(struct platform_device *pdev)
+>  static const struct dev_pm_ops tegra124_dfll_pm_ops = {
+>  	SET_RUNTIME_PM_OPS(tegra_dfll_runtime_suspend,
+>  			   tegra_dfll_runtime_resume, NULL)
+> +	SET_SYSTEM_SLEEP_PM_OPS(tegra_dfll_suspend, tegra_dfll_resume)
+>  };
+>  
+>  static struct platform_driver tegra124_dfll_fcpu_driver = {
+> 
+
