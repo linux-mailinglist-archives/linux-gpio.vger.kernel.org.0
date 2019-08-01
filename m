@@ -2,281 +2,103 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 3B8D07DDFA
-	for <lists+linux-gpio@lfdr.de>; Thu,  1 Aug 2019 16:36:17 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 73FE57E0C0
+	for <lists+linux-gpio@lfdr.de>; Thu,  1 Aug 2019 19:10:48 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732100AbfHAOgQ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 1 Aug 2019 10:36:16 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:41676 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732098AbfHAOgQ (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 1 Aug 2019 10:36:16 -0400
-Received: by mail-pf1-f193.google.com with SMTP id m30so34200472pff.8
-        for <linux-gpio@vger.kernel.org>; Thu, 01 Aug 2019 07:36:16 -0700 (PDT)
+        id S1732302AbfHARKr (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 1 Aug 2019 13:10:47 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:40591 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732281AbfHARKr (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 1 Aug 2019 13:10:47 -0400
+Received: by mail-wm1-f67.google.com with SMTP id v19so63904736wmj.5;
+        Thu, 01 Aug 2019 10:10:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=pibx78EWG8gcOu1hDUtRcgYysH58v/vtqrpOcAw6IUw=;
-        b=vCrRfxxSxKnmkxXdjlHz6jpu0VaVwAwF9gijiaar/VO4KY+Lah0TkNsuJsq2shBGib
-         gwZKKJuTlXJ4wdaeK7EfP1ow/n2uL9jDzVqlFFx6rIJwMmE/Sfy9UFN8zFhydTYIKKd7
-         7pvX/y6BZ7ypVMF865669HD1CxHK5c1slsH6hv0qr3ZX880fi93/y/ysz1tdXcCXbOEw
-         7bPCS/fncRYHjOlABYLMAo9D+qxxtZ9MUmWSvQROdGGMLb8+3ssQocExz0f2FvrZKVi9
-         cQ2cl9wwkXDpARY1xHuWDYk/0PCGBr3uc6a86WTuOSMa9+ka43irQCIFqDcpyClwvIJE
-         Cs7g==
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=FghonA4IabkJaTgLr8fM3E6htRJ5CzRRLsDA7y0O0VY=;
+        b=IXREDAqVq4+TQykJaNC3vMKRY1s8sfyb4cqoqV1qIJHds766TvFSenvnluadnn3JGN
+         49vKKJKm4LipWYwD5He7qF0AHhwSe10Hu6DLske6AsXxiaporx3njUEjBmcYekgdTvnq
+         5rnH632NNorGfygsGzzUazJX3QP618R5+SyZTlK0ExbbWUDfmVF3Jk4RMtOx1pdVAtBR
+         FAgM8kIL74JD/bfgmJe8IA2dfAay3nmkLdGTZX6V3YX+tmUEMojSASxMsyyif6AqBJCm
+         gpQEsHfz/KJkXN18bals8U3lmH6qEhVmI0Eftbhtdy0yHkLKIm05QttGenqwbLX2x+CC
+         n5+g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=pibx78EWG8gcOu1hDUtRcgYysH58v/vtqrpOcAw6IUw=;
-        b=m730d/Jp06lnWWD6TcW5C5XXw//jC+65oHT9oSo/yNbX0aGmTkNMRvzuMKBLClHFBQ
-         6DzIowET3OmfowNaPxu19dBxT+m/UPwHhi5n5OxIFYlizHc9IzFiX3jV1KwccB0fyMGb
-         kBwlFjz1YFsz/hJa5MnBpf2ptbneGAELxwpVAZOJVRsucX9T2cVMdf+rLnRvww4scK0+
-         PXgvQg8xwfjJ3f6qo5y4zxPUZLtDtLHt+DDqu/JzILdu67QMziuDORBj6QJqzV1nbM8y
-         f9ZxFUTHQdgp/qzjIoVZZT4pmat4AXc2pWi7zdZh3Y8zxidEj8CJK0lDPundwCPOhaAQ
-         frag==
-X-Gm-Message-State: APjAAAXSgn7GADeGGATQJ0c8qGwJVTFamgIipuENUQpwCU4CjWVrYpPN
-        W01f5Dr4flMHzYLi/yIaCU4AcA==
-X-Google-Smtp-Source: APXvYqzQsHGjFMFrJt2isegmbNtDWJz61+n+L0FWCYTV7fTkYB0L9NzLnbs6kghQKO85K5VdRt884Q==
-X-Received: by 2002:a63:6686:: with SMTP id a128mr111329429pgc.361.1564670175416;
-        Thu, 01 Aug 2019 07:36:15 -0700 (PDT)
-Received: from tuxbook-pro (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id f32sm4650500pgb.21.2019.08.01.07.36.14
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Thu, 01 Aug 2019 07:36:14 -0700 (PDT)
-Date:   Thu, 1 Aug 2019 07:37:45 -0700
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Rajendra Nayak <rnayak@codeaurora.org>
-Cc:     linus.walleij@linaro.org, linux-arm-msm@vger.kernel.org,
-        agross@kernel.org, robh+dt@kernel.org, linux-gpio@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Jitendra Sharma <shajit@codeaurora.org>,
-        Vivek Gautam <vivek.gautam@codeaurora.org>
-Subject: Re: [PATCH 1/2] dt-bindings: pinctrl: qcom: Add SC7180 pinctrl
- binding
-Message-ID: <20190801143745.GZ7234@tuxbook-pro>
-References: <20190801100717.23333-1-rnayak@codeaurora.org>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=FghonA4IabkJaTgLr8fM3E6htRJ5CzRRLsDA7y0O0VY=;
+        b=VpWkZr5nMewFWFhg3z7jh7UVwyfYThXdTu6I4Y0xhWtGfkP0kKgpcKb57HUDXulSOk
+         0tZ9ckDMCsLvqHt8ef0QzbnOzBMU8ZVr7+el5zRa88uUvh8H6lSPwc2XXKmL3e4H/B4v
+         iWaw8h7n6mM14k/6/2PuJV//u+iJf32iH2PZL0q+G2HVCzED61RUhMvy6jVkLQpEeDey
+         Rh4uIhhmJybU4Zm31dyWVI0wbYpwNuevv5Zw+tYRRJv2LaBSnvmg/eOOWraggysuiW2y
+         uT+mNWMVIhoS5l4HFR6Zxp2IhVHVQ0BeIhDL1s8qcoCxkAt+p81dpaEfOd+G/GmlSoNP
+         MOaQ==
+X-Gm-Message-State: APjAAAUzntiNPvwmjqM2zAbcW2YQ8vgKYYOniYMuLAodcvRYuNlmT851
+        C6Rn//DDIypXrEXR4RSD8GPWZeqe
+X-Google-Smtp-Source: APXvYqxByZB/gh88C6wRDNij3X4Fh7cbfowCUmSN5SWstCnDpG/3spte6L9Wyr3/77AaFAU2sLB6xg==
+X-Received: by 2002:a7b:c455:: with SMTP id l21mr119115981wmi.114.1564679444023;
+        Thu, 01 Aug 2019 10:10:44 -0700 (PDT)
+Received: from [192.168.2.145] (ppp91-78-220-99.pppoe.mtu-net.ru. [91.78.220.99])
+        by smtp.googlemail.com with ESMTPSA id u2sm5377105wmc.3.2019.08.01.10.10.41
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 01 Aug 2019 10:10:43 -0700 (PDT)
+Subject: Re: [PATCH v7 10/20] clk: tegra: clk-dfll: Add suspend and resume
+ support
+To:     Sowjanya Komatineni <skomatineni@nvidia.com>,
+        "thierry.reding@gmail.com" <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "jason@lakedaemon.net" <jason@lakedaemon.net>,
+        "marc.zyngier@arm.com" <marc.zyngier@arm.com>,
+        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
+        "stefan@agner.ch" <stefan@agner.ch>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>
+Cc:     Peter De Schrijver <pdeschrijver@nvidia.com>,
+        Prashant Gaikwad <pgaikwad@nvidia.com>,
+        "sboyd@kernel.org" <sboyd@kernel.org>,
+        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        Jui Chang Kuo <jckuo@nvidia.com>,
+        Joseph Lo <josephl@nvidia.com>, Timo Alho <talho@nvidia.com>,
+        "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Mikko Perttunen <mperttunen@nvidia.com>,
+        Sandipan Patra <spatra@nvidia.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "rjw@rjwysocki.net" <rjw@rjwysocki.net>,
+        "viresh.kumar@linaro.org" <viresh.kumar@linaro.org>,
+        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>
+References: <1564607463-28802-1-git-send-email-skomatineni@nvidia.com>
+ <1564607463-28802-11-git-send-email-skomatineni@nvidia.com>
+ <4400ffef-685f-b9e6-3b07-4790f851282c@gmail.com>
+ <501a9d0e-ce78-9b35-642d-dff7f9223926@gmail.com>
+ <BYAPR12MB3398C388471BC5811614C8FEC2DE0@BYAPR12MB3398.namprd12.prod.outlook.com>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <31990250-e237-ddb9-ce71-29b7c2302fc3@gmail.com>
+Date:   Thu, 1 Aug 2019 20:10:38 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190801100717.23333-1-rnayak@codeaurora.org>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+In-Reply-To: <BYAPR12MB3398C388471BC5811614C8FEC2DE0@BYAPR12MB3398.namprd12.prod.outlook.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu 01 Aug 03:07 PDT 2019, Rajendra Nayak wrote:
+01.08.2019 19:10, Sowjanya Komatineni пишет:
+> I didn’t updated any patches. This is still same v7 just resent with
+> CPUFreq maintainers in CC as I missed to add them earlier.
 
-> From: Jitendra Sharma <shajit@codeaurora.org>
-> 
-> Add the binding for the TLMM pinctrl block found in the SC7180 platform
-> 
-> Signed-off-by: Jitendra Sharma <shajit@codeaurora.org>
-> Signed-off-by: Vivek Gautam <vivek.gautam@codeaurora.org>
-> [rnayak: Fix some copy-paste issues, sort and fix functions]
-> Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
-
-Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-
-> ---
->  .../bindings/pinctrl/qcom,sc7180-pinctrl.txt  | 186 ++++++++++++++++++
->  1 file changed, 186 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/pinctrl/qcom,sc7180-pinctrl.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/pinctrl/qcom,sc7180-pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/qcom,sc7180-pinctrl.txt
-> new file mode 100644
-> index 000000000000..948cd56cfab7
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/pinctrl/qcom,sc7180-pinctrl.txt
-> @@ -0,0 +1,186 @@
-> +Qualcomm Technologies, Inc. SC7180 TLMM block
-> +
-> +This binding describes the Top Level Mode Multiplexer block found in the
-> +SC7180 platform.
-> +
-> +- compatible:
-> +	Usage: required
-> +	Value type: <string>
-> +	Definition: must be "qcom,sc7180-pinctrl"
-> +
-> +- reg:
-> +	Usage: required
-> +	Value type: <prop-encoded-array>
-> +	Definition: the base address and size of the north, south and west
-> +		    TLMM tiles
-> +
-> +- reg-names:
-> +	Usage: required
-> +	Value type: <prop-encoded-array>
-> +	Defintiion: names for the cells of reg, must contain "north", "south"
-> +		    and "west".
-> +
-> +- interrupts:
-> +	Usage: required
-> +	Value type: <prop-encoded-array>
-> +	Definition: should specify the TLMM summary IRQ.
-> +
-> +- interrupt-controller:
-> +	Usage: required
-> +	Value type: <none>
-> +	Definition: identifies this node as an interrupt controller
-> +
-> +- #interrupt-cells:
-> +	Usage: required
-> +	Value type: <u32>
-> +	Definition: must be 2. Specifying the pin number and flags, as defined
-> +		    in <dt-bindings/interrupt-controller/irq.h>
-> +
-> +- gpio-controller:
-> +	Usage: required
-> +	Value type: <none>
-> +	Definition: identifies this node as a gpio controller
-> +
-> +- #gpio-cells:
-> +	Usage: required
-> +	Value type: <u32>
-> +	Definition: must be 2. Specifying the pin number and flags, as defined
-> +		    in <dt-bindings/gpio/gpio.h>
-> +
-> +- gpio-ranges:
-> +	Usage: required
-> +	Value type: <prop-encoded-array>
-> +	Definition:  see ../gpio/gpio.txt
-> +
-> +- gpio-reserved-ranges:
-> +	Usage: optional
-> +	Value type: <prop-encoded-array>
-> +	Definition: see ../gpio/gpio.txt
-> +
-> +Please refer to ../gpio/gpio.txt and ../interrupt-controller/interrupts.txt for
-> +a general description of GPIO and interrupt bindings.
-> +
-> +Please refer to pinctrl-bindings.txt in this directory for details of the
-> +common pinctrl bindings used by client devices, including the meaning of the
-> +phrase "pin configuration node".
-> +
-> +The pin configuration nodes act as a container for an arbitrary number of
-> +subnodes. Each of these subnodes represents some desired configuration for a
-> +pin, a group, or a list of pins or groups. This configuration can include the
-> +mux function to select on those pin(s)/group(s), and various pin configuration
-> +parameters, such as pull-up, drive strength, etc.
-> +
-> +
-> +PIN CONFIGURATION NODES:
-> +
-> +The name of each subnode is not important; all subnodes should be enumerated
-> +and processed purely based on their content.
-> +
-> +Each subnode only affects those parameters that are explicitly listed. In
-> +other words, a subnode that lists a mux function but no pin configuration
-> +parameters implies no information about any pin configuration parameters.
-> +Similarly, a pin subnode that describes a pullup parameter implies no
-> +information about e.g. the mux function.
-> +
-> +
-> +The following generic properties as defined in pinctrl-bindings.txt are valid
-> +to specify in a pin configuration subnode:
-> +
-> +- pins:
-> +	Usage: required
-> +	Value type: <string-array>
-> +	Definition: List of gpio pins affected by the properties specified in
-> +		    this subnode.
-> +
-> +		    Valid pins are:
-> +		      gpio0-gpio118
-> +		        Supports mux, bias and drive-strength
-> +
-> +		      sdc1_clk, sdc1_cmd, sdc1_data sdc2_clk, sdc2_cmd,
-> +		      sdc2_data sdc1_rclk
-> +		        Supports bias and drive-strength
-> +
-> +		      ufs_reset
-> +			Supports bias and drive-strength
-> +
-> +- function:
-> +	Usage: required
-> +	Value type: <string>
-> +	Definition: Specify the alternative function to be configured for the
-> +		    specified pins. Functions are only valid for gpio pins.
-> +		    Valid values are:
-> +
-> +		    adsp_ext, agera_pll, aoss_cti, atest_char, atest_char0,
-> +		    atest_char1, atest_char2, atest_char3, atest_tsens,
-> +		    atest_tsens2, atest_usb1, atest_usb10, atest_usb11,
-> +		    atest_usb12, atest_usb13, atest_usb2, atest_usb20,
-> +		    atest_usb21, atest_usb22, atest_usb23, audio_ref,
-> +		    btfm_slimbus, cam_mclk, cci_async, cci_i2c, cci_timer0,
-> +		    cci_timer1, cci_timer2, cci_timer3, cci_timer4,
-> +		    cri_trng, dbg_out, ddr_bist, ddr_pxi0, ddr_pxi1,
-> +		    ddr_pxi2, ddr_pxi3, dp_hot, edp_lcd, gcc_gp1, gcc_gp2,
-> +		    gcc_gp3, gpio, gp_pdm0, gp_pdm1, gp_pdm2, gps_tx,
-> +		    jitter_bist, ldo_en, ldo_update, lpass_ext, mdp_vsync,
-> +		    mdp_vsync0, mdp_vsync1, mdp_vsync2, mdp_vsync3, mi2s_0,
-> +		    mi2s_1, mi2s_2, mss_lte, m_voc, pa_indicator, phase_flag,
-> +		    PLL_BIST, pll_bypassnl, pll_reset, prng_rosc, qdss,
-> +		    qdss_cti, qlink_enable, qlink_request, qspi_clk, qspi_cs,
-> +		    qspi_data, qup00, qup01, qup02, qup03, qup04, qup05,
-> +		    qup10, qup11, qup12, qup13, qup14, qup15, sdc1_tb,
-> +		    sdc2_tb, sd_write, sp_cmu, tgu_ch0, tgu_ch1, tgu_ch2,
-> +		    tgu_ch3, tsense_pwm1, tsense_pwm2, uim1, uim2, uim_batt,
-> +		    usb_phy, vfr_1, _V_GPIO, _V_PPS_IN, _V_PPS_OUT,
-> +		    vsense_trigger, wlan1_adc0, wlan1_adc1, wlan2_adc0,
-> +		    wlan2_adc1,
-> +
-> +- bias-disable:
-> +	Usage: optional
-> +	Value type: <none>
-> +	Definition: The specified pins should be configured as no pull.
-> +
-> +- bias-pull-down:
-> +	Usage: optional
-> +	Value type: <none>
-> +	Definition: The specified pins should be configured as pull down.
-> +
-> +- bias-pull-up:
-> +	Usage: optional
-> +	Value type: <none>
-> +	Definition: The specified pins should be configured as pull up.
-> +
-> +- output-high:
-> +	Usage: optional
-> +	Value type: <none>
-> +	Definition: The specified pins are configured in output mode, driven
-> +		    high.
-> +		    Not valid for sdc pins.
-> +
-> +- output-low:
-> +	Usage: optional
-> +	Value type: <none>
-> +	Definition: The specified pins are configured in output mode, driven
-> +		    low.
-> +		    Not valid for sdc pins.
-> +
-> +- drive-strength:
-> +	Usage: optional
-> +	Value type: <u32>
-> +	Definition: Selects the drive strength for the specified pins, in mA.
-> +		    Valid values are: 2, 4, 6, 8, 10, 12, 14 and 16
-> +
-> +Example:
-> +
-> +	tlmm: pinctrl@3000000 {
-> +		compatible = "qcom,sc7180-pinctrl";
-> +		reg = <0x3500000 0x300000>,
-> +		      <0x3900000 0x300000>,
-> +		      <0x3D00000 0x300000>;
-> +		reg-names = "west", "north", "south";
-> +		interrupts = <GIC_SPI 208 IRQ_TYPE_LEVEL_HIGH>;
-> +		gpio-controller;
-> +		#gpio-cells = <2>;
-> +		gpio-ranges = <&tlmm 0 0 119>;
-> +		gpio-reserved-ranges = <0 4>, <106 4>;
-> +		interrupt-controller;
-> +		#interrupt-cells = <2>;
-> +	};
-> -- 
-> QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-> of Code Aurora Forum, hosted by The Linux Foundation
-> 
+There are now two different threads for the same patches, which is not
+very good. When I said that CPUFreq maintainers should be CC'ed, I
+didn't mean to resend it all, sorry for not being clear about it. You
+should've wait for more comments to the original patches and then make a
+v8. I suggest to do the same in the current situation as well, please
+address all the current comments and wait for 1-2 days, then make a v8.
