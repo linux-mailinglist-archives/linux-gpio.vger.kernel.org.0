@@ -2,103 +2,82 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 73FE57E0C0
-	for <lists+linux-gpio@lfdr.de>; Thu,  1 Aug 2019 19:10:48 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D3B797E138
+	for <lists+linux-gpio@lfdr.de>; Thu,  1 Aug 2019 19:39:43 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732302AbfHARKr (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 1 Aug 2019 13:10:47 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:40591 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732281AbfHARKr (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 1 Aug 2019 13:10:47 -0400
-Received: by mail-wm1-f67.google.com with SMTP id v19so63904736wmj.5;
-        Thu, 01 Aug 2019 10:10:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=FghonA4IabkJaTgLr8fM3E6htRJ5CzRRLsDA7y0O0VY=;
-        b=IXREDAqVq4+TQykJaNC3vMKRY1s8sfyb4cqoqV1qIJHds766TvFSenvnluadnn3JGN
-         49vKKJKm4LipWYwD5He7qF0AHhwSe10Hu6DLske6AsXxiaporx3njUEjBmcYekgdTvnq
-         5rnH632NNorGfygsGzzUazJX3QP618R5+SyZTlK0ExbbWUDfmVF3Jk4RMtOx1pdVAtBR
-         FAgM8kIL74JD/bfgmJe8IA2dfAay3nmkLdGTZX6V3YX+tmUEMojSASxMsyyif6AqBJCm
-         gpQEsHfz/KJkXN18bals8U3lmH6qEhVmI0Eftbhtdy0yHkLKIm05QttGenqwbLX2x+CC
-         n5+g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=FghonA4IabkJaTgLr8fM3E6htRJ5CzRRLsDA7y0O0VY=;
-        b=VpWkZr5nMewFWFhg3z7jh7UVwyfYThXdTu6I4Y0xhWtGfkP0kKgpcKb57HUDXulSOk
-         0tZ9ckDMCsLvqHt8ef0QzbnOzBMU8ZVr7+el5zRa88uUvh8H6lSPwc2XXKmL3e4H/B4v
-         iWaw8h7n6mM14k/6/2PuJV//u+iJf32iH2PZL0q+G2HVCzED61RUhMvy6jVkLQpEeDey
-         Rh4uIhhmJybU4Zm31dyWVI0wbYpwNuevv5Zw+tYRRJv2LaBSnvmg/eOOWraggysuiW2y
-         uT+mNWMVIhoS5l4HFR6Zxp2IhVHVQ0BeIhDL1s8qcoCxkAt+p81dpaEfOd+G/GmlSoNP
-         MOaQ==
-X-Gm-Message-State: APjAAAUzntiNPvwmjqM2zAbcW2YQ8vgKYYOniYMuLAodcvRYuNlmT851
-        C6Rn//DDIypXrEXR4RSD8GPWZeqe
-X-Google-Smtp-Source: APXvYqxByZB/gh88C6wRDNij3X4Fh7cbfowCUmSN5SWstCnDpG/3spte6L9Wyr3/77AaFAU2sLB6xg==
-X-Received: by 2002:a7b:c455:: with SMTP id l21mr119115981wmi.114.1564679444023;
-        Thu, 01 Aug 2019 10:10:44 -0700 (PDT)
-Received: from [192.168.2.145] (ppp91-78-220-99.pppoe.mtu-net.ru. [91.78.220.99])
-        by smtp.googlemail.com with ESMTPSA id u2sm5377105wmc.3.2019.08.01.10.10.41
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 01 Aug 2019 10:10:43 -0700 (PDT)
-Subject: Re: [PATCH v7 10/20] clk: tegra: clk-dfll: Add suspend and resume
- support
-To:     Sowjanya Komatineni <skomatineni@nvidia.com>,
-        "thierry.reding@gmail.com" <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "jason@lakedaemon.net" <jason@lakedaemon.net>,
-        "marc.zyngier@arm.com" <marc.zyngier@arm.com>,
-        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
-        "stefan@agner.ch" <stefan@agner.ch>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>
-Cc:     Peter De Schrijver <pdeschrijver@nvidia.com>,
-        Prashant Gaikwad <pgaikwad@nvidia.com>,
-        "sboyd@kernel.org" <sboyd@kernel.org>,
-        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-        Jui Chang Kuo <jckuo@nvidia.com>,
-        Joseph Lo <josephl@nvidia.com>, Timo Alho <talho@nvidia.com>,
-        "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Mikko Perttunen <mperttunen@nvidia.com>,
-        Sandipan Patra <spatra@nvidia.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "rjw@rjwysocki.net" <rjw@rjwysocki.net>,
-        "viresh.kumar@linaro.org" <viresh.kumar@linaro.org>,
-        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>
-References: <1564607463-28802-1-git-send-email-skomatineni@nvidia.com>
- <1564607463-28802-11-git-send-email-skomatineni@nvidia.com>
- <4400ffef-685f-b9e6-3b07-4790f851282c@gmail.com>
- <501a9d0e-ce78-9b35-642d-dff7f9223926@gmail.com>
- <BYAPR12MB3398C388471BC5811614C8FEC2DE0@BYAPR12MB3398.namprd12.prod.outlook.com>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <31990250-e237-ddb9-ce71-29b7c2302fc3@gmail.com>
-Date:   Thu, 1 Aug 2019 20:10:38 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        id S1728404AbfHARjn (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 1 Aug 2019 13:39:43 -0400
+Received: from mga01.intel.com ([192.55.52.88]:50941 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728885AbfHARjm (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Thu, 1 Aug 2019 13:39:42 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 01 Aug 2019 10:39:42 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,334,1559545200"; 
+   d="scan'208";a="348161609"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by orsmga005.jf.intel.com with ESMTP; 01 Aug 2019 10:39:40 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1003)
+        id 58EAAFF; Thu,  1 Aug 2019 20:39:39 +0300 (EEST)
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        linux-gpio@vger.kernel.org, Marek Vasut <marek.vasut@gmail.com>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: [PATCH v1 1/4] gpio: pca953x: Switch to use device_get_match_data()
+Date:   Thu,  1 Aug 2019 20:39:35 +0300
+Message-Id: <20190801173938.36676-1-andriy.shevchenko@linux.intel.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-In-Reply-To: <BYAPR12MB3398C388471BC5811614C8FEC2DE0@BYAPR12MB3398.namprd12.prod.outlook.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-01.08.2019 19:10, Sowjanya Komatineni пишет:
-> I didn’t updated any patches. This is still same v7 just resent with
-> CPUFreq maintainers in CC as I missed to add them earlier.
+Instead of open coded variants, switch to direct use of
+device_get_match_data().
 
-There are now two different threads for the same patches, which is not
-very good. When I said that CPUFreq maintainers should be CC'ed, I
-didn't mean to resend it all, sorry for not being clear about it. You
-should've wait for more comments to the original patches and then make a
-v8. I suggest to do the same in the current situation as well, please
-address all the current comments and wait for 1-2 days, then make a v8.
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+---
+ drivers/gpio/gpio-pca953x.c | 20 ++++++++------------
+ 1 file changed, 8 insertions(+), 12 deletions(-)
+
+diff --git a/drivers/gpio/gpio-pca953x.c b/drivers/gpio/gpio-pca953x.c
+index 378b206d2dc9..54cf01901320 100644
+--- a/drivers/gpio/gpio-pca953x.c
++++ b/drivers/gpio/gpio-pca953x.c
+@@ -949,19 +949,15 @@ static int pca953x_probe(struct i2c_client *client,
+ 	if (i2c_id) {
+ 		chip->driver_data = i2c_id->driver_data;
+ 	} else {
+-		const struct acpi_device_id *acpi_id;
+-		struct device *dev = &client->dev;
+-
+-		chip->driver_data = (uintptr_t)of_device_get_match_data(dev);
+-		if (!chip->driver_data) {
+-			acpi_id = acpi_match_device(pca953x_acpi_ids, dev);
+-			if (!acpi_id) {
+-				ret = -ENODEV;
+-				goto err_exit;
+-			}
+-
+-			chip->driver_data = acpi_id->driver_data;
++		const void *match;
++
++		match = device_get_match_data(&client->dev);
++		if (!match) {
++			ret = -ENODEV;
++			goto err_exit;
+ 		}
++
++		chip->driver_data = (uintptr_t)match;
+ 	}
+ 
+ 	i2c_set_clientdata(client, chip);
+-- 
+2.20.1
+
