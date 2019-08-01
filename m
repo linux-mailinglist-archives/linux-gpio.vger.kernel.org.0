@@ -2,70 +2,91 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 501547D52A
-	for <lists+linux-gpio@lfdr.de>; Thu,  1 Aug 2019 07:59:22 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A94F07D659
+	for <lists+linux-gpio@lfdr.de>; Thu,  1 Aug 2019 09:33:44 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726936AbfHAF7J (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 1 Aug 2019 01:59:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51412 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725804AbfHAF7J (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Thu, 1 Aug 2019 01:59:09 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 65BE2206A2;
-        Thu,  1 Aug 2019 05:59:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564639148;
-        bh=7BxA1dkTb2aGHMGDFxjJqWn0Px1o18m+epr8o6ediEs=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Ia9p6X0H5Gl724ivQ6InCtcROAEFe8rQVFaNOvVlq5Rh882/tha4kHGaeDXQjwprA
-         eZDwMIAXb/VUsYV132SJ2N7N/VRdKwBfE+UTEWWt8varYy8gV1JcvGWclfkmx6iU/4
-         N6oPuU82l/c8qVTzrHI0kmAiVPJ5Ek6s3dj+ApoA=
-Date:   Thu, 1 Aug 2019 07:59:06 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     soc@kernel.org, linux-arm-kernel@lists.infradead.org,
+        id S1730012AbfHAHdk (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 1 Aug 2019 03:33:40 -0400
+Received: from mail-qk1-f194.google.com ([209.85.222.194]:43253 "EHLO
+        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725946AbfHAHdk (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 1 Aug 2019 03:33:40 -0400
+Received: by mail-qk1-f194.google.com with SMTP id m14so25541015qka.10;
+        Thu, 01 Aug 2019 00:33:39 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=uzHxuqP9bTvMw7JBQ/Id5Vam5w5HBpX0XWumLmps/F8=;
+        b=a2zwqHyjT8P+fvFrSFEOJ3Z1sbAqdsA2LP5g/lQoCinOhcUXP7sYyD11Wo60055Sut
+         EunN2tSpc0ixremLnzzmIt3Q/qJEdxpJOHqgoZN6hk2YXuU0hrwP6WXeY1m/k4fzlw/F
+         +DIAGrpnBnVrtnL/kZDuiTI4DfCNnBPgeElRwS5SUEhge1RgQokuqsUmM6YgBys7va57
+         0X5Qle87sSRyXQ1OHv94ddtqARdJfTvcugTjTHNEVyIXhFxD0vcdTfm2AeZAhoSldzI9
+         NhNMtU7wkxW9e+CZ/LJN7wg1gKdPv+knC0RL0DPFUGkegJO5xF733jO3d8GxGCYgsGF9
+         kU3A==
+X-Gm-Message-State: APjAAAU8B+qBWNdUE6ia99zmQpQswSTH9EbLvTEXCtYa2Y/Mc46yDQ5x
+        0If5aJq5SFXeVKQU8sxPUArwBNtG6CMFeWVzE8c=
+X-Google-Smtp-Source: APXvYqyMeJ9LlJMXE9rDAXSa0/HHTUU6jsIhO5Y0qQu+ABh/obgCJKyAqVIsLutAY+sl9DXQqRxphmZCeAPnr5ENpd8=
+X-Received: by 2002:a37:5f45:: with SMTP id t66mr84886325qkb.286.1564644819429;
+ Thu, 01 Aug 2019 00:33:39 -0700 (PDT)
+MIME-Version: 1.0
+References: <20190731195713.3150463-1-arnd@arndb.de> <20190731225303.GC1330@shell.armlinux.org.uk>
+In-Reply-To: <20190731225303.GC1330@shell.armlinux.org.uk>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Thu, 1 Aug 2019 09:33:23 +0200
+Message-ID: <CAK8P3a1Lgbz9RwVaOgNq=--gwvEG70tUi67XwsswjgnXAX6EhA@mail.gmail.com>
+Subject: Re: [PATCH 00/14] ARM: move lpc32xx and dove to multiplatform
+To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>
+Cc:     soc@kernel.org, Linux ARM <linux-arm-kernel@lists.infradead.org>,
         Vladimir Zapolskiy <vz@mleia.com>,
         Sylvain Lemieux <slemieux.tyco@gmail.com>,
-        Russell King <linux@armlinux.org.uk>,
         Gregory Clement <gregory.clement@bootlin.com>,
         Linus Walleij <linus.walleij@linaro.org>,
         Jason Cooper <jason@lakedaemon.net>,
         Andrew Lunn <andrew@lunn.ch>,
         Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
         "David S. Miller" <davem@davemloft.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Alan Stern <stern@rowland.harvard.edu>,
-        Guenter Roeck <linux@roeck-us.net>, linux-gpio@vger.kernel.org,
-        netdev@vger.kernel.org, linux-serial@vger.kernel.org,
-        linux-usb@vger.kernel.org, linux-watchdog@vger.kernel.org,
-        Jiri Slaby <jslaby@suse.com>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 09/14] serial: lpc32xx: allow compile testing
-Message-ID: <20190801055906.GD24607@kroah.com>
-References: <20190731195713.3150463-1-arnd@arndb.de>
- <20190731195713.3150463-10-arnd@arndb.de>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190731195713.3150463-10-arnd@arndb.de>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+        Guenter Roeck <linux@roeck-us.net>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Networking <netdev@vger.kernel.org>,
+        linux-serial@vger.kernel.org, USB list <linux-usb@vger.kernel.org>,
+        LINUXWATCHDOG <linux-watchdog@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Jul 31, 2019 at 09:56:51PM +0200, Arnd Bergmann wrote:
-> The lpc32xx_loopback_set() function in hte lpc32xx_hs driver is the
-> one thing that relies on platform header files. Move that into the
-> core platform code so we only need a variable declaration for it,
-> and enable COMPILE_TEST building.
-> 
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-> ---
->  arch/arm/mach-lpc32xx/serial.c       | 30 ++++++++++++++++++++++++
->  drivers/tty/serial/lpc32xx_hs.c      | 35 ++++------------------------
->  include/linux/soc/nxp/lpc32xx-misc.h |  4 ++++
->  3 files changed, 38 insertions(+), 31 deletions(-)
+On Thu, Aug 1, 2019 at 12:53 AM Russell King - ARM Linux admin
+<linux@armlinux.org.uk> wrote:
+>
+> On Wed, Jul 31, 2019 at 09:56:42PM +0200, Arnd Bergmann wrote:
+> > For dove, the patches are basically what I had proposed back in
+> > 2015 when all other ARMv6/ARMv7 machines became part of a single
+> > kernel build. I don't know what the state is mach-dove support is,
+> > compared to the DT based support in mach-mvebu for the same
+> > hardware. If they are functionally the same, we could also just
+> > remove mach-dove rather than applying my patches.
+>
+> Well, the good news is that I'm down to a small board support file
+> for the Dove Cubox now - but the bad news is, that there's still a
+> board support file necessary to support everything the Dove SoC has
+> to offer.
+>
+> Even for a DT based Dove Cubox, I'm still using mach-dove, but it
+> may be possible to drop most of mach-dove now.  Without spending a
+> lot of time digging through it, it's impossible to really know.
 
-Acked-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Ok, so we won't remove it then, but I'd like to merge my patches to
+at least get away from the special case of requiring a separate kernel
+image for it.
+
+Can you try if applying patches 12 and 14 from my series causes
+problems for you? (it may be easier to apply the entire set
+or pull from [1] to avoid rebase conflicts).
+
+     Arnd
+
+[1] kernel.org:/pub/scm/linux/kernel/git/arnd/playground.git mach-cleanup-5.4
