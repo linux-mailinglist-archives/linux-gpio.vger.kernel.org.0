@@ -2,55 +2,143 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 720197DCBD
-	for <lists+linux-gpio@lfdr.de>; Thu,  1 Aug 2019 15:45:16 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D58547DCFE
+	for <lists+linux-gpio@lfdr.de>; Thu,  1 Aug 2019 15:57:30 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728688AbfHANpP (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 1 Aug 2019 09:45:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56184 "EHLO mail.kernel.org"
+        id S1730644AbfHAN53 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 1 Aug 2019 09:57:29 -0400
+Received: from mga03.intel.com ([134.134.136.65]:58926 "EHLO mga03.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728705AbfHANpP (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Thu, 1 Aug 2019 09:45:15 -0400
-Subject: Re: [GIT PULL] GPIO fixes for the v5.3 series
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564667114;
-        bh=zXf0IQ6jTAs0NgXbmvvcUnFGibfFGxX4Rqlt4aUNwWk=;
-        h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=JfGuux3FWxlxnVYeHdLosQghP+UQ4NP0Ll7Sjw+EX29iz2b9DOwSON6Qq+O6EiFbD
-         G5bjqlQjiDLJ2YKlPxckq9TUG+qq9/jFHFIZ5iNFT/MayYpJ4/MnFeg7tLrH8ZzXsA
-         CoGD3t66Qi/NEgWeVYUuyiJqtW2P8/19JHK09vhE=
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <CACRpkdYN=GzAa6E+krY3+kMq2NgM=U26FQe1SJzGbbsnOO6V9g@mail.gmail.com>
-References: <CACRpkdYN=GzAa6E+krY3+kMq2NgM=U26FQe1SJzGbbsnOO6V9g@mail.gmail.com>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <CACRpkdYN=GzAa6E+krY3+kMq2NgM=U26FQe1SJzGbbsnOO6V9g@mail.gmail.com>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-gpio.git
- tags/gpio-v5.3-3
-X-PR-Tracked-Commit-Id: d95da993383c78f7efd25957ba3af23af4b1c613
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 28f5ab1e12ba702389c41bc95d02733673020d85
-Message-Id: <156466711445.11650.12401800713923742253.pr-tracker-bot@kernel.org>
-Date:   Thu, 01 Aug 2019 13:45:14 +0000
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
+        id S1730524AbfHAN52 (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Thu, 1 Aug 2019 09:57:28 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 01 Aug 2019 06:57:28 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,334,1559545200"; 
+   d="scan'208";a="196850046"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.145])
+  by fmsmga004.fm.intel.com with ESMTP; 01 Aug 2019 06:57:26 -0700
+Received: from andy by smile with local (Exim 4.92)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1htBa8-0004H6-Av; Thu, 01 Aug 2019 16:57:24 +0300
+Date:   Thu, 1 Aug 2019 16:57:24 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Stephen Boyd <swboyd@chromium.org>
+Cc:     linux-kernel@vger.kernel.org,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-gpio@vger.kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>
+Subject: Re: [PATCH v6 34/57] pinctrl: intel: Remove dev_err() usage after
+ platform_get_irq()
+Message-ID: <20190801135724.GX23480@smile.fi.intel.com>
+References: <20190730181557.90391-1-swboyd@chromium.org>
+ <20190730181557.90391-35-swboyd@chromium.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190730181557.90391-35-swboyd@chromium.org>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-The pull request you sent on Thu, 1 Aug 2019 10:53:48 +0200:
+On Tue, Jul 30, 2019 at 11:15:34AM -0700, Stephen Boyd wrote:
+> We don't need dev_err() messages when platform_get_irq() fails now that
+> platform_get_irq() prints an error message itself when something goes
+> wrong. Let's remove these prints with a simple semantic patch.
+> 
+> // <smpl>
+> @@
+> expression ret;
+> struct platform_device *E;
+> @@
+> 
+> ret =
+> (
+> platform_get_irq(E, ...)
+> |
+> platform_get_irq_byname(E, ...)
+> );
+> 
+> if ( \( ret < 0 \| ret <= 0 \) )
+> {
+> (
+> -if (ret != -EPROBE_DEFER)
+> -{ ...
+> -dev_err(...);
+> -... }
+> |
+> ...
+> -dev_err(...);
+> )
+> ...
+> }
+> // </smpl>
+> 
+> While we're here, remove braces on if statements that only have one
+> statement (manually).
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-gpio.git tags/gpio-v5.3-3
+Pushed to my review and testing queue, thanks!
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/28f5ab1e12ba702389c41bc95d02733673020d85
-
-Thank you!
+> 
+> Cc: Linus Walleij <linus.walleij@linaro.org>
+> Cc: linux-gpio@vger.kernel.org
+> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Cc: Mika Westerberg <mika.westerberg@linux.intel.com>
+> Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> Signed-off-by: Stephen Boyd <swboyd@chromium.org>
+> ---
+> 
+> Please apply directly to subsystem trees
+> 
+>  drivers/pinctrl/intel/pinctrl-cherryview.c | 4 +---
+>  drivers/pinctrl/intel/pinctrl-intel.c      | 4 +---
+>  2 files changed, 2 insertions(+), 6 deletions(-)
+> 
+> diff --git a/drivers/pinctrl/intel/pinctrl-cherryview.c b/drivers/pinctrl/intel/pinctrl-cherryview.c
+> index 03ec7a5d9d0b..cd4a69b4c5a8 100644
+> --- a/drivers/pinctrl/intel/pinctrl-cherryview.c
+> +++ b/drivers/pinctrl/intel/pinctrl-cherryview.c
+> @@ -1703,10 +1703,8 @@ static int chv_pinctrl_probe(struct platform_device *pdev)
+>  		return PTR_ERR(pctrl->regs);
+>  
+>  	irq = platform_get_irq(pdev, 0);
+> -	if (irq < 0) {
+> -		dev_err(&pdev->dev, "failed to get interrupt number\n");
+> +	if (irq < 0)
+>  		return irq;
+> -	}
+>  
+>  	pctrl->pctldesc = chv_pinctrl_desc;
+>  	pctrl->pctldesc.name = dev_name(&pdev->dev);
+> diff --git a/drivers/pinctrl/intel/pinctrl-intel.c b/drivers/pinctrl/intel/pinctrl-intel.c
+> index a18d6eefe672..0487e8dc7654 100644
+> --- a/drivers/pinctrl/intel/pinctrl-intel.c
+> +++ b/drivers/pinctrl/intel/pinctrl-intel.c
+> @@ -1354,10 +1354,8 @@ static int intel_pinctrl_probe(struct platform_device *pdev,
+>  	}
+>  
+>  	irq = platform_get_irq(pdev, 0);
+> -	if (irq < 0) {
+> -		dev_err(&pdev->dev, "failed to get interrupt number\n");
+> +	if (irq < 0)
+>  		return irq;
+> -	}
+>  
+>  	ret = intel_pinctrl_pm_init(pctrl);
+>  	if (ret)
+> -- 
+> Sent by a computer through tubes
+> 
 
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.wiki.kernel.org/userdoc/prtracker
+With Best Regards,
+Andy Shevchenko
+
+
