@@ -2,76 +2,103 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 3B8377D6DA
-	for <lists+linux-gpio@lfdr.de>; Thu,  1 Aug 2019 10:03:08 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1276B7D6F9
+	for <lists+linux-gpio@lfdr.de>; Thu,  1 Aug 2019 10:10:23 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728843AbfHAIDH (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 1 Aug 2019 04:03:07 -0400
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:37736 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728582AbfHAIDH (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 1 Aug 2019 04:03:07 -0400
-Received: by mail-lj1-f194.google.com with SMTP id z28so14189558ljn.4
-        for <linux-gpio@vger.kernel.org>; Thu, 01 Aug 2019 01:03:05 -0700 (PDT)
+        id S1730890AbfHAIKU (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 1 Aug 2019 04:10:20 -0400
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:36169 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728987AbfHAIKU (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 1 Aug 2019 04:10:20 -0400
+Received: by mail-ot1-f66.google.com with SMTP id r6so73312180oti.3
+        for <linux-gpio@vger.kernel.org>; Thu, 01 Aug 2019 01:10:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=C1QYEuNDIYrwn0YefEATWpCmHALa2cIoViFjy0wdbv4=;
-        b=YNo0fLJ89ieUdTz8SAOLXXsVzXJaRtNKSDoDumBJAmX/kmE1vcpw33lgQCtrKg41a/
-         MdMCBR3qejzGizuOzeS90EU3oCIqVgsQP/MSct9KWboHM1Nnjw4naRrFK5P+G8PlOc42
-         LEHgIZ+siaIfwGXog1FRsXe8uFFw/h28TC5Z1twAM4YlLy8x6RPT/P4oJTpJTmnC/sU5
-         H/dUma5MEnoCaT8aqpSCI5t6Iu23jHHxIIKtIUqphYOqTD1ag9KHkwGkK6TRGm4yPGqf
-         my3vJNHK0YhmM6BwnyibfRstXfT3MQD59sIhDe6aaK80Ay552Y+93l0xbIcUTFCjju8j
-         4QLA==
+         :cc:content-transfer-encoding;
+        bh=Pik2VLxgJF0MkqYpYN5q7foTkrh5VpFoeFzQEo8355c=;
+        b=T/8UmZhcpSsoLJOs1RyQYvHUl3/qy4AX6MeSUmKqqDjesxTYUBOGWJJz2QbZTan2EX
+         yTLzQ2VIFcYDHjulhXNeghRV9lxellbZK3fUT1vvPN8ahH4CWBkU2pC3sEByq+xBnvhe
+         FuL9nIi9+HbdKL3aW4UR/BCLNOXteIYyF1ba929PZbg/nUs9VO5V8hU1vlA1+GMaPOYK
+         9sCMaybMR4D+Sc8LLnH3B7GCRJPtWy8pxXrcNCUanX+V0u8b29lmituVJYLb2spJi9LR
+         pT4gkpo5HDEc9OwYUbaT8lcjI9k1P3GMC884R5pAO0Ip8SZRbF7MWzKbZhIWIuf7hJEp
+         21/A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=C1QYEuNDIYrwn0YefEATWpCmHALa2cIoViFjy0wdbv4=;
-        b=SPv8t7QW4Ckw94rQTs3ndXesLGfdHz+G4Fpp/6uAs0EHi/3gsc5ypBL0pMmpPyZvS8
-         sTNLW0gRkJC9Ywo0S9Z0r3mvuSETwvySqvlYOryYYAmbs/T6VX+zjXtYFWrDbLa4p5MI
-         j8EKKPNtgk09JdGTpatUGyRD/CmQ36jeYZPDqPQeN90doOwfQnB1TdZVZHzi/LZ70uOw
-         Tg/mawDybtD2HZitz7cPY8n8nTq8XcqNIENG8YDpthdtnMGhhWTefs8+beUNAXL7shEp
-         1oODj+P1IHUe64+QNIyZKE/gFecb0Om9+UQzm5qu/ddN3q4+4jUFCCp3JtVVtsP4By6f
-         bEFA==
-X-Gm-Message-State: APjAAAXTIpTtvQMKkKcbWm/KdcAFGH0mBbLipf1ZMReXUJiC42AknIbG
-        n3fp7DNbzYRlF5sNHXV1zUNPi5T2EDMV+WqfHIb6Y8dA
-X-Google-Smtp-Source: APXvYqwzfiiDj/cqQkQjcvy7Xw41j8dmhdR4DXI4MaUob31/YhTNS+zpu2v5TtbUGR16/InRB1T8eYlA5I9LZWRgv8k=
-X-Received: by 2002:a2e:a0cf:: with SMTP id f15mr3659704ljm.180.1564646585018;
- Thu, 01 Aug 2019 01:03:05 -0700 (PDT)
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=Pik2VLxgJF0MkqYpYN5q7foTkrh5VpFoeFzQEo8355c=;
+        b=U7iUYtOBnu7XxWv0qOODVmfyqIKcTrvALY5S4vSxDxjyXltdONBJ+jajm4atjbve+S
+         MV/4RB68igeZ26754S53cqBkUQvV+r72FVlobUfDmct8jaaUPd+fJlcEZqAJQDOjpseE
+         /kfN3NL6+VOTQomNe+KZ2A5krvkOZldUgm3pDbQxwV5Y2w+5B2qA0VcUScb4Q3nmvyxc
+         CE7L4mOp6oYz0GOaQJMlfKhliBUr7VxjwUf3TV7poamjeMRfIR0wUknBiYLyzyuB+ZFq
+         CbehHOLcLp1f593LTPA13b3r0NJZZ6kODy+S/28zmoXgctwLtIS4YO1uMAc6hX3b4i82
+         f14A==
+X-Gm-Message-State: APjAAAWur5UarzzfP+ZymISVeNlad5nL0UQyCqw6kTL0H9tFXcao+Ed8
+        5adgjGT1Zu4zfCDhLGi4xfit0l+HLXhNfqUlUzGHsw==
+X-Google-Smtp-Source: APXvYqyq2AG2FvYnV0DnYaYHmZRiXJAJAcUqVXHjV59By04t/o/vV/Fgt/Utm53zt+aV/S8FJg1/hM+u/Lr/FNq50BE=
+X-Received: by 2002:a9d:7352:: with SMTP id l18mr32266009otk.292.1564647019336;
+ Thu, 01 Aug 2019 01:10:19 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190731224208.30429-1-linus.walleij@linaro.org> <5d421b63.1c69fb81.e3ed.32c2@mx.google.com>
-In-Reply-To: <5d421b63.1c69fb81.e3ed.32c2@mx.google.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Thu, 1 Aug 2019 10:02:53 +0200
-Message-ID: <CACRpkdb6sPc3OvCWwaEzhg_gBQvFQpz03w2=yGSY6pK+Sw=_2w@mail.gmail.com>
-Subject: Re: [PATCH] gpio: of: Fix hard-assigned valid_mask for OF case
-To:     Stephen Boyd <swboyd@chromium.org>
-Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Mark Brown <broonie@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>
+References: <20190731173814.3400-1-rfried.dev@gmail.com>
+In-Reply-To: <20190731173814.3400-1-rfried.dev@gmail.com>
+From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Date:   Thu, 1 Aug 2019 10:10:08 +0200
+Message-ID: <CAMpxmJUvLNkEeFyNpZ0YFBoybNyp+Fqv8LUB7mpMweX-P26jFg@mail.gmail.com>
+Subject: Re: [libgpiod] [PATCH v2] gpioinfo: mark kernel claimed lines as used
+To:     Ramon Fried <rfried.dev@gmail.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        linux-gpio <linux-gpio@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Aug 1, 2019 at 12:51 AM Stephen Boyd <swboyd@chromium.org> wrote:
-> Quoting Linus Walleij (2019-07-31 15:42:08)
-> > From: Stephen Boyd <swboyd@chromium.org>
-> >
-> > The recent refactoring to break out OF code to its own file
-> > contained a bug by yours truly letting the need_valid_mask
+=C5=9Br., 31 lip 2019 o 19:38 Ramon Fried <rfried.dev@gmail.com> napisa=C5=
+=82(a):
 >
-> I'm not yours truly :)
+> In case where the GPIOLINE_FLAG_KERNEL flag was set
+> and no consumer string is provided by the kernel,
+> the used column was still showing the pin as "unused"
+> Fix that by writing "kernel".
+>
+> Signed-off-by: Ramon Fried <rfried.dev@gmail.com>
+> ---
+> v2:
+>   * Restructure for clarity
+>   * Print "kernel" if line is used by kernel.
+>   * Update commit message
+>
+>  tools/gpioinfo.c | 8 ++++++--
+>  1 file changed, 6 insertions(+), 2 deletions(-)
+>
+> diff --git a/tools/gpioinfo.c b/tools/gpioinfo.c
+> index bb17262..ba0327b 100644
+> --- a/tools/gpioinfo.c
+> +++ b/tools/gpioinfo.c
+> @@ -119,8 +119,12 @@ static void list_lines(struct gpiod_chip *chip)
+>                      : prinfo(&of, 12, "unnamed");
+>                 printf(" ");
+>
+> -               consumer ? prinfo(&of, 12, "\"%s\"", consumer)
+> -                        : prinfo(&of, 12, "unused");
+> +               if (!gpiod_line_is_used(line))
+> +                     prinfo(&of, 12, "unused");
+> +               else
+> +                       consumer ? prinfo(&of, 12, "\"%s\"", consumer)
+> +                               : prinfo(&of, 12, "kernel");
+> +
+>                 printf(" ");
+>
+>                 prinfo(&of, 8, "%s ", direction =3D=3D GPIOD_LINE_DIRECTI=
+ON_INPUT
+> --
+> 2.22.0
+>
 
-Ooops too much first person patching...
+Applied with indentation and alignment fixed.
 
-I fix it up in the git.
-
-Thanks a lot for helping out Stephen!
-
-Yours,
-Linus Walleij
+Bart
