@@ -2,91 +2,76 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id BEC77802B8
-	for <lists+linux-gpio@lfdr.de>; Sat,  3 Aug 2019 00:31:30 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 97EF3802D0
+	for <lists+linux-gpio@lfdr.de>; Sat,  3 Aug 2019 00:33:19 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731048AbfHBWb3 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 2 Aug 2019 18:31:29 -0400
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:44353 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728708AbfHBWb3 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 2 Aug 2019 18:31:29 -0400
-Received: by mail-lf1-f65.google.com with SMTP id v16so116390lfg.11
-        for <linux-gpio@vger.kernel.org>; Fri, 02 Aug 2019 15:31:28 -0700 (PDT)
+        id S1726626AbfHBWdS (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 2 Aug 2019 18:33:18 -0400
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:38561 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732876AbfHBWdS (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 2 Aug 2019 18:33:18 -0400
+Received: by mail-lf1-f68.google.com with SMTP id h28so53940727lfj.5
+        for <linux-gpio@vger.kernel.org>; Fri, 02 Aug 2019 15:33:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=8tQh191xW5z/uqwcXTQaR6iRlPu4dlS4JjUPIzXI1i0=;
-        b=L0evPFMisUlfcr0ejK8sxz3FR7curgkYcXNQl3aE8Ndyo6Zm2gmWpA/JzsTVoihGhw
-         5EWCzMH8dJbIdO1VXDSeK4S7EczFoV0sHOraDsX4ap9t9qaaHuD0ePuJc1eAHsLsr1YQ
-         93BJ8OPQo7AMtWpR1+drmfGGbZarfaW6MBebCodaismcPLqwfsmajV/wb30d7Gf9czUp
-         I+H4GL3RuxEU3PZjX2tgCZWhqug0csI/AbnfHt23mFD2x/rk8o2RROuPF/BesU+faH3L
-         UBBl/diHpYUBcbJvSpH6gin/E/MeAvwEW3Sp9OZoqR+PXIHTtSL7SpfS63Aehyic2Bu2
-         9gUw==
+        bh=M5Sp+aw1xGfAJw6QQ7rI2FkSiegHLKhpr8F21Ebetbk=;
+        b=agYUxtlAJg6Nuq0Z4pOkV/qkhu5fGOG7yxfzXCPzIr9tvqg2tmo0JrpRc43X4E6hWk
+         kWJXFk93I3bPSGiBuplmcRbTusctRRiqlRp3kPXo8IJvKYlEovKuL8w4iNdnO/52K1Kx
+         IfATW5sW4KgaKC6xVtutGBErt6QG5wMLLFzB6qC0z39b3jaS7rX51eCQLZ1GwUsIKIkg
+         UGThbfIZXsZ4zg9DBLAxJDvk1i8bfkbx4Bwe8wt+BJ713vYmhcz2K2jUZ0BdC6pljKH8
+         mhUFBZgAZhnnyug7Tf1cc7RYN3BwK1yOoobbKIifu8cIu5cKtS5LSt9U9LMp1lwk7FGK
+         eJJg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=8tQh191xW5z/uqwcXTQaR6iRlPu4dlS4JjUPIzXI1i0=;
-        b=bt61KRFWjgZonM33ObxVQnvQ5IXSAaLI4Dp/AoIY+cFIjOT9yoMQzbqfQ+k9RWnptJ
-         tj1g/ZkudeXlnAJQ4yTeySJN4L3ai7S13FI/y9jZXVr1oNlVilhFFMjNGUOFH4kCrIL1
-         d2a3u7RXpVmGpMzMMdgBDUdt95Ss2+qjPxwRZ7qBsHX1zrh24Tw9MVJLFSUuT9wMfsEQ
-         aAFYMkjWWdPFF4wRLvPW9IsABLNZ9Rqp38bcx+1zvHHwiOQUz874LwvMTg5Thh1vWaco
-         92bOa7MuG4Lg8C1VqIwd2Ow9WVF+kITlmH1h7GLOyKFHAiKFGpQ41nB7WYlFo/Z8WpWZ
-         j8hQ==
-X-Gm-Message-State: APjAAAUXLABD7a20w4lq5EUkOqSAc8M50PWJ3YEAGRjl0NAMTFGq4NMi
-        2BxkA8YcC3RZQIptpnFlXBVzDm4/tjzTGKet/TflQg==
-X-Google-Smtp-Source: APXvYqwDIwDheD+gFq+O5TZV6dJSFLuMVgoQGjhj+lZ8eLAYET/6IhmSX9+fvFrFVscVAgKHzz0hjQPV7iYVurKwj74=
-X-Received: by 2002:a19:7616:: with SMTP id c22mr1677508lff.115.1564785087648;
- Fri, 02 Aug 2019 15:31:27 -0700 (PDT)
+        bh=M5Sp+aw1xGfAJw6QQ7rI2FkSiegHLKhpr8F21Ebetbk=;
+        b=q+fmEgU1M6RCXeQK0YQrr/SBv+7zL2j8zy7mvThy9J4trK0IA12DHZK9kpaFuD4Uv2
+         D7TDjoPGPfcCeXb1p2VyBYO0FFS4ZZSHQmSIhwoo3FfaQzgF8Qdp8+UZcUSPGvLbvmOP
+         zfNVodHvnXl8boU+FbZ26gWt7qp69b5w2TXYvNXltgUzX5v/1XukTREL72IDMe99NyB/
+         M1QhHH/pkt3f4D8O3Ku/p1th1LwIZtyS4I70NQW5i2XVMMLz4i16BpDbAk+cZlGO7WjQ
+         V4Oyf8AeIrWuN6gobxqihLFvkygQMvaeViKqtmXZoFeQ4xbXWhh2DG5Twm+Jp1grky0m
+         nm/A==
+X-Gm-Message-State: APjAAAWHThH4noxSDGcuuT2j38QN/VVFwTJVzvO/ubQ2HnJ6gl0/SPaz
+        r1TKVId1jRF5WLZsg/J2gWyE8RNQF4GpV08HR1TP/A==
+X-Google-Smtp-Source: APXvYqxzoYu1mREI8w9eHSP7z3qdwPPm93bIZ2yKBLR4oSDfl4Qngc4P+Cg25YKu8pbFy/+hAq+JJriRM0/TyVE7vJg=
+X-Received: by 2002:a19:e006:: with SMTP id x6mr64184291lfg.165.1564785196301;
+ Fri, 02 Aug 2019 15:33:16 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190716215618.29757-1-robh@kernel.org>
-In-Reply-To: <20190716215618.29757-1-robh@kernel.org>
+References: <20190719032414.85369-1-yuehaibing@huawei.com>
+In-Reply-To: <20190719032414.85369-1-yuehaibing@huawei.com>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Sat, 3 Aug 2019 00:31:16 +0200
-Message-ID: <CACRpkdYsYH_z55+OeHzAp9bjj+0WrnH8LoXcEahVcX=in6TTEQ@mail.gmail.com>
-Subject: Re: [PATCH] dt-bindings: pinctrl: stm32: Fix missing 'clocks'
- property in examples
-To:     Rob Herring <robh@kernel.org>
-Cc:     "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
+Date:   Sat, 3 Aug 2019 00:33:05 +0200
+Message-ID: <CACRpkdbLFj=Oce_L42btBjvXCOJ8y-cyia57UFYH8DW=SZr94A@mail.gmail.com>
+Subject: Re: [PATCH -next] pinctrl: sprd: Fix platform_no_drv_owner.cocci warnings
+To:     YueHaibing <yuehaibing@huawei.com>
+Cc:     Orson Zhai <orsonzhai@gmail.com>,
+        Baolin Wang <baolin.wang@linaro.org>,
+        Chunyan Zhang <zhang.lyra@gmail.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Kate Stewart <kstewart@linuxfoundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Richard Fontana <rfontana@redhat.com>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        linux-stm32@st-md-mailman.stormreply.com
+        kernel-janitors@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Jul 16, 2019 at 11:56 PM Rob Herring <robh@kernel.org> wrote:
+On Fri, Jul 19, 2019 at 5:18 AM YueHaibing <yuehaibing@huawei.com> wrote:
 
-> Now that examples are validated against the DT schema, an error with
-> required 'clocks' property missing is exposed:
+> Remove .owner field if calls are used which set it automatically
+> Generated by: scripts/coccinelle/api/platform_no_drv_owner.cocci
 >
-> Documentation/devicetree/bindings/pinctrl/st,stm32-pinctrl.example.dt.yaml: \
-> pinctrl@40020000: gpio@0: 'clocks' is a required property
-> Documentation/devicetree/bindings/pinctrl/st,stm32-pinctrl.example.dt.yaml: \
-> pinctrl@50020000: gpio@1000: 'clocks' is a required property
-> Documentation/devicetree/bindings/pinctrl/st,stm32-pinctrl.example.dt.yaml: \
-> pinctrl@50020000: gpio@2000: 'clocks' is a required property
->
-> Add the missing 'clocks' properties to the examples to fix the errors.
->
-> Fixes: 2c9239c125f0 ("dt-bindings: pinctrl: Convert stm32 pinctrl bindings to json-schema")
-> Cc: Linus Walleij <linus.walleij@linaro.org>
-> Cc: Maxime Coquelin <mcoquelin.stm32@gmail.com>
-> Cc: Alexandre Torgue <alexandre.torgue@st.com>
-> Cc: linux-gpio@vger.kernel.org
-> Cc: linux-stm32@st-md-mailman.stormreply.com
-> Signed-off-by: Rob Herring <robh@kernel.org>
+> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
 
-This seems to already be upstream, but I have no memory of applying it.
-Less work for me :)
+Patch applied.
 
 Yours,
 Linus Walleij
