@@ -2,111 +2,85 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 4F7897EE0F
-	for <lists+linux-gpio@lfdr.de>; Fri,  2 Aug 2019 09:52:04 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BD41C7F0FE
+	for <lists+linux-gpio@lfdr.de>; Fri,  2 Aug 2019 11:34:59 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730173AbfHBHwD (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 2 Aug 2019 03:52:03 -0400
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:44092 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729283AbfHBHwD (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 2 Aug 2019 03:52:03 -0400
-Received: by mail-ot1-f68.google.com with SMTP id b7so27047576otl.11
-        for <linux-gpio@vger.kernel.org>; Fri, 02 Aug 2019 00:52:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=MY4Kjq3/X7iooEIRZWCRaeFs83GIjOlMhSGl42Pw6T4=;
-        b=TkPK45YOrN79YDa2rekcQUqlhRVADmO5qPjcRimLH+Eyo9W+RaxbScpG/VyZ1IG79S
-         kvL4Ug5bN2VF4uk7Tjk7c1UgGjQqFq53WPEfXfwhGw2dtwRi+gGrxv1wWODDTuYeis18
-         Iojaq2gJqwFOIJfYI4ZJ1W96XS1u6zA9oFi4WNfp9xzF9+BiVFyoR8Ghs/AA2HSdXmD9
-         W05mp/NFWA43BGb+u1xazZ1+NmVRzHdWeVvhQjHduNexvL75YIR92LaAU0LI/4P2ZkSm
-         kSOWjSEoucUMywI8faX1EWdQ1RDyuUhptfcWZdHjKSQ3PxAoFFjhKNdSQvjgSTiILEEL
-         YnPA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=MY4Kjq3/X7iooEIRZWCRaeFs83GIjOlMhSGl42Pw6T4=;
-        b=sPnsMxK1dam48pDdRRUmzHqRONYX6XEbPeVeRqdngY6wd+ZC24W2myBGsljXHGMHaZ
-         PfBU4dAbA37K2Ildb5QN3rTweDSlUyFHjrt3WAC5/aISkmB+d1s0/xh2laaepyDF7OKI
-         k0WkuPTyjXpGWjuXv0qC0aJj7uenhq+VwnrBCjw+pAvDbXB7koQ2rDlvkp3uAedLZJxR
-         AHPAYoud+4fA+4Rvglmu4DhjhHL+fye3URltD6uIQm+iAg74w2msmnxdzf6ySAiv37tj
-         iiiqI/OWVEtjmeRXzhWdYfhTME4yK1xJUF4ndhuYvQK8lHiWrSzCVHnhrlzlJOBPaV3i
-         uk2Q==
-X-Gm-Message-State: APjAAAVoSutGPmQv09jb8ghapvchUYeHIc9b77aFLN5zYCcbRAcKFeAb
-        hM7vXt3mOLsZP9TknNUUMwbGdqCYxgKfGwK7hTBJgg==
-X-Google-Smtp-Source: APXvYqyg2AQVzx5yOkLFlQ2GXZKVIX41QPWyu40K3oT/yFjyK5of/ORxWFlJK45m/Zwre4/ZidAUMq9Z7iDUfCWFgIY=
-X-Received: by 2002:a05:6830:1681:: with SMTP id k1mr17559545otr.256.1564732322752;
- Fri, 02 Aug 2019 00:52:02 -0700 (PDT)
+        id S2403766AbfHBJe4 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 2 Aug 2019 05:34:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35100 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2391581AbfHBJez (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Fri, 2 Aug 2019 05:34:55 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3EA46217D4;
+        Fri,  2 Aug 2019 09:34:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1564738494;
+        bh=NyiIAODgi67SoAGH9ft/V6UUhfzqoyu7bgemhXXdjTg=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=x80LHCYew8mks2oJi/OZrAMiLe+omdakI4eSNr0D6dnirdLpNbIAyon28ytlqjkw1
+         zcOAqhX3UAUTWR5cEs+Fo+/DJS+QRhv/QWQhaDhd51qj84VJPZqmANaRE1wN6xOMwG
+         imU9W11CW84IfjGZ/IhXHkQcgpXRiOZRan3WvUaM=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Wen Yang <wen.yang99@zte.com.cn>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Heiko Stuebner <heiko@sntech.de>, linux-gpio@vger.kernel.org,
+        linux-rockchip@lists.infradead.org, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.4 109/158] pinctrl: rockchip: fix leaked of_node references
+Date:   Fri,  2 Aug 2019 11:28:50 +0200
+Message-Id: <20190802092226.353596858@linuxfoundation.org>
+X-Mailer: git-send-email 2.22.0
+In-Reply-To: <20190802092203.671944552@linuxfoundation.org>
+References: <20190802092203.671944552@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-References: <20190801173938.36676-1-andriy.shevchenko@linux.intel.com>
-In-Reply-To: <20190801173938.36676-1-andriy.shevchenko@linux.intel.com>
-From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Date:   Fri, 2 Aug 2019 09:51:51 +0200
-Message-ID: <CAMpxmJUL+r7Ne+BDN0pREtow8WvH=w=L7hSUQ7mHiXyyaihVoA@mail.gmail.com>
-Subject: Re: [PATCH v1 1/4] gpio: pca953x: Switch to use device_get_match_data()
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        linux-gpio <linux-gpio@vger.kernel.org>,
-        Marek Vasut <marek.vasut@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-czw., 1 sie 2019 o 19:39 Andy Shevchenko
-<andriy.shevchenko@linux.intel.com> napisa=C5=82(a):
->
-> Instead of open coded variants, switch to direct use of
-> device_get_match_data().
->
-> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> ---
->  drivers/gpio/gpio-pca953x.c | 20 ++++++++------------
->  1 file changed, 8 insertions(+), 12 deletions(-)
->
-> diff --git a/drivers/gpio/gpio-pca953x.c b/drivers/gpio/gpio-pca953x.c
-> index 378b206d2dc9..54cf01901320 100644
-> --- a/drivers/gpio/gpio-pca953x.c
-> +++ b/drivers/gpio/gpio-pca953x.c
-> @@ -949,19 +949,15 @@ static int pca953x_probe(struct i2c_client *client,
->         if (i2c_id) {
->                 chip->driver_data =3D i2c_id->driver_data;
->         } else {
-> -               const struct acpi_device_id *acpi_id;
-> -               struct device *dev =3D &client->dev;
-> -
-> -               chip->driver_data =3D (uintptr_t)of_device_get_match_data=
-(dev);
-> -               if (!chip->driver_data) {
-> -                       acpi_id =3D acpi_match_device(pca953x_acpi_ids, d=
-ev);
-> -                       if (!acpi_id) {
-> -                               ret =3D -ENODEV;
-> -                               goto err_exit;
-> -                       }
-> -
-> -                       chip->driver_data =3D acpi_id->driver_data;
-> +               const void *match;
-> +
-> +               match =3D device_get_match_data(&client->dev);
-> +               if (!match) {
-> +                       ret =3D -ENODEV;
-> +                       goto err_exit;
->                 }
-> +
-> +               chip->driver_data =3D (uintptr_t)match;
->         }
->
->         i2c_set_clientdata(client, chip);
-> --
-> 2.20.1
->
+[ Upstream commit 3c89c70634bb0b6f48512de873e7a45c7e1fbaa5 ]
 
-Excellent work, all four applied.
+The call to of_parse_phandle returns a node pointer with refcount
+incremented thus it must be explicitly decremented after the last
+usage.
 
-Bart
+Detected by coccinelle with the following warnings:
+./drivers/pinctrl/pinctrl-rockchip.c:3221:2-8: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 3196, but without a corresponding object release within this function.
+./drivers/pinctrl/pinctrl-rockchip.c:3223:1-7: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 3196, but without a corresponding object release within this function.
+
+Signed-off-by: Wen Yang <wen.yang99@zte.com.cn>
+Cc: Linus Walleij <linus.walleij@linaro.org>
+Cc: Heiko Stuebner <heiko@sntech.de>
+Cc: linux-gpio@vger.kernel.org
+Cc: linux-rockchip@lists.infradead.org
+Cc: linux-kernel@vger.kernel.org
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/pinctrl/pinctrl-rockchip.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/drivers/pinctrl/pinctrl-rockchip.c b/drivers/pinctrl/pinctrl-rockchip.c
+index a0651128e23a..616055b5e996 100644
+--- a/drivers/pinctrl/pinctrl-rockchip.c
++++ b/drivers/pinctrl/pinctrl-rockchip.c
+@@ -1837,6 +1837,7 @@ static int rockchip_get_bank_data(struct rockchip_pin_bank *bank,
+ 						    base,
+ 						    &rockchip_regmap_config);
+ 		}
++		of_node_put(node);
+ 	}
+ 
+ 	bank->irq = irq_of_parse_and_map(bank->of_node, 0);
+-- 
+2.20.1
+
+
+
