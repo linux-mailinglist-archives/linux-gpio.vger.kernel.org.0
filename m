@@ -2,85 +2,104 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 8BF857F3DB
-	for <lists+linux-gpio@lfdr.de>; Fri,  2 Aug 2019 12:01:09 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 76E697F5E2
+	for <lists+linux-gpio@lfdr.de>; Fri,  2 Aug 2019 13:20:27 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405659AbfHBJvi (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 2 Aug 2019 05:51:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56854 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405876AbfHBJvg (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Fri, 2 Aug 2019 05:51:36 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CD8872064A;
-        Fri,  2 Aug 2019 09:51:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564739495;
-        bh=goHfdpkyjRkUxgqH3PRtuRUvEVTPWNxCNirmAlAXiTE=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=N+F5/N2xS17DE2+KW71cST1dRyNTwfdPsA/svXoYfIznhTmRFB3ox5P6YxhUua6P2
-         8YcpTcrWamBuODt3HZlpJuS9lKDRmERuI55lPmMhgh1myF0S1G+P481LBbw0UCv8Zq
-         S6w7SDfrUOxYHiii8kawOuLaHycytO8lsdsN9iSc=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Wen Yang <wen.yang99@zte.com.cn>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Heiko Stuebner <heiko@sntech.de>, linux-gpio@vger.kernel.org,
-        linux-rockchip@lists.infradead.org, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 162/223] pinctrl: rockchip: fix leaked of_node references
-Date:   Fri,  2 Aug 2019 11:36:27 +0200
-Message-Id: <20190802092248.664754116@linuxfoundation.org>
-X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20190802092238.692035242@linuxfoundation.org>
-References: <20190802092238.692035242@linuxfoundation.org>
-User-Agent: quilt/0.66
+        id S1729698AbfHBLUN (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 2 Aug 2019 07:20:13 -0400
+Received: from mail-qt1-f194.google.com ([209.85.160.194]:33004 "EHLO
+        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729311AbfHBLUN (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 2 Aug 2019 07:20:13 -0400
+Received: by mail-qt1-f194.google.com with SMTP id r6so69212912qtt.0;
+        Fri, 02 Aug 2019 04:20:12 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=6svSKUB8W/2vAHAY5YVCqR8+83bHvMbbXUyJ8GuWHhs=;
+        b=Vl32TDMoJGrn//dSjae8BtiiQXbK1GVk/KIbMF3jNGRWYACaHiYHpsZfap3j31W4oW
+         1BA2ejxnYg2JRRwI0gLIoyFsHc67h+13SAY00sQX8udn4tjIu/HINcaKSY81kZga1S8t
+         Z96q1ZqfPotvz1gM8G2zfUCt8ExscRW1F+h0PNErKwUa17Di67EyRfK3i11QcIwrMbg9
+         UF4CXKQ8dj4VEjWIcB3WleofB9bgdF13cUL1B7ycOfdu2iwYzk1KZqn4GgwyAXd3pEqp
+         ZyJk+a63FwkjXR3xmi2n7mIjzg1WtgsxYAO6/htVZuth3A95S1NsrU6cwDkhpCwGjOfc
+         17OQ==
+X-Gm-Message-State: APjAAAUdUndDAUq0W8zUuGURS4swB4p+GxBZ8r9A6fPJkOw5lclCpg3H
+        rr+b//tj0sGqReIzV6FkE2Lpr4My2TzBF+YvrTk=
+X-Google-Smtp-Source: APXvYqzzEMPL706zJeruFWjyPx3W7qLTYqQ+nPflILZAKmqIvcLEpD7XRJHi8zMXFo3sUO3koJwU4XNqk+rw0f5qJV4=
+X-Received: by 2002:aed:3e7c:: with SMTP id m57mr95077214qtf.204.1564744811845;
+ Fri, 02 Aug 2019 04:20:11 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <20190731195713.3150463-1-arnd@arndb.de> <20190731195713.3150463-6-arnd@arndb.de>
+ <CAMpxmJWFfT_vrDas2fzW5tnxskk9kmgHQpGnGQ-_C20UaS_jhA@mail.gmail.com>
+In-Reply-To: <CAMpxmJWFfT_vrDas2fzW5tnxskk9kmgHQpGnGQ-_C20UaS_jhA@mail.gmail.com>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Fri, 2 Aug 2019 13:19:55 +0200
+Message-ID: <CAK8P3a3KpKvRKXY72toE_5eAp4ER_Mre0GX3guwGeQgsY2HX+g@mail.gmail.com>
+Subject: Re: [PATCH 05/14] gpio: lpc32xx: allow building on non-lpc32xx targets
+To:     Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Cc:     soc@kernel.org, arm-soc <linux-arm-kernel@lists.infradead.org>,
+        Vladimir Zapolskiy <vz@mleia.com>,
+        Sylvain Lemieux <slemieux.tyco@gmail.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Gregory Clement <gregory.clement@bootlin.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        Guenter Roeck <linux@roeck-us.net>,
+        linux-gpio <linux-gpio@vger.kernel.org>,
+        netdev <netdev@vger.kernel.org>, linux-serial@vger.kernel.org,
+        USB list <linux-usb@vger.kernel.org>,
+        LINUXWATCHDOG <linux-watchdog@vger.kernel.org>,
+        Lee Jones <lee.jones@linaro.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-[ Upstream commit 3c89c70634bb0b6f48512de873e7a45c7e1fbaa5 ]
+On Fri, Aug 2, 2019 at 9:10 AM Bartosz Golaszewski
+<bgolaszewski@baylibre.com> wrote:
+> > -#include <mach/hardware.h>
+> > -#include <mach/platform.h>
+> > +#define _GPREG(x)                              (x)
+>
+> What purpose does this macro serve?
+>
+> >
+> >  #define LPC32XX_GPIO_P3_INP_STATE              _GPREG(0x000)
+> >  #define LPC32XX_GPIO_P3_OUTP_SET               _GPREG(0x004)
 
-The call to of_parse_phandle returns a node pointer with refcount
-incremented thus it must be explicitly decremented after the last
-usage.
+In the existing code base, this macro converts a register offset to
+an __iomem pointer for a gpio register. I changed the definition of the
+macro here to keep the number of changes down, but I it's just
+as easy to remove it if you prefer.
 
-Detected by coccinelle with the following warnings:
-./drivers/pinctrl/pinctrl-rockchip.c:3221:2-8: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 3196, but without a corresponding object release within this function.
-./drivers/pinctrl/pinctrl-rockchip.c:3223:1-7: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 3196, but without a corresponding object release within this function.
+> > @@ -167,14 +166,26 @@ struct lpc32xx_gpio_chip {
+> >         struct gpio_regs        *gpio_grp;
+> >  };
+> >
+> > +void __iomem *gpio_reg_base;
+>
+> Any reason why this can't be made part of struct lpc32xx_gpio_chip?
 
-Signed-off-by: Wen Yang <wen.yang99@zte.com.cn>
-Cc: Linus Walleij <linus.walleij@linaro.org>
-Cc: Heiko Stuebner <heiko@sntech.de>
-Cc: linux-gpio@vger.kernel.org
-Cc: linux-rockchip@lists.infradead.org
-Cc: linux-kernel@vger.kernel.org
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/pinctrl/pinctrl-rockchip.c | 1 +
- 1 file changed, 1 insertion(+)
+It could be, but it's the same for each instance, and not known until
+probe() time, so the same pointer would need to be copied into each
+instance that is otherwise read-only.
 
-diff --git a/drivers/pinctrl/pinctrl-rockchip.c b/drivers/pinctrl/pinctrl-rockchip.c
-index f826793e972c..417cd3bd7e0c 100644
---- a/drivers/pinctrl/pinctrl-rockchip.c
-+++ b/drivers/pinctrl/pinctrl-rockchip.c
-@@ -2208,6 +2208,7 @@ static int rockchip_get_bank_data(struct rockchip_pin_bank *bank,
- 						    base,
- 						    &rockchip_regmap_config);
- 		}
-+		of_node_put(node);
- 	}
- 
- 	bank->irq = irq_of_parse_and_map(bank->of_node, 0);
--- 
-2.20.1
+Let me know if you'd prefer me to rework these two things or leave
+them as they are.
 
+> > +static inline u32 gpreg_read(unsigned long offset)
+>
+> Here and elsewhere: could you please keep the lpc32xx_gpio prefix for
+> all symbols?
 
+Sure.
 
+      Arnd
