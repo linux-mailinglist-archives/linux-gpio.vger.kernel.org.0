@@ -2,57 +2,57 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 8A02280B92
-	for <lists+linux-gpio@lfdr.de>; Sun,  4 Aug 2019 18:02:17 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5CFF280B95
+	for <lists+linux-gpio@lfdr.de>; Sun,  4 Aug 2019 18:04:35 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726206AbfHDQCQ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sun, 4 Aug 2019 12:02:16 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:43476 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726181AbfHDQCQ (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sun, 4 Aug 2019 12:02:16 -0400
-Received: by mail-pf1-f194.google.com with SMTP id i189so38352822pfg.10;
-        Sun, 04 Aug 2019 09:02:16 -0700 (PDT)
+        id S1726319AbfHDQEe (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sun, 4 Aug 2019 12:04:34 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:36459 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726206AbfHDQEe (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sun, 4 Aug 2019 12:04:34 -0400
+Received: by mail-pg1-f194.google.com with SMTP id l21so38405536pgm.3
+        for <linux-gpio@vger.kernel.org>; Sun, 04 Aug 2019 09:04:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=LeGjYEzEnNd+LP7E7X1hGpTj7PNVozz8mf2RHENRFPs=;
-        b=LQytGn6C2tlkbNTMXkKZ2UyVakSPWDuBvnr2zYpndh4VptsQvTykzeffX86XeALTgk
-         u8V7q4xuIO4nY1eainybsqRRCkUU9UZlaffx/Mex4LR1mcNDxNllViZbEwkZoTaK522W
-         wNmbSEB1xFONhovQ+m5fvb60LMQaLRZo0Rr3nclUoBwKBFLotbBQx8P+D4Hk6VSSomcf
-         uAFJYT+MpMD/OhRYnG2IH5A9GbIq8Y8dH6GuknoM6u4uPRzsp2pZ8WQGQtUqzKdk/t6M
-         QjVvRlovZa8Le8dedeV0qILbbCFLc6E1OaiO2i3+6DMhS2WVshgPVhzxMovkkd/M6ZvF
-         JLRQ==
+        bh=43+wBAA2pYCZyIeE6dblgNpeldlqw4UsjWWmEq3JFkQ=;
+        b=MNB/Mc92mGLyuhVsZap7ySAwBC6u9/2UU+v246vUn8jld4GTJtPBdEK/sS4jqDUALx
+         ASGO3QxSSTMfen5a4818hqHKc6dGWuxarFx4xVAR37oOi3z8C6DwKf3cpZXKhDzcZzDT
+         ARu26iZVW+gzOfNZZ9Id3tcZBBzBwANnqVKwf8VzC5/yECvRSodP2CfPxpjUyEwuSPxC
+         qH90LTTJ6KOYUienovhJSPBFDDWqgKPSz1JCYRZq/rovUJDq6RyBecXXng5tZP2ocKyN
+         hfLDw1Dxmy84XUppiFSG/z4ANSf/CaaFsXaIFTK2flreppmFfwGRRCzJxKNQuDlWqeJP
+         okjg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=LeGjYEzEnNd+LP7E7X1hGpTj7PNVozz8mf2RHENRFPs=;
-        b=PD5ynfU3IeMCj/tcRyvhTb9wGKy0ykxbNom1SsdQFKS2pz0xQ/9GUnC1OssuKIy8AO
-         TAqOgOneBGyjqbG1rdO3xfBqODftMx7+z2AU8XlDuF1GtJWzX1SaPOq/P6rbur2NEyMl
-         LZJ95bK/e0H1QnnIqzeQKRaB+5wjAghpKSva2CxWe7CprM6RBhC6tBwHt2uU3fnklnG2
-         ae202rmIoFISV59CiUJuLhHh6Nn7fhlsj7Lt67L2XDNBX4dy7PzRTnHOgAZyIHik/ZqI
-         OUBlHmRtJ5nb7ObNT4+zhYvAICTUqmrgxPRiZS1L0N21aQmctyFqrBjlVGArMLEHvPej
-         RG6g==
-X-Gm-Message-State: APjAAAU/+YMUgkq4aat4D+01ctaT63gYI5eBtiZGpUjC+3lSrpn5gKwX
-        FTznCG53W10qI1chrJ/o4fg=
-X-Google-Smtp-Source: APXvYqyW3HshrRKiqWhhL7Xm0gBHnBObsgshWMul17uZfpv0UekHsFJKsZHv4yQsC3HGKCgiksvnzA==
-X-Received: by 2002:a63:89c2:: with SMTP id v185mr27001405pgd.241.1564934535868;
-        Sun, 04 Aug 2019 09:02:15 -0700 (PDT)
+        bh=43+wBAA2pYCZyIeE6dblgNpeldlqw4UsjWWmEq3JFkQ=;
+        b=BEBpgz/JXxxBtUaRfU62mhTga/ZTYNJv6p3d9JRJmtmiI7M+DTqtjQm22r8eYdy+Te
+         Me5Bxz5BbtyjJ+droBn2AZ5l1yWaT9FW1r4UKZ/3nqVk2PD8YIIx9b02CqxaMUNGExNn
+         raxdkDNy4xxtH8HhYVmI5ol6eMV+1SrYE/NtD/HO0cOqTRossGIrswcxntj0YTQXssqu
+         jnncuKBtWzQycFyySRQnbBfkzdiUtZ1PrxaC2XVy1Yd7mIMWQuCRjTjO2JNAV8g2Is1t
+         PrwywqeYLlA/xGF/pUBY3DJEdwmGtUJWOlfrEuZPl9JWnAamYYC7QMH7cZ0/LoZnqHcR
+         zCzg==
+X-Gm-Message-State: APjAAAVVDP+0799iN7yFG+eoiCtqXV2v+vNoEQBK8d0DIAX0UFQ+9y4V
+        F3AkMqLJZk3tipkH5vUqAM0=
+X-Google-Smtp-Source: APXvYqyoNpL7JNr6fzQGvbgLfKgJsIZcPfbrRAGknNTrjrqkxFtSsE80PHNU91LWByI9gkjdaETv6w==
+X-Received: by 2002:a17:90a:fa12:: with SMTP id cm18mr13985647pjb.137.1564934674142;
+        Sun, 04 Aug 2019 09:04:34 -0700 (PDT)
 Received: from localhost.localdomain ([122.163.105.8])
-        by smtp.gmail.com with ESMTPSA id v22sm80865042pgk.69.2019.08.04.09.02.12
+        by smtp.gmail.com with ESMTPSA id c8sm9505686pjq.2.2019.08.04.09.04.30
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Sun, 04 Aug 2019 09:02:15 -0700 (PDT)
+        Sun, 04 Aug 2019 09:04:33 -0700 (PDT)
 From:   Nishka Dasgupta <nishkadg.linux@gmail.com>
 To:     linus.walleij@linaro.org, linux-arm-kernel@lists.infradead.org,
-        linux-gpio@vger.kernel.org, tomasz.figa@gmail.com, krzk@kernel.org,
-        s.nawrocki@samsung.com, kgene@kernel.org,
-        linux-samsung-soc@vger.kernel.org
+        linux-gpio@vger.kernel.org, linux-imx@nxp.com,
+        s.hauer@pengutronix.de, kernel@pengutronix.de, stefan@agner.ch,
+        shawnguo@kernel.org, festevam@gmail.com, aisheng.dong@nxp.com
 Cc:     Nishka Dasgupta <nishkadg.linux@gmail.com>
-Subject: [PATCH] pinctrl: samsung: exynos: Add of_node_put() before return
-Date:   Sun,  4 Aug 2019 21:32:00 +0530
-Message-Id: <20190804160200.5139-1-nishkadg.linux@gmail.com>
+Subject: [PATCH] pinctrl: freescale: mxs: Add of_node_put() before return
+Date:   Sun,  4 Aug 2019 21:34:20 +0530
+Message-Id: <20190804160420.5309-1-nishkadg.linux@gmail.com>
 X-Mailer: git-send-email 2.19.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -63,30 +63,53 @@ X-Mailing-List: linux-gpio@vger.kernel.org
 
 Each iteration of for_each_child_of_node puts the previous node, but in
 the case of a return from the middle of the loop, there is no put, thus
-causing a memory leak. Hence add an of_node_put before the return.
+causing a memory leak. Hence add an of_node_put before the return in
+three places.
 Issue found with Coccinelle.
 
 Signed-off-by: Nishka Dasgupta <nishkadg.linux@gmail.com>
 ---
- drivers/pinctrl/samsung/pinctrl-exynos.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/pinctrl/freescale/pinctrl-mxs.c | 12 +++++++++---
+ 1 file changed, 9 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/pinctrl/samsung/pinctrl-exynos.c b/drivers/pinctrl/samsung/pinctrl-exynos.c
-index ebc27b06718c..e7f4cbad2c92 100644
---- a/drivers/pinctrl/samsung/pinctrl-exynos.c
-+++ b/drivers/pinctrl/samsung/pinctrl-exynos.c
-@@ -486,8 +486,10 @@ int exynos_eint_wkup_init(struct samsung_pinctrl_drv_data *d)
- 		if (match) {
- 			irq_chip = kmemdup(match->data,
- 				sizeof(*irq_chip), GFP_KERNEL);
--			if (!irq_chip)
-+			if (!irq_chip) {
-+				of_node_put(np);
+diff --git a/drivers/pinctrl/freescale/pinctrl-mxs.c b/drivers/pinctrl/freescale/pinctrl-mxs.c
+index 641b3088876f..735cedd0958a 100644
+--- a/drivers/pinctrl/freescale/pinctrl-mxs.c
++++ b/drivers/pinctrl/freescale/pinctrl-mxs.c
+@@ -488,8 +488,10 @@ static int mxs_pinctrl_probe_dt(struct platform_device *pdev,
+ 		if (of_property_read_u32(child, "reg", &val)) {
+ 			ret = mxs_pinctrl_parse_group(pdev, child,
+ 						      idxg++, NULL);
+-			if (ret)
++			if (ret) {
++				of_node_put(child);
+ 				return ret;
++			}
+ 			continue;
+ 		}
+ 
+@@ -499,15 +501,19 @@ static int mxs_pinctrl_probe_dt(struct platform_device *pdev,
+ 						 f->ngroups,
+ 						 sizeof(*f->groups),
+ 						 GFP_KERNEL);
+-			if (!f->groups)
++			if (!f->groups) {
++				of_node_put(child);
  				return -ENOMEM;
 +			}
- 			wkup_np = np;
- 			break;
+ 			fn = child->name;
+ 			i = 0;
  		}
+ 		ret = mxs_pinctrl_parse_group(pdev, child, idxg++,
+ 					      &f->groups[i++]);
+-		if (ret)
++		if (ret) {
++			of_node_put(child);
+ 			return ret;
++		}
+ 	}
+ 
+ 	return 0;
 -- 
 2.19.1
 
