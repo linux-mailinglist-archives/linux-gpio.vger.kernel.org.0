@@ -2,570 +2,379 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id BDE34808A4
-	for <lists+linux-gpio@lfdr.de>; Sun,  4 Aug 2019 01:44:45 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 112E5808C1
+	for <lists+linux-gpio@lfdr.de>; Sun,  4 Aug 2019 02:37:46 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729271AbfHCXol (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sat, 3 Aug 2019 19:44:41 -0400
-Received: from hqemgate15.nvidia.com ([216.228.121.64]:14433 "EHLO
-        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729159AbfHCXol (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sat, 3 Aug 2019 19:44:41 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5d461c5f0002>; Sat, 03 Aug 2019 16:44:31 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Sat, 03 Aug 2019 16:44:21 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Sat, 03 Aug 2019 16:44:21 -0700
-Received: from [10.2.165.119] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Sat, 3 Aug
- 2019 23:44:20 +0000
-Subject: Re: [PATCH v7 07/20] clk: tegra: clk-periph: Add save and restore
- support
-From:   Sowjanya Komatineni <skomatineni@nvidia.com>
-To:     Dmitry Osipenko <digetx@gmail.com>, <thierry.reding@gmail.com>,
-        <jonathanh@nvidia.com>, <tglx@linutronix.de>,
-        <jason@lakedaemon.net>, <marc.zyngier@arm.com>,
-        <linus.walleij@linaro.org>, <stefan@agner.ch>,
-        <mark.rutland@arm.com>
-CC:     <pdeschrijver@nvidia.com>, <pgaikwad@nvidia.com>,
-        <sboyd@kernel.org>, <linux-clk@vger.kernel.org>,
-        <linux-gpio@vger.kernel.org>, <jckuo@nvidia.com>,
-        <josephl@nvidia.com>, <talho@nvidia.com>,
-        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <mperttunen@nvidia.com>, <spatra@nvidia.com>, <robh+dt@kernel.org>,
-        <devicetree@vger.kernel.org>
-References: <1564532424-10449-1-git-send-email-skomatineni@nvidia.com>
- <550de191-f982-4544-6fbc-bf16dfeae2c6@nvidia.com>
- <c85ba067-af68-0b4a-d347-501ed7ed0ef9@gmail.com>
- <a81b85a2-5634-cfa2-77c5-94c23c4847bd@nvidia.com>
- <ef9e865f-359b-0873-a414-3d548bd4e590@gmail.com>
- <50bad1d3-df41-d1e5-a7c7-4be9c661ed14@nvidia.com>
- <62a5c6ed-21b1-8403-6fac-9c5d99b5a255@gmail.com>
- <85cd5100-467e-d08e-0ae5-ae57a6de5312@nvidia.com>
- <61652889-2e77-8f1e-9ed4-b7e525a40b10@nvidia.com>
- <9f6fc791-5c76-76d5-98fb-fd8facfd75d7@nvidia.com>
- <8bca50b2-a78c-c6b1-6547-4cec98a3e9cb@gmail.com>
- <314b5572-4113-d5c5-5956-1a55555a573c@nvidia.com>
- <a64472fd-46b7-5ff9-3140-11f71d5f88ff@gmail.com>
- <90268663-e5a7-4715-bd1a-31644c2fe9ab@gmail.com>
- <c6e1d744-3a7a-fe1b-2c86-a3d49f022232@nvidia.com>
- <73cd521b-782c-7fb2-d904-ae8b07927d47@gmail.com>
- <d82de63a-02a3-8fb0-57e7-7fe00d6b86ab@nvidia.com>
- <8d30f325-1c63-3802-7c21-f313115f8e55@gmail.com>
- <274e67b1-16b8-2475-d026-68bd89b090ec@nvidia.com>
-Message-ID: <4dec8efb-bc3b-0275-8dea-7600a8f9e478@nvidia.com>
-Date:   Sat, 3 Aug 2019 16:44:19 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        id S1729421AbfHDAhp (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sat, 3 Aug 2019 20:37:45 -0400
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:34228 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729407AbfHDAhp (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sat, 3 Aug 2019 20:37:45 -0400
+Received: by mail-lf1-f66.google.com with SMTP id b29so48172927lfq.1
+        for <linux-gpio@vger.kernel.org>; Sat, 03 Aug 2019 17:37:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=k4fPec1ZMrof5O8+Iw9iMzlfBvwpOif9EEyaTKz5PQY=;
+        b=jlvWoMHrM71WAI/BTTRe4UNM0tJcJwiDVtVJ1MSFfOiUqQ2Zlp8d3XgpfglP90Jg1i
+         cp0kN/2gqwjKIrVBSZc0s/ZY2P+1357wy/juwXGeuuGx5p7TYNc0mcZB++4FBBX5QHGT
+         1/1ZkYRIYKYkQfyWTTWaDzKX3xXMfBsSmVfkUEn4/f+coA33V1gsKlY5JEcqFvEaaWs8
+         MDdugXdg3bjKhyew0Jbkrs0cJjoFb/fLQL+LFnTkQqWh69pCQBuEotSc+reP6MpQFyVh
+         vyE5xAzuKzydOizby3ognejNUf6n7zb6ay2joDFI4tZIK6AofdVdIPEtVABtUgY64I+5
+         DSRQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=k4fPec1ZMrof5O8+Iw9iMzlfBvwpOif9EEyaTKz5PQY=;
+        b=Rzx2PePwotSmaGBLD1JQJoUes2Og+5L35xk/f0RjZRT3ol/gg+peGlmNA6Xky5winQ
+         9Yy+A0+JZtOtb9Gwrx4Zvy3NWgmAJeEHfzk9V96gou/EPygcsHb4YM2VZBqq3BSsWuJl
+         XjovZ/lh7qlT7bNQx8AZYpmOZPvz55IlBfw/C2bvTfx/KXwKxBSHH9Ou3NewqtDlA1Fx
+         3aFCwtTfOqGyiAoYi7ijL0yPW7Spac+VssKkl07f1hifueJI2E0FM6meZvYWbAKVjh+d
+         NGlzZ0PxMOZneeVmHARRQuO/lNJrXX2XxCEOM89GX17SioTT3JVn6w4Q9tLvqxNV/10E
+         6lEA==
+X-Gm-Message-State: APjAAAUvLaN9K7a3pTVfuk6tpL7XDC2TdSC0thrYcdYZ0+ERYdnmMogV
+        2dqL0UbWWH1F9BqudfV6NBGe5g==
+X-Google-Smtp-Source: APXvYqwlD9WclpD9YpyNplViDl+15+OVMJ5LaUsYrGGRyNeUcFrnGOCHsZrORuaB94uXS2vbFh20Iw==
+X-Received: by 2002:a19:4a50:: with SMTP id x77mr23174803lfa.91.1564879062355;
+        Sat, 03 Aug 2019 17:37:42 -0700 (PDT)
+Received: from localhost.localdomain (c-2ccd225c.014-348-6c756e10.bbcust.telenor.se. [92.34.205.44])
+        by smtp.gmail.com with ESMTPSA id e26sm16048603ljl.33.2019.08.03.17.37.40
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Sat, 03 Aug 2019 17:37:41 -0700 (PDT)
+From:   Linus Walleij <linus.walleij@linaro.org>
+To:     Mark Brown <broonie@kernel.org>, linux-spi@vger.kernel.org,
+        Fabio Estevam <festevam@gmail.com>
+Cc:     linux-gpio@vger.kernel.org,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        NXP Linux Team <linux-imx@nxp.com>
+Subject: [PATCH v2] spi: fsl: Convert to use CS GPIO descriptors
+Date:   Sun,  4 Aug 2019 02:35:39 +0200
+Message-Id: <20190804003539.985-1-linus.walleij@linaro.org>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-In-Reply-To: <274e67b1-16b8-2475-d026-68bd89b090ec@nvidia.com>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: quoted-printable
-Content-Language: en-US
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1564875871; bh=++HJ8KUzB4/EcwXI912rdHh/TVUn5/3eBsNa4C2ZPog=;
-        h=X-PGP-Universal:Subject:From:To:CC:References:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
-         Content-Language;
-        b=VDN6m1f823feYOsEH1i/KJhAzAP0pWTp8MXNzLmXokdq77hs+6mtAeZLL13XIb/V+
-         UiufZyhs6DLhyEP+Ca3euMhiOy7PPDqTNdHDgiyrKWW5DqXfD6d7b0baID3VDhx3JI
-         Kcbb8UdueUCqqDhq5rB3uznGXHL1/JnR5awhJGtS/UdiFR97hP7CjDLGHxGG45Ccqc
-         EbhZDXawsoAzAKwlG8GGsSgk2Z0xMFhofS+ZGpBEB67/Yzm7za9eonJM9tBcF9H7B4
-         9/X+6Xl3dk9bdBxodqsS5bE2f/FkIIglPn/Dstmrf4ys0vdqOWLxyVybqlNUrsFFTt
-         RTr2Iba5O5fxg==
+Content-Transfer-Encoding: 8bit
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+This converts the Freescale SPI master driver to use GPIO
+descriptors for chip select handling.
 
-On 8/3/19 10:01 AM, Sowjanya Komatineni wrote:
->
-> On 8/3/19 3:33 AM, Dmitry Osipenko wrote:
->> 03.08.2019 2:51, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
->>> On 8/2/19 2:15 PM, Dmitry Osipenko wrote:
->>>> 02.08.2019 23:32, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
->>>>> On 8/2/19 1:17 PM, Dmitry Osipenko wrote:
->>>>>> 02.08.2019 23:13, Dmitry Osipenko =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
->>>>>>> 02.08.2019 21:33, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=
-=82:
->>>>>>>> On 8/2/19 5:38 AM, Dmitry Osipenko wrote:
->>>>>>>>> 02.08.2019 2:49, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=
-=82:
->>>>>>>>>> On 8/1/19 4:19 PM, Sowjanya Komatineni wrote:
->>>>>>>>>>> On 8/1/19 2:30 PM, Sowjanya Komatineni wrote:
->>>>>>>>>>>> On 8/1/19 1:54 PM, Dmitry Osipenko wrote:
->>>>>>>>>>>>> 01.08.2019 23:31, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=
-=B5=D1=82:
->>>>>>>>>>>>>> On 8/1/19 1:17 PM, Dmitry Osipenko wrote:
->>>>>>>>>>>>>>> 01.08.2019 22:42, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=
-=B5=D1=82:
->>>>>>>>>>>>>>>> On 8/1/19 12:00 PM, Dmitry Osipenko wrote:
->>>>>>>>>>>>>>>>> 01.08.2019 20:58, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=
-=D0=B5=D1=82:
->>>>>>>>>>>>>>>>>> On 7/31/19 4:09 PM, Sowjanya Komatineni wrote:
->>>>>>>>>>>>>>>>>>> On 7/31/19 3:44 AM, Dmitry Osipenko wrote:
->>>>>>>>>>>>>>>>>>>> 31.07.2019 12:50, Dmitry Osipenko =D0=BF=D0=B8=D1=88=
-=D0=B5=D1=82:
->>>>>>>>>>>>>>>>>>>>> 31.07.2019 3:20, Sowjanya Komatineni =D0=BF=D0=B8=D1=
-=88=D0=B5=D1=82:
->>>>>>>>>>>>>>>>>>>>>> This patch implements save and restore context for
->>>>>>>>>>>>>>>>>>>>>> peripheral
->>>>>>>>>>>>>>>>>>>>>> fixed
->>>>>>>>>>>>>>>>>>>>>> clock ops, peripheral gate clock ops, sdmmc mux=20
->>>>>>>>>>>>>>>>>>>>>> clock
->>>>>>>>>>>>>>>>>>>>>> ops, and
->>>>>>>>>>>>>>>>>>>>>> peripheral clock ops.
->>>>>>>>>>>>>>>>>>>>>>
->>>>>>>>>>>>>>>>>>>>>> During system suspend, core power goes off and
->>>>>>>>>>>>>>>>>>>>>> looses the
->>>>>>>>>>>>>>>>>>>>>> settings
->>>>>>>>>>>>>>>>>>>>>> of the Tegra CAR controller registers.
->>>>>>>>>>>>>>>>>>>>>>
->>>>>>>>>>>>>>>>>>>>>> So during suspend entry clock and reset state of
->>>>>>>>>>>>>>>>>>>>>> peripherals is
->>>>>>>>>>>>>>>>>>>>>> saved
->>>>>>>>>>>>>>>>>>>>>> and on resume they are restored to have clocks=20
->>>>>>>>>>>>>>>>>>>>>> back to
->>>>>>>>>>>>>>>>>>>>>> same
->>>>>>>>>>>>>>>>>>>>>> rate and
->>>>>>>>>>>>>>>>>>>>>> state as before suspend.
->>>>>>>>>>>>>>>>>>>>>>
->>>>>>>>>>>>>>>>>>>>>> Acked-by: Thierry Reding <treding@nvidia.com>
->>>>>>>>>>>>>>>>>>>>>> Signed-off-by: Sowjanya Komatineni
->>>>>>>>>>>>>>>>>>>>>> <skomatineni@nvidia.com>
->>>>>>>>>>>>>>>>>>>>>> ---
->>>>>>>>>>>>>>>>>>>>>> drivers/clk/tegra/clk-periph-fixed.c | 33
->>>>>>>>>>>>>>>>>>>>>> ++++++++++++++++++++++++++++++++
->>>>>>>>>>>>>>>>>>>>>> drivers/clk/tegra/clk-periph-gate.c | 34
->>>>>>>>>>>>>>>>>>>>>> +++++++++++++++++++++++++++++++++
->>>>>>>>>>>>>>>>>>>>>> drivers/clk/tegra/clk-periph.c | 37
->>>>>>>>>>>>>>>>>>>>>> ++++++++++++++++++++++++++++++++++++
->>>>>>>>>>>>>>>>>>>>>> drivers/clk/tegra/clk-sdmmc-mux.c | 28
->>>>>>>>>>>>>>>>>>>>>> +++++++++++++++++++++++++++
->>>>>>>>>>>>>>>>>>>>>> drivers/clk/tegra/clk.h | 6 ++++++
->>>>>>>>>>>>>>>>>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 5 f=
-iles changed, 138 insertions(+)
->>>>>>>>>>>>>>>>>>>>>>
->>>>>>>>>>>>>>>>>>>>>> diff --git a/drivers/clk/tegra/clk-periph-fixed.c
->>>>>>>>>>>>>>>>>>>>>> b/drivers/clk/tegra/clk-periph-fixed.c
->>>>>>>>>>>>>>>>>>>>>> index c088e7a280df..21b24530fa00 100644
->>>>>>>>>>>>>>>>>>>>>> --- a/drivers/clk/tegra/clk-periph-fixed.c
->>>>>>>>>>>>>>>>>>>>>> +++ b/drivers/clk/tegra/clk-periph-fixed.c
->>>>>>>>>>>>>>>>>>>>>> @@ -60,11 +60,44 @@
->>>>>>>>>>>>>>>>>>>>>> tegra_clk_periph_fixed_recalc_rate(struct
->>>>>>>>>>>>>>>>>>>>>> clk_hw *hw,
->>>>>>>>>>>>>>>>>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0 return (unsigned long)rate;
->>>>>>>>>>>>>>>>>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 }
->>>>>>>>>>>>>>>>>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 +st=
-atic int
->>>>>>>>>>>>>>>>>>>>>> tegra_clk_periph_fixed_save_context(struct
->>>>>>>>>>>>>>>>>>>>>> clk_hw
->>>>>>>>>>>>>>>>>>>>>> *hw)
->>>>>>>>>>>>>>>>>>>>>> +{
->>>>>>>>>>>>>>>>>>>>>> +=C2=A0=C2=A0=C2=A0 struct tegra_clk_periph_fixed *f=
-ixed =3D
->>>>>>>>>>>>>>>>>>>>>> to_tegra_clk_periph_fixed(hw);
->>>>>>>>>>>>>>>>>>>>>> +=C2=A0=C2=A0=C2=A0 u32 mask =3D 1 << (fixed->num % =
-32);
->>>>>>>>>>>>>>>>>>>>>> +
->>>>>>>>>>>>>>>>>>>>>> +=C2=A0=C2=A0=C2=A0 fixed->enb_ctx =3D readl_relaxed=
-(fixed->base +
->>>>>>>>>>>>>>>>>>>>>> fixed->regs->enb_reg) &
->>>>>>>>>>>>>>>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0 mask;
->>>>>>>>>>>>>>>>>>>>>> +=C2=A0=C2=A0=C2=A0 fixed->rst_ctx =3D readl_relaxed=
-(fixed->base +
->>>>>>>>>>>>>>>>>>>>>> fixed->regs->rst_reg) &
->>>>>>>>>>>>>>>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0 mask;
->>>>>>>>>>>>>>>>>>>>>> +
->>>>>>>>>>>>>>>>>>>>>> +=C2=A0=C2=A0=C2=A0 return 0;
->>>>>>>>>>>>>>>>>>>>>> +}
->>>>>>>>>>>>>>>>>>>>>> +
->>>>>>>>>>>>>>>>>>>>>> +static void
->>>>>>>>>>>>>>>>>>>>>> tegra_clk_periph_fixed_restore_context(struct
->>>>>>>>>>>>>>>>>>>>>> clk_hw
->>>>>>>>>>>>>>>>>>>>>> *hw)
->>>>>>>>>>>>>>>>>>>>>> +{
->>>>>>>>>>>>>>>>>>>>>> +=C2=A0=C2=A0=C2=A0 struct tegra_clk_periph_fixed *f=
-ixed =3D
->>>>>>>>>>>>>>>>>>>>>> to_tegra_clk_periph_fixed(hw);
->>>>>>>>>>>>>>>>>>>>>> +=C2=A0=C2=A0=C2=A0 u32 mask =3D 1 << (fixed->num % =
-32);
->>>>>>>>>>>>>>>>>>>>>> +
->>>>>>>>>>>>>>>>>>>>>> +=C2=A0=C2=A0=C2=A0 if (fixed->enb_ctx)
->>>>>>>>>>>>>>>>>>>>>> + writel_relaxed(mask, fixed->base +
->>>>>>>>>>>>>>>>>>>>>> fixed->regs->enb_set_reg);
->>>>>>>>>>>>>>>>>>>>>> +=C2=A0=C2=A0=C2=A0 else
->>>>>>>>>>>>>>>>>>>>>> + writel_relaxed(mask, fixed->base +
->>>>>>>>>>>>>>>>>>>>>> fixed->regs->enb_clr_reg);
->>>>>>>>>>>>>>>>>>>>>> +
->>>>>>>>>>>>>>>>>>>>>> +=C2=A0=C2=A0=C2=A0 udelay(2);
->>>>>>>>>>>>>>>>>>>>>> +
->>>>>>>>>>>>>>>>>>>>>> +=C2=A0=C2=A0=C2=A0 if (!fixed->rst_ctx) {
->>>>>>>>>>>>>>>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 udelay(5=
-); /* reset propogation delay */
->>>>>>>>>>>>>>>>>>>>>> + writel_relaxed(mask, fixed->base +
->>>>>>>>>>>>>>>>>>>>>> fixed->regs->rst_reg);
->>>>>>>>>>>>>>>>>>>>>> +=C2=A0=C2=A0=C2=A0 }
->>>>>>>>>>>>>>>>>>>>>> +}
->>>>>>>>>>>>>>>>>>>>>> +
->>>>>>>>>>>>>>>>>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 sta=
-tic const struct clk_ops
->>>>>>>>>>>>>>>>>>>>>> tegra_clk_periph_fixed_ops
->>>>>>>>>>>>>>>>>>>>>> =3D {
->>>>>>>>>>>>>>>>>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0 .is_enabled =3D
->>>>>>>>>>>>>>>>>>>>>> tegra_clk_periph_fixed_is_enabled,
->>>>>>>>>>>>>>>>>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0 .enable =3D=20
->>>>>>>>>>>>>>>>>>>>>> tegra_clk_periph_fixed_enable,
->>>>>>>>>>>>>>>>>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0 .disable =3D=20
->>>>>>>>>>>>>>>>>>>>>> tegra_clk_periph_fixed_disable,
->>>>>>>>>>>>>>>>>>>>>> .recalc_rate =3D
->>>>>>>>>>>>>>>>>>>>>> tegra_clk_periph_fixed_recalc_rate,
->>>>>>>>>>>>>>>>>>>>>> +=C2=A0=C2=A0=C2=A0 .save_context =3D
->>>>>>>>>>>>>>>>>>>>>> tegra_clk_periph_fixed_save_context,
->>>>>>>>>>>>>>>>>>>>>> +=C2=A0=C2=A0=C2=A0 .restore_context =3D
->>>>>>>>>>>>>>>>>>>>>> tegra_clk_periph_fixed_restore_context,
->>>>>>>>>>>>>>>>>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 };
->>>>>>>>>>>>>>>>>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 =C2=
-=A0 struct clk
->>>>>>>>>>>>>>>>>>>>>> *tegra_clk_register_periph_fixed(const
->>>>>>>>>>>>>>>>>>>>>> char
->>>>>>>>>>>>>>>>>>>>>> *name,
->>>>>>>>>>>>>>>>>>>>>> diff --git a/drivers/clk/tegra/clk-periph-gate.c
->>>>>>>>>>>>>>>>>>>>>> b/drivers/clk/tegra/clk-periph-gate.c
->>>>>>>>>>>>>>>>>>>>>> index 4b31beefc9fc..6ba5b08e0787 100644
->>>>>>>>>>>>>>>>>>>>>> --- a/drivers/clk/tegra/clk-periph-gate.c
->>>>>>>>>>>>>>>>>>>>>> +++ b/drivers/clk/tegra/clk-periph-gate.c
->>>>>>>>>>>>>>>>>>>>>> @@ -25,6 +25,8 @@ static
->>>>>>>>>>>>>>>>>>>>>> DEFINE_SPINLOCK(periph_ref_lock);
->>>>>>>>>>>>>>>>>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 =C2=
-=A0 #define read_rst(gate) \
->>>>>>>>>>>>>>>>>>>>>> readl_relaxed(gate->clk_base +
->>>>>>>>>>>>>>>>>>>>>> (gate->regs->rst_reg))
->>>>>>>>>>>>>>>>>>>>>> +#define write_rst_set(val, gate) \
->>>>>>>>>>>>>>>>>>>>>> +=C2=A0=C2=A0=C2=A0 writel_relaxed(val, gate->clk_ba=
-se +
->>>>>>>>>>>>>>>>>>>>>> (gate->regs->rst_set_reg))
->>>>>>>>>>>>>>>>>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 #de=
-fine write_rst_clr(val, gate) \
->>>>>>>>>>>>>>>>>>>>>> writel_relaxed(val, gate->clk_base +
->>>>>>>>>>>>>>>>>>>>>> (gate->regs->rst_clr_reg))
->>>>>>>>>>>>>>>>>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 @@ =
--110,10 +112,42 @@ static void
->>>>>>>>>>>>>>>>>>>>>> clk_periph_disable(struct
->>>>>>>>>>>>>>>>>>>>>> clk_hw *hw)
->>>>>>>>>>>>>>>>>>>>>> spin_unlock_irqrestore(&periph_ref_lock, flags);
->>>>>>>>>>>>>>>>>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 }
->>>>>>>>>>>>>>>>>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 +st=
-atic int=20
->>>>>>>>>>>>>>>>>>>>>> clk_periph_gate_save_context(struct
->>>>>>>>>>>>>>>>>>>>>> clk_hw
->>>>>>>>>>>>>>>>>>>>>> *hw)
->>>>>>>>>>>>>>>>>>>>>> +{
->>>>>>>>>>>>>>>>>>>>>> +=C2=A0=C2=A0=C2=A0 struct tegra_clk_periph_gate *ga=
-te =3D
->>>>>>>>>>>>>>>>>>>>>> to_clk_periph_gate(hw);
->>>>>>>>>>>>>>>>>>>>>> +
->>>>>>>>>>>>>>>>>>>>>> + gate->clk_state_ctx =3D read_enb(gate) &
->>>>>>>>>>>>>>>>>>>>>> periph_clk_to_bit(gate);
->>>>>>>>>>>>>>>>>>>>>> + gate->rst_state_ctx =3D read_rst(gate) &
->>>>>>>>>>>>>>>>>>>>>> periph_clk_to_bit(gate);
->>>>>>>>>>>>>>>>>>>>>> +
->>>>>>>>>>>>>>>>>>>>>> +=C2=A0=C2=A0=C2=A0 return 0;
->>>>>>>>>>>>>>>>>>>>>> +}
->>>>>>>>>>>>>>>>>>>>>> +
->>>>>>>>>>>>>>>>>>>>>> +static void clk_periph_gate_restore_context(struct
->>>>>>>>>>>>>>>>>>>>>> clk_hw
->>>>>>>>>>>>>>>>>>>>>> *hw)
->>>>>>>>>>>>>>>>>>>>>> +{
->>>>>>>>>>>>>>>>>>>>>> +=C2=A0=C2=A0=C2=A0 struct tegra_clk_periph_gate *ga=
-te =3D
->>>>>>>>>>>>>>>>>>>>>> to_clk_periph_gate(hw);
->>>>>>>>>>>>>>>>>>>>>> +
->>>>>>>>>>>>>>>>>>>>>> +=C2=A0=C2=A0=C2=A0 if (gate->clk_state_ctx)
->>>>>>>>>>>>>>>>>>>>>> + write_enb_set(periph_clk_to_bit(gate), gate);
->>>>>>>>>>>>>>>>>>>>>> +=C2=A0=C2=A0=C2=A0 else
->>>>>>>>>>>>>>>>>>>>>> + write_enb_clr(periph_clk_to_bit(gate), gate);
->>>>>>>>>>>>>>>>>>>>>> +
->>>>>>>>>>>>>>>>>>>>>> +=C2=A0=C2=A0=C2=A0 udelay(5);
->>>>>>>>>>>>>>>>>>>>>> +
->>>>>>>>>>>>>>>>>>>>>> +=C2=A0=C2=A0=C2=A0 if (!(gate->flags & TEGRA_PERIPH=
-_NO_RESET) &&
->>>>>>>>>>>>>>>>>>>>>> + !(gate->flags & TEGRA_PERIPH_MANUAL_RESET)) {
->>>>>>>>>>>>>>>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (gate=
-->rst_state_ctx)
->>>>>>>>>>>>>>>>>>>>>> + write_rst_set(periph_clk_to_bit(gate), gate);
->>>>>>>>>>>>>>>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 else
->>>>>>>>>>>>>>>>>>>>>> + write_rst_clr(periph_clk_to_bit(gate), gate);
->>>>>>>>>>>>>>>>>>>>>> +=C2=A0=C2=A0=C2=A0 }
->>>>>>>>>>>>>>>>>>>>>> +}
->>>>>>>>>>>>>>>>>>>>>> +
->>>>>>>>>>>>>>>>>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 con=
-st struct clk_ops
->>>>>>>>>>>>>>>>>>>>>> tegra_clk_periph_gate_ops =3D {
->>>>>>>>>>>>>>>>>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0 .is_enabled =3D clk_periph_is_enabled,
->>>>>>>>>>>>>>>>>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0 .enable =3D clk_periph_enable,
->>>>>>>>>>>>>>>>>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0 .disable =3D clk_periph_disable,
->>>>>>>>>>>>>>>>>>>>>> +=C2=A0=C2=A0=C2=A0 .save_context =3D clk_periph_gat=
-e_save_context,
->>>>>>>>>>>>>>>>>>>>>> +=C2=A0=C2=A0=C2=A0 .restore_context =3D
->>>>>>>>>>>>>>>>>>>>>> clk_periph_gate_restore_context,
->>>>>>>>>>>>>>>>>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 };
->>>>>>>>>>>>>>>>>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 =C2=
-=A0 struct clk
->>>>>>>>>>>>>>>>>>>>>> *tegra_clk_register_periph_gate(const
->>>>>>>>>>>>>>>>>>>>>> char *name,
->>>>>>>>>>>>>>>>>>>>>> diff --git a/drivers/clk/tegra/clk-periph.c
->>>>>>>>>>>>>>>>>>>>>> b/drivers/clk/tegra/clk-periph.c
->>>>>>>>>>>>>>>>>>>>>> index 58437da25156..06fb62955768 100644
->>>>>>>>>>>>>>>>>>>>>> --- a/drivers/clk/tegra/clk-periph.c
->>>>>>>>>>>>>>>>>>>>>> +++ b/drivers/clk/tegra/clk-periph.c
->>>>>>>>>>>>>>>>>>>>>> @@ -99,6 +99,37 @@ static void
->>>>>>>>>>>>>>>>>>>>>> clk_periph_disable(struct
->>>>>>>>>>>>>>>>>>>>>> clk_hw
->>>>>>>>>>>>>>>>>>>>>> *hw)
->>>>>>>>>>>>>>>>>>>>>> gate_ops->disable(gate_hw);
->>>>>>>>>>>>>>>>>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 }
->>>>>>>>>>>>>>>>>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 +st=
-atic int clk_periph_save_context(struct
->>>>>>>>>>>>>>>>>>>>>> clk_hw *hw)
->>>>>>>>>>>>>>>>>>>>>> +{
->>>>>>>>>>>>>>>>>>>>>> +=C2=A0=C2=A0=C2=A0 struct tegra_clk_periph *periph =
-=3D
->>>>>>>>>>>>>>>>>>>>>> to_clk_periph(hw);
->>>>>>>>>>>>>>>>>>>>>> +=C2=A0=C2=A0=C2=A0 const struct clk_ops *gate_ops =
-=3D=20
->>>>>>>>>>>>>>>>>>>>>> periph->gate_ops;
->>>>>>>>>>>>>>>>>>>>>> +=C2=A0=C2=A0=C2=A0 struct clk_hw *gate_hw =3D &peri=
-ph->gate.hw;
->>>>>>>>>>>>>>>>>>>>>> +
->>>>>>>>>>>>>>>>>>>>>> +=C2=A0=C2=A0=C2=A0 if (!(periph->gate.flags &=20
->>>>>>>>>>>>>>>>>>>>>> TEGRA_PERIPH_NO_GATE))
->>>>>>>>>>>>>>>>>>>>>> + gate_ops->save_context(gate_hw);
->>>>>>>>>>>>>>>>>>>>>> +
->>>>>>>>>>>>>>>>>>>>>> + periph->parent_ctx =3D clk_periph_get_parent(hw);
->>>>>>>>>>>>>>>>>>>>>> +
->>>>>>>>>>>>>>>>>>>>>> +=C2=A0=C2=A0=C2=A0 return 0;
->>>>>>>>>>>>>>>>>>>>>> +}
->>>>>>>>>>>>>>>>>>>>>> +
->>>>>>>>>>>>>>>>>>>>>> +static void clk_periph_restore_context(struct=20
->>>>>>>>>>>>>>>>>>>>>> clk_hw
->>>>>>>>>>>>>>>>>>>>>> *hw)
->>>>>>>>>>>>>>>>>>>>>> +{
->>>>>>>>>>>>>>>>>>>>>> +=C2=A0=C2=A0=C2=A0 struct tegra_clk_periph *periph =
-=3D
->>>>>>>>>>>>>>>>>>>>>> to_clk_periph(hw);
->>>>>>>>>>>>>>>>>>>>>> +=C2=A0=C2=A0=C2=A0 const struct clk_ops *gate_ops =
-=3D=20
->>>>>>>>>>>>>>>>>>>>>> periph->gate_ops;
->>>>>>>>>>>>>>>>>>>>>> +=C2=A0=C2=A0=C2=A0 struct clk_hw *gate_hw =3D &peri=
-ph->gate.hw;
->>>>>>>>>>>>>>>>>>>>>> +=C2=A0=C2=A0=C2=A0 const struct clk_ops *div_ops =
-=3D=20
->>>>>>>>>>>>>>>>>>>>>> periph->div_ops;
->>>>>>>>>>>>>>>>>>>>>> +=C2=A0=C2=A0=C2=A0 struct clk_hw *div_hw =3D &perip=
-h->divider.hw;
->>>>>>>>>>>>>>>>>>>>>> +
->>>>>>>>>>>>>>>>>>>>>> + clk_periph_set_parent(hw, periph->parent_ctx);
->>>>>>>>>>>>>>>>>>>>>> +
->>>>>>>>>>>>>>>>>>>>>> +=C2=A0=C2=A0=C2=A0 if (!(periph->gate.flags &=20
->>>>>>>>>>>>>>>>>>>>>> TEGRA_PERIPH_NO_DIV))
->>>>>>>>>>>>>>>>>>>>>> + div_ops->restore_context(div_hw);
->>>>>>>>>>>>>>>>>>>>> Could you please point to where the divider's
->>>>>>>>>>>>>>>>>>>>> save_context()
->>>>>>>>>>>>>>>>>>>>> happens?
->>>>>>>>>>>>>>>>>>>>> Because I can't see it.
->>>>>>>>>>>>>>>>>>>> Ah, I now see that there is no need to save the=20
->>>>>>>>>>>>>>>>>>>> dividers
->>>>>>>>>>>>>>>>>>>> context
->>>>>>>>>>>>>>>>>>>> because
->>>>>>>>>>>>>>>>>>>> clk itself has enough info that is needed for the
->>>>>>>>>>>>>>>>>>>> context's
->>>>>>>>>>>>>>>>>>>> restoring
->>>>>>>>>>>>>>>>>>>> (like I pointed in the review to v6).
->>>>>>>>>>>>>>>>>>>>
->>>>>>>>>>>>>>>>>>>> Looks like you could also implement a new
->>>>>>>>>>>>>>>>>>>> clk_hw_get_parent_index()
->>>>>>>>>>>>>>>>>>>> generic helper to get the index instead of storing it
->>>>>>>>>>>>>>>>>>>> manually.
->>>>>>>>>>>>>>>>>>> clk_periph_get_parent basically invokes existing
->>>>>>>>>>>>>>>>>>> clk_mux_ops
->>>>>>>>>>>>>>>>>>> get_parent() which is then saved in tegra_clk_periph.
->>>>>>>>>>>>>>>>>>>
->>>>>>>>>>>>>>>>>>> All existing drivers are using directly get_parent()=20
->>>>>>>>>>>>>>>>>>> from
->>>>>>>>>>>>>>>>>>> clk_mux
->>>>>>>>>>>>>>>>>>> which actually gets index from the register read.
->>>>>>>>>>>>>>>>>>>
->>>>>>>>>>>>>>>>>>> To have this more generic w.r.t save/restore context
->>>>>>>>>>>>>>>>>>> point of
->>>>>>>>>>>>>>>>>>> view,
->>>>>>>>>>>>>>>>>>> probably instead of implementing new get_parent_index
->>>>>>>>>>>>>>>>>>> helper,
->>>>>>>>>>>>>>>>>>> I think
->>>>>>>>>>>>>>>>>>> its better to implement save_context and
->>>>>>>>>>>>>>>>>>> restore_context to
->>>>>>>>>>>>>>>>>>> clk_mux_ops along with creating parent_index field into
->>>>>>>>>>>>>>>>>>> clk_mux to
->>>>>>>>>>>>>>>>>>> cache index during set_parent.
->>>>>>>>>>>>>>>>>>>
->>>>>>>>>>>>>>>>>>> So we just need to invoke mux_ops save_context and
->>>>>>>>>>>>>>>>>>> restore_context.
->>>>>>>>>>>>>>>>>>>
->>>>>>>>>>>>>>>>>> I hope its ok to add save/restore context to clk_mux_ops
->>>>>>>>>>>>>>>>>> to be
->>>>>>>>>>>>>>>>>> more
->>>>>>>>>>>>>>>>>> generic w.r.t save/restore context rather than
->>>>>>>>>>>>>>>>>> get_parent_index
->>>>>>>>>>>>>>>>>> API.
->>>>>>>>>>>>>>>>>> Please confirm if you agree.
->>>>>>>>>>>>>>>>> Sounds like a good idea. I see that there is a=20
->>>>>>>>>>>>>>>>> 'restoring'
->>>>>>>>>>>>>>>>> helper for
->>>>>>>>>>>>>>>>> the generic clk_gate, seems something similar could be=20
->>>>>>>>>>>>>>>>> done
->>>>>>>>>>>>>>>>> for the
->>>>>>>>>>>>>>>>> clk_mux. And looks like anyway you'll need to=20
->>>>>>>>>>>>>>>>> associate the
->>>>>>>>>>>>>>>>> parent
->>>>>>>>>>>>>>>>> clock
->>>>>>>>>>>>>>>>> with the hw index in order to restore the muxing.
->>>>>>>>>>>>>>>> by 'restoring' helper for generic clk_gate, are you
->>>>>>>>>>>>>>>> referring to
->>>>>>>>>>>>>>>> clk_gate_restore_context API?
->>>>>>>>>>>>>>> Yes.
->>>>>>>>>>>>>>>
->>>>>>>>>>>>>>>> clk_gate_restore_context is API that's any clk drivers can
->>>>>>>>>>>>>>>> use for
->>>>>>>>>>>>>>>> clk_gate operation restore for custom gate clk_ops.
->>>>>>>>>>>>>>>>
->>>>>>>>>>>>>>>> But clk-periph is directly using generic clk_mux ops from
->>>>>>>>>>>>>>>> clk_mux
->>>>>>>>>>>>>>>> so I
->>>>>>>>>>>>>>>> think we should add .restore_context to clk_mux_ops and=20
->>>>>>>>>>>>>>>> then
->>>>>>>>>>>>>>>> during
->>>>>>>>>>>>>>>> clk-periph restore need to invoke=20
->>>>>>>>>>>>>>>> mux_ops->restore_context.
->>>>>>>>>>>>>>> I'm not sure whether it will be good for every driver that
->>>>>>>>>>>>>>> uses
->>>>>>>>>>>>>>> generic
->>>>>>>>>>>>>>> clk_mux ops. Should be more flexible to have a generic=20
->>>>>>>>>>>>>>> helper
->>>>>>>>>>>>>>> function
->>>>>>>>>>>>>>> that any driver could use in order to restore the clock's
->>>>>>>>>>>>>>> parent.
->>>>>>>>>>>>>>>
->>>>>>>>>>>>>>> The clk-periph restoring also includes case of combining
->>>>>>>>>>>>>>> divider
->>>>>>>>>>>>>>> and
->>>>>>>>>>>>>>> parent restoring, so generic helper could be useful in that
->>>>>>>>>>>>>>> case
->>>>>>>>>>>>>>> as well.
->>>>>>>>>>>>>>>
->>>>>>>>>>>>>>> It also looks like you could actually use the
->>>>>>>>>>>>>>> clk_gate_restore_context()
->>>>>>>>>>>>>>> instead of manually saving the clock's enable-state,=20
->>>>>>>>>>>>>>> couldn't
->>>>>>>>>>>>>>> you?
->>>>>>>>>>>>>> ok for clk_mux, can add generic clk_mux_restore_context API
->>>>>>>>>>>>>> rather
->>>>>>>>>>>>>> than
->>>>>>>>>>>>>> using restore_context in clk_ops and will invoke that during
->>>>>>>>>>>>>> clk_periph
->>>>>>>>>>>>>> restore.
->>>>>>>>>>>>>>
->>>>>>>>>> digging thru looks like for clk_periph source restore instead of
->>>>>>>>>> clk_mux_restore_context, i can directly do clk_hw_get_parent and
->>>>>>>>>> clk_set_parent with mux_hw as they invoke mux_ops get/set parent
->>>>>>>>>> anyway.
->>>>>>>>>> Will do this for periph clk mux
->>> Just to be clear, clk_mux don't have cached parent. get_parent is by
->>> register read. So, cant directly use get_parent and then set during
->>> restore.
->>>
->>> So will create both clk_mux_save/restore_context in generic clk driver
->>> and will invoke them during tegra peripheral clock suspend/resume.
->> Why MUX clock doesn't have a cached parent? What MUX clock you're
->> talking about?
->>
->> [snip]
->
-> Please ignore got it.
->
-> Will send next version after giving few more days for feedback.
->
-Couple of issues:
+The Freescale (fsl) driver has a lot of quirks to look up
+"gpios" rather than "cs-gpios" from the device tree.
+After the prior patch that will make gpiolib return the
+GPIO descriptor for "gpios" in response to a request for
+"cs-gpios", this code can be cut down quite a bit.
 
-1.) I see clk-tegra-periph driver periph_clks init_data entries for some=20
-peripherals are not correct for Tegra 114 and later chips.
+The driver has custom handling of chip select rather
+than using the core (which may be possible but not
+done in this patch) so it still needs to refer directly
+to spi->cs_gpiod to set the chip select.
 
-Eg I2C TEGRA_INIT_DATA_TABLE entries in clk-tegra-periph are used for=20
-all Tegra chipsets currently in the driver.
+Cc: Shawn Guo <shawnguo@kernel.org>
+Cc: Sascha Hauer <s.hauer@pengutronix.de>
+Cc: Pengutronix Kernel Team <kernel@pengutronix.de>
+Cc: Fabio Estevam <festevam@gmail.com>
+Cc: NXP Linux Team <linux-imx@nxp.com>
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+---
+ChangeLog v1->v2:
+- Rebased on v5.3-rc1
+---
+ drivers/spi/spi-fsl-lib.h |   3 -
+ drivers/spi/spi-fsl-spi.c | 193 +++++---------------------------------
+ 2 files changed, 25 insertions(+), 171 deletions(-)
 
-These entries are using MUX shift of 30 and MUX mask only for 2 bits=20
-which is correct for T30 and prior.
-But for later Tegra chips, it should be MUX shift 29 and MASK(3).
-
-Also, I2C parent idx entries in mux_pllp_clkm_idx are different from=20
-Tegra114 onwards.
-
-As we are using only PLLP and CLKM sources only for I2C, their=20
-corresponding mux values from register spec by using upper 2 bits for=20
-T114 onwards match actual 2 bits of MUX value on T30 and prior.
-
-Not sure if this something known pending to port actual clock MUX table=20
-changes for Tegra114 onwards?
-
-Or
-
-Are we purposely using upper 2 bits only for clock source for T114 and=20
-later as the upper 2 bit values of the limited clock source we are using=20
-match with previous Tegra peripheral clock source mux values?
-
-Peter/Thierry, Can you please help comment on this?
-
-
-2.) Other issue is regarding using clk_set_parent directly during=20
-clk_peripheral restore is clk_core_set_parent checks new parent with=20
-current parent and if its same, it just returns as success which is good=20
-in normal operation.
-
-But during restore, we can't use clk_set_parent as new parent is from=20
-clk_get_parent on restore and this is same as cached parent.
-
-So clk_set_parent returns 0 but acutal register value for clk source is=20
-different as it gets reset on SC7 entry/exit and to restore need to=20
-invoke mux_ops set_parent with parent_index.
-
-So this need parent index for cached parent and without using context=20
-variable to store this, need an API like you were originally suggesting=20
-for get_parent_index to get parent index for the specified parent clk_hw.
-
-As we decided not to use save/restore for clk_mux ops as its generic for=20
-other drivers, looks like we need get_parent_index API to use for=20
-restoring peripheral source and use this with clk_mux_ops set_parent.
-
-clk core driver already has clk_fetch_parent_index but is it OK to=20
-export this?
-
-Otherwise, will create separate API in clk driver which returns parent=20
-index from parent clk_hw by using this existing clk_fetch_parent_index=20
-so this API can be used by other drivers.
-
+diff --git a/drivers/spi/spi-fsl-lib.h b/drivers/spi/spi-fsl-lib.h
+index 3576167283dc..015a1abb6a84 100644
+--- a/drivers/spi/spi-fsl-lib.h
++++ b/drivers/spi/spi-fsl-lib.h
+@@ -91,9 +91,6 @@ static inline u32 mpc8xxx_spi_read_reg(__be32 __iomem *reg)
+ 
+ struct mpc8xxx_spi_probe_info {
+ 	struct fsl_spi_platform_data pdata;
+-	int ngpios;
+-	int *gpios;
+-	bool *alow_flags;
+ 	__be32 __iomem *immr_spi_cs;
+ };
+ 
+diff --git a/drivers/spi/spi-fsl-spi.c b/drivers/spi/spi-fsl-spi.c
+index 1d9b33aa1a3b..4b80ace1d137 100644
+--- a/drivers/spi/spi-fsl-spi.c
++++ b/drivers/spi/spi-fsl-spi.c
+@@ -18,7 +18,7 @@
+ #include <linux/delay.h>
+ #include <linux/dma-mapping.h>
+ #include <linux/fsl_devices.h>
+-#include <linux/gpio.h>
++#include <linux/gpio/consumer.h>
+ #include <linux/interrupt.h>
+ #include <linux/irq.h>
+ #include <linux/kernel.h>
+@@ -28,7 +28,6 @@
+ #include <linux/of.h>
+ #include <linux/of_address.h>
+ #include <linux/of_irq.h>
+-#include <linux/of_gpio.h>
+ #include <linux/of_platform.h>
+ #include <linux/platform_device.h>
+ #include <linux/spi/spi.h>
+@@ -481,32 +480,6 @@ static int fsl_spi_setup(struct spi_device *spi)
+ 		return retval;
+ 	}
+ 
+-	if (mpc8xxx_spi->type == TYPE_GRLIB) {
+-		if (gpio_is_valid(spi->cs_gpio)) {
+-			int desel;
+-
+-			retval = gpio_request(spi->cs_gpio,
+-					      dev_name(&spi->dev));
+-			if (retval)
+-				return retval;
+-
+-			desel = !(spi->mode & SPI_CS_HIGH);
+-			retval = gpio_direction_output(spi->cs_gpio, desel);
+-			if (retval) {
+-				gpio_free(spi->cs_gpio);
+-				return retval;
+-			}
+-		} else if (spi->cs_gpio != -ENOENT) {
+-			if (spi->cs_gpio < 0)
+-				return spi->cs_gpio;
+-			return -EINVAL;
+-		}
+-		/* When spi->cs_gpio == -ENOENT, a hole in the phandle list
+-		 * indicates to use native chipselect if present, or allow for
+-		 * an always selected chip
+-		 */
+-	}
+-
+ 	/* Initialize chipselect - might be active for SPI_CS_HIGH mode */
+ 	fsl_spi_chipselect(spi, BITBANG_CS_INACTIVE);
+ 
+@@ -515,12 +488,8 @@ static int fsl_spi_setup(struct spi_device *spi)
+ 
+ static void fsl_spi_cleanup(struct spi_device *spi)
+ {
+-	struct mpc8xxx_spi *mpc8xxx_spi = spi_master_get_devdata(spi->master);
+ 	struct spi_mpc8xxx_cs *cs = spi_get_ctldata(spi);
+ 
+-	if (mpc8xxx_spi->type == TYPE_GRLIB && gpio_is_valid(spi->cs_gpio))
+-		gpio_free(spi->cs_gpio);
+-
+ 	kfree(cs);
+ 	spi_set_ctldata(spi, NULL);
+ }
+@@ -586,8 +555,8 @@ static void fsl_spi_grlib_cs_control(struct spi_device *spi, bool on)
+ 	u32 slvsel;
+ 	u16 cs = spi->chip_select;
+ 
+-	if (gpio_is_valid(spi->cs_gpio)) {
+-		gpio_set_value(spi->cs_gpio, on);
++	if (spi->cs_gpiod) {
++		gpiod_set_value(spi->cs_gpiod, on);
+ 	} else if (cs < mpc8xxx_spi->native_chipselects) {
+ 		slvsel = mpc8xxx_spi_read_reg(&reg_base->slvsel);
+ 		slvsel = on ? (slvsel | (1 << cs)) : (slvsel & ~(1 << cs));
+@@ -718,139 +687,19 @@ static struct spi_master * fsl_spi_probe(struct device *dev,
+ 
+ static void fsl_spi_cs_control(struct spi_device *spi, bool on)
+ {
+-	struct device *dev = spi->dev.parent->parent;
+-	struct fsl_spi_platform_data *pdata = dev_get_platdata(dev);
+-	struct mpc8xxx_spi_probe_info *pinfo = to_of_pinfo(pdata);
+-	u16 cs = spi->chip_select;
+-
+-	if (cs < pinfo->ngpios) {
+-		int gpio = pinfo->gpios[cs];
+-		bool alow = pinfo->alow_flags[cs];
+-
+-		gpio_set_value(gpio, on ^ alow);
++	if (spi->cs_gpiod) {
++		gpiod_set_value(spi->cs_gpiod, on);
+ 	} else {
+-		if (WARN_ON_ONCE(cs > pinfo->ngpios || !pinfo->immr_spi_cs))
++		struct device *dev = spi->dev.parent->parent;
++		struct fsl_spi_platform_data *pdata = dev_get_platdata(dev);
++		struct mpc8xxx_spi_probe_info *pinfo = to_of_pinfo(pdata);
++
++		if (WARN_ON_ONCE(!pinfo->immr_spi_cs))
+ 			return;
+ 		iowrite32be(on ? SPI_BOOT_SEL_BIT : 0, pinfo->immr_spi_cs);
+ 	}
+ }
+ 
+-static int of_fsl_spi_get_chipselects(struct device *dev)
+-{
+-	struct device_node *np = dev->of_node;
+-	struct fsl_spi_platform_data *pdata = dev_get_platdata(dev);
+-	struct mpc8xxx_spi_probe_info *pinfo = to_of_pinfo(pdata);
+-	bool spisel_boot = IS_ENABLED(CONFIG_FSL_SOC) &&
+-		of_property_read_bool(np, "fsl,spisel_boot");
+-	int ngpios;
+-	int i = 0;
+-	int ret;
+-
+-	ngpios = of_gpio_count(np);
+-	ngpios = max(ngpios, 0);
+-	if (ngpios == 0 && !spisel_boot) {
+-		/*
+-		 * SPI w/o chip-select line. One SPI device is still permitted
+-		 * though.
+-		 */
+-		pdata->max_chipselect = 1;
+-		return 0;
+-	}
+-
+-	pinfo->ngpios = ngpios;
+-	pinfo->gpios = kmalloc_array(ngpios, sizeof(*pinfo->gpios),
+-				     GFP_KERNEL);
+-	if (!pinfo->gpios)
+-		return -ENOMEM;
+-	memset(pinfo->gpios, -1, ngpios * sizeof(*pinfo->gpios));
+-
+-	pinfo->alow_flags = kcalloc(ngpios, sizeof(*pinfo->alow_flags),
+-				    GFP_KERNEL);
+-	if (!pinfo->alow_flags) {
+-		ret = -ENOMEM;
+-		goto err_alloc_flags;
+-	}
+-
+-	for (; i < ngpios; i++) {
+-		int gpio;
+-		enum of_gpio_flags flags;
+-
+-		gpio = of_get_gpio_flags(np, i, &flags);
+-		if (!gpio_is_valid(gpio)) {
+-			dev_err(dev, "invalid gpio #%d: %d\n", i, gpio);
+-			ret = gpio;
+-			goto err_loop;
+-		}
+-
+-		ret = gpio_request(gpio, dev_name(dev));
+-		if (ret) {
+-			dev_err(dev, "can't request gpio #%d: %d\n", i, ret);
+-			goto err_loop;
+-		}
+-
+-		pinfo->gpios[i] = gpio;
+-		pinfo->alow_flags[i] = flags & OF_GPIO_ACTIVE_LOW;
+-
+-		ret = gpio_direction_output(pinfo->gpios[i],
+-					    pinfo->alow_flags[i]);
+-		if (ret) {
+-			dev_err(dev,
+-				"can't set output direction for gpio #%d: %d\n",
+-				i, ret);
+-			goto err_loop;
+-		}
+-	}
+-
+-#if IS_ENABLED(CONFIG_FSL_SOC)
+-	if (spisel_boot) {
+-		pinfo->immr_spi_cs = ioremap(get_immrbase() + IMMR_SPI_CS_OFFSET, 4);
+-		if (!pinfo->immr_spi_cs) {
+-			ret = -ENOMEM;
+-			i = ngpios - 1;
+-			goto err_loop;
+-		}
+-	}
+-#endif
+-
+-	pdata->max_chipselect = ngpios + spisel_boot;
+-	pdata->cs_control = fsl_spi_cs_control;
+-
+-	return 0;
+-
+-err_loop:
+-	while (i >= 0) {
+-		if (gpio_is_valid(pinfo->gpios[i]))
+-			gpio_free(pinfo->gpios[i]);
+-		i--;
+-	}
+-
+-	kfree(pinfo->alow_flags);
+-	pinfo->alow_flags = NULL;
+-err_alloc_flags:
+-	kfree(pinfo->gpios);
+-	pinfo->gpios = NULL;
+-	return ret;
+-}
+-
+-static int of_fsl_spi_free_chipselects(struct device *dev)
+-{
+-	struct fsl_spi_platform_data *pdata = dev_get_platdata(dev);
+-	struct mpc8xxx_spi_probe_info *pinfo = to_of_pinfo(pdata);
+-	int i;
+-
+-	if (!pinfo->gpios)
+-		return 0;
+-
+-	for (i = 0; i < pdata->max_chipselect; i++) {
+-		if (gpio_is_valid(pinfo->gpios[i]))
+-			gpio_free(pinfo->gpios[i]);
+-	}
+-
+-	kfree(pinfo->gpios);
+-	kfree(pinfo->alow_flags);
+-	return 0;
+-}
+-
+ static int of_fsl_spi_probe(struct platform_device *ofdev)
+ {
+ 	struct device *dev = &ofdev->dev;
+@@ -866,9 +715,21 @@ static int of_fsl_spi_probe(struct platform_device *ofdev)
+ 
+ 	type = fsl_spi_get_type(&ofdev->dev);
+ 	if (type == TYPE_FSL) {
+-		ret = of_fsl_spi_get_chipselects(dev);
+-		if (ret)
+-			goto err;
++		struct fsl_spi_platform_data *pdata = dev_get_platdata(dev);
++#if IS_ENABLED(CONFIG_FSL_SOC)
++		struct mpc8xxx_spi_probe_info *pinfo = to_of_pinfo(pdata);
++		bool spisel_boot = of_property_read_bool(np, "fsl,spisel_boot");
++
++		if (spisel_boot) {
++			pinfo->immr_spi_cs = ioremap(get_immrbase() + IMMR_SPI_CS_OFFSET, 4);
++			if (!pinfo->immr_spi_cs) {
++				ret = -ENOMEM;
++				goto err;
++			}
++		}
++#endif
++
++		pdata->cs_control = fsl_spi_cs_control;
+ 	}
+ 
+ 	ret = of_address_to_resource(np, 0, &mem);
+@@ -891,8 +752,6 @@ static int of_fsl_spi_probe(struct platform_device *ofdev)
+ 
+ err:
+ 	irq_dispose_mapping(irq);
+-	if (type == TYPE_FSL)
+-		of_fsl_spi_free_chipselects(dev);
+ 	return ret;
+ }
+ 
+@@ -902,8 +761,6 @@ static int of_fsl_spi_remove(struct platform_device *ofdev)
+ 	struct mpc8xxx_spi *mpc8xxx_spi = spi_master_get_devdata(master);
+ 
+ 	fsl_spi_cpm_free(mpc8xxx_spi);
+-	if (mpc8xxx_spi->type == TYPE_FSL)
+-		of_fsl_spi_free_chipselects(&ofdev->dev);
+ 	return 0;
+ }
+ 
+-- 
+2.21.0
 
