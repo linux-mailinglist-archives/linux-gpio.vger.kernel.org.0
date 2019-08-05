@@ -2,52 +2,52 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 6762F81801
-	for <lists+linux-gpio@lfdr.de>; Mon,  5 Aug 2019 13:18:20 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0C12B81805
+	for <lists+linux-gpio@lfdr.de>; Mon,  5 Aug 2019 13:19:27 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727328AbfHELST (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 5 Aug 2019 07:18:19 -0400
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:35241 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727158AbfHELSQ (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 5 Aug 2019 07:18:16 -0400
-Received: by mail-lj1-f196.google.com with SMTP id x25so79039896ljh.2
-        for <linux-gpio@vger.kernel.org>; Mon, 05 Aug 2019 04:18:15 -0700 (PDT)
+        id S1727739AbfHELT0 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 5 Aug 2019 07:19:26 -0400
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:39887 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727158AbfHELT0 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 5 Aug 2019 07:19:26 -0400
+Received: by mail-lf1-f66.google.com with SMTP id x3so3856815lfn.6
+        for <linux-gpio@vger.kernel.org>; Mon, 05 Aug 2019 04:19:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=pTrdNULqRQePZooec8hzYMuIdhWzshDsgdUne7v9Rpw=;
-        b=HfMDJKbibOLBUBs34DEUtHqcUBsW8mIlsJ4cc8eYz6VcbQmKPZvnH/qVxN79tm1G08
-         bEjAhCBkfH4Nj/pWLyZMs29VsnmVCV9q4O5CrlHx7hESCejGeUF5Y2ycoW+s1yhIrQBq
-         sYcAbdXAidoCi9RTvz3gvMMZEzbhDFaae9gYrqA3JyeVq4vtDIb4kw6dDCyCZLt70BJX
-         HGEx7Z65iLiegnTNg2lGymGYbDDRjkalIgzSel+z9gtWuD/MpLa88cjXdTRAOQM7AfOl
-         FnEOH5AXGz8ex15jR2XnRA1OsQJoagE/0AUdvuplwCjEYYFrZDA5fYM4BxZM/aH/zXSs
-         wMDQ==
+        bh=If2p5MuMUgWrpA5iJZhIZ1wfyNa+k0/qK9QG1U50VmA=;
+        b=zYcNBvOER7QkOzaZlD5YxYF00/Rtk5gIixj755hN9Pa8PENH1orP4d6NbSMAfr2E1e
+         hkVLaoLERziQ0B2dtVD/yIOByDsXQRCoyRcNCggfpm/yT9tpDp26F8bPOcydeY4SVsf1
+         EEKJgr8ObbogXKe/+9rzRscnPoZBPWF6HFHa+aiP9TmLLtYI2v8GxKvFDRK9BakbyZ6t
+         8cCiNqBgiFT52eNbSCYYGuJLlxVpnKLhM5nQmIaoyylgsplUm9/1oGv9GF6G6VCL32y5
+         JVtg8HCpgVrsBuxGQyw5WBG7x3WgEY/S7ZXh8BUd7KYzyc66AahKtyHL//L2ErYuDsHj
+         rt+w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=pTrdNULqRQePZooec8hzYMuIdhWzshDsgdUne7v9Rpw=;
-        b=rG7ONFZfeVvlMEnmQZG3fyOWpDaUs+qamGXeC7Xls/Qib0/7A2CdFdBK8JxNnbuPbS
-         qiCjGlwALG5d+XAPoTvWThOUo29Goq+NtCF7/gtsfxLZIFsTOp2Ztd17py8okwKerq5z
-         D31ReUt1UICAwIaJ6pYNuARpkxiqaG5UXSF0aUC3OBZYXLTbG9sqGZXRQDpKJiwxPnjY
-         nxEO17WXSl+ZQb8DijQuPTtg44keO/nIgonkpRQWnSW4CHzodcJycNBQ3Svr8E1r/Dy8
-         4hMEMXol+Tj1GnpTLbpNJNaWmECq6+CWgGGGdMlGEPgvcw5cl/0Wn4CbrUL1/grdU+h4
-         RsCQ==
-X-Gm-Message-State: APjAAAWi+xgYs5SC300NP5G+u/1/acI7qzAmSYE1/6aWIlX2kPCHOm63
-        EQ7nqVckUNOkjS7t7fb2isSj+ZcOXX5Q9jdA5kTw+g==
-X-Google-Smtp-Source: APXvYqyLXiSKJTl98Lkgl0Ja3jEwM+BGOX7bwjIKoiganUjSPKjHOrR2xjbwuvFB38NS1GCnOdkwwVZ1OFVgw843jm4=
-X-Received: by 2002:a2e:2c14:: with SMTP id s20mr16561733ljs.54.1565003894943;
- Mon, 05 Aug 2019 04:18:14 -0700 (PDT)
+        bh=If2p5MuMUgWrpA5iJZhIZ1wfyNa+k0/qK9QG1U50VmA=;
+        b=GhD4abyWWKfB7jr7IW/naYs/mHkjA7lh9JneMC3o8sR/6zXUoxLiT5ojfp4S7omks5
+         fJwmT8gAQ0h8bh87P1RFAa845UvXgDGG2aiq0bHpgCCJIEioT9msPbkZo6dl+kUCMXnJ
+         AoMNIYHredlVrpSNC6J2hO7n5yx8r3LBypXFgadtjDp+ov8BM9VEd9IWkhd7I4oGvpPQ
+         WruMw0a1Amfb3i0oubJCs0ldbBlmXcQqAjQGZkuwR6ZVjQGBLt1xCvuFmnAyBlmKyDvm
+         Dy4EPDfRPwYwBWvUGNJECCu7ozOSjQeIwcQpako/MZf60y+JqOJ+c/6x4HiZE/alWDFG
+         eQxg==
+X-Gm-Message-State: APjAAAVhOj13ML+Iz5pGlDyWQutfV6tvCAn4GJff3KqB+UDFdnsmxFFb
+        qIa4CSgZrONM7U/EJ/86T7ZECjBZb8LrxHRhZZT/FQ==
+X-Google-Smtp-Source: APXvYqxHgbLLB4QzzgK73ltagK7gUx7fz6MICytm9/FkLAF84pKeZp2qo9z7oTMZ3EQfBRWhVJIiLc0VENYNGP67YAg=
+X-Received: by 2002:ac2:4c07:: with SMTP id t7mr1510773lfq.152.1565003964027;
+ Mon, 05 Aug 2019 04:19:24 -0700 (PDT)
 MIME-Version: 1.0
-References: <1564465410-9165-1-git-send-email-hayashi.kunihiko@socionext.com> <1564465410-9165-2-git-send-email-hayashi.kunihiko@socionext.com>
-In-Reply-To: <1564465410-9165-2-git-send-email-hayashi.kunihiko@socionext.com>
+References: <1564465410-9165-1-git-send-email-hayashi.kunihiko@socionext.com> <1564465410-9165-3-git-send-email-hayashi.kunihiko@socionext.com>
+In-Reply-To: <1564465410-9165-3-git-send-email-hayashi.kunihiko@socionext.com>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Mon, 5 Aug 2019 13:18:03 +0200
-Message-ID: <CACRpkdbt63WrZszChi25H+mxrHneKFHbakiYYskCLSXO=A9rkQ@mail.gmail.com>
-Subject: Re: [PATCH v2 1/5] pinctrl: uniphier: Separate modem group from UART
- ctsrts group
+Date:   Mon, 5 Aug 2019 13:19:12 +0200
+Message-ID: <CACRpkdaNFz_S0MV1SSr_yiC3gAAQ3vsT0KQY1BgJ1riyFhxrOA@mail.gmail.com>
+Subject: Re: [PATCH v2 2/5] pinctrl: uniphier: Add another audio I/O pin-mux
+ settings for LD20
 To:     Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
 Cc:     Masahiro Yamada <yamada.masahiro@socionext.com>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
@@ -64,12 +64,9 @@ X-Mailing-List: linux-gpio@vger.kernel.org
 On Tue, Jul 30, 2019 at 7:43 AM Kunihiko Hayashi
 <hayashi.kunihiko@socionext.com> wrote:
 
-> It depends on the board implementation whether to have each pins of
-> CTS/RTS, and others for modem. So it is necessary to divide current
-> uart_ctsrts group into uart_ctsrts and uart_modem groups.
->
-> Since the number of implemented pins for modem differs depending
-> on SoC, each uart_modem group also has a different number of pins.
+> This adds support for pinmux settings of aout1b group. This group includes
+> audio I/O signals derived from xirq pins, and it is equivalent to "aout1"
+> in functionality.
 >
 > Signed-off-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
 
