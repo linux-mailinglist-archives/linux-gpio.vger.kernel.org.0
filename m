@@ -2,79 +2,83 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id DD77C8161F
-	for <lists+linux-gpio@lfdr.de>; Mon,  5 Aug 2019 11:57:37 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5016A81637
+	for <lists+linux-gpio@lfdr.de>; Mon,  5 Aug 2019 12:01:26 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728320AbfHEJ50 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 5 Aug 2019 05:57:26 -0400
-Received: from ox4u.de ([212.118.221.216]:58319 "EHLO s1.ox4u.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727357AbfHEJ5Z (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Mon, 5 Aug 2019 05:57:25 -0400
-X-Greylist: delayed 590 seconds by postgrey-1.27 at vger.kernel.org; Mon, 05 Aug 2019 05:57:24 EDT
-Received: by s1.ox4u.de (Postfix, from userid 65534)
-        id E03C82601A3; Mon,  5 Aug 2019 11:47:31 +0200 (CEST)
-X-Spam-Checker-Version: SpamAssassin 3.4.1 (2015-04-28) on s1.ox4u.de
-X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=5.0 tests=ALL_TRUSTED
-        autolearn=disabled version=3.4.1
-Received: from ws-140106.localnet (unknown [212.185.67.146])
-        (using TLSv1 with cipher DHE-RSA-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by s1.ox4u.de (Postfix) with ESMTPSA id B3B6526014C;
-        Mon,  5 Aug 2019 11:47:29 +0200 (CEST)
-From:   Alexander Stein <alexander.stein@systec-electronic.com>
-To:     Hui Song <hui.song_1@nxp.com>
-Cc:     linux-devel@linux.nxdi.nxp.com,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org
-Subject: Re: [PATCH v1] gpio: mpc8xxx: Add new platforms GPIO DT node description
-Date:   Mon, 05 Aug 2019 11:47:26 +0200
-Message-ID: <2908964.pz7DIX2Qck@ws-140106>
-In-Reply-To: <20190805091432.9656-2-hui.song_1@nxp.com>
-References: <20190805091432.9656-1-hui.song_1@nxp.com> <20190805091432.9656-2-hui.song_1@nxp.com>
+        id S1727328AbfHEKBZ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 5 Aug 2019 06:01:25 -0400
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:35855 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728114AbfHEKBZ (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 5 Aug 2019 06:01:25 -0400
+Received: by mail-lj1-f194.google.com with SMTP id i21so78787195ljj.3
+        for <linux-gpio@vger.kernel.org>; Mon, 05 Aug 2019 03:01:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=0xtvyrPYbjnc/YTvcTRZsvcmhf0BCCGEhLfCpsPtBwI=;
+        b=QAUH416Xg7pzoU6ZA9YnPHMPWwYoFtTCTcQDWmgeY3QWRsubRXnET3mxCJdlX5J1oR
+         zwIiDp6scndDTUXPvp7pabtaZWonqMt3RxuJrBEfWePlJP3U8262Q9B3mX6OW2LZBry8
+         y7XU8IAlxU4pxESaRqfe3aRFnP3dlGRYiYwLzUnExRe+HgkdktctGvkUGhDfLBA2d8TM
+         7MvczrSg/+Lk0ddMO6fY7AWUKq6+iWIRxY49QaIYroekMHELgsBFjjwdrGwniLs1UVFZ
+         zbcMChFfB/2LeuKXkm1eEd67CYfBNiMM09hfuJ1CAmxPi/8Rwdsi2ej8wL0Tc/UHTDEE
+         bmyw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=0xtvyrPYbjnc/YTvcTRZsvcmhf0BCCGEhLfCpsPtBwI=;
+        b=TGEaE7OJwNy3cCF+d3Qb3S0IMd1Tv/IudCZGRXk4wmcF8Ki7qKkml6WWnOLcqTSN2Q
+         EW9zwuVWzwD/M/keW9FbnP4MpydMh+A+0RMEVTTbRKNBqZHJa4hUMn1eDu4wCHzf0fGT
+         n3TPwU2itGWavhdG9JRPlXNc675Jz9D1InHKMqT7BsaRhno5eVEjBtVIs2K3zgU8FqTV
+         KMWVbf42F6jOeO/5Tul2+tz99KR3P3uIM9Bvciu2QU1m0BLhqPCBa5KxhKsA1A09mYM9
+         sKTVF4BxEk0f0i0PjPaBy/7es+INKHj9dAk4aaF+/+FfnEITorcTwKQuHsuiOrBGboNC
+         0quA==
+X-Gm-Message-State: APjAAAXkSa6jOuNqeyscgJI06g3OGBIbYs6IDarGPnZl2IyY7GwrbJ45
+        SbLMF3EKyLLu5DixSXnSLukeoNxYj6y2ZTGI1PA2lA==
+X-Google-Smtp-Source: APXvYqzDj5GHLN0h+zxHm04UoGGjJIZ8HVt7nx2D57Avm2xNDaXnuo+iqKYJ+tF7OnOSu+Lnnsnt5ATnXM2sP8DJiEc=
+X-Received: by 2002:a05:651c:28c:: with SMTP id b12mr13720878ljo.69.1564999283085;
+ Mon, 05 Aug 2019 03:01:23 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+References: <20190723192738.68486-1-andriy.shevchenko@linux.intel.com>
+In-Reply-To: <20190723192738.68486-1-andriy.shevchenko@linux.intel.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Mon, 5 Aug 2019 12:01:11 +0200
+Message-ID: <CACRpkda+0xQDcgkYg=x=d_Gk_EwvDE1iM+PKfo0sG7T-juQw6g@mail.gmail.com>
+Subject: Re: [PATCH v1 1/2] pinctrl: msm: Switch to use device_property_count_uXX()
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Andy Gross <agross@kernel.org>,
+        MSM <linux-arm-msm@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Monday, August 5, 2019, 11:14:32 AM CEST Hui Song wrote:
-> From: Song Hui <hui.song_1@nxp.com>
-> 
-> Update the NXP GPIO node dt-binding file for QorIQ and
-> Layerscape platforms, and add one more example with
-> ls1028a GPIO node.
-> 
-> Signed-off-by: Song Hui <hui.song_1@nxp.com>
-> ---
->  Documentation/devicetree/bindings/gpio/gpio-mpc8xxx.txt | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/gpio/gpio-mpc8xxx.txt b/Documentation/devicetree/bindings/gpio/gpio-mpc8xxx.txt
-> index 69d4616..fbe6d75 100644
-> --- a/Documentation/devicetree/bindings/gpio/gpio-mpc8xxx.txt
-> +++ b/Documentation/devicetree/bindings/gpio/gpio-mpc8xxx.txt
-> @@ -28,7 +28,7 @@ gpio0: gpio@1100 {
->  Example of gpio-controller node for a ls2080a SoC:
+On Tue, Jul 23, 2019 at 9:27 PM Andy Shevchenko
+<andriy.shevchenko@linux.intel.com> wrote:
 
-   ^^^^^^^                               ^^^^^^^
-This is an example for ls2080a...
+> Use use device_property_count_uXX() directly, that makes code neater.
+>
+> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+(...)
+>         /* The number of GPIOs in the ACPI tables */
+> -       len = ret = device_property_read_u16_array(pctrl->dev, "gpios", NULL,
+> -                                                  0);
+> +       len = ret = device_property_count_u16(pctrl->dev, "gpios");
 
->  gpio0: gpio@2300000 {
-> -	compatible = "fsl,ls2080a-gpio", "fsl,qoriq-gpio";
-> +	compatible = "fsl,ls1028a-gpio","fsl,ls2080a-gpio", "fsl,qoriq-gpio";
+Patch applied (makes the kernel a better place) but:
 
-so I doubt there should be a ls1028a compatible here though.
+Can't we just use: gpiod_count(pctrl->dev, NULL); ?
 
->  	reg = <0x0 0x2300000 0x0 0x10000>;
->  	interrupts = <0 36 0x4>; /* Level high type */
->  	gpio-controller;
+It's more to the point when counting gpios I think.
 
-Best regards,
-Alexander
+However this driver is not includeing <linux/gpio/consumer.h>
+and is this "gpios" property really a consumer property? I think
+so but...
 
-
-
+Yours,
+Linus Walleij
