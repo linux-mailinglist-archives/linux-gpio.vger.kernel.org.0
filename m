@@ -2,92 +2,97 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 2CB2E819EB
-	for <lists+linux-gpio@lfdr.de>; Mon,  5 Aug 2019 14:47:18 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 867B681A25
+	for <lists+linux-gpio@lfdr.de>; Mon,  5 Aug 2019 15:02:12 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728455AbfHEMrR (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 5 Aug 2019 08:47:17 -0400
-Received: from mail-io1-f67.google.com ([209.85.166.67]:35051 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726779AbfHEMrR (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 5 Aug 2019 08:47:17 -0400
-Received: by mail-io1-f67.google.com with SMTP id m24so167021337ioo.2;
-        Mon, 05 Aug 2019 05:47:17 -0700 (PDT)
+        id S1726693AbfHENCM (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 5 Aug 2019 09:02:12 -0400
+Received: from mail-wm1-f49.google.com ([209.85.128.49]:40725 "EHLO
+        mail-wm1-f49.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726508AbfHENCL (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 5 Aug 2019 09:02:11 -0400
+Received: by mail-wm1-f49.google.com with SMTP id v19so72947836wmj.5
+        for <linux-gpio@vger.kernel.org>; Mon, 05 Aug 2019 06:02:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=aNRu8d6P0l9UPeO2XHPUBXtwBghX09sN9CzqbrlIoh0=;
-        b=j/bAgWAil3mRiYky6AnRqLeM8V1zdbGU/zoXCwNDELkUqbe57Wb3Rqul+Yp7KZYmnp
-         /pXsxz4Ec1Ja6QFaBuqCCTyu4IjNEWuXjoThkG+AEQ3Th8XgyCwagIqsWbWYPl+qLynY
-         W81J2gSa/MLIwFXNv3zKXUKIu5+D6qnfW8TKgghA/61gAyF195B5MtLkiuE6PG8N0NnQ
-         /jqsrHJ7xyMicdJQmRxfBJG7YG5IsqcncR8/nnzSg6vU/sfnl9j+NaGJwjiVoItP7UVP
-         EROiUjX4A8VVYEfbXRhf/BX2VbQyKxkP3acsT18XJ41Jp698vRCg2ZZbbeGLgnFHmK/y
-         HpwA==
+        d=kernelci-org.20150623.gappssmtp.com; s=20150623;
+        h=message-id:date:mime-version:content-transfer-encoding:subject:to
+         :from;
+        bh=Ak/wlkgErtj57KG2gWrlU3VJ6IdLo9WgzYvhOM78kYY=;
+        b=mgjNY8Sk6rr+qUbQp0GDc+jRLgO8+YUvoaJkwz3BZ+sahiLC8iLWqSZdn+sGfbxyPj
+         X1cm+2uB3KPlOlfN1G7LJ0cIQNpLzyyJwx+qFIDaHMSVb4Af/VAtNiYQ49VlBQiz/epN
+         Pc4cdsvWOAMkdCEvUx8eMy58HuBT+bzPc9d8xxpJRJYaAf/qsHyPRWMfB8csWARvVufH
+         V8wFEBMQEBndxPICq2t3j4BVBAPbK1poAB0PDkCHV2N8ZVa4sSAU+ai77HRhUETMW5D3
+         7xtfFItYf4pk9nX69JhcEs8rcfEl41YbBx1jZVZgF5TD+sBAyLAz91XOJSHZl+6B7tEk
+         w89g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=aNRu8d6P0l9UPeO2XHPUBXtwBghX09sN9CzqbrlIoh0=;
-        b=mJz9CU045Tvh6I/fIkeLnimMLsV/ZiIYruMmtModtZwQHS9xztZhMzMJjxiZ3o+toF
-         YmjsEhTrSPxZaa/UjlfaP+f1pkh7HrlTw0fKZwjuo2PpuOJ2plehJ1YhGIuum1n9W8DE
-         1kjc9RTlNAqYxT2dcpi7wWrx7E4NuRbxm6dJgKwt7y1mKOGSh8gAGbdtmvo8wBLcyNCx
-         ccjyBPjzAM7FrHRf8r5JFWJBXR7uRoXxItscZBaGw76K/UPLSRa/W5LZDnL0WFH+3Fhc
-         b3jtyylqqOD59RDnjWtvQI63It3GXi7o1u68UI9YAFI3bkIzAto1UIu9zfXBmW0ot2dR
-         pJMQ==
-X-Gm-Message-State: APjAAAXMEPukTE20sldkFSovfHUr+8vXoqM9C8WvSVogKZ9pK/yCRuUb
-        VjM+c7IZQk2OkrUArP9TvRdDpa6OH9hB8IJg2jw=
-X-Google-Smtp-Source: APXvYqzXL2hkLoxBzy0mGaLH2PFh9enoPkAIlPHpx/CXR2e8aI0nWFKy0Tu9frhpX5sT1w1c87ndw7D6azKbKOfDYYg=
-X-Received: by 2002:a02:cb4b:: with SMTP id k11mr152797148jap.109.1565009236799;
- Mon, 05 Aug 2019 05:47:16 -0700 (PDT)
+        h=x-gm-message-state:message-id:date:mime-version
+         :content-transfer-encoding:subject:to:from;
+        bh=Ak/wlkgErtj57KG2gWrlU3VJ6IdLo9WgzYvhOM78kYY=;
+        b=ArcGHzgsqaphI9WVMRf73fDG9sbeAwfEMYUTyYzl8BXc1ucSPDX7lDqX1bDA8LLdgK
+         5EvSs+khBjEVDnPDP+5swCVZ8z8LsOdMelm220i30FT5VpCqUw8nb4owMXhuh09wSy7g
+         /7kqAls2MR0qWH75N4NhsYRkzQCb57UOXX3QCHfjELYIqSJmG+qZSfz61VcjQbaQrg2U
+         Ne9euTxxDY74b1Q6prb626ko2CZXCIMSb3Aen/FM2DX8wyrCHVyCB6iHzHnS/gwrWlZu
+         J4ZN7SpHGnSST0x+ymaXpdMB4b4CgiKDTR7KXSmpiKB52G5LjMdOgQAoshNyXPJ+KpPO
+         5lBA==
+X-Gm-Message-State: APjAAAWkeQmsmX4uV1nUh8zj3zxtZ/vPTfU7MPxLSptv5DH36nwS7C+x
+        Lms2DLq29MxiHtXzhaknZ3TjLyK+kS2/ZA==
+X-Google-Smtp-Source: APXvYqyqXT5YSQQvgRhypBHbZ73TxmefymxxQPwr5LiBVaBqWSVvt6MyGIwzpidUFWpiBmhiFeHdgg==
+X-Received: by 2002:a1c:9c4d:: with SMTP id f74mr18509065wme.156.1565010129728;
+        Mon, 05 Aug 2019 06:02:09 -0700 (PDT)
+Received: from [148.251.42.114] ([2a01:4f8:201:9271::2])
+        by smtp.gmail.com with ESMTPSA id c65sm86502247wma.44.2019.08.05.06.02.09
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 05 Aug 2019 06:02:09 -0700 (PDT)
+Message-ID: <5d4828d1.1c69fb81.faf79.e5fc@mx.google.com>
+Date:   Mon, 05 Aug 2019 06:02:09 -0700 (PDT)
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-References: <20190731195713.3150463-1-arnd@arndb.de> <20190731195713.3150463-3-arnd@arndb.de>
- <20190801055821.GB24607@kroah.com>
-In-Reply-To: <20190801055821.GB24607@kroah.com>
-From:   Sylvain Lemieux <slemieux.tyco@gmail.com>
-Date:   Mon, 5 Aug 2019 08:47:05 -0400
-Message-ID: <CA+rxa6rJE2R7R_r8nx7HyHu4xc8ujQB1rRG+0Yx2XzwtoiD5CQ@mail.gmail.com>
-Subject: Re: [PATCH 02/14] usb: udc: lpc32xx: allow compile-testing
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Arnd Bergmann <arnd@arndb.de>, soc@kernel.org,
-        "moderated list:ARM PORT" <linux-arm-kernel@lists.infradead.org>,
-        Vladimir Zapolskiy <vz@mleia.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Gregory Clement <gregory.clement@bootlin.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Felipe Balbi <balbi@kernel.org>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Alan Stern <stern@rowland.harvard.edu>,
-        Guenter Roeck <linux@roeck-us.net>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Networking <netdev@vger.kernel.org>,
-        linux-serial@vger.kernel.org, USB list <linux-usb@vger.kernel.org>,
-        LINUXWATCHDOG <linux-watchdog@vger.kernel.org>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Kernelci-Tree: linusw
+X-Kernelci-Kernel: v5.3-rc1-17-g15bddb7d787a
+X-Kernelci-Branch: devel
+X-Kernelci-Report-Type: boot
+Subject: linusw/devel boot: 43 boots: 1 failed,
+ 42 passed (v5.3-rc1-17-g15bddb7d787a)
+To:     linux-gpio@vger.kernel.org, fellows@kernelci.org
+From:   "kernelci.org bot" <bot@kernelci.org>
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Acked-by: Sylvain Lemieux <slemieux.tyco@gmail.com>
+linusw/devel boot: 43 boots: 1 failed, 42 passed (v5.3-rc1-17-g15bddb7d787a)
 
-On Thu, Aug 1, 2019 at 1:58 AM Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
->
-> On Wed, Jul 31, 2019 at 09:56:44PM +0200, Arnd Bergmann wrote:
-> > The only thing that prevents building this driver on other
-> > platforms is the mach/hardware.h include, which is not actually
-> > used here at all, so remove the line and allow CONFIG_COMPILE_TEST.
-> >
-> > Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-> > ---
-> >  drivers/usb/gadget/udc/Kconfig       | 3 ++-
-> >  drivers/usb/gadget/udc/lpc32xx_udc.c | 2 --
-> >  2 files changed, 2 insertions(+), 3 deletions(-)
->
-> Acked-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Full Boot Summary: https://kernelci.org/boot/all/job/linusw/branch/devel/ke=
+rnel/v5.3-rc1-17-g15bddb7d787a/
+Full Build Summary: https://kernelci.org/build/linusw/branch/devel/kernel/v=
+5.3-rc1-17-g15bddb7d787a/
+
+Tree: linusw
+Branch: devel
+Git Describe: v5.3-rc1-17-g15bddb7d787a
+Git Commit: 15bddb7d787aebc837912cecf107b7eaccf03913
+Git URL: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-gpio.=
+git/
+Tested: 30 unique boards, 12 SoC families, 3 builds out of 6
+
+Boot Regressions Detected:
+
+arm64:
+
+    defconfig:
+        gcc-8:
+          apq8016-sbc:
+              lab-mhart: failing since 6 days (last pass: v5.2-10808-g9637d=
+517347e - first fail: v5.3-rc1-5-ga299726da44f)
+
+Boot Failure Detected:
+
+arm64:
+    defconfig:
+        gcc-8:
+            apq8016-sbc: 1 failed lab
+
+---
+For more info write to <info@kernelci.org>
