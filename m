@@ -2,114 +2,147 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 5CFF280B95
-	for <lists+linux-gpio@lfdr.de>; Sun,  4 Aug 2019 18:04:35 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E5F7380FD6
+	for <lists+linux-gpio@lfdr.de>; Mon,  5 Aug 2019 02:48:05 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726319AbfHDQEe (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sun, 4 Aug 2019 12:04:34 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:36459 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726206AbfHDQEe (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sun, 4 Aug 2019 12:04:34 -0400
-Received: by mail-pg1-f194.google.com with SMTP id l21so38405536pgm.3
-        for <linux-gpio@vger.kernel.org>; Sun, 04 Aug 2019 09:04:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=43+wBAA2pYCZyIeE6dblgNpeldlqw4UsjWWmEq3JFkQ=;
-        b=MNB/Mc92mGLyuhVsZap7ySAwBC6u9/2UU+v246vUn8jld4GTJtPBdEK/sS4jqDUALx
-         ASGO3QxSSTMfen5a4818hqHKc6dGWuxarFx4xVAR37oOi3z8C6DwKf3cpZXKhDzcZzDT
-         ARu26iZVW+gzOfNZZ9Id3tcZBBzBwANnqVKwf8VzC5/yECvRSodP2CfPxpjUyEwuSPxC
-         qH90LTTJ6KOYUienovhJSPBFDDWqgKPSz1JCYRZq/rovUJDq6RyBecXXng5tZP2ocKyN
-         hfLDw1Dxmy84XUppiFSG/z4ANSf/CaaFsXaIFTK2flreppmFfwGRRCzJxKNQuDlWqeJP
-         okjg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=43+wBAA2pYCZyIeE6dblgNpeldlqw4UsjWWmEq3JFkQ=;
-        b=BEBpgz/JXxxBtUaRfU62mhTga/ZTYNJv6p3d9JRJmtmiI7M+DTqtjQm22r8eYdy+Te
-         Me5Bxz5BbtyjJ+droBn2AZ5l1yWaT9FW1r4UKZ/3nqVk2PD8YIIx9b02CqxaMUNGExNn
-         raxdkDNy4xxtH8HhYVmI5ol6eMV+1SrYE/NtD/HO0cOqTRossGIrswcxntj0YTQXssqu
-         jnncuKBtWzQycFyySRQnbBfkzdiUtZ1PrxaC2XVy1Yd7mIMWQuCRjTjO2JNAV8g2Is1t
-         PrwywqeYLlA/xGF/pUBY3DJEdwmGtUJWOlfrEuZPl9JWnAamYYC7QMH7cZ0/LoZnqHcR
-         zCzg==
-X-Gm-Message-State: APjAAAVVDP+0799iN7yFG+eoiCtqXV2v+vNoEQBK8d0DIAX0UFQ+9y4V
-        F3AkMqLJZk3tipkH5vUqAM0=
-X-Google-Smtp-Source: APXvYqyoNpL7JNr6fzQGvbgLfKgJsIZcPfbrRAGknNTrjrqkxFtSsE80PHNU91LWByI9gkjdaETv6w==
-X-Received: by 2002:a17:90a:fa12:: with SMTP id cm18mr13985647pjb.137.1564934674142;
-        Sun, 04 Aug 2019 09:04:34 -0700 (PDT)
-Received: from localhost.localdomain ([122.163.105.8])
-        by smtp.gmail.com with ESMTPSA id c8sm9505686pjq.2.2019.08.04.09.04.30
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Sun, 04 Aug 2019 09:04:33 -0700 (PDT)
-From:   Nishka Dasgupta <nishkadg.linux@gmail.com>
-To:     linus.walleij@linaro.org, linux-arm-kernel@lists.infradead.org,
-        linux-gpio@vger.kernel.org, linux-imx@nxp.com,
-        s.hauer@pengutronix.de, kernel@pengutronix.de, stefan@agner.ch,
-        shawnguo@kernel.org, festevam@gmail.com, aisheng.dong@nxp.com
-Cc:     Nishka Dasgupta <nishkadg.linux@gmail.com>
-Subject: [PATCH] pinctrl: freescale: mxs: Add of_node_put() before return
-Date:   Sun,  4 Aug 2019 21:34:20 +0530
-Message-Id: <20190804160420.5309-1-nishkadg.linux@gmail.com>
-X-Mailer: git-send-email 2.19.1
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        id S1726765AbfHEAsB (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sun, 4 Aug 2019 20:48:01 -0400
+Received: from new4-smtp.messagingengine.com ([66.111.4.230]:36983 "EHLO
+        new4-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726621AbfHEAsB (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sun, 4 Aug 2019 20:48:01 -0400
+Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
+        by mailnew.nyi.internal (Postfix) with ESMTP id 7C2CD16BF;
+        Sun,  4 Aug 2019 20:48:00 -0400 (EDT)
+Received: from imap2 ([10.202.2.52])
+  by compute4.internal (MEProxy); Sun, 04 Aug 2019 20:48:00 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aj.id.au; h=
+        mime-version:message-id:in-reply-to:references:date:from:to:cc
+        :subject:content-type; s=fm3; bh=wVRpJrgZ1O2Fju5cbM4E047p8yDD7x/
+        0FjNTZOxLy8A=; b=KouHbajvM5FTe5slhbI3hC2lczfuS90T9Jxq/k4GpPAXW3h
+        HugHeepMQ+QxDJcrrchOQ1VAqXNNFEOsWL97R/IcAe4l+mbizw9iqtkDcoAFnh0X
+        seovXUIddjx47kFX6hFXBChUSzl4ze9W+zwYf6TXXgerzeJGgvU1DZhbS849ImRW
+        /e4b32jzTzIeNFRyg6IzoX8cazIY83I8yohFl+dB+vqZ3ArhdSa5iEsqHpAyPUDf
+        QqCV6O7/ilnpb4umTPeM8OPTAA7jHW6hBNJCHSuHGVm68tQ3fCdd7MkD3RP8xwVv
+        fQvZtmh0KefZECyo4KqXbwox/tR9OghhnevkT/w==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=wVRpJr
+        gZ1O2Fju5cbM4E047p8yDD7x/0FjNTZOxLy8A=; b=kPaNfa3gItyPsgkEtYnPEx
+        ZWMrlMf/0VEwKYOqlfEYuUQCJfH15DbnP92xDipWrPXCTKuXtJUhZp9pna73Lk4n
+        bumeSKK+UCKZ9b0/Khnl2Qpch+VccyqQ61D3cUhfdjV8y5u625CIpWEP7oeHCLqZ
+        HF/IE6IziAaee7ajhvZhxl5XNtTU2jrZuOzVu2ouldc/ttf7GAWnlNBNi15USOXD
+        JjCl8mBXmXTvNVvT1u0esC1owINwkmXB1xS/Oxwri9zAP8JINhKpaK+FgPiMqV/x
+        oYQtlnWxpakK5v0cPxb9Wyz5YmiLkU80urNmC8m/suDVSBJk5puhuMmf8oJqYQMA
+        ==
+X-ME-Sender: <xms:vHxHXae8zQkQoIXOFmhTlYGbWfRNpWOI-HINgXhGX2UygIWYbvuKZA>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduvddruddtiedgfeejucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepofgfggfkjghffffhvffutgesthdtredtreertdenucfhrhhomhepfdetnhgu
+    rhgvficulfgvfhhfvghrhidfuceorghnughrvgifsegrjhdrihgurdgruheqnecurfgrrh
+    grmhepmhgrihhlfhhrohhmpegrnhgurhgvfiesrghjrdhiugdrrghunecuvehluhhsthgv
+    rhfuihiivgeptd
+X-ME-Proxy: <xmx:vHxHXYdSMGHxjZ4pnB-Ih6FhwhszzhpideX8pQECYN7z2CciX5vnSg>
+    <xmx:vHxHXWha17NCHarMxWIGvYsAQpQN_0u3dGGl-KAV-JwWc_BWf-pVHw>
+    <xmx:vHxHXcT3yaRYfFFGevfhXKYxLtpI1CCuze7nBKJU72nktFY9vzBOIg>
+    <xmx:wHxHXTjzDEJZKPlzisyKmdB0D309JcA8BJ-nH7F9fhiZii5hKAPq2A>
+Received: by mailuser.nyi.internal (Postfix, from userid 501)
+        id BC0C0E00A2; Sun,  4 Aug 2019 20:47:56 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
+User-Agent: Cyrus-JMAP/3.1.6-799-g925e343-fmstable-20190729v1
+Mime-Version: 1.0
+Message-Id: <5a6a22f8-d459-4aec-b69b-e49d096afa85@www.fastmail.com>
+In-Reply-To: <CACPK8Xc4Vigeu1B1Su5392BSCSKfoEDqt_tiDtgKmNH5ucAvAg@mail.gmail.com>
+References: <20190726053959.2003-1-andrew@aj.id.au>
+ <CAL_JsqJ+sFDG8eKbV3gvmqVHx+otWbki4dY213apzXgfhbXXEw@mail.gmail.com>
+ <fd8e57f0-aee2-403e-b6fb-76d0c18fe306@www.fastmail.com>
+ <CACPK8Xc4Vigeu1B1Su5392BSCSKfoEDqt_tiDtgKmNH5ucAvAg@mail.gmail.com>
+Date:   Mon, 05 Aug 2019 10:18:21 +0930
+From:   "Andrew Jeffery" <andrew@aj.id.au>
+To:     "Joel Stanley" <joel@jms.id.au>
+Cc:     "Rob Herring" <robh+dt@kernel.org>, linux-aspeed@lists.ozlabs.org,
+        "Mark Rutland" <mark.rutland@arm.com>,
+        devicetree <devicetree@vger.kernel.org>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "Adriana Kobylak" <anoo@us.ibm.com>,
+        "Alexander A. Filippov" <a.filippov@yadro.com>,
+        "Arnd Bergmann" <arnd@arndb.de>,
+        =?UTF-8?Q?YangBrianC=2EW_=E6=A5=8A=E5=98=89=E5=81=89_TAO?= 
+        <yang.brianc.w@inventec.com>, "Corey Minyard" <minyard@acm.org>,
+        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
+        "Haiyue Wang" <haiyue.wang@linux.intel.com>,
+        "John Wang" <wangzqbj@inspur.com>,
+        "Ken Chen" <chen.kenyy@inventec.com>,
+        "Linus Walleij" <linus.walleij@linaro.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        openipmi-developer@lists.sourceforge.net,
+        "Patrick Venture" <venture@google.com>,
+        "Stefan M Schaeckeler" <sschaeck@cisco.com>,
+        "Tao Ren" <taoren@fb.com>, "Xo Wang" <xow@google.com>,
+        yao.yuan@linaro.org
+Subject: Re: [RFC-ish PATCH 00/17] Clean up ASPEED devicetree warnings
+Content-Type: text/plain
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Each iteration of for_each_child_of_node puts the previous node, but in
-the case of a return from the middle of the loop, there is no put, thus
-causing a memory leak. Hence add an of_node_put before the return in
-three places.
-Issue found with Coccinelle.
 
-Signed-off-by: Nishka Dasgupta <nishkadg.linux@gmail.com>
----
- drivers/pinctrl/freescale/pinctrl-mxs.c | 12 +++++++++---
- 1 file changed, 9 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/pinctrl/freescale/pinctrl-mxs.c b/drivers/pinctrl/freescale/pinctrl-mxs.c
-index 641b3088876f..735cedd0958a 100644
---- a/drivers/pinctrl/freescale/pinctrl-mxs.c
-+++ b/drivers/pinctrl/freescale/pinctrl-mxs.c
-@@ -488,8 +488,10 @@ static int mxs_pinctrl_probe_dt(struct platform_device *pdev,
- 		if (of_property_read_u32(child, "reg", &val)) {
- 			ret = mxs_pinctrl_parse_group(pdev, child,
- 						      idxg++, NULL);
--			if (ret)
-+			if (ret) {
-+				of_node_put(child);
- 				return ret;
-+			}
- 			continue;
- 		}
- 
-@@ -499,15 +501,19 @@ static int mxs_pinctrl_probe_dt(struct platform_device *pdev,
- 						 f->ngroups,
- 						 sizeof(*f->groups),
- 						 GFP_KERNEL);
--			if (!f->groups)
-+			if (!f->groups) {
-+				of_node_put(child);
- 				return -ENOMEM;
-+			}
- 			fn = child->name;
- 			i = 0;
- 		}
- 		ret = mxs_pinctrl_parse_group(pdev, child, idxg++,
- 					      &f->groups[i++]);
--		if (ret)
-+		if (ret) {
-+			of_node_put(child);
- 			return ret;
-+		}
- 	}
- 
- 	return 0;
--- 
-2.19.1
+On Fri, 2 Aug 2019, at 15:21, Joel Stanley wrote:
+> On Tue, 30 Jul 2019 at 01:09, Andrew Jeffery <andrew@aj.id.au> wrote:
+> 
+> > > > The bang-for-buck is in fixing up the KCS bindings which removes all-but-two of
+> > > > the remaining warnings (which we can't feasibly remove), but doing so forces
+> > > > code changes (which I'd avoided up until this point).
+> > > >
+> > > > Reflecting broadly on the fixes, I think I've made a mistake way back by using
+> > > > syscon/simple-mfds to expose the innards of the SCU and LPC controllers in the
+> > > > devicetree. This series cleans up what's currently there, but I have half a
+> > > > mind to rev the SCU and LPC bindings to not use simple-mfd and instead have a
+> > > > driver implementation that uses `platform_device_register_full()` or similar to
+> > > > deal with the mess.
+> > > >
+> > > > Rob - I'm looking for your thoughts here and on the series, I've never felt
+> > > > entirely comfortable with what I cooked up. Your advice would be appreciated.
+> > >
+> > > The series generally looks fine to me from a quick scan. As far as
+> > > dropping 'simple-mfd', having less fine grained description in DT is
+> > > generally my preference. It comes down to whether what you have
+> > > defined is maintainable. As most of it is just additions, I think what
+> > > you have is fine. Maybe keep all this in mind for the next chip
+> > > depending how the SCU and LPC change.
+> >
+> > Okay, I think the timing of that suggestion is good given where things are with
+> > the AST2600. I'll keep that in mind.
+> >
+> > Consensus so far seems to be that the series is fine. I'll split it up and send out
+> > the sub-series to the relevant lists with the acks accumulated here.
+> 
+> The series look good. I suggest posting the KCS bindings and driver
+> changes as their own series to go through the IPMI tree.
 
+Yeah, that was the plan.
+
+> 
+> Please add my tag to all the patches except the OCC one, which I need
+> to do some investigation in to.
+> 
+> Reviewed-by: Joel Stanley <joel@jms.id.au>
+
+Thanks, will do.
+
+> 
+> The others can go via the aspeed tree. Perhaps post them as their own
+> series too so I don't get confused and apply the wrong ones. That way
+> if Rob wants to send his reviewed-by he can.
+
+SGTM.
+
+Cheers,
+
+Andrew
