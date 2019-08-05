@@ -2,78 +2,73 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 8F6598181F
-	for <lists+linux-gpio@lfdr.de>; Mon,  5 Aug 2019 13:26:40 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CD8888182B
+	for <lists+linux-gpio@lfdr.de>; Mon,  5 Aug 2019 13:30:04 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727349AbfHEL0j (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 5 Aug 2019 07:26:39 -0400
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:35043 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727328AbfHEL0j (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 5 Aug 2019 07:26:39 -0400
-Received: by mail-lj1-f195.google.com with SMTP id x25so79059822ljh.2
-        for <linux-gpio@vger.kernel.org>; Mon, 05 Aug 2019 04:26:38 -0700 (PDT)
+        id S1728483AbfHELaE (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 5 Aug 2019 07:30:04 -0400
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:42571 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727328AbfHELaD (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 5 Aug 2019 07:30:03 -0400
+Received: by mail-lj1-f196.google.com with SMTP id t28so78984838lje.9
+        for <linux-gpio@vger.kernel.org>; Mon, 05 Aug 2019 04:30:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=jIRa3TvqiJWaXbGz1Sxgf45N57AQXqRegz7cACuc68A=;
-        b=qIT1QTF1w0efi6+3yipuwFrYZL30qqHrYgmctXv8UnneOjx2GgF+0JZtmxWgB1Mg8/
-         v+7dHYiNP7xfVA03cjMy3k9BEgBXLsYVymjoWiHzr3/5VNRBifxMEd4ZWVsXOKaAmTrB
-         CcSQROuJEp6EE32Z1GgjQVsmuRDRbtCDceXuYg38GWcy27+AnKpv+kH4QLXoTIvYUobH
-         dGpTPrusQ7v5U3BtBFHERMkYU90cXbkQJxsIMDQup9UDjnWGH5+uV4f6ygLlQHWhCnGm
-         rMuIko9zudS/9WkGNeZXicg8j4Tw5FD2bvF67egZMkd3SiZN3d2Veb/HAxmtWny9+eXo
-         O75Q==
+        bh=b27Uxet0wS8heQ/uw8g5KksWqeArgR34fWuxvwa86go=;
+        b=okJuwlFFgvTnn/ENXSu5uVLZd90esmr0PeAasyEAjvvQOBioQ9CraF3qaK1yHy4Tsc
+         05Ax1mQL+MZtfVgufZvPgI7hFgVPUQCn5R3wPoFj+Pk1COAuj+FvYi2goUZyvm/26/J+
+         +QW4FoLOBSgcpnI9cQAciCUXFGt/Rz9n5bU/j17HrjmCaEdULpMhnrMCSB1buBCtfO8L
+         lPXsHxCRQNoKliMkLwhXohkAqw2qP9Ak5uY9RfPakkL1eysnWxN1CahKPVGsFqDq5ANh
+         Y6roI+60yj//+P1IJXT0e/EwMBTMFM+LpZc2z4c2cC2b5TDXfAsKxupjovUqZKAqaek6
+         1BDQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=jIRa3TvqiJWaXbGz1Sxgf45N57AQXqRegz7cACuc68A=;
-        b=l5PwO7798HcMCe1Z/AsOe+kmpdPGWrMVqa0z/xBSTChHxFbeaO75gf2WnV002l6yCS
-         K/m0yycIRq4mPZdJmA1BnDlHgyxpBCOK8r4NLKM0J9MnY2v4jOoy5j6zuqKP95lY7UWN
-         CZnVuJoQBvdx7Oy4rMEAayw6e7233VmN8JERdFJ4kHTJbNrEXgqztHplLq2B2rXp1N2r
-         fqHMGkVcsP0RVoFmP4wpU25vTDVu2Qf9xTcwbmfaJmVF1d60itk4KTHHpzON0XZvfj1u
-         HVUdASmVRfqBSgUdTVS5ssRVGVfiYq0tJ6ztapP4noNPB9DQMCJSc8JnQvtGTOI7iElg
-         C1jQ==
-X-Gm-Message-State: APjAAAXF8A2dHsgU5FWRMveYsA5BYCfPRexWj1/3ZgMVWpkXSged9Elo
-        HeTwb5Tqv6vEJCtnhMvtyceRbJG8NW79/Gn2jzUHAnVC
-X-Google-Smtp-Source: APXvYqwwzZUZzBlGj7UKPIgPKL/x6U8mlX5D2rx/vEhK1wdbSnO0UQNpPepk9N43zQqnbiwujFLC3RSHRZ8fPZyvLzM=
-X-Received: by 2002:a2e:9048:: with SMTP id n8mr62373ljg.37.1565004397519;
- Mon, 05 Aug 2019 04:26:37 -0700 (PDT)
+        bh=b27Uxet0wS8heQ/uw8g5KksWqeArgR34fWuxvwa86go=;
+        b=b39IDEs1cxBnvkClNhkP7900VHPGPI97P57YajOrIRJA0vZxGTDoNivw0w9LBVf+9R
+         ean0GGB4VyE5vngMwo5dDGJ2NwHsEMGYTwWkXfGcfvrtJf/Z86zNLE8rDO6R9ATKbUvY
+         +3+oSF+uSBt6q+fpQfbhRcGdXzGxy8PiSVImdqZcrAWeMYZeMbXOFpIdClyZFtl6UGXm
+         TLKX9rg6A3KvC/o5VcZRCjAofBIOGfjW0WhjQOfhu3ELRkk46djafmS5qaJTsJWw1MhA
+         Vo5heXkjXs+a92higmOTDXUoPzrnAFQbQh3mocGr59stnf+50y6sk/At4rWwxbrlXx55
+         nyaA==
+X-Gm-Message-State: APjAAAXajsZPT32riHdg8xYDPZfadmKgQz2rpYLagDlyY7oHUChPvScJ
+        vaKXMbpVUdQfytXz7vSr+E+/86ftp4kKDpxDgup/ug==
+X-Google-Smtp-Source: APXvYqyWjX7ImD434EUnGcBL+cAcnTOa29T0Gg9vkUy0uyuDubU+396J3QMFCOfCS8owfk3sgIVLrR367Ak25N4S+Do=
+X-Received: by 2002:a2e:2c14:: with SMTP id s20mr16587126ljs.54.1565004601793;
+ Mon, 05 Aug 2019 04:30:01 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190730181557.90391-1-swboyd@chromium.org> <20190730181557.90391-16-swboyd@chromium.org>
-In-Reply-To: <20190730181557.90391-16-swboyd@chromium.org>
+References: <20190731132917.17607-1-geert+renesas@glider.be> <20190731132917.17607-2-geert+renesas@glider.be>
+In-Reply-To: <20190731132917.17607-2-geert+renesas@glider.be>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Mon, 5 Aug 2019 13:26:25 +0200
-Message-ID: <CACRpkdbJ0dLpLyHMLkzaKDtPdR-JGaj30QQJCDTSh61qXRX6JQ@mail.gmail.com>
-Subject: Re: [PATCH v6 15/57] gpio: Remove dev_err() usage after platform_get_irq()
-To:     Stephen Boyd <swboyd@chromium.org>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Date:   Mon, 5 Aug 2019 13:29:50 +0200
+Message-ID: <CACRpkdY0A5dTORVD12jvTJrQQq0jJUtF78uF4g42PE_LWCxYhw@mail.gmail.com>
+Subject: Re: [PATCH 1/3] pinctrl: devicetree: Use strlen() instead of
+ hardcoded number
+To:     Geert Uytterhoeven <geert+renesas@glider.be>
+Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Jul 30, 2019 at 8:16 PM Stephen Boyd <swboyd@chromium.org> wrote:
+On Wed, Jul 31, 2019 at 3:29 PM Geert Uytterhoeven
+<geert+renesas@glider.be> wrote:
 
-> We don't need dev_err() messages when platform_get_irq() fails now that
-> platform_get_irq() prints an error message itself when something goes
-> wrong. Let's remove these prints with a simple semantic patch.
-(...)
-> While we're here, remove braces on if statements that only have one
-> statement (manually).
+> Improve readability by replacing a hardcoded number requiring a comment
+> by strlen().
 >
-> Cc: Linus Walleij <linus.walleij@linaro.org>
-> Cc: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> Cc: linux-gpio@vger.kernel.org
-> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Signed-off-by: Stephen Boyd <swboyd@chromium.org>
+> Gcc is smart enough to evaluate the length of a constant string at
+> compile-time.
+>
+> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-Patch applied!
+Patch applied.
 
 Yours,
 Linus Walleij
