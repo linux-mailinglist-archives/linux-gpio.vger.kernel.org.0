@@ -2,78 +2,93 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id CDCBC814CB
-	for <lists+linux-gpio@lfdr.de>; Mon,  5 Aug 2019 11:11:11 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3C9B581561
+	for <lists+linux-gpio@lfdr.de>; Mon,  5 Aug 2019 11:24:12 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727916AbfHEJLK (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 5 Aug 2019 05:11:10 -0400
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:43853 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726423AbfHEJLK (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 5 Aug 2019 05:11:10 -0400
-Received: by mail-lf1-f65.google.com with SMTP id c19so57321298lfm.10
-        for <linux-gpio@vger.kernel.org>; Mon, 05 Aug 2019 02:11:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=CcF0Tf2csoH94nm9DKzCzxCvNAg9jTgP3wKmMSrxdJ0=;
-        b=MApQPGimnkQK1YumuVAH57d9GFewJzttBSI4IlwQ/yJIDJRLm/8dLT/w11qpoANUCS
-         n640jop+mLHN4B2M8hCyV1s1RVoI6uCnDy2Qi2aj6o04OsN3By99wr2Q1AbFZwEivVEP
-         bEpNarqmrqqS0+i3A8W8o/Rtzdl02Q3JGzQLO7qKaIpOD0BEFBfYqj3AJLez5XeGQ581
-         iTAjRtwnM4qVQoyVmlTmECKZrLD4w2YvfCcP/981a20pKfyUc32js/CGh1MjVImw3nRT
-         y6pA9EFW4hLfWHqizmRsJIShPImlsMhnIIETjHySMG4uB6FMhpSbUkGAxDbFrfFZR4Dn
-         fbnA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=CcF0Tf2csoH94nm9DKzCzxCvNAg9jTgP3wKmMSrxdJ0=;
-        b=Yj3KEfUh2bmshDEEnAuS9bt5eLouOp6UKvyJmAeGzLn753bs5LEvXUIt54QCIcrJj5
-         sFLb6/KK5o9qB/YAJxsnOgsk4uQNj9yXdUM60CO80jjcK2b0jzbk8NLLe2mXD6jn6cFz
-         fzkef//ODTp/xP4DOqaiNPQhgw+MexXEvTV8U8I51gc3M5X3VQXqi857x1iBNl6zRtlK
-         ZiNNtqpBn8sMc5MnXSBCjJYzEAtbaKnkLGtsBMCyQ/mLyrXKMpOXKLcYXqFLDY1cQlFf
-         HZM/Nadwiut3p1rUAQr2Z2pWyLRcx2+tuXnH31+T21gKnrGDBOcGUSwQuT6JA7g2Lp4b
-         eznQ==
-X-Gm-Message-State: APjAAAXSfX3OxIyDWvH/KltqoVp1Puez5KGS7yZqHAD2pxEZxF5FHRt1
-        neRmblgI8qkXiTxW8jo1almL+0gQjFilg919fx8NoQ==
-X-Google-Smtp-Source: APXvYqxKN2Q9wjm993pLiTXUE/ZTFSZClxmxBxiSWznvRekHA4AKzry63edPZGGrMCuZQed5S2uahCV2KTY89z9epxY=
-X-Received: by 2002:ac2:59d0:: with SMTP id x16mr863981lfn.60.1564996268308;
- Mon, 05 Aug 2019 02:11:08 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190721125259.13990-1-hm@bitlabs.co.za> <20190721125259.13990-2-hm@bitlabs.co.za>
-In-Reply-To: <20190721125259.13990-2-hm@bitlabs.co.za>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Mon, 5 Aug 2019 11:10:56 +0200
-Message-ID: <CACRpkdZ0OYt4q3a=kEWswKZ0z779aDFNg8wbm9Tqa+ddgiW3dA@mail.gmail.com>
-Subject: Re: [PATCH 2/2] [PATCH] gpio: Explicitly cast from __be16 to unsigned short
-To:     Hennie Muller <hm@bitlabs.co.za>, Arnd Bergmann <arnd@arndb.de>
-Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        id S1726880AbfHEJYL (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 5 Aug 2019 05:24:11 -0400
+Received: from inva020.nxp.com ([92.121.34.13]:37602 "EHLO inva020.nxp.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726423AbfHEJYL (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Mon, 5 Aug 2019 05:24:11 -0400
+Received: from inva020.nxp.com (localhost [127.0.0.1])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 3CAF91A028A;
+        Mon,  5 Aug 2019 11:24:09 +0200 (CEST)
+Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id ABDF01A027D;
+        Mon,  5 Aug 2019 11:24:05 +0200 (CEST)
+Received: from titan.ap.freescale.net (TITAN.ap.freescale.net [10.192.208.233])
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 0194B402B5;
+        Mon,  5 Aug 2019 17:24:00 +0800 (SGT)
+From:   Hui Song <hui.song_1@nxp.com>
+To:     linux-devel@linux.nxdi.nxp.com
+Cc:     linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+        Song Hui <hui.song_1@nxp.com>
+Subject: [PATCH v2] arm64: dts: ls1028a: fix gpio nodes
+Date:   Mon,  5 Aug 2019 17:14:31 +0800
+Message-Id: <20190805091432.9656-1-hui.song_1@nxp.com>
+X-Mailer: git-send-email 2.9.5
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Sun, Jul 21, 2019 at 2:53 PM Hennie Muller <hm@bitlabs.co.za> wrote:
+From: Song Hui <hui.song_1@nxp.com>
 
-> cpu_to_be16 returns a __be16 value. This does not break anything
-> but does cause sparse to generate unnecessary warnings.
->
-> Signed-off-by: Hennie Muller <hm@bitlabs.co.za>
-(...)
+Update the nodes to include little-endian
+property to be consistent with the hardware.
 
-> -       gbmsg->val = cpu_to_be16(dir << offset);
-> -       gbmsg->mask = cpu_to_be16(0x0001 << offset);
-> +       gbmsg->val = (__force u16)cpu_to_be16(dir << offset);
-> +       gbmsg->mask = (__force u16)cpu_to_be16(0x0001 << offset);
+Signed-off-by: Song Hui <hui.song_1@nxp.com>
+---
+ arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
 
-Ugh I don't understand this.
+diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
+index aef5b06..7ccbbfc 100644
+--- a/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
++++ b/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
+@@ -277,33 +277,36 @@
+ 		};
+ 
+ 		gpio1: gpio@2300000 {
+-			compatible = "fsl,qoriq-gpio";
++			compatible = "fsl,ls1028a-gpio","fsl,qoriq-gpio";
+ 			reg = <0x0 0x2300000 0x0 0x10000>;
+ 			interrupts = <GIC_SPI 36 IRQ_TYPE_LEVEL_HIGH>;
+ 			gpio-controller;
+ 			#gpio-cells = <2>;
+ 			interrupt-controller;
+ 			#interrupt-cells = <2>;
++			little-endian;
+ 		};
+ 
+ 		gpio2: gpio@2310000 {
+-			compatible = "fsl,qoriq-gpio";
++			compatible = "fsl,ls1028a-gpio","fsl,qoriq-gpio";
+ 			reg = <0x0 0x2310000 0x0 0x10000>;
+ 			interrupts = <GIC_SPI 36 IRQ_TYPE_LEVEL_HIGH>;
+ 			gpio-controller;
+ 			#gpio-cells = <2>;
+ 			interrupt-controller;
+ 			#interrupt-cells = <2>;
++			little-endian;
+ 		};
+ 
+ 		gpio3: gpio@2320000 {
+-			compatible = "fsl,qoriq-gpio";
++			compatible = "fsl,ls1028a-gpio","fsl,qoriq-gpio";
+ 			reg = <0x0 0x2320000 0x0 0x10000>;
+ 			interrupts = <GIC_SPI 37 IRQ_TYPE_LEVEL_HIGH>;
+ 			gpio-controller;
+ 			#gpio-cells = <2>;
+ 			interrupt-controller;
+ 			#interrupt-cells = <2>;
++			little-endian;
+ 		};
+ 
+ 		usb0: usb@3100000 {
+-- 
+2.9.5
 
-Arnd: you know this better than me: is this the right thing to do
-to get rid of sparse warnings from the code?
-
-Yours,
-Linus Walleij
