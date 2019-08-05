@@ -2,69 +2,86 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id DC7FB81571
-	for <lists+linux-gpio@lfdr.de>; Mon,  5 Aug 2019 11:27:45 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C331F81577
+	for <lists+linux-gpio@lfdr.de>; Mon,  5 Aug 2019 11:30:45 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727889AbfHEJ1p (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 5 Aug 2019 05:27:45 -0400
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:37640 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727158AbfHEJ1o (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 5 Aug 2019 05:27:44 -0400
-Received: by mail-lj1-f194.google.com with SMTP id z28so24479159ljn.4
-        for <linux-gpio@vger.kernel.org>; Mon, 05 Aug 2019 02:27:43 -0700 (PDT)
+        id S1727230AbfHEJap (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 5 Aug 2019 05:30:45 -0400
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:45941 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726454AbfHEJap (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 5 Aug 2019 05:30:45 -0400
+Received: by mail-lf1-f66.google.com with SMTP id u10so18610702lfm.12
+        for <linux-gpio@vger.kernel.org>; Mon, 05 Aug 2019 02:30:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=miq5LJnsHycKAbKrX/aqmgv81qAV/3Tn1hYeTeovT1s=;
-        b=EtR7cxMhkbo7QWXknDztSh3qlAqEOooXAsGcenCHLESfVSPbSJWe0po31TRFEGZCIP
-         fbQ06k3afzdBiUxV4RZbezu+E5YrrIXsxeOFDqDVzK0lJkRJ0/Vx6GU/Es+xagKNV/PF
-         uerC3lf6diy5kPWhdalSC/w682CwmdsKYqbEZHz9RCwFxmK2MloL0OZ3SozE+GuKGAvc
-         7vMUN6fGY+7VdYhwHDQRHAYl7E9GxcsgkRw9VUaH06UBlMiXXsngXurrle9rXAJwquJA
-         6Oy3ra3Yqv7j9D0RHZ28Exk5bHTmk2XCYGAAjypo/3LtY5/0lMJV6Sxbp++wNWRVYSUB
-         Rf1A==
+        bh=2F9uPCRSmPiTo2hK4r/nBZb2ETnTkjzstupTkcKIfow=;
+        b=t7U6r61gh2G+txxmAuRpaIMbfCPRaDMyyIO/DfFxxg+JtNnGBLZnUxPz1OT31MR8Ta
+         u+bgHQQrsqGfkRbNhJKzPtenaidsGBnCiThyLb/tzDCpvLiVaH90rNOyUb/jua0ryyG+
+         nV4IiAWVB2f+6NLuV/5aG0usZKw/35iQ1ehdXDFboqr9ZKKz1MWi+luLMSLdXOZbFmXl
+         8UtI6s3GxdQ+zbEt7opMRSYufzsClWfsWpvLl3KSpb997MD0EBvKNNuqkW3X/eYjtj+Y
+         IulB2m4FlF2d7DwCcYEvXhSTTA1xAcZw6ZaYLGTBZtEJLhQRfIwYKHJzat/TMsiluHdf
+         AQbQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=miq5LJnsHycKAbKrX/aqmgv81qAV/3Tn1hYeTeovT1s=;
-        b=Rbgxuty733+EqmI9zpOdnJdCQ4x8FTW94RzbWquvmiWGNod8rMwrbrUTpzTNcn5nG4
-         icF8R6ViswYFsSDM9BcUoe8SICGq/j7i8kNKV2xc6C5+4mX/TxX8S/CFjiJ9O5hDgxZw
-         lcwO7pHZCnbAZmRuzrm8hlkGXbvlKQT/b6T8Oe+5bv5yskPuFLkM9I/cE0nuul+oJzbr
-         1oIx5YY6WvS0ovaP01qF7TWM+3CuZFoJVqIEYf4y5ka1IsVoyp9siMYSjZB5fPSFHy5T
-         MDsNA9PTy/H7bUe32HPFbUUrDnZRyo468MhvzY2slMBgRCmBooLO8omaWiyIB0nSBl5S
-         uZew==
-X-Gm-Message-State: APjAAAVY2+bqJXzM9QZET5T1qREYp1KHwH4VrVsogo1EnbcBQSdmzcfC
-        BHNSV6syLJR4udXUywpct7ss9z/pf95pzorNt4+1ow==
-X-Google-Smtp-Source: APXvYqzZZ+BV1zGXdPbqQEmcBkpwiyKfdqckHRWRksBBrs7TwsFvmAQry9T8pnndwRc5cffdFpZW/uNyp6Z0yYoRD50=
-X-Received: by 2002:a2e:a0cf:: with SMTP id f15mr14713714ljm.180.1564997263156;
- Mon, 05 Aug 2019 02:27:43 -0700 (PDT)
+        bh=2F9uPCRSmPiTo2hK4r/nBZb2ETnTkjzstupTkcKIfow=;
+        b=PoVgVJopuZnFcA+koe7+p2UHOKPqyn3Y1s4BdS5kkid4n0brXmwsaV86+4wDAQrHiC
+         SL4iBLE0EEgaYYf7j8vx0AVnuqyFLZSBqFxZC3MeTkz8Z56bEpmYtutjC9NgbFiNA68m
+         MLNaCeuR7AlWTRFtieZtwePgbY8T4oYk+VS1iQ77OSxDlIHBiHcMjrZ2YpkUWn1xB9ie
+         wVlp0yg6C7+EhnQCLAogodspuBw9v5u1PQHOHWJAIy/GtKvem7mcEiODo9sEo0499Lj9
+         Y5T/dQ+ZlmiVhypVuhtUnpHVE7XTg7YNZQsIUdvlddDCxdCtnaIylcez36mswxcSNqVT
+         5mFg==
+X-Gm-Message-State: APjAAAX2yvH4f6ily9cUPWpa0YjoJLwlFtPOCKjvWqkpASMWzcaoJ6c9
+        1qL8WAcftCrZ1r4/qt5zX3nSa1x3xaOCJ7XQ3m514Q==
+X-Google-Smtp-Source: APXvYqz7JBE9oQJCNW1UI+7INxOFq+v6UPMn9y4R/8owWAYGv9h3lldCN/2lgwanhTATZmfTmuSrRDYfei2zMsXMHWs=
+X-Received: by 2002:ac2:5382:: with SMTP id g2mr68650031lfh.92.1564997443136;
+ Mon, 05 Aug 2019 02:30:43 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190721125259.13990-1-hm@bitlabs.co.za>
-In-Reply-To: <20190721125259.13990-1-hm@bitlabs.co.za>
+References: <1563776607-8368-1-git-send-email-wahrenst@gmx.net> <1563776607-8368-2-git-send-email-wahrenst@gmx.net>
+In-Reply-To: <1563776607-8368-2-git-send-email-wahrenst@gmx.net>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Mon, 5 Aug 2019 11:27:31 +0200
-Message-ID: <CACRpkdYy+ZbcxwswOx9WWemmsSUcWKdLRXDGKeYkhbC2UYGGKQ@mail.gmail.com>
-Subject: Re: [PATCH 1/2] [PATCH] gpio: Replace usage of bare 'unsigned' with
- 'unsigned int'
-To:     Hennie Muller <hm@bitlabs.co.za>
-Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+Date:   Mon, 5 Aug 2019 11:30:31 +0200
+Message-ID: <CACRpkdYN249RE+=MpKz0X6Y9rX=hMQHPQmou6EMdCkO-m2LsDQ@mail.gmail.com>
+Subject: Re: [PATCH 11/18] dt-bindings: pinctrl: bcm2835: Add brcm,bcm2711 compatible
+To:     Stefan Wahren <wahrenst@gmx.net>
+Cc:     Eric Anholt <eric@anholt.net>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Ray Jui <rjui@broadcom.com>,
+        Scott Branden <sbranden@broadcom.com>,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        Matthias Brugger <mbrugger@suse.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        linux-rpi-kernel <linux-rpi-kernel@lists.infradead.org>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+        linux-mmc <linux-mmc@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Sun, Jul 21, 2019 at 2:53 PM Hennie Muller <hm@bitlabs.co.za> wrote:
+On Mon, Jul 22, 2019 at 8:23 AM Stefan Wahren <wahrenst@gmx.net> wrote:
 
-> Fixes a couple of warnings by checkpatch and sparse.
+> Add a new compatible for the BCM2711.
 >
-> Signed-off-by: Hennie Muller <hm@bitlabs.co.za>
+> Signed-off-by: Stefan Wahren <wahrenst@gmx.net>
+(...)
+> +  "brcm,bcm2711-gpio" - BCM2711 compatible pinctrl
 
-Patch applied.
+Completely uncontroversial so patch applied.
 
 Yours,
 Linus Walleij
