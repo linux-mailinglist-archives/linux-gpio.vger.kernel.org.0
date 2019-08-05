@@ -2,51 +2,51 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id CFCF5815BD
-	for <lists+linux-gpio@lfdr.de>; Mon,  5 Aug 2019 11:43:09 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E67CC815BE
+	for <lists+linux-gpio@lfdr.de>; Mon,  5 Aug 2019 11:43:54 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728028AbfHEJnJ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 5 Aug 2019 05:43:09 -0400
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:37715 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727340AbfHEJnI (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 5 Aug 2019 05:43:08 -0400
-Received: by mail-lf1-f66.google.com with SMTP id c9so57344839lfh.4
-        for <linux-gpio@vger.kernel.org>; Mon, 05 Aug 2019 02:43:07 -0700 (PDT)
+        id S1727158AbfHEJny (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 5 Aug 2019 05:43:54 -0400
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:43904 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726880AbfHEJny (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 5 Aug 2019 05:43:54 -0400
+Received: by mail-lj1-f195.google.com with SMTP id y17so54182584ljk.10
+        for <linux-gpio@vger.kernel.org>; Mon, 05 Aug 2019 02:43:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
         bh=r7GWnzw8LLVSbBo+yy3iG6e6CAQ2PpDK741XOujQ55U=;
-        b=JCurn0xM9V+8ojDDgzNt8zdaWur2Q413FUzkqsynzHpf/EKsMXQQ+CoBYNEb03IRLF
-         12NjQl2y/YC5hsT8AE5R9/E2PK2cCn4OUsxf/R6vvBMhp36BK+G8KL6/H9MFrk2XhACe
-         ksxNi0EbJUicit1LhKKpyqmg9TS9wuWBscHQ42kCZA8/NohbvlDJSv8GAtrDQub9Dnot
-         SWQwoTg0Ab3CTCy9werdkEwdVus0EM8Ma8vPnKiRT7i6tZBWrtG0SVbL2mBO9Y6atHxI
-         zPak/0DHYphR8fev2p3+n2lphIzC4V2Vr0dS1yw7QzHZsCXDfEXns9Kl2oNLLZ0LFyHa
-         UvQA==
+        b=XhPLeDT+zHhTq3wftYlI0u9/rfYrLAVXjYCV6goakFAT3jS5JWRrclcMa2aphQPWS0
+         C2lpOSdbQPsTMaLdCZAHqmocQfbAQFoWlYwIbh+6NrbHsEDw6RNpepTxt4QE4bCzpXw/
+         HNlNnF2xM/IfOIxDsPTn9ML6Ts8LZ+/YHaxnxc8lDX2NuOPsAGxsnr2eiPdE7/bGDb0/
+         Mvj8pbZ8OyzaX1bR8vsKC5tFSR7L32bSWKz8PN7yga2kiqdnfSd6DpI7i5+dsP/w5Rry
+         HhFamrqqBcevCU+nEZIPZmF3b+D1CjtQUJKeEDd2ne27oPgX8v6hlMxB0oUYosqMvmxk
+         mgzw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
         bh=r7GWnzw8LLVSbBo+yy3iG6e6CAQ2PpDK741XOujQ55U=;
-        b=eQ5/OLN6sv8gecp9blcS39w+lzZLt1kHjjVqkHme9iHywHF1JjFoC0I83kCSzTh+y1
-         lb3HFY5G8Z6+Dv8glAKGRNUM0uR5R3aMZ2hzZZh0oCJLrnnV0oXQMxuh1x9zOUdJeZDq
-         KYkC0U2yWLOOvkxfvh80QcabTlb+dmOGDnhODy0VQaSqObMUgYM83oM0hFJLkyj56+Z7
-         oLb5rtmkndr9bO13pC+YzAZLYonbY2RhY016KWvb9KWrzWh3Aoyk750EpC5TGB21ZJym
-         8r1Fey43WAmFtpjSo8ecAYltgUU7ZaRd9MKBkbgnmi/BnLaeGuVRgqa7THCwZ3fSr3pt
-         CpkQ==
-X-Gm-Message-State: APjAAAUGTWhVYUZbNDxb0RooR5DxAhQCfJsnLuOVyXtsHkJuXhaOSxTA
-        rKjkmQ8FRFiU+9MGfFLIurd6zo/16qxajwYNLzcPuw==
-X-Google-Smtp-Source: APXvYqxu3OFyma+Q5Ju3NIC0ci/K8GTjPSl7PaVzPIEiiV6xv0AC6zBDmeudwcb14x3U+GIiQP3mPQQ3OuVOqbsWyD8=
-X-Received: by 2002:ac2:5382:: with SMTP id g2mr68682648lfh.92.1564998186659;
- Mon, 05 Aug 2019 02:43:06 -0700 (PDT)
+        b=JbaLzqyisy6aij1XKw4ZTjElzZH+KPqCcm2CSIasy1zLcOnwR386BQyTQPfOXx7U8j
+         GbtcSTREWFaqUKUd790Tik7y1G4AIS2wnw0smxA2dEjwXfqXYx7zYbFGIjJkI7jrcaTr
+         vwuThxtRp9Ud7Rk2uUf/QxOZdaZmspmJYMA5oZOBfqqtxVd1HshXLyaGAUrGMWfqpUDA
+         OTdhSLhTT5JcLZp8KnW7wmC9MmhH38QJ4jl0AXhUrg4BGTtzaZDrCo5L0hq8aZsWkkyu
+         Km39LB5/ygSZdtDilA7AFRfBPcdHWsaqJhmbdrr+u1MtD4BvsVWOYzQ2kHruo9Lohz40
+         fo7g==
+X-Gm-Message-State: APjAAAWgaSubjmyFz9asPcvomTRIVZrtf8NA7SZrF28ZIvGEVBgMwJXv
+        vSFSxPq5htlIXEuI9odrMRNuVxGov2QmEf/CXXKd3v27
+X-Google-Smtp-Source: APXvYqwLCOcsNHaxqsbSppRvlyOWSSW2VVINEPQ39TXSXONERUtwZ9rDOiykdKQHftCohXA0T3BVXvnOXryvW0Rw1FI=
+X-Received: by 2002:a2e:8756:: with SMTP id q22mr79176242ljj.108.1564998232343;
+ Mon, 05 Aug 2019 02:43:52 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190722090748.20807-1-ckeepax@opensource.cirrus.com>
-In-Reply-To: <20190722090748.20807-1-ckeepax@opensource.cirrus.com>
+References: <20190722090748.20807-1-ckeepax@opensource.cirrus.com> <20190722090748.20807-2-ckeepax@opensource.cirrus.com>
+In-Reply-To: <20190722090748.20807-2-ckeepax@opensource.cirrus.com>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Mon, 5 Aug 2019 11:42:54 +0200
-Message-ID: <CACRpkdbK=GCh6-4NoYHug6or-hBw-NFJGXgS1EBLbrUZSxn5JQ@mail.gmail.com>
-Subject: Re: [PATCH 1/4] gpio: arizona: Use local copy of pdata
+Date:   Mon, 5 Aug 2019 11:43:41 +0200
+Message-ID: <CACRpkdYQ8EZWADSeHg+Eh09MciXbJhYBfn_1pPnqzg_G=yHfiw@mail.gmail.com>
+Subject: Re: [PATCH 2/4] gpio: madera: Use local copy of pdata
 To:     Charles Keepax <ckeepax@opensource.cirrus.com>
 Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
