@@ -2,119 +2,127 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 59A18812F2
-	for <lists+linux-gpio@lfdr.de>; Mon,  5 Aug 2019 09:18:35 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D1F148142B
+	for <lists+linux-gpio@lfdr.de>; Mon,  5 Aug 2019 10:28:06 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727606AbfHEHSe (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 5 Aug 2019 03:18:34 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:40123 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727600AbfHEHSe (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 5 Aug 2019 03:18:34 -0400
-Received: by mail-wr1-f68.google.com with SMTP id r1so83215077wrl.7;
-        Mon, 05 Aug 2019 00:18:32 -0700 (PDT)
+        id S1727826AbfHEI2A (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 5 Aug 2019 04:28:00 -0400
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:40560 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727791AbfHEI2A (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 5 Aug 2019 04:28:00 -0400
+Received: by mail-ot1-f68.google.com with SMTP id l15so27201662oth.7
+        for <linux-gpio@vger.kernel.org>; Mon, 05 Aug 2019 01:27:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=qvG85uu+23wc3aOz56jKz9zl98RKrlFXnI9v0RdgYHY=;
+        b=gn0LHf8ENoBGwjVAUPWk1trAn5THo247jg8e6zjlOG+W0AiNseHCflLSx/XH7Kcfy9
+         2wSOMmbwOPfMbBjkX6M2RQupJ/NbQ7i1OeZV4x0b7UaMTogOPcjGAh2WD4/Wzn3oFz+S
+         s68do0KW/i5W4PVQKdwoTVYuoajMggDI1ujveZBBQeM1XkbfxbcpVORGDNzhN6D90l0s
+         nchBa36BsovaPAw4h8M0gY9GSFJmJ6RPIM5M8O2TBp8svyqdG+/Z77FGfO1gxNobnwjE
+         Hl6bo1835l7C2TEp1ARt072yPf+OHySWwJSl6kUR7uAp3M2jEwLs21KSIEzQgcwZEeFx
+         EIwg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=7z7TxdT8LM5WCT5rFLppn3f5eATMhBkkA5pGtwYiQRk=;
-        b=L/CU2KyhkgICxLau3rE+r3r+v4HcP2cmxBNeKqJqTE1mBMyzzS2Vkgxqx3I7+z9unA
-         7i3gebW/XEzrm8e/6cenvmJOyhGaLW4gc8eL9+Y+fFLuwuxg+WJt05TBmrUttDwZcPoo
-         aLHUARO5oqsmoQySrhwr47dbi+3bRGSjPUXLpKhVc4s1IRHq9bu64bPWp9xrYYY4wy+H
-         fp2K+OsJJhp+DjQhBLmyQgI5MN0ZD9DdjfFVxmYOUDO8cdKOra9eyTNXpazGVVxFA7/P
-         dAuy9UsFnZ7R+UfpG8x1O/XQdq8eolek5V5UKNtLAPPqOoHOg0EVMT0UqUjqN7e8u+lp
-         /gmA==
-X-Gm-Message-State: APjAAAXpzjsEiLNGYiTh/3mbWGW3Pd401LtzUMybHN7RL8OoVRJydEwR
-        GzO1DNNu82ktJ2A9OfFO0ngXLD6wTgqMHn++IH4=
-X-Google-Smtp-Source: APXvYqzrP4AePN9rc8s5m6cROt7iPLUC8FyQXF+ULNhFoyftI7RhZ3WzSqW9P+zefGbahYWpJN+sHyUyMAySC2w56Ig=
-X-Received: by 2002:adf:ab51:: with SMTP id r17mr134648052wrc.95.1564989511601;
- Mon, 05 Aug 2019 00:18:31 -0700 (PDT)
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=qvG85uu+23wc3aOz56jKz9zl98RKrlFXnI9v0RdgYHY=;
+        b=HB+qqDNifkY6z5dV7SS74IcjsayU0UFWUnsS1VDwC9c6L7SYq6r+uRWHQ4qLI97ahs
+         dk+KuhcRhfgmrWesioOWhms9zv8rWu9ad9OM2ErH4HhLDdQIiKxmjBKLMMa2LOy8atbV
+         BbeBDag62b0Is6TuPZTVgIvRjRsGXEHohFQ+Tkm/wBHg6f9n5rvjlPSeRM6h0LpGWLQT
+         T5evWYxKtgzVnabc0QEvnJYkw/jaNezBjMLczJC7MVtVLe3U4DbgtApyPiXAK+rod3/i
+         f2bpRk5ATgZsqtEemx9w2onqc62N8VcWe5dtFdQiPtS3EQ+JKSRJOSgLXMFUwT/pvQPS
+         /p9A==
+X-Gm-Message-State: APjAAAWZkQdwpYwPCVWUK3TpQT4d2y95N9bOCCc4jH0n+l/Oui8rt756
+        j7C9tcF2Wxi1JngQVUOKFeUT1opTDW+3MnQR9fZ7pw==
+X-Google-Smtp-Source: APXvYqyHiFzcWgwMSYIdyYbnaCWSjRwGweIT3RKPv1xwORdpLKUPWaLHXzDYxYbuZLEk4t8xeoYAy31E8HbSzjuIfD4=
+X-Received: by 2002:a9d:2969:: with SMTP id d96mr115002880otb.85.1564993679131;
+ Mon, 05 Aug 2019 01:27:59 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190804154029.2749-1-nishkadg.linux@gmail.com>
-In-Reply-To: <20190804154029.2749-1-nishkadg.linux@gmail.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Mon, 5 Aug 2019 09:18:19 +0200
-Message-ID: <CAMuHMdX5FFuHFtj3PmaXC1PFHAHKPoOs_ZLrzhCoyRVOM+ugOA@mail.gmail.com>
-Subject: Re: [PATCH] pinctrl: rzn1: Add of_node_put() before return
-To:     Nishka Dasgupta <nishkadg.linux@gmail.com>
-Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
+References: <20190731195713.3150463-1-arnd@arndb.de> <20190731195713.3150463-6-arnd@arndb.de>
+ <CAMpxmJWFfT_vrDas2fzW5tnxskk9kmgHQpGnGQ-_C20UaS_jhA@mail.gmail.com> <CAK8P3a3KpKvRKXY72toE_5eAp4ER_Mre0GX3guwGeQgsY2HX+g@mail.gmail.com>
+In-Reply-To: <CAK8P3a3KpKvRKXY72toE_5eAp4ER_Mre0GX3guwGeQgsY2HX+g@mail.gmail.com>
+From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Date:   Mon, 5 Aug 2019 10:27:48 +0200
+Message-ID: <CAMpxmJUdSnp0QNwWB0rJ1opFrYs9R2KSVS64Tz8X5GDYAJYLpg@mail.gmail.com>
+Subject: Re: [PATCH 05/14] gpio: lpc32xx: allow building on non-lpc32xx targets
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     soc@kernel.org, arm-soc <linux-arm-kernel@lists.infradead.org>,
+        Vladimir Zapolskiy <vz@mleia.com>,
+        Sylvain Lemieux <slemieux.tyco@gmail.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Gregory Clement <gregory.clement@bootlin.com>,
         Linus Walleij <linus.walleij@linaro.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Phil Edworthy <phil.edworthy@renesas.com>
+        Jason Cooper <jason@lakedaemon.net>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        Guenter Roeck <linux@roeck-us.net>,
+        linux-gpio <linux-gpio@vger.kernel.org>,
+        netdev <netdev@vger.kernel.org>, linux-serial@vger.kernel.org,
+        USB list <linux-usb@vger.kernel.org>,
+        LINUXWATCHDOG <linux-watchdog@vger.kernel.org>,
+        Lee Jones <lee.jones@linaro.org>,
+        LKML <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-CC Phil
-
-On Sun, Aug 4, 2019 at 5:40 PM Nishka Dasgupta <nishkadg.linux@gmail.com> wrote:
-> Each iteration of for_each_child_of_node puts the previous node, but in
-> the case of a return from the middle of the loop, there is no put, thus
-> causing a memory leak. Hence add an of_node_put before the return in
-> three places.
-> Issue found with Coccinelle.
+pt., 2 sie 2019 o 13:20 Arnd Bergmann <arnd@arndb.de> napisa=C5=82(a):
 >
-> Signed-off-by: Nishka Dasgupta <nishkadg.linux@gmail.com>
-
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-i.e. will queue in sh-pfc-for-v5.4.
-
-> ---
->  drivers/pinctrl/pinctrl-rzn1.c | 12 +++++++++---
->  1 file changed, 9 insertions(+), 3 deletions(-)
+> On Fri, Aug 2, 2019 at 9:10 AM Bartosz Golaszewski
+> <bgolaszewski@baylibre.com> wrote:
+> > > -#include <mach/hardware.h>
+> > > -#include <mach/platform.h>
+> > > +#define _GPREG(x)                              (x)
+> >
+> > What purpose does this macro serve?
+> >
+> > >
+> > >  #define LPC32XX_GPIO_P3_INP_STATE              _GPREG(0x000)
+> > >  #define LPC32XX_GPIO_P3_OUTP_SET               _GPREG(0x004)
 >
-> diff --git a/drivers/pinctrl/pinctrl-rzn1.c b/drivers/pinctrl/pinctrl-rzn1.c
-> index cc0e5aa9128a..0f6f8a10a53a 100644
-> --- a/drivers/pinctrl/pinctrl-rzn1.c
-> +++ b/drivers/pinctrl/pinctrl-rzn1.c
-> @@ -412,8 +412,10 @@ static int rzn1_dt_node_to_map(struct pinctrl_dev *pctldev,
->
->         for_each_child_of_node(np, child) {
->                 ret = rzn1_dt_node_to_map_one(pctldev, child, map, num_maps);
-> -               if (ret < 0)
-> +               if (ret < 0) {
-> +                       of_node_put(child);
->                         return ret;
-> +               }
->         }
->
->         return 0;
-> @@ -792,8 +794,10 @@ static int rzn1_pinctrl_parse_functions(struct device_node *np,
->                 grp = &ipctl->groups[ipctl->ngroups];
->                 grp->func = func->name;
->                 ret = rzn1_pinctrl_parse_groups(child, grp, ipctl);
-> -               if (ret < 0)
-> +               if (ret < 0) {
-> +                       of_node_put(child);
->                         return ret;
-> +               }
->                 i++;
->                 ipctl->ngroups++;
->         }
-> @@ -838,8 +842,10 @@ static int rzn1_pinctrl_probe_dt(struct platform_device *pdev,
->
->         for_each_child_of_node(np, child) {
->                 ret = rzn1_pinctrl_parse_functions(child, ipctl, i++);
-> -               if (ret < 0)
-> +               if (ret < 0) {
-> +                       of_node_put(child);
->                         return ret;
-> +               }
->         }
->
->         return 0;
+> In the existing code base, this macro converts a register offset to
+> an __iomem pointer for a gpio register. I changed the definition of the
+> macro here to keep the number of changes down, but I it's just
+> as easy to remove it if you prefer.
 
-Gr{oetje,eeting}s,
+Could you just add a comment so that it's clear at first glance?
 
-                        Geert
+>
+> > > @@ -167,14 +166,26 @@ struct lpc32xx_gpio_chip {
+> > >         struct gpio_regs        *gpio_grp;
+> > >  };
+> > >
+> > > +void __iomem *gpio_reg_base;
+> >
+> > Any reason why this can't be made part of struct lpc32xx_gpio_chip?
+>
+> It could be, but it's the same for each instance, and not known until
+> probe() time, so the same pointer would need to be copied into each
+> instance that is otherwise read-only.
+>
+> Let me know if you'd prefer me to rework these two things or leave
+> them as they are.
 
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+I would prefer not to have global state in the driver, let's just
+store the pointer in the data passed to gpiochip_add_data().
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Bart
+
+>
+> > > +static inline u32 gpreg_read(unsigned long offset)
+> >
+> > Here and elsewhere: could you please keep the lpc32xx_gpio prefix for
+> > all symbols?
+>
+> Sure.
+>
+>       Arnd
