@@ -2,69 +2,79 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 715A6815DC
-	for <lists+linux-gpio@lfdr.de>; Mon,  5 Aug 2019 11:48:47 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DD77C8161F
+	for <lists+linux-gpio@lfdr.de>; Mon,  5 Aug 2019 11:57:37 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727855AbfHEJsm (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 5 Aug 2019 05:48:42 -0400
-Received: from mail-lf1-f67.google.com ([209.85.167.67]:35056 "EHLO
-        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727259AbfHEJsl (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 5 Aug 2019 05:48:41 -0400
-Received: by mail-lf1-f67.google.com with SMTP id p197so57376124lfa.2
-        for <linux-gpio@vger.kernel.org>; Mon, 05 Aug 2019 02:48:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=KkdIbKxtJoBOWFj6VvUe9M2OrYsexpiagO5AWkdp1QY=;
-        b=tVHNkv2mMZK3fy0EXhhTqp2nYQU+Rl+QvE1bdnc+n4ZSUCh4+158/Zk9RSXKga/tky
-         ja5gmuQ0UaldVR++RFRsoq+WpwUetHGpZc08ejc0TGnDdiLWu6ryK830HJaCq+oU4Dtv
-         M24eLKRBAKlRO3zjevgVGnhhTG6cmthW26PMIyxkvoLz40dQ+6k/UvglKCW2kgkl3MqD
-         VUB/KtgvPBxweEQq6QSKPEpI2z74OHavDB/Hn7E67eCcb2J17qmbTaOZ2HwJrrgS8qRT
-         7EQu0SorVJdW3X6Mz3JOeDQbxkgmfccL6J3yP035fmSM2gRknLc3XvjV/efMDfZYGPPp
-         hrlw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=KkdIbKxtJoBOWFj6VvUe9M2OrYsexpiagO5AWkdp1QY=;
-        b=VwRkpwaSNHr+GCiQuUOxt/W3pIu8RTYX9P/laIZchMNjqI2cwaKNGyjEnRlEOHNvat
-         8HP2GjsirITYAhS9LL4rmsV3cVgWIv3FTI1QNBUYMzSIymOlB0deGDcSkvCWt7RAxgr2
-         ITkSgj96SkDmmEAJVuLnednnS9BPZ6B8U7ShG0/hfvuqCOWWs/SMLzQKiaruatq7yoXR
-         zH0pTfVi/NUDNY7eVe1GQ10zVmBU9c1i7dH4CsV6tlRIP6wKoCTNiAs27yJna3n8nUWV
-         fS58cucLQPmz4eQVRPHtQMxK+SWlt455V5EFlu7A6ilA6AJbVwZOLGVtqC6S+ATFaunm
-         4YtQ==
-X-Gm-Message-State: APjAAAXah+kMn086EL2x1a+lBWm+j+eCcvxiqtotzKzY9UFJVOzFxfQw
-        Su3UyVWpHQpci1X31Xg4vQT5jaaTqGtmQipXodHjt/yf
-X-Google-Smtp-Source: APXvYqzb+dhsstUbqkpob5Lx+uLQpUErNUkwjMHVYh4iOAolSRxr8q+ehJAq6U4svFibkUt9pwvQhcvO72T61SbG38E=
-X-Received: by 2002:ac2:5939:: with SMTP id v25mr1303774lfi.115.1564998519951;
- Mon, 05 Aug 2019 02:48:39 -0700 (PDT)
+        id S1728320AbfHEJ50 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 5 Aug 2019 05:57:26 -0400
+Received: from ox4u.de ([212.118.221.216]:58319 "EHLO s1.ox4u.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727357AbfHEJ5Z (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Mon, 5 Aug 2019 05:57:25 -0400
+X-Greylist: delayed 590 seconds by postgrey-1.27 at vger.kernel.org; Mon, 05 Aug 2019 05:57:24 EDT
+Received: by s1.ox4u.de (Postfix, from userid 65534)
+        id E03C82601A3; Mon,  5 Aug 2019 11:47:31 +0200 (CEST)
+X-Spam-Checker-Version: SpamAssassin 3.4.1 (2015-04-28) on s1.ox4u.de
+X-Spam-Level: 
+X-Spam-Status: No, score=-1.0 required=5.0 tests=ALL_TRUSTED
+        autolearn=disabled version=3.4.1
+Received: from ws-140106.localnet (unknown [212.185.67.146])
+        (using TLSv1 with cipher DHE-RSA-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by s1.ox4u.de (Postfix) with ESMTPSA id B3B6526014C;
+        Mon,  5 Aug 2019 11:47:29 +0200 (CEST)
+From:   Alexander Stein <alexander.stein@systec-electronic.com>
+To:     Hui Song <hui.song_1@nxp.com>
+Cc:     linux-devel@linux.nxdi.nxp.com,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org
+Subject: Re: [PATCH v1] gpio: mpc8xxx: Add new platforms GPIO DT node description
+Date:   Mon, 05 Aug 2019 11:47:26 +0200
+Message-ID: <2908964.pz7DIX2Qck@ws-140106>
+In-Reply-To: <20190805091432.9656-2-hui.song_1@nxp.com>
+References: <20190805091432.9656-1-hui.song_1@nxp.com> <20190805091432.9656-2-hui.song_1@nxp.com>
 MIME-Version: 1.0
-References: <20190722091015.20884-1-ckeepax@opensource.cirrus.com> <20190722091015.20884-3-ckeepax@opensource.cirrus.com>
-In-Reply-To: <20190722091015.20884-3-ckeepax@opensource.cirrus.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Mon, 5 Aug 2019 11:48:28 +0200
-Message-ID: <CACRpkdY6WW-jKAygSBd0+6cz8TkLJXr8zfYV5Cs1YBW9k2Ga0g@mail.gmail.com>
-Subject: Re: [PATCH 3/3] pinctrl: madera: Add configuration for Cirrus Logic CS47L92
-To:     Charles Keepax <ckeepax@opensource.cirrus.com>
-Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        patches@opensource.cirrus.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Jul 22, 2019 at 11:10 AM Charles Keepax
-<ckeepax@opensource.cirrus.com> wrote:
+On Monday, August 5, 2019, 11:14:32 AM CEST Hui Song wrote:
+> From: Song Hui <hui.song_1@nxp.com>
+> 
+> Update the NXP GPIO node dt-binding file for QorIQ and
+> Layerscape platforms, and add one more example with
+> ls1028a GPIO node.
+> 
+> Signed-off-by: Song Hui <hui.song_1@nxp.com>
+> ---
+>  Documentation/devicetree/bindings/gpio/gpio-mpc8xxx.txt | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/gpio/gpio-mpc8xxx.txt b/Documentation/devicetree/bindings/gpio/gpio-mpc8xxx.txt
+> index 69d4616..fbe6d75 100644
+> --- a/Documentation/devicetree/bindings/gpio/gpio-mpc8xxx.txt
+> +++ b/Documentation/devicetree/bindings/gpio/gpio-mpc8xxx.txt
+> @@ -28,7 +28,7 @@ gpio0: gpio@1100 {
+>  Example of gpio-controller node for a ls2080a SoC:
 
-> This adds the pinctrl configuration for the CS47L92 codec to
-> the madera pinctrl driver.
->
-> Signed-off-by: Charles Keepax <ckeepax@opensource.cirrus.com>
+   ^^^^^^^                               ^^^^^^^
+This is an example for ls2080a...
 
-Patch applied.
+>  gpio0: gpio@2300000 {
+> -	compatible = "fsl,ls2080a-gpio", "fsl,qoriq-gpio";
+> +	compatible = "fsl,ls1028a-gpio","fsl,ls2080a-gpio", "fsl,qoriq-gpio";
 
-Yours,
-Linus Walleij
+so I doubt there should be a ls1028a compatible here though.
+
+>  	reg = <0x0 0x2300000 0x0 0x10000>;
+>  	interrupts = <0 36 0x4>; /* Level high type */
+>  	gpio-controller;
+
+Best regards,
+Alexander
+
+
+
