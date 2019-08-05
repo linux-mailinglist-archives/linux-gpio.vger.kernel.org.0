@@ -2,51 +2,51 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 2753D8175D
-	for <lists+linux-gpio@lfdr.de>; Mon,  5 Aug 2019 12:47:48 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0A4C681761
+	for <lists+linux-gpio@lfdr.de>; Mon,  5 Aug 2019 12:49:06 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728398AbfHEKrq (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 5 Aug 2019 06:47:46 -0400
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:45811 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728360AbfHEKrq (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 5 Aug 2019 06:47:46 -0400
-Received: by mail-lj1-f194.google.com with SMTP id m23so78807251lje.12
-        for <linux-gpio@vger.kernel.org>; Mon, 05 Aug 2019 03:47:45 -0700 (PDT)
+        id S1728058AbfHEKtF (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 5 Aug 2019 06:49:05 -0400
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:44606 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727349AbfHEKtF (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 5 Aug 2019 06:49:05 -0400
+Received: by mail-lj1-f193.google.com with SMTP id k18so78862643ljc.11
+        for <linux-gpio@vger.kernel.org>; Mon, 05 Aug 2019 03:49:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=Y8ev7idhhRdfNKj1s1Ry4AVA7oMVl5Zr3nXpss1zKaI=;
-        b=ciULGFpaKJGyGIn8DOiYc74jQEChvVXjT78X89byv515QioWQ8LKIbfQAuDjjBHX0u
-         2v96i5afuwQhBnrogqn47DxIdQ6IXLNkLuZlMVG4x6a1f5+CocddiYovSrGgDzIeaYl9
-         eh3plobRFsDauaUG3bJ8BELTRTjE8G/gGmjrGwh7GJiYkb3tJLJcGkGeVT1dsHYihhl3
-         GYFXPEWHP48uVedVSlamsufiFTMi4tv93b+CpDlI5z2Hw/Ov2d5mulyYBb78YzfeZOVC
-         J9cIbZmLoNriGN4BVqAx2ZWMRZuB77qLfRD3VaDOLL88RFAs7lNl5JDiiDfL67UkuCtD
-         u1Kw==
+        bh=zyWsXMkk6iYIEgII1oOJY8ugYk5vzPXYCtQlb3UFPac=;
+        b=p8YZD2U4JcoxOrifQes9j3JCaAfhm7o6USZZn0949Khu+OleChnYcRfI+39orr96Sv
+         pDMdXHaz6fS1XUsCCKp0w4RcDrzKXKl6EOZwrYgE5dQHWk9iigtwULLPoyoG2BMVu9vG
+         kvAuL51lL2OoTsLuVwBsGWfCtRbYG7VIc8NDjruo6AMYEtoZd+znBsmmHY2Ll8FcaqUQ
+         0OPryf7N8p0erCSYcfVN7ycuF+vhWFALeWbYx0ZZ70eUMFPI/W44qRIj3MyVuOLOpH79
+         r0lMZp7KsHkL2CF8P/dByC4r4M0tGxCRfH6gRf5mLdID+8voRToNX5qas9UKKdse0DK8
+         vVMQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=Y8ev7idhhRdfNKj1s1Ry4AVA7oMVl5Zr3nXpss1zKaI=;
-        b=RgRGLLq84m0edPIRWpK+o2FeAfocRFq8QRWHHJ+MxWmo89KgbFPoiB2aZK8XyHkScr
-         8ZrC0dvnjT2xysCShThCRsiI1ctxIaF0U/EisY7oPeNHhzmtjdbRNXiScZafaoTddqun
-         QOJSJkfIshHedpGI7Klg9ooWR760660BI6RXQhKp6/NNH4ndY3osOfRA6puA4opJ/S2i
-         7mH/2Y3z+tRSJpI0uWyXmyrwJym2Jtj9hEm1hCpeVMHx+rNKfpHdreyEvBFOmvDm4Q/a
-         UOkPM7Zod2VvMnutBSZxFNzOsYEeZsl7jkE1e5Um3V49JsofEnCMbq76aQ/iSZAnMYKw
-         dnyA==
-X-Gm-Message-State: APjAAAUmvQx7C6j/Ol2S4kNYcpG7i+SujUTIMW8UhEEgAik491Y33tET
-        8psuomYSdsh3w2Rf5u2+Y9br1qbxvOOd7SqzfW42Mw==
-X-Google-Smtp-Source: APXvYqwLJr3uamyVrePIy7GYeTGTKZVVFmuCgCeDV0lQp/Tg1tMYwqSStWcsZi8QVF2EtXjzVZWC8D1lN3Mn23V8cVg=
-X-Received: by 2002:a2e:2c14:: with SMTP id s20mr16495379ljs.54.1565002064570;
- Mon, 05 Aug 2019 03:47:44 -0700 (PDT)
+        bh=zyWsXMkk6iYIEgII1oOJY8ugYk5vzPXYCtQlb3UFPac=;
+        b=luvD5mi7Qwm0lUIcd1NNo8Ma+tcdbip0II1w1RbUaF9izDGscPF8FudKKlVUIjsFVS
+         DzNJ1JEpKgq+8+fGdGeUPDFt2Dn5tER5aYy1MkkWF6W2FTGS46Jnyg4Z6Cgww+KrgbJc
+         127eGTGkGS8PWXkGMebk/a5gdX5+ZokPK0yJYF3y+LdiZBum6Arpp3Lhe//robUYjRH/
+         SRhIQTWVyvi+qE83irm6KPCQOD3Edab3rCiEF+VNAD4wJKI2XuNw7UIIJH/UpHKqVwTz
+         e+jrGxoZ8+hDqSmVFeFDZm/tAvxWh7dhcunEyiQHTz7NjJmcS8yZudUqGnS+yQXsjpMu
+         Uq7A==
+X-Gm-Message-State: APjAAAWeRoI4+RqwcZKwG8n6DQ9RY6Ar8vGVxgEhRvEEdQOjqRn5xruC
+        c1+boJR/byAgGICI2HxOTvR9/C4UhfDu795OeZQIjw==
+X-Google-Smtp-Source: APXvYqwv1epfSf4ijzEUccvR56Qz9qbH+rnx/bhn0Kh+aaPW/inmXM+/zCQxf4A9MHgYUbFT258fn6fea66xtBqoGC4=
+X-Received: by 2002:a2e:781a:: with SMTP id t26mr29589680ljc.28.1565002143043;
+ Mon, 05 Aug 2019 03:49:03 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190724081313.12934-1-andrew@aj.id.au> <20190724081313.12934-3-andrew@aj.id.au>
-In-Reply-To: <20190724081313.12934-3-andrew@aj.id.au>
+References: <20190724081313.12934-1-andrew@aj.id.au> <20190724081313.12934-4-andrew@aj.id.au>
+In-Reply-To: <20190724081313.12934-4-andrew@aj.id.au>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Mon, 5 Aug 2019 12:47:32 +0200
-Message-ID: <CACRpkdYoiWwm7SeXxWgpJcoiRcNV28CDC3F8FVx5my2Q0KSvvA@mail.gmail.com>
-Subject: Re: [PATCH 2/3] pinctrl: aspeed: Document existence of deprecated compatibles
+Date:   Mon, 5 Aug 2019 12:48:51 +0200
+Message-ID: <CACRpkdZCJWeZO6CFvkq4uhnX+o_q_AfkDZ=a2kmUgbS3JtDqfA@mail.gmail.com>
+Subject: Re: [PATCH 3/3] dt-bindings: aspeed: Remove mention of deprecated compatibles
 To:     Andrew Jeffery <andrew@aj.id.au>
 Cc:     linux-aspeed <linux-aspeed@lists.ozlabs.org>,
         Lee Jones <lee.jones@linaro.org>,
@@ -66,8 +66,7 @@ X-Mailing-List: linux-gpio@vger.kernel.org
 
 On Wed, Jul 24, 2019 at 10:13 AM Andrew Jeffery <andrew@aj.id.au> wrote:
 
-> Otherwise they look odd in the face of not being listed in the bindings
-> documents.
+> Guide readers away from using the aspeed,g[45].* compatible patterns.
 >
 > Signed-off-by: Andrew Jeffery <andrew@aj.id.au>
 
