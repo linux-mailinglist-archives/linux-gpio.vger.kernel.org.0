@@ -2,71 +2,82 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id C35AE81746
-	for <lists+linux-gpio@lfdr.de>; Mon,  5 Aug 2019 12:43:08 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3E35981750
+	for <lists+linux-gpio@lfdr.de>; Mon,  5 Aug 2019 12:46:12 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728385AbfHEKnF (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 5 Aug 2019 06:43:05 -0400
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:40330 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727230AbfHEKnF (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 5 Aug 2019 06:43:05 -0400
-Received: by mail-lf1-f65.google.com with SMTP id b17so57550911lff.7
-        for <linux-gpio@vger.kernel.org>; Mon, 05 Aug 2019 03:43:04 -0700 (PDT)
+        id S1727739AbfHEKqL (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 5 Aug 2019 06:46:11 -0400
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:39742 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727349AbfHEKqL (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 5 Aug 2019 06:46:11 -0400
+Received: by mail-lj1-f195.google.com with SMTP id v18so78824165ljh.6
+        for <linux-gpio@vger.kernel.org>; Mon, 05 Aug 2019 03:46:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=FNuA6/9fhDtZ2LA/XhT5TM5n9GcO4T42zHctSuCq+QE=;
-        b=ZqKWS/7PAIhTkrjtw+GzHRAkD9966ILvMv4i8DSD/p0C0m6oeCBA5UKCB22elJeNfJ
-         zWiKm8UHSaQlH8pUZ3AZbvyx4ZBqw6BkeYLgJireYNPJmj0q2uqDnTzJCp/jQxiaax89
-         XCh32PWzJhWMXrG0JnXQJjWeNR65juG44BK9cUuZ2gKq8V14CF8zLoJyE3HcYK+XMi2Q
-         DQtRf+3O3nR21FO5G/p3IrM7QSNRG15P4rv6CZEdT3mTViEGqgzNB+Lz65tM2cCIbL/b
-         Mdp/TrttDV5dSNyEqTNV3L8pbAvkos2UKTsF8pX+/GaSCsnWP0IqyW1tDstJWH/iA/sw
-         MBQQ==
+        bh=azjj3TFeiqdmOl8nmyercmf7iB34KF89eZoGG/R6Zs4=;
+        b=gaWYUfwJYyttQBMe2nY+8yFL/8R5jK6AQk8xvuMDqQn5mcexQfU+ZUUBmyu+uJP9FD
+         AmKll1bIV4/biJ6Qu5g1juCqirMX0AA9Y7O0FMduDj8D0GDyQdzizwqMTlzy5Bu9gjWv
+         1HnI+DOVGuN2KsQjDbjg/5PnQh5CXxe8LbU1I1jgmfyS4ER7mB+VkEGz9UWTkkKnvIDb
+         AE8kGu/a+T/WRFmIyQppd735PPaioAy1djy1ixvflToH7U7NTeqAlF3eQ9nOCL1KN0gH
+         0asNpJXWqNkEs/u5hVmU5YZuz2wSW0AKsmclxTy6HUY95ONFEY6k/YlWjvb91w9mQ4xa
+         GrwQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=FNuA6/9fhDtZ2LA/XhT5TM5n9GcO4T42zHctSuCq+QE=;
-        b=iKeWExJjFXRIWWkFQ6R4Js6gBlL/z9Ng2rvUGnuMk+RervVz2Vgg/uHZl7nxMgKHhw
-         XqZ9SemUOyXokFJdnhH2K0NWqPbYcULsHll7KUuhkeW1qoj3PAiVMhk5F1m6MvNepxuF
-         Agip46Ri7rEQ+/EcptnvSCc/gQP4fInDmPauFrNaLCqCjHqroJu3rJuC3Sigu2Xbts95
-         /WmebZbOA//5A0S77MjaGLZT8GC52Q1sMaec6jUQmxmqBwogZxDbZJtjNdQCbPd19gtA
-         k0C1uxYF4Rb2bXIZ4j/hq70K5R/23Lav3VEKIOYVx5JREAHbyUCqaiuIto6zREBo/OhD
-         P1SQ==
-X-Gm-Message-State: APjAAAX/z88gsQMLDpShx+hxr1uu/o5x2ZnCFZnR6rGDV9mgXIc+tNT6
-        BAaRjVesU4OITrnTebHf9a98yAS4LyugLkfR4e1Wxw==
-X-Google-Smtp-Source: APXvYqzUEX+wRaUh5h+0CMDXrhYbMXJyYq5FgUc0gxHkybrHmYXBX420COs0UI1eqAlKWrcY6dDdA4a4Mno7k+9cWAE=
-X-Received: by 2002:ac2:4c07:: with SMTP id t7mr1415879lfq.152.1565001783694;
- Mon, 05 Aug 2019 03:43:03 -0700 (PDT)
+        bh=azjj3TFeiqdmOl8nmyercmf7iB34KF89eZoGG/R6Zs4=;
+        b=qfOQQnAK9cKV7z9wDhwps8Iys0QPbRK0YCGG6yCzk322cNYzDqk22pRHJyNf/BCqsI
+         5qiCqjteN5V/n743nbrYpvkYppv/IrmIfcrfKjco/itJqz/CsGalBQRecJl4f6B1wkOn
+         Vl7+tRQ9ipBgcjeMv6OBPL2AVlVvFcsKPNEzydWQjn5Bbg5FbsXtxKrCnzqv6OxdVGaY
+         91VkGnnuZR4nVyuaVUQ65LQPdUrRCILTPMHVJj2mOwnsc7zoDxBD6PAQMdrEuDOcKLrD
+         kobRl9Ern0l4yi3wHgCxG9361yJXMRVStrxmg2RaJujkqoz5akrM6rtMMJthYGscOYQ7
+         YZGw==
+X-Gm-Message-State: APjAAAVy+U09nZBrS1nxcJhdKeXPCL2zB0kMIm2JCeC7JKrNqabOANq+
+        QlnWVQij/0t8dZDPU1qwiFub9Wahtm/nSi98oiDoWA==
+X-Google-Smtp-Source: APXvYqyclUQUuvXpJI3a3I9xyKZ6YIBTCazGIgPNcBnTvtEx+0Gv4bfEuR07MD49TkWuHW7hIeykHmoPhEdmQSSmqjQ=
+X-Received: by 2002:a2e:781a:: with SMTP id t26mr29583690ljc.28.1565001969218;
+ Mon, 05 Aug 2019 03:46:09 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190711041942.23202-1-andrew@aj.id.au>
-In-Reply-To: <20190711041942.23202-1-andrew@aj.id.au>
+References: <20190724081313.12934-1-andrew@aj.id.au> <CACRpkdapypySGPrLgSMSNy1fzkca2BfMUGzf3koFWQZ-M5VOvg@mail.gmail.com>
+ <9d0f2b20-e6f6-419c-a866-c4a0dd92aa63@www.fastmail.com> <3691f6cb-2451-43f7-9f00-d5693071ba59@www.fastmail.com>
+ <CACPK8XcWK9Gf=pW5ds=3muoXHAWnyYfHcVSVh+anaTigtMO8yA@mail.gmail.com>
+In-Reply-To: <CACPK8XcWK9Gf=pW5ds=3muoXHAWnyYfHcVSVh+anaTigtMO8yA@mail.gmail.com>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Mon, 5 Aug 2019 12:42:52 +0200
-Message-ID: <CACRpkdac+yqO9BEJ67UMD=uQVfMzE=s9oHqaSOB20-OboBMVVw@mail.gmail.com>
-Subject: Re: [PATCH 0/6] pinctrl: aspeed: Add AST2600 pinmux support
-To:     Andrew Jeffery <andrew@aj.id.au>
-Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+Date:   Mon, 5 Aug 2019 12:45:57 +0200
+Message-ID: <CACRpkdbb9OFnnG6rN0fL-qA7vBsGze23GgOifAHqxhod=0kRpQ@mail.gmail.com>
+Subject: Re: [PATCH 0/3] ARM: dts: aspeed: Deprecate g[45]-style compatibles
+To:     Joel Stanley <joel@jms.id.au>
+Cc:     Andrew Jeffery <andrew@aj.id.au>,
+        linux-aspeed <linux-aspeed@lists.ozlabs.org>,
+        Lee Jones <lee.jones@linaro.org>,
         Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        Joel Stanley <joel@jms.id.au>, ryanchen.aspeed@gmail.com,
-        johnny_huang@aspeedtech.com,
-        linux-aspeed <linux-aspeed@lists.ozlabs.org>,
         "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
         <devicetree@vger.kernel.org>,
         Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-I applied this series now!
+On Fri, Aug 2, 2019 at 8:15 AM Joel Stanley <joel@jms.id.au> wrote:
 
-Thanks Andrew.
+> > Joel, do you mind if Linus takes this series through the pinctrl tree, given
+> > the fix to the devicetrees is patch 1/3?
+>
+> It depends if you plan more changes to that part of the device tree
+> this merge window :)
+>
+> Linus, perhaps the safer option is for me to take 1/3 through my tree
+> and you can take the rest through yours?
+
+OK let's proceed like that.
 
 Yours,
 Linus Walleij
