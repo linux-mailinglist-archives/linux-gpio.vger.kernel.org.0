@@ -2,84 +2,108 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 4D7C082EA1
-	for <lists+linux-gpio@lfdr.de>; Tue,  6 Aug 2019 11:23:54 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 689BF82F8C
+	for <lists+linux-gpio@lfdr.de>; Tue,  6 Aug 2019 12:14:17 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732290AbfHFJXx (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 6 Aug 2019 05:23:53 -0400
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:36237 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730068AbfHFJXx (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 6 Aug 2019 05:23:53 -0400
-Received: by mail-ot1-f66.google.com with SMTP id r6so90786686oti.3;
-        Tue, 06 Aug 2019 02:23:52 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=UeKI+wyGIyCm+Z7vX+Uc5wPRZnjQXw15qspoovmCKP4=;
-        b=ZsCUE6QXdyLnc7DYO13z3zwTTdLLc49mvH6lqP3d98zuS/qfp7PYMvOrGLdGD386FK
-         tbAb5ZGvU/UEMaBbBhSYDAU23z/84MIoUXFflyDRl8tVouZoP08coElxFvNGW9Kgrt0M
-         zkQjpIBDqLtsod6dNfxuz9OzjAwX8gQhJXRkcQj9zVBUOoVW1Y5p17YxmNOSg+6tL6Pi
-         v93GJ62V4RoSmrtVtPr1lDwFr/XOMMU9f7Pl+1b08pS105woAQxfBlv7HnunZN6Kg2c4
-         Xpdf49XzxJv1ycO0yepfZdrDonD6IXGBeuzc4nxOuoL2MGeaqQcjCbSMbFADCMM60fxw
-         3jfg==
-X-Gm-Message-State: APjAAAXj0zBbGgd3dttqvqyfvVKbuyaVXufKr5yUUDVMAowzDvgwl1YC
-        88o033Z3D+2vSJOdRkJKxRjnlWsImaJHUFEDbKM=
-X-Google-Smtp-Source: APXvYqzoue7LKiVS/fp2yo6a8EkRmr9Vdba6hiJplbafhOoXjkmNz+1Zf6SN7RotjA7UU2od04sn0L2mqC8LAWcPnsY=
-X-Received: by 2002:a9d:529:: with SMTP id 38mr2294075otw.145.1565083432454;
- Tue, 06 Aug 2019 02:23:52 -0700 (PDT)
-MIME-Version: 1.0
-References: <1562576868-8124-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
- <1562576868-8124-3-git-send-email-yoshihiro.shimoda.uh@renesas.com>
-In-Reply-To: <1562576868-8124-3-git-send-email-yoshihiro.shimoda.uh@renesas.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Tue, 6 Aug 2019 11:23:41 +0200
-Message-ID: <CAMuHMdVcAw_ApKMmrV7DaoJBGUZ1GzW3kmxnsTn72FtCGWhXPA@mail.gmail.com>
-Subject: Re: [PATCH RFC 2/7] pinctrl: sh-pfc: remove incomplete flag "cfg->type"
-To:     Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+        id S1728845AbfHFKOP (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 6 Aug 2019 06:14:15 -0400
+Received: from mga05.intel.com ([192.55.52.43]:28318 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726713AbfHFKOP (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Tue, 6 Aug 2019 06:14:15 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 06 Aug 2019 03:14:15 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,353,1559545200"; 
+   d="scan'208";a="192633500"
+Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.157])
+  by fmsmga001.fm.intel.com with SMTP; 06 Aug 2019 03:14:12 -0700
+Received: by lahna (sSMTP sendmail emulation); Tue, 06 Aug 2019 13:14:12 +0300
+Date:   Tue, 6 Aug 2019 13:14:12 +0300
+From:   Mika Westerberg <mika.westerberg@linux.intel.com>
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux PWM List <linux-pwm@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        linux-gpio@vger.kernel.org
+Subject: Re: [PATCH v1] pinctrl: intel: Use NSEC_PER_USEC for debounce
+ calculus
+Message-ID: <20190806101412.GJ2548@lahna.fi.intel.com>
+References: <20190723155431.65095-1-andriy.shevchenko@linux.intel.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190723155431.65095-1-andriy.shevchenko@linux.intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Shimoda-san,
+On Tue, Jul 23, 2019 at 06:54:31PM +0300, Andy Shevchenko wrote:
+> Replace hard coded constants with self-explanatory names, i.e.
+> use NSEC_PER_USEC for debounce calculus.
+> 
+> While here, add a unit suffix to debounce period constant.
+> 
+> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> ---
+>  drivers/pinctrl/intel/pinctrl-intel.c | 9 +++++----
+>  1 file changed, 5 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/pinctrl/intel/pinctrl-intel.c b/drivers/pinctrl/intel/pinctrl-intel.c
+> index 3a7876efd4a6..99c5bca789eb 100644
+> --- a/drivers/pinctrl/intel/pinctrl-intel.c
+> +++ b/drivers/pinctrl/intel/pinctrl-intel.c
+> @@ -8,12 +8,13 @@
+>   */
+>  
+>  #include <linux/acpi.h>
+> -#include <linux/module.h>
+>  #include <linux/interrupt.h>
+>  #include <linux/gpio/driver.h>
+>  #include <linux/log2.h>
+> +#include <linux/module.h>
+>  #include <linux/platform_device.h>
+>  #include <linux/property.h>
+> +#include <linux/time.h>
+>  
+>  #include <linux/pinctrl/pinctrl.h>
+>  #include <linux/pinctrl/pinmux.h>
+> @@ -71,7 +72,7 @@
+>  #define PADCFG2_DEBOUNCE_SHIFT		1
+>  #define PADCFG2_DEBOUNCE_MASK		GENMASK(4, 1)
+>  
+> -#define DEBOUNCE_PERIOD			31250 /* ns */
+> +#define DEBOUNCE_PERIOD_NS		31250
 
-On Mon, Jul 8, 2019 at 11:08 AM Yoshihiro Shimoda
-<yoshihiro.shimoda.uh@renesas.com> wrote:
-> The old commit c58d9c1b26e3 ("sh-pfc: Implement generic pinconf
-> support") broke the cfg->type flag to PINMUX_TYPE_FUNCTION because
-> sh_pfc_pinconf_set() didn't call sh_pfc_reconfig_pin().
-> Now if we fix the cfg->type condition, it gets worse because:
->  - Some drivers might be deferred so that .set_mux() will be called
->    multiple times.
->  - In such the case, the sh-pfc driver returns -EBUSY even if
->    the group is the same, and then that driver fails to probe.
->
-> Since the pinctrl subsystem already has such conditions according
-> to @set_mux and @gpio_request_enable, this patch just remove
-> the incomplete flag from sh-pfc/pinctrl.c.
+Should this be called DEBOUNCE_PERIOD_NSEC to be consistent with
+NSEC_PER_USEC?
 
-Do we need to set sh_pfc_pinmux_ops.strict = true?
+Otherwise looks good.
 
-Gr{oetje,eeting}s,
-
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+>  
+>  struct intel_pad_context {
+>  	u32 padcfg0;
+> @@ -566,7 +567,7 @@ static int intel_config_get(struct pinctrl_dev *pctldev, unsigned int pin,
+>  			return -EINVAL;
+>  
+>  		v = (v & PADCFG2_DEBOUNCE_MASK) >> PADCFG2_DEBOUNCE_SHIFT;
+> -		arg = BIT(v) * DEBOUNCE_PERIOD / 1000;
+> +		arg = BIT(v) * DEBOUNCE_PERIOD_NS / NSEC_PER_USEC;
+>  
+>  		break;
+>  	}
+> @@ -683,7 +684,7 @@ static int intel_config_set_debounce(struct intel_pinctrl *pctrl,
+>  	if (debounce) {
+>  		unsigned long v;
+>  
+> -		v = order_base_2(debounce * 1000 / DEBOUNCE_PERIOD);
+> +		v = order_base_2(debounce * NSEC_PER_USEC / DEBOUNCE_PERIOD_NS);
+>  		if (v < 3 || v > 15) {
+>  			ret = -EINVAL;
+>  			goto exit_unlock;
+> -- 
+> 2.20.1
