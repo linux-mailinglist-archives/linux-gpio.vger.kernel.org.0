@@ -2,116 +2,132 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id CA721839E8
-	for <lists+linux-gpio@lfdr.de>; Tue,  6 Aug 2019 21:55:00 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id ED4EA839F7
+	for <lists+linux-gpio@lfdr.de>; Tue,  6 Aug 2019 22:02:40 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725974AbfHFTzA (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 6 Aug 2019 15:55:00 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:40356 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725970AbfHFTy7 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 6 Aug 2019 15:54:59 -0400
-Received: by mail-wr1-f65.google.com with SMTP id r1so89020965wrl.7;
-        Tue, 06 Aug 2019 12:54:58 -0700 (PDT)
+        id S1725948AbfHFUCk (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 6 Aug 2019 16:02:40 -0400
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:40000 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725906AbfHFUCk (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 6 Aug 2019 16:02:40 -0400
+Received: by mail-ot1-f68.google.com with SMTP id l15so38386698oth.7;
+        Tue, 06 Aug 2019 13:02:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:user-agent:in-reply-to:references:mime-version
-         :content-transfer-encoding:subject:to:cc:from:message-id;
-        bh=pweWeMZ+YAimqC/rJkc+DaUbocqC+KDHTVadFtRmDA0=;
-        b=fGAJjSURN9jdmlO/I/yY7LcvHVIFWmV3kCQetZLe/YsASKUdA/2V49frkUJFh32akX
-         gt/nIuAshzYJrMBWOFMq7WOhOnKJNFylLc88RXm5VVxEyXnwZExq/aQyyFcw6PsIBdUO
-         UJBdbyqjns/oNRuElRx8SE96dBXcqAcxK/aj5vopiYWvxDSJwtP4RSABBjLH4MQt17dB
-         AOwLQA5PL/xZM+pTYZxvJhnFpmDkdLkUqo8nndY4GhfnYq58zUpjD8I5R57K4OgKkBFx
-         zGfzjahX0X8XzLBcff5KFwL0tPALfivB00M77hWMEdiAzB0K55NAJxYWQYAE+1ReF+f8
-         qkQA==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=gqjViCXObN2WgC0+IhrtTb7Ll35AmMVzauFcMWGTI3Y=;
+        b=g6geZrRSw1Dk72HeV3MeqgqDiCymOKGzorDS9kcJv2KYasDx9IRJzWdUCQ5iz/Ck/a
+         sMOqtrYcPYFkeOtOkh3EZ6BQOFZFtjfX4FeNaR7psKg3xzJZZT2HZI2UO45VHTO99KCa
+         5DJfIPEVo7ChrD9UA9ksvW4WKmWAYqfMY6fVOBsARhj6ITM/Y954KCB64DT/86RovKv+
+         v3izTjlAuvKv3KGD3bthq9dyPH36SX8i7m0+F89SRk5FQznew6pgkuE+/KIjfgWA0K30
+         KRvE8YQ5YyG26Sgb8bPl/FmaHp9h4HQXgX6WZJSlRti8akUyiqMHCDslkE+F9DWvSgMq
+         +SWA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:user-agent:in-reply-to:references
-         :mime-version:content-transfer-encoding:subject:to:cc:from
-         :message-id;
-        bh=pweWeMZ+YAimqC/rJkc+DaUbocqC+KDHTVadFtRmDA0=;
-        b=WurGKoyN2lV3dZY27B2iD59Pkm57nngCQuoA0JCxmdWNrXcqPOUTorzW0CTsnTz+CD
-         fUzu7Xi/KbFgJRj/iuRy8d9SUsof5QPxw2n/1y9klemunXVVAu8W/tR35yStFjQanxrv
-         pctQbFR3vt+67Wqj7VCFj1jLqLOHJ6xaeSyw/84aaywlMGmvU1xhIbI27OWxXAIzuPaz
-         MxO7ykkjeG2QXqgsuRvveMJ3sLnp3IFaMRfeemq9KJ9shOQiykykAZqgiuJUtZ3hTGBj
-         UDzGj0QYcbGBx99Fuj3k6DY4ugBnfFo++QRA+EgIYrU020QFmeA+BdLSxqLDTLN4MSTB
-         IO7g==
-X-Gm-Message-State: APjAAAU8dfRGIAOotTjHeKzqZd34RaSGGpkG/Zy4jWKzDYBzyNMAh5hd
-        A3slLXpUvDMcN9Sl3n/VPARv8QJO3kI=
-X-Google-Smtp-Source: APXvYqyqfIIs/GR5fj1UygzkWQGeAlXeuTKMOwI7ZkHYeJsqCO/4oOppuFUB/Tcua3HuCcOYDPpdjw==
-X-Received: by 2002:adf:fe10:: with SMTP id n16mr5585332wrr.92.1565121297462;
-        Tue, 06 Aug 2019 12:54:57 -0700 (PDT)
-Received: from [192.168.1.32] ([141.226.31.91])
-        by smtp.gmail.com with ESMTPSA id a8sm77911466wma.31.2019.08.06.12.54.56
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 06 Aug 2019 12:54:56 -0700 (PDT)
-Date:   Tue, 06 Aug 2019 22:54:48 +0300
-User-Agent: K-9 Mail for Android
-In-Reply-To: <CACRpkdaTmxQn2Z=vD6nyqk-iXCFrnCG1xpkXwO3-+sazOhGBvw@mail.gmail.com>
-References: <20190803133436.15016-1-rfried.dev@gmail.com> <CACRpkdYEdQdk62bWJ2=i2Mbvpz3kwL=9bnMoxksFsTgAHRh68w@mail.gmail.com> <CACRpkdaTmxQn2Z=vD6nyqk-iXCFrnCG1xpkXwO3-+sazOhGBvw@mail.gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=gqjViCXObN2WgC0+IhrtTb7Ll35AmMVzauFcMWGTI3Y=;
+        b=DAVKmvYCat5Dj/ruLiTDzFFuhZq4kak1ETB6I0A26uw55TdS6uBJmEri64wRgyHQVs
+         GN0Hy5n4PPvA4kEaPHcBmPMzYLhiipyLt5cVtdtxMbMaA5/o5SReiskWf1eMKNW0iPH1
+         e4DwW70VB23KpGrgxdaSpWb29r9f194r6Ro7GM7esYhQ0u0xEquCc8jXCfeKeAqWU8rL
+         QHTybgeHsj6D1htR0yXbCfmlDtKElfBibDqXLIv4CfekibAMhtjmTZ3r04tBCHWvTopq
+         yXqopfEBABpB5N5VkeK5JNRcYTvhc2ynumq8hJR0CH5cmo0QtomaTzLcDwfnVnVl0N6f
+         1IVw==
+X-Gm-Message-State: APjAAAUv/enkbaZmdiOEMTkClH/qX+lO8nl3kZrRCiqzEPZP78AwDiNv
+        C4f3UQG58s/Izj9E+KwZXS+RfZRthcf/rEJWTYc=
+X-Google-Smtp-Source: APXvYqxUZRrA60vyMd0kzSQ4htAnblGQWHtpdj5jgj0q6G1y1gZxQTbe74lzuUCM09PKJHet7o8XCRwQJqJO6Q95G/0=
+X-Received: by 2002:a5d:9942:: with SMTP id v2mr5555846ios.177.1565121759065;
+ Tue, 06 Aug 2019 13:02:39 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH] gpiolib: Take MUX usage into account
-To:     Linus Walleij <linus.walleij@linaro.org>
-CC:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+References: <20190731195713.3150463-1-arnd@arndb.de> <20190731195713.3150463-6-arnd@arndb.de>
+In-Reply-To: <20190731195713.3150463-6-arnd@arndb.de>
+From:   Sylvain Lemieux <slemieux.tyco@gmail.com>
+Date:   Tue, 6 Aug 2019 16:02:27 -0400
+Message-ID: <CA+rxa6p4gD7+6-aRyd4-V4TvkyMiUh9ueMLc6ggBaDC=LG7fQg@mail.gmail.com>
+Subject: Re: [PATCH 05/14] gpio: lpc32xx: allow building on non-lpc32xx targets
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     soc@kernel.org,
+        "moderated list:ARM PORT" <linux-arm-kernel@lists.infradead.org>,
+        Vladimir Zapolskiy <vz@mleia.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Gregory Clement <gregory.clement@bootlin.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        Guenter Roeck <linux@roeck-us.net>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Stefan Wahren <stefan.wahren@i2se.com>
-From:   Ramon Fried <rfried.dev@gmail.com>
-Message-ID: <2F7B6E95-045E-4F57-B2CB-858BEE298986@gmail.com>
+        Networking <netdev@vger.kernel.org>,
+        linux-serial@vger.kernel.org, USB list <linux-usb@vger.kernel.org>,
+        LINUXWATCHDOG <linux-watchdog@vger.kernel.org>,
+        Lee Jones <lee.jones@linaro.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+Hi Arnd,
 
+On Wed, Jul 31, 2019 at 4:00 PM Arnd Bergmann <arnd@arndb.de> wrote:
+>
+> The driver uses hardwire MMIO addresses instead of the data
+> that is passed in device tree. Change it over to only
+> hardcode the register offset values and allow compile-testing.
+>
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> ---
+>  drivers/gpio/Kconfig        |  8 +++++
+>  drivers/gpio/Makefile       |  2 +-
+>  drivers/gpio/gpio-lpc32xx.c | 63 ++++++++++++++++++++++++-------------
+>  3 files changed, 50 insertions(+), 23 deletions(-)
+>
+[...]
 
-On August 6, 2019 4:11:27 PM GMT+03:00, Linus Walleij <linus=2Ewalleij@lin=
-aro=2Eorg> wrote:
->On Tue, Aug 6, 2019 at 3:04 PM Linus Walleij <linus=2Ewalleij@linaro=2Eor=
-g>
->wrote:
->> On Sat, Aug 3, 2019 at 3:34 PM Ramon Fried <rfried=2Edev@gmail=2Ecom>
->wrote:
->>
->> > From: Stefan Wahren <stefan=2Ewahren@i2se=2Ecom>
->> >
->> > The user space like gpioinfo only see the GPIO usage but not the
->> > MUX usage (e=2Eg=2E I2C or SPI usage) of a pin=2E As a user we want t=
-o
->know which
->> > pin is free/safe to use=2E So take the MUX usage of strict pinmux
->controllers
->> > into account to get a more realistic view for ioctl
->GPIO_GET_LINEINFO_IOCTL=2E
->> >
->> > Signed-off-by: Stefan Wahren <stefan=2Ewahren@i2se=2Ecom>
->> > Tested-By: Ramon Fried <rfried=2Edev@gmail=2Ecom>
->> > Signed-off-by: Ramon Fried <rfried=2Edev@gmail=2Ecom>
->> > ---
->> > Sending Stefan's RFC as patch, as I tested it and it seems to work,
->> > additionally, an accompanying fix was made by me to gpiolibd to fix
->a
->> > display error of the actual result:
->> > https://patchwork=2Eozlabs=2Eorg/patch/1139923/
->>
->> This is mostly fine, some style nits so I fixed it up when
->> applying=2E
->
->Ooops no=2E It needs a deeper rework in accordance to my comments
->last time it was posted=2E Please read this reply to Stefan's patch
->and address the comments:
->
-NP, I'll try to address these in a new patch=2E=20
-Thanks=2E=20
-Ramon=20
->https://lore=2Ekernel=2Eorg/linux-gpio/CACRpkdb5DjAMRYkT+b0U6HVk7E6ccLT79=
--LB=3DQGQWWtE17aPUg@mail=2Egmail=2Ecom/
->
->Yours,
->Linus Walleij
+> diff --git a/drivers/gpio/gpio-lpc32xx.c b/drivers/gpio/gpio-lpc32xx.c
+> index 24885b3db3d5..548f7cb69386 100644
+> --- a/drivers/gpio/gpio-lpc32xx.c
+> +++ b/drivers/gpio/gpio-lpc32xx.c
 
---=20
-Sent from my Android device with K-9 Mail=2E Please excuse my brevity=2E
+[...]
+
+> @@ -498,6 +509,10 @@ static int lpc32xx_gpio_probe(struct platform_device *pdev)
+>  {
+>         int i;
+>
+> +       gpio_reg_base = devm_platform_ioremap_resource(pdev, 0);
+> +       if (gpio_reg_base)
+> +               return -ENXIO;
+
+The probe function will always return an error.
+Please replace the previous 2 lines with:
+    if (IS_ERR(gpio_reg_base))
+        return PTR_ERR(gpio_reg_base);
+
+You can add my acked-by and tested-by in the v2 patch.
+Acked-by: Sylvain Lemieux <slemieux.tyco@gmail.com>
+Tested-by: Sylvain Lemieux <slemieux.tyco@gmail.com>
+
+> +
+>         for (i = 0; i < ARRAY_SIZE(lpc32xx_gpiochip); i++) {
+>                 if (pdev->dev.of_node) {
+>                         lpc32xx_gpiochip[i].chip.of_xlate = lpc32xx_of_xlate;
+> @@ -527,3 +542,7 @@ static struct platform_driver lpc32xx_gpio_driver = {
+>  };
+>
+>  module_platform_driver(lpc32xx_gpio_driver);
+> +
+> +MODULE_AUTHOR("Kevin Wells <kevin.wells@nxp.com>");
+> +MODULE_LICENSE("GPL");
+> +MODULE_DESCRIPTION("GPIO driver for LPC32xx SoC");
+> --
+> 2.20.0
+>
+Sylvain
