@@ -2,168 +2,66 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 49509824A6
-	for <lists+linux-gpio@lfdr.de>; Mon,  5 Aug 2019 20:06:12 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1D1EE8298F
+	for <lists+linux-gpio@lfdr.de>; Tue,  6 Aug 2019 04:18:31 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728759AbfHESGH (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 5 Aug 2019 14:06:07 -0400
-Received: from hqemgate16.nvidia.com ([216.228.121.65]:8967 "EHLO
-        hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726779AbfHESGH (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 5 Aug 2019 14:06:07 -0400
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5d48700d0002>; Mon, 05 Aug 2019 11:06:05 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate102.nvidia.com (PGP Universal service);
-  Mon, 05 Aug 2019 11:06:04 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Mon, 05 Aug 2019 11:06:04 -0700
-Received: from [10.110.103.110] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 5 Aug
- 2019 18:06:03 +0000
-Subject: Re: [PATCH v7 01/20] pinctrl: tegra: Add suspend and resume support
-To:     Dmitry Osipenko <digetx@gmail.com>, <thierry.reding@gmail.com>,
-        <jonathanh@nvidia.com>, <tglx@linutronix.de>,
-        <jason@lakedaemon.net>, <marc.zyngier@arm.com>,
-        <linus.walleij@linaro.org>, <stefan@agner.ch>,
-        <mark.rutland@arm.com>
-CC:     <pdeschrijver@nvidia.com>, <pgaikwad@nvidia.com>,
-        <sboyd@kernel.org>, <linux-clk@vger.kernel.org>,
-        <linux-gpio@vger.kernel.org>, <jckuo@nvidia.com>,
-        <josephl@nvidia.com>, <talho@nvidia.com>,
-        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <mperttunen@nvidia.com>, <spatra@nvidia.com>, <robh+dt@kernel.org>,
-        <devicetree@vger.kernel.org>, <rjw@rjwysocki.net>,
-        <viresh.kumar@linaro.org>, <linux-pm@vger.kernel.org>
-References: <1564607463-28802-1-git-send-email-skomatineni@nvidia.com>
- <1564607463-28802-2-git-send-email-skomatineni@nvidia.com>
- <6b1482f6-0578-f602-d8d1-541d86303ce2@gmail.com>
-From:   Sowjanya Komatineni <skomatineni@nvidia.com>
-Message-ID: <b45ca99a-188a-c695-3f3d-48d273808f9c@nvidia.com>
-Date:   Mon, 5 Aug 2019 11:06:02 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        id S1731359AbfHFCSa (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 5 Aug 2019 22:18:30 -0400
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:36567 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731358AbfHFCSa (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 5 Aug 2019 22:18:30 -0400
+Received: by mail-oi1-f196.google.com with SMTP id c15so8915723oic.3
+        for <linux-gpio@vger.kernel.org>; Mon, 05 Aug 2019 19:18:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:sender:from:date:message-id:subject:to
+         :content-transfer-encoding;
+        bh=1RixQWRGBRCKP95c35mO4zNDicD1IhXHzQMmV09qSmg=;
+        b=hp0jfn0XwgUCJcPMGv65l/LE7RP/+SLuZUiJv8cr6DNnnyYKyuIBqUww172PLgACsv
+         ztIgMTJc07ZdXsYF7bGsM9hpCCNdIKOyYVQneDMthXYEzIfo8+DMz1EZB+fe186ZfZLI
+         YwnWaVGosJOnsxyGY0vvTUb2QvSnY//KjvR+LnoR/z/awCd1PPmnFCGZuATrBp4sDtqn
+         Q1K4Vx+XObUfa6JcH1beAdFMClmM5AlsnrjrNlg7BNQKio1Rck5FTwjHz8i6lcE0a2tF
+         AXoC6NPThMvX7Y5SWEcJk8jw6B1PI/FMYyLgXRQco9DUajG82uddaCp+2bgBDOvp6NF1
+         W6Kw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:sender:from:date:message-id:subject
+         :to:content-transfer-encoding;
+        bh=1RixQWRGBRCKP95c35mO4zNDicD1IhXHzQMmV09qSmg=;
+        b=HWYgL+lkmIXhmKutuzk7+PzAO5dZnZjf7V/zc2TSKt1Pcu0sb/pTRsPmlZSy+7sxtR
+         TSucLbbZh+BMEwQVQobjZ07eHSteuUFVlPUD64MVc8iwdI9cDLPra46Av+xf5GlgKDhb
+         xAiXlQKs+LUkeRdGjRap/sPRyedL6DmQ7sgMo9jxm0M1fbjZ+59Zw9ds1Qgz5QRVvgQ0
+         ZKUw68q05jUEO5giMtEW4KyoQmbNtwm24ed1YVGRXoAeKPm/Uq6IkGpLaolxsw/P+WB/
+         lr8PN2IfkcuqWhH/XacILCbBIU+sIeWfNbcKVolBWcvkO5hkHkPKqdoLmAa1YsIoFCjl
+         QMWA==
+X-Gm-Message-State: APjAAAUYL0uoECDCYC/ft1s4t+Lm5P2fP3PuEYcFFqrqkTlNbfI96H8Y
+        fx4dFVtNWVIB9nMCNGeuxAO2hu3ahjHQaIU/Uns=
+X-Google-Smtp-Source: APXvYqxIU2pomDXgZfvHb+vYY7KyrExj0Vonw+fci7lsJBjR5NMwj0Fue7Fpql1di+VDtZ/dTKjmL0urA7NBu2l2HXs=
+X-Received: by 2002:aca:4256:: with SMTP id p83mr94508oia.125.1565057908989;
+ Mon, 05 Aug 2019 19:18:28 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <6b1482f6-0578-f602-d8d1-541d86303ce2@gmail.com>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL104.nvidia.com (172.18.146.11) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: quoted-printable
-Content-Language: en-US
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1565028366; bh=u9t5KV0bHB75n4lpd6FYtATWM0z27WV2yxpqjZZtxoc=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
-         Content-Language;
-        b=LmZso5Mdq6S+I0KfwQU77iIz1ylo93ZTYRz6BtZiUOsI9mJQ3tzZf/e7MP6RvTp7P
-         Te+W1C6VZfAOyTG5eRVi14ZeGH6Q429HWebwZAhNqFrZEdD3ueab1hx2gCyVKtLFyf
-         /K5nyn0FZyzlVdXVEku3aMJwN3meAjE2jHaVDpDp0Dl/SCARviwCIQZ6DrZvojFM7w
-         3KImXiHDVDHjovUyAgDzsJ262Q2+NKa6zUv7zLUmvrAVCpMxrtJqG7RgFPLOhEQ+z2
-         fnrpbFSr8vBHAhSzd3P3/kOrOHbbxokOAb2n+53lPQ6P+1ig9trEk5PK4XTN04lWqi
-         g6z/VwJjUAZdA==
+Received: by 2002:a4a:aec9:0:0:0:0:0 with HTTP; Mon, 5 Aug 2019 19:18:27 -0700 (PDT)
+From:   Mrs Aisha Gaddafi <2007aisha2007@gmail.com>
+Date:   Mon, 5 Aug 2019 19:18:27 -0700
+X-Google-Sender-Auth: 0Q3NWFNRjSNNk67OVbLG7hgHQiY
+Message-ID: <CADJKOzVgBGyZHUx3e+pJM8VXNvLu=KwRjK1mtc9PHvQwGvCr1g@mail.gmail.com>
+Subject: Assalamu alaikum,..
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: base64
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-
-On 8/5/19 3:50 AM, Dmitry Osipenko wrote:
-> 01.08.2019 0:10, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
->> This patch adds support for Tegra pinctrl driver suspend and resume.
->>
->> During suspend, context of all pinctrl registers are stored and
->> on resume they are all restored to have all the pinmux and pad
->> configuration for normal operation.
->>
->> Acked-by: Thierry Reding <treding@nvidia.com>
->> Reviewed-by: Dmitry Osipenko <digetx@gmail.com>
->> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
->> ---
->>   drivers/pinctrl/tegra/pinctrl-tegra.c | 59 +++++++++++++++++++++++++++=
-++++++++
->>   drivers/pinctrl/tegra/pinctrl-tegra.h |  3 ++
->>   2 files changed, 62 insertions(+)
->>
->> diff --git a/drivers/pinctrl/tegra/pinctrl-tegra.c b/drivers/pinctrl/teg=
-ra/pinctrl-tegra.c
->> index 186ef98e7b2b..e3a237534281 100644
->> --- a/drivers/pinctrl/tegra/pinctrl-tegra.c
->> +++ b/drivers/pinctrl/tegra/pinctrl-tegra.c
->> @@ -631,6 +631,58 @@ static void tegra_pinctrl_clear_parked_bits(struct =
-tegra_pmx *pmx)
->>   	}
->>   }
->>  =20
->> +static size_t tegra_pinctrl_get_bank_size(struct device *dev,
->> +					  unsigned int bank_id)
->> +{
->> +	struct platform_device *pdev =3D to_platform_device(dev);
->> +	struct resource *res;
->> +
->> +	res =3D platform_get_resource(pdev, IORESOURCE_MEM, bank_id);
->> +
->> +	return resource_size(res) / 4;
->> +}
->> +
->> +static int tegra_pinctrl_suspend(struct device *dev)
->> +{
->> +	struct tegra_pmx *pmx =3D dev_get_drvdata(dev);
->> +	u32 *backup_regs =3D pmx->backup_regs;
->> +	u32 *regs;
->> +	size_t bank_size;
->> +	unsigned int i, k;
->> +
->> +	for (i =3D 0; i < pmx->nbanks; i++) {
->> +		bank_size =3D tegra_pinctrl_get_bank_size(dev, i);
->> +		regs =3D pmx->regs[i];
->> +		for (k =3D 0; k < bank_size; k++)
->> +			*backup_regs++ =3D readl_relaxed(regs++);
->> +	}
->> +
->> +	return pinctrl_force_sleep(pmx->pctl);
->> +}
->> +
->> +static int tegra_pinctrl_resume(struct device *dev)
->> +{
->> +	struct tegra_pmx *pmx =3D dev_get_drvdata(dev);
->> +	u32 *backup_regs =3D pmx->backup_regs;
->> +	u32 *regs;
->> +	size_t bank_size;
->> +	unsigned int i, k;
->> +
->> +	for (i =3D 0; i < pmx->nbanks; i++) {
->> +		bank_size =3D tegra_pinctrl_get_bank_size(dev, i);
->> +		regs =3D pmx->regs[i];
->> +		for (k =3D 0; k < bank_size; k++)
->> +			writel_relaxed(*backup_regs++, regs++);
->> +	}
-> I'm now curious whether any kind of barrier is needed after the
-> writings. The pmx_writel() doesn't insert a barrier after the write and
-> seems it just misuses writel, which actually should be writel_relaxed()
-> + barrier, IIUC.
-
-pmx_writel uses writel and it has wmb before raw_write which complete=20
-all writes initiated prior to this.
-
-By misusing writel, you mean to have barrier after register write?
-
-> It's also not obvious whether PINCTRL HW has any kind of write-FIFO and
-> thus maybe read-back + rmb() is needed in order ensure that writes are
-> actually completed.
-I believe adding write barrier wmb after writel_relaxed should be good=20
-rather than doing readback + rmb
->
-> The last thing which is not obvious is when the new configuration
-> actually takes into effect, does it happen immediately or maybe some
-> delay is needed?
->
-> [snip]
-
-Based on internal design there is no internal delay and it all depends=20
-on APB rate that it takes to write to register.
-
-Pinmux value change to reflect internally might take couple of clock=20
-cycles which is much faster than SW can read.
-
+QXNzYWxhbXUgYWxhaWt1bSwNCg0KSSBoYXZlIGEgYnVzaW5lc3MgUHJvcG9zYWwgZm9yIHlvdSBh
+bmQgSSBuZWVkIG11dHVhbCByZXNwZWN0LCB0cnVzdCwNCmhvbmVzdHksIHRyYW5zcGFyZW5jeSwg
+YWRlcXVhdGUgc3VwcG9ydCBhbmQgYXNzaXN0YW5jZSwgSG9wZSB0byBoZWFyDQpmcm9tIHlvdSBm
+b3IgbW9yZSBkZXRhaWxzLg0KDQpXYXJtZXN0IHJlZ2FyZHMNCk1ycyBBaXNoYSBHYWRkYWZpDQoN
+Ctin2YTYs9mE2KfZhSDYudmE2YrZg9mF2IwNCg0K2YTYr9mKINin2YLYqtix2KfYrSDYudmF2YQg
+2YTZgyDZiNij2K3Yqtin2Kwg2KXZhNmJINin2YTYp9it2KrYsdin2YUg2KfZhNmF2KrYqNin2K/Z
+hCDZiNin2YTYq9mC2Kkg2YjYp9mE2LXYr9mCINmI2KfZhNi02YHYp9mB2YrYqQ0K2YjYp9mE2K/Y
+udmFINin2YTZg9in2YHZiiDZiNin2YTZhdiz2KfYudiv2Kkg2Iwg2YjZhtij2YXZhCDYo9mGINmG
+2LPZhdi5INmF2YbZgyDZhNmF2LLZitivINmF2YYg2KfZhNiq2YHYp9i12YrZhC4NCg0K2KPYrdix
+INin2YTYqtit2YrYp9iqDQrYp9mE2LPZitiv2Kkg2LnYp9im2LTYqSDYp9mE2YLYsNin2YHZig0K
