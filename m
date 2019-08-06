@@ -2,193 +2,171 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id B333C83D03
-	for <lists+linux-gpio@lfdr.de>; Tue,  6 Aug 2019 23:54:30 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9B84383D6C
+	for <lists+linux-gpio@lfdr.de>; Wed,  7 Aug 2019 00:41:21 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726412AbfHFVyY (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 6 Aug 2019 17:54:24 -0400
-Received: from hqemgate16.nvidia.com ([216.228.121.65]:6328 "EHLO
-        hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726052AbfHFVyY (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 6 Aug 2019 17:54:24 -0400
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5d49f70d0000>; Tue, 06 Aug 2019 14:54:23 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate102.nvidia.com (PGP Universal service);
-  Tue, 06 Aug 2019 14:54:22 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Tue, 06 Aug 2019 14:54:22 -0700
-Received: from [10.110.102.151] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 6 Aug
- 2019 21:54:18 +0000
-Subject: Re: [PATCH v7 01/20] pinctrl: tegra: Add suspend and resume support
-To:     Dmitry Osipenko <digetx@gmail.com>, <thierry.reding@gmail.com>,
-        <jonathanh@nvidia.com>, <tglx@linutronix.de>,
-        <jason@lakedaemon.net>, <marc.zyngier@arm.com>,
-        <linus.walleij@linaro.org>, <stefan@agner.ch>,
-        <mark.rutland@arm.com>
-CC:     <pdeschrijver@nvidia.com>, <pgaikwad@nvidia.com>,
-        <sboyd@kernel.org>, <linux-clk@vger.kernel.org>,
-        <linux-gpio@vger.kernel.org>, <jckuo@nvidia.com>,
-        <josephl@nvidia.com>, <talho@nvidia.com>,
-        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <mperttunen@nvidia.com>, <spatra@nvidia.com>, <robh+dt@kernel.org>,
-        <devicetree@vger.kernel.org>, <rjw@rjwysocki.net>,
-        <viresh.kumar@linaro.org>, <linux-pm@vger.kernel.org>
-References: <1564607463-28802-1-git-send-email-skomatineni@nvidia.com>
- <1564607463-28802-2-git-send-email-skomatineni@nvidia.com>
- <6b1482f6-0578-f602-d8d1-541d86303ce2@gmail.com>
- <b45ca99a-188a-c695-3f3d-48d273808f9c@nvidia.com>
- <36351140-afd4-38c4-3722-4ee0894287fa@gmail.com>
-From:   Sowjanya Komatineni <skomatineni@nvidia.com>
-Message-ID: <961ceece-f42a-b933-9184-97e9d30ea381@nvidia.com>
-Date:   Tue, 6 Aug 2019 14:54:18 -0700
+        id S1726334AbfHFWlV (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 6 Aug 2019 18:41:21 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:45473 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726044AbfHFWlU (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 6 Aug 2019 18:41:20 -0400
+Received: by mail-pf1-f194.google.com with SMTP id r1so42283570pfq.12
+        for <linux-gpio@vger.kernel.org>; Tue, 06 Aug 2019 15:41:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-transfer-encoding:content-language;
+        bh=wR183pUAGxzM3kNfgqACbzFY/DLj7hr/GbAFrqz5Mp0=;
+        b=OpQrsD6f7zQ4q1Ewct2rdjEBEUjFc7ZeBDbC6kD6QVmHf6tUbrKTK/r/vyPocfJeYh
+         jKN3Xiqwh62/RQpPxgVosbsp/KG8tvNRVE2rSXJ6trgCyjRHdCLVqiQjULH1EtXCRdoI
+         g32R4bhRnI68ujTE4np/USwUYPBpcmzeujseZx9Vyx93LF/j9WHfOUxKiGiAIrlN29lm
+         ChfMoF5Q11lftLRwtZbP/1iYZVKPhr8DCOdKG0KXw3GZ1iYaz98XhoRWVZzh+/c/bg//
+         MQF9VuN8/vApwbvwVvnvAIWXSsfsjOkfkRMBPjI0Yv4jmHNwUSLC0KLavFAIAV234X5V
+         V1TQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-transfer-encoding
+         :content-language;
+        bh=wR183pUAGxzM3kNfgqACbzFY/DLj7hr/GbAFrqz5Mp0=;
+        b=tCwuF0rrfr2yUtn9VYTe16lGPAcjIJD9yA5Wun/D4LBgiaxe7PCh2+JGdOFI3Qq856
+         PvQwXbP0JUOKX7xYNiRRlSWQ4CQHa6CDjwPkT1tgfeZ2CV8KuumNEccoplihoY8z2QZk
+         VDKKJuAyhuJu4J3ZaIPKZcL6sumDUoTYYwtqmLRQ+Fi0iTVBf88gMfYdT/uWRg8LUOmk
+         LwO+Mfn73eKKeqDl0Arlak66p9TaYnJR1Ri6gv8isG/3Y5jJ+pCWkRV5vw6n8t096XqD
+         Cmn60AMBIGlDGAK3ifybF9IB4vEqnDeRG8zpgK8RI7/qmTFjCfOKeNUZRhfBypWg2quW
+         txiQ==
+X-Gm-Message-State: APjAAAVJmkjsfhvrIsQdiKRCp21A5ChqRANWZyL0CQwE3OCf98+uKKO4
+        5lAJ8EqD49FfOvf9dBtZ1WE=
+X-Google-Smtp-Source: APXvYqxQtHnGBBnhb5QQmZKyCxGCC1eg1VrPP00X9yty3u8yiBn7oVwZ55cHg/DM2Wkimq47pbQIdg==
+X-Received: by 2002:a17:90a:2ec1:: with SMTP id h1mr5449511pjs.101.1565131280105;
+        Tue, 06 Aug 2019 15:41:20 -0700 (PDT)
+Received: from ?IPv6:2001:df0:0:200c:8848:d70e:7e27:4c2a? ([2001:df0:0:200c:8848:d70e:7e27:4c2a])
+        by smtp.gmail.com with ESMTPSA id z20sm140262204pfk.72.2019.08.06.15.41.13
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 06 Aug 2019 15:41:19 -0700 (PDT)
+Subject: Re: [pinctrl:devel 16/46]
+ drivers/pinctrl/bcm/pinctrl-bcm2835.c:995:10: error: incompatible types when
+ assigning to type 'volatile struct SHIFTER' from type 'unsigned int'
+To:     Geert Uytterhoeven <geert@linux-m68k.org>,
+        kbuild test robot <lkp@intel.com>
+Cc:     Stefan Wahren <wahrenst@gmx.net>, kbuild-all@01.org,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-m68k <linux-m68k@lists.linux-m68k.org>
+References: <201908061021.pQY2TnEK%lkp@intel.com>
+ <CAMuHMdU1djc8-c1LvNLFyFa0eH9C3k8nxjN_6F40S43mYZH7Hw@mail.gmail.com>
+From:   Michael Schmitz <schmitzmic@gmail.com>
+Message-ID: <848e57bf-41a6-3e3e-6e72-3c15acd76902@gmail.com>
+Date:   Wed, 7 Aug 2019 10:41:09 +1200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-In-Reply-To: <36351140-afd4-38c4-3722-4ee0894287fa@gmail.com>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL104.nvidia.com (172.18.146.11) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <CAMuHMdU1djc8-c1LvNLFyFa0eH9C3k8nxjN_6F40S43mYZH7Hw@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
 Content-Language: en-US
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1565128463; bh=PVOjXIF+h+isaZujY/+iB+zLIz1zcPjtFjV9ZXA4++s=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
-         Content-Language;
-        b=a3WZIm9XcXwus1d36RFmpHdqXZHFkFcDczX0E1fQhmQZlYCIoC3p1cAKACHZoJ51L
-         zmiGE5+ZLVbes5JkcO1DEKwZOv44Oio7LW7JngdMWVcWv19fF00FBcDyvl0QO75vku
-         3VhkchAk7YLUw108KAwmJKT5NpIGc48m6lMAFd5D39T59FtF3OhBtrWyHav2Xi18Dd
-         0p3d8TiiR0Re6ikOPHJvJSUZKdWpn9+09aThtpIynYuNEhygJK+/F20l6X+RDLV2E7
-         VOckSGhgSDh1xp+BaVcw6zEwJJI7jAiRm7jiidyUOB5AEOxIupaDDXqaZ/TQ3dPkzC
-         XGRzKbwX2A+Gg==
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+Hi Geert,
 
-On 8/6/19 10:59 AM, Dmitry Osipenko wrote:
-> 05.08.2019 21:06, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
->> On 8/5/19 3:50 AM, Dmitry Osipenko wrote:
->>> 01.08.2019 0:10, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
->>>> This patch adds support for Tegra pinctrl driver suspend and resume.
->>>>
->>>> During suspend, context of all pinctrl registers are stored and
->>>> on resume they are all restored to have all the pinmux and pad
->>>> configuration for normal operation.
->>>>
->>>> Acked-by: Thierry Reding <treding@nvidia.com>
->>>> Reviewed-by: Dmitry Osipenko <digetx@gmail.com>
->>>> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
->>>> ---
->>>>  =C2=A0 drivers/pinctrl/tegra/pinctrl-tegra.c | 59
->>>> +++++++++++++++++++++++++++++++++++
->>>>  =C2=A0 drivers/pinctrl/tegra/pinctrl-tegra.h |=C2=A0 3 ++
->>>>  =C2=A0 2 files changed, 62 insertions(+)
->>>>
->>>> diff --git a/drivers/pinctrl/tegra/pinctrl-tegra.c
->>>> b/drivers/pinctrl/tegra/pinctrl-tegra.c
->>>> index 186ef98e7b2b..e3a237534281 100644
->>>> --- a/drivers/pinctrl/tegra/pinctrl-tegra.c
->>>> +++ b/drivers/pinctrl/tegra/pinctrl-tegra.c
->>>> @@ -631,6 +631,58 @@ static void
->>>> tegra_pinctrl_clear_parked_bits(struct tegra_pmx *pmx)
->>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 }
->>>>  =C2=A0 }
->>>>  =C2=A0 +static size_t tegra_pinctrl_get_bank_size(struct device *dev,
->>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 unsigned int bank=
-_id)
->>>> +{
->>>> +=C2=A0=C2=A0=C2=A0 struct platform_device *pdev =3D to_platform_devic=
-e(dev);
->>>> +=C2=A0=C2=A0=C2=A0 struct resource *res;
->>>> +
->>>> +=C2=A0=C2=A0=C2=A0 res =3D platform_get_resource(pdev, IORESOURCE_MEM=
-, bank_id);
->>>> +
->>>> +=C2=A0=C2=A0=C2=A0 return resource_size(res) / 4;
->>>> +}
->>>> +
->>>> +static int tegra_pinctrl_suspend(struct device *dev)
->>>> +{
->>>> +=C2=A0=C2=A0=C2=A0 struct tegra_pmx *pmx =3D dev_get_drvdata(dev);
->>>> +=C2=A0=C2=A0=C2=A0 u32 *backup_regs =3D pmx->backup_regs;
->>>> +=C2=A0=C2=A0=C2=A0 u32 *regs;
->>>> +=C2=A0=C2=A0=C2=A0 size_t bank_size;
->>>> +=C2=A0=C2=A0=C2=A0 unsigned int i, k;
->>>> +
->>>> +=C2=A0=C2=A0=C2=A0 for (i =3D 0; i < pmx->nbanks; i++) {
->>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 bank_size =3D tegra_pinctr=
-l_get_bank_size(dev, i);
->>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 regs =3D pmx->regs[i];
->>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 for (k =3D 0; k < bank_siz=
-e; k++)
->>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 *b=
-ackup_regs++ =3D readl_relaxed(regs++);
->>>> +=C2=A0=C2=A0=C2=A0 }
->>>> +
->>>> +=C2=A0=C2=A0=C2=A0 return pinctrl_force_sleep(pmx->pctl);
->>>> +}
->>>> +
->>>> +static int tegra_pinctrl_resume(struct device *dev)
->>>> +{
->>>> +=C2=A0=C2=A0=C2=A0 struct tegra_pmx *pmx =3D dev_get_drvdata(dev);
->>>> +=C2=A0=C2=A0=C2=A0 u32 *backup_regs =3D pmx->backup_regs;
->>>> +=C2=A0=C2=A0=C2=A0 u32 *regs;
->>>> +=C2=A0=C2=A0=C2=A0 size_t bank_size;
->>>> +=C2=A0=C2=A0=C2=A0 unsigned int i, k;
->>>> +
->>>> +=C2=A0=C2=A0=C2=A0 for (i =3D 0; i < pmx->nbanks; i++) {
->>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 bank_size =3D tegra_pinctr=
-l_get_bank_size(dev, i);
->>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 regs =3D pmx->regs[i];
->>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 for (k =3D 0; k < bank_siz=
-e; k++)
->>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 wr=
-itel_relaxed(*backup_regs++, regs++);
->>>> +=C2=A0=C2=A0=C2=A0 }
->>> I'm now curious whether any kind of barrier is needed after the
->>> writings. The pmx_writel() doesn't insert a barrier after the write and
->>> seems it just misuses writel, which actually should be writel_relaxed()
->>> + barrier, IIUC.
->> pmx_writel uses writel and it has wmb before raw_write which complete
->> all writes initiated prior to this.
->>
->> By misusing writel, you mean to have barrier after register write?
-> Yes, at least to me it doesn't make much sense for this driver to stall
-> before the write. It's the pinctrl user which should be taking care
-> about everything to be ready before making a change to the pinctrl's
-> configuration.
+could be renamed shifter_st, I suppose. Only used in 
+arch/m68k/atari/config.c and drivers/video/fbdev/atafb.c.
+
+Cheers,
+
+     Michael
+
+On 6/08/19 7:33 PM, Geert Uytterhoeven wrote:
+> CC linux-m68k (shifter too generic a name?)
 >
->>> It's also not obvious whether PINCTRL HW has any kind of write-FIFO and
->>> thus maybe read-back + rmb() is needed in order ensure that writes are
->>> actually completed.
->> I believe adding write barrier wmb after writel_relaxed should be good
->> rather than doing readback + rmb
->>> The last thing which is not obvious is when the new configuration
->>> actually takes into effect, does it happen immediately or maybe some
->>> delay is needed?
->>>
->>> [snip]
->> Based on internal design there is no internal delay and it all depends
->> on APB rate that it takes to write to register.
+> On Tue, Aug 6, 2019 at 5:00 AM kbuild test robot <lkp@intel.com> wrote:
+>> tree:   https://kernel.googlesource.com/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git devel
+>> head:   d55b7fdd58ac12e76ef65979af4a13b9c15fc00d
+>> commit: e38a9a437fb93ddafab5030165e4c6a3a5021669 [16/46] pinctrl: bcm2835: Add support for BCM2711 pull-up functionality
+>> config: m68k-allmodconfig (attached as .config)
+>> compiler: m68k-linux-gcc (GCC) 7.4.0
+>> reproduce:
+>>          wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
+>>          chmod +x ~/bin/make.cross
+>>          git checkout e38a9a437fb93ddafab5030165e4c6a3a5021669
+>>          # save the attached .config to linux build tree
+>>          GCC_VERSION=7.4.0 make.cross ARCH=m68k
 >>
->> Pinmux value change to reflect internally might take couple of clock
->> cycles which is much faster than SW can read.
-> Still not quite obvious if it's possible to have a case where some
-> hardware is touched before necessary pinctrl change is fully completed
-> and then to get into trouble because of it.
-
-To be safer, will add write barrier after all writes in resume and also=20
-will have separate patch for pmx_writel fix to use writel_relaxed=20
-followed by write barrier.
-
-Thanks
-
-Sowjanya
-
+>> If you fix the issue, kindly add following tag
+>> Reported-by: kbuild test robot <lkp@intel.com>
+>>
+>> All error/warnings (new ones prefixed by >>):
+>>
+>>     In file included from arch/m68k/include/asm/io_mm.h:32:0,
+>>                      from arch/m68k/include/asm/io.h:8,
+>>                      from include/linux/io.h:13,
+>>                      from include/linux/irq.h:20,
+>>                      from include/linux/gpio/driver.h:7,
+>>                      from drivers/pinctrl/bcm/pinctrl-bcm2835.c:17:
+>>     drivers/pinctrl/bcm/pinctrl-bcm2835.c: In function 'bcm2711_pull_config_set':
+>>>> arch/m68k/include/asm/atarihw.h:190:22: error: expected identifier or '(' before 'volatile'
+>>      # define shifter ((*(volatile struct SHIFTER *)SHF_BAS))
+>>                           ^
+>>>> drivers/pinctrl/bcm/pinctrl-bcm2835.c:990:6: note: in expansion of macro 'shifter'
+>>       u32 shifter;
+>>           ^~~~~~~
+>>>> arch/m68k/include/asm/atarihw.h:172:17: error: expected ')' before '(' token
+>>      #define SHF_BAS (0xffff8200)
+>>                      ^
+>>>> arch/m68k/include/asm/atarihw.h:190:48: note: in expansion of macro 'SHF_BAS'
+>>      # define shifter ((*(volatile struct SHIFTER *)SHF_BAS))
+>>                                                     ^~~~~~~
+>>>> drivers/pinctrl/bcm/pinctrl-bcm2835.c:990:6: note: in expansion of macro 'shifter'
+>>       u32 shifter;
+>>           ^~~~~~~
+>>>> drivers/pinctrl/bcm/pinctrl-bcm2835.c:995:10: error: incompatible types when assigning to type 'volatile struct SHIFTER' from type 'unsigned int'
+>>       shifter = PUD_2711_REG_SHIFT(pin);
+>>               ^
+>>>> drivers/pinctrl/bcm/pinctrl-bcm2835.c:998:27: error: invalid operands to binary << (have 'int' and 'volatile struct SHIFTER')
+>>       value &= ~(PUD_2711_MASK << shifter);
+>>                                ^~
+>>>> drivers/pinctrl/bcm/pinctrl-bcm2835.c:999:16: error: invalid operands to binary << (have 'unsigned int' and 'volatile struct SHIFTER')
+>>       value |= (arg << shifter);
+>>                     ^~
+>> --
+>>     In file included from arch/m68k/include/asm/io_mm.h:32:0,
+>>                      from arch/m68k/include/asm/io.h:8,
+>>                      from include/linux/io.h:13,
+>>                      from include/linux/irq.h:20,
+>>                      from include/linux/gpio/driver.h:7,
+>>                      from drivers/pinctrl//bcm/pinctrl-bcm2835.c:17:
+>>     drivers/pinctrl//bcm/pinctrl-bcm2835.c: In function 'bcm2711_pull_config_set':
+>>>> arch/m68k/include/asm/atarihw.h:190:22: error: expected identifier or '(' before 'volatile'
+>>      # define shifter ((*(volatile struct SHIFTER *)SHF_BAS))
+>>                           ^
+>>     drivers/pinctrl//bcm/pinctrl-bcm2835.c:990:6: note: in expansion of macro 'shifter'
+>>       u32 shifter;
+>>           ^~~~~~~
+>>>> arch/m68k/include/asm/atarihw.h:172:17: error: expected ')' before '(' token
+>>      #define SHF_BAS (0xffff8200)
+>>                      ^
+>>>> arch/m68k/include/asm/atarihw.h:190:48: note: in expansion of macro 'SHF_BAS'
+>>      # define shifter ((*(volatile struct SHIFTER *)SHF_BAS))
+>>                                                     ^~~~~~~
+>>     drivers/pinctrl//bcm/pinctrl-bcm2835.c:990:6: note: in expansion of macro 'shifter'
+>>       u32 shifter;
+>>           ^~~~~~~
+>>     drivers/pinctrl//bcm/pinctrl-bcm2835.c:995:10: error: incompatible types when assigning to type 'volatile struct SHIFTER' from type 'unsigned int'
+>>       shifter = PUD_2711_REG_SHIFT(pin);
+>>               ^
+>>     drivers/pinctrl//bcm/pinctrl-bcm2835.c:998:27: error: invalid operands to binary << (have 'int' and 'volatile struct SHIFTER')
+>>       value &= ~(PUD_2711_MASK << shifter);
+>>                                ^~
+>>     drivers/pinctrl//bcm/pinctrl-bcm2835.c:999:16: error: invalid operands to binary << (have 'unsigned int' and 'volatile struct SHIFTER')
+>>       value |= (arg << shifter);
+>>                     ^~
+>>
+>> vim +995 drivers/pinctrl/bcm/pinctrl-bcm2835.c
+>>
+>> ---
+>> 0-DAY kernel test infrastructure                Open Source Technology Center
+>> https://lists.01.org/pipermail/kbuild-all                   Intel Corporation
