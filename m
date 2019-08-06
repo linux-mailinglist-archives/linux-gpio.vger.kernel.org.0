@@ -2,87 +2,70 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 32B9A831C1
-	for <lists+linux-gpio@lfdr.de>; Tue,  6 Aug 2019 14:49:11 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2DE55831D0
+	for <lists+linux-gpio@lfdr.de>; Tue,  6 Aug 2019 14:51:01 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731092AbfHFMtI (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 6 Aug 2019 08:49:08 -0400
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:38493 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729898AbfHFMtI (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 6 Aug 2019 08:49:08 -0400
-Received: by mail-lf1-f65.google.com with SMTP id h28so60958446lfj.5
-        for <linux-gpio@vger.kernel.org>; Tue, 06 Aug 2019 05:49:06 -0700 (PDT)
+        id S1731883AbfHFMuy (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 6 Aug 2019 08:50:54 -0400
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:34731 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731538AbfHFMuy (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 6 Aug 2019 08:50:54 -0400
+Received: by mail-lf1-f66.google.com with SMTP id b29so53773697lfq.1
+        for <linux-gpio@vger.kernel.org>; Tue, 06 Aug 2019 05:50:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=dE5JuDdEA/pQScNByPn3VC+2psga/+uhIp5+6Lpb/IU=;
-        b=CfdkpelcPzvwnG1MdqcjcMyI02MUVnNU6luZnIfMDPb2TDvDh/PMhfidkJDiDm5vjw
-         TSvW1XIVaisosJn9owSOQNrRfN01cs41uzJMTlM1VsZX0cW6SBzNzVZKo2WGsc7xHA/y
-         52dUv8uwgMs+ujW6Xv1T48Zb1XvjfjCWbXCG46cuulJ68eqIsTcpjWkGSqGqJIk/zhKt
-         FmDBpMi8Fdr7o1vGrpM/XkRced54b6WwHbfhJBaJgtO7Nxsv4XjRHbsliAGTfPn5nSRH
-         4P0r6a4S4hwn0ipXQEhPdnBvxTjgs3aWXnX3Ob+3gbZvc/hC66HkM8kC7oWs5VCWX1de
-         wM1w==
+        bh=5j5lFMep8OWyHnkN89Jd2hIhwccXsi6PdbClOXm7U2w=;
+        b=xd2gD5GP2knBeH0qSZ92Cm7JtkG6tNUcX3/AME5hp6ZbPEvU1uWxnt7YSr+yJHSAOG
+         KTr1I2nslaCd0W/6G8nmnHCa4vIYCYRLHbKdQsvpSrc8ubQXG0QXXqyETkN2hvFhQqkV
+         bpve0YXJk9PCYL7GgSk1lU6L0hZE+QCSYeEZa5n3L272Ts1zkydIE29Y25fwp2X7FAW+
+         zvp36mmjcu3n06+I5wdOQvBoueT8PSwWYMiOaDe84O6u0IY2BcwyOLWtYmaqKHT4gEIg
+         FQLmGzjGGUveheBb/4MPAY+9pDmMF9E5gH3AGWQ+FztNMYo+UIvHAoB5B/drQuVFtsz2
+         NHUw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=dE5JuDdEA/pQScNByPn3VC+2psga/+uhIp5+6Lpb/IU=;
-        b=RobKwa81N01PTMQc5/JDMK2PKbbwAh8e8sBH2Hds1AjkRzNo+E/Bfg+Nkhfbb73ull
-         ZeyjMirryS2l2475i0u029XurYk2lqlauJuDLb5aMMXO/Aj3gAs66GjqnPXOrPuFZ1Jz
-         bOp1BQcwy9eeE4UN23OAKXfR7C0LLqr3x8efOYBCKD2lpPEJuGHTQhw0NVY9Mgcyhpva
-         do4OPbPQXGlYAYh6yW9+TbL/ctecy9n7iMgNM2UERm0bTtx0VGGbB1RY6S3ugp1Mz53K
-         rzNALWUz4qJn9EbIEe3WRId7v20fLhW2ertXh83fLIHBzPahkOHjOujkZdHmssB7dDTl
-         4cEw==
-X-Gm-Message-State: APjAAAXGoc3TxTzA7qxl9fRbpUzZ3FBZ7hrp7qxrhypN5eWJvgpIqDLf
-        FGnSDBTYhbXUzGPvpbpNpt2be4SO++zNo3Q9DCmdrg==
-X-Google-Smtp-Source: APXvYqw0Wl1Q08gOWskV45KZ1hlu4YydCL1Uqb2v8Dojvc+PSoMPhvxKIqVPTrhNLCBWwALS8FyzMEW+/49Nw/ggfeM=
-X-Received: by 2002:ac2:5dd6:: with SMTP id x22mr2349039lfq.92.1565095745984;
- Tue, 06 Aug 2019 05:49:05 -0700 (PDT)
+        bh=5j5lFMep8OWyHnkN89Jd2hIhwccXsi6PdbClOXm7U2w=;
+        b=cttI11QRIrVC05rllE6IdJEk9vinIBvEZP8Z3gU1kyTj+0HP5JU7RfoSgS5z3/bv8X
+         Q3bPNs64zFtuWqN9SXI0XXXH4qO7WS5eSyCP8+qH6ZOXdo36/a1KP/a9O564RqB/CWlf
+         vQbufK+Vhrqcpqj95r1BN9XphBbfUSvy9oY8eva/drZ0Dc8hbd6v4kvbyMVTC1C8ciaE
+         dIEwCxD4C6ANqGUY5Z/bzp8tBQdhP8hIYMCbQz1ePV1Q/WiHTnMDUuZTHiLfEPBxXEXl
+         3OaODsmIbGWmA31QJd759rDNEo7kcSN+2alBuUIYXDOnm1v4yYXs4UJppwQdfEdP6uCz
+         QCKg==
+X-Gm-Message-State: APjAAAUy5UidX9NBiF9x0bxHtPe+Xb22ftO3z3O17BoCNzonv04GKSXu
+        p2ZopXkeKdumuSWp2owybVUQFhIVm1iQcVYHVYTtfYpD
+X-Google-Smtp-Source: APXvYqwoMGBk7XdaUh4Xav8n7xMGy3DTiub0oCDZ0Zk9/tDT+B6o/WxR72g0+YVYpAdxHfYhMPd9zMCkm8KuzbxhVfE=
+X-Received: by 2002:ac2:5939:: with SMTP id v25mr2430504lfi.115.1565095852204;
+ Tue, 06 Aug 2019 05:50:52 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190806024923.34355-1-hui.song_1@nxp.com>
-In-Reply-To: <20190806024923.34355-1-hui.song_1@nxp.com>
+References: <20190804152745.2231-1-nishkadg.linux@gmail.com>
+In-Reply-To: <20190804152745.2231-1-nishkadg.linux@gmail.com>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Tue, 6 Aug 2019 14:48:54 +0200
-Message-ID: <CACRpkdZ7hW+hSC41JqjqfLrwWvRY80+_8sXC89OhN7SwVtU7MA@mail.gmail.com>
-Subject: Re: [PATCH v2] gpio: mpc8xxx: Add new platforms GPIO DT node description
-To:     Hui Song <hui.song_1@nxp.com>
-Cc:     Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
+Date:   Tue, 6 Aug 2019 14:50:39 +0200
+Message-ID: <CACRpkdYa0-2YSUdq1WcoYCaG+UiXTzipVDExMsQXukhQdxM8xg@mail.gmail.com>
+Subject: Re: [PATCH] pinctrl: falcon: Add of_node_put() before return
+To:     Nishka Dasgupta <nishkadg.linux@gmail.com>
+Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Hui,
+On Sun, Aug 4, 2019 at 5:28 PM Nishka Dasgupta <nishkadg.linux@gmail.com> wrote:
 
-On Tue, Aug 6, 2019 at 4:59 AM Hui Song <hui.song_1@nxp.com> wrote:
-
-> From: Song Hui <hui.song_1@nxp.com>
+> Each iteration of for_each_compatible_node puts the previous node, but in
+> the case of a return from the middle of the loop, there is no put, thus
+> causing a memory leak. Hence add an of_node_put before the return in two
+> places.
+> Issue found with Coccinelle.
 >
-> Update the NXP GPIO node dt-binding file for QorIQ and
-> Layerscape platforms, and add one more example with
-> ls1028a GPIO node.
->
-> Signed-off-by: Song Hui <hui.song_1@nxp.com>
-(...)
-> +Example of gpio-controller node for a ls1028a SoC:
-> +
-> +gpio1: gpio@2300000 {
-> +       compatible = "fsl,ls1028a-gpio","fsl,qoriq-gpio";
+> Signed-off-by: Nishka Dasgupta <nishkadg.linux@gmail.com>
 
-What you need to do is to add "fsl,ls1028a-gpio" to the list
-of compatible values at the top of the file "Required properties".
-Please send a v2 with this fixed.
+Patch applied!
 
 Yours,
 Linus Walleij
