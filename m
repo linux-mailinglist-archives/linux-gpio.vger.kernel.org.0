@@ -2,66 +2,76 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 1D1EE8298F
-	for <lists+linux-gpio@lfdr.de>; Tue,  6 Aug 2019 04:18:31 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 755A1829D3
+	for <lists+linux-gpio@lfdr.de>; Tue,  6 Aug 2019 04:59:08 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731359AbfHFCSa (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 5 Aug 2019 22:18:30 -0400
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:36567 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731358AbfHFCSa (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 5 Aug 2019 22:18:30 -0400
-Received: by mail-oi1-f196.google.com with SMTP id c15so8915723oic.3
-        for <linux-gpio@vger.kernel.org>; Mon, 05 Aug 2019 19:18:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:sender:from:date:message-id:subject:to
-         :content-transfer-encoding;
-        bh=1RixQWRGBRCKP95c35mO4zNDicD1IhXHzQMmV09qSmg=;
-        b=hp0jfn0XwgUCJcPMGv65l/LE7RP/+SLuZUiJv8cr6DNnnyYKyuIBqUww172PLgACsv
-         ztIgMTJc07ZdXsYF7bGsM9hpCCNdIKOyYVQneDMthXYEzIfo8+DMz1EZB+fe186ZfZLI
-         YwnWaVGosJOnsxyGY0vvTUb2QvSnY//KjvR+LnoR/z/awCd1PPmnFCGZuATrBp4sDtqn
-         Q1K4Vx+XObUfa6JcH1beAdFMClmM5AlsnrjrNlg7BNQKio1Rck5FTwjHz8i6lcE0a2tF
-         AXoC6NPThMvX7Y5SWEcJk8jw6B1PI/FMYyLgXRQco9DUajG82uddaCp+2bgBDOvp6NF1
-         W6Kw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:sender:from:date:message-id:subject
-         :to:content-transfer-encoding;
-        bh=1RixQWRGBRCKP95c35mO4zNDicD1IhXHzQMmV09qSmg=;
-        b=HWYgL+lkmIXhmKutuzk7+PzAO5dZnZjf7V/zc2TSKt1Pcu0sb/pTRsPmlZSy+7sxtR
-         TSucLbbZh+BMEwQVQobjZ07eHSteuUFVlPUD64MVc8iwdI9cDLPra46Av+xf5GlgKDhb
-         xAiXlQKs+LUkeRdGjRap/sPRyedL6DmQ7sgMo9jxm0M1fbjZ+59Zw9ds1Qgz5QRVvgQ0
-         ZKUw68q05jUEO5giMtEW4KyoQmbNtwm24ed1YVGRXoAeKPm/Uq6IkGpLaolxsw/P+WB/
-         lr8PN2IfkcuqWhH/XacILCbBIU+sIeWfNbcKVolBWcvkO5hkHkPKqdoLmAa1YsIoFCjl
-         QMWA==
-X-Gm-Message-State: APjAAAUYL0uoECDCYC/ft1s4t+Lm5P2fP3PuEYcFFqrqkTlNbfI96H8Y
-        fx4dFVtNWVIB9nMCNGeuxAO2hu3ahjHQaIU/Uns=
-X-Google-Smtp-Source: APXvYqxIU2pomDXgZfvHb+vYY7KyrExj0Vonw+fci7lsJBjR5NMwj0Fue7Fpql1di+VDtZ/dTKjmL0urA7NBu2l2HXs=
-X-Received: by 2002:aca:4256:: with SMTP id p83mr94508oia.125.1565057908989;
- Mon, 05 Aug 2019 19:18:28 -0700 (PDT)
-MIME-Version: 1.0
-Received: by 2002:a4a:aec9:0:0:0:0:0 with HTTP; Mon, 5 Aug 2019 19:18:27 -0700 (PDT)
-From:   Mrs Aisha Gaddafi <2007aisha2007@gmail.com>
-Date:   Mon, 5 Aug 2019 19:18:27 -0700
-X-Google-Sender-Auth: 0Q3NWFNRjSNNk67OVbLG7hgHQiY
-Message-ID: <CADJKOzVgBGyZHUx3e+pJM8VXNvLu=KwRjK1mtc9PHvQwGvCr1g@mail.gmail.com>
-Subject: Assalamu alaikum,..
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: base64
+        id S1731260AbfHFC7I (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 5 Aug 2019 22:59:08 -0400
+Received: from inva020.nxp.com ([92.121.34.13]:33618 "EHLO inva020.nxp.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729170AbfHFC7H (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Mon, 5 Aug 2019 22:59:07 -0400
+Received: from inva020.nxp.com (localhost [127.0.0.1])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 7DECF1A009A;
+        Tue,  6 Aug 2019 04:59:06 +0200 (CEST)
+Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id B0CA41A0043;
+        Tue,  6 Aug 2019 04:59:00 +0200 (CEST)
+Received: from titan.ap.freescale.net (TITAN.ap.freescale.net [10.192.208.233])
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 5FC6E402B5;
+        Tue,  6 Aug 2019 10:58:53 +0800 (SGT)
+From:   Hui Song <hui.song_1@nxp.com>
+To:     Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Cc:     linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+        Song Hui <hui.song_1@nxp.com>
+Subject: [PATCH v2] gpio: mpc8xxx: Add new platforms GPIO DT node description
+Date:   Tue,  6 Aug 2019 10:49:23 +0800
+Message-Id: <20190806024923.34355-1-hui.song_1@nxp.com>
+X-Mailer: git-send-email 2.9.5
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-QXNzYWxhbXUgYWxhaWt1bSwNCg0KSSBoYXZlIGEgYnVzaW5lc3MgUHJvcG9zYWwgZm9yIHlvdSBh
-bmQgSSBuZWVkIG11dHVhbCByZXNwZWN0LCB0cnVzdCwNCmhvbmVzdHksIHRyYW5zcGFyZW5jeSwg
-YWRlcXVhdGUgc3VwcG9ydCBhbmQgYXNzaXN0YW5jZSwgSG9wZSB0byBoZWFyDQpmcm9tIHlvdSBm
-b3IgbW9yZSBkZXRhaWxzLg0KDQpXYXJtZXN0IHJlZ2FyZHMNCk1ycyBBaXNoYSBHYWRkYWZpDQoN
-Ctin2YTYs9mE2KfZhSDYudmE2YrZg9mF2IwNCg0K2YTYr9mKINin2YLYqtix2KfYrSDYudmF2YQg
-2YTZgyDZiNij2K3Yqtin2Kwg2KXZhNmJINin2YTYp9it2KrYsdin2YUg2KfZhNmF2KrYqNin2K/Z
-hCDZiNin2YTYq9mC2Kkg2YjYp9mE2LXYr9mCINmI2KfZhNi02YHYp9mB2YrYqQ0K2YjYp9mE2K/Y
-udmFINin2YTZg9in2YHZiiDZiNin2YTZhdiz2KfYudiv2Kkg2Iwg2YjZhtij2YXZhCDYo9mGINmG
-2LPZhdi5INmF2YbZgyDZhNmF2LLZitivINmF2YYg2KfZhNiq2YHYp9i12YrZhC4NCg0K2KPYrdix
-INin2YTYqtit2YrYp9iqDQrYp9mE2LPZitiv2Kkg2LnYp9im2LTYqSDYp9mE2YLYsNin2YHZig0K
+From: Song Hui <hui.song_1@nxp.com>
+
+Update the NXP GPIO node dt-binding file for QorIQ and
+Layerscape platforms, and add one more example with
+ls1028a GPIO node.
+
+Signed-off-by: Song Hui <hui.song_1@nxp.com>
+---
+ Documentation/devicetree/bindings/gpio/gpio-mpc8xxx.txt | 14 ++++++++++++++
+ 1 file changed, 14 insertions(+)
+
+diff --git a/Documentation/devicetree/bindings/gpio/gpio-mpc8xxx.txt b/Documentation/devicetree/bindings/gpio/gpio-mpc8xxx.txt
+index 69d4616..2df5fc0 100644
+--- a/Documentation/devicetree/bindings/gpio/gpio-mpc8xxx.txt
++++ b/Documentation/devicetree/bindings/gpio/gpio-mpc8xxx.txt
+@@ -37,3 +37,17 @@ gpio0: gpio@2300000 {
+ 	interrupt-controller;
+ 	#interrupt-cells = <2>;
+ };
++
++
++Example of gpio-controller node for a ls1028a SoC:
++
++gpio1: gpio@2300000 {
++	compatible = "fsl,ls1028a-gpio","fsl,qoriq-gpio";
++	reg = <0x0 0x2300000 0x0 0x10000>;
++	interrupts = <GIC_SPI 36 IRQ_TYPE_LEVEL_HIGH>;
++	gpio-controller;
++	#gpio-cells = <2>;
++	interrupt-controller;
++	#interrupt-cells = <2>;
++	little-endian;
++};
+-- 
+2.9.5
+
