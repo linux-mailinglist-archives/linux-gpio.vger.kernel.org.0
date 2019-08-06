@@ -2,87 +2,74 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 43496833E0
-	for <lists+linux-gpio@lfdr.de>; Tue,  6 Aug 2019 16:24:15 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3299D833E7
+	for <lists+linux-gpio@lfdr.de>; Tue,  6 Aug 2019 16:25:58 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731833AbfHFOYL (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 6 Aug 2019 10:24:11 -0400
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:46770 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730754AbfHFOYL (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 6 Aug 2019 10:24:11 -0400
-Received: by mail-lf1-f66.google.com with SMTP id z15so57025706lfh.13
-        for <linux-gpio@vger.kernel.org>; Tue, 06 Aug 2019 07:24:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=/KGG719xZSycBl1aYVzQyMnG/L43I/ijsETlyDRRcYc=;
-        b=yTIiTkxCvQFirZoL2g4NxWxSfeFOfSnpWZMRidamnND+iAdhGzIbYEkAnOu35NJ/+q
-         vcIXYVXPFin5bg8EinvGE7meb+lgl/5Q7mGF7ZMO0ypdz2e0/cN+EPC2fjoC0LX1LZef
-         jqXUUuAhKDPm5QHsb1JuM1g9TckmUyRG59RUS6H4ZjsD0/UcPnCj7XyAEMC2svFyA23V
-         Xnr+aL0HgAVkW358ylJUu5ZpnZg65x9X5NCRz5IFbGOjzBXinPtcsfTJ8m76RzJfmCHe
-         zx2BGACg2jcONC63ODETKPaF/2nXAme+M7DYaJFNCwvNxjCcR2GP+UHFdyorGwPUiYD+
-         awHQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=/KGG719xZSycBl1aYVzQyMnG/L43I/ijsETlyDRRcYc=;
-        b=EON61BgWi0X4jzZy6r9x1i9YXqxkTw3Iw9FBd5i5oQh9oiu4cjeIbkIihlsWsCZPAp
-         b/Lx8ih7Cw+pXCsFIe5sl2wkjiui3CPS6HYS2l5oEmJ04bNRzkBmu+NUJ8RowjWCvvn6
-         M9q79zNORb1QaA7NThrRDzQ+3ZT55Jsmik1ZxhZl7e6hX2J2mN1gwh9jaA3FkJodoSk1
-         4nF/Wg674AiQfDOdH+ieCvNFlPzrj9jOlgRqSEVH2PaGcyjYWtg6uIxxLIHn0Hgbyx+A
-         hrb3HliQgHeEnQxuDPNzYuIg1Rn3PxRkcs6fiy5PZXkMnG8B1V0WarYA0pAlNeJ8+1KP
-         CZRw==
-X-Gm-Message-State: APjAAAWGhbSxc5E9Xf/U1+8NArk64sWTPdjZenaYOrcAB0wAgKtIIMo8
-        732g8yYskINCCLzRTrg9rnxxJI82jpII8+lOAprKSA==
-X-Google-Smtp-Source: APXvYqxqUtbC+Q7kC70bhYhYPCnMDetkHk8OUMT/4x4VUQhSCJ8j/U+NOYQNmhER8KejXrU7Y0oN8CVqjEaLDvR+dSc=
-X-Received: by 2002:ac2:5dd6:: with SMTP id x22mr2628851lfq.92.1565101449387;
- Tue, 06 Aug 2019 07:24:09 -0700 (PDT)
+        id S1730489AbfHFOZ5 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 6 Aug 2019 10:25:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38058 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728756AbfHFOZ5 (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Tue, 6 Aug 2019 10:25:57 -0400
+Received: from mail-lj1-f169.google.com (mail-lj1-f169.google.com [209.85.208.169])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 54D9E2173C;
+        Tue,  6 Aug 2019 14:25:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1565101556;
+        bh=hxvRGDEpNBm3mZPFFZ9scjz7nw9+tfcB69glm76Zj6k=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=LAR1NOD9DK3tAJ2JkBf7vEicPIWD0xoAsrAY+BabPQk//OwFZlnFZkvh+TTlIzRPg
+         sVdl6HCU5R05RZzEZkshV9i0qJEpuvmd08ej8da/jvRo9VAnwsc7rae8PedWVNvVQ8
+         PA3itgfOxe8MmtT80ZJR5MRIVKAk5q7wWB93BvqU=
+Received: by mail-lj1-f169.google.com with SMTP id i21so3162341ljj.3;
+        Tue, 06 Aug 2019 07:25:56 -0700 (PDT)
+X-Gm-Message-State: APjAAAX5guONvCSvKxuwBFXVaiPsCMxQrQJHqsPjrXX+v2kU6PXaYk9L
+        qxX3KInHa8VdeMCnLnPb97pb25C+1rGw2cT3U7Y=
+X-Google-Smtp-Source: APXvYqyR8xEsJE+MjEuvjOfu2HXgOcDbLzDQyXavm7a5+iFv4M54shHtw9bwzRKTalHYnjKzVT1tmRDtUKw9aVqqweQ=
+X-Received: by 2002:a2e:3008:: with SMTP id w8mr1964469ljw.13.1565101554494;
+ Tue, 06 Aug 2019 07:25:54 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190806114151.17652-1-brgl@bgdev.pl>
-In-Reply-To: <20190806114151.17652-1-brgl@bgdev.pl>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Tue, 6 Aug 2019 16:23:57 +0200
-Message-ID: <CACRpkdZq-AURpgjoXpZ4_w-_8K9KenUh8Bk8JVM0-MsmMy9+dw@mail.gmail.com>
-Subject: Re: [PATCH] gpiolib: never report open-drain/source lines as 'input'
- to user-space
-To:     Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+References: <20190805162710.7789-1-krzk@kernel.org> <CACRpkda8P522pkxctZbf2Ut13V6Rzx=mSYsRuHv0BvPyF6q1gA@mail.gmail.com>
+In-Reply-To: <CACRpkda8P522pkxctZbf2Ut13V6Rzx=mSYsRuHv0BvPyF6q1gA@mail.gmail.com>
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+Date:   Tue, 6 Aug 2019 16:25:43 +0200
+X-Gmail-Original-Message-ID: <CAJKOXPfuu1bgLL9oOf=7hrz-QvXBcJjJVMwqN2oRUv7hnB5Jyg@mail.gmail.com>
+Message-ID: <CAJKOXPfuu1bgLL9oOf=7hrz-QvXBcJjJVMwqN2oRUv7hnB5Jyg@mail.gmail.com>
+Subject: Re: [PATCH 1/4] pinctrl: samsung: Fix device node refcount leaks in
+ Exynos wakeup controller init
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     Tomasz Figa <tomasz.figa@gmail.com>,
+        Sylwester Nawrocki <s.nawrocki@samsung.com>,
+        Kukjin Kim <kgene@kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        linux-samsung-soc <linux-samsung-soc@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        stable <stable@vger.kernel.org>
+        Chanwoo Choi <cw00.choi@samsung.com>,
+        Marek Szyprowski <m.szyprowski@samsung.com>, notify@kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Aug 6, 2019 at 1:41 PM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
+On Tue, 6 Aug 2019 at 16:15, Linus Walleij <linus.walleij@linaro.org> wrote:
+>
+> On Mon, Aug 5, 2019 at 6:27 PM Krzysztof Kozlowski <krzk@kernel.org> wrote:
+>
+> > In exynos_eint_wkup_init() the for_each_child_of_node() loop is used
+> > with a break to find a matching child node.  Although each iteration of
+> > for_each_child_of_node puts the previous node, but early exit from loop
+> > misses it.  This leads to leak of device node.
+> >
+> > Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+>
+> I assume you're collecting these for a pull request to me
+> at some later point, all look good to me.
 
-> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
->
-> If the driver doesn't support open-drain/source config options, we
-> emulate this behavior when setting the direction by calling
-> gpiod_direction_input() if the default value is 0 (open-source) or
-> 1 (open-drain), thus not actively driving the line in those cases.
->
-> This however clears the FLAG_IS_OUT bit for the GPIO line descriptor
-> and makes the LINEINFO ioctl() incorrectly report this line's mode as
-> 'input' to user-space.
->
-> This commit modifies the ioctl() to always set the GPIOLINE_FLAG_IS_OUT
-> bit in the lineinfo structure's flags field. Since it's impossible to
-> use the input mode and open-drain/source options at the same time, we
-> can be sure the reported information will be correct.
->
-> Fixes: 521a2ad6f862 ("gpio: add userspace ABI for GPIO line information")
-> Cc: stable <stable@vger.kernel.org>
-> Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Yes, I'll take these and one more patch from lists and send them to you.
 
-Patch applied for fixes!
-Good catch.
-
-Yours,
-Linus Walleij
+Best regards,
+Krzysztof
