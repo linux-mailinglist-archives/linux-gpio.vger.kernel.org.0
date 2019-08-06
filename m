@@ -2,81 +2,124 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id BBB4A830EE
-	for <lists+linux-gpio@lfdr.de>; Tue,  6 Aug 2019 13:47:28 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 72530830F5
+	for <lists+linux-gpio@lfdr.de>; Tue,  6 Aug 2019 13:49:02 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726834AbfHFLr2 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 6 Aug 2019 07:47:28 -0400
-Received: from mga11.intel.com ([192.55.52.93]:34018 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726076AbfHFLr1 (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Tue, 6 Aug 2019 07:47:27 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 06 Aug 2019 04:47:27 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,353,1559545200"; 
-   d="scan'208";a="192645121"
-Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.157])
-  by fmsmga001.fm.intel.com with SMTP; 06 Aug 2019 04:47:25 -0700
-Received: by lahna (sSMTP sendmail emulation); Tue, 06 Aug 2019 14:47:24 +0300
-Date:   Tue, 6 Aug 2019 14:47:24 +0300
-From:   Mika Westerberg <mika.westerberg@linux.intel.com>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     linux-gpio@vger.kernel.org,
-        Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v1] pinctrl: intel: Allow to request locked pins
-Message-ID: <20190806114724.GU2548@lahna.fi.intel.com>
-References: <20190726200830.52728-1-andriy.shevchenko@linux.intel.com>
- <20190806110126.GR2548@lahna.fi.intel.com>
- <20190806114517.GT23480@smile.fi.intel.com>
+        id S1727259AbfHFLtB (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 6 Aug 2019 07:49:01 -0400
+Received: from mail-eopbgr1410125.outbound.protection.outlook.com ([40.107.141.125]:17248
+        "EHLO JPN01-OS2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726036AbfHFLtB (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Tue, 6 Aug 2019 07:49:01 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=nRNS5Mg7FY7wIr60sjkBly7N0QM2/qXGSDWuLIaOJkpulzqx2ygvNIfD4khrb2lZvvMBh6XF8UTWCQeYVmtgzcbsJwEFHXG8xjh5Dd2jJuS7H6XUn3T5FpgBgicIZVTj5vVNm/PYzWf8Lr8qTkCP7KnLlxCUvUL+UmSZ+T2KNbtNvrWUIiXSQyLv8TyNs7qr210tO5c56YK80zq/OFQae/gXqSFn9HU/zu2U2CmzBz2Om8ABNEkrODto6fYhhXDEXc3I6/tHv/igfrahBkTrvTQEVpMfM4aq5SM4FBRYpFnmjmDj5WdYvRDQhrQMwBK+YoqQ2BImz47EoLgOdBn3Ng==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=CwCzcxnr2DSnm2Zz77KXuUwzBqBHXbgLnYGUwhU6X8k=;
+ b=VuFtBZKm+TGHos7joKlNS1wnnaAICDvhGs9nlKK4RQ3IK68LFpUMm794ezGlh9BZ8jmFsS8V33gdqDXLya2dKzLMMMm8kReqQdqEvDsq3dPV7DM1TW/lUkmFrI2QlFjMChWK5HEE2h3g6/gpbzo6/FWy5ILnMsGgMgXHrBMEkcM/aqjKUtBXKiDJ+SrRTkwPDItR/HE5BNQQIyN1dffbgeeVOwCbvvG39QYgvaGCQ2wy/Vy2Kib+0ij3+wMBLQLe8hIqHWZ7gR2g0f72GqRj67e5AsHR9VCs8ogAoNtoYqBPNTNmmhSmBPL/M0mdVeOYrFEXxmfU19GR7CYhsKOf9g==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1;spf=pass
+ smtp.mailfrom=renesas.com;dmarc=pass action=none
+ header.from=renesas.com;dkim=pass header.d=renesas.com;arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=renesasgroup.onmicrosoft.com; s=selector2-renesasgroup-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=CwCzcxnr2DSnm2Zz77KXuUwzBqBHXbgLnYGUwhU6X8k=;
+ b=if8qbv7yozXc9OgPP4l1D3GyrHBCVv+VDaVpoHf41tNfJ5PHx2RgwwKTLw21DVnLMYVGYgesDbP4Ik1nd3GeYyyfDvApQTRF5WHmHFWOkAniZyZh83ZF4QWbkel/9B3zqN2SnBGNaSxaXjk0ByQoM7hsX/71fLDyhr4MVJEKv6U=
+Received: from OSBPR01MB4536.jpnprd01.prod.outlook.com (20.179.180.215) by
+ OSBPR01MB4294.jpnprd01.prod.outlook.com (20.179.180.143) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2136.19; Tue, 6 Aug 2019 11:48:57 +0000
+Received: from OSBPR01MB4536.jpnprd01.prod.outlook.com
+ ([fe80::106b:32d9:ab57:e8f3]) by OSBPR01MB4536.jpnprd01.prod.outlook.com
+ ([fe80::106b:32d9:ab57:e8f3%3]) with mapi id 15.20.2136.018; Tue, 6 Aug 2019
+ 11:48:57 +0000
+From:   Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+CC:     Linus Walleij <linus.walleij@linaro.org>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux PWM List <linux-pwm@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>
+Subject: RE: [PATCH RFC 2/7] pinctrl: sh-pfc: remove incomplete flag
+ "cfg->type"
+Thread-Topic: [PATCH RFC 2/7] pinctrl: sh-pfc: remove incomplete flag
+ "cfg->type"
+Thread-Index: AQHVNWy6yAT6N18acUCgmyJX7u1APKbuBmyAgAAnuPA=
+Date:   Tue, 6 Aug 2019 11:48:57 +0000
+Message-ID: <OSBPR01MB45363201E328DF9C15D2833FD8D50@OSBPR01MB4536.jpnprd01.prod.outlook.com>
+References: <1562576868-8124-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+ <1562576868-8124-3-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+ <CAMuHMdVcAw_ApKMmrV7DaoJBGUZ1GzW3kmxnsTn72FtCGWhXPA@mail.gmail.com>
+In-Reply-To: <CAMuHMdVcAw_ApKMmrV7DaoJBGUZ1GzW3kmxnsTn72FtCGWhXPA@mail.gmail.com>
+Accept-Language: ja-JP, en-US
+Content-Language: ja-JP
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=yoshihiro.shimoda.uh@renesas.com; 
+x-originating-ip: [118.238.235.108]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: e574cd7c-e605-4d6f-6419-08d71a6410c3
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:OSBPR01MB4294;
+x-ms-traffictypediagnostic: OSBPR01MB4294:
+x-microsoft-antispam-prvs: <OSBPR01MB4294488DF334BF906904F95FD8D50@OSBPR01MB4294.jpnprd01.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:565;
+x-forefront-prvs: 0121F24F22
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(39860400002)(396003)(366004)(376002)(136003)(346002)(199004)(189003)(55016002)(33656002)(6246003)(81156014)(4326008)(6436002)(5660300002)(8936002)(81166006)(8676002)(305945005)(74316002)(7736002)(478600001)(9686003)(14454004)(6506007)(99286004)(53546011)(25786009)(53936002)(7696005)(6116002)(68736007)(7416002)(54906003)(6916009)(446003)(476003)(76176011)(316002)(486006)(186003)(26005)(52536014)(11346002)(2906002)(229853002)(86362001)(66446008)(64756008)(66066001)(256004)(76116006)(14444005)(3846002)(66946007)(66556008)(102836004)(66476007)(71190400001)(71200400001);DIR:OUT;SFP:1102;SCL:1;SRVR:OSBPR01MB4294;H:OSBPR01MB4536.jpnprd01.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: renesas.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: H8P+Mbp/I4qyDjavhk8zVG7YF4MxL3vaN7kWsBFa6aJ8XAfcDdEF2lWgS57nvEVaZOcCQt+AcrCN6orS7pFCj8EjMVqRRqUzTrr7nm8DMmxSJzELuZiLCbmuNZ41G52OuHuZ6Gee5Wc3Mi3A+suYLQMKsvJ14OYkiWxAl9ogrkOGptLRj0JHaxp3SKd5b9d423+FYNJDuJ+NGeB0/UaG22j/xu5UAKgP9F0wlxHwVWOaMgLFCi535y253yoY8qPIFE+CIZnLADMSKtjkMBDmtcVit7GVppwmwbL6dP1FRd8c8ARE0BE/ot1IB3ToEuZD3B+doQbVF41xGujnEGwYfsH7ieZarYbei0Ol8eJVDloKNRy0o02VxPWdX8CKK9Rkbr5AZ/ewN+sXBYtkIm8Dk9qhbkAjVsn0MB4Hy4vEnog=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190806114517.GT23480@smile.fi.intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.11.4 (2019-03-13)
+X-OriginatorOrg: renesas.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: e574cd7c-e605-4d6f-6419-08d71a6410c3
+X-MS-Exchange-CrossTenant-originalarrivaltime: 06 Aug 2019 11:48:57.4128
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 53d82571-da19-47e4-9cb4-625a166a4a2a
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: yoshihiro.shimoda.uh@renesas.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: OSBPR01MB4294
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Aug 06, 2019 at 02:45:17PM +0300, Andy Shevchenko wrote:
-> On Tue, Aug 06, 2019 at 02:01:26PM +0300, Mika Westerberg wrote:
-> > On Fri, Jul 26, 2019 at 11:08:30PM +0300, Andy Shevchenko wrote:
-> > > Some firmwares would like to protect pins from being modified by OS
-> > > and at the same time provide them to OS as a resource. So, the driver
-> > > in such circumstances may request pin and may not change its state.
-> > 
-> > This is definitely good idea.
-> 
-> Thanks for review, my answers below.
-> 
-> > >  	 * the pad is considered unlocked. Any other case means that it is
-> > >  	 * either fully or partially locked and we don't touch it.
-> > 
-> > I think you should update the above comment as well.
-> 
-> Will do for v2.
-> 
-> > >  	raw_spin_lock_irqsave(&pctrl->lock, flags);
-> > >  
-> > > -	if (!intel_pad_usable(pctrl, pin)) {
-> > > +	if (!intel_pad_owned_by_host(pctrl, pin)) {
-> > >  		raw_spin_unlock_irqrestore(&pctrl->lock, flags);
-> > >  		return -EBUSY;
-> > >  	}
-> > >  
-> > > +	if (!intel_pad_is_unlocked(pctrl, pin)) {
-> > > +		raw_spin_unlock_irqrestore(&pctrl->lock, flags);
-> > > +		return 0;
-> > 
-> > Hmm, if I'm reading this right it still does not allow requesting locked
-> > pins. What I'm missing here?
-> 
-> We do not return an error code here, so pin is left requested but pad
-> configuration register untouched.
-
-Indeed, now it is clear. Thanks for explaining :)
+SGkgR2VlcnQtc2FuLA0KDQo+IEZyb206IEdlZXJ0IFV5dHRlcmhvZXZlbiwgU2VudDogVHVlc2Rh
+eSwgQXVndXN0IDYsIDIwMTkgNjoyNCBQTQ0KPiANCj4gSGkgU2hpbW9kYS1zYW4sDQo+IA0KPiBP
+biBNb24sIEp1bCA4LCAyMDE5IGF0IDExOjA4IEFNIFlvc2hpaGlybyBTaGltb2RhDQo+IDx5b3No
+aWhpcm8uc2hpbW9kYS51aEByZW5lc2FzLmNvbT4gd3JvdGU6DQo+ID4gVGhlIG9sZCBjb21taXQg
+YzU4ZDljMWIyNmUzICgic2gtcGZjOiBJbXBsZW1lbnQgZ2VuZXJpYyBwaW5jb25mDQo+ID4gc3Vw
+cG9ydCIpIGJyb2tlIHRoZSBjZmctPnR5cGUgZmxhZyB0byBQSU5NVVhfVFlQRV9GVU5DVElPTiBi
+ZWNhdXNlDQo+ID4gc2hfcGZjX3BpbmNvbmZfc2V0KCkgZGlkbid0IGNhbGwgc2hfcGZjX3JlY29u
+ZmlnX3BpbigpLg0KPiA+IE5vdyBpZiB3ZSBmaXggdGhlIGNmZy0+dHlwZSBjb25kaXRpb24sIGl0
+IGdldHMgd29yc2UgYmVjYXVzZToNCj4gPiAgLSBTb21lIGRyaXZlcnMgbWlnaHQgYmUgZGVmZXJy
+ZWQgc28gdGhhdCAuc2V0X211eCgpIHdpbGwgYmUgY2FsbGVkDQo+ID4gICAgbXVsdGlwbGUgdGlt
+ZXMuDQo+ID4gIC0gSW4gc3VjaCB0aGUgY2FzZSwgdGhlIHNoLXBmYyBkcml2ZXIgcmV0dXJucyAt
+RUJVU1kgZXZlbiBpZg0KPiA+ICAgIHRoZSBncm91cCBpcyB0aGUgc2FtZSwgYW5kIHRoZW4gdGhh
+dCBkcml2ZXIgZmFpbHMgdG8gcHJvYmUuDQo+ID4NCj4gPiBTaW5jZSB0aGUgcGluY3RybCBzdWJz
+eXN0ZW0gYWxyZWFkeSBoYXMgc3VjaCBjb25kaXRpb25zIGFjY29yZGluZw0KPiA+IHRvIEBzZXRf
+bXV4IGFuZCBAZ3Bpb19yZXF1ZXN0X2VuYWJsZSwgdGhpcyBwYXRjaCBqdXN0IHJlbW92ZQ0KPiA+
+IHRoZSBpbmNvbXBsZXRlIGZsYWcgZnJvbSBzaC1wZmMvcGluY3RybC5jLg0KPiANCj4gRG8gd2Ug
+bmVlZCB0byBzZXQgc2hfcGZjX3Bpbm11eF9vcHMuc3RyaWN0ID0gdHJ1ZT8NCg0KSWYgdGhlIC5z
+dHJpY3QgPSB0cnVlLCB0aGUgZmluYWwgcHdtIHBhdGNoIG9uIHRoaXMgc2VyaWVzIGZhaWxlZCB3
+aXRoIHRoZSBmb2xsb3dpbmcgZXJyb3I6DQoNClsgICAxMS40NTM3MTZdIHNoLXBmYyBlNjA2MDAw
+MC5waW4tY29udHJvbGxlcjogcGluIEdQXzJfNyBhbHJlYWR5IHJlcXVlc3RlZCBieSBlNmUzMTAw
+MC5wd207IGNhbm5vdCBjbGFpbSBmb3IgZTYwNTIwMDAuZ3Bpbzo0NTkNCg0KQmVzdCByZWdhcmRz
+LA0KWW9zaGloaXJvIFNoaW1vZGENCg0KPiBHcntvZXRqZSxlZXRpbmd9cywNCj4gDQo+ICAgICAg
+ICAgICAgICAgICAgICAgICAgIEdlZXJ0DQo+IA0KPiAtLQ0KPiBHZWVydCBVeXR0ZXJob2V2ZW4g
+LS0gVGhlcmUncyBsb3RzIG9mIExpbnV4IGJleW9uZCBpYTMyIC0tIGdlZXJ0QGxpbnV4LW02OGsu
+b3JnDQo+IA0KPiBJbiBwZXJzb25hbCBjb252ZXJzYXRpb25zIHdpdGggdGVjaG5pY2FsIHBlb3Bs
+ZSwgSSBjYWxsIG15c2VsZiBhIGhhY2tlci4gQnV0DQo+IHdoZW4gSSdtIHRhbGtpbmcgdG8gam91
+cm5hbGlzdHMgSSBqdXN0IHNheSAicHJvZ3JhbW1lciIgb3Igc29tZXRoaW5nIGxpa2UgdGhhdC4N
+Cj4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAtLSBMaW51cyBUb3J2YWxkcw0K
