@@ -2,68 +2,85 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id B19B084202
-	for <lists+linux-gpio@lfdr.de>; Wed,  7 Aug 2019 03:59:16 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D78A284264
+	for <lists+linux-gpio@lfdr.de>; Wed,  7 Aug 2019 04:22:39 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728449AbfHGB7Q (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 6 Aug 2019 21:59:16 -0400
-Received: from mail-lf1-f67.google.com ([209.85.167.67]:33801 "EHLO
-        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728360AbfHGB7Q (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 6 Aug 2019 21:59:16 -0400
-Received: by mail-lf1-f67.google.com with SMTP id b29so55519094lfq.1
-        for <linux-gpio@vger.kernel.org>; Tue, 06 Aug 2019 18:59:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:reply-to:from:date:message-id:subject:to;
-        bh=hUcKlTjR1HIw/YzjCQ7WTvYjftRSq8rHNjYT9AykjRQ=;
-        b=HTsji+gC34G6eFKNyJu/RJ+Rsn+DVeUWtZVy6Xd999DBpde3pBgxR2jwRGpiGSGOo8
-         3OKk/ZDR/oa6fY/pmKkN4enpd6z9kgQ+TdyqF8GF1Xm//wXnG6vJPZC8HvU3U9jawIsl
-         pIwqvY8cVioRH4cIgS0fW37aSADwEqKaSbs1GuRLFM/VEmddzbZ4aYV/r3EhDK9M/xot
-         VMVrGd1RaCaGT+NlNwblstxJTfWdlRWhRQ1yn+YnAEdVZJbtFTpSJifO5BjothYkNfQp
-         u/G6nH72Tiik5pD/EcOBhH/wRRAzjes/W+GB0BHN+3pH7hvzXK7XegqKZunPusy2HMya
-         rbPA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
-         :subject:to;
-        bh=hUcKlTjR1HIw/YzjCQ7WTvYjftRSq8rHNjYT9AykjRQ=;
-        b=NoBKZYfC7bBupNM8pCAybgcioE826jDIxTPX6oV4olC4To+meZXA++ht5yfn1POBus
-         aagfG3RsuUrRxXb4URSu0NP9Ln7gOMA2eXn0NPHVjKEqh0SLgVRMn+3G/bTTlvnektYo
-         /qfP9lJXxSIblPbl2J61dGrKFSmt7OJQJsFGdiohnVPR9g6rdq4Ir0s9KQdjSJxCpkkx
-         wc1S6bya57mbtn2GVLH2kEnT0iY95+vfMLxZgX2owkXiwDmkAsSlX52e2nl8iA86RTPT
-         TPR6MgeAyNQeCABNx1QA3FlBAuwcK+0VzfngyiTBopeXpX5ZEtqSM0IRbbodfXl8gci5
-         t8hg==
-X-Gm-Message-State: APjAAAW/C4ZM2x0sE0De/JCTzcvPD/9xhAbgaayx4wd2wpkH0RVxwum2
-        RZ9aE/vRJlec1pzzXYnl3FLRxlThhT2hmxjf38Q=
-X-Google-Smtp-Source: APXvYqwHgbWOh9mPra/9SDTB3sc6KsVSSfF1Ea9ZorgqhtPoaGeNszk7KigwdwBNidXepBWTkDDUIzH1WVoMbV6+jkM=
-X-Received: by 2002:a19:9104:: with SMTP id t4mr4193595lfd.179.1565143154129;
- Tue, 06 Aug 2019 18:59:14 -0700 (PDT)
-MIME-Version: 1.0
-Received: by 2002:a2e:7507:0:0:0:0:0 with HTTP; Tue, 6 Aug 2019 18:59:13 -0700 (PDT)
-Reply-To: beronsimon69@gmail.com
-From:   Simon Beron <agbej57@gmail.com>
-Date:   Wed, 7 Aug 2019 03:59:13 +0200
-Message-ID: <CAPE2HD2kxdYj9_5gC00HeLAVBnaozhwMmdcn=DyvPherXX2hvw@mail.gmail.com>
-Subject: PARTNERSHIP REQUEST,
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
+        id S1728828AbfHGCWj (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 6 Aug 2019 22:22:39 -0400
+Received: from inva020.nxp.com ([92.121.34.13]:60130 "EHLO inva020.nxp.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728772AbfHGCWi (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Tue, 6 Aug 2019 22:22:38 -0400
+Received: from inva020.nxp.com (localhost [127.0.0.1])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 7216C1A01EF;
+        Wed,  7 Aug 2019 04:22:36 +0200 (CEST)
+Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 5AEB71A0064;
+        Wed,  7 Aug 2019 04:22:31 +0200 (CEST)
+Received: from titan.ap.freescale.net (TITAN.ap.freescale.net [10.192.208.233])
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id D2ED9402B5;
+        Wed,  7 Aug 2019 10:22:24 +0800 (SGT)
+From:   Hui Song <hui.song_1@nxp.com>
+To:     Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Cc:     linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+        Song Hui <hui.song_1@nxp.com>
+Subject: [PATCH v3] gpio: mpc8xxx: Add new platforms GPIO DT node description
+Date:   Wed,  7 Aug 2019 10:12:54 +0800
+Message-Id: <20190807021254.49092-1-hui.song_1@nxp.com>
+X-Mailer: git-send-email 2.9.5
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Dear Friend,
+From: Song Hui <hui.song_1@nxp.com>
 
-I need you to please let me know if there are fast growing investments
-in your country in which i can invest money in. I have access to a
-huge amount of money, which i want to invest in your country, i want
-to know if you can be an agent/partner to me and i will give you a
-commission of 30% only If you agree to assist me, i will like to know
-if the commission is ok for you, also i would love to know more about
-you too. Get Back to me without delay if you are interested
+Update the NXP GPIO node dt-binding file for QorIQ and
+Layerscape platforms, and add one more example with
+ls1028a GPIO node.
 
+Signed-off-by: Song Hui <hui.song_1@nxp.com>
+---
+ Documentation/devicetree/bindings/gpio/gpio-mpc8xxx.txt | 16 +++++++++++++++-
+ 1 file changed, 15 insertions(+), 1 deletion(-)
 
-Yours Faithfully
+diff --git a/Documentation/devicetree/bindings/gpio/gpio-mpc8xxx.txt b/Documentation/devicetree/bindings/gpio/gpio-mpc8xxx.txt
+index 69d4616..baf95d9 100644
+--- a/Documentation/devicetree/bindings/gpio/gpio-mpc8xxx.txt
++++ b/Documentation/devicetree/bindings/gpio/gpio-mpc8xxx.txt
+@@ -4,7 +4,7 @@ Required properties:
+ - compatible : Should be "fsl,<soc>-gpio"
+   The following <soc>s are known to be supported:
+ 	mpc5121, mpc5125, mpc8349, mpc8572, mpc8610, pq3, qoriq,
+-	ls1021a, ls1043a, ls2080a.
++	ls1021a, ls1043a, ls2080a, ls1028a.
+ - reg : Address and length of the register set for the device
+ - interrupts : Should be the port interrupt shared by all 32 pins.
+ - #gpio-cells : Should be two.  The first cell is the pin number and
+@@ -37,3 +37,17 @@ gpio0: gpio@2300000 {
+ 	interrupt-controller;
+ 	#interrupt-cells = <2>;
+ };
++
++
++Example of gpio-controller node for a ls1028a SoC:
++
++gpio1: gpio@2300000 {
++	compatible = "fsl,ls1028a-gpio","fsl,qoriq-gpio";
++	reg = <0x0 0x2300000 0x0 0x10000>;
++	interrupts = <GIC_SPI 36 IRQ_TYPE_LEVEL_HIGH>;
++	gpio-controller;
++	#gpio-cells = <2>;
++	interrupt-controller;
++	#interrupt-cells = <2>;
++	little-endian;
++};
+-- 
+2.9.5
 
-Simon Beron.
