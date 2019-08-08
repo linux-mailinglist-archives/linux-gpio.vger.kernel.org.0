@@ -2,57 +2,57 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id E238C85BF3
-	for <lists+linux-gpio@lfdr.de>; Thu,  8 Aug 2019 09:47:34 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A88C085C29
+	for <lists+linux-gpio@lfdr.de>; Thu,  8 Aug 2019 09:55:10 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731333AbfHHHre (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 8 Aug 2019 03:47:34 -0400
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:45165 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730887AbfHHHre (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 8 Aug 2019 03:47:34 -0400
-Received: by mail-pl1-f195.google.com with SMTP id y8so1064831plr.12
-        for <linux-gpio@vger.kernel.org>; Thu, 08 Aug 2019 00:47:33 -0700 (PDT)
+        id S1731548AbfHHHzJ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 8 Aug 2019 03:55:09 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:47101 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725796AbfHHHzJ (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 8 Aug 2019 03:55:09 -0400
+Received: by mail-pf1-f196.google.com with SMTP id c3so20497491pfa.13
+        for <linux-gpio@vger.kernel.org>; Thu, 08 Aug 2019 00:55:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=2rESte5/57okCowz10RtqHSCa/mKipnoo2DWd+udp9Q=;
-        b=sRDhhJpt+/SXsSfg3oUjpHPQcYF6DZUMlgwXkoGoEJxhfxulV6+nhQ+JVKm2CJcyxn
-         mLh31PM9g4jiOc88jqEPfr2hZR6KyIKtDJMEsC3meMTNt9tLWENdM7V0yjMTPpi1GMt/
-         J6/FEbqmZqMJKeuOytpLmZ9B9hIyJSYBGOKrvxI8vO4k+6t/FYTs5Z2n9YoytI0vcwgQ
-         k96Z8aiSDy+W8lqe9yKpnJ8PyaiGSvPVGFUoMyiyevWlZkJO5T0FMs/Eh1dZAB6Mzqir
-         SHSWW01PMimuLSC3nWRkCA6k32a0iYXWwDEgKe9pHymrKakiQJsp0iiTw2i8mlwaws2n
-         zstg==
+        bh=AenDtBrpVG4930TDhGN2DV+HTpyLOWcIzVhLu9zuE4w=;
+        b=sd8ghvqFngt6Wd7gYlTDBvi+xzGc5m8Gcv+Q1s68B8x6rx+kNgEaCyXniwyuD/BTlD
+         464oe3yobiTKksTwqQnuNIMzWq2o8Os1uztTYyMvMBNpthEq1dJznYaU3GNcclhQAonO
+         i6z+pA3yMIh9GXZK/W2ubhcTJQtvaCQ7TXhOwwpxixhU0WiXaPRCYQDtptxZ/FTeongT
+         bS655Lmu2EroNzrH7I3qQP+pubvA6mxUAixK6f1tmiF6qd+b3RXhlvB5nMNmh0ju9qMS
+         kbuYAqUnx851oU4+T0iQcx3uE+tBC0Qy2q0iup9NZuNmJ1xphwZiUxLVPiY4ABvR1Tkp
+         YdOA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=2rESte5/57okCowz10RtqHSCa/mKipnoo2DWd+udp9Q=;
-        b=aDE6z8htbfXg1mc5MHruT1yW5bwbhfj7LnkfQ0qbXmL6V2HKHGc4VqATKnzUEXgRyJ
-         9BuKEPQzPsizcXSwBN48wUhBwTBNbReE+PIIGGkxbOT1svhr+Bb0BRJBShXiiz6zhBhL
-         vbnJ//7LtKrvrKR6cFsXdRzvWraB6Vb4wx1TSM4Q2qtaZj5mdi8aaYCjnVQ4MKvZu7M0
-         DrTwP5QWEePsdRpQoJ8myh/gsV/CbAsqJp6Ax3j6XRuasYloA19tS7JJjsu/lDuLGte+
-         3onw6vmRugs9PY8dASRSo1ZX4sfaKsFqVIeUJcPdzrtOp/vksfJNta1258Ce0RliCdmV
-         MxnQ==
-X-Gm-Message-State: APjAAAWIPDfz7jpTt4wgmRowN7r8C+ea7n4JfQkombjOiZ3aQklxorxY
-        pIPfimNnCpum3+BX0fdB4XE=
-X-Google-Smtp-Source: APXvYqzqPfZHIApuMh5OHeyfe24xH8jfgbus4OqX9KWnaF77FBz58qGVCMciafF9d9o+0Z7yvZ2dJg==
-X-Received: by 2002:a17:902:5a2:: with SMTP id f31mr12011172plf.72.1565250453700;
-        Thu, 08 Aug 2019 00:47:33 -0700 (PDT)
+        bh=AenDtBrpVG4930TDhGN2DV+HTpyLOWcIzVhLu9zuE4w=;
+        b=ZYxC7c6T72MboZ7RdqBL2FY5Hj5DhlVfVcDgZQ+dGiC3y2wgXiMsLvO1R86dFOFUkM
+         j3E3+vTM0vLkPMhxVV6HQbFKgCC3pw+9ttwHtcYYozuHGE77ytkpl6X8LPpxTJKe6TM3
+         +Ew9GATruT9oAewhh4ipJccSj5pwEsW+q/jp+rQ1A5lwCJrksb5O9qBXv5NWoccakVqx
+         yRsRptR3il8XZ30W7sL43gBGzUxM0Z38iw7LNVtdoUWmTWlP1yLgOk2UUMWuGJR6NbW0
+         32H/pOAFGk8UPpv+rhoAlQYUK0fiICAVFBKazNfSmEbJyvJam95+xIcynZaXg4aXbdTL
+         xnxQ==
+X-Gm-Message-State: APjAAAW0HqNWK3RcLKhkqwcVcsi2p53D9IKbzaGuqBNQKrNJQAf1Qbwc
+        z2UHpxQD/C+XfcqNtdi3jKc=
+X-Google-Smtp-Source: APXvYqwwX8sR5i5r5i+v6lD32wo6zEVFVFqLJblNiw7wl0jbxCwGEUiMOVlzTRqeOr0TI/WrD2DBCA==
+X-Received: by 2002:a62:e315:: with SMTP id g21mr14409156pfh.225.1565250909269;
+        Thu, 08 Aug 2019 00:55:09 -0700 (PDT)
 Received: from localhost.localdomain ([122.163.44.6])
-        by smtp.gmail.com with ESMTPSA id i14sm147454599pfk.0.2019.08.08.00.47.29
+        by smtp.gmail.com with ESMTPSA id v14sm9370402pgi.79.2019.08.08.00.55.06
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Thu, 08 Aug 2019 00:47:33 -0700 (PDT)
+        Thu, 08 Aug 2019 00:55:08 -0700 (PDT)
 From:   Nishka Dasgupta <nishkadg.linux@gmail.com>
-To:     aisheng.dong@nxp.com, festevam@gmail.com, shawnguo@kernel.org,
-        stefan@agner.ch, kernel@pengutronix.de, linus.walleij@linaro.org,
-        s.hauer@pengutronix.de, linux-imx@nxp.com,
-        linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+To:     linus.walleij@linaro.org, mcoquelin.stm32@gmail.com,
+        alexandre.torgue@st.com, linux-gpio@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org
 Cc:     Nishka Dasgupta <nishkadg.linux@gmail.com>
-Subject: [PATCH] pinctrl: freescale: imx: Add of_node_put() before return
-Date:   Thu,  8 Aug 2019 13:17:20 +0530
-Message-Id: <20190808074720.15754-1-nishkadg.linux@gmail.com>
+Subject: [PATCH] pinctrl: stm32: stm32: Add of_node_put() before return
+Date:   Thu,  8 Aug 2019 13:24:56 +0530
+Message-Id: <20190808075457.16109-1-nishkadg.linux@gmail.com>
 X-Mailer: git-send-email 2.19.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -61,53 +61,42 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Each iteration of for_each_child_of_node() puts the previous node;
-however, in the case of a return from the middle of the loop, there is no
-put, thus causing a memory leak. Hence put of_node_put() statements as
-required before two mid-loop return statements.
+Each iteration of for_each_child_of_node and
+for_each_available_child_of_node puts the previous node, but in
+the case of a return from the middle of the loop, there is no put, thus
+causing a memory leak. Hence add an of_node_put before the return in
+two places.
 Issue found with Coccinelle.
 
 Signed-off-by: Nishka Dasgupta <nishkadg.linux@gmail.com>
 ---
- drivers/pinctrl/freescale/pinctrl-imx.c | 13 ++++++++++---
- 1 file changed, 10 insertions(+), 3 deletions(-)
+ drivers/pinctrl/stm32/pinctrl-stm32.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/pinctrl/freescale/pinctrl-imx.c b/drivers/pinctrl/freescale/pinctrl-imx.c
-index 83ff9532bae6..9f42036c5fbb 100644
---- a/drivers/pinctrl/freescale/pinctrl-imx.c
-+++ b/drivers/pinctrl/freescale/pinctrl-imx.c
-@@ -672,8 +672,10 @@ static int imx_pinctrl_parse_functions(struct device_node *np,
- 
- 		grp = devm_kzalloc(ipctl->dev, sizeof(struct group_desc),
- 				   GFP_KERNEL);
--		if (!grp)
-+		if (!grp) {
-+			of_node_put(child);
- 			return -ENOMEM;
-+		}
- 
- 		mutex_lock(&ipctl->mutex);
- 		radix_tree_insert(&pctl->pin_group_tree,
-@@ -697,12 +699,17 @@ static bool imx_pinctrl_dt_is_flat_functions(struct device_node *np)
- 	struct device_node *pinctrl_np;
- 
- 	for_each_child_of_node(np, function_np) {
--		if (of_property_read_bool(function_np, "fsl,pins"))
-+		if (of_property_read_bool(function_np, "fsl,pins")) {
-+			of_node_put(function_np);
- 			return true;
-+		}
- 
- 		for_each_child_of_node(function_np, pinctrl_np) {
--			if (of_property_read_bool(pinctrl_np, "fsl,pins"))
-+			if (of_property_read_bool(pinctrl_np, "fsl,pins")) {
-+				of_node_put(pinctrl_np);
-+				of_node_put(function_np);
- 				return false;
-+			}
+diff --git a/drivers/pinctrl/stm32/pinctrl-stm32.c b/drivers/pinctrl/stm32/pinctrl-stm32.c
+index b453aed1bbeb..2d5e0435af0a 100644
+--- a/drivers/pinctrl/stm32/pinctrl-stm32.c
++++ b/drivers/pinctrl/stm32/pinctrl-stm32.c
+@@ -615,6 +615,7 @@ static int stm32_pctrl_dt_node_to_map(struct pinctrl_dev *pctldev,
+ 				&reserved_maps, num_maps);
+ 		if (ret < 0) {
+ 			pinctrl_utils_free_map(pctldev, *map, *num_maps);
++			of_node_put(np);
+ 			return ret;
  		}
  	}
+@@ -1468,8 +1469,10 @@ int stm32_pctl_probe(struct platform_device *pdev)
+ 	for_each_available_child_of_node(np, child) {
+ 		if (of_property_read_bool(child, "gpio-controller")) {
+ 			ret = stm32_gpiolib_register_bank(pctl, child);
+-			if (ret)
++			if (ret) {
++				of_node_put(child);
+ 				return ret;
++			}
  
+ 			pctl->nbanks++;
+ 		}
 -- 
 2.19.1
 
