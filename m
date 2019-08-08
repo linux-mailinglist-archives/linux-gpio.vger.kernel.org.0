@@ -2,41 +2,40 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id E2AE085CE1
-	for <lists+linux-gpio@lfdr.de>; Thu,  8 Aug 2019 10:29:37 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8261385CEA
+	for <lists+linux-gpio@lfdr.de>; Thu,  8 Aug 2019 10:31:21 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731936AbfHHI3g (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 8 Aug 2019 04:29:36 -0400
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:35460 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731677AbfHHI3g (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 8 Aug 2019 04:29:36 -0400
-Received: by mail-ot1-f66.google.com with SMTP id j19so38718585otq.2;
-        Thu, 08 Aug 2019 01:29:36 -0700 (PDT)
+        id S1732060AbfHHIbU (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 8 Aug 2019 04:31:20 -0400
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:43957 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731677AbfHHIbU (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 8 Aug 2019 04:31:20 -0400
+Received: by mail-ot1-f68.google.com with SMTP id j11so14981948otp.10;
+        Thu, 08 Aug 2019 01:31:19 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=+u/3qT61Q2/OcDjZCUn2YfBk48IfIziysA/L4R6VDgE=;
-        b=Eb9cqxbGq1SXBCK1bVosRO2Tm/ExSHzvrhMlkkVWMXZXSXJKPgkNso6uEvQWHWXI+K
-         eI2socyjIDJQDaGd8QpkhGTUk5zpPWwjhKKp+s7eox1Fl9DvNSMu5LVp3sK53nYUZdU1
-         nN93j9RyNdlG5uGRKGsdzPEc572JPJ/2MOpgAuhx1ahHk7YSa637vuLU3E4CktRliacM
-         o+46y7aUcx24/Zg/+qoqfvaZA9AjlqQlwzsu1UUM2VFYRW82tbcaTDLJ+i13DeRHHj1D
-         gHKT124+OPMjeRdUa4kjdBQIOqjE73FY68P8ZgHbVzSU/PKhY5NaFFnYSRjJaivGDJoT
-         LuWg==
-X-Gm-Message-State: APjAAAVtCs6uHAMPOjwZBQHdxMsep0GRZ6xiNMkXmL6WT7up9/mQ4B/l
-        AtPaKSHGmsn5hDPeesU83wW1ojxUtkVLZpsTbzE=
-X-Google-Smtp-Source: APXvYqzcUNVB4t/U9lHIue/3Y61jRYncB0pQRFcKk+KuQLUQ3wfKH9JQKE6/uCxXKIpRhsfc7L8P6yxiJ84IMpkla8k=
-X-Received: by 2002:a05:6830:210f:: with SMTP id i15mr12288585otc.250.1565252975601;
- Thu, 08 Aug 2019 01:29:35 -0700 (PDT)
+        bh=iXMOZAOPp/kxW4HPboOr7lbxbkktN0hF/10EUasUADA=;
+        b=UpDnH8BfjGWVvs2gXm2tD1lyaMjyYbjo3gvKB+nK+FTWK8gpoYKdYZdZhD6dM7TP+f
+         og1SsrW70+WAY6UoX8cfxrgQHHEhO/pEpf2LRUoLPp8IW8Z0SjriiZwVOv+AgZDq6Nyc
+         Z4JXZ3qP0WSXsed6JrfdDf+K4ZbCePm5k9egFre45afmd5WjV00HlrymuGL28itJoToa
+         fdwB9xPHK62rvdEOk0rBBNPS8ury375mzdfWiv9CTtgpheMFRbL4bN6OBAw3mRLvGFoC
+         RER03UpRoIYE2LoFTtCcBTaJCK3H9OCnVhvoGFsH7luapy3AcELovv+H9RYP43NwGQR2
+         PB/g==
+X-Gm-Message-State: APjAAAXG+KwNQUAerQx/31IcRfcOlxVaUvPB5h86bL3AKFVwH8S/6KPs
+        Qbm1xd4VOj1UPm3cpTSiROSQkBYo2f2KbhNMKsCSjw==
+X-Google-Smtp-Source: APXvYqwWQTKCvDXI8JtC//JpwD5zdx7xFJiSgt8gwS3WjOg7D0hIsS5E65xe7EsHk/PpTDE96Qj72N7KBxF1JiIWWs0=
+X-Received: by 2002:aca:3bc6:: with SMTP id i189mr1658775oia.153.1565253079486;
+ Thu, 08 Aug 2019 01:31:19 -0700 (PDT)
 MIME-Version: 1.0
 References: <1565245143-15018-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
- <1565245143-15018-4-git-send-email-yoshihiro.shimoda.uh@renesas.com>
-In-Reply-To: <1565245143-15018-4-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+In-Reply-To: <1565245143-15018-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
 From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Thu, 8 Aug 2019 10:29:24 +0200
-Message-ID: <CAMuHMdW32TRw3Awf-5C2eJiZ1iys-vK7YihFwqPxOP66Eh9+Lg@mail.gmail.com>
-Subject: Re: [PATCH v2 3/3] pinctrl: sh-pfc: Rollback to mux if requires when
+Date:   Thu, 8 Aug 2019 10:31:08 +0200
+Message-ID: <CAMuHMdXx7ger66b8H5cxeEJTkZmVsTcdPE2mnsFsZ3s6EQJ8Lg@mail.gmail.com>
+Subject: Re: [PATCH v2 0/3] pinctrl: sh-pfc: Rollback to mux if requires when
  the gpio is freed
 To:     Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
 Cc:     Linus Walleij <linus.walleij@linaro.org>,
@@ -49,15 +48,34 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+Hi Shimoda-san,
+
 On Thu, Aug 8, 2019 at 8:20 AM Yoshihiro Shimoda
 <yoshihiro.shimoda.uh@renesas.com> wrote:
-> R-Car PWM controller requires the gpio to output zero duty,
-> this patch allows to roll it back from gpio to mux when the gpio
-> is freed.
+> This patch series is based on renesas-drivers.git /
+> renesas-drivers-2019-07-30-v5.3-rc2 tag.
 >
-> Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+> About R-Car PWM driver modification, it seems to need more time to achieve
+> output duty zero about suitable gpio vs pinctrl handling. But, I believe
+> this pinctrl patches could be applied into the mainline regardless
+> the R-Car PWM modification.
 
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Thank you! I plan to apply this next week, after I've sent a first sh-pfc pull
+request for v5.4, and let it soak in renesas-drivers.
+
+> Changes from v1:
+>  - Spin-off the pinctrl patches (from 1/7 to 3/7).
+>  - Add Geert-san's Reviewed-by on 1/3 and 2/3.
+>  - Add Fixes tag on 2/3.
+> https://patchwork.kernel.org/project/linux-renesas-soc/list/?series=143129
+>
+> Yoshihiro Shimoda (3):
+>   pinctrl: sh-pfc: add new flags into struct sh_pfc_pin_config
+>   pinctrl: sh-pfc: remove incomplete flag "cfg->type"
+>   pinctrl: sh-pfc: Rollback to mux if requires when the gpio is freed
+>
+>  drivers/pinctrl/sh-pfc/pinctrl.c | 45 ++++++++++++++++++++--------------------
+>  1 file changed, 23 insertions(+), 22 deletions(-)
 
 Gr{oetje,eeting}s,
 
