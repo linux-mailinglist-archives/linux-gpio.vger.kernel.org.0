@@ -2,99 +2,107 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 52FC9864DC
-	for <lists+linux-gpio@lfdr.de>; Thu,  8 Aug 2019 16:56:35 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7CEBC86510
+	for <lists+linux-gpio@lfdr.de>; Thu,  8 Aug 2019 17:03:29 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730170AbfHHO4e (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 8 Aug 2019 10:56:34 -0400
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:39281 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728289AbfHHO4e (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 8 Aug 2019 10:56:34 -0400
-Received: from lupine.hi.pengutronix.de ([2001:67c:670:100:3ad5:47ff:feaf:1a17] helo=lupine)
-        by metis.ext.pengutronix.de with esmtp (Exim 4.92)
-        (envelope-from <p.zabel@pengutronix.de>)
-        id 1hvjq9-0005mr-PZ; Thu, 08 Aug 2019 16:56:29 +0200
-Message-ID: <1565276188.3656.24.camel@pengutronix.de>
-Subject: Re: [PATCH] pinctrl: freescale: imx: Add of_node_put() before return
-From:   Philipp Zabel <p.zabel@pengutronix.de>
-To:     Nishka Dasgupta <nishkadg.linux@gmail.com>, aisheng.dong@nxp.com,
-        festevam@gmail.com, shawnguo@kernel.org, stefan@agner.ch,
-        kernel@pengutronix.de, linus.walleij@linaro.org,
-        s.hauer@pengutronix.de, linux-imx@nxp.com,
-        linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Date:   Thu, 08 Aug 2019 16:56:28 +0200
-In-Reply-To: <20190808074720.15754-1-nishkadg.linux@gmail.com>
-References: <20190808074720.15754-1-nishkadg.linux@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.22.6-1+deb9u2 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 2001:67c:670:100:3ad5:47ff:feaf:1a17
-X-SA-Exim-Mail-From: p.zabel@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-gpio@vger.kernel.org
+        id S1732346AbfHHPD2 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 8 Aug 2019 11:03:28 -0400
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:33853 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728289AbfHHPD2 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 8 Aug 2019 11:03:28 -0400
+Received: by mail-lj1-f196.google.com with SMTP id p17so89239314ljg.1
+        for <linux-gpio@vger.kernel.org>; Thu, 08 Aug 2019 08:03:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=mmnFZZttzNll6Mb5XmwQX5FbW4sfyb4MRTiyZMXbxWg=;
+        b=MX6wtxj/Lge1vMMnI1h6iHZbUVKMELdiW/nhVQO5y0r1HlVIwEc4NbOIU2EJDo6wI3
+         fhlc1ud1ZYizA3b1dK+6vCSE07SJPfM/uu3F5wYCnkm+KcbuW4HEm25LTf1HNE70PTnR
+         HT0FpUjDV+M10cwqHm48zWTMcBt0zCVl9r54YZ/5nAgwfP7zejGLSDiPCvZX1Y0jUiwr
+         8lRfvlYWYiFlS9TOo0ZZ55NvbPmzGRmcr8U/HQiVAhp4mHe6TZx4pIlJQXr4Zgc4SkJd
+         EmxQBUdGX7bHKxW9IYbmxavMmwOeH5yrT7ljAOlseFZMODy/qghDQEkdeUr76Ilkb+IP
+         y3zw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=mmnFZZttzNll6Mb5XmwQX5FbW4sfyb4MRTiyZMXbxWg=;
+        b=hx2td2GG8Q6i5LjNDyFgoR22UcerQvbt4Ikgw+QDfkTd9Da9hJkpm+p52z0stQhy4g
+         Ondj5jaohQnl1awkoLEknxsAsMhPxT4y1jJY5MV6CXYTz+ALChHbkhfk5a68Jk0eTM4U
+         B5i1KpHnxLpA3r5uLwk10R6qP8D2EVqoSb+3JTz3Xr39Dz4PQt5ITSAV8cLuP6P+lR57
+         Ouew1ZUbj2pf/mmINfOPURz3iSToVqzlX6GVpnuWfpg/xC5VrdM4KA7v3hTuuO6Srkog
+         a7p4nkaIqVmHwbaJhIhA0rmPHOUaX1C915owoqtAx13R7zeWy+nDoyEU8rbG8+Bp0ZUk
+         OHtA==
+X-Gm-Message-State: APjAAAVoYRJDg7siJL6vQpjvqy0wJ+Yf1XatRPqCQAMS7qZzL5km3ydz
+        BhK7G6Q7MLNnHJl+U6It40jrag==
+X-Google-Smtp-Source: APXvYqx5jBVZ+U8o+QEk+Eln2jVbnq3YUSTLl/i/iei4yhxc/PRs4RRk4Wt1np88KOo1uQG5EfCh/g==
+X-Received: by 2002:a2e:890c:: with SMTP id d12mr8436882lji.103.1565276606115;
+        Thu, 08 Aug 2019 08:03:26 -0700 (PDT)
+Received: from genomnajs.ideon.se ([85.235.10.227])
+        by smtp.gmail.com with ESMTPSA id m28sm18845209ljb.68.2019.08.08.08.03.24
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Thu, 08 Aug 2019 08:03:24 -0700 (PDT)
+From:   Linus Walleij <linus.walleij@linaro.org>
+To:     Mark Brown <broonie@kernel.org>, linux-spi@vger.kernel.org
+Cc:     linux-gpio@vger.kernel.org,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Linus Walleij <linus.walleij@linaro.org>
+Subject: [PATCH] spi: Rename of_spi_register_master() function
+Date:   Thu,  8 Aug 2019 17:03:21 +0200
+Message-Id: <20190808150321.23319-1-linus.walleij@linaro.org>
+X-Mailer: git-send-email 2.21.0
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, 2019-08-08 at 13:17 +0530, Nishka Dasgupta wrote:
-> Each iteration of for_each_child_of_node() puts the previous node;
-> however, in the case of a return from the middle of the loop, there is no
-> put, thus causing a memory leak. Hence put of_node_put() statements as
-> required before two mid-loop return statements.
-> Issue found with Coccinelle.
-> 
-> Signed-off-by: Nishka Dasgupta <nishkadg.linux@gmail.com>
-> ---
->  drivers/pinctrl/freescale/pinctrl-imx.c | 13 ++++++++++---
->  1 file changed, 10 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/pinctrl/freescale/pinctrl-imx.c b/drivers/pinctrl/freescale/pinctrl-imx.c
-> index 83ff9532bae6..9f42036c5fbb 100644
-> --- a/drivers/pinctrl/freescale/pinctrl-imx.c
-> +++ b/drivers/pinctrl/freescale/pinctrl-imx.c
-> @@ -672,8 +672,10 @@ static int imx_pinctrl_parse_functions(struct device_node *np,
->  
->  		grp = devm_kzalloc(ipctl->dev, sizeof(struct group_desc),
->  				   GFP_KERNEL);
+Rename this function to of_spi_get_gpio_numbers() as this
+is what the function does, it does not register a master,
+it is called in the path of registering a master so the
+name is logical in a convoluted way, but it is better to
+follow Rusty Russell's ABI level no 7:
+"The obvious use is (probably) the correct one"
 
-This looks to me like it could just allocate an array of struct
-group_desc upfront, just like the group_names array. Same for the
-functions in imx_pinctrl_probe_dt(). Not an issue with this patch
-though.
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+---
+ drivers/spi/spi.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-Reviewed-by: Philipp Zabel <p.zabel@pengutronix.de>
+diff --git a/drivers/spi/spi.c b/drivers/spi/spi.c
+index 75ac046cae52..79d7526e1337 100644
+--- a/drivers/spi/spi.c
++++ b/drivers/spi/spi.c
+@@ -2236,7 +2236,7 @@ struct spi_controller *__spi_alloc_controller(struct device *dev,
+ EXPORT_SYMBOL_GPL(__spi_alloc_controller);
+ 
+ #ifdef CONFIG_OF
+-static int of_spi_register_master(struct spi_controller *ctlr)
++static int of_spi_get_gpio_numbers(struct spi_controller *ctlr)
+ {
+ 	int nb, i, *cs;
+ 	struct device_node *np = ctlr->dev.of_node;
+@@ -2269,7 +2269,7 @@ static int of_spi_register_master(struct spi_controller *ctlr)
+ 	return 0;
+ }
+ #else
+-static int of_spi_register_master(struct spi_controller *ctlr)
++static int of_spi_get_gpio_numbers(struct spi_controller *ctlr)
+ {
+ 	return 0;
+ }
+@@ -2456,7 +2456,7 @@ int spi_register_controller(struct spi_controller *ctlr)
+ 			ctlr->mode_bits |= SPI_CS_HIGH;
+ 		} else {
+ 			/* Legacy code path for GPIOs from DT */
+-			status = of_spi_register_master(ctlr);
++			status = of_spi_get_gpio_numbers(ctlr);
+ 			if (status)
+ 				return status;
+ 		}
+-- 
+2.21.0
 
-regards
-Philipp
-
-> -		if (!grp)
-> +		if (!grp) {
-> +			of_node_put(child);
->  			return -ENOMEM;
-> +		}
->  
->  		mutex_lock(&ipctl->mutex);
->  		radix_tree_insert(&pctl->pin_group_tree,
-> @@ -697,12 +699,17 @@ static bool imx_pinctrl_dt_is_flat_functions(struct device_node *np)
->  	struct device_node *pinctrl_np;
->  
->  	for_each_child_of_node(np, function_np) {
-> -		if (of_property_read_bool(function_np, "fsl,pins"))
-> +		if (of_property_read_bool(function_np, "fsl,pins")) {
-> +			of_node_put(function_np);
->  			return true;
-> +		}
->  
->  		for_each_child_of_node(function_np, pinctrl_np) {
-> -			if (of_property_read_bool(pinctrl_np, "fsl,pins"))
-> +			if (of_property_read_bool(pinctrl_np, "fsl,pins")) {
-> +				of_node_put(pinctrl_np);
-> +				of_node_put(function_np);
->  				return false;
-> +			}
->  		}
->  	}
->  
