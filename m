@@ -2,93 +2,86 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 4830685A7D
-	for <lists+linux-gpio@lfdr.de>; Thu,  8 Aug 2019 08:20:44 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5C70085B09
+	for <lists+linux-gpio@lfdr.de>; Thu,  8 Aug 2019 08:49:52 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731151AbfHHGU3 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 8 Aug 2019 02:20:29 -0400
-Received: from relmlor1.renesas.com ([210.160.252.171]:30299 "EHLO
-        relmlie5.idc.renesas.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1731147AbfHHGU3 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 8 Aug 2019 02:20:29 -0400
-X-IronPort-AV: E=Sophos;i="5.64,360,1559487600"; 
-   d="scan'208";a="23652846"
-Received: from unknown (HELO relmlir6.idc.renesas.com) ([10.200.68.152])
-  by relmlie5.idc.renesas.com with ESMTP; 08 Aug 2019 15:20:25 +0900
-Received: from localhost.localdomain (unknown [10.166.17.210])
-        by relmlir6.idc.renesas.com (Postfix) with ESMTP id 6BEBD41CA0B9;
-        Thu,  8 Aug 2019 15:20:25 +0900 (JST)
-From:   Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-To:     linus.walleij@linaro.org, geert+renesas@glider.be
-Cc:     linux-gpio@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Subject: [PATCH v2 3/3] pinctrl: sh-pfc: Rollback to mux if requires when the gpio is freed
-Date:   Thu,  8 Aug 2019 15:19:03 +0900
-Message-Id: <1565245143-15018-4-git-send-email-yoshihiro.shimoda.uh@renesas.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1565245143-15018-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
-References: <1565245143-15018-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+        id S1731054AbfHHGtb convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-gpio@lfdr.de>); Thu, 8 Aug 2019 02:49:31 -0400
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:40202 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730903AbfHHGta (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 8 Aug 2019 02:49:30 -0400
+Received: by mail-ot1-f66.google.com with SMTP id l15so57219239oth.7;
+        Wed, 07 Aug 2019 23:49:30 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=vofpqJmWPCpdTKORwInySY406kDvTjoQzZVxHXBRsCA=;
+        b=UF11r4q9UKVUWkdNTE+q8j+ikNTKplXH2s+Irx7sDBkEL7XKD9146FwIL9jjrfozQT
+         zjbAauyLSgV/9ZwPYp7zbK1veiE3rlEQGG2IcYRfPpFKbZBGdqFn3iQpipsS1q7rvVca
+         PNuMauiceiQmJkwKcLuTbW1Xdw3BGNzqS7bOEK3626qGq1vxYruyTn/ZEj+o7jweGEzw
+         Es6WNM4kyXoFzokFJT9ztLi91U7hYIPEdNCInwZo0cKbqf0EdsS9GstqGjQ5DpG2K/4Q
+         htSkC8VydQVd10DT0DLQQ5eOUmiyEHOefbfMpYQHxF9JpGON1nd4VKR+GwJGAL85DLmZ
+         CN5A==
+X-Gm-Message-State: APjAAAU7kYYQ8DPTK/mZt3y/eh4X21mSID+8vLEoDK2GQnsjpcw45tt/
+        SOhWYgmetfX+jY4bAWrSZvuKbxz1zSVqgeJ4QDya3guF
+X-Google-Smtp-Source: APXvYqycaCgOY64ZbYNjNBxSzXJK4/qbMAr5CyoE77wU6UV+kSw0FkDIeGR/ERUBuvE0QEGUiPJnTOr2vaaBVBZgTyE=
+X-Received: by 2002:a9d:529:: with SMTP id 38mr11812023otw.145.1565246969609;
+ Wed, 07 Aug 2019 23:49:29 -0700 (PDT)
+MIME-Version: 1.0
+References: <1562576868-8124-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+ <1562576868-8124-7-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+ <20190807070326.cgkbt4kpzhqvo5a3@pengutronix.de> <TYAPR01MB45445D854C1FDBB473A89559D8D70@TYAPR01MB4544.jpnprd01.prod.outlook.com>
+In-Reply-To: <TYAPR01MB45445D854C1FDBB473A89559D8D70@TYAPR01MB4544.jpnprd01.prod.outlook.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Thu, 8 Aug 2019 08:49:17 +0200
+Message-ID: <CAMuHMdUQpTvwk=PxhwJGbW8izBXSzHw0sNvypzONPovR7sZutA@mail.gmail.com>
+Subject: Re: [PATCH RFC 6/7] pwm: rcar: Add gpio support to output duty zero
+To:     Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Cc:     =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
+        "geert+renesas@glider.be" <geert+renesas@glider.be>,
+        "thierry.reding@gmail.com" <thierry.reding@gmail.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-renesas-soc@vger.kernel.org" 
+        <linux-renesas-soc@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-R-Car PWM controller requires the gpio to output zero duty,
-this patch allows to roll it back from gpio to mux when the gpio
-is freed.
+Hi Shimoda-san,
 
-Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
----
- drivers/pinctrl/sh-pfc/pinctrl.c | 15 +++++++++++++++
- 1 file changed, 15 insertions(+)
+On Thu, Aug 8, 2019 at 5:53 AM Yoshihiro Shimoda
+<yoshihiro.shimoda.uh@renesas.com> wrote:
+> > From: Uwe Kleine-König, Sent: Wednesday, August 7, 2019 4:03 PM
+> > While at it: If there is a publicly available reference manual adding a line:
+> >
+> >       Reference Manual: https://...
+> >
+> > would be great, too.
+>
+> Unfortunately, the document is not public...
 
-diff --git a/drivers/pinctrl/sh-pfc/pinctrl.c b/drivers/pinctrl/sh-pfc/pinctrl.c
-index ab2aa93..c9bdca5 100644
---- a/drivers/pinctrl/sh-pfc/pinctrl.c
-+++ b/drivers/pinctrl/sh-pfc/pinctrl.c
-@@ -26,6 +26,7 @@
- #include "../pinconf.h"
- 
- struct sh_pfc_pin_config {
-+	unsigned int mux_mark;
- 	bool mux_set;
- 	bool gpio_enabled;
- };
-@@ -353,6 +354,16 @@ static int sh_pfc_func_set_mux(struct pinctrl_dev *pctldev, unsigned selector,
- 	spin_lock_irqsave(&pfc->lock, flags);
- 
- 	for (i = 0; i < grp->nr_pins; ++i) {
-+		int idx = sh_pfc_get_pin_index(pfc, grp->pins[i]);
-+		struct sh_pfc_pin_config *cfg = &pmx->configs[idx];
-+
-+		/*
-+		 * This driver cannot manage both gpio and mux when the gpio
-+		 * pin is already enabled. So, this function failed.
-+		 */
-+		if (cfg->gpio_enabled)
-+			return -EBUSY;
-+
- 		ret = sh_pfc_config_mux(pfc, grp->mux[i], PINMUX_TYPE_FUNCTION);
- 		if (ret < 0)
- 			goto done;
-@@ -364,6 +375,7 @@ static int sh_pfc_func_set_mux(struct pinctrl_dev *pctldev, unsigned selector,
- 		struct sh_pfc_pin_config *cfg = &pmx->configs[idx];
- 
- 		cfg->mux_set = true;
-+		cfg->mux_mark = grp->mux[i];
- 	}
- 
- done:
-@@ -417,6 +429,9 @@ static void sh_pfc_gpio_disable_free(struct pinctrl_dev *pctldev,
- 
- 	spin_lock_irqsave(&pfc->lock, flags);
- 	cfg->gpio_enabled = false;
-+	/* If mux is already set, this configures it here */
-+	if (cfg->mux_set)
-+		sh_pfc_config_mux(pfc, cfg->mux_mark, PINMUX_TYPE_FUNCTION);
- 	spin_unlock_irqrestore(&pfc->lock, flags);
- }
- 
+RZ/G1 has the same hardware block, right?
+Its Hardware User's Manual is publicly available, e.g. for RZ/G1M:
+https://www.renesas.com/eu/en/products/microcontrollers-microprocessors/rz/rzg/rzg1m.html#documents
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
 -- 
-2.7.4
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
