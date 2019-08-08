@@ -2,103 +2,124 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 4A4A2868F3
-	for <lists+linux-gpio@lfdr.de>; Thu,  8 Aug 2019 20:41:59 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DD7C986B92
+	for <lists+linux-gpio@lfdr.de>; Thu,  8 Aug 2019 22:34:08 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733248AbfHHSl7 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 8 Aug 2019 14:41:59 -0400
-Received: from mx2.mailbox.org ([80.241.60.215]:55094 "EHLO mx2.mailbox.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732375AbfHHSl6 (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Thu, 8 Aug 2019 14:41:58 -0400
-Received: from smtp1.mailbox.org (smtp1.mailbox.org [IPv6:2001:67c:2050:105:465:1:1:0])
-        (using TLSv1.2 with cipher ECDHE-RSA-CHACHA20-POLY1305 (256/256 bits))
-        (No client certificate requested)
-        by mx2.mailbox.org (Postfix) with ESMTPS id 46120A0141;
-        Thu,  8 Aug 2019 20:41:56 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=mailbox.org; h=
-        content-type:content-type:content-transfer-encoding:mime-version
-        :references:in-reply-to:message-id:date:date:subject:subject
-        :from:from:received; s=mail20150812; t=1565289713; bh=oWtBOiSJw6
-        GKmS4tVeGK/514J22D9Jyg8jer441863s=; b=mjT/gqWWryWOxFAZyK81mBg6cW
-        YlKDOlrSQPPaxTS5/dGnPw0k3fIBT+3SQQF5j4Tl/g6a0vzHCXyWpjofbiHhrMIB
-        hkt69PeuYeXgC+QkKMszcTZ7HCFkdHySw/4XRLESV0DOXlNIlMpbwZdGjBPagYpw
-        gxdRRlxrELVhFnMYFiuw7lp+Yv9FD3nh8wLy55JMxaJA/Sr1+8Lfr+m/jqgg6Zx1
-        LRbNj+aZiZkkqSpBLAKQUBU4fQVoNISUAB0uhSSYxFUHXL1igbRVKqqd+CcI846h
-        sSNKtfJESLxWdWzpNknOo85NggCtuU6tfBa6wwYN7mLKpHH5fb7B8tdD43fg==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailbox.org; s=mail20150812;
-        t=1565289715; h=from:from:sender:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=3zx1Z316WI2HE6iiyL5o/HqJ5kuW3NK+C4hmsGQJW+4=;
-        b=Xe/JLGmkY+km5tH/XO89eOmODgH8OCcjvS7XTXstUp0IdX9RvIo9HUDWyIrpWPXTWQ2qNj
-        kSGG62GDAHp1/eKVqyHzFufnBK6ihpQb14wxruDkmAJU79Q0UjOfoOoaw/APBhEqCLwKlo
-        jktIB8Csss2R40ZSo+TH10nCZfikIA0IUbwlYo6M5a6isQ+daGyjzwRnIVCuSMRnzmHN+f
-        MoF3gMZ254xestFzoUoIF8EoLnzuxBnGr8Vcy2koigG/3ZgxqupWIjt5b81jT+HFIAUFei
-        okgd/Ij68qmqm4BancGDMehqdC3+v8ZM20fWmASOkY2msO7eQDpG5PSrP/+c8A==
-X-Virus-Scanned: amavisd-new at heinlein-support.de
-Received: from smtp1.mailbox.org ([80.241.60.240])
-        by spamfilter03.heinlein-hosting.de (spamfilter03.heinlein-hosting.de [80.241.56.117]) (amavisd-new, port 10030)
-        with ESMTP id roVrzcLLYdn6; Thu,  8 Aug 2019 20:41:53 +0200 (CEST)
-From:   Alexander Stein <alexander.stein@mailbox.org>
-To:     Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
-Subject: Re: [libgpiod] [PATCH 5/5] bindings: cxx: Workaround --success run
-Date:   Thu, 08 Aug 2019 20:41:52 +0200
-Message-ID: <6061947.U0Wa8ctkoo@kongar>
-In-Reply-To: <CAMRc=McmKs=5ToTRLgQ_f30DRtqq-57OZRw-EnL1gm_M1kqUXQ@mail.gmail.com>
-References: <20190807195132.7538-1-alexander.stein@mailbox.org> <20190807195132.7538-5-alexander.stein@mailbox.org> <CAMRc=McmKs=5ToTRLgQ_f30DRtqq-57OZRw-EnL1gm_M1kqUXQ@mail.gmail.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset="UTF-8"
+        id S2390363AbfHHUd6 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 8 Aug 2019 16:33:58 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:59174 "EHLO
+        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2404800AbfHHUd6 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 8 Aug 2019 16:33:58 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
+        Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
+        List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
+        List-Archive; bh=Wzf+I9fcsxZuVaYRajx66L1PY3WCux2mFR6C4152LNM=; b=rzSrJ+LL0sL1
+        P6O11YsZkVDbKRtuB09B8IAybDpOKC8o5SUQUDFcB+RLyR4rwJJ/N/60pG0RAtnC0/dhwsunZ2Ock
+        7Ay7EWzrE2kRWW/mx26FUPj/ju13v/8e30dBhZwRCxpMqLb53d0ra80O+TTRiJ1sxgTR8CHmKWTnm
+        Z89Yc=;
+Received: from ypsilon.sirena.org.uk ([2001:470:1f1d:6b5::7])
+        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <broonie@sirena.co.uk>)
+        id 1hvp6h-00043F-1u; Thu, 08 Aug 2019 20:33:55 +0000
+Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
+        id 6CADD2742B42; Thu,  8 Aug 2019 21:33:54 +0100 (BST)
+From:   Mark Brown <broonie@kernel.org>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        linux-gpio@vger.kernel.org, linux-spi@vger.kernel.org,
+        Mark Brown <broonie@kernel.org>
+Subject: Applied "spi: Rename of_spi_register_master() function" to the spi tree
+In-Reply-To: <20190808150321.23319-1-linus.walleij@linaro.org>
+X-Patchwork-Hint: ignore
+Message-Id: <20190808203354.6CADD2742B42@ypsilon.sirena.org.uk>
+Date:   Thu,  8 Aug 2019 21:33:54 +0100 (BST)
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
- On Thursday, August 8, 2019, 5:27:14 PM CEST Bartosz Golaszewski wrote:
-> =C5=9Br., 7 sie 2019 o 21:51 Alexander Stein <alexander.stein@mailbox.org>
-> napisa=C5=82(a):
-> >
-> > If run with --success, all expressions are evaluated and printed out.
-> > But REQUIRE_FALSE(chip) tries to iterate over the chip resulting in this
-> > backtrace:
-> > #0  gpiod_chip_num_lines (chip=3Dchip@entry=3D0x0) at ../../lib/core.c:=
-235
-> > #1  gpiod_line_iter_new (chip=3D0x0) at ../../lib/iter.c:140
-> > #2  gpiod::(anonymous namespace)::make_line_iter (chip=3D0x0) at ../../=
-=2E./bindings/cxx/iter.cpp:29
-> > #3  gpiod::line_iter::line_iter (this=3D0x7fffffffd690, owner=3D...) at=
- ../../../bindings/cxx/iter.cpp:109
-> > #4  Catch::rangeToString<gpiod::chip> (range=3D...) at /usr/include/cat=
-ch2/catch.hpp:1959
-> > [...]
-> >
-> > Workaround by forcing catch2 to call gpiod::chip::operator bool().
-> >
-> > Signed-off-by: Alexander Stein <alexander.stein@mailbox.org>
-> > ---
-> > This actually looks like a flaw in the binding itself that the
-> > gpiod::line_iter can't cope with an empty gpiod::chip.
-> >
->=20
-> Do you want to submit a patch that fixes that? Otherwise I can fix it.
-> I think that simply throwing an exception on empty chip is enough,
-> right?
+The patch
 
-Reading that backtrace today, the actual problem is gpiod_chip_num_lines de=
-ferencing the nullptr.
-There are 2 possibilities:
-* if gpiod_chip is NULL in gpiod_line_iter_new(), return NULLL iter as well=
- (which will raise an exception on line iter.cpp:31)
-* return an iter with num_lines =3D 0
+   spi: Rename of_spi_register_master() function
 
-Can't rate the 2nd one if this will raise other problems.
+has been applied to the spi tree at
 
-Best regards,
-Alexander
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git for-5.4
 
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.  
 
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
+
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
+
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+Thanks,
+Mark
+
+From 43004f31ebf2705905460a6d9a77da4182170c38 Mon Sep 17 00:00:00 2001
+From: Linus Walleij <linus.walleij@linaro.org>
+Date: Thu, 8 Aug 2019 17:03:21 +0200
+Subject: [PATCH] spi: Rename of_spi_register_master() function
+
+Rename this function to of_spi_get_gpio_numbers() as this
+is what the function does, it does not register a master,
+it is called in the path of registering a master so the
+name is logical in a convoluted way, but it is better to
+follow Rusty Russell's ABI level no 7:
+"The obvious use is (probably) the correct one"
+
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+Link: https://lore.kernel.org/r/20190808150321.23319-1-linus.walleij@linaro.org
+Signed-off-by: Mark Brown <broonie@kernel.org>
+---
+ drivers/spi/spi.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/spi/spi.c b/drivers/spi/spi.c
+index 8e83c9567353..aef55acb5ccd 100644
+--- a/drivers/spi/spi.c
++++ b/drivers/spi/spi.c
+@@ -2235,7 +2235,7 @@ struct spi_controller *__spi_alloc_controller(struct device *dev,
+ EXPORT_SYMBOL_GPL(__spi_alloc_controller);
+ 
+ #ifdef CONFIG_OF
+-static int of_spi_register_master(struct spi_controller *ctlr)
++static int of_spi_get_gpio_numbers(struct spi_controller *ctlr)
+ {
+ 	int nb, i, *cs;
+ 	struct device_node *np = ctlr->dev.of_node;
+@@ -2268,7 +2268,7 @@ static int of_spi_register_master(struct spi_controller *ctlr)
+ 	return 0;
+ }
+ #else
+-static int of_spi_register_master(struct spi_controller *ctlr)
++static int of_spi_get_gpio_numbers(struct spi_controller *ctlr)
+ {
+ 	return 0;
+ }
+@@ -2455,7 +2455,7 @@ int spi_register_controller(struct spi_controller *ctlr)
+ 			ctlr->mode_bits |= SPI_CS_HIGH;
+ 		} else {
+ 			/* Legacy code path for GPIOs from DT */
+-			status = of_spi_register_master(ctlr);
++			status = of_spi_get_gpio_numbers(ctlr);
+ 			if (status)
+ 				return status;
+ 		}
+-- 
+2.20.1
 
