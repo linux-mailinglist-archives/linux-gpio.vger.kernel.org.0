@@ -2,150 +2,140 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 9919B87B21
-	for <lists+linux-gpio@lfdr.de>; Fri,  9 Aug 2019 15:28:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6E54C87B81
+	for <lists+linux-gpio@lfdr.de>; Fri,  9 Aug 2019 15:38:51 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407086AbfHIN2Y (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 9 Aug 2019 09:28:24 -0400
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:36102 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2407085AbfHIN2Y (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 9 Aug 2019 09:28:24 -0400
-Received: by mail-lf1-f66.google.com with SMTP id j17so15506339lfp.3;
-        Fri, 09 Aug 2019 06:28:22 -0700 (PDT)
+        id S1726152AbfHINiu (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 9 Aug 2019 09:38:50 -0400
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:35943 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2405948AbfHINiu (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 9 Aug 2019 09:38:50 -0400
+Received: by mail-lf1-f67.google.com with SMTP id j17so15529851lfp.3
+        for <linux-gpio@vger.kernel.org>; Fri, 09 Aug 2019 06:38:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=EDzK4HqGCuYHNeAik93nZOt6GVBVyL4RxyPi6JCejLQ=;
-        b=YSmPOe6cdLuMYmLalcXrV1zZPmoP7esgm+eyg9ShiE+r9XIoVfqjsOSmd+p3dusaRZ
-         nT8ylNAQWkfK8H+NITQZOI/OKZU+ZtFFSe0ZuzeyI4KWtnzv6APYr/Rihbm5sYUfwxD8
-         nbGaCvyuROjMeFcV9+qkn0IQHwl5WNZFO/UobWPDIXDKnp1g4gM0LpYKnB8t0euqShEe
-         E+Yw7QMFrIt/KyVRwVnlBxE9F82UzfyetEPh/Z9fia6NIHOMpikbZmMEW2nFwxjtnTbn
-         9foy3qAKnkjXCQE35uagSJVeo5Hou4api1+baTtM3V/QcTxMRlMhPX30q15N9TmInibe
-         N0BQ==
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=RKvyntXueMtld/bLq4POUo+3j78kQALYYUxLrikEJfk=;
+        b=L4xzzzDk/KyTM2kFNPtg1qE6myfUJe29C6NzJYFSsDrCJsGU3mrfg5CCudG1yMvRKP
+         jMm1zH/ZWqeUYADBlPuVLxsHo6fiPhFAMTS8x1tT4eXXquUuskPw8NB6AhLyTuJ7ZBGi
+         rQy1HE6ylgaclL/yIZPCoLT3SHJ91zkv7oVERslhyG396GaRZfZLWI/1xMYPmagJLRaA
+         E8zXHKnZsP5N/s3ZUZdX0qQNCcJz88WznSZSIp2AMgYF3awmgC5ZimdO/GvYbDQ6Rnsa
+         20CsvJ29bpVuGOpWQqrMxQ6OJ1ob2A2KTFxNUlF2AtXKnE9U6366dpyxOOHIA/GJnHbi
+         Ircw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=EDzK4HqGCuYHNeAik93nZOt6GVBVyL4RxyPi6JCejLQ=;
-        b=O9u2GxUA8Rk674G3hPxW27sz8sutU27fHluOYz6fBuW4DOn1rYooyWmeQTWFSItKJe
-         ub5jv6LviicNBuxcl4eeq2IUOJ06pcrqi0OTg9cbZukw5/QCKkvlh89NbDkVrcJSGndn
-         R+Soa/gVmM9MUdtD/KeCjLyUcncugynPNGT+zvl1I8KCH5Fx3RzTjnj+Z/03gX0MehIx
-         4CwCNSNr5nP7qKb//GyCwUxOjZi7plMvZ+njwnhYjwEZkAgXdoiqV1uvYWehBiwmTeSS
-         fZtUdfte7/h643yxTzW4tZ888FrQTpHYBe9Zb1kOk97ahwTT1qgWRg271fUoCTszcbep
-         jZpA==
-X-Gm-Message-State: APjAAAXcxNS8Sd2msu0aB2KbTiUUbIVZFxP3B2g65itkeKHCfIKN/Kty
-        O5YosX7vgRMk+7kUDPsPSvIbp+Qe
-X-Google-Smtp-Source: APXvYqyOgin95krEezpqlMeS2zy8wXVRzT5ENjo1BnJcIm27WZ57gmXVWTJJgHg99kCnFfTlyqFkWQ==
-X-Received: by 2002:a19:8586:: with SMTP id h128mr13172457lfd.62.1565357301241;
-        Fri, 09 Aug 2019 06:28:21 -0700 (PDT)
-Received: from [192.168.2.145] ([94.29.34.218])
-        by smtp.googlemail.com with ESMTPSA id k23sm16209456ljg.90.2019.08.09.06.28.19
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 09 Aug 2019 06:28:20 -0700 (PDT)
-Subject: Re: [PATCH v8 16/21] soc/tegra: pmc: Add pmc wake support for
- tegra210
-To:     Sowjanya Komatineni <skomatineni@nvidia.com>,
-        thierry.reding@gmail.com, jonathanh@nvidia.com, tglx@linutronix.de,
-        jason@lakedaemon.net, marc.zyngier@arm.com,
-        linus.walleij@linaro.org, stefan@agner.ch, mark.rutland@arm.com
-Cc:     pdeschrijver@nvidia.com, pgaikwad@nvidia.com, sboyd@kernel.org,
-        linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org,
-        jckuo@nvidia.com, josephl@nvidia.com, talho@nvidia.com,
-        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org,
-        mperttunen@nvidia.com, spatra@nvidia.com, robh+dt@kernel.org,
-        devicetree@vger.kernel.org, rjw@rjwysocki.net,
-        viresh.kumar@linaro.org, linux-pm@vger.kernel.org
-References: <1565308020-31952-1-git-send-email-skomatineni@nvidia.com>
- <1565308020-31952-17-git-send-email-skomatineni@nvidia.com>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <85ea23c7-1459-e396-b08a-b38e0f6d44eb@gmail.com>
-Date:   Fri, 9 Aug 2019 16:28:19 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        bh=RKvyntXueMtld/bLq4POUo+3j78kQALYYUxLrikEJfk=;
+        b=TUDtAnb2mlrbPSFQb8tbHRJUFME6D9HdWAAmDHMZJch6TzCsrx8xX03yTWuWBp/rZu
+         a/X+pkFrtYO0c9UZ5TkZIk066Mr/q5PntQpbEstG7Xbt93FI3oMQikIoI1sGWD9lbl7r
+         Sea5y7ACTxTXQHQEey0KSQ06+XQWlfn5nFyFeiiqrbnCTw/XcsUTFTouzbyUEBKkotwX
+         mBdJuc7+H5OSTjV7BcpRAojKjZ/cchqP0eS0PWNYEzPCRyJzHcapadGRsL5Bqdk4AUXc
+         ODNQ2F7vmGg3z0Y8zGJcWXNrwyFX90PvlzXYKbPOuw1z8jC7g9dJDENVnD7zgRKT72VP
+         tqVA==
+X-Gm-Message-State: APjAAAX4PV+zvzIA1OTwownpClwswqd8K0omZuTsVHaHvjKjTtsmMxv2
+        0/c/LRY8grGntmsPBnCe4mKOL/p9FVY=
+X-Google-Smtp-Source: APXvYqw78W/vGAgmLoZuCHcIcFatkVRugCEnYMAfZEjRgmNuX20n2iQgEt7OLaOu9sVTQotYDovvWw==
+X-Received: by 2002:a19:f11a:: with SMTP id p26mr9034700lfh.160.1565357927999;
+        Fri, 09 Aug 2019 06:38:47 -0700 (PDT)
+Received: from genomnajs.ideon.se ([85.235.10.227])
+        by smtp.gmail.com with ESMTPSA id r24sm22193860ljb.72.2019.08.09.06.38.46
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Fri, 09 Aug 2019 06:38:47 -0700 (PDT)
+From:   Linus Walleij <linus.walleij@linaro.org>
+To:     linux-gpio@vger.kernel.org
+Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Jonas Gorski <jogo@openwrt.org>, Jun Nie <jun.nie@linaro.org>,
+        Thierry Reding <treding@nvidia.com>
+Subject: [PATCH] gpio: zx: Pass irqchip when adding gpiochip
+Date:   Fri,  9 Aug 2019 15:38:45 +0200
+Message-Id: <20190809133845.30991-1-linus.walleij@linaro.org>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-In-Reply-To: <1565308020-31952-17-git-send-email-skomatineni@nvidia.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-09.08.2019 2:46, Sowjanya Komatineni пишет:
-> This patch implements PMC wakeup sequence for Tegra210 and defines
-> common used RTC alarm wake event.
-> 
-> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
-> ---
->  drivers/soc/tegra/pmc.c | 98 +++++++++++++++++++++++++++++++++++++++++++++++++
->  1 file changed, 98 insertions(+)
-> 
-> diff --git a/drivers/soc/tegra/pmc.c b/drivers/soc/tegra/pmc.c
-> index 91c84d0e66ae..3aa71c28a10a 100644
-> --- a/drivers/soc/tegra/pmc.c
-> +++ b/drivers/soc/tegra/pmc.c
-> @@ -58,6 +58,11 @@
->  #define  PMC_CNTRL_SYSCLK_POLARITY	BIT(10) /* sys clk polarity */
->  #define  PMC_CNTRL_MAIN_RST		BIT(4)
->  
-> +#define PMC_WAKE_MASK			0x0c
-> +#define PMC_WAKE_LEVEL			0x10
-> +#define PMC_WAKE_STATUS			0x14
-> +#define PMC_SW_WAKE_STATUS		0x18
-> +
->  #define DPD_SAMPLE			0x020
->  #define  DPD_SAMPLE_ENABLE		BIT(0)
->  #define  DPD_SAMPLE_DISABLE		(0 << 0)
-> @@ -87,6 +92,11 @@
->  
->  #define PMC_SCRATCH41			0x140
->  
-> +#define PMC_WAKE2_MASK			0x160
-> +#define PMC_WAKE2_LEVEL			0x164
-> +#define PMC_WAKE2_STATUS		0x168
-> +#define PMC_SW_WAKE2_STATUS		0x16c
-> +
->  #define PMC_SENSOR_CTRL			0x1b0
->  #define  PMC_SENSOR_CTRL_SCRATCH_WRITE	BIT(2)
->  #define  PMC_SENSOR_CTRL_ENABLE_RST	BIT(1)
-> @@ -1922,6 +1932,43 @@ static const struct irq_domain_ops tegra_pmc_irq_domain_ops = {
->  	.alloc = tegra_pmc_irq_alloc,
->  };
->  
-> +static int tegra210_pmc_irq_set_wake(struct irq_data *data, unsigned int on)
-> +{
-> +	struct tegra_pmc *pmc = irq_data_get_irq_chip_data(data);
-> +	unsigned int offset, bit;
-> +	u32 value;
-> +
-> +	if (data->hwirq == ULONG_MAX)
-> +		return 0;
-> +
-> +	offset = data->hwirq / 32;
-> +	bit = data->hwirq % 32;
-> +
-> +	/* clear wake status */
-> +	tegra_pmc_writel(pmc, 0, PMC_SW_WAKE_STATUS);
-> +	tegra_pmc_writel(pmc, 0, PMC_SW_WAKE2_STATUS);
-> +
-> +	tegra_pmc_writel(pmc, 0, PMC_WAKE_STATUS);
-> +	tegra_pmc_writel(pmc, 0, PMC_WAKE2_STATUS);
-> +
-> +	/* enable PMC wake */
-> +	if (data->hwirq >= 32)
-> +		offset = PMC_WAKE2_MASK;
-> +	else
-> +		offset = PMC_WAKE_MASK;
-> +
-> +	value = tegra_pmc_readl(pmc, offset);
-> +
-> +	if (on)
-> +		value |= 1 << bit;
-> +	else
-> +		value &= ~(1 << bit);
+We need to convert all old gpio irqchips to pass the irqchip
+setup along when adding the gpio_chip. For more info see
+drivers/gpio/TODO.
 
-Looks like a good case for utilizing of the BIT() macro here.
+For chained irqchips this is a pretty straight-forward
+conversion.
+
+Cc: Jonas Gorski <jogo@openwrt.org>
+Cc: Jun Nie <jun.nie@linaro.org>
+Cc: Thierry Reding <treding@nvidia.com>
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+---
+ drivers/gpio/gpio-zx.c | 34 +++++++++++++++++-----------------
+ 1 file changed, 17 insertions(+), 17 deletions(-)
+
+diff --git a/drivers/gpio/gpio-zx.c b/drivers/gpio/gpio-zx.c
+index 8d9b9bf8510a..98cbaf0e415e 100644
+--- a/drivers/gpio/gpio-zx.c
++++ b/drivers/gpio/gpio-zx.c
+@@ -215,6 +215,7 @@ static int zx_gpio_probe(struct platform_device *pdev)
+ {
+ 	struct device *dev = &pdev->dev;
+ 	struct zx_gpio *chip;
++	struct gpio_irq_chip *girq;
+ 	int irq, id, ret;
+ 
+ 	chip = devm_kzalloc(dev, sizeof(*chip), GFP_KERNEL);
+@@ -242,31 +243,30 @@ static int zx_gpio_probe(struct platform_device *pdev)
+ 	chip->gc.parent = dev;
+ 	chip->gc.owner = THIS_MODULE;
+ 
+-	ret = gpiochip_add_data(&chip->gc, chip);
+-	if (ret)
+-		return ret;
+-
+ 	/*
+ 	 * irq_chip support
+ 	 */
+ 	writew_relaxed(0xffff, chip->base + ZX_GPIO_IM);
+ 	writew_relaxed(0, chip->base + ZX_GPIO_IE);
+ 	irq = platform_get_irq(pdev, 0);
+-	if (irq < 0) {
+-		gpiochip_remove(&chip->gc);
+-		return -ENODEV;
+-	}
++	if (irq < 0)
++		return irq;
++	girq = &chip->gc.irq;
++	girq->chip = &zx_irqchip;
++	girq->parent_handler = zx_irq_handler;
++	girq->num_parents = 1;
++	girq->parents = devm_kcalloc(&pdev->dev, 1,
++				     sizeof(*girq->parents),
++				     GFP_KERNEL);
++	if (!girq->parents)
++		return -ENOMEM;
++	girq->parents[0] = irq;
++	girq->default_type = IRQ_TYPE_NONE;
++	girq->handler = handle_simple_irq;
+ 
+-	ret = gpiochip_irqchip_add(&chip->gc, &zx_irqchip,
+-				   0, handle_simple_irq,
+-				   IRQ_TYPE_NONE);
+-	if (ret) {
+-		dev_err(dev, "could not add irqchip\n");
+-		gpiochip_remove(&chip->gc);
++	ret = gpiochip_add_data(&chip->gc, chip);
++	if (ret)
+ 		return ret;
+-	}
+-	gpiochip_set_chained_irqchip(&chip->gc, &zx_irqchip,
+-				     irq, zx_irq_handler);
+ 
+ 	platform_set_drvdata(pdev, chip);
+ 	dev_info(dev, "ZX GPIO chip registered\n");
+-- 
+2.21.0
+
