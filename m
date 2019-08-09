@@ -2,151 +2,231 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 92DB587CDB
-	for <lists+linux-gpio@lfdr.de>; Fri,  9 Aug 2019 16:40:52 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id ACCA487D38
+	for <lists+linux-gpio@lfdr.de>; Fri,  9 Aug 2019 16:53:03 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726261AbfHIOkv (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 9 Aug 2019 10:40:51 -0400
-Received: from mail-lf1-f67.google.com ([209.85.167.67]:38410 "EHLO
-        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726140AbfHIOkv (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 9 Aug 2019 10:40:51 -0400
-Received: by mail-lf1-f67.google.com with SMTP id h28so69640284lfj.5
-        for <linux-gpio@vger.kernel.org>; Fri, 09 Aug 2019 07:40:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=wXxXOhEbXdsMl/G/C1HkrghsmnTlDveq2pniwsmkuSw=;
-        b=M9x1XR+g8vj12BKhOTf5BoK5l9EiegLyuQAa7ryt4d5B7FuTh67HNmX2CdYaKiAt8X
-         YBmXKe8K3wGekKRVk927ro0Y1Ir0wepXrfklB/ezn871qMJBvTS/ZGx6yxh3O6ngD+rz
-         C0h+CNdrJhnjt5YIBr2WujnHsfCpytuWBnTIla7Cz77oWeOt4HIOEzQPj2RnhOelAXXj
-         ZbVUe5BuzlkbiE19ho0EHatMAKnkCdTMXbW1QuhDC+qDuFoUO3kvNwRc8t6IO/feYOZe
-         aTr/HcuVQJoqMElB2AwuAi5St+UT8LiJ6Cd2ylABDvZHIFI5tN60Rw68n6SzspQiVt/d
-         Z69g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=wXxXOhEbXdsMl/G/C1HkrghsmnTlDveq2pniwsmkuSw=;
-        b=SWeWRrqcQo2Rv3/qcztAQYg6v7A5Rm8dgS+n507or8M3UdUPfENPE+IireZLvTMs7X
-         G0fcuL4tR3GsPk4qEze5KNumOn+4Hw2u+oOTi2fuJZUS7+CtgSZ7xrY/mdpIvQPlSOXR
-         tfeaSaFCIldEuaIlgEOz/9FlXYKiFegA404cPhaOjSNJgfxBlbNaMbtjtEmF+1T7li4e
-         f90ANic7UxNVEuoHy3v4Z9KmDrdcONHo60YQkzy6iqo1eTLsXOxtVpPYl/URg2RY6mk8
-         hAfMW65olfMAQwuaSXWiMG6WCrnF/sqaKoTw9V5/mR0Kjqn0cXuftnDuUEJNrjED2iI0
-         wN/w==
-X-Gm-Message-State: APjAAAWh7Sl2K6BXEhbGZnfoGPUt2e/+DFo7xBOcKscS5ZvcyzAho/iM
-        8hdn7/wvPgxhNtAzZuECynR/gWq/Ebo=
-X-Google-Smtp-Source: APXvYqzECjEkfwlQ61hdxRDYuFLmaNDXWpdqGOwXFS1iDyOyvathh0qLWdLh1pPQr3FJ/YDVx1Tk/g==
-X-Received: by 2002:ac2:46ce:: with SMTP id p14mr13042213lfo.39.1565361649420;
-        Fri, 09 Aug 2019 07:40:49 -0700 (PDT)
-Received: from genomnajs.ideon.se ([85.235.10.227])
-        by smtp.gmail.com with ESMTPSA id b1sm19517164ljj.26.2019.08.09.07.40.47
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Fri, 09 Aug 2019 07:40:48 -0700 (PDT)
-From:   Linus Walleij <linus.walleij@linaro.org>
-To:     linux-gpio@vger.kernel.org
-Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Thierry Reding <treding@nvidia.com>
-Subject: [PATCH] gpio: tqmx86: Pass irqchip when adding gpiochip
-Date:   Fri,  9 Aug 2019 16:40:45 +0200
-Message-Id: <20190809144045.26018-1-linus.walleij@linaro.org>
-X-Mailer: git-send-email 2.21.0
+        id S1726164AbfHIOxC (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 9 Aug 2019 10:53:02 -0400
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:33058 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726037AbfHIOxC (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 9 Aug 2019 10:53:02 -0400
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id x79Equnw076130;
+        Fri, 9 Aug 2019 09:52:56 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1565362376;
+        bh=V2KXqyvDDIJp8HPjSXjxQloTkI08WBnBkF4L8tqqD1A=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=kQTXHwN1zRnKz80S77FF9u2hIo/4nVL/HRzLlV99r1cBKa6aLtAGzYZjniUn7ko+e
+         CxwJL8BqezFQhXUGVW3xHLDR0bvyOzuGlVnRr8TSfEjU8s+LIoF9qEFSxS7DUN7AjG
+         tbJyyFkOtBNSj55rZJbKlhe6xBcVvoDcBJSwjxfQ=
+Received: from DFLE104.ent.ti.com (dfle104.ent.ti.com [10.64.6.25])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x79EquWP041139
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 9 Aug 2019 09:52:56 -0500
+Received: from DFLE101.ent.ti.com (10.64.6.22) by DFLE104.ent.ti.com
+ (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Fri, 9 Aug
+ 2019 09:52:56 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE101.ent.ti.com
+ (10.64.6.22) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Fri, 9 Aug 2019 09:52:56 -0500
+Received: from [172.24.191.45] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id x79EqrAo086111;
+        Fri, 9 Aug 2019 09:52:54 -0500
+Subject: Re: [PATCH 2/6] arm64: dts: ti: k3-j721e: Add gpio nodes in main
+ domain
+To:     Lokesh Vutla <lokeshvutla@ti.com>, Tero Kristo <t-kristo@ti.com>,
+        Nishanth Menon <nm@ti.com>, <linus.walleij@linaro.org>
+CC:     Rob Herring <robh+dt@kernel.org>, <linux-gpio@vger.kernel.org>,
+        Device Tree Mailing List <devicetree@vger.kernel.org>,
+        Linux ARM Mailing List <linux-arm-kernel@lists.infradead.org>
+References: <20190809082947.30590-1-lokeshvutla@ti.com>
+ <20190809082947.30590-3-lokeshvutla@ti.com>
+From:   Keerthy <j-keerthy@ti.com>
+Message-ID: <170f021e-eeeb-9b5b-1e66-7cf2dfc54185@ti.com>
+Date:   Fri, 9 Aug 2019 20:23:30 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190809082947.30590-3-lokeshvutla@ti.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-We need to convert all old gpio irqchips to pass the irqchip
-setup along when adding the gpio_chip. For more info see
-drivers/gpio/TODO.
 
-For chained irqchips this is a pretty straight-forward
-conversion.
 
-Cc: Andrew Lunn <andrew@lunn.ch>
-Cc: Thierry Reding <treding@nvidia.com>
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
----
- drivers/gpio/gpio-tqmx86.c | 41 ++++++++++++++++++++++----------------
- 1 file changed, 24 insertions(+), 17 deletions(-)
+On 09/08/19 1:59 PM, Lokesh Vutla wrote:
+> There are 8 instances of gpio modules in main domain divided into 2 groups:
+> - Group1: gpio0, gpio2, gpio4, gpio6
+> - Group2: gpio1, gpio3, gpio5, gpio7
+> 
+> Groups are created to provide protection between two different processor
+> virtual worlds. There are x gpio lines coming out of each group. Each module
+> in a group has equal x gpio lines pinned out. There is a top level mux for
+> selecting the module instance for each pin coming out of group. Exactly
+> one module can be selected to control the corresponding pin. This muxing
+> can be controlled along the pad mux configuration registers.
+> 
+> Group1 pins out 128 lines(8 banks). Group 2 pins out 36 lines(2 banks).
+> 
+> Add DT nodes for each module instance in the main domain. Users should
+> make sure that correct gpio instance is selected in their pad configuration.
 
-diff --git a/drivers/gpio/gpio-tqmx86.c b/drivers/gpio/gpio-tqmx86.c
-index d5880db7f9d4..07050cdbadb9 100644
---- a/drivers/gpio/gpio-tqmx86.c
-+++ b/drivers/gpio/gpio-tqmx86.c
-@@ -219,6 +219,7 @@ static int tqmx86_gpio_probe(struct platform_device *pdev)
- 	struct device *dev = &pdev->dev;
- 	struct tqmx86_gpio_data *gpio;
- 	struct gpio_chip *chip;
-+	struct gpio_irq_chip *girq;
- 	void __iomem *io_base;
- 	struct resource *res;
- 	int ret, irq;
-@@ -264,12 +265,6 @@ static int tqmx86_gpio_probe(struct platform_device *pdev)
- 
- 	pm_runtime_enable(&pdev->dev);
- 
--	ret = devm_gpiochip_add_data(dev, chip, gpio);
--	if (ret) {
--		dev_err(dev, "Could not register GPIO chip\n");
--		goto out_pm_dis;
--	}
--
- 	if (irq) {
- 		struct irq_chip *irq_chip = &gpio->irq_chip;
- 		u8 irq_status;
-@@ -287,23 +282,35 @@ static int tqmx86_gpio_probe(struct platform_device *pdev)
- 		irq_status = tqmx86_gpio_read(gpio, TQMX86_GPIIS);
- 		tqmx86_gpio_write(gpio, irq_status, TQMX86_GPIIS);
- 
--		ret = gpiochip_irqchip_add(chip, irq_chip,
--					   0, handle_simple_irq,
--					   IRQ_TYPE_EDGE_BOTH);
--		if (ret) {
--			dev_err(dev, "Could not add irq chip\n");
-+		girq = &chip->irq;
-+		girq->chip = irq_chip;
-+		girq->parent_handler = tqmx86_gpio_irq_handler;
-+		girq->num_parents = 1;
-+		girq->parents = devm_kcalloc(&pdev->dev, 1,
-+					     sizeof(*girq->parents),
-+					     GFP_KERNEL);
-+		if (!girq->parents) {
-+			ret = -ENOMEM;
- 			goto out_pm_dis;
- 		}
-+		girq->parents[0] = irq;
-+		girq->default_type = IRQ_TYPE_NONE;
-+		girq->handler = handle_simple_irq;
-+	}
- 
--		gpiochip_set_chained_irqchip(chip, irq_chip,
--					     irq, tqmx86_gpio_irq_handler);
-+	ret = devm_gpiochip_add_data(dev, chip, gpio);
-+	if (ret) {
-+		dev_err(dev, "Could not register GPIO chip\n");
-+		goto out_pm_dis;
- 	}
- 
- 	/* Only GPIOs 4-7 are valid for interrupts. Clear the others */
--	clear_bit(0, chip->irq.valid_mask);
--	clear_bit(1, chip->irq.valid_mask);
--	clear_bit(2, chip->irq.valid_mask);
--	clear_bit(3, chip->irq.valid_mask);
-+	if (irq) {
-+		clear_bit(0, girq->valid_mask);
-+		clear_bit(1, girq->valid_mask);
-+		clear_bit(2, girq->valid_mask);
-+		clear_bit(3, girq->valid_mask);
-+	}
- 
- 	dev_info(dev, "GPIO functionality initialized with %d pins\n",
- 		 chip->ngpio);
--- 
-2.21.0
+Reviewed-by: Keerthy <j-keerthy@ti.com>
 
+> 
+> Signed-off-by: Lokesh Vutla <lokeshvutla@ti.com>
+> ---
+>   arch/arm64/boot/dts/ti/k3-j721e-main.dtsi | 132 ++++++++++++++++++++++
+>   1 file changed, 132 insertions(+)
+> 
+> diff --git a/arch/arm64/boot/dts/ti/k3-j721e-main.dtsi b/arch/arm64/boot/dts/ti/k3-j721e-main.dtsi
+> index 01661c22c39d..199bc9a00b20 100644
+> --- a/arch/arm64/boot/dts/ti/k3-j721e-main.dtsi
+> +++ b/arch/arm64/boot/dts/ti/k3-j721e-main.dtsi
+> @@ -240,4 +240,136 @@
+>   		clocks = <&k3_clks 286 0>;
+>   		clock-names = "fclk";
+>   	};
+> +
+> +	main_gpio0: gpio@600000 {
+> +		compatible = "ti,j721e-gpio", "ti,keystone-gpio";
+> +		reg = <0x0 0x00600000 0x0 0x100>;
+> +		gpio-controller;
+> +		#gpio-cells = <2>;
+> +		interrupt-parent = <&main_gpio_intr>;
+> +		interrupts = <105 0>, <105 1>, <105 2>, <105 3>,
+> +			     <105 4>, <105 5>, <105 6>, <105 7>;
+> +		interrupt-controller;
+> +		#interrupt-cells = <2>;
+> +		ti,ngpio = <128>;
+> +		ti,davinci-gpio-unbanked = <0>;
+> +		power-domains = <&k3_pds 105 TI_SCI_PD_EXCLUSIVE>;
+> +		clocks = <&k3_clks 105 0>;
+> +		clock-names = "gpio";
+> +	};
+> +
+> +	main_gpio1: gpio@601000 {
+> +		compatible = "ti,j721e-gpio", "ti,keystone-gpio";
+> +		reg = <0x0 0x00601000 0x0 0x100>;
+> +		gpio-controller;
+> +		#gpio-cells = <2>;
+> +		interrupt-parent = <&main_gpio_intr>;
+> +		interrupts = <106 0>, <106 1>, <106 2>;
+> +		interrupt-controller;
+> +		#interrupt-cells = <2>;
+> +		ti,ngpio = <36>;
+> +		ti,davinci-gpio-unbanked = <0>;
+> +		power-domains = <&k3_pds 106 TI_SCI_PD_EXCLUSIVE>;
+> +		clocks = <&k3_clks 106 0>;
+> +		clock-names = "gpio";
+> +	};
+> +
+> +	main_gpio2: gpio@610000 {
+> +		compatible = "ti,j721e-gpio", "ti,keystone-gpio";
+> +		reg = <0x0 0x00610000 0x0 0x100>;
+> +		gpio-controller;
+> +		#gpio-cells = <2>;
+> +		interrupt-parent = <&main_gpio_intr>;
+> +		interrupts = <107 0>, <107 1>, <107 2>, <107 3>,
+> +			     <107 4>, <107 5>, <107 6>, <107 7>;
+> +		interrupt-controller;
+> +		#interrupt-cells = <2>;
+> +		ti,ngpio = <128>;
+> +		ti,davinci-gpio-unbanked = <0>;
+> +		power-domains = <&k3_pds 107 TI_SCI_PD_EXCLUSIVE>;
+> +		clocks = <&k3_clks 107 0>;
+> +		clock-names = "gpio";
+> +	};
+> +
+> +	main_gpio3: gpio@611000 {
+> +		compatible = "ti,j721e-gpio", "ti,keystone-gpio";
+> +		reg = <0x0 0x00611000 0x0 0x100>;
+> +		gpio-controller;
+> +		#gpio-cells = <2>;
+> +		interrupt-parent = <&main_gpio_intr>;
+> +		interrupts = <108 0>, <108 1>, <108 2>;
+> +		interrupt-controller;
+> +		#interrupt-cells = <2>;
+> +		ti,ngpio = <36>;
+> +		ti,davinci-gpio-unbanked = <0>;
+> +		power-domains = <&k3_pds 108 TI_SCI_PD_EXCLUSIVE>;
+> +		clocks = <&k3_clks 108 0>;
+> +		clock-names = "gpio";
+> +	};
+> +
+> +	main_gpio4: gpio@620000 {
+> +		compatible = "ti,j721e-gpio", "ti,keystone-gpio";
+> +		reg = <0x0 0x00620000 0x0 0x100>;
+> +		gpio-controller;
+> +		#gpio-cells = <2>;
+> +		interrupt-parent = <&main_gpio_intr>;
+> +		interrupts = <109 0>, <109 1>, <109 2>, <109 3>,
+> +			     <109 4>, <109 5>, <109 6>, <109 7>;
+> +		interrupt-controller;
+> +		#interrupt-cells = <2>;
+> +		ti,ngpio = <128>;
+> +		ti,davinci-gpio-unbanked = <0>;
+> +		power-domains = <&k3_pds 109 TI_SCI_PD_EXCLUSIVE>;
+> +		clocks = <&k3_clks 109 0>;
+> +		clock-names = "gpio";
+> +	};
+> +
+> +	main_gpio5: gpio@621000 {
+> +		compatible = "ti,j721e-gpio", "ti,keystone-gpio";
+> +		reg = <0x0 0x00621000 0x0 0x100>;
+> +		gpio-controller;
+> +		#gpio-cells = <2>;
+> +		interrupt-parent = <&main_gpio_intr>;
+> +		interrupts = <110 0>, <110 1>, <110 2>;
+> +		interrupt-controller;
+> +		#interrupt-cells = <2>;
+> +		ti,ngpio = <36>;
+> +		ti,davinci-gpio-unbanked = <0>;
+> +		power-domains = <&k3_pds 110 TI_SCI_PD_EXCLUSIVE>;
+> +		clocks = <&k3_clks 110 0>;
+> +		clock-names = "gpio";
+> +	};
+> +
+> +	main_gpio6: gpio@630000 {
+> +		compatible = "ti,j721e-gpio", "ti,keystone-gpio";
+> +		reg = <0x0 0x00630000 0x0 0x100>;
+> +		gpio-controller;
+> +		#gpio-cells = <2>;
+> +		interrupt-parent = <&main_gpio_intr>;
+> +		interrupts = <111 0>, <111 1>, <111 2>, <111 3>,
+> +			     <111 4>, <111 5>, <111 6>, <111 7>;
+> +		interrupt-controller;
+> +		#interrupt-cells = <2>;
+> +		ti,ngpio = <128>;
+> +		ti,davinci-gpio-unbanked = <0>;
+> +		power-domains = <&k3_pds 111 TI_SCI_PD_EXCLUSIVE>;
+> +		clocks = <&k3_clks 111 0>;
+> +		clock-names = "gpio";
+> +	};
+> +
+> +	main_gpio7: gpio@631000 {
+> +		compatible = "ti,j721e-gpio", "ti,keystone-gpio";
+> +		reg = <0x0 0x00631000 0x0 0x100>;
+> +		gpio-controller;
+> +		#gpio-cells = <2>;
+> +		interrupt-parent = <&main_gpio_intr>;
+> +		interrupts = <112 0>, <112 1>, <112 2>;
+> +		interrupt-controller;
+> +		#interrupt-cells = <2>;
+> +		ti,ngpio = <36>;
+> +		ti,davinci-gpio-unbanked = <0>;
+> +		power-domains = <&k3_pds 112 TI_SCI_PD_EXCLUSIVE>;
+> +		clocks = <&k3_clks 112 0>;
+> +		clock-names = "gpio";
+> +	};
+>   };
+> 
