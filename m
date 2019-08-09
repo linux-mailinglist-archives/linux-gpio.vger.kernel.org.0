@@ -2,57 +2,58 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 6E54C87B81
-	for <lists+linux-gpio@lfdr.de>; Fri,  9 Aug 2019 15:38:51 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0742E87C14
+	for <lists+linux-gpio@lfdr.de>; Fri,  9 Aug 2019 15:51:26 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726152AbfHINiu (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 9 Aug 2019 09:38:50 -0400
-Received: from mail-lf1-f67.google.com ([209.85.167.67]:35943 "EHLO
-        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2405948AbfHINiu (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 9 Aug 2019 09:38:50 -0400
-Received: by mail-lf1-f67.google.com with SMTP id j17so15529851lfp.3
-        for <linux-gpio@vger.kernel.org>; Fri, 09 Aug 2019 06:38:48 -0700 (PDT)
+        id S2406374AbfHINvZ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 9 Aug 2019 09:51:25 -0400
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:45044 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726140AbfHINvZ (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 9 Aug 2019 09:51:25 -0400
+Received: by mail-lj1-f194.google.com with SMTP id k18so92133063ljc.11
+        for <linux-gpio@vger.kernel.org>; Fri, 09 Aug 2019 06:51:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=RKvyntXueMtld/bLq4POUo+3j78kQALYYUxLrikEJfk=;
-        b=L4xzzzDk/KyTM2kFNPtg1qE6myfUJe29C6NzJYFSsDrCJsGU3mrfg5CCudG1yMvRKP
-         jMm1zH/ZWqeUYADBlPuVLxsHo6fiPhFAMTS8x1tT4eXXquUuskPw8NB6AhLyTuJ7ZBGi
-         rQy1HE6ylgaclL/yIZPCoLT3SHJ91zkv7oVERslhyG396GaRZfZLWI/1xMYPmagJLRaA
-         E8zXHKnZsP5N/s3ZUZdX0qQNCcJz88WznSZSIp2AMgYF3awmgC5ZimdO/GvYbDQ6Rnsa
-         20CsvJ29bpVuGOpWQqrMxQ6OJ1ob2A2KTFxNUlF2AtXKnE9U6366dpyxOOHIA/GJnHbi
-         Ircw==
+        bh=CaLwq6MYMD0U79o+6XH0qF1y/n5q12/0f9PXqJLchhw=;
+        b=w5VzendaqHmXx+QGDz3mw3ddWBBNgOU9ElOZFiElxsZx7MCTaVRMJlYd8iSSvHbFwa
+         +ps9GY4Qenmm7Zn46slnAee4h7aOiTAgOwV6sG/NJAA6V3OLM19eIwK9tQAfE23ovMUW
+         bwT9SNFYE9Enfe2qXlaLZfkQIqvL/hC9IjFhOB2eXOw+OS41UkF3kuFIwxZYCcK2pXBT
+         yDXb06kCLm4XxCMKqw4AfpGYxlUirzNZhr25sH3Byp1YhX1fmwfm4ITHCPWQZkTq9SOc
+         Ha7j+EmKdBj01yvV/mxvL59p1bhAzPdcYKvqPjt6tUXahkNiwdxnfVsnFr/7iX605f49
+         vS0A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=RKvyntXueMtld/bLq4POUo+3j78kQALYYUxLrikEJfk=;
-        b=TUDtAnb2mlrbPSFQb8tbHRJUFME6D9HdWAAmDHMZJch6TzCsrx8xX03yTWuWBp/rZu
-         a/X+pkFrtYO0c9UZ5TkZIk066Mr/q5PntQpbEstG7Xbt93FI3oMQikIoI1sGWD9lbl7r
-         Sea5y7ACTxTXQHQEey0KSQ06+XQWlfn5nFyFeiiqrbnCTw/XcsUTFTouzbyUEBKkotwX
-         mBdJuc7+H5OSTjV7BcpRAojKjZ/cchqP0eS0PWNYEzPCRyJzHcapadGRsL5Bqdk4AUXc
-         ODNQ2F7vmGg3z0Y8zGJcWXNrwyFX90PvlzXYKbPOuw1z8jC7g9dJDENVnD7zgRKT72VP
-         tqVA==
-X-Gm-Message-State: APjAAAX4PV+zvzIA1OTwownpClwswqd8K0omZuTsVHaHvjKjTtsmMxv2
-        0/c/LRY8grGntmsPBnCe4mKOL/p9FVY=
-X-Google-Smtp-Source: APXvYqw78W/vGAgmLoZuCHcIcFatkVRugCEnYMAfZEjRgmNuX20n2iQgEt7OLaOu9sVTQotYDovvWw==
-X-Received: by 2002:a19:f11a:: with SMTP id p26mr9034700lfh.160.1565357927999;
-        Fri, 09 Aug 2019 06:38:47 -0700 (PDT)
+        bh=CaLwq6MYMD0U79o+6XH0qF1y/n5q12/0f9PXqJLchhw=;
+        b=iTJWKxWBodZommzsr3HuPWhvbVx5wc8RawdpeV1psQqNUFwC707qUMvw4rr2IR4K+A
+         Ytn/WnWl5xP3rmN0P4Rjfxekf7dJWIwZdO83KGTP6LTKws8cMRe+ETaoE8RVS3fx9xSs
+         3g0EkWljxjpZdL9/qs+j7zmQ/MsPcQAYHoUvzGtp7XkTQajDSLwZdvRI9sx83jJff3ya
+         KQUte0vVB3r+8gCf1oKp8GVu1RI5N4dKRe6jLbtw0+/BWR5p//rXFDN9LzvrNeM6uNBK
+         P7z2AW54zNhmNOde/bZsW7Hom3AnMbxslBuXJfJfuvcPoiswhMBX7zUCl+SOt2HsbAIU
+         QlLQ==
+X-Gm-Message-State: APjAAAVEVPC94C+C3r52mq7D1cZc4Ox7/P0y8BKdp5tHLYzsUzubax5E
+        SHAr2GaK6RbMME1F0cYCFFQTKxgWI/M=
+X-Google-Smtp-Source: APXvYqwDHa/JLpcLk0e9VbPefzOJpu0s58JX4s27exc6ow6DHi8GpeWisTUyiS6uwONXNUNTggszjw==
+X-Received: by 2002:a2e:8ecb:: with SMTP id e11mr11552228ljl.218.1565358682500;
+        Fri, 09 Aug 2019 06:51:22 -0700 (PDT)
 Received: from genomnajs.ideon.se ([85.235.10.227])
-        by smtp.gmail.com with ESMTPSA id r24sm22193860ljb.72.2019.08.09.06.38.46
+        by smtp.gmail.com with ESMTPSA id q30sm19984598lfd.27.2019.08.09.06.51.21
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Fri, 09 Aug 2019 06:38:47 -0700 (PDT)
+        Fri, 09 Aug 2019 06:51:21 -0700 (PDT)
 From:   Linus Walleij <linus.walleij@linaro.org>
 To:     linux-gpio@vger.kernel.org
 Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
         Linus Walleij <linus.walleij@linaro.org>,
-        Jonas Gorski <jogo@openwrt.org>, Jun Nie <jun.nie@linaro.org>,
+        Jayachandran C <jnair@caviumnetworks.com>,
+        Kamlakant Patel <kamlakant.patel@broadcom.com>,
         Thierry Reding <treding@nvidia.com>
-Subject: [PATCH] gpio: zx: Pass irqchip when adding gpiochip
-Date:   Fri,  9 Aug 2019 15:38:45 +0200
-Message-Id: <20190809133845.30991-1-linus.walleij@linaro.org>
+Subject: [PATCH] gpio: xlp: Pass irqchip when adding gpiochip
+Date:   Fri,  9 Aug 2019 15:51:19 +0200
+Message-Id: <20190809135119.6946-1-linus.walleij@linaro.org>
 X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -68,49 +69,33 @@ drivers/gpio/TODO.
 For chained irqchips this is a pretty straight-forward
 conversion.
 
-Cc: Jonas Gorski <jogo@openwrt.org>
-Cc: Jun Nie <jun.nie@linaro.org>
+Cc: Jayachandran C <jnair@caviumnetworks.com>
+Cc: Kamlakant Patel <kamlakant.patel@broadcom.com>
 Cc: Thierry Reding <treding@nvidia.com>
 Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
 ---
- drivers/gpio/gpio-zx.c | 34 +++++++++++++++++-----------------
- 1 file changed, 17 insertions(+), 17 deletions(-)
+ drivers/gpio/gpio-xlp.c | 29 +++++++++++++++--------------
+ 1 file changed, 15 insertions(+), 14 deletions(-)
 
-diff --git a/drivers/gpio/gpio-zx.c b/drivers/gpio/gpio-zx.c
-index 8d9b9bf8510a..98cbaf0e415e 100644
---- a/drivers/gpio/gpio-zx.c
-+++ b/drivers/gpio/gpio-zx.c
-@@ -215,6 +215,7 @@ static int zx_gpio_probe(struct platform_device *pdev)
+diff --git a/drivers/gpio/gpio-xlp.c b/drivers/gpio/gpio-xlp.c
+index 54d3359444f3..d7b16bb9e4e4 100644
+--- a/drivers/gpio/gpio-xlp.c
++++ b/drivers/gpio/gpio-xlp.c
+@@ -290,6 +290,7 @@ MODULE_DEVICE_TABLE(of, xlp_gpio_of_ids);
+ static int xlp_gpio_probe(struct platform_device *pdev)
  {
- 	struct device *dev = &pdev->dev;
- 	struct zx_gpio *chip;
+ 	struct gpio_chip *gc;
 +	struct gpio_irq_chip *girq;
- 	int irq, id, ret;
+ 	struct xlp_gpio_priv *priv;
+ 	void __iomem *gpio_base;
+ 	int irq_base, irq, err;
+@@ -395,27 +396,27 @@ static int xlp_gpio_probe(struct platform_device *pdev)
+ 		irq_base = 0;
+ 	}
  
- 	chip = devm_kzalloc(dev, sizeof(*chip), GFP_KERNEL);
-@@ -242,31 +243,30 @@ static int zx_gpio_probe(struct platform_device *pdev)
- 	chip->gc.parent = dev;
- 	chip->gc.owner = THIS_MODULE;
- 
--	ret = gpiochip_add_data(&chip->gc, chip);
--	if (ret)
--		return ret;
--
- 	/*
- 	 * irq_chip support
- 	 */
- 	writew_relaxed(0xffff, chip->base + ZX_GPIO_IM);
- 	writew_relaxed(0, chip->base + ZX_GPIO_IE);
- 	irq = platform_get_irq(pdev, 0);
--	if (irq < 0) {
--		gpiochip_remove(&chip->gc);
--		return -ENODEV;
--	}
-+	if (irq < 0)
-+		return irq;
-+	girq = &chip->gc.irq;
-+	girq->chip = &zx_irqchip;
-+	girq->parent_handler = zx_irq_handler;
++	girq = &gc->irq;
++	girq->chip = &xlp_gpio_irq_chip;
++	girq->parent_handler = xlp_gpio_generic_handler;
 +	girq->num_parents = 1;
 +	girq->parents = devm_kcalloc(&pdev->dev, 1,
 +				     sizeof(*girq->parents),
@@ -118,24 +103,34 @@ index 8d9b9bf8510a..98cbaf0e415e 100644
 +	if (!girq->parents)
 +		return -ENOMEM;
 +	girq->parents[0] = irq;
++	girq->first = irq_base;
 +	girq->default_type = IRQ_TYPE_NONE;
-+	girq->handler = handle_simple_irq;
++	girq->handler = handle_level_irq;
++
+ 	err = gpiochip_add_data(gc, priv);
+ 	if (err < 0)
+ 		return err;
  
--	ret = gpiochip_irqchip_add(&chip->gc, &zx_irqchip,
--				   0, handle_simple_irq,
--				   IRQ_TYPE_NONE);
--	if (ret) {
--		dev_err(dev, "could not add irqchip\n");
--		gpiochip_remove(&chip->gc);
-+	ret = gpiochip_add_data(&chip->gc, chip);
-+	if (ret)
- 		return ret;
+-	err = gpiochip_irqchip_add(gc, &xlp_gpio_irq_chip, irq_base,
+-				handle_level_irq, IRQ_TYPE_NONE);
+-	if (err) {
+-		dev_err(&pdev->dev, "Could not connect irqchip to gpiochip!\n");
+-		goto out_gpio_remove;
 -	}
--	gpiochip_set_chained_irqchip(&chip->gc, &zx_irqchip,
--				     irq, zx_irq_handler);
+-
+-	gpiochip_set_chained_irqchip(gc, &xlp_gpio_irq_chip, irq,
+-			xlp_gpio_generic_handler);
+-
+ 	dev_info(&pdev->dev, "registered %d GPIOs\n", gc->ngpio);
  
- 	platform_set_drvdata(pdev, chip);
- 	dev_info(dev, "ZX GPIO chip registered\n");
+ 	return 0;
+-
+-out_gpio_remove:
+-	gpiochip_remove(gc);
+-	return err;
+ }
+ 
+ #ifdef CONFIG_ACPI
 -- 
 2.21.0
 
