@@ -2,98 +2,131 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id AF4B1882B2
-	for <lists+linux-gpio@lfdr.de>; Fri,  9 Aug 2019 20:37:18 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 51E87882E9
+	for <lists+linux-gpio@lfdr.de>; Fri,  9 Aug 2019 20:50:38 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407618AbfHIShR (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 9 Aug 2019 14:37:17 -0400
-Received: from pandora.armlinux.org.uk ([78.32.30.218]:33524 "EHLO
-        pandora.armlinux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2407617AbfHIShR (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 9 Aug 2019 14:37:17 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=IGx1tU/8oZZB3pB47GcI0li+Dcw0am8UumHeTJgqBsA=; b=FI1vTkLp5g159Uj8cKQ9M9yPg
-        5o1Cnqp19oMJ6nrpK4zw0M1TH8cDtseJ969So98LRY7NxqWnT2GtIvCesWJy5YogAvFlQcwVLFf9m
-        MdzBWgIc6Eqi9mNeGKEbCZ9AbhgxE+I9yycgXHBgxA5104BGeZr1YZid8L4JBbwIYV/BtyAyk1euz
-        KwZgttgdk5EEc6iqpUf2Bvj3Duy/uTnZNEIAJhQsO9IeHKI/u7syQ7tOl0+F2VQniPR2YGbBcT+Ft
-        8Xy5MdDaQ7/hyU4s3LkVh3XzSZpYapT3CopyQgW0n2gy4ZTERYvKaCunp9i2GpwSUkZmulS+XvQ7r
-        dl2HpuDSQ==;
-Received: from shell.armlinux.org.uk ([2001:4d48:ad52:3201:5054:ff:fe00:4ec]:42960)
-        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.90_1)
-        (envelope-from <linux@armlinux.org.uk>)
-        id 1hw9lA-0003Lr-PB; Fri, 09 Aug 2019 19:37:04 +0100
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
-        (envelope-from <linux@shell.armlinux.org.uk>)
-        id 1hw9l4-0003t7-5w; Fri, 09 Aug 2019 19:36:58 +0100
-Date:   Fri, 9 Aug 2019 19:36:58 +0100
-From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
-To:     Dan Williams <dan.j.williams@intel.com>
-Cc:     Arnd Bergmann <arnd@arndb.de>, soc@kernel.org,
-        Vinod Koul <vkoul@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        linux-arm-kernel@lists.infradead.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        dmaengine@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-i2c@vger.kernel.org, Martin Michlmayr <tbm@cyrius.com>
-Subject: Re: [PATCH 1/7] [RFC] ARM: remove Intel iop33x and iop13xx support
-Message-ID: <20190809183658.GA13294@shell.armlinux.org.uk>
-References: <20190809162956.488941-1-arnd@arndb.de>
- <20190809163334.489360-1-arnd@arndb.de>
- <CAA9_cmdDbBm0ookyqGJMcyLVFHkYHuR3mEeawQKS2UqYJoWWaQ@mail.gmail.com>
+        id S1726634AbfHISui (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 9 Aug 2019 14:50:38 -0400
+Received: from hqemgate16.nvidia.com ([216.228.121.65]:15880 "EHLO
+        hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726168AbfHISuh (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 9 Aug 2019 14:50:37 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5d4dc07d0002>; Fri, 09 Aug 2019 11:50:37 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Fri, 09 Aug 2019 11:50:35 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Fri, 09 Aug 2019 11:50:35 -0700
+Received: from [10.2.167.88] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 9 Aug
+ 2019 18:50:34 +0000
+Subject: Re: [PATCH v8 05/21] clk: tegra: pll: Save and restore pll context
+To:     Dmitry Osipenko <digetx@gmail.com>, <thierry.reding@gmail.com>,
+        <jonathanh@nvidia.com>, <tglx@linutronix.de>,
+        <jason@lakedaemon.net>, <marc.zyngier@arm.com>,
+        <linus.walleij@linaro.org>, <stefan@agner.ch>,
+        <mark.rutland@arm.com>
+CC:     <pdeschrijver@nvidia.com>, <pgaikwad@nvidia.com>,
+        <sboyd@kernel.org>, <linux-clk@vger.kernel.org>,
+        <linux-gpio@vger.kernel.org>, <jckuo@nvidia.com>,
+        <josephl@nvidia.com>, <talho@nvidia.com>,
+        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <mperttunen@nvidia.com>, <spatra@nvidia.com>, <robh+dt@kernel.org>,
+        <devicetree@vger.kernel.org>, <rjw@rjwysocki.net>,
+        <viresh.kumar@linaro.org>, <linux-pm@vger.kernel.org>
+References: <1565308020-31952-1-git-send-email-skomatineni@nvidia.com>
+ <1565308020-31952-6-git-send-email-skomatineni@nvidia.com>
+ <68f65db6-44b7-1c75-2633-4a2fffd62a92@gmail.com>
+ <dd20aa34-d838-40c4-9edd-bbe5973053f3@nvidia.com>
+ <2eecf4ff-802d-7e0e-d971-0257fae4e3a2@gmail.com>
+From:   Sowjanya Komatineni <skomatineni@nvidia.com>
+Message-ID: <9096cbca-f647-b0af-2ab8-d48769555c3e@nvidia.com>
+Date:   Fri, 9 Aug 2019 11:50:33 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAA9_cmdDbBm0ookyqGJMcyLVFHkYHuR3mEeawQKS2UqYJoWWaQ@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <2eecf4ff-802d-7e0e-d971-0257fae4e3a2@gmail.com>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: quoted-printable
+Content-Language: en-US
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1565376637; bh=SfvdUFKLkyQbfTKMP8GT8fp4INVlwrptcyWMvdGjvqQ=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
+         Content-Language;
+        b=OTaGAijbYuLx6OHVL6rG0f89MiUPGg3h+uo8DRPKwUCDZ3zOylkdezrznU7bqqddA
+         9i03jhAOpggS3ss1lNCOU217+PvSMFUZSn3SY6nbE0ab4QtmOHyVtU08+sflAmZdBO
+         ZpiW13GEpoMT9uTSZylJsdPJLW6pjs16X7jtX7cBtuUskdx3yhf+BuCfvNJPK7cGOw
+         nTzSx/4GNgIlqHzlXUDf9+vvWg1q/UFpy1c1ncSxdEj5VjXDBkrwOlNSfkrvepd7Um
+         ma245jVkhZHDU81cdhwWaHH76UGumTiQk9nR7zAvP1PXuqM4m0sPcYRm20mhulmuXq
+         It3Xqa/7azCPw==
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Aug 09, 2019 at 11:34:12AM -0700, Dan Williams wrote:
-> [ add Martin (if cyrius.com address is still valid) ]
-> 
-> On Fri, Aug 9, 2019 at 9:35 AM Arnd Bergmann <arnd@arndb.de> wrote:
-> >
-> > There are three families of IOP machines we support in Linux: iop32x
-> > (which includes EP80219), iop33x and iop13xx (aka IOP34x aka WP8134x).
-> >
-> > All products we support in the kernel are based on the first of these,
-> > iop32x, the other families only ever supported the Intel reference
-> > boards but no actual machine anyone could ever buy.
-> >
-> > While one could clearly make them all three work in a single kernel
-> > with some work, this takes the easy way out, removing the later two
-> > platforms entirely, under the assumption that there are no remaining
-> > users.
-> >
-> > Earlier versions of OpenWRT and Debian both had support for iop32x
-> > but not the others, and they both dropped iop32x as well in their 2015
-> > releases.
-> >
-> > Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-> > ---
-> > I'm just guessing that iop32x is still needed, and the other two are
-> > not. If anyone disagrees with that assessment, let me know so we
-> > can come up with an alternative approach.
-> 
-> I'm not sure who would scream if iop32x support went away as well, but
-> I have not followed this space in years hence copying Martin.
-> 
-> In any event:
-> 
-> Acked-by: Dan Williams <dan.j.williams@intel.com>
 
-Those of us who have and still run Thecus N2100's, for example?
+On 8/9/19 10:50 AM, Dmitry Osipenko wrote:
+> 09.08.2019 20:39, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+>> On 8/9/19 4:33 AM, Dmitry Osipenko wrote:
+>>> 09.08.2019 2:46, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+>>>> This patch implements save and restore of PLL context.
+>>>>
+>>>> During system suspend, core power goes off and looses the settings
+>>>> of the Tegra CAR controller registers.
+>>>>
+>>>> So during suspend entry pll context is stored and on resume it is
+>>>> restored back along with its state.
+>>>>
+>>>> Acked-by: Thierry Reding <treding@nvidia.com>
+>>>> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
+>>>> ---
+>>>>  =C2=A0 drivers/clk/tegra/clk-pll.c | 88 ++++++++++++++++++++++++++++-=
+----------------
+>>>>  =C2=A0 drivers/clk/tegra/clk.h=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0 2 ++
+>>>>  =C2=A0 2 files changed, 58 insertions(+), 32 deletions(-)
+>>>>
+>>>> diff --git a/drivers/clk/tegra/clk-pll.c b/drivers/clk/tegra/clk-pll.c
+>>>> index 1583f5fc992f..e52add2bbdbb 100644
+>>>> --- a/drivers/clk/tegra/clk-pll.c
+>>>> +++ b/drivers/clk/tegra/clk-pll.c
+>>>> @@ -1008,6 +1008,28 @@ static unsigned long clk_plle_recalc_rate(struc=
+t clk_hw *hw,
+>>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return rate;
+>>>>  =C2=A0 }
+>>>>  =C2=A0 +static void tegra_clk_pll_restore_context(struct clk_hw *hw)
+>>>> +{
+>>>> +=C2=A0=C2=A0=C2=A0 struct tegra_clk_pll *pll =3D to_clk_pll(hw);
+>>>> +=C2=A0=C2=A0=C2=A0 struct clk_hw *parent =3D clk_hw_get_parent(hw);
+>>>> +=C2=A0=C2=A0=C2=A0 unsigned long parent_rate =3D clk_hw_get_rate(pare=
+nt);
+>>>> +=C2=A0=C2=A0=C2=A0 unsigned long rate =3D clk_hw_get_rate(hw);
+>>>> +=C2=A0=C2=A0=C2=A0 u32 val;
+>>>> +
+>>>> +=C2=A0=C2=A0=C2=A0 if (clk_pll_is_enabled(hw))
+>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return;
+>>>> +
+>>>> +=C2=A0=C2=A0=C2=A0 if (pll->params->set_defaults)
+>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 pll->params->set_defaults(=
+pll);
+>>>> +
+>>>> +=C2=A0=C2=A0=C2=A0 clk_pll_set_rate(hw, rate, parent_rate);
+>>>> +
+>>>> +=C2=A0=C2=A0=C2=A0 if (!__clk_get_enable_count(hw->clk))
+>>> What about orphaned clocks? Is enable_count > 0 for them?
+>> There are no orphaned pll clocks.
+> Sorry, I meant the "clk_ignore_unused".
 
--- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
-According to speedtest.net: 11.9Mbps down 500kbps up
+clocks with CLK_IGNORE_UNUSED are taken care by clk driver.
+
+clk_disable_unused checks for clocks with this flag and if they are not=20
+enabled it will enable them.
+
+So by the time suspend happens enable_count is > 0
+
+
