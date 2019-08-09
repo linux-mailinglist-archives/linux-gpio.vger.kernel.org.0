@@ -2,336 +2,151 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id EC4F287CF9
-	for <lists+linux-gpio@lfdr.de>; Fri,  9 Aug 2019 16:43:19 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 92DB587CDB
+	for <lists+linux-gpio@lfdr.de>; Fri,  9 Aug 2019 16:40:52 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406607AbfHIOnT (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 9 Aug 2019 10:43:19 -0400
-Received: from mout.kundenserver.de ([212.227.126.131]:52963 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2406439AbfHIOnT (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 9 Aug 2019 10:43:19 -0400
-Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
- (mreue012 [212.227.15.129]) with ESMTPA (Nemesis) id
- 1MsJXG-1iBz611zvG-00tgzd; Fri, 09 Aug 2019 16:43:07 +0200
-From:   Arnd Bergmann <arnd@arndb.de>
-To:     soc@kernel.org
-Cc:     Vladimir Zapolskiy <vz@mleia.com>,
-        Sylvain Lemieux <slemieux.tyco@gmail.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Arnd Bergmann <arnd@arndb.de>,
+        id S1726261AbfHIOkv (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 9 Aug 2019 10:40:51 -0400
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:38410 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726140AbfHIOkv (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 9 Aug 2019 10:40:51 -0400
+Received: by mail-lf1-f67.google.com with SMTP id h28so69640284lfj.5
+        for <linux-gpio@vger.kernel.org>; Fri, 09 Aug 2019 07:40:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=wXxXOhEbXdsMl/G/C1HkrghsmnTlDveq2pniwsmkuSw=;
+        b=M9x1XR+g8vj12BKhOTf5BoK5l9EiegLyuQAa7ryt4d5B7FuTh67HNmX2CdYaKiAt8X
+         YBmXKe8K3wGekKRVk927ro0Y1Ir0wepXrfklB/ezn871qMJBvTS/ZGx6yxh3O6ngD+rz
+         C0h+CNdrJhnjt5YIBr2WujnHsfCpytuWBnTIla7Cz77oWeOt4HIOEzQPj2RnhOelAXXj
+         ZbVUe5BuzlkbiE19ho0EHatMAKnkCdTMXbW1QuhDC+qDuFoUO3kvNwRc8t6IO/feYOZe
+         aTr/HcuVQJoqMElB2AwuAi5St+UT8LiJ6Cd2ylABDvZHIFI5tN60Rw68n6SzspQiVt/d
+         Z69g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=wXxXOhEbXdsMl/G/C1HkrghsmnTlDveq2pniwsmkuSw=;
+        b=SWeWRrqcQo2Rv3/qcztAQYg6v7A5Rm8dgS+n507or8M3UdUPfENPE+IireZLvTMs7X
+         G0fcuL4tR3GsPk4qEze5KNumOn+4Hw2u+oOTi2fuJZUS7+CtgSZ7xrY/mdpIvQPlSOXR
+         tfeaSaFCIldEuaIlgEOz/9FlXYKiFegA404cPhaOjSNJgfxBlbNaMbtjtEmF+1T7li4e
+         f90ANic7UxNVEuoHy3v4Z9KmDrdcONHo60YQkzy6iqo1eTLsXOxtVpPYl/URg2RY6mk8
+         hAfMW65olfMAQwuaSXWiMG6WCrnF/sqaKoTw9V5/mR0Kjqn0cXuftnDuUEJNrjED2iI0
+         wN/w==
+X-Gm-Message-State: APjAAAWh7Sl2K6BXEhbGZnfoGPUt2e/+DFo7xBOcKscS5ZvcyzAho/iM
+        8hdn7/wvPgxhNtAzZuECynR/gWq/Ebo=
+X-Google-Smtp-Source: APXvYqzECjEkfwlQ61hdxRDYuFLmaNDXWpdqGOwXFS1iDyOyvathh0qLWdLh1pPQr3FJ/YDVx1Tk/g==
+X-Received: by 2002:ac2:46ce:: with SMTP id p14mr13042213lfo.39.1565361649420;
+        Fri, 09 Aug 2019 07:40:49 -0700 (PDT)
+Received: from genomnajs.ideon.se ([85.235.10.227])
+        by smtp.gmail.com with ESMTPSA id b1sm19517164ljj.26.2019.08.09.07.40.47
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Fri, 09 Aug 2019 07:40:48 -0700 (PDT)
+From:   Linus Walleij <linus.walleij@linaro.org>
+To:     linux-gpio@vger.kernel.org
+Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
         Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        linux-gpio@vger.kernel.org
-Subject: [PATCH v2 05/13] gpio: lpc32xx: allow building on non-lpc32xx targets
-Date:   Fri,  9 Aug 2019 16:40:31 +0200
-Message-Id: <20190809144043.476786-6-arnd@arndb.de>
-X-Mailer: git-send-email 2.20.0
-In-Reply-To: <20190809144043.476786-1-arnd@arndb.de>
-References: <20190809144043.476786-1-arnd@arndb.de>
+        Andrew Lunn <andrew@lunn.ch>,
+        Thierry Reding <treding@nvidia.com>
+Subject: [PATCH] gpio: tqmx86: Pass irqchip when adding gpiochip
+Date:   Fri,  9 Aug 2019 16:40:45 +0200
+Message-Id: <20190809144045.26018-1-linus.walleij@linaro.org>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:/mHIHcM4NUVHez/4l0Lm1IgoJwHRA/BTHyJw9ReNM2OTo0m9Aod
- /O1DdwbpKfucI3Vu/nSW1Mx3r/G6pP4GiPf7xoOOyxb9l8JP2dhlOHvHUFonOgsn9JgbFUI
- T76EjiBiCN+w5pUXFxPmuA4D41MDrJJmD43NC5aj6dGXMNSx4/AW43hTYxQpDXAQhKvu2XD
- EPib7hU9b0bM9hbXpermA==
-X-Spam-Flag: NO
-X-UI-Out-Filterresults: notjunk:1;V03:K0:e145JppYo8c=:btDTqUjP2xw07aCm+vPUBB
- gMV48+aRcWyxtdRnkWTZznJ9m1CbvklY9oCI+mcfAUiDqEtIFhueI/dbL4Utv0vtRz949Qa8l
- bUWwWSZi7x0AdA3Ss0f823OEsBMc2Y4Mw8Ryl7nEpBzVC9EONchO/UEekT5M/at/QhRwApz8x
- lT+GX7MZLa16AavB5Buju0zx3I17fW6FHxMsvub0k8kTM3vqTO3qonjsEvUtVPOISGMJlSoha
- 82CXkRVqtDXA9LzTyp62T2cpOl7pEz5ipPzk5CF++C16RqMEcG4uXQ414JE/9V4aa5OF6fPzt
- SawVmPBSigapi1xY6Wwgw26poYrQTIkem6fMthNUHsFdOxOvi7koB3o5uPwBBhMMpV2AuhBzy
- sszl3OCfOwijfOe/wXKFl0Gp7pZOn+T2dscCkcT8chKXy2A+kNt7INxSq9YcT5zHX0DSvmRxv
- RmO7Ul6N2eZ6sHgXWAaM4yyjXQww+tZM3U1UDiT6+JGI8iDu6MKuUYE/Rjl3tVwVHOECvw3af
- WmFf9uGE9ye5vbO5CkM8i0JZZr2ZS68/kHDHSvCHagr2nmmrvr2U1ZoBbCXJhCf9NVy8Volc1
- fEyk9e7GQRg07HjPgfD6l4xv6rKkiV7XACv7VqkjIy47W32Qy6PXtm/tITLLTq4516sJ55CSh
- blbkDgUtxk12GTfRtZFKnJKk+eAgBVriC/nKEsmXi0DvNlolCcQY/Tgxir1JoLQaaUa7h1X5J
- QPMa9E+NeJyV4/w3o3MrXFaomiRX8zsg6MYYpg==
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-The driver uses hardwire MMIO addresses instead of the data
-that is passed in device tree. Change it over to only
-hardcode the register offset values and allow compile-testing.
+We need to convert all old gpio irqchips to pass the irqchip
+setup along when adding the gpio_chip. For more info see
+drivers/gpio/TODO.
 
-Acked-by: Sylvain Lemieux <slemieux.tyco@gmail.com>
-Tested-by: Sylvain Lemieux <slemieux.tyco@gmail.com>
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+For chained irqchips this is a pretty straight-forward
+conversion.
+
+Cc: Andrew Lunn <andrew@lunn.ch>
+Cc: Thierry Reding <treding@nvidia.com>
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
 ---
- arch/arm/configs/lpc32xx_defconfig |   1 +
- drivers/gpio/Kconfig               |   7 ++
- drivers/gpio/Makefile              |   2 +-
- drivers/gpio/gpio-lpc32xx.c        | 118 +++++++++++++++++------------
- 4 files changed, 77 insertions(+), 51 deletions(-)
+ drivers/gpio/gpio-tqmx86.c | 41 ++++++++++++++++++++++----------------
+ 1 file changed, 24 insertions(+), 17 deletions(-)
 
-diff --git a/arch/arm/configs/lpc32xx_defconfig b/arch/arm/configs/lpc32xx_defconfig
-index 0cdc6c7974b3..3772d5a8975a 100644
---- a/arch/arm/configs/lpc32xx_defconfig
-+++ b/arch/arm/configs/lpc32xx_defconfig
-@@ -93,6 +93,7 @@ CONFIG_SERIAL_HS_LPC32XX_CONSOLE=y
- # CONFIG_HW_RANDOM is not set
- CONFIG_I2C_CHARDEV=y
- CONFIG_I2C_PNX=y
-+CONFIG_GPIO_LPC32XX=y
- CONFIG_SPI=y
- CONFIG_SPI_PL022=y
- CONFIG_GPIO_SYSFS=y
-diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
-index bb13c266c329..8b40a578963c 100644
---- a/drivers/gpio/Kconfig
-+++ b/drivers/gpio/Kconfig
-@@ -311,6 +311,13 @@ config GPIO_LPC18XX
- 	  Select this option to enable GPIO driver for
- 	  NXP LPC18XX/43XX devices.
+diff --git a/drivers/gpio/gpio-tqmx86.c b/drivers/gpio/gpio-tqmx86.c
+index d5880db7f9d4..07050cdbadb9 100644
+--- a/drivers/gpio/gpio-tqmx86.c
++++ b/drivers/gpio/gpio-tqmx86.c
+@@ -219,6 +219,7 @@ static int tqmx86_gpio_probe(struct platform_device *pdev)
+ 	struct device *dev = &pdev->dev;
+ 	struct tqmx86_gpio_data *gpio;
+ 	struct gpio_chip *chip;
++	struct gpio_irq_chip *girq;
+ 	void __iomem *io_base;
+ 	struct resource *res;
+ 	int ret, irq;
+@@ -264,12 +265,6 @@ static int tqmx86_gpio_probe(struct platform_device *pdev)
  
-+config GPIO_LPC32XX
-+	tristate "NXP LPC32XX GPIO support"
-+	depends on OF_GPIO && (ARCH_LPC32XX || COMPILE_TEST)
-+	help
-+	  Select this option to enable GPIO driver for
-+	  NXP LPC32XX devices.
-+
- config GPIO_LYNXPOINT
- 	tristate "Intel Lynxpoint GPIO support"
- 	depends on ACPI && X86
-diff --git a/drivers/gpio/Makefile b/drivers/gpio/Makefile
-index a4e91175c708..87d659ae95eb 100644
---- a/drivers/gpio/Makefile
-+++ b/drivers/gpio/Makefile
-@@ -74,7 +74,7 @@ obj-$(CONFIG_GPIO_LP3943)		+= gpio-lp3943.o
- obj-$(CONFIG_GPIO_LP873X)		+= gpio-lp873x.o
- obj-$(CONFIG_GPIO_LP87565)		+= gpio-lp87565.o
- obj-$(CONFIG_GPIO_LPC18XX)		+= gpio-lpc18xx.o
--obj-$(CONFIG_ARCH_LPC32XX)		+= gpio-lpc32xx.o
-+obj-$(CONFIG_GPIO_LPC32XX)		+= gpio-lpc32xx.o
- obj-$(CONFIG_GPIO_LYNXPOINT)		+= gpio-lynxpoint.o
- obj-$(CONFIG_GPIO_MADERA)		+= gpio-madera.o
- obj-$(CONFIG_GPIO_MAX3191X)		+= gpio-max3191x.o
-diff --git a/drivers/gpio/gpio-lpc32xx.c b/drivers/gpio/gpio-lpc32xx.c
-index 24885b3db3d5..4e626c4235c2 100644
---- a/drivers/gpio/gpio-lpc32xx.c
-+++ b/drivers/gpio/gpio-lpc32xx.c
-@@ -16,36 +16,33 @@
- #include <linux/platform_device.h>
- #include <linux/module.h>
+ 	pm_runtime_enable(&pdev->dev);
  
--#include <mach/hardware.h>
--#include <mach/platform.h>
+-	ret = devm_gpiochip_add_data(dev, chip, gpio);
+-	if (ret) {
+-		dev_err(dev, "Could not register GPIO chip\n");
+-		goto out_pm_dis;
+-	}
 -
--#define LPC32XX_GPIO_P3_INP_STATE		_GPREG(0x000)
--#define LPC32XX_GPIO_P3_OUTP_SET		_GPREG(0x004)
--#define LPC32XX_GPIO_P3_OUTP_CLR		_GPREG(0x008)
--#define LPC32XX_GPIO_P3_OUTP_STATE		_GPREG(0x00C)
--#define LPC32XX_GPIO_P2_DIR_SET			_GPREG(0x010)
--#define LPC32XX_GPIO_P2_DIR_CLR			_GPREG(0x014)
--#define LPC32XX_GPIO_P2_DIR_STATE		_GPREG(0x018)
--#define LPC32XX_GPIO_P2_INP_STATE		_GPREG(0x01C)
--#define LPC32XX_GPIO_P2_OUTP_SET		_GPREG(0x020)
--#define LPC32XX_GPIO_P2_OUTP_CLR		_GPREG(0x024)
--#define LPC32XX_GPIO_P2_MUX_SET			_GPREG(0x028)
--#define LPC32XX_GPIO_P2_MUX_CLR			_GPREG(0x02C)
--#define LPC32XX_GPIO_P2_MUX_STATE		_GPREG(0x030)
--#define LPC32XX_GPIO_P0_INP_STATE		_GPREG(0x040)
--#define LPC32XX_GPIO_P0_OUTP_SET		_GPREG(0x044)
--#define LPC32XX_GPIO_P0_OUTP_CLR		_GPREG(0x048)
--#define LPC32XX_GPIO_P0_OUTP_STATE		_GPREG(0x04C)
--#define LPC32XX_GPIO_P0_DIR_SET			_GPREG(0x050)
--#define LPC32XX_GPIO_P0_DIR_CLR			_GPREG(0x054)
--#define LPC32XX_GPIO_P0_DIR_STATE		_GPREG(0x058)
--#define LPC32XX_GPIO_P1_INP_STATE		_GPREG(0x060)
--#define LPC32XX_GPIO_P1_OUTP_SET		_GPREG(0x064)
--#define LPC32XX_GPIO_P1_OUTP_CLR		_GPREG(0x068)
--#define LPC32XX_GPIO_P1_OUTP_STATE		_GPREG(0x06C)
--#define LPC32XX_GPIO_P1_DIR_SET			_GPREG(0x070)
--#define LPC32XX_GPIO_P1_DIR_CLR			_GPREG(0x074)
--#define LPC32XX_GPIO_P1_DIR_STATE		_GPREG(0x078)
-+#define LPC32XX_GPIO_P3_INP_STATE		(0x000)
-+#define LPC32XX_GPIO_P3_OUTP_SET		(0x004)
-+#define LPC32XX_GPIO_P3_OUTP_CLR		(0x008)
-+#define LPC32XX_GPIO_P3_OUTP_STATE		(0x00C)
-+#define LPC32XX_GPIO_P2_DIR_SET			(0x010)
-+#define LPC32XX_GPIO_P2_DIR_CLR			(0x014)
-+#define LPC32XX_GPIO_P2_DIR_STATE		(0x018)
-+#define LPC32XX_GPIO_P2_INP_STATE		(0x01C)
-+#define LPC32XX_GPIO_P2_OUTP_SET		(0x020)
-+#define LPC32XX_GPIO_P2_OUTP_CLR		(0x024)
-+#define LPC32XX_GPIO_P2_MUX_SET			(0x028)
-+#define LPC32XX_GPIO_P2_MUX_CLR			(0x02C)
-+#define LPC32XX_GPIO_P2_MUX_STATE		(0x030)
-+#define LPC32XX_GPIO_P0_INP_STATE		(0x040)
-+#define LPC32XX_GPIO_P0_OUTP_SET		(0x044)
-+#define LPC32XX_GPIO_P0_OUTP_CLR		(0x048)
-+#define LPC32XX_GPIO_P0_OUTP_STATE		(0x04C)
-+#define LPC32XX_GPIO_P0_DIR_SET			(0x050)
-+#define LPC32XX_GPIO_P0_DIR_CLR			(0x054)
-+#define LPC32XX_GPIO_P0_DIR_STATE		(0x058)
-+#define LPC32XX_GPIO_P1_INP_STATE		(0x060)
-+#define LPC32XX_GPIO_P1_OUTP_SET		(0x064)
-+#define LPC32XX_GPIO_P1_OUTP_CLR		(0x068)
-+#define LPC32XX_GPIO_P1_OUTP_STATE		(0x06C)
-+#define LPC32XX_GPIO_P1_DIR_SET			(0x070)
-+#define LPC32XX_GPIO_P1_DIR_CLR			(0x074)
-+#define LPC32XX_GPIO_P1_DIR_STATE		(0x078)
+ 	if (irq) {
+ 		struct irq_chip *irq_chip = &gpio->irq_chip;
+ 		u8 irq_status;
+@@ -287,23 +282,35 @@ static int tqmx86_gpio_probe(struct platform_device *pdev)
+ 		irq_status = tqmx86_gpio_read(gpio, TQMX86_GPIIS);
+ 		tqmx86_gpio_write(gpio, irq_status, TQMX86_GPIIS);
  
- #define GPIO012_PIN_TO_BIT(x)			(1 << (x))
- #define GPIO3_PIN_TO_BIT(x)			(1 << ((x) + 25))
-@@ -72,12 +69,12 @@
- #define LPC32XX_GPO_P3_GRP	(LPC32XX_GPI_P3_GRP + LPC32XX_GPI_P3_MAX)
- 
- struct gpio_regs {
--	void __iomem *inp_state;
--	void __iomem *outp_state;
--	void __iomem *outp_set;
--	void __iomem *outp_clr;
--	void __iomem *dir_set;
--	void __iomem *dir_clr;
-+	unsigned long inp_state;
-+	unsigned long outp_state;
-+	unsigned long outp_set;
-+	unsigned long outp_clr;
-+	unsigned long dir_set;
-+	unsigned long dir_clr;
- };
- 
- /*
-@@ -165,16 +162,27 @@ static struct gpio_regs gpio_grp_regs_p3 = {
- struct lpc32xx_gpio_chip {
- 	struct gpio_chip	chip;
- 	struct gpio_regs	*gpio_grp;
-+	void __iomem		*reg_base;
- };
- 
-+static inline u32 gpreg_read(struct lpc32xx_gpio_chip *group, unsigned long offset)
-+{
-+	return __raw_readl(group->reg_base + offset);
-+}
-+
-+static inline void gpreg_write(struct lpc32xx_gpio_chip *group, u32 val, unsigned long offset)
-+{
-+	__raw_writel(val, group->reg_base + offset);
-+}
-+
- static void __set_gpio_dir_p012(struct lpc32xx_gpio_chip *group,
- 	unsigned pin, int input)
- {
- 	if (input)
--		__raw_writel(GPIO012_PIN_TO_BIT(pin),
-+		gpreg_write(group, GPIO012_PIN_TO_BIT(pin),
- 			group->gpio_grp->dir_clr);
- 	else
--		__raw_writel(GPIO012_PIN_TO_BIT(pin),
-+		gpreg_write(group, GPIO012_PIN_TO_BIT(pin),
- 			group->gpio_grp->dir_set);
- }
- 
-@@ -184,19 +192,19 @@ static void __set_gpio_dir_p3(struct lpc32xx_gpio_chip *group,
- 	u32 u = GPIO3_PIN_TO_BIT(pin);
- 
- 	if (input)
--		__raw_writel(u, group->gpio_grp->dir_clr);
-+		gpreg_write(group, u, group->gpio_grp->dir_clr);
- 	else
--		__raw_writel(u, group->gpio_grp->dir_set);
-+		gpreg_write(group, u, group->gpio_grp->dir_set);
- }
- 
- static void __set_gpio_level_p012(struct lpc32xx_gpio_chip *group,
- 	unsigned pin, int high)
- {
- 	if (high)
--		__raw_writel(GPIO012_PIN_TO_BIT(pin),
-+		gpreg_write(group, GPIO012_PIN_TO_BIT(pin),
- 			group->gpio_grp->outp_set);
- 	else
--		__raw_writel(GPIO012_PIN_TO_BIT(pin),
-+		gpreg_write(group, GPIO012_PIN_TO_BIT(pin),
- 			group->gpio_grp->outp_clr);
- }
- 
-@@ -206,31 +214,31 @@ static void __set_gpio_level_p3(struct lpc32xx_gpio_chip *group,
- 	u32 u = GPIO3_PIN_TO_BIT(pin);
- 
- 	if (high)
--		__raw_writel(u, group->gpio_grp->outp_set);
-+		gpreg_write(group, u, group->gpio_grp->outp_set);
- 	else
--		__raw_writel(u, group->gpio_grp->outp_clr);
-+		gpreg_write(group, u, group->gpio_grp->outp_clr);
- }
- 
- static void __set_gpo_level_p3(struct lpc32xx_gpio_chip *group,
- 	unsigned pin, int high)
- {
- 	if (high)
--		__raw_writel(GPO3_PIN_TO_BIT(pin), group->gpio_grp->outp_set);
-+		gpreg_write(group, GPO3_PIN_TO_BIT(pin), group->gpio_grp->outp_set);
- 	else
--		__raw_writel(GPO3_PIN_TO_BIT(pin), group->gpio_grp->outp_clr);
-+		gpreg_write(group, GPO3_PIN_TO_BIT(pin), group->gpio_grp->outp_clr);
- }
- 
- static int __get_gpio_state_p012(struct lpc32xx_gpio_chip *group,
- 	unsigned pin)
- {
--	return GPIO012_PIN_IN_SEL(__raw_readl(group->gpio_grp->inp_state),
-+	return GPIO012_PIN_IN_SEL(gpreg_read(group, group->gpio_grp->inp_state),
- 		pin);
- }
- 
- static int __get_gpio_state_p3(struct lpc32xx_gpio_chip *group,
- 	unsigned pin)
- {
--	int state = __raw_readl(group->gpio_grp->inp_state);
-+	int state = gpreg_read(group, group->gpio_grp->inp_state);
- 
- 	/*
- 	 * P3 GPIO pin input mapping is not contiguous, GPIOP3-0..4 is mapped
-@@ -242,13 +250,13 @@ static int __get_gpio_state_p3(struct lpc32xx_gpio_chip *group,
- static int __get_gpi_state_p3(struct lpc32xx_gpio_chip *group,
- 	unsigned pin)
- {
--	return GPI3_PIN_IN_SEL(__raw_readl(group->gpio_grp->inp_state), pin);
-+	return GPI3_PIN_IN_SEL(gpreg_read(group, group->gpio_grp->inp_state), pin);
- }
- 
- static int __get_gpo_state_p3(struct lpc32xx_gpio_chip *group,
- 	unsigned pin)
- {
--	return GPO3_PIN_IN_SEL(__raw_readl(group->gpio_grp->outp_state), pin);
-+	return GPO3_PIN_IN_SEL(gpreg_read(group, group->gpio_grp->outp_state), pin);
- }
- 
- /*
-@@ -497,12 +505,18 @@ static int lpc32xx_of_xlate(struct gpio_chip *gc,
- static int lpc32xx_gpio_probe(struct platform_device *pdev)
- {
- 	int i;
-+	void __iomem *reg_base;
-+
-+	reg_base = devm_platform_ioremap_resource(pdev, 0);
-+	if (IS_ERR(reg_base))
-+		return PTR_ERR(reg_base);
- 
- 	for (i = 0; i < ARRAY_SIZE(lpc32xx_gpiochip); i++) {
- 		if (pdev->dev.of_node) {
- 			lpc32xx_gpiochip[i].chip.of_xlate = lpc32xx_of_xlate;
- 			lpc32xx_gpiochip[i].chip.of_gpio_n_cells = 3;
- 			lpc32xx_gpiochip[i].chip.of_node = pdev->dev.of_node;
-+			lpc32xx_gpiochip[i].reg_base = reg_base;
+-		ret = gpiochip_irqchip_add(chip, irq_chip,
+-					   0, handle_simple_irq,
+-					   IRQ_TYPE_EDGE_BOTH);
+-		if (ret) {
+-			dev_err(dev, "Could not add irq chip\n");
++		girq = &chip->irq;
++		girq->chip = irq_chip;
++		girq->parent_handler = tqmx86_gpio_irq_handler;
++		girq->num_parents = 1;
++		girq->parents = devm_kcalloc(&pdev->dev, 1,
++					     sizeof(*girq->parents),
++					     GFP_KERNEL);
++		if (!girq->parents) {
++			ret = -ENOMEM;
+ 			goto out_pm_dis;
  		}
- 		devm_gpiochip_add_data(&pdev->dev, &lpc32xx_gpiochip[i].chip,
- 				  &lpc32xx_gpiochip[i]);
-@@ -527,3 +541,7 @@ static struct platform_driver lpc32xx_gpio_driver = {
- };
++		girq->parents[0] = irq;
++		girq->default_type = IRQ_TYPE_NONE;
++		girq->handler = handle_simple_irq;
++	}
  
- module_platform_driver(lpc32xx_gpio_driver);
-+
-+MODULE_AUTHOR("Kevin Wells <kevin.wells@nxp.com>");
-+MODULE_LICENSE("GPL");
-+MODULE_DESCRIPTION("GPIO driver for LPC32xx SoC");
+-		gpiochip_set_chained_irqchip(chip, irq_chip,
+-					     irq, tqmx86_gpio_irq_handler);
++	ret = devm_gpiochip_add_data(dev, chip, gpio);
++	if (ret) {
++		dev_err(dev, "Could not register GPIO chip\n");
++		goto out_pm_dis;
+ 	}
+ 
+ 	/* Only GPIOs 4-7 are valid for interrupts. Clear the others */
+-	clear_bit(0, chip->irq.valid_mask);
+-	clear_bit(1, chip->irq.valid_mask);
+-	clear_bit(2, chip->irq.valid_mask);
+-	clear_bit(3, chip->irq.valid_mask);
++	if (irq) {
++		clear_bit(0, girq->valid_mask);
++		clear_bit(1, girq->valid_mask);
++		clear_bit(2, girq->valid_mask);
++		clear_bit(3, girq->valid_mask);
++	}
+ 
+ 	dev_info(dev, "GPIO functionality initialized with %d pins\n",
+ 		 chip->ngpio);
 -- 
-2.20.0
+2.21.0
 
