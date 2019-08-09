@@ -2,149 +2,115 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 5EE1487C5E
-	for <lists+linux-gpio@lfdr.de>; Fri,  9 Aug 2019 16:11:23 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A05FF87C7A
+	for <lists+linux-gpio@lfdr.de>; Fri,  9 Aug 2019 16:19:03 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726168AbfHIOLW (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 9 Aug 2019 10:11:22 -0400
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:46794 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726157AbfHIOLW (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 9 Aug 2019 10:11:22 -0400
-Received: by mail-lf1-f68.google.com with SMTP id n19so1214686lfe.13
-        for <linux-gpio@vger.kernel.org>; Fri, 09 Aug 2019 07:11:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=1zv5zaIK+W734WPRwgbyvqdVX6u8ERDo9sAQWiOXOxo=;
-        b=ZhH6yWnE8a/LL7jLmWfQQs7EbO5vXgeFlRxovWGNo4xcHVwuN45bkmfamj96Uutq/L
-         nt9CR2A7hq9k8vFlTUXAGv0nr+n/IRmQ91X/6yY5DbzlyGRa095hUsyDAXtSvnljgi+R
-         TCmDaCQ0Dw7+UxP5VnpB83JiIVrDeKaLyHTy3SeWzqjQMEswiEibJ8iTqlvS31iODUOm
-         d6RlWJVWW4vg8aa2mOw9OwviBkh6ey5qJZcfhpPGhpM3UVrN+f3aSwVLW1A4yNDCV296
-         WOgq4+vpMKxxcdpDoe/RRCRblfTujxCSHfc+q5RhwAnxZJKrc2O9RTtiiaMEv4VMBMv/
-         +JXQ==
+        id S2407061AbfHIOTC convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-gpio@lfdr.de>); Fri, 9 Aug 2019 10:19:02 -0400
+Received: from mail-qk1-f194.google.com ([209.85.222.194]:41937 "EHLO
+        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726342AbfHIOTB (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 9 Aug 2019 10:19:01 -0400
+Received: by mail-qk1-f194.google.com with SMTP id g17so1058726qkk.8;
+        Fri, 09 Aug 2019 07:19:00 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=1zv5zaIK+W734WPRwgbyvqdVX6u8ERDo9sAQWiOXOxo=;
-        b=JK+l8s8RBR2TGsfeprUlDsqRmgx435XQPThGOxc7yloDLR83m5KO04Y/LvgESg/UQZ
-         NvF3iSJ9jpHa0bjCuQrk43wMN95fzf1sOYVJks9iJ6uYaJS2FvwhRNx3B6CjOh+cpJ9h
-         IUl6eJpJjTr6n9FAZCP3mZafazBAyYKTMDniwllT7RA6ITi2ukOqcn/lwHjrai4I3Z3y
-         ZnKJfGc5trVFgvrVugTZtKYa/rTxnk+tHOlFzOra3yO5K2eETNJKlQogfCEey6KVs/pu
-         YSSoesR5OxkSi+TvY8cS7WMBhQTyUNX/SQ9SERTbVdNDr/FQveF1JZQHAw116LulzsyC
-         UUcQ==
-X-Gm-Message-State: APjAAAVquBfOvW1ulazC1RTVAPxkXChyum0Peh6junNeKEnFYs4gqW6e
-        4OooeUNW1L/ToY33z01jw6vdD/kbLNY=
-X-Google-Smtp-Source: APXvYqyz4ZMK+lA5GCA2GiWLO2Vdmb+6zVBa2dPFViVZVr8ADqoQBupD8iVUpNzFHMnmQS4le1KM2A==
-X-Received: by 2002:a19:c887:: with SMTP id y129mr13047645lff.73.1565359879778;
-        Fri, 09 Aug 2019 07:11:19 -0700 (PDT)
-Received: from genomnajs.ideon.se ([85.235.10.227])
-        by smtp.gmail.com with ESMTPSA id t8sm2119091lfk.61.2019.08.09.07.11.18
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Fri, 09 Aug 2019 07:11:18 -0700 (PDT)
-From:   Linus Walleij <linus.walleij@linaro.org>
-To:     linux-gpio@vger.kernel.org
-Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        =?UTF-8?q?Ren=C3=A9=20van=20Dorst?= <opensource@vdorst.com>,
-        Greg Ungerer <gerg@kernel.org>,
-        Nicholas Mc Guire <hofrat@osadl.org>,
-        Sergio Paracuellos <sergio.paracuellos@gmail.com>,
-        Thierry Reding <treding@nvidia.com>
-Subject: [PATCH] gpio: mt7621: Pass irqchip when adding gpiochip
-Date:   Fri,  9 Aug 2019 16:11:16 +0200
-Message-Id: <20190809141116.16403-1-linus.walleij@linaro.org>
-X-Mailer: git-send-email 2.21.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=TEfOzDxFX7gDpnqMzrlBGrH3Syt9gXqMdj4yqEybIZo=;
+        b=QXHfe+5F2OOhd2CElNQM4DMdlNJ4IJl8fINRHiW3jKlocffCMbvetrzZAqZj73zlmj
+         KWvFoVIYkOHvDj1DaYKbfsuCvroIUYFb3KL+M9mkFDlElbx/WQrXDrEmoD9TEU4aBY4V
+         KOYSTDW4jBYl1Q1ouhbunaHKhuxt1uFwhly4aynTDR3/pFoatrZAGcllqAX3imwjf7rg
+         Zvptpq+bditHfN3KQpZl7biqacUzCNzWVHXcWNc47zgDNuTW5Ddvc7FolbuGOSKoYWHe
+         U95f/JthiUb4jQ8Awib8m4ByohBD8ZbF9S/ymEA2OIxhbWwKX69SfaGeAtETxlf7AIPX
+         4bTg==
+X-Gm-Message-State: APjAAAULwbc9OKX1TGlOPd/2K493GXivn5Vz3PzAouoEWlMHdClUpahm
+        1/NNzHwi7xx3joyV/qXpaBZpTVA/KRvGrriqZOs=
+X-Google-Smtp-Source: APXvYqwdOIIhs7aYJbryOrEuz/1xQSAZBUfsTj7jxd0qGAmaTDwXDUSNUG1kGVNfZ5fjxOBFSW0skDDZmykp0YbSLSg=
+X-Received: by 2002:a37:984:: with SMTP id 126mr12380366qkj.3.1565360340175;
+ Fri, 09 Aug 2019 07:19:00 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <20190731195713.3150463-1-arnd@arndb.de> <20190731195713.3150463-6-arnd@arndb.de>
+ <CAMpxmJWFfT_vrDas2fzW5tnxskk9kmgHQpGnGQ-_C20UaS_jhA@mail.gmail.com>
+ <CAK8P3a3KpKvRKXY72toE_5eAp4ER_Mre0GX3guwGeQgsY2HX+g@mail.gmail.com> <CAMpxmJUdSnp0QNwWB0rJ1opFrYs9R2KSVS64Tz8X5GDYAJYLpg@mail.gmail.com>
+In-Reply-To: <CAMpxmJUdSnp0QNwWB0rJ1opFrYs9R2KSVS64Tz8X5GDYAJYLpg@mail.gmail.com>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Fri, 9 Aug 2019 16:18:43 +0200
+Message-ID: <CAK8P3a1NT_yoP39y52oJTMsFCb96-bRyuMm=+5HPPsxyq0fJDA@mail.gmail.com>
+Subject: Re: [PATCH 05/14] gpio: lpc32xx: allow building on non-lpc32xx targets
+To:     Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Cc:     soc@kernel.org, arm-soc <linux-arm-kernel@lists.infradead.org>,
+        Vladimir Zapolskiy <vz@mleia.com>,
+        Sylvain Lemieux <slemieux.tyco@gmail.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Gregory Clement <gregory.clement@bootlin.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        Guenter Roeck <linux@roeck-us.net>,
+        linux-gpio <linux-gpio@vger.kernel.org>,
+        netdev <netdev@vger.kernel.org>, linux-serial@vger.kernel.org,
+        USB list <linux-usb@vger.kernel.org>,
+        LINUXWATCHDOG <linux-watchdog@vger.kernel.org>,
+        Lee Jones <lee.jones@linaro.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-We need to convert all old gpio irqchips to pass the irqchip
-setup along when adding the gpio_chip. For more info see
-drivers/gpio/TODO.
+On Mon, Aug 5, 2019 at 10:28 AM Bartosz Golaszewski
+<bgolaszewski@baylibre.com> wrote:
+>
+> pt., 2 sie 2019 o 13:20 Arnd Bergmann <arnd@arndb.de> napisał(a):
+> >
+> > On Fri, Aug 2, 2019 at 9:10 AM Bartosz Golaszewski
+> > <bgolaszewski@baylibre.com> wrote:
+> > > > -#include <mach/hardware.h>
+> > > > -#include <mach/platform.h>
+> > > > +#define _GPREG(x)                              (x)
+> > >
+> > > What purpose does this macro serve?
+> > >
+> > > >
+> > > >  #define LPC32XX_GPIO_P3_INP_STATE              _GPREG(0x000)
+> > > >  #define LPC32XX_GPIO_P3_OUTP_SET               _GPREG(0x004)
+> >
+> > In the existing code base, this macro converts a register offset to
+> > an __iomem pointer for a gpio register. I changed the definition of the
+> > macro here to keep the number of changes down, but I it's just
+> > as easy to remove it if you prefer.
+>
+> Could you just add a comment so that it's clear at first glance?
 
-For chained irqchips this is a pretty straight-forward
-conversion.
+I ended up removing the macro. With the change to keep the reg_base as
+a struct member, this ends up being a relatively small change, and it's
+more straightforward that way.
 
-This driver requests the IRQ directly in the driver so it
-differs a bit from the others.
+> > > > @@ -167,14 +166,26 @@ struct lpc32xx_gpio_chip {
+> > > >         struct gpio_regs        *gpio_grp;
+> > > >  };
+> > > >
+> > > > +void __iomem *gpio_reg_base;
+> > >
+> > > Any reason why this can't be made part of struct lpc32xx_gpio_chip?
+> >
+> > It could be, but it's the same for each instance, and not known until
+> > probe() time, so the same pointer would need to be copied into each
+> > instance that is otherwise read-only.
+> >
+> > Let me know if you'd prefer me to rework these two things or leave
+> > them as they are.
+>
+> I would prefer not to have global state in the driver, let's just
+> store the pointer in the data passed to gpiochip_add_data().
 
-Cc: René van Dorst <opensource@vdorst.com>
-Cc: Greg Ungerer <gerg@kernel.org>
-Cc: Nicholas Mc Guire <hofrat@osadl.org>
-Cc: Sergio Paracuellos <sergio.paracuellos@gmail.com>
-Cc: Thierry Reding <treding@nvidia.com>
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
----
- drivers/gpio/gpio-mt7621.c | 33 +++++++++++++++++----------------
- 1 file changed, 17 insertions(+), 16 deletions(-)
+Ok, done.
 
-diff --git a/drivers/gpio/gpio-mt7621.c b/drivers/gpio/gpio-mt7621.c
-index 79654fb2e50f..d1d785f983a7 100644
---- a/drivers/gpio/gpio-mt7621.c
-+++ b/drivers/gpio/gpio-mt7621.c
-@@ -241,13 +241,6 @@ mediatek_gpio_bank_probe(struct device *dev,
- 	if (!rg->chip.label)
- 		return -ENOMEM;
- 
--	ret = devm_gpiochip_add_data(dev, &rg->chip, mtk);
--	if (ret < 0) {
--		dev_err(dev, "Could not register gpio %d, ret=%d\n",
--			rg->chip.ngpio, ret);
--		return ret;
--	}
--
- 	rg->irq_chip.name = dev_name(dev);
- 	rg->irq_chip.parent_device = dev;
- 	rg->irq_chip.irq_unmask = mediatek_gpio_irq_unmask;
-@@ -256,8 +249,10 @@ mediatek_gpio_bank_probe(struct device *dev,
- 	rg->irq_chip.irq_set_type = mediatek_gpio_irq_type;
- 
- 	if (mtk->gpio_irq) {
-+		struct gpio_irq_chip *girq;
-+
- 		/*
--		 * Manually request the irq here instead of passing
-+		 * Directly request the irq here instead of passing
- 		 * a flow-handler to gpiochip_set_chained_irqchip,
- 		 * because the irq is shared.
- 		 */
-@@ -271,15 +266,21 @@ mediatek_gpio_bank_probe(struct device *dev,
- 			return ret;
- 		}
- 
--		ret = gpiochip_irqchip_add(&rg->chip, &rg->irq_chip,
--					   0, handle_simple_irq, IRQ_TYPE_NONE);
--		if (ret) {
--			dev_err(dev, "failed to add gpiochip_irqchip\n");
--			return ret;
--		}
-+		girq = &rg->chip.irq;
-+		girq->chip = &rg->irq_chip;
-+		/* This will let us handle the parent IRQ in the driver */
-+		girq->parent_handler = NULL;
-+		girq->num_parents = 0;
-+		girq->parents = NULL;
-+		girq->default_type = IRQ_TYPE_NONE;
-+		girq->handler = handle_simple_irq;
-+	}
- 
--		gpiochip_set_chained_irqchip(&rg->chip, &rg->irq_chip,
--					     mtk->gpio_irq, NULL);
-+	ret = devm_gpiochip_add_data(dev, &rg->chip, mtk);
-+	if (ret < 0) {
-+		dev_err(dev, "Could not register gpio %d, ret=%d\n",
-+			rg->chip.ngpio, ret);
-+		return ret;
- 	}
- 
- 	/* set polarity to low for all gpios */
--- 
-2.21.0
-
+       Arnd
