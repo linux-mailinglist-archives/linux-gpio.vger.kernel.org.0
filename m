@@ -2,78 +2,115 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 913DB87AAF
-	for <lists+linux-gpio@lfdr.de>; Fri,  9 Aug 2019 14:58:24 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E1F4287AE4
+	for <lists+linux-gpio@lfdr.de>; Fri,  9 Aug 2019 15:13:30 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726267AbfHIM6X (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 9 Aug 2019 08:58:23 -0400
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:44758 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726157AbfHIM6X (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 9 Aug 2019 08:58:23 -0400
-Received: by mail-lj1-f196.google.com with SMTP id k18so91977470ljc.11
-        for <linux-gpio@vger.kernel.org>; Fri, 09 Aug 2019 05:58:22 -0700 (PDT)
+        id S2406824AbfHINN0 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 9 Aug 2019 09:13:26 -0400
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:45574 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726157AbfHINNZ (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 9 Aug 2019 09:13:25 -0400
+Received: by mail-lf1-f67.google.com with SMTP id a30so6430752lfk.12;
+        Fri, 09 Aug 2019 06:13:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=XwaWKZDSHe1I80bisXSNJIWzL8wl2xq2VTsncPVHBWc=;
-        b=jejH5IZKgO83L1vJddIFvE9i0jmZSe4vpPmRc28zRlTdvQPaHp/r1WjenaYnE9aZbQ
-         oY+1K/cThpLcCQfio569wohtcIhS9ouwM+Ci3hxdnvo3W6JDvDpDSEdJll77TLzEfJFB
-         OuBSKDozxOk5Yk6mG+ULAfYmfnJRwwYRutWncwjC3S5Xi6g6E9ExAWK2fSeDxToe69MA
-         Drq3C1+DESnptqE5nMLNN/miYSZrZtk6TvyU5Ibq9KEow9LxsGc55sVXTyZS1G2p6223
-         AfErguYqVQXbdxxgYgyhGtYvl/abP8eL/ziP30KVbYs4maLMD6uTuOl6FI9kUqg6HJ/y
-         K7oA==
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=R/qbfybNTawBfvTZEySh0cjltm2Kq0tph5R6n428udM=;
+        b=GlblEZrkT23FfH3YxwgAttCw6xMNP7KmjYM4WXbspvsjFKfa2jnMBD9iz9n/359YcB
+         mh1ba0d5xf1zHxpLYacNsJ3P90ZN+296q6JzVff86xucaYj/+8z6O4lg6Lk8RQX1Ftfi
+         ISE1PqIr2YzS82esJXELAiYZhczT1wMe71LlZOhk/PnPHjZ2R5k3+3XQCEEg4zOWHdHr
+         md4eFoFMjx17VGzybjmylCG7pkgn06aca+wnsBRr6jiVDdjPDUmN+4APIHiT9poKviyF
+         oMEBxX3477w1dW3K+x6B52wSS/8CkF3eQtIrPf+jvad1ZuOdshSYXAMuhyVGzBm78tth
+         3qsA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=XwaWKZDSHe1I80bisXSNJIWzL8wl2xq2VTsncPVHBWc=;
-        b=Jb0ahxw0mPHs+cENhz9Jiof0qvmszOvLBdN/BFQlNZTKRg9jH1G6pMoMAlT0T9vedc
-         EMsNT2Fmtlvu205ZzpfbBydeHiHZxULPFbd6mLfeZpZdNh2B420agYLEsoFKPn5Bbx0N
-         +ikTGyoRyckrwhgEgjEbgv1EbG9ZscWllGbiKjKrarsdhJC8qM/Kn2idlSNOZqjXrtYF
-         kP+H/XOqZ0nCDTQqngxtocRLXpSvAQHjEN3fOsSxzTw4R1DLhpiZr27HulbyocNnaYdo
-         pXAdI4hbxcrSSPouu2HRKgNTkVwwZt7/xds0n48TgTb2C0x7TX7+xwXexHGLuvkKCZr2
-         AvKQ==
-X-Gm-Message-State: APjAAAX8N/59X1gPavuc0glrCBwVIUIxj4x3jrlz8iatZZYfGDPPfLaP
-        YKMWaZRDHLXuLhBgkXH6tWntOpa1wuz0U1BhMVkc6aZATog=
-X-Google-Smtp-Source: APXvYqwZHxPel8iWoW+RfFZDeMlpptWObrR53+YONbLN3cqDPVU/TMo1+HinN4DN4snd6v6pZVfqihGTcgZDp1cnLag=
-X-Received: by 2002:a2e:9048:: with SMTP id n8mr11337170ljg.37.1565355501575;
- Fri, 09 Aug 2019 05:58:21 -0700 (PDT)
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=R/qbfybNTawBfvTZEySh0cjltm2Kq0tph5R6n428udM=;
+        b=j1YtCmyfZ48Dgraz2bmpoKEtL8ufcAevdF5JTPvFIHTIsWQb9AbJJKXb8Ubr9jvBdT
+         aOmBfvE+yNH/iiuwkxoDvR09+MdssA7ZCVUf021iZMI9sjcP9jwRbz4ezqKDthz5pfU+
+         T7PF9T9c/8WIFPaQiTQCygYlLL5JPytZEh0GMd4yfRjLiRTMgRF0uLc1UdbPHitH8Wqu
+         B964jWD7e/OX3C6P9tavqmGTEx5x5l0Q34ihhX7kPpHcIqgu7s8ZsJhX90uOFoBWELKB
+         EFi8hKDg5X91ctI0nlZ7d7xwj9jQT+WCz5fhnpfWE+JG2Y1Srny2fOMvU7Ipw4OqK+CH
+         EthQ==
+X-Gm-Message-State: APjAAAVaqDVFElqP5I4yHme1FMNQlqfG6NqGKEQhFVO/gzyEihhdodzT
+        sd7s+OVI4j7Ig1SsDTH6PV4KB+2K
+X-Google-Smtp-Source: APXvYqyf29S37MuD+Ii1VOieSMvQRwalWsMCTSNp4taVg2fWHXkXUtz+sOa2dH9UTLHVaWFwFCfeCQ==
+X-Received: by 2002:ac2:568e:: with SMTP id 14mr12994101lfr.189.1565356402685;
+        Fri, 09 Aug 2019 06:13:22 -0700 (PDT)
+Received: from [192.168.2.145] ([94.29.34.218])
+        by smtp.googlemail.com with ESMTPSA id k124sm17587000lfd.60.2019.08.09.06.13.20
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 09 Aug 2019 06:13:21 -0700 (PDT)
+Subject: Re: [PATCH v8 18/21] soc/tegra: pmc: Configure core power request
+ polarity
+To:     Sowjanya Komatineni <skomatineni@nvidia.com>,
+        thierry.reding@gmail.com, jonathanh@nvidia.com, tglx@linutronix.de,
+        jason@lakedaemon.net, marc.zyngier@arm.com,
+        linus.walleij@linaro.org, stefan@agner.ch, mark.rutland@arm.com
+Cc:     pdeschrijver@nvidia.com, pgaikwad@nvidia.com, sboyd@kernel.org,
+        linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org,
+        jckuo@nvidia.com, josephl@nvidia.com, talho@nvidia.com,
+        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org,
+        mperttunen@nvidia.com, spatra@nvidia.com, robh+dt@kernel.org,
+        devicetree@vger.kernel.org, rjw@rjwysocki.net,
+        viresh.kumar@linaro.org, linux-pm@vger.kernel.org
+References: <1565308020-31952-1-git-send-email-skomatineni@nvidia.com>
+ <1565308020-31952-19-git-send-email-skomatineni@nvidia.com>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <29842147-a5f8-d51d-c594-b93b20b2e20f@gmail.com>
+Date:   Fri, 9 Aug 2019 16:13:20 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-References: <20190808132128.13359-1-andriy.shevchenko@linux.intel.com>
-In-Reply-To: <20190808132128.13359-1-andriy.shevchenko@linux.intel.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Fri, 9 Aug 2019 14:58:10 +0200
-Message-ID: <CACRpkdZKv3w7yGNWrE7WvWLd9tw=3at9EPyOQRruqE=Frym8bA@mail.gmail.com>
-Subject: Re: [PATCH v2] pinctrl: intel: Allow to request locked pads
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     Mika Westerberg <mika.westerberg@linux.intel.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <1565308020-31952-19-git-send-email-skomatineni@nvidia.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Aug 8, 2019 at 3:21 PM Andy Shevchenko
-<andriy.shevchenko@linux.intel.com> wrote:
-
-> Some firmwares would like to protect pads from being modified by OS
-> and at the same time provide them to OS as a resource. So, the driver
-> in such circumstances may request pad and may not change its state.
->
-> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+09.08.2019 2:46, Sowjanya Komatineni пишет:
+> This patch configures polarity of the core power request signal
+> in PMC control register based on the device tree property.
+> 
+> PMC asserts and de-asserts power request signal based on it polarity
+> when it need to power-up and power-down the core rail during SC7.
+> 
+> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
 > ---
-> in v2:
-> - amended comment in intel_pad_locked() respectively to the change (Mika)
-> - described enum values (Linus)
-> - lowered case for locking flavour in debugfs for better looking
->  drivers/pinctrl/intel/pinctrl-intel.c | 67 ++++++++++++++++++++-------
->  1 file changed, 50 insertions(+), 17 deletions(-)
+>  drivers/soc/tegra/pmc.c | 6 ++++++
+>  1 file changed, 6 insertions(+)
+> 
+> diff --git a/drivers/soc/tegra/pmc.c b/drivers/soc/tegra/pmc.c
+> index 3aa71c28a10a..e013ada7e4e9 100644
+> --- a/drivers/soc/tegra/pmc.c
+> +++ b/drivers/soc/tegra/pmc.c
+> @@ -56,6 +56,7 @@
+>  #define  PMC_CNTRL_SIDE_EFFECT_LP0	BIT(14) /* LP0 when CPU pwr gated */
+>  #define  PMC_CNTRL_SYSCLK_OE		BIT(11) /* system clock enable */
+>  #define  PMC_CNTRL_SYSCLK_POLARITY	BIT(10) /* sys clk polarity */
+> +#define  PMC_CNTRL_PWRREQ_POLARITY	BIT(8)
+>  #define  PMC_CNTRL_MAIN_RST		BIT(4)
+>  
+>  #define PMC_WAKE_MASK			0x0c
+> @@ -2290,6 +2291,11 @@ static void tegra20_pmc_init(struct tegra_pmc *pmc)
+>  	else
+>  		value |= PMC_CNTRL_SYSCLK_POLARITY;
+>  
+> +	if (pmc->corereq_high)
+> +		value &= ~PMC_CNTRL_PWRREQ_POLARITY;
+> +	else
+> +		value |= PMC_CNTRL_PWRREQ_POLARITY;
+> +
+>  	/* configure the output polarity while the request is tristated */
+>  	tegra_pmc_writel(pmc, value, PMC_CNTRL);
+>  
+> 
 
-Mika pointed out some typos or so, apart from that:
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
-
-Yours,
-Linus Walleij
+Reviewed-by: Dmitry Osipenko <digetx@gmail.com>
