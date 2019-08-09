@@ -2,115 +2,135 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id E1F4287AE4
-	for <lists+linux-gpio@lfdr.de>; Fri,  9 Aug 2019 15:13:30 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5CFB987AEF
+	for <lists+linux-gpio@lfdr.de>; Fri,  9 Aug 2019 15:18:21 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406824AbfHINN0 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 9 Aug 2019 09:13:26 -0400
-Received: from mail-lf1-f67.google.com ([209.85.167.67]:45574 "EHLO
-        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726157AbfHINNZ (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 9 Aug 2019 09:13:25 -0400
-Received: by mail-lf1-f67.google.com with SMTP id a30so6430752lfk.12;
-        Fri, 09 Aug 2019 06:13:23 -0700 (PDT)
+        id S2406970AbfHINSO (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 9 Aug 2019 09:18:14 -0400
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:42696 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2406973AbfHINSJ (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 9 Aug 2019 09:18:09 -0400
+Received: by mail-lf1-f65.google.com with SMTP id s19so6830848lfb.9
+        for <linux-gpio@vger.kernel.org>; Fri, 09 Aug 2019 06:18:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=R/qbfybNTawBfvTZEySh0cjltm2Kq0tph5R6n428udM=;
-        b=GlblEZrkT23FfH3YxwgAttCw6xMNP7KmjYM4WXbspvsjFKfa2jnMBD9iz9n/359YcB
-         mh1ba0d5xf1zHxpLYacNsJ3P90ZN+296q6JzVff86xucaYj/+8z6O4lg6Lk8RQX1Ftfi
-         ISE1PqIr2YzS82esJXELAiYZhczT1wMe71LlZOhk/PnPHjZ2R5k3+3XQCEEg4zOWHdHr
-         md4eFoFMjx17VGzybjmylCG7pkgn06aca+wnsBRr6jiVDdjPDUmN+4APIHiT9poKviyF
-         oMEBxX3477w1dW3K+x6B52wSS/8CkF3eQtIrPf+jvad1ZuOdshSYXAMuhyVGzBm78tth
-         3qsA==
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=fMHyIY10wRDU6FO5jbJ2R+jLGL7a5ywGysVQL+ZhZOo=;
+        b=OTwRj9BSfz7+sF7brp9UAxUWPrDk/OTawXWWQp5iDKe2R042i7tAHlvIpzCsHrtuDG
+         NHeXQ8WUDqT/DN2SEBQdvYhNiBfORCz6d7z1wQtmmb1KqAHlZYqU+FQLZq3tQCZ3/rwy
+         kPPUkjWkLGmDlJmXniCsQuwde+Hp2Ihr3NhvyifLHoiZ/1cX2u+TPlULXi+SVho/6hQD
+         kI2rdH8WM6QZmgqqs8sgJqEvNLRivUMA8MlFo08b69/QB5ghG/A/wNDdJsr0z9vHNEW6
+         Tdg0ZLZGEDEMOJEKXHXeoNC3cs1Vzc65h3pF55cDAYi6rWMWEZsOk98jV0ryS7rPTmLx
+         GMOA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=R/qbfybNTawBfvTZEySh0cjltm2Kq0tph5R6n428udM=;
-        b=j1YtCmyfZ48Dgraz2bmpoKEtL8ufcAevdF5JTPvFIHTIsWQb9AbJJKXb8Ubr9jvBdT
-         aOmBfvE+yNH/iiuwkxoDvR09+MdssA7ZCVUf021iZMI9sjcP9jwRbz4ezqKDthz5pfU+
-         T7PF9T9c/8WIFPaQiTQCygYlLL5JPytZEh0GMd4yfRjLiRTMgRF0uLc1UdbPHitH8Wqu
-         B964jWD7e/OX3C6P9tavqmGTEx5x5l0Q34ihhX7kPpHcIqgu7s8ZsJhX90uOFoBWELKB
-         EFi8hKDg5X91ctI0nlZ7d7xwj9jQT+WCz5fhnpfWE+JG2Y1Srny2fOMvU7Ipw4OqK+CH
-         EthQ==
-X-Gm-Message-State: APjAAAVaqDVFElqP5I4yHme1FMNQlqfG6NqGKEQhFVO/gzyEihhdodzT
-        sd7s+OVI4j7Ig1SsDTH6PV4KB+2K
-X-Google-Smtp-Source: APXvYqyf29S37MuD+Ii1VOieSMvQRwalWsMCTSNp4taVg2fWHXkXUtz+sOa2dH9UTLHVaWFwFCfeCQ==
-X-Received: by 2002:ac2:568e:: with SMTP id 14mr12994101lfr.189.1565356402685;
-        Fri, 09 Aug 2019 06:13:22 -0700 (PDT)
-Received: from [192.168.2.145] ([94.29.34.218])
-        by smtp.googlemail.com with ESMTPSA id k124sm17587000lfd.60.2019.08.09.06.13.20
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 09 Aug 2019 06:13:21 -0700 (PDT)
-Subject: Re: [PATCH v8 18/21] soc/tegra: pmc: Configure core power request
- polarity
-To:     Sowjanya Komatineni <skomatineni@nvidia.com>,
-        thierry.reding@gmail.com, jonathanh@nvidia.com, tglx@linutronix.de,
-        jason@lakedaemon.net, marc.zyngier@arm.com,
-        linus.walleij@linaro.org, stefan@agner.ch, mark.rutland@arm.com
-Cc:     pdeschrijver@nvidia.com, pgaikwad@nvidia.com, sboyd@kernel.org,
-        linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org,
-        jckuo@nvidia.com, josephl@nvidia.com, talho@nvidia.com,
-        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org,
-        mperttunen@nvidia.com, spatra@nvidia.com, robh+dt@kernel.org,
-        devicetree@vger.kernel.org, rjw@rjwysocki.net,
-        viresh.kumar@linaro.org, linux-pm@vger.kernel.org
-References: <1565308020-31952-1-git-send-email-skomatineni@nvidia.com>
- <1565308020-31952-19-git-send-email-skomatineni@nvidia.com>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <29842147-a5f8-d51d-c594-b93b20b2e20f@gmail.com>
-Date:   Fri, 9 Aug 2019 16:13:20 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        bh=fMHyIY10wRDU6FO5jbJ2R+jLGL7a5ywGysVQL+ZhZOo=;
+        b=gjbqDzu+2utIqWbqT3b3R0Oup2kUv41vtCEsktgAU62Pc8htV7rQJYH5lW9YFcEFMH
+         PfNSJ8lVgBx1PQZW1kgtBw+dxL61nBcADfUQ+mK3Q21UmoawUMZz/5N7i669uxTU9FI1
+         lbM27ggG3vcJZ/BrHHqNSdwwJ7LbwEPuot8vzgSC5rTK4pY+Ux2remVi4A9EgoyHrB9X
+         iy6OjTJC/HIfQtg6RayO5j+LOAogiQUncG6FvkRpPNpMa1mo59zRj8vetYp0ZrPez/29
+         FKAW5aX2HQO9AucIkIPpxWH+ISxgab1P43DsKSPbJYQw1YaCYdaFkr4hdMwnQ9+BLCd0
+         FuYg==
+X-Gm-Message-State: APjAAAU3CnssNVkFyD3KgxcIDV69gPYE1T2jqTO55oWPs4MQ1KWJZiZJ
+        Ac5l3O1wRXj4RLjsfc1+4zEIbpneAS8=
+X-Google-Smtp-Source: APXvYqyoPvyOWV3mkH44XUNx5l/+rFOGAy9GUlvzKZW19kZe0ZfRrOXi/XRUtyW464Kwyfi+IbFp1w==
+X-Received: by 2002:ac2:4644:: with SMTP id s4mr12617576lfo.158.1565356687188;
+        Fri, 09 Aug 2019 06:18:07 -0700 (PDT)
+Received: from genomnajs.ideon.se ([85.235.10.227])
+        by smtp.gmail.com with ESMTPSA id j21sm538982lfb.38.2019.08.09.06.18.06
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Fri, 09 Aug 2019 06:18:06 -0700 (PDT)
+From:   Linus Walleij <linus.walleij@linaro.org>
+To:     linux-gpio@vger.kernel.org
+Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Jan Kotas <jank@cadence.com>,
+        Thierry Reding <treding@nvidia.com>
+Subject: [PATCH] gpio: cadence: Pass irqchip when adding gpiochip
+Date:   Fri,  9 Aug 2019 15:18:04 +0200
+Message-Id: <20190809131804.20352-1-linus.walleij@linaro.org>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-In-Reply-To: <1565308020-31952-19-git-send-email-skomatineni@nvidia.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-09.08.2019 2:46, Sowjanya Komatineni пишет:
-> This patch configures polarity of the core power request signal
-> in PMC control register based on the device tree property.
-> 
-> PMC asserts and de-asserts power request signal based on it polarity
-> when it need to power-up and power-down the core rail during SC7.
-> 
-> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
-> ---
->  drivers/soc/tegra/pmc.c | 6 ++++++
->  1 file changed, 6 insertions(+)
-> 
-> diff --git a/drivers/soc/tegra/pmc.c b/drivers/soc/tegra/pmc.c
-> index 3aa71c28a10a..e013ada7e4e9 100644
-> --- a/drivers/soc/tegra/pmc.c
-> +++ b/drivers/soc/tegra/pmc.c
-> @@ -56,6 +56,7 @@
->  #define  PMC_CNTRL_SIDE_EFFECT_LP0	BIT(14) /* LP0 when CPU pwr gated */
->  #define  PMC_CNTRL_SYSCLK_OE		BIT(11) /* system clock enable */
->  #define  PMC_CNTRL_SYSCLK_POLARITY	BIT(10) /* sys clk polarity */
-> +#define  PMC_CNTRL_PWRREQ_POLARITY	BIT(8)
->  #define  PMC_CNTRL_MAIN_RST		BIT(4)
->  
->  #define PMC_WAKE_MASK			0x0c
-> @@ -2290,6 +2291,11 @@ static void tegra20_pmc_init(struct tegra_pmc *pmc)
->  	else
->  		value |= PMC_CNTRL_SYSCLK_POLARITY;
->  
-> +	if (pmc->corereq_high)
-> +		value &= ~PMC_CNTRL_PWRREQ_POLARITY;
-> +	else
-> +		value |= PMC_CNTRL_PWRREQ_POLARITY;
-> +
->  	/* configure the output polarity while the request is tristated */
->  	tegra_pmc_writel(pmc, value, PMC_CNTRL);
->  
-> 
+We need to convert all old gpio irqchips to pass the irqchip
+setup along when adding the gpio_chip. For more info see
+drivers/gpio/TODO.
 
-Reviewed-by: Dmitry Osipenko <digetx@gmail.com>
+For chained irqchips this is a pretty straight-forward
+conversion.
+
+Cc: Jan Kotas <jank@cadence.com>
+Cc: Thierry Reding <treding@nvidia.com>
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+---
+Hi Jan, it'd be great if you could test/review this
+patch.
+---
+ drivers/gpio/gpio-cadence.c | 36 +++++++++++++++++++++---------------
+ 1 file changed, 21 insertions(+), 15 deletions(-)
+
+diff --git a/drivers/gpio/gpio-cadence.c b/drivers/gpio/gpio-cadence.c
+index 712ae212b0b4..a4d3239d2594 100644
+--- a/drivers/gpio/gpio-cadence.c
++++ b/drivers/gpio/gpio-cadence.c
+@@ -214,27 +214,33 @@ static int cdns_gpio_probe(struct platform_device *pdev)
+ 		goto err_revert_dir;
+ 	}
+ 
+-	ret = devm_gpiochip_add_data(&pdev->dev, &cgpio->gc, cgpio);
+-	if (ret < 0) {
+-		dev_err(&pdev->dev, "Could not register gpiochip, %d\n", ret);
+-		goto err_disable_clk;
+-	}
+-
+ 	/*
+-	 * irq_chip support
++	 * Optional irq_chip support
+ 	 */
+ 	irq = platform_get_irq(pdev, 0);
+ 	if (irq >= 0) {
+-		ret = gpiochip_irqchip_add(&cgpio->gc, &cdns_gpio_irqchip,
+-					   0, handle_level_irq,
+-					   IRQ_TYPE_NONE);
+-		if (ret) {
+-			dev_err(&pdev->dev, "Could not add irqchip, %d\n",
+-				ret);
++		struct gpio_irq_chip *girq;
++
++		girq = &cgpio->gc.irq;
++		girq->chip = &cdns_gpio_irqchip;
++		girq->parent_handler = cdns_gpio_irq_handler;
++		girq->num_parents = 1;
++		girq->parents = devm_kcalloc(&pdev->dev, 1,
++					     sizeof(*girq->parents),
++					     GFP_KERNEL);
++		if (!girq->parents) {
++			ret = -ENOMEM;
+ 			goto err_disable_clk;
+ 		}
+-		gpiochip_set_chained_irqchip(&cgpio->gc, &cdns_gpio_irqchip,
+-					     irq, cdns_gpio_irq_handler);
++		girq->parents[0] = irq;
++		girq->default_type = IRQ_TYPE_NONE;
++		girq->handler = handle_level_irq;
++	}
++
++	ret = devm_gpiochip_add_data(&pdev->dev, &cgpio->gc, cgpio);
++	if (ret < 0) {
++		dev_err(&pdev->dev, "Could not register gpiochip, %d\n", ret);
++		goto err_disable_clk;
+ 	}
+ 
+ 	cgpio->bypass_orig = ioread32(cgpio->regs + CDNS_GPIO_BYPASS_MODE);
+-- 
+2.21.0
+
