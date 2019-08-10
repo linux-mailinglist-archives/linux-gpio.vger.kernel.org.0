@@ -2,69 +2,112 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 9BF6888A2F
-	for <lists+linux-gpio@lfdr.de>; Sat, 10 Aug 2019 11:04:05 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3694888AD1
+	for <lists+linux-gpio@lfdr.de>; Sat, 10 Aug 2019 12:35:42 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725773AbfHJJEE (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sat, 10 Aug 2019 05:04:04 -0400
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:39864 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725372AbfHJJEE (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sat, 10 Aug 2019 05:04:04 -0400
-Received: by mail-lf1-f68.google.com with SMTP id x3so17437686lfn.6
-        for <linux-gpio@vger.kernel.org>; Sat, 10 Aug 2019 02:04:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=/2+7/rOX4aw3CppBe0IexN01CpzL88m+5LBEHDnN2Rw=;
-        b=UWXfmIvt1zHaFkYC5PiEheTFjDL7HpdPy8/pWaB3rltMoL9ZOy12Kw00PkfDPqoeJQ
-         jmRSwYU9WauFsE0125chERnsi49PwatStXmIjANuzt+o49gfza6ZiEewStFi2akTWgfH
-         ZV+U45AZD5QA5/Op6qprG+kqufxr42/yviarDiT8gBrh08xIqESd5EqDzjccW13UtbOJ
-         MZQaHFi21rewWbj4Bgp3SQPPwwUBLsNvl/1xla1CxRJ13EwijevHjFLBmIizayRtbJsa
-         7j+8aXU3zI1JFycLadcUOet0i3qvQggkICji+NvunvHtjHlFDtKt1KTAGtO4U2THdX10
-         Os7g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=/2+7/rOX4aw3CppBe0IexN01CpzL88m+5LBEHDnN2Rw=;
-        b=gvX5p/kF9meyHXJCe3nyuzCZNCptIcCNBayR587hfjKq11B8SoE/v+zAmk3i1Xz/Z9
-         fHJdaa22Q6YBzKM73/0j8mYgMh6w2IRzp5rX4inOyWZUJXA+TQ3QdF4FLGMb+3Siao9z
-         UrkC2PbLGKd2dk4lKTZ9On5SS/ZW/uQFvM05cMYdr9LD13Wjd9ii1n5BIFKa9EEmmAGG
-         VlctBSuEESxyqi/mM0hSLjSvo/UgVzmmBrB+B6HXHrmg/3b2X5IXwII1jyCVwHFblR8+
-         s9mlFeH1bQdVZigtrftjZeR/vE7W4a8WsbhRwuzxoieHs+wIZdqpZ5cZ14P4bCDlLEQC
-         D15g==
-X-Gm-Message-State: APjAAAU9RqWL7i8I93Ie+9dsFEX+p65/0zZzWLRQuHXzcEPMS7Z6AP1r
-        0BZUFNpTqAIprI52o2OK+S542x1L523IQoO7I8dD0w==
-X-Google-Smtp-Source: APXvYqzI1OUT91BOym1WtVyDuCF8UlcJ0q+oCBXUIJCXfURb7tSXeCn2SRWNYfl0AXcRv204POPlchz1LNHOB+/AQyY=
-X-Received: by 2002:a19:ed11:: with SMTP id y17mr15054737lfy.141.1565427842907;
- Sat, 10 Aug 2019 02:04:02 -0700 (PDT)
+        id S1725884AbfHJKfl (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sat, 10 Aug 2019 06:35:41 -0400
+Received: from mout.gmx.net ([212.227.15.18]:51459 "EHLO mout.gmx.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725497AbfHJKfl (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Sat, 10 Aug 2019 06:35:41 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+        s=badeba3b8450; t=1565433335;
+        bh=Qwz9cwXiLX9NP8x0F1UleAr72SwbnQ2lE1Rc4ZXWLgI=;
+        h=X-UI-Sender-Class:Date:From:To:Cc:Subject:References:In-Reply-To;
+        b=g8r6eZxM5x2OjTNjTlXy44KiZC3MAoDBJ6wIy/AiVJw592yeBzgr9l1obETigFxh/
+         EBP1C5Q/9+Qhor9gUHpX73ctUCZb9GSu4WWoAhlDrllHQq7hwCqwRqvmlD9NGzmm/Z
+         Bfciv+h65finv+AdrsRhzJMvgyMKpnp0ZQ+bL0Zo=
+X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
+Received: from longitude ([109.90.233.87]) by mail.gmx.com (mrgmx001
+ [212.227.17.190]) with ESMTPSA (Nemesis) id 0Lx8vJ-1iPD0344Ov-016cON; Sat, 10
+ Aug 2019 12:35:35 +0200
+Date:   Sat, 10 Aug 2019 12:35:23 +0200
+From:   Jonathan =?utf-8?Q?Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     linux-gpio@vger.kernel.org,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Jonathan =?utf-8?Q?Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>,
+        Thierry Reding <treding@nvidia.com>
+Subject: Re: [PATCH] gpio: hlwd: Pass irqchip when adding gpiochip
+Message-ID: <20190810103523.GC1966@latitude>
+References: <20190809140005.11654-1-linus.walleij@linaro.org>
 MIME-Version: 1.0
-References: <20190809202749.742267-1-arnd@arndb.de> <20190809202749.742267-4-arnd@arndb.de>
-In-Reply-To: <20190809202749.742267-4-arnd@arndb.de>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Sat, 10 Aug 2019 11:03:51 +0200
-Message-ID: <CACRpkdYRpsoxwCjGW2JOJCCgs2xGztKHk429gg4SMOwgqvG+Rg@mail.gmail.com>
-Subject: Re: [PATCH 03/16] gpio: remove ks8695 driver
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     soc@kernel.org, Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="XMCwj5IQnwKtuyBG"
+Content-Disposition: inline
+In-Reply-To: <20190809140005.11654-1-linus.walleij@linaro.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Provags-ID: V03:K1:Uj45cNtKf+sIWuub11sp3K9JmUffi50GftZXepobJz/unOYtuBM
+ ClxtGla22LgoKzrh7+jTpure0yxKNacJLphWt8zLoCcHWugeHhfai/CAm6AaZzjKMY/LRtz
+ oE/RWHOn/bC9EoeE+Je5MfRu0vgXPYdTHqwR5T0g25cHsY4w7KYvvFrp7LWZRUUCer/xzaG
+ eFFunmhynKXJ4GBPZgAfA==
+X-Spam-Flag: NO
+X-UI-Out-Filterresults: notjunk:1;V03:K0:CngFCRjGBdM=:AsHolo3EvbudHD8TPblTov
+ NGHm/zAPPjP9zhNomLTAVjJiigxY4hnU8l2KnZixDU6CzdV53OJ7ThQU4VKIfDlZd95GPC67B
+ AJipSB4tymoj7nFZlwSd9EQtbADHo2bTXU/lAckjRBbD/4+/agiTMzT+W3MRUF9tnIReMo6Zq
+ AQ+tKHog0kxQ87tbhtmGiqEk40TvAM8FMIGpXBTStULAFHEYjap54HUE+bvoO4l60RnSHsrSX
+ bHJAzDeRSV7OHiALNtBECwKTP8dNtgIIRmlQXjuLdZwvRuVBUJSz/jA9ORDb5fq8ftfSyNVAA
+ 5QwwAPsBWtvGC8TXspPJuv9sQ4YpgVlSTmvZac2LvVPAuGBK46DjBVnUUL8+GnTvPdxW1dHsu
+ Wo4F1JFB7LrzBmvQsU1/UiiDcmI8CklmYX+YKF3OcJzXU9idLZodl/1SsZNg49brw++aFxvwl
+ 2YVVLH49d+A91/3Sj1/JXX4P0sgNTxVaSwa2iAiWBImZ3iK8FH9qDkSCDIx5SHSIW7GvW8JSg
+ GvHwripdMbbKf9aBwcZvTVYexzQf8GqSyoUhTz6/CP+AlSzJr4CKM3cwSK6/hpMlb0EpGDQZY
+ ZHGOnlgvM8X5ER0Fr2gON7WxguLeP2rLnS1L7x4jd2jVvgYY0FkXEXexY8OaKQfp3YSruCu6r
+ YwX1VrDXfHKpFVjHT1B19nBonlQSsXZEC3pILjJNFppvaG421pVOYb4cStaNdxdUj8in6XnKj
+ YrMfJMBm4F3w92RISnwjwmfe0ld7ihfBZeopzSWe2yhn0W3b4s0YLlT+QKN3ItzkYQQ6yBLWI
+ vZChJH93F3q1HUG5cGrOgYoGwqUijFRlibD9yuC+Tof451MM09HNNaDcxxmyv/RSJjmjXXA7p
+ 26TeOL6g6WMKLinyVAEsKBRb8eepOaB17dRF1K0cvvUx3BF/3TCxLr1UfsbtWWhFWlt/8O8EC
+ BlJ+kVSY+ra1Q6dU00NJAkiEbJCJHhy53Q4tw7bvQ6UoTxVztIA3z0Qw4jjUe+vy0xLZe8rmv
+ rT+V1+xVOBAW5/Yw+IjMJDlBcf69OeTeVq+mT+qrmr0WKkL6yJvmTYXhNbwdHoRo82dijdFXF
+ iIs2TcZCGn3rUqmJf6rR5IDDUSg1OiqT5xbgLLe7uF/XkWJJQ8XaqxaSA==
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Aug 9, 2019 at 10:28 PM Arnd Bergmann <arnd@arndb.de> wrote:
 
-> The platform is getting removed, so there are no remaining
-> users of this driver.
->
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+--XMCwj5IQnwKtuyBG
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Patch applied. Thanks for cleaning out this old cruft.
+On Fri, Aug 09, 2019 at 04:00:05PM +0200, Linus Walleij wrote:
+> We need to convert all old gpio irqchips to pass the irqchip
+> setup along when adding the gpio_chip. For more info see
+> drivers/gpio/TODO.
+>=20
+> For chained irqchips this is a pretty straight-forward
+> conversion.
+>=20
+> Cc: Jonathan Neusch=C3=A4fer <j.neuschaefer@gmx.net>
+> Cc: Thierry Reding <treding@nvidia.com>
+> Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+> ---
 
-Yours,
-Linus Walleij
+Unfortunately, there seems to have been an unrelated regression between
+5.0 and now affecting the Wii, so I can't easily test this patch right
+now. But it looks good (esp. with git show -b).
+
+Reviewed-by: Jonathan Neusch=C3=A4fer <j.neuschaefer@gmx.net>
+
+--XMCwj5IQnwKtuyBG
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEvHAHGBBjQPVy+qvDCDBEmo7zX9sFAl1OneMACgkQCDBEmo7z
+X9tUJw//dV5uJf37rziXdqjQ0jqrFDmH4Vm3uM6w8r0m2NUOQTlqOB3ZZpxhANgB
+Ha6z/7nDhMKRQaZNmcYSWKOcFKShgRdcQKoZ5M74HSyFCFRw6tv3lOTfitRGc4JN
+TAvQ4VFGWM0mAyzm6knBw3HWtUdTK63h77rH20FTquqJGYIIfa1wKSNsQ0dmqeV/
+1BSi29yYYIpJcUR2sxDmNJNBsfFtf38YdRD/bmeKSZAu81Xb39HgbAoGlpH8m9lN
+Ocxlep/DaY0q2OaGBLBBoMazTlQRO2s/aQ2zAN+Ph4FLPEABgj3XWLJuynf4Uu/b
+EpZ4TTahqqOUIYa8WheAkFnQDCU5qPW1GD/FRu7QtmNtGyBbaESqQRXMCbR5GRMd
+JgqJ2F42gy/LfFN281mmmqTRLv6ku87H177gn0lzvdma0o0f5LiPwFtI5RBHXIRL
+J3qrxn57mdaGkXRXmdPeM8gwqbdP42gQrzaxZNxp/bH+PoSE4u/gMfaC8+5ph9WC
+DqHvbEH2x1HbZ7jiAtwIq/kGug6t3+0VbkNZOKetQb1i8nOS/8LPRvxQgVXwepkA
+KUA6zRVNzLgQtNTWNK1T6Uvv9FaIBGHdxYDIcO2HFvXhb5w8mVQpfyYHMVB9JC+D
+Cv2Vu8JDzsn1TQLdh4L+aYM/2ZUtKiT5WpZHKBUC1DazkGuW9mI=
+=lqiS
+-----END PGP SIGNATURE-----
+
+--XMCwj5IQnwKtuyBG--
