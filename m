@@ -2,78 +2,76 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 2BF4488A05
-	for <lists+linux-gpio@lfdr.de>; Sat, 10 Aug 2019 10:30:30 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D97D288A08
+	for <lists+linux-gpio@lfdr.de>; Sat, 10 Aug 2019 10:32:03 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725773AbfHJIa3 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sat, 10 Aug 2019 04:30:29 -0400
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:43273 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725763AbfHJIa3 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sat, 10 Aug 2019 04:30:29 -0400
-Received: by mail-lf1-f65.google.com with SMTP id c19so71182616lfm.10
-        for <linux-gpio@vger.kernel.org>; Sat, 10 Aug 2019 01:30:27 -0700 (PDT)
+        id S1725862AbfHJIcD (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sat, 10 Aug 2019 04:32:03 -0400
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:42694 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725763AbfHJIcC (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sat, 10 Aug 2019 04:32:02 -0400
+Received: by mail-lf1-f67.google.com with SMTP id s19so8502787lfb.9
+        for <linux-gpio@vger.kernel.org>; Sat, 10 Aug 2019 01:32:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=8cS6whuQx4DiXwl2uCBLk9T9CxxkX4y0PTjlTGjmUo8=;
-        b=Bpi1rjkFJMHgOIbcvWSc0zU4OZ2FaIw3BXhaYreLp3dl1rPdyAtx7fd+PJ5GPdppFD
-         RhmQRpdBJelObM08Xpq15gTBLaeY3eVklsUIU1COVpJBDGMr6D06dafHpv4s3c0bOWrx
-         PEO5G3eXHmjYIXt0mpCmbdsdzjwjfLM6RPuHW7/ViqwSu1OPwu0Vn+IPZJrp2HLHTYUu
-         o6sdoPMm+BfVXUscV1/9rv9JemSZFWrQKHpfsKMxUmfXGjGXlAvGUZCxn+3bAY4nu20t
-         DsaD03+/+89dkFBwLUmx66hzM4UZg3pILCMqB2dKM34pkKrz1AYhkxRySfXRImNcBVzo
-         esRw==
+        bh=GVHoD/kFYG2+UKWyfR9Vz4jg8lLzKuoZVZM/VErCL8E=;
+        b=Goy+1fh1bV3JbOPmD7gfeGw8Pplhqu/VgLRSSwuu3/OCtZ7lCDjYAKEt6SmsMIL4+m
+         7snSUOSn3Igv+Bh9uN2NDvgCwwpGIr95+t1b7FHoMSG/KVEKw3uaZEQyYt0Sw12CZims
+         Gs/i3TIV0zOBLQjI+uIx4rOFg1rglgnVfVe3VXJY2wO/vOv97sLTt6oKPDMlkie7+LCx
+         XW/BNRpSp7F5+Q+XnlVceamffP7LlFnNtuG3CN6B9GTKG3VEd9y4rKZt397gK83ycuV7
+         MVRP662N8F/INq+TdYktgAy71fNps9sL/e7liwlVgAl/WoC5DWLbOsio9zLr5qluhtzT
+         +lfA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=8cS6whuQx4DiXwl2uCBLk9T9CxxkX4y0PTjlTGjmUo8=;
-        b=PqRna8AkiFWsjC8bjH0NjjQOyGnTty5AezAnBIbvRkRtQm3fBDJ4R/NX4hf4PjOX2c
-         sJMvT4AAQHknggGk4w7DpO5X4EeJmoiLRRLBJbz/66vk5NqT9kI1PTe3V2h8zndxrL3E
-         SH4xrILlzCp40SMwiU/awJQshDrLXh9AobqhBxyExCnQoG3k0Rg8zSnTuLWEBl33qVLB
-         e3Y2Vt9f+ePpYpuKx4Ar5q/BMcQ/eVqgzV9FVoYc5nAdrJzLh07mExglg8cUWorNnn4K
-         WChrHcrHgp59FN8kLph65CyW2QcMGO9CKJefSe9x4GWT2EmMu93Vi/TtNl19O5iSJh2Z
-         S4ww==
-X-Gm-Message-State: APjAAAXA4BjqJHE64OHM95yzfyCQTX1oYqZD0PumQIQwFRQdk1zha3tl
-        R0EvjREPMGVoKF51aMHKCzqnLAOIFswKrr9zK8MQFkw14r0=
-X-Google-Smtp-Source: APXvYqz3iyknd9U+Aqu0UdmG71Iok1VwzPjyL6T+MtBSBCQBTIs98zUm+bnjNoxDGSuA4prPcqKrt8dfmYTe23qujFY=
-X-Received: by 2002:ac2:5dd6:: with SMTP id x22mr14674947lfq.92.1565425827221;
- Sat, 10 Aug 2019 01:30:27 -0700 (PDT)
+        bh=GVHoD/kFYG2+UKWyfR9Vz4jg8lLzKuoZVZM/VErCL8E=;
+        b=b3QAbzpQAAIdIXR9mW8/ABMevUGKjWDjX/EOX0Nme5H1hxDkODPN5rQn4B5gKKEUnA
+         wemtKURmlqwzHqie2Ai5pY4OQVei5cmCZkoOd47No7xeXepin4Wfb2l2eszgJuiVX2rZ
+         qmrWEgt1pUc2BSyWEn7pfEj+4pHiNKgnd4TYinHyaTDs8DjPwHProuwx98hrk8OPekFm
+         qmmoyGCnuRD0sG8pODn9NLUNrgbWyP7OkI4Dg9ezIFCP/19bMtQgO8tYLzyouMd9xAvx
+         +d/vpTek/s7nX/LlqZUUb+6SXZtedatdF08QZoah6OoKsa73CnLcbh+jliNO7T+6/Zss
+         UGtA==
+X-Gm-Message-State: APjAAAXMdwmirhlulbNF2uabJ7hSyKFCZiIygCHVQFbw4voOo/RAbJmR
+        C2f4WlWUgq9+IqRfzSZcH3C7Y3nNKf+CewS7QKZW7KIHahQ=
+X-Google-Smtp-Source: APXvYqySUS5WDap6akhFSliYjDaWYZFixsK7mUC4osTLggtfhjnYzwKKRmx57CnB44C1+CD1hV7/vrs0/ZGAXQRE5Uc=
+X-Received: by 2002:ac2:5c42:: with SMTP id s2mr15392081lfp.61.1565425920681;
+ Sat, 10 Aug 2019 01:32:00 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190808074720.15754-1-nishkadg.linux@gmail.com>
-In-Reply-To: <20190808074720.15754-1-nishkadg.linux@gmail.com>
+References: <20190809074420.27006-1-geert+renesas@glider.be>
+In-Reply-To: <20190809074420.27006-1-geert+renesas@glider.be>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Sat, 10 Aug 2019 10:30:16 +0200
-Message-ID: <CACRpkdZZmJUDiLnf7YtD8nQ4pzTsZfDu=B6jFFSuHF6Sc45EJw@mail.gmail.com>
-Subject: Re: [PATCH] pinctrl: freescale: imx: Add of_node_put() before return
-To:     Nishka Dasgupta <nishkadg.linux@gmail.com>
-Cc:     Dong Aisheng <aisheng.dong@nxp.com>,
-        Fabio Estevam <festevam@gmail.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Stefan Agner <stefan@agner.ch>,
-        Sascha Hauer <kernel@pengutronix.de>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>
+Date:   Sat, 10 Aug 2019 10:31:49 +0200
+Message-ID: <CACRpkdY4hZ3kUMs6n-kway=rbp1bocpLsJ1qMAe64oC32NZA1w@mail.gmail.com>
+Subject: Re: [git pull] pinctrl: sh-pfc: Updates for v5.4
+To:     Geert Uytterhoeven <geert+renesas@glider.be>
+Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Aug 8, 2019 at 9:47 AM Nishka Dasgupta <nishkadg.linux@gmail.com> wrote:
+On Fri, Aug 9, 2019 at 9:44 AM Geert Uytterhoeven
+<geert+renesas@glider.be> wrote:
 
-> Each iteration of for_each_child_of_node() puts the previous node;
-> however, in the case of a return from the middle of the loop, there is no
-> put, thus causing a memory leak. Hence put of_node_put() statements as
-> required before two mid-loop return statements.
-> Issue found with Coccinelle.
+> The following changes since commit 5f9e832c137075045d15cd6899ab0505cfb2ca4b:
 >
-> Signed-off-by: Nishka Dasgupta <nishkadg.linux@gmail.com>
+>   Linus 5.3-rc1 (2019-07-21 14:05:38 -0700)
+>
+> are available in the Git repository at:
+>
+>   git://git.kernel.org/pub/scm/linux/kernel/git/geert/renesas-drivers.git tags/sh-pfc-for-v5.4-tag1
+>
+> for you to fetch changes up to 625efea83a7c37d281c6a90526813a1366929d24:
+>
+>   pinctrl: rza1: Use devm_platform_ioremap_resource() helper (2019-08-09 09:34:45 +0200)
 
-Patch applied with Philipp's ACK.
+Pulled into my "devel" branch, thanks!
 
 Yours,
 Linus Walleij
