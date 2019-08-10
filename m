@@ -2,76 +2,73 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id D97D288A08
-	for <lists+linux-gpio@lfdr.de>; Sat, 10 Aug 2019 10:32:03 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3A64D88A22
+	for <lists+linux-gpio@lfdr.de>; Sat, 10 Aug 2019 10:48:11 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725862AbfHJIcD (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sat, 10 Aug 2019 04:32:03 -0400
-Received: from mail-lf1-f67.google.com ([209.85.167.67]:42694 "EHLO
-        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725763AbfHJIcC (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sat, 10 Aug 2019 04:32:02 -0400
-Received: by mail-lf1-f67.google.com with SMTP id s19so8502787lfb.9
-        for <linux-gpio@vger.kernel.org>; Sat, 10 Aug 2019 01:32:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=GVHoD/kFYG2+UKWyfR9Vz4jg8lLzKuoZVZM/VErCL8E=;
-        b=Goy+1fh1bV3JbOPmD7gfeGw8Pplhqu/VgLRSSwuu3/OCtZ7lCDjYAKEt6SmsMIL4+m
-         7snSUOSn3Igv+Bh9uN2NDvgCwwpGIr95+t1b7FHoMSG/KVEKw3uaZEQyYt0Sw12CZims
-         Gs/i3TIV0zOBLQjI+uIx4rOFg1rglgnVfVe3VXJY2wO/vOv97sLTt6oKPDMlkie7+LCx
-         XW/BNRpSp7F5+Q+XnlVceamffP7LlFnNtuG3CN6B9GTKG3VEd9y4rKZt397gK83ycuV7
-         MVRP662N8F/INq+TdYktgAy71fNps9sL/e7liwlVgAl/WoC5DWLbOsio9zLr5qluhtzT
-         +lfA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=GVHoD/kFYG2+UKWyfR9Vz4jg8lLzKuoZVZM/VErCL8E=;
-        b=b3QAbzpQAAIdIXR9mW8/ABMevUGKjWDjX/EOX0Nme5H1hxDkODPN5rQn4B5gKKEUnA
-         wemtKURmlqwzHqie2Ai5pY4OQVei5cmCZkoOd47No7xeXepin4Wfb2l2eszgJuiVX2rZ
-         qmrWEgt1pUc2BSyWEn7pfEj+4pHiNKgnd4TYinHyaTDs8DjPwHProuwx98hrk8OPekFm
-         qmmoyGCnuRD0sG8pODn9NLUNrgbWyP7OkI4Dg9ezIFCP/19bMtQgO8tYLzyouMd9xAvx
-         +d/vpTek/s7nX/LlqZUUb+6SXZtedatdF08QZoah6OoKsa73CnLcbh+jliNO7T+6/Zss
-         UGtA==
-X-Gm-Message-State: APjAAAXMdwmirhlulbNF2uabJ7hSyKFCZiIygCHVQFbw4voOo/RAbJmR
-        C2f4WlWUgq9+IqRfzSZcH3C7Y3nNKf+CewS7QKZW7KIHahQ=
-X-Google-Smtp-Source: APXvYqySUS5WDap6akhFSliYjDaWYZFixsK7mUC4osTLggtfhjnYzwKKRmx57CnB44C1+CD1hV7/vrs0/ZGAXQRE5Uc=
-X-Received: by 2002:ac2:5c42:: with SMTP id s2mr15392081lfp.61.1565425920681;
- Sat, 10 Aug 2019 01:32:00 -0700 (PDT)
+        id S1725773AbfHJIsK (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sat, 10 Aug 2019 04:48:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37422 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725497AbfHJIsK (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Sat, 10 Aug 2019 04:48:10 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E5E2A208C4;
+        Sat, 10 Aug 2019 08:48:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1565426889;
+        bh=pnfaOMCA1rkUd9Nt7AktzZyhGAumgm3OwY7WEXfVsX4=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=mkdM6FL/hsDUTUUSWSvlnZ3OWjd1Y4v5iaa1xHyCIG96BSdXpVG2t3NE/xFfCl8KB
+         hPHzMqCftmrqg9Z/3t9znpxEoo1yvf0p6CUF7bli6+7caVcH8Ptv1DVQxMcBbFAAY6
+         746bOCEbEa1YbtKhL3PMrRTd9BEjWv5vl6vNTr78=
+Date:   Sat, 10 Aug 2019 10:48:06 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     Stefan Roese <sr@denx.de>, linux-serial@vger.kernel.org,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Pavel Machek <pavel@denx.de>
+Subject: Re: [PATCH 1/2] gpiolib: Add for_each_gpio_suffix() helper
+Message-ID: <20190810084806.GA15178@kroah.com>
+References: <20190808132543.26274-1-sr@denx.de>
+ <CACRpkdYzg0At4qf1Nv5_+SzgqQ-iLU1ND9Svhj47=pXJf9E7Mg@mail.gmail.com>
 MIME-Version: 1.0
-References: <20190809074420.27006-1-geert+renesas@glider.be>
-In-Reply-To: <20190809074420.27006-1-geert+renesas@glider.be>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Sat, 10 Aug 2019 10:31:49 +0200
-Message-ID: <CACRpkdY4hZ3kUMs6n-kway=rbp1bocpLsJ1qMAe64oC32NZA1w@mail.gmail.com>
-Subject: Re: [git pull] pinctrl: sh-pfc: Updates for v5.4
-To:     Geert Uytterhoeven <geert+renesas@glider.be>
-Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CACRpkdYzg0At4qf1Nv5_+SzgqQ-iLU1ND9Svhj47=pXJf9E7Mg@mail.gmail.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Aug 9, 2019 at 9:44 AM Geert Uytterhoeven
-<geert+renesas@glider.be> wrote:
+On Sat, Aug 10, 2019 at 10:27:27AM +0200, Linus Walleij wrote:
+> On Thu, Aug 8, 2019 at 3:25 PM Stefan Roese <sr@denx.de> wrote:
+> 
+> > Add a helper macro to enable the interation over all supported GPIO
+> > suffixes (currently "gpios" & "gpio"). This will be used by the serial
+> > mctrl code to check, if a GPIO property exists before requesting it.
+> >
+> > Signed-off-by: Stefan Roese <sr@denx.de>
+> > Suggested-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> > Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> > Cc: Geert Uytterhoeven <geert@linux-m68k.org>
+> > Cc: Pavel Machek <pavel@denx.de>
+> > Cc: Linus Walleij <linus.walleij@linaro.org>
+> > Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> 
+> I really like this patch, it makes things so much more readable.
+> 
+> Do you want me to apply both patches to the GPIO tree when
+> we agreed on the final version? I need some ACK from some
+> serial maintainer.
 
-> The following changes since commit 5f9e832c137075045d15cd6899ab0505cfb2ca4b:
->
->   Linus 5.3-rc1 (2019-07-21 14:05:38 -0700)
->
-> are available in the Git repository at:
->
->   git://git.kernel.org/pub/scm/linux/kernel/git/geert/renesas-drivers.git tags/sh-pfc-for-v5.4-tag1
->
-> for you to fetch changes up to 625efea83a7c37d281c6a90526813a1366929d24:
->
->   pinctrl: rza1: Use devm_platform_ioremap_resource() helper (2019-08-09 09:34:45 +0200)
+When you all can agree on the final version, I'll be glad to give my ack
+for you to take these :)
 
-Pulled into my "devel" branch, thanks!
+thanks,
 
-Yours,
-Linus Walleij
+greg k-h
