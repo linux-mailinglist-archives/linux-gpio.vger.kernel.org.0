@@ -2,91 +2,101 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id D4CDF893D5
-	for <lists+linux-gpio@lfdr.de>; Sun, 11 Aug 2019 23:01:40 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7E2A889419
+	for <lists+linux-gpio@lfdr.de>; Sun, 11 Aug 2019 23:13:32 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726604AbfHKVBg (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sun, 11 Aug 2019 17:01:36 -0400
-Received: from mout.gmx.net ([212.227.17.21]:58041 "EHLO mout.gmx.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726566AbfHKVBf (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Sun, 11 Aug 2019 17:01:35 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1565557280;
-        bh=87tUvpcWCQX+/G+ktrp3h7Sag+HQut9DBjGaGXfmipA=;
-        h=X-UI-Sender-Class:Subject:To:Cc:References:From:Date:In-Reply-To;
-        b=KF+qdZuDpR4jdp8zljq22F2xq1wbR6ECSnOsVzKWTLsA+HBmMNkVl1AzSAwGwIdyd
-         GP1LP8ZjMLvxYS4WNIfvMvaJqF8FDvqL3R232uyyTbHmK34JZ/XeXzvq5mp6GD1yRR
-         srjzxsfIs0hCoh3yXSNVFcEooLQW8FyRnnLZ6Ijk=
-X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from [192.168.1.162] ([37.4.249.106]) by mail.gmx.com (mrgmx101
- [212.227.17.168]) with ESMTPSA (Nemesis) id 0MADqP-1i8Eh72FnV-00BM6v; Sun, 11
- Aug 2019 23:01:20 +0200
+        id S1726155AbfHKVNb (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sun, 11 Aug 2019 17:13:31 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:36764 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726014AbfHKVNb (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sun, 11 Aug 2019 17:13:31 -0400
+Received: by mail-pl1-f193.google.com with SMTP id g4so614559plo.3
+        for <linux-gpio@vger.kernel.org>; Sun, 11 Aug 2019 14:13:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-transfer-encoding;
+        bh=iFnEN3Cwzg71FLpVmxXqQFuErxrLeEAUvbHz2UOpoVM=;
+        b=rFo6IbwflISomuiI660x2Rjx5mSb2cdywbKFA0SDx5CLg/CKVbKOqstQ4eXwQHFpTS
+         VUHE1SQlTzhdgxJArFe+Z5G9IXsrPtwD/qT0tHlYkDTy/2tNIpDFabUTd/2ObCgoggi8
+         2h7+j47OXuJWVtEEh54rGHJMKs3pNSpQ95KYAg3s6fj+XkZT0GBgM7BYc8wOUAwYYohZ
+         /svrr21GS4N3XVnYAoG+fo5ZP9Jny4T3lO+gHaRrmqzytshBM2sDJ+zn2OAufNlt4cpO
+         7fcN8M0T5vu+mm3njKX0n5/DvypHnCjtxHY3BVFAegA81N1hsoJv2vE+XyMT/8TRZH3g
+         z1mQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-transfer-encoding;
+        bh=iFnEN3Cwzg71FLpVmxXqQFuErxrLeEAUvbHz2UOpoVM=;
+        b=HAlFFqmZvyTD8TM0X0Jte5JUg/EvjxFZY806M66jU7tbHmdNA1GtshXMOIQg9noON7
+         Rx6JPQYiADIMomutqtt2oeF6B+aQHNieqJmSTRjIOb3PJoWef/0VaI80KAa2jJJeto7G
+         h7RCyeXXcabBfHqehsVCIX6Y915oO6jjzHCBsNkRFzEAMUyPqb1PYV4hxPmVfJhd/INW
+         z5GjXIku8rC2jGuHmjB5bjyvBXrrxmPUXjy160LkN3DMTgVWZ1fN2ef27u3/nb8BDtY1
+         ZdQBM5Z8yzioX+Tk9h4UeM8X6JR5QCu9kcGoyftgem6Hxqqc547op/LcxjQ6j0mTbOYw
+         j1xA==
+X-Gm-Message-State: APjAAAU3k99vD13drHEID1Pzx4GFcwYFKYyW9AARlneJWaNy+GW4XhEH
+        aGyIGKYrAIiH83WL61Opovw=
+X-Google-Smtp-Source: APXvYqyRnq9q6tt9HzYbI8dR8fkT+ebnnsmmyx1a44JT5VNJ0XuMgp7YOTP5WPsnqC6XvN2n/1GJAA==
+X-Received: by 2002:a17:902:547:: with SMTP id 65mr20090629plf.131.1565558011079;
+        Sun, 11 Aug 2019 14:13:31 -0700 (PDT)
+Received: from Schmitz-MBP.telecom (122-58-182-39-adsl.sparkbb.co.nz. [122.58.182.39])
+        by smtp.googlemail.com with ESMTPSA id 81sm154404823pfx.111.2019.08.11.14.13.28
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sun, 11 Aug 2019 14:13:30 -0700 (PDT)
 Subject: Re: [pinctrl:devel 16/46]
  drivers/pinctrl/bcm/pinctrl-bcm2835.c:995:10: error: incompatible types when
  assigning to type 'volatile struct SHIFTER' from type 'unsigned int'
-To:     Michael Schmitz <schmitzmic@gmail.com>,
+To:     Stefan Wahren <wahrenst@gmx.net>,
         Geert Uytterhoeven <geert@linux-m68k.org>
-Cc:     kbuild test robot <lkp@intel.com>, kbuild-all@01.org,
+Cc:     kbuild-all@01.org,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
         Linus Walleij <linus.walleij@linaro.org>,
         linux-m68k <linux-m68k@lists.linux-m68k.org>
 References: <201908061021.pQY2TnEK%lkp@intel.com>
  <CAMuHMdU1djc8-c1LvNLFyFa0eH9C3k8nxjN_6F40S43mYZH7Hw@mail.gmail.com>
  <848e57bf-41a6-3e3e-6e72-3c15acd76902@gmail.com>
-From:   Stefan Wahren <wahrenst@gmx.net>
-Message-ID: <0ef2d73b-c815-e3e7-a037-db7672bbb413@gmx.net>
-Date:   Sun, 11 Aug 2019 23:01:18 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+ <0ef2d73b-c815-e3e7-a037-db7672bbb413@gmx.net>
+From:   Michael Schmitz <schmitzmic@gmail.com>
+Message-ID: <f1032537-aba1-7db2-2651-b9c6f27445ce@gmail.com>
+Date:   Mon, 12 Aug 2019 09:13:21 +1200
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.11; rv:60.0)
+ Gecko/20100101 Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <848e57bf-41a6-3e3e-6e72-3c15acd76902@gmail.com>
+In-Reply-To: <0ef2d73b-c815-e3e7-a037-db7672bbb413@gmx.net>
 Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Content-Language: en-US
-X-Provags-ID: V03:K1:m2szew/42g8JCLKuWouvXxs5Y8qy5+DYG7VMJ9Kk925YhaNkj/p
- w0O5weO6WKII9NqIS5EPtWOZsN785NcOCplOGGROJnPLptQV/w0IBzO8kNoY/3TGg9Un9cT
- USCH7yuqHf7R39o2OTJKiOPZ5CIxVpxNy8LVU3YfhczmlwdTV7LDrwm+0hGnehEp5SBkwmy
- 5YeqyOSdgXjh6/d/6Wzhw==
-X-Spam-Flag: NO
-X-UI-Out-Filterresults: notjunk:1;V03:K0:HHwBHM09aIs=:fsh3NVqAFvjAJ6zUha1CSF
- o1TeErhmczkY7YSvZIL1Y3dqgg5fzszwfhRTx0ZDsgyOxwS+KPfWf7obOGItkj8rtyo2IJsgs
- 2IitojsRe8Piu7ha3Gsylbyx9FQRAUEw7zAnrpO774Fttvrfk7STEagDhLRnxFmWe6ZbpisE1
- 0FD9zaviO4MbHInSZWegin+qkAYYy9j+jwxa29co0LMZ74vvOPcI7ZR4bCian9m4tp0cfzbvX
- QLtfGltKlNg1Ou81IciH3F1yMYc0C7uqjwpZNqt4+dZXFoUm3z5Sa6MmYyeRI1/7PVsUaO2Un
- mAsOKnphQMLmyYGEoTJmzorE6mWwDyGe5nZR+a8HmlF9ZvRBCWpEGYz7R610dcb60osIXdQrU
- rRmKOi5gWVzSEajzcheXh5UlpAYnx+qd4Rsx58+1EHZ+rzsX5S8LxC4gR2of0AdF3lYNHpybQ
- +A2RXv84hlQUuqDbCbRtMyPaK7UaVmDOIm0KZm08Zox++leqt81P20HjuGHdL6TAjYQ3V4zrH
- bINLN+6vbe/XTnSqt9rnGVQaQOPZ2ZcZl0F0IiB2+fpOX1Nz/Ff8iZjoILbyV6zZ8ca42aNYF
- f4OFWUXTvgGEC3PlSH9aHnNSY1xOFFS/4DttyWBAUwN5mvVGEfJ1WdZFae844JdPjv8EyTjqk
- Hhnrv/FVYoXiGFpkEyLMpQuKmogP7iDBKUBFqpst0IGCdNd3qHoNB/+gFzXmzWY47gxwx7k+y
- jLhVYqnYtxE1Iknz9SWcS6QW8aaY7FbTfsSdJ9OjLP1aaohNBDXjlpYejpy7oEH1dk4UWi5PL
- V5Up1s/0fzuUpIO4HmB3J/RvF14aYJlcKnJ5LcynRXw/Wfm/cL/Gv/81V5XlTQhpiixFMeVhK
- t7Q8Q81MXzXH13TIbvd9OxYmuFKw/nH5CkRk1bvyh4cc9Js5Jc/mtiGgK4DFVz1gVrwW+p8qR
- NgbvmffcGuZhcJTnTio8F9Kqv3HzBGZhcGksBG5giINPGgAs1EMbgUE6WXfgxWQw3aZDF92pG
- hqra/OskOcN3FrLD7vOE2H+vBfJFiNOw4ht2fH/APmkGJt7XIOA+ko6m52euPdBozSoY/t3Jy
- A8eDLG+x7n0LSkfO5OlD+l2CatxZ5mnlgXbwMWtWgpqNQwc4JGtm3tHKqo91qiYM9sjHfyh0n
- EOFDU=
+Content-Transfer-Encoding: 8bit
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi,
+Stefan,
 
-Am 07.08.19 um 00:41 schrieb Michael Schmitz:
-> Hi Geert,
+considering that such a clash could happen again, it might be prudent to
+use a less generic name in your driver as well?
+
+Leaves the matter of who prepares a patch to atarihw.h and users of that
+definition ...
+
+Cheers,
+
+    Michael
+
+Am 12.08.19 um 09:01 schrieb Stefan Wahren:
+> Hi,
 >
-> could be renamed shifter_st, I suppose. Only used in
-> arch/m68k/atari/config.c and drivers/video/fbdev/atafb.c.
-
-looks like you've come to a solution. Is there any action required from
-my side?
-
-Regards
-Stefan
-
+> Am 07.08.19 um 00:41 schrieb Michael Schmitz:
+>> Hi Geert,
+>>
+>> could be renamed shifter_st, I suppose. Only used in
+>> arch/m68k/atari/config.c and drivers/video/fbdev/atafb.c.
+> looks like you've come to a solution. Is there any action required from
+> my side?
 >
-> Cheers,
+> Regards
+> Stefan
 >
-> =C2=A0=C2=A0=C2=A0 Michael
+>> Cheers,
+>>
+>>     Michael
