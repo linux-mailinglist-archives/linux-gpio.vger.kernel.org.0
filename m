@@ -2,140 +2,116 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id CD4B4898A5
-	for <lists+linux-gpio@lfdr.de>; Mon, 12 Aug 2019 10:23:38 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id EFE75899AA
+	for <lists+linux-gpio@lfdr.de>; Mon, 12 Aug 2019 11:20:27 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727043AbfHLIXi (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 12 Aug 2019 04:23:38 -0400
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:36323 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726834AbfHLIXh (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 12 Aug 2019 04:23:37 -0400
-Received: by mail-lf1-f68.google.com with SMTP id j17so19633687lfp.3
-        for <linux-gpio@vger.kernel.org>; Mon, 12 Aug 2019 01:23:36 -0700 (PDT)
+        id S1727072AbfHLJU1 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 12 Aug 2019 05:20:27 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:55053 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727023AbfHLJU1 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 12 Aug 2019 05:20:27 -0400
+Received: by mail-wm1-f67.google.com with SMTP id p74so11473724wme.4;
+        Mon, 12 Aug 2019 02:20:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=tIwv8dK4/49+nYJUXAhUb6v7kSDNhA5y6DSNONfPNGw=;
-        b=ArLrOvzidmhgHvCs+LPUonuvQsXaCPj2ergMFlg79B6RqlC1PPEE1HcrhFSpNKKube
-         ZIWAApQlYFf42bv/MePqIEOJreNBo0JR1fPRSk08f+m9pAdwVG6hA4nMOrjP8iNmElxA
-         tW+EColZ9L+aOqAI4JoHvfFIR/lZj+7ta5hXnQX4jG7ckjsPwwpAxWrNv0H8eandho7v
-         sby0wKyExH0obqvj/j8cvrsF39ur5CqAKMzjBdjbYVDAAFn99l0lIT7WzKXDHJd379ag
-         z5/3U6eqKJ+2W3Eg5smznoZHgT4Sh/5etuceMHXFfURIuDdliLz3cgt1cfGjRh+5zL/R
-         NcpQ==
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=MgLPMTtg6Jyzs9wt4ekHIpThJOy3S51fX4Pbs5028Qw=;
+        b=MRdxqniAXGFwWGp6ovZBRFM5kKVCzLuypXpwid6B4G8z7Twcw1CyFlX5XZduWh6krN
+         BvoiV1sQSftc9cDjUaJAIOA/xdD5x5IaNN4fT2PbmzflVMWDP+lnn4Uj0gJ9mrnTDb//
+         QN9BugW6+JENQzNq/HeN8qdi9AxVJ5WyVlu/z74wAoImfMnLfr1BdDzzhR0VUaX/NK7B
+         DjFAfJuOmwwnepWyG9icGE30RhNahktJMk1z8ZBV9B2HcjMfnrEw9PueE3xjbd5ao0ls
+         4dceqzuANg44kgeClcK0gxjc/+68HYucfwePMGct+S/xb/Woo+wd1CzjNrg24nC5bztP
+         11Eg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=tIwv8dK4/49+nYJUXAhUb6v7kSDNhA5y6DSNONfPNGw=;
-        b=JXmE0bsx++279XoxPN2QXnJp06oe5/X9yCI7f/EsZ567dZ5fKRf+eFAeX3WL9FfHIU
-         7fzdltpnyYj4iz7wRShLbVc/HG55rOKpFRyaoFY7YHK39PJgdpyPAJ0MQHQm/AsjVVfs
-         weA41bOWPCWGDFZHEe0sY8Oe1GmixQpm+kKbupv3z1BFsYJieeAD2m2LYqtllWYGPv6Y
-         DWqkFFUdsdWm6YLKr1P/5KzzTxTxNJeaOYBdx16zpptzKQXNU8noxCgO2EdQg3hl+k6F
-         8jWQvGsVKNjVGO2dD5HfeiOnsTGhEZ21LEo5gaiEja+oNqbNXimAE05HsXNBj4JVtd5I
-         AepQ==
-X-Gm-Message-State: APjAAAXuXFLRmhrydYEky1Nry/BGxeiGuyQsKF8j5By6quooowkLAc9x
-        erTxuVFd909EzqOzwm4lffnltpXA3BQ=
-X-Google-Smtp-Source: APXvYqyUE+nnAsGpw+XjdEWDUac0p72HjEYNE71HGqE13Uv+z90hMXYvZrT86olLjacYSYUIfKSKwg==
-X-Received: by 2002:a19:c6d4:: with SMTP id w203mr19271481lff.135.1565598215469;
-        Mon, 12 Aug 2019 01:23:35 -0700 (PDT)
-Received: from genomnajs.ideon.se ([85.235.10.227])
-        by smtp.gmail.com with ESMTPSA id n17sm4635074lfi.37.2019.08.12.01.23.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 12 Aug 2019 01:23:34 -0700 (PDT)
-From:   Linus Walleij <linus.walleij@linaro.org>
-To:     linux-gpio@vger.kernel.org
-Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        David Cohen <david.a.cohen@linux.intel.com>,
-        Thierry Reding <treding@nvidia.com>
-Subject: [PATCH] gpio: merrifield: Pass irqchip when adding gpiochip
-Date:   Mon, 12 Aug 2019 10:23:31 +0200
-Message-Id: <20190812082331.22674-1-linus.walleij@linaro.org>
-X-Mailer: git-send-email 2.21.0
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=MgLPMTtg6Jyzs9wt4ekHIpThJOy3S51fX4Pbs5028Qw=;
+        b=uLH+2WOkrWNz0tTDoB+NX4b++ENxLOgWMFLL/GNehwRSLJTcXd9LFKmRMZLDj+I2pT
+         bL8TaTDDzYPX72wOhPYP5T/FByuR50JiC7ZgCzDADzyhK0auxjtGpjEvjgf2Rh2yqprR
+         4NVmHzHI4EY2gETMozMiGpLxS+PZSryMEdmpIG5Mv1DUJxHvBskVTQfdBYFic6n+j8G+
+         uYeFWJpJdPPftYwmuYPMX2KxrruqdZEMZZGY3sw+PzJrlaRtH20FceU6vqA3vSX5SxmW
+         OTQO/2OEfq2Y+/vwsAmF/SmuE6n2HXZEMMirQ4j6L1T9o7vRhehZEE7oR0yQUTkmz/EX
+         VH8g==
+X-Gm-Message-State: APjAAAU4BcbzardcI25fwQQmnMQGN2cp8WC7/KrMqWvz7Gm7C/R0ga3a
+        Slhtt+P6WaIDbLccF8Acq74=
+X-Google-Smtp-Source: APXvYqxHLPKNrpdLLMqp0G4bXC5Z91yn/gIGCzLXSVN9445Z3ZyS5vnf0Dqr+tLu8Cusm5o3P0Nl2Q==
+X-Received: by 2002:a05:600c:10ce:: with SMTP id l14mr25953651wmd.118.1565601624096;
+        Mon, 12 Aug 2019 02:20:24 -0700 (PDT)
+Received: from localhost (pD9E51890.dip0.t-ipconnect.de. [217.229.24.144])
+        by smtp.gmail.com with ESMTPSA id w13sm44443446wre.44.2019.08.12.02.20.22
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Mon, 12 Aug 2019 02:20:22 -0700 (PDT)
+Date:   Mon, 12 Aug 2019 11:20:21 +0200
+From:   Thierry Reding <thierry.reding@gmail.com>
+To:     Sowjanya Komatineni <skomatineni@nvidia.com>
+Cc:     jonathanh@nvidia.com, tglx@linutronix.de, jason@lakedaemon.net,
+        marc.zyngier@arm.com, linus.walleij@linaro.org, stefan@agner.ch,
+        mark.rutland@arm.com, pdeschrijver@nvidia.com, pgaikwad@nvidia.com,
+        sboyd@kernel.org, linux-clk@vger.kernel.org,
+        linux-gpio@vger.kernel.org, jckuo@nvidia.com, josephl@nvidia.com,
+        talho@nvidia.com, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org, mperttunen@nvidia.com,
+        spatra@nvidia.com, robh+dt@kernel.org, digetx@gmail.com,
+        devicetree@vger.kernel.org, rjw@rjwysocki.net,
+        viresh.kumar@linaro.org, linux-pm@vger.kernel.org
+Subject: Re: [PATCH v8 01/21] pinctrl: tegra: Fix write barrier placement in
+ pmx_writel
+Message-ID: <20190812092021.GC8903@ulmo>
+References: <1565308020-31952-1-git-send-email-skomatineni@nvidia.com>
+ <1565308020-31952-2-git-send-email-skomatineni@nvidia.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="i7F3eY7HS/tUJxUd"
+Content-Disposition: inline
+In-Reply-To: <1565308020-31952-2-git-send-email-skomatineni@nvidia.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-We need to convert all old gpio irqchips to pass the irqchip
-setup along when adding the gpio_chip. For more info see
-drivers/gpio/TODO.
 
-For chained irqchips this is a pretty straight-forward
-conversion.
+--i7F3eY7HS/tUJxUd
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Mika Westerberg <mika.westerberg@linux.intel.com>
-Cc: David Cohen <david.a.cohen@linux.intel.com>
-Cc: Thierry Reding <treding@nvidia.com>
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
----
-Andy: when you're happy with this you can either supply an
-ACK and I will merge it or you can merge it into your tree
-for a later pull request, just tell me what you prefer.
----
- drivers/gpio/gpio-merrifield.c | 28 ++++++++++++++++------------
- 1 file changed, 16 insertions(+), 12 deletions(-)
+On Thu, Aug 08, 2019 at 04:46:40PM -0700, Sowjanya Komatineni wrote:
+> pmx_writel uses writel which inserts write barrier before the
+> register write rather.
+>=20
+> This patch has fix to replace writel with writel_relaxed followed
+> by a write barrier to ensure write operation before the barrier
+> is completed for successful pinctrl change.
+>=20
+> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
+> ---
+>  drivers/pinctrl/tegra/pinctrl-tegra.c | 4 +++-
+>  1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/gpio/gpio-merrifield.c b/drivers/gpio/gpio-merrifield.c
-index 3302125e5265..299277951791 100644
---- a/drivers/gpio/gpio-merrifield.c
-+++ b/drivers/gpio/gpio-merrifield.c
-@@ -397,6 +397,7 @@ static int mrfld_gpio_probe(struct pci_dev *pdev, const struct pci_device_id *id
- {
- 	const struct mrfld_gpio_pinrange *range;
- 	const char *pinctrl_dev_name;
-+	struct gpio_irq_chip *girq;
- 	struct mrfld_gpio *priv;
- 	u32 gpio_base, irq_base;
- 	void __iomem *base;
-@@ -444,6 +445,21 @@ static int mrfld_gpio_probe(struct pci_dev *pdev, const struct pci_device_id *id
- 
- 	raw_spin_lock_init(&priv->lock);
- 
-+	girq = &priv->chip.irq;
-+	girq->chip = &mrfld_irqchip;
-+	girq->parent_handler = mrfld_irq_handler;
-+	girq->num_parents = 1;
-+	girq->parents = devm_kcalloc(&pdev->dev, 1,
-+				     sizeof(*girq->parents),
-+				     GFP_KERNEL);
-+	if (!girq->parents)
-+		return -ENOMEM;
-+	girq->parents[0] = pdev->irq;
-+	girq->default_type = IRQ_TYPE_NONE;
-+	girq->handler = handle_bad_irq;
-+
-+	mrfld_irq_init_hw(priv);
-+
- 	pci_set_drvdata(pdev, priv);
- 	retval = devm_gpiochip_add_data(&pdev->dev, &priv->chip, priv);
- 	if (retval) {
-@@ -465,18 +481,6 @@ static int mrfld_gpio_probe(struct pci_dev *pdev, const struct pci_device_id *id
- 		}
- 	}
- 
--	retval = gpiochip_irqchip_add(&priv->chip, &mrfld_irqchip, irq_base,
--				      handle_bad_irq, IRQ_TYPE_NONE);
--	if (retval) {
--		dev_err(&pdev->dev, "could not connect irqchip to gpiochip\n");
--		return retval;
--	}
--
--	mrfld_irq_init_hw(priv);
--
--	gpiochip_set_chained_irqchip(&priv->chip, &mrfld_irqchip, pdev->irq,
--				     mrfld_irq_handler);
--
- 	return 0;
- }
- 
--- 
-2.21.0
+Acked-by: Thierry Reding <treding@nvidia.com>
 
+--i7F3eY7HS/tUJxUd
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl1RL1EACgkQ3SOs138+
+s6GgOQ/+KHEjD8Jzg9BS66GmKuNoOclOxDM03l3CoYiOGhyyUsPjifCTvtnDFGwa
+lqaq7sH3V7fOCC/qun2i5BE8pumI+NgLEkm9tYKvmLCn2vKCzIpv2LGX37+e91M8
+GiMD27bmKkEDW4nLgIza9y3v/t6kJ4XhwKnFA2+eMjqZB9SNleworpYAZp832AIj
+nl0HbqRiGpkLjcIaWAibNY5+0OEpRB6AhZlhsCWz5h7c00Jad8qK1rBnoLxDiq7a
+s5jPfDc8fYWQ6OnIutLEjm+GdSx17odH7R+mprW9OiKqWPmdZUp/aZEHDyS434Al
++c8I0wEpxWWCEk924kF6oPytP6KKjOHy29SdhPg0RV7uuK/qPm6ylaSxem3NyCMi
+sibGMlfXuMKdFaDbCEIv0XbVsu7nmu1I0h7PV1Gy+oCSnPI8EJ+tFiGozbYoy9hQ
+INdJWkMQLWXsCRsECrP1zWyDdiA5zhI0nRNVSflZi5Lz9GkcGa8fmi+r0o4vOL+x
+Lsy85RpW8ukLteRRUf51hpXNcvsXTGXZEempESfd+uLu7eHTpq8WciMDDT0//ekQ
+L4xaq/9TB7s0sDH3D2O8VOd5s1tR0nHl0DojzeY/YS25hOi3nW/8/fHaz+1c6z/C
+cZ7LUpJxyGhfs9Sj00Ftyj2fWVZGuIxFDQXh5ny339ST1DhgPRQ=
+=NUo9
+-----END PGP SIGNATURE-----
+
+--i7F3eY7HS/tUJxUd--
