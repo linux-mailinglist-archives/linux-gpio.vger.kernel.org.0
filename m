@@ -2,272 +2,137 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id AAE7989A84
-	for <lists+linux-gpio@lfdr.de>; Mon, 12 Aug 2019 11:54:04 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 25C2889A85
+	for <lists+linux-gpio@lfdr.de>; Mon, 12 Aug 2019 11:54:05 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727667AbfHLJxu (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 12 Aug 2019 05:53:50 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:37004 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727425AbfHLJxu (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 12 Aug 2019 05:53:50 -0400
-Received: by mail-wm1-f65.google.com with SMTP id z23so11198106wmf.2;
-        Mon, 12 Aug 2019 02:53:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=G2spvlN9eUViINwSX8FLxMr7evAtvkAGUBzR5szrA6Y=;
-        b=uNj2PzOWlYlm63XokrWRMDpTE+Vuqj1ANchbpecQS0QcxzFrm5pQbh2FZhKpyxjJJO
-         69MGdgUe4m020JK6zmZd9cYpjxOcnwArSNqsGTe/4QF8/ULz/K4t8tzdojHSLloVB8pR
-         D7tF6VkN9VUzEnHGDEW7lIe6Pek1g1JbEU2dzxohIUlyg0wYXBXnIOyMwNjIlby4n3El
-         hxVFwY04AX2YIVv7F8ksqr2cOYse067RYHQYt5yKpt45a3cfkrPjr7Al8LkKoA47sVRK
-         JGdzl9sW5rkb/EmUhs/VcGxZXO8Mp0wbGuHyHqneOZrEltcRwfBzzfB/u/bYeAyl+WRS
-         Flzw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=G2spvlN9eUViINwSX8FLxMr7evAtvkAGUBzR5szrA6Y=;
-        b=qi68GWwx3WI9yDirlBqPqd4VlebAlOMZ8lBJWeca6LeqP5QqcfAvTtp55t1/wassuK
-         TNPv7+N0MvS4JdBYXHmnt5i9Yvy+uxaEEtsb3ug7JTHQHKcVAQi6XFF8gD8BhPWPNcxt
-         oPPPZQUEL8YF2Re8Lh8sAwNx3REZi1xlbqVs6osinQhckbbHT+NB2pbtB14QahNW4jfg
-         JVL3hRFDYNhGlz4AWlnUG4qcm4bZ1tIixVwtE+/1UuFi+wrJHrU6ZadBZ113OOJ4PEoS
-         760wBd5heehO6m9Pp4oJGhvxrz3Mk4rs4NCrtuSc3mLUz2WxfpjuytMkEtdtJOYVLkn5
-         9MVw==
-X-Gm-Message-State: APjAAAWi7KQWNzyVloDcFt2cF93hvRdqifRkJsoMdq4KszYkNjP5XgtV
-        w3Pmd0eq6/SoKW/sRdCFsJ8=
-X-Google-Smtp-Source: APXvYqwbMybiTxjGXH5d4FP5EAydJFALYbdnI5jzXf1AhozoLGqlFSqtheu0qHGyI2NDVuElLZ6OuQ==
-X-Received: by 2002:a1c:7516:: with SMTP id o22mr27231371wmc.19.1565603625897;
-        Mon, 12 Aug 2019 02:53:45 -0700 (PDT)
-Received: from localhost (pD9E51890.dip0.t-ipconnect.de. [217.229.24.144])
-        by smtp.gmail.com with ESMTPSA id o6sm230670853wra.27.2019.08.12.02.53.44
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Mon, 12 Aug 2019 02:53:44 -0700 (PDT)
-Date:   Mon, 12 Aug 2019 11:53:43 +0200
-From:   Thierry Reding <thierry.reding@gmail.com>
-To:     Sowjanya Komatineni <skomatineni@nvidia.com>
-Cc:     jonathanh@nvidia.com, tglx@linutronix.de, jason@lakedaemon.net,
-        marc.zyngier@arm.com, linus.walleij@linaro.org, stefan@agner.ch,
-        mark.rutland@arm.com, pdeschrijver@nvidia.com, pgaikwad@nvidia.com,
-        sboyd@kernel.org, linux-clk@vger.kernel.org,
-        linux-gpio@vger.kernel.org, jckuo@nvidia.com, josephl@nvidia.com,
-        talho@nvidia.com, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org, mperttunen@nvidia.com,
-        spatra@nvidia.com, robh+dt@kernel.org, digetx@gmail.com,
-        devicetree@vger.kernel.org, rjw@rjwysocki.net,
-        viresh.kumar@linaro.org, linux-pm@vger.kernel.org
-Subject: Re: [PATCH v8 09/21] clk: tegra: clk-super: Fix to enable PLLP
- branches to CPU
-Message-ID: <20190812095343.GH8903@ulmo>
-References: <1565308020-31952-1-git-send-email-skomatineni@nvidia.com>
- <1565308020-31952-10-git-send-email-skomatineni@nvidia.com>
+        id S1727423AbfHLJxv (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 12 Aug 2019 05:53:51 -0400
+Received: from mx0a-0014ca01.pphosted.com ([208.84.65.235]:47894 "EHLO
+        mx0a-0014ca01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727140AbfHLJxv (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>);
+        Mon, 12 Aug 2019 05:53:51 -0400
+Received: from pps.filterd (m0042385.ppops.net [127.0.0.1])
+        by mx0a-0014ca01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x7C9qG81001701;
+        Mon, 12 Aug 2019 02:53:47 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cadence.com; h=from : to : cc :
+ subject : date : message-id : references : in-reply-to : content-type :
+ content-id : content-transfer-encoding : mime-version; s=proofpoint;
+ bh=MmBhk0vHRYgcB17h3GZSvctr9j1wsy+npKYT7K2v9Cg=;
+ b=eUkUktnr4n1ohiDZEmmUZUcIs4GuJV2j0IWT00+prsKL2TcoPAZIfP3Klbh4xpQ0TEVo
+ JTapruaZwXQ5gViJ5ASiwK4jmqHG1L8iqJo6KIi7BZ2iEslt5jHJd9mkabD/gZkhP+gJ
+ bGLYT5l+QvzxYcFslvA96uJVj+mB+5mrxHasoUKxiw8f1GgLgKCjez7axNlbR3OAJqUM
+ Ql8cdoXieTjuViiorM3FO36BVQJTHpTB7mNKXMqkBWOCX4qGBfyRvhpDIrxdSElIbDCA
+ bu8vBoMa+rBovgOoFPejgHk/J6k4aHNR07cxJF+aXuUPEIPv6WU8HYjifzCfzJevfS0T BQ== 
+Authentication-Results: cadence.com;
+        spf=pass smtp.mailfrom=jank@cadence.com
+Received: from nam03-co1-obe.outbound.protection.outlook.com (mail-co1nam03lp2051.outbound.protection.outlook.com [104.47.40.51])
+        by mx0a-0014ca01.pphosted.com with ESMTP id 2u9tfs57vb-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 12 Aug 2019 02:53:47 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=DM9XG/0pUJokNYiHSRIqBrxRLDniVIaItwvotE70O33NO+E3+BFxP5D4pZrt++WBJD3sER6RAiXIS9uYmSMDL3J2uwpg6qti83/fPI0zLSti/D7tQZXZ7pymo451AT7K5xP2QGhBav01ZBrGdKAl86QUd4UyhBKr/wZMxyX0EA3VNY0D/H0ZWjYZuJ3z5uWM87Y8wkAZJZ19/IVJYoRVK4lVbern4oEiewHlpNNO8ANJReixvh597+aYflRnFWMQhq4pVm/2yrSohK42lEcIgP2JT4z0m53J9o4nwCzBEzUxZWfeCWGx7e9HFjCV4fRmHOMX5MWzzaRa+VdG5PJzTw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=MmBhk0vHRYgcB17h3GZSvctr9j1wsy+npKYT7K2v9Cg=;
+ b=TMCGuaymEY7qTwPyw5gQBwMZMC0pLNTUaWdRx9LBZCuhm13RKJrAzxZVxmaUXh0ZjKkaEO3RpTBaGNz2lSuwlSZuHhBzZe9YUA7BFWSkolc52YX6xneNtVxPjj3X//7idxjgOE5fxXHEzouc/dWWpLy0ubpOmYo56UAyVWk80PhZ9q+onOqaraANSR1VqK5agZP7RYa4Ro0PrPOGFdrQgIt5EULvY8EXzGvVPfJASnMySbyuU+evpaQ8mutjaVz4+lwd4C1hW1+2HiWfwoUYbgFSowTHEaBBL2tJZCcYhypMWzeMeVJXXd9vcreSosly4vTBOSJlMOBJIKn7RM3sPQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=cadence.com; dmarc=pass action=none header.from=cadence.com;
+ dkim=pass header.d=cadence.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cadence.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=MmBhk0vHRYgcB17h3GZSvctr9j1wsy+npKYT7K2v9Cg=;
+ b=g/HgaxcHRFBf5mmGOHSAiO45MFIT/FhmnMzLvW9F+2bwHT1OEULXDD2636J4oHBxwQEDgAmdNa5Q564e1wCc/153UM60WJ2W65d/pg8CBmnsMIvW7ubXgquZIqFl79NnUbaqadwNUUb5afnLTeo8u4VkmdLh5+qMcHFvkyuS1rI=
+Received: from CY1PR07MB2521.namprd07.prod.outlook.com (10.167.16.12) by
+ CY1PR07MB2617.namprd07.prod.outlook.com (10.167.16.143) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2157.15; Mon, 12 Aug 2019 09:53:45 +0000
+Received: from CY1PR07MB2521.namprd07.prod.outlook.com
+ ([fe80::2cc9:1e25:81ae:bc20]) by CY1PR07MB2521.namprd07.prod.outlook.com
+ ([fe80::2cc9:1e25:81ae:bc20%11]) with mapi id 15.20.2157.022; Mon, 12 Aug
+ 2019 09:53:45 +0000
+From:   Jan Kotas <jank@cadence.com>
+To:     Linus Walleij <linus.walleij@linaro.org>
+CC:     "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Jan Kotas <jank@cadence.com>,
+        Thierry Reding <treding@nvidia.com>
+Subject: Re: [PATCH] gpio: cadence: Pass irqchip when adding gpiochip
+Thread-Topic: [PATCH] gpio: cadence: Pass irqchip when adding gpiochip
+Thread-Index: AQHVTrTlcTdS7y+xz0Gl7Rddx404tqb3Sj4A
+Date:   Mon, 12 Aug 2019 09:53:45 +0000
+Message-ID: <95B402CC-A698-42FE-9D3E-D4B05997ED3E@global.cadence.com>
+References: <20190809131804.20352-1-linus.walleij@linaro.org>
+In-Reply-To: <20190809131804.20352-1-linus.walleij@linaro.org>
+Accept-Language: en-US, pl-PL
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [158.140.1.28]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 98d86f5b-e0ee-4801-62e7-08d71f0af72b
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:CY1PR07MB2617;
+x-ms-traffictypediagnostic: CY1PR07MB2617:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <CY1PR07MB26177CB5EE058951B899DE8ED0D30@CY1PR07MB2617.namprd07.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:6790;
+x-forefront-prvs: 012792EC17
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(366004)(39860400002)(346002)(136003)(396003)(376002)(189003)(199004)(36092001)(6246003)(102836004)(54906003)(8676002)(25786009)(476003)(33656002)(99286004)(5660300002)(446003)(76176011)(6436002)(14454004)(53546011)(6486002)(2906002)(6506007)(4744005)(478600001)(316002)(11346002)(66446008)(64756008)(66556008)(66476007)(66946007)(76116006)(91956017)(486006)(26005)(6512007)(66066001)(186003)(86362001)(71200400001)(71190400001)(53936002)(305945005)(6116002)(3846002)(229853002)(6916009)(4326008)(256004)(8936002)(81156014)(81166006)(7736002);DIR:OUT;SFP:1101;SCL:1;SRVR:CY1PR07MB2617;H:CY1PR07MB2521.namprd07.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: cadence.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: y9sKPE4oxOB08LSLpx7tVsT26rmG+w/KYPCce+Q7UD1Xva5VLoCCibSIP1PLTvMa6155fjLwmAfRXhXxeZn7YvG8JPrwUoEHMMHWNXo5VTnr0y7TPYR9A7YUju8wJe6JOflxRQn3UJv7+t9R3s0kPlzbwTmbyhCmppnq5RsHymkTppErMP6G09XGLdsL4Ryu1gSwsIHpLpH7vCXv7ZtecFZvhZo4llToYTU8rbyBJmRY095KjZg/6sszRjCinkSwbOSkhduDg+nUmQzKiy22ZNCWsr6A/vgsp9SMaBjivXAJBetzn8qpi2k3OnnyWh+pP3CnQdlWGHA9I+9LHBN16ZtFy993eICOQ9Mnb7aUmtVX000Xrt0GFR9a3mXUdAKyorzmZtKWc1sZbLnczOS/2d1TV3izfRnUmx0GK4bcgN0=
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <B8312DF4B7405B4FB1CBFDDE856F6B1C@namprd07.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="2oox5VnwalALFvA7"
-Content-Disposition: inline
-In-Reply-To: <1565308020-31952-10-git-send-email-skomatineni@nvidia.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+X-OriginatorOrg: cadence.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 98d86f5b-e0ee-4801-62e7-08d71f0af72b
+X-MS-Exchange-CrossTenant-originalarrivaltime: 12 Aug 2019 09:53:45.2024
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: d36035c5-6ce6-4662-a3dc-e762e61ae4c9
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: RxT+ad/VVpMAyUa6nsAmkyc2fKOO3t71ZOT+9bJquQJFS2diwDaIA4zbwJfb8ToaLo84kFlwoVv6rKDo1m08Qg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY1PR07MB2617
+X-Proofpoint-SPF-Result: pass
+X-Proofpoint-SPF-Record: v=spf1 include:spf.smktg.jp include:_spf.salesforce.com
+ include:mktomail.com include:spf-0014ca01.pphosted.com
+ include:spf.protection.outlook.com include:auth.msgapp.com
+ include:spf.mandrillapp.com ~all
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-08-12_04:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_check_notspam policy=outbound_check score=0
+ priorityscore=1501 malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0
+ spamscore=0 clxscore=1011 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=911 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1906280000 definitions=main-1908120110
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
 
---2oox5VnwalALFvA7
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Thu, Aug 08, 2019 at 04:46:48PM -0700, Sowjanya Komatineni wrote:
-> This patch has a fix to enable PLLP branches to CPU before changing
-> the CPU cluster clock source to PLLP for Gen5 Super clock and
-> disables PLLP branches to CPU when not in use.
+> On 9 Aug 2019, at 15:18, Linus Walleij <linus.walleij@linaro.org> wrote:
 >=20
-> During system suspend entry and exit, CPU source will be switched
-> to PLLP and this needs PLLP branches to be enabled to CPU prior to
-> the switch.
+> We need to convert all old gpio irqchips to pass the irqchip
+> setup along when adding the gpio_chip. For more info see
+> drivers/gpio/TODO.
 >=20
-> On system resume, warmboot code enables PLLP branches to CPU and
-> powers up the CPU with PLLP clock source.
+> For chained irqchips this is a pretty straight-forward
+> conversion.
 >=20
-> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
+> Cc: Jan Kotas <jank@cadence.com>
+> Cc: Thierry Reding <treding@nvidia.com>
+> Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
 > ---
->  drivers/clk/tegra/clk-super.c            | 14 ++++++++++++++
->  drivers/clk/tegra/clk-tegra-super-gen4.c |  7 ++++++-
->  drivers/clk/tegra/clk.c                  | 14 ++++++++++++++
->  drivers/clk/tegra/clk.h                  |  5 +++++
->  4 files changed, 39 insertions(+), 1 deletion(-)
->=20
-> diff --git a/drivers/clk/tegra/clk-super.c b/drivers/clk/tegra/clk-super.c
-> index 39ef31b46df5..e2a1e95a8db7 100644
-> --- a/drivers/clk/tegra/clk-super.c
-> +++ b/drivers/clk/tegra/clk-super.c
-> @@ -28,6 +28,9 @@
->  #define super_state_to_src_shift(m, s) ((m->width * s))
->  #define super_state_to_src_mask(m) (((1 << m->width) - 1))
-> =20
-> +#define CCLK_SRC_PLLP_OUT0 4
-> +#define CCLK_SRC_PLLP_OUT4 5
-> +
->  static u8 clk_super_get_parent(struct clk_hw *hw)
->  {
->  	struct tegra_clk_super_mux *mux =3D to_clk_super_mux(hw);
-> @@ -97,12 +100,23 @@ static int clk_super_set_parent(struct clk_hw *hw, u=
-8 index)
->  		if (index =3D=3D mux->div2_index)
->  			index =3D mux->pllx_index;
->  	}
-> +
-> +	/* enable PLLP branches to CPU before selecting PLLP source */
-> +	if ((mux->flags & TEGRA210_CPU_CLK) &&
-> +	    (index =3D=3D CCLK_SRC_PLLP_OUT0 || index =3D=3D CCLK_SRC_PLLP_OUT4=
-))
-> +		tegra_clk_set_pllp_out_cpu(true);
-> +
->  	val &=3D ~((super_state_to_src_mask(mux)) << shift);
->  	val |=3D (index & (super_state_to_src_mask(mux))) << shift;
-> =20
->  	writel_relaxed(val, mux->reg);
->  	udelay(2);
-> =20
-> +	/* disable PLLP branches to CPU if not used */
-> +	if ((mux->flags & TEGRA210_CPU_CLK) &&
-> +	    index !=3D CCLK_SRC_PLLP_OUT0 && index !=3D CCLK_SRC_PLLP_OUT4)
-> +		tegra_clk_set_pllp_out_cpu(false);
-> +
->  out:
->  	if (mux->lock)
->  		spin_unlock_irqrestore(mux->lock, flags);
-> diff --git a/drivers/clk/tegra/clk-tegra-super-gen4.c b/drivers/clk/tegra=
-/clk-tegra-super-gen4.c
-> index cdfe7c9697e1..98538f79b0c4 100644
-> --- a/drivers/clk/tegra/clk-tegra-super-gen4.c
-> +++ b/drivers/clk/tegra/clk-tegra-super-gen4.c
-> @@ -180,7 +180,7 @@ static void __init tegra_super_clk_init(void __iomem =
-*clk_base,
->  					gen_info->num_cclk_g_parents,
->  					CLK_SET_RATE_PARENT,
->  					clk_base + CCLKG_BURST_POLICY,
-> -					0, 4, 8, 0, NULL);
-> +					TEGRA210_CPU_CLK, 4, 8, 0, NULL);
->  		} else {
->  			clk =3D tegra_clk_register_super_mux("cclk_g",
->  					gen_info->cclk_g_parents,
-> @@ -196,6 +196,11 @@ static void __init tegra_super_clk_init(void __iomem=
- *clk_base,
->  	dt_clk =3D tegra_lookup_dt_id(tegra_clk_cclk_lp, tegra_clks);
->  	if (dt_clk) {
->  		if (gen_info->gen =3D=3D gen5) {
-> +		/*
-> +		 * TEGRA210_CPU_CLK flag is not needed for cclk_lp as cluster
-> +		 * switching is not currently supported on Tegra210 and also
-> +		 * cpu_lp is not used.
-> +		 */
+> Hi Jan, it'd be great if you could test/review this
+> patch.
 
-Indentation looks odd here. If you want to comment the whole block, put
-the comment above the "if (...) {". If you want to comment the contents
-of the block, indent one level further so it aligns with the "clk =3D ..."
-below.
+Everything seems to be OK in my tests.
 
-Otherwise looks good, so with the indentation fixed:
+Regards,
+Jan
 
-Acked-by: Thierry Reding <treding@nvidia.com>
-
->  			clk =3D tegra_clk_register_super_mux("cclk_lp",
->  					gen_info->cclk_lp_parents,
->  					gen_info->num_cclk_lp_parents,
-> diff --git a/drivers/clk/tegra/clk.c b/drivers/clk/tegra/clk.c
-> index 573e3c967ae1..eb08047fd02f 100644
-> --- a/drivers/clk/tegra/clk.c
-> +++ b/drivers/clk/tegra/clk.c
-> @@ -23,6 +23,7 @@
->  #define CLK_OUT_ENB_W			0x364
->  #define CLK_OUT_ENB_X			0x280
->  #define CLK_OUT_ENB_Y			0x298
-> +#define CLK_ENB_PLLP_OUT_CPU		BIT(31)
->  #define CLK_OUT_ENB_SET_L		0x320
->  #define CLK_OUT_ENB_CLR_L		0x324
->  #define CLK_OUT_ENB_SET_H		0x328
-> @@ -199,6 +200,19 @@ const struct tegra_clk_periph_regs *get_reg_bank(int=
- clkid)
->  	}
->  }
-> =20
-> +void tegra_clk_set_pllp_out_cpu(bool enable)
-> +{
-> +	u32 val;
-> +
-> +	val =3D readl_relaxed(clk_base + CLK_OUT_ENB_Y);
-> +	if (enable)
-> +		val |=3D CLK_ENB_PLLP_OUT_CPU;
-> +	else
-> +		val &=3D ~CLK_ENB_PLLP_OUT_CPU;
-> +
-> +	writel_relaxed(val, clk_base + CLK_OUT_ENB_Y);
-> +}
-> +
->  struct clk ** __init tegra_clk_init(void __iomem *regs, int num, int ban=
-ks)
->  {
->  	clk_base =3D regs;
-> diff --git a/drivers/clk/tegra/clk.h b/drivers/clk/tegra/clk.h
-> index 8a9af45b6084..560e2bcb3d7d 100644
-> --- a/drivers/clk/tegra/clk.h
-> +++ b/drivers/clk/tegra/clk.h
-> @@ -677,6 +677,9 @@ struct clk *tegra_clk_register_periph_data(void __iom=
-em *clk_base,
->   * Flags:
->   * TEGRA_DIVIDER_2 - LP cluster has additional divider. This flag indica=
-tes
->   *     that this is LP cluster clock.
-> + * TEGRA210_CPU_CLK - This flag is used to identify CPU cluster for gen5
-> + * super mux parent using PLLP branches. To use PLLP branches to CPU, ne=
-ed
-> + * to configure additional bit PLLP_OUT_CPU in the clock registers.
->   */
->  struct tegra_clk_super_mux {
->  	struct clk_hw	hw;
-> @@ -693,6 +696,7 @@ struct tegra_clk_super_mux {
->  #define to_clk_super_mux(_hw) container_of(_hw, struct tegra_clk_super_m=
-ux, hw)
-> =20
->  #define TEGRA_DIVIDER_2 BIT(0)
-> +#define TEGRA210_CPU_CLK BIT(1)
-> =20
->  extern const struct clk_ops tegra_clk_super_ops;
->  struct clk *tegra_clk_register_super_mux(const char *name,
-> @@ -838,6 +842,7 @@ int tegra_pll_p_div_to_hw(struct tegra_clk_pll *pll, =
-u8 p_div);
->  int div_frac_get(unsigned long rate, unsigned parent_rate, u8 width,
->  		 u8 frac_width, u8 flags);
->  void tegra_clk_osc_resume(void __iomem *clk_base);
-> +void tegra_clk_set_pllp_out_cpu(bool enable);
-> =20
-> =20
->  /* Combined read fence with delay */
-> --=20
-> 2.7.4
->=20
-
---2oox5VnwalALFvA7
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl1RNycACgkQ3SOs138+
-s6FWNhAAlaShT2GFtVBnhhFJ445GVNOhlfEDJqg1Z1G4FVSwFxbtkRYmVuAa+KSq
-YgcgH99epOInSsouaVVlwF3uBpAaZVXn1tX3LSzqvbvgDWq4H/EnWOk8jRwKL4Tv
-a0CLk8G7kfgwHy83vBuZu2XcBqp8tmWjFLs6Z2g3hohxnwGkmcc1503vqP/Iv/cm
-M1Xh+nIcilyWJZh+HSKJXi6gmsciVh1ebEItgZjVzDq74AIVs8WQIsN5evcRPrYH
-sF3t8n+vEThtO4yv0nrBwOeXDW7+DoLHbNNttnb++5DoJ8YPFamEOhPXULomtH+5
-W0WYACbVmq+r/vSGq0/CvdsUOuXfUtcIFRcSKflomIi9sIE62Zxcgx2Mu5DFwF3J
-mKVetDtHpqnWn8HP/cwAd/pUI8OBiUczzdneJtYY+Kl9HYZ+QRhvR69C1QXt00JS
-hx41ObgsLn66B2pmKcOzCs8IlPfzPnjzNpsiRloHv2b82be/VHB3CR+H1LUkv2BY
-nQmdXPUOLaFeHUMUgXus4i8XoHOWsxnIAQdgW5Q44BQesc0eOZKGl9aRbO9g+8Wi
-xNTHsaXoSDCGsEqEGC4suyUqz1CI9OrGbRcJRSr72zdSO0krgOV4Gy8lgvHhIDjw
-03rH1AMxPh3jCXhHiN9SFNSPPDhbguHoEz+5sDezI0s52deFTGY=
-=ARG9
------END PGP SIGNATURE-----
-
---2oox5VnwalALFvA7--
