@@ -2,27 +2,28 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 9DD8E8A8E4
-	for <lists+linux-gpio@lfdr.de>; Mon, 12 Aug 2019 23:03:21 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E0A5F8A8E9
+	for <lists+linux-gpio@lfdr.de>; Mon, 12 Aug 2019 23:04:01 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727215AbfHLVDV (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 12 Aug 2019 17:03:21 -0400
-Received: from mout.gmx.net ([212.227.15.18]:57179 "EHLO mout.gmx.net"
+        id S1727072AbfHLVEB (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 12 Aug 2019 17:04:01 -0400
+Received: from mout.gmx.net ([212.227.15.18]:40659 "EHLO mout.gmx.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726980AbfHLVDV (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Mon, 12 Aug 2019 17:03:21 -0400
+        id S1726707AbfHLVEA (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Mon, 12 Aug 2019 17:04:00 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1565643767;
-        bh=WvBCUiocoyigiLp0Fi/IoYgHQyq8r4DYjzlDtLDbMUA=;
+        s=badeba3b8450; t=1565643821;
+        bh=Z4dob6QFbBn2pjPUd/UPBrkeB6mcJHKlMV0DqcboR08=;
         h=X-UI-Sender-Class:Subject:To:Cc:References:From:Date:In-Reply-To;
-        b=b6MO8jthbtqz838yEij/t1eD6ilGnGqgZxdFCdnbWYIQcAK6zNwDy/5pGeuYf/I4L
-         8KEFZYWNzFeMiK65JwQ2LlKVHmtdLcbLzFbkvfaXGCMnDCGVpxC11GQiiovkxu/yy5
-         dqHkckKUEA1Fut9jzyJ8X6V1CUtCdI7thVjHbk90=
+        b=B4NG0dM8FysyLubkeDJwulk//hiefE+vWC0zHl0jeJUr4J/wKse1+Ie3RPn+YYT7t
+         4ZBAfJyOqSwGvQlPB7Ker8RPVXP8aphQmmVEhdHMSBLmT1i6DPszA4zi5JBr91K21y
+         K0GzfZoThtVjl9dCddbRLIlTosEFax2tc9KW6S2M=
 X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from [192.168.1.162] ([37.4.249.106]) by mail.gmx.com (mrgmx003
- [212.227.17.190]) with ESMTPSA (Nemesis) id 0MbxJ8-1hhGTp1uxa-00JLT4; Mon, 12
- Aug 2019 23:02:47 +0200
-Subject: Re: [PATCH 05/18] ARM: dts: bcm283x: Define memory at board level
+Received: from [192.168.1.162] ([37.4.249.106]) by mail.gmx.com (mrgmx002
+ [212.227.17.190]) with ESMTPSA (Nemesis) id 0MUZG7-1hoj2U0bBb-00RFGz; Mon, 12
+ Aug 2019 23:03:41 +0200
+Subject: Re: [PATCH 04/18] ARM: dts: bcm283x: Define MMC interfaces at board
+ level
 To:     Eric Anholt <eric@anholt.net>,
         Florian Fainelli <f.fainelli@gmail.com>,
         Ray Jui <rjui@broadcom.com>,
@@ -41,49 +42,50 @@ Cc:     linux-mmc@vger.kernel.org, linux-gpio@vger.kernel.org,
         linux-rpi-kernel@lists.infradead.org,
         linux-arm-kernel@lists.infradead.org
 References: <1563774880-8061-1-git-send-email-wahrenst@gmx.net>
- <1563774880-8061-6-git-send-email-wahrenst@gmx.net>
+ <1563774880-8061-5-git-send-email-wahrenst@gmx.net>
 From:   Stefan Wahren <wahrenst@gmx.net>
-Message-ID: <22482ae9-0239-560e-ad4a-4ab13d864e15@gmx.net>
-Date:   Mon, 12 Aug 2019 23:02:44 +0200
+Message-ID: <b9ed2030-25de-4e21-7fc0-9382f6250630@gmx.net>
+Date:   Mon, 12 Aug 2019 23:03:38 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <1563774880-8061-6-git-send-email-wahrenst@gmx.net>
+In-Reply-To: <1563774880-8061-5-git-send-email-wahrenst@gmx.net>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
 Content-Language: en-US
-X-Provags-ID: V03:K1:ARo3+Icmnx/PndUhQU2k0e2sY26OWqJ3C06fIrGFTm+kAkDNG3G
- /yJoK2PKsy0heqEo+0iLJsZDm8SHprriMFTVYNr4S4GohYtz7Bt5Ic3UALXus+A2dUASB9r
- /HIbAgxcttGcBjfeQs2pvctMptxBI6X3eqrUOtrqTj8nDEUpCalYS0mG3tZ7Su3bloL9iFC
- f4VrxLoKxlDpwFianZf+w==
+X-Provags-ID: V03:K1:uXhaVTZBIdtkgpQUvDbG0jujSsYTCHrV4MMU4Fp2mY1BMnzmFcu
+ dj2zho2p1mWt4W8P9ca6cb4FZqTkfvwYrgsdpjsbunb2+OCQ26HuB5DQvg48g0xDpcdlvKS
+ PKWvKVNaDW0nB3RUbs8GYcGeMbePtCkVYxcbQ/bcw7SN/CGkwcrSxiZq7HYkHxdcU9wlpbU
+ 5oKyiopkh2L982OwP3whA==
 X-Spam-Flag: NO
-X-UI-Out-Filterresults: notjunk:1;V03:K0:U1G1cJg8HDI=:Gr24C988FzpO7UmnSYRIHP
- fZAXIbOnrujKZUos5erQKmFbz2JLuhxjdQsW0Eq3tRZlpQiB4wgFHPx4qH39e41KCK3uldRTj
- Lq3ZPMvtsE1gW2XtEYtccKMQzVBuLAc0KfQFfVp+J1QHNDzr5aq75HjYedGm9K2ER1KWDDcyg
- ovsKRLAN/9CHkBSto1TqtpMwqd18M3DaLo0gCXqX2tFfL8XfSlCGBpfYZWM6ciTa8WUbml9+l
- 5bGLDN0UBSahZf1Gg2Px19DUDlWtwRKZ6/fmQQtosIEdX2uAgnIKpu55t/VvseuxkAGeHqpzg
- M2QEFC4gMFjNsmQC4S4kWAJ9u9ygE6IyrkuQK8ZVoFN2sJVQPmLI1H4K5aeaN6CKmlc0DdCGn
- 2gMK+JsTmEGWDAXrUBkc2GqKhkVdHUS6qiltNJvOQeAuLvUh5XzYqVOtcLxoyUMKOw5ovmfNi
- E8LfggB7C0qCu7u/geoBpNHvc7+goG75jXN9KNd/EuRk8JexEQLwX+fxwXFYENr9v1z2GBPcI
- PZkPM1xIJi7hYNjznE+QiXWDKFQvj+Upw/0cqq6QVCtj4t1pmlOSx2K57WzG2wnUTRjqXmtWD
- esMHGYzZAD9vz82CsFfRrzDkS7F7M8NqzMParFjaaDCq+1mhWe8l4sfTPwGET6kqzESBFmjti
- q3g8hYxP4yZYPPXDBxSzrUJBB+yF0txpQICSDHR9Uz7yO+kPAkiHRQk0VK3rWVAKPldAnaPQD
- 2SQTMgh11n+mX/NE6wWa03E+vGUMWRulx2FIeI9AKO9wdxTiP5QTpDdOXnTSUSZH8rGOSILFj
- 8bUm4RBiweNE8uTni/gUhdbXzGRYRvcXF4vvoAMja2n6guzt5R+o/X1aPLyVr+FrjVarDrWYj
- 51R9R+E10zQsemR5ImCGmy0HSv295FbjTOHNcteWcS6RYvn0113PSbVwjfmPn17ZnnPnV/ld1
- hpNq9fZWyC4wohHrUk/kcb0xnU0ZEgRFeTE60pG4zU3VGwFiDxA4HSsE+mqPg+VZin5xycyho
- u23g8jNw6FVRNMMnQ4ECGVDs3yyzDJZ4k6MtoN4ETusqezDo7X/OXikML4UKeTgg1s+xPpftY
- gaPAjiLOA0eOGkGiBU3PITEE0fWPZtmpVLzl9idsV9LI5p3eZndsrAtqywSIZucX2BJ/bUuBV
- 8Btl8=
+X-UI-Out-Filterresults: notjunk:1;V03:K0:m77DRGs/jQw=:SUOdNsS/ZqhCJsJlR6MruL
+ UMB+vVPWVjHskJr9GgrZboRMpxMbTP5+ajj+wh17Rb8Xrpm5qOdmm/sgaalaJQmiYcuOJA8B0
+ ZFQ7m/CYO7oj78rnADsnr6FsDNvMRFEPJIDYDzq/mrIdtoFYBptRWmfVZY3KcAoOcljhOlpMj
+ f9cisBARzc7TjkABHr7cgOjOQ1UvAFSDSetanMqSorRtK970Mzv1LyEMvP+0oDi81ACfXJTyj
+ tgRgb8WO/d2Qei9frV1O3ILKY0zP3u9UoBON+WRlsn4RWh/MX/xvtr/ctgIfa2F0TKN+yHuxz
+ VvGar7T1VwWLaGdDZSlV5bOrEVJIpDQMKJ92LMYNyF4q5xS5P6bdsFV/czPqcxlV8d7jQP93K
+ U2MPwt6vWCqTUW4mONbuErQ2USTKHq7kfn2OnlIdyGqjALEnt6aQ5G5fA9znnqU44ZEI2UdTx
+ CxrTPuIha5Y4b0vkb2XnXWyPv6oHgm4fE6ufHW8HT2I5HUM4ATpNE+BC8EP7t11NiqrDd4C5p
+ WmiXgHlU198hAIxp+XeUd9qCRk7msfUWEDqCun4JcCklGHpYBEWjfpbHgZEQFAlZW5dMu1dt3
+ ZZBM4KuWfKktyXqephuS9NeWQGDzkFaTYIKLlYqq3uBZt52lpo364MWDT05PVM3FOpRq7N0jZ
+ tRUEOWhyHvGOYnTD0X+4JkZ6nzfUQTIJn05ln8AZTFI3SuywiJbwOXKQHgZyCpk4cmVHtC++s
+ TO7IW2E/scQ7zwVraGsChU6QKlR6z5Vl53zGL78cHNah8fJTxWNcd3sOTxpncrLErZy5EqIP6
+ om551ZL2ZtLz5VrfiTooZHHFrm0i4W8r3K7GBJFIm8g7zxSCE0evcnEtbAe2KI8l4JQAdjZ7I
+ BnT3ais0cuF/FUCmJD8tg9Tdrk2CRfPMd7IsF+zYM1lalHCWGKjRigq8WwcFmRt8BVJM2pl9f
+ +GQf0QRXDNQUGS6ImJGNFEJd9SE9sfgDwMeND3ZKI75uvqSA/5Em4VY4Q2dgTEMJyRR1d7C5E
+ legBB0PgKurO3SDe3zf4uwZ+5l8Zo0meuYjB4bm/zG27xbuEfk0A+ecfa3/T/zy7VeHNhg8I2
+ 1YkyUA7vsdAygpN9A4xIIyd9SISAvtTBASpIbRxdZ6QUA+jsqDdhpkcUI1H+cPCo2JNllosGt
+ Lx3Hc=
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
 Am 22.07.19 um 07:54 schrieb Stefan Wahren:
-> Now with the varity of several RPi boards, the memory should be defined
-> at board level. This step gives us the chance to fix the memory size
-> of the RPi 1 B+, Zero (incl. W) and Compute Module 1.
+> Starting with RPi 4 this is the first board, which doesn't use sdhost
+> as default SD interface. So the MMC interfaces should be defined finally at
+> board level. Since all boards using sdhci already does this, we can drop the
+> pinctrl part from bcm2835-rpi.dtsi.
 >
 > Signed-off-by: Stefan Wahren <wahrenst@gmx.net>
 Applied to bcm2835-dt-next
