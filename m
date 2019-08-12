@@ -2,137 +2,191 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 77A7A8A2C9
-	for <lists+linux-gpio@lfdr.de>; Mon, 12 Aug 2019 18:00:41 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 331CE8A319
+	for <lists+linux-gpio@lfdr.de>; Mon, 12 Aug 2019 18:14:06 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726267AbfHLQAk (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 12 Aug 2019 12:00:40 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:37728 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725648AbfHLQAk (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 12 Aug 2019 12:00:40 -0400
-Received: by mail-pl1-f193.google.com with SMTP id bj8so1020868plb.4
-        for <linux-gpio@vger.kernel.org>; Mon, 12 Aug 2019 09:00:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-transfer-encoding:content-language;
-        bh=eu4hl5qNaMJhHhWuL7T0rF5vow3jYh9xaCT/k0XYegc=;
-        b=fYGgtyFXvcj2HnwlHoYT6g9KhiCyUBLNG62n3HsLA934ERKhjuhYqXTY11f9yY6qGW
-         Ri9OSvrv1P5bg2kET95NS8shMfc2ZwBGOPNGDf81JO3GCrJhKzrohIwwAYe2YHXd93tY
-         CNkMMRoBmf4uyMvTfvK+8TGl7uZnzbvN1o7Tc=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding
-         :content-language;
-        bh=eu4hl5qNaMJhHhWuL7T0rF5vow3jYh9xaCT/k0XYegc=;
-        b=WZgD3FE9Ze0bqjn74gV8aU6e0q9XCu+w9dMJ/aEqUCuEVoLqM0u4zdBrAAEA5QJi1T
-         mH3ntZt03XOE+/hkQwACO/R+B+Uuj7j18pE1F7iEkbo+RmJouwkt8UFGUuJ4/WsO770r
-         lDCUkN+xIfdVIX1neR8S21fnhqyfaSX6bHuZfTyAyyESrNTmxAU0OEerlSDwBEjJtc+4
-         Yuss8IaaoaT9B0EBpkIvgq/qN34J3dio6wHqPgs5B8+fIfx8DxubRBx32pMhGBkpRueb
-         a5OdeZjzghYtasVF/m5WFPvy6YcWLFxMDS6Y0HpbZG99YmJIssAlqqqnTtgf9qbB/Vmu
-         VqcA==
-X-Gm-Message-State: APjAAAVGqyT4CEk2c7yeD1dQU30AzM++Wp+1bkyJysEc7jUEk7QLSrFj
-        oebv5G4sdLTV+fQ8s9gFvnV80w==
-X-Google-Smtp-Source: APXvYqyU3EltDuiGW5guVXDVBQ+lUYTTY/F8ooszBunHleKhnCrCI6OV79LHfPrQ0DhHD9nj2iePSA==
-X-Received: by 2002:a17:902:381:: with SMTP id d1mr32851258pld.331.1565625639711;
-        Mon, 12 Aug 2019 09:00:39 -0700 (PDT)
-Received: from [10.136.13.65] ([192.19.228.250])
-        by smtp.gmail.com with ESMTPSA id l1sm152074747pfl.9.2019.08.12.09.00.38
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 12 Aug 2019 09:00:38 -0700 (PDT)
-Subject: Re: [PATCH] pinctrl: bcm-iproc: Pass irqchip when adding gpiochip
-To:     Linus Walleij <linus.walleij@linaro.org>,
-        linux-gpio@vger.kernel.org
-Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Pramod Kumar <pramodku@broadcom.com>,
-        Ray Jui <rjui@broadcom.com>,
-        Scott Branden <sbranden@broadcom.com>,
-        Thierry Reding <treding@nvidia.com>
-References: <20190812132554.18313-1-linus.walleij@linaro.org>
-From:   Scott Branden <scott.branden@broadcom.com>
-Message-ID: <24d28eed-c2ab-5850-50b2-db63740b71dd@broadcom.com>
-Date:   Mon, 12 Aug 2019 09:00:37 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        id S1726458AbfHLQOF (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 12 Aug 2019 12:14:05 -0400
+Received: from mga03.intel.com ([134.134.136.65]:53796 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725648AbfHLQOF (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Mon, 12 Aug 2019 12:14:05 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 12 Aug 2019 09:14:04 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,378,1559545200"; 
+   d="scan'208";a="180903264"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by orsmga006.jf.intel.com with ESMTP; 12 Aug 2019 09:14:03 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1003)
+        id 2400111C; Mon, 12 Aug 2019 19:14:01 +0300 (EEST)
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Mika Westerberg <mika.westerberg@linux.intel.com>,
+        linux-gpio@vger.kernel.org,
+        Linus Walleij <linus.walleij@linaro.org>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: [PATCH v3] pinctrl: intel: Allow to request locked pads
+Date:   Mon, 12 Aug 2019 19:14:01 +0300
+Message-Id: <20190812161401.87589-1-andriy.shevchenko@linux.intel.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-In-Reply-To: <20190812132554.18313-1-linus.walleij@linaro.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+Some firmwares would like to protect pads from being modified by OS
+and at the same time provide them to OS as a resource. So, the driver
+in such circumstances may request pad and may not change its state.
 
-On 2019-08-12 6:25 a.m., Linus Walleij wrote:
-> We need to convert all old gpio irqchips to pass the irqchip
-> setup along when adding the gpio_chip. For more info see
-> drivers/gpio/TODO.
->
-> For chained irqchips this is a pretty straight-forward
-> conversion.
->
-> Cc: Pramod Kumar <pramodku@broadcom.com>
-> Cc: Ray Jui <rjui@broadcom.com>
-> Cc: Scott Branden <sbranden@broadcom.com>
-> Cc: Thierry Reding <treding@nvidia.com>
-> Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
-Acked-by: Scott Branden <scott.branden@broadcom.com>
-> ---
->   drivers/pinctrl/bcm/pinctrl-iproc-gpio.c | 33 ++++++++++++++----------
->   1 file changed, 19 insertions(+), 14 deletions(-)
->
-> diff --git a/drivers/pinctrl/bcm/pinctrl-iproc-gpio.c b/drivers/pinctrl/bcm/pinctrl-iproc-gpio.c
-> index 18ff01727e0e..ee01306c62fa 100644
-> --- a/drivers/pinctrl/bcm/pinctrl-iproc-gpio.c
-> +++ b/drivers/pinctrl/bcm/pinctrl-iproc-gpio.c
-> @@ -780,6 +780,25 @@ static int iproc_gpio_probe(struct platform_device *pdev)
->   	chip->pinmux_is_supported = of_property_read_bool(dev->of_node,
->   							"gpio-ranges");
->   
-> +	/* optional GPIO interrupt support */
-> +	irq = platform_get_irq(pdev, 0);
-> +	if (irq) {
-> +		struct gpio_irq_chip *girq;
-> +
-> +		girq = &gc->irq;
-> +		girq->chip = &iproc_gpio_irq_chip;
-> +		girq->parent_handler = iproc_gpio_irq_handler;
-> +		girq->num_parents = 1;
-> +		girq->parents = devm_kcalloc(dev, 1,
-> +					     sizeof(*girq->parents),
-> +					     GFP_KERNEL);
-> +		if (!girq->parents)
-> +			return -ENOMEM;
-> +		girq->parents[0] = irq;
-> +		girq->default_type = IRQ_TYPE_NONE;
-> +		girq->handler = handle_simple_irq;
-> +	}
-> +
->   	ret = gpiochip_add_data(gc, chip);
->   	if (ret < 0) {
->   		dev_err(dev, "unable to add GPIO chip\n");
-> @@ -804,20 +823,6 @@ static int iproc_gpio_probe(struct platform_device *pdev)
->   		}
->   	}
->   
-> -	/* optional GPIO interrupt support */
-> -	irq = platform_get_irq(pdev, 0);
-> -	if (irq) {
-> -		ret = gpiochip_irqchip_add(gc, &iproc_gpio_irq_chip, 0,
-> -					   handle_simple_irq, IRQ_TYPE_NONE);
-> -		if (ret) {
-> -			dev_err(dev, "no GPIO irqchip\n");
-> -			goto err_rm_gpiochip;
-> -		}
-> -
-> -		gpiochip_set_chained_irqchip(gc, &iproc_gpio_irq_chip, irq,
-> -					     iproc_gpio_irq_handler);
-> -	}
-> -
->   	return 0;
->   
->   err_rm_gpiochip:
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+---
+v3: Describe enum in kernel-doc
+    (note a warning which is fixed in a separate patch against kernel-doc)
+    Add Linus' Rb tag
+ drivers/pinctrl/intel/pinctrl-intel.c | 69 ++++++++++++++++++++-------
+ 1 file changed, 52 insertions(+), 17 deletions(-)
+
+diff --git a/drivers/pinctrl/intel/pinctrl-intel.c b/drivers/pinctrl/intel/pinctrl-intel.c
+index c949df07cbdf..104dfaa78cb8 100644
+--- a/drivers/pinctrl/intel/pinctrl-intel.c
++++ b/drivers/pinctrl/intel/pinctrl-intel.c
+@@ -220,47 +220,71 @@ static bool intel_pad_acpi_mode(struct intel_pinctrl *pctrl, unsigned int pin)
+ 	return !(readl(hostown) & BIT(gpp_offset));
+ }
+ 
+-static bool intel_pad_locked(struct intel_pinctrl *pctrl, unsigned int pin)
++/**
++ * enum - Locking variants of the pad configuration
++ *
++ * @PAD_UNLOCKED:	pad is fully controlled by the configuration registers
++ * @PAD_LOCKED:		pad configuration registers, except TX state, are locked
++ * @PAD_LOCKED_TX:	pad configuration TX state is locked
++ * @PAD_LOCKED_FULL:	pad configuration registers are locked completely
++ *
++ * Locking is considered as read-only mode for corresponding registers and
++ * their respective fields. That said, TX state bit is locked separately from
++ * the main locking scheme.
++ */
++enum {
++	PAD_UNLOCKED	= 0,
++	PAD_LOCKED	= 1,
++	PAD_LOCKED_TX	= 2,
++	PAD_LOCKED_FULL	= PAD_LOCKED | PAD_LOCKED_TX,
++};
++
++static int intel_pad_locked(struct intel_pinctrl *pctrl, unsigned int pin)
+ {
+ 	struct intel_community *community;
+ 	const struct intel_padgroup *padgrp;
+ 	unsigned int offset, gpp_offset;
+ 	u32 value;
++	int ret = PAD_UNLOCKED;
+ 
+ 	community = intel_get_community(pctrl, pin);
+ 	if (!community)
+-		return true;
++		return PAD_LOCKED_FULL;
+ 	if (!community->padcfglock_offset)
+-		return false;
++		return PAD_UNLOCKED;
+ 
+ 	padgrp = intel_community_get_padgroup(community, pin);
+ 	if (!padgrp)
+-		return true;
++		return PAD_LOCKED_FULL;
+ 
+ 	gpp_offset = padgroup_offset(padgrp, pin);
+ 
+ 	/*
+ 	 * If PADCFGLOCK and PADCFGLOCKTX bits are both clear for this pad,
+ 	 * the pad is considered unlocked. Any other case means that it is
+-	 * either fully or partially locked and we don't touch it.
++	 * either fully or partially locked.
+ 	 */
+-	offset = community->padcfglock_offset + padgrp->reg_num * 8;
++	offset = community->padcfglock_offset + 0 + padgrp->reg_num * 8;
+ 	value = readl(community->regs + offset);
+ 	if (value & BIT(gpp_offset))
+-		return true;
++		ret |= PAD_LOCKED;
+ 
+ 	offset = community->padcfglock_offset + 4 + padgrp->reg_num * 8;
+ 	value = readl(community->regs + offset);
+ 	if (value & BIT(gpp_offset))
+-		return true;
++		ret |= PAD_LOCKED_TX;
+ 
+-	return false;
++	return ret;
++}
++
++static bool intel_pad_is_unlocked(struct intel_pinctrl *pctrl, unsigned int pin)
++{
++	return (intel_pad_locked(pctrl, pin) & PAD_LOCKED) == PAD_UNLOCKED;
+ }
+ 
+ static bool intel_pad_usable(struct intel_pinctrl *pctrl, unsigned int pin)
+ {
+-	return intel_pad_owned_by_host(pctrl, pin) &&
+-		!intel_pad_locked(pctrl, pin);
++	return intel_pad_owned_by_host(pctrl, pin) && intel_pad_is_unlocked(pctrl, pin);
+ }
+ 
+ static int intel_get_groups_count(struct pinctrl_dev *pctldev)
+@@ -294,7 +318,8 @@ static void intel_pin_dbg_show(struct pinctrl_dev *pctldev, struct seq_file *s,
+ 	struct intel_pinctrl *pctrl = pinctrl_dev_get_drvdata(pctldev);
+ 	void __iomem *padcfg;
+ 	u32 cfg0, cfg1, mode;
+-	bool locked, acpi;
++	int locked;
++	bool acpi;
+ 
+ 	if (!intel_pad_owned_by_host(pctrl, pin)) {
+ 		seq_puts(s, "not available");
+@@ -322,11 +347,16 @@ static void intel_pin_dbg_show(struct pinctrl_dev *pctldev, struct seq_file *s,
+ 
+ 	if (locked || acpi) {
+ 		seq_puts(s, " [");
+-		if (locked) {
++		if (locked)
+ 			seq_puts(s, "LOCKED");
+-			if (acpi)
+-				seq_puts(s, ", ");
+-		}
++		if ((locked & PAD_LOCKED_FULL) == PAD_LOCKED_TX)
++			seq_puts(s, " tx");
++		else if ((locked & PAD_LOCKED_FULL) == PAD_LOCKED_FULL)
++			seq_puts(s, " full");
++
++		if (locked && acpi)
++			seq_puts(s, ", ");
++
+ 		if (acpi)
+ 			seq_puts(s, "ACPI");
+ 		seq_puts(s, "]");
+@@ -448,11 +478,16 @@ static int intel_gpio_request_enable(struct pinctrl_dev *pctldev,
+ 
+ 	raw_spin_lock_irqsave(&pctrl->lock, flags);
+ 
+-	if (!intel_pad_usable(pctrl, pin)) {
++	if (!intel_pad_owned_by_host(pctrl, pin)) {
+ 		raw_spin_unlock_irqrestore(&pctrl->lock, flags);
+ 		return -EBUSY;
+ 	}
+ 
++	if (!intel_pad_is_unlocked(pctrl, pin)) {
++		raw_spin_unlock_irqrestore(&pctrl->lock, flags);
++		return 0;
++	}
++
+ 	padcfg0 = intel_get_padcfg(pctrl, pin, PADCFG0);
+ 	intel_gpio_set_gpio_mode(padcfg0);
+ 	/* Disable TX buffer and enable RX (this will be input) */
+-- 
+2.20.1
+
