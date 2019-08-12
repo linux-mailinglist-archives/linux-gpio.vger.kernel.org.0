@@ -2,113 +2,183 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id EDD3F8951A
-	for <lists+linux-gpio@lfdr.de>; Mon, 12 Aug 2019 02:51:58 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 59F7289726
+	for <lists+linux-gpio@lfdr.de>; Mon, 12 Aug 2019 08:29:36 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726164AbfHLAv4 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sun, 11 Aug 2019 20:51:56 -0400
-Received: from wout3-smtp.messagingengine.com ([64.147.123.19]:58985 "EHLO
-        wout3-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726144AbfHLAv4 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>);
-        Sun, 11 Aug 2019 20:51:56 -0400
-Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailout.west.internal (Postfix) with ESMTP id A1B5321E;
-        Sun, 11 Aug 2019 20:51:54 -0400 (EDT)
-Received: from imap2 ([10.202.2.52])
-  by compute4.internal (MEProxy); Sun, 11 Aug 2019 20:51:55 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aj.id.au; h=
-        mime-version:message-id:in-reply-to:references:date:from:to:cc
-        :subject:content-type; s=fm3; bh=/vRZS0DH6BibYTI+jPSXeATx8DCWgvz
-        KB2bf68zgCYQ=; b=OQek2Bg6nPx+MsQpoORrSMQGYewK50sRAfUejX06ZLWlOBG
-        gn7XgbylvKurPPS5ys0R5IVfpXhTFMDXdWyX0mKClfr7T75O5bD3f7IJCU8Gh1s9
-        YLSS1rsgbUsk6QfhyFv/srD+1BbDXgAD/89Y6r5vMCbhP9aHbxgE3KuY82EDN/lr
-        ZvhX5WsHp78jWXRxsr1DhvuTJ+Kwk7Fe9op7n1PpfNiGdGVukF2WR1N6g33Be3Vc
-        bM/HCQrRjmhxp7v/owwpJezKnNwEDyY3ZcYKrLEIXy9CSCRiHnaPJmHKzW+D760P
-        DtNmt1qWG4i9DP9UQQSYbunB5/D26fewO9BxAow==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=/vRZS0
-        DH6BibYTI+jPSXeATx8DCWgvzKB2bf68zgCYQ=; b=l4EgbgtFwY2Rpc1UyNz2W+
-        SVRmVfLyLc4sGVwItuaAv9LJ/jyolnlF5S9783mgLebzuLBhoA29b1mfBtjfXlts
-        nt6Qa/vDIhZUFwfSEXXitbVgP54MPr45swxOvFlpy1+X3/48Sn0flYvsdCrocClv
-        MS3KOs2ZS3tyoY8zAwtSmlqSnwXglqStBVKdLy+19+/SJEqTHkK1H2fie7Hp1zmr
-        s/KUU61alWy7z+Exs29OZunIrAoHKqq2YxK/idCRFkgRJ9dDk7/GeUA6L/jk0Y2V
-        rtlWVclnKR7Ik144F39sFM0Y3e3Uk4/gh97MJmSnTUM/2RfPfMPFeW61hPmPH+9A
-        ==
-X-ME-Sender: <xms:KbhQXUG9-62aDcJWln-0fRcKkW7dmXKPACWIugq9hkhX3w-TU-muhQ>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduvddruddvfedggeduucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepofgfggfkjghffffhvffutgesthdtredtreerjeenucfhrhhomhepfdetnhgu
-    rhgvficulfgvfhhfvghrhidfuceorghnughrvgifsegrjhdrihgurdgruheqnecuffhomh
-    grihhnpehgihhthhhusgdrtghomhenucfrrghrrghmpehmrghilhhfrhhomheprghnughr
-    vgifsegrjhdrihgurdgruhenucevlhhushhtvghrufhiiigvpedt
-X-ME-Proxy: <xmx:KbhQXU9W_omMMMEsdmyjaJCTtlhrXfmQ3KUB8ekL7_ANC9twYQ9hXA>
-    <xmx:KbhQXby0EuRf6TnVmdBphx1eiSVUUC8rYJuvXidsen8cy4t_cOTOeg>
-    <xmx:KbhQXQOaNCOxABK2Jby3AbZlBGd4snluNAwo42JMlCx9npfu7ftg5g>
-    <xmx:KrhQXTalqmfKIW_ZqyRhUrTSCKbpaRqhFzQ2d9LCJDTIvYS19-x12w>
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-        id 0A5CCE00A2; Sun, 11 Aug 2019 20:51:52 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.1.6-809-g8e5c451-fmstable-20190809v1
-Mime-Version: 1.0
-Message-Id: <e5aa4940-41d8-4c35-9783-09548e406885@www.fastmail.com>
-In-Reply-To: <CACRpkdbDgOQXfxgM4dEyzBRhtske3=V+858B7J8jGExnJE5fJQ@mail.gmail.com>
-References: <20190807003037.48457-1-natechancellor@gmail.com>
- <CACRpkdbDgOQXfxgM4dEyzBRhtske3=V+858B7J8jGExnJE5fJQ@mail.gmail.com>
-Date:   Mon, 12 Aug 2019 10:21:55 +0930
-From:   "Andrew Jeffery" <andrew@aj.id.au>
-To:     "Linus Walleij" <linus.walleij@linaro.org>,
-        "Nathan Chancellor" <natechancellor@gmail.com>
-Cc:     "Joel Stanley" <joel@jms.id.au>,
-        linux-aspeed <linux-aspeed@lists.ozlabs.org>,
-        "OpenBMC Maillist" <openbmc@lists.ozlabs.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "Linux ARM" <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        clang-built-linux@googlegroups.com
-Subject: =?UTF-8?Q?Re:_[PATCH]_pinctrl:_aspeed:_g6:_Remove_const_specifier_from_a?=
- =?UTF-8?Q?speed=5Fg6=5Fsig=5Fexpr=5Fset's_ctx_parameter?=
-Content-Type: text/plain
+        id S1725887AbfHLG3f (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 12 Aug 2019 02:29:35 -0400
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:41049 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725822AbfHLG3f (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 12 Aug 2019 02:29:35 -0400
+Received: by mail-lj1-f193.google.com with SMTP id d24so97252769ljg.8
+        for <linux-gpio@vger.kernel.org>; Sun, 11 Aug 2019 23:29:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=1YSy8DoNIl6rgR8pkGggmZ86Q54OzAg3sqWfAxNn8QY=;
+        b=F6wKUc+wA/i9a4nqh3ZgaeZFauOjRLkqDa7z2sjOlK9BvoYX88aLIJO7fGi6/cFE8W
+         k54idyl1SNfRq95qs20OslYhZRbAtFKwfInEGWR6K7by5c2ARKcv4J69xsDSewymYLTv
+         cmLMbIaN3Ys+DeMiwdBzUAsF62rkb94SFdUgi+C+h0U8T4TEsMYYhYWkGdzDCTsmvtPo
+         1czaHJlKrpJkGF7jH/wBGTBfUREFc/VfDgGP5Mqc5sdd7ffCdiDguCu2mqUi7JQaEK3Y
+         280GJcFSWwvaIFJFLh/AtI7pbXA0tkrn5ZRiGT08kazqM51iagL5TgIFffXCu9yBde4Y
+         iixQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=1YSy8DoNIl6rgR8pkGggmZ86Q54OzAg3sqWfAxNn8QY=;
+        b=PlV4q9laNeuOeeDLf7wmwyTCXPOXB5lyJ9mVEVIoKKH94R0W76/o1tD/8pxxHB3CRB
+         Q5nvZp7H1TFSs0jmXIIhZpFTg/881rFWAa/wYLgNkGkWJy09Rom9YWtbPXLPwK38wvt8
+         UwtF22eNCgg/hkuymtWcfrT8BFdi0ZFine6G4flNHh6zQ4oNsAcVF5r9TOh28rJtPglJ
+         T5Lx4VQXXv2CCqSz1Z3/vSswX1C4LHRPKJfW26SfEq+bY0tivR+tl/PbUUpV/Rx1+dh3
+         Em+Qz2opG9r5YpVskWYIEUE7M4V9Qcdo2ZYB4KZ4u6pbufqSKdw5frnpqTfTRkGW7Aso
+         Pp/Q==
+X-Gm-Message-State: APjAAAU0unVELHHvqOA7dlJlvMWbLVeCaJcrpIsdAz/0OuCdb8DHOT4D
+        5cziPN1m1Tdpixga1ryHd2Gp312QoubQdA==
+X-Google-Smtp-Source: APXvYqwUbkgAbER956OYKiy+Lua8BiBuJqg4Z6gMbeVvgXsdkRcavCVqmcNJr2QJgeDEcDdfwMHdvw==
+X-Received: by 2002:a05:651c:1b9:: with SMTP id c25mr18106190ljn.25.1565591373269;
+        Sun, 11 Aug 2019 23:29:33 -0700 (PDT)
+Received: from localhost.localdomain (c-2ccd225c.014-348-6c756e10.bbcust.telenor.se. [92.34.205.44])
+        by smtp.gmail.com with ESMTPSA id d16sm5843356lfl.29.2019.08.11.23.29.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 11 Aug 2019 23:29:32 -0700 (PDT)
+From:   Linus Walleij <linus.walleij@linaro.org>
+To:     linux-gpio@vger.kernel.org
+Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Simon Arlott <simon@arlott.org>, Eric Anholt <eric@anholt.net>,
+        Stefan Wahren <stefan.wahren@i2se.com>,
+        Thierry Reding <treding@nvidia.com>
+Subject: [PATCH] pinctrl: bcm2835: Pass irqchip when adding gpiochip
+Date:   Mon, 12 Aug 2019 08:27:29 +0200
+Message-Id: <20190812062729.1892-1-linus.walleij@linaro.org>
+X-Mailer: git-send-email 2.21.0
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+We need to convert all old gpio irqchips to pass the irqchip
+setup along when adding the gpio_chip. For more info see
+drivers/gpio/TODO.
 
+For chained irqchips this is a pretty straight-forward
+conversion. The BCM2835 has multiple parents so let's
+exploit the new facility in the GPIO_IRQCHIP to actually
+deal with multiple parents.
 
-On Sat, 10 Aug 2019, at 17:43, Linus Walleij wrote:
-> On Wed, Aug 7, 2019 at 2:32 AM Nathan Chancellor
-> <natechancellor@gmail.com> wrote:
-> 
-> > clang errors:
-> >
-> > drivers/pinctrl/aspeed/pinctrl-aspeed-g6.c:2325:9: error: incompatible
-> > pointer types initializing 'int (*)(struct aspeed_pinmux_data *, const
-> > struct aspeed_sig_expr *, bool)' with an expression of type 'int (const
-> > struct aspeed_pinmux_data *, const struct aspeed_sig_expr *, bool)'
-> > [-Werror,-Wincompatible-pointer-types]
-> >         .set = aspeed_g6_sig_expr_set,
-> >                ^~~~~~~~~~~~~~~~~~~~~~
-> > 1 error generated.
-> >
-> > Commit 674fa8daa8c9 ("pinctrl: aspeed-g5: Delay acquisition of regmaps")
-> > changed the set function pointer declaration and the g6 one wasn't
-> > updated (I assume because it wasn't merged yet).
-> >
-> > Fixes: 2eda1cdec49f ("pinctrl: aspeed: Add AST2600 pinmux support")
-> > Link: https://github.com/ClangBuiltLinux/linux/issues/632
-> > Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
-> 
-> Patch applied with Andrew's ACK.
+Cc: Simon Arlott <simon@arlott.org>
+Cc: Eric Anholt <eric@anholt.net>
+Cc: Stefan Wahren <stefan.wahren@i2se.com>
+Cc: Thierry Reding <treding@nvidia.com>
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+---
+ drivers/pinctrl/bcm/pinctrl-bcm2835.c | 56 +++++++++++++--------------
+ 1 file changed, 26 insertions(+), 30 deletions(-)
 
-FYI this fixes pinctrl/for-next which is likely where Nathan ran into the issue,
-however to fix pinctrl/devel we'll need a back-merge of pinctrl/fixes, or to
-apply 674fa8daa8c9 ("pinctrl: aspeed-g5: Delay acquisition of regmaps") to
-pinctrl/devel also.
+diff --git a/drivers/pinctrl/bcm/pinctrl-bcm2835.c b/drivers/pinctrl/bcm/pinctrl-bcm2835.c
+index 183d1ffe6a75..b729997cd887 100644
+--- a/drivers/pinctrl/bcm/pinctrl-bcm2835.c
++++ b/drivers/pinctrl/bcm/pinctrl-bcm2835.c
+@@ -69,7 +69,6 @@
+ struct bcm2835_pinctrl {
+ 	struct device *dev;
+ 	void __iomem *base;
+-	int irq[BCM2835_NUM_IRQS];
+ 
+ 	/* note: locking assumes each bank will have its own unsigned long */
+ 	unsigned long enabled_irq_map[BCM2835_NUM_BANKS];
+@@ -373,14 +372,14 @@ static void bcm2835_gpio_irq_handler(struct irq_desc *desc)
+ 	int group;
+ 	int i;
+ 
+-	for (i = 0; i < ARRAY_SIZE(pc->irq); i++) {
+-		if (pc->irq[i] == irq) {
++	for (i = 0; i < BCM2835_NUM_IRQS; i++) {
++		if (chip->irq.parents[i] == irq) {
+ 			group = i;
+ 			break;
+ 		}
+ 	}
+ 	/* This should not happen, every IRQ has a bank */
+-	if (i == ARRAY_SIZE(pc->irq))
++	if (i == BCM2835_NUM_IRQS)
+ 		BUG();
+ 
+ 	chained_irq_enter(host_chip, desc);
+@@ -995,6 +994,7 @@ static int bcm2835_pinctrl_probe(struct platform_device *pdev)
+ 	struct device *dev = &pdev->dev;
+ 	struct device_node *np = dev->of_node;
+ 	struct bcm2835_pinctrl *pc;
++	struct gpio_irq_chip *girq;
+ 	struct resource iomem;
+ 	int err, i;
+ 	BUILD_BUG_ON(ARRAY_SIZE(bcm2835_gpio_pins) != BCM2835_NUM_GPIOS);
+@@ -1041,38 +1041,34 @@ static int bcm2835_pinctrl_probe(struct platform_device *pdev)
+ 		raw_spin_lock_init(&pc->irq_lock[i]);
+ 	}
+ 
++	girq = &pc->gpio_chip.irq;
++	girq->chip = &bcm2835_gpio_irq_chip;
++	girq->parent_handler = bcm2835_gpio_irq_handler;
++	girq->num_parents = BCM2835_NUM_IRQS;
++	girq->parents = devm_kcalloc(&pdev->dev, BCM2835_NUM_IRQS,
++				     sizeof(*girq->parents),
++				     GFP_KERNEL);
++	if (!girq->parents)
++		return -ENOMEM;
++	/*
++	 * Use the same handler for all groups: this is necessary
++	 * since we use one gpiochip to cover all lines - the
++	 * irq handler then needs to figure out which group and
++	 * bank that was firing the IRQ and look up the per-group
++	 * and bank data.
++	 */
++	for (i = 0; i < BCM2835_NUM_IRQS; i++)
++		girq->parents[i] = irq_of_parse_and_map(np, i);
++	girq->default_type = IRQ_TYPE_NONE;
++	girq->handler = handle_level_irq;
++
++
+ 	err = gpiochip_add_data(&pc->gpio_chip, pc);
+ 	if (err) {
+ 		dev_err(dev, "could not add GPIO chip\n");
+ 		return err;
+ 	}
+ 
+-	err = gpiochip_irqchip_add(&pc->gpio_chip, &bcm2835_gpio_irq_chip,
+-				   0, handle_level_irq, IRQ_TYPE_NONE);
+-	if (err) {
+-		dev_info(dev, "could not add irqchip\n");
+-		return err;
+-	}
+-
+-	for (i = 0; i < BCM2835_NUM_IRQS; i++) {
+-		pc->irq[i] = irq_of_parse_and_map(np, i);
+-
+-		if (pc->irq[i] == 0)
+-			continue;
+-
+-		/*
+-		 * Use the same handler for all groups: this is necessary
+-		 * since we use one gpiochip to cover all lines - the
+-		 * irq handler then needs to figure out which group and
+-		 * bank that was firing the IRQ and look up the per-group
+-		 * and bank data.
+-		 */
+-		gpiochip_set_chained_irqchip(&pc->gpio_chip,
+-					     &bcm2835_gpio_irq_chip,
+-					     pc->irq[i],
+-					     bcm2835_gpio_irq_handler);
+-	}
+-
+ 	pc->pctl_dev = devm_pinctrl_register(dev, &bcm2835_pinctrl_desc, pc);
+ 	if (IS_ERR(pc->pctl_dev)) {
+ 		gpiochip_remove(&pc->gpio_chip);
+-- 
+2.21.0
 
-Fixing that bug was unfortunate timing wrt the 2600 driver.
-
-Andrew
