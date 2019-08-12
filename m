@@ -2,123 +2,107 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id B30A48A23E
-	for <lists+linux-gpio@lfdr.de>; Mon, 12 Aug 2019 17:27:36 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 610988A2C6
+	for <lists+linux-gpio@lfdr.de>; Mon, 12 Aug 2019 17:59:59 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727263AbfHLP1g (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 12 Aug 2019 11:27:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42850 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727103AbfHLP1f (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Mon, 12 Aug 2019 11:27:35 -0400
-Received: from X250 (37.80-203-192.nextgentel.com [80.203.192.37])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7261B2070C;
-        Mon, 12 Aug 2019 15:27:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565623655;
-        bh=vbVr9jjl22J0zb0ffZlickEWyD1dg9kUn83VsAuo2gc=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=pV7VfsZmTSwqdx7hJ19BAsFa2hxZSxzosbwfvKgUv/wMxXD6fuH8M5J9Pqve32BHM
-         LGi33XJvc9mlNIxCCG7JnfYNDqfXjO0tCKMWDhPFbuQ3/kuQHKbGdxCNTOyTWARIyc
-         iGsnxyY//nXtgglWqzmEM9Z93K1D54pAY09YstTk=
-Date:   Mon, 12 Aug 2019 17:27:25 +0200
-From:   Shawn Guo <shawnguo@kernel.org>
-To:     Hui Song <hui.song_1@nxp.com>
-Cc:     Li Yang <leoyang.li@nxp.com>, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org
-Subject: Re: [PATCH v1 2/3] arm64: dts: fix gpio node
-Message-ID: <20190812152723.GK27041@X250>
-References: <20190808101628.36782-1-hui.song_1@nxp.com>
- <20190808101628.36782-2-hui.song_1@nxp.com>
+        id S1725843AbfHLP76 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 12 Aug 2019 11:59:58 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:39188 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725648AbfHLP76 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 12 Aug 2019 11:59:58 -0400
+Received: by mail-pf1-f193.google.com with SMTP id f17so45910315pfn.6
+        for <linux-gpio@vger.kernel.org>; Mon, 12 Aug 2019 08:59:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=broadcom.com; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-transfer-encoding:content-language;
+        bh=R8zKtsrZlzRiuqo5Lr6uS7Zz5vZz4cfJeHF7vKw2cRo=;
+        b=QkpaS7c2K1Rce00zT6rwH6D9yFdfJjH4WNF3Tb5YmjP5nBT6CW7bQjJPOAG3eHqAsR
+         IA40v/3Lhx81VBN1nqXtCzFChgoeAysYfRiD6obvt7x4NHZIrZOrJvvySLLHIrG32ILU
+         g03LIQxp0IhYeOM1I0nIuCGZHWzdWih2H98lo=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-transfer-encoding
+         :content-language;
+        bh=R8zKtsrZlzRiuqo5Lr6uS7Zz5vZz4cfJeHF7vKw2cRo=;
+        b=fsGAxaApcNRPWVU6BTLCE26Hx7HXENrVpGEvPRSVFT6ykbO57uEJHk4HdUU/saxbWh
+         N2mvGzWW92p/TQmeh1GEx+uuG5bBnsI0l91tG9fev9XYKKIe4wuCvPIEXtx/odDxOU1b
+         bJWL7MfEL2YRssBKEEeLHtrl+dfr+6nf6HdO+MkenUTS+ipycyiysBY3bjI5vwftNB7b
+         +fTISTZxEXzmOtkklW2Jn43043Pq2c/sgHzJ+6ka9le8vxOdrJ0rtePOA9URBf8NHs1+
+         JEJzI3rO0YE9yafhQedoKjrsvVtYyUsVVvbbyln3TbxjqaBGOYjnAGE14g6ckkfAqeRC
+         oU7A==
+X-Gm-Message-State: APjAAAWN/WyxET0Eqd5bHlDXxxqQM+kZJP/zDYUYTHIXfJ4ZyCOt9eTk
+        VmZZw+pE18oBaVogrGHqpPlltg==
+X-Google-Smtp-Source: APXvYqzXJnpllqpIYFF1YgpprMf8SnB0J0ZhrK1f1CecaLBpD4rUSUBKmGYtmj1ZEQ/Sur/poiTxQA==
+X-Received: by 2002:a17:90a:358a:: with SMTP id r10mr22263pjb.30.1565625597884;
+        Mon, 12 Aug 2019 08:59:57 -0700 (PDT)
+Received: from [10.136.13.65] ([192.19.228.250])
+        by smtp.gmail.com with ESMTPSA id f6sm108604526pga.50.2019.08.12.08.59.56
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 12 Aug 2019 08:59:57 -0700 (PDT)
+Subject: Re: [PATCH] pinctrl: bcm-iproc: Use SPDX header
+To:     Linus Walleij <linus.walleij@linaro.org>,
+        linux-gpio@vger.kernel.org
+Cc:     Pramod Kumar <pramodku@broadcom.com>, Ray Jui <rjui@broadcom.com>,
+        Scott Branden <sbranden@broadcom.com>
+References: <20190812130401.22769-1-linus.walleij@linaro.org>
+From:   Scott Branden <scott.branden@broadcom.com>
+Message-ID: <60da7536-2d41-69b2-5730-4678b6e84cf9@broadcom.com>
+Date:   Mon, 12 Aug 2019 08:59:55 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190808101628.36782-2-hui.song_1@nxp.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <20190812130401.22769-1-linus.walleij@linaro.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Aug 08, 2019 at 06:16:27PM +0800, Hui Song wrote:
-> From: Song Hui <hui.song_1@nxp.com>
-> 
-> Update the nodes to include little-endian
-> property to be consistent with the hardware
-> and add ls1088a gpio specify compatible.
-> 
-> Signed-off-by: Song Hui <hui.song_1@nxp.com>
+Hi Linus,
 
-The prefix should be more specific, like 'arm64: dts: ls1088a: ...'
-
-Shawn
-
+On 2019-08-12 6:04 a.m., Linus Walleij wrote:
+> This convert the BCM IPROC driver to use the SPDX header
+> for indicating GPL v2.0 only licensing.
+>
+> Cc: Pramod Kumar <pramodku@broadcom.com>
+> Cc: Ray Jui <rjui@broadcom.com>
+> Cc: Scott Branden <sbranden@broadcom.com>
+> Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
 > ---
->  arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi | 12 ++++++++----
->  1 file changed, 8 insertions(+), 4 deletions(-)
-> 
-> diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
-> index 20f5ebd..d58d203 100644
-> --- a/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
-> +++ b/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
-> @@ -269,43 +269,47 @@
->  		};
->  
->  		gpio0: gpio@2300000 {
-> -			compatible = "fsl,qoriq-gpio";
-> +			compatible = "fsl,ls1088a-gpio", "fsl,qoriq-gpio";
->  			reg = <0x0 0x2300000 0x0 0x10000>;
->  			interrupts = <0 36 IRQ_TYPE_LEVEL_HIGH>;
->  			gpio-controller;
->  			#gpio-cells = <2>;
->  			interrupt-controller;
->  			#interrupt-cells = <2>;
-> +			little-endian;
->  		};
->  
->  		gpio1: gpio@2310000 {
-> -			compatible = "fsl,qoriq-gpio";
-> +			compatible = "fsl,ls1088a-gpio", "fsl,qoriq-gpio";
->  			reg = <0x0 0x2310000 0x0 0x10000>;
->  			interrupts = <0 36 IRQ_TYPE_LEVEL_HIGH>;
->  			gpio-controller;
->  			#gpio-cells = <2>;
->  			interrupt-controller;
->  			#interrupt-cells = <2>;
-> +			little-endian;
->  		};
->  
->  		gpio2: gpio@2320000 {
-> -			compatible = "fsl,qoriq-gpio";
-> +			compatible = "fsl,ls1088a-gpio", "fsl,qoriq-gpio";
->  			reg = <0x0 0x2320000 0x0 0x10000>;
->  			interrupts = <0 37 IRQ_TYPE_LEVEL_HIGH>;
->  			gpio-controller;
->  			#gpio-cells = <2>;
->  			interrupt-controller;
->  			#interrupt-cells = <2>;
-> +			little-endian;
->  		};
->  
->  		gpio3: gpio@2330000 {
-> -			compatible = "fsl,qoriq-gpio";
-> +			compatible = "fsl,ls1088a-gpio", "fsl,qoriq-gpio";
->  			reg = <0x0 0x2330000 0x0 0x10000>;
->  			interrupts = <0 37 IRQ_TYPE_LEVEL_HIGH>;
->  			gpio-controller;
->  			#gpio-cells = <2>;
->  			interrupt-controller;
->  			#interrupt-cells = <2>;
-> +			little-endian;
->  		};
->  
->  		ifc: ifc@2240000 {
-> -- 
-> 2.9.5
-> 
+>   drivers/pinctrl/bcm/pinctrl-iproc-gpio.c | 12 +-----------
+>   1 file changed, 1 insertion(+), 11 deletions(-)
+>
+> diff --git a/drivers/pinctrl/bcm/pinctrl-iproc-gpio.c b/drivers/pinctrl/bcm/pinctrl-iproc-gpio.c
+> index b70058caee50..18ff01727e0e 100644
+> --- a/drivers/pinctrl/bcm/pinctrl-iproc-gpio.c
+> +++ b/drivers/pinctrl/bcm/pinctrl-iproc-gpio.c
+> @@ -1,17 +1,7 @@
+> +// SPDX-License-Identifier: GPL-2.0-only
+>   /*
+>    * Copyright (C) 2014-2017 Broadcom
+>    *
+> - * This program is free software; you can redistribute it and/or
+> - * modify it under the terms of the GNU General Public License as
+> - * published by the Free Software Foundation version 2.
+> - *
+> - * This program is distributed "as is" WITHOUT ANY WARRANTY of any
+> - * kind, whether express or implied; without even the implied warranty
+> - * of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> - * GNU General Public License for more details.
+> - */
+> -
+> -/*
+
+Please leave the file description comment separate from the license 
+header/copyright notices.
+
+ie. leave the above 3 lines intact.
+
+>    * This file contains the Broadcom Iproc GPIO driver that supports 3
+>    * GPIO controllers on Iproc including the ASIU GPIO controller, the
+>    * chipCommonG GPIO controller, and the always-on GPIO controller. Basic
