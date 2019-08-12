@@ -2,59 +2,62 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 610988A2C6
-	for <lists+linux-gpio@lfdr.de>; Mon, 12 Aug 2019 17:59:59 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 77A7A8A2C9
+	for <lists+linux-gpio@lfdr.de>; Mon, 12 Aug 2019 18:00:41 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725843AbfHLP76 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 12 Aug 2019 11:59:58 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:39188 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725648AbfHLP76 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 12 Aug 2019 11:59:58 -0400
-Received: by mail-pf1-f193.google.com with SMTP id f17so45910315pfn.6
-        for <linux-gpio@vger.kernel.org>; Mon, 12 Aug 2019 08:59:58 -0700 (PDT)
+        id S1726267AbfHLQAk (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 12 Aug 2019 12:00:40 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:37728 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725648AbfHLQAk (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 12 Aug 2019 12:00:40 -0400
+Received: by mail-pl1-f193.google.com with SMTP id bj8so1020868plb.4
+        for <linux-gpio@vger.kernel.org>; Mon, 12 Aug 2019 09:00:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=broadcom.com; s=google;
         h=subject:to:cc:references:from:message-id:date:user-agent
          :mime-version:in-reply-to:content-transfer-encoding:content-language;
-        bh=R8zKtsrZlzRiuqo5Lr6uS7Zz5vZz4cfJeHF7vKw2cRo=;
-        b=QkpaS7c2K1Rce00zT6rwH6D9yFdfJjH4WNF3Tb5YmjP5nBT6CW7bQjJPOAG3eHqAsR
-         IA40v/3Lhx81VBN1nqXtCzFChgoeAysYfRiD6obvt7x4NHZIrZOrJvvySLLHIrG32ILU
-         g03LIQxp0IhYeOM1I0nIuCGZHWzdWih2H98lo=
+        bh=eu4hl5qNaMJhHhWuL7T0rF5vow3jYh9xaCT/k0XYegc=;
+        b=fYGgtyFXvcj2HnwlHoYT6g9KhiCyUBLNG62n3HsLA934ERKhjuhYqXTY11f9yY6qGW
+         Ri9OSvrv1P5bg2kET95NS8shMfc2ZwBGOPNGDf81JO3GCrJhKzrohIwwAYe2YHXd93tY
+         CNkMMRoBmf4uyMvTfvK+8TGl7uZnzbvN1o7Tc=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:message-id:date
          :user-agent:mime-version:in-reply-to:content-transfer-encoding
          :content-language;
-        bh=R8zKtsrZlzRiuqo5Lr6uS7Zz5vZz4cfJeHF7vKw2cRo=;
-        b=fsGAxaApcNRPWVU6BTLCE26Hx7HXENrVpGEvPRSVFT6ykbO57uEJHk4HdUU/saxbWh
-         N2mvGzWW92p/TQmeh1GEx+uuG5bBnsI0l91tG9fev9XYKKIe4wuCvPIEXtx/odDxOU1b
-         bJWL7MfEL2YRssBKEEeLHtrl+dfr+6nf6HdO+MkenUTS+ipycyiysBY3bjI5vwftNB7b
-         +fTISTZxEXzmOtkklW2Jn43043Pq2c/sgHzJ+6ka9le8vxOdrJ0rtePOA9URBf8NHs1+
-         JEJzI3rO0YE9yafhQedoKjrsvVtYyUsVVvbbyln3TbxjqaBGOYjnAGE14g6ckkfAqeRC
-         oU7A==
-X-Gm-Message-State: APjAAAWN/WyxET0Eqd5bHlDXxxqQM+kZJP/zDYUYTHIXfJ4ZyCOt9eTk
-        VmZZw+pE18oBaVogrGHqpPlltg==
-X-Google-Smtp-Source: APXvYqzXJnpllqpIYFF1YgpprMf8SnB0J0ZhrK1f1CecaLBpD4rUSUBKmGYtmj1ZEQ/Sur/poiTxQA==
-X-Received: by 2002:a17:90a:358a:: with SMTP id r10mr22263pjb.30.1565625597884;
-        Mon, 12 Aug 2019 08:59:57 -0700 (PDT)
+        bh=eu4hl5qNaMJhHhWuL7T0rF5vow3jYh9xaCT/k0XYegc=;
+        b=WZgD3FE9Ze0bqjn74gV8aU6e0q9XCu+w9dMJ/aEqUCuEVoLqM0u4zdBrAAEA5QJi1T
+         mH3ntZt03XOE+/hkQwACO/R+B+Uuj7j18pE1F7iEkbo+RmJouwkt8UFGUuJ4/WsO770r
+         lDCUkN+xIfdVIX1neR8S21fnhqyfaSX6bHuZfTyAyyESrNTmxAU0OEerlSDwBEjJtc+4
+         Yuss8IaaoaT9B0EBpkIvgq/qN34J3dio6wHqPgs5B8+fIfx8DxubRBx32pMhGBkpRueb
+         a5OdeZjzghYtasVF/m5WFPvy6YcWLFxMDS6Y0HpbZG99YmJIssAlqqqnTtgf9qbB/Vmu
+         VqcA==
+X-Gm-Message-State: APjAAAVGqyT4CEk2c7yeD1dQU30AzM++Wp+1bkyJysEc7jUEk7QLSrFj
+        oebv5G4sdLTV+fQ8s9gFvnV80w==
+X-Google-Smtp-Source: APXvYqyU3EltDuiGW5guVXDVBQ+lUYTTY/F8ooszBunHleKhnCrCI6OV79LHfPrQ0DhHD9nj2iePSA==
+X-Received: by 2002:a17:902:381:: with SMTP id d1mr32851258pld.331.1565625639711;
+        Mon, 12 Aug 2019 09:00:39 -0700 (PDT)
 Received: from [10.136.13.65] ([192.19.228.250])
-        by smtp.gmail.com with ESMTPSA id f6sm108604526pga.50.2019.08.12.08.59.56
+        by smtp.gmail.com with ESMTPSA id l1sm152074747pfl.9.2019.08.12.09.00.38
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 12 Aug 2019 08:59:57 -0700 (PDT)
-Subject: Re: [PATCH] pinctrl: bcm-iproc: Use SPDX header
+        Mon, 12 Aug 2019 09:00:38 -0700 (PDT)
+Subject: Re: [PATCH] pinctrl: bcm-iproc: Pass irqchip when adding gpiochip
 To:     Linus Walleij <linus.walleij@linaro.org>,
         linux-gpio@vger.kernel.org
-Cc:     Pramod Kumar <pramodku@broadcom.com>, Ray Jui <rjui@broadcom.com>,
-        Scott Branden <sbranden@broadcom.com>
-References: <20190812130401.22769-1-linus.walleij@linaro.org>
+Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Pramod Kumar <pramodku@broadcom.com>,
+        Ray Jui <rjui@broadcom.com>,
+        Scott Branden <sbranden@broadcom.com>,
+        Thierry Reding <treding@nvidia.com>
+References: <20190812132554.18313-1-linus.walleij@linaro.org>
 From:   Scott Branden <scott.branden@broadcom.com>
-Message-ID: <60da7536-2d41-69b2-5730-4678b6e84cf9@broadcom.com>
-Date:   Mon, 12 Aug 2019 08:59:55 -0700
+Message-ID: <24d28eed-c2ab-5850-50b2-db63740b71dd@broadcom.com>
+Date:   Mon, 12 Aug 2019 09:00:37 -0700
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <20190812130401.22769-1-linus.walleij@linaro.org>
+In-Reply-To: <20190812132554.18313-1-linus.walleij@linaro.org>
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
 Content-Language: en-US
@@ -63,46 +66,73 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Linus,
 
-On 2019-08-12 6:04 a.m., Linus Walleij wrote:
-> This convert the BCM IPROC driver to use the SPDX header
-> for indicating GPL v2.0 only licensing.
+On 2019-08-12 6:25 a.m., Linus Walleij wrote:
+> We need to convert all old gpio irqchips to pass the irqchip
+> setup along when adding the gpio_chip. For more info see
+> drivers/gpio/TODO.
+>
+> For chained irqchips this is a pretty straight-forward
+> conversion.
 >
 > Cc: Pramod Kumar <pramodku@broadcom.com>
 > Cc: Ray Jui <rjui@broadcom.com>
 > Cc: Scott Branden <sbranden@broadcom.com>
+> Cc: Thierry Reding <treding@nvidia.com>
 > Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+Acked-by: Scott Branden <scott.branden@broadcom.com>
 > ---
->   drivers/pinctrl/bcm/pinctrl-iproc-gpio.c | 12 +-----------
->   1 file changed, 1 insertion(+), 11 deletions(-)
+>   drivers/pinctrl/bcm/pinctrl-iproc-gpio.c | 33 ++++++++++++++----------
+>   1 file changed, 19 insertions(+), 14 deletions(-)
 >
 > diff --git a/drivers/pinctrl/bcm/pinctrl-iproc-gpio.c b/drivers/pinctrl/bcm/pinctrl-iproc-gpio.c
-> index b70058caee50..18ff01727e0e 100644
+> index 18ff01727e0e..ee01306c62fa 100644
 > --- a/drivers/pinctrl/bcm/pinctrl-iproc-gpio.c
 > +++ b/drivers/pinctrl/bcm/pinctrl-iproc-gpio.c
-> @@ -1,17 +1,7 @@
-> +// SPDX-License-Identifier: GPL-2.0-only
->   /*
->    * Copyright (C) 2014-2017 Broadcom
->    *
-> - * This program is free software; you can redistribute it and/or
-> - * modify it under the terms of the GNU General Public License as
-> - * published by the Free Software Foundation version 2.
-> - *
-> - * This program is distributed "as is" WITHOUT ANY WARRANTY of any
-> - * kind, whether express or implied; without even the implied warranty
-> - * of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> - * GNU General Public License for more details.
-> - */
+> @@ -780,6 +780,25 @@ static int iproc_gpio_probe(struct platform_device *pdev)
+>   	chip->pinmux_is_supported = of_property_read_bool(dev->of_node,
+>   							"gpio-ranges");
+>   
+> +	/* optional GPIO interrupt support */
+> +	irq = platform_get_irq(pdev, 0);
+> +	if (irq) {
+> +		struct gpio_irq_chip *girq;
+> +
+> +		girq = &gc->irq;
+> +		girq->chip = &iproc_gpio_irq_chip;
+> +		girq->parent_handler = iproc_gpio_irq_handler;
+> +		girq->num_parents = 1;
+> +		girq->parents = devm_kcalloc(dev, 1,
+> +					     sizeof(*girq->parents),
+> +					     GFP_KERNEL);
+> +		if (!girq->parents)
+> +			return -ENOMEM;
+> +		girq->parents[0] = irq;
+> +		girq->default_type = IRQ_TYPE_NONE;
+> +		girq->handler = handle_simple_irq;
+> +	}
+> +
+>   	ret = gpiochip_add_data(gc, chip);
+>   	if (ret < 0) {
+>   		dev_err(dev, "unable to add GPIO chip\n");
+> @@ -804,20 +823,6 @@ static int iproc_gpio_probe(struct platform_device *pdev)
+>   		}
+>   	}
+>   
+> -	/* optional GPIO interrupt support */
+> -	irq = platform_get_irq(pdev, 0);
+> -	if (irq) {
+> -		ret = gpiochip_irqchip_add(gc, &iproc_gpio_irq_chip, 0,
+> -					   handle_simple_irq, IRQ_TYPE_NONE);
+> -		if (ret) {
+> -			dev_err(dev, "no GPIO irqchip\n");
+> -			goto err_rm_gpiochip;
+> -		}
 > -
-> -/*
-
-Please leave the file description comment separate from the license 
-header/copyright notices.
-
-ie. leave the above 3 lines intact.
-
->    * This file contains the Broadcom Iproc GPIO driver that supports 3
->    * GPIO controllers on Iproc including the ASIU GPIO controller, the
->    * chipCommonG GPIO controller, and the always-on GPIO controller. Basic
+> -		gpiochip_set_chained_irqchip(gc, &iproc_gpio_irq_chip, irq,
+> -					     iproc_gpio_irq_handler);
+> -	}
+> -
+>   	return 0;
+>   
+>   err_rm_gpiochip:
