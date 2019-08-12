@@ -2,80 +2,127 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 5054189C7B
-	for <lists+linux-gpio@lfdr.de>; Mon, 12 Aug 2019 13:18:39 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5166589CF6
+	for <lists+linux-gpio@lfdr.de>; Mon, 12 Aug 2019 13:29:16 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728054AbfHLLSi (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 12 Aug 2019 07:18:38 -0400
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:41407 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727936AbfHLLSi (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 12 Aug 2019 07:18:38 -0400
-Received: by mail-ot1-f65.google.com with SMTP id o101so4369734ota.8;
-        Mon, 12 Aug 2019 04:18:38 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=qy4pjH0HF5Jw/fK3kw8pQHHijM5PTE57kQ2fl43ZBFI=;
-        b=fPz/hu+pt4RGL8GJaE6SKD2KNAHgn30H5Q2QUC1qnXTil1lmdShnxXI0VVyoZNKGOY
-         D3nY89oCkudTauRzIT2vW85dt5jH2UlZFmfgDJ3wKi59jOUMqT2s7QkwncIgLIIv99Tp
-         gsW8G4ztuS96ion1rNhdY+KmyTaAL5sxDKuFVAPq2vUn97GBrQ767udnf23DDeNtxj09
-         7oDr+SCE/0ZJScaWjuzE4fMeG7v5PDbKeVCoZHOCv61nyJLYJt07ip5PTL1GLIyyYjYE
-         hOoxe+F5yQzi8GUFmwdjFcdOFUMJo1VIkPc1kLh1a7e68KHe57Qkwg1ua0avK2IKtFYY
-         OBKQ==
-X-Gm-Message-State: APjAAAWmWhwuffrVEGjngz+kWh5aBmFqY9mqtiOzU83hNYWdpYSZ4vP5
-        IOzyPmFVu0HrkF7AlwCR4p6vpzVRmiKnUvVjZJg=
-X-Google-Smtp-Source: APXvYqyB+wAz0wdsRQhPMr9u3bj6K5knz/OIceaUIfgVi2u58h5iVQkNvR1Cb2iHtIuYJQskwFEjnYysiD1XNLLCzWw=
-X-Received: by 2002:aca:f4ca:: with SMTP id s193mr5041843oih.131.1565608717208;
- Mon, 12 Aug 2019 04:18:37 -0700 (PDT)
+        id S1728207AbfHLL3A (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 12 Aug 2019 07:29:00 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:54464 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728473AbfHLL27 (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Mon, 12 Aug 2019 07:28:59 -0400
+Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 988ECB04B9D23C81953D;
+        Mon, 12 Aug 2019 19:28:56 +0800 (CST)
+Received: from [127.0.0.1] (10.57.101.250) by DGGEMS402-HUB.china.huawei.com
+ (10.3.19.202) with Microsoft SMTP Server id 14.3.439.0; Mon, 12 Aug 2019
+ 19:28:47 +0800
+To:     <linux-gpio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>, <linus.walleij@linaro.org>
+CC:     Linuxarm <linuxarm@huawei.com>, <xuwei5@hisilicon.com>,
+        "Shameerali Kolothum Thodi" <shameerali.kolothum.thodi@huawei.com>,
+        Jonathan Cameron <jonathan.cameron@huawei.com>,
+        John Garry <john.garry@huawei.com>,
+        "Salil Mehta" <salil.mehta@huawei.com>,
+        Shiju Jose <shiju.jose@huawei.com>, <jinying@hisilicon.com>,
+        Zhangyi ac <zhangyi.ac@huawei.com>,
+        "Liguozhu (Kenneth)" <liguozhu@hisilicon.com>,
+        Tangkunshan <tangkunshan@huawei.com>,
+        huangdaode <huangdaode@hisilicon.com>
+From:   Wei Xu <xuwei5@hisilicon.com>
+Subject: [PATCH] gpio: pl061: Fix the issue failed to register the ACPI
+ interruption
+Message-ID: <5D514D6F.4090904@hisilicon.com>
+Date:   Mon, 12 Aug 2019 19:28:47 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:38.0) Gecko/20100101
+ Thunderbird/38.2.0
 MIME-Version: 1.0
-References: <20190808132543.26274-1-sr@denx.de> <CACRpkdYzg0At4qf1Nv5_+SzgqQ-iLU1ND9Svhj47=pXJf9E7Mg@mail.gmail.com>
-In-Reply-To: <CACRpkdYzg0At4qf1Nv5_+SzgqQ-iLU1ND9Svhj47=pXJf9E7Mg@mail.gmail.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Mon, 12 Aug 2019 13:18:26 +0200
-Message-ID: <CAMuHMdXP8K+yvUHrjnegnNuViG3YsCAD=PxTsDHJcTLRRjJguQ@mail.gmail.com>
-Subject: Re: [PATCH 1/2] gpiolib: Add for_each_gpio_suffix() helper
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Stefan Roese <sr@denx.de>,
-        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Pavel Machek <pavel@denx.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.57.101.250]
+X-CFilter-Loop: Reflected
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Linus,
+Invoke acpi_gpiochip_request_interrupts after the acpi data has been
+attached to the pl061 acpi node to register interruption.
 
-On Sat, Aug 10, 2019 at 10:27 AM Linus Walleij <linus.walleij@linaro.org> wrote:
-> On Thu, Aug 8, 2019 at 3:25 PM Stefan Roese <sr@denx.de> wrote:
-> > Add a helper macro to enable the interation over all supported GPIO
-> > suffixes (currently "gpios" & "gpio"). This will be used by the serial
-> > mctrl code to check, if a GPIO property exists before requesting it.
-> >
-> > Signed-off-by: Stefan Roese <sr@denx.de>
-> > Suggested-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> > Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> > Cc: Geert Uytterhoeven <geert@linux-m68k.org>
-> > Cc: Pavel Machek <pavel@denx.de>
-> > Cc: Linus Walleij <linus.walleij@linaro.org>
-> > Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
->
-> I really like this patch, it makes things so much more readable.
+Otherwise it will be failed to register interruption for the ACPI case.
+Because in the gpiochip_add_data_with_key, acpi_gpiochip_add is invoked
+after gpiochip_add_irqchip but at that time the acpi data has not been
+attached yet.
 
-Do we really need to spread this *-gpio" legacy support all over the kernel?
+Tested with below steps on QEMU v4.1.0-rc3 and Linux kernel v5.3-rc4,
+and found pl061 interruption is missed in the /proc/interrupts:
+1.
+qemu-system-aarch64 \
+-machine virt,gic-version=3 -cpu cortex-a57 \
+-m 1G,maxmem=4G,slots=4 \
+-kernel Image -initrd rootfs.cpio.gz \
+-net none -nographic  \
+-bios QEMU_EFI.fd  \
+-append "console=ttyAMA0 acpi=force earlycon=pl011,0x9000000"
 
-Gr{oetje,eeting}s,
+2. cat /proc/interrupts in the guest console:
+estuary:/$ cat /proc/interrupts
+CPU0
+2:       3228     GICv3  27 Level     arch_timer
+4:         15     GICv3  33 Level     uart-pl011
+42:          0     GICv3  23 Level     arm-pmu
+IPI0:         0       Rescheduling interrupts
+IPI1:         0       Function call interrupts
+IPI2:         0       CPU stop interrupts
+IPI3:         0       CPU stop (for crash dump) interrupts
+IPI4:         0       Timer broadcast interrupts
+IPI5:         0       IRQ work interrupts
+IPI6:         0       CPU wake-up interrupts
+Err:          0
 
-                        Geert
+Fixes: 04ce935c6b2a ("gpio: pl061: Pass irqchip when adding gpiochip")
+Signed-off-by: Wei Xu <xuwei5@hisilicon.com>
+---
+  drivers/gpio/gpio-pl061.c | 7 +++++++
+  1 file changed, 7 insertions(+)
+
+diff --git a/drivers/gpio/gpio-pl061.c b/drivers/gpio/gpio-pl061.c
+index 722ce5c..e1a434e 100644
+--- a/drivers/gpio/gpio-pl061.c
++++ b/drivers/gpio/gpio-pl061.c
+@@ -8,6 +8,7 @@
+   *
+   * Data sheet: ARM DDI 0190B, September 2000
+   */
++#include <linux/acpi.h>
+  #include <linux/spinlock.h>
+  #include <linux/errno.h>
+  #include <linux/init.h>
+@@ -24,6 +25,9 @@
+  #include <linux/pinctrl/consumer.h>
+  #include <linux/pm.h>
+
++#include "gpiolib.h"
++#include "gpiolib-acpi.h"
++
+  #define GPIODIR 0x400
+  #define GPIOIS  0x404
+  #define GPIOIBE 0x408
+@@ -345,6 +349,9 @@ static int pl061_probe(struct amba_device *adev, 
+const struct amba_id *id)
+      if (ret)
+          return ret;
+
++    if (has_acpi_companion(dev))
++        acpi_gpiochip_request_interrupts(&pl061->gc);
++
+      amba_set_drvdata(adev, pl061);
+      dev_info(dev, "PL061 GPIO chip registered\n");
 
 -- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+2.8.1
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+
+.
+
