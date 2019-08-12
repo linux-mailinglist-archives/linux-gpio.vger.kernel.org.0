@@ -2,240 +2,172 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id C51258A858
-	for <lists+linux-gpio@lfdr.de>; Mon, 12 Aug 2019 22:28:24 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8D1618A8D6
+	for <lists+linux-gpio@lfdr.de>; Mon, 12 Aug 2019 23:01:31 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727185AbfHLU2X (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 12 Aug 2019 16:28:23 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:34580 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726907AbfHLU2X (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 12 Aug 2019 16:28:23 -0400
-Received: by mail-wm1-f67.google.com with SMTP id e8so754008wme.1;
-        Mon, 12 Aug 2019 13:28:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=s0wCDx5y8pM7KtoQUqmdqY2XvkbJAZAW+gebmmrvDIE=;
-        b=cAJ5h1wFXUpT9r4lSaCUp9GTsqU+jUD3IEO0JrHTfziR7f2FmF76dZgvpsPXeTNtiS
-         aEw7fp/lS611qPmwa4pE3qnF68BhjavZ9OtDH2o3OEx+4b4Lu5VhO6TRiGzubbIEl1C1
-         nRrL01e0gFLK5pH4CdxqERkorGogwxbZW3xleDzMAGKjLNtATZD5b0UqGLWTbQVroURy
-         q1CcREkVPnVLyJiko/JK15+d3E8Un5YVy1B2WiWJgIiqD9YxQF14FKgpdQYqGeeuI44v
-         jmhbsFoKLJZJLegN8p4KyBr3lmk8BcraA8yNOGqccz1qXF9kCet/txd2iIQ5/citHZhH
-         n/IQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=s0wCDx5y8pM7KtoQUqmdqY2XvkbJAZAW+gebmmrvDIE=;
-        b=Jv9UgHkesFLLtLdTy2nfC1kpnqwafITbMO/TvqVV4EKuQZIVJVQwVT7eJHLM9muIt9
-         mc0uzE87ZjssMqssW5f0y8/+w23da3bo3MadaXCleLRkAqFproyk/dD6JybdN2s0yfNm
-         7kIH6MKjNlvO4eNZRt33ubD929mTl7IzIZ3ixeeYtUEnmKIXdUS1WrD/edr3njEkLvW6
-         t/pgYbty8F5lWWjfXrASZ1+Q/WMAwqePW6ecAZaV9dAnHIQFd5e83d91y+lMDh1GRlr3
-         QI/X7XyxNd0sQU7qUAUbJgYIps5hT5hfIqCCtnF64872dj6PGIRyPnc977TP3L5SOluv
-         bNiA==
-X-Gm-Message-State: APjAAAVh1SSJOkgRvGt6eyrMAqPTk+7UFHI7Zo2fQGqbr5tN4n3pnQHe
-        ANAiuVtnnB1Ksheq2nIls6vOpT79
-X-Google-Smtp-Source: APXvYqxeFokrusVryrWCYSrwCp/0pKQAr6rCeL88qBCrWqVRBNU52Y1mu2t0P6NIjfR8780orli+0Q==
-X-Received: by 2002:a1c:f509:: with SMTP id t9mr1021363wmh.114.1565641698530;
-        Mon, 12 Aug 2019 13:28:18 -0700 (PDT)
-Received: from [192.168.2.145] ([94.29.34.218])
-        by smtp.googlemail.com with ESMTPSA id u186sm1061474wmu.26.2019.08.12.13.28.16
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 12 Aug 2019 13:28:17 -0700 (PDT)
-Subject: Re: [PATCH v8 14/21] clk: tegra210: Add suspend and resume support
-To:     Sowjanya Komatineni <skomatineni@nvidia.com>
-Cc:     thierry.reding@gmail.com, jonathanh@nvidia.com, tglx@linutronix.de,
-        jason@lakedaemon.net, marc.zyngier@arm.com,
-        linus.walleij@linaro.org, stefan@agner.ch, mark.rutland@arm.com,
-        pdeschrijver@nvidia.com, pgaikwad@nvidia.com, sboyd@kernel.org,
-        linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org,
-        jckuo@nvidia.com, josephl@nvidia.com, talho@nvidia.com,
-        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org,
-        mperttunen@nvidia.com, spatra@nvidia.com, robh+dt@kernel.org,
-        devicetree@vger.kernel.org, rjw@rjwysocki.net,
-        viresh.kumar@linaro.org, linux-pm@vger.kernel.org
-References: <1565308020-31952-1-git-send-email-skomatineni@nvidia.com>
- <1565308020-31952-15-git-send-email-skomatineni@nvidia.com>
- <a21b7464-62c3-8461-04c2-a0e863bdde85@gmail.com>
- <7d101ec9-c559-8b40-1764-6bf67a9c7a7a@nvidia.com>
- <aa823801-00c7-df88-0f63-45338bffa854@gmail.com>
- <cbe94f84-a17b-7e1a-811d-89db571784e1@nvidia.com>
- <4397de5d-772d-2b04-5f87-b2988f6c96c8@gmail.com>
- <805a825e-f19d-d056-83eb-8ed1cb1c089c@nvidia.com>
- <ca90bd2b-8088-8b46-2816-95e58a4811b8@gmail.com>
- <931b027d-fdf3-220b-167a-4177fa917781@nvidia.com>
- <1779e92b-fa4d-68ab-9218-51970eee1ec5@gmail.com>
- <cd685e84-c0de-6142-597e-f7c77604350e@nvidia.com>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <232688c1-d47b-771d-a768-07e722488fa8@gmail.com>
-Date:   Mon, 12 Aug 2019 23:28:15 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
-MIME-Version: 1.0
-In-Reply-To: <cd685e84-c0de-6142-597e-f7c77604350e@nvidia.com>
-Content-Type: text/plain; charset=utf-8
+        id S1727224AbfHLVBX (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 12 Aug 2019 17:01:23 -0400
+Received: from mail-eopbgr50075.outbound.protection.outlook.com ([40.107.5.75]:15329
+        "EHLO EUR03-VE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727148AbfHLVBW (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Mon, 12 Aug 2019 17:01:22 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=M30wn+hK7jXJZFqjIRImPd9p9GNMlah3AGmR36ckMKC4IL+toTMFzjlNQCoTPMz1txEUsmAR7kD3LuL2cfdT9WpkJU+wSOJrdXICzx+8wbVwLmxIFWsBt6C2bbD1RNwc94P8JsXEzmg1QQnvf2y7Rakoa0/Ok/X0DkL5jfkeLG8SERcW/ah6G8bkPYaC6CaGsqfGxkQb8aBs7Du1no9Q+XhycQHkJsLIcGl82+3qz326cANvFjcgM4DILp5dDOHQ1VS1tbBK8kO6siGWybKN3wA3/VflKMJSfV9V+GHDmU7PmsI5yeozj3Z/S0XuiIh1c2C49G67yO0q6uecrrLghQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=m5Zc1plXoUEoUZrAqh7n3UA7BB1zA7OiTRTmEIjv9ec=;
+ b=Ene0UDGoQSGvsj3MZWRz6snKDDIm0IAPD/4Dudn11crhXeQiW1UAOq3/g7rIzcYZV5E3Nlfv1PsxW30cbXbARPciyO7Wk7IizT02EOshpFHq8DjzFPbkUbjwl4oU/NbQp+Mta360VQmxhHQl+oBBi3MvZXiOyTwFmlltyQY3ESJiE7ZIsJmpZfmiQj93N9N83rf1HNCpBYyGkuzxx8Fw2tcE/ta3bJe02DESeeyBGsIciMhMG03dMd27vK0PFyq8YLzGYz9ljew61xEAxCscIe0jW5BKNi+ADknypNhL2JYy/wW9Elk0zEvPVkoECs1bvmIdZQgspM7MHOTYjBfpIA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=m5Zc1plXoUEoUZrAqh7n3UA7BB1zA7OiTRTmEIjv9ec=;
+ b=g/j7NXhTQWDlxCtZgyVVOYwbvsjD6C6x9r+Lay2JTTtr9VMzzrzgK/a9EWV2ysKZeCbnuxS+rI/pog42LYErCfe11JlHNyCEnXG8PghPPOzP41VWKqoXivj18zN84HzR2tM+OriWAeGs4tzcPEQdtWIgaH0lsUiCOf9d3JbCYVc=
+Received: from VE1PR04MB6687.eurprd04.prod.outlook.com (20.179.235.152) by
+ VE1PR04MB6365.eurprd04.prod.outlook.com (10.255.118.78) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2157.15; Mon, 12 Aug 2019 21:01:16 +0000
+Received: from VE1PR04MB6687.eurprd04.prod.outlook.com
+ ([fe80::3d61:6e52:a83c:7c59]) by VE1PR04MB6687.eurprd04.prod.outlook.com
+ ([fe80::3d61:6e52:a83c:7c59%6]) with mapi id 15.20.2136.018; Mon, 12 Aug 2019
+ 21:01:16 +0000
+From:   Leo Li <leoyang.li@nxp.com>
+To:     Shawn Guo <shawnguo@kernel.org>, Hui Song <hui.song_1@nxp.com>
+CC:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>
+Subject: RE: [PATCH] arm64: dts: ls1028a: fix gpio nodes
+Thread-Topic: [PATCH] arm64: dts: ls1028a: fix gpio nodes
+Thread-Index: AQHVS1xblpcZ3Pq6W0S1i4g4uemWo6b3ki+AgAB5MaA=
+Date:   Mon, 12 Aug 2019 21:01:16 +0000
+Message-ID: <VE1PR04MB6687FD06F5E8DADE55F495D38FD30@VE1PR04MB6687.eurprd04.prod.outlook.com>
+References: <20190805065700.7601-1-hui.song_1@nxp.com>
+ <20190812134716.GF27041@X250>
+In-Reply-To: <20190812134716.GF27041@X250>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=leoyang.li@nxp.com; 
+x-originating-ip: [64.157.242.222]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 292d8597-4316-4697-e572-08d71f6837cd
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:VE1PR04MB6365;
+x-ms-traffictypediagnostic: VE1PR04MB6365:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <VE1PR04MB6365742E0F7A89332BC4D3298FD30@VE1PR04MB6365.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:935;
+x-forefront-prvs: 012792EC17
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(376002)(366004)(136003)(346002)(39860400002)(396003)(189003)(199004)(13464003)(33656002)(81156014)(55016002)(86362001)(71190400001)(7696005)(6506007)(7736002)(9686003)(53936002)(6436002)(186003)(102836004)(52536014)(74316002)(476003)(53546011)(486006)(6246003)(8676002)(76176011)(25786009)(316002)(229853002)(110136005)(26005)(5660300002)(305945005)(4326008)(99286004)(446003)(6636002)(11346002)(54906003)(3846002)(6116002)(64756008)(71200400001)(66446008)(14454004)(14444005)(66066001)(66946007)(478600001)(76116006)(8936002)(66476007)(256004)(66556008)(81166006)(2906002);DIR:OUT;SFP:1101;SCL:1;SRVR:VE1PR04MB6365;H:VE1PR04MB6687.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: QKiiM4qg/gxSOO7lXh04gyDz1WuUoz+3JT9Tkn3P0oZUrwWY+fYen+hnfheCu10n8+yjroxqjgyW2Gc/IL9ixnBsiA6j64cQ1d0P4jJ6Q3RFvgxxb9eflBsBEyM+P1S97XZZNsy8Tah8gSr/Ht+I3x2I0XUjFIqyEYJPLxxFkgZCMhgt4D6ZQERQB6Jp/dkc2gGq45TQJM8Mqj/siRqTrDhhvdHnXOk9Ip3XfYLpo4e1j78l7oUKkNvQcLHRVXdjTJpsepuO/fqzUZDkEG5pn3IfjJLwVInDg0wkgNgqqSuVFhtCCwD1Qf4kT/NmNwHtx0VQOsKLi3T/A//OY3pYNeVrnrYjwNfQiZP/3TqhxmWxbqWxoWkS6GCzYfafOcW0ot7BoSwilyEMOoP2wBlYa/pjy+4wlcfsuoY1ONomTYc=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 292d8597-4316-4697-e572-08d71f6837cd
+X-MS-Exchange-CrossTenant-originalarrivaltime: 12 Aug 2019 21:01:16.8605
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: leoyang.li@nxp.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VE1PR04MB6365
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-12.08.2019 22:03, Sowjanya Komatineni пишет:
-> 
-> On 8/12/19 11:19 AM, Dmitry Osipenko wrote:
->> 12.08.2019 20:28, Sowjanya Komatineni пишет:
->>> On 8/12/19 9:25 AM, Dmitry Osipenko wrote:
->>>> 11.08.2019 22:15, Sowjanya Komatineni пишет:
->>>>> On 8/11/19 10:39 AM, Dmitry Osipenko wrote:
->>>>>> 09.08.2019 21:40, Sowjanya Komatineni пишет:
->>>>>>> On 8/9/19 11:18 AM, Dmitry Osipenko wrote:
->>>>>>>> 09.08.2019 19:19, Sowjanya Komatineni пишет:
->>>>>>>>> On 8/9/19 6:56 AM, Dmitry Osipenko wrote:
->>>>>>>>>> 09.08.2019 2:46, Sowjanya Komatineni пишет:
->>>>>>>>>>> This patch adds support for clk: tegra210: suspend-resume.
->>>>>>>>>>>
->>>>>>>>>>> All the CAR controller settings are lost on suspend when core
->>>>>>>>>>> power goes off.
->>>>>>>>>>>
->>>>>>>>>>> This patch has implementation for saving and restoring all PLLs
->>>>>>>>>>> and clocks context during system suspend and resume to have the
->>>>>>>>>>> clocks back to same state for normal operation.
->>>>>>>>>>>
->>>>>>>>>>> Clock driver suspend and resume are registered as syscore_ops as clocks
->>>>>>>>>>> restore need to happen before the other drivers resume to have all their
->>>>>>>>>>> clocks back to the same state as before suspend.
->>>>>>>>>>>
->>>>>>>>>>> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
->>>>>>>>>>> ---
->>>>>>>>>>>      drivers/clk/tegra/clk-tegra210.c | 103 +++++++++++++++++++++++++++++++++++++--
->>>>>>>>>>>      drivers/clk/tegra/clk.c          |  64 ++++++++++++++++++++++++
->>>>>>>>>>>      drivers/clk/tegra/clk.h          |   3 ++
->>>>>>>>>>>      3 files changed, 166 insertions(+), 4 deletions(-)
->>>>>>>>>>>
->>>>>>>>>>> diff --git a/drivers/clk/tegra/clk-tegra210.c b/drivers/clk/tegra/clk-tegra210.c
->>>>>>>>>>> index 998bf60b219a..8dd6f4f4debb 100644
->>>>>>>>>>> --- a/drivers/clk/tegra/clk-tegra210.c
->>>>>>>>>>> +++ b/drivers/clk/tegra/clk-tegra210.c
->>>>>>>>>>> @@ -9,13 +9,13 @@
->>>>>>>>>>>      #include <linux/clkdev.h>
->>>>>>>>>>>      #include <linux/of.h>
->>>>>>>>>>>      #include <linux/of_address.h>
->>>>>>>>>>> +#include <linux/syscore_ops.h>
->>>>>>>>>>>      #include <linux/delay.h>
->>>>>>>>>>>      #include <linux/export.h>
->>>>>>>>>>>      #include <linux/mutex.h>
->>>>>>>>>>>      #include <linux/clk/tegra.h>
->>>>>>>>>>>      #include <dt-bindings/clock/tegra210-car.h>
->>>>>>>>>>>      #include <dt-bindings/reset/tegra210-car.h>
->>>>>>>>>>> -#include <linux/iopoll.h>
->>>>>>>>>>>      #include <linux/sizes.h>
->>>>>>>>>>>      #include <soc/tegra/pmc.h>
->>>>>>>>>>>      @@ -220,11 +220,15 @@
->>>>>>>>>>>      #define CLK_M_DIVISOR_SHIFT 2
->>>>>>>>>>>      #define CLK_M_DIVISOR_MASK 0x3
->>>>>>>>>>>      +#define CLK_MASK_ARM    0x44
->>>>>>>>>>> +#define MISC_CLK_ENB    0x48
->>>>>>>>>>> +
->>>>>>>>>>>      #define RST_DFLL_DVCO 0x2f4
->>>>>>>>>>>      #define DVFS_DFLL_RESET_SHIFT 0
->>>>>>>>>>>        #define CLK_RST_CONTROLLER_RST_DEV_Y_SET 0x2a8
->>>>>>>>>>>      #define CLK_RST_CONTROLLER_RST_DEV_Y_CLR 0x2ac
->>>>>>>>>>> +#define CPU_SOFTRST_CTRL 0x380
->>>>>>>>>>>        #define LVL2_CLK_GATE_OVRA 0xf8
->>>>>>>>>>>      #define LVL2_CLK_GATE_OVRC 0x3a0
->>>>>>>>>>> @@ -2825,6 +2829,7 @@ static int tegra210_enable_pllu(void)
->>>>>>>>>>>          struct tegra_clk_pll_freq_table *fentry;
->>>>>>>>>>>          struct tegra_clk_pll pllu;
->>>>>>>>>>>          u32 reg;
->>>>>>>>>>> +    int ret;
->>>>>>>>>>>            for (fentry = pll_u_freq_table; fentry->input_rate; fentry++) {
->>>>>>>>>>>              if (fentry->input_rate == pll_ref_freq)
->>>>>>>>>>> @@ -2853,9 +2858,14 @@ static int tegra210_enable_pllu(void)
->>>>>>>>>>>          reg |= PLL_ENABLE;
->>>>>>>>>>>          writel(reg, clk_base + PLLU_BASE);
->>>>>>>>>>>      -    readl_relaxed_poll_timeout_atomic(clk_base + PLLU_BASE, reg,
->>>>>>>>>>> -                      reg & PLL_BASE_LOCK, 2, 1000);
->>>>>>>>>>> -    if (!(reg & PLL_BASE_LOCK)) {
->>>>>>>>>>> +    /*
->>>>>>>>>>> +     * During clocks resume, same PLLU init and enable sequence get
->>>>>>>>>>> +     * executed. So, readx_poll_timeout_atomic can't be used here as it
->>>>>>>>>>> +     * uses ktime_get() and timekeeping resume doesn't happen by that
->>>>>>>>>>> +     * time. So, using tegra210_wait_for_mask for PLL LOCK.
->>>>>>>>>>> +     */
->>>>>>>>>>> +    ret = tegra210_wait_for_mask(&pllu, PLLU_BASE, PLL_BASE_LOCK);
->>>>>>>>>>> +    if (ret) {
->>>>>>>>>>>              pr_err("Timed out waiting for PLL_U to lock\n");
->>>>>>>>>>>              return -ETIMEDOUT;
->>>>>>>>>>>          }
->>>>>>>>>>> @@ -3288,6 +3298,84 @@ static void tegra210_disable_cpu_clock(u32 cpu)
->>>>>>>>>>>      }
->>>>>>>>>>>        #ifdef CONFIG_PM_SLEEP
->>>>>>>>>>> +/*
->>>>>>>>>>> + * This array lists mask values for each peripheral clk bank
->>>>>>>>>>> + * to mask out reserved bits during the clocks state restore
->>>>>>>>>>> + * on SC7 resume to prevent accidental writes to these reserved
->>>>>>>>>>> + * bits.
->>>>>>>>>>> + */
->>>>>>>>>>> +static u32 periph_clk_rsvd_mask[TEGRA210_CAR_BANK_COUNT] = {
->>>>>>>>>> Should be more natural to have a "valid_mask" instead of "rsvd_mask".
->>>>>>>>>>
->>>>>>>>>> What's actually wrong with touching of the reserved bits? They must be NO-OP.. or the
->>>>>>>>>> reserved bits are actually some kind of "secret" bits? If those bits have some
->>>>>>>>>> use-case
->>>>>>>>>> outside of Silicon HW (like FPGA simulation), then this doesn't matter for upstream
->>>>>>>>>> and you
->>>>>>>>>> have to keep the workaround locally in the downstream kernel or whatever.
->>>>>>>>> Will rename as valid_mask.
->>>>>>>>>
->>>>>>>>> some bits in these registers are undefined and is not good to write to these bits as
->>>>>>>>> they
->>>>>>>>> can cause pslverr.
->>>>>>>> Okay, it should be explained in the comment.
->>>>>>>>
->>>>>>>> Is it possible to disable trapping of changing the undefined bits?
->>>>>>> No its internal to design
->>>>>> Okay.
->>>>>>
->>>>>> Also, what about to move the valid_mask into struct tegra_clk_periph_regs?
->>>>> No, we cannot move to tegra_clk_periph_regs as its in tegra/clk.c and is common for all
->>>>> tegra.
->>>>>
->>>>> Reserved bits are different on tegra chips so should come from Tegra chip specific clock
->>>>> driver like
->>>>>
->>>>> clk-tegra210 for Tegra210.
->>>> Could you please check whether the reserved bits are RAZ (read as zero)?
->>>>
->>>> [snip]
->>> yes all reserved bits of clk_enb register is 0. This should not be set to 1.
->>>
->>> As I will be changing to variable name to valid_mask instead of reserved mask, will also
->>> change values to valid mask so it can be used directly to write to clk_enb for enabling all
->>> peripherals clks.
->>>
->> It looks to me that the tegra_clk_periph_force_on() could be made local to the
->> clk-tegra210.c and then the raw clk_enb values could be written directly instead of having
->> the clk_enb[] array, probably that will be a bit cleaner
-> 
-> All CLK_OUT_ENB* registers are already defined in clk driver and also periph_regs includes
-> all of these to use.
-> 
-> To write value to enable all clocks directly without array, it need total 7 individual
-> register writes for Tegra210. Also when suspend/resume is implemented for other prior
-> tegras, they need to do same in tegra clock driver.
-> 
-> Reason I had this in clock driver is, this can be used by all tegra clock drivers and just
-> can pass valid clocks values.
-> 
-> But doing individual register write with direct hard code values in corresponding tegra
-> clock driver is preferred still, will update so in next revision and will move all the
-> CLK_OUT_ENB* register defines to tegra/clk.h
-> 
-> Currently RST_DEVICES & CLK_OUT_ENB are all in tegra/clk.c
 
-Yes, it should be a bit more clear to share these defines. Also, please define the "valid"
-bitmasks with something like TEGRA210_DEVICES_MASK_L.
+
+> -----Original Message-----
+> From: Shawn Guo <shawnguo@kernel.org>
+> Sent: Monday, August 12, 2019 8:47 AM
+> To: Hui Song <hui.song_1@nxp.com>; Leo Li <leoyang.li@nxp.com>
+> Cc: Rob Herring <robh+dt@kernel.org>; Mark Rutland
+> <mark.rutland@arm.com>; Linus Walleij <linus.walleij@linaro.org>; Bartosz
+> Golaszewski <bgolaszewski@baylibre.com>; linux-arm-
+> kernel@lists.infradead.org; devicetree@vger.kernel.org; linux-
+> kernel@vger.kernel.org; linux-gpio@vger.kernel.org
+> Subject: Re: [PATCH] arm64: dts: ls1028a: fix gpio nodes
+>=20
+> On Mon, Aug 05, 2019 at 02:57:00PM +0800, Hui Song wrote:
+> > From: Song Hui <hui.song_1@nxp.com>
+> >
+> > Update the nodes to include little-endian property to be consistent
+> > with the hardware.
+> >
+> > Signed-off-by: Song Hui <hui.song_1@nxp.com>
+>=20
+> @Leo, looks good?
+
+Acked-by: Li Yang <leoyang.li@nxp.com>
+
+>=20
+> Shawn
+>=20
+> > ---
+> >  arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi | 9 ++++++---
+> >  1 file changed, 6 insertions(+), 3 deletions(-)
+> >
+> > diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
+> > b/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
+> > index aef5b06..7ccbbfc 100644
+> > --- a/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
+> > +++ b/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
+> > @@ -277,33 +277,36 @@
+> >  		};
+> >
+> >  		gpio1: gpio@2300000 {
+> > -			compatible =3D "fsl,qoriq-gpio";
+> > +			compatible =3D "fsl,ls1028a-gpio","fsl,qoriq-gpio";
+> >  			reg =3D <0x0 0x2300000 0x0 0x10000>;
+> >  			interrupts =3D <GIC_SPI 36 IRQ_TYPE_LEVEL_HIGH>;
+> >  			gpio-controller;
+> >  			#gpio-cells =3D <2>;
+> >  			interrupt-controller;
+> >  			#interrupt-cells =3D <2>;
+> > +			little-endian;
+> >  		};
+> >
+> >  		gpio2: gpio@2310000 {
+> > -			compatible =3D "fsl,qoriq-gpio";
+> > +			compatible =3D "fsl,ls1028a-gpio","fsl,qoriq-gpio";
+> >  			reg =3D <0x0 0x2310000 0x0 0x10000>;
+> >  			interrupts =3D <GIC_SPI 36 IRQ_TYPE_LEVEL_HIGH>;
+> >  			gpio-controller;
+> >  			#gpio-cells =3D <2>;
+> >  			interrupt-controller;
+> >  			#interrupt-cells =3D <2>;
+> > +			little-endian;
+> >  		};
+> >
+> >  		gpio3: gpio@2320000 {
+> > -			compatible =3D "fsl,qoriq-gpio";
+> > +			compatible =3D "fsl,ls1028a-gpio","fsl,qoriq-gpio";
+> >  			reg =3D <0x0 0x2320000 0x0 0x10000>;
+> >  			interrupts =3D <GIC_SPI 37 IRQ_TYPE_LEVEL_HIGH>;
+> >  			gpio-controller;
+> >  			#gpio-cells =3D <2>;
+> >  			interrupt-controller;
+> >  			#interrupt-cells =3D <2>;
+> > +			little-endian;
+> >  		};
+> >
+> >  		usb0: usb@3100000 {
+> > --
+> > 2.9.5
+> >
