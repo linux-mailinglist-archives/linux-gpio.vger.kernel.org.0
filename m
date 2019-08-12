@@ -2,124 +2,101 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 4D79C89B28
-	for <lists+linux-gpio@lfdr.de>; Mon, 12 Aug 2019 12:17:35 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B3C9E89BFA
+	for <lists+linux-gpio@lfdr.de>; Mon, 12 Aug 2019 12:53:12 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727323AbfHLKRZ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 12 Aug 2019 06:17:25 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:52127 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727564AbfHLKRZ (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 12 Aug 2019 06:17:25 -0400
-Received: by mail-wm1-f67.google.com with SMTP id 207so11634786wma.1;
-        Mon, 12 Aug 2019 03:17:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=LUHWKrlv3HNtE6WpJRs+ppErRQ6HyXfaAOYd1oUIeGU=;
-        b=sVDlNwPpgC0BjkbGpvQSy6teOifCQbvM2HlnPdr7U5LwsO8+cxBqUjRCwp8aJ6xkZh
-         ASicGs8CwoyzR2ofwu057jmzmglvjG1NN8/QmYLVsruez8RLMxALvmOILlnqkyoOvjXX
-         CiPuIxuMdogKBY17+M1+IE5Kg/dl4/oe+sWUnF/Ke6I0fV9066nTqIUgwS4vI25Rq7Kh
-         /CPH/oIvMV9GW70oeiM5galSSxnGHC45npBkuNZUDj1l3qcuuTEt6t+FkIKFdmleYULx
-         1tYWf7L39zd6NPkbVlqYBp7DUs6sSaly6qJheh+YMvHGxmfAIJUlvfYA6Q6oQ4H5Zz8Z
-         xEJA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=LUHWKrlv3HNtE6WpJRs+ppErRQ6HyXfaAOYd1oUIeGU=;
-        b=JLNsUPmVbZ3kWAptEG92PRFchja3DXGHMeDHwbSkfhg6eZnNwgz2x8pV/58FbSqkQf
-         JT/6WT0Bl5ssrcsauIFXhqFpFZuj3IMXe23+nhPv1d7sqgjMOOLLC4CnepsxhBDpLKzD
-         1rVmLPCSRp7/OkTIHJDqVXIICWptcHD04HAfx9ULrwemfzsFkFTKMQjtdHc+n8CA0A5e
-         SWyJtUtzjHiIS6W6b1jD47GQeTBxL8PviloKJhG0hJkj4wrwIh0Hkx/EKO3lAj2YXTdI
-         KCrBDz2GDZySLWc7OFWeV53ZJDvYtXyCh6ZCE4CAswBK+K8S2rFmcBaHxIwDZPA+EKY5
-         WmNQ==
-X-Gm-Message-State: APjAAAVrkI6ptjuGMpgbI7Csax+SZwv93pbabCadgwrn1TGDV6up8pQo
-        P4128PWnFqh17mKFNVG+0iE=
-X-Google-Smtp-Source: APXvYqxTMqUT3tDz+Un7sn3NhO7hRNUeoeo7EqzcAubtM2zorEDjYyk+JdHHwdp2Rd4EpMEETtzKLw==
-X-Received: by 2002:a7b:ce0b:: with SMTP id m11mr21097940wmc.151.1565605042377;
-        Mon, 12 Aug 2019 03:17:22 -0700 (PDT)
-Received: from localhost (pD9E51890.dip0.t-ipconnect.de. [217.229.24.144])
-        by smtp.gmail.com with ESMTPSA id z5sm10900441wmf.48.2019.08.12.03.17.20
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Mon, 12 Aug 2019 03:17:20 -0700 (PDT)
-Date:   Mon, 12 Aug 2019 12:17:19 +0200
-From:   Thierry Reding <thierry.reding@gmail.com>
-To:     Sowjanya Komatineni <skomatineni@nvidia.com>
-Cc:     jonathanh@nvidia.com, tglx@linutronix.de, jason@lakedaemon.net,
-        marc.zyngier@arm.com, linus.walleij@linaro.org, stefan@agner.ch,
-        mark.rutland@arm.com, pdeschrijver@nvidia.com, pgaikwad@nvidia.com,
-        sboyd@kernel.org, linux-clk@vger.kernel.org,
-        linux-gpio@vger.kernel.org, jckuo@nvidia.com, josephl@nvidia.com,
-        talho@nvidia.com, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org, mperttunen@nvidia.com,
-        spatra@nvidia.com, robh+dt@kernel.org, digetx@gmail.com,
-        devicetree@vger.kernel.org, rjw@rjwysocki.net,
-        viresh.kumar@linaro.org, linux-pm@vger.kernel.org
-Subject: Re: [PATCH v8 14/21] clk: tegra210: Add suspend and resume support
-Message-ID: <20190812101719.GL8903@ulmo>
-References: <1565308020-31952-1-git-send-email-skomatineni@nvidia.com>
- <1565308020-31952-15-git-send-email-skomatineni@nvidia.com>
+        id S1727691AbfHLKxL (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 12 Aug 2019 06:53:11 -0400
+Received: from mga03.intel.com ([134.134.136.65]:29582 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727235AbfHLKxL (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Mon, 12 Aug 2019 06:53:11 -0400
+X-Amp-Result: UNSCANNABLE
+X-Amp-File-Uploaded: False
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 12 Aug 2019 03:53:11 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,377,1559545200"; 
+   d="scan'208";a="183521892"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.145])
+  by FMSMGA003.fm.intel.com with ESMTP; 12 Aug 2019 03:53:09 -0700
+Received: from andy by smile with local (Exim 4.92.1)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1hx7wp-0005aM-Bp; Mon, 12 Aug 2019 13:53:07 +0300
+Date:   Mon, 12 Aug 2019 13:53:07 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Stefan Roese <sr@denx.de>
+Cc:     linux-serial@vger.kernel.org, linux-gpio@vger.kernel.org,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Pavel Machek <pavel@denx.de>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: Re: [PATCH 2/2] serial: mctrl_gpio: Support all GPIO suffixes (gpios
+ vs gpio)
+Message-ID: <20190812105307.GA30120@smile.fi.intel.com>
+References: <20190808132543.26274-1-sr@denx.de>
+ <20190808132543.26274-2-sr@denx.de>
+ <20190808134859.GY30120@smile.fi.intel.com>
+ <c4d14b64-6c2f-7e87-ea45-aa780dca85b8@denx.de>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="3xQkynibq3FKlJyM"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1565308020-31952-15-git-send-email-skomatineni@nvidia.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <c4d14b64-6c2f-7e87-ea45-aa780dca85b8@denx.de>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+On Thu, Aug 08, 2019 at 03:59:36PM +0200, Stefan Roese wrote:
+> On 08.08.19 15:48, Andy Shevchenko wrote:
+> > On Thu, Aug 08, 2019 at 03:25:43PM +0200, Stefan Roese wrote:
+> > > This patch fixes a backward compatibility issue, when boards use the
+> > > old style GPIO suffix "-gpio" instead of the new "-gpios". This
+> > > potential problem has been introduced by commit d99482673f95 ("serial:
+> > > mctrl_gpio: Check if GPIO property exisits before requesting it").
+> > > 
+> > > This patch now fixes this issue by iterating over all supported GPIO
+> > > suffixes by using the newly introduced for_each_gpio_suffix() helper.
+> > > 
+> > > Also, the string buffer is now allocated on the stack to avoid the
+> > > problem of allocation in a loop and its potential failure.
+> > 
+> > >   	for (i = 0; i < UART_GPIO_MAX; i++) {
+> > >   		enum gpiod_flags flags;
+> > > -		char *gpio_str;
+> > > +		const char *suffix;
+> > > +		char gpio_str[32];	/* 32 is max size of property name */
+> > 
+> > Hmm... don't we have some define for the maximum length of property?
+> 
+> I've come up with this assumption from this code (identical comment):
+> 
+> https://elixir.bootlin.com/linux/latest/source/drivers/gpio/gpiolib-of.c#L293
+> 
+> (and other places in drivers/gpio/*)
 
---3xQkynibq3FKlJyM
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+I tried hard to find an evidence of this in Linux kernel, I assume that comes
+from DT compiler or something, but fail. Linux kernel OF properties handling is
+written in the assumption of arbitrary length of the property name.
 
-On Thu, Aug 08, 2019 at 04:46:53PM -0700, Sowjanya Komatineni wrote:
-> This patch adds support for clk: tegra210: suspend-resume.
->=20
-> All the CAR controller settings are lost on suspend when core
-> power goes off.
->=20
-> This patch has implementation for saving and restoring all PLLs
-> and clocks context during system suspend and resume to have the
-> clocks back to same state for normal operation.
->=20
-> Clock driver suspend and resume are registered as syscore_ops as clocks
-> restore need to happen before the other drivers resume to have all their
-> clocks back to the same state as before suspend.
->=20
-> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
-> ---
->  drivers/clk/tegra/clk-tegra210.c | 103 +++++++++++++++++++++++++++++++++=
-++++--
->  drivers/clk/tegra/clk.c          |  64 ++++++++++++++++++++++++
->  drivers/clk/tegra/clk.h          |   3 ++
->  3 files changed, 166 insertions(+), 4 deletions(-)
+It might be that my hard was not hard at all and I missed something.
 
-Acked-by: Thierry Reding <treding@nvidia.com>
+> > Or maybe we can still continue using kasprintf() approach?
+> 
+> Frankly, I was feeling a bit uncomfortable with this memory allocation
+> in a loop. And Pavel also commented on this:
+> 
+> https://www.mail-archive.com/linux-kernel@vger.kernel.org/msg2066286.html
 
---3xQkynibq3FKlJyM
-Content-Type: application/pgp-signature; name="signature.asc"
+If memory allocator fails, it's a big issue, and what will happen next probably
+much less important.
 
------BEGIN PGP SIGNATURE-----
+> So I would really prefer to move this buffer to the stack instead.
 
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl1RPK0ACgkQ3SOs138+
-s6EALw//YUajBdPK4FtVwcA4OIK8GLJi4rRvPYUFKpGPdKoebx0XvmddXHMql1jz
-Z/X4hPffkZ3qc7Dk849Dqqkr8pX3FFUKjIrn4HdlNYxXcHzGjtI3/FR5AA3VleFN
-UcgaqzN248n5VL7QDw1xdwJ/OG1rluR9TbHx/Lqido8ohbGmeebrcSyqs9eeU92R
-dpFqewgNOyBrr07g3yMgyV/ntGvFqBqjb48PLgZnXNhgt08N5F8P/hypIACSwE3N
-o0q1GY/J8mzIRFWwOMRkw2I7NkHto07C+lumrq8R0UqtdVYC5j33lnnw6L7BhQcQ
-ElQpej6y3XAMKTQt74Gf6bM3nYfJyiyh6c0MqGISkQOR5k6pBYXljOJlsIAOL3Qw
-8adsNWCiEdaYPH6jWtm9I2PRRl2f2js9rMBla8RUW93e00lcN2JI4jLv/DkM/Rgf
-0hiwsEn0UelnV0GlvecbbVMvWElj6OsdtkRprJ0tlu0UD9LEwvnkMlKikiJuFgq5
-Bf1F89JCeMGixa+oLU1+R7zsSW5TiHuFcoUJZwB7okUIEN+i/3ZjfHlwh/iWOPx4
-NffENeaDzZ/Pt0oMzEjNde9O5ezWXjOcOk5Hvq5b42CWoybtC+SLFV9MTNBYfaZb
-hHwouuAzg/pvY2TBrNCm10lvbeoYBaINg+HwCcCxLZvUvBsQnEE=
-=zcts
------END PGP SIGNATURE-----
+-- 
+With Best Regards,
+Andy Shevchenko
 
---3xQkynibq3FKlJyM--
+
