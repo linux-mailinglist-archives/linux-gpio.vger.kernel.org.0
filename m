@@ -2,137 +2,117 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 25C2889A85
-	for <lists+linux-gpio@lfdr.de>; Mon, 12 Aug 2019 11:54:05 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 53D9889A8E
+	for <lists+linux-gpio@lfdr.de>; Mon, 12 Aug 2019 11:55:21 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727423AbfHLJxv (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 12 Aug 2019 05:53:51 -0400
-Received: from mx0a-0014ca01.pphosted.com ([208.84.65.235]:47894 "EHLO
-        mx0a-0014ca01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727140AbfHLJxv (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>);
-        Mon, 12 Aug 2019 05:53:51 -0400
-Received: from pps.filterd (m0042385.ppops.net [127.0.0.1])
-        by mx0a-0014ca01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x7C9qG81001701;
-        Mon, 12 Aug 2019 02:53:47 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cadence.com; h=from : to : cc :
- subject : date : message-id : references : in-reply-to : content-type :
- content-id : content-transfer-encoding : mime-version; s=proofpoint;
- bh=MmBhk0vHRYgcB17h3GZSvctr9j1wsy+npKYT7K2v9Cg=;
- b=eUkUktnr4n1ohiDZEmmUZUcIs4GuJV2j0IWT00+prsKL2TcoPAZIfP3Klbh4xpQ0TEVo
- JTapruaZwXQ5gViJ5ASiwK4jmqHG1L8iqJo6KIi7BZ2iEslt5jHJd9mkabD/gZkhP+gJ
- bGLYT5l+QvzxYcFslvA96uJVj+mB+5mrxHasoUKxiw8f1GgLgKCjez7axNlbR3OAJqUM
- Ql8cdoXieTjuViiorM3FO36BVQJTHpTB7mNKXMqkBWOCX4qGBfyRvhpDIrxdSElIbDCA
- bu8vBoMa+rBovgOoFPejgHk/J6k4aHNR07cxJF+aXuUPEIPv6WU8HYjifzCfzJevfS0T BQ== 
-Authentication-Results: cadence.com;
-        spf=pass smtp.mailfrom=jank@cadence.com
-Received: from nam03-co1-obe.outbound.protection.outlook.com (mail-co1nam03lp2051.outbound.protection.outlook.com [104.47.40.51])
-        by mx0a-0014ca01.pphosted.com with ESMTP id 2u9tfs57vb-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 12 Aug 2019 02:53:47 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=DM9XG/0pUJokNYiHSRIqBrxRLDniVIaItwvotE70O33NO+E3+BFxP5D4pZrt++WBJD3sER6RAiXIS9uYmSMDL3J2uwpg6qti83/fPI0zLSti/D7tQZXZ7pymo451AT7K5xP2QGhBav01ZBrGdKAl86QUd4UyhBKr/wZMxyX0EA3VNY0D/H0ZWjYZuJ3z5uWM87Y8wkAZJZ19/IVJYoRVK4lVbern4oEiewHlpNNO8ANJReixvh597+aYflRnFWMQhq4pVm/2yrSohK42lEcIgP2JT4z0m53J9o4nwCzBEzUxZWfeCWGx7e9HFjCV4fRmHOMX5MWzzaRa+VdG5PJzTw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=MmBhk0vHRYgcB17h3GZSvctr9j1wsy+npKYT7K2v9Cg=;
- b=TMCGuaymEY7qTwPyw5gQBwMZMC0pLNTUaWdRx9LBZCuhm13RKJrAzxZVxmaUXh0ZjKkaEO3RpTBaGNz2lSuwlSZuHhBzZe9YUA7BFWSkolc52YX6xneNtVxPjj3X//7idxjgOE5fxXHEzouc/dWWpLy0ubpOmYo56UAyVWk80PhZ9q+onOqaraANSR1VqK5agZP7RYa4Ro0PrPOGFdrQgIt5EULvY8EXzGvVPfJASnMySbyuU+evpaQ8mutjaVz4+lwd4C1hW1+2HiWfwoUYbgFSowTHEaBBL2tJZCcYhypMWzeMeVJXXd9vcreSosly4vTBOSJlMOBJIKn7RM3sPQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=cadence.com; dmarc=pass action=none header.from=cadence.com;
- dkim=pass header.d=cadence.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cadence.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=MmBhk0vHRYgcB17h3GZSvctr9j1wsy+npKYT7K2v9Cg=;
- b=g/HgaxcHRFBf5mmGOHSAiO45MFIT/FhmnMzLvW9F+2bwHT1OEULXDD2636J4oHBxwQEDgAmdNa5Q564e1wCc/153UM60WJ2W65d/pg8CBmnsMIvW7ubXgquZIqFl79NnUbaqadwNUUb5afnLTeo8u4VkmdLh5+qMcHFvkyuS1rI=
-Received: from CY1PR07MB2521.namprd07.prod.outlook.com (10.167.16.12) by
- CY1PR07MB2617.namprd07.prod.outlook.com (10.167.16.143) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2157.15; Mon, 12 Aug 2019 09:53:45 +0000
-Received: from CY1PR07MB2521.namprd07.prod.outlook.com
- ([fe80::2cc9:1e25:81ae:bc20]) by CY1PR07MB2521.namprd07.prod.outlook.com
- ([fe80::2cc9:1e25:81ae:bc20%11]) with mapi id 15.20.2157.022; Mon, 12 Aug
- 2019 09:53:45 +0000
-From:   Jan Kotas <jank@cadence.com>
-To:     Linus Walleij <linus.walleij@linaro.org>
-CC:     "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Jan Kotas <jank@cadence.com>,
-        Thierry Reding <treding@nvidia.com>
-Subject: Re: [PATCH] gpio: cadence: Pass irqchip when adding gpiochip
-Thread-Topic: [PATCH] gpio: cadence: Pass irqchip when adding gpiochip
-Thread-Index: AQHVTrTlcTdS7y+xz0Gl7Rddx404tqb3Sj4A
-Date:   Mon, 12 Aug 2019 09:53:45 +0000
-Message-ID: <95B402CC-A698-42FE-9D3E-D4B05997ED3E@global.cadence.com>
-References: <20190809131804.20352-1-linus.walleij@linaro.org>
-In-Reply-To: <20190809131804.20352-1-linus.walleij@linaro.org>
-Accept-Language: en-US, pl-PL
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [158.140.1.28]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 98d86f5b-e0ee-4801-62e7-08d71f0af72b
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:CY1PR07MB2617;
-x-ms-traffictypediagnostic: CY1PR07MB2617:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <CY1PR07MB26177CB5EE058951B899DE8ED0D30@CY1PR07MB2617.namprd07.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:6790;
-x-forefront-prvs: 012792EC17
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(366004)(39860400002)(346002)(136003)(396003)(376002)(189003)(199004)(36092001)(6246003)(102836004)(54906003)(8676002)(25786009)(476003)(33656002)(99286004)(5660300002)(446003)(76176011)(6436002)(14454004)(53546011)(6486002)(2906002)(6506007)(4744005)(478600001)(316002)(11346002)(66446008)(64756008)(66556008)(66476007)(66946007)(76116006)(91956017)(486006)(26005)(6512007)(66066001)(186003)(86362001)(71200400001)(71190400001)(53936002)(305945005)(6116002)(3846002)(229853002)(6916009)(4326008)(256004)(8936002)(81156014)(81166006)(7736002);DIR:OUT;SFP:1101;SCL:1;SRVR:CY1PR07MB2617;H:CY1PR07MB2521.namprd07.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: cadence.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: y9sKPE4oxOB08LSLpx7tVsT26rmG+w/KYPCce+Q7UD1Xva5VLoCCibSIP1PLTvMa6155fjLwmAfRXhXxeZn7YvG8JPrwUoEHMMHWNXo5VTnr0y7TPYR9A7YUju8wJe6JOflxRQn3UJv7+t9R3s0kPlzbwTmbyhCmppnq5RsHymkTppErMP6G09XGLdsL4Ryu1gSwsIHpLpH7vCXv7ZtecFZvhZo4llToYTU8rbyBJmRY095KjZg/6sszRjCinkSwbOSkhduDg+nUmQzKiy22ZNCWsr6A/vgsp9SMaBjivXAJBetzn8qpi2k3OnnyWh+pP3CnQdlWGHA9I+9LHBN16ZtFy993eICOQ9Mnb7aUmtVX000Xrt0GFR9a3mXUdAKyorzmZtKWc1sZbLnczOS/2d1TV3izfRnUmx0GK4bcgN0=
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <B8312DF4B7405B4FB1CBFDDE856F6B1C@namprd07.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+        id S1727568AbfHLJzF (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 12 Aug 2019 05:55:05 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:36272 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727140AbfHLJzF (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 12 Aug 2019 05:55:05 -0400
+Received: by mail-wm1-f65.google.com with SMTP id g67so11203227wme.1;
+        Mon, 12 Aug 2019 02:55:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=mQO/VOKFZftOK8QHN4NGuCN85/5BGprWbgm1EqjUZRk=;
+        b=f3a+MClydnhfTcdBwTNQsqn6kbXHVsIhjsN5qRYW8QT/b34I8g0tBhs4xg7iZiQYmV
+         /ds/dQG0Zj8/LzKHOMB2oNPLsbnUW4OcpDpRufXgbX7ZE8Q7iZDLPEfNbg0CxDB/TWhf
+         IJNyPYCU8BQEi/SsiBrFdM2p7KQt+Qbcb30MS/NSHEO5kW0Ige5o5LMzv0vwFSPrvnM+
+         KpFEoWGWXbDvknQM6trCaPMqES24WmDEzjIHgOwkSLULGIIoDKjJMYvw+a1cEi7oOyuz
+         yeEs82+F7dOtfM4Dg8/vgqkANUWYXbMVolpmd5Oc1YCMZdK+FAwDM0YBaZZGKPu5w050
+         A6nQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=mQO/VOKFZftOK8QHN4NGuCN85/5BGprWbgm1EqjUZRk=;
+        b=JnUSnq1G+xBsBouFD/kjNoM8ep1pUPTl4jtfItCYM8osJVt//JOL3mjnZFyEUtgitX
+         NjS/2cuq8WgaJwQM8Qg0Rl9l0vjGOQ9pxUdCZx2HjpWyYxDFBrxc+Xu7IO+2/IHojKaK
+         e+Al1rhRckRw+5nSbN+e7DPeIOtUh0yWEYJFA2MD93UZiWPW1e3RVVcFarcCjE9dw94E
+         mhMY2irSr6WDZZGfEi3FgdUPiAn3Ar1ZPI8khKYctknz3mhGJnO07NG7AfnF4HJAHyuw
+         vdUfbA0hQ+4YBadwvWVxEqF50ARD5AzxvmkUeqRlTxMwORPI9XkdCLTMJwfH3kPSqRLO
+         E/Hw==
+X-Gm-Message-State: APjAAAUHMc6KtZfd4soorYP5qoa4IRjCYOFjt0vV7+qFtYjj/CIag3WZ
+        S5XmIj9twty7Jks1lwJ3o8s=
+X-Google-Smtp-Source: APXvYqy+V17kwdKJdpqcY5NM6SKLstrsWvCPqEdTInpG5cnwKl78q58ZT/S2d6tCDCF6MSLio96JEA==
+X-Received: by 2002:a05:600c:2192:: with SMTP id e18mr8525190wme.83.1565603702323;
+        Mon, 12 Aug 2019 02:55:02 -0700 (PDT)
+Received: from localhost (pD9E51890.dip0.t-ipconnect.de. [217.229.24.144])
+        by smtp.gmail.com with ESMTPSA id f23sm7593250wmj.37.2019.08.12.02.55.01
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Mon, 12 Aug 2019 02:55:01 -0700 (PDT)
+Date:   Mon, 12 Aug 2019 11:55:00 +0200
+From:   Thierry Reding <thierry.reding@gmail.com>
+To:     Sowjanya Komatineni <skomatineni@nvidia.com>
+Cc:     jonathanh@nvidia.com, tglx@linutronix.de, jason@lakedaemon.net,
+        marc.zyngier@arm.com, linus.walleij@linaro.org, stefan@agner.ch,
+        mark.rutland@arm.com, pdeschrijver@nvidia.com, pgaikwad@nvidia.com,
+        sboyd@kernel.org, linux-clk@vger.kernel.org,
+        linux-gpio@vger.kernel.org, jckuo@nvidia.com, josephl@nvidia.com,
+        talho@nvidia.com, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org, mperttunen@nvidia.com,
+        spatra@nvidia.com, robh+dt@kernel.org, digetx@gmail.com,
+        devicetree@vger.kernel.org, rjw@rjwysocki.net,
+        viresh.kumar@linaro.org, linux-pm@vger.kernel.org
+Subject: Re: [PATCH v8 10/21] clk: tegra: clk-super: Add restore-context
+ support
+Message-ID: <20190812095500.GI8903@ulmo>
+References: <1565308020-31952-1-git-send-email-skomatineni@nvidia.com>
+ <1565308020-31952-11-git-send-email-skomatineni@nvidia.com>
 MIME-Version: 1.0
-X-OriginatorOrg: cadence.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 98d86f5b-e0ee-4801-62e7-08d71f0af72b
-X-MS-Exchange-CrossTenant-originalarrivaltime: 12 Aug 2019 09:53:45.2024
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: d36035c5-6ce6-4662-a3dc-e762e61ae4c9
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: RxT+ad/VVpMAyUa6nsAmkyc2fKOO3t71ZOT+9bJquQJFS2diwDaIA4zbwJfb8ToaLo84kFlwoVv6rKDo1m08Qg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY1PR07MB2617
-X-Proofpoint-SPF-Result: pass
-X-Proofpoint-SPF-Record: v=spf1 include:spf.smktg.jp include:_spf.salesforce.com
- include:mktomail.com include:spf-0014ca01.pphosted.com
- include:spf.protection.outlook.com include:auth.msgapp.com
- include:spf.mandrillapp.com ~all
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-08-12_04:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_check_notspam policy=outbound_check score=0
- priorityscore=1501 malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0
- spamscore=0 clxscore=1011 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=911 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1906280000 definitions=main-1908120110
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="hABqaeELJqnDDeDE"
+Content-Disposition: inline
+In-Reply-To: <1565308020-31952-11-git-send-email-skomatineni@nvidia.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
 
-> On 9 Aug 2019, at 15:18, Linus Walleij <linus.walleij@linaro.org> wrote:
+--hABqaeELJqnDDeDE
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Thu, Aug 08, 2019 at 04:46:49PM -0700, Sowjanya Komatineni wrote:
+> This patch implements restore_context for clk_super_mux and clk_super.
 >=20
-> We need to convert all old gpio irqchips to pass the irqchip
-> setup along when adding the gpio_chip. For more info see
-> drivers/gpio/TODO.
+> During system supend, core power goes off the and context of Tegra
+> CAR registers is lost.
 >=20
-> For chained irqchips this is a pretty straight-forward
-> conversion.
+> So on system resume, context of super clock registers are restored
+> to have them in same state as before suspend.
 >=20
-> Cc: Jan Kotas <jank@cadence.com>
-> Cc: Thierry Reding <treding@nvidia.com>
-> Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
 > ---
-> Hi Jan, it'd be great if you could test/review this
-> patch.
+>  drivers/clk/tegra/clk-super.c | 21 +++++++++++++++++++++
+>  1 file changed, 21 insertions(+)
 
-Everything seems to be OK in my tests.
+Acked-by: Thierry Reding <treding@nvidia.com>
 
-Regards,
-Jan
+--hABqaeELJqnDDeDE
+Content-Type: application/pgp-signature; name="signature.asc"
 
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl1RN3QACgkQ3SOs138+
+s6FHwRAAnYt3bQr8qabJpmuLiAWddIRGpf0XzLDW6DnRqSmhENAKH09BCH1IJ8bO
+RNFI+6CZYoGt38zjU54qQxf2BGFSW1q/63T/+CU318zZ1oUws+0iWQrFPKHIxnS7
+Rae4YsOE1UqTucB/uwniVcDVTGTcMmDKx9lA+WgMTcNyRcMFYuKhPjV0BL34Kq+5
+2JA7MaqNqrBKSwVqOlN2kAjqa5NOUq57c8MbQ6/blbGQsdgnDrWt9TDR4s3cifCc
+tu9HdlV5921/RAP42V2+oCnHnYMNvGAre7Z3ES5GZ0z5DdW48koDA99XexftElaT
++KCuXTdOUrv8Y5x6PQ5MwCxnXqqayjz+4c3v8ahygNBV8K159Kkokt2c8NR6Igbt
+Mz403frb3Hp3qstDs6HfvYCsuNFmTmB+/Lhp8xciVyEiuv26CPNXg+OL7rRfJtc2
+hQy6RcFw4D8uYRcOS7rkH5m2rot8R59tK+2QqSEIgMlYbNtDuciS/5r83/ro7516
+tTMbjYdQWRlrFELVTzmjIQtE2i5PJ4uq8VJsbXOGlx0ESmQIwNcxdwe2nBH6vrSY
+7kFuBQvOBTMv7bUvHY4/M+yhZLHOIC77Z/vYPh58Yl8JwxFTu1RNT7esQUcMyJfD
+i1u4z1VztUimQjiojE4eGV8tkO6K6f38N0lz1R8T/MyOOOf67TE=
+=5pWj
+-----END PGP SIGNATURE-----
+
+--hABqaeELJqnDDeDE--
