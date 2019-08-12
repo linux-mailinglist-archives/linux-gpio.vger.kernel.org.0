@@ -2,65 +2,59 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 8119989ED8
-	for <lists+linux-gpio@lfdr.de>; Mon, 12 Aug 2019 14:54:04 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 25F0F89F05
+	for <lists+linux-gpio@lfdr.de>; Mon, 12 Aug 2019 15:00:23 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726603AbfHLMxH (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 12 Aug 2019 08:53:07 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:53957 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728733AbfHLMxH (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 12 Aug 2019 08:53:07 -0400
-Received: by mail-wm1-f66.google.com with SMTP id 10so12060949wmp.3
-        for <linux-gpio@vger.kernel.org>; Mon, 12 Aug 2019 05:53:05 -0700 (PDT)
+        id S1728679AbfHLNAI (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 12 Aug 2019 09:00:08 -0400
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:44479 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726219AbfHLNAH (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 12 Aug 2019 09:00:07 -0400
+Received: by mail-lj1-f194.google.com with SMTP id e24so1505504ljg.11
+        for <linux-gpio@vger.kernel.org>; Mon, 12 Aug 2019 06:00:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=Y89XLsQtWG/YyrYGGvZCcjA0zx5JXTeWEYf0McG34uo=;
-        b=oEFbsX1TGS/whTSUusE0SfvnT6PGJKKs6XBPssz6AtPXNq9t5FvyOi54SLDBVM8zpl
-         UBcdQiafv+kOHds9rp54A6RFpPXm+19r3X57RVrm9sYo0LGhRRZZ3DxoEm9ywt0K0BZy
-         cqYeFSymQsQ9y6Mw+BZCcv8vhbMp+/eT/CknrEPnoG/JJ2jzW7NKsZb64u3GRZz8t8KQ
-         HN/ni/YgtlfXg7PBUc8koIAcYIIGEt/vn6/k+UxvmKm2esic7c91yutt9AK33awuGGsi
-         cUN2a6HtaNgEVzZfa5KeN8omxUDOG7baUfBE+oxZTnsz/A/82AdXvGjQ6RtfQnQyUBh+
-         iuYQ==
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=EG0tjExHy9EX3Z2PnpdBG0qykklEiCJc4FLl7qwoWkQ=;
+        b=Wmi6jWChalheX1V786BUXEuqmzp44mZrrk+7eXLoMVh3RRMyU2W9GHCiCBTh5e9Ecj
+         wwDlEL9d/D0SZoVMOhIKqS4CbEvXfelanH2c6SAXzf06LhkA3I/t+sJNhQDCCqefjBvt
+         Juz7f8goN8keQCbrDZk5kQB4sN162RfZZkOr1r3xa5qyoFQuulAb/BTmNXwID2Umyl7P
+         2ipB8rJSwhrqm8B3Bcu8r3LAMmf0XRbHPbCrDAPH4kUhLjbNbzfM3eKe1S9x31YSK3pl
+         p7GWNtEeE4Yk3v71Kpounxlua5iAo6osF6bN82iAjUcOi2uBpp3MOott7r2wMjjiR2Pz
+         E0wg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=Y89XLsQtWG/YyrYGGvZCcjA0zx5JXTeWEYf0McG34uo=;
-        b=lESU25FQVaU+wzMO+07Z+bsHaSyQ59PEBmEHEHguUID91cTJ0zPOqk6/LC1lVY63ia
-         RAlBy07FrlWYTg88CH5voFIyW0CmGITnsDJJ9bUosWfyfFT2Yw7mBsEBv6ktffB4ZIRS
-         aVM6e/rBr98hTACqdA9FrkXDFpF+Bk5A6Asd+d4xJRkxrRe3MkGBsYAeGXsUzkITDUmF
-         sy02HrdJYticBnLreoAciybQ6JtnS49MRFqQKumYTIMH36iaYonF58iWiD119Mc0HUNA
-         fnUD++SdYDsNB65tqxvlH0zq/gbdAEq/HE1LeENxXMbIKM8U609MkcZX3bENp8J4NAlo
-         FeLA==
-X-Gm-Message-State: APjAAAUZfDpAn4Uuu9pUuqfk/TfDJ+4ygUF5SCN/vn2pkjl7ZS29YDwm
-        TanN7vDZMK/9PGW8EFt1yKAOgA==
-X-Google-Smtp-Source: APXvYqxY4O4YfMLmrTXF9161PU6br6h3SWj1ZxZQY+16ic1Ney1WrLdsWf7jZWg8XkqXusV2NA0ZDw==
-X-Received: by 2002:a1c:c915:: with SMTP id f21mr26431795wmb.173.1565614384444;
-        Mon, 12 Aug 2019 05:53:04 -0700 (PDT)
-Received: from debian-brgl.home ([2a01:cb1d:af:5b00:6d6c:8493:1ab5:dad7])
-        by smtp.gmail.com with ESMTPSA id r16sm28288431wrc.81.2019.08.12.05.53.03
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=EG0tjExHy9EX3Z2PnpdBG0qykklEiCJc4FLl7qwoWkQ=;
+        b=ffoTF/p4lOvSuh6RPGiy9lnsaqi20d+92h/1jnWucw4SZBOoaN2C31BXikzTvAKSEq
+         4uvdaZnNBZU09QNF2avfUweYDrRTDLG93c6R8Z/+tsUgza+BIdigzyRjPRVgn7k7WOwk
+         YVNF5vh7WH0WsBVU6CUkG4pqqfymEAXg6GjQuVgBWuYsjsYhy4oq+NnwMpBjb9rEkMXm
+         H9rS+XbVHmQ4cFAmIGXxx9K7JH88vwet6QN38peX2MruGXtvqZUBtBiaOhIoEp+I4vD+
+         xZXTi082gzyW5BcIpAPr2GUVXFS+XSZhoNqmJ8+IY8gwgxGC9xzhhXz+EB40x8PoVHDU
+         yp7A==
+X-Gm-Message-State: APjAAAUrgmBwKZ535FCnSj4Lf5Z7J3nJlEIMan+iTO1SX3JMdcZmq75V
+        cq4i4HuJXcQKkr6Eyix7qGYwOXv5dH8=
+X-Google-Smtp-Source: APXvYqxuiVV9Q1TgVetsej2GUlSlQsYSjJRcuBuP+3TAynUCgUcCJ0ywAMlOBRptTK3ZzAAODcx+JQ==
+X-Received: by 2002:a2e:9857:: with SMTP id e23mr18559313ljj.217.1565614804092;
+        Mon, 12 Aug 2019 06:00:04 -0700 (PDT)
+Received: from genomnajs.ideon.se ([85.235.10.227])
+        by smtp.gmail.com with ESMTPSA id h84sm20951407ljf.42.2019.08.12.06.00.02
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Mon, 12 Aug 2019 05:53:03 -0700 (PDT)
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-To:     Linus Walleij <linus.walleij@linaro.org>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Marc Zyngier <maz@kernel.org>
-Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-iio@vger.kernel.org,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: [PATCH 2/2] irq/irq_sim: use irq domain
-Date:   Mon, 12 Aug 2019 14:52:56 +0200
-Message-Id: <20190812125256.9690-3-brgl@bgdev.pl>
+        Mon, 12 Aug 2019 06:00:02 -0700 (PDT)
+From:   Linus Walleij <linus.walleij@linaro.org>
+To:     linux-gpio@vger.kernel.org
+Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Alexander Sverdlin <alexander.sverdlin@gmail.com>,
+        H Hartley Sweeten <hsweeten@visionengravers.com>,
+        Thierry Reding <treding@nvidia.com>
+Subject: [PATCH] gpio: ep93xx: Pass irqchip when adding gpiochip
+Date:   Mon, 12 Aug 2019 15:00:00 +0200
+Message-Id: <20190812130000.22252-1-linus.walleij@linaro.org>
 X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190812125256.9690-1-brgl@bgdev.pl>
-References: <20190812125256.9690-1-brgl@bgdev.pl>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-gpio-owner@vger.kernel.org
@@ -68,369 +62,221 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+We need to convert all old gpio irqchips to pass the irqchip
+setup along when adding the gpio_chip. For more info see
+drivers/gpio/TODO.
 
-We currently have a dedicated function to map the interrupt simulator
-offsets to global interrupt numbers. This is something that irq_domain
-should handle.
+For chained irqchips this is a pretty straight-forward
+conversion.
 
-Create a linear irq_domain when initializing the interrupt simulator
-and modify the irq_sim_fire() function to only take as parameter the
-global interrupt number.
-
-Convert both users in the same patch to using the new interface.
-
-Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Cc: Alexander Sverdlin <alexander.sverdlin@gmail.com>
+Cc: H Hartley Sweeten <hsweeten@visionengravers.com>
+Cc: Thierry Reding <treding@nvidia.com>
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
 ---
- drivers/gpio/gpio-mockup.c          |  11 ++-
- drivers/iio/dummy/iio_dummy_evgen.c |  22 ++++--
- include/linux/irq_sim.h             |   5 +-
- kernel/irq/Kconfig                  |   1 +
- kernel/irq/irq_sim.c                | 110 +++++++++++++++++-----------
- 5 files changed, 94 insertions(+), 55 deletions(-)
+ drivers/gpio/gpio-ep93xx.c | 140 +++++++++++++++++++------------------
+ 1 file changed, 73 insertions(+), 67 deletions(-)
 
-diff --git a/drivers/gpio/gpio-mockup.c b/drivers/gpio/gpio-mockup.c
-index 9b28ffec5826..4cf594f0e7cd 100644
---- a/drivers/gpio/gpio-mockup.c
-+++ b/drivers/gpio/gpio-mockup.c
-@@ -186,7 +186,7 @@ static int gpio_mockup_to_irq(struct gpio_chip *gc, unsigned int offset)
- {
- 	struct gpio_mockup_chip *chip = gpiochip_get_data(gc);
- 
--	return irq_sim_irqnum(chip->irqsim, offset);
-+	return irq_create_mapping(irq_sim_get_domain(chip->irqsim), offset);
- }
- 
- static void gpio_mockup_free(struct gpio_chip *gc, unsigned int offset)
-@@ -228,6 +228,7 @@ static ssize_t gpio_mockup_debugfs_write(struct file *file,
- 	struct gpio_mockup_dbgfs_private *priv;
- 	int rv, val, curr, irq, irq_type;
- 	struct gpio_mockup_chip *chip;
-+	struct irq_domain *domain;
- 	struct seq_file *sfile;
- 	struct gpio_desc *desc;
- 	struct gpio_chip *gc;
-@@ -248,6 +249,7 @@ static ssize_t gpio_mockup_debugfs_write(struct file *file,
- 	gc = &chip->gc;
- 	desc = &gc->gpiodev->descs[priv->offset];
- 	sim = chip->irqsim;
-+	domain = irq_sim_get_domain(sim);
- 
- 	mutex_lock(&chip->lock);
- 
-@@ -257,12 +259,15 @@ static ssize_t gpio_mockup_debugfs_write(struct file *file,
- 		if (curr == val)
- 			goto out;
- 
--		irq = irq_sim_irqnum(sim, priv->offset);
-+		irq = irq_find_mapping(domain, priv->offset);
-+		if (!irq)
-+			return -ENOENT;
-+
- 		irq_type = irq_get_trigger_type(irq);
- 
- 		if ((val == 1 && (irq_type & IRQ_TYPE_EDGE_RISING)) ||
- 		    (val == 0 && (irq_type & IRQ_TYPE_EDGE_FALLING)))
--			irq_sim_fire(sim, priv->offset);
-+			irq_sim_fire(irq);
- 	}
- 
- 	/* Change the value unless we're actively driving the line. */
-diff --git a/drivers/iio/dummy/iio_dummy_evgen.c b/drivers/iio/dummy/iio_dummy_evgen.c
-index efbcd4a5609e..cc827f60a535 100644
---- a/drivers/iio/dummy/iio_dummy_evgen.c
-+++ b/drivers/iio/dummy/iio_dummy_evgen.c
-@@ -31,14 +31,13 @@
-  * @lock: protect the evgen state
-  * @inuse: mask of which irqs are connected
-  * @irq_sim: interrupt simulator
-- * @base: base of irq range
-  */
- struct iio_dummy_eventgen {
- 	struct iio_dummy_regs regs[IIO_EVENTGEN_NO];
- 	struct mutex lock;
- 	bool inuse[IIO_EVENTGEN_NO];
- 	struct irq_sim *irq_sim;
--	int base;
-+	struct irq_domain *domain;
+diff --git a/drivers/gpio/gpio-ep93xx.c b/drivers/gpio/gpio-ep93xx.c
+index a90870a60c15..226da8df6f10 100644
+--- a/drivers/gpio/gpio-ep93xx.c
++++ b/drivers/gpio/gpio-ep93xx.c
+@@ -269,56 +269,6 @@ static struct irq_chip ep93xx_gpio_irq_chip = {
+ 	.irq_set_type	= ep93xx_gpio_irq_type,
  };
  
- /* We can only ever have one instance of this 'device' */
-@@ -56,7 +55,7 @@ static int iio_dummy_evgen_create(void)
- 		return PTR_ERR(iio_evgen->irq_sim);
- 	}
- 
--	iio_evgen->base = irq_sim_irqnum(iio_evgen->irq_sim, 0);
-+	iio_evgen->domain = irq_sim_get_domain(iio_evgen->irq_sim);
- 	mutex_init(&iio_evgen->lock);
- 
- 	return 0;
-@@ -78,7 +77,7 @@ int iio_dummy_evgen_get_irq(void)
- 	mutex_lock(&iio_evgen->lock);
- 	for (i = 0; i < IIO_EVENTGEN_NO; i++) {
- 		if (!iio_evgen->inuse[i]) {
--			ret = irq_sim_irqnum(iio_evgen->irq_sim, i);
-+			ret = irq_create_mapping(iio_evgen->domain, i);
- 			iio_evgen->inuse[i] = true;
- 			break;
- 		}
-@@ -99,15 +98,21 @@ EXPORT_SYMBOL_GPL(iio_dummy_evgen_get_irq);
-  */
- void iio_dummy_evgen_release_irq(int irq)
- {
-+	struct irq_data *irqd;
-+
-+	irqd = irq_get_irq_data(irq);
-+
- 	mutex_lock(&iio_evgen->lock);
--	iio_evgen->inuse[irq - iio_evgen->base] = false;
-+	iio_evgen->inuse[irqd_to_hwirq(irqd)] = false;
- 	mutex_unlock(&iio_evgen->lock);
- }
- EXPORT_SYMBOL_GPL(iio_dummy_evgen_release_irq);
- 
- struct iio_dummy_regs *iio_dummy_evgen_get_regs(int irq)
- {
--	return &iio_evgen->regs[irq - iio_evgen->base];
-+	struct irq_data *irqd = irq_get_irq_data(irq);
-+
-+	return &iio_evgen->regs[irqd_to_hwirq(irqd)];
- }
- EXPORT_SYMBOL_GPL(iio_dummy_evgen_get_regs);
- 
-@@ -129,7 +134,7 @@ static ssize_t iio_evgen_poke(struct device *dev,
- {
- 	struct iio_dev_attr *this_attr = to_iio_dev_attr(attr);
- 	unsigned long event;
+-static int ep93xx_gpio_init_irq(struct platform_device *pdev,
+-				struct ep93xx_gpio *epg)
+-{
+-	int ab_parent_irq = platform_get_irq(pdev, 0);
+-	struct device *dev = &pdev->dev;
+-	int gpio_irq;
 -	int ret;
-+	int ret, irq;
- 
- 	ret = kstrtoul(buf, 10, &event);
- 	if (ret)
-@@ -138,7 +143,8 @@ static ssize_t iio_evgen_poke(struct device *dev,
- 	iio_evgen->regs[this_attr->address].reg_id   = this_attr->address;
- 	iio_evgen->regs[this_attr->address].reg_data = event;
- 
--	irq_sim_fire(iio_evgen->irq_sim, this_attr->address);
-+	irq = irq_create_mapping(iio_evgen->domain, this_attr->address);
-+	irq_sim_fire(irq);
- 
- 	return len;
- }
-diff --git a/include/linux/irq_sim.h b/include/linux/irq_sim.h
-index 4bbf036145e2..4056d0e7f0b4 100644
---- a/include/linux/irq_sim.h
-+++ b/include/linux/irq_sim.h
-@@ -7,6 +7,7 @@
- #define _LINUX_IRQ_SIM_H
- 
- #include <linux/irq_work.h>
-+#include <linux/irqdomain.h>
- #include <linux/device.h>
- 
- /*
-@@ -19,7 +20,7 @@ struct irq_sim;
- struct irq_sim *irq_sim_new(unsigned int num_irqs);
- struct irq_sim *devm_irq_sim_new(struct device *dev, unsigned int num_irqs);
- void irq_sim_free(struct irq_sim *sim);
--void irq_sim_fire(struct irq_sim *sim, unsigned int offset);
--int irq_sim_irqnum(struct irq_sim *sim, unsigned int offset);
-+void irq_sim_fire(int virq);
-+struct irq_domain *irq_sim_get_domain(struct irq_sim *sim);
- 
- #endif /* _LINUX_IRQ_SIM_H */
-diff --git a/kernel/irq/Kconfig b/kernel/irq/Kconfig
-index f92d9a687372..d0890f7729d4 100644
---- a/kernel/irq/Kconfig
-+++ b/kernel/irq/Kconfig
-@@ -68,6 +68,7 @@ config IRQ_DOMAIN
- config IRQ_SIM
- 	bool
- 	select IRQ_WORK
-+	select IRQ_DOMAIN
- 
- # Support for hierarchical irq domains
- config IRQ_DOMAIN_HIERARCHY
-diff --git a/kernel/irq/irq_sim.c b/kernel/irq/irq_sim.c
-index 79f0a6494b6c..a1c91aefb6cd 100644
---- a/kernel/irq/irq_sim.c
-+++ b/kernel/irq/irq_sim.c
-@@ -15,13 +15,14 @@ struct irq_sim_work_ctx {
- struct irq_sim_irq_ctx {
- 	int			irqnum;
- 	bool			enabled;
-+	struct irq_sim_work_ctx	*work_ctx;
- };
- 
- struct irq_sim {
- 	struct irq_sim_work_ctx	work_ctx;
- 	int			irq_base;
- 	unsigned int		irq_count;
--	struct irq_sim_irq_ctx	*irqs;
-+	struct irq_domain	*domain;
- };
- 
- struct irq_sim_devres {
-@@ -74,11 +75,46 @@ static void irq_sim_handle_irq(struct irq_work *work)
- 		offset = find_next_bit(work_ctx->pending,
- 				       sim->irq_count, offset);
- 		clear_bit(offset, work_ctx->pending);
--		irqnum = irq_sim_irqnum(sim, offset);
-+		irqnum = irq_find_mapping(sim->domain, offset);
- 		handle_simple_irq(irq_to_desc(irqnum));
- 	}
- }
- 
-+static int irq_sim_domain_map(struct irq_domain *domain,
-+			      unsigned int virq, irq_hw_number_t hw)
-+{
-+	struct irq_sim *sim = domain->host_data;
-+	struct irq_sim_irq_ctx *ctx;
-+
-+	ctx = kzalloc(sizeof(*ctx), GFP_KERNEL);
-+	if (!ctx)
-+		return -ENOMEM;
-+
-+	irq_set_chip(virq, &irq_sim_irqchip);
-+	irq_set_chip_data(virq, ctx);
-+	irq_set_handler(virq, handle_simple_irq);
-+	irq_modify_status(virq, IRQ_NOREQUEST | IRQ_NOAUTOEN, IRQ_NOPROBE);
-+	ctx->work_ctx = &sim->work_ctx;
-+
-+	return 0;
-+}
-+
-+static void irq_sim_domain_unmap(struct irq_domain *domain, unsigned int virq)
-+{
-+	struct irq_sim_irq_ctx *ctx;
-+	struct irq_data *irqd;
-+
-+	irqd = irq_domain_get_irq_data(domain, virq);
-+	ctx = irq_data_get_irq_chip_data(irqd);
-+
-+	kfree(ctx);
-+}
-+
-+static const struct irq_domain_ops irq_sim_domain_ops = {
-+	.map		= irq_sim_domain_map,
-+	.unmap		= irq_sim_domain_unmap,
-+};
-+
- /**
-  * irq_sim_new - Create a new interrupt simulator: allocate a range of
-  *               dummy interrupts.
-@@ -91,42 +127,21 @@ static void irq_sim_handle_irq(struct irq_work *work)
- struct irq_sim *irq_sim_new(unsigned int num_irqs)
- {
- 	struct irq_sim *sim;
 -	int i;
- 
- 	sim = kmalloc(sizeof(*sim), GFP_KERNEL);
- 	if (!sim)
- 		return ERR_PTR(-ENOMEM);
- 
--	sim->irqs = kmalloc_array(num_irqs, sizeof(*sim->irqs), GFP_KERNEL);
--	if (!sim->irqs) {
--		kfree(sim);
--		return ERR_PTR(-ENOMEM);
+-
+-	/* The A bank */
+-	ret = gpiochip_irqchip_add(&epg->gc[0], &ep93xx_gpio_irq_chip,
+-                                   64, handle_level_irq,
+-                                   IRQ_TYPE_NONE);
+-	if (ret) {
+-		dev_err(dev, "Could not add irqchip 0\n");
+-		return ret;
+-	}
+-	gpiochip_set_chained_irqchip(&epg->gc[0], &ep93xx_gpio_irq_chip,
+-				     ab_parent_irq,
+-				     ep93xx_gpio_ab_irq_handler);
+-
+-	/* The B bank */
+-	ret = gpiochip_irqchip_add(&epg->gc[1], &ep93xx_gpio_irq_chip,
+-                                   72, handle_level_irq,
+-                                   IRQ_TYPE_NONE);
+-	if (ret) {
+-		dev_err(dev, "Could not add irqchip 1\n");
+-		return ret;
+-	}
+-	gpiochip_set_chained_irqchip(&epg->gc[1], &ep93xx_gpio_irq_chip,
+-				     ab_parent_irq,
+-				     ep93xx_gpio_ab_irq_handler);
+-
+-	/* The F bank */
+-	for (i = 0; i < 8; i++) {
+-		gpio_irq = EP93XX_GPIO_F_IRQ_BASE + i;
+-		irq_set_chip_data(gpio_irq, &epg->gc[5]);
+-		irq_set_chip_and_handler(gpio_irq, &ep93xx_gpio_irq_chip,
+-					 handle_level_irq);
+-		irq_clear_status_flags(gpio_irq, IRQ_NOREQUEST);
 -	}
 -
--	sim->irq_base = irq_alloc_descs(-1, 0, num_irqs, 0);
--	if (sim->irq_base < 0) {
--		kfree(sim->irqs);
--		kfree(sim);
--		return ERR_PTR(sim->irq_base);
--	}
+-	for (i = 1; i <= 8; i++)
+-		irq_set_chained_handler_and_data(platform_get_irq(pdev, i),
+-						 ep93xx_gpio_f_irq_handler,
+-						 &epg->gc[i]);
+-	return 0;
+-}
 -
- 	sim->work_ctx.pending = bitmap_zalloc(num_irqs, GFP_KERNEL);
- 	if (!sim->work_ctx.pending) {
--		kfree(sim->irqs);
- 		kfree(sim);
--		irq_free_descs(sim->irq_base, num_irqs);
- 		return ERR_PTR(-ENOMEM);
+-
+ /*************************************************************************
+  * gpiolib interface for EP93xx on-chip GPIOs
+  *************************************************************************/
+@@ -328,26 +278,33 @@ struct ep93xx_gpio_bank {
+ 	int		dir;
+ 	int		base;
+ 	bool		has_irq;
++	bool		has_hierarchical_irq;
++	unsigned int	irq_base;
+ };
+ 
+-#define EP93XX_GPIO_BANK(_label, _data, _dir, _base, _has_irq)	\
++#define EP93XX_GPIO_BANK(_label, _data, _dir, _base, _has_irq, _has_hier, _irq_base) \
+ 	{							\
+ 		.label		= _label,			\
+ 		.data		= _data,			\
+ 		.dir		= _dir,				\
+ 		.base		= _base,			\
+ 		.has_irq	= _has_irq,			\
++		.has_hierarchical_irq = _has_hier,		\
++		.irq_base	= _irq_base,			\
  	}
  
--	for (i = 0; i < num_irqs; i++) {
--		sim->irqs[i].irqnum = sim->irq_base + i;
--		sim->irqs[i].enabled = false;
--		irq_set_chip(sim->irq_base + i, &irq_sim_irqchip);
--		irq_set_chip_data(sim->irq_base + i, &sim->irqs[i]);
--		irq_set_handler(sim->irq_base + i, &handle_simple_irq);
--		irq_modify_status(sim->irq_base + i,
--				  IRQ_NOREQUEST | IRQ_NOAUTOEN, IRQ_NOPROBE);
--	}
-+	sim->domain = irq_domain_create_linear(NULL, num_irqs,
-+					       &irq_sim_domain_ops, sim);
-+	if (!sim->domain)
-+		return ERR_PTR(-ENOMEM);
+ static struct ep93xx_gpio_bank ep93xx_gpio_banks[] = {
+-	EP93XX_GPIO_BANK("A", 0x00, 0x10, 0, true), /* Bank A has 8 IRQs */
+-	EP93XX_GPIO_BANK("B", 0x04, 0x14, 8, true), /* Bank B has 8 IRQs */
+-	EP93XX_GPIO_BANK("C", 0x08, 0x18, 40, false),
+-	EP93XX_GPIO_BANK("D", 0x0c, 0x1c, 24, false),
+-	EP93XX_GPIO_BANK("E", 0x20, 0x24, 32, false),
+-	EP93XX_GPIO_BANK("F", 0x30, 0x34, 16, true), /* Bank F has 8 IRQs */
+-	EP93XX_GPIO_BANK("G", 0x38, 0x3c, 48, false),
+-	EP93XX_GPIO_BANK("H", 0x40, 0x44, 56, false),
++	/* Bank A has 8 IRQs */
++	EP93XX_GPIO_BANK("A", 0x00, 0x10, 0, true, false, 64),
++	/* Bank B has 8 IRQs */
++	EP93XX_GPIO_BANK("B", 0x04, 0x14, 8, true, false, 72),
++	EP93XX_GPIO_BANK("C", 0x08, 0x18, 40, false, false, 0),
++	EP93XX_GPIO_BANK("D", 0x0c, 0x1c, 24, false, false, 0),
++	EP93XX_GPIO_BANK("E", 0x20, 0x24, 32, false, false, 0),
++	/* Bank F has 8 IRQs */
++	EP93XX_GPIO_BANK("F", 0x30, 0x34, 16, false, true, 0),
++	EP93XX_GPIO_BANK("G", 0x38, 0x3c, 48, false, false, 0),
++	EP93XX_GPIO_BANK("H", 0x40, 0x44, 56, false, false, 0),
+ };
  
- 	init_irq_work(&sim->work_ctx.work, irq_sim_handle_irq);
- 	sim->irq_count = num_irqs;
-@@ -143,10 +158,17 @@ EXPORT_SYMBOL_GPL(irq_sim_new);
-  */
- void irq_sim_free(struct irq_sim *sim)
+ static int ep93xx_gpio_set_config(struct gpio_chip *gc, unsigned offset,
+@@ -369,12 +326,15 @@ static int ep93xx_gpio_f_to_irq(struct gpio_chip *gc, unsigned offset)
+ 	return EP93XX_GPIO_F_IRQ_BASE + offset;
+ }
+ 
+-static int ep93xx_gpio_add_bank(struct gpio_chip *gc, struct device *dev,
++static int ep93xx_gpio_add_bank(struct gpio_chip *gc,
++				struct platform_device *pdev,
+ 				struct ep93xx_gpio *epg,
+ 				struct ep93xx_gpio_bank *bank)
  {
-+	int i, irq;
-+
-+	for (i = 0; i < sim->irq_count; i++) {
-+		irq = irq_find_mapping(sim->domain, i);
-+		if (irq)
-+			irq_dispose_mapping(irq);
+ 	void __iomem *data = epg->base + bank->data;
+ 	void __iomem *dir = epg->base + bank->dir;
++	struct device *dev = &pdev->dev;
++	struct gpio_irq_chip *girq;
+ 	int err;
+ 
+ 	err = bgpio_init(gc, dev, 1, data, NULL, NULL, dir, NULL, 0);
+@@ -384,8 +344,59 @@ static int ep93xx_gpio_add_bank(struct gpio_chip *gc, struct device *dev,
+ 	gc->label = bank->label;
+ 	gc->base = bank->base;
+ 
+-	if (bank->has_irq)
++	girq = &gc->irq;
++	if (bank->has_irq || bank->has_hierarchical_irq) {
+ 		gc->set_config = ep93xx_gpio_set_config;
++		girq->chip = &ep93xx_gpio_irq_chip;
 +	}
 +
-+	irq_domain_remove(sim->domain);
- 	irq_work_sync(&sim->work_ctx.work);
- 	bitmap_free(sim->work_ctx.pending);
--	irq_free_descs(sim->irq_base, sim->irq_count);
--	kfree(sim->irqs);
- 	kfree(sim);
- }
- EXPORT_SYMBOL_GPL(irq_sim_free);
-@@ -189,27 +211,31 @@ EXPORT_SYMBOL_GPL(devm_irq_sim_new);
- /**
-  * irq_sim_fire - Enqueue an interrupt.
-  *
-- * @sim:        The interrupt simulator object.
-- * @offset:     Offset of the simulated interrupt which should be fired.
-+ * @virq:        Virtual interrupt number to fire. It must be associated with
-+ *               an existing interrupt simulator.
-  */
--void irq_sim_fire(struct irq_sim *sim, unsigned int offset)
-+void irq_sim_fire(int virq)
- {
--	if (sim->irqs[offset].enabled) {
--		set_bit(offset, sim->work_ctx.pending);
--		irq_work_queue(&sim->work_ctx.work);
-+	struct irq_sim_irq_ctx *ctx;
-+	struct irq_data *irqd;
++	if (bank->has_irq) {
++		int ab_parent_irq = platform_get_irq(pdev, 0);
 +
-+	irqd = irq_get_irq_data(virq);
-+	ctx = irq_data_get_irq_chip_data(irqd);
++		girq->parent_handler = ep93xx_gpio_ab_irq_handler;
++		girq->num_parents = 1;
++		girq->parents = devm_kcalloc(dev, 1,
++					     sizeof(*girq->parents),
++					     GFP_KERNEL);
++		if (!girq->parents)
++			return -ENOMEM;
++		girq->default_type = IRQ_TYPE_NONE;
++		girq->handler = handle_level_irq;
++		girq->parents[0] = ab_parent_irq;
++		girq->first = bank->irq_base;
++	}
 +
-+	if (ctx->enabled) {
-+		set_bit(irqd_to_hwirq(irqd), ctx->work_ctx->pending);
-+		irq_work_queue(&ctx->work_ctx->work);
- 	}
- }
- EXPORT_SYMBOL_GPL(irq_sim_fire);
++	/* Only bank F has especially funky IRQ handling */
++	if (bank->has_hierarchical_irq) {
++		int gpio_irq;
++		int i;
++
++		/*
++		 * FIXME: convert this to use hierarchical IRQ support!
++		 * this requires fixing the root irqchip to be hierarchial.
++		 */
++		girq->parent_handler = ep93xx_gpio_f_irq_handler;
++		girq->num_parents = 8;
++		girq->parents = devm_kcalloc(dev, 8,
++					     sizeof(*girq->parents),
++					     GFP_KERNEL);
++		if (!girq->parents)
++			return -ENOMEM;
++		/* Pick resources 1..8 for these IRQs */
++		for (i = 1; i <= 8; i++)
++			girq->parents[i - 1] = platform_get_irq(pdev, i);
++		for (i = 0; i < 8; i++) {
++			gpio_irq = EP93XX_GPIO_F_IRQ_BASE + i;
++			irq_set_chip_data(gpio_irq, &epg->gc[5]);
++			irq_set_chip_and_handler(gpio_irq,
++						 &ep93xx_gpio_irq_chip,
++						 handle_level_irq);
++			irq_clear_status_flags(gpio_irq, IRQ_NOREQUEST);
++		}
++		girq->default_type = IRQ_TYPE_NONE;
++		girq->handler = handle_level_irq;
++		gc->to_irq = ep93xx_gpio_f_to_irq;
++	}
  
- /**
-- * irq_sim_irqnum - Get the allocated number of a dummy interrupt.
-+ * irq_sim_get_domain - Retrieve the interrupt domain for this simulator.
-  *
-- * @sim:        The interrupt simulator object.
-- * @offset:     Offset of the simulated interrupt for which to retrieve
-- *              the number.
-+ * @sim:         The interrupt simulator the domain of which we retrieve.
-  */
--int irq_sim_irqnum(struct irq_sim *sim, unsigned int offset)
-+struct irq_domain *irq_sim_get_domain(struct irq_sim *sim)
- {
--	return sim->irqs[offset].irqnum;
-+	return sim->domain;
+ 	return devm_gpiochip_add_data(dev, gc, epg);
  }
--EXPORT_SYMBOL_GPL(irq_sim_irqnum);
-+EXPORT_SYMBOL(irq_sim_get_domain);
+@@ -407,16 +418,11 @@ static int ep93xx_gpio_probe(struct platform_device *pdev)
+ 		struct gpio_chip *gc = &epg->gc[i];
+ 		struct ep93xx_gpio_bank *bank = &ep93xx_gpio_banks[i];
+ 
+-		if (ep93xx_gpio_add_bank(gc, &pdev->dev, epg, bank))
++		if (ep93xx_gpio_add_bank(gc, pdev, epg, bank))
+ 			dev_warn(&pdev->dev, "Unable to add gpio bank %s\n",
+ 				 bank->label);
+-		/* Only bank F has especially funky IRQ handling */
+-		if (i == 5)
+-			gc->to_irq = ep93xx_gpio_f_to_irq;
+ 	}
+ 
+-	ep93xx_gpio_init_irq(pdev, epg);
+-
+ 	return 0;
+ }
+ 
 -- 
 2.21.0
 
