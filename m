@@ -2,165 +2,189 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 59A5C8AF51
-	for <lists+linux-gpio@lfdr.de>; Tue, 13 Aug 2019 08:11:02 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C72EC8B067
+	for <lists+linux-gpio@lfdr.de>; Tue, 13 Aug 2019 09:01:30 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727529AbfHMGKo (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 13 Aug 2019 02:10:44 -0400
-Received: from mga03.intel.com ([134.134.136.65]:50516 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726808AbfHMGKo (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Tue, 13 Aug 2019 02:10:44 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 12 Aug 2019 23:10:43 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,380,1559545200"; 
-   d="scan'208";a="177709469"
-Received: from rfried-mobl.ger.corp.intel.com (HELO [10.249.82.228]) ([10.249.82.228])
-  by fmsmga007.fm.intel.com with ESMTP; 12 Aug 2019 23:10:41 -0700
-Subject: Re: [PATCH v2] gpiolib: Take MUX usage into account
-To:     Stefan Wahren <wahrenst@gmx.net>, linus.walleij@linaro.org,
-        bgolaszewski@baylibre.com
-Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20190813014210.15519-1-ramon.fried@linux.intel.com>
- <1650c967-5176-70db-ff9a-b2af432ba1e7@i2se.com>
-From:   "Fried, Ramon" <ramon.fried@linux.intel.com>
-Message-ID: <88cbb5b2-fd95-afb3-3645-e5b799844941@linux.intel.com>
-Date:   Tue, 13 Aug 2019 09:10:37 +0300
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        id S1726735AbfHMHBa (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 13 Aug 2019 03:01:30 -0400
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:37931 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725981AbfHMHBa (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 13 Aug 2019 03:01:30 -0400
+Received: by mail-lf1-f67.google.com with SMTP id h28so75947484lfj.5
+        for <linux-gpio@vger.kernel.org>; Tue, 13 Aug 2019 00:01:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=uDwX+OlvaGVnD0PINMaKdZYf3XHTjwaKWaXBq4LCRbE=;
+        b=ZuJm9msJwnXXFXjqTOkipXSS+yF3WDwb7zagySN3D6+RLBljBknUbJ+D7aRjXG1HJ4
+         nfHBisqwfSLmcOEm8VAD4HtyZ434OTDVX/Xz5Iy/T7me4g5V3s57AgSOSBN4BLat2KuX
+         ngrEdJR7iVYYWobUf9xSZyebGkRUlb6LZY385gLWqhCCUDtTCWhHqdNxuaPV6JbdxMqs
+         s7wi4VXbvwcT6PrfqJhKWAYZqwxAPugvbdyntlnJC3/P+cF4AqAoXkCLoxM091WXV/bP
+         xevucZi6358+/+yeL5NcPUjkcEN2eLCMECLIUY+8oE22djDEGaDJZ2sM3abPrFtICyCl
+         gO1A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=uDwX+OlvaGVnD0PINMaKdZYf3XHTjwaKWaXBq4LCRbE=;
+        b=m/rpDSd2cSBdV3MtUdqjLpg8rAsIEqtILTILh8Jhv2k382QSnj13oHCpnOYx3J6JRn
+         3T4p+ebw53jCbgctais2NtJNW/ni6YTlViznxgU/QGiiRJX+sHH6HKpMjbheEfpvHkFK
+         aaSoF8EFsRxjWaDX1S//y5tc5Zcp5XgjsXR3so2FEFNW+M63HT8qq91Z96emmcFZOAvn
+         VSayuHplHTGQLjb9zlckDdYgaEzqr0BVJrpZRb1dkgaIOZDlTI6/Zgeff/v//avpMPZf
+         ykeRPy8mD+4NybZOVtE5tgAhzyE7QuoAoySrcD5xkSLZ93G1lQnbBBdnVUrgIJIsMq3u
+         ZQuw==
+X-Gm-Message-State: APjAAAUr0/ubHUVDrma3eKITYJZVWmDiw8VrIrv3JiWA0MrCKQoon+nD
+        n+nkQl9XQWFk/3scPslI8FbkdAdn/cI=
+X-Google-Smtp-Source: APXvYqz5IIXsNJPttAk/NJciV5EgiHY8/yiNzMCcCGUt3K7gC3FlTZflE1ojKBZ13OUOS/jhJpHUlw==
+X-Received: by 2002:ac2:599b:: with SMTP id w27mr9072520lfn.75.1565679687046;
+        Tue, 13 Aug 2019 00:01:27 -0700 (PDT)
+Received: from genomnajs.ideon.se ([85.235.10.227])
+        by smtp.gmail.com with ESMTPSA id z25sm19516714lfi.51.2019.08.13.00.01.25
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Tue, 13 Aug 2019 00:01:25 -0700 (PDT)
+From:   Linus Walleij <linus.walleij@linaro.org>
+To:     linux-gpio@vger.kernel.org
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <marc.zyngier@arm.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Thierry Reding <treding@nvidia.com>
+Subject: [PATCH] RFC: pinctrl: cherryview: Pass irqchip when adding gpiochip
+Date:   Tue, 13 Aug 2019 09:01:23 +0200
+Message-Id: <20190813070123.17406-1-linus.walleij@linaro.org>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-In-Reply-To: <1650c967-5176-70db-ff9a-b2af432ba1e7@i2se.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+We need to convert all old gpio irqchips to pass the irqchip
+setup along when adding the gpio_chip. For more info see
+drivers/gpio/TODO.
 
-On 8/13/2019 08:38, Stefan Wahren wrote:
-> Hi Ramon,
->
-> On 13.08.19 03:42, Ramon Fried wrote:
->> From: Stefan Wahren <stefan.wahren@i2se.com>
->>
->> The user space like gpioinfo only see the GPIO usage but not the
->> MUX usage (e.g. I2C or SPI usage) of a pin. As a user we want to know which
->> pin is free/safe to use. So take the MUX usage of strict pinmux controllers
->> into account to get a more realistic view for ioctl GPIO_GET_LINEINFO_IOCTL.
->>
->> Signed-off-by: Stefan Wahren <stefan.wahren@i2se.com>
->> Tested-by: Ramon Fried <rfried.dev@gmail.com>
->> Signed-off-by: Ramon Fried <rfried.dev@gmail.com>
->> ---
->> v2: Address review from linus:
->> * ** Please notive logic was reversed **
->> * renamed pinctrl_gpio_is_in_use() to pinctrl_gpio_can_use_line()
->> * renamed pinmux_is_in_use() to pinmux_can_be_used_for_gpio()
->> * changed dev_err to dev_dbg (Linus suggested removing it altogether, I
->>    find it better to keep it for debug).
-> thanks for taking care of this.
->>   drivers/gpio/gpiolib.c           |  3 ++-
->>   drivers/pinctrl/core.c           | 28 ++++++++++++++++++++++++++++
->>   drivers/pinctrl/pinmux.c         | 27 +++++++++++++++++++++++++++
->>   drivers/pinctrl/pinmux.h         |  8 ++++++++
->>   include/linux/pinctrl/consumer.h |  6 ++++++
->>   5 files changed, 71 insertions(+), 1 deletion(-)
->>
->> diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
->> index f497003f119c..52937bf8e514 100644
->> --- a/drivers/gpio/gpiolib.c
->> +++ b/drivers/gpio/gpiolib.c
->> @@ -1084,7 +1084,8 @@ static long gpio_ioctl(struct file *filp, unsigned int cmd, unsigned long arg)
->>   		    test_bit(FLAG_IS_HOGGED, &desc->flags) ||
->>   		    test_bit(FLAG_USED_AS_IRQ, &desc->flags) ||
->>   		    test_bit(FLAG_EXPORT, &desc->flags) ||
->> -		    test_bit(FLAG_SYSFS, &desc->flags))
->> +		    test_bit(FLAG_SYSFS, &desc->flags) ||
->> +		    !pinctrl_gpio_can_use_line(chip->base + lineinfo.line_offset))
->>   			lineinfo.flags |= GPIOLINE_FLAG_KERNEL;
->>   		if (test_bit(FLAG_IS_OUT, &desc->flags))
->>   			lineinfo.flags |= GPIOLINE_FLAG_IS_OUT;
->> diff --git a/drivers/pinctrl/core.c b/drivers/pinctrl/core.c
->> index b70df27874d1..2bbd8ee93507 100644
->> --- a/drivers/pinctrl/core.c
->> +++ b/drivers/pinctrl/core.c
->> @@ -736,6 +736,34 @@ int pinctrl_get_group_selector(struct pinctrl_dev *pctldev,
->>   	return -EINVAL;
->>   }
->>   
->> +bool pinctrl_gpio_can_use_line(unsigned gpio)
->> +{
->> +	struct pinctrl_dev *pctldev;
->> +	struct pinctrl_gpio_range *range;
->> +	bool result;
->> +	int pin;
->> +
->> +	/*
->> +	 * Try to obtain GPIO range, if it fails
->> +	 * we're probably dealing with GPIO driver
->> +	 * without a backing pin controller - bail out.
->> +	 */
->> +	if (pinctrl_get_device_gpio_range(gpio, &pctldev, &range))
->> +		return true;
->> +
->> +	mutex_lock(&pctldev->mutex);
->> +
->> +	/* Convert to the pin controllers number space */
->> +	pin = gpio_to_pin(range, gpio);
->> +
->> +	result = pinmux_can_be_used_for_gpio(pctldev, pin);
->> +
->> +	mutex_unlock(&pctldev->mutex);
->> +
->> +	return result;
->> +}
->> +EXPORT_SYMBOL_GPL(pinctrl_gpio_can_use_line);
->> +
->>   /**
->>    * pinctrl_gpio_request() - request a single pin to be used as GPIO
->>    * @gpio: the GPIO pin number from the GPIO subsystem number space
->> diff --git a/drivers/pinctrl/pinmux.c b/drivers/pinctrl/pinmux.c
->> index 020e54f843f9..7e42a5738d82 100644
->> --- a/drivers/pinctrl/pinmux.c
->> +++ b/drivers/pinctrl/pinmux.c
->> @@ -70,6 +70,33 @@ int pinmux_validate_map(const struct pinctrl_map *map, int i)
->>   	return 0;
->>   }
->>   
->> +/**
->> + * pinmux_can_be_used_for_gpio() - check if a specific pin
->> + *	is either muxed to a different function or used as gpio.
->> + *
->> + * @pin: the pin number in the global pin space
->> + *
->> + * Controllers not defined as strict will always return true,
->> + * menaning that the gpio can be used.
->> + */
->> +bool pinmux_can_be_used_for_gpio(struct pinctrl_dev *pctldev, unsigned pin)
->> +{
->> +	struct pin_desc *desc = pin_desc_get(pctldev, pin);
->> +	const struct pinmux_ops *ops = pctldev->desc->pmxops;
->> +
->> +	if (!desc) {
->> +		dev_dbg(pctldev->dev,
->> +			"pin %u is not registered so it cannot be requested\n",
->> +			pin);
->> +		return true;
-> This return value looks strange to me.
+This driver is something of a special case, so we need to
+discuss it.
 
-Basically, it's just the reversed return value you returned in the 
-original patch,
-It means in this context that if the pin is not owned by a 
-pin-controller it can be used for GPIO.
+It picks a number of IRQ descriptors before setting up
+the gpio_irq_chip using devm_irq_alloc_descs() giving a
+fixed irq base in the IRQ numberspace. It then games the
+irqchip API by associating IRQs from that base and upward
+with as many pins there are in the "community" which is a
+set of pins. Then after each gpio_chip is registered, it
+fills in the pin to IRQ map for each GPIO range inside
+that "community" with irq_domain_associate_many() which
+works fine since the descriptors were allocated
+previously.
 
-Thanks,
-Ramon.
+This is actually a hierarchical irq_chip as far as I can
+tell. The problem is that very likely the Intel root IRQ
+chip is not hierarchical so it does not support using the
+facilities for hierarchical irqdomains.
 
->
-> Stefan
->
+I will soon merge the patch providing hierarchical irqchip
+support in gpiolib:
+https://lore.kernel.org/linux-gpio/20190808123242.5359-1-linus.walleij@linaro.org/
+
+Will we need to bite the bullet and convert the root
+irqchip for the intels to support hierarcical irqdomain?
+
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Jason Cooper <jason@lakedaemon.net>
+Cc: Marc Zyngier <marc.zyngier@arm.com>
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Mika Westerberg <mika.westerberg@linux.intel.com>
+Cc: Thierry Reding <treding@nvidia.com>
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+---
+ drivers/pinctrl/intel/pinctrl-cherryview.c | 37 +++++++++++++++-------
+ 1 file changed, 26 insertions(+), 11 deletions(-)
+
+diff --git a/drivers/pinctrl/intel/pinctrl-cherryview.c b/drivers/pinctrl/intel/pinctrl-cherryview.c
+index 03ec7a5d9d0b..932da7071356 100644
+--- a/drivers/pinctrl/intel/pinctrl-cherryview.c
++++ b/drivers/pinctrl/intel/pinctrl-cherryview.c
+@@ -1547,6 +1547,7 @@ static int chv_gpio_probe(struct chv_pinctrl *pctrl, int irq)
+ {
+ 	const struct chv_gpio_pinrange *range;
+ 	struct gpio_chip *chip = &pctrl->chip;
++	struct gpio_irq_chip *girq;
+ 	bool need_valid_mask = !dmi_check_system(chv_no_valid_mask);
+ 	const struct chv_community *community = pctrl->community;
+ 	int ret, i, irq_base;
+@@ -1559,12 +1560,6 @@ static int chv_gpio_probe(struct chv_pinctrl *pctrl, int irq)
+ 	chip->base = -1;
+ 	chip->irq.need_valid_mask = need_valid_mask;
+ 
+-	ret = devm_gpiochip_add_data(pctrl->dev, chip, pctrl);
+-	if (ret) {
+-		dev_err(pctrl->dev, "Failed to register gpiochip\n");
+-		return ret;
+-	}
+-
+ 	for (i = 0; i < community->ngpio_ranges; i++) {
+ 		range = &community->gpio_ranges[i];
+ 		ret = gpiochip_add_pin_range(chip, dev_name(pctrl->dev),
+@@ -1610,6 +1605,11 @@ static int chv_gpio_probe(struct chv_pinctrl *pctrl, int irq)
+ 	/* Clear all interrupts */
+ 	chv_writel(0xffff, pctrl->regs + CHV_INTSTAT);
+ 
++	/*
++	 * FIXME: this picks as many IRQs as there are lines in the
++	 * "community", which is then later associated per-range below
++	 * registering the gpio_chip. This is actually hierarchical IRQ.
++	 */
+ 	if (!need_valid_mask) {
+ 		irq_base = devm_irq_alloc_descs(pctrl->dev, -1, 0,
+ 						community->npins, NUMA_NO_NODE);
+@@ -1619,13 +1619,30 @@ static int chv_gpio_probe(struct chv_pinctrl *pctrl, int irq)
+ 		}
+ 	}
+ 
+-	ret = gpiochip_irqchip_add(chip, &chv_gpio_irqchip, 0,
+-				   handle_bad_irq, IRQ_TYPE_NONE);
++	girq = &chip->irq;
++	girq->chip = &chv_gpio_irqchip;
++	girq->parent_handler = chv_gpio_irq_handler;
++	girq->num_parents = 1;
++	girq->parents = devm_kcalloc(pctrl->dev, 1,
++				     sizeof(*girq->parents),
++				     GFP_KERNEL);
++	if (!girq->parents)
++		return -ENOMEM;
++	girq->parents[0] = irq;
++	girq->default_handler = IRQ_TYPE_NONE;
++	girq->handler = handle_bad_irq;
++
++	ret = devm_gpiochip_add_data(pctrl->dev, chip, pctrl);
+ 	if (ret) {
+-		dev_err(pctrl->dev, "failed to add IRQ chip\n");
++		dev_err(pctrl->dev, "Failed to register gpiochip\n");
+ 		return ret;
+ 	}
+ 
++	/*
++	 * FIXME: this associates a different IRQ with each discrete range
++	 * inside the community. If we use the hierarchical irq support,
++	 * the .translate() function can do this translation for each IRQ.
++	 */
+ 	if (!need_valid_mask) {
+ 		for (i = 0; i < community->ngpio_ranges; i++) {
+ 			range = &community->gpio_ranges[i];
+@@ -1636,8 +1653,6 @@ static int chv_gpio_probe(struct chv_pinctrl *pctrl, int irq)
+ 		}
+ 	}
+ 
+-	gpiochip_set_chained_irqchip(chip, &chv_gpio_irqchip, irq,
+-				     chv_gpio_irq_handler);
+ 	return 0;
+ }
+ 
+-- 
+2.21.0
+
