@@ -2,90 +2,205 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id E0A5F8A8E9
-	for <lists+linux-gpio@lfdr.de>; Mon, 12 Aug 2019 23:04:01 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AD2EC8AC77
+	for <lists+linux-gpio@lfdr.de>; Tue, 13 Aug 2019 03:42:49 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727072AbfHLVEB (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 12 Aug 2019 17:04:01 -0400
-Received: from mout.gmx.net ([212.227.15.18]:40659 "EHLO mout.gmx.net"
+        id S1726463AbfHMBms (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 12 Aug 2019 21:42:48 -0400
+Received: from mga14.intel.com ([192.55.52.115]:29636 "EHLO mga14.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726707AbfHLVEA (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Mon, 12 Aug 2019 17:04:00 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1565643821;
-        bh=Z4dob6QFbBn2pjPUd/UPBrkeB6mcJHKlMV0DqcboR08=;
-        h=X-UI-Sender-Class:Subject:To:Cc:References:From:Date:In-Reply-To;
-        b=B4NG0dM8FysyLubkeDJwulk//hiefE+vWC0zHl0jeJUr4J/wKse1+Ie3RPn+YYT7t
-         4ZBAfJyOqSwGvQlPB7Ker8RPVXP8aphQmmVEhdHMSBLmT1i6DPszA4zi5JBr91K21y
-         K0GzfZoThtVjl9dCddbRLIlTosEFax2tc9KW6S2M=
-X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from [192.168.1.162] ([37.4.249.106]) by mail.gmx.com (mrgmx002
- [212.227.17.190]) with ESMTPSA (Nemesis) id 0MUZG7-1hoj2U0bBb-00RFGz; Mon, 12
- Aug 2019 23:03:41 +0200
-Subject: Re: [PATCH 04/18] ARM: dts: bcm283x: Define MMC interfaces at board
- level
-To:     Eric Anholt <eric@anholt.net>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Ray Jui <rjui@broadcom.com>,
-        Scott Branden <sbranden@broadcom.com>,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Matthias Brugger <mbrugger@suse.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Adrian Hunter <adrian.hunter@intel.com>
-Cc:     linux-mmc@vger.kernel.org, linux-gpio@vger.kernel.org,
-        bcm-kernel-feedback-list@broadcom.com,
-        linux-rpi-kernel@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org
-References: <1563774880-8061-1-git-send-email-wahrenst@gmx.net>
- <1563774880-8061-5-git-send-email-wahrenst@gmx.net>
-From:   Stefan Wahren <wahrenst@gmx.net>
-Message-ID: <b9ed2030-25de-4e21-7fc0-9382f6250630@gmx.net>
-Date:   Mon, 12 Aug 2019 23:03:38 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        id S1726236AbfHMBms (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Mon, 12 Aug 2019 21:42:48 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 12 Aug 2019 18:42:48 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,379,1559545200"; 
+   d="scan'208";a="177657704"
+Received: from rfried-mobl1.iil.intel.com ([143.185.152.137])
+  by fmsmga007.fm.intel.com with ESMTP; 12 Aug 2019 18:42:46 -0700
+From:   Ramon Fried <ramon.fried@linux.intel.com>
+To:     linus.walleij@linaro.org, bgolaszewski@baylibre.com,
+        stefan.wahren@i2se.com
+Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v2] gpiolib: Take MUX usage into account
+Date:   Tue, 13 Aug 2019 04:42:10 +0300
+Message-Id: <20190813014210.15519-1-ramon.fried@linux.intel.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-In-Reply-To: <1563774880-8061-5-git-send-email-wahrenst@gmx.net>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Provags-ID: V03:K1:uXhaVTZBIdtkgpQUvDbG0jujSsYTCHrV4MMU4Fp2mY1BMnzmFcu
- dj2zho2p1mWt4W8P9ca6cb4FZqTkfvwYrgsdpjsbunb2+OCQ26HuB5DQvg48g0xDpcdlvKS
- PKWvKVNaDW0nB3RUbs8GYcGeMbePtCkVYxcbQ/bcw7SN/CGkwcrSxiZq7HYkHxdcU9wlpbU
- 5oKyiopkh2L982OwP3whA==
-X-Spam-Flag: NO
-X-UI-Out-Filterresults: notjunk:1;V03:K0:m77DRGs/jQw=:SUOdNsS/ZqhCJsJlR6MruL
- UMB+vVPWVjHskJr9GgrZboRMpxMbTP5+ajj+wh17Rb8Xrpm5qOdmm/sgaalaJQmiYcuOJA8B0
- ZFQ7m/CYO7oj78rnADsnr6FsDNvMRFEPJIDYDzq/mrIdtoFYBptRWmfVZY3KcAoOcljhOlpMj
- f9cisBARzc7TjkABHr7cgOjOQ1UvAFSDSetanMqSorRtK970Mzv1LyEMvP+0oDi81ACfXJTyj
- tgRgb8WO/d2Qei9frV1O3ILKY0zP3u9UoBON+WRlsn4RWh/MX/xvtr/ctgIfa2F0TKN+yHuxz
- VvGar7T1VwWLaGdDZSlV5bOrEVJIpDQMKJ92LMYNyF4q5xS5P6bdsFV/czPqcxlV8d7jQP93K
- U2MPwt6vWCqTUW4mONbuErQ2USTKHq7kfn2OnlIdyGqjALEnt6aQ5G5fA9znnqU44ZEI2UdTx
- CxrTPuIha5Y4b0vkb2XnXWyPv6oHgm4fE6ufHW8HT2I5HUM4ATpNE+BC8EP7t11NiqrDd4C5p
- WmiXgHlU198hAIxp+XeUd9qCRk7msfUWEDqCun4JcCklGHpYBEWjfpbHgZEQFAlZW5dMu1dt3
- ZZBM4KuWfKktyXqephuS9NeWQGDzkFaTYIKLlYqq3uBZt52lpo364MWDT05PVM3FOpRq7N0jZ
- tRUEOWhyHvGOYnTD0X+4JkZ6nzfUQTIJn05ln8AZTFI3SuywiJbwOXKQHgZyCpk4cmVHtC++s
- TO7IW2E/scQ7zwVraGsChU6QKlR6z5Vl53zGL78cHNah8fJTxWNcd3sOTxpncrLErZy5EqIP6
- om551ZL2ZtLz5VrfiTooZHHFrm0i4W8r3K7GBJFIm8g7zxSCE0evcnEtbAe2KI8l4JQAdjZ7I
- BnT3ais0cuF/FUCmJD8tg9Tdrk2CRfPMd7IsF+zYM1lalHCWGKjRigq8WwcFmRt8BVJM2pl9f
- +GQf0QRXDNQUGS6ImJGNFEJd9SE9sfgDwMeND3ZKI75uvqSA/5Em4VY4Q2dgTEMJyRR1d7C5E
- legBB0PgKurO3SDe3zf4uwZ+5l8Zo0meuYjB4bm/zG27xbuEfk0A+ecfa3/T/zy7VeHNhg8I2
- 1YkyUA7vsdAygpN9A4xIIyd9SISAvtTBASpIbRxdZ6QUA+jsqDdhpkcUI1H+cPCo2JNllosGt
- Lx3Hc=
+Content-Transfer-Encoding: 8bit
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Am 22.07.19 um 07:54 schrieb Stefan Wahren:
-> Starting with RPi 4 this is the first board, which doesn't use sdhost
-> as default SD interface. So the MMC interfaces should be defined finally at
-> board level. Since all boards using sdhci already does this, we can drop the
-> pinctrl part from bcm2835-rpi.dtsi.
->
-> Signed-off-by: Stefan Wahren <wahrenst@gmx.net>
-Applied to bcm2835-dt-next
+From: Stefan Wahren <stefan.wahren@i2se.com>
+
+The user space like gpioinfo only see the GPIO usage but not the
+MUX usage (e.g. I2C or SPI usage) of a pin. As a user we want to know which
+pin is free/safe to use. So take the MUX usage of strict pinmux controllers
+into account to get a more realistic view for ioctl GPIO_GET_LINEINFO_IOCTL.
+
+Signed-off-by: Stefan Wahren <stefan.wahren@i2se.com>
+Tested-by: Ramon Fried <rfried.dev@gmail.com>
+Signed-off-by: Ramon Fried <rfried.dev@gmail.com>
+---
+v2: Address review from linus:
+* ** Please notive logic was reversed **
+* renamed pinctrl_gpio_is_in_use() to pinctrl_gpio_can_use_line()
+* renamed pinmux_is_in_use() to pinmux_can_be_used_for_gpio()
+* changed dev_err to dev_dbg (Linus suggested removing it altogether, I
+  find it better to keep it for debug).
+
+ drivers/gpio/gpiolib.c           |  3 ++-
+ drivers/pinctrl/core.c           | 28 ++++++++++++++++++++++++++++
+ drivers/pinctrl/pinmux.c         | 27 +++++++++++++++++++++++++++
+ drivers/pinctrl/pinmux.h         |  8 ++++++++
+ include/linux/pinctrl/consumer.h |  6 ++++++
+ 5 files changed, 71 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
+index f497003f119c..52937bf8e514 100644
+--- a/drivers/gpio/gpiolib.c
++++ b/drivers/gpio/gpiolib.c
+@@ -1084,7 +1084,8 @@ static long gpio_ioctl(struct file *filp, unsigned int cmd, unsigned long arg)
+ 		    test_bit(FLAG_IS_HOGGED, &desc->flags) ||
+ 		    test_bit(FLAG_USED_AS_IRQ, &desc->flags) ||
+ 		    test_bit(FLAG_EXPORT, &desc->flags) ||
+-		    test_bit(FLAG_SYSFS, &desc->flags))
++		    test_bit(FLAG_SYSFS, &desc->flags) ||
++		    !pinctrl_gpio_can_use_line(chip->base + lineinfo.line_offset))
+ 			lineinfo.flags |= GPIOLINE_FLAG_KERNEL;
+ 		if (test_bit(FLAG_IS_OUT, &desc->flags))
+ 			lineinfo.flags |= GPIOLINE_FLAG_IS_OUT;
+diff --git a/drivers/pinctrl/core.c b/drivers/pinctrl/core.c
+index b70df27874d1..2bbd8ee93507 100644
+--- a/drivers/pinctrl/core.c
++++ b/drivers/pinctrl/core.c
+@@ -736,6 +736,34 @@ int pinctrl_get_group_selector(struct pinctrl_dev *pctldev,
+ 	return -EINVAL;
+ }
+ 
++bool pinctrl_gpio_can_use_line(unsigned gpio)
++{
++	struct pinctrl_dev *pctldev;
++	struct pinctrl_gpio_range *range;
++	bool result;
++	int pin;
++
++	/*
++	 * Try to obtain GPIO range, if it fails
++	 * we're probably dealing with GPIO driver
++	 * without a backing pin controller - bail out.
++	 */
++	if (pinctrl_get_device_gpio_range(gpio, &pctldev, &range))
++		return true;
++
++	mutex_lock(&pctldev->mutex);
++
++	/* Convert to the pin controllers number space */
++	pin = gpio_to_pin(range, gpio);
++
++	result = pinmux_can_be_used_for_gpio(pctldev, pin);
++
++	mutex_unlock(&pctldev->mutex);
++
++	return result;
++}
++EXPORT_SYMBOL_GPL(pinctrl_gpio_can_use_line);
++
+ /**
+  * pinctrl_gpio_request() - request a single pin to be used as GPIO
+  * @gpio: the GPIO pin number from the GPIO subsystem number space
+diff --git a/drivers/pinctrl/pinmux.c b/drivers/pinctrl/pinmux.c
+index 020e54f843f9..7e42a5738d82 100644
+--- a/drivers/pinctrl/pinmux.c
++++ b/drivers/pinctrl/pinmux.c
+@@ -70,6 +70,33 @@ int pinmux_validate_map(const struct pinctrl_map *map, int i)
+ 	return 0;
+ }
+ 
++/**
++ * pinmux_can_be_used_for_gpio() - check if a specific pin
++ *	is either muxed to a different function or used as gpio.
++ *
++ * @pin: the pin number in the global pin space
++ *
++ * Controllers not defined as strict will always return true,
++ * menaning that the gpio can be used.
++ */
++bool pinmux_can_be_used_for_gpio(struct pinctrl_dev *pctldev, unsigned pin)
++{
++	struct pin_desc *desc = pin_desc_get(pctldev, pin);
++	const struct pinmux_ops *ops = pctldev->desc->pmxops;
++
++	if (!desc) {
++		dev_dbg(pctldev->dev,
++			"pin %u is not registered so it cannot be requested\n",
++			pin);
++		return true;
++	}
++
++	if (ops->strict && desc->mux_usecount)
++		return false;
++
++	return !(ops->strict && !!desc->gpio_owner);
++}
++
+ /**
+  * pin_request() - request a single pin to be muxed in, typically for GPIO
+  * @pin: the pin number in the global pin space
+diff --git a/drivers/pinctrl/pinmux.h b/drivers/pinctrl/pinmux.h
+index 794cb3a003ff..78c3a31be882 100644
+--- a/drivers/pinctrl/pinmux.h
++++ b/drivers/pinctrl/pinmux.h
+@@ -15,6 +15,8 @@ int pinmux_check_ops(struct pinctrl_dev *pctldev);
+ 
+ int pinmux_validate_map(const struct pinctrl_map *map, int i);
+ 
++bool pinmux_can_be_used_for_gpio(struct pinctrl_dev *pctldev, unsigned pin);
++
+ int pinmux_request_gpio(struct pinctrl_dev *pctldev,
+ 			struct pinctrl_gpio_range *range,
+ 			unsigned pin, unsigned gpio);
+@@ -42,6 +44,12 @@ static inline int pinmux_validate_map(const struct pinctrl_map *map, int i)
+ 	return 0;
+ }
+ 
++static inline bool pinmux_can_be_used_for_gpio(struct pinctrl_dev *pctldev,
++					       unsigned pin)
++{
++	return true;
++}
++
+ static inline int pinmux_request_gpio(struct pinctrl_dev *pctldev,
+ 			struct pinctrl_gpio_range *range,
+ 			unsigned pin, unsigned gpio)
+diff --git a/include/linux/pinctrl/consumer.h b/include/linux/pinctrl/consumer.h
+index 86720a5a384f..7f8c7d9583d3 100644
+--- a/include/linux/pinctrl/consumer.h
++++ b/include/linux/pinctrl/consumer.h
+@@ -24,6 +24,7 @@ struct device;
+ #ifdef CONFIG_PINCTRL
+ 
+ /* External interface to pin control */
++extern bool pinctrl_gpio_can_use_line(unsigned gpio);
+ extern int pinctrl_gpio_request(unsigned gpio);
+ extern void pinctrl_gpio_free(unsigned gpio);
+ extern int pinctrl_gpio_direction_input(unsigned gpio);
+@@ -61,6 +62,11 @@ static inline int pinctrl_pm_select_idle_state(struct device *dev)
+ 
+ #else /* !CONFIG_PINCTRL */
+ 
++static inline bool pinctrl_gpio_can_use_line(unsigned gpio)
++{
++	return true;
++}
++
+ static inline int pinctrl_gpio_request(unsigned gpio)
+ {
+ 	return 0;
+-- 
+2.20.1
+
