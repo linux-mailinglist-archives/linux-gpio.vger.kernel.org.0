@@ -2,103 +2,126 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id A6C218B448
-	for <lists+linux-gpio@lfdr.de>; Tue, 13 Aug 2019 11:36:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 36F048B765
+	for <lists+linux-gpio@lfdr.de>; Tue, 13 Aug 2019 13:43:04 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726915AbfHMJgZ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 13 Aug 2019 05:36:25 -0400
-Received: from mout.kundenserver.de ([217.72.192.73]:60207 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726685AbfHMJgZ (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 13 Aug 2019 05:36:25 -0400
-Received: from [192.168.178.60] ([109.104.47.130]) by mrelayeu.kundenserver.de
- (mreue107 [212.227.15.183]) with ESMTPSA (Nemesis) id
- 1M5gAG-1hukSx14nq-007FT2; Tue, 13 Aug 2019 11:36:17 +0200
-Subject: Re: [PATCH v4] spi: bcm2835: Convert to use CS GPIO descriptors
-To:     Linus Walleij <linus.walleij@linaro.org>,
-        Mark Brown <broonie@kernel.org>, linux-spi@vger.kernel.org
-Cc:     linux-gpio@vger.kernel.org,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Lukas Wunner <lukas@wunner.de>,
-        Martin Sperl <kernel@martin.sperl.org>,
-        Chris Boot <bootc@bootc.net>
-References: <20190804003852.1312-1-linus.walleij@linaro.org>
-From:   Stefan Wahren <stefan.wahren@i2se.com>
-Message-ID: <d4df1cdd-604b-89bd-27da-ed455f170b00@i2se.com>
-Date:   Tue, 13 Aug 2019 11:36:13 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        id S1727103AbfHMLnC (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 13 Aug 2019 07:43:02 -0400
+Received: from atrey.karlin.mff.cuni.cz ([195.113.26.193]:55317 "EHLO
+        atrey.karlin.mff.cuni.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725981AbfHMLnB (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 13 Aug 2019 07:43:01 -0400
+Received: by atrey.karlin.mff.cuni.cz (Postfix, from userid 512)
+        id 1378880743; Tue, 13 Aug 2019 13:42:45 +0200 (CEST)
+Date:   Tue, 13 Aug 2019 13:42:58 +0200
+From:   Pavel Machek <pavel@denx.de>
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     Stefan Roese <sr@denx.de>, linux-serial@vger.kernel.org,
+        linux-gpio@vger.kernel.org,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Pavel Machek <pavel@denx.de>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: Re: [PATCH 2/2] serial: mctrl_gpio: Support all GPIO suffixes (gpios
+ vs gpio)
+Message-ID: <20190813114258.GA11559@amd>
+References: <20190808132543.26274-1-sr@denx.de>
+ <20190808132543.26274-2-sr@denx.de>
+ <20190808134859.GY30120@smile.fi.intel.com>
+ <c4d14b64-6c2f-7e87-ea45-aa780dca85b8@denx.de>
+ <20190812105307.GA30120@smile.fi.intel.com>
 MIME-Version: 1.0
-In-Reply-To: <20190804003852.1312-1-linus.walleij@linaro.org>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Provags-ID: V03:K1:jCoBHsGzrqvGdA03wROJa4FubZzr0bFm8xCEVDDmuFqFwFOdJN4
- Rx+dIIKRYx+4DqV7/PtIa2Y7q3cIAWDm5etyKmuFGveGCKq4HpUNEud8irkcdax1xINgRit
- dMVWtJzAUlD7xKcRNg61Z/3cXi1GU8OnjH/WJUli/ews8MUuMhxHPGfdNR9oSn2YQP2kQS1
- RRk2gV7EfnRBvaPpaQdog==
-X-Spam-Flag: NO
-X-UI-Out-Filterresults: notjunk:1;V03:K0:uUABwUqmInI=:Ji8rCBQBBOxDVgq4U3KlIP
- KqbEQdg5IqgWL6Nf78WESRbqYtInqOSrPTmZVc5FCsBAHxFfu+HykknX/+lFX6mXcaqUfUj8i
- tULnac9w/eiN23/Ew43G1t+X3Wf4r8XHCcLaCK7D/PZBoqhO7vSX0LZG3h+g+EWFgAE8kCAgs
- ONgMqZwh1NjVJcqlXQ3cJeGlSM3Obli72B17ipyWBJrwL3oZ6Bd3yyZ35n2Ujdee3Jx/Fw3kG
- aOkkAhg3CC4yKbJW3QlIFMYmnIazTVi37AQtfi1tKaSLkfYLAKFrZ14WOsaz6LM/Vh7VRlaCd
- yuUIs9d1nkah8etZAAhKmKs1WDfjrkiLWf3yEKOUmcmMkepfP7QgcJrsF36xMBd7mmX7Y/hA0
- ifETm+T9isMScJBwGuWLsYEBsNlOVDWoBS2KqbkysvybnxjUK9CRPKoO9DzqJDMXfzFsu5IIy
- 0hjwnn6YLMP6qpj7Co/1PS9ejhpIRrARiL7AIS97pM/DAj+t7JTo+xhqr+3otqo6UA5kkg69H
- PHr877NfagmzC+NhX97qj/2pvfvAHk1UqGMVShxkc03J2OKYX7zjHnYN6jONrYVrfbJW1FCwa
- MP7WUk9BdFlGupO433M0OkJGOnz8k8OUpk9Zn4mNhFTTYbNFUYUbjnltLA7A2p5gdFBnwsmvZ
- q8WAAF2EczVebhvnadGcevTbVT5XOWvEwCMzEf/nHVxmdVsBxFpy8OT04d3uXTgoB52EEoZC2
- Q+FLM3wp1uC6CAhInFZ38oCr+iIhQm18aZjcsgOOhFBLh/0MiTlk0FKg/AA=
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="zhXaljGHf11kAtnf"
+Content-Disposition: inline
+In-Reply-To: <20190812105307.GA30120@smile.fi.intel.com>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Linus,
 
-On 04.08.19 02:38, Linus Walleij wrote:
-> This converts the BCM2835 SPI master driver to use GPIO
-> descriptors for chip select handling.
->
-> The BCM2835 driver was relying on the core to drive the
-> CS high/low so very small changes were needed for this
-> part. If it managed to request the CS from the device tree
-> node, all is pretty straight forward.
->
-> However for native GPIOs this driver has a quite unorthodox
-> loopback to request some GPIOs from the SoC GPIO chip by
-> looking it up from the device tree using gpiochip_find()
-> and then offseting hard into its numberspace. This has
-> been augmented a bit by using gpiochip_request_own_desc()
-> but this code really needs to be verified. If "native CS"
-> is actually an SoC GPIO, why is it even done this way?
-> Should this GPIO not just be defined in the device tree
-> like any other CS GPIO? I'm confused.
->
-> Cc: Lukas Wunner <lukas@wunner.de>
-> Cc: Stefan Wahren <stefan.wahren@i2se.com>
-> Cc: Martin Sperl <kernel@martin.sperl.org>
-> Cc: Chris Boot <bootc@bootc.net>
-> Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
-> ---
-> ChangeLog v3->v4:
-> - Fix the offset of the chipselect line to be 8 - CS
->   as in the original code.
-> - Use the modified gpiochip_request_own_desc() to set up
->   line inversion semantics if need be. Look at the OF
->   node of the SPI device for flags.
-> ChangeLog v2->v3:
-> - Fix unused variable "err" compile-time message.
-> ChangeLog RFT->v2:
-> - Rebased on v5.1-rc1
->
-> I would very much appreciate if someone took this for
-> a ride on top of linux-next (there are some fixes in
-> the -rcs you need) and see if all still works as expected.
+--zhXaljGHf11kAtnf
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-sorry for my late reply, but i was on vacation.
+On Mon 2019-08-12 13:53:07, Andy Shevchenko wrote:
+> On Thu, Aug 08, 2019 at 03:59:36PM +0200, Stefan Roese wrote:
+> > On 08.08.19 15:48, Andy Shevchenko wrote:
+> > > On Thu, Aug 08, 2019 at 03:25:43PM +0200, Stefan Roese wrote:
+> > > > This patch fixes a backward compatibility issue, when boards use the
+> > > > old style GPIO suffix "-gpio" instead of the new "-gpios". This
+> > > > potential problem has been introduced by commit d99482673f95 ("seri=
+al:
+> > > > mctrl_gpio: Check if GPIO property exisits before requesting it").
+> > > >=20
+> > > > This patch now fixes this issue by iterating over all supported GPIO
+> > > > suffixes by using the newly introduced for_each_gpio_suffix() helpe=
+r.
+> > > >=20
+> > > > Also, the string buffer is now allocated on the stack to avoid the
+> > > > problem of allocation in a loop and its potential failure.
+> > >=20
+> > > >   	for (i =3D 0; i < UART_GPIO_MAX; i++) {
+> > > >   		enum gpiod_flags flags;
+> > > > -		char *gpio_str;
+> > > > +		const char *suffix;
+> > > > +		char gpio_str[32];	/* 32 is max size of property name */
+> > >=20
+> > > Hmm... don't we have some define for the maximum length of property?
+> >=20
+> > I've come up with this assumption from this code (identical comment):
+> >=20
+> > https://elixir.bootlin.com/linux/latest/source/drivers/gpio/gpiolib-of.=
+c#L293
+> >=20
+> > (and other places in drivers/gpio/*)
+>=20
+> I tried hard to find an evidence of this in Linux kernel, I assume that c=
+omes
+> from DT compiler or something, but fail. Linux kernel OF properties handl=
+ing is
+> written in the assumption of arbitrary length of the property name.
+>=20
+> It might be that my hard was not hard at all and I missed something.
+>=20
+> > > Or maybe we can still continue using kasprintf() approach?
+> >=20
+> > Frankly, I was feeling a bit uncomfortable with this memory allocation
+> > in a loop. And Pavel also commented on this:
+> >=20
+> > https://www.mail-archive.com/linux-kernel@vger.kernel.org/msg2066286.ht=
+ml
+>=20
+> If memory allocator fails, it's a big issue, and what will happen next pr=
+obably
+> much less important.
 
-Thanks for your efforts on this, but currently i don't have a setup to
-test this :-(
+Not... really. With "too big" allocations, it will fail.
 
+Anyway, my point is that allocating in a loop for this is slow and
+ugly. If we don't have a maximum property length, we should probably
+invent some. I mean, we can agree that 64KB property name is not okay,
+right?
+
+
+								Pavel
+--=20
+DENX Software Engineering GmbH,      Managing Director: Wolfgang Denk
+HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
+
+--zhXaljGHf11kAtnf
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iEYEARECAAYFAl1SokIACgkQMOfwapXb+vI03QCfVL56ayV+DiFy0yy9qhjJkLPe
+hLMAoKc9LU5izQbyJvwSCZljjRHmTBOy
+=UlO0
+-----END PGP SIGNATURE-----
+
+--zhXaljGHf11kAtnf--
