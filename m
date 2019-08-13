@@ -2,35 +2,34 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 121538BAC0
-	for <lists+linux-gpio@lfdr.de>; Tue, 13 Aug 2019 15:50:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2463F8BB11
+	for <lists+linux-gpio@lfdr.de>; Tue, 13 Aug 2019 16:04:08 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728705AbfHMNu4 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 13 Aug 2019 09:50:56 -0400
-Received: from mga12.intel.com ([192.55.52.136]:6249 "EHLO mga12.intel.com"
+        id S1729070AbfHMOEH (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 13 Aug 2019 10:04:07 -0400
+Received: from mga09.intel.com ([134.134.136.24]:26736 "EHLO mga09.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728346AbfHMNu4 (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Tue, 13 Aug 2019 09:50:56 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
+        id S1728095AbfHMOEH (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Tue, 13 Aug 2019 10:04:07 -0400
+X-Amp-Result: UNSCANNABLE
 X-Amp-File-Uploaded: False
 Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 13 Aug 2019 06:50:55 -0700
+  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 13 Aug 2019 07:04:06 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.64,381,1559545200"; 
-   d="scan'208";a="375603915"
+   d="scan'208";a="375607688"
 Received: from smile.fi.intel.com (HELO smile) ([10.237.68.145])
-  by fmsmga005.fm.intel.com with ESMTP; 13 Aug 2019 06:50:54 -0700
+  by fmsmga005.fm.intel.com with ESMTP; 13 Aug 2019 07:04:05 -0700
 Received: from andy by smile with local (Exim 4.92.1)
         (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1hxXCP-0006rk-3f; Tue, 13 Aug 2019 16:50:53 +0300
-Date:   Tue, 13 Aug 2019 16:50:53 +0300
+        id 1hxXP9-00075C-QT; Tue, 13 Aug 2019 17:04:03 +0300
+Date:   Tue, 13 Aug 2019 17:04:03 +0300
 From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     linux-gpio@vger.kernel.org
+To:     linux-gpio@vger.kernel.org, Stephen Rothwell <sfr@canb.auug.org.au>
 Cc:     Linus Walleij <linus.walleij@linaro.org>,
         Mika Westerberg <mika.westerberg@linux.intel.com>
 Subject: Intel GPIO / pin control repositories for next
-Message-ID: <20190813135053.GA30120@smile.fi.intel.com>
+Message-ID: <20190813140403.GB30120@smile.fi.intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
