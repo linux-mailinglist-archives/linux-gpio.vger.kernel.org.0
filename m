@@ -2,110 +2,82 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 8BBE88AC9C
-	for <lists+linux-gpio@lfdr.de>; Tue, 13 Aug 2019 04:14:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id F218A8ADC4
+	for <lists+linux-gpio@lfdr.de>; Tue, 13 Aug 2019 06:34:37 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726516AbfHMCOu (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 12 Aug 2019 22:14:50 -0400
-Received: from inva021.nxp.com ([92.121.34.21]:55198 "EHLO inva021.nxp.com"
+        id S1725815AbfHMEeh (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 13 Aug 2019 00:34:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57400 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726506AbfHMCOt (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Mon, 12 Aug 2019 22:14:49 -0400
-Received: from inva021.nxp.com (localhost [127.0.0.1])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 13F7A200716;
-        Tue, 13 Aug 2019 04:14:47 +0200 (CEST)
-Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 005DE20070A;
-        Tue, 13 Aug 2019 04:14:42 +0200 (CEST)
-Received: from titan.ap.freescale.net (TITAN.ap.freescale.net [10.192.208.233])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 7AF9F402BF;
-        Tue, 13 Aug 2019 10:14:35 +0800 (SGT)
-From:   Hui Song <hui.song_1@nxp.com>
-To:     Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
+        id S1725298AbfHMEeh (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Tue, 13 Aug 2019 00:34:37 -0400
+Received: from localhost (unknown [106.201.103.22])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D145A20644;
+        Tue, 13 Aug 2019 04:34:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1565670876;
+        bh=LeDopwTuWI+vg3sAxESkUP1Ad5woiNmLizqxL2IUUjM=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=2m6MPJ5tm+CEzskDxqHh9F5ecwuPmPFOBWaBViK3MhhhWAkFnTetCXd5ZZllNn9EW
+         EvujBk4rI/uez+gJqjt7AKpovUYUPsV8xcNohYbUEs89CXz7wyihUSeXqeEWSDZQ6a
+         gd+NmLgXwRhYiYmrZZWdTko2muDs9IZgs4W+WBH0=
+Date:   Tue, 13 Aug 2019 10:03:24 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     soc@kernel.org, Russell King <linux@armlinux.org.uk>,
+        Dan Williams <dan.j.williams@intel.com>,
         Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Cc:     linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-        Song Hui <hui.song_1@nxp.com>
-Subject: [PATCH v2] arm64: dts: ls1088a: fix gpio node
-Date:   Tue, 13 Aug 2019 10:04:57 +0800
-Message-Id: <20190813020457.45370-1-hui.song_1@nxp.com>
-X-Mailer: git-send-email 2.9.5
-X-Virus-Scanned: ClamAV using ClamSMTP
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        dmaengine@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-i2c@vger.kernel.org, kbuild test robot <lkp@intel.com>
+Subject: Re: [PATCH 2/7] dma: iop-adma: include prefetch.h
+Message-ID: <20190813043324.GN12733@vkoul-mobl.Dlink>
+References: <20190809162956.488941-1-arnd@arndb.de>
+ <20190809163334.489360-1-arnd@arndb.de>
+ <20190809163334.489360-2-arnd@arndb.de>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190809163334.489360-2-arnd@arndb.de>
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-From: Song Hui <hui.song_1@nxp.com>
+On 09-08-19, 18:33, Arnd Bergmann wrote:
+> Compile-testing this driver fails on m68k without the
+> extra header inclusion.
 
-Update the nodes to include little-endian
-property to be consistent with the hardware
-and add ls1088a gpio specify compatible.
+Please change title to "dmaengine: iop-adma: include prefetch.h"
 
-Signed-off-by: Song Hui <hui.song_1@nxp.com>
----
- arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi | 12 ++++++++----
- 1 file changed, 8 insertions(+), 4 deletions(-)
+After that:
 
-diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
-index 20f5ebd..d58d203 100644
---- a/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
-+++ b/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
-@@ -269,43 +269,47 @@
- 		};
- 
- 		gpio0: gpio@2300000 {
--			compatible = "fsl,qoriq-gpio";
-+			compatible = "fsl,ls1088a-gpio", "fsl,qoriq-gpio";
- 			reg = <0x0 0x2300000 0x0 0x10000>;
- 			interrupts = <0 36 IRQ_TYPE_LEVEL_HIGH>;
- 			gpio-controller;
- 			#gpio-cells = <2>;
- 			interrupt-controller;
- 			#interrupt-cells = <2>;
-+			little-endian;
- 		};
- 
- 		gpio1: gpio@2310000 {
--			compatible = "fsl,qoriq-gpio";
-+			compatible = "fsl,ls1088a-gpio", "fsl,qoriq-gpio";
- 			reg = <0x0 0x2310000 0x0 0x10000>;
- 			interrupts = <0 36 IRQ_TYPE_LEVEL_HIGH>;
- 			gpio-controller;
- 			#gpio-cells = <2>;
- 			interrupt-controller;
- 			#interrupt-cells = <2>;
-+			little-endian;
- 		};
- 
- 		gpio2: gpio@2320000 {
--			compatible = "fsl,qoriq-gpio";
-+			compatible = "fsl,ls1088a-gpio", "fsl,qoriq-gpio";
- 			reg = <0x0 0x2320000 0x0 0x10000>;
- 			interrupts = <0 37 IRQ_TYPE_LEVEL_HIGH>;
- 			gpio-controller;
- 			#gpio-cells = <2>;
- 			interrupt-controller;
- 			#interrupt-cells = <2>;
-+			little-endian;
- 		};
- 
- 		gpio3: gpio@2330000 {
--			compatible = "fsl,qoriq-gpio";
-+			compatible = "fsl,ls1088a-gpio", "fsl,qoriq-gpio";
- 			reg = <0x0 0x2330000 0x0 0x10000>;
- 			interrupts = <0 37 IRQ_TYPE_LEVEL_HIGH>;
- 			gpio-controller;
- 			#gpio-cells = <2>;
- 			interrupt-controller;
- 			#interrupt-cells = <2>;
-+			little-endian;
- 		};
- 
- 		ifc: ifc@2240000 {
+Acked-by: Vinod Koul <vkoul@kernel.org>
+
+> Reported-by: kbuild test robot <lkp@intel.com>
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> ---
+>  drivers/dma/iop-adma.c | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/drivers/dma/iop-adma.c b/drivers/dma/iop-adma.c
+> index c6c0143670d9..7857b54770d1 100644
+> --- a/drivers/dma/iop-adma.c
+> +++ b/drivers/dma/iop-adma.c
+> @@ -16,6 +16,7 @@
+>  #include <linux/spinlock.h>
+>  #include <linux/interrupt.h>
+>  #include <linux/platform_device.h>
+> +#include <linux/prefetch.h>
+>  #include <linux/memory.h>
+>  #include <linux/ioport.h>
+>  #include <linux/raid/pq.h>
+> -- 
+> 2.20.0
+
 -- 
-2.9.5
-
+~Vinod
