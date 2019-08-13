@@ -2,205 +2,110 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id AD2EC8AC77
-	for <lists+linux-gpio@lfdr.de>; Tue, 13 Aug 2019 03:42:49 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8BBE88AC9C
+	for <lists+linux-gpio@lfdr.de>; Tue, 13 Aug 2019 04:14:50 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726463AbfHMBms (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 12 Aug 2019 21:42:48 -0400
-Received: from mga14.intel.com ([192.55.52.115]:29636 "EHLO mga14.intel.com"
+        id S1726516AbfHMCOu (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 12 Aug 2019 22:14:50 -0400
+Received: from inva021.nxp.com ([92.121.34.21]:55198 "EHLO inva021.nxp.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726236AbfHMBms (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Mon, 12 Aug 2019 21:42:48 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 12 Aug 2019 18:42:48 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,379,1559545200"; 
-   d="scan'208";a="177657704"
-Received: from rfried-mobl1.iil.intel.com ([143.185.152.137])
-  by fmsmga007.fm.intel.com with ESMTP; 12 Aug 2019 18:42:46 -0700
-From:   Ramon Fried <ramon.fried@linux.intel.com>
-To:     linus.walleij@linaro.org, bgolaszewski@baylibre.com,
-        stefan.wahren@i2se.com
-Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2] gpiolib: Take MUX usage into account
-Date:   Tue, 13 Aug 2019 04:42:10 +0300
-Message-Id: <20190813014210.15519-1-ramon.fried@linux.intel.com>
-X-Mailer: git-send-email 2.20.1
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        id S1726506AbfHMCOt (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Mon, 12 Aug 2019 22:14:49 -0400
+Received: from inva021.nxp.com (localhost [127.0.0.1])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 13F7A200716;
+        Tue, 13 Aug 2019 04:14:47 +0200 (CEST)
+Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 005DE20070A;
+        Tue, 13 Aug 2019 04:14:42 +0200 (CEST)
+Received: from titan.ap.freescale.net (TITAN.ap.freescale.net [10.192.208.233])
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 7AF9F402BF;
+        Tue, 13 Aug 2019 10:14:35 +0800 (SGT)
+From:   Hui Song <hui.song_1@nxp.com>
+To:     Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Cc:     linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+        Song Hui <hui.song_1@nxp.com>
+Subject: [PATCH v2] arm64: dts: ls1088a: fix gpio node
+Date:   Tue, 13 Aug 2019 10:04:57 +0800
+Message-Id: <20190813020457.45370-1-hui.song_1@nxp.com>
+X-Mailer: git-send-email 2.9.5
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-From: Stefan Wahren <stefan.wahren@i2se.com>
+From: Song Hui <hui.song_1@nxp.com>
 
-The user space like gpioinfo only see the GPIO usage but not the
-MUX usage (e.g. I2C or SPI usage) of a pin. As a user we want to know which
-pin is free/safe to use. So take the MUX usage of strict pinmux controllers
-into account to get a more realistic view for ioctl GPIO_GET_LINEINFO_IOCTL.
+Update the nodes to include little-endian
+property to be consistent with the hardware
+and add ls1088a gpio specify compatible.
 
-Signed-off-by: Stefan Wahren <stefan.wahren@i2se.com>
-Tested-by: Ramon Fried <rfried.dev@gmail.com>
-Signed-off-by: Ramon Fried <rfried.dev@gmail.com>
+Signed-off-by: Song Hui <hui.song_1@nxp.com>
 ---
-v2: Address review from linus:
-* ** Please notive logic was reversed **
-* renamed pinctrl_gpio_is_in_use() to pinctrl_gpio_can_use_line()
-* renamed pinmux_is_in_use() to pinmux_can_be_used_for_gpio()
-* changed dev_err to dev_dbg (Linus suggested removing it altogether, I
-  find it better to keep it for debug).
+ arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi | 12 ++++++++----
+ 1 file changed, 8 insertions(+), 4 deletions(-)
 
- drivers/gpio/gpiolib.c           |  3 ++-
- drivers/pinctrl/core.c           | 28 ++++++++++++++++++++++++++++
- drivers/pinctrl/pinmux.c         | 27 +++++++++++++++++++++++++++
- drivers/pinctrl/pinmux.h         |  8 ++++++++
- include/linux/pinctrl/consumer.h |  6 ++++++
- 5 files changed, 71 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
-index f497003f119c..52937bf8e514 100644
---- a/drivers/gpio/gpiolib.c
-+++ b/drivers/gpio/gpiolib.c
-@@ -1084,7 +1084,8 @@ static long gpio_ioctl(struct file *filp, unsigned int cmd, unsigned long arg)
- 		    test_bit(FLAG_IS_HOGGED, &desc->flags) ||
- 		    test_bit(FLAG_USED_AS_IRQ, &desc->flags) ||
- 		    test_bit(FLAG_EXPORT, &desc->flags) ||
--		    test_bit(FLAG_SYSFS, &desc->flags))
-+		    test_bit(FLAG_SYSFS, &desc->flags) ||
-+		    !pinctrl_gpio_can_use_line(chip->base + lineinfo.line_offset))
- 			lineinfo.flags |= GPIOLINE_FLAG_KERNEL;
- 		if (test_bit(FLAG_IS_OUT, &desc->flags))
- 			lineinfo.flags |= GPIOLINE_FLAG_IS_OUT;
-diff --git a/drivers/pinctrl/core.c b/drivers/pinctrl/core.c
-index b70df27874d1..2bbd8ee93507 100644
---- a/drivers/pinctrl/core.c
-+++ b/drivers/pinctrl/core.c
-@@ -736,6 +736,34 @@ int pinctrl_get_group_selector(struct pinctrl_dev *pctldev,
- 	return -EINVAL;
- }
+diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
+index 20f5ebd..d58d203 100644
+--- a/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
++++ b/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
+@@ -269,43 +269,47 @@
+ 		};
  
-+bool pinctrl_gpio_can_use_line(unsigned gpio)
-+{
-+	struct pinctrl_dev *pctldev;
-+	struct pinctrl_gpio_range *range;
-+	bool result;
-+	int pin;
-+
-+	/*
-+	 * Try to obtain GPIO range, if it fails
-+	 * we're probably dealing with GPIO driver
-+	 * without a backing pin controller - bail out.
-+	 */
-+	if (pinctrl_get_device_gpio_range(gpio, &pctldev, &range))
-+		return true;
-+
-+	mutex_lock(&pctldev->mutex);
-+
-+	/* Convert to the pin controllers number space */
-+	pin = gpio_to_pin(range, gpio);
-+
-+	result = pinmux_can_be_used_for_gpio(pctldev, pin);
-+
-+	mutex_unlock(&pctldev->mutex);
-+
-+	return result;
-+}
-+EXPORT_SYMBOL_GPL(pinctrl_gpio_can_use_line);
-+
- /**
-  * pinctrl_gpio_request() - request a single pin to be used as GPIO
-  * @gpio: the GPIO pin number from the GPIO subsystem number space
-diff --git a/drivers/pinctrl/pinmux.c b/drivers/pinctrl/pinmux.c
-index 020e54f843f9..7e42a5738d82 100644
---- a/drivers/pinctrl/pinmux.c
-+++ b/drivers/pinctrl/pinmux.c
-@@ -70,6 +70,33 @@ int pinmux_validate_map(const struct pinctrl_map *map, int i)
- 	return 0;
- }
+ 		gpio0: gpio@2300000 {
+-			compatible = "fsl,qoriq-gpio";
++			compatible = "fsl,ls1088a-gpio", "fsl,qoriq-gpio";
+ 			reg = <0x0 0x2300000 0x0 0x10000>;
+ 			interrupts = <0 36 IRQ_TYPE_LEVEL_HIGH>;
+ 			gpio-controller;
+ 			#gpio-cells = <2>;
+ 			interrupt-controller;
+ 			#interrupt-cells = <2>;
++			little-endian;
+ 		};
  
-+/**
-+ * pinmux_can_be_used_for_gpio() - check if a specific pin
-+ *	is either muxed to a different function or used as gpio.
-+ *
-+ * @pin: the pin number in the global pin space
-+ *
-+ * Controllers not defined as strict will always return true,
-+ * menaning that the gpio can be used.
-+ */
-+bool pinmux_can_be_used_for_gpio(struct pinctrl_dev *pctldev, unsigned pin)
-+{
-+	struct pin_desc *desc = pin_desc_get(pctldev, pin);
-+	const struct pinmux_ops *ops = pctldev->desc->pmxops;
-+
-+	if (!desc) {
-+		dev_dbg(pctldev->dev,
-+			"pin %u is not registered so it cannot be requested\n",
-+			pin);
-+		return true;
-+	}
-+
-+	if (ops->strict && desc->mux_usecount)
-+		return false;
-+
-+	return !(ops->strict && !!desc->gpio_owner);
-+}
-+
- /**
-  * pin_request() - request a single pin to be muxed in, typically for GPIO
-  * @pin: the pin number in the global pin space
-diff --git a/drivers/pinctrl/pinmux.h b/drivers/pinctrl/pinmux.h
-index 794cb3a003ff..78c3a31be882 100644
---- a/drivers/pinctrl/pinmux.h
-+++ b/drivers/pinctrl/pinmux.h
-@@ -15,6 +15,8 @@ int pinmux_check_ops(struct pinctrl_dev *pctldev);
+ 		gpio1: gpio@2310000 {
+-			compatible = "fsl,qoriq-gpio";
++			compatible = "fsl,ls1088a-gpio", "fsl,qoriq-gpio";
+ 			reg = <0x0 0x2310000 0x0 0x10000>;
+ 			interrupts = <0 36 IRQ_TYPE_LEVEL_HIGH>;
+ 			gpio-controller;
+ 			#gpio-cells = <2>;
+ 			interrupt-controller;
+ 			#interrupt-cells = <2>;
++			little-endian;
+ 		};
  
- int pinmux_validate_map(const struct pinctrl_map *map, int i);
+ 		gpio2: gpio@2320000 {
+-			compatible = "fsl,qoriq-gpio";
++			compatible = "fsl,ls1088a-gpio", "fsl,qoriq-gpio";
+ 			reg = <0x0 0x2320000 0x0 0x10000>;
+ 			interrupts = <0 37 IRQ_TYPE_LEVEL_HIGH>;
+ 			gpio-controller;
+ 			#gpio-cells = <2>;
+ 			interrupt-controller;
+ 			#interrupt-cells = <2>;
++			little-endian;
+ 		};
  
-+bool pinmux_can_be_used_for_gpio(struct pinctrl_dev *pctldev, unsigned pin);
-+
- int pinmux_request_gpio(struct pinctrl_dev *pctldev,
- 			struct pinctrl_gpio_range *range,
- 			unsigned pin, unsigned gpio);
-@@ -42,6 +44,12 @@ static inline int pinmux_validate_map(const struct pinctrl_map *map, int i)
- 	return 0;
- }
+ 		gpio3: gpio@2330000 {
+-			compatible = "fsl,qoriq-gpio";
++			compatible = "fsl,ls1088a-gpio", "fsl,qoriq-gpio";
+ 			reg = <0x0 0x2330000 0x0 0x10000>;
+ 			interrupts = <0 37 IRQ_TYPE_LEVEL_HIGH>;
+ 			gpio-controller;
+ 			#gpio-cells = <2>;
+ 			interrupt-controller;
+ 			#interrupt-cells = <2>;
++			little-endian;
+ 		};
  
-+static inline bool pinmux_can_be_used_for_gpio(struct pinctrl_dev *pctldev,
-+					       unsigned pin)
-+{
-+	return true;
-+}
-+
- static inline int pinmux_request_gpio(struct pinctrl_dev *pctldev,
- 			struct pinctrl_gpio_range *range,
- 			unsigned pin, unsigned gpio)
-diff --git a/include/linux/pinctrl/consumer.h b/include/linux/pinctrl/consumer.h
-index 86720a5a384f..7f8c7d9583d3 100644
---- a/include/linux/pinctrl/consumer.h
-+++ b/include/linux/pinctrl/consumer.h
-@@ -24,6 +24,7 @@ struct device;
- #ifdef CONFIG_PINCTRL
- 
- /* External interface to pin control */
-+extern bool pinctrl_gpio_can_use_line(unsigned gpio);
- extern int pinctrl_gpio_request(unsigned gpio);
- extern void pinctrl_gpio_free(unsigned gpio);
- extern int pinctrl_gpio_direction_input(unsigned gpio);
-@@ -61,6 +62,11 @@ static inline int pinctrl_pm_select_idle_state(struct device *dev)
- 
- #else /* !CONFIG_PINCTRL */
- 
-+static inline bool pinctrl_gpio_can_use_line(unsigned gpio)
-+{
-+	return true;
-+}
-+
- static inline int pinctrl_gpio_request(unsigned gpio)
- {
- 	return 0;
+ 		ifc: ifc@2240000 {
 -- 
-2.20.1
+2.9.5
 
