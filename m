@@ -2,213 +2,103 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 2D2768B308
-	for <lists+linux-gpio@lfdr.de>; Tue, 13 Aug 2019 10:53:59 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A6C218B448
+	for <lists+linux-gpio@lfdr.de>; Tue, 13 Aug 2019 11:36:26 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725781AbfHMIxu (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 13 Aug 2019 04:53:50 -0400
-Received: from mailgw01.mediatek.com ([210.61.82.183]:16221 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727937AbfHMIxe (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 13 Aug 2019 04:53:34 -0400
-X-UUID: c7f4f8f3d41f4b269a4693c7148c42f3-20190813
-X-UUID: c7f4f8f3d41f4b269a4693c7148c42f3-20190813
-Received: from mtkcas06.mediatek.inc [(172.21.101.30)] by mailgw01.mediatek.com
-        (envelope-from <light.hsieh@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0707 with TLS)
-        with ESMTP id 1338583607; Tue, 13 Aug 2019 16:53:28 +0800
-Received: from MTKCAS06.mediatek.inc (172.21.101.30) by
- mtkmbs08n2.mediatek.inc (172.21.101.56) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Tue, 13 Aug 2019 16:53:23 +0800
-Received: from mtkswgap22.mediatek.inc (172.21.77.33) by MTKCAS06.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Tue, 13 Aug 2019 16:53:20 +0800
-From:   Light Hsieh <light.hsieh@mediatek.com>
-To:     <linus.walleij@linaro.org>
-CC:     <linux-mediatek@lists.infradead.org>, <linux-gpio@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <sean.wang@kernel.org>,
-        Light Hsieh <light.hsieh@mediatek.com>
-Subject: [PATCH v1 5/5] pinctrl: mediatek: Add support for pin configuration dump via sysfs.
-Date:   Tue, 13 Aug 2019 16:53:20 +0800
-Message-ID: <1565686400-5711-6-git-send-email-light.hsieh@mediatek.com>
-X-Mailer: git-send-email 1.8.1.1.dirty
-In-Reply-To: <1565686400-5711-1-git-send-email-light.hsieh@mediatek.com>
-References: <1565686400-5711-1-git-send-email-light.hsieh@mediatek.com>
+        id S1726915AbfHMJgZ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 13 Aug 2019 05:36:25 -0400
+Received: from mout.kundenserver.de ([217.72.192.73]:60207 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726685AbfHMJgZ (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 13 Aug 2019 05:36:25 -0400
+Received: from [192.168.178.60] ([109.104.47.130]) by mrelayeu.kundenserver.de
+ (mreue107 [212.227.15.183]) with ESMTPSA (Nemesis) id
+ 1M5gAG-1hukSx14nq-007FT2; Tue, 13 Aug 2019 11:36:17 +0200
+Subject: Re: [PATCH v4] spi: bcm2835: Convert to use CS GPIO descriptors
+To:     Linus Walleij <linus.walleij@linaro.org>,
+        Mark Brown <broonie@kernel.org>, linux-spi@vger.kernel.org
+Cc:     linux-gpio@vger.kernel.org,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Lukas Wunner <lukas@wunner.de>,
+        Martin Sperl <kernel@martin.sperl.org>,
+        Chris Boot <bootc@bootc.net>
+References: <20190804003852.1312-1-linus.walleij@linaro.org>
+From:   Stefan Wahren <stefan.wahren@i2se.com>
+Message-ID: <d4df1cdd-604b-89bd-27da-ed455f170b00@i2se.com>
+Date:   Tue, 13 Aug 2019 11:36:13 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-TM-SNTS-SMTP: 41BE2C130F025CE26F677411444F68295D1EEB5E0CD0F50C791DA3A9105C9AF72000:8
-X-MTK:  N
+In-Reply-To: <20190804003852.1312-1-linus.walleij@linaro.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Provags-ID: V03:K1:jCoBHsGzrqvGdA03wROJa4FubZzr0bFm8xCEVDDmuFqFwFOdJN4
+ Rx+dIIKRYx+4DqV7/PtIa2Y7q3cIAWDm5etyKmuFGveGCKq4HpUNEud8irkcdax1xINgRit
+ dMVWtJzAUlD7xKcRNg61Z/3cXi1GU8OnjH/WJUli/ews8MUuMhxHPGfdNR9oSn2YQP2kQS1
+ RRk2gV7EfnRBvaPpaQdog==
+X-Spam-Flag: NO
+X-UI-Out-Filterresults: notjunk:1;V03:K0:uUABwUqmInI=:Ji8rCBQBBOxDVgq4U3KlIP
+ KqbEQdg5IqgWL6Nf78WESRbqYtInqOSrPTmZVc5FCsBAHxFfu+HykknX/+lFX6mXcaqUfUj8i
+ tULnac9w/eiN23/Ew43G1t+X3Wf4r8XHCcLaCK7D/PZBoqhO7vSX0LZG3h+g+EWFgAE8kCAgs
+ ONgMqZwh1NjVJcqlXQ3cJeGlSM3Obli72B17ipyWBJrwL3oZ6Bd3yyZ35n2Ujdee3Jx/Fw3kG
+ aOkkAhg3CC4yKbJW3QlIFMYmnIazTVi37AQtfi1tKaSLkfYLAKFrZ14WOsaz6LM/Vh7VRlaCd
+ yuUIs9d1nkah8etZAAhKmKs1WDfjrkiLWf3yEKOUmcmMkepfP7QgcJrsF36xMBd7mmX7Y/hA0
+ ifETm+T9isMScJBwGuWLsYEBsNlOVDWoBS2KqbkysvybnxjUK9CRPKoO9DzqJDMXfzFsu5IIy
+ 0hjwnn6YLMP6qpj7Co/1PS9ejhpIRrARiL7AIS97pM/DAj+t7JTo+xhqr+3otqo6UA5kkg69H
+ PHr877NfagmzC+NhX97qj/2pvfvAHk1UqGMVShxkc03J2OKYX7zjHnYN6jONrYVrfbJW1FCwa
+ MP7WUk9BdFlGupO433M0OkJGOnz8k8OUpk9Zn4mNhFTTYbNFUYUbjnltLA7A2p5gdFBnwsmvZ
+ q8WAAF2EczVebhvnadGcevTbVT5XOWvEwCMzEf/nHVxmdVsBxFpy8OT04d3uXTgoB52EEoZC2
+ Q+FLM3wp1uC6CAhInFZ38oCr+iIhQm18aZjcsgOOhFBLh/0MiTlk0FKg/AA=
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-From: Light Hsieh <light.hsieh@mediatek.com>
+Hi Linus,
 
-Add support for pin configuration dump via catting
-/sys/kernel/debug/pinctrl/$platform_dependent_path/pinconf-pins.
-pinctrl framework had already support such dump. This patch implement the
-operation function pointer to fullfill this dump.
+On 04.08.19 02:38, Linus Walleij wrote:
+> This converts the BCM2835 SPI master driver to use GPIO
+> descriptors for chip select handling.
+>
+> The BCM2835 driver was relying on the core to drive the
+> CS high/low so very small changes were needed for this
+> part. If it managed to request the CS from the device tree
+> node, all is pretty straight forward.
+>
+> However for native GPIOs this driver has a quite unorthodox
+> loopback to request some GPIOs from the SoC GPIO chip by
+> looking it up from the device tree using gpiochip_find()
+> and then offseting hard into its numberspace. This has
+> been augmented a bit by using gpiochip_request_own_desc()
+> but this code really needs to be verified. If "native CS"
+> is actually an SoC GPIO, why is it even done this way?
+> Should this GPIO not just be defined in the device tree
+> like any other CS GPIO? I'm confused.
+>
+> Cc: Lukas Wunner <lukas@wunner.de>
+> Cc: Stefan Wahren <stefan.wahren@i2se.com>
+> Cc: Martin Sperl <kernel@martin.sperl.org>
+> Cc: Chris Boot <bootc@bootc.net>
+> Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+> ---
+> ChangeLog v3->v4:
+> - Fix the offset of the chipselect line to be 8 - CS
+>   as in the original code.
+> - Use the modified gpiochip_request_own_desc() to set up
+>   line inversion semantics if need be. Look at the OF
+>   node of the SPI device for flags.
+> ChangeLog v2->v3:
+> - Fix unused variable "err" compile-time message.
+> ChangeLog RFT->v2:
+> - Rebased on v5.1-rc1
+>
+> I would very much appreciate if someone took this for
+> a ride on top of linux-next (there are some fixes in
+> the -rcs you need) and see if all still works as expected.
 
-Change-Id: Ib59212eb47febcd84140cbf84e1bd7286769beb0
----
- drivers/pinctrl/mediatek/pinctrl-paris.c | 88 ++++++++++++++++++++++++++++++++
- drivers/pinctrl/mediatek/pinctrl-paris.h | 30 +++++++++++
- 2 files changed, 118 insertions(+)
+sorry for my late reply, but i was on vacation.
 
-diff --git a/drivers/pinctrl/mediatek/pinctrl-paris.c b/drivers/pinctrl/mediatek/pinctrl-paris.c
-index 0a9440a..91d6e72 100644
---- a/drivers/pinctrl/mediatek/pinctrl-paris.c
-+++ b/drivers/pinctrl/mediatek/pinctrl-paris.c
-@@ -531,12 +531,99 @@ static int mtk_pctrl_get_group_pins(struct pinctrl_dev *pctldev,
- 	return 0;
- }
- 
-+int mtk_hw_get_value_wrap(struct mtk_pinctrl *hw, unsigned int gpio, int field)
-+{
-+	const struct mtk_pin_desc *desc;
-+	int value, err;
-+
-+	if (gpio > hw->soc->npins)
-+		return -EINVAL;
-+
-+	desc = (const struct mtk_pin_desc *)&hw->soc->pins[gpio];
-+
-+	err = mtk_hw_get_value(hw, desc, field, &value);
-+	if (err)
-+		return err;
-+
-+	return value;
-+}
-+
-+ssize_t mtk_pctrl_show_one_pin(struct mtk_pinctrl *hw,
-+	unsigned int gpio, char *buf, unsigned int bufLen)
-+{
-+	const struct mtk_pin_desc *desc;
-+	int pinmux, pullup, pullen, r1 = -1, r0 = -1, len = 0;
-+
-+	if (gpio > hw->soc->npins)
-+		return -EINVAL;
-+
-+	desc = (const struct mtk_pin_desc *)&hw->soc->pins[gpio];
-+	pinmux = mtk_pctrl_get_pinmux(hw, gpio);
-+	if (pinmux >= hw->soc->nfuncs)
-+		pinmux -= hw->soc->nfuncs;
-+
-+	mtk_pinconf_bias_get_combo(hw, desc, &pullup, &pullen);
-+	if (pullen == MTK_PUPD_SET_R1R0_00) {
-+		pullen = 0;
-+		r1 = 0;
-+		r0 = 0;
-+	} else if (pullen == MTK_PUPD_SET_R1R0_01) {
-+		pullen = 1;
-+		r1 = 0;
-+		r0 = 1;
-+	} else if (pullen == MTK_PUPD_SET_R1R0_10) {
-+		pullen = 1;
-+		r1 = 1;
-+		r0 = 0;
-+	} else if (pullen == MTK_PUPD_SET_R1R0_11) {
-+		pullen = 1;
-+		r1 = 1;
-+		r0 = 1;
-+	} else if (pullen != MTK_DISABLE && pullen != MTK_ENABLE) {
-+		pullen = 0;
-+	}
-+	len += snprintf(buf + len, bufLen - len,
-+			"%03d: %1d%1d%1d%1d%02d%1d%1d%1d%1d",
-+			gpio,
-+			pinmux,
-+			mtk_pctrl_get_direction(hw, gpio),
-+			mtk_pctrl_get_out(hw, gpio),
-+			mtk_pctrl_get_in(hw, gpio),
-+			mtk_pctrl_get_driving(hw, gpio),
-+			mtk_pctrl_get_smt(hw, gpio),
-+			mtk_pctrl_get_ies(hw, gpio),
-+			pullen,
-+			pullup);
-+
-+	if (r1 != -1) {
-+		len += snprintf(buf + len, bufLen - len, " (%1d %1d)\n",
-+			r1, r0);
-+	} else {
-+		len += snprintf(buf + len, bufLen - len, "\n");
-+	}
-+
-+	return len;
-+}
-+
-+#define PIN_DBG_BUF_SZ 96
-+static void mtk_pctrl_dbg_show(struct pinctrl_dev *pctldev, struct seq_file *s,
-+			  unsigned int gpio)
-+{
-+	struct mtk_pinctrl *hw = pinctrl_dev_get_drvdata(pctldev);
-+	char buf[PIN_DBG_BUF_SZ];
-+
-+	(void)mtk_pctrl_show_one_pin(hw, gpio, buf, PIN_DBG_BUF_SZ);
-+
-+	seq_printf(s, "%s", buf);
-+}
-+
- static const struct pinctrl_ops mtk_pctlops = {
- 	.dt_node_to_map		= mtk_pctrl_dt_node_to_map,
- 	.dt_free_map		= pinctrl_utils_free_map,
- 	.get_groups_count	= mtk_pctrl_get_groups_count,
- 	.get_group_name		= mtk_pctrl_get_group_name,
- 	.get_group_pins		= mtk_pctrl_get_group_pins,
-+	.pin_dbg_show           = mtk_pctrl_dbg_show,
- };
- 
- static int mtk_pmx_get_funcs_cnt(struct pinctrl_dev *pctldev)
-@@ -633,6 +720,7 @@ static int mtk_pconf_group_set(struct pinctrl_dev *pctldev, unsigned group,
- 	.pin_config_get = mtk_pinconf_get,
- 	.pin_config_group_get	= mtk_pconf_group_get,
- 	.pin_config_group_set	= mtk_pconf_group_set,
-+	.is_generic = true,
- };
- 
- static struct pinctrl_desc mtk_desc = {
-diff --git a/drivers/pinctrl/mediatek/pinctrl-paris.h b/drivers/pinctrl/mediatek/pinctrl-paris.h
-index 3d43771..d73f4b6 100644
---- a/drivers/pinctrl/mediatek/pinctrl-paris.h
-+++ b/drivers/pinctrl/mediatek/pinctrl-paris.h
-@@ -60,6 +60,36 @@
- int mtk_paris_pinctrl_probe(struct platform_device *pdev,
- 			    const struct mtk_pin_soc *soc);
- 
-+int mtk_hw_get_value_wrap(struct mtk_pinctrl *hw, unsigned int gpio, int field);
-+
-+#define mtk_pctrl_get_pinmux(hw, gpio)			\
-+	mtk_hw_get_value_wrap(hw, gpio, PINCTRL_PIN_REG_MODE)
-+
-+/* MTK HW use 0 as input, 1 for output
-+ * This interface is for get direct register value,
-+ * so don't reverse
-+ */
-+#define mtk_pctrl_get_direction(hw, gpio)		\
-+	mtk_hw_get_value_wrap(hw, gpio, PINCTRL_PIN_REG_DIR)
-+
-+#define mtk_pctrl_get_out(hw, gpio)			\
-+	mtk_hw_get_value_wrap(hw, gpio, PINCTRL_PIN_REG_DO)
-+
-+#define mtk_pctrl_get_in(hw, gpio)			\
-+	mtk_hw_get_value_wrap(hw, gpio, PINCTRL_PIN_REG_DI)
-+
-+#define mtk_pctrl_get_smt(hw, gpio)			\
-+	mtk_hw_get_value_wrap(hw, gpio, PINCTRL_PIN_REG_SMT)
-+
-+#define mtk_pctrl_get_ies(hw, gpio)			\
-+	mtk_hw_get_value_wrap(hw, gpio, PINCTRL_PIN_REG_IES)
-+
-+#define mtk_pctrl_get_driving(hw, gpio)			\
-+	mtk_hw_get_value_wrap(hw, gpio, PINCTRL_PIN_REG_DRV)
-+
-+ssize_t mtk_pctrl_show_one_pin(struct mtk_pinctrl *hw,
-+	unsigned int gpio, char *buf, unsigned int bufLen);
-+
- extern const struct dev_pm_ops mtk_paris_pinctrl_pm_ops;
- 
- #endif /* __PINCTRL_PARIS_H */
--- 
-1.8.1.1.dirty
+Thanks for your efforts on this, but currently i don't have a setup to
+test this :-(
 
