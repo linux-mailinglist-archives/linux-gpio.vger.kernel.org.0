@@ -2,108 +2,203 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 7F9FB8D196
-	for <lists+linux-gpio@lfdr.de>; Wed, 14 Aug 2019 12:55:06 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DB9F38D1A9
+	for <lists+linux-gpio@lfdr.de>; Wed, 14 Aug 2019 13:01:32 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727750AbfHNKyn (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 14 Aug 2019 06:54:43 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:34215 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727721AbfHNKyn (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 14 Aug 2019 06:54:43 -0400
-Received: by mail-wm1-f68.google.com with SMTP id e8so3056406wme.1
-        for <linux-gpio@vger.kernel.org>; Wed, 14 Aug 2019 03:54:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=tT1WBkErjAogTXzuIr64b4Ipw6zSwCNCCPdgxI3cPic=;
-        b=SdT02fPizF4VsboyubypNXDpHVLnbdZbIsuPH+ovAlV5oBYyfxf+IqaHkW/lXVSOgg
-         kwC+GscgHbhE+BM34hlIzT1cHQV6ngH7tNC6TG6DmwZgNBLe2MCZ3Jmg07GXmPHYOjbr
-         k8NQN/NtlfNnCZyMXOYOJxsiWf1JmP53Mq5BITPOgRDzYyO3Cs8pF9uq2ZIMQNO8QJF9
-         o884eKSq00ZGTYrgQWUjcD9Rs6p7yHWWqjEpnGMmjiHchQLPx/2yM62XgRZYSEQ7tqg2
-         rDfQ/uBtjTxdZcZUQXerWQzzjolGQb0sTjZZnUuqFYftQRe7QZM7gpY1vADKoRV3FXTd
-         puUw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=tT1WBkErjAogTXzuIr64b4Ipw6zSwCNCCPdgxI3cPic=;
-        b=FHKS6jZ0s9ypbwUEOSEMDDXiCCz/tiaAejxuLZBT4Z2jl3xHDLKvobS4c4vGVEH3ea
-         ia/Z6NzJbNWlZ7oF/lXqF5ERyg0RAhpldahXXn5AKL7Y+/F7AM+LFC4cm5R+iitErevw
-         JnoHgpwp/YkDfXbeG6DGMp5gvH0v7ymYXTP+FI62/TRmwEi15Zug2Qtci2qQmcZfeZIC
-         JJI6VJDuTlEEEUOGmsLXaTQOFzgz0TZA3ThJR2ncw/iyNg8PcsJeHv5XSG5Vf6Rg2KYQ
-         meS635inhYm34/StpKuJ8Y20Vp1u6xqR9/5lnpvJE16FnjH1uC3P1cf8ELPZGboi9da6
-         rL7g==
-X-Gm-Message-State: APjAAAX6JY7+lmJUhYIMp7BYZN4kgHgUseoZRGvzPd+IA/ODUhrTczFK
-        uYCjujtH18nevijC0cy/IbRH1w==
-X-Google-Smtp-Source: APXvYqyKLin58q1G/qvQ8vEt+Ct9hq4RH5l/rpi6T0U8tdIutWirP+pgkhY/ww5FQqvj81PeYCpPOA==
-X-Received: by 2002:a1c:a8c9:: with SMTP id r192mr8019337wme.43.1565780080798;
-        Wed, 14 Aug 2019 03:54:40 -0700 (PDT)
-Received: from dell ([2.27.35.255])
-        by smtp.gmail.com with ESMTPSA id e9sm2998336wrm.43.2019.08.14.03.54.38
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 14 Aug 2019 03:54:39 -0700 (PDT)
-Date:   Wed, 14 Aug 2019 11:54:37 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Andrew Jeffery <andrew@aj.id.au>,
-        linux-aspeed <linux-aspeed@lists.ozlabs.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Joel Stanley <joel@jms.id.au>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
-Subject: Re: [PATCH 3/3] dt-bindings: aspeed: Remove mention of deprecated
- compatibles
-Message-ID: <20190814105437.GE26727@dell>
-References: <20190724081313.12934-1-andrew@aj.id.au>
- <20190724081313.12934-4-andrew@aj.id.au>
- <CACRpkdZCJWeZO6CFvkq4uhnX+o_q_AfkDZ=a2kmUgbS3JtDqfA@mail.gmail.com>
- <20190812101504.GF26727@dell>
- <CACRpkdapA_-yp4ihY3S+CHMmDMKU2b0u=sj2UhJ-cvv39Dji_g@mail.gmail.com>
+        id S1726383AbfHNLBc (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 14 Aug 2019 07:01:32 -0400
+Received: from mga14.intel.com ([192.55.52.115]:3316 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726263AbfHNLBb (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Wed, 14 Aug 2019 07:01:31 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 14 Aug 2019 04:01:31 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,385,1559545200"; 
+   d="scan'208";a="376693151"
+Received: from rfried-mobl1.iil.intel.com ([143.185.152.137])
+  by fmsmga006.fm.intel.com with ESMTP; 14 Aug 2019 04:01:29 -0700
+From:   Ramon Fried <ramon.fried@linux.intel.com>
+To:     linus.walleij@linaro.org, bgolaszewski@baylibre.com,
+        stefan.wahren@i2se.com
+Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v3] gpiolib: Take MUX usage into account
+Date:   Wed, 14 Aug 2019 14:00:35 +0300
+Message-Id: <20190814110035.13451-1-ramon.fried@linux.intel.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CACRpkdapA_-yp4ihY3S+CHMmDMKU2b0u=sj2UhJ-cvv39Dji_g@mail.gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, 14 Aug 2019, Linus Walleij wrote:
+From: Stefan Wahren <stefan.wahren@i2se.com>
 
-> On Mon, Aug 12, 2019 at 12:15 PM Lee Jones <lee.jones@linaro.org> wrote:
-> > On Mon, 05 Aug 2019, Linus Walleij wrote:
-> >
-> > > On Wed, Jul 24, 2019 at 10:13 AM Andrew Jeffery <andrew@aj.id.au> wrote:
-> > >
-> > > > Guide readers away from using the aspeed,g[45].* compatible patterns.
-> > > >
-> > > > Signed-off-by: Andrew Jeffery <andrew@aj.id.au>
-> > >
-> > > Patch applied to the pinctrl tree.
-> >
-> > With my Ack?
-> 
-> Sorry no. :( Was I too trigger-happy?
-> 
-> Usually I take Rob's ACK as authoritative for anything under
-> Documentation/devicetree but if you have concerns about the
-> patch from an MFD point of view I will revert it pending further
-> discussion.
+The user space like gpioinfo only see the GPIO usage but not the
+MUX usage (e.g. I2C or SPI usage) of a pin. As a user we want to know which
+pin is free/safe to use. So take the MUX usage of strict pinmux controllers
+into account to get a more realistic view for ioctl GPIO_GET_LINEINFO_IOCTL.
 
-No need.  I would have Acked it.
+Signed-off-by: Stefan Wahren <stefan.wahren@i2se.com>
+Tested-by: Ramon Fried <rfried.dev@gmail.com>
+Signed-off-by: Ramon Fried <rfried.dev@gmail.com>
+---
+v3:
+* Remove the debug message and replace with comment in code.
+v2: Address review from linus:
+* ** Please notive logic was reversed **
+* renamed pinctrl_gpio_is_in_use() to pinctrl_gpio_can_use_line()
+* renamed pinmux_is_in_use() to pinmux_can_be_used_for_gpio()
+* changed dev_err to dev_dbg (Linus suggested removing it altogether, I
+  find it better to keep it for debug).
+ drivers/gpio/gpiolib.c           |  3 ++-
+ drivers/pinctrl/core.c           | 28 ++++++++++++++++++++++++++++
+ drivers/pinctrl/pinmux.c         | 24 ++++++++++++++++++++++++
+ drivers/pinctrl/pinmux.h         |  8 ++++++++
+ include/linux/pinctrl/consumer.h |  6 ++++++
+ 5 files changed, 68 insertions(+), 1 deletion(-)
 
+diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
+index f497003f119c..52937bf8e514 100644
+--- a/drivers/gpio/gpiolib.c
++++ b/drivers/gpio/gpiolib.c
+@@ -1084,7 +1084,8 @@ static long gpio_ioctl(struct file *filp, unsigned int cmd, unsigned long arg)
+ 		    test_bit(FLAG_IS_HOGGED, &desc->flags) ||
+ 		    test_bit(FLAG_USED_AS_IRQ, &desc->flags) ||
+ 		    test_bit(FLAG_EXPORT, &desc->flags) ||
+-		    test_bit(FLAG_SYSFS, &desc->flags))
++		    test_bit(FLAG_SYSFS, &desc->flags) ||
++		    !pinctrl_gpio_can_use_line(chip->base + lineinfo.line_offset))
+ 			lineinfo.flags |= GPIOLINE_FLAG_KERNEL;
+ 		if (test_bit(FLAG_IS_OUT, &desc->flags))
+ 			lineinfo.flags |= GPIOLINE_FLAG_IS_OUT;
+diff --git a/drivers/pinctrl/core.c b/drivers/pinctrl/core.c
+index b70df27874d1..2bbd8ee93507 100644
+--- a/drivers/pinctrl/core.c
++++ b/drivers/pinctrl/core.c
+@@ -736,6 +736,34 @@ int pinctrl_get_group_selector(struct pinctrl_dev *pctldev,
+ 	return -EINVAL;
+ }
+ 
++bool pinctrl_gpio_can_use_line(unsigned gpio)
++{
++	struct pinctrl_dev *pctldev;
++	struct pinctrl_gpio_range *range;
++	bool result;
++	int pin;
++
++	/*
++	 * Try to obtain GPIO range, if it fails
++	 * we're probably dealing with GPIO driver
++	 * without a backing pin controller - bail out.
++	 */
++	if (pinctrl_get_device_gpio_range(gpio, &pctldev, &range))
++		return true;
++
++	mutex_lock(&pctldev->mutex);
++
++	/* Convert to the pin controllers number space */
++	pin = gpio_to_pin(range, gpio);
++
++	result = pinmux_can_be_used_for_gpio(pctldev, pin);
++
++	mutex_unlock(&pctldev->mutex);
++
++	return result;
++}
++EXPORT_SYMBOL_GPL(pinctrl_gpio_can_use_line);
++
+ /**
+  * pinctrl_gpio_request() - request a single pin to be used as GPIO
+  * @gpio: the GPIO pin number from the GPIO subsystem number space
+diff --git a/drivers/pinctrl/pinmux.c b/drivers/pinctrl/pinmux.c
+index 020e54f843f9..e914f6efd39e 100644
+--- a/drivers/pinctrl/pinmux.c
++++ b/drivers/pinctrl/pinmux.c
+@@ -70,6 +70,30 @@ int pinmux_validate_map(const struct pinctrl_map *map, int i)
+ 	return 0;
+ }
+ 
++/**
++ * pinmux_can_be_used_for_gpio() - check if a specific pin
++ *	is either muxed to a different function or used as gpio.
++ *
++ * @pin: the pin number in the global pin space
++ *
++ * Controllers not defined as strict will always return true,
++ * menaning that the gpio can be used.
++ */
++bool pinmux_can_be_used_for_gpio(struct pinctrl_dev *pctldev, unsigned pin)
++{
++	struct pin_desc *desc = pin_desc_get(pctldev, pin);
++	const struct pinmux_ops *ops = pctldev->desc->pmxops;
++
++	/* Can't inspect pin, assume it can be used */
++	if (!desc)
++		return true;
++
++	if (ops->strict && desc->mux_usecount)
++		return false;
++
++	return !(ops->strict && !!desc->gpio_owner);
++}
++
+ /**
+  * pin_request() - request a single pin to be muxed in, typically for GPIO
+  * @pin: the pin number in the global pin space
+diff --git a/drivers/pinctrl/pinmux.h b/drivers/pinctrl/pinmux.h
+index 794cb3a003ff..78c3a31be882 100644
+--- a/drivers/pinctrl/pinmux.h
++++ b/drivers/pinctrl/pinmux.h
+@@ -15,6 +15,8 @@ int pinmux_check_ops(struct pinctrl_dev *pctldev);
+ 
+ int pinmux_validate_map(const struct pinctrl_map *map, int i);
+ 
++bool pinmux_can_be_used_for_gpio(struct pinctrl_dev *pctldev, unsigned pin);
++
+ int pinmux_request_gpio(struct pinctrl_dev *pctldev,
+ 			struct pinctrl_gpio_range *range,
+ 			unsigned pin, unsigned gpio);
+@@ -42,6 +44,12 @@ static inline int pinmux_validate_map(const struct pinctrl_map *map, int i)
+ 	return 0;
+ }
+ 
++static inline bool pinmux_can_be_used_for_gpio(struct pinctrl_dev *pctldev,
++					       unsigned pin)
++{
++	return true;
++}
++
+ static inline int pinmux_request_gpio(struct pinctrl_dev *pctldev,
+ 			struct pinctrl_gpio_range *range,
+ 			unsigned pin, unsigned gpio)
+diff --git a/include/linux/pinctrl/consumer.h b/include/linux/pinctrl/consumer.h
+index 86720a5a384f..7f8c7d9583d3 100644
+--- a/include/linux/pinctrl/consumer.h
++++ b/include/linux/pinctrl/consumer.h
+@@ -24,6 +24,7 @@ struct device;
+ #ifdef CONFIG_PINCTRL
+ 
+ /* External interface to pin control */
++extern bool pinctrl_gpio_can_use_line(unsigned gpio);
+ extern int pinctrl_gpio_request(unsigned gpio);
+ extern void pinctrl_gpio_free(unsigned gpio);
+ extern int pinctrl_gpio_direction_input(unsigned gpio);
+@@ -61,6 +62,11 @@ static inline int pinctrl_pm_select_idle_state(struct device *dev)
+ 
+ #else /* !CONFIG_PINCTRL */
+ 
++static inline bool pinctrl_gpio_can_use_line(unsigned gpio)
++{
++	return true;
++}
++
+ static inline int pinctrl_gpio_request(unsigned gpio)
+ {
+ 	return 0;
 -- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+2.20.1
+
