@@ -2,185 +2,83 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 0F0D28D0AE
-	for <lists+linux-gpio@lfdr.de>; Wed, 14 Aug 2019 12:24:51 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E6D188D14A
+	for <lists+linux-gpio@lfdr.de>; Wed, 14 Aug 2019 12:50:11 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725955AbfHNKYu (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 14 Aug 2019 06:24:50 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:39528 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725828AbfHNKYu (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 14 Aug 2019 06:24:50 -0400
-Received: by mail-wr1-f66.google.com with SMTP id t16so20453428wra.6
-        for <linux-gpio@vger.kernel.org>; Wed, 14 Aug 2019 03:24:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernelci-org.20150623.gappssmtp.com; s=20150623;
-        h=message-id:date:mime-version:content-transfer-encoding:subject:to
-         :from;
-        bh=vXJxY5UH8tLvfb43FfCBW+Z+Cpl/0UGF3BDOSEIgVIk=;
-        b=m2rlIIW/wpMCOrIc8r8CLMogHIaviyQKhHyznGVU8jjsH18NCLrzg+KstaKPt2gQXc
-         iV8V/NpIh9Wy42jbdWXJtrY6rQKnQOPjPEbOAh1zA/GTumod0Cq/oqs9664KqSYKC11j
-         1ZI2qRozZwLEuPdhWV0rVUhCgTz+mkE86BuQty1Tjn2ggJwaBYwXOuLDdPlz1CXUpJhm
-         0Sm4HMAdwfacSx1JuOi0aR0jj9RaVUz0m7q+xND6UAG112dvBLdDbMw0zB6Q2rPROutY
-         urFXKYj5NYy63QvDCyWMFEIIwUMU6pKp5J6XJvobuiCNkWr9cZZaTbxyiXkoXYLqe0aI
-         bRAQ==
+        id S1727111AbfHNKso (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 14 Aug 2019 06:48:44 -0400
+Received: from mail-qk1-f194.google.com ([209.85.222.194]:44110 "EHLO
+        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726126AbfHNKso (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 14 Aug 2019 06:48:44 -0400
+Received: by mail-qk1-f194.google.com with SMTP id d79so82010405qke.11;
+        Wed, 14 Aug 2019 03:48:43 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:date:mime-version
-         :content-transfer-encoding:subject:to:from;
-        bh=vXJxY5UH8tLvfb43FfCBW+Z+Cpl/0UGF3BDOSEIgVIk=;
-        b=SSn55aKIIbaTk2HEfAboupUXNLuEvkMnWKGEu5f41TOWLUqjnpMz52pGeXkenC94Nu
-         r8+lYJzGU2wKXRD8zhw388It9uF5/9XE82ddeppBzkLfr8TNFbuqei6PZEmS2xwQre5x
-         sNjMXGhU30emajXuezpJHR1SWcYHflw2wDOmyIdY3sAUUUHp8mVDyST1+guUPAQrkMGO
-         5yMFxXxCMh7x1Yd7Oo4YxPH+Sf80fpx8BS/Sd7j2WH9/v+VZEfpe4eRylF12cKnhaDjX
-         Xa13dRyriW42vwPv9DJG3pikF+vNcfrh3xqja+STToK/rCAgYoLeF7ADSYFJaEM0ZI9s
-         JAng==
-X-Gm-Message-State: APjAAAXBSqIyAB082/K4ftjXfftxtKlxU/r6VZxjgWpKFLSgJxqDV35R
-        4pEEUQr3Gwwc4IZKEslhqto+wHLQCvrIug==
-X-Google-Smtp-Source: APXvYqwr5rHh4aWtWal5Km9kc3sTweRAOeGwpVEoSn0idOy3YsG64Fbta9C2+D81PRlm7v8uRXm89w==
-X-Received: by 2002:a5d:6408:: with SMTP id z8mr50950312wru.246.1565778286957;
-        Wed, 14 Aug 2019 03:24:46 -0700 (PDT)
-Received: from [148.251.42.114] ([2a01:4f8:201:9271::2])
-        by smtp.gmail.com with ESMTPSA id e9sm2375167wrt.69.2019.08.14.03.24.45
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 14 Aug 2019 03:24:46 -0700 (PDT)
-Message-ID: <5d53e16e.1c69fb81.74cda.c248@mx.google.com>
-Date:   Wed, 14 Aug 2019 03:24:46 -0700 (PDT)
-Content-Type: text/plain; charset="utf-8"
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=6Pd2kynJ3XCWkX4RKcVEYfgPLi/9H/DDd0NVl7yQPeo=;
+        b=b3WfU4JrlERMYKiLFbBextRd7Yf69VVTW6nuiE21/6RvqXYKge8poIU+J8JMwdJiZH
+         pzUPX8ALt7pm0DOucJNDLl4QMghRb0/j4O8FtrWS3vNMctxx9I3OZCkpQNEohrg1WS1h
+         5TdReU4oZMhBV92RSRM7DwElUHfP/dQPL/ajWUMIogpyCMeyIJNrII8cLsiX1j9gdbsS
+         4VVkGJfwKfCCm1Ggi1kI7IlP4Kkldzk+U/h+Gfh7Jm8galthdPkquR1oLPw9QjOZ2BqT
+         Ryrw6u3uIbgPhV+CElyw08M/Isw7bGI8rznYdLlN1j4GVsWmQe3F+8qcUlc7PQzC418l
+         3WMA==
+X-Gm-Message-State: APjAAAWq0ebSqKDmFCdj0GJN40JJAkqmONMUNQzD76dwn0L5TEHp5zU8
+        5sGJLDfPaXhRDLe6ZF6tKMKV6zwixU7SEbSfFDs=
+X-Google-Smtp-Source: APXvYqzJchKTdX84186eS/GRemJU2ycIuCn2KmHcwgWMevAGnRcm51YC1Y0PGo9zYEARmcpYhVr0785iqWnXPMYbu7s=
+X-Received: by 2002:a37:4ac3:: with SMTP id x186mr36177300qka.138.1565779720761;
+ Wed, 14 Aug 2019 03:48:40 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-Kernelci-Kernel: v5.3-rc1-25-g470219c619e9
-X-Kernelci-Tree: linusw
-X-Kernelci-Report-Type: build
-X-Kernelci-Branch: devel
-Subject: linusw/devel build: 6 builds: 0 failed, 6 passed,
- 13 warnings (v5.3-rc1-25-g470219c619e9)
-To:     linux-gpio@vger.kernel.org, fellows@kernelci.org
-From:   "kernelci.org bot" <bot@kernelci.org>
+References: <20190809162956.488941-1-arnd@arndb.de> <20190809163334.489360-1-arnd@arndb.de>
+ <CAA9_cmdDbBm0ookyqGJMcyLVFHkYHuR3mEeawQKS2UqYJoWWaQ@mail.gmail.com>
+ <20190812094456.GI10598@jirafa.cyrius.com> <CACRpkdao8LF8g5qi_h+9BT9cHwmB4OadabkdGfP0sEFeLbmiLw@mail.gmail.com>
+In-Reply-To: <CACRpkdao8LF8g5qi_h+9BT9cHwmB4OadabkdGfP0sEFeLbmiLw@mail.gmail.com>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Wed, 14 Aug 2019 12:48:23 +0200
+Message-ID: <CAK8P3a3Jtc-hgP+st=oDUF2hWkLK7CCM461YSA2ks3dqcv-W7g@mail.gmail.com>
+Subject: Re: [PATCH 1/7] [RFC] ARM: remove Intel iop33x and iop13xx support
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     Martin Michlmayr <tbm@cyrius.com>,
+        Dan Williams <dan.j.williams@intel.com>, soc@kernel.org,
+        Russell King <linux@armlinux.org.uk>,
+        Vinod Koul <vkoul@kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        dmaengine@vger.kernel.org,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        linux-i2c <linux-i2c@vger.kernel.org>,
+        Peter Teichmann <lists@peter-teichmann.de>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-linusw/devel build: 6 builds: 0 failed, 6 passed, 13 warnings (v5.3-rc1-25-=
-g470219c619e9)
+On Wed, Aug 14, 2019 at 10:36 AM Linus Walleij <linus.walleij@linaro.org> wrote:
+>
+> On Mon, Aug 12, 2019 at 11:45 AM Martin Michlmayr <tbm@cyrius.com> wrote:
+>
+> > As Arnd points out, Debian used to have support for various iop32x
+> > devices.  While Debian hasn't supported iop32x in a number of years,
+> > these devices are still usable and in use (RMK being a prime example).
+>
+> I suppose it could be a good idea to add support for iop32x to
+> OpenWrt and/or OpenEmbedded, both of which support some
+> pretty constrained systems. I am personally using these
+> distributions to support elder ARM hardware these days.
 
-Full Build Summary: https://kernelci.org/build/linusw/branch/devel/kernel/v=
-5.3-rc1-25-g470219c619e9/
+OpenWRT also had support in the past and dropped it around the
+same time as Debian. The way I understand it, a couple of platforms
+including iop32x were moved out of the main openwrt source tree
+into https://github.com/openwrt/targets/ because there was little
+interest in keeping them running.
 
-Tree: linusw
-Branch: devel
-Git Describe: v5.3-rc1-25-g470219c619e9
-Git Commit: 470219c619e9f76e41497b9a90f2ec61dbedf3f2
-Git URL: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-gpio.=
-git/
-Built: 6 unique architectures
+The idea was that any remaining users could add that feed to get
+minimal support, but I'm not sure if would still work. In particular,
+iop33x appears to be based on linux-3.3 plus three patches that
+are no longer needed in mainline. Building a mainline kernel without
+those patches may or may not work.
 
-Warnings Detected:
-
-arc:
-    nsim_hs_defconfig (gcc-8): 2 warnings
-
-arm64:
-
-arm:
-    multi_v7_defconfig (gcc-8): 6 warnings
-
-mips:
-    32r2el_defconfig (gcc-8): 3 warnings
-
-riscv:
-    defconfig (gcc-8): 2 warnings
-
-x86_64:
-
-
-Warnings summary:
-
-    7    <stdin>:1511:2: warning: #warning syscall clone3 not implemented [=
--Wcpp]
-    1    arch/arm/boot/dts/bcm47094-linksys-panamera.dts:129.4-18: Warning =
-(reg_format): /mdio-bus-mux/mdio@200:reg: property has invalid length (4 by=
-tes) (#address-cells =3D=3D 2, #size-cells =3D=3D 1)
-    1    arch/arm/boot/dts/bcm47094-linksys-panamera.dts:128.22-132.5: Warn=
-ing (avoid_default_addr_size): /mdio-bus-mux/mdio@200: Relying on default #=
-size-cells value
-    1    arch/arm/boot/dts/bcm47094-linksys-panamera.dts:128.22-132.5: Warn=
-ing (avoid_default_addr_size): /mdio-bus-mux/mdio@200: Relying on default #=
-address-cells value
-    1    arch/arm/boot/dts/bcm47094-linksys-panamera.dtb: Warning (spi_bus_=
-reg): Failed prerequisite 'reg_format'
-    1    arch/arm/boot/dts/bcm47094-linksys-panamera.dtb: Warning (pci_devi=
-ce_bus_num): Failed prerequisite 'reg_format'
-    1    arch/arm/boot/dts/bcm47094-linksys-panamera.dtb: Warning (i2c_bus_=
-reg): Failed prerequisite 'reg_format'
-
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D
-
-Detailed per-defconfig build reports:
-
----------------------------------------------------------------------------=
------
-32r2el_defconfig (mips, gcc-8) =E2=80=94 PASS, 0 errors, 3 warnings, 0 sect=
-ion mismatches
-
-Warnings:
-    <stdin>:1511:2: warning: #warning syscall clone3 not implemented [-Wcpp]
-    <stdin>:1511:2: warning: #warning syscall clone3 not implemented [-Wcpp]
-    <stdin>:1511:2: warning: #warning syscall clone3 not implemented [-Wcpp]
-
----------------------------------------------------------------------------=
------
-defconfig (riscv, gcc-8) =E2=80=94 PASS, 0 errors, 2 warnings, 0 section mi=
-smatches
-
-Warnings:
-    <stdin>:1511:2: warning: #warning syscall clone3 not implemented [-Wcpp]
-    <stdin>:1511:2: warning: #warning syscall clone3 not implemented [-Wcpp]
-
----------------------------------------------------------------------------=
------
-defconfig (arm64, gcc-8) =E2=80=94 PASS, 0 errors, 0 warnings, 0 section mi=
-smatches
-
----------------------------------------------------------------------------=
------
-multi_v7_defconfig (arm, gcc-8) =E2=80=94 PASS, 0 errors, 6 warnings, 0 sec=
-tion mismatches
-
-Warnings:
-    arch/arm/boot/dts/bcm47094-linksys-panamera.dts:129.4-18: Warning (reg_=
-format): /mdio-bus-mux/mdio@200:reg: property has invalid length (4 bytes) =
-(#address-cells =3D=3D 2, #size-cells =3D=3D 1)
-    arch/arm/boot/dts/bcm47094-linksys-panamera.dtb: Warning (pci_device_bu=
-s_num): Failed prerequisite 'reg_format'
-    arch/arm/boot/dts/bcm47094-linksys-panamera.dtb: Warning (i2c_bus_reg):=
- Failed prerequisite 'reg_format'
-    arch/arm/boot/dts/bcm47094-linksys-panamera.dtb: Warning (spi_bus_reg):=
- Failed prerequisite 'reg_format'
-    arch/arm/boot/dts/bcm47094-linksys-panamera.dts:128.22-132.5: Warning (=
-avoid_default_addr_size): /mdio-bus-mux/mdio@200: Relying on default #addre=
-ss-cells value
-    arch/arm/boot/dts/bcm47094-linksys-panamera.dts:128.22-132.5: Warning (=
-avoid_default_addr_size): /mdio-bus-mux/mdio@200: Relying on default #size-=
-cells value
-
----------------------------------------------------------------------------=
------
-nsim_hs_defconfig (arc, gcc-8) =E2=80=94 PASS, 0 errors, 2 warnings, 0 sect=
-ion mismatches
-
-Warnings:
-    <stdin>:1511:2: warning: #warning syscall clone3 not implemented [-Wcpp]
-    <stdin>:1511:2: warning: #warning syscall clone3 not implemented [-Wcpp]
-
----------------------------------------------------------------------------=
------
-x86_64_defconfig (x86_64, gcc-8) =E2=80=94 PASS, 0 errors, 0 warnings, 0 se=
-ction mismatches
-
----
-For more info write to <info@kernelci.org>
+        Arnd
