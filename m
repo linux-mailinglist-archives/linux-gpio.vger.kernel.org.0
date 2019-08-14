@@ -2,59 +2,59 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 9A56D8D0AF
+	by mail.lfdr.de (Postfix) with ESMTP id 0F0D28D0AE
 	for <lists+linux-gpio@lfdr.de>; Wed, 14 Aug 2019 12:24:51 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725828AbfHNKYu (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        id S1725955AbfHNKYu (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
         Wed, 14 Aug 2019 06:24:50 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:40443 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725800AbfHNKYu (ORCPT
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:39528 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725828AbfHNKYu (ORCPT
         <rfc822;linux-gpio@vger.kernel.org>); Wed, 14 Aug 2019 06:24:50 -0400
-Received: by mail-wm1-f66.google.com with SMTP id v19so3968519wmj.5
+Received: by mail-wr1-f66.google.com with SMTP id t16so20453428wra.6
         for <linux-gpio@vger.kernel.org>; Wed, 14 Aug 2019 03:24:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=kernelci-org.20150623.gappssmtp.com; s=20150623;
         h=message-id:date:mime-version:content-transfer-encoding:subject:to
          :from;
-        bh=346Ng/S/4lFpbfVLTj3u5Gm25Xs/m+XQrXS+7jdAHT0=;
-        b=1UaJUPGgLitZJuwwBcNzR3YEp6u7PnEyJvygxW0xirsQ34Ee/gNSlhCjvK2LIBLkrS
-         5hJjHfKqPPBLr/p33nkYFg3fn0vWY7YscKi5siIXWaxWdlfNYRVvCIBw7qJ5kdNe+r6m
-         OR2UMK5ZtQR3iktnajDyoue5ykXuvR+A2sjX/ifb4OBi5UuT89q7nxAfVrpoGHWW3g5R
-         9YeVh/pyEOOC8rSCkfl+RnR24OyF/TrSp0g+X4/lcmRKX3ThJUkWg//6PNvZu22BbG3n
-         yn/0THT5rpsPYMELNeI+5kTwm9z6VqMEAXK5JAMKrft/pJxT5rqtBjqpbkZFRxAQXwCr
-         RTig==
+        bh=vXJxY5UH8tLvfb43FfCBW+Z+Cpl/0UGF3BDOSEIgVIk=;
+        b=m2rlIIW/wpMCOrIc8r8CLMogHIaviyQKhHyznGVU8jjsH18NCLrzg+KstaKPt2gQXc
+         iV8V/NpIh9Wy42jbdWXJtrY6rQKnQOPjPEbOAh1zA/GTumod0Cq/oqs9664KqSYKC11j
+         1ZI2qRozZwLEuPdhWV0rVUhCgTz+mkE86BuQty1Tjn2ggJwaBYwXOuLDdPlz1CXUpJhm
+         0Sm4HMAdwfacSx1JuOi0aR0jj9RaVUz0m7q+xND6UAG112dvBLdDbMw0zB6Q2rPROutY
+         urFXKYj5NYy63QvDCyWMFEIIwUMU6pKp5J6XJvobuiCNkWr9cZZaTbxyiXkoXYLqe0aI
+         bRAQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:message-id:date:mime-version
          :content-transfer-encoding:subject:to:from;
-        bh=346Ng/S/4lFpbfVLTj3u5Gm25Xs/m+XQrXS+7jdAHT0=;
-        b=pHbsXzQiJKOXva+J9nCRw6h3xXCOUOpWWBi9Il4CCeUTb+npKvQ13P4tCJw43to8Xj
-         S3KxGYITDdbe3+QvuK86GqnB88bYvnCzXcQz0kVKnzOH4YWoE/w6psTKpidVJMMbRQgF
-         /J1k9nidvdZCNTTOro+pQtnbPLb5DRPV3dW9wQIAfx58lzAaBleeAdyPDxmpXVOFD78B
-         IDBFF3vr0AWzS3M1mkcHaHytK/ls6b5OAUw3+WeepZZ/UwKo2PeRyHOIwqyeqDSPaY22
-         ZSU37FXASzjtsxb0D06uXw5GtF7QicO2vvsCtEhkhNXWhdYsY0Sq7Y/jWWsrnVhnhgFE
-         9j5w==
-X-Gm-Message-State: APjAAAVW03gzRXv/UeGE35TysTFgNiXaOAsGP+LSTVQqrQ/Xg5dOi57k
-        /xhDT2cw7HSRCVA8Lwv/gVg2C6dQpGWY0w==
-X-Google-Smtp-Source: APXvYqxFrtSe7dZR4MeLR6sQw7BWZz6I+B3WlRqxB4RWDxT48fx+MYVFpMSsJvL+Sb0HkfHw8XZCFA==
-X-Received: by 2002:a1c:2d4:: with SMTP id 203mr7718980wmc.105.1565778286598;
+        bh=vXJxY5UH8tLvfb43FfCBW+Z+Cpl/0UGF3BDOSEIgVIk=;
+        b=SSn55aKIIbaTk2HEfAboupUXNLuEvkMnWKGEu5f41TOWLUqjnpMz52pGeXkenC94Nu
+         r8+lYJzGU2wKXRD8zhw388It9uF5/9XE82ddeppBzkLfr8TNFbuqei6PZEmS2xwQre5x
+         sNjMXGhU30emajXuezpJHR1SWcYHflw2wDOmyIdY3sAUUUHp8mVDyST1+guUPAQrkMGO
+         5yMFxXxCMh7x1Yd7Oo4YxPH+Sf80fpx8BS/Sd7j2WH9/v+VZEfpe4eRylF12cKnhaDjX
+         Xa13dRyriW42vwPv9DJG3pikF+vNcfrh3xqja+STToK/rCAgYoLeF7ADSYFJaEM0ZI9s
+         JAng==
+X-Gm-Message-State: APjAAAXBSqIyAB082/K4ftjXfftxtKlxU/r6VZxjgWpKFLSgJxqDV35R
+        4pEEUQr3Gwwc4IZKEslhqto+wHLQCvrIug==
+X-Google-Smtp-Source: APXvYqwr5rHh4aWtWal5Km9kc3sTweRAOeGwpVEoSn0idOy3YsG64Fbta9C2+D81PRlm7v8uRXm89w==
+X-Received: by 2002:a5d:6408:: with SMTP id z8mr50950312wru.246.1565778286957;
         Wed, 14 Aug 2019 03:24:46 -0700 (PDT)
 Received: from [148.251.42.114] ([2a01:4f8:201:9271::2])
-        by smtp.gmail.com with ESMTPSA id w14sm9614337wrl.21.2019.08.14.03.24.45
+        by smtp.gmail.com with ESMTPSA id e9sm2375167wrt.69.2019.08.14.03.24.45
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
         Wed, 14 Aug 2019 03:24:46 -0700 (PDT)
-Message-ID: <5d53e16e.1c69fb81.7800b.1901@mx.google.com>
+Message-ID: <5d53e16e.1c69fb81.74cda.c248@mx.google.com>
 Date:   Wed, 14 Aug 2019 03:24:46 -0700 (PDT)
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
-X-Kernelci-Kernel: v5.3-rc4-2-g68e03b85474a
+X-Kernelci-Kernel: v5.3-rc1-25-g470219c619e9
 X-Kernelci-Tree: linusw
 X-Kernelci-Report-Type: build
-X-Kernelci-Branch: fixes
-Subject: linusw/fixes build: 6 builds: 0 failed, 6 passed,
- 34 warnings (v5.3-rc4-2-g68e03b85474a)
+X-Kernelci-Branch: devel
+Subject: linusw/devel build: 6 builds: 0 failed, 6 passed,
+ 13 warnings (v5.3-rc1-25-g470219c619e9)
 To:     linux-gpio@vger.kernel.org, fellows@kernelci.org
 From:   "kernelci.org bot" <bot@kernelci.org>
 Sender: linux-gpio-owner@vger.kernel.org
@@ -62,16 +62,16 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-linusw/fixes build: 6 builds: 0 failed, 6 passed, 34 warnings (v5.3-rc4-2-g=
-68e03b85474a)
+linusw/devel build: 6 builds: 0 failed, 6 passed, 13 warnings (v5.3-rc1-25-=
+g470219c619e9)
 
-Full Build Summary: https://kernelci.org/build/linusw/branch/fixes/kernel/v=
-5.3-rc4-2-g68e03b85474a/
+Full Build Summary: https://kernelci.org/build/linusw/branch/devel/kernel/v=
+5.3-rc1-25-g470219c619e9/
 
 Tree: linusw
-Branch: fixes
-Git Describe: v5.3-rc4-2-g68e03b85474a
-Git Commit: 68e03b85474a51ec1921b4d13204782594ef7223
+Branch: devel
+Git Describe: v5.3-rc1-25-g470219c619e9
+Git Commit: 470219c619e9f76e41497b9a90f2ec61dbedf3f2
 Git URL: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-gpio.=
 git/
 Built: 6 unique architectures
@@ -79,76 +79,41 @@ Built: 6 unique architectures
 Warnings Detected:
 
 arc:
-    nsim_hs_defconfig (gcc-8): 5 warnings
+    nsim_hs_defconfig (gcc-8): 2 warnings
 
 arm64:
-    defconfig (gcc-8): 5 warnings
 
 arm:
-    multi_v7_defconfig (gcc-8): 21 warnings
+    multi_v7_defconfig (gcc-8): 6 warnings
 
 mips:
     32r2el_defconfig (gcc-8): 3 warnings
 
 riscv:
+    defconfig (gcc-8): 2 warnings
 
 x86_64:
 
 
 Warnings summary:
 
-    5    <stdin>:1511:2: warning: #warning syscall clone3 not implemented [=
+    7    <stdin>:1511:2: warning: #warning syscall clone3 not implemented [=
 -Wcpp]
-    2    drivers/pinctrl/qcom/pinctrl-spmi-gpio.c:820:20: warning: this sta=
-tement may fall through [-Wimplicit-fallthrough=3D]
-    2    drivers/pinctrl/qcom/pinctrl-spmi-gpio.c:815:20: warning: this sta=
-tement may fall through [-Wimplicit-fallthrough=3D]
-    2    drivers/pinctrl/pinctrl-rockchip.c:2783:3: warning: this statement=
- may fall through [-Wimplicit-fallthrough=3D]
-    2    drivers/gpu/drm/sun4i/sun4i_tcon.c:316:7: warning: this statement =
-may fall through [-Wimplicit-fallthrough=3D]
-    1    include/linux/compiler.h:328:5: warning: this statement may fall t=
-hrough [-Wimplicit-fallthrough=3D]
-    1    drivers/video/fbdev/sh_mobile_lcdcfb.c:2086:22: warning: this stat=
-ement may fall through [-Wimplicit-fallthrough=3D]
-    1    drivers/video/fbdev/sh_mobile_lcdcfb.c:1596:22: warning: this stat=
-ement may fall through [-Wimplicit-fallthrough=3D]
-    1    drivers/usb/phy/phy-ab8500-usb.c:459:9: warning: this statement ma=
-y fall through [-Wimplicit-fallthrough=3D]
-    1    drivers/usb/phy/phy-ab8500-usb.c:440:9: warning: this statement ma=
-y fall through [-Wimplicit-fallthrough=3D]
-    1    drivers/usb/phy/phy-ab8500-usb.c:424:9: warning: this statement ma=
-y fall through [-Wimplicit-fallthrough=3D]
-    1    drivers/usb/phy/phy-ab8500-usb.c:370:9: warning: this statement ma=
-y fall through [-Wimplicit-fallthrough=3D]
-    1    drivers/usb/phy/phy-ab8500-usb.c:352:9: warning: this statement ma=
-y fall through [-Wimplicit-fallthrough=3D]
-    1    drivers/usb/phy/phy-ab8500-usb.c:332:9: warning: this statement ma=
-y fall through [-Wimplicit-fallthrough=3D]
-    1    drivers/mmc/host/sdhci-s3c.c:613:19: warning: this statement may f=
-all through [-Wimplicit-fallthrough=3D]
-    1    drivers/mmc/host/atmel-mci.c:2426:40: warning: this statement may =
-fall through [-Wimplicit-fallthrough=3D]
-    1    drivers/mmc/host/atmel-mci.c:2422:28: warning: this statement may =
-fall through [-Wimplicit-fallthrough=3D]
-    1    drivers/mmc/host/atmel-mci.c:2415:30: warning: this statement may =
-fall through [-Wimplicit-fallthrough=3D]
-    1    drivers/iommu/arm-smmu-v3.c:1189:7: warning: this statement may fa=
-ll through [-Wimplicit-fallthrough=3D]
-    1    drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c:992:6: warning: this statem=
-ent may fall through [-Wimplicit-fallthrough=3D]
-    1    drivers/gpu/drm/sti/sti_hdmi.c:855:13: warning: this statement may=
- fall through [-Wimplicit-fallthrough=3D]
-    1    drivers/gpu/drm/sti/sti_hdmi.c:853:13: warning: this statement may=
- fall through [-Wimplicit-fallthrough=3D]
-    1    drivers/gpu/drm/sti/sti_hdmi.c:851:13: warning: this statement may=
- fall through [-Wimplicit-fallthrough=3D]
-    1    drivers/dma/imx-dma.c:542:6: warning: this statement may fall thro=
-ugh [-Wimplicit-fallthrough=3D]
-    1    arch/arc/kernel/unwind.c:836:20: warning: this statement may fall =
-through [-Wimplicit-fallthrough=3D]
-    1    arch/arc/kernel/unwind.c:827:20: warning: this statement may fall =
-through [-Wimplicit-fallthrough=3D]
+    1    arch/arm/boot/dts/bcm47094-linksys-panamera.dts:129.4-18: Warning =
+(reg_format): /mdio-bus-mux/mdio@200:reg: property has invalid length (4 by=
+tes) (#address-cells =3D=3D 2, #size-cells =3D=3D 1)
+    1    arch/arm/boot/dts/bcm47094-linksys-panamera.dts:128.22-132.5: Warn=
+ing (avoid_default_addr_size): /mdio-bus-mux/mdio@200: Relying on default #=
+size-cells value
+    1    arch/arm/boot/dts/bcm47094-linksys-panamera.dts:128.22-132.5: Warn=
+ing (avoid_default_addr_size): /mdio-bus-mux/mdio@200: Relying on default #=
+address-cells value
+    1    arch/arm/boot/dts/bcm47094-linksys-panamera.dtb: Warning (spi_bus_=
+reg): Failed prerequisite 'reg_format'
+    1    arch/arm/boot/dts/bcm47094-linksys-panamera.dtb: Warning (pci_devi=
+ce_bus_num): Failed prerequisite 'reg_format'
+    1    arch/arm/boot/dts/bcm47094-linksys-panamera.dtb: Warning (i2c_bus_=
+reg): Failed prerequisite 'reg_format'
 
 =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
 =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
@@ -169,88 +134,47 @@ Warnings:
 
 ---------------------------------------------------------------------------=
 -----
-defconfig (riscv, gcc-8) =E2=80=94 PASS, 0 errors, 0 warnings, 0 section mi=
+defconfig (riscv, gcc-8) =E2=80=94 PASS, 0 errors, 2 warnings, 0 section mi=
+smatches
+
+Warnings:
+    <stdin>:1511:2: warning: #warning syscall clone3 not implemented [-Wcpp]
+    <stdin>:1511:2: warning: #warning syscall clone3 not implemented [-Wcpp]
+
+---------------------------------------------------------------------------=
+-----
+defconfig (arm64, gcc-8) =E2=80=94 PASS, 0 errors, 0 warnings, 0 section mi=
 smatches
 
 ---------------------------------------------------------------------------=
 -----
-defconfig (arm64, gcc-8) =E2=80=94 PASS, 0 errors, 5 warnings, 0 section mi=
-smatches
+multi_v7_defconfig (arm, gcc-8) =E2=80=94 PASS, 0 errors, 6 warnings, 0 sec=
+tion mismatches
 
 Warnings:
-    drivers/iommu/arm-smmu-v3.c:1189:7: warning: this statement may fall th=
-rough [-Wimplicit-fallthrough=3D]
-    drivers/pinctrl/qcom/pinctrl-spmi-gpio.c:815:20: warning: this statemen=
-t may fall through [-Wimplicit-fallthrough=3D]
-    drivers/pinctrl/qcom/pinctrl-spmi-gpio.c:820:20: warning: this statemen=
-t may fall through [-Wimplicit-fallthrough=3D]
-    drivers/pinctrl/pinctrl-rockchip.c:2783:3: warning: this statement may =
-fall through [-Wimplicit-fallthrough=3D]
-    drivers/gpu/drm/sun4i/sun4i_tcon.c:316:7: warning: this statement may f=
-all through [-Wimplicit-fallthrough=3D]
+    arch/arm/boot/dts/bcm47094-linksys-panamera.dts:129.4-18: Warning (reg_=
+format): /mdio-bus-mux/mdio@200:reg: property has invalid length (4 bytes) =
+(#address-cells =3D=3D 2, #size-cells =3D=3D 1)
+    arch/arm/boot/dts/bcm47094-linksys-panamera.dtb: Warning (pci_device_bu=
+s_num): Failed prerequisite 'reg_format'
+    arch/arm/boot/dts/bcm47094-linksys-panamera.dtb: Warning (i2c_bus_reg):=
+ Failed prerequisite 'reg_format'
+    arch/arm/boot/dts/bcm47094-linksys-panamera.dtb: Warning (spi_bus_reg):=
+ Failed prerequisite 'reg_format'
+    arch/arm/boot/dts/bcm47094-linksys-panamera.dts:128.22-132.5: Warning (=
+avoid_default_addr_size): /mdio-bus-mux/mdio@200: Relying on default #addre=
+ss-cells value
+    arch/arm/boot/dts/bcm47094-linksys-panamera.dts:128.22-132.5: Warning (=
+avoid_default_addr_size): /mdio-bus-mux/mdio@200: Relying on default #size-=
+cells value
 
 ---------------------------------------------------------------------------=
 -----
-multi_v7_defconfig (arm, gcc-8) =E2=80=94 PASS, 0 errors, 21 warnings, 0 se=
-ction mismatches
-
-Warnings:
-    drivers/dma/imx-dma.c:542:6: warning: this statement may fall through [=
--Wimplicit-fallthrough=3D]
-    drivers/mmc/host/sdhci-s3c.c:613:19: warning: this statement may fall t=
-hrough [-Wimplicit-fallthrough=3D]
-    drivers/mmc/host/atmel-mci.c:2415:30: warning: this statement may fall =
-through [-Wimplicit-fallthrough=3D]
-    drivers/mmc/host/atmel-mci.c:2422:28: warning: this statement may fall =
-through [-Wimplicit-fallthrough=3D]
-    drivers/mmc/host/atmel-mci.c:2426:40: warning: this statement may fall =
-through [-Wimplicit-fallthrough=3D]
-    drivers/pinctrl/qcom/pinctrl-spmi-gpio.c:815:20: warning: this statemen=
-t may fall through [-Wimplicit-fallthrough=3D]
-    drivers/pinctrl/qcom/pinctrl-spmi-gpio.c:820:20: warning: this statemen=
-t may fall through [-Wimplicit-fallthrough=3D]
-    drivers/pinctrl/pinctrl-rockchip.c:2783:3: warning: this statement may =
-fall through [-Wimplicit-fallthrough=3D]
-    drivers/video/fbdev/sh_mobile_lcdcfb.c:2086:22: warning: this statement=
- may fall through [-Wimplicit-fallthrough=3D]
-    drivers/video/fbdev/sh_mobile_lcdcfb.c:1596:22: warning: this statement=
- may fall through [-Wimplicit-fallthrough=3D]
-    drivers/usb/phy/phy-ab8500-usb.c:424:9: warning: this statement may fal=
-l through [-Wimplicit-fallthrough=3D]
-    drivers/usb/phy/phy-ab8500-usb.c:440:9: warning: this statement may fal=
-l through [-Wimplicit-fallthrough=3D]
-    drivers/usb/phy/phy-ab8500-usb.c:459:9: warning: this statement may fal=
-l through [-Wimplicit-fallthrough=3D]
-    drivers/usb/phy/phy-ab8500-usb.c:332:9: warning: this statement may fal=
-l through [-Wimplicit-fallthrough=3D]
-    drivers/usb/phy/phy-ab8500-usb.c:352:9: warning: this statement may fal=
-l through [-Wimplicit-fallthrough=3D]
-    drivers/usb/phy/phy-ab8500-usb.c:370:9: warning: this statement may fal=
-l through [-Wimplicit-fallthrough=3D]
-    drivers/gpu/drm/sti/sti_hdmi.c:851:13: warning: this statement may fall=
- through [-Wimplicit-fallthrough=3D]
-    drivers/gpu/drm/sti/sti_hdmi.c:853:13: warning: this statement may fall=
- through [-Wimplicit-fallthrough=3D]
-    drivers/gpu/drm/sti/sti_hdmi.c:855:13: warning: this statement may fall=
- through [-Wimplicit-fallthrough=3D]
-    drivers/gpu/drm/sun4i/sun4i_tcon.c:316:7: warning: this statement may f=
-all through [-Wimplicit-fallthrough=3D]
-    drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c:992:6: warning: this statement m=
-ay fall through [-Wimplicit-fallthrough=3D]
-
----------------------------------------------------------------------------=
------
-nsim_hs_defconfig (arc, gcc-8) =E2=80=94 PASS, 0 errors, 5 warnings, 0 sect=
+nsim_hs_defconfig (arc, gcc-8) =E2=80=94 PASS, 0 errors, 2 warnings, 0 sect=
 ion mismatches
 
 Warnings:
     <stdin>:1511:2: warning: #warning syscall clone3 not implemented [-Wcpp]
-    include/linux/compiler.h:328:5: warning: this statement may fall throug=
-h [-Wimplicit-fallthrough=3D]
-    arch/arc/kernel/unwind.c:827:20: warning: this statement may fall throu=
-gh [-Wimplicit-fallthrough=3D]
-    arch/arc/kernel/unwind.c:836:20: warning: this statement may fall throu=
-gh [-Wimplicit-fallthrough=3D]
     <stdin>:1511:2: warning: #warning syscall clone3 not implemented [-Wcpp]
 
 ---------------------------------------------------------------------------=
