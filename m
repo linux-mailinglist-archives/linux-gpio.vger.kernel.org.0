@@ -2,60 +2,72 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 18D7D8D61B
-	for <lists+linux-gpio@lfdr.de>; Wed, 14 Aug 2019 16:30:34 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D8B4D8D730
+	for <lists+linux-gpio@lfdr.de>; Wed, 14 Aug 2019 17:29:25 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728064AbfHNOac (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 14 Aug 2019 10:30:32 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:44181 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728443AbfHNOa2 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 14 Aug 2019 10:30:28 -0400
-Received: by mail-wr1-f65.google.com with SMTP id p17so111285699wrf.11
-        for <linux-gpio@vger.kernel.org>; Wed, 14 Aug 2019 07:30:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:from:date:message-id:subject:to;
-        bh=WZ0WpVHO6Buieu74iO1hBYzIgDvoQnB0xKhxtCOAjYg=;
-        b=WEUpnoZyshmUqtwrRJYkXa2ldzyfK4DgvFSRP8QZSoTB4tcm9niniRidej9DH7DSPX
-         yErTaXfLdGq+QdElT73pjAyY64RKQGz/zV/GjBMMmFFqc633jezcVWC4sz5NxVjgyaXF
-         22yeBvfOH+dajDADr8mZMASEEji2QgDpqgNam1BASG8BKb6VBadvBpfwddgZ2rQxeBK4
-         ZPdZU5LpSXvbj52DRuUOo64D/c7tvpech4RMcP6QoJ8TkClhXidnc6X5+e6JFyBQB10a
-         AEoQ6900N4XeKrpaejWvYiWugDYaJ29qViHBjbe3NxTTgXxOVQwRD8l1OTcJv2aiacGK
-         l5Xw==
+        id S1726585AbfHNP3U (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 14 Aug 2019 11:29:20 -0400
+Received: from mail-qt1-f196.google.com ([209.85.160.196]:36858 "EHLO
+        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726047AbfHNP3U (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 14 Aug 2019 11:29:20 -0400
+Received: by mail-qt1-f196.google.com with SMTP id z4so110608145qtc.3;
+        Wed, 14 Aug 2019 08:29:20 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to;
-        bh=WZ0WpVHO6Buieu74iO1hBYzIgDvoQnB0xKhxtCOAjYg=;
-        b=cp3kF5xrbO1Cx4ZiMYJlbFqgW09WG+tIoQlhPU9w4I/aw/lXot4XVJCTOm5g1l7lW4
-         fj5pFGsnTdErTxZH1tWYSTH1ngTBXYASu3KWxn/Uaj9VdJQaPtjBjU0Ma7/2UVCQNREB
-         TR/IEkfGT23czWGZkJPnR8mBDE1AEx3/M6rZnH5/vDCJckcBONvNESZMs5UkXvJcecwC
-         Hu7hy46ssrsRYo0m4h/lemK5rZ5XQ9lRGaYZK/WFTYJbloZsa4LOkskpbdw6fZTWEiiy
-         utIlNV+rF9G+QuSUs/pfFeNKexWXyPE+f+XDQ0bDVCtt1MRpuCgs3uBVRlOf90f6chEx
-         PmPw==
-X-Gm-Message-State: APjAAAWCEtcDDiwwSsZ0Xp2VCwKqysJ92c2E4zOjBoslpcoQwxOxSMHY
-        Cs5fQPc+YgwG/H905PbB5EIB/rScNUuuKXAUACY=
-X-Google-Smtp-Source: APXvYqyWs1Q9Gk+9cQAxRJeWe8kjFwY4OMCoOAzEj1i0jBdOzDjVe7BdyhQxxAUX7x1JjRqLiIBdsci/jUkrUDfVz70=
-X-Received: by 2002:adf:b60c:: with SMTP id f12mr54603151wre.231.1565793026902;
- Wed, 14 Aug 2019 07:30:26 -0700 (PDT)
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=hkxXFxsppAjXcN3Fnw0Ysp3XgDoee+JKNoPUXSqHEM4=;
+        b=SipexNLQTdiqQNlEHJbGyAE3AnuyNLioPesL8ndijjGQV39XVg6qP7TDc8bmQVmGNC
+         VsTuWgPlGcQvGZon+ZRlM91lhj4JyGHOEKt1GN7/7pKuEqS2cbSRKQ0gCC4tYhe5uChJ
+         oOFQT2s7bRGdJbHlSi2lgucUQdCSMJMQze4uvWWTsqdlhoZzu1fWrLUNDLiFN790dWue
+         ywfmCBLNs6drSKoMHyZzjmbAtWXZjcHOsaucD7U8TP+MfgxqFwqYHTC5XVLA9X9AvzYX
+         FzHER/W5TthAQ6g9dFcxZsEgLlR5KnbnpKktl3S2lfEdbjbb9QvZN6QepG3IMh7m8jst
+         7Hsw==
+X-Gm-Message-State: APjAAAVSTknwJ6wDNixg65MosHJEpn0AFb3PjWANwPmW46a+qGY0+mRB
+        FqZvJssExL6JWuSGHHkpcoZJqy5s/bIYQ6Hfyhc=
+X-Google-Smtp-Source: APXvYqwLKjmuLo6RfGCS8yr97bmaozdgfj78fh2TDXsp3KO1WrajwArEwxXrcfFgURj+QRlR1VEJ90KRLcwY3cq6bcA=
+X-Received: by 2002:ac8:f99:: with SMTP id b25mr38079380qtk.142.1565796559558;
+ Wed, 14 Aug 2019 08:29:19 -0700 (PDT)
 MIME-Version: 1.0
-Received: by 2002:adf:ab19:0:0:0:0:0 with HTTP; Wed, 14 Aug 2019 07:30:26
- -0700 (PDT)
-From:   "M. Cheickna Toure" <barrtraore11@gmail.com>
-Date:   Wed, 14 Aug 2019 15:30:26 +0100
-Message-ID: <CAJabzdMqgh7O6KFN2onBFrhx_Pd-a1MsEz2sAostqnj-mu7BOw@mail.gmail.com>
-Subject: important
-To:     undisclosed-recipients:;
+References: <20190809162956.488941-1-arnd@arndb.de> <20190809163334.489360-1-arnd@arndb.de>
+ <20190809163334.489360-2-arnd@arndb.de> <20190813043324.GN12733@vkoul-mobl.Dlink>
+In-Reply-To: <20190813043324.GN12733@vkoul-mobl.Dlink>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Wed, 14 Aug 2019 17:29:03 +0200
+Message-ID: <CAK8P3a0jWunQFvt4bVn0GtqN5xwcnO2a1jO0EaqxWqw4VMGL5Q@mail.gmail.com>
+Subject: Re: [PATCH 2/7] dma: iop-adma: include prefetch.h
+To:     Vinod Koul <vkoul@kernel.org>
+Cc:     soc@kernel.org, Russell King <linux@armlinux.org.uk>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        dmaengine@vger.kernel.org,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux I2C <linux-i2c@vger.kernel.org>,
+        kbuild test robot <lkp@intel.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Dear,
-I have an important and favourable information/proposal which might
-interest you to know, let me hear from you to detail you, it's
-important
-Regards,
-M.Cheickna
-mcheicknatoure@consultant.com
+On Tue, Aug 13, 2019 at 6:34 AM Vinod Koul <vkoul@kernel.org> wrote:
+>
+> On 09-08-19, 18:33, Arnd Bergmann wrote:
+> > Compile-testing this driver fails on m68k without the
+> > extra header inclusion.
+>
+> Please change title to "dmaengine: iop-adma: include prefetch.h"
+>
+> After that:
+>
+> Acked-by: Vinod Koul <vkoul@kernel.org>
+
+Ok, thanks!
+
+One day I will remember all the subsystem prefixes. ;-)
+
+       Arnd
