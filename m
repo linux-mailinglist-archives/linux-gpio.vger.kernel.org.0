@@ -2,54 +2,55 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 643F38CE36
-	for <lists+linux-gpio@lfdr.de>; Wed, 14 Aug 2019 10:19:38 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6295E8CE3C
+	for <lists+linux-gpio@lfdr.de>; Wed, 14 Aug 2019 10:21:39 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727456AbfHNITi (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 14 Aug 2019 04:19:38 -0400
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:40514 "EHLO
+        id S1726990AbfHNIVi (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 14 Aug 2019 04:21:38 -0400
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:39575 "EHLO
         mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725816AbfHNITh (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 14 Aug 2019 04:19:37 -0400
-Received: by mail-lj1-f194.google.com with SMTP id e27so8843965ljb.7
-        for <linux-gpio@vger.kernel.org>; Wed, 14 Aug 2019 01:19:36 -0700 (PDT)
+        with ESMTP id S1725905AbfHNIVi (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 14 Aug 2019 04:21:38 -0400
+Received: by mail-lj1-f194.google.com with SMTP id x4so11861074ljj.6
+        for <linux-gpio@vger.kernel.org>; Wed, 14 Aug 2019 01:21:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=cwScbmtrmNuBR5G3wRFxtNr9QN4NohyZ8GWITq0x6hU=;
-        b=V8M9wR7C9ozDvj5x/n1qmUeH2muGhaG1wzA7Zlb4kegU5t2aFJAYOl9EzRYfyMwp9D
-         HNbTFdjH9tK9TSpgu+dHXVCBNHgXlGNvEEDdVGAPs1UCdYTf7mbbPQyCoXnDghD1KAEy
-         9zfljzusxRi6Wcp6ofoQz0VCgFM9/8s2bu1RPdrRTWqGqlM2GsfaOQ3aQkz2ouwJ96A2
-         oDd6QEFU7qdKXqwExWOQqrQY0uLl6TF+BgsoxXnWbLYVVON2faa1crApvkpo6KJJDH7M
-         +Kzd5oslcbein27xy20a+2SiBZX32CXBAiDdJnLQHQc6qgdElJXCxtHW5hvSiNu5peeT
-         g4Ng==
+        bh=2NizU6vc5EkP2sSlLY3lPz73A+RgMAkOCKcvc8aSTPk=;
+        b=a6sl5hkHU9NM8E4RM7b/VggMsrosREkVZHP89EstJFcybVhE4eeFnkqDMqQfor8JJw
+         Zb8lXzWfaBlr5AcxoHYbp2oOrB78fSknDRuEOgJENyjlDhHr+XNEliW4aEufobVJpagr
+         ePJ5qIzUnWs5GISroRGdjlcLnUKfNhjBY6zpN1RdKEUHWAB8b0qvK5QAxbNBUJOXE3tZ
+         bw3571ge1zsBuf+vfpJXJwHRr0j9P+n2bH9WVCviIIYPcSGSU4sUmGvxO+FG4oH9kCVK
+         Jo4ndsbxz6wDD+YBshWlA81v9gs+Cy1gHSbGbHHQ6ATSg0Qgby1daMDHEuiMxbfi3qsh
+         HBOQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=cwScbmtrmNuBR5G3wRFxtNr9QN4NohyZ8GWITq0x6hU=;
-        b=aZGEos4cUr9IKBALBW0QWaiqDWF3ik2kPY0/I0zU6AqkBoG9M5NQXvKJ0Pj8UnTblE
-         CnLhQNJXYSAv7jx3iovEkVxSh7uH/TReZrZHhXQW1pA1FxQrydSkxIXEKl/YAaLbLKjB
-         BykYYwWDd+6ZpDmvdiRD1uEnyfOS4SBYVSXnfGUPgaVfHVpWgaVn/BN8QYAILkEqMrfy
-         elY4LG1nYdLT8qJWARWdqMvNGQnsZ2aikviGo9dIfxQ04G5Rp0HgDWv0hj3hnxYhsmvn
-         bUSSB6F/RGZKgt/hvfG8si0TTI8QkohlTzS7M7QnMQmcpuOSle8V2j+gbXH33sZQYug+
-         gwoA==
-X-Gm-Message-State: APjAAAV6l8f0KHtaUNVJYLu0X99YA70jUZjldqLQUS4W21+4g3l40KB+
-        j2aG3A0aadI/Y9dnlUdRnx6drZvPbOimpcciDIHZOoMAYjo=
-X-Google-Smtp-Source: APXvYqwSvcufDjugPxDTxi2pAbD528o/rMuXFqscn4JcI3VY4FGSnTAwIOtvyglnsPLl7NwT7jW2b/yFz3DrChqvFMM=
-X-Received: by 2002:a2e:3a0e:: with SMTP id h14mr7386596lja.180.1565770775501;
- Wed, 14 Aug 2019 01:19:35 -0700 (PDT)
+        bh=2NizU6vc5EkP2sSlLY3lPz73A+RgMAkOCKcvc8aSTPk=;
+        b=Iv/MPFdX4/kny/q2Bb2zEXRMZoOX1gsusGQiHiyqrmtzUMlLopvwo7ELWR9sXsBtB/
+         GO/xx50QVrzPoUK/p02HbGfTt8+1hsqZKnaMSr46WBWlLsi+7uXt1muL1sVEpSp9Nk7o
+         HGO0NnvpJKFc2hXPyDD99auG6jcjhb7/vLANqHDNQkKkBcDuiyaV8LgtbuRQcn81TQ2H
+         qDrVhmERYV+GvlK7YqNp/O4paTKABXfeTxvaokOwhWyFdBa5EzbRbY5BWhJ8H0vIMh2j
+         sgvjAF+1QSMeegX4Z/VDDXhVteztUEnDEAWhb3qLuwZk57KqeQYhdzzlFv4Sm7rQuKdf
+         WWBg==
+X-Gm-Message-State: APjAAAXAcuJjay3km9JFEIDL2Hrjs0sF7icA91KGbSxrJAE+JDzf+/wc
+        uv2x3bYocjVZuzCriTTNlGA0yrrVFNjYif1k9QzljD3TRT8=
+X-Google-Smtp-Source: APXvYqw/KdOv8DzTmbxQAxMesntD6oRCGg5Ol95hEEFITE+e29hp0r0mT5jHRY2DGS3PkkUZ3/C7oGrL18KXON5jhMc=
+X-Received: by 2002:a2e:9f0f:: with SMTP id u15mr14696618ljk.54.1565770894967;
+ Wed, 14 Aug 2019 01:21:34 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190808123242.5359-1-linus.walleij@linaro.org> <20190808123242.5359-3-linus.walleij@linaro.org>
-In-Reply-To: <20190808123242.5359-3-linus.walleij@linaro.org>
+References: <20190808123242.5359-1-linus.walleij@linaro.org> <20190808123242.5359-4-linus.walleij@linaro.org>
+In-Reply-To: <20190808123242.5359-4-linus.walleij@linaro.org>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Wed, 14 Aug 2019 10:19:24 +0200
-Message-ID: <CACRpkdbB0etxmkB-jUG5dhW6rvQhm1wkudCE0-V1ZndX+yCO4Q@mail.gmail.com>
-Subject: Re: [PATCH 3/6 v2] qcom: spmi-gpio: convert to hierarchical IRQ
- helpers in gpio core
+Date:   Wed, 14 Aug 2019 10:21:23 +0200
+Message-ID: <CACRpkdZkO-iXy8fznnJ+USvt18cbehbfM2TexUYfAjFxD+fkOQ@mail.gmail.com>
+Subject: Re: [PATCH 4/6 v2] RFT: gpio: thunderx: Switch to GPIOLIB_IRQCHIP
 To:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
 Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        David Daney <david.daney@cavium.com>,
+        Thierry Reding <treding@nvidia.com>,
         Brian Masney <masneyb@onstation.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
@@ -59,22 +60,34 @@ X-Mailing-List: linux-gpio@vger.kernel.org
 
 On Thu, Aug 8, 2019 at 2:32 PM Linus Walleij <linus.walleij@linaro.org> wrote:
 
-> From: Brian Masney <masneyb@onstation.org>
+> Use the new infrastructure for hierarchical irqchips in
+> gpiolib.
 >
-> Now that the GPIO core has support for hierarchical IRQ chips, convert
-> Qualcomm's spmi-gpio over to use these new helpers to reduce duplicated
-> code across drivers.
+> The major part of the rewrite was dues to the fact that
+> the driver was passing around a per-irq pointer to
+> struct thunderx_line * data container, and the central
+> handlers will assume struct gpio_chip * to be passed
+> to we need to use the hwirq as index to look up the
+> struct thunderx_line * for each IRQ.
 >
-> This change was tested on a LG Nexus 5 (hammerhead) phone.
+> The pushing and pop:ing of the irqdomain was confusing
+> because I've never seen this before, but I tried to
+> replicate it as best I could.
 >
-> Signed-off-by: Brian Masney <masneyb@onstation.org>
+> I have no chance to test or debug this so I need
+> help.
+>
+> Cc: David Daney <david.daney@cavium.com>
+> Cc: Thierry Reding <treding@nvidia.com>
+> Cc: Brian Masney <masneyb@onstation.org>
 > Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
 > ---
-> ChangeLog v1->v2:
-> - Change "child_pin_to_irq" into "child_offset_to_irq" so
->   we avoid confusion with pin control.
+> ChangeLog RFT v1-> RFT v2:
+> - Rebased.
 
-This patch is now applied.
+As noone seems interested in reviewing or testing ThunderX
+I have applied the patch, as I think there are ThunderX machines
+in the test farms, things will crop out now.
 
 Yours,
 Linus Walleij
