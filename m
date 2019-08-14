@@ -2,88 +2,107 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id A70118CECB
-	for <lists+linux-gpio@lfdr.de>; Wed, 14 Aug 2019 10:48:56 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 99B848CEF7
+	for <lists+linux-gpio@lfdr.de>; Wed, 14 Aug 2019 11:04:15 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726126AbfHNIsz (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 14 Aug 2019 04:48:55 -0400
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:45213 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725996AbfHNIsz (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 14 Aug 2019 04:48:55 -0400
-Received: by mail-lj1-f194.google.com with SMTP id t3so15522759ljj.12
-        for <linux-gpio@vger.kernel.org>; Wed, 14 Aug 2019 01:48:54 -0700 (PDT)
+        id S1725306AbfHNJEP (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 14 Aug 2019 05:04:15 -0400
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:36287 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725861AbfHNJEO (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 14 Aug 2019 05:04:14 -0400
+Received: by mail-lj1-f193.google.com with SMTP id u15so9132291ljl.3
+        for <linux-gpio@vger.kernel.org>; Wed, 14 Aug 2019 02:04:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=AaXXXJyoRix4ci7hEwut2qc9UXNgLOAwJXuK5aHAjno=;
-        b=QFmd1l1ZbeAWnxu46lwnT+tGjxGDvgauGe76FXrPjgMTzAof5eg4lgP3Vx+eylh+tq
-         MGldTRkYbDyDXk4rPfvSWWOk4caLcPHHLYomaksYEesHbO83AMK64X+hTW98NwDcBReh
-         76aqgPbArHQesF2KyFSX6EdAmA5JxRAZ05W2b0HeUknGbH10PEEpmX3NV4ZTCgh5hU9p
-         WJcacsA8ffuH4gxKQqyegZ2O3DVI42SUe3GnfMfr0KEavpNFTwHn1q1Pks6uJoL8FD90
-         EFkUbMkTlTInDVoqoZozZjQfXkcbPXEgFvoJpu2YNVhMlnkzyla5BSneHw2IMiE72bvb
-         4aoA==
+        bh=lq2l16RSFjq6wz/ruQesNuUbLI8gmiZmId5G0J+mFQo=;
+        b=zQF4AgTB+9jEl7UsscxvQbb3C/iWEfR4hAhEodH95ojTdcbsoROw3XnU60PvQtxDcc
+         KLO3c4fng1VTaMMoqMhN+6kfbYEAeC0rmOaIGjwz7EmbTXkN8mv6xUuUXiBKFQY48PTX
+         h6SaaxEGRKrAfH25y8SCObSPisDoXFK/JcHqbwgIPzvmvmxSzB5rGjFw/JuTF1WrV8CO
+         N4L6K56gDoxrBlvdai1ZTrldNmS0Wo7/JsNqAu+9xhExyoOzfT7lbF/xWCsTz376brts
+         AUE7D3rTs96kryUmLSju9r6Wr3jB9RWG7fKXCrvg++wk1U4//1R2pQt8zeD+IjK3ojuz
+         QCDQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=AaXXXJyoRix4ci7hEwut2qc9UXNgLOAwJXuK5aHAjno=;
-        b=X1ZmRJq8qOel11d605FmFCHtEQlQF2DvxFNziNIfuYN2364KU4BXpzgKRLkDNquROO
-         kqoQp7rJ2xDoHIFdn78hlY/17ZPxNpir16yfbiNGM1OLsRLW/FvrCboeHga6W3HkBGXh
-         CTBEoADA4ZL1BfLVbamEadqpcJ2ljVVr79oKjTdxNKmxsl+MOf6M1Wm6LYbXPAqRO0MW
-         6eO+GjC3NOJ4OSHBsFqlWkzwIMRKpMEKz9qdi76KWSpq5fOIodNCLMnT2Ij7Awphj8GN
-         Cj1xeWxvYtM69RH7kfywU9ZcOtUdxzTcskChTUqxUjBIXdB8B0uhe4KF1lboIekC1sMu
-         N7+A==
-X-Gm-Message-State: APjAAAUTp6w8IqW2JC4xyCZyWbPmrWgAboBmMeagK7OTfkAGBE763oY2
-        TIWTFjHLNum4LvHUY2Z4SOclsuX09vxAlu/h4c1lsA==
-X-Google-Smtp-Source: APXvYqxYtukqY2v01INeb/yow8UvGVlTOeiUie13T4PU1HPjHvFqbbFTMWwmN9WngAAJzyw4VsZgq3FLqy0pudhxhk4=
-X-Received: by 2002:a2e:9f0f:: with SMTP id u15mr14760601ljk.54.1565772533555;
- Wed, 14 Aug 2019 01:48:53 -0700 (PDT)
+        bh=lq2l16RSFjq6wz/ruQesNuUbLI8gmiZmId5G0J+mFQo=;
+        b=ZI3B7fq/wlwzyNU4izVjrhX7BqQvCcLtp0lYayS9caAYk74bf2RC/gwsrn667dub8g
+         VT54osJ9JloeqZQ1d+PPllT84w/1whTFf4IqbA06sUoZJCA0RLo3DY9W9n0p/SGHkvmR
+         WxQAvhOhE4gjHGWGcnkKyW/NvqOBExZH4j1nM713BOlBDgw4O0SrdERVd9bKkjC7HA5D
+         4+duWsGeLtlRbH2yI5kWagY7Cd/bkBCnyAPPtP6LvAgHvsMuahuJn1fLIuqqKi1fmwL2
+         2DzdOCLy0aUD4G/flJzC6SAXeROI0p2AFSUZmr3q7gXvZDHBhoISWZ/w0zzDX1Rvpdl7
+         Br7A==
+X-Gm-Message-State: APjAAAVt+Kk/SKlyC3FOqSSpQrxIqz+TEa39vZti39hzjsP5UzFVxiUw
+        SG5gv4iqjCQ9A8f23ArAS6lXay19ajb8PuC4z9ol/A==
+X-Google-Smtp-Source: APXvYqzPYWkAeDfuLYjvtXLWvxIxO98UH5s/tMQr2Hk9GOmp+mYngZQOcDzHvZK/OEE9UNRS960d4fKBb6LVSE0+JWE=
+X-Received: by 2002:a2e:781a:: with SMTP id t26mr23992742ljc.28.1565773452821;
+ Wed, 14 Aug 2019 02:04:12 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190808132543.26274-1-sr@denx.de> <CACRpkdYzg0At4qf1Nv5_+SzgqQ-iLU1ND9Svhj47=pXJf9E7Mg@mail.gmail.com>
- <CAMuHMdXP8K+yvUHrjnegnNuViG3YsCAD=PxTsDHJcTLRRjJguQ@mail.gmail.com>
-In-Reply-To: <CAMuHMdXP8K+yvUHrjnegnNuViG3YsCAD=PxTsDHJcTLRRjJguQ@mail.gmail.com>
+References: <5D514D6F.4090904@hisilicon.com>
+In-Reply-To: <5D514D6F.4090904@hisilicon.com>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Wed, 14 Aug 2019 10:48:42 +0200
-Message-ID: <CACRpkdZqFGyZETZBoo6xSE9FSMpsbinLquX=4M=2FghdLMxWKw@mail.gmail.com>
-Subject: Re: [PATCH 1/2] gpiolib: Add for_each_gpio_suffix() helper
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-Cc:     Stefan Roese <sr@denx.de>,
-        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Pavel Machek <pavel@denx.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Date:   Wed, 14 Aug 2019 11:04:01 +0200
+Message-ID: <CACRpkdbi21mV5quTmur6egb6FJMFrD-Lg1EUKtk+HejyWjzmUA@mail.gmail.com>
+Subject: Re: [PATCH] gpio: pl061: Fix the issue failed to register the ACPI interruption
+To:     Wei Xu <xuwei5@hisilicon.com>
+Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        Linuxarm <linuxarm@huawei.com>,
+        Shameerali Kolothum Thodi 
+        <shameerali.kolothum.thodi@huawei.com>,
+        Jonathan Cameron <jonathan.cameron@huawei.com>,
+        John Garry <john.garry@huawei.com>,
+        Salil Mehta <salil.mehta@huawei.com>,
+        Shiju Jose <shiju.jose@huawei.com>, jinying@hisilicon.com,
+        Zhangyi ac <zhangyi.ac@huawei.com>,
+        "Liguozhu (Kenneth)" <liguozhu@hisilicon.com>,
+        Tangkunshan <tangkunshan@huawei.com>,
+        huangdaode <huangdaode@hisilicon.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Aug 12, 2019 at 1:18 PM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
-> On Sat, Aug 10, 2019 at 10:27 AM Linus Walleij <linus.walleij@linaro.org> wrote:
-> > On Thu, Aug 8, 2019 at 3:25 PM Stefan Roese <sr@denx.de> wrote:
-> > > Add a helper macro to enable the interation over all supported GPIO
-> > > suffixes (currently "gpios" & "gpio"). This will be used by the serial
-> > > mctrl code to check, if a GPIO property exists before requesting it.
-> > >
-> > > Signed-off-by: Stefan Roese <sr@denx.de>
-> > > Suggested-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> > > Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> > > Cc: Geert Uytterhoeven <geert@linux-m68k.org>
-> > > Cc: Pavel Machek <pavel@denx.de>
-> > > Cc: Linus Walleij <linus.walleij@linaro.org>
-> > > Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> >
-> > I really like this patch, it makes things so much more readable.
->
-> Do we really need to spread this *-gpio" legacy support all over the kernel?
+Hi Wei,
 
-Not really :/
+thanks for your patch!
 
-Isn't it possible to use something like gpiod_count(dev, "foo") to
-check for any GPIOs instead?
+This doesn't apply for my "devel" branch, can you rebase
+on this:
+https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-gpio.git/log/?h=devel
 
-Yours,
+We have moved some ACPI headers around recently.
+
+On Mon, Aug 12, 2019 at 1:28 PM Wei Xu <xuwei5@hisilicon.com> wrote:
+
+> Invoke acpi_gpiochip_request_interrupts after the acpi data has been
+> attached to the pl061 acpi node to register interruption.
+
+Makes sense.
+
+> Fixes: 04ce935c6b2a ("gpio: pl061: Pass irqchip when adding gpiochip")
+
+I doubt this is a regression since I haven't seen anyone use this
+gpiochip with ACPI before.
+
+Please rename the patch "gpio: pl061: Add ACPI support" unless
+you can convince me it worked without changes before.
+
+Please include some ACPI people on review of this. From
+MAINTAINERS:
+ACPI
+M:      "Rafael J. Wysocki" <rjw@rjwysocki.net>
+M:      Len Brown <lenb@kernel.org>
+L:      linux-acpi@vger.kernel.org
+
+I would also include Andy Shevchenko and Mika Westerberg for
+the GPIO aspects.
+
+Thanks!
 Linus Walleij
