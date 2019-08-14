@@ -2,88 +2,94 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 428988CEA4
-	for <lists+linux-gpio@lfdr.de>; Wed, 14 Aug 2019 10:41:32 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CCBE88CEBC
+	for <lists+linux-gpio@lfdr.de>; Wed, 14 Aug 2019 10:47:03 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726714AbfHNIlb (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 14 Aug 2019 04:41:31 -0400
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:34886 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726365AbfHNIlb (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 14 Aug 2019 04:41:31 -0400
-Received: by mail-lf1-f68.google.com with SMTP id p197so78701193lfa.2
-        for <linux-gpio@vger.kernel.org>; Wed, 14 Aug 2019 01:41:30 -0700 (PDT)
+        id S1725888AbfHNIrD (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 14 Aug 2019 04:47:03 -0400
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:40688 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725265AbfHNIrC (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 14 Aug 2019 04:47:02 -0400
+Received: by mail-lf1-f65.google.com with SMTP id b17so78761948lff.7
+        for <linux-gpio@vger.kernel.org>; Wed, 14 Aug 2019 01:47:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=KzpALMQhsAYiuMs6y6iJLV3dLZWeIJlGmnisMykIAis=;
-        b=r2pSn+KrIj0p/r1Jh1Qa8oRX30gNZzgGkBpwKkDEJNczG7E+VnEvwitjkTtXDi+iiY
-         4quGEaWmppl+rGwEtCxpw/UZ3hBqlm+OVntmnenzCFo/I6+LXJxNE7F5nzZUYPGfUZiM
-         xiG/6RYIi+mV1854OvRiWUXHkXNDPIzy+8pHNKtKmSgN6mwGISjCmBFoX1/xBh582HPF
-         0rE/0WduaDy2igRu2LN3eXNSIweY7DEhtBe8nqhlALJP8Xv3yu9U1R/0vGBigFAmvlLa
-         PAsFJPhwguzevp0v5g/p6gMTOOiq08hxCCU/MhScC+UZSJVOlkN0kzs35xo7Oo+fvBp+
-         LgMg==
+        bh=J+Uv/ssW3LS+BMf/0AoJkCiv1isbEzUkHs4RgSvcQLQ=;
+        b=Ha98pG9CnnigxyTxsokOvzCl+km65kr6rUzBJ1RXkyXbl9Kw/gjT1fgQmSVd5KL1Oi
+         vuatFX7wcIgQAxrutfoZ/rHiWQnMHlocwbESCmKcWrLHe4urCUOwnbQYxIe/bn5WlTBA
+         /3J85Xxv8d44xBoXEXKQYCBDcEzvzOvRhIReSA6PC6+0OTatsANYQtdZO5QH+lU31LCc
+         IU9nFrqrIc5Ndggq3heSdgWTn4HCQrA4dl8xHk4xH9KfWisgReeYKtiphmbU7QiuToal
+         2tTaOCx10jwoQEqFsvqYfhwcELsMMewO047Q8NwVddrI8VJ9hxCpswruESapUquYRtmH
+         uw7A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=KzpALMQhsAYiuMs6y6iJLV3dLZWeIJlGmnisMykIAis=;
-        b=P2N1ader6tdTIemtFRGw3gvWyGPIy2W0lAr2fePmXh66JxO5040hmMj2ePpUrpJ4Ns
-         136yE+OAg82EXkws6sW1lY7ynjDJyLQBMXgzioSFNPi1XRFvKrXknnCzWPcRCLEdgWng
-         gg+cwVKsJxxhjPqsqaekgxNf+r8yjlbFSX90dpvSUZq9hT8ohxvoa66C796+JX2OTTAf
-         XJFPGk5CQcQBqkGrKYyykzT7gBjs6cF9F4yh4l/0jN98aFT8jKx4XZOePXs2++XNtRej
-         v7EeylrAZKoUBqkNwFBlLCkBstlJzGin5n3c9I5e4YMZXxR4PELmZtql5UQxpT2P3CVI
-         FtIA==
-X-Gm-Message-State: APjAAAVkmKXV5alz3DO+Hw1XU6zboAPVYZJrRQ9hgAPIQ+nuwS/NaoXg
-        2XNsYviQkvFbOuvN8fC+gHPDUHQ1Fmo0PvizZDLDCA==
-X-Google-Smtp-Source: APXvYqx5nqnXeVYMCMOMXqQ9fV6cH2bSPFPCrhICg/SdR9VyEVww1xueQTgGw2t8u9djOnijC0ljUID4vf6sSeDgNCQ=
-X-Received: by 2002:ac2:4c07:: with SMTP id t7mr22886155lfq.152.1565772089303;
- Wed, 14 Aug 2019 01:41:29 -0700 (PDT)
+        bh=J+Uv/ssW3LS+BMf/0AoJkCiv1isbEzUkHs4RgSvcQLQ=;
+        b=BbZqSWvLSnwvEJ6YL7BAq4HH8psqiEGZVew0lOgDhYAPjjdx9j4NZVxxyHKKBF8PEg
+         1o7CsEeHXcA8N3Ua3g0CQAxacPqTiCQ6bGfVc7LXjOliYL62Aipdg9rZaJGfwYV9DyZY
+         lJkMADeLIPKnX5y6yw9nRptj0SVnul0D3sYWJwPHuGQVmKnxrQ+5X3GepeYFauVPBpWk
+         T+5BIzobDB02MwxW8sAA12+mg2C4XQKOqkkIyHvs4bTduZi8t2eunpjD3Luv3QSReYut
+         KGv2wtB40wtiFa3HacYNhUpxT5OFm7p9kI6rQNjR48A5vW5j4QQn1BTV/aIgxKDWnYEL
+         5Ygw==
+X-Gm-Message-State: APjAAAVlGR8nYkJHeBSbLkDLe5+tjnkT8AXxWIpGE/BQgLvqFvbQEyQv
+        hG+ziqJKZ6sS8dEompU/zI7MBOJCpMtaPbJvKhFdEg==
+X-Google-Smtp-Source: APXvYqyGHzt8eVn18eiTFmQAUBfEJREot29/k8GOTjTpRYhs3wo/vm+Z1+K00mQ/n6SZmxrDgdLl/gshupco4s7OPnw=
+X-Received: by 2002:ac2:5c42:: with SMTP id s2mr25712838lfp.61.1565772420852;
+ Wed, 14 Aug 2019 01:47:00 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190724081313.12934-1-andrew@aj.id.au> <20190724081313.12934-4-andrew@aj.id.au>
- <CACRpkdZCJWeZO6CFvkq4uhnX+o_q_AfkDZ=a2kmUgbS3JtDqfA@mail.gmail.com> <20190812101504.GF26727@dell>
-In-Reply-To: <20190812101504.GF26727@dell>
+References: <20190812081351.21284-1-linus.walleij@linaro.org> <20190812105825.GB30120@smile.fi.intel.com>
+In-Reply-To: <20190812105825.GB30120@smile.fi.intel.com>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Wed, 14 Aug 2019 10:41:17 +0200
-Message-ID: <CACRpkdapA_-yp4ihY3S+CHMmDMKU2b0u=sj2UhJ-cvv39Dji_g@mail.gmail.com>
-Subject: Re: [PATCH 3/3] dt-bindings: aspeed: Remove mention of deprecated compatibles
-To:     Lee Jones <lee.jones@linaro.org>
-Cc:     Andrew Jeffery <andrew@aj.id.au>,
-        linux-aspeed <linux-aspeed@lists.ozlabs.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Joel Stanley <joel@jms.id.au>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
+Date:   Wed, 14 Aug 2019 10:46:49 +0200
+Message-ID: <CACRpkda_2T_eBf5AxpNG0P54KTLds-NvYDMcTWx5BtOa9kK-mA@mail.gmail.com>
+Subject: Re: [PATCH] gpio: lynxpoint: Pass irqchip when adding gpiochip
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        David Cohen <david.a.cohen@linux.intel.com>,
+        Thierry Reding <treding@nvidia.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Aug 12, 2019 at 12:15 PM Lee Jones <lee.jones@linaro.org> wrote:
-> On Mon, 05 Aug 2019, Linus Walleij wrote:
->
-> > On Wed, Jul 24, 2019 at 10:13 AM Andrew Jeffery <andrew@aj.id.au> wrote:
-> >
-> > > Guide readers away from using the aspeed,g[45].* compatible patterns.
-> > >
-> > > Signed-off-by: Andrew Jeffery <andrew@aj.id.au>
-> >
-> > Patch applied to the pinctrl tree.
->
-> With my Ack?
+On Mon, Aug 12, 2019 at 12:58 PM Andy Shevchenko
+<andriy.shevchenko@linux.intel.com> wrote:
+> On Mon, Aug 12, 2019 at 10:13:51AM +0200, Linus Walleij wrote:
 
-Sorry no. :( Was I too trigger-happy?
+> > +             girq->num_parents = 1;
+> > +             girq->parents = devm_kcalloc(&pdev->dev, 1,
+> > +                                          sizeof(*girq->parents),
+> > +                                          GFP_KERNEL);
+> > +             if (!girq->parents)
+> > +                     return -ENOMEM;
+>
+> I understand the point to use kcalloc() for one entry, though I would make
+> intention more explicitly, i.e. use girq->num_parents in it instead of hard
+> coded value.
 
-Usually I take Rob's ACK as authoritative for anything under
-Documentation/devicetree but if you have concerns about the
-patch from an MFD point of view I will revert it pending further
-discussion.
+That is better, but I have a loose plan to get rid of this
+and just set parents to a fixed width because all the allocation
+is annoying.
+
+> > +             girq->parents[0] = (unsigned)irq_rc->start;
+> > +             girq->default_type = IRQ_TYPE_NONE;
+>
+> > +             girq->handler = handle_simple_irq;
+>
+> > -             ret = gpiochip_irqchip_add(gc, &lp_irqchip, 0,
+> > -                                        handle_simple_irq, IRQ_TYPE_NONE);
+>
+> Hmm... Now I'm wondering, shall we use handle_bad_irq() here?
+
+If you are sure that every consumer will call .set_type() you can
+use handle_bad_irq, and that is preferred.
 
 Yours,
 Linus Walleij
