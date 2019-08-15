@@ -2,95 +2,93 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 295548E600
-	for <lists+linux-gpio@lfdr.de>; Thu, 15 Aug 2019 10:15:16 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id ED6C68E776
+	for <lists+linux-gpio@lfdr.de>; Thu, 15 Aug 2019 10:53:54 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730413AbfHOIPP (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 15 Aug 2019 04:15:15 -0400
-Received: from mail-lf1-f67.google.com ([209.85.167.67]:43808 "EHLO
-        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725961AbfHOIPP (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 15 Aug 2019 04:15:15 -0400
-Received: by mail-lf1-f67.google.com with SMTP id c19so1098509lfm.10
-        for <linux-gpio@vger.kernel.org>; Thu, 15 Aug 2019 01:15:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=07F0k0/I+yQaJeXPWKleDyscIPKImasXKY4zAI60tCY=;
-        b=G8SdXPNy0DY07FdznzFQbQPys62B0rkcgdUNT5rYvTTPn4OonEcccoiFkBo37IAx3I
-         BL9Lk28Tu5Lf9K+yB+wRakTAzoisJMKBx73xHjVkVyrcdNA6XnKtROAKwke820Hu3U7C
-         3DpU+WBUJTXBWYM4VsE8Xj5Jl1ED+0ZOodIZAPwoNhhswaJVrEgpfRyAl/ukjeJAYWL2
-         wHWySW6lnrDHYCXorZfmoy0KO7B87NYRrettzL5vyd8b1Bu4wymhJCznHvLi1P/qe8oU
-         4OzzEftvuK/zJuF5fWLMIhmL7SrCqJRRMq2eit1SdQw8gbDjBXvRB1+iYMH68kLeUQYD
-         tB/w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=07F0k0/I+yQaJeXPWKleDyscIPKImasXKY4zAI60tCY=;
-        b=IzJT3i3L4N8RLgvIBy+T+CEDVS1UEh6n3WDAEeA+A+QDRyMkgwu7473YF0gl4u9RMz
-         oVVv2DqTL+SSPa/O39h3wIVwlluYDVr2YPf2zae4BwAk2EZs8LOavaERlOU+2f2ZIvmz
-         mNOMYe+yvRwQ1qB6R8NUUrVJQQFMGULMV58i+d8wATif7eQMEUYZsKzdwcgNRN1GzQLR
-         UP4i2+la8FK0i3E8FBXGSWQgnFF8Q/qPTrUnGfZB7s+P+OR8LsVMidJcCoGa8lebQ15g
-         0buJo/KM0GLOD5utJf5wyR6xi2SzjrvIHRiKqMyCmTUHEpY3EiLAP7362Bd3GyjKo2pt
-         UWEQ==
-X-Gm-Message-State: APjAAAXZx7FgDhRwknTTBF+L/3+qAaiqeJ5/4+uELLghYYC0wqqDx0Es
-        kBSmKMhS1n4zr+0O4+Y5RG4+SGZ4yyrnPls+Momb2kaYFrA=
-X-Google-Smtp-Source: APXvYqwIh4OwFZkSrYNco6Hu5QjyW4uf5uMv+vgvg4VuDTF5BWUPotfTuOryTJ3WWGJrbJbymQSfOvvAHhFhPTMq1LM=
-X-Received: by 2002:ac2:5c42:: with SMTP id s2mr1830823lfp.61.1565856913202;
- Thu, 15 Aug 2019 01:15:13 -0700 (PDT)
+        id S1730029AbfHOIxs (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 15 Aug 2019 04:53:48 -0400
+Received: from mx2.mailbox.org ([80.241.60.215]:13182 "EHLO mx2.mailbox.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730004AbfHOIxs (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Thu, 15 Aug 2019 04:53:48 -0400
+Received: from smtp1.mailbox.org (smtp1.mailbox.org [IPv6:2001:67c:2050:105:465:1:1:0])
+        (using TLSv1.2 with cipher ECDHE-RSA-CHACHA20-POLY1305 (256/256 bits))
+        (No client certificate requested)
+        by mx2.mailbox.org (Postfix) with ESMTPS id CB9C1A110F;
+        Thu, 15 Aug 2019 10:53:45 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at heinlein-support.de
+Received: from smtp1.mailbox.org ([80.241.60.240])
+        by spamfilter02.heinlein-hosting.de (spamfilter02.heinlein-hosting.de [80.241.56.116]) (amavisd-new, port 10030)
+        with ESMTP id bKwNenchx4uj; Thu, 15 Aug 2019 10:53:42 +0200 (CEST)
+From:   Stefan Roese <sr@denx.de>
+To:     linux-serial@vger.kernel.org
+Cc:     linux-gpio@vger.kernel.org,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Pavel Machek <pavel@denx.de>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: [PATCH v2] serial: mctrl_gpio: Support all GPIO suffixes (gpios vs gpio)
+Date:   Thu, 15 Aug 2019 10:53:41 +0200
+Message-Id: <20190815085341.28088-1-sr@denx.de>
 MIME-Version: 1.0
-References: <20190725131002.14597-1-uwe@kleine-koenig.org> <9d01ed54-4c20-a4d3-f5b1-8ec2aac09ea0@kleine-koenig.org>
-In-Reply-To: <9d01ed54-4c20-a4d3-f5b1-8ec2aac09ea0@kleine-koenig.org>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Thu, 15 Aug 2019 10:15:00 +0200
-Message-ID: <CACRpkdYjeNFP0KrF+RpFOvWWzmY5iKcRK9EOPqMX3t_6vwhbeA@mail.gmail.com>
-Subject: Re: [PATCH] gpio: mockup: don't depend twice on GPIOLIB
-To:     =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <uwe@kleine-koenig.org>
-Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Aug 14, 2019 at 10:12 PM Uwe Kleine-K=C3=B6nig <uwe@kleine-koenig.o=
-rg> wrote:
-> On 7/25/19 3:10 PM, Uwe Kleine-K=C3=B6nig wrote:
-> > config GPIO_MOCKUP is defined in a big if GPIOLIB ... endif block so it
-> > doesn't need to depend explicitly on GPIOLIB.
-> >
-> > Signed-off-by: Uwe Kleine-K=C3=B6nig <uwe@kleine-koenig.org>
-> > ---
-> >  drivers/gpio/Kconfig | 1 -
-> >  1 file changed, 1 deletion(-)
-> >
-> > diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
-> > index bb13c266c329..856fcd260ba2 100644
-> > --- a/drivers/gpio/Kconfig
-> > +++ b/drivers/gpio/Kconfig
-> > @@ -1465,7 +1465,6 @@ endmenu
-> >
-> >  config GPIO_MOCKUP
-> >       tristate "GPIO Testing Driver"
-> > -     depends on GPIOLIB
-> >       select IRQ_SIM
-> >       help
-> >         This enables GPIO Testing driver, which provides a way to test =
-GPIO
-> >
->
-> I didn't get feedback for this patch. Did it fall through the cracks?
+This patch fixes a backward compatibility issue, when boards use the
+old style GPIO suffix "-gpio" instead of the new "-gpios". This
+potential problem has been introduced by commit d99482673f95 ("serial:
+mctrl_gpio: Check if GPIO property exisits before requesting it").
 
-Weird, the patch is not in my inbox :(
+This patch now fixes this issue by using gpiod_count() which iterates
+over all supported GPIO suffixes (thanks to Linus for suggesting this).
 
-I downloaded from lore.kernel.org and applied, thanks!
+With this change, the local string is not needed any more. This way
+we can remove the allocation in the loop.
 
-Yours,
-Linus Walleij
+Signed-off-by: Stefan Roese <sr@denx.de>
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Pavel Machek <pavel@denx.de>
+Cc: Linus Walleij <linus.walleij@linaro.org>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+---
+v2
+- Use gpiod_count() to check if the GPIO exists (Linus)
+- Remove the now unnecessary malloc in the loop (kasprintf)
 
-Yours,
-Linus Walleij
+ drivers/tty/serial/serial_mctrl_gpio.c | 13 +++----------
+ 1 file changed, 3 insertions(+), 10 deletions(-)
+
+diff --git a/drivers/tty/serial/serial_mctrl_gpio.c b/drivers/tty/serial/serial_mctrl_gpio.c
+index 2b400189be91..ce73b142c66b 100644
+--- a/drivers/tty/serial/serial_mctrl_gpio.c
++++ b/drivers/tty/serial/serial_mctrl_gpio.c
+@@ -117,18 +117,11 @@ struct mctrl_gpios *mctrl_gpio_init_noauto(struct device *dev, unsigned int idx)
+ 
+ 	for (i = 0; i < UART_GPIO_MAX; i++) {
+ 		enum gpiod_flags flags;
+-		char *gpio_str;
+-		bool present;
++		int count;
+ 
+ 		/* Check if GPIO property exists and continue if not */
+-		gpio_str = kasprintf(GFP_KERNEL, "%s-gpios",
+-				     mctrl_gpios_desc[i].name);
+-		if (!gpio_str)
+-			continue;
+-
+-		present = device_property_present(dev, gpio_str);
+-		kfree(gpio_str);
+-		if (!present)
++		count = gpiod_count(dev, mctrl_gpios_desc[i].name);
++		if (count <= 0)
+ 			continue;
+ 
+ 		if (mctrl_gpios_desc[i].dir_out)
+-- 
+2.22.1
+
