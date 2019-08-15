@@ -2,102 +2,99 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 52EA88E8EF
-	for <lists+linux-gpio@lfdr.de>; Thu, 15 Aug 2019 12:21:18 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 75E938E929
+	for <lists+linux-gpio@lfdr.de>; Thu, 15 Aug 2019 12:40:19 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730948AbfHOKVR (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 15 Aug 2019 06:21:17 -0400
-Received: from mail-wr1-f51.google.com ([209.85.221.51]:34024 "EHLO
-        mail-wr1-f51.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730646AbfHOKVR (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 15 Aug 2019 06:21:17 -0400
-Received: by mail-wr1-f51.google.com with SMTP id s18so1009198wrn.1
-        for <linux-gpio@vger.kernel.org>; Thu, 15 Aug 2019 03:21:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernelci-org.20150623.gappssmtp.com; s=20150623;
-        h=message-id:date:mime-version:content-transfer-encoding:subject:to
-         :from;
-        bh=UTZdXnrla3zS1GY/caA3BWvjWzi87t//nfk/LWER4BI=;
-        b=D/7mh4zVCk4N7SVHqsHKvFeIFHEBmsvFG+tOmDzoCpfO28jZUjsyK9rAMKYbQM4qMj
-         /R4H/WTp46QUxPkHDGtcCuESawVNDP2bW6MxsDsfqk2c2ASrliyxzm0zDnoHDgOKWfk1
-         K2mbCdv7uQ3qTTK3tTEBQdTT5oTspB+lnXYeKlI5k/lxmXxEQ1Qk03+ymBfcqJ1+g+0p
-         Kpy0f/ch3vsUKiYL1iW8gLGGQR3Wkau2ojUQOdDV/g5M/L4QiWETaPMptmV27h6Itc9n
-         FV4vpRPpTcBeuwZYLGKuBfxT1ebqewNmoWWdfYUDyDf8LHMSX3WY6vlsurAhnWs59czI
-         KeJw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:date:mime-version
-         :content-transfer-encoding:subject:to:from;
-        bh=UTZdXnrla3zS1GY/caA3BWvjWzi87t//nfk/LWER4BI=;
-        b=AmI07NiNZSC2WBOOaK9wJmo8FIsEjjmKWWH9JJ8p47DqHA3P26+mdCQRzoxf4DXRTX
-         OJnbqMCLAQneclJnS5Sa/S9MAcDLWOAdUxszYq4+QpOhI3VxHwRQfHbIC3vK5DTUrsEs
-         7Pfx9199GsxQwO1XyfeidqAnc9aJneZQvFyz0LPrMYwnl9IKiF5moysNzmQclooixI2Q
-         y0K2DqWfD92DxRWLnayZGRvXXsSgOIyJCDgU2yyfrZmUD4RSQCUpjIsYcBpquaZVd60F
-         O12+4wbEapRUBufS8h1itZFTOHFhp10JooaTycHF4SRtWK662CcpKrf47XTnKQEbG1l5
-         cacA==
-X-Gm-Message-State: APjAAAXfknFd+zT7WQb9U8hhOK0CAqcuFSHOxUjz50fQn30SQd9R5Jwn
-        LCMM3kcWPss7+CAX51+iUN7MH4c0bUQTHA==
-X-Google-Smtp-Source: APXvYqxUenKXF0BTPEIJsxj55RaZNQaUFAlqtFGnNLbXNqULjRSlHULpj9KHSoKsX6z6AeCVmEh39A==
-X-Received: by 2002:a5d:4211:: with SMTP id n17mr4227121wrq.137.1565864475015;
-        Thu, 15 Aug 2019 03:21:15 -0700 (PDT)
-Received: from [148.251.42.114] ([2a01:4f8:201:9271::2])
-        by smtp.gmail.com with ESMTPSA id h23sm1077126wml.43.2019.08.15.03.21.13
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 15 Aug 2019 03:21:14 -0700 (PDT)
-Message-ID: <5d55321a.1c69fb81.6ed08.5006@mx.google.com>
-Date:   Thu, 15 Aug 2019 03:21:14 -0700 (PDT)
-Content-Type: text/plain; charset="utf-8"
-MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-Kernelci-Kernel: v5.3-rc1-30-ge00fae7d82ec
-X-Kernelci-Tree: linusw
-X-Kernelci-Report-Type: boot
-X-Kernelci-Branch: devel
-Subject: linusw/devel boot: 55 boots: 3 failed,
- 52 passed (v5.3-rc1-30-ge00fae7d82ec)
-To:     linux-gpio@vger.kernel.org, fellows@kernelci.org
-From:   "kernelci.org bot" <bot@kernelci.org>
+        id S1730352AbfHOKkJ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 15 Aug 2019 06:40:09 -0400
+Received: from inva021.nxp.com ([92.121.34.21]:55624 "EHLO inva021.nxp.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726027AbfHOKkJ (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Thu, 15 Aug 2019 06:40:09 -0400
+Received: from inva021.nxp.com (localhost [127.0.0.1])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 57AF22002B0;
+        Thu, 15 Aug 2019 12:40:07 +0200 (CEST)
+Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 4AF3B2000B8;
+        Thu, 15 Aug 2019 12:40:02 +0200 (CEST)
+Received: from titan.ap.freescale.net (TITAN.ap.freescale.net [10.192.208.233])
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id C0B90402EC;
+        Thu, 15 Aug 2019 18:39:55 +0800 (SGT)
+From:   Hui Song <hui.song_1@nxp.com>
+To:     Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Cc:     linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+        Song Hui <hui.song_1@nxp.com>
+Subject: [PATCH v3] arm64: dts: ls1088a: fix gpio node
+Date:   Thu, 15 Aug 2019 18:30:16 +0800
+Message-Id: <20190815103016.23125-1-hui.song_1@nxp.com>
+X-Mailer: git-send-email 2.9.5
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-linusw/devel boot: 55 boots: 3 failed, 52 passed (v5.3-rc1-30-ge00fae7d82ec)
+From: Song Hui <hui.song_1@nxp.com>
 
-Full Boot Summary: https://kernelci.org/boot/all/job/linusw/branch/devel/ke=
-rnel/v5.3-rc1-30-ge00fae7d82ec/
-Full Build Summary: https://kernelci.org/build/linusw/branch/devel/kernel/v=
-5.3-rc1-30-ge00fae7d82ec/
+Update the nodes to include little-endian
+property to be consistent with the hardware
+and add ls1088a gpio specify compatible.
 
-Tree: linusw
-Branch: devel
-Git Describe: v5.3-rc1-30-ge00fae7d82ec
-Git Commit: e00fae7d82ec1267633fc2fc29d77c650d4a1229
-Git URL: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-gpio.=
-git/
-Tested: 39 unique boards, 15 SoC families, 3 builds out of 6
-
-Boot Regressions Detected:
-
-arm64:
-
-    defconfig:
-        gcc-8:
-          apq8016-sbc:
-              lab-mhart: failing since 16 days (last pass: v5.2-10808-g9637=
-d517347e - first fail: v5.3-rc1-5-ga299726da44f)
-          meson-gxbb-nanopi-k2:
-              lab-baylibre: new failure (last pass: v5.3-rc1-25-g470219c619=
-e9)
-
-Boot Failures Detected:
-
-arm64:
-    defconfig:
-        gcc-8:
-            apq8016-sbc: 1 failed lab
-            meson-gxbb-nanopi-k2: 1 failed lab
-            meson-gxm-khadas-vim2: 1 failed lab
-
+Signed-off-by: Song Hui <hui.song_1@nxp.com>
 ---
-For more info write to <info@kernelci.org>
+Changes in v3:
+	- delete the attribute of little-endian.
+Changes in v2:
+	- update the subject.
+	
+ arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
+index dfbead4..ff669c8 100644
+--- a/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
++++ b/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
+@@ -269,7 +269,7 @@
+ 		};
+ 
+ 		gpio0: gpio@2300000 {
+-			compatible = "fsl,qoriq-gpio";
++			compatible = "fsl,ls1088a-gpio", "fsl,qoriq-gpio";
+ 			reg = <0x0 0x2300000 0x0 0x10000>;
+ 			interrupts = <0 36 IRQ_TYPE_LEVEL_HIGH>;
+ 			little-endian;
+@@ -280,7 +280,7 @@
+ 		};
+ 
+ 		gpio1: gpio@2310000 {
+-			compatible = "fsl,qoriq-gpio";
++			compatible = "fsl,ls1088a-gpio", "fsl,qoriq-gpio";
+ 			reg = <0x0 0x2310000 0x0 0x10000>;
+ 			interrupts = <0 36 IRQ_TYPE_LEVEL_HIGH>;
+ 			little-endian;
+@@ -291,7 +291,7 @@
+ 		};
+ 
+ 		gpio2: gpio@2320000 {
+-			compatible = "fsl,qoriq-gpio";
++			compatible = "fsl,ls1088a-gpio", "fsl,qoriq-gpio";
+ 			reg = <0x0 0x2320000 0x0 0x10000>;
+ 			interrupts = <0 37 IRQ_TYPE_LEVEL_HIGH>;
+ 			little-endian;
+@@ -302,7 +302,7 @@
+ 		};
+ 
+ 		gpio3: gpio@2330000 {
+-			compatible = "fsl,qoriq-gpio";
++			compatible = "fsl,ls1088a-gpio", "fsl,qoriq-gpio";
+ 			reg = <0x0 0x2330000 0x0 0x10000>;
+ 			interrupts = <0 37 IRQ_TYPE_LEVEL_HIGH>;
+ 			little-endian;
+-- 
+2.9.5
+
