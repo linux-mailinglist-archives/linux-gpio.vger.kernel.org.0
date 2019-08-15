@@ -2,83 +2,76 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 1FC178E5C6
-	for <lists+linux-gpio@lfdr.de>; Thu, 15 Aug 2019 09:51:56 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 208358E5CB
+	for <lists+linux-gpio@lfdr.de>; Thu, 15 Aug 2019 09:56:19 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730573AbfHOHvv (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 15 Aug 2019 03:51:51 -0400
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:43578 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725911AbfHOHvv (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 15 Aug 2019 03:51:51 -0400
-Received: by mail-lj1-f195.google.com with SMTP id h15so1455987ljg.10
-        for <linux-gpio@vger.kernel.org>; Thu, 15 Aug 2019 00:51:49 -0700 (PDT)
+        id S1730562AbfHOH4S (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 15 Aug 2019 03:56:18 -0400
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:42532 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729988AbfHOH4S (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 15 Aug 2019 03:56:18 -0400
+Received: by mail-lj1-f193.google.com with SMTP id l14so1471951ljj.9
+        for <linux-gpio@vger.kernel.org>; Thu, 15 Aug 2019 00:56:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=2KO+Z0JsKFmq2PO7wNOhuuy5QVOCrUT3RkmKRxIEBxM=;
-        b=MFX+4DBCjGwtyq+vpGo6BFOdWRFE7uHXLJA3Lp63Rm41HUV/ctST4jX4RIClPJz38D
-         ayGGN6FXa2reujZbvOX5UiTHdbRMUPx2uzBXBntLaeA8tMv7wUnqqeFooDdMyUjKrqPt
-         vhfNjMu8ABOYkztZ8XgebxqtzxNkqwq7gz85a0oF6vekNc0hUHbFYpXI/AgevaB7vVEq
-         0xhkUf1gCOK9IT9+Bu5PGFY9wAurydpISn8NiKQG/V7HcfnYaZMrTlAb+9oyH5l1Wpsl
-         r6D/cbOgRQ0m38xq0n1Ld0evhLvhxDCgID50uib/d8evoQFYoYAk5zOCz35B2CWzHvXA
-         XKsg==
+        bh=4Y8XmEhYmB7olti/32E4GL8RTIPvUT5BJ4/7gBL/k7E=;
+        b=MuI+QRa16rAPa94UUX5TMFL97UA6EOrvPzBDPQM3ULhXawhThhoXO7bX07rluEbBf8
+         iU7Etgq5v/ojKhJ9yVRGAu2qzgtSLrttxfJrskLHwqqpF2ILc9rJDDsi2S2o7fM2pJLc
+         jMeAXkF6r0BXQW5HnqSoUnPJG2sRbGtuCzMi1lDShXLKTyMWP1AaJXRWT36YmueMC0qq
+         sdskN1PgUlDooFjY5R2VgqaXVMBY4M42aXksVElKTQEkFU0R/F6vRGxB+/icbZ41Fhhv
+         F7lqnwoS8ZjB/F8dzgsnfe2DgTattQIyz/qTCbcOwMlowWNd5vK4PIu7KroNntt2EFMb
+         CK2A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=2KO+Z0JsKFmq2PO7wNOhuuy5QVOCrUT3RkmKRxIEBxM=;
-        b=uk08L8BGflaQ8aeZq2i19hP0u/az/07b9K26bh9y/Q+kHzhq8QzN7aM981tgKa2Cvi
-         TJCUaH7A85x7jXmGfS5WfuRXtklEHyIhjfXUQQOP7EgQhnL7G0qCCsfKUptriOgc+3qg
-         80i+3PsmlzrgTt4vD3iDB5G1XofH+sZ2S9Be9OfjVwqmPyTru4o40LIh6fpmARta3qhe
-         MnFpBR/TBh9F8SJmqUJN+CvF+OXYAz0ZcFt6jSd/dUBIGl15L2H0mQveMAGbdKaAM7sL
-         3/x7g2XN+8uOlBZONmqcGz3FuhhNeCJmYVb9472VUv9VBWSXLq28JWoze+3+c+bwbe+u
-         jCBA==
-X-Gm-Message-State: APjAAAX8OryftL8CjAhb6S3WyMPWcWJRrCvJGTndUZcaFVasBe8roCTY
-        udmGdSf5890/mexsFhp8S/vDCrqXBJwSFM5MRr8pXw==
-X-Google-Smtp-Source: APXvYqynv1Gde66j1lWkcpt1eC+OtHXJ31xTsAHe5lJV/skSr6II9/5QHd/HzPoW5xCyGd8uaoIz0NAIhIRu4HhP/0w=
-X-Received: by 2002:a2e:b174:: with SMTP id a20mr2001181ljm.108.1565855508911;
- Thu, 15 Aug 2019 00:51:48 -0700 (PDT)
+        bh=4Y8XmEhYmB7olti/32E4GL8RTIPvUT5BJ4/7gBL/k7E=;
+        b=Nx3FD8Duspu0S8hZ+FYCVkMBdraVxL6ZMffjU/V+V2z24mrCpoABZNdyHKnusHDfpW
+         UEw+37TN3T7wN0uYVS9vGViKfh8lhk4lOUVdk7UUqgKXfIsx2iMJ3N/7aw94c73BF67m
+         VWpn8/mWEyCbHsIWdyh/V+5w34jxKQykwMI89tgmH83cse+OoQbY5dHRCX+x722Gqcgw
+         bTZ5/C690Om2/xNDHH3ogjjP7RIw+9y2up46/Dhi0ebcPxoAObVjRFQ+mose2XY68OFG
+         YD/fqa3jd0ozcJhsaz4PIdUXmpqj8UjhXSpojeeDayO/M1KCg9LRa17CSgvvts4V2zIy
+         9Ncw==
+X-Gm-Message-State: APjAAAWXdF6Na7joLZAXPHLnh8xHV2IfLa+5gKF0jhpA0S/HW1YQomk4
+        GUOlv6txgRKG9PMBoMtcKyurykDfHI9dccjug0YSMZQBnDQ=
+X-Google-Smtp-Source: APXvYqxU5Zk2X4LGKzicaeM99lNrFkIsbcQQ5k3ifl6q3UpYYxti6lLHCtSGd4Mafp92uMU7QnqCestPMmtqa8io5EQ=
+X-Received: by 2002:a2e:9903:: with SMTP id v3mr431621lji.37.1565855775292;
+ Thu, 15 Aug 2019 00:56:15 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190812130401.22769-1-linus.walleij@linaro.org> <60da7536-2d41-69b2-5730-4678b6e84cf9@broadcom.com>
-In-Reply-To: <60da7536-2d41-69b2-5730-4678b6e84cf9@broadcom.com>
+References: <20190809135119.6946-1-linus.walleij@linaro.org>
+In-Reply-To: <20190809135119.6946-1-linus.walleij@linaro.org>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Thu, 15 Aug 2019 09:51:36 +0200
-Message-ID: <CACRpkdZ4k_b=rOPvRi2wPgk1=9Md+urw6No1xcPy3nSFEcUogg@mail.gmail.com>
-Subject: Re: [PATCH] pinctrl: bcm-iproc: Use SPDX header
-To:     Scott Branden <scott.branden@broadcom.com>
-Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Pramod Kumar <pramodku@broadcom.com>,
-        Ray Jui <rjui@broadcom.com>,
-        Scott Branden <sbranden@broadcom.com>
+Date:   Thu, 15 Aug 2019 09:56:03 +0200
+Message-ID: <CACRpkdaKzqsUTsNAJfHxXYxGiHj==L7_Brk0tcoH+9VFtvJpKA@mail.gmail.com>
+Subject: Re: [PATCH] gpio: xlp: Pass irqchip when adding gpiochip
+To:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
+Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Thierry Reding <treding@nvidia.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Aug 12, 2019 at 5:59 PM Scott Branden
-<scott.branden@broadcom.com> wrote:
+On Fri, Aug 9, 2019 at 3:51 PM Linus Walleij <linus.walleij@linaro.org> wrote:
 
-> Please leave the file description comment separate from the license
-> header/copyright notices.
+> We need to convert all old gpio irqchips to pass the irqchip
+> setup along when adding the gpio_chip. For more info see
+> drivers/gpio/TODO.
 >
-> ie. leave the above 3 lines intact.
+> For chained irqchips this is a pretty straight-forward
+> conversion.
+>
+> Cc: Jayachandran C <jnair@caviumnetworks.com>
+> Cc: Kamlakant Patel <kamlakant.patel@broadcom.com>
+> Cc: Thierry Reding <treding@nvidia.com>
+> Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
 
-OK... Why?
-
-Is this because you have an automated tool that likes this format:
-
-/*
- * Copyright ...
- */
-
-/*
- * Other stuff
- */
-
-Or is it just a personal (perception) preference?
+All maintainers mail addresses are bouncing so I just
+applied the patch.
 
 Yours,
 Linus Walleij
