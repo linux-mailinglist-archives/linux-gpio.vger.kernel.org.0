@@ -2,116 +2,103 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id D8F1A8EC6E
-	for <lists+linux-gpio@lfdr.de>; Thu, 15 Aug 2019 15:10:37 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A59728EC77
+	for <lists+linux-gpio@lfdr.de>; Thu, 15 Aug 2019 15:11:45 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732059AbfHONKh (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 15 Aug 2019 09:10:37 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:36353 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730635AbfHONKh (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 15 Aug 2019 09:10:37 -0400
-Received: by mail-pf1-f193.google.com with SMTP id w2so1324768pfi.3;
-        Thu, 15 Aug 2019 06:10:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=O7UsU+IB0EE7NVhDIGHpvj8aJpCdK3kTtUuGx3BwSGI=;
-        b=gwFFNodooT/qbINiYVSeCDxk71mXjZiC7S+XJFZbRt1moD9TF+wTC//3cCZ6/gW7e2
-         +GFwiNW47z0zBpVZX//63Au4UIdulWLXm/DQAOnR4MsJiW67WdTTSklMMeSwxBhb5JcO
-         t0l6Ec2FpTnKg344AKoeu8+lrDnIRHI5ItTDxzG+Z7rFrRvkOJyIQfycFlBwI15/YKmv
-         4/ia0TG1iMaObQpMJqDXIEPM4sSipwr51IWwAW4JWjrI01Mzg4kOzP+x7Qc0d+bN/Y+4
-         f1PzORsZDI+3mI0MHPrAoHtD7KFd9HtvtOTp+i9clArOf/kp+wcamMYifFFuSEPGcq/Q
-         P9ow==
+        id S1732079AbfHONLn (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 15 Aug 2019 09:11:43 -0400
+Received: from mail-qt1-f195.google.com ([209.85.160.195]:37150 "EHLO
+        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731282AbfHONLn (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 15 Aug 2019 09:11:43 -0400
+Received: by mail-qt1-f195.google.com with SMTP id y26so2251139qto.4;
+        Thu, 15 Aug 2019 06:11:42 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=O7UsU+IB0EE7NVhDIGHpvj8aJpCdK3kTtUuGx3BwSGI=;
-        b=grmq7xnZeyI/mrokkMvf9HmJqCaf9Y209sAPVX6/AEHIMBqo747vZvEFYfY5uL5q9q
-         M3odjgoPYzr5IQR1xIrp6WovcOjcmXVEkqYZ8YF1qKvnpM1Rzg8qsHOw+4xHpRepcBpi
-         6SR5CyCJPr0VJDwPiSRJI4h+qLGFrkEXP6/lUz0AaKWl3iUc5+QJR7U/16pdakwENSav
-         TvmAWiMUvWRL1Wp9gTc5Ba48a8uWA/qXvOtgY+A+DAzD0jQP5nvxWzEk7k8HuN1KcjGG
-         KkiiRkemtJaS7d2hzOhUTEdpRSSYa60tf0W/LVPMVL7RZ0FQDqfhh5bF6g0qSze8qmdA
-         g8Nw==
-X-Gm-Message-State: APjAAAUODzYGo4YsHzhTLfC3XkBzHWJ6wRal6tAiEZwvA4TwTc1ibBv4
-        bXIZ4rF6ibLNWypCSgTNqEX7hVNuEPnfPhb6N+uC3LZm
-X-Google-Smtp-Source: APXvYqx8IquyCXVRV8V1mOek+yuM6k8+je0LcuDmJciyOCZuG5B1qZv11I1EODVf93jqY/FOYUV2IGqY6ihgUkQsk2Q=
-X-Received: by 2002:a05:6a00:8e:: with SMTP id c14mr5173336pfj.241.1565874636467;
- Thu, 15 Aug 2019 06:10:36 -0700 (PDT)
+        bh=Oj5UE2LGVcMS9SysCoBFopHSBvRpgrX1g7nT1W4Cv9s=;
+        b=HmHrpfoylIv+xenX+ud7+vckyYDAz7lESPt20PyQy2YEInPQleZa1NVmH0x4CfYiBJ
+         JXW7Hl0Ra0lW+jouPOonVpIg8RvjwGgENSVMn351rtO0nD5SsJqrsAcNSeWu/VqzrnXX
+         ElBk6PwCa12NBNyZiaKQECiegQ1dDbulhdA4XZJd5ElX8WlaW43i0ZjbuGEgorzggdZx
+         HVgsGhDqkmwVpcvSSntpkMagxMhhIhJoaq6e81Vz+jeRtwMYoJ4Fn2FVvVcNIZ03ySAT
+         fwdWqTd3IjVxa/LeZgJVcrxfao45oXHsYq3Tv5zKnSQWED52q9jBCcbzyManuc5vU6tk
+         2s/Q==
+X-Gm-Message-State: APjAAAWHpTUJLk1TW3XlkPOlsBoewZwdFvYWLwRVRkD4eOrfOI8oLzgj
+        vn+GtPPpgIXLfr246yq4GX/Sw/QE7ADJfz7Te4k=
+X-Google-Smtp-Source: APXvYqxABsAyr+BlU4FYBzPP5E1lu5hNr5RQd0ASTCcdU5s/TSRX7ngTvmZ5zwiRax3ZP5e4wh7pQOi1eFXPhhKeyw0=
+X-Received: by 2002:ad4:53cb:: with SMTP id k11mr3085440qvv.93.1565874701634;
+ Thu, 15 Aug 2019 06:11:41 -0700 (PDT)
 MIME-Version: 1.0
-References: <5D514D6F.4090904@hisilicon.com>
-In-Reply-To: <5D514D6F.4090904@hisilicon.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Thu, 15 Aug 2019 16:10:24 +0300
-Message-ID: <CAHp75VcKNZeq80hw5qjKKuh8Qg=WUrXPSpcy6yx5h-_7RHah+g@mail.gmail.com>
-Subject: Re: [PATCH] gpio: pl061: Fix the issue failed to register the ACPI interruption
-To:     Wei Xu <xuwei5@hisilicon.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>
-Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
+References: <20190731195713.3150463-1-arnd@arndb.de> <20190731225303.GC1330@shell.armlinux.org.uk>
+ <CAK8P3a1Lgbz9RwVaOgNq=--gwvEG70tUi67XwsswjgnXAX6EhA@mail.gmail.com>
+In-Reply-To: <CAK8P3a1Lgbz9RwVaOgNq=--gwvEG70tUi67XwsswjgnXAX6EhA@mail.gmail.com>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Thu, 15 Aug 2019 15:11:25 +0200
+Message-ID: <CAK8P3a0=GrjM_HOBgqy5V3pOsA6w1EDOtEQO9dZG2Cw+-2niaw@mail.gmail.com>
+Subject: Re: [PATCH 00/14] ARM: move lpc32xx and dove to multiplatform
+To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>
+Cc:     SoC Team <soc@kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Vladimir Zapolskiy <vz@mleia.com>,
+        Sylvain Lemieux <slemieux.tyco@gmail.com>,
+        Gregory Clement <gregory.clement@bootlin.com>,
         Linus Walleij <linus.walleij@linaro.org>,
-        Linuxarm <linuxarm@huawei.com>,
-        Shameerali Kolothum Thodi 
-        <shameerali.kolothum.thodi@huawei.com>,
-        Jonathan Cameron <jonathan.cameron@huawei.com>,
-        John Garry <john.garry@huawei.com>,
-        Salil Mehta <salil.mehta@huawei.com>,
-        Shiju Jose <shiju.jose@huawei.com>, jinying@hisilicon.com,
-        Zhangyi ac <zhangyi.ac@huawei.com>,
-        "Liguozhu (Kenneth)" <liguozhu@hisilicon.com>,
-        Tangkunshan <tangkunshan@huawei.com>,
-        huangdaode <huangdaode@hisilicon.com>
+        Jason Cooper <jason@lakedaemon.net>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        Guenter Roeck <linux@roeck-us.net>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Networking <netdev@vger.kernel.org>,
+        linux-serial@vger.kernel.org, USB list <linux-usb@vger.kernel.org>,
+        LINUXWATCHDOG <linux-watchdog@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Aug 12, 2019 at 2:30 PM Wei Xu <xuwei5@hisilicon.com> wrote:
+On Thu, Aug 1, 2019 at 9:33 AM Arnd Bergmann <arnd@arndb.de> wrote:
 >
-> Invoke acpi_gpiochip_request_interrupts after the acpi data has been
-> attached to the pl061 acpi node to register interruption.
+> On Thu, Aug 1, 2019 at 12:53 AM Russell King - ARM Linux admin
+> <linux@armlinux.org.uk> wrote:
+> >
+> > On Wed, Jul 31, 2019 at 09:56:42PM +0200, Arnd Bergmann wrote:
+> > > For dove, the patches are basically what I had proposed back in
+> > > 2015 when all other ARMv6/ARMv7 machines became part of a single
+> > > kernel build. I don't know what the state is mach-dove support is,
+> > > compared to the DT based support in mach-mvebu for the same
+> > > hardware. If they are functionally the same, we could also just
+> > > remove mach-dove rather than applying my patches.
+> >
+> > Well, the good news is that I'm down to a small board support file
+> > for the Dove Cubox now - but the bad news is, that there's still a
+> > board support file necessary to support everything the Dove SoC has
+> > to offer.
+> >
+> > Even for a DT based Dove Cubox, I'm still using mach-dove, but it
+> > may be possible to drop most of mach-dove now.  Without spending a
+> > lot of time digging through it, it's impossible to really know.
 >
-> Otherwise it will be failed to register interruption for the ACPI case.
-> Because in the gpiochip_add_data_with_key, acpi_gpiochip_add is invoked
-> after gpiochip_add_irqchip but at that time the acpi data has not been
-> attached yet.
+> Ok, so we won't remove it then, but I'd like to merge my patches to
+> at least get away from the special case of requiring a separate kernel
+> image for it.
 >
-> Tested with below steps on QEMU v4.1.0-rc3 and Linux kernel v5.3-rc4,
-> and found pl061 interruption is missed in the /proc/interrupts:
-> 1.
-> qemu-system-aarch64 \
-> -machine virt,gic-version=3 -cpu cortex-a57 \
-> -m 1G,maxmem=4G,slots=4 \
-> -kernel Image -initrd rootfs.cpio.gz \
-> -net none -nographic  \
-> -bios QEMU_EFI.fd  \
-> -append "console=ttyAMA0 acpi=force earlycon=pl011,0x9000000"
->
-> 2. cat /proc/interrupts in the guest console:
-> estuary:/$ cat /proc/interrupts
-> CPU0
-> 2:       3228     GICv3  27 Level     arch_timer
-> 4:         15     GICv3  33 Level     uart-pl011
-> 42:          0     GICv3  23 Level     arm-pmu
-> IPI0:         0       Rescheduling interrupts
-> IPI1:         0       Function call interrupts
-> IPI2:         0       CPU stop interrupts
-> IPI3:         0       CPU stop (for crash dump) interrupts
-> IPI4:         0       Timer broadcast interrupts
-> IPI5:         0       IRQ work interrupts
-> IPI6:         0       CPU wake-up interrupts
-> Err:          0
->
-> Fixes: 04ce935c6b2a ("gpio: pl061: Pass irqchip when adding gpiochip")
+> Can you try if applying patches 12 and 14 from my series causes
+> problems for you? (it may be easier to apply the entire set
+> or pull from [1] to avoid rebase conflicts).
 
-Linus, I'm wondering if we can do this for all inside the GPIO library.
-Thoughts?
+I applied patches 12 and 13 into the soc tree now. There are some
+other pending multiplatform conversions (iop32x, ep93xx, lpc32xx,
+omap1), but it looks like none of those will be complete for 5.4.
 
---
-With Best Regards,
-Andy Shevchenko
+I now expect that we can get most of the preparation into 5.4,
+and maybe move them all over together in 5.5 after some more
+testing. If someone finds a problem with the one of the
+preparation steps, that we can revert the individual patches
+more easily.
+
+      Arnd
