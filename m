@@ -2,68 +2,72 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id B890F8E4D8
-	for <lists+linux-gpio@lfdr.de>; Thu, 15 Aug 2019 08:16:00 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 18FC88E5B8
+	for <lists+linux-gpio@lfdr.de>; Thu, 15 Aug 2019 09:46:35 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730405AbfHOGP4 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 15 Aug 2019 02:15:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59538 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725681AbfHOGP4 (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Thu, 15 Aug 2019 02:15:56 -0400
-Received: from mail-lj1-f182.google.com (mail-lj1-f182.google.com [209.85.208.182])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9CB582084D;
-        Thu, 15 Aug 2019 06:15:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565849756;
-        bh=UdS63mi586+/lEO9WpbHVnhGDiXc8WFsWXVUrVKqli4=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=hyUFe4azQclyComi59PT8+Kby66Jv3PaMtN63HzWTHy4EWA/UfsV8YRNa/xUj0GL9
-         1Bv68TTO26hdiNLdjYc74BncODUUcEeIMYPjzmXh0LS8HLH+/XHsaIMqbKY0/+FWUf
-         QN30HeTeemMFAYLF+kh3XrtRPAhhPe+uOJrphYDc=
-Received: by mail-lj1-f182.google.com with SMTP id z17so1329470ljz.0;
-        Wed, 14 Aug 2019 23:15:55 -0700 (PDT)
-X-Gm-Message-State: APjAAAUeVc8VMZ7hQJuS/0pvZBkKI79/GOq7m3UTTFqjCzVeek6mCIle
-        +FvP3aSiSHVZxCbeSjVkuKILOXDiSfqmdtUTkYQ=
-X-Google-Smtp-Source: APXvYqymA0m6g6FYEkt+jvTS/lHA6LXkadvpzAJfqn2n+NzLPIJ0NX5IscY500yE+VMSEdPLNeQTT4pSQY1UMVm/F7Q=
-X-Received: by 2002:a2e:7818:: with SMTP id t24mr298678ljc.210.1565849753812;
- Wed, 14 Aug 2019 23:15:53 -0700 (PDT)
+        id S1730615AbfHOHqe (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 15 Aug 2019 03:46:34 -0400
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:36306 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730509AbfHOHqe (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 15 Aug 2019 03:46:34 -0400
+Received: by mail-lf1-f67.google.com with SMTP id j17so1085557lfp.3
+        for <linux-gpio@vger.kernel.org>; Thu, 15 Aug 2019 00:46:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=KvqA7IsnNASc7CJ4IW1giEyezsBAXupdGLtj7uVYzjo=;
+        b=sVDXhXrw4Mg8Lz4WDAzFmuZ45tFznhV2dEah0EpU/mgvuFCNNZJ8gF3oAGHnwiC/KH
+         XQyopiul1TP//82B6W+1RH4gU7cIYK9c2/2GBjbSCIwLi9c0pcyeQgSYfNVBn8siH7V3
+         Z/iO5QKNgpMNJ//tZjmDHSpJ8IfF3daj+YkyW33pi8vBomTucb0aS0vkbqHqeaRPkpMD
+         oODl52VETergHl5tqgx/qNYXfDntP+fOrksSkNhFreNxhgYSdpzQDLenR4hTUUTlIBvG
+         aOKQurFvaPhT5g4ttSxG8sPcu9UG92/qMss9ZZVGDHDH+NvLylYJvdQi9FAfPHKzSLo5
+         O2rw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=KvqA7IsnNASc7CJ4IW1giEyezsBAXupdGLtj7uVYzjo=;
+        b=KVqG/oYnh2hq+HVTwc5L1CVHjryBlxEYk30h52B92MGKgs0OyL3efglT8e60pA8Y/6
+         j14NxC1wn+oXffsqSSjmbvIWgTFZgooUZ6UzxlLdyw7l+rGWNzzEWyp/A89wSknIQjZY
+         zjBFFJYyvJkV+KbNZ/o2uVFBoLhq9fAN6wyE1iuIrI/A5ZliIVR+9FSPx6EFiqzImHtp
+         idhmviJTwBTQA0Gs8ejT8TYaxu47g5yoWIGv5SRkOqxcvgtrwcC4ORulxs8nFTP5ga+a
+         eZJsGdk8Ea3OhgBndZrzRuezovREvard77d8ioTuQVLKLb1w7DDjV2v3uAWSxW3s2jQC
+         cS0g==
+X-Gm-Message-State: APjAAAUcbnvEqu/SUQvNvfdngCWrVQCyoWlIfOL3l6PjckzOZoA/qAx8
+        nfrdn+KmKTom1Q+ICasvIbZIHy3Vg82UNUSmsibjmA==
+X-Google-Smtp-Source: APXvYqzkhC2NmCMDusfDasVwyN9Dfskh9WToFmpwdWNabOnvXr7WeusCj090idUG5TCvhv0VfZX4fsMlPOQ6am60p6Q=
+X-Received: by 2002:ac2:4c07:: with SMTP id t7mr1546229lfq.152.1565855192086;
+ Thu, 15 Aug 2019 00:46:32 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190815060914.3572-1-nishkadg.linux@gmail.com>
-In-Reply-To: <20190815060914.3572-1-nishkadg.linux@gmail.com>
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-Date:   Thu, 15 Aug 2019 08:15:42 +0200
-X-Gmail-Original-Message-ID: <CAJKOXPfxV9SZrjpQ1=fRcRrkE_4vYRMKPzr3+GJ6cyktZeZtYw@mail.gmail.com>
-Message-ID: <CAJKOXPfxV9SZrjpQ1=fRcRrkE_4vYRMKPzr3+GJ6cyktZeZtYw@mail.gmail.com>
-Subject: Re: [PATCH] pinctrl: samsung: samsung: Add of_node_put() before return
-To:     Nishka Dasgupta <nishkadg.linux@gmail.com>
-Cc:     Tomasz Figa <tomasz.figa@gmail.com>, linus.walleij@linaro.org,
-        linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
-        "linux-samsung-soc@vger.kernel.org" 
-        <linux-samsung-soc@vger.kernel.org>
+References: <20190809082947.30590-1-lokeshvutla@ti.com> <20190809082947.30590-2-lokeshvutla@ti.com>
+In-Reply-To: <20190809082947.30590-2-lokeshvutla@ti.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Thu, 15 Aug 2019 09:46:20 +0200
+Message-ID: <CACRpkdYwOaiNyZ-hhXF2Ly4-tZ67o2u+ouRmsjoXiRbY=+YXoA@mail.gmail.com>
+Subject: Re: [PATCH 1/6] dt-bindings: gpio: davinci: Add new compatible for
+ J721E SoCs
+To:     Lokesh Vutla <lokeshvutla@ti.com>
+Cc:     Tero Kristo <t-kristo@ti.com>, Nishanth Menon <nm@ti.com>,
+        Keerthy <j-keerthy@ti.com>, Rob Herring <robh+dt@kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Device Tree Mailing List <devicetree@vger.kernel.org>,
+        Linux ARM Mailing List <linux-arm-kernel@lists.infradead.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, 15 Aug 2019 at 08:09, Nishka Dasgupta <nishkadg.linux@gmail.com> wrote:
->
-> Each iteration of for_each_child_of_node puts the previous node, but in
-> the case of a return from the middle of the loop, there is no put, thus
-> causing a memory leak. Hence add an of_node_put before the return in
-> three places.
-> Issue found with Coccinelle.
->
-> Signed-off-by: Nishka Dasgupta <nishkadg.linux@gmail.com>
-> ---
->  drivers/pinctrl/samsung/pinctrl-samsung.c | 9 +++++++--
->  1 file changed, 7 insertions(+), 2 deletions(-)
+On Fri, Aug 9, 2019 at 10:30 AM Lokesh Vutla <lokeshvutla@ti.com> wrote:
 
-This is already fixed. You can base your patches on top of linux-next
-to avoid duplicating effort.
+> J721e SoCs have same gpio IP as K2G davinci gpio. Add a new compatible to
+> handle J721E SoCs.
+>
+> Signed-off-by: Lokesh Vutla <lokeshvutla@ti.com>
 
-Best regards,
-Krzysztof
+Patch applied with Keerthy's review tag.
+
+Yours,
+Linus Walleij
