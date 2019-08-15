@@ -2,103 +2,88 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id A59728EC77
-	for <lists+linux-gpio@lfdr.de>; Thu, 15 Aug 2019 15:11:45 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4A1208ED12
+	for <lists+linux-gpio@lfdr.de>; Thu, 15 Aug 2019 15:39:22 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732079AbfHONLn (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 15 Aug 2019 09:11:43 -0400
-Received: from mail-qt1-f195.google.com ([209.85.160.195]:37150 "EHLO
-        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731282AbfHONLn (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 15 Aug 2019 09:11:43 -0400
-Received: by mail-qt1-f195.google.com with SMTP id y26so2251139qto.4;
-        Thu, 15 Aug 2019 06:11:42 -0700 (PDT)
+        id S1732379AbfHONjW (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 15 Aug 2019 09:39:22 -0400
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:46871 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732299AbfHONjV (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 15 Aug 2019 09:39:21 -0400
+Received: by mail-lj1-f193.google.com with SMTP id f9so2223781ljc.13
+        for <linux-gpio@vger.kernel.org>; Thu, 15 Aug 2019 06:39:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=/SOlumz6vk2Alm/CYh7S2Oejxh0Xe/C95oR58raMHnQ=;
+        b=Bqv5iBRPvFl2b9VdsUGma7yaA5FL4jWGwfAzscFHwHgVn2LkIz6NuqRaS3ifedqu7t
+         Zl7nkg7Uvq2YawfNEJDqo0IYmfIhnGM6j1EU/ZuUjmua4FPdl6LRWb6bSeIV+U0Sy44Q
+         sROgcq6zOpSCERywNRarUg2G+rFt2vOyPf9FWZmSyerZuCp8sAqpkmh3gJONeWc4aH47
+         JwsXgTRJArkMPd/jBm9NQ9aNekx8d+hIw0V02KXdw6uP/wWAr+bkxjv5FWgCcCPAzN5b
+         +79RHCgxN2dvNUlunVHE72i3dFzwn0IA3O/C+Qz/QpA1t4b0CAGIa20oHiT1OEqgIcR1
+         ulLw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=Oj5UE2LGVcMS9SysCoBFopHSBvRpgrX1g7nT1W4Cv9s=;
-        b=HmHrpfoylIv+xenX+ud7+vckyYDAz7lESPt20PyQy2YEInPQleZa1NVmH0x4CfYiBJ
-         JXW7Hl0Ra0lW+jouPOonVpIg8RvjwGgENSVMn351rtO0nD5SsJqrsAcNSeWu/VqzrnXX
-         ElBk6PwCa12NBNyZiaKQECiegQ1dDbulhdA4XZJd5ElX8WlaW43i0ZjbuGEgorzggdZx
-         HVgsGhDqkmwVpcvSSntpkMagxMhhIhJoaq6e81Vz+jeRtwMYoJ4Fn2FVvVcNIZ03ySAT
-         fwdWqTd3IjVxa/LeZgJVcrxfao45oXHsYq3Tv5zKnSQWED52q9jBCcbzyManuc5vU6tk
-         2s/Q==
-X-Gm-Message-State: APjAAAWHpTUJLk1TW3XlkPOlsBoewZwdFvYWLwRVRkD4eOrfOI8oLzgj
-        vn+GtPPpgIXLfr246yq4GX/Sw/QE7ADJfz7Te4k=
-X-Google-Smtp-Source: APXvYqxABsAyr+BlU4FYBzPP5E1lu5hNr5RQd0ASTCcdU5s/TSRX7ngTvmZ5zwiRax3ZP5e4wh7pQOi1eFXPhhKeyw0=
-X-Received: by 2002:ad4:53cb:: with SMTP id k11mr3085440qvv.93.1565874701634;
- Thu, 15 Aug 2019 06:11:41 -0700 (PDT)
+        bh=/SOlumz6vk2Alm/CYh7S2Oejxh0Xe/C95oR58raMHnQ=;
+        b=AamUCVTlpfNCuHMInyK+C9uPjop1YODxcPxg+CdmH6ckA7p3bM5QFn1Pnz8lqTfRWU
+         G3ks7Js4ih9UGY+KY2N1DGcUqw4ocgNnlqNaO5NWBEAgppZEL56ZZ2PNnyzU6Gq+Blvw
+         EzT7tb3AxHK1zT8EAIhZKCI/DOK2IocEyJb7O7wvM11VEBB1ST1ui4D8Jv01SXaIYcsD
+         CUHrdJ1/Et1rZnUFi8FxvPn4NBfv1aYQfHSuLKcf2lgR6wTdOEGRmI9BnxQSIKUIUInI
+         GPTpUj+XGV+LKtgFW6ell37oKNTXD7VCzAFQUVdPABgkyS2iNPvx5pSFfBvHkt6M7Nfp
+         OLrQ==
+X-Gm-Message-State: APjAAAXziMXmg6t6qMwAGSoWoHN8iBnfvk5oIov07zXWMIPfe52hs8Dq
+        L/NFvFxpWQmIOPDZK5iArZEajRMkLdj7lqItE17/ZQ==
+X-Google-Smtp-Source: APXvYqwFALZTskPXo6e7NXJ/utTQfhrRgdFbqggPbykgoqXnV4m7nNI5t8VLZQOj3hti8lr1yIIaXwLEq2Y74hb9jMA=
+X-Received: by 2002:a2e:3a0e:: with SMTP id h14mr2771959lja.180.1565876359961;
+ Thu, 15 Aug 2019 06:39:19 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190731195713.3150463-1-arnd@arndb.de> <20190731225303.GC1330@shell.armlinux.org.uk>
- <CAK8P3a1Lgbz9RwVaOgNq=--gwvEG70tUi67XwsswjgnXAX6EhA@mail.gmail.com>
-In-Reply-To: <CAK8P3a1Lgbz9RwVaOgNq=--gwvEG70tUi67XwsswjgnXAX6EhA@mail.gmail.com>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Thu, 15 Aug 2019 15:11:25 +0200
-Message-ID: <CAK8P3a0=GrjM_HOBgqy5V3pOsA6w1EDOtEQO9dZG2Cw+-2niaw@mail.gmail.com>
-Subject: Re: [PATCH 00/14] ARM: move lpc32xx and dove to multiplatform
-To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>
-Cc:     SoC Team <soc@kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Vladimir Zapolskiy <vz@mleia.com>,
-        Sylvain Lemieux <slemieux.tyco@gmail.com>,
-        Gregory Clement <gregory.clement@bootlin.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Alan Stern <stern@rowland.harvard.edu>,
-        Guenter Roeck <linux@roeck-us.net>,
+References: <5D514D6F.4090904@hisilicon.com> <CAHp75VcKNZeq80hw5qjKKuh8Qg=WUrXPSpcy6yx5h-_7RHah+g@mail.gmail.com>
+In-Reply-To: <CAHp75VcKNZeq80hw5qjKKuh8Qg=WUrXPSpcy6yx5h-_7RHah+g@mail.gmail.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Thu, 15 Aug 2019 15:39:07 +0200
+Message-ID: <CACRpkdbJS-b4E84qU7Knt7ND9WHwKh_d1MdawrFf4Ht_MHt2xw@mail.gmail.com>
+Subject: Re: [PATCH] gpio: pl061: Fix the issue failed to register the ACPI interruption
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     Wei Xu <xuwei5@hisilicon.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Networking <netdev@vger.kernel.org>,
-        linux-serial@vger.kernel.org, USB list <linux-usb@vger.kernel.org>,
-        LINUXWATCHDOG <linux-watchdog@vger.kernel.org>
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        Linuxarm <linuxarm@huawei.com>,
+        Shameerali Kolothum Thodi 
+        <shameerali.kolothum.thodi@huawei.com>,
+        Jonathan Cameron <jonathan.cameron@huawei.com>,
+        John Garry <john.garry@huawei.com>,
+        Salil Mehta <salil.mehta@huawei.com>,
+        Shiju Jose <shiju.jose@huawei.com>, jinying@hisilicon.com,
+        Zhangyi ac <zhangyi.ac@huawei.com>,
+        "Liguozhu (Kenneth)" <liguozhu@hisilicon.com>,
+        Tangkunshan <tangkunshan@huawei.com>,
+        huangdaode <huangdaode@hisilicon.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Aug 1, 2019 at 9:33 AM Arnd Bergmann <arnd@arndb.de> wrote:
->
-> On Thu, Aug 1, 2019 at 12:53 AM Russell King - ARM Linux admin
-> <linux@armlinux.org.uk> wrote:
-> >
-> > On Wed, Jul 31, 2019 at 09:56:42PM +0200, Arnd Bergmann wrote:
-> > > For dove, the patches are basically what I had proposed back in
-> > > 2015 when all other ARMv6/ARMv7 machines became part of a single
-> > > kernel build. I don't know what the state is mach-dove support is,
-> > > compared to the DT based support in mach-mvebu for the same
-> > > hardware. If they are functionally the same, we could also just
-> > > remove mach-dove rather than applying my patches.
-> >
-> > Well, the good news is that I'm down to a small board support file
-> > for the Dove Cubox now - but the bad news is, that there's still a
-> > board support file necessary to support everything the Dove SoC has
-> > to offer.
-> >
-> > Even for a DT based Dove Cubox, I'm still using mach-dove, but it
-> > may be possible to drop most of mach-dove now.  Without spending a
-> > lot of time digging through it, it's impossible to really know.
->
-> Ok, so we won't remove it then, but I'd like to merge my patches to
-> at least get away from the special case of requiring a separate kernel
-> image for it.
->
-> Can you try if applying patches 12 and 14 from my series causes
-> problems for you? (it may be easier to apply the entire set
-> or pull from [1] to avoid rebase conflicts).
+On Thu, Aug 15, 2019 at 3:10 PM Andy Shevchenko
+<andy.shevchenko@gmail.com> wrote:
+> On Mon, Aug 12, 2019 at 2:30 PM Wei Xu <xuwei5@hisilicon.com> wrote:
 
-I applied patches 12 and 13 into the soc tree now. There are some
-other pending multiplatform conversions (iop32x, ep93xx, lpc32xx,
-omap1), but it looks like none of those will be complete for 5.4.
+> Linus, I'm wondering if we can do this for all inside the GPIO library.
+> Thoughts?
 
-I now expect that we can get most of the preparation into 5.4,
-and maybe move them all over together in 5.5 after some more
-testing. If someone finds a problem with the one of the
-preparation steps, that we can revert the individual patches
-more easily.
+If it's supposed to happen exactly the same way on all ACPI-enabled
+gpiochips, I think it is more or less mandatory :D
 
-      Arnd
+We need to be sure we're not gonna have to quirks for misc variants
+of GPIO controllers down in the gpiolib-acpi.c as a result because
+some ACPI-thing is "standard not quite standard" though.
+
+Yours,
+Linus Walleij
