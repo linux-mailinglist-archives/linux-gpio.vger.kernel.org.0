@@ -2,72 +2,83 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 18FC88E5B8
-	for <lists+linux-gpio@lfdr.de>; Thu, 15 Aug 2019 09:46:35 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1FC178E5C6
+	for <lists+linux-gpio@lfdr.de>; Thu, 15 Aug 2019 09:51:56 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730615AbfHOHqe (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 15 Aug 2019 03:46:34 -0400
-Received: from mail-lf1-f67.google.com ([209.85.167.67]:36306 "EHLO
-        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730509AbfHOHqe (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 15 Aug 2019 03:46:34 -0400
-Received: by mail-lf1-f67.google.com with SMTP id j17so1085557lfp.3
-        for <linux-gpio@vger.kernel.org>; Thu, 15 Aug 2019 00:46:32 -0700 (PDT)
+        id S1730573AbfHOHvv (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 15 Aug 2019 03:51:51 -0400
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:43578 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725911AbfHOHvv (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 15 Aug 2019 03:51:51 -0400
+Received: by mail-lj1-f195.google.com with SMTP id h15so1455987ljg.10
+        for <linux-gpio@vger.kernel.org>; Thu, 15 Aug 2019 00:51:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=KvqA7IsnNASc7CJ4IW1giEyezsBAXupdGLtj7uVYzjo=;
-        b=sVDXhXrw4Mg8Lz4WDAzFmuZ45tFznhV2dEah0EpU/mgvuFCNNZJ8gF3oAGHnwiC/KH
-         XQyopiul1TP//82B6W+1RH4gU7cIYK9c2/2GBjbSCIwLi9c0pcyeQgSYfNVBn8siH7V3
-         Z/iO5QKNgpMNJ//tZjmDHSpJ8IfF3daj+YkyW33pi8vBomTucb0aS0vkbqHqeaRPkpMD
-         oODl52VETergHl5tqgx/qNYXfDntP+fOrksSkNhFreNxhgYSdpzQDLenR4hTUUTlIBvG
-         aOKQurFvaPhT5g4ttSxG8sPcu9UG92/qMss9ZZVGDHDH+NvLylYJvdQi9FAfPHKzSLo5
-         O2rw==
+        bh=2KO+Z0JsKFmq2PO7wNOhuuy5QVOCrUT3RkmKRxIEBxM=;
+        b=MFX+4DBCjGwtyq+vpGo6BFOdWRFE7uHXLJA3Lp63Rm41HUV/ctST4jX4RIClPJz38D
+         ayGGN6FXa2reujZbvOX5UiTHdbRMUPx2uzBXBntLaeA8tMv7wUnqqeFooDdMyUjKrqPt
+         vhfNjMu8ABOYkztZ8XgebxqtzxNkqwq7gz85a0oF6vekNc0hUHbFYpXI/AgevaB7vVEq
+         0xhkUf1gCOK9IT9+Bu5PGFY9wAurydpISn8NiKQG/V7HcfnYaZMrTlAb+9oyH5l1Wpsl
+         r6D/cbOgRQ0m38xq0n1Ld0evhLvhxDCgID50uib/d8evoQFYoYAk5zOCz35B2CWzHvXA
+         XKsg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=KvqA7IsnNASc7CJ4IW1giEyezsBAXupdGLtj7uVYzjo=;
-        b=KVqG/oYnh2hq+HVTwc5L1CVHjryBlxEYk30h52B92MGKgs0OyL3efglT8e60pA8Y/6
-         j14NxC1wn+oXffsqSSjmbvIWgTFZgooUZ6UzxlLdyw7l+rGWNzzEWyp/A89wSknIQjZY
-         zjBFFJYyvJkV+KbNZ/o2uVFBoLhq9fAN6wyE1iuIrI/A5ZliIVR+9FSPx6EFiqzImHtp
-         idhmviJTwBTQA0Gs8ejT8TYaxu47g5yoWIGv5SRkOqxcvgtrwcC4ORulxs8nFTP5ga+a
-         eZJsGdk8Ea3OhgBndZrzRuezovREvard77d8ioTuQVLKLb1w7DDjV2v3uAWSxW3s2jQC
-         cS0g==
-X-Gm-Message-State: APjAAAUcbnvEqu/SUQvNvfdngCWrVQCyoWlIfOL3l6PjckzOZoA/qAx8
-        nfrdn+KmKTom1Q+ICasvIbZIHy3Vg82UNUSmsibjmA==
-X-Google-Smtp-Source: APXvYqzkhC2NmCMDusfDasVwyN9Dfskh9WToFmpwdWNabOnvXr7WeusCj090idUG5TCvhv0VfZX4fsMlPOQ6am60p6Q=
-X-Received: by 2002:ac2:4c07:: with SMTP id t7mr1546229lfq.152.1565855192086;
- Thu, 15 Aug 2019 00:46:32 -0700 (PDT)
+        bh=2KO+Z0JsKFmq2PO7wNOhuuy5QVOCrUT3RkmKRxIEBxM=;
+        b=uk08L8BGflaQ8aeZq2i19hP0u/az/07b9K26bh9y/Q+kHzhq8QzN7aM981tgKa2Cvi
+         TJCUaH7A85x7jXmGfS5WfuRXtklEHyIhjfXUQQOP7EgQhnL7G0qCCsfKUptriOgc+3qg
+         80i+3PsmlzrgTt4vD3iDB5G1XofH+sZ2S9Be9OfjVwqmPyTru4o40LIh6fpmARta3qhe
+         MnFpBR/TBh9F8SJmqUJN+CvF+OXYAz0ZcFt6jSd/dUBIGl15L2H0mQveMAGbdKaAM7sL
+         3/x7g2XN+8uOlBZONmqcGz3FuhhNeCJmYVb9472VUv9VBWSXLq28JWoze+3+c+bwbe+u
+         jCBA==
+X-Gm-Message-State: APjAAAX8OryftL8CjAhb6S3WyMPWcWJRrCvJGTndUZcaFVasBe8roCTY
+        udmGdSf5890/mexsFhp8S/vDCrqXBJwSFM5MRr8pXw==
+X-Google-Smtp-Source: APXvYqynv1Gde66j1lWkcpt1eC+OtHXJ31xTsAHe5lJV/skSr6II9/5QHd/HzPoW5xCyGd8uaoIz0NAIhIRu4HhP/0w=
+X-Received: by 2002:a2e:b174:: with SMTP id a20mr2001181ljm.108.1565855508911;
+ Thu, 15 Aug 2019 00:51:48 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190809082947.30590-1-lokeshvutla@ti.com> <20190809082947.30590-2-lokeshvutla@ti.com>
-In-Reply-To: <20190809082947.30590-2-lokeshvutla@ti.com>
+References: <20190812130401.22769-1-linus.walleij@linaro.org> <60da7536-2d41-69b2-5730-4678b6e84cf9@broadcom.com>
+In-Reply-To: <60da7536-2d41-69b2-5730-4678b6e84cf9@broadcom.com>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Thu, 15 Aug 2019 09:46:20 +0200
-Message-ID: <CACRpkdYwOaiNyZ-hhXF2Ly4-tZ67o2u+ouRmsjoXiRbY=+YXoA@mail.gmail.com>
-Subject: Re: [PATCH 1/6] dt-bindings: gpio: davinci: Add new compatible for
- J721E SoCs
-To:     Lokesh Vutla <lokeshvutla@ti.com>
-Cc:     Tero Kristo <t-kristo@ti.com>, Nishanth Menon <nm@ti.com>,
-        Keerthy <j-keerthy@ti.com>, Rob Herring <robh+dt@kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Device Tree Mailing List <devicetree@vger.kernel.org>,
-        Linux ARM Mailing List <linux-arm-kernel@lists.infradead.org>
+Date:   Thu, 15 Aug 2019 09:51:36 +0200
+Message-ID: <CACRpkdZ4k_b=rOPvRi2wPgk1=9Md+urw6No1xcPy3nSFEcUogg@mail.gmail.com>
+Subject: Re: [PATCH] pinctrl: bcm-iproc: Use SPDX header
+To:     Scott Branden <scott.branden@broadcom.com>
+Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Pramod Kumar <pramodku@broadcom.com>,
+        Ray Jui <rjui@broadcom.com>,
+        Scott Branden <sbranden@broadcom.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Aug 9, 2019 at 10:30 AM Lokesh Vutla <lokeshvutla@ti.com> wrote:
+On Mon, Aug 12, 2019 at 5:59 PM Scott Branden
+<scott.branden@broadcom.com> wrote:
 
-> J721e SoCs have same gpio IP as K2G davinci gpio. Add a new compatible to
-> handle J721E SoCs.
+> Please leave the file description comment separate from the license
+> header/copyright notices.
 >
-> Signed-off-by: Lokesh Vutla <lokeshvutla@ti.com>
+> ie. leave the above 3 lines intact.
 
-Patch applied with Keerthy's review tag.
+OK... Why?
+
+Is this because you have an automated tool that likes this format:
+
+/*
+ * Copyright ...
+ */
+
+/*
+ * Other stuff
+ */
+
+Or is it just a personal (perception) preference?
 
 Yours,
 Linus Walleij
