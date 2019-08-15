@@ -2,55 +2,55 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 286D38E4B9
-	for <lists+linux-gpio@lfdr.de>; Thu, 15 Aug 2019 08:05:19 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 453A28E4BE
+	for <lists+linux-gpio@lfdr.de>; Thu, 15 Aug 2019 08:06:26 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726008AbfHOGFS (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 15 Aug 2019 02:05:18 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:46266 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725977AbfHOGFR (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 15 Aug 2019 02:05:17 -0400
-Received: by mail-pg1-f194.google.com with SMTP id m3so268324pgv.13;
-        Wed, 14 Aug 2019 23:05:17 -0700 (PDT)
+        id S1725977AbfHOGGZ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 15 Aug 2019 02:06:25 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:33398 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725911AbfHOGGZ (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 15 Aug 2019 02:06:25 -0400
+Received: by mail-pf1-f193.google.com with SMTP id g2so873125pfq.0
+        for <linux-gpio@vger.kernel.org>; Wed, 14 Aug 2019 23:06:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=QR+1SuJZ5tZbGg7qkLCJVmhmhdJKRiKQpawR4Js8Xuk=;
-        b=J40S5LgVIFbpKF4VcPkepw8kzEiHWTibNmix/H9iDdsHe3GMUIUit3NqDx7wuVJiyt
-         G+Fk1scK5zD3KNi7jRf70kvb0zWiL1uCzhfbVoZtm93VwnediryTfIWwBvTXQgHr+/5K
-         QY11ruKyR6sVQJlZs0iQl+xzDM7vmQ3r06HWrJg0SPT00wfF4HBq1DKKgxMV5VkCB526
-         WV/BSIGogVvcg3tOmnVQE4vc0M2uxG5qHRMhuLBb+lhsDYTzrmb1wITXCC2CFe5lMpJu
-         SNwct2lCmtQH3i7kJ3BpdWXA/BPLz9UEClEv/FrfWKsk8Ab9GEyUWLSPZTVUpjzzL5oW
-         uWog==
+        bh=IWP/C/XpjQhJDAx2QHm1UDwbKPSNG33jAiOfZIHArMw=;
+        b=ta+mnThUrSgw4PJu9B1bI/erSr+RFYpPGO/FcdAk2Y1C87+F1jr+hjOb37wXGBB5I4
+         QG2PirON/lA1Fi1LUXZFmmzgJZftvnEkWDWyv6SsuI9m53Lt8PY268xzIZ0uQD1Q/Okf
+         Y14nXreXD1kJQ3ICkN4HmTPIYCbiwEA0OnaUN9etLN9HMaHrTQ/W5UNWOpOwNEdJc8vV
+         Qo8Rn+d0cH1XngoVUCY33JcKNpGfSN9/A8MCJjJ82SrmftLMLjkFAzu8SV1dUvUVRj6V
+         bPyX8f+e8YB3C4f8EThbKazbR4InCuGL6DHhYTdG6AfAuYaWLlOcGu20hn+PsH4eZyND
+         Ro2g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=QR+1SuJZ5tZbGg7qkLCJVmhmhdJKRiKQpawR4Js8Xuk=;
-        b=RlWgDM03w0g5LeGwKbBvhGF4UdkDdUT8kQL35fUmohMLMV6SrMF15UfukBEtQdp+D9
-         jsc53Zt4sMLKiGhibaMlwro/SdAAEuxUJ6rMOCgKtkmzhQITdNCLay5jTq1rjQrSkNln
-         fSRpF8xOG5IQJsKtdYzRmfdiKgPc1kQTxJ+fjZpp3s+R00yIYuF1SioHxRupA3E0DvVw
-         JAXU4GmwSfoPZRqVnSNVfHrG8CbQMRPgR7uOcygj9Whj99SQEw/QvQDEPe5XZJTw+PGV
-         1uV7smMlOb8o08NnjmA0Q+fm/EO8tRbb+L9KQGGuTpiEOEbDaemrGmuwsa5eLOF3l+A5
-         /IKA==
-X-Gm-Message-State: APjAAAWCl+Z/+l2a4UOzF2mU0hPIY1MHN9oVYzAGa02XaIXegbj2tGyv
-        2CFoflMpzVQcEgPXVHgrOCBxlzI7
-X-Google-Smtp-Source: APXvYqwlHIKuxDnvidJF57JWbVKhk+wa/hb/uzQXQgc5YbmR5QYd0mamBhaxNsx5WykXdcAyh54Z8A==
-X-Received: by 2002:a17:90a:ec12:: with SMTP id l18mr812807pjy.6.1565849117142;
-        Wed, 14 Aug 2019 23:05:17 -0700 (PDT)
+        bh=IWP/C/XpjQhJDAx2QHm1UDwbKPSNG33jAiOfZIHArMw=;
+        b=p7qm2+B26Z9FF7lkYzZF1KoRfz36f5GUhKQgdomzjDWcBWNhg9/w2YhKrNekX5dmUO
+         d7dMqGyocrswImuuL7XP+ECiRpPKTxGMtRftsE9VRkt34wKGSsnz9E973ls89yup1Mqc
+         Dn6kYQGZSC96ilSNFExOmtBm0eyKHEUbo26zxp9Qzr0kVh0QGhqX0NfhFjWGH86zm0oB
+         0Mw3D6NxJISjtA7KZfnZPzqvNlfkvwAAZFcPlyR/SLwR+oso1zp+GSd86oSIQgfFvsUW
+         9WVhrsaoEsJfPKrzfMBi+HLUT0M5bhLd9dj8VHCrpgTbWr+XWCzb9FB8b2Al/HGhHuJA
+         8lIQ==
+X-Gm-Message-State: APjAAAWOvg6O1l4Q2WlZs7K9aOkAnpV8tYJxeBR8Ep1CWi67oIsXmvXy
+        THAkIOphbtrkTm215Hg0GlU=
+X-Google-Smtp-Source: APXvYqxTYYMswK13ErwYCDDOlLX/KNuxx4uj1nuebSYRyIorlOmqQpwOmMfKl+Go7/pr6OEwiqq+FQ==
+X-Received: by 2002:a17:90a:3aaf:: with SMTP id b44mr808587pjc.87.1565849184305;
+        Wed, 14 Aug 2019 23:06:24 -0700 (PDT)
 Received: from localhost.localdomain ([110.225.3.176])
-        by smtp.gmail.com with ESMTPSA id l31sm1492817pgm.63.2019.08.14.23.05.14
+        by smtp.gmail.com with ESMTPSA id i9sm411521pjj.2.2019.08.14.23.06.21
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 14 Aug 2019 23:05:16 -0700 (PDT)
+        Wed, 14 Aug 2019 23:06:23 -0700 (PDT)
 From:   Nishka Dasgupta <nishkadg.linux@gmail.com>
-To:     geert+renesas@glider.be, linus.walleij@linaro.org,
-        linux-renesas-soc@vger.kernel.org, linux-gpio@vger.kernel.org
+To:     patrice.chotard@st.com, linus.walleij@linaro.org,
+        linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org
 Cc:     Nishka Dasgupta <nishkadg.linux@gmail.com>
-Subject: [PATCH] pinctrl: rza1: Add of_node_put() before return
-Date:   Thu, 15 Aug 2019 11:35:03 +0530
-Message-Id: <20190815060503.2853-1-nishkadg.linux@gmail.com>
+Subject: [PATCH] pinctrl: st: Add of_node_put() before return
+Date:   Thu, 15 Aug 2019 11:36:09 +0530
+Message-Id: <20190815060609.3056-1-nishkadg.linux@gmail.com>
 X-Mailer: git-send-email 2.19.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -67,49 +67,45 @@ Issue found with Coccinelle.
 
 Signed-off-by: Nishka Dasgupta <nishkadg.linux@gmail.com>
 ---
- drivers/pinctrl/pinctrl-rza1.c | 12 +++++++++---
- 1 file changed, 9 insertions(+), 3 deletions(-)
+ drivers/pinctrl/pinctrl-st.c | 9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/pinctrl/pinctrl-rza1.c b/drivers/pinctrl/pinctrl-rza1.c
-index 021e37b7689e..8eeb9545137b 100644
---- a/drivers/pinctrl/pinctrl-rza1.c
-+++ b/drivers/pinctrl/pinctrl-rza1.c
-@@ -866,8 +866,10 @@ static int rza1_dt_node_pin_count(struct device_node *np)
- 	npins = 0;
- 	for_each_child_of_node(np, child) {
- 		of_pins = of_find_property(child, "pinmux", NULL);
--		if (!of_pins)
-+		if (!of_pins) {
-+			of_node_put(child);
- 			return -EINVAL;
-+		}
- 
- 		npins += of_pins->length / sizeof(u32);
- 	}
-@@ -1025,8 +1027,10 @@ static int rza1_dt_node_to_map(struct pinctrl_dev *pctldev,
- 		for_each_child_of_node(np, child) {
- 			ret = rza1_parse_pinmux_node(rza1_pctl, child, mux_conf,
- 						     grpin);
--			if (ret < 0)
-+			if (ret < 0) {
-+				of_node_put(child);
- 				return ret;
-+			}
- 
- 			grpin += ret;
- 			mux_conf += ret;
-@@ -1272,8 +1276,10 @@ static int rza1_gpio_register(struct rza1_pinctrl *rza1_pctl)
- 
- 		ret = rza1_parse_gpiochip(rza1_pctl, child, &gpio_chips[i],
- 					  &gpio_ranges[i]);
+diff --git a/drivers/pinctrl/pinctrl-st.c b/drivers/pinctrl/pinctrl-st.c
+index b9688ea548da..e788c7495ec7 100644
+--- a/drivers/pinctrl/pinctrl-st.c
++++ b/drivers/pinctrl/pinctrl-st.c
+@@ -1262,8 +1262,10 @@ static int st_pctl_parse_functions(struct device_node *np,
+ 		grp = &info->groups[*grp_index];
+ 		*grp_index += 1;
+ 		ret = st_pctl_dt_parse_groups(child, grp, info, i++);
 -		if (ret)
 +		if (ret) {
 +			of_node_put(child);
  			return ret;
 +		}
- 
- 		++i;
  	}
+ 	dev_info(info->dev, "Function[%d\t name:%s,\tgroups:%d]\n",
+ 				index, func->name, func->ngroups);
+@@ -1623,8 +1625,10 @@ static int st_pctl_probe_dt(struct platform_device *pdev,
+ 		if (of_property_read_bool(child, "gpio-controller")) {
+ 			const char *bank_name = NULL;
+ 			ret = st_gpiolib_register_bank(info, bank, child);
+-			if (ret)
++			if (ret) {
++				of_node_put(child);
+ 				return ret;
++			}
+ 
+ 			k = info->banks[bank].range.pin_base;
+ 			bank_name = info->banks[bank].range.name;
+@@ -1641,6 +1645,7 @@ static int st_pctl_probe_dt(struct platform_device *pdev,
+ 							i++, &grp_index);
+ 			if (ret) {
+ 				dev_err(&pdev->dev, "No functions found.\n");
++				of_node_put(child);
+ 				return ret;
+ 			}
+ 		}
 -- 
 2.19.1
 
