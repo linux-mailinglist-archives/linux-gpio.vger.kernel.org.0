@@ -2,145 +2,143 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 3A2AD8F85A
-	for <lists+linux-gpio@lfdr.de>; Fri, 16 Aug 2019 03:10:58 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3D1B38FBEE
+	for <lists+linux-gpio@lfdr.de>; Fri, 16 Aug 2019 09:17:05 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726108AbfHPBK4 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 15 Aug 2019 21:10:56 -0400
-Received: from onstation.org ([52.200.56.107]:49918 "EHLO onstation.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725983AbfHPBK4 (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Thu, 15 Aug 2019 21:10:56 -0400
-Received: from localhost (c-98-239-145-235.hsd1.wv.comcast.net [98.239.145.235])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: masneyb)
-        by onstation.org (Postfix) with ESMTPSA id EE4203E998;
-        Fri, 16 Aug 2019 01:10:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=onstation.org;
-        s=default; t=1565917855;
-        bh=trw4UAl1Eb+fVV8ZdiSFdjA+FeU/YpldiCUXoiwWXas=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=GS8uyytoGyrdQNXg5spsgIJ9xfYuHND5aXCwKgk5WCdrI1+/SEMdbuKwEkpsKJJcd
-         Rirz2Pxkl+N4NAGCog+XLutC6DK1tLOz4V2cZj5AyllsH4c5zHZwvl6CggRkG/WPlC
-         CFkKFJ/fBCQp25agKqP9IYpl1GZdWGov5nWwZSI0=
-Date:   Thu, 15 Aug 2019 21:10:54 -0400
-From:   Brian Masney <masneyb@onstation.org>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     linux-gpio@vger.kernel.org,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Marc Zyngier <marc.zyngier@arm.com>,
-        Lina Iyer <ilina@codeaurora.org>,
-        Jon Hunter <jonathanh@nvidia.com>,
-        Sowjanya Komatineni <skomatineni@nvidia.com>,
-        Bitan Biswas <bbiswas@nvidia.com>, linux-tegra@vger.kernel.org,
-        David Daney <david.daney@cavium.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Thierry Reding <treding@nvidia.com>
-Subject: Re: [PATCH 1/6 v2] gpio: Add support for hierarchical IRQ domains
-Message-ID: <20190816011054.GA1041@onstation.org>
-References: <20190808123242.5359-1-linus.walleij@linaro.org>
+        id S1726774AbfHPHQv (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 16 Aug 2019 03:16:51 -0400
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:38496 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726604AbfHPHQu (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 16 Aug 2019 03:16:50 -0400
+Received: by mail-ot1-f66.google.com with SMTP id r20so8805178ota.5;
+        Fri, 16 Aug 2019 00:16:50 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=bXpDqfJClvWxOUOcU12TDdqXCxVH2IPM0Zi2QEc01lk=;
+        b=OipSLBandzQZqt7D7xb74hPnz6cqH2ZJNJmROyxPoxx41c4en8PJ1PFrUiQ8iNS/xH
+         Cx6klZSHntoRUK8m9aqYrT48qID7culJIduhdkFak3eEUxyMLnwWJd0QT8tyTzu7lieI
+         uLvqwM6suqsxZBlqUlm+IFctlyF+5TVk4X2kroBAUQ8OvRK2QAWr6nMlgywy37CqggnU
+         IxkxEYVeQlkdfRHhZN07+i79R1Cw4t5GqoLGPD1dZFSVczG3LP/tgDKwWN8Uar4Jes17
+         bsVbBq1K8OJt0/Q0EzjGze14/gLJ28Word/FBKUSkqBMx4gSlfinoewVIN11Q6BNTmR9
+         k3Gg==
+X-Gm-Message-State: APjAAAX7BRMdt+I6aJ2sTthm66VqCHVRYgggX7RcJgtlI5tnOVAzvUYR
+        bhz2XpcC9c6tDp35xLfSqTpQtLGBfdylHke5b7X2RBWi
+X-Google-Smtp-Source: APXvYqyzBK8lbM0XtJlylaIgzwq7el+4ERBBXhXH8xLvH6jCTgbjXceYtri2d9D+gGx37sCMxh0Nu/xlbqgpj1bn0jc=
+X-Received: by 2002:a9d:5c0c:: with SMTP id o12mr6547455otk.145.1565939810078;
+ Fri, 16 Aug 2019 00:16:50 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190808123242.5359-1-linus.walleij@linaro.org>
+References: <20190815085341.28088-1-sr@denx.de>
+In-Reply-To: <20190815085341.28088-1-sr@denx.de>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Fri, 16 Aug 2019 09:16:39 +0200
+Message-ID: <CAMuHMdXYLB1UShMjoZi6gzyxx=uOeLdVsZmhWZO5J+=As-5gdw@mail.gmail.com>
+Subject: Re: [PATCH v2] serial: mctrl_gpio: Support all GPIO suffixes (gpios
+ vs gpio)
+To:     Stefan Roese <sr@denx.de>
+Cc:     "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Pavel Machek <pavel@denx.de>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Linus,
+CC Mika, who reported the initial issue
 
-On Thu, Aug 08, 2019 at 02:32:37PM +0200, Linus Walleij wrote:
-> Hierarchical IRQ domains can be used to stack different IRQ
-> controllers on top of each other.
-> 
-> Bring hierarchical IRQ domains into the GPIOLIB core with the
-> following basic idea:
-> 
-> Drivers that need their interrupts handled hierarchically
-> specify a callback to translate the child hardware IRQ and
-> IRQ type for each GPIO offset to a parent hardware IRQ and
-> parent hardware IRQ type.
-> 
-> Users have to pass the callback, fwnode, and parent irqdomain
-> before calling gpiochip_irqchip_add().
-> 
-> We use the new method of just filling in the struct
-> gpio_irq_chip before adding the gpiochip for all hierarchical
-> irqchips of this type.
-> 
-> The code path for device tree is pretty straight-forward,
-> while the code path for old boardfiles or anything else will
-> be more convoluted requireing upfront allocation of the
-> interrupts when adding the chip.
-> 
-> One specific use-case where this can be useful is if a power
-> management controller has top-level controls for wakeup
-> interrupts. In such cases, the power management controller can
-> be a parent to other interrupt controllers and program
-> additional registers when an IRQ has its wake capability
-> enabled or disabled.
-> 
-> The hierarchical irqchip helper code will only be available
-> when IRQ_DOMAIN_HIERARCHY is selected to GPIO chips using
-> this should select or depend on that symbol. When using
-> hierarchical IRQs, the parent interrupt controller must
-> also be hierarchical all the way up to the top interrupt
-> controller wireing directly into the CPU, so on systems
-> that do not have this we can get rid of all the extra
-> code for supporting hierarchical irqs.
-> 
-> Cc: Thomas Gleixner <tglx@linutronix.de>
-> Cc: Marc Zyngier <marc.zyngier@arm.com>
-> Cc: Lina Iyer <ilina@codeaurora.org>
-> Cc: Jon Hunter <jonathanh@nvidia.com>
-> Cc: Sowjanya Komatineni <skomatineni@nvidia.com>
-> Cc: Bitan Biswas <bbiswas@nvidia.com>
-> Cc: linux-tegra@vger.kernel.org
-> Cc: David Daney <david.daney@cavium.com>
-> Cc: Masahiro Yamada <yamada.masahiro@socionext.com>
-> Cc: Brian Masney <masneyb@onstation.org>
-> Signed-off-by: Thierry Reding <treding@nvidia.com>
-> Signed-off-by: Brian Masney <masneyb@onstation.org>
-> Co-developed-by: Brian Masney <masneyb@onstation.org>
-> Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+On Thu, Aug 15, 2019 at 10:53 AM Stefan Roese <sr@denx.de> wrote:
+>
+> This patch fixes a backward compatibility issue, when boards use the
+> old style GPIO suffix "-gpio" instead of the new "-gpios". This
+> potential problem has been introduced by commit d99482673f95 ("serial:
+> mctrl_gpio: Check if GPIO property exisits before requesting it").
+>
+> This patch now fixes this issue by using gpiod_count() which iterates
+> over all supported GPIO suffixes (thanks to Linus for suggesting this).
+>
+> With this change, the local string is not needed any more. This way
+> we can remove the allocation in the loop.
+>
+> Signed-off-by: Stefan Roese <sr@denx.de>
+> Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> Cc: Geert Uytterhoeven <geert@linux-m68k.org>
+> Cc: Pavel Machek <pavel@denx.de>
+> Cc: Linus Walleij <linus.walleij@linaro.org>
+> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 > ---
+> v2
+> - Use gpiod_count() to check if the GPIO exists (Linus)
+> - Remove the now unnecessary malloc in the loop (kasprintf)
+>
+>  drivers/tty/serial/serial_mctrl_gpio.c | 13 +++----------
+>  1 file changed, 3 insertions(+), 10 deletions(-)
+>
+> diff --git a/drivers/tty/serial/serial_mctrl_gpio.c b/drivers/tty/serial/serial_mctrl_gpio.c
+> index 2b400189be91..ce73b142c66b 100644
+> --- a/drivers/tty/serial/serial_mctrl_gpio.c
+> +++ b/drivers/tty/serial/serial_mctrl_gpio.c
+> @@ -117,18 +117,11 @@ struct mctrl_gpios *mctrl_gpio_init_noauto(struct device *dev, unsigned int idx)
+>
+>         for (i = 0; i < UART_GPIO_MAX; i++) {
+>                 enum gpiod_flags flags;
+> -               char *gpio_str;
+> -               bool present;
+> +               int count;
+>
+>                 /* Check if GPIO property exists and continue if not */
+> -               gpio_str = kasprintf(GFP_KERNEL, "%s-gpios",
+> -                                    mctrl_gpios_desc[i].name);
+> -               if (!gpio_str)
+> -                       continue;
+> -
+> -               present = device_property_present(dev, gpio_str);
+> -               kfree(gpio_str);
+> -               if (!present)
+> +               count = gpiod_count(dev, mctrl_gpios_desc[i].name);
+> +               if (count <= 0)
+>                         continue;
+>
+>                 if (mctrl_gpios_desc[i].dir_out)
 
-[ snip ]
+Seems like both device_property_present() and gpiod_count()
+eventually call into acpi_data_get_property().
+
+However, given
+commit 6fe9da42f1d98fdb4be1598e230aca97e66cf35d
+Author: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Date:   Tue May 23 20:03:20 2017 +0300
+
+    gpio: acpi: Synchronize acpi_find_gpio() and acpi_gpio_count()
+
+    If we pass connection ID to the both functions and at the same time
+    acpi_can_fallback_to_crs() returns false we will get different results,
+    i.e. the number of GPIO resources returned by acpi_gpio_count() might be
+    not correct.
+
+    Fix this by calling acpi_can_fallback_to_crs() in acpi_gpio_count()
+    before trying to fallback.
+
+acpi_find_gpio() and acpi_gpio_count() are supposed to use the exact
+same logic, so this patch is not gonna work as intended?!?
+
+Note that I still find it strange that acpi_find_gpio() falls back to
+unnamed gpios if con_id != NULL, causing the problem in the first place.
+This is gonna bite us again later...
+
+Gr{oetje,eeting}s,
+
+                        Geert
 
 
-> @@ -1827,10 +2099,23 @@ EXPORT_SYMBOL_GPL(gpiochip_irq_domain_deactivate);
->  
->  static int gpiochip_to_irq(struct gpio_chip *chip, unsigned offset)
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
-   ^^^^^^
-
-I started to convert ssbi-gpio over to this and pm8xxx_gpio_to_irq() has
-this little snippet that's different from spmi-gpio:
-
-	[ fwspec mapping code ]
-
-	/*
-	 * Cache the IRQ since pm8xxx_gpio_get() needs this to get determine the
-	 * line level.
-	 */
-	pin->irq = ret;
-
-Here's the relevant code in pm8xxx_gpio_get():
-
-	if (pin->mode == PM8XXX_GPIO_MODE_OUTPUT) {
-		ret = pin->output_value;
-	} else if (pin->irq >= 0) {
-		ret = irq_get_irqchip_state(pin->irq, IRQCHIP_STATE_LINE_LEVEL, &state);
-		...
-	}
-
-What do you think about using EXPORT_SYMBOL_GPL() for gpiochip_to_irq() so
-that we can call it in pm8xxx_gpio_to_irq()? Or do you have any other
-suggestions for how we can get rid of that IRQ cache?
-
-I don't see any other issues for ssbi-gpio.
-
-Brian
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
