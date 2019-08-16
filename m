@@ -2,83 +2,81 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 1225890590
-	for <lists+linux-gpio@lfdr.de>; Fri, 16 Aug 2019 18:15:23 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1B1989066D
+	for <lists+linux-gpio@lfdr.de>; Fri, 16 Aug 2019 19:05:55 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726265AbfHPQPS (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 16 Aug 2019 12:15:18 -0400
-Received: from emh02.mail.saunalahti.fi ([62.142.5.108]:44832 "EHLO
-        emh02.mail.saunalahti.fi" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726089AbfHPQPS (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 16 Aug 2019 12:15:18 -0400
-Received: from darkstar.musicnaut.iki.fi (85-76-65-201-nat.elisa-mobile.fi [85.76.65.201])
-        by emh02.mail.saunalahti.fi (Postfix) with ESMTP id 15AB6200D9;
-        Fri, 16 Aug 2019 19:15:14 +0300 (EEST)
-Date:   Fri, 16 Aug 2019 19:15:14 +0300
-From:   Aaro Koskinen <aaro.koskinen@iki.fi>
-To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Martin Michlmayr <tbm@cyrius.com>,
-        Peter Teichmann <lists@peter-teichmann.de>,
-        Arnd Bergmann <arnd@arndb.de>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        soc@kernel.org, Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        linux-i2c <linux-i2c@vger.kernel.org>, dmaengine@vger.kernel.org,
-        Dan Williams <dan.j.williams@intel.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [PATCH 1/7] [RFC] ARM: remove Intel iop33x and iop13xx support
-Message-ID: <20190816161514.GB30291@darkstar.musicnaut.iki.fi>
-References: <20190809162956.488941-1-arnd@arndb.de>
- <20190809163334.489360-1-arnd@arndb.de>
- <CAA9_cmdDbBm0ookyqGJMcyLVFHkYHuR3mEeawQKS2UqYJoWWaQ@mail.gmail.com>
- <20190812094456.GI10598@jirafa.cyrius.com>
- <CACRpkdao8LF8g5qi_h+9BT9cHwmB4OadabkdGfP0sEFeLbmiLw@mail.gmail.com>
- <20190816154249.GA30291@darkstar.musicnaut.iki.fi>
- <20190816155833.GL13294@shell.armlinux.org.uk>
+        id S1726469AbfHPRFl (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 16 Aug 2019 13:05:41 -0400
+Received: from mail.andi.de1.cc ([85.214.55.253]:48174 "EHLO mail.andi.de1.cc"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726447AbfHPRFk (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Fri, 16 Aug 2019 13:05:40 -0400
+X-Greylist: delayed 923 seconds by postgrey-1.27 at vger.kernel.org; Fri, 16 Aug 2019 13:05:40 EDT
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=kemnade.info; s=20180802; h=Content-Transfer-Encoding:MIME-Version:
+        Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
+        List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=TMl0t22j8qYVABIvPAxoYrZBeDSEu0ad3kM77/ptRoY=; b=hbTpfDeLYXAn+UuBGXwhvLgYW1
+        qE1JEkDq17OwOZsSvyKJAhAgykxc7KsKQyjq5YBrNJmbPfFZBodVEeJicEvKKDv+yL3e4rtI5E9Vg
+        wBijc8pOhYzsAWdCHz2KN/PLm0H8cAB8oSNnxPmRQsPOOkvYg7VBe74IBRMBs2LK4JCA=;
+Received: from pd9e2f4fd.dip0.t-ipconnect.de ([217.226.244.253] helo=aktux)
+        by mail.andi.de1.cc with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <andreas@kemnade.info>)
+        id 1hyfQc-0002DT-Pg; Fri, 16 Aug 2019 18:50:15 +0200
+Received: from andi by aktux with local (Exim 4.92)
+        (envelope-from <andreas@kemnade.info>)
+        id 1hyfQc-0008QU-CO; Fri, 16 Aug 2019 18:50:14 +0200
+From:   Andreas Kemnade <andreas@kemnade.info>
+To:     linus.walleij@linaro.org, bgolaszewski@baylibre.com,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        letux-kernel@openphoenux.org, linux-spi@vger.kernel.org
+Cc:     Andreas Kemnade <andreas@kemnade.info>,
+        "H . Nikolaus Schaller" <hns@goldelico.com>
+Subject: [PATCH] gpio: of: fix Freescale SPI CS quirk handling
+Date:   Fri, 16 Aug 2019 18:50:00 +0200
+Message-Id: <20190816165000.32334-1-andreas@kemnade.info>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190816155833.GL13294@shell.armlinux.org.uk>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+Content-Transfer-Encoding: 8bit
+X-Spam-Score: -1.0 (-)
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi,
+On the gta04 we see:
+spi_gpio: probe of spi_lcd failed with error -2
 
-On Fri, Aug 16, 2019 at 04:58:33PM +0100, Russell King - ARM Linux admin wrote:
-> On Fri, Aug 16, 2019 at 06:42:49PM +0300, Aaro Koskinen wrote:
-> > On Wed, Aug 14, 2019 at 10:36:01AM +0200, Linus Walleij wrote:
-> > > On Mon, Aug 12, 2019 at 11:45 AM Martin Michlmayr <tbm@cyrius.com> wrote:
-> > > > As Arnd points out, Debian used to have support for various iop32x
-> > > > devices.  While Debian hasn't supported iop32x in a number of years,
-> > > > these devices are still usable and in use (RMK being a prime example).
-> > > 
-> > > I suppose it could be a good idea to add support for iop32x to
-> > > OpenWrt and/or OpenEmbedded, both of which support some
-> > > pretty constrained systems.
-> > 
-> > This platform is not really too constrained... E.g. on N2100 you have
-> > 512 MB RAM, SATA disks and gigabit ethernet. Not that different from
-> > mvebu that Debian currently (?) supports. Maybe with multiplatform they
-> > could support iop32x again.
-> 
-> Probably not.  The kernel has a dividing line between ARMv5 and ARMv6
-> where it's not possible to multiplatform across that boundary, so
-> you're already needing separate kernel images there.
-> 
-> Secondly, armhf distros won't be compatible with ARMv5, and to make
-> them compatible will make performance on armhf suffer - you have to
-> stop using barriers, exclusive load/store and a few other things.
-> You have to rely on the kuser page exported by the kernel (which is
-> now optional as it's deemed to be a security issue for ROP attacks)
-> for some things that such a userspace requires - such as NPTL support.
-> 
-> Effectively, ARMv5 is an entirely separate userspace distro from armhf.
+The quirk introduced in
+commit e3023bf80639 ("gpio: of: Handle the Freescale SPI CS")
+can also be triggered by a temporary -EPROBE_DEFER and
+so "convert" it to a hard -ENOENT.
 
-I thought they still had armel for ARMv5 and mvebu (kirkwood).
+Disable that conversion by checking for -EPROBE_DEFER.
 
-A.
+Fixes: e3023bf80639 ("gpio: of: Handle the Freescale SPI CS")
+Suggested-by: H. Nikolaus Schaller <hns@goldelico.com>
+Signed-off-by: Andreas Kemnade <andreas@kemnade.info>
+---
+ drivers/gpio/gpiolib-of.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/gpio/gpiolib-of.c b/drivers/gpio/gpiolib-of.c
+index 567fb98c0892..9762dd6d99fa 100644
+--- a/drivers/gpio/gpiolib-of.c
++++ b/drivers/gpio/gpiolib-of.c
+@@ -363,7 +363,7 @@ struct gpio_desc *of_find_gpio(struct device *dev, const char *con_id,
+ 	/* Special handling for SPI GPIOs if used */
+ 	if (IS_ERR(desc))
+ 		desc = of_find_spi_gpio(dev, con_id, &of_flags);
+-	if (IS_ERR(desc)) {
++	if (IS_ERR(desc) && PTR_ERR(desc) != -EPROBE_DEFER) {
+ 		/* This quirk looks up flags and all */
+ 		desc = of_find_spi_cs_gpio(dev, con_id, idx, flags);
+ 		if (!IS_ERR(desc))
+-- 
+2.20.1
+
