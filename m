@@ -2,85 +2,82 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id F10A49090C
-	for <lists+linux-gpio@lfdr.de>; Fri, 16 Aug 2019 21:56:48 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 46E7290AF0
+	for <lists+linux-gpio@lfdr.de>; Sat, 17 Aug 2019 00:29:29 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727655AbfHPT4m (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 16 Aug 2019 15:56:42 -0400
-Received: from sauhun.de ([88.99.104.3]:48456 "EHLO pokefinder.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727542AbfHPT4m (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Fri, 16 Aug 2019 15:56:42 -0400
-Received: from localhost (p54B33308.dip0.t-ipconnect.de [84.179.51.8])
-        by pokefinder.org (Postfix) with ESMTPSA id 8437D4A14FE;
-        Fri, 16 Aug 2019 21:56:40 +0200 (CEST)
-Date:   Fri, 16 Aug 2019 21:56:40 +0200
-From:   Wolfram Sang <wsa@the-dreams.de>
-To:     "Enrico Weigelt, metux IT consult" <lkml@metux.net>
-Cc:     "Enrico Weigelt, metux IT consult" <info@metux.net>,
-        linux-kernel@vger.kernel.org, linus.walleij@linaro.org,
-        bgolaszewski@baylibre.com, linux-gpio@vger.kernel.org,
-        linux-i2c@vger.kernel.org
-Subject: Re: [PATCH 1/3] include: linux: i2c: more helpers for declaring i2c
- drivers
-Message-ID: <20190816195640.GD6886@kunai>
-References: <1560796779-17117-1-git-send-email-info@metux.net>
- <20190621211744.GC950@kunai>
- <c669a041-f025-693a-492a-80ce888db737@metux.net>
- <20190624084427.GA1014@kunai>
- <205d0ef7-d487-006b-d104-88958f40e197@metux.net>
+        id S1727660AbfHPW32 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 16 Aug 2019 18:29:28 -0400
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:36071 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727793AbfHPW32 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 16 Aug 2019 18:29:28 -0400
+Received: by mail-lj1-f196.google.com with SMTP id u15so6619504ljl.3
+        for <linux-gpio@vger.kernel.org>; Fri, 16 Aug 2019 15:29:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=UcIQ8f7uiCgBRDYQZgvf9BdkFXQfiqi4Jnab8kvYofM=;
+        b=DDD0IAvtj0S3l02ltQU8EpNBnZXa/LPDRrS4ggAiitlDhWaKUUJDCnxA9iSvTLf+N9
+         JZWiD52Bcwo2O1maT+VX7N3rDWG8fv9AAnOB7/f/1WWnGc/YMMnbRqLO9qyo/efPOZS/
+         Vxx/aIR67dEPcfQpYYXixqhhM2QH0AZsUyogKTjNIBdasiZlwTXiIuexbtky0AZxHq1T
+         3xYzXlFudhl39/1Zhd13U4fFewgwdGqBUSj1kW090KxlTnaKJ+VLSIzpIwgSbpiVNCJI
+         TdAtYozC06bsrgLh4jUhwGe7flg7gHfJOcuhikauTII5mO35xtcuLhNYkNBH3dVA5HrL
+         rYFQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=UcIQ8f7uiCgBRDYQZgvf9BdkFXQfiqi4Jnab8kvYofM=;
+        b=qK6B25TIYpT7awtKMA2BC4Wk8tfEq3cbExQB3QyTM7gYN5uoMBtPuFEl8GbvQUzyrg
+         kLe3xfXaR98tAvdXJV/JxEKxufZ0fsKaDbCE+ySHLsC4gUJ1QfJJa7qiCVyj97pc91xB
+         S89eqeOZ7PiykWH67ZOL74W7ZlwHyYnNKxjZ1BgPZupmol8jM4s7dZnTwgD+EIIcNkLM
+         M5ZDPRlIm/Hw9oKqFXPi3LjRNLLgwxdRvaBFwry5sgWS7G/vDiHadXtahE4yOE6qYWf4
+         sE6/xZA02Hn1JZgMwgbQSojvCVx6QEBb91lBT4qDlFCwHJHwNqP5MXgiHoieRYcyhEmG
+         nQtw==
+X-Gm-Message-State: APjAAAVgk+TTsVZsSOnVnEkea6tYGF+uQhExypNpUPHpaQLOKGFwoAcL
+        74rxHHroKV1qfoXwJCfkegoXsndtjSi4D+kYrEFUWoSa6jY=
+X-Google-Smtp-Source: APXvYqz/Um0VpLAdA90TWsPCo26kbKDPeGImTYJpGVkwKP0ZHIykSPf1mpDFbizhE48JPVnKM4VviobMERdB5LF39uY=
+X-Received: by 2002:a2e:80da:: with SMTP id r26mr4644548ljg.62.1565994566351;
+ Fri, 16 Aug 2019 15:29:26 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="eheScQNz3K90DVRs"
-Content-Disposition: inline
-In-Reply-To: <205d0ef7-d487-006b-d104-88958f40e197@metux.net>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20190816165000.32334-1-andreas@kemnade.info>
+In-Reply-To: <20190816165000.32334-1-andreas@kemnade.info>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Sat, 17 Aug 2019 00:29:14 +0200
+Message-ID: <CACRpkdaVHPFgw9g8D=zrYECO5Syk1kMT3VgL+wq2ebKQxg_FGA@mail.gmail.com>
+Subject: Re: [PATCH] gpio: of: fix Freescale SPI CS quirk handling
+To:     Andreas Kemnade <andreas@kemnade.info>
+Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Discussions about the Letux Kernel 
+        <letux-kernel@openphoenux.org>,
+        linux-spi <linux-spi@vger.kernel.org>,
+        "H . Nikolaus Schaller" <hns@goldelico.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+On Fri, Aug 16, 2019 at 6:50 PM Andreas Kemnade <andreas@kemnade.info> wrote:
 
---eheScQNz3K90DVRs
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+> On the gta04 we see:
+> spi_gpio: probe of spi_lcd failed with error -2
+>
+> The quirk introduced in
+> commit e3023bf80639 ("gpio: of: Handle the Freescale SPI CS")
+> can also be triggered by a temporary -EPROBE_DEFER and
+> so "convert" it to a hard -ENOENT.
+>
+> Disable that conversion by checking for -EPROBE_DEFER.
+>
+> Fixes: e3023bf80639 ("gpio: of: Handle the Freescale SPI CS")
+> Suggested-by: H. Nikolaus Schaller <hns@goldelico.com>
+> Signed-off-by: Andreas Kemnade <andreas@kemnade.info>
 
+Good catch! Patch applied for fixes.
 
-(Found this mail in the offline draft folder of another laptop)
-
-> So, then the current approach of using subsys_initcall() can't be
-> changed easily, right now. But planned for the future (or at least
-> not introducing new caes).
-
-Yes.
-
-> But: how does that conflict w/ just moving the existing redundant
-> pieces into a helper macro ? The logic stays the same - just using
-> a shorter notation. (assuming my patch isn't buggy ;-)).
-
-It is not conflicting. My thinking is that such helpers, in general,
-scale better and are less error prone. But there is nothing to scale
-here.
-
-
---eheScQNz3K90DVRs
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl1XCngACgkQFA3kzBSg
-KbYWTRAAjHFuFmxp6ayjp/MNRyXYjcRadDc3TrI200+v/8QzljjpaQ4oBTmXoKPU
-2nqyXXulIQZU9Bfy4IxgNHkbv9X3Au5mC3rJP+Mp/77JfFyk5EDFl2sPWlg2gt2g
-kvgjFTv70bOso6Md3V88f0XppSFDj0rXJ33dMwTaDIEVVGBCE22o6ei0AQZfs5qb
-PS4UtuLBxD3nahjziH6GIbY69CxCOPgXcLY/WVT7FjhyQu+RmZzRVJ9MCJRyE7Nb
-2at41jzk1fMpsAligpgkVGRDLE2yvGgoDwiCWO96SqUsM/8ARmXk8PmHCUsn123G
-MJbtl9D96AkGSKTe3JRXuPkcztAzENWF8en+AT3OfMwuB5aXSv41UTCTEy61SWWV
-eQlCtX5h89NIreEmwU+n0tVpQG5Q0C3ds5toCHyuaXvSHWfucmMVbY/pDyezBuV+
-ON8qCGii7VJpsafs1ggn59bxKJJRRkztN5SVahqUAafIGNGNLZEQAl1S+fmVuEZn
-iadGjmQFnv89hDpniObnVvfV4hPYEaNOfrIDwydGpL4mB/wKLp/xLE+Oz3Qd0Okg
-d4JHRahfTM7Dq2YkWkd25jTkTe4UugGM1kxxOWIwjyYEM7mULa87npP2ZRCboIiv
-CEc8dk3c3Qke9oEtYsQ7SoXuLjtURRSsGgSr+rgQrk0AaMsXNVk=
-=QklQ
------END PGP SIGNATURE-----
-
---eheScQNz3K90DVRs--
+Yours,
+Linus Walleij
