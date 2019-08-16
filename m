@@ -2,26 +2,36 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id CAF028FEA1
-	for <lists+linux-gpio@lfdr.de>; Fri, 16 Aug 2019 11:00:33 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 764488FEAC
+	for <lists+linux-gpio@lfdr.de>; Fri, 16 Aug 2019 11:07:46 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726867AbfHPJAd (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 16 Aug 2019 05:00:33 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:52332 "EHLO huawei.com"
+        id S1726973AbfHPJHp (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 16 Aug 2019 05:07:45 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:42614 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726753AbfHPJAd (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Fri, 16 Aug 2019 05:00:33 -0400
-Received: from DGGEMS401-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id C1A786A4ACAF3B138B3D
-        for <linux-gpio@vger.kernel.org>; Fri, 16 Aug 2019 17:00:27 +0800 (CST)
+        id S1726863AbfHPJHp (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Fri, 16 Aug 2019 05:07:45 -0400
+Received: from DGGEMS407-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 5DC656E0A5FDC11CA106;
+        Fri, 16 Aug 2019 17:07:42 +0800 (CST)
 Received: from localhost.localdomain (10.67.212.75) by
- DGGEMS401-HUB.china.huawei.com (10.3.19.201) with Microsoft SMTP Server id
- 14.3.439.0; Fri, 16 Aug 2019 17:00:19 +0800
+ DGGEMS407-HUB.china.huawei.com (10.3.19.207) with Microsoft SMTP Server id
+ 14.3.439.0; Fri, 16 Aug 2019 17:07:33 +0800
 From:   Wei Xu <xuwei5@hisilicon.com>
-To:     <xuwei5@hisilicon.com>, <linux-gpio@vger.kernel.org>
+To:     <xuwei5@hisilicon.com>, <linux-gpio@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, <linus.walleij@linaro.org>,
+        <rjw@rjwysocki.net>, <lenb@kernel.org>,
+        <mika.westerberg@linux.intel.com>, <andy.shevchenko@gmail.com>
+CC:     <linuxarm@huawei.com>, <shameerali.kolothum.thodi@huawei.com>,
+        <jonathan.cameron@huawei.com>, <john.garry@huawei.com>,
+        <salil.mehta@huawei.com>, <shiju.jose@huawei.com>,
+        <jinying@hisilicon.com>, <zhangyi.ac@huawei.com>,
+        <liguozhu@hisilicon.com>, <tangkunshan@huawei.com>,
+        <huangdaode@hisilicon.com>
 Subject: [PATCH v2] gpio: pl061: Fix the issue failed to register the ACPI interrtupion
-Date:   Fri, 16 Aug 2019 16:58:22 +0800
-Message-ID: <1565945902-1126-1-git-send-email-xuwei5@hisilicon.com>
+Date:   Fri, 16 Aug 2019 17:05:36 +0800
+Message-ID: <1565946336-20080-1-git-send-email-xuwei5@hisilicon.com>
 X-Mailer: git-send-email 2.8.1
 MIME-Version: 1.0
 Content-Type: text/plain
