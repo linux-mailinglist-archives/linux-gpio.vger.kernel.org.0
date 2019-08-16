@@ -2,123 +2,65 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 75A8A90342
-	for <lists+linux-gpio@lfdr.de>; Fri, 16 Aug 2019 15:40:53 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B0B50904F5
+	for <lists+linux-gpio@lfdr.de>; Fri, 16 Aug 2019 17:49:11 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727203AbfHPNkx (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 16 Aug 2019 09:40:53 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:37450 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726032AbfHPNkw (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 16 Aug 2019 09:40:52 -0400
-Received: by mail-pl1-f196.google.com with SMTP id bj8so2477487plb.4;
-        Fri, 16 Aug 2019 06:40:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=vDN0+dyr6DMJd4+K52kh69879Me//RnUZQzc4InlSuI=;
-        b=pKlnlCGxRoVBUmrLdA9fApZTDvZ5DJq3I+0kCVBqienNx9Qn7pdopdYm+dyXTWCi4e
-         ld85emkhKH4xYp5n5lnIHz47ik8yefKVI2kFdE03AHYTvMEkyOdF0qM2zLwuzXmxbadi
-         brekO1yP9CUCjg8NFI4TeAbMfP4dggWQUssO3eCaHccAm79SCnyTosfUSTusDQrB+MSL
-         PllpCHry3OMcTFyCmbgX4XBbKwsgBO9nNMI0HBqOOx3WPDHErJ0ylYPB9GhHg0m8PzYL
-         sBSZhoHVSVTGIOc2Kr9FdHg8PZ7X02lzsJVJHvQFu3+mv6c91tDwRj4pd/E4WH0jwJPA
-         HOvQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=vDN0+dyr6DMJd4+K52kh69879Me//RnUZQzc4InlSuI=;
-        b=L2/bq+gEyaijiKYNL4ZsthRCHA5drjbOegIGZmXDwwlY0hAv1idngl82i0M57o3nes
-         fZXV7xEZsEAfioIneard5luntQ9nVO3VovHG+a7E3fCCbHCP5Bquk0jFw2q8O4zV2+md
-         LfcShBD9MTdV/mMy75sOd7O78R3xXH0koxEHXhQbePptwJc5fpqs1ybw5zvbjE+aFvFn
-         u2ieB8Rj73LrTechSNldp2gGyeu0dKxkDITGlh+TBlD/RyBG3CuYpUyCpFN78lhuXuUK
-         jZP5n2FMNXfTaxne9VdpEmUGRC/bDuZL+lGNZpragVDUwlKIDUjh3VxwFQRsiwoArjtl
-         9tGA==
-X-Gm-Message-State: APjAAAW41DLiGVeLMjSs1I74J/h5OWNflyey71LD9kK0rgI7u9P+tD3e
-        H5Ov/N8m4PtHUBNuX3pq+1oWd1RPrpwudfg+q3M=
-X-Google-Smtp-Source: APXvYqyOqNRH0WBVdfxBLkaw7mQ2WBZbnECGUjAk75ks9d9mQcn1NWOwlq96XVwE8oEFizIMPWTo+W4QkBOhfTK99nE=
-X-Received: by 2002:a17:902:e106:: with SMTP id cc6mr9230690plb.255.1565962852141;
- Fri, 16 Aug 2019 06:40:52 -0700 (PDT)
-MIME-Version: 1.0
-References: <1565946336-20080-1-git-send-email-xuwei5@hisilicon.com>
-In-Reply-To: <1565946336-20080-1-git-send-email-xuwei5@hisilicon.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Fri, 16 Aug 2019 16:40:40 +0300
-Message-ID: <CAHp75VfjE4V7yY1b3JYd_Mk9-8RTok2WCN=-MMrUBw5NN90o2A@mail.gmail.com>
-Subject: Re: [PATCH v2] gpio: pl061: Fix the issue failed to register the ACPI interrtupion
-To:     Wei Xu <xuwei5@hisilicon.com>
-Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        id S1727377AbfHPPtK (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 16 Aug 2019 11:49:10 -0400
+Received: from emh01.mail.saunalahti.fi ([62.142.5.107]:52788 "EHLO
+        emh01.mail.saunalahti.fi" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727359AbfHPPtK (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 16 Aug 2019 11:49:10 -0400
+X-Greylist: delayed 378 seconds by postgrey-1.27 at vger.kernel.org; Fri, 16 Aug 2019 11:49:09 EDT
+Received: from darkstar.musicnaut.iki.fi (85-76-65-201-nat.elisa-mobile.fi [85.76.65.201])
+        by emh01.mail.saunalahti.fi (Postfix) with ESMTP id 61F422002A;
+        Fri, 16 Aug 2019 18:42:49 +0300 (EEST)
+Date:   Fri, 16 Aug 2019 18:42:49 +0300
+From:   Aaro Koskinen <aaro.koskinen@iki.fi>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     Martin Michlmayr <tbm@cyrius.com>,
+        Peter Teichmann <lists@peter-teichmann.de>,
+        Arnd Bergmann <arnd@arndb.de>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Linuxarm <linuxarm@huawei.com>,
-        shameerali.kolothum.thodi@huawei.com,
-        Jonathan Cameron <jonathan.cameron@huawei.com>,
-        John Garry <john.garry@huawei.com>, salil.mehta@huawei.com,
-        shiju.jose@huawei.com, jinying@hisilicon.com,
-        zhangyi.ac@huawei.com, liguozhu@hisilicon.com,
-        tangkunshan@huawei.com, huangdaode <huangdaode@hisilicon.com>
-Content-Type: text/plain; charset="UTF-8"
+        soc@kernel.org, Russell King <linux@armlinux.org.uk>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Vinod Koul <vkoul@kernel.org>,
+        linux-i2c <linux-i2c@vger.kernel.org>, dmaengine@vger.kernel.org,
+        Dan Williams <dan.j.williams@intel.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [PATCH 1/7] [RFC] ARM: remove Intel iop33x and iop13xx support
+Message-ID: <20190816154249.GA30291@darkstar.musicnaut.iki.fi>
+References: <20190809162956.488941-1-arnd@arndb.de>
+ <20190809163334.489360-1-arnd@arndb.de>
+ <CAA9_cmdDbBm0ookyqGJMcyLVFHkYHuR3mEeawQKS2UqYJoWWaQ@mail.gmail.com>
+ <20190812094456.GI10598@jirafa.cyrius.com>
+ <CACRpkdao8LF8g5qi_h+9BT9cHwmB4OadabkdGfP0sEFeLbmiLw@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CACRpkdao8LF8g5qi_h+9BT9cHwmB4OadabkdGfP0sEFeLbmiLw@mail.gmail.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Aug 16, 2019 at 12:07 PM Wei Xu <xuwei5@hisilicon.com> wrote:
->
-> Invoke acpi_gpiochip_request_interrupts after the acpi data has been
-> attached to the pl061 acpi node to register interruption.
->
-> Otherwise it will be failed to register interruption for the ACPI case.
-> Because in the gpiochip_add_data_with_key, acpi_gpiochip_add is invoked
-> after gpiochip_add_irqchip but at that time the acpi data has not been
-> attached yet.
+Hi,
 
-> 2. cat /proc/interrupts in the guest console:
->
->         estuary:/$ cat /proc/interrupts
->                    CPU0
->         2:         3228     GICv3  27 Level     arch_timer
->         4:           15     GICv3  33 Level     uart-pl011
->         42:           0     GICv3  23 Level     arm-pmu
->         IPI0:         0       Rescheduling interrupts
->         IPI1:         0       Function call interrupts
->         IPI2:         0       CPU stop interrupts
->         IPI3:         0       CPU stop (for crash dump) interrupts
->         IPI4:         0       Timer broadcast interrupts
->         IPI5:         0       IRQ work interrupts
->         IPI6:         0       CPU wake-up interrupts
->         Err:          0
->
-> But on QEMU v3.0.0 and Linux kernel v5.2.0-rc7, pl061 interruption is
-> there as below:
->
->         estuary:/$ cat /proc/interrupts
->                    CPU0
->           2:       2648     GICv3  27 Level     arch_timer
->           4:         12     GICv3  33 Level     uart-pl011
->          42:          0     GICv3  23 Level     arm-pmu
->          43:          0  ARMH0061:00   3 Edge      ACPI:Event
->         IPI0:         0       Rescheduling interrupts
->         IPI1:         0       Function call interrupts
->         IPI2:         0       CPU stop interrupts
->         IPI3:         0       CPU stop (for crash dump) interrupts
->         IPI4:         0       Timer broadcast interrupts
->         IPI5:         0       IRQ work interrupts
->         IPI6:         0       CPU wake-up interrupts
->         Err:          0
+On Wed, Aug 14, 2019 at 10:36:01AM +0200, Linus Walleij wrote:
+> On Mon, Aug 12, 2019 at 11:45 AM Martin Michlmayr <tbm@cyrius.com> wrote:
+> > As Arnd points out, Debian used to have support for various iop32x
+> > devices.  While Debian hasn't supported iop32x in a number of years,
+> > these devices are still usable and in use (RMK being a prime example).
+> 
+> I suppose it could be a good idea to add support for iop32x to
+> OpenWrt and/or OpenEmbedded, both of which support some
+> pretty constrained systems.
 
-In above show only affected line.
+This platform is not really too constrained... E.g. on N2100 you have
+512 MB RAM, SATA disks and gigabit ethernet. Not that different from
+mvebu that Debian currently (?) supports. Maybe with multiplatform they
+could support iop32x again.
 
-> And the whole dmesg log on Linux kernel v5.2.0-rc7 is as below:
-
-NO!
-Please, remove this huge noise!
-
--- 
-With Best Regards,
-Andy Shevchenko
+A.
