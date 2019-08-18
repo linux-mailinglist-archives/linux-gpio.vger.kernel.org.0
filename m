@@ -2,87 +2,97 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id BE88E90F72
-	for <lists+linux-gpio@lfdr.de>; Sat, 17 Aug 2019 10:25:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9BC5E913C1
+	for <lists+linux-gpio@lfdr.de>; Sun, 18 Aug 2019 02:11:16 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726002AbfHQIZx (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sat, 17 Aug 2019 04:25:53 -0400
-Received: from mout.gmx.net ([212.227.17.21]:41305 "EHLO mout.gmx.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725911AbfHQIZw (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Sat, 17 Aug 2019 04:25:52 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1566030348;
-        bh=OclZl71JjJafvFBdBBkyM/N/A67EHRaXQtmowmWRoR0=;
-        h=X-UI-Sender-Class:From:To:Cc:Subject:Date;
-        b=Bvc6EmBKKrKWuniYz36rvH6eUnVKgBZTR/zcYSX4KPxT0np/aeDal0wBktGFWGpNo
-         ICreq0U+TqutxCFeUWBe1FzauoFT6GYx3inZlLYbm5msNzufD3alG2pvE7I/jOKRD8
-         juLqOUmsptoCrNUWMwaz8fmOAAlGziCTfnWqNcYM=
-X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from localhost.localdomain ([82.19.195.159]) by mail.gmx.com
- (mrgmx102 [212.227.17.174]) with ESMTPSA (Nemesis) id
- 0MdXSC-1he3GR3XOW-00PPnf; Sat, 17 Aug 2019 10:25:47 +0200
-From:   Alex Dewar <alex.dewar@gmx.co.uk>
-To:     agross@kernel.org, linus.walleij@linaro.org,
-        bjorn.andersson@linaro.org
-Cc:     linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Alex Dewar <alex.dewar@gmx.co.uk>
-Subject: [PATCH] pinctrl/qcom: Fix -Wimplicit-fallthrough
-Date:   Sat, 17 Aug 2019 09:25:20 +0100
-Message-Id: <20190817082520.7751-1-alex.dewar@gmx.co.uk>
-X-Mailer: git-send-email 2.22.1
+        id S1726217AbfHRAKy (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sat, 17 Aug 2019 20:10:54 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:39224 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726208AbfHRAKy (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sat, 17 Aug 2019 20:10:54 -0400
+Received: by mail-pg1-f193.google.com with SMTP id u17so4814766pgi.6
+        for <linux-gpio@vger.kernel.org>; Sat, 17 Aug 2019 17:10:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=2P41VmpgH709MNjHtQjn5kqjWZE/eE2T7peV7aC9s3c=;
+        b=o3sGogWvJviB7R6PAM2ZAPgtxpcOjEugWQ8M4NTCjhEyK7O1HITcRLaHJBElmqbjao
+         tsADmvTpZRmCbm9xUVuEcaLTIvcS8H0Yg18MEcyLqpRENzCq4kDA2cI34BF5DMy9CPDB
+         akbgXsac8k4R954sOTrsifvNYGKYx45C67svRpjGoWWdiShZ1f0oTl7fLWh6fuJTEJQy
+         I9jYrG8UreC7ov8hIIAeh38qcNvSjY3HYex+hT1E/xDcOX/ZWtvT6+CoGHNNDoqDrkc4
+         X0R+3Pw87KKTdaSuHYJmJm4FhnGvrk90hvxZ2JgT9pLusd2W2O2eg0+SJ9K8DKRLMcfM
+         EHFw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=2P41VmpgH709MNjHtQjn5kqjWZE/eE2T7peV7aC9s3c=;
+        b=t57XBogqOEUdZQnTdh9CSHmx5IcqFU7uDoNch9Dw4r+9K77i8n4+5e1P0LepJuqLbw
+         Bl/XPUYMKwJ/O2TwGsdbXYLPs37Ir8Bnpwa86GfJEivIFHlMInuBzFPrJL2bTer83qAH
+         DoBGx2WXnEk4cSIMgK4IkE7sENgEqLLNZj11ftjIgik+YLG1r86qAdYB1XrcIRS+260n
+         +2s/n2QfhR2e7jXsRbp8Onv8neiqOfFAeitZ0cdiaYw+5y5vJnvdHuZhMZCqcrmw6Y9T
+         KIT6+Te48QRj8aJFc2g/SWqMbBVpezlsFP4PyNeqhTBCui6tL8+OM7S/R64o5bC+HnMD
+         vicg==
+X-Gm-Message-State: APjAAAU/eeYvydFUbTFIj6ay1LPLzrP5mOLxVY4A6IiAo02D/YCNG0hG
+        volwRN8OZjv4XsKEVwG4Ioc6FQ==
+X-Google-Smtp-Source: APXvYqxx9Yp9jc1UsaQxsOLh+ZbdBrM65L0qU1Ys+W3yCPVRifCRRIBAFjP9lfKXMe4c4uP55xWvtA==
+X-Received: by 2002:a65:518a:: with SMTP id h10mr11820901pgq.117.1566087053602;
+        Sat, 17 Aug 2019 17:10:53 -0700 (PDT)
+Received: from tuxbook-pro (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id h11sm10630488pfn.120.2019.08.17.17.10.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 17 Aug 2019 17:10:52 -0700 (PDT)
+Date:   Sat, 17 Aug 2019 17:12:35 -0700
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Alex Dewar <alex.dewar@gmx.co.uk>
+Cc:     agross@kernel.org, linus.walleij@linaro.org,
+        linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] pinctrl/qcom: Fix -Wimplicit-fallthrough
+Message-ID: <20190818001235.GX26807@tuxbook-pro>
+References: <20190817082520.7751-1-alex.dewar@gmx.co.uk>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:o1x6eoesNv7qishmWoL2Ucl7VvxquR1rNH4cT1rnMGinQcSQYAk
- 5rgfbmstyPdXuvbiBDq5g4WOTW/3F3Ui3lSNOM3G/dl5ZzDUmuuDuOz3KjL4kjioPB8799c
- I7X6YQjwpyZruSElqRdmvnbEma3AAgXhx4Z9XgfnA/Zv7N++74mqvtcp+8L23qOHIiOqZXu
- Al+4YTz4HMrcm28AztV3A==
-X-Spam-Flag: NO
-X-UI-Out-Filterresults: notjunk:1;V03:K0:7QirXCb5saw=:vP35C/dAS/tqYsO+x7LYS8
- WAIus80ysGOcHS7LQ8PJ6NMdOs0fs3cOmOsqDT4c0l/fPJ/bX/HbDU0V88WNBb3YWKubqJALx
- cs0SlxJrORqA9Sy5QZINF0dLo1eA0LZt7izq73KfyJZh5EGQLctbBSUMEQI7yWwEf6Tsvl4vm
- sTPOjNidUpqYXe26+Zxy2Qlz8+DtyWHsJyye7Obv4B9g/bKHv9l6MOIaqAr0QVaHEigYMC6+5
- Z5g5qcetQ347yUBvbCL+1JZHllUMT1Fny6UE4cIGc95X4dbTdEpxrnGTqHwhD0WZtFsBNjT45
- YHWUmnL+AaD7968/SzRVdy/P1G3arTnDZs72Zmgh7sIElhbUE5dxyu1Ih6VKDoKvpFH89XFJf
- dnoxsd6EanmEtQLk1UT57Qv9Wl4KU9N5RomDg6Lv47ignZ9sv/AdvGJmE7GsxVeDrRGBwRNE5
- W34nrJqDuva4xAiiJaRUmvfy8xIFBfnIfDq78jEL7W9zRQky23yzIo7bLnLwwZXq9uAwQAt50
- DgXqEDGlTRXjQ7ItjMRcndNxqbbX53omig1qFviBuwUWC8ScQXl1B+zf0VD6nr0oKrGudoHgz
- osuvZkCz3nukks2hFzm+PRn5yHJPqF9y/4wbAd6oVQIvmtoA2g0QNammjqkXO+YJjlvIb9IU9
- tDnCy1IlpdmYU5/FLjEJ4gNpQpVr7RsKHhd7zP3MIcW0laTjxZFYhNB6hm1OO29qc7AS4OBx+
- xY/CsWhk1wA4rXARmV5LxLDpVYj9zaDt2gUbqSRuaa6NrD6doHv0DG05kQlDsbrm7nAI9OBaW
- ywitnWHB/60oZ0ckFUYMNUU5cUKKjxw2wIDEoQ+ATw7c21TR2WUfJ2FuZ2K5ffw5njBI0V0Xu
- XeeHcU16d6JgpLnYAAOV4Yacau8mJL2B/khjObm8ghuv5vHxNDNhK087oMp+p5SvstrjCJrvI
- J2vU/HDZx/zgNEIaoOisWbJ4LG4Q/8757EuNrcrZIZsJf7EGyl6sBtZ/jtbD9y+P93rxN9/pd
- HG9su4/1HIOl4bhqKUaoabTdy4brS1gEfoJ0jUZWGIggThFKHu+O3CS5PWhkt0Amt14B27Lxv
- ac4K5ojLTlTG9csHFA1meCMkpqIbsWNjRFoPmkyAhjJnLytY9qV7ssN2g==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190817082520.7751-1-alex.dewar@gmx.co.uk>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-In pinctrl-spmi-gpio.c there is a switch case which is obviously
-intended to fall through to the next label. Add a comment to suppress
--Wimplicit-fallthrough warning.
+On Sat 17 Aug 01:25 PDT 2019, Alex Dewar wrote:
 
-Signed-off-by: Alex Dewar <alex.dewar@gmx.co.uk>
-=2D--
- drivers/pinctrl/qcom/pinctrl-spmi-gpio.c | 1 +
- 1 file changed, 1 insertion(+)
+> In pinctrl-spmi-gpio.c there is a switch case which is obviously
+> intended to fall through to the next label. Add a comment to suppress
+> -Wimplicit-fallthrough warning.
+> 
 
-diff --git a/drivers/pinctrl/qcom/pinctrl-spmi-gpio.c b/drivers/pinctrl/qc=
-om/pinctrl-spmi-gpio.c
-index f39da87ea185..b035dd5e25b8 100644
-=2D-- a/drivers/pinctrl/qcom/pinctrl-spmi-gpio.c
-+++ b/drivers/pinctrl/qcom/pinctrl-spmi-gpio.c
-@@ -813,6 +813,7 @@ static int pmic_gpio_populate(struct pmic_gpio_state *=
-state,
- 	switch (subtype) {
- 	case PMIC_GPIO_SUBTYPE_GPIO_4CH:
- 		pad->have_buffer =3D true;
-+		/* FALLS THROUGH */
- 	case PMIC_GPIO_SUBTYPE_GPIOC_4CH:
- 		pad->num_sources =3D 4;
- 		break;
-=2D-
-2.22.1
+Thanks for your patch Alex, this was fixed in 6161dc03587b ("pinctrl:
+qcom: spmi-gpio: Mark expected switch fall-through")
 
+Regards,
+Bjorn
+
+> Signed-off-by: Alex Dewar <alex.dewar@gmx.co.uk>
+> ---
+>  drivers/pinctrl/qcom/pinctrl-spmi-gpio.c | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/drivers/pinctrl/qcom/pinctrl-spmi-gpio.c b/drivers/pinctrl/qcom/pinctrl-spmi-gpio.c
+> index f39da87ea185..b035dd5e25b8 100644
+> --- a/drivers/pinctrl/qcom/pinctrl-spmi-gpio.c
+> +++ b/drivers/pinctrl/qcom/pinctrl-spmi-gpio.c
+> @@ -813,6 +813,7 @@ static int pmic_gpio_populate(struct pmic_gpio_state *state,
+>  	switch (subtype) {
+>  	case PMIC_GPIO_SUBTYPE_GPIO_4CH:
+>  		pad->have_buffer = true;
+> +		/* FALLS THROUGH */
+>  	case PMIC_GPIO_SUBTYPE_GPIOC_4CH:
+>  		pad->num_sources = 4;
+>  		break;
+> --
+> 2.22.1
+> 
