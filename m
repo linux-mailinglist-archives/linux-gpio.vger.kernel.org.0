@@ -2,118 +2,115 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 6F24A922C1
-	for <lists+linux-gpio@lfdr.de>; Mon, 19 Aug 2019 13:52:24 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C25E392408
+	for <lists+linux-gpio@lfdr.de>; Mon, 19 Aug 2019 14:59:59 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727084AbfHSLwX (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 19 Aug 2019 07:52:23 -0400
-Received: from mga01.intel.com ([192.55.52.88]:53745 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726594AbfHSLwX (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Mon, 19 Aug 2019 07:52:23 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 19 Aug 2019 04:52:22 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,403,1559545200"; 
-   d="scan'208";a="177859322"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.145])
-  by fmsmga008.fm.intel.com with ESMTP; 19 Aug 2019 04:52:20 -0700
-Received: from andy by smile with local (Exim 4.92.1)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1hzgCw-00055k-CD; Mon, 19 Aug 2019 14:52:18 +0300
-Date:   Mon, 19 Aug 2019 14:52:18 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Ian W MORRISON <ianwmorrison@gmail.com>
-Cc:     benjamin.tissoires@redhat.com, hdegoede@redhat.com,
-        mika.westerberg@linux.intel.com, linus.walleij@linaro.org,
-        bgolaszewski@baylibre.com, linux-gpio@vger.kernel.org,
-        linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
-        stable@vger.kernel.org
-Subject: Re: [PATCH v2] Skip deferred request irqs for devices known to fail
-Message-ID: <20190819115218.GY30120@smile.fi.intel.com>
-References: <20190819112637.29943-1-ianwmorrison@gmail.com>
+        id S1727352AbfHSM77 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 19 Aug 2019 08:59:59 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:5156 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727128AbfHSM77 (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Mon, 19 Aug 2019 08:59:59 -0400
+Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id ACA9CA8B24C2C0ADD55A;
+        Mon, 19 Aug 2019 20:59:55 +0800 (CST)
+Received: from [127.0.0.1] (10.57.101.250) by DGGEMS414-HUB.china.huawei.com
+ (10.3.19.214) with Microsoft SMTP Server id 14.3.439.0; Mon, 19 Aug 2019
+ 20:59:49 +0800
+Subject: Re: [PATCH v2] gpio: pl061: Fix the issue failed to register the ACPI
+ interrtupion
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+References: <1565946336-20080-1-git-send-email-xuwei5@hisilicon.com>
+ <CAHp75VfjE4V7yY1b3JYd_Mk9-8RTok2WCN=-MMrUBw5NN90o2A@mail.gmail.com>
+CC:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "Linux Kernel Mailing List" <linux-kernel@vger.kernel.org>,
+        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        "Len Brown" <lenb@kernel.org>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Linuxarm <linuxarm@huawei.com>,
+        <shameerali.kolothum.thodi@huawei.com>,
+        Jonathan Cameron <jonathan.cameron@huawei.com>,
+        John Garry <john.garry@huawei.com>, <salil.mehta@huawei.com>,
+        <shiju.jose@huawei.com>, <jinying@hisilicon.com>,
+        <zhangyi.ac@huawei.com>, <liguozhu@hisilicon.com>,
+        <tangkunshan@huawei.com>, huangdaode <huangdaode@hisilicon.com>
+From:   Wei Xu <xuwei5@hisilicon.com>
+Message-ID: <5D5A9D43.4040508@hisilicon.com>
+Date:   Mon, 19 Aug 2019 20:59:47 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:38.0) Gecko/20100101
+ Thunderbird/38.2.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190819112637.29943-1-ianwmorrison@gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <CAHp75VfjE4V7yY1b3JYd_Mk9-8RTok2WCN=-MMrUBw5NN90o2A@mail.gmail.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.57.101.250]
+X-CFilter-Loop: Reflected
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Aug 19, 2019 at 09:26:37PM +1000, Ian W MORRISON wrote:
-> Patch ca876c7483b6 "gpiolib-acpi: make sure we trigger edge events at
-> least once on boot" causes the MINIX family of mini PCs to fail to boot
-> resulting in a "black screen".
-> 
-> This patch excludes MINIX devices from executing this trigger in order
-> to successfully boot.
+Hi Andy,
 
-Thanks for an update.
+Thanks!
 
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Ian W MORRISON <ianwmorrison@gmail.com>
-> Reviewed-by: Hans de Goede <hdegoede@redhat.com>
+On 2019/8/16 21:40, Andy Shevchenko wrote:
+> On Fri, Aug 16, 2019 at 12:07 PM Wei Xu <xuwei5@hisilicon.com> wrote:
+>> Invoke acpi_gpiochip_request_interrupts after the acpi data has been
+>> attached to the pl061 acpi node to register interruption.
+>>
+>> Otherwise it will be failed to register interruption for the ACPI case.
+>> Because in the gpiochip_add_data_with_key, acpi_gpiochip_add is invoked
+>> after gpiochip_add_irqchip but at that time the acpi data has not been
+>> attached yet.
+>> 2. cat /proc/interrupts in the guest console:
+>>
+>>          estuary:/$ cat /proc/interrupts
+>>                     CPU0
+>>          2:         3228     GICv3  27 Level     arch_timer
+>>          4:           15     GICv3  33 Level     uart-pl011
+>>          42:           0     GICv3  23 Level     arm-pmu
+>>          IPI0:         0       Rescheduling interrupts
+>>          IPI1:         0       Function call interrupts
+>>          IPI2:         0       CPU stop interrupts
+>>          IPI3:         0       CPU stop (for crash dump) interrupts
+>>          IPI4:         0       Timer broadcast interrupts
+>>          IPI5:         0       IRQ work interrupts
+>>          IPI6:         0       CPU wake-up interrupts
+>>          Err:          0
+>>
+>> But on QEMU v3.0.0 and Linux kernel v5.2.0-rc7, pl061 interruption is
+>> there as below:
+>>
+>>          estuary:/$ cat /proc/interrupts
+>>                     CPU0
+>>            2:       2648     GICv3  27 Level     arch_timer
+>>            4:         12     GICv3  33 Level     uart-pl011
+>>           42:          0     GICv3  23 Level     arm-pmu
+>>           43:          0  ARMH0061:00   3 Edge      ACPI:Event
+>>          IPI0:         0       Rescheduling interrupts
+>>          IPI1:         0       Function call interrupts
+>>          IPI2:         0       CPU stop interrupts
+>>          IPI3:         0       CPU stop (for crash dump) interrupts
+>>          IPI4:         0       Timer broadcast interrupts
+>>          IPI5:         0       IRQ work interrupts
+>>          IPI6:         0       CPU wake-up interrupts
+>>          Err:          0
+> In above show only affected line.
 
-> Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+OK. Will update it in v3.
 
-Hmm... Did I really give the tag?
-Too many stuff is going on, anyway, please consider more comments below.
+>> And the whole dmesg log on Linux kernel v5.2.0-rc7 is as below:
+> NO!
+> Please, remove this huge noise!
 
-First of all, the subject should start from "gpiolib: acpi: " prefix.
+Sorry for the noise!
+I will drop it in v3.
 
-Then, Fixes tag seems to be missed.
+Best Regards,
+Wei
 
-> +/*
-> + * Run deferred acpi_gpiochip_request_irqs()
-> + * but exclude devices known to fail
-
-Missed period.
-
-> +*/
-
-Missed leading space (the column of stars).
-
->  static int acpi_gpio_handle_deferred_request_irqs(void)
->  {
->  	struct acpi_gpio_chip *acpi_gpio, *tmp;
-> +	const struct dmi_system_id *dmi_id;
->  
-> -	mutex_lock(&acpi_gpio_deferred_req_irqs_lock);
-> -	list_for_each_entry_safe(acpi_gpio, tmp,
-> +	dmi_id = dmi_first_match(skip_deferred_request_irqs_table);
-> +	if (dmi_id)
-> +		return 0;
-
-The idea of positive check is exactly for...
-
-> +	else {
-
-...getting rid of this redundant 'else' followed by unneeded level of indentation.
-
-> +		mutex_lock(&acpi_gpio_deferred_req_irqs_lock);
-> +		list_for_each_entry_safe(acpi_gpio, tmp,
->  				 &acpi_gpio_deferred_req_irqs_list,
->  				 deferred_req_irqs_list_entry)
-> -		acpi_gpiochip_request_irqs(acpi_gpio);
-> +			acpi_gpiochip_request_irqs(acpi_gpio);
->  
-> -	acpi_gpio_deferred_req_irqs_done = true;
-> -	mutex_unlock(&acpi_gpio_deferred_req_irqs_lock);
-> +		acpi_gpio_deferred_req_irqs_done = true;
-> +		mutex_unlock(&acpi_gpio_deferred_req_irqs_lock);
-> +	}
->  
->  	return 0;
->  }
-
--- 
-With Best Regards,
-Andy Shevchenko
 
 
