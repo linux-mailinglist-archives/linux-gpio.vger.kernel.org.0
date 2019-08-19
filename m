@@ -2,171 +2,107 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 5ACF694D8D
-	for <lists+linux-gpio@lfdr.de>; Mon, 19 Aug 2019 21:08:29 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CEF3994DFA
+	for <lists+linux-gpio@lfdr.de>; Mon, 19 Aug 2019 21:27:45 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728420AbfHSTHx (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 19 Aug 2019 15:07:53 -0400
-Received: from hqemgate15.nvidia.com ([216.228.121.64]:9385 "EHLO
-        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728185AbfHSTHx (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 19 Aug 2019 15:07:53 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5d5af3880001>; Mon, 19 Aug 2019 12:07:52 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Mon, 19 Aug 2019 12:07:51 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Mon, 19 Aug 2019 12:07:51 -0700
-Received: from DRHQMAIL107.nvidia.com (10.27.9.16) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 19 Aug
- 2019 19:07:51 +0000
-Received: from [10.110.103.66] (10.124.1.5) by DRHQMAIL107.nvidia.com
- (10.27.9.16) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 19 Aug
- 2019 19:07:50 +0000
-Subject: Re: [PATCH v9 20/22] soc/tegra: pmc: Configure deep sleep control
- settings
-From:   Sowjanya Komatineni <skomatineni@nvidia.com>
-To:     Dmitry Osipenko <digetx@gmail.com>, <thierry.reding@gmail.com>,
-        <jonathanh@nvidia.com>, <tglx@linutronix.de>,
-        <jason@lakedaemon.net>, <marc.zyngier@arm.com>,
-        <linus.walleij@linaro.org>, <stefan@agner.ch>,
-        <mark.rutland@arm.com>
-CC:     <pdeschrijver@nvidia.com>, <pgaikwad@nvidia.com>,
-        <sboyd@kernel.org>, <linux-clk@vger.kernel.org>,
-        <linux-gpio@vger.kernel.org>, <jckuo@nvidia.com>,
-        <josephl@nvidia.com>, <talho@nvidia.com>,
-        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <mperttunen@nvidia.com>, <spatra@nvidia.com>, <robh+dt@kernel.org>,
-        <devicetree@vger.kernel.org>, <rjw@rjwysocki.net>,
-        <viresh.kumar@linaro.org>, <linux-pm@vger.kernel.org>
-References: <1565984527-5272-1-git-send-email-skomatineni@nvidia.com>
- <1565984527-5272-21-git-send-email-skomatineni@nvidia.com>
- <bf5541d2-1bad-8a8c-fd9d-821b55861136@gmail.com>
- <2092e557-06cb-4a74-fe40-1d83bf67ccca@nvidia.com>
-Message-ID: <a8d65dbc-6924-c972-06e9-5bc47d66e94f@nvidia.com>
-Date:   Mon, 19 Aug 2019 12:07:50 -0700
+        id S1728437AbfHST1K (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 19 Aug 2019 15:27:10 -0400
+Received: from mout.kundenserver.de ([212.227.17.10]:50963 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728409AbfHST1J (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 19 Aug 2019 15:27:09 -0400
+Received: from [192.168.1.162] ([37.4.249.106]) by mrelayeu.kundenserver.de
+ (mreue109 [212.227.15.183]) with ESMTPSA (Nemesis) id
+ 1MLi4c-1hi7vk2652-00HePR; Mon, 19 Aug 2019 21:27:04 +0200
+Subject: Re: [PATCH v3] gpiolib: Take MUX usage into account
+To:     Ramon Fried <ramon.fried@linux.intel.com>,
+        linus.walleij@linaro.org, bgolaszewski@baylibre.com
+Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20190814110035.13451-1-ramon.fried@linux.intel.com>
+From:   Stefan Wahren <stefan.wahren@i2se.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=stefan.wahren@i2se.com; keydata=
+ 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 AQ==
+Message-ID: <5e5c9003-b25a-b81f-cac8-9c33a2f1cd04@i2se.com>
+Date:   Mon, 19 Aug 2019 21:27:03 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <2092e557-06cb-4a74-fe40-1d83bf67ccca@nvidia.com>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
- DRHQMAIL107.nvidia.com (10.27.9.16)
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20190814110035.13451-1-ramon.fried@linux.intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Content-Language: en-US
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1566241672; bh=lDgc6QK33DRljdsnrvFj9EKf+a9SbqWwFOOiG9EuoAk=;
-        h=X-PGP-Universal:Subject:From:To:CC:References:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
-         Content-Language;
-        b=k3PNkY/zqJCaYV+SmTHtuqLnfIrIUjJap4KJsrwrW+761Wh6674laB+NR6y6whumN
-         IvinVjqCeLAR+wbFOdUKjsYgARJy1eRRpS31N+657GvaYq/UgVtJWfJE6jYC/LEdc9
-         exWUV/5obw5zb8Mb2pE5JHmA2D+sdX7MPNfPOyIFC1hr+9Q1qF3d9d3NXh7OuB9HAS
-         wNegGp+ishXCr+H6dkQivS9IFywlvqvHrc1CDbXVZBxnJ7jV6sJYW5PKkF/c0kzCoO
-         a8XWx4WNFb1ksAaoXq2G0cs59s76KMZdUFx2LA8hRf4ZBtaMaZrnGZWQhnYEHcPoi5
-         SjmXNk3kQ9eqg==
+X-Provags-ID: V03:K1:pgoqZzmuMfBn8cnM8rtk60omos+FwRN8mhDg5uwdNPYLNFK5+Sz
+ 7tvQvnoBuz9zpb1lWesQdpkPfW5oI5xHeLsE4Eo89YS5hQz3+HjPz46CDge10OitKf1/wDa
+ cNLRB7qo+DNM/RUbnvBb9Ri0a9MqpBtlSsV4wVhRwiFn/82S7Lu2l5PpWgbcZnCJBL+edVu
+ Ho1fBlRiqCDE2O767mNNg==
+X-Spam-Flag: NO
+X-UI-Out-Filterresults: notjunk:1;V03:K0:uh6rUzE80uI=:qBo41oufmASZ34eJIXP40n
+ gyTfk9t0WeCzd6pRipG1Fc3z8d9l5joFeXUiCBN50w8fctXUdeGAteTIPEHYWILdEHTPgaYQm
+ ifJ2C73pw28HZC1KNDdAIkyXU+6ksGUn/16yugkGhXnLNEFKBExFixIWqbbQvV9QSGAR4/HEI
+ nExry2ahJUFOztMy9qNT3vDptTr5jd3bDDTI4Wx0Kg0bwPWdvNOu0OTKGghz8V0zdoXFf1eas
+ kAdmFvwNDJhaWcdQ3Av2LGTxc7bo/q73xlCcpObGIuuSmuxjDeZ9xzep1aqUrSJnYcViwFA6O
+ 5zpX4OmEG5K7fjMUUPzCCDHuK+ySCbwxNmaMwKxGtrIUs0kN1v1cuRqXBeKnmUgGhLpqchriY
+ rxkvUaboacW7UyfxqwuNPZSeKqOnmb0YHHeNb0yrh98Qi94ogQT6Lj+DAJx7SY+P9QdQSkTEM
+ aAQ6XzDfkzBAcu+9KHwIskgdYQGFq5rf4TaJX1/rx1DbMTcRQEjJVmSd4BQ0ZCTBgg7paodIV
+ DumAfW2CENmI1Nheu84/lhUwyuE+mN6dyn3nX0CJ6O0b0OPpIpMdx9yMZgSxOyytA4NerCfkQ
+ X9O/yDuapZy+66/IjWM/exCFFtgnusjOaPJDo2Ds0CUhLJbx+rkhO4c9GolqflEwXA29nSZFD
+ nfK9po2ipn+n2UkhKOMMFlLJdlYivQTlA4IIcGDKAB45MzAPI7t8Ca1/tWwWVaWIzNd4L+UgU
+ CHJuU2mtvtE9ga2IyOazXWlB3N4rTyNEN03kNkBrhlLcK+9zKEXai0enjJA=
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-
-On 8/19/19 11:20 AM, Sowjanya Komatineni wrote:
+Am 14.08.19 um 13:00 schrieb Ramon Fried:
+> From: Stefan Wahren <stefan.wahren@i2se.com>
 >
-> On 8/19/19 9:48 AM, Dmitry Osipenko wrote:
->> 16.08.2019 22:42, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
->>> Tegra210 and prior Tegra chips have deep sleep entry and wakeup related
->>> timings which are platform specific that should be configured before
->>> entering into deep sleep.
->>>
->>> Below are the timing specific configurations for deep sleep entry and
->>> wakeup.
->>> - Core rail power-on stabilization timer
->>> - OSC clock stabilization timer after SOC rail power is stabilized.
->>> - Core power off time is the minimum wake delay to keep the system
->>> =C2=A0=C2=A0 in deep sleep state irrespective of any quick wake event.
->>>
->>> These values depends on the discharge time of regulators and turn OFF
->>> time of the PMIC to allow the complete system to finish entering into
->>> deep sleep state.
->>>
->>> These values vary based on the platform design and are specified
->>> through the device tree.
->>>
->>> This patch has implementation to configure these timings which are must
->>> to have for proper deep sleep and wakeup operations.
->>>
->>> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
->>> ---
->>> =C2=A0 drivers/soc/tegra/pmc.c | 14 +++++++++++++-
->>> =C2=A0 1 file changed, 13 insertions(+), 1 deletion(-)
->>>
->>> diff --git a/drivers/soc/tegra/pmc.c b/drivers/soc/tegra/pmc.c
->>> index 53ed70773872..710969043668 100644
->>> --- a/drivers/soc/tegra/pmc.c
->>> +++ b/drivers/soc/tegra/pmc.c
->>> @@ -88,6 +88,8 @@
->>> =C2=A0 =C2=A0 #define PMC_CPUPWRGOOD_TIMER=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0 0xc8
->>> =C2=A0 #define PMC_CPUPWROFF_TIMER=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0 0xcc
->>> +#define PMC_COREPWRGOOD_TIMER=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0 0x3c
->>> +#define PMC_COREPWROFF_TIMER=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
- 0xe0
->>> =C2=A0 =C2=A0 #define PMC_PWR_DET_VALUE=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0 0xe4
->>> =C2=A0 @@ -2277,7 +2279,7 @@ static const struct tegra_pmc_regs=20
->>> tegra20_pmc_regs =3D {
->>> =C2=A0 =C2=A0 static void tegra20_pmc_init(struct tegra_pmc *pmc)
->>> =C2=A0 {
->>> -=C2=A0=C2=A0=C2=A0 u32 value;
->>> +=C2=A0=C2=A0=C2=A0 u32 value, osc, pmu, off;
->>> =C2=A0 =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 /* Always enable CPU power reques=
-t */
->>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 value =3D tegra_pmc_readl(pmc, PMC_CNTRL=
-);
->>> @@ -2303,6 +2305,16 @@ static void tegra20_pmc_init(struct tegra_pmc=20
->>> *pmc)
->>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 value =3D tegra_pmc_readl(pmc, PMC_CNTRL=
-);
->>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 value |=3D PMC_CNTRL_SYSCLK_OE;
->>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 tegra_pmc_writel(pmc, value, PMC_CNTRL);
->>> +
->>> +=C2=A0=C2=A0=C2=A0 /* program core timings which are applicable only f=
-or suspend=20
->>> state */
->>> +=C2=A0=C2=A0=C2=A0 if (pmc->suspend_mode !=3D TEGRA_SUSPEND_NONE) {
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 osc =3D DIV_ROUND_UP(pmc->c=
-ore_osc_time * 8192, 1000000);
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 pmu =3D DIV_ROUND_UP(pmc->c=
-ore_pmu_time * 32768, 1000000);
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 off =3D DIV_ROUND_UP(pmc->c=
-ore_off_time * 32768, 1000000);
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 tegra_pmc_writel(pmc, ((osc=
- << 8) & 0xff00) | (pmu & 0xff),
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0 PMC_COREPWRGOOD_TIMER);
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 tegra_pmc_writel(pmc, off, =
-PMC_COREPWROFF_TIMER);
->>> +=C2=A0=C2=A0=C2=A0 }
->>> =C2=A0 }
->>> =C2=A0 =C2=A0 static void tegra20_pmc_setup_irq_polarity(struct tegra_p=
-mc *pmc,
->>>
->> In the previous version of this patch there were checks for zero values
->> of the timers with intention to skip programming of the timers if value
->> is zero. I'm a bit puzzled by the new version, given that SUSPEND_NONE
->> means that suspending isn't available at all and thus PMC timers won't
->> be utilized, hence it shouldn't matter what values are programmed for
->> the counters, isn't it?
+> The user space like gpioinfo only see the GPIO usage but not the
+> MUX usage (e.g. I2C or SPI usage) of a pin. As a user we want to know which
+> pin is free/safe to use. So take the MUX usage of strict pinmux controllers
+> into account to get a more realistic view for ioctl GPIO_GET_LINEINFO_IOCTL.
 >
-> Yes, as I see in documentation we already specify all these timings=20
-> are required properties when suspend mode is used, I updated in this=20
-> version to program core timings only when suspend mode is enabled.
->
-In other words, core timings are for SC7 entry only. So when SC7/suspend=20
-mode is not used, these timings doesn't matter.
+> Signed-off-by: Stefan Wahren <stefan.wahren@i2se.com>
+> Tested-by: Ramon Fried <rfried.dev@gmail.com>
+> Signed-off-by: Ramon Fried <rfried.dev@gmail.com>
+Acked-by: Stefan Wahren <stefan.wahren@i2se.com>
