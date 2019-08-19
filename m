@@ -2,106 +2,94 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id CACCC927FB
-	for <lists+linux-gpio@lfdr.de>; Mon, 19 Aug 2019 17:07:48 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CB13694ABD
+	for <lists+linux-gpio@lfdr.de>; Mon, 19 Aug 2019 18:47:58 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726905AbfHSPHs (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 19 Aug 2019 11:07:48 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:46413 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726784AbfHSPHr (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 19 Aug 2019 11:07:47 -0400
-Received: by mail-pg1-f194.google.com with SMTP id m3so1370403pgv.13;
-        Mon, 19 Aug 2019 08:07:47 -0700 (PDT)
+        id S1727268AbfHSQr6 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 19 Aug 2019 12:47:58 -0400
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:34603 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726553AbfHSQr5 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 19 Aug 2019 12:47:57 -0400
+Received: by mail-lf1-f65.google.com with SMTP id b29so1903647lfq.1;
+        Mon, 19 Aug 2019 09:47:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=hd5r0WEwP797Bcjl677J0kfX+yGFvnC6jJRdRPfYUHE=;
-        b=e9IwPue31vXYimlp3bK+fSUjE5BQzSNQp/qoupT2K3YzseSWcP6spDQqQQKfszOaUa
-         YAMWS0gJEfcqnZYNyg0wTeBKR5M807tlc7ZJ4aXgKDZU/EmJNxY4tQbQ6jSXsgsNF4GC
-         On/XGCZWJOZDcKDRfG+qE5q6rKkB2NtcdpeGerUoYQs9Ihf5IoFe/dWu2e9tW96DieWQ
-         90B+V0Frr8Muqoa7+aNwswRoHdTW2y3GaHgsC9OhyfPRzuXWs3TE7QcgQgZd8i64VSEp
-         evY/zt/IN2I5HNfszQ+laplxQR7hvApo+TGHEqtf2OoFLQGUBKj52YX3FQT90CjsH01/
-         tqpg==
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=Ew3DQY1/Dy+Vj1B+2EqwrXO/bgBLBuE1m+WOVlZNw9k=;
+        b=Zzrat69qNDkyOx6bUdjul9/0REh8MBL9UAfX0aHLTfPO4Yj7u1jxyx6SYwrJdLj8fo
+         ucIFzCZgUVUpIFcZAW7T0tWl540lK7SKozSZn3bjuUdC8tGXH/VIeZtcUkFYUaXLBSGI
+         fPTywm4DUPlheCPBkNQ9zdIfjghGMGueSZ6lyvfUDEWgm+6++aS8Hcbr5F2vxTBll9h0
+         TJT0trrOtUy0/DPtiDODK9ZKAAQh5RkJZuNdnerkLAtvf4RBBlLOcs2KzDtMbttTJOMl
+         DfRWNEmeK7Da6+ru63FNSm0V9BMRRmQwnA53fZPitY9O6THMt3vPoyBLuDpEmH095hlB
+         ICPQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=hd5r0WEwP797Bcjl677J0kfX+yGFvnC6jJRdRPfYUHE=;
-        b=QLpWpEY4N9ekbTyIS22b6kegItiE27qX0yGT3FPt0I16qb+OkXhKWQB5CFftkVXWB2
-         9/40ZNsk7IGw/qPW7NgAQy6B6U1402RWpD0lojgU+SJdeOJlmho19dyyJpmPjjZDvRDa
-         aBbuocKqwL1Nf8j1AozgNRdN+4e7XtHM86zu1fcWeZbp8sfgfP/IjeSHFvKzENTO3LgI
-         izv4Mxv+eAaZNEh91JhL+5XomoOcqCdZ1vuPJm3l75GMQI45OCmaefnZoPw2z8vpuZha
-         GO858cnygzHKVwecz3mKViW5+Zgxk+NGC0pMW1cc/M52Xidnu1yEol9KE4ngJdczNwgd
-         ztdw==
-X-Gm-Message-State: APjAAAV6T9PjLOfVVE4RhCEFZHZbc6SgwxNyiAi/00ub+wrC4IsMLBUS
-        OaJ+Kyc7Ru4fPb9xoxgDSENeWVJ1H1/sGv57Ol8=
-X-Google-Smtp-Source: APXvYqyf1tTOFKwnnkjydQxzYuwsYNGgVwWGdJg3bsxdR2Vpue/v9ezEdgyTsR26yvKaDBUO4BjeDfHOeIWF/viDWIo=
-X-Received: by 2002:a63:e54f:: with SMTP id z15mr20272610pgj.4.1566227266644;
- Mon, 19 Aug 2019 08:07:46 -0700 (PDT)
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=Ew3DQY1/Dy+Vj1B+2EqwrXO/bgBLBuE1m+WOVlZNw9k=;
+        b=gDFbwyrPTkF0+mLsHsmhg9DJzPUJ4R1vkEafUrzb+j9Y0XAjyuxPfzpiJbDBND6el6
+         DJfpe31hwM5fW62xZLwVKhuWZ581b4BWR/cCy/pGS4Fq/jSCTqxQrXl0ASNBwk/2UnwU
+         5eXXpvNAUP6Rt+q2Er2cpmZENMOHGiRgRs5RxyHmIWZqzpcVnYk3CRHlsixZFHdkDVAL
+         JKYDDqqDUxRlN/5Jlrzbwlh+H2q4qzqvl0K7ZW+hJXoVkWVe+01nqiIQYjNrPpYM9aMN
+         eTJBBLCzrqbIkzXMYyvjttZ3VKfhAjIwYL7MVe0myTUTxiEFPgy8kbMM0gLSZS5jd9jb
+         vKPg==
+X-Gm-Message-State: APjAAAUYA9xyR7X/FaCcqOj4VlcU4MHkBrjiJ3kubMQ8wAce9Rts/hE7
+        9AE45wOVFd1zJAp9gEKvaJ3+ggFE
+X-Google-Smtp-Source: APXvYqylRRIWkhGbH3c9BVxzslGqbyBV8LGTEodnMmUBoTGC/IS6qv/jaXeotyUzTfjx+hA9HVysqg==
+X-Received: by 2002:a19:7:: with SMTP id 7mr11557327lfa.45.1566233274484;
+        Mon, 19 Aug 2019 09:47:54 -0700 (PDT)
+Received: from [192.168.2.145] ([94.29.34.218])
+        by smtp.googlemail.com with ESMTPSA id b9sm1248849ljd.52.2019.08.19.09.47.51
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 19 Aug 2019 09:47:53 -0700 (PDT)
+Subject: Re: [PATCH v9 15/22] clk: tegra210: Add suspend and resume support
+To:     Sowjanya Komatineni <skomatineni@nvidia.com>,
+        thierry.reding@gmail.com, jonathanh@nvidia.com, tglx@linutronix.de,
+        jason@lakedaemon.net, marc.zyngier@arm.com,
+        linus.walleij@linaro.org, stefan@agner.ch, mark.rutland@arm.com
+Cc:     pdeschrijver@nvidia.com, pgaikwad@nvidia.com, sboyd@kernel.org,
+        linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org,
+        jckuo@nvidia.com, josephl@nvidia.com, talho@nvidia.com,
+        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org,
+        mperttunen@nvidia.com, spatra@nvidia.com, robh+dt@kernel.org,
+        devicetree@vger.kernel.org, rjw@rjwysocki.net,
+        viresh.kumar@linaro.org, linux-pm@vger.kernel.org
+References: <1565984527-5272-1-git-send-email-skomatineni@nvidia.com>
+ <1565984527-5272-16-git-send-email-skomatineni@nvidia.com>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <85b970d7-1a4d-1db4-8d9d-177a7cd4a7c3@gmail.com>
+Date:   Mon, 19 Aug 2019 19:47:50 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-References: <1566221225-5170-1-git-send-email-xuwei5@hisilicon.com>
-In-Reply-To: <1566221225-5170-1-git-send-email-xuwei5@hisilicon.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Mon, 19 Aug 2019 18:07:34 +0300
-Message-ID: <CAHp75Vct3qtR5bDF6iALmduKEEq+gNL-btmzQVuWq_hYsmxKhw@mail.gmail.com>
-Subject: Re: [PATCH v3] gpio: pl061: Fix the issue failed to register the ACPI interrtupion
-To:     Wei Xu <xuwei5@hisilicon.com>
-Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Linuxarm <linuxarm@huawei.com>,
-        Shameerali Kolothum Thodi 
-        <shameerali.kolothum.thodi@huawei.com>,
-        Jonathan Cameron <jonathan.cameron@huawei.com>,
-        John Garry <john.garry@huawei.com>,
-        Salil Mehta <salil.mehta@huawei.com>,
-        Shiju Jose <shiju.jose@huawei.com>, jinying@hisilicon.com,
-        Zhangyi ac <zhangyi.ac@huawei.com>,
-        "Liguozhu (Kenneth)" <liguozhu@hisilicon.com>,
-        Tangkunshan <tangkunshan@huawei.com>,
-        huangdaode <huangdaode@hisilicon.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <1565984527-5272-16-git-send-email-skomatineni@nvidia.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Aug 19, 2019 at 4:29 PM Wei Xu <xuwei5@hisilicon.com> wrote:
->
-> Invoke acpi_gpiochip_request_interrupts after the acpi data has been
-> attached to the pl061 acpi node to register interruption.
->
-> Otherwise it will be failed to register interruption for the ACPI case.
-> Because in the gpiochip_add_data_with_key, acpi_gpiochip_add is invoked
-> after gpiochip_add_irqchip but at that time the acpi data has not been
-> attached yet.
->
-> Tested with below steps:
->
->         qemu-system-aarch64 \
->         -machine virt,gic-version=3 -cpu cortex-a57 \
->         -m 1G,maxmem=4G,slots=4 \
->         -kernel Image -initrd rootfs.cpio.gz \
->         -net none -nographic  \
->         -bios QEMU_EFI.fd  \
->         -append "console=ttyAMA0 acpi=force earlycon=pl011,0x9000000"
->
-> The pl061 interruption is missed and the following output is not in the
-> /proc/interrupts on the v5.3-rc4 compared with the v5.2.0-rc7.
->
->          43:          0  ARMH0061:00   3 Edge      ACPI:Event
+16.08.2019 22:42, Sowjanya Komatineni пишет:
+> This patch adds support for clk: tegra210: suspend-resume.
+> 
+> All the CAR controller settings are lost on suspend when core
+> power goes off.
+> 
+> This patch has implementation for saving and restoring all PLLs
+> and clocks context during system suspend and resume to have the
+> clocks back to same state for normal operation.
+> 
+> Clock driver suspend and resume are registered as syscore_ops as clocks
+> restore need to happen before the other drivers resume to have all their
+> clocks back to the same state as before suspend.
+> 
+> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
 
-The proper fix is to revert the culprit since we call
-acpi_gpiochip_request_interrupts() for all controllers.
-Linus, please re-do the approach with IRQ handling, it seems broadly
-regress with ACPI enabled platforms.
+Looks good, thanks!
 
--- 
-With Best Regards,
-Andy Shevchenko
+Reviewed-by: Dmitry Osipenko <digetx@gmail.com>
