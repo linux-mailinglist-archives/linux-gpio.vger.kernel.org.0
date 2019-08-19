@@ -2,168 +2,93 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id EF13292095
-	for <lists+linux-gpio@lfdr.de>; Mon, 19 Aug 2019 11:44:01 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 220DE92093
+	for <lists+linux-gpio@lfdr.de>; Mon, 19 Aug 2019 11:43:22 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726594AbfHSJoB (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 19 Aug 2019 05:44:01 -0400
-Received: from esa3.mentor.iphmx.com ([68.232.137.180]:61995 "EHLO
-        esa3.mentor.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726314AbfHSJoB (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 19 Aug 2019 05:44:01 -0400
-X-Greylist: delayed 426 seconds by postgrey-1.27 at vger.kernel.org; Mon, 19 Aug 2019 05:44:00 EDT
-IronPort-SDR: ULwVpsUop0K8AujMfNBfValf0XikrucAtLkWBk4APUCFj5xf4r3C3ZN8A1g3AULVnMzsAp0pP+
- o2DxmNX4mDPz+tLi7X90wyxufpDRvMaf/Bvbok5yZ4Tubwx6nhFJjdmG7Rcu0CQxKpSS43gDQP
- We9vQAvDF+dGnuVpNzfSJhrIiIeAbu4ygQpsN/iWBlZRiP+shn7iaQDIbRBWZKvd3zbVs38Mvs
- SY3KCQE4ngRZ0y/bXLe3RY1CD7kVXY8WaS/di4X0LdBepOoPg6dC9QdS8TraKwaCi2g08Hx/vx
- +2o=
-X-IronPort-AV: E=Sophos;i="5.64,403,1559548800"; 
-   d="scan'208";a="40555512"
-Received: from orw-gwy-02-in.mentorg.com ([192.94.38.167])
-  by esa3.mentor.iphmx.com with ESMTP; 19 Aug 2019 01:36:54 -0800
-IronPort-SDR: bWajPJagU5mFCq4Ct2iChEeRdKQEEgvSddLiibp1A3iihPj1cf9NYMzPL18nrBebE5xXcxByik
- VefVVKHQLuh5UWDdaXBPFhycaowZ1+mAYijzmsdlok1IeC0fni5P1UU0JUbt6XTEx/cNqBODYD
- D5sJTv84Mq6wkhxp+gF1hAusoUqLzwRTJFpV3MXSYEFcvOffT580cGce74/Qbvi11cDX3xDQX4
- bE/y2FbjPWKurkl5/ZPmGXu10A1udS5LclNCstlbqsgdbAEDpIvejSaFQHik8IJq2OpKM8iFnX
- vlg=
-Subject: Re: [PATCH V4 2/2] gpio: inverter: document the inverter bindings
-To:     Linus Walleij <linus.walleij@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>
-CC:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Balasubramani Vivekanandan 
-        <balasubramani_vivekanandan@mentor.com>
-References: <1561714250-19613-1-git-send-email-harish_kandiga@mentor.com>
- <CAL_Jsq+-xWLkvku-nLmJnFvbuS=dSD=9dG=GS4uBUqL50tdcDg@mail.gmail.com>
- <06c95f15-d577-e43d-e046-ee222f86c406@mentor.com>
- <CAL_JsqLQvjtnfUsZ2RP4eozvdwMLzNxtgmT+XFaxW4xzoFjL=w@mail.gmail.com>
- <f1616784-4dbf-d0fa-b33e-c85fd569383a@mentor.com>
- <CACRpkdZ+vXG-mGjn0Tt5gyGowAuxiCSQNdjEPGTP9qj23CwkSw@mail.gmail.com>
- <CAL_JsqLp___2O-naU+2PPQy0QmJX6+aN3hByz-OB9+qFvWgN9Q@mail.gmail.com>
- <CACRpkdbmyc9LsJ2xiX=zAQR9FZ9dmwu-nPrNbt1Tgud9+rBGpw@mail.gmail.com>
-From:   Harish Jenny K N <harish_kandiga@mentor.com>
-Message-ID: <978af20e-12aa-a8e9-5da9-9af6d6b8f553@mentor.com>
-Date:   Mon, 19 Aug 2019 15:06:38 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        id S1726661AbfHSJnV (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 19 Aug 2019 05:43:21 -0400
+Received: from mga02.intel.com ([134.134.136.20]:39689 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726314AbfHSJnV (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Mon, 19 Aug 2019 05:43:21 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 19 Aug 2019 02:42:56 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,403,1559545200"; 
+   d="scan'208";a="172076242"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.145])
+  by orsmga008.jf.intel.com with ESMTP; 19 Aug 2019 02:42:54 -0700
+Received: from andy by smile with local (Exim 4.92.1)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1hzeBg-0003JP-Aa; Mon, 19 Aug 2019 12:42:52 +0300
+Date:   Mon, 19 Aug 2019 12:42:52 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Mika Westerberg <mika.westerberg@linux.intel.com>
+Cc:     Chris Chiu <chiu@endlessm.com>, linus.walleij@linaro.org,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux@endlessm.com
+Subject: Re: [PATCH] pinctrl: intel: remap the pin number to gpio offset for
+ irq enabled pin
+Message-ID: <20190819094252.GW30120@smile.fi.intel.com>
+References: <20190816093838.81461-1-chiu@endlessm.com>
+ <20190819071413.GI19908@lahna.fi.intel.com>
 MIME-Version: 1.0
-In-Reply-To: <CACRpkdbmyc9LsJ2xiX=zAQR9FZ9dmwu-nPrNbt1Tgud9+rBGpw@mail.gmail.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Originating-IP: [137.202.0.90]
-X-ClientProxiedBy: SVR-IES-MBX-04.mgc.mentorg.com (139.181.222.4) To
- svr-ies-mbx-01.mgc.mentorg.com (139.181.222.1)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190819071413.GI19908@lahna.fi.intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Rob,
+On Mon, Aug 19, 2019 at 10:14:13AM +0300, Mika Westerberg wrote:
+> On Fri, Aug 16, 2019 at 05:38:38PM +0800, Chris Chiu wrote:
+> > On Asus X571GT, GPIO 297 is configured as an interrupt and serves
+> > for the touchpad. The touchpad will report input events much less
+> > than expected after S3 suspend/resume, which results in extremely
+> > slow cursor movement. However, the number of interrupts observed
+> > from /proc/interrupts increases much more than expected even no
+> > touching touchpad.
+> > 
+> > This is due to the value of PADCFG0 of PIN 225 for the interrupt
+> > has been changed from 0x80800102 to 0x80100102. The GPIROUTIOXAPIC
+> > is toggled on which results in the spurious interrupts. The PADCFG0
+> > of PIN 225 is expected to be saved during suspend, but the 297 is
+> > saved instead because the gpiochip_line_is_irq() expect the GPIO
+> > offset but what's really passed to it is PIN number. In this case,
+> > the /sys/kernel/debug/pinctrl/INT3450:00/gpio-ranges shows
+> > 
+> > 288: INT3450:00 GPIOS [436 - 459] PINS [216 - 239]
+> > 
+> > So gpiochip_line_is_irq() returns true for GPIO offset 297, the
+> > suspend routine spuriously saves the content for PIN 297 which
+> > we expect to save for PIN 225.
+> 
+> Nice work nailing the issue!
+> 
+> > This commit maps the PIN number to GPIO offset first in the
+> > intel_pinctrl_should_save() to make sure the values for the
+> > specific PINs can be correctly saved and then restored.
+> > 
+> > Signed-off-by: Chris Chiu <chiu@endlessm.com>
+> 
+> Acked-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+> 
+> I think this should also have:
+> 
+> Fixes: c538b9436751 ("pinctrl: intel: Only restore pins that are used by the driver")
 
+Pushed to my review and testing queue, thanks!
 
-On 10/08/19 2:21 PM, Linus Walleij wrote:
-> On Fri, Aug 9, 2019 at 4:08 PM Rob Herring <robh+dt@kernel.org> wrote:
->> On Mon, Aug 5, 2019 at 5:15 AM Linus Walleij <linus.walleij@linaro.org> wrote:
->>> There is some level of ambition here which is inherently a bit fuzzy
->>> around the edges. ("How long is the coast of Britain?" comes to mind.)
->>>
->>> Surely the intention of device tree is not to recreate the schematic
->>> in all detail. What we want is a model of the hardware that will
->>> suffice for the operating system usecases.
->>>
->>> But sometimes the DTS files will become confusing: why is this
->>> component using GPIO_ACTIVE_LOW when another system
->>> doesn't have that flag? If there is an explicit inverter, the
->>> DTS gets more readable for a human.
->>>
->>> But arguable that is case for adding inverters as syntactic
->>> sugar in the DTS compiler instead...
->> If you really want something more explicit, then add a new GPIO
->> 'inverted' flag. Then a device can always have the same HIGH/LOW flag.
->> That also solves the abstract it for userspace problem.
-> I think there are some intricate ontologies at work here.
->
-> Consider this example: a GPIO is controlling a chip select
-> regulator, say Acme Foo. The chip select
-> has a pin named CSN. We know from convention that the
-> "N" at the end of that pin name means "negative" i.e. active
-> low, and that is how the electronics engineers think about
-> that chip select line: it activates the IC when
-> the line goes low.
->
-> The regulator subsystem and I think all subsystems in the
-> Linux kernel say the consumer pin should be named and
-> tagged after the datsheet of the regulator.
->
-> So it has for example:
->
-> foo {
->     compatible = "acme,foo";
->     cs-gpios = <&gpio0 6 GPIO_ACTIVE_LOW>;
-> };
->
-> (It would be inappropriate to name it "csn-gpios" since
-> we have an established flag for active low. But it is another
-> of these syntactic choices where people likely do mistakes.)
->
-> I think it would be appropriate for the DT binding to say
-> that this flag must always be GPIO_ACTIVE_LOW since
-> the bindings are seen from the component point of view,
-> and thus this is always active low.
->
-> It would even be reasonable for a yaml schema to enfore
-> this, if it could. It is defined as active low after all.
->
-> Now if someone adds an inverter on that line between
-> gpio0 and Acme Foo it looks like this:
->
-> foo {
->     compatible = "acme,foo";
->     cs-gpios = <&gpio0 6 GPIO_ACTIVE_HIGH>;
-> };
->
-> And now we get cognitive dissonance or whatever I should
-> call it: someone reading this DTS sheet and the data
-> sheet for the component Acme Foo to troubleshoot
-> this will be confused: this component has CS active
-> low and still it is specified as active high? Unless they
-> also look at the schematic or the board and find the
-> inverter things are pretty muddy and they will likely curse
-> and solve the situation with the usual trial-and-error,
-> inserting some random cursewords as a comment.
->
-> With an intermediate inverter node, the cs-gpios
-> can go back to GPIO_ACTIVE_LOW and follow
-> the bindings:
->
-> inv0: inverter {
->     compatible = "gpio-inverter";
->     gpio-controller;
->     #gpio-cells = <1>;
->     inverted-gpios = <&gpio0 6 GPIO_ACTIVE_HIGH>;
-> };
->
-> foo {
->     compatible = "acme,foo";
->     cs-gpios = <&inv0 0 GPIO_ACTIVE_LOW>;
-> };
->
-> And now Acme Foo bindings can keep enforcing cs-gpios
-> to always be tagged GPIO_ACTIVE_LOW.
+P.S. I have added Fixes tag.
 
-
-Can you please review/let us know your opinion on this ? I think the idea here is to also isolate the changes to a separate consumer driver and avoid getting inversions inside gpiolib.
-
-
-Thanks.
-
-
-Regards,
-
-Harish Jenny K N
+-- 
+With Best Regards,
+Andy Shevchenko
 
 
