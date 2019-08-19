@@ -2,115 +2,82 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 44DB0924F9
-	for <lists+linux-gpio@lfdr.de>; Mon, 19 Aug 2019 15:29:19 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C3522925AE
+	for <lists+linux-gpio@lfdr.de>; Mon, 19 Aug 2019 16:01:22 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727332AbfHSN3S (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 19 Aug 2019 09:29:18 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:5157 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727172AbfHSN3S (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Mon, 19 Aug 2019 09:29:18 -0400
-Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 8EC5B6C097E5FE472E6A;
-        Mon, 19 Aug 2019 21:29:11 +0800 (CST)
-Received: from localhost.localdomain (10.67.212.75) by
- DGGEMS403-HUB.china.huawei.com (10.3.19.203) with Microsoft SMTP Server id
- 14.3.439.0; Mon, 19 Aug 2019 21:29:05 +0800
-From:   Wei Xu <xuwei5@hisilicon.com>
-To:     <xuwei5@hisilicon.com>, <linux-gpio@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <linus.walleij@linaro.org>,
-        <rjw@rjwysocki.net>, <lenb@kernel.org>,
-        <mika.westerberg@linux.intel.com>, <andy.shevchenko@gmail.com>
-CC:     <linuxarm@huawei.com>, <shameerali.kolothum.thodi@huawei.com>,
-        <jonathan.cameron@huawei.com>, <john.garry@huawei.com>,
-        <salil.mehta@huawei.com>, <shiju.jose@huawei.com>,
-        <jinying@hisilicon.com>, <zhangyi.ac@huawei.com>,
-        <liguozhu@hisilicon.com>, <tangkunshan@huawei.com>,
-        <huangdaode@hisilicon.com>
-Subject: [PATCH v3] gpio: pl061: Fix the issue failed to register the ACPI interrtupion
-Date:   Mon, 19 Aug 2019 21:27:05 +0800
-Message-ID: <1566221225-5170-1-git-send-email-xuwei5@hisilicon.com>
-X-Mailer: git-send-email 2.8.1
+        id S1727529AbfHSOBW (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 19 Aug 2019 10:01:22 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:34581 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727525AbfHSOBW (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 19 Aug 2019 10:01:22 -0400
+Received: by mail-pf1-f195.google.com with SMTP id b24so1234504pfp.1
+        for <linux-gpio@vger.kernel.org>; Mon, 19 Aug 2019 07:01:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=message-id:mime-version:content-transfer-encoding:in-reply-to
+         :references:subject:from:cc:to:user-agent:date;
+        bh=F7cpkNBFx5xI8+VlOismPhtrQ5hpus/IZj9fASHsXMk=;
+        b=JU855dzAkwqT1H/3BG4zjhY11jGbS9PftsV6YBi4NEDxMc/cyHOiZxstQTIEPdBs/D
+         px4XzAmMqIH+epMx9Q9/I/Tj4siR6qSFje5XrtsMzPHDlj9VNSHTX16cWDS1TBNjYxvD
+         6gKP/m3VIZ6F+GD9oBFrvxgfasAD9ShWYTl/Q=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:mime-version
+         :content-transfer-encoding:in-reply-to:references:subject:from:cc:to
+         :user-agent:date;
+        bh=F7cpkNBFx5xI8+VlOismPhtrQ5hpus/IZj9fASHsXMk=;
+        b=jVjl2eRTt57BwtKVK7aUy+h8fC2sywmUy+UdBqQNu9F5Xr6Fkn+1mbWVzQWTKCTZQw
+         wRXklpvMXnvN136Y3B1TlQqATJjdAvHpStYYEsVTWBsgZszrH1blq3QBFysktWdTB1JM
+         ODN+J8NxujNuqSxPxNc3xOFEYpjyYt9SgnsEDLWpXz9dyep/8nOUzPL8VPfosRC5cB9b
+         2fV/lkBYaXIP/0hHdDp1k3uziwkQJp8j/9CozValLxBv/Zpg5i+S4F3b5vrLC1tHTZCb
+         YctzeBkBSs7zL06hGak1ACfU0BwpN6gGzmbrS8fIL8ZA974ZTWC8igVyeMEm0FkcErQA
+         wZEQ==
+X-Gm-Message-State: APjAAAV33Mfgk5p5jr5kUm/cf+U5YRM43i2Y+FjV5ojlW+h5nk2qjBy7
+        QAd7cScbpKBlKPSm5V/JyDJ6ig==
+X-Google-Smtp-Source: APXvYqwd2MJPQXgPfnINl1zrYEAsGlaRF/1z/0BEQQvDiTLDS/Ut4D3ajYmeBSpGrNzJXUWRj0iCew==
+X-Received: by 2002:a17:90a:e28a:: with SMTP id d10mr20993767pjz.107.1566223281613;
+        Mon, 19 Aug 2019 07:01:21 -0700 (PDT)
+Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
+        by smtp.gmail.com with ESMTPSA id a6sm16857646pfa.162.2019.08.19.07.01.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 19 Aug 2019 07:01:21 -0700 (PDT)
+Message-ID: <5d5aabb1.1c69fb81.869b6.c526@mx.google.com>
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.67.212.75]
-X-CFilter-Loop: Reflected
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20190819084904.30027-1-linus.walleij@linaro.org>
+References: <20190819084904.30027-1-linus.walleij@linaro.org>
+Subject: Re: [PATCH] gpio: Pass mask and size with the init_valid_mask()
+From:   Stephen Boyd <swboyd@chromium.org>
+Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Linus Walleij <linus.walleij@linaro.org>,
+        linux-gpio@vger.kernel.org
+User-Agent: alot/0.8.1
+Date:   Mon, 19 Aug 2019 07:01:20 -0700
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Invoke acpi_gpiochip_request_interrupts after the acpi data has been
-attached to the pl061 acpi node to register interruption.
+Quoting Linus Walleij (2019-08-19 01:49:04)
+> diff --git a/drivers/pinctrl/qcom/pinctrl-msm.c b/drivers/pinctrl/qcom/pi=
+nctrl-msm.c
+> index 7f35c196bb3e..a5d8f75da4a7 100644
+> --- a/drivers/pinctrl/qcom/pinctrl-msm.c
+> +++ b/drivers/pinctrl/qcom/pinctrl-msm.c
+> @@ -593,24 +593,25 @@ static void msm_gpio_dbg_show(struct seq_file *s, s=
+truct gpio_chip *chip)
+>  #define msm_gpio_dbg_show NULL
+>  #endif
+> =20
+> -static int msm_gpio_init_valid_mask(struct gpio_chip *chip)
+> +static int msm_gpio_init_valid_mask(struct gpio_chip *gc,
 
-Otherwise it will be failed to register interruption for the ACPI case.
-Because in the gpiochip_add_data_with_key, acpi_gpiochip_add is invoked
-after gpiochip_add_irqchip but at that time the acpi data has not been
-attached yet.
+Please leave the name as 'chip' like the other ops in this file. The
+other uses of 'gc' in gpiolib are fine though.
 
-Tested with below steps:
-
-	qemu-system-aarch64 \
-	-machine virt,gic-version=3 -cpu cortex-a57 \
-	-m 1G,maxmem=4G,slots=4 \
-	-kernel Image -initrd rootfs.cpio.gz \
-	-net none -nographic  \
-	-bios QEMU_EFI.fd  \
-	-append "console=ttyAMA0 acpi=force earlycon=pl011,0x9000000"
-
-The pl061 interruption is missed and the following output is not in the
-/proc/interrupts on the v5.3-rc4 compared with the v5.2.0-rc7.
-
-	 43:          0  ARMH0061:00   3 Edge      ACPI:Event
-
-Fixes: 04ce935c6b2a ("gpio: pl061: Pass irqchip when adding gpiochip")
-Signed-off-by: Wei Xu <xuwei5@hisilicon.com>
----
-v2 -> v3:
-* addressed the comments of Andy to show only affected output of
-/proc/interrupts and drop the whole log of v5.2.0-rc7
-
-v1- > v2:
-* rebased on https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-gpio.git/log/?h=devel
-* attached the log based on QEMU v3.0.0 and Linux kernel v5.2.0-rc7
----
- drivers/gpio/gpio-pl061.c | 7 +++++++
- 1 file changed, 7 insertions(+)
-
-diff --git a/drivers/gpio/gpio-pl061.c b/drivers/gpio/gpio-pl061.c
-index 722ce5c..e1a434e 100644
---- a/drivers/gpio/gpio-pl061.c
-+++ b/drivers/gpio/gpio-pl061.c
-@@ -8,6 +8,7 @@
-  *
-  * Data sheet: ARM DDI 0190B, September 2000
-  */
-+#include <linux/acpi.h>
- #include <linux/spinlock.h>
- #include <linux/errno.h>
- #include <linux/init.h>
-@@ -24,6 +25,9 @@
- #include <linux/pinctrl/consumer.h>
- #include <linux/pm.h>
- 
-+#include "gpiolib.h"
-+#include "gpiolib-acpi.h"
-+
- #define GPIODIR 0x400
- #define GPIOIS  0x404
- #define GPIOIBE 0x408
-@@ -345,6 +349,9 @@ static int pl061_probe(struct amba_device *adev, const struct amba_id *id)
- 	if (ret)
- 		return ret;
- 
-+	if (has_acpi_companion(dev))
-+		acpi_gpiochip_request_interrupts(&pl061->gc);
-+
- 	amba_set_drvdata(adev, pl061);
- 	dev_info(dev, "PL061 GPIO chip registered\n");
- 
--- 
-2.8.1
+Reviewed-by: Stephen Boyd <swboyd@chromium.org>
 
