@@ -2,57 +2,59 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 9862691FB6
-	for <lists+linux-gpio@lfdr.de>; Mon, 19 Aug 2019 11:11:49 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D441C9205A
+	for <lists+linux-gpio@lfdr.de>; Mon, 19 Aug 2019 11:31:07 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727128AbfHSJLt (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 19 Aug 2019 05:11:49 -0400
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:39874 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726767AbfHSJLt (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 19 Aug 2019 05:11:49 -0400
-Received: by mail-lf1-f66.google.com with SMTP id x3so854517lfn.6
-        for <linux-gpio@vger.kernel.org>; Mon, 19 Aug 2019 02:11:47 -0700 (PDT)
+        id S1726842AbfHSJbG (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 19 Aug 2019 05:31:06 -0400
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:37200 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726930AbfHSJbF (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 19 Aug 2019 05:31:05 -0400
+Received: by mail-lf1-f65.google.com with SMTP id c9so896589lfh.4
+        for <linux-gpio@vger.kernel.org>; Mon, 19 Aug 2019 02:31:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=j/I05uhQKW/43t9Rdq41q6aXWCJLT9bC/VQUa+EvImA=;
-        b=y4u5ErMobz+NU6cVvfgrloapCl5Y+lHaB1H2y34wD7lvAorRFf5K6BQPcYHWGVuRQd
-         1ej5WhNeD65Xm7lmV7gL80EW7x3rvZ/iyZfGHALrzSweRczZiyYg+utTnYL8qPEiv9TX
-         E7mDDXpDBL1T9c+2ujt2w56tbRVyzuUUqWEQINjCaffOLlH5D4U6QG6rM9nvg3vy1ly5
-         /dGrCoWLX1Ef/aH1vYyxYZDXFeyuIUYd9OiysIEAgqg8m/+cNN78MCzESskDLVdyrXIT
-         1Nkvx+P4g33GeJ4PSYvTVycbULhq7BIFp7WXxlG6P7ErH0YQnkWXjdtGGrTzXYNKQv00
-         nyEA==
+        bh=4Oha65tTiE8y2ga7ugs6EJqRA+vmk14Daxp04mibMg4=;
+        b=LkSQP7giGMD/biydF+x/mSkzOvuwBMw/jiXpA84XNOLkST0LBszOPIzL0OufGJ9ML0
+         tvekrLGWwiPOitLpJMsiZl21pf9JArjby1XGAyHSma7n0YW+0kHCF2w67YjKuIqbgP/E
+         P+qRuBBgzSGP9VRIHlRFocLwxLczdSdSPj24IEJ2heaMJS6Y3KDqJOlMsAOXytc6HXbR
+         GdiqNKqAsLaAES5yufo/nKM7uGHAEPjQTkVA11jZxg0oyGbYDuRLHNjGd6SKEab2YfAp
+         AWU2tmDZSL2VEY3eTOnJooPWVBCnggOG7C94r6Dtx6TUc5k4NfNrwn99XD6yXQB17PUt
+         uv0w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=j/I05uhQKW/43t9Rdq41q6aXWCJLT9bC/VQUa+EvImA=;
-        b=OqngIgiqUqOGQJ/iNaKw0q1Mg7sDQQpmSiBwiSZJ3uGLWVnqYIcSD6OT3yTNeY/8SC
-         C0ZURjGJfC8agWIRvBcElENYYNoszCIAUEORBAn9hDe1v3DdgGg4SY/XFQQ+SAjYPyfC
-         op+2Hmgyi8bgprav1y7n8v7qSah6rL8ghk923Nvud92x6mCJKcD2DJbiWPas+4kOgs0W
-         pMMsnIjDo3mTJ94SjA63sUU1xA8axOReWL52EKOc+yK+O6CE678oXBilDkZceYigSHDf
-         b+n71ul+7hBKKUgwFdtGA79oYZZxUc6Dj/Uy77earktd3E7gUcfd/qQFenNTD0jFovXs
-         QYaw==
-X-Gm-Message-State: APjAAAXCaGJtbnyYQRKYkPWy1OdNFfs9peDcMljr9z4p5sc4lhqIt0ej
-        CXn87rsV529t0tFzT+9ydm7sfeMTMKw=
-X-Google-Smtp-Source: APXvYqyp2wPtP26Jnm9cm6pSd9HHE71sPuVyTNAYXR0RlrPELK+8Cx4EWmEAKI4/IkMPVfaoIHIJSQ==
-X-Received: by 2002:a19:80c4:: with SMTP id b187mr11387136lfd.122.1566205906896;
-        Mon, 19 Aug 2019 02:11:46 -0700 (PDT)
+        bh=4Oha65tTiE8y2ga7ugs6EJqRA+vmk14Daxp04mibMg4=;
+        b=oeEKg613r/P/3USrwE3Q2Rp6fA5MnAd39xfOlTnB13vBisbSofWj/gNL74iJxVJjny
+         /bBAgZi+BiVthlJBRCCamtfHR1Nlm7gTTMc38b37Fw46/IEDU1tkNoCOVQUjk2I1oXyp
+         ZYV9MEo//lSNuleiyhUvYfVR2el9Wv8Rq5DA8dkAAOtPRyrdcaE4omollm8guQhocXYF
+         7uNfyn/Gj92zIUReQ/0WqfOtUEEg6TAqVTfCb8SoS9aAuqGz84IOyr5ZbA8WaC1OGehU
+         1hXXrTJWXqJyF0pqAlBDwMQif9Z5A8NynebTquwriSyxRCwxC+dOQC0GeiZnrb4KYDVP
+         shlQ==
+X-Gm-Message-State: APjAAAVAGwk8xadMjeZUKXHF5hBHUmOIY5n++AUz/8m38oQB1Cs5v8rC
+        lZkev4yclK0o3Pb+4ECuS1vvZw7Upi4=
+X-Google-Smtp-Source: APXvYqzI9r5HymzanjG8iaxSkgWhV5R8N0Bp9kwsELLugI0ofFVYsHMRlv7COL8bdm70YBOXqrfQaw==
+X-Received: by 2002:ac2:5336:: with SMTP id f22mr11519074lfh.180.1566207062665;
+        Mon, 19 Aug 2019 02:31:02 -0700 (PDT)
 Received: from genomnajs.ideon.se ([85.235.10.227])
-        by smtp.gmail.com with ESMTPSA id q17sm2235494lfa.82.2019.08.19.02.11.45
+        by smtp.gmail.com with ESMTPSA id 2sm2258237lfr.76.2019.08.19.02.31.00
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 19 Aug 2019 02:11:45 -0700 (PDT)
+        Mon, 19 Aug 2019 02:31:01 -0700 (PDT)
 From:   Linus Walleij <linus.walleij@linaro.org>
 To:     linux-gpio@vger.kernel.org
 Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
         Linus Walleij <linus.walleij@linaro.org>,
         Benjamin Gaignard <benjamin.gaignard@st.com>,
-        Amelie Delaunay <amelie.delaunay@st.com>
-Subject: [PATCH] pinctrl: stmfx: Use the callback to populate valid_mask
-Date:   Mon, 19 Aug 2019 11:11:40 +0200
-Message-Id: <20190819091140.622-1-linus.walleij@linaro.org>
+        Amelie Delaunay <amelie.delaunay@st.com>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>
+Subject: [PATCH] gpio: Use callback presence to determine need of valid_mask
+Date:   Mon, 19 Aug 2019 11:30:58 +0200
+Message-Id: <20190819093058.10863-1-linus.walleij@linaro.org>
 X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -61,68 +63,94 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-This makes use of the existing callback to populate the
-valid mask instead of iteratively setting it up during
-probe.
+After we switched the two drivers that have .need_valid_mask
+set to use the callback for setting up the .valid_mask,
+we can just use the presence of the .init_valid_mask()
+callback (or the OF reserved ranges, nota bene) to determine
+whether to allocate the mask or not and we can drop the
+.need_valid_mask field altogether.
 
 Cc: Benjamin Gaignard <benjamin.gaignard@st.com>
 Cc: Amelie Delaunay <amelie.delaunay@st.com>
+Cc: Stephen Boyd <swboyd@chromium.org>
+Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
 Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
 ---
-Testing this requires the patch:
-"gpio: Pass mask and size with the init_valid_mask()"
-that I just sent out.
----
- drivers/pinctrl/pinctrl-stmfx.c | 17 ++++++++++++++---
- 1 file changed, 14 insertions(+), 3 deletions(-)
+ drivers/gpio/gpiolib.c             | 4 +---
+ drivers/pinctrl/pinctrl-stmfx.c    | 1 -
+ drivers/pinctrl/qcom/pinctrl-msm.c | 4 ++--
+ include/linux/gpio/driver.h        | 9 ---------
+ 4 files changed, 3 insertions(+), 15 deletions(-)
 
+diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
+index 22b87c6e8cd5..01aa5440454c 100644
+--- a/drivers/gpio/gpiolib.c
++++ b/drivers/gpio/gpiolib.c
+@@ -363,9 +363,7 @@ static unsigned long *gpiochip_allocate_mask(struct gpio_chip *chip)
+ 
+ static int gpiochip_alloc_valid_mask(struct gpio_chip *gc)
+ {
+-	if (of_gpio_need_valid_mask(gc))
+-		gc->need_valid_mask = true;
+-	if (!gc->need_valid_mask)
++	if (!(of_gpio_need_valid_mask(gc) || gc->init_valid_mask))
+ 		return 0;
+ 
+ 	gc->valid_mask = gpiochip_allocate_mask(gc);
 diff --git a/drivers/pinctrl/pinctrl-stmfx.c b/drivers/pinctrl/pinctrl-stmfx.c
-index d3332da35637..13b6d6f72bcc 100644
+index 13b6d6f72bcc..dd5aa9a2dfe5 100644
 --- a/drivers/pinctrl/pinctrl-stmfx.c
 +++ b/drivers/pinctrl/pinctrl-stmfx.c
-@@ -585,12 +585,24 @@ static int stmfx_pinctrl_gpio_function_enable(struct stmfx_pinctrl *pctl)
- 	return stmfx_function_enable(pctl->stmfx, func);
- }
- 
-+static int stmfx_pinctrl_gpio_init_valid_mask(struct gpio_chip *gc,
-+					      unsigned long *valid_mask,
-+					      unsigned int ngpios)
-+{
-+	struct stmfx_pinctrl *pctl = gpiochip_get_data(gc);
-+	u32 n;
-+
-+	for_each_clear_bit(n, &pctl->gpio_valid_mask, ngpios)
-+		clear_bit(n, valid_mask);
-+
-+	return 0;
-+}
-+
- static int stmfx_pinctrl_probe(struct platform_device *pdev)
- {
- 	struct stmfx *stmfx = dev_get_drvdata(pdev->dev.parent);
- 	struct device_node *np = pdev->dev.of_node;
- 	struct stmfx_pinctrl *pctl;
--	u32 n;
- 	int irq, ret;
- 
- 	pctl = devm_kzalloc(stmfx->dev, sizeof(*pctl), GFP_KERNEL);
-@@ -651,6 +663,7 @@ static int stmfx_pinctrl_probe(struct platform_device *pdev)
+@@ -662,7 +662,6 @@ static int stmfx_pinctrl_probe(struct platform_device *pdev)
+ 	pctl->gpio_chip.ngpio = pctl->pctl_desc.npins;
  	pctl->gpio_chip.can_sleep = true;
  	pctl->gpio_chip.of_node = np;
- 	pctl->gpio_chip.need_valid_mask = true;
-+	pctl->gpio_chip.init_valid_mask = stmfx_pinctrl_gpio_init_valid_mask;
+-	pctl->gpio_chip.need_valid_mask = true;
+ 	pctl->gpio_chip.init_valid_mask = stmfx_pinctrl_gpio_init_valid_mask;
  
  	ret = devm_gpiochip_add_data(pctl->dev, &pctl->gpio_chip, pctl);
- 	if (ret) {
-@@ -668,8 +681,6 @@ static int stmfx_pinctrl_probe(struct platform_device *pdev)
- 	pctl->irq_chip.irq_set_type = stmfx_pinctrl_irq_set_type;
- 	pctl->irq_chip.irq_bus_lock = stmfx_pinctrl_irq_bus_lock;
- 	pctl->irq_chip.irq_bus_sync_unlock = stmfx_pinctrl_irq_bus_sync_unlock;
--	for_each_clear_bit(n, &pctl->gpio_valid_mask, pctl->gpio_chip.ngpio)
--		clear_bit(n, pctl->gpio_chip.valid_mask);
+diff --git a/drivers/pinctrl/qcom/pinctrl-msm.c b/drivers/pinctrl/qcom/pinctrl-msm.c
+index a5d8f75da4a7..b8a1c43222f8 100644
+--- a/drivers/pinctrl/qcom/pinctrl-msm.c
++++ b/drivers/pinctrl/qcom/pinctrl-msm.c
+@@ -654,7 +654,6 @@ static const struct gpio_chip msm_gpio_template = {
+ 	.request          = gpiochip_generic_request,
+ 	.free             = gpiochip_generic_free,
+ 	.dbg_show         = msm_gpio_dbg_show,
+-	.init_valid_mask  = msm_gpio_init_valid_mask,
+ };
  
- 	ret = gpiochip_irqchip_add_nested(&pctl->gpio_chip, &pctl->irq_chip,
- 					  0, handle_bad_irq, IRQ_TYPE_NONE);
+ /* For dual-edge interrupts in software, since some hardware has no
+@@ -1016,7 +1015,8 @@ static int msm_gpio_init(struct msm_pinctrl *pctrl)
+ 	chip->parent = pctrl->dev;
+ 	chip->owner = THIS_MODULE;
+ 	chip->of_node = pctrl->dev->of_node;
+-	chip->need_valid_mask = msm_gpio_needs_valid_mask(pctrl);
++	if (msm_gpio_needs_valid_mask(pctrl))
++		chip->init_valid_mask = msm_gpio_init_valid_mask;
+ 
+ 	pctrl->irq_chip.name = "msmgpio";
+ 	pctrl->irq_chip.irq_enable = msm_gpio_irq_enable;
+diff --git a/include/linux/gpio/driver.h b/include/linux/gpio/driver.h
+index dc03323897ef..340121c7d2fb 100644
+--- a/include/linux/gpio/driver.h
++++ b/include/linux/gpio/driver.h
+@@ -403,15 +403,6 @@ struct gpio_chip {
+ 	struct gpio_irq_chip irq;
+ #endif /* CONFIG_GPIOLIB_IRQCHIP */
+ 
+-	/**
+-	 * @need_valid_mask:
+-	 *
+-	 * If set core allocates @valid_mask with all its values initialized
+-	 * with init_valid_mask() or set to one if init_valid_mask() is not
+-	 * defined
+-	 */
+-	bool need_valid_mask;
+-
+ 	/**
+ 	 * @valid_mask:
+ 	 *
 -- 
 2.21.0
 
