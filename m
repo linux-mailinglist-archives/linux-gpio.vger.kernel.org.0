@@ -2,93 +2,142 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 220DE92093
-	for <lists+linux-gpio@lfdr.de>; Mon, 19 Aug 2019 11:43:22 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 77A1692247
+	for <lists+linux-gpio@lfdr.de>; Mon, 19 Aug 2019 13:27:23 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726661AbfHSJnV (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 19 Aug 2019 05:43:21 -0400
-Received: from mga02.intel.com ([134.134.136.20]:39689 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726314AbfHSJnV (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Mon, 19 Aug 2019 05:43:21 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 19 Aug 2019 02:42:56 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,403,1559545200"; 
-   d="scan'208";a="172076242"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.145])
-  by orsmga008.jf.intel.com with ESMTP; 19 Aug 2019 02:42:54 -0700
-Received: from andy by smile with local (Exim 4.92.1)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1hzeBg-0003JP-Aa; Mon, 19 Aug 2019 12:42:52 +0300
-Date:   Mon, 19 Aug 2019 12:42:52 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Mika Westerberg <mika.westerberg@linux.intel.com>
-Cc:     Chris Chiu <chiu@endlessm.com>, linus.walleij@linaro.org,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux@endlessm.com
-Subject: Re: [PATCH] pinctrl: intel: remap the pin number to gpio offset for
- irq enabled pin
-Message-ID: <20190819094252.GW30120@smile.fi.intel.com>
-References: <20190816093838.81461-1-chiu@endlessm.com>
- <20190819071413.GI19908@lahna.fi.intel.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190819071413.GI19908@lahna.fi.intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        id S1727259AbfHSL07 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 19 Aug 2019 07:26:59 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:39659 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727308AbfHSL07 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 19 Aug 2019 07:26:59 -0400
+Received: by mail-pg1-f193.google.com with SMTP id u17so1053607pgi.6;
+        Mon, 19 Aug 2019 04:26:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=vRVye6B8XFgwGVUEF0GcA194DZPYgp0SHGUoR6zegFI=;
+        b=eoOeXs46jigQlSjUrPijc/oAUBkYCMh5h7wy7K5rCwFMCI6NX5c67Ftrq7DQTgNEYA
+         rhi6pWmJ5wOab8uC9xZ60knm73pwug1ubUJMCgbe7BdN4k1fXliPgHEnzR4mUFSkWLJD
+         NOmdvihYR1oLgfDoHKMYrzC3xG6cacVYOabtrv8imr9G2I0nK57rf0i3nh2WEr2/wTOn
+         sF5SSNdCz1QC0wihKUP46q7IailDx74HUxS6VDxAJp9SmWLSChgz73DEkX153UQyAeIa
+         fwRkZwhx/JOA4l0QMpZ4n7p018JBE6g9pJmPelQXbDKwAD/2U0eObhWrL7T1LNy9k1Vh
+         Mb4g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=vRVye6B8XFgwGVUEF0GcA194DZPYgp0SHGUoR6zegFI=;
+        b=PHhZKsenuZ8VDfaRm4iwVLt+8Qn5qJF8ULrcYeSczlstt0ChQ+eQRh7nezoNZG1abm
+         Ty+8WaiUWmWkwWzCkHNe9QKlaaeka68N0Q+JVKBKfpuw88+1z3EvsZ8n3LM8gm7gYU1f
+         6nyuZv8CDwC4j8I3ASjvhMs3Q91KlQiIMFLSJCbI04pISYL6BkTEAQKZ6drGGetN9OE3
+         iqlUKeQjP/NL+WNZmjBlgcG7gxtQt+fsEaQucMZFz+nX/J03vrToXLHxaktF5TAd7i3s
+         JiJPm8+Tj2OkrgDIPKTs+a2p4/wgGVQnl1bleHCy9HVo01iX8znW5H0rFiZC7dF7wXif
+         9IoQ==
+X-Gm-Message-State: APjAAAV/noRaT2NJnyl9cfnPhJSqa7OtZQ59831L910ommbrKK6naZOm
+        yDPEll/sk1aXhOFJKap82cI=
+X-Google-Smtp-Source: APXvYqx0jyZSkUJc+ccc4cDOsChOkIyUbxMIWJOpwE3D6Rdphhg/hGR2Jsau1+7LWRECYdHdPsbsbA==
+X-Received: by 2002:a63:194f:: with SMTP id 15mr19939402pgz.382.1566214018788;
+        Mon, 19 Aug 2019 04:26:58 -0700 (PDT)
+Received: from localhost.localdomain ([58.173.144.54])
+        by smtp.googlemail.com with ESMTPSA id br18sm13826091pjb.20.2019.08.19.04.26.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 19 Aug 2019 04:26:58 -0700 (PDT)
+From:   Ian W MORRISON <ianwmorrison@gmail.com>
+To:     benjamin.tissoires@redhat.com, hdegoede@redhat.com,
+        mika.westerberg@linux.intel.com, andriy.shevchenko@linux.intel.com,
+        linus.walleij@linaro.org, bgolaszewski@baylibre.com
+Cc:     linux-gpio@vger.kernel.org, linux-acpi@vger.kernel.org,
+        linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        Ian W MORRISON <ianwmorrison@gmail.com>
+Subject: [PATCH v2] Skip deferred request irqs for devices known to fail
+Date:   Mon, 19 Aug 2019 21:26:37 +1000
+Message-Id: <20190819112637.29943-1-ianwmorrison@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Aug 19, 2019 at 10:14:13AM +0300, Mika Westerberg wrote:
-> On Fri, Aug 16, 2019 at 05:38:38PM +0800, Chris Chiu wrote:
-> > On Asus X571GT, GPIO 297 is configured as an interrupt and serves
-> > for the touchpad. The touchpad will report input events much less
-> > than expected after S3 suspend/resume, which results in extremely
-> > slow cursor movement. However, the number of interrupts observed
-> > from /proc/interrupts increases much more than expected even no
-> > touching touchpad.
-> > 
-> > This is due to the value of PADCFG0 of PIN 225 for the interrupt
-> > has been changed from 0x80800102 to 0x80100102. The GPIROUTIOXAPIC
-> > is toggled on which results in the spurious interrupts. The PADCFG0
-> > of PIN 225 is expected to be saved during suspend, but the 297 is
-> > saved instead because the gpiochip_line_is_irq() expect the GPIO
-> > offset but what's really passed to it is PIN number. In this case,
-> > the /sys/kernel/debug/pinctrl/INT3450:00/gpio-ranges shows
-> > 
-> > 288: INT3450:00 GPIOS [436 - 459] PINS [216 - 239]
-> > 
-> > So gpiochip_line_is_irq() returns true for GPIO offset 297, the
-> > suspend routine spuriously saves the content for PIN 297 which
-> > we expect to save for PIN 225.
-> 
-> Nice work nailing the issue!
-> 
-> > This commit maps the PIN number to GPIO offset first in the
-> > intel_pinctrl_should_save() to make sure the values for the
-> > specific PINs can be correctly saved and then restored.
-> > 
-> > Signed-off-by: Chris Chiu <chiu@endlessm.com>
-> 
-> Acked-by: Mika Westerberg <mika.westerberg@linux.intel.com>
-> 
-> I think this should also have:
-> 
-> Fixes: c538b9436751 ("pinctrl: intel: Only restore pins that are used by the driver")
+Patch ca876c7483b6 "gpiolib-acpi: make sure we trigger edge events at
+least once on boot" causes the MINIX family of mini PCs to fail to boot
+resulting in a "black screen". 
 
-Pushed to my review and testing queue, thanks!
+This patch excludes MINIX devices from executing this trigger in order
+to successfully boot.
 
-P.S. I have added Fixes tag.
+Cc: stable@vger.kernel.org
+Signed-off-by: Ian W MORRISON <ianwmorrison@gmail.com>
+Reviewed-by: Hans de Goede <hdegoede@redhat.com>
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+---
+ drivers/gpio/gpiolib-acpi.c | 33 +++++++++++++++++++++++++++------
+ 1 file changed, 27 insertions(+), 6 deletions(-)
 
+diff --git a/drivers/gpio/gpiolib-acpi.c b/drivers/gpio/gpiolib-acpi.c
+index fdee8afa5339..f6c3dcdc91c9 100644
+--- a/drivers/gpio/gpiolib-acpi.c
++++ b/drivers/gpio/gpiolib-acpi.c
+@@ -13,6 +13,7 @@
+ #include <linux/gpio/machine.h>
+ #include <linux/export.h>
+ #include <linux/acpi.h>
++#include <linux/dmi.h>
+ #include <linux/interrupt.h>
+ #include <linux/mutex.h>
+ #include <linux/pinctrl/pinctrl.h>
+@@ -20,6 +21,17 @@
+ #include "gpiolib.h"
+ #include "gpiolib-acpi.h"
+ 
++static const struct dmi_system_id skip_deferred_request_irqs_table[] = {
++	{
++		.ident = "MINIX Z83-4",
++		.matches = {
++			DMI_EXACT_MATCH(DMI_SYS_VENDOR, "MINIX"),
++			DMI_MATCH(DMI_PRODUCT_NAME, "Z83-4"),
++		},
++	},
++	{}
++};
++
+ /**
+  * struct acpi_gpio_event - ACPI GPIO event handler data
+  *
+@@ -1273,19 +1285,28 @@ bool acpi_can_fallback_to_crs(struct acpi_device *adev, const char *con_id)
+ 	return con_id == NULL;
+ }
+ 
+-/* Run deferred acpi_gpiochip_request_irqs() */
++/*
++ * Run deferred acpi_gpiochip_request_irqs()
++ * but exclude devices known to fail
++*/
+ static int acpi_gpio_handle_deferred_request_irqs(void)
+ {
+ 	struct acpi_gpio_chip *acpi_gpio, *tmp;
++	const struct dmi_system_id *dmi_id;
+ 
+-	mutex_lock(&acpi_gpio_deferred_req_irqs_lock);
+-	list_for_each_entry_safe(acpi_gpio, tmp,
++	dmi_id = dmi_first_match(skip_deferred_request_irqs_table);
++	if (dmi_id)
++		return 0;
++	else {
++		mutex_lock(&acpi_gpio_deferred_req_irqs_lock);
++		list_for_each_entry_safe(acpi_gpio, tmp,
+ 				 &acpi_gpio_deferred_req_irqs_list,
+ 				 deferred_req_irqs_list_entry)
+-		acpi_gpiochip_request_irqs(acpi_gpio);
++			acpi_gpiochip_request_irqs(acpi_gpio);
+ 
+-	acpi_gpio_deferred_req_irqs_done = true;
+-	mutex_unlock(&acpi_gpio_deferred_req_irqs_lock);
++		acpi_gpio_deferred_req_irqs_done = true;
++		mutex_unlock(&acpi_gpio_deferred_req_irqs_lock);
++	}
+ 
+ 	return 0;
+ }
 -- 
-With Best Regards,
-Andy Shevchenko
-
+2.17.1
 
