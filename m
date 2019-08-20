@@ -2,97 +2,108 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 22B3895C83
-	for <lists+linux-gpio@lfdr.de>; Tue, 20 Aug 2019 12:46:33 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 81CE295CD3
+	for <lists+linux-gpio@lfdr.de>; Tue, 20 Aug 2019 13:05:18 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729712AbfHTKpx (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 20 Aug 2019 06:45:53 -0400
-Received: from mail-wr1-f49.google.com ([209.85.221.49]:36982 "EHLO
-        mail-wr1-f49.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729710AbfHTKpx (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 20 Aug 2019 06:45:53 -0400
-Received: by mail-wr1-f49.google.com with SMTP id z11so11869183wrt.4
-        for <linux-gpio@vger.kernel.org>; Tue, 20 Aug 2019 03:45:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernelci-org.20150623.gappssmtp.com; s=20150623;
-        h=message-id:date:mime-version:content-transfer-encoding:subject:to
-         :from;
-        bh=KkIarKsCP4FFqAflKoKIg67IOpS0fPSFwH4PBOHKlps=;
-        b=NTpdp5Jyf51E+nStTBajcij53m6xxEIoZO9OYxk3dg1oI2haqRUjaW6kexlFoTWPpe
-         F4Q3rA70YDMtvV0LcZ1Wyf+7e8xfl5oE9bwbgScPEJiAavH2QI1wN2L5v6nBbfdH3uai
-         SBBAM/3VKiHH0+MVzxR4p0rI6K//8aXvYRr+sZCn4kSke6Eq/FU04aodnZLS2szkUlDT
-         JdLqWjFw2kKon2l/DrTVmHhKwsPHfW7t1c7VdNgN15HYp15m+Nfoev7IpjrYwZeEaKrD
-         xZNJL9aMnrxdJ17dJRrtrYCwE9yY1busWiuEn+MfeE9N99GqfeJF5JJADcHoAhrz+Rv2
-         bYjw==
+        id S1729556AbfHTLFR convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-gpio@lfdr.de>); Tue, 20 Aug 2019 07:05:17 -0400
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:46632 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728503AbfHTLFR (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 20 Aug 2019 07:05:17 -0400
+Received: by mail-ot1-f67.google.com with SMTP id z17so4617743otk.13
+        for <linux-gpio@vger.kernel.org>; Tue, 20 Aug 2019 04:05:16 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:date:mime-version
-         :content-transfer-encoding:subject:to:from;
-        bh=KkIarKsCP4FFqAflKoKIg67IOpS0fPSFwH4PBOHKlps=;
-        b=qxxV2u0/mtXXSoiKhETMoOlPf3XoBxiqcIKrB/4nDmlC37M2SevQTAKmS+hgPjebVP
-         PVnUG5L/Bwxa6PC8P+n2KbbknadcRubzJ094dGNNGlMKHUTz5OZ+HlmwBzPwZ+XSa+wf
-         IDDvfvz/Yk4LAlQb0p0fdWshfFy5Jy44TAfQB6FaigNJI9IwuNibtYae7smv1Hpql7Kk
-         BYu0l/TtZW7WelOITieizlWHHPKIn8URt15kVGNh+N6MiiFQIh/RbD8rGEO/qIY4LJ7+
-         jH2AqjA+rhtbW/bhsso33SyVkszXTw4pwr3Snxw17ZDmkIIO78xSu3ww0LoOBXnLBmI4
-         07qA==
-X-Gm-Message-State: APjAAAXpS/l92VWWjZic7J5b2qtp+yZOIMhLYnmcO4wksHPnKWMKDla2
-        acCGaL9396rfKyrqmbvwog3zTGv7R41HiA==
-X-Google-Smtp-Source: APXvYqxgkyG9GwRcaUrRsbJ+kUQ5nC/GJrcbjCB5JUHQ6AXBeldvlLYtWg6eNiYvnEO9IX4s/O3hAw==
-X-Received: by 2002:adf:f54a:: with SMTP id j10mr26703222wrp.220.1566297951268;
-        Tue, 20 Aug 2019 03:45:51 -0700 (PDT)
-Received: from [148.251.42.114] ([2a01:4f8:201:9271::2])
-        by smtp.gmail.com with ESMTPSA id r23sm12992637wmc.38.2019.08.20.03.45.50
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 20 Aug 2019 03:45:50 -0700 (PDT)
-Message-ID: <5d5bcf5e.1c69fb81.f1705.c8dd@mx.google.com>
-Date:   Tue, 20 Aug 2019 03:45:50 -0700 (PDT)
-Content-Type: text/plain; charset="utf-8"
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=3YGrbSkleZN3Kg35RZrdrl0Ec9/FU7SXMwQ/xlIPzrw=;
+        b=Wj2pNvWLOzIVun3mzcqMrDFDQXJVSMNXYQgFWzivEyGuS52MBqJ07fxO0JSbvunM9X
+         PvV98OWlQrJJmx21mSpvMYPld70jM3El+GeGNgAR2+AW31yHm9EsPeH3dTRoJ8xyj3P8
+         Dw+7x4mfV7/IVdEUmAYSjFR6mmu2CZkkBccpzz/+n0/5ZsuyuMe2frNbuLrAa3PmGXKM
+         M/13EclZm48vLH45YJYo4B9ItSKvJsk5KemwrntHpNE0aqXfXmyVWI/wgg/jImMwuFmS
+         3Z219gchJOtrFc+Zd8zgnHM9R5qx6a5x/j/5Amrg6YvomfV7/uTtuzSjG25jivHEGiHo
+         9rcw==
+X-Gm-Message-State: APjAAAUasB5qrMyICykSEXCs7Oy80pq6QDtD7a9Clqvg6XliJ3CCcGHv
+        BxRPCTi2+eZTsDCOd01/uhHhBD7IZdKeYqlFf+zCaayc
+X-Google-Smtp-Source: APXvYqyptuLlf0Zd1DqIEYCDiqQxmd90vhMK+Rcl/Z9BDnkUncwy37EKLmuObnDIsT/OmzzZW978f3bnSEeruOJAfAk=
+X-Received: by 2002:a9d:7a90:: with SMTP id l16mr22729287otn.297.1566299116379;
+ Tue, 20 Aug 2019 04:05:16 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-Kernelci-Kernel: v5.3-rc4-4-g607ff4deb08f
-X-Kernelci-Tree: linusw
-X-Kernelci-Report-Type: boot
-X-Kernelci-Branch: fixes
-Subject: linusw/fixes boot: 50 boots: 1 failed,
- 49 passed (v5.3-rc4-4-g607ff4deb08f)
-To:     linux-gpio@vger.kernel.org, fellows@kernelci.org
-From:   "kernelci.org bot" <bot@kernelci.org>
+References: <20190820104252.8255-1-linus.walleij@linaro.org>
+In-Reply-To: <20190820104252.8255-1-linus.walleij@linaro.org>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Tue, 20 Aug 2019 13:05:04 +0200
+Message-ID: <CAMuHMdWMA6r_-esqHUVkbMvQZs2o_BMyB_XS8UZUTrqwOMGCPw@mail.gmail.com>
+Subject: Re: [PATCH] pinctrl: rza2: Include the appropriate headers
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Chris Brandt <chris.brandt@renesas.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-linusw/fixes boot: 50 boots: 1 failed, 49 passed (v5.3-rc4-4-g607ff4deb08f)
+Hi Linus,
 
-Full Boot Summary: https://kernelci.org/boot/all/job/linusw/branch/fixes/ke=
-rnel/v5.3-rc4-4-g607ff4deb08f/
-Full Build Summary: https://kernelci.org/build/linusw/branch/fixes/kernel/v=
-5.3-rc4-4-g607ff4deb08f/
+On Tue, Aug 20, 2019 at 12:44 PM Linus Walleij <linus.walleij@linaro.org> wrote:
+> This driver is implementing a GPIO driver so include
+> <linux/gpio/driver.h> and not the legacy API <linux/gpio.h>.
+> When testing it turns out it also relies on implicit
+> inclusion of <linux/io.h> (readw etc) so make sure to
+> include that as well.
+>
+> Cc: Chris Brandt <chris.brandt@renesas.com>
+> Cc: Geert Uytterhoeven <geert+renesas@glider.be>
+> Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+> ---
+> Geert: assuming you will pick this up if you're happy
+> with it.
 
-Tree: linusw
-Branch: fixes
-Git Describe: v5.3-rc4-4-g607ff4deb08f
-Git Commit: 607ff4deb08f986753f0b40e2d7840b61e11a46d
-Git URL: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-gpio.=
-git/
-Tested: 35 unique boards, 15 SoC families, 3 builds out of 6
+Unfortunately shmobile_defconfig is not happy with it:
 
-Boot Regressions Detected:
+drivers/pinctrl/pinctrl-rza2.c: In function ‘rza2_pin_to_gpio’:
+drivers/pinctrl/pinctrl-rza2.c:119:13: error: ‘GPIOF_DIR_IN’
+undeclared (first use in this function); did you mean ‘_IOC_DIRBITS’?
+drivers/pinctrl/pinctrl-rza2.c:119:13: note: each undeclared
+identifier is reported only once for each function it appears in
+drivers/pinctrl/pinctrl-rza2.c: In function ‘rza2_chip_get_direction’:
+drivers/pinctrl/pinctrl-rza2.c:138:10: error: ‘GPIOF_DIR_OUT’
+undeclared (first use in this function); did you mean ‘IOC_INOUT’?
+drivers/pinctrl/pinctrl-rza2.c:141:10: error: ‘GPIOF_DIR_IN’
+undeclared (first use in this function); did you mean ‘GPIOF_DIR_OUT’?
+drivers/pinctrl/pinctrl-rza2.c: In function ‘rza2_chip_direction_input’:
+drivers/pinctrl/pinctrl-rza2.c:157:39: error: ‘GPIOF_DIR_IN’
+undeclared (first use in this function); did you mean ‘_IOC_DIRBITS’?
+drivers/pinctrl/pinctrl-rza2.c: In function ‘rza2_chip_direction_output’:
+drivers/pinctrl/pinctrl-rza2.c:195:39: error: ‘GPIOF_DIR_OUT’
+undeclared (first use in this function); did you mean ‘IOC_INOUT’?
 
-arm64:
+Are there prerequisites? It even fails on gpio/for-next.
 
-    defconfig:
-        gcc-8:
-          meson-gxm-khadas-vim2:
-              lab-baylibre: new failure (last pass: v5.3-rc4-3-gdf451f83e1f=
-c)
+> --- a/drivers/pinctrl/pinctrl-rza2.c
+> +++ b/drivers/pinctrl/pinctrl-rza2.c
+> @@ -11,7 +11,8 @@
+>   */
+>
+>  #include <linux/bitops.h>
+> -#include <linux/gpio.h>
+> +#include <linux/gpio/driver.h>
+> +#include <linux/io.h>
+>  #include <linux/module.h>
+>  #include <linux/of_device.h>
+>  #include <linux/pinctrl/pinmux.h>
 
-Boot Failure Detected:
+Gr{oetje,eeting}s,
 
-arm64:
-    defconfig:
-        gcc-8:
-            meson-gxm-khadas-vim2: 1 failed lab
+                        Geert
 
----
-For more info write to <info@kernelci.org>
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
