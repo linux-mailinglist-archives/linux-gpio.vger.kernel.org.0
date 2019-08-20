@@ -2,168 +2,130 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 9A8AF95917
-	for <lists+linux-gpio@lfdr.de>; Tue, 20 Aug 2019 10:05:36 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D48BB95994
+	for <lists+linux-gpio@lfdr.de>; Tue, 20 Aug 2019 10:29:42 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728595AbfHTIFe (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 20 Aug 2019 04:05:34 -0400
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:37215 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726049AbfHTIFe (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 20 Aug 2019 04:05:34 -0400
-Received: by mail-lf1-f66.google.com with SMTP id c9so3421320lfh.4
-        for <linux-gpio@vger.kernel.org>; Tue, 20 Aug 2019 01:05:32 -0700 (PDT)
+        id S1729107AbfHTI3i (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 20 Aug 2019 04:29:38 -0400
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:34885 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728879AbfHTI3i (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 20 Aug 2019 04:29:38 -0400
+Received: by mail-pl1-f196.google.com with SMTP id gn20so2390116plb.2;
+        Tue, 20 Aug 2019 01:29:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=mAOQfKuPDv59rAP/50Uq7dXiqumJsVP5h6BG03JNo8Q=;
-        b=jqnHPhybhbHcvdfAzVhhj6bXrAwKiN/cMJDgpXvEhVMT4l16f/n8QXBTX0x1HtqKLy
-         C1RYOqqsbe6pGprK/gm0KXdTNY/I7h2iClPwvqnmMsiIw9GRKFP0Zmu0j/rSsO6yfSxv
-         AfqzxX0aV6JV+xe7hZXlV/vB56yA/26/k2VVIGg0JB8ZD2Bp4FkCmDpsYywySMKwbxiU
-         cBfgzIqbdbsq8cAGcF6+4FrTWo0mFY+zdWH+wNCG/W0pYRiEqDfO5UwvjnHfpfTOqqtJ
-         PHuhzxsk5frZqkqo4rZ0MYS67hvtTekNy5ORNoxRA0Z9IuoUn4C4ZH8bLmqPQCjmp2p8
-         n0CA==
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=89TWE76G7HmT9xAoVwVI29PCwJL0d5XIbmYkxr69FI8=;
+        b=t3hXiMlkVt2zJaCYzY3mwYAXvkxRkUd4IvETXXxhkKsfipfJvPz4EarBK/OHJtQQIV
+         13b93tyXyy2kyraWIoH9SktPh4GrDhWJHNon3rGOf3HPVAmR9ATe29AzLkq/RKXa7uwc
+         iGp0SyOpS2QkotJUPbElXObHvdM2674Yz67VdAA4bVEHtZqRvyosUcA7+0N0JV38apLd
+         c1CKOnB9iVA3xMfyIckwphcO+EMY95NwZ6vWVs/9Cojk2zxVr5Gn3XOw0FVVEYhPCB2N
+         oV6XMWV0DkYS/Ak4LmoFKqqMJF1lCkU6CuXvwX+X4We/kYkF5FKcQXKIR8yn68+KJAA7
+         ICrg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=mAOQfKuPDv59rAP/50Uq7dXiqumJsVP5h6BG03JNo8Q=;
-        b=GhqprFsF55qc06wm0TgnYp6w7Go9xjfOOtrpfuGfRQ2dMzbo4T9UpKyCqogc0Z7bnr
-         3CIpZXGH6fhkyMSuObr9HE9O3gADMghxl22NnhdK8Y91O7FIt4+VW6/e/4ivWLdfEcw9
-         8PYrw6NOkMV4wPYO1Il8ufBNML5RQgKwL2PDGY8av2vgh3yXETSJ1HRoqA5kfSs6LYUm
-         dgoVNJHWBZEBgw8K59yp2wE5TNbXpWildfM12edmKiWJnsjh5gduNfsAToiHy5CQnaTB
-         6KzHR9NDIl21DU2GljjzpakN+WUkSK3TvTDyaVSec5uvFFJQtJ9gv5ki1nMVMvb7GQrB
-         +dlA==
-X-Gm-Message-State: APjAAAUj83D7r7p1Ooa+oz2yRMUkrY0cZFR+g2gzSqCHVbdin4cLREHl
-        XOh4abzZbOZXy/g72eRGspkie+RXLTA=
-X-Google-Smtp-Source: APXvYqwjJLwZH8hlaqawdTy39q/XhbVL5rP2uMXCH5lBXDJP2Pwn2MsTulDiPn8C4VcZ7J9mkGQTjA==
-X-Received: by 2002:a19:4349:: with SMTP id m9mr14554832lfj.64.1566288331681;
-        Tue, 20 Aug 2019 01:05:31 -0700 (PDT)
-Received: from genomnajs.ideon.se ([85.235.10.227])
-        by smtp.gmail.com with ESMTPSA id i123sm3014957lfi.72.2019.08.20.01.05.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 20 Aug 2019 01:05:30 -0700 (PDT)
-From:   Linus Walleij <linus.walleij@linaro.org>
-To:     linux-gpio@vger.kernel.org
-Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Thierry Reding <treding@nvidia.com>,
-        Grygorii Strashko <grygorii.strashko@ti.com>,
-        Wei Xu <xuwei5@hisilicon.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: [PATCH] gpio: Fix irqchip initialization order
-Date:   Tue, 20 Aug 2019 10:05:27 +0200
-Message-Id: <20190820080527.11796-1-linus.walleij@linaro.org>
-X-Mailer: git-send-email 2.21.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=89TWE76G7HmT9xAoVwVI29PCwJL0d5XIbmYkxr69FI8=;
+        b=k9bsHaGeTFA+Ksw8+FEE6kq+6/u3R9CNbIfPSBJMxEjFpKNshxyPH8VSjogTlvexup
+         6ooEe6FaonFAsnTnc+99KcPPNVMh6YlQjLAVNviKcc4I9u8y2p1AS4SC2xNjMSth6PTS
+         UYhsVVUbFHyOa7rNHkFgOA/2K5PLb8eNPbcdbs8Tdhpj+f9y2tN3q9pICrXndcoLYfwj
+         BqBPgVfMnC/hRoFpdwDsXA2/Ec2/815a+3Sffm1AzYrmaWaTXIvWdeNmZytAzxZrTpSt
+         8mem52z/QkkFH94a+BPbL5gefSsXzjSRnS6NzxeVzTuWlFqSRwmpM7ljNpzcy7mrUTY6
+         wpmw==
+X-Gm-Message-State: APjAAAWyzwGiiH2azy+ScmWd48dsgj8zbjkP0T4uuc2UZjB7oiA5Ct2b
+        o/yryKd2vVV2aVKDZTyUFcI37rCCpZKVdHzM6uA=
+X-Google-Smtp-Source: APXvYqygm5yiRH3vpF8T5W/PhygCjGZrGfGYrWM5PLTXTvTufF0Xj6dS4Xvx5Zx33oWjUK8S+Fud3s41GC9hvsxlGgI=
+X-Received: by 2002:a17:902:9349:: with SMTP id g9mr26677775plp.262.1566289777626;
+ Tue, 20 Aug 2019 01:29:37 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <1566221225-5170-1-git-send-email-xuwei5@hisilicon.com>
+ <CAHp75Vct3qtR5bDF6iALmduKEEq+gNL-btmzQVuWq_hYsmxKhw@mail.gmail.com> <CACRpkdbRZ=88+ooW5jb5vu4Dwsaj7Ce+V5Ked2-bGn0JWpTHfQ@mail.gmail.com>
+In-Reply-To: <CACRpkdbRZ=88+ooW5jb5vu4Dwsaj7Ce+V5Ked2-bGn0JWpTHfQ@mail.gmail.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Tue, 20 Aug 2019 11:29:25 +0300
+Message-ID: <CAHp75VdZk5F2RTyLbtnD57hNYG3i=Grxd-mBTVOS6yckjr9XbQ@mail.gmail.com>
+Subject: Re: [PATCH v3] gpio: pl061: Fix the issue failed to register the ACPI interrtupion
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     Thierry Reding <treding@nvidia.com>, Wei Xu <xuwei5@hisilicon.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Linuxarm <linuxarm@huawei.com>,
+        Shameerali Kolothum Thodi 
+        <shameerali.kolothum.thodi@huawei.com>,
+        Jonathan Cameron <jonathan.cameron@huawei.com>,
+        John Garry <john.garry@huawei.com>,
+        Salil Mehta <salil.mehta@huawei.com>,
+        Shiju Jose <shiju.jose@huawei.com>, jinying@hisilicon.com,
+        Zhangyi ac <zhangyi.ac@huawei.com>,
+        "Liguozhu (Kenneth)" <liguozhu@hisilicon.com>,
+        Tangkunshan <tangkunshan@huawei.com>,
+        huangdaode <huangdaode@hisilicon.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-The new API for registering a gpio_irq_chip along with a
-gpio_chip has a different semantic ordering than the old
-API which added the irqchip explicitly after registering
-the gpio_chip.
+On Tue, Aug 20, 2019 at 10:12 AM Linus Walleij <linus.walleij@linaro.org> wrote:
+>
+> On Mon, Aug 19, 2019 at 5:07 PM Andy Shevchenko
+> <andy.shevchenko@gmail.com> wrote:
+>
+> > The proper fix is to revert the culprit since we call
+> > acpi_gpiochip_request_interrupts() for all controllers.
+> > Linus, please re-do the approach with IRQ handling,
+>
+> Exactly what do you refer to when you want me to
+> "re-do the approach for IRQ handling"? Do you mean
+> this driver or are you referring to:
+>
+> commit e0d89728981393b7d694bd3419b7794b9882c92d
+> Author: Thierry Reding <treding@nvidia.com>
+> Date:   Tue Nov 7 19:15:54 2017 +0100
+>
+>     gpio: Implement tighter IRQ chip integration
+>
+>     Currently GPIO drivers are required to add the GPIO chip and its
+>     corresponding IRQ chip separately, which can result in a lot of
+>     boilerplate. Use the newly introduced struct gpio_irq_chip, embedded in
+>     struct gpio_chip, that drivers can fill in if they want the GPIO core
+>     to automatically register the IRQ chip associated with a GPIO chip.
+>
+>     Signed-off-by: Thierry Reding <treding@nvidia.com>
+>     Acked-by: Grygorii Strashko <grygorii.strashko@ti.com>
+>     Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+>
+> The new API introduced by this patch is what I am trying to switch
+> everything over to, because the forked paths inside of gpiolib
+> is causing me a maintenance headache and also increasing
+> the footprint of the library.
+>
+> >  it seems broadly
+> > regress with ACPI enabled platforms.
+>
+> It only becomes a problem if the platform uses ACPI right?
+> But it's a problem if I can't really tell if a driver is using
+> ACPI or not, there is no sign in the pl061 driver that it would
+> be used on ACPI systems until now, so how do I design
+> for it?
+>
+> The problem comes from the problem/mess I am trying to
+> clean up in the first place. So if the new way of registering GPIO
+> irqchips is not working for ACPI, then we have to fix that instead
+> of reverting all attempts to use the new API IMO.
+>
+> Yours,
+> Linus Walleij
 
-Move the calls to add the gpio_irq_chip *last* in the
-function, so that the different hooks setting up OF and
-ACPI and machine gpio_chips are called *before* we try
-to register the interrupts, preserving the elder semantic
-order.
 
-This cropped up in the PL061 driver which used to work
-fine with no special ACPI quirks, but started to misbehave
-using the new API.
 
-Fixes: e0d897289813 ("gpio: Implement tighter IRQ chip integration")
-Cc: Thierry Reding <treding@nvidia.com>
-Cc: Grygorii Strashko <grygorii.strashko@ti.com>
-Cc: Wei Xu <xuwei5@hisilicon.com>
-Cc: Andy Shevchenko <andy.shevchenko@gmail.com>
-Reported-by: Wei Xu <xuwei5@hisilicon.com>
-Reported-by: Andy Shevchenko <andy.shevchenko@gmail.com>
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
----
-Wei: it would be great if you could test this and
-confirm if it solves your problem, so I can apply this
-for fixes.
----
- drivers/gpio/gpiolib.c | 30 +++++++++++++++---------------
- 1 file changed, 15 insertions(+), 15 deletions(-)
-
-diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
-index 80a2a2cb673b..cca749010cd0 100644
---- a/drivers/gpio/gpiolib.c
-+++ b/drivers/gpio/gpiolib.c
-@@ -1373,21 +1373,13 @@ int gpiochip_add_data_with_key(struct gpio_chip *chip, void *data,
- 	if (status)
- 		goto err_remove_from_list;
- 
--	status = gpiochip_irqchip_init_valid_mask(chip);
--	if (status)
--		goto err_remove_from_list;
--
- 	status = gpiochip_alloc_valid_mask(chip);
- 	if (status)
--		goto err_remove_irqchip_mask;
--
--	status = gpiochip_add_irqchip(chip, lock_key, request_key);
--	if (status)
--		goto err_free_gpiochip_mask;
-+		goto err_remove_from_list;
- 
- 	status = of_gpiochip_add(chip);
- 	if (status)
--		goto err_remove_chip;
-+		goto err_free_gpiochip_mask;
- 
- 	status = gpiochip_init_valid_mask(chip);
- 	if (status)
-@@ -1413,6 +1405,14 @@ int gpiochip_add_data_with_key(struct gpio_chip *chip, void *data,
- 
- 	machine_gpiochip_add(chip);
- 
-+	status = gpiochip_irqchip_init_valid_mask(chip);
-+	if (status)
-+		goto err_remove_acpi_chip;
-+
-+	status = gpiochip_add_irqchip(chip, lock_key, request_key);
-+	if (status)
-+		goto err_remove_irqchip_mask;
-+
- 	/*
- 	 * By first adding the chardev, and then adding the device,
- 	 * we get a device node entry in sysfs under
-@@ -1424,21 +1424,21 @@ int gpiochip_add_data_with_key(struct gpio_chip *chip, void *data,
- 	if (gpiolib_initialized) {
- 		status = gpiochip_setup_dev(gdev);
- 		if (status)
--			goto err_remove_acpi_chip;
-+			goto err_remove_irqchip;
- 	}
- 	return 0;
- 
-+err_remove_irqchip:
-+	gpiochip_irqchip_remove(chip);
-+err_remove_irqchip_mask:
-+	gpiochip_irqchip_free_valid_mask(chip);
- err_remove_acpi_chip:
- 	acpi_gpiochip_remove(chip);
- err_remove_of_chip:
- 	gpiochip_free_hogs(chip);
- 	of_gpiochip_remove(chip);
--err_remove_chip:
--	gpiochip_irqchip_remove(chip);
- err_free_gpiochip_mask:
- 	gpiochip_free_valid_mask(chip);
--err_remove_irqchip_mask:
--	gpiochip_irqchip_free_valid_mask(chip);
- err_remove_from_list:
- 	spin_lock_irqsave(&gpio_lock, flags);
- 	list_del(&gdev->list);
 -- 
-2.21.0
-
+With Best Regards,
+Andy Shevchenko
