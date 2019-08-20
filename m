@@ -2,100 +2,86 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id E213B961D1
-	for <lists+linux-gpio@lfdr.de>; Tue, 20 Aug 2019 16:00:12 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A202296B14
+	for <lists+linux-gpio@lfdr.de>; Tue, 20 Aug 2019 23:05:38 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729965AbfHTOAF (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 20 Aug 2019 10:00:05 -0400
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:42358 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730115AbfHTOAF (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 20 Aug 2019 10:00:05 -0400
-Received: by mail-lj1-f193.google.com with SMTP id l14so5217571ljj.9
-        for <linux-gpio@vger.kernel.org>; Tue, 20 Aug 2019 07:00:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=fdjrR163OvNQOzxW/RsIvv+HcRRibCJSVQsaILHRThk=;
-        b=wHouE7ePHN8eNwsYy28BvJsYnIes3rPayPyN193n0neli/u9XOvq4HENFHhn5aRo7X
-         oW+kMVxRNbXWC+apGuEFv/lxjJbVZtO1ZxR0UYu38x4NSZeD3qTM1jwggYcpWEx99CM1
-         TVXzX3+rBreXuL4+oYDHs8GC2d3C1Bd54CweY8OfZSCPoGKWAstdwaKo4gs9sJLju161
-         LJ61ETGhP5NpWm43vDIUxUzfVhqOPGNaD1zH4i2gZri+ONvHAW0wexokXlv93Os4hk6A
-         N6NiZpq1qudPE+9egU2awXsbGTeQJpORpxRhCF9igAmheqq/VMsQd4izWsuti/FyylLM
-         nj6w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=fdjrR163OvNQOzxW/RsIvv+HcRRibCJSVQsaILHRThk=;
-        b=eg+nYR7G1XFvJUu9Glqn6PXNJp3RN7Kw9hXUTor9pAJnUcjXiX0Zer7KqzZC6J9NWp
-         wltogjXlBSKpzfE6Uup3hZ6Vb+frVa+vo6Jzh/Sy5ZkP3n1sxR5DsVKDwY1UgT05z2PW
-         /fm8AdKx4tGj52wHqCSiEKi2cs0JgygHQPAMH894p8AUXP+MzWlQOQiEKzBebhUSZMql
-         9Mqr2RHPLXlAv8xKQgN3sPlh2f2p5ihi7Hep5Ok4/ER81NcGG6k1KzeTe+bFC5MlRA9q
-         VwSG9SzBVeIFCy495w7Z6nPSpQpxbnp55kpKdfsYdZfN5mb3nT2TUfOZeL5n5GTOyE/l
-         /pKg==
-X-Gm-Message-State: APjAAAWtwqTADc6bXtkoDUykEDJEdWk+LUWivwd6He/vTJD3nv6GXgJ0
-        a5SauT8htNW1FKm34791zJaIaulpDac=
-X-Google-Smtp-Source: APXvYqyvKDtC7hphICx4vBeM3lHSPlzPLLSjl3Zvgwz83BqQSqIiKOBoRKZcuqZbAD6oYo2Nsovx/g==
-X-Received: by 2002:a2e:9582:: with SMTP id w2mr15043166ljh.194.1566309602528;
-        Tue, 20 Aug 2019 07:00:02 -0700 (PDT)
-Received: from genomnajs.ideon.se ([85.235.10.227])
-        by smtp.gmail.com with ESMTPSA id w6sm2871543lff.80.2019.08.20.07.00.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 20 Aug 2019 07:00:01 -0700 (PDT)
-From:   Linus Walleij <linus.walleij@linaro.org>
-To:     linux-gpio@vger.kernel.org
-Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        id S1730273AbfHTVFe (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 20 Aug 2019 17:05:34 -0400
+Received: from atlmailgw2.ami.com ([63.147.10.42]:52819 "EHLO
+        atlmailgw2.ami.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728283AbfHTVFe (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 20 Aug 2019 17:05:34 -0400
+X-AuditID: ac10606f-d27ff70000003324-96-5d5c609dc94e
+Received: from atlms1.us.megatrends.com (atlms1.us.megatrends.com [172.16.96.144])
+        (using TLS with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by atlmailgw2.ami.com (Symantec Messaging Gateway) with SMTP id 07.00.13092.D906C5D5; Tue, 20 Aug 2019 17:05:33 -0400 (EDT)
+Received: from hongweiz-Ubuntu-AMI.us.megatrends.com (172.16.98.93) by
+ atlms1.us.megatrends.com (172.16.96.144) with Microsoft SMTP Server (TLS) id
+ 14.3.408.0; Tue, 20 Aug 2019 17:05:31 -0400
+From:   Hongwei Zhang <hongweiz@ami.com>
+To:     Andrew Jeffery <andrew@aj.id.au>,
         Linus Walleij <linus.walleij@linaro.org>,
-        Chris Brandt <chris.brandt@renesas.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH 2/2 v3] pinctrl: rza2: Include the appropriate headers
-Date:   Tue, 20 Aug 2019 15:59:55 +0200
-Message-Id: <20190820135955.14391-2-linus.walleij@linaro.org>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190820135955.14391-1-linus.walleij@linaro.org>
-References: <20190820135955.14391-1-linus.walleij@linaro.org>
+        <linux-gpio@vger.kernel.org>
+CC:     Hongwei Zhang <hongweiz@ami.com>, Joel Stanley <joel@jms.id.au>,
+        <devicetree@vger.kernel.org>, <linux-aspeed@lists.ozlabs.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>
+Subject: [v8]  gpio: aspeed: Add SGPIO driver
+Date:   Tue, 20 Aug 2019 17:05:27 -0400
+Message-ID: <1566335128-31498-1-git-send-email-hongweiz@ami.com>
+X-Mailer: git-send-email 2.7.4
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Originating-IP: [172.16.98.93]
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrHLMWRmVeSWpSXmKPExsWyRiBhgu7chJhYgzevJC12Xeaw+DL3FIvF
+        /CPnWC1+n//LbDHlz3Imi02Pr7FaNK8+x2yxef4fRovLu+awWSy9fpHJonXvEXYHbo+r7bvY
+        PdbMW8Po8f5GK7vHxY/HmD02repk87hzbQ+bx+Yl9R7nZyxk9Pi8SS6AM4rLJiU1J7MstUjf
+        LoErY83Hp4wFH9kr/nTPYW1g7GLrYuTkkBAwkWjZ9JW9i5GLQ0hgF5NE895dzBDOYUaJtbP3
+        MYFUsQmoSezdPAfMFhHIkzi8/i0rSBGzwCkmiRn7OllBEsICuhJzT99gBrFZBFQlvi7ZwwJi
+        8wo4SMzrX8QOsU5O4ua5TmaIuKDEyZlPwGqYBSQkDr54ARYXEpCVuHXoMRNEvYLE877HLBMY
+        +WYhaZmFpGUBI9MqRqHEkpzcxMyc9HIjvcTcTL3k/NxNjJAwz9/B+PGj+SFGJg7GQ4wSHMxK
+        IrwVc6JihXhTEiurUovy44tKc1KLDzFKc7AoifOuWvMtRkggPbEkNTs1tSC1CCbLxMEp1cB4
+        42BnLHv5g70MSy2WzQ4v/H3l96nHfpd3JGdMVjmR6rzsmNCVH7x/LzGkfrlsez5T5pTaVsM/
+        bX/LbOoM7XZ+vMr2vv/as6yvh5WFC7sNJQyVGN/5bP/DfchekfnKp2PnXI88S1mV9Fv9Z8PX
+        Pv+rOTcDpjlHR4lPytwtzVG+zaXtLn+c47owJZbijERDLeai4kQARbmDwmECAAA=
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-This driver is implementing a GPIO driver so include
-<linux/gpio/driver.h> and not the legacy API <linux/gpio.h>.
-When testing it turns out it also relies on implicit
-inclusion of <linux/io.h> (readw etc) so make sure to
-include that as well.
+Hello,
 
-Cc: Chris Brandt <chris.brandt@renesas.com>
-Cc: Geert Uytterhoeven <geert+renesas@glider.be>
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
----
-ChangeLov v2->v3:
-- Fix one more instance.
-- Test compile properly.
-ChangeLog v1->v2:
-- Remove the use of GPIOF_* consumer flags in the driver.
----
- drivers/pinctrl/pinctrl-rza2.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+This short series introduce dt-binding document and a driver for the 
+Aspeed AST2500 SGPIO controller. Please review.
 
-diff --git a/drivers/pinctrl/pinctrl-rza2.c b/drivers/pinctrl/pinctrl-rza2.c
-index b0806667e94c..3be1d833bf25 100644
---- a/drivers/pinctrl/pinctrl-rza2.c
-+++ b/drivers/pinctrl/pinctrl-rza2.c
-@@ -11,7 +11,8 @@
-  */
- 
- #include <linux/bitops.h>
--#include <linux/gpio.h>
-+#include <linux/gpio/driver.h>
-+#include <linux/io.h>
- #include <linux/module.h>
- #include <linux/of_device.h>
- #include <linux/pinctrl/pinmux.h>
+[v8]:   Changes between v7 and v8:
+        - v7 updates based on Linus' feedback 
+        - since Linus has already merged sgpio-aspeed.txt, I only include
+	  the driver here to avoid confusion.
+
+[v7]:   Changes between v6 and v7:
+        - fix missing variable 'reg' assign issue in aspeed_sgpio_set()
+        - v6 feedback updates
+
+[v6]:   Changes between v5 and v6:
+        - fix a bug in aspeed_sgpio_dir_out()
+        - v5 feedback updates, some comments cleanup
+
+The related SGPM pinmux dt-binding document, dts, and pinctrl driver
+updates have been accepted and merged:
+_http://patchwork.ozlabs.org/patch/1110210/
+
+Hongwei Zhang (1):
+  gpio: aspeed: Add SGPIO driver
+
+ drivers/gpio/sgpio-aspeed.c | 533 ++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 533 insertions(+)
+ create mode 100644 drivers/gpio/sgpio-aspeed.c
+
 -- 
-2.21.0
+2.7.4
 
