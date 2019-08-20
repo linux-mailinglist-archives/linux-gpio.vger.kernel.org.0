@@ -2,83 +2,122 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 8BD5295C27
-	for <lists+linux-gpio@lfdr.de>; Tue, 20 Aug 2019 12:20:03 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 46AE095C3B
+	for <lists+linux-gpio@lfdr.de>; Tue, 20 Aug 2019 12:27:30 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729736AbfHTKRu (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 20 Aug 2019 06:17:50 -0400
-Received: from mout.kundenserver.de ([217.72.192.73]:50385 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729544AbfHTKRu (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 20 Aug 2019 06:17:50 -0400
-Received: from [192.168.1.110] ([95.117.23.32]) by mrelayeu.kundenserver.de
- (mreue107 [212.227.15.183]) with ESMTPSA (Nemesis) id
- 1M2wbS-1hyukC38X6-003NW3; Tue, 20 Aug 2019 12:17:48 +0200
-To:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-From:   "Enrico Weigelt, metux IT consult" <lkml@metux.net>
-Subject: RFC: is SIM connector switch a case for pinmux ?
-Organization: metux IT consult
-Message-ID: <a1bb9419-c499-dbd8-8e15-e7655b484d6e@metux.net>
-Date:   Tue, 20 Aug 2019 12:17:47 +0200
-User-Agent: Mozilla/5.0 (X11; Linux i686 on x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        id S1729464AbfHTK1F (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 20 Aug 2019 06:27:05 -0400
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:43577 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728414AbfHTK1F (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 20 Aug 2019 06:27:05 -0400
+Received: by mail-lj1-f194.google.com with SMTP id h15so4592536ljg.10
+        for <linux-gpio@vger.kernel.org>; Tue, 20 Aug 2019 03:27:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=e/WL7mt//GAgzwpdMZbthxuFg+kLsllf6TCIqq5cm4k=;
+        b=WRmbYOSuUZTNI+VHX1CcRM/fsEMSBDx0RvKKzmF0CBEnfGFQy4jwdRNLy7jlnI71Jx
+         vpVfv1RUwcWCx6BY0Ww4yUiLIZW59Ks6mcyBJ/34UhiYcaCJMg0H2VxEQ4C77ZKH7OwI
+         e1SvT7JJBct7l227/+DWqKgkSjG2K/bPFJGXSqOqyc5Z/GHZs7xizq/yrtYTa6vdpiBw
+         vA3CPiGHNyD/M6Mx1CZtmQUaQ76xIgOYo2G5FmdW5bYPaMkF86DVU+QXZY26Hjj5yoKb
+         077WUHbNXzbP2drPoIpP83IgyXznGU7ZNCatF/K1XShzcm8Cfj2hr5QISGBqHSCZt91P
+         xkYA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=e/WL7mt//GAgzwpdMZbthxuFg+kLsllf6TCIqq5cm4k=;
+        b=CENROYL9YhFKLauHLH2pMPXisSxFhmj8+KoF/QRWMPAFDs8RaNqFijhEgHjnjeepkX
+         CkwhUCOFwKbX/+5cMJA/zJIC8j2KT0r4D9gmpuWncY1fFJfstCuK92nJGpjheScQ6g1J
+         xNUnVTzc1lH1lgqmb5tW1QB6eNRftZiXqLBV4orX9EkYiJrIo1RlYhU2mt7XNYittcCm
+         8EtLvWlahqZIbCQoVVpmf3zrztXyL73VQ3jHi6WKYOvc8ZngU1622QfDk0Kd1PSu17uV
+         FhK3YPJZH/4Xiz+pKAUIgTk/oEWMAZ8QhntujRR2i6ax/31GEHzLaw9E2/I9tga5o3U3
+         d8Pg==
+X-Gm-Message-State: APjAAAW0tP17q4rNfDhaxRJ/KLC5Bx4Wxyjgb8PDzezgcdtYAhKMqUx/
+        KrfsvHTGqqXaISHEAQ9aglfkc1n9+o2sodzi5O+vKw==
+X-Google-Smtp-Source: APXvYqy9d7CgQvy0ZM0/DSmtHyrZ+R2wFU3tRkdCwr+9kjsIgtuwE4FW7X7VWI/cj5Incxd0Z4l1OHqEHETZ6NI0BN8=
+X-Received: by 2002:a2e:781a:: with SMTP id t26mr10426093ljc.28.1566296822942;
+ Tue, 20 Aug 2019 03:27:02 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Provags-ID: V03:K1:K9QtXFy+Jwg/xRHmXFiWX03D01PorpZ+Av3oNTId8elFDHr3RB7
- G+i76VCxf79yAcA2RP0P/rTe57Lbu50yH6/fIYksV25uLorg+hJHUVe5o8uWVmXfyY4tWcp
- oHqIzC4Ghzy/NiL2NkxhyjqzsCmDDibj+hiztWXl6VcS2RJR4TBSXNXKgiIlZo+c3bZyDQS
- RpIYaeqxZtD/CGL3AJ7SA==
-X-Spam-Flag: NO
-X-UI-Out-Filterresults: notjunk:1;V03:K0:UlXhfYdJPbo=:BRvPolD53WUtbPBaicI2Gb
- SuKZUGuqgTt2KSBREIkblK+3MJz3qqVpJ4mN55gpNzp0PnvXo4+7qRSbWNR1wjpvRtb9pJbP8
- bFXxF3OZi3AXo/yolrN1Q1kGngQzd3aNrvgCNgpUxVHTgDJp+qVx/7l/E4pZC8AU23wAz6ug5
- r+7C1KnQEBZDiA72srfGaWVBojMMX2NAUmSiHxtjcar3l6wH2otUYRFSZyPvNS/2TUHMsgJ3O
- P4+H+bCYEXMiyk09fCljiYiCfa3a34NR9wcHtiUjjMRQXPtRazVyuS+L5TqJGFvTbn63dXOhx
- syR5Ovd7ijX0Z9pjSIeDi7FdpkI63GqT0jtIn7JAdup+ksg35j8GThUw5IeRdHI4eQuVgJyNk
- gxHA9QFYlHpBCNzq5tIS5YRYeVKN5IaBJlM+SEYIDCDq8j57jq+qTb8Z3yt5iLwRCpOUGlgOa
- G2XBiniSWGv9DJoq7/JzkOMPXvVKUBlEUd0sgHtHLqkatHAGPyQ0ZHLAEr1zQm1E7L7TJz4fb
- wiMiK6strKOGp4guy9PUQidawebKPYxurxe4RQ5/zzyLzbJBimuTSd447w18MXTzHnvGnBOH3
- eIqsaJx/08oldGx37ymrcg5EV9SJg/8iowxDYi2AOcHlUGBbjA6QMAFFiO0hZagJYhv04Hthn
- q6ejXpzlQIi2AKyiRUonnq84Kgnq3Za9nQ0g7HYHxiiVI5JNlGFRAfmuTyT9iwpOp91SDz6SK
- AZs65m/+PNyly6+6YtyPz6HgoTNcpR5XfLdb3LSIGHOTxb4HVZhwhDl7DLM=
+References: <1566221225-5170-1-git-send-email-xuwei5@hisilicon.com>
+ <CAHp75Vct3qtR5bDF6iALmduKEEq+gNL-btmzQVuWq_hYsmxKhw@mail.gmail.com>
+ <CACRpkdbRZ=88+ooW5jb5vu4Dwsaj7Ce+V5Ked2-bGn0JWpTHfQ@mail.gmail.com> <CAHp75VcwDZdOwFsT4Gf-1a4tNGQdowK-RKRvSif2m7oTsVQNbw@mail.gmail.com>
+In-Reply-To: <CAHp75VcwDZdOwFsT4Gf-1a4tNGQdowK-RKRvSif2m7oTsVQNbw@mail.gmail.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Tue, 20 Aug 2019 12:26:51 +0200
+Message-ID: <CACRpkdZMHqppyzVQCLSR8yv1owZ71eDAduL9JGkCawjFvZ2U+A@mail.gmail.com>
+Subject: Re: [PATCH v3] gpio: pl061: Fix the issue failed to register the ACPI interrtupion
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     Thierry Reding <treding@nvidia.com>, Wei Xu <xuwei5@hisilicon.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Linuxarm <linuxarm@huawei.com>,
+        Shameerali Kolothum Thodi 
+        <shameerali.kolothum.thodi@huawei.com>,
+        Jonathan Cameron <jonathan.cameron@huawei.com>,
+        John Garry <john.garry@huawei.com>,
+        Salil Mehta <salil.mehta@huawei.com>,
+        Shiju Jose <shiju.jose@huawei.com>, jinying@hisilicon.com,
+        Zhangyi ac <zhangyi.ac@huawei.com>,
+        "Liguozhu (Kenneth)" <liguozhu@hisilicon.com>,
+        Tangkunshan <tangkunshan@huawei.com>,
+        huangdaode <huangdaode@hisilicon.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hello folks,
+On Tue, Aug 20, 2019 at 10:51 AM Andy Shevchenko
+<andy.shevchenko@gmail.com> wrote:
+> On Tue, Aug 20, 2019 at 10:12 AM Linus Walleij <linus.walleij@linaro.org> wrote:
+> > On Mon, Aug 19, 2019 at 5:07 PM Andy Shevchenko
+> > <andy.shevchenko@gmail.com> wrote:
 
+> > Exactly what do you refer to when you want me to
+> > "re-do the approach for IRQ handling"? Do you mean
+> > this driver or are you referring to:
+> >
+> > commit e0d89728981393b7d694bd3419b7794b9882c92d
+> > Author: Thierry Reding <treding@nvidia.com>
+> > Date:   Tue Nov 7 19:15:54 2017 +0100
+> >
+> >     gpio: Implement tighter IRQ chip integration
+> >
+> >     Currently GPIO drivers are required to add the GPIO chip and its
+> >     corresponding IRQ chip separately, which can result in a lot of
+> >     boilerplate. Use the newly introduced struct gpio_irq_chip, embedded in
+> >     struct gpio_chip, that drivers can fill in if they want the GPIO core
+> >     to automatically register the IRQ chip associated with a GPIO chip.
+> >
+> >     Signed-off-by: Thierry Reding <treding@nvidia.com>
+> >     Acked-by: Grygorii Strashko <grygorii.strashko@ti.com>
+> >     Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+>
+> Yes.
 
-I'm currently thinking about what would be the best fit for the
-APU board's sim-switch functionality.
+OK let's fix this mess, it shouldn't be too hard, I've sent a first
+few patches.
 
-The boards have two sim sockets, where only one can be active at
-a time (the lines are routed to mpcie slot), which can be controlled
-via a gpio line.
+> > The problem comes from the problem/mess I am trying to
+> > clean up in the first place. So if the new way of registering GPIO
+> > irqchips is not working for ACPI, then we have to fix that instead
+> > of reverting all attempts to use the new API IMO.
+>
+> Sorry for me being impatient and asking for a groundless requests.
+> I'll help you with cleaning this.
 
-Extconn doesn't seem to fit, as it IMHO only does the exact opposite
-direction - detect what external connector is currently active (eg.
-on slots that support multiple conntor types and switch automatically)
+Sorry if I sounded harsh :( I just have a bit of panic.
 
-Pinmux might be an option, as this HW is some pin multiplexer, but in
-this case it's not related SoC pins and doesn't control which internal
-devices are connected to the outside.
+I am sure we can fix this, I only recently realized what a headache
+the new API is going to be if I can't straighten it out and have to
+keep the old stuff around forever in parallel.
 
-I've already thought about introducing a new class for the pretty much
-the opposite of extconn (maybe call it extswitch ?). There also might
-be an semantic overlap w/ other subsystems, eg. kvm's connector
-switching. Not sure whether yet another subsystem is the optimal
-solution here.
-
-What's your oppinion on that ?
-
-
---mtx
-
--- 
-Enrico Weigelt, metux IT consult
-Free software and Linux embedded engineering
-info@metux.net -- +49-151-27565287
+Yours,
+Linus Walleij
