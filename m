@@ -2,89 +2,150 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id CD15B95FE7
-	for <lists+linux-gpio@lfdr.de>; Tue, 20 Aug 2019 15:22:23 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6379195FF6
+	for <lists+linux-gpio@lfdr.de>; Tue, 20 Aug 2019 15:25:55 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729812AbfHTNWQ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 20 Aug 2019 09:22:16 -0400
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:37092 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729810AbfHTNWQ (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 20 Aug 2019 09:22:16 -0400
-Received: by mail-lj1-f196.google.com with SMTP id t14so5114825lji.4
-        for <linux-gpio@vger.kernel.org>; Tue, 20 Aug 2019 06:22:15 -0700 (PDT)
+        id S1728947AbfHTNZy (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 20 Aug 2019 09:25:54 -0400
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:42596 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728248AbfHTNZy (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 20 Aug 2019 09:25:54 -0400
+Received: by mail-lj1-f194.google.com with SMTP id l14so5104869ljj.9
+        for <linux-gpio@vger.kernel.org>; Tue, 20 Aug 2019 06:25:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=avheJWJajQY7PfCCSpcjgBxyhBB+prcVabC+Fv0sCJQ=;
-        b=ELJDtB/01ExFyGuWaJKGDYfa6bmhTPurIolQJAtCGNR9YB5HDNVF8oHajafezRiBCn
-         Q+3LTRFkwQ7B9QuyMBnMwyzD/x4PgKQqsbXOkxDu9Dh9x4SYxJq8/Luu+ooIWXovl4KC
-         GhokEu/wvCF65/U6Ffpy6N+zrtlOtJ9rwufQGWgPCRyx7chtGnzHSQ5rnzxvVc3EFytH
-         oVPuF10Mei8GaPtKnriyTtMG0HIWFYhRAXGfZjIQuFudNeFpY1GmhvjOcrNdAXlYoHbu
-         HIvrenq2uNFgFNUgaMJSUhELTrclV2Kj4inu2h+0bMouWiG+W3cYFrE9wmpCDJ6skPyO
-         +9JA==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=vIp/xscKrOpc0mHF9aIZK3SGm0WN9133iiFhSpcLQEY=;
+        b=nnYptNI1F3EgmzxHVNTZdcrOBJMH8nzAqjNQer/Kk63WeDakUq4CllNXMXssIVY6k5
+         tMab4Ef/se+k8jSk445bZUECrpPABVhhS5r1mZ9j3h7cYA48BoF+FY1OaAFI7BuHED5A
+         W0aMQ4G2ZT9zSTUjm1NsAq7fZj8Zb1LKsGSvW4zJR64rvfqx0eBcZu4YtVIqyfURzLJ5
+         QY2WvkXjpjua35i7qmvIzHblENfYyPnKKOhMekp7ow1cNfJMPG/Xjim9v31ka0T9AfXV
+         mVx60/WJfhvtkvLRUxS6N6tot9x2yYD4A8CSMVRlqGIEBVs1EnXdbAChpKE2k3WlvaYg
+         783w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=avheJWJajQY7PfCCSpcjgBxyhBB+prcVabC+Fv0sCJQ=;
-        b=WuVsKHCnCE+vSwIrQ0LMenLJt9EljfC6TJDS1EgZ7gd+TvkulT1rLseJM9rhwk9JHD
-         FWh5dDQo1QXCStLLgNT5Z8JuiIjvob/2+Y+/G7gOXAWJecuzoFw4qOWwwWIv4HE2QHiP
-         ngBF08q8MQ5bYiGqloPWWtufDEwNbXEIIu64w3oChSMfAdKQ8P9TGzJg7C5Mo8cpv1Pb
-         3aP6Uo1eGifZdbuUrAOFZa/x8b1bA5rehxI8I5CpRur2+X/3wI/FZX+NYyyR2lDBhi3B
-         wuHVOAwcts3Sy2loz9BMB2jEtPvwy31TFuAYZGxCE8DV1SEkQ6DnYMIVwuYGgHUqPsj2
-         moKw==
-X-Gm-Message-State: APjAAAVVDw3cCiBR2lU+38YEL+7StivL2AIxtVdtwIo2kQHdTk2j9yk3
-        J7EFCC65f/Vp9qmrSGdqtLWA4ET6E+GBEhOqq9IwdQ==
-X-Google-Smtp-Source: APXvYqySkeLD73rjtfY+rIYZuuvaf7CEzNgTjlBP3UXzkIKib0twYhKHhr46lBPmPXQ0YLG2BImPRqZQ/N3DfzDI3cI=
-X-Received: by 2002:a2e:781a:: with SMTP id t26mr10879722ljc.28.1566307333073;
- Tue, 20 Aug 2019 06:22:13 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190820104252.8255-1-linus.walleij@linaro.org> <CAMuHMdWMA6r_-esqHUVkbMvQZs2o_BMyB_XS8UZUTrqwOMGCPw@mail.gmail.com>
-In-Reply-To: <CAMuHMdWMA6r_-esqHUVkbMvQZs2o_BMyB_XS8UZUTrqwOMGCPw@mail.gmail.com>
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=vIp/xscKrOpc0mHF9aIZK3SGm0WN9133iiFhSpcLQEY=;
+        b=uTvg63d2h/TA2NgUzSs8KywHZmbvlFoWowqo7/ZGfouq8YI0zgwnX/U/83Vc9JxqzB
+         1FlAvpX3AUbTEEi+WOLXlFyPUjcrSBSYbO0VUCoAmGdHD1wm6rJB5YU140x6WAHDy5n2
+         WAZmZOtrl7iOy8Zf5nfbNiwm6lPEQ6uSQf2k43kTz0JVHbIXrU3cWDvxr9bSQHEhDnsY
+         7W1qZLNxRAptGHdQ1BI34J9gyP4glCQBhmpgsSLrp+KdrMQPrVUWI8SJQLAZEGtaczkR
+         ovkY+zBo6vFFTd+IxSxbpz6jiTTnLUvKhr/uKXZkMJzYGVuWUg+A/xXCkPbABWfDesDm
+         g6Lw==
+X-Gm-Message-State: APjAAAV/obCIOzsmUtFXrWSZwXesb6zSHc6u5dWc190mbTwEozwXjkkL
+        Os/NmaCJ93+9Q9Vx3nUhg0ecie7VgBo=
+X-Google-Smtp-Source: APXvYqxFi2RBuVm58UGqYRMTudio7q4dOLkYxDKiiMpX/3ezLRg2XNg9GO1sklwnoS/W+s6hr5YvSg==
+X-Received: by 2002:a2e:9ec9:: with SMTP id h9mr1917372ljk.90.1566307552108;
+        Tue, 20 Aug 2019 06:25:52 -0700 (PDT)
+Received: from genomnajs.ideon.se ([85.235.10.227])
+        by smtp.gmail.com with ESMTPSA id v16sm2836898lje.58.2019.08.20.06.25.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 20 Aug 2019 06:25:50 -0700 (PDT)
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Tue, 20 Aug 2019 15:22:01 +0200
-Message-ID: <CACRpkdZ6kKkNv2iYeyqeBgDWeeXLwYs6WSpmhureVdzV16EL7g@mail.gmail.com>
-Subject: Re: [PATCH] pinctrl: rza2: Include the appropriate headers
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+To:     linux-gpio@vger.kernel.org
+Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
         Chris Brandt <chris.brandt@renesas.com>,
         Geert Uytterhoeven <geert+renesas@glider.be>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Subject: [PATCH v2] pinctrl: rza2: Include the appropriate headers
+Date:   Tue, 20 Aug 2019 15:25:48 +0200
+Message-Id: <20190820132548.4012-1-linus.walleij@linaro.org>
+X-Mailer: git-send-email 2.21.0
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Aug 20, 2019 at 1:05 PM Geert Uytterhoeven <geert@linux-m68k.org> w=
-rote:
-> On Tue, Aug 20, 2019 at 12:44 PM Linus Walleij <linus.walleij@linaro.org>=
- wrote:
-> > This driver is implementing a GPIO driver so include
-> > <linux/gpio/driver.h> and not the legacy API <linux/gpio.h>.
-> > When testing it turns out it also relies on implicit
-> > inclusion of <linux/io.h> (readw etc) so make sure to
-> > include that as well.
-> >
-> > Cc: Chris Brandt <chris.brandt@renesas.com>
-> > Cc: Geert Uytterhoeven <geert+renesas@glider.be>
-> > Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
-> > ---
-> > Geert: assuming you will pick this up if you're happy
-> > with it.
->
-> Unfortunately shmobile_defconfig is not happy with it:
->
-> drivers/pinctrl/pinctrl-rza2.c: In function =E2=80=98rza2_pin_to_gpio=E2=
-=80=99:
-> drivers/pinctrl/pinctrl-rza2.c:119:13: error: =E2=80=98GPIOF_DIR_IN=E2=80=
-=99
+This driver is implementing a GPIO driver so include
+<linux/gpio/driver.h> and not the legacy API <linux/gpio.h>.
+When testing it turns out it also relies on implicit
+inclusion of <linux/io.h> (readw etc) so make sure to
+include that as well.
 
-Oh drivers should not use these defines.
+The GPIOF_* flags used in the driver is not for driver use,
+these are consumer flags. Replace these with literal 0/1.
 
-OK I spin a v2 fixing that too, no problem.
+Cc: Chris Brandt <chris.brandt@renesas.com>
+Cc: Geert Uytterhoeven <geert+renesas@glider.be>
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+---
+ChangeLog v1->v2:
+- Remove the use of GPIOF_* consumer flags in the driver.
 
-Yours,
-Linus Walleij
+Geert: assuming you will pick this up if you're happy
+with it.
+---
+ drivers/pinctrl/pinctrl-rza2.c | 15 ++++++++-------
+ 1 file changed, 8 insertions(+), 7 deletions(-)
+
+diff --git a/drivers/pinctrl/pinctrl-rza2.c b/drivers/pinctrl/pinctrl-rza2.c
+index 5b951c7422cc..ecb5d7ee5078 100644
+--- a/drivers/pinctrl/pinctrl-rza2.c
++++ b/drivers/pinctrl/pinctrl-rza2.c
+@@ -11,7 +11,8 @@
+  */
+ 
+ #include <linux/bitops.h>
+-#include <linux/gpio.h>
++#include <linux/gpio/driver.h>
++#include <linux/io.h>
+ #include <linux/module.h>
+ #include <linux/of_device.h>
+ #include <linux/pinctrl/pinmux.h>
+@@ -115,7 +116,7 @@ static void rza2_pin_to_gpio(void __iomem *pfc_base, unsigned int offset,
+ 	mask16 = RZA2_PDR_MASK << (pin * 2);
+ 	reg16 &= ~mask16;
+ 
+-	if (dir == GPIOF_DIR_IN)
++	if (dir)
+ 		reg16 |= RZA2_PDR_INPUT << (pin * 2);	/* pin as input */
+ 	else
+ 		reg16 |= RZA2_PDR_OUTPUT << (pin * 2);	/* pin as output */
+@@ -134,10 +135,10 @@ static int rza2_chip_get_direction(struct gpio_chip *chip, unsigned int offset)
+ 	reg16 = (reg16 >> (pin * 2)) & RZA2_PDR_MASK;
+ 
+ 	if (reg16 == RZA2_PDR_OUTPUT)
+-		return GPIOF_DIR_OUT;
++		return 0;
+ 
+ 	if (reg16 == RZA2_PDR_INPUT)
+-		return GPIOF_DIR_IN;
++		return 1;
+ 
+ 	/*
+ 	 * This GPIO controller has a default Hi-Z state that is not input or
+@@ -145,7 +146,7 @@ static int rza2_chip_get_direction(struct gpio_chip *chip, unsigned int offset)
+ 	 */
+ 	rza2_pin_to_gpio(priv->base, offset, GPIOF_DIR_IN);
+ 
+-	return GPIOF_DIR_IN;
++	return 1;
+ }
+ 
+ static int rza2_chip_direction_input(struct gpio_chip *chip,
+@@ -153,7 +154,7 @@ static int rza2_chip_direction_input(struct gpio_chip *chip,
+ {
+ 	struct rza2_pinctrl_priv *priv = gpiochip_get_data(chip);
+ 
+-	rza2_pin_to_gpio(priv->base, offset, GPIOF_DIR_IN);
++	rza2_pin_to_gpio(priv->base, offset, 1);
+ 
+ 	return 0;
+ }
+@@ -191,7 +192,7 @@ static int rza2_chip_direction_output(struct gpio_chip *chip,
+ 	struct rza2_pinctrl_priv *priv = gpiochip_get_data(chip);
+ 
+ 	rza2_chip_set(chip, offset, val);
+-	rza2_pin_to_gpio(priv->base, offset, GPIOF_DIR_OUT);
++	rza2_pin_to_gpio(priv->base, offset, 0);
+ 
+ 	return 0;
+ }
+-- 
+2.21.0
+
