@@ -2,69 +2,90 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 8E6EC977FF
-	for <lists+linux-gpio@lfdr.de>; Wed, 21 Aug 2019 13:36:40 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1731597961
+	for <lists+linux-gpio@lfdr.de>; Wed, 21 Aug 2019 14:31:41 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727075AbfHULgi (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 21 Aug 2019 07:36:38 -0400
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:36821 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726349AbfHULgh (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 21 Aug 2019 07:36:37 -0400
-Received: by mail-lf1-f68.google.com with SMTP id j17so1543669lfp.3
-        for <linux-gpio@vger.kernel.org>; Wed, 21 Aug 2019 04:36:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=V7SRxxhu6d2taMyrfv7C+/76ZolCosQAbFPgSvc8oqc=;
-        b=UkNTd9b92rDM0ZiDi+VNEr+7OKUu7Y0tRRA7ihVNhLNt+IaCkcZP5oY0K9bUCrl/1V
-         HKxzhZ/Z1W+wxce98pwGkd+vuv1U/w2kqkvSgHMfOLa7il/LJOMLQOpB9lByZsZdaTJ3
-         s8DN4iEinnmMPKYtbuwoWUJC88OLcowNIrnOKfdl9o8m/osvczbD7REAWfl9k9MVInlk
-         v8wrnnLa4tLMU8hBwSsL/+YqjS00ha/iXZmgNq9kWvzrUS2+rhibKdcZ+v5/J6F9z/EZ
-         /STJL1LK/MgIuFjw1DKK5r8juOSP4CD7EoAjmfg53gQt8VVLXnitKtBE+LJDte9z6ODr
-         g5Yw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=V7SRxxhu6d2taMyrfv7C+/76ZolCosQAbFPgSvc8oqc=;
-        b=tfzpdR1V2J348hBOQnZkBb8hWcs+pTGIPrRY1wyUr14OfOZ2YVybg2lDRRP4hKH6ox
-         FW6Rm5xNxmoxwb59N4NAhK4bZD6XaxB4vIo5BBTGFCPWIoln3Havy92vVvzwYdN+0yVc
-         RbvN00Vl/gms1lDKZLN2eeLhY5BM1HkQur+rhnxp7v/+xW8zb0lxfkimRgwFK8KGltnr
-         4gAWY8IVqsKqD5CQXslkFzHrB7ZHZemL95itAsKZgScI16Jh8c9q+McX6hprmW9OY00P
-         XvdW1hAwvpTD5eMZMHOZuOcFC8YGaEm3NgHIghWfQnxdWX7HNsFPXuxE0r/3HLrx5R4E
-         uGeg==
-X-Gm-Message-State: APjAAAWxKnj7i/gm1hqSiDrJaqxPGHmLL1DoKkyeWDnpqIDGhuD7JsyJ
-        /7o1G630c0WilKlqBGhw7lwujKR8oGrubu3FKCVUfA==
-X-Google-Smtp-Source: APXvYqxADZOGozKUtUmh+cHBPwFO1HUJ9MgdUMomYKjDxjaaP+vRsWaXIdoI96W57Qvdajhkh0JM7Tz7Eg86PPPFlfg=
-X-Received: by 2002:a19:ed11:: with SMTP id y17mr18143432lfy.141.1566387395736;
- Wed, 21 Aug 2019 04:36:35 -0700 (PDT)
+        id S1727956AbfHUMbk (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 21 Aug 2019 08:31:40 -0400
+Received: from icp-osb-irony-out5.external.iinet.net.au ([203.59.1.221]:42020
+        "EHLO icp-osb-irony-out5.external.iinet.net.au" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728007AbfHUMbk (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>);
+        Wed, 21 Aug 2019 08:31:40 -0400
+X-IronPort-Anti-Spam-Filtered: true
+X-IronPort-Anti-Spam-Result: =?us-ascii?q?A2ADAADFNl1d/zXSMGcNWBoBAQEBAQI?=
+ =?us-ascii?q?BAQEBBwIBAQEBgVUDAQEBAQsBhB4UhB+RDIlsjyeBewkBAQEBAQEBAQE3AQG?=
+ =?us-ascii?q?EPwKCfzYHDgIFAQEBBAECAQEGAwGFUoYYAQEBAQIBIxVBBQsLDQsCAiYCAlc?=
+ =?us-ascii?q?GAQwGAgEBgx6BdwWpZnOBMhqFL4M8gUmBDCgBgWKKHoF/gREngms+h0+CWAS?=
+ =?us-ascii?q?VIpYzCAGCH5QzIY1mA4pdjVuaDQyBfTMaCCgIgyeRGWCNJwEB?=
+X-IPAS-Result: =?us-ascii?q?A2ADAADFNl1d/zXSMGcNWBoBAQEBAQIBAQEBBwIBAQEBg?=
+ =?us-ascii?q?VUDAQEBAQsBhB4UhB+RDIlsjyeBewkBAQEBAQEBAQE3AQGEPwKCfzYHDgIFA?=
+ =?us-ascii?q?QEBBAECAQEGAwGFUoYYAQEBAQIBIxVBBQsLDQsCAiYCAlcGAQwGAgEBgx6Bd?=
+ =?us-ascii?q?wWpZnOBMhqFL4M8gUmBDCgBgWKKHoF/gREngms+h0+CWASVIpYzCAGCH5QzI?=
+ =?us-ascii?q?Y1mA4pdjVuaDQyBfTMaCCgIgyeRGWCNJwEB?=
+X-IronPort-AV: E=Sophos;i="5.64,412,1559491200"; 
+   d="scan'208";a="246864955"
+Received: from unknown (HELO [10.44.0.192]) ([103.48.210.53])
+  by icp-osb-irony-out5.iinet.net.au with ESMTP; 21 Aug 2019 20:22:22 +0800
+Subject: Re: [PATCH] m68k: coldfire: Include the GPIO driver header
+To:     Geert Uytterhoeven <geert@linux-m68k.org>,
+        Linus Walleij <linus.walleij@linaro.org>
+Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        linux-m68k <linux-m68k@lists.linux-m68k.org>
+References: <20190821070923.687-1-linus.walleij@linaro.org>
+ <CAMuHMdWF1GXYtFbjrALRMObqzezd-cBwDPAqhC-9d=RbrLxNyQ@mail.gmail.com>
+From:   Greg Ungerer <gerg@linux-m68k.org>
+Message-ID: <fb01f312-5cc5-03a1-a1a5-a12819e2ff7b@linux-m68k.org>
+Date:   Wed, 21 Aug 2019 22:22:19 +1000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-References: <201908210839.fFMuc6Yx%lkp@intel.com> <15f11bd1-cde0-4345-8daf-234d61ebc9c0@www.fastmail.com>
-In-Reply-To: <15f11bd1-cde0-4345-8daf-234d61ebc9c0@www.fastmail.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Wed, 21 Aug 2019 13:36:24 +0200
-Message-ID: <CACRpkdakewyaF4Xp6=2c_h1_T1kY-1MQ3bbZzNv2uHSCndHQgg@mail.gmail.com>
-Subject: Re: [pinctrl:for-next 54/63] drivers/pinctrl/aspeed/pinctrl-aspeed-g6.c:2325:9:
- error: initialization from incompatible pointer type
-To:     Andrew Jeffery <andrew@aj.id.au>
-Cc:     kbuild test robot <lkp@intel.com>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        kbuild-all@01.org,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <CAMuHMdWF1GXYtFbjrALRMObqzezd-cBwDPAqhC-9d=RbrLxNyQ@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Aug 21, 2019 at 3:09 AM Andrew Jeffery <andrew@aj.id.au> wrote:
 
-> This is resolved by back-merging the pinctrl-v5.3-2 into pinctrl/devel
-> or pinctrl/for-next as mentioned in the thread on Nathan's patch.
+On 21/8/19 5:19 pm, Geert Uytterhoeven wrote:
+> CC Greg (coldfire)
 
-OK I merged v5.3-rc5 into my devel branch, that should cut it.
+Thanks Geert.
+I am happy to take it via the m68knommu tree if you prefer?
 
-Yours,
-Linus Walleij
+Regards
+Greg
+
+
+
+> On Wed, Aug 21, 2019 at 9:09 AM Linus Walleij <linus.walleij@linaro.org> wrote:
+>> The Coldfire GPIO driver needs to explicitly incldue the
+>> GPIO driver header since it is providing a driver.
+>>
+>> Cc: Geert Uytterhoeven <geert@linux-m68k.org>
+>> Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+>> ---
+>> Geert can you pick this up for m68k?
+>> ---
+>>   arch/m68k/coldfire/gpio.c | 1 +
+>>   1 file changed, 1 insertion(+)
+>>
+>> diff --git a/arch/m68k/coldfire/gpio.c b/arch/m68k/coldfire/gpio.c
+>> index a83898426127..ca26de257871 100644
+>> --- a/arch/m68k/coldfire/gpio.c
+>> +++ b/arch/m68k/coldfire/gpio.c
+>> @@ -9,6 +9,7 @@
+>>   #include <linux/module.h>
+>>   #include <linux/init.h>
+>>   #include <linux/device.h>
+>> +#include <linux/gpio/driver.h>
+>>
+>>   #include <linux/io.h>
+>>   #include <asm/coldfire.h>
+>> --
+>> 2.21.0
+> 
