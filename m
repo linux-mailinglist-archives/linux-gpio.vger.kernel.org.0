@@ -2,134 +2,81 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id C47D597CD5
-	for <lists+linux-gpio@lfdr.de>; Wed, 21 Aug 2019 16:25:51 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 63007983B3
+	for <lists+linux-gpio@lfdr.de>; Wed, 21 Aug 2019 20:53:44 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728724AbfHUOZv (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 21 Aug 2019 10:25:51 -0400
-Received: from atlmailgw2.ami.com ([63.147.10.42]:59600 "EHLO
-        atlmailgw2.ami.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726484AbfHUOZu (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 21 Aug 2019 10:25:50 -0400
-X-AuditID: ac10606f-d11ff70000003324-16-5d5d546dd669
-Received: from atlms1.us.megatrends.com (atlms1.us.megatrends.com [172.16.96.144])
-        (using TLS with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by atlmailgw2.ami.com (Symantec Messaging Gateway) with SMTP id C0.22.13092.D645D5D5; Wed, 21 Aug 2019 10:25:49 -0400 (EDT)
-Received: from hongweiz-Ubuntu-AMI.us.megatrends.com (172.16.98.93) by
- atlms1.us.megatrends.com (172.16.96.144) with Microsoft SMTP Server (TLS) id
- 14.3.408.0; Wed, 21 Aug 2019 10:25:49 -0400
-From:   Hongwei Zhang <hongweiz@ami.com>
-To:     Andrew Jeffery <andrew@aj.id.au>,
+        id S1727491AbfHUSxn (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 21 Aug 2019 14:53:43 -0400
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:46028 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727266AbfHUSxn (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 21 Aug 2019 14:53:43 -0400
+Received: by mail-ot1-f66.google.com with SMTP id m24so3027963otp.12;
+        Wed, 21 Aug 2019 11:53:42 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=35w30kfg8waZGig5Tgp5myLfGxs2v26s2C8ndD5dbgE=;
+        b=TkHm8wHG/DrKD8+PzQmZAWY8/Rf5AwrDYBzbFsMm4BWdtBz4J0usgb0gC3LOo9Z06e
+         yrcLk2GpJMU1PN6Y4iN5ZibtEruDF5rpq6NlagG+N8jYr/UerqCqYUujU7wt1TBQkaMr
+         qc8gGTnJU6YzJDyeZfKFI9hWbaiI0o6natn+nDHD5dRr/kzBB46KoUlzWlrTDKZk+ZQJ
+         nBVWXShgqdA2p/joqJfburolacvobRRDw91eKD8kR1gwrE1/GOGjCgo2musvJd4fNUr8
+         d282M1kwwEB+j9qVNdZfTbQ3P1XHgdazbPi2akxEgGNwmhPcW7jp1P0KelfI9Gapzpr+
+         p8Mw==
+X-Gm-Message-State: APjAAAVDom8bxwg0yCNDZtM1IkvG7/159BEFt29Z/MeRePALKfdjaz2a
+        JAa4Vo+W8+3cuhtJEZthTw==
+X-Google-Smtp-Source: APXvYqx6qzNVtFhlJaMG2/mMChFWJqtieUnJ35anReOkOofFGHrpDYvfpmmHired3qcAnjde3+xLIw==
+X-Received: by 2002:a05:6830:1345:: with SMTP id r5mr11259617otq.158.1566413622284;
+        Wed, 21 Aug 2019 11:53:42 -0700 (PDT)
+Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id d27sm8061374otf.25.2019.08.21.11.53.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 21 Aug 2019 11:53:41 -0700 (PDT)
+Date:   Wed, 21 Aug 2019 13:53:41 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Miquel Raynal <miquel.raynal@bootlin.com>
+Cc:     Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Gregory Clement <gregory.clement@bootlin.com>,
+        Antoine Tenart <antoine.tenart@bootlin.com>,
+        Maxime Chevallier <maxime.chevallier@bootlin.com>,
+        Nadav Haklai <nadavh@marvell.com>,
         Linus Walleij <linus.walleij@linaro.org>,
-        <linux-gpio@vger.kernel.org>
-CC:     Hongwei Zhang <hongweiz@ami.com>, Joel Stanley <joel@jms.id.au>,
-        <linux-aspeed@lists.ozlabs.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>
-Subject: [v7 2/2] gpio: aspeed: Add SGPIO driver
-Date:   Wed, 21 Aug 2019 10:25:21 -0400
-Message-ID: <1566397521-987-1-git-send-email-hongweiz@ami.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1564603297-1391-3-git-send-email-hongweiz@ami.com>
-References: <1564603297-1391-1-git-send-email-hongweiz@ami.com>
+        linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        Grzegorz Jaszczyk <jaz@semihalf.com>,
+        Marcin Wojtas <mw@semihalf.com>,
+        Stefan Chulski <stefanc@marvell.com>,
+        Yan Markman <ymarkman@marvell.com>,
+        Miquel Raynal <miquel.raynal@bootlin.com>
+Subject: Re: [PATCH 2/3] dt-bindings: cp110: document the new CP115 pinctrl
+ compatible
+Message-ID: <20190821185341.GA29195@bogus>
+References: <20190805101607.29811-1-miquel.raynal@bootlin.com>
+ <20190805101607.29811-3-miquel.raynal@bootlin.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [172.16.98.93]
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrFLMWRmVeSWpSXmKPExsWyRiBhgm5eSGysQc8WRotdlzksvsw9xWLx
-        +/xfZospf5YzWWx6fI3Vonn1OWaLzfP/MFpc3jWHzYHD42r7LnaP9zda2T0ufjzG7HHn2h42
-        j81L6j3Oz1jI6PF5k1wAexSXTUpqTmZZapG+XQJXxsvmU+wF30QrDtz4wdrAeEugi5GTQ0LA
-        ROLxv1nMXYxcHEICu5gk7j1aAOUcZpQ4+2gSG0gVm4CaxN7Nc5hAbBGBPInD69+yghQxCzxm
-        lNj9agNQEQeHsICBxLEVeiA1LAKqEs0nvjGChHkF7CRe9RRCLJOTuHmukxnE5hRwkPh2ZikT
-        SImQgL3E1O/VIGFeAUGJkzOfsIDYzAISEgdfvAArFxKQlbh16DETxBgFied9j1kmMArMQtIy
-        C0nLAkamVYxCiSU5uYmZOenlRnqJuZl6yfm5mxgh4Z2/g/HjR/NDjEwcjIcYJTiYlUR4K+ZE
-        xQrxpiRWVqUW5ccXleakFh9ilOZgURLnXbXmW4yQQHpiSWp2ampBahFMlomDU6qBMaN26021
-        Rc+yboS911XPNT16UXBaXcXDd0cdW33z/wiW3y7e53mQ9bWP7vdFc/RWP9X8nXj6/7mjUxdH
-        LvvhzjI1N1pLf81hPu0PLUs2+s54UJi+4v1jNu9qHTPPLKG/l3haWosFnNOeOV7w/RLGuitm
-        SpBe/II+iZOPdQ5Wisrf/NOret81TomlOCPRUIu5qDgRAOsOQLZdAgAA
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190805101607.29811-3-miquel.raynal@bootlin.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hello Linus,
-
-Thanks for your review! I just submitted v8 to the list, please help to review it again.
-
-Since you have already merged the dt-binding document [v7 1/2], and I don't have your
-update to this file, so to avoid confusion, I only include the driver code in v8.
-
-Regards,
---Hongwei 
-
-P.S. sorry previous response used wrong In-Reply-To ID, so resent it again.
-
-> From:	Linus Walleij <linus.walleij@linaro.org>
-> Sent:	Wednesday, August 14, 2019 4:09 AM
-> To:	Hongwei Zhang
-> Cc:	Andrew Jeffery; open list:GPIO SUBSYSTEM; Joel Stanley; linux-aspeed; Bartosz Golaszewski; 
-> linux-kernel@vger.kernel.org; Linux ARM
-> Subject:	Re: [v7 2/2] gpio: aspeed: Add SGPIO driver
+On Mon,  5 Aug 2019 12:16:06 +0200, Miquel Raynal wrote:
+> From: Grzegorz Jaszczyk <jaz@semihalf.com>
 > 
-> Hi Hongwei,
+> A new compatible is going to be used for Armada CP115 pinctrl block,
+> document it.
 > 
-> thanks for your patch!
-> 
-> I have now merged the bindings so you only need to respin this patch.
-> 
-> On Wed, Jul 31, 2019 at 10:02 PM Hongwei Zhang <hongweiz@ami.com> wrote:
-> 
-> > Add SGPIO driver support for Aspeed AST2500 SoC.
-> >
-> > Signed-off-by: Hongwei Zhang <hongweiz@ami.com>
-> > Reviewed-by:   Andrew Jeffery <andrew@aj.id.au>
-> 
-> I guess I need to go with this, there are some minor things I still want to be fixed:
-> 
-> > +static void __aspeed_sgpio_set(struct gpio_chip *gc, unsigned int 
-> > +offset, int val)
-> 
-> I don't like __underscore_functions because their semantic is ambiguous.
+> Signed-off-by: Grzegorz Jaszczyk <jaz@semihalf.com>
+> [<miquel.raynal@bootlin.com>: split the documentation out of the
+> driver commit]
+> Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
+> ---
+>  .../bindings/arm/marvell/cp110-system-controller.txt          | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
 > 
 
-done, please see v8.
-
-> Rename this something like aspeed_sgpio_commit() or whatever best fits the actual use.
-> 
-> > +static int aspeed_sgpio_setup_irqs(struct aspeed_sgpio *gpio,
-> > +                                  struct platform_device *pdev) {
-> (...)
-> > +       rc = gpiochip_irqchip_add(&gpio->chip, &aspeed_sgpio_irqchip,
-> > +                                 0, handle_bad_irq, IRQ_TYPE_NONE);
-> (...)
-> > +       gpiochip_set_chained_irqchip(&gpio->chip, &aspeed_sgpio_irqchip,
-> > +                                    gpio->irq, 
-> > + aspeed_sgpio_irq_handler);
-> 
-> We do not set up chained irqchips like this anymore, sorry.
-> 
-> I am currently rewriting all existing chained drivers to pass an initialized irqchip when registering the 
-> whole gpio chip.
-> See drivers/gpio/TODO.
-> 
-> Here are examples:
-> https://lore.kernel.org/linux-gpio/20190811080539.15647-1-linus.walleij@linaro.org/
-> https://lore.kernel.org/linux-gpio/20190812132554.18313-1-linus.walleij@linaro.org/
-> 
-
-done, please see v8.
-
-> > +       /* set all SGPIO pins as input (1). */
-> > +       memset(gpio->dir_in, 0xff, sizeof(gpio->dir_in));
-> 
-> Do the irqchip set-up here, before adding the gpio_chip.
-> 
-> > +       rc = devm_gpiochip_add_data(&pdev->dev, &gpio->chip, gpio);
-> > +       if (rc < 0)
-> > +               return rc;
-> > +
-> > +       return aspeed_sgpio_setup_irqs(gpio, pdev);
-> 
-> Yours,
-> Linus Walleij
+Reviewed-by: Rob Herring <robh@kernel.org>
