@@ -2,72 +2,113 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id E57BA973C9
-	for <lists+linux-gpio@lfdr.de>; Wed, 21 Aug 2019 09:46:09 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2CD7C97470
+	for <lists+linux-gpio@lfdr.de>; Wed, 21 Aug 2019 10:12:24 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727206AbfHUHqJ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 21 Aug 2019 03:46:09 -0400
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:42036 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726224AbfHUHqJ (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 21 Aug 2019 03:46:09 -0400
-Received: by mail-oi1-f196.google.com with SMTP id o6so894030oic.9
-        for <linux-gpio@vger.kernel.org>; Wed, 21 Aug 2019 00:46:08 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=SdD2LwlvMnpHdKh4iXEY3zt9jqjFRxplZ+70PsaEpMk=;
-        b=gZDMDGRE1M15fvsR4sQIb96pRrU5K7ubSAlF73vscJejXP068kzDNaTVCVSPielbgo
-         iNpriEXPRF7IIBjn+A9lsi0Pff43eizNbh2jU0mt1nOV05erF+aJ81V/jObOxtiI1Pnm
-         9z/WTT6tONfs5ZZjns2mou6f3cyc3UuW3aPbxsfetAFZhfe9JhVbDvl1bHpje0uTfafY
-         wZBrZ4o4+2qimymtvoo2q+3FHgNlyiDCGfI6R8L35Lsnbba2FtZjbh5MEVwY6F8/ZbIt
-         lpX/VFzWuBqB7dvHe/4qGk6WvqPVeDMbQsPxdO4+TqOAVLP2VffmH739u5g7GBn2gzfj
-         kFrw==
-X-Gm-Message-State: APjAAAXfo7WduaQ9ZSS9jXDMqSPvwRGteWvjmEgRoliJdKWa8nrNdC9T
-        3axtG0fs4ugYZf9DcncUBgmmLjmmlvkIbWBDvPg=
-X-Google-Smtp-Source: APXvYqwWp35N6ciYQTvT6v+dUMueSbx3OBxP2xVsHd3b1dw4sNvDo80DqWzjiiZZmzP2FooiBalvhxlM2SRZ90vABqo=
-X-Received: by 2002:a54:4618:: with SMTP id p24mr2715497oip.148.1566373568208;
- Wed, 21 Aug 2019 00:46:08 -0700 (PDT)
+        id S1726317AbfHUIIk (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 21 Aug 2019 04:08:40 -0400
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:58799 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726362AbfHUIIj (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 21 Aug 2019 04:08:39 -0400
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1i0Lfa-0005rp-3h; Wed, 21 Aug 2019 10:08:38 +0200
+Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1i0LfZ-0007cW-2c; Wed, 21 Aug 2019 10:08:37 +0200
+Date:   Wed, 21 Aug 2019 10:08:37 +0200
+From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+To:     Stefan Roese <sr@denx.de>
+Cc:     linux-serial@vger.kernel.org, linux-gpio@vger.kernel.org,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Pavel Machek <pavel@denx.de>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        kernel@pengutronix.de
+Subject: Re: [PATCH v2] serial: mctrl_gpio: Support all GPIO suffixes (gpios
+ vs gpio)
+Message-ID: <20190821080837.p5whh7pyqpg4kasc@pengutronix.de>
+References: <20190815085341.28088-1-sr@denx.de>
 MIME-Version: 1.0
-References: <20190820135955.14391-1-linus.walleij@linaro.org> <20190820135955.14391-2-linus.walleij@linaro.org>
-In-Reply-To: <20190820135955.14391-2-linus.walleij@linaro.org>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Wed, 21 Aug 2019 09:45:57 +0200
-Message-ID: <CAMuHMdUQxPLozVPJD5vdCokeuD+AaRmZ-MjwUccGnrVJp5P0iQ@mail.gmail.com>
-Subject: Re: [PATCH 2/2 v3] pinctrl: rza2: Include the appropriate headers
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Chris Brandt <chris.brandt@renesas.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190815085341.28088-1-sr@denx.de>
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-gpio@vger.kernel.org
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Aug 20, 2019 at 4:00 PM Linus Walleij <linus.walleij@linaro.org> wrote:
-> This driver is implementing a GPIO driver so include
-> <linux/gpio/driver.h> and not the legacy API <linux/gpio.h>.
-> When testing it turns out it also relies on implicit
-> inclusion of <linux/io.h> (readw etc) so make sure to
-> include that as well.
->
-> Cc: Chris Brandt <chris.brandt@renesas.com>
-> Cc: Geert Uytterhoeven <geert+renesas@glider.be>
-> Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+Hello Stefan,
 
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-i.e. will queue in sh-pfc-for-v5.4.
+On Thu, Aug 15, 2019 at 10:53:41AM +0200, Stefan Roese wrote:
+> This patch fixes a backward compatibility issue, when boards use the
+> old style GPIO suffix "-gpio" instead of the new "-gpios". This
+> potential problem has been introduced by commit d99482673f95 ("serial:
+> mctrl_gpio: Check if GPIO property exisits before requesting it").
+> 
+> This patch now fixes this issue by using gpiod_count() which iterates
+> over all supported GPIO suffixes (thanks to Linus for suggesting this).
+> 
+> With this change, the local string is not needed any more. This way
+> we can remove the allocation in the loop.
+> 
+> Signed-off-by: Stefan Roese <sr@denx.de>
+> Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> Cc: Geert Uytterhoeven <geert@linux-m68k.org>
+> Cc: Pavel Machek <pavel@denx.de>
+> Cc: Linus Walleij <linus.walleij@linaro.org>
+> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> ---
+> v2
+> - Use gpiod_count() to check if the GPIO exists (Linus)
+> - Remove the now unnecessary malloc in the loop (kasprintf)
+> 
+>  drivers/tty/serial/serial_mctrl_gpio.c | 13 +++----------
+>  1 file changed, 3 insertions(+), 10 deletions(-)
+> 
+> diff --git a/drivers/tty/serial/serial_mctrl_gpio.c b/drivers/tty/serial/serial_mctrl_gpio.c
+> index 2b400189be91..ce73b142c66b 100644
+> --- a/drivers/tty/serial/serial_mctrl_gpio.c
+> +++ b/drivers/tty/serial/serial_mctrl_gpio.c
+> @@ -117,18 +117,11 @@ struct mctrl_gpios *mctrl_gpio_init_noauto(struct device *dev, unsigned int idx)
+>  
+>  	for (i = 0; i < UART_GPIO_MAX; i++) {
+>  		enum gpiod_flags flags;
+> -		char *gpio_str;
+> -		bool present;
+> +		int count;
+>  
+>  		/* Check if GPIO property exists and continue if not */
+> -		gpio_str = kasprintf(GFP_KERNEL, "%s-gpios",
+> -				     mctrl_gpios_desc[i].name);
+> -		if (!gpio_str)
+> -			continue;
+> -
+> -		present = device_property_present(dev, gpio_str);
+> -		kfree(gpio_str);
+> -		if (!present)
+> +		count = gpiod_count(dev, mctrl_gpios_desc[i].name);
+> +		if (count <= 0)
+>  			continue;
 
-Gr{oetje,eeting}s,
+Can you explain why this check is necessary (both the new and the old
+variant)? I would expect that it doesn't add any value over the
+gpiod_get_index_optional that follows later.
 
-                        Geert
+Best regards
+Uwe
 
 -- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Pengutronix e.K.                           | Uwe Kleine-König            |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
