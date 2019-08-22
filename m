@@ -2,83 +2,91 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 127B298E5D
-	for <lists+linux-gpio@lfdr.de>; Thu, 22 Aug 2019 10:51:10 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7812C993CE
+	for <lists+linux-gpio@lfdr.de>; Thu, 22 Aug 2019 14:34:25 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731774AbfHVIvJ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 22 Aug 2019 04:51:09 -0400
-Received: from mga05.intel.com ([192.55.52.43]:4795 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730488AbfHVIvJ (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Thu, 22 Aug 2019 04:51:09 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 22 Aug 2019 01:51:08 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,416,1559545200"; 
-   d="scan'208";a="203320074"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.145])
-  by fmsmga004.fm.intel.com with ESMTP; 22 Aug 2019 01:51:07 -0700
-Received: from andy by smile with local (Exim 4.92.1)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1i0ioD-0006KF-AQ; Thu, 22 Aug 2019 11:51:05 +0300
-Date:   Thu, 22 Aug 2019 11:51:05 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Dave Hansen <dave.hansen@intel.com>, linux-gpio@vger.kernel.org,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: Re: [PATCH v1] MAINTAINERS: Remove staled record for gpio-intel-mid.c
-Message-ID: <20190822085105.GH30120@smile.fi.intel.com>
-References: <20190822084252.61856-1-andriy.shevchenko@linux.intel.com>
+        id S2388658AbfHVMeM (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 22 Aug 2019 08:34:12 -0400
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:39039 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388506AbfHVMeM (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 22 Aug 2019 08:34:12 -0400
+Received: by mail-lf1-f65.google.com with SMTP id x3so4410596lfn.6
+        for <linux-gpio@vger.kernel.org>; Thu, 22 Aug 2019 05:34:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:reply-to:from:date:message-id:subject:to
+         :content-transfer-encoding;
+        bh=aWwEGZ7IKPwlD1SyN53LweuoS+rG8j2WBRgPDxMagPA=;
+        b=qQwouDogyXJvS+YAsG7u3jI4chdOO2iCwbnUv4qV7/t3H0mpAnkar5BQ6W4yzvm3w4
+         MFy7lbM3I35ux+N13OWQLqMSp+JYBfamJOBS4Rv9YtwGFbdx/1nZ3P/IH2tA3AOy5PjU
+         kwMZko6qlgHP0UHJGHFvzgceOWtw4tjNefrQZ96MP6AChhfKt94B36gjTZhv6W5d2u3q
+         XLX/JEQ53zQai3qewoG2X6xDeNJ4HOzQU6TV4Cb4zGt4uQQf5AD05mnaufLgjsYbqLh0
+         X5GVMmJW05ufNL+28p6nLz0lCjVsZITmyIS1mIvW9/VAX3eTcLMat0TkK0bawj8l1wal
+         unaQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
+         :subject:to:content-transfer-encoding;
+        bh=aWwEGZ7IKPwlD1SyN53LweuoS+rG8j2WBRgPDxMagPA=;
+        b=BG+nZGp6AAgaxzRpLJer4JKV8HUl9NhX+mq3UysQQ1NZ3A+fMu7DDY++i2OC0e6zSp
+         D/3kzvU8gHZAMf4UO54wxW2ZWZ1IdkZDRcJm1AtNOfFX1jmrocRlP5iOIKENQbN6MZvw
+         IMGL1pSfyUhwIS5in7imZdGdVjN2A2hTMpaXwukb07cwwkpAo7aj+xef7oR/oNruZAmt
+         4UkXkloqgBgh4EYVLJQN8lqUfQtHCGnhK9rp7fzwnkaMYu7M0wIvboLDSf9uTOq+FF3p
+         i3J0vYY/zpuYwgV1W5zYrachPiiUHaTVvzMrzCF5wduDUNO1ze8frh4pr7uodLIAlApf
+         Exfg==
+X-Gm-Message-State: APjAAAUYu+b9/XZxxQAIrOz88CfxuKoQUmkYNn2CcWSupreJ8zLc42qA
+        tJzy0f6GbkC7EHBHp/n4WcdhS3IY9x5AiJq4HUc=
+X-Google-Smtp-Source: APXvYqyvt2RXzV9cZsTsiBwjcFFEoyd1HLlAwIQQPxXOemblWJ85A0QXgz94gt7tcllsT417ikCMvXpOU1ZxhrqMZqI=
+X-Received: by 2002:ac2:42c3:: with SMTP id n3mr13722899lfl.117.1566477250738;
+ Thu, 22 Aug 2019 05:34:10 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190822084252.61856-1-andriy.shevchenko@linux.intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Received: by 2002:ab3:6a0f:0:0:0:0:0 with HTTP; Thu, 22 Aug 2019 05:34:10
+ -0700 (PDT)
+Reply-To: eku.lawfirm@gmail.com
+From:   "Law firm(Eku and Associates)" <ezeobodo1@gmail.com>
+Date:   Thu, 22 Aug 2019 12:34:10 +0000
+Message-ID: <CAN-_bTZ04fanuBw0m=mWQFHTKscwdYgns3LR19ZdaFDanOVNGQ@mail.gmail.com>
+Subject: MY $25,000,000.00 INVESTMENT PROPOSAL WITH YOU AND IN YOUR COUNTRY.
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Aug 22, 2019 at 11:42:52AM +0300, Andy Shevchenko wrote:
-> David Cohen seems left Intel few years back. Remove the staled record in
-> MAINTAINERS data base. The file is anyway listed under my maintainership.
+--=20
+Dear,
+With due respect this is not spam or Scam mail, because I have
+contacted you before and there was no response from you,I apologise if
+the contents of this mail are contrary to your moral ethics, which I
+feel may be of great disturbance to your person, but please treat this
+with absolute confidentiality, believing that this email reaches you
+in good faith. My contacting you is not a mistake or a coincidence
+because God can use any person known or unknown to accomplish great
+things.
+I am a lawyer and I have an investment business proposal to offer you.
+It is not official but should be considered as legal and confidential
+business. I have a customer's deposit of $US25 million dollars ready
+to be moved for investment if you can partner with us. We are ready to
+offer you 10% of this total amount as your compensation for supporting
+the transaction to completion. If you are interested to help me please
+reply me with your full details as stated below:
+(1) Your full names:
+(2) Your address:
+(3) Your occupation:
+(4) Your mobile telephone number:
+(5) Your nationality:
+(6) Your present location:
+(7) Your age:
+So that I will provide you more details on what to do and what is
+required for successful completion.
+Note: DO NOT REPLY ME IF YOU ARE NOT INTERESTED AND WITHOUT THE ABOVE
+MENTIONED DETAILS
 
-This is supposed to go via gpio-intel tree.
-
-> 
-> Reported-by: Dave Hansen <dave.hansen@intel.com>
-> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> ---
->  MAINTAINERS | 6 ------
->  1 file changed, 6 deletions(-)
-> 
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 33e6b9e2da9e..3c8cc45c3cc7 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -8446,12 +8446,6 @@ F:	Documentation/x86/intel_txt.rst
->  F:	include/linux/tboot.h
->  F:	arch/x86/kernel/tboot.c
->  
-> -INTEL-MID GPIO DRIVER
-> -M:	David Cohen <david.a.cohen@linux.intel.com>
-> -L:	linux-gpio@vger.kernel.org
-> -S:	Maintained
-> -F:	drivers/gpio/gpio-intel-mid.c
-> -
->  INTERCONNECT API
->  M:	Georgi Djakov <georgi.djakov@linaro.org>
->  L:	linux-pm@vger.kernel.org
-> -- 
-> 2.23.0.rc1
-> 
-
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+Sinc=C3=A8rement v=C3=B4tre,
+Avocat Etienne Eku Esq.(Lawfirm)
+Procureur principal. De Cabinet d=E2=80=99avocats de l=E2=80=99Afrique de l=
+=E2=80=99ouest.
+Skype:westafricalawfirm
