@@ -2,91 +2,92 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 477AF988B5
-	for <lists+linux-gpio@lfdr.de>; Thu, 22 Aug 2019 02:50:30 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A8044988DF
+	for <lists+linux-gpio@lfdr.de>; Thu, 22 Aug 2019 03:12:27 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727493AbfHVAuK (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 21 Aug 2019 20:50:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54576 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727257AbfHVAuK (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Wed, 21 Aug 2019 20:50:10 -0400
-Received: from [10.44.0.22] (unknown [103.48.210.53])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 614B5216F4;
-        Thu, 22 Aug 2019 00:50:08 +0000 (UTC)
-Subject: Re: [PATCH] m68k: coldfire: Include the GPIO driver header
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        linux-m68k <linux-m68k@lists.linux-m68k.org>
-References: <20190821070923.687-1-linus.walleij@linaro.org>
- <CAMuHMdWF1GXYtFbjrALRMObqzezd-cBwDPAqhC-9d=RbrLxNyQ@mail.gmail.com>
- <fb01f312-5cc5-03a1-a1a5-a12819e2ff7b@linux-m68k.org>
- <CAMuHMdVsqKqppkvXYm=NiGeikhC_i99hH+Y2ecjQfr3S2-BTZA@mail.gmail.com>
-From:   Greg Ungerer <gerg@linux-m68k.org>
-Message-ID: <5bba9a8e-5f8d-8f33-6dba-503ae59a8ee4@linux-m68k.org>
-Date:   Thu, 22 Aug 2019 10:50:05 +1000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
-MIME-Version: 1.0
-In-Reply-To: <CAMuHMdVsqKqppkvXYm=NiGeikhC_i99hH+Y2ecjQfr3S2-BTZA@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        id S1729074AbfHVBM0 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 21 Aug 2019 21:12:26 -0400
+Received: from out3-smtp.messagingengine.com ([66.111.4.27]:38751 "EHLO
+        out3-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727558AbfHVBM0 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>);
+        Wed, 21 Aug 2019 21:12:26 -0400
+Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
+        by mailout.nyi.internal (Postfix) with ESMTP id 300D021B10;
+        Wed, 21 Aug 2019 21:12:25 -0400 (EDT)
+Received: from imap2 ([10.202.2.52])
+  by compute4.internal (MEProxy); Wed, 21 Aug 2019 21:12:25 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aj.id.au; h=
+        mime-version:message-id:in-reply-to:references:date:from:to:cc
+        :subject:content-type; s=fm3; bh=I/affUWjhNprrpXsHfcCHIXv2F7Ad9/
+        xhK2EXQOpp98=; b=R8oRVyf4+2WowuRn9p7X9+NDdhJuTQccHkkHzttR0kr+DRJ
+        sAr9eebs9yM8W45gAn5XxVxbG/nA32qf68iRA8+r3e7ME/ZL2CWvoqKObTHgQ5bu
+        drVgG4GUdyd35LGdYAFHzdujOqQqQzb7D+2475nM54CrXwu1vs1ZBtrWYhwL9LCE
+        pyz9+D0YCDlXbA5kl1oFu8+d7eGO8rt71Yw1FW7bq7Lrb54TDyMIrhC6ZQmt/Mto
+        zB+KrKgqbhGFzgiWAM8+zNV97MfoopI35Mi5EM0PBOw94BW/awzx69H99K1+8Wce
+        hGpfaGLtCag5jTZmAbd/C6JqzuTKWi3p/3gL7NA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=I/affU
+        WjhNprrpXsHfcCHIXv2F7Ad9/xhK2EXQOpp98=; b=z/MNqVn4EwaILd52FEMHrr
+        RKIpAIcffgSeLx8MaYZSKtFf7FOJ+z/IjhtfCFlMoTMTEIapu8lJ1oEDR50Jyhn2
+        PUJ0xqxV/AjdGOZfpz+rdghST/b2cX2zqx4rTwbDWlRmZTPZV/j00hlve+SDldzG
+        NNxVj9gK13RX1d1gxsGK8JgbJqetp/X/UwXsuytc46pmlOLU2Z9EcBAgbsE2oqOk
+        8RliXYSdAoeSdSfhc2VjZnw0MBk01BU8OL+k72w3guxp+rhCyhp9nOxIrwrVcoFL
+        21NRdKvkENhpmzmC9vhkpwybwNFD3YtLG5aR+sEXQ4qFo2FezsIdYc2rIjn0pyVw
+        ==
+X-ME-Sender: <xms:-OtdXa7YYaTpVJZkqaJXJIMptTbysLndJ5nXJxSR0oyhGoY3KdOwfQ>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduvddrudeggedggeehucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepofgfggfkjghffffhvffutgesthdtredtreerjeenucfhrhhomhepfdetnhgu
+    rhgvficulfgvfhhfvghrhidfuceorghnughrvgifsegrjhdrihgurdgruheqnecurfgrrh
+    grmhepmhgrihhlfhhrohhmpegrnhgurhgvfiesrghjrdhiugdrrghunecuvehluhhsthgv
+    rhfuihiivgeptd
+X-ME-Proxy: <xmx:-OtdXW20vpqwb3uaN61RK5fb21-K4_ISy68rgttqjGofnKHW5Xn4qw>
+    <xmx:-OtdXRoVkXCYsQ_VLMcew4DVvYt1JTnJKqw-v_CLPG3mT4REfg1d2g>
+    <xmx:-OtdXV_8rOMGBeiEfxNf2zwHk6XTSSoLP9FyezgKUQTI4mXN6FK5OQ>
+    <xmx:-etdXRbrydgUrhrJkdJ0SPThLT_ruOTuvcS8MxU0dNYF1qFAA8RaHw>
+Received: by mailuser.nyi.internal (Postfix, from userid 501)
+        id 6111FE00A3; Wed, 21 Aug 2019 21:12:24 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
+User-Agent: Cyrus-JMAP/3.1.6-916-g49fca03-fmstable-20190821v7
+Mime-Version: 1.0
+Message-Id: <a8fdfb41-73f5-462b-b38b-94bc1af9f64c@www.fastmail.com>
+In-Reply-To: <CACRpkdakewyaF4Xp6=2c_h1_T1kY-1MQ3bbZzNv2uHSCndHQgg@mail.gmail.com>
+References: <201908210839.fFMuc6Yx%lkp@intel.com>
+ <15f11bd1-cde0-4345-8daf-234d61ebc9c0@www.fastmail.com>
+ <CACRpkdakewyaF4Xp6=2c_h1_T1kY-1MQ3bbZzNv2uHSCndHQgg@mail.gmail.com>
+Date:   Thu, 22 Aug 2019 10:42:40 +0930
+From:   "Andrew Jeffery" <andrew@aj.id.au>
+To:     "Linus Walleij" <linus.walleij@linaro.org>
+Cc:     "kbuild test robot" <lkp@intel.com>,
+        "Nathan Chancellor" <natechancellor@gmail.com>, kbuild-all@01.org,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
+Subject: =?UTF-8?Q?Re:_[pinctrl:for-next_54/63]_drivers/pinctrl/aspeed/pinctrl-as?=
+ =?UTF-8?Q?peed-g6.c:2325:9:_error:_initialization_from_incompatible_poi?=
+ =?UTF-8?Q?nter_type?=
+Content-Type: text/plain
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Geert, Linus,
 
-On 21/8/19 10:50 pm, Geert Uytterhoeven wrote:
-> On Wed, Aug 21, 2019 at 2:22 PM Greg Ungerer <gerg@linux-m68k.org> wrote:
->> On 21/8/19 5:19 pm, Geert Uytterhoeven wrote:
->>> CC Greg (coldfire)
->>
->> Thanks Geert.
->> I am happy to take it via the m68knommu tree if you prefer?
+
+On Wed, 21 Aug 2019, at 21:06, Linus Walleij wrote:
+> On Wed, Aug 21, 2019 at 3:09 AM Andrew Jeffery <andrew@aj.id.au> wrote:
 > 
-> Sounds most logical to me.
-> Thanks!
-
-Pushed to the for-next branch of the m68knommu git tree.
-
-Regards
-Greg
-
-
-
->>> On Wed, Aug 21, 2019 at 9:09 AM Linus Walleij <linus.walleij@linaro.org> wrote:
->>>> The Coldfire GPIO driver needs to explicitly incldue the
->>>> GPIO driver header since it is providing a driver.
->>>>
->>>> Cc: Geert Uytterhoeven <geert@linux-m68k.org>
->>>> Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
->>>> ---
->>>> Geert can you pick this up for m68k?
->>>> ---
->>>>    arch/m68k/coldfire/gpio.c | 1 +
->>>>    1 file changed, 1 insertion(+)
->>>>
->>>> diff --git a/arch/m68k/coldfire/gpio.c b/arch/m68k/coldfire/gpio.c
->>>> index a83898426127..ca26de257871 100644
->>>> --- a/arch/m68k/coldfire/gpio.c
->>>> +++ b/arch/m68k/coldfire/gpio.c
->>>> @@ -9,6 +9,7 @@
->>>>    #include <linux/module.h>
->>>>    #include <linux/init.h>
->>>>    #include <linux/device.h>
->>>> +#include <linux/gpio/driver.h>
->>>>
->>>>    #include <linux/io.h>
->>>>    #include <asm/coldfire.h>
+> > This is resolved by back-merging the pinctrl-v5.3-2 into pinctrl/devel
+> > or pinctrl/for-next as mentioned in the thread on Nathan's patch.
 > 
-> Gr{oetje,eeting}s,
-> 
->                          Geert
-> 
+> OK I merged v5.3-rc5 into my devel branch, that should cut it.
+
+Yep, I just did a successful build of pinctrl/devel with multi_v5_defconfig and
+CONFIG_COMPILE_TEST=y (the AST2600 arch support only just hit the lists),
+looks good.
+
+Thanks,
+
+Andrew
