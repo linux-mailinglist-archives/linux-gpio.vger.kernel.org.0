@@ -2,77 +2,93 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 133569A903
-	for <lists+linux-gpio@lfdr.de>; Fri, 23 Aug 2019 09:38:51 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3B7CE9A911
+	for <lists+linux-gpio@lfdr.de>; Fri, 23 Aug 2019 09:44:34 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733014AbfHWHiu (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 23 Aug 2019 03:38:50 -0400
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:36478 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731748AbfHWHit (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 23 Aug 2019 03:38:49 -0400
-Received: by mail-lf1-f66.google.com with SMTP id r5so933891lfc.3
-        for <linux-gpio@vger.kernel.org>; Fri, 23 Aug 2019 00:38:48 -0700 (PDT)
+        id S1726079AbfHWHod (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 23 Aug 2019 03:44:33 -0400
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:47070 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732422AbfHWHod (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 23 Aug 2019 03:44:33 -0400
+Received: by mail-lf1-f67.google.com with SMTP id n19so6422139lfe.13
+        for <linux-gpio@vger.kernel.org>; Fri, 23 Aug 2019 00:44:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=Lz2W/Er+vhSnNSGXtvI+raF02sxjt0QdGmNNXiXbeZ8=;
-        b=xSbUP94itBW5D+EIP6J+VeADRYAq49B6u3tO5t95hiQ3LqFqEQ+LFuJEBkPwIvl6NJ
-         rdHJD228PuvuWY4ayKaABZy0R7ZgUsv1KoJKe1+B4yBMntOltSIwBMnp0zedzqrv87zL
-         FyQiEkp4NI1BU+dGZ0yLr0aX/BmREJwiUiVaQP7m7hDwK2klVCy6+CigyrmqkaynwxUX
-         i9hJB5OCNPeM/9T9HUThretRY6cbh94rGzMPh3Hx8QHO9Re1SquQiiwQO2kbIgauukEr
-         DUTZbK0uzXVvytwctPYRyQDuMKG6qUb+FWGnnGyZvGsYO7gI58znr1Ne4ZP01V0cDmVx
-         f3vw==
+        bh=8VhnyQ/lvnPjeI+ZEe4VcwGbfHZbPpwY+AwHcnvR+oE=;
+        b=I7Wm2w112kZVo5kWC7G4B9lxgpkpfdDFoX4S5HugYjmAlJg9Z0erMI9NUjIR6JI91X
+         Ksvwc+eyUbldOgsBbz65LlhuXXdpscFzJc1vJ07sq2yZe6jlm9x/fvoK0tql9th3ci1/
+         CS+DHzG+MT0BgLZQuteblBYRpuXfutqgO3hdFI44CeD329VZcVFLu1vQ44gVVuzeSVII
+         9p9q/El026NdnM9A+3b7963AZEg2TEzK3EH31+tAvlgORlD7In2/scnhEcL1feu4ST/1
+         DZzgp81ZoP5eiSFgyUIMgsd2vNRj0qHbQfnJPxqefeos6vZgInxz5UN2yqRGIAW1wRLF
+         a/Xg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=Lz2W/Er+vhSnNSGXtvI+raF02sxjt0QdGmNNXiXbeZ8=;
-        b=lYzfehQtdtZM8JovQq1cG1tBcaLoev07XBI1OW+r6OI1guFM/Z9tmXQCWJldZyPSd8
-         6qs4+6oKS0AawdRjEZWK4bthxwKDDH9J18+vYzoT3NZ1r0ZBNnPwJhYcJf5w51ogGSKZ
-         Ug4wIEIp6pIJpSgG7eZ/nT2+7mvx4a8PQtoM7jftq4PLPNZgLEy2kTiJ13CsVeJl5u4J
-         1VT5a531uhT6LdldeqnZa22jXcduGWDw05Inhn8Vz7gNpW3bDh39v5TWLbEOSxDLYM9H
-         UiJ0h3JihuPHvs8vGYPJ4BPZIPNOJfapdm/TAZ42JTVS3uHI/jyC0A/IrvMQxhxpjd4S
-         pr6A==
-X-Gm-Message-State: APjAAAXY51wtzQzzklSD8/aQwEcoRH8w/Yr4DKvp7do2XV8l1dH/QIhB
-        wGOhfarLQuH+CJlGxhmfrpdu+023PghIyZ0h9XE/Xg==
-X-Google-Smtp-Source: APXvYqwn8sOli89h3xpwI0gsI6dJyFeTKTHshx0YK3OmzA9sFUzjhWgRf+UO3GE1WNBwItHvNrorYCww02wff3Qgq/U=
-X-Received: by 2002:a19:e006:: with SMTP id x6mr1813674lfg.165.1566545928179;
- Fri, 23 Aug 2019 00:38:48 -0700 (PDT)
+        bh=8VhnyQ/lvnPjeI+ZEe4VcwGbfHZbPpwY+AwHcnvR+oE=;
+        b=jM1wLtkcsHmcvy+9GfRkpm7+1cdPzPXPZbcnBSViALV6GfJbKa7iMFCzwnacEkRB+v
+         VV9Zn5GAjpvMLsKN+pOTpTBeRa1h3TsOPXNZ8JS9P8dDbrfs7Bd+rwL0SV4fojNLhrs1
+         6pyKVdtjxkAKOieEhixccpfwRlcZ17/A7vvAtQb4UxWNDIvzXpUQAGK/q8BsRZkKZahK
+         2msmoqXtba3Gv6ch8YBuUR0mt7FguLafwSJzT7sk4ybQXG2caKWnRadBjL53V7PMSKfJ
+         ZWiJ5MLxQzGKjN48fEDzLgFjtlKEf8F1UEGW/lmxFCX57xD6vOjzgX43hVZdD27Xd/ol
+         4I3Q==
+X-Gm-Message-State: APjAAAXNGf9EIKLI0bLRORUWRvDeuKlkBii0zTBsKpDv7jxeA2Ufsk7+
+        nB/1ZGQfrPW8eGnGEDAjyGvRoloP1v86QXk2Aqiqsw==
+X-Google-Smtp-Source: APXvYqyNoQgfYc8y4pHvuwV6KbLFLXwLC/iwoPTjq9ZJq+M/tH/JxhgIoE9IKKUF7jG7d7iHWjhzOuKCY0Oof3gDTrw=
+X-Received: by 2002:a19:e006:: with SMTP id x6mr1828413lfg.165.1566546271241;
+ Fri, 23 Aug 2019 00:44:31 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190808101628.36782-1-hui.song_1@nxp.com> <20190808101628.36782-3-hui.song_1@nxp.com>
-In-Reply-To: <20190808101628.36782-3-hui.song_1@nxp.com>
+References: <20190809162956.488941-1-arnd@arndb.de> <20190809163334.489360-1-arnd@arndb.de>
+ <20190809163334.489360-5-arnd@arndb.de>
+In-Reply-To: <20190809163334.489360-5-arnd@arndb.de>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Fri, 23 Aug 2019 09:38:37 +0200
-Message-ID: <CACRpkdajLb3Spsq4SvRCEJVQcABK+QnNyZi5C3ciTvirjcHF-Q@mail.gmail.com>
-Subject: Re: [PATCH v1 3/3] gpio: mpc8xxx: add ls1088a platform special function
-To:     Hui Song <hui.song_1@nxp.com>
-Cc:     Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
+Date:   Fri, 23 Aug 2019 09:44:19 +0200
+Message-ID: <CACRpkdajapOw+fsEx1fqG3FL-n-WYmOUoGw_HGRHd730h+uv-w@mail.gmail.com>
+Subject: Re: [PATCH 5/7] ARM: xscale: fix multi-cpu compilation
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     soc@kernel.org, Russell King <linux@armlinux.org.uk>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Vinod Koul <vkoul@kernel.org>,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>,
         Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
+        dmaengine@vger.kernel.org,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        linux-i2c <linux-i2c@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Aug 8, 2019 at 12:26 PM Hui Song <hui.song_1@nxp.com> wrote:
+On Fri, Aug 9, 2019 at 6:33 PM Arnd Bergmann <arnd@arndb.de> wrote:
 
-> From: Song Hui <hui.song_1@nxp.com>
+> Building a combined ARMv4+XScale kernel produces these
+> and other build failures:
 >
-> ls1028a and ls1088a platform share common special function.
-> The gpio hardware what they use is the same version.
->
-> Signed-off-by: Song Hui <hui.song_1@nxp.com>
+> /tmp/copypage-xscale-3aa821.s: Assembler messages:
+> /tmp/copypage-xscale-3aa821.s:167: Error: selected processor does not support `pld [r7,#0]' in ARM mode
+> /tmp/copypage-xscale-3aa821.s:168: Error: selected processor does not support `pld [r7,#32]' in ARM mode
+> /tmp/copypage-xscale-3aa821.s:169: Error: selected processor does not support `pld [r1,#0]' in ARM mode
+> /tmp/copypage-xscale-3aa821.s:170: Error: selected processor does not support `pld [r1,#32]' in ARM mode
+> /tmp/copypage-xscale-3aa821.s:171: Error: selected processor does not support `pld [r7,#64]' in ARM mode
+> /tmp/copypage-xscale-3aa821.s:176: Error: selected processor does not support `ldrd r4,r5,[r7],#8' in ARM mode
+> /tmp/copypage-xscale-3aa821.s:180: Error: selected processor does not support `strd r4,r5,[r1],#8' in ARM mode
 
-Patch applied.
+OK we certainly need this.
+
+> Add an explict .arch armv5 in the inline assembly to allow the ARMv5
+> specific instructions regardless of the compiler -march= target.
+
+You probably mean...
+
+> +.arch xscale                                   \n\
+>         pld     [%0, #0]                        \n\
+
+Explicit .arch xscale rather than .arch armv5.
 
 Yours,
 Linus Walleij
