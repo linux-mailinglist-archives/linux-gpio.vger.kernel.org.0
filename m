@@ -2,90 +2,75 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 51C639A932
-	for <lists+linux-gpio@lfdr.de>; Fri, 23 Aug 2019 09:56:45 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 005209A96D
+	for <lists+linux-gpio@lfdr.de>; Fri, 23 Aug 2019 09:59:01 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391415AbfHWH4o (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 23 Aug 2019 03:56:44 -0400
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:44522 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2391272AbfHWH4o (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 23 Aug 2019 03:56:44 -0400
-Received: by mail-lj1-f193.google.com with SMTP id e24so7984516ljg.11
-        for <linux-gpio@vger.kernel.org>; Fri, 23 Aug 2019 00:56:43 -0700 (PDT)
+        id S2388139AbfHWH64 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 23 Aug 2019 03:58:56 -0400
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:39794 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387722AbfHWH6z (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 23 Aug 2019 03:58:55 -0400
+Received: by mail-lj1-f196.google.com with SMTP id x4so8009780ljj.6
+        for <linux-gpio@vger.kernel.org>; Fri, 23 Aug 2019 00:58:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=ZoH99gCCqRWJNWWiOrWyp5IoDarLlyblNQ/wC6mp43o=;
-        b=BV74voyGG+vzjEEv5SxUv3lMMiWzg2Gt744uxljX5dPLJ4uZjgE5jQ3sgQJALIFyip
-         h7UyPzA01YTHo7q26n0zZMVRTEM0Z3xtsafYIcrVDvyWXe+qjN+JG2vbsOjJCH+AX44v
-         JSgI3dPhigaNYXXayRrqcu3NAteYguM4g6K85LsPqb2iAl1sy5PIRg76hmdF/f284+1G
-         Qjdy3h6zyYTL/7Y0zRA9zJE2epLWWqu5I13LmMtGJ6Yr2xurXupp29/haDb/o0U/Bm2Z
-         S9vAZe8BlvwcalWIlYiWiwzuS3CkzN33bl+vWbBjxv5yladJ9Rtj3auU3t/YMsOVmbfQ
-         lwiA==
+        bh=bd8XoLtOAWU+7BwGbBI3SJRXpJvzJRqxBSiZxXkbwbQ=;
+        b=cY06XukrB8tjEf9UAwvxbqEkYGIf7YplCL05socdcolxb5FMUe0XrJy1kJFlbZgKRA
+         xqBy2i1DYn8CGjEMlIEPBNN/0LLpxzRsS2ynK+EiNpRJVxQP4RSyFdYzu9UbU736NJ5I
+         aWADQq7MJJe75skDBRAyGxZ2l5IJ8IbOlJcYqHMxtxxVqAhcy13Kol6ZJ7sVkFqbj/pa
+         bHauROnenvzsFCd3LzDoWGTcTldnMrZDcKXLRGU78crbBv4uZNWyvieSTL/GGN5ctTTT
+         r7DBfd61vPAP9baxyD63C1Q4bmz3mI8IPOJ6Sdvu6HW0n5kkFwJHqvEmYt4fkKo1BUeJ
+         QXGA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=ZoH99gCCqRWJNWWiOrWyp5IoDarLlyblNQ/wC6mp43o=;
-        b=dgqAeaRzQGfC/b3Ni5L1YyMpUcfWEfHJmf6KW2Ybh0EbZQ0OVst0ccoArPma4LNliA
-         yVztH93W7gfsUsl2MmTi3nS7sM0iveNWnALo5rJciYFXprkf2M/d3nWmNzCwudOyb7D/
-         r2SfYRpNwDSwfAXmf3PVriJNjhLHHaSt6zuBJLONF452LwFUtO9Uu+kZaVRvvT4fjlWj
-         JaguUuApDweImi4hJlVFaZ8REh/Ua4Kgbw/2mlhWJDFWVNg2UAg4EgJ4dXwSZ2Ha0ynl
-         OkEUguqK7cnc8HgDx3TlvId4GXsbyBVfcm27DhMtLrfGnK5eJ/YCznb1HethhitT8elw
-         8g6Q==
-X-Gm-Message-State: APjAAAVxxYtTSdg2xv6eIg597T+eon/Jxbjc68kZMDUsFEOA2DtWnVyG
-        fqleY6Rg5HJSCWcIBtpTfLnqUN04Q4Au+ZAp3mOYKw==
-X-Google-Smtp-Source: APXvYqwJYQ4Xm5tr03gXwgQ6Q/M4wcA7Z91VrCJJBTW9+/jKLRaw4zkjmBh4t3cxoJm5k/TQoDDGkEeRnrfM/ZO+GrM=
-X-Received: by 2002:a05:651c:28c:: with SMTP id b12mr2113497ljo.69.1566547002430;
- Fri, 23 Aug 2019 00:56:42 -0700 (PDT)
+        bh=bd8XoLtOAWU+7BwGbBI3SJRXpJvzJRqxBSiZxXkbwbQ=;
+        b=C8g558IyPQGRjIx+CWOMonOrABKXoPM4WDq/8OeqNktRJsQ8b/K29vluozbkNJDJ1y
+         Lot3vneYubwk59zyq2TQw++KMKGp4R3UoiO/bH5ghE55Ojl1tyQmUGyjLwB4MWFQIM06
+         an9Onh5b+HfPXGXRGlP9QBlITGQGNoiZKEcqbyQxJm4iAQx3GfP82tqwtU7JRw4UVpWT
+         iCIjZ1fyy0yeWX0SKXixf5+YFoy7c76Pd8+fvSdDpxX7lKJ0zmLiBwwGaX0pOs5BQ1eW
+         +HbHAipaOAUPEowkmh8weB+B6FrGQ0KBJShOCoQy2DK7vWhGwW/aR9zDh97QgdzQofMo
+         SpkQ==
+X-Gm-Message-State: APjAAAWhOzKO97VqrMY/sgJuk63e98sosWei8ONoQg1l0X2/W82Iwtq9
+        poeJf+6wi24YdGT5ZPDmduauzRX/0hSJ/5YVWuDCfA==
+X-Google-Smtp-Source: APXvYqx20UFE09WUbvPbKRheJe5uPUYJciAr4V5C0JTxwVk+UKhBPMsa+z9iIIb0TS7UW3n8ScMINNgWL5FoPJpJES0=
+X-Received: by 2002:a2e:9903:: with SMTP id v3mr2098659lji.37.1566547133896;
+ Fri, 23 Aug 2019 00:58:53 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190814090540.7152-1-drake@endlessm.com>
-In-Reply-To: <20190814090540.7152-1-drake@endlessm.com>
+References: <20190814123512.6017-1-vkoul@kernel.org>
+In-Reply-To: <20190814123512.6017-1-vkoul@kernel.org>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Fri, 23 Aug 2019 09:56:31 +0200
-Message-ID: <CACRpkdZUB_aJetES+Wq1sSVnEu+xEJ117kP1LLmEyxRPG0xSmA@mail.gmail.com>
-Subject: Re: [PATCH] pinctrl/amd: disable spurious-firing GPIO IRQs
-To:     Daniel Drake <drake@endlessm.com>
-Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        linux@endlessm.com, "Singh, Sandeep" <sandeep.singh@amd.com>,
-        "S-k, Shyam-sundar" <Shyam-sundar.S-k@amd.com>,
-        "Shah, Nehal-bakulchandra" <Nehal-Bakulchandra.shah@amd.com>
+Date:   Fri, 23 Aug 2019 09:58:42 +0200
+Message-ID: <CACRpkdb-y4PhqH+fSeQNRHKHDKB=qDdcgR4VdnBqXJEh2YPAUw@mail.gmail.com>
+Subject: Re: [PATCH 1/3] dt-bindings: pinctrl: qcom-pmic-gpio: Add pm8150 support
+To:     Vinod Koul <vkoul@kernel.org>
+Cc:     MSM <linux-arm-msm@vger.kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Andy Gross <agross@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Aug 14, 2019 at 11:05 AM Daniel Drake <drake@endlessm.com> wrote:
+On Wed, Aug 14, 2019 at 2:36 PM Vinod Koul <vkoul@kernel.org> wrote:
 
-> When cold-booting Asus X434DA, GPIO 7 is found to be already configured
-> as an interrupt, and the GPIO level is found to be in a state that
-> causes the interrupt to fire.
+> Add support for the PM8150 GPIO support to the Qualcomm PMIC GPIO
+> binding.
 >
-> As soon as pinctrl-amd probes, this interrupt fires and invokes
-> amd_gpio_irq_handler(). The IRQ is acked, but no GPIO-IRQ handler was
-> invoked, so the GPIO level being unchanged just causes another interrupt
-> to fire again immediately after.
->
-> This results in an interrupt storm causing this platform to hang
-> during boot, right after pinctrl-amd is probed.
->
-> Detect this situation and disable the GPIO interrupt when this happens.
-> This enables the affected platform to boot as normal. GPIO 7 actually is
-> the I2C touchpad interrupt line, and later on, i2c-multitouch loads and
-> re-enables this interrupt when it is ready to handle it.
->
-> Instead of this approach, I considered disabling all GPIO interrupts at
-> probe time, however that seems a little risky, and I also confirmed that
-> Windows does not seem to have this behaviour: the same 41 GPIO IRQs are
-> enabled under both Linux and Windows, which is a far larger collection
-> than the GPIOs referenced by the DSDT on this platform.
->
-> Signed-off-by: Daniel Drake <drake@endlessm.com>
+> Signed-off-by: Vinod Koul <vkoul@kernel.org>
 
-Patch applied!
+Patch applied as lightweight and uncontroversial.
 
 Yours,
 Linus Walleij
