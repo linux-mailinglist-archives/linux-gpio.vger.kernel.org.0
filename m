@@ -2,192 +2,72 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 9AE109AA60
-	for <lists+linux-gpio@lfdr.de>; Fri, 23 Aug 2019 10:31:58 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E1FF29AAF4
+	for <lists+linux-gpio@lfdr.de>; Fri, 23 Aug 2019 11:02:36 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391013AbfHWIb6 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 23 Aug 2019 04:31:58 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:44488 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1733069AbfHWIb5 (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Fri, 23 Aug 2019 04:31:57 -0400
-Received: from DGGEMS401-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id A4ECE6978710F9AB2DA6;
-        Fri, 23 Aug 2019 16:31:55 +0800 (CST)
-Received: from [127.0.0.1] (10.57.101.250) by DGGEMS401-HUB.china.huawei.com
- (10.3.19.201) with Microsoft SMTP Server id 14.3.439.0; Fri, 23 Aug 2019
- 16:31:52 +0800
+        id S1732043AbfHWJCJ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 23 Aug 2019 05:02:09 -0400
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:38485 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725797AbfHWJCJ (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 23 Aug 2019 05:02:09 -0400
+Received: by mail-lf1-f68.google.com with SMTP id f21so1634320lfc.5
+        for <linux-gpio@vger.kernel.org>; Fri, 23 Aug 2019 02:02:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=0QyxxyRluECjdJkoLMYC9fmu4/5/v8zNJ/ufvcfQSPQ=;
+        b=N7h77oRWy1NES6UfXGLBy3+XgXDQfO9qbseQVAx7sYunjgOJVDezGdzBbBEZPDYbWs
+         zdzwI+m8PrJ6XBzhs+0Ekab55i30Pzo1aOIJXZIRFTGYEmFJn5DjocBNqR2yP+BI6zDr
+         UAC+vml6qtduEWXpluIDMfVVJMa3k6qPdGZXAz+P6UiD0SRX0xyH59MhxrKAfsyAcS6L
+         zsC0wrwY83haDmjM4/xlhvqSWSUgWW8cKIV/WSuE97PIaLNy4wSh+bUcCnSfQOLecmKM
+         efVpPfVry4LguDt5SN1lChKwVrYRajjxqDWo4dHcEfHK+nmBqBHS095kqUs3iQTwlQrA
+         A+dA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=0QyxxyRluECjdJkoLMYC9fmu4/5/v8zNJ/ufvcfQSPQ=;
+        b=dsssG7W+oxknqCcCmaZvDn//KrgEhNqAcvpMJKpIvE7qKvOaxQVgWdY3xhXdzEkeu+
+         DEF05CGtCR8S+H7eTNltT7wEANZPWs+12ETQAG8sEpo9UsqQVUXATBoHtWOm3QM64bLn
+         o4zgR96G1opeG9Nl7eleYi4U9lke+WjRCzyVdDegDRfsg/LS4UaE40UBniR4ms6WEftI
+         1Hqd7f3s82Z47CfDRoIUq1ltcD35BbEEvc66yTTT6uXvaPHeE9jlHaOS9H9quF79Fhn+
+         lkTIcV+Oe4wc/dlAhAraiaazgS+MOtfLNEHfVS2ehFAJPbLH4xfZHawEhHhy8Pp50DXv
+         r2Gg==
+X-Gm-Message-State: APjAAAXOGII3Jqw/a4+2gMiuZ8+oShFYu23VZyByVBzhdfkXBN5qYc0S
+        AvKPGTUr9PEj47ZlupjAKHxVUAWGjI5M7eGa0GVqFG018ss=
+X-Google-Smtp-Source: APXvYqyjQKopZCrPLomiHMDFj6TSJhVXJMVerAdTPrlxpQ37K5/d0izNNRhU1ncoS8elL1MPDL1F8PWM2sqeBfHF8YI=
+X-Received: by 2002:ac2:5c42:: with SMTP id s2mr2195029lfp.61.1566550927617;
+ Fri, 23 Aug 2019 02:02:07 -0700 (PDT)
+MIME-Version: 1.0
+References: <20190820080527.11796-1-linus.walleij@linaro.org> <5D5FA478.6090707@hisilicon.com>
+In-Reply-To: <5D5FA478.6090707@hisilicon.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Fri, 23 Aug 2019 11:01:56 +0200
+Message-ID: <CACRpkdYKN23csn+DekZdNRN1HN8weX8SiU5W6XofvqzdAERTAQ@mail.gmail.com>
 Subject: Re: [PATCH] gpio: Fix irqchip initialization order
-To:     Linus Walleij <linus.walleij@linaro.org>,
-        <linux-gpio@vger.kernel.org>
-References: <20190820080527.11796-1-linus.walleij@linaro.org>
-CC:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+To:     Wei Xu <xuwei5@hisilicon.com>
+Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
         Thierry Reding <treding@nvidia.com>,
         Grygorii Strashko <grygorii.strashko@ti.com>,
-        "Andy Shevchenko" <andy.shevchenko@gmail.com>
-From:   Wei Xu <xuwei5@hisilicon.com>
-Message-ID: <5D5FA478.6090707@hisilicon.com>
-Date:   Fri, 23 Aug 2019 16:31:52 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:38.0) Gecko/20100101
- Thunderbird/38.2.0
-MIME-Version: 1.0
-In-Reply-To: <20190820080527.11796-1-linus.walleij@linaro.org>
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.57.101.250]
-X-CFilter-Loop: Reflected
+        Andy Shevchenko <andy.shevchenko@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Linus,
+On Fri, Aug 23, 2019 at 10:31 AM Wei Xu <xuwei5@hisilicon.com> wrote:
 
-On 2019/8/20 16:05, Linus Walleij wrote:
-> The new API for registering a gpio_irq_chip along with a
-> gpio_chip has a different semantic ordering than the old
-> API which added the irqchip explicitly after registering
-> the gpio_chip.
+> Yes, this fixes the problem and tested based on gpio/devel branch.
+> So,
 >
-> Move the calls to add the gpio_irq_chip *last* in the
-> function, so that the different hooks setting up OF and
-> ACPI and machine gpio_chips are called *before* we try
-> to register the interrupts, preserving the elder semantic
-> order.
->
-> This cropped up in the PL061 driver which used to work
-> fine with no special ACPI quirks, but started to misbehave
-> using the new API.
->
-> Fixes: e0d897289813 ("gpio: Implement tighter IRQ chip integration")
-> Cc: Thierry Reding <treding@nvidia.com>
-> Cc: Grygorii Strashko <grygorii.strashko@ti.com>
-> Cc: Wei Xu <xuwei5@hisilicon.com>
-> Cc: Andy Shevchenko <andy.shevchenko@gmail.com>
-> Reported-by: Wei Xu <xuwei5@hisilicon.com>
-> Reported-by: Andy Shevchenko <andy.shevchenko@gmail.com>
-> Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
-> ---
-> Wei: it would be great if you could test this and
-> confirm if it solves your problem, so I can apply this
-> for fixes.
+> Tested-by: Wei Xu <xuwei5@hisilicon.com>
 
-Sorry for the late reply!
-There are some issues about my mail filter.
+Awesome! Thanks a lot Wei!
+I'll get this to Torvalds tree ASAP.
 
-Yes, this fixes the problem and tested based on gpio/devel branch.
-So,
-
-Tested-by: Wei Xu <xuwei5@hisilicon.com>
-
-Thanks!
-
-The log is as below:
-
-     estuary:/$ cat /proc/interrupts
-                CPU0
-       2:       2610     GICv3  27 Level     arch_timer
-       4:         33     GICv3  33 Level     uart-pl011
-      42:          0     GICv3  23 Level     arm-pmu
-      43:          0  ARMH0061:00   3 Edge      ACPI:Event
-     IPI0:         0       Rescheduling interrupts
-     IPI1:         0       Function call interrupts
-     IPI2:         0       CPU stop interrupts
-     IPI3:         0       CPU stop (for crash dump) interrupts
-     IPI4:         0       Timer broadcast interrupts
-     IPI5:         0       IRQ work interrupts
-     IPI6:         0       CPU wake-up interrupts
-     Err:          0
-
-     estuary:/$ dmesg | more
-     [    0.000000] Booting Linux on physical CPU 0x0000000000 [0x411fd070]
-     [    0.000000] Linux version 5.3.0-rc1-00036-gbe23e9a 
-(joyx@Turing-Arch-b) (gcc version 4.9.1 20140505 (prerelease) 
-(crosstool-NG linaro-1.13.1-4.9-2014.05 - Linaro GCC 4.9-2014.05)) #64 
-SMP Fri Aug 23 16:05:08 CST 2019
-
-     commit be23e9a097e55d6733eec4336c078fda93339265
-     Author: Linus Walleij <linus.walleij@linaro.org>
-     Date:   Tue Aug 20 10:05:27 2019 +0200
-
-         gpio: Fix irqchip initialization order
-
-Best Regards,
-Wei
-
-> ---
->   drivers/gpio/gpiolib.c | 30 +++++++++++++++---------------
->   1 file changed, 15 insertions(+), 15 deletions(-)
->
-> diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
-> index 80a2a2cb673b..cca749010cd0 100644
-> --- a/drivers/gpio/gpiolib.c
-> +++ b/drivers/gpio/gpiolib.c
-> @@ -1373,21 +1373,13 @@ int gpiochip_add_data_with_key(struct gpio_chip *chip, void *data,
->   	if (status)
->   		goto err_remove_from_list;
->   
-> -	status = gpiochip_irqchip_init_valid_mask(chip);
-> -	if (status)
-> -		goto err_remove_from_list;
-> -
->   	status = gpiochip_alloc_valid_mask(chip);
->   	if (status)
-> -		goto err_remove_irqchip_mask;
-> -
-> -	status = gpiochip_add_irqchip(chip, lock_key, request_key);
-> -	if (status)
-> -		goto err_free_gpiochip_mask;
-> +		goto err_remove_from_list;
->   
->   	status = of_gpiochip_add(chip);
->   	if (status)
-> -		goto err_remove_chip;
-> +		goto err_free_gpiochip_mask;
->   
->   	status = gpiochip_init_valid_mask(chip);
->   	if (status)
-> @@ -1413,6 +1405,14 @@ int gpiochip_add_data_with_key(struct gpio_chip *chip, void *data,
->   
->   	machine_gpiochip_add(chip);
->   
-> +	status = gpiochip_irqchip_init_valid_mask(chip);
-> +	if (status)
-> +		goto err_remove_acpi_chip;
-> +
-> +	status = gpiochip_add_irqchip(chip, lock_key, request_key);
-> +	if (status)
-> +		goto err_remove_irqchip_mask;
-> +
->   	/*
->   	 * By first adding the chardev, and then adding the device,
->   	 * we get a device node entry in sysfs under
-> @@ -1424,21 +1424,21 @@ int gpiochip_add_data_with_key(struct gpio_chip *chip, void *data,
->   	if (gpiolib_initialized) {
->   		status = gpiochip_setup_dev(gdev);
->   		if (status)
-> -			goto err_remove_acpi_chip;
-> +			goto err_remove_irqchip;
->   	}
->   	return 0;
->   
-> +err_remove_irqchip:
-> +	gpiochip_irqchip_remove(chip);
-> +err_remove_irqchip_mask:
-> +	gpiochip_irqchip_free_valid_mask(chip);
->   err_remove_acpi_chip:
->   	acpi_gpiochip_remove(chip);
->   err_remove_of_chip:
->   	gpiochip_free_hogs(chip);
->   	of_gpiochip_remove(chip);
-> -err_remove_chip:
-> -	gpiochip_irqchip_remove(chip);
->   err_free_gpiochip_mask:
->   	gpiochip_free_valid_mask(chip);
-> -err_remove_irqchip_mask:
-> -	gpiochip_irqchip_free_valid_mask(chip);
->   err_remove_from_list:
->   	spin_lock_irqsave(&gpio_lock, flags);
->   	list_del(&gdev->list);
-
-
+Yours,
+Linus Walleij
