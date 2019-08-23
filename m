@@ -2,91 +2,72 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 4F42B9AC4F
-	for <lists+linux-gpio@lfdr.de>; Fri, 23 Aug 2019 12:00:43 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A90B49AC5C
+	for <lists+linux-gpio@lfdr.de>; Fri, 23 Aug 2019 12:03:12 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388393AbfHWKAk (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 23 Aug 2019 06:00:40 -0400
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:38221 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726508AbfHWKAj (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 23 Aug 2019 06:00:39 -0400
-Received: by mail-lj1-f194.google.com with SMTP id x3so8317555lji.5
-        for <linux-gpio@vger.kernel.org>; Fri, 23 Aug 2019 03:00:38 -0700 (PDT)
+        id S1730580AbfHWKDL (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 23 Aug 2019 06:03:11 -0400
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:43022 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730796AbfHWKDL (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 23 Aug 2019 06:03:11 -0400
+Received: by mail-lj1-f196.google.com with SMTP id h15so8296707ljg.10
+        for <linux-gpio@vger.kernel.org>; Fri, 23 Aug 2019 03:03:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=OYtHVFMQLzS9sJJeSyCBx/b59zqA2cgkZM6wKCYLhPI=;
-        b=I5bjDMRqbnKWh8cuXJ/GOm4BEDe5Ka7HjlyevUJasXA+1BL8QDcTRTEXHHAa4aUv5P
-         Gdot/lqksVt1ghCdyo7mL4ZDg8oT1BoRoAcikTQEEdvVTx59p920QplYZ5yQPyo5WjQN
-         2M4W6+9UyBAhsxoe/Kg7V41jsWpyUchEl40nUbvDRT0rlOs72o13XTv7Js6tC3prUS36
-         eTaE9nYa+TMFxMJslxm+EDV5Qivr9/G6sYeWePm85wGoPd3bOVRI/H6DLWYYZVYn9BjV
-         of7rAZGIS4DOArycPxIYHPNE22i0cleDWKI5W1qS5VO0m7PFZvVPyBt/3l9wZMDaHss2
-         qIEw==
+        bh=nSBz+3Ajg0zUkEHOpalFy2yQQERAUt33EX4Z6O2112Q=;
+        b=Qqbt7Hg7CVMJ++GMLAdQEdO5V9jYs6VU8k5Bb8ML6AnhICBExaR4DjFJFmQ0NzNuYg
+         sbHDg5E0qPzUgFo/PS7UqlpYU8Q7IkC3yhgkNUVXiNT7Z9oy02pGpElc7Cx617GhQ5bT
+         fdl4cZlVArIRQmvmtcE/+ktEuqhIdbU8oGRyAOaBsqRse5q6yZPnGYsjVFdMl84v9qFo
+         i3jTov1EHj3JqU1+740PmIgYO2WxvE4K6zJihYHaEm3EX7eZZzTFuJrEyoYhVYCsesu5
+         QCAUmZ5er+iYxYZj7EiDOTWvJFkXwQbA7pmT+eZy87XDQK9NC8sAyfNuMN3SXXZxfHIn
+         bNIQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=OYtHVFMQLzS9sJJeSyCBx/b59zqA2cgkZM6wKCYLhPI=;
-        b=UxnGVaow18edFo2jIFckWvsE+2T9b3ZaHqAzRhIZ5VnKFvqOEkJ626kVA6+Vy/yDsY
-         veIc7X3IbGdGTIyVgIzGWOeaYeyv14oYAHVoufaUHWUSQFbg6fi+RZclMvIxoQJSFREq
-         v0lLZRPwBoeLwt0Hh/mpW5bsxsZqEpyCWl84f02vFJwyzWZw0sU0OWonG3hqNP3nxrev
-         dSlXt5tRPMvp/fABhKKKO+7xzy0q6fTddyaSQ6yBj9tiNvHgM8k3mvS3bgKn2U4PXie7
-         dyakRBV6HjcPC74WP8SMfMZT94M53rutBpKTGJbTpeg2cM2tvwdjxbl7wRNu28O0SPxA
-         qbSg==
-X-Gm-Message-State: APjAAAX+E0X4Z/zb35gt4NxozEWmKltMUa8qE7YzQ+QWHoqQ08hsl6c+
-        HBujDN4YocxlKx1y7r2iVybg9lQFVz8XI0HxYXS8ZQ==
-X-Google-Smtp-Source: APXvYqxasa3YtuvrkVLTdP/ist4WZrp/LNp2iWxGNuSbwN7+h1+l/xw0EVq25Uqj/p5fWzGHS9WejmrxgwOgHAuN/+8=
-X-Received: by 2002:a2e:80da:: with SMTP id r26mr2301865ljg.62.1566554437819;
- Fri, 23 Aug 2019 03:00:37 -0700 (PDT)
+        bh=nSBz+3Ajg0zUkEHOpalFy2yQQERAUt33EX4Z6O2112Q=;
+        b=fP3v08BQCdAE/Ip2DG50fYoPDXRoZPMGInDaBnsvrohCPYR3SAQgwbyU+BvbyhECcc
+         A3hMsA8ynVSv4oa0nSd1u33qCwO6OqMESiRIiBAym4JNxBcFU3qCnJhpjvVapEv20bca
+         p/OS7ZlmeoRdcsW9Op6nia5wOeX2ZcvQWOF3K6wq3M4NItdpJ6hf5rZ+ZlwbLBBjAIi+
+         Gw6B56ctGqnRdV50qZy10QzwbE12HHLCGkB8rR3h2ecGmIoXy9fupd7mVh/fPS41ra04
+         1Vk5CIR8omMP3G71Wd24lmzzsS43FWqKA6WOOpxurSs5nQATfbahHVQJ2kY71SOzMant
+         aT+A==
+X-Gm-Message-State: APjAAAWiB4aBPrspR5+3LHa+Hz8+OfBQxmin4i4qt8iLvUrMBW1RO3Wp
+        zNbi0gxjAEHuN0VB67isRh/Kc+/qxFeTrS4EOubtwA==
+X-Google-Smtp-Source: APXvYqxTjn97YdwzicnGq3IvnbKXlScd2i/LCcZyVhZZvRtC+Dg4mYSvpgp9/b3MPiBed4CvWtwmVE/lJdpaeT8Pa0g=
+X-Received: by 2002:a2e:9903:: with SMTP id v3mr2446810lji.37.1566554589125;
+ Fri, 23 Aug 2019 03:03:09 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190822031817.32888-1-yuehaibing@huawei.com>
-In-Reply-To: <20190822031817.32888-1-yuehaibing@huawei.com>
+References: <20190822204538.4791-1-christophe.jaillet@wanadoo.fr>
+In-Reply-To: <20190822204538.4791-1-christophe.jaillet@wanadoo.fr>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Fri, 23 Aug 2019 12:00:26 +0200
-Message-ID: <CACRpkdapgDbkm3JjywtPv=5gYKQCCXzdabDumVukFv5Dn5pomA@mail.gmail.com>
-Subject: Re: [PATCH] gpio: Move gpiochip_lock/unlock_as_irq to gpio/driver.h
-To:     YueHaibing <yuehaibing@huawei.com>
+Date:   Fri, 23 Aug 2019 12:02:57 +0200
+Message-ID: <CACRpkdacDZTnT2myMrsPLMZYkonGbFu27nr_A1hgw1AKozMMgQ@mail.gmail.com>
+Subject: Re: [PATCH] gpio: ftgpio: Fix an error handling path in 'ftgpio_gpio_probe()'
+To:     Christophe JAILLET <christophe.jaillet@wanadoo.fr>
 Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Alexandre Courbot <acourbot@nvidia.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
+        kernel-janitors@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Aug 22, 2019 at 5:19 AM YueHaibing <yuehaibing@huawei.com> wrote:
+On Thu, Aug 22, 2019 at 10:45 PM Christophe JAILLET
+<christophe.jaillet@wanadoo.fr> wrote:
 
-> If CONFIG_GPIOLIB is not, gpiochip_lock/unlock_as_irq will
-> conflict as this:
+> If 'devm_kcalloc()' fails, we should go through the error handling path,
+> should some clean-up be needed.
 >
-> In file included from sound/soc/codecs/wm5100.c:18:0:
-> ./include/linux/gpio.h:224:19: error: static declaration of gpiochip_lock_as_irq follows non-static declaration
->  static inline int gpiochip_lock_as_irq(struct gpio_chip *chip,
->                    ^~~~~~~~~~~~~~~~~~~~
-> In file included from sound/soc/codecs/wm5100.c:17:0:
-> ./include/linux/gpio/driver.h:494:5: note: previous declaration of gpiochip_lock_as_irq was here
->  int gpiochip_lock_as_irq(struct gpio_chip *chip, unsigned int offset);
->      ^~~~~~~~~~~~~~~~~~~~
-> In file included from sound/soc/codecs/wm5100.c:18:0:
-> ./include/linux/gpio.h:231:20: error: static declaration of gpiochip_unlock_as_irq follows non-static declaration
->  static inline void gpiochip_unlock_as_irq(struct gpio_chip *chip,
->                     ^~~~~~~~~~~~~~~~~~~~~~
-> In file included from sound/soc/codecs/wm5100.c:17:0:
-> ./include/linux/gpio/driver.h:495:6: note: previous declaration of gpiochip_unlock_as_irq was here
->  void gpiochip_unlock_as_irq(struct gpio_chip *chip, unsigned int offset);
->      ^~~~~~~~~~~~~~~~~~~~~~
->
-> Move them to gpio/driver.h and use CONFIG_GPIOLIB guard this.
->
-> Reported-by: Hulk Robot <hulkci@huawei.com>
-> Fixes: d74be6dfea1b ("gpio: remove gpiod_lock/unlock_as_irq()")
-> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+> Fixes: 42d9fc7176eb ("gpio: ftgpio: Pass irqchip when adding gpiochip")
+> Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
 
-Patch applied with some fuzzing.
+Patch applied, thanks!
 
 Yours,
-Linus Walleij
+Linus Waleij
