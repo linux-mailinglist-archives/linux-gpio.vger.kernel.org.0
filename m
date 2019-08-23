@@ -2,174 +2,261 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 2E35F9B659
-	for <lists+linux-gpio@lfdr.de>; Fri, 23 Aug 2019 20:48:20 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id ED5929B660
+	for <lists+linux-gpio@lfdr.de>; Fri, 23 Aug 2019 20:50:48 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405146AbfHWSsT (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 23 Aug 2019 14:48:19 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:35062 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387927AbfHWSsT (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Fri, 23 Aug 2019 14:48:19 -0400
-Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com [209.85.128.70])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id E16B95FD40
-        for <linux-gpio@vger.kernel.org>; Fri, 23 Aug 2019 18:48:17 +0000 (UTC)
-Received: by mail-wm1-f70.google.com with SMTP id b135so3237162wmg.1
-        for <linux-gpio@vger.kernel.org>; Fri, 23 Aug 2019 11:48:17 -0700 (PDT)
+        id S2390718AbfHWSus (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 23 Aug 2019 14:50:48 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:38600 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389187AbfHWSus (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 23 Aug 2019 14:50:48 -0400
+Received: by mail-wr1-f65.google.com with SMTP id g17so9531191wrr.5
+        for <linux-gpio@vger.kernel.org>; Fri, 23 Aug 2019 11:50:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernelci-org.20150623.gappssmtp.com; s=20150623;
+        h=message-id:date:mime-version:content-transfer-encoding:subject:to
+         :from;
+        bh=edazCv1Ihv1Yeq3/IjVdTaj2fg8HngTRSD/8V8OLZwM=;
+        b=2CexI3R6xuYZK7yscSIAjdHCLYFlEonuj2t7iIEElmLC+7X9byf8YIIiOfns7U+yzk
+         g6pVMU9SRWg85idJFi8uEVMhnRHCycaCk7RS3LMe4PA/gmIlmWDwnxwC05D8tY9eCHn2
+         XP2A3jppJjIg2f+zFcPJG9Iw+ru9FOD9d5NCShMQVGwDAnbOwwtd1NGfggr8iBfXrxFU
+         CTlZAdTu6JEJi26uRjr9TTuPCWLuTkz+4l7Z0oAiaKvzIt+gBbpBEkDc3vXPSvKPEhqv
+         Waz0tNMlB6gdMdiWRo1fLoYDWeydWAXR8rV1coTsuk+/uyK/rlWxoYOQQEBo/Bt5YyAi
+         cU5w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=sGNGnqO2CgLpFM1iKS6qRwAXyoExthyJKcp7kUqVmWM=;
-        b=la2ptKkRFPnZnWTQVP/bYBIF5OjJfkd3W1z9YAXZcM3WWaOgGDvCoFRoZUMf6NhvcN
-         Yw1Aiwm0dcxYUekaTt638rebbTpKUu2uaoTmytEfy8wDC3c7snCRmx9N8ffpwrbFE0eL
-         pbTCXORDOOiCIZNGEWFlMmeTjIZ6iMAWFbDxSwP1QYA7Lt5aoDwIRTnoB5+aUIPSV3p8
-         +jCAwpDj5Wp6cw5s8ZtC/q5hOD2vHh3cLyO0Qt96oKxH+zMqLULXXzsxnMrDTUXNbT2w
-         lMOBLG9Tu9avfTuB8tZzfbmC1u7WNKhPRy1JrdkDLatGYJJSF+/GrJEoVLj5Rs76Yfoi
-         Gk/Q==
-X-Gm-Message-State: APjAAAX/cUtECH1ROrv4gNfxiclLrgz87nj3xZhpCw/dIuHfBVJprNXn
-        WLdxCY/+fJ/FBICfEonqEFNI+Z017QGBE7LXHPWB0WTgVY0io0TQ1sRGQeimwPpSXfk7INluuSn
-        8AYA3MqbvnMcR0HgpmOzqpg==
-X-Received: by 2002:adf:f90e:: with SMTP id b14mr6326225wrr.124.1566586096635;
-        Fri, 23 Aug 2019 11:48:16 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqzxyBWs5nYiTra5Je385RvMcKrClvmEsC3wJTCjjFQImHQ6mFhu1UD5pfOGNuAqAz3TDXwsTg==
-X-Received: by 2002:adf:f90e:: with SMTP id b14mr6326214wrr.124.1566586096450;
-        Fri, 23 Aug 2019 11:48:16 -0700 (PDT)
-Received: from dhcp-44-196.space.revspace.nl ([2a01:4f8:1c0c:6c86:46e0:a7ad:5246:f04d])
-        by smtp.gmail.com with ESMTPSA id m188sm7246594wmm.32.2019.08.23.11.48.15
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 23 Aug 2019 11:48:15 -0700 (PDT)
-Subject: Re: gpiolib-acpi problematic trigger of edge events during boot
-To:     Daniel Drake <drake@endlessm.com>,
-        Benjamin Tissoires <benjamin.tissoires@redhat.com>
-Cc:     Endless Linux Upstreaming Team <linux@endlessm.com>,
-        "open list:PIN CONTROL SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>
-References: <CAD8Lp47Le8CBkc3HN4_8+x6ZqR5eiwbVh+VbnfFysKgPgErptQ@mail.gmail.com>
-From:   Hans de Goede <hdegoede@redhat.com>
-Message-ID: <c122b8e8-f124-040a-aadd-8d9b58393d48@redhat.com>
-Date:   Fri, 23 Aug 2019 20:48:14 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        h=x-gm-message-state:message-id:date:mime-version
+         :content-transfer-encoding:subject:to:from;
+        bh=edazCv1Ihv1Yeq3/IjVdTaj2fg8HngTRSD/8V8OLZwM=;
+        b=PIHUqJ2M6uK1vObr3jXfxgRaG30r5SnOnB3/2qye/NnffDCVGNo+4N0cgqwSqH4CJn
+         yKBo8UmVUGpCRjvdkv5q71i39t8jlbz4YpKG0eukkSIjzIFffFkip0dr3VY5Os0GGk/h
+         DjR6346oFa86cHEFL5zcsc8oNuxXKrg4Txf1iyMes+Y5w7uH8AAxkA3MmrlkfRB7oUO8
+         IskYYvqc1CRDnHukm9QmGLMgVpRP/MGCuNO3vk9OpyBjCAhLbtA2YSlD6aB6yCQ2nqfc
+         PlfkQRgY8BkLD4bqRYQz+mNhJWP4BRFbt4kDNgipwiOcSSseRXU2dbFg+COXX+GQU+9H
+         BI/A==
+X-Gm-Message-State: APjAAAWuDECDQOIhmuWcfBVbgduXTjL+kkT9zKkQz/7kOPIsJGEZjudQ
+        wiEksYShY5y92kfMs+xLZ6Stg74h3fxi3A==
+X-Google-Smtp-Source: APXvYqwJoUuTGj0HEVVNESpY/CXMPGFf9oHcsqWEEZqLWakLieDPuq0maZQputtxqKfIqo3Tad0Z5A==
+X-Received: by 2002:a5d:4f91:: with SMTP id d17mr6925455wru.74.1566586244929;
+        Fri, 23 Aug 2019 11:50:44 -0700 (PDT)
+Received: from [148.251.42.114] ([2a01:4f8:201:9271::2])
+        by smtp.gmail.com with ESMTPSA id r15sm2915608wrj.68.2019.08.23.11.50.44
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 23 Aug 2019 11:50:44 -0700 (PDT)
+Message-ID: <5d603584.1c69fb81.ab6c4.c6cb@mx.google.com>
+Date:   Fri, 23 Aug 2019 11:50:44 -0700 (PDT)
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-In-Reply-To: <CAD8Lp47Le8CBkc3HN4_8+x6ZqR5eiwbVh+VbnfFysKgPgErptQ@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: quoted-printable
+X-Kernelci-Kernel: v5.3-rc4-4-g48057ed1840f
+X-Kernelci-Tree: linusw
+X-Kernelci-Report-Type: build
+X-Kernelci-Branch: fixes
+Subject: linusw/fixes build: 6 builds: 0 failed, 6 passed,
+ 34 warnings (v5.3-rc4-4-g48057ed1840f)
+To:     linux-gpio@vger.kernel.org, fellows@kernelci.org
+From:   "kernelci.org bot" <bot@kernelci.org>
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Daniel,
+linusw/fixes build: 6 builds: 0 failed, 6 passed, 34 warnings (v5.3-rc4-4-g=
+48057ed1840f)
 
-On 8/23/19 4:59 AM, Daniel Drake wrote:
-> Hi,
-> 
-> acpi_gpiochip_request_irq() has this code:
-> 
->      /* Make sure we trigger the initial state of edge-triggered IRQs */
->      value = gpiod_get_raw_value_cansleep(event->desc);
->      if (((event->irqflags & IRQF_TRIGGER_RISING) && value == 1) ||
->          ((event->irqflags & IRQF_TRIGGER_FALLING) && value == 0))
->          event->handler(event->irq, event);
-> 
-> Originally introduced in:
-> commit ca876c7483b697b498868b1f575997191b077885
-> Author: Benjamin Tissoires <benjamin.tissoires@redhat.com>
-> Date:   Thu Jul 12 17:25:06 2018 +0200
-> 
->      gpiolib-acpi: make sure we trigger edge events at least once on boot
-> 
-> This code is causing a problem on a new consumer laptop, which is
-> based on the new ACPI reduced hardware standard. Under this design,
-> the power button is now just an ordinary GPIO that should be handled
-> by software: ACPI's _AEI method lists this GPIO as one that the OS
-> should monitor for changes, and the OS is expected to call the
-> corresponding _EVT method when that happens, which will in turn raise
-> a Notify event on the power button device.
-> 
-> Here, the GpioInt defined in _AEI is Edge-triggered, ActiveHigh. The
-> GPIO level is ordinarily high, but goes low when the button is
-> pressed. We checked this definition and behaviour with the vendor,
-> even suggesting that it should maybe be ActiveLow instead, but they
-> responded that this is correct and by-design.
-> 
-> These conditions set the IRQF_TRIGGER_RISING flag and cause the _EVT
-> event handler to be called by the code above as soon as the pinctrl
-> module is loaded. In other words, loading the pinctrl driver causes
-> the system to incorrectly believe the power button has been pressed so
-> it will immediately go into suspend or shutdown.
-> 
-> Fortunately this is perhaps not a serious issue, as at least Ubuntu
-> and Endless build the corresponding pinctrl drivers directly into the
-> kernel image. They are then loaded in early boot, and despite a power
-> button event being reported, it's so early that userspace doesn't
-> notice and no action is taken.
-> 
-> But I raise this anyway as a potential problem should that ever
-> change, it may also become a more widespead issue as the ACPI reduced
-> hardware standard becomes more and more common in consumer devices.
-> 
-> Any ideas for how we can better deal with this issue?
-> 
-> I can see the rationale for handling the specific cases mentioned in
-> the original commit message, but at the same time this code seems to
-> be assuming that an edge transition has happened, which is not true in
-> this case.
+Full Build Summary: https://kernelci.org/build/linusw/branch/fixes/kernel/v=
+5.3-rc4-4-g48057ed1840f/
 
-The code does not as much assume that an edge has happened as well
-that calling the handler unnecessarily is safely to do, IOW that
-it only sets state which may have already been set to the same
-state, without any side-effects.
+Tree: linusw
+Branch: fixes
+Git Describe: v5.3-rc4-4-g48057ed1840f
+Git Commit: 48057ed1840fde9239b1e000bea1a0a1f07c5e99
+Git URL: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-gpio.=
+git/
+Built: 6 unique architectures
 
-In your power-button example this clearly is not true.
+Warnings Detected:
 
-I picked up Benjamin's patch (which he wrote for the surface 3)
-because I have been seeing the second issue (micro-usb-b ports
-not working on device mode unless first forced to host mode)
-and quite a few different Cherry Trail devices.
+arc:
+    nsim_hs_defconfig (gcc-8): 5 warnings
 
-Yesterday and today I have actually been working on an issue
-where the root cause is also this issue. The case I'm working on
-is the HDMI output of the Minix Neo Z83-4 Mini PC not working.
+arm64:
+    defconfig (gcc-8): 5 warnings
 
-The problem is the DSDT for this Cherry Trail device has been copy
-and pasted from a tablet and thus has the host/device role switch code
-(even though the Mini PC has no micro USB connector at all).
-For some reason the _AEI handler for this is also bit-banging the DDC
-data pin of the HDMI connector, flipping it from its DDC special function
-into GPIO mode, breaking DDC on the HDMI connector.
+arm:
+    multi_v7_defconfig (gcc-8): 21 warnings
 
-As mentioned in another mail-thread my plan to fix this is:
+mips:
+    32r2el_defconfig (gcc-8): 3 warnings
 
-1) Add a gpiolib_acpi_run_edge_events_on_startup kernel parameter which
-controls this behavior
+riscv:
 
-2) Make this default paramter to auto which uses a DMI blacklist
-
-But I have the feeling that $otherOS (aka Windows) does not do this
-and that if we hit more cases we may need to completely stop doing
-this or switch to a whitelist. Although the whitelist for the micro-usb
-role-sw thingie is going to be huge (Windows does not do device mode so
-it does not care).
-
-Anyways for now I think a blacklist is a good approach we can
-re-evaluate if it grows too much.
-
-Daniel, I will Cc you on the patch adding the blacklist, if you
-want you can add the laptop you are seeing this on to the list, although
-as you mentioned ATM this does not seem to be a real problem on that
-laptop, so I'm not 100% sure if we should add it to the blacklist.
-
-Regards,
-
-Hans
+x86_64:
 
 
+Warnings summary:
 
+    5    <stdin>:1511:2: warning: #warning syscall clone3 not implemented [=
+-Wcpp]
+    2    drivers/pinctrl/qcom/pinctrl-spmi-gpio.c:820:20: warning: this sta=
+tement may fall through [-Wimplicit-fallthrough=3D]
+    2    drivers/pinctrl/qcom/pinctrl-spmi-gpio.c:815:20: warning: this sta=
+tement may fall through [-Wimplicit-fallthrough=3D]
+    2    drivers/pinctrl/pinctrl-rockchip.c:2783:3: warning: this statement=
+ may fall through [-Wimplicit-fallthrough=3D]
+    2    drivers/gpu/drm/sun4i/sun4i_tcon.c:316:7: warning: this statement =
+may fall through [-Wimplicit-fallthrough=3D]
+    1    include/linux/compiler.h:328:5: warning: this statement may fall t=
+hrough [-Wimplicit-fallthrough=3D]
+    1    drivers/video/fbdev/sh_mobile_lcdcfb.c:2086:22: warning: this stat=
+ement may fall through [-Wimplicit-fallthrough=3D]
+    1    drivers/video/fbdev/sh_mobile_lcdcfb.c:1596:22: warning: this stat=
+ement may fall through [-Wimplicit-fallthrough=3D]
+    1    drivers/usb/phy/phy-ab8500-usb.c:459:9: warning: this statement ma=
+y fall through [-Wimplicit-fallthrough=3D]
+    1    drivers/usb/phy/phy-ab8500-usb.c:440:9: warning: this statement ma=
+y fall through [-Wimplicit-fallthrough=3D]
+    1    drivers/usb/phy/phy-ab8500-usb.c:424:9: warning: this statement ma=
+y fall through [-Wimplicit-fallthrough=3D]
+    1    drivers/usb/phy/phy-ab8500-usb.c:370:9: warning: this statement ma=
+y fall through [-Wimplicit-fallthrough=3D]
+    1    drivers/usb/phy/phy-ab8500-usb.c:352:9: warning: this statement ma=
+y fall through [-Wimplicit-fallthrough=3D]
+    1    drivers/usb/phy/phy-ab8500-usb.c:332:9: warning: this statement ma=
+y fall through [-Wimplicit-fallthrough=3D]
+    1    drivers/mmc/host/sdhci-s3c.c:613:19: warning: this statement may f=
+all through [-Wimplicit-fallthrough=3D]
+    1    drivers/mmc/host/atmel-mci.c:2426:40: warning: this statement may =
+fall through [-Wimplicit-fallthrough=3D]
+    1    drivers/mmc/host/atmel-mci.c:2422:28: warning: this statement may =
+fall through [-Wimplicit-fallthrough=3D]
+    1    drivers/mmc/host/atmel-mci.c:2415:30: warning: this statement may =
+fall through [-Wimplicit-fallthrough=3D]
+    1    drivers/iommu/arm-smmu-v3.c:1189:7: warning: this statement may fa=
+ll through [-Wimplicit-fallthrough=3D]
+    1    drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c:992:6: warning: this statem=
+ent may fall through [-Wimplicit-fallthrough=3D]
+    1    drivers/gpu/drm/sti/sti_hdmi.c:855:13: warning: this statement may=
+ fall through [-Wimplicit-fallthrough=3D]
+    1    drivers/gpu/drm/sti/sti_hdmi.c:853:13: warning: this statement may=
+ fall through [-Wimplicit-fallthrough=3D]
+    1    drivers/gpu/drm/sti/sti_hdmi.c:851:13: warning: this statement may=
+ fall through [-Wimplicit-fallthrough=3D]
+    1    drivers/dma/imx-dma.c:542:6: warning: this statement may fall thro=
+ugh [-Wimplicit-fallthrough=3D]
+    1    arch/arc/kernel/unwind.c:836:20: warning: this statement may fall =
+through [-Wimplicit-fallthrough=3D]
+    1    arch/arc/kernel/unwind.c:827:20: warning: this statement may fall =
+through [-Wimplicit-fallthrough=3D]
 
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D
 
+Detailed per-defconfig build reports:
+
+---------------------------------------------------------------------------=
+-----
+32r2el_defconfig (mips, gcc-8) =E2=80=94 PASS, 0 errors, 3 warnings, 0 sect=
+ion mismatches
+
+Warnings:
+    <stdin>:1511:2: warning: #warning syscall clone3 not implemented [-Wcpp]
+    <stdin>:1511:2: warning: #warning syscall clone3 not implemented [-Wcpp]
+    <stdin>:1511:2: warning: #warning syscall clone3 not implemented [-Wcpp]
+
+---------------------------------------------------------------------------=
+-----
+defconfig (riscv, gcc-8) =E2=80=94 PASS, 0 errors, 0 warnings, 0 section mi=
+smatches
+
+---------------------------------------------------------------------------=
+-----
+defconfig (arm64, gcc-8) =E2=80=94 PASS, 0 errors, 5 warnings, 0 section mi=
+smatches
+
+Warnings:
+    drivers/iommu/arm-smmu-v3.c:1189:7: warning: this statement may fall th=
+rough [-Wimplicit-fallthrough=3D]
+    drivers/pinctrl/qcom/pinctrl-spmi-gpio.c:815:20: warning: this statemen=
+t may fall through [-Wimplicit-fallthrough=3D]
+    drivers/pinctrl/qcom/pinctrl-spmi-gpio.c:820:20: warning: this statemen=
+t may fall through [-Wimplicit-fallthrough=3D]
+    drivers/pinctrl/pinctrl-rockchip.c:2783:3: warning: this statement may =
+fall through [-Wimplicit-fallthrough=3D]
+    drivers/gpu/drm/sun4i/sun4i_tcon.c:316:7: warning: this statement may f=
+all through [-Wimplicit-fallthrough=3D]
+
+---------------------------------------------------------------------------=
+-----
+multi_v7_defconfig (arm, gcc-8) =E2=80=94 PASS, 0 errors, 21 warnings, 0 se=
+ction mismatches
+
+Warnings:
+    drivers/dma/imx-dma.c:542:6: warning: this statement may fall through [=
+-Wimplicit-fallthrough=3D]
+    drivers/mmc/host/sdhci-s3c.c:613:19: warning: this statement may fall t=
+hrough [-Wimplicit-fallthrough=3D]
+    drivers/mmc/host/atmel-mci.c:2415:30: warning: this statement may fall =
+through [-Wimplicit-fallthrough=3D]
+    drivers/mmc/host/atmel-mci.c:2422:28: warning: this statement may fall =
+through [-Wimplicit-fallthrough=3D]
+    drivers/mmc/host/atmel-mci.c:2426:40: warning: this statement may fall =
+through [-Wimplicit-fallthrough=3D]
+    drivers/pinctrl/qcom/pinctrl-spmi-gpio.c:815:20: warning: this statemen=
+t may fall through [-Wimplicit-fallthrough=3D]
+    drivers/pinctrl/qcom/pinctrl-spmi-gpio.c:820:20: warning: this statemen=
+t may fall through [-Wimplicit-fallthrough=3D]
+    drivers/pinctrl/pinctrl-rockchip.c:2783:3: warning: this statement may =
+fall through [-Wimplicit-fallthrough=3D]
+    drivers/video/fbdev/sh_mobile_lcdcfb.c:2086:22: warning: this statement=
+ may fall through [-Wimplicit-fallthrough=3D]
+    drivers/video/fbdev/sh_mobile_lcdcfb.c:1596:22: warning: this statement=
+ may fall through [-Wimplicit-fallthrough=3D]
+    drivers/usb/phy/phy-ab8500-usb.c:424:9: warning: this statement may fal=
+l through [-Wimplicit-fallthrough=3D]
+    drivers/usb/phy/phy-ab8500-usb.c:440:9: warning: this statement may fal=
+l through [-Wimplicit-fallthrough=3D]
+    drivers/usb/phy/phy-ab8500-usb.c:459:9: warning: this statement may fal=
+l through [-Wimplicit-fallthrough=3D]
+    drivers/usb/phy/phy-ab8500-usb.c:332:9: warning: this statement may fal=
+l through [-Wimplicit-fallthrough=3D]
+    drivers/usb/phy/phy-ab8500-usb.c:352:9: warning: this statement may fal=
+l through [-Wimplicit-fallthrough=3D]
+    drivers/usb/phy/phy-ab8500-usb.c:370:9: warning: this statement may fal=
+l through [-Wimplicit-fallthrough=3D]
+    drivers/gpu/drm/sti/sti_hdmi.c:851:13: warning: this statement may fall=
+ through [-Wimplicit-fallthrough=3D]
+    drivers/gpu/drm/sti/sti_hdmi.c:853:13: warning: this statement may fall=
+ through [-Wimplicit-fallthrough=3D]
+    drivers/gpu/drm/sti/sti_hdmi.c:855:13: warning: this statement may fall=
+ through [-Wimplicit-fallthrough=3D]
+    drivers/gpu/drm/sun4i/sun4i_tcon.c:316:7: warning: this statement may f=
+all through [-Wimplicit-fallthrough=3D]
+    drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c:992:6: warning: this statement m=
+ay fall through [-Wimplicit-fallthrough=3D]
+
+---------------------------------------------------------------------------=
+-----
+nsim_hs_defconfig (arc, gcc-8) =E2=80=94 PASS, 0 errors, 5 warnings, 0 sect=
+ion mismatches
+
+Warnings:
+    <stdin>:1511:2: warning: #warning syscall clone3 not implemented [-Wcpp]
+    include/linux/compiler.h:328:5: warning: this statement may fall throug=
+h [-Wimplicit-fallthrough=3D]
+    arch/arc/kernel/unwind.c:827:20: warning: this statement may fall throu=
+gh [-Wimplicit-fallthrough=3D]
+    arch/arc/kernel/unwind.c:836:20: warning: this statement may fall throu=
+gh [-Wimplicit-fallthrough=3D]
+    <stdin>:1511:2: warning: #warning syscall clone3 not implemented [-Wcpp]
+
+---------------------------------------------------------------------------=
+-----
+x86_64_defconfig (x86_64, gcc-8) =E2=80=94 PASS, 0 errors, 0 warnings, 0 se=
+ction mismatches
+
+---
+For more info write to <info@kernelci.org>
