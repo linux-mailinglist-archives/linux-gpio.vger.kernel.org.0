@@ -2,87 +2,133 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 43C5F9A9A9
-	for <lists+linux-gpio@lfdr.de>; Fri, 23 Aug 2019 10:08:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 18DC29AA42
+	for <lists+linux-gpio@lfdr.de>; Fri, 23 Aug 2019 10:27:12 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387725AbfHWIH1 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 23 Aug 2019 04:07:27 -0400
-Received: from mout.kundenserver.de ([217.72.192.74]:38351 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731543AbfHWIH0 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 23 Aug 2019 04:07:26 -0400
-Received: from [192.168.178.51] ([109.104.55.215]) by mrelayeu.kundenserver.de
- (mreue106 [212.227.15.183]) with ESMTPSA (Nemesis) id
- 1MIcux-1i46zY2yQ9-00Ecz4; Fri, 23 Aug 2019 10:07:17 +0200
-Subject: Re: [PATCH] pinctrl: bcm2835: Pass irqchip when adding gpiochip
-To:     Linus Walleij <linus.walleij@linaro.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Eric Anholt <eric@anholt.net>
-Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Thierry Reding <treding@nvidia.com>
-References: <20190812062729.1892-1-linus.walleij@linaro.org>
- <CACRpkdbBaiVQ+BUNZEYNv6dGZjAbS=eA54dLTQ99Ngvbk7YQ9Q@mail.gmail.com>
-From:   Stefan Wahren <stefan.wahren@i2se.com>
-Message-ID: <a82230ae-4f3a-2600-0bea-85c432c56d05@i2se.com>
-Date:   Fri, 23 Aug 2019 10:07:16 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        id S2390152AbfHWIZH (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 23 Aug 2019 04:25:07 -0400
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:33859 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388301AbfHWIZH (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 23 Aug 2019 04:25:07 -0400
+Received: by mail-lj1-f195.google.com with SMTP id x18so8107062ljh.1
+        for <linux-gpio@vger.kernel.org>; Fri, 23 Aug 2019 01:25:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=/Glz0OwhvEKOoAb5oRJJvTSgEA9gKmwWwKievNCcJKQ=;
+        b=uZUjKOsE5/jPMneL47DnFGmzeeLAbZCzHyf6MvJo8nU7wGnh+jouYUqCLIVqYMe5JK
+         kW8iW2I59/2pVhtoCXEFyEMJqA7TVACmba4co2d2ncSiSxH0YCITDPt38CkGH3c/a4DA
+         bgZtU9G6kryKdaKj/wqLYGOBsvGxWO5gzh5Eh0nKdzBMbGKE5qXRbQntrOneSmnzm6SC
+         kE3+TVqmFKc/HO6g8S51spAGAhPNA9N4GlK05uBmXOHHzPGl2HPBd/lve+MgzO4AEM80
+         HUDc7hbrrOEhRnT7k+cjAt8iBYaVMvCbJAE6WPXGHxyn+DF/adcGp0K55CmQHUIi1CsK
+         Q/AA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=/Glz0OwhvEKOoAb5oRJJvTSgEA9gKmwWwKievNCcJKQ=;
+        b=Q5H/UApZLmI9l97smNWIKzabvb9sveijQq/+LkHQxukGOEchy2qtlNFWPnLTaPcH/5
+         er7AI0R8yGEjIcEZit6jVON1LnCv4nGpZp2o3cSfMoj4tqqTKiz2PE163DFt/n86Xhn3
+         0YjuTr7p8JqW/qa+oNONIzEihaMxzpweLxaYhfnIwjocaAw0CrAFnOBd8E2tmWQQ7Xzg
+         QByi3DHsH/lHN4aSaJPC65xTdAfz4HqYVMjlGTmxdk88WQkOb5zvjmQy+mY5juGWAlBe
+         AOQUZeks/43H5ZvOugIsbd57x8Vbo+fsGmeoCUVIBFqgC4OTUP22/4xaAply2skKaAKx
+         GTyQ==
+X-Gm-Message-State: APjAAAWtcbO5EFJGplldrylnykHCoE2joohkahTL+ulFbag8X5MQiNRG
+        w7kP9l0/xeukx5Vql0nglM/LXbNCAnT8Md+UqUD0sA==
+X-Google-Smtp-Source: APXvYqwuwG4xNuZjZkxSBKeWiQIyN29Ihec9ptvxODHGofHpDvPXgBtv28RnrJqmnSCq61BDiNLYZg0OQ+SbT72IHLo=
+X-Received: by 2002:a2e:781a:: with SMTP id t26mr2161179ljc.28.1566548705194;
+ Fri, 23 Aug 2019 01:25:05 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <CACRpkdbBaiVQ+BUNZEYNv6dGZjAbS=eA54dLTQ99Ngvbk7YQ9Q@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Provags-ID: V03:K1:IlhfUP/v0cOGMC6DwMmISufd6A6l/OuO/ButIksOAjQsEglQqeN
- nzBEwmq8q78WE0GLWfvC5hoIrnvKGRiACT3k8XQqOp6U9lZK9dAkjIMSig8uXdnxWOj8BgX
- nrDPqJX+rZDIMFcV5EHIMhGwZSgFZHS1ihahG6ZfiKHN+iO3RnY1ymzTIOC2aPxJSgXCz9v
- twcUQJBhn88VXy+5q/3oA==
-X-Spam-Flag: NO
-X-UI-Out-Filterresults: notjunk:1;V03:K0:/QTGmZmkJyM=:/P+4LPBrpHIVA0h6Np+dMo
- QYOmt7mtJtATb3rAw1A8QsWS6EWpNU6V4H2uYkOngp4b+B4kHZAl4tVbmLVIzSfQLhXxgLkaZ
- 5mqpAwNoBKcmZFv64BlGFOq8FszMphL2YMv2OCkFnKym1TP3gxCkaVBqVbMCSQU00DQ+Jrwsu
- CEojpIZ9W3Tfkbi2dBxmau0Fu5KZgehEcoqTAQBdgTFpEykaEHz80NOjzpkwhTfktGhRAXbZm
- 6xTs6WVmEXJtHBnkWdQlBf7GCXQNKAGFlSrfMIYMadtyprLdTk6ywOgCpuWuiGcqglyKIrtOa
- yWF1zGJMewLCjcSUvdR4EL290cHwNNM+rjYxnS64wKKYpGNtJr0x7+nZO6aN5+aUMUzZVu6pY
- 8DbLQgBf7LsB1yAPR00/pxeudAw+ACMlXXt84tmTs7mdVgK67hmtlo2run+tO14iNZA69wVlC
- OmdyctHAWBXxFQgHg2oy6Uy+mL8VVT3zymzXOqYa7GQ3z0qJxUtYtSWLkA9VOpVbA+FAREeVB
- 0FvAWxWw8v0szKKTpbTfIC53cT2ygpxAE/MIxoAjTtFr6p5xQtX8/Fz3ucVQ3elTeTc8z3BDm
- +5qUpF3olyCUv5HI2fQ+9DyOgc0GWCQ9aK98sxx9/0forPC8MRSt29j3D22eZdepB3GOcBCPz
- 5CjvVRTsNlIfUNRtjCYCP5r80jZLJymCq2Lb6FFs9I5HIh9GKsGuOdJJHO9SELb/PU4Ks31ND
- RRiAbhQC0S5jXSdt7O6XNYnsS/oBxr7aF5PiZCkAX5vZ1GcWA2D8JoUlTM4=
+References: <20190808123242.5359-1-linus.walleij@linaro.org> <20190816011054.GA1041@onstation.org>
+In-Reply-To: <20190816011054.GA1041@onstation.org>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Fri, 23 Aug 2019 10:24:53 +0200
+Message-ID: <CACRpkdbZSJ4ggprUXaBJ07Hz=eryuy5=AmYOigTUmO9z4yahfQ@mail.gmail.com>
+Subject: Re: [PATCH 1/6 v2] gpio: Add support for hierarchical IRQ domains
+To:     Brian Masney <masneyb@onstation.org>,
+        Marc Zyngier <marc.zyngier@arm.com>
+Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Lina Iyer <ilina@codeaurora.org>,
+        Jon Hunter <jonathanh@nvidia.com>,
+        Sowjanya Komatineni <skomatineni@nvidia.com>,
+        Bitan Biswas <bbiswas@nvidia.com>, linux-tegra@vger.kernel.org,
+        David Daney <david.daney@cavium.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Thierry Reding <treding@nvidia.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Linus,
+Hi Brian,
 
-[removed Simon from CC to stop annoy him]
+I tried to look into this ssbi-gpio problem...
 
-On 23.08.19 09:46, Linus Walleij wrote:
-> On Mon, Aug 12, 2019 at 8:29 AM Linus Walleij <linus.walleij@linaro.org> wrote:
+Paging in Marc Z as well.
+
+On Fri, Aug 16, 2019 at 3:10 AM Brian Masney <masneyb@onstation.org> wrote:
+
+> I started to convert ssbi-gpio over to this and pm8xxx_gpio_to_irq() has
+> this little snippet that's different from spmi-gpio:
 >
->> We need to convert all old gpio irqchips to pass the irqchip
->> setup along when adding the gpio_chip. For more info see
->> drivers/gpio/TODO.
->>
->> For chained irqchips this is a pretty straight-forward
->> conversion. The BCM2835 has multiple parents so let's
->> exploit the new facility in the GPIO_IRQCHIP to actually
->> deal with multiple parents.
->>
->> Cc: Simon Arlott <simon@arlott.org>
->> Cc: Eric Anholt <eric@anholt.net>
->> Cc: Stefan Wahren <stefan.wahren@i2se.com>
->> Cc: Thierry Reding <treding@nvidia.com>
->> Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
-> This patch is a bit scary because I haven't tried converting multiple
-> parents before. Any chance one of you RPi people could give it
-> a test run, so you don't have to experience testing it in linux-next?
-
-it's on my TODO list, but i didn't had the time to test it yet.
-
-Can you give me some test ideas?
-
+>         [ fwspec mapping code ]
 >
-> Yours,
-> Linus Walleij
+>         /*
+>          * Cache the IRQ since pm8xxx_gpio_get() needs this to get determine the
+>          * line level.
+>          */
+>         pin->irq = ret;
+>
+> Here's the relevant code in pm8xxx_gpio_get():
+>
+>         if (pin->mode == PM8XXX_GPIO_MODE_OUTPUT) {
+>                 ret = pin->output_value;
+>         } else if (pin->irq >= 0) {
+>                 ret = irq_get_irqchip_state(pin->irq, IRQCHIP_STATE_LINE_LEVEL, &state);
+>                 ...
+>         }
+
+It's a bit annoying that this API (irq_get_irqchip_state()) is relying on
+the global irq numbers and the internal function using irqdesc
+__irq_get_irqchip_state() is not exported.
+
+We should be encouraged to operate on IRQ descriptors rather
+than IRQ numbers when doing this kind of deep core work,
+right?
+
+> What do you think about using EXPORT_SYMBOL_GPL() for gpiochip_to_irq() so
+> that we can call it in pm8xxx_gpio_to_irq()?
+
+I would like to avoid that because people tend to abuse every
+API I expose (leasson learnt: APIs shall be narrow and deep).
+
+> Or do you have any other
+> suggestions for how we can get rid of that IRQ cache?
+
+So the issue is that moving this to the hierarchical helpers
+rids pm8xxx_gpio_to_irq() and we needed that to map this.
+
+I would rather just add a new driver API to wrap the irqchip
+API:
+
+ret = gpiochip_get_irq_state(offset, IRQCHIP_STATE_LINE_LEVEL, &state);
+
+Where int gpiochip_get_own_irq_state(int offset, ...) will figure
+out the gpio_desc of the offset and then call gpiod_to_irq()
+and then use that irq number to call irq_get_irqchip_state()
+and the goal is met.
+
+This should work I think, and expose a more precise
+API for what this driver wants.
+
+> I don't see any other issues for ssbi-gpio.
+
+That's good news!
+
+Yours,
+Linus Walleij
