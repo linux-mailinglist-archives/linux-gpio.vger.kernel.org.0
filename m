@@ -2,163 +2,79 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id C9FDD9A7E2
-	for <lists+linux-gpio@lfdr.de>; Fri, 23 Aug 2019 08:56:23 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 377D39A845
+	for <lists+linux-gpio@lfdr.de>; Fri, 23 Aug 2019 09:10:34 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404280AbfHWG4W (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 23 Aug 2019 02:56:22 -0400
-Received: from mx.0dd.nl ([5.2.79.48]:60210 "EHLO mx.0dd.nl"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404303AbfHWG4T (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Fri, 23 Aug 2019 02:56:19 -0400
-Received: from mail.vdorst.com (mail.vdorst.com [IPv6:fd01::250])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mx.0dd.nl (Postfix) with ESMTPS id 09BD25FA7D;
-        Fri, 23 Aug 2019 08:56:17 +0200 (CEST)
-Authentication-Results: mx.0dd.nl;
-        dkim=pass (2048-bit key; secure) header.d=vdorst.com header.i=@vdorst.com header.b="sxuCZ7G5";
-        dkim-atps=neutral
-Received: from www (www.vdorst.com [192.168.2.222])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.vdorst.com (Postfix) with ESMTPSA id C203C1D87AB0;
-        Fri, 23 Aug 2019 08:56:16 +0200 (CEST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.vdorst.com C203C1D87AB0
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=vdorst.com;
-        s=default; t=1566543376;
-        bh=i4izGsTFHI2qX0ITiH13V1P8hsBkqEM6ULePLcob3HU=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=sxuCZ7G5Z00EIVrnXzMNlY0x97YL+coDxnx7g6Tht0ff+Zxud2A+4EuLndnoVMVO/
-         5kKeoHXLhS4r2Csy31p4igrqPEzm/KH0OcMMS2Wo09TLhI9Ru6d1DZHMdTaKPxyc8j
-         EkBvqEE/bbu8YxqBVeVvDEvBZIhN05B430gOAGyYiCIKXY2OTIHyUDrC/O7qqr32UX
-         BaaUu6+bzC1rTC6axKFsSiiWDFttCrQpEI166Wr9ZdT8LYJyQAFZXgt+BeZ0mxd6Tn
-         Q2GpwXdw6Eme3L3IEbLjMZ6RRindiznJBFECUxp/S0FAyP4GkaR3TBcZvejU9lJLAb
-         cuRbz9FRxJfIg==
-Received: from localhost.localdomain (localhost.localdomain [127.0.0.1]) by
- www.vdorst.com (Horde Framework) with HTTPS; Fri, 23 Aug 2019 06:56:16 +0000
-Date:   Fri, 23 Aug 2019 06:56:16 +0000
-Message-ID: <20190823065616.Horde.zxW8UlkPwcaP5PP9T86uVGn@www.vdorst.com>
-From:   =?utf-8?b?UmVuw6k=?= van Dorst <opensource@vdorst.com>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     linux-gpio@vger.kernel.org,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Greg Ungerer <gerg@kernel.org>,
-        Nicholas Mc Guire <hofrat@osadl.org>,
-        Sergio Paracuellos <sergio.paracuellos@gmail.com>,
-        Thierry Reding <treding@nvidia.com>
-Subject: Re: [PATCH] gpio: mt7621: Pass irqchip when adding gpiochip
-In-Reply-To: <20190809141116.16403-1-linus.walleij@linaro.org>
-User-Agent: Horde Application Framework 5
-Content-Type: text/plain; charset=utf-8; format=flowed; DelSp=Yes
+        id S2388050AbfHWHKd (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 23 Aug 2019 03:10:33 -0400
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:35154 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728332AbfHWHKc (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 23 Aug 2019 03:10:32 -0400
+Received: by mail-ot1-f66.google.com with SMTP id g17so7902990otl.2;
+        Fri, 23 Aug 2019 00:10:32 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Hi8bbXcICEO2TpR7O70QBFyTd6RMwjMbhWJM+LT8Vvs=;
+        b=MwJhr+G8piWUGwi7no80/ZysGrpFYx+nvcXcBK0y4tSSW9p+7aBy8gy8ycs+fK6WdQ
+         SSvfTQNZk64FwEGNzyKXEOCBe+K+pwVeiJK1r2tA4I4PG0mzMBwPDjGYHWcvU/y77x1F
+         ndhgx4xpy9FFndz7zUYpwHoethTw5nH6qMSlgLTe72hLi++Iziwkv8FLtLFyfh9G0lsb
+         0LCuddcL3+HJvlphTbd2LqHmoZJtNgKRFGbj1ZIEKlDvgjz3pO3067dfEWqaL3EzbjRA
+         5G5LshgcGHEIjykrmn18zgb7zCFqrhKWYrN+i21iLn3oOokC5X7EANLP9p0WsPwJuzyt
+         E4Bg==
+X-Gm-Message-State: APjAAAWshRLIJ9dkZErImipJtR2F+WCX90Qh7bN/1YnVUSJgjHATXOQs
+        g75hfSfuqaxIbGU7M0zIMxFL7dV3lgTB0AuC5FIe8Q8I
+X-Google-Smtp-Source: APXvYqy7c1bLUI9/qrRuVFIkGb9UpfzKw28D7K0z5R4pUgYbJwDHtZwlX1QCZ6WaVVAG93+1KoTDErCN1vuiZc0ouX4=
+X-Received: by 2002:a9d:5c0c:: with SMTP id o12mr2881542otk.145.1566544231794;
+ Fri, 23 Aug 2019 00:10:31 -0700 (PDT)
 MIME-Version: 1.0
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
+References: <1565245143-15018-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+ <1565245143-15018-4-git-send-email-yoshihiro.shimoda.uh@renesas.com> <CAMuHMdW32TRw3Awf-5C2eJiZ1iys-vK7YihFwqPxOP66Eh9+Lg@mail.gmail.com>
+In-Reply-To: <CAMuHMdW32TRw3Awf-5C2eJiZ1iys-vK7YihFwqPxOP66Eh9+Lg@mail.gmail.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Fri, 23 Aug 2019 09:10:20 +0200
+Message-ID: <CAMuHMdVhK9UPEH9VHC7kSeYPORdW3DFeLi2druoEzAjm5zA4+g@mail.gmail.com>
+Subject: Re: [PATCH v2 3/3] pinctrl: sh-pfc: Rollback to mux if requires when
+ the gpio is freed
+To:     Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Linus,
-
-Sorry for the late reply.
-
-Quoting Linus Walleij <linus.walleij@linaro.org>:
-
-> We need to convert all old gpio irqchips to pass the irqchip
-> setup along when adding the gpio_chip. For more info see
-> drivers/gpio/TODO.
+On Thu, Aug 8, 2019 at 10:29 AM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
+> On Thu, Aug 8, 2019 at 8:20 AM Yoshihiro Shimoda
+> <yoshihiro.shimoda.uh@renesas.com> wrote:
+> > R-Car PWM controller requires the gpio to output zero duty,
+> > this patch allows to roll it back from gpio to mux when the gpio
+> > is freed.
+> >
+> > Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
 >
-> For chained irqchips this is a pretty straight-forward
-> conversion.
->
-> This driver requests the IRQ directly in the driver so it
-> differs a bit from the others.
->
-> Cc: René van Dorst <opensource@vdorst.com>
-> Cc: Greg Ungerer <gerg@kernel.org>
-> Cc: Nicholas Mc Guire <hofrat@osadl.org>
-> Cc: Sergio Paracuellos <sergio.paracuellos@gmail.com>
-> Cc: Thierry Reding <treding@nvidia.com>
-> Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
-> ---
->  drivers/gpio/gpio-mt7621.c | 33 +++++++++++++++++----------------
->  1 file changed, 17 insertions(+), 16 deletions(-)
->
-> diff --git a/drivers/gpio/gpio-mt7621.c b/drivers/gpio/gpio-mt7621.c
-> index 79654fb2e50f..d1d785f983a7 100644
-> --- a/drivers/gpio/gpio-mt7621.c
-> +++ b/drivers/gpio/gpio-mt7621.c
-> @@ -241,13 +241,6 @@ mediatek_gpio_bank_probe(struct device *dev,
->  	if (!rg->chip.label)
->  		return -ENOMEM;
->
-> -	ret = devm_gpiochip_add_data(dev, &rg->chip, mtk);
-> -	if (ret < 0) {
-> -		dev_err(dev, "Could not register gpio %d, ret=%d\n",
-> -			rg->chip.ngpio, ret);
-> -		return ret;
-> -	}
-> -
->  	rg->irq_chip.name = dev_name(dev);
->  	rg->irq_chip.parent_device = dev;
->  	rg->irq_chip.irq_unmask = mediatek_gpio_irq_unmask;
-> @@ -256,8 +249,10 @@ mediatek_gpio_bank_probe(struct device *dev,
->  	rg->irq_chip.irq_set_type = mediatek_gpio_irq_type;
->
->  	if (mtk->gpio_irq) {
-> +		struct gpio_irq_chip *girq;
-> +
->  		/*
-> -		 * Manually request the irq here instead of passing
-> +		 * Directly request the irq here instead of passing
->  		 * a flow-handler to gpiochip_set_chained_irqchip,
->  		 * because the irq is shared.
->  		 */
-> @@ -271,15 +266,21 @@ mediatek_gpio_bank_probe(struct device *dev,
->  			return ret;
->  		}
->
-> -		ret = gpiochip_irqchip_add(&rg->chip, &rg->irq_chip,
-> -					   0, handle_simple_irq, IRQ_TYPE_NONE);
-> -		if (ret) {
-> -			dev_err(dev, "failed to add gpiochip_irqchip\n");
-> -			return ret;
-> -		}
-> +		girq = &rg->chip.irq;
-> +		girq->chip = &rg->irq_chip;
-> +		/* This will let us handle the parent IRQ in the driver */
-> +		girq->parent_handler = NULL;
-> +		girq->num_parents = 0;
-> +		girq->parents = NULL;
-> +		girq->default_type = IRQ_TYPE_NONE;
-> +		girq->handler = handle_simple_irq;
-> +	}
->
-> -		gpiochip_set_chained_irqchip(&rg->chip, &rg->irq_chip,
-> -					     mtk->gpio_irq, NULL);
-> +	ret = devm_gpiochip_add_data(dev, &rg->chip, mtk);
-> +	if (ret < 0) {
-> +		dev_err(dev, "Could not register gpio %d, ret=%d\n",
-> +			rg->chip.ngpio, ret);
-> +		return ret;
->  	}
->
->  	/* set polarity to low for all gpios */
-> --
-> 2.21.0
+> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-I have this patch applied for a while.
-I didn't encounter an issues.
+FTR: as the PWM work is put on hold, I have changed the commit
+description to:
 
-Tested-by: René van Dorst <opensource@vdorst.com>
+    pinctrl: sh-pfc: Rollback to mux if required when the gpio is freed
 
-Greats,
+    Some drivers require switching between function and gpio at run-time.
+    Allow to roll back from gpio to mux when the gpio is freed.
 
-René
+Gr{oetje,eeting}s,
 
+                        Geert
 
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
-
-
-
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
