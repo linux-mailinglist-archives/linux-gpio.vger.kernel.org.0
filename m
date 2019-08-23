@@ -2,161 +2,185 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id D4B7B9B850
-	for <lists+linux-gpio@lfdr.de>; Fri, 23 Aug 2019 23:53:07 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 52FBE9B86F
+	for <lists+linux-gpio@lfdr.de>; Sat, 24 Aug 2019 00:12:06 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393058AbfHWVxH (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 23 Aug 2019 17:53:07 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:60466 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392654AbfHWVxG (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Fri, 23 Aug 2019 17:53:06 -0400
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 196E485536;
-        Fri, 23 Aug 2019 21:53:06 +0000 (UTC)
-Received: from dhcp-44-196.space.revspace.nl (unknown [10.36.112.14])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 5A798600C1;
-        Fri, 23 Aug 2019 21:53:00 +0000 (UTC)
-From:   Hans de Goede <hdegoede@redhat.com>
-To:     Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Cc:     Hans de Goede <hdegoede@redhat.com>,
-        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
-        linux-gpio@vger.kernel.org, linux-acpi@vger.kernel.org,
-        linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        Daniel Drake <drake@endlessm.com>,
-        Ian W MORRISON <ianwmorrison@gmail.com>
-Subject: [PATCH] gpiolib: acpi: Add gpiolib_acpi_run_edge_events_on_boot option and blacklist
-Date:   Fri, 23 Aug 2019 23:52:55 +0200
-Message-Id: <20190823215255.7631-1-hdegoede@redhat.com>
+        id S2390340AbfHWWMF (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 23 Aug 2019 18:12:05 -0400
+Received: from mail-wr1-f44.google.com ([209.85.221.44]:45521 "EHLO
+        mail-wr1-f44.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390281AbfHWWMF (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 23 Aug 2019 18:12:05 -0400
+Received: by mail-wr1-f44.google.com with SMTP id q12so9864335wrj.12
+        for <linux-gpio@vger.kernel.org>; Fri, 23 Aug 2019 15:12:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernelci-org.20150623.gappssmtp.com; s=20150623;
+        h=message-id:date:mime-version:content-transfer-encoding:subject:to
+         :from;
+        bh=GoGrqX6b18Ffd/Khxni4k2DZahYj1JID4CfMoAC7lr0=;
+        b=hzAXMaAPNTCNJj6XQUj7FMGdukbXsG1rAgDhxqUHsHvkusFMTYuHotPJywIRySWTIE
+         AVigSxfRwGUNQHdTQh0rrnzYnETMqakKdKap5Cq17xt7ir3IWM15UDtPM0rk2rcdm+9K
+         a5SyPXvB1rdlA3X8oqINvXvjykWEH3cnvXfJ33FS+HCME4AyWBO44b9HmFSAUZ0VPMaB
+         sWpLFdkpRQVib3DX9mHRChNOQzVbTD792smj5mn+CvtyGAM42xiEbUX8x36GpTm3hbmo
+         GBYuKMSxLI4oD/UfZQmvNH8KAmBNyZJuaoslD+PgSFufY0DvmwpDOJXNEMvqqqti33SF
+         QTIg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:date:mime-version
+         :content-transfer-encoding:subject:to:from;
+        bh=GoGrqX6b18Ffd/Khxni4k2DZahYj1JID4CfMoAC7lr0=;
+        b=WtgI4LMdrniOgs4KSZBA7YOT5lMS9s0LEwAkMMgWec4JJN4nOaj5Kx7OsONkqh9xME
+         ogfqMFltCMkFFMFaDCP3xTru492JrF5aj7c1sxwa0hhbCFENgPciigp98Bi1jL1rWl4q
+         Wi4wx8VrTN9VI9tbo5U9arcVdBMg9qSK4hz3Hm3nirNLVH7lqR5VCt+AWaiflJfYyXKW
+         D+GnHYJYUw69I3mUBDagxdxXzQYiEqHhiEr1KQ0aevIN1sX/dHKQrpt2PTgCbQkwln/R
+         hkhD71uYIcZDeVV42KSwazIfUSCHHxQTBrc6FCu2TMDD+K3YxquXxd0XYPcmfOMYn0jn
+         Hxng==
+X-Gm-Message-State: APjAAAWPWU7uBvqMgaSa/IcGxBwO5rq+B7oUfnf+YZ+rcBlhqyHfxaLX
+        6c99Gzq+hZTsfW5bzKvdiVBXRdJff2rZ9g==
+X-Google-Smtp-Source: APXvYqzcUq+mD+LY4lQAaFmlgTXYvaaEfHiWAG3M4zAaWqCDK2HqXWeDWp2eylu1K3g+tQbcQ9piUA==
+X-Received: by 2002:adf:ebc6:: with SMTP id v6mr7226859wrn.223.1566598322224;
+        Fri, 23 Aug 2019 15:12:02 -0700 (PDT)
+Received: from [148.251.42.114] ([2a01:4f8:201:9271::2])
+        by smtp.gmail.com with ESMTPSA id c11sm2948004wrs.86.2019.08.23.15.12.00
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 23 Aug 2019 15:12:01 -0700 (PDT)
+Message-ID: <5d6064b1.1c69fb81.a604.cb36@mx.google.com>
+Date:   Fri, 23 Aug 2019 15:12:01 -0700 (PDT)
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.28]); Fri, 23 Aug 2019 21:53:06 +0000 (UTC)
+Content-Transfer-Encoding: quoted-printable
+X-Kernelci-Kernel: v5.3-rc1-46-gf4e9bcc05f4e
+X-Kernelci-Tree: linusw
+X-Kernelci-Report-Type: build
+X-Kernelci-Branch: devel
+Subject: linusw/devel build: 6 builds: 0 failed, 6 passed,
+ 13 warnings (v5.3-rc1-46-gf4e9bcc05f4e)
+To:     linux-gpio@vger.kernel.org, fellows@kernelci.org
+From:   "kernelci.org bot" <bot@kernelci.org>
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Another day; another DSDT bug we need to workaround...
+linusw/devel build: 6 builds: 0 failed, 6 passed, 13 warnings (v5.3-rc1-46-=
+gf4e9bcc05f4e)
 
-Since commit ca876c7483b6 ("gpiolib-acpi: make sure we trigger edge events
-at least once on boot") we call _AEI edge handlers at boot.
+Full Build Summary: https://kernelci.org/build/linusw/branch/devel/kernel/v=
+5.3-rc1-46-gf4e9bcc05f4e/
 
-In some rare cases this causes problems. One example of this is the Minix
-Neo Z83-4 mini PC, this device has a clear DSDT bug where it has some copy
-and pasted code for dealing with Micro USB-B connector host/device role
-switching, while the mini PC does not even have a micro-USB connector.
-This code, which should not be there, messes with the DDC data pin from
-the HDMI connector (switching it to GPIO mode) breaking HDMI support.
+Tree: linusw
+Branch: devel
+Git Describe: v5.3-rc1-46-gf4e9bcc05f4e
+Git Commit: f4e9bcc05f4e8d543afbfc0ca1fd4435a2204776
+Git URL: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-gpio.=
+git/
+Built: 6 unique architectures
 
-To avoid problems like this, this commit adds a new
-gpiolib_acpi_run_edge_events_on_boot kernel commandline option which
-can be "on", "off", or "auto" (default).
+Warnings Detected:
 
-In auto mode the default is on and a DMI based blacklist is used,
-the initial version of this blacklist contains the Minix Neo Z83-4
-fixing the HDMI being broken on this device.
+arc:
+    nsim_hs_defconfig (gcc-8): 2 warnings
 
-Cc: stable@vger.kernel.org
-Cc: Daniel Drake <drake@endlessm.com>
-Cc: Ian W MORRISON <ianwmorrison@gmail.com>
-Reported-by: Ian W MORRISON <ianwmorrison@gmail.com>
-Suggested-by: Ian W MORRISON <ianwmorrison@gmail.com>
-Fixes: ca876c7483b6 ("gpiolib-acpi: make sure we trigger edge events at least once on boot")
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+arm64:
+
+arm:
+    multi_v7_defconfig (gcc-8): 6 warnings
+
+mips:
+    32r2el_defconfig (gcc-8): 3 warnings
+
+riscv:
+    defconfig (gcc-8): 2 warnings
+
+x86_64:
+
+
+Warnings summary:
+
+    7    <stdin>:1511:2: warning: #warning syscall clone3 not implemented [=
+-Wcpp]
+    1    arch/arm/boot/dts/bcm47094-linksys-panamera.dts:129.4-18: Warning =
+(reg_format): /mdio-bus-mux/mdio@200:reg: property has invalid length (4 by=
+tes) (#address-cells =3D=3D 2, #size-cells =3D=3D 1)
+    1    arch/arm/boot/dts/bcm47094-linksys-panamera.dts:128.22-132.5: Warn=
+ing (avoid_default_addr_size): /mdio-bus-mux/mdio@200: Relying on default #=
+size-cells value
+    1    arch/arm/boot/dts/bcm47094-linksys-panamera.dts:128.22-132.5: Warn=
+ing (avoid_default_addr_size): /mdio-bus-mux/mdio@200: Relying on default #=
+address-cells value
+    1    arch/arm/boot/dts/bcm47094-linksys-panamera.dtb: Warning (spi_bus_=
+reg): Failed prerequisite 'reg_format'
+    1    arch/arm/boot/dts/bcm47094-linksys-panamera.dtb: Warning (pci_devi=
+ce_bus_num): Failed prerequisite 'reg_format'
+    1    arch/arm/boot/dts/bcm47094-linksys-panamera.dtb: Warning (i2c_bus_=
+reg): Failed prerequisite 'reg_format'
+
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D
+
+Detailed per-defconfig build reports:
+
+---------------------------------------------------------------------------=
+-----
+32r2el_defconfig (mips, gcc-8) =E2=80=94 PASS, 0 errors, 3 warnings, 0 sect=
+ion mismatches
+
+Warnings:
+    <stdin>:1511:2: warning: #warning syscall clone3 not implemented [-Wcpp]
+    <stdin>:1511:2: warning: #warning syscall clone3 not implemented [-Wcpp]
+    <stdin>:1511:2: warning: #warning syscall clone3 not implemented [-Wcpp]
+
+---------------------------------------------------------------------------=
+-----
+defconfig (riscv, gcc-8) =E2=80=94 PASS, 0 errors, 2 warnings, 0 section mi=
+smatches
+
+Warnings:
+    <stdin>:1511:2: warning: #warning syscall clone3 not implemented [-Wcpp]
+    <stdin>:1511:2: warning: #warning syscall clone3 not implemented [-Wcpp]
+
+---------------------------------------------------------------------------=
+-----
+defconfig (arm64, gcc-8) =E2=80=94 PASS, 0 errors, 0 warnings, 0 section mi=
+smatches
+
+---------------------------------------------------------------------------=
+-----
+multi_v7_defconfig (arm, gcc-8) =E2=80=94 PASS, 0 errors, 6 warnings, 0 sec=
+tion mismatches
+
+Warnings:
+    arch/arm/boot/dts/bcm47094-linksys-panamera.dts:129.4-18: Warning (reg_=
+format): /mdio-bus-mux/mdio@200:reg: property has invalid length (4 bytes) =
+(#address-cells =3D=3D 2, #size-cells =3D=3D 1)
+    arch/arm/boot/dts/bcm47094-linksys-panamera.dtb: Warning (pci_device_bu=
+s_num): Failed prerequisite 'reg_format'
+    arch/arm/boot/dts/bcm47094-linksys-panamera.dtb: Warning (i2c_bus_reg):=
+ Failed prerequisite 'reg_format'
+    arch/arm/boot/dts/bcm47094-linksys-panamera.dtb: Warning (spi_bus_reg):=
+ Failed prerequisite 'reg_format'
+    arch/arm/boot/dts/bcm47094-linksys-panamera.dts:128.22-132.5: Warning (=
+avoid_default_addr_size): /mdio-bus-mux/mdio@200: Relying on default #addre=
+ss-cells value
+    arch/arm/boot/dts/bcm47094-linksys-panamera.dts:128.22-132.5: Warning (=
+avoid_default_addr_size): /mdio-bus-mux/mdio@200: Relying on default #size-=
+cells value
+
+---------------------------------------------------------------------------=
+-----
+nsim_hs_defconfig (arc, gcc-8) =E2=80=94 PASS, 0 errors, 2 warnings, 0 sect=
+ion mismatches
+
+Warnings:
+    <stdin>:1511:2: warning: #warning syscall clone3 not implemented [-Wcpp]
+    <stdin>:1511:2: warning: #warning syscall clone3 not implemented [-Wcpp]
+
+---------------------------------------------------------------------------=
+-----
+x86_64_defconfig (x86_64, gcc-8) =E2=80=94 PASS, 0 errors, 0 warnings, 0 se=
+ction mismatches
+
 ---
- drivers/gpio/gpiolib-acpi.c | 52 ++++++++++++++++++++++++++++++++++---
- 1 file changed, 48 insertions(+), 4 deletions(-)
-
-diff --git a/drivers/gpio/gpiolib-acpi.c b/drivers/gpio/gpiolib-acpi.c
-index 39f2f9035c11..546dc2c1f3f1 100644
---- a/drivers/gpio/gpiolib-acpi.c
-+++ b/drivers/gpio/gpiolib-acpi.c
-@@ -7,6 +7,7 @@
-  *          Mika Westerberg <mika.westerberg@linux.intel.com>
-  */
- 
-+#include <linux/dmi.h>
- #include <linux/errno.h>
- #include <linux/gpio/consumer.h>
- #include <linux/gpio/driver.h>
-@@ -19,6 +20,23 @@
- 
- #include "gpiolib.h"
- 
-+static int gpiolib_acpi_run_edge_events_on_boot = -1;
-+
-+static int __init gpiolib_acpi_run_edge_events_on_boot_setup(char *arg)
-+{
-+	if (!strcmp(arg, "on"))
-+		gpiolib_acpi_run_edge_events_on_boot = 1;
-+	else if (!strcmp(arg, "off"))
-+		gpiolib_acpi_run_edge_events_on_boot = 0;
-+	else if (!strcmp(arg, "auto"))
-+		gpiolib_acpi_run_edge_events_on_boot = -1;
-+
-+	return 1;
-+}
-+
-+__setup("gpiolib_acpi_run_edge_events_on_boot=",
-+        gpiolib_acpi_run_edge_events_on_boot_setup);
-+
- /**
-  * struct acpi_gpio_event - ACPI GPIO event handler data
-  *
-@@ -150,6 +168,29 @@ bool acpi_gpio_get_irq_resource(struct acpi_resource *ares,
- }
- EXPORT_SYMBOL_GPL(acpi_gpio_get_irq_resource);
- 
-+static const struct dmi_system_id run_edge_events_on_boot_blacklist[] =
-+{
-+	{
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "MINIX"),
-+			DMI_MATCH(DMI_PRODUCT_NAME, "Z83-4"),
-+		}
-+	},
-+	{} /* Terminating entry */
-+};
-+
-+static bool acpi_gpiochip_run_edge_events_on_boot(void)
-+{
-+	if (gpiolib_acpi_run_edge_events_on_boot == -1) {
-+		if (dmi_check_system(run_edge_events_on_boot_blacklist))
-+			gpiolib_acpi_run_edge_events_on_boot = 0;
-+		else
-+			gpiolib_acpi_run_edge_events_on_boot = 1;
-+	}
-+
-+	return gpiolib_acpi_run_edge_events_on_boot;
-+}
-+
- static void acpi_gpiochip_request_irq(struct acpi_gpio_chip *acpi_gpio,
- 				      struct acpi_gpio_event *event)
- {
-@@ -170,10 +211,13 @@ static void acpi_gpiochip_request_irq(struct acpi_gpio_chip *acpi_gpio,
- 	event->irq_requested = true;
- 
- 	/* Make sure we trigger the initial state of edge-triggered IRQs */
--	value = gpiod_get_raw_value_cansleep(event->desc);
--	if (((event->irqflags & IRQF_TRIGGER_RISING) && value == 1) ||
--	    ((event->irqflags & IRQF_TRIGGER_FALLING) && value == 0))
--		event->handler(event->irq, event);
-+	if (acpi_gpiochip_run_edge_events_on_boot() &&
-+	    (event->irqflags & (IRQF_TRIGGER_RISING | IRQF_TRIGGER_FALLING))) {
-+		value = gpiod_get_raw_value_cansleep(event->desc);
-+		if (((event->irqflags & IRQF_TRIGGER_RISING) && value == 1) ||
-+		    ((event->irqflags & IRQF_TRIGGER_FALLING) && value == 0))
-+			event->handler(event->irq, event);
-+	}
- }
- 
- static void acpi_gpiochip_request_irqs(struct acpi_gpio_chip *acpi_gpio)
--- 
-2.22.0
-
+For more info write to <info@kernelci.org>
