@@ -2,97 +2,81 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id C60159B93D
-	for <lists+linux-gpio@lfdr.de>; Sat, 24 Aug 2019 02:01:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 350AF9BD28
+	for <lists+linux-gpio@lfdr.de>; Sat, 24 Aug 2019 12:56:06 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725886AbfHXAB0 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 23 Aug 2019 20:01:26 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:37221 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725857AbfHXABZ (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 23 Aug 2019 20:01:25 -0400
-Received: by mail-wm1-f65.google.com with SMTP id d16so10582984wme.2
-        for <linux-gpio@vger.kernel.org>; Fri, 23 Aug 2019 17:01:24 -0700 (PDT)
+        id S1727590AbfHXKxs (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sat, 24 Aug 2019 06:53:48 -0400
+Received: from mail-qk1-f193.google.com ([209.85.222.193]:45947 "EHLO
+        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727593AbfHXKxs (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sat, 24 Aug 2019 06:53:48 -0400
+Received: by mail-qk1-f193.google.com with SMTP id m2so10432376qki.12;
+        Sat, 24 Aug 2019 03:53:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernelci-org.20150623.gappssmtp.com; s=20150623;
-        h=message-id:date:mime-version:content-transfer-encoding:subject:to
-         :from;
-        bh=HeiSmcWKI/yFAebw4JuLlMoSWj9hzaMyR/25vkyY2/k=;
-        b=jNKdOhYbI/xuJNpftfabH0gvMHdsv/ia4Sb88SfUH2lyjZKHE5G91g/ZDr5cI6OOEw
-         liORx4ScSp4HiZhgMnFxvpC1oOpNevP/wM6XDiqHGlA3PFCwDm9IesGr1gh7K6LPKci1
-         dgtT30hZl49nw4M9ZazveSDbod2NK5/rW2cpSnS+EP7b6q7wqfufO/dRL1pZ0cul9Ov4
-         B5lWvJm4nzjtbLBRbe/5AM5zkCJW3GVUo1z3fTu6C0q9jcYdpGLJ7nR8bmHf4rc8xLoE
-         gmhQI6PkzI08URRIIiEJgy781bekapkbUsxtKOOUozGM4IdnURUCPjl6YkAeFIxG1nL4
-         DkbA==
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=TbxzA8gVsCSK3z+t0mDil0in4W6ri8b3PO8br9bfWts=;
+        b=M7QNvw9jRmfvcOSyb8HQd6yZAix34IZXdI4XbQzYW3owMZbo9a/T2Ng1Qj9wJ2PEti
+         3AxQXMAz009wgw9nzXSga/VvSi7rYe/2vkvL0DkR03hl7moxNFipctcLoeqlOQiYmToS
+         6qmDQyTltS6HgbLmT916vnpxBlT4m8BVju6Mq1zxFEYefIhn+dL+ySm8a6mLuHtzTTIa
+         6gCzrx0+WmzJlOsrq2Tti/H5BDyKY85gKW/0JevFRJLUiXXZCK8QDCTQsiwddk4XP7Bt
+         JB2NePG+bqMftxT00mWG+RSE9bK/IvmFzrRlwW5uXjJ/PAfJqu3TDytWmb4cJs7vVCeG
+         R4DQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:date:mime-version
-         :content-transfer-encoding:subject:to:from;
-        bh=HeiSmcWKI/yFAebw4JuLlMoSWj9hzaMyR/25vkyY2/k=;
-        b=M3nccw7ZoeOfjc5+pWhXdm6ejbfHok0AeaVs8XLXYmuWiDwOik6+ZrSTOQVqI0ZoGt
-         rt5RemlyUT9x10Ocq9U/dX2F6HnUvV81offPwJn4ja7QW+cqj2dNm49CMc59uBrvjKiI
-         fH5f6fn1gIrFXLLsxaB45iMG35TFA8aI1BAd1a3sU5pTASVWqsxrTA0e8LA8e4V2yXDr
-         XH3laRYFw69z2kM95huZTRrRNaPIk8giZYb+JlUq4cU/sTWMM46syqfzTB6DWe2ZIBxX
-         jTlfdlvC+VdrmgTIuW7JMH36v1pJSsoNWVSrpe4Q9aumX98/4ucpGAL65TxJe1MKs3HB
-         Y4bA==
-X-Gm-Message-State: APjAAAXkljCrL03lxDh7gGBveOeVvsozZw55eK4r7VBl31Nuul/TtXpo
-        hSzpPVFa+GuDhGTg5go2a2D55FCwrJX8bg==
-X-Google-Smtp-Source: APXvYqx6cFAvgpu2nMgYcURfzgqxo7cBgxqw0dIEeizj+nBnSiv+XQSouwbI1kFn8aShuhMAcYxpfw==
-X-Received: by 2002:a1c:1a56:: with SMTP id a83mr7773757wma.44.1566604883836;
-        Fri, 23 Aug 2019 17:01:23 -0700 (PDT)
-Received: from [148.251.42.114] ([2a01:4f8:201:9271::2])
-        by smtp.gmail.com with ESMTPSA id c9sm3001338wrv.40.2019.08.23.17.01.22
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 23 Aug 2019 17:01:22 -0700 (PDT)
-Message-ID: <5d607e52.1c69fb81.f10df.cda8@mx.google.com>
-Date:   Fri, 23 Aug 2019 17:01:22 -0700 (PDT)
-Content-Type: text/plain; charset="utf-8"
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=TbxzA8gVsCSK3z+t0mDil0in4W6ri8b3PO8br9bfWts=;
+        b=sdoLEtDVSwWVASWerexwmWm8MHAAMQzAB9QKiErmV2MZV/NYBdlhJsqDO305+zivWt
+         XhM0/WGSCO7TWVJLwXE+YzOd9c8PZuw+fUZ//xazi2zUQKhEgI03KzeAVb1nIZZrcCOT
+         mVReffdjgHz5JcrFKK1UQ+qJrTMLuwuzPprs6ct9l3EkIUsEN4D1XqwbzlTIHe2QQ9Gi
+         2zk6JDkTTXc/ES4DNMzy3CmQHgEmgP2cU9+REdgkKffA+2aYfqpEdX5cGFsN6pQY9wZh
+         OAnG7UHshQwI3LXEykGj6caTD5irD4rxfOI4xZvdJfrSVeGu5udmTTewpCgSEWPZAdwY
+         Jm4w==
+X-Gm-Message-State: APjAAAWZmB0O7kE5+IyFRQgXAFnGsCnWg+S6J73T+BjV+M/CD5NYUB8X
+        +BJtzu2QQVKTQMjo0pggQkHZHGiZD6uGVpLCJd4=
+X-Google-Smtp-Source: APXvYqxkG4NMxhycjdYiSIFcFIz9H1LlGWXbJH1IPkZl7HlwlKbsxAsC0YE39DrKJayiIL7rFQNCSgF5GI8IfuMEraY=
+X-Received: by 2002:a05:620a:16c3:: with SMTP id a3mr7827421qkn.315.1566644026718;
+ Sat, 24 Aug 2019 03:53:46 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-Kernelci-Kernel: v5.3-rc1-47-g9ed7ccefcb30
-X-Kernelci-Tree: linusw
-X-Kernelci-Report-Type: boot
-X-Kernelci-Branch: devel
-Subject: linusw/devel boot: 53 boots: 1 failed,
- 52 passed (v5.3-rc1-47-g9ed7ccefcb30)
-To:     linux-gpio@vger.kernel.org, fellows@kernelci.org
-From:   "kernelci.org bot" <bot@kernelci.org>
+References: <20190823215255.7631-1-hdegoede@redhat.com>
+In-Reply-To: <20190823215255.7631-1-hdegoede@redhat.com>
+From:   Ian W MORRISON <ianwmorrison@gmail.com>
+Date:   Sat, 24 Aug 2019 20:53:35 +1000
+Message-ID: <CAFXWsS9q5-Ny_Lz4H51+UU0eRv5DJgRHy5XFi4_hxNCFTMb=dg@mail.gmail.com>
+Subject: Re: [PATCH] gpiolib: acpi: Add gpiolib_acpi_run_edge_events_on_boot
+ option and blacklist
+To:     Hans de Goede <hdegoede@redhat.com>
+Cc:     Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+        linux-gpio@vger.kernel.org, linux-acpi@vger.kernel.org,
+        linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        Daniel Drake <drake@endlessm.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-linusw/devel boot: 53 boots: 1 failed, 52 passed (v5.3-rc1-47-g9ed7ccefcb30)
+On Sat, 24 Aug 2019 at 07:53, Hans de Goede <hdegoede@redhat.com> wrote:
+>
+> To avoid problems like this, this commit adds a new
+> gpiolib_acpi_run_edge_events_on_boot kernel commandline option which
+> can be "on", "off", or "auto" (default).
+>
+> In auto mode the default is on and a DMI based blacklist is used,
+> the initial version of this blacklist contains the Minix Neo Z83-4
+> fixing the HDMI being broken on this device.
+>
 
-Full Boot Summary: https://kernelci.org/boot/all/job/linusw/branch/devel/ke=
-rnel/v5.3-rc1-47-g9ed7ccefcb30/
-Full Build Summary: https://kernelci.org/build/linusw/branch/devel/kernel/v=
-5.3-rc1-47-g9ed7ccefcb30/
+Many thanks Hans. I've tested the patch including the command line
+option with both v5.3-rc5 and linux-next on a Minix Neo Z83-4 and it
+works fine.
 
-Tree: linusw
-Branch: devel
-Git Describe: v5.3-rc1-47-g9ed7ccefcb30
-Git Commit: 9ed7ccefcb306fb61e27b4b74aca1ed29656c572
-Git URL: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-gpio.=
-git/
-Tested: 35 unique boards, 15 SoC families, 3 builds out of 6
-
-Boot Regressions Detected:
-
-arm64:
-
-    defconfig:
-        gcc-8:
-          apq8016-sbc:
-              lab-mhart: failing since 24 days (last pass: v5.2-10808-g9637=
-d517347e - first fail: v5.3-rc1-5-ga299726da44f)
-
-Boot Failure Detected:
-
-arm64:
-    defconfig:
-        gcc-8:
-            apq8016-sbc: 1 failed lab
-
----
-For more info write to <info@kernelci.org>
+Best regards,
+Ian
