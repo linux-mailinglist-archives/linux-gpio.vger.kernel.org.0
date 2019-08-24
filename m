@@ -2,81 +2,94 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 350AF9BD28
-	for <lists+linux-gpio@lfdr.de>; Sat, 24 Aug 2019 12:56:06 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AF2B69BD4E
+	for <lists+linux-gpio@lfdr.de>; Sat, 24 Aug 2019 13:33:23 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727590AbfHXKxs (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sat, 24 Aug 2019 06:53:48 -0400
-Received: from mail-qk1-f193.google.com ([209.85.222.193]:45947 "EHLO
-        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727593AbfHXKxs (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sat, 24 Aug 2019 06:53:48 -0400
-Received: by mail-qk1-f193.google.com with SMTP id m2so10432376qki.12;
-        Sat, 24 Aug 2019 03:53:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=TbxzA8gVsCSK3z+t0mDil0in4W6ri8b3PO8br9bfWts=;
-        b=M7QNvw9jRmfvcOSyb8HQd6yZAix34IZXdI4XbQzYW3owMZbo9a/T2Ng1Qj9wJ2PEti
-         3AxQXMAz009wgw9nzXSga/VvSi7rYe/2vkvL0DkR03hl7moxNFipctcLoeqlOQiYmToS
-         6qmDQyTltS6HgbLmT916vnpxBlT4m8BVju6Mq1zxFEYefIhn+dL+ySm8a6mLuHtzTTIa
-         6gCzrx0+WmzJlOsrq2Tti/H5BDyKY85gKW/0JevFRJLUiXXZCK8QDCTQsiwddk4XP7Bt
-         JB2NePG+bqMftxT00mWG+RSE9bK/IvmFzrRlwW5uXjJ/PAfJqu3TDytWmb4cJs7vVCeG
-         R4DQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=TbxzA8gVsCSK3z+t0mDil0in4W6ri8b3PO8br9bfWts=;
-        b=sdoLEtDVSwWVASWerexwmWm8MHAAMQzAB9QKiErmV2MZV/NYBdlhJsqDO305+zivWt
-         XhM0/WGSCO7TWVJLwXE+YzOd9c8PZuw+fUZ//xazi2zUQKhEgI03KzeAVb1nIZZrcCOT
-         mVReffdjgHz5JcrFKK1UQ+qJrTMLuwuzPprs6ct9l3EkIUsEN4D1XqwbzlTIHe2QQ9Gi
-         2zk6JDkTTXc/ES4DNMzy3CmQHgEmgP2cU9+REdgkKffA+2aYfqpEdX5cGFsN6pQY9wZh
-         OAnG7UHshQwI3LXEykGj6caTD5irD4rxfOI4xZvdJfrSVeGu5udmTTewpCgSEWPZAdwY
-         Jm4w==
-X-Gm-Message-State: APjAAAWZmB0O7kE5+IyFRQgXAFnGsCnWg+S6J73T+BjV+M/CD5NYUB8X
-        +BJtzu2QQVKTQMjo0pggQkHZHGiZD6uGVpLCJd4=
-X-Google-Smtp-Source: APXvYqxkG4NMxhycjdYiSIFcFIz9H1LlGWXbJH1IPkZl7HlwlKbsxAsC0YE39DrKJayiIL7rFQNCSgF5GI8IfuMEraY=
-X-Received: by 2002:a05:620a:16c3:: with SMTP id a3mr7827421qkn.315.1566644026718;
- Sat, 24 Aug 2019 03:53:46 -0700 (PDT)
+        id S1727922AbfHXLdW convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-gpio@lfdr.de>); Sat, 24 Aug 2019 07:33:22 -0400
+Received: from relay8-d.mail.gandi.net ([217.70.183.201]:44255 "EHLO
+        relay8-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727779AbfHXLdW (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sat, 24 Aug 2019 07:33:22 -0400
+X-Originating-IP: 91.224.148.103
+Received: from xps13 (unknown [91.224.148.103])
+        (Authenticated sender: miquel.raynal@bootlin.com)
+        by relay8-d.mail.gandi.net (Postfix) with ESMTPSA id 49A361BF208;
+        Sat, 24 Aug 2019 11:33:19 +0000 (UTC)
+Date:   Sat, 24 Aug 2019 13:33:17 +0200
+From:   Miquel Raynal <miquel.raynal@bootlin.com>
+To:     Linus Walleij <linus.walleij@linaro.org>,
+        Yan Markman <ymarkman@marvell.com>
+Cc:     Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Gregory Clement <gregory.clement@bootlin.com>,
+        Antoine Tenart <antoine.tenart@bootlin.com>,
+        Maxime Chevallier <maxime.chevallier@bootlin.com>,
+        Nadav Haklai <nadavh@marvell.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Grzegorz Jaszczyk <jaz@semihalf.com>,
+        Marcin Wojtas <mw@semihalf.com>,
+        Stefan Chulski <stefanc@marvell.com>
+Subject: Re: [PATCH 0/3] CP115 pinctrl support
+Message-ID: <20190824133317.371dec4f@xps13>
+In-Reply-To: <CACRpkdY-AtaS67u4s58PifFtP5C7xp4P15J+hW_Dba=Gb4rhSQ@mail.gmail.com>
+References: <20190805101607.29811-1-miquel.raynal@bootlin.com>
+        <CACRpkdar5jE116CcywYxLR9JKWunRusJjNw7f3C0SFK4-4+dNQ@mail.gmail.com>
+        <CACRpkdbEw5eCKb=nTCK4wuMsPEadEQdGx62cGRhk7F78p5X2CA@mail.gmail.com>
+        <20190814143457.664b04c8@windsurf.home>
+        <CACRpkdY-AtaS67u4s58PifFtP5C7xp4P15J+hW_Dba=Gb4rhSQ@mail.gmail.com>
+Organization: Bootlin
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-References: <20190823215255.7631-1-hdegoede@redhat.com>
-In-Reply-To: <20190823215255.7631-1-hdegoede@redhat.com>
-From:   Ian W MORRISON <ianwmorrison@gmail.com>
-Date:   Sat, 24 Aug 2019 20:53:35 +1000
-Message-ID: <CAFXWsS9q5-Ny_Lz4H51+UU0eRv5DJgRHy5XFi4_hxNCFTMb=dg@mail.gmail.com>
-Subject: Re: [PATCH] gpiolib: acpi: Add gpiolib_acpi_run_edge_events_on_boot
- option and blacklist
-To:     Hans de Goede <hdegoede@redhat.com>
-Cc:     Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
-        linux-gpio@vger.kernel.org, linux-acpi@vger.kernel.org,
-        linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        Daniel Drake <drake@endlessm.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Sat, 24 Aug 2019 at 07:53, Hans de Goede <hdegoede@redhat.com> wrote:
->
-> To avoid problems like this, this commit adds a new
-> gpiolib_acpi_run_edge_events_on_boot kernel commandline option which
-> can be "on", "off", or "auto" (default).
->
-> In auto mode the default is on and a DMI based blacklist is used,
-> the initial version of this blacklist contains the Minix Neo Z83-4
-> fixing the HDMI being broken on this device.
->
+Hi Linus,
 
-Many thanks Hans. I've tested the patch including the command line
-option with both v5.3-rc5 and linux-next on a Minix Neo Z83-4 and it
-works fine.
+Linus Walleij <linus.walleij@linaro.org> wrote on Thu, 15 Aug 2019
+10:10:46 +0200:
 
-Best regards,
-Ian
+> On Wed, Aug 14, 2019 at 2:35 PM Thomas Petazzoni
+> <thomas.petazzoni@bootlin.com> wrote:
+> > On Wed, 14 Aug 2019 10:12:36 +0200
+> > Linus Walleij <linus.walleij@linaro.org> wrote:
+> >  
+> > > On Wed, Aug 7, 2019 at 2:47 PM Linus Walleij <linus.walleij@linaro.org> wrote:  
+> > > > On Mon, Aug 5, 2019 at 12:16 PM Miquel Raynal <miquel.raynal@bootlin.com> wrote:
+> > > >  
+> > > > > This is the second batch of changes (out of three) to support the brand
+> > > > > new Marvell CN9130 SoCs which are made of one AP807 and one CP115.
+> > > > >
+> > > > > We add a new compatible (and the relevant support in the pinctrl
+> > > > > driver) before the addition in batch 3/3 of CN9130 SoCs DT using it.  
+> > > >
+> > > > Waiting for review from the Mvebu maintainers.
+> > > >
+> > > > If it takes too long just nudge me, it looks good to me.  
+> > >
+> > > So if the other MVEBU maintainers don't really look much at MVEBU
+> > > patches anymore while Miquel is working a lot on the platform,
+> > > what about listing Miquel as maintainer under the SoC entry, hm?  
+> >
+> > Miquel sent his series on August 5, i.e 9 days ago. We're in August, in
+> > the middle of the summer vacations for many people. While it is nice to
+> > see subsystem maintainers who want to get code merged in a timely
+> > fashion, I think it is probably wise to give it some more time for
+> > review in this period of the year.  
+> 
+> OK then maybe I am a bit impatient.
+
+Actually Gregory is on vacation until September, so if we still are in
+time for this merge window I suppose you can take it.
+
+
+Thanks,
+Miquèl
