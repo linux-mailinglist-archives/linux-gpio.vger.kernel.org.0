@@ -2,111 +2,103 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 821D99BFC8
-	for <lists+linux-gpio@lfdr.de>; Sat, 24 Aug 2019 21:14:53 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 279E09C054
+	for <lists+linux-gpio@lfdr.de>; Sat, 24 Aug 2019 23:18:10 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727997AbfHXTOx (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sat, 24 Aug 2019 15:14:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59664 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726553AbfHXTOx (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Sat, 24 Aug 2019 15:14:53 -0400
-Received: from X250.getinternet.no (98.142.130.235.16clouds.com [98.142.130.235])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 864092146E;
-        Sat, 24 Aug 2019 19:14:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566674092;
-        bh=8qX1ZJe1XLYMzC7AJza+cKAUFCy/FnwUUpWjirZd0JY=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=ia/mYxruLGEEb0ATpZpUyBqnVlcfnLCbSfL9lrPv495b+HukbAQOuSsBDb36Ok2uC
-         gaxroPEWyjeNjJQO+xN6+137UrES0LIxO9culjvY5e425FKLEi6ElxU+sKnAWXg4P7
-         phqPRMe6N7kmWdzUGmYC9lccfSdVtTAgBQcYugQk=
-Date:   Sat, 24 Aug 2019 21:14:39 +0200
-From:   Shawn Guo <shawnguo@kernel.org>
-To:     Hui Song <hui.song_1@nxp.com>
-Cc:     Li Yang <leoyang.li@nxp.com>, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org
-Subject: Re: [PATCH v4] arm64: dts: ls1088a: fix gpio node
-Message-ID: <20190824191438.GE16308@X250.getinternet.no>
-References: <20190820055438.43469-1-hui.song_1@nxp.com>
+        id S1727879AbfHXVSJ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sat, 24 Aug 2019 17:18:09 -0400
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:46311 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727823AbfHXVSI (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sat, 24 Aug 2019 17:18:08 -0400
+Received: by mail-lf1-f65.google.com with SMTP id n19so9527154lfe.13
+        for <linux-gpio@vger.kernel.org>; Sat, 24 Aug 2019 14:18:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:from:date:message-id:subject:to:cc;
+        bh=buG8rS1mJF0qAnzC4CPBok3txDbgd1yDUZD/dbaM0ZI=;
+        b=BE85dBJbTx/kCV/K61eeXdfzfnJ2mys1pqTCzNLN+29ZHQOyNl4I0MC0JtYtksN+3/
+         ThtcLUKmJQRpyc+FwTr/Xs7fOvgEwJrDE/O9EvdkhQoVPENqR2+P6dBQAyzfvnhdiQ5h
+         aY1OBBncu7vycqpujXGWqpvbtcr4L5vCSuvcNu+X+a/KDIDDkoz/iyWyUnl64/ulJ7/i
+         Sh1ZO7XNNbGhgltOWHB5Mhaw5U5fHU1foQY12xa2gvnlySrqB6YITMnNQgEMHndh+jH6
+         gY/ZaCu3wvWUE0/wwCAs3IBaMO4l1eWkftuXLIDGNZCaHTBSetOwtlhu0vLIA4ljEvth
+         JpYQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
+        bh=buG8rS1mJF0qAnzC4CPBok3txDbgd1yDUZD/dbaM0ZI=;
+        b=l3FaGo3NNtIO7eJR6jDyPRv0yEY+KpOK6iIBIk+oP5BPVKNzleKeHbTJ6yNqiseqqX
+         HmZW1MbT7yNY2DgaBKySV6pds2jhI2Ld07F899ezh3hXz5rzUC2XX7bquoPaYK1Howrw
+         y59BKDYsSnGXENyuCCdi8iN/ER4+6AC1rRCo+7QqypNllGEPNUbdyjw3U9iNeiI+3jK5
+         LGGWzqXzH0b/eT4QVT+QerHWzuyONpKBXSePE0N3twub6/aK0fhU3eBduH1rBKlbxGhP
+         aaxlfQIwB3PFXU+YLugZ8MtSogeIHh3q0ZPRLRSsLaziV3Sz4OfhF+J6DK3UuDEX2jIZ
+         JCrA==
+X-Gm-Message-State: APjAAAVfpebb/LsMrRB/0v2ExXscLPVKiH+OnIKahKIErloJojDpm8lt
+        V/tr7cA68aFWVuDSuJeqYst3EQJxjmB2FPC5JDZySvIw5C5LHw==
+X-Google-Smtp-Source: APXvYqytYBob1ysBJFACFwD27yhpXuh79le74ImOIBK9fnFXYOfsrqZBUWF/nbQVDk6NXB+PhLckDQnRms6L+zoHv0A=
+X-Received: by 2002:ac2:5939:: with SMTP id v25mr6513387lfi.115.1566681486625;
+ Sat, 24 Aug 2019 14:18:06 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190820055438.43469-1-hui.song_1@nxp.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Sat, 24 Aug 2019 23:17:54 +0200
+Message-ID: <CACRpkdaWR9GZ0Hem4h-jdGcYc_Uwx29XvsHuEgvXiebRG6DCwA@mail.gmail.com>
+Subject: [GIT PULL] GPIO fixes for v5.3
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Aug 20, 2019 at 01:54:38PM +0800, Hui Song wrote:
-> From: Song Hui <hui.song_1@nxp.com>
-> 
-> add ls1088a gpio specify compatible.
-> 
-> Signed-off-by: Song Hui <hui.song_1@nxp.com>
+Hi Linus,
 
-I updated the patch subject as below, and applied the patch.
+here is a (hopefully last) set of GPIO fixes for the v5.3 kernel
+cycle. Two are pretty core.
 
-  arm64: dts: ls1088a: update gpio compatible
+Please pull them in! Details in the signed tag.
 
-Shawn
+Yours,
+Linus Walleij
 
-> ---
-> Changes in v4:
-> 	- update the patch description.
-> Changes in v3:
-> 	- delete the attribute of little-endian.
-> Changes in v2:
-> 	- update the subject.
->  
-> 
-> diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
-> index dfbead4..ff669c8 100644
-> --- a/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
-> +++ b/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
-> @@ -269,7 +269,7 @@
->  		};
->  
->  		gpio0: gpio@2300000 {
-> -			compatible = "fsl,qoriq-gpio";
-> +			compatible = "fsl,ls1088a-gpio", "fsl,qoriq-gpio";
->  			reg = <0x0 0x2300000 0x0 0x10000>;
->  			interrupts = <0 36 IRQ_TYPE_LEVEL_HIGH>;
->  			little-endian;
-> @@ -280,7 +280,7 @@
->  		};
->  
->  		gpio1: gpio@2310000 {
-> -			compatible = "fsl,qoriq-gpio";
-> +			compatible = "fsl,ls1088a-gpio", "fsl,qoriq-gpio";
->  			reg = <0x0 0x2310000 0x0 0x10000>;
->  			interrupts = <0 36 IRQ_TYPE_LEVEL_HIGH>;
->  			little-endian;
-> @@ -291,7 +291,7 @@
->  		};
->  
->  		gpio2: gpio@2320000 {
-> -			compatible = "fsl,qoriq-gpio";
-> +			compatible = "fsl,ls1088a-gpio", "fsl,qoriq-gpio";
->  			reg = <0x0 0x2320000 0x0 0x10000>;
->  			interrupts = <0 37 IRQ_TYPE_LEVEL_HIGH>;
->  			little-endian;
-> @@ -302,7 +302,7 @@
->  		};
->  
->  		gpio3: gpio@2330000 {
-> -			compatible = "fsl,qoriq-gpio";
-> +			compatible = "fsl,ls1088a-gpio", "fsl,qoriq-gpio";
->  			reg = <0x0 0x2330000 0x0 0x10000>;
->  			interrupts = <0 37 IRQ_TYPE_LEVEL_HIGH>;
->  			little-endian;
-> -- 
-> 2.9.5
-> 
+The following changes since commit d45331b00ddb179e291766617259261c112db872:
+
+  Linux 5.3-rc4 (2019-08-11 13:26:41 -0700)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-gpio.git
+tags/gpio-v5.3-4
+
+for you to fetch changes up to 48057ed1840fde9239b1e000bea1a0a1f07c5e99:
+
+  gpio: Fix irqchip initialization order (2019-08-23 11:00:43 +0200)
+
+----------------------------------------------------------------
+GPIO fixes for the v5.3 kernel:
+
+- Fix not reporting open drain/source lines to userspace as "input"
+- Fix a minor build error found in randconfigs
+- Fix a chip select quirk on the Freescale SPI
+- Fix the irqchip initialization semantic order to reflect what
+  it was using the old API
+
+----------------------------------------------------------------
+Andreas Kemnade (1):
+      gpio: of: fix Freescale SPI CS quirk handling
+
+Bartosz Golaszewski (1):
+      gpiolib: never report open-drain/source lines as 'input' to user-space
+
+Linus Walleij (1):
+      gpio: Fix irqchip initialization order
+
+YueHaibing (1):
+      gpio: Fix build error of function redefinition
+
+ drivers/gpio/gpiolib-of.c |  2 +-
+ drivers/gpio/gpiolib.c    | 36 +++++++++++++++++++-----------------
+ include/linux/gpio.h      | 24 ------------------------
+ 3 files changed, 20 insertions(+), 42 deletions(-)
