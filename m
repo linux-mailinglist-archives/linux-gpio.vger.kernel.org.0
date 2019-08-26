@@ -2,108 +2,82 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id DF8819CEF0
-	for <lists+linux-gpio@lfdr.de>; Mon, 26 Aug 2019 14:05:47 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9215F9D08E
+	for <lists+linux-gpio@lfdr.de>; Mon, 26 Aug 2019 15:29:26 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730597AbfHZMFr (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 26 Aug 2019 08:05:47 -0400
-Received: from mx2.suse.de ([195.135.220.15]:43554 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726962AbfHZMFq (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Mon, 26 Aug 2019 08:05:46 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 62E2AAFCC;
-        Mon, 26 Aug 2019 12:05:45 +0000 (UTC)
-Date:   Mon, 26 Aug 2019 14:05:44 +0200
-From:   Petr Mladek <pmladek@suse.com>
-To:     Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <uwe@kleine-koenig.org>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
+        id S1728551AbfHZN3U (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 26 Aug 2019 09:29:20 -0400
+Received: from mout.kundenserver.de ([217.72.192.73]:43823 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727261AbfHZN3U (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 26 Aug 2019 09:29:20 -0400
+Received: from [192.168.1.110] ([95.118.26.153]) by mrelayeu.kundenserver.de
+ (mreue108 [212.227.15.183]) with ESMTPSA (Nemesis) id
+ 1MUXh8-1hboEp2oAy-00QVfP; Mon, 26 Aug 2019 15:29:11 +0200
 Subject: Re: [PATCH v1 1/2] vsprintf: introduce %dE for error constants
-Message-ID: <20190826120544.ccbtjkgvk3ao4ak6@pathway.suse.cz>
+To:     =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <uwe@kleine-koenig.org>,
+        Andrew Morton <akpm@linux-foundation.org>
+Cc:     Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
 References: <20190824233724.1775-1-uwe@kleine-koenig.org>
- <20190824165829.7d330367992c62dab87f6652@linux-foundation.org>
- <20190825091442.GA5817@taurus.defre.kleine-koenig.org>
+From:   "Enrico Weigelt, metux IT consult" <lkml@metux.net>
+Organization: metux IT consult
+Message-ID: <a5f535af-09f7-e65b-1527-7d6dd8553c1d@metux.net>
+Date:   Mon, 26 Aug 2019 15:29:08 +0200
+User-Agent: Mozilla/5.0 (X11; Linux i686 on x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
+In-Reply-To: <20190824233724.1775-1-uwe@kleine-koenig.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190825091442.GA5817@taurus.defre.kleine-koenig.org>
-User-Agent: NeoMutt/20170912 (1.9.0)
+X-Provags-ID: V03:K1:G5RzoUT+mkDb1PhnP98I+bnT7IxJGLBn4rohV3XwBzi53At0zak
+ XcOTukvSzyaBBwsZ1w2ZujXAufGApITFPz0S4cWo7R3lqmCNqIFDeGRZD9DmC6cGsCR2tPt
+ d+nI6a8iLItPYFPvYiZV+K8AfGjXbPSof67D3AC5yr97eGz2Bph6IsZepjClB8ur4BEGWv7
+ xFIVgT5A686Qcno5zVZDw==
+X-Spam-Flag: NO
+X-UI-Out-Filterresults: notjunk:1;V03:K0:8GFIGhsgunc=:7a0+kvbhjTR0SzPdhb2FBq
+ 0aZGTQ/xMkx/2CVPktdHSCy/5yrVc3+CxhPal/o5HYKD1TV7a+E0ySQCVpJxQ2VBCJ0LoKc2h
+ 3u5nnRRVkx1xGrBPj9bmLuqTXS/V59vCh/Q8vnZlb0wqnsb/bgssMUt9SPWkqGxf4BIN/s6+p
+ x5nvkg4Ko7aTLhKxglGWh/3oIMXrwHFaRoI4K8LF3B8R51G8y+q22S+qIJslbPXyu18RbtUB7
+ dT8JEMx9zAr+BbtQgQz2/I6TakCS5Ew+hUxMEuWFIrGFTI+BaBW8xmI2GOMrjBZMY5WceIgYW
+ Gr62SvMxSpIlyc6WA7hmCFg1lO9HzTGtjs/QpNwpVyR3iUYiFkpYhs7/ezUKDSydWL6lLqMSw
+ JWe38ZzeDEbUQsW2gnyhuhx4bfgBP3+X3HoBNMQOBMupTRCxLxhOzc+CmiqTbQzr3ajoRcvsG
+ aXRl51ojDQxFeZFl/zWTgNK0odlc1MgUqt+CytK/Qh04DZ5g4Fm4cXFzx5/Oatpbseb1qET1l
+ +fNL8dvP7xaoh0OkueaEtIQy80/eYhLiC076SQgUr6UgBUb6UkEdFDoyjy2MOlP62hc4wvSb9
+ GDMb4At24eLTqYwu5FVHwuJY+wiVyAvcxlHJkAGI5MAxHKWzG0Pg2y0T4ytrf/ddn53b5t5Ad
+ p0ciMlEiNq0icMcWHhUkwO7RZtKFLo3hEM/BALrY1yyo/6SeRJ6lvQAj3h/dnT4aUvMChX9/D
+ jknX7Or4qQsP4N6b9amBPa8UhHLjDjic5HR20K6wrG4lJnSUmWVAgCdD+y4=
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Sun 2019-08-25 11:14:42, Uwe Kleine-König  wrote:
-> Hello Andrew,
-> 
-> On Sat, Aug 24, 2019 at 04:58:29PM -0700, Andrew Morton wrote:
-> > (cc printk maintainers).
-> 
-> Ah, I wasn't aware there is something like them. Thanks
-> 
-> > On Sun, 25 Aug 2019 01:37:23 +0200 Uwe Kleine-König <uwe@kleine-koenig.org> wrote:
-> > 
-> > > 	pr_info("probing failed (%dE)\n", ret);
-> > > 
-> > > expands to
-> > > 
-> > > 	probing failed (EIO)
-> > > 
-> > > if ret holds -EIO (or EIO). This introduces an array of error codes. If
-> > > the error code is missing, %dE falls back to %d and so prints the plain
-> > > number.
+On 25.08.19 01:37, Uwe Kleine-KÃ¶nig wrote:
 
-What was the motivation for this patch, please?
+Hi,
 
-Did it look like a good idea?
-Did anyone got tired by searching for the error codes many
-times a day?
-Did the idea came from a developer, support, or user, please?
+> +static noinline_for_stack > +char *errstr(char *buf, char *end, unsigned long long num,> +	 
+struct printf_spec spec)> +{
+#1: why not putting that into some separate strerror() lib function ?
+     This is something I've been looking for quite some time (actually
+     already hacked it up somewhere, sometime, but forgotten ...)
 
-> 	add/remove: 2/0 grow/shrink: 4/2 up/down: 1488/-8 (1480)
-> 	Function                                     old     new   delta
-> 	errorcodes                                     -    1200   +1200
-> 	errstr                                         -     200    +200
-> 	vsnprintf                                    884     960     +76
-> 	set_precision                                148     152      +4
-> 	resource_string                             1380    1384      +4
-> 	flags_string                                 400     404      +4
-> 	num_to_str                                   288     284      -4
-> 	format_decode                               1024    1020      -4
-> 	Total: Before=21686, After=23166, chg +6.82%
-> 
-> But that doesn't seem to include the size increase for all the added
-> strings which seems to be around another 1300 bytes.
+#2: why not just having a big case statement and leave the actual lookup
+     logic to the compiler ? IMHO, could be written in a very compact way
+     by some macro magic
 
-This non-trivial increase of the size and the table still
-includes only part of the error codes.
+> +	for (i = 0; i < ARRAY_SIZE(errorcodes); ++i) { > +		if (num == errorcodes[i].err || num == -errorcodes[i].err) {
 
-The array is long, created by cpu&paste, the index of each code
-is not obvious.
+why not taking the abs value only once, instead of duplicate comp on
+each iteration ?
 
-There are ideas to make the code even more tricky to reduce
-the size, keep it fast.
 
-Both, %dE modifier and the output format (ECODE) is non-standard.
+--mtx
 
-Upper letters gain a lot of attention. But the error code is
-only helper information. Also many error codes are misleading because
-they are used either wrongly or there was no better available.
-
-There is no proof that this approach would be widely acceptable for
-subsystem maintainers. Some might not like mass and "blind" code
-changes. Some might not like the output at all.
-
-I am not persuaded that all this is worth it. Also I do not like
-the non-standard solution.
-
-Best Regards,
-Petr
+-- 
+Enrico Weigelt, metux IT consult
+Free software and Linux embedded engineering
+info@metux.net -- +49-151-27565287
