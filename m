@@ -2,136 +2,82 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id ED7499CC47
-	for <lists+linux-gpio@lfdr.de>; Mon, 26 Aug 2019 11:11:17 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 90ACD9CCEA
+	for <lists+linux-gpio@lfdr.de>; Mon, 26 Aug 2019 11:58:16 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730693AbfHZJLQ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 26 Aug 2019 05:11:16 -0400
-Received: from mga01.intel.com ([192.55.52.88]:58104 "EHLO mga01.intel.com"
+        id S1731052AbfHZJ6Q (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 26 Aug 2019 05:58:16 -0400
+Received: from mga14.intel.com ([192.55.52.115]:49016 "EHLO mga14.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729753AbfHZJLP (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Mon, 26 Aug 2019 05:11:15 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
+        id S1730338AbfHZJ6P (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Mon, 26 Aug 2019 05:58:15 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 26 Aug 2019 02:11:15 -0700
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 26 Aug 2019 02:58:15 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.64,431,1559545200"; 
-   d="scan'208";a="380471920"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.145])
-  by fmsmga006.fm.intel.com with ESMTP; 26 Aug 2019 02:11:12 -0700
-Received: from andy by smile with local (Exim 4.92.1)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1i2B1q-0000Le-2U; Mon, 26 Aug 2019 12:11:10 +0300
-Date:   Mon, 26 Aug 2019 12:11:10 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Hans de Goede <hdegoede@redhat.com>
-Cc:     Mika Westerberg <mika.westerberg@linux.intel.com>,
+   d="scan'208";a="197019323"
+Received: from jnikula-mobl3.fi.intel.com (HELO localhost) ([10.237.66.150])
+  by fmsmga001.fm.intel.com with ESMTP; 26 Aug 2019 02:58:12 -0700
+From:   Jani Nikula <jani.nikula@linux.intel.com>
+To:     Andrew Morton <akpm@linux-foundation.org>,
+        Uwe =?utf-8?Q?Kleine-K?= =?utf-8?Q?=C3=B6nig?= 
+        <uwe@kleine-koenig.org>
+Cc:     Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
         Linus Walleij <linus.walleij@linaro.org>,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
-        linux-gpio@vger.kernel.org, linux-acpi@vger.kernel.org,
-        linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        Daniel Drake <drake@endlessm.com>,
-        Ian W MORRISON <ianwmorrison@gmail.com>
-Subject: Re: [PATCH] gpiolib: acpi: Add gpiolib_acpi_run_edge_events_on_boot
- option and blacklist
-Message-ID: <20190826091110.GY30120@smile.fi.intel.com>
-References: <20190823215255.7631-1-hdegoede@redhat.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190823215255.7631-1-hdegoede@redhat.com>
+        Petr Mladek <pmladek@suse.com>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>
+Subject: Re: [PATCH v1 1/2] vsprintf: introduce %dE for error constants
+In-Reply-To: <20190824165829.7d330367992c62dab87f6652@linux-foundation.org>
 Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20190824233724.1775-1-uwe@kleine-koenig.org> <20190824165829.7d330367992c62dab87f6652@linux-foundation.org>
+Date:   Mon, 26 Aug 2019 12:58:11 +0300
+Message-ID: <87o90c9rkc.fsf@intel.com>
+MIME-Version: 1.0
+Content-Type: text/plain
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Aug 23, 2019 at 11:52:55PM +0200, Hans de Goede wrote:
-> Another day; another DSDT bug we need to workaround...
-> 
-> Since commit ca876c7483b6 ("gpiolib-acpi: make sure we trigger edge events
-> at least once on boot") we call _AEI edge handlers at boot.
-> 
-> In some rare cases this causes problems. One example of this is the Minix
-> Neo Z83-4 mini PC, this device has a clear DSDT bug where it has some copy
-> and pasted code for dealing with Micro USB-B connector host/device role
-> switching, while the mini PC does not even have a micro-USB connector.
-> This code, which should not be there, messes with the DDC data pin from
-> the HDMI connector (switching it to GPIO mode) breaking HDMI support.
-> 
-> To avoid problems like this, this commit adds a new
-> gpiolib_acpi_run_edge_events_on_boot kernel commandline option which
-> can be "on", "off", or "auto" (default).
-> 
-> In auto mode the default is on and a DMI based blacklist is used,
-> the initial version of this blacklist contains the Minix Neo Z83-4
-> fixing the HDMI being broken on this device.
+On Sat, 24 Aug 2019, Andrew Morton <akpm@linux-foundation.org> wrote:
+>> --- a/lib/vsprintf.c
+>> +++ b/lib/vsprintf.c
+>> @@ -533,6 +533,192 @@ char *number(char *buf, char *end, unsigned long long num,
+>>  	return buf;
+>>  }
+>>  
+>> +#define ERRORCODE(x) { .str = #x, .err = x }
+>> +
+>> +static const struct {
+>> +	const char *str;
+>> +	int err;
+>> +} errorcodes[] = {
+>
+> It's a bit of a hack, but an array of char*'s and a separate array of
+> ushorts would save a bit of space.
 
-> +static int gpiolib_acpi_run_edge_events_on_boot = -1;
-> +
-> +static int __init gpiolib_acpi_run_edge_events_on_boot_setup(char *arg)
-> +{
+Or just
 
-> +	if (!strcmp(arg, "on"))
-> +		gpiolib_acpi_run_edge_events_on_boot = 1;
-> +	else if (!strcmp(arg, "off"))
-> +		gpiolib_acpi_run_edge_events_on_boot = 0;
+#define ERRORCODE(x) [x] = #x
 
-kstrtobool() ?
+static const char * const errorcodes[] = {
+	ERRORCODE(EPERM),
+        ERRORCODE(ENOENT),
+        ...
+};
 
-> +	else if (!strcmp(arg, "auto"))
-> +		gpiolib_acpi_run_edge_events_on_boot = -1;
-> +
-> +	return 1;
-> +}
+Saves space, faster lookup, discovers at build time why EWOULDBLOCK
+would always show up as EAGAIN in the logs. We don't have holes to speak
+of in the error codes.
 
-> +
-> +__setup("gpiolib_acpi_run_edge_events_on_boot=",
-> +        gpiolib_acpi_run_edge_events_on_boot_setup);
+BR,
+Jani.
 
-Can't we use module_param() ?
-The resulting option would be 'gpiolib_acpi.foo=...'
-
-> +{
-
-> +	if (gpiolib_acpi_run_edge_events_on_boot == -1) {
-> +		if (dmi_check_system(run_edge_events_on_boot_blacklist))
-> +			gpiolib_acpi_run_edge_events_on_boot = 0;
-> +		else
-> +			gpiolib_acpi_run_edge_events_on_boot = 1;
-> +	}
-
-Can we run this at an initcall once and use variable instead of calling a
-method below?
-
-> +	return gpiolib_acpi_run_edge_events_on_boot;
-> +}
-> +
->  static void acpi_gpiochip_request_irq(struct acpi_gpio_chip *acpi_gpio,
->  				      struct acpi_gpio_event *event)
->  {
-> @@ -170,10 +211,13 @@ static void acpi_gpiochip_request_irq(struct acpi_gpio_chip *acpi_gpio,
->  	event->irq_requested = true;
->  
->  	/* Make sure we trigger the initial state of edge-triggered IRQs */
-> -	value = gpiod_get_raw_value_cansleep(event->desc);
-> -	if (((event->irqflags & IRQF_TRIGGER_RISING) && value == 1) ||
-> -	    ((event->irqflags & IRQF_TRIGGER_FALLING) && value == 0))
-> -		event->handler(event->irq, event);
-> +	if (acpi_gpiochip_run_edge_events_on_boot() &&
-> +	    (event->irqflags & (IRQF_TRIGGER_RISING | IRQF_TRIGGER_FALLING))) {
-> +		value = gpiod_get_raw_value_cansleep(event->desc);
-> +		if (((event->irqflags & IRQF_TRIGGER_RISING) && value == 1) ||
-> +		    ((event->irqflags & IRQF_TRIGGER_FALLING) && value == 0))
-> +			event->handler(event->irq, event);
-> +	}
 
 -- 
-With Best Regards,
-Andy Shevchenko
-
-
+Jani Nikula, Intel Open Source Graphics Center
