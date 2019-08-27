@@ -2,79 +2,86 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 9332A9DE45
-	for <lists+linux-gpio@lfdr.de>; Tue, 27 Aug 2019 08:57:08 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B84549DEFF
+	for <lists+linux-gpio@lfdr.de>; Tue, 27 Aug 2019 09:46:59 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726071AbfH0G4z (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 27 Aug 2019 02:56:55 -0400
-Received: from protonic.xs4all.nl ([83.163.252.89]:51452 "EHLO protonic.nl"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725904AbfH0G4y (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Tue, 27 Aug 2019 02:56:54 -0400
-Received: from troy.prtnl (troy.prtnl [192.168.224.29])
-        by sparta (Postfix) with ESMTP id 8E22944A00C5;
-        Tue, 27 Aug 2019 08:49:09 +0200 (CEST)
-From:   David Jander <david@protonic.nl>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        David Jander <david@protonic.nl>
-Subject: [PATCH 2/2] gpio: pca953x.c: Use pca953x_read_regs instead of regmap_bulk_read
-Date:   Tue, 27 Aug 2019 06:46:29 +0000
-Message-Id: <20190827064629.90214-2-david@protonic.nl>
-X-Mailer: git-send-email 2.19.1
-In-Reply-To: <20190827064629.90214-1-david@protonic.nl>
-References: <20190827064629.90214-1-david@protonic.nl>
+        id S1728684AbfH0Hq6 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 27 Aug 2019 03:46:58 -0400
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:32792 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726333AbfH0Hq6 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 27 Aug 2019 03:46:58 -0400
+Received: by mail-lf1-f68.google.com with SMTP id g9so612784lfb.0
+        for <linux-gpio@vger.kernel.org>; Tue, 27 Aug 2019 00:46:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=dFOqKfbpfyZwn4Lyu2FeqhkpQf6JFuziIop7qSWTXvo=;
+        b=o20jXDDPPvxsDErqPFhPbfNrq2zsAHXv/blUGUUzxgi9ZujS2x3dWAXkVTJkZvSiRp
+         XLQYJ7cS5xAsRz9QN5DVVevEEPm26i/0CDuG/bH+j0WidzzWVNm0GhjLFyUPOgmrYO/I
+         d0Vj52vxskMPnsYGqKcvsL0A08TxjsahAWGQR4FPYo3EasGLcyzAbeIh6v/tZj5iEoOQ
+         6dsrGi1rLGZQLzn38pc2y8nOUx8Lea9k+lhUEt/HKQ9lqrfux/gx5pPdZYOvDlpS7a+w
+         P8BmixbZNLImDZeI1aWMxY+C0H1waPmA4soCZRh42waMFt94rl1RNwb62jC4CFsKfcrF
+         RBWQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=dFOqKfbpfyZwn4Lyu2FeqhkpQf6JFuziIop7qSWTXvo=;
+        b=bBKmrmQR6AXPTMOjBhKQi9SKKjTLvGYtKUr+WBPamWJNyqEIxsTVCmm9D472lgnTAd
+         FFb232t8Cu+P2eUQV6VO3fxc0eBL+gx2sVbQK9pD7fGRqutYsV5mllQe6mMQKE/js2PY
+         H2B8uxkQaETUsUO1mffZL6aCrp0NGoHSHBuLxLFlsuM6sK6Ilg/7c6U3unlKvA8haT5Q
+         PTrc2KWdzoizxOv5ubXxPf+5/agcrjWqD890gaYnW9p4BvR/Ybv3g57TWffcA0dV2/qo
+         ZTq9HHxu8cy19Giazhz9bBMF3vf1c3u7DAx5Ta8KGwEDhrlt3kEUN0MlVI1/oJcJCVja
+         H8hQ==
+X-Gm-Message-State: APjAAAXhmXtSjR2K9QoPGFhk35E/Oc7vYgJtgMxE4KF7huXi5xX26cIH
+        59kUDoJlWf01bZ24zuwSXXZCoYnbBt/ZMl8Y0hJqUw==
+X-Google-Smtp-Source: APXvYqxixoiN4Btq5D4VdRTz8xdDlhBGXd+FvALGAPeghizFIx2u8ZlMTzyPN6AT9HwLGk6zEvIAWZ7sUfdYixXZlD4=
+X-Received: by 2002:ac2:5939:: with SMTP id v25mr13672672lfi.115.1566892016527;
+ Tue, 27 Aug 2019 00:46:56 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20190805101607.29811-1-miquel.raynal@bootlin.com> <20190805101607.29811-3-miquel.raynal@bootlin.com>
+In-Reply-To: <20190805101607.29811-3-miquel.raynal@bootlin.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Tue, 27 Aug 2019 09:46:45 +0200
+Message-ID: <CACRpkdb4m9RJ_e_ykWu2-FEOXP3X3K04TX5nPFjo482iY15j+A@mail.gmail.com>
+Subject: Re: [PATCH 2/3] dt-bindings: cp110: document the new CP115 pinctrl compatible
+To:     Miquel Raynal <miquel.raynal@bootlin.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Gregory Clement <gregory.clement@bootlin.com>,
+        Antoine Tenart <antoine.tenart@bootlin.com>,
+        Maxime Chevallier <maxime.chevallier@bootlin.com>,
+        Nadav Haklai <nadavh@marvell.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Grzegorz Jaszczyk <jaz@semihalf.com>,
+        Marcin Wojtas <mw@semihalf.com>,
+        Stefan Chulski <stefanc@marvell.com>,
+        Yan Markman <ymarkman@marvell.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-The register number needs to be translated for chips with more than 8
-ports. This patch fixes a bug causing all chips with more than 8 GPIO pins
-to not work correctly.
+On Mon, Aug 5, 2019 at 12:16 PM Miquel Raynal <miquel.raynal@bootlin.com> wrote:
 
-Signed-off-by: David Jander <david@protonic.nl>
----
- drivers/gpio/gpio-pca953x.c | 9 +++------
- 1 file changed, 3 insertions(+), 6 deletions(-)
+> From: Grzegorz Jaszczyk <jaz@semihalf.com>
+>
+> A new compatible is going to be used for Armada CP115 pinctrl block,
+> document it.
+>
+> Signed-off-by: Grzegorz Jaszczyk <jaz@semihalf.com>
+> [<miquel.raynal@bootlin.com>: split the documentation out of the
+> driver commit]
+> Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
 
-diff --git a/drivers/gpio/gpio-pca953x.c b/drivers/gpio/gpio-pca953x.c
-index 30072a570bc2..48fea4c68e8d 100644
---- a/drivers/gpio/gpio-pca953x.c
-+++ b/drivers/gpio/gpio-pca953x.c
-@@ -606,8 +606,7 @@ static void pca953x_irq_bus_sync_unlock(struct irq_data *d)
- 	u8 invert_irq_mask[MAX_BANK];
- 	u8 reg_direction[MAX_BANK];
- 
--	regmap_bulk_read(chip->regmap, chip->regs->direction, reg_direction,
--			 NBANK(chip));
-+	pca953x_read_regs(chip, chip->regs->direction, reg_direction);
- 
- 	if (chip->driver_data & PCA_PCAL) {
- 		/* Enable latch on interrupt-enabled inputs */
-@@ -710,8 +709,7 @@ static bool pca953x_irq_pending(struct pca953x_chip *chip, u8 *pending)
- 		return false;
- 
- 	/* Remove output pins from the equation */
--	regmap_bulk_read(chip->regmap, chip->regs->direction, reg_direction,
--			 NBANK(chip));
-+	pca953x_read_regs(chip, chip->regs->direction, reg_direction);
- 	for (i = 0; i < NBANK(chip); i++)
- 		cur_stat[i] &= reg_direction[i];
- 
-@@ -789,8 +787,7 @@ static int pca953x_irq_setup(struct pca953x_chip *chip,
- 	 * interrupt.  We have to rely on the previous read for
- 	 * this purpose.
- 	 */
--	regmap_bulk_read(chip->regmap, chip->regs->direction, reg_direction,
--			 NBANK(chip));
-+	pca953x_read_regs(chip, chip->regs->direction, reg_direction);
- 	for (i = 0; i < NBANK(chip); i++)
- 		chip->irq_stat[i] &= reg_direction[i];
- 	mutex_init(&chip->irq_lock);
--- 
-2.19.1
+Patch applied with Rob's ACK.
 
+Yours,
+Linus Walleij
