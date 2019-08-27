@@ -2,180 +2,88 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 1A40B9DF82
-	for <lists+linux-gpio@lfdr.de>; Tue, 27 Aug 2019 09:55:38 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 145CA9DF1B
+	for <lists+linux-gpio@lfdr.de>; Tue, 27 Aug 2019 09:51:02 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729635AbfH0HzB (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 27 Aug 2019 03:55:01 -0400
-Received: from esa2.mentor.iphmx.com ([68.232.141.98]:44310 "EHLO
-        esa2.mentor.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730207AbfH0Hy7 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 27 Aug 2019 03:54:59 -0400
-X-Greylist: delayed 427 seconds by postgrey-1.27 at vger.kernel.org; Tue, 27 Aug 2019 03:54:58 EDT
-IronPort-SDR: 7ljm1gIQnKNVw/yCuBD7MDcBp1Tbbyl1fhloC9zBbFZtoTqRAy+g/aexh+OJzWbWnVa5u3hpVc
- FtrQ9xJpYQA3SpwYelnHwh+W1Ah4SwcfvyigGxe4KHZ4tyuH3jXOvkY9pB+CA4k9aPHnlb35CU
- /iMWC4D7DEE2frqOCjg7V0yOy7bb1wI/UUzBGp7qbfkGaoAf3VkBcatUqHBlQOfCLXMtIFjBB3
- zgSdXp3wgLsS9gghPYPMwzQsoW0qv4iZ4PB2awd1JTxif61qpIdQgPi8NRa9y1rDx/tEbwZwjN
- opw=
-X-IronPort-AV: E=Sophos;i="5.64,436,1559548800"; 
-   d="scan'208";a="40756529"
-Received: from orw-gwy-01-in.mentorg.com ([192.94.38.165])
-  by esa2.mentor.iphmx.com with ESMTP; 26 Aug 2019 23:47:51 -0800
-IronPort-SDR: PBtNVqwncOR3DyyhHKAtZ5pgm7+7RfirIg1tml22USOCGNuBjoe/r1fXiHc16Pi3HhtioTa88r
- wG0tavERaSUvD+JeV+rIPAbfQBMYrK2lqAM2UGBdmTvjGjXNh/fmIQJdZMLeqsivJnKoTxZaia
- GUBKF9SUDzZeanABwzPrFHB2POrOpGZ0TxwkbwvwnhTEFzormNHPw/OqGmZZ8tqs+FB7hv42nV
- jj6BnnPc+UeJi6nZBnImhXUMXNvoCIpOsGLX8gBkW98GxGAD+QRgdQpzNf+Kdcl9jkPoupYzbo
- bH4=
-Subject: Re: [PATCH V4 2/2] gpio: inverter: document the inverter bindings
-From:   Harish Jenny K N <harish_kandiga@mentor.com>
-To:     Linus Walleij <linus.walleij@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>
-CC:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        id S1726134AbfH0HvB (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 27 Aug 2019 03:51:01 -0400
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:35206 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725985AbfH0HvB (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 27 Aug 2019 03:51:01 -0400
+Received: by mail-lj1-f193.google.com with SMTP id l14so17557667lje.2
+        for <linux-gpio@vger.kernel.org>; Tue, 27 Aug 2019 00:51:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=L9Zh3GrxMUIZygrm/sqB7uRawwKNOmPmv1C0mbC/aHs=;
+        b=kAEowIBMqlOiQbXMCtXM6absLiz1V6Xiyw3B8NCBPEyEmirQQBDYiTQF8BY1AjPNsg
+         arEECZFILxQqVnSBMFJU2lh4X0rJrrloauZLDPGRtdSx/GjuYl11BxWuWVmaHqKzRaia
+         VvhBh4LM6zfMEAj4YoCbxnraby9WnHWRZitbl3UkiwtvUtG1lgiAnGQ8P4MEenhW6Ydy
+         KSi/3aZ/0MsCZmNqZsjgbUhNsvlczfuL7mAEea7kjx6IUii6bBJiMN1x4FPTZmo31HUY
+         1Rlb4wv6essdGhd5GfH1gx4e7uVdK755ydDcInQ2qBo/sTLj7cD+i/qknk/XVsioj90Y
+         N9sA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=L9Zh3GrxMUIZygrm/sqB7uRawwKNOmPmv1C0mbC/aHs=;
+        b=bfiYg2qgbgIsCMj0we2J6gHNXfZ8DTqeP7DeKMY90JVPL2+zAD/7RGxjufkCSAwPAI
+         E6lcGYZcLB7CG3e7iA3jNNEs+AjzLGTtO45dtip7KKLpEAL4f9f3Yd6o1yV49I3UPZgH
+         5/gSQnMLxFO567Gm3F3cUL6K9N6y6q3wplz+uS2GfXGqdsS4yEeQDRl2YhUToANtcvjX
+         GfGihkI8ZmkdFmIL0FiGhLmArKxvmcLtCaH/kwimbS89MKH5lpq9ofT56hHLYGFYHm85
+         9uJu46PJA0Ow9uzHxsiBDfErsoQp+0s+elYCGKySnVbNpSaWz5wSxFLD8vVvC1BIw3JJ
+         eOpg==
+X-Gm-Message-State: APjAAAVQDrs7murLmqXeuexT0JmwFkkDIukhgn6HNCkG3I4r5Z6LYYQB
+        O2bw5AxA5ycCGh2daGX/YUcvQsw+5DwWnmtoeC7drg==
+X-Google-Smtp-Source: APXvYqzvGbIyA3LLknq2G4rbQ5Q7mx7t5yXqkOE+0yokVI69BeNEdJn00m2LbQgCn4KXb7+dQBM1CRBb9cVJArd4arA=
+X-Received: by 2002:a05:651c:28c:: with SMTP id b12mr13180755ljo.69.1566892259461;
+ Tue, 27 Aug 2019 00:50:59 -0700 (PDT)
+MIME-Version: 1.0
+References: <20190805101607.29811-1-miquel.raynal@bootlin.com>
+ <CACRpkdar5jE116CcywYxLR9JKWunRusJjNw7f3C0SFK4-4+dNQ@mail.gmail.com>
+ <CACRpkdbEw5eCKb=nTCK4wuMsPEadEQdGx62cGRhk7F78p5X2CA@mail.gmail.com>
+ <20190814143457.664b04c8@windsurf.home> <CACRpkdY-AtaS67u4s58PifFtP5C7xp4P15J+hW_Dba=Gb4rhSQ@mail.gmail.com>
+ <20190824133317.371dec4f@xps13>
+In-Reply-To: <20190824133317.371dec4f@xps13>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Tue, 27 Aug 2019 09:50:47 +0200
+Message-ID: <CACRpkdZ+zSCSc9Q40=_+K0kfZ4evuOTAShVYWYvuSeOfgkxZng@mail.gmail.com>
+Subject: Re: [PATCH 0/3] CP115 pinctrl support
+To:     Miquel Raynal <miquel.raynal@bootlin.com>
+Cc:     Yan Markman <ymarkman@marvell.com>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
         <devicetree@vger.kernel.org>,
+        Gregory Clement <gregory.clement@bootlin.com>,
+        Antoine Tenart <antoine.tenart@bootlin.com>,
+        Maxime Chevallier <maxime.chevallier@bootlin.com>,
+        Nadav Haklai <nadavh@marvell.com>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Balasubramani Vivekanandan 
-        <balasubramani_vivekanandan@mentor.com>
-References: <1561714250-19613-1-git-send-email-harish_kandiga@mentor.com>
- <CAL_Jsq+-xWLkvku-nLmJnFvbuS=dSD=9dG=GS4uBUqL50tdcDg@mail.gmail.com>
- <06c95f15-d577-e43d-e046-ee222f86c406@mentor.com>
- <CAL_JsqLQvjtnfUsZ2RP4eozvdwMLzNxtgmT+XFaxW4xzoFjL=w@mail.gmail.com>
- <f1616784-4dbf-d0fa-b33e-c85fd569383a@mentor.com>
- <CACRpkdZ+vXG-mGjn0Tt5gyGowAuxiCSQNdjEPGTP9qj23CwkSw@mail.gmail.com>
- <CAL_JsqLp___2O-naU+2PPQy0QmJX6+aN3hByz-OB9+qFvWgN9Q@mail.gmail.com>
- <CACRpkdbmyc9LsJ2xiX=zAQR9FZ9dmwu-nPrNbt1Tgud9+rBGpw@mail.gmail.com>
- <978af20e-12aa-a8e9-5da9-9af6d6b8f553@mentor.com>
-Message-ID: <f47588d5-226a-6a7a-6c74-c0caaafaf572@mentor.com>
-Date:   Tue, 27 Aug 2019 13:17:37 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
-MIME-Version: 1.0
-In-Reply-To: <978af20e-12aa-a8e9-5da9-9af6d6b8f553@mentor.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Originating-IP: [137.202.0.90]
-X-ClientProxiedBy: SVR-IES-MBX-03.mgc.mentorg.com (139.181.222.3) To
- svr-ies-mbx-01.mgc.mentorg.com (139.181.222.1)
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Grzegorz Jaszczyk <jaz@semihalf.com>,
+        Marcin Wojtas <mw@semihalf.com>,
+        Stefan Chulski <stefanc@marvell.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Rob,
+On Sat, Aug 24, 2019 at 1:33 PM Miquel Raynal <miquel.raynal@bootlin.com> wrote:
+> Linus Walleij <linus.walleij@linaro.org> wrote on Thu, 15 Aug 2019
 
+> > OK then maybe I am a bit impatient.
+>
+> Actually Gregory is on vacation until September, so if we still are in
+> time for this merge window I suppose you can take it.
 
-On 19/08/19 3:06 PM, Harish Jenny K N wrote:
-> Hi Rob,
->
->
-> On 10/08/19 2:21 PM, Linus Walleij wrote:
->> On Fri, Aug 9, 2019 at 4:08 PM Rob Herring <robh+dt@kernel.org> wrote:
->>> On Mon, Aug 5, 2019 at 5:15 AM Linus Walleij <linus.walleij@linaro.org> wrote:
->>>> There is some level of ambition here which is inherently a bit fuzzy
->>>> around the edges. ("How long is the coast of Britain?" comes to mind.)
->>>>
->>>> Surely the intention of device tree is not to recreate the schematic
->>>> in all detail. What we want is a model of the hardware that will
->>>> suffice for the operating system usecases.
->>>>
->>>> But sometimes the DTS files will become confusing: why is this
->>>> component using GPIO_ACTIVE_LOW when another system
->>>> doesn't have that flag? If there is an explicit inverter, the
->>>> DTS gets more readable for a human.
->>>>
->>>> But arguable that is case for adding inverters as syntactic
->>>> sugar in the DTS compiler instead...
->>> If you really want something more explicit, then add a new GPIO
->>> 'inverted' flag. Then a device can always have the same HIGH/LOW flag.
->>> That also solves the abstract it for userspace problem.
->> I think there are some intricate ontologies at work here.
->>
->> Consider this example: a GPIO is controlling a chip select
->> regulator, say Acme Foo. The chip select
->> has a pin named CSN. We know from convention that the
->> "N" at the end of that pin name means "negative" i.e. active
->> low, and that is how the electronics engineers think about
->> that chip select line: it activates the IC when
->> the line goes low.
->>
->> The regulator subsystem and I think all subsystems in the
->> Linux kernel say the consumer pin should be named and
->> tagged after the datsheet of the regulator.
->>
->> So it has for example:
->>
->> foo {
->>     compatible = "acme,foo";
->>     cs-gpios = <&gpio0 6 GPIO_ACTIVE_LOW>;
->> };
->>
->> (It would be inappropriate to name it "csn-gpios" since
->> we have an established flag for active low. But it is another
->> of these syntactic choices where people likely do mistakes.)
->>
->> I think it would be appropriate for the DT binding to say
->> that this flag must always be GPIO_ACTIVE_LOW since
->> the bindings are seen from the component point of view,
->> and thus this is always active low.
->>
->> It would even be reasonable for a yaml schema to enfore
->> this, if it could. It is defined as active low after all.
->>
->> Now if someone adds an inverter on that line between
->> gpio0 and Acme Foo it looks like this:
->>
->> foo {
->>     compatible = "acme,foo";
->>     cs-gpios = <&gpio0 6 GPIO_ACTIVE_HIGH>;
->> };
->>
->> And now we get cognitive dissonance or whatever I should
->> call it: someone reading this DTS sheet and the data
->> sheet for the component Acme Foo to troubleshoot
->> this will be confused: this component has CS active
->> low and still it is specified as active high? Unless they
->> also look at the schematic or the board and find the
->> inverter things are pretty muddy and they will likely curse
->> and solve the situation with the usual trial-and-error,
->> inserting some random cursewords as a comment.
->>
->> With an intermediate inverter node, the cs-gpios
->> can go back to GPIO_ACTIVE_LOW and follow
->> the bindings:
->>
->> inv0: inverter {
->>     compatible = "gpio-inverter";
->>     gpio-controller;
->>     #gpio-cells = <1>;
->>     inverted-gpios = <&gpio0 6 GPIO_ACTIVE_HIGH>;
->> };
->>
->> foo {
->>     compatible = "acme,foo";
->>     cs-gpios = <&inv0 0 GPIO_ACTIVE_LOW>;
->> };
->>
->> And now Acme Foo bindings can keep enforcing cs-gpios
->> to always be tagged GPIO_ACTIVE_LOW.
->
-> Can you please review/let us know your opinion on this ? I think the idea here is to also isolate the changes to a separate consumer driver and avoid getting inversions inside gpiolib.
->
->
-> Thanks.
->
->
-> Regards,
->
-> Harish Jenny K N
->
+OK I applied the patches.
 
-Can you please comment on this ?
+If someone is upset we can always revert them in the -rc phase.
 
-
-Thanks,
-
-Harish Jenny K N
-
-
+Yours,
+Linus Walleij
