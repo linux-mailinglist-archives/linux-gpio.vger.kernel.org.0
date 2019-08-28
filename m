@@ -2,199 +2,392 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 51663A017F
-	for <lists+linux-gpio@lfdr.de>; Wed, 28 Aug 2019 14:21:30 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E12B9A02C4
+	for <lists+linux-gpio@lfdr.de>; Wed, 28 Aug 2019 15:13:33 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726368AbfH1MV3 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 28 Aug 2019 08:21:29 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:39694 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726259AbfH1MV3 (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Wed, 28 Aug 2019 08:21:29 -0400
-Received: from mail-ed1-f70.google.com (mail-ed1-f70.google.com [209.85.208.70])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 81EF6811A9
-        for <linux-gpio@vger.kernel.org>; Wed, 28 Aug 2019 12:21:28 +0000 (UTC)
-Received: by mail-ed1-f70.google.com with SMTP id z2so1579203ede.2
-        for <linux-gpio@vger.kernel.org>; Wed, 28 Aug 2019 05:21:28 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=pFwT3MczVz0uzEr5z1eNeQGMrxBuPaHwi2jIUSF3DYw=;
-        b=fSp/ZXiAj+VrXwqr+eGt9g0Bbw0QZ19cvjbuSqvITu37lvVo9hTdmWWVUBgLyw4yRo
-         IPYp7crGUgisMeTr7nq3m6WzcCI2/3vXbblL+p+uoPmuc6t0MItJ9arMnsD38taeX4ym
-         gRlYWoj/s7Y+uARO/7mCXNa+/XFpD6dI67MRQAAq69nkMHk+qDJdsgq2o/sRis9kBBUN
-         SyTJzLAU/1onKrATd3ECyCLxh/EcsGJKgve6Vmr7m4Ug1Y5bQ4OcDEc9reWuYzXuaugL
-         WbOde5DRx3DHfDu1oV58TQ98yVTD8+FZnaGwRAlVOyEqn/buvQAP+dejfWP+t+mBu0gu
-         1BbA==
-X-Gm-Message-State: APjAAAXYhH66x86MINcONTzcYZz/y0NNuYx76zKJRr+/l21zJDAUNa54
-        Qm5ZLMptKJbUyev5UzKi1xKrigJOUTSJ4UEZ9T7xr2gVvddFYClJbXl6FNfUbSLr6kEH/SxC4F0
-        LbWTIvyKF+FGxIz931DDq1g==
-X-Received: by 2002:a50:b165:: with SMTP id l34mr3669765edd.179.1566994887261;
-        Wed, 28 Aug 2019 05:21:27 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqxluKTYQWj67XWD8VFMLEPjzWhXpX6fsNT/j5tTVmlbY2uAsI4n2i4ld3hTVQwF28OBuxOQtw==
-X-Received: by 2002:a50:b165:: with SMTP id l34mr3669749edd.179.1566994887097;
-        Wed, 28 Aug 2019 05:21:27 -0700 (PDT)
-Received: from shalem.localdomain (84-106-84-65.cable.dynamic.v4.ziggo.nl. [84.106.84.65])
-        by smtp.gmail.com with ESMTPSA id k15sm359958ejk.46.2019.08.28.05.21.26
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 28 Aug 2019 05:21:26 -0700 (PDT)
-Subject: Re: [PATCH v2] gpiolib: acpi: Add
- gpiolib_acpi_run_edge_events_on_boot option and blacklist
-From:   Hans de Goede <hdegoede@redhat.com>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-gpio@vger.kernel.org, linux-acpi@vger.kernel.org,
-        stable@vger.kernel.org, Daniel Drake <drake@endlessm.com>,
-        Ian W MORRISON <ianwmorrison@gmail.com>
-References: <20190827202835.213456-1-hdegoede@redhat.com>
- <20190828113748.GK2680@smile.fi.intel.com>
- <005b954d-46ad-5e45-6a9c-0b1efe020b92@redhat.com>
-Message-ID: <c07a8e2e-61a7-7ce7-4f73-48978be98d27@redhat.com>
-Date:   Wed, 28 Aug 2019 14:21:25 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
-MIME-Version: 1.0
-In-Reply-To: <005b954d-46ad-5e45-6a9c-0b1efe020b92@redhat.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+        id S1726521AbfH1NN0 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 28 Aug 2019 09:13:26 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:37408 "EHLO
+        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726341AbfH1NN0 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 28 Aug 2019 09:13:26 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
+        Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
+        List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
+        List-Archive; bh=bLMkbp5ARdiwH2HpZoPUrOzoPdkWcvg1pZjWF08BQ5g=; b=fsR+JrcaywTr
+        l6bNx7np4Ad0LMcA3zUsOQCUb0MSzvWBqKPl3bs4HqRXEPES4RFMFvMfqvdrPzZpaWjH7iFg4UdjD
+        u8ag32MeY5l94Pta1cp9KEQVr9jY6fPIxIwMyNG04Usan0vZ9ZG0iPXQJ+ETj+zjaNTkKYTPVLgpB
+        Wm37E=;
+Received: from ypsilon.sirena.org.uk ([2001:470:1f1d:6b5::7])
+        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <broonie@sirena.co.uk>)
+        id 1i2xlH-0004Hh-A2; Wed, 28 Aug 2019 13:13:19 +0000
+Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
+        id B2BE82742B9F; Wed, 28 Aug 2019 14:13:17 +0100 (BST)
+From:   Mark Brown <broonie@kernel.org>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Fabio Estevam <festevam@gmail.com>, linux-gpio@vger.kernel.org,
+        linux-spi@vger.kernel.org, Mark Brown <broonie@kernel.org>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Shawn Guo <shawnguo@kernel.org>
+Subject: Applied "spi: fsl: Convert to use CS GPIO descriptors" to the spi tree
+In-Reply-To: <20190804003539.985-1-linus.walleij@linaro.org>
+X-Patchwork-Hint: ignore
+Message-Id: <20190828131317.B2BE82742B9F@ypsilon.sirena.org.uk>
+Date:   Wed, 28 Aug 2019 14:13:17 +0100 (BST)
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi,
+The patch
 
-On 28-08-19 14:20, Hans de Goede wrote:
-> Hi,
-> 
-> On 28-08-19 13:37, Andy Shevchenko wrote:
->> On Tue, Aug 27, 2019 at 10:28:35PM +0200, Hans de Goede wrote:
->>> Another day; another DSDT bug we need to workaround...
->>>
->>> Since commit ca876c7483b6 ("gpiolib-acpi: make sure we trigger edge events
->>> at least once on boot") we call _AEI edge handlers at boot.
->>>
->>> In some rare cases this causes problems. One example of this is the Minix
->>> Neo Z83-4 mini PC, this device has a clear DSDT bug where it has some copy
->>> and pasted code for dealing with Micro USB-B connector host/device role
->>> switching, while the mini PC does not even have a micro-USB connector.
->>> This code, which should not be there, messes with the DDC data pin from
->>> the HDMI connector (switching it to GPIO mode) breaking HDMI support.
->>>
->>> To avoid problems like this, this commit adds a new
->>> gpiolib_acpi.run_edge_events_on_boot kernel commandline option, which
->>> allows disabling the running of _AEI edge event handlers at boot.
->>>
->>> The default value is -1/auto which uses a DMI based blacklist, the initial
->>> version of this blacklist contains the Neo Z83-4 fixing the HDMI breakage.
->>
->> Thank you!
->>
->> Assuming it works for Ian,
->> Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> 
-> Note I have access to a Minix Neo Z83-4 myself now and I did test that
-> this fixes it and that passing gpiolib_acpi.run_edge_events_on_boot=0
-> breaks HDMI again (so the option works).
+   spi: fsl: Convert to use CS GPIO descriptors
 
-Erm that should be gpiolib_acpi.run_edge_events_on_boot=1 (not 0) breaks
-HDMI.
+has been applied to the spi tree at
 
-Regards,
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git for-5.4
 
-Hans
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.  
 
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
 
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
 
->>> Cc: stable@vger.kernel.org
->>> Cc: Daniel Drake <drake@endlessm.com>
->>> Cc: Ian W MORRISON <ianwmorrison@gmail.com>
->>> Reported-by: Ian W MORRISON <ianwmorrison@gmail.com>
->>> Suggested-by: Ian W MORRISON <ianwmorrison@gmail.com>
->>> Fixes: ca876c7483b6 ("gpiolib-acpi: make sure we trigger edge events at least once on boot")
->>> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
->>> ---
->>> Changes in v2:
->>> - Use a module_param instead of __setup
->>> - Do DMI check only once from a postcore_initcall
->>> ---
->>>   drivers/gpio/gpiolib-acpi.c | 42 +++++++++++++++++++++++++++++++++----
->>>   1 file changed, 38 insertions(+), 4 deletions(-)
->>>
->>> diff --git a/drivers/gpio/gpiolib-acpi.c b/drivers/gpio/gpiolib-acpi.c
->>> index 39f2f9035c11..bda28eb82c3f 100644
->>> --- a/drivers/gpio/gpiolib-acpi.c
->>> +++ b/drivers/gpio/gpiolib-acpi.c
->>> @@ -7,6 +7,7 @@
->>>    *          Mika Westerberg <mika.westerberg@linux.intel.com>
->>>    */
->>> +#include <linux/dmi.h>
->>>   #include <linux/errno.h>
->>>   #include <linux/gpio/consumer.h>
->>>   #include <linux/gpio/driver.h>
->>> @@ -19,6 +20,11 @@
->>>   #include "gpiolib.h"
->>> +static int run_edge_events_on_boot = -1;
->>> +module_param(run_edge_events_on_boot, int, 0444);
->>> +MODULE_PARM_DESC(run_edge_events_on_boot,
->>> +         "Run edge _AEI event-handlers at boot: 0=no, 1=yes, -1=auto");
->>> +
->>>   /**
->>>    * struct acpi_gpio_event - ACPI GPIO event handler data
->>>    *
->>> @@ -170,10 +176,13 @@ static void acpi_gpiochip_request_irq(struct acpi_gpio_chip *acpi_gpio,
->>>       event->irq_requested = true;
->>>       /* Make sure we trigger the initial state of edge-triggered IRQs */
->>> -    value = gpiod_get_raw_value_cansleep(event->desc);
->>> -    if (((event->irqflags & IRQF_TRIGGER_RISING) && value == 1) ||
->>> -        ((event->irqflags & IRQF_TRIGGER_FALLING) && value == 0))
->>> -        event->handler(event->irq, event);
->>> +    if (run_edge_events_on_boot &&
->>> +        (event->irqflags & (IRQF_TRIGGER_RISING | IRQF_TRIGGER_FALLING))) {
->>> +        value = gpiod_get_raw_value_cansleep(event->desc);
->>> +        if (((event->irqflags & IRQF_TRIGGER_RISING) && value == 1) ||
->>> +            ((event->irqflags & IRQF_TRIGGER_FALLING) && value == 0))
->>> +            event->handler(event->irq, event);
->>> +    }
->>>   }
->>>   static void acpi_gpiochip_request_irqs(struct acpi_gpio_chip *acpi_gpio)
->>> @@ -1283,3 +1292,28 @@ static int acpi_gpio_handle_deferred_request_irqs(void)
->>>   }
->>>   /* We must use _sync so that this runs after the first deferred_probe run */
->>>   late_initcall_sync(acpi_gpio_handle_deferred_request_irqs);
->>> +
->>> +static const struct dmi_system_id run_edge_events_on_boot_blacklist[] = {
->>> +    {
->>> +        .matches = {
->>> +            DMI_MATCH(DMI_SYS_VENDOR, "MINIX"),
->>> +            DMI_MATCH(DMI_PRODUCT_NAME, "Z83-4"),
->>> +        }
->>> +    },
->>> +    {} /* Terminating entry */
->>> +};
->>> +
->>> +static int acpi_gpio_setup_params(void)
->>> +{
->>> +    if (run_edge_events_on_boot < 0) {
->>> +        if (dmi_check_system(run_edge_events_on_boot_blacklist))
->>> +            run_edge_events_on_boot = 0;
->>> +        else
->>> +            run_edge_events_on_boot = 1;
->>> +    }
->>> +
->>> +    return 0;
->>> +}
->>> +
->>> +/* Directly after dmi_setup() which runs as core_initcall() */
->>> +postcore_initcall(acpi_gpio_setup_params);
->>> -- 
->>> 2.23.0
->>>
->>
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+Thanks,
+Mark
+
+From 0f0581b24bd019dfe32878e4c1bde266c7364e02 Mon Sep 17 00:00:00 2001
+From: Linus Walleij <linus.walleij@linaro.org>
+Date: Sun, 4 Aug 2019 02:35:39 +0200
+Subject: [PATCH] spi: fsl: Convert to use CS GPIO descriptors
+
+This converts the Freescale SPI master driver to use GPIO
+descriptors for chip select handling.
+
+The Freescale (fsl) driver has a lot of quirks to look up
+"gpios" rather than "cs-gpios" from the device tree.
+After the prior patch that will make gpiolib return the
+GPIO descriptor for "gpios" in response to a request for
+"cs-gpios", this code can be cut down quite a bit.
+
+The driver has custom handling of chip select rather
+than using the core (which may be possible but not
+done in this patch) so it still needs to refer directly
+to spi->cs_gpiod to set the chip select.
+
+Cc: Shawn Guo <shawnguo@kernel.org>
+Cc: Sascha Hauer <s.hauer@pengutronix.de>
+Cc: Pengutronix Kernel Team <kernel@pengutronix.de>
+Cc: Fabio Estevam <festevam@gmail.com>
+Cc: NXP Linux Team <linux-imx@nxp.com>
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+Link: https://lore.kernel.org/r/20190804003539.985-1-linus.walleij@linaro.org
+Signed-off-by: Mark Brown <broonie@kernel.org>
+---
+ drivers/spi/spi-fsl-lib.h |   3 -
+ drivers/spi/spi-fsl-spi.c | 193 +++++---------------------------------
+ 2 files changed, 25 insertions(+), 171 deletions(-)
+
+diff --git a/drivers/spi/spi-fsl-lib.h b/drivers/spi/spi-fsl-lib.h
+index 3576167283dc..015a1abb6a84 100644
+--- a/drivers/spi/spi-fsl-lib.h
++++ b/drivers/spi/spi-fsl-lib.h
+@@ -91,9 +91,6 @@ static inline u32 mpc8xxx_spi_read_reg(__be32 __iomem *reg)
+ 
+ struct mpc8xxx_spi_probe_info {
+ 	struct fsl_spi_platform_data pdata;
+-	int ngpios;
+-	int *gpios;
+-	bool *alow_flags;
+ 	__be32 __iomem *immr_spi_cs;
+ };
+ 
+diff --git a/drivers/spi/spi-fsl-spi.c b/drivers/spi/spi-fsl-spi.c
+index 1d9b33aa1a3b..4b80ace1d137 100644
+--- a/drivers/spi/spi-fsl-spi.c
++++ b/drivers/spi/spi-fsl-spi.c
+@@ -18,7 +18,7 @@
+ #include <linux/delay.h>
+ #include <linux/dma-mapping.h>
+ #include <linux/fsl_devices.h>
+-#include <linux/gpio.h>
++#include <linux/gpio/consumer.h>
+ #include <linux/interrupt.h>
+ #include <linux/irq.h>
+ #include <linux/kernel.h>
+@@ -28,7 +28,6 @@
+ #include <linux/of.h>
+ #include <linux/of_address.h>
+ #include <linux/of_irq.h>
+-#include <linux/of_gpio.h>
+ #include <linux/of_platform.h>
+ #include <linux/platform_device.h>
+ #include <linux/spi/spi.h>
+@@ -481,32 +480,6 @@ static int fsl_spi_setup(struct spi_device *spi)
+ 		return retval;
+ 	}
+ 
+-	if (mpc8xxx_spi->type == TYPE_GRLIB) {
+-		if (gpio_is_valid(spi->cs_gpio)) {
+-			int desel;
+-
+-			retval = gpio_request(spi->cs_gpio,
+-					      dev_name(&spi->dev));
+-			if (retval)
+-				return retval;
+-
+-			desel = !(spi->mode & SPI_CS_HIGH);
+-			retval = gpio_direction_output(spi->cs_gpio, desel);
+-			if (retval) {
+-				gpio_free(spi->cs_gpio);
+-				return retval;
+-			}
+-		} else if (spi->cs_gpio != -ENOENT) {
+-			if (spi->cs_gpio < 0)
+-				return spi->cs_gpio;
+-			return -EINVAL;
+-		}
+-		/* When spi->cs_gpio == -ENOENT, a hole in the phandle list
+-		 * indicates to use native chipselect if present, or allow for
+-		 * an always selected chip
+-		 */
+-	}
+-
+ 	/* Initialize chipselect - might be active for SPI_CS_HIGH mode */
+ 	fsl_spi_chipselect(spi, BITBANG_CS_INACTIVE);
+ 
+@@ -515,12 +488,8 @@ static int fsl_spi_setup(struct spi_device *spi)
+ 
+ static void fsl_spi_cleanup(struct spi_device *spi)
+ {
+-	struct mpc8xxx_spi *mpc8xxx_spi = spi_master_get_devdata(spi->master);
+ 	struct spi_mpc8xxx_cs *cs = spi_get_ctldata(spi);
+ 
+-	if (mpc8xxx_spi->type == TYPE_GRLIB && gpio_is_valid(spi->cs_gpio))
+-		gpio_free(spi->cs_gpio);
+-
+ 	kfree(cs);
+ 	spi_set_ctldata(spi, NULL);
+ }
+@@ -586,8 +555,8 @@ static void fsl_spi_grlib_cs_control(struct spi_device *spi, bool on)
+ 	u32 slvsel;
+ 	u16 cs = spi->chip_select;
+ 
+-	if (gpio_is_valid(spi->cs_gpio)) {
+-		gpio_set_value(spi->cs_gpio, on);
++	if (spi->cs_gpiod) {
++		gpiod_set_value(spi->cs_gpiod, on);
+ 	} else if (cs < mpc8xxx_spi->native_chipselects) {
+ 		slvsel = mpc8xxx_spi_read_reg(&reg_base->slvsel);
+ 		slvsel = on ? (slvsel | (1 << cs)) : (slvsel & ~(1 << cs));
+@@ -718,139 +687,19 @@ static struct spi_master * fsl_spi_probe(struct device *dev,
+ 
+ static void fsl_spi_cs_control(struct spi_device *spi, bool on)
+ {
+-	struct device *dev = spi->dev.parent->parent;
+-	struct fsl_spi_platform_data *pdata = dev_get_platdata(dev);
+-	struct mpc8xxx_spi_probe_info *pinfo = to_of_pinfo(pdata);
+-	u16 cs = spi->chip_select;
+-
+-	if (cs < pinfo->ngpios) {
+-		int gpio = pinfo->gpios[cs];
+-		bool alow = pinfo->alow_flags[cs];
+-
+-		gpio_set_value(gpio, on ^ alow);
++	if (spi->cs_gpiod) {
++		gpiod_set_value(spi->cs_gpiod, on);
+ 	} else {
+-		if (WARN_ON_ONCE(cs > pinfo->ngpios || !pinfo->immr_spi_cs))
++		struct device *dev = spi->dev.parent->parent;
++		struct fsl_spi_platform_data *pdata = dev_get_platdata(dev);
++		struct mpc8xxx_spi_probe_info *pinfo = to_of_pinfo(pdata);
++
++		if (WARN_ON_ONCE(!pinfo->immr_spi_cs))
+ 			return;
+ 		iowrite32be(on ? SPI_BOOT_SEL_BIT : 0, pinfo->immr_spi_cs);
+ 	}
+ }
+ 
+-static int of_fsl_spi_get_chipselects(struct device *dev)
+-{
+-	struct device_node *np = dev->of_node;
+-	struct fsl_spi_platform_data *pdata = dev_get_platdata(dev);
+-	struct mpc8xxx_spi_probe_info *pinfo = to_of_pinfo(pdata);
+-	bool spisel_boot = IS_ENABLED(CONFIG_FSL_SOC) &&
+-		of_property_read_bool(np, "fsl,spisel_boot");
+-	int ngpios;
+-	int i = 0;
+-	int ret;
+-
+-	ngpios = of_gpio_count(np);
+-	ngpios = max(ngpios, 0);
+-	if (ngpios == 0 && !spisel_boot) {
+-		/*
+-		 * SPI w/o chip-select line. One SPI device is still permitted
+-		 * though.
+-		 */
+-		pdata->max_chipselect = 1;
+-		return 0;
+-	}
+-
+-	pinfo->ngpios = ngpios;
+-	pinfo->gpios = kmalloc_array(ngpios, sizeof(*pinfo->gpios),
+-				     GFP_KERNEL);
+-	if (!pinfo->gpios)
+-		return -ENOMEM;
+-	memset(pinfo->gpios, -1, ngpios * sizeof(*pinfo->gpios));
+-
+-	pinfo->alow_flags = kcalloc(ngpios, sizeof(*pinfo->alow_flags),
+-				    GFP_KERNEL);
+-	if (!pinfo->alow_flags) {
+-		ret = -ENOMEM;
+-		goto err_alloc_flags;
+-	}
+-
+-	for (; i < ngpios; i++) {
+-		int gpio;
+-		enum of_gpio_flags flags;
+-
+-		gpio = of_get_gpio_flags(np, i, &flags);
+-		if (!gpio_is_valid(gpio)) {
+-			dev_err(dev, "invalid gpio #%d: %d\n", i, gpio);
+-			ret = gpio;
+-			goto err_loop;
+-		}
+-
+-		ret = gpio_request(gpio, dev_name(dev));
+-		if (ret) {
+-			dev_err(dev, "can't request gpio #%d: %d\n", i, ret);
+-			goto err_loop;
+-		}
+-
+-		pinfo->gpios[i] = gpio;
+-		pinfo->alow_flags[i] = flags & OF_GPIO_ACTIVE_LOW;
+-
+-		ret = gpio_direction_output(pinfo->gpios[i],
+-					    pinfo->alow_flags[i]);
+-		if (ret) {
+-			dev_err(dev,
+-				"can't set output direction for gpio #%d: %d\n",
+-				i, ret);
+-			goto err_loop;
+-		}
+-	}
+-
+-#if IS_ENABLED(CONFIG_FSL_SOC)
+-	if (spisel_boot) {
+-		pinfo->immr_spi_cs = ioremap(get_immrbase() + IMMR_SPI_CS_OFFSET, 4);
+-		if (!pinfo->immr_spi_cs) {
+-			ret = -ENOMEM;
+-			i = ngpios - 1;
+-			goto err_loop;
+-		}
+-	}
+-#endif
+-
+-	pdata->max_chipselect = ngpios + spisel_boot;
+-	pdata->cs_control = fsl_spi_cs_control;
+-
+-	return 0;
+-
+-err_loop:
+-	while (i >= 0) {
+-		if (gpio_is_valid(pinfo->gpios[i]))
+-			gpio_free(pinfo->gpios[i]);
+-		i--;
+-	}
+-
+-	kfree(pinfo->alow_flags);
+-	pinfo->alow_flags = NULL;
+-err_alloc_flags:
+-	kfree(pinfo->gpios);
+-	pinfo->gpios = NULL;
+-	return ret;
+-}
+-
+-static int of_fsl_spi_free_chipselects(struct device *dev)
+-{
+-	struct fsl_spi_platform_data *pdata = dev_get_platdata(dev);
+-	struct mpc8xxx_spi_probe_info *pinfo = to_of_pinfo(pdata);
+-	int i;
+-
+-	if (!pinfo->gpios)
+-		return 0;
+-
+-	for (i = 0; i < pdata->max_chipselect; i++) {
+-		if (gpio_is_valid(pinfo->gpios[i]))
+-			gpio_free(pinfo->gpios[i]);
+-	}
+-
+-	kfree(pinfo->gpios);
+-	kfree(pinfo->alow_flags);
+-	return 0;
+-}
+-
+ static int of_fsl_spi_probe(struct platform_device *ofdev)
+ {
+ 	struct device *dev = &ofdev->dev;
+@@ -866,9 +715,21 @@ static int of_fsl_spi_probe(struct platform_device *ofdev)
+ 
+ 	type = fsl_spi_get_type(&ofdev->dev);
+ 	if (type == TYPE_FSL) {
+-		ret = of_fsl_spi_get_chipselects(dev);
+-		if (ret)
+-			goto err;
++		struct fsl_spi_platform_data *pdata = dev_get_platdata(dev);
++#if IS_ENABLED(CONFIG_FSL_SOC)
++		struct mpc8xxx_spi_probe_info *pinfo = to_of_pinfo(pdata);
++		bool spisel_boot = of_property_read_bool(np, "fsl,spisel_boot");
++
++		if (spisel_boot) {
++			pinfo->immr_spi_cs = ioremap(get_immrbase() + IMMR_SPI_CS_OFFSET, 4);
++			if (!pinfo->immr_spi_cs) {
++				ret = -ENOMEM;
++				goto err;
++			}
++		}
++#endif
++
++		pdata->cs_control = fsl_spi_cs_control;
+ 	}
+ 
+ 	ret = of_address_to_resource(np, 0, &mem);
+@@ -891,8 +752,6 @@ static int of_fsl_spi_probe(struct platform_device *ofdev)
+ 
+ err:
+ 	irq_dispose_mapping(irq);
+-	if (type == TYPE_FSL)
+-		of_fsl_spi_free_chipselects(dev);
+ 	return ret;
+ }
+ 
+@@ -902,8 +761,6 @@ static int of_fsl_spi_remove(struct platform_device *ofdev)
+ 	struct mpc8xxx_spi *mpc8xxx_spi = spi_master_get_devdata(master);
+ 
+ 	fsl_spi_cpm_free(mpc8xxx_spi);
+-	if (mpc8xxx_spi->type == TYPE_FSL)
+-		of_fsl_spi_free_chipselects(&ofdev->dev);
+ 	return 0;
+ }
+ 
+-- 
+2.20.1
+
