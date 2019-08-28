@@ -2,169 +2,139 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id E7D63A00D0
-	for <lists+linux-gpio@lfdr.de>; Wed, 28 Aug 2019 13:37:54 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C0B69A0173
+	for <lists+linux-gpio@lfdr.de>; Wed, 28 Aug 2019 14:17:11 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726474AbfH1Lhx (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 28 Aug 2019 07:37:53 -0400
-Received: from mga06.intel.com ([134.134.136.31]:54301 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726466AbfH1Lhx (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Wed, 28 Aug 2019 07:37:53 -0400
-X-Amp-Result: UNSCANNABLE
-X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 28 Aug 2019 04:37:52 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,440,1559545200"; 
-   d="scan'208";a="188196893"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by FMSMGA003.fm.intel.com with ESMTP; 28 Aug 2019 04:37:50 -0700
-Received: from andy by smile with local (Exim 4.92.1)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1i2wGq-0007UH-Up; Wed, 28 Aug 2019 14:37:48 +0300
-Date:   Wed, 28 Aug 2019 14:37:48 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Hans de Goede <hdegoede@redhat.com>
-Cc:     Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-gpio@vger.kernel.org, linux-acpi@vger.kernel.org,
-        stable@vger.kernel.org, Daniel Drake <drake@endlessm.com>,
-        Ian W MORRISON <ianwmorrison@gmail.com>
-Subject: Re: [PATCH v2] gpiolib: acpi: Add
- gpiolib_acpi_run_edge_events_on_boot option and blacklist
-Message-ID: <20190828113748.GK2680@smile.fi.intel.com>
-References: <20190827202835.213456-1-hdegoede@redhat.com>
+        id S1726300AbfH1MRK (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 28 Aug 2019 08:17:10 -0400
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:46069 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726259AbfH1MRK (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 28 Aug 2019 08:17:10 -0400
+Received: by mail-ot1-f66.google.com with SMTP id m24so2477112otp.12
+        for <linux-gpio@vger.kernel.org>; Wed, 28 Aug 2019 05:17:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=8ucg4PVvFDJuY7IrX1BzjsG7jDMsSrlHH0nllnqOy1w=;
+        b=RaaIg11X9DM0RGWFrGEjc/ZFk/tHs7LC6sDd3cWu2S6dRraD/Y04AcW2iBpmNHrpfN
+         ea31HYHK7zF6k9yOf19OidqCKxqkJGzqh8D7XfnSPAomPgR/oThBI/dqteVcfc3R9RhS
+         N2Y62HIWCOLylC1GlCTTLLvMELu6Lp9qgGMrouRx9ZFaTb3d5D6zKoZ8zEpjts64ssve
+         1y1gh7m35Uhwr37MsFo0eluINZ7NKD9drFPWIQJuYClyc6+CkPQY1/UfizJhnXp6PhBx
+         yCYpcVgC4C6krmIsCHHQakFMfYNq2tJaM1VyjPWE31A2jr9Bo93dVG9vyFOY9I16GWJK
+         TpPw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=8ucg4PVvFDJuY7IrX1BzjsG7jDMsSrlHH0nllnqOy1w=;
+        b=GPMobDkFKgsi9bAsd0W4+slcwK5MIWUHT4k8vuFJqGxK3KYwVJONF98pWsSz7gfwMD
+         BV0vK5uKsbcSHh4Knr2L2XBmjAuRWFmqILvO/ZmY1/qAeeCVkXo3YhM2nl6F7qHpYt+u
+         O/qmgiS/UU2+xLcArDeWFzD9Jo5ksXyXPFCTSit1PjxS1/PCaz27kfy7fyopxDOLp5qU
+         rOQ5eZG/0x4rDDz46pEIgAczsKNZpzh9k4RgiLbtzHwKoJIeOX5fTyxIrdTUzoipz8NR
+         yqxVBgPsoSAk+agl02/cA9pQZGBL1aR3JztNMSNIoxNBNXQE6bB7dTuXoL8JIKwjV5py
+         lM1g==
+X-Gm-Message-State: APjAAAVI9Ube93iRTghfMXKLYwVp61R/3gvxNgh3AV5n0N4UkGIDoUGw
+        dEh50E7nr33TbXAD9EWHuvC0Ztvm+4R2Mhqi59sMZQ==
+X-Google-Smtp-Source: APXvYqxvaDhp/dkkcMw7DJJ3ub/Alcq2Wx3/cUgoCozs4WNtp8URsGvjmQq9zjow7okgb55DGZ/Unruq8ktrBx09lXw=
+X-Received: by 2002:a05:6830:144d:: with SMTP id w13mr3040072otp.85.1566994629759;
+ Wed, 28 Aug 2019 05:17:09 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190827202835.213456-1-hdegoede@redhat.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20190827064629.90214-1-david@protonic.nl> <CAMpxmJV2XC+CK1SfJnH2YuaD2Gh=fiBQY+WPbjnqkvxGW6ZH_w@mail.gmail.com>
+ <CAMpxmJXQ=M9PeMFBf70aE5Jgg3c6P2=4QF5CxWpenh+2WXLhnA@mail.gmail.com> <20190828131330.6a28e5cc@erd988>
+In-Reply-To: <20190828131330.6a28e5cc@erd988>
+From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Date:   Wed, 28 Aug 2019 14:16:58 +0200
+Message-ID: <CAMpxmJUrvu9f_+-3epZ4iafZ-t0YUAA8E3_Xangc_dBiiCc20A@mail.gmail.com>
+Subject: Re: [PATCH 1/2] gpio: gpio-pca953x.c: Correct type of reg_direction
+To:     David Jander <david@protonic.nl>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        linux-gpio <linux-gpio@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Aug 27, 2019 at 10:28:35PM +0200, Hans de Goede wrote:
-> Another day; another DSDT bug we need to workaround...
-> 
-> Since commit ca876c7483b6 ("gpiolib-acpi: make sure we trigger edge events
-> at least once on boot") we call _AEI edge handlers at boot.
-> 
-> In some rare cases this causes problems. One example of this is the Minix
-> Neo Z83-4 mini PC, this device has a clear DSDT bug where it has some copy
-> and pasted code for dealing with Micro USB-B connector host/device role
-> switching, while the mini PC does not even have a micro-USB connector.
-> This code, which should not be there, messes with the DDC data pin from
-> the HDMI connector (switching it to GPIO mode) breaking HDMI support.
-> 
-> To avoid problems like this, this commit adds a new
-> gpiolib_acpi.run_edge_events_on_boot kernel commandline option, which
-> allows disabling the running of _AEI edge event handlers at boot.
-> 
-> The default value is -1/auto which uses a DMI based blacklist, the initial
-> version of this blacklist contains the Neo Z83-4 fixing the HDMI breakage.
+=C5=9Br., 28 sie 2019 o 13:13 David Jander <david@protonic.nl> napisa=C5=82=
+(a):
+>
+> On Wed, 28 Aug 2019 12:56:28 +0200
+> Bartosz Golaszewski <bgolaszewski@baylibre.com> wrote:
+>
+> > =C5=9Br., 28 sie 2019 o 10:38 Bartosz Golaszewski
+> > <bgolaszewski@baylibre.com> napisa=C5=82(a):
+> > >
+> > > wt., 27 sie 2019 o 08:46 David Jander <david@protonic.nl> napisa=C5=
+=82(a):
+> > > >
+> > > > The type of reg_direction needs to match the type of the regmap, wh=
+ich is
+> > > > u8.
+> > > >
+> > > > Signed-off-by: David Jander <david@protonic.nl>
+> > > > ---
+> > > >  drivers/gpio/gpio-pca953x.c | 6 +++---
+> > > >  1 file changed, 3 insertions(+), 3 deletions(-)
+> > > >
+> > > > diff --git a/drivers/gpio/gpio-pca953x.c b/drivers/gpio/gpio-pca953=
+x.c
+> > > > index 378b206d2dc9..30072a570bc2 100644
+> > > > --- a/drivers/gpio/gpio-pca953x.c
+> > > > +++ b/drivers/gpio/gpio-pca953x.c
+> > > > @@ -604,7 +604,7 @@ static void pca953x_irq_bus_sync_unlock(struct =
+irq_data *d)
+> > > >         u8 new_irqs;
+> > > >         int level, i;
+> > > >         u8 invert_irq_mask[MAX_BANK];
+> > > > -       int reg_direction[MAX_BANK];
+> > > > +       u8 reg_direction[MAX_BANK];
+> > > >
+> > > >         regmap_bulk_read(chip->regmap, chip->regs->direction, reg_d=
+irection,
+> > > >                          NBANK(chip));
+> > > > @@ -679,7 +679,7 @@ static bool pca953x_irq_pending(struct pca953x_=
+chip *chip, u8 *pending)
+> > > >         bool pending_seen =3D false;
+> > > >         bool trigger_seen =3D false;
+> > > >         u8 trigger[MAX_BANK];
+> > > > -       int reg_direction[MAX_BANK];
+> > > > +       u8 reg_direction[MAX_BANK];
+> > > >         int ret, i;
+> > > >
+> > > >         if (chip->driver_data & PCA_PCAL) {
+> > > > @@ -768,7 +768,7 @@ static int pca953x_irq_setup(struct pca953x_chi=
+p *chip,
+> > > >  {
+> > > >         struct i2c_client *client =3D chip->client;
+> > > >         struct irq_chip *irq_chip =3D &chip->irq_chip;
+> > > > -       int reg_direction[MAX_BANK];
+> > > > +       u8 reg_direction[MAX_BANK];
+> > > >         int ret, i;
+> > > >
+> > > >         if (!client->irq)
+> > > > --
+> > > > 2.19.1
+> > > >
+> > >
+> > > Applied for v5.4.
+> >
+> > Actually the second patch depends on the first one, so moved it over to=
+ fixes.
+>
+> Btw, they are both bugfixes, IMHO it would be valuable to have them in 5.=
+3rc
+> if possible... there is some severe breakage there right now.
+>
+> Best regards,
+>
+> --
+> David Jander
+>
 
-Thank you!
+Yes, that's why I said I moved it to fixes.
 
-Assuming it works for Ian,
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-
-> 
-> Cc: stable@vger.kernel.org
-> Cc: Daniel Drake <drake@endlessm.com>
-> Cc: Ian W MORRISON <ianwmorrison@gmail.com>
-> Reported-by: Ian W MORRISON <ianwmorrison@gmail.com>
-> Suggested-by: Ian W MORRISON <ianwmorrison@gmail.com>
-> Fixes: ca876c7483b6 ("gpiolib-acpi: make sure we trigger edge events at least once on boot")
-> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-> ---
-> Changes in v2:
-> - Use a module_param instead of __setup
-> - Do DMI check only once from a postcore_initcall
-> ---
->  drivers/gpio/gpiolib-acpi.c | 42 +++++++++++++++++++++++++++++++++----
->  1 file changed, 38 insertions(+), 4 deletions(-)
-> 
-> diff --git a/drivers/gpio/gpiolib-acpi.c b/drivers/gpio/gpiolib-acpi.c
-> index 39f2f9035c11..bda28eb82c3f 100644
-> --- a/drivers/gpio/gpiolib-acpi.c
-> +++ b/drivers/gpio/gpiolib-acpi.c
-> @@ -7,6 +7,7 @@
->   *          Mika Westerberg <mika.westerberg@linux.intel.com>
->   */
->  
-> +#include <linux/dmi.h>
->  #include <linux/errno.h>
->  #include <linux/gpio/consumer.h>
->  #include <linux/gpio/driver.h>
-> @@ -19,6 +20,11 @@
->  
->  #include "gpiolib.h"
->  
-> +static int run_edge_events_on_boot = -1;
-> +module_param(run_edge_events_on_boot, int, 0444);
-> +MODULE_PARM_DESC(run_edge_events_on_boot,
-> +		 "Run edge _AEI event-handlers at boot: 0=no, 1=yes, -1=auto");
-> +
->  /**
->   * struct acpi_gpio_event - ACPI GPIO event handler data
->   *
-> @@ -170,10 +176,13 @@ static void acpi_gpiochip_request_irq(struct acpi_gpio_chip *acpi_gpio,
->  	event->irq_requested = true;
->  
->  	/* Make sure we trigger the initial state of edge-triggered IRQs */
-> -	value = gpiod_get_raw_value_cansleep(event->desc);
-> -	if (((event->irqflags & IRQF_TRIGGER_RISING) && value == 1) ||
-> -	    ((event->irqflags & IRQF_TRIGGER_FALLING) && value == 0))
-> -		event->handler(event->irq, event);
-> +	if (run_edge_events_on_boot &&
-> +	    (event->irqflags & (IRQF_TRIGGER_RISING | IRQF_TRIGGER_FALLING))) {
-> +		value = gpiod_get_raw_value_cansleep(event->desc);
-> +		if (((event->irqflags & IRQF_TRIGGER_RISING) && value == 1) ||
-> +		    ((event->irqflags & IRQF_TRIGGER_FALLING) && value == 0))
-> +			event->handler(event->irq, event);
-> +	}
->  }
->  
->  static void acpi_gpiochip_request_irqs(struct acpi_gpio_chip *acpi_gpio)
-> @@ -1283,3 +1292,28 @@ static int acpi_gpio_handle_deferred_request_irqs(void)
->  }
->  /* We must use _sync so that this runs after the first deferred_probe run */
->  late_initcall_sync(acpi_gpio_handle_deferred_request_irqs);
-> +
-> +static const struct dmi_system_id run_edge_events_on_boot_blacklist[] = {
-> +	{
-> +		.matches = {
-> +			DMI_MATCH(DMI_SYS_VENDOR, "MINIX"),
-> +			DMI_MATCH(DMI_PRODUCT_NAME, "Z83-4"),
-> +		}
-> +	},
-> +	{} /* Terminating entry */
-> +};
-> +
-> +static int acpi_gpio_setup_params(void)
-> +{
-> +	if (run_edge_events_on_boot < 0) {
-> +		if (dmi_check_system(run_edge_events_on_boot_blacklist))
-> +			run_edge_events_on_boot = 0;
-> +		else
-> +			run_edge_events_on_boot = 1;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +/* Directly after dmi_setup() which runs as core_initcall() */
-> +postcore_initcall(acpi_gpio_setup_params);
-> -- 
-> 2.23.0
-> 
-
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+Bart
