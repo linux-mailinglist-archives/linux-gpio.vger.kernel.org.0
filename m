@@ -2,38 +2,38 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id ADF90A2468
-	for <lists+linux-gpio@lfdr.de>; Thu, 29 Aug 2019 20:23:13 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A669CA2420
+	for <lists+linux-gpio@lfdr.de>; Thu, 29 Aug 2019 20:21:06 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727949AbfH2SW4 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 29 Aug 2019 14:22:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59242 "EHLO mail.kernel.org"
+        id S1729567AbfH2SUt (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 29 Aug 2019 14:20:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59980 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729963AbfH2SRH (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Thu, 29 Aug 2019 14:17:07 -0400
+        id S1729225AbfH2SRq (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Thu, 29 Aug 2019 14:17:46 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DC3F3233FF;
-        Thu, 29 Aug 2019 18:17:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 37CD6233FF;
+        Thu, 29 Aug 2019 18:17:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567102626;
-        bh=qoqEgI0RDaEh5bLLgfguTtjro2ymvYiXCz+63heuajc=;
+        s=default; t=1567102665;
+        bh=ujvp1p1YhOa9w3WPCpb4c4nB5ta5oSCXhedSlRXePDQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=EHnYc/DP7mIyeF+DC+luCtpTdQNr8pq1dTqpXFOyY4c7c8MYBdqEr2As4kTPi7Wlv
-         lG9YwStsHC3lxuVD+ZW1AkOjysxNBLulWN0QZ6Ai50ZscwIxsZas3w1/eNeiMQT5tH
-         +RYTwuFRd3rp9oKBWbZLzOC7NkJ9vEvvILXL1cso=
+        b=STOSL+/rCcebhjcqcbK8l9zgPxtuTVxZa6OQjZg+CFStZwGdJtU2ytylwN1A5PPOf
+         R9FSerL47cXc/OelI6AecFZ8RX04CEnNskaDi3cUTZRCWsOFT1+AV2IiRUfXa7Fxg9
+         E+lz4+4mq1q8Y/A/wVG/JuSS97nqSm3cPAmvWuAk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     YueHaibing <yuehaibing@huawei.com>, Hulk Robot <hulkci@huawei.com>,
         Linus Walleij <linus.walleij@linaro.org>,
         Sasha Levin <sashal@kernel.org>, linux-gpio@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 07/27] gpio: Fix build error of function redefinition
-Date:   Thu, 29 Aug 2019 14:16:33 -0400
-Message-Id: <20190829181655.8741-7-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.9 05/16] gpio: Fix build error of function redefinition
+Date:   Thu, 29 Aug 2019 14:17:23 -0400
+Message-Id: <20190829181736.9040-5-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190829181655.8741-1-sashal@kernel.org>
-References: <20190829181655.8741-1-sashal@kernel.org>
+In-Reply-To: <20190829181736.9040-1-sashal@kernel.org>
+References: <20190829181736.9040-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -69,10 +69,10 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 24 deletions(-)
 
 diff --git a/include/linux/gpio.h b/include/linux/gpio.h
-index 8ef7fc0ce0f0c..b2f103b170a97 100644
+index d12b5d566e4b1..11555bd821b73 100644
 --- a/include/linux/gpio.h
 +++ b/include/linux/gpio.h
-@@ -230,30 +230,6 @@ static inline int irq_to_gpio(unsigned irq)
+@@ -229,30 +229,6 @@ static inline int irq_to_gpio(unsigned irq)
  	return -EINVAL;
  }
  
