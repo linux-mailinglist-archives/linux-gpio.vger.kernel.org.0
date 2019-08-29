@@ -2,56 +2,64 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 6FD7DA0AED
-	for <lists+linux-gpio@lfdr.de>; Wed, 28 Aug 2019 21:57:35 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4398DA126E
+	for <lists+linux-gpio@lfdr.de>; Thu, 29 Aug 2019 09:17:34 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726775AbfH1T5e (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 28 Aug 2019 15:57:34 -0400
-Received: from mail-qt1-f193.google.com ([209.85.160.193]:45764 "EHLO
-        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726315AbfH1T5e (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 28 Aug 2019 15:57:34 -0400
-Received: by mail-qt1-f193.google.com with SMTP id k13so930268qtm.12;
-        Wed, 28 Aug 2019 12:57:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=L8TI0FYfNM24ppkJYFG6qOg+IUh+v/+7bkBCmbd/o1U=;
-        b=od89jVX6U1HTi2Ua0mQBqSe9vCA9lhvMN+NiX3sSQ2zqbFaFsl3Ec/OZ526tbAYWSI
-         JQAAoYmaSvdo2sKk4wMenaTTMKsWjXJu98MMUnyrWuc8AyJqtyU+dPCyKupXSYqgQw5F
-         cfdMgjSKfULJWwk0gLhPORT/Pix+JwjhE99314NnOCmFwxclFVlRvEKuPpFogSFHud3w
-         kwDH6+cpZYu/Yhn2xsHvNAe9E1bjetWXmrhm91Z+hLL+0dC3QK38d/2h4eFTuK4ni4RX
-         7pz/lcpXaMALM5cvu60lLXVkVfAjH+ezK/33OU/nCupZCsYdxyjoLggP3sJ5jK77gOo0
-         vrZQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=L8TI0FYfNM24ppkJYFG6qOg+IUh+v/+7bkBCmbd/o1U=;
-        b=n9zCzhtnQN4fap4PtQkpidY/hoz/IsZuHuVXB8f3CVmX9R3KvWWVCgrwlS3sfrrg95
-         uOhgWEzk3tr6DY/mzcLeu9/vNXvO47JNp5X3y9h2Qbo1yI3TqDCtAViVG2Lbgz9c5bJz
-         PKhf8xlWxIJFTf6gOIhG4+ONu8aQgOpaxpNVgJDhq/U0zTv8RrVRQlBDz+ynoKFB/2N1
-         Y6CbK2FwLLUEmtcK61i+ZQdiONwWyMGMs44mn1bpJRYawjjbzudPP6osM/txz/dhdBAJ
-         FJFhZF1a/WrWitNdTTj1HM19Qmi9BQa8KsNEWE1dFvq9OmaSh+e57acoOpT4MvX9XbuY
-         yEpw==
-X-Gm-Message-State: APjAAAUsV8qnoGmHJZSPqjRhmaBwNuc8gysNwr86NuPpaV/W+GZSosxM
-        nXHMj8S1X5OL0Z6fJ1eRcaY=
-X-Google-Smtp-Source: APXvYqzT87+RKNEsWkCNXwUBTwGxlha0v6Y5m9kSXMYf11Ty/t78K9JvfdUPECbHxaWLT//6zXsroA==
-X-Received: by 2002:ac8:4895:: with SMTP id i21mr6318407qtq.146.1567022253364;
-        Wed, 28 Aug 2019 12:57:33 -0700 (PDT)
-Received: from localhost.localdomain (mobile-166-170-30-28.mycingular.net. [166.170.30.28])
-        by smtp.googlemail.com with ESMTPSA id q6sm105689qtr.23.2019.08.28.12.57.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 28 Aug 2019 12:57:32 -0700 (PDT)
-From:   Peter Vernia <peter.vernia@gmail.com>
-To:     peter.vernia@gmail.com
-Cc:     linus.walleij@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com,
-        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, poeschel@lemonage.de
-Subject: [PATCH] pinctrl-mcp23s08: Fix property-name in dt-example
-Date:   Wed, 28 Aug 2019 15:56:09 -0400
-Message-Id: <20190828195609.4176-1-peter.vernia@gmail.com>
+        id S1725881AbfH2HRd (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 29 Aug 2019 03:17:33 -0400
+Received: from out5-smtp.messagingengine.com ([66.111.4.29]:41235 "EHLO
+        out5-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725853AbfH2HRd (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>);
+        Thu, 29 Aug 2019 03:17:33 -0400
+Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
+        by mailout.nyi.internal (Postfix) with ESMTP id EFFA32235F;
+        Thu, 29 Aug 2019 03:17:31 -0400 (EDT)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute4.internal (MEProxy); Thu, 29 Aug 2019 03:17:32 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aj.id.au; h=from
+        :to:cc:subject:date:message-id:mime-version
+        :content-transfer-encoding; s=fm3; bh=fNZ4xh9uT1X3X9+GMF7S9M4Khb
+        ZuAQ0dU82+LfdKRIU=; b=EHmXLhKdqEQBUyL306orSymEN4gb3qidnBa9u0FxOq
+        zd0YytrNno08Kqv5NSjc38Pr+Lr/jHcl8rGOr9jgksKhxt7iJHzoF3oHrdlou1le
+        eGEdsY8S3rAUCZJd8rhMlGPKH3FDTgvQP9L5vtXfTQDCI9bqf4eVjoDVoAcRN5M6
+        gDL/NkA/TEYP251tUEDLugtVheOKGHkgtWYZpnm5fGbQ1gDZ5TdTyWg2r5kRKSBu
+        sE5HQAf3utvq++HcB/AJBS8YGl+Lr7Vd4BDBtBsAlh9ykmytk1cG3gcgUiHIvfBF
+        vfhjF97n7OQaNeBZlQn8ukokVsL/dQpGPJvnTdfre7vw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-transfer-encoding:date:from
+        :message-id:mime-version:subject:to:x-me-proxy:x-me-proxy
+        :x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=fNZ4xh9uT1X3X9+GM
+        F7S9M4KhbZuAQ0dU82+LfdKRIU=; b=HGuxF0etWnXEN6y4boSnGGQXpJH7ly3Eq
+        Ez0ulWry3Yo98dj/8yqbpwFnaajas3Wtx/Jah2C+neEDDsjWkEOGifv6LumpomAN
+        85lln7PI1lRXjMNNFPu4RjenLEXOJarR1qzet0OLketJRs5FT62VNvCYcYtcvOGq
+        8hxK0IjaOvZb0sxlE4PM8EAIHaR6vC/d3QaSuhxzbvlNfpqJ3tFx6COEUekxfc3s
+        c1Jhy0obR8leSFKNUWmYSsU3aa2898nhm2UvbdAjG3oRqt1QyIZKvGqfCgA2HXoR
+        roZ7D9AuQaCBB0+fE3vp5U5gRFF7Izya6kPh2AWv0bqgrxg4rtkgw==
+X-ME-Sender: <xms:C3xnXR5TNsg2nfSkDmIJdHg-sBClwUmgNEp3HiP0nlCg5X0yjIkmig>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduvddrudeiuddguddujecutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
+    necuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmd
+    enucfjughrpefhvffufffkofgggfestdekredtredttdenucfhrhhomheptehnughrvgif
+    ucflvghffhgvrhihuceorghnughrvgifsegrjhdrihgurdgruheqnecukfhppedvtdefrd
+    ehjedrvdduhedrudejkeenucfrrghrrghmpehmrghilhhfrhhomheprghnughrvgifsegr
+    jhdrihgurdgruhenucevlhhushhtvghrufhiiigvpedt
+X-ME-Proxy: <xmx:C3xnXWVPSGN_N4m99OBLSxYNVhByx2iL3arujMGJK5q4fDY6RIurlw>
+    <xmx:C3xnXV2UuDik2kCDKF1TGivDCpdlJ_22fKEJZnjxGl17oAVQ5HFXkQ>
+    <xmx:C3xnXT09aVDRCJ9IvAZhY18NPHbvMgkAFCBYkMcKggnkf7G1i5rb-g>
+    <xmx:C3xnXeuKEklshHhzeEVxMLz14cBWL7fN9Dvh3fO1L_Ha2DAkiLxeZg>
+Received: from localhost.localdomain (203-57-215-178.dyn.iinet.net.au [203.57.215.178])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 59BFDD6005A;
+        Thu, 29 Aug 2019 03:17:28 -0400 (EDT)
+From:   Andrew Jeffery <andrew@aj.id.au>
+To:     linux-gpio@vger.kernel.org
+Cc:     Andrew Jeffery <andrew@aj.id.au>, linus.walleij@linaro.org,
+        joel@jms.id.au, linux-aspeed@lists.ozlabs.org,
+        openbmc@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, John Wang <wangzqbj@inspur.com>
+Subject: [PATCH pinctrl/fixes] pinctrl: aspeed: Fix spurious mux failures on the AST2500
+Date:   Thu, 29 Aug 2019 16:47:38 +0930
+Message-Id: <20190829071738.2523-1-andrew@aj.id.au>
 X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -60,32 +68,149 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-The device-tree properties documentation-file specifies the property
-"microchip,spi-present-mask" as required for MCP23SXX chips. However,
-the device-tree-source example below it uses only "spi-present-mask".
-Without "microchip," on the front, the driver will print "missing
-spi-present-mask" when it initializes.
+Commit 674fa8daa8c9 ("pinctrl: aspeed-g5: Delay acquisition of regmaps")
+was determined to be a partial fix to the problem of acquiring the LPC
+Host Controller and GFX regmaps: The AST2500 pin controller may need to
+fetch syscon regmaps during expression evaluation as well as when
+setting mux state. For example, this case is hit by attempting to export
+pins exposing the LPC Host Controller as GPIOs.
 
-Update the device-tree example with the correct property-name.
+An optional eval() hook is added to the Aspeed pinmux operation struct
+and called from aspeed_sig_expr_eval() if the pointer is set by the
+SoC-specific driver. This enables the AST2500 to perform the custom
+action of acquiring its regmap dependencies as required.
 
-Signed-off-by: Peter Vernia <peter.vernia@gmail.com>
+John Wang tested the fix on an Inspur FP5280G2 machine (AST2500-based)
+where the issue was found, and I've booted the fix on Witherspoon
+(AST2500) and Palmetto (AST2400) machines, and poked at relevant pins
+under QEMU by forcing mux configurations via devmem before exporting
+GPIOs to exercise the driver.
+
+Fixes: 7d29ed88acbb ("pinctrl: aspeed: Read and write bits in LPC and GFX controllers")
+Fixes: 674fa8daa8c9 ("pinctrl: aspeed-g5: Delay acquisition of regmaps")
+Reported-by: John Wang <wangzqbj@inspur.com>
+Tested-by: John Wang <wangzqbj@inspur.com>
+Signed-off-by: Andrew Jeffery <andrew@aj.id.au>
+
 ---
- Documentation/devicetree/bindings/pinctrl/pinctrl-mcp23s08.txt | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Hi Linus,
 
-diff --git a/Documentation/devicetree/bindings/pinctrl/pinctrl-mcp23s08.txt b/Documentation/devicetree/bindings/pinctrl/pinctrl-mcp23s08.txt
-index 625a22e2f211..8b94aa8f5971 100644
---- a/Documentation/devicetree/bindings/pinctrl/pinctrl-mcp23s08.txt
-+++ b/Documentation/devicetree/bindings/pinctrl/pinctrl-mcp23s08.txt
-@@ -82,7 +82,7 @@ gpiom1: gpio@0 {
-         compatible = "microchip,mcp23s17";
-         gpio-controller;
-         #gpio-cells = <2>;
--        spi-present-mask = <0x01>;
-+        microchip,spi-present-mask = <0x01>;
-         reg = <0>;
-         spi-max-frequency = <1000000>;
+The timing of merging the AST2600 (g6) driver and 674fa8daa8c9 ("pinctrl:
+aspeed-g5: Delay acquisition of regmaps") caused a bit of a rough spot a
+few weeks back. This fix doesn't cause any such disruption - I've
+developed it on top of pinctrl/fixes and back-merged the result into
+pinctrl/devel to test for build breakage (via CONFIG_COMPILE_TEST to
+enable all of the g4, g5 and g6 drivers). All three ASPEED pinctrl
+drivers built successfully, so it should be enough to simply take this
+patch through pinctrl/fixes and leave pinctrl/devel as is for the 5.4
+merge window.
+---
+ drivers/pinctrl/aspeed/pinctrl-aspeed-g5.c | 30 +++++++++++++++++++++-
+ drivers/pinctrl/aspeed/pinmux-aspeed.c     |  7 +++--
+ drivers/pinctrl/aspeed/pinmux-aspeed.h     |  7 ++---
+ 3 files changed, 38 insertions(+), 6 deletions(-)
+
+diff --git a/drivers/pinctrl/aspeed/pinctrl-aspeed-g5.c b/drivers/pinctrl/aspeed/pinctrl-aspeed-g5.c
+index ba6438ac4d72..ff84d1afd229 100644
+--- a/drivers/pinctrl/aspeed/pinctrl-aspeed-g5.c
++++ b/drivers/pinctrl/aspeed/pinctrl-aspeed-g5.c
+@@ -2552,7 +2552,7 @@ static struct regmap *aspeed_g5_acquire_regmap(struct aspeed_pinmux_data *ctx,
+ 			if (IS_ERR(map))
+ 				return map;
+ 		} else
+-			map = ERR_PTR(-ENODEV);
++			return ERR_PTR(-ENODEV);
+ 
+ 		ctx->maps[ASPEED_IP_LPC] = map;
+ 		dev_dbg(ctx->dev, "Acquired LPC regmap");
+@@ -2562,6 +2562,33 @@ static struct regmap *aspeed_g5_acquire_regmap(struct aspeed_pinmux_data *ctx,
+ 	return ERR_PTR(-EINVAL);
+ }
+ 
++static int aspeed_g5_sig_expr_eval(struct aspeed_pinmux_data *ctx,
++				   const struct aspeed_sig_expr *expr,
++				   bool enabled)
++{
++	int ret;
++	int i;
++
++	for (i = 0; i < expr->ndescs; i++) {
++		const struct aspeed_sig_desc *desc = &expr->descs[i];
++		struct regmap *map;
++
++		map = aspeed_g5_acquire_regmap(ctx, desc->ip);
++		if (IS_ERR(map)) {
++			dev_err(ctx->dev,
++				"Failed to acquire regmap for IP block %d\n",
++				desc->ip);
++			return PTR_ERR(map);
++		}
++
++		ret = aspeed_sig_desc_eval(desc, enabled, ctx->maps[desc->ip]);
++		if (ret <= 0)
++			return ret;
++	}
++
++	return 1;
++}
++
+ /**
+  * Configure a pin's signal by applying an expression's descriptor state for
+  * all descriptors in the expression.
+@@ -2647,6 +2674,7 @@ static int aspeed_g5_sig_expr_set(struct aspeed_pinmux_data *ctx,
+ }
+ 
+ static const struct aspeed_pinmux_ops aspeed_g5_ops = {
++	.eval = aspeed_g5_sig_expr_eval,
+ 	.set = aspeed_g5_sig_expr_set,
  };
+ 
+diff --git a/drivers/pinctrl/aspeed/pinmux-aspeed.c b/drivers/pinctrl/aspeed/pinmux-aspeed.c
+index 839c01b7953f..57305ca838a7 100644
+--- a/drivers/pinctrl/aspeed/pinmux-aspeed.c
++++ b/drivers/pinctrl/aspeed/pinmux-aspeed.c
+@@ -78,11 +78,14 @@ int aspeed_sig_desc_eval(const struct aspeed_sig_desc *desc,
+  * neither the enabled nor disabled state. Thus we must explicitly test for
+  * either condition as required.
+  */
+-int aspeed_sig_expr_eval(const struct aspeed_pinmux_data *ctx,
++int aspeed_sig_expr_eval(struct aspeed_pinmux_data *ctx,
+ 			 const struct aspeed_sig_expr *expr, bool enabled)
+ {
++	int ret;
+ 	int i;
+-	int ret;
++
++	if (ctx->ops->eval)
++		return ctx->ops->eval(ctx, expr, enabled);
+ 
+ 	for (i = 0; i < expr->ndescs; i++) {
+ 		const struct aspeed_sig_desc *desc = &expr->descs[i];
+diff --git a/drivers/pinctrl/aspeed/pinmux-aspeed.h b/drivers/pinctrl/aspeed/pinmux-aspeed.h
+index 52d299b59ce2..db3457c86f48 100644
+--- a/drivers/pinctrl/aspeed/pinmux-aspeed.h
++++ b/drivers/pinctrl/aspeed/pinmux-aspeed.h
+@@ -702,6 +702,8 @@ struct aspeed_pin_function {
+ struct aspeed_pinmux_data;
+ 
+ struct aspeed_pinmux_ops {
++	int (*eval)(struct aspeed_pinmux_data *ctx,
++		    const struct aspeed_sig_expr *expr, bool enabled);
+ 	int (*set)(struct aspeed_pinmux_data *ctx,
+ 		   const struct aspeed_sig_expr *expr, bool enabled);
+ };
+@@ -722,9 +724,8 @@ struct aspeed_pinmux_data {
+ int aspeed_sig_desc_eval(const struct aspeed_sig_desc *desc, bool enabled,
+ 			 struct regmap *map);
+ 
+-int aspeed_sig_expr_eval(const struct aspeed_pinmux_data *ctx,
+-			 const struct aspeed_sig_expr *expr,
+-			 bool enabled);
++int aspeed_sig_expr_eval(struct aspeed_pinmux_data *ctx,
++			 const struct aspeed_sig_expr *expr, bool enabled);
+ 
+ static inline int aspeed_sig_expr_set(struct aspeed_pinmux_data *ctx,
+ 				      const struct aspeed_sig_expr *expr,
 -- 
 2.20.1
 
