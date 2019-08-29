@@ -2,79 +2,85 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id DAA1BA1E1B
-	for <lists+linux-gpio@lfdr.de>; Thu, 29 Aug 2019 16:58:04 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0E1F3A1E7A
+	for <lists+linux-gpio@lfdr.de>; Thu, 29 Aug 2019 17:09:58 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727364AbfH2O6C (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 29 Aug 2019 10:58:02 -0400
-Received: from office2.cesnet.cz ([195.113.144.244]:56802 "EHLO
-        office2.cesnet.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727235AbfH2O6C (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 29 Aug 2019 10:58:02 -0400
-X-Greylist: delayed 334 seconds by postgrey-1.27 at vger.kernel.org; Thu, 29 Aug 2019 10:58:01 EDT
-Received: from localhost (unknown [IPv6:2001:718:1:2e:a5b5:770:4491:af45])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by office2.cesnet.cz (Postfix) with ESMTPSA id C5050400090;
-        Thu, 29 Aug 2019 16:52:25 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cesnet.cz;
-        s=office2; t=1567090346;
-        bh=3tXhnFz9DXpG4v0X5eDoi7gh3sGoIVP30uPeWkcdU20=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References;
-        b=dnjZYPl3pVtVYldh/uT1hu2d7uxI1b3CgI0Jwygo+nJxcGsDoGjlzP2qxCL/K907v
-         ijYbtkX9QYAvkiLHQnyV1lGFtaB9veCKl6vLLkiD6CJquGc/YMUbpO6gbxbe4f+rAc
-         hGnFJoUOdYGdaWsdKCfqMaCGAnVz9JnaX/+4ksBU=
-From:   =?iso-8859-1?Q?Jan_Kundr=E1t?= <jan.kundrat@cesnet.cz>
-To:     Peter Vernia <peter.vernia@gmail.com>
-Cc:     <linus.walleij@linaro.org>, <robh+dt@kernel.org>,
-        <mark.rutland@arm.com>, <linux-gpio@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <poeschel@lemonage.de>
-Subject: Re: [PATCH] pinctrl-mcp23s08: Fix property-name in dt-example
-Date:   Thu, 29 Aug 2019 16:52:24 +0200
+        id S1727115AbfH2PJx (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 29 Aug 2019 11:09:53 -0400
+Received: from mail-qk1-f194.google.com ([209.85.222.194]:37773 "EHLO
+        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726950AbfH2PJx (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 29 Aug 2019 11:09:53 -0400
+Received: by mail-qk1-f194.google.com with SMTP id s14so3255780qkm.4;
+        Thu, 29 Aug 2019 08:09:52 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=6u6dCwC2AXkIji3mWvHkjCdJECAtIHmA17odygtXfv4=;
+        b=EmLtseUKbwckhUwybNTPRma2kFhUf0KBHggEvVEXhuDAw1OL5tuDurb0pdEpKmN4hW
+         lm0cLveE80IYJLOuh6oXY4U8o8aCyYCIv9Jb2UPQgwytGNmaFMXxoY1O6wf1+TZtYwuf
+         QsJ8e8/DUv/XU9sHXg0iGSO/QEijOz1MizLITpIO6SUOJpr7y0fCvqwoNt3VV0zeS/Du
+         c3UFdl+aq092Sk/GQIzKs8rEZF8H7rJuNGG9x1nQIivWcrJC1i/OpJOUNeqjvorOPi9Y
+         C3smr69EMx3IA9bXsQ/Ls32rWD0qagzBbFgfkecPo4bFWWtT0g1R7VNdJ6MxpqQNsI9n
+         Cgeg==
+X-Gm-Message-State: APjAAAV++5N4smUutPjhsU4vWubJBHUEhi6b/g0zshU6pu3z8SoCloYx
+        pdHTyYamJs6nmARtxl21yXLJ3PKJV5uvIL8CVxU=
+X-Google-Smtp-Source: APXvYqz+OTLX5WalC0BHdlzlG68GfRdHuWYXB7TEvUIwtsbgeNRNSEwMSu7vDs8mtEOGVF2Qu2vjyjHby17ElUNZrYQ=
+X-Received: by 2002:a37:4051:: with SMTP id n78mr9705549qka.138.1567091392126;
+ Thu, 29 Aug 2019 08:09:52 -0700 (PDT)
 MIME-Version: 1.0
-Message-ID: <eaa0f631-bf71-4ca9-b3ff-06d5d43cc58d@cesnet.cz>
-In-Reply-To: <20190828195609.4176-1-peter.vernia@gmail.com>
-References: <20190828195609.4176-1-peter.vernia@gmail.com>
-Organization: CESNET
-User-Agent: Trojita/v0.7-402-g90b417b1-dirty; Qt/5.13.0; xcb; Linux; Gentoo Base System release 2.4.1
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: quoted-printable
+References: <20190829143742.24726-1-brgl@bgdev.pl> <20190829143742.24726-4-brgl@bgdev.pl>
+In-Reply-To: <20190829143742.24726-4-brgl@bgdev.pl>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Thu, 29 Aug 2019 17:09:35 +0200
+Message-ID: <CAK8P3a1vKmYS-sRj=GrjtqudjbYrwmEOEiKWOVRfHm2rLqxgPg@mail.gmail.com>
+Subject: Re: [PATCH 3/9] lib: devres: provide new variants for devm_ioremap_resource()
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     Jonathan Corbet <corbet@lwn.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J . Wysocki" <rafael@kernel.org>,
+        Alban Bedel <albeu@free.fr>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Julia Lawall <Julia.Lawall@lip6.fr>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On st=C5=99eda 28. srpna 2019 21:56:09 CEST, Peter Vernia wrote:
-> The device-tree properties documentation-file specifies the property
-> "microchip,spi-present-mask" as required for MCP23SXX chips. However,
-> the device-tree-source example below it uses only "spi-present-mask".
-> Without "microchip," on the front, the driver will print "missing
-> spi-present-mask" when it initializes.
->
-> Update the device-tree example with the correct property-name.
->
-> Signed-off-by: Peter Vernia <peter.vernia@gmail.com>
+On Thu, Aug 29, 2019 at 4:38 PM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
 
-Reviewed-by: Jan Kundr=C3=A1t <jan.kundrat@cesnet.cz>
-
-> ---
->  Documentation/devicetree/bindings/pinctrl/pinctrl-mcp23s08.txt | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+> @@ -710,6 +710,10 @@ extern void devm_free_pages(struct device *dev, unsigned long addr);
 >
-> diff --git=20
-> a/Documentation/devicetree/bindings/pinctrl/pinctrl-mcp23s08.txt=20
-> b/Documentation/devicetree/bindings/pinctrl/pinctrl-mcp23s08.txt
-> index 625a22e2f211..8b94aa8f5971 100644
-> --- a/Documentation/devicetree/bindings/pinctrl/pinctrl-mcp23s08.txt
-> +++ b/Documentation/devicetree/bindings/pinctrl/pinctrl-mcp23s08.txt
-> @@ -82,7 +82,7 @@ gpiom1: gpio@0 {
->          compatible =3D "microchip,mcp23s17";
->          gpio-controller;
->          #gpio-cells =3D <2>;
-> -        spi-present-mask =3D <0x01>;
-> +        microchip,spi-present-mask =3D <0x01>;
->          reg =3D <0>;
->          spi-max-frequency =3D <1000000>;
->  };
+>  void __iomem *devm_ioremap_resource(struct device *dev,
+>                                     const struct resource *res);
+> +void __iomem *devm_ioremap_resource_nocache(struct device *dev,
+> +                                           const struct resource *res);
+> +void __iomem *devm_ioremap_resource_wc(struct device *dev,
+> +                                      const struct resource *res);
+>
+>  void __iomem *devm_of_iomap(struct device *dev,
+>                             struct device_node *node, int index,
+> diff --git a/lib/devres.c b/lib/devres.c
 
+I think adding devm_ioremap_resource_wc() and
+devm_platform_ioremap_resource_wc() makes sense, but I think we're
+better off without devm_ioremap_resource_nocache() and
+devm_ioremap_resource_cache().
+
+The only architecture that actually has a difference between
+ioremap() and ioremap_nocache() seems to be ia64. I would
+generally assume that any driver using ioremap_nocache()
+that is not ia64 specific should just use ioremap().
+
+The ia64 version of ioremap() tries to guess whether it needs
+a cached or uncached mapping, everyone else always
+gets uncached these days.
+
+       Arnd
