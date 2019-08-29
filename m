@@ -2,215 +2,343 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 4398DA126E
-	for <lists+linux-gpio@lfdr.de>; Thu, 29 Aug 2019 09:17:34 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 50459A1B6B
+	for <lists+linux-gpio@lfdr.de>; Thu, 29 Aug 2019 15:28:18 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725881AbfH2HRd (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 29 Aug 2019 03:17:33 -0400
-Received: from out5-smtp.messagingengine.com ([66.111.4.29]:41235 "EHLO
-        out5-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725853AbfH2HRd (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>);
-        Thu, 29 Aug 2019 03:17:33 -0400
-Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailout.nyi.internal (Postfix) with ESMTP id EFFA32235F;
-        Thu, 29 Aug 2019 03:17:31 -0400 (EDT)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute4.internal (MEProxy); Thu, 29 Aug 2019 03:17:32 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aj.id.au; h=from
-        :to:cc:subject:date:message-id:mime-version
-        :content-transfer-encoding; s=fm3; bh=fNZ4xh9uT1X3X9+GMF7S9M4Khb
-        ZuAQ0dU82+LfdKRIU=; b=EHmXLhKdqEQBUyL306orSymEN4gb3qidnBa9u0FxOq
-        zd0YytrNno08Kqv5NSjc38Pr+Lr/jHcl8rGOr9jgksKhxt7iJHzoF3oHrdlou1le
-        eGEdsY8S3rAUCZJd8rhMlGPKH3FDTgvQP9L5vtXfTQDCI9bqf4eVjoDVoAcRN5M6
-        gDL/NkA/TEYP251tUEDLugtVheOKGHkgtWYZpnm5fGbQ1gDZ5TdTyWg2r5kRKSBu
-        sE5HQAf3utvq++HcB/AJBS8YGl+Lr7Vd4BDBtBsAlh9ykmytk1cG3gcgUiHIvfBF
-        vfhjF97n7OQaNeBZlQn8ukokVsL/dQpGPJvnTdfre7vw==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-transfer-encoding:date:from
-        :message-id:mime-version:subject:to:x-me-proxy:x-me-proxy
-        :x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=fNZ4xh9uT1X3X9+GM
-        F7S9M4KhbZuAQ0dU82+LfdKRIU=; b=HGuxF0etWnXEN6y4boSnGGQXpJH7ly3Eq
-        Ez0ulWry3Yo98dj/8yqbpwFnaajas3Wtx/Jah2C+neEDDsjWkEOGifv6LumpomAN
-        85lln7PI1lRXjMNNFPu4RjenLEXOJarR1qzet0OLketJRs5FT62VNvCYcYtcvOGq
-        8hxK0IjaOvZb0sxlE4PM8EAIHaR6vC/d3QaSuhxzbvlNfpqJ3tFx6COEUekxfc3s
-        c1Jhy0obR8leSFKNUWmYSsU3aa2898nhm2UvbdAjG3oRqt1QyIZKvGqfCgA2HXoR
-        roZ7D9AuQaCBB0+fE3vp5U5gRFF7Izya6kPh2AWv0bqgrxg4rtkgw==
-X-ME-Sender: <xms:C3xnXR5TNsg2nfSkDmIJdHg-sBClwUmgNEp3HiP0nlCg5X0yjIkmig>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduvddrudeiuddguddujecutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
-    necuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmd
-    enucfjughrpefhvffufffkofgggfestdekredtredttdenucfhrhhomheptehnughrvgif
-    ucflvghffhgvrhihuceorghnughrvgifsegrjhdrihgurdgruheqnecukfhppedvtdefrd
-    ehjedrvdduhedrudejkeenucfrrghrrghmpehmrghilhhfrhhomheprghnughrvgifsegr
-    jhdrihgurdgruhenucevlhhushhtvghrufhiiigvpedt
-X-ME-Proxy: <xmx:C3xnXWVPSGN_N4m99OBLSxYNVhByx2iL3arujMGJK5q4fDY6RIurlw>
-    <xmx:C3xnXV2UuDik2kCDKF1TGivDCpdlJ_22fKEJZnjxGl17oAVQ5HFXkQ>
-    <xmx:C3xnXT09aVDRCJ9IvAZhY18NPHbvMgkAFCBYkMcKggnkf7G1i5rb-g>
-    <xmx:C3xnXeuKEklshHhzeEVxMLz14cBWL7fN9Dvh3fO1L_Ha2DAkiLxeZg>
-Received: from localhost.localdomain (203-57-215-178.dyn.iinet.net.au [203.57.215.178])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 59BFDD6005A;
-        Thu, 29 Aug 2019 03:17:28 -0400 (EDT)
-From:   Andrew Jeffery <andrew@aj.id.au>
-To:     linux-gpio@vger.kernel.org
-Cc:     Andrew Jeffery <andrew@aj.id.au>, linus.walleij@linaro.org,
-        joel@jms.id.au, linux-aspeed@lists.ozlabs.org,
-        openbmc@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, John Wang <wangzqbj@inspur.com>
-Subject: [PATCH pinctrl/fixes] pinctrl: aspeed: Fix spurious mux failures on the AST2500
-Date:   Thu, 29 Aug 2019 16:47:38 +0930
-Message-Id: <20190829071738.2523-1-andrew@aj.id.au>
-X-Mailer: git-send-email 2.20.1
+        id S1726518AbfH2N2C (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 29 Aug 2019 09:28:02 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:32802 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727021AbfH2N2B (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 29 Aug 2019 09:28:01 -0400
+Received: by mail-pg1-f194.google.com with SMTP id n190so1616008pgn.0;
+        Thu, 29 Aug 2019 06:28:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=2Y6BpN7Uupv7X4I2rysVn7jUz/GHrmd0Z9b9CcxKoxs=;
+        b=Ycdb5dkvqqq+4NIpkaAupgTLIDvX14i7bpzIKjFlPl3+BAx5Z4ux339GbCiXB8RFii
+         KYI/1UWZhaVcbvMVjlqnN0cWuaycw9VQELtYcvwDXdzjw4hYAf7xh681C93k2DzWa8HF
+         b2xmoN+7bprc8Ez94NBFrEfyiQqxUTI5VOlO3acgw8I3+y10RWZ74FlwgZZZnoQdc1WL
+         lu8urWcjz+eAmbYR/8sDH4xc7Sva1FtH2dNweORLRl72vollVCx+BfNBl0SI+vrX6NoP
+         7j/hGqbW+KUiJwYBydeg21FmieYDDbXt6qAJwiHLnNV3iriEK5Vx4cajJE0bcp8ournT
+         HKPA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=2Y6BpN7Uupv7X4I2rysVn7jUz/GHrmd0Z9b9CcxKoxs=;
+        b=BEgRGiGFt1+oq/bIJp+xOvY4/a4GCLQErlKmjaxb0DdI0p8dicWNh7zcMzmFTM9qnO
+         BvFejYpwGD16uHn5ic19UaGCaDDBcRis0N0rAyXbFQfZayKJ+wnZx+ygc6XIf4OGxXwU
+         2eQfVKHE1dc6Z8mHSn6j1SG8aEedLUK9uvJIssQQ06pD3ON2enSU1G4d6RpvOnjFK8M7
+         MwNSpCYbsZQzZ5VMAK6RoPaoXTyD0BFvOq2+G3r/179jRNaeTtexG4Jy0OmcOXAns331
+         kt3j6hdWFUNvCkFPk285Qz/hcT3eaz0BVY9t9seQD4Uj4v6ugGWSzNgf6Up3I2RUl1b4
+         c5Iw==
+X-Gm-Message-State: APjAAAVfMv+8uIeLv24fg7XswWpl/SRySpxL8POtvWQuv6HuxzP0pVPY
+        5e6Ur3ZvTMzIuiQ+1Mm8NX3c7Hsgd0Zk6oMUNng=
+X-Google-Smtp-Source: APXvYqx4YSUU2osDY9JdW85z12G2w/UvYdFaEaqz3Z5+lCelyQCVM7HmagT+5t2YxPCEJ95Uyc+Y0i2MTZHASo/160k=
+X-Received: by 2002:a63:c842:: with SMTP id l2mr6905808pgi.4.1567085280639;
+ Thu, 29 Aug 2019 06:28:00 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20190824233724.1775-1-uwe@kleine-koenig.org>
+In-Reply-To: <20190824233724.1775-1-uwe@kleine-koenig.org>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Thu, 29 Aug 2019 16:27:49 +0300
+Message-ID: <CAHp75Veuxt40U8CotL5KHJGxNPOJ7a-DCcKWN7+mgoPJAieTDA@mail.gmail.com>
+Subject: Re: [PATCH v1 1/2] vsprintf: introduce %dE for error constants
+To:     =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <uwe@kleine-koenig.org>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Linux Documentation List <linux-doc@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Commit 674fa8daa8c9 ("pinctrl: aspeed-g5: Delay acquisition of regmaps")
-was determined to be a partial fix to the problem of acquiring the LPC
-Host Controller and GFX regmaps: The AST2500 pin controller may need to
-fetch syscon regmaps during expression evaluation as well as when
-setting mux state. For example, this case is hit by attempting to export
-pins exposing the LPC Host Controller as GPIOs.
+On Sun, Aug 25, 2019 at 2:40 AM Uwe Kleine-K=C3=B6nig <uwe@kleine-koenig.or=
+g> wrote:
+>
+>         pr_info("probing failed (%dE)\n", ret);
+>
+> expands to
+>
+>         probing failed (EIO)
+>
+> if ret holds -EIO (or EIO). This introduces an array of error codes. If
+> the error code is missing, %dE falls back to %d and so prints the plain
+> number.
+>
+> Signed-off-by: Uwe Kleine-K=C3=B6nig <uwe@kleine-koenig.org>
+> ---
+> Hello
+>
+> there are many code sites that benefit from this. Just grep for
+> "(%d)" ...
+>
+> As an example the follow up patch converts a printk to use this new
+> format escape.
+>
 
-An optional eval() hook is added to the Aspeed pinmux operation struct
-and called from aspeed_sig_expr_eval() if the pointer is set by the
-SoC-specific driver. This enables the AST2500 to perform the custom
-action of acquiring its regmap dependencies as required.
+Let's not do this!
 
-John Wang tested the fix on an Inspur FP5280G2 machine (AST2500-based)
-where the issue was found, and I've booted the fix on Witherspoon
-(AST2500) and Palmetto (AST2400) machines, and poked at relevant pins
-under QEMU by forcing mux configurations via devmem before exporting
-GPIOs to exercise the driver.
+We have already a lot of pain with pointer extension, but here is just
+a misleading stuff.
+Besides above, how you print (float) number out of kernel in sysfs in
+very well standard format?
+Please, use %p<SMTH> instead.
 
-Fixes: 7d29ed88acbb ("pinctrl: aspeed: Read and write bits in LPC and GFX controllers")
-Fixes: 674fa8daa8c9 ("pinctrl: aspeed-g5: Delay acquisition of regmaps")
-Reported-by: John Wang <wangzqbj@inspur.com>
-Tested-by: John Wang <wangzqbj@inspur.com>
-Signed-off-by: Andrew Jeffery <andrew@aj.id.au>
+> Best regards
+> Uwe
+>
+>  Documentation/core-api/printk-formats.rst |   3 +
+>  lib/vsprintf.c                            | 193 +++++++++++++++++++++-
+>  2 files changed, 195 insertions(+), 1 deletion(-)
+>
+> diff --git a/Documentation/core-api/printk-formats.rst b/Documentation/co=
+re-api/printk-formats.rst
+> index c6224d039bcb..81002414f956 100644
+> --- a/Documentation/core-api/printk-formats.rst
+> +++ b/Documentation/core-api/printk-formats.rst
+> @@ -35,6 +35,9 @@ Integer types
+>                 u64                     %llu or %llx
+>
+>
+> +To print the name that corresponds to an integer error constant, use %dE=
+ and
+> +pass the int.
+> +
+>  If <type> is dependent on a config option for its size (e.g., sector_t,
+>  blkcnt_t) or is architecture-dependent for its size (e.g., tcflag_t), us=
+e a
+>  format specifier of its largest possible type and explicitly cast to it.
+> diff --git a/lib/vsprintf.c b/lib/vsprintf.c
+> index b0967cf17137..672eab8dab84 100644
+> --- a/lib/vsprintf.c
+> +++ b/lib/vsprintf.c
+> @@ -533,6 +533,192 @@ char *number(char *buf, char *end, unsigned long lo=
+ng num,
+>         return buf;
+>  }
+>
+> +#define ERRORCODE(x) { .str =3D #x, .err =3D x }
+> +
+> +static const struct {
+> +       const char *str;
+> +       int err;
+> +} errorcodes[] =3D {
+> +       ERRORCODE(EPERM),
+> +       ERRORCODE(ENOENT),
+> +       ERRORCODE(ESRCH),
+> +       ERRORCODE(EINTR),
+> +       ERRORCODE(EIO),
+> +       ERRORCODE(ENXIO),
+> +       ERRORCODE(E2BIG),
+> +       ERRORCODE(ENOEXEC),
+> +       ERRORCODE(EBADF),
+> +       ERRORCODE(ECHILD),
+> +       ERRORCODE(EAGAIN),
+> +       ERRORCODE(ENOMEM),
+> +       ERRORCODE(EACCES),
+> +       ERRORCODE(EFAULT),
+> +       ERRORCODE(ENOTBLK),
+> +       ERRORCODE(EBUSY),
+> +       ERRORCODE(EEXIST),
+> +       ERRORCODE(EXDEV),
+> +       ERRORCODE(ENODEV),
+> +       ERRORCODE(ENOTDIR),
+> +       ERRORCODE(EISDIR),
+> +       ERRORCODE(EINVAL),
+> +       ERRORCODE(ENFILE),
+> +       ERRORCODE(EMFILE),
+> +       ERRORCODE(ENOTTY),
+> +       ERRORCODE(ETXTBSY),
+> +       ERRORCODE(EFBIG),
+> +       ERRORCODE(ENOSPC),
+> +       ERRORCODE(ESPIPE),
+> +       ERRORCODE(EROFS),
+> +       ERRORCODE(EMLINK),
+> +       ERRORCODE(EPIPE),
+> +       ERRORCODE(EDOM),
+> +       ERRORCODE(ERANGE),
+> +       ERRORCODE(EDEADLK),
+> +       ERRORCODE(ENAMETOOLONG),
+> +       ERRORCODE(ENOLCK),
+> +       ERRORCODE(ENOSYS),
+> +       ERRORCODE(ENOTEMPTY),
+> +       ERRORCODE(ELOOP),
+> +       ERRORCODE(EWOULDBLOCK),
+> +       ERRORCODE(ENOMSG),
+> +       ERRORCODE(EIDRM),
+> +       ERRORCODE(ECHRNG),
+> +       ERRORCODE(EL2NSYNC),
+> +       ERRORCODE(EL3HLT),
+> +       ERRORCODE(EL3RST),
+> +       ERRORCODE(ELNRNG),
+> +       ERRORCODE(EUNATCH),
+> +       ERRORCODE(ENOCSI),
+> +       ERRORCODE(EL2HLT),
+> +       ERRORCODE(EBADE),
+> +       ERRORCODE(EBADR),
+> +       ERRORCODE(EXFULL),
+> +       ERRORCODE(ENOANO),
+> +       ERRORCODE(EBADRQC),
+> +       ERRORCODE(EBADSLT),
+> +       ERRORCODE(EBFONT),
+> +       ERRORCODE(ENOSTR),
+> +       ERRORCODE(ENODATA),
+> +       ERRORCODE(ETIME),
+> +       ERRORCODE(ENOSR),
+> +       ERRORCODE(ENONET),
+> +       ERRORCODE(ENOPKG),
+> +       ERRORCODE(EREMOTE),
+> +       ERRORCODE(ENOLINK),
+> +       ERRORCODE(EADV),
+> +       ERRORCODE(ESRMNT),
+> +       ERRORCODE(ECOMM),
+> +       ERRORCODE(EPROTO),
+> +       ERRORCODE(EMULTIHOP),
+> +       ERRORCODE(EDOTDOT),
+> +       ERRORCODE(EBADMSG),
+> +       ERRORCODE(EOVERFLOW),
+> +       ERRORCODE(ENOTUNIQ),
+> +       ERRORCODE(EBADFD),
+> +       ERRORCODE(EREMCHG),
+> +       ERRORCODE(ELIBACC),
+> +       ERRORCODE(ELIBBAD),
+> +       ERRORCODE(ELIBSCN),
+> +       ERRORCODE(ELIBMAX),
+> +       ERRORCODE(ELIBEXEC),
+> +       ERRORCODE(EILSEQ),
+> +       ERRORCODE(ERESTART),
+> +       ERRORCODE(ESTRPIPE),
+> +       ERRORCODE(EUSERS),
+> +       ERRORCODE(ENOTSOCK),
+> +       ERRORCODE(EDESTADDRREQ),
+> +       ERRORCODE(EMSGSIZE),
+> +       ERRORCODE(EPROTOTYPE),
+> +       ERRORCODE(ENOPROTOOPT),
+> +       ERRORCODE(EPROTONOSUPPORT),
+> +       ERRORCODE(ESOCKTNOSUPPORT),
+> +       ERRORCODE(EOPNOTSUPP),
+> +       ERRORCODE(EPFNOSUPPORT),
+> +       ERRORCODE(EAFNOSUPPORT),
+> +       ERRORCODE(EADDRINUSE),
+> +       ERRORCODE(EADDRNOTAVAIL),
+> +       ERRORCODE(ENETDOWN),
+> +       ERRORCODE(ENETUNREACH),
+> +       ERRORCODE(ENETRESET),
+> +       ERRORCODE(ECONNABORTED),
+> +       ERRORCODE(ECONNRESET),
+> +       ERRORCODE(ENOBUFS),
+> +       ERRORCODE(EISCONN),
+> +       ERRORCODE(ENOTCONN),
+> +       ERRORCODE(ESHUTDOWN),
+> +       ERRORCODE(ETOOMANYREFS),
+> +       ERRORCODE(ETIMEDOUT),
+> +       ERRORCODE(ECONNREFUSED),
+> +       ERRORCODE(EHOSTDOWN),
+> +       ERRORCODE(EHOSTUNREACH),
+> +       ERRORCODE(EALREADY),
+> +       ERRORCODE(EINPROGRESS),
+> +       ERRORCODE(ESTALE),
+> +       ERRORCODE(EUCLEAN),
+> +       ERRORCODE(ENOTNAM),
+> +       ERRORCODE(ENAVAIL),
+> +       ERRORCODE(EISNAM),
+> +       ERRORCODE(EREMOTEIO),
+> +       ERRORCODE(EDQUOT),
+> +       ERRORCODE(ENOMEDIUM),
+> +       ERRORCODE(EMEDIUMTYPE),
+> +       ERRORCODE(ECANCELED),
+> +       ERRORCODE(ENOKEY),
+> +       ERRORCODE(EKEYEXPIRED),
+> +       ERRORCODE(EKEYREVOKED),
+> +       ERRORCODE(EKEYREJECTED),
+> +       ERRORCODE(EOWNERDEAD),
+> +       ERRORCODE(ENOTRECOVERABLE),
+> +       ERRORCODE(ERFKILL),
+> +       ERRORCODE(EHWPOISON),
+> +       ERRORCODE(ERESTARTSYS),
+> +       ERRORCODE(ERESTARTNOINTR),
+> +       ERRORCODE(ERESTARTNOHAND),
+> +       ERRORCODE(ENOIOCTLCMD),
+> +       ERRORCODE(ERESTART_RESTARTBLOCK),
+> +       ERRORCODE(EPROBE_DEFER),
+> +       ERRORCODE(EOPENSTALE),
+> +       ERRORCODE(ENOPARAM),
+> +       ERRORCODE(EBADHANDLE),
+> +       ERRORCODE(ENOTSYNC),
+> +       ERRORCODE(EBADCOOKIE),
+> +       ERRORCODE(ENOTSUPP),
+> +       ERRORCODE(ETOOSMALL),
+> +       ERRORCODE(ESERVERFAULT),
+> +       ERRORCODE(EBADTYPE),
+> +       ERRORCODE(EJUKEBOX),
+> +       ERRORCODE(EIOCBQUEUED),
+> +       ERRORCODE(ERECALLCONFLICT),
+> +};
+> +
+> +static noinline_for_stack
+> +char *errstr(char *buf, char *end, unsigned long long num,
+> +            struct printf_spec spec)
+> +{
+> +       char *errname =3D NULL;
+> +       size_t errnamelen, copy;
+> +       int i;
+> +
+> +       for (i =3D 0; i < ARRAY_SIZE(errorcodes); ++i) {
+> +               if (num =3D=3D errorcodes[i].err || num =3D=3D -errorcode=
+s[i].err) {
+> +                       errname =3D errorcodes[i].str;
+> +                       break;
+> +               }
+> +       }
+> +
+> +       if (!errname) {
+> +               /* fall back to ordinary number */
+> +               return number(buf, end, num, spec);
+> +       }
+> +
+> +       copy =3D errnamelen =3D strlen(errname);
+> +       if (copy > end - buf)
+> +               copy =3D end - buf;
+> +       buf =3D memcpy(buf, errname, copy);
+> +
+> +       return buf + errnamelen;
+> +}
+> +
+>  static noinline_for_stack
+>  char *special_hex_number(char *buf, char *end, unsigned long long num, i=
+nt size)
+>  {
+> @@ -2566,7 +2752,12 @@ int vsnprintf(char *buf, size_t size, const char *=
+fmt, va_list args)
+>                                 num =3D va_arg(args, unsigned int);
+>                         }
+>
+> -                       str =3D number(str, end, num, spec);
+> +                       if (spec.type =3D=3D FORMAT_TYPE_INT && *fmt =3D=
+=3D 'E') {
+> +                               fmt++;
+> +                               str =3D errstr(str, end, num, spec);
+> +                       } else {
+> +                               str =3D number(str, end, num, spec);
+> +                       }
+>                 }
+>         }
+>
+> --
+> 2.20.1
+>
 
----
-Hi Linus,
 
-The timing of merging the AST2600 (g6) driver and 674fa8daa8c9 ("pinctrl:
-aspeed-g5: Delay acquisition of regmaps") caused a bit of a rough spot a
-few weeks back. This fix doesn't cause any such disruption - I've
-developed it on top of pinctrl/fixes and back-merged the result into
-pinctrl/devel to test for build breakage (via CONFIG_COMPILE_TEST to
-enable all of the g4, g5 and g6 drivers). All three ASPEED pinctrl
-drivers built successfully, so it should be enough to simply take this
-patch through pinctrl/fixes and leave pinctrl/devel as is for the 5.4
-merge window.
----
- drivers/pinctrl/aspeed/pinctrl-aspeed-g5.c | 30 +++++++++++++++++++++-
- drivers/pinctrl/aspeed/pinmux-aspeed.c     |  7 +++--
- drivers/pinctrl/aspeed/pinmux-aspeed.h     |  7 ++---
- 3 files changed, 38 insertions(+), 6 deletions(-)
-
-diff --git a/drivers/pinctrl/aspeed/pinctrl-aspeed-g5.c b/drivers/pinctrl/aspeed/pinctrl-aspeed-g5.c
-index ba6438ac4d72..ff84d1afd229 100644
---- a/drivers/pinctrl/aspeed/pinctrl-aspeed-g5.c
-+++ b/drivers/pinctrl/aspeed/pinctrl-aspeed-g5.c
-@@ -2552,7 +2552,7 @@ static struct regmap *aspeed_g5_acquire_regmap(struct aspeed_pinmux_data *ctx,
- 			if (IS_ERR(map))
- 				return map;
- 		} else
--			map = ERR_PTR(-ENODEV);
-+			return ERR_PTR(-ENODEV);
- 
- 		ctx->maps[ASPEED_IP_LPC] = map;
- 		dev_dbg(ctx->dev, "Acquired LPC regmap");
-@@ -2562,6 +2562,33 @@ static struct regmap *aspeed_g5_acquire_regmap(struct aspeed_pinmux_data *ctx,
- 	return ERR_PTR(-EINVAL);
- }
- 
-+static int aspeed_g5_sig_expr_eval(struct aspeed_pinmux_data *ctx,
-+				   const struct aspeed_sig_expr *expr,
-+				   bool enabled)
-+{
-+	int ret;
-+	int i;
-+
-+	for (i = 0; i < expr->ndescs; i++) {
-+		const struct aspeed_sig_desc *desc = &expr->descs[i];
-+		struct regmap *map;
-+
-+		map = aspeed_g5_acquire_regmap(ctx, desc->ip);
-+		if (IS_ERR(map)) {
-+			dev_err(ctx->dev,
-+				"Failed to acquire regmap for IP block %d\n",
-+				desc->ip);
-+			return PTR_ERR(map);
-+		}
-+
-+		ret = aspeed_sig_desc_eval(desc, enabled, ctx->maps[desc->ip]);
-+		if (ret <= 0)
-+			return ret;
-+	}
-+
-+	return 1;
-+}
-+
- /**
-  * Configure a pin's signal by applying an expression's descriptor state for
-  * all descriptors in the expression.
-@@ -2647,6 +2674,7 @@ static int aspeed_g5_sig_expr_set(struct aspeed_pinmux_data *ctx,
- }
- 
- static const struct aspeed_pinmux_ops aspeed_g5_ops = {
-+	.eval = aspeed_g5_sig_expr_eval,
- 	.set = aspeed_g5_sig_expr_set,
- };
- 
-diff --git a/drivers/pinctrl/aspeed/pinmux-aspeed.c b/drivers/pinctrl/aspeed/pinmux-aspeed.c
-index 839c01b7953f..57305ca838a7 100644
---- a/drivers/pinctrl/aspeed/pinmux-aspeed.c
-+++ b/drivers/pinctrl/aspeed/pinmux-aspeed.c
-@@ -78,11 +78,14 @@ int aspeed_sig_desc_eval(const struct aspeed_sig_desc *desc,
-  * neither the enabled nor disabled state. Thus we must explicitly test for
-  * either condition as required.
-  */
--int aspeed_sig_expr_eval(const struct aspeed_pinmux_data *ctx,
-+int aspeed_sig_expr_eval(struct aspeed_pinmux_data *ctx,
- 			 const struct aspeed_sig_expr *expr, bool enabled)
- {
-+	int ret;
- 	int i;
--	int ret;
-+
-+	if (ctx->ops->eval)
-+		return ctx->ops->eval(ctx, expr, enabled);
- 
- 	for (i = 0; i < expr->ndescs; i++) {
- 		const struct aspeed_sig_desc *desc = &expr->descs[i];
-diff --git a/drivers/pinctrl/aspeed/pinmux-aspeed.h b/drivers/pinctrl/aspeed/pinmux-aspeed.h
-index 52d299b59ce2..db3457c86f48 100644
---- a/drivers/pinctrl/aspeed/pinmux-aspeed.h
-+++ b/drivers/pinctrl/aspeed/pinmux-aspeed.h
-@@ -702,6 +702,8 @@ struct aspeed_pin_function {
- struct aspeed_pinmux_data;
- 
- struct aspeed_pinmux_ops {
-+	int (*eval)(struct aspeed_pinmux_data *ctx,
-+		    const struct aspeed_sig_expr *expr, bool enabled);
- 	int (*set)(struct aspeed_pinmux_data *ctx,
- 		   const struct aspeed_sig_expr *expr, bool enabled);
- };
-@@ -722,9 +724,8 @@ struct aspeed_pinmux_data {
- int aspeed_sig_desc_eval(const struct aspeed_sig_desc *desc, bool enabled,
- 			 struct regmap *map);
- 
--int aspeed_sig_expr_eval(const struct aspeed_pinmux_data *ctx,
--			 const struct aspeed_sig_expr *expr,
--			 bool enabled);
-+int aspeed_sig_expr_eval(struct aspeed_pinmux_data *ctx,
-+			 const struct aspeed_sig_expr *expr, bool enabled);
- 
- static inline int aspeed_sig_expr_set(struct aspeed_pinmux_data *ctx,
- 				      const struct aspeed_sig_expr *expr,
--- 
-2.20.1
-
+--=20
+With Best Regards,
+Andy Shevchenko
