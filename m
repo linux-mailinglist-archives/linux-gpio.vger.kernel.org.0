@@ -2,24 +2,24 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 270BBA2656
-	for <lists+linux-gpio@lfdr.de>; Thu, 29 Aug 2019 20:46:05 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 368F3A2655
+	for <lists+linux-gpio@lfdr.de>; Thu, 29 Aug 2019 20:45:53 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728084AbfH2SqE (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 29 Aug 2019 14:46:04 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:60572 "EHLO
+        id S1726518AbfH2Spq (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 29 Aug 2019 14:45:46 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:59514 "EHLO
         smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727867AbfH2SqE (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 29 Aug 2019 14:46:04 -0400
+        with ESMTP id S1727867AbfH2Spq (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 29 Aug 2019 14:45:46 -0400
 Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 5AE2269729; Thu, 29 Aug 2019 18:12:24 +0000 (UTC)
+        id BCD7C696F4; Thu, 29 Aug 2019 18:12:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1567104362;
-        bh=NeN4E6ZDwRBCdLKC0wxNI3H/ZmA0gyTLRM9b/Pm81zE=;
+        s=default; t=1567104345;
+        bh=UEhIiuKN6lZvFJkHN8qytkrYecwNLjuVzsDfPq+Y0Ig=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dh9Kt024EryacgO8qnE+9gVquDx+DFricK+M6P/3vzhkfVxNDqxf+59z6dr9X74A3
-         zfe3qN/r31VAzey3zoklmmtJm+RYl7kz0hAf0WnFY+bVneu3ACA9LHlngNRyMovHsL
-         hePBKtFsrdID7SX/2h6ydKEbFYB3sRpQUJgDPFIQ=
+        b=MctWhjTSS/HmTH8w/aOmUeGpBTWXXyIt95FG8eODHy+SZq4LMFgiYv449ZBaxYgUV
+         7lmYvZuvujJQoeeH14UcrCPJa90yIlPea5J6jGdFvSTZKgmvetJm3JlYxKIFTnxAsH
+         V8bLKFii2qrGQfXPlt4/BYoM7Lf5fBQNqXYdOVgo=
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
         pdx-caf-mail.web.codeaurora.org
 X-Spam-Level: 
@@ -30,16 +30,16 @@ Received: from codeaurora.org (i-global254.qualcomm.com [199.106.103.254])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
         (No client certificate requested)
         (Authenticated sender: ilina@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 97DC86895F;
-        Thu, 29 Aug 2019 18:12:20 +0000 (UTC)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 8770B68A27;
+        Thu, 29 Aug 2019 18:12:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1567102341;
-        bh=NeN4E6ZDwRBCdLKC0wxNI3H/ZmA0gyTLRM9b/Pm81zE=;
+        s=default; t=1567102349;
+        bh=UEhIiuKN6lZvFJkHN8qytkrYecwNLjuVzsDfPq+Y0Ig=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=W1Xr7uKcxlsqNNIRblfR6+gWo8oIU6UQdeGiiVsn0afNghUlNl98SbU+tSJlNXlOr
-         a87kHbC8jBnFS8ofI9wgMlF+3NPRyTY3nH+a0NXxc3TEHR/wTmJrMzjc9+LurBPD4K
-         tcHBF4WEpXDYSnQiynyxvsDlbX51eR3zvE1sPJG0=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 97DC86895F
+        b=br2N+vrAi6Y/F/3/BlazvqHODLCzqzUgz5gCmcDQ3Xt2jVqSoQ4gz6Wg6FErarw9k
+         j+O7VPK+tiKJ7Men2kj7UJ1MqsXspouaOLMfKyjwz9lZkR2MuldU4UXyZL4vmFjsUs
+         /ZCRH+DTv8MSPNYuINuWV/hrZ/kcOCF7fV+Mz7ds=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 8770B68A27
 Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
 Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=ilina@codeaurora.org
 From:   Lina Iyer <ilina@codeaurora.org>
@@ -49,9 +49,9 @@ Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
         bjorn.andersson@linaro.org, mkshah@codeaurora.org,
         linux-gpio@vger.kernel.org, rnayak@codeaurora.org,
         Lina Iyer <ilina@codeaurora.org>
-Subject: [PATCH RFC 06/14] drivers: irqchip: pdc: additionally set type in SPI config registers
-Date:   Thu, 29 Aug 2019 12:11:55 -0600
-Message-Id: <20190829181203.2660-7-ilina@codeaurora.org>
+Subject: [PATCH RFC 10/14] drivers: pinctrl: msm: setup GPIO chip in hierarchy
+Date:   Thu, 29 Aug 2019 12:11:59 -0600
+Message-Id: <20190829181203.2660-11-ilina@codeaurora.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190829181203.2660-1-ilina@codeaurora.org>
 References: <20190829181203.2660-1-ilina@codeaurora.org>
@@ -62,182 +62,283 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-GPIOs that can be configured as wakeup are routed to the PDC wakeup
-interrupt controller and from there to the GIC interrupt controller. On
-some QCOM SoCs, the interface to the GIC for wakeup capable GPIOs have
-additional hardware registers that need to be configured as well to
-match the trigger type of the GPIO. This register interfaces the PDC to
-the GIC and therefore updated from the PDC driver.
+Some GPIOs are marked as wakeup capable and are routed to another
+interrupt controller that is an always-domain and can detect interrupts
+even most of the SoC is powered off. The wakeup interrupt controller
+wakes up the GIC and replays the interrupt at the GIC.
 
-Typically, the firmware intializes the interface registers for the
-wakeup capable GPIOs with commonly used GPIO trigger type, but it is
-possible that a platform may want to use the GPIO differently. So, in
-addition to configuring the PDC, configure the interface registers as
-well.
+Setup the TLMM irqchip in hierarchy with the wakeup interrupt controller
+and ensure the wakeup GPIOs are handled correctly.
 
+Signed-off-by: Maulik Shah <mkshah@codeaurora.org>
 Signed-off-by: Lina Iyer <ilina@codeaurora.org>
 ---
- drivers/irqchip/qcom-pdc.c | 93 ++++++++++++++++++++++++++++++++++++++
- 1 file changed, 93 insertions(+)
+ drivers/pinctrl/qcom/pinctrl-msm.c | 114 +++++++++++++++++++++++++++++
+ drivers/pinctrl/qcom/pinctrl-msm.h |  16 ++++
+ 2 files changed, 130 insertions(+)
 
-diff --git a/drivers/irqchip/qcom-pdc.c b/drivers/irqchip/qcom-pdc.c
-index ad1faf634bcf..bf5f98bb4d2b 100644
---- a/drivers/irqchip/qcom-pdc.c
-+++ b/drivers/irqchip/qcom-pdc.c
-@@ -18,6 +18,8 @@
- #include <linux/slab.h>
- #include <linux/types.h>
+diff --git a/drivers/pinctrl/qcom/pinctrl-msm.c b/drivers/pinctrl/qcom/pinctrl-msm.c
+index 76e8528e4d0a..d626264fe678 100644
+--- a/drivers/pinctrl/qcom/pinctrl-msm.c
++++ b/drivers/pinctrl/qcom/pinctrl-msm.c
+@@ -23,6 +23,8 @@
+ #include <linux/pm.h>
+ #include <linux/log2.h>
  
-+#include <linux/qcom_scm.h>
++#include <linux/soc/qcom/irq.h>
 +
- #define PDC_MAX_IRQS		126
- #define PDC_MAX_GPIO_IRQS	256
+ #include "../core.h"
+ #include "../pinconf.h"
+ #include "pinctrl-msm.h"
+@@ -44,6 +46,7 @@
+  * @enabled_irqs:   Bitmap of currently enabled irqs.
+  * @dual_edge_irqs: Bitmap of irqs that need sw emulated dual edge
+  *                  detection.
++ * @skip_wake_irqs: Skip IRQs that are handled by wakeup interrupt contrroller
+  * @soc;            Reference to soc_data of platform specific data.
+  * @regs:           Base addresses for the TLMM tiles.
+  */
+@@ -61,6 +64,7 @@ struct msm_pinctrl {
  
-@@ -35,10 +37,20 @@ struct pdc_pin_region {
- 	u32 cnt;
- };
+ 	DECLARE_BITMAP(dual_edge_irqs, MAX_NR_GPIO);
+ 	DECLARE_BITMAP(enabled_irqs, MAX_NR_GPIO);
++	DECLARE_BITMAP(skip_wake_irqs, MAX_NR_GPIO);
  
-+struct spi_cfg_regs {
-+	union {
-+		u64 start;
-+		void __iomem *base;
-+	};
-+	resource_size_t size;
-+	bool scm_io;
-+};
+ 	const struct msm_pinctrl_soc_data *soc;
+ 	void __iomem *regs[MAX_NR_TILES];
+@@ -708,6 +712,12 @@ static void msm_gpio_irq_mask(struct irq_data *d)
+ 	unsigned long flags;
+ 	u32 val;
+ 
++	if (d->parent_data)
++		irq_chip_mask_parent(d);
 +
- static DEFINE_RAW_SPINLOCK(pdc_lock);
- static void __iomem *pdc_base;
- static struct pdc_pin_region *pdc_region;
- static int pdc_region_cnt;
-+static struct spi_cfg_regs *spi_cfg;
++	if (test_bit(d->hwirq, pctrl->skip_wake_irqs))
++		return;
++
+ 	g = &pctrl->soc->groups[d->hwirq];
  
- static void pdc_reg_write(int reg, u32 i, u32 val)
+ 	raw_spin_lock_irqsave(&pctrl->lock, flags);
+@@ -752,6 +762,12 @@ static void msm_gpio_irq_clear_unmask(struct irq_data *d, bool status_clear)
+ 	unsigned long flags;
+ 	u32 val;
+ 
++	if (d->parent_data)
++		irq_chip_unmask_parent(d);
++
++	if (test_bit(d->hwirq, pctrl->skip_wake_irqs))
++		return;
++
+ 	g = &pctrl->soc->groups[d->hwirq];
+ 
+ 	raw_spin_lock_irqsave(&pctrl->lock, flags);
+@@ -779,10 +795,43 @@ static void msm_gpio_irq_clear_unmask(struct irq_data *d, bool status_clear)
+ 
+ static void msm_gpio_irq_enable(struct irq_data *d)
  {
-@@ -100,6 +112,57 @@ static void qcom_pdc_gic_unmask(struct irq_data *d)
- 	irq_chip_unmask_parent(d);
++	struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
++	struct msm_pinctrl *pctrl = gpiochip_get_data(gc);
++
++	/*
++	 * Clear the interrupt that may be pending before we enable
++	 * the line.
++	 * This is especially a problem with the GPIOs routed to the
++	 * PDC. These GPIOs are direct-connect interrupts to the GIC.
++	 * Disabling the interrupt line at the PDC does not prevent
++	 * the interrupt from being latched at the GIC. The state at
++	 * GIC needs to be cleared before enabling.
++	 */
++	if (d->parent_data) {
++		irq_chip_set_parent_state(d, IRQCHIP_STATE_PENDING, 0);
++		irq_chip_enable_parent(d);
++	}
++
++	if (test_bit(d->hwirq, pctrl->skip_wake_irqs))
++		return;
+ 
+ 	msm_gpio_irq_clear_unmask(d, true);
  }
  
-+static u32 __spi_pin_read(unsigned int pin)
++static void msm_gpio_irq_disable(struct irq_data *d)
 +{
-+	void __iomem *cfg_reg = spi_cfg->base + pin * 4;
-+	u64 scm_cfg_reg = spi_cfg->start + pin * 4;
++	struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
++	struct msm_pinctrl *pctrl = gpiochip_get_data(gc);
 +
-+	if (spi_cfg->scm_io) {
-+		unsigned int val;
++	if (d->parent_data)
++		irq_chip_disable_parent(d);
 +
-+		qcom_scm_io_readl(scm_cfg_reg, &val);
-+		return val;
-+	} else {
-+		return readl(cfg_reg);
-+	}
++	if (test_bit(d->hwirq, pctrl->skip_wake_irqs))
++		return;
++
++	msm_gpio_irq_mask(d);
 +}
 +
-+static void __spi_pin_write(unsigned int pin, unsigned int val)
-+{
-+	void __iomem *cfg_reg = spi_cfg->base + pin * 4;
-+	u64 scm_cfg_reg = spi_cfg->start + pin * 4;
+ static void msm_gpio_irq_unmask(struct irq_data *d)
+ {
+ 	msm_gpio_irq_clear_unmask(d, false);
+@@ -796,6 +845,9 @@ static void msm_gpio_irq_ack(struct irq_data *d)
+ 	unsigned long flags;
+ 	u32 val;
+ 
++	if (test_bit(d->hwirq, pctrl->skip_wake_irqs))
++		return;
 +
-+	if (spi_cfg->scm_io)
-+		qcom_scm_io_writel(scm_cfg_reg, val);
-+	else
-+		writel(val, cfg_reg);
-+}
+ 	g = &pctrl->soc->groups[d->hwirq];
+ 
+ 	raw_spin_lock_irqsave(&pctrl->lock, flags);
+@@ -821,6 +873,12 @@ static int msm_gpio_irq_set_type(struct irq_data *d, unsigned int type)
+ 	unsigned long flags;
+ 	u32 val;
+ 
++	if (d->parent_data)
++		irq_chip_set_type_parent(d, type);
 +
-+static int spi_configure_type(irq_hw_number_t hwirq, unsigned int type)
-+{
-+	int spi = hwirq - 32;
-+	u32 pin = spi / 32;
-+	u32 mask = BIT(spi % 32);
-+	u32 val;
-+	unsigned long flags;
-+
-+	if (!spi_cfg)
++	if (test_bit(d->hwirq, pctrl->skip_wake_irqs))
 +		return 0;
 +
-+	if (pin * 4 > spi_cfg->size)
-+		return -EFAULT;
+ 	g = &pctrl->soc->groups[d->hwirq];
+ 
+ 	raw_spin_lock_irqsave(&pctrl->lock, flags);
+@@ -913,6 +971,15 @@ static int msm_gpio_irq_set_wake(struct irq_data *d, unsigned int on)
+ 	struct msm_pinctrl *pctrl = gpiochip_get_data(gc);
+ 	unsigned long flags;
+ 
++	if (d->parent_data)
++		irq_chip_set_wake_parent(d, on);
 +
-+	raw_spin_lock_irqsave(&pdc_lock, flags);
-+	val = __spi_pin_read(pin);
-+	val &= ~mask;
-+	if (type & IRQ_TYPE_LEVEL_MASK)
-+		val |= mask;
-+	__spi_pin_write(pin, val);
-+	raw_spin_unlock_irqrestore(&pdc_lock, flags);
++	/*
++	 * While they may not wake up when the TLMM is powered off,
++	 * some GPIOs would like to wakeup the system from suspend
++	 * when TLMM is powered on. To allow that, enable the GPIO
++	 * summary line to be wakeup capable at GIC.
++	 */
+ 	raw_spin_lock_irqsave(&pctrl->lock, flags);
+ 
+ 	irq_set_irq_wake(pctrl->irq, on);
+@@ -991,6 +1058,30 @@ static void msm_gpio_irq_handler(struct irq_desc *desc)
+ 	chained_irq_exit(chip, desc);
+ }
+ 
++static int msm_gpio_wakeirq(struct gpio_chip *gc,
++			    unsigned int child,
++			    unsigned int child_type,
++			    unsigned int *parent,
++			    unsigned int *parent_type)
++{
++	struct msm_pinctrl *pctrl = gpiochip_get_data(gc);
++	const struct msm_gpio_wakeirq_map *map;
++	int i;
++
++	*parent = GPIO_NO_WAKE_IRQ;
++	*parent_type = IRQ_TYPE_EDGE_RISING;
++
++	for (i = 0; i < pctrl->soc->nwakeirq_map; i++) {
++		map = &pctrl->soc->wakeirq_map[i];
++		if (map->gpio == child) {
++			*parent = map->wakeirq;
++			break;
++		}
++	}
 +
 +	return 0;
 +}
 +
- /*
-  * GIC does not handle falling edge or active low. To allow falling edge and
-  * active low interrupts to be handled at GIC, PDC has an inverter that inverts
-@@ -137,7 +200,9 @@ enum pdc_irq_config_bits {
- static int qcom_pdc_gic_set_type(struct irq_data *d, unsigned int type)
+ static bool msm_gpio_needs_valid_mask(struct msm_pinctrl *pctrl)
  {
- 	int pin_out = d->hwirq;
-+	int parent_hwirq = d->parent_data->hwirq;
- 	enum pdc_irq_config_bits pdc_type;
-+	int ret;
- 
- 	if (pin_out == GPIO_NO_WAKE_IRQ)
- 		return 0;
-@@ -168,6 +233,11 @@ static int qcom_pdc_gic_set_type(struct irq_data *d, unsigned int type)
- 
- 	pdc_reg_write(IRQ_i_CFG, pin_out, pdc_type);
- 
-+	/* Additionally, configure (only) the GPIO in the f/w */
-+	ret = spi_configure_type(parent_hwirq, type);
-+	if (ret)
-+		return ret;
-+
- 	return irq_chip_set_type_parent(d, type);
- }
- 
-@@ -354,6 +424,7 @@ static int pdc_setup_pin_mapping(struct device_node *np)
- static int qcom_pdc_init(struct device_node *node, struct device_node *parent)
- {
- 	struct irq_domain *parent_domain, *pdc_domain, *pdc_gpio_domain;
-+	struct resource res;
+ 	if (pctrl->soc->reserved_gpios)
+@@ -1004,6 +1095,7 @@ static int msm_gpio_init(struct msm_pinctrl *pctrl)
+ 	struct gpio_chip *chip;
  	int ret;
+ 	unsigned ngpio = pctrl->soc->ngpios;
++	struct device_node *dn;
  
- 	pdc_base = of_iomap(node, 0);
-@@ -384,6 +455,27 @@ static int qcom_pdc_init(struct device_node *node, struct device_node *parent)
- 		goto fail;
- 	}
+ 	if (WARN_ON(ngpio > MAX_NR_GPIO))
+ 		return -EINVAL;
+@@ -1019,14 +1111,36 @@ static int msm_gpio_init(struct msm_pinctrl *pctrl)
  
-+	ret = of_address_to_resource(node, 1, &res);
-+	if (!ret) {
-+		spi_cfg = kcalloc(1, sizeof(*spi_cfg), GFP_KERNEL);
-+		if (!spi_cfg) {
-+			ret = -ENOMEM;
-+			goto remove;
-+		}
-+		spi_cfg->scm_io = of_find_property(node,
-+						   "qcom,scm-spi-cfg", NULL);
-+		spi_cfg->size = resource_size(&res);
-+		if (spi_cfg->scm_io) {
-+			spi_cfg->start = res.start;
-+		} else {
-+			spi_cfg->base = ioremap(res.start, spi_cfg->size);
-+			if (!spi_cfg->base) {
-+				ret = -ENOMEM;
-+				goto remove;
-+			}
+ 	pctrl->irq_chip.name = "msmgpio";
+ 	pctrl->irq_chip.irq_enable = msm_gpio_irq_enable;
++	pctrl->irq_chip.irq_disable = msm_gpio_irq_disable;
+ 	pctrl->irq_chip.irq_mask = msm_gpio_irq_mask;
+ 	pctrl->irq_chip.irq_unmask = msm_gpio_irq_unmask;
+ 	pctrl->irq_chip.irq_ack = msm_gpio_irq_ack;
++	pctrl->irq_chip.irq_eoi = irq_chip_eoi_parent;
+ 	pctrl->irq_chip.irq_set_type = msm_gpio_irq_set_type;
+ 	pctrl->irq_chip.irq_set_wake = msm_gpio_irq_set_wake;
+ 	pctrl->irq_chip.irq_request_resources = msm_gpio_irq_reqres;
+ 	pctrl->irq_chip.irq_release_resources = msm_gpio_irq_relres;
+ 
++	dn = of_parse_phandle(pctrl->dev->of_node, "wakeup-parent", 0);
++	if (dn) {
++		int i;
++		bool skip;
++		unsigned int gpio;
++
++		chip->irq.parent_domain = irq_find_matching_host(dn,
++						 DOMAIN_BUS_WAKEUP);
++		of_node_put(dn);
++		if (!chip->irq.parent_domain)
++			return -EPROBE_DEFER;
++		chip->irq.child_to_parent_hwirq = msm_gpio_wakeirq;
++
++		skip = irq_domain_qcom_handle_wakeup(chip->irq.parent_domain);
++		for (i = 0; skip && i < pctrl->soc->nwakeirq_map; i++) {
++			gpio = pctrl->soc->wakeirq_map[i].gpio;
++			set_bit(gpio, pctrl->skip_wake_irqs);
 +		}
 +	}
 +
- 	pdc_gpio_domain = irq_domain_create_hierarchy(parent_domain,
- 						      IRQ_DOMAIN_FLAG_QCOM_PDC_WAKEUP,
- 						      PDC_MAX_GPIO_IRQS,
-@@ -401,6 +493,7 @@ static int qcom_pdc_init(struct device_node *node, struct device_node *parent)
+ 	chip->irq.chip = &pctrl->irq_chip;
+ 	chip->irq.default_type = IRQ_TYPE_NONE;
+ 	chip->irq.handler = handle_bad_irq;
+diff --git a/drivers/pinctrl/qcom/pinctrl-msm.h b/drivers/pinctrl/qcom/pinctrl-msm.h
+index 48569cda8471..15470203b446 100644
+--- a/drivers/pinctrl/qcom/pinctrl-msm.h
++++ b/drivers/pinctrl/qcom/pinctrl-msm.h
+@@ -5,6 +5,8 @@
+ #ifndef __PINCTRL_MSM_H__
+ #define __PINCTRL_MSM_H__
  
- remove:
- 	irq_domain_remove(pdc_domain);
-+	kfree(spi_cfg);
- fail:
- 	kfree(pdc_region);
- 	iounmap(pdc_base);
++#include <linux/gpio/driver.h>
++
+ struct pinctrl_pin_desc;
+ 
+ /**
+@@ -91,6 +93,16 @@ struct msm_pingroup {
+ 	unsigned intr_detection_width:5;
+ };
+ 
++/**
++ * struct msm_gpio_wakeirq_map - Map of GPIOs and their wakeup pins
++ * @gpio:          The GPIOs that are wakeup capable
++ * @wakeirq:       The interrupt at the always-on interrupt controller
++ */
++struct msm_gpio_wakeirq_map {
++	unsigned int gpio;
++	unsigned int wakeirq;
++};
++
+ /**
+  * struct msm_pinctrl_soc_data - Qualcomm pin controller driver configuration
+  * @pins:	    An array describing all pins the pin controller affects.
+@@ -101,6 +113,8 @@ struct msm_pingroup {
+  * @ngroups:	    The numbmer of entries in @groups.
+  * @ngpio:	    The number of pingroups the driver should expose as GPIOs.
+  * @pull_no_keeper: The SoC does not support keeper bias.
++ * @wakeirq_map:    The map of wakeup capable GPIOs and the pin at PDC/MPM
++ * @nwakeirq_map:   The number of entries in @hierarchy_map
+  */
+ struct msm_pinctrl_soc_data {
+ 	const struct pinctrl_pin_desc *pins;
+@@ -114,6 +128,8 @@ struct msm_pinctrl_soc_data {
+ 	const char *const *tiles;
+ 	unsigned int ntiles;
+ 	const int *reserved_gpios;
++	const struct msm_gpio_wakeirq_map *wakeirq_map;
++	unsigned int nwakeirq_map;
+ };
+ 
+ extern const struct dev_pm_ops msm_pinctrl_dev_pm_ops;
 -- 
 The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
 a Linux Foundation Collaborative Project
