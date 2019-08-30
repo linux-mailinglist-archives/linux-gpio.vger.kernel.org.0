@@ -2,98 +2,95 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 44C01A3D4B
-	for <lists+linux-gpio@lfdr.de>; Fri, 30 Aug 2019 19:56:47 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9119BA3D95
+	for <lists+linux-gpio@lfdr.de>; Fri, 30 Aug 2019 20:17:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727304AbfH3R4q (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 30 Aug 2019 13:56:46 -0400
-Received: from mail-wr1-f50.google.com ([209.85.221.50]:40064 "EHLO
-        mail-wr1-f50.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727904AbfH3R4p (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 30 Aug 2019 13:56:45 -0400
-Received: by mail-wr1-f50.google.com with SMTP id c3so7822369wrd.7
-        for <linux-gpio@vger.kernel.org>; Fri, 30 Aug 2019 10:56:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernelci-org.20150623.gappssmtp.com; s=20150623;
-        h=message-id:date:mime-version:content-transfer-encoding:subject:to
-         :from;
-        bh=vc+TNPJgxTLLcBMu72DqJADPv5Gwmm2j73ah42gmZIk=;
-        b=Hi/vqCdYehzdO/lylk/zZ4IHgDRFsyh3I2ML/zaQas7NYnpdEJ5VpN1kcY3ijaBkoa
-         dnjON5NLHhY/hDNz5pDSKsBTXnrfITswTyY4JoaWUy451iF4P8k2+nyAiEq27vXeQzg6
-         d0fNhx5Pk0q73QukQ8UmKkNkeDIiVHhSian5u7dSazv4kooVqAMQfuCjFHr5ZqS2S6kC
-         SpChuJw+8xei0PcvgDgr2JXNkgHDL8NGXjA5AL/WxjZ69a1uj8lCcw4PSx4p+3eIWIzQ
-         EO+onrzXqWXK/CJ15XPKb28HK1w7hTVhBfR0RNzxp7K21d7UcdIciEu2+UNGoG4fQvM+
-         QS7w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:date:mime-version
-         :content-transfer-encoding:subject:to:from;
-        bh=vc+TNPJgxTLLcBMu72DqJADPv5Gwmm2j73ah42gmZIk=;
-        b=K7dtuy/DNLoelL9ZNY4OSRSD6n+noINN7s3I9Abud+574boFXjYe1bnD6r2klsEiGl
-         sNpsok0QBFCvZh2pC3a7JtyiiGqGEHnNYrgaZZC0RacnEoAIGQaljO+9W4DAJabEDidb
-         chpvTIIawc8m7V3hl8HRODpt/v5oXpDsksXvLL3OZiQVJoeE8hshiOGLebFUn4VxzLGd
-         FSlUhr/PNH8rPvivoSg2UsenOu1wxX/uqpTL/NL1XCVpsW6zuXUjy7+SU0ZJF8ihb/Q9
-         Oon5sX/rJLnFqRUePlykvoozKXr3BDte/zO8uj0WWjjtDwb8X4BJoTTYNh7ztLt2Z12A
-         9nLA==
-X-Gm-Message-State: APjAAAXEVWS23SJ/jJvIoQIOwPpVlPwQx5tPyUyFrylnh9R8ut5tmhZt
-        DGq0dKaDPKWCL8AlvIVKz/t/Wg9Jb6gKtQ==
-X-Google-Smtp-Source: APXvYqzkfCWL3a3XUGl/tybiBBNNrroJm1sOSuHZ2Y7ibzTp73CBbOpZJ5xoYn3h5zTDh2eevxCOFw==
-X-Received: by 2002:adf:ef49:: with SMTP id c9mr3935516wrp.122.1567187803295;
-        Fri, 30 Aug 2019 10:56:43 -0700 (PDT)
-Received: from [148.251.42.114] ([2a01:4f8:201:9271::2])
-        by smtp.gmail.com with ESMTPSA id d16sm8287725wrj.47.2019.08.30.10.56.42
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 30 Aug 2019 10:56:42 -0700 (PDT)
-Message-ID: <5d69635a.1c69fb81.8439d.8167@mx.google.com>
-Date:   Fri, 30 Aug 2019 10:56:42 -0700 (PDT)
-Content-Type: text/plain; charset="utf-8"
+        id S1728094AbfH3SRE (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 30 Aug 2019 14:17:04 -0400
+Received: from mga05.intel.com ([192.55.52.43]:7946 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727246AbfH3SRD (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Fri, 30 Aug 2019 14:17:03 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 30 Aug 2019 11:17:03 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,447,1559545200"; 
+   d="scan'208";a="382093729"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by fmsmga006.fm.intel.com with ESMTP; 30 Aug 2019 11:17:00 -0700
+Received: from andy by smile with local (Exim 4.92.1)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1i3lSF-0002tl-7k; Fri, 30 Aug 2019 21:16:59 +0300
+Date:   Fri, 30 Aug 2019 21:16:59 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Peter Cai <peter@typeblog.net>
+Cc:     Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Bastien Nocera <hadess@hadess.net>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>, linux-gpio@vger.kernel.org,
+        linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-input@vger.kernel.org
+Subject: Re: [PATCH 2/2] touchscreen: goodix: define GPIO mapping for GPD P2
+ Max
+Message-ID: <20190830181659.GO2680@smile.fi.intel.com>
+References: <20190830000024.20384-1-peter@typeblog.net>
+ <20190830000024.20384-2-peter@typeblog.net>
+ <20190830115505.GX2680@smile.fi.intel.com>
+ <CA+Zf_0etfu7282TQ4wYE8tOrhh2Je4aV4Dz5tgC_wt7=FMAidA@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-Kernelci-Kernel: v5.3-rc1-47-gf6a7053ddcf1
-X-Kernelci-Tree: linusw
-X-Kernelci-Report-Type: boot
-X-Kernelci-Branch: devel
-Subject: linusw/devel boot: 53 boots: 2 failed,
- 51 passed (v5.3-rc1-47-gf6a7053ddcf1)
-To:     linux-gpio@vger.kernel.org, fellows@kernelci.org
-From:   "kernelci.org bot" <bot@kernelci.org>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CA+Zf_0etfu7282TQ4wYE8tOrhh2Je4aV4Dz5tgC_wt7=FMAidA@mail.gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-linusw/devel boot: 53 boots: 2 failed, 51 passed (v5.3-rc1-47-gf6a7053ddcf1)
+On Fri, Aug 30, 2019 at 11:15:27PM +0800, Peter Cai wrote:
+> On Fri, Aug 30, 2019, 7:55 PM Andy Shevchenko <
+> andriy.shevchenko@linux.intel.com> wrote:
 
-Full Boot Summary: https://kernelci.org/boot/all/job/linusw/branch/devel/ke=
-rnel/v5.3-rc1-47-gf6a7053ddcf1/
-Full Build Summary: https://kernelci.org/build/linusw/branch/devel/kernel/v=
-5.3-rc1-47-gf6a7053ddcf1/
+> > I guess most of these #ifdef:s makes code less readable for exchange of
+> saving
+> few bytes in the module footprint.
+> 
+> Well since they can only be used when ACPI is supported
 
-Tree: linusw
-Branch: devel
-Git Describe: v5.3-rc1-47-gf6a7053ddcf1
-Git Commit: f6a7053ddcf1c05c443715d627507f0ab9a0b491
-Git URL: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-gpio.=
-git/
-Tested: 41 unique boards, 15 SoC families, 3 builds out of 6
+> (devm_acpi_dev_add_driver_gpios does not exist without ACPI defined, thus
+> the last guard must exist),
 
-Boot Regressions Detected:
+This is not correct.
 
-arm64:
+> if they were not guarded then we would be left
+> with a bunch of unused variables warnings when building without ACPI which
+> doesn't seem good.
 
-    defconfig:
-        gcc-8:
-          apq8016-sbc:
-              lab-mhart: failing since 31 days (last pass: v5.2-10808-g9637=
-d517347e - first fail: v5.3-rc1-5-ga299726da44f)
+Good / no-good is only matter of few dozens of bytes here and there to be saved.
 
-Boot Failures Detected:
+> Should we use __maybe_unused here instead of #ifdef guards?
 
-arm64:
-    defconfig:
-        gcc-8:
-            apq8016-sbc: 1 failed lab
-            meson-gxm-khadas-vim2: 1 failed lab
+No, it won't make sense, because the structures will be part of
+_add_driver_gpio() call, due to which compiler likely can't recognize unused
+structures. However, you may try with warnings enabled `make W=1`.
 
----
-For more info write to <info@kernelci.org>
+> > Comma at the end?
+> 
+> I was trying to follow the style of this driver but it doesn't seem to be
+> really consistent within itself. Another dmi_system_id definition in the
+> same file mixed both styles so I was kind of confused.
+
+I see. So, this is for Dmitry's preferences.
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
