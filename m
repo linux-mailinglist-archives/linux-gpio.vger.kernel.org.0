@@ -2,92 +2,77 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 505DCA3610
-	for <lists+linux-gpio@lfdr.de>; Fri, 30 Aug 2019 13:55:11 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3DBD7A37AE
+	for <lists+linux-gpio@lfdr.de>; Fri, 30 Aug 2019 15:21:26 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727521AbfH3LzK (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 30 Aug 2019 07:55:10 -0400
-Received: from mga18.intel.com ([134.134.136.126]:42612 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727410AbfH3LzK (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Fri, 30 Aug 2019 07:55:10 -0400
-X-Amp-Result: UNSCANNABLE
-X-Amp-File-Uploaded: False
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 30 Aug 2019 04:55:10 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,447,1559545200"; 
-   d="scan'208";a="181186330"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by fmsmga008.fm.intel.com with ESMTP; 30 Aug 2019 04:55:07 -0700
-Received: from andy by smile with local (Exim 4.92.1)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1i3fUf-00077m-Jj; Fri, 30 Aug 2019 14:55:05 +0300
-Date:   Fri, 30 Aug 2019 14:55:05 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Peter Cai <peter@typeblog.net>
-Cc:     Mika Westerberg <mika.westerberg@linux.intel.com>,
+        id S1727135AbfH3NVV (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 30 Aug 2019 09:21:21 -0400
+Received: from eu-smtp-delivery-151.mimecast.com ([207.82.80.151]:47520 "EHLO
+        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727522AbfH3NVU (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>);
+        Fri, 30 Aug 2019 09:21:20 -0400
+Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
+ TLS) by relay.mimecast.com with ESMTP id uk-mta-2-xNpIK8UVPGuOYFddx-OeKA-1;
+ Fri, 30 Aug 2019 14:21:16 +0100
+Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
+ AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
+ Server (TLS) id 15.0.1347.2; Fri, 30 Aug 2019 14:21:16 +0100
+Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
+ AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
+ Fri, 30 Aug 2019 14:21:16 +0100
+From:   David Laight <David.Laight@ACULAB.COM>
+To:     "'Enrico Weigelt, metux IT consult'" <lkml@metux.net>,
+        =?utf-8?B?VXdlIEtsZWluZS1Lw7ZuaWc=?= <uwe@kleine-koenig.org>,
+        Andrew Morton <akpm@linux-foundation.org>
+CC:     Jonathan Corbet <corbet@lwn.net>,
+        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
         Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Bastien Nocera <hadess@hadess.net>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>, linux-gpio@vger.kernel.org,
-        linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-input@vger.kernel.org
-Subject: Re: [PATCH 2/2] touchscreen: goodix: define GPIO mapping for GPD P2
- Max
-Message-ID: <20190830115505.GX2680@smile.fi.intel.com>
-References: <20190830000024.20384-1-peter@typeblog.net>
- <20190830000024.20384-2-peter@typeblog.net>
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Subject: RE: [PATCH v1 1/2] vsprintf: introduce %dE for error constants
+Thread-Topic: [PATCH v1 1/2] vsprintf: introduce %dE for error constants
+Thread-Index: AQHVWtTu78Xh1ob+uECVSLeo5ivYsqcNXgwAgAZWjOA=
+Date:   Fri, 30 Aug 2019 13:21:16 +0000
+Message-ID: <66a5a5e1adf944f592202e5ffdf3fe9c@AcuMS.aculab.com>
+References: <20190824233724.1775-1-uwe@kleine-koenig.org>
+ <a5f535af-09f7-e65b-1527-7d6dd8553c1d@metux.net>
+In-Reply-To: <a5f535af-09f7-e65b-1527-7d6dd8553c1d@metux.net>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.202.205.107]
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190830000024.20384-2-peter@typeblog.net>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-MC-Unique: xNpIK8UVPGuOYFddx-OeKA-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: base64
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Aug 30, 2019 at 08:00:24AM +0800, Peter Cai wrote:
-> The firmware of GPD P2 Max could not handle panel resets although code
-> is present in DSDT. The kernel needs to take on this job instead, but
-> the DSDT does not provide _DSD, rendering kernel helpless when trying to
-> find the respective GPIO pins.
-> 
-> Fortunately, this time GPD has proper DMI vendor / product strings that
-> we could match against. We simply apply an acpi_gpio_mapping table when
-> GPD P2 Max is matched.
-> 
-> Additionally, the DSDT definition of the irq pin specifies a wrong
-> polarity. The new quirk introduced in the previous patch
-> (ACPI_GPIO_QUIRK_OVERRIDE_POLARITY) is applied to correct this.
-
-> +#ifdef CONFIG_ACPI
-
-I guess most of these #ifdef:s makes code less readable for exchange of saving
-few bytes in the module footprint.
-
-> +	{ "irq-gpios", &irq_gpios_default, 1,
-> +		ACPI_GPIO_QUIRK_OVERRIDE_POLARITY },
-
-One line?
-
-> +		.matches = {
-> +			DMI_MATCH(DMI_SYS_VENDOR, "GPD"),
-> +			DMI_MATCH(DMI_PRODUCT_NAME, "P2 MAX")
-
-Comma at the end?
-
-> +		},
-> +		.driver_data = &gpio_mapping_force_irq_active_high
-
-Ditto.
-
--- 
-With Best Regards,
-Andy Shevchenko
-
+RnJvbTogRW5yaWNvIFdlaWdlbHQsIG1ldHV4IElUIGNvbnN1bHQNCj4gU2VudDogMjYgQXVndXN0
+IDIwMTkgMTQ6MjkNCj4gT24gMjUuMDguMTkgMDE6MzcsIFV3ZSBLbGVpbmUtS8ODwrZuaWcgd3Jv
+dGU6DQo+IA0KPiBIaSwNCj4gDQo+ID4gK3N0YXRpYyBub2lubGluZV9mb3Jfc3RhY2sgPiArY2hh
+ciAqZXJyc3RyKGNoYXIgKmJ1ZiwgY2hhciAqZW5kLCB1bnNpZ25lZCBsb25nIGxvbmcgbnVtLD4g
+Kw0KPiBzdHJ1Y3QgcHJpbnRmX3NwZWMgc3BlYyk+ICt7DQo+ICMxOiB3aHkgbm90IHB1dHRpbmcg
+dGhhdCBpbnRvIHNvbWUgc2VwYXJhdGUgc3RyZXJyb3IoKSBsaWIgZnVuY3Rpb24gPw0KPiAgICAg
+IFRoaXMgaXMgc29tZXRoaW5nIEkndmUgYmVlbiBsb29raW5nIGZvciBxdWl0ZSBzb21lIHRpbWUg
+KGFjdHVhbGx5DQo+ICAgICAgYWxyZWFkeSBoYWNrZWQgaXQgdXAgc29tZXdoZXJlLCBzb21ldGlt
+ZSwgYnV0IGZvcmdvdHRlbiAuLi4pDQo+IA0KPiAjMjogd2h5IG5vdCBqdXN0IGhhdmluZyBhIGJp
+ZyBjYXNlIHN0YXRlbWVudCBhbmQgbGVhdmUgdGhlIGFjdHVhbCBsb29rdXANCj4gICAgICBsb2dp
+YyB0byB0aGUgY29tcGlsZXIgPyBJTUhPLCBjb3VsZCBiZSB3cml0dGVuIGluIGEgdmVyeSBjb21w
+YWN0IHdheQ0KPiAgICAgIGJ5IHNvbWUgbWFjcm8gbWFnaWMNCg0KQW5kIGdlbmVyYXRlIGFuIGVu
+b3Jtb3VzIGFtb3VudCBvZiBjb2RlIGFuZCBsb25nIGNoYWlucyBvZiBtaXNwcmVkaWN0ZWQgYnJh
+bmNoZXMuDQoNCklzIGl0IGFsc28gd29ydGggbG9va2luZyBhdCBob3cgbG9uZyB0aGUgc3RyaW5n
+cyBhcmUuDQpJZiB0aGV5IGNhbiBiZSB0cnVuY2F0ZWQgdG8gMTYgYnl0ZXMgdGhlbiBjaGFyW11b
+MTZdIHdpbGwgZ2VuZXJhdGUNCm11Y2ggYmV0dGVyIGNvZGUgdGhhbiB0aGUgYXJyYXkgb2YgcG9p
+bnRlcnMuDQoNCk9UT0ggSSdtIG5vdCByZWFsbHkgc3VyZSBpdCBpcyBhbGwgYSBnb29kIGlkZWEu
+DQoNCglEYXZpZA0KDQotDQpSZWdpc3RlcmVkIEFkZHJlc3MgTGFrZXNpZGUsIEJyYW1sZXkgUm9h
+ZCwgTW91bnQgRmFybSwgTWlsdG9uIEtleW5lcywgTUsxIDFQVCwgVUsNClJlZ2lzdHJhdGlvbiBO
+bzogMTM5NzM4NiAoV2FsZXMpDQo=
 
