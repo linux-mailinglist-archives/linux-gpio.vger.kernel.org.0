@@ -2,48 +2,48 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id E87F0A2B3D
-	for <lists+linux-gpio@lfdr.de>; Fri, 30 Aug 2019 02:02:00 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 95920A2B43
+	for <lists+linux-gpio@lfdr.de>; Fri, 30 Aug 2019 02:02:12 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727025AbfH3ABy (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 29 Aug 2019 20:01:54 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:43802 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726084AbfH3ABy (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 29 Aug 2019 20:01:54 -0400
-Received: by mail-pf1-f194.google.com with SMTP id v12so3233435pfn.10
-        for <linux-gpio@vger.kernel.org>; Thu, 29 Aug 2019 17:01:54 -0700 (PDT)
+        id S1727174AbfH3ACA (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 29 Aug 2019 20:02:00 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:39138 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727122AbfH3ACA (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 29 Aug 2019 20:02:00 -0400
+Received: by mail-pf1-f193.google.com with SMTP id y200so3242171pfb.6
+        for <linux-gpio@vger.kernel.org>; Thu, 29 Aug 2019 17:02:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=typeblog-net.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=r4FdmecES1mXuhQRWO8rMFn+Nx420CRXp9hbw5E4DeY=;
-        b=C+rwRawAYjEQMmq1XlJqg/oPcrd9+huDhBB/ffgbwV2euRm53zIQKEzHOR/2TGOJgM
-         nKzl3Z6sSCW9v4ByjBtXDP49ANg3dw8ayKkt3IUigIB9aT6LV3nd2GzEzE3rPEHYljfB
-         G6JF1BsruhNFBDg4UiAiSlMS5ip7KyygC3mi2v2BA0gj8gh0/GRqgAaaZfvDovCpsL4j
-         55uEAummxO8+6zhQKMmUH17J2FFfXWiN+7ifJaBaQ4WGuNd08im5K56a9drKA8GdYr8b
-         fFpZDpz7NRdcKw3Th+tSyYgctrqBYF3pHK8l3x38pGo3t7RNIJFGjdj7LwUUFiLVvdug
-         Pwpg==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=IldQxyej46YU/SkHEEsnjl/LzmCcMggIbONwXFCSCKE=;
+        b=X0Az8igVrc/4gMnl5ADWTxShGaQFNupE1xbuCezN4YHWmi1aCOQeQyNrfkUh91vEC/
+         Jnjy2Zvmwn316YjWnNmofhEJ1/MO3Q+vKCkvxCw4RdMjeiegd9ABp5z9r3LQzHhoF/Sr
+         JSHn7bApaXUDGs0DvnqQgDtSNIdofrDOPfJe1tm2UV2HV6lp4kMRyBP4i7nCJag/dJvp
+         r25V44aCqJvk25M6ytooHD9n+xecEEW0Jpn8seM5m4nvbLouIRt3wmhUH4TZ7QbiueqE
+         nYJykgKYmcPoVqu7s78+gPF/ldglPJAbnZ/daCR/4Db90NrT3UrhNC6HvqaEF5zCzZTb
+         zT4A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=r4FdmecES1mXuhQRWO8rMFn+Nx420CRXp9hbw5E4DeY=;
-        b=dFeI3EcPy4vIfOUcQZrNCkXMrhSfd5l+BeAxAOKOS7Y/6YnJ+Y2YWt8ScB+hXScpjk
-         eqfHO1ffMJYOAL8owAcmPDWY+WQHrAX9Wk+/c37bw3MLsqTmpe3N0eJL4UFdAu3asBL/
-         nqYtPdGs57cCrepSxqtfP+CJHbLmEzvbufIwpKUUp84qsSqkQRONs9Qh3P8U8MQauZ1V
-         MR564cymp5N8vWaQ6/1BsWsJii5YLddu0mAiYm2pK++yd7WVIQXbMVZaJMSvogaEiep7
-         hHFIwrd4ZejGR6caEJt6yiyP86mUd6cBCeqEZvJFjz4X8lgEKkCaaLialO53/edlQ9nO
-         W2Nw==
-X-Gm-Message-State: APjAAAXyxFXHD/a5dimvpmJfjKZLh2fxHnOpG1VpkAGifwtNjjbAIEbM
-        6VE9VSMIkYFbHgVIjjR66IvgwQ==
-X-Google-Smtp-Source: APXvYqzqeat554HkNrmzQW+v4uxeKH2ucYkRnvGkc20nQ9CzJSLXTHeAVgx+oRGALg9emAc734pNzA==
-X-Received: by 2002:a17:90a:e505:: with SMTP id t5mr359288pjy.68.1567123313781;
-        Thu, 29 Aug 2019 17:01:53 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=IldQxyej46YU/SkHEEsnjl/LzmCcMggIbONwXFCSCKE=;
+        b=hVAjDKPsXjTosRF20jUDSCtKCSNT98z7XjcsLvI6V48SGWemicnhCWsvH/xOy8Dc7y
+         ydr0lsXhO/rLdBV94sr1k2f/yzh1d8diXrHS5Nb1jbpAJtquR7gOQ0mnww2Air99N8ze
+         jet8BWyGd7bZR8jc9aeMmSKwcEs50E7+5uZOp95HYLFC3VDqJF6q4rSPSEeHHz4RcD1k
+         35dfzsT6x1KP60p+PTHu7giNDKsKIgFLpaeoMd6EOCgcG7wJv6jrw49ue9zqEh2vb7xv
+         rpgFJibLF8XAZTdLVA4M+LTiCM/PkI271184i0eqhQ0RmJBD6eXx7iFrDswKOSTV41zR
+         KsxQ==
+X-Gm-Message-State: APjAAAX6cUfsP7dtHk/Dx0UBIMpQqgky+jQAFVWkvjMQ3f3aTgjJq2XE
+        9iKu0TrBXXnX/koIubFo89pbnQ==
+X-Google-Smtp-Source: APXvYqwjKLpuXVkSR1nIUL4L0503S/Jm0MrmR+DtmeNp33276pQCiT6zEVNp+Gbr2ogFQbHDmXmnfg==
+X-Received: by 2002:a63:4c5c:: with SMTP id m28mr11229487pgl.333.1567123319576;
+        Thu, 29 Aug 2019 17:01:59 -0700 (PDT)
 Received: from peter-pc.home ([91.207.174.229])
-        by smtp.gmail.com with ESMTPSA id g2sm4369819pfm.32.2019.08.29.17.01.49
+        by smtp.gmail.com with ESMTPSA id g2sm4369819pfm.32.2019.08.29.17.01.55
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 29 Aug 2019 17:01:52 -0700 (PDT)
+        Thu, 29 Aug 2019 17:01:58 -0700 (PDT)
 From:   Peter Cai <peter@typeblog.net>
 Cc:     Peter Cai <peter@typeblog.net>,
         Mika Westerberg <mika.westerberg@linux.intel.com>,
@@ -56,10 +56,12 @@ Cc:     Peter Cai <peter@typeblog.net>,
         Len Brown <lenb@kernel.org>, linux-gpio@vger.kernel.org,
         linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-input@vger.kernel.org
-Subject: [PATCH 1/2] gpio: acpi: add quirk to override GpioInt polarity
-Date:   Fri, 30 Aug 2019 08:00:23 +0800
-Message-Id: <20190830000024.20384-1-peter@typeblog.net>
+Subject: [PATCH 2/2] touchscreen: goodix: define GPIO mapping for GPD P2 Max
+Date:   Fri, 30 Aug 2019 08:00:24 +0800
+Message-Id: <20190830000024.20384-2-peter@typeblog.net>
 X-Mailer: git-send-email 2.23.0
+In-Reply-To: <20190830000024.20384-1-peter@typeblog.net>
+References: <20190830000024.20384-1-peter@typeblog.net>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 To:     unlisted-recipients:; (no To-header on input)
@@ -68,68 +70,79 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On GPD P2 Max, the firmware could not reset the touch panel correctly.
-The kernel needs to take on the job instead, but the GpioInt definition
-in DSDT specifies ActiveHigh while the GPIO pin should actually be
-ActiveLow.
+The firmware of GPD P2 Max could not handle panel resets although code
+is present in DSDT. The kernel needs to take on this job instead, but
+the DSDT does not provide _DSD, rendering kernel helpless when trying to
+find the respective GPIO pins.
 
-We need to override the polarity defined by DSDT. The GPIO driver
-already allows defining polarity in acpi_gpio_params, but the option is
-not applied to GpioInt.
+Fortunately, this time GPD has proper DMI vendor / product strings that
+we could match against. We simply apply an acpi_gpio_mapping table when
+GPD P2 Max is matched.
 
-This patch adds a new quirk that enables the polarity specified in
-acpi_gpio_params to also be applied to GpioInt.
+Additionally, the DSDT definition of the irq pin specifies a wrong
+polarity. The new quirk introduced in the previous patch
+(ACPI_GPIO_QUIRK_OVERRIDE_POLARITY) is applied to correct this.
 
 Signed-off-by: Peter Cai <peter@typeblog.net>
 ---
- drivers/gpio/gpiolib-acpi.c | 10 +++++++++-
- include/linux/acpi.h        |  6 ++++++
- 2 files changed, 15 insertions(+), 1 deletion(-)
+ drivers/input/touchscreen/goodix.c | 37 ++++++++++++++++++++++++++++++
+ 1 file changed, 37 insertions(+)
 
-diff --git a/drivers/gpio/gpiolib-acpi.c b/drivers/gpio/gpiolib-acpi.c
-index 39f2f9035c11..1a07c79ca2de 100644
---- a/drivers/gpio/gpiolib-acpi.c
-+++ b/drivers/gpio/gpiolib-acpi.c
-@@ -583,13 +583,21 @@ static int acpi_populate_gpio_lookup(struct acpi_resource *ares, void *data)
- 		/*
- 		 * Polarity and triggering are only specified for GpioInt
- 		 * resource.
-+		 * Polarity specified by GpioInt may be ignored if
-+		 * ACPI_GPIO_QUIRK_OVERRIDE_POLARITY is set.
- 		 * Note: we expect here:
- 		 * - ACPI_ACTIVE_LOW == GPIO_ACTIVE_LOW
- 		 * - ACPI_ACTIVE_HIGH == GPIO_ACTIVE_HIGH
- 		 */
- 		if (lookup->info.gpioint) {
- 			lookup->info.flags = GPIOD_IN;
--			lookup->info.polarity = agpio->polarity;
-+			if (lookup->info.quirks &
-+					ACPI_GPIO_QUIRK_OVERRIDE_POLARITY) {
-+				dev_warn(&lookup->info.adev->dev, FW_BUG "Incorrect polarity specified by GpioInt, overriding.\n");
-+				lookup->info.polarity = lookup->active_low;
-+			} else {
-+				lookup->info.polarity = agpio->polarity;
-+			}
- 			lookup->info.triggering = agpio->triggering;
- 		} else {
- 			lookup->info.flags = acpi_gpio_to_gpiod_flags(agpio);
-diff --git a/include/linux/acpi.h b/include/linux/acpi.h
-index 9426b9aaed86..6569773ceffd 100644
---- a/include/linux/acpi.h
-+++ b/include/linux/acpi.h
-@@ -1014,6 +1014,12 @@ struct acpi_gpio_mapping {
-  * get GpioIo type explicitly, this quirk may be used.
-  */
- #define ACPI_GPIO_QUIRK_ONLY_GPIOIO		BIT(1)
-+/*
-+ * Use the GPIO polarity (ActiveHigh / ActiveLow) from acpi_gpio_params
-+ * for GpioInt as well. The default behavior is to use the one specified
-+ * by GpioInt, which can be incorrect on some devices.
-+ */
-+#define ACPI_GPIO_QUIRK_OVERRIDE_POLARITY	BIT(2)
- 
- 	unsigned int quirks;
+diff --git a/drivers/input/touchscreen/goodix.c b/drivers/input/touchscreen/goodix.c
+index 5178ea8b5f30..65b8d04b6dcf 100644
+--- a/drivers/input/touchscreen/goodix.c
++++ b/drivers/input/touchscreen/goodix.c
+@@ -144,6 +144,34 @@ static const struct dmi_system_id rotated_screen[] = {
+ 	{}
  };
+ 
++#ifdef CONFIG_ACPI
++static const struct acpi_gpio_params irq_gpios_default = { 0, 0, false };
++static const struct acpi_gpio_params reset_gpios_default = { 1, 0, false };
++static const struct acpi_gpio_mapping gpio_mapping_force_irq_active_high[] = {
++	{ "irq-gpios", &irq_gpios_default, 1,
++		ACPI_GPIO_QUIRK_OVERRIDE_POLARITY },
++	{ "reset-gpios", &reset_gpios_default, 1 },
++	{}
++};
++
++/*
++ * Devices that need acpi_gpio_mapping to function correctly
++ */
++static const struct dmi_system_id need_gpio_mapping[] = {
++#if defined(CONFIG_DMI) && defined(CONFIG_X86)
++	{
++		.ident = "GPD P2 Max",
++		.matches = {
++			DMI_MATCH(DMI_SYS_VENDOR, "GPD"),
++			DMI_MATCH(DMI_PRODUCT_NAME, "P2 MAX")
++		},
++		.driver_data = &gpio_mapping_force_irq_active_high
++	},
++#endif
++	{}
++};
++#endif
++
+ /**
+  * goodix_i2c_read - read data from a register of the i2c slave device.
+  *
+@@ -796,6 +824,15 @@ static int goodix_ts_probe(struct i2c_client *client,
+ 	struct goodix_ts_data *ts;
+ 	int error;
+ 
++#ifdef CONFIG_ACPI
++	struct dmi_system_id *dmi_match;
++
++	dmi_match = dmi_first_match(need_gpio_mapping);
++	if (dmi_match)
++		devm_acpi_dev_add_driver_gpios(&client->dev,
++					       dmi_match->driver_data);
++#endif
++
+ 	dev_dbg(&client->dev, "I2C Address: 0x%02x\n", client->addr);
+ 
+ 	if (!i2c_check_functionality(client->adapter, I2C_FUNC_I2C)) {
 -- 
 2.23.0
 
