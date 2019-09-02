@@ -2,72 +2,90 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 507E9A598C
-	for <lists+linux-gpio@lfdr.de>; Mon,  2 Sep 2019 16:41:02 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1959AA5B1B
+	for <lists+linux-gpio@lfdr.de>; Mon,  2 Sep 2019 18:06:16 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730874AbfIBOk0 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 2 Sep 2019 10:40:26 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:45584 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730830AbfIBOk0 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 2 Sep 2019 10:40:26 -0400
-Received: by mail-wr1-f67.google.com with SMTP id q12so14241135wrj.12;
-        Mon, 02 Sep 2019 07:40:24 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=gF2YRoI6/lwt/TFrMmnLSeITDMeILS4+8zt7lZ2omHo=;
-        b=SeD1F11cXtnLnW8M3vBCdD1wlLJ8w/5LP6d+V+4Vlv91+v0XCPwv827KEG8Xo4xYbj
-         IohDbp5OyaDgbcpYX4CzKDwebbYrbt6SXQibN+j0BIpKLXRCnwarVW9gfjTdZhiED7cc
-         UABBye0tc4hDMMbNsT029lm/CS0Q0lxXaH4sbrreD84gTGu1FCP55UAl3DAhRZnbVlNg
-         Yn7XrLKe6tx9OYfknoOG5vTkZtILGU0nDQDCkVyZZi6DwOczbjPXqOmrlv7dNyu78+Za
-         5+iC6fy80cQ4utrys9ndpQ3dnETiNtWYGl3gCskoN1SfRW2PjDULxNKODgnmBn6W1Cba
-         IuEQ==
-X-Gm-Message-State: APjAAAUsaJ0kW3no0/sOtjhkkZPms85IAoFPkic7FeT1zp1RQv7Si4WE
-        Xlv9IPBJex9mLGBUqkl3eQ==
-X-Google-Smtp-Source: APXvYqzRwSzgzhnfparGWRJaR6tBJvpa7gyFCJoMnUO+USlBgu95jVtD97+bXRcYz9WicR2EhMiC3g==
-X-Received: by 2002:a5d:51c7:: with SMTP id n7mr35130945wrv.73.1567435224169;
-        Mon, 02 Sep 2019 07:40:24 -0700 (PDT)
-Received: from localhost ([212.187.182.166])
-        by smtp.gmail.com with ESMTPSA id o193sm14431348wme.39.2019.09.02.07.40.23
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 02 Sep 2019 07:40:23 -0700 (PDT)
-Date:   Mon, 2 Sep 2019 15:40:22 +0100
-From:   Rob Herring <robh@kernel.org>
-To:     Peter Vernia <peter.vernia@gmail.com>
-Cc:     peter.vernia@gmail.com, linus.walleij@linaro.org,
-        robh+dt@kernel.org, mark.rutland@arm.com,
-        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, poeschel@lemonage.de
-Subject: Re: [PATCH] pinctrl-mcp23s08: Fix property-name in dt-example
-Message-ID: <20190902144022.GA24928@bogus>
-References: <20190828195609.4176-1-peter.vernia@gmail.com>
+        id S1726124AbfIBQGM (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 2 Sep 2019 12:06:12 -0400
+Received: from mga01.intel.com ([192.55.52.88]:54378 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726027AbfIBQGM (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Mon, 2 Sep 2019 12:06:12 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 02 Sep 2019 09:06:11 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,459,1559545200"; 
+   d="scan'208";a="187029255"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by orsmga006.jf.intel.com with ESMTP; 02 Sep 2019 09:06:07 -0700
+Received: from andy by smile with local (Exim 4.92.1)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1i4oqE-0004aN-9z; Mon, 02 Sep 2019 19:06:06 +0300
+Date:   Mon, 2 Sep 2019 19:06:06 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     Peter Cai <peter@typeblog.net>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Bastien Nocera <hadess@hadess.net>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Linux Input <linux-input@vger.kernel.org>
+Subject: Re: [PATCH v2 1/2] gpio: acpi: add quirk to override GpioInt polarity
+Message-ID: <20190902160606.GR2680@smile.fi.intel.com>
+References: <20190831030916.13172-1-peter@typeblog.net>
+ <20190902100141.GW2680@smile.fi.intel.com>
+ <CACRpkdaY_TT_m3XEh_J9TqMQijzUieQDBn+t4=uGUyfP+V0Hzg@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190828195609.4176-1-peter.vernia@gmail.com>
+In-Reply-To: <CACRpkdaY_TT_m3XEh_J9TqMQijzUieQDBn+t4=uGUyfP+V0Hzg@mail.gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, 28 Aug 2019 15:56:09 -0400, Peter Vernia wrote:
-> The device-tree properties documentation-file specifies the property
-> "microchip,spi-present-mask" as required for MCP23SXX chips. However,
-> the device-tree-source example below it uses only "spi-present-mask".
-> Without "microchip," on the front, the driver will print "missing
-> spi-present-mask" when it initializes.
+On Mon, Sep 02, 2019 at 03:36:24PM +0200, Linus Walleij wrote:
+> On Mon, Sep 2, 2019 at 12:01 PM Andy Shevchenko
+> <andriy.shevchenko@linux.intel.com> wrote:
+> > On Sat, Aug 31, 2019 at 11:09:14AM +0800, Peter Cai wrote:
+> > > On GPD P2 Max, the firmware could not reset the touch panel correctly.
+> > > The kernel needs to take on the job instead, but the GpioInt definition
+> > > in DSDT specifies ActiveHigh while the GPIO pin should actually be
+> > > ActiveLow.
+> > >
+> > > We need to override the polarity defined by DSDT. The GPIO driver
+> > > already allows defining polarity in acpi_gpio_params, but the option is
+> > > not applied to GpioInt.
+> > >
+> > > This patch adds a new quirk that enables the polarity specified in
+> > > acpi_gpio_params to also be applied to GpioInt.
+> >
+> > Thank you for an update!
+> >
+> > Acked-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> >
+> > on the condition that Dmitry and other input / Goodix developers are okay with
+> > the approach in general.
 > 
-> Update the device-tree example with the correct property-name.
+> Acked-by: Linus Walleij <linus.walleij@linaro.org>
+> In case Dmitry needs to merge this.
 > 
-> Signed-off-by: Peter Vernia <peter.vernia@gmail.com>
-> ---
->  Documentation/devicetree/bindings/pinctrl/pinctrl-mcp23s08.txt | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
+> Or should I simply merge this patch to the GPIO tree?
 
-Applied, thanks.
+For my opinion Input subsystem should decide how to proceed with this.
 
-Rob
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
