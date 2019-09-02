@@ -2,134 +2,128 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 4DA2EA5176
-	for <lists+linux-gpio@lfdr.de>; Mon,  2 Sep 2019 10:21:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 61B8FA5387
+	for <lists+linux-gpio@lfdr.de>; Mon,  2 Sep 2019 12:02:46 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729600AbfIBIVG (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 2 Sep 2019 04:21:06 -0400
-Received: from foss.arm.com ([217.140.110.172]:50152 "EHLO foss.arm.com"
+        id S1730214AbfIBKBr (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 2 Sep 2019 06:01:47 -0400
+Received: from mga14.intel.com ([192.55.52.115]:10307 "EHLO mga14.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729408AbfIBIVF (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Mon, 2 Sep 2019 04:21:05 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A799028;
-        Mon,  2 Sep 2019 01:21:04 -0700 (PDT)
-Received: from [10.1.197.61] (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 3032B3F71A;
-        Mon,  2 Sep 2019 01:21:03 -0700 (PDT)
-Subject: Re: [PATCH RFC 03/14] drivers: irqchip: add PDC irqdomain for wakeup
- capable GPIOs
-To:     Lina Iyer <ilina@codeaurora.org>
-Cc:     swboyd@chromium.org, evgreen@chromium.org,
-        linus.walleij@linaro.org, linux-kernel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, bjorn.andersson@linaro.org,
-        mkshah@codeaurora.org, linux-gpio@vger.kernel.org,
-        rnayak@codeaurora.org
-References: <20190829181203.2660-1-ilina@codeaurora.org>
- <20190829181203.2660-4-ilina@codeaurora.org>
- <d2a45d45-3071-ab8d-060b-92a2812a8d42@kernel.org>
- <20190830155853.GA5224@codeaurora.org>
-From:   Marc Zyngier <maz@kernel.org>
-Organization: Approximate
-Message-ID: <11d14b08-27ae-d25a-6056-55c1cfbd89b1@kernel.org>
-Date:   Mon, 2 Sep 2019 09:21:02 +0100
-User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        id S1729808AbfIBKBr (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Mon, 2 Sep 2019 06:01:47 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 02 Sep 2019 03:01:46 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,457,1559545200"; 
+   d="scan'208";a="211644503"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by fmsmga002.fm.intel.com with ESMTP; 02 Sep 2019 03:01:42 -0700
+Received: from andy by smile with local (Exim 4.92.1)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1i4j9Z-0008GD-87; Mon, 02 Sep 2019 13:01:41 +0300
+Date:   Mon, 2 Sep 2019 13:01:41 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Peter Cai <peter@typeblog.net>
+Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Bastien Nocera <hadess@hadess.net>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        linux-gpio@vger.kernel.org, linux-acpi@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-input@vger.kernel.org
+Subject: Re: [PATCH v2 1/2] gpio: acpi: add quirk to override GpioInt polarity
+Message-ID: <20190902100141.GW2680@smile.fi.intel.com>
+References: <20190831030916.13172-1-peter@typeblog.net>
 MIME-Version: 1.0
-In-Reply-To: <20190830155853.GA5224@codeaurora.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190831030916.13172-1-peter@typeblog.net>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 30/08/2019 16:58, Lina Iyer wrote:
-> On Fri, Aug 30 2019 at 08:50 -0600, Marc Zyngier wrote:
->> [Please use my kernel.org address in the future. The days of this
->> arm.com address are numbered...]
->>
-> Sure, will update and repost.
+On Sat, Aug 31, 2019 at 11:09:14AM +0800, Peter Cai wrote:
+> On GPD P2 Max, the firmware could not reset the touch panel correctly.
+> The kernel needs to take on the job instead, but the GpioInt definition
+> in DSDT specifies ActiveHigh while the GPIO pin should actually be
+> ActiveLow.
 > 
->> On 29/08/2019 19:11, Lina Iyer wrote:
->>> Introduce a new domain for wakeup capable GPIOs. The domain can be
->>> requested using the bus token DOMAIN_BUS_WAKEUP. In the following
->>> patches, we will specify PDC as the wakeup-parent for the TLMM GPIO
->>> irqchip. Requesting a wakeup GPIO will setup the GPIO and the
->>> corresponding PDC interrupt as its parent.
->>>
->>> Co-developed-by: Stephen Boyd <swboyd@chromium.org>
->>> Signed-off-by: Lina Iyer <ilina@codeaurora.org>
->>> ---
->>>  drivers/irqchip/qcom-pdc.c   | 104 ++++++++++++++++++++++++++++++++---
->>>  include/linux/soc/qcom/irq.h |  34 ++++++++++++
->>>  2 files changed, 129 insertions(+), 9 deletions(-)
->>>  create mode 100644 include/linux/soc/qcom/irq.h
->>>
-
-[...]
-
->>> diff --git a/include/linux/soc/qcom/irq.h b/include/linux/soc/qcom/irq.h
->>> new file mode 100644
->>> index 000000000000..73239917dc38
->>> --- /dev/null
->>> +++ b/include/linux/soc/qcom/irq.h
->>> @@ -0,0 +1,34 @@
->>> +/* SPDX-License-Identifier: GPL-2.0-only */
->>> +
->>> +#ifndef __QCOM_IRQ_H
->>> +#define __QCOM_IRQ_H
->>> +
->>> +#include <linux/irqdomain.h>
->>> +
->>> +#define GPIO_NO_WAKE_IRQ	~0U
->>> +
->>> +/**
->>> + * QCOM specific IRQ domain flags that distinguishes the handling of wakeup
->>> + * capable interrupts by different interrupt controllers.
->>> + *
->>> + * IRQ_DOMAIN_FLAG_QCOM_PDC_WAKEUP: Line must be masked at TLMM and the
->>> + *                                  interrupt configuration is done at PDC
->>> + * IRQ_DOMAIN_FLAG_QCOM_MPM_WAKEUP: Interrupt configuration is handled at TLMM
->>> + */
->>> +#define IRQ_DOMAIN_FLAG_QCOM_PDC_WAKEUP		(1 << 17)
->>> +#define IRQ_DOMAIN_FLAG_QCOM_MPM_WAKEUP		(1 << 18)
->>
->> Any reason why you're starting at bit 17? The available range in from
->> bit 16... But overall, it would be better if you expressed it as:
->>
->> #define IRQ_DOMAIN_FLAG_QCOM_PDC_WAKEUP	(IRQ_DOMAIN_FLAG_NONCORE << 0)
->> #define IRQ_DOMAIN_FLAG_QCOM_MPM_WAKEUP (IRQ_DOMAIN_FLAG_NONCORE << 1)
->>
-> Okay.
+> We need to override the polarity defined by DSDT. The GPIO driver
+> already allows defining polarity in acpi_gpio_params, but the option is
+> not applied to GpioInt.
 > 
->>> +
->>> +/**
->>> + * irq_domain_qcom_handle_wakeup: Return if the domain handles interrupt
->>> + *                                configuration
->>> + * @parent: irq domain
->>> + *
->>> + * This QCOM specific irq domain call returns if the interrupt controller
->>> + * requires the interrupt be masked at the child interrupt controller.
->>> + */
->>> +static inline bool irq_domain_qcom_handle_wakeup(struct irq_domain *parent)
->>> +{
->>> +	return (parent->flags & IRQ_DOMAIN_FLAG_QCOM_PDC_WAKEUP);
->>> +}
->>> +
->>> +#endif
->>>
->>
->> But most of this file isn't used by this patch, so maybe it should be
->> moved somewhere else...
->>
-> Apart from creating the domain, this is not used here, but a separate
-> patch seemed excessive. Let me know if you have any suggestions.
+> This patch adds a new quirk that enables the polarity specified in
+> acpi_gpio_params to also be applied to GpioInt.
 
-My personal preference would be to move it into the patch that actually
-makes use of this.
+Thank you for an update!
 
-	M.
+Acked-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+
+on the condition that Dmitry and other input / Goodix developers are okay with
+the approach in general.
+
+> 
+> Signed-off-by: Peter Cai <peter@typeblog.net>
+> ---
+> 
+> v2: rebased to gpio/for-next, moved quirk out of the gpioint
+> conditional.
+> ---
+>  drivers/gpio/gpiolib-acpi.c   | 9 +++++++++
+>  include/linux/gpio/consumer.h | 6 ++++++
+>  2 files changed, 15 insertions(+)
+> 
+> diff --git a/drivers/gpio/gpiolib-acpi.c b/drivers/gpio/gpiolib-acpi.c
+> index fdee8afa5339..ab16ea61a8fa 100644
+> --- a/drivers/gpio/gpiolib-acpi.c
+> +++ b/drivers/gpio/gpiolib-acpi.c
+> @@ -603,6 +603,15 @@ static int acpi_populate_gpio_lookup(struct acpi_resource *ares, void *data)
+>  			lookup->info.flags = acpi_gpio_to_gpiod_flags(agpio);
+>  			lookup->info.polarity = lookup->active_low;
+>  		}
+> +
+> +		/*
+> +		 * Override the polarity specified by GpioInt if
+> +		 * ACPI_GPIO_QUIRK_OVERRIDE_POLARITY is set.
+> +		 */
+> +		if (lookup->info.quirks & ACPI_GPIO_QUIRK_OVERRIDE_POLARITY) {
+> +			dev_warn(&lookup->info.adev->dev, FW_BUG "Incorrect polarity specified by GpioInt, overriding.\n");
+> +			lookup->info.polarity = lookup->active_low;
+> +		}
+>  	}
+>  
+>  	return 1;
+> diff --git a/include/linux/gpio/consumer.h b/include/linux/gpio/consumer.h
+> index b70af921c614..7e9f24ebb085 100644
+> --- a/include/linux/gpio/consumer.h
+> +++ b/include/linux/gpio/consumer.h
+> @@ -622,6 +622,12 @@ struct acpi_gpio_mapping {
+>   * get GpioIo type explicitly, this quirk may be used.
+>   */
+>  #define ACPI_GPIO_QUIRK_ONLY_GPIOIO		BIT(1)
+> +/*
+> + * Use the GPIO polarity (ActiveHigh / ActiveLow) from acpi_gpio_params
+> + * for GpioInt as well. The default behavior is to use the one specified
+> + * by GpioInt, which can be incorrect on some devices.
+> + */
+> +#define ACPI_GPIO_QUIRK_OVERRIDE_POLARITY	BIT(2)
+>  
+>  	unsigned int quirks;
+>  };
+> -- 
+> 2.23.0
+> 
+
 -- 
-Jazz is not dead, it just smells funny...
+With Best Regards,
+Andy Shevchenko
+
+
