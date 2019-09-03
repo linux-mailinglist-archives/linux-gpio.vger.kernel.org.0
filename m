@@ -2,64 +2,45 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 583E7A67FF
-	for <lists+linux-gpio@lfdr.de>; Tue,  3 Sep 2019 14:02:20 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 75810A69BB
+	for <lists+linux-gpio@lfdr.de>; Tue,  3 Sep 2019 15:25:51 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728288AbfICMCT (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 3 Sep 2019 08:02:19 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:42827 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726936AbfICMCT (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 3 Sep 2019 08:02:19 -0400
-Received: by mail-wr1-f66.google.com with SMTP id b16so17162171wrq.9
-        for <linux-gpio@vger.kernel.org>; Tue, 03 Sep 2019 05:02:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=vDvNVSEQfxyPsOTRETdn1/7ddH0aEL19s1+a1DtNqk8=;
-        b=i/Sun/KHt6IzDh0/nQYAtXEAtwZjEW1h8TY9G+2fABt9EOg0EK2mBmrrU+IByXTUAd
-         FQSTnufY8c8Yvh6/1Fg8OZdl5E2XsnHHscgvoTnZfviKc9iSgw1a2rCn85Q3kTSzDyds
-         13QSuhsCJHc2xJM8jqrJgt4H+Ho0MXA+zuJQ8k4qBnWwUg6u8MYS4tRmyddf+YUiLbk3
-         5ymg17t1w/09NlyxptaaB18Ez3wyoXEM5DnH/OShaaF42HLqiAVdafrGgk66oWdPYI8t
-         t1KiYYZ0D9BX3wBKbndF6vEA3NVrm7SIEpkYzs8VW6qdcBZ5UJKSRAZaQI4n80mPgRdc
-         7X8A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=vDvNVSEQfxyPsOTRETdn1/7ddH0aEL19s1+a1DtNqk8=;
-        b=TDQ/zA+HDdKrzyTPJq7YQ+eLzNAgdyb7jYF7Ak79f2DsNl8kJV0Ynp4725hhTi6mKe
-         v5uZQuXSNjJHAeL315ObwEttaZ4mkTybPwyesni6BovNnYPi95f7Ktrmvev45BYKIV0d
-         hre0N+qx4kRulUYrs3ypGeHRL60lt3xdb09yQqd7joFmyX8NPkLPeZKtQAvWPuvteTDJ
-         d22x0oyZgFqQja/5N5xHIv2e9zpJr7PyC6LTcm2Vo5GvuNjiQ4wKsve4Ch+InFZN4Apo
-         kipyAeZDwp1JM5EKj8u728dlBt1CEjVi7jKp6dw+/K4P1F5L5JtIbANF2AgpJTyqctQS
-         bEhQ==
-X-Gm-Message-State: APjAAAWVx5V4LJsP3sRz2Nsx/R+s5EbFUyjXZdUrvoVC7U+m7zLqSVL9
-        X4R+IlLDVK+MtuaKozXlfysf5MlZoPY=
-X-Google-Smtp-Source: APXvYqziPzppD6VL5U2OKJrKgYhTDEJWlIc2LB67FUlc+nCqmjMsAzLeNVzW/uz3DsR6fLnB4LGjnQ==
-X-Received: by 2002:a05:6000:49:: with SMTP id k9mr16560701wrx.21.1567512137200;
-        Tue, 03 Sep 2019 05:02:17 -0700 (PDT)
-Received: from debian-brgl.home (lfbn-1-7087-108.w90-116.abo.wanadoo.fr. [90.116.255.108])
-        by smtp.gmail.com with ESMTPSA id u6sm17029173wrr.26.2019.09.03.05.02.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 03 Sep 2019 05:02:16 -0700 (PDT)
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
+        id S1729392AbfICNZW (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 3 Sep 2019 09:25:22 -0400
+Received: from mga11.intel.com ([192.55.52.93]:44544 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729443AbfICNZV (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Tue, 3 Sep 2019 09:25:21 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 03 Sep 2019 06:25:21 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,463,1559545200"; 
+   d="scan'208";a="198769574"
+Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.157])
+  by fmsmga001.fm.intel.com with SMTP; 03 Sep 2019 06:25:18 -0700
+Received: by lahna (sSMTP sendmail emulation); Tue, 03 Sep 2019 16:25:17 +0300
+Date:   Tue, 3 Sep 2019 16:25:17 +0300
+From:   Mika Westerberg <mika.westerberg@linux.intel.com>
 To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     linux-gpio@vger.kernel.org,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: [GIT PULL] gpio: updates for v5.4
-Date:   Tue,  3 Sep 2019 14:02:14 +0200
-Message-Id: <20190903120214.16375-1-brgl@bgdev.pl>
-X-Mailer: git-send-email 2.21.0
+Cc:     Linux pin control <linux-gpio@vger.kernel.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>
+Subject: [GIT PULL] intel-pinctrl for v5.4
+Message-ID: <20190903132517.GF2691@lahna.fi.intel.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Hi Linus,
 
 The following changes since commit 5f9e832c137075045d15cd6899ab0505cfb2ca4b:
 
@@ -67,56 +48,68 @@ The following changes since commit 5f9e832c137075045d15cd6899ab0505cfb2ca4b:
 
 are available in the Git repository at:
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git tags/gpio-v5.4-updates-for-linus
+  git://git.kernel.org/pub/scm/linux/kernel/git/pinctrl/intel.git tags/intel-pinctrl-v5.4
 
-for you to fetch changes up to f2ee73147a3f23cc4b032a76b5677b4b8441ba74:
+for you to fetch changes up to 6cb0880f08229360c6c57416de075aa96930be78:
 
-  gpio: lpc32xx: allow building on non-lpc32xx targets (2019-08-12 09:10:00 +0200)
-
-----------------------------------------------------------------
-gpio: updates for v5.4
-
-- use a helper variable for &pdev->dev in gpio-em
-- tweak the ifdefs in GPIO headers
-- fix function links in HTML docs
-- remove an unneeded error message from ixp4xx
-- use the optional clk_get in gpio-mxc instead of checking the return value
-- a couple improvements in pca953x
-- allow to build gpio-lpc32xx on non-lpc32xx targets
+  pinctrl: intel: remap the pin number to gpio offset for irq enabled pin (2019-08-19 12:41:44 +0300)
 
 ----------------------------------------------------------------
-Andy Shevchenko (4):
-      gpio: pca953x: Switch to use device_get_match_data()
-      gpio: pca953x: Use GENMASK() consistently
-      gpio: pca953x: Remove explicit comparison with 0
-      gpio: pca953x: Drop %s for constant string literals
+intel-pinctrl for v5.4
 
-Anson Huang (1):
-      gpio: mxc: Use devm_clk_get_optional instead of devm_clk_get
+A collection of improvements and fixes for Intel pinctrl drivers
+including:
 
-Arnd Bergmann (1):
-      gpio: lpc32xx: allow building on non-lpc32xx targets
+  - Converting drivers to use new devm_platform_ioremap_resource()
+    helper function.
 
-Bartosz Golaszewski (1):
-      gpio: em: use a helper variable for &pdev->dev
+  - Make Interrupt Status (IS) register configurable.
 
-Ding Xiang (1):
-      gpio: ixp4xx: remove redundant dev_err message
+  - Allow locked pins to be requested and used as long as they are not
+    modified.
 
-Jeremy Cline (1):
-      Documentation: gpio: fix function links in the HTML docs
+  - Fix intel_pinctrl_should_save() to translate pin number to GPIO
+    number where needed. This fixes Asus X571GT touchpad
+    unresponsiveness issue after suspend/resume cycle.
 
-Masahiro Yamada (1):
-      gpio: remove less important #ifdef around declarations
+----------------------------------------------------------------
+Andy Shevchenko (18):
+      pinctrl: baytrail: Use devm_platform_ioremap_resource()
+      pinctrl: cherryview: Use devm_platform_ioremap_resource()
+      pinctrl: intel: Use devm_platform_ioremap_resource()
+      pinctrl: merrifield: Use devm_platform_ioremap_resource()
+      pinctrl: intel: Drop double check for data in intel_pinctrl_probe_by_uid()
+      pinctrl: intel: Simplify offset validation in intel_get_padcfg()
+      pinctrl: broxton: Provide Interrupt Status register offset
+      pinctrl: cannonlake: Provide Interrupt Status register offset
+      pinctrl: geminilake: Provide Interrupt Status register offset
+      pinctrl: icelake: Provide Interrupt Status register offset
+      pinctrl: sunrisepoint: Provide Interrupt Status register offset
+      pinctrl: denverton: Provide Interrupt Status register offset
+      pinctrl: lewisburg: Provide Interrupt Status register offset
+      pinctrl: intel: Remove default Interrupt Status offset
+      pinctrl: baytrail: Re-use data structures from pinctrl-intel.h (part 2)
+      pinctrl: intel: Use NSEC_PER_USEC for debounce calculus
+      pinctrl: denverton: Update pin names according to v1.08
+      pinctrl: intel: Allow to request locked pads
 
- Documentation/driver-api/gpio/driver.rst |  16 ++---
- arch/arm/configs/lpc32xx_defconfig       |   1 +
- drivers/gpio/Kconfig                     |   7 ++
- drivers/gpio/Makefile                    |   2 +-
- drivers/gpio/gpio-em.c                   |  37 +++++-----
- drivers/gpio/gpio-ixp4xx.c               |   4 +-
- drivers/gpio/gpio-lpc32xx.c              | 118 ++++++++++++++++++-------------
- drivers/gpio/gpio-mxc.c                  |   9 +--
- drivers/gpio/gpio-pca953x.c              |  70 +++++++++---------
- include/linux/gpio/driver.h              |  27 +++----
- 10 files changed, 149 insertions(+), 142 deletions(-)
+Chris Chiu (1):
+      pinctrl: intel: remap the pin number to gpio offset for irq enabled pin
+
+Stephen Boyd (2):
+      pinctrl: intel: Remove dev_err() usage after platform_get_irq()
+      pinctrl: cherryview: Remove dev_err() usage after platform_get_irq()
+
+ drivers/pinctrl/intel/pinctrl-baytrail.c     |  67 +++++----------
+ drivers/pinctrl/intel/pinctrl-broxton.c      |   4 +-
+ drivers/pinctrl/intel/pinctrl-cannonlake.c   |   2 +
+ drivers/pinctrl/intel/pinctrl-cherryview.c   |   8 +-
+ drivers/pinctrl/intel/pinctrl-denverton.c    |  53 ++++++------
+ drivers/pinctrl/intel/pinctrl-geminilake.c   |   2 +
+ drivers/pinctrl/intel/pinctrl-icelake.c      |   2 +
+ drivers/pinctrl/intel/pinctrl-intel.c        | 120 +++++++++++++++++++--------
+ drivers/pinctrl/intel/pinctrl-intel.h        |   9 +-
+ drivers/pinctrl/intel/pinctrl-lewisburg.c    |   2 +
+ drivers/pinctrl/intel/pinctrl-merrifield.c   |   4 +-
+ drivers/pinctrl/intel/pinctrl-sunrisepoint.c |   2 +
+ 12 files changed, 156 insertions(+), 119 deletions(-)
