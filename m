@@ -2,90 +2,120 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 1959AA5B1B
-	for <lists+linux-gpio@lfdr.de>; Mon,  2 Sep 2019 18:06:16 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8E537A61E8
+	for <lists+linux-gpio@lfdr.de>; Tue,  3 Sep 2019 08:54:51 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726124AbfIBQGM (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 2 Sep 2019 12:06:12 -0400
-Received: from mga01.intel.com ([192.55.52.88]:54378 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726027AbfIBQGM (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Mon, 2 Sep 2019 12:06:12 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 02 Sep 2019 09:06:11 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,459,1559545200"; 
-   d="scan'208";a="187029255"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by orsmga006.jf.intel.com with ESMTP; 02 Sep 2019 09:06:07 -0700
-Received: from andy by smile with local (Exim 4.92.1)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1i4oqE-0004aN-9z; Mon, 02 Sep 2019 19:06:06 +0300
-Date:   Mon, 2 Sep 2019 19:06:06 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Peter Cai <peter@typeblog.net>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Bastien Nocera <hadess@hadess.net>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Linux Input <linux-input@vger.kernel.org>
-Subject: Re: [PATCH v2 1/2] gpio: acpi: add quirk to override GpioInt polarity
-Message-ID: <20190902160606.GR2680@smile.fi.intel.com>
-References: <20190831030916.13172-1-peter@typeblog.net>
- <20190902100141.GW2680@smile.fi.intel.com>
- <CACRpkdaY_TT_m3XEh_J9TqMQijzUieQDBn+t4=uGUyfP+V0Hzg@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CACRpkdaY_TT_m3XEh_J9TqMQijzUieQDBn+t4=uGUyfP+V0Hzg@mail.gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        id S1727284AbfICGyu (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 3 Sep 2019 02:54:50 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:38243 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727173AbfICGyt (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 3 Sep 2019 02:54:49 -0400
+Received: by mail-pf1-f193.google.com with SMTP id h195so3620494pfe.5
+        for <linux-gpio@vger.kernel.org>; Mon, 02 Sep 2019 23:54:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=dZueRWZd1uZbZNG0riAle5evD2RPXFUMBIbKb1n2stM=;
+        b=FGEtBmTw+UijXa25Ipc7xQ4tq+qIvfBqVg1NmnanWKkTe7yno7WjcxKffa1nMJRAxD
+         AOYney+tqn0eT+NmaNjlkHQOanv2QIDA74pDFkjN2+P7BgoLwUFLkf7WRlMExbShWPkY
+         li/3kKiY2mP6zBN27Xf9uW7QmC1Xh1uz3qOhy4WUq3vxN6fp1IjTUXp0jvN9sbegwtGr
+         jBZD8enNnF01X7NkZsKZipwUc+J5nvDpaxa6aPgYmHKkqoD/xsVarFNXkIr2mGdpaGkC
+         eWL7t0M4ytePKm2cj76neBQtC3gx6gqV2FTcsx3B5KgRrVZLgUaYfZ51ZUJWctoicY7C
+         TIoA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=dZueRWZd1uZbZNG0riAle5evD2RPXFUMBIbKb1n2stM=;
+        b=UISTRkOoWsgihvsW2PKqnGcdQKvEkfrfzm42fiyOnQzIp4hsu6rb8bZosFwW3CqIG9
+         NnOEUfrndR3Hckd19Dj8fg+Dgw1EUgkMNRmO8N7MOqtLpbr9gb+K5EQeyJ+PLkZBuisX
+         uMjjWS7gvU2p2dZ3+sgD17Dz8coT5YazM23dtIBc161u8i9rPTIiArZEUlxMeWIT7EVH
+         iFdLVD7L2ErG7/2HnlnE2OGE7yg5yaOncoI869YGCVuuLen9oQHLgKIkIm/6hZtA+dAq
+         Sz3JpIjwlWw1XzyVHA5/SO3R/F7IDKwC+SBg59pvJfxfnIaXbJ4GktQ7Z7PLdKjCDjlx
+         zS7A==
+X-Gm-Message-State: APjAAAVxvrRh4O9N68Da+xJxbhP/7AIwQo3PAn3QbYc2j4Bevxlomh/m
+        Qd9u9nPQxtE4KcrehjICGGd8zg==
+X-Google-Smtp-Source: APXvYqxkoDM0uGwkQpRgclz5RRJ0gAHteeMYv8Fxj1KTi5HwH2NFSQ2AQjYuF7bCDIFRGM9OMwEfJg==
+X-Received: by 2002:a63:7887:: with SMTP id t129mr28954591pgc.309.1567493688797;
+        Mon, 02 Sep 2019 23:54:48 -0700 (PDT)
+Received: from baolinwangubtpc.spreadtrum.com ([117.18.48.82])
+        by smtp.gmail.com with ESMTPSA id s7sm5872032pjn.8.2019.09.02.23.54.39
+        (version=TLS1 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Mon, 02 Sep 2019 23:54:48 -0700 (PDT)
+From:   Baolin Wang <baolin.wang@linaro.org>
+To:     stable@vger.kernel.org, chris@chris-wilson.co.uk, airlied@linux.ie,
+        davem@davemloft.net, kuznet@ms2.inr.ac.ru, yoshfuji@linux-ipv6.org,
+        edumazet@google.com, peterz@infradead.org, mingo@redhat.com,
+        vyasevich@gmail.com, nhorman@tuxdriver.com,
+        linus.walleij@linaro.org, natechancellor@gmail.com, sre@kernel.org,
+        paulus@samba.org, gregkh@linuxfoundation.org
+Cc:     intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+        netdev@vger.kernel.org, longman@redhat.com,
+        hariprasad.kelam@gmail.com, linux-sctp@vger.kernel.org,
+        linux-gpio@vger.kernel.org, david@lechnology.com,
+        linux-pm@vger.kernel.org, ebiggers@google.com,
+        linux-ppp@vger.kernel.org, lanqing.liu@unisoc.com,
+        linux-serial@vger.kernel.org, arnd@arndb.de,
+        baolin.wang@linaro.org, orsonzhai@gmail.com,
+        vincent.guittot@linaro.org, linux-kernel@vger.kernel.org
+Subject: [BACKPORT 4.14.y 0/8] Candidates from Spreadtrum 4.14 product kernel
+Date:   Tue,  3 Sep 2019 14:53:46 +0800
+Message-Id: <cover.1567492316.git.baolin.wang@linaro.org>
+X-Mailer: git-send-email 1.7.9.5
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Sep 02, 2019 at 03:36:24PM +0200, Linus Walleij wrote:
-> On Mon, Sep 2, 2019 at 12:01 PM Andy Shevchenko
-> <andriy.shevchenko@linux.intel.com> wrote:
-> > On Sat, Aug 31, 2019 at 11:09:14AM +0800, Peter Cai wrote:
-> > > On GPD P2 Max, the firmware could not reset the touch panel correctly.
-> > > The kernel needs to take on the job instead, but the GpioInt definition
-> > > in DSDT specifies ActiveHigh while the GPIO pin should actually be
-> > > ActiveLow.
-> > >
-> > > We need to override the polarity defined by DSDT. The GPIO driver
-> > > already allows defining polarity in acpi_gpio_params, but the option is
-> > > not applied to GpioInt.
-> > >
-> > > This patch adds a new quirk that enables the polarity specified in
-> > > acpi_gpio_params to also be applied to GpioInt.
-> >
-> > Thank you for an update!
-> >
-> > Acked-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> >
-> > on the condition that Dmitry and other input / Goodix developers are okay with
-> > the approach in general.
-> 
-> Acked-by: Linus Walleij <linus.walleij@linaro.org>
-> In case Dmitry needs to merge this.
-> 
-> Or should I simply merge this patch to the GPIO tree?
+With Arnd's script [1] help, I found some bugfixes in Spreadtrum 4.14 product
+kernel, but missing in v4.14.141:
 
-For my opinion Input subsystem should decide how to proceed with this.
+86fda90ab588 net: sctp: fix warning "NULL check before some freeing functions is not needed"
+25a09ce79639 ppp: mppe: Revert "ppp: mppe: Add softdep to arc4"
+d9b308b1f8a1 drm/i915/fbdev: Actually configure untiled displays
+47d3d7fdb10a ip6: fix skb leak in ip6frag_expire_frag_queue()
+5b9cea15a3de serial: sprd: Modify the baud rate calculation formula
+513e1073d52e locking/lockdep: Add debug_locks check in __lock_downgrade()
+957063c92473 pinctrl: sprd: Use define directive for sprd_pinconf_params values
+87a2b65fc855 power: supply: sysfs: ratelimit property read error message
+
+[1] https://lore.kernel.org/lkml/20190322154425.3852517-19-arnd@arndb.de/T/
+
+Chris Wilson (1):
+  drm/i915/fbdev: Actually configure untiled displays
+
+David Lechner (1):
+  power: supply: sysfs: ratelimit property read error message
+
+Eric Biggers (1):
+  ppp: mppe: Revert "ppp: mppe: Add softdep to arc4"
+
+Eric Dumazet (1):
+  ip6: fix skb leak in ip6frag_expire_frag_queue()
+
+Hariprasad Kelam (1):
+  net: sctp: fix warning "NULL check before some freeing functions is
+    not needed"
+
+Lanqing Liu (1):
+  serial: sprd: Modify the baud rate calculation formula
+
+Nathan Chancellor (1):
+  pinctrl: sprd: Use define directive for sprd_pinconf_params values
+
+Waiman Long (1):
+  locking/lockdep: Add debug_locks check in __lock_downgrade()
+
+ drivers/gpu/drm/i915/intel_fbdev.c        |   12 +++++++-----
+ drivers/net/ppp/ppp_mppe.c                |    1 -
+ drivers/pinctrl/sprd/pinctrl-sprd.c       |    6 ++----
+ drivers/power/supply/power_supply_sysfs.c |    3 ++-
+ drivers/tty/serial/sprd_serial.c          |    2 +-
+ include/net/ipv6_frag.h                   |    1 -
+ kernel/locking/lockdep.c                  |    3 +++
+ net/sctp/sm_make_chunk.c                  |   12 ++++--------
+ 8 files changed, 19 insertions(+), 21 deletions(-)
 
 -- 
-With Best Regards,
-Andy Shevchenko
-
+1.7.9.5
 
