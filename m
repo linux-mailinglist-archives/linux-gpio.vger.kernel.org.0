@@ -2,253 +2,137 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 10BBCA774A
-	for <lists+linux-gpio@lfdr.de>; Wed,  4 Sep 2019 00:51:09 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AA77AA7783
+	for <lists+linux-gpio@lfdr.de>; Wed,  4 Sep 2019 01:19:05 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727083AbfICWvE (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 3 Sep 2019 18:51:04 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:41052 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726953AbfICWvE (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 3 Sep 2019 18:51:04 -0400
-Received: by mail-pl1-f193.google.com with SMTP id m9so8606428pls.8
-        for <linux-gpio@vger.kernel.org>; Tue, 03 Sep 2019 15:51:03 -0700 (PDT)
+        id S1726105AbfICXTA (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 3 Sep 2019 19:19:00 -0400
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:41780 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726009AbfICXS7 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 3 Sep 2019 19:18:59 -0400
+Received: by mail-pl1-f195.google.com with SMTP id m9so8640655pls.8;
+        Tue, 03 Sep 2019 16:18:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=message-id:mime-version:content-transfer-encoding:in-reply-to
-         :references:cc:subject:to:from:user-agent:date;
-        bh=9trNFzcMJPxSkbrSQIMdwqf4HgHwbgy97ByQX0gMK0E=;
-        b=kVB2bGKrY+RjYxQMQPdpAu0cBQ0jsHUK6i1aB7e3YQSxT4wq4O9JOzSfKusm0rgZAc
-         ymgZ3oXqU9FE6mJbG77HAhONRCRLgi4iO217Ph5ut58Y/T95sayXsjxTs8ZvsCHkIO8b
-         JekHkmTtj0nhnaZI9IXjo3pTiggUG59ghAlM0=
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=hAmHof5HSYuYAUNCiL3ISHJlEemOn6yRBu9YZMQZqPc=;
+        b=Bz1I0OTlqz2IoLpCYGYgb1LSAEBFeQi1RlyBJUQcPySBSoouYlGdoh4vmyb5BJgYLU
+         6/3vw4RyGQgIBAQhjO0tLroffsJegDWjJ3gbKS4IqfpWic6gJFYCG5iSkEWlKqsOliBw
+         xGrQ0qPsjrd5cQJ/6Pr8RyyQ3iQr2DFDVwD1GlIkDOW1VhOJMo6qasyGNrrJUH1n0k8V
+         KYZm6QWXwl8xHb2Dqrqfsz7s2NOFHgO0u8VWYnp3KEY1vwZOjt4207zx1gIEaOKUCJ7u
+         qaoE5YJWM43R4frGNRZQjhqO1FCWdUyfJD4ky27ZAPJyMX4nBFkwQTHo6wpezFqpwdfD
+         DSZA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:mime-version
-         :content-transfer-encoding:in-reply-to:references:cc:subject:to:from
-         :user-agent:date;
-        bh=9trNFzcMJPxSkbrSQIMdwqf4HgHwbgy97ByQX0gMK0E=;
-        b=a1ERMj7IO/UWtZRUXsCh+wyNY9RutO6EmQlX4v1UVrawa9veXG7TSl1GMmXuz3lnQX
-         8/Uf7EphOYCG/o465fVP5gJFdrqJHl7j7WMm2y40DcGaalBHXnFFEHMlzTJBlaYWrRVv
-         25QmYzUcRhVJPYh7cFXL5+MF2IFavwvo3aixUTZVeYK16GKVc3Pkkg2koL+iGypfLkD8
-         z4rInfMPzeUzQ+ICcU1GsjCjly+RB3SFdevG2vV3JdExunlcGWgdoFnEnxaOpQL08NBt
-         BRIHa1tfRLYAfbDjpqMKtrofnAJUh8JInDe7etBfNGgQpjSYXiBMXRcm7MQfea1AfiBQ
-         boRw==
-X-Gm-Message-State: APjAAAXx8dBWOiEef7ZIJg1VDlSQE389Yax4Yny+p5dTuImLaNBCk62j
-        RM2Jv8LHUkpGqL5dpt2EmWmN8A==
-X-Google-Smtp-Source: APXvYqyqfTTW9r2z0CkUJ2ZJK1rN6wWkA/LBN/Q0DZBNDJVvFxkFkA6qVLLpORsqAkXypCXruhmEAQ==
-X-Received: by 2002:a17:902:780c:: with SMTP id p12mr22955161pll.290.1567551063379;
-        Tue, 03 Sep 2019 15:51:03 -0700 (PDT)
-Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
-        by smtp.gmail.com with ESMTPSA id bt1sm588583pjb.17.2019.09.03.15.51.02
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=hAmHof5HSYuYAUNCiL3ISHJlEemOn6yRBu9YZMQZqPc=;
+        b=pu90uH54CliPNFGV96/gHX39MEmUEJVVN+EziUhZTilQgfUyB9jtYwdlXZqpXqjZjm
+         NQR9pfzOgCBIHpbP7Kpo9CnDkz+xFhLcz05e5YxfMf2lyEke0YTjUncrOUYS/wLajDQ8
+         qClXyWMToN25xagfTBnuE5rS0wLQ6tc1zZiE2KiP4qJKg4KbxgvZSCK3xpY9/RxA0RDm
+         N+rfP+nvfPG1qWGBpkTYx0urF3n4nuQv3QnreOtG2NrQLbfUKuS9Y3484SJq2lPjczuW
+         uY6SINI+JRF/WbMCF9cJ6XOCvYC2LGFm1emvMtlcca4Vc+GI1nybR2K2OYz/F3AQlOYV
+         xc1Q==
+X-Gm-Message-State: APjAAAWB0O2rUqJ57PA9Wg1Bx3pK8O+I0UU7zMjTn84u51AeyQSXiScu
+        IGGLRvbop8rXeQoe2kNCN04=
+X-Google-Smtp-Source: APXvYqze4lacj4Iix2KiSq3/g6RLQ/Q4EuaBlhKRfCw7Dt/xtfK8GI1PVrQ2rKRgfIRsPRjy4caUXw==
+X-Received: by 2002:a17:902:5a1:: with SMTP id f30mr38620237plf.64.1567552738880;
+        Tue, 03 Sep 2019 16:18:58 -0700 (PDT)
+Received: from dtor-ws ([2620:15c:202:201:3adc:b08c:7acc:b325])
+        by smtp.gmail.com with ESMTPSA id z12sm20840701pfg.21.2019.09.03.16.18.57
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 03 Sep 2019 15:51:02 -0700 (PDT)
-Message-ID: <5d6eee56.1c69fb81.e2ebe.2352@mx.google.com>
-Content-Type: text/plain; charset="utf-8"
+        Tue, 03 Sep 2019 16:18:58 -0700 (PDT)
+Date:   Tue, 3 Sep 2019 16:18:56 -0700
+From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Andreas Kemnade <andreas@kemnade.info>,
+        linux-gpio@vger.kernel.org, linux-spi@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] gpiolib: of: fix fallback quirks handling
+Message-ID: <20190903231856.GA165165@dtor-ws>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20190829181203.2660-4-ilina@codeaurora.org>
-References: <20190829181203.2660-1-ilina@codeaurora.org> <20190829181203.2660-4-ilina@codeaurora.org>
-Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        bjorn.andersson@linaro.org, mkshah@codeaurora.org,
-        linux-gpio@vger.kernel.org, rnayak@codeaurora.org,
-        Lina Iyer <ilina@codeaurora.org>
-Subject: Re: [PATCH RFC 03/14] drivers: irqchip: add PDC irqdomain for wakeup capable GPIOs
-To:     Lina Iyer <ilina@codeaurora.org>, evgreen@chromium.org,
-        linus.walleij@linaro.org, marc.zyngier@arm.com
-From:   Stephen Boyd <swboyd@chromium.org>
-User-Agent: alot/0.8.1
-Date:   Tue, 03 Sep 2019 15:51:01 -0700
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Quoting Lina Iyer (2019-08-29 11:11:52)
-> Introduce a new domain for wakeup capable GPIOs. The domain can be
-> requested using the bus token DOMAIN_BUS_WAKEUP. In the following
-> patches, we will specify PDC as the wakeup-parent for the TLMM GPIO
-> irqchip. Requesting a wakeup GPIO will setup the GPIO and the
-> corresponding PDC interrupt as its parent.
->=20
-> Co-developed-by: Stephen Boyd <swboyd@chromium.org>
+We should only try to execute fallback quirks handling when previous
+call returned -ENOENT, and not when we did not get -EPROBE_DEFER.
+The other errors should be treated as hard errors: we did find the GPIO
+description, but for some reason we failed to handle it properly.
 
-Per the Documentation about Co-developed-by this should have my=20
+The fallbacks should only be executed when previous handlers returned
+-ENOENT, which means the mapping/description was not found.
 
-Signed-off-by: Stephen Boyd <swboyd@chromium.org>
+Also let's remove the explicit deferral handling when iterating through
+GPIO suffixes: it is not needed anymore as we will not be calling
+fallbacks for anything but -ENOENT.
 
-here. Please add it for the next version.
+Fixes: df451f83e1fc ("gpio: of: fix Freescale SPI CS quirk handling")
+Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+---
+ drivers/gpio/gpiolib-of.c | 27 +++++++++------------------
+ 1 file changed, 9 insertions(+), 18 deletions(-)
 
-> Signed-off-by: Lina Iyer <ilina@codeaurora.org>
-> ---
->  drivers/irqchip/qcom-pdc.c   | 104 ++++++++++++++++++++++++++++++++---
->  include/linux/soc/qcom/irq.h |  34 ++++++++++++
->  2 files changed, 129 insertions(+), 9 deletions(-)
->  create mode 100644 include/linux/soc/qcom/irq.h
->=20
-> diff --git a/drivers/irqchip/qcom-pdc.c b/drivers/irqchip/qcom-pdc.c
-> index 338fae604af5..ad1faf634bcf 100644
-> --- a/drivers/irqchip/qcom-pdc.c
-> +++ b/drivers/irqchip/qcom-pdc.c
-> @@ -244,6 +261,60 @@ static const struct irq_domain_ops qcom_pdc_ops =3D {
->         .free           =3D irq_domain_free_irqs_common,
->  };
-> =20
-> +static int qcom_pdc_gpio_alloc(struct irq_domain *domain, unsigned int v=
-irq,
-> +                              unsigned int nr_irqs, void *data)
-> +{
-> +       struct irq_fwspec *fwspec =3D data;
-> +       struct irq_fwspec parent_fwspec;
-> +       irq_hw_number_t hwirq, parent_hwirq;
-> +       unsigned int type;
-> +       int ret;
-> +
-> +       ret =3D qcom_pdc_translate(domain, fwspec, &hwirq, &type);
-> +       if (ret)
-> +               return ret;
-> +
-> +       ret =3D irq_domain_set_hwirq_and_chip(domain, virq, hwirq,
-> +                                           &qcom_pdc_gic_chip, NULL);
-> +       if (ret)
-> +               return ret;
-> +
-> +       if (hwirq =3D=3D GPIO_NO_WAKE_IRQ)
-> +               return 0;
-> +
-> +       parent_hwirq =3D get_parent_hwirq(hwirq);
-> +       if (parent_hwirq =3D=3D PDC_NO_PARENT_IRQ)
-> +               return 0;
-> +
-> +       if (type & IRQ_TYPE_EDGE_BOTH)
-> +               type =3D IRQ_TYPE_EDGE_RISING;
-> +
-> +       if (type & IRQ_TYPE_LEVEL_MASK)
-> +               type =3D IRQ_TYPE_LEVEL_HIGH;
-> +
-> +       parent_fwspec.fwnode      =3D domain->parent->fwnode;
-> +       parent_fwspec.param_count =3D 3;
-> +       parent_fwspec.param[0]    =3D 0;
-> +       parent_fwspec.param[1]    =3D parent_hwirq;
-> +       parent_fwspec.param[2]    =3D type;
-> +
-> +       return irq_domain_alloc_irqs_parent(domain, virq, nr_irqs,
-> +                                           &parent_fwspec);
-> +}
-> +
-> +static int qcom_pdc_gpio_domain_select(struct irq_domain *d,
-> +                                      struct irq_fwspec *fwspec,
-> +                                      enum irq_domain_bus_token bus_toke=
-n)
-> +{
-> +       return (bus_token =3D=3D DOMAIN_BUS_WAKEUP);
+diff --git a/drivers/gpio/gpiolib-of.c b/drivers/gpio/gpiolib-of.c
+index b034abe59f28..b45b39c48a34 100644
+--- a/drivers/gpio/gpiolib-of.c
++++ b/drivers/gpio/gpiolib-of.c
+@@ -457,36 +457,27 @@ struct gpio_desc *of_find_gpio(struct device *dev, const char *con_id,
+ 
+ 		desc = of_get_named_gpiod_flags(dev->of_node, prop_name, idx,
+ 						&of_flags);
+-		/*
+-		 * -EPROBE_DEFER in our case means that we found a
+-		 * valid GPIO property, but no controller has been
+-		 * registered so far.
+-		 *
+-		 * This means we don't need to look any further for
+-		 * alternate name conventions, and we should really
+-		 * preserve the return code for our user to be able to
+-		 * retry probing later.
+-		 */
+-		if (IS_ERR(desc) && PTR_ERR(desc) == -EPROBE_DEFER)
+-			return desc;
+ 
+-		if (!IS_ERR(desc) || (PTR_ERR(desc) != -ENOENT))
++		if (!IS_ERR(desc) || PTR_ERR(desc) != -ENOENT)
+ 			break;
+ 	}
+ 
+-	/* Special handling for SPI GPIOs if used */
+-	if (IS_ERR(desc))
++	if (IS_ERR(desc) && PTR_ERR(desc) == -ENOENT) {
++		/* Special handling for SPI GPIOs if used */
+ 		desc = of_find_spi_gpio(dev, con_id, &of_flags);
+-	if (IS_ERR(desc) && PTR_ERR(desc) != -EPROBE_DEFER) {
++	}
++
++	if (IS_ERR(desc) && PTR_ERR(desc) == -ENOENT) {
+ 		/* This quirk looks up flags and all */
+ 		desc = of_find_spi_cs_gpio(dev, con_id, idx, flags);
+ 		if (!IS_ERR(desc))
+ 			return desc;
+ 	}
+ 
+-	/* Special handling for regulator GPIOs if used */
+-	if (IS_ERR(desc) && PTR_ERR(desc) != -EPROBE_DEFER)
++	if (IS_ERR(desc) && PTR_ERR(desc) == -ENOENT) {
++		/* Special handling for regulator GPIOs if used */
+ 		desc = of_find_regulator_gpio(dev, con_id, &of_flags);
++	}
+ 
+ 	if (IS_ERR(desc))
+ 		return desc;
+-- 
+2.23.0.187.g17f5b7556c-goog
 
-Drop the parenthesis please.
 
-> +}
-> +
-> +static const struct irq_domain_ops qcom_pdc_gpio_ops =3D {
-> +       .select         =3D qcom_pdc_gpio_domain_select,
-> +       .alloc          =3D qcom_pdc_gpio_alloc,
-> +       .free           =3D irq_domain_free_irqs_common,
-> +};
-> +
->  static int pdc_setup_pin_mapping(struct device_node *np)
->  {
->         int ret, n;
-> @@ -282,7 +353,7 @@ static int pdc_setup_pin_mapping(struct device_node *=
-np)
-> =20
->  static int qcom_pdc_init(struct device_node *node, struct device_node *p=
-arent)
->  {
-> -       struct irq_domain *parent_domain, *pdc_domain;
-> +       struct irq_domain *parent_domain, *pdc_domain, *pdc_gpio_domain;
->         int ret;
-> =20
->         pdc_base =3D of_iomap(node, 0);
-> @@ -313,8 +384,23 @@ static int qcom_pdc_init(struct device_node *node, s=
-truct device_node *parent)
->                 goto fail;
->         }
-> =20
-> +       pdc_gpio_domain =3D irq_domain_create_hierarchy(parent_domain,
-> +                                                     IRQ_DOMAIN_FLAG_QCO=
-M_PDC_WAKEUP,
-> +                                                     PDC_MAX_GPIO_IRQS,
-> +                                                     of_fwnode_handle(no=
-de),
-> +                                                     &qcom_pdc_gpio_ops,=
- NULL);
-> +       if (!pdc_gpio_domain) {
-> +               pr_err("%pOF: GIC domain add failed for GPIO domain\n", n=
-ode);
-
-s/GIC/PDC/?
-
-> +               ret =3D -ENOMEM;
-> +               goto remove;
-> +       }
-> +
-> +       irq_domain_update_bus_token(pdc_gpio_domain, DOMAIN_BUS_WAKEUP);
-> +
->         return 0;
-> =20
-> +remove:
-> +       irq_domain_remove(pdc_domain);
->  fail:
->         kfree(pdc_region);
->         iounmap(pdc_base);
-> diff --git a/include/linux/soc/qcom/irq.h b/include/linux/soc/qcom/irq.h
-> new file mode 100644
-> index 000000000000..73239917dc38
-> --- /dev/null
-> +++ b/include/linux/soc/qcom/irq.h
-> @@ -0,0 +1,34 @@
-> +/* SPDX-License-Identifier: GPL-2.0-only */
-> +
-> +#ifndef __QCOM_IRQ_H
-> +#define __QCOM_IRQ_H
-> +
-> +#include <linux/irqdomain.h>
-
-Just forward declare struct irq_domain instead?
-
-> +
-> +#define GPIO_NO_WAKE_IRQ       ~0U
-> +
-> +/**
-> + * QCOM specific IRQ domain flags that distinguishes the handling of wak=
-eup
-> + * capable interrupts by different interrupt controllers.
-> + *
-> + * IRQ_DOMAIN_FLAG_QCOM_PDC_WAKEUP: Line must be masked at TLMM and the
-> + *                                  interrupt configuration is done at P=
-DC
-> + * IRQ_DOMAIN_FLAG_QCOM_MPM_WAKEUP: Interrupt configuration is handled a=
-t TLMM
-> + */
-> +#define IRQ_DOMAIN_FLAG_QCOM_PDC_WAKEUP                (1 << 17)
-> +#define IRQ_DOMAIN_FLAG_QCOM_MPM_WAKEUP                (1 << 18)
-
-Why do these numbers start at 17?
-
-> +
-> +/**
-> + * irq_domain_qcom_handle_wakeup: Return if the domain handles interrupt
-> + *                                configuration
-> + * @parent: irq domain
-> + *
-> + * This QCOM specific irq domain call returns if the interrupt controller
-> + * requires the interrupt be masked at the child interrupt controller.
-> + */
-> +static inline bool irq_domain_qcom_handle_wakeup(struct irq_domain *pare=
-nt)
-> +{
-> +       return (parent->flags & IRQ_DOMAIN_FLAG_QCOM_PDC_WAKEUP);
-> +}
-> +
-> +#endif
-> --=20
-> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-> a Linux Foundation Collaborative Project
->=20
+-- 
+Dmitry
