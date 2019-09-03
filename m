@@ -2,137 +2,247 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id AA77AA7783
-	for <lists+linux-gpio@lfdr.de>; Wed,  4 Sep 2019 01:19:05 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B9E23A77B3
+	for <lists+linux-gpio@lfdr.de>; Wed,  4 Sep 2019 01:58:40 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726105AbfICXTA (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 3 Sep 2019 19:19:00 -0400
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:41780 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726009AbfICXS7 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 3 Sep 2019 19:18:59 -0400
-Received: by mail-pl1-f195.google.com with SMTP id m9so8640655pls.8;
-        Tue, 03 Sep 2019 16:18:59 -0700 (PDT)
+        id S1726589AbfICX6j (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 3 Sep 2019 19:58:39 -0400
+Received: from mail-wm1-f47.google.com ([209.85.128.47]:53038 "EHLO
+        mail-wm1-f47.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726441AbfICX6j (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 3 Sep 2019 19:58:39 -0400
+Received: by mail-wm1-f47.google.com with SMTP id t17so1270284wmi.2
+        for <linux-gpio@vger.kernel.org>; Tue, 03 Sep 2019 16:58:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=hAmHof5HSYuYAUNCiL3ISHJlEemOn6yRBu9YZMQZqPc=;
-        b=Bz1I0OTlqz2IoLpCYGYgb1LSAEBFeQi1RlyBJUQcPySBSoouYlGdoh4vmyb5BJgYLU
-         6/3vw4RyGQgIBAQhjO0tLroffsJegDWjJ3gbKS4IqfpWic6gJFYCG5iSkEWlKqsOliBw
-         xGrQ0qPsjrd5cQJ/6Pr8RyyQ3iQr2DFDVwD1GlIkDOW1VhOJMo6qasyGNrrJUH1n0k8V
-         KYZm6QWXwl8xHb2Dqrqfsz7s2NOFHgO0u8VWYnp3KEY1vwZOjt4207zx1gIEaOKUCJ7u
-         qaoE5YJWM43R4frGNRZQjhqO1FCWdUyfJD4ky27ZAPJyMX4nBFkwQTHo6wpezFqpwdfD
-         DSZA==
+        d=kernelci-org.20150623.gappssmtp.com; s=20150623;
+        h=message-id:date:mime-version:content-transfer-encoding:subject:to
+         :from;
+        bh=r+18lT1U9EBgCBiL4PvOTg4sKHyzGzbSCuTcfti+HLQ=;
+        b=WSsycn4Nzh4FzkPT65Uv36ay8zF9WXzwl9gLZGqrFD/JzZ/1oThgqFkzdOxAqQwqjC
+         dIKqgockxpPAR104Qeggw1KCgfemN8/b4wSqasEFvyN4IXEykVgbznq4MewSATWs1lHd
+         aLlqfBmiCikYjTzQPq3bjpJGDEtkXfeMl33Q287UHWviS21gKsFoZ16RCDZ84FhsWHBN
+         5aqeN6JAwP6B3m0CJp5IMfyddf3Vbk8wuXaTR5+4romAiOHhvireXyjdPiZs3//d1W21
+         SfMNymmVFWkLVS+Z3hM0NxY7phE54HtrXzHVl75m+hum1YJuNZ7YPki9rDJcDYW7N9Uc
+         1yqw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=hAmHof5HSYuYAUNCiL3ISHJlEemOn6yRBu9YZMQZqPc=;
-        b=pu90uH54CliPNFGV96/gHX39MEmUEJVVN+EziUhZTilQgfUyB9jtYwdlXZqpXqjZjm
-         NQR9pfzOgCBIHpbP7Kpo9CnDkz+xFhLcz05e5YxfMf2lyEke0YTjUncrOUYS/wLajDQ8
-         qClXyWMToN25xagfTBnuE5rS0wLQ6tc1zZiE2KiP4qJKg4KbxgvZSCK3xpY9/RxA0RDm
-         N+rfP+nvfPG1qWGBpkTYx0urF3n4nuQv3QnreOtG2NrQLbfUKuS9Y3484SJq2lPjczuW
-         uY6SINI+JRF/WbMCF9cJ6XOCvYC2LGFm1emvMtlcca4Vc+GI1nybR2K2OYz/F3AQlOYV
-         xc1Q==
-X-Gm-Message-State: APjAAAWB0O2rUqJ57PA9Wg1Bx3pK8O+I0UU7zMjTn84u51AeyQSXiScu
-        IGGLRvbop8rXeQoe2kNCN04=
-X-Google-Smtp-Source: APXvYqze4lacj4Iix2KiSq3/g6RLQ/Q4EuaBlhKRfCw7Dt/xtfK8GI1PVrQ2rKRgfIRsPRjy4caUXw==
-X-Received: by 2002:a17:902:5a1:: with SMTP id f30mr38620237plf.64.1567552738880;
-        Tue, 03 Sep 2019 16:18:58 -0700 (PDT)
-Received: from dtor-ws ([2620:15c:202:201:3adc:b08c:7acc:b325])
-        by smtp.gmail.com with ESMTPSA id z12sm20840701pfg.21.2019.09.03.16.18.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 03 Sep 2019 16:18:58 -0700 (PDT)
-Date:   Tue, 3 Sep 2019 16:18:56 -0700
-From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Andreas Kemnade <andreas@kemnade.info>,
-        linux-gpio@vger.kernel.org, linux-spi@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] gpiolib: of: fix fallback quirks handling
-Message-ID: <20190903231856.GA165165@dtor-ws>
+        h=x-gm-message-state:message-id:date:mime-version
+         :content-transfer-encoding:subject:to:from;
+        bh=r+18lT1U9EBgCBiL4PvOTg4sKHyzGzbSCuTcfti+HLQ=;
+        b=dFG8oDF2ePGGWGZvZzM2OhahScGUEJMfVBPZW1pPGjQoVs1ckctuCZL1t/7+5F31n2
+         NSVJ7PNUwm/grKuWwwrxaF+bbJEgKmQQwHb+F4VFQWq/Rd6kuQz8jTQ9dN3ZN6R/1pG3
+         gizqbWFyD1K4BDp+oO9Y6YeFeoC4IYUC+25ddBmXJbruShtPZMlSiu3T4+QZZ3g7sQRC
+         7qv5I/5djyyQ+wVVBZdM/hSF61SXhjFslyCF7cZPQy1/6ExsH/qHPIytRHg7Pw/Hg4YE
+         iSWdx9xlBqJdBBsoBHnB4gBDTGAdZSUJPV6wAMcwzY+C1AojuxoSiHlc/Kl5aPW6Se8A
+         hToA==
+X-Gm-Message-State: APjAAAXWLz+tzGhAh3bGTjKWJDk/6k+kSfjufxN/1epB/9TP9zOTmxVC
+        YwmN+L0GrBsTRaysIAJ9jVFpNrP7OsAwHA==
+X-Google-Smtp-Source: APXvYqwONLTov8M5rvGRXlAse5mdYXIVLw0txLw+q2OVwr5qN8cl/kDvtw5F9/OAZGgmVR88/J1NYA==
+X-Received: by 2002:a1c:a94b:: with SMTP id s72mr1930365wme.9.1567555116234;
+        Tue, 03 Sep 2019 16:58:36 -0700 (PDT)
+Received: from [148.251.42.114] ([2a01:4f8:201:9271::2])
+        by smtp.gmail.com with ESMTPSA id s19sm35415986wrb.94.2019.09.03.16.58.35
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 03 Sep 2019 16:58:35 -0700 (PDT)
+Message-ID: <5d6efe2b.1c69fb81.9a42f.1338@mx.google.com>
+Date:   Tue, 03 Sep 2019 16:58:35 -0700 (PDT)
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: quoted-printable
+X-Kernelci-Kernel: v5.3-rc6-62-g0f40dd225a88
+X-Kernelci-Tree: linusw
+X-Kernelci-Report-Type: build
+X-Kernelci-Branch: for-next
+Subject: linusw/for-next build: 6 builds: 0 failed, 6 passed,
+ 30 warnings (v5.3-rc6-62-g0f40dd225a88)
+To:     linux-gpio@vger.kernel.org, fellows@kernelci.org
+From:   "kernelci.org bot" <bot@kernelci.org>
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-We should only try to execute fallback quirks handling when previous
-call returned -ENOENT, and not when we did not get -EPROBE_DEFER.
-The other errors should be treated as hard errors: we did find the GPIO
-description, but for some reason we failed to handle it properly.
+linusw/for-next build: 6 builds: 0 failed, 6 passed, 30 warnings (v5.3-rc6-=
+62-g0f40dd225a88)
 
-The fallbacks should only be executed when previous handlers returned
--ENOENT, which means the mapping/description was not found.
+Full Build Summary: https://kernelci.org/build/linusw/branch/for-next/kerne=
+l/v5.3-rc6-62-g0f40dd225a88/
 
-Also let's remove the explicit deferral handling when iterating through
-GPIO suffixes: it is not needed anymore as we will not be calling
-fallbacks for anything but -ENOENT.
+Tree: linusw
+Branch: for-next
+Git Describe: v5.3-rc6-62-g0f40dd225a88
+Git Commit: 0f40dd225a8823102f558bc9f0b663e8bb4be32d
+Git URL: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-gpio.=
+git/
+Built: 6 unique architectures
 
-Fixes: df451f83e1fc ("gpio: of: fix Freescale SPI CS quirk handling")
-Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Warnings Detected:
+
+arc:
+    nsim_hs_defconfig (gcc-8): 5 warnings
+
+arm64:
+    defconfig (gcc-8): 3 warnings
+
+arm:
+    multi_v7_defconfig (gcc-8): 19 warnings
+
+mips:
+    32r2el_defconfig (gcc-8): 3 warnings
+
+riscv:
+
+x86_64:
+
+
+Warnings summary:
+
+    5    <stdin>:1511:2: warning: #warning syscall clone3 not implemented [=
+-Wcpp]
+    2    drivers/pinctrl/qcom/pinctrl-spmi-gpio.c:800:20: warning: this sta=
+tement may fall through [-Wimplicit-fallthrough=3D]
+    2    drivers/pinctrl/qcom/pinctrl-spmi-gpio.c:795:20: warning: this sta=
+tement may fall through [-Wimplicit-fallthrough=3D]
+    2    drivers/pinctrl/pinctrl-rockchip.c:2783:3: warning: this statement=
+ may fall through [-Wimplicit-fallthrough=3D]
+    1    include/linux/compiler.h:328:5: warning: this statement may fall t=
+hrough [-Wimplicit-fallthrough=3D]
+    1    drivers/video/fbdev/sh_mobile_lcdcfb.c:2086:22: warning: this stat=
+ement may fall through [-Wimplicit-fallthrough=3D]
+    1    drivers/video/fbdev/sh_mobile_lcdcfb.c:1596:22: warning: this stat=
+ement may fall through [-Wimplicit-fallthrough=3D]
+    1    drivers/usb/phy/phy-ab8500-usb.c:459:9: warning: this statement ma=
+y fall through [-Wimplicit-fallthrough=3D]
+    1    drivers/usb/phy/phy-ab8500-usb.c:440:9: warning: this statement ma=
+y fall through [-Wimplicit-fallthrough=3D]
+    1    drivers/usb/phy/phy-ab8500-usb.c:424:9: warning: this statement ma=
+y fall through [-Wimplicit-fallthrough=3D]
+    1    drivers/usb/phy/phy-ab8500-usb.c:370:9: warning: this statement ma=
+y fall through [-Wimplicit-fallthrough=3D]
+    1    drivers/usb/phy/phy-ab8500-usb.c:352:9: warning: this statement ma=
+y fall through [-Wimplicit-fallthrough=3D]
+    1    drivers/usb/phy/phy-ab8500-usb.c:332:9: warning: this statement ma=
+y fall through [-Wimplicit-fallthrough=3D]
+    1    drivers/mmc/host/sdhci-s3c.c:613:19: warning: this statement may f=
+all through [-Wimplicit-fallthrough=3D]
+    1    drivers/mmc/host/atmel-mci.c:2426:40: warning: this statement may =
+fall through [-Wimplicit-fallthrough=3D]
+    1    drivers/mmc/host/atmel-mci.c:2422:28: warning: this statement may =
+fall through [-Wimplicit-fallthrough=3D]
+    1    drivers/mmc/host/atmel-mci.c:2415:30: warning: this statement may =
+fall through [-Wimplicit-fallthrough=3D]
+    1    drivers/gpu/drm/sti/sti_hdmi.c:855:13: warning: this statement may=
+ fall through [-Wimplicit-fallthrough=3D]
+    1    drivers/gpu/drm/sti/sti_hdmi.c:853:13: warning: this statement may=
+ fall through [-Wimplicit-fallthrough=3D]
+    1    drivers/gpu/drm/sti/sti_hdmi.c:851:13: warning: this statement may=
+ fall through [-Wimplicit-fallthrough=3D]
+    1    drivers/dma/imx-dma.c:542:6: warning: this statement may fall thro=
+ugh [-Wimplicit-fallthrough=3D]
+    1    arch/arc/kernel/unwind.c:836:20: warning: this statement may fall =
+through [-Wimplicit-fallthrough=3D]
+    1    arch/arc/kernel/unwind.c:827:20: warning: this statement may fall =
+through [-Wimplicit-fallthrough=3D]
+
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D
+
+Detailed per-defconfig build reports:
+
+---------------------------------------------------------------------------=
+-----
+32r2el_defconfig (mips, gcc-8) =E2=80=94 PASS, 0 errors, 3 warnings, 0 sect=
+ion mismatches
+
+Warnings:
+    <stdin>:1511:2: warning: #warning syscall clone3 not implemented [-Wcpp]
+    <stdin>:1511:2: warning: #warning syscall clone3 not implemented [-Wcpp]
+    <stdin>:1511:2: warning: #warning syscall clone3 not implemented [-Wcpp]
+
+---------------------------------------------------------------------------=
+-----
+defconfig (riscv, gcc-8) =E2=80=94 PASS, 0 errors, 0 warnings, 0 section mi=
+smatches
+
+---------------------------------------------------------------------------=
+-----
+defconfig (arm64, gcc-8) =E2=80=94 PASS, 0 errors, 3 warnings, 0 section mi=
+smatches
+
+Warnings:
+    drivers/pinctrl/qcom/pinctrl-spmi-gpio.c:795:20: warning: this statemen=
+t may fall through [-Wimplicit-fallthrough=3D]
+    drivers/pinctrl/qcom/pinctrl-spmi-gpio.c:800:20: warning: this statemen=
+t may fall through [-Wimplicit-fallthrough=3D]
+    drivers/pinctrl/pinctrl-rockchip.c:2783:3: warning: this statement may =
+fall through [-Wimplicit-fallthrough=3D]
+
+---------------------------------------------------------------------------=
+-----
+multi_v7_defconfig (arm, gcc-8) =E2=80=94 PASS, 0 errors, 19 warnings, 0 se=
+ction mismatches
+
+Warnings:
+    drivers/dma/imx-dma.c:542:6: warning: this statement may fall through [=
+-Wimplicit-fallthrough=3D]
+    drivers/mmc/host/sdhci-s3c.c:613:19: warning: this statement may fall t=
+hrough [-Wimplicit-fallthrough=3D]
+    drivers/mmc/host/atmel-mci.c:2415:30: warning: this statement may fall =
+through [-Wimplicit-fallthrough=3D]
+    drivers/mmc/host/atmel-mci.c:2422:28: warning: this statement may fall =
+through [-Wimplicit-fallthrough=3D]
+    drivers/mmc/host/atmel-mci.c:2426:40: warning: this statement may fall =
+through [-Wimplicit-fallthrough=3D]
+    drivers/pinctrl/qcom/pinctrl-spmi-gpio.c:795:20: warning: this statemen=
+t may fall through [-Wimplicit-fallthrough=3D]
+    drivers/pinctrl/qcom/pinctrl-spmi-gpio.c:800:20: warning: this statemen=
+t may fall through [-Wimplicit-fallthrough=3D]
+    drivers/pinctrl/pinctrl-rockchip.c:2783:3: warning: this statement may =
+fall through [-Wimplicit-fallthrough=3D]
+    drivers/video/fbdev/sh_mobile_lcdcfb.c:2086:22: warning: this statement=
+ may fall through [-Wimplicit-fallthrough=3D]
+    drivers/video/fbdev/sh_mobile_lcdcfb.c:1596:22: warning: this statement=
+ may fall through [-Wimplicit-fallthrough=3D]
+    drivers/usb/phy/phy-ab8500-usb.c:424:9: warning: this statement may fal=
+l through [-Wimplicit-fallthrough=3D]
+    drivers/usb/phy/phy-ab8500-usb.c:440:9: warning: this statement may fal=
+l through [-Wimplicit-fallthrough=3D]
+    drivers/usb/phy/phy-ab8500-usb.c:459:9: warning: this statement may fal=
+l through [-Wimplicit-fallthrough=3D]
+    drivers/usb/phy/phy-ab8500-usb.c:332:9: warning: this statement may fal=
+l through [-Wimplicit-fallthrough=3D]
+    drivers/usb/phy/phy-ab8500-usb.c:352:9: warning: this statement may fal=
+l through [-Wimplicit-fallthrough=3D]
+    drivers/usb/phy/phy-ab8500-usb.c:370:9: warning: this statement may fal=
+l through [-Wimplicit-fallthrough=3D]
+    drivers/gpu/drm/sti/sti_hdmi.c:851:13: warning: this statement may fall=
+ through [-Wimplicit-fallthrough=3D]
+    drivers/gpu/drm/sti/sti_hdmi.c:853:13: warning: this statement may fall=
+ through [-Wimplicit-fallthrough=3D]
+    drivers/gpu/drm/sti/sti_hdmi.c:855:13: warning: this statement may fall=
+ through [-Wimplicit-fallthrough=3D]
+
+---------------------------------------------------------------------------=
+-----
+nsim_hs_defconfig (arc, gcc-8) =E2=80=94 PASS, 0 errors, 5 warnings, 0 sect=
+ion mismatches
+
+Warnings:
+    <stdin>:1511:2: warning: #warning syscall clone3 not implemented [-Wcpp]
+    include/linux/compiler.h:328:5: warning: this statement may fall throug=
+h [-Wimplicit-fallthrough=3D]
+    arch/arc/kernel/unwind.c:827:20: warning: this statement may fall throu=
+gh [-Wimplicit-fallthrough=3D]
+    arch/arc/kernel/unwind.c:836:20: warning: this statement may fall throu=
+gh [-Wimplicit-fallthrough=3D]
+    <stdin>:1511:2: warning: #warning syscall clone3 not implemented [-Wcpp]
+
+---------------------------------------------------------------------------=
+-----
+x86_64_defconfig (x86_64, gcc-8) =E2=80=94 PASS, 0 errors, 0 warnings, 0 se=
+ction mismatches
+
 ---
- drivers/gpio/gpiolib-of.c | 27 +++++++++------------------
- 1 file changed, 9 insertions(+), 18 deletions(-)
-
-diff --git a/drivers/gpio/gpiolib-of.c b/drivers/gpio/gpiolib-of.c
-index b034abe59f28..b45b39c48a34 100644
---- a/drivers/gpio/gpiolib-of.c
-+++ b/drivers/gpio/gpiolib-of.c
-@@ -457,36 +457,27 @@ struct gpio_desc *of_find_gpio(struct device *dev, const char *con_id,
- 
- 		desc = of_get_named_gpiod_flags(dev->of_node, prop_name, idx,
- 						&of_flags);
--		/*
--		 * -EPROBE_DEFER in our case means that we found a
--		 * valid GPIO property, but no controller has been
--		 * registered so far.
--		 *
--		 * This means we don't need to look any further for
--		 * alternate name conventions, and we should really
--		 * preserve the return code for our user to be able to
--		 * retry probing later.
--		 */
--		if (IS_ERR(desc) && PTR_ERR(desc) == -EPROBE_DEFER)
--			return desc;
- 
--		if (!IS_ERR(desc) || (PTR_ERR(desc) != -ENOENT))
-+		if (!IS_ERR(desc) || PTR_ERR(desc) != -ENOENT)
- 			break;
- 	}
- 
--	/* Special handling for SPI GPIOs if used */
--	if (IS_ERR(desc))
-+	if (IS_ERR(desc) && PTR_ERR(desc) == -ENOENT) {
-+		/* Special handling for SPI GPIOs if used */
- 		desc = of_find_spi_gpio(dev, con_id, &of_flags);
--	if (IS_ERR(desc) && PTR_ERR(desc) != -EPROBE_DEFER) {
-+	}
-+
-+	if (IS_ERR(desc) && PTR_ERR(desc) == -ENOENT) {
- 		/* This quirk looks up flags and all */
- 		desc = of_find_spi_cs_gpio(dev, con_id, idx, flags);
- 		if (!IS_ERR(desc))
- 			return desc;
- 	}
- 
--	/* Special handling for regulator GPIOs if used */
--	if (IS_ERR(desc) && PTR_ERR(desc) != -EPROBE_DEFER)
-+	if (IS_ERR(desc) && PTR_ERR(desc) == -ENOENT) {
-+		/* Special handling for regulator GPIOs if used */
- 		desc = of_find_regulator_gpio(dev, con_id, &of_flags);
-+	}
- 
- 	if (IS_ERR(desc))
- 		return desc;
--- 
-2.23.0.187.g17f5b7556c-goog
-
-
--- 
-Dmitry
+For more info write to <info@kernelci.org>
