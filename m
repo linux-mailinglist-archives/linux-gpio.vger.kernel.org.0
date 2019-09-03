@@ -2,185 +2,122 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 2762AA7053
-	for <lists+linux-gpio@lfdr.de>; Tue,  3 Sep 2019 18:39:30 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AB4B7A7160
+	for <lists+linux-gpio@lfdr.de>; Tue,  3 Sep 2019 19:07:26 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729056AbfICQiP (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 3 Sep 2019 12:38:15 -0400
-Received: from mail-wm1-f54.google.com ([209.85.128.54]:39650 "EHLO
-        mail-wm1-f54.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730927AbfICQiP (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 3 Sep 2019 12:38:15 -0400
-Received: by mail-wm1-f54.google.com with SMTP id n2so203443wmk.4
-        for <linux-gpio@vger.kernel.org>; Tue, 03 Sep 2019 09:38:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernelci-org.20150623.gappssmtp.com; s=20150623;
-        h=message-id:date:mime-version:content-transfer-encoding:subject:to
-         :from;
-        bh=Kl/j3HQkbEFr64JcM/Fm+lJNWBN+7AIzMGKPDZp6Fgs=;
-        b=JjHS4t6kwgmYKwCwY7jOtmde02vh6zeLbHsqm7+IjhP4FW0jV0HHSQwRUidXFonqw+
-         H75Dym8uz4S5Ldy3t7F5FTsjDExm97ggQSpiQB433x4nxupcsbs3f+rUpIPbi0VHxCs+
-         tbc11Ri9qTYennTMTGWrBBFbmLaFwfuxqZ1fMRYEx1pKYFAqWJlgit3axf6I7pTIrNKa
-         s0ig+ScdyD6lu8MRbUMta9HZbw+2pGMKlX6cwjxZLWVAOMWygG9JVmKFjNJZ6cQVvT02
-         MzDrp/6L6S/sWCDfX+weNfkWDkBZMG+8rJAUEPPi8LZjfFLfow1mvq+DTgskTZ9SDKKl
-         xIYQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:date:mime-version
-         :content-transfer-encoding:subject:to:from;
-        bh=Kl/j3HQkbEFr64JcM/Fm+lJNWBN+7AIzMGKPDZp6Fgs=;
-        b=dzgX21V7f0zeXaZ4pwQdyodldV7gxqvZb3Cn6M/IAoidfV6Gdt0kUdTiqNyJFxPW5W
-         wv+mbI2CyKaMpX4gmMSnd3xt4uZf7+2Hss26LUzsuF0b40AjHZ6tYen7kRb2XwZgfaDa
-         uTx6nn+iPkGgYNbcFym6IqBzqv2B4Y+/5JJaGgav/QGpXvTVfpvKrl75mEgENEnmqiv6
-         dR0EcyQxlLlASloiWPRBbsvPvI99VnqpJRbCLXn/d0Xel3cyZJVpiKxTUgdcqf4cyKKe
-         zOl9hcGpJpHWK5UUPX1HNQ+RLdqTh/5d8y6Ls6x4MatOMyR3EzoJB8/99WH9FiheolV3
-         dGBw==
-X-Gm-Message-State: APjAAAUdrfV9DIpAPQ4KpTNbo8SAxQ+RDKVRMuJnq+J7hVSalXietBAo
-        8fsY26+qOGLQ52Dbj6dYSmpaeherKUuwmA==
-X-Google-Smtp-Source: APXvYqyDox7Sf7kTSvjpjFvSm83rpJn9R5q76kYMFNyYO7MprrxfATrC0lFd8sZbLKx+u7QPN/QAcw==
-X-Received: by 2002:a1c:7513:: with SMTP id o19mr234004wmc.126.1567528692393;
-        Tue, 03 Sep 2019 09:38:12 -0700 (PDT)
-Received: from [148.251.42.114] ([2a01:4f8:201:9271::2])
-        by smtp.gmail.com with ESMTPSA id t14sm19070028wrs.58.2019.09.03.09.38.11
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 03 Sep 2019 09:38:11 -0700 (PDT)
-Message-ID: <5d6e96f3.1c69fb81.390b4.3e2a@mx.google.com>
-Date:   Tue, 03 Sep 2019 09:38:11 -0700 (PDT)
-Content-Type: text/plain; charset="utf-8"
+        id S1725782AbfICRHZ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 3 Sep 2019 13:07:25 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:47344 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729782AbfICRHZ (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 3 Sep 2019 13:07:25 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id 5023E6058E; Tue,  3 Sep 2019 17:07:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1567530444;
+        bh=peIxQIYef8qNH4Y0hAECo3n1aQk635rjS9T/N1qw8Qw=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=lk8GTTVCePAccxj7umHquCQcJqCXlhcFrz7egG+SqS6gbOiozQmbM1zvNGOn/pbgy
+         V7CtVbUT/XduG3uUC85ETQJeVwLwlQIDbUK8BpEexUzDaRJw/OoJfqcD0F9sq11SiN
+         9VKdVIYIzlI8vAFb3/CoxEw/PQm7t7urD32/aOV8=
+X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
+        pdx-caf-mail.web.codeaurora.org
+X-Spam-Level: 
+X-Spam-Status: No, score=-2.7 required=2.0 tests=ALL_TRUSTED,BAYES_00,
+        DKIM_INVALID,DKIM_SIGNED,SPF_NONE autolearn=no autolearn_force=no
+        version=3.4.0
+Received: from localhost (i-global254.qualcomm.com [199.106.103.254])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: ilina@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 1E91F6058E;
+        Tue,  3 Sep 2019 17:07:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1567530443;
+        bh=peIxQIYef8qNH4Y0hAECo3n1aQk635rjS9T/N1qw8Qw=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=AdZp3F3XRKYI9lq5tqZh+gGJNM0LOdWJeYa5ape8yOGw8ip/o5QTU7dH8X4lqc3SV
+         pERJVQxC596mhGHWhaik9N1yOlwB1UAFKxb9QtFT8Y7FbfS8gGyk5MyeHJ27UDNNPo
+         kYa5ybxYZ2bR81qAi7BEUffp8MUcdSzqIcAFxeIU=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 1E91F6058E
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=ilina@codeaurora.org
+Date:   Tue, 3 Sep 2019 11:07:22 -0600
+From:   Lina Iyer <ilina@codeaurora.org>
+To:     Marc Zyngier <marc.zyngier@arm.com>
+Cc:     Rob Herring <robh@kernel.org>, swboyd@chromium.org,
+        evgreen@chromium.org, linus.walleij@linaro.org,
+        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        bjorn.andersson@linaro.org, mkshah@codeaurora.org,
+        linux-gpio@vger.kernel.org, rnayak@codeaurora.org,
+        devicetree@vger.kernel.org
+Subject: Re: [PATCH RFC 05/14] dt-bindings/interrupt-controller: pdc: add SPI
+ config register
+Message-ID: <20190903170722.GA31716@codeaurora.org>
+References: <20190829181203.2660-1-ilina@codeaurora.org>
+ <20190829181203.2660-6-ilina@codeaurora.org>
+ <5d6d1b72.1c69fb81.ee88.efcf@mx.google.com>
+ <102c9268-c4ce-6133-3b0a-67c2fcba1e7a@arm.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-Kernelci-Kernel: v5.3-rc1-58-g8a6abcd04e4c
-X-Kernelci-Tree: linusw
-X-Kernelci-Report-Type: build
-X-Kernelci-Branch: devel
-Subject: linusw/devel build: 6 builds: 0 failed, 6 passed,
- 13 warnings (v5.3-rc1-58-g8a6abcd04e4c)
-To:     linux-gpio@vger.kernel.org, fellows@kernelci.org
-From:   "kernelci.org bot" <bot@kernelci.org>
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <102c9268-c4ce-6133-3b0a-67c2fcba1e7a@arm.com>
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-linusw/devel build: 6 builds: 0 failed, 6 passed, 13 warnings (v5.3-rc1-58-=
-g8a6abcd04e4c)
+On Mon, Sep 02 2019 at 07:58 -0600, Marc Zyngier wrote:
+>On 02/09/2019 14:38, Rob Herring wrote:
+>> On Thu, Aug 29, 2019 at 12:11:54PM -0600, Lina Iyer wrote:
+>>> In addition to configuring the PDC, additional registers that interface
+>>> the GIC have to be configured to match the GPIO type. The registers on
+>>> some QCOM SoCs are access restricted, while on other SoCs are not. They
+>>> SoCs with access restriction to these SPI registers need to be written
+>>
+>> Took me a minute to figure out this is GIC SPI interrupts, not SPI bus.
+>>
+>>> from the firmware using the SCM interface. Add a flag to indicate if the
+>>> register is to be written using SCM interface.
+>>>
+>>> Cc: devicetree@vger.kernel.org
+>>> Signed-off-by: Lina Iyer <ilina@codeaurora.org>
+>>> ---
+>>>  .../bindings/interrupt-controller/qcom,pdc.txt           | 9 ++++++++-
+>>>  1 file changed, 8 insertions(+), 1 deletion(-)
+>>>
+>>> diff --git a/Documentation/devicetree/bindings/interrupt-controller/qcom,pdc.txt b/Documentation/devicetree/bindings/interrupt-controller/qcom,pdc.txt
+>>> index 8e0797cb1487..852fcba98ea6 100644
+>>> --- a/Documentation/devicetree/bindings/interrupt-controller/qcom,pdc.txt
+>>> +++ b/Documentation/devicetree/bindings/interrupt-controller/qcom,pdc.txt
+>>> @@ -50,15 +50,22 @@ Properties:
+>>>  		    The second element is the GIC hwirq number for the PDC port.
+>>>  		    The third element is the number of interrupts in sequence.
+>>>
+>>> +- qcom,scm-spi-cfg:
+>>> +	Usage: optional
+>>> +	Value type: <bool>
+>>> +	Definition: Specifies if the SPI configuration registers have to be
+>>> +		    written from the firmware.
+>>> +
+>>>  Example:
+>>>
+>>>  	pdc: interrupt-controller@b220000 {
+>>>  		compatible = "qcom,sdm845-pdc";
+>>> -		reg = <0xb220000 0x30000>;
+>>> +		reg = <0xb220000 0x30000>, <0x179900f0 0x60>;
+>>
+>> There needs to be a description for reg updated. These aren't GIC
+>> registers are they? Because those go in the GIC node.
+>
+They are not GIC registers. I will update this documentation.
 
-Full Build Summary: https://kernelci.org/build/linusw/branch/devel/kernel/v=
-5.3-rc1-58-g8a6abcd04e4c/
+>This is completely insane. Why are the GIC registers configured as
+>secure the first place, if they are expected to be in control of the
+>non-secure?
+These are not GIC registers but located on the PDC interface to the GIC.
+They may or may not be secure access controlled, depending on the SoC.
 
-Tree: linusw
-Branch: devel
-Git Describe: v5.3-rc1-58-g8a6abcd04e4c
-Git Commit: 8a6abcd04e4cdf6088f11212570c3e5ec36ee5c3
-Git URL: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-gpio.=
-git/
-Built: 6 unique architectures
-
-Warnings Detected:
-
-arc:
-    nsim_hs_defconfig (gcc-8): 2 warnings
-
-arm64:
-
-arm:
-    multi_v7_defconfig (gcc-8): 6 warnings
-
-mips:
-    32r2el_defconfig (gcc-8): 3 warnings
-
-riscv:
-    defconfig (gcc-8): 2 warnings
-
-x86_64:
-
-
-Warnings summary:
-
-    7    <stdin>:1511:2: warning: #warning syscall clone3 not implemented [=
--Wcpp]
-    1    arch/arm/boot/dts/bcm47094-linksys-panamera.dts:129.4-18: Warning =
-(reg_format): /mdio-bus-mux/mdio@200:reg: property has invalid length (4 by=
-tes) (#address-cells =3D=3D 2, #size-cells =3D=3D 1)
-    1    arch/arm/boot/dts/bcm47094-linksys-panamera.dts:128.22-132.5: Warn=
-ing (avoid_default_addr_size): /mdio-bus-mux/mdio@200: Relying on default #=
-size-cells value
-    1    arch/arm/boot/dts/bcm47094-linksys-panamera.dts:128.22-132.5: Warn=
-ing (avoid_default_addr_size): /mdio-bus-mux/mdio@200: Relying on default #=
-address-cells value
-    1    arch/arm/boot/dts/bcm47094-linksys-panamera.dtb: Warning (spi_bus_=
-reg): Failed prerequisite 'reg_format'
-    1    arch/arm/boot/dts/bcm47094-linksys-panamera.dtb: Warning (pci_devi=
-ce_bus_num): Failed prerequisite 'reg_format'
-    1    arch/arm/boot/dts/bcm47094-linksys-panamera.dtb: Warning (i2c_bus_=
-reg): Failed prerequisite 'reg_format'
-
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D
-
-Detailed per-defconfig build reports:
-
----------------------------------------------------------------------------=
------
-32r2el_defconfig (mips, gcc-8) =E2=80=94 PASS, 0 errors, 3 warnings, 0 sect=
-ion mismatches
-
-Warnings:
-    <stdin>:1511:2: warning: #warning syscall clone3 not implemented [-Wcpp]
-    <stdin>:1511:2: warning: #warning syscall clone3 not implemented [-Wcpp]
-    <stdin>:1511:2: warning: #warning syscall clone3 not implemented [-Wcpp]
-
----------------------------------------------------------------------------=
------
-defconfig (riscv, gcc-8) =E2=80=94 PASS, 0 errors, 2 warnings, 0 section mi=
-smatches
-
-Warnings:
-    <stdin>:1511:2: warning: #warning syscall clone3 not implemented [-Wcpp]
-    <stdin>:1511:2: warning: #warning syscall clone3 not implemented [-Wcpp]
-
----------------------------------------------------------------------------=
------
-defconfig (arm64, gcc-8) =E2=80=94 PASS, 0 errors, 0 warnings, 0 section mi=
-smatches
-
----------------------------------------------------------------------------=
------
-multi_v7_defconfig (arm, gcc-8) =E2=80=94 PASS, 0 errors, 6 warnings, 0 sec=
-tion mismatches
-
-Warnings:
-    arch/arm/boot/dts/bcm47094-linksys-panamera.dts:129.4-18: Warning (reg_=
-format): /mdio-bus-mux/mdio@200:reg: property has invalid length (4 bytes) =
-(#address-cells =3D=3D 2, #size-cells =3D=3D 1)
-    arch/arm/boot/dts/bcm47094-linksys-panamera.dtb: Warning (pci_device_bu=
-s_num): Failed prerequisite 'reg_format'
-    arch/arm/boot/dts/bcm47094-linksys-panamera.dtb: Warning (i2c_bus_reg):=
- Failed prerequisite 'reg_format'
-    arch/arm/boot/dts/bcm47094-linksys-panamera.dtb: Warning (spi_bus_reg):=
- Failed prerequisite 'reg_format'
-    arch/arm/boot/dts/bcm47094-linksys-panamera.dts:128.22-132.5: Warning (=
-avoid_default_addr_size): /mdio-bus-mux/mdio@200: Relying on default #addre=
-ss-cells value
-    arch/arm/boot/dts/bcm47094-linksys-panamera.dts:128.22-132.5: Warning (=
-avoid_default_addr_size): /mdio-bus-mux/mdio@200: Relying on default #size-=
-cells value
-
----------------------------------------------------------------------------=
------
-nsim_hs_defconfig (arc, gcc-8) =E2=80=94 PASS, 0 errors, 2 warnings, 0 sect=
-ion mismatches
-
-Warnings:
-    <stdin>:1511:2: warning: #warning syscall clone3 not implemented [-Wcpp]
-    <stdin>:1511:2: warning: #warning syscall clone3 not implemented [-Wcpp]
-
----------------------------------------------------------------------------=
------
-x86_64_defconfig (x86_64, gcc-8) =E2=80=94 PASS, 0 errors, 0 warnings, 0 se=
-ction mismatches
-
----
-For more info write to <info@kernelci.org>
+Thanks,
+Lina
