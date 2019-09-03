@@ -2,122 +2,97 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id AB4B7A7160
-	for <lists+linux-gpio@lfdr.de>; Tue,  3 Sep 2019 19:07:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3E73CA719B
+	for <lists+linux-gpio@lfdr.de>; Tue,  3 Sep 2019 19:23:07 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725782AbfICRHZ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 3 Sep 2019 13:07:25 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:47344 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729782AbfICRHZ (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 3 Sep 2019 13:07:25 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 5023E6058E; Tue,  3 Sep 2019 17:07:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1567530444;
-        bh=peIxQIYef8qNH4Y0hAECo3n1aQk635rjS9T/N1qw8Qw=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=lk8GTTVCePAccxj7umHquCQcJqCXlhcFrz7egG+SqS6gbOiozQmbM1zvNGOn/pbgy
-         V7CtVbUT/XduG3uUC85ETQJeVwLwlQIDbUK8BpEexUzDaRJw/OoJfqcD0F9sq11SiN
-         9VKdVIYIzlI8vAFb3/CoxEw/PQm7t7urD32/aOV8=
-X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
-        pdx-caf-mail.web.codeaurora.org
-X-Spam-Level: 
-X-Spam-Status: No, score=-2.7 required=2.0 tests=ALL_TRUSTED,BAYES_00,
-        DKIM_INVALID,DKIM_SIGNED,SPF_NONE autolearn=no autolearn_force=no
-        version=3.4.0
-Received: from localhost (i-global254.qualcomm.com [199.106.103.254])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: ilina@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 1E91F6058E;
-        Tue,  3 Sep 2019 17:07:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1567530443;
-        bh=peIxQIYef8qNH4Y0hAECo3n1aQk635rjS9T/N1qw8Qw=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=AdZp3F3XRKYI9lq5tqZh+gGJNM0LOdWJeYa5ape8yOGw8ip/o5QTU7dH8X4lqc3SV
-         pERJVQxC596mhGHWhaik9N1yOlwB1UAFKxb9QtFT8Y7FbfS8gGyk5MyeHJ27UDNNPo
-         kYa5ybxYZ2bR81qAi7BEUffp8MUcdSzqIcAFxeIU=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 1E91F6058E
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=ilina@codeaurora.org
-Date:   Tue, 3 Sep 2019 11:07:22 -0600
-From:   Lina Iyer <ilina@codeaurora.org>
-To:     Marc Zyngier <marc.zyngier@arm.com>
-Cc:     Rob Herring <robh@kernel.org>, swboyd@chromium.org,
-        evgreen@chromium.org, linus.walleij@linaro.org,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        bjorn.andersson@linaro.org, mkshah@codeaurora.org,
-        linux-gpio@vger.kernel.org, rnayak@codeaurora.org,
-        devicetree@vger.kernel.org
-Subject: Re: [PATCH RFC 05/14] dt-bindings/interrupt-controller: pdc: add SPI
- config register
-Message-ID: <20190903170722.GA31716@codeaurora.org>
-References: <20190829181203.2660-1-ilina@codeaurora.org>
- <20190829181203.2660-6-ilina@codeaurora.org>
- <5d6d1b72.1c69fb81.ee88.efcf@mx.google.com>
- <102c9268-c4ce-6133-3b0a-67c2fcba1e7a@arm.com>
+        id S1728864AbfICRXG (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 3 Sep 2019 13:23:06 -0400
+Received: from mail-wr1-f50.google.com ([209.85.221.50]:44939 "EHLO
+        mail-wr1-f50.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725782AbfICRXG (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 3 Sep 2019 13:23:06 -0400
+Received: by mail-wr1-f50.google.com with SMTP id 30so7397033wrk.11
+        for <linux-gpio@vger.kernel.org>; Tue, 03 Sep 2019 10:23:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernelci-org.20150623.gappssmtp.com; s=20150623;
+        h=message-id:date:mime-version:content-transfer-encoding:subject:to
+         :from;
+        bh=o1A5g0Kld5mb0TaPVPhIDqPRMOQZ4r+ij0YxxefcqXQ=;
+        b=LH4EcuuG+pZy9B1cFzlAtORGPtAXBydwvWGbAkHRjCCbe7WDs2VlHUFq0Xct1o+iD+
+         eSWW+7oa9g15G3QFl9Ho3y7xDm8h5xGEGxCHYj6l/LIs6lW43XJ1GV6uqT4E+7xSJWom
+         xCYdVQHZYErnDanrhRqGxwM5avQBzeVY54nkS+IyhBWKfPNoQVU7T0mDv6yKBa7BNlST
+         eGVpsuoELsrNWTHpXJfZEaT4eqX6bKBGCc/6zNdMl2tBeUCLooF3RvkD9Vjv5ij9ImaK
+         zfySFFJQVKYrFls0y222wPn1npTYZpWkYylwXMV2+bzUS8cRxIFqoIZAsVqsnGvwkE7A
+         ylYg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:date:mime-version
+         :content-transfer-encoding:subject:to:from;
+        bh=o1A5g0Kld5mb0TaPVPhIDqPRMOQZ4r+ij0YxxefcqXQ=;
+        b=qJ8MNgnopMsbBVdic0+GhbJWkkh4dGKtWqZuBiZXGZeYjwK124ZM/Xyai8mE4G9Ct0
+         5nxjJtPyUMHbYeKLW/B566T+5D2QEFVHZeQfUK8fQ20N73OqBPph+FVbN6X/gTqzOJ8z
+         l050QXn5M9xTGIIygQVsJQDYKmbtxnvNbT6MBaGFesIg/dkEZfIGd7remR0een4bFQEC
+         QvA/K+Nm75NHFIg+fN4LyMSrrb1l8LeCfVFmCmGPlRcte5s/TZ0SN7NljvLQ5r89ULpm
+         NAixmDcz43P0qcIir/AV7E73wOkLvRwBKb0gLA255QWuzpipx7Ie3d6mAhOrHqHMvYWC
+         t5dQ==
+X-Gm-Message-State: APjAAAVeUDholRGKR4LIABM7bS+Js8aB7Jrp0sg1C5YB7WqWYIsmlaHk
+        zonU4plsLxwb71d1+EYEgrD2ZL+J/Ljt8w==
+X-Google-Smtp-Source: APXvYqyp10fKyS7mogWuT7xfV1TcanxTZe6i+mxB2g0lkKKKTrwGVpq88YW6zM3ELNwXKPYvveQlKQ==
+X-Received: by 2002:adf:fad0:: with SMTP id a16mr1504548wrs.195.1567531384524;
+        Tue, 03 Sep 2019 10:23:04 -0700 (PDT)
+Received: from [148.251.42.114] ([2a01:4f8:201:9271::2])
+        by smtp.gmail.com with ESMTPSA id t14sm19208075wrs.58.2019.09.03.10.23.03
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 03 Sep 2019 10:23:03 -0700 (PDT)
+Message-ID: <5d6ea177.1c69fb81.390b4.496d@mx.google.com>
+Date:   Tue, 03 Sep 2019 10:23:03 -0700 (PDT)
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <102c9268-c4ce-6133-3b0a-67c2fcba1e7a@arm.com>
-User-Agent: Mutt/1.11.3 (2019-02-01)
+Content-Transfer-Encoding: quoted-printable
+X-Kernelci-Kernel: v5.3-rc1-58-g8a6abcd04e4c
+X-Kernelci-Tree: linusw
+X-Kernelci-Report-Type: boot
+X-Kernelci-Branch: devel
+Subject: linusw/devel boot: 53 boots: 1 failed,
+ 52 passed (v5.3-rc1-58-g8a6abcd04e4c)
+To:     linux-gpio@vger.kernel.org, fellows@kernelci.org
+From:   "kernelci.org bot" <bot@kernelci.org>
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Sep 02 2019 at 07:58 -0600, Marc Zyngier wrote:
->On 02/09/2019 14:38, Rob Herring wrote:
->> On Thu, Aug 29, 2019 at 12:11:54PM -0600, Lina Iyer wrote:
->>> In addition to configuring the PDC, additional registers that interface
->>> the GIC have to be configured to match the GPIO type. The registers on
->>> some QCOM SoCs are access restricted, while on other SoCs are not. They
->>> SoCs with access restriction to these SPI registers need to be written
->>
->> Took me a minute to figure out this is GIC SPI interrupts, not SPI bus.
->>
->>> from the firmware using the SCM interface. Add a flag to indicate if the
->>> register is to be written using SCM interface.
->>>
->>> Cc: devicetree@vger.kernel.org
->>> Signed-off-by: Lina Iyer <ilina@codeaurora.org>
->>> ---
->>>  .../bindings/interrupt-controller/qcom,pdc.txt           | 9 ++++++++-
->>>  1 file changed, 8 insertions(+), 1 deletion(-)
->>>
->>> diff --git a/Documentation/devicetree/bindings/interrupt-controller/qcom,pdc.txt b/Documentation/devicetree/bindings/interrupt-controller/qcom,pdc.txt
->>> index 8e0797cb1487..852fcba98ea6 100644
->>> --- a/Documentation/devicetree/bindings/interrupt-controller/qcom,pdc.txt
->>> +++ b/Documentation/devicetree/bindings/interrupt-controller/qcom,pdc.txt
->>> @@ -50,15 +50,22 @@ Properties:
->>>  		    The second element is the GIC hwirq number for the PDC port.
->>>  		    The third element is the number of interrupts in sequence.
->>>
->>> +- qcom,scm-spi-cfg:
->>> +	Usage: optional
->>> +	Value type: <bool>
->>> +	Definition: Specifies if the SPI configuration registers have to be
->>> +		    written from the firmware.
->>> +
->>>  Example:
->>>
->>>  	pdc: interrupt-controller@b220000 {
->>>  		compatible = "qcom,sdm845-pdc";
->>> -		reg = <0xb220000 0x30000>;
->>> +		reg = <0xb220000 0x30000>, <0x179900f0 0x60>;
->>
->> There needs to be a description for reg updated. These aren't GIC
->> registers are they? Because those go in the GIC node.
->
-They are not GIC registers. I will update this documentation.
+linusw/devel boot: 53 boots: 1 failed, 52 passed (v5.3-rc1-58-g8a6abcd04e4c)
 
->This is completely insane. Why are the GIC registers configured as
->secure the first place, if they are expected to be in control of the
->non-secure?
-These are not GIC registers but located on the PDC interface to the GIC.
-They may or may not be secure access controlled, depending on the SoC.
+Full Boot Summary: https://kernelci.org/boot/all/job/linusw/branch/devel/ke=
+rnel/v5.3-rc1-58-g8a6abcd04e4c/
+Full Build Summary: https://kernelci.org/build/linusw/branch/devel/kernel/v=
+5.3-rc1-58-g8a6abcd04e4c/
 
-Thanks,
-Lina
+Tree: linusw
+Branch: devel
+Git Describe: v5.3-rc1-58-g8a6abcd04e4c
+Git Commit: 8a6abcd04e4cdf6088f11212570c3e5ec36ee5c3
+Git URL: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-gpio.=
+git/
+Tested: 42 unique boards, 15 SoC families, 3 builds out of 6
+
+Boot Regressions Detected:
+
+arm64:
+
+    defconfig:
+        gcc-8:
+          apq8016-sbc:
+              lab-mhart: failing since 35 days (last pass: v5.2-10808-g9637=
+d517347e - first fail: v5.3-rc1-5-ga299726da44f)
+
+Boot Failure Detected:
+
+arm64:
+    defconfig:
+        gcc-8:
+            apq8016-sbc: 1 failed lab
+
+---
+For more info write to <info@kernelci.org>
