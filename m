@@ -2,72 +2,73 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 6C100A8464
-	for <lists+linux-gpio@lfdr.de>; Wed,  4 Sep 2019 15:49:46 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E0413A8470
+	for <lists+linux-gpio@lfdr.de>; Wed,  4 Sep 2019 15:49:51 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728878AbfIDNVA (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 4 Sep 2019 09:21:00 -0400
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:38445 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727900AbfIDNVA (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 4 Sep 2019 09:21:00 -0400
-Received: by mail-lj1-f194.google.com with SMTP id h3so12754621ljb.5
-        for <linux-gpio@vger.kernel.org>; Wed, 04 Sep 2019 06:20:59 -0700 (PDT)
+        id S1729471AbfIDNYR (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 4 Sep 2019 09:24:17 -0400
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:41121 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730013AbfIDNYR (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 4 Sep 2019 09:24:17 -0400
+Received: by mail-lj1-f193.google.com with SMTP id a4so4554751ljk.8
+        for <linux-gpio@vger.kernel.org>; Wed, 04 Sep 2019 06:24:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=H/McqjCJwAceSRkY4OhVruox/1oDcb1iEk95KrzZ0uM=;
-        b=kOu9/J4oiwzQUs+JWQhch0uDUfTZFjc7xHXiPEiAmOvmP2h6dCCptcuFiW+oHsaIq1
-         KlXB1yt0loRXNB4Ow+61skHlH+XdAg7Jmv++lwL6wLe9JhZKCkofxqYwgbCYqfgSdzhb
-         mpEsyIwvzZ0iwJhKiqL1HcBCx1NnLGwAlfH6Dlm80YJAvBe80O8hCxCvnmO10Gf3ihAR
-         oPiV+4iyEAt1paL5KZ2SopKpLCYNw2nRg8JgpF93s4HWh1nqHjy1DUIxQdJHuhUOfxWh
-         6DUUUYAp7oWWf4xg846nocTiGn7RyPoMfhzaswVSdz3vtKoDS+cypViBGpce4/4NBTZo
-         UxAA==
+        bh=aqQvklk8YIAFUL9lGcPHiWhtS58FRSlGQcASUQ543l0=;
+        b=hrEGXFTiVfl2ayVHe7GhvPWCx/hZhnMQWOnrOquNFJzjQmJEAPbAd5llGrzK8r003L
+         ZHW6aH+hIi7aRiRaNelBhwHX/njZzNdJfvYi3+LZB0T1gGwhv4BhpwH/bLi29wt6MP11
+         xb1M02zcK4APML8vL+s5X9sgo+cQYF9XGkCEnq9/9CoJO8E7PGaojjQSJqMAkaRdmIT1
+         EPaw2wPwkID896IbPq0h/CwUoukxwFp3QUcR7IkHrKaQUn+FaUceBw6gh3sDBf7fiGTq
+         bdVqrMPr3nP0UHqmJEKPBA+6F/TBN80bvWhMqJh5fIDnatPnJnFni4NbEm8GCWrHkyWb
+         ie7Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=H/McqjCJwAceSRkY4OhVruox/1oDcb1iEk95KrzZ0uM=;
-        b=Ey6odzupoLrNHBnI1D3CNi8288Gf9E0+ajhd7VW2oAGRfbHHbDIeIJjtGyNBve+Yq3
-         toMXRGspgoI4LrDzmI+XRsNLT/HJyh8cojT2WUSjDOjO2GdeBxIA4ne7fLnMGkS7ZPep
-         0tpXxwyPu7ItOgVycV8vBlv10Oxbqm3B0aPZzIU1Xiyczt+d/I0BK3V3SpVMqk3mEjVM
-         CMbTWYSqVIuFH6mWxKiTBmNdz6u9BbXTu4MvfUsEd3OFvLRyrm6q37KsUFVoqyh9oFuD
-         4iE+ORT6prH7WXushIZnkY6c4bXnVLjyaP1sgK4RmeB4y52G/ypdk7majYD5DaFzp20E
-         aARA==
-X-Gm-Message-State: APjAAAUBdEYrH3XgdG5ZYb9gliDFkloohuIHDHpds/z6t3UEhlHvglMo
-        A3XM6REIYuVd+H7RPPZmpTj9MvKDjV133sWROamuwg==
-X-Google-Smtp-Source: APXvYqzGTkq9u717QNZGpj93H4Rf1yfAcIH7h5WDM8Xifk8kBItvQoTYBizWwmFWkVNn388LuV8H1F9CKd2U9lMtH3c=
-X-Received: by 2002:a05:651c:28c:: with SMTP id b12mr23225191ljo.69.1567603258542;
- Wed, 04 Sep 2019 06:20:58 -0700 (PDT)
+        bh=aqQvklk8YIAFUL9lGcPHiWhtS58FRSlGQcASUQ543l0=;
+        b=EMDPJc7NgAt+ueT/UQ89svZMTbtCw5qDDFjvmhXoy9qRyTU9PqbaCBMg65Tdghqn57
+         HHmdm050N6zaJPpRAhnLWZx27Hroh0umjU7TOEctZ/OcLDQzPx9P61EViYPRCIDh9ccz
+         PDG+4QBGKkhSnqWjtLpFFHOkiYi/GrL7WqjtGHMPkO5Rxsf88UGnxDpIfDNACEx/aEez
+         ++0ZdmpyTz9ZL31GgRgK8bw+sAi2sbDk9wzFJAjBr3Q8FBSI3QYX4iBUUe7eFltM9lcd
+         78yk55rKQ6vSfNM+flLulV5UGZBq5IAayEb8DAyhf3jG9N7xZ3ioQ2tNePggBT4MHccw
+         YZ/Q==
+X-Gm-Message-State: APjAAAXuMgjX/10Az7jMY20S1KoZhGBkpe7+HAo33uxv5f2EZHdSVvo1
+        5skm4q8Mxx4KBCTb4AgK4hEjX5qQzkAPZiEgOl2kjg==
+X-Google-Smtp-Source: APXvYqzzpq0zy/ApTjeKi5jzJDmNcldnYjTPQZRuBnxHCQ1EP/fKYVGvmjJY5Dfa1R8vvE78iBx8GyZjNk6U6GqI/V4=
+X-Received: by 2002:a2e:b174:: with SMTP id a20mr23389649ljm.108.1567603455383;
+ Wed, 04 Sep 2019 06:24:15 -0700 (PDT)
 MIME-Version: 1.0
-References: <201909041904.FgFKdAf7%lkp@intel.com> <CAMuHMdWLR-2Wd7M+KAmk7mKaCw=pUTY4DCehFwbrg_griPrGoA@mail.gmail.com>
-In-Reply-To: <CAMuHMdWLR-2Wd7M+KAmk7mKaCw=pUTY4DCehFwbrg_griPrGoA@mail.gmail.com>
+References: <20190830060227.12792-1-swboyd@chromium.org>
+In-Reply-To: <20190830060227.12792-1-swboyd@chromium.org>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Wed, 4 Sep 2019 15:20:47 +0200
-Message-ID: <CACRpkdYkcR8MAzoQBEOvKQvNwut=uteNaDEs0JZCs5VrOkd9AA@mail.gmail.com>
-Subject: Re: [pinctrl:for-next 16/77] drivers/pinctrl/bcm/pinctrl-bcm2835.c:995:10:
- error: incompatible types when assigning to type 'volatile struct SHIFTER'
- from type 'unsigned int'
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-Cc:     kbuild test robot <lkp@intel.com>,
-        Stefan Wahren <wahrenst@gmx.net>, kbuild-all@01.org,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
+Date:   Wed, 4 Sep 2019 15:24:03 +0200
+Message-ID: <CACRpkdZZ5WX5hMYwv9D4ED+ChD44RG2FEHU0Hi83v8znu1i4dw@mail.gmail.com>
+Subject: Re: [PATCH] pinctrl: qcom: sdm845: Fix UFS_RESET pin
+To:     Stephen Boyd <swboyd@chromium.org>
+Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        MSM <linux-arm-msm@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Andy Gross <agross@kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Sep 4, 2019 at 1:44 PM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
+On Fri, Aug 30, 2019 at 8:02 AM Stephen Boyd <swboyd@chromium.org> wrote:
 
-> >    drivers/pinctrl/bcm/pinctrl-bcm2835.c: In function 'bcm2711_pull_config_set':
-> > >> arch/m68k/include/asm/atarihw.h:190:22: error: expected identifier or '(' before 'volatile'
+> The UFS_RESET pin is the magical pin #150 now, not 153 per the
+> sdm845_groups array declared in this file. Fix the order of pins so that
+> UFS_RESET is 150 and the SDC pins follow after.
 >
-> https://git.kernel.org/pub/scm/linux/kernel/git/geert/linux-m68k.git/commit/?h=for-v5.4&id=053b514295694f3336e97f56d5f41c0d4972c109
+> Fixes: 53a5372ce326 ("pinctrl: qcom: sdm845: Expose ufs_reset as gpio")
+> Signed-off-by: Stephen Boyd <swboyd@chromium.org>
 
-What people sometimes do to shut up the automatic checks is to merge
-the patch into both trees and let git sort it out. I'd rather not, though.
+Patch applied with Bjorn's ACK.
 
 Yours,
 Linus Walleij
