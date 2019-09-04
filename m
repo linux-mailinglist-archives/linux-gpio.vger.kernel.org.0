@@ -2,87 +2,94 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 8C73AA7B4E
-	for <lists+linux-gpio@lfdr.de>; Wed,  4 Sep 2019 08:13:39 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7A412A7C22
+	for <lists+linux-gpio@lfdr.de>; Wed,  4 Sep 2019 08:57:57 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728781AbfIDGNa (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 4 Sep 2019 02:13:30 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:38937 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727881AbfIDGN3 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 4 Sep 2019 02:13:29 -0400
-Received: by mail-pf1-f194.google.com with SMTP id s12so5550963pfe.6;
-        Tue, 03 Sep 2019 23:13:29 -0700 (PDT)
+        id S1728922AbfIDG54 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 4 Sep 2019 02:57:56 -0400
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:42660 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728604AbfIDG54 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 4 Sep 2019 02:57:56 -0400
+Received: by mail-ot1-f67.google.com with SMTP id c10so8189711otd.9
+        for <linux-gpio@vger.kernel.org>; Tue, 03 Sep 2019 23:57:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=/J2boyPn+qcY/K0vnmvhFTTJFIHHHtzjypsfGFGhgdk=;
-        b=T+AzYIEUXfUowK7oaDioOyQfgljXCgF5OaLeVOZDs5si9YNS62iHvZYF7QPPWxoMuD
-         6HZoj9lzZMst3evVF0QG+nXAFRWyTTfNe+b4E+h9aBaBl8CaInKHf+pZGjQktMzzlEyS
-         HPNpOSDNvBsS1d0T59kOyxX0yOuiQVzLIo1D/hymPSUPqgY+ZFRe3b3dSJPdOMgWbONz
-         XvbCScG2k/yOAyjE4AfT144iEbaku+wFeuwj856zrB+uPkd+g7LsFBwlQVtZxyT5dwXx
-         hb3V4Ke7j/tgHPb2wYdr0vtUMJXXvKhK8Lz9SZ5Ad7ed0rq0j23lIoyWDfziHTJgqVtW
-         vamg==
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=Dt75WhUIfHVQfvigwZn6/besGZVEJEtBIQcEOqZ+B54=;
+        b=Pvsm0jkNiRhObMK4vm9PFjK6gDG1RInx1dfQIY+anapAMmQ7BBqa+FSp2oQcED/5ZB
+         fMFHq1bQSJaQxWDjSZDwYSgSZiGzcMYKOHp3BHHpvmkR/bFVtnN1/nZhEyIerU3Ius5Z
+         nhj9GQwxsboOGg+Xy6lXBu8TMN5aY7NAg746v/3ONWMWbQRN3cS84RI2pA4veYqocRhW
+         Tk70wmmQirUWHbVtRF2QYa5Fa7ZUVBzx4h5df3jv2vIplCQB6rnVK09hgrU5zieTdwdI
+         HxM/Gs7C8qN25BCH3ub6QKRMsgVuWSajuOJsabMCCXmOevSJjqfqamqw3aKhEiPWNJMV
+         /Q6A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=/J2boyPn+qcY/K0vnmvhFTTJFIHHHtzjypsfGFGhgdk=;
-        b=Uc+/RrKaejOFzQq5K2W7Y6LJbehBm7dSaZPIdRngsapDqCYicNTH0OR+Fzb4xnM49A
-         R0hBmdl28s43b5YSzr3WGbgHicCz0UklT+g+iY8LKatIRe5Eu0URKh5V3+3dlCDYqUDo
-         31Sov4PyGwI9h6LqpP1w121NJ/11Fu43QStz0slB2sAoRfN6bOMfwTO4FzQctZHgmHOH
-         PgW/8osfW4TayrjdVD2OZ+K9kY2LPqBTeOERkfwEuhbGzDaWGG7IYivc1ZXquadzxSqK
-         q/dyuDJwd0Qo4haZjp5x01GxSKbgCDw9QTZ7BYZ08UsesnLW2Dv4QtwekBaH2kJUn8Jz
-         zL1g==
-X-Gm-Message-State: APjAAAUbtGtY5kn23kkzCfXcE/itW32Lr3sTlc1UHoQoP2MjyK13v1ZW
-        aprShgIDMjFFVUzwDC8l3OqFNfPiQy0=
-X-Google-Smtp-Source: APXvYqx0ThSaW+fHUBqyw3dqUD0Oa30Gmx83hxepmA1ZcStILNrjdla4WSXq4PxIDnAoPGKQ4jNvJQ==
-X-Received: by 2002:a65:5a8c:: with SMTP id c12mr32988229pgt.73.1567577609134;
-        Tue, 03 Sep 2019 23:13:29 -0700 (PDT)
-Received: from rashmica.ozlabs.ibm.com ([122.99.82.10])
-        by smtp.gmail.com with ESMTPSA id i9sm42443093pgo.46.2019.09.03.23.13.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 03 Sep 2019 23:13:28 -0700 (PDT)
-From:   Rashmica Gupta <rashmica.g@gmail.com>
-To:     linus.walleij@linaro.org, linux-gpio@vger.kernel.org,
-        bgolaszewski@baylibre.com
-Cc:     linux-arm-kernel@lists.infradead.org,
-        linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org,
-        joel@jms.id.au, andrew@aj.id.au,
-        Rashmica Gupta <rashmica.g@gmail.com>
-Subject: [PATCH 4/4] gpio: Update documentation with ast2600 controllers
-Date:   Wed,  4 Sep 2019 16:12:45 +1000
-Message-Id: <20190904061245.30770-4-rashmica.g@gmail.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190904061245.30770-1-rashmica.g@gmail.com>
-References: <20190904061245.30770-1-rashmica.g@gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=Dt75WhUIfHVQfvigwZn6/besGZVEJEtBIQcEOqZ+B54=;
+        b=h63SLS5b8p4fyRzz8/cmS8IepJ2oVH1CzuzIzftoH68KlvvFQIZjjsu+GWYSbo1KQe
+         M67H2KQjb6UVV07rD14KNmiP3nAyI6oFiWNiVaw40vVAJvhWDsMAwArxVLPoGLUMw2Q0
+         +CzdKKNCfws0o4D/b+IsZHzgHNe8XhPALQbOQUcP4iC9LOJrUfy0HdhS/vWoJkBqkFQY
+         VsnP1+wFsY02GsUKpDQX2wS8xRw9woTqIyHy4sXjZkWscNl4I9jfBVYvIKDs4OJE9uJH
+         To+i6c0Vn6tAmg/QD9OXO3fz1lA87z+23q0FiB3E2w6KHO29UpQcdeV/4nxws9uVS3Gr
+         G3iA==
+X-Gm-Message-State: APjAAAWLgQK30zDWydM6zzdqv+gCoahEm3bm2GCWBMWw6gRO/GHDhl7t
+        NZRhq8C+GQ3IuE/4nRURgsVPADgBJ9InqdUVSam6vw==
+X-Google-Smtp-Source: APXvYqwU0uoAvsRitFcgVrGOxLPCnceC5cmEGe0+fYS1mNopOondiib3itWCLOA9ZD86Hadp9khJFTIPsIhusxb2mrI=
+X-Received: by 2002:a9d:6c0d:: with SMTP id f13mr1329516otq.85.1567580275770;
+ Tue, 03 Sep 2019 23:57:55 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20190904061245.30770-1-rashmica.g@gmail.com>
+In-Reply-To: <20190904061245.30770-1-rashmica.g@gmail.com>
+From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Date:   Wed, 4 Sep 2019 08:57:44 +0200
+Message-ID: <CAMpxmJUVijPRGDw3GcSVt=MYod4nCD-npQKVmn2L4AdBSy5++w@mail.gmail.com>
+Subject: Re: [PATCH 1/4] gpio/aspeed: Fix incorrect number of banks
+To:     Rashmica Gupta <rashmica.g@gmail.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        linux-gpio <linux-gpio@vger.kernel.org>,
+        arm-soc <linux-arm-kernel@lists.infradead.org>,
+        linux-aspeed@lists.ozlabs.org, LKML <linux-kernel@vger.kernel.org>,
+        Joel Stanley <joel@jms.id.au>, Andrew Jeffery <andrew@aj.id.au>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Signed-off-by: Rashmica Gupta <rashmica.g@gmail.com>
----
- Documentation/devicetree/bindings/gpio/gpio-aspeed.txt | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+=C5=9Br., 4 wrz 2019 o 08:13 Rashmica Gupta <rashmica.g@gmail.com> napisa=
+=C5=82(a):
+>
+> Fixes: 361b79119a4b7 ('gpio: Add Aspeed driver')
+>
 
-diff --git a/Documentation/devicetree/bindings/gpio/gpio-aspeed.txt b/Documentation/devicetree/bindings/gpio/gpio-aspeed.txt
-index 7e9b586770b0..cd388797e07c 100644
---- a/Documentation/devicetree/bindings/gpio/gpio-aspeed.txt
-+++ b/Documentation/devicetree/bindings/gpio/gpio-aspeed.txt
-@@ -2,7 +2,8 @@ Aspeed GPIO controller Device Tree Bindings
- -------------------------------------------
- 
- Required properties:
--- compatible		: Either "aspeed,ast2400-gpio" or "aspeed,ast2500-gpio"
-+- compatible		: Either "aspeed,ast2400-gpio", "aspeed,ast2500-gpio",
-+					  "aspeed,ast2600-gpio", or "aspeed,ast2600-1-8v-gpio"
- 
- - #gpio-cells 		: Should be two
- 			  - First cell is the GPIO line number
--- 
-2.20.1
+Please, add a proper commit description. Checkpatch should have warned
+you about it.
 
+Bart
+
+> Signed-off-by: Rashmica Gupta <rashmica.g@gmail.com>
+> ---
+>  drivers/gpio/gpio-aspeed.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/drivers/gpio/gpio-aspeed.c b/drivers/gpio/gpio-aspeed.c
+> index 9defe25d4721..77752b2624e8 100644
+> --- a/drivers/gpio/gpio-aspeed.c
+> +++ b/drivers/gpio/gpio-aspeed.c
+> @@ -1165,7 +1165,7 @@ static int __init aspeed_gpio_probe(struct platform=
+_device *pdev)
+>         gpio->chip.base =3D -1;
+>
+>         /* Allocate a cache of the output registers */
+> -       banks =3D gpio->config->nr_gpios >> 5;
+> +       banks =3D (gpio->config->nr_gpios >> 5) + 1;
+>         gpio->dcache =3D devm_kcalloc(&pdev->dev,
+>                                     banks, sizeof(u32), GFP_KERNEL);
+>         if (!gpio->dcache)
+> --
+> 2.20.1
+>
