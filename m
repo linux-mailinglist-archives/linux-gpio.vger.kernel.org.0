@@ -2,107 +2,132 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 51F3CA8237
-	for <lists+linux-gpio@lfdr.de>; Wed,  4 Sep 2019 14:23:10 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2A18FA82DC
+	for <lists+linux-gpio@lfdr.de>; Wed,  4 Sep 2019 14:51:39 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729727AbfIDMRC (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 4 Sep 2019 08:17:02 -0400
-Received: from laurent.telenet-ops.be ([195.130.137.89]:36962 "EHLO
-        laurent.telenet-ops.be" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729146AbfIDMRB (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 4 Sep 2019 08:17:01 -0400
-Received: from ramsan ([84.194.98.4])
-        by laurent.telenet-ops.be with bizsmtp
-        id xQGz2000P05gfCL01QGz5s; Wed, 04 Sep 2019 14:17:00 +0200
-Received: from rox.of.borg ([192.168.97.57])
-        by ramsan with esmtp (Exim 4.90_1)
-        (envelope-from <geert@linux-m68k.org>)
-        id 1i5UDb-0001f4-I3; Wed, 04 Sep 2019 14:16:59 +0200
-Received: from geert by rox.of.borg with local (Exim 4.90_1)
-        (envelope-from <geert@linux-m68k.org>)
-        id 1i5UDb-0000h7-GB; Wed, 04 Sep 2019 14:16:59 +0200
-From:   Geert Uytterhoeven <geert+renesas@glider.be>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Takeshi Kihara <takeshi.kihara.df@renesas.com>,
-        linux-renesas-soc@vger.kernel.org, linux-gpio@vger.kernel.org,
-        Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH 3/3] Revert "pinctrl: sh-pfc: r8a77990: Fix MOD_SEL1 bit31 when using SIM0_D"
-Date:   Wed,  4 Sep 2019 14:16:58 +0200
-Message-Id: <20190904121658.2617-4-geert+renesas@glider.be>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190904121658.2617-1-geert+renesas@glider.be>
-References: <20190904121658.2617-1-geert+renesas@glider.be>
+        id S1729020AbfIDMeY (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 4 Sep 2019 08:34:24 -0400
+Received: from mga11.intel.com ([192.55.52.93]:4080 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728878AbfIDMeY (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Wed, 4 Sep 2019 08:34:24 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 04 Sep 2019 05:34:23 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,467,1559545200"; 
+   d="scan'208";a="194716420"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by orsmga002.jf.intel.com with ESMTP; 04 Sep 2019 05:34:21 -0700
+Received: from andy by smile with local (Exim 4.92.1)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1i5UUO-0000nP-7s; Wed, 04 Sep 2019 15:34:20 +0300
+Date:   Wed, 4 Sep 2019 15:34:20 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Andreas Kemnade <andreas@kemnade.info>,
+        linux-gpio@vger.kernel.org, linux-spi@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] gpiolib: of: fix fallback quirks handling
+Message-ID: <20190904123420.GK2680@smile.fi.intel.com>
+References: <20190903231856.GA165165@dtor-ws>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190903231856.GA165165@dtor-ws>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-This reverts commit e167d723e1a472d252e5c4baf823b77ce5543b05.
+On Tue, Sep 03, 2019 at 04:18:56PM -0700, Dmitry Torokhov wrote:
+> We should only try to execute fallback quirks handling when previous
+> call returned -ENOENT, and not when we did not get -EPROBE_DEFER.
+> The other errors should be treated as hard errors: we did find the GPIO
+> description, but for some reason we failed to handle it properly.
+> 
+> The fallbacks should only be executed when previous handlers returned
+> -ENOENT, which means the mapping/description was not found.
+> 
+> Also let's remove the explicit deferral handling when iterating through
+> GPIO suffixes: it is not needed anymore as we will not be calling
+> fallbacks for anything but -ENOENT.
+> 
 
-According to the R-Car Gen3 Hardware Manual Errata for Rev 1.00 of Aug
-24, 2018, the SEL_SIMCARD_{0,1} definition was to be deleted.  However,
-this errata merely fixed an accidental double definition in the Hardware
-User's Manual Rev. 1.00.  The real definition is still present in later
-revisions of the manual (Rev. 1.50 and Rev. 2.00).
+I would rather leave extra parenthesis and comments untouched,
+nevertheless, FWIW,
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-Hence revert the commit to recover the definition.
+> Fixes: df451f83e1fc ("gpio: of: fix Freescale SPI CS quirk handling")
+> Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+> ---
+>  drivers/gpio/gpiolib-of.c | 27 +++++++++------------------
+>  1 file changed, 9 insertions(+), 18 deletions(-)
+> 
+> diff --git a/drivers/gpio/gpiolib-of.c b/drivers/gpio/gpiolib-of.c
+> index b034abe59f28..b45b39c48a34 100644
+> --- a/drivers/gpio/gpiolib-of.c
+> +++ b/drivers/gpio/gpiolib-of.c
+> @@ -457,36 +457,27 @@ struct gpio_desc *of_find_gpio(struct device *dev, const char *con_id,
+>  
+>  		desc = of_get_named_gpiod_flags(dev->of_node, prop_name, idx,
+>  						&of_flags);
+> -		/*
+> -		 * -EPROBE_DEFER in our case means that we found a
+> -		 * valid GPIO property, but no controller has been
+> -		 * registered so far.
+> -		 *
+> -		 * This means we don't need to look any further for
+> -		 * alternate name conventions, and we should really
+> -		 * preserve the return code for our user to be able to
+> -		 * retry probing later.
+> -		 */
+> -		if (IS_ERR(desc) && PTR_ERR(desc) == -EPROBE_DEFER)
+> -			return desc;
+>  
+> -		if (!IS_ERR(desc) || (PTR_ERR(desc) != -ENOENT))
+> +		if (!IS_ERR(desc) || PTR_ERR(desc) != -ENOENT)
+>  			break;
+>  	}
+>  
+> -	/* Special handling for SPI GPIOs if used */
+> -	if (IS_ERR(desc))
+> +	if (IS_ERR(desc) && PTR_ERR(desc) == -ENOENT) {
+> +		/* Special handling for SPI GPIOs if used */
+>  		desc = of_find_spi_gpio(dev, con_id, &of_flags);
+> -	if (IS_ERR(desc) && PTR_ERR(desc) != -EPROBE_DEFER) {
+> +	}
+> +
+> +	if (IS_ERR(desc) && PTR_ERR(desc) == -ENOENT) {
+>  		/* This quirk looks up flags and all */
+>  		desc = of_find_spi_cs_gpio(dev, con_id, idx, flags);
+>  		if (!IS_ERR(desc))
+>  			return desc;
+>  	}
+>  
+> -	/* Special handling for regulator GPIOs if used */
+> -	if (IS_ERR(desc) && PTR_ERR(desc) != -EPROBE_DEFER)
+> +	if (IS_ERR(desc) && PTR_ERR(desc) == -ENOENT) {
+> +		/* Special handling for regulator GPIOs if used */
+>  		desc = of_find_regulator_gpio(dev, con_id, &of_flags);
+> +	}
+>  
+>  	if (IS_ERR(desc))
+>  		return desc;
+> -- 
+> 2.23.0.187.g17f5b7556c-goog
+> 
+> 
+> -- 
+> Dmitry
 
-Based on a patch in the BSP by Takeshi Kihara
-<takeshi.kihara.df@renesas.com>.
-
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
----
- drivers/pinctrl/sh-pfc/pfc-r8a77990.c | 9 +++++----
- 1 file changed, 5 insertions(+), 4 deletions(-)
-
-diff --git a/drivers/pinctrl/sh-pfc/pfc-r8a77990.c b/drivers/pinctrl/sh-pfc/pfc-r8a77990.c
-index 010fc0a6aba65428..c926a59dd21ceadc 100644
---- a/drivers/pinctrl/sh-pfc/pfc-r8a77990.c
-+++ b/drivers/pinctrl/sh-pfc/pfc-r8a77990.c
-@@ -448,6 +448,7 @@ FM(IP12_31_28)	IP12_31_28	FM(IP13_31_28)	IP13_31_28	FM(IP14_31_28)	IP14_31_28	FM
- #define MOD_SEL0_1_0	   REV4(FM(SEL_SPEED_PULSE_IF_0),	FM(SEL_SPEED_PULSE_IF_1),	FM(SEL_SPEED_PULSE_IF_2),	F_(0, 0))
- 
- /* MOD_SEL1 */			/* 0 */				/* 1 */				/* 2 */				/* 3 */			/* 4 */			/* 5 */		/* 6 */		/* 7 */
-+#define MOD_SEL1_31		FM(SEL_SIMCARD_0)		FM(SEL_SIMCARD_1)
- #define MOD_SEL1_30		FM(SEL_SSI2_0)			FM(SEL_SSI2_1)
- #define MOD_SEL1_29		FM(SEL_TIMER_TMU_0)		FM(SEL_TIMER_TMU_1)
- #define MOD_SEL1_28		FM(SEL_USB_20_CH0_0)		FM(SEL_USB_20_CH0_1)
-@@ -469,6 +470,7 @@ FM(IP12_31_28)	IP12_31_28	FM(IP13_31_28)	IP13_31_28	FM(IP14_31_28)	IP14_31_28	FM
- 
- #define PINMUX_MOD_SELS	\
- \
-+			MOD_SEL1_31 \
- MOD_SEL0_30_29		MOD_SEL1_30 \
- 			MOD_SEL1_29 \
- MOD_SEL0_28		MOD_SEL1_28 \
-@@ -1197,7 +1199,7 @@ static const u16 pinmux_data[] = {
- 	PINMUX_IPSR_MSEL(IP13_19_16,		RIF0_D1_A,	SEL_DRIF0_0),
- 	PINMUX_IPSR_MSEL(IP13_19_16,		SDA1_B,		SEL_I2C1_1),
- 	PINMUX_IPSR_MSEL(IP13_19_16,		TCLK2_B,	SEL_TIMER_TMU_1),
--	PINMUX_IPSR_GPSR(IP13_19_16,		SIM0_D_A),
-+	PINMUX_IPSR_MSEL(IP13_19_16,		SIM0_D_A,	SEL_SIMCARD_0),
- 
- 	PINMUX_IPSR_GPSR(IP13_23_20,		MLB_DAT),
- 	PINMUX_IPSR_MSEL(IP13_23_20,		TX0_B,		SEL_SCIF0_1),
-@@ -1265,7 +1267,7 @@ static const u16 pinmux_data[] = {
- 	PINMUX_IPSR_GPSR(IP15_15_12,		TPU0TO2),
- 	PINMUX_IPSR_MSEL(IP15_15_12,		SDA1_D,		SEL_I2C1_3),
- 	PINMUX_IPSR_MSEL(IP15_15_12,		FSO_CFE_1_N_B,	SEL_FSO_1),
--	PINMUX_IPSR_GPSR(IP15_15_12,		SIM0_D_B),
-+	PINMUX_IPSR_MSEL(IP15_15_12,		SIM0_D_B,	SEL_SIMCARD_1),
- 
- 	PINMUX_IPSR_GPSR(IP15_19_16,		SSI_SDATA6),
- 	PINMUX_IPSR_MSEL(IP15_19_16,		HRTS2_N_A,	SEL_HSCIF2_0),
-@@ -4961,8 +4963,7 @@ static const struct pinmux_cfg_reg pinmux_config_regs[] = {
- 			     GROUP(1, 1, 1, 1, 1, 1, 1, 3, 3, 1, 1, 1,
- 				   1, 2, 2, 2, 1, 1, 2, 1, 4),
- 			     GROUP(
--		/* RESERVED 31 */
--		0, 0,
-+		MOD_SEL1_31
- 		MOD_SEL1_30
- 		MOD_SEL1_29
- 		MOD_SEL1_28
 -- 
-2.17.1
+With Best Regards,
+Andy Shevchenko
+
 
