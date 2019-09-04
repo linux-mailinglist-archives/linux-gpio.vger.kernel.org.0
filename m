@@ -2,102 +2,104 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id BB23BA77E9
-	for <lists+linux-gpio@lfdr.de>; Wed,  4 Sep 2019 02:43:23 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 297BCA7990
+	for <lists+linux-gpio@lfdr.de>; Wed,  4 Sep 2019 06:10:47 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726009AbfIDAnW (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 3 Sep 2019 20:43:22 -0400
-Received: from mail-wr1-f41.google.com ([209.85.221.41]:33507 "EHLO
-        mail-wr1-f41.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725882AbfIDAnW (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 3 Sep 2019 20:43:22 -0400
-Received: by mail-wr1-f41.google.com with SMTP id u16so19328044wrr.0
-        for <linux-gpio@vger.kernel.org>; Tue, 03 Sep 2019 17:43:21 -0700 (PDT)
+        id S1725947AbfIDEKq (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 4 Sep 2019 00:10:46 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:33685 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725877AbfIDEKq (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 4 Sep 2019 00:10:46 -0400
+Received: by mail-pf1-f196.google.com with SMTP id q10so7303739pfl.0
+        for <linux-gpio@vger.kernel.org>; Tue, 03 Sep 2019 21:10:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernelci-org.20150623.gappssmtp.com; s=20150623;
-        h=message-id:date:mime-version:content-transfer-encoding:subject:to
-         :from;
-        bh=NRw+DbwGKc5//DtM7Xy0VHucHaNTLEGvBho4ZJAcNbY=;
-        b=LvfM/QYWKFi6HM/rLC5m/aege3UNT0b6BjQmwKpj5ELUlFgQRiCVatR5mhpRtxsHOD
-         tb8SFA6Dt5DwNG9Kf8RStiv8EvT8P7YiwtD19KqrlOUMA8VPPpaPrPsOm9N1aVeGDaZw
-         3+3Wig7KyvXFeOdAQhtvQlIL+JbVkPieAFvs+fw2EKw00inKnfMREfYpl5nMalkZ3fOD
-         Sh8Qwi0hudj17DTRwKDqGIaadq9aqh7DEGdbXnS9bLRqRZhVDCXabmVfZL7y2+IHThz1
-         3PHI20M1G8H+EASdflVBkktfeGjmJv0qc6ZA2kIJVzqeuu74VRsRX9M2Vbdnfqlwx7ZD
-         Ve+Q==
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=dcYAzYNxQfFqfgdx0zCpj/KDgBQyEbUaQn4XvdZRh0o=;
+        b=FS+bxCoUQzMvxNRSiuwbjLMktNYmoSyiiTcfCGtEnw7oz/RaknS05DuDykC403577e
+         aynw2TKjaDfAEI23jPVLOhc/3G/rkAz7G2O2HHg72LBDavjfVPwQra/xf+dEjHoI8kOg
+         IuWAw1rPOjzVw796xT4ci53dIXgxwE4RflDxmwDNlGVJJP4z73z7kX1HxNZgPVd/y3uf
+         ZiaFmvt6+NBqLMfUefRGhd3q/L9SptsrKfBO5fc/AT324K1GAYNVE2yOMjEDtVE6hqD9
+         YT8wZYLepIB8cl/py+xsQeevHiNdcHFOnB8+icy62A7ytTqLZZZp90F2cuiuOY7NGrmD
+         E8TQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:date:mime-version
-         :content-transfer-encoding:subject:to:from;
-        bh=NRw+DbwGKc5//DtM7Xy0VHucHaNTLEGvBho4ZJAcNbY=;
-        b=WUnqe8B8NE9DFLanVs7u7qnVYXVAdO/KT0P145ohdv1sP8emI+bIC+EfBEuKf7B65Q
-         5YtYmEmqv0boCtl27AViAr3f+pTMtF6CoSXDxB+0oD8nqz5+nmPhHFsO7kTAMl2MbCO/
-         PCpm1AaIm6yBtRf6PNb8TfpViBq9LUAL9mOhXB2rb2ZrNpuGIjde8JARcW4R9o/ANiZ/
-         PE/HJhbeQiFb2LjBmu/HHA2NjC0VTI1wuNdUaYcR+MWCchg3dpDgNKPn6hAsk3UC8msZ
-         Gw20QB10h/WMds0k8xKQgqvvVkrnZKDyR6y4G0/GQJ1mkeFeX8IixurmxqDsJSZ5Ud3p
-         Xw5w==
-X-Gm-Message-State: APjAAAWBiy8XNecAuUG7YOKOEOa6Vy7wl/vc2MybzuyWD+d8S/v9TGVL
-        o4hNzsPEpCcaCLQMRbmqLm3+JzvxHpdIDw==
-X-Google-Smtp-Source: APXvYqwxgw0haY21SrqovXe7M0hxUKEBCFNG6fhhRp5blwXs7CSlngIMjQIpniHvuOrl6PwE/vXWiQ==
-X-Received: by 2002:adf:9b9d:: with SMTP id d29mr27022099wrc.132.1567557800347;
-        Tue, 03 Sep 2019 17:43:20 -0700 (PDT)
-Received: from [148.251.42.114] ([2a01:4f8:201:9271::2])
-        by smtp.gmail.com with ESMTPSA id j9sm18380663wrx.66.2019.09.03.17.43.19
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 03 Sep 2019 17:43:19 -0700 (PDT)
-Message-ID: <5d6f08a7.1c69fb81.38aa9.f7bf@mx.google.com>
-Date:   Tue, 03 Sep 2019 17:43:19 -0700 (PDT)
-Content-Type: text/plain; charset="utf-8"
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=dcYAzYNxQfFqfgdx0zCpj/KDgBQyEbUaQn4XvdZRh0o=;
+        b=CB3TnpH/zo43Z4fXDLm1x/jVdvqTaN60GeyUsgdsgP6Pf/KKwBiqhy4B1dMlNa7oda
+         GAdKbz3628VWHgz7WA+UlTOnp2RmxYVKyqE5/BikL/nERuAUr3QcTuKj75JhGQMu0Wc9
+         86igAarQCBxbgMuZOGlV0b5Z/TXpwLtwzjy0l67z/eCLLwhxdzdi3FHszISpqkA9urWN
+         IC6pps+ejwZUY7/5e7ZxtBJV80dX1A1tTkgDOiBqwQ75DSGB+aW+vh7srD5jS8HqU32B
+         KzF+lab0gWGWxPYixCaNFq/nEhXkqdoAHiS5GW4zbYHYGYq0zbx7S+MpZ81HSAVriWd1
+         oxMA==
+X-Gm-Message-State: APjAAAXvqkwPaJZEzkflAbuWu61W95QQ9yGTEf4iK5F5Ecnm7IM9y/mA
+        AzPl+kIouqSyEFtRgY2y3g0VUA==
+X-Google-Smtp-Source: APXvYqwXBC7IUWS8hioJj3UhbdiVmNX4j6uLKBpFtP+lG8xcx7bnu+iFYAnbEW6qGLSWRKczEYAZHQ==
+X-Received: by 2002:aa7:851a:: with SMTP id v26mr43247304pfn.238.1567570245048;
+        Tue, 03 Sep 2019 21:10:45 -0700 (PDT)
+Received: from tuxbook-pro (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id v12sm17321805pgr.86.2019.09.03.21.10.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 03 Sep 2019 21:10:44 -0700 (PDT)
+Date:   Tue, 3 Sep 2019 21:10:42 -0700
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Stephen Boyd <swboyd@chromium.org>
+Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-gpio@vger.kernel.org,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Andy Gross <agross@kernel.org>
+Subject: Re: [PATCH] pinctrl: qcom: sdm845: Fix UFS_RESET pin
+Message-ID: <20190904041042.GA3081@tuxbook-pro>
+References: <20190830060227.12792-1-swboyd@chromium.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-Kernelci-Kernel: v5.3-rc6-62-g0f40dd225a88
-X-Kernelci-Tree: linusw
-X-Kernelci-Report-Type: boot
-X-Kernelci-Branch: for-next
-Subject: linusw/for-next boot: 60 boots: 2 failed,
- 58 passed (v5.3-rc6-62-g0f40dd225a88)
-To:     linux-gpio@vger.kernel.org, fellows@kernelci.org
-From:   "kernelci.org bot" <bot@kernelci.org>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190830060227.12792-1-swboyd@chromium.org>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-linusw/for-next boot: 60 boots: 2 failed, 58 passed (v5.3-rc6-62-g0f40dd225=
-a88)
+On Thu 29 Aug 23:02 PDT 2019, Stephen Boyd wrote:
 
-Full Boot Summary: https://kernelci.org/boot/all/job/linusw/branch/for-next=
-/kernel/v5.3-rc6-62-g0f40dd225a88/
-Full Build Summary: https://kernelci.org/build/linusw/branch/for-next/kerne=
-l/v5.3-rc6-62-g0f40dd225a88/
+> The UFS_RESET pin is the magical pin #150 now, not 153 per the
+> sdm845_groups array declared in this file. Fix the order of pins so that
+> UFS_RESET is 150 and the SDC pins follow after.
+> 
 
-Tree: linusw
-Branch: for-next
-Git Describe: v5.3-rc6-62-g0f40dd225a88
-Git Commit: 0f40dd225a8823102f558bc9f0b663e8bb4be32d
-Git URL: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-gpio.=
-git/
-Tested: 45 unique boards, 14 SoC families, 3 builds out of 6
+Woops, thanks
 
-Boot Regressions Detected:
+Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 
-arm64:
-
-    defconfig:
-        gcc-8:
-          meson-gxl-s805x-libretech-ac:
-              lab-baylibre: new failure (last pass: v5.3-rc6-51-g1fc4f3c962=
-b7)
-          meson-gxl-s905d-p230:
-              lab-baylibre: new failure (last pass: v5.3-rc6-51-g1fc4f3c962=
-b7)
-
-Boot Failures Detected:
-
-arm64:
-    defconfig:
-        gcc-8:
-            meson-gxl-s805x-libretech-ac: 1 failed lab
-            meson-gxl-s905d-p230: 1 failed lab
-
----
-For more info write to <info@kernelci.org>
+> Fixes: 53a5372ce326 ("pinctrl: qcom: sdm845: Expose ufs_reset as gpio")
+> Signed-off-by: Stephen Boyd <swboyd@chromium.org>
+> ---
+>  drivers/pinctrl/qcom/pinctrl-sdm845.c | 8 ++++----
+>  1 file changed, 4 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/pinctrl/qcom/pinctrl-sdm845.c b/drivers/pinctrl/qcom/pinctrl-sdm845.c
+> index 39f498c09906..ce495970459d 100644
+> --- a/drivers/pinctrl/qcom/pinctrl-sdm845.c
+> +++ b/drivers/pinctrl/qcom/pinctrl-sdm845.c
+> @@ -262,10 +262,10 @@ static const struct pinctrl_pin_desc sdm845_pins[] = {
+>  	PINCTRL_PIN(147, "GPIO_147"),
+>  	PINCTRL_PIN(148, "GPIO_148"),
+>  	PINCTRL_PIN(149, "GPIO_149"),
+> -	PINCTRL_PIN(150, "SDC2_CLK"),
+> -	PINCTRL_PIN(151, "SDC2_CMD"),
+> -	PINCTRL_PIN(152, "SDC2_DATA"),
+> -	PINCTRL_PIN(153, "UFS_RESET"),
+> +	PINCTRL_PIN(150, "UFS_RESET"),
+> +	PINCTRL_PIN(151, "SDC2_CLK"),
+> +	PINCTRL_PIN(152, "SDC2_CMD"),
+> +	PINCTRL_PIN(153, "SDC2_DATA"),
+>  };
+>  
+>  #define DECLARE_MSM_GPIO_PINS(pin) \
+> -- 
+> Sent by a computer through tubes
+> 
