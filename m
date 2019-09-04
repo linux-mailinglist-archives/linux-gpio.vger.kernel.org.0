@@ -2,100 +2,76 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id A8296A7C39
-	for <lists+linux-gpio@lfdr.de>; Wed,  4 Sep 2019 09:02:46 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 06315A7E8F
+	for <lists+linux-gpio@lfdr.de>; Wed,  4 Sep 2019 10:56:19 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728537AbfIDHCp (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 4 Sep 2019 03:02:45 -0400
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:35982 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728259AbfIDHCp (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 4 Sep 2019 03:02:45 -0400
-Received: by mail-ot1-f66.google.com with SMTP id 67so8082279oto.3
-        for <linux-gpio@vger.kernel.org>; Wed, 04 Sep 2019 00:02:45 -0700 (PDT)
+        id S1727348AbfIDI4S (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 4 Sep 2019 04:56:18 -0400
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:40290 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727144AbfIDI4S (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 4 Sep 2019 04:56:18 -0400
+Received: by mail-lj1-f196.google.com with SMTP id 7so9289795ljw.7
+        for <linux-gpio@vger.kernel.org>; Wed, 04 Sep 2019 01:56:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=hJb8C0XxHQ+BPdFitXGai/GvOOBT3Zt2EUfRo7xRmzs=;
-        b=a4yHwUrxocYrJolETfDC/dVE5GboZjW8JiuE3msRZRCguq5K4r/1oDLfRqaoJmbSH5
-         cZI/QYpDHXUrcZotRjrf/trcRlqB8ltA3kJK6DjfGFk3hmeG+jXApv3k7ApeIlJO7AFR
-         u4xiR3hK90QpFCVn6HPEsug1s8QSoJBV5XzlMHywHUadBrAyy3Q+bmm3Z68VXeZH43IC
-         BjK6Nl3lnDt6qR04RYGBn0zAQ+XvmjU2z9x2H8MgGPQSsPdLycKbhOhmph0C4YMPDCw8
-         0RfbGDgCXiPYDnO8jlo/vKaMVj26uIkvRHpk+oocjJrN6gwqA2WzgWoxaJXQX2evtFw3
-         3gIA==
+         :cc;
+        bh=2d1gSHgVF6GGE1yTBdoSyC8IfXC20RQYBQqwBgSSBsg=;
+        b=m+uUcEJoATzQHiFGnUOt6KbAoqwtSk/SyonCaWuvQZBFPWoMSVEFtmqOtgKZiZV/wi
+         +6tZmAj4uHyjfzmdgof7ZGiJGYH28EOm7tXuG7O0mN6IujBXE+igFh8H/pCv+531a8BU
+         UYfT31A5mB9QBzEa9QG7faetvWQTw/kgoFVHoML8rwet1U5t9L7QafXGI7ZmPMrFAVDm
+         C5Tsts+Ad8ZXr5ZVaqnthlsFqJ3k+L8hCGcuwplhbbfG6vlIJnEXCsuAP0kjE50eqzRL
+         3XOmw775a+1AWjx/vYuG0XhyaCqtsu0Ngc3gYZCL8x0mxHuHeYAlbTKe3EutgG/knGcF
+         Wtgw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=hJb8C0XxHQ+BPdFitXGai/GvOOBT3Zt2EUfRo7xRmzs=;
-        b=R5iHRFist8GQQeTzLpANMcaNa6EFDzMAvzoT+2IKdAZ5nUpvI/TIa+SaJDeqQwxbjl
-         P8T1I3V/wfrbaX5kXexYcD/gY1smhzdN5WKUEaHLzKwOSohpZrFcSey+hmb9OEWvzb4A
-         yXsb9Ug1xJAtoHiuIZEwKY8cepn0gzXMZ/2EW4H8tr2GEIr0AL6TVffaWJf1NurGBXUL
-         sksxZTdWwcbaz/nv1qU1RpkuZcLfuze+umX8RniYh2eygEAUjf4IT92CdPkyrKBnx7qs
-         gUsD3HQK82l60/WCTQR8OI/bAIf3u7eH2NNBH29TMqHLBPYdT4AlZARM6cFQ3XZqZ8y6
-         gvSA==
-X-Gm-Message-State: APjAAAU2vblVU6bgYwV3lIrNogJCZTMbHVEnQ+e1eryHCD0Qs+BgY0wd
-        T3TCQXdg0JvTS3KDXx5XMDagJ53kk8lbDjuYa8/KrA==
-X-Google-Smtp-Source: APXvYqxxks9djuMMHQfVLolM/IUn9zgO3O4jtGuHuSO1CHv6NW5x0Jn250yoKjvs6bRFbiPnut+ChZu3saOUiE5+Idk=
-X-Received: by 2002:a9d:68c5:: with SMTP id i5mr15201774oto.250.1567580564651;
- Wed, 04 Sep 2019 00:02:44 -0700 (PDT)
+         :message-id:subject:to:cc;
+        bh=2d1gSHgVF6GGE1yTBdoSyC8IfXC20RQYBQqwBgSSBsg=;
+        b=dwIu4ZLbCp5XxpDQkft8+K51bNbyz5qbFY4uTae3tfxYvr8rn/nOXulW/WaxxM97RN
+         O6tOj9R5194ogovHF2FbJFwszfFfyekUMbUsWUOICWKSsA7rOYwqwT7i+4u2tW2s49HR
+         LXfXiVaRQge2R9dHKObuFHNkj5XaP5M/HHg3SJJI1n1hTx/MmkqeGQ9i9ZzL6lv17xdE
+         MnZ/WQILJZcc2tcGBJ05/lghqf9X29TWvyWVElI75gXRJ8mRAJTheABxMtkKwh7SeFFl
+         2Lk5qzZ7ZYA133c0KcNOVFr2QTqREJng+MhbQGBiy7f31PfDOyk2uMkIwmi/pjCf04od
+         dYHw==
+X-Gm-Message-State: APjAAAWwOok8XO7oko9REmcALIl3uQpojz4UnJHu0VNkI+tiHq+YMB8T
+        3LF+xp8tqUH+qgP5nq7x472T/yQ8NibTcogYQSE9D7HNuvE=
+X-Google-Smtp-Source: APXvYqydvZ9EttlCiYEycmndhDSTUrlomX2D832praqqImcfboC3K1e3x/hISAcQv4uWpFOR/Y5FAAieGO5T1NQS/3w=
+X-Received: by 2002:a2e:884d:: with SMTP id z13mr15340888ljj.62.1567587376252;
+ Wed, 04 Sep 2019 01:56:16 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190904061245.30770-1-rashmica.g@gmail.com> <20190904061245.30770-4-rashmica.g@gmail.com>
-In-Reply-To: <20190904061245.30770-4-rashmica.g@gmail.com>
-From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Date:   Wed, 4 Sep 2019 09:02:33 +0200
-Message-ID: <CAMpxmJUGm3Zs8VHwHnXTQ2cKnpF0caR=7V4bBi1_sy1U2mWc0g@mail.gmail.com>
-Subject: Re: [PATCH 4/4] gpio: Update documentation with ast2600 controllers
-To:     Rashmica Gupta <rashmica.g@gmail.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        linux-gpio <linux-gpio@vger.kernel.org>,
-        arm-soc <linux-arm-kernel@lists.infradead.org>,
-        linux-aspeed@lists.ozlabs.org, LKML <linux-kernel@vger.kernel.org>,
-        Joel Stanley <joel@jms.id.au>, Andrew Jeffery <andrew@aj.id.au>
+References: <20190903132517.GF2691@lahna.fi.intel.com>
+In-Reply-To: <20190903132517.GF2691@lahna.fi.intel.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Wed, 4 Sep 2019 10:56:05 +0200
+Message-ID: <CACRpkdb3n+SNfqYT7zyCNxCgLHxtY4PJUwA1oGuc126O3WCC_g@mail.gmail.com>
+Subject: Re: [GIT PULL] intel-pinctrl for v5.4
+To:     Mika Westerberg <mika.westerberg@linux.intel.com>
+Cc:     Linux pin control <linux-gpio@vger.kernel.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-=C5=9Br., 4 wrz 2019 o 08:13 Rashmica Gupta <rashmica.g@gmail.com> napisa=
-=C5=82(a):
->
+On Tue, Sep 3, 2019 at 3:25 PM Mika Westerberg
+<mika.westerberg@linux.intel.com> wrote:
 
-Again, this needs a proper commit description and the subject should
-start with "dt-bindings: ...".
+> The following changes since commit 5f9e832c137075045d15cd6899ab0505cfb2ca4b:
+>
+>   Linus 5.3-rc1 (2019-07-21 14:05:38 -0700)
+>
+> are available in the Git repository at:
+>
+>   git://git.kernel.org/pub/scm/linux/kernel/git/pinctrl/intel.git tags/intel-pinctrl-v5.4
+>
+> for you to fetch changes up to 6cb0880f08229360c6c57416de075aa96930be78:
+>
+>   pinctrl: intel: remap the pin number to gpio offset for irq enabled pin (2019-08-19 12:41:44 +0300)
 
-You also need to Cc the device-tree maintainers. Use
-scripts/get_maintainer.pl to list all people that should get this
-patch.
+Pulled into my "devel" branch for v5.4.
 
-Bart
-
-> Signed-off-by: Rashmica Gupta <rashmica.g@gmail.com>
-> ---
->  Documentation/devicetree/bindings/gpio/gpio-aspeed.txt | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
->
-> diff --git a/Documentation/devicetree/bindings/gpio/gpio-aspeed.txt b/Doc=
-umentation/devicetree/bindings/gpio/gpio-aspeed.txt
-> index 7e9b586770b0..cd388797e07c 100644
-> --- a/Documentation/devicetree/bindings/gpio/gpio-aspeed.txt
-> +++ b/Documentation/devicetree/bindings/gpio/gpio-aspeed.txt
-> @@ -2,7 +2,8 @@ Aspeed GPIO controller Device Tree Bindings
->  -------------------------------------------
->
->  Required properties:
-> -- compatible           : Either "aspeed,ast2400-gpio" or "aspeed,ast2500=
--gpio"
-> +- compatible           : Either "aspeed,ast2400-gpio", "aspeed,ast2500-g=
-pio",
-> +                                         "aspeed,ast2600-gpio", or "aspe=
-ed,ast2600-1-8v-gpio"
->
->  - #gpio-cells          : Should be two
->                           - First cell is the GPIO line number
-> --
-> 2.20.1
->
+Thanks Mika!
+Linus Walleij
