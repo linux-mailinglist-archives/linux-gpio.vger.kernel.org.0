@@ -2,52 +2,52 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 765D7A9C99
-	for <lists+linux-gpio@lfdr.de>; Thu,  5 Sep 2019 10:08:27 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6267FA9CA1
+	for <lists+linux-gpio@lfdr.de>; Thu,  5 Sep 2019 10:11:09 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732228AbfIEII0 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 5 Sep 2019 04:08:26 -0400
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:37773 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730809AbfIEII0 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 5 Sep 2019 04:08:26 -0400
-Received: by mail-pl1-f195.google.com with SMTP id b10so922750plr.4;
-        Thu, 05 Sep 2019 01:08:26 -0700 (PDT)
+        id S1730809AbfIEILI (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 5 Sep 2019 04:11:08 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:43762 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725290AbfIEILI (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 5 Sep 2019 04:11:08 -0400
+Received: by mail-pg1-f196.google.com with SMTP id u72so968422pgb.10;
+        Thu, 05 Sep 2019 01:11:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=p4cc3HD6wCgRlnUtcn0OOHFmBZxcsFw0lbNwPOQXaMs=;
-        b=ldqIJr7rYiw3PfQqdQzuOi7dClRQkPVHQ78j0B22mJIViZA3bBPXpqOgqQfRYw477s
-         HSy1oDmzKI7o2tp87ZoXVsuCMMg1FTgRrNOA125vjse2m5crWv6rqwXnRW/56VJ3R5Gl
-         5lbkaq+trdJvu3B3FD95traiLrl5n0Frg1kDdyfgETxTIwvuH7fJ3Xbi+9rw6I0LpPyh
-         9dEC67LHeKADIOu3uUCU5Ja1B30P0AB6ewmQ72l5j0LBBBQ7bK0tBlz8PBniTjaLAE0E
-         RQEM8MjW7Get5PgLg3Azvc4wbNxm1078ev2AKbDiNFD7yruPq+HkHQUu0Q7SgZ/te7KX
-         y1DQ==
+        bh=BNUhBxF1OnG3d3ID43Jl2Sra4Jf1K5JNUVXSe0J/Mmo=;
+        b=FsniQefV8YjuNc/PRrZO7rOT/9G0ax8+aLc2Sz/tUwIKjH+DrNsgTNPIdCNssllbf1
+         yTsw2jCCl+nhi3JG+3OiKUJbn9m3OqZzU/MwtpGG7EvVTeby+PTM1a4kWl+pAl/W8p2f
+         QW3A2gnfv/hpd5csElAMUYftBSWWIMgYAbyA8tas18mDueWBGlE+8y8yMlS7K97UJz1e
+         FdGd63Y59wGv26usW5cD/I64bNqERDONTXMRb/TQ1dMOR3neAW0ou+hw7gmHuZ/jLN3R
+         Yq6qr2hqq64hFguW6qK+LgttRPvNo0jBVjB5hpdOXr7pVzj2BUERpVvhbtWwaa3rb9Bu
+         0X5A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=p4cc3HD6wCgRlnUtcn0OOHFmBZxcsFw0lbNwPOQXaMs=;
-        b=EYkkE0Owejf6lNjiB9gQCxhtZgMJpWkTugTEJZOZJ+psCFQCEwQIgfs57LUIvPnYba
-         ALZ0Cz50FqZYnHBdEHXMvUOkODG+TQEeHrKQBaCQC841myb4h3I9QHtYzCIeRmwvjNip
-         GJ4q1SxzBbyKSWWqecZCUmsjwFj0/ZTmHpvCsibUKDjgD+JHIxQikDkWtQoGL2bsXtp8
-         2LKDbDF36lkUnawkqmoWSfwM688CDlfFaWAV4lvYZaE6NKL/zbO4aM1QDTo6fBlYxqz4
-         HPIcjh2sagwumjqUZt+sbU+7t8iQ0PP4YhiclEEx6tRIHREi5Yv56WR8DkGXVkGzUHxE
-         XMdg==
-X-Gm-Message-State: APjAAAXIqN4OTT2Xo+Ue6qNUMJGhjIrA/TEXbQnyRUV52cgD8LcMZ0vR
-        UYc8LAyp4HAeXlyilpD3Kgi/AhX1LC/r71xKTKI=
-X-Google-Smtp-Source: APXvYqwWrgyUGsctjbz9xkNUlborGLECclh7l27G2fO9h6X4J9/miCFZcTmLyyj7sm/bNj1c3Gs23ePhQy3qAsUB81A=
-X-Received: by 2002:a17:902:9348:: with SMTP id g8mr2103599plp.18.1567670905658;
- Thu, 05 Sep 2019 01:08:25 -0700 (PDT)
+        bh=BNUhBxF1OnG3d3ID43Jl2Sra4Jf1K5JNUVXSe0J/Mmo=;
+        b=TH+4o0+FR28jprocDOAgxdStGWwYI4ivFWyD9jEbgXJSqK/26fbtj+x1cpC51KPqf5
+         4BygmquP+5crbeqBq7wbVSV9zOCCP2mnPKGGHDcuBMzHSn0/ZJJg5mwOcUsFPPA+qIJg
+         znozsFSRIbshEMeF9QTY9Tu8Hqy++Cw2il0jSdnqqp3O/msHAWRaJ0kNMcT9Tmn7/q8G
+         /4TvZzJtdjul/KxSkoVIOiXvoyqmWMsfZwcHqKJURhidViw9Mf2d7gGP0SLRY4oP7+tJ
+         /ow4wSMJ18pA9mc1diAxCajMA1D/610joibQO7e4Sb9QRdavgXeflmzTqc7Nd4QNmUvl
+         fEsg==
+X-Gm-Message-State: APjAAAWty45o2FqkvW5k+m1tq+JCuS0f7XFROzp36srUBkbO3sgbupsg
+        UqQ5Ym7uCHPazLoTmCKX47sQ2HNVCHwK/vdg8WA=
+X-Google-Smtp-Source: APXvYqxtpDJ3+oWsCUzA9PrngplgA8XurQG2hkrTxbU64Fwo0RP5J+VAvVKFqCivcEjjcIw5AUIW1TNKX62bq9nBXEs=
+X-Received: by 2002:a17:90a:338b:: with SMTP id n11mr2570783pjb.132.1567671067543;
+ Thu, 05 Sep 2019 01:11:07 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190904061245.30770-1-rashmica.g@gmail.com> <CAHp75Vd_6Rpt5=BjzV8YFCiFP7qsRrYHHo7+=gWwnZH-zT9jNw@mail.gmail.com>
- <dd62da5f10c06fae1823bf8338c2acc83fe40a40.camel@gmail.com>
-In-Reply-To: <dd62da5f10c06fae1823bf8338c2acc83fe40a40.camel@gmail.com>
+References: <20190904061245.30770-1-rashmica.g@gmail.com> <20190904061245.30770-3-rashmica.g@gmail.com>
+ <CAHp75Ve0zEkuD-75aZ6FU+A=DvX8NvVvY3n9p_pYDyfa76sxoQ@mail.gmail.com> <1ca6ffddd2452e218ef19ea84ac6c6277e1a9725.camel@gmail.com>
+In-Reply-To: <1ca6ffddd2452e218ef19ea84ac6c6277e1a9725.camel@gmail.com>
 From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Thu, 5 Sep 2019 11:08:13 +0300
-Message-ID: <CAHp75VfbjRfCOzo2+95aiGDcmEUOAqUORY4epK+REJ=Y57XFFQ@mail.gmail.com>
-Subject: Re: [PATCH 1/4] gpio/aspeed: Fix incorrect number of banks
+Date:   Thu, 5 Sep 2019 11:10:55 +0300
+Message-ID: <CAHp75VcCUuCNx35DReO4YzSgDv0YJPKXdpL+xNyjwOZX8jvVtA@mail.gmail.com>
+Subject: Re: [PATCH 3/4] gpio: Add in ast2600 details to Aspeed driver
 To:     Rashmica Gupta <rashmica.g@gmail.com>
 Cc:     Linus Walleij <linus.walleij@linaro.org>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
@@ -62,24 +62,15 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Sep 5, 2019 at 2:17 AM Rashmica Gupta <rashmica.g@gmail.com> wrote:
-> On Wed, 2019-09-04 at 19:27 +0300, Andy Shevchenko wrote:
-> > On Wed, Sep 4, 2019 at 9:14 AM Rashmica Gupta <rashmica.g@gmail.com>
-> > wrote:
+On Thu, Sep 5, 2019 at 2:34 AM Rashmica Gupta <rashmica.g@gmail.com> wrote:>
+> On Wed, 2019-09-04 at 19:30 +0300, Andy Shevchenko wrote:
 
-> > > -       banks = gpio->config->nr_gpios >> 5;
-> > > +       banks = (gpio->config->nr_gpios >> 5) + 1;
-> >
-> > Shouldn't be rather DIV_ROUND_UP(nr_gpios, sizeof(u32)) ?
->
-> I agree that DIV_ROUND_UP is the right thing to use here, but wouldn't
-> it be DIV_ROUND_UP(nr_gpios, 32)?
+> Perhaps this and your other comments below would be best addressed in
+> an additional cleanup patch? This patch follows the formatting of the
+> existing code and it's not very clean to differ from that or to change
+> the formatting of the current code in this patch.
 
-Right. Either this or BITS_PER_TYPE(u32).
-
-> > >         gpio->dcache = devm_kcalloc(&pdev->dev,
-> > >                                     banks, sizeof(u32),
-> > > GFP_KERNEL);
+OK.
 
 -- 
 With Best Regards,
