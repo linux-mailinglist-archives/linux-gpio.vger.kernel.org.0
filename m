@@ -2,102 +2,86 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 4CBA4AA94F
-	for <lists+linux-gpio@lfdr.de>; Thu,  5 Sep 2019 18:46:53 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A75AFAADC3
+	for <lists+linux-gpio@lfdr.de>; Thu,  5 Sep 2019 23:22:52 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389823AbfIEQqv (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 5 Sep 2019 12:46:51 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:42132 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387586AbfIEQqv (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 5 Sep 2019 12:46:51 -0400
-Received: by mail-pg1-f194.google.com with SMTP id p3so1711970pgb.9
-        for <linux-gpio@vger.kernel.org>; Thu, 05 Sep 2019 09:46:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=L9WHyJ99KP39xuH8ZsBbeD/D63ObFkXNBLywQqZYCeQ=;
-        b=IcLjJF6Drj/jNnHL/b3X6MBESCOo9YBQ726xZEEEmWRXc8xz/NMkPi5oQm1CTl46ju
-         10h5rfJrJmPahQG5I7wfMHm3Fmn2auuA4hO62jagzIOVh3dGJ1gcyIxA2phxbSqlEL8c
-         65/MGCgUUJ5lOBWoETWECotdK7cREeFHnQuuE=
+        id S2389595AbfIEVWu (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 5 Sep 2019 17:22:50 -0400
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:37935 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389217AbfIEVWt (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 5 Sep 2019 17:22:49 -0400
+Received: by mail-oi1-f196.google.com with SMTP id 7so3200834oip.5
+        for <linux-gpio@vger.kernel.org>; Thu, 05 Sep 2019 14:22:48 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=L9WHyJ99KP39xuH8ZsBbeD/D63ObFkXNBLywQqZYCeQ=;
-        b=ph/ZyCab5jknCT5cEU6Ims/JFTtbocoY1gFy86qncM2M45GJErdnMPMfW8wdMN/zok
-         BlWocK/l9fSxzsHHDLvlO6ekFjdZ7hmNWnV4e9etpVnDqzZVNx/wM6JlPn9LCWw+SX/C
-         Scv0dy0LHWTTUHRba0F2FqId1AGRkITAm52bCiIULRJp3CYCVvdc9fg80lWVHuAFn8jA
-         +be4hOpO+rbMX/HDBRfI5RMum1D/G8kPHv5psDRBfiBsg+PkzwPhY6WfXmg22fxJ+a64
-         tmYvIxtPXQHL6Jtqc2s1o5yABmWP50qPhcmUEHRHf75cvSWRhctfRo+lWi5CY3fAaEhW
-         u72A==
-X-Gm-Message-State: APjAAAWInPzhSxg3S2Hm5pg40BQrcDxeCWpjnxYsPHpG9AD+JSb+7G4N
-        ZoAYI8qsKK+mzA+vybd2VlwdcA==
-X-Google-Smtp-Source: APXvYqy0sZl+jGcPJei+V5sF4FXAeaGn9GQV14FyFINPWV2xmay1Mt/P6SirlNi+G2x6Daricnqaag==
-X-Received: by 2002:a65:620a:: with SMTP id d10mr4029784pgv.8.1567702010015;
-        Thu, 05 Sep 2019 09:46:50 -0700 (PDT)
-Received: from rj-aorus.ric.broadcom.com ([192.19.228.250])
-        by smtp.gmail.com with ESMTPSA id x11sm7683567pja.3.2019.09.05.09.46.47
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 05 Sep 2019 09:46:49 -0700 (PDT)
-Subject: Re: [PATCH] pinctrl: bcm: remove redundant assignment to pointer log
-To:     Colin King <colin.king@canonical.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Ray Jui <rjui@broadcom.com>,
-        Scott Branden <sbranden@broadcom.com>,
-        bcm-kernel-feedback-list@broadcom.com, linux-gpio@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20190905140919.29283-1-colin.king@canonical.com>
-From:   Ray Jui <ray.jui@broadcom.com>
-Message-ID: <190fef22-fe90-dfa0-0943-4d30b10b6b1d@broadcom.com>
-Date:   Thu, 5 Sep 2019 09:46:46 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=0cnbIe9gOrVh1+4RkkZfV9Qd5QUru6V45yI8RpWai/8=;
+        b=qkfY1RHmC0HXVV7rdeAxcYiehIobG/GcIronToTit69rNaaxHGqwI/fTATB3KGHvqS
+         vHNS8G3rSxGqHySXT6G3ZnvXYCASkn4hXvA+pixRd0oRgN//vWZB6pTBKgJrBHeriVzb
+         Gtde4YtMyRNQiHzXFEEAbBYXAgcGIcJ0pFwEVx9JrJCrlgdWIsCDno8BaewSq89w5xsV
+         ELPdXxsk//UIrSKshd/BiP6PC3g8e/nVUsPQNicIk7DYPHUKQhnX6LtqemAOiOJ1IrL6
+         bzvySMjdrcLEPpwPfgd3c9Z/AA+Cn5T9EE+PeDbufphShquNdXiS96M/tOh4UpweeHDc
+         UGtw==
+X-Gm-Message-State: APjAAAWEe3ohfNtMqYfv6g6v05HLr66qaEJWHzXfmjPXEru73eVL5Cxv
+        ekuXmRlScawx+arCWTEmK+X3YJVD5vZq2YixS6o=
+X-Google-Smtp-Source: APXvYqxUFV8ck46RpfqtTps76vq4uobOYk6Gk9i7/v/Z4/Vm8k+OVUGjM+fSqUo+Xt+2KOSpWO01hG1J3pk+ScP7Ejs=
+X-Received: by 2002:aca:f305:: with SMTP id r5mr4268871oih.131.1567718568491;
+ Thu, 05 Sep 2019 14:22:48 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190905140919.29283-1-colin.king@canonical.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <201909052108.b1uElYhb%lkp@intel.com>
+In-Reply-To: <201909052108.b1uElYhb%lkp@intel.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Thu, 5 Sep 2019 23:22:37 +0200
+Message-ID: <CAMuHMdV75ng-w5KoDAt8=yp0gO=DAU-u9HCy+ydPu+pS9HZhGw@mail.gmail.com>
+Subject: Re: [gpio:devel 53/53] drivers//gpio/gpiolib.c:1402:2: error:
+ 'status' undeclared; did you mean 'kstatfs'?
+To:     kbuild test robot <lkp@intel.com>
+Cc:     kbuild-all@01.org,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+On Thu, Sep 5, 2019 at 4:04 PM kbuild test robot <lkp@intel.com> wrote:
+> tree:   https://kernel.googlesource.com/pub/scm/linux/kernel/git/linusw/linux-gpio.git devel
+> head:   151a41014bff92f353263cadc051435dc9c3258e
+> commit: 151a41014bff92f353263cadc051435dc9c3258e [53/53] Merge tag 'v5.3-rc7' into devel
+> config: x86_64-lkp (attached as .config)
+> compiler: gcc-7 (Debian 7.4.0-11) 7.4.0
+> reproduce:
+>         git checkout 151a41014bff92f353263cadc051435dc9c3258e
+>         # save the attached .config to linux build tree
+>         make ARCH=x86_64
+>
+> If you fix the issue, kindly add following tag
+> Reported-by: kbuild test robot <lkp@intel.com>
+>
+> All errors (new ones prefixed by >>):
+>
+>    drivers//gpio/gpiolib.c: In function 'gpiochip_add_data_with_key':
+> >> drivers//gpio/gpiolib.c:1402:2: error: 'status' undeclared (first use in this function); did you mean 'kstatfs'?
+>      status = gpiochip_irqchip_init_valid_mask(chip);
+>      ^~~~~~
+>      kstatfs
+>    drivers//gpio/gpiolib.c:1402:2: note: each undeclared identifier is reported only once for each function it appears in
 
+Looks like the merge resolution in 151a41014bff92f353263cadc051435dc9c3258e
+replaced "status" by "ret", but forgot to update 4 occurrences.
 
-On 9/5/19 7:09 AM, Colin King wrote:
-> From: Colin Ian King <colin.king@canonical.com>
-> 
-> The pointer log is being initialized with a value that is never read
-> and is being re-assigned a little later on. The assignment is
-> redundant and hence can be removed.
-> 
-> Addresses-Coverity: ("Unused value")
-> Signed-off-by: Colin Ian King <colin.king@canonical.com>
-> ---
->   drivers/pinctrl/bcm/pinctrl-cygnus-mux.c | 1 -
->   1 file changed, 1 deletion(-)
-> 
-> diff --git a/drivers/pinctrl/bcm/pinctrl-cygnus-mux.c b/drivers/pinctrl/bcm/pinctrl-cygnus-mux.c
-> index 44df35942a43..dcab2204c60c 100644
-> --- a/drivers/pinctrl/bcm/pinctrl-cygnus-mux.c
-> +++ b/drivers/pinctrl/bcm/pinctrl-cygnus-mux.c
-> @@ -923,7 +923,6 @@ static int cygnus_mux_log_init(struct cygnus_pinctrl *pinctrl)
->   	if (!pinctrl->mux_log)
->   		return -ENOMEM;
->   
-> -	log = pinctrl->mux_log;
+Note that it's still broken in current gpio/for-next.
 
-Yes, this indeed looks completely redundant.
+Gr{oetje,eeting}s,
 
->   	for (i = 0; i < CYGNUS_NUM_IOMUX_REGS; i++) {
->   		for (j = 0; j < CYGNUS_NUM_MUX_PER_REG; j++) {
->   			log = &pinctrl->mux_log[i * CYGNUS_NUM_MUX_PER_REG
-> 
+                        Geert
 
-Change looks good to me. Thanks!
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
-Reviewed-by: Ray Jui <ray.jui@broadcom.com>
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
