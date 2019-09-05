@@ -2,114 +2,101 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 2A8DAA9917
-	for <lists+linux-gpio@lfdr.de>; Thu,  5 Sep 2019 05:59:11 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 65B0EA99E2
+	for <lists+linux-gpio@lfdr.de>; Thu,  5 Sep 2019 07:01:29 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728267AbfIED7F (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 4 Sep 2019 23:59:05 -0400
-Received: from new1-smtp.messagingengine.com ([66.111.4.221]:47789 "EHLO
-        new1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727562AbfIED7E (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 4 Sep 2019 23:59:04 -0400
-Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailnew.nyi.internal (Postfix) with ESMTP id E36DC399A;
-        Wed,  4 Sep 2019 23:59:03 -0400 (EDT)
-Received: from imap2 ([10.202.2.52])
-  by compute4.internal (MEProxy); Wed, 04 Sep 2019 23:59:03 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aj.id.au; h=
-        mime-version:message-id:in-reply-to:references:date:from:to:cc
-        :subject:content-type; s=fm3; bh=bsxI63SDV53IBgVMw9ODo8bNo53LTDF
-        tLsvuYgDTumc=; b=cxi0lxLMshDNFApXwHb+YnUgaXybAEJD4RXHoK45E5SVzBo
-        jwmlEP9AamppX+wLLstsGJrBCfPKqKxYTMOiHYBvNOtYR4BHt0qAMn/6nvtu023i
-        oMz1+L2EopbHYaibpSYOnjKxAhVvo5SUX8K3Qa+3iN/LCYg3YTy43UJAMOni17wS
-        isZJzyTCpSunnQGn8kUtTNSfo247l0wubez2B7LoDLQGWwZHpYtjlpDMdX58fOOv
-        T33ukMTx5ZzovB0jlb61CseEJQECpU+CIQwN7aWfrCZihc3fGTANoan9eiMlbSAV
-        AAEnEw94LbDxVSanAo6cUFTVRs3r9RHWLiouxOA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=bsxI63
-        SDV53IBgVMw9ODo8bNo53LTDFtLsvuYgDTumc=; b=XdIJZOQmJhKJ1LqYXYYS4h
-        IuDgZApzHMLe2yXEYn0Jtah0T1STxbmaFDguklzz9+FQxNcd7MQ2ZROl4q2YpepQ
-        Z50PtQvsk9GWP6cRgkknPJjFbp2qtfbwKGBQ0TFC8aqEidJT2EgF16qVkSUgBXzi
-        cSJ4phSg7BAjkAOu9lkYR7zNYzrhZTAZotpvpRHZ7uGr3DZsYzCGwro4nVos4uOc
-        G7wyG0OLNiVC2N28x9rXNrNAC9FehG6IsnPTl7t0FyXaMCvjYuEpG7bRQGh3MFfB
-        WTr7pByxoFMtdEwVfr0IWC4UBM//mL8o48rTXsI5/RVMVxALWsHX2XogHIR84WGw
-        ==
-X-ME-Sender: <xms:B4hwXayjsygOYaj8l4PbulBAuT8qWTh1NBH6NzyMdJkaY2VTz--qaA>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduvddrudejiedgjeeiucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepofgfggfkjghffffhvffutgesthdtredtreerjeenucfhrhhomhepfdetnhgu
-    rhgvficulfgvfhhfvghrhidfuceorghnughrvgifsegrjhdrihgurdgruheqnecurfgrrh
-    grmhepmhgrihhlfhhrohhmpegrnhgurhgvfiesrghjrdhiugdrrghunecuvehluhhsthgv
-    rhfuihiivgeptd
-X-ME-Proxy: <xmx:B4hwXfGnLBul3l6Udc_i_53IEol2R6CjpoL9MJLEZQo750pyaTOnGA>
-    <xmx:B4hwXTTC5oI7XVX6BT1Jm-kZAOwa8B4ZmTbvqP9BsUX7oP_Vjkmo_A>
-    <xmx:B4hwXaGdHvnq3xcZ3ahDizMlAjxwfEdCU6WlswcVpTDnExbf4FfDZQ>
-    <xmx:B4hwXeyGK36-A7d6lMJZBk4iEBP9mmUowTbonVUncqdCVaq0n2Trwg>
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-        id 933F9E00A3; Wed,  4 Sep 2019 23:59:03 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.1.7-186-gf4cb3c3-fmstable-20190904v1
-Mime-Version: 1.0
-Message-Id: <3f9d48eb-79ed-42e9-a346-761871e74c98@www.fastmail.com>
-In-Reply-To: <20190905011800.16156-1-rashmica.g@gmail.com>
-References: <20190905011800.16156-1-rashmica.g@gmail.com>
-Date:   Thu, 05 Sep 2019 13:29:29 +0930
-From:   "Andrew Jeffery" <andrew@aj.id.au>
-To:     "Rashmica Gupta" <rashmica.g@gmail.com>,
-        "Linus Walleij" <linus.walleij@linaro.org>
-Cc:     "Bartosz Golaszewski" <bgolaszewski@baylibre.com>,
-        "Rob Herring" <robh+dt@kernel.org>,
-        "Mark Rutland" <mark.rutland@arm.com>,
-        "Joel Stanley" <joel@jms.id.au>, linux-gpio@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org
-Subject: =?UTF-8?Q?Re:_[PATCH_v2_4/4]_gpio:_dt-bindings:_Update_documentation_wit?=
- =?UTF-8?Q?h_ast2600_controllers?=
-Content-Type: text/plain
+        id S1731196AbfIEFB2 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 5 Sep 2019 01:01:28 -0400
+Received: from mga12.intel.com ([192.55.52.136]:28652 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725921AbfIEFB2 (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Thu, 5 Sep 2019 01:01:28 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 04 Sep 2019 22:01:27 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,469,1559545200"; 
+   d="scan'208";a="199195303"
+Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.157])
+  by fmsmga001.fm.intel.com with SMTP; 04 Sep 2019 22:01:24 -0700
+Received: by lahna (sSMTP sendmail emulation); Thu, 05 Sep 2019 08:01:23 +0300
+Date:   Thu, 5 Sep 2019 08:01:23 +0300
+From:   Mika Westerberg <mika.westerberg@linux.intel.com>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     linux-gpio@vger.kernel.org,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Patrice Chotard <patrice.chotard@st.com>,
+        Andrew Lunn <andrew@lunn.ch>, Andrew Jeffery <andrew@aj.id.au>,
+        Joel Stanley <joel@jms.id.au>,
+        Thierry Reding <treding@nvidia.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: Re: [PATCH] gpio: Initialize the irqchip valid_mask with a callback
+Message-ID: <20190905050123.GT18521@lahna.fi.intel.com>
+References: <20190904140104.32426-1-linus.walleij@linaro.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190904140104.32426-1-linus.walleij@linaro.org>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-
-
-On Thu, 5 Sep 2019, at 10:48, Rashmica Gupta wrote:
-> The ast2600 is a new generation of SoC from ASPEED. Similarly to the
-> ast2400 and ast2500, it has a GPIO controller for it's 3.6V GPIO pins.
-> Additionally, it has a GPIO controller for 36 1.8V GPIO pins. These
-> voltages are fixed and cannot be configured via pinconf, so we have two
-> separate drivers for them.
-
-See 3/4 for discussion about the commit message.
-
+On Wed, Sep 04, 2019 at 04:01:04PM +0200, Linus Walleij wrote:
+> After changing the valid_mask for the struct gpio_chip
+> to detect the need and presence of a valid mask with the
+> presence of a .init_valid_mask() callback to fill it in,
+> we augment the gpio_irq_chip to use the same logic.
 > 
-> Signed-off-by: Rashmica Gupta <rashmica.g@gmail.com>
+> Switch all driver using the gpio_irq_chio valid_mask
+> over to this new method.
+> 
+> This makes sure the valid_mask for the gpio_irq_chip gets
+> filled in when we add the gpio_chip, which makes it a
+> little easier to switch over drivers using the old
+> way of setting up gpio_irq_chip over to the new method
+> of passing the gpio_irq_chip along with the gpio_chip.
+> (See drivers/gpio/TODO for details.)
+> 
+> Cc: Patrice Chotard <patrice.chotard@st.com>
+> Cc: Andrew Lunn <andrew@lunn.ch>
+> Cc: Andrew Jeffery <andrew@aj.id.au>
+> Cc: Joel Stanley <joel@jms.id.au>
+> Cc: Thierry Reding <treding@nvidia.com>
+> Cc: Hans de Goede <hdegoede@redhat.com>
+> Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> Cc: Mika Westerberg <mika.westerberg@linux.intel.com>
+> Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
 > ---
->  Documentation/devicetree/bindings/gpio/gpio-aspeed.txt | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
+> All is compile tested on top of the gpio "devel" branch.
 > 
-> diff --git a/Documentation/devicetree/bindings/gpio/gpio-aspeed.txt 
-> b/Documentation/devicetree/bindings/gpio/gpio-aspeed.txt
-> index 7e9b586770b0..cd388797e07c 100644
-> --- a/Documentation/devicetree/bindings/gpio/gpio-aspeed.txt
-> +++ b/Documentation/devicetree/bindings/gpio/gpio-aspeed.txt
-> @@ -2,7 +2,8 @@ Aspeed GPIO controller Device Tree Bindings
->  -------------------------------------------
->  
->  Required properties:
-> -- compatible		: Either "aspeed,ast2400-gpio" or "aspeed,ast2500-gpio"
-> +- compatible		: Either "aspeed,ast2400-gpio", "aspeed,ast2500-gpio",
-> +					  "aspeed,ast2600-gpio", or "aspeed,ast2600-1-8v-gpio"
+> Andy: I guess this would collide with my attempted
+> rewrites of some Intel-related drivers, we can either
+> merge this first and I will rebase and resend the
+> other changes, or you can send me a pull request
+> if you think some of my changes are working and I
+> will instead rebase this on top of that, thanks.
+> 
+> Hans de Goede: I actually think that patch
+> 48057ed1840fde9239b1e000bea1a0a1f07c5e99
+> "gpio: Fix irqchip initialization order" fixes the
+> issues you saw with the rewrite of int0002 earlier,
+> and we suggested setting up the mask as part of the
+> chip addition then, but this change is nice to have
+> anyways.
+> ---
+>  drivers/gpio/gpio-aspeed.c                 | 13 ++++---
+>  drivers/gpio/gpio-stmpe.c                  | 36 +++++++++++++------
+>  drivers/gpio/gpio-tqmx86.c                 | 21 ++++++-----
+>  drivers/gpio/gpiolib.c                     | 12 ++++---
+>  drivers/pinctrl/intel/pinctrl-baytrail.c   | 16 ++++++++-
+>  drivers/pinctrl/intel/pinctrl-cherryview.c | 42 +++++++++++++---------
 
-See the discussion on patch 3/4 about how we might eliminate the
-aspeed,ast2600-1-8v-gpio compatible string.
+For Intel pinctrl driver changes,
 
-Also, this patch should be the first in the series and start the subject with
-"dt-bindings: gpio: aspeed: ..."
-
-Cheers,
-
-Andrew
+Acked-by: Mika Westerberg <mika.westerberg@linux.intel.com>
