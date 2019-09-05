@@ -2,181 +2,110 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 7F58DA9820
-	for <lists+linux-gpio@lfdr.de>; Thu,  5 Sep 2019 03:48:06 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2FDF4A9836
+	for <lists+linux-gpio@lfdr.de>; Thu,  5 Sep 2019 04:04:36 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730651AbfIEBrs (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 4 Sep 2019 21:47:48 -0400
-Received: from out1-smtp.messagingengine.com ([66.111.4.25]:52383 "EHLO
-        out1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727156AbfIEBrs (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 4 Sep 2019 21:47:48 -0400
-Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailout.nyi.internal (Postfix) with ESMTP id A511922254;
-        Wed,  4 Sep 2019 21:47:46 -0400 (EDT)
-Received: from imap2 ([10.202.2.52])
-  by compute4.internal (MEProxy); Wed, 04 Sep 2019 21:47:46 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aj.id.au; h=
-        mime-version:message-id:in-reply-to:references:date:from:to:cc
-        :subject:content-type; s=fm3; bh=TxCpelb2dlkqpemAFLly7jkcdpaH6YJ
-        ukF29OnIns9o=; b=bRcWOTOHlOkEpOvmm0bOyV1/RFiNn0YwiHOo8lqvyd4aGjM
-        ID2zn9qXmRgqNLWrv5yF5dboiTn3J7mCu390IxHr0FsVBSDfV5vHRzWLYEqP3DAx
-        5E+rMv40S0dT2FTMpdH2QcEBCNsHRYpTE/i9B7WMva7iJSGV3Qa5YBTM9I/5x3aq
-        6XniFAcTxdY7ZqV3PCPwyNogGPLv86RvMBfd2fl/8rf9XM4JdLuY/mcHxYqA1Hx8
-        Ph4E8Qv/mqHjbhHVS9PON9qIF1p5Z69Cc9L7JgBHUpqzYBwsTToBDETMFc/eU6YM
-        fLa7zr1V8/8zDC6MJ2iOkirdEm3SZevbbUerDLA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=TxCpel
-        b2dlkqpemAFLly7jkcdpaH6YJukF29OnIns9o=; b=BASVlN4QhfTtYxmmT06cXq
-        yVQ1fOvo9FGW9Y9KuRbzaVXygqJKhb9i5fizdCqIHLki2t6QzyiLzn2XbuwLy3AZ
-        8Z9YNei+MtcghAA49GLwRX4NvczLgwfiD3uGwfuTeJop5tSZ/BJ8nx8bcOqlm80w
-        tVbZ/NChs9/FVQ0WnhyLt8+vfP+9CxZSsj4NiPHhy77TTHsag9tbttSEfyPQ7MrO
-        7AKUo7ch4BefvVWsh8EvfaNeAe+OtOKFzAhGgPfGZrpkQ5MZ3Ge6ZfWMozlMyE76
-        PE2CcRcYUIfIsNiM6Qstq9eQEgtzwAnSaS+6Oe1fZzYRWVvnDHW+oJNk9rg75mWw
-        ==
-X-ME-Sender: <xms:PWlwXWEO955NlOFhMDWeOnxe6bhmkhrqy5YM6Kyop4ebT1WtWmNumA>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduvddrudejiedggeelucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepofgfggfkjghffffhvffutgesthdtredtreertdenucfhrhhomhepfdetnhgu
-    rhgvficulfgvfhhfvghrhidfuceorghnughrvgifsegrjhdrihgurdgruheqnecurfgrrh
-    grmhepmhgrihhlfhhrohhmpegrnhgurhgvfiesrghjrdhiugdrrghunecuvehluhhsthgv
-    rhfuihiivgeptd
-X-ME-Proxy: <xmx:PWlwXRVjcXqbNkMBAxV0uaNnkWEhRPzT1MwgtcbVFdHS8mtcRfYzlA>
-    <xmx:PWlwXWyc5rY0KSB93Dg-q7sZckXNCN40d2mkS-BTEaU75PttSR-oxw>
-    <xmx:PWlwXeSfAc2yRZrJKEZqk24bWsytr_jpks1IyvuLm6U1ZpkDcZ62Rw>
-    <xmx:QmlwXXVjhxexS_6OOcSVGg3xhifr-eeBYJJP87N-lrenIw7LJT5NfA>
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-        id EBFF3E00B1; Wed,  4 Sep 2019 21:47:40 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.1.7-186-gf4cb3c3-fmstable-20190904v1
-Mime-Version: 1.0
-Message-Id: <17e6638e-f140-4144-bea5-f7bf0039ead5@www.fastmail.com>
-In-Reply-To: <20190904140104.32426-1-linus.walleij@linaro.org>
-References: <20190904140104.32426-1-linus.walleij@linaro.org>
-Date:   Thu, 05 Sep 2019 11:18:06 +0930
-From:   "Andrew Jeffery" <andrew@aj.id.au>
-To:     "Linus Walleij" <linus.walleij@linaro.org>,
-        linux-gpio@vger.kernel.org
-Cc:     "Bartosz Golaszewski" <bgolaszewski@baylibre.com>,
-        "Patrice Chotard" <patrice.chotard@st.com>,
-        "Andrew Lunn" <andrew@lunn.ch>, "Joel Stanley" <joel@jms.id.au>,
-        "Thierry Reding" <treding@nvidia.com>,
-        "Hans de Goede" <hdegoede@redhat.com>,
-        "Andy Shevchenko" <andriy.shevchenko@linux.intel.com>,
-        "Mika Westerberg" <mika.westerberg@linux.intel.com>
-Subject: Re: [PATCH] gpio: Initialize the irqchip valid_mask with a callback
-Content-Type: text/plain
+        id S1730741AbfIECEf (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 4 Sep 2019 22:04:35 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:34622 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1730730AbfIECEf (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Wed, 4 Sep 2019 22:04:35 -0400
+Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id AB9F98287DF39B640022;
+        Thu,  5 Sep 2019 10:04:33 +0800 (CST)
+Received: from [127.0.0.1] (10.133.213.239) by DGGEMS403-HUB.china.huawei.com
+ (10.3.19.203) with Microsoft SMTP Server id 14.3.439.0; Thu, 5 Sep 2019
+ 10:04:28 +0800
+Subject: Re: [PATCH] gpio: Move gpiochip_.*lock_as_irq() to the proper ifdef
+To:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Linus Walleij <linus.walleij@linaro.org>
+References: <20190822031817.32888-1-yuehaibing@huawei.com>
+ <CACRpkdapgDbkm3JjywtPv=5gYKQCCXzdabDumVukFv5Dn5pomA@mail.gmail.com>
+ <20190904154631.kjegnsk6cf473nr6@flow>
+CC:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Alexandre Courbot <acourbot@nvidia.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>
+From:   Yuehaibing <yuehaibing@huawei.com>
+Message-ID: <23aeaa05-3a59-5f01-7a67-de1d1d1de547@huawei.com>
+Date:   Thu, 5 Sep 2019 10:04:27 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:45.0) Gecko/20100101
+ Thunderbird/45.2.0
+MIME-Version: 1.0
+In-Reply-To: <20190904154631.kjegnsk6cf473nr6@flow>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.133.213.239]
+X-CFilter-Loop: Reflected
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-
-
-On Wed, 4 Sep 2019, at 23:31, Linus Walleij wrote:
-> After changing the valid_mask for the struct gpio_chip
-> to detect the need and presence of a valid mask with the
-> presence of a .init_valid_mask() callback to fill it in,
-> we augment the gpio_irq_chip to use the same logic.
+On 2019/9/4 23:46, Sebastian Andrzej Siewior wrote:
+> In a recent commit the gpiochip_.*lock_as_irq() were moved and ended up
+> in the wrong `ifdef' section. Now for !CONFIG_GPIOLIB the function is
+> defined twice leading to an compile error.
 > 
-> Switch all driver using the gpio_irq_chio valid_mask
-> over to this new method.
+> Move the extern function declaration under CONFIG_GPIOLIB, the "static
+> inline" version is already under !CONFIG_GPIOLIB.
 > 
-> This makes sure the valid_mask for the gpio_irq_chip gets
-> filled in when we add the gpio_chip, which makes it a
-> little easier to switch over drivers using the old
-> way of setting up gpio_irq_chip over to the new method
-> of passing the gpio_irq_chip along with the gpio_chip.
-> (See drivers/gpio/TODO for details.)
-> 
-> Cc: Patrice Chotard <patrice.chotard@st.com>
-> Cc: Andrew Lunn <andrew@lunn.ch>
-> Cc: Andrew Jeffery <andrew@aj.id.au>
-> Cc: Joel Stanley <joel@jms.id.au>
-> Cc: Thierry Reding <treding@nvidia.com>
-> Cc: Hans de Goede <hdegoede@redhat.com>
-> Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> Cc: Mika Westerberg <mika.westerberg@linux.intel.com>
-> Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+> Fixes: c7663fa2a6631 ("gpio: Move gpiochip_lock/unlock_as_irq to gpio/driver.h")
+> Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 > ---
-> All is compile tested on top of the gpio "devel" branch.
+>  include/linux/gpio/driver.h | 8 ++++----
+>  1 file changed, 4 insertions(+), 4 deletions(-)
 > 
-> Andy: I guess this would collide with my attempted
-> rewrites of some Intel-related drivers, we can either
-> merge this first and I will rebase and resend the
-> other changes, or you can send me a pull request
-> if you think some of my changes are working and I
-> will instead rebase this on top of that, thanks.
-> 
-> Hans de Goede: I actually think that patch
-> 48057ed1840fde9239b1e000bea1a0a1f07c5e99
-> "gpio: Fix irqchip initialization order" fixes the
-> issues you saw with the rewrite of int0002 earlier,
-> and we suggested setting up the mask as part of the
-> chip addition then, but this change is nice to have
-> anyways.
-> ---
->  drivers/gpio/gpio-aspeed.c                 | 13 ++++---
->  drivers/gpio/gpio-stmpe.c                  | 36 +++++++++++++------
->  drivers/gpio/gpio-tqmx86.c                 | 21 ++++++-----
->  drivers/gpio/gpiolib.c                     | 12 ++++---
->  drivers/pinctrl/intel/pinctrl-baytrail.c   | 16 ++++++++-
->  drivers/pinctrl/intel/pinctrl-cherryview.c | 42 +++++++++++++---------
->  drivers/platform/x86/intel_int0002_vgpio.c | 11 ++++--
->  include/linux/gpio/driver.h                | 16 ++++++---
->  8 files changed, 112 insertions(+), 55 deletions(-)
-> 
-> diff --git a/drivers/gpio/gpio-aspeed.c b/drivers/gpio/gpio-aspeed.c
-> index 9defe25d4721..7bcd83dbc3e3 100644
-> --- a/drivers/gpio/gpio-aspeed.c
-> +++ b/drivers/gpio/gpio-aspeed.c
-> @@ -689,8 +689,11 @@ static struct irq_chip aspeed_gpio_irqchip = {
->  	.irq_set_type	= aspeed_gpio_set_type,
->  };
+> diff --git a/include/linux/gpio/driver.h b/include/linux/gpio/driver.h
+> index b74a3bee85e5d..fb134ff20f6b2 100644
+> --- a/include/linux/gpio/driver.h
+> +++ b/include/linux/gpio/driver.h
+> @@ -702,14 +702,14 @@ void gpiochip_free_own_desc(struct gpio_desc *desc);
+>  void devprop_gpiochip_set_names(struct gpio_chip *chip,
+>  				const struct fwnode_handle *fwnode);
 >  
-> -static void set_irq_valid_mask(struct aspeed_gpio *gpio)
-> +static void aspeed_init_irq_valid_mask(struct gpio_chip *gc,
-> +				       unsigned long *valid_mask,
-> +				       unsigned int ngpios)
->  {
-> +	struct aspeed_gpio *gpio = gpiochip_get_data(gc);
->  	const struct aspeed_bank_props *props = gpio->config->props;
->  
->  	while (!is_bank_props_sentinel(props)) {
-> @@ -704,7 +707,7 @@ static void set_irq_valid_mask(struct aspeed_gpio *gpio)
->  			if (i >= gpio->config->nr_gpios)
->  				break;
->  
-> -			clear_bit(i, gpio->chip.irq.valid_mask);
-> +			clear_bit(i, valid_mask);
->  		}
->  
->  		props++;
-> @@ -1203,7 +1206,7 @@ static int __init aspeed_gpio_probe(struct 
-> platform_device *pdev)
->  		girq->parents[0] = gpio->irq;
->  		girq->default_type = IRQ_TYPE_NONE;
->  		girq->handler = handle_bad_irq;
-> -		girq->need_valid_mask = true;
-> +		girq->init_valid_mask = aspeed_init_irq_valid_mask;
->  	}
->  
->  	gpio->offset_timer =
-> @@ -1215,10 +1218,6 @@ static int __init aspeed_gpio_probe(struct 
-> platform_device *pdev)
->  	if (rc < 0)
->  		return rc;
->  
-> -	/* Now the valid mask is allocated */
-> -	if (gpio->irq)
-> -		set_irq_valid_mask(gpio);
+> -/* lock/unlock as IRQ */
+> -int gpiochip_lock_as_irq(struct gpio_chip *chip, unsigned int offset);
+> -void gpiochip_unlock_as_irq(struct gpio_chip *chip, unsigned int offset);
 > -
->  	return 0;
->  }
+>  #ifdef CONFIG_GPIOLIB
+>  
+>  struct gpio_chip *gpiod_to_chip(const struct gpio_desc *desc);
+>  
+> +/* lock/unlock as IRQ */
+> +int gpiochip_lock_as_irq(struct gpio_chip *chip, unsigned int offset);
+> +void gpiochip_unlock_as_irq(struct gpio_chip *chip, unsigned int offset);
+> +
+>  #else /* CONFIG_GPIOLIB */
 
-For the Aspeed changes:
+Interesting, my patch indeed do the correct thing：
 
-Reviewed-by: Andrew Jeffery <andrew@aj.id.au>
++/* lock/unlock as IRQ */
++int gpiochip_lock_as_irq(struct gpio_chip *chip, unsigned int offset);
++void gpiochip_unlock_as_irq(struct gpio_chip *chip, unsigned int offset);
++
+ #else /* CONFIG_GPIOLIB */
+
+however, now in include/linux/gpio/driver.h, it is:
+
+/* lock/unlock as IRQ */
+int gpiochip_lock_as_irq(struct gpio_chip *chip, unsigned int offset);
+void gpiochip_unlock_as_irq(struct gpio_chip *chip, unsigned int offset);
+
+#ifdef CONFIG_GPIOLIB
+
+struct gpio_chip *gpiod_to_chip(const struct gpio_desc *desc);
+
+#else /* CONFIG_GPIOLIB */
+
+
+Maybe this caused by the fuzzing?  Anyway, this fix the issue, so
+
+Reviewed-by: YueHaibing <yuehaibing@huawei.com>
+
+>  
+>  static inline struct gpio_chip *gpiod_to_chip(const struct gpio_desc *desc)
+> 
+
