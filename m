@@ -2,113 +2,107 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id B7F51A98BB
-	for <lists+linux-gpio@lfdr.de>; Thu,  5 Sep 2019 05:08:23 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3FFF1A9900
+	for <lists+linux-gpio@lfdr.de>; Thu,  5 Sep 2019 05:47:15 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731072AbfIEDIW (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 4 Sep 2019 23:08:22 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:37876 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731069AbfIEDIW (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 4 Sep 2019 23:08:22 -0400
-Received: by mail-pg1-f194.google.com with SMTP id d1so560543pgp.4
-        for <linux-gpio@vger.kernel.org>; Wed, 04 Sep 2019 20:08:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=PfNn/W0PmjQ9bUUZ6dAEkvRvRPYcOrbr2656dQFRs6Q=;
-        b=Rfnun+BKpxLGSH5iYf9FM54fTzUr/1eAOg+7ooMe9cJVIYKInFGkE5PP8FtwBa54Lu
-         hDju3syhY1Tz6ydSOrJ3+ZFZU8o5CzZIWg3aM6HnvUgjwjQ7N7ohBKWrP10BM/RbEsbz
-         Lt4v78Gehe70tjX9vpE3FVaoGNT25TOCm8/Evglc197eKQynU/NCrrk/D1mxTbpm6U5Z
-         XedhzH7HGU87rl7hqtoUVFg8bMwl9arkXoON3SF8PQPgE/nARM80G+mo6tQnTkL27uQY
-         t4fbl2EvxU5VeD0ccEHRWivNn11uAXVswJmNzq2fuFGpN0CnQGtXXcndB/SzBQaP0HrW
-         mQwQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=PfNn/W0PmjQ9bUUZ6dAEkvRvRPYcOrbr2656dQFRs6Q=;
-        b=F4epoP1XRlDYLJ2CwpCZZXxE/UnfHhqXHJun8nG1glThMWyUKedaHJI1NcF05IQ7IX
-         S9I+ja2AuvmRPWthCJTIL7ai1xY4887eE4O3RQ6vcqTIbH56Yxmc14KXIC8nyCfPCMb6
-         TyxfOTQil9Em18rEs0ZsMdQwRTzH7bv/AFPBKD762hDE4T1x/zyHSa2YL0HksVnBY/97
-         X/Pq/3euR3uKmxbJVFkdq+L5F1ByvMgMh5ZTgRecq82JYergkPBwWzbxLVeAb+flRlPu
-         CS4zQklCWTibsKTHkIidg+Prdekf7E30vZB4dKX9NlK42kKgSRvzEwb/aU5FgU1OPfBT
-         pNmg==
-X-Gm-Message-State: APjAAAVIrAK7ITXG+w4d8rBg/Ku7foDn7MFjFWC3oMBH508myOsvPhCV
-        4t5BYTGfOoO2Kx7TvHubPa9kbQ==
-X-Google-Smtp-Source: APXvYqzLtfOPZjB56l72tPxU34aCQyYpUADkwCEg5v8DnhXx1pXs3Xk57srn2UH+MmKw8Yi0OemPAQ==
-X-Received: by 2002:a65:68c9:: with SMTP id k9mr1152083pgt.28.1567652902075;
-        Wed, 04 Sep 2019 20:08:22 -0700 (PDT)
-Received: from baolinwangubtpc.spreadtrum.com ([117.18.48.82])
-        by smtp.gmail.com with ESMTPSA id s4sm497041pfh.15.2019.09.04.20.08.19
-        (version=TLS1 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Wed, 04 Sep 2019 20:08:21 -0700 (PDT)
-From:   Baolin Wang <baolin.wang@linaro.org>
-To:     stable@vger.kernel.org, linus.walleij@linaro.org,
-        natechancellor@gmail.com
-Cc:     linux-gpio@vger.kernel.org, arnd@arndb.de, baolin.wang@linaro.org,
-        orsonzhai@gmail.com, vincent.guittot@linaro.org,
-        linux-kernel@vger.kernel.org
-Subject: [BACKPORT 4.14.y v2 3/6] pinctrl: sprd: Use define directive for sprd_pinconf_params values
-Date:   Thu,  5 Sep 2019 11:07:52 +0800
-Message-Id: <db6ae70b6b727e646b1f9ed5c2c8d490cfc50695.1567649729.git.baolin.wang@linaro.org>
-X-Mailer: git-send-email 1.7.9.5
-In-Reply-To: <cover.1567649728.git.baolin.wang@linaro.org>
-References: <cover.1567649728.git.baolin.wang@linaro.org>
+        id S1731043AbfIEDrK (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 4 Sep 2019 23:47:10 -0400
+Received: from out2-smtp.messagingengine.com ([66.111.4.26]:40289 "EHLO
+        out2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1730628AbfIEDrK (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 4 Sep 2019 23:47:10 -0400
+Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
+        by mailout.nyi.internal (Postfix) with ESMTP id 8A30C21391;
+        Wed,  4 Sep 2019 23:47:08 -0400 (EDT)
+Received: from imap2 ([10.202.2.52])
+  by compute4.internal (MEProxy); Wed, 04 Sep 2019 23:47:08 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aj.id.au; h=
+        mime-version:message-id:in-reply-to:references:date:from:to:cc
+        :subject:content-type; s=fm3; bh=iz5b5ME3PsMsS8QeBujZtb3JCi3nja+
+        Hla+LmculZwk=; b=b4epihcJys2LL8YoCM/nc8qGbEazvW2vWIO1hIVaP9napuP
+        AgLUK/SA4LCbYT07PHOJ76rcWRjJwmhK+SpzqL7QUuBCTXcnnP/NuS/jUcSWKWzR
+        AY8hwGjvJfCsQg7OOdgu5uDvLXf2aR/h1d69gfjGE1RPPjYZLKdfY419TQ1VBZHE
+        LEj5vLwO/Y31rQ//yYbd4S5Hj8fp7R3T9M8tHJmJxXAgwOVFF6bJwPJ8wjnx2N88
+        oKI2W8VJ1Y8Yi/Usv0DAICA8Rs6J/to+LLrz+l2sQWGppJSjp3qsGRg/r6Cv3zGH
+        hQI2yfJdSUzasOhqLIEuQ6yOrP/u1ng0xIZuiXQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=iz5b5M
+        E3PsMsS8QeBujZtb3JCi3nja+Hla+LmculZwk=; b=RSh87SEs4Y5wMEQGhMF4TS
+        cTeVYM8QeCyqZt+S3kg5/alKN3LfJRrDYbL4QebKdEuKDXl/WvhnqtRC/LIH9ufS
+        YH2RPnAIdDbVRv7NWv0/3BVCF4BB6uzAB0BN7X+Q3aoTaYgUL6OBuKR2I/B+szBf
+        CBWcbyXTo06rhy1TceChRX0UlnEP362/efTMCe4Ho+iPbaW/2ZwQwA4sCte2oHj3
+        PbkeQV+WaA7MuB63+2wybuenW63wBIt2Q+4LAgcHVm41dBadp3X8dFHqtRwJSvwb
+        5rooHlU2LFk+U6icJyVPkgFmKUf/GAGABGAoCC1uMsEyrj9ga+YlfSGpxXXIiy4g
+        ==
+X-ME-Sender: <xms:O4VwXXAJe39Xm9VrYIewsp4nenufMiJTMOMxHoALQG_Zr48RAi2MZA>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduvddrudejiedgjeegucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepofgfggfkjghffffhvffutgesthdtredtreertdenucfhrhhomhepfdetnhgu
+    rhgvficulfgvfhhfvghrhidfuceorghnughrvgifsegrjhdrihgurdgruheqnecurfgrrh
+    grmhepmhgrihhlfhhrohhmpegrnhgurhgvfiesrghjrdhiugdrrghunecuvehluhhsthgv
+    rhfuihiivgeptd
+X-ME-Proxy: <xmx:O4VwXSE4mYfTEweu3O6KFE0pGmhNb_HFsgwDUiQVeh0YpIveJSvaKg>
+    <xmx:O4VwXfsL9wGoQ0JxDaAo2kBs1kK7vFeAGvk_WynV2YxxmiBwhsJyzA>
+    <xmx:O4VwXQktE8PQEzKDSfzOWBM1NB6cjn_43xm_-mJXRwKx2Gl7msm2rg>
+    <xmx:PIVwXXgFkxGGf64YPijCZE9v8cbsk3HfIs7FmFcR8-D7RIG-x8YgbA>
+Received: by mailuser.nyi.internal (Postfix, from userid 501)
+        id 77709E00A3; Wed,  4 Sep 2019 23:47:07 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
+User-Agent: Cyrus-JMAP/3.1.7-186-gf4cb3c3-fmstable-20190904v1
+Mime-Version: 1.0
+Message-Id: <5f3ec58f-d83b-41f9-80ed-35a5434bb985@www.fastmail.com>
+In-Reply-To: <20190905011635.15902-1-rashmica.g@gmail.com>
+References: <20190905011635.15902-1-rashmica.g@gmail.com>
+Date:   Thu, 05 Sep 2019 13:17:33 +0930
+From:   "Andrew Jeffery" <andrew@aj.id.au>
+To:     "Rashmica Gupta" <rashmica.g@gmail.com>,
+        "Linus Walleij" <linus.walleij@linaro.org>
+Cc:     "Bartosz Golaszewski" <bgolaszewski@baylibre.com>,
+        "Joel Stanley" <joel@jms.id.au>, linux-gpio@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 1/4] gpio/aspeed: Fix incorrect number of banks
+Content-Type: text/plain
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-From: Nathan Chancellor <natechancellor@gmail.com>
 
-[Upstream commit 957063c924736d4341e5d588757b9f31e8f6fa24]
 
-Clang warns when one enumerated type is implicitly converted to another:
+On Thu, 5 Sep 2019, at 10:46, Rashmica Gupta wrote:
+> The current calculation for the number of GPIO banks is only correct if
+> the number of GPIOs is a multiple of 32 (if there were 31 GPIOs we would
+> currently say there are 0 banks, which is incorrect).
+> 
+> Fixes: 361b79119a4b7 ('gpio: Add Aspeed driver')
+> 
+> Signed-off-by: Rashmica Gupta <rashmica.g@gmail.com>
 
-drivers/pinctrl/sprd/pinctrl-sprd.c:845:19: warning: implicit conversion
-from enumeration type 'enum sprd_pinconf_params' to different
-enumeration type 'enum pin_config_param' [-Wenum-conversion]
-        {"sprd,control", SPRD_PIN_CONFIG_CONTROL, 0},
-        ~                ^~~~~~~~~~~~~~~~~~~~~~~
-drivers/pinctrl/sprd/pinctrl-sprd.c:846:22: warning: implicit conversion
-from enumeration type 'enum sprd_pinconf_params' to different
-enumeration type 'enum pin_config_param' [-Wenum-conversion]
-        {"sprd,sleep-mode", SPRD_PIN_CONFIG_SLEEP_MODE, 0},
-        ~                   ^~~~~~~~~~~~~~~~~~~~~~~~~~
+Reviewed-by: Andrew Jeffery <andrew@aj.id.au>
 
-It is expected that pinctrl drivers can extend pin_config_param because
-of the gap between PIN_CONFIG_END and PIN_CONFIG_MAX so this conversion
-isn't an issue. Most drivers that take advantage of this define the
-PIN_CONFIG variables as constants, rather than enumerated values. Do the
-same thing here so that Clang no longer warns.
-
-Link: https://github.com/ClangBuiltLinux/linux/issues/138
-Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
-Reviewed-by: Baolin Wang <baolin.wang@linaro.org>
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
-Signed-off-by: Baolin Wang <baolin.wang@linaro.org>
----
- drivers/pinctrl/sprd/pinctrl-sprd.c |    6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
-
-diff --git a/drivers/pinctrl/sprd/pinctrl-sprd.c b/drivers/pinctrl/sprd/pinctrl-sprd.c
-index 6352991..83958bd 100644
---- a/drivers/pinctrl/sprd/pinctrl-sprd.c
-+++ b/drivers/pinctrl/sprd/pinctrl-sprd.c
-@@ -159,10 +159,8 @@ struct sprd_pinctrl {
- 	struct sprd_pinctrl_soc_info *info;
- };
- 
--enum sprd_pinconf_params {
--	SPRD_PIN_CONFIG_CONTROL = PIN_CONFIG_END + 1,
--	SPRD_PIN_CONFIG_SLEEP_MODE = PIN_CONFIG_END + 2,
--};
-+#define SPRD_PIN_CONFIG_CONTROL		(PIN_CONFIG_END + 1)
-+#define SPRD_PIN_CONFIG_SLEEP_MODE	(PIN_CONFIG_END + 2)
- 
- static int sprd_pinctrl_get_id_by_name(struct sprd_pinctrl *sprd_pctl,
- 				       const char *name)
--- 
-1.7.9.5
-
+> ---
+>  drivers/gpio/gpio-aspeed.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/gpio/gpio-aspeed.c b/drivers/gpio/gpio-aspeed.c
+> index 9defe25d4721..b83e23aecd18 100644
+> --- a/drivers/gpio/gpio-aspeed.c
+> +++ b/drivers/gpio/gpio-aspeed.c
+> @@ -1165,7 +1165,7 @@ static int __init aspeed_gpio_probe(struct 
+> platform_device *pdev)
+>  	gpio->chip.base = -1;
+>  
+>  	/* Allocate a cache of the output registers */
+> -	banks = gpio->config->nr_gpios >> 5;
+> +	banks = DIV_ROUND_UP(gpio->config->nr_gpios, 32);
+>  	gpio->dcache = devm_kcalloc(&pdev->dev,
+>  				    banks, sizeof(u32), GFP_KERNEL);
+>  	if (!gpio->dcache)
+> -- 
+> 2.20.1
+> 
+>
