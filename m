@@ -2,188 +2,82 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 044E6A9A52
-	for <lists+linux-gpio@lfdr.de>; Thu,  5 Sep 2019 08:00:19 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 97774A9AB6
+	for <lists+linux-gpio@lfdr.de>; Thu,  5 Sep 2019 08:34:17 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726286AbfIEGAS (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 5 Sep 2019 02:00:18 -0400
-Received: from mailgw02.mediatek.com ([210.61.82.184]:1964 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726175AbfIEGAS (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 5 Sep 2019 02:00:18 -0400
-X-UUID: af0b181f45a442e1adc4f5a6d77e205e-20190905
-X-UUID: af0b181f45a442e1adc4f5a6d77e205e-20190905
-Received: from mtkmrs01.mediatek.inc [(172.21.131.159)] by mailgw02.mediatek.com
-        (envelope-from <light.hsieh@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 1530193086; Thu, 05 Sep 2019 14:00:12 +0800
-Received: from mtkcas07.mediatek.inc (172.21.101.84) by
- mtkmbs02n2.mediatek.inc (172.21.101.101) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Thu, 5 Sep 2019 14:00:08 +0800
-Received: from [172.21.77.33] (172.21.77.33) by mtkcas07.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Thu, 5 Sep 2019 14:00:08 +0800
-Message-ID: <1567663210.1324.3.camel@mtkswgap22>
-Subject: Re: [PATCH v2 1/5] pinctrl: mediatek: Check gpio pin number and use
- binary  search in mtk_hw_pin_field_lookup()
-From:   Light Hsieh <light.hsieh@mediatek.com>
-To:     <linus.walleij@linaro.org>
-CC:     <linux-mediatek@lists.infradead.org>, <linux-gpio@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <sean.wang@kernel.org>
-Date:   Thu, 5 Sep 2019 14:00:10 +0800
-In-Reply-To: <1567662796-25508-1-git-send-email-light.hsieh@mediatek.com>
-References: <1567662796-25508-1-git-send-email-light.hsieh@mediatek.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.2.3-0ubuntu6 
-Content-Transfer-Encoding: 7bit
+        id S1731147AbfIEGeQ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 5 Sep 2019 02:34:16 -0400
+Received: from vps0.lunn.ch ([185.16.172.187]:56396 "EHLO vps0.lunn.ch"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725290AbfIEGeQ (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Thu, 5 Sep 2019 02:34:16 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=yWByamN8dUTbjA9RNtOkNSZ+0GTSwhLgNi2wQcbzaek=; b=6QPOQ4iqvPALDXmn7Rc424Ce8X
+        nC+0+btlrBpXo6h5eUdR7DWOyvEgQmIFeTvr74WV9pOSg6HaJk5jF4n3X8iKY53jGe/d+k6fsLWsC
+        OUZyKwOJLgGo8eQphFRMlewBsv5hZqNkCL58P8ED6Ws+x/u85onT5cv5EztWpj5Ic1AY=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.89)
+        (envelope-from <andrew@lunn.ch>)
+        id 1i5lLO-0000C9-95; Thu, 05 Sep 2019 08:34:10 +0200
+Date:   Thu, 5 Sep 2019 08:34:10 +0200
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     linux-gpio@vger.kernel.org,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Patrice Chotard <patrice.chotard@st.com>,
+        Andrew Jeffery <andrew@aj.id.au>,
+        Joel Stanley <joel@jms.id.au>,
+        Thierry Reding <treding@nvidia.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>
+Subject: Re: [PATCH] gpio: Initialize the irqchip valid_mask with a callback
+Message-ID: <20190905063410.GA415@lunn.ch>
+References: <20190904140104.32426-1-linus.walleij@linaro.org>
 MIME-Version: 1.0
-X-TM-SNTS-SMTP: 01C553FE9CD159425C4B9E487375BD2AB2816699737AD9C83EEC7E12ED10C3E22000:8
-X-MTK:  N
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190904140104.32426-1-linus.walleij@linaro.org>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Dear reviewers, 
+On Wed, Sep 04, 2019 at 04:01:04PM +0200, Linus Walleij wrote:
+> diff --git a/drivers/gpio/gpio-tqmx86.c b/drivers/gpio/gpio-tqmx86.c
+> index 07050cdbadb9..a3109bcaa0ac 100644
+> --- a/drivers/gpio/gpio-tqmx86.c
+> +++ b/drivers/gpio/gpio-tqmx86.c
+> @@ -214,6 +214,17 @@ static const struct dev_pm_ops tqmx86_gpio_dev_pm_ops = {
+>  			   tqmx86_gpio_runtime_resume, NULL)
+>  };
+>  
+> +static void tqmx86_init_irq_valid_mask(struct gpio_chip *chip,
+> +				       unsigned long *valid_mask,
+> +				       unsigned int ngpios)
+> +{
+> +	/* Only GPIOs 4-7 are valid for interrupts. Clear the others */
+> +	clear_bit(0, valid_mask);
+> +	clear_bit(1, valid_mask);
+> +	clear_bit(2, valid_mask);
+> +	clear_bit(3, valid_mask);
+> +}
 
-v2 is the same as v1 except that commit message is corrected according
-to Linus' comment for v1:
+Hi Linus
 
-1. remove Change-Id lines
-2. correct sysfs as debugfs
+The change looks good. But a minor naming nit-pick. The code here
+assumes valid_mask has already been initialised, all valid gpios have
+had their bit set to 1 by the core. What we are actually doing here is
+masking the mask to fit the hardware.
 
-On Thu, 2019-09-05 at 13:53 +0800, Light Hsieh wrote:
-> From: Light Hsieh <light.hsieh@mediatek.com>
-> 
-> 1. Check if gpio pin number is in valid range to prevent from get invalid
->    pointer 'desc' in the following code:
-> 	desc = (const struct mtk_pin_desc *)&hw->soc->pins[gpio];
-> 
-> 2. Use binary search in mtk_hw_pin_field_lookup()
->    Modify mtk_hw_pin_field_lookup() to use binary search for accelerating
->    search.
-> 
-> ---
->  drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.c | 24 +++++++++++++++++++-----
->  drivers/pinctrl/mediatek/pinctrl-paris.c         | 19 +++++++++++++++++++
->  2 files changed, 38 insertions(+), 5 deletions(-)
-> 
-> diff --git a/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.c b/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.c
-> index 20e1c89..4687f63 100644
-> --- a/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.c
-> +++ b/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.c
-> @@ -68,7 +68,7 @@ static int mtk_hw_pin_field_lookup(struct mtk_pinctrl *hw,
->  {
->  	const struct mtk_pin_field_calc *c, *e;
->  	const struct mtk_pin_reg_calc *rc;
-> -	u32 bits;
-> +	u32 bits, start = 0, end, found = 0, check;
->  
->  	if (hw->soc->reg_cal && hw->soc->reg_cal[field].range) {
->  		rc = &hw->soc->reg_cal[field];
-> @@ -79,21 +79,32 @@ static int mtk_hw_pin_field_lookup(struct mtk_pinctrl *hw,
->  		return -ENOTSUPP;
->  	}
->  
-> +	end = rc->nranges - 1;
->  	c = rc->range;
->  	e = c + rc->nranges;
->  
-> -	while (c < e) {
-> -		if (desc->number >= c->s_pin && desc->number <= c->e_pin)
-> +	while (start <= end) {
-> +		check = (start + end) >> 1;
-> +		if (desc->number >= rc->range[check].s_pin
-> +		 && desc->number <= rc->range[check].e_pin) {
-> +			found = 1;
->  			break;
-> -		c++;
-> +		} else if (start == end)
-> +			break;
-> +		else if (desc->number < rc->range[check].s_pin)
-> +			end = check - 1;
-> +		else
-> +			start = check + 1;
->  	}
->  
-> -	if (c >= e) {
-> +	if (!found) {
->  		dev_dbg(hw->dev, "Not support field %d for pin = %d (%s)\n",
->  			field, desc->number, desc->name);
->  		return -ENOTSUPP;
->  	}
->  
-> +	c = rc->range + check;
-> +
->  	if (c->i_base > hw->nbase - 1) {
->  		dev_err(hw->dev,
->  			"Invalid base for field %d for pin = %d (%s)\n",
-> @@ -182,6 +193,9 @@ int mtk_hw_set_value(struct mtk_pinctrl *hw, const struct mtk_pin_desc *desc,
->  	if (err)
->  		return err;
->  
-> +	if (value < 0 || value > pf.mask)
-> +		return -EINVAL;
-> +
->  	if (!pf.next)
->  		mtk_rmw(hw, pf.index, pf.offset, pf.mask << pf.bitpos,
->  			(value & pf.mask) << pf.bitpos);
-> diff --git a/drivers/pinctrl/mediatek/pinctrl-paris.c b/drivers/pinctrl/mediatek/pinctrl-paris.c
-> index 923264d..28b4951 100644
-> --- a/drivers/pinctrl/mediatek/pinctrl-paris.c
-> +++ b/drivers/pinctrl/mediatek/pinctrl-paris.c
-> @@ -693,6 +693,9 @@ static int mtk_gpio_get_direction(struct gpio_chip *chip, unsigned int gpio)
->  	const struct mtk_pin_desc *desc;
->  	int value, err;
->  
-> +	if (gpio > hw->soc->npins)
-> +		return -EINVAL;
-> +
->  	desc = (const struct mtk_pin_desc *)&hw->soc->pins[gpio];
->  
->  	err = mtk_hw_get_value(hw, desc, PINCTRL_PIN_REG_DIR, &value);
-> @@ -708,6 +711,9 @@ static int mtk_gpio_get(struct gpio_chip *chip, unsigned int gpio)
->  	const struct mtk_pin_desc *desc;
->  	int value, err;
->  
-> +	if (gpio > hw->soc->npins)
-> +		return -EINVAL;
-> +
->  	desc = (const struct mtk_pin_desc *)&hw->soc->pins[gpio];
->  
->  	err = mtk_hw_get_value(hw, desc, PINCTRL_PIN_REG_DI, &value);
-> @@ -722,6 +728,9 @@ static void mtk_gpio_set(struct gpio_chip *chip, unsigned int gpio, int value)
->  	struct mtk_pinctrl *hw = gpiochip_get_data(chip);
->  	const struct mtk_pin_desc *desc;
->  
-> +	if (gpio > hw->soc->npins)
-> +		return;
-> +
->  	desc = (const struct mtk_pin_desc *)&hw->soc->pins[gpio];
->  
->  	mtk_hw_set_value(hw, desc, PINCTRL_PIN_REG_DO, !!value);
-> @@ -729,12 +738,22 @@ static void mtk_gpio_set(struct gpio_chip *chip, unsigned int gpio, int value)
->  
->  static int mtk_gpio_direction_input(struct gpio_chip *chip, unsigned int gpio)
->  {
-> +	struct mtk_pinctrl *hw = gpiochip_get_data(chip);
-> +
-> +	if (gpio > hw->soc->npins)
-> +		return -EINVAL;
-> +
->  	return pinctrl_gpio_direction_input(chip->base + gpio);
->  }
->  
->  static int mtk_gpio_direction_output(struct gpio_chip *chip, unsigned int gpio,
->  				     int value)
->  {
-> +	struct mtk_pinctrl *hw = gpiochip_get_data(chip);
-> +
-> +	if (gpio > hw->soc->npins)
-> +		return -EINVAL;
-> +
->  	mtk_gpio_set(chip, gpio, value);
->  
->  	return pinctrl_gpio_direction_output(chip->base + gpio);
+So maybe a better name would be tqmx86_mask_irq_valid_mask()?
 
+For gpio-tqmx86.c
+Reviewed-by: Andrew Lunn <andrew@lunn.ch>
 
+    Andrew
