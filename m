@@ -2,46 +2,47 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 15CD6AB6CF
-	for <lists+linux-gpio@lfdr.de>; Fri,  6 Sep 2019 13:09:55 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 88FB3AB6F2
+	for <lists+linux-gpio@lfdr.de>; Fri,  6 Sep 2019 13:14:24 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730633AbfIFLJw convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-gpio@lfdr.de>); Fri, 6 Sep 2019 07:09:52 -0400
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:40942 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731527AbfIFLJv (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 6 Sep 2019 07:09:51 -0400
-Received: by mail-ot1-f67.google.com with SMTP id y39so5341311ota.7;
-        Fri, 06 Sep 2019 04:09:51 -0700 (PDT)
+        id S1726937AbfIFLOX convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-gpio@lfdr.de>); Fri, 6 Sep 2019 07:14:23 -0400
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:39014 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726231AbfIFLOX (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 6 Sep 2019 07:14:23 -0400
+Received: by mail-ot1-f65.google.com with SMTP id n7so5348745otk.6;
+        Fri, 06 Sep 2019 04:14:22 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc:content-transfer-encoding;
-        bh=YjIOTnA7AJrnGQlF0RtRVuR7iIuADp5iAhDiCUvFbDY=;
-        b=RsTS3VcxF55/+90ijx30BBcgmTMDLDJcPW2gE/p8rcYNRNamg8aaKkVQldvzDht5PM
-         7xuua/7XK8Nq+SbjZVOe901eYb6z54Eve0ioYJtlxvFf0eG0yjUmjAnNC+NT62Y1QzRB
-         Jjk7hxGtGY8OVQE8cftrMhKIhEVLirmpD5OslKJdkt1Plhl0K+4EMGBawDIe6pPpeRjU
-         R/pFbRQC+hNL42JWaC9LVwT1ae0H9i1Oigd0o7iURelqJDcvbKzE3z9BF71j8W+LAQ77
-         uBiTc7ZECucv7fVDWXs5TkYy7fwe0/YfSrVIMId85UFnwpqDbNBiiHkdSo70T4T1lGKL
-         G2ig==
-X-Gm-Message-State: APjAAAWeEoU31d3ZGKoHuPQ5h6RoHE8wC/sPZ7dUG8noMbeJVtoUylBj
-        oz8wBrYRMo3I98elF/eu9EcBf5v9PFqbx8LeDGo=
-X-Google-Smtp-Source: APXvYqycNpCL4JLDQsajFhUn38P3soOaWnlH2I8lUg6IR7dOErT/aqJzV4mupZNPg2j96MybcS6x7VN9KphMVsGGLLA=
-X-Received: by 2002:a05:6830:1196:: with SMTP id u22mr6795961otq.39.1567768190812;
- Fri, 06 Sep 2019 04:09:50 -0700 (PDT)
+        bh=A+M249Y2yXTR5pLBFzUNH1SBf+7zmy/nNt6gvl0in+8=;
+        b=ay3oHVCvhkOP4NCTsypUY8oM+oDGeXKR8DMt3kZaxiOGKxKu3ocvmz9GawMYIQG0xV
+         dxypLYOYFoIJag0hImEircHpTUDwE5tEedcSuX5+aU2eWGuurARp3DTbjlmIdPvOX0xE
+         JShBsh4+SM4CROCBLTiFvAkeLKURYbZp0HncVEwVYhTSay0WjYVv9a9PH7qyJ+SuHwz1
+         8QB+kezx1lSi5UxyDJbxcv1dbWmmJtOv8EobOCMfCyMUfY+Aw6LdSdyUiG709F6CBEcy
+         YcTHWNL0zTeAWf52sdAQRCQGgllGQMfvo6VNzRXkjaGrKlJ8DMYUWuY1eFYoxOzsXAGN
+         EQ8A==
+X-Gm-Message-State: APjAAAVouXrwZq1gD4s6qlAs+H8cuHLbtdbaShdMeIx7c0emn2EunT3D
+        AHBkB7bM5/+cX2dVDqgoEkZrtAGZPu4RGQuJkTw=
+X-Google-Smtp-Source: APXvYqzUNQXMQuLstdGXR8mRJrmMCqQfnRb/uNRT1dACYw9FvhrBJuzXdIAg5nMAqX8cUVjMPZH+gtG74Cj8EpGzPcc=
+X-Received: by 2002:a05:6830:1196:: with SMTP id u22mr6812488otq.39.1567768461501;
+ Fri, 06 Sep 2019 04:14:21 -0700 (PDT)
 MIME-Version: 1.0
 References: <20190705160536.12047-1-geert+renesas@glider.be>
  <CAMpxmJXOrDLdw6ZPBHxzsDRYiLmhRNCb-s_Z=Gu=Ecg1XA5ONQ@mail.gmail.com>
- <CAMuHMdWdb0dcS8Nvk-Poz2dT7nuHjFhqpsRPZZnSKsc3VffcRA@mail.gmail.com> <CAMpxmJUF1s1zyXVtoUGfbV7Yk+heua4rNjY=DrX=jr-v8UfNxA@mail.gmail.com>
-In-Reply-To: <CAMpxmJUF1s1zyXVtoUGfbV7Yk+heua4rNjY=DrX=jr-v8UfNxA@mail.gmail.com>
+ <CAMuHMdWdb0dcS8Nvk-Poz2dT7nuHjFhqpsRPZZnSKsc3VffcRA@mail.gmail.com>
+ <CAMpxmJUF1s1zyXVtoUGfbV7Yk+heua4rNjY=DrX=jr-v8UfNxA@mail.gmail.com>
+ <CAMuHMdUkF32+wOLkfd2BL4h-=0nZjPDMtVOpOcyDYzBbhWXteQ@mail.gmail.com> <CAMpxmJXCYeGjCu_PhCPffZQZ+ST9YCp27-PTHfL2SJ0Bh8SJFQ@mail.gmail.com>
+In-Reply-To: <CAMpxmJXCYeGjCu_PhCPffZQZ+ST9YCp27-PTHfL2SJ0Bh8SJFQ@mail.gmail.com>
 From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Fri, 6 Sep 2019 13:09:39 +0200
-Message-ID: <CAMuHMdXOhrc1o5Jh3TN+JT4VFSSMg8Wy-rsgH=b8hNZQd8rXiA@mail.gmail.com>
+Date:   Fri, 6 Sep 2019 13:14:10 +0200
+Message-ID: <CAMuHMdV32_x5+CEqZM-mNjg5dAEK-D1JNTTGQYqR87u5X2dJqg@mail.gmail.com>
 Subject: Re: [PATCH RFC] gpio: Add Virtual Aggregator GPIO Driver
 To:     Bartosz Golaszewski <bgolaszewski@baylibre.com>
 Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
         Linus Walleij <linus.walleij@linaro.org>,
-        Alexander Graf <agraf@suse.de>,
         Peter Maydell <peter.maydell@linaro.org>,
         Paolo Bonzini <pbonzini@redhat.com>,
         Magnus Damm <magnus.damm@gmail.com>,
@@ -56,32 +57,72 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Jul 9, 2019 at 4:59 PM Bartosz Golaszewski
-<bgolaszewski@baylibre.com> wrote:
-> pon., 8 lip 2019 o 12:24 Geert Uytterhoeven <geert@linux-m68k.org> napisał(a):
-> > On Mon, Jul 8, 2019 at 11:45 AM Bartosz Golaszewski
-> > <bgolaszewski@baylibre.com> wrote:
-> > > pt., 5 lip 2019 o 18:05 Geert Uytterhoeven <geert+renesas@glider.be> napisał(a):
-> > > > +static int gpio_virt_agg_set_config(struct gpio_chip *chip,
-> > > > +                                   unsigned int offset, unsigned long config)
-> > > > +{
-> > > > +       struct gpio_virt_agg_priv *priv = gpiochip_get_data(chip);
-> > > > +
-> > > > +       chip = priv->desc[offset]->gdev->chip;
-> > > > +       if (chip->set_config)
-> > > > +               return chip->set_config(chip, offset, config);
-> > > > +
-> > > > +       // FIXME gpiod_set_transitory() expects success if not implemented
-> >
-> > BTW, do you have a comment about this FIXME?
->
-> Ha! Interesting. I'll give it a thought and respond elsewhere as it's
-> a different subject.
->
-> > > > +       return -ENOTSUPP;
+Hi Bartosz,
 
-Upon closer look, this turns out to be a red herring: gpiod_set_transitory()
-converts -ENOTSUPP to zero, so there is no issue.
+On Fri, Jul 12, 2019 at 11:27 AM Bartosz Golaszewski
+<bgolaszewski@baylibre.com> wrote:
+> wt., 9 lip 2019 o 17:59 Geert Uytterhoeven <geert@linux-m68k.org> napisał(a):
+> > On Tue, Jul 9, 2019 at 4:59 PM Bartosz Golaszewski
+> > <bgolaszewski@baylibre.com> wrote:
+> > > pon., 8 lip 2019 o 12:24 Geert Uytterhoeven <geert@linux-m68k.org> napisał(a):
+> > > > On Mon, Jul 8, 2019 at 11:45 AM Bartosz Golaszewski
+> > > > <bgolaszewski@baylibre.com> wrote:
+> > > > > pt., 5 lip 2019 o 18:05 Geert Uytterhoeven <geert+renesas@glider.be> napisał(a):
+> > > > > > GPIO controllers are exported to userspace using /dev/gpiochip*
+> > > > > > character devices.  Access control to these devices is provided by
+> > > > > > standard UNIX file system permissions, on an all-or-nothing basis:
+> > > > > > either a GPIO controller is accessible for a user, or it is not.
+> > > > > > Currently no mechanism exists to control access to individual GPIOs.
+> > > > > >
+> > > > > > Hence add a virtual GPIO driver to aggregate existing GPIOs (up to 32),
+> > > > > > and expose them as a new gpiochip.  This is useful for implementing
+> > > > > > access control, and assigning a set of GPIOs to a specific user.
+> > > > > > Furthermore, it would simplify and harden exporting GPIOs to a virtual
+> > > > > > machine, as the VM can just grab the full virtual GPIO controller, and
+> > > > > > no longer needs to care about which GPIOs to grab and which not,
+> > > > > > reducing the attack surface.
+> > > > > >
+> > > > > > Virtual GPIO controllers are instantiated by writing to the "new_device"
+> > > > > > attribute file in sysfs:
+> > > > > >
+> > > > > >     $ echo "<gpiochipA> <gpioA1> [<gpioA2> ...]"
+> > > > > >            "[, <gpiochipB> <gpioB1> [<gpioB2> ...]] ...]"
+> > > > > >             > /sys/bus/platform/drivers/gpio-virt-agg/new_device
+> > > > > >
+> > > > > > Likewise, virtual GPIO controllers can be destroyed after use:
+> > > > > >
+> > > > > >     $ echo gpio-virt-agg.<N> \
+> > > > > >             > /sys/bus/platform/drivers/gpio-virt-agg/delete_device
+> >
+> > > Am I doing it right? I'm trying to create a device and am only getting this:
+> > >
+> > > # echo gpiochip2 23 > new_device
+> > > [  707.507039] gpio-virt-agg gpio-virt-agg.0: Cannot find gpiochip gpiochip2
+> > >
+> > > gpiochip2 *does* exist in the system.
+> >
+> > Please try the name of the platform device instead.
+> > I.e. for my koelsch (R-Car M2-W), it needs "e6052000.gpio" instead
+> > of "gpiochip2".
+> >
+> > Probably the driver should match on both.
+> >
+> > > I see. I'll try to review it more thoroughly once I get to play with
+> > > it. So far I'm stuck on creating the virtual chip.
+>
+> This is not a show-stopper but one thing that's bothering me in this
+> is that lines used by the aggregator are considered 'used' in regard
+> to the original chip. I'm wondering how much effort would it take to
+> have them be 'muxed' into two (real and virtual) chips at once.
+
+Is that really what you want?
+If a GPIO is aggregated with othrs, it's intended to be used only through
+the aggregator, isn't it?
+
+> Other than that - seems to works pretty nice other than the matching
+> by chip name and by line names.
+
+Thanks, working on that...
 
 Gr{oetje,eeting}s,
 
