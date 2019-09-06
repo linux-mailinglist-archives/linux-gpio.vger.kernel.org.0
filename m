@@ -2,108 +2,71 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 4717EAB7D0
-	for <lists+linux-gpio@lfdr.de>; Fri,  6 Sep 2019 14:08:13 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6C8A3AB9AF
+	for <lists+linux-gpio@lfdr.de>; Fri,  6 Sep 2019 15:48:40 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404602AbfIFMGr (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 6 Sep 2019 08:06:47 -0400
-Received: from inva020.nxp.com ([92.121.34.13]:33106 "EHLO inva020.nxp.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404426AbfIFMGb (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Fri, 6 Sep 2019 08:06:31 -0400
-Received: from inva020.nxp.com (localhost [127.0.0.1])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 62DE51A05D0;
-        Fri,  6 Sep 2019 14:06:29 +0200 (CEST)
-Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 682C31A00B6;
-        Fri,  6 Sep 2019 14:06:24 +0200 (CEST)
-Received: from titan.ap.freescale.net (TITAN.ap.freescale.net [10.192.208.233])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 0AF19402A5;
-        Fri,  6 Sep 2019 20:06:17 +0800 (SGT)
-From:   Hui Song <hui.song_1@nxp.com>
-To:     Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Cc:     linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-        Song Hui <hui.song_1@nxp.com>
-Subject: [PATCH] gpio/mpc8xxx: change irq handler from chained to normal
-Date:   Fri,  6 Sep 2019 19:56:14 +0800
-Message-Id: <20190906115614.5645-1-hui.song_1@nxp.com>
-X-Mailer: git-send-email 2.9.5
-X-Virus-Scanned: ClamAV using ClamSMTP
+        id S2388719AbfIFNsj (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 6 Sep 2019 09:48:39 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:42472 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727031AbfIFNsj (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Fri, 6 Sep 2019 09:48:39 -0400
+Received: from DGGEMS405-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 6E9F1C240AAF7362C57F;
+        Fri,  6 Sep 2019 21:48:36 +0800 (CST)
+Received: from localhost (10.133.213.239) by DGGEMS405-HUB.china.huawei.com
+ (10.3.19.205) with Microsoft SMTP Server id 14.3.439.0; Fri, 6 Sep 2019
+ 21:48:28 +0800
+From:   YueHaibing <yuehaibing@huawei.com>
+To:     <Eugeniy.Paltsev@synopsys.com>, <linus.walleij@linaro.org>,
+        <bgolaszewski@baylibre.com>
+CC:     <linux-gpio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <kernel-janitors@vger.kernel.org>,
+        YueHaibing <yuehaibing@huawei.com>
+Subject: [PATCH -next] gpio: creg-snps: use devm_platform_ioremap_resource() to simplify code
+Date:   Fri, 6 Sep 2019 21:10:32 +0800
+Message-ID: <20190906131032.22148-1-yuehaibing@huawei.com>
+X-Mailer: git-send-email 2.10.2.windows.1
+MIME-Version: 1.0
+Content-Type: text/plain
+X-Originating-IP: [10.133.213.239]
+X-CFilter-Loop: Reflected
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-From: Song Hui <hui.song_1@nxp.com>
+Use devm_platform_ioremap_resource() to simplify the code a bit.
+This is detected by coccinelle.
 
-more one gpio controller use share one interrupt,
-make request interrupt to be shared.
-
-Signed-off-by: Laurentiu Tudor <Laurentiu.Tudor@nxp.com>
-Signed-off-by: Alex Marginean <alexandru.marginean@nxp.com>
-Signed-off-by: Song Hui <hui.song_1@nxp.com>
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
 ---
- drivers/gpio/gpio-mpc8xxx.c | 20 +++++++++++++-------
- 1 file changed, 13 insertions(+), 7 deletions(-)
+ drivers/gpio/gpio-creg-snps.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
-diff --git a/drivers/gpio/gpio-mpc8xxx.c b/drivers/gpio/gpio-mpc8xxx.c
-index 16a47de..4006250 100644
---- a/drivers/gpio/gpio-mpc8xxx.c
-+++ b/drivers/gpio/gpio-mpc8xxx.c
-@@ -22,6 +22,7 @@
- #include <linux/irq.h>
- #include <linux/gpio/driver.h>
- #include <linux/bitops.h>
-+#include <linux/interrupt.h>
+diff --git a/drivers/gpio/gpio-creg-snps.c b/drivers/gpio/gpio-creg-snps.c
+index 8cbc94d..ff19a8a 100644
+--- a/drivers/gpio/gpio-creg-snps.c
++++ b/drivers/gpio/gpio-creg-snps.c
+@@ -137,7 +137,6 @@ static int creg_gpio_probe(struct platform_device *pdev)
+ 	const struct of_device_id *match;
+ 	struct device *dev = &pdev->dev;
+ 	struct creg_gpio *hcg;
+-	struct resource *mem;
+ 	u32 ngpios;
+ 	int ret;
  
- #define MPC8XXX_GPIO_PINS	32
+@@ -145,8 +144,7 @@ static int creg_gpio_probe(struct platform_device *pdev)
+ 	if (!hcg)
+ 		return -ENOMEM;
  
-@@ -127,10 +128,9 @@ static int mpc8xxx_gpio_to_irq(struct gpio_chip *gc, unsigned offset)
- 		return -ENXIO;
- }
+-	mem = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+-	hcg->regs = devm_ioremap_resource(dev, mem);
++	hcg->regs = devm_platform_ioremap_resource(pdev, 0);
+ 	if (IS_ERR(hcg->regs))
+ 		return PTR_ERR(hcg->regs);
  
--static void mpc8xxx_gpio_irq_cascade(struct irq_desc *desc)
-+static irqreturn_t mpc8xxx_gpio_irq_cascade(int irq, void *data)
- {
--	struct mpc8xxx_gpio_chip *mpc8xxx_gc = irq_desc_get_handler_data(desc);
--	struct irq_chip *chip = irq_desc_get_chip(desc);
-+	struct mpc8xxx_gpio_chip *mpc8xxx_gc = (struct mpc8xxx_gpio_chip *)data;
- 	struct gpio_chip *gc = &mpc8xxx_gc->gc;
- 	unsigned int mask;
- 
-@@ -139,8 +139,8 @@ static void mpc8xxx_gpio_irq_cascade(struct irq_desc *desc)
- 	if (mask)
- 		generic_handle_irq(irq_linear_revmap(mpc8xxx_gc->irq,
- 						     32 - ffs(mask)));
--	if (chip->irq_eoi)
--		chip->irq_eoi(&desc->irq_data);
-+
-+	return IRQ_HANDLED;
- }
- 
- static void mpc8xxx_irq_unmask(struct irq_data *d)
-@@ -409,8 +409,14 @@ static int mpc8xxx_probe(struct platform_device *pdev)
- 	if (devtype->gpio_dir_in_init)
- 		devtype->gpio_dir_in_init(gc);
- 
--	irq_set_chained_handler_and_data(mpc8xxx_gc->irqn,
--					 mpc8xxx_gpio_irq_cascade, mpc8xxx_gc);
-+	ret = request_irq(mpc8xxx_gc->irqn, mpc8xxx_gpio_irq_cascade,
-+		IRQF_NO_THREAD | IRQF_SHARED, "gpio-cascade", mpc8xxx_gc);
-+	if (ret) {
-+		pr_err("%s: failed to request_irq(%d), ret = %d\n",
-+				np->full_name, mpc8xxx_gc->irqn, ret);
-+		goto err;
-+	}
-+
- 	return 0;
- err:
- 	iounmap(mpc8xxx_gc->regs);
 -- 
-2.9.5
+2.7.4
+
 
