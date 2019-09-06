@@ -2,62 +2,62 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id C29BEAB26D
-	for <lists+linux-gpio@lfdr.de>; Fri,  6 Sep 2019 08:26:32 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C74E3AB271
+	for <lists+linux-gpio@lfdr.de>; Fri,  6 Sep 2019 08:26:55 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389006AbfIFG0c (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 6 Sep 2019 02:26:32 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:47102 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727970AbfIFG0c (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 6 Sep 2019 02:26:32 -0400
-Received: by mail-pl1-f194.google.com with SMTP id t1so2606800plq.13;
-        Thu, 05 Sep 2019 23:26:31 -0700 (PDT)
+        id S1730440AbfIFG0z (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 6 Sep 2019 02:26:55 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:45271 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727970AbfIFG0y (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 6 Sep 2019 02:26:54 -0400
+Received: by mail-pg1-f196.google.com with SMTP id 4so2873049pgm.12;
+        Thu, 05 Sep 2019 23:26:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=VywQQgwoddW91Jq4aMSrybOZ072q9St1Z4i5rxfAKss=;
-        b=GGNMeOiyYHFVFbotkWPcgoumWVou3FxdbVs9/ZllGyRMZj3CYE50mPl9eaGFK1SSJ1
-         ehwBhp1UScc4KWEVlRPTVx5dcCy+WX7EbS7TTARFNII+ncgxuk21EEMFuOwhgWtIa+hy
-         /f6e7unxpJT7Gy1vtgrYz8B8OK/i7/jJyGmy06Zd2HRGt0nVcQhxLxpf/i6vGD+oGigX
-         CpnNnsbajWYqKej4a5ukjmDX2t/YD8+maxsED7v6pUHoO6keEhTC2ZjlnTfxTkfPQXbD
-         vTYcDqCdcICnYEKy+XEg3z7BLeBcmQK0pGKWBNT+XrnEdIR8+Zot+2wioR+D/zN7vM4n
-         vGtQ==
+        bh=nBz/Nw09bo2+Nxy27B6Bnst72+LgNmbIsMhxAo7ybD0=;
+        b=aUMqxfSdSnkuwGPqLRjheiUFzikOfV2fc0xU5mynUICbJ06VKhxLcszMC7XIGhR+9a
+         LCox84h/CIDLKI1gSOXrLAHb3iR6w4VFUPCGACcdJ6Ma0OQwvRE2K/M2jl30aGnGEUHh
+         qtdsJvleLml70aYLbf52MZduXl+OBtmnBO7lfJ5+23BRakN9poArHpHZ7Vp3xIAEP4Ip
+         IKpv9txRDkokW+UwGti5JJzeptzCSA4SXd8fNu4C6HaAUyOdEMbrrwRHBDnX2D1FweAj
+         5DG0jbewwAw/rv0ZkvJaoVxtqR6FcgG8OKwBRl3aqO1YWYoIVxWHLYc9xe36ZLlCKuq8
+         nnWQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=VywQQgwoddW91Jq4aMSrybOZ072q9St1Z4i5rxfAKss=;
-        b=ccQ9r9amEQbh0fm4AQC3+9NX+4nWibbqq+Xy1XNpL6k2F+gkLcYSaZzEjNl0BFEHiV
-         6IYvnv03BAsxIC9+tTDkkkLAZ2pWe6W5EVQeSxvwgUENxO2yGoQLwBL/YYwmMlZg3ZZE
-         riWCXcsQzjcCyQv9sX+CX22/08S3i4IyOy1zYqsEcgTgxFiBSvH0C467ImXQqTHZmchR
-         DFl6FMLG/rs4dduLfYIU683wlj51/u24U+VSYWUmiVEk+HWcoF479DO5EdpaYuigV+GM
-         JXR32UuFdOP04XkMDPXFQiB0UgLj8iCvlqr+RwkT+5g/Lt0CsY06CrkAyoWh9Xts0fHm
-         QM5A==
-X-Gm-Message-State: APjAAAWiY2eSTkvym3fryYwOoKPWDhUZoMg4SsOCF01Z6/I5T1H5enTL
-        UWgNS6ownm/jCxeCI8g0G40=
-X-Google-Smtp-Source: APXvYqyB4ARXWSH67d+dolbjyhdZvVBxPlfvR8PsPQ1/637E5ASl4JnhB8dHZykbbS8hKbyHlvXzkg==
-X-Received: by 2002:a17:902:aa02:: with SMTP id be2mr7780215plb.172.1567751191484;
-        Thu, 05 Sep 2019 23:26:31 -0700 (PDT)
+        bh=nBz/Nw09bo2+Nxy27B6Bnst72+LgNmbIsMhxAo7ybD0=;
+        b=LD0Dgs7/gCXWkOHszPhgTgmBJ2OpQRIJrPLu0v58olzYWkz9991zilQHdXZwDDiKuM
+         vGGCYzwWZ/mM33ro1czNCBD63dJlOSZJdn6bWaMA5/CbTZOfSLriXd+jHaHupWtQW4iC
+         Zv23bG+S3gMkdaoPK8DxkBG4SOFyvQSRT5EUH58EHiQYQgQrRbZOI1WAICJfQC6n+zkd
+         9/AUozEIv5QZLyD2+GY2bDt8GCPTlC1gohy1jXBXcM8oS9jjbji6h5CHrorcjM0F1ICW
+         37HJPukQe/chlHSpGlQg2a5utqX8HBnCAbaxq5jM6q61mcZRyQvlHfkzi9t5wwdjRlf1
+         MpRA==
+X-Gm-Message-State: APjAAAXRQTGMAyg+YzTGONA03fPAobCFV3+18yaJY9zY3gBlR8D8kzlf
+        wKaK0ZE9nRNZzP9QY3Ztkjg=
+X-Google-Smtp-Source: APXvYqxBZZ2BelsDovsxHdtpDaLyiv2LFGl8lKiDGpiVUZV8DHdc7jIWEf8BdGHl1IAd2NAHni+KZA==
+X-Received: by 2002:a63:6904:: with SMTP id e4mr6538279pgc.321.1567751214158;
+        Thu, 05 Sep 2019 23:26:54 -0700 (PDT)
 Received: from rashmica.ozlabs.ibm.com ([122.99.82.10])
-        by smtp.gmail.com with ESMTPSA id c64sm1631254pfc.19.2019.09.05.23.26.27
+        by smtp.gmail.com with ESMTPSA id a20sm3109704pfo.33.2019.09.05.23.26.50
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 05 Sep 2019 23:26:30 -0700 (PDT)
+        Thu, 05 Sep 2019 23:26:53 -0700 (PDT)
 From:   Rashmica Gupta <rashmica.g@gmail.com>
 To:     linus.walleij@linaro.org
 Cc:     Rashmica Gupta <rashmica.g@gmail.com>,
-        Andrew Jeffery <andrew@aj.id.au>,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>,
         Joel Stanley <joel@jms.id.au>,
+        Andrew Jeffery <andrew@aj.id.au>,
         linux-gpio@vger.kernel.org (open list:GPIO SUBSYSTEM),
         linux-arm-kernel@lists.infradead.org (moderated list:ARM/ASPEED MACHINE
         SUPPORT),
         linux-aspeed@lists.ozlabs.org (moderated list:ARM/ASPEED MACHINE
         SUPPORT), linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH v3 2/5] gpio/aspeed: Fix incorrect number of banks
-Date:   Fri,  6 Sep 2019 16:26:22 +1000
-Message-Id: <20190906062623.13354-1-rashmica.g@gmail.com>
+Subject: [PATCH v3 3/5] gpio/aspeed: Setup irqchip dynamically
+Date:   Fri,  6 Sep 2019 16:26:44 +1000
+Message-Id: <20190906062644.13445-1-rashmica.g@gmail.com>
 X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -66,31 +66,56 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-The current calculation for the number of GPIO banks is only correct if
-the number of GPIOs is a multiple of 32 (if there were 31 GPIOs we would
-currently say there are 0 banks, which is incorrect).
-
-Fixes: 361b79119a4b7 ('gpio: Add Aspeed driver')
+This is in preparation for adding ast2600 support. The ast2600 SoC
+requires two instances of the GPIO driver as it has two GPIO
+controllers. Each instance needs it's own irqchip.
 
 Signed-off-by: Rashmica Gupta <rashmica.g@gmail.com>
-Reviewed-by: Andrew Jeffery <andrew@aj.id.au>
 ---
- drivers/gpio/gpio-aspeed.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/gpio/gpio-aspeed.c | 16 +++++++---------
+ 1 file changed, 7 insertions(+), 9 deletions(-)
 
 diff --git a/drivers/gpio/gpio-aspeed.c b/drivers/gpio/gpio-aspeed.c
-index 9defe25d4721..b83e23aecd18 100644
+index b83e23aecd18..16c6eaf70857 100644
 --- a/drivers/gpio/gpio-aspeed.c
 +++ b/drivers/gpio/gpio-aspeed.c
-@@ -1165,7 +1165,7 @@ static int __init aspeed_gpio_probe(struct platform_device *pdev)
- 	gpio->chip.base = -1;
+@@ -52,6 +52,7 @@ struct aspeed_gpio_config {
+  */
+ struct aspeed_gpio {
+ 	struct gpio_chip chip;
++	struct irq_chip irqc;
+ 	spinlock_t lock;
+ 	void __iomem *base;
+ 	int irq;
+@@ -681,14 +682,6 @@ static void aspeed_gpio_irq_handler(struct irq_desc *desc)
+ 	chained_irq_exit(ic, desc);
+ }
  
- 	/* Allocate a cache of the output registers */
--	banks = gpio->config->nr_gpios >> 5;
-+	banks = DIV_ROUND_UP(gpio->config->nr_gpios, 32);
- 	gpio->dcache = devm_kcalloc(&pdev->dev,
- 				    banks, sizeof(u32), GFP_KERNEL);
- 	if (!gpio->dcache)
+-static struct irq_chip aspeed_gpio_irqchip = {
+-	.name		= "aspeed-gpio",
+-	.irq_ack	= aspeed_gpio_irq_ack,
+-	.irq_mask	= aspeed_gpio_irq_mask,
+-	.irq_unmask	= aspeed_gpio_irq_unmask,
+-	.irq_set_type	= aspeed_gpio_set_type,
+-};
+-
+ static void set_irq_valid_mask(struct aspeed_gpio *gpio)
+ {
+ 	const struct aspeed_bank_props *props = gpio->config->props;
+@@ -1192,7 +1185,12 @@ static int __init aspeed_gpio_probe(struct platform_device *pdev)
+ 
+ 		gpio->irq = rc;
+ 		girq = &gpio->chip.irq;
+-		girq->chip = &aspeed_gpio_irqchip;
++		girq->chip = &gpio->irqc;
++		girq->chip->name = dev_name(&pdev->dev);
++		girq->chip->irq_ack = aspeed_gpio_irq_ack;
++		girq->chip->irq_mask = aspeed_gpio_irq_mask;
++		girq->chip->irq_unmask = aspeed_gpio_irq_unmask;
++		girq->chip->irq_set_type = aspeed_gpio_set_type;
+ 		girq->parent_handler = aspeed_gpio_irq_handler;
+ 		girq->num_parents = 1;
+ 		girq->parents = devm_kcalloc(&pdev->dev, 1,
 -- 
 2.20.1
 
