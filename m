@@ -2,93 +2,116 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 37E3FAB562
-	for <lists+linux-gpio@lfdr.de>; Fri,  6 Sep 2019 12:08:07 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CFB4BAB651
+	for <lists+linux-gpio@lfdr.de>; Fri,  6 Sep 2019 12:47:28 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726008AbfIFKIG (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 6 Sep 2019 06:08:06 -0400
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:37284 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725975AbfIFKIG (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 6 Sep 2019 06:08:06 -0400
-Received: by mail-lf1-f66.google.com with SMTP id w67so4530805lff.4
-        for <linux-gpio@vger.kernel.org>; Fri, 06 Sep 2019 03:08:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=kms00KK7xrS9j+PsdEtET2aQsT/1Gao5klx1Mqds7jQ=;
-        b=zq8Ne7JsEEGIlolTC72WD2gU+yulL5Z37xCsgdxRMmarme3nTBLwX6Oi1JpoCMlNz+
-         LKSv6l3Cy0N9Qmkhl9rquqV0oemNLId+tXo36ACBxiDpuAEaFasxZjd/dmhy62uWqK0q
-         wZDlMYlRXdhTbsEz/Enk4Nk2XoZvHPPXHS8qZgcYPzLMIV4kB6gsEXBQZiPtL5NT9cuV
-         PvVVNDNYOoG+BNNV2Pi1gKwxJwy0976bRloh2OwXGm+RjsoOyr99yRCK1425ZvMVm76m
-         dr+I6KiO9wAiv+Cn1jqsLhH74G2J0ectZAq7hAMYfLalxIa98oYGIrlXSA9dQYzGAPo0
-         BDQw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=kms00KK7xrS9j+PsdEtET2aQsT/1Gao5klx1Mqds7jQ=;
-        b=g3OvbvIt+kQuL9E0yNvF99PPVoQL/BlHyYlsooR7u82LlOoNwgHK9BCnAYuXq3Q/j2
-         KP3mHikwdkwFKh8MxH0dX4JyN/DOjHLDAdUCSnw/lvuVPpiIgQj90sPU8yc+aA+mAobP
-         4rjlF69SdM4leNF5sRwiCEua7gxYF1b/63KZzoJsBlcpV0wUovqNA+hf2AmxQk8vekKP
-         LTiW6x3NUTjGG2ohPnmHm/HPb15h8wEYVAqq0eoTKF7i4ljN9bJregQPTCtDyg9c9RBh
-         ZsBcLn+Wflc/U7CLMDAP/Wbd+/eO95pSY7dQdV3GGPWcU5XPjumNL3sCR8zhx+4FXLZo
-         aqiA==
-X-Gm-Message-State: APjAAAX7Zjw3osSYahVxRWwGWKIR8H46p6ZOQ4T25TYCl/yAEPdXO+o7
-        DIz5VesFhfZuHOGZfwgJrKTpXrqJhG5uOgKS
-X-Google-Smtp-Source: APXvYqzogTs2/j47DUcbrtgTISHABSnGzXlTpfF1Ms/EkTC+iWdJIClgWqOBuBrGx+j9KBLF4YRxGw==
-X-Received: by 2002:ac2:5483:: with SMTP id t3mr5834863lfk.39.1567764484348;
-        Fri, 06 Sep 2019 03:08:04 -0700 (PDT)
-Received: from localhost.localdomain ([185.122.190.73])
-        by smtp.gmail.com with ESMTPSA id h21sm846481ljg.34.2019.09.06.03.08.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 06 Sep 2019 03:08:03 -0700 (PDT)
-From:   Linus Walleij <linus.walleij@linaro.org>
-To:     linux-gpio@vger.kernel.org
-Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Linus Walleij <linus.walleij@linaro.org>
-Subject: [PATCH] gpio: Fix further merge errors
-Date:   Fri,  6 Sep 2019 12:08:01 +0200
-Message-Id: <20190906100801.5752-1-linus.walleij@linaro.org>
-X-Mailer: git-send-email 2.21.0
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        id S2389780AbfIFKrS (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 6 Sep 2019 06:47:18 -0400
+Received: from inva020.nxp.com ([92.121.34.13]:34920 "EHLO inva020.nxp.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726080AbfIFKrS (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Fri, 6 Sep 2019 06:47:18 -0400
+Received: from inva020.nxp.com (localhost [127.0.0.1])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id EC6331A0216;
+        Fri,  6 Sep 2019 12:47:15 +0200 (CEST)
+Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id F00A21A0BC3;
+        Fri,  6 Sep 2019 12:47:10 +0200 (CEST)
+Received: from titan.ap.freescale.net (TITAN.ap.freescale.net [10.192.208.233])
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 8E114402FB;
+        Fri,  6 Sep 2019 18:47:04 +0800 (SGT)
+From:   Hui Song <hui.song_1@nxp.com>
+To:     Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Cc:     linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+        Song Hui <hui.song_1@nxp.com>
+Subject: [PATCH] gpio/mpc8xxx: change irq handler from chained to normal
+Date:   Fri,  6 Sep 2019 18:37:00 +0800
+Message-Id: <20190906103700.2034-1-hui.song_1@nxp.com>
+X-Mailer: git-send-email 2.9.5
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-The previous merge of v5.3-rc7 was struggle enough, now it
-gave rise to new errors and now I fix those too.
+From: Song Hui <hui.song_1@nxp.com>
 
-Fixes: 151a41014bff ("Merge tag 'v5.3-rc7' into devel")
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+more one gpio controller use share one interrupt,
+make request interrupt to be shared.
+
+Signed-off-by: Laurentiu Tudor <Laurentiu.Tudor@nxp.com>
+Signed-off-by: Alex Marginean <alexandru.marginean@nxp.com>
+Signed-off-by: Song Hui <hui.song_1@nxp.com>
 ---
- drivers/gpio/gpiolib.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ drivers/gpio/gpio-mpc8xxx.c | 21 ++++++++++++++-------
+ 1 file changed, 14 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
-index 5b351f87c50a..56d0898d94aa 100644
---- a/drivers/gpio/gpiolib.c
-+++ b/drivers/gpio/gpiolib.c
-@@ -1399,12 +1399,12 @@ int gpiochip_add_data_with_key(struct gpio_chip *chip, void *data,
+diff --git a/drivers/gpio/gpio-mpc8xxx.c b/drivers/gpio/gpio-mpc8xxx.c
+index 1a680aa..4006250 100644
+--- a/drivers/gpio/gpio-mpc8xxx.c
++++ b/drivers/gpio/gpio-mpc8xxx.c
+@@ -22,6 +22,7 @@
+ #include <linux/irq.h>
+ #include <linux/gpio/driver.h>
+ #include <linux/bitops.h>
++#include <linux/interrupt.h>
  
- 	machine_gpiochip_add(chip);
+ #define MPC8XXX_GPIO_PINS	32
  
--	status = gpiochip_irqchip_init_valid_mask(chip);
--	if (status)
-+	ret = gpiochip_irqchip_init_valid_mask(chip);
-+	if (ret)
- 		goto err_remove_acpi_chip;
+@@ -127,10 +128,9 @@ static int mpc8xxx_gpio_to_irq(struct gpio_chip *gc, unsigned offset)
+ 		return -ENXIO;
+ }
  
--	status = gpiochip_add_irqchip(chip, lock_key, request_key);
--	if (status)
-+	ret = gpiochip_add_irqchip(chip, lock_key, request_key);
-+	if (ret)
- 		goto err_remove_irqchip_mask;
+-static void mpc8xxx_gpio_irq_cascade(struct irq_desc *desc)
++static irqreturn_t mpc8xxx_gpio_irq_cascade(int irq, void *data)
+ {
+-	struct mpc8xxx_gpio_chip *mpc8xxx_gc = irq_desc_get_handler_data(desc);
+-	struct irq_chip *chip = irq_desc_get_chip(desc);
++	struct mpc8xxx_gpio_chip *mpc8xxx_gc = (struct mpc8xxx_gpio_chip *)data;
+ 	struct gpio_chip *gc = &mpc8xxx_gc->gc;
+ 	unsigned int mask;
  
- 	/*
+@@ -139,8 +139,8 @@ static void mpc8xxx_gpio_irq_cascade(struct irq_desc *desc)
+ 	if (mask)
+ 		generic_handle_irq(irq_linear_revmap(mpc8xxx_gc->irq,
+ 						     32 - ffs(mask)));
+-	if (chip->irq_eoi)
+-		chip->irq_eoi(&desc->irq_data);
++
++	return IRQ_HANDLED;
+ }
+ 
+ static void mpc8xxx_irq_unmask(struct irq_data *d)
+@@ -319,6 +319,7 @@ static const struct of_device_id mpc8xxx_gpio_ids[] = {
+ 	{ .compatible = "fsl,mpc5125-gpio", .data = &mpc5125_gpio_devtype, },
+ 	{ .compatible = "fsl,pq3-gpio",     },
+ 	{ .compatible = "fsl,ls1028a-gpio", .data = &ls1028a_gpio_devtype, },
++	{ .compatible = "fsl,ls1088a-gpio", .data = &ls1028a_gpio_devtype, },
+ 	{ .compatible = "fsl,qoriq-gpio",   },
+ 	{}
+ };
+@@ -408,8 +409,14 @@ static int mpc8xxx_probe(struct platform_device *pdev)
+ 	if (devtype->gpio_dir_in_init)
+ 		devtype->gpio_dir_in_init(gc);
+ 
+-	irq_set_chained_handler_and_data(mpc8xxx_gc->irqn,
+-					 mpc8xxx_gpio_irq_cascade, mpc8xxx_gc);
++	ret = request_irq(mpc8xxx_gc->irqn, mpc8xxx_gpio_irq_cascade,
++		IRQF_NO_THREAD | IRQF_SHARED, "gpio-cascade", mpc8xxx_gc);
++	if (ret) {
++		pr_err("%s: failed to request_irq(%d), ret = %d\n",
++				np->full_name, mpc8xxx_gc->irqn, ret);
++		goto err;
++	}
++
+ 	return 0;
+ err:
+ 	iounmap(mpc8xxx_gc->regs);
 -- 
-2.21.0
+2.9.5
 
