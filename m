@@ -2,48 +2,48 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id C0E69AB261
-	for <lists+linux-gpio@lfdr.de>; Fri,  6 Sep 2019 08:25:32 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 930FEAB26A
+	for <lists+linux-gpio@lfdr.de>; Fri,  6 Sep 2019 08:26:07 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730476AbfIFGZb (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 6 Sep 2019 02:25:31 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:33021 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727970AbfIFGZb (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 6 Sep 2019 02:25:31 -0400
-Received: by mail-pf1-f194.google.com with SMTP id q10so3677887pfl.0;
-        Thu, 05 Sep 2019 23:25:31 -0700 (PDT)
+        id S2391832AbfIFGZ7 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 6 Sep 2019 02:25:59 -0400
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:38130 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727970AbfIFGZ6 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 6 Sep 2019 02:25:58 -0400
+Received: by mail-pl1-f196.google.com with SMTP id w11so2636362plp.5;
+        Thu, 05 Sep 2019 23:25:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=tB2RNxXRErmJ9e3PrRrfYZt/4IO0/YJdN93uotJXzmg=;
-        b=KHw7ngbgKFGwXSFYuiQbGQBfie880OX2vpp7L7MkL1sULSWNTS+amLlNfeUx7rmuOp
-         E9CSHIH+Snd+pHoNvNkmoZPMxy2VDvQqTpqGVu6G2n6Yu2DJQ33iR4a+b1nOTbCtdCkJ
-         Ut6L9cfoS+yOgTUVEvlrjqyUeOHn17ryGyo0lFFLqh/mokWzyKNTkzYqmMrymwaxFF3e
-         8wFtNMlScmfR4ntuMwoNwxaxjHmJI0iqON9yO31sLfTs/v1XFrEicM7OsWR1Rdtvjce9
-         WdKepwAaq6dsMxsIXT8ilMO01Lezvk7CaRhJA6DSiYSJRoGNPSlNApc3uZpDPQIdBFK8
-         9knQ==
+        bh=nRxcumHCoieD4YHhJDBwA9IBTCoCwLTVhc9o3nRRDkI=;
+        b=ADimNP2ND3VOH2ln0p+yNfF/DGU2qkBipN72ljAr/PczQvTfbrKsX07vY8Zdwngoar
+         LhdZEUosmuWvZxdURnHwN7oYANLXkw1O7D6cD5OJp5+/tCkczEX/nk5v6+w2CXfSDCk9
+         L8eHl7xI6P/RcTjbsUVJuQNkq6YLcLN6H3OV6ApvAePbpWSpsOyYEqqqvMNYFtcxKvQR
+         cbG2R/hIbwiZcQaSbzwjgw2yVtC0T4zgOKxeF049FwRTUIo7ETmaEAstIajleYpZtZKM
+         C42BxBvR8hUAH8v2LxsxzjNdxPxoxqeK2II8PyPVrsFPJubqbesfhTTe9RIflLXv6b83
+         6QLg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=tB2RNxXRErmJ9e3PrRrfYZt/4IO0/YJdN93uotJXzmg=;
-        b=gR7uIS6L+KorWk7yWcynRxWc9cIU9NU4bwpOj2+4c5OFE4V1mgulz4qfK6PevXa0+0
-         H71ExLx2H8FEpT2z20rWCXI7wdBZy9ia/B8JYS5QLVvPuHyouh0Ci75PTxChAVmU+lTX
-         +JJuS0rVz80mGnXGoe7Uw/oXhIKOpK+BNGMgNSF8YWGLxOkjhPZp0tPvO93tIqFWL+HE
-         Uku5L/RK5MsNxD2zzrG2r6cYrd2W2y9jUkHZ6OjH4o3PVbSBrLjRZPzA4Dte3vEoiXKU
-         gkJAMKbgc3+RQDDe0acZDKHjE87MJ+BnWLMRmkK9GnzcgCKv7ZIEcwT6nNqWpMpjE2GH
-         ZqBg==
-X-Gm-Message-State: APjAAAVAo7iTsGz5kTHCM5UDlYwTk6OfLvWEgRXdGJpV/T1GJHJOHBtR
-        Ha7/MEqSHNRvdXOtvmmBG1w=
-X-Google-Smtp-Source: APXvYqyQA5o7Nplg7Mz6cACJYxVi92CNBUmDeAZ/6//NQuySZy9WiwRBzeJBgCrM660faJtp+bFQrg==
-X-Received: by 2002:a63:6f41:: with SMTP id k62mr6650552pgc.32.1567751130676;
-        Thu, 05 Sep 2019 23:25:30 -0700 (PDT)
+        bh=nRxcumHCoieD4YHhJDBwA9IBTCoCwLTVhc9o3nRRDkI=;
+        b=MuW1ggQqkU0Wkossy8PGyQMQQyKS0Ee8dYjwcZeyh15DipREOpoBdZnzUL+cLD/vCR
+         5aoWbUR0bPcGGbuDePqda/bvHZMNb4Wq+QdkGW3Saxsg80+FVhNC7lnkog783Dp0uCqq
+         0RAPQvwsN7P7RbDJXE4mnH+EsFOp8Y/lK3io2LLNd0ZM5uafd/5vcc6/59929hRbYaub
+         eLCTX3Zr8g0nT2TR9Y2VNmkl1AZi042cF8VAuPFxEjV5AzMbX+lBUZ1TU+aehuM1V3RG
+         7Y1Tjdt3G6Z0xFkatiIsHS30s3+50yoaUOeOAKbXr5sFCTk8nKa+4pn3oED7yfH/LZCR
+         WZGw==
+X-Gm-Message-State: APjAAAWCRiOD6wv5iqU3+dLiYa80cYYHB7+tUpRX+wh5dq8JeWXdZeL7
+        Yt80/Avzgcep1RmrAMYnt8oBHwknFqU=
+X-Google-Smtp-Source: APXvYqxAHm7TEMjvZZG+IKwNgVMQW4iXvRHQ3UYm4fIeZ5CGft2zoBZMr3vCIp78S9acysQdbufG3A==
+X-Received: by 2002:a17:902:748b:: with SMTP id h11mr7587383pll.269.1567751158029;
+        Thu, 05 Sep 2019 23:25:58 -0700 (PDT)
 Received: from rashmica.ozlabs.ibm.com ([122.99.82.10])
-        by smtp.gmail.com with ESMTPSA id b5sm7950688pfp.38.2019.09.05.23.25.26
+        by smtp.gmail.com with ESMTPSA id y192sm6244998pfg.141.2019.09.05.23.25.53
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 05 Sep 2019 23:25:30 -0700 (PDT)
+        Thu, 05 Sep 2019 23:25:57 -0700 (PDT)
 From:   Rashmica Gupta <rashmica.g@gmail.com>
 To:     linus.walleij@linaro.org
 Cc:     Rashmica Gupta <rashmica.g@gmail.com>,
@@ -59,9 +59,9 @@ Cc:     Rashmica Gupta <rashmica.g@gmail.com>,
         SUPPORT),
         linux-aspeed@lists.ozlabs.org (moderated list:ARM/ASPEED MACHINE
         SUPPORT), linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH v3 0/5] Add ast2600 gpio support
-Date:   Fri,  6 Sep 2019 16:25:10 +1000
-Message-Id: <20190906062510.13191-1-rashmica.g@gmail.com>
+Subject: [PATCH v3 1/5] dt-bindings: gpio: aspeed: Update documentation with ast2600 controllers
+Date:   Fri,  6 Sep 2019 16:25:47 +1000
+Message-Id: <20190906062547.13264-1-rashmica.g@gmail.com>
 X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -70,23 +70,41 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-v3: Different ordering of patches, using ngpio property to distinguish between
-the two ast2600 gpio controllers, fixed typos of 3.6V.
+The ast2600 is a new generation of SoC from ASPEED. Similarly to the
+ast2400 and ast2500, it has a GPIO controller for it's 3.3V GPIO pins.
+Additionally, it has a GPIO controller for 36 1.8V GPIO pins.  We use
+the ngpio property to differentiate between these controllers.
 
-v2: More verbose commit messages, using DIV_ROUND_UP().
+Signed-off-by: Rashmica Gupta <rashmica.g@gmail.com>
+---
+ Documentation/devicetree/bindings/gpio/gpio-aspeed.txt | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
 
-Rashmica Gupta (5):
-  dt-bindings: gpio: aspeed: Update documentation with ast2600
-    controllers
-  gpio/aspeed: Fix incorrect number of banks
-  gpio/aspeed: Setup irqchip dynamically
-  gpios: Use ngpio property from device tree if available
-  gpio: Add in ast2600 details to Aspeed driver
-
- drivers/gpio/gpio-aspeed.c                    | 52 ++++++++++++-------
- .../devicetree/bindings/gpio/gpio-aspeed.txt  |  7 ++-
- 2 files changed, 39 insertions(+), 20 deletions(-)
-
+diff --git a/Documentation/devicetree/bindings/gpio/gpio-aspeed.txt b/Documentation/devicetree/bindings/gpio/gpio-aspeed.txt
+index 7e9b586770b0..b2033fc3a71a 100644
+--- a/Documentation/devicetree/bindings/gpio/gpio-aspeed.txt
++++ b/Documentation/devicetree/bindings/gpio/gpio-aspeed.txt
+@@ -2,7 +2,8 @@ Aspeed GPIO controller Device Tree Bindings
+ -------------------------------------------
+ 
+ Required properties:
+-- compatible		: Either "aspeed,ast2400-gpio" or "aspeed,ast2500-gpio"
++- compatible		: Either "aspeed,ast2400-gpio", "aspeed,ast2500-gpio",
++					or "aspeed,ast2600-gpio".
+ 
+ - #gpio-cells 		: Should be two
+ 			  - First cell is the GPIO line number
+@@ -17,7 +18,9 @@ Required properties:
+ 
+ Optional properties:
+ 
+-- clocks                : A phandle to the clock to use for debounce timings
++- clocks		: A phandle to the clock to use for debounce timings
++- ngpios		: Number of GPIOs controlled by this controller. Should	be set
++				  when there are multiple GPIO controllers on a SoC (ast2600).
+ 
+ The gpio and interrupt properties are further described in their respective
+ bindings documentation:
 -- 
 2.20.1
 
