@@ -2,135 +2,108 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 88FB3AB6F2
-	for <lists+linux-gpio@lfdr.de>; Fri,  6 Sep 2019 13:14:24 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4717EAB7D0
+	for <lists+linux-gpio@lfdr.de>; Fri,  6 Sep 2019 14:08:13 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726937AbfIFLOX convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-gpio@lfdr.de>); Fri, 6 Sep 2019 07:14:23 -0400
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:39014 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726231AbfIFLOX (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 6 Sep 2019 07:14:23 -0400
-Received: by mail-ot1-f65.google.com with SMTP id n7so5348745otk.6;
-        Fri, 06 Sep 2019 04:14:22 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=A+M249Y2yXTR5pLBFzUNH1SBf+7zmy/nNt6gvl0in+8=;
-        b=ay3oHVCvhkOP4NCTsypUY8oM+oDGeXKR8DMt3kZaxiOGKxKu3ocvmz9GawMYIQG0xV
-         dxypLYOYFoIJag0hImEircHpTUDwE5tEedcSuX5+aU2eWGuurARp3DTbjlmIdPvOX0xE
-         JShBsh4+SM4CROCBLTiFvAkeLKURYbZp0HncVEwVYhTSay0WjYVv9a9PH7qyJ+SuHwz1
-         8QB+kezx1lSi5UxyDJbxcv1dbWmmJtOv8EobOCMfCyMUfY+Aw6LdSdyUiG709F6CBEcy
-         YcTHWNL0zTeAWf52sdAQRCQGgllGQMfvo6VNzRXkjaGrKlJ8DMYUWuY1eFYoxOzsXAGN
-         EQ8A==
-X-Gm-Message-State: APjAAAVouXrwZq1gD4s6qlAs+H8cuHLbtdbaShdMeIx7c0emn2EunT3D
-        AHBkB7bM5/+cX2dVDqgoEkZrtAGZPu4RGQuJkTw=
-X-Google-Smtp-Source: APXvYqzUNQXMQuLstdGXR8mRJrmMCqQfnRb/uNRT1dACYw9FvhrBJuzXdIAg5nMAqX8cUVjMPZH+gtG74Cj8EpGzPcc=
-X-Received: by 2002:a05:6830:1196:: with SMTP id u22mr6812488otq.39.1567768461501;
- Fri, 06 Sep 2019 04:14:21 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190705160536.12047-1-geert+renesas@glider.be>
- <CAMpxmJXOrDLdw6ZPBHxzsDRYiLmhRNCb-s_Z=Gu=Ecg1XA5ONQ@mail.gmail.com>
- <CAMuHMdWdb0dcS8Nvk-Poz2dT7nuHjFhqpsRPZZnSKsc3VffcRA@mail.gmail.com>
- <CAMpxmJUF1s1zyXVtoUGfbV7Yk+heua4rNjY=DrX=jr-v8UfNxA@mail.gmail.com>
- <CAMuHMdUkF32+wOLkfd2BL4h-=0nZjPDMtVOpOcyDYzBbhWXteQ@mail.gmail.com> <CAMpxmJXCYeGjCu_PhCPffZQZ+ST9YCp27-PTHfL2SJ0Bh8SJFQ@mail.gmail.com>
-In-Reply-To: <CAMpxmJXCYeGjCu_PhCPffZQZ+ST9YCp27-PTHfL2SJ0Bh8SJFQ@mail.gmail.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Fri, 6 Sep 2019 13:14:10 +0200
-Message-ID: <CAMuHMdV32_x5+CEqZM-mNjg5dAEK-D1JNTTGQYqR87u5X2dJqg@mail.gmail.com>
-Subject: Re: [PATCH RFC] gpio: Add Virtual Aggregator GPIO Driver
-To:     Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
+        id S2404602AbfIFMGr (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 6 Sep 2019 08:06:47 -0400
+Received: from inva020.nxp.com ([92.121.34.13]:33106 "EHLO inva020.nxp.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2404426AbfIFMGb (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Fri, 6 Sep 2019 08:06:31 -0400
+Received: from inva020.nxp.com (localhost [127.0.0.1])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 62DE51A05D0;
+        Fri,  6 Sep 2019 14:06:29 +0200 (CEST)
+Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 682C31A00B6;
+        Fri,  6 Sep 2019 14:06:24 +0200 (CEST)
+Received: from titan.ap.freescale.net (TITAN.ap.freescale.net [10.192.208.233])
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 0AF19402A5;
+        Fri,  6 Sep 2019 20:06:17 +0800 (SGT)
+From:   Hui Song <hui.song_1@nxp.com>
+To:     Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
         Linus Walleij <linus.walleij@linaro.org>,
-        Peter Maydell <peter.maydell@linaro.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        linux-gpio <linux-gpio@vger.kernel.org>,
-        QEMU Developers <qemu-devel@nongnu.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Cc:     linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+        Song Hui <hui.song_1@nxp.com>
+Subject: [PATCH] gpio/mpc8xxx: change irq handler from chained to normal
+Date:   Fri,  6 Sep 2019 19:56:14 +0800
+Message-Id: <20190906115614.5645-1-hui.song_1@nxp.com>
+X-Mailer: git-send-email 2.9.5
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Bartosz,
+From: Song Hui <hui.song_1@nxp.com>
 
-On Fri, Jul 12, 2019 at 11:27 AM Bartosz Golaszewski
-<bgolaszewski@baylibre.com> wrote:
-> wt., 9 lip 2019 o 17:59 Geert Uytterhoeven <geert@linux-m68k.org> napisał(a):
-> > On Tue, Jul 9, 2019 at 4:59 PM Bartosz Golaszewski
-> > <bgolaszewski@baylibre.com> wrote:
-> > > pon., 8 lip 2019 o 12:24 Geert Uytterhoeven <geert@linux-m68k.org> napisał(a):
-> > > > On Mon, Jul 8, 2019 at 11:45 AM Bartosz Golaszewski
-> > > > <bgolaszewski@baylibre.com> wrote:
-> > > > > pt., 5 lip 2019 o 18:05 Geert Uytterhoeven <geert+renesas@glider.be> napisał(a):
-> > > > > > GPIO controllers are exported to userspace using /dev/gpiochip*
-> > > > > > character devices.  Access control to these devices is provided by
-> > > > > > standard UNIX file system permissions, on an all-or-nothing basis:
-> > > > > > either a GPIO controller is accessible for a user, or it is not.
-> > > > > > Currently no mechanism exists to control access to individual GPIOs.
-> > > > > >
-> > > > > > Hence add a virtual GPIO driver to aggregate existing GPIOs (up to 32),
-> > > > > > and expose them as a new gpiochip.  This is useful for implementing
-> > > > > > access control, and assigning a set of GPIOs to a specific user.
-> > > > > > Furthermore, it would simplify and harden exporting GPIOs to a virtual
-> > > > > > machine, as the VM can just grab the full virtual GPIO controller, and
-> > > > > > no longer needs to care about which GPIOs to grab and which not,
-> > > > > > reducing the attack surface.
-> > > > > >
-> > > > > > Virtual GPIO controllers are instantiated by writing to the "new_device"
-> > > > > > attribute file in sysfs:
-> > > > > >
-> > > > > >     $ echo "<gpiochipA> <gpioA1> [<gpioA2> ...]"
-> > > > > >            "[, <gpiochipB> <gpioB1> [<gpioB2> ...]] ...]"
-> > > > > >             > /sys/bus/platform/drivers/gpio-virt-agg/new_device
-> > > > > >
-> > > > > > Likewise, virtual GPIO controllers can be destroyed after use:
-> > > > > >
-> > > > > >     $ echo gpio-virt-agg.<N> \
-> > > > > >             > /sys/bus/platform/drivers/gpio-virt-agg/delete_device
-> >
-> > > Am I doing it right? I'm trying to create a device and am only getting this:
-> > >
-> > > # echo gpiochip2 23 > new_device
-> > > [  707.507039] gpio-virt-agg gpio-virt-agg.0: Cannot find gpiochip gpiochip2
-> > >
-> > > gpiochip2 *does* exist in the system.
-> >
-> > Please try the name of the platform device instead.
-> > I.e. for my koelsch (R-Car M2-W), it needs "e6052000.gpio" instead
-> > of "gpiochip2".
-> >
-> > Probably the driver should match on both.
-> >
-> > > I see. I'll try to review it more thoroughly once I get to play with
-> > > it. So far I'm stuck on creating the virtual chip.
->
-> This is not a show-stopper but one thing that's bothering me in this
-> is that lines used by the aggregator are considered 'used' in regard
-> to the original chip. I'm wondering how much effort would it take to
-> have them be 'muxed' into two (real and virtual) chips at once.
+more one gpio controller use share one interrupt,
+make request interrupt to be shared.
 
-Is that really what you want?
-If a GPIO is aggregated with othrs, it's intended to be used only through
-the aggregator, isn't it?
+Signed-off-by: Laurentiu Tudor <Laurentiu.Tudor@nxp.com>
+Signed-off-by: Alex Marginean <alexandru.marginean@nxp.com>
+Signed-off-by: Song Hui <hui.song_1@nxp.com>
+---
+ drivers/gpio/gpio-mpc8xxx.c | 20 +++++++++++++-------
+ 1 file changed, 13 insertions(+), 7 deletions(-)
 
-> Other than that - seems to works pretty nice other than the matching
-> by chip name and by line names.
-
-Thanks, working on that...
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
+diff --git a/drivers/gpio/gpio-mpc8xxx.c b/drivers/gpio/gpio-mpc8xxx.c
+index 16a47de..4006250 100644
+--- a/drivers/gpio/gpio-mpc8xxx.c
++++ b/drivers/gpio/gpio-mpc8xxx.c
+@@ -22,6 +22,7 @@
+ #include <linux/irq.h>
+ #include <linux/gpio/driver.h>
+ #include <linux/bitops.h>
++#include <linux/interrupt.h>
+ 
+ #define MPC8XXX_GPIO_PINS	32
+ 
+@@ -127,10 +128,9 @@ static int mpc8xxx_gpio_to_irq(struct gpio_chip *gc, unsigned offset)
+ 		return -ENXIO;
+ }
+ 
+-static void mpc8xxx_gpio_irq_cascade(struct irq_desc *desc)
++static irqreturn_t mpc8xxx_gpio_irq_cascade(int irq, void *data)
+ {
+-	struct mpc8xxx_gpio_chip *mpc8xxx_gc = irq_desc_get_handler_data(desc);
+-	struct irq_chip *chip = irq_desc_get_chip(desc);
++	struct mpc8xxx_gpio_chip *mpc8xxx_gc = (struct mpc8xxx_gpio_chip *)data;
+ 	struct gpio_chip *gc = &mpc8xxx_gc->gc;
+ 	unsigned int mask;
+ 
+@@ -139,8 +139,8 @@ static void mpc8xxx_gpio_irq_cascade(struct irq_desc *desc)
+ 	if (mask)
+ 		generic_handle_irq(irq_linear_revmap(mpc8xxx_gc->irq,
+ 						     32 - ffs(mask)));
+-	if (chip->irq_eoi)
+-		chip->irq_eoi(&desc->irq_data);
++
++	return IRQ_HANDLED;
+ }
+ 
+ static void mpc8xxx_irq_unmask(struct irq_data *d)
+@@ -409,8 +409,14 @@ static int mpc8xxx_probe(struct platform_device *pdev)
+ 	if (devtype->gpio_dir_in_init)
+ 		devtype->gpio_dir_in_init(gc);
+ 
+-	irq_set_chained_handler_and_data(mpc8xxx_gc->irqn,
+-					 mpc8xxx_gpio_irq_cascade, mpc8xxx_gc);
++	ret = request_irq(mpc8xxx_gc->irqn, mpc8xxx_gpio_irq_cascade,
++		IRQF_NO_THREAD | IRQF_SHARED, "gpio-cascade", mpc8xxx_gc);
++	if (ret) {
++		pr_err("%s: failed to request_irq(%d), ret = %d\n",
++				np->full_name, mpc8xxx_gc->irqn, ret);
++		goto err;
++	}
++
+ 	return 0;
+ err:
+ 	iounmap(mpc8xxx_gc->regs);
 -- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+2.9.5
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
