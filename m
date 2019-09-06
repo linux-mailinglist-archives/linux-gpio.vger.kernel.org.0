@@ -2,113 +2,139 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id B0DBFAC164
-	for <lists+linux-gpio@lfdr.de>; Fri,  6 Sep 2019 22:28:44 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 93F15AC227
+	for <lists+linux-gpio@lfdr.de>; Fri,  6 Sep 2019 23:47:10 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394415AbfIFU2n (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 6 Sep 2019 16:28:43 -0400
-Received: from mail-wm1-f49.google.com ([209.85.128.49]:55773 "EHLO
-        mail-wm1-f49.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2392704AbfIFU2n (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 6 Sep 2019 16:28:43 -0400
-Received: by mail-wm1-f49.google.com with SMTP id g207so7736336wmg.5
-        for <linux-gpio@vger.kernel.org>; Fri, 06 Sep 2019 13:28:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernelci-org.20150623.gappssmtp.com; s=20150623;
-        h=message-id:date:mime-version:content-transfer-encoding:subject:to
-         :from;
-        bh=oBGRXlnNm7JZFvJOYj841VKfUZ68DCMAhTPJZ1sqc5E=;
-        b=C1y6LyK+D4CdP3c8RaXn4Q4DkwQqZQYshvMYWfpeHCOsBUquSztShXxUSP0rsxQyz7
-         DtUnwQkorELYgDiU5d4+tuJNlCUoRYOMzkVgjAVeAN5SfKOluS+BfrF7Hif6pzkniWPV
-         kNR9+7myNNwVGcLztSZELbBHe2/Metb8nSjQ1MdmxDkdv0c9XPLrllQlsWPZwbtBaWPV
-         4zrVaCcen3WhpYcVp0gzzBGzZnlLoqWnjSX6X9yWi8dQtlTkZnVN9L43yK7T4rKlvCwu
-         vUt10rguhKnnA7t5kpln3gSD6tU4Dfp6fcvh9+RmW9uC6A/tn2qgxc2QUvt0UjnYWT+t
-         DbuQ==
+        id S2404651AbfIFVrJ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 6 Sep 2019 17:47:09 -0400
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:46830 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2404449AbfIFVrJ (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 6 Sep 2019 17:47:09 -0400
+Received: by mail-ot1-f68.google.com with SMTP id g19so7114098otg.13;
+        Fri, 06 Sep 2019 14:47:08 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:date:mime-version
-         :content-transfer-encoding:subject:to:from;
-        bh=oBGRXlnNm7JZFvJOYj841VKfUZ68DCMAhTPJZ1sqc5E=;
-        b=WtHKgSlo2BUk/mIk9Tx/NSPrq45siYsJASfatjsuj6x/mXucDfBB6ZSRdY4GApzwpd
-         rH6cJyukjZl4pi96lIgKGoCCSQJt7volJSA0dxEuG2QR2GDTzHFYvWMyPJImMIIP42Zi
-         zdWHLMkuCdr6rJ/WUoznkZ7K5Dn1Ld1kTR1b5EhjNJirl0/bI3B8l0mxm/g0dkW7gnNe
-         fERiZ9zdh3RoCxD8ZUi2lZHbknvBYYldsFb7kUyhKlu94wNzRAV+97XNcr4Tf+J4fP9s
-         xO1iVchNMG5I4z4YW6sDRXRROb12/3xhJhT1dVvS4KrLpVHKNuGf9U/4PSXYULU0ghZw
-         B4tw==
-X-Gm-Message-State: APjAAAXSo0ZcUI80jwV9VBVZYw9dP94Gs/Ka3piZywjNvV3nopibbgrC
-        E8for5162s0e1stIMGhi22ZIlsVqNppTMg==
-X-Google-Smtp-Source: APXvYqyrAvr7zy4/Bf4ZBG5L/mhCr28utrAASxSa5VRakZMTue8TRBIUGfJL4RU5qIVkwK7oapuMsw==
-X-Received: by 2002:a7b:c8d6:: with SMTP id f22mr7478520wml.67.1567801721203;
-        Fri, 06 Sep 2019 13:28:41 -0700 (PDT)
-Received: from [148.251.42.114] ([2a01:4f8:201:9271::2])
-        by smtp.gmail.com with ESMTPSA id d9sm6599488wrc.44.2019.09.06.13.28.40
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 06 Sep 2019 13:28:40 -0700 (PDT)
-Message-ID: <5d72c178.1c69fb81.817f1.edb9@mx.google.com>
-Date:   Fri, 06 Sep 2019 13:28:40 -0700 (PDT)
-Content-Type: text/plain; charset="utf-8"
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=AxdmH4Las6LxoPzUkRRDSuUEuP8kEFd6s6/nV6yfxfg=;
+        b=kJ8V6SKUgTMBpZVLUgCBoDhLUAbrxohNBnGKYz5ADglBM8cRRC1XNgOxTfO09Ao0wV
+         8BQczCd7yaJz8hbUKtmym+hsPhNtnOH6VfJeyhMLJf02rJj5kcMcbVCoYJgL7w8JymdV
+         a6sIuJJnXC+WYQdwJkTwB6KlZCMRFOWZypKUDrlCRYHXJoLcgWFawqoYD0FEll+HRcQv
+         lkATQM/e/CxseNcd8hAOhXPWzrxqvEV0H7/8NRqkwJypKjzjRzJqRcBjmMkcJFX3W1b/
+         C/0/IwQcNBLmREJ6IoFqK1nu6D1qlhUj5yGseVzABJBooBmDdzzhqbXnPPEcsP1Hp0uL
+         X+MQ==
+X-Gm-Message-State: APjAAAWgjKQBs5F/JE9VoVTCxiSHM7wQu1Ja2vZUveWaudQtNON2ZItc
+        4GvN8WaC3vXjWsrTRisWOlj07Tds
+X-Google-Smtp-Source: APXvYqyKdkJy2UYmQBEftN3cVDKDxGk7OkLkrI9pGAnrPLPlQPtaJfgj/TAw7lpHUajBdykqy4i+wg==
+X-Received: by 2002:a9d:127:: with SMTP id 36mr3127123otu.64.1567806427609;
+        Fri, 06 Sep 2019 14:47:07 -0700 (PDT)
+Received: from mail-oi1-f182.google.com (mail-oi1-f182.google.com. [209.85.167.182])
+        by smtp.gmail.com with ESMTPSA id b21sm2544627otl.12.2019.09.06.14.47.06
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 06 Sep 2019 14:47:06 -0700 (PDT)
+Received: by mail-oi1-f182.google.com with SMTP id t84so6244575oih.10;
+        Fri, 06 Sep 2019 14:47:06 -0700 (PDT)
+X-Received: by 2002:a54:4492:: with SMTP id v18mr25801oiv.175.1567806426189;
+ Fri, 06 Sep 2019 14:47:06 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-Kernelci-Kernel: v5.3-rc7-68-g07dec0b44925
-X-Kernelci-Tree: linusw
-X-Kernelci-Report-Type: boot
-X-Kernelci-Branch: for-next
-Subject: linusw/for-next boot: 67 boots: 2 failed,
- 63 passed with 2 untried/unknown (v5.3-rc7-68-g07dec0b44925)
-To:     linux-gpio@vger.kernel.org, fellows@kernelci.org
-From:   "kernelci.org bot" <bot@kernelci.org>
+References: <20190906115614.5645-1-hui.song_1@nxp.com>
+In-Reply-To: <20190906115614.5645-1-hui.song_1@nxp.com>
+From:   Li Yang <leoyang.li@nxp.com>
+Date:   Fri, 6 Sep 2019 16:46:54 -0500
+X-Gmail-Original-Message-ID: <CADRPPNSjOV4RvJiFU2krj_-0gwcvw07x27Ku9t7h+VKNd=BStQ@mail.gmail.com>
+Message-ID: <CADRPPNSjOV4RvJiFU2krj_-0gwcvw07x27Ku9t7h+VKNd=BStQ@mail.gmail.com>
+Subject: Re: [PATCH] gpio/mpc8xxx: change irq handler from chained to normal
+To:     Hui Song <hui.song_1@nxp.com>
+Cc:     Shawn Guo <shawnguo@kernel.org>, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, lkml <linux-kernel@vger.kernel.org>,
+        linux-gpio@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-linusw/for-next boot: 67 boots: 2 failed, 63 passed with 2 untried/unknown =
-(v5.3-rc7-68-g07dec0b44925)
+On Fri, Sep 6, 2019 at 10:20 AM Hui Song <hui.song_1@nxp.com> wrote:
+>
+> From: Song Hui <hui.song_1@nxp.com>
+>
 
-Full Boot Summary: https://kernelci.org/boot/all/job/linusw/branch/for-next=
-/kernel/v5.3-rc7-68-g07dec0b44925/
-Full Build Summary: https://kernelci.org/build/linusw/branch/for-next/kerne=
-l/v5.3-rc7-68-g07dec0b44925/
+The English below need to be fixed.
 
-Tree: linusw
-Branch: for-next
-Git Describe: v5.3-rc7-68-g07dec0b44925
-Git Commit: 07dec0b449253479d66c4b6b274e8ce25677d139
-Git URL: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-gpio.=
-git/
-Tested: 47 unique boards, 15 SoC families, 3 builds out of 6
+> more one gpio controller use share one interrupt,
+> make request interrupt to be shared.
 
-Boot Regressions Detected:
+More than one gpio controllers can share one interrupt, change the
+driver to request shared irq.
 
-arm:
-
-    multi_v7_defconfig:
-        gcc-8:
-          sun8i-h2-plus-orangepi-r1:
-              lab-baylibre: new failure (last pass: v5.3-rc6-62-g0f40dd225a=
-88)
-
-arm64:
-
-    defconfig:
-        gcc-8:
-          meson-gxl-s805x-p241:
-              lab-baylibre: new failure (last pass: v5.3-rc6-62-g0f40dd225a=
-88)
-          meson-gxl-s905d-p230:
-              lab-baylibre: failing since 2 days (last pass: v5.3-rc6-51-g1=
-fc4f3c962b7 - first fail: v5.3-rc6-62-g0f40dd225a88)
-          meson-gxm-khadas-vim2:
-              lab-baylibre: new failure (last pass: v5.3-rc6-62-g0f40dd225a=
-88)
-
-Boot Failures Detected:
-
-arm64:
-    defconfig:
-        gcc-8:
-            meson-gxl-s905d-p230: 1 failed lab
-            meson-gxm-khadas-vim2: 1 failed lab
-
----
-For more info write to <info@kernelci.org>
+>
+> Signed-off-by: Laurentiu Tudor <Laurentiu.Tudor@nxp.com>
+> Signed-off-by: Alex Marginean <alexandru.marginean@nxp.com>
+> Signed-off-by: Song Hui <hui.song_1@nxp.com>
+> ---
+>  drivers/gpio/gpio-mpc8xxx.c | 20 +++++++++++++-------
+>  1 file changed, 13 insertions(+), 7 deletions(-)
+>
+> diff --git a/drivers/gpio/gpio-mpc8xxx.c b/drivers/gpio/gpio-mpc8xxx.c
+> index 16a47de..4006250 100644
+> --- a/drivers/gpio/gpio-mpc8xxx.c
+> +++ b/drivers/gpio/gpio-mpc8xxx.c
+> @@ -22,6 +22,7 @@
+>  #include <linux/irq.h>
+>  #include <linux/gpio/driver.h>
+>  #include <linux/bitops.h>
+> +#include <linux/interrupt.h>
+>
+>  #define MPC8XXX_GPIO_PINS      32
+>
+> @@ -127,10 +128,9 @@ static int mpc8xxx_gpio_to_irq(struct gpio_chip *gc, unsigned offset)
+>                 return -ENXIO;
+>  }
+>
+> -static void mpc8xxx_gpio_irq_cascade(struct irq_desc *desc)
+> +static irqreturn_t mpc8xxx_gpio_irq_cascade(int irq, void *data)
+>  {
+> -       struct mpc8xxx_gpio_chip *mpc8xxx_gc = irq_desc_get_handler_data(desc);
+> -       struct irq_chip *chip = irq_desc_get_chip(desc);
+> +       struct mpc8xxx_gpio_chip *mpc8xxx_gc = (struct mpc8xxx_gpio_chip *)data;
+>         struct gpio_chip *gc = &mpc8xxx_gc->gc;
+>         unsigned int mask;
+>
+> @@ -139,8 +139,8 @@ static void mpc8xxx_gpio_irq_cascade(struct irq_desc *desc)
+>         if (mask)
+>                 generic_handle_irq(irq_linear_revmap(mpc8xxx_gc->irq,
+>                                                      32 - ffs(mask)));
+> -       if (chip->irq_eoi)
+> -               chip->irq_eoi(&desc->irq_data);
+> +
+> +       return IRQ_HANDLED;
+>  }
+>
+>  static void mpc8xxx_irq_unmask(struct irq_data *d)
+> @@ -409,8 +409,14 @@ static int mpc8xxx_probe(struct platform_device *pdev)
+>         if (devtype->gpio_dir_in_init)
+>                 devtype->gpio_dir_in_init(gc);
+>
+> -       irq_set_chained_handler_and_data(mpc8xxx_gc->irqn,
+> -                                        mpc8xxx_gpio_irq_cascade, mpc8xxx_gc);
+> +       ret = request_irq(mpc8xxx_gc->irqn, mpc8xxx_gpio_irq_cascade,
+> +               IRQF_NO_THREAD | IRQF_SHARED, "gpio-cascade", mpc8xxx_gc);
+> +       if (ret) {
+> +               pr_err("%s: failed to request_irq(%d), ret = %d\n",
+> +                               np->full_name, mpc8xxx_gc->irqn, ret);
+> +               goto err;
+> +       }
+> +
+>         return 0;
+>  err:
+>         iounmap(mpc8xxx_gc->regs);
+> --
+> 2.9.5
+>
