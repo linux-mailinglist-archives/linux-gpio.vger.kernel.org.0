@@ -2,48 +2,48 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 5173FAC0D3
-	for <lists+linux-gpio@lfdr.de>; Fri,  6 Sep 2019 21:47:08 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7E74AAC0D8
+	for <lists+linux-gpio@lfdr.de>; Fri,  6 Sep 2019 21:48:08 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393422AbfIFTrH (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 6 Sep 2019 15:47:07 -0400
-Received: from mail-qk1-f196.google.com ([209.85.222.196]:34550 "EHLO
-        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2393209AbfIFTrH (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 6 Sep 2019 15:47:07 -0400
-Received: by mail-qk1-f196.google.com with SMTP id q203so6865896qke.1;
-        Fri, 06 Sep 2019 12:47:06 -0700 (PDT)
+        id S1730303AbfIFTsH (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 6 Sep 2019 15:48:07 -0400
+Received: from mail-qt1-f196.google.com ([209.85.160.196]:38637 "EHLO
+        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729209AbfIFTsH (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 6 Sep 2019 15:48:07 -0400
+Received: by mail-qt1-f196.google.com with SMTP id b2so8489615qtq.5;
+        Fri, 06 Sep 2019 12:48:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=jms.id.au; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=GlriHQcPoNAAyA0m3FTNkIoAvIrt6CyS5DffxYEz37k=;
-        b=JV3Gxop+nVe6QmZ91Cy718WYBKBAy8NjiGK4vtv+HjEfMdhIIBjEhWnBJdsRgYlyWr
-         6Q0JSuJelzRFEQ/cvRNurMHnh4RnezG6ayGXFbCJDsZWwhDYiN8Rj8VgPLvDUmKAjXst
-         DOD3sL8OIY+m5zWDXSDXsKLu+c86L3M9Esd0o=
+        bh=iUo+RAfa/ck7sxO/vrTAcMV5/EPMZ8UlL+MvZ/FXZXo=;
+        b=LgST1CJV9YA7mttan8L01i3+eoJrRdysbvUiwWvM6KWQbaxEK29uzeyzZSLlkcS3eG
+         S5ulY+M3I8TszhtbLSQJdkTbrOw55QatC87Sv1oIpwbI9UkD3ug+eUiNiJ9JXOOU+SSJ
+         ELK+5ZbKl3TP1suF2E4ZsSA1YzriQ2mZgfw7o=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=GlriHQcPoNAAyA0m3FTNkIoAvIrt6CyS5DffxYEz37k=;
-        b=dUIApfnisSnuFWBF2+J5yVWA9BfH3ahumqfkCGfw3z5rDb7QYKR6EUoWI0TTpBc7bN
-         3I2lIEziv8gVVIkWtTKj58dGPDolrSuRyKm7o8B3gH9pZ/eiNp6qYFryzs/yOZH4MF/n
-         5kzL4741fanTaxAuV2UPSdwpJJqDR4/gXRNDJWJB52gQgUu1Gih8RJeJdK6lLX5YGQfq
-         XxPIb4XHqnRrmUrECF0/HjDib7YQDWlSBq+vC2So4fVcumchSi7UHXzNwysquSEzLEde
-         a4+VC07zKu9wsRDxSstBjcqrfLETnOhbvGIu2KVqzkn94FC7Ma6ZJn9pMbX3RcA/y1nW
-         g2Tw==
-X-Gm-Message-State: APjAAAV3iARzK0xjbdKNePJLqIEhlqY8gFg4vkqgtzUFcukPilKiz/Qk
-        NQeDzEuSfj5Qj7vgbUGvrCRSoeSr7gZEpkyVVgM=
-X-Google-Smtp-Source: APXvYqzPbIKN8fLMP3JKF0jTbxrj163kAl2OUg9AwS3DSyA2kYmIJr9dAtyu/yz9wztF6mdPxhcTuHhbFMrrusGOrNI=
-X-Received: by 2002:a37:bd5:: with SMTP id 204mr10857479qkl.330.1567799226454;
- Fri, 06 Sep 2019 12:47:06 -0700 (PDT)
+        bh=iUo+RAfa/ck7sxO/vrTAcMV5/EPMZ8UlL+MvZ/FXZXo=;
+        b=qGz/2BM/jPYIezUzGZn8iJLHHPgcYl6spIc9V+YixrB4UX70rOgYCvNb/jRDYGG2Nt
+         55BHXyTFDwjH85loGz3cZMsymKeomWgaDls73XBjCd9zP0CYm+YkuqGLLxp7UA1kGKAd
+         fwhQTMcvKS4IMPeyJIFTeUzH7YxOoiZHj4gq+ksJVTupdBVK0lswgjzvCg90jBV3hMYB
+         kAEkqmVD/wirTNmmm7U5LYY19Kes+2NOhVPQArWAuGBkLdoR79mpKpO5+S/anEtGn95x
+         5X+BYw4j3+dj6bfUpRw1uJy21vHtTyFBkMp3FmlJ+JLIczK+zgpm81hcl1sHSS0WY4pY
+         KGYA==
+X-Gm-Message-State: APjAAAVlj4mN9+vRvBc5mHAUqOpDej8RMZTbq0rf3HjlLUGQtjUSJMLL
+        A2KMNXEbpvVirGFh2GdxBiLC929DwMi9le0N2mw=
+X-Google-Smtp-Source: APXvYqzFyczhuU4vELy3FEnLbpNgDv8ZSb9uoaP+A83ZFTCAHt0aG0j50/6DoriEh8Y6hPfF9qnzGXcUaTg6VlJXffI=
+X-Received: by 2002:a0c:e48b:: with SMTP id n11mr6351886qvl.38.1567799286186;
+ Fri, 06 Sep 2019 12:48:06 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190906062644.13445-1-rashmica.g@gmail.com>
-In-Reply-To: <20190906062644.13445-1-rashmica.g@gmail.com>
+References: <20190906062727.13521-1-rashmica.g@gmail.com>
+In-Reply-To: <20190906062727.13521-1-rashmica.g@gmail.com>
 From:   Joel Stanley <joel@jms.id.au>
-Date:   Fri, 6 Sep 2019 19:46:55 +0000
-Message-ID: <CACPK8XdWtg73-ZewJ7jThs0G-j5a3PL3Y9HLcMiEjU+8W_-_Uw@mail.gmail.com>
-Subject: Re: [PATCH v3 3/5] gpio/aspeed: Setup irqchip dynamically
+Date:   Fri, 6 Sep 2019 19:47:55 +0000
+Message-ID: <CACPK8XfjGY4A1g0eJAUC7SmiguBa6fLhBBz_FzTRa3hQ1kWDSA@mail.gmail.com>
+Subject: Re: [PATCH v3 4/5] gpios: Use ngpio property from device tree if available
 To:     Rashmica Gupta <rashmica.g@gmail.com>
 Cc:     Linus Walleij <linus.walleij@linaro.org>,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>,
@@ -60,61 +60,90 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, 6 Sep 2019 at 06:26, Rashmica Gupta <rashmica.g@gmail.com> wrote:
+On Fri, 6 Sep 2019 at 06:27, Rashmica Gupta <rashmica.g@gmail.com> wrote:
 >
-> This is in preparation for adding ast2600 support. The ast2600 SoC
-> requires two instances of the GPIO driver as it has two GPIO
-> controllers. Each instance needs it's own irqchip.
+> Use the ngpio property from the device tree if it exists. If it doesn't
+> then fallback to the hardcoded value in the config.
+>
+> This is in preparation for adding ast2600 support. The ast2600 SoC has
+> two GPIO controllers and so requires two instances of the GPIO driver.
+> We use the ngpio property to different between them as they have
+> different numbers of GPIOs.
 >
 > Signed-off-by: Rashmica Gupta <rashmica.g@gmail.com>
 
 Reviewed-by: Joel Stanley <joel@jms.id.au>
 
 > ---
->  drivers/gpio/gpio-aspeed.c | 16 +++++++---------
->  1 file changed, 7 insertions(+), 9 deletions(-)
+>  drivers/gpio/gpio-aspeed.c | 18 +++++++++++-------
+>  1 file changed, 11 insertions(+), 7 deletions(-)
 >
 > diff --git a/drivers/gpio/gpio-aspeed.c b/drivers/gpio/gpio-aspeed.c
-> index b83e23aecd18..16c6eaf70857 100644
+> index 16c6eaf70857..c3d5ecba343b 100644
 > --- a/drivers/gpio/gpio-aspeed.c
 > +++ b/drivers/gpio/gpio-aspeed.c
-> @@ -52,6 +52,7 @@ struct aspeed_gpio_config {
->   */
->  struct aspeed_gpio {
->         struct gpio_chip chip;
-> +       struct irq_chip irqc;
->         spinlock_t lock;
->         void __iomem *base;
->         int irq;
-> @@ -681,14 +682,6 @@ static void aspeed_gpio_irq_handler(struct irq_desc *desc)
->         chained_irq_exit(ic, desc);
->  }
+> @@ -694,7 +694,7 @@ static void set_irq_valid_mask(struct aspeed_gpio *gpio)
+>                 for_each_clear_bit(offset, &input, 32) {
+>                         unsigned int i = props->bank * 32 + offset;
 >
-> -static struct irq_chip aspeed_gpio_irqchip = {
-> -       .name           = "aspeed-gpio",
-> -       .irq_ack        = aspeed_gpio_irq_ack,
-> -       .irq_mask       = aspeed_gpio_irq_mask,
-> -       .irq_unmask     = aspeed_gpio_irq_unmask,
-> -       .irq_set_type   = aspeed_gpio_set_type,
-> -};
-> -
->  static void set_irq_valid_mask(struct aspeed_gpio *gpio)
+> -                       if (i >= gpio->config->nr_gpios)
+> +                       if (i >= gpio->chip.ngpio)
+>                                 break;
+>
+>                         clear_bit(i, gpio->chip.irq.valid_mask);
+> @@ -1007,10 +1007,10 @@ int aspeed_gpio_copro_grab_gpio(struct gpio_desc *desc,
+>         unsigned long flags;
+>
+>         if (!gpio->cf_copro_bankmap)
+> -               gpio->cf_copro_bankmap = kzalloc(gpio->config->nr_gpios >> 3, GFP_KERNEL);
+> +               gpio->cf_copro_bankmap = kzalloc(gpio->chip.ngpio >> 3, GFP_KERNEL);
+>         if (!gpio->cf_copro_bankmap)
+>                 return -ENOMEM;
+> -       if (offset < 0 || offset > gpio->config->nr_gpios)
+> +       if (offset < 0 || offset > gpio->chip.ngpio)
+>                 return -EINVAL;
+>         bindex = offset >> 3;
+>
+> @@ -1055,7 +1055,7 @@ int aspeed_gpio_copro_release_gpio(struct gpio_desc *desc)
+>         if (!gpio->cf_copro_bankmap)
+>                 return -ENXIO;
+>
+> -       if (offset < 0 || offset > gpio->config->nr_gpios)
+> +       if (offset < 0 || offset > gpio->chip.ngpio)
+>                 return -EINVAL;
+>         bindex = offset >> 3;
+>
+> @@ -1119,7 +1119,8 @@ static int __init aspeed_gpio_probe(struct platform_device *pdev)
 >  {
->         const struct aspeed_bank_props *props = gpio->config->props;
-> @@ -1192,7 +1185,12 @@ static int __init aspeed_gpio_probe(struct platform_device *pdev)
+>         const struct of_device_id *gpio_id;
+>         struct aspeed_gpio *gpio;
+> -       int rc, i, banks;
+> +       int rc, i, banks, err;
+> +       u32 ngpio;
 >
->                 gpio->irq = rc;
->                 girq = &gpio->chip.irq;
-> -               girq->chip = &aspeed_gpio_irqchip;
-> +               girq->chip = &gpio->irqc;
-> +               girq->chip->name = dev_name(&pdev->dev);
-> +               girq->chip->irq_ack = aspeed_gpio_irq_ack;
-> +               girq->chip->irq_mask = aspeed_gpio_irq_mask;
-> +               girq->chip->irq_unmask = aspeed_gpio_irq_unmask;
-> +               girq->chip->irq_set_type = aspeed_gpio_set_type;
->                 girq->parent_handler = aspeed_gpio_irq_handler;
->                 girq->num_parents = 1;
->                 girq->parents = devm_kcalloc(&pdev->dev, 1,
+>         gpio = devm_kzalloc(&pdev->dev, sizeof(*gpio), GFP_KERNEL);
+>         if (!gpio)
+> @@ -1145,7 +1146,10 @@ static int __init aspeed_gpio_probe(struct platform_device *pdev)
+>         gpio->config = gpio_id->data;
+>
+>         gpio->chip.parent = &pdev->dev;
+> -       gpio->chip.ngpio = gpio->config->nr_gpios;
+> +       err = of_property_read_u32(pdev->dev.of_node, "ngpios", &ngpio);
+> +       gpio->chip.ngpio = (u16) ngpio;
+> +       if (err)
+> +               gpio->chip.ngpio = gpio->config->nr_gpios;
+>         gpio->chip.direction_input = aspeed_gpio_dir_in;
+>         gpio->chip.direction_output = aspeed_gpio_dir_out;
+>         gpio->chip.get_direction = aspeed_gpio_get_direction;
+> @@ -1158,7 +1162,7 @@ static int __init aspeed_gpio_probe(struct platform_device *pdev)
+>         gpio->chip.base = -1;
+>
+>         /* Allocate a cache of the output registers */
+> -       banks = DIV_ROUND_UP(gpio->config->nr_gpios, 32);
+> +       banks = DIV_ROUND_UP(gpio->chip.ngpio, 32);
+>         gpio->dcache = devm_kcalloc(&pdev->dev,
+>                                     banks, sizeof(u32), GFP_KERNEL);
+>         if (!gpio->dcache)
 > --
 > 2.20.1
 >
