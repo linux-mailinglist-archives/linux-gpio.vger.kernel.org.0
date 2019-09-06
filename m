@@ -2,116 +2,98 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id CFB4BAB651
-	for <lists+linux-gpio@lfdr.de>; Fri,  6 Sep 2019 12:47:28 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A87B8AB631
+	for <lists+linux-gpio@lfdr.de>; Fri,  6 Sep 2019 12:42:34 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389780AbfIFKrS (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 6 Sep 2019 06:47:18 -0400
-Received: from inva020.nxp.com ([92.121.34.13]:34920 "EHLO inva020.nxp.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726080AbfIFKrS (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Fri, 6 Sep 2019 06:47:18 -0400
-Received: from inva020.nxp.com (localhost [127.0.0.1])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id EC6331A0216;
-        Fri,  6 Sep 2019 12:47:15 +0200 (CEST)
-Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id F00A21A0BC3;
-        Fri,  6 Sep 2019 12:47:10 +0200 (CEST)
-Received: from titan.ap.freescale.net (TITAN.ap.freescale.net [10.192.208.233])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 8E114402FB;
-        Fri,  6 Sep 2019 18:47:04 +0800 (SGT)
-From:   Hui Song <hui.song_1@nxp.com>
-To:     Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Cc:     linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-        Song Hui <hui.song_1@nxp.com>
-Subject: [PATCH] gpio/mpc8xxx: change irq handler from chained to normal
-Date:   Fri,  6 Sep 2019 18:37:00 +0800
-Message-Id: <20190906103700.2034-1-hui.song_1@nxp.com>
-X-Mailer: git-send-email 2.9.5
-X-Virus-Scanned: ClamAV using ClamSMTP
+        id S1729831AbfIFKmd (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 6 Sep 2019 06:42:33 -0400
+Received: from relay1-d.mail.gandi.net ([217.70.183.193]:47261 "EHLO
+        relay1-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728269AbfIFKmd (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 6 Sep 2019 06:42:33 -0400
+X-Originating-IP: 86.207.98.53
+Received: from localhost (aclermont-ferrand-651-1-259-53.w86-207.abo.wanadoo.fr [86.207.98.53])
+        (Authenticated sender: alexandre.belloni@bootlin.com)
+        by relay1-d.mail.gandi.net (Postfix) with ESMTPSA id BE71F240004;
+        Fri,  6 Sep 2019 10:42:30 +0000 (UTC)
+Date:   Fri, 6 Sep 2019 12:42:24 +0200
+From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
+To:     David Laight <David.Laight@aculab.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Ludovic Desroches <ludovic.desroches@microchip.com>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        "Claudiu.Beznea@microchip.com" <Claudiu.Beznea@microchip.com>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2] pinctrl: at91-pio4: implement .get_multiple and
+ .set_multiple
+Message-ID: <20190906104224.GG21254@piout.net>
+References: <20190905144849.24882-1-alexandre.belloni@bootlin.com>
+ <2261eadf98584d13a490f2abd8777d4a@AcuMS.aculab.com>
+ <20190906091212.GF21254@piout.net>
+ <b010053340ef48dfa244ff48c8decd38@AcuMS.aculab.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <b010053340ef48dfa244ff48c8decd38@AcuMS.aculab.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-From: Song Hui <hui.song_1@nxp.com>
+On 06/09/2019 09:46:02+0000, David Laight wrote:
+> From: Alexandre Belloni
+> > Sent: 06 September 2019 10:12
+> > On 06/09/2019 09:05:36+0000, David Laight wrote:
+> > > From: Alexandre Belloni
+> > > > Implement .get_multiple and .set_multiple to allow reading or setting
+> > > > multiple pins simultaneously. Pins in the same bank will all be switched at
+> > > > the same time, improving synchronization and performances.
+> > >
+> > > Actually it won't 'improve synchronisation', instead it will lead to
+> > > random synchronisation errors and potential metastability if one
+> > > pin is used as a clock and another as data, or if the code is reading
+> > > a free-flowing counter.
+> > >
+> > 
+> > It does improve gpio switching synchronisation when they are in the same
+> > bank as it will remove the 250ns delay. Of course, if you need this
+> > delay between clk and data, then the consumer driver should ensure the
+> > delay is present.
+> 
+> With multiple requests the output pin changes will always be in the
+> same order and will be separated by (say) 250ns.
+> This is a guaranteed synchronisation.
+> 
+> If you change multiple pins with the same 'iowrite()' then the pins
+> will change at approximately the same time.
+> But the actual order will depend on internal device delays (which
+> may depend on the actual silicon and temperature).
+> You then have to take account of varying track lengths and the
+> target devices input stage properties before knowing which change
+> arrives first.
+> The delays might be sub-nanosecond, but they matter if you are
+> talking about synchronisation.
+> 
 
-more one gpio controller use share one interrupt,
-make request interrupt to be shared.
+And my point is that this means that your gpio consumer driver is buggy
+if it doesn't do multiple requests if it requires a delay between two
+pin changes.
 
-Signed-off-by: Laurentiu Tudor <Laurentiu.Tudor@nxp.com>
-Signed-off-by: Alex Marginean <alexandru.marginean@nxp.com>
-Signed-off-by: Song Hui <hui.song_1@nxp.com>
----
- drivers/gpio/gpio-mpc8xxx.c | 21 ++++++++++++++-------
- 1 file changed, 14 insertions(+), 7 deletions(-)
+> IIRC both SMBus and I2C now quote 0ns setup time.
+> Changing both clock and data with the same IOW isn't enough to
+> guarantee this.
+> (In practise the I2C setup time required by a device is probably
+> slightly negative (In order to support 0ns inputs) so a very small
+> -ve setup will (mostly) work.)
 
-diff --git a/drivers/gpio/gpio-mpc8xxx.c b/drivers/gpio/gpio-mpc8xxx.c
-index 1a680aa..4006250 100644
---- a/drivers/gpio/gpio-mpc8xxx.c
-+++ b/drivers/gpio/gpio-mpc8xxx.c
-@@ -22,6 +22,7 @@
- #include <linux/irq.h>
- #include <linux/gpio/driver.h>
- #include <linux/bitops.h>
-+#include <linux/interrupt.h>
- 
- #define MPC8XXX_GPIO_PINS	32
- 
-@@ -127,10 +128,9 @@ static int mpc8xxx_gpio_to_irq(struct gpio_chip *gc, unsigned offset)
- 		return -ENXIO;
- }
- 
--static void mpc8xxx_gpio_irq_cascade(struct irq_desc *desc)
-+static irqreturn_t mpc8xxx_gpio_irq_cascade(int irq, void *data)
- {
--	struct mpc8xxx_gpio_chip *mpc8xxx_gc = irq_desc_get_handler_data(desc);
--	struct irq_chip *chip = irq_desc_get_chip(desc);
-+	struct mpc8xxx_gpio_chip *mpc8xxx_gc = (struct mpc8xxx_gpio_chip *)data;
- 	struct gpio_chip *gc = &mpc8xxx_gc->gc;
- 	unsigned int mask;
- 
-@@ -139,8 +139,8 @@ static void mpc8xxx_gpio_irq_cascade(struct irq_desc *desc)
- 	if (mask)
- 		generic_handle_irq(irq_linear_revmap(mpc8xxx_gc->irq,
- 						     32 - ffs(mask)));
--	if (chip->irq_eoi)
--		chip->irq_eoi(&desc->irq_data);
-+
-+	return IRQ_HANDLED;
- }
- 
- static void mpc8xxx_irq_unmask(struct irq_data *d)
-@@ -319,6 +319,7 @@ static const struct of_device_id mpc8xxx_gpio_ids[] = {
- 	{ .compatible = "fsl,mpc5125-gpio", .data = &mpc5125_gpio_devtype, },
- 	{ .compatible = "fsl,pq3-gpio",     },
- 	{ .compatible = "fsl,ls1028a-gpio", .data = &ls1028a_gpio_devtype, },
-+	{ .compatible = "fsl,ls1088a-gpio", .data = &ls1028a_gpio_devtype, },
- 	{ .compatible = "fsl,qoriq-gpio",   },
- 	{}
- };
-@@ -408,8 +409,14 @@ static int mpc8xxx_probe(struct platform_device *pdev)
- 	if (devtype->gpio_dir_in_init)
- 		devtype->gpio_dir_in_init(gc);
- 
--	irq_set_chained_handler_and_data(mpc8xxx_gc->irqn,
--					 mpc8xxx_gpio_irq_cascade, mpc8xxx_gc);
-+	ret = request_irq(mpc8xxx_gc->irqn, mpc8xxx_gpio_irq_cascade,
-+		IRQF_NO_THREAD | IRQF_SHARED, "gpio-cascade", mpc8xxx_gc);
-+	if (ret) {
-+		pr_err("%s: failed to request_irq(%d), ret = %d\n",
-+				np->full_name, mpc8xxx_gc->irqn, ret);
-+		goto err;
-+	}
-+
- 	return 0;
- err:
- 	iounmap(mpc8xxx_gc->regs);
+I'm not sure what is your point exactly as this patch doesn't break any
+existing use cases.
+
 -- 
-2.9.5
-
+Alexandre Belloni, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
