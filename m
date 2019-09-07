@@ -2,121 +2,235 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id C933FAC3CA
-	for <lists+linux-gpio@lfdr.de>; Sat,  7 Sep 2019 03:05:42 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BBD3BAC4B3
+	for <lists+linux-gpio@lfdr.de>; Sat,  7 Sep 2019 06:51:02 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393716AbfIGBFl (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 6 Sep 2019 21:05:41 -0400
-Received: from hqemgate15.nvidia.com ([216.228.121.64]:3990 "EHLO
-        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726627AbfIGBFl (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 6 Sep 2019 21:05:41 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5d7302680001>; Fri, 06 Sep 2019 18:05:44 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Fri, 06 Sep 2019 18:05:40 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Fri, 06 Sep 2019 18:05:40 -0700
-Received: from HQMAIL110.nvidia.com (172.18.146.15) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Sat, 7 Sep
- 2019 01:05:40 +0000
-Received: from HQMAIL111.nvidia.com (172.20.187.18) by hqmail110.nvidia.com
- (172.18.146.15) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Sat, 7 Sep
- 2019 01:05:40 +0000
-Received: from hqnvemgw01.nvidia.com (172.20.150.20) by HQMAIL111.nvidia.com
- (172.20.187.18) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
- Transport; Sat, 7 Sep 2019 01:05:40 +0000
-Received: from blueforge.nvidia.com (Not Verified[10.110.48.28]) by hqnvemgw01.nvidia.com with Trustwave SEG (v7,5,8,10121)
-        id <B5d7302640000>; Fri, 06 Sep 2019 18:05:40 -0700
-From:   John Hubbard <jhubbard@nvidia.com>
-To:     YueHaibing <yuehaibing@huawei.com>
-CC:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        <linux-gpio@vger.kernel.org>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "John Hubbard" <jhubbard@nvidia.com>,
-        Linus Walleij <linus.walleij@linaro.org>
-Subject: [PATCH] gpio: fix build failure: gpiochip_[un]lock*() static/non-static
-Date:   Fri, 6 Sep 2019 18:05:34 -0700
-Message-ID: <20190907010534.23713-1-jhubbard@nvidia.com>
-X-Mailer: git-send-email 2.23.0
+        id S2394278AbfIGEvB (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sat, 7 Sep 2019 00:51:01 -0400
+Received: from mail-wm1-f47.google.com ([209.85.128.47]:54883 "EHLO
+        mail-wm1-f47.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2394250AbfIGEvB (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sat, 7 Sep 2019 00:51:01 -0400
+Received: by mail-wm1-f47.google.com with SMTP id k2so8381171wmj.4
+        for <linux-gpio@vger.kernel.org>; Fri, 06 Sep 2019 21:50:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernelci-org.20150623.gappssmtp.com; s=20150623;
+        h=message-id:date:mime-version:content-transfer-encoding:subject:to
+         :from;
+        bh=DWt4t3crE4CmdDO1lghFWySm8JDjHoYGmz5xQUJTxkQ=;
+        b=tE0RDkBZd8PEsFRcbNnI0GjafwZx5/qBDRewUsTj2vWOlcwfGJiAaT/cVpZGWyk1v1
+         fFE13B2RhcilQ050CwxFAaa5pcdQ1yfhvhGBwp0AuS9dps3U5/wh6Xav4S/8tt8IKeuC
+         rDUEOXWn9HcMtXp3zEyUYYMzadZaLK9ww12B17jPCApdgiyD/q33h3Hh/9Eqi6HLFtID
+         vrAa3NwwWpVh4rMa8tTUHvi5d5qT0Wm855vw2VMGJG/zgKFcUV4qgGwqL/YDSNdStgol
+         fhVT8hP2i5nbMJngrKN73sHfj3BupGpMMoyKTb93foKvXpQ9QW+Yi3Z4j3BlSP+qLyfe
+         WmzA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:date:mime-version
+         :content-transfer-encoding:subject:to:from;
+        bh=DWt4t3crE4CmdDO1lghFWySm8JDjHoYGmz5xQUJTxkQ=;
+        b=glMcSnUIw0Mid7eNch8ZzE4sDWR39GXdkui4X4jABaw9mSI8H0VDbB7hswAc3oWETx
+         6bBWBIp9ZeENx0mndIU3y9vBsxYVJWPpOIybBkgxwU6y1j9dMf/EOIcRcoV0UAvGCHwy
+         ngnWSh3zdqiBVHGs6hIZk4lY7y5P1/TFXGMp2Ff6lFMUUJVzslvzU1mV5wKF4TIA+xMq
+         TZroaHf3sm9uUj+t0sLBe2ku5s19qxo4V4AEqA9OuppydMatb/To87+gD1dKZHrKMJou
+         N4WSQRvPlZQr45lFDYjXGxwpJlYde8BHnxW3j6uHU2MnH/X2aVdPbFDA1N3Yq36sLVwL
+         2K9Q==
+X-Gm-Message-State: APjAAAViIZASbldJyvZNLIDaUirOqpXWx8FHdiuKxq2HME2eGoC0/dIU
+        Eqsm1IgGUoXD4QlFyp+p1HnRaMq7hPSpMw==
+X-Google-Smtp-Source: APXvYqyC9qf0unjkwcSKu5J7VYOfjdq4TxIqu7eGVBbfXcsnUNWNgDUXzF0kHd/62z14od79Gy92og==
+X-Received: by 2002:a1c:a7c6:: with SMTP id q189mr9230373wme.22.1567831858202;
+        Fri, 06 Sep 2019 21:50:58 -0700 (PDT)
+Received: from [148.251.42.114] ([2a01:4f8:201:9271::2])
+        by smtp.gmail.com with ESMTPSA id s12sm10551334wra.82.2019.09.06.21.50.57
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 06 Sep 2019 21:50:57 -0700 (PDT)
+Message-ID: <5d733731.1c69fb81.96e74.349c@mx.google.com>
+Date:   Fri, 06 Sep 2019 21:50:57 -0700 (PDT)
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-X-NVConfidentiality: public
 Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1567818344; bh=eO1xZfAtxjNLKEcOZ88Jf/cJ0R2lqa5Lv5whwF3UwU4=;
-        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
-         MIME-Version:X-NVConfidentiality:Content-Transfer-Encoding:
-         Content-Type;
-        b=ZFUUKLlFAab9l88gosi3tE+tELd+vYeSMblhkb2LZY9JV8ZGjNTiKSDr8VsfvJumb
-         qbX2LjAe/IpARlEipReKQsGvLSQn3NKElg3yFGZptq5uHRp296sWeIwGcekntiuxrW
-         GK0dBaqt71ru5lmHO/l2lgGOR7mVQOzTtVIETCpJhMs2rXMUdAyxXG1RYY7+T/lScS
-         NpNjoerq33+meJW+Hdj4o5AUUffbufEKxY1vuHurw1Zu1mZtPnKq7wYZ0KXKVMxTUR
-         SeKlvDhe+ZeSf5S9eF7mKptnVDD5B7jn6con62CSqx598RnPovICKAS6Z5gbZtsQ+6
-         yborNyJoXes9Q==
+X-Kernelci-Kernel: v5.3-rc7-64-gfbdf8d4bef49
+X-Kernelci-Tree: linusw
+X-Kernelci-Report-Type: build
+X-Kernelci-Branch: devel
+Subject: linusw/devel build: 6 builds: 0 failed, 6 passed,
+ 27 warnings (v5.3-rc7-64-gfbdf8d4bef49)
+To:     linux-gpio@vger.kernel.org, fellows@kernelci.org
+From:   "kernelci.org bot" <bot@kernelci.org>
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-While building with !CONFIG_GPIOLIB, I experienced a build failure,
-because driver.h in that configuration supplies both a static and
-a non-static version of these routines:
+linusw/devel build: 6 builds: 0 failed, 6 passed, 27 warnings (v5.3-rc7-64-=
+gfbdf8d4bef49)
 
-	gpiochip_lock_as_irq()
-	gpiochip_unlock_as_irq()
+Full Build Summary: https://kernelci.org/build/linusw/branch/devel/kernel/v=
+5.3-rc7-64-gfbdf8d4bef49/
 
-Fix this by moving the non-static routines under the scope of
-CONFIG_GPIOLIB.
+Tree: linusw
+Branch: devel
+Git Describe: v5.3-rc7-64-gfbdf8d4bef49
+Git Commit: fbdf8d4bef4917713e7ec2fc006041a2b449605a
+Git URL: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-gpio.=
+git/
+Built: 6 unique architectures
 
-Fixes: commit c7663fa2a663 ("gpio: Move gpiochip_lock/unlock_as_irq to gpio=
-/driver.h")
-Cc: YueHaibing <yuehaibing@huawei.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>
-Signed-off-by: John Hubbard <jhubbard@nvidia.com>
+Warnings Detected:
+
+arc:
+    nsim_hs_defconfig (gcc-8): 2 warnings
+
+arm64:
+    defconfig (gcc-8): 3 warnings
+
+arm:
+    multi_v7_defconfig (gcc-8): 19 warnings
+
+mips:
+    32r2el_defconfig (gcc-8): 3 warnings
+
+riscv:
+
+x86_64:
+
+
+Warnings summary:
+
+    5    <stdin>:1511:2: warning: #warning syscall clone3 not implemented [=
+-Wcpp]
+    2    drivers/pinctrl/qcom/pinctrl-spmi-gpio.c:800:20: warning: this sta=
+tement may fall through [-Wimplicit-fallthrough=3D]
+    2    drivers/pinctrl/qcom/pinctrl-spmi-gpio.c:795:20: warning: this sta=
+tement may fall through [-Wimplicit-fallthrough=3D]
+    2    drivers/pinctrl/pinctrl-rockchip.c:2783:3: warning: this statement=
+ may fall through [-Wimplicit-fallthrough=3D]
+    1    drivers/video/fbdev/sh_mobile_lcdcfb.c:2086:22: warning: this stat=
+ement may fall through [-Wimplicit-fallthrough=3D]
+    1    drivers/video/fbdev/sh_mobile_lcdcfb.c:1596:22: warning: this stat=
+ement may fall through [-Wimplicit-fallthrough=3D]
+    1    drivers/usb/phy/phy-ab8500-usb.c:459:9: warning: this statement ma=
+y fall through [-Wimplicit-fallthrough=3D]
+    1    drivers/usb/phy/phy-ab8500-usb.c:440:9: warning: this statement ma=
+y fall through [-Wimplicit-fallthrough=3D]
+    1    drivers/usb/phy/phy-ab8500-usb.c:424:9: warning: this statement ma=
+y fall through [-Wimplicit-fallthrough=3D]
+    1    drivers/usb/phy/phy-ab8500-usb.c:370:9: warning: this statement ma=
+y fall through [-Wimplicit-fallthrough=3D]
+    1    drivers/usb/phy/phy-ab8500-usb.c:352:9: warning: this statement ma=
+y fall through [-Wimplicit-fallthrough=3D]
+    1    drivers/usb/phy/phy-ab8500-usb.c:332:9: warning: this statement ma=
+y fall through [-Wimplicit-fallthrough=3D]
+    1    drivers/mmc/host/sdhci-s3c.c:613:19: warning: this statement may f=
+all through [-Wimplicit-fallthrough=3D]
+    1    drivers/mmc/host/atmel-mci.c:2426:40: warning: this statement may =
+fall through [-Wimplicit-fallthrough=3D]
+    1    drivers/mmc/host/atmel-mci.c:2422:28: warning: this statement may =
+fall through [-Wimplicit-fallthrough=3D]
+    1    drivers/mmc/host/atmel-mci.c:2415:30: warning: this statement may =
+fall through [-Wimplicit-fallthrough=3D]
+    1    drivers/gpu/drm/sti/sti_hdmi.c:855:13: warning: this statement may=
+ fall through [-Wimplicit-fallthrough=3D]
+    1    drivers/gpu/drm/sti/sti_hdmi.c:853:13: warning: this statement may=
+ fall through [-Wimplicit-fallthrough=3D]
+    1    drivers/gpu/drm/sti/sti_hdmi.c:851:13: warning: this statement may=
+ fall through [-Wimplicit-fallthrough=3D]
+    1    drivers/dma/imx-dma.c:542:6: warning: this statement may fall thro=
+ugh [-Wimplicit-fallthrough=3D]
+
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D
+
+Detailed per-defconfig build reports:
+
+---------------------------------------------------------------------------=
+-----
+32r2el_defconfig (mips, gcc-8) =E2=80=94 PASS, 0 errors, 3 warnings, 0 sect=
+ion mismatches
+
+Warnings:
+    <stdin>:1511:2: warning: #warning syscall clone3 not implemented [-Wcpp]
+    <stdin>:1511:2: warning: #warning syscall clone3 not implemented [-Wcpp]
+    <stdin>:1511:2: warning: #warning syscall clone3 not implemented [-Wcpp]
+
+---------------------------------------------------------------------------=
+-----
+defconfig (riscv, gcc-8) =E2=80=94 PASS, 0 errors, 0 warnings, 0 section mi=
+smatches
+
+---------------------------------------------------------------------------=
+-----
+defconfig (arm64, gcc-8) =E2=80=94 PASS, 0 errors, 3 warnings, 0 section mi=
+smatches
+
+Warnings:
+    drivers/pinctrl/qcom/pinctrl-spmi-gpio.c:795:20: warning: this statemen=
+t may fall through [-Wimplicit-fallthrough=3D]
+    drivers/pinctrl/qcom/pinctrl-spmi-gpio.c:800:20: warning: this statemen=
+t may fall through [-Wimplicit-fallthrough=3D]
+    drivers/pinctrl/pinctrl-rockchip.c:2783:3: warning: this statement may =
+fall through [-Wimplicit-fallthrough=3D]
+
+---------------------------------------------------------------------------=
+-----
+multi_v7_defconfig (arm, gcc-8) =E2=80=94 PASS, 0 errors, 19 warnings, 0 se=
+ction mismatches
+
+Warnings:
+    drivers/dma/imx-dma.c:542:6: warning: this statement may fall through [=
+-Wimplicit-fallthrough=3D]
+    drivers/mmc/host/sdhci-s3c.c:613:19: warning: this statement may fall t=
+hrough [-Wimplicit-fallthrough=3D]
+    drivers/mmc/host/atmel-mci.c:2415:30: warning: this statement may fall =
+through [-Wimplicit-fallthrough=3D]
+    drivers/mmc/host/atmel-mci.c:2422:28: warning: this statement may fall =
+through [-Wimplicit-fallthrough=3D]
+    drivers/mmc/host/atmel-mci.c:2426:40: warning: this statement may fall =
+through [-Wimplicit-fallthrough=3D]
+    drivers/pinctrl/qcom/pinctrl-spmi-gpio.c:795:20: warning: this statemen=
+t may fall through [-Wimplicit-fallthrough=3D]
+    drivers/pinctrl/qcom/pinctrl-spmi-gpio.c:800:20: warning: this statemen=
+t may fall through [-Wimplicit-fallthrough=3D]
+    drivers/pinctrl/pinctrl-rockchip.c:2783:3: warning: this statement may =
+fall through [-Wimplicit-fallthrough=3D]
+    drivers/video/fbdev/sh_mobile_lcdcfb.c:2086:22: warning: this statement=
+ may fall through [-Wimplicit-fallthrough=3D]
+    drivers/video/fbdev/sh_mobile_lcdcfb.c:1596:22: warning: this statement=
+ may fall through [-Wimplicit-fallthrough=3D]
+    drivers/usb/phy/phy-ab8500-usb.c:424:9: warning: this statement may fal=
+l through [-Wimplicit-fallthrough=3D]
+    drivers/usb/phy/phy-ab8500-usb.c:440:9: warning: this statement may fal=
+l through [-Wimplicit-fallthrough=3D]
+    drivers/usb/phy/phy-ab8500-usb.c:459:9: warning: this statement may fal=
+l through [-Wimplicit-fallthrough=3D]
+    drivers/usb/phy/phy-ab8500-usb.c:332:9: warning: this statement may fal=
+l through [-Wimplicit-fallthrough=3D]
+    drivers/usb/phy/phy-ab8500-usb.c:352:9: warning: this statement may fal=
+l through [-Wimplicit-fallthrough=3D]
+    drivers/usb/phy/phy-ab8500-usb.c:370:9: warning: this statement may fal=
+l through [-Wimplicit-fallthrough=3D]
+    drivers/gpu/drm/sti/sti_hdmi.c:851:13: warning: this statement may fall=
+ through [-Wimplicit-fallthrough=3D]
+    drivers/gpu/drm/sti/sti_hdmi.c:853:13: warning: this statement may fall=
+ through [-Wimplicit-fallthrough=3D]
+    drivers/gpu/drm/sti/sti_hdmi.c:855:13: warning: this statement may fall=
+ through [-Wimplicit-fallthrough=3D]
+
+---------------------------------------------------------------------------=
+-----
+nsim_hs_defconfig (arc, gcc-8) =E2=80=94 PASS, 0 errors, 2 warnings, 0 sect=
+ion mismatches
+
+Warnings:
+    <stdin>:1511:2: warning: #warning syscall clone3 not implemented [-Wcpp]
+    <stdin>:1511:2: warning: #warning syscall clone3 not implemented [-Wcpp]
+
+---------------------------------------------------------------------------=
+-----
+x86_64_defconfig (x86_64, gcc-8) =E2=80=94 PASS, 0 errors, 0 warnings, 0 se=
+ction mismatches
+
 ---
-
-Hi,
-
-This is for today's linux-next.
-
-More background:
-
-It *looks* like the original commit did correctly put the non-static
-versions of these routines in CONFIG_GPIOLIB, and the static versions
-inside !CONFIG_GPIOLIB, but my git history foo is not strong enough
-to figure out how we got here, so I'm not sure if the "Fixes:" tag
-really refers to the guilty commit.
-
-thanks,
-John Hubbard
-NVIDIA
-
- include/linux/gpio/driver.h | 6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
-
-diff --git a/include/linux/gpio/driver.h b/include/linux/gpio/driver.h
-index b74a3bee85e5..39be896aad38 100644
---- a/include/linux/gpio/driver.h
-+++ b/include/linux/gpio/driver.h
-@@ -702,13 +702,11 @@ void gpiochip_free_own_desc(struct gpio_desc *desc);
- void devprop_gpiochip_set_names(struct gpio_chip *chip,
- 				const struct fwnode_handle *fwnode);
-=20
--/* lock/unlock as IRQ */
--int gpiochip_lock_as_irq(struct gpio_chip *chip, unsigned int offset);
--void gpiochip_unlock_as_irq(struct gpio_chip *chip, unsigned int offset);
--
- #ifdef CONFIG_GPIOLIB
-=20
- struct gpio_chip *gpiod_to_chip(const struct gpio_desc *desc);
-+int gpiochip_lock_as_irq(struct gpio_chip *chip, unsigned int offset);
-+void gpiochip_unlock_as_irq(struct gpio_chip *chip, unsigned int offset);
-=20
- #else /* CONFIG_GPIOLIB */
-=20
---=20
-2.23.0
-
+For more info write to <info@kernelci.org>
