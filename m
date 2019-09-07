@@ -2,139 +2,121 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 93F15AC227
-	for <lists+linux-gpio@lfdr.de>; Fri,  6 Sep 2019 23:47:10 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C933FAC3CA
+	for <lists+linux-gpio@lfdr.de>; Sat,  7 Sep 2019 03:05:42 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404651AbfIFVrJ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 6 Sep 2019 17:47:09 -0400
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:46830 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2404449AbfIFVrJ (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 6 Sep 2019 17:47:09 -0400
-Received: by mail-ot1-f68.google.com with SMTP id g19so7114098otg.13;
-        Fri, 06 Sep 2019 14:47:08 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=AxdmH4Las6LxoPzUkRRDSuUEuP8kEFd6s6/nV6yfxfg=;
-        b=kJ8V6SKUgTMBpZVLUgCBoDhLUAbrxohNBnGKYz5ADglBM8cRRC1XNgOxTfO09Ao0wV
-         8BQczCd7yaJz8hbUKtmym+hsPhNtnOH6VfJeyhMLJf02rJj5kcMcbVCoYJgL7w8JymdV
-         a6sIuJJnXC+WYQdwJkTwB6KlZCMRFOWZypKUDrlCRYHXJoLcgWFawqoYD0FEll+HRcQv
-         lkATQM/e/CxseNcd8hAOhXPWzrxqvEV0H7/8NRqkwJypKjzjRzJqRcBjmMkcJFX3W1b/
-         C/0/IwQcNBLmREJ6IoFqK1nu6D1qlhUj5yGseVzABJBooBmDdzzhqbXnPPEcsP1Hp0uL
-         X+MQ==
-X-Gm-Message-State: APjAAAWgjKQBs5F/JE9VoVTCxiSHM7wQu1Ja2vZUveWaudQtNON2ZItc
-        4GvN8WaC3vXjWsrTRisWOlj07Tds
-X-Google-Smtp-Source: APXvYqyKdkJy2UYmQBEftN3cVDKDxGk7OkLkrI9pGAnrPLPlQPtaJfgj/TAw7lpHUajBdykqy4i+wg==
-X-Received: by 2002:a9d:127:: with SMTP id 36mr3127123otu.64.1567806427609;
-        Fri, 06 Sep 2019 14:47:07 -0700 (PDT)
-Received: from mail-oi1-f182.google.com (mail-oi1-f182.google.com. [209.85.167.182])
-        by smtp.gmail.com with ESMTPSA id b21sm2544627otl.12.2019.09.06.14.47.06
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 06 Sep 2019 14:47:06 -0700 (PDT)
-Received: by mail-oi1-f182.google.com with SMTP id t84so6244575oih.10;
-        Fri, 06 Sep 2019 14:47:06 -0700 (PDT)
-X-Received: by 2002:a54:4492:: with SMTP id v18mr25801oiv.175.1567806426189;
- Fri, 06 Sep 2019 14:47:06 -0700 (PDT)
+        id S2393716AbfIGBFl (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 6 Sep 2019 21:05:41 -0400
+Received: from hqemgate15.nvidia.com ([216.228.121.64]:3990 "EHLO
+        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726627AbfIGBFl (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 6 Sep 2019 21:05:41 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5d7302680001>; Fri, 06 Sep 2019 18:05:44 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Fri, 06 Sep 2019 18:05:40 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Fri, 06 Sep 2019 18:05:40 -0700
+Received: from HQMAIL110.nvidia.com (172.18.146.15) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Sat, 7 Sep
+ 2019 01:05:40 +0000
+Received: from HQMAIL111.nvidia.com (172.20.187.18) by hqmail110.nvidia.com
+ (172.18.146.15) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Sat, 7 Sep
+ 2019 01:05:40 +0000
+Received: from hqnvemgw01.nvidia.com (172.20.150.20) by HQMAIL111.nvidia.com
+ (172.20.187.18) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
+ Transport; Sat, 7 Sep 2019 01:05:40 +0000
+Received: from blueforge.nvidia.com (Not Verified[10.110.48.28]) by hqnvemgw01.nvidia.com with Trustwave SEG (v7,5,8,10121)
+        id <B5d7302640000>; Fri, 06 Sep 2019 18:05:40 -0700
+From:   John Hubbard <jhubbard@nvidia.com>
+To:     YueHaibing <yuehaibing@huawei.com>
+CC:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        <linux-gpio@vger.kernel.org>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "John Hubbard" <jhubbard@nvidia.com>,
+        Linus Walleij <linus.walleij@linaro.org>
+Subject: [PATCH] gpio: fix build failure: gpiochip_[un]lock*() static/non-static
+Date:   Fri, 6 Sep 2019 18:05:34 -0700
+Message-ID: <20190907010534.23713-1-jhubbard@nvidia.com>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
-References: <20190906115614.5645-1-hui.song_1@nxp.com>
-In-Reply-To: <20190906115614.5645-1-hui.song_1@nxp.com>
-From:   Li Yang <leoyang.li@nxp.com>
-Date:   Fri, 6 Sep 2019 16:46:54 -0500
-X-Gmail-Original-Message-ID: <CADRPPNSjOV4RvJiFU2krj_-0gwcvw07x27Ku9t7h+VKNd=BStQ@mail.gmail.com>
-Message-ID: <CADRPPNSjOV4RvJiFU2krj_-0gwcvw07x27Ku9t7h+VKNd=BStQ@mail.gmail.com>
-Subject: Re: [PATCH] gpio/mpc8xxx: change irq handler from chained to normal
-To:     Hui Song <hui.song_1@nxp.com>
-Cc:     Shawn Guo <shawnguo@kernel.org>, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, lkml <linux-kernel@vger.kernel.org>,
-        linux-gpio@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+X-NVConfidentiality: public
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1567818344; bh=eO1xZfAtxjNLKEcOZ88Jf/cJ0R2lqa5Lv5whwF3UwU4=;
+        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
+         MIME-Version:X-NVConfidentiality:Content-Transfer-Encoding:
+         Content-Type;
+        b=ZFUUKLlFAab9l88gosi3tE+tELd+vYeSMblhkb2LZY9JV8ZGjNTiKSDr8VsfvJumb
+         qbX2LjAe/IpARlEipReKQsGvLSQn3NKElg3yFGZptq5uHRp296sWeIwGcekntiuxrW
+         GK0dBaqt71ru5lmHO/l2lgGOR7mVQOzTtVIETCpJhMs2rXMUdAyxXG1RYY7+T/lScS
+         NpNjoerq33+meJW+Hdj4o5AUUffbufEKxY1vuHurw1Zu1mZtPnKq7wYZ0KXKVMxTUR
+         SeKlvDhe+ZeSf5S9eF7mKptnVDD5B7jn6con62CSqx598RnPovICKAS6Z5gbZtsQ+6
+         yborNyJoXes9Q==
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Sep 6, 2019 at 10:20 AM Hui Song <hui.song_1@nxp.com> wrote:
->
-> From: Song Hui <hui.song_1@nxp.com>
->
+While building with !CONFIG_GPIOLIB, I experienced a build failure,
+because driver.h in that configuration supplies both a static and
+a non-static version of these routines:
 
-The English below need to be fixed.
+	gpiochip_lock_as_irq()
+	gpiochip_unlock_as_irq()
 
-> more one gpio controller use share one interrupt,
-> make request interrupt to be shared.
+Fix this by moving the non-static routines under the scope of
+CONFIG_GPIOLIB.
 
-More than one gpio controllers can share one interrupt, change the
-driver to request shared irq.
+Fixes: commit c7663fa2a663 ("gpio: Move gpiochip_lock/unlock_as_irq to gpio=
+/driver.h")
+Cc: YueHaibing <yuehaibing@huawei.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>
+Signed-off-by: John Hubbard <jhubbard@nvidia.com>
+---
 
->
-> Signed-off-by: Laurentiu Tudor <Laurentiu.Tudor@nxp.com>
-> Signed-off-by: Alex Marginean <alexandru.marginean@nxp.com>
-> Signed-off-by: Song Hui <hui.song_1@nxp.com>
-> ---
->  drivers/gpio/gpio-mpc8xxx.c | 20 +++++++++++++-------
->  1 file changed, 13 insertions(+), 7 deletions(-)
->
-> diff --git a/drivers/gpio/gpio-mpc8xxx.c b/drivers/gpio/gpio-mpc8xxx.c
-> index 16a47de..4006250 100644
-> --- a/drivers/gpio/gpio-mpc8xxx.c
-> +++ b/drivers/gpio/gpio-mpc8xxx.c
-> @@ -22,6 +22,7 @@
->  #include <linux/irq.h>
->  #include <linux/gpio/driver.h>
->  #include <linux/bitops.h>
-> +#include <linux/interrupt.h>
->
->  #define MPC8XXX_GPIO_PINS      32
->
-> @@ -127,10 +128,9 @@ static int mpc8xxx_gpio_to_irq(struct gpio_chip *gc, unsigned offset)
->                 return -ENXIO;
->  }
->
-> -static void mpc8xxx_gpio_irq_cascade(struct irq_desc *desc)
-> +static irqreturn_t mpc8xxx_gpio_irq_cascade(int irq, void *data)
->  {
-> -       struct mpc8xxx_gpio_chip *mpc8xxx_gc = irq_desc_get_handler_data(desc);
-> -       struct irq_chip *chip = irq_desc_get_chip(desc);
-> +       struct mpc8xxx_gpio_chip *mpc8xxx_gc = (struct mpc8xxx_gpio_chip *)data;
->         struct gpio_chip *gc = &mpc8xxx_gc->gc;
->         unsigned int mask;
->
-> @@ -139,8 +139,8 @@ static void mpc8xxx_gpio_irq_cascade(struct irq_desc *desc)
->         if (mask)
->                 generic_handle_irq(irq_linear_revmap(mpc8xxx_gc->irq,
->                                                      32 - ffs(mask)));
-> -       if (chip->irq_eoi)
-> -               chip->irq_eoi(&desc->irq_data);
-> +
-> +       return IRQ_HANDLED;
->  }
->
->  static void mpc8xxx_irq_unmask(struct irq_data *d)
-> @@ -409,8 +409,14 @@ static int mpc8xxx_probe(struct platform_device *pdev)
->         if (devtype->gpio_dir_in_init)
->                 devtype->gpio_dir_in_init(gc);
->
-> -       irq_set_chained_handler_and_data(mpc8xxx_gc->irqn,
-> -                                        mpc8xxx_gpio_irq_cascade, mpc8xxx_gc);
-> +       ret = request_irq(mpc8xxx_gc->irqn, mpc8xxx_gpio_irq_cascade,
-> +               IRQF_NO_THREAD | IRQF_SHARED, "gpio-cascade", mpc8xxx_gc);
-> +       if (ret) {
-> +               pr_err("%s: failed to request_irq(%d), ret = %d\n",
-> +                               np->full_name, mpc8xxx_gc->irqn, ret);
-> +               goto err;
-> +       }
-> +
->         return 0;
->  err:
->         iounmap(mpc8xxx_gc->regs);
-> --
-> 2.9.5
->
+Hi,
+
+This is for today's linux-next.
+
+More background:
+
+It *looks* like the original commit did correctly put the non-static
+versions of these routines in CONFIG_GPIOLIB, and the static versions
+inside !CONFIG_GPIOLIB, but my git history foo is not strong enough
+to figure out how we got here, so I'm not sure if the "Fixes:" tag
+really refers to the guilty commit.
+
+thanks,
+John Hubbard
+NVIDIA
+
+ include/linux/gpio/driver.h | 6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
+
+diff --git a/include/linux/gpio/driver.h b/include/linux/gpio/driver.h
+index b74a3bee85e5..39be896aad38 100644
+--- a/include/linux/gpio/driver.h
++++ b/include/linux/gpio/driver.h
+@@ -702,13 +702,11 @@ void gpiochip_free_own_desc(struct gpio_desc *desc);
+ void devprop_gpiochip_set_names(struct gpio_chip *chip,
+ 				const struct fwnode_handle *fwnode);
+=20
+-/* lock/unlock as IRQ */
+-int gpiochip_lock_as_irq(struct gpio_chip *chip, unsigned int offset);
+-void gpiochip_unlock_as_irq(struct gpio_chip *chip, unsigned int offset);
+-
+ #ifdef CONFIG_GPIOLIB
+=20
+ struct gpio_chip *gpiod_to_chip(const struct gpio_desc *desc);
++int gpiochip_lock_as_irq(struct gpio_chip *chip, unsigned int offset);
++void gpiochip_unlock_as_irq(struct gpio_chip *chip, unsigned int offset);
+=20
+ #else /* CONFIG_GPIOLIB */
+=20
+--=20
+2.23.0
+
