@@ -2,59 +2,59 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id BBD3BAC4B3
-	for <lists+linux-gpio@lfdr.de>; Sat,  7 Sep 2019 06:51:02 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BAA1EAC4C7
+	for <lists+linux-gpio@lfdr.de>; Sat,  7 Sep 2019 07:35:45 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394278AbfIGEvB (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sat, 7 Sep 2019 00:51:01 -0400
-Received: from mail-wm1-f47.google.com ([209.85.128.47]:54883 "EHLO
+        id S2388663AbfIGFfp (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sat, 7 Sep 2019 01:35:45 -0400
+Received: from mail-wm1-f47.google.com ([209.85.128.47]:55659 "EHLO
         mail-wm1-f47.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2394250AbfIGEvB (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sat, 7 Sep 2019 00:51:01 -0400
-Received: by mail-wm1-f47.google.com with SMTP id k2so8381171wmj.4
-        for <linux-gpio@vger.kernel.org>; Fri, 06 Sep 2019 21:50:59 -0700 (PDT)
+        with ESMTP id S1726049AbfIGFfo (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sat, 7 Sep 2019 01:35:44 -0400
+Received: by mail-wm1-f47.google.com with SMTP id g207so8440790wmg.5
+        for <linux-gpio@vger.kernel.org>; Fri, 06 Sep 2019 22:35:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=kernelci-org.20150623.gappssmtp.com; s=20150623;
         h=message-id:date:mime-version:content-transfer-encoding:subject:to
          :from;
-        bh=DWt4t3crE4CmdDO1lghFWySm8JDjHoYGmz5xQUJTxkQ=;
-        b=tE0RDkBZd8PEsFRcbNnI0GjafwZx5/qBDRewUsTj2vWOlcwfGJiAaT/cVpZGWyk1v1
-         fFE13B2RhcilQ050CwxFAaa5pcdQ1yfhvhGBwp0AuS9dps3U5/wh6Xav4S/8tt8IKeuC
-         rDUEOXWn9HcMtXp3zEyUYYMzadZaLK9ww12B17jPCApdgiyD/q33h3Hh/9Eqi6HLFtID
-         vrAa3NwwWpVh4rMa8tTUHvi5d5qT0Wm855vw2VMGJG/zgKFcUV4qgGwqL/YDSNdStgol
-         fhVT8hP2i5nbMJngrKN73sHfj3BupGpMMoyKTb93foKvXpQ9QW+Yi3Z4j3BlSP+qLyfe
-         WmzA==
+        bh=NCP5L2QMRDLrDZwuv3f9dzPdC31cq4Egw09oaKf8hC0=;
+        b=osXmdLCt/covXhcOdLUqjEuOf7IKxyAMw2W2B1FyggZkOSesR3dyMhz9NTP98W1LgT
+         iQH03iHM13r5t3vNJgXh/chYWiObv/AVHVgLX/j3egtJDFZb3CuTy7BycZOAfMZHczxs
+         KwCT97QSns7JTrZ0YNPosFST+eAIZQugVBurcbXneAK7VFZ+WzUa1ZaxTfemAjI6sZ0/
+         tIVYfX4ES0ww/24ItEfQdOgrUGc4kQ/cagvfJjxap+ckUGgHiSvI4vQe/Itrk+xrlK8b
+         iBIalzjUkVgadqiqW5+S2Gor1lZ7iPNoYLgJ17dISQQgGrf8uVWWRrk9XJ+HSvbWAibL
+         i3sA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:message-id:date:mime-version
          :content-transfer-encoding:subject:to:from;
-        bh=DWt4t3crE4CmdDO1lghFWySm8JDjHoYGmz5xQUJTxkQ=;
-        b=glMcSnUIw0Mid7eNch8ZzE4sDWR39GXdkui4X4jABaw9mSI8H0VDbB7hswAc3oWETx
-         6bBWBIp9ZeENx0mndIU3y9vBsxYVJWPpOIybBkgxwU6y1j9dMf/EOIcRcoV0UAvGCHwy
-         ngnWSh3zdqiBVHGs6hIZk4lY7y5P1/TFXGMp2Ff6lFMUUJVzslvzU1mV5wKF4TIA+xMq
-         TZroaHf3sm9uUj+t0sLBe2ku5s19qxo4V4AEqA9OuppydMatb/To87+gD1dKZHrKMJou
-         N4WSQRvPlZQr45lFDYjXGxwpJlYde8BHnxW3j6uHU2MnH/X2aVdPbFDA1N3Yq36sLVwL
-         2K9Q==
-X-Gm-Message-State: APjAAAViIZASbldJyvZNLIDaUirOqpXWx8FHdiuKxq2HME2eGoC0/dIU
-        Eqsm1IgGUoXD4QlFyp+p1HnRaMq7hPSpMw==
-X-Google-Smtp-Source: APXvYqyC9qf0unjkwcSKu5J7VYOfjdq4TxIqu7eGVBbfXcsnUNWNgDUXzF0kHd/62z14od79Gy92og==
-X-Received: by 2002:a1c:a7c6:: with SMTP id q189mr9230373wme.22.1567831858202;
-        Fri, 06 Sep 2019 21:50:58 -0700 (PDT)
+        bh=NCP5L2QMRDLrDZwuv3f9dzPdC31cq4Egw09oaKf8hC0=;
+        b=TFa1Ien5+nGR2yGgPd/SFzU8MhCoD8LTMdCwjk9goBYkuDsWOUjBcGLsBIHVsbuiql
+         aM8dK1YAhVtOqdHHVB+f+BhHvfFLrAHV1H4h7YiJAPE2UKgj5NBgcaSzVXRbZZ/4fL0G
+         Uz2NBJaxEKzHLGVlAjGLbWi/IRM6gnoeNUcFI25u0gCnnbgdDnGS1YIcWbu3F4kl0jMp
+         IwP3EXU5GG+OcNSstoSxqhuf0FneozawovhopS9cX16bSOVa1jZ2ZOpshp6nObW40XPR
+         Xe+A09Gin9TtxMD5yjzJ9QNoTx7TFijgVnu8EdrBKnegzdcA/vWOg7Vmo0sfuZhaigan
+         aqgg==
+X-Gm-Message-State: APjAAAVwlUZWgoRybnRQf74OuiCB++gGicDp+59DGez3X0VZWF6rA8Nq
+        NQurzHsL9kcKQ+Fvcsyo+P+RZqGNlXwbtQ==
+X-Google-Smtp-Source: APXvYqxDiBL4MgObRpJ3oclFZxYfBsL2J0SpdtahD7FIHl5kBv/ztD2tpmB35AGMenIV0LtKPZuELA==
+X-Received: by 2002:a1c:a984:: with SMTP id s126mr10550627wme.26.1567834542827;
+        Fri, 06 Sep 2019 22:35:42 -0700 (PDT)
 Received: from [148.251.42.114] ([2a01:4f8:201:9271::2])
-        by smtp.gmail.com with ESMTPSA id s12sm10551334wra.82.2019.09.06.21.50.57
+        by smtp.gmail.com with ESMTPSA id f66sm10496289wmg.2.2019.09.06.22.35.42
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 06 Sep 2019 21:50:57 -0700 (PDT)
-Message-ID: <5d733731.1c69fb81.96e74.349c@mx.google.com>
-Date:   Fri, 06 Sep 2019 21:50:57 -0700 (PDT)
+        Fri, 06 Sep 2019 22:35:42 -0700 (PDT)
+Message-ID: <5d7341ae.1c69fb81.48a8c.1eb7@mx.google.com>
+Date:   Fri, 06 Sep 2019 22:35:42 -0700 (PDT)
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 X-Kernelci-Kernel: v5.3-rc7-64-gfbdf8d4bef49
 X-Kernelci-Tree: linusw
-X-Kernelci-Report-Type: build
+X-Kernelci-Report-Type: boot
 X-Kernelci-Branch: devel
-Subject: linusw/devel build: 6 builds: 0 failed, 6 passed,
- 27 warnings (v5.3-rc7-64-gfbdf8d4bef49)
+Subject: linusw/devel boot: 51 boots: 1 failed,
+ 49 passed with 1 untried/unknown (v5.3-rc7-64-gfbdf8d4bef49)
 To:     linux-gpio@vger.kernel.org, fellows@kernelci.org
 From:   "kernelci.org bot" <bot@kernelci.org>
 Sender: linux-gpio-owner@vger.kernel.org
@@ -62,9 +62,11 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-linusw/devel build: 6 builds: 0 failed, 6 passed, 27 warnings (v5.3-rc7-64-=
-gfbdf8d4bef49)
+linusw/devel boot: 51 boots: 1 failed, 49 passed with 1 untried/unknown (v5=
+.3-rc7-64-gfbdf8d4bef49)
 
+Full Boot Summary: https://kernelci.org/boot/all/job/linusw/branch/devel/ke=
+rnel/v5.3-rc7-64-gfbdf8d4bef49/
 Full Build Summary: https://kernelci.org/build/linusw/branch/devel/kernel/v=
 5.3-rc7-64-gfbdf8d4bef49/
 
@@ -74,163 +76,32 @@ Git Describe: v5.3-rc7-64-gfbdf8d4bef49
 Git Commit: fbdf8d4bef4917713e7ec2fc006041a2b449605a
 Git URL: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-gpio.=
 git/
-Built: 6 unique architectures
+Tested: 43 unique boards, 14 SoC families, 3 builds out of 6
 
-Warnings Detected:
-
-arc:
-    nsim_hs_defconfig (gcc-8): 2 warnings
-
-arm64:
-    defconfig (gcc-8): 3 warnings
+Boot Regressions Detected:
 
 arm:
-    multi_v7_defconfig (gcc-8): 19 warnings
 
-mips:
-    32r2el_defconfig (gcc-8): 3 warnings
+    multi_v7_defconfig:
+        gcc-8:
+          sun7i-a20-cubietruck:
+              lab-baylibre: new failure (last pass: v5.3-rc1-47-gf6a7053ddc=
+f1)
 
-riscv:
+arm64:
 
-x86_64:
+    defconfig:
+        gcc-8:
+          meson-gxl-s805x-p241:
+              lab-baylibre: new failure (last pass: v5.3-rc1-58-g8a6abcd04e=
+4c)
 
+Boot Failure Detected:
 
-Warnings summary:
-
-    5    <stdin>:1511:2: warning: #warning syscall clone3 not implemented [=
--Wcpp]
-    2    drivers/pinctrl/qcom/pinctrl-spmi-gpio.c:800:20: warning: this sta=
-tement may fall through [-Wimplicit-fallthrough=3D]
-    2    drivers/pinctrl/qcom/pinctrl-spmi-gpio.c:795:20: warning: this sta=
-tement may fall through [-Wimplicit-fallthrough=3D]
-    2    drivers/pinctrl/pinctrl-rockchip.c:2783:3: warning: this statement=
- may fall through [-Wimplicit-fallthrough=3D]
-    1    drivers/video/fbdev/sh_mobile_lcdcfb.c:2086:22: warning: this stat=
-ement may fall through [-Wimplicit-fallthrough=3D]
-    1    drivers/video/fbdev/sh_mobile_lcdcfb.c:1596:22: warning: this stat=
-ement may fall through [-Wimplicit-fallthrough=3D]
-    1    drivers/usb/phy/phy-ab8500-usb.c:459:9: warning: this statement ma=
-y fall through [-Wimplicit-fallthrough=3D]
-    1    drivers/usb/phy/phy-ab8500-usb.c:440:9: warning: this statement ma=
-y fall through [-Wimplicit-fallthrough=3D]
-    1    drivers/usb/phy/phy-ab8500-usb.c:424:9: warning: this statement ma=
-y fall through [-Wimplicit-fallthrough=3D]
-    1    drivers/usb/phy/phy-ab8500-usb.c:370:9: warning: this statement ma=
-y fall through [-Wimplicit-fallthrough=3D]
-    1    drivers/usb/phy/phy-ab8500-usb.c:352:9: warning: this statement ma=
-y fall through [-Wimplicit-fallthrough=3D]
-    1    drivers/usb/phy/phy-ab8500-usb.c:332:9: warning: this statement ma=
-y fall through [-Wimplicit-fallthrough=3D]
-    1    drivers/mmc/host/sdhci-s3c.c:613:19: warning: this statement may f=
-all through [-Wimplicit-fallthrough=3D]
-    1    drivers/mmc/host/atmel-mci.c:2426:40: warning: this statement may =
-fall through [-Wimplicit-fallthrough=3D]
-    1    drivers/mmc/host/atmel-mci.c:2422:28: warning: this statement may =
-fall through [-Wimplicit-fallthrough=3D]
-    1    drivers/mmc/host/atmel-mci.c:2415:30: warning: this statement may =
-fall through [-Wimplicit-fallthrough=3D]
-    1    drivers/gpu/drm/sti/sti_hdmi.c:855:13: warning: this statement may=
- fall through [-Wimplicit-fallthrough=3D]
-    1    drivers/gpu/drm/sti/sti_hdmi.c:853:13: warning: this statement may=
- fall through [-Wimplicit-fallthrough=3D]
-    1    drivers/gpu/drm/sti/sti_hdmi.c:851:13: warning: this statement may=
- fall through [-Wimplicit-fallthrough=3D]
-    1    drivers/dma/imx-dma.c:542:6: warning: this statement may fall thro=
-ugh [-Wimplicit-fallthrough=3D]
-
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D
-
-Detailed per-defconfig build reports:
-
----------------------------------------------------------------------------=
------
-32r2el_defconfig (mips, gcc-8) =E2=80=94 PASS, 0 errors, 3 warnings, 0 sect=
-ion mismatches
-
-Warnings:
-    <stdin>:1511:2: warning: #warning syscall clone3 not implemented [-Wcpp]
-    <stdin>:1511:2: warning: #warning syscall clone3 not implemented [-Wcpp]
-    <stdin>:1511:2: warning: #warning syscall clone3 not implemented [-Wcpp]
-
----------------------------------------------------------------------------=
------
-defconfig (riscv, gcc-8) =E2=80=94 PASS, 0 errors, 0 warnings, 0 section mi=
-smatches
-
----------------------------------------------------------------------------=
------
-defconfig (arm64, gcc-8) =E2=80=94 PASS, 0 errors, 3 warnings, 0 section mi=
-smatches
-
-Warnings:
-    drivers/pinctrl/qcom/pinctrl-spmi-gpio.c:795:20: warning: this statemen=
-t may fall through [-Wimplicit-fallthrough=3D]
-    drivers/pinctrl/qcom/pinctrl-spmi-gpio.c:800:20: warning: this statemen=
-t may fall through [-Wimplicit-fallthrough=3D]
-    drivers/pinctrl/pinctrl-rockchip.c:2783:3: warning: this statement may =
-fall through [-Wimplicit-fallthrough=3D]
-
----------------------------------------------------------------------------=
------
-multi_v7_defconfig (arm, gcc-8) =E2=80=94 PASS, 0 errors, 19 warnings, 0 se=
-ction mismatches
-
-Warnings:
-    drivers/dma/imx-dma.c:542:6: warning: this statement may fall through [=
--Wimplicit-fallthrough=3D]
-    drivers/mmc/host/sdhci-s3c.c:613:19: warning: this statement may fall t=
-hrough [-Wimplicit-fallthrough=3D]
-    drivers/mmc/host/atmel-mci.c:2415:30: warning: this statement may fall =
-through [-Wimplicit-fallthrough=3D]
-    drivers/mmc/host/atmel-mci.c:2422:28: warning: this statement may fall =
-through [-Wimplicit-fallthrough=3D]
-    drivers/mmc/host/atmel-mci.c:2426:40: warning: this statement may fall =
-through [-Wimplicit-fallthrough=3D]
-    drivers/pinctrl/qcom/pinctrl-spmi-gpio.c:795:20: warning: this statemen=
-t may fall through [-Wimplicit-fallthrough=3D]
-    drivers/pinctrl/qcom/pinctrl-spmi-gpio.c:800:20: warning: this statemen=
-t may fall through [-Wimplicit-fallthrough=3D]
-    drivers/pinctrl/pinctrl-rockchip.c:2783:3: warning: this statement may =
-fall through [-Wimplicit-fallthrough=3D]
-    drivers/video/fbdev/sh_mobile_lcdcfb.c:2086:22: warning: this statement=
- may fall through [-Wimplicit-fallthrough=3D]
-    drivers/video/fbdev/sh_mobile_lcdcfb.c:1596:22: warning: this statement=
- may fall through [-Wimplicit-fallthrough=3D]
-    drivers/usb/phy/phy-ab8500-usb.c:424:9: warning: this statement may fal=
-l through [-Wimplicit-fallthrough=3D]
-    drivers/usb/phy/phy-ab8500-usb.c:440:9: warning: this statement may fal=
-l through [-Wimplicit-fallthrough=3D]
-    drivers/usb/phy/phy-ab8500-usb.c:459:9: warning: this statement may fal=
-l through [-Wimplicit-fallthrough=3D]
-    drivers/usb/phy/phy-ab8500-usb.c:332:9: warning: this statement may fal=
-l through [-Wimplicit-fallthrough=3D]
-    drivers/usb/phy/phy-ab8500-usb.c:352:9: warning: this statement may fal=
-l through [-Wimplicit-fallthrough=3D]
-    drivers/usb/phy/phy-ab8500-usb.c:370:9: warning: this statement may fal=
-l through [-Wimplicit-fallthrough=3D]
-    drivers/gpu/drm/sti/sti_hdmi.c:851:13: warning: this statement may fall=
- through [-Wimplicit-fallthrough=3D]
-    drivers/gpu/drm/sti/sti_hdmi.c:853:13: warning: this statement may fall=
- through [-Wimplicit-fallthrough=3D]
-    drivers/gpu/drm/sti/sti_hdmi.c:855:13: warning: this statement may fall=
- through [-Wimplicit-fallthrough=3D]
-
----------------------------------------------------------------------------=
------
-nsim_hs_defconfig (arc, gcc-8) =E2=80=94 PASS, 0 errors, 2 warnings, 0 sect=
-ion mismatches
-
-Warnings:
-    <stdin>:1511:2: warning: #warning syscall clone3 not implemented [-Wcpp]
-    <stdin>:1511:2: warning: #warning syscall clone3 not implemented [-Wcpp]
-
----------------------------------------------------------------------------=
------
-x86_64_defconfig (x86_64, gcc-8) =E2=80=94 PASS, 0 errors, 0 warnings, 0 se=
-ction mismatches
+arm:
+    multi_v7_defconfig:
+        gcc-8:
+            sun7i-a20-cubietruck: 1 failed lab
 
 ---
 For more info write to <info@kernelci.org>
