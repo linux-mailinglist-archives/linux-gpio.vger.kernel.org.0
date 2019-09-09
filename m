@@ -2,73 +2,89 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 31CAEAD21F
-	for <lists+linux-gpio@lfdr.de>; Mon,  9 Sep 2019 05:11:51 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0D3F8AD22E
+	for <lists+linux-gpio@lfdr.de>; Mon,  9 Sep 2019 05:23:02 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387406AbfIIDLh (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sun, 8 Sep 2019 23:11:37 -0400
-Received: from mail-qk1-f194.google.com ([209.85.222.194]:41573 "EHLO
-        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729790AbfIIDLh (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sun, 8 Sep 2019 23:11:37 -0400
-Received: by mail-qk1-f194.google.com with SMTP id o11so11680617qkg.8
-        for <linux-gpio@vger.kernel.org>; Sun, 08 Sep 2019 20:11:35 -0700 (PDT)
+        id S2387491AbfIIDXB (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sun, 8 Sep 2019 23:23:01 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:33133 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387403AbfIIDXB (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sun, 8 Sep 2019 23:23:01 -0400
+Received: by mail-pf1-f195.google.com with SMTP id q10so8260938pfl.0
+        for <linux-gpio@vger.kernel.org>; Sun, 08 Sep 2019 20:23:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=endlessm-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ysUHgmNu9WMA8zL7iVWv/ObdOdJAcInEBYKpkc9uysc=;
-        b=EA0bJFIwM2SjnvAUk8RI0nFyjwZcV+73V6hkW0nl/potXqj6JTUzUTyaQd7OEzizOv
-         vyHEimncQN7YnHnfEUPp8I/UtaRujv1i5W762CvcziFum4ncZsXhYe+XQRxyw1WeLOLN
-         rSLD8ldV0GUgjGPCvuI8Y4KehrU3PVeG49DxLr19tTb/FohzTLCBu83AEL/ZXJ2smw/L
-         8s3EOcTJ4h7EQuTEMeFuq4y+mUCxkUEBTC4ggjorkPNRtmxMcf76UDUkfV424/Qy9i2h
-         Bwn92bWrujqZCt04DQmiu+pBJm03Q9wELvxVN+EtcPDS3ikIFtBmOAuQNpEsnIAorRMC
-         8dig==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=gwUn6LZY/+tXNbWADM6TlgZV7T1ZrquvHLWoehydA7o=;
+        b=NnvByjkNCgMYh3p5KTUXyMu7X5Tk+hvFjw9UnnOjl4JBFoNwPUGQxJq0dvRbxuXJm3
+         sYj2JbEclxd0Ih95V/7FpknNpYnlP+xw1FBPFqMCv2VkxWplFRclfeTD8sEsh+WKA7LE
+         G0gxNdvpm8n49Y8I0YpacK6WeFpUKoBDDcxFWEbgnPU2bmmvkQkYkgogQv4eRWaKorVy
+         d/HQS3rIYKMlQXQtnXeOoSxJ0UXz2+0rQtsQxdsFxYnj5zUQixuDbzjZ1Xy+ILcPwb0a
+         0346Ce1X858lQQn6O13oUfyWbVQnH3tWwOF7BQOUnsJQCdncjGtR9X4PnDYqaRiSmWCK
+         Qe4w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ysUHgmNu9WMA8zL7iVWv/ObdOdJAcInEBYKpkc9uysc=;
-        b=NEhkSL+jjYx5lh7DTuA48CMyHo32bZnu2y+AklszP3c25l/A2xZXwdh5ViGGDNbUBK
-         UVxnVOBDx6G8mJG3pQxFvZZgWFZD1qusiZkwaRt7BPbxS17ww0Fr9rfJPrPFZqVbNvdt
-         AjfqHQ/uSq3j6q4DmwdNlri51VSWopclNwzlwbSprDvzA7IqzOGafs5RWkCnNpLAP/cE
-         Vsl2ASp7JjpXRDAfx5LTFVB0Za64rjMJ31WYJPhFUWz1dpEPR515VQ2jlsX4vg2Z+4lF
-         gGrBK30XiFgMA1Z9dXdIE7KDzoxO6ljj914JhsU1cun/KANM/i8oJuiYKBX099jX/NnQ
-         MheA==
-X-Gm-Message-State: APjAAAWBb52wNC7nXE4P2EsLsBBgJiHNjMuDWrOUcRHwBlN6SLBQKDK/
-        OSKVHFxOFMB66nqtRuqCyNcV3Skc9PaqbIyObOaqwg==
-X-Google-Smtp-Source: APXvYqxX0B/GZlqSYxDgtH13jNbbY+d3/QJQCEQPxrTROPkHoAlfS/Qfoz+sw1btsfsESznBrLnmdvq6rUNtzvgitZI=
-X-Received: by 2002:a37:9c57:: with SMTP id f84mr21728192qke.250.1567998695029;
- Sun, 08 Sep 2019 20:11:35 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=gwUn6LZY/+tXNbWADM6TlgZV7T1ZrquvHLWoehydA7o=;
+        b=Sf+PUb3DOPhHa+lcwYW+0uZQ3NOrsaBg3Yv77sy/I6cvzdjWRjc0p5FBHhUFmx5Zvb
+         +Ir4zxgeZoGEPJ4rpXcDGWHOJbX4Xv9IiUzUPCqgID1eZ31ZIDYJ1ziu3mUUC+Tzazpo
+         jgY5VUxCpYqvB23BJSKJOL7vWY6PmzuaGNpjvgDIi+3sv4GBi1llaFZ5PvkM6Yvdr+OD
+         HiXwp/BbGGc/Z9vxit2PTny57LHKsYGQCAvixWJ5AVhhdgNhGxNdcZdCETfIDWJu93il
+         z7OCHZjXerZSh5pju3mEEDqRrUXg1Qso3DwoGYFbZ+R04QyGqWlf6i7ERd3H23S8DmHf
+         k4Fg==
+X-Gm-Message-State: APjAAAWlmGVzrGHo1B97zHeywZ+GydqePAweooPlXB6RuEamJXnQCbfT
+        OWdHasWAIxtpyi7vs3cjAwR9bP/ZF/T8XQ==
+X-Google-Smtp-Source: APXvYqxJhqWlbYHFPp3NKAdulLE5YCRvlTxDnBuA4qByrTyXPNhuHTH9pVQYH6xInGlbTNAxdcF9aw==
+X-Received: by 2002:a65:5c02:: with SMTP id u2mr19603981pgr.367.1567999379794;
+        Sun, 08 Sep 2019 20:22:59 -0700 (PDT)
+Received: from firefly.lan (220-235-119-39.dyn.iinet.net.au. [220.235.119.39])
+        by smtp.gmail.com with ESMTPSA id a1sm12782901pgd.74.2019.09.08.20.22.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 08 Sep 2019 20:22:59 -0700 (PDT)
+From:   Kent Gibson <warthog618@gmail.com>
+To:     linux-gpio@vger.kernel.org
+Cc:     Kent Gibson <warthog618@gmail.com>
+Subject: [PATCH] gpio: fix line flag validation in linehandle_create
+Date:   Mon,  9 Sep 2019 03:22:18 +0000
+Message-Id: <20190909032218.1901-1-warthog618@gmail.com>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
-References: <20190906185231.1081695-1-arnd@arndb.de>
-In-Reply-To: <20190906185231.1081695-1-arnd@arndb.de>
-From:   Chris Chiu <chiu@endlessm.com>
-Date:   Mon, 9 Sep 2019 11:11:24 +0800
-Message-ID: <CAB4CAwfvPpdhp0oCnAkZEY9GqE+PA8OcD84wtR_P44CZ12p8-g@mail.gmail.com>
-Subject: Re: [PATCH] [v2] pinctrl: intel: mark intel_pin_to_gpio __maybe_unused
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        "open list:PIN CONTROL SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux Kernel <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Sat, Sep 7, 2019 at 2:52 AM Arnd Bergmann <arnd@arndb.de> wrote:
->
-> The intel_pin_to_gpio() function is only called by the
-> PM support functions and causes a warning when those are disabled:
->
-> drivers/pinctrl/intel/pinctrl-intel.c:841:12: error: unused function 'intel_pin_to_gpio' [-Werror,-Wunused-function]
->
-> Mark it __maybe_unused to suppress the warning.
->
-> Suggested-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-Reviewed-by: Chris Chiu <chiu@endlessm.com>
+linehandle_create should not allow both GPIOHANDLE_REQUEST_INPUT
+and GPIOHANDLE_REQUEST_OUTPUT to be set.
+
+Signed-off-by: Kent Gibson <warthog618@gmail.com>
+---
+ drivers/gpio/gpiolib.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
+
+diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
+index cca749010cd0..7502230a4ec8 100644
+--- a/drivers/gpio/gpiolib.c
++++ b/drivers/gpio/gpiolib.c
+@@ -535,6 +535,14 @@ static int linehandle_create(struct gpio_device *gdev, void __user *ip)
+ 	if (lflags & ~GPIOHANDLE_REQUEST_VALID_FLAGS)
+ 		return -EINVAL;
+ 
++	/*
++	 * Do not allow both INPUT & OUTPUT flags to be set as they are
++	 * contradictory.
++	 */
++	if ((lflags & GPIOHANDLE_REQUEST_INPUT) &&
++	    (lflags & GPIOHANDLE_REQUEST_OUTPUT))
++		return -EINVAL;
++
+ 	/*
+ 	 * Do not allow OPEN_SOURCE & OPEN_DRAIN flags in a single request. If
+ 	 * the hardware actually supports enabling both at the same time the
+-- 
+2.23.0
+
