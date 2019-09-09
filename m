@@ -2,105 +2,88 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id CD6D4AD46D
-	for <lists+linux-gpio@lfdr.de>; Mon,  9 Sep 2019 10:08:51 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 900E1AD592
+	for <lists+linux-gpio@lfdr.de>; Mon,  9 Sep 2019 11:22:16 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388563AbfIIIIv (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 9 Sep 2019 04:08:51 -0400
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:39229 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727079AbfIIIIv (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 9 Sep 2019 04:08:51 -0400
-Received: by mail-ot1-f65.google.com with SMTP id n7so11590191otk.6
-        for <linux-gpio@vger.kernel.org>; Mon, 09 Sep 2019 01:08:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=gJqsNk537Ee698eaMI/WoUOzxOSMBJRuyaZH39TduDU=;
-        b=tV4CHDh5/x14CjSLzPXNjSrr+KO5ZwGNjsO+eJCUJDD55ojKGrvIW0WwrwhhnPM/Uc
-         M9W7qCVu2FfrQezi90405Ev7XmnTRT0jU/Srfeta7Em2TjWMZ5+DVbFQ5mY5CsF9MkgO
-         8sZCeSi/jr3WgU3CfycmGdJJuxo/BZIHDR07YGaybbOf/DbBMrK1qgSuMT1ha8gxzcmm
-         n9LV0Nf+cK21w/c5ljuBJYA0pSdgQDFuuVP6lVRnqZb3GeQRJjNVdgurG6XLX14Ydf/E
-         xN+Sda6Fh9zifoRjwGCOsgckLP23ivlvAt51xQ+fWcrSyqbWnRPl1/QBQNWMnJZ9xWmW
-         TLHA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=gJqsNk537Ee698eaMI/WoUOzxOSMBJRuyaZH39TduDU=;
-        b=SprFBqYp46oZ7A2ckMr+tCYYlD7ceh+KbaAzePmMdcHHrxUZgt8RJtrLewn7JKVeqG
-         /5PJVD1rkhD+E/VOWL7UyK0fVmB096Sd22A+Laofif6Ng2sPyhvzpZlS3e+dHIrRflap
-         Qsr1cirn5vHHlWmq9tznIfhQ/YZSQS0Wr+crvWwu5tGcXUJUtrvVEKCxlKc0KvtkQgMM
-         RB0gXpKJVOJhpLYh07yFKzwRXmr9Ya6EgyAAiv/I0b6d81QYex2JH/+6A8LmSW5POt2a
-         oEAHwOvO2ICmSbVYoGAzYXIzXNexinWVV60SlaLZHOxlLzZeXiIeNmQUlmAQo2ntfSMz
-         69bQ==
-X-Gm-Message-State: APjAAAXIjP1gaux9EUjYyn7/b2vtGP0c93sZnNoht17MCgGdmyHZ3vNi
-        /JkDUhhlijvSjzYT3+Gku1uRF6DuDPP3s4b4wFZptw==
-X-Google-Smtp-Source: APXvYqxE+jEqaxY/ZswNBiISMkKeCPo7b4iQVVMhabwK63I4ZoYPjGGjobrNUVzpsqIa33svZwabA4fI7Ba4C4w6eBQ=
-X-Received: by 2002:a9d:5a06:: with SMTP id v6mr17519979oth.250.1568016530212;
- Mon, 09 Sep 2019 01:08:50 -0700 (PDT)
+        id S1728861AbfIIJWQ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 9 Sep 2019 05:22:16 -0400
+Received: from mga18.intel.com ([134.134.136.126]:9306 "EHLO mga18.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728706AbfIIJWP (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Mon, 9 Sep 2019 05:22:15 -0400
+X-Amp-Result: UNSCANNABLE
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 09 Sep 2019 02:22:15 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,484,1559545200"; 
+   d="scan'208";a="213859213"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by fmsmga002.fm.intel.com with ESMTP; 09 Sep 2019 02:22:13 -0700
+Received: from andy by smile with local (Exim 4.92.1)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1i7FsB-00061C-QA; Mon, 09 Sep 2019 12:22:11 +0300
+Date:   Mon, 9 Sep 2019 12:22:11 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Chris Chiu <chiu@endlessm.com>,
+        Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] [v2] pinctrl: intel: mark intel_pin_to_gpio
+ __maybe_unused
+Message-ID: <20190909092211.GN2680@smile.fi.intel.com>
+References: <20190906185231.1081695-1-arnd@arndb.de>
 MIME-Version: 1.0
-References: <20190904141834.195294-1-weiyongjun1@huawei.com> <CAMpxmJWJr0uBCs_oGX+h1uFmQ2f7Axo1iqtD6rzwgT-bbZdD6g@mail.gmail.com>
-In-Reply-To: <CAMpxmJWJr0uBCs_oGX+h1uFmQ2f7Axo1iqtD6rzwgT-bbZdD6g@mail.gmail.com>
-From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Date:   Mon, 9 Sep 2019 10:08:39 +0200
-Message-ID: <CAMpxmJVyYVd-B=6x2sNk3Qa1TTsOHju7TKAG=_8h3Bo1zXxDzw@mail.gmail.com>
-Subject: Re: [PATCH] gpio: mockup: add missing single_release()
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Wei Yongjun <weiyongjun1@huawei.com>,
-        Bamvor Jian Zhang <bamv2005@gmail.com>,
-        linux-gpio <linux-gpio@vger.kernel.org>,
-        kernel-janitors@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190906185231.1081695-1-arnd@arndb.de>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-=C5=9Br., 4 wrz 2019 o 16:54 Bartosz Golaszewski
-<bgolaszewski@baylibre.com> napisa=C5=82(a):
->
-> =C5=9Br., 4 wrz 2019 o 16:00 Wei Yongjun <weiyongjun1@huawei.com> napisa=
-=C5=82(a):
-> >
-> > When using single_open() for opening, single_release() should be
-> > used instead of seq_release(), otherwise there is a memory leak.
-> >
-> > Fixes: 2a9e27408e12 ("gpio: mockup: rework debugfs interface")
-> > Signed-off-by: Wei Yongjun <weiyongjun1@huawei.com>
-> > ---
-> >  drivers/gpio/gpio-mockup.c | 1 +
-> >  1 file changed, 1 insertion(+)
-> >
-> > diff --git a/drivers/gpio/gpio-mockup.c b/drivers/gpio/gpio-mockup.c
-> > index f1a9c0544e3f..213aedc97dc2 100644
-> > --- a/drivers/gpio/gpio-mockup.c
-> > +++ b/drivers/gpio/gpio-mockup.c
-> > @@ -309,6 +309,7 @@ static const struct file_operations gpio_mockup_deb=
-ugfs_ops =3D {
-> >         .read =3D gpio_mockup_debugfs_read,
-> >         .write =3D gpio_mockup_debugfs_write,
-> >         .llseek =3D no_llseek,
-> > +       .release =3D single_release,
-> >  };
-> >
-> >  static void gpio_mockup_debugfs_setup(struct device *dev,
-> >
-> >
-> >
->
-> Good catch!
->
-> Reviewed-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
->
-> Linus: can you pick it up for your last pull-requests with fixes for v5.3=
-?
->
-> Bart
+On Fri, Sep 06, 2019 at 08:51:59PM +0200, Arnd Bergmann wrote:
+> The intel_pin_to_gpio() function is only called by the
+> PM support functions and causes a warning when those are disabled:
+> 
+> drivers/pinctrl/intel/pinctrl-intel.c:841:12: error: unused function 'intel_pin_to_gpio' [-Werror,-Wunused-function]
+> 
+> Mark it __maybe_unused to suppress the warning.
+> 
 
-Nevermind - I applied it to my tree and will send it with two other
-fixes in a PR.
+Acked-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-Bart
+> Suggested-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> ---
+> v2: use __maybe_unused instead of moving the code
+> ---
+>  drivers/pinctrl/intel/pinctrl-intel.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/pinctrl/intel/pinctrl-intel.c b/drivers/pinctrl/intel/pinctrl-intel.c
+> index d66fe2b4221b..1f13bcd0e4e1 100644
+> --- a/drivers/pinctrl/intel/pinctrl-intel.c
+> +++ b/drivers/pinctrl/intel/pinctrl-intel.c
+> @@ -838,7 +838,7 @@ static int intel_gpio_to_pin(struct intel_pinctrl *pctrl, unsigned int offset,
+>   *
+>   * Translate the pin number of pinctrl to GPIO offset
+>   */
+> -static int intel_pin_to_gpio(struct intel_pinctrl *pctrl, int pin)
+> +static __maybe_unused int intel_pin_to_gpio(struct intel_pinctrl *pctrl, int pin)
+>  {
+>  	const struct intel_community *community;
+>  	const struct intel_padgroup *padgrp;
+> -- 
+> 2.20.0
+> 
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
