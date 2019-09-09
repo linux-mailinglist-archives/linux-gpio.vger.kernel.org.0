@@ -2,53 +2,56 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id E3AF6AD46C
-	for <lists+linux-gpio@lfdr.de>; Mon,  9 Sep 2019 10:08:02 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CD6D4AD46D
+	for <lists+linux-gpio@lfdr.de>; Mon,  9 Sep 2019 10:08:51 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726126AbfIIIIC (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 9 Sep 2019 04:08:02 -0400
-Received: from mail-io1-f66.google.com ([209.85.166.66]:42917 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725875AbfIIIIC (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 9 Sep 2019 04:08:02 -0400
-Received: by mail-io1-f66.google.com with SMTP id n197so26594433iod.9
-        for <linux-gpio@vger.kernel.org>; Mon, 09 Sep 2019 01:08:00 -0700 (PDT)
+        id S2388563AbfIIIIv (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 9 Sep 2019 04:08:51 -0400
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:39229 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727079AbfIIIIv (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 9 Sep 2019 04:08:51 -0400
+Received: by mail-ot1-f65.google.com with SMTP id n7so11590191otk.6
+        for <linux-gpio@vger.kernel.org>; Mon, 09 Sep 2019 01:08:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc:content-transfer-encoding;
-        bh=EPO+JEAp3lllN7FD/A/K+0ZkOWtOPlRcQJal9iDBtSg=;
-        b=MEwQZkzClMwDCop2v5Xs83+gbVEMMCcJQ1TgvtaAeDxgtgNhbqKzwnY2i0EQJMVvgX
-         lY6X6Eecmo+dmLsCGaL3bIQ983WF14Aawe854EldQenGRIn0vrMXcpYlCaCPOgZFbCEH
-         8t885pQD6I6RxTEQburNZvcZMGnboiepszEWgzWyVIsReqfTyGzzA5InybqhIPKG3cwH
-         9dntZxZM1ez5HnjlPLCBSZypsMvzXTblugnGRDLWjp0FxVW4N8apaTBlHZg580EIYH+H
-         34sK4vac8elr4R6kfYS6oK/k7+pfAenER2tj30YJaQcO/AxWfYPMy8skMAO6pcMg/1l9
-         vhcA==
+        bh=gJqsNk537Ee698eaMI/WoUOzxOSMBJRuyaZH39TduDU=;
+        b=tV4CHDh5/x14CjSLzPXNjSrr+KO5ZwGNjsO+eJCUJDD55ojKGrvIW0WwrwhhnPM/Uc
+         M9W7qCVu2FfrQezi90405Ev7XmnTRT0jU/Srfeta7Em2TjWMZ5+DVbFQ5mY5CsF9MkgO
+         8sZCeSi/jr3WgU3CfycmGdJJuxo/BZIHDR07YGaybbOf/DbBMrK1qgSuMT1ha8gxzcmm
+         n9LV0Nf+cK21w/c5ljuBJYA0pSdgQDFuuVP6lVRnqZb3GeQRJjNVdgurG6XLX14Ydf/E
+         xN+Sda6Fh9zifoRjwGCOsgckLP23ivlvAt51xQ+fWcrSyqbWnRPl1/QBQNWMnJZ9xWmW
+         TLHA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc:content-transfer-encoding;
-        bh=EPO+JEAp3lllN7FD/A/K+0ZkOWtOPlRcQJal9iDBtSg=;
-        b=Riq5A1auilqaKsRXDxiKNvxf3WPKO0w6LcVKpXolMa1m1Syb9DnTmWfmb9iUFq9qFW
-         BqnwyVXu6PkrNVTEn4S8/F/6cbt6bXJx5DAyjJR5ZEACPgJR8IkotsFXHErlhZ/tvIP/
-         L/N8tigbFr8e3u3aeVl+Zg4R6Gy6Wo8Ux2gr+YjybJxfP2IaTUHigmjy1/rTfhoaUC+u
-         NjTxe1zBHFmJF4KBiGbdCgNSVFcnl6tCVCCx72eXx6UBGkIL0jXmrrvP2FI5UBhplwfh
-         ihP4l/hqapw2MfM4+DG4RAq8yTdk88TraIhOECh4UPGLbobiF8V9WKcBJrjY3vmBiCWN
-         IDPw==
-X-Gm-Message-State: APjAAAUmljFqpTKJZ5KF6YPLEIha88lJBlWy0BNB0J3bIRSa40wSJEa8
-        X+T3uJ27tyKjieYTAfFsviXGke4VcaXUG8txuQeLK/Vm
-X-Google-Smtp-Source: APXvYqxSR2x72+P0eHPbTrMKD+swgFNs9R8udT6Q3RW91xpIbxn4U9/DY+t1GG/c6f5WVJNhFL/mulahb431EVJQx1I=
-X-Received: by 2002:a02:a403:: with SMTP id c3mr23516886jal.93.1568016479725;
- Mon, 09 Sep 2019 01:07:59 -0700 (PDT)
+        bh=gJqsNk537Ee698eaMI/WoUOzxOSMBJRuyaZH39TduDU=;
+        b=SprFBqYp46oZ7A2ckMr+tCYYlD7ceh+KbaAzePmMdcHHrxUZgt8RJtrLewn7JKVeqG
+         /5PJVD1rkhD+E/VOWL7UyK0fVmB096Sd22A+Laofif6Ng2sPyhvzpZlS3e+dHIrRflap
+         Qsr1cirn5vHHlWmq9tznIfhQ/YZSQS0Wr+crvWwu5tGcXUJUtrvVEKCxlKc0KvtkQgMM
+         RB0gXpKJVOJhpLYh07yFKzwRXmr9Ya6EgyAAiv/I0b6d81QYex2JH/+6A8LmSW5POt2a
+         oEAHwOvO2ICmSbVYoGAzYXIzXNexinWVV60SlaLZHOxlLzZeXiIeNmQUlmAQo2ntfSMz
+         69bQ==
+X-Gm-Message-State: APjAAAXIjP1gaux9EUjYyn7/b2vtGP0c93sZnNoht17MCgGdmyHZ3vNi
+        /JkDUhhlijvSjzYT3+Gku1uRF6DuDPP3s4b4wFZptw==
+X-Google-Smtp-Source: APXvYqxE+jEqaxY/ZswNBiISMkKeCPo7b4iQVVMhabwK63I4ZoYPjGGjobrNUVzpsqIa33svZwabA4fI7Ba4C4w6eBQ=
+X-Received: by 2002:a9d:5a06:: with SMTP id v6mr17519979oth.250.1568016530212;
+ Mon, 09 Sep 2019 01:08:50 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190909032406.1952-1-warthog618@gmail.com> <CAMRc=McNhsJ1r_uKCsL_1dLyrm2FoGxcs-1yBfs-SpBdKBFggw@mail.gmail.com>
-In-Reply-To: <CAMRc=McNhsJ1r_uKCsL_1dLyrm2FoGxcs-1yBfs-SpBdKBFggw@mail.gmail.com>
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Mon, 9 Sep 2019 10:07:49 +0200
-Message-ID: <CAMRc=MczkOy2b_NWJvkpOMgCd9g+RhFHZA3EVRqF4kFcKWOTvg@mail.gmail.com>
-Subject: Re: [PATCH] gpio: fix line flag validation in lineevent_create
-To:     Kent Gibson <warthog618@gmail.com>
-Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
+References: <20190904141834.195294-1-weiyongjun1@huawei.com> <CAMpxmJWJr0uBCs_oGX+h1uFmQ2f7Axo1iqtD6rzwgT-bbZdD6g@mail.gmail.com>
+In-Reply-To: <CAMpxmJWJr0uBCs_oGX+h1uFmQ2f7Axo1iqtD6rzwgT-bbZdD6g@mail.gmail.com>
+From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Date:   Mon, 9 Sep 2019 10:08:39 +0200
+Message-ID: <CAMpxmJVyYVd-B=6x2sNk3Qa1TTsOHju7TKAG=_8h3Bo1zXxDzw@mail.gmail.com>
+Subject: Re: [PATCH] gpio: mockup: add missing single_release()
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     Wei Yongjun <weiyongjun1@huawei.com>,
+        Bamvor Jian Zhang <bamv2005@gmail.com>,
+        linux-gpio <linux-gpio@vger.kernel.org>,
+        kernel-janitors@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 Sender: linux-gpio-owner@vger.kernel.org
@@ -56,75 +59,48 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-pon., 9 wrz 2019 o 09:31 Bartosz Golaszewski <brgl@bgdev.pl> napisa=C5=82(a=
-):
+=C5=9Br., 4 wrz 2019 o 16:54 Bartosz Golaszewski
+<bgolaszewski@baylibre.com> napisa=C5=82(a):
 >
-> pon., 9 wrz 2019 o 05:24 Kent Gibson <warthog618@gmail.com> napisa=C5=82(=
-a):
+> =C5=9Br., 4 wrz 2019 o 16:00 Wei Yongjun <weiyongjun1@huawei.com> napisa=
+=C5=82(a):
 > >
->
-> Hi Kent,
->
-> thanks for spotting this. Just single nit below:
->
-> > lineevent_create should not allow any of GPIOHANDLE_REQUEST_OUTPUT,
-> > GPIOHANDLE_REQUEST_OPEN_DRAIN or GPIOHANDLE_REQUEST_OPEN_SOURCE to be s=
-et.
+> > When using single_open() for opening, single_release() should be
+> > used instead of seq_release(), otherwise there is a memory leak.
 > >
-> > Signed-off-by: Kent Gibson <warthog618@gmail.com>
+> > Fixes: 2a9e27408e12 ("gpio: mockup: rework debugfs interface")
+> > Signed-off-by: Wei Yongjun <weiyongjun1@huawei.com>
 > > ---
-> >  drivers/gpio/gpiolib.c | 10 ++++------
-> >  1 file changed, 4 insertions(+), 6 deletions(-)
+> >  drivers/gpio/gpio-mockup.c | 1 +
+> >  1 file changed, 1 insertion(+)
 > >
-> > diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
-> > index cca749010cd0..5499ec7bc783 100644
-> > --- a/drivers/gpio/gpiolib.c
-> > +++ b/drivers/gpio/gpiolib.c
-> > @@ -918,7 +918,7 @@ static int lineevent_create(struct gpio_device *gde=
-v, void __user *ip)
-> >                 goto out_free_label;
-> >         }
+> > diff --git a/drivers/gpio/gpio-mockup.c b/drivers/gpio/gpio-mockup.c
+> > index f1a9c0544e3f..213aedc97dc2 100644
+> > --- a/drivers/gpio/gpio-mockup.c
+> > +++ b/drivers/gpio/gpio-mockup.c
+> > @@ -309,6 +309,7 @@ static const struct file_operations gpio_mockup_deb=
+ugfs_ops =3D {
+> >         .read =3D gpio_mockup_debugfs_read,
+> >         .write =3D gpio_mockup_debugfs_write,
+> >         .llseek =3D no_llseek,
+> > +       .release =3D single_release,
+> >  };
 > >
-> > -       /* Return an error if a unknown flag is set */
-> > +       /* Return an error if an unknown flag is set */
+> >  static void gpio_mockup_debugfs_setup(struct device *dev,
+> >
+> >
+> >
 >
-> Please don't sneak in changes unrelated to the patch. If you want to
-> fix the typo - do it in a separate one.
+> Good catch!
 >
-> >         if ((lflags & ~GPIOHANDLE_REQUEST_VALID_FLAGS) ||
-> >             (eflags & ~GPIOEVENT_REQUEST_VALID_FLAGS)) {
-> >                 ret =3D -EINVAL;
-> > @@ -926,7 +926,9 @@ static int lineevent_create(struct gpio_device *gde=
-v, void __user *ip)
-> >         }
-> >
-> >         /* This is just wrong: we don't look for events on output lines=
- */
-> > -       if (lflags & GPIOHANDLE_REQUEST_OUTPUT) {
-> > +       if ((lflags & GPIOHANDLE_REQUEST_OUTPUT) ||
-> > +           (lflags & GPIOHANDLE_REQUEST_OPEN_DRAIN) ||
-> > +           (lflags & GPIOHANDLE_REQUEST_OPEN_SOURCE)) {
-> >                 ret =3D -EINVAL;
-> >                 goto out_free_label;
-> >         }
-> > @@ -940,10 +942,6 @@ static int lineevent_create(struct gpio_device *gd=
-ev, void __user *ip)
-> >
-> >         if (lflags & GPIOHANDLE_REQUEST_ACTIVE_LOW)
-> >                 set_bit(FLAG_ACTIVE_LOW, &desc->flags);
-> > -       if (lflags & GPIOHANDLE_REQUEST_OPEN_DRAIN)
-> > -               set_bit(FLAG_OPEN_DRAIN, &desc->flags);
-> > -       if (lflags & GPIOHANDLE_REQUEST_OPEN_SOURCE)
-> > -               set_bit(FLAG_OPEN_SOURCE, &desc->flags);
-> >
-> >         ret =3D gpiod_direction_input(desc);
-> >         if (ret)
-> > --
-> > 2.23.0
-> >
+> Reviewed-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+>
+> Linus: can you pick it up for your last pull-requests with fixes for v5.3=
+?
+>
+> Bart
 
-Ok, so seeing that we'll still have another week for fixes, I thought
-it would be nice to get those in before v5.3. I eventually applied
-both patches and simply removed the typo fix.
+Nevermind - I applied it to my tree and will send it with two other
+fixes in a PR.
 
 Bart
