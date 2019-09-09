@@ -2,105 +2,85 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 85E32AD921
-	for <lists+linux-gpio@lfdr.de>; Mon,  9 Sep 2019 14:36:58 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2D620ADAF2
+	for <lists+linux-gpio@lfdr.de>; Mon,  9 Sep 2019 16:14:59 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728010AbfIIMg5 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 9 Sep 2019 08:36:57 -0400
-Received: from mga07.intel.com ([134.134.136.100]:25635 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727868AbfIIMg5 (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Mon, 9 Sep 2019 08:36:57 -0400
-X-Amp-Result: UNSCANNABLE
-X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 09 Sep 2019 05:36:56 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,484,1559545200"; 
-   d="scan'208";a="383961916"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by fmsmga005.fm.intel.com with ESMTP; 09 Sep 2019 05:36:55 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1003)
-        id 1564E2BD; Mon,  9 Sep 2019 15:36:54 +0300 (EEST)
-Date:   Mon, 9 Sep 2019 15:36:54 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Linux GPIO <linux-gpio@vger.kernel.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: [GIT PULL] intel-gpio for 5.4-1
-Message-ID: <20190909123653.GA4122@black.fi.intel.com>
+        id S2405272AbfIIOO6 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 9 Sep 2019 10:14:58 -0400
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:37111 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2405250AbfIIOO6 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 9 Sep 2019 10:14:58 -0400
+Received: by mail-lj1-f195.google.com with SMTP id y5so2104605lji.4;
+        Mon, 09 Sep 2019 07:14:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=rwPtv2PkHjRWVfHgdMma8hT5zZLqlYAxoe2nwjsXNiM=;
+        b=d0hM9Hrtn18AtU+ItYS9C5KbSbAKVPpAtJi/W3hBTlbUSAWkLU0R2Mv3yQSK7Rgwwz
+         tcsA+5RnBZdnOqJ5dtNsDjuvjPPLMWHDEE9UwxY7LK2xb/qgGxnAH85F0O4/Dc6vWzkg
+         LnofrMxWnuLmgz3aiBmPeBMOcjjc0b3vwQhbhQ6oWa1DSisWWb1l0LCK9BfxIonpZRSt
+         lewluv90tzc1TxR7XBO+o4nRYdZgXLVGxJj2vktBoMfD60K+MO1B9gIYVoggs6MNp+5Z
+         WTYH0UmlsdBl/E9mryMLNUomGjZw6qwyfjxgRovhf3AJh36tirGbwfm2H3+Vbh4b6/yY
+         OHMw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=rwPtv2PkHjRWVfHgdMma8hT5zZLqlYAxoe2nwjsXNiM=;
+        b=FTdhHUrAyII4uVdlHMB+4M414uCE9YMEFHHf9e0nugGHdzgsEpelh5N8/3ppFi9YCg
+         Y25UtFuPO2rQaGHSkqwG7ragKg/yQ04wRw6/j8dv78fzzlb908w9NLczZAZWtZnZH7fJ
+         ysC0enDxGOToP1A87ebgpSQ1ghWj8VKMctLqSAAa0OZs5L12mNitAVJ4aXo1FZv8fYyL
+         0H1NR/evtgI5HWDR8LXaywxz2Wv3IG2WnTqn9fBq3CwKksaTVRtaspIrXoP1zHQwvl8B
+         IFDYYrUARZsN3ZS7urLWWj26E41tAFxMUuiHAstdWFUp0H8xmXeLTt/GuiyQJIML7lRu
+         91Hw==
+X-Gm-Message-State: APjAAAVn4h8rlD+6sP33OPASdDfh9MuVf/PGggHzodUJ0vGwIdXzZYNy
+        iSEsjQE8EqlLzcxUyOkKo/h1/D2tJz72VpQPmkU=
+X-Google-Smtp-Source: APXvYqzW8UtXCJLn1NiAEYBOEdyxkVEvLirKRufFFnCXOBna7CwH0djt8OgcYo082H7aaYsJDDuPbJx6pF2cN9g+nO4=
+X-Received: by 2002:a2e:9b43:: with SMTP id o3mr5058959ljj.214.1568038495704;
+ Mon, 09 Sep 2019 07:14:55 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20190909021214.25646-1-hui.song_1@nxp.com>
+In-Reply-To: <20190909021214.25646-1-hui.song_1@nxp.com>
+From:   Fabio Estevam <festevam@gmail.com>
+Date:   Mon, 9 Sep 2019 11:14:45 -0300
+Message-ID: <CAOMZO5AG2xmnDbjmysTbiHpF1W0yERFFwYAa98+YFH7cGSPE6w@mail.gmail.com>
+Subject: Re: [PATCH v3] gpio/mpc8xxx: change irq handler from chained to normal
+To:     Hui Song <hui.song_1@nxp.com>
+Cc:     Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Linus,
+Hi Song,
 
-Small bunch of Intel GPIO driver clean ups.
+On Mon, Sep 9, 2019 at 11:12 AM Hui Song <hui.song_1@nxp.com> wrote:
 
-Thanks,
+>  static void mpc8xxx_irq_unmask(struct irq_data *d)
+> @@ -409,8 +409,14 @@ static int mpc8xxx_probe(struct platform_device *pdev)
+>         if (devtype->gpio_dir_in_init)
+>                 devtype->gpio_dir_in_init(gc);
+>
+> -       irq_set_chained_handler_and_data(mpc8xxx_gc->irqn,
+> -                                        mpc8xxx_gpio_irq_cascade, mpc8xxx_gc);
+> +       ret = request_irq(mpc8xxx_gc->irqn, mpc8xxx_gpio_irq_cascade,
+> +               IRQF_NO_THREAD | IRQF_SHARED, "gpio-cascade", mpc8xxx_gc);
+> +       if (ret) {
+> +               pr_err("%s: failed to request_irq(%d), ret = %d\n",
 
-With Best Regards,
-Andy Shevchenko
+In drivers, it is preferred to use dev_err() instead of pr_err().
 
-The following changes since commit 5f9e832c137075045d15cd6899ab0505cfb2ca4b:
-
-  Linus 5.3-rc1 (2019-07-21 14:05:38 -0700)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/andy/linux-gpio-intel.git tags/intel-gpio-v5.4-1
-
-for you to fetch changes up to 85af79659f455ddbdc5b6b6e2a888a430cb58948:
-
-  MAINTAINERS: Remove stale record for gpio-intel-mid.c (2019-08-26 15:05:23 +0300)
-
-----------------------------------------------------------------
-intel-gpio for v5.4-1
-
-The clean up of IRQ chip initialization has been done in few drivers.
-Stale record in MAINTAINERS database is removed.
-
-The following is an automated git shortlog grouped by driver:
-
-intel-mid:
- -  Pass irqchip when adding gpiochip
- -  MAINTAINERS: Remove stale record for gpio-intel-mid.c
-
-lynxpoint:
- -  Pass irqchip when adding gpiochip
-
-merrifield:
- -  Pass irqchip when adding gpiochip
-
-pch:
- -  Use dev_get_drvdata
-
-----------------------------------------------------------------
-Andy Shevchenko (1):
-      MAINTAINERS: Remove stale record for gpio-intel-mid.c
-
-Chuhong Yuan (1):
-      gpio: pch: Use dev_get_drvdata
-
-Linus Walleij (3):
-      gpio: intel-mid: Pass irqchip when adding gpiochip
-      gpio: lynxpoint: Pass irqchip when adding gpiochip
-      gpio: merrifield: Pass irqchip when adding gpiochip
-
- MAINTAINERS                    |  6 ------
- drivers/gpio/gpio-intel-mid.c  | 35 +++++++++++++++++------------------
- drivers/gpio/gpio-lynxpoint.c  | 35 ++++++++++++++++++++---------------
- drivers/gpio/gpio-merrifield.c | 28 ++++++++++++++++------------
- drivers/gpio/gpio-pch.c        |  6 ++----
- 5 files changed, 55 insertions(+), 55 deletions(-)
-
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+Please swicth for dev_err().
