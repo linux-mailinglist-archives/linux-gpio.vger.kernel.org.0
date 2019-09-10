@@ -2,196 +2,149 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 1DAF0AE4DC
-	for <lists+linux-gpio@lfdr.de>; Tue, 10 Sep 2019 09:47:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 369BBAE570
+	for <lists+linux-gpio@lfdr.de>; Tue, 10 Sep 2019 10:22:26 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729171AbfIJHrZ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 10 Sep 2019 03:47:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49348 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728885AbfIJHrZ (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Tue, 10 Sep 2019 03:47:25 -0400
-Received: from mail-qk1-f174.google.com (mail-qk1-f174.google.com [209.85.222.174])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BA2A4218AF;
-        Tue, 10 Sep 2019 07:47:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568101643;
-        bh=nGjz64JsIA70km5VVpm6+cua8VTY9DOAhaSAmk4nyDE=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=Y4FLVsUn/8aKT2Tjtg94rlCB9M9JA+DRdvAt3bHd54raay0QjgSDW8fGzs787DmhZ
-         poo+kiUPQearsRCw3t5q6+5MGg1NKorRXsU6VME69wYMIU5qfKWkOr1b4pzq+pPt1i
-         FUmmQtTloY7AEEkm9KcHFna94yD6ZoIj2A+DQswA=
-Received: by mail-qk1-f174.google.com with SMTP id z67so15965039qkb.12;
-        Tue, 10 Sep 2019 00:47:23 -0700 (PDT)
-X-Gm-Message-State: APjAAAUH+iv3uRrCQ+PR4lnl8ZjzMGDmwJJYgUxydYXsH1Fz0NPyM4oD
-        v0Xh5cPngkiCaTowVRUurdVxnP2xn24jsTAffA==
-X-Google-Smtp-Source: APXvYqzxa41U7sMES0YTXYiTAZt7FuAH65NepWNyv3+43O3djJ8TWKKcJ8keBqytKgB1rDKdEE4Kv0dVS+rSG/j9M/4=
-X-Received: by 2002:ae9:e212:: with SMTP id c18mr28105718qkc.254.1568101642856;
- Tue, 10 Sep 2019 00:47:22 -0700 (PDT)
-MIME-Version: 1.0
-References: <1561714250-19613-1-git-send-email-harish_kandiga@mentor.com>
- <CAL_Jsq+-xWLkvku-nLmJnFvbuS=dSD=9dG=GS4uBUqL50tdcDg@mail.gmail.com>
- <06c95f15-d577-e43d-e046-ee222f86c406@mentor.com> <CAL_JsqLQvjtnfUsZ2RP4eozvdwMLzNxtgmT+XFaxW4xzoFjL=w@mail.gmail.com>
- <f1616784-4dbf-d0fa-b33e-c85fd569383a@mentor.com> <CACRpkdZ+vXG-mGjn0Tt5gyGowAuxiCSQNdjEPGTP9qj23CwkSw@mail.gmail.com>
- <CAL_JsqLp___2O-naU+2PPQy0QmJX6+aN3hByz-OB9+qFvWgN9Q@mail.gmail.com>
- <CACRpkdbmyc9LsJ2xiX=zAQR9FZ9dmwu-nPrNbt1Tgud9+rBGpw@mail.gmail.com>
- <978af20e-12aa-a8e9-5da9-9af6d6b8f553@mentor.com> <f47588d5-226a-6a7a-6c74-c0caaafaf572@mentor.com>
- <6673873d-3ed2-ba98-8448-8047eccc994f@mentor.com> <fbc51f91-75ac-ef57-137b-0d8231cccc34@mentor.com>
-In-Reply-To: <fbc51f91-75ac-ef57-137b-0d8231cccc34@mentor.com>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Tue, 10 Sep 2019 08:47:11 +0100
-X-Gmail-Original-Message-ID: <CAL_JsqKsAHDN=Sp=TsvqjB0CvV+UT4ZwcX6xMk552id69FJAmQ@mail.gmail.com>
-Message-ID: <CAL_JsqKsAHDN=Sp=TsvqjB0CvV+UT4ZwcX6xMk552id69FJAmQ@mail.gmail.com>
-Subject: Re: [PATCH V4 2/2] gpio: inverter: document the inverter bindings
-To:     Harish Jenny K N <harish_kandiga@mentor.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        id S1726714AbfIJIWZ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 10 Sep 2019 04:22:25 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:37289 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725932AbfIJIWW (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 10 Sep 2019 04:22:22 -0400
+Received: by mail-wr1-f68.google.com with SMTP id i1so17648631wro.4
+        for <linux-gpio@vger.kernel.org>; Tue, 10 Sep 2019 01:22:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=RMKlXc+O7D5bCEwjDFFMVCcJWJjC2HcosOo5F0af2FI=;
+        b=w5yp3SAoZLSEZHdc4COhQMLChm6+6lkbYEEEox3jiTQJlbtARAZq0gCWGPUZbvCR1N
+         Fa28W1OpRk6mjYDIeE4Q3QDcQzEZef+qYmuz1Tl1SktRh24VyKr5+UaleXWmlK8iXYvA
+         OTedXapPS/oe2CR46mDhaAsNYE6Jc3mvwjcyHTwQ2019/hOvrPvZSpTucSsY55149Azr
+         FYUUT9T9xmvBIE8NsXwokYqaEXA/FhRuLa7qNK/IR3fvAIrGBr4qVQkvURboA2mqVUfs
+         8xTP1rWx8wj+SsUGMoXzy1+DXMZXOeaFqFj3wpbuXBA2cZ59Enp9bcacLMSs9Y49dBrn
+         jWRg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=RMKlXc+O7D5bCEwjDFFMVCcJWJjC2HcosOo5F0af2FI=;
+        b=m+IpZ0CkVsNUa9EE2bitWmZLLJBB1/n/AMc4wbDeXje9mzzQaQJoDpHxKO3XQChY2L
+         nbSy+I21/ZjZqITDa7z1DsnCJ+yOPCo61oNqb4udrma35S63/0BaceqZtMUwbXVl/T1D
+         kK5eqsUi5XdPk4c1A7vYV2Z8ImX90dBueO0vCSYk6EisV12ZEMdXNWf0acUBbmUnPvAE
+         bonK0jGFgZ+2aOl6ez5jrzp2/UOkpfp77uENrTG3il37+WpW84M4yHB7VbJB6E/GbljU
+         xzOt1Vm8Ol5ejYmaIHJSqal4IwKUTHByqobHwPzor6/eZHXOXO0MSxaEThjS2JZXGa/L
+         SE1g==
+X-Gm-Message-State: APjAAAVkquPfYv7GbHWvvLIjP38p4FBbYWnUFcjr4sv2+lmGoQNrAlFE
+        zDxCFf4l0moYQAAWejjJB0XEIA==
+X-Google-Smtp-Source: APXvYqyM5+/RiHdg9qMKBydxzwyIXjhSzKk7we5ZuMc9Gn9PbbHTDuepiFwku8fXnT/Vo+JTAk0qyQ==
+X-Received: by 2002:adf:dc41:: with SMTP id m1mr11190301wrj.46.1568103738351;
+        Tue, 10 Sep 2019 01:22:18 -0700 (PDT)
+Received: from localhost.localdomain (amontpellier-652-1-281-69.w109-210.abo.wanadoo.fr. [109.210.96.69])
+        by smtp.gmail.com with ESMTPSA id 189sm2534813wmz.19.2019.09.10.01.22.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 10 Sep 2019 01:22:17 -0700 (PDT)
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Balasubramani Vivekanandan 
-        <balasubramani_vivekanandan@mentor.com>
-Content-Type: text/plain; charset="UTF-8"
+        stable@vger.kernel.org, Kent Gibson <warthog618@gmail.com>
+Subject: [PATCH] gpiolib: don't clear FLAG_IS_OUT when emulating open-drain/open-source
+Date:   Tue, 10 Sep 2019 10:21:38 +0200
+Message-Id: <20190910082138.30193-1-brgl@bgdev.pl>
+X-Mailer: git-send-email 2.21.0
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Sep 4, 2019 at 5:58 AM Harish Jenny K N
-<harish_kandiga@mentor.com> wrote:
->
-> Hi Rob, Hi Linus,
->
->
-> On 30/08/19 10:51 AM, Harish Jenny K N wrote:
-> > Hi Rob,
-> >
-> >
-> > On 27/08/19 1:17 PM, Harish Jenny K N wrote:
-> >> Hi Rob,
-> >>
-> >>
-> >> On 19/08/19 3:06 PM, Harish Jenny K N wrote:
-> >>> Hi Rob,
-> >>>
-> >>>
-> >>> On 10/08/19 2:21 PM, Linus Walleij wrote:
-> >>>> On Fri, Aug 9, 2019 at 4:08 PM Rob Herring <robh+dt@kernel.org> wrote:
-> >>>>> On Mon, Aug 5, 2019 at 5:15 AM Linus Walleij <linus.walleij@linaro.org> wrote:
-> >>>>>> There is some level of ambition here which is inherently a bit fuzzy
-> >>>>>> around the edges. ("How long is the coast of Britain?" comes to mind.)
-> >>>>>>
-> >>>>>> Surely the intention of device tree is not to recreate the schematic
-> >>>>>> in all detail. What we want is a model of the hardware that will
-> >>>>>> suffice for the operating system usecases.
-> >>>>>>
-> >>>>>> But sometimes the DTS files will become confusing: why is this
-> >>>>>> component using GPIO_ACTIVE_LOW when another system
-> >>>>>> doesn't have that flag? If there is an explicit inverter, the
-> >>>>>> DTS gets more readable for a human.
-> >>>>>>
-> >>>>>> But arguable that is case for adding inverters as syntactic
-> >>>>>> sugar in the DTS compiler instead...
-> >>>>> If you really want something more explicit, then add a new GPIO
-> >>>>> 'inverted' flag. Then a device can always have the same HIGH/LOW flag.
-> >>>>> That also solves the abstract it for userspace problem.
-> >>>> I think there are some intricate ontologies at work here.
-> >>>>
-> >>>> Consider this example: a GPIO is controlling a chip select
-> >>>> regulator, say Acme Foo. The chip select
-> >>>> has a pin named CSN. We know from convention that the
-> >>>> "N" at the end of that pin name means "negative" i.e. active
-> >>>> low, and that is how the electronics engineers think about
-> >>>> that chip select line: it activates the IC when
-> >>>> the line goes low.
-> >>>>
-> >>>> The regulator subsystem and I think all subsystems in the
-> >>>> Linux kernel say the consumer pin should be named and
-> >>>> tagged after the datsheet of the regulator.
-> >>>>
-> >>>> So it has for example:
-> >>>>
-> >>>> foo {
-> >>>>     compatible = "acme,foo";
-> >>>>     cs-gpios = <&gpio0 6 GPIO_ACTIVE_LOW>;
-> >>>> };
-> >>>>
-> >>>> (It would be inappropriate to name it "csn-gpios" since
-> >>>> we have an established flag for active low. But it is another
-> >>>> of these syntactic choices where people likely do mistakes.)
-> >>>>
-> >>>> I think it would be appropriate for the DT binding to say
-> >>>> that this flag must always be GPIO_ACTIVE_LOW since
-> >>>> the bindings are seen from the component point of view,
-> >>>> and thus this is always active low.
-> >>>>
-> >>>> It would even be reasonable for a yaml schema to enfore
-> >>>> this, if it could. It is defined as active low after all.
-> >>>>
-> >>>> Now if someone adds an inverter on that line between
-> >>>> gpio0 and Acme Foo it looks like this:
-> >>>>
-> >>>> foo {
-> >>>>     compatible = "acme,foo";
-> >>>>     cs-gpios = <&gpio0 6 GPIO_ACTIVE_HIGH>;
-> >>>> };
-> >>>>
-> >>>> And now we get cognitive dissonance or whatever I should
-> >>>> call it: someone reading this DTS sheet and the data
-> >>>> sheet for the component Acme Foo to troubleshoot
-> >>>> this will be confused: this component has CS active
-> >>>> low and still it is specified as active high? Unless they
-> >>>> also look at the schematic or the board and find the
-> >>>> inverter things are pretty muddy and they will likely curse
-> >>>> and solve the situation with the usual trial-and-error,
-> >>>> inserting some random cursewords as a comment.
-> >>>>
-> >>>> With an intermediate inverter node, the cs-gpios
-> >>>> can go back to GPIO_ACTIVE_LOW and follow
-> >>>> the bindings:
-> >>>>
-> >>>> inv0: inverter {
-> >>>>     compatible = "gpio-inverter";
-> >>>>     gpio-controller;
-> >>>>     #gpio-cells = <1>;
-> >>>>     inverted-gpios = <&gpio0 6 GPIO_ACTIVE_HIGH>;
-> >>>> };
-> >>>>
-> >>>> foo {
-> >>>>     compatible = "acme,foo";
-> >>>>     cs-gpios = <&inv0 0 GPIO_ACTIVE_LOW>;
-> >>>> };
-> >>>>
-> >>>> And now Acme Foo bindings can keep enforcing cs-gpios
-> >>>> to always be tagged GPIO_ACTIVE_LOW.
-> >>> Can you please review/let us know your opinion on this ? I think the idea here is to also isolate the changes to a separate consumer driver and avoid getting inversions inside gpiolib.
-> >>>
-> >>>
-> >>> Thanks.
-> >>>
-> >>>
-> >>> Regards,
-> >>>
-> >>> Harish Jenny K N
-> >>>
-> >> Can you please comment on this ?
-> >>
-> >>
-> >> Thanks,
-> >>
-> >> Harish Jenny K N
-> >>
-> > Friendly Reminder.
-> >
-> > can we please finalize this ?
+From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 
-I think I have made my position clear and don't really have more to
-add. I'm simply not convinced of the need for this. An inverter is not
-a GPIO controller. You can't set/get or do any control. It is already
-possible to invert GPIO lines in DT by changing the flags and it has
-been this way for decades.
+When emulating open-drain/open-source by not actively driving the output
+lines - we're simply changing their mode to input. This is wrong as it
+will then make it impossible to change the value of such line - it's now
+considered to actually be in input mode. If we want to still use the
+direction_input() callback for simplicity then we need to set FLAG_IS_OUT
+manually in gpiod_direction_output() and not clear it in
+gpio_set_open_drain_value_commit() and
+gpio_set_open_source_value_commit().
 
-Rob
+Fixes: c663e5f56737 ("gpio: support native single-ended hardware drivers")
+Cc: stable@vger.kernel.org
+Reported-by: Kent Gibson <warthog618@gmail.com>
+Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+---
+ drivers/gpio/gpiolib.c | 27 +++++++++++++++++++--------
+ 1 file changed, 19 insertions(+), 8 deletions(-)
+
+diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
+index cca749010cd0..6bb4191d3844 100644
+--- a/drivers/gpio/gpiolib.c
++++ b/drivers/gpio/gpiolib.c
+@@ -2769,8 +2769,10 @@ int gpiod_direction_output(struct gpio_desc *desc, int value)
+ 		if (!ret)
+ 			goto set_output_value;
+ 		/* Emulate open drain by not actively driving the line high */
+-		if (value)
+-			return gpiod_direction_input(desc);
++		if (value) {
++			ret = gpiod_direction_input(desc);
++			goto set_output_flag;
++		}
+ 	}
+ 	else if (test_bit(FLAG_OPEN_SOURCE, &desc->flags)) {
+ 		ret = gpio_set_config(gc, gpio_chip_hwgpio(desc),
+@@ -2778,8 +2780,10 @@ int gpiod_direction_output(struct gpio_desc *desc, int value)
+ 		if (!ret)
+ 			goto set_output_value;
+ 		/* Emulate open source by not actively driving the line low */
+-		if (!value)
+-			return gpiod_direction_input(desc);
++		if (!value) {
++			ret = gpiod_direction_input(desc);
++			goto set_output_flag;
++		}
+ 	} else {
+ 		gpio_set_config(gc, gpio_chip_hwgpio(desc),
+ 				PIN_CONFIG_DRIVE_PUSH_PULL);
+@@ -2787,6 +2791,17 @@ int gpiod_direction_output(struct gpio_desc *desc, int value)
+ 
+ set_output_value:
+ 	return gpiod_direction_output_raw_commit(desc, value);
++
++set_output_flag:
++	/*
++	 * When emulating open-source or open-drain functionalities by not
++	 * actively driving the line (setting mode to input) we still need to
++	 * set the IS_OUT flag or otherwise we won't be able to set the line
++	 * value anymore.
++	 */
++	if (ret == 0)
++		set_bit(FLAG_IS_OUT, &desc->flags);
++	return ret;
+ }
+ EXPORT_SYMBOL_GPL(gpiod_direction_output);
+ 
+@@ -3147,8 +3162,6 @@ static void gpio_set_open_drain_value_commit(struct gpio_desc *desc, bool value)
+ 
+ 	if (value) {
+ 		err = chip->direction_input(chip, offset);
+-		if (!err)
+-			clear_bit(FLAG_IS_OUT, &desc->flags);
+ 	} else {
+ 		err = chip->direction_output(chip, offset, 0);
+ 		if (!err)
+@@ -3178,8 +3191,6 @@ static void gpio_set_open_source_value_commit(struct gpio_desc *desc, bool value
+ 			set_bit(FLAG_IS_OUT, &desc->flags);
+ 	} else {
+ 		err = chip->direction_input(chip, offset);
+-		if (!err)
+-			clear_bit(FLAG_IS_OUT, &desc->flags);
+ 	}
+ 	trace_gpio_direction(desc_to_gpio(desc), !value, err);
+ 	if (err < 0)
+-- 
+2.21.0
+
