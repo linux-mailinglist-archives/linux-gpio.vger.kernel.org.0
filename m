@@ -2,92 +2,92 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id D8469AEB6D
-	for <lists+linux-gpio@lfdr.de>; Tue, 10 Sep 2019 15:24:44 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BAFD6AECBB
+	for <lists+linux-gpio@lfdr.de>; Tue, 10 Sep 2019 16:15:36 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725957AbfIJNYn (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 10 Sep 2019 09:24:43 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:44522 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726263AbfIJNYn (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 10 Sep 2019 09:24:43 -0400
-Received: by mail-io1-f68.google.com with SMTP id j4so37401533iog.11
-        for <linux-gpio@vger.kernel.org>; Tue, 10 Sep 2019 06:24:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:reply-to:from:date:message-id:subject:to
-         :content-transfer-encoding;
-        bh=oIyyL2k+Kx6gsc2VZuXgLDADDM5sLHRH4QY8N90RTy0=;
-        b=typ0xFn4l8a5huD1mAfwd+LU/AF5FoU6ZEUww3SDPLGqUM+H9kbGhkKCS7d4JgSjJM
-         NxCJM8n8IfScqV3F6qoZkuLwEy7jxFSc1d4RYy+te9GSGeX+ai69j2O4IITKtN3m5+55
-         2fG/FvETCw9WTV2ZidkLNZHOnm105jGoOjinRFm9FAAF1LOukRf2wdQykny7BV0Lf+6U
-         PU1VlkEhFS0dRmYfjgxCfdi8TX1MFo5b8BcfQdG2vV74cfHNfpQ4hQVUelwQJBNNnEMV
-         vZCfGHF7gq5iQk49JBXG6/Wk7ZXXxMih9wlPgtB5bSIBmKoH63vHgzKBoCX5zxEPXl79
-         MODw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
-         :subject:to:content-transfer-encoding;
-        bh=oIyyL2k+Kx6gsc2VZuXgLDADDM5sLHRH4QY8N90RTy0=;
-        b=BvHcDV9NxnzQFwM9mIS7O6HHILuPaE6ZdfOqGYAAX/gtV3fIb3I/MNGTiZ4tFqsEZE
-         SLh48+SpYdO2sd2ib6G4Hz3+lq8IuqqULCd5M7CvxDks4DV9Sph6weDwY8wp1fGpqZi2
-         HbVb90wyWE3hecT8gk13cTxudnSBO/4fdgx/9wo+ZJSVXrSJF0IDXWmK1TxpkRufMG5A
-         96T6tZ6DHHp5KWabjTFybIqhouhZKKWV8QhRXr6zlBRqFCxOcwimkDx7PKG0fhlMzmDK
-         wxSA3RipyOL5sQSrlUu27XMhMfXUtLHa/RIsCqebq0340u3b92Oj+cfKI68FfxDz8xY2
-         eIPQ==
-X-Gm-Message-State: APjAAAURon+OfURyBYmdxc1ybtjx8VIlXMFIf3GOdgaBptooQFFmCRgw
-        FVOrXsEO/TRkGDPjCn2DMRtD/1svNclm2ymxkwE=
-X-Google-Smtp-Source: APXvYqwJqAeElVr5yBH+UDbIUjvhjE2yhxxfPVMWjw837pVlPskfPWAzghqN+27wkLbbtN8LG382C2jAL9FSmLH2RBM=
-X-Received: by 2002:a02:48e:: with SMTP id 136mr14124764jab.20.1568121882142;
- Tue, 10 Sep 2019 06:24:42 -0700 (PDT)
-MIME-Version: 1.0
-Received: by 2002:a6b:db02:0:0:0:0:0 with HTTP; Tue, 10 Sep 2019 06:24:41
- -0700 (PDT)
-Reply-To: joeakaba00@gmail.com
-From:   joe akaba <davisemm6@gmail.com>
-Date:   Tue, 10 Sep 2019 15:24:41 +0200
-Message-ID: <CAKAY_3X2i6z8-LQCmvvkV9xeP3gHya7OmpPPy7-jpFvfWkGq-w@mail.gmail.com>
-Subject: hello
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        id S1731905AbfIJOPg (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 10 Sep 2019 10:15:36 -0400
+Received: from laurent.telenet-ops.be ([195.130.137.89]:52556 "EHLO
+        laurent.telenet-ops.be" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727332AbfIJOPg (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 10 Sep 2019 10:15:36 -0400
+Received: from ramsan ([84.194.98.4])
+        by laurent.telenet-ops.be with bizsmtp
+        id zqFW2000k05gfCL01qFWtr; Tue, 10 Sep 2019 16:15:34 +0200
+Received: from rox.of.borg ([192.168.97.57])
+        by ramsan with esmtp (Exim 4.90_1)
+        (envelope-from <geert@linux-m68k.org>)
+        id 1i7gva-0001al-HK; Tue, 10 Sep 2019 16:15:30 +0200
+Received: from geert by rox.of.borg with local (Exim 4.90_1)
+        (envelope-from <geert@linux-m68k.org>)
+        id 1i7gva-0005Tv-F5; Tue, 10 Sep 2019 16:15:30 +0200
+From:   Geert Uytterhoeven <geert+renesas@glider.be>
+To:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Cc:     Philipp Zabel <philipp.zabel@gmail.com>,
+        Paul Parsons <lost.distance@yahoo.com>,
+        Daniel Mack <daniel@zonque.org>,
+        Haojian Zhuang <haojian.zhuang@gmail.com>,
+        Robert Jarzmik <robert.jarzmik@free.fr>,
+        Russell King <linux@armlinux.org.uk>,
+        linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org,
+        Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: [PATCH] gpio: htc-egpio: Remove unused exported htc_egpio_get_wakeup_irq()
+Date:   Tue, 10 Sep 2019 16:15:29 +0200
+Message-Id: <20190910141529.21030-1-geert+renesas@glider.be>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hallo
+This function was never used upstream, and is a relic of the original
+handhelds.org code the htc-egpio driver was based on.
 
-Mein Name ist Joe Akaba. Ich bin von Beruf Rechtsanwalt. Ich m=C3=B6chte
-Ihnen anbieten
-die n=C3=A4chsten Verwandten zu meinem Klienten. Sie erben die Summe von
-(8,5 Millionen US-Dollar)
-Dollar, die mein Kunde vor seinem Tod in der Bank gelassen hat.
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+---
+ drivers/gpio/gpio-htc-egpio.c                | 14 --------------
+ include/linux/platform_data/gpio-htc-egpio.h |  3 ---
+ 2 files changed, 17 deletions(-)
 
-Mein Mandant ist ein Staatsb=C3=BCrger Ihres Landes, der mit seiner Frau
-bei einem Autounfall ums Leben gekommen ist
-und nur Sohn. Ich werde mit 50% des Gesamtfonds berechtigt sein, w=C3=A4hre=
-nd 50%
-sein f=C3=BCr dich.
-Bitte kontaktieren Sie meine private E-Mail hier f=C3=BCr weitere
-Informationen: joeakaba00@gmail.com
+diff --git a/drivers/gpio/gpio-htc-egpio.c b/drivers/gpio/gpio-htc-egpio.c
+index 9d3ac51a765c1405..6eb56f7ab9c94e73 100644
+--- a/drivers/gpio/gpio-htc-egpio.c
++++ b/drivers/gpio/gpio-htc-egpio.c
+@@ -118,20 +118,6 @@ static void egpio_handler(struct irq_desc *desc)
+ 	}
+ }
+ 
+-int htc_egpio_get_wakeup_irq(struct device *dev)
+-{
+-	struct egpio_info *ei = dev_get_drvdata(dev);
+-
+-	/* Read current pins. */
+-	u16 readval = egpio_readw(ei, ei->ack_register);
+-	/* Ack/unmask interrupts. */
+-	ack_irqs(ei);
+-	/* Return first set pin. */
+-	readval &= ei->irqs_enabled;
+-	return ei->irq_start + ffs(readval) - 1;
+-}
+-EXPORT_SYMBOL(htc_egpio_get_wakeup_irq);
+-
+ static inline int egpio_pos(struct egpio_info *ei, int bit)
+ {
+ 	return bit >> ei->reg_shift;
+diff --git a/include/linux/platform_data/gpio-htc-egpio.h b/include/linux/platform_data/gpio-htc-egpio.h
+index 9a3e78082883f366..eaefba0b6465b48c 100644
+--- a/include/linux/platform_data/gpio-htc-egpio.h
++++ b/include/linux/platform_data/gpio-htc-egpio.h
+@@ -50,7 +50,4 @@ struct htc_egpio_platform_data {
+ 	int                   num_chips;
+ };
+ 
+-/* Determine the wakeup irq, to be called during early resume */
+-extern int htc_egpio_get_wakeup_irq(struct device *dev);
+-
+ #endif
+-- 
+2.17.1
 
-Vielen Dank im Voraus,
-Mr.Joe Akaba
-
-
-
-
-Hello
-
-My name is Joe Akaba I am a lawyer by profession. I wish to offer you
-the next of kin to my client. You will inherit the sum of ($8.5 Million)
-dollars my client left in the bank before his death.
-
-My client is a citizen of your country who died in auto crash with his wife
-and only son. I will be entitled with 50% of the total fund while 50% will
-be for you.
-Please contact my private email here for more details:joeakaba00@gmail.com
-
-Many thanks in advance,
-Mr.Joe Akaba
