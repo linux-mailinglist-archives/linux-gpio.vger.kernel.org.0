@@ -2,20 +2,20 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 18DB8AEE7F
-	for <lists+linux-gpio@lfdr.de>; Tue, 10 Sep 2019 17:29:54 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 66893AEE83
+	for <lists+linux-gpio@lfdr.de>; Tue, 10 Sep 2019 17:30:16 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728035AbfIJP3x (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 10 Sep 2019 11:29:53 -0400
-Received: from relay3-d.mail.gandi.net ([217.70.183.195]:47699 "EHLO
+        id S2393941AbfIJP3z (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 10 Sep 2019 11:29:55 -0400
+Received: from relay3-d.mail.gandi.net ([217.70.183.195]:41649 "EHLO
         relay3-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727457AbfIJP3x (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 10 Sep 2019 11:29:53 -0400
+        with ESMTP id S1727457AbfIJP3y (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 10 Sep 2019 11:29:54 -0400
 X-Originating-IP: 86.250.200.211
 Received: from localhost.localdomain (lfbn-1-17395-211.w86-250.abo.wanadoo.fr [86.250.200.211])
         (Authenticated sender: paul.kocialkowski@bootlin.com)
-        by relay3-d.mail.gandi.net (Postfix) with ESMTPSA id 19DB860012;
-        Tue, 10 Sep 2019 15:29:50 +0000 (UTC)
+        by relay3-d.mail.gandi.net (Postfix) with ESMTPSA id 6BAFD60015;
+        Tue, 10 Sep 2019 15:29:51 +0000 (UTC)
 From:   Paul Kocialkowski <paul.kocialkowski@bootlin.com>
 To:     linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org
@@ -25,10 +25,12 @@ Cc:     Linus Walleij <linus.walleij@linaro.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
         Paul Kocialkowski <paul.kocialkowski@bootlin.com>
-Subject: [PATCH 1/3] gpio: syscon: Add support for a custom get operation
-Date:   Tue, 10 Sep 2019 17:28:53 +0200
-Message-Id: <20190910152855.111588-1-paul.kocialkowski@bootlin.com>
+Subject: [PATCH 2/3] dt-bindings: gpio: Add binding document for xylon logicvc-gpio
+Date:   Tue, 10 Sep 2019 17:28:54 +0200
+Message-Id: <20190910152855.111588-2-paul.kocialkowski@bootlin.com>
 X-Mailer: git-send-email 2.23.0
+In-Reply-To: <20190910152855.111588-1-paul.kocialkowski@bootlin.com>
+References: <20190910152855.111588-1-paul.kocialkowski@bootlin.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-gpio-owner@vger.kernel.org
@@ -36,41 +38,71 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Some drivers might need a custom get operation to match custom
-behavior implemented in the set operation.
+The Xylon LogiCVC display controller exports some GPIOs, which are
+exposed as a dedicated driver.
 
-Add plumbing for supporting that.
+This introduces the associated device-tree bindings documentation.
 
 Signed-off-by: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
 ---
- drivers/gpio/gpio-syscon.c | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+ .../bindings/gpio/xylon,logicvc-gpio.txt      | 48 +++++++++++++++++++
+ 1 file changed, 48 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/gpio/xylon,logicvc-gpio.txt
 
-diff --git a/drivers/gpio/gpio-syscon.c b/drivers/gpio/gpio-syscon.c
-index 31f332074d7d..05c537ed73f1 100644
---- a/drivers/gpio/gpio-syscon.c
-+++ b/drivers/gpio/gpio-syscon.c
-@@ -43,8 +43,9 @@ struct syscon_gpio_data {
- 	unsigned int	bit_count;
- 	unsigned int	dat_bit_offset;
- 	unsigned int	dir_bit_offset;
--	void		(*set)(struct gpio_chip *chip,
--			       unsigned offset, int value);
-+	int		(*get)(struct gpio_chip *chip, unsigned offset);
-+	void		(*set)(struct gpio_chip *chip, unsigned offset,
-+			       int value);
- };
- 
- struct syscon_gpio_priv {
-@@ -252,7 +253,7 @@ static int syscon_gpio_probe(struct platform_device *pdev)
- 	priv->chip.label = dev_name(dev);
- 	priv->chip.base = -1;
- 	priv->chip.ngpio = priv->data->bit_count;
--	priv->chip.get = syscon_gpio_get;
-+	priv->chip.get = priv->data->get ? : syscon_gpio_get;
- 	if (priv->data->flags & GPIO_SYSCON_FEAT_IN)
- 		priv->chip.direction_input = syscon_gpio_dir_in;
- 	if (priv->data->flags & GPIO_SYSCON_FEAT_OUT) {
+diff --git a/Documentation/devicetree/bindings/gpio/xylon,logicvc-gpio.txt b/Documentation/devicetree/bindings/gpio/xylon,logicvc-gpio.txt
+new file mode 100644
+index 000000000000..4835659cb90b
+--- /dev/null
++++ b/Documentation/devicetree/bindings/gpio/xylon,logicvc-gpio.txt
+@@ -0,0 +1,48 @@
++Xylon LogiCVC GPIO controller
++
++The Xylon LogiCVC is a display controller that contains a number of GPIO pins,
++meant to be used for controlling display-related signals.
++
++In practice, the GPIOs can be used for any purpose they might be needed for.
++
++The controller exposes GPIOs from the display and power control registers,
++which are mapped by the driver as follows:
++- GPIO[4:0] (display control) mapped to index 0-4
++- EN_BLIGHT (power control) mapped to index 5
++- EN_VDD (power control) mapped to index 6
++- EN_VEE (power control) mapped to index 7
++- V_EN (power control) mapped to index 8
++
++The driver was implemented and tested for version 3.02.a of the controller,
++but should be compatible with version 4 as well.
++
++Required properties:
++- compatible: Should contain "xylon,logicvc-3.02.a-gpio".
++- gpio-controller: Marks the device node as a gpio controller.
++- #gpio-cells: Should be 2. The first cell is the pin number and
++  the second cell is used to specify the gpio polarity:
++    0 = Active high,
++    1 = Active low.
++- gpio,syscon-dev: Syscon phandle representing the logicvc instance.
++
++Example:
++
++	logicvc: logicvc@43c00000 {
++		compatible = "syscon", "simple-mfd";
++		reg = <0x43c00000 0x6000>;
++
++		#address-cells = <1>;
++		#size-cells = <1>;
++
++		logicvc_gpio: display-gpio@40 {
++			compatible = "xylon,logicvc-3.02.a-gpio";
++			reg = <0x40 0x40>;
++			gpio-controller;
++			#gpio-cells = <2>;
++			gpio,syscon-dev = <&logicvc>;
++		};
++	};
++
++Note: the device-tree node should either be declared as a child of the logicvc
++syscon node or the syscon node should be precised with the gpio,syscon-dev
++property. Both are shown in the example above.
 -- 
 2.23.0
 
