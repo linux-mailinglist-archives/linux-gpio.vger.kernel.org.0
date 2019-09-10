@@ -2,69 +2,69 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 17FC3AE7AA
-	for <lists+linux-gpio@lfdr.de>; Tue, 10 Sep 2019 12:11:12 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CF32DAE7AF
+	for <lists+linux-gpio@lfdr.de>; Tue, 10 Sep 2019 12:13:26 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392124AbfIJKLL (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 10 Sep 2019 06:11:11 -0400
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:36421 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2392036AbfIJKLL (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 10 Sep 2019 06:11:11 -0400
-Received: by mail-lj1-f194.google.com with SMTP id l20so15828739ljj.3
-        for <linux-gpio@vger.kernel.org>; Tue, 10 Sep 2019 03:11:09 -0700 (PDT)
+        id S2392189AbfIJKN0 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 10 Sep 2019 06:13:26 -0400
+Received: from mail-lj1-f182.google.com ([209.85.208.182]:36329 "EHLO
+        mail-lj1-f182.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2392140AbfIJKNZ (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 10 Sep 2019 06:13:25 -0400
+Received: by mail-lj1-f182.google.com with SMTP id l20so15835334ljj.3
+        for <linux-gpio@vger.kernel.org>; Tue, 10 Sep 2019 03:13:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=ynFXmeLBfKiC07k2+rpb2zC5PgmZfk7HSzPAD6VZEok=;
-        b=edyp3LmLYyI4zYaMN8BIXO0VH3Pr3XMiSXnBbsq/3e0dZzhPUToyhQG0vpt1IUHGni
-         N+Sw3ZSu9Vy21Fwpvt83G69sbbRQAynyO/Pa6Pa6M9pDIdg5KDLtQQmsoCdD8tbEoaUE
-         FlPJkcwNSWAhAkaWbmHK+LXAmFaA6iAtshu+xvQlryjHhTD2ZLw//j6d8lOpDlRRbj2+
-         96/33zb2Qs2F1j9djmr0oSg6lgxyne0Sj3pArPVcLlcLV4lvaFKNOTaK9LqaG03jkURm
-         0f5pZLS5ufhxR8d0aRc+/rqhEuI+z0d6XqtEJG2mrcO8DByXxe1RkqSPyPF1nAzhJHQC
-         JrBg==
+        bh=lKHgomJalitF3xAuJSH7kZXFARPzQ7fixgfscyxk508=;
+        b=mJjwYJ3s4R+nztO3QODKofz1vH+S0Fthz44+NwkbkarMoBvhPqpP4aFSJkSTlgNwzZ
+         qu4IdYDoVv4AnP5sKO2hBnJS4NuzIm7HOAN2lhcAj+naWsNvt7XV/flEQIZXroIdeRtI
+         TOCfBEWuoxFtwTsPF/MtoYEjqY8fmbXTB5IiCk96bCSdZvdF6hG1rVHl5t2YdCteL8H3
+         ldsK3Nzb6FCGs9JL6HSGZcOiW1CDCFff7CFXzow/PlLT/gdTUsHK1x8MBlzK3kxu3VNx
+         WfocVOmd2ZrXZ9Nb5LuWUdOGBHulTtHKH6NXkERk43jk+0O1wkIDf5Nw3CY698XW4K+C
+         xkoQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=ynFXmeLBfKiC07k2+rpb2zC5PgmZfk7HSzPAD6VZEok=;
-        b=OJv6+DjYKT89vXhRq2riMLmbOvC8b/vLpVgm9kv+Kn/ItPntF+CmJw3lg5/AHFnxFb
-         uolPb7It85caFXdVU5ak9heF5Aujv1Xj6L3IzNg89ibirs+YG5b7I4Ady5qlb9AxcBCm
-         NowK9j75NRSJIP7RqVdEYXMedrp2i6pfBJXefYPhta/+HIwvLyK0lq4Q5AnuYlac8qgi
-         nRVkm4PjLKSUE56EwaETro2gr6DsiWtlYyqgNWEG4vCbJrkaD0iwIpRLwwPplRVP+reU
-         F2siJVJXd4jVvSkh6GC+agyvcQIC+F8Ah0WQBUFZ6PiNk+PU+xlwIeT0TSjsPN0xmiTb
-         qReg==
-X-Gm-Message-State: APjAAAVVAi/uqDR0gQcpRZ/aKfsQfvc2PRTVSbApOOQVklvJaAC4+qLq
-        grbqyZ8iw8ASl+Gf672Bg14sDA6OkgelidxUnR5Nht0ELdGdCw==
-X-Google-Smtp-Source: APXvYqxOubfDzFifUxumRe1dwz7xKHG0IWiZy55OmyM2C04lYSja+7z1fHsoiDBGi6h6J3WxBGBq+O2LAAEBsG3t+7A=
-X-Received: by 2002:a2e:a408:: with SMTP id p8mr18964063ljn.54.1568110269206;
- Tue, 10 Sep 2019 03:11:09 -0700 (PDT)
+        bh=lKHgomJalitF3xAuJSH7kZXFARPzQ7fixgfscyxk508=;
+        b=NJYx0U7QNADXdO1Wn+9LgDTSUgdYnmjOO2t/zlrwiZKya4ON9Bi424y10ns/Y7dVgT
+         kikB13OaZBSdQTXe1TFblUmW/cfy4MrhT5yqZDW8S6fkWC0iYES5V9+Yr5KDn8b7DeDf
+         iylRqsniDWPW1rSdkLjmktQJPk2z6milEDBjjqC0eacipvLBBqVtXDkUuFmiYtDRkAng
+         iTl4wtjinFwwq6ZrUeUZ2MHNX9Q0tv54kb35sakdgzC6jefPyFDEuyWWZkWhfiJIo/FR
+         mQ6mCOR1PUioVC2dIrAzNeZEs0HJi0Po1tZl010xYVqFFx9ywb/5AP0+CCnG52FEl0VX
+         GqXg==
+X-Gm-Message-State: APjAAAXMPYdecXe5FsNNh99RJS5e3MN/0MK/yZNt0aBn4XTI+0s6z3t8
+        Dt0/eJXAf2bTZ0XcHF8frQ+UtxQXhbmQtk4URN31R7EkeeMEFg==
+X-Google-Smtp-Source: APXvYqzkUibWHOaDUCSgQdVKHf7BUPrPCoU+CUNscAKWcBCZYnmsldITjrVCZZ1lysh6WzxTCy9rvbWLnbsJpPiCJLE=
+X-Received: by 2002:a2e:7d15:: with SMTP id y21mr12099214ljc.28.1568110403734;
+ Tue, 10 Sep 2019 03:13:23 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190909123653.GA4122@black.fi.intel.com>
-In-Reply-To: <20190909123653.GA4122@black.fi.intel.com>
+References: <20190910082903.2727-1-brgl@bgdev.pl>
+In-Reply-To: <20190910082903.2727-1-brgl@bgdev.pl>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Tue, 10 Sep 2019 11:10:57 +0100
-Message-ID: <CACRpkdbgah19c0bwW0BbogTcsnS7fa_N29gqNuC0-6rrT9f=qg@mail.gmail.com>
-Subject: Re: [GIT PULL] intel-gpio for 5.4-1
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     Linux GPIO <linux-gpio@vger.kernel.org>
+Date:   Tue, 10 Sep 2019 11:13:12 +0100
+Message-ID: <CACRpkdb4tu4h3uZz-TWssNXiRLJF8TjTxTG1VHO-sDTkVJR0_g@mail.gmail.com>
+Subject: Re: [GIT PULL] gpio: fixes for v5.4
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Sep 9, 2019 at 1:36 PM Andy Shevchenko
-<andriy.shevchenko@linux.intel.com> wrote:
+On Tue, Sep 10, 2019 at 9:29 AM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
 
-> Small bunch of Intel GPIO driver clean ups.
-(...)
-> The following changes since commit 5f9e832c137075045d15cd6899ab0505cfb2ca4b:
+> Hi Linus,
+>
+> please pull the following (hopefully last) bunch of fixes for this release.
 
-Pulled into my gpio "devel" branch!
-
-Thanks a lot Andy, much appreciated!
+Thanks Bartosz, pulled to my "fixes" branch for v5.3
+I will try to get these to Torvalds ASAP, just give the
+robots a chance to look at it first.
 
 Yours,
 Linus Walleij
