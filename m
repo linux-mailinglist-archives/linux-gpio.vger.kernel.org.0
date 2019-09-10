@@ -2,72 +2,78 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id CA318AE150
-	for <lists+linux-gpio@lfdr.de>; Tue, 10 Sep 2019 01:01:03 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 188FFAE4B5
+	for <lists+linux-gpio@lfdr.de>; Tue, 10 Sep 2019 09:33:15 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728349AbfIIXAw (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 9 Sep 2019 19:00:52 -0400
-Received: from onstation.org ([52.200.56.107]:44768 "EHLO onstation.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726474AbfIIXAw (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Mon, 9 Sep 2019 19:00:52 -0400
-Received: from localhost (c-98-239-145-235.hsd1.wv.comcast.net [98.239.145.235])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: masneyb)
-        by onstation.org (Postfix) with ESMTPSA id 071EA3EECB;
-        Mon,  9 Sep 2019 23:00:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=onstation.org;
-        s=default; t=1568070051;
-        bh=6Kv4KMaygv0KswF7kk/EVVDG9vrBQXD7yG5Bil7Y34A=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=a6YmcW0Ph4LLfgyO3jfVMFR5L6ufv/rzPUTiqRPgQ1puSrzqLxK+fq+ACbZrnbLLP
-         +iVuxSaP2nanO9bD4PA7tWbbZqxpHI4LsocCCxi3Np9LvSjOIbT1vfvpYP1+uY/tkP
-         rDgx16eprx9w9aRwXIqDbBsVXDLBOLzewb1/HHMY=
-Date:   Mon, 9 Sep 2019 19:00:50 -0400
-From:   Brian Masney <masneyb@onstation.org>
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Hulk Robot <hulkci@huawei.com>,
-        YueHaibing <yuehaibing@huawei.com>,
-        Hans Verkuil <hans.verkuil@cisco.com>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Enrico Weigelt <info@metux.net>,
-        Johan Hovold <johan@kernel.org>, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] gpio: fix incorrect merge of linux/gpio/driver.h
-Message-ID: <20190909230050.GA5181@onstation.org>
-References: <20190909203512.675822-1-arnd@arndb.de>
+        id S1728897AbfIJHdO (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 10 Sep 2019 03:33:14 -0400
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:43050 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728157AbfIJHdO (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 10 Sep 2019 03:33:14 -0400
+Received: by mail-ot1-f68.google.com with SMTP id b2so16931403otq.10;
+        Tue, 10 Sep 2019 00:33:11 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=5P01RYkKgcHPUYjswW70NifVp4Z0kf9Z1V54hUpct4o=;
+        b=DSxojzIVOSVtMwdbCZrEvMpH2wqOXYRZQ1i5yxZWqeIqv0g5QenZ3U3V6DaiYjAU7A
+         37/9wjhqXvzq9VREkeAVTwd8zUjkVsvYSH9ye0OF0gXD5Y/QrQa4+l8/V7v+C/1s+xgb
+         5UhsIb13KSBVxxKcGivSuiH2vBHxW3Vcm/bWyAnwxEHs1wkoRO7IHYkTBr5k/lyP+YSn
+         zT0sGo88un7xJ2IaLSv5OKKH/7OTXMveqRVBhi3HVwaSuZNKFydlz1nsYz0FlQBI7++8
+         4ZCqaix5+2Hp+gWD8B+7dsChs5ov9hRb1RZnwnCNt0CUe1cwnKUYlue9P+6P8f55p14x
+         zemA==
+X-Gm-Message-State: APjAAAXiFKNA4zLYjpioAJksfRh00tliRwPcgtbVHgvz58lrrYNwr7s/
+        T6ho40/RzwhyhVYrTznt2rseWFtSAUSU3uJfxmg=
+X-Google-Smtp-Source: APXvYqxvjvfB3lp1gpAc4xcpHpepOmJjAOO9w99Zz6FSJOl+rXJQVuknMhQYK1Zv06NkX5LG65XIVlBM2DfpxreJ7GQ=
+X-Received: by 2002:a05:6830:1196:: with SMTP id u22mr24870585otq.39.1568100791499;
+ Tue, 10 Sep 2019 00:33:11 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190909203512.675822-1-arnd@arndb.de>
+References: <20190904121658.2617-1-geert+renesas@glider.be>
+ <20190904121658.2617-2-geert+renesas@glider.be> <20190905085925.umc6khhp2nurdljo@verge.net.au>
+In-Reply-To: <20190905085925.umc6khhp2nurdljo@verge.net.au>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Tue, 10 Sep 2019 09:33:00 +0200
+Message-ID: <CAMuHMdVAM8LpCZiJPattkj2QsBrXJLKde-MB1Y3+iqC2DNegpA@mail.gmail.com>
+Subject: Re: [PATCH 1/3] pinctrl: sh-pfc: r8a77990: Rename AVB_AVTP_{MATCH,CAPTURE}
+ pin functions
+To:     Simon Horman <horms@verge.net.au>
+Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Takeshi Kihara <takeshi.kihara.df@renesas.com>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Sep 09, 2019 at 10:34:59PM +0200, Arnd Bergmann wrote:
-> Two otherwise correct patches got merged incorrectly, which leads to
-> build problems when CONFIG_GPIOLIB is disabled:
-> 
-> include/linux/gpio/driver.h:722:19: error: static declaration of 'gpiochip_lock_as_irq' follows non-static declaration
-> static inline int gpiochip_lock_as_irq(struct gpio_chip *chip,
->                   ^
-> include/linux/gpio/driver.h:706:5: note: previous declaration is here
-> int gpiochip_lock_as_irq(struct gpio_chip *chip, unsigned int offset);
->     ^
-> include/linux/gpio/driver.h:729:20: error: static declaration of 'gpiochip_unlock_as_irq' follows non-static declaration
-> static inline void gpiochip_unlock_as_irq(struct gpio_chip *chip,
->                    ^
-> include/linux/gpio/driver.h:707:6: note: previous declaration is here
-> void gpiochip_unlock_as_irq(struct gpio_chip *chip, unsigned int offset);
-> 
-> Fixes: 8a6abcd04e4c ("Merge tag 'gpio-v5.4-updates-for-linus' of git://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux into devel")
-> Fixes: 9091373ab7ea ("gpio: remove less important #ifdef around declarations")
-> Fixes: c7663fa2a663 ("gpio: Move gpiochip_lock/unlock_as_irq to gpio/driver.h")
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+On Thu, Sep 5, 2019 at 10:59 AM Simon Horman <horms@verge.net.au> wrote:
+> On Wed, Sep 04, 2019 at 02:16:56PM +0200, Geert Uytterhoeven wrote:
+> > From: Takeshi Kihara <takeshi.kihara.df@renesas.com>
+> >
+> > The Hardware Manual Errata for Rev. 1.50 of April 10, 2019 renamed IPSR2
+> > register bit[23:20] value H'3 and register bit[27:24] value H'3 from
+> > AVB_AVTP_MATCH_A resp. AVB_AVTP_CAPTURE_A to AVB_AVTP_MATCH resp.
+> > AVB_AVTP_CAPTURE_A.
+>
+> I think the trailing '_A' above is a typo.
+>
+> That notwithstanding:
+>
+> Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
 
-Reviewed-by: Brian Masney <masneyb@onstation.org>
+Thanks, queueing in sh-pfc-for-v5.5 with the above fixed.
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
