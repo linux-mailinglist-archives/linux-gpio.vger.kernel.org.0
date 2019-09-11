@@ -2,78 +2,71 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 2D8E8AF91C
-	for <lists+linux-gpio@lfdr.de>; Wed, 11 Sep 2019 11:39:28 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2213DAF94D
+	for <lists+linux-gpio@lfdr.de>; Wed, 11 Sep 2019 11:44:45 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727289AbfIKJj1 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 11 Sep 2019 05:39:27 -0400
-Received: from pandora.armlinux.org.uk ([78.32.30.218]:56436 "EHLO
-        pandora.armlinux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726657AbfIKJj1 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 11 Sep 2019 05:39:27 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=qH4aLi8vNU39JraY+mjqNDssJCjJu1mgK8p4TLwqn00=; b=uCZyJThrDP5rjKd/qs2xLpGwe
-        9yvVGxNsyY0RQ83xsZXFZT/qjQUbZpp7P4CwojrxlXGV//jGMU6Z8RnYDeEgB4h3WIHRAKBJdJMpW
-        JF3w6dvN+84fIAtnmdMwc7sWqPD2/t+zNaNPV2gatjWVEh7bQbbsU1c8KDg8k8VoPHOVwbRYJXu09
-        ZXnDLhRbcQY6FbqVN4eg4OBbaZGFwYkGY4HYK5yf4RrhZPSwPJq9VpMN+sT+lW3YFOJktRaaWAntb
-        jvXzijNKeiEh8lBEQCE1VqfwvVxxF92UCQ/4i91/Rsj8TL1zQV+MdjYdHd7gGFTMj5MhT85DCeVsl
-        6q9TwrtrQ==;
-Received: from shell.armlinux.org.uk ([2002:4e20:1eda:1:5054:ff:fe00:4ec]:38164)
-        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.90_1)
-        (envelope-from <linux@armlinux.org.uk>)
-        id 1i7z5p-0005VM-K5; Wed, 11 Sep 2019 10:39:17 +0100
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
-        (envelope-from <linux@shell.armlinux.org.uk>)
-        id 1i7z5m-0003qS-QY; Wed, 11 Sep 2019 10:39:14 +0100
-Date:   Wed, 11 Sep 2019 10:39:14 +0100
-From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-        Andrew Lunn <andrew@lunn.ch>,
-        "David S. Miller" <davem@davemloft.net>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>, netdev@vger.kernel.org
-Subject: Re: [PATCH 04/11] net: phylink: switch to using
- fwnode_gpiod_get_index()
-Message-ID: <20190911093914.GT13294@shell.armlinux.org.uk>
-References: <20190911075215.78047-1-dmitry.torokhov@gmail.com>
- <20190911075215.78047-5-dmitry.torokhov@gmail.com>
- <20190911092514.GM2680@smile.fi.intel.com>
+        id S1726724AbfIKJom (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 11 Sep 2019 05:44:42 -0400
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:40489 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726781AbfIKJom (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 11 Sep 2019 05:44:42 -0400
+Received: by mail-lj1-f193.google.com with SMTP id 7so19319767ljw.7
+        for <linux-gpio@vger.kernel.org>; Wed, 11 Sep 2019 02:44:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=TfO4HK/WGXxXK4b73oCZUUTA55lR9Dm1uUKXZY75m1g=;
+        b=FVd794B/Kh/woVfXGPNZCcWRpdvtsO7FEOFvVWWsDu9CYn3LPtCumsPuml8fSoKw+e
+         KnKQ1OQBqXFQg6aAxPWZ9HUGhtvWVXE2oMkqx/P0c4YZ5Dr+VfmnJTgVQP/TupXCVAgd
+         PSXqaZfRWqeyTLoKB2ClqNXo0wsisp9NfhfloqBp6KpkJstC4JydH0EqgRt0bq0sqtGb
+         UtIxjI9Qxd/S9sWFfStjHiOq9R0mDh75ID1sH9qF6T9BmL7AkK+TJsEKb9iUw2WSAj2X
+         ky1GT9TVT4NlNp7nUobvtpK89c2PzAxwlBYSGimYJTckgwGmIvYBAvMsoseCkdXWoyUJ
+         GvgA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=TfO4HK/WGXxXK4b73oCZUUTA55lR9Dm1uUKXZY75m1g=;
+        b=odjBgd1F9jsDRpWK/Cezpiqt73rRdN/Xbs1grJyp0dB4bk1bhYN9P2QrmhQWXYqkh4
+         q38kc/1COptVB4dZZDYB403vFmVhxpqWydJTAmDRcWacuIFiPEABcoC0vYhmKoZY3wns
+         xVMeOlutpPWNdOg2pOUBAGwLCGg8a365LjW7Y1eczBSNsIQB154kI4iSxoGYUSgqEd+S
+         5nOL+vXmRJ4v/Bdqg6AoyCqcdxu7VkyxyYEbyEc+bSK6+oVKLteN/PoEBcmO4rdNqZo1
+         mA6r3eH3Qmp6ZKqbHOc7iaCcQBKSW8+E9j30utTcFgv2kKhvrP5BCdBeWsXkSxJdKtWL
+         igFw==
+X-Gm-Message-State: APjAAAVJfiYg+PixL2eK5oil8nF4fhaQ2rN5lV0nfCMicLmzTtwzmL3H
+        JLXm6uEecWWG6iIukuKWc016YBDp+Z2H8JsP8w/PuQ==
+X-Google-Smtp-Source: APXvYqyeJkEnPdU1nrHqRvNcYPbtI5tOlybw7foaIzX3I439oYmaNxLFkKhZDLyK6wH/rgo0lItiJsUi9kMI/EVGZhQ=
+X-Received: by 2002:a2e:8056:: with SMTP id p22mr17545242ljg.69.1568195078811;
+ Wed, 11 Sep 2019 02:44:38 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190911092514.GM2680@smile.fi.intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <1568178685-30738-1-git-send-email-rayagonda.kokatanur@broadcom.com>
+In-Reply-To: <1568178685-30738-1-git-send-email-rayagonda.kokatanur@broadcom.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Wed, 11 Sep 2019 10:44:27 +0100
+Message-ID: <CACRpkdYSHnt3WMjpukHKq0kygxZbxHt8tipkQ-UHdXWYr0L5yg@mail.gmail.com>
+Subject: Re: [PATCH v1 1/1] pinctrl: iproc: Add 'get_direction' support
+To:     Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>
+Cc:     Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>,
+        bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Sep 11, 2019 at 12:25:14PM +0300, Andy Shevchenko wrote:
-> On Wed, Sep 11, 2019 at 12:52:08AM -0700, Dmitry Torokhov wrote:
-> > Instead of fwnode_get_named_gpiod() that I plan to hide away, let's use
-> > the new fwnode_gpiod_get_index() that mimics gpiod_get_index(), bit
-> > works with arbitrary firmware node.
-> 
-> I'm wondering if it's possible to step forward and replace
-> fwnode_get_gpiod_index by gpiod_get() / gpiod_get_index() here and
-> in other cases in this series.
+On Wed, Sep 11, 2019 at 6:16 AM Rayagonda Kokatanur
+<rayagonda.kokatanur@broadcom.com> wrote:
 
-No, those require a struct device, but we have none.  There are network
-drivers where there is a struct device for the network complex, but only
-DT nodes for the individual network interfaces.  So no, gpiod_* really
-doesn't work.
+> Add 'get_direction' support to the iProc GPIO driver.
+>
+> Signed-off-by: Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>
 
--- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
-According to speedtest.net: 11.9Mbps down 500kbps up
+Patch applied, thanks for doing this!
+
+Yours,
+Linus Walleij
