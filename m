@@ -2,90 +2,65 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 07047AF88E
-	for <lists+linux-gpio@lfdr.de>; Wed, 11 Sep 2019 11:11:09 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 856EBAF8D7
+	for <lists+linux-gpio@lfdr.de>; Wed, 11 Sep 2019 11:25:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727072AbfIKJLI (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 11 Sep 2019 05:11:08 -0400
-Received: from relay10.mail.gandi.net ([217.70.178.230]:60895 "EHLO
-        relay10.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726889AbfIKJLI (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 11 Sep 2019 05:11:08 -0400
-Received: from localhost (unknown [148.69.85.38])
-        (Authenticated sender: alexandre.belloni@bootlin.com)
-        by relay10.mail.gandi.net (Postfix) with ESMTPSA id 9046124001F;
-        Wed, 11 Sep 2019 09:11:05 +0000 (UTC)
-Date:   Wed, 11 Sep 2019 11:11:01 +0200
-From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Ludovic Desroches <ludovic.desroches@microchip.com>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] pinctrl: at91-pio4: implement .get_multiple and
- .set_multiple
-Message-ID: <20190911091101.GC21254@piout.net>
-References: <20190905141304.22005-1-alexandre.belloni@bootlin.com>
- <CACRpkdbVC6DLHWftpL1wfkx_kWyfE=LpCQWZw=cv=RMVxDBm_g@mail.gmail.com>
+        id S1726735AbfIKJZT (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 11 Sep 2019 05:25:19 -0400
+Received: from mga09.intel.com ([134.134.136.24]:3742 "EHLO mga09.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726579AbfIKJZT (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Wed, 11 Sep 2019 05:25:19 -0400
+X-Amp-Result: UNSCANNABLE
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 11 Sep 2019 02:25:18 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,492,1559545200"; 
+   d="scan'208";a="214619764"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by fmsmga002.fm.intel.com with ESMTP; 11 Sep 2019 02:25:16 -0700
+Received: from andy by smile with local (Exim 4.92.1)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1i7ysE-0005Lw-SK; Wed, 11 Sep 2019 12:25:14 +0300
+Date:   Wed, 11 Sep 2019 12:25:14 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+        Andrew Lunn <andrew@lunn.ch>,
+        "David S. Miller" <davem@davemloft.net>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Russell King <linux@armlinux.org.uk>, netdev@vger.kernel.org
+Subject: Re: [PATCH 04/11] net: phylink: switch to using
+ fwnode_gpiod_get_index()
+Message-ID: <20190911092514.GM2680@smile.fi.intel.com>
+References: <20190911075215.78047-1-dmitry.torokhov@gmail.com>
+ <20190911075215.78047-5-dmitry.torokhov@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CACRpkdbVC6DLHWftpL1wfkx_kWyfE=LpCQWZw=cv=RMVxDBm_g@mail.gmail.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <20190911075215.78047-5-dmitry.torokhov@gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 11/09/2019 01:27:10+0100, Linus Walleij wrote:
-> On Thu, Sep 5, 2019 at 3:13 PM Alexandre Belloni
-> <alexandre.belloni@bootlin.com> wrote:
-> >
-> > Implement .get_multiple and .set_multiple to allow reading or setting
-> > multiple pins simultaneously. Pins in the same bank will all be switched at
-> > the same time, improving synchronization and performances.
-> >
-> > Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
-> 
-> Good initiative!
-> 
-> > +       for (bank = 0; bank < atmel_pioctrl->nbanks; bank++) {> +               unsigned int word = bank;
-> > +               unsigned int offset = 0;
-> > +               unsigned int reg;
-> > +
-> > +#if ATMEL_PIO_NPINS_PER_BANK != BITS_PER_LONG
-> 
-> Should it not be > rather than != ?
-> 
+On Wed, Sep 11, 2019 at 12:52:08AM -0700, Dmitry Torokhov wrote:
+> Instead of fwnode_get_named_gpiod() that I plan to hide away, let's use
+> the new fwnode_gpiod_get_index() that mimics gpiod_get_index(), bit
+> works with arbitrary firmware node.
 
-Realistically, the only case that could happen would be
-ATMEL_PIO_NPINS_PER_BANK == 32 and BITS_PER_LONG ==64. so I would go for
-ATMEL_PIO_NPINS_PER_BANK < BITS_PER_LONG
-
-> > +               word = BIT_WORD(bank * ATMEL_PIO_NPINS_PER_BANK);
-> > +               offset = bank * ATMEL_PIO_NPINS_PER_BANK % BITS_PER_LONG;
-> > +#endif
-> 
-> This doesn't look good for multiplatform kernels.
-> 
-
-I don't think we have multiplatform kernels that run both in 32 and 64
-bits. I don't believe ATMEL_PIO_NPINS_PER_BANK will ever change, it has
-been 32 on all the atmel SoCs since 2001.
-
-> We need to get rid of any compiletime constants like this.
-> 
-> Not your fault I suppose it is already there, but this really need
-> to be fixed. Any ideas?
-> 
-
-I can go for a variable instead of a constant but the fact is that there
-is currently no 64bit SoC with that IP. I added the compile time check
-just in case a 64 bit SoC appears with that IP one day.
-
+I'm wondering if it's possible to step forward and replace
+fwnode_get_gpiod_index by gpiod_get() / gpiod_get_index() here and
+in other cases in this series.
 
 -- 
-Alexandre Belloni, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+With Best Regards,
+Andy Shevchenko
+
+
