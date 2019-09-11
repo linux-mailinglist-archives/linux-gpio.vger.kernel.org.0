@@ -2,59 +2,59 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 79CA8AF3F0
-	for <lists+linux-gpio@lfdr.de>; Wed, 11 Sep 2019 03:26:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 34A96AF3F1
+	for <lists+linux-gpio@lfdr.de>; Wed, 11 Sep 2019 03:27:44 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726239AbfIKB00 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 10 Sep 2019 21:26:26 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:50927 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726224AbfIKB0Z (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 10 Sep 2019 21:26:25 -0400
-Received: by mail-wm1-f66.google.com with SMTP id c10so1480274wmc.0
-        for <linux-gpio@vger.kernel.org>; Tue, 10 Sep 2019 18:26:22 -0700 (PDT)
+        id S1726224AbfIKB1n (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 10 Sep 2019 21:27:43 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:53902 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726214AbfIKB1n (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 10 Sep 2019 21:27:43 -0400
+Received: by mail-wm1-f67.google.com with SMTP id q18so1475944wmq.3
+        for <linux-gpio@vger.kernel.org>; Tue, 10 Sep 2019 18:27:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=kernelci-org.20150623.gappssmtp.com; s=20150623;
         h=message-id:date:mime-version:content-transfer-encoding:subject:to
          :from;
-        bh=ibKMXvup433JDjAomhmweIxLHVSPB+GIi3CQMMoeRD4=;
-        b=1lZ0gYn9EpVT25oHbo3GpQjSVrC3wFLVwyoBads2A+P7TIWiKreYqtpNl0wSMW5MCr
-         ltMvG7SttKn6RFi5sjo917oi6vtC6OYmTfnpFPyRkKiWxm81Qh7iS44bp8uJO5Rq6/EY
-         Vcf7tH2nywXB3jTQy9DTso3tJVAFw6SEvH6eo1J0v9L3Gg2CfH/XItLWNZKhS0NUAMi2
-         HvF/KR8XwtHSnGsHn5W3uMqQkR+yXsp0z6UI0Tdcn4N45HcQPodga1raPMa1M5RBCz+C
-         A+l9kDrdVkQDyMCEQOFa303rBsJEgr8oDl9WjP+WlNO7hPjU38mGZW4eJy4yQuSC20ZZ
-         ZjkA==
+        bh=npc/rQMlv90S69cjwUgQW56+caK0sovG77VNPtgXbds=;
+        b=DHaytI/t2aoW9+8+WrvzJwU2ORv2NFFu1loAK1oRuwFyZOn5lHPgSUKC5PyjW9x5aY
+         ww3krOwcKsZsaEgLvIxLHGZatzjSG/DOsQUmqOhlJh9rn7wSOWO+VLXaA4yu6lERs+P6
+         TZ0kW/QhMWRvMraBKXydY2Zq0ZrmoHNH5KRucvLbUhKxCDs11w72NCKtfJN+usnOwpyK
+         sKwVD0SkTfXAIZfP35ASYUXEW8YBAvQeCDeKEJNupVT1I7xU+1TcW4wxcXy7XtI/r0b2
+         /loAe3kmkXm4ifSZ4TYFgyyFdnqKKPrOfu3G8y7QZGwITKLpHnN2asyyQ+eqpTC/s+vD
+         vDgg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:message-id:date:mime-version
          :content-transfer-encoding:subject:to:from;
-        bh=ibKMXvup433JDjAomhmweIxLHVSPB+GIi3CQMMoeRD4=;
-        b=UNircdXNobd0oDGfeGSZCngGEYMBHjwbhRhl25GJWlN8CWuJ2PNualjXcSEQi4YoGO
-         sgTFTDp14uKBv8ee3HCzdftjUIIJPC2cSW/MwLbJVgdaxz50ClNRLLgPA6Kcjf/Z/naX
-         SQupl5o6ewyWFyXQO//z1e11gVBQRyt5mZ0csBYE5KzpVorCCcthq+e0Q6A5YDEdXzuf
-         bKXcpuqXExiHG6yeMZQ2Nof6SYnGpe6vqTmkJ/uIL8cDfIoihhWjBd2hsFAfgobdzp0b
-         ZfnPiRJnFJY5+5TPJGxTq4fVYePCLCdlnuCIgOweaDufazb1EdhYIVohJW5Mmu+n+rOp
-         KPAg==
-X-Gm-Message-State: APjAAAX5Pv+OkTtDNgug6jbXFKFVl5YsWPKQA0PkrUHnP8kTNtk1iWrW
-        CBSQ8xpzctajy2t23eaQwg0UMO31wcqYTw==
-X-Google-Smtp-Source: APXvYqz4BvX74JFt0mGdxSL6VFBBXzOPk1KIkcTlZSEMt1NbPiLRkESAbKQdNyZklhqcdVZwfmrGbA==
-X-Received: by 2002:a7b:c4d0:: with SMTP id g16mr1810067wmk.94.1568165181865;
-        Tue, 10 Sep 2019 18:26:21 -0700 (PDT)
+        bh=npc/rQMlv90S69cjwUgQW56+caK0sovG77VNPtgXbds=;
+        b=PV/ZiIpPZ5IU3+FmhfIbf7nWI0fStTTzH++AP2tKL802sMBjhV496K0sAVDeIt27PE
+         DUQ2EKa/44BYGEAkMR0So3JkBIOif50VGarmdarUF/KRdcbsMLYyPGi4w1HuTxoz1Eqz
+         roGbYPOWmh6V0RALshZBbPeXMZ2txnQSOvzPcd4dzB7Wbk0FVJ0lXS02+SGwh5Uqwtpy
+         YpfNkUzqWu4q/lGG1WB0KsIA2lBA3to99jCfLPO0UO9zizEr2OH1ay2fUo1Vo+OJGuuk
+         95vGQXWuyMBqzuy5IPmMNxwnuXUeC4mH6Ez6P2QDXEDxVl0SoP8nil4Za60NEHf1cQbG
+         WH/Q==
+X-Gm-Message-State: APjAAAWHeixBPAT7XpFncB5HBULafTJCgmhI4OeYCnM0uP1akHie6d2G
+        b2InWlKDSYNWo57++7kC+NUK+Ltqh5Qztg==
+X-Google-Smtp-Source: APXvYqx+7JTKrIU0o0qbBGAVpiVfyb3JCgCijWfpt5j0O8F0MH8Ib+4HKijwLUx69wzFnDno/1p42g==
+X-Received: by 2002:a1c:7009:: with SMTP id l9mr1562220wmc.173.1568165258692;
+        Tue, 10 Sep 2019 18:27:38 -0700 (PDT)
 Received: from [148.251.42.114] ([2a01:4f8:201:9271::2])
-        by smtp.gmail.com with ESMTPSA id r17sm18246968wrt.68.2019.09.10.18.26.21
+        by smtp.gmail.com with ESMTPSA id h7sm1398630wmb.34.2019.09.10.18.27.37
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 10 Sep 2019 18:26:21 -0700 (PDT)
-Message-ID: <5d784d3d.1c69fb81.a23f0.6d5e@mx.google.com>
-Date:   Tue, 10 Sep 2019 18:26:21 -0700 (PDT)
+        Tue, 10 Sep 2019 18:27:38 -0700 (PDT)
+Message-ID: <5d784d8a.1c69fb81.117ad.72b4@mx.google.com>
+Date:   Tue, 10 Sep 2019 18:27:38 -0700 (PDT)
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
-X-Kernelci-Kernel: v5.3-rc8-78-ga818894f80cc
+X-Kernelci-Kernel: v5.3-rc8-5-g1dea33e84d33
 X-Kernelci-Tree: linusw
 X-Kernelci-Report-Type: build
-X-Kernelci-Branch: for-next
-Subject: linusw/for-next build: 6 builds: 0 failed, 6 passed,
- 27 warnings (v5.3-rc8-78-ga818894f80cc)
+X-Kernelci-Branch: fixes
+Subject: linusw/fixes build: 6 builds: 0 failed, 6 passed,
+ 27 warnings (v5.3-rc8-5-g1dea33e84d33)
 To:     linux-gpio@vger.kernel.org, fellows@kernelci.org
 From:   "kernelci.org bot" <bot@kernelci.org>
 Sender: linux-gpio-owner@vger.kernel.org
@@ -62,16 +62,16 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-linusw/for-next build: 6 builds: 0 failed, 6 passed, 27 warnings (v5.3-rc8-=
-78-ga818894f80cc)
+linusw/fixes build: 6 builds: 0 failed, 6 passed, 27 warnings (v5.3-rc8-5-g=
+1dea33e84d33)
 
-Full Build Summary: https://kernelci.org/build/linusw/branch/for-next/kerne=
-l/v5.3-rc8-78-ga818894f80cc/
+Full Build Summary: https://kernelci.org/build/linusw/branch/fixes/kernel/v=
+5.3-rc8-5-g1dea33e84d33/
 
 Tree: linusw
-Branch: for-next
-Git Describe: v5.3-rc8-78-ga818894f80cc
-Git Commit: a818894f80cc1327e2f20c07291701ccf31584ec
+Branch: fixes
+Git Describe: v5.3-rc8-5-g1dea33e84d33
+Git Commit: 1dea33e84d33a5220aeda4ca9e918de0fd77c078
 Git URL: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-gpio.=
 git/
 Built: 6 unique architectures
@@ -99,9 +99,9 @@ Warnings summary:
 
     5    <stdin>:1511:2: warning: #warning syscall clone3 not implemented [=
 -Wcpp]
-    2    drivers/pinctrl/qcom/pinctrl-spmi-gpio.c:800:20: warning: this sta=
+    2    drivers/pinctrl/qcom/pinctrl-spmi-gpio.c:820:20: warning: this sta=
 tement may fall through [-Wimplicit-fallthrough=3D]
-    2    drivers/pinctrl/qcom/pinctrl-spmi-gpio.c:795:20: warning: this sta=
+    2    drivers/pinctrl/qcom/pinctrl-spmi-gpio.c:815:20: warning: this sta=
 tement may fall through [-Wimplicit-fallthrough=3D]
     2    drivers/pinctrl/pinctrl-rockchip.c:2783:3: warning: this statement=
  may fall through [-Wimplicit-fallthrough=3D]
@@ -166,9 +166,9 @@ defconfig (arm64, gcc-8) =E2=80=94 PASS, 0 errors, 3 warnings, 0 section mi=
 smatches
 
 Warnings:
-    drivers/pinctrl/qcom/pinctrl-spmi-gpio.c:795:20: warning: this statemen=
+    drivers/pinctrl/qcom/pinctrl-spmi-gpio.c:815:20: warning: this statemen=
 t may fall through [-Wimplicit-fallthrough=3D]
-    drivers/pinctrl/qcom/pinctrl-spmi-gpio.c:800:20: warning: this statemen=
+    drivers/pinctrl/qcom/pinctrl-spmi-gpio.c:820:20: warning: this statemen=
 t may fall through [-Wimplicit-fallthrough=3D]
     drivers/pinctrl/pinctrl-rockchip.c:2783:3: warning: this statement may =
 fall through [-Wimplicit-fallthrough=3D]
@@ -189,9 +189,9 @@ through [-Wimplicit-fallthrough=3D]
 through [-Wimplicit-fallthrough=3D]
     drivers/mmc/host/atmel-mci.c:2426:40: warning: this statement may fall =
 through [-Wimplicit-fallthrough=3D]
-    drivers/pinctrl/qcom/pinctrl-spmi-gpio.c:795:20: warning: this statemen=
+    drivers/pinctrl/qcom/pinctrl-spmi-gpio.c:815:20: warning: this statemen=
 t may fall through [-Wimplicit-fallthrough=3D]
-    drivers/pinctrl/qcom/pinctrl-spmi-gpio.c:800:20: warning: this statemen=
+    drivers/pinctrl/qcom/pinctrl-spmi-gpio.c:820:20: warning: this statemen=
 t may fall through [-Wimplicit-fallthrough=3D]
     drivers/pinctrl/pinctrl-rockchip.c:2783:3: warning: this statement may =
 fall through [-Wimplicit-fallthrough=3D]
