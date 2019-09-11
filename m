@@ -2,25 +2,25 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 924D4AFEEA
-	for <lists+linux-gpio@lfdr.de>; Wed, 11 Sep 2019 16:39:49 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4B58FAFEF2
+	for <lists+linux-gpio@lfdr.de>; Wed, 11 Sep 2019 16:39:53 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728182AbfIKOjX (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 11 Sep 2019 10:39:23 -0400
-Received: from michel.telenet-ops.be ([195.130.137.88]:35360 "EHLO
-        michel.telenet-ops.be" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728053AbfIKOjN (ORCPT
+        id S1728032AbfIKOji (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 11 Sep 2019 10:39:38 -0400
+Received: from xavier.telenet-ops.be ([195.130.132.52]:33370 "EHLO
+        xavier.telenet-ops.be" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728085AbfIKOjN (ORCPT
         <rfc822;linux-gpio@vger.kernel.org>); Wed, 11 Sep 2019 10:39:13 -0400
 Received: from ramsan ([84.194.98.4])
-        by michel.telenet-ops.be with bizsmtp
-        id 0Ef42100305gfCL06Ef4Rm; Wed, 11 Sep 2019 16:39:10 +0200
+        by xavier.telenet-ops.be with bizsmtp
+        id 0Ef42100405gfCL01Ef4Mv; Wed, 11 Sep 2019 16:39:10 +0200
 Received: from rox.of.borg ([192.168.97.57])
         by ramsan with esmtp (Exim 4.90_1)
         (envelope-from <geert@linux-m68k.org>)
-        id 1i83lv-0006TA-Vs; Wed, 11 Sep 2019 16:39:03 +0200
+        id 1i83lw-0006TC-16; Wed, 11 Sep 2019 16:39:04 +0200
 Received: from geert by rox.of.borg with local (Exim 4.90_1)
         (envelope-from <geert@linux-m68k.org>)
-        id 1i83lv-0003PF-UY; Wed, 11 Sep 2019 16:39:03 +0200
+        id 1i83lv-0003PI-VI; Wed, 11 Sep 2019 16:39:03 +0200
 From:   Geert Uytterhoeven <geert+renesas@glider.be>
 To:     Linus Walleij <linus.walleij@linaro.org>,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>
@@ -35,9 +35,9 @@ Cc:     Alexander Graf <graf@amazon.com>,
         linux-gpio@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
         linux-kernel@vger.kernel.org, qemu-devel@nongnu.org,
         Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH/RFC v2 4/5] gpio: Add GPIO Forwarder Helper
-Date:   Wed, 11 Sep 2019 16:38:57 +0200
-Message-Id: <20190911143858.13024-5-geert+renesas@glider.be>
+Subject: [PATCH/RFC v2 5/5] gpio: Add GPIO Aggregator Driver
+Date:   Wed, 11 Sep 2019 16:38:58 +0200
+Message-Id: <20190911143858.13024-6-geert+renesas@glider.be>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190911143858.13024-1-geert+renesas@glider.be>
 References: <20190911143858.13024-1-geert+renesas@glider.be>
@@ -46,351 +46,434 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Add a helper for creating GPIO chips that merely forward all operations
-to other GPIOs.
+GPIO controllers are exported to userspace using /dev/gpiochip*
+character devices.  Access control to these devices is provided by
+standard UNIX file system permissions, on an all-or-nothing basis:
+either a GPIO controller is accessible for a user, or it is not.
+Currently no mechanism exists to control access to individual GPIOs.
 
-This will be used by the GPIO Aggregator.
+Hence add a GPIO driver to aggregate existing GPIOs, and expose them as
+a new gpiochip.  This is useful for implementing access control, and
+assigning a set of GPIOs to a specific user.
+Furthermore, this simplifies and hardens exporting GPIOs to a virtual
+machine, as the VM can just grab the full GPIO controller, and no longer
+needs to care about which GPIOs to grab and which not, reducing the
+attack surface.
+
+Aggregated GPIO controllers are instantiated by writing to the
+"new_device" attribute file in sysfs:
+
+    $ echo [<gpioA>] [<gpiochipB> <offsets>] ...
+            > /sys/bus/platform/drivers/gpio-aggregator/new_device
+
+Where <gpioA> is a GPIO line name, <gpiochipB> is a GPIO chip label or
+name, and <offsets> is a comma-separated list of GPIO offsets and/or
+GPIO offset ranges.
+
+Likewise, aggregated GPIO controllers can be destroyed after use:
+
+    $ echo gpio-aggregator.<N> \
+            > /sys/bus/platform/drivers/gpio-aggregator/delete_device
 
 Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
 ---
-I expect this can be used by the GPIO inverter, too, after adding an
-"invert" flag, or a filter function that checks which offsets need
-inversion.
+v2:
+  - Add missing initialization of i in gpio_virt_agg_probe(),
+  - Update for removed .need_valid_mask field and changed
+    .init_valid_mask() signature,
+  - Drop "virtual", rename to gpio-aggregator,
+  - Drop bogus FIXME related to gpiod_set_transitory() expectations,
+  - Use new GPIO Forwarder Helper,
+  - Lift limit on the maximum number of GPIOs,
+  - Improve parsing:
+      - add support for specifying GPIOs by line name,
+      - add support for specifying GPIO chips by ID,
+      - add support for GPIO offset ranges,
+      - names and offset specifiers must be separated by whitespace,
+      - GPIO offsets must separated by spaces,
+  - Use str_has_prefix() and kstrtouint().
+
+I didn't use argv_split(), as it doesn't support quoted strings yet,
+and GPIO line names can contain spaces.  Perhaps I should enhance
+argv_split() first, and use that?
 ---
- drivers/gpio/Kconfig       |   3 +
- drivers/gpio/Makefile      |   1 +
- drivers/gpio/gpiolib-fwd.c | 272 +++++++++++++++++++++++++++++++++++++
- drivers/gpio/gpiolib-fwd.h |  16 +++
- 4 files changed, 292 insertions(+)
- create mode 100644 drivers/gpio/gpiolib-fwd.c
- create mode 100644 drivers/gpio/gpiolib-fwd.h
+ drivers/gpio/Kconfig           |   9 +
+ drivers/gpio/Makefile          |   1 +
+ drivers/gpio/gpio-aggregator.c | 333 +++++++++++++++++++++++++++++++++
+ 3 files changed, 343 insertions(+)
+ create mode 100644 drivers/gpio/gpio-aggregator.c
 
 diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
-index 38e096e6925fa65d..29d3ce8debcca1f6 100644
+index 29d3ce8debcca1f6..058aa68fd7015e7c 100644
 --- a/drivers/gpio/Kconfig
 +++ b/drivers/gpio/Kconfig
-@@ -47,6 +47,9 @@ config GPIOLIB_IRQCHIP
- 	select IRQ_DOMAIN
- 	bool
+@@ -1483,6 +1483,15 @@ config GPIO_VIPERBOARD
  
-+config GPIOLIB_FWD
-+	tristate
+ endmenu
+ 
++config GPIO_AGGREGATOR
++	tristate "GPIO Aggregator"
++	select GPIOLIB_FWD
++	help
++	  This enabled the GPIO Aggregator, which provides a way to aggregate
++	  existing GPIOs into a new GPIO device.
++	  This is useful for assigning a collection of GPIOs to a user, or
++	  exported them to a virtual machine.
 +
- config DEBUG_GPIO
- 	bool "Debug GPIO calls"
- 	depends on DEBUG_KERNEL
+ config GPIO_MOCKUP
+ 	tristate "GPIO Testing Driver"
+ 	select IRQ_SIM
 diff --git a/drivers/gpio/Makefile b/drivers/gpio/Makefile
-index d2fd19c15bae3fba..8a0e685c92b69855 100644
+index 8a0e685c92b69855..2ec9128bcfefa40a 100644
 --- a/drivers/gpio/Makefile
 +++ b/drivers/gpio/Makefile
-@@ -10,6 +10,7 @@ obj-$(CONFIG_GPIOLIB)		+= gpiolib-devprop.o
- obj-$(CONFIG_OF_GPIO)		+= gpiolib-of.o
- obj-$(CONFIG_GPIO_SYSFS)	+= gpiolib-sysfs.o
- obj-$(CONFIG_GPIO_ACPI)		+= gpiolib-acpi.o
-+obj-$(CONFIG_GPIOLIB_FWD)	+= gpiolib-fwd.o
- 
- # Device drivers. Generally keep list sorted alphabetically
- obj-$(CONFIG_GPIO_GENERIC)	+= gpio-generic.o
-diff --git a/drivers/gpio/gpiolib-fwd.c b/drivers/gpio/gpiolib-fwd.c
+@@ -26,6 +26,7 @@ obj-$(CONFIG_GPIO_74XX_MMIO)		+= gpio-74xx-mmio.o
+ obj-$(CONFIG_GPIO_ADNP)			+= gpio-adnp.o
+ obj-$(CONFIG_GPIO_ADP5520)		+= gpio-adp5520.o
+ obj-$(CONFIG_GPIO_ADP5588)		+= gpio-adp5588.o
++obj-$(CONFIG_GPIO_AGGREGATOR)		+= gpio-aggregator.o
+ obj-$(CONFIG_GPIO_ALTERA_A10SR)		+= gpio-altera-a10sr.o
+ obj-$(CONFIG_GPIO_ALTERA)  		+= gpio-altera.o
+ obj-$(CONFIG_GPIO_AMD8111)		+= gpio-amd8111.o
+diff --git a/drivers/gpio/gpio-aggregator.c b/drivers/gpio/gpio-aggregator.c
 new file mode 100644
-index 0000000000000000..28dac8c60a981337
+index 0000000000000000..42485735bd823e02
 --- /dev/null
-+++ b/drivers/gpio/gpiolib-fwd.c
-@@ -0,0 +1,272 @@
++++ b/drivers/gpio/gpio-aggregator.c
+@@ -0,0 +1,333 @@
 +// SPDX-License-Identifier: GPL-2.0-only
 +//
-+// GPIO Forwarder Helper
++// GPIO Aggregator
 +//
 +// Copyright (C) 2019 Glider bvba
 +
-+#include <linux/bitmap.h>
-+#include <linux/bitops.h>
++#include <linux/ctype.h>
++#include <linux/gpio/driver.h>
++#include <linux/idr.h>
 +#include <linux/kernel.h>
 +#include <linux/module.h>
 +#include <linux/mutex.h>
-+#include <linux/overflow.h>
-+#include <linux/spinlock.h>
++#include <linux/platform_device.h>
++#include <linux/string.h>
 +
 +#include "gpiolib.h"
 +#include "gpiolib-fwd.h"
 +
-+struct gpiochip_fwd {
-+	struct gpio_chip chip;
-+	struct gpio_desc **descs;
-+	union {
-+		struct mutex mlock;	/* protects tmp[] if can_sleep */
-+		spinlock_t slock;	/* protects tmp[] if !can_sleep */
-+	};
-+	unsigned long tmp[];		/* values and descs for multiple ops */
++#define DRV_NAME	"gpio-aggregator"
++
++struct gpio_aggregator {
++	struct platform_device *pdev;
 +};
 +
-+static int gpio_fwd_get_direction(struct gpio_chip *chip, unsigned int offset)
-+{
-+	struct gpiochip_fwd *fwd = gpiochip_get_data(chip);
++static DEFINE_MUTEX(gpio_aggregator_lock);	/* protects idr */
++static DEFINE_IDR(gpio_aggregator_idr);
 +
-+	return gpiod_get_direction(fwd->descs[offset]);
++static int gpiochip_match_label(struct gpio_chip *chip, void *data)
++{
++	return !strcmp(chip->label, data);
 +}
 +
-+static int gpio_fwd_direction_input(struct gpio_chip *chip, unsigned int offset)
++static struct gpio_chip *gpiochip_find_by_label(const char *label)
 +{
-+	struct gpiochip_fwd *fwd = gpiochip_get_data(chip);
-+
-+	return gpiod_direction_input(fwd->descs[offset]);
++	return gpiochip_find((void *)label, gpiochip_match_label);
 +}
 +
-+static int gpio_fwd_direction_output(struct gpio_chip *chip,
-+				     unsigned int offset, int value)
++static int gpiochip_match_id(struct gpio_chip *chip, void *data)
 +{
-+	struct gpiochip_fwd *fwd = gpiochip_get_data(chip);
++	unsigned int id = (uintptr_t)data;
 +
-+	return gpiod_direction_output(fwd->descs[offset], value);
++	return id == chip->base || id == chip->gpiodev->id;
 +}
 +
-+static int gpio_fwd_get(struct gpio_chip *chip, unsigned int offset)
++static struct gpio_chip *gpiochip_find_by_id(const char *id)
 +{
-+	struct gpiochip_fwd *fwd = gpiochip_get_data(chip);
++	unsigned int x;
 +
-+	return gpiod_get_value(fwd->descs[offset]);
++	if (!str_has_prefix(id, "gpiochip"))
++		return NULL;
++
++	if (kstrtouint(id + strlen("gpiochip"), 10, &x))
++		return NULL;
++
++	return gpiochip_find((void *)(uintptr_t)x, gpiochip_match_id);
 +}
 +
-+static int gpio_fwd_get_multiple(struct gpio_chip *chip, unsigned long *mask,
-+				 unsigned long *bits)
++static ssize_t new_device_store(struct device_driver *driver, const char *buf,
++				size_t count)
 +{
-+	struct gpiochip_fwd *fwd = gpiochip_get_data(chip);
-+	unsigned long *values, flags;
-+	struct gpio_desc **descs;
-+	unsigned int i, j = 0;
++	struct platform_device *pdev;
++	struct gpio_aggregator *aggr;
++	int res, id;
++
++	aggr = kzalloc(sizeof(*aggr), GFP_KERNEL);
++	if (!aggr)
++		return -ENOMEM;
++
++	mutex_lock(&gpio_aggregator_lock);
++	id = idr_alloc(&gpio_aggregator_idr, aggr, 0, 0, GFP_KERNEL);
++	mutex_unlock(&gpio_aggregator_lock);
++
++	if (id < 0) {
++		res = id;
++		goto free_ga;
++	}
++
++	/* kernfs guarantees string termination, so count + 1 is safe */
++	pdev = platform_device_register_data(NULL, DRV_NAME, id, buf,
++					     count + 1);
++	if (IS_ERR(pdev)) {
++		res = PTR_ERR(pdev);
++		goto remove_idr;
++	}
++
++	aggr->pdev = pdev;
++	return count;
++
++remove_idr:
++	mutex_lock(&gpio_aggregator_lock);
++	idr_remove(&gpio_aggregator_idr, id);
++	mutex_unlock(&gpio_aggregator_lock);
++free_ga:
++	kfree(aggr);
++	return res;
++}
++
++static DRIVER_ATTR_WO(new_device);
++
++static ssize_t delete_device_store(struct device_driver *driver,
++				   const char *buf, size_t count)
++{
++	struct gpio_aggregator *aggr;
++	unsigned int id;
 +	int error;
 +
-+	if (chip->can_sleep)
-+		mutex_lock(&fwd->mlock);
-+	else
-+		spin_lock_irqsave(&fwd->slock, flags);
++	if (!str_has_prefix(buf, DRV_NAME "."))
++		return -EINVAL;
 +
-+	values = &fwd->tmp[0];
-+	bitmap_clear(values, 0, fwd->chip.ngpio);
-+	descs = (void *)&fwd->tmp[BITS_TO_LONGS(fwd->chip.ngpio)];
++	error = kstrtouint(buf + strlen(DRV_NAME "."), 10, &id);
++	if (error)
++		return error;
 +
-+	for_each_set_bit(i, mask, fwd->chip.ngpio)
-+		descs[j++] = fwd->descs[i];
++	mutex_lock(&gpio_aggregator_lock);
++	aggr = idr_remove(&gpio_aggregator_idr, id);
++	mutex_unlock(&gpio_aggregator_lock);
++	if (!aggr)
++		return -ENOENT;
 +
-+	error = gpiod_get_array_value(j, descs, NULL, values);
-+	if (!error) {
-+		j = 0;
-+		for_each_set_bit(i, mask, fwd->chip.ngpio)
-+			__assign_bit(i, bits, test_bit(j++, values));
++	platform_device_unregister(aggr->pdev);
++	kfree(aggr);
++	return count;
++}
++static DRIVER_ATTR_WO(delete_device);
++
++static struct attribute *gpio_aggregator_attrs[] = {
++	&driver_attr_new_device.attr,
++	&driver_attr_delete_device.attr,
++	NULL,
++};
++ATTRIBUTE_GROUPS(gpio_aggregator);
++
++static char *get_arg(struct device *dev, const char **args)
++{
++	const char *start = *args, *end;
++	char *arg;
++
++	if (*start == '"') {
++		/* Quoted arg */
++		end = strchr(++start, '"');
++		if (!end)
++			return ERR_PTR(-EINVAL);
++
++		arg = devm_kasprintf(dev, GFP_KERNEL, "%.*s",
++				     (int)(end++ - start), start);
++	} else {
++		/* Unquoted arg */
++		for (end = start; *end && !isspace(*end); end++) ;
++
++		if (end == start)
++			return ERR_PTR(-ENOENT);
++
++		arg = devm_kasprintf(dev, GFP_KERNEL, "%.*s",
++				     (int)(end - start), start);
 +	}
-+
-+	if (chip->can_sleep)
-+		mutex_unlock(&fwd->mlock);
-+	else
-+		spin_unlock_irqrestore(&fwd->slock, flags);
-+
-+	return error;
-+}
-+
-+static void gpio_fwd_set(struct gpio_chip *chip, unsigned int offset, int value)
-+{
-+	struct gpiochip_fwd *fwd = gpiochip_get_data(chip);
-+
-+	gpiod_set_value(fwd->descs[offset], value);
-+}
-+
-+static void gpio_fwd_set_multiple(struct gpio_chip *chip, unsigned long *mask,
-+				  unsigned long *bits)
-+{
-+	struct gpiochip_fwd *fwd = gpiochip_get_data(chip);
-+	unsigned long *values, flags;
-+	struct gpio_desc **descs;
-+	unsigned int i, j = 0;
-+
-+	if (chip->can_sleep)
-+		mutex_lock(&fwd->mlock);
-+	else
-+		spin_lock_irqsave(&fwd->slock, flags);
-+
-+	values = &fwd->tmp[0];
-+	descs = (void *)&fwd->tmp[BITS_TO_LONGS(fwd->chip.ngpio)];
-+
-+	for_each_set_bit(i, mask, fwd->chip.ngpio) {
-+		__assign_bit(j, values, test_bit(i, bits));
-+		descs[j++] = fwd->descs[i];
-+	}
-+
-+	gpiod_set_array_value(j, descs, NULL, values);
-+
-+	if (chip->can_sleep)
-+		mutex_unlock(&fwd->mlock);
-+	else
-+		spin_unlock_irqrestore(&fwd->slock, flags);
-+}
-+
-+static int gpio_fwd_set_config(struct gpio_chip *chip, unsigned int offset,
-+			       unsigned long config)
-+{
-+	struct gpiochip_fwd *fwd = gpiochip_get_data(chip);
-+
-+	chip = fwd->descs[offset]->gdev->chip;
-+	if (chip->set_config)
-+		return chip->set_config(chip, offset, config);
-+
-+	return -ENOTSUPP;
-+}
-+
-+static int gpio_fwd_init_valid_mask(struct gpio_chip *chip,
-+				    unsigned long *valid_mask,
-+				    unsigned int ngpios)
-+{
-+	struct gpiochip_fwd *fwd = gpiochip_get_data(chip);
-+	unsigned int i;
-+
-+	for (i = 0; i < ngpios; i++) {
-+		if (!gpiochip_line_is_valid(fwd->descs[i]->gdev->chip,
-+					    gpio_chip_hwgpio(fwd->descs[i])))
-+			clear_bit(i, valid_mask);
-+	}
-+
-+	return 0;
-+}
-+
-+/**
-+ * gpiochip_fwd_create() - Create a new GPIO forwarder
-+ * @label: Name of the forwarder
-+ * @parent: Optional parent device pointer
-+ * @ngpios: Number of GPIOs in the forwarder.
-+ * @descs: Array containing the GPIO descriptors to forward to.
-+ *         This array must contain @ngpios entries, and must not be deallocated
-+ *         before the forwarder has been destroyed again.
-+ *
-+ * This function creates a new gpiochip, which forwards all GPIO operations to
-+ * the passed GPIO descriptors.
-+ *
-+ * Return: An opaque object pointer, or an ERR_PTR()-encoded negative error
-+ *         code on failure.
-+ */
-+struct gpiochip_fwd *gpiochip_fwd_create(const char *label,
-+					 struct device *parent,
-+					 unsigned int ngpios,
-+					 struct gpio_desc *descs[])
-+{
-+	struct gpiochip_fwd *fwd;
-+	struct gpio_chip *chip;
-+	unsigned int i;
-+	int error;
-+
-+	fwd = kzalloc(struct_size(fwd, tmp, BITS_TO_LONGS(ngpios) + ngpios),
-+		      GFP_KERNEL);
-+	if (!fwd)
++	if (!arg)
 +		return ERR_PTR(-ENOMEM);
 +
-+	chip = &fwd->chip;
++	while (isspace(*end))
++		end++;
 +
-+	for (i = 0; i < ngpios; i++) {
-+		pr_debug("%s: gpio %u => gpio-%d (%s)\n", label, i,
-+			 desc_to_gpio(descs[i]), descs[i]->label ? : "?");
++	*args = end;
++	return arg;
++}
 +
-+		error = gpiod_request(descs[i], label);
-+		if (error) {
-+			gpiod_err(descs[i], "%s: Cannot request GPIO: %d\n",
-+				  label, error);
-+			goto free;
-+		}
++static int add_gpio(struct device *dev, struct gpio_desc ***descs,
++		    unsigned int *n, struct gpio_desc *desc)
++{
++	struct gpio_desc **new_descs;
 +
-+		if (gpiod_cansleep(descs[i]))
-+			chip->can_sleep = true;
-+		if (descs[i]->gdev->chip->set_config)
-+			chip->set_config = gpio_fwd_set_config;
-+		if (descs[i]->gdev->chip->init_valid_mask)
-+			chip->init_valid_mask = gpio_fwd_init_valid_mask;
++	new_descs = devm_kmalloc_array(dev, *n + 1, sizeof(desc), GFP_KERNEL);
++	if (!new_descs)
++		return -ENOMEM;
++
++	if (*descs) {
++		memcpy(new_descs, *descs, *n * sizeof(desc));
++		devm_kfree(dev, *descs);
 +	}
 +
-+	chip->label = label;
-+	chip->parent = parent;
-+	chip->owner = THIS_MODULE;
-+	chip->get_direction = gpio_fwd_get_direction;
-+	chip->direction_input = gpio_fwd_direction_input;
-+	chip->direction_output = gpio_fwd_direction_output;
-+	chip->get = gpio_fwd_get;
-+	chip->get_multiple = gpio_fwd_get_multiple;
-+	chip->set = gpio_fwd_set;
-+	chip->set_multiple = gpio_fwd_set_multiple;
-+	chip->base = -1;
-+	chip->ngpio = ngpios;
-+	fwd->descs = descs;
-+
-+	if (chip->can_sleep)
-+		mutex_init(&fwd->mlock);
-+	else
-+		spin_lock_init(&fwd->slock);
-+
-+	error = gpiochip_add_data(chip, fwd);
-+	if (error)
-+		goto free;
-+
-+	return fwd;
-+
-+free:
-+	while (i-- > 0)
-+		gpiod_free(descs[i]);
-+
-+	kfree(fwd);
-+
-+	return ERR_PTR(error);
-+}
-+EXPORT_SYMBOL_GPL(gpiochip_fwd_create);
-+
-+/**
-+ * gpiochip_fwd_destroy() - Destroy a new GPIO forwarder
-+ * @fwd: Opaque object pointer, as returned by gpiochip_fwd_create()
-+ *
-+ * This function destroys GPIO forwarder gpiochip, previously created by
-+ * gpiochip_fwd_create().
-+
-+ * Return: Zero.
-+ */
-+int gpiochip_fwd_destroy(struct gpiochip_fwd *fwd)
-+{
-+	unsigned int i;
-+
-+	if (IS_ERR_OR_NULL(fwd))
-+		return 0;
-+
-+	gpiochip_remove(&fwd->chip);
-+
-+	for (i = 0; i < fwd->chip.ngpio; i++)
-+		gpiod_free(fwd->descs[i]);
-+
-+	kfree(fwd);
-+
++	new_descs[(*n)++] = desc;
++	*descs = new_descs;
 +	return 0;
 +}
-+EXPORT_SYMBOL_GPL(gpiochip_fwd_destroy);
++
++static int gpio_aggregator_probe(struct platform_device *pdev)
++{
++	struct device *dev = &pdev->dev;
++	char *name, *offsets, *first, *last, *next;
++	const char *args = dev_get_platdata(dev);
++	struct gpio_desc **descs = NULL, *desc;
++	unsigned int a, b, i, n = 0;
++	struct gpiochip_fwd *fwd;
++	struct gpio_chip *chip;
++	int error;
++
++	while (isspace(*args))
++		args++;
++
++	while (*args) {
++		name = get_arg(dev, &args);
++		if (IS_ERR(name)) {
++			dev_err(dev, "Cannot get GPIO specifier: %ld\n",
++				PTR_ERR(name));
++			return PTR_ERR(name);
++		}
++
++		desc = gpio_name_to_desc(name);
++		if (desc) {
++			/* Named GPIO line */
++			error = add_gpio(dev, &descs, &n, desc);
++			if (error)
++				return error;
++
++			devm_kfree(dev, name);
++			continue;
++		}
++
++		/* GPIO chip + offsets */
++		chip = gpiochip_find_by_label(name);
++		if (!chip)
++			chip = gpiochip_find_by_id(name);
++		if (!chip) {
++			dev_err(dev, "Cannot find gpiochip %s\n", name);
++			return -EINVAL;
++		}
++
++		offsets = get_arg(dev, &args);
++		if (IS_ERR(offsets)) {
++			dev_err(dev, "Cannot get GPIO offsets: %ld\n",
++				PTR_ERR(offsets));
++			return PTR_ERR(offsets);
++		}
++
++		for (first = offsets; *first; first = next) {
++			next = strchrnul(first, ',');
++			if (*next)
++				*next++ = '\0';
++
++			last = strchr(first, '-');
++			if (last)
++				*last++ = '\0';
++
++			if (kstrtouint(first, 10, &a)) {
++				dev_err(dev, "Cannot parse gpio index %s\n",
++					first);
++				return -EINVAL;
++			}
++
++			if (!last) {
++				b = a;
++			} else if (kstrtouint(last, 10, &b)) {
++				dev_err(dev, "Cannot parse gpio index %s\n",
++					last);
++				return -EINVAL;
++			}
++
++			for (i = a; i <= b; i++) {
++				desc = gpiochip_get_desc(chip, i);
++				if (IS_ERR(desc)) {
++					dev_err(dev,
++						"Cannot get GPIO %s/%u: %ld\n",
++						name, i, PTR_ERR(desc));
++					return PTR_ERR(desc);
++				}
++
++				error = add_gpio(dev, &descs, &n, desc);
++				if (error)
++					return error;
++			}
++		}
++
++		devm_kfree(dev, offsets);
++		devm_kfree(dev, name);
++	}
++
++	if (!descs) {
++		dev_err(dev, "No GPIOs specified\n");
++		return -EINVAL;
++	}
++
++	fwd = gpiochip_fwd_create(dev_name(dev), dev, n, descs);
++	if (IS_ERR(fwd))
++		return PTR_ERR(fwd);
++
++	platform_set_drvdata(pdev, fwd);
++	return 0;
++}
++
++static int gpio_aggregator_remove(struct platform_device *pdev)
++{
++	struct gpiochip_fwd *fwd = platform_get_drvdata(pdev);
++
++	return gpiochip_fwd_destroy(fwd);
++}
++
++static struct platform_driver gpio_aggregator_driver = {
++	.probe = gpio_aggregator_probe,
++	.remove = gpio_aggregator_remove,
++	.driver = {
++		.name = DRV_NAME,
++		.groups = gpio_aggregator_groups,
++	},
++};
++
++static int __init gpio_aggregator_init(void)
++{
++	return platform_driver_register(&gpio_aggregator_driver);
++}
++module_init(gpio_aggregator_init);
++
++static int __exit gpio_aggregator_idr_remove(int id, void *p, void *data)
++{
++	struct gpio_aggregator *aggr = p;
++
++	platform_device_unregister(aggr->pdev);
++	kfree(aggr);
++	return 0;
++}
++
++static void __exit gpio_aggregator_exit(void)
++{
++	mutex_lock(&gpio_aggregator_lock);
++	idr_for_each(&gpio_aggregator_idr, gpio_aggregator_idr_remove, NULL);
++	idr_destroy(&gpio_aggregator_idr);
++	mutex_unlock(&gpio_aggregator_lock);
++
++	platform_driver_unregister(&gpio_aggregator_driver);
++}
++module_exit(gpio_aggregator_exit);
 +
 +MODULE_AUTHOR("Geert Uytterhoeven <geert+renesas@glider.be>");
-+MODULE_DESCRIPTION("GPIO Forwarder Helper");
++MODULE_DESCRIPTION("GPIO Aggregator");
 +MODULE_LICENSE("GPL v2");
-diff --git a/drivers/gpio/gpiolib-fwd.h b/drivers/gpio/gpiolib-fwd.h
-new file mode 100644
-index 0000000000000000..68d299afc6883a9c
---- /dev/null
-+++ b/drivers/gpio/gpiolib-fwd.h
-@@ -0,0 +1,16 @@
-+/* SPDX-License-Identifier: GPL-2.0-only */
-+/*
-+ * GPIO Forwarder Helper
-+ *
-+ * Copyright (C) 2019 Glider bvba
-+ */
-+
-+struct device;
-+struct gpio_desc;
-+struct gpiochip_fwd;
-+
-+struct gpiochip_fwd *gpiochip_fwd_create(const char *label,
-+					 struct device *parent,
-+					 unsigned int ngpios,
-+					 struct gpio_desc *descs[]);
-+int gpiochip_fwd_destroy(struct gpiochip_fwd *fwd);
 -- 
 2.17.1
 
