@@ -2,71 +2,77 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 2213DAF94D
-	for <lists+linux-gpio@lfdr.de>; Wed, 11 Sep 2019 11:44:45 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7F190AF958
+	for <lists+linux-gpio@lfdr.de>; Wed, 11 Sep 2019 11:46:25 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726724AbfIKJom (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 11 Sep 2019 05:44:42 -0400
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:40489 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726781AbfIKJom (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 11 Sep 2019 05:44:42 -0400
-Received: by mail-lj1-f193.google.com with SMTP id 7so19319767ljw.7
-        for <linux-gpio@vger.kernel.org>; Wed, 11 Sep 2019 02:44:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=TfO4HK/WGXxXK4b73oCZUUTA55lR9Dm1uUKXZY75m1g=;
-        b=FVd794B/Kh/woVfXGPNZCcWRpdvtsO7FEOFvVWWsDu9CYn3LPtCumsPuml8fSoKw+e
-         KnKQ1OQBqXFQg6aAxPWZ9HUGhtvWVXE2oMkqx/P0c4YZ5Dr+VfmnJTgVQP/TupXCVAgd
-         PSXqaZfRWqeyTLoKB2ClqNXo0wsisp9NfhfloqBp6KpkJstC4JydH0EqgRt0bq0sqtGb
-         UtIxjI9Qxd/S9sWFfStjHiOq9R0mDh75ID1sH9qF6T9BmL7AkK+TJsEKb9iUw2WSAj2X
-         ky1GT9TVT4NlNp7nUobvtpK89c2PzAxwlBYSGimYJTckgwGmIvYBAvMsoseCkdXWoyUJ
-         GvgA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=TfO4HK/WGXxXK4b73oCZUUTA55lR9Dm1uUKXZY75m1g=;
-        b=odjBgd1F9jsDRpWK/Cezpiqt73rRdN/Xbs1grJyp0dB4bk1bhYN9P2QrmhQWXYqkh4
-         q38kc/1COptVB4dZZDYB403vFmVhxpqWydJTAmDRcWacuIFiPEABcoC0vYhmKoZY3wns
-         xVMeOlutpPWNdOg2pOUBAGwLCGg8a365LjW7Y1eczBSNsIQB154kI4iSxoGYUSgqEd+S
-         5nOL+vXmRJ4v/Bdqg6AoyCqcdxu7VkyxyYEbyEc+bSK6+oVKLteN/PoEBcmO4rdNqZo1
-         mA6r3eH3Qmp6ZKqbHOc7iaCcQBKSW8+E9j30utTcFgv2kKhvrP5BCdBeWsXkSxJdKtWL
-         igFw==
-X-Gm-Message-State: APjAAAVJfiYg+PixL2eK5oil8nF4fhaQ2rN5lV0nfCMicLmzTtwzmL3H
-        JLXm6uEecWWG6iIukuKWc016YBDp+Z2H8JsP8w/PuQ==
-X-Google-Smtp-Source: APXvYqyeJkEnPdU1nrHqRvNcYPbtI5tOlybw7foaIzX3I439oYmaNxLFkKhZDLyK6wH/rgo0lItiJsUi9kMI/EVGZhQ=
-X-Received: by 2002:a2e:8056:: with SMTP id p22mr17545242ljg.69.1568195078811;
- Wed, 11 Sep 2019 02:44:38 -0700 (PDT)
+        id S1726928AbfIKJqY (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 11 Sep 2019 05:46:24 -0400
+Received: from mga03.intel.com ([134.134.136.65]:17217 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726579AbfIKJqY (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Wed, 11 Sep 2019 05:46:24 -0400
+X-Amp-Result: UNSCANNABLE
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 11 Sep 2019 02:46:23 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,492,1559545200"; 
+   d="scan'208";a="196844304"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by orsmga002.jf.intel.com with ESMTP; 11 Sep 2019 02:46:20 -0700
+Received: from andy by smile with local (Exim 4.92.1)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1i7zCd-0005c0-E6; Wed, 11 Sep 2019 12:46:19 +0300
+Date:   Wed, 11 Sep 2019 12:46:19 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>
+Cc:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+        Andrew Lunn <andrew@lunn.ch>,
+        "David S. Miller" <davem@davemloft.net>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>, netdev@vger.kernel.org
+Subject: Re: [PATCH 04/11] net: phylink: switch to using
+ fwnode_gpiod_get_index()
+Message-ID: <20190911094619.GN2680@smile.fi.intel.com>
+References: <20190911075215.78047-1-dmitry.torokhov@gmail.com>
+ <20190911075215.78047-5-dmitry.torokhov@gmail.com>
+ <20190911092514.GM2680@smile.fi.intel.com>
+ <20190911093914.GT13294@shell.armlinux.org.uk>
 MIME-Version: 1.0
-References: <1568178685-30738-1-git-send-email-rayagonda.kokatanur@broadcom.com>
-In-Reply-To: <1568178685-30738-1-git-send-email-rayagonda.kokatanur@broadcom.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Wed, 11 Sep 2019 10:44:27 +0100
-Message-ID: <CACRpkdYSHnt3WMjpukHKq0kygxZbxHt8tipkQ-UHdXWYr0L5yg@mail.gmail.com>
-Subject: Re: [PATCH v1 1/1] pinctrl: iproc: Add 'get_direction' support
-To:     Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>
-Cc:     Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>,
-        bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190911093914.GT13294@shell.armlinux.org.uk>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Sep 11, 2019 at 6:16 AM Rayagonda Kokatanur
-<rayagonda.kokatanur@broadcom.com> wrote:
+On Wed, Sep 11, 2019 at 10:39:14AM +0100, Russell King - ARM Linux admin wrote:
+> On Wed, Sep 11, 2019 at 12:25:14PM +0300, Andy Shevchenko wrote:
+> > On Wed, Sep 11, 2019 at 12:52:08AM -0700, Dmitry Torokhov wrote:
+> > > Instead of fwnode_get_named_gpiod() that I plan to hide away, let's use
+> > > the new fwnode_gpiod_get_index() that mimics gpiod_get_index(), bit
+> > > works with arbitrary firmware node.
+> > 
+> > I'm wondering if it's possible to step forward and replace
+> > fwnode_get_gpiod_index by gpiod_get() / gpiod_get_index() here and
+> > in other cases in this series.
+> 
+> No, those require a struct device, but we have none.  There are network
+> drivers where there is a struct device for the network complex, but only
+> DT nodes for the individual network interfaces.  So no, gpiod_* really
+> doesn't work.
 
-> Add 'get_direction' support to the iProc GPIO driver.
->
-> Signed-off-by: Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>
+In the following patch the node is derived from struct device. So, I believe
+some cases can be handled differently.
 
-Patch applied, thanks for doing this!
+-- 
+With Best Regards,
+Andy Shevchenko
 
-Yours,
-Linus Walleij
+
