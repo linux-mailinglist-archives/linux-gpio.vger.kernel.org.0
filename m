@@ -2,81 +2,92 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 27F95AF369
-	for <lists+linux-gpio@lfdr.de>; Wed, 11 Sep 2019 01:39:53 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 804DDAF3A2
+	for <lists+linux-gpio@lfdr.de>; Wed, 11 Sep 2019 02:27:24 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725965AbfIJXjw (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 10 Sep 2019 19:39:52 -0400
-Received: from hqemgate14.nvidia.com ([216.228.121.143]:4934 "EHLO
-        hqemgate14.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725957AbfIJXjw (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 10 Sep 2019 19:39:52 -0400
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqemgate14.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5d7834480000>; Tue, 10 Sep 2019 16:39:53 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate102.nvidia.com (PGP Universal service);
-  Tue, 10 Sep 2019 16:39:51 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Tue, 10 Sep 2019 16:39:51 -0700
-Received: from ngvpn01-172-168.dyn.scz.us.nvidia.com (172.20.13.39) by
- HQMAIL107.nvidia.com (172.20.187.13) with Microsoft SMTP Server (TLS) id
- 15.0.1473.3; Tue, 10 Sep 2019 23:39:49 +0000
-Subject: Re: [PATCH] gpio: fix build failure: gpiochip_[un]lock*()
- static/non-static
-To:     Linus Walleij <linus.walleij@linaro.org>
-CC:     YueHaibing <yuehaibing@huawei.com>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-References: <20190907010534.23713-1-jhubbard@nvidia.com>
- <CACRpkdbmw-EOm5Os=BjoX1G+ZDxRGnJ3Zd3BWtDksnQ46aJ_JA@mail.gmail.com>
-X-Nvconfidentiality: public
-From:   John Hubbard <jhubbard@nvidia.com>
-Message-ID: <c917f7f2-2f3b-f01e-8ea2-858eaf5f3e2d@nvidia.com>
-Date:   Wed, 11 Sep 2019 00:39:48 +0100
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:60.0)
- Gecko/20100101 Thunderbird/60.9.0
+        id S1726239AbfIKA1X (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 10 Sep 2019 20:27:23 -0400
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:44181 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726126AbfIKA1X (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 10 Sep 2019 20:27:23 -0400
+Received: by mail-lf1-f67.google.com with SMTP id q11so13704lfc.11
+        for <linux-gpio@vger.kernel.org>; Tue, 10 Sep 2019 17:27:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=WajEOxLInLugBAoDBpA/UZhycoI/rEzq/XTRSPCwG6E=;
+        b=EzMngyN8/VFtydsD0WIWfF50NQaPkM2eq8VQZ1+mbgQSlXsfBVGI+7MkTEJzrMepjE
+         N5dzp3wn51b/B2O+rrJbqNGUKq5JuOmTT6211sd23WXSiR3zd2dGAm9f8pa0q1IGg2IK
+         7UUdZYscZWrzG/He/DIZfQEpeLTSwcEo3eedfyMyU6cEaPIfRhxowWNF6pc2dPeVa5X5
+         v3AHcOmN5viENhp+J71IZD/ZGQXMj0xOiHP+s7iSQW7MdcXBb3q+PaJlOw5FzNIHbjK7
+         mYXUmu9PfI0jRJ5VcJqvushgAmgG0XP8z+66xHsDuZzkpejBCpjVGlQGBPgYhkvRR1n8
+         BBEg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=WajEOxLInLugBAoDBpA/UZhycoI/rEzq/XTRSPCwG6E=;
+        b=S2UR1TPOgsglLHl0Xzk9Q56KiOiIdkJcbk5CI7pjIpPOWRntmDBtYjsuVtJQQBDvfZ
+         X9/5UXUCS6KJp99+l6zWIYumU86G5g6xZp/9tNQa5RMsn5qelTzyJUIECJl2vOeKMnbk
+         nLc1aikPIcMtL4fvqYy9yMsELwbw1hPrWuH229RbDO27WTaJm1x+vql8RTjd+fIfbNXA
+         Addf6bI/udSPHccNMwNBjvPmXQuITPfeQsrYJubWkGMxXSmmsKMIVj32qBu2FH8qanoi
+         5p5ZJGDMBW7E3qWomajQ46nFkPIH+ZBkfE+OUTHzloze9qz1yoecczNn3VLz9oFCTZTk
+         ei3w==
+X-Gm-Message-State: APjAAAXrd2PWdt4kRFw3mwpu+XEdB2/W3PMxuOPF5qA+ErpXsaH4gDy9
+        vJDcFboiYgF03z4rm/E6FsN3/z80Cj8JJvaavdCFLw==
+X-Google-Smtp-Source: APXvYqzTq8nRKqDrSo4UwdKaMsjIls0OQxxqbEF2KXMZYG4h+hjc3wihhhumQbhxZ9JIU9zTtyDhgWLKDvdddWxQFZc=
+X-Received: by 2002:a19:14f:: with SMTP id 76mr21572482lfb.92.1568161641802;
+ Tue, 10 Sep 2019 17:27:21 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <CACRpkdbmw-EOm5Os=BjoX1G+ZDxRGnJ3Zd3BWtDksnQ46aJ_JA@mail.gmail.com>
-X-Originating-IP: [172.20.13.39]
-X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1568158793; bh=Qy6VepiFpAZlMrNzDzcHtBi9QfYWbrDNF8q7ZPJDXvk=;
-        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
-         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
-         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=U+YTbJMsGjo52Kl1kpYBHxmh75vkb8qhsWJ16f8tDrh832uxffBKPi5Ntka/pAjmZ
-         Kpd6l13CODtxkA9wRTe3PTbSYTNQ2uK+T/pIuMk5GTthp7EkDPiTLSTXoCH89kKHSd
-         rb2xT0l7h81/+Rw03UKc4PfvzuFcqs5qveahnT68VRsrgUxc36pkyvcFN3k6/hNN4s
-         7muMJmhYSDv5Tx9g/g8o/s9/flBlMuxqjGmCjwKXr4UkpI15JiYng1eUCE74G9B7ro
-         MGer5IQH993ovdUiRKtqVc8Y6+9MFa782qoTsdp0Z98c3sDap4OOjfdco9ei+o1CWf
-         0+tXPJ7JteGDQ==
+References: <20190905141304.22005-1-alexandre.belloni@bootlin.com>
+In-Reply-To: <20190905141304.22005-1-alexandre.belloni@bootlin.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Wed, 11 Sep 2019 01:27:10 +0100
+Message-ID: <CACRpkdbVC6DLHWftpL1wfkx_kWyfE=LpCQWZw=cv=RMVxDBm_g@mail.gmail.com>
+Subject: Re: [PATCH] pinctrl: at91-pio4: implement .get_multiple and .set_multiple
+To:     Alexandre Belloni <alexandre.belloni@bootlin.com>
+Cc:     Ludovic Desroches <ludovic.desroches@microchip.com>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 9/8/19 12:16 AM, Linus Walleij wrote:
-> On Sat, Sep 7, 2019 at 2:05 AM John Hubbard <jhubbard@nvidia.com> wrote:
-> 
->> While building with !CONFIG_GPIOLIB, I experienced a build failure,
->> because driver.h in that configuration supplies both a static and
->> a non-static version of these routines:
-> 
-> I think this is fixed in my latest version of the "devel" branch?
-> 
+On Thu, Sep 5, 2019 at 3:13 PM Alexandre Belloni
+<alexandre.belloni@bootlin.com> wrote:
+>
+> Implement .get_multiple and .set_multiple to allow reading or setting
+> multiple pins simultaneously. Pins in the same bank will all be switched at
+> the same time, improving synchronization and performances.
+>
+> Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
 
-OK, sounds good to me. Sorry for not spotting that a fix is in
-the pipeline. :)
+Good initiative!
 
+> +       for (bank = 0; bank < atmel_pioctrl->nbanks; bank++) {> +               unsigned int word = bank;
+> +               unsigned int offset = 0;
+> +               unsigned int reg;
+> +
+> +#if ATMEL_PIO_NPINS_PER_BANK != BITS_PER_LONG
 
-thanks,
--- 
-John Hubbard
-NVIDIA
+Should it not be > rather than != ?
+
+> +               word = BIT_WORD(bank * ATMEL_PIO_NPINS_PER_BANK);
+> +               offset = bank * ATMEL_PIO_NPINS_PER_BANK % BITS_PER_LONG;
+> +#endif
+
+This doesn't look good for multiplatform kernels.
+
+We need to get rid of any compiletime constants like this.
+
+Not your fault I suppose it is already there, but this really need
+to be fixed. Any ideas?
+
+Yours,
+Linus Walleij
