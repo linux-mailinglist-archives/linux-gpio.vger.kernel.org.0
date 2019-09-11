@@ -2,123 +2,83 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id BE974AF9C9
-	for <lists+linux-gpio@lfdr.de>; Wed, 11 Sep 2019 12:02:58 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0FFE8AF9D7
+	for <lists+linux-gpio@lfdr.de>; Wed, 11 Sep 2019 12:04:28 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727270AbfIKKCu (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 11 Sep 2019 06:02:50 -0400
-Received: from inva021.nxp.com ([92.121.34.21]:58292 "EHLO inva021.nxp.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726579AbfIKKCu (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Wed, 11 Sep 2019 06:02:50 -0400
-Received: from inva021.nxp.com (localhost [127.0.0.1])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id B820F2005B1;
-        Wed, 11 Sep 2019 12:02:47 +0200 (CEST)
-Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id A98AF200022;
-        Wed, 11 Sep 2019 12:02:42 +0200 (CEST)
-Received: from titan.ap.freescale.net (TITAN.ap.freescale.net [10.192.208.233])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 2F9EF402AE;
-        Wed, 11 Sep 2019 18:02:36 +0800 (SGT)
-From:   Hui Song <hui.song_1@nxp.com>
-To:     Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
+        id S1727575AbfIKKEO (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 11 Sep 2019 06:04:14 -0400
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:46454 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727513AbfIKKEN (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 11 Sep 2019 06:04:13 -0400
+Received: by mail-lf1-f65.google.com with SMTP id t8so15922602lfc.13
+        for <linux-gpio@vger.kernel.org>; Wed, 11 Sep 2019 03:04:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=hUrALqLYIp3tenV9WPlX+wrIGiFW2sjaAtprRGLAeEM=;
+        b=p2jaID0PK0kDp5GpJDQQkIXhcRDJG0tyKs3M8dW00A0nTmYl4XPzPDxiiXVVHMrvt+
+         3r7lWYb3E1VbxJKjCFl4T/s7r/GjKdCpMsYFGhPYq40CrLVtcwphRVLlOz4Mi1abAmc6
+         gb7WEzvYMYxI1T0Yv1JJQMukj1kqEswd1th8aKqcRAHTLbfy8nsrMproykhpVp2apyq1
+         YZAJxHMjH/FKf0pJw40wEhiG4GATCpQy1rgKrv+b1JNb++7VFgOOXTCNwIkKecduNXL3
+         gwOiiQuJzd/9zYidBIhoUcbKtFgICCtV1yeLL8Sdtn6e6RFujjx3Wf2pnscLkru96m90
+         vHEg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=hUrALqLYIp3tenV9WPlX+wrIGiFW2sjaAtprRGLAeEM=;
+        b=NZ9qfC/uJRXZQ/OVa1L/KkBv9GZAhX2ahgkyOUk5Fxd7vhntCZc9pr1gtBg2Z/X7+F
+         HZw2UXL2k0vNEg6+1WN888jF8zU4pDHvNDFhmiKTPbQ+Pr3LuS1xOE9Waw2DoFi+StPK
+         R/PeRqJKQTSXQ94BSvy9n8TKOfcuQo4/3ZIFuxeknU+OpGVk/r3D0YVOrh+sZRB37/ZT
+         gZ5aKoRUqBmfeOQ1zvTgm7rUQH4lambVHCIxF6pK+5MJN5i6Scw0PgrZL2DmCGfpqgVS
+         2yjB1Jm/9Hwh/H/48GvDJCOaj0ntBWJcg5Dg0LCOcRDc0Xdn+mnDlDY9Gh6cdvgKNjt7
+         OZoQ==
+X-Gm-Message-State: APjAAAVmMzlx1CY5En4mwsDx/OzYuYuNZSI+CiYitJ5EPd0NNejRlPck
+        1IW5uBZqf9uR+4qFckv9dSHbbOmvDHq3LKvM+QR5Mg==
+X-Google-Smtp-Source: APXvYqzngoeZ/r34ebfHnHn3MkbXp29HvsnciD2vYxTBkFVS7UiQq+i0mLCv1JJKPJCI91Pa7RHozJe5TicykUeAq+0=
+X-Received: by 2002:a19:14f:: with SMTP id 76mr22938921lfb.92.1568196250647;
+ Wed, 11 Sep 2019 03:04:10 -0700 (PDT)
+MIME-Version: 1.0
+References: <20190906062547.13264-1-rashmica.g@gmail.com>
+In-Reply-To: <20190906062547.13264-1-rashmica.g@gmail.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Wed, 11 Sep 2019 11:03:59 +0100
+Message-ID: <CACRpkdY1Rk6vPihZkpKC9hya9ixQcqg9PG9rEpM3kSY0kxwsjg@mail.gmail.com>
+Subject: Re: [PATCH v3 1/5] dt-bindings: gpio: aspeed: Update documentation
+ with ast2600 controllers
+To:     Rashmica Gupta <rashmica.g@gmail.com>
+Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
         Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Cc:     linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-        Song Hui <hui.song_1@nxp.com>
-Subject: [PATCH] gpio/mpc8xxx: change irq handler from chained to normal
-Date:   Wed, 11 Sep 2019 17:52:27 +0800
-Message-Id: <20190911095227.16003-1-hui.song_1@nxp.com>
-X-Mailer: git-send-email 2.9.5
-X-Virus-Scanned: ClamAV using ClamSMTP
+        Joel Stanley <joel@jms.id.au>,
+        Andrew Jeffery <andrew@aj.id.au>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        "moderated list:ARM/ASPEED MACHINE SUPPORT" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "moderated list:ARM/ASPEED MACHINE SUPPORT" 
+        <linux-aspeed@lists.ozlabs.org>,
+        open list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-From: Song Hui <hui.song_1@nxp.com>
+On Fri, Sep 6, 2019 at 7:25 AM Rashmica Gupta <rashmica.g@gmail.com> wrote:
 
-More than one gpio controllers can share one interrupt, change the
-driver to request shared irq.
+> The ast2600 is a new generation of SoC from ASPEED. Similarly to the
+> ast2400 and ast2500, it has a GPIO controller for it's 3.3V GPIO pins.
+> Additionally, it has a GPIO controller for 36 1.8V GPIO pins.  We use
+> the ngpio property to differentiate between these controllers.
+>
+> Signed-off-by: Rashmica Gupta <rashmica.g@gmail.com>
 
-Signed-off-by: Laurentiu Tudor <Laurentiu.Tudor@nxp.com>
-Signed-off-by: Alex Marginean <alexandru.marginean@nxp.com>
-Signed-off-by: Song Hui <hui.song_1@nxp.com>
----
-Changes in v4:
-	- convert 'pr_err' to 'dev_err'.
-Changes in v3:
-	- update the patch description.
-Changes in v2:
-	- delete the compatible of ls1088a.
- drivers/gpio/gpio-mpc8xxx.c | 22 ++++++++++++++--------
- 1 file changed, 14 insertions(+), 8 deletions(-)
+The changes are uncontroversial (uses just standard GPIO
+ngpios and adds a compatible) so patch applied.
 
-diff --git a/drivers/gpio/gpio-mpc8xxx.c b/drivers/gpio/gpio-mpc8xxx.c
-index 16a47de..e16591b 100644
---- a/drivers/gpio/gpio-mpc8xxx.c
-+++ b/drivers/gpio/gpio-mpc8xxx.c
-@@ -22,6 +22,7 @@
- #include <linux/irq.h>
- #include <linux/gpio/driver.h>
- #include <linux/bitops.h>
-+#include <linux/interrupt.h>
- 
- #define MPC8XXX_GPIO_PINS	32
- 
-@@ -127,10 +128,9 @@ static int mpc8xxx_gpio_to_irq(struct gpio_chip *gc, unsigned offset)
- 		return -ENXIO;
- }
- 
--static void mpc8xxx_gpio_irq_cascade(struct irq_desc *desc)
-+static irqreturn_t mpc8xxx_gpio_irq_cascade(int irq, void *data)
- {
--	struct mpc8xxx_gpio_chip *mpc8xxx_gc = irq_desc_get_handler_data(desc);
--	struct irq_chip *chip = irq_desc_get_chip(desc);
-+	struct mpc8xxx_gpio_chip *mpc8xxx_gc = (struct mpc8xxx_gpio_chip *)data;
- 	struct gpio_chip *gc = &mpc8xxx_gc->gc;
- 	unsigned int mask;
- 
-@@ -139,8 +139,8 @@ static void mpc8xxx_gpio_irq_cascade(struct irq_desc *desc)
- 	if (mask)
- 		generic_handle_irq(irq_linear_revmap(mpc8xxx_gc->irq,
- 						     32 - ffs(mask)));
--	if (chip->irq_eoi)
--		chip->irq_eoi(&desc->irq_data);
-+
-+	return IRQ_HANDLED;
- }
- 
- static void mpc8xxx_irq_unmask(struct irq_data *d)
-@@ -388,7 +388,7 @@ static int mpc8xxx_probe(struct platform_device *pdev)
- 
- 	ret = gpiochip_add_data(gc, mpc8xxx_gc);
- 	if (ret) {
--		pr_err("%pOF: GPIO chip registration failed with status %d\n",
-+		dev_err("%pOF: GPIO chip registration failed with status %d\n",
- 		       np, ret);
- 		goto err;
- 	}
-@@ -409,8 +409,14 @@ static int mpc8xxx_probe(struct platform_device *pdev)
- 	if (devtype->gpio_dir_in_init)
- 		devtype->gpio_dir_in_init(gc);
- 
--	irq_set_chained_handler_and_data(mpc8xxx_gc->irqn,
--					 mpc8xxx_gpio_irq_cascade, mpc8xxx_gc);
-+	ret = request_irq(mpc8xxx_gc->irqn, mpc8xxx_gpio_irq_cascade,
-+		IRQF_NO_THREAD | IRQF_SHARED, "gpio-cascade", mpc8xxx_gc);
-+	if (ret) {
-+		dev_err("%s: failed to request_irq(%d), ret = %d\n",
-+				np->full_name, mpc8xxx_gc->irqn, ret);
-+		goto err;
-+	}
-+
- 	return 0;
- err:
- 	iounmap(mpc8xxx_gc->regs);
--- 
-2.9.5
-
+Yours,
+Linus Walleij
