@@ -2,72 +2,163 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id DB2EBAFE12
-	for <lists+linux-gpio@lfdr.de>; Wed, 11 Sep 2019 15:51:19 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5164FAFEDE
+	for <lists+linux-gpio@lfdr.de>; Wed, 11 Sep 2019 16:39:15 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728195AbfIKNvH (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 11 Sep 2019 09:51:07 -0400
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:40098 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726781AbfIKNvH (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 11 Sep 2019 09:51:07 -0400
-Received: by mail-lj1-f196.google.com with SMTP id 7so20052599ljw.7
-        for <linux-gpio@vger.kernel.org>; Wed, 11 Sep 2019 06:51:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=NoMqRKmSHDNSonXcVU6fMQXm+z8bwoc4kZBnKFdCowk=;
-        b=U3w+OKyBdOmsh6TvHMeNg2QShNoGWJKQGgwwHt3oI+sJpfMGXbMmZAW4xPIAm37vUf
-         eHS2BZ9FeUkb+xCURTh9+1atnbXo8i0O4a0ONkSg9pFunDi8U2UOmSKJo1csyqw42lFA
-         Mtkq+qxIiq+2bjH3m880tHaH0bAkOzrbgg0bCQxQuUQHe6UfpQX4gtCSowLb48kYe9H8
-         UDScj59r1OpzGwKEUTtY0PSMfA669A1lqJPtmTOGCnfVHZP26XqHbb0caZ6Vh8TRf0Xv
-         FKUWnGmrKvVL/6XJ5Hq/UgLcW9DyKpOfdnw39veCqa1inGv0zjOMM6xtfSIokn3qL7oh
-         WaEQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=NoMqRKmSHDNSonXcVU6fMQXm+z8bwoc4kZBnKFdCowk=;
-        b=S6+lKdf2u73iWXJasgrFh/SZmumpzKQxm89ScC4tIrKLX/0CIMaLoB4vBQ3FtVkvsk
-         pNOPnGR5VpZUGR+RyzQyEiUIH6XLAIc5bdf8CKQPqs0l3ndapsiOIFeOK1Co29mEtif0
-         LxJNkZkyMr0vq58p7bX+QNKmzhI+UEwLGxqL+a49o7eEeG+69CtU6CtIwS7GpxDZUwN7
-         a9rRDQ4A7Yk5klC/8BbpWcnKXubPN/KqaTOqc9vIKC4dI/HdUg3eDbxVW4TcSXd0k50+
-         PICNR326LCDEOuMyooAy29HJlSktUvkKtnNxeRF9omEyWer2tNQOu6rsgrcH+U9XBTbr
-         wpdg==
-X-Gm-Message-State: APjAAAUHJMK3LeZUfyrti490xpin8POZx4XHOQ13nvcaWNzKjqdCydiB
-        ao125PbGJhWAluHNVodr5k1TOdPZb4HHK7keszRh6Q==
-X-Google-Smtp-Source: APXvYqwfZnw3PjgDOxtmmaDanHc/yotTXP96wDhdzPOnMRhDpWyM2WFlorifP/kb36RfTEmUgCFHL3JnFqi8Mce9Hw8=
-X-Received: by 2002:a2e:884d:: with SMTP id z13mr22437077ljj.62.1568209863184;
- Wed, 11 Sep 2019 06:51:03 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190906131032.22148-1-yuehaibing@huawei.com>
-In-Reply-To: <20190906131032.22148-1-yuehaibing@huawei.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Wed, 11 Sep 2019 14:50:51 +0100
-Message-ID: <CACRpkdZgH9Q9OMUV4C6zADPj_NN+QrxQOLUDcOqJ_oYCxWP7vg@mail.gmail.com>
-Subject: Re: [PATCH -next] gpio: creg-snps: use devm_platform_ioremap_resource()
- to simplify code
-To:     YueHaibing <yuehaibing@huawei.com>
-Cc:     Eugeniy.Paltsev@synopsys.com,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        kernel-janitors@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+        id S1728265AbfIKOjN (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 11 Sep 2019 10:39:13 -0400
+Received: from xavier.telenet-ops.be ([195.130.132.52]:33400 "EHLO
+        xavier.telenet-ops.be" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728167AbfIKOjN (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 11 Sep 2019 10:39:13 -0400
+Received: from ramsan ([84.194.98.4])
+        by xavier.telenet-ops.be with bizsmtp
+        id 0Ef42100105gfCL01Ef4Mu; Wed, 11 Sep 2019 16:39:10 +0200
+Received: from rox.of.borg ([192.168.97.57])
+        by ramsan with esmtp (Exim 4.90_1)
+        (envelope-from <geert@linux-m68k.org>)
+        id 1i83lv-0006T2-Tj; Wed, 11 Sep 2019 16:39:03 +0200
+Received: from geert by rox.of.borg with local (Exim 4.90_1)
+        (envelope-from <geert@linux-m68k.org>)
+        id 1i83lv-0003Ou-Qz; Wed, 11 Sep 2019 16:39:03 +0200
+From:   Geert Uytterhoeven <geert+renesas@glider.be>
+To:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Cc:     Alexander Graf <graf@amazon.com>,
+        Peter Maydell <peter.maydell@linaro.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Phil Reid <preid@electromag.com.au>,
+        Harish Jenny K N <harish_kandiga@mentor.com>,
+        Marc Zyngier <marc.zyngier@arm.com>,
+        Christoffer Dall <christoffer.dall@arm.com>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        linux-gpio@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, qemu-devel@nongnu.org,
+        Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: [PATCH/RFC v2 0/5] gpio: Add GPIO Aggregator Driver
+Date:   Wed, 11 Sep 2019 16:38:53 +0200
+Message-Id: <20190911143858.13024-1-geert+renesas@glider.be>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Sep 6, 2019 at 2:48 PM YueHaibing <yuehaibing@huawei.com> wrote:
+	Hi all,
 
-> Use devm_platform_ioremap_resource() to simplify the code a bit.
-> This is detected by coccinelle.
->
-> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+GPIO controllers are exported to userspace using /dev/gpiochip*
+character devices.  Access control to these devices is provided by
+standard UNIX file system permissions, on an all-or-nothing basis:
+either a GPIO controller is accessible for a user, or it is not.
+Currently no mechanism exists to control access to individual GPIOs.
 
-Patch applied with Eugeniy's ACK!
+Hence this second RFC adds a GPIO driver to aggregate existing GPIOs,
+and expose them as a new gpiochip.  This is useful for implementing
+access control, and assigning a set of GPIOs to a specific user.
+Furthermore, this simplifies and hardens exporting GPIOs to a virtual
+machine, as the VM can just grab the full GPIO controller, and no longer
+needs to care about which GPIOs to grab and which not, reducing the
+attack surface.
 
-Yours,
-Linus Walleij
+Changes compared to v1[1]:
+  - Drop "virtual", rename to gpio-aggregator,
+  - Create and use new GPIO Forwarder Helper, to allow sharing code with
+    the GPIO inverter,
+  - Lift limit on the maximum number of GPIOs,
+  - Improve parsing of GPIO specifiers,
+  - Fix modular build.
+
+To do:
+  - Write proper documentation.
+
+Aggregating GPIOs and exposing them as a new gpiochip was suggested in
+response to my proof-of-concept for GPIO virtualization with QEMU[2][3].
+
+Aggregated GPIO controllers are instantiated and destroyed by writing to
+atribute files in sysfs.  Sample session on r8a7791/koelsch:
+
+  - Unbind LEDs from leds-gpio driver:
+
+	echo leds > /sys/bus/platform/drivers/leds-gpio/unbind
+
+  - Create aggregators:
+
+    $ echo e6052000.gpio 19,20 \
+	> /sys/bus/platform/drivers/gpio-aggregator/new_device
+
+    gpio-aggregator.0: gpio 0 => gpio-953 (?)
+    gpio-aggregator.0: gpio 1 => gpio-954 (?)
+    gpiochip_find_base: found new base at 778
+    gpio gpiochip8: (gpio-aggregator.0): added GPIO chardev (254:8)
+    gpiochip_setup_dev: registered GPIOs 778 to 779 on device: gpiochip8 (gpio-aggregator.0)
+
+    $ echo e6052000.gpio 21 e6050000.gpio 20-22 \
+	> /sys/bus/platform/drivers/gpio-aggregator/new_device
+
+    gpio-aggregator.1: gpio 0 => gpio-955 (?)
+    gpio-aggregator.1: gpio 1 => gpio-1012 (?)
+    gpio-aggregator.1: gpio 2 => gpio-1013 (?)
+    gpio-aggregator.1: gpio 3 => gpio-1014 (?)
+    gpiochip_find_base: found new base at 774
+    gpio gpiochip9: (gpio-aggregator.1): added GPIO chardev (254:9)
+    gpiochip_setup_dev: registered GPIOs 774 to 777 on device: gpiochip9 (gpio-aggregator.1)
+
+  - Adjust permissions on /dev/gpiochip[89] (optional)
+
+  - Control LEDs:
+
+    $ gpioset gpiochip8 0=0 1=1	# LED6 OFF, LED7 ON
+    $ gpioset gpiochip8 0=1 1=0	# LED6 ON, LED7 OFF
+    $ gpioset gpiochip9 0=0	# LED8 OFF
+    $ gpioset gpiochip9 0=1	# LED8 ON
+
+  - Destroy aggregators:
+
+    $ echo gpio-aggregator.0 \
+            > /sys/bus/platform/drivers/gpio-aggregator/delete_device
+    $ echo gpio-aggregator.1 \
+            > /sys/bus/platform/drivers/gpio-aggregator/delete_device
+
+Thanks for your comments!
+
+References:
+  - [1] "[PATCH RFC] gpio: Add Virtual Aggregator GPIO Driver"
+        (https://lore.kernel.org/lkml/20190705160536.12047-1-geert+renesas@glider.be/)
+  - [2] "[PATCH QEMU POC] Add a GPIO backend"
+	(https://lore.kernel.org/linux-renesas-soc/20181003152521.23144-1-geert+renesas@glider.be/)
+  - [3] "Getting To Blinky: Virt Edition / Making device pass-through
+	 work on embedded ARM"
+	(https://fosdem.org/2019/schedule/event/vai_getting_to_blinky/)
+
+Geert Uytterhoeven (5):
+  gpio: Export gpiod_{request,free}() to modular GPIO code
+  gpio: Export gpiochip_get_desc() to modular GPIO code
+  gpio: Export gpio_name_to_desc() to modular GPIO code
+  gpio: Add GPIO Forwarder Helper
+  gpio: Add GPIO Aggregator Driver
+
+ drivers/gpio/Kconfig           |  12 ++
+ drivers/gpio/Makefile          |   2 +
+ drivers/gpio/gpio-aggregator.c | 333 +++++++++++++++++++++++++++++++++
+ drivers/gpio/gpiolib-fwd.c     | 272 +++++++++++++++++++++++++++
+ drivers/gpio/gpiolib-fwd.h     |  16 ++
+ drivers/gpio/gpiolib.c         |   6 +-
+ drivers/gpio/gpiolib.h         |   1 +
+ 7 files changed, 641 insertions(+), 1 deletion(-)
+ create mode 100644 drivers/gpio/gpio-aggregator.c
+ create mode 100644 drivers/gpio/gpiolib-fwd.c
+ create mode 100644 drivers/gpio/gpiolib-fwd.h
+
+-- 
+2.17.1
+
+Gr{oetje,eeting}s,
+
+						Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+							    -- Linus Torvalds
