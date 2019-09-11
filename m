@@ -2,121 +2,80 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 71EFCAF9FE
-	for <lists+linux-gpio@lfdr.de>; Wed, 11 Sep 2019 12:10:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 153F6AFA0E
+	for <lists+linux-gpio@lfdr.de>; Wed, 11 Sep 2019 12:12:30 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727408AbfIKKKZ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 11 Sep 2019 06:10:25 -0400
-Received: from pandora.armlinux.org.uk ([78.32.30.218]:56982 "EHLO
-        pandora.armlinux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726341AbfIKKKZ (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 11 Sep 2019 06:10:25 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=hn2x8HbV7ojQpyUDVHHPLV53AHNfyJ+GzzuAB0pB4kw=; b=TMKfNNgZA4dRN9kS51bLL7CcG
-        NrJYUfh++qO+I3D9nO9IXN1brtM1SxmJqNkcEeGaeMeP6cQst1L+/Km10QPq+cM5dlkSwFAiCvrOr
-        JQoBJ2ELWWX1NAB3DZQ3bE97hBy71SqHsFOGzNBuMNNDz247c+ES2IDbhPJzKrSPYXqABBBj8izNQ
-        QDTtJDvGXOxCwVUzcLtZ0pEo8pAFgNZI5Wqb+CApQ7fhP5x++rqI16zyg1PMTHottvEK2Z7luxbca
-        M9v49J9f7wtievzsDKI2Gwqv1QxcgyG3V4DxrmCnTVOps/xuTQatUoKM+89PqQ07kcbs4ttNtAZRB
-        RagWu2CIg==;
-Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:42318)
-        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.90_1)
-        (envelope-from <linux@armlinux.org.uk>)
-        id 1i7zZr-0005hn-Lb; Wed, 11 Sep 2019 11:10:19 +0100
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
-        (envelope-from <linux@shell.armlinux.org.uk>)
-        id 1i7zZo-0003rs-W7; Wed, 11 Sep 2019 11:10:17 +0100
-Date:   Wed, 11 Sep 2019 11:10:16 +0100
-From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
-To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-        Andrew Lunn <andrew@lunn.ch>,
-        "David S. Miller" <davem@davemloft.net>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>, netdev@vger.kernel.org
-Subject: Re: [PATCH 04/11] net: phylink: switch to using
- fwnode_gpiod_get_index()
-Message-ID: <20190911101016.GW13294@shell.armlinux.org.uk>
-References: <20190911075215.78047-1-dmitry.torokhov@gmail.com>
- <20190911075215.78047-5-dmitry.torokhov@gmail.com>
- <20190911092514.GM2680@smile.fi.intel.com>
- <20190911093914.GT13294@shell.armlinux.org.uk>
- <20190911094619.GN2680@smile.fi.intel.com>
- <20190911094929.GV13294@shell.armlinux.org.uk>
- <20190911095511.GB108334@dtor-ws>
+        id S1727406AbfIKKM3 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 11 Sep 2019 06:12:29 -0400
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:35523 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726793AbfIKKM3 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 11 Sep 2019 06:12:29 -0400
+Received: by mail-lj1-f194.google.com with SMTP id q22so14841870ljj.2
+        for <linux-gpio@vger.kernel.org>; Wed, 11 Sep 2019 03:12:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=3M63LrG7x4EL82UFdpWrP/9mQ7ENkTmec+0FbO71I3U=;
+        b=anZV1hGsHQ0z1I7A96aJmqJ9C+jSf5S0WZzmj5riq0TO4C4XTdh61XfESCOdVK7/HG
+         ZcTZZMCmwGzHPy5ca0/pD2rQcHMIabGHMDDjeILV3sHF1ZLht/o0tdV8knjUIh4joiLw
+         m3FrJZldDwYb1O8mcZRFFIXGvaGsfVCE6YENAm0fSjYHk7QyrQPTqsBvX56MG6kpaGKk
+         OkHG31ufBamCooV1exe8XXHIX+PLLKnYXIALwiNdE7gjhUggrNU5LAhZqnARlj8naLfQ
+         rHUphgQfJU2v6QXgckORHG3H4aH8VQiYhBGjvyOjG4T/L38EwZktvb0+eeqZTAm3D/1z
+         tXyw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=3M63LrG7x4EL82UFdpWrP/9mQ7ENkTmec+0FbO71I3U=;
+        b=d7eQTL+CmF7FIhGWor73NHUQiCMv1NgifbFhSHIUodjZvwWBZR8bOhHB6Vd0WKWXYe
+         IlDsSAVutMjxejNz6PNmV8lstg/hGNIUFat9mh7++n7jhmMJYxcgl9XF4L45iMO4rx5A
+         5UEvmFQ70L+oNbAHr2BXBqpw3WxPKKnKQaPevBg0GJ/iSbT1VmGR8qv9QmEjq2Lgd+sl
+         n7QZCjjhq7X3wNgT1eW8K6uimS7W8HVutONVgGxZySCPcs3GgxM8qNMKx3BlkklkysSm
+         IC1SHE2Y15VmhPM9fyxnEW9M6N7Yz/gVsLA8zLR3kNrXFL1wSU8h7mJ6eTR0eTxx+EhM
+         s71A==
+X-Gm-Message-State: APjAAAVupUwwC391snCf/CrlHBwb5SsSRqWhyaUHkK6SLGnjR/+Tf8Or
+        WKjD/YAz3oRodUiU30msjT28tqK0fG6qAUoEVy7Pvg==
+X-Google-Smtp-Source: APXvYqwTtRm0wqQ33imjK5cfMhNwbKoP0HS+Yel+sv1lad66NjfwlsknxBwRjBLiSYx4GLneZb/79nnkLvotk3xijGU=
+X-Received: by 2002:a05:651c:1108:: with SMTP id d8mr14938226ljo.180.1568196747444;
+ Wed, 11 Sep 2019 03:12:27 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190911095511.GB108334@dtor-ws>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20190906062727.13521-1-rashmica.g@gmail.com>
+In-Reply-To: <20190906062727.13521-1-rashmica.g@gmail.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Wed, 11 Sep 2019 11:12:15 +0100
+Message-ID: <CACRpkdYbyHtC_gQqvc5cwYGqUPt1cYTW0cQVxPDah4XrdYB8Kw@mail.gmail.com>
+Subject: Re: [PATCH v3 4/5] gpios: Use ngpio property from device tree if available
+To:     Rashmica Gupta <rashmica.g@gmail.com>
+Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Joel Stanley <joel@jms.id.au>,
+        Andrew Jeffery <andrew@aj.id.au>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "moderated list:ARM/ASPEED MACHINE SUPPORT" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "moderated list:ARM/ASPEED MACHINE SUPPORT" 
+        <linux-aspeed@lists.ozlabs.org>,
+        open list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Sep 11, 2019 at 02:55:11AM -0700, Dmitry Torokhov wrote:
-> On Wed, Sep 11, 2019 at 10:49:29AM +0100, Russell King - ARM Linux admin wrote:
-> > On Wed, Sep 11, 2019 at 12:46:19PM +0300, Andy Shevchenko wrote:
-> > > On Wed, Sep 11, 2019 at 10:39:14AM +0100, Russell King - ARM Linux admin wrote:
-> > > > On Wed, Sep 11, 2019 at 12:25:14PM +0300, Andy Shevchenko wrote:
-> > > > > On Wed, Sep 11, 2019 at 12:52:08AM -0700, Dmitry Torokhov wrote:
-> > > > > > Instead of fwnode_get_named_gpiod() that I plan to hide away, let's use
-> > > > > > the new fwnode_gpiod_get_index() that mimics gpiod_get_index(), bit
-> > > > > > works with arbitrary firmware node.
-> > e > > 
-> > > > > I'm wondering if it's possible to step forward and replace
-> > > > > fwnode_get_gpiod_index by gpiod_get() / gpiod_get_index() here and
-> > > > > in other cases in this series.
-> > > > 
-> > > > No, those require a struct device, but we have none.  There are network
-> > > > drivers where there is a struct device for the network complex, but only
-> > > > DT nodes for the individual network interfaces.  So no, gpiod_* really
-> > > > doesn't work.
-> > > 
-> > > In the following patch the node is derived from struct device. So, I believe
-> > > some cases can be handled differently.
-> > 
-> > phylink is not passed a struct device - it has no knowledge what the
-> > parent device is.
-> > 
-> > In any case, I do not have "the following patch".
-> 
-> Andy is talking about this one:
-> 
-> diff --git a/drivers/net/phy/mdio_bus.c b/drivers/net/phy/mdio_bus.c
-> index ce940871331e..9ca51d678123 100644
-> --- a/drivers/net/phy/mdio_bus.c
-> +++ b/drivers/net/phy/mdio_bus.c
-> @@ -46,8 +46,8 @@ static int mdiobus_register_gpiod(struct mdio_device *mdiodev)
-> 
->         /* Deassert the optional reset signal */
->         if (mdiodev->dev.of_node)
-> -               gpiod = fwnode_get_named_gpiod(&mdiodev->dev.of_node->fwnode,
-> -                                              "reset-gpios", 0,
->                                                GPIOD_OUT_LOW,
-> +               gpiod = fwnode_gpiod_get_index(&mdiodev->dev.of_node->fwnode,
-> +                                              "reset", 0, GPIOD_OUT_LOW,
->                                                "PHY reset");
-> Here if we do not care about "PHY reset" label, we could use
-> gpiod_get(&mdiodev->dev, "reset", GPIOD_OUT_LOW).
+On Fri, Sep 6, 2019 at 7:27 AM Rashmica Gupta <rashmica.g@gmail.com> wrote:
 
-Here, you have a struct device, so yes, it's possible.
+> Use the ngpio property from the device tree if it exists. If it doesn't
+> then fallback to the hardcoded value in the config.
+>
+> This is in preparation for adding ast2600 support. The ast2600 SoC has
+> two GPIO controllers and so requires two instances of the GPIO driver.
+> We use the ngpio property to different between them as they have
+> different numbers of GPIOs.
+>
+> Signed-off-by: Rashmica Gupta <rashmica.g@gmail.com>
 
-Referring back to my comment, notice that I said we have none for the
-phylink case, so it's not possible there.
+Patch applied with some fuzzing.
 
-I'm not sure why Andy replied the way he did, unless he mis-read my
-comment.
-
--- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
-According to speedtest.net: 11.9Mbps down 500kbps up
+Yours,
+Linus Walleij
