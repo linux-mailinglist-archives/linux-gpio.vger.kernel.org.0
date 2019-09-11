@@ -2,123 +2,104 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 1EDB9AF99A
-	for <lists+linux-gpio@lfdr.de>; Wed, 11 Sep 2019 11:56:08 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 682BBAF985
+	for <lists+linux-gpio@lfdr.de>; Wed, 11 Sep 2019 11:52:06 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727427AbfIKJ4H (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 11 Sep 2019 05:56:07 -0400
-Received: from inva020.nxp.com ([92.121.34.13]:32888 "EHLO inva020.nxp.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726911AbfIKJ4H (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Wed, 11 Sep 2019 05:56:07 -0400
-Received: from inva020.nxp.com (localhost [127.0.0.1])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 71F7E1A0572;
-        Wed, 11 Sep 2019 11:56:05 +0200 (CEST)
-Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 62FC31A0596;
-        Wed, 11 Sep 2019 11:56:00 +0200 (CEST)
-Received: from titan.ap.freescale.net (TITAN.ap.freescale.net [10.192.208.233])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id E453A402AE;
-        Wed, 11 Sep 2019 17:55:53 +0800 (SGT)
-From:   Hui Song <hui.song_1@nxp.com>
-To:     Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
+        id S1727512AbfIKJvy (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 11 Sep 2019 05:51:54 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:40201 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726341AbfIKJvy (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 11 Sep 2019 05:51:54 -0400
+Received: by mail-pf1-f194.google.com with SMTP id x127so13326694pfb.7;
+        Wed, 11 Sep 2019 02:51:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=oa7u80RXbIOL5pSRB6LVDmgAyUhE8R9E1GZbUGFyfpY=;
+        b=mL7NiEn+6ge0h+BxS7E7NOyBlmKTMOwNAU7+4YOxjrZ6Hvnrbythxytm5RgnsCOwqH
+         96ZdXgnXnC24cqlC78FvkyznbIVJ7G2x7FL1jPki82vTYFGf2DpfBaSzBF8wOnpaiRJG
+         fGBn0/SScHlqjPVezslukbzENw/x4nG/Dm8GCMsAfsDCA2ed8JOu4TNBx0UKCa72g4qU
+         QNzHKZSv9TL+APROJcYu66ENexXXQTElyfwKokZoZcYstN7XWsN3YB/lxLdDvnDyC0gw
+         MjTYnaDC198sVBo8fnyStu3xwNSWTU0U3griwrge5RxxVUSvYf5+4PJsVcljMxwRlPxh
+         fUog==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=oa7u80RXbIOL5pSRB6LVDmgAyUhE8R9E1GZbUGFyfpY=;
+        b=QBEFeOb00QM9llFGyUHBf5wThwgpCLrR3Xg4qRNj6wQHLxqUyLpnxvQ5m3cERCZh8H
+         vutE2Mozz1+/ZJBhRX/z5loHRsVxPIn7wos2IS617YS+W3Yv7CcvyeecyDTej6Ub8ad/
+         xcux7wMIW32JJw9H9A5Tc3zB7vyKJIVOvcbQBDT+FAXer/wZwLGb1SjmZ7YYz1IlcDCG
+         RPNtlZA1iPSYGyYihBGzL4Ndo/dmw63ik8ceYwYgGMSgsX7XOTH/qHTvhxgEvQ6ID1WE
+         mkXs8rJpQOr1aL9qITWvcsKYh6jUDwNMa6O6HaGWX1ckC9vgCxDgMYpSLrMW0iyP/Nut
+         Ux1Q==
+X-Gm-Message-State: APjAAAU9iJ+RE1f4iTTFz/S8ixbI7zOSmp5PBp5nTURFQKLSH4lrjz2m
+        0k7nG1RKwZMJAHfqBEYaSbA=
+X-Google-Smtp-Source: APXvYqwOcxIOH4t+fIaaEcDipG/11XnkGy5NdmbeWsVxSGU8jsO2ou3SCB17+GxNscICkb3PBxJMrQ==
+X-Received: by 2002:a17:90a:3aa3:: with SMTP id b32mr4559506pjc.75.1568195512312;
+        Wed, 11 Sep 2019 02:51:52 -0700 (PDT)
+Received: from dtor-ws ([2620:15c:202:201:3adc:b08c:7acc:b325])
+        by smtp.gmail.com with ESMTPSA id b185sm26818791pfg.14.2019.09.11.02.51.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 11 Sep 2019 02:51:51 -0700 (PDT)
+Date:   Wed, 11 Sep 2019 02:51:49 -0700
+From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     Russell King - ARM Linux admin <linux@armlinux.org.uk>,
         Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Cc:     linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
         linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-        Song Hui <hui.song_1@nxp.com>
-Subject: [PATCH] gpio/mpc8xxx: change irq handler from chained to normal
-Date:   Wed, 11 Sep 2019 17:45:44 +0800
-Message-Id: <20190911094544.15893-1-hui.song_1@nxp.com>
-X-Mailer: git-send-email 2.9.5
-X-Virus-Scanned: ClamAV using ClamSMTP
+        Andrew Lunn <andrew@lunn.ch>,
+        "David S. Miller" <davem@davemloft.net>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>, netdev@vger.kernel.org
+Subject: Re: [PATCH 04/11] net: phylink: switch to using
+ fwnode_gpiod_get_index()
+Message-ID: <20190911095149.GA108334@dtor-ws>
+References: <20190911075215.78047-1-dmitry.torokhov@gmail.com>
+ <20190911075215.78047-5-dmitry.torokhov@gmail.com>
+ <20190911092514.GM2680@smile.fi.intel.com>
+ <20190911093914.GT13294@shell.armlinux.org.uk>
+ <20190911094619.GN2680@smile.fi.intel.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190911094619.GN2680@smile.fi.intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-From: Song Hui <hui.song_1@nxp.com>
+On Wed, Sep 11, 2019 at 12:46:19PM +0300, Andy Shevchenko wrote:
+> On Wed, Sep 11, 2019 at 10:39:14AM +0100, Russell King - ARM Linux admin wrote:
+> > On Wed, Sep 11, 2019 at 12:25:14PM +0300, Andy Shevchenko wrote:
+> > > On Wed, Sep 11, 2019 at 12:52:08AM -0700, Dmitry Torokhov wrote:
+> > > > Instead of fwnode_get_named_gpiod() that I plan to hide away, let's use
+> > > > the new fwnode_gpiod_get_index() that mimics gpiod_get_index(), bit
+> > > > works with arbitrary firmware node.
+> > > 
+> > > I'm wondering if it's possible to step forward and replace
+> > > fwnode_get_gpiod_index by gpiod_get() / gpiod_get_index() here and
+> > > in other cases in this series.
+> > 
+> > No, those require a struct device, but we have none.  There are network
+> > drivers where there is a struct device for the network complex, but only
+> > DT nodes for the individual network interfaces.  So no, gpiod_* really
+> > doesn't work.
+> 
+> In the following patch the node is derived from struct device. So, I believe
+> some cases can be handled differently.
 
-More than one gpio controllers can share one interrupt, change the
-driver to request shared irq.
+If we are willing to sacrifice the custom label for the GPIO that
+fwnode_gpiod_get_index() allows us to set, then there are several
+drivers that could actually use gpiod_get() API.
 
-Signed-off-by: Laurentiu Tudor <Laurentiu.Tudor@nxp.com>
-Signed-off-by: Alex Marginean <alexandru.marginean@nxp.com>
-Signed-off-by: Song Hui <hui.song_1@nxp.com>
----
-Changes in v4:
-	- convert 'pr_err' to 'dev_err'.
-Changes in v3:
-	- update the patch description.
-Changes in v2:
-	- delete the compatible of ls1088a.
- drivers/gpio/gpio-mpc8xxx.c | 22 ++++++++++++++--------
- 1 file changed, 14 insertions(+), 8 deletions(-)
+This is up to the dirver's maintainers...
 
-diff --git a/drivers/gpio/gpio-mpc8xxx.c b/drivers/gpio/gpio-mpc8xxx.c
-index 16a47de..e16591b 100644
---- a/drivers/gpio/gpio-mpc8xxx.c
-+++ b/drivers/gpio/gpio-mpc8xxx.c
-@@ -22,6 +22,7 @@
- #include <linux/irq.h>
- #include <linux/gpio/driver.h>
- #include <linux/bitops.h>
-+#include <linux/interrupt.h>
- 
- #define MPC8XXX_GPIO_PINS	32
- 
-@@ -127,10 +128,9 @@ static int mpc8xxx_gpio_to_irq(struct gpio_chip *gc, unsigned offset)
- 		return -ENXIO;
- }
- 
--static void mpc8xxx_gpio_irq_cascade(struct irq_desc *desc)
-+static irqreturn_t mpc8xxx_gpio_irq_cascade(int irq, void *data)
- {
--	struct mpc8xxx_gpio_chip *mpc8xxx_gc = irq_desc_get_handler_data(desc);
--	struct irq_chip *chip = irq_desc_get_chip(desc);
-+	struct mpc8xxx_gpio_chip *mpc8xxx_gc = (struct mpc8xxx_gpio_chip *)data;
- 	struct gpio_chip *gc = &mpc8xxx_gc->gc;
- 	unsigned int mask;
- 
-@@ -139,8 +139,8 @@ static void mpc8xxx_gpio_irq_cascade(struct irq_desc *desc)
- 	if (mask)
- 		generic_handle_irq(irq_linear_revmap(mpc8xxx_gc->irq,
- 						     32 - ffs(mask)));
--	if (chip->irq_eoi)
--		chip->irq_eoi(&desc->irq_data);
-+
-+	return IRQ_HANDLED;
- }
- 
- static void mpc8xxx_irq_unmask(struct irq_data *d)
-@@ -388,7 +388,7 @@ static int mpc8xxx_probe(struct platform_device *pdev)
- 
- 	ret = gpiochip_add_data(gc, mpc8xxx_gc);
- 	if (ret) {
--		pr_err("%pOF: GPIO chip registration failed with status %d\n",
-+		dev_err("%pOF: GPIO chip registration failed with status %d\n",
- 		       np, ret);
- 		goto err;
- 	}
-@@ -409,8 +409,14 @@ static int mpc8xxx_probe(struct platform_device *pdev)
- 	if (devtype->gpio_dir_in_init)
- 		devtype->gpio_dir_in_init(gc);
- 
--	irq_set_chained_handler_and_data(mpc8xxx_gc->irqn,
--					 mpc8xxx_gpio_irq_cascade, mpc8xxx_gc);
-+	ret = request_irq(mpc8xxx_gc->irqn, mpc8xxx_gpio_irq_cascade,
-+		IRQF_NO_THREAD | IRQF_SHARED, "gpio-cascade", mpc8xxx_gc);
-+	if (ret) {
-+		dev_err("%s: failed to request_irq(%d), ret = %d\n",
-+				np->full_name, mpc8xxx_gc->irqn, ret);
-+		goto err;
-+	}
-+
- 	return 0;
- err:
- 	iounmap(mpc8xxx_gc->regs);
+Thanks.
+
 -- 
-2.9.5
-
+Dmitry
