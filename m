@@ -2,164 +2,72 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 3BEC1B0574
-	for <lists+linux-gpio@lfdr.de>; Thu, 12 Sep 2019 00:19:09 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D3F8DB05D8
+	for <lists+linux-gpio@lfdr.de>; Thu, 12 Sep 2019 01:06:19 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729004AbfIKWS7 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 11 Sep 2019 18:18:59 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:43746 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728415AbfIKWS6 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 11 Sep 2019 18:18:58 -0400
-Received: by mail-pf1-f196.google.com with SMTP id d15so14562411pfo.10
-        for <linux-gpio@vger.kernel.org>; Wed, 11 Sep 2019 15:18:58 -0700 (PDT)
+        id S1728253AbfIKXGT (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 11 Sep 2019 19:06:19 -0400
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:35703 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726761AbfIKXGS (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 11 Sep 2019 19:06:18 -0400
+Received: by mail-lj1-f195.google.com with SMTP id q22so17153308ljj.2
+        for <linux-gpio@vger.kernel.org>; Wed, 11 Sep 2019 16:06:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :in-reply-to:references;
-        bh=wJpUcmtI6YKhyLGtOcvDAWFwk949XlDAmv2MKsxWP1U=;
-        b=DMkvTmwVBoZy7jqUIkAihodC8R4kqONrk3HGJetqqwTAcCDCcYKzpuoElpoaj8L4q3
-         kKAmLx32GZAY0DgrK7yzscFGAZzHV24sY6eDNwE0lp4RqIGvHit4bu1Vuqcm2NlyyYRU
-         L3qjQuPWAX9cZEUzgkadODxqhF3eBa2y0DhN1H4UCagnFBKVrEgpQjE9I1NtUyfZ02fZ
-         z1RWSyAFtOaxIDNIeSoIaPHqKn0dXGifT5otHgWpv1Gdudbav2hq4d8vK8e6HO+QxMlR
-         BI1FLqp0jLwQ5iKEuprVYqwH/Wvo4kSjvvG/gaOi/KA8BPaM8SDl2B0A+FXXzETgvYz3
-         KgrQ==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=7883Z7ac+Slfbx+cQ/2DuLT6CRyOLfw8ut+c4CPANPs=;
+        b=stvvdzBxZQFTptGzgB/17WFhzTnI1B5cqiDZnDkMkXANt53ZBZnICa4KmgDHALXJ4Z
+         ceqxJg6ZCM19wPr6NoqVAfdXmq92wMFSjhrjO/mEvPHbSPEL2W3tY5Pp73XBcwlJbLS0
+         2WuWg+Cap9oK26ETQLk2Gq3N1LqEEniPaHLY5v89o0+3ac4Bd0L1B9/UUVZCiQ4juLNq
+         VsZkeRCO317GHUAKVV3p70wbMiN5fnxDXyY+gzY4KR7g3vdXSpHVZNxxoF/dUAmCxcR6
+         TDMuzkmGqJp1h/YjGE0OdZXSapzBN6SNO3tNwfFqvcn/VPBFewtPs7ZE+wP+kw7YATpa
+         ensQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:in-reply-to:references;
-        bh=wJpUcmtI6YKhyLGtOcvDAWFwk949XlDAmv2MKsxWP1U=;
-        b=HNpbxMlZ8bHfyRjBY3rzfO3cEo1KFi0Z3KKlaz83TzE7rWe/E53G/my44aKoviNA9Y
-         h+73p/uktjot8rTrJqM+hf0vlfXRP5MSfDMff0UT0vVrMz1LqJUfb5n0DZYwpohAR4R3
-         depo1LZFfFSlmeCL8zeI5mUy3Vu7Sb10Sv/6WEp8Y7MsOWUyF/Kb84CrUPKSJMTQCe9p
-         5Yt6khLDk61gBS6MPt1m3ZGChlMelLWkarEVxZ3+ALwU+AWiP7fpfI3NNs/Gc4O044tZ
-         tZrSP0i3L6c4/adf0cMDpKo5T2vjhXW3Qrlw6LL5xXQnn5S1iwvziYmPcjmgV7/9jvH1
-         in8g==
-X-Gm-Message-State: APjAAAUEvBkDcIqux6vk7rjN2JNAXfduMfdtRxdvWD/3yYA5vKzcaBz2
-        BKpl4VJWHz/xY5FHy6b7VOYcyQ==
-X-Google-Smtp-Source: APXvYqzP0/gBNZzG2CFRFIE/UkaEI5NjGZqMp4m4/H9NRm7GUMMLKzapx1Z7TocuBDHfZe6TC2ck1g==
-X-Received: by 2002:a63:2807:: with SMTP id o7mr35679328pgo.131.1568240337895;
-        Wed, 11 Sep 2019 15:18:57 -0700 (PDT)
-Received: from localhost ([49.248.179.160])
-        by smtp.gmail.com with ESMTPSA id r13sm2806843pgp.63.2019.09.11.15.18.56
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 11 Sep 2019 15:18:57 -0700 (PDT)
-From:   Amit Kucheria <amit.kucheria@linaro.org>
-To:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        arm@kernel.org, Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Mark Brown <broonie@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Sebastian Reichel <sre@kernel.org>,
-        Stephen Boyd <sboyd@kernel.org>, Will Deacon <will@kernel.org>
-Cc:     linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-pci@vger.kernel.org, linux-pm@vger.kernel.org
-Subject: [PATCH 1/4] arm64: Kconfig: Fix XGENE driver dependencies
-Date:   Thu, 12 Sep 2019 03:48:45 +0530
-Message-Id: <f6cefef2bf6b34ec6eb82d3614054734fa5e8dd1.1568239378.git.amit.kucheria@linaro.org>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <cover.1568239378.git.amit.kucheria@linaro.org>
-References: <cover.1568239378.git.amit.kucheria@linaro.org>
-In-Reply-To: <cover.1568239378.git.amit.kucheria@linaro.org>
-References: <cover.1568239378.git.amit.kucheria@linaro.org>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=7883Z7ac+Slfbx+cQ/2DuLT6CRyOLfw8ut+c4CPANPs=;
+        b=oHSsuegdRtjbK2d2VyAIZx4QqDdEKfnbVtfTB4ZFeD2Ak49VMIOR46cnLCBTtspzU+
+         333+04VsUqBfqQOpP/r+iA5LOV3UkbLIQC3evxjFx5S66GrJ2yV9vt9G1gDt1O0cpoc5
+         5GF2TFc5DQR7XDReUoo5xZqOoDZdNUjhioaHE8VSMi8g+1DhZeN7xNWMv9TnDhG3kMTI
+         Y+d36v49WbsnqoOjHdkbb1m6hHEB6b9f+tbmNscpM434/s/MZnpIUgwfsioZtxpZCmub
+         FQM+TkoqDeNJpvpkcOo4egc1mBOB7kkNDC9YrMnCdKrx/VR3J8wuvXd7i3X1QIzNA6nx
+         X2eg==
+X-Gm-Message-State: APjAAAXtwN4oyMorOqTH8TucMd5TZdkcNkqhBUixRnQNqHAabSA6x6UU
+        mLZsiO8H1FRdQS9H1cCaNu9i4JCfZs+nwAARY30X6Q==
+X-Google-Smtp-Source: APXvYqyIytBBqNqsUppL3242vttfgTVNOPFJ1CgaZu/wYMBC5ORTHbehk9CWW/zvK6SNx3rRlGlpknUWJWHBMsh8L9A=
+X-Received: by 2002:a2e:884d:: with SMTP id z13mr23708970ljj.62.1568243176898;
+ Wed, 11 Sep 2019 16:06:16 -0700 (PDT)
+MIME-Version: 1.0
+References: <20190907173910.GA9547@SD>
+In-Reply-To: <20190907173910.GA9547@SD>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Thu, 12 Sep 2019 00:06:05 +0100
+Message-ID: <CACRpkdYoY9nRGD+4m7yzSci5n0YS3XeL+tgPDKWuaoqh3GSTyw@mail.gmail.com>
+Subject: Re: [PATCH] gpio: remove explicit comparison with 0
+To:     Saiyam Doshi <saiyamdoshi.in@gmail.com>
+Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Push various XGENE drivers behind ARCH_XGENE dependency so that it
-doesn't get enabled by default on other platforms.
+On Sat, Sep 7, 2019 at 6:39 PM Saiyam Doshi <saiyamdoshi.in@gmail.com> wrote:
 
-Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
----
- arch/arm64/Kconfig.platforms   | 3 +++
- drivers/clk/Kconfig            | 2 +-
- drivers/gpio/Kconfig           | 1 +
- drivers/pci/controller/Kconfig | 1 +
- drivers/phy/Kconfig            | 1 +
- drivers/power/reset/Kconfig    | 2 +-
- 6 files changed, 8 insertions(+), 2 deletions(-)
+> No need to compare return value with 0. In case of non-zero
+> return value, the if condition will be true.
+>
+> This makes intent a bit more clear to the reader.
+> "if (x) then", compared to "if (x is not zero) then".
+>
+> Signed-off-by: Saiyam Doshi <saiyamdoshi.in@gmail.com>
 
-diff --git a/arch/arm64/Kconfig.platforms b/arch/arm64/Kconfig.platforms
-index 4778c775de1b..cdf4e452e34c 100644
---- a/arch/arm64/Kconfig.platforms
-+++ b/arch/arm64/Kconfig.platforms
-@@ -281,6 +281,9 @@ config ARCH_VULCAN
- 
- config ARCH_XGENE
- 	bool "AppliedMicro X-Gene SOC Family"
-+	select COMMON_CLK_XGENE
-+	select PCI_XGENE
-+	select GPIO_XGENE
- 	help
- 	  This enables support for AppliedMicro X-Gene SOC Family
- 
-diff --git a/drivers/clk/Kconfig b/drivers/clk/Kconfig
-index 801fa1cd0321..9b2790d3f18a 100644
---- a/drivers/clk/Kconfig
-+++ b/drivers/clk/Kconfig
-@@ -225,7 +225,7 @@ config CLK_QORIQ
- 
- config COMMON_CLK_XGENE
- 	bool "Clock driver for APM XGene SoC"
--	default ARCH_XGENE
-+	depends on ARCH_XGENE
- 	depends on ARM64 || COMPILE_TEST
- 	---help---
- 	  Sypport for the APM X-Gene SoC reference, PLL, and device clocks.
-diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
-index bb13c266c329..072c749c5c1f 100644
---- a/drivers/gpio/Kconfig
-+++ b/drivers/gpio/Kconfig
-@@ -580,6 +580,7 @@ config GPIO_VX855
- 
- config GPIO_XGENE
- 	bool "APM X-Gene GPIO controller support"
-+	depends on ARCH_XGENE
- 	depends on ARM64 && OF_GPIO
- 	help
- 	  This driver is to support the GPIO block within the APM X-Gene SoC
-diff --git a/drivers/pci/controller/Kconfig b/drivers/pci/controller/Kconfig
-index fe9f9f13ce11..44699f45784f 100644
---- a/drivers/pci/controller/Kconfig
-+++ b/drivers/pci/controller/Kconfig
-@@ -112,6 +112,7 @@ config PCIE_XILINX
- config PCI_XGENE
- 	bool "X-Gene PCIe controller"
- 	depends on ARM64 || COMPILE_TEST
-+	depends on ARCH_XGENE
- 	depends on OF || (ACPI && PCI_QUIRKS)
- 	help
- 	  Say Y here if you want internal PCI support on APM X-Gene SoC.
-diff --git a/drivers/phy/Kconfig b/drivers/phy/Kconfig
-index 0263db2ac874..7c5eefecdabd 100644
---- a/drivers/phy/Kconfig
-+++ b/drivers/phy/Kconfig
-@@ -44,6 +44,7 @@ config PHY_PISTACHIO_USB
- 
- config PHY_XGENE
- 	tristate "APM X-Gene 15Gbps PHY support"
-+	depends on ARCH_XGENE
- 	depends on HAS_IOMEM && OF && (ARM64 || COMPILE_TEST)
- 	select GENERIC_PHY
- 	help
-diff --git a/drivers/power/reset/Kconfig b/drivers/power/reset/Kconfig
-index a564237278ff..651b763f80cd 100644
---- a/drivers/power/reset/Kconfig
-+++ b/drivers/power/reset/Kconfig
-@@ -181,7 +181,7 @@ config POWER_RESET_VEXPRESS
- 
- config POWER_RESET_XGENE
- 	bool "APM SoC X-Gene reset driver"
--	depends on ARM64
-+	depends on ARCH_XGENE && ARM64
- 	help
- 	  Reboot support for the APM SoC X-Gene Eval boards.
- 
--- 
-2.17.1
+Patch applied.
 
+Yours,
+Linus Walleij
