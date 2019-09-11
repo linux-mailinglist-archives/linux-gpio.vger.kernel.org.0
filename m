@@ -2,88 +2,94 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 7572DB0135
-	for <lists+linux-gpio@lfdr.de>; Wed, 11 Sep 2019 18:19:04 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 207E9B021B
+	for <lists+linux-gpio@lfdr.de>; Wed, 11 Sep 2019 18:52:38 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729178AbfIKQQx (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 11 Sep 2019 12:16:53 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:37970 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729149AbfIKQQt (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 11 Sep 2019 12:16:49 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 2900760C72; Wed, 11 Sep 2019 16:16:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1568218608;
-        bh=tn8EIOlw52p10Je+it7oNkaaHTfUPXTl86tPFg9hjf4=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=ojylFW7dnyYRTd/m6Je9Pflrh3J/HiQswu7GR89Oy0hd9ICzLsjlBLdHrXU4Oc1vH
-         crQ+JZ9X+/YAM94thTMlbDpLjAOhF5IpNLuwRAg/MpzSqrB2eeY6GyxvfVnK0P4Jsk
-         LJB6id1yKoAMBNZzhE8QeudvPbXBHEL7hjq63mrk=
-X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
-        pdx-caf-mail.web.codeaurora.org
-X-Spam-Level: 
-X-Spam-Status: No, score=-2.7 required=2.0 tests=ALL_TRUSTED,BAYES_00,
-        DKIM_INVALID,DKIM_SIGNED,SPF_NONE autolearn=no autolearn_force=no
-        version=3.4.0
-Received: from localhost (i-global254.qualcomm.com [199.106.103.254])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: ilina@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 099F8607CA;
-        Wed, 11 Sep 2019 16:16:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1568218607;
-        bh=tn8EIOlw52p10Je+it7oNkaaHTfUPXTl86tPFg9hjf4=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=kuou501Yo7RboC4JSk3MoJZMFT5F2MdaLY69J+9td8eHy5AUlddXETD4NaMngglZH
-         hGYp7phS6po6tVrVSqrTxerKL4tgX3IDdo+23t2Cdebt09QAw975vUKh+d2RHu3/wB
-         OGka20x77a2XvwIyS8hSV65fbtCyUEF+8rSy+J1s=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 099F8607CA
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=ilina@codeaurora.org
-Date:   Wed, 11 Sep 2019 10:16:46 -0600
-From:   Lina Iyer <ilina@codeaurora.org>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Stephen Boyd <swboyd@chromium.org>,
-        Evan Green <evgreen@chromium.org>,
-        Marc Zyngier <marc.zyngier@arm.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        MSM <linux-arm-msm@vger.kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        mkshah@codeaurora.org,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Rajendra Nayak <rnayak@codeaurora.org>
-Subject: Re: [PATCH RFC 09/14] drivers: pinctrl: msm: fix use of deprecated
- gpiolib APIs
-Message-ID: <20190911161646.GC30053@codeaurora.org>
-References: <20190829181203.2660-1-ilina@codeaurora.org>
- <20190829181203.2660-10-ilina@codeaurora.org>
- <CACRpkdbhNY8N=LMG6wwYw9bAnL4HmAqj8WMpsLsqvh8PvaQ52A@mail.gmail.com>
+        id S1729182AbfIKQw3 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 11 Sep 2019 12:52:29 -0400
+Received: from mga03.intel.com ([134.134.136.65]:51603 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729061AbfIKQw3 (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Wed, 11 Sep 2019 12:52:29 -0400
+X-Amp-Result: UNSCANNABLE
+X-Amp-File-Uploaded: False
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 11 Sep 2019 09:52:28 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,494,1559545200"; 
+   d="scan'208";a="184538858"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by fmsmga008.fm.intel.com with ESMTP; 11 Sep 2019 09:52:23 -0700
+Received: from andy by smile with local (Exim 4.92.1)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1i85qy-0001nV-3A; Wed, 11 Sep 2019 19:52:24 +0300
+Date:   Wed, 11 Sep 2019 19:52:24 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>
+Cc:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+        Andrew Lunn <andrew@lunn.ch>,
+        "David S. Miller" <davem@davemloft.net>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>, netdev@vger.kernel.org
+Subject: Re: [PATCH 04/11] net: phylink: switch to using
+ fwnode_gpiod_get_index()
+Message-ID: <20190911165224.GR2680@smile.fi.intel.com>
+References: <20190911075215.78047-1-dmitry.torokhov@gmail.com>
+ <20190911075215.78047-5-dmitry.torokhov@gmail.com>
+ <20190911092514.GM2680@smile.fi.intel.com>
+ <20190911093914.GT13294@shell.armlinux.org.uk>
+ <20190911094619.GN2680@smile.fi.intel.com>
+ <20190911094929.GV13294@shell.armlinux.org.uk>
+ <20190911095511.GB108334@dtor-ws>
+ <20190911101016.GW13294@shell.armlinux.org.uk>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CACRpkdbhNY8N=LMG6wwYw9bAnL4HmAqj8WMpsLsqvh8PvaQ52A@mail.gmail.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <20190911101016.GW13294@shell.armlinux.org.uk>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Sep 11 2019 at 04:19 -0600, Linus Walleij wrote:
->On Thu, Aug 29, 2019 at 7:35 PM Lina Iyer <ilina@codeaurora.org> wrote:
->
->> Replace gpiochip_irqchip_add() and gpiochip_set_chained_irqchip() calls
->> by populating the gpio_irq_chip data structures instead.
->>
->> Signed-off-by: Lina Iyer <ilina@codeaurora.org>
->
->This is mostly fixed upstream I think, but:
->
->> +       chip->irq.fwnode = pctrl->dev->fwnode;
->
->This fwnode assignment is missing though.
->
->Sorry for the constant churn and required rebasing...
->
-Not a problem. Will rebase.
+On Wed, Sep 11, 2019 at 11:10:16AM +0100, Russell King - ARM Linux admin wrote:
+> On Wed, Sep 11, 2019 at 02:55:11AM -0700, Dmitry Torokhov wrote:
+> > On Wed, Sep 11, 2019 at 10:49:29AM +0100, Russell King - ARM Linux admin wrote:
+> > > On Wed, Sep 11, 2019 at 12:46:19PM +0300, Andy Shevchenko wrote:
+> > > > On Wed, Sep 11, 2019 at 10:39:14AM +0100, Russell King - ARM Linux admin wrote:
+> > > > > On Wed, Sep 11, 2019 at 12:25:14PM +0300, Andy Shevchenko wrote:
+> > > > > > On Wed, Sep 11, 2019 at 12:52:08AM -0700, Dmitry Torokhov wrote:
+> > > > > > > Instead of fwnode_get_named_gpiod() that I plan to hide away, let's use
+> > > > > > > the new fwnode_gpiod_get_index() that mimics gpiod_get_index(), bit
+> > > > > > > works with arbitrary firmware node.
+> > > e > > 
+> > > > > > I'm wondering if it's possible to step forward and replace
+> > > > > > fwnode_get_gpiod_index by gpiod_get() / gpiod_get_index() here and
+> > > > > > in other cases in this series.
+> > > > > 
+> > > > > No, those require a struct device, but we have none.  There are network
+> > > > > drivers where there is a struct device for the network complex, but only
+> > > > > DT nodes for the individual network interfaces.  So no, gpiod_* really
+> > > > > doesn't work.
+> > > > 
+> > > > In the following patch the node is derived from struct device. So, I believe
+> > > > some cases can be handled differently.
+
+> Referring back to my comment, notice that I said we have none for the
+> phylink case, so it's not possible there.
+> 
+> I'm not sure why Andy replied the way he did, unless he mis-read my
+> comment.
+
+It is a first patch which does the change. Mostly my reply was to Dmitry and
+your comment clarifies the case with this patch, thanks!
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
