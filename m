@@ -2,98 +2,123 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id DD34AAF9B4
-	for <lists+linux-gpio@lfdr.de>; Wed, 11 Sep 2019 11:59:30 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BE974AF9C9
+	for <lists+linux-gpio@lfdr.de>; Wed, 11 Sep 2019 12:02:58 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727593AbfIKJ7a (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 11 Sep 2019 05:59:30 -0400
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:37969 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726928AbfIKJ73 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 11 Sep 2019 05:59:29 -0400
-Received: by mail-lj1-f193.google.com with SMTP id y23so19039507ljn.5
-        for <linux-gpio@vger.kernel.org>; Wed, 11 Sep 2019 02:59:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=9HXuMTVfcpW37UjviTlGUeNHddiNVnJw+Pnhmp5IW9U=;
-        b=vqdRVbY3xkC8To+y63JXG0n3y8xeMP0cnqAh5gPos11TPx2MJ5YjNkuJkgPa80BtcF
-         4JiZ4Xx8a7uw9Sz5tkqQGh+2m6Nz9+2vV/eI5yr843rVuAxXNoQohYhlWMnodprm0bcL
-         5mCehv9pHsqGcrw1VDwaO9mzO4mDNVRhL+666OGE2jOYg6gdJaWopbdX5Zbcj0ZBra6T
-         dYYWFHT4Y+ZSRGrLD3fdTJOXp6uxQ8LDzR17KwG3hJmcJvFECjC256VuIiJ6Y9q8XhrX
-         afoPOGfqqiuy++3LDu/tUkWFuC7huA2fPV5Qkxe4M7wov2clbWPSOuYDVhLY+7mTrAXE
-         hB3w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=9HXuMTVfcpW37UjviTlGUeNHddiNVnJw+Pnhmp5IW9U=;
-        b=raemjiNvM4ueuY8wkgGPXmsOaviVWfC4luvRULyf3c8pWUU07oWBvuTRKRegPfXFvl
-         2ZB5BFtPc5RmGV8ZG4f1ivKWH4/fDPmNVdtVB2OdZExcd6H28/CAlnHcf7wJX1jdbYV5
-         /aSJNW4JPsg8y6SyF1dzDH3vKyXm3HkiJ2GSQekbWEB5br+zGJYABnXWTvMFZ5cVq826
-         7tu38i7SPRLrnP4uyzyq+crujScIeQdpb5xZmpWualq1aHzu8S33M+JVdLXSe0Y3VqRX
-         Mosu/nDMaN/7FD29QoWR/ySpdUKn3nznM6ndJqQiuIt0Eu2K7hUt5wQ3B60uiZNXmcG3
-         S8HA==
-X-Gm-Message-State: APjAAAVv0xvN4rIuLYWpnSpmLtUFrOh0n08C7jBzvADh2bzQdJqzZLH2
-        DSCssF359yR2O3VqHgAY0511OpSLT2N9OgSivYkivw==
-X-Google-Smtp-Source: APXvYqxT1aoNXvUwL/ESu+QKh3xMgy/YTSB/t3k/OGav9Yicg3DARxKZrCRl4SpCBRaX/EF9sONVO8FgCZf9RKQtZBU=
-X-Received: by 2002:a2e:7d15:: with SMTP id y21mr15616211ljc.28.1568195968059;
- Wed, 11 Sep 2019 02:59:28 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190829181203.2660-1-ilina@codeaurora.org> <20190829181203.2660-6-ilina@codeaurora.org>
-In-Reply-To: <20190829181203.2660-6-ilina@codeaurora.org>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Wed, 11 Sep 2019 10:59:16 +0100
-Message-ID: <CACRpkdaReFzjb_hcDbQwqMX+whzscLpeZpJPHKqOo+9tANzemA@mail.gmail.com>
-Subject: Re: [PATCH RFC 05/14] dt-bindings/interrupt-controller: pdc: add SPI
- config register
-To:     Lina Iyer <ilina@codeaurora.org>
-Cc:     Stephen Boyd <swboyd@chromium.org>,
-        Evan Green <evgreen@chromium.org>,
-        Marc Zyngier <marc.zyngier@arm.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        MSM <linux-arm-msm@vger.kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        mkshah@codeaurora.org,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Rajendra Nayak <rnayak@codeaurora.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        id S1727270AbfIKKCu (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 11 Sep 2019 06:02:50 -0400
+Received: from inva021.nxp.com ([92.121.34.21]:58292 "EHLO inva021.nxp.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726579AbfIKKCu (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Wed, 11 Sep 2019 06:02:50 -0400
+Received: from inva021.nxp.com (localhost [127.0.0.1])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id B820F2005B1;
+        Wed, 11 Sep 2019 12:02:47 +0200 (CEST)
+Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id A98AF200022;
+        Wed, 11 Sep 2019 12:02:42 +0200 (CEST)
+Received: from titan.ap.freescale.net (TITAN.ap.freescale.net [10.192.208.233])
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 2F9EF402AE;
+        Wed, 11 Sep 2019 18:02:36 +0800 (SGT)
+From:   Hui Song <hui.song_1@nxp.com>
+To:     Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Cc:     linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+        Song Hui <hui.song_1@nxp.com>
+Subject: [PATCH] gpio/mpc8xxx: change irq handler from chained to normal
+Date:   Wed, 11 Sep 2019 17:52:27 +0800
+Message-Id: <20190911095227.16003-1-hui.song_1@nxp.com>
+X-Mailer: git-send-email 2.9.5
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Aug 29, 2019 at 8:47 PM Lina Iyer <ilina@codeaurora.org> wrote:
+From: Song Hui <hui.song_1@nxp.com>
 
-> +- qcom,scm-spi-cfg:
-> +       Usage: optional
-> +       Value type: <bool>
-> +       Definition: Specifies if the SPI configuration registers have to be
-> +                   written from the firmware.
-> +
->  Example:
->
->         pdc: interrupt-controller@b220000 {
->                 compatible = "qcom,sdm845-pdc";
-> -               reg = <0xb220000 0x30000>;
-> +               reg = <0xb220000 0x30000>, <0x179900f0 0x60>;
->                 qcom,pdc-ranges = <0 512 94>, <94 641 15>, <115 662 7>;
->                 #interrupt-cells = <2>;
->                 interrupt-parent = <&intc>;
->                 interrupt-controller;
-> +               qcom,scm-spi-cfg;
+More than one gpio controllers can share one interrupt, change the
+driver to request shared irq.
 
-You can probably drop this bool if you just give names to the registers.
+Signed-off-by: Laurentiu Tudor <Laurentiu.Tudor@nxp.com>
+Signed-off-by: Alex Marginean <alexandru.marginean@nxp.com>
+Signed-off-by: Song Hui <hui.song_1@nxp.com>
+---
+Changes in v4:
+	- convert 'pr_err' to 'dev_err'.
+Changes in v3:
+	- update the patch description.
+Changes in v2:
+	- delete the compatible of ls1088a.
+ drivers/gpio/gpio-mpc8xxx.c | 22 ++++++++++++++--------
+ 1 file changed, 14 insertions(+), 8 deletions(-)
 
-Like
-reg = <0xb220000 0x30000>, <0x179900f0 0x60>;
-reg-names = "gic", "pdc";
+diff --git a/drivers/gpio/gpio-mpc8xxx.c b/drivers/gpio/gpio-mpc8xxx.c
+index 16a47de..e16591b 100644
+--- a/drivers/gpio/gpio-mpc8xxx.c
++++ b/drivers/gpio/gpio-mpc8xxx.c
+@@ -22,6 +22,7 @@
+ #include <linux/irq.h>
+ #include <linux/gpio/driver.h>
+ #include <linux/bitops.h>
++#include <linux/interrupt.h>
+ 
+ #define MPC8XXX_GPIO_PINS	32
+ 
+@@ -127,10 +128,9 @@ static int mpc8xxx_gpio_to_irq(struct gpio_chip *gc, unsigned offset)
+ 		return -ENXIO;
+ }
+ 
+-static void mpc8xxx_gpio_irq_cascade(struct irq_desc *desc)
++static irqreturn_t mpc8xxx_gpio_irq_cascade(int irq, void *data)
+ {
+-	struct mpc8xxx_gpio_chip *mpc8xxx_gc = irq_desc_get_handler_data(desc);
+-	struct irq_chip *chip = irq_desc_get_chip(desc);
++	struct mpc8xxx_gpio_chip *mpc8xxx_gc = (struct mpc8xxx_gpio_chip *)data;
+ 	struct gpio_chip *gc = &mpc8xxx_gc->gc;
+ 	unsigned int mask;
+ 
+@@ -139,8 +139,8 @@ static void mpc8xxx_gpio_irq_cascade(struct irq_desc *desc)
+ 	if (mask)
+ 		generic_handle_irq(irq_linear_revmap(mpc8xxx_gc->irq,
+ 						     32 - ffs(mask)));
+-	if (chip->irq_eoi)
+-		chip->irq_eoi(&desc->irq_data);
++
++	return IRQ_HANDLED;
+ }
+ 
+ static void mpc8xxx_irq_unmask(struct irq_data *d)
+@@ -388,7 +388,7 @@ static int mpc8xxx_probe(struct platform_device *pdev)
+ 
+ 	ret = gpiochip_add_data(gc, mpc8xxx_gc);
+ 	if (ret) {
+-		pr_err("%pOF: GPIO chip registration failed with status %d\n",
++		dev_err("%pOF: GPIO chip registration failed with status %d\n",
+ 		       np, ret);
+ 		goto err;
+ 	}
+@@ -409,8 +409,14 @@ static int mpc8xxx_probe(struct platform_device *pdev)
+ 	if (devtype->gpio_dir_in_init)
+ 		devtype->gpio_dir_in_init(gc);
+ 
+-	irq_set_chained_handler_and_data(mpc8xxx_gc->irqn,
+-					 mpc8xxx_gpio_irq_cascade, mpc8xxx_gc);
++	ret = request_irq(mpc8xxx_gc->irqn, mpc8xxx_gpio_irq_cascade,
++		IRQF_NO_THREAD | IRQF_SHARED, "gpio-cascade", mpc8xxx_gc);
++	if (ret) {
++		dev_err("%s: failed to request_irq(%d), ret = %d\n",
++				np->full_name, mpc8xxx_gc->irqn, ret);
++		goto err;
++	}
++
+ 	return 0;
+ err:
+ 	iounmap(mpc8xxx_gc->regs);
+-- 
+2.9.5
 
-Then jus check explicitly for a "pdc" register and in that case
-initialize the PDC.
-
-Yours,
-Linus Walleij
