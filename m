@@ -2,124 +2,76 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 67B65AF998
-	for <lists+linux-gpio@lfdr.de>; Wed, 11 Sep 2019 11:55:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 041C5AF9A5
+	for <lists+linux-gpio@lfdr.de>; Wed, 11 Sep 2019 11:58:17 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726793AbfIKJzP (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 11 Sep 2019 05:55:15 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:33524 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726702AbfIKJzP (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 11 Sep 2019 05:55:15 -0400
-Received: by mail-pf1-f196.google.com with SMTP id q10so13350898pfl.0;
-        Wed, 11 Sep 2019 02:55:14 -0700 (PDT)
+        id S1727224AbfIKJ6O (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 11 Sep 2019 05:58:14 -0400
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:33847 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727216AbfIKJ6O (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 11 Sep 2019 05:58:14 -0400
+Received: by mail-lj1-f194.google.com with SMTP id h2so12873783ljk.1
+        for <linux-gpio@vger.kernel.org>; Wed, 11 Sep 2019 02:58:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=EYAdW6e1HjgiO7iOA9knRWup6ouX3NvawvaBsn5XypY=;
-        b=uadrbg0nOLNfbytsdr/sMmmtNrDUkeUPXVSZuu51dsCCjTuuJIQ70gXTSFF9T/2Mod
-         9WuGH7pzgyBVz7CUH169M1T2ORrSB93tEzRcOnFlgAlr5aPoxrbP++8WhYuUP+Y+TFBS
-         QGAqm0aqS7VP/0Zp6tN64XH/sgtS0puMtywdEnQWylQa12lnCjhM/28pV43vv5qsiuAo
-         +0x5Q6A57plY+1ZEWAPJusNjnYGnNvM0UGCxpWY9Eiuq70zzjEt6IcD0TFze6vB96iUt
-         mHapZ2Z1zdbob9Oq0EZiiSFhN6JkgJpNt5po04BFPnTWW8d8mCRHdS6tIDwKvoLkRCgK
-         CpvQ==
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=k4dGhcxp6T6gSoKIxWokryHsNaeknVwfT4UnRhjgn/A=;
+        b=tkDWR58vwuKS0da2FWu9u/M/Xn/DyAr+ZUrx/+cJp27zqKvp/xBOMk/VGYXwWTSTla
+         RUGyo5mKpJkCSH4kikwfH+5eo9+R6rZIayBLRSf+XRHifxKTcmqIQ4gwFxUtB1L1mNNv
+         C+y6q8VDxxIv11W0mSPewJcrRxVLCXfhy/zrVENzffiPUZWT19SmmXpXLxeHXmrBsWUW
+         Z+acs/RypO6knajkSEc5Qz/wJsF/2ZvG/Tnm6Rf1dhTLkszi/Ebc+DrhWG1iSvuJcAmU
+         OvMWljKcMJ9mFuT5LckIuewLzRHNMNjiVhbyaXyBbavOplfSxkteHCHD9wi0oaIvuhN+
+         RE7A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=EYAdW6e1HjgiO7iOA9knRWup6ouX3NvawvaBsn5XypY=;
-        b=sptcehjBkkuOEff8cqXpLIQKmYnpTaUUG+JYv3EiiaowBoR9ZdlBjbmlXd0RKNGklr
-         meH+GY1ZyKj/oWYsC3dtm3p9XgBakvtHGtXaC6rBzRCfKtwxFZMab4qib6yOQQFsWLVX
-         ERWxKNf+dienNlNvyPniHyU13bT+ESyB6+9BDx2CdlWnzpX5BffQEOY+5/gyzRXIF7xa
-         xW/FMxaCM8kuKXxrsXPEedZQfaYo761LH3r5+N3C1NnWImtWotJMT4irjAnha95lUvfD
-         wxVS3hapkVUFFXzNu+i9cKKbdKpfgtr7ecE1wCeCCvZOTRjIM6yCIPQ/D7dWBFl0O8Ap
-         qOYw==
-X-Gm-Message-State: APjAAAWbu3VMHtMJBuA9pCUYB8QNvqmrAmGRmoG8Jyd4uq18fyUVTenM
-        Jznugw9smIQZIJ/d8jv72esQcoQZlkE=
-X-Google-Smtp-Source: APXvYqz8/DQvRH8+c009V9c0kMz3Cs9wV2T2oQJUOaot7e5CWOEkxzbY8jQ1Kv48S4dhqFwZvUdIFw==
-X-Received: by 2002:a17:90a:a014:: with SMTP id q20mr4591336pjp.113.1568195714294;
-        Wed, 11 Sep 2019 02:55:14 -0700 (PDT)
-Received: from dtor-ws ([2620:15c:202:201:3adc:b08c:7acc:b325])
-        by smtp.gmail.com with ESMTPSA id j2sm21388338pfe.130.2019.09.11.02.55.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 11 Sep 2019 02:55:13 -0700 (PDT)
-Date:   Wed, 11 Sep 2019 02:55:11 -0700
-From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-        Andrew Lunn <andrew@lunn.ch>,
-        "David S. Miller" <davem@davemloft.net>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>, netdev@vger.kernel.org
-Subject: Re: [PATCH 04/11] net: phylink: switch to using
- fwnode_gpiod_get_index()
-Message-ID: <20190911095511.GB108334@dtor-ws>
-References: <20190911075215.78047-1-dmitry.torokhov@gmail.com>
- <20190911075215.78047-5-dmitry.torokhov@gmail.com>
- <20190911092514.GM2680@smile.fi.intel.com>
- <20190911093914.GT13294@shell.armlinux.org.uk>
- <20190911094619.GN2680@smile.fi.intel.com>
- <20190911094929.GV13294@shell.armlinux.org.uk>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=k4dGhcxp6T6gSoKIxWokryHsNaeknVwfT4UnRhjgn/A=;
+        b=Lrj63ZLwHvD034uEMlVINawAdfOUuKOOa/DrGT1IgYUuW80Pvw7rQSZ3wwdiT5ZHlP
+         JWr4I+gUTYDPcEDqYlgk0V4cZX8vaw/8bZ8goxnr/LmW22RYScjpOoEUGwxnVPoJTQss
+         kkC4dOCrIFouA4kgVVfynKALPzHQKxNCmiqwXikfpf884N8jymt/qnz+63zGGo8RC6gG
+         wzKzQdqPAsh6GH47iY9Ggl6rwBdFhiYXU0pZYdO2sE3RIVyhnphJ1n245cwKc8LHdbx3
+         x/mJyKuWi6fFsG51zUp/PSV9b+ZQWljaT4TRRJAa3l49b8O6YHg7U6FIwO6Dzq1wxudR
+         nDEg==
+X-Gm-Message-State: APjAAAVViqLg9McemVheD6EqRbqgMZg747dbmO7PiL/RsQ3usicEdgsm
+        tpjYV9c0Mv1Az+y5tMs7/tI9xcEpvuul0l1K6CAA3g==
+X-Google-Smtp-Source: APXvYqwbLg5jGI86j9e4EMl792llsAjTOPkGlSGFa4C8Xlkdq8JvUyl4zObZNLLqt7Sar4h37ifM08D33QB5mKjQPek=
+X-Received: by 2002:a2e:8056:: with SMTP id p22mr17584388ljg.69.1568195890794;
+ Wed, 11 Sep 2019 02:58:10 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190911094929.GV13294@shell.armlinux.org.uk>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20190905140919.29283-1-colin.king@canonical.com>
+In-Reply-To: <20190905140919.29283-1-colin.king@canonical.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Wed, 11 Sep 2019 10:57:59 +0100
+Message-ID: <CACRpkdbYKjKPAT=V8K_JtP49teq5q9GELkK-vc+mQEdwcU781w@mail.gmail.com>
+Subject: Re: [PATCH] pinctrl: bcm: remove redundant assignment to pointer log
+To:     Colin King <colin.king@canonical.com>
+Cc:     Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>,
+        bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        kernel-janitors@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Sep 11, 2019 at 10:49:29AM +0100, Russell King - ARM Linux admin wrote:
-> On Wed, Sep 11, 2019 at 12:46:19PM +0300, Andy Shevchenko wrote:
-> > On Wed, Sep 11, 2019 at 10:39:14AM +0100, Russell King - ARM Linux admin wrote:
-> > > On Wed, Sep 11, 2019 at 12:25:14PM +0300, Andy Shevchenko wrote:
-> > > > On Wed, Sep 11, 2019 at 12:52:08AM -0700, Dmitry Torokhov wrote:
-> > > > > Instead of fwnode_get_named_gpiod() that I plan to hide away, let's use
-> > > > > the new fwnode_gpiod_get_index() that mimics gpiod_get_index(), bit
-> > > > > works with arbitrary firmware node.
-> e > > 
-> > > > I'm wondering if it's possible to step forward and replace
-> > > > fwnode_get_gpiod_index by gpiod_get() / gpiod_get_index() here and
-> > > > in other cases in this series.
-> > > 
-> > > No, those require a struct device, but we have none.  There are network
-> > > drivers where there is a struct device for the network complex, but only
-> > > DT nodes for the individual network interfaces.  So no, gpiod_* really
-> > > doesn't work.
-> > 
-> > In the following patch the node is derived from struct device. So, I believe
-> > some cases can be handled differently.
-> 
-> phylink is not passed a struct device - it has no knowledge what the
-> parent device is.
-> 
-> In any case, I do not have "the following patch".
+On Thu, Sep 5, 2019 at 3:09 PM Colin King <colin.king@canonical.com> wrote:
 
-Andy is talking about this one:
+> From: Colin Ian King <colin.king@canonical.com>
+>
+> The pointer log is being initialized with a value that is never read
+> and is being re-assigned a little later on. The assignment is
+> redundant and hence can be removed.
+>
+> Addresses-Coverity: ("Unused value")
+> Signed-off-by: Colin Ian King <colin.king@canonical.com>
 
-diff --git a/drivers/net/phy/mdio_bus.c b/drivers/net/phy/mdio_bus.c
-index ce940871331e..9ca51d678123 100644
---- a/drivers/net/phy/mdio_bus.c
-+++ b/drivers/net/phy/mdio_bus.c
-@@ -46,8 +46,8 @@ static int mdiobus_register_gpiod(struct mdio_device *mdiodev)
+Patch applied.
 
-        /* Deassert the optional reset signal */
-        if (mdiodev->dev.of_node)
--               gpiod = fwnode_get_named_gpiod(&mdiodev->dev.of_node->fwnode,
--                                              "reset-gpios", 0,
-                                               GPIOD_OUT_LOW,
-+               gpiod = fwnode_gpiod_get_index(&mdiodev->dev.of_node->fwnode,
-+                                              "reset", 0, GPIOD_OUT_LOW,
-                                               "PHY reset");
-Here if we do not care about "PHY reset" label, we could use
-gpiod_get(&mdiodev->dev, "reset", GPIOD_OUT_LOW).
-
-Thanks.
-
--- 
-Dmitry
+Yours,
+Linus Walleij
