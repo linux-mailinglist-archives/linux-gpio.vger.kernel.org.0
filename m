@@ -2,105 +2,133 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 3901BAF57F
-	for <lists+linux-gpio@lfdr.de>; Wed, 11 Sep 2019 07:55:28 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 955BEAF72C
+	for <lists+linux-gpio@lfdr.de>; Wed, 11 Sep 2019 09:52:21 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726749AbfIKFz1 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 11 Sep 2019 01:55:27 -0400
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:35462 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726724AbfIKFz1 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 11 Sep 2019 01:55:27 -0400
-Received: by mail-oi1-f196.google.com with SMTP id a127so13190596oii.2
-        for <linux-gpio@vger.kernel.org>; Tue, 10 Sep 2019 22:55:26 -0700 (PDT)
+        id S1727014AbfIKHwV (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 11 Sep 2019 03:52:21 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:41049 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726696AbfIKHwU (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 11 Sep 2019 03:52:20 -0400
+Received: by mail-pf1-f193.google.com with SMTP id b13so13129573pfo.8;
+        Wed, 11 Sep 2019 00:52:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=YM9Kdr6pR5ir7duMfXwKDarzHXJpHvXrhgqbZfkgyPo=;
-        b=qsq1GMF2ulu4HYjpmfNjkU+svPULNKsFBDnfrbqvgBAt0sI3P5hnPGDp+PXIxN5Qnr
-         ULHtUiLC7YYgwecrpKkiJOHZSgj8ZS9+lGTJlH9LBByDp3iieP138pzF1dUR3GL8QKCf
-         ujLaU2k4LfPVymsjQlPCjPjKxQxNppnzV1pi4c3AbsOny/l+quvwbyWQGPac9xW1bEZg
-         wFUhmqHdPJLbBs5zSYwfEashUsHkRLqckbQI+v3jN+b/YB18JBJ43IAbPYqaUIL9ffcs
-         E8pI++hXavPOnHIApgP4tuwuxRu2I5+I+BLVB5Jeylihn3eNTKKVXs/e7+ndw8nygvZC
-         cg0w==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=q4c1ESOOpjE2P/uFd/KkrtGxclO2zKfVzjnW7aP5b5c=;
+        b=icWt7W0/ZGxLPm02+gnA/J9j34su+UEYXiIxB1YxkdgQeerLuWIogY5w8f411VOCOq
+         SgN3HpCyUKKt0AHKyEgPID2BBTF3u4+NAuk3B9QNNX/KsAULVe9vssToPV0QF4zjzvr0
+         KKcBVuk0hI5R1cs9G7wNbXYDTEXe4mDCRGFBMbrNiIb2Z+MPOKB/5nd+zOlxhG7ImCxG
+         bQPZ2M+gW9iF9Aikn4j/ghPrWXFh5X+F6gpMOK/20erVWKwkcBiH7ran3LtCKIHxFUnF
+         4jUTN0gHJNHvc/00+XZPU9eLUehHBeQae0yLzl5aTDWL/DklS1NCHKX2o3qv5IO278+C
+         /jmQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=YM9Kdr6pR5ir7duMfXwKDarzHXJpHvXrhgqbZfkgyPo=;
-        b=S74NJ4muOFgfHTJz1EOT8IS/ZdWt/nZN5fKTcpIAyCMuqGvF5ZJ26KJPFHiD6Zo7Pg
-         UeUnR26C6ZxzxTR82ZDtf+cmhvcgFMiAYMOYylWGTZ46u2Ci4kUNDqez8vdyyg0XAYoL
-         0Cp4HLcXPeYcYHw/ux46w9NsGcsj8av2WMwYtWN3kmLuBGKEYJ3mEeBrnkxd4s9L87Cu
-         3ej9xo8fMQlpqPBlzLTpNAxoWoBlvegjr7ob0YTJy1+nV8w++zKsX3LqcSAP1jzeewPL
-         4ReFpN+rqu5+UrLSSgqIS0sZ5CzpzNzJG/fopoYMJvA7L37vUuUAB3dO+FUUU3YXV16n
-         LuQA==
-X-Gm-Message-State: APjAAAWH70UQwFfmXisGiUUzpM/w0tCT2eMaSf884oJ2+ta+bcgl5+tT
-        +60mLwp/oReI9KOFMcGhu5A8MAF9jMsAN/VCCXwDSQ==
-X-Google-Smtp-Source: APXvYqz0CXlFQ4QKcgT2lV5sbnXYFZ+y9GQ1tRvJmX8PPD/t7utrccBcs5DQOstgiQUvQmjfaq7+K9YdmeYUA14R33g=
-X-Received: by 2002:a54:4f8a:: with SMTP id g10mr2667440oiy.147.1568181326176;
- Tue, 10 Sep 2019 22:55:26 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=q4c1ESOOpjE2P/uFd/KkrtGxclO2zKfVzjnW7aP5b5c=;
+        b=hVs+MlzzlcOWf6afERJANW73FuqA9/qlcUxEMhazrFhYlDnNh3tLfNt9IcTLf5w8BX
+         V5Jj3Sj4DxXrBidhKtVSWH8OlIX8Q/uxJ5SY4wP9bwmLmmm1Li//xbwNkjgzW+vvkJ5l
+         1tjBL0D6KVsrKei/5+Ec06iwy23krOlgOOxkWD+n0K84p2IbP1QtpiQHXSXVzwvDPt/U
+         FjAhi64ebcVp/w9yeyU1QPpkqiVG07RHQj3/nyeR7aR3O5M6B4Pn4C1S6JR4xt0sroPP
+         /K6Oe5iN9Md+TlAJzOczJHYKS4ob00I36HWOiNQlRs1z6zdzjN0ikwy0zBjL61OrT0Wu
+         Kf1g==
+X-Gm-Message-State: APjAAAX5SHn81kdD08rPok9eR8N3aIHLh5vn9h2D2ck2HbQQLvLCIFyg
+        BrjT3g8SJmd5/y1ulsIMzmsd2BmRBT0=
+X-Google-Smtp-Source: APXvYqyrkl1nQUV0tQy2ao6Qp1atdp6sVcb56rA8O+j9Av28pZKjTEmBQuuMIwaP++GyQIODri9+7A==
+X-Received: by 2002:a62:ee0a:: with SMTP id e10mr41430645pfi.197.1568188339617;
+        Wed, 11 Sep 2019 00:52:19 -0700 (PDT)
+Received: from dtor-ws.mtv.corp.google.com ([2620:15c:202:201:3adc:b08c:7acc:b325])
+        by smtp.gmail.com with ESMTPSA id u2sm8582445pgp.66.2019.09.11.00.52.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 11 Sep 2019 00:52:19 -0700 (PDT)
+From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+        Andrew Lunn <andrew@lunn.ch>,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        David Airlie <airlied@linux.ie>,
+        "David S. Miller" <davem@davemloft.net>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Russell King <linux@armlinux.org.uk>,
+        dri-devel@lists.freedesktop.org, linux-acpi@vger.kernel.org,
+        netdev@vger.kernel.org
+Subject: [PATCH 00/11] Add support for software nodes to gpiolib
+Date:   Wed, 11 Sep 2019 00:52:04 -0700
+Message-Id: <20190911075215.78047-1-dmitry.torokhov@gmail.com>
+X-Mailer: git-send-email 2.23.0.162.g0b9fbb3734-goog
 MIME-Version: 1.0
-References: <20190910082138.30193-1-brgl@bgdev.pl> <20190910104829.983FE2067B@mail.kernel.org>
-In-Reply-To: <20190910104829.983FE2067B@mail.kernel.org>
-From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Date:   Wed, 11 Sep 2019 07:55:15 +0200
-Message-ID: <CAMpxmJW0gd9vVp-UXeRBsrLuvYiOJNo=mcLZi8DLCQKNNXgO2A@mail.gmail.com>
-Subject: Re: [PATCH] gpiolib: don't clear FLAG_IS_OUT when emulating open-drain/open-source
-To:     Sasha Levin <sashal@kernel.org>
-Cc:     Bartosz Golaszewski <brgl@bgdev.pl>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-gpio <linux-gpio@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "Stable # 4 . 20+" <stable@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-wt., 10 wrz 2019 o 12:48 Sasha Levin <sashal@kernel.org> napisa=C5=82(a):
->
-> Hi,
->
-> [This is an automated email]
->
-> This commit has been processed because it contains a "Fixes:" tag,
-> fixing commit: c663e5f56737 gpio: support native single-ended hardware dr=
-ivers.
->
-> The bot has tested the following trees: v5.2.13, v4.19.71, v4.14.142, v4.=
-9.191.
->
-> v5.2.13: Build OK!
-> v4.19.71: Build OK!
-> v4.14.142: Failed to apply! Possible dependencies:
->     02e479808b5d ("gpio: Alter semantics of *raw* operations to actually =
-be raw")
->     fac9d8850a0c ("gpio: Get rid of _prefix and __prefixes")
->
-> v4.9.191: Failed to apply! Possible dependencies:
->     02e479808b5d ("gpio: Alter semantics of *raw* operations to actually =
-be raw")
->     0db0f26c2c5d ("pinctrl-sx150x: Convert driver to use regmap API")
->     2956b5d94a76 ("pinctrl / gpio: Introduce .set_config() callback for G=
-PIO chips")
->     46a5c112a401 ("gpio: merrifield: Implement gpio_get_direction callbac=
-k")
->     6489677f86c3 ("pinctrl-sx150x: Replace sx150x_*_cfg by means of regma=
-p API")
->     6697546d650d ("pinctrl-sx150x: Add SX1503 specific data")
->     9e80f9064e73 ("pinctrl: Add SX150X GPIO Extender Pinctrl Driver")
->     e3ba81206811 ("pinctrl-sx150x: Improve OF device matching code")
->     e7a718f9b1c1 ("gpio: merrifield: Add support for hardware debouncer")
->
->
-> NOTE: The patch will not be queued to stable trees until it is upstream.
->
-> How should we proceed with this patch?
->
+This series attempts to add support for software nodes to gpiolib, using
+software node references that were introduced recently. This allows us
+to convert more drivers to the generic device properties and drop
+support for custom platform data:
 
-Once it's accepted, I'll prepare backports.
+static const struct software_node gpio_bank_b_node = {
+|-------.name = "B",
+};
 
-Bart
+static const struct property_entry simone_key_enter_props[] = {
+|-------PROPERTY_ENTRY_U32("linux,code", KEY_ENTER),
+|-------PROPERTY_ENTRY_STRING("label", "enter"),
+|-------PROPERTY_ENTRY_REF("gpios", &gpio_bank_b_node, 123, GPIO_ACTIVE_LOW),
+|-------{ }
+};
+
+If we agree in principle, I would like to have the very first 3 patches
+in an immutable branch off maybe -rc8 so that it can be pulled into
+individual subsystems so that patches switching various drivers to
+fwnode_gpiod_get_index() could be applied.
+
+Thanks,
+Dmitry
+
+Dmitry Torokhov (11):
+  gpiolib: of: add a fallback for wlf,reset GPIO name
+  gpiolib: introduce devm_fwnode_gpiod_get_index()
+  gpiolib: introduce fwnode_gpiod_get_index()
+  net: phylink: switch to using fwnode_gpiod_get_index()
+  net: mdio: switch to using fwnode_gpiod_get_index()
+  drm/bridge: ti-tfp410: switch to using fwnode_gpiod_get_index()
+  gpliolib: make fwnode_get_named_gpiod() static
+  gpiolib: of: tease apart of_find_gpio()
+  gpiolib: of: tease apart acpi_find_gpio()
+  gpiolib: consolidate fwnode GPIO lookups
+  gpiolib: add support for software nodes
+
+ drivers/gpio/Makefile              |   1 +
+ drivers/gpio/gpiolib-acpi.c        | 153 ++++++++++++++----------
+ drivers/gpio/gpiolib-acpi.h        |  21 ++--
+ drivers/gpio/gpiolib-devres.c      |  33 ++----
+ drivers/gpio/gpiolib-of.c          | 159 ++++++++++++++-----------
+ drivers/gpio/gpiolib-of.h          |  26 ++--
+ drivers/gpio/gpiolib-swnode.c      |  92 +++++++++++++++
+ drivers/gpio/gpiolib-swnode.h      |  13 ++
+ drivers/gpio/gpiolib.c             | 184 ++++++++++++++++-------------
+ drivers/gpu/drm/bridge/ti-tfp410.c |   4 +-
+ drivers/net/phy/mdio_bus.c         |   4 +-
+ drivers/net/phy/phylink.c          |   4 +-
+ include/linux/gpio/consumer.h      |  53 ++++++---
+ 13 files changed, 471 insertions(+), 276 deletions(-)
+ create mode 100644 drivers/gpio/gpiolib-swnode.c
+ create mode 100644 drivers/gpio/gpiolib-swnode.h
+
+-- 
+2.23.0.162.g0b9fbb3734-goog
+
