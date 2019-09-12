@@ -2,100 +2,77 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id A856BB0AE5
-	for <lists+linux-gpio@lfdr.de>; Thu, 12 Sep 2019 11:05:38 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4ED75B0AF4
+	for <lists+linux-gpio@lfdr.de>; Thu, 12 Sep 2019 11:08:34 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730419AbfILJFh (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 12 Sep 2019 05:05:37 -0400
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:37288 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730327AbfILJFh (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 12 Sep 2019 05:05:37 -0400
-Received: by mail-lj1-f195.google.com with SMTP id y5so12027414lji.4
-        for <linux-gpio@vger.kernel.org>; Thu, 12 Sep 2019 02:05:35 -0700 (PDT)
+        id S1730434AbfILJId (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 12 Sep 2019 05:08:33 -0400
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:44632 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730398AbfILJId (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 12 Sep 2019 05:08:33 -0400
+Received: by mail-lj1-f193.google.com with SMTP id u14so22823699ljj.11
+        for <linux-gpio@vger.kernel.org>; Thu, 12 Sep 2019 02:08:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=yO0Ugz+vt5CON7QrbS17pn/9PoZbjOpwqpjgIPuPJBI=;
-        b=JJf5Um2xcF6I4Vn5Xtmtb4fAN1rtfg7aG42sxpsldtz+GgKvxTp9tTKa3VkZPvd9EY
-         dNzJ9xxQyS5kWB6EYiK9A9y/XxTEbxHF+zBJb89n6dDM57nEbNVKR4rsAIl5lf8Vhag+
-         TclfJV07yTOh8AcC1ggO1+zr5+Myc0FLWvLQnhvWQE30mYuP0yE+rULvwCNU9ShRD18t
-         Ncf+uKf0LjKen0Acg8JxoedVHusi+NQfZzIwwkPo4tfApHhpJzwol/5ei1Ca5GtDRVn0
-         itrKDGPC4kbBoCIDKzKKGKr2LcuCjbM5hHFqKkGEVt56HMsRvQ2UcuurPsCGdFd9ll7C
-         b6ZA==
+         :cc;
+        bh=i7J4PbmeH1oWO8W8ZajC7YRPfKxbxslCKwg9jxg+VhI=;
+        b=wjZ7oJl201ebYkz2a4f5nJBzDw39KWVo2OQLkQ1zXvGCiTSdowLq/j7ziMwP1Rfjrs
+         uV7gzQlNFSDiiryzutStPQMBshx949FbzlxiVoQdxywBka36pLfree0FoDtqHieqXZ9h
+         LSgcUGWnPCzn38RtRhs/XPWLl0gNsZKoEPpWaZcCYDw3x1qSEcrPoXL0OXhYHOZ/VJCD
+         o81eT3EXtrpPzrvnW31ZLOH9xKRQTKq2SpnvdemuVseN+LY2LrjlyZCHaSdpM+Nkqi8r
+         dSpTP/SLeNoIUByjYSm41gQDDZcdiwBVHX+C01i1dKIRxJsM+9fV3vd+AvYEZc6zq6Lh
+         pjFg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=yO0Ugz+vt5CON7QrbS17pn/9PoZbjOpwqpjgIPuPJBI=;
-        b=b7lwTYofUDaUbeIhTHSVu8JEnJBC3Z0lkojCbue0SA8HPJUvFBlbS5i7vQQkRn2Bk8
-         8Es4Nr9yZhmmdL57MdJQ1oQQU+UUEjZ1L1/lXEg2R/SOF1Y+dAWvgTl9Qkhl5PS1yPLQ
-         SmGZ2gr2012Lzmm53BiynBKah+vJQdMz4SXzleWYCbYY617iJhHzc9dWp4qD1+/wiBPs
-         KSoB2F7m/ev+SQumfW8FnK15BAdiqS9JrTE7PS9azwDW5v/g2aokG2UqaPYQg4T12vVM
-         hYhS8UwWixJg32el70Wlb9qCHMzTAeQwSv+XvHjndZ9o1pWvcT5IYO3rZ+mge8IE1rbt
-         9kXA==
-X-Gm-Message-State: APjAAAXiarUc2VDCDuXSbELwTdVWkoikFp9dFjh199BChg2QecaNfSWU
-        LDXTQBKYM496cxMs1U1IMothPcIAdmVBH9ExQAI09hNDtOLJIA==
-X-Google-Smtp-Source: APXvYqxXstkfuaWL/WFUhn1/bUVAnAuPusgloIUG5UcV8mlZwjnAkzyfflZWQZ9rXkXh1oQu49x02P3fCMOERZMIJrI=
-X-Received: by 2002:a2e:654a:: with SMTP id z71mr26065109ljb.37.1568279134855;
- Thu, 12 Sep 2019 02:05:34 -0700 (PDT)
+         :message-id:subject:to:cc;
+        bh=i7J4PbmeH1oWO8W8ZajC7YRPfKxbxslCKwg9jxg+VhI=;
+        b=Mk51PL2VVkorTkJjpBLDnpTpyFoVlSyQRFUy71YRXy7gAp+52LFBeJn0W/R+mtuU7a
+         +i2UDXzu1hfuvgGbjiz49VUp+jcENqHvKbBV5wyGp71VpT+EvVYpU9Dmi8JALxrfwjbf
+         y4comO9bZ3jCnnoFEFh8zQsW5zK4QYa7S7MlqxMEI+jxWTu6RCuA8PRltgInzqSxY2ay
+         6BYgL97/vQvsMxVpXNOevPa4ArkzLxbTP21blHhV9SjzhYhkGWwG3D2q0Mp4//vWESZN
+         M0FgbDqKUr351Tij3G9G4QFku4MWXMTU/uSz/jL3Y/P8L8heRM6QGIkx/poctf6ZVTqB
+         l5Yw==
+X-Gm-Message-State: APjAAAWtpUvI6A22E89Dm3EcKibPV8byyaioZhr+WS+QChPjEvtc4/AO
+        wm9FQrFKHq8COSc+gmcWQacGQNH7wO/y2di//iYFEg==
+X-Google-Smtp-Source: APXvYqycdCEjJhtO9F1hYvDSmgwKHe8g+Qx//eIozwl50NSf3M2ESWqUNchgPo7jVeCOMW93J0H7u9GmmXC1JnhgtLc=
+X-Received: by 2002:a2e:8056:: with SMTP id p22mr20790479ljg.69.1568279311270;
+ Thu, 12 Sep 2019 02:08:31 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190909105919.30418-1-u.kleine-koenig@pengutronix.de>
-In-Reply-To: <20190909105919.30418-1-u.kleine-koenig@pengutronix.de>
+References: <20190910141529.21030-1-geert+renesas@glider.be>
+In-Reply-To: <20190910141529.21030-1-geert+renesas@glider.be>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Thu, 12 Sep 2019 10:05:23 +0100
-Message-ID: <CACRpkdZTzYtxjmiEnbvSn0-WQtxADLrxJGb_Q83gtRFhcShRiQ@mail.gmail.com>
-Subject: Re: [PATCH RFC] gpio: define gpio-init nodes to initialize pins
- similar to hogs
-To:     =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>
+Date:   Thu, 12 Sep 2019 10:08:18 +0100
+Message-ID: <CACRpkdZ=NVVEwk=V8z4--t0Yjf0bqKrjKn0e8d7hKn_1-3xW0w@mail.gmail.com>
+Subject: Re: [PATCH] gpio: htc-egpio: Remove unused exported htc_egpio_get_wakeup_irq()
+To:     Geert Uytterhoeven <geert+renesas@glider.be>
 Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Philipp Zabel <philipp.zabel@gmail.com>,
+        Paul Parsons <lost.distance@yahoo.com>,
+        Daniel Mack <daniel@zonque.org>,
+        Haojian Zhuang <haojian.zhuang@gmail.com>,
+        Robert Jarzmik <robert.jarzmik@free.fr>,
+        Russell King <linux@armlinux.org.uk>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Sascha Hauer <kernel@pengutronix.de>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Sep 9, 2019 at 11:59 AM Uwe Kleine-K=C3=B6nig
-<u.kleine-koenig@pengutronix.de> wrote:
+On Tue, Sep 10, 2019 at 3:15 PM Geert Uytterhoeven
+<geert+renesas@glider.be> wrote:
 
-> Sometimes it is handy to be able to easily define a "safe" state for a
-> GPIO. This might for example be used to ensure that an ethernet phy is
-> properly reset during startup or just that all pins have a defined state
-> to minimize leakage current. As such a pin must be requestable (and
-> changable) by a device driver, a gpio-hog cannot be used.
+> This function was never used upstream, and is a relic of the original
+> handhelds.org code the htc-egpio driver was based on.
 >
-> So define a GPIO initializer with a syntax identical to a GPIO hog just
-> using "gpio-init" as identifier instead of "gpio-hog".
->
-> The usage I have in mind (and also implemented in a custom patch stack
-> on top of barebox already) is targeting the bootloader and not
-> necessarily Linux as such an boot-up initialisation should be done as
-> early as possible.
->
-> Not-yet-signed-off-by: Uwe Kleine-K=C3=B6nig <u.kleine-koenig@pengutronix=
-.de>
-> ---
-> Hello,
->
-> maybe it also makes sense to use "gpio-safe"? Maybe it (then) makes
-> sense to reset the gpio in the indicated state after it is released?
->
-> Also it might be beneficial to make the wording more explicit in the
-> description and for example tell that only one of gpio-hog and gpio-init
-> must be provided.
+> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-It's no secret that I am in favor of this approach, as I like consistency
-with the hogs.
-
-The DT people have been against, as they prefer something like an
-initial array of values akin to gpio-names IIRC. But this is a good
-time for them to speak up.
+Patch applied.
 
 Yours,
 Linus Walleij
