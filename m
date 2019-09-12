@@ -2,166 +2,100 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id D3C66B0AC0
-	for <lists+linux-gpio@lfdr.de>; Thu, 12 Sep 2019 10:59:20 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A856BB0AE5
+	for <lists+linux-gpio@lfdr.de>; Thu, 12 Sep 2019 11:05:38 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725940AbfILI7O (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 12 Sep 2019 04:59:14 -0400
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:33688 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730268AbfILI7O (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 12 Sep 2019 04:59:14 -0400
-Received: by mail-oi1-f195.google.com with SMTP id e12so16227035oie.0;
-        Thu, 12 Sep 2019 01:59:13 -0700 (PDT)
+        id S1730419AbfILJFh (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 12 Sep 2019 05:05:37 -0400
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:37288 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730327AbfILJFh (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 12 Sep 2019 05:05:37 -0400
+Received: by mail-lj1-f195.google.com with SMTP id y5so12027414lji.4
+        for <linux-gpio@vger.kernel.org>; Thu, 12 Sep 2019 02:05:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=yO0Ugz+vt5CON7QrbS17pn/9PoZbjOpwqpjgIPuPJBI=;
+        b=JJf5Um2xcF6I4Vn5Xtmtb4fAN1rtfg7aG42sxpsldtz+GgKvxTp9tTKa3VkZPvd9EY
+         dNzJ9xxQyS5kWB6EYiK9A9y/XxTEbxHF+zBJb89n6dDM57nEbNVKR4rsAIl5lf8Vhag+
+         TclfJV07yTOh8AcC1ggO1+zr5+Myc0FLWvLQnhvWQE30mYuP0yE+rULvwCNU9ShRD18t
+         Ncf+uKf0LjKen0Acg8JxoedVHusi+NQfZzIwwkPo4tfApHhpJzwol/5ei1Ca5GtDRVn0
+         itrKDGPC4kbBoCIDKzKKGKr2LcuCjbM5hHFqKkGEVt56HMsRvQ2UcuurPsCGdFd9ll7C
+         b6ZA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=07+QEZTfn9RypDDP0lnGrecYssAORdm1hEOMhmeJ4sQ=;
-        b=qB29lOZJwO2tvSVVpPI8hVkGV53UZRntu+VETEohIp9cgwQ0GOgisfHFTxRfPdNgcm
-         9Ms8gmKQb8a8y2dghFQVV+Q5LVR+OVqU4YuHf1kMhTzHBKZTkNa6+Vrrrs1fOiAbyTLC
-         TP8J4g5ZorKV8H4n1lrGFcuBqjihNXySK1Ou288MTZkBL7SvbAaW0Kr8DAaGuN8XIBxG
-         /v7bodccIGoU/bImy7Bat7F8iBaUAadk94kTXpDUMUIX86oOmY225uGkuaDW3C0aeJxr
-         Zcvwfh9fEBAYswRpowHBCQAGFcKch1ekWf/k53SdIvvscq+dAa5FM9S9b6Jw+FgnouHk
-         B3sg==
-X-Gm-Message-State: APjAAAUrL3d8WZD7jpFr0ZE9Z+KtcoGqXw2vpK0VSn99MrZXTNYY/Rua
-        0MJsvru99UyvZvSMuIamMGkX4KWU7ATOjMQgMMc=
-X-Google-Smtp-Source: APXvYqwaLUUcAadCv0DqnSsH8fSMIu/3zsuqD2+TF8HGL+/gSXVIvL0eI/76KPAWOFUO1FnvkEwE9GdgkicOmpaXifE=
-X-Received: by 2002:a05:6808:8e3:: with SMTP id d3mr7305993oic.153.1568278753086;
- Thu, 12 Sep 2019 01:59:13 -0700 (PDT)
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=yO0Ugz+vt5CON7QrbS17pn/9PoZbjOpwqpjgIPuPJBI=;
+        b=b7lwTYofUDaUbeIhTHSVu8JEnJBC3Z0lkojCbue0SA8HPJUvFBlbS5i7vQQkRn2Bk8
+         8Es4Nr9yZhmmdL57MdJQ1oQQU+UUEjZ1L1/lXEg2R/SOF1Y+dAWvgTl9Qkhl5PS1yPLQ
+         SmGZ2gr2012Lzmm53BiynBKah+vJQdMz4SXzleWYCbYY617iJhHzc9dWp4qD1+/wiBPs
+         KSoB2F7m/ev+SQumfW8FnK15BAdiqS9JrTE7PS9azwDW5v/g2aokG2UqaPYQg4T12vVM
+         hYhS8UwWixJg32el70Wlb9qCHMzTAeQwSv+XvHjndZ9o1pWvcT5IYO3rZ+mge8IE1rbt
+         9kXA==
+X-Gm-Message-State: APjAAAXiarUc2VDCDuXSbELwTdVWkoikFp9dFjh199BChg2QecaNfSWU
+        LDXTQBKYM496cxMs1U1IMothPcIAdmVBH9ExQAI09hNDtOLJIA==
+X-Google-Smtp-Source: APXvYqxXstkfuaWL/WFUhn1/bUVAnAuPusgloIUG5UcV8mlZwjnAkzyfflZWQZ9rXkXh1oQu49x02P3fCMOERZMIJrI=
+X-Received: by 2002:a2e:654a:: with SMTP id z71mr26065109ljb.37.1568279134855;
+ Thu, 12 Sep 2019 02:05:34 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190705160536.12047-1-geert+renesas@glider.be> <CACRpkdZstL3PMtLN3VCDmHq7vSNdO0Q8Wf1sYb5VnwCMs=0uJQ@mail.gmail.com>
-In-Reply-To: <CACRpkdZstL3PMtLN3VCDmHq7vSNdO0Q8Wf1sYb5VnwCMs=0uJQ@mail.gmail.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Thu, 12 Sep 2019 10:59:01 +0200
-Message-ID: <CAMuHMdWcxgXfBb9sBNunOwxftO0+pEB3oAHgufyiGUn3B8uv2Q@mail.gmail.com>
-Subject: Re: [PATCH RFC] gpio: Add Virtual Aggregator GPIO Driver
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Geert Uytterhoeven <geert+renesas@glider.be>, adelva@google.com,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Alexander Graf <agraf@suse.de>,
-        Peter Maydell <peter.maydell@linaro.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Magnus Damm <magnus.damm@gmail.com>,
+References: <20190909105919.30418-1-u.kleine-koenig@pengutronix.de>
+In-Reply-To: <20190909105919.30418-1-u.kleine-koenig@pengutronix.de>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Thu, 12 Sep 2019 10:05:23 +0100
+Message-ID: <CACRpkdZTzYtxjmiEnbvSn0-WQtxADLrxJGb_Q83gtRFhcShRiQ@mail.gmail.com>
+Subject: Re: [PATCH RFC] gpio: define gpio-init nodes to initialize pins
+ similar to hogs
+To:     =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        QEMU Developers <qemu-devel@nongnu.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+        Sascha Hauer <kernel@pengutronix.de>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Linus,
+On Mon, Sep 9, 2019 at 11:59 AM Uwe Kleine-K=C3=B6nig
+<u.kleine-koenig@pengutronix.de> wrote:
 
-On Thu, Sep 12, 2019 at 10:56 AM Linus Walleij <linus.walleij@linaro.org> wrote:
-> On Fri, Jul 5, 2019 at 5:05 PM Geert Uytterhoeven
-> <geert+renesas@glider.be> wrote:
-> > GPIO controllers are exported to userspace using /dev/gpiochip*
-> > character devices.  Access control to these devices is provided by
-> > standard UNIX file system permissions, on an all-or-nothing basis:
-> > either a GPIO controller is accessible for a user, or it is not.
-> > Currently no mechanism exists to control access to individual GPIOs.
-> >
-> > Hence add a virtual GPIO driver to aggregate existing GPIOs (up to 32),
-> > and expose them as a new gpiochip.  This is useful for implementing
-> > access control, and assigning a set of GPIOs to a specific user.
-> > Furthermore, it would simplify and harden exporting GPIOs to a virtual
-> > machine, as the VM can just grab the full virtual GPIO controller, and
-> > no longer needs to care about which GPIOs to grab and which not,
-> > reducing the attack surface.
-> >
-> > Virtual GPIO controllers are instantiated by writing to the "new_device"
-> > attribute file in sysfs:
-> >
-> >     $ echo "<gpiochipA> <gpioA1> [<gpioA2> ...]"
-> >            "[, <gpiochipB> <gpioB1> [<gpioB2> ...]] ...]"
-> >             > /sys/bus/platform/drivers/gpio-virt-agg/new_device
-> >
-> > Likewise, virtual GPIO controllers can be destroyed after use:
-> >
-> >     $ echo gpio-virt-agg.<N> \
-> >             > /sys/bus/platform/drivers/gpio-virt-agg/delete_device
-> >
-> > Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> > ---
-> > Aggregating GPIOs and exposing them as a new gpiochip was suggested in
-> > response to my proof-of-concept for GPIO virtualization with QEMU[1][2].
-> >
-> > Sample session on r8a7791/koelsch:
-> >
-> >   - Disable the leds node in arch/arm/boot/dts/r8a7791-koelsch.dts
-> >
-> >   - Create virtual aggregators:
-> >
-> >     $ echo "e6052000.gpio 19 20" \
-> >             > /sys/bus/platform/drivers/gpio-virt-agg/new_device
-> >
-> >     gpio-virt-agg gpio-virt-agg.0: GPIO 0 => e6052000.gpio/19
-> >     gpio-virt-agg gpio-virt-agg.0: GPIO 1 => e6052000.gpio/20
-> >     gpiochip_find_base: found new base at 778
-> >     gpio gpiochip8: (gpio-virt-agg.0): added GPIO chardev (254:8)
-> >     gpiochip_setup_dev: registered GPIOs 778 to 779 on device: gpiochip8 (gpio-virt-agg.0)
-> >
-> >     $ echo "e6052000.gpio 21, e6050000.gpio 20 21 22" \
-> >             > /sys/bus/platform/drivers/gpio-virt-agg/new_device
-> >
-> >     gpio-virt-agg gpio-virt-agg.1: GPIO 0 => e6052000.gpio/21
-> >     gpio-virt-agg gpio-virt-agg.1: GPIO 1 => e6050000.gpio/20
-> >     gpio-virt-agg gpio-virt-agg.1: GPIO 2 => e6050000.gpio/21
-> >     gpio-virt-agg gpio-virt-agg.1: GPIO 3 => e6050000.gpio/22
-> >     gpiochip_find_base: found new base at 774
-> >     gpio gpiochip9: (gpio-virt-agg.1): added GPIO chardev (254:9)
-> >     gpiochip_setup_dev: registered GPIOs 774 to 777 on device: gpiochip9 (gpio-virt-agg.1)
-> >
-> >   - Adjust permissions on /dev/gpiochip[89] (optional)
-> >
-> >   - Control LEDs:
-> >
-> >     $ gpioset gpiochip8 0=0 1=1 # LED6 OFF, LED7 ON
-> >     $ gpioset gpiochip8 0=1 1=0 # LED6 ON, LED7 OFF
-> >     $ gpioset gpiochip9 0=0     # LED8 OFF
-> >     $ gpioset gpiochip9 0=1     # LED8 ON
-> >
-> >   - Destroy virtual aggregators:
-> >
-> >     $ echo gpio-virt-agg.0 \
-> >             > /sys/bus/platform/drivers/gpio-virt-agg/delete_device
-> >     $ echo gpio-virt-agg.1 \
-> >             > /sys/bus/platform/drivers/gpio-virt-agg/delete_device
-> >
-> > Thanks for your comments!
-> >
-> > References:
-> >   - [1] "[PATCH QEMU POC] Add a GPIO backend"
-> >         (https://lore.kernel.org/linux-renesas-soc/20181003152521.23144-1-geert+renesas@glider.be/)
-> >   - [2] "Getting To Blinky: Virt Edition / Making device pass-through
-> >          work on embedded ARM"
-> >         (https://fosdem.org/2019/schedule/event/vai_getting_to_blinky/)
+> Sometimes it is handy to be able to easily define a "safe" state for a
+> GPIO. This might for example be used to ensure that an ethernet phy is
+> properly reset during startup or just that all pins have a defined state
+> to minimize leakage current. As such a pin must be requestable (and
+> changable) by a device driver, a gpio-hog cannot be used.
 >
-> I'm looping in my friends at Google for this discussion.
+> So define a GPIO initializer with a syntax identical to a GPIO hog just
+> using "gpio-init" as identifier instead of "gpio-hog".
 >
-> They need a virtualized gpio_chip for their Android emulator,
-> and their current approach for other devices has been around
-> using virtio in most cases and an emulated AC97 for the
-> audio case as far as I remember.
+> The usage I have in mind (and also implemented in a custom patch stack
+> on top of barebox already) is targeting the bootloader and not
+> necessarily Linux as such an boot-up initialisation should be done as
+> early as possible.
 >
-> It would be great to have their input on this so we can create a
-> virtualization/aggregate that works for all.
+> Not-yet-signed-off-by: Uwe Kleine-K=C3=B6nig <u.kleine-koenig@pengutronix=
+.de>
+> ---
+> Hello,
 >
-> Please include adelva@google.com on future postings of this!
+> maybe it also makes sense to use "gpio-safe"? Maybe it (then) makes
+> sense to reset the gpio in the indicated state after it is released?
+>
+> Also it might be beneficial to make the wording more explicit in the
+> description and for example tell that only one of gpio-hog and gpio-init
+> must be provided.
 
-I've sent v2 yesterday:
-https://lore.kernel.org/lkml/20190911143858.13024-1-geert+renesas@glider.be/
+It's no secret that I am in favor of this approach, as I like consistency
+with the hogs.
 
-Gr{oetje,eeting}s,
+The DT people have been against, as they prefer something like an
+initial array of values akin to gpio-names IIRC. But this is a good
+time for them to speak up.
 
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Yours,
+Linus Walleij
