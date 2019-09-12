@@ -2,51 +2,51 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id B700CB0B0E
-	for <lists+linux-gpio@lfdr.de>; Thu, 12 Sep 2019 11:17:29 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C7305B0B1A
+	for <lists+linux-gpio@lfdr.de>; Thu, 12 Sep 2019 11:18:48 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730458AbfILJR2 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 12 Sep 2019 05:17:28 -0400
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:38383 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730397AbfILJR2 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 12 Sep 2019 05:17:28 -0400
-Received: by mail-lj1-f195.google.com with SMTP id y23so22528325ljn.5
-        for <linux-gpio@vger.kernel.org>; Thu, 12 Sep 2019 02:17:27 -0700 (PDT)
+        id S1730632AbfILJSs (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 12 Sep 2019 05:18:48 -0400
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:46668 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730509AbfILJSr (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 12 Sep 2019 05:18:47 -0400
+Received: by mail-lf1-f67.google.com with SMTP id t8so18697690lfc.13
+        for <linux-gpio@vger.kernel.org>; Thu, 12 Sep 2019 02:18:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=szvOgaSKQHuR91dwCdpTxKgQS8xunWLLdcGGO0krnL4=;
-        b=sA7zUsLieMzsUVFjX2+urBr0+1oZ9bvhGRHA4G0cboyuuO3Y0mq+djLeDOwM0jAPY4
-         /QNlB9igugVuoWRXJRNqk4JkA9GyMlt0oRVwCZo+/fm0cn6IFuMcU30YnHCJLopTFQqP
-         EW8b1fGL078UUPetpRD6ZnYfylArrpW1c6mqvxdiMyE+k1g1tk6KPkC11hwPTtzJ9WsU
-         Cg9K08Wep9/wMuKC5cmgo0iE0qOqEnvACztRLP90QbET4V/YHOZeiJvgxXL+TDeQYoHd
-         C/sGr9e//liFGE+rDfKNa0KlqNI808auphGPLR8RhaQFbgU3KGv8Yv+BC1uVses4g8xU
-         t7WA==
+        bh=h+78ps/YcRgQREC8bdm59/QXTeZLeIK2n4ix1Zc6YuE=;
+        b=ltewyL2WgM1Du8dsV1BulMpBXfyc5iBPw/OicmEDuWpykUKquvS58FZyFlFBoWGtYE
+         DKivTxiSwd/VoeS716Qu+MOJ/knvInl1KdWOq2lle4uy/NNshh9dxaOSW0ho5cGc/YIS
+         9H3XI58bOMEFypzNTyT3bsNgLV9SmSW9bSRXPPFNUteYYdEH4vptUz9AKEiBCLeiY/j8
+         odpcJif9v89xjj7AQ8suKy+VPNdET4YNK6pP7LrzIIvnY88gZGF+YyXjETcPUHcDjk7r
+         YEoIXw2SKp+KmhwxnbZtXq6Md2o8+wF3kOx6YoT9qF7GqajMiozNqKiwjeZyFLh5ko7z
+         V/Gw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=szvOgaSKQHuR91dwCdpTxKgQS8xunWLLdcGGO0krnL4=;
-        b=Rn2svLyght0e8DGdP4GcjpdvTpgj6MbcCPHc9JghfHsT0LCh1GxJ5NDQej46/MMq5M
-         fIC2S5pIsFjVjqzaecPOoIKpJH2jUfQpZvs4+yFq2nj2g/RN7KL9RmvCb4wohy02JhyQ
-         NpXVpizh6iibM0QCKaWNI08X1WZVl+sR0Ee/TqY8dIM2CKTAxryYAX5MAPIf+5St+APi
-         ar9TuYpPd2QdoeJdK5zpx4izWr8CJlI3mnhCjSPdTi1q8WymXORb2NtS6PBsm2ZecZv4
-         zgrkFJsWUGZCj80H3OexyzAe9vFSATz+9KQNOvkD9RN32phl+vdC93dJmuZpGFZYYIRk
-         Yt2w==
-X-Gm-Message-State: APjAAAX2ufaM3ZLiZ3x/8R/1i9To6WoYQHOXeTzW5NLADL4SqTzS/3vc
-        6piW1RMHvUK87RKQPwL5XH+7TE4TDJrWYfV4hcSTuw==
-X-Google-Smtp-Source: APXvYqxL+8XFoDpn8Dd9sc3WWzP6/eBNJgZM935Fj7SoXm0Pq+8cYMp8gFoV2ij+afLEJn83FenUjyZivw8vujXDIuM=
-X-Received: by 2002:a2e:9dc3:: with SMTP id x3mr22302607ljj.108.1568279846715;
- Thu, 12 Sep 2019 02:17:26 -0700 (PDT)
+        bh=h+78ps/YcRgQREC8bdm59/QXTeZLeIK2n4ix1Zc6YuE=;
+        b=m5eepsSGqg5Q4DRBll7E8UFXUKT7RTBqp4oc/y7RIM5uyHaSK/AriCJtvV4ykOyIwi
+         ex1ZO2SYQfpL1toPWZOUluHEHrzLNU5T4mDAwci8BDT4lbc4rpuYYlEK4oPCbZm3FhEM
+         jEPHIBoUFx6KXNgyLXpnxYrUmTdGTf+qh/azgVRg2ubl0Hy9JIwlhMViwU+C0EgnwKUe
+         n2zojHKX/KoX/BUlewt1bWiFHKWXgDw3k9eMndn+lzo/xAWID73aqBIxW9ThelpIC/zf
+         FNChhXKgzM5lX3Q/9kNmTDp++jw7Om2BIvHEAlX+nNsDjzN5EAE41OllEt2pBm77Uuu0
+         Kj7w==
+X-Gm-Message-State: APjAAAVW/t6J9f1wuB6rUImHS/34vT2UN9qEcZwttqxV3dFfeHIE3+S8
+        /GAhLQf/MTOON/vQiCs3PzsNCTXQDnJgu6dYa74Q1MgEM6HaBg==
+X-Google-Smtp-Source: APXvYqw99POSQQmybjyQTzX+pmWjYXGnqHl/f+z6QV0Owgv09UDDxoCLWxb8BQV1wLRbkNBmLMTRSaxBTJicMRvjXTw=
+X-Received: by 2002:ac2:5c11:: with SMTP id r17mr27498145lfp.61.1568279925827;
+ Thu, 12 Sep 2019 02:18:45 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190910152855.111588-1-paul.kocialkowski@bootlin.com> <20190910152855.111588-3-paul.kocialkowski@bootlin.com>
-In-Reply-To: <20190910152855.111588-3-paul.kocialkowski@bootlin.com>
+References: <20190910152855.111588-1-paul.kocialkowski@bootlin.com>
+In-Reply-To: <20190910152855.111588-1-paul.kocialkowski@bootlin.com>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Thu, 12 Sep 2019 10:17:15 +0100
-Message-ID: <CACRpkdY40PZc9R-yFwooR4-WMgn3LH7K+yTx00ZNxyq6OOnw6A@mail.gmail.com>
-Subject: Re: [PATCH 3/3] gpio: syscon: Add support for the Xylon LogiCVC GPIOs
+Date:   Thu, 12 Sep 2019 10:18:34 +0100
+Message-ID: <CACRpkdYGCWc007s-9_jvX2aKuZv8fTfV2UX-qBBi7WtePABMVg@mail.gmail.com>
+Subject: Re: [PATCH 1/3] gpio: syscon: Add support for a custom get operation
 To:     Paul Kocialkowski <paul.kocialkowski@bootlin.com>
 Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
         "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
@@ -65,31 +65,16 @@ X-Mailing-List: linux-gpio@vger.kernel.org
 On Tue, Sep 10, 2019 at 4:29 PM Paul Kocialkowski
 <paul.kocialkowski@bootlin.com> wrote:
 
-> The LogiCVC display hardware block comes with GPIO capabilities
-> that must be exposed separately from the main driver (as GPIOs) for
-> use with regulators and panels. A syscon is used to share the same
-> regmap across the two drivers.
+> Some drivers might need a custom get operation to match custom
+> behavior implemented in the set operation.
 >
-> Since the GPIO capabilities are pretty simple, add them to the syscon
-> GPIO driver.
+> Add plumbing for supporting that.
 >
 > Signed-off-by: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
 
-I'm fine with this for now, but the gpio-syscon driver is now growing
-big and when you use it you are getting support for a whole bunch
-of systems you're not running on included in your binary.
-
-We need to think about possibly creating drivers/gpio/syscon
-and split subdrivers into separate files and config options
-so that people can slim down to what they actually need.
-
-> +       *bit = 1 << offset;
-
-Please do this:
-
-#include <linux/bits.h>
-
-*bit = BIT(offset);
+Looks OK but as noted in the other patch: we are accumulating stuff
+in this driver, possibly this syscon part should just be a library
+used by individual drivers that can be switched on/off with Kconfig.
 
 Yours,
 Linus Walleij
