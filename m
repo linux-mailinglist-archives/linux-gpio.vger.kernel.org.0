@@ -2,80 +2,92 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 11E8AB138A
-	for <lists+linux-gpio@lfdr.de>; Thu, 12 Sep 2019 19:28:44 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 74CECB1414
+	for <lists+linux-gpio@lfdr.de>; Thu, 12 Sep 2019 19:53:06 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387592AbfILR2k (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 12 Sep 2019 13:28:40 -0400
-Received: from mail-wm1-f43.google.com ([209.85.128.43]:51510 "EHLO
-        mail-wm1-f43.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387586AbfILR2k (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 12 Sep 2019 13:28:40 -0400
-Received: by mail-wm1-f43.google.com with SMTP id 7so921153wme.1
-        for <linux-gpio@vger.kernel.org>; Thu, 12 Sep 2019 10:28:38 -0700 (PDT)
+        id S1726984AbfILRwB (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 12 Sep 2019 13:52:01 -0400
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:40125 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726721AbfILRwB (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 12 Sep 2019 13:52:01 -0400
+Received: by mail-oi1-f196.google.com with SMTP id b80so17849400oii.7
+        for <linux-gpio@vger.kernel.org>; Thu, 12 Sep 2019 10:51:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernelci-org.20150623.gappssmtp.com; s=20150623;
-        h=message-id:date:mime-version:content-transfer-encoding:subject:to
-         :from;
-        bh=LYtMXN3yF5ICrVK6QleYka57GXiWtzFP8xZkuyz8yLY=;
-        b=0o0cl7rV+xqGciQJZ6qX0f60jsXbAhvuT2DE4wJoZBy3IaA95UsCFMQLBVN9CVuoLG
-         ESIF/qdZiO6iilNCmQbLk8ALU+SYrch3R0w+XzuahtRy/a74+6XIrg4g3qIliHd1O0iy
-         PhoMrosFVoFVmDANtt07TmqmrjQ84x/VQbLHU8x57KVxGxpE98lZ6FdKUi8oYlWtHrZq
-         JtDreXA4wG4quqWFF10vApRjd2wzOyZMBaZxdOwnYgg+hkfpImlQ/9vvk3niCAiuUsyS
-         eZZzH4IjUPZfysrwrPvhoS781Krp4D1B2xITkZcjrrGMjyqMoLW5j1/kE2zL4FRePRnb
-         H+nw==
+        d=gmail.com; s=20161025;
+        h=mime-version:reply-to:from:date:message-id:subject:to
+         :content-transfer-encoding;
+        bh=oIyyL2k+Kx6gsc2VZuXgLDADDM5sLHRH4QY8N90RTy0=;
+        b=um+3+ms64YMbxgnCvMUxGClHXaG7CU2Hvmeo7x0ojjxrb2Z5+JoTdlY5roY9yHIU5y
+         qpxpBLfgCFT5gO0HeAIiV+kuBjSlKm4g02gKbvUCmvJpquwE/jGF0bjhR3MF8kW0RFCD
+         qDNmcATmtiVI1zS6pK/W74fVP35Ip69TmqS/2ZXzBwwBN1fsqcsH+2FNzLJNIC+EijaG
+         k/o1PddqkaUqGjYxlbPwJ6sg9Qg1pd2AsXYsvZuJZlq620ZGsHnUw30TXrhMqeCxac4V
+         QHDtSM73VQQGbjhS9tk9goXK2jKqj/MOvPqNpZHJHDXEZwkix72cAkU/eNRBtvBrB2cp
+         KUvQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:date:mime-version
-         :content-transfer-encoding:subject:to:from;
-        bh=LYtMXN3yF5ICrVK6QleYka57GXiWtzFP8xZkuyz8yLY=;
-        b=I3QfQMAC/9FDEjOeH5QzvuB/cr97mvjPIl/JC8FTevGY7V7qLD+QJuZBnhrkAowgIP
-         KjUOinwvuaV3NzIvocnc2LYKE2ni57nbkTRz772KvQh4z9VB+8l9tyJ7RzGF/3vsTbJQ
-         eKTztj+Wx9/vbL5rBf2Y+v+HrHC4PpwJeeofZi6lEhCtpKTQRwT+MXmEXCL/4xI6nkY2
-         Z3UxY1mWE4dYpj+2Cu8gUl+akO6e7mZkcVOtfae31ajJqEZJ2rQ+QZw3V9ZfGijAMjtF
-         dBfCK9CzAjK96TKb82wwFQ21y3bX5ciyyfBQILDCaVF62b2fgiozMT3IPT2S49GRF+Tg
-         SUvw==
-X-Gm-Message-State: APjAAAVYNlwuOtprGW3cf/kk7F9/dsq6xm7H1hDVHLOQF7Jsh5CtJhso
-        XSpzCUen5RHiF0sy3fmh89b+Q0Q4x9RZWA==
-X-Google-Smtp-Source: APXvYqyFtP/8eoke9fvLzck9eKmRwM+5Wrm3x0RtBmWk5rHqYWG+Fx638C88n5zHuudL/pLoc93cuw==
-X-Received: by 2002:a05:600c:307:: with SMTP id q7mr966474wmd.6.1568309317693;
-        Thu, 12 Sep 2019 10:28:37 -0700 (PDT)
-Received: from [148.251.42.114] ([2a01:4f8:201:9271::2])
-        by smtp.gmail.com with ESMTPSA id i14sm3790060wra.78.2019.09.12.10.28.36
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 12 Sep 2019 10:28:37 -0700 (PDT)
-Message-ID: <5d7a8045.1c69fb81.f36c0.347f@mx.google.com>
-Date:   Thu, 12 Sep 2019 10:28:37 -0700 (PDT)
-Content-Type: text/plain; charset="utf-8"
+        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
+         :subject:to:content-transfer-encoding;
+        bh=oIyyL2k+Kx6gsc2VZuXgLDADDM5sLHRH4QY8N90RTy0=;
+        b=l7ai6nuCE4G1iCGVIRrOheEHNhszRvw78NoqYnDTVErge2L+dWMucHM66HidctTaI8
+         YL4zwCtWgVEsJsfWWDs3bQqmXZaevA6yfQy06VDo3crIif6YowXzR8Q0HBdhq1MPo6g8
+         fT3/sJoDF/qomRHNS5Ctt84BslYzyI0hFO45w/zcLCxYoboElsfIEf6J9JHaDL7OdXbW
+         aPkdJKNV2/BtUs2wNOJo3yIwliNAmAH5qHqTwMIbkrY/1e1Wz6CId0GPaBNaT3mMOoPm
+         ZhMXqwKxLyb0V9Y6mVlquu71IOlJw1tepz5N/66OssfM39LW4P0IW3qVKRDslkQCnrod
+         N8nw==
+X-Gm-Message-State: APjAAAWJ9OgvXh0ekO0Nfz2SQmSUGavDBM6jYwrWO2wziZH+MgwLnzsV
+        +AST6FJVmCi0xep7fOcIwJ115EgDD4iQw9r/Fu0=
+X-Google-Smtp-Source: APXvYqxaLtZV2UGoUYzY6PS+UpH3Fre1CaB2IktHMjwSRusX2WNTP9PiNh2ZKgtKnY+TklTHG/dLnYMgsp5sed8x0Uk=
+X-Received: by 2002:aca:1209:: with SMTP id 9mr1195784ois.89.1568310719564;
+ Thu, 12 Sep 2019 10:51:59 -0700 (PDT)
 MIME-Version: 1.0
+Received: by 2002:a4a:e7ce:0:0:0:0:0 with HTTP; Thu, 12 Sep 2019 10:51:59
+ -0700 (PDT)
+Reply-To: joeakaba00@gmail.com
+From:   joe akaba <fiacregnansa@gmail.com>
+Date:   Thu, 12 Sep 2019 19:51:59 +0200
+Message-ID: <CANUG11_0Uish2Vb_D1UTedw8RpJ0E8RkOyqUBzSWWs0CyCyagw@mail.gmail.com>
+Subject: hello
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-X-Kernelci-Kernel: v5.3-rc7-85-g11c43bb022b3
-X-Kernelci-Tree: linusw
-X-Kernelci-Report-Type: boot
-X-Kernelci-Branch: devel
-Subject: linusw/devel boot: 48 boots: 0 failed,
- 48 passed (v5.3-rc7-85-g11c43bb022b3)
-To:     linux-gpio@vger.kernel.org, fellows@kernelci.org
-From:   "kernelci.org bot" <bot@kernelci.org>
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-linusw/devel boot: 48 boots: 0 failed, 48 passed (v5.3-rc7-85-g11c43bb022b3)
+Hallo
 
-Full Boot Summary: https://kernelci.org/boot/all/job/linusw/branch/devel/ke=
-rnel/v5.3-rc7-85-g11c43bb022b3/
-Full Build Summary: https://kernelci.org/build/linusw/branch/devel/kernel/v=
-5.3-rc7-85-g11c43bb022b3/
+Mein Name ist Joe Akaba. Ich bin von Beruf Rechtsanwalt. Ich m=C3=B6chte
+Ihnen anbieten
+die n=C3=A4chsten Verwandten zu meinem Klienten. Sie erben die Summe von
+(8,5 Millionen US-Dollar)
+Dollar, die mein Kunde vor seinem Tod in der Bank gelassen hat.
 
-Tree: linusw
-Branch: devel
-Git Describe: v5.3-rc7-85-g11c43bb022b3
-Git Commit: 11c43bb022b373d2fdb84950ebf1911362f3f010
-Git URL: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-gpio.=
-git/
-Tested: 42 unique boards, 15 SoC families, 3 builds out of 6
+Mein Mandant ist ein Staatsb=C3=BCrger Ihres Landes, der mit seiner Frau
+bei einem Autounfall ums Leben gekommen ist
+und nur Sohn. Ich werde mit 50% des Gesamtfonds berechtigt sein, w=C3=A4hre=
+nd 50%
+sein f=C3=BCr dich.
+Bitte kontaktieren Sie meine private E-Mail hier f=C3=BCr weitere
+Informationen: joeakaba00@gmail.com
 
----
-For more info write to <info@kernelci.org>
+Vielen Dank im Voraus,
+Mr.Joe Akaba
+
+
+
+
+Hello
+
+My name is Joe Akaba I am a lawyer by profession. I wish to offer you
+the next of kin to my client. You will inherit the sum of ($8.5 Million)
+dollars my client left in the bank before his death.
+
+My client is a citizen of your country who died in auto crash with his wife
+and only son. I will be entitled with 50% of the total fund while 50% will
+be for you.
+Please contact my private email here for more details:joeakaba00@gmail.com
+
+Many thanks in advance,
+Mr.Joe Akaba
