@@ -2,93 +2,90 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 21E0CB0A2C
-	for <lists+linux-gpio@lfdr.de>; Thu, 12 Sep 2019 10:24:10 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 87630B0A4E
+	for <lists+linux-gpio@lfdr.de>; Thu, 12 Sep 2019 10:29:11 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726952AbfILIYJ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 12 Sep 2019 04:24:09 -0400
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:33120 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725765AbfILIYJ (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 12 Sep 2019 04:24:09 -0400
-Received: by mail-lj1-f194.google.com with SMTP id a22so22760971ljd.0
-        for <linux-gpio@vger.kernel.org>; Thu, 12 Sep 2019 01:24:07 -0700 (PDT)
+        id S1730166AbfILI3K (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 12 Sep 2019 04:29:10 -0400
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:45347 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730049AbfILI3K (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 12 Sep 2019 04:29:10 -0400
+Received: by mail-lj1-f193.google.com with SMTP id q64so12213403ljb.12
+        for <linux-gpio@vger.kernel.org>; Thu, 12 Sep 2019 01:29:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=w49o6bLlxe70T8dk8RcKOKQ6ege87Mzu24iLNFJSi6U=;
-        b=r+RtCQ+QSzYgod49oCaqYCkPTh5kZ0t0Sd0c4Z0+s2eYFento9RBH+cJ6oV9udoLxV
-         UAOH78eysBB4GLzpWHG+n3DdyMpTG7bjHG3OJeNy+YTbh7rBITWWJ8UHrdYbqbOvjhKU
-         wBTdN/oCGKDqPSMGUinbCLXh34ir+lHen6smdbyfGfv6TgiY+CpSyJIftKzl59psWfws
-         otcFJcFnELrgNmLbcSAaY3WNMrDE3O2jMbPXOMUIuJikgcaKm6OPJYCvJZrtz4War3NN
-         ajFA0ei1LXIJFhOzIOd53cSYdpBzThBf/siT6WVcfCVmFGAVjjLSKvEWboTgzARw8sLQ
-         cIEw==
+        h=mime-version:from:date:message-id:subject:to:cc;
+        bh=AWT+r6/NgVobzeH1u98/3A5yGwSecklVJ9rqaQzylB0=;
+        b=m/JOEZTjFPzWHbSmnr5nr/Tdgu6cFmzrYLIQjyCa8sXFWKn83drTTd91g4MK0HMczx
+         EvdRww1VzMqHz/p7Edx5K68PlE+PVc0zjg+Zv3xjzcgIcnvB6dse9FWjUe65gHNQ5ijr
+         EyaMfYC9QxuPnjjawE+EJrQMn+3n6H6qiyvli3aL7caP+QsYDBGaj+0nAUYA00YwsPNC
+         Vuho4SzqP7gYxBshamH3wbEZ9iVSQSf85AOi68fbcH+xtZvuf6SvjqjFJCJ1OufRVlNR
+         rFDT0EYKdP3Em06q/O1d+bF2DE4doCj94737U4FTZnNhBhBIer+FKhx02qkLDLl51qcQ
+         RZdg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=w49o6bLlxe70T8dk8RcKOKQ6ege87Mzu24iLNFJSi6U=;
-        b=EzK+LAeh9qP2BQJOJUfDK174Z062vrq8kUP9SzQlZml+pHfHP96J4mUFqZ7d3+Q6Eg
-         WOWjUJomE7cWTFYEvY0VbL3H5LAziUmASxu3+EsPJwx1ziExkG6RwSCqqmjrrwHapoKl
-         zZ8Q1XYs2q+xjRxLrC7LCLSFbAkTwHzK5pbPGnYMT6fVJ/DWTVBH8xU0L9mhx2pyHHjD
-         aCqkpQy6r1Hpggx+utsp/WcWLflnRPz2SBFWVHZrWS/Kc9KHavpWVhltmAywxM2jEt3c
-         rLLAAiSWgSzZ3sGVecbOm55VRZkZE64jaMfv8Tyd9D0D8BYiIp/8D/RPRpRz5DTZwlqM
-         3KVg==
-X-Gm-Message-State: APjAAAWkHymvFkavM5OSDf6o3dNfrG6NhUHbg/uoZiTC8DFugqK/ushV
-        uNXdTk77SAE0bztAoCgIjlFYB+lNjJfFKRa2Ef30gA==
-X-Google-Smtp-Source: APXvYqxJDL4FyhE3BXAv2E4B/4JEGQGPdbnrnZxx+n3oo9L0E7CyQ/g/GKuusfARHUSvwKnun6uC2HwM7AK4drFXwyc=
-X-Received: by 2002:a05:651c:1108:: with SMTP id d8mr17993431ljo.180.1568276647071;
- Thu, 12 Sep 2019 01:24:07 -0700 (PDT)
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
+        bh=AWT+r6/NgVobzeH1u98/3A5yGwSecklVJ9rqaQzylB0=;
+        b=b6BzEwLEqw59EpKqcF9wHfPcgA4dBnuzSIEwnEWEKR/y7POzA1hXW0V+yKZMkVXwkd
+         YF5msNGJbLQxL9Dlsz+UoqfIHyrW3T6U77GpzBV/SlUQyg8XfVsZ/pQdu+ROJEuW8ytz
+         KLK+1cb9Ni082AJoJ+0BLit42WsVB9FJvV4dxQQY7hYTRUq/OxyA87JXx9iv6TmJKcgr
+         lTPso8HTHaCcJdy8lHZabVpCF4x5tdDZV3DWqfIry9j2ep5LlCNzFz2w26qZoyWWDoOe
+         ww3fuG/wv3rpvJABg1AyjxjK2pOfV1ZFelDQOQ8fNnFe2Yg1ge1hjIIqgF/9Mq+i7lAT
+         3dkg==
+X-Gm-Message-State: APjAAAUgfl/yEhDgXiDGnvuMc23lvSJWWrt3P2TMSfTjfm+7jzMjfsLO
+        2SUr1RY6iv3fRMcTnVXkQFL+GFRXiM0I+GcrKT4/oQ==
+X-Google-Smtp-Source: APXvYqwAI869nyytO0eJsd4fc6BSdITrx5GuQ64geJL29p/gUUY6gSER0UCDyqE6Bdh0ZZgyOvEhIFWATYfZ660KXQI=
+X-Received: by 2002:a2e:8056:: with SMTP id p22mr20686035ljg.69.1568276948342;
+ Thu, 12 Sep 2019 01:29:08 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190829071738.2523-1-andrew@aj.id.au>
-In-Reply-To: <20190829071738.2523-1-andrew@aj.id.au>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Thu, 12 Sep 2019 09:23:55 +0100
-Message-ID: <CACRpkdYW_PX7npB+b1YJ4pfFQNLVOsMx2hpKtntBeHg=C1j-Cg@mail.gmail.com>
-Subject: Re: [PATCH pinctrl/fixes] pinctrl: aspeed: Fix spurious mux failures
- on the AST2500
-To:     Andrew Jeffery <andrew@aj.id.au>
+Date:   Thu, 12 Sep 2019 09:28:57 +0100
+Message-ID: <CACRpkdaF8PNXBR2+d7OBWmR7wqRy=iP3OOCJDAFV0rf_e5PaZQ@mail.gmail.com>
+Subject: [GIT PULL] last pin control fix for v5.3
+To:     Linus Torvalds <torvalds@linux-foundation.org>
 Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Joel Stanley <joel@jms.id.au>,
-        linux-aspeed <linux-aspeed@lists.ozlabs.org>,
-        OpenBMC Maillist <openbmc@lists.ozlabs.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        John Wang <wangzqbj@inspur.com>
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Andrew Jeffery <andrew@aj.id.au>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Aug 29, 2019 at 8:17 AM Andrew Jeffery <andrew@aj.id.au> wrote:
+Hi Linus,
 
-> Commit 674fa8daa8c9 ("pinctrl: aspeed-g5: Delay acquisition of regmaps")
-> was determined to be a partial fix to the problem of acquiring the LPC
-> Host Controller and GFX regmaps: The AST2500 pin controller may need to
-> fetch syscon regmaps during expression evaluation as well as when
-> setting mux state. For example, this case is hit by attempting to export
-> pins exposing the LPC Host Controller as GPIOs.
->
-> An optional eval() hook is added to the Aspeed pinmux operation struct
-> and called from aspeed_sig_expr_eval() if the pointer is set by the
-> SoC-specific driver. This enables the AST2500 to perform the custom
-> action of acquiring its regmap dependencies as required.
->
-> John Wang tested the fix on an Inspur FP5280G2 machine (AST2500-based)
-> where the issue was found, and I've booted the fix on Witherspoon
-> (AST2500) and Palmetto (AST2400) machines, and poked at relevant pins
-> under QEMU by forcing mux configurations via devmem before exporting
-> GPIOs to exercise the driver.
->
-> Fixes: 7d29ed88acbb ("pinctrl: aspeed: Read and write bits in LPC and GFX controllers")
-> Fixes: 674fa8daa8c9 ("pinctrl: aspeed-g5: Delay acquisition of regmaps")
-> Reported-by: John Wang <wangzqbj@inspur.com>
-> Tested-by: John Wang <wangzqbj@inspur.com>
-> Signed-off-by: Andrew Jeffery <andrew@aj.id.au>
+here is a hopefully last pin control fix for the Aspeed.
 
-Applied for fixes already yesterday!
+Please pull it in!
 
 Yours,
 Linus Walleij
+
+The following changes since commit d45331b00ddb179e291766617259261c112db872:
+
+  Linux 5.3-rc4 (2019-08-11 13:26:41 -0700)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git
+tags/pinctrl-v5.3-3
+
+for you to fetch changes up to c1432423a16825ef94e019808ed7330ee33ffc69:
+
+  pinctrl: aspeed: Fix spurious mux failures on the AST2500
+(2019-09-12 00:08:27 +0100)
+
+----------------------------------------------------------------
+Pin control fixes for v5.3:
+- A single patch for some Aspeed problems. The BMCs are much
+  happier now.
+
+----------------------------------------------------------------
+Andrew Jeffery (1):
+      pinctrl: aspeed: Fix spurious mux failures on the AST2500
+
+ drivers/pinctrl/aspeed/pinctrl-aspeed-g5.c | 30 +++++++++++++++++++++++++++++-
+ drivers/pinctrl/aspeed/pinmux-aspeed.c     |  7 +++++--
+ drivers/pinctrl/aspeed/pinmux-aspeed.h     |  7 ++++---
+ 3 files changed, 38 insertions(+), 6 deletions(-)
