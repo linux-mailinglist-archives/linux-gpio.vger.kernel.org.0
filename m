@@ -2,84 +2,81 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 33EF6B0B7F
-	for <lists+linux-gpio@lfdr.de>; Thu, 12 Sep 2019 11:36:08 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 74D80B0BB9
+	for <lists+linux-gpio@lfdr.de>; Thu, 12 Sep 2019 11:42:02 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730580AbfILJgC (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 12 Sep 2019 05:36:02 -0400
-Received: from mail-lf1-f67.google.com ([209.85.167.67]:37262 "EHLO
+        id S1730922AbfILJl4 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 12 Sep 2019 05:41:56 -0400
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:41758 "EHLO
         mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730218AbfILJgC (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 12 Sep 2019 05:36:02 -0400
-Received: by mail-lf1-f67.google.com with SMTP id w67so18760576lff.4
-        for <linux-gpio@vger.kernel.org>; Thu, 12 Sep 2019 02:36:01 -0700 (PDT)
+        with ESMTP id S1730237AbfILJl4 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 12 Sep 2019 05:41:56 -0400
+Received: by mail-lf1-f67.google.com with SMTP id r2so765985lfn.8
+        for <linux-gpio@vger.kernel.org>; Thu, 12 Sep 2019 02:41:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=kH4sFfjOL7A7KkMOV7vO4UQpyFz9162V/0NGhP2LeSw=;
-        b=HC4txyRjxxz5UdDmhEgx85TIHyKxoHw2xFB4boVIniAuaYNptRdirmEVyOSmpxTlK/
-         l/CSZ+KB0+6Cx13rsE3aBhIo1L1jAy18I6BmPAE1dTZOiFapkH17OTjZY94KGQpT0l2E
-         szQD3XSjOdIMpaeBS7iY/NEbdKAzIttZ6jytZNnmyPg4/7hsrAWqkWCnd0qKKbeVKOuZ
-         CdgSX8i0IElZQwO5Si1vmsuLR7dM37KB6z5mQwmBus5iGvcWwoKd/oZWJi1X9qzl0cLC
-         S4t9QBD+TrljIfpI/6ImwJmy0vevu/vCe2RKPG7THWx+8gxQsa/hYPUgVbxmn1ywXfzl
-         t83Q==
+        bh=6RSUOvSNksdnUYSmi7ImPO3GUMvdFvOcyPQJVj+uUBA=;
+        b=dIWOPJqfucag4BHcYnnZ8GmQSV6fzoImY8SV/+J5Q6xJ3aWO4AT2VTggjkxgR0kaoJ
+         v8m6K2FcP12vy5m8vMZ9283lPrNaHC7wZZo2pkaHnmWlT3g3fnM2Bu+LYlAodlbGuBwi
+         I2WLDFUsZVxBPG74qJg+RQcmKS3pfsG5+qwFk0i8wKxxImYTJp5UFlY60k9ESRM9VTA6
+         d6cVhUfPH8R+dJUOzgwuQugXU2vKstME/JbmXgCWgdopIuRCH000mUWKBDUdw7dXdmmj
+         C8x8iW0j4L5GKZt2PBNup3YxIoGZGeBiQVT57scO4bqnpybmLeCm52julMK78TA+I0g7
+         cqbg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=kH4sFfjOL7A7KkMOV7vO4UQpyFz9162V/0NGhP2LeSw=;
-        b=daUyUdONgfr4nNsh9yvD7zuR6nGWJS8hLXW+p3B0rHRhV/1vAvEj5hAATBESI0wbP6
-         hmZHtCB/37gjqoSKbWqceKfzC8gaKRXcyDwbDRQjE9/mPs1eHCujknRPLgIOHSGqzjdG
-         OdelsF/mD4S5vctVZH7TzCPVTMCpSSeMFtKpR0xtlgqpKyMOwnQt9VnFYyg5g/pw5E25
-         jIbDqM0ikfoVHJwIyDO19AdLrB7mAShPY8s8Oo+r4tJui99y4MEsNOYKqz4rpK/FlaN3
-         8cV40mj5XSPU3NwNBSOYpKsG3hicrEq8T7ptfxQ57MnxjSghH4p1iJDS0dYz5xu23y6z
-         NIUA==
-X-Gm-Message-State: APjAAAUq1FtRrE/KTd3I5BSw7ffbfXMBUZL+WlCOZ0yQmOCVfL2KQ+Y6
-        h/wJl3RBcbvuflZNGqGLVTKeveu3FDwFkdFAIdSgtg==
-X-Google-Smtp-Source: APXvYqyxNtgIo21vnlXm6rIfHw5trKnnP33CLddtU3yZiyvg20eJ+KsBoi44dzHBWHnwNIT4/vtfRWOEHEBXKqSKQto=
-X-Received: by 2002:ac2:5c11:: with SMTP id r17mr27549722lfp.61.1568280960418;
- Thu, 12 Sep 2019 02:36:00 -0700 (PDT)
+        bh=6RSUOvSNksdnUYSmi7ImPO3GUMvdFvOcyPQJVj+uUBA=;
+        b=eHnxUOGUDuMC1r1/mBjbcTwOcyQGLNjiNRarSTuZ/CmL/vJfWHSX2x9KKeHPtD+YKV
+         B0jNxQnxeybH3J/kV1ys1RgyCCtIrO+PPXh97YDuYQbuUZ7EUNT8tjbLBN0DcQI6+JHw
+         gHDLltMiDMLvDy7VVnPt1qP3LPggNslzCrv5wYEldrbj4BfJPyT1m79nT6drS/J0Q+VC
+         6Ti0t+CyGhKC8ZaqxlmvaDT2M8z9MntzMpvnoF4PFhwiziGkv6p3dNN51mCgJo3e59Hg
+         uAMl1YnJOZwolb9KDmnn1PIvTXrc4xMuCuNFSCFJ4vslR6OTPCMVQc/+M57rUx1c9GT/
+         /Yyg==
+X-Gm-Message-State: APjAAAXNHzSULd3lY2xqi4DRaiBbLV1f5qXyx9423h8amLH/tDbU5yTO
+        glpyUGowS0FEfMhr98dBFLyLUNdbDZcDgXY+c85LBw==
+X-Google-Smtp-Source: APXvYqz+NHIm3ClqeP49m5uOlZRwSCiWVPrJwTDKiLWdx7zhe9GVGvQS+zPe9EJmnmVbo3ibul2QuWqxgyHRCCkBksk=
+X-Received: by 2002:a19:48c3:: with SMTP id v186mr27253402lfa.141.1568281314260;
+ Thu, 12 Sep 2019 02:41:54 -0700 (PDT)
 MIME-Version: 1.0
 References: <20190911075215.78047-1-dmitry.torokhov@gmail.com>
- <20190911075215.78047-3-dmitry.torokhov@gmail.com> <20190911170140.GS2680@smile.fi.intel.com>
-In-Reply-To: <20190911170140.GS2680@smile.fi.intel.com>
+ <20190911075215.78047-5-dmitry.torokhov@gmail.com> <20190911092514.GM2680@smile.fi.intel.com>
+ <20190911093914.GT13294@shell.armlinux.org.uk> <20190911094619.GN2680@smile.fi.intel.com>
+ <20190911095149.GA108334@dtor-ws>
+In-Reply-To: <20190911095149.GA108334@dtor-ws>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Thu, 12 Sep 2019 10:35:49 +0100
-Message-ID: <CACRpkdZNy82SwDYThtD8Q3K_2MrFHXjWfv2k93sp=XnoWj71TA@mail.gmail.com>
-Subject: Re: [PATCH 02/11] gpiolib: introduce devm_fwnode_gpiod_get_index()
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+Date:   Thu, 12 Sep 2019 10:41:43 +0100
+Message-ID: <CACRpkdbTErKxFBr__tj391FHwUTxC7ZF_m94tC8-VHzaynBsnw@mail.gmail.com>
+Subject: Re: [PATCH 04/11] net: phylink: switch to using fwnode_gpiod_get_index()
+To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Russell King - ARM Linux admin <linux@armlinux.org.uk>,
         Mika Westerberg <mika.westerberg@linux.intel.com>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+        Andrew Lunn <andrew@lunn.ch>,
+        "David S. Miller" <davem@davemloft.net>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        netdev <netdev@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Sep 11, 2019 at 6:01 PM Andy Shevchenko
-<andriy.shevchenko@linux.intel.com> wrote:
-> On Wed, Sep 11, 2019 at 12:52:06AM -0700, Dmitry Torokhov wrote:
-> > devm_fwnode_get_index_gpiod_from_child() is too long, besides the fwnode
-> > in question does not have to be a child of device node. Let's rename it
-> > to devm_fwnode_gpiod_get_index() and keep the old name for compatibility
-> > for now.
-> >
-> > Also let's add a devm_fwnode_gpiod_get() wrapper as majority of the
-> > callers need a single GPIO.
->
-> > +     return devm_fwnode_gpiod_get_index(dev, fwnode, con_id, 0,
-> > +                                        flags, label);
->
-> At least one parameter can fit previous line, but taking into consideration
-> that moving second one makes it 81 character long, I would do it completely on
-> one line. I don't remember Linus' preferences.
+On Wed, Sep 11, 2019 at 10:51 AM Dmitry Torokhov
+<dmitry.torokhov@gmail.com> wrote:
 
-I don't really have one, I don't mind 80+ chars, I don't mind breaking lines
-to avoid it.
+> If we are willing to sacrifice the custom label for the GPIO that
+> fwnode_gpiod_get_index() allows us to set, then there are several
+> drivers that could actually use gpiod_get() API.
+
+We have:
+gpiod_set_consumer_name(gpiod, "name");
+to deal with that so no sacrifice is needed.
 
 Yours,
 Linus Walleij
