@@ -2,115 +2,93 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 74E94B09EC
-	for <lists+linux-gpio@lfdr.de>; Thu, 12 Sep 2019 10:10:30 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 21E0CB0A2C
+	for <lists+linux-gpio@lfdr.de>; Thu, 12 Sep 2019 10:24:10 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726744AbfILIK0 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 12 Sep 2019 04:10:26 -0400
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:46891 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729903AbfILIKZ (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 12 Sep 2019 04:10:25 -0400
-Received: by mail-lf1-f68.google.com with SMTP id t8so18531821lfc.13
-        for <linux-gpio@vger.kernel.org>; Thu, 12 Sep 2019 01:10:22 -0700 (PDT)
+        id S1726952AbfILIYJ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 12 Sep 2019 04:24:09 -0400
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:33120 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725765AbfILIYJ (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 12 Sep 2019 04:24:09 -0400
+Received: by mail-lj1-f194.google.com with SMTP id a22so22760971ljd.0
+        for <linux-gpio@vger.kernel.org>; Thu, 12 Sep 2019 01:24:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=mime-version:from:date:message-id:subject:to:cc;
-        bh=P7NzzGg11L1WgkGhr271SvCX8f/Rsb9hDudwdwT0fCA=;
-        b=ajTDMmdfwn5UX+d5ejQBWK28wtYqlhBqiZBhyyo1d7EH4QnVlSGSthpPF94JG1ts1u
-         4AKBxKZnZoc2yguzP8SwFqFnEf7kZThvviTT4yARFn6IW3KOoxTJIP+KBETzzcVCE20X
-         lRqOilUcIEi1rbYoyMDOmpFzRW94FQd9IBGOuE2r7jeIn+yHruPy/3UDpI9iXsDRT5qs
-         ojPUxfYujzU4BAdjvtfk6dXQttk6r7g8dzEDFEcUJ8bgDDBFL3v1/h1ZgFec1bp7iUvv
-         JJ1LKyVMbUFXNG5piF2UMuPPEStF1dKu6KzRRISxvaIIs3cTB/UixJgrtNgWpWbmvxBk
-         iFlg==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=w49o6bLlxe70T8dk8RcKOKQ6ege87Mzu24iLNFJSi6U=;
+        b=r+RtCQ+QSzYgod49oCaqYCkPTh5kZ0t0Sd0c4Z0+s2eYFento9RBH+cJ6oV9udoLxV
+         UAOH78eysBB4GLzpWHG+n3DdyMpTG7bjHG3OJeNy+YTbh7rBITWWJ8UHrdYbqbOvjhKU
+         wBTdN/oCGKDqPSMGUinbCLXh34ir+lHen6smdbyfGfv6TgiY+CpSyJIftKzl59psWfws
+         otcFJcFnELrgNmLbcSAaY3WNMrDE3O2jMbPXOMUIuJikgcaKm6OPJYCvJZrtz4War3NN
+         ajFA0ei1LXIJFhOzIOd53cSYdpBzThBf/siT6WVcfCVmFGAVjjLSKvEWboTgzARw8sLQ
+         cIEw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
-        bh=P7NzzGg11L1WgkGhr271SvCX8f/Rsb9hDudwdwT0fCA=;
-        b=UV3pVjzoodfsQ1fzndsnddgk7fVr/yuZUjfnv0XnoyefPJVzzI8aZbaIyguNzRIH6W
-         GP6ELcPAvOsUK1VkvoCN8k7gN83JKIui6IF/HlqavMl5jzBYi46NXNRKmy5tGJudvmGJ
-         2kOIyHHOE+HBW3nims3l98NpK3rp/+Vj0nauNbm7TXzM9eZiobhE/S98oag/xWCbEQ0m
-         B7Z7Oha+lKi+IQoLwRxARAd7wEqSmJlwDEsEUIWehANxKio4/zRuFU1TypLlJTbHt2xg
-         TsDjFoRzsE3pLd0tuvSGKQ/7WbwqMHG7htrldPaTeACgw22XPD5z4yqn+zKvHtnBFhdT
-         UFjQ==
-X-Gm-Message-State: APjAAAWlXfMe5eMWEOauBooHmfqeJ4wotaSx66drq2AqTjC54xLW5YeG
-        fBHTGprpgZWFxXSD/kdO27lfI1tORKs5TI26InMTUA==
-X-Google-Smtp-Source: APXvYqwyEw+nwxXxUdrq0Oo0KcwsWs9CUJUX5FHdQpSJ5n0/6fskRV5YuggZ49ndyydr6NdwgqdefbOCuuQr3ymB+WY=
-X-Received: by 2002:ac2:5c11:: with SMTP id r17mr27289496lfp.61.1568275822130;
- Thu, 12 Sep 2019 01:10:22 -0700 (PDT)
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=w49o6bLlxe70T8dk8RcKOKQ6ege87Mzu24iLNFJSi6U=;
+        b=EzK+LAeh9qP2BQJOJUfDK174Z062vrq8kUP9SzQlZml+pHfHP96J4mUFqZ7d3+Q6Eg
+         WOWjUJomE7cWTFYEvY0VbL3H5LAziUmASxu3+EsPJwx1ziExkG6RwSCqqmjrrwHapoKl
+         zZ8Q1XYs2q+xjRxLrC7LCLSFbAkTwHzK5pbPGnYMT6fVJ/DWTVBH8xU0L9mhx2pyHHjD
+         aCqkpQy6r1Hpggx+utsp/WcWLflnRPz2SBFWVHZrWS/Kc9KHavpWVhltmAywxM2jEt3c
+         rLLAAiSWgSzZ3sGVecbOm55VRZkZE64jaMfv8Tyd9D0D8BYiIp/8D/RPRpRz5DTZwlqM
+         3KVg==
+X-Gm-Message-State: APjAAAWkHymvFkavM5OSDf6o3dNfrG6NhUHbg/uoZiTC8DFugqK/ushV
+        uNXdTk77SAE0bztAoCgIjlFYB+lNjJfFKRa2Ef30gA==
+X-Google-Smtp-Source: APXvYqxJDL4FyhE3BXAv2E4B/4JEGQGPdbnrnZxx+n3oo9L0E7CyQ/g/GKuusfARHUSvwKnun6uC2HwM7AK4drFXwyc=
+X-Received: by 2002:a05:651c:1108:: with SMTP id d8mr17993431ljo.180.1568276647071;
+ Thu, 12 Sep 2019 01:24:07 -0700 (PDT)
 MIME-Version: 1.0
+References: <20190829071738.2523-1-andrew@aj.id.au>
+In-Reply-To: <20190829071738.2523-1-andrew@aj.id.au>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Thu, 12 Sep 2019 09:10:10 +0100
-Message-ID: <CACRpkdbZE2dwmaE2-NF_p6XQodBb=34tOxyDgfbAWjiirTgj+Q@mail.gmail.com>
-Subject: [GIT PULL] final GPIO fixes for v5.3
-To:     Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Thu, 12 Sep 2019 09:23:55 +0100
+Message-ID: <CACRpkdYW_PX7npB+b1YJ4pfFQNLVOsMx2hpKtntBeHg=C1j-Cg@mail.gmail.com>
+Subject: Re: [PATCH pinctrl/fixes] pinctrl: aspeed: Fix spurious mux failures
+ on the AST2500
+To:     Andrew Jeffery <andrew@aj.id.au>
 Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>
+        Joel Stanley <joel@jms.id.au>,
+        linux-aspeed <linux-aspeed@lists.ozlabs.org>,
+        OpenBMC Maillist <openbmc@lists.ozlabs.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        John Wang <wangzqbj@inspur.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Linus,
+On Thu, Aug 29, 2019 at 8:17 AM Andrew Jeffery <andrew@aj.id.au> wrote:
 
-I don't really like to send so many fixes at the very last minute,
-but the bug-sport activity is unpredictable.
+> Commit 674fa8daa8c9 ("pinctrl: aspeed-g5: Delay acquisition of regmaps")
+> was determined to be a partial fix to the problem of acquiring the LPC
+> Host Controller and GFX regmaps: The AST2500 pin controller may need to
+> fetch syscon regmaps during expression evaluation as well as when
+> setting mux state. For example, this case is hit by attempting to export
+> pins exposing the LPC Host Controller as GPIOs.
+>
+> An optional eval() hook is added to the Aspeed pinmux operation struct
+> and called from aspeed_sig_expr_eval() if the pointer is set by the
+> SoC-specific driver. This enables the AST2500 to perform the custom
+> action of acquiring its regmap dependencies as required.
+>
+> John Wang tested the fix on an Inspur FP5280G2 machine (AST2500-based)
+> where the issue was found, and I've booted the fix on Witherspoon
+> (AST2500) and Palmetto (AST2400) machines, and poked at relevant pins
+> under QEMU by forcing mux configurations via devmem before exporting
+> GPIOs to exercise the driver.
+>
+> Fixes: 7d29ed88acbb ("pinctrl: aspeed: Read and write bits in LPC and GFX controllers")
+> Fixes: 674fa8daa8c9 ("pinctrl: aspeed-g5: Delay acquisition of regmaps")
+> Reported-by: John Wang <wangzqbj@inspur.com>
+> Tested-by: John Wang <wangzqbj@inspur.com>
+> Signed-off-by: Andrew Jeffery <andrew@aj.id.au>
 
-Four out of three are -stable material that will go everywhere,
-one is for the current cycle.
-
-Please pull them in!
+Applied for fixes already yesterday!
 
 Yours,
 Linus Walleij
-
-The following changes since commit f74c2bb98776e2de508f4d607cd519873065118e:
-
-  Linux 5.3-rc8 (2019-09-08 13:33:15 -0700)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-gpio.git
-tags/gpio-v5.3-6
-
-for you to fetch changes up to 61f7f7c8f978b1c0d80e43c83b7d110ca0496eb4:
-
-  gpiolib: acpi: Add gpiolib_acpi_run_edge_events_on_boot option and
-blacklist (2019-09-11 10:46:54 +0100)
-
-----------------------------------------------------------------
-GPIO fixes for v5.3:
-- An ACPI DSDT error fixup of the type we always see and
-  Hans invariably gets to fix.
-- A OF quirk fix for the current release (v5.3)
-- Some consistency checks on the userspace ABI.
-- A memory leak.
-
-----------------------------------------------------------------
-Dmitry Torokhov (1):
-      gpiolib: of: fix fallback quirks handling
-
-Hans de Goede (1):
-      gpiolib: acpi: Add gpiolib_acpi_run_edge_events_on_boot option
-and blacklist
-
-Kent Gibson (2):
-      gpio: fix line flag validation in linehandle_create
-      gpio: fix line flag validation in lineevent_create
-
-Linus Walleij (1):
-      Merge tag 'gpio-v5.4-fixes-for-linus' of
-git://git.kernel.org/.../brgl/linux into fixes
-
-Wei Yongjun (1):
-      gpio: mockup: add missing single_release()
-
- drivers/gpio/gpio-mockup.c  |  1 +
- drivers/gpio/gpiolib-acpi.c | 42 ++++++++++++++++++++++++++++++++++++++----
- drivers/gpio/gpiolib-of.c   | 27 +++++++++------------------
- drivers/gpio/gpiolib.c      | 16 +++++++++++-----
- 4 files changed, 59 insertions(+), 27 deletions(-)
