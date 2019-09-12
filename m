@@ -2,92 +2,85 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 67250B1064
-	for <lists+linux-gpio@lfdr.de>; Thu, 12 Sep 2019 15:52:24 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id F3D9DB107E
+	for <lists+linux-gpio@lfdr.de>; Thu, 12 Sep 2019 15:58:11 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731971AbfILNwR (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 12 Sep 2019 09:52:17 -0400
-Received: from pandora.armlinux.org.uk ([78.32.30.218]:47844 "EHLO
-        pandora.armlinux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731683AbfILNwR (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 12 Sep 2019 09:52:17 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=P5GNO5qeCugl9ICVScLbazWUS0djlBZooprxENuDtI0=; b=fn7zM6YU7Y8gezw7Rh/SGNIH9
-        H+/W8zRfXHLmDano96MAjUcvGLZydTZYqG8u1lkhPXFCMWyrgtuOtsmqRaYxQNSHeCZqE9BH5k4QK
-        zhiMBHOOYazuL63goViZtkVzqZmf+Iz7D0AA1nNLeuLA5UUnJcMKGgk9ZnN6I/uYqw9676F5a6vSQ
-        GJfD9xVjlmH3ZVnrRfVt6JYdjd7Pidy0toN+WtR31by/eFWDJ+3y13V+nOppV0/xXhOST7FDXOiKv
-        l/Yq0PxIfHRaQyO1owqPlRc7iUR8sP7Xw8JheMWomTAuMAhsB5Tz1RJTATdwnyMshBJcMdanDkA3X
-        49PM6qpig==;
-Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:42778)
-        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.90_1)
-        (envelope-from <linux@armlinux.org.uk>)
-        id 1i8PW7-0004oy-EQ; Thu, 12 Sep 2019 14:52:11 +0100
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
-        (envelope-from <linux@shell.armlinux.org.uk>)
-        id 1i8PW4-0004vZ-E6; Thu, 12 Sep 2019 14:52:08 +0100
-Date:   Thu, 12 Sep 2019 14:52:08 +0100
-From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        id S1731971AbfILN6L (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 12 Sep 2019 09:58:11 -0400
+Received: from mga04.intel.com ([192.55.52.120]:45955 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731474AbfILN6L (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Thu, 12 Sep 2019 09:58:11 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 12 Sep 2019 06:58:11 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,497,1559545200"; 
+   d="scan'208";a="210032661"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by fmsmga004.fm.intel.com with ESMTP; 12 Sep 2019 06:58:08 -0700
+Received: from andy by smile with local (Exim 4.92.1)
+        (envelope-from <andriy.shevchenko@intel.com>)
+        id 1i8Pbq-0005t1-Rj; Thu, 12 Sep 2019 16:58:06 +0300
+Date:   Thu, 12 Sep 2019 16:58:06 +0300
+From:   Andriy Shevchenko <andriy.shevchenko@intel.com>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     Rahul Tanwar <rahul.tanwar@linux.intel.com>,
         Mika Westerberg <mika.westerberg@linux.intel.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Andrew Lunn <andrew@lunn.ch>,
-        "David S. Miller" <davem@davemloft.net>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        netdev <netdev@vger.kernel.org>
-Subject: Re: [PATCH 04/11] net: phylink: switch to using
- fwnode_gpiod_get_index()
-Message-ID: <20190912135208.GY13294@shell.armlinux.org.uk>
-References: <20190911075215.78047-1-dmitry.torokhov@gmail.com>
- <20190911075215.78047-5-dmitry.torokhov@gmail.com>
- <20190911092514.GM2680@smile.fi.intel.com>
- <20190911093914.GT13294@shell.armlinux.org.uk>
- <20190911094619.GN2680@smile.fi.intel.com>
- <20190911095149.GA108334@dtor-ws>
- <CACRpkdbTErKxFBr__tj391FHwUTxC7ZF_m94tC8-VHzaynBsnw@mail.gmail.com>
- <20190912134429.GZ2680@smile.fi.intel.com>
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, Rob Herring <robh@kernel.org>,
+        qi-ming.wu@intel.com, yixin.zhu@linux.intel.com,
+        cheol.yong.kim@intel.com,
+        Mathias Nyman <mathias.nyman@linux.intel.com>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>
+Subject: Re: [PATCH v1 0/2] pinctrl: Add new pinctrl/GPIO driver
+Message-ID: <20190912135806.GA2680@smile.fi.intel.com>
+References: <cover.1568274587.git.rahul.tanwar@linux.intel.com>
+ <CACRpkdb7bPo7oH9w5OhAsOoQXx=MWjJELd5JvBt3R1sPdMjnpw@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190912134429.GZ2680@smile.fi.intel.com>
+In-Reply-To: <CACRpkdb7bPo7oH9w5OhAsOoQXx=MWjJELd5JvBt3R1sPdMjnpw@mail.gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Sep 12, 2019 at 04:44:29PM +0300, Andy Shevchenko wrote:
-> On Thu, Sep 12, 2019 at 10:41:43AM +0100, Linus Walleij wrote:
-> > On Wed, Sep 11, 2019 at 10:51 AM Dmitry Torokhov
-> > <dmitry.torokhov@gmail.com> wrote:
-> > 
-> > > If we are willing to sacrifice the custom label for the GPIO that
-> > > fwnode_gpiod_get_index() allows us to set, then there are several
-> > > drivers that could actually use gpiod_get() API.
-> > 
-> > We have:
-> > gpiod_set_consumer_name(gpiod, "name");
-> > to deal with that so no sacrifice is needed.
+On Thu, Sep 12, 2019 at 11:11:32AM +0100, Linus Walleij wrote:
+> Hi Rahul,
 > 
-> Thank for this hint!
+> thanks for your patches!
+> 
+> On Thu, Sep 12, 2019 at 8:59 AM Rahul Tanwar
+> <rahul.tanwar@linux.intel.com> wrote:
+> 
+> > This series is to add pinctrl & GPIO controller driver for a new SoC.
+> > Patch 1 adds pinmux & GPIO controller driver.
+> > Patch 2 adds the dt bindings document & include file.
+> >
+> > Patches are against Linux 5.3-rc5 at below Git tree:
+> > git://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git
+> 
+> OK nice, I think you need to include Mika Westerberg on this review
+> as well, because I think he likes to stay on top of all things intel
+> in pin control. (Also included two other Intel folks in Finland who usually
+> take an interest in these things.)
 
-Would it be possible to improve your email etiquette, and move this
-discussion to a more appropriate subject line, so I don't have to keep
-checking these emails, in case you _do_ talk about something relevent
-to the original patch that the subject line refers to?
-
-Thanks.
+Linus,
+nevertheless I guess you may give your comments WRT device tree use
+(bindings, helpers, etc) along with some basics, (like devm_*()
+[ab]use I just noticed).
 
 -- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
-According to speedtest.net: 11.9Mbps down 500kbps up
+With Best Regards,
+Andy Shevchenko
+
+
