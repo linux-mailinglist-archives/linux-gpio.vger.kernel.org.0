@@ -2,221 +2,115 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id E493CB09CF
-	for <lists+linux-gpio@lfdr.de>; Thu, 12 Sep 2019 10:00:03 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 74E94B09EC
+	for <lists+linux-gpio@lfdr.de>; Thu, 12 Sep 2019 10:10:30 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729975AbfILH7d (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 12 Sep 2019 03:59:33 -0400
-Received: from mga09.intel.com ([134.134.136.24]:33645 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725765AbfILH7d (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Thu, 12 Sep 2019 03:59:33 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 12 Sep 2019 00:59:32 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,489,1559545200"; 
-   d="scan'208";a="385962552"
-Received: from sgsxdev001.isng.intel.com (HELO localhost) ([10.226.88.11])
-  by fmsmga006.fm.intel.com with ESMTP; 12 Sep 2019 00:59:27 -0700
-From:   Rahul Tanwar <rahul.tanwar@linux.intel.com>
-To:     linus.walleij@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com
-Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, robh@kernel.org,
-        andriy.shevchenko@intel.com, qi-ming.wu@intel.com,
-        yixin.zhu@linux.intel.com, cheol.yong.kim@intel.com,
-        Rahul Tanwar <rahul.tanwar@linux.intel.com>
-Subject: [PATCH v1 2/2] dt-bindings: pinctrl: intel: Add for new SoC
-Date:   Thu, 12 Sep 2019 15:59:11 +0800
-Message-Id: <c53173f380d47e9a5feaef9a35de535c6de9f6cb.1568274587.git.rahul.tanwar@linux.intel.com>
-X-Mailer: git-send-email 2.11.0
-In-Reply-To: <cover.1568274587.git.rahul.tanwar@linux.intel.com>
-References: <cover.1568274587.git.rahul.tanwar@linux.intel.com>
-In-Reply-To: <cover.1568274587.git.rahul.tanwar@linux.intel.com>
-References: <cover.1568274587.git.rahul.tanwar@linux.intel.com>
+        id S1726744AbfILIK0 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 12 Sep 2019 04:10:26 -0400
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:46891 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729903AbfILIKZ (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 12 Sep 2019 04:10:25 -0400
+Received: by mail-lf1-f68.google.com with SMTP id t8so18531821lfc.13
+        for <linux-gpio@vger.kernel.org>; Thu, 12 Sep 2019 01:10:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:from:date:message-id:subject:to:cc;
+        bh=P7NzzGg11L1WgkGhr271SvCX8f/Rsb9hDudwdwT0fCA=;
+        b=ajTDMmdfwn5UX+d5ejQBWK28wtYqlhBqiZBhyyo1d7EH4QnVlSGSthpPF94JG1ts1u
+         4AKBxKZnZoc2yguzP8SwFqFnEf7kZThvviTT4yARFn6IW3KOoxTJIP+KBETzzcVCE20X
+         lRqOilUcIEi1rbYoyMDOmpFzRW94FQd9IBGOuE2r7jeIn+yHruPy/3UDpI9iXsDRT5qs
+         ojPUxfYujzU4BAdjvtfk6dXQttk6r7g8dzEDFEcUJ8bgDDBFL3v1/h1ZgFec1bp7iUvv
+         JJ1LKyVMbUFXNG5piF2UMuPPEStF1dKu6KzRRISxvaIIs3cTB/UixJgrtNgWpWbmvxBk
+         iFlg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
+        bh=P7NzzGg11L1WgkGhr271SvCX8f/Rsb9hDudwdwT0fCA=;
+        b=UV3pVjzoodfsQ1fzndsnddgk7fVr/yuZUjfnv0XnoyefPJVzzI8aZbaIyguNzRIH6W
+         GP6ELcPAvOsUK1VkvoCN8k7gN83JKIui6IF/HlqavMl5jzBYi46NXNRKmy5tGJudvmGJ
+         2kOIyHHOE+HBW3nims3l98NpK3rp/+Vj0nauNbm7TXzM9eZiobhE/S98oag/xWCbEQ0m
+         B7Z7Oha+lKi+IQoLwRxARAd7wEqSmJlwDEsEUIWehANxKio4/zRuFU1TypLlJTbHt2xg
+         TsDjFoRzsE3pLd0tuvSGKQ/7WbwqMHG7htrldPaTeACgw22XPD5z4yqn+zKvHtnBFhdT
+         UFjQ==
+X-Gm-Message-State: APjAAAWlXfMe5eMWEOauBooHmfqeJ4wotaSx66drq2AqTjC54xLW5YeG
+        fBHTGprpgZWFxXSD/kdO27lfI1tORKs5TI26InMTUA==
+X-Google-Smtp-Source: APXvYqwyEw+nwxXxUdrq0Oo0KcwsWs9CUJUX5FHdQpSJ5n0/6fskRV5YuggZ49ndyydr6NdwgqdefbOCuuQr3ymB+WY=
+X-Received: by 2002:ac2:5c11:: with SMTP id r17mr27289496lfp.61.1568275822130;
+ Thu, 12 Sep 2019 01:10:22 -0700 (PDT)
+MIME-Version: 1.0
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Thu, 12 Sep 2019 09:10:10 +0100
+Message-ID: <CACRpkdbZE2dwmaE2-NF_p6XQodBb=34tOxyDgfbAWjiirTgj+Q@mail.gmail.com>
+Subject: [GIT PULL] final GPIO fixes for v5.3
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Add dt bindings document & include file for pinmux & GPIO controller driver of
-Intel Lightning Mountain SoC.
+Hi Linus,
 
-Signed-off-by: Rahul Tanwar <rahul.tanwar@linux.intel.com>
----
- .../bindings/pinctrl/intel,lgm-pinctrl.yaml        | 131 +++++++++++++++++++++
- include/dt-bindings/pinctrl/intel,equilibrium.h    |  23 ++++
- 2 files changed, 154 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/pinctrl/intel,lgm-pinctrl.yaml
- create mode 100644 include/dt-bindings/pinctrl/intel,equilibrium.h
+I don't really like to send so many fixes at the very last minute,
+but the bug-sport activity is unpredictable.
 
-diff --git a/Documentation/devicetree/bindings/pinctrl/intel,lgm-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/intel,lgm-pinctrl.yaml
-new file mode 100644
-index 000000000000..1aee42f0057e
---- /dev/null
-+++ b/Documentation/devicetree/bindings/pinctrl/intel,lgm-pinctrl.yaml
-@@ -0,0 +1,131 @@
-+# SPDX-License-Identifier: GPL-2.0-only
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/bindings/pinctrl/intel,lgm-pinctrl.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Intel Lightning Mountain SoC pinmux & GPIO controller binding
-+
-+maintainers:
-+  - Rahul Tanwar <rahul.tanwar@linux.intel.com>
-+
-+description: |
-+  Pinmux & GPIO controller controls pin multiplexing & configuration including
-+  GPIO function selection & GPIO attributes configuration.
-+
-+  Please refer to [1] for details of the common pinctrl bindings used by the
-+  client devices.
-+
-+  [1] Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt
-+
-+properties:
-+  compatible:
-+    const: intel,lgm-pinctrl
-+
-+  reg:
-+    maxItems: 1
-+
-+# Client device subnode's properties
-+patternProperties:
-+  "^.*@[0-9a-fA-F]+$":
-+    type: object
-+    description:
-+      Pinctrl node's client devices use subnodes for desired pin configuration.
-+      Client device subnodes use below defined properties.
-+
-+    properties:
-+      intel,function:
-+        $ref: /schemas/types.yaml#/definitions/string
-+        description:
-+          A string containing the name of the function to mux to the group.
-+
-+      intel,groups:
-+        $ref: /schemas/types.yaml#/definitions/string-array
-+        description:
-+          An array of strings identifying the list of groups.
-+
-+      intel,pins:
-+        $ref: /schemas/types.yaml#/definitions/uint32-array
-+        description:
-+          List of pins to select with this function.
-+
-+      intel,mux:
-+        description: The applicable mux group.
-+        allOf:
-+          - $ref: "/schemas/types.yaml#/definitions/uint32"
-+          - enum:
-+              # Refer include/dt-bindings/pinctrl/intel,equilibrium.h
-+              - PINMUX_0 # 0 PINMUX_GPIO
-+              - PINMUX_1 # 1
-+              - PINMUX_2 # 2
-+              - PINMUX_3 # 3
-+              - PINMUX_4 # 4
-+
-+      intel,pullup:
-+        $ref: /schemas/types.yaml#/definitions/uint32
-+        description: Specifies pull-up configuration.
-+
-+      intel,pulldown:
-+        $ref: /schemas/types.yaml#/definitions/uint32
-+        description: Specifies pull-down configuration.
-+
-+      intel,drive-current:
-+        $ref: /schemas/types.yaml#/definitions/uint32
-+        description: Enables driver-current.
-+
-+      intel,slew-rate:
-+        $ref: /schemas/types.yaml#/definitions/uint32
-+        description: Enables slew-rate.
-+
-+      intel,open-drain:
-+        $ref: /schemas/types.yaml#/definitions/uint32
-+        description: Specifies open-drain configuration.
-+
-+      intel,output:
-+        $ref: /schemas/types.yaml#/definitions/uint32
-+        description: Specifies if the pin is to be configured as output.
-+
-+
-+    required:
-+      - intel,function
-+      - intel,groups
-+
-+required:
-+  - compatible
-+  - reg
-+
-+examples:
-+  # Pinmux controller node
-+  - |
-+    pinctrl: pinctrl@e2880000 {
-+          compatible = "intel,lgm-pinctrl";
-+          reg = <0xe2880000 0x100000>;
-+    };
-+
-+  # Client device node
-+  - |
-+    asc0: serial@e0a00000 {
-+          compatible = "intel,lgm-asc";
-+          reg = <0xe0a00000 0x1000>;
-+          interrupt-parent = <&ioapic1>;
-+          interrupts = <128 1>;
-+          interrupt-names = "asc_irq";
-+          clocks = <&cgu0 31>, <&cgu0 98>;
-+          clock-names = "freq", "asc";
-+          pinctrl-names = "default";
-+          pinctrl-0 = <&uart0>;
-+    };
-+
-+   # Client device subnode
-+  - |
-+    uart0:uart0 {
-+          intel,pins = <64>, /* UART_RX0 */
-+                       <65>; /* UART_TX0 */
-+          intel,function = "CONSOLE_UART0";
-+          intel,mux = <1>,
-+                      <1>;
-+          intel,groups = "CONSOLE_UART0";
-+    };
-+
-+
-+...
-diff --git a/include/dt-bindings/pinctrl/intel,equilibrium.h b/include/dt-bindings/pinctrl/intel,equilibrium.h
-new file mode 100644
-index 000000000000..c37bfbea8ff1
---- /dev/null
-+++ b/include/dt-bindings/pinctrl/intel,equilibrium.h
-@@ -0,0 +1,23 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+
-+#ifndef __DT_BINDINGS_PINCTRL_INTEL_EQUILIBRIUM_H_
-+#define __DT_BINDINGS_PINCTRL_INTEL_EQUILIBRIUM_H_
-+
-+#define PINCTRL_DRCC_2_MA	0
-+#define PINCTRL_DRCC_4_MA	1
-+#define PINCTRL_DRCC_8_MA	2
-+#define PINCTRL_DRCC_12_MA	3
-+
-+#define PINMUX_0		0
-+#define PINMUX_1		1
-+#define PINMUX_2		2
-+#define PINMUX_3		3
-+#define PINMUX_4		4
-+#define PINMUX_GPIO		PINMUX_0
-+
-+#define PINCTRL_GROUP		"intel,groups"
-+#define PINCTRL_FUNCTION	"intel,function"
-+#define PINCTRL_PINS		"intel,pins"
-+#define PINCTRL_MUX		"intel,mux"
-+
-+#endif /* __DT_BINDINGS_PINCTRL_INTEL_EQUILIBRIUM_H_ */
--- 
-2.11.0
+Four out of three are -stable material that will go everywhere,
+one is for the current cycle.
 
+Please pull them in!
+
+Yours,
+Linus Walleij
+
+The following changes since commit f74c2bb98776e2de508f4d607cd519873065118e:
+
+  Linux 5.3-rc8 (2019-09-08 13:33:15 -0700)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-gpio.git
+tags/gpio-v5.3-6
+
+for you to fetch changes up to 61f7f7c8f978b1c0d80e43c83b7d110ca0496eb4:
+
+  gpiolib: acpi: Add gpiolib_acpi_run_edge_events_on_boot option and
+blacklist (2019-09-11 10:46:54 +0100)
+
+----------------------------------------------------------------
+GPIO fixes for v5.3:
+- An ACPI DSDT error fixup of the type we always see and
+  Hans invariably gets to fix.
+- A OF quirk fix for the current release (v5.3)
+- Some consistency checks on the userspace ABI.
+- A memory leak.
+
+----------------------------------------------------------------
+Dmitry Torokhov (1):
+      gpiolib: of: fix fallback quirks handling
+
+Hans de Goede (1):
+      gpiolib: acpi: Add gpiolib_acpi_run_edge_events_on_boot option
+and blacklist
+
+Kent Gibson (2):
+      gpio: fix line flag validation in linehandle_create
+      gpio: fix line flag validation in lineevent_create
+
+Linus Walleij (1):
+      Merge tag 'gpio-v5.4-fixes-for-linus' of
+git://git.kernel.org/.../brgl/linux into fixes
+
+Wei Yongjun (1):
+      gpio: mockup: add missing single_release()
+
+ drivers/gpio/gpio-mockup.c  |  1 +
+ drivers/gpio/gpiolib-acpi.c | 42 ++++++++++++++++++++++++++++++++++++++----
+ drivers/gpio/gpiolib-of.c   | 27 +++++++++------------------
+ drivers/gpio/gpiolib.c      | 16 +++++++++++-----
+ 4 files changed, 59 insertions(+), 27 deletions(-)
