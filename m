@@ -2,57 +2,60 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 41A0CB1C6F
-	for <lists+linux-gpio@lfdr.de>; Fri, 13 Sep 2019 13:35:39 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A3239B1C70
+	for <lists+linux-gpio@lfdr.de>; Fri, 13 Sep 2019 13:35:41 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728237AbfIMLfi (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 13 Sep 2019 07:35:38 -0400
-Received: from mail-lf1-f67.google.com ([209.85.167.67]:37328 "EHLO
-        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727997AbfIMLfi (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 13 Sep 2019 07:35:38 -0400
-Received: by mail-lf1-f67.google.com with SMTP id w67so21855057lff.4
-        for <linux-gpio@vger.kernel.org>; Fri, 13 Sep 2019 04:35:37 -0700 (PDT)
+        id S1727848AbfIMLfl (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 13 Sep 2019 07:35:41 -0400
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:33166 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727997AbfIMLfl (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 13 Sep 2019 07:35:41 -0400
+Received: by mail-lf1-f66.google.com with SMTP id d10so21863378lfi.0
+        for <linux-gpio@vger.kernel.org>; Fri, 13 Sep 2019 04:35:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=Yb/+G3TZ7Tb6RdpFJuCWvlbyLNP0pf8HNVvp3LwN82w=;
-        b=G82JUXib1QdSx81R9RIU5xwm+dKFe0Dh8mmyRlBLc2Ey1E2cr58vkCt8hTbOPJCI0I
-         cgSrqcesnJHKkU9IBnNWYN+NxCS8EkeCZLbDNaAeLEWoSW4ChduP/E6daZowIg42ecYX
-         h/Am61amDhAAitn1s8BYwxks7nWaJGEVBPeRb2YA2YaDUDKSRM2/Wt91GxU+Q8OugX/E
-         LZVH6IPpIkf9OfZ4536HLGDAU3fin0ul8L7aZow3mplyhNCTdAqEGFogyTmVmhRrf6Tv
-         vPwBxKKd0kf7eVxb2AuQRKh0R/6Aa2M5tESqIbZbveSheLX1yFtaNfs3FCRqPklBXzQ7
-         jQQQ==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=XxmY4f1RQi74zXyerk/mcobxBi1tw34QoigTbNp/Les=;
+        b=gUggQK5Z9FaO57HcFWvFxo21GsklUZRbC4F+d3IkQeVwRUppCxRSkWuAdnqc/ADknw
+         1aMT5MhJ0OREevh1CqRsvkAd4CkNWqwdfWdAeEK1wxFrSf4IWK+IrpK+aZmuw/R6tT89
+         XcA3pKq2xRa9ZerAH4cSNQBU77k+OGhJ6HM7u8brhi5Ut/39b1dddQq43npHB94fXyKN
+         fjrpWrEXYu93sj7vouZHdYY9imA9aYfF+vEv9bewiP5jupqAiyqTx1sMTRSnYphy02KF
+         OK5Yg8sJMtqQPeNJI52VdqfWJztts+DyR9a8Hkf+ybJe7W2n5TGeVugYLOFBvJJASQHM
+         gKlA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=Yb/+G3TZ7Tb6RdpFJuCWvlbyLNP0pf8HNVvp3LwN82w=;
-        b=O9rPUPtqVtp7wwpxICmjhQ1cjbTyyrKeut7elPaEWX8dIpz8Z8QPrseJeaWxpT3skc
-         9OcbB3TjsCKs6tR/H/66oYJTC/OiWo7/98/XlGIRCHs+nljaQWs2aeMHJ2oLkQzv3b7+
-         7eo1mxKq4/cFQK54uVLolkqEzjnpdrMSkLVH3JzpWD4qhggajUKlDbX2G/FBuIWOc9Lr
-         WyoGfs6cSsOfucA6LXICZReJfbF8H3tZm28kXBfFqiPCQz8C5LLYB5uO9iW8axTofZGb
-         jlLu/+uCTriR8X1bJgNeNGjcsBmzOAQOppoy3bH3FKA4RbHdvXFbUvHtLyEn/qBT+UFN
-         Ja2A==
-X-Gm-Message-State: APjAAAUesiaQcrdT27YEG7HrPcOM9YnTHKnJpGJqLWpmoYEzj68+qLaq
-        CsfwiOHzehydxPH+yj3XRoh6R85KrwFnvMxO
-X-Google-Smtp-Source: APXvYqyXUtKnHFhS9rQIIzR0ajwmw1KEmQoSBCULLhgWgpCudVYU0ywWzHZpKSeDrzHPewg6ymqIuQ==
-X-Received: by 2002:ac2:53a3:: with SMTP id j3mr31394766lfh.155.1568374536705;
-        Fri, 13 Sep 2019 04:35:36 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=XxmY4f1RQi74zXyerk/mcobxBi1tw34QoigTbNp/Les=;
+        b=NWV4vJrK+5fw7zsMHl7tqitkhrIzeAkL1l1mCw12GJY5Ilf3I9hMAnUVJIcxNuo6E8
+         JllFkJzRUyJRi2ZT8VcuB1kuHELkyoNE/ZuIabNhFcWz5JC3yVECGMiAGEhLuyzUwVks
+         YQUsazC0CdQS+7kGsItyPtBcbboLhIhhz/mAke23U4zIRk2CezyFa/FpiRlxAcn5wV7X
+         7PfISrMUATBK5OlBa/RMMWH0kVVrogAPWUluGj/ZRtAyry7SqqcP7hRi60MxER93RctT
+         m+4sdB8Qj5t9O3YPNK/W25tRLVXwirIX2PifwMLl6CHe4pVKoX+YHP4QI+cHlrkOA6j6
+         uEbQ==
+X-Gm-Message-State: APjAAAU6u1Gv7JhpWb+nfHWQBDhdNRx1kYDAPmm4Dazh3EQP6Bki+xc7
+        Z0RldjiBjdwy5xkEfTndkCjeNEF79vH95MFT
+X-Google-Smtp-Source: APXvYqynUEFJ3gOEN33vcO4t2z+WMSku4q9JBMvR2hayJHARezrsET+u52RhqzS41KZ/WQ29Q4pnZA==
+X-Received: by 2002:ac2:47e3:: with SMTP id b3mr29486787lfp.80.1568374538928;
+        Fri, 13 Sep 2019 04:35:38 -0700 (PDT)
 Received: from genomnajs.ideon.se ([85.235.10.227])
-        by smtp.gmail.com with ESMTPSA id v17sm6177440ljh.8.2019.09.13.04.35.34
+        by smtp.gmail.com with ESMTPSA id v17sm6177440ljh.8.2019.09.13.04.35.37
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 13 Sep 2019 04:35:35 -0700 (PDT)
+        Fri, 13 Sep 2019 04:35:37 -0700 (PDT)
 From:   Linus Walleij <linus.walleij@linaro.org>
 To:     linux-gpio@vger.kernel.org
 Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
         Linus Walleij <linus.walleij@linaro.org>,
+        Joshua Henderson <joshua.henderson@microchip.com>,
         Thierry Reding <thierry.reding@gmail.com>
-Subject: [PATCH 1/6] pinctrl: coh901: Pass irqchip when adding gpiochip
-Date:   Fri, 13 Sep 2019 13:35:25 +0200
-Message-Id: <20190913113530.5536-1-linus.walleij@linaro.org>
+Subject: [PATCH 2/6] pinctrl: pic32: Pass irqchip when adding gpiochip
+Date:   Fri, 13 Sep 2019 13:35:26 +0200
+Message-Id: <20190913113530.5536-2-linus.walleij@linaro.org>
 X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20190913113530.5536-1-linus.walleij@linaro.org>
+References: <20190913113530.5536-1-linus.walleij@linaro.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-gpio-owner@vger.kernel.org
@@ -67,100 +70,62 @@ drivers/gpio/TODO.
 For chained irqchips this is a pretty straight-forward
 conversion.
 
+Cc: Joshua Henderson <joshua.henderson@microchip.com>
 Cc: Thierry Reding <thierry.reding@gmail.com>
 Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
 ---
- drivers/pinctrl/pinctrl-coh901.c | 50 +++++++++++++++-----------------
- 1 file changed, 23 insertions(+), 27 deletions(-)
+ drivers/pinctrl/pinctrl-pic32.c | 25 ++++++++++++-------------
+ 1 file changed, 12 insertions(+), 13 deletions(-)
 
-diff --git a/drivers/pinctrl/pinctrl-coh901.c b/drivers/pinctrl/pinctrl-coh901.c
-index 08b9e909e917..063a629be9b2 100644
---- a/drivers/pinctrl/pinctrl-coh901.c
-+++ b/drivers/pinctrl/pinctrl-coh901.c
-@@ -616,6 +616,7 @@ static int __init u300_gpio_probe(struct platform_device *pdev)
- {
- 	struct u300_gpio *gpio;
- 	struct resource *memres;
+diff --git a/drivers/pinctrl/pinctrl-pic32.c b/drivers/pinctrl/pinctrl-pic32.c
+index e7f6dd5ab578..7e4c5a08a932 100644
+--- a/drivers/pinctrl/pinctrl-pic32.c
++++ b/drivers/pinctrl/pinctrl-pic32.c
+@@ -2203,6 +2203,7 @@ static int pic32_gpio_probe(struct platform_device *pdev)
+ 	u32 id;
+ 	int irq, ret;
+ 	struct resource *res;
 +	struct gpio_irq_chip *girq;
- 	int err = 0;
- 	int portno;
- 	u32 val;
-@@ -672,26 +673,17 @@ static int __init u300_gpio_probe(struct platform_device *pdev)
- 	       gpio->base + U300_GPIO_CR);
- 	u300_gpio_init_coh901571(gpio);
  
--#ifdef CONFIG_OF_GPIO
--	gpio->chip.of_node = pdev->dev.of_node;
--#endif
--	err = gpiochip_add_data(&gpio->chip, gpio);
--	if (err) {
--		dev_err(gpio->dev, "unable to add gpiochip: %d\n", err);
--		goto err_no_chip;
+ 	if (of_property_read_u32(np, "microchip,gpio-bank", &id)) {
+ 		dev_err(&pdev->dev, "microchip,gpio-bank property not found\n");
+@@ -2240,25 +2241,23 @@ static int pic32_gpio_probe(struct platform_device *pdev)
+ 
+ 	bank->gpio_chip.parent = &pdev->dev;
+ 	bank->gpio_chip.of_node = np;
++	girq = &bank->gpio_chip.irq;
++	girq->chip = &bank->irq_chip;
++	girq->parent_handler = pic32_gpio_irq_handler;
++	girq->num_parents = 1;
++	girq->parents = devm_kcalloc(&pdev->dev, 1, sizeof(*girq->parents),
++				     GFP_KERNEL);
++	if (!girq->parents)
++		return -ENOMEM;
++	girq->default_type = IRQ_TYPE_NONE;
++	girq->handler = handle_level_irq;
++	girq->parents[0] = irq;
+ 	ret = gpiochip_add_data(&bank->gpio_chip, bank);
+ 	if (ret < 0) {
+ 		dev_err(&pdev->dev, "Failed to add GPIO chip %u: %d\n",
+ 			id, ret);
+ 		return ret;
+ 	}
+-
+-	ret = gpiochip_irqchip_add(&bank->gpio_chip, &bank->irq_chip,
+-				0, handle_level_irq, IRQ_TYPE_NONE);
+-	if (ret < 0) {
+-		dev_err(&pdev->dev, "Failed to add IRQ chip %u: %d\n",
+-			id, ret);
+-		gpiochip_remove(&bank->gpio_chip);
+-		return ret;
 -	}
 -
--	err = gpiochip_irqchip_add(&gpio->chip,
--				   &u300_gpio_irqchip,
--				   0,
--				   handle_simple_irq,
--				   IRQ_TYPE_EDGE_FALLING);
--	if (err) {
--		dev_err(gpio->dev, "no GPIO irqchip\n");
--		goto err_no_irqchip;
-+	girq = &gpio->chip.irq;
-+	girq->chip = &u300_gpio_irqchip;
-+	girq->parent_handler = u300_gpio_irq_handler;
-+	girq->num_parents = U300_GPIO_NUM_PORTS;
-+	girq->parents = devm_kcalloc(gpio->dev, U300_GPIO_NUM_PORTS,
-+				     sizeof(*girq->parents),
-+				     GFP_KERNEL);
-+	if (!girq->parents) {
-+		err = -ENOMEM;
-+		goto err_dis_clk;
- 	}
+-	gpiochip_set_chained_irqchip(&bank->gpio_chip, &bank->irq_chip,
+-				     irq, pic32_gpio_irq_handler);
 -
--	/* Add each port with its IRQ separately */
- 	for (portno = 0 ; portno < U300_GPIO_NUM_PORTS; portno++) {
- 		struct u300_gpio_port *port = &gpio->ports[portno];
- 
-@@ -700,16 +692,21 @@ static int __init u300_gpio_probe(struct platform_device *pdev)
- 		port->gpio = gpio;
- 
- 		port->irq = platform_get_irq(pdev, portno);
--
--		gpiochip_set_chained_irqchip(&gpio->chip,
--					     &u300_gpio_irqchip,
--					     port->irq,
--					     u300_gpio_irq_handler);
-+		girq->parents[portno] = port->irq;
- 
- 		/* Turns off irq force (test register) for this port */
- 		writel(0x0, gpio->base + portno * gpio->stride + ifr);
- 	}
--	dev_dbg(gpio->dev, "initialized %d GPIO ports\n", portno);
-+	girq->default_type = IRQ_TYPE_EDGE_FALLING;
-+	girq->handler = handle_simple_irq;
-+#ifdef CONFIG_OF_GPIO
-+	gpio->chip.of_node = pdev->dev.of_node;
-+#endif
-+	err = gpiochip_add_data(&gpio->chip, gpio);
-+	if (err) {
-+		dev_err(gpio->dev, "unable to add gpiochip: %d\n", err);
-+		goto err_dis_clk;
-+	}
- 
- 	/*
- 	 * Add pinctrl pin ranges, the pin controller must be registered
-@@ -729,9 +726,8 @@ static int __init u300_gpio_probe(struct platform_device *pdev)
  	return 0;
+ }
  
- err_no_range:
--err_no_irqchip:
- 	gpiochip_remove(&gpio->chip);
--err_no_chip:
-+err_dis_clk:
- 	clk_disable_unprepare(gpio->clk);
- 	dev_err(&pdev->dev, "module ERROR:%d\n", err);
- 	return err;
 -- 
 2.21.0
 
