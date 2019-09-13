@@ -2,92 +2,86 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 74CECB1414
-	for <lists+linux-gpio@lfdr.de>; Thu, 12 Sep 2019 19:53:06 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8B879B176A
+	for <lists+linux-gpio@lfdr.de>; Fri, 13 Sep 2019 05:23:25 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726984AbfILRwB (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 12 Sep 2019 13:52:01 -0400
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:40125 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726721AbfILRwB (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 12 Sep 2019 13:52:01 -0400
-Received: by mail-oi1-f196.google.com with SMTP id b80so17849400oii.7
-        for <linux-gpio@vger.kernel.org>; Thu, 12 Sep 2019 10:51:59 -0700 (PDT)
+        id S1726099AbfIMDWo (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 12 Sep 2019 23:22:44 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:37419 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726032AbfIMDWo (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 12 Sep 2019 23:22:44 -0400
+Received: by mail-pg1-f194.google.com with SMTP id c17so6755120pgg.4;
+        Thu, 12 Sep 2019 20:22:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:reply-to:from:date:message-id:subject:to
+        h=from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=oIyyL2k+Kx6gsc2VZuXgLDADDM5sLHRH4QY8N90RTy0=;
-        b=um+3+ms64YMbxgnCvMUxGClHXaG7CU2Hvmeo7x0ojjxrb2Z5+JoTdlY5roY9yHIU5y
-         qpxpBLfgCFT5gO0HeAIiV+kuBjSlKm4g02gKbvUCmvJpquwE/jGF0bjhR3MF8kW0RFCD
-         qDNmcATmtiVI1zS6pK/W74fVP35Ip69TmqS/2ZXzBwwBN1fsqcsH+2FNzLJNIC+EijaG
-         k/o1PddqkaUqGjYxlbPwJ6sg9Qg1pd2AsXYsvZuJZlq620ZGsHnUw30TXrhMqeCxac4V
-         QHDtSM73VQQGbjhS9tk9goXK2jKqj/MOvPqNpZHJHDXEZwkix72cAkU/eNRBtvBrB2cp
-         KUvQ==
+        bh=mq3uEQUSbTsyi612FRhgkMJIVMuNd8+2nTcH+ZUp44U=;
+        b=Gq0/8HV9ZJFm98E/55dcvt7PbBQWsjnj6H3fSoM6mmyNhFxKsdwg8JqHQRTeWdf7d2
+         UZcD3feViQF5lAJH4PXoD3KbmjCeQtcIaaa98SNo6jESF8dQ6hxgj3bzRPr5xHR9YOoT
+         nM1zts/CIUouiCp12Tptw9w9AwIc9ThpwqbaymF9UX3gejveOg7PeqqaBoFPoAiz11Km
+         ub5qbwoj79GWKCVY9kRBpESD8KDfLrYtCfipdmItona6HU9FrHouZz/gE77ORzxUMGLe
+         jc+zX4HttZWiK13aEr7+bZxGFSYcoDL2NbnPdcg2Mb28aLL5ycQ3Wcg3WYUys3ifYgj4
+         NXng==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
-         :subject:to:content-transfer-encoding;
-        bh=oIyyL2k+Kx6gsc2VZuXgLDADDM5sLHRH4QY8N90RTy0=;
-        b=l7ai6nuCE4G1iCGVIRrOheEHNhszRvw78NoqYnDTVErge2L+dWMucHM66HidctTaI8
-         YL4zwCtWgVEsJsfWWDs3bQqmXZaevA6yfQy06VDo3crIif6YowXzR8Q0HBdhq1MPo6g8
-         fT3/sJoDF/qomRHNS5Ctt84BslYzyI0hFO45w/zcLCxYoboElsfIEf6J9JHaDL7OdXbW
-         aPkdJKNV2/BtUs2wNOJo3yIwliNAmAH5qHqTwMIbkrY/1e1Wz6CId0GPaBNaT3mMOoPm
-         ZhMXqwKxLyb0V9Y6mVlquu71IOlJw1tepz5N/66OssfM39LW4P0IW3qVKRDslkQCnrod
-         N8nw==
-X-Gm-Message-State: APjAAAWJ9OgvXh0ekO0Nfz2SQmSUGavDBM6jYwrWO2wziZH+MgwLnzsV
-        +AST6FJVmCi0xep7fOcIwJ115EgDD4iQw9r/Fu0=
-X-Google-Smtp-Source: APXvYqxaLtZV2UGoUYzY6PS+UpH3Fre1CaB2IktHMjwSRusX2WNTP9PiNh2ZKgtKnY+TklTHG/dLnYMgsp5sed8x0Uk=
-X-Received: by 2002:aca:1209:: with SMTP id 9mr1195784ois.89.1568310719564;
- Thu, 12 Sep 2019 10:51:59 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=mq3uEQUSbTsyi612FRhgkMJIVMuNd8+2nTcH+ZUp44U=;
+        b=rfLBGKeGnIeqfWJ4sWuB33z+oVkU40KOwmRGLzXMlpxMtt/YCtEPU7KWxpFssUXz88
+         wi7V+1+e1lqoXEhZHRPA359lLj5BwMEeq/dz1xj7wR21qXlEvnqiQtBOT99BRY7j2TxH
+         lR84wtYCWBFifJooH/YwgMtj6yE9COgtpnLQVxT/Mp9tUIdTa9ykecPtSvLtIiggFQfQ
+         GCZOpPNtVvV4rAel7xkEfXjf7H0Gd6csmwCr7fhgsbVvzjmKwEFTOOlwhBOazbfRaDgp
+         RFMAIyJ7P4+JkRa4y38vqE14hkwxjyIdu58Ttx1TERUYwV8DfrctPsafj+9HLgh0qL4y
+         68Gw==
+X-Gm-Message-State: APjAAAVDCei9rtyDpzRElORYAaqufD1i7QnkSWhcZ+Ca6W70JXQyJNDh
+        6N5TGR9zVymCi5Lqw5SgV5g=
+X-Google-Smtp-Source: APXvYqzGDU2p00rpKHHpgR0XKyIcdSAHlLJt1ols4C1Zo9DYgvfKJg2Rw8JMt0Hp+WH0ePmJorpdUA==
+X-Received: by 2002:a17:90a:25a9:: with SMTP id k38mr2660559pje.12.1568344963350;
+        Thu, 12 Sep 2019 20:22:43 -0700 (PDT)
+Received: from dtor-ws.mtv.corp.google.com ([2620:15c:202:201:3adc:b08c:7acc:b325])
+        by smtp.gmail.com with ESMTPSA id b2sm8060936pfd.81.2019.09.12.20.22.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 12 Sep 2019 20:22:42 -0700 (PDT)
+From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Subject: [PATCH v2 0/2] Add support for software nodes to gpiolib
+Date:   Thu, 12 Sep 2019 20:22:37 -0700
+Message-Id: <20190913032240.50333-1-dmitry.torokhov@gmail.com>
+X-Mailer: git-send-email 2.23.0.237.gc6a4ce50a0-goog
 MIME-Version: 1.0
-Received: by 2002:a4a:e7ce:0:0:0:0:0 with HTTP; Thu, 12 Sep 2019 10:51:59
- -0700 (PDT)
-Reply-To: joeakaba00@gmail.com
-From:   joe akaba <fiacregnansa@gmail.com>
-Date:   Thu, 12 Sep 2019 19:51:59 +0200
-Message-ID: <CANUG11_0Uish2Vb_D1UTedw8RpJ0E8RkOyqUBzSWWs0CyCyagw@mail.gmail.com>
-Subject: hello
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hallo
+This is a part of the larger series previously posted at
 
-Mein Name ist Joe Akaba. Ich bin von Beruf Rechtsanwalt. Ich m=C3=B6chte
-Ihnen anbieten
-die n=C3=A4chsten Verwandten zu meinem Klienten. Sie erben die Summe von
-(8,5 Millionen US-Dollar)
-Dollar, die mein Kunde vor seinem Tod in der Bank gelassen hat.
+https://lore.kernel.org/linux-gpio/20190911075215.78047-1-dmitry.torokhov@gmail.com
 
-Mein Mandant ist ein Staatsb=C3=BCrger Ihres Landes, der mit seiner Frau
-bei einem Autounfall ums Leben gekommen ist
-und nur Sohn. Ich werde mit 50% des Gesamtfonds berechtigt sein, w=C3=A4hre=
-nd 50%
-sein f=C3=BCr dich.
-Bitte kontaktieren Sie meine private E-Mail hier f=C3=BCr weitere
-Informationen: joeakaba00@gmail.com
+that was rebased on top of linux-gpio devel branch.
 
-Vielen Dank im Voraus,
-Mr.Joe Akaba
+Changes in v2:
+- switched export to be EXPORT_SYMBOL_GPL to match the new export
+  markings for the rest of GPIO devres functions
+- rebased on top of Linus W devel branch
+- added Andy's Reviewed-by
 
+Dmitry Torokhov (2):
+  gpiolib: introduce devm_fwnode_gpiod_get_index()
+  gpiolib: introduce fwnode_gpiod_get_index()
 
+ drivers/gpio/gpiolib-devres.c | 33 ++++++---------------
+ drivers/gpio/gpiolib.c        | 48 +++++++++++++++++++++++++++++++
+ include/linux/gpio/consumer.h | 54 ++++++++++++++++++++++++++++-------
+ 3 files changed, 101 insertions(+), 34 deletions(-)
 
+-- 
+2.23.0.237.gc6a4ce50a0-goog
 
-Hello
-
-My name is Joe Akaba I am a lawyer by profession. I wish to offer you
-the next of kin to my client. You will inherit the sum of ($8.5 Million)
-dollars my client left in the bank before his death.
-
-My client is a citizen of your country who died in auto crash with his wife
-and only son. I will be entitled with 50% of the total fund while 50% will
-be for you.
-Please contact my private email here for more details:joeakaba00@gmail.com
-
-Many thanks in advance,
-Mr.Joe Akaba
