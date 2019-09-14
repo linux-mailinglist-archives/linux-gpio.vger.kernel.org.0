@@ -2,58 +2,53 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 56E66B2A6D
-	for <lists+linux-gpio@lfdr.de>; Sat, 14 Sep 2019 10:18:46 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 41B5BB2A7F
+	for <lists+linux-gpio@lfdr.de>; Sat, 14 Sep 2019 10:42:18 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727184AbfINISn (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sat, 14 Sep 2019 04:18:43 -0400
-Received: from mail-io1-f50.google.com ([209.85.166.50]:36206 "EHLO
-        mail-io1-f50.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727171AbfINISn (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sat, 14 Sep 2019 04:18:43 -0400
-Received: by mail-io1-f50.google.com with SMTP id b136so67877352iof.3
-        for <linux-gpio@vger.kernel.org>; Sat, 14 Sep 2019 01:18:41 -0700 (PDT)
+        id S1727558AbfINImR (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sat, 14 Sep 2019 04:42:17 -0400
+Received: from mail-io1-f51.google.com ([209.85.166.51]:37616 "EHLO
+        mail-io1-f51.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727555AbfINImR (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sat, 14 Sep 2019 04:42:17 -0400
+Received: by mail-io1-f51.google.com with SMTP id b19so7890801iob.4
+        for <linux-gpio@vger.kernel.org>; Sat, 14 Sep 2019 01:42:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc:content-transfer-encoding;
-        bh=zYArlTblKp7qw3ypTNSHe+V1MY+vVcUDKYbqMHtoAws=;
-        b=XEmvtN9tMqaFzPKwaZmuNR6xwRPFIrUeuM0rIp5MMcJwP56KHHHz6rzfjiOB7DDw30
-         KLKPsthYta1EZduadNUmrnoafXqHbLdcEnlFezwlRWolm9MtmjWpHdwQgVygou0n6LV3
-         oK7GLma8+7cUGp3az+e42FFaeJdiGkUG5741hpKriUSrpgbnknoAf2zYZWuOGUBnePVm
-         9o/lddsDsfVrBC/rol5t78agseKXu3le6/MyyQzxDdqRj1bZwlQY+ujcwoSee4K5mvrg
-         6iBtUQQH+BselJbQXZqtcD+0cxJTdneesmUbWMsNdsMrE5ezo+INuKvIHjSVXZkjYCny
-         ZElA==
+        bh=FlR8QyScXmkfGx+MX/01NhXYDwleVTzxMUeD9wh/x3w=;
+        b=KoREbczLen+w0excsbNim9uLufoAVhqsWuW3PUduIVripEpXUTIdx8bggnzB3/jh0u
+         H92xCUYd2qG8ERC6BgMIYZeFTbmCQaBDBjOU0JS8HN4UQkQzcN8Vwqup6oDHUe4oQmqx
+         AMDe+OGRgCkbpyTpwTKMLPIsRa2yPnsUYAs3hyArCUufFoNWVjlDf3a83TuZmkprCqmO
+         9YaC4ydED9TZ0nWHxOZUwg+7durupgR5BBW37jIyCCKTmoz3pVteua64esDeUAU0/44z
+         8yhre5wpWSPs4MA2MQQcEO/z9v+n/T4sQ/tETMD8tlaqbmhC1TxjmW9l8cog+Mcqe7Dv
+         0lTw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc:content-transfer-encoding;
-        bh=zYArlTblKp7qw3ypTNSHe+V1MY+vVcUDKYbqMHtoAws=;
-        b=SoYIsHss9wkTY2rUCu9bR96FxKbxRE8NoZG+UfJKtwQmbg/2Dx6z8yBvBHMsumsVTu
-         1smXiJhPXFI+BULW7jQ1wzQtA998tZbbm9YTQWMBWMB+he+u/qVgYZyM6l4c39wWzJuc
-         tfvD2jY6qYy/YDin8cCgDMSWTH4KvIs1DHmT95KISJNklGYwv7EM5asU/F1URsXbO+il
-         /hMWbwW6xPsXLbtMFwPxDqdwzeu6bgONpOljcWoIIbEI3aeGVgJKdkEC9ZdYMMCR3402
-         c6ZIwYFD2cOpji+NuKhCykl+CRBkDbm5JGPrJUqiDHbE2PrVeLCZROLJs/mCOUxslHS4
-         E6Eg==
-X-Gm-Message-State: APjAAAUlXamI/x49TXr9PaVtSIFNei3o/ivUO4FqalZFXPQyc4I9b76S
-        vPSVX5tUg/f9/UTFy2B+4qaO8oBbEMnoNaSeMfyCrw==
-X-Google-Smtp-Source: APXvYqxVormL8rfbB1X5lO0j4qFp2MQnJn4M5F88KN8mAHIxdApldNO6jSYjPboO2NPgZ8RWExiTHrbknGPcZlTG+ao=
-X-Received: by 2002:a6b:7408:: with SMTP id s8mr4967449iog.287.1568449121150;
- Sat, 14 Sep 2019 01:18:41 -0700 (PDT)
+        bh=FlR8QyScXmkfGx+MX/01NhXYDwleVTzxMUeD9wh/x3w=;
+        b=NyGnMLH2Iw35b1y5vPnqFZkuue9j7sDqKD9Dq6FG51Ua9xI46FQ/LxXZbPU43mSqx1
+         azB+aP51xMF335H1s/xSOlpy6HplK/pvTSgmlTRBhvkaVJ5rk1Lv9LMkYEVKAPF7Zc5m
+         sL4q2gY5ETJViBEvfc419tXBAlbZZIPjVqHf/QkcltRYMO3JLl0Zvq+h1qzypcb3IVkl
+         9qeiUmv9FH7/XvIl/LuDS24lheJtNa+X5jacdXT4lU13141M9icihpsLGXgOlLUlpfWZ
+         qgnFSxMlb7jlDYPuV9SLGttMI1163RELsYjujADUK4j1cnFbPrfvA4nHCfwC5tqF4ZJx
+         Dl9w==
+X-Gm-Message-State: APjAAAUiNyg4QyREqRsxyG7dtCKi2p87WOJZZk4dn1YZgpZ7Ldh00q/w
+        6yNFJqZZcNmrgpMup1l4U3abPwCbFQ6c3Rdq2HkpPw==
+X-Google-Smtp-Source: APXvYqxnU2Mcmianby71oWbtFwaQy2WWC9QBGVn3QCG/GFx6kvnw7qNKwSlk9mYAWHb7DJsiGwpka1ao2ZlhV+VZtp0=
+X-Received: by 2002:a02:7b0d:: with SMTP id q13mr44763052jac.114.1568450534653;
+ Sat, 14 Sep 2019 01:42:14 -0700 (PDT)
 MIME-Version: 1.0
-References: <08ac3d50-ae2b-060f-0210-4be213b6c97c@korgrd.com>
- <CAMRc=Md9yD6U+_BAEY_pB1vdri6oZuMLwAhvDuAgpee_bQEpVA@mail.gmail.com>
- <CAEf4M_B2RXbv-B2fsU-15iF56bO0_K--UeSdmdXHqgYNjCTbYw@mail.gmail.com> <CACRpkda_oXz0Dv064MiHrctmmPHca3B8LotiHUd8Z3TAuwVLcQ@mail.gmail.com>
-In-Reply-To: <CACRpkda_oXz0Dv064MiHrctmmPHca3B8LotiHUd8Z3TAuwVLcQ@mail.gmail.com>
+References: <a2ad7284-b31c-a152-aebf-01efc4a36765@freenet.de>
+In-Reply-To: <a2ad7284-b31c-a152-aebf-01efc4a36765@freenet.de>
 From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Sat, 14 Sep 2019 10:18:30 +0200
-Message-ID: <CAMRc=MdooA26agpg5tUcfcV-0BvHq2fSqih+8kcd5AENE-FQ0Q@mail.gmail.com>
-Subject: Re: [libgpiod] hopefully simple question regarding pull-up/down control
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Drew Fustini <pdp7pdp7@gmail.com>,
-        Bill Barton <peabody@korgrd.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "thomas.petazzoni@bootlin.com" <thomas.petazzoni@bootlin.com>
+Date:   Sat, 14 Sep 2019 10:42:03 +0200
+Message-ID: <CAMRc=Mez=0L8jemxC5r_+1pkT1vmpyZdoTws00ssf0kq_ELDXw@mail.gmail.com>
+Subject: Re: [libgpiod] python binding decidedly unpythonic
+To:     Darrien <darrien@freenet.de>
+Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 Sender: linux-gpio-owner@vger.kernel.org
@@ -61,28 +56,61 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-czw., 12 wrz 2019 o 11:27 Linus Walleij <linus.walleij@linaro.org> napisa=
-=C5=82(a):
+pt., 13 wrz 2019 o 15:05 Darrien <darrien@freenet.de> napisa=C5=82(a):
 >
-> On Wed, Sep 11, 2019 at 12:19 AM Drew Fustini <pdp7pdp7@gmail.com> wrote:
-> > On Fri, Feb 1, 2019 at 4:07 PM Bartosz Golaszewski <brgl@bgdev.pl> wrot=
-e:
-> > > As for your question: it's in the pipeline, but it's not a trivial
-> > > task. We first need to implement the kernel part, then define a
-> > > future-proof kernel-to-user-space interface and then implement the
-> > > support in libgpiod. For now it's impossible to enable configurable
-> > > pull-up/down resistors from user-space.
-> >
-> > Hello, I'm curious if there has been any further development towards
-> > being able to control pull up or pull down through libgpiod.
+> Hello,
 >
-> I met with Drew yesterdat and we decided he will take a stab at fixing
-> this for the benefit of all Adafruits etc.
->
-> Yours,
-> Linus Walleij
 
-Awesome! Let me know if I can help. I'll make sure this gets supported
-in libgpiod as soon as we have an interface exposed by the kernel.
+Hi Darrien,
 
-Bart
+> I just started working with python3-libgpiod and noticed that it is
+> decidedly unpythonic.
+>
+
+I'm not really sure what that means. A quick google search yields many
+answers but not necessarily with regard to what should or should not
+be handled as properties.
+
+> For example the Line object functions active_state, consumer, direction,
+> is_open_drain, is_open_source, is_requested, is_used, name, offset and
+> owner should be properties, and set_value/get_value should be merged
+> into one property.
+>
+
+For the first part: you may be right that it would be somehow "better"
+or more standardized (I didn't really find any official documentation
+that would suggest always using properties when possible - mostly some
+stackoverflow posts), but I decided at the time of writing that when
+in C, methods cause less churn. Also: these methods make the object
+call underlying C code, so I considered it more of "telling the object
+what to do". I may have been wrong - python is not my main language.
+
+As for get/set values: this leads to execution of underlying code that
+can fail, it's definitely not a property but an operation on the
+object conceptually.
+
+> Line.direction should probably also be writable for bidirectional pin use=
+.
+>
+
+Definitely not. Direction can be changed by an external actor or by
+the current process when it runs the request operation. Even as a
+property it should be read-only.
+
+> Regards
+>
+> Darrien
+>
+
+Let's say I'd want to convert the methods you listed to properties:
+this would be a backward incompatible change of the interface. I'd say
+it's the right thing to do if the API was fundamentally broken and
+didn't work but it's not the case. I'd prefer not to force people to
+change their existing code without a very strong reason.
+
+In other words - if ever there'll be a change of API major version to
+2, I'll be sure to address python bindings as well. For now I believe
+we should leave it like it is.
+
+Best regards,
+Bartosz Golaszewski
