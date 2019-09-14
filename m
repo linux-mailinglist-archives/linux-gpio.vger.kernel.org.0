@@ -2,87 +2,182 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 0F6A8B2C65
-	for <lists+linux-gpio@lfdr.de>; Sat, 14 Sep 2019 19:26:06 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D7A83B2CB3
+	for <lists+linux-gpio@lfdr.de>; Sat, 14 Sep 2019 21:36:42 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726044AbfINR0F (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sat, 14 Sep 2019 13:26:05 -0400
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:38419 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725850AbfINR0F (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sat, 14 Sep 2019 13:26:05 -0400
-Received: by mail-oi1-f194.google.com with SMTP id 7so5203521oip.5
-        for <linux-gpio@vger.kernel.org>; Sat, 14 Sep 2019 10:26:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=googlemail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=pEU3Vq66btO8h2McFVIKj0tMUw48c9orqQSFYLNd9xs=;
-        b=uyP7JgLJbfgbS/le3OMX+P7UhfZu8a1VCacW8LH8gP3q3S1NGpnfPARIFu718sIU6b
-         wfQ1iOdUr0UA339aEZxtoFXKdFMMlO8hp9cbKgA45ID5I1QLTbuFsM5BEgZ6LKKRNFee
-         ZYJvFULQ/LpVMj0EKjYBluGsCUMSq80yx9gZDXHCV1WUyHwFU0bVyiYU6t0+2p5jrYLZ
-         Jw5hYZUhl/DNyHn+nu06L46uROmyQnd/lCTemND9ZZcNdXq8U21Q0IUjwzmn0hKriuVQ
-         /6zQQzE9m4vYips0OnN/6celpDSKa8mB6mnOgTVlLIqNKFTKTTsmgiYekS1MR0B/cbXO
-         2ZjA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=pEU3Vq66btO8h2McFVIKj0tMUw48c9orqQSFYLNd9xs=;
-        b=dpfmKxLMsTHFoygcT6hrYM68igwAj9yRsSINGlqwu9BJKFRtjrc2XSEfuAuURJU/XU
-         botEpqCMI0q//iAlK5gS9DinPo3jTqtErmh43xN7AtrXqn6Up6iMEFNvW1n1MlaHK2Pv
-         vBK810QJNJx4RXXln5tQtZpGgnYgE4W2x31AaRxhHGIOmglsfRMK4kZ0bhhFJ2ibMKqV
-         4hoqTSm2OCwgT4DyXAF5bhhJh0i1cXYuJNQ73xJYq0QB7sQwI6tVtsD18Ef9TRQEVhi3
-         iXAKZrURboY1XoZbcE9VajZi73NiHQFssNEUNct2uJKs4GdtyahuQkNv0HhWHON+AP0G
-         ZCtg==
-X-Gm-Message-State: APjAAAUTSNY+dY27dFzISbOrmKHSEqeCKVl4zQ8Vg4+XzevBmwktS8Wf
-        /u/kkJKFWfolLNYQPCcj7G98UJUmhkkJwG71lY8=
-X-Google-Smtp-Source: APXvYqzK0H5zUEdOzFIVK0V/x5t+2bTHmhGy3LA9aWyubA2MqZwc0kNEBhr/iQI79VOk1dnfCQ/Ksfi3qexx6c788bc=
-X-Received: by 2002:aca:3ad6:: with SMTP id h205mr6489381oia.129.1568481963863;
- Sat, 14 Sep 2019 10:26:03 -0700 (PDT)
+        id S1729652AbfINTgm (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sat, 14 Sep 2019 15:36:42 -0400
+Received: from esa3.microchip.iphmx.com ([68.232.153.233]:17163 "EHLO
+        esa3.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729470AbfINTgl (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sat, 14 Sep 2019 15:36:41 -0400
+Received-SPF: Pass (esa3.microchip.iphmx.com: domain of
+  Ludovic.Desroches@microchip.com designates 198.175.253.82 as
+  permitted sender) identity=mailfrom;
+  client-ip=198.175.253.82; receiver=esa3.microchip.iphmx.com;
+  envelope-from="Ludovic.Desroches@microchip.com";
+  x-sender="Ludovic.Desroches@microchip.com";
+  x-conformance=spf_only; x-record-type="v=spf1";
+  x-record-text="v=spf1 mx a:ushub1.microchip.com
+  a:smtpout.microchip.com a:mx1.microchip.iphmx.com
+  a:mx2.microchip.iphmx.com include:servers.mcsv.net
+  include:mktomail.com include:spf.protection.outlook.com ~all"
+Received-SPF: None (esa3.microchip.iphmx.com: no sender
+  authenticity information available from domain of
+  postmaster@email.microchip.com) identity=helo;
+  client-ip=198.175.253.82; receiver=esa3.microchip.iphmx.com;
+  envelope-from="Ludovic.Desroches@microchip.com";
+  x-sender="postmaster@email.microchip.com";
+  x-conformance=spf_only
+Authentication-Results: esa3.microchip.iphmx.com; dkim=none (message not signed) header.i=none; spf=Pass smtp.mailfrom=Ludovic.Desroches@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dmarc=pass (p=none dis=none) d=microchip.com
+IronPort-SDR: keNpXfLXUMoDMxEwDXkh1mbph9oViuJ4JrpXrJ1xCqVup2vET7FDtb/AgXnpGSP8bhWt3hK3ED
+ M2ecOs3Uzbx/jrAqI0h1XFbDiPrHDVi8jLp9RRSbdUNcbC7kgoF5pTk5/7Rn1v81U5Y5pPPJGw
+ 4VrpogipfA5ZH0fLogMBvjEhSyttU5D5yM0YDXpik8iBIcZjBJ/QkWKiT6eQUu/I0uYCaDVJsB
+ QDupPgUqYtqi8/8L9NJRY2wtZzdem1JzD05xhgGXzZWgO8+O8CZ9yp5WBa1pumUaMXN77ZBc4Z
+ 29E=
+X-IronPort-AV: E=Sophos;i="5.64,506,1559545200"; 
+   d="scan'208";a="49099072"
+Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
+  by esa3.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 14 Sep 2019 12:36:41 -0700
+Received: from chn-vm-ex03.mchp-main.com (10.10.85.151) by
+ chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Sat, 14 Sep 2019 12:36:41 -0700
+Received: from localhost (10.10.85.251) by chn-vm-ex03.mchp-main.com
+ (10.10.85.151) with Microsoft SMTP Server id 15.1.1713.5 via Frontend
+ Transport; Sat, 14 Sep 2019 12:36:40 -0700
+Date:   Sat, 14 Sep 2019 21:36:40 +0200
+From:   Ludovic Desroches <ludovic.desroches@microchip.com>
+To:     Alexandre Belloni <alexandre.belloni@bootlin.com>
+CC:     Linus Walleij <linus.walleij@linaro.org>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        <linux-gpio@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] pinctrl: at91-pio4: implement .get_multiple and
+ .set_multiple
+Message-ID: <20190914193640.rukypixp6t54fwfc@sekiro>
+Mail-Followup-To: Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+References: <20190905141304.22005-1-alexandre.belloni@bootlin.com>
 MIME-Version: 1.0
-References: <1cc32a18-464d-5531-7a1c-084390e2ecb1@gmx.net> <CACRpkdY=Jema8LmeF_k47gQsdxTHPi5sVCYM3ihe47=bw6K4cQ@mail.gmail.com>
-In-Reply-To: <CACRpkdY=Jema8LmeF_k47gQsdxTHPi5sVCYM3ihe47=bw6K4cQ@mail.gmail.com>
-From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Date:   Sat, 14 Sep 2019 19:25:52 +0200
-Message-ID: <CAFBinCDom6OHuUxVxQxLNX+ykgSaNEEZnqw03-NUvvxAVvUN9A@mail.gmail.com>
-Subject: Re: [BUG] wrong pinning definition or uart_c in pinctrl-meson-gxbb.c
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Otto Meier <gf435@gmx.net>,
-        "open list:ARM/Amlogic Meson..." <linux-amlogic@lists.infradead.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Kevin Hilman <khilman@baylibre.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20190905141304.22005-1-alexandre.belloni@bootlin.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Linus,
+On Thu, Sep 05, 2019 at 04:13:04PM +0200, Alexandre Belloni wrote:
+> 
+> Implement .get_multiple and .set_multiple to allow reading or setting
+> multiple pins simultaneously. Pins in the same bank will all be switched at
+> the same time, improving synchronization and performances.
+> 
+> Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
 
-On Thu, Sep 12, 2019 at 11:21 AM Linus Walleij <linus.walleij@linaro.org> wrote:
->
-> On Tue, Sep 10, 2019 at 5:01 PM Otto Meier <gf435@gmx.net> wrote:
->
-> > Hi i tried to use the uart_C of the the odroid-c2.
-> >
-> > I enabled it in the dts file. During boot it crashed when the
-> > the sdcard slot is addressed.
-> >
-> > After long search in the net i found this:
-> >
-> > https://forum.odroid.com/viewtopic.php?f=139&t=25371&p=194370&hilit=uart_C#p177856
-> >
-> > After changing the pin definitions accordingly erverything works.
-> > Uart_c is functioning and sdcard ist working.
-> >
-> >
-> > Fixes: 6db0f3a8a04e46 ("pinctrl: amlogic: gxbb: add more UART pins")
-> > Signed-off-by: Otto Meiergf435@gmx.net
->
-> Looks like a simple fix to me, Martin could you take a look?
-this looks fine to me based on the description on the Odroid forums so:
-Reviewed-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Acked-by: Ludovic Desroches <ludovic.desroches@microchip.com>
 
+Thanks for this improvement. You can keep my ack for v3 as the changes
+should be the commit message only. I'll be off for three weeks.
 
-Martin
+Regards
+
+Ludovic
+
+> ---
+>  drivers/pinctrl/pinctrl-at91-pio4.c | 60 +++++++++++++++++++++++++++++
+>  1 file changed, 60 insertions(+)
+> 
+> diff --git a/drivers/pinctrl/pinctrl-at91-pio4.c b/drivers/pinctrl/pinctrl-at91-pio4.c
+> index d6de4d360cd4..488a302a60d4 100644
+> --- a/drivers/pinctrl/pinctrl-at91-pio4.c
+> +++ b/drivers/pinctrl/pinctrl-at91-pio4.c
+> @@ -328,6 +328,35 @@ static int atmel_gpio_get(struct gpio_chip *chip, unsigned offset)
+>  	return !!(reg & BIT(pin->line));
+>  }
+>  
+> +static int atmel_gpio_get_multiple(struct gpio_chip *chip, unsigned long *mask,
+> +				   unsigned long *bits)
+> +{
+> +	struct atmel_pioctrl *atmel_pioctrl = gpiochip_get_data(chip);
+> +	unsigned int bank;
+> +
+> +	bitmap_zero(bits, atmel_pioctrl->npins);
+> +
+> +	for (bank = 0; bank < atmel_pioctrl->nbanks; bank++) {
+> +		unsigned int word = bank;
+> +		unsigned int offset = 0;
+> +		unsigned int reg;
+> +
+> +#if ATMEL_PIO_NPINS_PER_BANK != BITS_PER_LONG
+> +		word = BIT_WORD(bank * ATMEL_PIO_NPINS_PER_BANK);
+> +		offset = bank * ATMEL_PIO_NPINS_PER_BANK % BITS_PER_LONG;
+> +#endif
+> +		if (!mask[word])
+> +			continue;
+> +
+> +		reg = atmel_gpio_read(atmel_pioctrl, bank, ATMEL_PIO_PDSR);
+> +		bits[word] |= mask[word] & (reg << offset);
+> +
+> +		pr_err("ABE: %d %08x\n", bank, bits[word]);
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+>  static int atmel_gpio_direction_output(struct gpio_chip *chip, unsigned offset,
+>  				       int value)
+>  {
+> @@ -358,11 +387,42 @@ static void atmel_gpio_set(struct gpio_chip *chip, unsigned offset, int val)
+>  			 BIT(pin->line));
+>  }
+>  
+> +static void atmel_gpio_set_multiple(struct gpio_chip *chip, unsigned long *mask,
+> +				    unsigned long *bits)
+> +{
+> +	struct atmel_pioctrl *atmel_pioctrl = gpiochip_get_data(chip);
+> +	unsigned int bank;
+> +
+> +	for (bank = 0; bank < atmel_pioctrl->nbanks; bank++) {
+> +		unsigned int bitmask;
+> +		unsigned int word = bank;
+> +
+> +#if ATMEL_PIO_NPINS_PER_BANK != BITS_PER_LONG
+> +		word = BIT_WORD(bank * ATMEL_PIO_NPINS_PER_BANK);
+> +#endif
+> +		if (!mask[word])
+> +			continue;
+> +
+> +		bitmask = mask[word] & bits[word];
+> +		atmel_gpio_write(atmel_pioctrl, bank, ATMEL_PIO_SODR, bitmask);
+> +
+> +		bitmask = mask[word] & ~bits[word];
+> +		atmel_gpio_write(atmel_pioctrl, bank, ATMEL_PIO_CODR, bitmask);
+> +
+> +#if ATMEL_PIO_NPINS_PER_BANK != BITS_PER_LONG
+> +		mask[word] >>= ATMEL_PIO_NPINS_PER_BANK;
+> +		bits[word] >>= ATMEL_PIO_NPINS_PER_BANK;
+> +#endif
+> +	}
+> +}
+> +
+>  static struct gpio_chip atmel_gpio_chip = {
+>  	.direction_input        = atmel_gpio_direction_input,
+>  	.get                    = atmel_gpio_get,
+> +	.get_multiple           = atmel_gpio_get_multiple,
+>  	.direction_output       = atmel_gpio_direction_output,
+>  	.set                    = atmel_gpio_set,
+> +	.set_multiple           = atmel_gpio_set_multiple,
+>  	.to_irq                 = atmel_gpio_to_irq,
+>  	.base                   = 0,
+>  };
+> -- 
+> 2.21.0
+> 
+> 
