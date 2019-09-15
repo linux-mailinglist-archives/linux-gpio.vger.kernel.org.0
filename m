@@ -2,182 +2,65 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id D7A83B2CB3
-	for <lists+linux-gpio@lfdr.de>; Sat, 14 Sep 2019 21:36:42 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 57BB5B3247
+	for <lists+linux-gpio@lfdr.de>; Sun, 15 Sep 2019 23:41:53 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729652AbfINTgm (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sat, 14 Sep 2019 15:36:42 -0400
-Received: from esa3.microchip.iphmx.com ([68.232.153.233]:17163 "EHLO
-        esa3.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729470AbfINTgl (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sat, 14 Sep 2019 15:36:41 -0400
-Received-SPF: Pass (esa3.microchip.iphmx.com: domain of
-  Ludovic.Desroches@microchip.com designates 198.175.253.82 as
-  permitted sender) identity=mailfrom;
-  client-ip=198.175.253.82; receiver=esa3.microchip.iphmx.com;
-  envelope-from="Ludovic.Desroches@microchip.com";
-  x-sender="Ludovic.Desroches@microchip.com";
-  x-conformance=spf_only; x-record-type="v=spf1";
-  x-record-text="v=spf1 mx a:ushub1.microchip.com
-  a:smtpout.microchip.com a:mx1.microchip.iphmx.com
-  a:mx2.microchip.iphmx.com include:servers.mcsv.net
-  include:mktomail.com include:spf.protection.outlook.com ~all"
-Received-SPF: None (esa3.microchip.iphmx.com: no sender
-  authenticity information available from domain of
-  postmaster@email.microchip.com) identity=helo;
-  client-ip=198.175.253.82; receiver=esa3.microchip.iphmx.com;
-  envelope-from="Ludovic.Desroches@microchip.com";
-  x-sender="postmaster@email.microchip.com";
-  x-conformance=spf_only
-Authentication-Results: esa3.microchip.iphmx.com; dkim=none (message not signed) header.i=none; spf=Pass smtp.mailfrom=Ludovic.Desroches@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dmarc=pass (p=none dis=none) d=microchip.com
-IronPort-SDR: keNpXfLXUMoDMxEwDXkh1mbph9oViuJ4JrpXrJ1xCqVup2vET7FDtb/AgXnpGSP8bhWt3hK3ED
- M2ecOs3Uzbx/jrAqI0h1XFbDiPrHDVi8jLp9RRSbdUNcbC7kgoF5pTk5/7Rn1v81U5Y5pPPJGw
- 4VrpogipfA5ZH0fLogMBvjEhSyttU5D5yM0YDXpik8iBIcZjBJ/QkWKiT6eQUu/I0uYCaDVJsB
- QDupPgUqYtqi8/8L9NJRY2wtZzdem1JzD05xhgGXzZWgO8+O8CZ9yp5WBa1pumUaMXN77ZBc4Z
- 29E=
-X-IronPort-AV: E=Sophos;i="5.64,506,1559545200"; 
-   d="scan'208";a="49099072"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa3.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 14 Sep 2019 12:36:41 -0700
-Received: from chn-vm-ex03.mchp-main.com (10.10.85.151) by
- chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Sat, 14 Sep 2019 12:36:41 -0700
-Received: from localhost (10.10.85.251) by chn-vm-ex03.mchp-main.com
- (10.10.85.151) with Microsoft SMTP Server id 15.1.1713.5 via Frontend
- Transport; Sat, 14 Sep 2019 12:36:40 -0700
-Date:   Sat, 14 Sep 2019 21:36:40 +0200
-From:   Ludovic Desroches <ludovic.desroches@microchip.com>
-To:     Alexandre Belloni <alexandre.belloni@bootlin.com>
-CC:     Linus Walleij <linus.walleij@linaro.org>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        <linux-gpio@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] pinctrl: at91-pio4: implement .get_multiple and
- .set_multiple
-Message-ID: <20190914193640.rukypixp6t54fwfc@sekiro>
-Mail-Followup-To: Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-References: <20190905141304.22005-1-alexandre.belloni@bootlin.com>
+        id S1725971AbfIOVlw (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sun, 15 Sep 2019 17:41:52 -0400
+Received: from sonic307-54.consmr.mail.ir2.yahoo.com ([87.248.110.31]:39032
+        "EHLO sonic307-54.consmr.mail.ir2.yahoo.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726139AbfIOVlw (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>);
+        Sun, 15 Sep 2019 17:41:52 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1568583708; bh=lAh1VSII1GxH1Lprx9ZFG4FPrK3+vs4TTowEGakve2I=; h=Date:From:Reply-To:Subject:From:Subject; b=amqXg37f4YcDrVxIrYO0cXpaRGE/ysFQawBer/OF0nIqgW3CmzGKJRmJzVwVc38Q+AZXZqJu0jwix6ADcfwMCuu/eL3r2QJN5fPk8ESE6lltDM+Bn1kPqGOLM38IJiN+vCwXmn3vy97EsJvb7g0JYQ0PzoWpl76OtX9VSvmRdiNpvSxvZTzcZMJ6DVUk2iSOUuBLE2GrKL2lXZn/MS8mTtaCrKZn4yrzxKk95ePXDR3STfBnV3syERxWnbM8Cqehy/bdwmcwZ9lQZN2m/CQAKsmrgmhfuYb9qY4sYZ2eD7X5OSj/UP+G3LfQrfJZBR/J4CB4r1jbJ8USf6urJKJZSQ==
+X-YMail-OSG: Ny4QInoVM1kGVDdB.gfkcPbNbOCW6QQYKslKxUZrKGfRnhCJ4qR9Tv5LB2VgtuQ
+ 1tOCBYEuTN9Cp2D6fkArh7NHS6qE0tJfQd9OEjMsJ0LuUfJ5wUgy5nHojv.uNKuHArSDg5e1xh._
+ 4YGTLSlx9tLIPwNba4WEDnMSTR9WXWT9tCpZfpyfCxGqJ3iE8Wq0FRLMhXlYyxDHUmSHWX5esYRF
+ BYMznTpkZlZ5TTqiohxdWkU9C5ZKEPfBrxEwjyfVo6UUvMuCstvpgHOmEA4LT7Jttcit4sVt4Tu3
+ Aj17mCTdYBLI3haCGBM1TuFO86JccxfcJQNLvCqnPJE_hEuEBMNL6TNrxilbR5SZWTiaooNuz5ds
+ EKepFirNdHB4aIPszx4nC946kYbLcSa0kgZcB_To.vpCabdC4c67ELmnUdlTUrVgcMdorfDUwy9.
+ p_n86q3RnH3j5m7DB73wC02EEBP8GFdw5S_8kOaJ.x2lFbvUWen1ko_Rx6a7voA55vil2.1U2Bjx
+ QOl9U46Mx53QwNe1up8Q7egyssJrxCuBkEqTWU5aO2uZ_vrjsNop_n8LE93VaTsnt.CeymPuN79P
+ fFdh74swJHGf05NdLnLYWg7C.8NzpoLz5QBZqv6n9O2wHog.XwjFTCSpUnOm6XIS2I7uy0zhM9xb
+ s5SoSgZoVwc0ifBHxLfFpkhBpK47FZd2LKv17BW4lI.el8VUZ3rKUnQX1zFIwug1vFCI4dFzAOXm
+ OJ2YFdCd9qFIIY5erwo0JrogFKXFYoC1hCN84PoRCD.aZiwzQd4mrTQU9adDg2ryexWgj5CG6jec
+ NkRO7JMnMeiAYsD.uYWDDTYpKyOxGM2nWx2NG6ixZpD_ZcECi5YxHz3SxzqEJkCEZi665agZYvT9
+ B2qZFaZMNmg.V6zKf2InIc6DeAKIGWJO0MySQhktecwosY.UP1unBs1FG0jWBFYdTwz11TnogO9Q
+ 0zaBx4mdmYx7dnAOVOZPsxHn4j0cm4_S4TmTRUxoiLJaHN._aQ_J6aYbuKTDOolk6eON9uE64uZc
+ 6_EXXZTWK3Vli_jZOufEFzrRqzGjGq8gIjH4gW9w6QcfCK3E31H_VAlvcEOvOsxCFYtQlg83mQBM
+ 5A5spLa.SCJgdV2YDw8AQn6BPKDTg4qjzRNHYzHQ1UHNMXg834tbR2IFA.dwSzXJPkKGrUelFcjz
+ pv.trfuTC59t7MxbKua7U8Lm5CKmp3Av3PludFMFZxw3ClDM7EH.8NqWihewAQALCTAgISA9hxG.
+ a.QVPGLqG32ApJYXxdIW6NI2a0qCUPli63rzp
+Received: from sonic.gate.mail.ne1.yahoo.com by sonic307.consmr.mail.ir2.yahoo.com with HTTP; Sun, 15 Sep 2019 21:41:48 +0000
+Date:   Sun, 15 Sep 2019 21:41:46 +0000 (UTC)
+From:   "Engr. Issah Ahmed" <officefilele@gmail.com>
+Reply-To: engrissahahmd@gmail.com
+Message-ID: <83731469.10245694.1568583706456@mail.yahoo.com>
+Subject: INVESTMENT PROPOSAL.
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20190905141304.22005-1-alexandre.belloni@bootlin.com>
-User-Agent: NeoMutt/20180716
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Sep 05, 2019 at 04:13:04PM +0200, Alexandre Belloni wrote:
-> 
-> Implement .get_multiple and .set_multiple to allow reading or setting
-> multiple pins simultaneously. Pins in the same bank will all be switched at
-> the same time, improving synchronization and performances.
-> 
-> Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Dear Sir,
 
-Acked-by: Ludovic Desroches <ludovic.desroches@microchip.com>
+My Name is Engr. Issah Ahmed, I was a top official in the former government of Late Muammar Gaddafi of Libya.
 
-Thanks for this improvement. You can keep my ack for v3 as the changes
-should be the commit message only. I'll be off for three weeks.
+My late master Muammar Gaddafi, the deposed leader of our country, died on 20 October 2011 during the Battle of Sirte. Gaddafi was found hiding in a culvert west of Sirte and captured by National Transitional Council forces. He was killed shortly afterwards.
+
+We the official members continued with war till the early year 2017 due to the painful death and forceful removal of our Late Master Muammar Gaddafi, our country was totally destabilized because we refused to another government.
+
+In this year 2019 all we the officials in the former Gaddafi government are being arrested, persecuted and imprisoned by the new wicked government.
+
+Libya is presently not safe at the moment, therefore we all moving our money out of Libya.
+
+I want you to quickly help me receive and keep the sum US $20.5million to your country for safety. I have agreed you take 25% of the said money for your assistance.
+
+It is very urgent and Please reply me urgently If you can be trustful to help. I will be waiting to hear from you as soon as possible.
 
 Regards
-
-Ludovic
-
-> ---
->  drivers/pinctrl/pinctrl-at91-pio4.c | 60 +++++++++++++++++++++++++++++
->  1 file changed, 60 insertions(+)
-> 
-> diff --git a/drivers/pinctrl/pinctrl-at91-pio4.c b/drivers/pinctrl/pinctrl-at91-pio4.c
-> index d6de4d360cd4..488a302a60d4 100644
-> --- a/drivers/pinctrl/pinctrl-at91-pio4.c
-> +++ b/drivers/pinctrl/pinctrl-at91-pio4.c
-> @@ -328,6 +328,35 @@ static int atmel_gpio_get(struct gpio_chip *chip, unsigned offset)
->  	return !!(reg & BIT(pin->line));
->  }
->  
-> +static int atmel_gpio_get_multiple(struct gpio_chip *chip, unsigned long *mask,
-> +				   unsigned long *bits)
-> +{
-> +	struct atmel_pioctrl *atmel_pioctrl = gpiochip_get_data(chip);
-> +	unsigned int bank;
-> +
-> +	bitmap_zero(bits, atmel_pioctrl->npins);
-> +
-> +	for (bank = 0; bank < atmel_pioctrl->nbanks; bank++) {
-> +		unsigned int word = bank;
-> +		unsigned int offset = 0;
-> +		unsigned int reg;
-> +
-> +#if ATMEL_PIO_NPINS_PER_BANK != BITS_PER_LONG
-> +		word = BIT_WORD(bank * ATMEL_PIO_NPINS_PER_BANK);
-> +		offset = bank * ATMEL_PIO_NPINS_PER_BANK % BITS_PER_LONG;
-> +#endif
-> +		if (!mask[word])
-> +			continue;
-> +
-> +		reg = atmel_gpio_read(atmel_pioctrl, bank, ATMEL_PIO_PDSR);
-> +		bits[word] |= mask[word] & (reg << offset);
-> +
-> +		pr_err("ABE: %d %08x\n", bank, bits[word]);
-> +	}
-> +
-> +	return 0;
-> +}
-> +
->  static int atmel_gpio_direction_output(struct gpio_chip *chip, unsigned offset,
->  				       int value)
->  {
-> @@ -358,11 +387,42 @@ static void atmel_gpio_set(struct gpio_chip *chip, unsigned offset, int val)
->  			 BIT(pin->line));
->  }
->  
-> +static void atmel_gpio_set_multiple(struct gpio_chip *chip, unsigned long *mask,
-> +				    unsigned long *bits)
-> +{
-> +	struct atmel_pioctrl *atmel_pioctrl = gpiochip_get_data(chip);
-> +	unsigned int bank;
-> +
-> +	for (bank = 0; bank < atmel_pioctrl->nbanks; bank++) {
-> +		unsigned int bitmask;
-> +		unsigned int word = bank;
-> +
-> +#if ATMEL_PIO_NPINS_PER_BANK != BITS_PER_LONG
-> +		word = BIT_WORD(bank * ATMEL_PIO_NPINS_PER_BANK);
-> +#endif
-> +		if (!mask[word])
-> +			continue;
-> +
-> +		bitmask = mask[word] & bits[word];
-> +		atmel_gpio_write(atmel_pioctrl, bank, ATMEL_PIO_SODR, bitmask);
-> +
-> +		bitmask = mask[word] & ~bits[word];
-> +		atmel_gpio_write(atmel_pioctrl, bank, ATMEL_PIO_CODR, bitmask);
-> +
-> +#if ATMEL_PIO_NPINS_PER_BANK != BITS_PER_LONG
-> +		mask[word] >>= ATMEL_PIO_NPINS_PER_BANK;
-> +		bits[word] >>= ATMEL_PIO_NPINS_PER_BANK;
-> +#endif
-> +	}
-> +}
-> +
->  static struct gpio_chip atmel_gpio_chip = {
->  	.direction_input        = atmel_gpio_direction_input,
->  	.get                    = atmel_gpio_get,
-> +	.get_multiple           = atmel_gpio_get_multiple,
->  	.direction_output       = atmel_gpio_direction_output,
->  	.set                    = atmel_gpio_set,
-> +	.set_multiple           = atmel_gpio_set_multiple,
->  	.to_irq                 = atmel_gpio_to_irq,
->  	.base                   = 0,
->  };
-> -- 
-> 2.21.0
-> 
-> 
+Engr. Issah Ahmed
