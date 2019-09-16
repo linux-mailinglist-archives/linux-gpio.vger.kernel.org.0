@@ -2,64 +2,133 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id D8053B3665
-	for <lists+linux-gpio@lfdr.de>; Mon, 16 Sep 2019 10:30:59 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 32B65B376F
+	for <lists+linux-gpio@lfdr.de>; Mon, 16 Sep 2019 11:46:35 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731015AbfIPIa7 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 16 Sep 2019 04:30:59 -0400
-Received: from mga18.intel.com ([134.134.136.126]:18636 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729373AbfIPIa6 (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Mon, 16 Sep 2019 04:30:58 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 16 Sep 2019 01:30:57 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,512,1559545200"; 
-   d="scan'208";a="201554852"
-Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.157])
-  by fmsmga001.fm.intel.com with SMTP; 16 Sep 2019 01:30:55 -0700
-Received: by lahna (sSMTP sendmail emulation); Mon, 16 Sep 2019 11:30:54 +0300
-Date:   Mon, 16 Sep 2019 11:30:54 +0300
-From:   Mika Westerberg <mika.westerberg@linux.intel.com>
-To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+        id S1729636AbfIPJq2 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 16 Sep 2019 05:46:28 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:35774 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729615AbfIPJq1 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 16 Sep 2019 05:46:27 -0400
+Received: by mail-wr1-f65.google.com with SMTP id v8so2761873wrt.2
+        for <linux-gpio@vger.kernel.org>; Mon, 16 Sep 2019 02:46:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=hX0b7zC7u4DV3OF+QghzX3x2HnfB4enZLlboz/3QMWU=;
+        b=KfDuj5Tw0d9lAA011CT56IlOxeT5+b42os5EcT1xOOoKs2ZS9keD0ad+1UskNMFL3X
+         UkZFMGvHWE8Yeo8ZVG/CfLeVSKc/MB3Nn5V1CVFx13CyXY2DuKZr07r/4zfSmiqpHMXS
+         j3GaSOvXnwKgS1g+/Vg6yBNUuJfsur2Iytnfs4e1JnhBxtF2MPASDsP/4Few/iP8as8N
+         rezTO0l6hc5KJOFPHy39mW7646QvPtaI3KTilyStlfGnlDWQhBjwgOHIumN+BLFKCxsi
+         941294jnJ1mAKM652I5pcyU0h2SqBgKheT+RZj+i5WQVR2oLJocq6Aw6TPzexSa+C+MD
+         nfRg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=hX0b7zC7u4DV3OF+QghzX3x2HnfB4enZLlboz/3QMWU=;
+        b=RP6K5cSqFVcliJOy8orfe6FUWGATzUo6E14SStAgafb/Sp1jW+l+461DVA9uE5b0Um
+         A4XXrD2QOoglRb0r/Q6evro0eExz5pGoAwzSpvhU4UVvC0ivjDYqZ07/gv0CSwTjcFDa
+         3Xum9YvwaP5MmmQ2VfIvxntrntODn2KsO/tB4Dh08jpEePCDH5zdzKIZvpO9QFkVwwdF
+         lKpfgLMTUTFOmAqwVRUYvWSn1Miu7+9TKQAECqbHpzYGSAlaUlI1Bh0Cb+V/qjxf5G04
+         J9Sh6cYUZSrZ2Oq1TB4iSfkqVNQHhWCyc9OEElWtbSP+lK/FJtoexeP6e0QCB9+7+B2X
+         +6fg==
+X-Gm-Message-State: APjAAAVPBGHh7cy8I2wbVs+n8Uk4LuxG0YaYNcmIC3M1XT0dIeNlfEhk
+        OOy7F0L7NJ1JW3v71IhbEbHfaM8LYUE=
+X-Google-Smtp-Source: APXvYqy8vo+FLXDSDTpi5E7qkxIeiJ6EwTo4fbKHUergwLitnTEA6T08YwwwN9PSmHTYFgN32oohKQ==
+X-Received: by 2002:a5d:5403:: with SMTP id g3mr6821829wrv.338.1568627186233;
+        Mon, 16 Sep 2019 02:46:26 -0700 (PDT)
+Received: from localhost.localdomain (amontpellier-652-1-281-69.w109-210.abo.wanadoo.fr. [109.210.96.69])
+        by smtp.gmail.com with ESMTPSA id r20sm1261251wmh.37.2019.09.16.02.46.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 16 Sep 2019 02:46:25 -0700 (PDT)
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: Re: [PATCH v2 1/2] gpiolib: introduce devm_fwnode_gpiod_get_index()
-Message-ID: <20190916083054.GN28281@lahna.fi.intel.com>
-References: <20190913032240.50333-1-dmitry.torokhov@gmail.com>
- <20190913032240.50333-2-dmitry.torokhov@gmail.com>
- <20190913094007.GE28281@lahna.fi.intel.com>
- <20190913181310.GA237523@dtor-ws>
+Subject: [PATCH] gpiolib: sanitize flags before allocating memory in lineevent_create()
+Date:   Mon, 16 Sep 2019 11:46:23 +0200
+Message-Id: <20190916094623.12125-1-brgl@bgdev.pl>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190913181310.GA237523@dtor-ws>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.12.1 (2019-06-15)
+Content-Transfer-Encoding: 8bit
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Sep 13, 2019 at 11:13:10AM -0700, Dmitry Torokhov wrote:
-> On Fri, Sep 13, 2019 at 12:40:07PM +0300, Mika Westerberg wrote:
-> > On Thu, Sep 12, 2019 at 08:22:38PM -0700, Dmitry Torokhov wrote:
-> > > devm_fwnode_get_index_gpiod_from_child() is too long, besides the fwnode
-> > > in question does not have to be a child of device node. Let's rename it
-> > > to devm_fwnode_gpiod_get_index() and keep the old name for compatibility
-> > > for now.
-> > 
-> > Shouldn't we convert all the users and drop that monstrosity
-> > devm_fwnode_get_index_gpiod_from_child() completely?
-> 
-> Yes, once we land this in 5.4 I will start blasting maintainers with
-> patches.
+From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 
-OK, thanks for the clarification.
+Move all the flags sanitization before any memory allocation in
+lineevent_create() in order to remove a couple unneeded gotos.
 
-Reviewed-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+---
+ drivers/gpio/gpiolib.c | 42 ++++++++++++++++++------------------------
+ 1 file changed, 18 insertions(+), 24 deletions(-)
+
+diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
+index d9074191edef..194b0bcdcfb7 100644
+--- a/drivers/gpio/gpiolib.c
++++ b/drivers/gpio/gpiolib.c
+@@ -899,6 +899,24 @@ static int lineevent_create(struct gpio_device *gdev, void __user *ip)
+ 
+ 	if (copy_from_user(&eventreq, ip, sizeof(eventreq)))
+ 		return -EFAULT;
++	
++	offset = eventreq.lineoffset;
++	lflags = eventreq.handleflags;
++	eflags = eventreq.eventflags;
++
++	if (offset >= gdev->ngpio)
++		return -EINVAL;
++
++	/* Return an error if a unknown flag is set */
++	if ((lflags & ~GPIOHANDLE_REQUEST_VALID_FLAGS) ||
++	    (eflags & ~GPIOEVENT_REQUEST_VALID_FLAGS))
++		return -EINVAL;
++
++	/* This is just wrong: we don't look for events on output lines */
++	if ((lflags & GPIOHANDLE_REQUEST_OUTPUT) ||
++	    (lflags & GPIOHANDLE_REQUEST_OPEN_DRAIN) ||
++	    (lflags & GPIOHANDLE_REQUEST_OPEN_SOURCE))
++		return -EINVAL;
+ 
+ 	le = kzalloc(sizeof(*le), GFP_KERNEL);
+ 	if (!le)
+@@ -917,30 +935,6 @@ static int lineevent_create(struct gpio_device *gdev, void __user *ip)
+ 		}
+ 	}
+ 
+-	offset = eventreq.lineoffset;
+-	lflags = eventreq.handleflags;
+-	eflags = eventreq.eventflags;
+-
+-	if (offset >= gdev->ngpio) {
+-		ret = -EINVAL;
+-		goto out_free_label;
+-	}
+-
+-	/* Return an error if a unknown flag is set */
+-	if ((lflags & ~GPIOHANDLE_REQUEST_VALID_FLAGS) ||
+-	    (eflags & ~GPIOEVENT_REQUEST_VALID_FLAGS)) {
+-		ret = -EINVAL;
+-		goto out_free_label;
+-	}
+-
+-	/* This is just wrong: we don't look for events on output lines */
+-	if ((lflags & GPIOHANDLE_REQUEST_OUTPUT) ||
+-	    (lflags & GPIOHANDLE_REQUEST_OPEN_DRAIN) ||
+-	    (lflags & GPIOHANDLE_REQUEST_OPEN_SOURCE)) {
+-		ret = -EINVAL;
+-		goto out_free_label;
+-	}
+-
+ 	desc = &gdev->descs[offset];
+ 	ret = gpiod_request(desc, le->label);
+ 	if (ret)
+-- 
+2.21.0
+
