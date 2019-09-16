@@ -2,133 +2,93 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 32B65B376F
-	for <lists+linux-gpio@lfdr.de>; Mon, 16 Sep 2019 11:46:35 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3D83DB37A1
+	for <lists+linux-gpio@lfdr.de>; Mon, 16 Sep 2019 11:57:19 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729636AbfIPJq2 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 16 Sep 2019 05:46:28 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:35774 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729615AbfIPJq1 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 16 Sep 2019 05:46:27 -0400
-Received: by mail-wr1-f65.google.com with SMTP id v8so2761873wrt.2
-        for <linux-gpio@vger.kernel.org>; Mon, 16 Sep 2019 02:46:26 -0700 (PDT)
+        id S1726421AbfIPJ5S (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 16 Sep 2019 05:57:18 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:43878 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726321AbfIPJ5S (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 16 Sep 2019 05:57:18 -0400
+Received: by mail-pf1-f194.google.com with SMTP id a2so3667003pfo.10
+        for <linux-gpio@vger.kernel.org>; Mon, 16 Sep 2019 02:57:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=hX0b7zC7u4DV3OF+QghzX3x2HnfB4enZLlboz/3QMWU=;
-        b=KfDuj5Tw0d9lAA011CT56IlOxeT5+b42os5EcT1xOOoKs2ZS9keD0ad+1UskNMFL3X
-         UkZFMGvHWE8Yeo8ZVG/CfLeVSKc/MB3Nn5V1CVFx13CyXY2DuKZr07r/4zfSmiqpHMXS
-         j3GaSOvXnwKgS1g+/Vg6yBNUuJfsur2Iytnfs4e1JnhBxtF2MPASDsP/4Few/iP8as8N
-         rezTO0l6hc5KJOFPHy39mW7646QvPtaI3KTilyStlfGnlDWQhBjwgOHIumN+BLFKCxsi
-         941294jnJ1mAKM652I5pcyU0h2SqBgKheT+RZj+i5WQVR2oLJocq6Aw6TPzexSa+C+MD
-         nfRg==
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=Rkhdorkxe0qRZF13/02UUScKqG72498Hp24eJzEwJa4=;
+        b=CJF7A23iXJA/Af2Yb6R3fM9Va0UjPmaQ868Hl2yLvWV+aC47MYd9JdyW/tqY/iHD/L
+         MURnT8MBPkKqzDjW5NmJexiBpNlSeR7Sf9Pg0dylNDMSy+zIsx/uB/K7NHls5AhyF/Ua
+         HPTcBN5DwmxQsRtslqTLJko/yPFzBHJ1CHLufoG76YBwOuBY5XJJYiNPkfqJEFSlm0mR
+         K2SaXmJkKZpnRIDqLK+/2CsD6fIM2KMMZ1IWD3eMKpZ9jrQttWjJWjPKNmFSSOjEIZNV
+         g9COt5CZ3Z9PehnJDhitdG/itkGSBXYa43Mz1jPk8vv9dT97NIxqDhP8Diyb+mhBvllB
+         FGhw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=hX0b7zC7u4DV3OF+QghzX3x2HnfB4enZLlboz/3QMWU=;
-        b=RP6K5cSqFVcliJOy8orfe6FUWGATzUo6E14SStAgafb/Sp1jW+l+461DVA9uE5b0Um
-         A4XXrD2QOoglRb0r/Q6evro0eExz5pGoAwzSpvhU4UVvC0ivjDYqZ07/gv0CSwTjcFDa
-         3Xum9YvwaP5MmmQ2VfIvxntrntODn2KsO/tB4Dh08jpEePCDH5zdzKIZvpO9QFkVwwdF
-         lKpfgLMTUTFOmAqwVRUYvWSn1Miu7+9TKQAECqbHpzYGSAlaUlI1Bh0Cb+V/qjxf5G04
-         J9Sh6cYUZSrZ2Oq1TB4iSfkqVNQHhWCyc9OEElWtbSP+lK/FJtoexeP6e0QCB9+7+B2X
-         +6fg==
-X-Gm-Message-State: APjAAAVPBGHh7cy8I2wbVs+n8Uk4LuxG0YaYNcmIC3M1XT0dIeNlfEhk
-        OOy7F0L7NJ1JW3v71IhbEbHfaM8LYUE=
-X-Google-Smtp-Source: APXvYqy8vo+FLXDSDTpi5E7qkxIeiJ6EwTo4fbKHUergwLitnTEA6T08YwwwN9PSmHTYFgN32oohKQ==
-X-Received: by 2002:a5d:5403:: with SMTP id g3mr6821829wrv.338.1568627186233;
-        Mon, 16 Sep 2019 02:46:26 -0700 (PDT)
-Received: from localhost.localdomain (amontpellier-652-1-281-69.w109-210.abo.wanadoo.fr. [109.210.96.69])
-        by smtp.gmail.com with ESMTPSA id r20sm1261251wmh.37.2019.09.16.02.46.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 16 Sep 2019 02:46:25 -0700 (PDT)
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: [PATCH] gpiolib: sanitize flags before allocating memory in lineevent_create()
-Date:   Mon, 16 Sep 2019 11:46:23 +0200
-Message-Id: <20190916094623.12125-1-brgl@bgdev.pl>
-X-Mailer: git-send-email 2.21.0
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=Rkhdorkxe0qRZF13/02UUScKqG72498Hp24eJzEwJa4=;
+        b=VjfGyPSV1BcrUkInSCsPsS5LFCgnit0RSzgOQTBjyDo4U9rPAl5lyXmUCd1dp856nc
+         8wy6t4fs2UxArMoOq5HdS0XVHdGYFyz9+MWJlsK0+vUl+ZMhWRfdlnExWJWGQdMT+Sm5
+         pJndmh+1xg3fxZ6mWerARbqPEyuLx5QKoeGQGYKsSjPwvyle4FnHh+YP5gIwG4lHwb3O
+         chqhBNm+ogNe5AtGFHd0G+unW+E5yEkfb/baqPCvYR5HvFnL3ZF7xMKNY6iMSoxMMgSU
+         6AVI0G/dbs8crUwfaf4o0VjsAHCjmIo0axnb8pFF8PLb8Vz8soyxhLNLnwUHxIGLJ5GF
+         iSwg==
+X-Gm-Message-State: APjAAAWOvVHIhDTtR0UuPyadl3mFw2XcE4PQBkdwgc04JtXTO5Jd9z0z
+        TXdL2J5i8PXsHfErq9nD8t5LQQ==
+X-Google-Smtp-Source: APXvYqylK1NKzYEcF+uWSCu14dTOkiaD2Ge+hzHZl2r37nI3kD7UrB02MDpe0uV+PdmDsWO2Jvnqrg==
+X-Received: by 2002:aa7:8d12:: with SMTP id j18mr71147231pfe.33.1568627836100;
+        Mon, 16 Sep 2019 02:57:16 -0700 (PDT)
+Received: from baolinwangubtpc.spreadtrum.com ([117.18.48.82])
+        by smtp.gmail.com with ESMTPSA id m2sm10355923pff.154.2019.09.16.02.57.12
+        (version=TLS1 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Mon, 16 Sep 2019 02:57:15 -0700 (PDT)
+From:   Baolin Wang <baolin.wang@linaro.org>
+To:     linus.walleij@linaro.org, bgolaszewski@baylibre.com
+Cc:     orsonzhai@gmail.com, zhang.lyra@gmail.com, baolin.wang@linaro.org,
+        bruce.chen@unisoc.com, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] gpio: eic: sprd: Fix the incorrect EIC offset when toggling
+Date:   Mon, 16 Sep 2019 17:56:56 +0800
+Message-Id: <5ca714b7bbd12ce24a6e8cc278eb438c576fa75d.1568627608.git.baolin.wang@linaro.org>
+X-Mailer: git-send-email 1.7.9.5
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+From: Bruce Chen <bruce.chen@unisoc.com>
 
-Move all the flags sanitization before any memory allocation in
-lineevent_create() in order to remove a couple unneeded gotos.
+When toggling the level trigger to emulate the edge trigger, the
+EIC offset is incorrect without adding the corresponding bank index,
+thus fix it.
 
-Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Fixes: 7bf0d7f62282 ("gpio: eic: Add edge trigger emulation for EIC")
+Signed-off-by: Bruce Chen <bruce.chen@unisoc.com>
+Signed-off-by: Baolin Wang <baolin.wang@linaro.org>
 ---
- drivers/gpio/gpiolib.c | 42 ++++++++++++++++++------------------------
- 1 file changed, 18 insertions(+), 24 deletions(-)
+ drivers/gpio/gpio-eic-sprd.c |    7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
-index d9074191edef..194b0bcdcfb7 100644
---- a/drivers/gpio/gpiolib.c
-+++ b/drivers/gpio/gpiolib.c
-@@ -899,6 +899,24 @@ static int lineevent_create(struct gpio_device *gdev, void __user *ip)
+diff --git a/drivers/gpio/gpio-eic-sprd.c b/drivers/gpio/gpio-eic-sprd.c
+index 7b9ac4a..090539f 100644
+--- a/drivers/gpio/gpio-eic-sprd.c
++++ b/drivers/gpio/gpio-eic-sprd.c
+@@ -530,11 +530,12 @@ static void sprd_eic_handle_one_type(struct gpio_chip *chip)
+ 		}
  
- 	if (copy_from_user(&eventreq, ip, sizeof(eventreq)))
- 		return -EFAULT;
-+	
-+	offset = eventreq.lineoffset;
-+	lflags = eventreq.handleflags;
-+	eflags = eventreq.eventflags;
+ 		for_each_set_bit(n, &reg, SPRD_EIC_PER_BANK_NR) {
+-			girq = irq_find_mapping(chip->irq.domain,
+-					bank * SPRD_EIC_PER_BANK_NR + n);
++			u32 offset = bank * SPRD_EIC_PER_BANK_NR + n;
 +
-+	if (offset >= gdev->ngpio)
-+		return -EINVAL;
-+
-+	/* Return an error if a unknown flag is set */
-+	if ((lflags & ~GPIOHANDLE_REQUEST_VALID_FLAGS) ||
-+	    (eflags & ~GPIOEVENT_REQUEST_VALID_FLAGS))
-+		return -EINVAL;
-+
-+	/* This is just wrong: we don't look for events on output lines */
-+	if ((lflags & GPIOHANDLE_REQUEST_OUTPUT) ||
-+	    (lflags & GPIOHANDLE_REQUEST_OPEN_DRAIN) ||
-+	    (lflags & GPIOHANDLE_REQUEST_OPEN_SOURCE))
-+		return -EINVAL;
++			girq = irq_find_mapping(chip->irq.domain, offset);
  
- 	le = kzalloc(sizeof(*le), GFP_KERNEL);
- 	if (!le)
-@@ -917,30 +935,6 @@ static int lineevent_create(struct gpio_device *gdev, void __user *ip)
+ 			generic_handle_irq(girq);
+-			sprd_eic_toggle_trigger(chip, girq, n);
++			sprd_eic_toggle_trigger(chip, girq, offset);
  		}
  	}
- 
--	offset = eventreq.lineoffset;
--	lflags = eventreq.handleflags;
--	eflags = eventreq.eventflags;
--
--	if (offset >= gdev->ngpio) {
--		ret = -EINVAL;
--		goto out_free_label;
--	}
--
--	/* Return an error if a unknown flag is set */
--	if ((lflags & ~GPIOHANDLE_REQUEST_VALID_FLAGS) ||
--	    (eflags & ~GPIOEVENT_REQUEST_VALID_FLAGS)) {
--		ret = -EINVAL;
--		goto out_free_label;
--	}
--
--	/* This is just wrong: we don't look for events on output lines */
--	if ((lflags & GPIOHANDLE_REQUEST_OUTPUT) ||
--	    (lflags & GPIOHANDLE_REQUEST_OPEN_DRAIN) ||
--	    (lflags & GPIOHANDLE_REQUEST_OPEN_SOURCE)) {
--		ret = -EINVAL;
--		goto out_free_label;
--	}
--
- 	desc = &gdev->descs[offset];
- 	ret = gpiod_request(desc, le->label);
- 	if (ret)
+ }
 -- 
-2.21.0
+1.7.9.5
 
