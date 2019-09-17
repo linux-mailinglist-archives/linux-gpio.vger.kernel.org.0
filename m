@@ -2,106 +2,174 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id EE7D3B48C7
-	for <lists+linux-gpio@lfdr.de>; Tue, 17 Sep 2019 10:09:19 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1FCD0B4944
+	for <lists+linux-gpio@lfdr.de>; Tue, 17 Sep 2019 10:26:21 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728049AbfIQIJT (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 17 Sep 2019 04:09:19 -0400
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:35441 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729815AbfIQIJS (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 17 Sep 2019 04:09:18 -0400
-Received: by mail-ot1-f66.google.com with SMTP id z6so2264929otb.2
-        for <linux-gpio@vger.kernel.org>; Tue, 17 Sep 2019 01:09:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=vo/oVpeB3qhdq7dqY8xlj9Tzr7vj+ZfcOGdaj1cujrc=;
-        b=hf/AAXhWJ1kDjSCHqgEJyJvrWfGfpo0PtPZysXVvZcD52JRSE2JO+9LyTajUdDmbk6
-         IB8MhXfJqp0lprL2UUZyUydwvZ4/JS3BsMduAPqZge1MDz8VpPs/K1uc9bJdsGLph/3p
-         2BROoCuI9Mrn8g27pZ9DLlqkkBLxKE8uv5IH5m+3LkGQKtxC3GcjZG7ABQA3rtL4cElp
-         j4K/LrjfLj5JCzxdXTx3UeFRCYTVcErpKPJ/2Gg4U0aYA3dHUL1ylyfKSBk6hd1tL1pf
-         00/gzjZAn3KOdIJ5jh2/iQyNWB0X3mEn0srkOj39hcakO458IFYnreJjsWIAg+V5ud42
-         Rmqw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=vo/oVpeB3qhdq7dqY8xlj9Tzr7vj+ZfcOGdaj1cujrc=;
-        b=Qs7YYresrRrfv0pvAIRckxoI7n+T/B2DXViqM09Lz7n9SuCiC55bg/UpPR9DquLG82
-         a9LD/LJHjtD/6Q85GFdsWPi/aPs7c+AG1IH7lX+5CpztvtRrrsCzuHPkEjeWcK+9QtSo
-         70Cn7YVmHpoxFXuOpIyngtuLF0Uu0C3RSUsEtQGJN3X08wz3qraoy6hzBmhjEzFiMM15
-         U+st55Gjk0pJw8VtpJUDBnUH/Oilz1IvioY3ExMEquwqoDR6Sg6KHUITHFydaZKaRwxp
-         adHvBjPMsX9J9O92D9LCAwqZM0kx3HtocjAd1hcJS9oomr8FGwvA72InwTMPNwOFO489
-         Yx0w==
-X-Gm-Message-State: APjAAAW8x7fZLbRtt/hpxYekTgV2Ks9L2T8GJul1B1/zeqcIq05Ug2X3
-        fg4Id26f+Le5CBA1xz1Hwevdmj459SRhgTIztdQ8xA==
-X-Google-Smtp-Source: APXvYqwtq0F/cD3QmH9ByzxWbexSd+XkNUO2+TWJmjSfUz7aVUU8Fyyl0II2Y5tGw9prcchOxrmDeVEeU/lexI1NUBU=
-X-Received: by 2002:a05:6830:18f3:: with SMTP id d19mr1727959otf.256.1568707757737;
- Tue, 17 Sep 2019 01:09:17 -0700 (PDT)
+        id S1730712AbfIQI0U (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 17 Sep 2019 04:26:20 -0400
+Received: from mailgw01.mediatek.com ([210.61.82.183]:43547 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1730693AbfIQI0T (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 17 Sep 2019 04:26:19 -0400
+X-UUID: bd1d61eae1704fe2bd3731fafb5876c9-20190917
+X-UUID: bd1d61eae1704fe2bd3731fafb5876c9-20190917
+Received: from mtkcas09.mediatek.inc [(172.21.101.178)] by mailgw01.mediatek.com
+        (envelope-from <light.hsieh@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 829145969; Tue, 17 Sep 2019 16:26:14 +0800
+Received: from mtkcas09.mediatek.inc (172.21.101.178) by
+ mtkmbs08n1.mediatek.inc (172.21.101.55) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Tue, 17 Sep 2019 16:26:11 +0800
+Received: from mtkswgap22.mediatek.inc (172.21.77.33) by mtkcas09.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Tue, 17 Sep 2019 16:26:11 +0800
+From:   Light Hsieh <light.hsieh@mediatek.com>
+To:     <linus.walleij@linaro.org>
+CC:     <linux-mediatek@lists.infradead.org>, <linux-gpio@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <sean.wang@kernel.org>,
+        Light Hsieh <light.hsieh@mediatek.com>
+Subject: [PATCH v3 1/5] pinctrl: mediatek: Check gpio pin number and use binary  search in mtk_hw_pin_field_lookup()
+Date:   Tue, 17 Sep 2019 16:26:07 +0800
+Message-ID: <1568708771-12409-1-git-send-email-light.hsieh@mediatek.com>
+X-Mailer: git-send-email 1.8.1.1.dirty
 MIME-Version: 1.0
-References: <5ca714b7bbd12ce24a6e8cc278eb438c576fa75d.1568627608.git.baolin.wang@linaro.org>
-In-Reply-To: <5ca714b7bbd12ce24a6e8cc278eb438c576fa75d.1568627608.git.baolin.wang@linaro.org>
-From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Date:   Tue, 17 Sep 2019 10:09:07 +0200
-Message-ID: <CAMpxmJVBzOwZ7JaySzq1bZkEtwEfMSu_e8dGTSEiY6wG0d=KiQ@mail.gmail.com>
-Subject: Re: [PATCH] gpio: eic: sprd: Fix the incorrect EIC offset when toggling
-To:     Baolin Wang <baolin.wang@linaro.org>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Orson Zhai <orsonzhai@gmail.com>,
-        Lyra Zhang <zhang.lyra@gmail.com>, bruce.chen@unisoc.com,
-        linux-gpio <linux-gpio@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
+X-MTK:  N
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-pon., 16 wrz 2019 o 11:57 Baolin Wang <baolin.wang@linaro.org> napisa=C5=82=
-(a):
->
-> From: Bruce Chen <bruce.chen@unisoc.com>
->
-> When toggling the level trigger to emulate the edge trigger, the
-> EIC offset is incorrect without adding the corresponding bank index,
-> thus fix it.
->
-> Fixes: 7bf0d7f62282 ("gpio: eic: Add edge trigger emulation for EIC")
-> Signed-off-by: Bruce Chen <bruce.chen@unisoc.com>
-> Signed-off-by: Baolin Wang <baolin.wang@linaro.org>
-> ---
->  drivers/gpio/gpio-eic-sprd.c |    7 ++++---
->  1 file changed, 4 insertions(+), 3 deletions(-)
->
-> diff --git a/drivers/gpio/gpio-eic-sprd.c b/drivers/gpio/gpio-eic-sprd.c
-> index 7b9ac4a..090539f 100644
-> --- a/drivers/gpio/gpio-eic-sprd.c
-> +++ b/drivers/gpio/gpio-eic-sprd.c
-> @@ -530,11 +530,12 @@ static void sprd_eic_handle_one_type(struct gpio_ch=
-ip *chip)
->                 }
->
->                 for_each_set_bit(n, &reg, SPRD_EIC_PER_BANK_NR) {
-> -                       girq =3D irq_find_mapping(chip->irq.domain,
-> -                                       bank * SPRD_EIC_PER_BANK_NR + n);
-> +                       u32 offset =3D bank * SPRD_EIC_PER_BANK_NR + n;
-> +
-> +                       girq =3D irq_find_mapping(chip->irq.domain, offse=
-t);
->
->                         generic_handle_irq(girq);
-> -                       sprd_eic_toggle_trigger(chip, girq, n);
-> +                       sprd_eic_toggle_trigger(chip, girq, offset);
->                 }
->         }
->  }
-> --
-> 1.7.9.5
->
+1. Check if gpio pin number is in valid range to prevent from get invalid
+   pointer 'desc' in the following code:
+	desc = (const struct mtk_pin_desc *)&hw->soc->pins[gpio];
 
-Queued for fixes.
+2. Use binary search in mtk_hw_pin_field_lookup()
+   Modify mtk_hw_pin_field_lookup() to use binary search for accelerating
+   search.
 
-Bart
+---
+ drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.c | 24 +++++++++++++++++++-----
+ drivers/pinctrl/mediatek/pinctrl-paris.c         | 19 +++++++++++++++++++
+ 2 files changed, 38 insertions(+), 5 deletions(-)
+
+diff --git a/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.c b/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.c
+index 20e1c89..4687f63 100644
+--- a/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.c
++++ b/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.c
+@@ -68,7 +68,7 @@ static int mtk_hw_pin_field_lookup(struct mtk_pinctrl *hw,
+ {
+ 	const struct mtk_pin_field_calc *c, *e;
+ 	const struct mtk_pin_reg_calc *rc;
+-	u32 bits;
++	u32 bits, start = 0, end, found = 0, check;
+ 
+ 	if (hw->soc->reg_cal && hw->soc->reg_cal[field].range) {
+ 		rc = &hw->soc->reg_cal[field];
+@@ -79,21 +79,32 @@ static int mtk_hw_pin_field_lookup(struct mtk_pinctrl *hw,
+ 		return -ENOTSUPP;
+ 	}
+ 
++	end = rc->nranges - 1;
+ 	c = rc->range;
+ 	e = c + rc->nranges;
+ 
+-	while (c < e) {
+-		if (desc->number >= c->s_pin && desc->number <= c->e_pin)
++	while (start <= end) {
++		check = (start + end) >> 1;
++		if (desc->number >= rc->range[check].s_pin
++		 && desc->number <= rc->range[check].e_pin) {
++			found = 1;
+ 			break;
+-		c++;
++		} else if (start == end)
++			break;
++		else if (desc->number < rc->range[check].s_pin)
++			end = check - 1;
++		else
++			start = check + 1;
+ 	}
+ 
+-	if (c >= e) {
++	if (!found) {
+ 		dev_dbg(hw->dev, "Not support field %d for pin = %d (%s)\n",
+ 			field, desc->number, desc->name);
+ 		return -ENOTSUPP;
+ 	}
+ 
++	c = rc->range + check;
++
+ 	if (c->i_base > hw->nbase - 1) {
+ 		dev_err(hw->dev,
+ 			"Invalid base for field %d for pin = %d (%s)\n",
+@@ -182,6 +193,9 @@ int mtk_hw_set_value(struct mtk_pinctrl *hw, const struct mtk_pin_desc *desc,
+ 	if (err)
+ 		return err;
+ 
++	if (value < 0 || value > pf.mask)
++		return -EINVAL;
++
+ 	if (!pf.next)
+ 		mtk_rmw(hw, pf.index, pf.offset, pf.mask << pf.bitpos,
+ 			(value & pf.mask) << pf.bitpos);
+diff --git a/drivers/pinctrl/mediatek/pinctrl-paris.c b/drivers/pinctrl/mediatek/pinctrl-paris.c
+index 923264d..28b4951 100644
+--- a/drivers/pinctrl/mediatek/pinctrl-paris.c
++++ b/drivers/pinctrl/mediatek/pinctrl-paris.c
+@@ -693,6 +693,9 @@ static int mtk_gpio_get_direction(struct gpio_chip *chip, unsigned int gpio)
+ 	const struct mtk_pin_desc *desc;
+ 	int value, err;
+ 
++	if (gpio > hw->soc->npins)
++		return -EINVAL;
++
+ 	desc = (const struct mtk_pin_desc *)&hw->soc->pins[gpio];
+ 
+ 	err = mtk_hw_get_value(hw, desc, PINCTRL_PIN_REG_DIR, &value);
+@@ -708,6 +711,9 @@ static int mtk_gpio_get(struct gpio_chip *chip, unsigned int gpio)
+ 	const struct mtk_pin_desc *desc;
+ 	int value, err;
+ 
++	if (gpio > hw->soc->npins)
++		return -EINVAL;
++
+ 	desc = (const struct mtk_pin_desc *)&hw->soc->pins[gpio];
+ 
+ 	err = mtk_hw_get_value(hw, desc, PINCTRL_PIN_REG_DI, &value);
+@@ -722,6 +728,9 @@ static void mtk_gpio_set(struct gpio_chip *chip, unsigned int gpio, int value)
+ 	struct mtk_pinctrl *hw = gpiochip_get_data(chip);
+ 	const struct mtk_pin_desc *desc;
+ 
++	if (gpio > hw->soc->npins)
++		return;
++
+ 	desc = (const struct mtk_pin_desc *)&hw->soc->pins[gpio];
+ 
+ 	mtk_hw_set_value(hw, desc, PINCTRL_PIN_REG_DO, !!value);
+@@ -729,12 +738,22 @@ static void mtk_gpio_set(struct gpio_chip *chip, unsigned int gpio, int value)
+ 
+ static int mtk_gpio_direction_input(struct gpio_chip *chip, unsigned int gpio)
+ {
++	struct mtk_pinctrl *hw = gpiochip_get_data(chip);
++
++	if (gpio > hw->soc->npins)
++		return -EINVAL;
++
+ 	return pinctrl_gpio_direction_input(chip->base + gpio);
+ }
+ 
+ static int mtk_gpio_direction_output(struct gpio_chip *chip, unsigned int gpio,
+ 				     int value)
+ {
++	struct mtk_pinctrl *hw = gpiochip_get_data(chip);
++
++	if (gpio > hw->soc->npins)
++		return -EINVAL;
++
+ 	mtk_gpio_set(chip, gpio, value);
+ 
+ 	return pinctrl_gpio_direction_output(chip->base + gpio);
+-- 
+1.8.1.1.dirty
+
