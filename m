@@ -2,109 +2,74 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 2A333B44D8
-	for <lists+linux-gpio@lfdr.de>; Tue, 17 Sep 2019 02:22:13 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E3019B4762
+	for <lists+linux-gpio@lfdr.de>; Tue, 17 Sep 2019 08:22:46 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728190AbfIQAWM (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 16 Sep 2019 20:22:12 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:36505 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726118AbfIQAWM (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 16 Sep 2019 20:22:12 -0400
-Received: by mail-pg1-f194.google.com with SMTP id m29so970995pgc.3;
-        Mon, 16 Sep 2019 17:22:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=gHvCS0WVH6nxYtiVa7cmozt6ck7gFLQffDaRFaPUffg=;
-        b=JVYTowaLIzs55a08OwW7+1LUrzAWD08aN31/PaXOCbf6VJrKyRw4oxkO/HMDjDR2Ss
-         VHJccL1WXw1Ard7nTI5inozA2xt6smVM7TWC0xWkmOUizHgkmg2IxsTHXbmBRn7U9MaG
-         sqC8VPO3gCq40qVaeqVxB9vl67T+JNzolQGp7v86oNyTji1s6fXImtuUNR6vP0yVQA/q
-         y+PxowdPxsSw0cY2njZ6lrxTEd1a7SFUHK63b5NDecQDSzmdrsIjn9QcIhvEGPJ30yko
-         udvbDp0GzntKTVqq5pmxkwTz0ePE4jzL9WXbpT3+yprF7IQfOcPDo1gaMVWn/LyZKt1B
-         OikA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=gHvCS0WVH6nxYtiVa7cmozt6ck7gFLQffDaRFaPUffg=;
-        b=mWHu0eLdfb/F0z61wTshFvLlkd+8e3oo0L2k3qCS8oCF37BpahDRSiTj+of/UfWTq8
-         3NaUHcr3UhBrubwHFR1XdCWG9CcO8sRj2fhkmpxLtSeOSDMgFpHIk23APkuK6t/03t0c
-         UkyfuQOsArdXV6sVk8FUjr9oTyAE+1fCI87tGxYArb9ORAFyyWbNA0yo2WLsRRlUL8Y/
-         Z2M1VdCGRMEdjc+XmSnhNlQACV5vEEZzIQs+NzoHb6niDyrULOfB5/G+eF/d8scb0Bxh
-         35/nYR+krQyvSh4VNzoHy5RUrN06eBOF1BMO0KmkIZQIhpSZF+sKLcxVBDHKkYPuGH2w
-         X8Hw==
-X-Gm-Message-State: APjAAAVJyPuRra5x3c7C1xWo4nrpCG/382wIsD421RQq9o62jZWH/ZhY
-        dw8hNcc8C6PH825hB1/hNAo=
-X-Google-Smtp-Source: APXvYqzJ6FqLP4djoh9LqAiR2iEtYD5Kkz7MksbyKf2l/vz2NaL/A51k9HEdd9SWkQezPbEFKC3CUg==
-X-Received: by 2002:a17:90b:f15:: with SMTP id br21mr2033808pjb.101.1568679730699;
-        Mon, 16 Sep 2019 17:22:10 -0700 (PDT)
-Received: from dtor-ws ([2620:15c:202:201:3adc:b08c:7acc:b325])
-        by smtp.gmail.com with ESMTPSA id q204sm288345pfq.176.2019.09.16.17.22.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 16 Sep 2019 17:22:09 -0700 (PDT)
-Date:   Mon, 16 Sep 2019 17:22:07 -0700
-From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        David Airlie <airlied@linux.ie>,
-        "David S. Miller" <davem@davemloft.net>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Jernej Skrabec <jernej.skrabec@siol.net>,
-        Jonas Karlman <jonas@kwiboo.se>,
-        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+        id S2404174AbfIQGWg (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 17 Sep 2019 02:22:36 -0400
+Received: from mail-sz.amlogic.com ([211.162.65.117]:11520 "EHLO
+        mail-sz.amlogic.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2403814AbfIQGWg (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 17 Sep 2019 02:22:36 -0400
+X-Greylist: delayed 904 seconds by postgrey-1.27 at vger.kernel.org; Tue, 17 Sep 2019 02:22:35 EDT
+Received: from localhost.localdomain (10.28.8.19) by mail-sz.amlogic.com
+ (10.28.11.5) with Microsoft SMTP Server id 15.1.1591.10; Tue, 17 Sep 2019
+ 14:08:26 +0800
+From:   Qianggui Song <qianggui.song@amlogic.com>
+To:     Linus Walleij <linus.walleij@linaro.org>,
+        <linux-gpio@vger.kernel.org>
+CC:     Qianggui Song <qianggui.song@amlogic.com>,
         Neil Armstrong <narmstrong@baylibre.com>,
-        Russell King <linux@armlinux.org.uk>,
-        "open list:DRM PANEL DRIVERS" <dri-devel@lists.freedesktop.org>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        netdev <netdev@vger.kernel.org>
-Subject: Re: [PATCH 00/11] Add support for software nodes to gpiolib
-Message-ID: <20190917002207.GJ237523@dtor-ws>
-References: <20190911075215.78047-1-dmitry.torokhov@gmail.com>
- <CACRpkdb=s67w2DCGubhbLQTtxpWtiW8S1MECMO4cvec=bF6OdA@mail.gmail.com>
+        Jerome Brunet <jbrunet@baylibre.com>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        Carlo Caione <carlo@caione.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Xingyu Chen <xingyu.chen@amlogic.com>,
+        Jianxin Pan <jianxin.pan@amlogic.com>,
+        Hanjie Lin <hanjie.lin@amlogic.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-amlogic@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>
+Subject: [PATCH 0/3] pinctrl: meson-a1: add pinctrl driver
+Date:   Tue, 17 Sep 2019 14:07:19 +0800
+Message-ID: <1568700442-18540-1-git-send-email-qianggui.song@amlogic.com>
+X-Mailer: git-send-email 1.9.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CACRpkdb=s67w2DCGubhbLQTtxpWtiW8S1MECMO4cvec=bF6OdA@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain
+X-Originating-IP: [10.28.8.19]
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Sep 12, 2019 at 10:55:47AM +0100, Linus Walleij wrote:
-> On Wed, Sep 11, 2019 at 8:52 AM Dmitry Torokhov
-> <dmitry.torokhov@gmail.com> wrote:
-> 
-> > If we agree in principle, I would like to have the very first 3 patches
-> > in an immutable branch off maybe -rc8 so that it can be pulled into
-> > individual subsystems so that patches switching various drivers to
-> > fwnode_gpiod_get_index() could be applied.
-> 
-> I think it seems a bit enthusiastic to have non-GPIO subsystems
-> pick up these changes this close to the merge window so my plan
-> is to merge patches 1.2.3 (1 already merged) and then you could
-> massage the other subsystems in v5.4-rc1.
-> 
-> But if other subsystems say "hey we want do fix this in like 3 days"
-> then I'm game for an immutable branch as well.
+This patchset adds Pin controller driver support for Meson-A1 Soc
+which shares the same register layout of pinmux with previous
+Meson-G12A, however there is difference for gpio and pin config
+registers in A1.
 
-No, if it is still has a chance for -rc1 then I'm good. I was thinking
-if it does not go into -rc1 I could convince some of them merge a
-targeted immutable branch off -rc8 or 5.3 final and then apply patches
-relevant to their subsystems so we do not have to wait till 5.6 to land
-everything.
+This patchset is based on A1 DTBv4[1].
 
-Thanks.
+[1] https://lore.kernel.org/linux-amlogic/1568276370-54181-1-git-send-email-jianxin.pan@amlogic.com
+
+Qianggui Song (3):
+  pinctrl: add compatible for Amlogic Meson A1 pin controller
+  pinctrl: meson-a1: add pinctrl driver for Meson A1 Soc
+  arm64: dts: meson: a1: add pinctrl controller support
+
+ .../devicetree/bindings/pinctrl/meson,pinctrl.txt  |   1 +
+ arch/arm64/boot/dts/amlogic/meson-a1.dtsi          |  18 +
+ drivers/pinctrl/meson/Kconfig                      |   6 +
+ drivers/pinctrl/meson/Makefile                     |   1 +
+ drivers/pinctrl/meson/pinctrl-meson-a1.c           | 942 +++++++++++++++++++++
+ drivers/pinctrl/meson/pinctrl-meson.c              |   8 +-
+ drivers/pinctrl/meson/pinctrl-meson.h              |   9 +
+ include/dt-bindings/gpio/meson-a1-gpio.h           |  73 ++
+ 8 files changed, 1056 insertions(+), 2 deletions(-)
+ create mode 100644 drivers/pinctrl/meson/pinctrl-meson-a1.c
+ create mode 100644 include/dt-bindings/gpio/meson-a1-gpio.h
 
 -- 
-Dmitry
+1.9.1
+
