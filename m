@@ -2,113 +2,175 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 9D66EB57C7
-	for <lists+linux-gpio@lfdr.de>; Tue, 17 Sep 2019 23:50:28 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 173A2B59C2
+	for <lists+linux-gpio@lfdr.de>; Wed, 18 Sep 2019 04:39:43 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726693AbfIQVuY (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 17 Sep 2019 17:50:24 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:35526 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725866AbfIQVuX (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 17 Sep 2019 17:50:23 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 4BFB160767; Tue, 17 Sep 2019 21:50:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1568757022;
-        bh=+bL3Z3Y6Hl+C8MixFa02sCzsCPEv0bSGIE8FlarpAD8=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=LucnLAvs8c/a4VPdqBtIeaYQh0PZTAR2nm7XpcSuPUokuG86a76YQclF3twIDmrSp
-         vC79sFw8HFGl4AyO/ceqwgeGYfrnyTu6fRK8t5AxtYLDQrnRjzlxxdtjnxnPbsQv7E
-         HLeRVzSMDDs9TZocDCx+Ii9gW13Pn22eaLupuDAk=
-X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
-        pdx-caf-mail.web.codeaurora.org
-X-Spam-Level: 
-X-Spam-Status: No, score=-2.7 required=2.0 tests=ALL_TRUSTED,BAYES_00,
-        DKIM_INVALID,DKIM_SIGNED,SPF_NONE autolearn=no autolearn_force=no
-        version=3.4.0
-Received: from localhost (i-global254.qualcomm.com [199.106.103.254])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: ilina@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 5F12960767;
-        Tue, 17 Sep 2019 21:50:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1568757021;
-        bh=+bL3Z3Y6Hl+C8MixFa02sCzsCPEv0bSGIE8FlarpAD8=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=e9PVkqaCJJO0YMqwe3jsNEicNdxouQtoYWnqdXy3te9d5yDe/6oHUZUQ2C5sAfk6C
-         M3mYJ/Kkle2a7MZbfKh3TbRsFO6qSOtTH/108NZ3Kww17HmyM1bJPNmC6LJcbmX/ZU
-         RHPYsUM0UGBdYuom3CfytQRGQlYZ2t2W19Tv6jyc=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 5F12960767
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=ilina@codeaurora.org
-Date:   Tue, 17 Sep 2019 15:50:20 -0600
-From:   Lina Iyer <ilina@codeaurora.org>
-To:     Stephen Boyd <swboyd@chromium.org>
-Cc:     Rob Herring <robh@kernel.org>, evgreen@chromium.org,
-        linus.walleij@linaro.org, linux-kernel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, bjorn.andersson@linaro.org,
-        mkshah@codeaurora.org, linux-gpio@vger.kernel.org,
-        rnayak@codeaurora.org, devicetree@vger.kernel.org, maz@kernel.org,
-        sibis@codeaurora.org
-Subject: Re: [PATCH RFC 05/14] dt-bindings/interrupt-controller: pdc: add SPI
- config register
-Message-ID: <20190917215020.GA15853@codeaurora.org>
-References: <20190829181203.2660-1-ilina@codeaurora.org>
- <20190829181203.2660-6-ilina@codeaurora.org>
- <5d6d1b72.1c69fb81.ee88.efcf@mx.google.com>
- <102c9268-c4ce-6133-3b0a-67c2fcba1e7a@arm.com>
- <20190903170722.GA31716@codeaurora.org>
- <5d71a247.1c69fb81.2146f.7ed2@mx.google.com>
- <20190913195326.GA3293@codeaurora.org>
+        id S1727463AbfIRCjS (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 17 Sep 2019 22:39:18 -0400
+Received: from mailgw01.mediatek.com ([210.61.82.183]:17967 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727354AbfIRCjS (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 17 Sep 2019 22:39:18 -0400
+X-UUID: a4a7e7bae23c481daa2475ff900a1fab-20190918
+X-UUID: a4a7e7bae23c481daa2475ff900a1fab-20190918
+Received: from mtkexhb01.mediatek.inc [(172.21.101.102)] by mailgw01.mediatek.com
+        (envelope-from <light.hsieh@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 1347887542; Wed, 18 Sep 2019 10:39:11 +0800
+Received: from mtkcas07.mediatek.inc (172.21.101.84) by
+ mtkmbs08n2.mediatek.inc (172.21.101.56) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Wed, 18 Sep 2019 10:39:06 +0800
+Received: from mtkswgap22.mediatek.inc (172.21.77.33) by mtkcas07.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Wed, 18 Sep 2019 10:39:06 +0800
+From:   Light Hsieh <light.hsieh@mediatek.com>
+To:     <linus.walleij@linaro.org>
+CC:     <linux-mediatek@lists.infradead.org>, <linux-gpio@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <sean.wang@kernel.org>,
+        Light Hsieh <light.hsieh@mediatek.com>
+Subject: [PATCH v5 1/5] pinctrl: mediatek: Check gpio pin number and use binary  search in mtk_hw_pin_field_lookup()
+Date:   Wed, 18 Sep 2019 10:39:04 +0800
+Message-ID: <1568774348-24363-1-git-send-email-light.hsieh@mediatek.com>
+X-Mailer: git-send-email 1.8.1.1.dirty
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <20190913195326.GA3293@codeaurora.org>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+Content-Type: text/plain
+X-TM-SNTS-SMTP: 5B4894C816F6683EC50A23CED134C29014FA31E617B040CF8A35F4D76A778BE52000:8
+X-MTK:  N
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Adding Sibi
+1. Check if gpio pin number is in valid range to prevent from get invalid
+   pointer 'desc' in the following code:
+	desc = (const struct mtk_pin_desc *)&hw->soc->pins[gpio];
 
-On Fri, Sep 13 2019 at 13:53 -0600, Lina Iyer wrote:
->Sorry, I couldn't get to this earlier.
->
->On Thu, Sep 05 2019 at 18:03 -0600, Stephen Boyd wrote:
->>Quoting Lina Iyer (2019-09-03 10:07:22)
->>>On Mon, Sep 02 2019 at 07:58 -0600, Marc Zyngier wrote:
->>>>On 02/09/2019 14:38, Rob Herring wrote:
->>>>> On Thu, Aug 29, 2019 at 12:11:54PM -0600, Lina Iyer wrote:
->>>These are not GIC registers but located on the PDC interface to the GIC.
->>>They may or may not be secure access controlled, depending on the SoC.
->>>
->>
->>It looks like it falls under this "mailbox" device which is really the
->>catch all bucket for bits with no home besides they're related to the
->>apps CPUs/subsystem.
->>
->Thanks for pointing to this.
->>	apss_shared: mailbox@17990000 {
->>		compatible = "qcom,sdm845-apss-shared";
->>		reg = <0 0x17990000 0 0x1000>;
->But this doesn't seem correct. The registers in this page are all not
->mailbox door bell registers. We should restrict the space allocated to
->the mbox to 0xC or something, definitely, not the whole page. They all
->cannot be treated as a mailbox registers.
->>		#mbox-cells = <1>;
->>	};
->>
->>Can you point to this node with a phandle and then parse the reg
->>property out of it to use in the scm readl/writel APIs? Maybe it can be
->>a two cell property with <&apps_shared 0xf0> to indicate the offset to
->>the registers to read/write? In non-secure mode presumably we need to
->>also write these registers? Good news is that there's a regmap for this
->>driver already, so maybe that can be acquired from the pdc driver.
->>
->The register space collection seems to be mix of different types of
->application processor registers that should probably not be grouped up
->under one subsystem. A single regmap doesn't seem correct either.
->
->-- Lina
+2. Use binary search in mtk_hw_pin_field_lookup()
+   Modify mtk_hw_pin_field_lookup() to use binary search for accelerating
+   search.
+
+---
+ drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.c | 24 +++++++++++++++++++-----
+ drivers/pinctrl/mediatek/pinctrl-paris.c         | 19 +++++++++++++++++++
+ 2 files changed, 38 insertions(+), 5 deletions(-)
+
+diff --git a/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.c b/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.c
+index 20e1c89..4687f63 100644
+--- a/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.c
++++ b/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.c
+@@ -68,7 +68,7 @@ static int mtk_hw_pin_field_lookup(struct mtk_pinctrl *hw,
+ {
+ 	const struct mtk_pin_field_calc *c, *e;
+ 	const struct mtk_pin_reg_calc *rc;
+-	u32 bits;
++	u32 bits, start = 0, end, found = 0, check;
+ 
+ 	if (hw->soc->reg_cal && hw->soc->reg_cal[field].range) {
+ 		rc = &hw->soc->reg_cal[field];
+@@ -79,21 +79,32 @@ static int mtk_hw_pin_field_lookup(struct mtk_pinctrl *hw,
+ 		return -ENOTSUPP;
+ 	}
+ 
++	end = rc->nranges - 1;
+ 	c = rc->range;
+ 	e = c + rc->nranges;
+ 
+-	while (c < e) {
+-		if (desc->number >= c->s_pin && desc->number <= c->e_pin)
++	while (start <= end) {
++		check = (start + end) >> 1;
++		if (desc->number >= rc->range[check].s_pin
++		 && desc->number <= rc->range[check].e_pin) {
++			found = 1;
+ 			break;
+-		c++;
++		} else if (start == end)
++			break;
++		else if (desc->number < rc->range[check].s_pin)
++			end = check - 1;
++		else
++			start = check + 1;
+ 	}
+ 
+-	if (c >= e) {
++	if (!found) {
+ 		dev_dbg(hw->dev, "Not support field %d for pin = %d (%s)\n",
+ 			field, desc->number, desc->name);
+ 		return -ENOTSUPP;
+ 	}
+ 
++	c = rc->range + check;
++
+ 	if (c->i_base > hw->nbase - 1) {
+ 		dev_err(hw->dev,
+ 			"Invalid base for field %d for pin = %d (%s)\n",
+@@ -182,6 +193,9 @@ int mtk_hw_set_value(struct mtk_pinctrl *hw, const struct mtk_pin_desc *desc,
+ 	if (err)
+ 		return err;
+ 
++	if (value < 0 || value > pf.mask)
++		return -EINVAL;
++
+ 	if (!pf.next)
+ 		mtk_rmw(hw, pf.index, pf.offset, pf.mask << pf.bitpos,
+ 			(value & pf.mask) << pf.bitpos);
+diff --git a/drivers/pinctrl/mediatek/pinctrl-paris.c b/drivers/pinctrl/mediatek/pinctrl-paris.c
+index 923264d..28b4951 100644
+--- a/drivers/pinctrl/mediatek/pinctrl-paris.c
++++ b/drivers/pinctrl/mediatek/pinctrl-paris.c
+@@ -693,6 +693,9 @@ static int mtk_gpio_get_direction(struct gpio_chip *chip, unsigned int gpio)
+ 	const struct mtk_pin_desc *desc;
+ 	int value, err;
+ 
++	if (gpio > hw->soc->npins)
++		return -EINVAL;
++
+ 	desc = (const struct mtk_pin_desc *)&hw->soc->pins[gpio];
+ 
+ 	err = mtk_hw_get_value(hw, desc, PINCTRL_PIN_REG_DIR, &value);
+@@ -708,6 +711,9 @@ static int mtk_gpio_get(struct gpio_chip *chip, unsigned int gpio)
+ 	const struct mtk_pin_desc *desc;
+ 	int value, err;
+ 
++	if (gpio > hw->soc->npins)
++		return -EINVAL;
++
+ 	desc = (const struct mtk_pin_desc *)&hw->soc->pins[gpio];
+ 
+ 	err = mtk_hw_get_value(hw, desc, PINCTRL_PIN_REG_DI, &value);
+@@ -722,6 +728,9 @@ static void mtk_gpio_set(struct gpio_chip *chip, unsigned int gpio, int value)
+ 	struct mtk_pinctrl *hw = gpiochip_get_data(chip);
+ 	const struct mtk_pin_desc *desc;
+ 
++	if (gpio > hw->soc->npins)
++		return;
++
+ 	desc = (const struct mtk_pin_desc *)&hw->soc->pins[gpio];
+ 
+ 	mtk_hw_set_value(hw, desc, PINCTRL_PIN_REG_DO, !!value);
+@@ -729,12 +738,22 @@ static void mtk_gpio_set(struct gpio_chip *chip, unsigned int gpio, int value)
+ 
+ static int mtk_gpio_direction_input(struct gpio_chip *chip, unsigned int gpio)
+ {
++	struct mtk_pinctrl *hw = gpiochip_get_data(chip);
++
++	if (gpio > hw->soc->npins)
++		return -EINVAL;
++
+ 	return pinctrl_gpio_direction_input(chip->base + gpio);
+ }
+ 
+ static int mtk_gpio_direction_output(struct gpio_chip *chip, unsigned int gpio,
+ 				     int value)
+ {
++	struct mtk_pinctrl *hw = gpiochip_get_data(chip);
++
++	if (gpio > hw->soc->npins)
++		return -EINVAL;
++
+ 	mtk_gpio_set(chip, gpio, value);
+ 
+ 	return pinctrl_gpio_direction_output(chip->base + gpio);
+-- 
+1.8.1.1.dirty
+
