@@ -2,115 +2,119 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 72A02B73E6
-	for <lists+linux-gpio@lfdr.de>; Thu, 19 Sep 2019 09:18:18 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 96AE4B74BE
+	for <lists+linux-gpio@lfdr.de>; Thu, 19 Sep 2019 10:10:15 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388151AbfISHSO (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 19 Sep 2019 03:18:14 -0400
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:43626 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388079AbfISHSN (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 19 Sep 2019 03:18:13 -0400
-Received: by mail-oi1-f194.google.com with SMTP id t84so1824438oih.10
-        for <linux-gpio@vger.kernel.org>; Thu, 19 Sep 2019 00:18:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=8zgBDSez7/+bzGBV7GF5xRZlniZ5KOtG5kxmVNZ9gtI=;
-        b=xKAPhdRxODA5Qbmt0V91TPi5abCsKP8XYnfz9GsKDfweG6XpzWo/1wD9t6ELjZo75Q
-         7SI2L8bFsv+23zYxfXpMVJffnsFXNZsX12RLdcrJhpyhrQ4miGxiI+3kiX38wme0waUM
-         515ZFhJUGaka43E9V77QtpSipUj86l0F/omjRv0cKMTdtQw4EhcS+gaYDqSOctgsDOyx
-         fOLxRU/dCMwdkfhEO/83fhTUotTZQzKwy7dSrOESjsQF977VRUAu5d7Ik2UUQCND9aE7
-         m/5S2Xmn++VJmqDzVULwTzZQJG9P5+2MkTpIZcweWbFJeu+mr6C691KhdsjFyisvSKiI
-         sc+A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=8zgBDSez7/+bzGBV7GF5xRZlniZ5KOtG5kxmVNZ9gtI=;
-        b=biCq5ppG9lJmwjdbH51iGpDMJBr6CgolNnNrrYYWUuVhaxV8CWC/+w6RjGLV5HfLve
-         8Tldlrj/0S9oJjnjyO08UX/LF+G800JW/wbsNxfixSkYrrfUNmd4/yTmD9ULJ0kkFa35
-         jkKmDjk9/CUD3N03RM63BZTVtYn190Pa4lFrFG7CGqWlKkzLS4C7lEBvtNV8YkJqnU+r
-         hCThu50d665wCGS58r4eW7We1ml76wztdgAG5rR/9k1mBOJKXKOgRUUp8PUy7FX45ynq
-         A8/RobDqzM6GTDO//gofO7tQEZITKz+0nGN4Fgg0Bz1LvdVpJrmBKDfj2oRwU2J18Uhk
-         tE7g==
-X-Gm-Message-State: APjAAAVlSgsaq6MXIbz0KfFmMAwJToBK6RGgFml+eu9coESjMfupDw7x
-        tj/m4YmWPUBzwAjLo/FfkadLPXr/XfFHFB19pXFdgw==
-X-Google-Smtp-Source: APXvYqyMGd14fdBBLUu/zy3WcG0BTwkmqYc0Q1+98B2gJNl2xUFWbHwaXR8dXX5yU0HlUg/FFzZzyqfWUVk85xkFjkE=
-X-Received: by 2002:aca:4e85:: with SMTP id c127mr1202995oib.21.1568877492010;
- Thu, 19 Sep 2019 00:18:12 -0700 (PDT)
+        id S1728033AbfISIKO (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 19 Sep 2019 04:10:14 -0400
+Received: from sonic305-19.consmr.mail.gq1.yahoo.com ([98.137.64.82]:36254
+        "EHLO sonic305-19.consmr.mail.gq1.yahoo.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725320AbfISIKO (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>);
+        Thu, 19 Sep 2019 04:10:14 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1568880613; bh=aqgfpQSbF9xm5XIVI9xJRBUCxbTLiIvQcaFtsOtxcow=; h=Date:From:Reply-To:Subject:From:Subject; b=kR3qibXkMRNpy8rdmE/1+kh/PCRtP3aSXlwUM00UxdSTM/vuZGhL0NtWHgRyr2rupHAou2LdLP9uAie/k/MBEhJS8bysySAJ49RfwnxBKkrY9jZ320s8qoMpTa4LBFQaV654XNn8ivMo+NH5E2d+6VjU42T4h32G0Br7SjpZBrfqGYkkoQliPCjM7VYSd8qcV0OnsQ0/6m5XfqXbDIuzzP/Go7lOIr3hOm43UK5xmJiA1EjYN5peFDmbl6Y3Qqzc/P/302ZnuO/l265MOCokWz7YFb29Azf/98pRMTNdOX1Kh3AzZF4RUEwEeiuBi8Lb+cmxY//yj2eAG6IGn1NYtw==
+X-YMail-OSG: 9Uce2zgVM1mPqRYbagTuvo2e7U85RS37DWbPXB9k.ub6Arh4ZPZ5x.ZYmmCuqdH
+ iXi0S5e1xoE_K7mAxg969jpQx5VJG8uWQXaEFezTokRAiPnjLdvQL1C7ViCmlqdMGBBOx3mOQ2AL
+ sADjl34KfSjvFEHoehFLp_N5w0nAhFJtw3bZBQfGNAKVAjJAaI0rPWrfOsECH2ljv94sqxIyTVrk
+ mSNaABTxhqc9S2y8t7OW.bC_DLdFV2iMGxyObq0ZduiBMJ_.KJvgRK3oYy7mMXy81qOTXblbo6Y0
+ 7xPhxUzUxlbBwtXZsr.Zzmq8ndjTccTqkaSsqnkzN434uZs3NgfVbcCS_RkyO8ZxLGf2QxHjRiRK
+ 8WWoe0zo4PVhG6rwCiqJsp0xgY4d8VO57x8ZIk5U1wJTPmL0jVkcgR6Z0yREbXclP77BB6vEIQCx
+ uJpRjrQEKU590h7qs4CAtdvNR2a3QYOSQdhiCiF_Z3UghxuA669oXIOUA0aGKxIMD_vHJkLos5P7
+ sUSw8._TI8AmwlnYuswujBqBtnpCHKFGNHkOHviKWCzQnmUCJ94u.a_U6kBUwT0Eu_sL_Vatkxsj
+ eiOcEzbDlSWVxJPocdV0_fMO_akejtenW_mXX_6NnfHSLWp135b0QoGolVdIpad1b0O6iMaLClSc
+ NQf_miXKwwyizYAhYUQxQBKDartO2QIGGCrAYzCeOUZD3Tet7GGz6hmN7z.G0dut7f4anunNuFTk
+ yQkqjJgDuCfdvHjf9kamSnhgmjRDL3KSCZDQ5jh21FX_kvSHYF7imM_8GKb47..uDcJ288TYfG_R
+ LvyXRTVqOgBeDodjkFfvi1LvTTe29tRVap.g3yVAz_sOMQ5ISx.5gWDr7rDRyoKkH_aWVPvW9jRZ
+ XE6cHRz1GCfLMLmV1sEUekcYe_KuTy0iCyUbCNHCIY_mo6AGbEk8PPFEwGr4plLx7mXughRE4S8h
+ MTjQEtYU_NkfOb3UsGT7yhNNzKR3n9v0UeZGFD7pwGJSsyCqOeIzrkwqwRPxdIdx9qBy_STRv1SB
+ lmqdDRl2fwNg2F8o4Omc1mxVavgtkLLn7iyp9bEOYQnyrWwYNESo4iB.XLCzoROrPoysjtusTBSY
+ Q4852IBOFl.kHoZMUMef8vZSmTKUypPqUPzHCZVodSQjrG_BbSCKoodBIqiIEIIYBpHXkmXCqCPs
+ IaNEDsWEUT6RbHpWp7jcsy.0dtF6LnxK4v.rfX95f9CMx.J32NV62NmsbLvLP7S6Ea00CvMwUNBl
+ DugOOPW9ykb898fcCzIg7iofbru8gto1.JS0b9tBCC93j79urqIEaXtYE6.S3e.eDc2u1
+Received: from sonic.gate.mail.ne1.yahoo.com by sonic305.consmr.mail.gq1.yahoo.com with HTTP; Thu, 19 Sep 2019 08:10:13 +0000
+Date:   Thu, 19 Sep 2019 08:10:08 +0000 (UTC)
+From:   Mr Maryam Sharifi <mrscantarak@gmail.com>
+Reply-To: mrmaryamsharifi@gmail.com
+Message-ID: <954094629.9578094.1568880608959@mail.yahoo.com>
+Subject: Assalamualaikum.
 MIME-Version: 1.0
-References: <1568873377-13433-1-git-send-email-Anson.Huang@nxp.com>
-In-Reply-To: <1568873377-13433-1-git-send-email-Anson.Huang@nxp.com>
-From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Date:   Thu, 19 Sep 2019 09:18:01 +0200
-Message-ID: <CAMpxmJVm+HyKOgoEVnU0tcJ1A4ghGC=Vvf0Kw40Js=O-C_t1=w@mail.gmail.com>
-Subject: Re: [PATCH] gpio: mxc: Only getting second IRQ when there is more
- than one IRQ
-To:     Anson Huang <Anson.Huang@nxp.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        linux-gpio <linux-gpio@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        dl-linux-imx <Linux-imx@nxp.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: quoted-printable
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-czw., 19 wrz 2019 o 08:10 Anson Huang <Anson.Huang@nxp.com> napisa=C5=82(a)=
-:
->
-> On some of i.MX SoCs like i.MX8QXP, there is ONLY one IRQ for each
-> GPIO bank, so it is better to check the IRQ count before getting
-> second IRQ to avoid below error message during probe:
->
-> [    1.070908] gpio-mxc 5d080000.gpio: IRQ index 1 not found
-> [    1.077420] gpio-mxc 5d090000.gpio: IRQ index 1 not found
-> [    1.083766] gpio-mxc 5d0a0000.gpio: IRQ index 1 not found
-> [    1.090122] gpio-mxc 5d0b0000.gpio: IRQ index 1 not found
-> [    1.096470] gpio-mxc 5d0c0000.gpio: IRQ index 1 not found
-> [    1.102804] gpio-mxc 5d0d0000.gpio: IRQ index 1 not found
-> [    1.109144] gpio-mxc 5d0e0000.gpio: IRQ index 1 not found
-> [    1.115475] gpio-mxc 5d0f0000.gpio: IRQ index 1 not found
->
-> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
-> ---
->  drivers/gpio/gpio-mxc.c | 12 +++++++++---
->  1 file changed, 9 insertions(+), 3 deletions(-)
->
-> diff --git a/drivers/gpio/gpio-mxc.c b/drivers/gpio/gpio-mxc.c
-> index 7907a87..39ba7dd 100644
-> --- a/drivers/gpio/gpio-mxc.c
-> +++ b/drivers/gpio/gpio-mxc.c
-> @@ -426,9 +426,15 @@ static int mxc_gpio_probe(struct platform_device *pd=
-ev)
->         if (IS_ERR(port->base))
->                 return PTR_ERR(port->base);
->
-> -       port->irq_high =3D platform_get_irq(pdev, 1);
-> -       if (port->irq_high < 0)
-> -               port->irq_high =3D 0;
-> +       err =3D platform_irq_count(pdev);
-> +       if (err < 0)
-> +               return err;
-> +
-> +       if (err > 1) {
 
-Could you use a variable called irq_count or something here? This
-'err' is a confusing name for a variable that contains a valid value.
 
-Bart
 
-> +               port->irq_high =3D platform_get_irq(pdev, 1);
-> +               if (port->irq_high < 0)
-> +                       port->irq_high =3D 0;
-> +       }
->
->         port->irq =3D platform_get_irq(pdev, 0);
->         if (port->irq < 0)
-> --
-> 2.7.4
->
+
+My Dear Friend,
+
+Before I introduce myself, I wish to inform you that this letter is not a h=
+oax mail and I urge you to treat it serious. This letter must come to you a=
+s a big surprise, but I believe it is only a day that people meet and becom=
+e great friends and business partners. Please I want you to read this lette=
+r very carefully and I must apologize for barging this message into your ma=
+il box without any formal introduction due to the urgency and confidentiali=
+ty of this business and I know that this message will come to you as a surp=
+rise. Please this is not a joke and I will not like you to joke with it ok,=
+ with due respect to your person and much sincerity of purpose, I make this=
+ contact with you as I believe that you can be of great assistance to me. M=
+y name is MR. MARYAM SHARIFI, from Burkina Faso, West Africa. I work in Uni=
+ted Bank for Africa (UBA) as telex manager, please see this as a confidenti=
+al message and do not reveal it to another person and let me know whether y=
+ou can be of assistance regarding my proposal below because it is top secre=
+t.
+
+I am about to retire from active Banking service to start a new life but I =
+am skeptical to reveal this particular secret to a stranger. You must assur=
+e me that everything will be handled confidentially because we are not goin=
+g to suffer again in life. It has been 10 years now that most of the greedy=
+ African Politicians used our bank to launder money overseas through the he=
+lp of their Political advisers. Most of the funds which they transferred ou=
+t of the shores of Africa were gold and oil money that was supposed to have=
+ been used to develop the continent. Their Political advisers always inflat=
+ed the amounts before transferring to foreign accounts, so I also used the =
+opportunity to divert part of the funds hence I am aware that there is no o=
+fficial trace of how much was transferred as all the accounts used for such=
+ transfers were being closed after transfer. I acted as the Bank Officer to=
+ most of the politicians and when I discovered that they were using me to s=
+ucceed in their greedy act; I also cleaned some of their banking records fr=
+om the Bank files and no one cared to ask me because the money was too much=
+ for them to control. They laundered over $5billion Dollars during the proc=
+ess.
+
+Before I send this message to you, I have already diverted ($10.5million Do=
+llars) to an escrow account belonging to no one in the bank. The bank is an=
+xious now to know who the beneficiary to the funds is because they have mad=
+e a lot of profits with the funds. It is more than Eight years now and most=
+ of the politicians are no longer using our bank to transfer funds overseas=
+. The ($10.5million Dollars) has been laying waste in our bank and I don=E2=
+=80=99t want to retire from the bank without transferring the funds to a fo=
+reign account to enable me share the proceeds with the receiver (a foreigne=
+r). The money will be shared 60% for me and 40% for you. There is no one co=
+ming to ask you about the funds because I secured everything. I only want y=
+ou to assist me by providing a reliable bank account where the funds can be=
+ transferred.
+
+You are not to face any difficulties or legal implications as I am going to=
+ handle the transfer personally. If you are capable of receiving the funds,=
+ do let me know immediately to enable me give you a detailed information on=
+ what to do. For me, I have not stolen the money from anyone because the ot=
+her people that took the whole money did not face any problems. This is my =
+chance to grab my own life opportunity but you must keep the details of the=
+ funds secret to avoid any leakages as no one in the bank knows about my pl=
+ans. Please get back to me if you are interested and capable to handle this
+
+project, I shall intimate you on what to do when I hear from your confirmat=
+ion and acceptance. If you are capable of being my trusted associate, do de=
+clare your consent to me I am looking forward to hear from you immediately =
+for further information.
+Thanks with my best regards. ( mrmaryamsharifi@gmail.com )
+
+MR. MARYAM SHARIFI
+Telex Manager
+United Bank for Africa (UBA)
+Burkina Faso
