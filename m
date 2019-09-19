@@ -2,1019 +2,488 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id CECC3B74F2
-	for <lists+linux-gpio@lfdr.de>; Thu, 19 Sep 2019 10:17:52 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5C4CCB750B
+	for <lists+linux-gpio@lfdr.de>; Thu, 19 Sep 2019 10:24:58 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387782AbfISIRv (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 19 Sep 2019 04:17:51 -0400
-Received: from relmlor2.renesas.com ([210.160.252.172]:33458 "EHLO
-        relmlie6.idc.renesas.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2387581AbfISIRv (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>);
-        Thu, 19 Sep 2019 04:17:51 -0400
-X-IronPort-AV: E=Sophos;i="5.64,522,1559487600"; 
-   d="scan'208";a="26760334"
-Received: from unknown (HELO relmlir6.idc.renesas.com) ([10.200.68.152])
-  by relmlie6.idc.renesas.com with ESMTP; 19 Sep 2019 17:17:44 +0900
-Received: from be1yocto.ree.adwin.renesas.com (unknown [172.29.43.62])
-        by relmlir6.idc.renesas.com (Postfix) with ESMTP id E8C0241F812D;
-        Thu, 19 Sep 2019 17:17:41 +0900 (JST)
-From:   Biju Das <biju.das@bp.renesas.com>
-To:     Geert Uytterhoeven <geert+renesas@glider.be>,
-        Linus Walleij <linus.walleij@linaro.org>
-Cc:     Biju Das <biju.das@bp.renesas.com>,
-        linux-renesas-soc@vger.kernel.org, linux-gpio@vger.kernel.org,
-        Simon Horman <horms@verge.net.au>,
-        Chris Paterson <Chris.Paterson2@renesas.com>,
-        Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-Subject: [PATCH v2 8/8] pinctrl: sh-pfc: r8a77965: Add R8A774B1 PFC support
-Date:   Thu, 19 Sep 2019 09:17:16 +0100
-Message-Id: <1568881036-4404-9-git-send-email-biju.das@bp.renesas.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1568881036-4404-1-git-send-email-biju.das@bp.renesas.com>
-References: <1568881036-4404-1-git-send-email-biju.das@bp.renesas.com>
+        id S1725887AbfISIY4 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 19 Sep 2019 04:24:56 -0400
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:42564 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730886AbfISIY4 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 19 Sep 2019 04:24:56 -0400
+Received: by mail-ot1-f66.google.com with SMTP id c10so2307755otd.9
+        for <linux-gpio@vger.kernel.org>; Thu, 19 Sep 2019 01:24:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=vcX8xWSkz8gmtnTygw2kVGLRvVzTR9G0+9PcokDqHew=;
+        b=aggy534fJ5GJ6CmDomKaiD6yUbU5cPjrrLXtv2yI2Ep/NyNj4t4L5UsQdlH2MnqR05
+         bs+L7gopJw0Nmdh8m3SEe30AyNTlg/BHkUE6fH9gsNr2scX80Ys0XcfR0MTbkJmy2oZY
+         5OXpU/it22+xqg4IOO72/0u4J3o7TDQlLvWMucwZZ2VxjPHbLiQukuwYnYRcrVQgCVuv
+         6OC6Y9q9bcMx2SYYvSLZVsufRn6ETU+CKh5EJXodc5LvEWWTW4IY8C8c4EA1r0PDHyA/
+         umPMQ9meO24F87w5pnxWenGEe7R+Imkzr40lByzrcFuLgO91ysZo6EnYVfRP9uX9Ogjq
+         TNRg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=vcX8xWSkz8gmtnTygw2kVGLRvVzTR9G0+9PcokDqHew=;
+        b=dn1v0dFLYtoVQ0n0qJTsWGtZeT7pAKstvgobN/w2JgyoRj/i4xJVwXhRbl6l7ypxXB
+         d2Rps3rPHx7RgwHZ7X0iKVP+61JZYvdKWEJADIKozgcmP/IG8+m7iKfD9WrdETyiuG0k
+         MZtAaOcmiJLsFSyZsEG5TLHerxAp+3yogZ0Uf7XloifMXF42JkuXaN0YJtci3b8PR/ym
+         JA00oOK746B/sMnYCQbH7JTSqApGX3PXJjjG9pXpqNwkHJnoAnY+JnAjeo6wuKtArh4S
+         Q5Eod8V22qcqN5jZQwsOUxkH23Drt8BfVMykx0s/sz+N+aWlywjmduKtcfSXIbCGebYL
+         +bzQ==
+X-Gm-Message-State: APjAAAVXosScBKkq0NJwgsSZg4AP40GdMqZeLAVfpH6U2LxmL52p14t/
+        nxnGcKa6EXyP6T2KoJXE2wksIWbS7JEi8DIgBykFyA==
+X-Google-Smtp-Source: APXvYqw9PdZaI1Oyuca6F86hnYDoBRzalabPJuvnPgo8wDyMhZkz3W3MBZKljWskPXxuSp4ZFhSZI4X9UJfLU3C099s=
+X-Received: by 2002:a9d:62c3:: with SMTP id z3mr5985407otk.194.1568881493951;
+ Thu, 19 Sep 2019 01:24:53 -0700 (PDT)
+MIME-Version: 1.0
+References: <20190917105902.445-1-m.felsch@pengutronix.de> <20190917105902.445-4-m.felsch@pengutronix.de>
+ <CAMpxmJUeasS3ogGVvy2jrE8ZdVtjWVjgJr1wcynfu8SzXQMmRA@mail.gmail.com> <20190918120613.mnehis6ydvbsqppb@pengutronix.de>
+In-Reply-To: <20190918120613.mnehis6ydvbsqppb@pengutronix.de>
+From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Date:   Thu, 19 Sep 2019 10:24:42 +0200
+Message-ID: <CAMpxmJX4wwfxGSCmNXQxYT54yofqhE26MDqVx+M=v7rOorKNYg@mail.gmail.com>
+Subject: Re: [PATCH 3/3] gpio: da9062: add driver support
+To:     Marco Felsch <m.felsch@pengutronix.de>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Support Opensource <support.opensource@diasemi.com>,
+        Adam.Thomson.Opensource@diasemi.com,
+        linux-devicetree <devicetree@vger.kernel.org>,
+        linux-gpio <linux-gpio@vger.kernel.org>, kernel@pengutronix.de
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Renesas RZ/G2N (r8a774b1) is pin compatible with R-Car M3-N (r8a77965),
-however it doesn't have several automotive specific peripherals. Add
-a r8a77965 specific pin groups/functions along with common pin
-groups/functions for supporting both r8a77965 and r8a774b1 SoC.
+=C5=9Br., 18 wrz 2019 o 14:06 Marco Felsch <m.felsch@pengutronix.de> napisa=
+=C5=82(a):
+>
+> On 19-09-18 09:04, Bartosz Golaszewski wrote:
+> > wt., 17 wrz 2019 o 12:59 Marco Felsch <m.felsch@pengutronix.de> napisa=
+=C5=82(a):
+> > >
+> > > The DA9062 is a mfd pmic device which supports 5 GPIOs. The GPIOs can
+> > > be used as input, output or have a special use-case.
+> > >
+> > > The patch adds the support for the normal input/output use-case.
+> > >
+> > > Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
+> > > ---
+> > >  drivers/gpio/Kconfig            |  11 ++
+> > >  drivers/gpio/Makefile           |   1 +
+> > >  drivers/gpio/gpio-da9062.c      | 265 ++++++++++++++++++++++++++++++=
+++
+> > >  include/linux/mfd/da9062/gpio.h |  13 ++
+> > >  4 files changed, 290 insertions(+)
+> > >  create mode 100644 drivers/gpio/gpio-da9062.c
+> > >  create mode 100644 include/linux/mfd/da9062/gpio.h
+> > >
+> > > diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
+> > > index bb13c266c329..b308ea549aaa 100644
+> > > --- a/drivers/gpio/Kconfig
+> > > +++ b/drivers/gpio/Kconfig
+> > > @@ -1038,6 +1038,17 @@ config GPIO_DA9055
+> > >
+> > >           If driver is built as a module it will be called gpio-da905=
+5.
+> > >
+> > > +config GPIO_DA9062
+> > > +       tristate "Dialog Semiconductor DA9062 GPIO"
+> > > +       depends on MFD_DA9062
+> > > +       help
+> > > +         Say yes here to enable the GPIO driver for the DA9062 chip.
+> > > +
+> > > +         The Dialog DA9062 PMIC chip has 5 GPIO pins that can be
+> > > +         be controller by this driver.
+> > > +
+> > > +         If driver is built as a module it will be called gpio-da906=
+2.
+> > > +
+> > >  config GPIO_DLN2
+> > >         tristate "Diolan DLN2 GPIO support"
+> > >         depends on MFD_DLN2
+> > > diff --git a/drivers/gpio/Makefile b/drivers/gpio/Makefile
+> > > index a4e91175c708..f29c8af2d096 100644
+> > > --- a/drivers/gpio/Makefile
+> > > +++ b/drivers/gpio/Makefile
+> > > @@ -45,6 +45,7 @@ obj-$(CONFIG_GPIO_CRYSTAL_COVE)               +=3D =
+gpio-crystalcove.o
+> > >  obj-$(CONFIG_GPIO_CS5535)              +=3D gpio-cs5535.o
+> > >  obj-$(CONFIG_GPIO_DA9052)              +=3D gpio-da9052.o
+> > >  obj-$(CONFIG_GPIO_DA9055)              +=3D gpio-da9055.o
+> > > +obj-$(CONFIG_GPIO_DA9062)              +=3D gpio-da9062.o
+> > >  obj-$(CONFIG_GPIO_DAVINCI)             +=3D gpio-davinci.o
+> > >  obj-$(CONFIG_GPIO_DLN2)                        +=3D gpio-dln2.o
+> > >  obj-$(CONFIG_GPIO_DWAPB)               +=3D gpio-dwapb.o
+> > > diff --git a/drivers/gpio/gpio-da9062.c b/drivers/gpio/gpio-da9062.c
+> > > new file mode 100644
+> > > index 000000000000..6035963929a2
+> > > --- /dev/null
+> > > +++ b/drivers/gpio/gpio-da9062.c
+> > > @@ -0,0 +1,265 @@
+> > > +// SPDX-License-Identifier: GPL-2.0
+> > > +/*
+> > > + * GPIO Driver for Dialog DA9062 PMICs.
+> > > + * Based on DA9055 GPIO driver.
+> > > + *
+> > > + * Copyright (C) 2019 Pengutronix, Marco Felsch <kernel@pengutronix.=
+de>
+> > > + */
+> > > +#include <linux/module.h>
+> > > +#include <linux/platform_device.h>
+> > > +#include <linux/regmap.h>
+> > > +
+> > > +#include <linux/gpio/driver.h>
+> > > +#include <linux/gpio/consumer.h>
+> > > +
+> > > +#include <linux/mfd/da9062/core.h>
+> > > +#include <linux/mfd/da9062/registers.h>
+> > > +
+> > > +#include "gpiolib.h"
+> > > +
+> > > +#define DA9062_TYPE(offset)            (4 * (offset % 2))
+> > > +#define DA9062_PIN_SHIFT(offset)       (4 * (offset % 2))
+> > > +#define DA9062_PIN_ALTERNATE           0x00 /* gpio alternate mode *=
+/
+> > > +#define DA9062_PIN_GPI                 0x01 /* gpio in */
+> > > +#define DA9062_PIN_GPO_OD              0x02 /* gpio out open-drain *=
+/
+> > > +#define DA9062_PIN_GPO_PP              0x03 /* gpio out push-pull */
+> > > +#define DA9062_GPIO_NUM                        5
+> > > +
+> > > +struct da9062_gpio {
+> > > +       struct da9062 *da9062;
+> > > +       struct gpio_chip gp;
+> > > +};
+> > > +
+> > > +int da9062_gpio_get_hwgpio(struct gpio_desc *desc)
+> > > +{
+> > > +       return gpio_chip_hwgpio(desc);
+> > > +}
+> > > +EXPORT_SYMBOL_GPL(da9062_gpio_get_hwgpio);
+> > > +
+> >
+> > Is this going to be used anywhere? I'm not really a fan of adding new
+> > APIs without users.
+>
+> Yes, it is used here: https://lkml.org/lkml/2019/9/17/411
+>
+> I don't know if I should add the gpio here or as seperate patch within
+> the above series.
+>
+> > > +static int da9062_gpio_get_pin_mode(struct regmap *regmap, unsigned =
+int offset)
+> > > +{
+> > > +       int ret;
+> > > +       int val;
+> >
+> > Nit: maybe put these two in a single line?
+>
+> Yes.
+>
+> > > +
+> > > +       ret =3D regmap_read(regmap, DA9062AA_GPIO_0_1 + (offset >> 1)=
+, &val);
+> > > +       if (ret < 0)
+> > > +               return ret;
+> > > +
+> > > +       val >>=3D DA9062_PIN_SHIFT(offset);
+> > > +       val &=3D DA9062AA_GPIO0_PIN_MASK;
+> > > +
+> > > +       return val;
+> > > +}
+> > > +
+> > > +static int da9062_gpio_set_pin_mode(struct regmap *regmap, unsigned =
+int offset,
+> > > +                                   unsigned int mode)
+> > > +{
+> > > +       unsigned int mask;
+> > > +
+> > > +       mode &=3D DA9062AA_GPIO0_PIN_MASK;
+> > > +       mode <<=3D DA9062_PIN_SHIFT(offset);
+> > > +       mask =3D DA9062AA_GPIO0_PIN_MASK << DA9062_PIN_SHIFT(offset);
+> > > +
+> > > +       return regmap_update_bits(regmap, DA9062AA_GPIO_0_1 + (offset=
+ >> 1),
+> > > +                                 mask, mode);
+> > > +}
+> > > +
+> > > +static int da9062_gpio_get(struct gpio_chip *gc, unsigned int offset=
+)
+> > > +{
+> > > +       struct da9062_gpio *gpio =3D gpiochip_get_data(gc);
+> > > +       struct regmap *regmap =3D gpio->da9062->regmap;
+> > > +       int gpio_dir, val;
+> > > +       int ret;
+> > > +
+> > > +       gpio_dir =3D da9062_gpio_get_pin_mode(regmap, offset);
+> > > +       if (gpio_dir < 0)
+> > > +               return gpio_dir;
+> > > +
+> > > +       switch (gpio_dir) {
+> > > +       case DA9062_PIN_ALTERNATE:
+> > > +               return -ENOTSUPP;
+> > > +       case DA9062_PIN_GPI:
+> > > +               ret =3D regmap_read(regmap, DA9062AA_STATUS_B, &val);
+> > > +               if (ret < 0)
+> > > +                       return ret;
+> > > +               break;
+> > > +       case DA9062_PIN_GPO_OD:
+> > > +               /* falltrough */
+> > > +       case DA9062_PIN_GPO_PP:
+> > > +               ret =3D regmap_read(regmap, DA9062AA_GPIO_MODE0_4, &v=
+al);
+> > > +               if (ret < 0)
+> > > +                       return ret;
+> > > +       }
+> > > +
+> > > +       return val & BIT(offset);
+> > > +}
+> > > +
+> > > +static void da9062_gpio_set(struct gpio_chip *gc, unsigned int offse=
+t,
+> > > +                           int value)
+> > > +{
+> > > +       struct da9062_gpio *gpio =3D gpiochip_get_data(gc);
+> > > +       struct regmap *regmap =3D gpio->da9062->regmap;
+> > > +
+> > > +       regmap_update_bits(regmap, DA9062AA_GPIO_MODE0_4, BIT(offset)=
+,
+> > > +                          value << offset);
+> > > +}
+> > > +
+> > > +static int da9062_gpio_get_direction(struct gpio_chip *gc, unsigned =
+int offset)
+> > > +{
+> > > +       struct da9062_gpio *gpio =3D gpiochip_get_data(gc);
+> > > +       struct regmap *regmap =3D gpio->da9062->regmap;
+> > > +       int gpio_dir;
+> > > +
+> > > +       gpio_dir =3D da9062_gpio_get_pin_mode(regmap, offset);
+> > > +       if (gpio_dir < 0)
+> > > +               return gpio_dir;
+> > > +
+> > > +       switch (gpio_dir) {
+> > > +       case DA9062_PIN_ALTERNATE:
+> > > +               return -ENOTSUPP;
+> > > +       case DA9062_PIN_GPI:
+> > > +               return 1;
+> > > +       case DA9062_PIN_GPO_OD:
+> > > +               /* falltrough */
+> > > +       case DA9062_PIN_GPO_PP:
+> > > +               return 0;
+> > > +       }
+> > > +
+> > > +       return -EINVAL;
+> > > +}
+> > > +
+> > > +static int da9062_gpio_direction_input(struct gpio_chip *gc,
+> > > +                                      unsigned int offset)
+> > > +{
+> > > +       struct da9062_gpio *gpio =3D gpiochip_get_data(gc);
+> > > +       struct regmap *regmap =3D gpio->da9062->regmap;
+> > > +       struct gpio_desc *desc =3D gpiochip_get_desc(gc, offset);
+> > > +       unsigned int gpi_type;
+> > > +       int ret;
+> > > +
+> > > +       ret =3D da9062_gpio_set_pin_mode(regmap, offset, DA9062_PIN_G=
+PI);
+> > > +       if (ret)
+> > > +               return ret;
+> > > +
+> > > +       /*
+> > > +        * If the gpio is active low we should set it in hw too. No w=
+orries
+> > > +        * about gpio_get() because we read and return the gpio-level=
+. So the
+> > > +        * gpiolob active_low handling is still correct.
+> > > +        *
+> > > +        * 0 - active low, 1 - active high
+> > > +        */
+> > > +       gpi_type =3D !gpiod_is_active_low(desc);
+> > > +       return regmap_update_bits(regmap, DA9062AA_GPIO_0_1 + (offset=
+ >> 1),
+> > > +                               DA9062AA_GPIO0_TYPE_MASK << DA9062_TY=
+PE(offset),
+> > > +                               gpi_type << DA9062_TYPE(offset));
+> > > +}
+> > > +
+> > > +static int da9062_gpio_direction_output(struct gpio_chip *gc,
+> > > +                                       unsigned int offset, int valu=
+e)
+> > > +{
+> > > +       /* Push-Pull / Open-Drain options are configured during set_c=
+onfig */
+> > > +       da9062_gpio_set(gc, offset, value);
+> > > +
+> > > +       return 0;
+> > > +}
+> > > +
+> > > +static int da9062_gpio_set_config(struct gpio_chip *gc, unsigned int=
+ offset,
+> > > +                                 unsigned long config)
+> > > +{
+> > > +       struct da9062_gpio *gpio =3D gpiochip_get_data(gc);
+> > > +       struct regmap *regmap =3D gpio->da9062->regmap;
+> > > +       int gpio_dir;
+> > > +
+> > > +       switch (pinconf_to_config_param(config)) {
+> > > +       case PIN_CONFIG_BIAS_PULL_DOWN:
+> > > +               /* PD only if pin is input */
+> > > +               gpio_dir =3D da9062_gpio_get_pin_mode(regmap, offset)=
+;
+> > > +               if (gpio_dir < 0)
+> > > +                       return -EINVAL;
+> > > +               else if (gpio_dir !=3D DA9062_PIN_GPI)
+> > > +                       return -ENOTSUPP;
+> > > +               return regmap_update_bits(regmap, DA9062AA_CONFIG_K,
+> > > +                                         BIT(offset), BIT(offset));
+> > > +       case PIN_CONFIG_BIAS_PULL_UP:
+> > > +               /* PU only if pin is output open-drain */
+> > > +               gpio_dir =3D da9062_gpio_get_pin_mode(regmap, offset)=
+;
+> > > +               if (gpio_dir < 0)
+> > > +                       return -EINVAL;
+> > > +               else if (gpio_dir !=3D DA9062_PIN_GPO_OD)
+> > > +                       return -ENOTSUPP;
+> > > +               return regmap_update_bits(regmap, DA9062AA_CONFIG_K,
+> > > +                                         BIT(offset), BIT(offset));
+> > > +       case PIN_CONFIG_DRIVE_OPEN_DRAIN:
+> > > +               return da9062_gpio_set_pin_mode(regmap, offset,
+> > > +                                               DA9062_PIN_GPO_OD);
+> > > +       case PIN_CONFIG_DRIVE_PUSH_PULL:
+> > > +               return da9062_gpio_set_pin_mode(regmap, offset,
+> > > +                                               DA9062_PIN_GPO_PP);
+> > > +       default:
+> > > +               return -ENOTSUPP;
+> > > +       }
+> > > +}
+> > > +
+> > > +static int da9062_gpio_to_irq(struct gpio_chip *gc, unsigned int off=
+set)
+> > > +{
+> > > +       struct da9062_gpio *gpio =3D gpiochip_get_data(gc);
+> > > +       struct da9062 *da9062 =3D gpio->da9062;
+> > > +
+> > > +       return regmap_irq_get_virq(da9062->regmap_irq,
+> > > +                                  DA9062_IRQ_GPI0 + offset);
+> > > +}
+> > > +
+> >
+> > I'm afraid this won't fly anymore. We now have support for
+> > hierarchical GPIO irqchips (take a look at
+> > Documentation/driver-api/gpio/driver.rst) and Linus is quite strict on
+> > enforcing its usage. What I did with a very simple mfd device with
+> > GPIOs (where using hierarchical irqchips was clearly overkill) was to
+> > put the gpio-controller on the same DT node as the core mfd device -
+> > that way there's no need for a hierarchy.
+>
+> Okay, I've checked the documentation and the code. If I understood it
+> right I should request each irq using platform_get_irq_byname() as you
+> did for the max77650?
+>
 
-Signed-off-by: Biju Das <biju.das@bp.renesas.com>
----
-V1-->V2
- * No change.
----
- drivers/pinctrl/sh-pfc/Kconfig        |   4 +
- drivers/pinctrl/sh-pfc/Makefile       |   1 +
- drivers/pinctrl/sh-pfc/core.c         |   6 +
- drivers/pinctrl/sh-pfc/pfc-r8a77965.c | 861 ++++++++++++++++++----------------
- drivers/pinctrl/sh-pfc/sh_pfc.h       |   1 +
- 5 files changed, 464 insertions(+), 409 deletions(-)
+No, regmap irq domain is fine, as long as you modify the DT bindings
+to not use a sub-node for the gpio-controller.
 
-diff --git a/drivers/pinctrl/sh-pfc/Kconfig b/drivers/pinctrl/sh-pfc/Kconfig
-index 2dd716b..de2a33a 100644
---- a/drivers/pinctrl/sh-pfc/Kconfig
-+++ b/drivers/pinctrl/sh-pfc/Kconfig
-@@ -17,6 +17,7 @@ config PINCTRL_SH_PFC
- 	select PINCTRL_PFC_R8A7745 if ARCH_R8A7745
- 	select PINCTRL_PFC_R8A77470 if ARCH_R8A77470
- 	select PINCTRL_PFC_R8A774A1 if ARCH_R8A774A1
-+	select PINCTRL_PFC_R8A774B1 if ARCH_R8A774B1
- 	select PINCTRL_PFC_R8A774C0 if ARCH_R8A774C0
- 	select PINCTRL_PFC_R8A7778 if ARCH_R8A7778
- 	select PINCTRL_PFC_R8A7779 if ARCH_R8A7779
-@@ -86,6 +87,9 @@ config PINCTRL_PFC_R8A77470
- config PINCTRL_PFC_R8A774A1
- 	bool "RZ/G2M pin control support" if COMPILE_TEST
- 
-+config PINCTRL_PFC_R8A774B1
-+	bool "RZ/G2N pin control support" if COMPILE_TEST
-+
- config PINCTRL_PFC_R8A774C0
- 	bool "RZ/G2E pin control support" if COMPILE_TEST
- 
-diff --git a/drivers/pinctrl/sh-pfc/Makefile b/drivers/pinctrl/sh-pfc/Makefile
-index 8c95abc..00b12af 100644
---- a/drivers/pinctrl/sh-pfc/Makefile
-+++ b/drivers/pinctrl/sh-pfc/Makefile
-@@ -9,6 +9,7 @@ obj-$(CONFIG_PINCTRL_PFC_R8A7744)	+= pfc-r8a7791.o
- obj-$(CONFIG_PINCTRL_PFC_R8A7745)	+= pfc-r8a7794.o
- obj-$(CONFIG_PINCTRL_PFC_R8A77470)	+= pfc-r8a77470.o
- obj-$(CONFIG_PINCTRL_PFC_R8A774A1)	+= pfc-r8a7796.o
-+obj-$(CONFIG_PINCTRL_PFC_R8A774B1)	+= pfc-r8a77965.o
- obj-$(CONFIG_PINCTRL_PFC_R8A774C0)	+= pfc-r8a77990.o
- obj-$(CONFIG_PINCTRL_PFC_R8A7778)	+= pfc-r8a7778.o
- obj-$(CONFIG_PINCTRL_PFC_R8A7779)	+= pfc-r8a7779.o
-diff --git a/drivers/pinctrl/sh-pfc/core.c b/drivers/pinctrl/sh-pfc/core.c
-index b8640ad..f8cbd33 100644
---- a/drivers/pinctrl/sh-pfc/core.c
-+++ b/drivers/pinctrl/sh-pfc/core.c
-@@ -518,6 +518,12 @@ static const struct of_device_id sh_pfc_of_table[] = {
- 		.data = &r8a774a1_pinmux_info,
- 	},
- #endif
-+#ifdef CONFIG_PINCTRL_PFC_R8A774B1
-+	{
-+		.compatible = "renesas,pfc-r8a774b1",
-+		.data = &r8a774b1_pinmux_info,
-+	},
-+#endif
- #ifdef CONFIG_PINCTRL_PFC_R8A774C0
- 	{
- 		.compatible = "renesas,pfc-r8a774c0",
-diff --git a/drivers/pinctrl/sh-pfc/pfc-r8a77965.c b/drivers/pinctrl/sh-pfc/pfc-r8a77965.c
-index 697c77a..44c9892 100644
---- a/drivers/pinctrl/sh-pfc/pfc-r8a77965.c
-+++ b/drivers/pinctrl/sh-pfc/pfc-r8a77965.c
-@@ -4378,355 +4378,362 @@ static const unsigned int vin5_clk_mux[] = {
- 	VI5_CLK_MARK,
- };
- 
--static const struct sh_pfc_pin_group pinmux_groups[] = {
--	SH_PFC_PIN_GROUP(audio_clk_a_a),
--	SH_PFC_PIN_GROUP(audio_clk_a_b),
--	SH_PFC_PIN_GROUP(audio_clk_a_c),
--	SH_PFC_PIN_GROUP(audio_clk_b_a),
--	SH_PFC_PIN_GROUP(audio_clk_b_b),
--	SH_PFC_PIN_GROUP(audio_clk_c_a),
--	SH_PFC_PIN_GROUP(audio_clk_c_b),
--	SH_PFC_PIN_GROUP(audio_clkout_a),
--	SH_PFC_PIN_GROUP(audio_clkout_b),
--	SH_PFC_PIN_GROUP(audio_clkout_c),
--	SH_PFC_PIN_GROUP(audio_clkout_d),
--	SH_PFC_PIN_GROUP(audio_clkout1_a),
--	SH_PFC_PIN_GROUP(audio_clkout1_b),
--	SH_PFC_PIN_GROUP(audio_clkout2_a),
--	SH_PFC_PIN_GROUP(audio_clkout2_b),
--	SH_PFC_PIN_GROUP(audio_clkout3_a),
--	SH_PFC_PIN_GROUP(audio_clkout3_b),
--	SH_PFC_PIN_GROUP(avb_link),
--	SH_PFC_PIN_GROUP(avb_magic),
--	SH_PFC_PIN_GROUP(avb_phy_int),
--	SH_PFC_PIN_GROUP_ALIAS(avb_mdc, avb_mdio),	/* Deprecated */
--	SH_PFC_PIN_GROUP(avb_mdio),
--	SH_PFC_PIN_GROUP(avb_mii),
--	SH_PFC_PIN_GROUP(avb_avtp_pps),
--	SH_PFC_PIN_GROUP(avb_avtp_match_a),
--	SH_PFC_PIN_GROUP(avb_avtp_capture_a),
--	SH_PFC_PIN_GROUP(avb_avtp_match_b),
--	SH_PFC_PIN_GROUP(avb_avtp_capture_b),
--	SH_PFC_PIN_GROUP(can0_data_a),
--	SH_PFC_PIN_GROUP(can0_data_b),
--	SH_PFC_PIN_GROUP(can1_data),
--	SH_PFC_PIN_GROUP(can_clk),
--	SH_PFC_PIN_GROUP(canfd0_data_a),
--	SH_PFC_PIN_GROUP(canfd0_data_b),
--	SH_PFC_PIN_GROUP(canfd1_data),
--	SH_PFC_PIN_GROUP(drif0_ctrl_a),
--	SH_PFC_PIN_GROUP(drif0_data0_a),
--	SH_PFC_PIN_GROUP(drif0_data1_a),
--	SH_PFC_PIN_GROUP(drif0_ctrl_b),
--	SH_PFC_PIN_GROUP(drif0_data0_b),
--	SH_PFC_PIN_GROUP(drif0_data1_b),
--	SH_PFC_PIN_GROUP(drif0_ctrl_c),
--	SH_PFC_PIN_GROUP(drif0_data0_c),
--	SH_PFC_PIN_GROUP(drif0_data1_c),
--	SH_PFC_PIN_GROUP(drif1_ctrl_a),
--	SH_PFC_PIN_GROUP(drif1_data0_a),
--	SH_PFC_PIN_GROUP(drif1_data1_a),
--	SH_PFC_PIN_GROUP(drif1_ctrl_b),
--	SH_PFC_PIN_GROUP(drif1_data0_b),
--	SH_PFC_PIN_GROUP(drif1_data1_b),
--	SH_PFC_PIN_GROUP(drif1_ctrl_c),
--	SH_PFC_PIN_GROUP(drif1_data0_c),
--	SH_PFC_PIN_GROUP(drif1_data1_c),
--	SH_PFC_PIN_GROUP(drif2_ctrl_a),
--	SH_PFC_PIN_GROUP(drif2_data0_a),
--	SH_PFC_PIN_GROUP(drif2_data1_a),
--	SH_PFC_PIN_GROUP(drif2_ctrl_b),
--	SH_PFC_PIN_GROUP(drif2_data0_b),
--	SH_PFC_PIN_GROUP(drif2_data1_b),
--	SH_PFC_PIN_GROUP(drif3_ctrl_a),
--	SH_PFC_PIN_GROUP(drif3_data0_a),
--	SH_PFC_PIN_GROUP(drif3_data1_a),
--	SH_PFC_PIN_GROUP(drif3_ctrl_b),
--	SH_PFC_PIN_GROUP(drif3_data0_b),
--	SH_PFC_PIN_GROUP(drif3_data1_b),
--	SH_PFC_PIN_GROUP(du_rgb666),
--	SH_PFC_PIN_GROUP(du_rgb888),
--	SH_PFC_PIN_GROUP(du_clk_out_0),
--	SH_PFC_PIN_GROUP(du_clk_out_1),
--	SH_PFC_PIN_GROUP(du_sync),
--	SH_PFC_PIN_GROUP(du_oddf),
--	SH_PFC_PIN_GROUP(du_cde),
--	SH_PFC_PIN_GROUP(du_disp),
--	SH_PFC_PIN_GROUP(hscif0_data),
--	SH_PFC_PIN_GROUP(hscif0_clk),
--	SH_PFC_PIN_GROUP(hscif0_ctrl),
--	SH_PFC_PIN_GROUP(hscif1_data_a),
--	SH_PFC_PIN_GROUP(hscif1_clk_a),
--	SH_PFC_PIN_GROUP(hscif1_ctrl_a),
--	SH_PFC_PIN_GROUP(hscif1_data_b),
--	SH_PFC_PIN_GROUP(hscif1_clk_b),
--	SH_PFC_PIN_GROUP(hscif1_ctrl_b),
--	SH_PFC_PIN_GROUP(hscif2_data_a),
--	SH_PFC_PIN_GROUP(hscif2_clk_a),
--	SH_PFC_PIN_GROUP(hscif2_ctrl_a),
--	SH_PFC_PIN_GROUP(hscif2_data_b),
--	SH_PFC_PIN_GROUP(hscif2_clk_b),
--	SH_PFC_PIN_GROUP(hscif2_ctrl_b),
--	SH_PFC_PIN_GROUP(hscif2_data_c),
--	SH_PFC_PIN_GROUP(hscif2_clk_c),
--	SH_PFC_PIN_GROUP(hscif2_ctrl_c),
--	SH_PFC_PIN_GROUP(hscif3_data_a),
--	SH_PFC_PIN_GROUP(hscif3_clk),
--	SH_PFC_PIN_GROUP(hscif3_ctrl),
--	SH_PFC_PIN_GROUP(hscif3_data_b),
--	SH_PFC_PIN_GROUP(hscif3_data_c),
--	SH_PFC_PIN_GROUP(hscif3_data_d),
--	SH_PFC_PIN_GROUP(hscif4_data_a),
--	SH_PFC_PIN_GROUP(hscif4_clk),
--	SH_PFC_PIN_GROUP(hscif4_ctrl),
--	SH_PFC_PIN_GROUP(hscif4_data_b),
--	SH_PFC_PIN_GROUP(i2c0),
--	SH_PFC_PIN_GROUP(i2c1_a),
--	SH_PFC_PIN_GROUP(i2c1_b),
--	SH_PFC_PIN_GROUP(i2c2_a),
--	SH_PFC_PIN_GROUP(i2c2_b),
--	SH_PFC_PIN_GROUP(i2c3),
--	SH_PFC_PIN_GROUP(i2c5),
--	SH_PFC_PIN_GROUP(i2c6_a),
--	SH_PFC_PIN_GROUP(i2c6_b),
--	SH_PFC_PIN_GROUP(i2c6_c),
--	SH_PFC_PIN_GROUP(intc_ex_irq0),
--	SH_PFC_PIN_GROUP(intc_ex_irq1),
--	SH_PFC_PIN_GROUP(intc_ex_irq2),
--	SH_PFC_PIN_GROUP(intc_ex_irq3),
--	SH_PFC_PIN_GROUP(intc_ex_irq4),
--	SH_PFC_PIN_GROUP(intc_ex_irq5),
--	SH_PFC_PIN_GROUP(msiof0_clk),
--	SH_PFC_PIN_GROUP(msiof0_sync),
--	SH_PFC_PIN_GROUP(msiof0_ss1),
--	SH_PFC_PIN_GROUP(msiof0_ss2),
--	SH_PFC_PIN_GROUP(msiof0_txd),
--	SH_PFC_PIN_GROUP(msiof0_rxd),
--	SH_PFC_PIN_GROUP(msiof1_clk_a),
--	SH_PFC_PIN_GROUP(msiof1_sync_a),
--	SH_PFC_PIN_GROUP(msiof1_ss1_a),
--	SH_PFC_PIN_GROUP(msiof1_ss2_a),
--	SH_PFC_PIN_GROUP(msiof1_txd_a),
--	SH_PFC_PIN_GROUP(msiof1_rxd_a),
--	SH_PFC_PIN_GROUP(msiof1_clk_b),
--	SH_PFC_PIN_GROUP(msiof1_sync_b),
--	SH_PFC_PIN_GROUP(msiof1_ss1_b),
--	SH_PFC_PIN_GROUP(msiof1_ss2_b),
--	SH_PFC_PIN_GROUP(msiof1_txd_b),
--	SH_PFC_PIN_GROUP(msiof1_rxd_b),
--	SH_PFC_PIN_GROUP(msiof1_clk_c),
--	SH_PFC_PIN_GROUP(msiof1_sync_c),
--	SH_PFC_PIN_GROUP(msiof1_ss1_c),
--	SH_PFC_PIN_GROUP(msiof1_ss2_c),
--	SH_PFC_PIN_GROUP(msiof1_txd_c),
--	SH_PFC_PIN_GROUP(msiof1_rxd_c),
--	SH_PFC_PIN_GROUP(msiof1_clk_d),
--	SH_PFC_PIN_GROUP(msiof1_sync_d),
--	SH_PFC_PIN_GROUP(msiof1_ss1_d),
--	SH_PFC_PIN_GROUP(msiof1_ss2_d),
--	SH_PFC_PIN_GROUP(msiof1_txd_d),
--	SH_PFC_PIN_GROUP(msiof1_rxd_d),
--	SH_PFC_PIN_GROUP(msiof1_clk_e),
--	SH_PFC_PIN_GROUP(msiof1_sync_e),
--	SH_PFC_PIN_GROUP(msiof1_ss1_e),
--	SH_PFC_PIN_GROUP(msiof1_ss2_e),
--	SH_PFC_PIN_GROUP(msiof1_txd_e),
--	SH_PFC_PIN_GROUP(msiof1_rxd_e),
--	SH_PFC_PIN_GROUP(msiof1_clk_f),
--	SH_PFC_PIN_GROUP(msiof1_sync_f),
--	SH_PFC_PIN_GROUP(msiof1_ss1_f),
--	SH_PFC_PIN_GROUP(msiof1_ss2_f),
--	SH_PFC_PIN_GROUP(msiof1_txd_f),
--	SH_PFC_PIN_GROUP(msiof1_rxd_f),
--	SH_PFC_PIN_GROUP(msiof1_clk_g),
--	SH_PFC_PIN_GROUP(msiof1_sync_g),
--	SH_PFC_PIN_GROUP(msiof1_ss1_g),
--	SH_PFC_PIN_GROUP(msiof1_ss2_g),
--	SH_PFC_PIN_GROUP(msiof1_txd_g),
--	SH_PFC_PIN_GROUP(msiof1_rxd_g),
--	SH_PFC_PIN_GROUP(msiof2_clk_a),
--	SH_PFC_PIN_GROUP(msiof2_sync_a),
--	SH_PFC_PIN_GROUP(msiof2_ss1_a),
--	SH_PFC_PIN_GROUP(msiof2_ss2_a),
--	SH_PFC_PIN_GROUP(msiof2_txd_a),
--	SH_PFC_PIN_GROUP(msiof2_rxd_a),
--	SH_PFC_PIN_GROUP(msiof2_clk_b),
--	SH_PFC_PIN_GROUP(msiof2_sync_b),
--	SH_PFC_PIN_GROUP(msiof2_ss1_b),
--	SH_PFC_PIN_GROUP(msiof2_ss2_b),
--	SH_PFC_PIN_GROUP(msiof2_txd_b),
--	SH_PFC_PIN_GROUP(msiof2_rxd_b),
--	SH_PFC_PIN_GROUP(msiof2_clk_c),
--	SH_PFC_PIN_GROUP(msiof2_sync_c),
--	SH_PFC_PIN_GROUP(msiof2_ss1_c),
--	SH_PFC_PIN_GROUP(msiof2_ss2_c),
--	SH_PFC_PIN_GROUP(msiof2_txd_c),
--	SH_PFC_PIN_GROUP(msiof2_rxd_c),
--	SH_PFC_PIN_GROUP(msiof2_clk_d),
--	SH_PFC_PIN_GROUP(msiof2_sync_d),
--	SH_PFC_PIN_GROUP(msiof2_ss1_d),
--	SH_PFC_PIN_GROUP(msiof2_ss2_d),
--	SH_PFC_PIN_GROUP(msiof2_txd_d),
--	SH_PFC_PIN_GROUP(msiof2_rxd_d),
--	SH_PFC_PIN_GROUP(msiof3_clk_a),
--	SH_PFC_PIN_GROUP(msiof3_sync_a),
--	SH_PFC_PIN_GROUP(msiof3_ss1_a),
--	SH_PFC_PIN_GROUP(msiof3_ss2_a),
--	SH_PFC_PIN_GROUP(msiof3_txd_a),
--	SH_PFC_PIN_GROUP(msiof3_rxd_a),
--	SH_PFC_PIN_GROUP(msiof3_clk_b),
--	SH_PFC_PIN_GROUP(msiof3_sync_b),
--	SH_PFC_PIN_GROUP(msiof3_ss1_b),
--	SH_PFC_PIN_GROUP(msiof3_ss2_b),
--	SH_PFC_PIN_GROUP(msiof3_txd_b),
--	SH_PFC_PIN_GROUP(msiof3_rxd_b),
--	SH_PFC_PIN_GROUP(msiof3_clk_c),
--	SH_PFC_PIN_GROUP(msiof3_sync_c),
--	SH_PFC_PIN_GROUP(msiof3_txd_c),
--	SH_PFC_PIN_GROUP(msiof3_rxd_c),
--	SH_PFC_PIN_GROUP(msiof3_clk_d),
--	SH_PFC_PIN_GROUP(msiof3_sync_d),
--	SH_PFC_PIN_GROUP(msiof3_ss1_d),
--	SH_PFC_PIN_GROUP(msiof3_txd_d),
--	SH_PFC_PIN_GROUP(msiof3_rxd_d),
--	SH_PFC_PIN_GROUP(msiof3_clk_e),
--	SH_PFC_PIN_GROUP(msiof3_sync_e),
--	SH_PFC_PIN_GROUP(msiof3_ss1_e),
--	SH_PFC_PIN_GROUP(msiof3_ss2_e),
--	SH_PFC_PIN_GROUP(msiof3_txd_e),
--	SH_PFC_PIN_GROUP(msiof3_rxd_e),
--	SH_PFC_PIN_GROUP(pwm0),
--	SH_PFC_PIN_GROUP(pwm1_a),
--	SH_PFC_PIN_GROUP(pwm1_b),
--	SH_PFC_PIN_GROUP(pwm2_a),
--	SH_PFC_PIN_GROUP(pwm2_b),
--	SH_PFC_PIN_GROUP(pwm3_a),
--	SH_PFC_PIN_GROUP(pwm3_b),
--	SH_PFC_PIN_GROUP(pwm4_a),
--	SH_PFC_PIN_GROUP(pwm4_b),
--	SH_PFC_PIN_GROUP(pwm5_a),
--	SH_PFC_PIN_GROUP(pwm5_b),
--	SH_PFC_PIN_GROUP(pwm6_a),
--	SH_PFC_PIN_GROUP(pwm6_b),
--	SH_PFC_PIN_GROUP(sata0_devslp_a),
--	SH_PFC_PIN_GROUP(sata0_devslp_b),
--	SH_PFC_PIN_GROUP(scif0_data),
--	SH_PFC_PIN_GROUP(scif0_clk),
--	SH_PFC_PIN_GROUP(scif0_ctrl),
--	SH_PFC_PIN_GROUP(scif1_data_a),
--	SH_PFC_PIN_GROUP(scif1_clk),
--	SH_PFC_PIN_GROUP(scif1_ctrl),
--	SH_PFC_PIN_GROUP(scif1_data_b),
--	SH_PFC_PIN_GROUP(scif2_data_a),
--	SH_PFC_PIN_GROUP(scif2_clk),
--	SH_PFC_PIN_GROUP(scif2_data_b),
--	SH_PFC_PIN_GROUP(scif3_data_a),
--	SH_PFC_PIN_GROUP(scif3_clk),
--	SH_PFC_PIN_GROUP(scif3_ctrl),
--	SH_PFC_PIN_GROUP(scif3_data_b),
--	SH_PFC_PIN_GROUP(scif4_data_a),
--	SH_PFC_PIN_GROUP(scif4_clk_a),
--	SH_PFC_PIN_GROUP(scif4_ctrl_a),
--	SH_PFC_PIN_GROUP(scif4_data_b),
--	SH_PFC_PIN_GROUP(scif4_clk_b),
--	SH_PFC_PIN_GROUP(scif4_ctrl_b),
--	SH_PFC_PIN_GROUP(scif4_data_c),
--	SH_PFC_PIN_GROUP(scif4_clk_c),
--	SH_PFC_PIN_GROUP(scif4_ctrl_c),
--	SH_PFC_PIN_GROUP(scif5_data_a),
--	SH_PFC_PIN_GROUP(scif5_clk_a),
--	SH_PFC_PIN_GROUP(scif5_data_b),
--	SH_PFC_PIN_GROUP(scif5_clk_b),
--	SH_PFC_PIN_GROUP(scif_clk_a),
--	SH_PFC_PIN_GROUP(scif_clk_b),
--	SH_PFC_PIN_GROUP(sdhi0_data1),
--	SH_PFC_PIN_GROUP(sdhi0_data4),
--	SH_PFC_PIN_GROUP(sdhi0_ctrl),
--	SH_PFC_PIN_GROUP(sdhi0_cd),
--	SH_PFC_PIN_GROUP(sdhi0_wp),
--	SH_PFC_PIN_GROUP(sdhi1_data1),
--	SH_PFC_PIN_GROUP(sdhi1_data4),
--	SH_PFC_PIN_GROUP(sdhi1_ctrl),
--	SH_PFC_PIN_GROUP(sdhi1_cd),
--	SH_PFC_PIN_GROUP(sdhi1_wp),
--	SH_PFC_PIN_GROUP(sdhi2_data1),
--	SH_PFC_PIN_GROUP(sdhi2_data4),
--	SH_PFC_PIN_GROUP(sdhi2_data8),
--	SH_PFC_PIN_GROUP(sdhi2_ctrl),
--	SH_PFC_PIN_GROUP(sdhi2_cd_a),
--	SH_PFC_PIN_GROUP(sdhi2_wp_a),
--	SH_PFC_PIN_GROUP(sdhi2_cd_b),
--	SH_PFC_PIN_GROUP(sdhi2_wp_b),
--	SH_PFC_PIN_GROUP(sdhi2_ds),
--	SH_PFC_PIN_GROUP(sdhi3_data1),
--	SH_PFC_PIN_GROUP(sdhi3_data4),
--	SH_PFC_PIN_GROUP(sdhi3_data8),
--	SH_PFC_PIN_GROUP(sdhi3_ctrl),
--	SH_PFC_PIN_GROUP(sdhi3_cd),
--	SH_PFC_PIN_GROUP(sdhi3_wp),
--	SH_PFC_PIN_GROUP(sdhi3_ds),
--	SH_PFC_PIN_GROUP(ssi0_data),
--	SH_PFC_PIN_GROUP(ssi01239_ctrl),
--	SH_PFC_PIN_GROUP(ssi1_data_a),
--	SH_PFC_PIN_GROUP(ssi1_data_b),
--	SH_PFC_PIN_GROUP(ssi1_ctrl_a),
--	SH_PFC_PIN_GROUP(ssi1_ctrl_b),
--	SH_PFC_PIN_GROUP(ssi2_data_a),
--	SH_PFC_PIN_GROUP(ssi2_data_b),
--	SH_PFC_PIN_GROUP(ssi2_ctrl_a),
--	SH_PFC_PIN_GROUP(ssi2_ctrl_b),
--	SH_PFC_PIN_GROUP(ssi3_data),
--	SH_PFC_PIN_GROUP(ssi349_ctrl),
--	SH_PFC_PIN_GROUP(ssi4_data),
--	SH_PFC_PIN_GROUP(ssi4_ctrl),
--	SH_PFC_PIN_GROUP(ssi5_data),
--	SH_PFC_PIN_GROUP(ssi5_ctrl),
--	SH_PFC_PIN_GROUP(ssi6_data),
--	SH_PFC_PIN_GROUP(ssi6_ctrl),
--	SH_PFC_PIN_GROUP(ssi7_data),
--	SH_PFC_PIN_GROUP(ssi78_ctrl),
--	SH_PFC_PIN_GROUP(ssi8_data),
--	SH_PFC_PIN_GROUP(ssi9_data_a),
--	SH_PFC_PIN_GROUP(ssi9_data_b),
--	SH_PFC_PIN_GROUP(ssi9_ctrl_a),
--	SH_PFC_PIN_GROUP(ssi9_ctrl_b),
--	SH_PFC_PIN_GROUP(tmu_tclk1_a),
--	SH_PFC_PIN_GROUP(tmu_tclk1_b),
--	SH_PFC_PIN_GROUP(tmu_tclk2_a),
--	SH_PFC_PIN_GROUP(tmu_tclk2_b),
--	SH_PFC_PIN_GROUP(tpu_to0),
--	SH_PFC_PIN_GROUP(tpu_to1),
--	SH_PFC_PIN_GROUP(tpu_to2),
--	SH_PFC_PIN_GROUP(tpu_to3),
--	SH_PFC_PIN_GROUP(usb0),
--	SH_PFC_PIN_GROUP(usb1),
--	SH_PFC_PIN_GROUP(usb30),
--	VIN_DATA_PIN_GROUP(vin4_data, 8, _a),
--	VIN_DATA_PIN_GROUP(vin4_data, 10, _a),
--	VIN_DATA_PIN_GROUP(vin4_data, 12, _a),
--	VIN_DATA_PIN_GROUP(vin4_data, 16, _a),
--	SH_PFC_PIN_GROUP(vin4_data18_a),
--	VIN_DATA_PIN_GROUP(vin4_data, 20, _a),
--	VIN_DATA_PIN_GROUP(vin4_data, 24, _a),
--	VIN_DATA_PIN_GROUP(vin4_data, 8, _b),
--	VIN_DATA_PIN_GROUP(vin4_data, 10, _b),
--	VIN_DATA_PIN_GROUP(vin4_data, 12, _b),
--	VIN_DATA_PIN_GROUP(vin4_data, 16, _b),
--	SH_PFC_PIN_GROUP(vin4_data18_b),
--	VIN_DATA_PIN_GROUP(vin4_data, 20, _b),
--	VIN_DATA_PIN_GROUP(vin4_data, 24, _b),
--	SH_PFC_PIN_GROUP(vin4_sync),
--	SH_PFC_PIN_GROUP(vin4_field),
--	SH_PFC_PIN_GROUP(vin4_clkenb),
--	SH_PFC_PIN_GROUP(vin4_clk),
--	VIN_DATA_PIN_GROUP(vin5_data, 8),
--	VIN_DATA_PIN_GROUP(vin5_data, 10),
--	VIN_DATA_PIN_GROUP(vin5_data, 12),
--	VIN_DATA_PIN_GROUP(vin5_data, 16),
--	SH_PFC_PIN_GROUP(vin5_sync),
--	SH_PFC_PIN_GROUP(vin5_field),
--	SH_PFC_PIN_GROUP(vin5_clkenb),
--	SH_PFC_PIN_GROUP(vin5_clk),
-+static const struct {
-+	struct sh_pfc_pin_group common[318];
-+	struct sh_pfc_pin_group automotive[30];
-+} pinmux_groups = {
-+	.common = {
-+		SH_PFC_PIN_GROUP(audio_clk_a_a),
-+		SH_PFC_PIN_GROUP(audio_clk_a_b),
-+		SH_PFC_PIN_GROUP(audio_clk_a_c),
-+		SH_PFC_PIN_GROUP(audio_clk_b_a),
-+		SH_PFC_PIN_GROUP(audio_clk_b_b),
-+		SH_PFC_PIN_GROUP(audio_clk_c_a),
-+		SH_PFC_PIN_GROUP(audio_clk_c_b),
-+		SH_PFC_PIN_GROUP(audio_clkout_a),
-+		SH_PFC_PIN_GROUP(audio_clkout_b),
-+		SH_PFC_PIN_GROUP(audio_clkout_c),
-+		SH_PFC_PIN_GROUP(audio_clkout_d),
-+		SH_PFC_PIN_GROUP(audio_clkout1_a),
-+		SH_PFC_PIN_GROUP(audio_clkout1_b),
-+		SH_PFC_PIN_GROUP(audio_clkout2_a),
-+		SH_PFC_PIN_GROUP(audio_clkout2_b),
-+		SH_PFC_PIN_GROUP(audio_clkout3_a),
-+		SH_PFC_PIN_GROUP(audio_clkout3_b),
-+		SH_PFC_PIN_GROUP(avb_link),
-+		SH_PFC_PIN_GROUP(avb_magic),
-+		SH_PFC_PIN_GROUP(avb_phy_int),
-+		SH_PFC_PIN_GROUP_ALIAS(avb_mdc, avb_mdio),	/* Deprecated */
-+		SH_PFC_PIN_GROUP(avb_mdio),
-+		SH_PFC_PIN_GROUP(avb_mii),
-+		SH_PFC_PIN_GROUP(avb_avtp_pps),
-+		SH_PFC_PIN_GROUP(avb_avtp_match_a),
-+		SH_PFC_PIN_GROUP(avb_avtp_capture_a),
-+		SH_PFC_PIN_GROUP(avb_avtp_match_b),
-+		SH_PFC_PIN_GROUP(avb_avtp_capture_b),
-+		SH_PFC_PIN_GROUP(can0_data_a),
-+		SH_PFC_PIN_GROUP(can0_data_b),
-+		SH_PFC_PIN_GROUP(can1_data),
-+		SH_PFC_PIN_GROUP(can_clk),
-+		SH_PFC_PIN_GROUP(canfd0_data_a),
-+		SH_PFC_PIN_GROUP(canfd0_data_b),
-+		SH_PFC_PIN_GROUP(canfd1_data),
-+		SH_PFC_PIN_GROUP(du_rgb666),
-+		SH_PFC_PIN_GROUP(du_rgb888),
-+		SH_PFC_PIN_GROUP(du_clk_out_0),
-+		SH_PFC_PIN_GROUP(du_clk_out_1),
-+		SH_PFC_PIN_GROUP(du_sync),
-+		SH_PFC_PIN_GROUP(du_oddf),
-+		SH_PFC_PIN_GROUP(du_cde),
-+		SH_PFC_PIN_GROUP(du_disp),
-+		SH_PFC_PIN_GROUP(hscif0_data),
-+		SH_PFC_PIN_GROUP(hscif0_clk),
-+		SH_PFC_PIN_GROUP(hscif0_ctrl),
-+		SH_PFC_PIN_GROUP(hscif1_data_a),
-+		SH_PFC_PIN_GROUP(hscif1_clk_a),
-+		SH_PFC_PIN_GROUP(hscif1_ctrl_a),
-+		SH_PFC_PIN_GROUP(hscif1_data_b),
-+		SH_PFC_PIN_GROUP(hscif1_clk_b),
-+		SH_PFC_PIN_GROUP(hscif1_ctrl_b),
-+		SH_PFC_PIN_GROUP(hscif2_data_a),
-+		SH_PFC_PIN_GROUP(hscif2_clk_a),
-+		SH_PFC_PIN_GROUP(hscif2_ctrl_a),
-+		SH_PFC_PIN_GROUP(hscif2_data_b),
-+		SH_PFC_PIN_GROUP(hscif2_clk_b),
-+		SH_PFC_PIN_GROUP(hscif2_ctrl_b),
-+		SH_PFC_PIN_GROUP(hscif2_data_c),
-+		SH_PFC_PIN_GROUP(hscif2_clk_c),
-+		SH_PFC_PIN_GROUP(hscif2_ctrl_c),
-+		SH_PFC_PIN_GROUP(hscif3_data_a),
-+		SH_PFC_PIN_GROUP(hscif3_clk),
-+		SH_PFC_PIN_GROUP(hscif3_ctrl),
-+		SH_PFC_PIN_GROUP(hscif3_data_b),
-+		SH_PFC_PIN_GROUP(hscif3_data_c),
-+		SH_PFC_PIN_GROUP(hscif3_data_d),
-+		SH_PFC_PIN_GROUP(hscif4_data_a),
-+		SH_PFC_PIN_GROUP(hscif4_clk),
-+		SH_PFC_PIN_GROUP(hscif4_ctrl),
-+		SH_PFC_PIN_GROUP(hscif4_data_b),
-+		SH_PFC_PIN_GROUP(i2c0),
-+		SH_PFC_PIN_GROUP(i2c1_a),
-+		SH_PFC_PIN_GROUP(i2c1_b),
-+		SH_PFC_PIN_GROUP(i2c2_a),
-+		SH_PFC_PIN_GROUP(i2c2_b),
-+		SH_PFC_PIN_GROUP(i2c3),
-+		SH_PFC_PIN_GROUP(i2c5),
-+		SH_PFC_PIN_GROUP(i2c6_a),
-+		SH_PFC_PIN_GROUP(i2c6_b),
-+		SH_PFC_PIN_GROUP(i2c6_c),
-+		SH_PFC_PIN_GROUP(intc_ex_irq0),
-+		SH_PFC_PIN_GROUP(intc_ex_irq1),
-+		SH_PFC_PIN_GROUP(intc_ex_irq2),
-+		SH_PFC_PIN_GROUP(intc_ex_irq3),
-+		SH_PFC_PIN_GROUP(intc_ex_irq4),
-+		SH_PFC_PIN_GROUP(intc_ex_irq5),
-+		SH_PFC_PIN_GROUP(msiof0_clk),
-+		SH_PFC_PIN_GROUP(msiof0_sync),
-+		SH_PFC_PIN_GROUP(msiof0_ss1),
-+		SH_PFC_PIN_GROUP(msiof0_ss2),
-+		SH_PFC_PIN_GROUP(msiof0_txd),
-+		SH_PFC_PIN_GROUP(msiof0_rxd),
-+		SH_PFC_PIN_GROUP(msiof1_clk_a),
-+		SH_PFC_PIN_GROUP(msiof1_sync_a),
-+		SH_PFC_PIN_GROUP(msiof1_ss1_a),
-+		SH_PFC_PIN_GROUP(msiof1_ss2_a),
-+		SH_PFC_PIN_GROUP(msiof1_txd_a),
-+		SH_PFC_PIN_GROUP(msiof1_rxd_a),
-+		SH_PFC_PIN_GROUP(msiof1_clk_b),
-+		SH_PFC_PIN_GROUP(msiof1_sync_b),
-+		SH_PFC_PIN_GROUP(msiof1_ss1_b),
-+		SH_PFC_PIN_GROUP(msiof1_ss2_b),
-+		SH_PFC_PIN_GROUP(msiof1_txd_b),
-+		SH_PFC_PIN_GROUP(msiof1_rxd_b),
-+		SH_PFC_PIN_GROUP(msiof1_clk_c),
-+		SH_PFC_PIN_GROUP(msiof1_sync_c),
-+		SH_PFC_PIN_GROUP(msiof1_ss1_c),
-+		SH_PFC_PIN_GROUP(msiof1_ss2_c),
-+		SH_PFC_PIN_GROUP(msiof1_txd_c),
-+		SH_PFC_PIN_GROUP(msiof1_rxd_c),
-+		SH_PFC_PIN_GROUP(msiof1_clk_d),
-+		SH_PFC_PIN_GROUP(msiof1_sync_d),
-+		SH_PFC_PIN_GROUP(msiof1_ss1_d),
-+		SH_PFC_PIN_GROUP(msiof1_ss2_d),
-+		SH_PFC_PIN_GROUP(msiof1_txd_d),
-+		SH_PFC_PIN_GROUP(msiof1_rxd_d),
-+		SH_PFC_PIN_GROUP(msiof1_clk_e),
-+		SH_PFC_PIN_GROUP(msiof1_sync_e),
-+		SH_PFC_PIN_GROUP(msiof1_ss1_e),
-+		SH_PFC_PIN_GROUP(msiof1_ss2_e),
-+		SH_PFC_PIN_GROUP(msiof1_txd_e),
-+		SH_PFC_PIN_GROUP(msiof1_rxd_e),
-+		SH_PFC_PIN_GROUP(msiof1_clk_f),
-+		SH_PFC_PIN_GROUP(msiof1_sync_f),
-+		SH_PFC_PIN_GROUP(msiof1_ss1_f),
-+		SH_PFC_PIN_GROUP(msiof1_ss2_f),
-+		SH_PFC_PIN_GROUP(msiof1_txd_f),
-+		SH_PFC_PIN_GROUP(msiof1_rxd_f),
-+		SH_PFC_PIN_GROUP(msiof1_clk_g),
-+		SH_PFC_PIN_GROUP(msiof1_sync_g),
-+		SH_PFC_PIN_GROUP(msiof1_ss1_g),
-+		SH_PFC_PIN_GROUP(msiof1_ss2_g),
-+		SH_PFC_PIN_GROUP(msiof1_txd_g),
-+		SH_PFC_PIN_GROUP(msiof1_rxd_g),
-+		SH_PFC_PIN_GROUP(msiof2_clk_a),
-+		SH_PFC_PIN_GROUP(msiof2_sync_a),
-+		SH_PFC_PIN_GROUP(msiof2_ss1_a),
-+		SH_PFC_PIN_GROUP(msiof2_ss2_a),
-+		SH_PFC_PIN_GROUP(msiof2_txd_a),
-+		SH_PFC_PIN_GROUP(msiof2_rxd_a),
-+		SH_PFC_PIN_GROUP(msiof2_clk_b),
-+		SH_PFC_PIN_GROUP(msiof2_sync_b),
-+		SH_PFC_PIN_GROUP(msiof2_ss1_b),
-+		SH_PFC_PIN_GROUP(msiof2_ss2_b),
-+		SH_PFC_PIN_GROUP(msiof2_txd_b),
-+		SH_PFC_PIN_GROUP(msiof2_rxd_b),
-+		SH_PFC_PIN_GROUP(msiof2_clk_c),
-+		SH_PFC_PIN_GROUP(msiof2_sync_c),
-+		SH_PFC_PIN_GROUP(msiof2_ss1_c),
-+		SH_PFC_PIN_GROUP(msiof2_ss2_c),
-+		SH_PFC_PIN_GROUP(msiof2_txd_c),
-+		SH_PFC_PIN_GROUP(msiof2_rxd_c),
-+		SH_PFC_PIN_GROUP(msiof2_clk_d),
-+		SH_PFC_PIN_GROUP(msiof2_sync_d),
-+		SH_PFC_PIN_GROUP(msiof2_ss1_d),
-+		SH_PFC_PIN_GROUP(msiof2_ss2_d),
-+		SH_PFC_PIN_GROUP(msiof2_txd_d),
-+		SH_PFC_PIN_GROUP(msiof2_rxd_d),
-+		SH_PFC_PIN_GROUP(msiof3_clk_a),
-+		SH_PFC_PIN_GROUP(msiof3_sync_a),
-+		SH_PFC_PIN_GROUP(msiof3_ss1_a),
-+		SH_PFC_PIN_GROUP(msiof3_ss2_a),
-+		SH_PFC_PIN_GROUP(msiof3_txd_a),
-+		SH_PFC_PIN_GROUP(msiof3_rxd_a),
-+		SH_PFC_PIN_GROUP(msiof3_clk_b),
-+		SH_PFC_PIN_GROUP(msiof3_sync_b),
-+		SH_PFC_PIN_GROUP(msiof3_ss1_b),
-+		SH_PFC_PIN_GROUP(msiof3_ss2_b),
-+		SH_PFC_PIN_GROUP(msiof3_txd_b),
-+		SH_PFC_PIN_GROUP(msiof3_rxd_b),
-+		SH_PFC_PIN_GROUP(msiof3_clk_c),
-+		SH_PFC_PIN_GROUP(msiof3_sync_c),
-+		SH_PFC_PIN_GROUP(msiof3_txd_c),
-+		SH_PFC_PIN_GROUP(msiof3_rxd_c),
-+		SH_PFC_PIN_GROUP(msiof3_clk_d),
-+		SH_PFC_PIN_GROUP(msiof3_sync_d),
-+		SH_PFC_PIN_GROUP(msiof3_ss1_d),
-+		SH_PFC_PIN_GROUP(msiof3_txd_d),
-+		SH_PFC_PIN_GROUP(msiof3_rxd_d),
-+		SH_PFC_PIN_GROUP(msiof3_clk_e),
-+		SH_PFC_PIN_GROUP(msiof3_sync_e),
-+		SH_PFC_PIN_GROUP(msiof3_ss1_e),
-+		SH_PFC_PIN_GROUP(msiof3_ss2_e),
-+		SH_PFC_PIN_GROUP(msiof3_txd_e),
-+		SH_PFC_PIN_GROUP(msiof3_rxd_e),
-+		SH_PFC_PIN_GROUP(pwm0),
-+		SH_PFC_PIN_GROUP(pwm1_a),
-+		SH_PFC_PIN_GROUP(pwm1_b),
-+		SH_PFC_PIN_GROUP(pwm2_a),
-+		SH_PFC_PIN_GROUP(pwm2_b),
-+		SH_PFC_PIN_GROUP(pwm3_a),
-+		SH_PFC_PIN_GROUP(pwm3_b),
-+		SH_PFC_PIN_GROUP(pwm4_a),
-+		SH_PFC_PIN_GROUP(pwm4_b),
-+		SH_PFC_PIN_GROUP(pwm5_a),
-+		SH_PFC_PIN_GROUP(pwm5_b),
-+		SH_PFC_PIN_GROUP(pwm6_a),
-+		SH_PFC_PIN_GROUP(pwm6_b),
-+		SH_PFC_PIN_GROUP(sata0_devslp_a),
-+		SH_PFC_PIN_GROUP(sata0_devslp_b),
-+		SH_PFC_PIN_GROUP(scif0_data),
-+		SH_PFC_PIN_GROUP(scif0_clk),
-+		SH_PFC_PIN_GROUP(scif0_ctrl),
-+		SH_PFC_PIN_GROUP(scif1_data_a),
-+		SH_PFC_PIN_GROUP(scif1_clk),
-+		SH_PFC_PIN_GROUP(scif1_ctrl),
-+		SH_PFC_PIN_GROUP(scif1_data_b),
-+		SH_PFC_PIN_GROUP(scif2_data_a),
-+		SH_PFC_PIN_GROUP(scif2_clk),
-+		SH_PFC_PIN_GROUP(scif2_data_b),
-+		SH_PFC_PIN_GROUP(scif3_data_a),
-+		SH_PFC_PIN_GROUP(scif3_clk),
-+		SH_PFC_PIN_GROUP(scif3_ctrl),
-+		SH_PFC_PIN_GROUP(scif3_data_b),
-+		SH_PFC_PIN_GROUP(scif4_data_a),
-+		SH_PFC_PIN_GROUP(scif4_clk_a),
-+		SH_PFC_PIN_GROUP(scif4_ctrl_a),
-+		SH_PFC_PIN_GROUP(scif4_data_b),
-+		SH_PFC_PIN_GROUP(scif4_clk_b),
-+		SH_PFC_PIN_GROUP(scif4_ctrl_b),
-+		SH_PFC_PIN_GROUP(scif4_data_c),
-+		SH_PFC_PIN_GROUP(scif4_clk_c),
-+		SH_PFC_PIN_GROUP(scif4_ctrl_c),
-+		SH_PFC_PIN_GROUP(scif5_data_a),
-+		SH_PFC_PIN_GROUP(scif5_clk_a),
-+		SH_PFC_PIN_GROUP(scif5_data_b),
-+		SH_PFC_PIN_GROUP(scif5_clk_b),
-+		SH_PFC_PIN_GROUP(scif_clk_a),
-+		SH_PFC_PIN_GROUP(scif_clk_b),
-+		SH_PFC_PIN_GROUP(sdhi0_data1),
-+		SH_PFC_PIN_GROUP(sdhi0_data4),
-+		SH_PFC_PIN_GROUP(sdhi0_ctrl),
-+		SH_PFC_PIN_GROUP(sdhi0_cd),
-+		SH_PFC_PIN_GROUP(sdhi0_wp),
-+		SH_PFC_PIN_GROUP(sdhi1_data1),
-+		SH_PFC_PIN_GROUP(sdhi1_data4),
-+		SH_PFC_PIN_GROUP(sdhi1_ctrl),
-+		SH_PFC_PIN_GROUP(sdhi1_cd),
-+		SH_PFC_PIN_GROUP(sdhi1_wp),
-+		SH_PFC_PIN_GROUP(sdhi2_data1),
-+		SH_PFC_PIN_GROUP(sdhi2_data4),
-+		SH_PFC_PIN_GROUP(sdhi2_data8),
-+		SH_PFC_PIN_GROUP(sdhi2_ctrl),
-+		SH_PFC_PIN_GROUP(sdhi2_cd_a),
-+		SH_PFC_PIN_GROUP(sdhi2_wp_a),
-+		SH_PFC_PIN_GROUP(sdhi2_cd_b),
-+		SH_PFC_PIN_GROUP(sdhi2_wp_b),
-+		SH_PFC_PIN_GROUP(sdhi2_ds),
-+		SH_PFC_PIN_GROUP(sdhi3_data1),
-+		SH_PFC_PIN_GROUP(sdhi3_data4),
-+		SH_PFC_PIN_GROUP(sdhi3_data8),
-+		SH_PFC_PIN_GROUP(sdhi3_ctrl),
-+		SH_PFC_PIN_GROUP(sdhi3_cd),
-+		SH_PFC_PIN_GROUP(sdhi3_wp),
-+		SH_PFC_PIN_GROUP(sdhi3_ds),
-+		SH_PFC_PIN_GROUP(ssi0_data),
-+		SH_PFC_PIN_GROUP(ssi01239_ctrl),
-+		SH_PFC_PIN_GROUP(ssi1_data_a),
-+		SH_PFC_PIN_GROUP(ssi1_data_b),
-+		SH_PFC_PIN_GROUP(ssi1_ctrl_a),
-+		SH_PFC_PIN_GROUP(ssi1_ctrl_b),
-+		SH_PFC_PIN_GROUP(ssi2_data_a),
-+		SH_PFC_PIN_GROUP(ssi2_data_b),
-+		SH_PFC_PIN_GROUP(ssi2_ctrl_a),
-+		SH_PFC_PIN_GROUP(ssi2_ctrl_b),
-+		SH_PFC_PIN_GROUP(ssi3_data),
-+		SH_PFC_PIN_GROUP(ssi349_ctrl),
-+		SH_PFC_PIN_GROUP(ssi4_data),
-+		SH_PFC_PIN_GROUP(ssi4_ctrl),
-+		SH_PFC_PIN_GROUP(ssi5_data),
-+		SH_PFC_PIN_GROUP(ssi5_ctrl),
-+		SH_PFC_PIN_GROUP(ssi6_data),
-+		SH_PFC_PIN_GROUP(ssi6_ctrl),
-+		SH_PFC_PIN_GROUP(ssi7_data),
-+		SH_PFC_PIN_GROUP(ssi78_ctrl),
-+		SH_PFC_PIN_GROUP(ssi8_data),
-+		SH_PFC_PIN_GROUP(ssi9_data_a),
-+		SH_PFC_PIN_GROUP(ssi9_data_b),
-+		SH_PFC_PIN_GROUP(ssi9_ctrl_a),
-+		SH_PFC_PIN_GROUP(ssi9_ctrl_b),
-+		SH_PFC_PIN_GROUP(tmu_tclk1_a),
-+		SH_PFC_PIN_GROUP(tmu_tclk1_b),
-+		SH_PFC_PIN_GROUP(tmu_tclk2_a),
-+		SH_PFC_PIN_GROUP(tmu_tclk2_b),
-+		SH_PFC_PIN_GROUP(tpu_to0),
-+		SH_PFC_PIN_GROUP(tpu_to1),
-+		SH_PFC_PIN_GROUP(tpu_to2),
-+		SH_PFC_PIN_GROUP(tpu_to3),
-+		SH_PFC_PIN_GROUP(usb0),
-+		SH_PFC_PIN_GROUP(usb1),
-+		SH_PFC_PIN_GROUP(usb30),
-+		VIN_DATA_PIN_GROUP(vin4_data, 8, _a),
-+		VIN_DATA_PIN_GROUP(vin4_data, 10, _a),
-+		VIN_DATA_PIN_GROUP(vin4_data, 12, _a),
-+		VIN_DATA_PIN_GROUP(vin4_data, 16, _a),
-+		SH_PFC_PIN_GROUP(vin4_data18_a),
-+		VIN_DATA_PIN_GROUP(vin4_data, 20, _a),
-+		VIN_DATA_PIN_GROUP(vin4_data, 24, _a),
-+		VIN_DATA_PIN_GROUP(vin4_data, 8, _b),
-+		VIN_DATA_PIN_GROUP(vin4_data, 10, _b),
-+		VIN_DATA_PIN_GROUP(vin4_data, 12, _b),
-+		VIN_DATA_PIN_GROUP(vin4_data, 16, _b),
-+		SH_PFC_PIN_GROUP(vin4_data18_b),
-+		VIN_DATA_PIN_GROUP(vin4_data, 20, _b),
-+		VIN_DATA_PIN_GROUP(vin4_data, 24, _b),
-+		SH_PFC_PIN_GROUP(vin4_sync),
-+		SH_PFC_PIN_GROUP(vin4_field),
-+		SH_PFC_PIN_GROUP(vin4_clkenb),
-+		SH_PFC_PIN_GROUP(vin4_clk),
-+		VIN_DATA_PIN_GROUP(vin5_data, 8),
-+		VIN_DATA_PIN_GROUP(vin5_data, 10),
-+		VIN_DATA_PIN_GROUP(vin5_data, 12),
-+		VIN_DATA_PIN_GROUP(vin5_data, 16),
-+		SH_PFC_PIN_GROUP(vin5_sync),
-+		SH_PFC_PIN_GROUP(vin5_field),
-+		SH_PFC_PIN_GROUP(vin5_clkenb),
-+		SH_PFC_PIN_GROUP(vin5_clk),
-+	},
-+	.automotive = {
-+		SH_PFC_PIN_GROUP(drif0_ctrl_a),
-+		SH_PFC_PIN_GROUP(drif0_data0_a),
-+		SH_PFC_PIN_GROUP(drif0_data1_a),
-+		SH_PFC_PIN_GROUP(drif0_ctrl_b),
-+		SH_PFC_PIN_GROUP(drif0_data0_b),
-+		SH_PFC_PIN_GROUP(drif0_data1_b),
-+		SH_PFC_PIN_GROUP(drif0_ctrl_c),
-+		SH_PFC_PIN_GROUP(drif0_data0_c),
-+		SH_PFC_PIN_GROUP(drif0_data1_c),
-+		SH_PFC_PIN_GROUP(drif1_ctrl_a),
-+		SH_PFC_PIN_GROUP(drif1_data0_a),
-+		SH_PFC_PIN_GROUP(drif1_data1_a),
-+		SH_PFC_PIN_GROUP(drif1_ctrl_b),
-+		SH_PFC_PIN_GROUP(drif1_data0_b),
-+		SH_PFC_PIN_GROUP(drif1_data1_b),
-+		SH_PFC_PIN_GROUP(drif1_ctrl_c),
-+		SH_PFC_PIN_GROUP(drif1_data0_c),
-+		SH_PFC_PIN_GROUP(drif1_data1_c),
-+		SH_PFC_PIN_GROUP(drif2_ctrl_a),
-+		SH_PFC_PIN_GROUP(drif2_data0_a),
-+		SH_PFC_PIN_GROUP(drif2_data1_a),
-+		SH_PFC_PIN_GROUP(drif2_ctrl_b),
-+		SH_PFC_PIN_GROUP(drif2_data0_b),
-+		SH_PFC_PIN_GROUP(drif2_data1_b),
-+		SH_PFC_PIN_GROUP(drif3_ctrl_a),
-+		SH_PFC_PIN_GROUP(drif3_data0_a),
-+		SH_PFC_PIN_GROUP(drif3_data1_a),
-+		SH_PFC_PIN_GROUP(drif3_ctrl_b),
-+		SH_PFC_PIN_GROUP(drif3_data0_b),
-+		SH_PFC_PIN_GROUP(drif3_data1_b),
-+	}
- };
- 
- static const char * const audio_clk_groups[] = {
-@@ -5241,62 +5248,69 @@ static const char * const vin5_groups[] = {
- 	"vin5_clk",
- };
- 
--static const struct sh_pfc_function pinmux_functions[] = {
--	SH_PFC_FUNCTION(audio_clk),
--	SH_PFC_FUNCTION(avb),
--	SH_PFC_FUNCTION(can0),
--	SH_PFC_FUNCTION(can1),
--	SH_PFC_FUNCTION(can_clk),
--	SH_PFC_FUNCTION(canfd0),
--	SH_PFC_FUNCTION(canfd1),
--	SH_PFC_FUNCTION(drif0),
--	SH_PFC_FUNCTION(drif1),
--	SH_PFC_FUNCTION(drif2),
--	SH_PFC_FUNCTION(drif3),
--	SH_PFC_FUNCTION(du),
--	SH_PFC_FUNCTION(hscif0),
--	SH_PFC_FUNCTION(hscif1),
--	SH_PFC_FUNCTION(hscif2),
--	SH_PFC_FUNCTION(hscif3),
--	SH_PFC_FUNCTION(hscif4),
--	SH_PFC_FUNCTION(i2c0),
--	SH_PFC_FUNCTION(i2c1),
--	SH_PFC_FUNCTION(i2c2),
--	SH_PFC_FUNCTION(i2c3),
--	SH_PFC_FUNCTION(i2c5),
--	SH_PFC_FUNCTION(i2c6),
--	SH_PFC_FUNCTION(intc_ex),
--	SH_PFC_FUNCTION(msiof0),
--	SH_PFC_FUNCTION(msiof1),
--	SH_PFC_FUNCTION(msiof2),
--	SH_PFC_FUNCTION(msiof3),
--	SH_PFC_FUNCTION(pwm0),
--	SH_PFC_FUNCTION(pwm1),
--	SH_PFC_FUNCTION(pwm2),
--	SH_PFC_FUNCTION(pwm3),
--	SH_PFC_FUNCTION(pwm4),
--	SH_PFC_FUNCTION(pwm5),
--	SH_PFC_FUNCTION(pwm6),
--	SH_PFC_FUNCTION(sata0),
--	SH_PFC_FUNCTION(scif0),
--	SH_PFC_FUNCTION(scif1),
--	SH_PFC_FUNCTION(scif2),
--	SH_PFC_FUNCTION(scif3),
--	SH_PFC_FUNCTION(scif4),
--	SH_PFC_FUNCTION(scif5),
--	SH_PFC_FUNCTION(scif_clk),
--	SH_PFC_FUNCTION(sdhi0),
--	SH_PFC_FUNCTION(sdhi1),
--	SH_PFC_FUNCTION(sdhi2),
--	SH_PFC_FUNCTION(sdhi3),
--	SH_PFC_FUNCTION(ssi),
--	SH_PFC_FUNCTION(tmu),
--	SH_PFC_FUNCTION(tpu),
--	SH_PFC_FUNCTION(usb0),
--	SH_PFC_FUNCTION(usb1),
--	SH_PFC_FUNCTION(usb30),
--	SH_PFC_FUNCTION(vin4),
--	SH_PFC_FUNCTION(vin5),
-+static const struct {
-+	struct sh_pfc_function common[51];
-+	struct sh_pfc_function automotive[4];
-+} pinmux_functions = {
-+	.common = {
-+		SH_PFC_FUNCTION(audio_clk),
-+		SH_PFC_FUNCTION(avb),
-+		SH_PFC_FUNCTION(can0),
-+		SH_PFC_FUNCTION(can1),
-+		SH_PFC_FUNCTION(can_clk),
-+		SH_PFC_FUNCTION(canfd0),
-+		SH_PFC_FUNCTION(canfd1),
-+		SH_PFC_FUNCTION(du),
-+		SH_PFC_FUNCTION(hscif0),
-+		SH_PFC_FUNCTION(hscif1),
-+		SH_PFC_FUNCTION(hscif2),
-+		SH_PFC_FUNCTION(hscif3),
-+		SH_PFC_FUNCTION(hscif4),
-+		SH_PFC_FUNCTION(i2c0),
-+		SH_PFC_FUNCTION(i2c1),
-+		SH_PFC_FUNCTION(i2c2),
-+		SH_PFC_FUNCTION(i2c3),
-+		SH_PFC_FUNCTION(i2c5),
-+		SH_PFC_FUNCTION(i2c6),
-+		SH_PFC_FUNCTION(intc_ex),
-+		SH_PFC_FUNCTION(msiof0),
-+		SH_PFC_FUNCTION(msiof1),
-+		SH_PFC_FUNCTION(msiof2),
-+		SH_PFC_FUNCTION(msiof3),
-+		SH_PFC_FUNCTION(pwm0),
-+		SH_PFC_FUNCTION(pwm1),
-+		SH_PFC_FUNCTION(pwm2),
-+		SH_PFC_FUNCTION(pwm3),
-+		SH_PFC_FUNCTION(pwm4),
-+		SH_PFC_FUNCTION(pwm5),
-+		SH_PFC_FUNCTION(pwm6),
-+		SH_PFC_FUNCTION(sata0),
-+		SH_PFC_FUNCTION(scif0),
-+		SH_PFC_FUNCTION(scif1),
-+		SH_PFC_FUNCTION(scif2),
-+		SH_PFC_FUNCTION(scif3),
-+		SH_PFC_FUNCTION(scif4),
-+		SH_PFC_FUNCTION(scif5),
-+		SH_PFC_FUNCTION(scif_clk),
-+		SH_PFC_FUNCTION(sdhi0),
-+		SH_PFC_FUNCTION(sdhi1),
-+		SH_PFC_FUNCTION(sdhi2),
-+		SH_PFC_FUNCTION(sdhi3),
-+		SH_PFC_FUNCTION(ssi),
-+		SH_PFC_FUNCTION(tmu),
-+		SH_PFC_FUNCTION(tpu),
-+		SH_PFC_FUNCTION(usb0),
-+		SH_PFC_FUNCTION(usb1),
-+		SH_PFC_FUNCTION(usb30),
-+		SH_PFC_FUNCTION(vin4),
-+		SH_PFC_FUNCTION(vin5),
-+	},
-+	.automotive = {
-+		SH_PFC_FUNCTION(drif0),
-+		SH_PFC_FUNCTION(drif1),
-+		SH_PFC_FUNCTION(drif2),
-+		SH_PFC_FUNCTION(drif3),
-+	}
- };
- 
- static const struct pinmux_cfg_reg pinmux_config_regs[] = {
-@@ -6425,6 +6439,32 @@ static const struct sh_pfc_soc_operations r8a77965_pinmux_ops = {
- 	.set_bias = r8a77965_pinmux_set_bias,
- };
- 
-+#ifdef CONFIG_PINCTRL_PFC_R8A774B1
-+const struct sh_pfc_soc_info r8a774b1_pinmux_info = {
-+	.name = "r8a774b1_pfc",
-+	.ops = &r8a77965_pinmux_ops,
-+	.unlock_reg = 0xe6060000, /* PMMR */
-+
-+	.function = { PINMUX_FUNCTION_BEGIN, PINMUX_FUNCTION_END },
-+
-+	.pins = pinmux_pins,
-+	.nr_pins = ARRAY_SIZE(pinmux_pins),
-+	.groups = pinmux_groups.common,
-+	.nr_groups = ARRAY_SIZE(pinmux_groups.common),
-+	.functions = pinmux_functions.common,
-+	.nr_functions = ARRAY_SIZE(pinmux_functions.common),
-+
-+	.cfg_regs = pinmux_config_regs,
-+	.drive_regs = pinmux_drive_regs,
-+	.bias_regs = pinmux_bias_regs,
-+	.ioctrl_regs = pinmux_ioctrl_regs,
-+
-+	.pinmux_data = pinmux_data,
-+	.pinmux_data_size = ARRAY_SIZE(pinmux_data),
-+};
-+#endif
-+
-+#ifdef CONFIG_PINCTRL_PFC_R8A77965
- const struct sh_pfc_soc_info r8a77965_pinmux_info = {
- 	.name = "r8a77965_pfc",
- 	.ops = &r8a77965_pinmux_ops,
-@@ -6434,10 +6474,12 @@ const struct sh_pfc_soc_info r8a77965_pinmux_info = {
- 
- 	.pins = pinmux_pins,
- 	.nr_pins = ARRAY_SIZE(pinmux_pins),
--	.groups = pinmux_groups,
--	.nr_groups = ARRAY_SIZE(pinmux_groups),
--	.functions = pinmux_functions,
--	.nr_functions = ARRAY_SIZE(pinmux_functions),
-+	.groups = pinmux_groups.common,
-+	.nr_groups = ARRAY_SIZE(pinmux_groups.common) +
-+		ARRAY_SIZE(pinmux_groups.automotive),
-+	.functions = pinmux_functions.common,
-+	.nr_functions = ARRAY_SIZE(pinmux_functions.common) +
-+		ARRAY_SIZE(pinmux_functions.automotive),
- 
- 	.cfg_regs = pinmux_config_regs,
- 	.drive_regs = pinmux_drive_regs,
-@@ -6447,3 +6489,4 @@ const struct sh_pfc_soc_info r8a77965_pinmux_info = {
- 	.pinmux_data = pinmux_data,
- 	.pinmux_data_size = ARRAY_SIZE(pinmux_data),
- };
-+#endif
-diff --git a/drivers/pinctrl/sh-pfc/sh_pfc.h b/drivers/pinctrl/sh-pfc/sh_pfc.h
-index 835148f..63d2089 100644
---- a/drivers/pinctrl/sh-pfc/sh_pfc.h
-+++ b/drivers/pinctrl/sh-pfc/sh_pfc.h
-@@ -309,6 +309,7 @@ extern const struct sh_pfc_soc_info r8a7744_pinmux_info;
- extern const struct sh_pfc_soc_info r8a7745_pinmux_info;
- extern const struct sh_pfc_soc_info r8a77470_pinmux_info;
- extern const struct sh_pfc_soc_info r8a774a1_pinmux_info;
-+extern const struct sh_pfc_soc_info r8a774b1_pinmux_info;
- extern const struct sh_pfc_soc_info r8a774c0_pinmux_info;
- extern const struct sh_pfc_soc_info r8a7778_pinmux_info;
- extern const struct sh_pfc_soc_info r8a7779_pinmux_info;
--- 
-2.7.4
-
+> Regards,
+>   Marco
+>
+> > Bart
+> >
+> > > +static const struct gpio_chip reference_gp =3D {
+> > > +       .label =3D "da9062-gpio",
+> > > +       .owner =3D THIS_MODULE,
+> > > +       .get =3D da9062_gpio_get,
+> > > +       .set =3D da9062_gpio_set,
+> > > +       .get_direction =3D da9062_gpio_get_direction,
+> > > +       .direction_input =3D da9062_gpio_direction_input,
+> > > +       .direction_output =3D da9062_gpio_direction_output,
+> > > +       .set_config =3D da9062_gpio_set_config,
+> > > +       .to_irq =3D da9062_gpio_to_irq,
+> > > +       .can_sleep =3D true,
+> > > +       .ngpio =3D DA9062_GPIO_NUM,
+> > > +       .base =3D -1,
+> > > +};
+> > > +
+> > > +static int da9062_gpio_probe(struct platform_device *pdev)
+> > > +{
+> > > +       struct da9062_gpio *gpio;
+> > > +
+> > > +       gpio =3D devm_kzalloc(&pdev->dev, sizeof(*gpio), GFP_KERNEL);
+> > > +       if (!gpio)
+> > > +               return -ENOMEM;
+> > > +
+> > > +       gpio->da9062 =3D dev_get_drvdata(pdev->dev.parent);
+> > > +       if (!gpio->da9062)
+> > > +               return -EINVAL;
+> > > +
+> > > +       gpio->gp =3D reference_gp;
+> > > +       gpio->gp.parent =3D &pdev->dev;
+> > > +
+> > > +       platform_set_drvdata(pdev, gpio);
+> > > +
+> > > +       return devm_gpiochip_add_data(&pdev->dev, &gpio->gp, gpio);
+> > > +}
+> > > +
+> > > +static const struct of_device_id da9062_compatible_id_table[] =3D {
+> > > +       { .compatible =3D "dlg,da9062-gpio" },
+> > > +       { },
+> > > +};
+> > > +MODULE_DEVICE_TABLE(of, da9062_compatible_id_table);
+> > > +
+> > > +static struct platform_driver da9062_gpio_driver =3D {
+> > > +       .probe =3D da9062_gpio_probe,
+> > > +       .driver =3D {
+> > > +               .name   =3D "da9062-gpio",
+> > > +               .of_match_table =3D da9062_compatible_id_table,
+> > > +       },
+> > > +};
+> > > +module_platform_driver(da9062_gpio_driver);
+> > > +
+> > > +MODULE_AUTHOR("Marco Felsch <kernel@pengutronix.de>");
+> > > +MODULE_DESCRIPTION("DA9062 GPIO Device Driver");
+> > > +MODULE_LICENSE("GPL v2");
+> > > +MODULE_ALIAS("platform:da9062-gpio");
+> > > diff --git a/include/linux/mfd/da9062/gpio.h b/include/linux/mfd/da90=
+62/gpio.h
+> > > new file mode 100644
+> > > index 000000000000..67627ada1ad4
+> > > --- /dev/null
+> > > +++ b/include/linux/mfd/da9062/gpio.h
+> > > @@ -0,0 +1,13 @@
+> > > +/* SPDX-License-Identifier: GPL-2.0 */
+> > > +/*
+> > > + * Copyright (C) 2019 Pengutronix, Marco Felsch <kernel@pengutronix.=
+de>
+> > > + */
+> > > +
+> > > +#ifndef __MFD_DA9062_GPIO_H__
+> > > +#define __MFD_DA9062_GPIO_H__
+> > > +
+> > > +struct gpio_desc;
+> > > +
+> > > +int da9062_gpio_get_hwgpio(struct gpio_desc *desc);
+> > > +
+> > > +#endif /* __MFD_DA9062_GPIO_H__ */
+> > > --
+> > > 2.20.1
+> > >
+> >
+>
+> --
+> Pengutronix e.K.                           |                             =
+|
+> Industrial Linux Solutions                 | http://www.pengutronix.de/  =
+|
+> Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    =
+|
+> Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 =
+|
