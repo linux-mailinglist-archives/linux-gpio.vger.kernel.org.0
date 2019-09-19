@@ -2,100 +2,125 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 8F540B7A5F
-	for <lists+linux-gpio@lfdr.de>; Thu, 19 Sep 2019 15:24:11 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 08F7FB7BF1
+	for <lists+linux-gpio@lfdr.de>; Thu, 19 Sep 2019 16:16:51 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388590AbfISNYK (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 19 Sep 2019 09:24:10 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:54041 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388408AbfISNYJ (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 19 Sep 2019 09:24:09 -0400
-Received: by mail-wm1-f67.google.com with SMTP id i16so4513424wmd.3
-        for <linux-gpio@vger.kernel.org>; Thu, 19 Sep 2019 06:24:07 -0700 (PDT)
+        id S2388949AbfISOQu (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 19 Sep 2019 10:16:50 -0400
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:32819 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388331AbfISOQu (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 19 Sep 2019 10:16:50 -0400
+Received: by mail-oi1-f195.google.com with SMTP id e18so2889454oii.0
+        for <linux-gpio@vger.kernel.org>; Thu, 19 Sep 2019 07:16:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=pDeIStA2SVxbAXaFQXClZ86g46tDLe4UA5LZRN92sxU=;
-        b=sA4gWwGLLbVGPZOpGQKku8JSVALqiyYoYZAyD4bVbQmtiD7eveepKE9VfNlvhO1d4A
-         67DwB43kretuhocqPTsTAeTBH0Tuq3WtiDIryGEhv6AlZuM592nzM8Lbh585J2uP4uLJ
-         B47fCwtmxyBC3WYekWy6p/lr7rbijpsloMnt8p5afsGw5bMTdpb48QVmS9nsPEFGa9pS
-         TbalDteCOrXQyfYElcQtfzB1NduYLIQsvehCGLnCuZA/UftU7hvmyseE9J8VtEFg0R8x
-         qC7i1dPYAOux2zV4lhnqjovSPIahQshgmY5wn+q2OMt3ugwepElmGugL/3D9ImrAnG+Q
-         oGvw==
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=qaeMCYjZPRaH9Ju9SgkSov7Ze/8oIWs13QEihdDThJ8=;
+        b=z+2qSOa3cyfelEyS2Tc7A9vemu+IwUiJQqeEP2gEj3gSL1xNk+m7ZN8QluhyS5bXfA
+         I8vH6Zhm8sg5ohv6KRmQicpAHf95W+eBHjtmirVWhc7uSQIokMbjxkyHSipMh+zJ7uav
+         g3TZR0TxEX1iedciFW5eFGEwtEFlpF1n2VMEW4f+MlUH334eb9jav1XI8ouU3mpXzrwJ
+         W+3gCxXBF47XY2HQON0XxJLnNkHzgQTsmW5j4rTpDTRpowEFjPSV9LxZ3YwN8n658w/r
+         t780vK5wrh8QDRjJNbdN63IJzBv1Rh2ItXdhYnVdXxlC0VmaJ+7QAzBMBvenefk5pMU+
+         YvhQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=pDeIStA2SVxbAXaFQXClZ86g46tDLe4UA5LZRN92sxU=;
-        b=XhUP4SZ+OrYl1/QtrIWGy3irZpqYCANpca96sHPlKBUgpeWqZGTlBmjtHUqNRLbnaR
-         c3lu/4STYB8JiiHOLK2MtHHxPNPeSkHmySJEZaLF+JaPh69V3uSBs0rhadF5X9fT/zir
-         zsvaykxUKMmj/2PO89TLsgLXcunLAO8SpTuBIh3+wluGL4PieWOyIJajwFSz071h/Xzv
-         Ts0g7mqx9dU5IBl8tu0NGXdFx6P1aBV6Y4PME9w0ksnqPPCvNnfznRapqUDYBgdrWGNK
-         CgnSPVxBJXmETw3uGAFrXrFChkvbZH9lr6wZnBl0kkkGANz/8lmb9qpPegcr/7zalK4u
-         xjBQ==
-X-Gm-Message-State: APjAAAXK/NEolpyVS7aUyUYXEhXvmpokh1LOsMThAEQfB7gWI0kPmAi9
-        fkNDTzrGn+/Iw/1imbkglOTbGQ==
-X-Google-Smtp-Source: APXvYqxvYdxqoMstA5eP3IpeSzfkWy7MxwjMkyS4XKl/W+zPB+askv4GufCmfCQi1cSZKq2uApqxkw==
-X-Received: by 2002:a05:600c:12:: with SMTP id g18mr2723929wmc.158.1568899446493;
-        Thu, 19 Sep 2019 06:24:06 -0700 (PDT)
-Received: from localhost.localdomain (amontpellier-652-1-281-69.w109-210.abo.wanadoo.fr. [109.210.96.69])
-        by smtp.gmail.com with ESMTPSA id f186sm8133678wmg.21.2019.09.19.06.24.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 19 Sep 2019 06:24:05 -0700 (PDT)
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     linux-gpio@vger.kernel.org,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: [GIT PULL] gpio: fixes for v5.4-rc1
-Date:   Thu, 19 Sep 2019 15:24:03 +0200
-Message-Id: <20190919132403.1835-1-brgl@bgdev.pl>
-X-Mailer: git-send-email 2.23.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=qaeMCYjZPRaH9Ju9SgkSov7Ze/8oIWs13QEihdDThJ8=;
+        b=afBkIJ9Hvp1HxFciyNzTrUFP762h+JR1m0ZvoFqQTjSLifGajf65eaTIbyKraFsFfI
+         keMTZS4w/8EpOdKByaGaUgB9hW6DZDn0iHHYfpRDvtz8e46ZeCN5LGO3SRB7UP7HP8zb
+         xZmmOzErNfReP9t98CReaPsWpDl/QV9z3VZXTmt0kKirMLqBTYnOirve9/Yx4rd+IFJM
+         KXP1A6x82tRnsuCJ7zohmfiNCRvIhzOq96q6Ou+AlAA2bxGZLXqs1T2q6u5cQJ1fQOo2
+         QK0HVUlEe6wGg0YjJVttsAU/ap4d5yiPl46Tm63WNoI7frUnSX5OdS65Cpvume30bqj6
+         R8pg==
+X-Gm-Message-State: APjAAAUeqi7LUGW8fMWT6iWfzCsghDM7k2NqPLLnEkTn1sIYbeNWR8gq
+        f2F0kxLiCVXyMeEelJReg/chEGBMFKYqVjrSORDiDg==
+X-Google-Smtp-Source: APXvYqwXltbLynYwpGAPcFo116M4pb5TeU6PcSlbflTdA2waTF273hEyMScZ1wWzwpDkltR4r+LG+7VVFEkP7Odi6Ik=
+X-Received: by 2002:aca:ad09:: with SMTP id w9mr2447606oie.114.1568902609135;
+ Thu, 19 Sep 2019 07:16:49 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <1568885957-2968-1-git-send-email-Anson.Huang@nxp.com>
+In-Reply-To: <1568885957-2968-1-git-send-email-Anson.Huang@nxp.com>
+From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Date:   Thu, 19 Sep 2019 16:16:38 +0200
+Message-ID: <CAMpxmJW1Z2WAAcCByPM=MS+PZdo-xxBjsVraHdnftwx-WzRA_A@mail.gmail.com>
+Subject: Re: [PATCH V2] gpio: mxc: Only getting second IRQ when there is more
+ than one IRQ
+To:     Anson Huang <Anson.Huang@nxp.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        linux-gpio <linux-gpio@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        dl-linux-imx <Linux-imx@nxp.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+czw., 19 wrz 2019 o 11:40 Anson Huang <Anson.Huang@nxp.com> napisa=C5=82(a)=
+:
+>
+> On some of i.MX SoCs like i.MX8QXP, there is ONLY one IRQ for each
+> GPIO bank, so it is better to check the IRQ count before getting
+> second IRQ to avoid below error message during probe:
+>
+> [    1.070908] gpio-mxc 5d080000.gpio: IRQ index 1 not found
+> [    1.077420] gpio-mxc 5d090000.gpio: IRQ index 1 not found
+> [    1.083766] gpio-mxc 5d0a0000.gpio: IRQ index 1 not found
+> [    1.090122] gpio-mxc 5d0b0000.gpio: IRQ index 1 not found
+> [    1.096470] gpio-mxc 5d0c0000.gpio: IRQ index 1 not found
+> [    1.102804] gpio-mxc 5d0d0000.gpio: IRQ index 1 not found
+> [    1.109144] gpio-mxc 5d0e0000.gpio: IRQ index 1 not found
+> [    1.115475] gpio-mxc 5d0f0000.gpio: IRQ index 1 not found
+>
+> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+> ---
+> Changes since V1:
+>         - use local variable irq_count instead or err to avoid confusion.
+> ---
+>  drivers/gpio/gpio-mxc.c | 13 ++++++++++---
+>  1 file changed, 10 insertions(+), 3 deletions(-)
+>
+> diff --git a/drivers/gpio/gpio-mxc.c b/drivers/gpio/gpio-mxc.c
+> index 7907a87..c77d474 100644
+> --- a/drivers/gpio/gpio-mxc.c
+> +++ b/drivers/gpio/gpio-mxc.c
+> @@ -411,6 +411,7 @@ static int mxc_gpio_probe(struct platform_device *pde=
+v)
+>  {
+>         struct device_node *np =3D pdev->dev.of_node;
+>         struct mxc_gpio_port *port;
+> +       int irq_count;
+>         int irq_base;
+>         int err;
+>
+> @@ -426,9 +427,15 @@ static int mxc_gpio_probe(struct platform_device *pd=
+ev)
+>         if (IS_ERR(port->base))
+>                 return PTR_ERR(port->base);
+>
+> -       port->irq_high =3D platform_get_irq(pdev, 1);
+> -       if (port->irq_high < 0)
+> -               port->irq_high =3D 0;
+> +       irq_count =3D platform_irq_count(pdev);
+> +       if (irq_count < 0)
+> +               return irq_count;
+> +
+> +       if (irq_count > 1) {
+> +               port->irq_high =3D platform_get_irq(pdev, 1);
+> +               if (port->irq_high < 0)
+> +                       port->irq_high =3D 0;
+> +       }
+>
+>         port->irq =3D platform_get_irq(pdev, 0);
+>         if (port->irq < 0)
+> --
+> 2.7.4
+>
 
-Hi Linus,
+Applied, thanks.
 
-please pull the following set of fixes. Two are core code, one is a fix for
-a driver. All are stable material.
-
-The following changes since commit 4d856f72c10ecb060868ed10ff1b1453943fc6c8:
-
-  Linux 5.3 (2019-09-15 14:19:32 -0700)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git tags/gpio-v5.4-rc1-fixes-for-linus
-
-for you to fetch changes up to a94b734a563498ac4b8fff61179a3c2bba781a4e:
-
-  gpio: eic: sprd: Fix the incorrect EIC offset when toggling (2019-09-17 10:08:35 +0200)
-
-----------------------------------------------------------------
-gpio: fixes for v5.4-rc1
-
-- fix a bug with emulated open-drain/source where lines' values can no longer
-  be changed
-- fix getting nonexclusive gpiods from DT
-- fix an incorrect offset for the level trigger in gpio-eic-sprd
-
-----------------------------------------------------------------
-Bartosz Golaszewski (1):
-      gpiolib: don't clear FLAG_IS_OUT when emulating open-drain/open-source
-
-Bruce Chen (1):
-      gpio: eic: sprd: Fix the incorrect EIC offset when toggling
-
-Marco Felsch (1):
-      gpio: fix getting nonexclusive gpiods from DT
-
- drivers/gpio/gpio-eic-sprd.c |  7 ++++---
- drivers/gpio/gpiolib.c       | 29 ++++++++++++++++++++---------
- 2 files changed, 24 insertions(+), 12 deletions(-)
+Bart
