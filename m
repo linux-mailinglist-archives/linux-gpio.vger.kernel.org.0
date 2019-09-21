@@ -2,99 +2,104 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id A8D65B99F6
-	for <lists+linux-gpio@lfdr.de>; Sat, 21 Sep 2019 01:12:41 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0927EB9D4E
+	for <lists+linux-gpio@lfdr.de>; Sat, 21 Sep 2019 12:12:22 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389873AbfITXMk (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 20 Sep 2019 19:12:40 -0400
-Received: from perceval.ideasonboard.com ([213.167.242.64]:60992 "EHLO
-        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389793AbfITXMk (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 20 Sep 2019 19:12:40 -0400
-Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id AC0662F9;
-        Sat, 21 Sep 2019 01:12:37 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1569021157;
-        bh=rjz1wJjGxXSYjN7ynywAFExyXsol+TYBRcie4ik5QFk=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=JeYj3LfQ2XRfPhk6Ulsz3ivewW9stOFV7hn8IvUAjrSXWo0UuPGQufLY4KiyICKy+
-         nN4IdpmQgooiW64b5jnvntaP6C7v63g4CaCbYfEfAJKgR4ptfKnNFY7oFw56gjtBfB
-         rOuCz07m5mhlBVKozL75z1u45T/przGI192osQdc=
-Date:   Sat, 21 Sep 2019 02:12:28 +0300
-From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        David Airlie <airlied@linux.ie>,
-        Jernej Skrabec <jernej.skrabec@siol.net>,
-        Jonas Karlman <jonas@kwiboo.se>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        dri-devel@lists.freedesktop.org,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>
-Subject: Re: [PATCH 06/11] drm/bridge: ti-tfp410: switch to using
- fwnode_gpiod_get_index()
-Message-ID: <20190920231228.GH12672@pendragon.ideasonboard.com>
-References: <20190911075215.78047-1-dmitry.torokhov@gmail.com>
- <20190911075215.78047-7-dmitry.torokhov@gmail.com>
+        id S2407496AbfIUKMV (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sat, 21 Sep 2019 06:12:21 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:35914 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2407493AbfIUKMU (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sat, 21 Sep 2019 06:12:20 -0400
+Received: by mail-wm1-f65.google.com with SMTP id m18so4504478wmc.1;
+        Sat, 21 Sep 2019 03:12:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=hKYyLM5BOtgVBAAvkvS6FKjjOSYeaYgSfPRLTapRKxI=;
+        b=BXFtczkROFTd5F7nF9vFs4iYb/cGWoJaUouhm2hadcjaC9BAkpztyj8GZ+CHtVhSkN
+         RzDk5E2HYyftOb0z9Jll49dR8M5vDUqT6NKke3GNaTARgIMNq376F6+v5pP337HZiSJ7
+         3cYlKHQ7KW+0tdwSqYBhhodWNsZpjOhSCo2RwakeqDD0IfhL41sfclmJa8hemR070T07
+         bC/t6wy9TOtB0nhk/I6jciKASlEx4PY1RRSs6dYdNrbG8+2dXD/Bjs2PqVvClGYNzu8N
+         35gzeAE30rlOdAco2CX5VZmVmquRZx/h0dlfUvOHpFZjlYe1vrFITJawWB6NSXSns4Fh
+         m+dQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=hKYyLM5BOtgVBAAvkvS6FKjjOSYeaYgSfPRLTapRKxI=;
+        b=M2rhiCFUalese7me6/So3kdxS3wXiskuHeoHXNItE0gf1MJezg+Ct9bPAqbb6iM2rV
+         E5FxLFKgIHWJ0nc80BQ84Jf5hpIRAfW3yOLIa2qMUniUd79x10JLbzL1E1I5CgvH2JGu
+         MCCVVGuXld3x1Ku2gBNDAquJ3sp3hHamA5FmLLqn0GCcBVPe8OdG2axuoWulAllFLubn
+         1r/G+Fm8a+eR0S1tgyY1OYxt/B7NJez+ongRU3t4X0JIoX9AhscaOHSerXOL7TfK6j4v
+         QTJ/zWLE31MLSGQp4A4l2owMf6HcmuQtOTbsuU0OBXSVJ9Zg08Pnn5HKniuzNxorYFie
+         NykQ==
+X-Gm-Message-State: APjAAAWZUbC5ExIj2cTla1DdzhoDFCUFjOIuw3ZIJGVTTMLJt6rlTGdb
+        vcClEpDim/fJYwJWprV6SvMrd8GSaP0=
+X-Google-Smtp-Source: APXvYqyAyeHjA0IHOFwyiWVlAxV7cz+4lfM13iaW080T9Jssw1kpOAbR6dS1yp3jx7QwG6EEheR0Lw==
+X-Received: by 2002:a1c:3182:: with SMTP id x124mr7129433wmx.168.1569060737898;
+        Sat, 21 Sep 2019 03:12:17 -0700 (PDT)
+Received: from IcarusMOD.eternityproject.eu ([93.51.16.173])
+        by smtp.gmail.com with ESMTPSA id l1sm6129262wrb.1.2019.09.21.03.12.16
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sat, 21 Sep 2019 03:12:17 -0700 (PDT)
+From:   kholk11@gmail.com
+To:     linux-arm-msm@vger.kernel.org
+Cc:     kholk11@gmail.com, marijns95@gmail.com, agross@kernel.org,
+        mturquette@baylibre.com, sboyd@kernel.org, robh+dt@kernel.org,
+        mark.rutland@arm.com, bjorn.andersson@linaro.org,
+        linus.walleij@linaro.org, linux-clk@vger.kernel.org,
+        linux-gpio@vger.kernel.org
+Subject: [PATCH 0/5] Add core MSM8956/76 SoC support drivers
+Date:   Sat, 21 Sep 2019 12:12:02 +0200
+Message-Id: <20190921101207.65042-1-kholk11@gmail.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20190911075215.78047-7-dmitry.torokhov@gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Dmitry,
+From: AngeloGioacchino Del Regno <kholk11@gmail.com>
 
-(CC'ing Heikki as the original author of software nodes support)
+This patch series adds support for the core components that are
+required to run the MSM8956 (and MSM8976) SoCs, such as pinctrl,
+GCC clocks, RPM power domains.
 
-Thank you for the patch.
+The personal aim is to upstream MSM8956 as much as possible.
 
-On Wed, Sep 11, 2019 at 12:52:10AM -0700, Dmitry Torokhov wrote:
-> Instead of fwnode_get_named_gpiod() that I plan to hide away, let's use
-> the new fwnode_gpiod_get_index() that mimics gpiod_get_index(), bit
+This code has been tested on two Sony phones featuring the Qualcomm
+MSM8956 SoC.
 
-s/bit/but/
+Angelo G. Del Regno (5):
+  pinctrl: qcom: Add a pinctrl driver for MSM8976 and 8956
+  clk: qcom: Add MSM8976/56 Global Clock Controller (GCC) driver
+  soc: qcom: smd-rpm: Add MSM8976 compatible
+  dt-bindings: power: Add missing rpmpd smd performance level
+  soc: qcom: rpmpd: Add rpm power domains for msm8956
 
-> works with arbitrary firmware node.
-> 
-> Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-
-Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-
-On a side note, as I'm not very familiar with software nodes, I tried to
-see how they are to be used, and it seems they are completely
-undocumented :-( Heikki, is this something that could be fixed ?
-
-> ---
-> 
->  drivers/gpu/drm/bridge/ti-tfp410.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/gpu/drm/bridge/ti-tfp410.c b/drivers/gpu/drm/bridge/ti-tfp410.c
-> index 61cc2354ef1b..d9c9c9ebad2b 100644
-> --- a/drivers/gpu/drm/bridge/ti-tfp410.c
-> +++ b/drivers/gpu/drm/bridge/ti-tfp410.c
-> @@ -284,8 +284,8 @@ static int tfp410_get_connector_properties(struct tfp410 *dvi)
->  	else
->  		dvi->connector_type = DRM_MODE_CONNECTOR_DVID;
->  
-> -	dvi->hpd = fwnode_get_named_gpiod(&connector_node->fwnode,
-> -					"hpd-gpios", 0, GPIOD_IN, "hpd");
-> +	dvi->hpd = fwnode_gpiod_get_index(&connector_node->fwnode,
-> +					  "hpd", 0, GPIOD_IN, "hpd");
->  	if (IS_ERR(dvi->hpd)) {
->  		ret = PTR_ERR(dvi->hpd);
->  		dvi->hpd = NULL;
+ .../devicetree/bindings/clock/qcom,gcc.txt    |    1 +
+ .../bindings/pinctrl/qcom,msm8976-pinctrl.txt |  183 +
+ .../devicetree/bindings/power/qcom,rpmpd.txt  |    1 +
+ .../bindings/soc/qcom/qcom,smd-rpm.txt        |    1 +
+ drivers/clk/qcom/Kconfig                      |    8 +
+ drivers/clk/qcom/Makefile                     |    1 +
+ drivers/clk/qcom/gcc-msm8976.c                | 4215 +++++++++++++++++
+ drivers/pinctrl/qcom/Kconfig                  |   10 +
+ drivers/pinctrl/qcom/Makefile                 |    1 +
+ drivers/pinctrl/qcom/pinctrl-msm8976.c        | 1128 +++++
+ drivers/soc/qcom/rpmpd.c                      |   23 +
+ drivers/soc/qcom/smd-rpm.c                    |    1 +
+ include/dt-bindings/clock/qcom,gcc-msm8976.h  |  293 ++
+ include/dt-bindings/power/qcom-rpmpd.h        |    9 +
+ 14 files changed, 5875 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/pinctrl/qcom,msm8976-pinctrl.txt
+ create mode 100644 drivers/clk/qcom/gcc-msm8976.c
+ create mode 100644 drivers/pinctrl/qcom/pinctrl-msm8976.c
+ create mode 100644 include/dt-bindings/clock/qcom,gcc-msm8976.h
 
 -- 
-Regards,
+2.21.0
 
-Laurent Pinchart
