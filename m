@@ -2,188 +2,123 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 13244BB647
-	for <lists+linux-gpio@lfdr.de>; Mon, 23 Sep 2019 16:13:14 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 649AEBB684
+	for <lists+linux-gpio@lfdr.de>; Mon, 23 Sep 2019 16:20:14 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2437035AbfIWONN (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 23 Sep 2019 10:13:13 -0400
-Received: from relay7-d.mail.gandi.net ([217.70.183.200]:37795 "EHLO
-        relay7-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389738AbfIWONN (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 23 Sep 2019 10:13:13 -0400
-X-Originating-IP: 86.250.200.211
-Received: from aptenodytes (lfbn-1-17395-211.w86-250.abo.wanadoo.fr [86.250.200.211])
-        (Authenticated sender: paul.kocialkowski@bootlin.com)
-        by relay7-d.mail.gandi.net (Postfix) with ESMTPSA id 139B920012;
-        Mon, 23 Sep 2019 14:13:04 +0000 (UTC)
-Date:   Mon, 23 Sep 2019 16:13:04 +0200
-From:   Paul Kocialkowski <paul.kocialkowski@bootlin.com>
-To:     Rob Herring <robh@kernel.org>
-Cc:     linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Subject: Re: [PATCH 2/3] dt-bindings: gpio: Add binding document for xylon
- logicvc-gpio
-Message-ID: <20190923141304.GD57525@aptenodytes>
-References: <20190910152855.111588-1-paul.kocialkowski@bootlin.com>
- <20190910152855.111588-2-paul.kocialkowski@bootlin.com>
- <5d7ba96d.1c69fb81.59623.6c9f@mx.google.com>
+        id S2407085AbfIWOUN (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 23 Sep 2019 10:20:13 -0400
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:46147 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2407022AbfIWOUN (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 23 Sep 2019 10:20:13 -0400
+Received: by mail-lj1-f194.google.com with SMTP id e17so13836808ljf.13
+        for <linux-gpio@vger.kernel.org>; Mon, 23 Sep 2019 07:20:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=rasmusvillemoes.dk; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Cn9/9Me6Kmp4Xn9AfJMQMku3qxEXOlFZIGtDmEDrJpc=;
+        b=abcoxhvNE4QzsWdjpcm4fIk+YAxDnJvfoFRGb46mpPwEFg0aOpeJ0eaheg3tZgT4ZG
+         ojpl8m/oDAh+qYbzYsIcSeNXc5m5DY3mfdWvxLXTBeWP7wfLsaIXItCLI6UZUPW+vtJ1
+         VGOT858b8NEkfBIvrgsoW5+e3A7n18FZCZM84=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Cn9/9Me6Kmp4Xn9AfJMQMku3qxEXOlFZIGtDmEDrJpc=;
+        b=PuGGB92rO5Cs6OiNHzmQz+yVEtPGmEVDeRgTz9VrqW82Jz+iQNACMWD6YKN6vo1qmJ
+         3MYBmUE6ivPdvJVWrFvxFm891zhdq1Rr9b6c6m1Yy3BKxdMSw58dLtC8Rjkoppt6O9YW
+         i14ufsJlWVAoQCnOQWqY8Jl7fE3DgHxdRh1uSc3w/iQKRiF2kJh4SR1pS5E2l0UzyKrp
+         VSCr8NOLjStG9G/gIGtsoTEZ7vMtqoHZ5Tx/yzLEa1VJmO6IjMas9BvT4wi1d6++N4/P
+         uXEqA6NV92MVFEoZi5PyoOYSmTfypUl9Xv10cXtmeS/YSiSAZOtTMECQ1BDzuZkCrbBi
+         Ta/A==
+X-Gm-Message-State: APjAAAWGc7hn2dos2ITIVj0yp5h/9647myPymXqbSMYyp6VqUVz/WMrv
+        EbFoR/joEV1uZAQ1YQ7T9U1/Nw==
+X-Google-Smtp-Source: APXvYqy+Ki9LgN+TwomD1Y4hGoRYgJaAEevteVNzRvde3/6GQAoELKo5qYA33O6wCDX/Pq8W4P59VQ==
+X-Received: by 2002:a2e:3902:: with SMTP id g2mr17815555lja.196.1569248411411;
+        Mon, 23 Sep 2019 07:20:11 -0700 (PDT)
+Received: from prevas-ravi.prevas.se ([81.216.59.226])
+        by smtp.gmail.com with ESMTPSA id b21sm2230125lff.96.2019.09.23.07.20.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 23 Sep 2019 07:20:10 -0700 (PDT)
+From:   Rasmus Villemoes <linux@rasmusvillemoes.dk>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     Tony Lindgren <tony@atomide.com>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] pinctrl: devicetree.c: remove orphan pinctrl_dt_has_hogs()
+Date:   Mon, 23 Sep 2019 16:20:05 +0200
+Message-Id: <20190923142005.5632-1-linux@rasmusvillemoes.dk>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="hxkXGo8AKqTJ+9QI"
-Content-Disposition: inline
-In-Reply-To: <5d7ba96d.1c69fb81.59623.6c9f@mx.google.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+Content-Transfer-Encoding: 8bit
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+The helper pinctrl_dt_has_hogs() was introduced in
+99e4f67508e1 (pinctrl: core: Use delayed work for hogs), but the sole
+use then got removed shortly after in 950b0d91dc10 (pinctrl: core: Fix
+regression caused by delayed work for hogs).
 
---hxkXGo8AKqTJ+9QI
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Signed-off-by: Rasmus Villemoes <linux@rasmusvillemoes.dk>
+---
+ drivers/pinctrl/devicetree.c | 15 ---------------
+ drivers/pinctrl/devicetree.h |  7 -------
+ 2 files changed, 22 deletions(-)
 
-Hi,
+diff --git a/drivers/pinctrl/devicetree.c b/drivers/pinctrl/devicetree.c
+index 5d6d8b1e9062..6716a406d128 100644
+--- a/drivers/pinctrl/devicetree.c
++++ b/drivers/pinctrl/devicetree.c
+@@ -166,21 +166,6 @@ static int dt_remember_dummy_state(struct pinctrl *p, const char *statename)
+ 	return dt_remember_or_free_map(p, statename, NULL, map, 1);
+ }
+ 
+-bool pinctrl_dt_has_hogs(struct pinctrl_dev *pctldev)
+-{
+-	struct device_node *np;
+-	struct property *prop;
+-	int size;
+-
+-	np = pctldev->dev->of_node;
+-	if (!np)
+-		return false;
+-
+-	prop = of_find_property(np, "pinctrl-0", &size);
+-
+-	return prop ? true : false;
+-}
+-
+ int pinctrl_dt_to_map(struct pinctrl *p, struct pinctrl_dev *pctldev)
+ {
+ 	struct device_node *np = p->dev->of_node;
+diff --git a/drivers/pinctrl/devicetree.h b/drivers/pinctrl/devicetree.h
+index 00e645d7fac7..efa80779de4f 100644
+--- a/drivers/pinctrl/devicetree.h
++++ b/drivers/pinctrl/devicetree.h
+@@ -9,8 +9,6 @@ struct of_phandle_args;
+ 
+ #ifdef CONFIG_OF
+ 
+-bool pinctrl_dt_has_hogs(struct pinctrl_dev *pctldev);
+-
+ void pinctrl_dt_free_maps(struct pinctrl *p);
+ int pinctrl_dt_to_map(struct pinctrl *p, struct pinctrl_dev *pctldev);
+ 
+@@ -23,11 +21,6 @@ int pinctrl_parse_index_with_args(const struct device_node *np,
+ 
+ #else
+ 
+-static inline bool pinctrl_dt_has_hogs(struct pinctrl_dev *pctldev)
+-{
+-	return false;
+-}
+-
+ static inline int pinctrl_dt_to_map(struct pinctrl *p,
+ 				    struct pinctrl_dev *pctldev)
+ {
+-- 
+2.20.1
 
-On Fri 13 Sep 19, 15:36, Rob Herring wrote:
-> On Tue, Sep 10, 2019 at 05:28:54PM +0200, Paul Kocialkowski wrote:
-> > The Xylon LogiCVC display controller exports some GPIOs, which are
-> > exposed as a dedicated driver.
-> >=20
-> > This introduces the associated device-tree bindings documentation.
-> >=20
-> > Signed-off-by: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
-> > ---
-> >  .../bindings/gpio/xylon,logicvc-gpio.txt      | 48 +++++++++++++++++++
-> >  1 file changed, 48 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/gpio/xylon,logicv=
-c-gpio.txt
->=20
-> Please consider using the new DT schema format.
-
-Sure, I will give it a try.
-
-> > diff --git a/Documentation/devicetree/bindings/gpio/xylon,logicvc-gpio.=
-txt b/Documentation/devicetree/bindings/gpio/xylon,logicvc-gpio.txt
-> > new file mode 100644
-> > index 000000000000..4835659cb90b
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/gpio/xylon,logicvc-gpio.txt
-> > @@ -0,0 +1,48 @@
-> > +Xylon LogiCVC GPIO controller
-> > +
-> > +The Xylon LogiCVC is a display controller that contains a number of GP=
-IO pins,
-> > +meant to be used for controlling display-related signals.
-> > +
-> > +In practice, the GPIOs can be used for any purpose they might be neede=
-d for.
-> > +
-> > +The controller exposes GPIOs from the display and power control regist=
-ers,
-> > +which are mapped by the driver as follows:
-> > +- GPIO[4:0] (display control) mapped to index 0-4
-> > +- EN_BLIGHT (power control) mapped to index 5
-> > +- EN_VDD (power control) mapped to index 6
-> > +- EN_VEE (power control) mapped to index 7
-> > +- V_EN (power control) mapped to index 8
-> > +
-> > +The driver was implemented and tested for version 3.02.a of the contro=
-ller,
-> > +but should be compatible with version 4 as well.
-> > +
-> > +Required properties:
-> > +- compatible: Should contain "xylon,logicvc-3.02.a-gpio".
-> > +- gpio-controller: Marks the device node as a gpio controller.
-> > +- #gpio-cells: Should be 2. The first cell is the pin number and
-> > +  the second cell is used to specify the gpio polarity:
-> > +    0 =3D Active high,
-> > +    1 =3D Active low.
->=20
-> No need to define these standard flags again here.
->=20
-> > +- gpio,syscon-dev: Syscon phandle representing the logicvc instance.
->=20
-> Don't need this. It's the parent.
-
-Note that this is de-facto already supported by the gpio-syscon driver: the
-driver supports either an explicit syscon dev with this property or having =
-the
-parent as syscon.
-
-I assumed that mentioning both was good for the sake of diversity, but let's
-stick to parent node then.
-
-> > +
-> > +Example:
-> > +
-> > +	logicvc: logicvc@43c00000 {
-> > +		compatible =3D "syscon", "simple-mfd";
->=20
-> This device needs a device specific compatible. These 2 alone are not=20
-> desired.
-
-Thanks for the heads-up. I'll introduce a new compatible, describing a mfd
-device then.
-
-> Please define everything that's in the chip as much as you can.=20
->=20
-> > +		reg =3D <0x43c00000 0x6000>;
-> > +
-> > +		#address-cells =3D <1>;
-> > +		#size-cells =3D <1>;
-> > +
-> > +		logicvc_gpio: display-gpio@40 {
->=20
-> Use standard node names: gpio@40
->=20
-> You may not even need a child node here. It depends on what other child=
-=20
-> nodes you have and whether they have their own DT resources.
->=20
-> > +			compatible =3D "xylon,logicvc-3.02.a-gpio";
-> > +			reg =3D <0x40 0x40>;
-> > +			gpio-controller;
-> > +			#gpio-cells =3D <2>;
-> > +			gpio,syscon-dev =3D <&logicvc>;
-> > +		};
-> > +	};
-> > +
-> > +Note: the device-tree node should either be declared as a child of the=
- logicvc
-> > +syscon node or the syscon node should be precised with the gpio,syscon=
--dev
-> > +property. Both are shown in the example above.
->=20
-> Why? Just pick one and a child node is the preference.
-
-That was for the sake of diversity, but having both at once could probably =
-be
-misleading too.
-
---=20
-Paul Kocialkowski, Bootlin
-Embedded Linux and kernel engineering
-https://bootlin.com
-
---hxkXGo8AKqTJ+9QI
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEEJZpWjZeIetVBefti3cLmz3+fv9EFAl2I0vAACgkQ3cLmz3+f
-v9GGEggAkGDGF0qjUMVm5LCjsWQCdoEM4/ZESNSB/Br2iFJ79Q6ig9da0U8JtFC0
-KGskjRdJXwMBG6IZtnYW5R/LPnMwGSGM5kPOMXlUsS773rxo8M+yY7cBrBC243Zv
-YRzJrMDOGLa/RiTti7Cfmh5G01vyk7gWzHumIJcjpKvOfC7nFAUM521rgHsNx7Jt
-j0/dp/wSQvKXhcAYmaB1a+cN4HNqx50qPo+EF9j7wMSNaJBIxvovZ/3Cv6FA8VtW
-myZfpag94NyuFtPy5IB3gzAMBq/WzQhi9tSLt8aCuQm/wUE+6iT4qavRgECPUJxO
-X7g8tyYka4VFz0kln6WyPdgmZ36NWg==
-=RTko
------END PGP SIGNATURE-----
-
---hxkXGo8AKqTJ+9QI--
