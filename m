@@ -2,164 +2,102 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 19609BAFBF
-	for <lists+linux-gpio@lfdr.de>; Mon, 23 Sep 2019 10:38:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D405ABB186
+	for <lists+linux-gpio@lfdr.de>; Mon, 23 Sep 2019 11:36:42 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729376AbfIWIi4 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 23 Sep 2019 04:38:56 -0400
-Received: from mail-io1-f65.google.com ([209.85.166.65]:41334 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729373AbfIWIi4 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 23 Sep 2019 04:38:56 -0400
-Received: by mail-io1-f65.google.com with SMTP id r26so31355805ioh.8
-        for <linux-gpio@vger.kernel.org>; Mon, 23 Sep 2019 01:38:55 -0700 (PDT)
+        id S2406204AbfIWJgm (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 23 Sep 2019 05:36:42 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:33376 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2405796AbfIWJgl (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 23 Sep 2019 05:36:41 -0400
+Received: by mail-wm1-f68.google.com with SMTP id r17so14546990wme.0;
+        Mon, 23 Sep 2019 02:36:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=Z66RdQZHaR+LFy+7u3wSKlBb2kvT7TR/msSi0TmhaO8=;
-        b=GSDf8XcZcj/M0eCtxhIR1y0CuHqRDf8/vYNi6vC6QDKqw2umXbrQTytViDT5lcn1K1
-         f2uQeQ96ORPwLevtzwj6iEyQSk58O8ESuhUs3fiQKEhSqYBwWR6niVbH8mjV2uvJSIJf
-         OHRsxS8elhcUkT8Kg98Egcr+VTMd+8FPjpLfhT2FjKurSJiOZURPB0Ens+U8PAPpTljq
-         Cw/zyJF49blxSLuUKsmzrhTEEg8ICbS3eIRGx/8DmaLmOro1bRXxRd+1c2AzEAyG7UAB
-         cvGiEGOXEPek61X8ylRgfBGtUla6Dwlofgl8MiV+k5CP3WXpAaBlZL9AxDRca0CFSYYB
-         63TA==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=m+aIgC2O26A/R6e5uIh8ES0o+l1xiUCC4g3FQlcbNyo=;
+        b=OJQVQVpOXj4aeIAidjTjTidN1NVBNgo6HbfhyOuSPSu6RG6XarThgbhHXM+Skq+Gwv
+         T2spWv6pWWPwLIoFsJ2paUPPvLJLN6rdwrksaf5ySgUoGX+wD9N6XpjSlv8megs9E9Za
+         fMtIuzm+p2M8D7rclQDJG12XIR3/DEUtPtNwKcMBKOWsim+VUyy28gmE3M0QZXZN60+M
+         pG8w6wupBaGWH6HQPWhR2kbpTwEO0tQLI1emXdwa+mWx683OH1s8ap1X4qGYnlT2ph80
+         2sGnh2cpZr44Je3BDtuioUD4dnidi6PNdHJAmTooK8e1bAQ6uOppi133Q23YaYC9QLJK
+         /ymA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=Z66RdQZHaR+LFy+7u3wSKlBb2kvT7TR/msSi0TmhaO8=;
-        b=mxV/LRC4SNfR8/72kaiIr7wkIyZqwNZE2plq0KeuxfzOyO99oulVVMcElKHI8hpA9q
-         rUIQcxLRIi6BWOl7wEgSAhZZw7MxHjwl59Nj85r9yisUIaObVMUmIkstNrd/n7jhYYSz
-         xrWzl0q6lv7rbvQhrXZoYn3FVzKto03aerPlo9HkZKnpNl8nc9iRQXHTwN3Oebdl8TKG
-         Zrv2g+PywL2kMZBahLEigOlH6tF3wcAR0SUATsh+0SwHk3pzzYRAenpkfSQMiK/1qAAs
-         EXZr98yWKkf96YjuvVPFatfP91+EgYcs4yux2/hdpbT1IgK7XbAIwiepuxbjfThwuQQL
-         leYw==
-X-Gm-Message-State: APjAAAWLV50vP9HnVBwIplLOo6gce6FaCCno0JfXL8PkJXBaS9vc80BA
-        lMUwPvBYCCfOFwC2ZaBxN3MqQm4qhmFTjyI+x0uo3w==
-X-Google-Smtp-Source: APXvYqwommw18/whlR1YCZCLlPve/5YQoTF9NQaaC3N+EQmJx3oAfamEJfaE1y1bv0X2KE/IbHs7nousAls/iRtZYQg=
-X-Received: by 2002:a05:6638:5ba:: with SMTP id b26mr32886006jar.57.1569227934765;
- Mon, 23 Sep 2019 01:38:54 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=m+aIgC2O26A/R6e5uIh8ES0o+l1xiUCC4g3FQlcbNyo=;
+        b=MYKYtiMCHaZzY3Kqa/+c6R3yTOgbFNGooq0WGi0kKjnTahTul/KnvD7itdUWQcAWmo
+         2mqRSuP6AEqC6Er1R7b5NwzEHrLElFJFCyr3LVMCFfVxE+omF19e4To7791pX0poa4UW
+         i6FsqiE7kBFfHKF+c2JkUNU3AvTNmk66jb2Bh2R7E13WSZZGf+V7iDnvwwb627yLsW9h
+         wZyXzvwNtZ5r7ZLPDm6pdmZf9fNUQifdQtHTyiX23lMG+LPjtMy+ouRRFo9w1R9x8pgI
+         MTaAfFIFKYEOavbHOnb0ogcnhY0cg01HD2TYzx0ysFtXXwljOOArbahU8o4OGeVn4o9Z
+         TDKQ==
+X-Gm-Message-State: APjAAAXh+GD7pywG6Locp7x5CHQWGaZJFP0JM50XDS0C+xrEZZcFYCV0
+        5AJ0ry/yxaVpwDwaKWcusBW2tZ1p
+X-Google-Smtp-Source: APXvYqwSI1O3ShSG1d9cGh+twp85T9eIdqEIv2mrcm/4L5nXugqq+B/6MgwAJ1wNWRne7sIvXB5rCw==
+X-Received: by 2002:a1c:7d8e:: with SMTP id y136mr12655806wmc.83.1569231399583;
+        Mon, 23 Sep 2019 02:36:39 -0700 (PDT)
+Received: from localhost (p2E5BE2CE.dip0.t-ipconnect.de. [46.91.226.206])
+        by smtp.gmail.com with ESMTPSA id a13sm22071360wrf.73.2019.09.23.02.36.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 23 Sep 2019 02:36:38 -0700 (PDT)
+From:   Thierry Reding <thierry.reding@gmail.com>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     Jonathan Hunter <jonathanh@nvidia.com>, linux-gpio@vger.kernel.org,
+        linux-tegra@vger.kernel.org
+Subject: [PATCH] pinctrl: tegra: Use of_device_get_match_data()
+Date:   Mon, 23 Sep 2019 11:36:37 +0200
+Message-Id: <20190923093637.27968-1-thierry.reding@gmail.com>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
-References: <20190921102522.8970-1-drew@pdp7.com>
-In-Reply-To: <20190921102522.8970-1-drew@pdp7.com>
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Mon, 23 Sep 2019 10:38:44 +0200
-Message-ID: <CAMRc=Me=6JeOOv_SRhKt+vOsd3p5yOVkWyNu4Oo+DeCwMJHmaA@mail.gmail.com>
-Subject: Re: [RFC] gpio: expose pull-up/pull-down line flags to userspace
-To:     Drew Fustini <drew@pdp7.com>
-Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-sob., 21 wrz 2019 o 12:27 Drew Fustini <drew@pdp7.com> napisa=C5=82(a):
->
-> Add pull-up/pull-down flags to the gpio line get and
-> set ioctl() calls.  Use cases include a push button
-> that does not have an external resistor.
->
-> Addition use cases described by Limor Fried (ladyada) of
-> Adafruit in this PR for Adafruit_Blinka Python lib:
-> https://github.com/adafruit/Adafruit_Blinka/pull/59
->
-> Signed-off-by: Drew Fustini <drew@pdp7.com>
-> ---
->  drivers/gpio/gpiolib.c    | 12 ++++++++++++
->  include/uapi/linux/gpio.h |  4 ++++
->  2 files changed, 16 insertions(+)
->
-> diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
-> index d9074191edef..9da1093cc7f5 100644
-> --- a/drivers/gpio/gpiolib.c
-> +++ b/drivers/gpio/gpiolib.c
-> @@ -427,6 +427,8 @@ struct linehandle_state {
->         (GPIOHANDLE_REQUEST_INPUT | \
->         GPIOHANDLE_REQUEST_OUTPUT | \
->         GPIOHANDLE_REQUEST_ACTIVE_LOW | \
-> +       GPIOHANDLE_REQUEST_PULL_UP | \
-> +       GPIOHANDLE_REQUEST_PULL_DOWN | \
->         GPIOHANDLE_REQUEST_OPEN_DRAIN | \
->         GPIOHANDLE_REQUEST_OPEN_SOURCE)
->
-> @@ -598,6 +600,10 @@ static int linehandle_create(struct gpio_device *gde=
-v, void __user *ip)
->                         set_bit(FLAG_OPEN_DRAIN, &desc->flags);
->                 if (lflags & GPIOHANDLE_REQUEST_OPEN_SOURCE)
->                         set_bit(FLAG_OPEN_SOURCE, &desc->flags);
-> +               if (lflags & GPIOHANDLE_REQUEST_PULL_DOWN)
-> +                       set_bit(FLAG_PULL_DOWN, &desc->flags);
-> +               if (lflags & GPIOHANDLE_REQUEST_PULL_UP)
-> +                       set_bit(FLAG_PULL_UP, &desc->flags);
->
->                 ret =3D gpiod_set_transitory(desc, false);
->                 if (ret < 0)
-> @@ -1102,6 +1108,10 @@ static long gpio_ioctl(struct file *filp, unsigned=
- int cmd, unsigned long arg)
->                 if (test_bit(FLAG_OPEN_SOURCE, &desc->flags))
->                         lineinfo.flags |=3D (GPIOLINE_FLAG_OPEN_SOURCE |
->                                            GPIOLINE_FLAG_IS_OUT);
-> +               if (test_bit(FLAG_PULL_DOWN, &desc->flags))
-> +                       lineinfo.flags |=3D GPIOLINE_FLAG_PULL_DOWN;
-> +               if (test_bit(FLAG_PULL_UP, &desc->flags))
-> +                       lineinfo.flags |=3D GPIOLINE_FLAG_PULL_UP;
->
->                 if (copy_to_user(ip, &lineinfo, sizeof(lineinfo)))
->                         return -EFAULT;
-> @@ -2475,6 +2485,8 @@ static bool gpiod_free_commit(struct gpio_desc *des=
-c)
->                 clear_bit(FLAG_REQUESTED, &desc->flags);
->                 clear_bit(FLAG_OPEN_DRAIN, &desc->flags);
->                 clear_bit(FLAG_OPEN_SOURCE, &desc->flags);
-> +               clear_bit(FLAG_PULL_UP, &desc->flags);
-> +               clear_bit(FLAG_PULL_DOWN, &desc->flags);
->                 clear_bit(FLAG_IS_HOGGED, &desc->flags);
->                 ret =3D true;
->         }
-> diff --git a/include/uapi/linux/gpio.h b/include/uapi/linux/gpio.h
-> index 4ebfe0ac6c5b..c2d1f7d908d6 100644
-> --- a/include/uapi/linux/gpio.h
-> +++ b/include/uapi/linux/gpio.h
-> @@ -33,6 +33,8 @@ struct gpiochip_info {
->  #define GPIOLINE_FLAG_ACTIVE_LOW       (1UL << 2)
->  #define GPIOLINE_FLAG_OPEN_DRAIN       (1UL << 3)
->  #define GPIOLINE_FLAG_OPEN_SOURCE      (1UL << 4)
-> +#define GPIOLINE_FLAG_PULL_UP  (1UL << 5)
-> +#define GPIOLINE_FLAG_PULL_DOWN        (1UL << 6)
->
->  /**
->   * struct gpioline_info - Information about a certain GPIO line
-> @@ -62,6 +64,8 @@ struct gpioline_info {
->  #define GPIOHANDLE_REQUEST_ACTIVE_LOW  (1UL << 2)
->  #define GPIOHANDLE_REQUEST_OPEN_DRAIN  (1UL << 3)
->  #define GPIOHANDLE_REQUEST_OPEN_SOURCE (1UL << 4)
-> +#define GPIOHANDLE_REQUEST_PULL_UP     (1UL << 5)
-> +#define GPIOHANDLE_REQUEST_PULL_DOWN   (1UL << 6)
->
->  /**
->   * struct gpiohandle_request - Information about a GPIO handle request
-> --
-> 2.20.1
->
+From: Thierry Reding <treding@nvidia.com>
 
-Hi Drew,
+Use the of_device_get_match_data() helper instead of open-coding.
 
-I remember discussing it with Linus some time ago. This may not be as
-straightforward as simply adding new flags. Since PULL-UP/DOWN
-resistors can - among other parameters - also have configurable
-resistance, we'll probably need some kind of a structure for this
-ioctl() to pass any additional information to the kernel. Since we
-can't change ABI this may require adding a whole new ioctl() for
-extended configuration. This in turn has to be as future-proof as
-possible - if someone asks for user-space-configurable drive-strength,
-the new ioctl() should be ready for it.
+Signed-off-by: Thierry Reding <treding@nvidia.com>
+---
+ drivers/pinctrl/tegra/pinctrl-tegra-xusb.c | 5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
 
-I should have some bandwidth in the coming days, so I'll try to give it a t=
-ry.
+diff --git a/drivers/pinctrl/tegra/pinctrl-tegra-xusb.c b/drivers/pinctrl/tegra/pinctrl-tegra-xusb.c
+index 95002e3ecaff..6b6d027c6fd0 100644
+--- a/drivers/pinctrl/tegra/pinctrl-tegra-xusb.c
++++ b/drivers/pinctrl/tegra/pinctrl-tegra-xusb.c
+@@ -7,6 +7,7 @@
+ #include <linux/io.h>
+ #include <linux/module.h>
+ #include <linux/of.h>
++#include <linux/of_device.h>
+ #include <linux/phy/phy.h>
+ #include <linux/pinctrl/pinctrl.h>
+ #include <linux/pinctrl/pinmux.h>
+@@ -872,7 +873,6 @@ int tegra_xusb_padctl_legacy_remove(struct platform_device *pdev);
+ int tegra_xusb_padctl_legacy_probe(struct platform_device *pdev)
+ {
+ 	struct tegra_xusb_padctl *padctl;
+-	const struct of_device_id *match;
+ 	struct resource *res;
+ 	struct phy *phy;
+ 	int err;
+@@ -885,8 +885,7 @@ int tegra_xusb_padctl_legacy_probe(struct platform_device *pdev)
+ 	mutex_init(&padctl->lock);
+ 	padctl->dev = &pdev->dev;
+ 
+-	match = of_match_node(tegra_xusb_padctl_of_match, pdev->dev.of_node);
+-	padctl->soc = match->data;
++	padctl->soc = of_device_get_match_data(&pdev->dev);
+ 
+ 	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+ 	padctl->regs = devm_ioremap_resource(&pdev->dev, res);
+-- 
+2.23.0
 
-Bart
