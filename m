@@ -2,38 +2,35 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 4312CBCFFD
-	for <lists+linux-gpio@lfdr.de>; Tue, 24 Sep 2019 19:03:07 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id EF81CBCFC5
+	for <lists+linux-gpio@lfdr.de>; Tue, 24 Sep 2019 19:02:41 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2411060AbfIXRCS (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 24 Sep 2019 13:02:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:32918 "EHLO mail.kernel.org"
+        id S2404633AbfIXQoV (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 24 Sep 2019 12:44:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33384 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391830AbfIXQoC (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Tue, 24 Sep 2019 12:44:02 -0400
+        id S2404129AbfIXQoU (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Tue, 24 Sep 2019 12:44:20 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 836E420872;
-        Tue, 24 Sep 2019 16:44:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E03922196E;
+        Tue, 24 Sep 2019 16:44:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569343441;
-        bh=QEzS84l9KQQJCNWHSl88ZGBwPCWjjxkz8jzDybGM6bc=;
+        s=default; t=1569343459;
+        bh=2Qwsm8loPfoLwUa6cnWbCON9/e9C/jsrHa0Bssbv39I=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Lg4eoKIGkblfjDyFOHQipst1rzXjtu/I/QJKmc4n+isuLf68mHQYcYRUAlODCXvlT
-         8MfcsL6rTE7kTgfu/HfnfTTwelC3FqSHkXymXiioz6zhzij4uMt/xC+kqZ7ff4p6cD
-         WigQ73K+jlZMQovpkPNY5W2DHpmYE5uV4BkHBmDQ=
+        b=R3+bqTduQyUB/KJFXQVHVYy+An7/aW7pEUhvoqPXgyZE9fvv28hLTSkRfO2OPOykK
+         8Twfh1F2e4xZ8jJ9ui7VLORo5yEgRacVFFrFm1gXhXlVtr5nW7bjZ1WhrvzwwtrGLM
+         cqOYI0OlOWCPNCVm6/T2N9tATmtRmVgu+gbJN+6c=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Sowjanya Komatineni <skomatineni@nvidia.com>,
-        Thierry Reding <treding@nvidia.com>,
-        Dmitry Osipenko <digetx@gmail.com>,
+Cc:     Daniel Drake <drake@endlessm.com>,
         Linus Walleij <linus.walleij@linaro.org>,
-        Sasha Levin <sashal@kernel.org>, linux-gpio@vger.kernel.org,
-        linux-tegra@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.3 50/87] pinctrl: tegra: Fix write barrier placement in pmx_writel
-Date:   Tue, 24 Sep 2019 12:41:06 -0400
-Message-Id: <20190924164144.25591-50-sashal@kernel.org>
+        Sasha Levin <sashal@kernel.org>, linux-gpio@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.3 56/87] pinctrl: amd: disable spurious-firing GPIO IRQs
+Date:   Tue, 24 Sep 2019 12:41:12 -0400
+Message-Id: <20190924164144.25591-56-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190924164144.25591-1-sashal@kernel.org>
 References: <20190924164144.25591-1-sashal@kernel.org>
@@ -46,42 +43,72 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-From: Sowjanya Komatineni <skomatineni@nvidia.com>
+From: Daniel Drake <drake@endlessm.com>
 
-[ Upstream commit c2cf351eba2ff6002ce8eb178452219d2521e38e ]
+[ Upstream commit d21b8adbd475dba19ac2086d3306327b4a297418 ]
 
-pmx_writel uses writel which inserts write barrier before the
-register write.
+When cold-booting Asus X434DA, GPIO 7 is found to be already configured
+as an interrupt, and the GPIO level is found to be in a state that
+causes the interrupt to fire.
 
-This patch has fix to replace writel with writel_relaxed followed
-by a readback and memory barrier to ensure write operation is
-completed for successful pinctrl change.
+As soon as pinctrl-amd probes, this interrupt fires and invokes
+amd_gpio_irq_handler(). The IRQ is acked, but no GPIO-IRQ handler was
+invoked, so the GPIO level being unchanged just causes another interrupt
+to fire again immediately after.
 
-Acked-by: Thierry Reding <treding@nvidia.com>
-Reviewed-by: Dmitry Osipenko <digetx@gmail.com>
-Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
-Link: https://lore.kernel.org/r/1565984527-5272-2-git-send-email-skomatineni@nvidia.com
+This results in an interrupt storm causing this platform to hang
+during boot, right after pinctrl-amd is probed.
+
+Detect this situation and disable the GPIO interrupt when this happens.
+This enables the affected platform to boot as normal. GPIO 7 actually is
+the I2C touchpad interrupt line, and later on, i2c-multitouch loads and
+re-enables this interrupt when it is ready to handle it.
+
+Instead of this approach, I considered disabling all GPIO interrupts at
+probe time, however that seems a little risky, and I also confirmed that
+Windows does not seem to have this behaviour: the same 41 GPIO IRQs are
+enabled under both Linux and Windows, which is a far larger collection
+than the GPIOs referenced by the DSDT on this platform.
+
+Signed-off-by: Daniel Drake <drake@endlessm.com>
+Link: https://lore.kernel.org/r/20190814090540.7152-1-drake@endlessm.com
 Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pinctrl/tegra/pinctrl-tegra.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/pinctrl/pinctrl-amd.c | 12 +++++++++++-
+ 1 file changed, 11 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/pinctrl/tegra/pinctrl-tegra.c b/drivers/pinctrl/tegra/pinctrl-tegra.c
-index 186ef98e7b2b8..f1b523beec5b3 100644
---- a/drivers/pinctrl/tegra/pinctrl-tegra.c
-+++ b/drivers/pinctrl/tegra/pinctrl-tegra.c
-@@ -32,7 +32,9 @@ static inline u32 pmx_readl(struct tegra_pmx *pmx, u32 bank, u32 reg)
+diff --git a/drivers/pinctrl/pinctrl-amd.c b/drivers/pinctrl/pinctrl-amd.c
+index 9b9c61e3f0652..977792654e017 100644
+--- a/drivers/pinctrl/pinctrl-amd.c
++++ b/drivers/pinctrl/pinctrl-amd.c
+@@ -565,15 +565,25 @@ static irqreturn_t amd_gpio_irq_handler(int irq, void *dev_id)
+ 			    !(regval & BIT(INTERRUPT_MASK_OFF)))
+ 				continue;
+ 			irq = irq_find_mapping(gc->irq.domain, irqnr + i);
+-			generic_handle_irq(irq);
++			if (irq != 0)
++				generic_handle_irq(irq);
  
- static inline void pmx_writel(struct tegra_pmx *pmx, u32 val, u32 bank, u32 reg)
- {
--	writel(val, pmx->regs[bank] + reg);
-+	writel_relaxed(val, pmx->regs[bank] + reg);
-+	/* make sure pinmux register write completed */
-+	pmx_readl(pmx, bank, reg);
- }
- 
- static int tegra_pinctrl_get_groups_count(struct pinctrl_dev *pctldev)
+ 			/* Clear interrupt.
+ 			 * We must read the pin register again, in case the
+ 			 * value was changed while executing
+ 			 * generic_handle_irq() above.
++			 * If we didn't find a mapping for the interrupt,
++			 * disable it in order to avoid a system hang caused
++			 * by an interrupt storm.
+ 			 */
+ 			raw_spin_lock_irqsave(&gpio_dev->lock, flags);
+ 			regval = readl(regs + i);
++			if (irq == 0) {
++				regval &= ~BIT(INTERRUPT_ENABLE_OFF);
++				dev_dbg(&gpio_dev->pdev->dev,
++					"Disabling spurious GPIO IRQ %d\n",
++					irqnr + i);
++			}
+ 			writel(regval, regs + i);
+ 			raw_spin_unlock_irqrestore(&gpio_dev->lock, flags);
+ 			ret = IRQ_HANDLED;
 -- 
 2.20.1
 
