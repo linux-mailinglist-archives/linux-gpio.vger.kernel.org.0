@@ -2,38 +2,39 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id EF81CBCFC5
-	for <lists+linux-gpio@lfdr.de>; Tue, 24 Sep 2019 19:02:41 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9620ABCFA3
+	for <lists+linux-gpio@lfdr.de>; Tue, 24 Sep 2019 19:02:26 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404633AbfIXQoV (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 24 Sep 2019 12:44:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33384 "EHLO mail.kernel.org"
+        id S2407246AbfIXQ7z (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 24 Sep 2019 12:59:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37220 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404129AbfIXQoU (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Tue, 24 Sep 2019 12:44:20 -0400
+        id S2633217AbfIXQqc (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Tue, 24 Sep 2019 12:46:32 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E03922196E;
-        Tue, 24 Sep 2019 16:44:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B0812222BF;
+        Tue, 24 Sep 2019 16:46:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569343459;
-        bh=2Qwsm8loPfoLwUa6cnWbCON9/e9C/jsrHa0Bssbv39I=;
+        s=default; t=1569343591;
+        bh=Xhdwc27crQh8QWKhbFFcu+WZDtv79dO+TPMXSEimq/s=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=R3+bqTduQyUB/KJFXQVHVYy+An7/aW7pEUhvoqPXgyZE9fvv28hLTSkRfO2OPOykK
-         8Twfh1F2e4xZ8jJ9ui7VLORo5yEgRacVFFrFm1gXhXlVtr5nW7bjZ1WhrvzwwtrGLM
-         cqOYI0OlOWCPNCVm6/T2N9tATmtRmVgu+gbJN+6c=
+        b=hkZmzkhmOE9nDkSdm1H6yiV9YA3fmgmYajSsbOnunIRYXYxas8OkXau8fdn+vpVUo
+         QAtt0nEUsEYwHT2+qHJ2WvRZ6Fln2IOUrLBi49nJ7PBtUbk3Fgju1xwkqb2tQYBzvp
+         EWK4dwA+CV6snt/3xDmTM8iah4Si7KuWRaCRsIG0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Daniel Drake <drake@endlessm.com>,
+Cc:     Alexandre Torgue <alexandre.torgue@st.com>,
+        Amelie Delaunay <amelie.delaunay@st.com>,
         Linus Walleij <linus.walleij@linaro.org>,
         Sasha Levin <sashal@kernel.org>, linux-gpio@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.3 56/87] pinctrl: amd: disable spurious-firing GPIO IRQs
-Date:   Tue, 24 Sep 2019 12:41:12 -0400
-Message-Id: <20190924164144.25591-56-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.2 18/70] pinctrl: stmfx: update pinconf settings
+Date:   Tue, 24 Sep 2019 12:44:57 -0400
+Message-Id: <20190924164549.27058-18-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190924164144.25591-1-sashal@kernel.org>
-References: <20190924164144.25591-1-sashal@kernel.org>
+In-Reply-To: <20190924164549.27058-1-sashal@kernel.org>
+References: <20190924164549.27058-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -43,72 +44,88 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-From: Daniel Drake <drake@endlessm.com>
+From: Alexandre Torgue <alexandre.torgue@st.com>
 
-[ Upstream commit d21b8adbd475dba19ac2086d3306327b4a297418 ]
+[ Upstream commit a502b343ebd0eab38f3cb33fbb84011847cf5aac ]
 
-When cold-booting Asus X434DA, GPIO 7 is found to be already configured
-as an interrupt, and the GPIO level is found to be in a state that
-causes the interrupt to fire.
+According to the following tab (coming from STMFX datasheet), updates
+have to done in stmfx_pinconf_set function:
 
-As soon as pinctrl-amd probes, this interrupt fires and invokes
-amd_gpio_irq_handler(). The IRQ is acked, but no GPIO-IRQ handler was
-invoked, so the GPIO level being unchanged just causes another interrupt
-to fire again immediately after.
+-"type" has to be set when "bias" is configured as "pull-up or pull-down"
+-PIN_CONFIG_DRIVE_PUSH_PULL should only be used when gpio is configured as
+ output. There is so no need to check direction.
 
-This results in an interrupt storm causing this platform to hang
-during boot, right after pinctrl-amd is probed.
+DIR | TYPE | PUPD | MFX GPIO configuration
+----|------|------|---------------------------------------------------
+1   | 1    | 1    | OUTPUT open drain with internal pull-up resistor
+----|------|------|---------------------------------------------------
+1   | 1    | 0    | OUTPUT open drain with internal pull-down resistor
+----|------|------|---------------------------------------------------
+1   | 0    | 0/1  | OUTPUT push pull no pull
+----|------|------|---------------------------------------------------
+0   | 1    | 1    | INPUT with internal pull-up resistor
+----|------|------|---------------------------------------------------
+0   | 1    | 0    | INPUT with internal pull-down resistor
+----|------|------|---------------------------------------------------
+0   | 0    | 1    | INPUT floating
+----|------|------|---------------------------------------------------
+0   | 0    | 0    | analog (GPIO not used, default setting)
 
-Detect this situation and disable the GPIO interrupt when this happens.
-This enables the affected platform to boot as normal. GPIO 7 actually is
-the I2C touchpad interrupt line, and later on, i2c-multitouch loads and
-re-enables this interrupt when it is ready to handle it.
-
-Instead of this approach, I considered disabling all GPIO interrupts at
-probe time, however that seems a little risky, and I also confirmed that
-Windows does not seem to have this behaviour: the same 41 GPIO IRQs are
-enabled under both Linux and Windows, which is a far larger collection
-than the GPIOs referenced by the DSDT on this platform.
-
-Signed-off-by: Daniel Drake <drake@endlessm.com>
-Link: https://lore.kernel.org/r/20190814090540.7152-1-drake@endlessm.com
+Signed-off-by: Alexandre Torgue <alexandre.torgue@st.com>
+Signed-off-by: Amelie Delaunay <amelie.delaunay@st.com>
+Link: https://lore.kernel.org/r/1564053416-32192-1-git-send-email-amelie.delaunay@st.com
 Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pinctrl/pinctrl-amd.c | 12 +++++++++++-
- 1 file changed, 11 insertions(+), 1 deletion(-)
+ drivers/pinctrl/pinctrl-stmfx.c | 24 ++++++++++++------------
+ 1 file changed, 12 insertions(+), 12 deletions(-)
 
-diff --git a/drivers/pinctrl/pinctrl-amd.c b/drivers/pinctrl/pinctrl-amd.c
-index 9b9c61e3f0652..977792654e017 100644
---- a/drivers/pinctrl/pinctrl-amd.c
-+++ b/drivers/pinctrl/pinctrl-amd.c
-@@ -565,15 +565,25 @@ static irqreturn_t amd_gpio_irq_handler(int irq, void *dev_id)
- 			    !(regval & BIT(INTERRUPT_MASK_OFF)))
- 				continue;
- 			irq = irq_find_mapping(gc->irq.domain, irqnr + i);
--			generic_handle_irq(irq);
-+			if (irq != 0)
-+				generic_handle_irq(irq);
- 
- 			/* Clear interrupt.
- 			 * We must read the pin register again, in case the
- 			 * value was changed while executing
- 			 * generic_handle_irq() above.
-+			 * If we didn't find a mapping for the interrupt,
-+			 * disable it in order to avoid a system hang caused
-+			 * by an interrupt storm.
- 			 */
- 			raw_spin_lock_irqsave(&gpio_dev->lock, flags);
- 			regval = readl(regs + i);
-+			if (irq == 0) {
-+				regval &= ~BIT(INTERRUPT_ENABLE_OFF);
-+				dev_dbg(&gpio_dev->pdev->dev,
-+					"Disabling spurious GPIO IRQ %d\n",
-+					irqnr + i);
-+			}
- 			writel(regval, regs + i);
- 			raw_spin_unlock_irqrestore(&gpio_dev->lock, flags);
- 			ret = IRQ_HANDLED;
+diff --git a/drivers/pinctrl/pinctrl-stmfx.c b/drivers/pinctrl/pinctrl-stmfx.c
+index eba872ce4a7cb..c82ad4b629e3e 100644
+--- a/drivers/pinctrl/pinctrl-stmfx.c
++++ b/drivers/pinctrl/pinctrl-stmfx.c
+@@ -296,29 +296,29 @@ static int stmfx_pinconf_set(struct pinctrl_dev *pctldev, unsigned int pin,
+ 		switch (param) {
+ 		case PIN_CONFIG_BIAS_PULL_PIN_DEFAULT:
+ 		case PIN_CONFIG_BIAS_DISABLE:
++		case PIN_CONFIG_DRIVE_PUSH_PULL:
++			ret = stmfx_pinconf_set_type(pctl, pin, 0);
++			if (ret)
++				return ret;
++			break;
+ 		case PIN_CONFIG_BIAS_PULL_DOWN:
++			ret = stmfx_pinconf_set_type(pctl, pin, 1);
++			if (ret)
++				return ret;
+ 			ret = stmfx_pinconf_set_pupd(pctl, pin, 0);
+ 			if (ret)
+ 				return ret;
+ 			break;
+ 		case PIN_CONFIG_BIAS_PULL_UP:
+-			ret = stmfx_pinconf_set_pupd(pctl, pin, 1);
++			ret = stmfx_pinconf_set_type(pctl, pin, 1);
+ 			if (ret)
+ 				return ret;
+-			break;
+-		case PIN_CONFIG_DRIVE_OPEN_DRAIN:
+-			if (!dir)
+-				ret = stmfx_pinconf_set_type(pctl, pin, 1);
+-			else
+-				ret = stmfx_pinconf_set_type(pctl, pin, 0);
++			ret = stmfx_pinconf_set_pupd(pctl, pin, 1);
+ 			if (ret)
+ 				return ret;
+ 			break;
+-		case PIN_CONFIG_DRIVE_PUSH_PULL:
+-			if (!dir)
+-				ret = stmfx_pinconf_set_type(pctl, pin, 0);
+-			else
+-				ret = stmfx_pinconf_set_type(pctl, pin, 1);
++		case PIN_CONFIG_DRIVE_OPEN_DRAIN:
++			ret = stmfx_pinconf_set_type(pctl, pin, 1);
+ 			if (ret)
+ 				return ret;
+ 			break;
 -- 
 2.20.1
 
