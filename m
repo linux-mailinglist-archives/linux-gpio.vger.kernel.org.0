@@ -2,36 +2,38 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 9620ABCFA3
-	for <lists+linux-gpio@lfdr.de>; Tue, 24 Sep 2019 19:02:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2C924BCEBD
+	for <lists+linux-gpio@lfdr.de>; Tue, 24 Sep 2019 19:00:39 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407246AbfIXQ7z (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 24 Sep 2019 12:59:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37220 "EHLO mail.kernel.org"
+        id S2410383AbfIXQr2 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 24 Sep 2019 12:47:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38666 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2633217AbfIXQqc (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Tue, 24 Sep 2019 12:46:32 -0400
+        id S2404432AbfIXQr1 (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Tue, 24 Sep 2019 12:47:27 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B0812222BF;
-        Tue, 24 Sep 2019 16:46:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F3E1621971;
+        Tue, 24 Sep 2019 16:47:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569343591;
-        bh=Xhdwc27crQh8QWKhbFFcu+WZDtv79dO+TPMXSEimq/s=;
+        s=default; t=1569343646;
+        bh=qoBK0hkdFsiiVxNDcmUlZav7h8iEpyyiNs7p2aJpotQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hkZmzkhmOE9nDkSdm1H6yiV9YA3fmgmYajSsbOnunIRYXYxas8OkXau8fdn+vpVUo
-         QAtt0nEUsEYwHT2+qHJ2WvRZ6Fln2IOUrLBi49nJ7PBtUbk3Fgju1xwkqb2tQYBzvp
-         EWK4dwA+CV6snt/3xDmTM8iah4Si7KuWRaCRsIG0=
+        b=IClMHtgQVAq5Ol1MRWNn5R2VV5OPmZDR3wseL2JhndkcxPjFQCyx9Q+gn7Dd1lvb0
+         QS48xHyVmTaPKPbIU3sM8XClK0HmAhEV2I+saAEKtgChs/bL4Rm42Vq068H5d0TAtE
+         NbTo4I1PSCcko7tH8ak0RkEMS9zXnOHPmQlUOGtw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Alexandre Torgue <alexandre.torgue@st.com>,
-        Amelie Delaunay <amelie.delaunay@st.com>,
+Cc:     Sowjanya Komatineni <skomatineni@nvidia.com>,
+        Thierry Reding <treding@nvidia.com>,
+        Dmitry Osipenko <digetx@gmail.com>,
         Linus Walleij <linus.walleij@linaro.org>,
-        Sasha Levin <sashal@kernel.org>, linux-gpio@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.2 18/70] pinctrl: stmfx: update pinconf settings
-Date:   Tue, 24 Sep 2019 12:44:57 -0400
-Message-Id: <20190924164549.27058-18-sashal@kernel.org>
+        Sasha Levin <sashal@kernel.org>, linux-gpio@vger.kernel.org,
+        linux-tegra@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.2 39/70] pinctrl: tegra: Fix write barrier placement in pmx_writel
+Date:   Tue, 24 Sep 2019 12:45:18 -0400
+Message-Id: <20190924164549.27058-39-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190924164549.27058-1-sashal@kernel.org>
 References: <20190924164549.27058-1-sashal@kernel.org>
@@ -44,88 +46,42 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-From: Alexandre Torgue <alexandre.torgue@st.com>
+From: Sowjanya Komatineni <skomatineni@nvidia.com>
 
-[ Upstream commit a502b343ebd0eab38f3cb33fbb84011847cf5aac ]
+[ Upstream commit c2cf351eba2ff6002ce8eb178452219d2521e38e ]
 
-According to the following tab (coming from STMFX datasheet), updates
-have to done in stmfx_pinconf_set function:
+pmx_writel uses writel which inserts write barrier before the
+register write.
 
--"type" has to be set when "bias" is configured as "pull-up or pull-down"
--PIN_CONFIG_DRIVE_PUSH_PULL should only be used when gpio is configured as
- output. There is so no need to check direction.
+This patch has fix to replace writel with writel_relaxed followed
+by a readback and memory barrier to ensure write operation is
+completed for successful pinctrl change.
 
-DIR | TYPE | PUPD | MFX GPIO configuration
-----|------|------|---------------------------------------------------
-1   | 1    | 1    | OUTPUT open drain with internal pull-up resistor
-----|------|------|---------------------------------------------------
-1   | 1    | 0    | OUTPUT open drain with internal pull-down resistor
-----|------|------|---------------------------------------------------
-1   | 0    | 0/1  | OUTPUT push pull no pull
-----|------|------|---------------------------------------------------
-0   | 1    | 1    | INPUT with internal pull-up resistor
-----|------|------|---------------------------------------------------
-0   | 1    | 0    | INPUT with internal pull-down resistor
-----|------|------|---------------------------------------------------
-0   | 0    | 1    | INPUT floating
-----|------|------|---------------------------------------------------
-0   | 0    | 0    | analog (GPIO not used, default setting)
-
-Signed-off-by: Alexandre Torgue <alexandre.torgue@st.com>
-Signed-off-by: Amelie Delaunay <amelie.delaunay@st.com>
-Link: https://lore.kernel.org/r/1564053416-32192-1-git-send-email-amelie.delaunay@st.com
+Acked-by: Thierry Reding <treding@nvidia.com>
+Reviewed-by: Dmitry Osipenko <digetx@gmail.com>
+Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
+Link: https://lore.kernel.org/r/1565984527-5272-2-git-send-email-skomatineni@nvidia.com
 Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pinctrl/pinctrl-stmfx.c | 24 ++++++++++++------------
- 1 file changed, 12 insertions(+), 12 deletions(-)
+ drivers/pinctrl/tegra/pinctrl-tegra.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/pinctrl/pinctrl-stmfx.c b/drivers/pinctrl/pinctrl-stmfx.c
-index eba872ce4a7cb..c82ad4b629e3e 100644
---- a/drivers/pinctrl/pinctrl-stmfx.c
-+++ b/drivers/pinctrl/pinctrl-stmfx.c
-@@ -296,29 +296,29 @@ static int stmfx_pinconf_set(struct pinctrl_dev *pctldev, unsigned int pin,
- 		switch (param) {
- 		case PIN_CONFIG_BIAS_PULL_PIN_DEFAULT:
- 		case PIN_CONFIG_BIAS_DISABLE:
-+		case PIN_CONFIG_DRIVE_PUSH_PULL:
-+			ret = stmfx_pinconf_set_type(pctl, pin, 0);
-+			if (ret)
-+				return ret;
-+			break;
- 		case PIN_CONFIG_BIAS_PULL_DOWN:
-+			ret = stmfx_pinconf_set_type(pctl, pin, 1);
-+			if (ret)
-+				return ret;
- 			ret = stmfx_pinconf_set_pupd(pctl, pin, 0);
- 			if (ret)
- 				return ret;
- 			break;
- 		case PIN_CONFIG_BIAS_PULL_UP:
--			ret = stmfx_pinconf_set_pupd(pctl, pin, 1);
-+			ret = stmfx_pinconf_set_type(pctl, pin, 1);
- 			if (ret)
- 				return ret;
--			break;
--		case PIN_CONFIG_DRIVE_OPEN_DRAIN:
--			if (!dir)
--				ret = stmfx_pinconf_set_type(pctl, pin, 1);
--			else
--				ret = stmfx_pinconf_set_type(pctl, pin, 0);
-+			ret = stmfx_pinconf_set_pupd(pctl, pin, 1);
- 			if (ret)
- 				return ret;
- 			break;
--		case PIN_CONFIG_DRIVE_PUSH_PULL:
--			if (!dir)
--				ret = stmfx_pinconf_set_type(pctl, pin, 0);
--			else
--				ret = stmfx_pinconf_set_type(pctl, pin, 1);
-+		case PIN_CONFIG_DRIVE_OPEN_DRAIN:
-+			ret = stmfx_pinconf_set_type(pctl, pin, 1);
- 			if (ret)
- 				return ret;
- 			break;
+diff --git a/drivers/pinctrl/tegra/pinctrl-tegra.c b/drivers/pinctrl/tegra/pinctrl-tegra.c
+index abcfbad94f00e..849c3b34e887c 100644
+--- a/drivers/pinctrl/tegra/pinctrl-tegra.c
++++ b/drivers/pinctrl/tegra/pinctrl-tegra.c
+@@ -32,7 +32,9 @@ static inline u32 pmx_readl(struct tegra_pmx *pmx, u32 bank, u32 reg)
+ 
+ static inline void pmx_writel(struct tegra_pmx *pmx, u32 val, u32 bank, u32 reg)
+ {
+-	writel(val, pmx->regs[bank] + reg);
++	writel_relaxed(val, pmx->regs[bank] + reg);
++	/* make sure pinmux register write completed */
++	pmx_readl(pmx, bank, reg);
+ }
+ 
+ static int tegra_pinctrl_get_groups_count(struct pinctrl_dev *pctldev)
 -- 
 2.20.1
 
