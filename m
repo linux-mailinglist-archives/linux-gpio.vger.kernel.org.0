@@ -2,39 +2,41 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id A0191BCEFE
-	for <lists+linux-gpio@lfdr.de>; Tue, 24 Sep 2019 19:01:08 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 213CDBCF3C
+	for <lists+linux-gpio@lfdr.de>; Tue, 24 Sep 2019 19:01:38 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391011AbfIXQuP (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 24 Sep 2019 12:50:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43000 "EHLO mail.kernel.org"
+        id S2406917AbfIXQxu (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 24 Sep 2019 12:53:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46412 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2410716AbfIXQuP (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Tue, 24 Sep 2019 12:50:15 -0400
+        id S2441689AbfIXQwf (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Tue, 24 Sep 2019 12:52:35 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1BDE221D82;
-        Tue, 24 Sep 2019 16:50:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A8A0921D7A;
+        Tue, 24 Sep 2019 16:52:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569343814;
-        bh=X83HWbTqofVal5zxoKrVPyIEsOibVmg3PU1ULh3YdLs=;
+        s=default; t=1569343954;
+        bh=P5yrhEzdFdo0qVfMiA38Ip22G1j0H8ar9SlOTwIHjD0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CR554ori/7xMiBb/O0K56qbvd+kK/9sBwok56zG9ks4DqB4PFSE0aALIFz2YceDkB
-         6xDWuFe6yiVin9ql+I019v9nBwGPDJoNMJZNj7qUB2YOz8/nXaAUrIPNpFnNTc7FZ1
-         3iqTmuCXhWTWrHgwPNP4U7REmfsVLiyDXie2AFDo=
+        b=GGSWaGbvL7igcFJGvDhPJOVJSBCRmWgQU1hMIev6GKlqHmC8dkTSDU2Y0FJzrX+UM
+         Yh3cGwDNdjfrQlaqTSN0jzJ0RQhsp04ywNVp+GC3JQz2f/0eeVaPqKiEyddqFFOery
+         DmA6DT2zCP/E5LO4AOVOcXhVSJAC1KDsQEPI5LMs=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Otto Meier <gf435@gmx.net>,
+Cc:     Sowjanya Komatineni <skomatineni@nvidia.com>,
+        Thierry Reding <treding@nvidia.com>,
+        Dmitry Osipenko <digetx@gmail.com>,
         Linus Walleij <linus.walleij@linaro.org>,
         Sasha Levin <sashal@kernel.org>, linux-gpio@vger.kernel.org,
-        linux-amlogic@lists.infradead.org
-Subject: [PATCH AUTOSEL 4.19 42/50] pinctrl: meson-gxbb: Fix wrong pinning definition for uart_c
-Date:   Tue, 24 Sep 2019 12:48:39 -0400
-Message-Id: <20190924164847.27780-42-sashal@kernel.org>
+        linux-tegra@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.4 09/14] pinctrl: tegra: Fix write barrier placement in pmx_writel
+Date:   Tue, 24 Sep 2019 12:52:07 -0400
+Message-Id: <20190924165214.28857-9-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190924164847.27780-1-sashal@kernel.org>
-References: <20190924164847.27780-1-sashal@kernel.org>
+In-Reply-To: <20190924165214.28857-1-sashal@kernel.org>
+References: <20190924165214.28857-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -44,61 +46,42 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-From: Otto Meier <gf435@gmx.net>
+From: Sowjanya Komatineni <skomatineni@nvidia.com>
 
-[ Upstream commit cb0438e4436085d89706b5ccfce4d5da531253de ]
+[ Upstream commit c2cf351eba2ff6002ce8eb178452219d2521e38e ]
 
-Hi i tried to use the uart_C of the the odroid-c2.
+pmx_writel uses writel which inserts write barrier before the
+register write.
 
-I enabled it in the dts file. During boot it crashed when the
-the sdcard slot is addressed.
+This patch has fix to replace writel with writel_relaxed followed
+by a readback and memory barrier to ensure write operation is
+completed for successful pinctrl change.
 
-After long search in the net i found this:
-
-https://forum.odroid.com/viewtopic.php?f=139&t=25371&p=194370&hilit=uart_C#p177856
-
-After changing the pin definitions accordingly erverything works.
-Uart_c is functioning and sdcard ist working.
-
-Fixes: 6db0f3a8a04e46 ("pinctrl: amlogic: gxbb: add more UART pins")
-Signed-off-by: Otto Meier <gf435@gmx.net>
-Link: https://lore.kernel.org/r/1cc32a18-464d-5531-7a1c-084390e2ecb1@gmx.net
+Acked-by: Thierry Reding <treding@nvidia.com>
+Reviewed-by: Dmitry Osipenko <digetx@gmail.com>
+Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
+Link: https://lore.kernel.org/r/1565984527-5272-2-git-send-email-skomatineni@nvidia.com
 Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pinctrl/meson/pinctrl-meson-gxbb.c | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+ drivers/pinctrl/pinctrl-tegra.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/pinctrl/meson/pinctrl-meson-gxbb.c b/drivers/pinctrl/meson/pinctrl-meson-gxbb.c
-index 4edeb4cae72aa..c4c70dc57dbee 100644
---- a/drivers/pinctrl/meson/pinctrl-meson-gxbb.c
-+++ b/drivers/pinctrl/meson/pinctrl-meson-gxbb.c
-@@ -198,8 +198,8 @@ static const unsigned int uart_rts_b_pins[]	= { GPIODV_27 };
+diff --git a/drivers/pinctrl/pinctrl-tegra.c b/drivers/pinctrl/pinctrl-tegra.c
+index 0fd7fd2b0f72c..a30e967d75c2a 100644
+--- a/drivers/pinctrl/pinctrl-tegra.c
++++ b/drivers/pinctrl/pinctrl-tegra.c
+@@ -52,7 +52,9 @@ static inline u32 pmx_readl(struct tegra_pmx *pmx, u32 bank, u32 reg)
  
- static const unsigned int uart_tx_c_pins[]	= { GPIOY_13 };
- static const unsigned int uart_rx_c_pins[]	= { GPIOY_14 };
--static const unsigned int uart_cts_c_pins[]	= { GPIOX_11 };
--static const unsigned int uart_rts_c_pins[]	= { GPIOX_12 };
-+static const unsigned int uart_cts_c_pins[]	= { GPIOY_11 };
-+static const unsigned int uart_rts_c_pins[]	= { GPIOY_12 };
+ static inline void pmx_writel(struct tegra_pmx *pmx, u32 val, u32 bank, u32 reg)
+ {
+-	writel(val, pmx->regs[bank] + reg);
++	writel_relaxed(val, pmx->regs[bank] + reg);
++	/* make sure pinmux register write completed */
++	pmx_readl(pmx, bank, reg);
+ }
  
- static const unsigned int i2c_sck_a_pins[]	= { GPIODV_25 };
- static const unsigned int i2c_sda_a_pins[]	= { GPIODV_24 };
-@@ -445,10 +445,10 @@ static struct meson_pmx_group meson_gxbb_periphs_groups[] = {
- 	GROUP(pwm_f_x,		3,	18),
- 
- 	/* Bank Y */
--	GROUP(uart_cts_c,	1,	19),
--	GROUP(uart_rts_c,	1,	18),
--	GROUP(uart_tx_c,	1,	17),
--	GROUP(uart_rx_c,	1,	16),
-+	GROUP(uart_cts_c,	1,	17),
-+	GROUP(uart_rts_c,	1,	16),
-+	GROUP(uart_tx_c,	1,	19),
-+	GROUP(uart_rx_c,	1,	18),
- 	GROUP(pwm_a_y,		1,	21),
- 	GROUP(pwm_f_y,		1,	20),
- 	GROUP(i2s_out_ch23_y,	1,	5),
+ static int tegra_pinctrl_get_groups_count(struct pinctrl_dev *pctldev)
 -- 
 2.20.1
 
