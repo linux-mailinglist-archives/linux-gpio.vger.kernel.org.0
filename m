@@ -2,27 +2,27 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 04D21BCE5C
-	for <lists+linux-gpio@lfdr.de>; Tue, 24 Sep 2019 18:52:58 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 20F76BCE71
+	for <lists+linux-gpio@lfdr.de>; Tue, 24 Sep 2019 18:53:07 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404929AbfIXQvI (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 24 Sep 2019 12:51:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44308 "EHLO mail.kernel.org"
+        id S2441562AbfIXQv4 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 24 Sep 2019 12:51:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45424 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2410837AbfIXQvI (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Tue, 24 Sep 2019 12:51:08 -0400
+        id S2405125AbfIXQvz (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Tue, 24 Sep 2019 12:51:55 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 423D821655;
-        Tue, 24 Sep 2019 16:51:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 209DD21D80;
+        Tue, 24 Sep 2019 16:51:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569343867;
-        bh=w5w50r3vpJG9CJUPiNhcuqcLYA7qlpR6IwB/g4wCeDE=;
+        s=default; t=1569343915;
+        bh=Rx6N0Sztt597jJ0U1M8H59Tn/bYkHwhyjGXmagEO2vU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=aYmDRoSBnD/kXkjO4I157WDTwQhuv9iblQXSDigVd0MRAhU0gwBPAFqQ9UwumhLFz
-         /o3tZ5ZbPFzOPNstgl+/U8Mpjll1ObkdfuWcwxYGDVfExoNd0fSSrNm4FTssEmCVMu
-         0IBgFPgfrUKJewQmY/zgRiqrLnhvtyNcCbzOjtzM=
+        b=kRwBLW6VBb1dVvz6GVff5X5UaQJ2Wc4k+NLwaGtYyZ0niNHKFe9rMCrvR67Rz3+8X
+         hUIyGeQKqa0RSYr6MZLTGTVOX+jh1B5eUufBwU++ewn8CO3qP8wOi1CMajN6596zRm
+         n7Q7oL0aCccBmyzWZY352qWLieCgdekFcoUMyQ28=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Sowjanya Komatineni <skomatineni@nvidia.com>,
@@ -31,12 +31,12 @@ Cc:     Sowjanya Komatineni <skomatineni@nvidia.com>,
         Linus Walleij <linus.walleij@linaro.org>,
         Sasha Levin <sashal@kernel.org>, linux-gpio@vger.kernel.org,
         linux-tegra@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 19/28] pinctrl: tegra: Fix write barrier placement in pmx_writel
-Date:   Tue, 24 Sep 2019 12:50:22 -0400
-Message-Id: <20190924165031.28292-19-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.9 12/19] pinctrl: tegra: Fix write barrier placement in pmx_writel
+Date:   Tue, 24 Sep 2019 12:51:23 -0400
+Message-Id: <20190924165130.28625-12-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190924165031.28292-1-sashal@kernel.org>
-References: <20190924165031.28292-1-sashal@kernel.org>
+In-Reply-To: <20190924165130.28625-1-sashal@kernel.org>
+References: <20190924165130.28625-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -68,10 +68,10 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 3 insertions(+), 1 deletion(-)
 
 diff --git a/drivers/pinctrl/tegra/pinctrl-tegra.c b/drivers/pinctrl/tegra/pinctrl-tegra.c
-index 51716819129d2..e5c9b9c684289 100644
+index 277622b4b6fb9..1d9f63e954c71 100644
 --- a/drivers/pinctrl/tegra/pinctrl-tegra.c
 +++ b/drivers/pinctrl/tegra/pinctrl-tegra.c
-@@ -51,7 +51,9 @@ static inline u32 pmx_readl(struct tegra_pmx *pmx, u32 bank, u32 reg)
+@@ -52,7 +52,9 @@ static inline u32 pmx_readl(struct tegra_pmx *pmx, u32 bank, u32 reg)
  
  static inline void pmx_writel(struct tegra_pmx *pmx, u32 val, u32 bank, u32 reg)
  {
