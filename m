@@ -2,27 +2,27 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id A01D1BE585
-	for <lists+linux-gpio@lfdr.de>; Wed, 25 Sep 2019 21:20:53 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2FED1BE58C
+	for <lists+linux-gpio@lfdr.de>; Wed, 25 Sep 2019 21:22:27 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2408642AbfIYTUw (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 25 Sep 2019 15:20:52 -0400
-Received: from atlmailgw1.ami.com ([63.147.10.40]:65041 "EHLO
-        atlmailgw1.ami.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726017AbfIYTUw (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 25 Sep 2019 15:20:52 -0400
-X-AuditID: ac1060b2-791ff700000017bd-b6-5d8bbe11adce
+        id S1726491AbfIYTW0 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 25 Sep 2019 15:22:26 -0400
+Received: from atlmailgw2.ami.com ([63.147.10.42]:52539 "EHLO
+        atlmailgw2.ami.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726166AbfIYTW0 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 25 Sep 2019 15:22:26 -0400
+X-AuditID: ac10606f-35bff7000000187d-ce-5d8bbe713dbc
 Received: from atlms1.us.megatrends.com (atlms1.us.megatrends.com [172.16.96.144])
         (using TLS with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
         (Client did not present a certificate)
-        by atlmailgw1.ami.com (Symantec Messaging Gateway) with SMTP id 03.CA.06077.11EBB8D5; Wed, 25 Sep 2019 15:20:50 -0400 (EDT)
+        by atlmailgw2.ami.com (Symantec Messaging Gateway) with SMTP id 3A.7C.06269.17EBB8D5; Wed, 25 Sep 2019 15:22:25 -0400 (EDT)
 Received: from hongweiz-Ubuntu-AMI.us.megatrends.com (172.16.98.93) by
  atlms1.us.megatrends.com (172.16.96.144) with Microsoft SMTP Server (TLS) id
- 14.3.408.0; Wed, 25 Sep 2019 15:20:50 -0400
+ 14.3.408.0; Wed, 25 Sep 2019 15:22:24 -0400
 From:   Hongwei Zhang <hongweiz@ami.com>
-To:     Linus Walleij <linus.walleij@linaro.org>,
-        Andrew Jeffery <andrew@aj.id.au>, <linux-gpio@vger.kernel.org>,
-        Joel Stanley <joel@jms.id.au>
+To:     Andrew Jeffery <andrew@aj.id.au>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        <linux-gpio@vger.kernel.org>, Joel Stanley <joel@jms.id.au>
 CC:     Hongwei Zhang <hongweiz@ami.com>, <devicetree@vger.kernel.org>,
         <linux-aspeed@lists.ozlabs.org>,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>,
@@ -39,53 +39,59 @@ CC:     Hongwei Zhang <hongweiz@ami.com>, <devicetree@vger.kernel.org>,
         Russell King <linux@armlinux.org.uk>,
         <linux-kernel@vger.kernel.org>,
         <linux-arm-kernel@lists.infradead.org>
-Subject: [v1, 0/1] gpio: dts: aspeed: Add SGPIO driver
-Date:   Wed, 25 Sep 2019 15:20:48 -0400
-Message-ID: <1569439248-10430-1-git-send-email-hongweiz@ami.com>
+Subject: [v2, 0/2] gpio: dts: aspeed: Add SGPIO driver 
+Date:   Wed, 25 Sep 2019 15:22:15 -0400
+Message-ID: <1569439337-10482-1-git-send-email-hongweiz@ami.com>
 X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1569351740-6285-1-git-send-email-hongweiz@ami.com>
-References: <1569351740-6285-1-git-send-email-hongweiz@ami.com>
 MIME-Version: 1.0
 Content-Type: text/plain
 X-Originating-IP: [172.16.98.93]
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrIIsWRmVeSWpSXmKPExsWyRiBhgq7Qvu5YgxkrmS3mrF/DZrHrMofF
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprBIsWRmVeSWpSXmKPExsWyRiBhgm7hvu5YgwX7rCzmrF/DZrHrMofF
         /w+7GS2+75/FavF30jF2i6ZDp9gsvsw9xWIx/8g5Vovf5/8yW0z5s5zJYtPja6wWzavPMVts
         nv+H0eLyrjlsFoem7mW0WHr9IpPF+0+dTBate4+wW9yY0sBmsffeZ0YHEY+r7bvYPdbMW8Po
         cfnaRWaP378mMXq8v9HK7nHx4zFmj02rOtk87lzbw+ZxYsZvFo8Jiw4wemxeUu9xfsZCRo+/
-        jV/ZPU5M/87i8XmTXAB/FJdNSmpOZllqkb5dAldGb08rU8EL1orpswsaGM+wdDFyckgImEjs
-        uXedqYuRi0NIYBeTxKkN0xkhnMOMEqc+fmUFqWITUJPYu3kOWJWIQD+jxPUdTWwgDrPAVlaJ
-        7QeawKqEBcwkOqfOBbNZBFQlLrXfZQSxeQUcJG5dbmaE2CcncfNcJzOIzQkUv7z4A9gdQgL2
-        EqsXnISqF5Q4OfMJWJxZQELi4IsXzBA1shK3Dj1mgpijIPG87zHLBEaBWUhaZiFpWcDItIpR
-        KLEkJzcxMye93FAvMTdTLzk/dxMjJFo37WBsuWh+iJGJg/EQowQHs5II7yyZrlgh3pTEyqrU
-        ovz4otKc1OJDjNIcLErivCvXfIsREkhPLEnNTk0tSC2CyTJxcEo1MC59Wrj1TlnSxR5PR4H0
-        jeeUD7zzczCc/kL2xue9d7R7f7pOyVwYqm9ey7tkh4rj86+yooqnb8Z8ioxWaJF7bLugZ+Xh
-        v1vPBx1qXLn81RLrsrVN9W+uN5exZZw/9OSA1hc/uxmMr94sfbFQ5ew2f93uCpXSro3Grz3Z
-        ms9/vW73wuz4b2frVdeVWIozEg21mIuKEwFFarKcxAIAAA==
+        jV/ZPU5M/87i8XmTXAB/FJdNSmpOZllqkb5dAlfGnI897AUP2Srun5nI1MA4h7WLkZNDQsBE
+        4tnDzywgtpDALiaJlsnWEPZhRomfPYUgNpuAmsTezXOYuhi5OEQE+hklFsyZC+YwC2xlldh+
+        oAlskrCAucT0a/eZQWwWAVWJ7TPPsYPYvAIOEleW32OG2CYncfNcJzNEXFDi5MwnYJuZBSQk
+        Dr54wQyxWVbi1qHHTBD1ChLP+x6zTGDkm4WkZRaSlgWMTKsYhRJLcnITM3PSy430EnMz9ZLz
+        czcxQmIvfwfjx4/mhxiZOBgPMUpwMCuJ8M6S6YoV4k1JrKxKLcqPLyrNSS0+xCjNwaIkzrtq
+        zbcYIYH0xJLU7NTUgtQimCwTB6dUA6M3E5Ppn1OZtVOCM+7m7ZD7vVx6d3/6RYbl7wX+rpmk
+        UuuYvZ+3S49b707Cmd8r+6/Jisq5Rrqrn2XbGF4r+rlR1KnnSuf8orNTp02sEZ7xdXPAj3q+
+        H8IpaY+FHH7WnF3nPlNyZqq7H49fwrStmzg3K+t2Xcua8kDEOY7JqKlMMvb/tM98T5RYijMS
+        DbWYi4oTAb5SBiarAgAA
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-> 
-> > The related SGPIO driver has been accepted and merged into v5.4:
-> > _http://patchwork.ozlabs.org/patch/1150357/
-> 
-> Oh what a mess, it didn't add the necessary code into Kconfig and Makefile, also names it sgpio-gpio.c 
-> when everything else is named gpio-sgpio.c.
-> 
-> I guess I have to fix it up. My fault for missing.
-> 
-> Linus Walleij
+Hello,
 
-Thanks Linus,
+This short series introduce the Kconfig, Makefile, and dts for the 
+Aspeed AST2500 SGPIO controller. This is the last patch set.
+Please review.
 
-It's not your fault, I misunderstood a earlier comment from another 
-reviewer and thought I should wait until the driver is accecpted, 
-and then submit the patch to include / enable it.
+[v2]:	changes between v1 and v2:
+	- split the patches based on review feedback.
 
-As Bart suggested, I splitte the patches. 
+[v1]:	Initial commit
 
-Regarding the driver name, following the gpio-SoC_name.o convention 
-in the Makefile, we choose sgpio-aspeed.o .
+The related SGPIO driver has been accepted and merged into v5.4:
+_http://patchwork.ozlabs.org/patch/1150357/
 
---Hongwei
+The related SGPM pinmux dt-binding document, dts, and pinctrl driver
+updates have been accepted and merged:
+_http://patchwork.ozlabs.org/patch/1110210/
+
+Thanks!
+Hongwei Zhang (1):
+  gpio: dts: aspeed: Add SGPIO driver
+
+ arch/arm/Kconfig                 |  2 ++
+ arch/arm/boot/dts/aspeed-g5.dtsi | 16 +++++++++++++++-
+ drivers/gpio/Kconfig             |  8 ++++++++
+ drivers/gpio/Makefile            |  1 +
+ 4 files changed, 26 insertions(+), 1 deletion(-)
+
+-- 
+2.7.4
+
