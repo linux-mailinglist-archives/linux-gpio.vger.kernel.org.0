@@ -2,85 +2,113 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 939AABDB7B
-	for <lists+linux-gpio@lfdr.de>; Wed, 25 Sep 2019 11:53:02 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7576EBDB82
+	for <lists+linux-gpio@lfdr.de>; Wed, 25 Sep 2019 11:54:41 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731769AbfIYJwv (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 25 Sep 2019 05:52:51 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:43538 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727579AbfIYJwu (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 25 Sep 2019 05:52:50 -0400
-Received: by mail-pg1-f195.google.com with SMTP id v27so2896074pgk.10
-        for <linux-gpio@vger.kernel.org>; Wed, 25 Sep 2019 02:52:48 -0700 (PDT)
+        id S1732583AbfIYJye (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 25 Sep 2019 05:54:34 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:38625 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726698AbfIYJye (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 25 Sep 2019 05:54:34 -0400
+Received: by mail-pf1-f195.google.com with SMTP id h195so3082741pfe.5
+        for <linux-gpio@vger.kernel.org>; Wed, 25 Sep 2019 02:54:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=TV3RT1yNKXy5j0AoE4e6keZibU6Zrl0Z4HmWZXehpjw=;
-        b=va8yIct1jAIbfCuT/3sEP4exm22IQ2TSwWZP2+TsQD7Czgf2QXVgxepvptPTgLoifq
-         5r/FRHyIQOdjDoO5V+eirOa4qQ5m5BXLaK0Jc+RM6BD8Edgv9isDVFsB3SwVDyL/+8mW
-         s6axDG4Eti4ok2rYzMLd/40V9QkKJEHTx+7q/KUEWYKzi84PeWgSjNOMUYp2EGX7VEdn
-         daIsmeq4cDoSg85xqv9HhaCnxKuPz2KJBDNiSb8+6It47l89jyS3m7xe/EhL8qnfHRx7
-         JJnNtE22qP4BEFxoOCaOPhlXs2Wh8b8y8tYKZda6+/4/ZMa0oNQbDPQcjzVrutR+SOFO
-         IuKg==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=qjt9nGee6IRgKbTvjid5ObbFQrI9vCTeU4UrRiALsas=;
+        b=kg8lbcqYpgzcKQyZHGhI7ejPMzvDJkhTF8+VLoKNp6I0PZW3MWX13h0iqXQz+W4ftP
+         jTixi9u0JwyhtYY/BNrY/39d/0c5CbNRDkCmfFRpVwNbzp3epZud42ngEFiREiFbRIP0
+         rYOdkfT4JsJx6qUBBuX9DR4DnVh4+NmfUFyMIozvXGnO3AoyZZEjseLyCkL81vZbmxiK
+         kkBcMijzCe69hXkUI1owV1UhlJ3LiVqMGzgNMjDPArVDbfnK40jQDxvDToQwzaG5HnyL
+         toDVSZDPE+7C9XGhcRlKuLbkIDgZWDK0fCO6XoMQR/ZqKlkjzm2Qb6XAAWGfstda6Puh
+         KM7A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=TV3RT1yNKXy5j0AoE4e6keZibU6Zrl0Z4HmWZXehpjw=;
-        b=ZY1dHMRvELYrI1Z4OGPCQ5fHLke3dDEZJbuPySF7s9BEJpPS0s4hFxWkH2aEx0QcZe
-         hQ2524cTJie+22PyagYM4EUz17vG+NaJ8me5zovz4dZehEh8/XkaGjgnfp22a1ehldq6
-         bqchzEsscNT6JBCoqIkd2s+vtfGDURVTY0H/oH2yWTxiZb907EwPqP7y/NF7bo3FilkX
-         LrKJS+A7WOcpWjPO3598tnfoV5Pay4A7kcStGCC/aZMGVh4A5rc3mdJ46cyftxOjIX/5
-         tY8ts84zzgeZokYXUEWrb1wUbauOsbO0OyTWufHuH5U4gMGH7WFWTW0Y86f7cDgLdeew
-         Pg6A==
-X-Gm-Message-State: APjAAAXBpIFy+8F6EWcpqtFF0lLYgcQ6GlCwNBT8AIWAEXq6JHDSafAT
-        WNSp3kf1u2xXxTdopSTVWdBXgAwzC7rN3A==
-X-Google-Smtp-Source: APXvYqxAi3M7mauapLMsR6LDIGh2upipMbm+6rwiwwDaLqwegdnLSJD1q1FWwqTsxI1Xn5NqnSB2mQ==
-X-Received: by 2002:a63:d908:: with SMTP id r8mr8046960pgg.263.1569405167866;
-        Wed, 25 Sep 2019 02:52:47 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=qjt9nGee6IRgKbTvjid5ObbFQrI9vCTeU4UrRiALsas=;
+        b=aECorVEicwW0emrPnsTIuc4YCcFa+9YFRceNHUmWvs4l/mU1TMQD8lkCJ4E8/rrMjs
+         PeGiOgNf4sk9b0Aag3yWMzTFP3nlS2lgwIH3tAqVbbtaTdcXnOJw0pTBIji+35GobgR8
+         eIvodYu5SPVXnNoQykz714Zw/577H44ccleSzZceApQXPrEMymMtsfjvVfA/bIuSMpDj
+         nlDQy5VE0c74BE7iCm2+K/FKz8MtIjly5SVs+/m0zGPo79ExkrdoEZl+ag/jam86+c52
+         HSaOZI7BHxj/y3j8LEikNjiVnliLz+JIBDrE8YNQh4YhaDixsCbpPcqydLWLL1L6mE4O
+         Rjvg==
+X-Gm-Message-State: APjAAAUHf+iZzl6M8jvLZXxWRqyO1kk+jVZV7A6x2Ws/Keqeq0c1Zwar
+        YY5TRpN0OKx9wYaVmsQnCatWDw==
+X-Google-Smtp-Source: APXvYqwj9vYR+usXdpMYRActcK2WXECClntp1jjA+Fzj8B5VVqPOtYW+ZMwHg73Z/ckv/aAJEpR37w==
+X-Received: by 2002:a63:1950:: with SMTP id 16mr8180123pgz.213.1569405271867;
+        Wed, 25 Sep 2019 02:54:31 -0700 (PDT)
 Received: from baolinwangubtpc.spreadtrum.com ([117.18.48.82])
-        by smtp.gmail.com with ESMTPSA id p20sm4037221pgj.47.2019.09.25.02.52.43
+        by smtp.gmail.com with ESMTPSA id i126sm5298307pfc.29.2019.09.25.02.54.28
         (version=TLS1 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Wed, 25 Sep 2019 02:52:46 -0700 (PDT)
+        Wed, 25 Sep 2019 02:54:30 -0700 (PDT)
 From:   Baolin Wang <baolin.wang@linaro.org>
-To:     stable@vger.kernel.org, peterz@infradead.org, mingo@redhat.com,
-        linus.walleij@linaro.org, natechancellor@gmail.com, sre@kernel.org
-Cc:     longman@redhat.com, linux-gpio@vger.kernel.org,
-        david@lechnology.com, linux-pm@vger.kernel.org, arnd@arndb.de,
-        baolin.wang@linaro.org, orsonzhai@gmail.com,
-        vincent.guittot@linaro.org, linux-kernel@vger.kernel.org
-Subject: [BACKPORT 4.19.y 0/3] Candidates from Spreadtrum 4.14 product kernel
-Date:   Wed, 25 Sep 2019 17:52:26 +0800
-Message-Id: <cover.1569404757.git.baolin.wang@linaro.org>
+To:     stable@vger.kernel.org, linus.walleij@linaro.org,
+        natechancellor@gmail.com
+Cc:     linux-gpio@vger.kernel.org, arnd@arndb.de, baolin.wang@linaro.org,
+        orsonzhai@gmail.com, vincent.guittot@linaro.org,
+        linux-kernel@vger.kernel.org
+Subject: [BACKPORT 4.19.y 2/3] pinctrl: sprd: Use define directive for sprd_pinconf_params values
+Date:   Wed, 25 Sep 2019 17:54:09 +0800
+Message-Id: <a1d7a04b0319dc977a0dcc7224d7fd41c635b6b9.1569404757.git.baolin.wang@linaro.org>
 X-Mailer: git-send-email 1.7.9.5
+In-Reply-To: <cover.1569404757.git.baolin.wang@linaro.org>
+References: <cover.1569404757.git.baolin.wang@linaro.org>
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-With Arnd's script [1] help, I found some bugfixes in Spreadtrum 4.14 product
-kernel, but missing in v4.19.75:
+From: Nathan Chancellor <natechancellor@gmail.com>
 
-513e1073d52e locking/lockdep: Add debug_locks check in __lock_downgrade()
-957063c92473 pinctrl: sprd: Use define directive for sprd_pinconf_params values
-87a2b65fc855 power: supply: sysfs: ratelimit property read error message
+[Upstream commit 957063c924736d4341e5d588757b9f31e8f6fa24]
 
-[1] https://lore.kernel.org/lkml/20190322154425.3852517-19-arnd@arndb.de/T/
+Clang warns when one enumerated type is implicitly converted to another:
 
-David Lechner (1):
-  power: supply: sysfs: ratelimit property read error message
+drivers/pinctrl/sprd/pinctrl-sprd.c:845:19: warning: implicit conversion
+from enumeration type 'enum sprd_pinconf_params' to different
+enumeration type 'enum pin_config_param' [-Wenum-conversion]
+        {"sprd,control", SPRD_PIN_CONFIG_CONTROL, 0},
+        ~                ^~~~~~~~~~~~~~~~~~~~~~~
+drivers/pinctrl/sprd/pinctrl-sprd.c:846:22: warning: implicit conversion
+from enumeration type 'enum sprd_pinconf_params' to different
+enumeration type 'enum pin_config_param' [-Wenum-conversion]
+        {"sprd,sleep-mode", SPRD_PIN_CONFIG_SLEEP_MODE, 0},
+        ~                   ^~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Nathan Chancellor (1):
-  pinctrl: sprd: Use define directive for sprd_pinconf_params values
+It is expected that pinctrl drivers can extend pin_config_param because
+of the gap between PIN_CONFIG_END and PIN_CONFIG_MAX so this conversion
+isn't an issue. Most drivers that take advantage of this define the
+PIN_CONFIG variables as constants, rather than enumerated values. Do the
+same thing here so that Clang no longer warns.
 
-Waiman Long (1):
-  locking/lockdep: Add debug_locks check in __lock_downgrade()
+Link: https://github.com/ClangBuiltLinux/linux/issues/138
+Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+Reviewed-by: Baolin Wang <baolin.wang@linaro.org>
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+Signed-off-by: Baolin Wang <baolin.wang@linaro.org>
+---
+ drivers/pinctrl/sprd/pinctrl-sprd.c |    6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
 
- drivers/pinctrl/sprd/pinctrl-sprd.c       |    6 ++----
- drivers/power/supply/power_supply_sysfs.c |    3 ++-
- kernel/locking/lockdep.c                  |    3 +++
- 3 files changed, 7 insertions(+), 5 deletions(-)
-
+diff --git a/drivers/pinctrl/sprd/pinctrl-sprd.c b/drivers/pinctrl/sprd/pinctrl-sprd.c
+index 78c2f54..8f3468d 100644
+--- a/drivers/pinctrl/sprd/pinctrl-sprd.c
++++ b/drivers/pinctrl/sprd/pinctrl-sprd.c
+@@ -159,10 +159,8 @@ struct sprd_pinctrl {
+ 	struct sprd_pinctrl_soc_info *info;
+ };
+ 
+-enum sprd_pinconf_params {
+-	SPRD_PIN_CONFIG_CONTROL = PIN_CONFIG_END + 1,
+-	SPRD_PIN_CONFIG_SLEEP_MODE = PIN_CONFIG_END + 2,
+-};
++#define SPRD_PIN_CONFIG_CONTROL		(PIN_CONFIG_END + 1)
++#define SPRD_PIN_CONFIG_SLEEP_MODE	(PIN_CONFIG_END + 2)
+ 
+ static int sprd_pinctrl_get_id_by_name(struct sprd_pinctrl *sprd_pctl,
+ 				       const char *name)
 -- 
 1.7.9.5
 
