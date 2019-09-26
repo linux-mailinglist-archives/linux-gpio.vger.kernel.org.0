@@ -2,108 +2,136 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 18C93BE596
-	for <lists+linux-gpio@lfdr.de>; Wed, 25 Sep 2019 21:22:53 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1A2E6BE9C3
+	for <lists+linux-gpio@lfdr.de>; Thu, 26 Sep 2019 02:39:38 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2439954AbfIYTWe (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 25 Sep 2019 15:22:34 -0400
-Received: from atlmailgw2.ami.com ([63.147.10.42]:64000 "EHLO
-        atlmailgw2.ami.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726166AbfIYTWd (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 25 Sep 2019 15:22:33 -0400
-X-AuditID: ac10606f-371ff7000000187d-cf-5d8bbe782d8d
-Received: from atlms1.us.megatrends.com (atlms1.us.megatrends.com [172.16.96.144])
-        (using TLS with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by atlmailgw2.ami.com (Symantec Messaging Gateway) with SMTP id 8B.7C.06269.87EBB8D5; Wed, 25 Sep 2019 15:22:33 -0400 (EDT)
-Received: from hongweiz-Ubuntu-AMI.us.megatrends.com (172.16.98.93) by
- atlms1.us.megatrends.com (172.16.96.144) with Microsoft SMTP Server (TLS) id
- 14.3.408.0; Wed, 25 Sep 2019 15:22:32 -0400
-From:   Hongwei Zhang <hongweiz@ami.com>
-To:     Andrew Jeffery <andrew@aj.id.au>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        <linux-gpio@vger.kernel.org>, Joel Stanley <joel@jms.id.au>
-CC:     Hongwei Zhang <hongweiz@ami.com>, <devicetree@vger.kernel.org>,
-        <linux-aspeed@lists.ozlabs.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Benjamin Gaignard <benjamin.gaignard@linaro.org>,
-        Doug Anderson <armlinux@m.disordat.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Russell King <linux@armlinux.org.uk>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>
-Subject: [v2, 2/2] gpio: dts: aspeed: Add SGPIO driver
-Date:   Wed, 25 Sep 2019 15:22:17 -0400
-Message-ID: <1569439337-10482-3-git-send-email-hongweiz@ami.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1569439337-10482-1-git-send-email-hongweiz@ami.com>
-References: <1569439337-10482-1-git-send-email-hongweiz@ami.com>
+        id S1728089AbfIZAjh (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 25 Sep 2019 20:39:37 -0400
+Received: from mail-qk1-f195.google.com ([209.85.222.195]:41910 "EHLO
+        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726098AbfIZAjh (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 25 Sep 2019 20:39:37 -0400
+Received: by mail-qk1-f195.google.com with SMTP id p10so353589qkg.8
+        for <linux-gpio@vger.kernel.org>; Wed, 25 Sep 2019 17:39:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=8eElvPCoM/FfEnn5Y4ueHDwedd4HgZwZRPzixoGrG8Y=;
+        b=SRkhwVFdVzU6Xd8hDe1fjb+pbOsZaE2zoac5LpFpNUAq5387VnUQYu66P9pKspY4QS
+         tyx/JCI8DmzLJyHnqqsJ4cys0kdlwdoTZUjr6txj2JT0y671xbzHCXGyc44Fp1J/VQwx
+         qP76nOzMumdSVfW0J+k14XJdC3gtD8dYXnqgc=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=8eElvPCoM/FfEnn5Y4ueHDwedd4HgZwZRPzixoGrG8Y=;
+        b=W6Yz7HU5ak4GcvyScSkbhlW5uHkH0jPNgZ8Z2O5ZEr9wDKjHJfl5BuSRentDHkXnEI
+         W71B4knJvIr1yqgUSfgcqY1qeR7sN0jREf/I5zJukBIAz+BsVIrsSK7evYkcXPvOd0Sz
+         L6GLHPhxZfMJN6AXAMJOKgeH8J2mqJ66VqJ0/XrgZvW1mQuNPdmiPYBggwZuZVT3cw6u
+         XvkgvoBRMXn3SgmgQU7jfX4C33NE7kQmaABo52UQg3RlOTGQ0yNfzjThSTY6nUCcge/x
+         /uMcVCkpaQNFwObRwXmN/Uz9zvVIxdqqL9x/NA6Hg1kDeV9pntMVDH6Oz7roRbKlsOG+
+         CDpQ==
+X-Gm-Message-State: APjAAAUdIqQFaPubmqQm9e7KJwyY0melaWbnzbDX2UzoLLePUy/AUlKj
+        fmvYkIrWkxmz4dWTT9s4f0lD18rJszi9i645i6sA7w==
+X-Google-Smtp-Source: APXvYqysEFiOA5JsgMZ41RNUUxUa7Or5sDYleM9GT9IE+iSk5HjBjZ/LqeLOrwmBKEcZCtSL7jmzfEV43UKJ/AQUUqU=
+X-Received: by 2002:a37:dcc1:: with SMTP id v184mr805620qki.258.1569458376178;
+ Wed, 25 Sep 2019 17:39:36 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [172.16.98.93]
-X-Brightmail-Tracker: H4sIAAAAAAAAA02RbUhTYRzFee69u7vOZtcl9KAlNXoBU1cS+ZAhToge+hB+jMj0khcdTSeb
-        zSzKZfm2wsSXcmO+pA5hDcJJFMuVThFdw2XiUhEJliUI6jSTmlJtM/DbOZzfOf8Pf4aU9FKx
-        jKKohFcXcUopLaKsbG59Utm7R9knvw1GItNLK43skwz6s/oWoM33RgHabhgRogqni0Y/Wl0U
-        ah8eF6CAZ5tETVs9BLL5vAL04MU4ifratwCatJto5Gx2AGT+PEGglbVaAlU6hoVouklHI8f8
-        OsiIwVPVdiG2tlkBnvROkDjwuwHglelKIZ7wj5DYZqml8Zy3n8ajLQEK13cOANzXXY49Lc8B
-        3r6/IcSjzzYpvG6Lz9p7RXQuj1cqtLxalp4rKvB4N6jiMdEtz8NEHZhj9CCCgexpuNBdIdQD
-        ESNh7QRc9nTRYTMEYG/1FBmkaPYYdPSZiGAQwz4BsMPUGjIk+0oAXw9UCILUPvYMNLc8FQY1
-        xR6F024zFdRiNgMON8yA8L14ODNeG1qNYOXQ0zYf0pJ/jN0Q2OGj4Zjha0iTLISDi4s7zEE4
-        6/QR4Z1D8Hudj6oHrHFXxbir0gEIC5BwJcpCTqHML01J5goVyddVhTYQfqvqDfD7U52AYIAT
-        QIaUxoiNB/TZEnEeV3abV6ty1DeVvMYJ4hhKul9ssf68KmHzuRL+Bs8X8+r/KcFExOqA8/D5
-        Dm90naa8332pK3J51W2W5nRlx8ma5XeSfLNnldfSopaOpMusjaqeqONVinsfOf1FLNqqTlvU
-        DiYuRV0wDWldVaWGtSr5ngFfZmfjgqxc+0knycvMYg0fEmpS/MZfkr2+mhPypbtpbaYsl/my
-        xa1LVX7Jly5bimLrHkspTQF3KoFUa7i/wVaWXMQCAAA=
+References: <20190924024958.GA229906@dtor-ws> <20190924082143.GS2680@smile.fi.intel.com>
+In-Reply-To: <20190924082143.GS2680@smile.fi.intel.com>
+From:   Alex Levin <levinale@chromium.org>
+Date:   Wed, 25 Sep 2019 17:39:25 -0700
+Message-ID: <CAPBFDX+Bjd7CZg2ZqBANJ6=pb9SA7bnpxOo=Lv4BS1CJUytEmQ@mail.gmail.com>
+Subject: Re: [PATCH] pinctrl: cherryview: restore Strago DMI workaround for
+ all versions
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Add SGPIO driver support for Aspeed AST2500 SoC.
+On Tue, Sep 24, 2019 at 1:21 AM Andy Shevchenko
+<andriy.shevchenko@linux.intel.com> wrote:
+>
+> On Mon, Sep 23, 2019 at 07:49:58PM -0700, Dmitry Torokhov wrote:
+> > This is essentially a revert of:
+> >
+> > e3f72b749da2 pinctrl: cherryview: fix Strago DMI workaround
+> > 86c5dd6860a6 pinctrl: cherryview: limit Strago DMI workarounds to version 1.0
+> >
+> > because even with 1.1 versions of BIOS there are some pins that are
+> > configured as interrupts but not claimed by any driver, and they
+> > sometimes fire up and result in interrupt storms that cause touchpad
+> > stop functioning and other issues.
+> >
+> > Given that we are unlikely to qualify another firmware version for a
+> > while it is better to keep the workaround active on all Strago boards.
+>
+> Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-Signed-off-by: Hongwei Zhang <hongweiz@ami.com>
----
- drivers/gpio/Kconfig             |  8 ++++++++
- drivers/gpio/Makefile            |  1 +
+Tested-by: Alex Levin <levinale@chromium.org>
 
-diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
-index bb13c26..e94f903 100644
---- a/drivers/gpio/Kconfig
-+++ b/drivers/gpio/Kconfig
-@@ -120,6 +120,14 @@ config GPIO_ASPEED
- 	help
- 	  Say Y here to support Aspeed AST2400 and AST2500 GPIO controllers.
- 
-+config SGPIO_ASPEED
-+	bool "Aspeed SGPIO support"
-+	depends on (ARCH_ASPEED || COMPILE_TEST) && OF_GPIO
-+	select GPIO_GENERIC
-+	select GPIOLIB_IRQCHIP
-+	help
-+	  Say Y here to support Aspeed AST2500 SGPIO functionality.
-+
- config GPIO_ATH79
- 	tristate "Atheros AR71XX/AR724X/AR913X GPIO support"
- 	default y if ATH79
-diff --git a/drivers/gpio/Makefile b/drivers/gpio/Makefile
-index a4e9117..bebbd82 100644
---- a/drivers/gpio/Makefile
-+++ b/drivers/gpio/Makefile
-@@ -32,6 +32,7 @@ obj-$(CONFIG_GPIO_AMD_FCH)		+= gpio-amd-fch.o
- obj-$(CONFIG_GPIO_AMDPT)		+= gpio-amdpt.o
- obj-$(CONFIG_GPIO_ARIZONA)		+= gpio-arizona.o
- obj-$(CONFIG_GPIO_ASPEED)		+= gpio-aspeed.o
-+obj-$(CONFIG_SGPIO_ASPEED)		+= sgpio-aspeed.o
- obj-$(CONFIG_GPIO_ATH79)		+= gpio-ath79.o
- obj-$(CONFIG_GPIO_BCM_KONA)		+= gpio-bcm-kona.o
- obj-$(CONFIG_GPIO_BD70528)		+= gpio-bd70528.o
--- 
-2.7.4
-
+>
+> >
+> > Reported-by: Alex Levin <levinale@chromium.org>
+> > Fixes: 86c5dd6860a6 ("pinctrl: cherryview: limit Strago DMI workarounds to version 1.0")
+> > Cc: stable@vger.kernel.org
+> > Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+> > ---
+> >  drivers/pinctrl/intel/pinctrl-cherryview.c | 4 ----
+> >  1 file changed, 4 deletions(-)
+> >
+> > diff --git a/drivers/pinctrl/intel/pinctrl-cherryview.c b/drivers/pinctrl/intel/pinctrl-cherryview.c
+> > index 03ec7a5d9d0b..bf049d1bbb87 100644
+> > --- a/drivers/pinctrl/intel/pinctrl-cherryview.c
+> > +++ b/drivers/pinctrl/intel/pinctrl-cherryview.c
+> > @@ -1513,7 +1513,6 @@ static const struct dmi_system_id chv_no_valid_mask[] = {
+> >               .matches = {
+> >                       DMI_MATCH(DMI_SYS_VENDOR, "GOOGLE"),
+> >                       DMI_MATCH(DMI_PRODUCT_FAMILY, "Intel_Strago"),
+> > -                     DMI_MATCH(DMI_PRODUCT_VERSION, "1.0"),
+> >               },
+> >       },
+> >       {
+> > @@ -1521,7 +1520,6 @@ static const struct dmi_system_id chv_no_valid_mask[] = {
+> >               .matches = {
+> >                       DMI_MATCH(DMI_SYS_VENDOR, "HP"),
+> >                       DMI_MATCH(DMI_PRODUCT_NAME, "Setzer"),
+> > -                     DMI_MATCH(DMI_PRODUCT_VERSION, "1.0"),
+> >               },
+> >       },
+> >       {
+> > @@ -1529,7 +1527,6 @@ static const struct dmi_system_id chv_no_valid_mask[] = {
+> >               .matches = {
+> >                       DMI_MATCH(DMI_SYS_VENDOR, "GOOGLE"),
+> >                       DMI_MATCH(DMI_PRODUCT_NAME, "Cyan"),
+> > -                     DMI_MATCH(DMI_PRODUCT_VERSION, "1.0"),
+> >               },
+> >       },
+> >       {
+> > @@ -1537,7 +1534,6 @@ static const struct dmi_system_id chv_no_valid_mask[] = {
+> >               .matches = {
+> >                       DMI_MATCH(DMI_SYS_VENDOR, "GOOGLE"),
+> >                       DMI_MATCH(DMI_PRODUCT_NAME, "Celes"),
+> > -                     DMI_MATCH(DMI_PRODUCT_VERSION, "1.0"),
+> >               },
+> >       },
+> >       {}
+> > --
+> > 2.23.0.351.gc4317032e6-goog
+> >
+> >
+> > --
+> > Dmitry
+>
+> --
+> With Best Regards,
+> Andy Shevchenko
+>
+>
