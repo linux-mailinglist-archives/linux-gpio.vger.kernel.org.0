@@ -2,171 +2,100 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 5E1D4BF5FE
-	for <lists+linux-gpio@lfdr.de>; Thu, 26 Sep 2019 17:36:06 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 628A2BF6BC
+	for <lists+linux-gpio@lfdr.de>; Thu, 26 Sep 2019 18:30:16 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727305AbfIZPgF (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 26 Sep 2019 11:36:05 -0400
-Received: from pandora.armlinux.org.uk ([78.32.30.218]:46504 "EHLO
-        pandora.armlinux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727238AbfIZPgF (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 26 Sep 2019 11:36:05 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=uAwy68EBZ+WrFk18SUph66dAQKMcbtYPjR8HT7qhx0U=; b=v5EjcodX+DDYtZVC73ZrRDKTv
-        Law3lHGDqKvv/DuA/ybW7hpqoyRp8b67l6kGkzqF5w3Cpl6OhMcwQ/d7PNXXOy4QdP19lD1Z/FAHY
-        7k04JuKGO9slt2XSKqRXjO4U2vSVUX5g4Jieq5ALG4E0frC/HksY3OlnURO2rzcmSqc7CJw8bInxf
-        t8qt/zPzhj2O6TOUHp0xEnZCSmVUc1kS9HfT8BOYcEYddyZUsPUw/vpO60OM3jFlAM0zU3ZTNebeS
-        2IJTX0Bmi+ZpgOk6/MDTXSGIr5z5k4L2mNfZcgvEbtXleqF5l7BxqwjnXjmfMxZp9cHtwJjFOzfvn
-        BP7LnGAqg==;
-Received: from shell.armlinux.org.uk ([2001:4d48:ad52:3201:5054:ff:fe00:4ec]:36844)
-        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.90_1)
-        (envelope-from <linux@armlinux.org.uk>)
-        id 1iDVo2-00072Q-Mf; Thu, 26 Sep 2019 16:35:46 +0100
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
-        (envelope-from <linux@shell.armlinux.org.uk>)
-        id 1iDVny-0003K7-Va; Thu, 26 Sep 2019 16:35:42 +0100
-Date:   Thu, 26 Sep 2019 16:35:42 +0100
-From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
-To:     Hui Song <hui.song_1@nxp.com>
-Cc:     Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
-        Rob Herring <robh+dt@kernel.org>,
+        id S1726029AbfIZQaC (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 26 Sep 2019 12:30:02 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:37605 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727481AbfIZQaB (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 26 Sep 2019 12:30:01 -0400
+Received: by mail-pl1-f193.google.com with SMTP id u20so1536570plq.4
+        for <linux-gpio@vger.kernel.org>; Thu, 26 Sep 2019 09:30:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=pensando.io; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-transfer-encoding:content-language;
+        bh=iUBOjyHfuR7bXfhhUiHsxfKRvIQzrO86xTAr8Ifre0Q=;
+        b=y3h5OT0UmQqXJi0n0rBvqkcTo+13EdxQBhESuHKUhhUdt4HIIcVQewbszw7316Jbj3
+         B26hOzlkXv8XsgeN5pGs7wsfUu35kRVDjdfbd80Cz2QkLIg0M3MsvsJVJdd9QD5RXeiy
+         6UEhQ9sxyZ6zQojKZM8g8YSAiU0HmfS6EeGLmm2G3M5zDUXby8glVotg/+s3ve95UAlT
+         DAQ0U/ntgxEnEPfGxe+68Qz99D7tUdj8cjDtGb+44i81+8OKBcckxrd+3wvZeL0MsCVS
+         GUydrXVlNXeNeT9yD3EB7dKB2lMU1zF3uY6+lKZ9hv2ld2NLoMT31L6wdQwnvoc03z5L
+         JHDg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-transfer-encoding
+         :content-language;
+        bh=iUBOjyHfuR7bXfhhUiHsxfKRvIQzrO86xTAr8Ifre0Q=;
+        b=SdDqsnpXo3zgyN+ap6l1hovjnuTXXtHi00xoT/NSR3QWt9j9FrcnhxhbTpwrkBvMT7
+         h6h8qWX0zLt5cYxz4e5ZvUY3F1E8WhVqh1bBgYjvr5uN5sCOiuc5IWP1J/I1mYWVsuWK
+         yRhr0NrEUDMG1fEDQxVNWYjiQT0UolBBmGEiYdDGDjRAJ0Uo8ZDqU7KyGnDbWFUJw1QQ
+         WtDPzyYtxznTNwuFiv1LlPDKxf6TN19S0DeAqbO/nw/R/7h8Bck5/NNJ0I+kxi2HlhEG
+         IR7o5eL46ZX/MnNlRI8iw8oZoQ4ya1Bp8/ZwpqLBtumHvcieGR43BaBpu2viMaf76UVH
+         LyMA==
+X-Gm-Message-State: APjAAAXxNh6GX409/+5XlzPbhOuI9QBdTlZAAt9NCAtoLwzJcsYSSvys
+        Os8GqcPjQeHhtl6S6qdhHquwaA==
+X-Google-Smtp-Source: APXvYqzWSovEndvhpUlPPG2KWsLiHc/5J0wB0jU8KW7kk3lkOzlRWdHFYbFHIpUg2H8EkpfjsR5P5g==
+X-Received: by 2002:a17:902:8a88:: with SMTP id p8mr4822043plo.152.1569515400373;
+        Thu, 26 Sep 2019 09:30:00 -0700 (PDT)
+Received: from Shannons-MacBook-Pro.local (static-50-53-47-17.bvtn.or.frontiernet.net. [50.53.47.17])
+        by smtp.gmail.com with ESMTPSA id e127sm3547209pfe.37.2019.09.26.09.29.57
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 26 Sep 2019 09:29:59 -0700 (PDT)
+Subject: Re: [PATCH 1/3] docs: fix some broken references
+To:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        corbet@lwn.net
+Cc:     Mauro Carvalho Chehab <mchehab@infradead.org>,
+        linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
         Linus Walleij <linus.walleij@linaro.org>,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org
-Subject: Re: [PATCH v5] gpio/mpc8xxx: change irq handler from chained to
- normal
-Message-ID: <20190926153542.GE25745@shell.armlinux.org.uk>
-References: <20190916055817.43425-1-hui.song_1@nxp.com>
+        Jean Delvare <jdelvare@suse.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Paul Burton <paul.burton@mips.com>,
+        James Hogan <jhogan@kernel.org>,
+        Saeed Mahameed <saeedm@mellanox.com>,
+        Leon Romanovsky <leon@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Pensando Drivers <drivers@pensando.io>,
+        Steve French <sfrench@samba.org>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Palmer Dabbelt <palmer@sifive.com>,
+        Albert Ou <aou@eecs.berkeley.edu>, devicetree@vger.kernel.org,
+        linux-gpio@vger.kernel.org, linux-hwmon@vger.kernel.org,
+        linux-mips@vger.kernel.org, netdev@vger.kernel.org,
+        linux-rdma@vger.kernel.org, linux-cifs@vger.kernel.org,
+        samba-technical@lists.samba.org, linux-riscv@lists.infradead.org
+References: <b87385b2ac6ce6c75df82062fce2976149bbaa6b.1569330078.git.mchehab+samsung@kernel.org>
+From:   Shannon Nelson <snelson@pensando.io>
+Message-ID: <81dc41d5-606a-7638-1d11-4fe53e9c2a7f@pensando.io>
+Date:   Thu, 26 Sep 2019 09:29:56 -0700
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:60.0)
+ Gecko/20100101 Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190916055817.43425-1-hui.song_1@nxp.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <b87385b2ac6ce6c75df82062fce2976149bbaa6b.1569330078.git.mchehab+samsung@kernel.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Sep 16, 2019 at 01:58:17PM +0800, Hui Song wrote:
-> From: Song Hui <hui.song_1@nxp.com>
-> 
-> More than one gpio controllers can share one interrupt, change the
-> driver to request shared irq.
-> 
-> Signed-off-by: Laurentiu Tudor <Laurentiu.Tudor@nxp.com>
-> Signed-off-by: Alex Marginean <alexandru.marginean@nxp.com>
-> Signed-off-by: Song Hui <hui.song_1@nxp.com>
+On 9/24/19 6:01 AM, Mauro Carvalho Chehab wrote:
+> There are a number of documentation files that got moved or
+> renamed. update their references.
+>
+> Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 
-While this will work, it will mess up userspace accounting of the
-number of interrupts per second in tools such as vmstat.  The reason
-is that for every GPIO interrupt, /proc/interrupts records the count
-against GIC interrupt 68 or 69, as well as the GPIO itself.  So, for
-every GPIO interrupt, the total number of interrupts that the system
-has seen increments by two.
+>   drivers/net/ethernet/pensando/ionic/ionic_if.h            | 4 ++--
 
-If we don't care about accurate interrupt statistics, then this is
-fine, but I think it should be mentioned in the commit message.
+Acked-by: Shannon Nelson <snelson@pensando.io>
 
-> ---
-> Changes in v5:
-> 	- add traverse every bit function.
-> Changes in v4:
-> 	- convert 'pr_err' to 'dev_err'.
-> Changes in v3:
-> 	- update the patch description.
-> Changes in v2:
-> 	- delete the compatible of ls1088a.
->  drivers/gpio/gpio-mpc8xxx.c | 30 +++++++++++++++++++-----------
->  1 file changed, 19 insertions(+), 11 deletions(-)
-> 
-> diff --git a/drivers/gpio/gpio-mpc8xxx.c b/drivers/gpio/gpio-mpc8xxx.c
-> index 16a47de..3a06ca9 100644
-> --- a/drivers/gpio/gpio-mpc8xxx.c
-> +++ b/drivers/gpio/gpio-mpc8xxx.c
-> @@ -22,6 +22,7 @@
->  #include <linux/irq.h>
->  #include <linux/gpio/driver.h>
->  #include <linux/bitops.h>
-> +#include <linux/interrupt.h>
->  
->  #define MPC8XXX_GPIO_PINS	32
->  
-> @@ -127,20 +128,20 @@ static int mpc8xxx_gpio_to_irq(struct gpio_chip *gc, unsigned offset)
->  		return -ENXIO;
->  }
->  
-> -static void mpc8xxx_gpio_irq_cascade(struct irq_desc *desc)
-> +static irqreturn_t mpc8xxx_gpio_irq_cascade(int irq, void *data)
->  {
-> -	struct mpc8xxx_gpio_chip *mpc8xxx_gc = irq_desc_get_handler_data(desc);
-> -	struct irq_chip *chip = irq_desc_get_chip(desc);
-> +	struct mpc8xxx_gpio_chip *mpc8xxx_gc = (struct mpc8xxx_gpio_chip *)data;
->  	struct gpio_chip *gc = &mpc8xxx_gc->gc;
->  	unsigned int mask;
-> +	int i;
->  
->  	mask = gc->read_reg(mpc8xxx_gc->regs + GPIO_IER)
->  		& gc->read_reg(mpc8xxx_gc->regs + GPIO_IMR);
-> -	if (mask)
-> +	for_each_set_bit(i, &mask, 32)
->  		generic_handle_irq(irq_linear_revmap(mpc8xxx_gc->irq,
-> -						     32 - ffs(mask)));
-> -	if (chip->irq_eoi)
-> -		chip->irq_eoi(&desc->irq_data);
-> +						     31 - i));
-> +
-> +	return IRQ_HANDLED;
->  }
->  
->  static void mpc8xxx_irq_unmask(struct irq_data *d)
-> @@ -388,8 +389,8 @@ static int mpc8xxx_probe(struct platform_device *pdev)
->  
->  	ret = gpiochip_add_data(gc, mpc8xxx_gc);
->  	if (ret) {
-> -		pr_err("%pOF: GPIO chip registration failed with status %d\n",
-> -		       np, ret);
-> +		dev_err(&pdev->dev, "%pOF: GPIO chip registration failed with status %d\n",
-> +			np, ret);
->  		goto err;
->  	}
->  
-> @@ -409,8 +410,15 @@ static int mpc8xxx_probe(struct platform_device *pdev)
->  	if (devtype->gpio_dir_in_init)
->  		devtype->gpio_dir_in_init(gc);
->  
-> -	irq_set_chained_handler_and_data(mpc8xxx_gc->irqn,
-> -					 mpc8xxx_gpio_irq_cascade, mpc8xxx_gc);
-> +	ret = request_irq(mpc8xxx_gc->irqn, mpc8xxx_gpio_irq_cascade,
-> +			  IRQF_NO_THREAD | IRQF_SHARED, "gpio-cascade",
-> +			  mpc8xxx_gc);
-> +	if (ret) {
-> +		dev_err(&pdev->dev, "%s: failed to request_irq(%d), ret = %d\n",
-> +			np->full_name, mpc8xxx_gc->irqn, ret);
-> +		goto err;
-> +	}
-> +
->  	return 0;
->  err:
->  	iounmap(mpc8xxx_gc->regs);
-> -- 
-> 2.9.5
-> 
-> 
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-> 
-
--- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
-According to speedtest.net: 11.9Mbps down 500kbps up
