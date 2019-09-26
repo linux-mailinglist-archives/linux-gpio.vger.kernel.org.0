@@ -2,102 +2,81 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 901F4BED2F
-	for <lists+linux-gpio@lfdr.de>; Thu, 26 Sep 2019 10:14:51 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2AE3BBEFE1
+	for <lists+linux-gpio@lfdr.de>; Thu, 26 Sep 2019 12:44:06 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726408AbfIZIOj (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 26 Sep 2019 04:14:39 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:37126 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725883AbfIZIOi (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 26 Sep 2019 04:14:38 -0400
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x8Q8EMNj095953;
-        Thu, 26 Sep 2019 08:14:35 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : mime-version : content-type; s=corp-2019-08-05;
- bh=YDRRpVAtUWoOxNUyo4YRN1dH81wF4V8OciFyOM/bsSc=;
- b=KKTeV+/j14MDSdEkpTJ/hZYSgcx0pcAf0UfV7cef+vW8nQfVg2di0XL69sZfOoRPtse5
- Kh5DErxoBhAXXWUnwZZIWnLhaeGqg7WevuDWzOMTJsL0gy6YWIgGvgoX7GvJSU2d3wJE
- 2GQNzCGcy5B+DX4e/sdHW8QFOmshI27/7wqJ5j+4ZHXmQPubXV9AOkPH7GeVDyOtXJ7C
- Mquxjf2fp4sNUF9XUL5wNCpjWWkJT3V+U8P26Q2yBAh87SiCGQU05jkWHV0kNq5Nbcg7
- SJmglC8HVYdsLMIkBHCrEqwMQ9pqU9zi5grHgLSutLhVfNMVdzgUhEAe2mORwLkS4T9Z og== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by aserp2120.oracle.com with ESMTP id 2v5btqa041-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 26 Sep 2019 08:14:35 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x8Q88fFR130879;
-        Thu, 26 Sep 2019 08:14:35 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by aserp3030.oracle.com with ESMTP id 2v82tmp2ck-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 26 Sep 2019 08:14:34 +0000
-Received: from abhmp0007.oracle.com (abhmp0007.oracle.com [141.146.116.13])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x8Q8EY9u022413;
-        Thu, 26 Sep 2019 08:14:34 GMT
-Received: from mwanda (/41.57.98.10)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Thu, 26 Sep 2019 01:14:33 -0700
-Date:   Thu, 26 Sep 2019 11:14:26 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     Ray Jui <rjui@broadcom.com>,
-        Yendapally Reddy Dhananjaya Reddy 
-        <yendapally.reddy@broadcom.com>
-Cc:     Scott Branden <sbranden@broadcom.com>,
-        bcm-kernel-feedback-list@broadcom.com,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel-janitors@vger.kernel.org
-Subject: [PATCH] ns2: Fix off by one bugs in ns2_pinmux_enable()
-Message-ID: <20190926081426.GB2332@mwanda>
+        id S1725819AbfIZKoF (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 26 Sep 2019 06:44:05 -0400
+Received: from mail-io1-f66.google.com ([209.85.166.66]:36976 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725208AbfIZKoF (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 26 Sep 2019 06:44:05 -0400
+Received: by mail-io1-f66.google.com with SMTP id b19so5267786iob.4
+        for <linux-gpio@vger.kernel.org>; Thu, 26 Sep 2019 03:44:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:reply-to:from:date:message-id:subject:to;
+        bh=y7cIzG0PVrRis126czyvwHkkalaXGhnWuRZIJrhxFOU=;
+        b=ZWWzY74uIfSWV+URtAnHFAkd79RdtJYePup62zhvflVIU+GGexZqD4nzbrEB2uuu1/
+         K+xa8fS8ovFGd3qnTNLceKVNbaNBC00w/ZGgYSoOOVstBWg7+fQBZQuMKS5XlnZa1+2A
+         GB+mx5UBbymvKmh7/XWkmujpf6DBgMT1vgITJAajqFZf9Rif54A/6MCI3gCFphMPEcE/
+         NNM5lW7e/BV09W/oAziamU/SxV4tGJ9dPi2o6e0YVvmWtehIK91O2T6XzbP2Hd3i9jiF
+         oOkVMFKF4mOrlKBP03j2EeoZYCpdo4OANWsV+qg7uGQEAlcn8AX3W8yO9JS/KXQC4EZ7
+         sF1A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
+         :subject:to;
+        bh=y7cIzG0PVrRis126czyvwHkkalaXGhnWuRZIJrhxFOU=;
+        b=e0z8gSNPKBmJy6gceA57YfLpmpRWzi0n8IuC3PWooHxldJzg8D4LA89k3dYcZr2kef
+         zCjRP7NJAj8fojpa/SPbWiVF17LuIh2qQk4Rfg+sDFwcOhZ/Gv7l1QAdzZWCDOJXB73z
+         mc7e3awrmKjRlOqz7waBj+rX+t1ImQnBMynS8qH/QgYEqwy1/uT6n9XBEpKsEvTpIEhp
+         WAUoBCEy5RVM2VyZLdfC4MZYamJO6qsjvXVkfRRxzvB+oG+FIbsrTLG+D1CuLAk2RaIW
+         KUoIjHUH7mTTZPz+xETx2zz6qai3VNiKKr99tppFOPrLqV/GKJYmzIiBvLXAVKWKMBC/
+         4qoA==
+X-Gm-Message-State: APjAAAXrT3i8IjssGqh6XfCqf8Os6feHK+2yb2W+LrfG2jMGmhwXMsLA
+        l4vzWAvr5eet2TMkomeVLGjos+SVDfk+/x631Rw=
+X-Google-Smtp-Source: APXvYqyBkKr2Jo8/mQCqnx77SRC8rBVDJ8k8O9PIcClzepGMr9fIBfcINyJvlrml2vBMtSd0TPRNepHC+J1dtf7n1ug=
+X-Received: by 2002:a92:db0c:: with SMTP id b12mr1567408iln.27.1569494643368;
+ Thu, 26 Sep 2019 03:44:03 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-X-Mailer: git-send-email haha only kidding
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9391 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=955
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1908290000 definitions=main-1909260080
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9391 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1908290000
- definitions=main-1909260081
+Received: by 2002:a4f:1b16:0:0:0:0:0 with HTTP; Thu, 26 Sep 2019 03:44:02
+ -0700 (PDT)
+Reply-To: ayishagddafio@mail.com
+From:   AISHA GADDAFI <uusembassy@gmail.com>
+Date:   Thu, 26 Sep 2019 03:44:02 -0700
+Message-ID: <CAAFfNTazddxDrqUYgrMYwmSVEcne-q5WzB4wXjEj33BEPeM0rg@mail.gmail.com>
+Subject: Dear Friend (Assalamu Alaikum),
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-The pinctrl->functions[] array has pinctrl->num_functions elements and
-the pinctrl->groups[] array is the same way.  These are set in
-ns2_pinmux_probe().  So the > comparisons should be >= so that we don't
-read one element beyond the end of the array.
-
-Fixes: b5aa1006e4a9 ("pinctrl: ns2: add pinmux driver support for Broadcom NS2 SoC")
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
----
- drivers/pinctrl/bcm/pinctrl-ns2-mux.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/pinctrl/bcm/pinctrl-ns2-mux.c b/drivers/pinctrl/bcm/pinctrl-ns2-mux.c
-index 2bf6af7df7d9..9fabc451550e 100644
---- a/drivers/pinctrl/bcm/pinctrl-ns2-mux.c
-+++ b/drivers/pinctrl/bcm/pinctrl-ns2-mux.c
-@@ -640,8 +640,8 @@ static int ns2_pinmux_enable(struct pinctrl_dev *pctrl_dev,
- 	const struct ns2_pin_function *func;
- 	const struct ns2_pin_group *grp;
- 
--	if (grp_select > pinctrl->num_groups ||
--		func_select > pinctrl->num_functions)
-+	if (grp_select >= pinctrl->num_groups ||
-+		func_select >= pinctrl->num_functions)
- 		return -EINVAL;
- 
- 	func = &pinctrl->functions[func_select];
 -- 
-2.20.1
+Dear Friend (Assalamu Alaikum),
 
+I came across your e-mail contact prior a private search while in need of
+your assistance. My name is Aisha  Al-Qaddafi a single Mother and a Widow
+with three Children. I am the only biological Daughter of late Libyan
+President (Late Colonel Muammar Gaddafi).
+
+I have investment funds worth Twenty Seven Million Five Hundred Thousand
+United State Dollar ($27.500.000.00 ) and i need a trusted investment
+Manager/Partner because of my current refugee status, however, I am
+interested in you for investment project assistance in your country, may be
+from there, we can build business relationship in the nearest future.
+
+I am willing to negotiate investment/business profit sharing ratio with you
+base on the future investment earning profits.
+
+If you are willing to handle this project on my behalf kindly reply urgent
+to enable me provide you more information about the investment funds.
+
+Your Urgent Reply Will Be Appreciated. write me at this email address(
+ayishagddafio@mail.com ) for further discussion.
+
+Best Regards
+Mrs Aisha Al-Qaddafi
+Reply to: ayishagddafio@mail.com
