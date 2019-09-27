@@ -2,52 +2,52 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id DCF95BFC9A
-	for <lists+linux-gpio@lfdr.de>; Fri, 27 Sep 2019 03:13:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A33F2BFCA4
+	for <lists+linux-gpio@lfdr.de>; Fri, 27 Sep 2019 03:16:45 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725808AbfI0BNZ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 26 Sep 2019 21:13:25 -0400
-Received: from mail-io1-f67.google.com ([209.85.166.67]:46189 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725819AbfI0BNY (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 26 Sep 2019 21:13:24 -0400
-Received: by mail-io1-f67.google.com with SMTP id c6so11685500ioo.13
-        for <linux-gpio@vger.kernel.org>; Thu, 26 Sep 2019 18:13:24 -0700 (PDT)
+        id S1726202AbfI0BQp (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 26 Sep 2019 21:16:45 -0400
+Received: from mail-io1-f68.google.com ([209.85.166.68]:35826 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726140AbfI0BQo (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 26 Sep 2019 21:16:44 -0400
+Received: by mail-io1-f68.google.com with SMTP id q10so11914050iop.2
+        for <linux-gpio@vger.kernel.org>; Thu, 26 Sep 2019 18:16:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linuxfoundation.org; s=google;
         h=from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=vEE9lOyJedYGEKwzVDnKuOkrG0RTwYW04dLMK0cfVNI=;
-        b=aewx8DaVgi2IdGL01e4RMmtoymyhqnU1GKAbN4jN+2MeIAH5LDTe27X9hTI4aQQZ6v
-         9TRC9vcS29nS6XOnSEfGzgsIU6hpszM9EamSBK20+M5v1RzMXAoG5eM5ccdafnaMZgsC
-         j7Jiv/gSplXSNatW+xjRZG6YvpXWe+QvxtcNc=
+        bh=H2GyEMBjk27THtCkzskXmMVgGtiHssCWYkVZJhAzOdg=;
+        b=BY3eP8mGIkLH/kjnNmwFxxobZiK8CoYQi9lyd2yXukK5S/NAvSa5KF4f8hpeLfkQuM
+         hHoxaOV2Pa6GF2CZECb3AqZAjQ8p/pS1vAuURM2Totchz2gfdi/b/I0AjYAv0jGL0aKX
+         552gq4qW4lMnHWn2Ek2jKIBttdf8IHEWRQcnU=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=vEE9lOyJedYGEKwzVDnKuOkrG0RTwYW04dLMK0cfVNI=;
-        b=K0W0U0MNaf6olDfi5N+I6ylMqSj/VC3vRyWn1wzw/gmc16c5xPVNReXnTJRRlqoAAK
-         k99EsofwlVa4HpvbfjG7M+NiG2XgWb6oNVE0JjGEuIQMiJ5J9HQv0N0yPEfMcZeDEQsR
-         dY3XhSRkuNO2i6dz5F6M528tFdGz7N7jWudiFzMs602LzlA+NKiy2tibrea0qobrGrq3
-         QrRO0BcR44cptUGae3C0B3KSf5mEkaB5ICtPZDsiYJ9JzJdfd8jQriR/JcQwWMSMLlaa
-         VaxB1604qzmsxmJ7mlozJYg1PC7M47Ulb/6RFwPeA+4Zgl+mRIBqbHQqKiGPup6Yh2CN
-         6TMw==
-X-Gm-Message-State: APjAAAU4TEXd7tRyAhlOQLwFpW1feh3Ky2m8abnut2Xo0zSADm5jAfX4
-        B02XZAX+HZ99uZg5iiacODHd6g==
-X-Google-Smtp-Source: APXvYqyi25JQWLz5zuPdbjoyS7rTFaHfpEmPpxHwSsRTBjT+rhIcseiZPcgjtZuZTSP2Nu6zbDvXAw==
-X-Received: by 2002:a92:1685:: with SMTP id 5mr2085408ilw.81.1569546804169;
-        Thu, 26 Sep 2019 18:13:24 -0700 (PDT)
+        bh=H2GyEMBjk27THtCkzskXmMVgGtiHssCWYkVZJhAzOdg=;
+        b=q4TQHWmKO0lc7AlJcilcwU/b2WueRNt1NJO9Dnkn3v4mCXeZ8JAFiSECURraEI7J1K
+         7op/70TsOduf/G6QM51ja3LqjNdyhp+xcDTMxQRcUY6WQZlZz1tmP7C6J6+kjIobXyfG
+         oTrTyictNbnR+maCLml+o2dNIh5E7h2y2bSFq3toL1AuNpt5UHnF/gXBQ4jJ14jbDeLp
+         7AYRJfb6PsGneu6diEY//xa9A4Xl3nMqLS+em6Kwlkb9w57Jlmz5Iyk2MPwFLb4slvr8
+         3jsDDGFSMwKMwwe5k4ewwKY0WbQAvvVJDffUq1+lfeOz3spF9AIGUnf6uTcR5DtJiu7P
+         uoQw==
+X-Gm-Message-State: APjAAAVHJWCYsmnPyJcuZD+wtq6iHP3H77qpUtqqLHkThzRhePhAFXvp
+        ORshVjBwZO2NbLJpRs0L+1J3mw==
+X-Google-Smtp-Source: APXvYqw4JUFgbiVAQSuDwJ3BV44jJ7VB5OKgmirW3uvkHAOBn1S/AOu+UhOVLSlxzghLpFiI9P2BvQ==
+X-Received: by 2002:a6b:fa07:: with SMTP id p7mr6298691ioh.164.1569547003964;
+        Thu, 26 Sep 2019 18:16:43 -0700 (PDT)
 Received: from shuah-t480s.internal (c-24-9-64-241.hsd1.co.comcast.net. [24.9.64.241])
-        by smtp.gmail.com with ESMTPSA id z5sm1717813ioh.23.2019.09.26.18.13.23
+        by smtp.gmail.com with ESMTPSA id x2sm1652121iob.74.2019.09.26.18.16.42
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 26 Sep 2019 18:13:23 -0700 (PDT)
+        Thu, 26 Sep 2019 18:16:43 -0700 (PDT)
 From:   Shuah Khan <skhan@linuxfoundation.org>
 To:     linus.walleij@linaro.org, bgolaszewski@baylibre.com
 Cc:     Shuah Khan <skhan@linuxfoundation.org>, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org, --cc=linux-kselftest@vger.kernel.org
-Subject: [PATCH] tools: gpio: Use !building_out_of_srctree to determine srctree
-Date:   Thu, 26 Sep 2019 19:13:21 -0600
-Message-Id: <20190927011321.4612-1-skhan@linuxfoundation.org>
+        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org
+Subject: [PATCH RESEND] tools: gpio: Use !building_out_of_srctree to determine srctree
+Date:   Thu, 26 Sep 2019 19:16:41 -0600
+Message-Id: <20190927011641.4858-1-skhan@linuxfoundation.org>
 X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -73,6 +73,8 @@ cases to fix "make TARGETS=gpio kselftest" build failure.
 
 Signed-off-by: Shuah Khan <skhan@linuxfoundation.org>
 ---
+Rsending with corrected address for linux-kselftest@vger.kernel.org
+
  tools/gpio/Makefile | 6 +++++-
  1 file changed, 5 insertions(+), 1 deletion(-)
 
