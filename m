@@ -2,120 +2,90 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 2F787C0496
-	for <lists+linux-gpio@lfdr.de>; Fri, 27 Sep 2019 13:49:16 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E4F84C049B
+	for <lists+linux-gpio@lfdr.de>; Fri, 27 Sep 2019 13:50:45 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727085AbfI0Lsk (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 27 Sep 2019 07:48:40 -0400
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:34967 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725882AbfI0Lsk (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 27 Sep 2019 07:48:40 -0400
-Received: by mail-lf1-f68.google.com with SMTP id w6so1703051lfl.2
-        for <linux-gpio@vger.kernel.org>; Fri, 27 Sep 2019 04:48:38 -0700 (PDT)
+        id S1726540AbfI0Lul (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 27 Sep 2019 07:50:41 -0400
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:38530 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727303AbfI0Lul (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 27 Sep 2019 07:50:41 -0400
+Received: by mail-lf1-f67.google.com with SMTP id u28so1696008lfc.5
+        for <linux-gpio@vger.kernel.org>; Fri, 27 Sep 2019 04:50:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=pFDpkukXEfU9tBx0F5yg7RZhEDdxtF7LeVvjbzzhvz8=;
-        b=vlaaHSfwdULnq2917DCg7xxUVx3tXBwbhXuy9YmIbneJ1XULVOakNhuzop+ws1zxWX
-         E8br64wJYaTSyokIxipxJg5Y1zrGrwuUF4tWUPGaGA2opAj+AQzKbvTHEsoH1+p6H3Et
-         c0hZ5aoEwGKflD1IX0WdVRzgtODQuQ8zmOULCu34lyWogFrKgUeW4IUTP5Ldr4NMPaxA
-         DarBpPhBVDHS/fnFyiNA7odVuq51FmcCElHLbFHIBIaUka1iMSqgrAA9znlxEVV3UI8R
-         6EwoRrExWoATTPlpEw7+zsG0KpbBk0UrFJRJO8uGs283/Q2kT+wT8YvZnObrKXcIRxHZ
-         4Nqw==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=jtkPzUdh0BjwnTFcU6cDEv31BuC4wG3MpqjO9vOb5nc=;
+        b=dHkG+HnC9dM6qd1tsawE2B77CGjpChpBeEsSBUvLKNrVXpX+osBDmU/jLYHZPm1B/P
+         2dyDxSkFmTP8ieUdkcZKpDi2kNeo10lBoWrXT9wdZ615R12K9KGFf6J/OrMdVyWQEX/z
+         wYgpsuDlMp9FCPoF7j0EiuKNEMBtaw/LYAUt7RIkCAlVR/MANI5zfMMqmxqGDQcnXtAL
+         2OY3vl+bQvPLR8uEP6OVKQm7w0g52y6Li38Svuxw5AE7QBLcb9eP1aPHP9bXfcFj5qG3
+         0/jxw0iG4icNXkyuWt9atKmkl1Z8zGcUZmaUcKj8BAHOSFFYokiX4pBiyg/QJksov5nt
+         4GIA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=pFDpkukXEfU9tBx0F5yg7RZhEDdxtF7LeVvjbzzhvz8=;
-        b=KkLtufg1qiOQDQ8+8fD9po7JFn38VUjq4WouIi6/GGyRj6Mia5xEPFvmO3lUE3UDok
-         zMkDqJK/yIhPrRwN4U4SJlq3GRTDwvWTAcgZ+I4X2tZnoLw1Xgoc2OV4byN+KeRtQYKw
-         J28aouyE4QOV4qEG5YCL/fRLtKUnDW9iumtDuboFuB+2q4QlV3tBHRA3GAWiuMW6ye0E
-         mdUaLlyC1g+C7yQXxrjwX1JaamUDjgWXESq9d2671pTJ9QZrjWHVsrDcxivDh1WHLCsl
-         lNpgHXB8OYRrVpyBebUX/nXLSpLJjJDd27BvFz63tlspNVlH2QLyITzWkj2o4pd369u6
-         L3OA==
-X-Gm-Message-State: APjAAAVsl4BCEj+0eKFUwJjga6hqhMFZo6hNerJ7rfmoCzRys4HmzwJ0
-        FNVvKs73QSg3QJLPlGbvv9swnb/BHbKczg==
-X-Google-Smtp-Source: APXvYqxKjBfNJup5xvk+08oKCUvTq6X62CvXe7DXPn1mtn0paJq9cgllkUqOdZhOhBidGKqsVu6yIA==
-X-Received: by 2002:ac2:5a19:: with SMTP id q25mr2504854lfn.178.1569584917836;
-        Fri, 27 Sep 2019 04:48:37 -0700 (PDT)
-Received: from genomnajs.ideon.se ([85.235.10.227])
-        by smtp.gmail.com with ESMTPSA id v1sm408631lji.89.2019.09.27.04.48.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 27 Sep 2019 04:48:36 -0700 (PDT)
-From:   Linus Walleij <linus.walleij@linaro.org>
-To:     linux-gpio@vger.kernel.org
-Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Hongwei Zhang <hongweiz@ami.com>,
-        Andrew Jeffery <andrew@aj.id.au>
-Subject: [PATCH] gpio: aspeed-sgpio: Rename and add Kconfig/Makefile
-Date:   Fri, 27 Sep 2019 13:48:33 +0200
-Message-Id: <20190927114833.12551-1-linus.walleij@linaro.org>
-X-Mailer: git-send-email 2.21.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=jtkPzUdh0BjwnTFcU6cDEv31BuC4wG3MpqjO9vOb5nc=;
+        b=TzPbLcd4sjpzLQ/cv5AYY3Blj1sY2g+gyZTwBS4yrN4sol5yVinkY0H4wAyFT7qbZY
+         bo5qQi6wtpticTl4i2AYyU36HuoX6KvAEQqlrLzG2A+Z9BAoxzQA4kjQJl0CjmTLPzO+
+         TDzTdYneHLKlyqefurhURYVdGnSBMv9fdWeEoXbxUCfJxyiSrNDeB2GJnIMy0NIl+hdV
+         cOlxpIP0aziIrDlleSRpElwlR69p+OBIHUe4BqeEkPovwvhz7hkgMJMwOvZ5fbspTtCA
+         p0EIYbGb1Z1PtKE6XJIXpl56u0PYWNxahO9VYvH+pc5ocCGr8qtgX0wZ/bGLsQNv+4fj
+         GQHQ==
+X-Gm-Message-State: APjAAAXnAFhve2ym6nEUR3r9OAMdgmpBF1EqiQoHQkAUEAUdIqkZBzag
+        9MK/hkDabs0b5Q9t6XtfF6xMqSFEiYsEpX3z5CuLZQ==
+X-Google-Smtp-Source: APXvYqyF/AMU9HIQoJBR4mgMcIh/XR7QQxXA0oPACvNrMQJcYHLmYcQQw76chmDwmpMjtdY1kzoSIQzHJDEllWzZAzI=
+X-Received: by 2002:a19:48c3:: with SMTP id v186mr2493316lfa.141.1569585039656;
+ Fri, 27 Sep 2019 04:50:39 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <1569439337-10482-1-git-send-email-hongweiz@ami.com> <1569439337-10482-3-git-send-email-hongweiz@ami.com>
+In-Reply-To: <1569439337-10482-3-git-send-email-hongweiz@ami.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Fri, 27 Sep 2019 13:50:28 +0200
+Message-ID: <CACRpkdY4RsqAOykyS-9GEFvF--3bmf=UjzADx8U18z=gTHBb4g@mail.gmail.com>
+Subject: Re: [v2, 2/2] gpio: dts: aspeed: Add SGPIO driver
+To:     Hongwei Zhang <hongweiz@ami.com>
+Cc:     Andrew Jeffery <andrew@aj.id.au>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Joel Stanley <joel@jms.id.au>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        linux-aspeed <linux-aspeed@lists.ozlabs.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Benjamin Gaignard <benjamin.gaignard@linaro.org>,
+        Doug Anderson <armlinux@m.disordat.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Russell King <linux@armlinux.org.uk>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-This renames the "gpio-aspeed" driver to conform with other
-GPIO drivers as "gpio-aspeed-sgpio.c". All GPIO drivers
-should start with the string "gpio-" no special exceptions.
+On Wed, Sep 25, 2019 at 9:22 PM Hongwei Zhang <hongweiz@ami.com> wrote:
 
-Also the Kconfig and Makefile entries should normally
-go with the driver but I missed this in my review, sorry
-for mistake. "CONFIG_GPIO_ASPEED_SGPIO" is used to
-activate this driver.
+> Add SGPIO driver support for Aspeed AST2500 SoC.
+>
+> Signed-off-by: Hongwei Zhang <hongweiz@ami.com>
 
-Cc: Hongwei Zhang <hongweiz@ami.com>
-Cc: Andrew Jeffery <andrew@aj.id.au>
-Fixes: 7db47faae79b ("gpio: aspeed: Add SGPIO driver")
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
----
- drivers/gpio/Kconfig                                 | 8 ++++++++
- drivers/gpio/Makefile                                | 1 +
- drivers/gpio/{sgpio-aspeed.c => gpio-aspeed-sgpio.c} | 0
- 3 files changed, 9 insertions(+)
- rename drivers/gpio/{sgpio-aspeed.c => gpio-aspeed-sgpio.c} (100%)
+I sent a separate patch to fix this up the way I want it with the file
+named gpio-aspeed-sgpio.c and CONFIG_GPIO_ASPEED_SGPIO.
 
-diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
-index 38e096e6925f..7138290cdd36 100644
---- a/drivers/gpio/Kconfig
-+++ b/drivers/gpio/Kconfig
-@@ -120,6 +120,14 @@ config GPIO_ASPEED
- 	help
- 	  Say Y here to support Aspeed AST2400 and AST2500 GPIO controllers.
- 
-+config GPIO_ASPEED_SGPIO
-+	bool "Aspeed SGPIO support"
-+	depends on (ARCH_ASPEED || COMPILE_TEST) && OF_GPIO
-+	select GPIO_GENERIC
-+	select GPIOLIB_IRQCHIP
-+	help
-+	  Say Y here to support Aspeed AST2500 SGPIO functionality.
-+
- config GPIO_ATH79
- 	tristate "Atheros AR71XX/AR724X/AR913X GPIO support"
- 	default y if ATH79
-diff --git a/drivers/gpio/Makefile b/drivers/gpio/Makefile
-index d2fd19c15bae..e4599f90f702 100644
---- a/drivers/gpio/Makefile
-+++ b/drivers/gpio/Makefile
-@@ -32,6 +32,7 @@ obj-$(CONFIG_GPIO_AMD_FCH)		+= gpio-amd-fch.o
- obj-$(CONFIG_GPIO_AMDPT)		+= gpio-amdpt.o
- obj-$(CONFIG_GPIO_ARIZONA)		+= gpio-arizona.o
- obj-$(CONFIG_GPIO_ASPEED)		+= gpio-aspeed.o
-+obj-$(CONFIG_GPIO_ASPEED_SGPIO)		+= gpio-aspeed-sgpio.o
- obj-$(CONFIG_GPIO_ATH79)		+= gpio-ath79.o
- obj-$(CONFIG_GPIO_BCM_KONA)		+= gpio-bcm-kona.o
- obj-$(CONFIG_GPIO_BD70528)		+= gpio-bd70528.o
-diff --git a/drivers/gpio/sgpio-aspeed.c b/drivers/gpio/gpio-aspeed-sgpio.c
-similarity index 100%
-rename from drivers/gpio/sgpio-aspeed.c
-rename to drivers/gpio/gpio-aspeed-sgpio.c
--- 
-2.21.0
+I don't want to mix up the namespaces of something Aspeed-generic
+with the namespace of the GPIO subsystem. SGPIO is the name
+of a specific Aspeed component.
 
+Yours,
+Linus Walleij
