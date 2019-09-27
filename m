@@ -2,236 +2,136 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 62825C0DD5
-	for <lists+linux-gpio@lfdr.de>; Sat, 28 Sep 2019 00:11:16 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7795CC0DDD
+	for <lists+linux-gpio@lfdr.de>; Sat, 28 Sep 2019 00:15:58 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726036AbfI0WLP (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 27 Sep 2019 18:11:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47142 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726033AbfI0WLP (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Fri, 27 Sep 2019 18:11:15 -0400
-Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 406BA217D9;
-        Fri, 27 Sep 2019 22:11:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569622274;
-        bh=58COh0a9lzNayEkOKvFt70ACnycq2rNmRYv95pg9O+E=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=euo5fT1PzNI/vG5JFBL0XIchph3OiWMQyRqCIIKhen+P6P5GT0SD4pVnbUFI4Ny51
-         LNc31rhB6/z213+UpEzIrGX7KFG2bUabffhMmTiUyxUijt7dGHLbWyK0TQ2eAw8pI4
-         IxYqOEbncqCaeWJKq0JpdWSe9stdSkNuNjCjcMeo=
-Received: by mail-wm1-f53.google.com with SMTP id 3so6990486wmi.3;
-        Fri, 27 Sep 2019 15:11:14 -0700 (PDT)
-X-Gm-Message-State: APjAAAUHwPU9LxgwJQI/f9oY4wdLbtjVLvMqnDjZlflGLf55O5yz2xUq
-        GuUvILjkMxcj04rGVyUm2z85JqDJeyMOcdlctm8=
-X-Google-Smtp-Source: APXvYqz4VPgxhyHSxGNoezNefD7iHVu009KTZ47zBxC7f6LvK3X27cb5VbS/erEUJho47dJVp84sRMs0XE3SU7xDXyM=
-X-Received: by 2002:a05:600c:1103:: with SMTP id b3mr9005703wma.3.1569622272786;
- Fri, 27 Sep 2019 15:11:12 -0700 (PDT)
+        id S1726116AbfI0WPy (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 27 Sep 2019 18:15:54 -0400
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:42151 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725990AbfI0WPy (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 27 Sep 2019 18:15:54 -0400
+Received: by mail-ot1-f68.google.com with SMTP id c10so3577966otd.9;
+        Fri, 27 Sep 2019 15:15:52 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=42kJGNhCusDQNjkVnOKLdMbZYX560Wifg8dSCAiA4cc=;
+        b=MaTHFVvSjGQewcLfEKv3lZqLFzzv1t0RBBz70gGFlKJEMIFDTtXHrPRK4VBQ3q5cAJ
+         uhf68TfNq7c6IPfVjF9JkGhkNqat8ixPOTsOcxXvgcpKuR0aMdP/9xwwoyD73yHTsvl6
+         hjv2p+aleWR3a4fMkNVgTS/jpuz97LDdQSfKuuFggcIQeZN0W4HinPYQGZ1hKFJZI/Ii
+         zVsfesp58p54llLCZKf2+Dfb+b7KccEIBl7t+vN1vHMyJAV+nIXTJXcb7M8oOWsq7ewP
+         wsR4BYZeTeK2FEysXkx6B4k7wnoJX8lf1Vwq8Unxi5pSVyDVNn2JYO4kN9AU+79t9wEJ
+         +g4A==
+X-Gm-Message-State: APjAAAXnmpwueYA/XqRZ3vmMViqb+qaYFndNNK7RtmBp6TVKkkswUW5g
+        z35SI9fI0wDXLsA4u9FX4g==
+X-Google-Smtp-Source: APXvYqxHRXceYpuvkMidUXb4bFxc1IAdjKxxMEefxLhDPOGzWSs4+1XW+3Bdbq9EdqO2Jw6obeKSuA==
+X-Received: by 2002:a9d:1425:: with SMTP id h34mr3237861oth.122.1569622552123;
+        Fri, 27 Sep 2019 15:15:52 -0700 (PDT)
+Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id t207sm2087066oif.11.2019.09.27.15.15.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 27 Sep 2019 15:15:51 -0700 (PDT)
+Date:   Fri, 27 Sep 2019 17:15:50 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+Cc:     linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+Subject: Re: [PATCH v3 2/5] dt-bindings: mfd: Document the Xylon LogiCVC
+ multi-function device
+Message-ID: <20190927221550.GA28831@bogus>
+References: <20190927100407.1863293-1-paul.kocialkowski@bootlin.com>
+ <20190927100407.1863293-3-paul.kocialkowski@bootlin.com>
 MIME-Version: 1.0
-References: <1569560532-1886-1-git-send-email-light.hsieh@mediatek.com> <1569560532-1886-5-git-send-email-light.hsieh@mediatek.com>
-In-Reply-To: <1569560532-1886-5-git-send-email-light.hsieh@mediatek.com>
-From:   Sean Wang <sean.wang@kernel.org>
-Date:   Fri, 27 Sep 2019 15:11:00 -0700
-X-Gmail-Original-Message-ID: <CAGp9LzpdVJ1=hSGiUxi9i+FSDtB9g2Qk22NmMoe660a8hCvU-Q@mail.gmail.com>
-Message-ID: <CAGp9LzpdVJ1=hSGiUxi9i+FSDtB9g2Qk22NmMoe660a8hCvU-Q@mail.gmail.com>
-Subject: Re: [PATCH v6 5/5] pinctrl: mediatek: Add support for pin
- configuration dump via debugfs.
-To:     Light Hsieh <light.hsieh@mediatek.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>, kuohong.wang@mediatek.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190927100407.1863293-3-paul.kocialkowski@bootlin.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi,
-
-On Thu, Sep 26, 2019 at 10:02 PM Light Hsieh <light.hsieh@mediatek.com> wrote:
->
-> Add support for pin configuration dump via catting
-> /sys/kernel/debug/pinctrl/$platform_dependent_path/pinconf-pins.
-> pinctrl framework had already support such dump. This patch implement the
-> operation function pointer to fullfill this dump.
->
-
-Here are missing tags too.
-
+On Fri, Sep 27, 2019 at 12:04:04PM +0200, Paul Kocialkowski wrote:
+> The LogiCVC is a display engine which also exposes GPIO functionality.
+> For this reason, it is described as a multi-function device that is expected
+> to provide register access to its children nodes for gpio and display.
+> 
+> Signed-off-by: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
 > ---
->  drivers/pinctrl/mediatek/pinctrl-paris.c | 88 ++++++++++++++++++++++++++++++++
->  drivers/pinctrl/mediatek/pinctrl-paris.h | 30 +++++++++++
->  2 files changed, 118 insertions(+)
->
-> diff --git a/drivers/pinctrl/mediatek/pinctrl-paris.c b/drivers/pinctrl/mediatek/pinctrl-paris.c
-> index 2a47c45..f531908 100644
-> --- a/drivers/pinctrl/mediatek/pinctrl-paris.c
-> +++ b/drivers/pinctrl/mediatek/pinctrl-paris.c
-> @@ -538,12 +538,99 @@ static int mtk_pctrl_get_group_pins(struct pinctrl_dev *pctldev,
->         return 0;
->  }
->
-> +int mtk_hw_get_value_wrap(struct mtk_pinctrl *hw, unsigned int gpio, int field)
-> +{
-> +       const struct mtk_pin_desc *desc;
-> +       int value, err;
+>  .../bindings/mfd/xylon,logicvc.yaml           | 50 +++++++++++++++++++
+>  1 file changed, 50 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/mfd/xylon,logicvc.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/mfd/xylon,logicvc.yaml b/Documentation/devicetree/bindings/mfd/xylon,logicvc.yaml
+> new file mode 100644
+> index 000000000000..abc9937506e0
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/mfd/xylon,logicvc.yaml
+> @@ -0,0 +1,50 @@
+> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+> +# Copyright 2019 Bootlin
+> +%YAML 1.2
+> +---
+> +$id: "http://devicetree.org/schemas/mfd/xylon,logicvc.yaml#"
+> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
 > +
-> +       if (gpio > hw->soc->npins)
-> +               return -EINVAL;
+> +title: Xylon LogiCVC multi-function device
 > +
-> +       desc = (const struct mtk_pin_desc *)&hw->soc->pins[gpio];
+> +maintainers:
+> +  - Paul Kocialkowski <paul.kocialkowski@bootlin.com>
 > +
-> +       err = mtk_hw_get_value(hw, desc, field, &value);
-> +       if (err)
-> +               return err;
+> +description: |
+> +  The LogiCVC is a display controller that also contains a GPIO controller.
+> +  As a result, a multi-function device is exposed as parent of the display
+> +  and GPIO blocks.
 > +
-> +       return value;
-> +}
+> +properties:
+> +  compatible:
+> +    items:
+> +      - enum:
+> +          - xylon,logicvc-3.02.a
+> +      - const: syscon
+> +      - const: simple-mfd
 > +
-> +ssize_t mtk_pctrl_show_one_pin(struct mtk_pinctrl *hw,
-> +       unsigned int gpio, char *buf, unsigned int bufLen)
-> +{
-> +       const struct mtk_pin_desc *desc;
-> +       int pinmux, pullup, pullen, r1 = -1, r0 = -1, len = 0;
+> +  reg:
+> +    maxItems: 1
+> +
+> +select:
+> +  properties:
+> +    compatible:
+> +      contains:
+> +        enum:
+> +          - xylon,logicvc-3.02.a
 
-Sort the variable declarations in reverse xmas tree order.
+I've seen a couple of these with 'syscon' today, so I fixed the schema 
+tool to just exclude 'syscon' and 'simple-mfd' from the generated 
+'select'. So you can drop select now.
+
+Reviewed-by: Rob Herring <robh@kernel.org>
 
 > +
-> +       if (gpio > hw->soc->npins)
-> +               return -EINVAL;
+> +  required:
+> +    - compatible
 > +
-> +       desc = (const struct mtk_pin_desc *)&hw->soc->pins[gpio];
-> +       pinmux = mtk_pctrl_get_pinmux(hw, gpio);
-> +       if (pinmux >= hw->soc->nfuncs)
-> +               pinmux -= hw->soc->nfuncs;
+> +required:
+> +  - compatible
+> +  - reg
 > +
-> +       mtk_pinconf_bias_get_combo(hw, desc, &pullup, &pullen);
-> +       if (pullen == MTK_PUPD_SET_R1R0_00) {
-> +               pullen = 0;
-> +               r1 = 0;
-> +               r0 = 0;
-> +       } else if (pullen == MTK_PUPD_SET_R1R0_01) {
-> +               pullen = 1;
-> +               r1 = 0;
-> +               r0 = 1;
-> +       } else if (pullen == MTK_PUPD_SET_R1R0_10) {
-> +               pullen = 1;
-> +               r1 = 1;
-> +               r0 = 0;
-> +       } else if (pullen == MTK_PUPD_SET_R1R0_11) {
-> +               pullen = 1;
-> +               r1 = 1;
-> +               r0 = 1;
-> +       } else if (pullen != MTK_DISABLE && pullen != MTK_ENABLE) {
-> +               pullen = 0;
-> +       }
-> +       len += snprintf(buf + len, bufLen - len,
-> +                       "%03d: %1d%1d%1d%1d%02d%1d%1d%1d%1d",
-> +                       gpio,
-> +                       pinmux,
-> +                       mtk_pctrl_get_direction(hw, gpio),
-> +                       mtk_pctrl_get_out(hw, gpio),
-> +                       mtk_pctrl_get_in(hw, gpio),
-> +                       mtk_pctrl_get_driving(hw, gpio),
-> +                       mtk_pctrl_get_smt(hw, gpio),
-> +                       mtk_pctrl_get_ies(hw, gpio),
-> +                       pullen,
-> +                       pullup);
-> +
-> +       if (r1 != -1) {
-> +               len += snprintf(buf + len, bufLen - len, " (%1d %1d)\n",
-> +                       r1, r0);
-> +       } else {
-> +               len += snprintf(buf + len, bufLen - len, "\n");
-> +       }
-> +
-> +       return len;
-> +}
-> +
-> +#define PIN_DBG_BUF_SZ 96
-> +static void mtk_pctrl_dbg_show(struct pinctrl_dev *pctldev, struct seq_file *s,
-> +                         unsigned int gpio)
-> +{
-> +       struct mtk_pinctrl *hw = pinctrl_dev_get_drvdata(pctldev);
-> +       char buf[PIN_DBG_BUF_SZ];
-> +
-> +       (void)mtk_pctrl_show_one_pin(hw, gpio, buf, PIN_DBG_BUF_SZ);
-> +
-> +       seq_printf(s, "%s", buf);
-> +}
-> +
->  static const struct pinctrl_ops mtk_pctlops = {
->         .dt_node_to_map         = mtk_pctrl_dt_node_to_map,
->         .dt_free_map            = pinctrl_utils_free_map,
->         .get_groups_count       = mtk_pctrl_get_groups_count,
->         .get_group_name         = mtk_pctrl_get_group_name,
->         .get_group_pins         = mtk_pctrl_get_group_pins,
-> +       .pin_dbg_show           = mtk_pctrl_dbg_show,
->  };
->
->  static int mtk_pmx_get_funcs_cnt(struct pinctrl_dev *pctldev)
-> @@ -640,6 +727,7 @@ static int mtk_pconf_group_set(struct pinctrl_dev *pctldev, unsigned group,
->         .pin_config_get = mtk_pinconf_get,
->         .pin_config_group_get   = mtk_pconf_group_get,
->         .pin_config_group_set   = mtk_pconf_group_set,
-> +       .is_generic = true,
->  };
->
->  static struct pinctrl_desc mtk_desc = {
-> diff --git a/drivers/pinctrl/mediatek/pinctrl-paris.h b/drivers/pinctrl/mediatek/pinctrl-paris.h
-> index 3d43771..d73f4b6 100644
-> --- a/drivers/pinctrl/mediatek/pinctrl-paris.h
-> +++ b/drivers/pinctrl/mediatek/pinctrl-paris.h
-> @@ -60,6 +60,36 @@
->  int mtk_paris_pinctrl_probe(struct platform_device *pdev,
->                             const struct mtk_pin_soc *soc);
->
-> +int mtk_hw_get_value_wrap(struct mtk_pinctrl *hw, unsigned int gpio, int field);
-> +
-> +#define mtk_pctrl_get_pinmux(hw, gpio)                 \
-> +       mtk_hw_get_value_wrap(hw, gpio, PINCTRL_PIN_REG_MODE)
-> +
-> +/* MTK HW use 0 as input, 1 for output
-> + * This interface is for get direct register value,
-> + * so don't reverse
-> + */
-
-The comment should be removed since that is not really matched with the context.
-
-> +#define mtk_pctrl_get_direction(hw, gpio)              \
-> +       mtk_hw_get_value_wrap(hw, gpio, PINCTRL_PIN_REG_DIR)
-> +
-> +#define mtk_pctrl_get_out(hw, gpio)                    \
-> +       mtk_hw_get_value_wrap(hw, gpio, PINCTRL_PIN_REG_DO)
-> +
-> +#define mtk_pctrl_get_in(hw, gpio)                     \
-> +       mtk_hw_get_value_wrap(hw, gpio, PINCTRL_PIN_REG_DI)
-> +
-> +#define mtk_pctrl_get_smt(hw, gpio)                    \
-> +       mtk_hw_get_value_wrap(hw, gpio, PINCTRL_PIN_REG_SMT)
-> +
-> +#define mtk_pctrl_get_ies(hw, gpio)                    \
-> +       mtk_hw_get_value_wrap(hw, gpio, PINCTRL_PIN_REG_IES)
-> +
-> +#define mtk_pctrl_get_driving(hw, gpio)                        \
-> +       mtk_hw_get_value_wrap(hw, gpio, PINCTRL_PIN_REG_DRV)
-> +
-> +ssize_t mtk_pctrl_show_one_pin(struct mtk_pinctrl *hw,
-> +       unsigned int gpio, char *buf, unsigned int bufLen);
-> +
-
-Currently, these above functions are not being referred by other users
-outside the file so stay them visible inside the file until there are
-explicit users present.
-
->  extern const struct dev_pm_ops mtk_paris_pinctrl_pm_ops;
->
->  #endif /* __PINCTRL_PARIS_H */
-> --
-> 1.8.1.1.dirty
->
+> +examples:
+> +  - |
+> +    logicvc: logicvc@43c00000 {
+> +      compatible = "xylon,logicvc-3.02.a", "syscon", "simple-mfd";
+> +      reg = <0x43c00000 0x6000>;
+> +      #address-cells = <1>;
+> +      #size-cells = <1>;
+> +    };
+> -- 
+> 2.23.0
+> 
