@@ -2,72 +2,76 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 00B32C0DE6
-	for <lists+linux-gpio@lfdr.de>; Sat, 28 Sep 2019 00:19:10 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 70EB5C1213
+	for <lists+linux-gpio@lfdr.de>; Sat, 28 Sep 2019 22:02:24 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728334AbfI0WQW (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 27 Sep 2019 18:16:22 -0400
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:35895 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725990AbfI0WQW (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 27 Sep 2019 18:16:22 -0400
-Received: by mail-oi1-f193.google.com with SMTP id k20so6523109oih.3;
-        Fri, 27 Sep 2019 15:16:20 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Rr4kVsayhPkWRZ0bP0EnubFT+L2ShEWQEZTWxYzPcSY=;
-        b=sgYdAHMc/Gr2CZw7QPUpa6Gqrfj/waPifwquUCAxueUp0qgRnXrBuyFvVQasCQK8c/
-         VsgrWsN/l/K1WKiZs9clu28lpRzB2YpY5LzbVKakjJ/RWBR9+2ERsGau0xoIGvzFXRhL
-         7jL4nVUeDfSzzU/lU0DErkfR0yQu/pXpik0MAgJzoE9NfTPE07ZkDpX6g+zVikvyR8eA
-         eEpbPtJR1RPvLtpx2rX/KZ6H3KAOg8BZ/7lPVZTLT4RKhTKz200eMkVvTCDK8tbr4P2b
-         sBvf4Uhe6yS2YPfM8HKy78aZeNzLglWm6O5xDXJsBDvl16QHAd0qtJ9imNeIMxofYC0a
-         /0og==
-X-Gm-Message-State: APjAAAUACOOKG57mwSukjVPl04/1Q9VLE62vhTP9iUCFpZ9nHzYbqypF
-        nHlGaZLxtD3Kpd/vHWrrHQ==
-X-Google-Smtp-Source: APXvYqzGwkDwe77wSI6KG9cqX8XJOo6OY1O6yTmgoypoPuROn+n53MHijTuqzT/UPDXU30KMreJHoQ==
-X-Received: by 2002:aca:4e97:: with SMTP id c145mr8549728oib.145.1569622579975;
-        Fri, 27 Sep 2019 15:16:19 -0700 (PDT)
-Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id e9sm1917468oie.58.2019.09.27.15.16.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 27 Sep 2019 15:16:19 -0700 (PDT)
-Date:   Fri, 27 Sep 2019 17:16:19 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Paul Kocialkowski <paul.kocialkowski@bootlin.com>
-Cc:     linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Paul Kocialkowski <paul.kocialkowski@bootlin.com>
-Subject: Re: [PATCH v3 4/5] dt-bindings: gpio: Document the Xylon LogiCVC
- GPIO controller
-Message-ID: <20190927221619.GA22004@bogus>
-References: <20190927100407.1863293-1-paul.kocialkowski@bootlin.com>
- <20190927100407.1863293-5-paul.kocialkowski@bootlin.com>
+        id S1728655AbfI1UCP (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sat, 28 Sep 2019 16:02:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51176 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728617AbfI1UCP (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Sat, 28 Sep 2019 16:02:15 -0400
+Received: from localhost (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8023F20863;
+        Sat, 28 Sep 2019 20:02:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1569700934;
+        bh=iBI4ADUUwpbjA+pmHsEfnTeue1a9adW21YpVKP9WhKE=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=T2F5ar22dPjflJL9yIU58hu70yONBakpNONVOBBsTvNXDHVVGdyHdS1PDdcN/Q2yB
+         +XUqR8207O4FeHFf1saqEFOAxmexTHTj23wLC9UQ43DmmvdORzZpKjh10ipBAGqLVk
+         YQZea0UROJnoEp41s4cIDmuxBDLTJJx4BDk+yCgo=
+Date:   Sat, 28 Sep 2019 16:02:13 -0400
+From:   Sasha Levin <sashal@kernel.org>
+To:     Baolin Wang <baolin.wang@linaro.org>
+Cc:     stable@vger.kernel.org, peterz@infradead.org, mingo@redhat.com,
+        linus.walleij@linaro.org, natechancellor@gmail.com, sre@kernel.org,
+        longman@redhat.com, linux-gpio@vger.kernel.org,
+        david@lechnology.com, linux-pm@vger.kernel.org, arnd@arndb.de,
+        orsonzhai@gmail.com, vincent.guittot@linaro.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [BACKPORT 4.19.y 0/3] Candidates from Spreadtrum 4.14 product
+ kernel
+Message-ID: <20190927153055.GP8171@sasha-vm>
+References: <cover.1569404757.git.baolin.wang@linaro.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=us-ascii; format=flowed
 Content-Disposition: inline
-In-Reply-To: <20190927100407.1863293-5-paul.kocialkowski@bootlin.com>
+In-Reply-To: <cover.1569404757.git.baolin.wang@linaro.org>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, 27 Sep 2019 12:04:06 +0200, Paul Kocialkowski wrote:
-> The Xylon LogiCVC display controller exports some GPIOs, which are
-> exposed as a separate entity.
-> 
-> Signed-off-by: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
-> ---
->  .../bindings/gpio/xylon,logicvc-gpio.yaml     | 69 +++++++++++++++++++
->  1 file changed, 69 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/gpio/xylon,logicvc-gpio.yaml
-> 
+On Wed, Sep 25, 2019 at 05:52:26PM +0800, Baolin Wang wrote:
+>With Arnd's script [1] help, I found some bugfixes in Spreadtrum 4.14 product
+>kernel, but missing in v4.19.75:
+>
+>513e1073d52e locking/lockdep: Add debug_locks check in __lock_downgrade()
+>957063c92473 pinctrl: sprd: Use define directive for sprd_pinconf_params values
+>87a2b65fc855 power: supply: sysfs: ratelimit property read error message
+>
+>[1] https://lore.kernel.org/lkml/20190322154425.3852517-19-arnd@arndb.de/T/
+>
+>David Lechner (1):
+>  power: supply: sysfs: ratelimit property read error message
+>
+>Nathan Chancellor (1):
+>  pinctrl: sprd: Use define directive for sprd_pinconf_params values
+>
+>Waiman Long (1):
+>  locking/lockdep: Add debug_locks check in __lock_downgrade()
+>
+> drivers/pinctrl/sprd/pinctrl-sprd.c       |    6 ++----
+> drivers/power/supply/power_supply_sysfs.c |    3 ++-
+> kernel/locking/lockdep.c                  |    3 +++
+> 3 files changed, 7 insertions(+), 5 deletions(-)
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+I've queued these up for 4.19, 4.14 and some for 4.9 and 4.4. Thank you.
+
+--
+Thanks,
+Sasha
