@@ -2,99 +2,73 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id A87BCC2952
-	for <lists+linux-gpio@lfdr.de>; Tue,  1 Oct 2019 00:12:41 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9ED3EC2953
+	for <lists+linux-gpio@lfdr.de>; Tue,  1 Oct 2019 00:14:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726986AbfI3WMK (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 30 Sep 2019 18:12:10 -0400
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:36070 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726784AbfI3WMK (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 30 Sep 2019 18:12:10 -0400
-Received: by mail-lj1-f194.google.com with SMTP id v24so11168177ljj.3
-        for <linux-gpio@vger.kernel.org>; Mon, 30 Sep 2019 15:12:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=KeMbURaaSS9vRDVHmI6PUKuuQvzE/b1Qg3h1SqnoNyo=;
-        b=pordKa2eHoTT+5VMhZ4hPOEjHJ48YTIZ1a/CJykpPeYQ6wfTQ9xFrtAgWaDNltu5Lo
-         K6F2N5Yd3asJKOucpvN8hIAdce6h/jRjYD1PB8yO0QhO9dEfl49r+gPkeWV7DxAq1vDz
-         mXsfEi7qvITjyi/9pbkvioj7usa5FcPfK6ATPnljI6ugKWgLXMDz+gAPSHGdX7xZMTnM
-         P3bmRR6BPk/o7NgiD8YHje9wTRafxMvCxLGpI9rRtvFXEiaXlg1BRP348HxKSE12ceB2
-         lhVIA6dR/ybsaIfn4u5MAQxLPv6Wdl0zYVb7ciNL2PXNW79EbOA50ZJI97UkxYNNRMT9
-         qpEw==
+        id S1727220AbfI3WOT (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 30 Sep 2019 18:14:19 -0400
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:40991 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726350AbfI3WOT (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 30 Sep 2019 18:14:19 -0400
+Received: by mail-oi1-f195.google.com with SMTP id w17so12591670oiw.8;
+        Mon, 30 Sep 2019 15:14:19 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=KeMbURaaSS9vRDVHmI6PUKuuQvzE/b1Qg3h1SqnoNyo=;
-        b=DHocR3qmPQ0mDxkMUeYsSL+0Xbs+mTtr+9HZcY56RMQTw3cgAkzrN7LjZvAArwQhyJ
-         cbWPKb1b0NXBkmdOd0ZeAyQFjPS/CvZZyOMsZ18oPPWB8/q3x3Xx1RLxQH3yW2KrP6rQ
-         hEBzi5QJ1n02OsIUvaKMeZ55zoqzduQNsqVtfYbOLDMdN+MI1AaT9bWDATZ/O+uawE14
-         A0rAM88ShmNgL4GAXM88gL/h89096iiU+nFD+sB5xBsj3VOx7GaanXERKJXv0w8+dykV
-         /Giq9Yktz7E8yO70yQ83G06WBigXQH8Np0gpsnkGpVyazVlm36mapHPFd8J1QlYMX2FU
-         ysNA==
-X-Gm-Message-State: APjAAAXosL+Eh9W8QOWInCIFFp+NJUR0j2NAoSf3Efw2TOgwA3l8iuLX
-        k3SlDKevMNa8MBk7nAtnxu5YMGIjeq8veclv/7bmaw==
-X-Google-Smtp-Source: APXvYqxe6D7M2CpO9ejL2LIa7KeWGOnYdsL3yKj5+GxSvDm2nH3mB/7BTdj25RWdDwQlfeOkdzVzHiO0rGuz6tzoTpI=
-X-Received: by 2002:a2e:3e07:: with SMTP id l7mr13604466lja.180.1569881528577;
- Mon, 30 Sep 2019 15:12:08 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=3JL07qcEomx/9mlKOqWt2erRCCI5K8JebJ9YmzD5Gcc=;
+        b=FtVpnwExQsggMVh7RFhTMB9eCMqn7W81w5JZTHd4RYQqgNt7t3LGGSX/8v3X5EwNMQ
+         iyHiSH0v9XJCY35ekbgTklNUFzO0Kn8dgofrdca0r9ayVVuiKPOIzmNgFAcupHqwvxUs
+         cT7p5eWGU+1nrElcN70DEVSApc2urM7X9YlrdeQkC2rdRGaGyJUSJ1YcKUF6stEoFZPl
+         S5HObIEr2UCXMgKNGTG+bopZgajHUxaSrXR/KXCf79joTtlBEqMiWcrw4BDJPcO0LyGv
+         ArHcwuHlx5PaPcm7i6R/J3IBuz+//8RDfldi7+nYu2a1tD2NoVOBJV//HRUNcNi6pcEB
+         IKrQ==
+X-Gm-Message-State: APjAAAWIpThG9+uwv7P6ZC/eYQgrfq3/SWnjgG3rWZUzOBaX+BxTQ5gu
+        dFgdHLDHlMXRUibdEGS6Jg==
+X-Google-Smtp-Source: APXvYqxpwQgOYAduUVZFilh7lH0oLGASilH357Tyg+So0faHgnmK5HDGm97eoKIonTvMwBkzrp5Ekw==
+X-Received: by 2002:aca:3c55:: with SMTP id j82mr1128598oia.135.1569881658562;
+        Mon, 30 Sep 2019 15:14:18 -0700 (PDT)
+Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id v6sm4716139oie.4.2019.09.30.15.14.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 30 Sep 2019 15:14:17 -0700 (PDT)
+Date:   Mon, 30 Sep 2019 17:14:16 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Lina Iyer <ilina@codeaurora.org>
+Cc:     swboyd@chromium.org, evgreen@chromium.org, maz@kernel.org,
+        linus.walleij@linaro.org, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, bjorn.andersson@linaro.org,
+        mkshah@codeaurora.org, linux-gpio@vger.kernel.org,
+        Lina Iyer <ilina@codeaurora.org>, devicetree@vger.kernel.org
+Subject: Re: [PATCH RFC v2 06/14] dt-bindings/interrupt-controller: pdc: add
+ SPI config register
+Message-ID: <20190930221416.GA2501@bogus>
+References: <1568411962-1022-1-git-send-email-ilina@codeaurora.org>
+ <1568411962-1022-7-git-send-email-ilina@codeaurora.org>
 MIME-Version: 1.0
-References: <20190919132403.1835-1-brgl@bgdev.pl>
-In-Reply-To: <20190919132403.1835-1-brgl@bgdev.pl>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Tue, 1 Oct 2019 00:11:57 +0200
-Message-ID: <CACRpkdaiKzbE6bKX+Wg-KxO1QkG3245evvaM-xCNgDTYdf-qKg@mail.gmail.com>
-Subject: Re: [GIT PULL] gpio: fixes for v5.4-rc1
-To:     Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1568411962-1022-7-git-send-email-ilina@codeaurora.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Sep 19, 2019 at 3:24 PM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
+On Fri, 13 Sep 2019 15:59:14 -0600, Lina Iyer wrote:
+> In addition to configuring the PDC, additional registers that interface
+> the GIC have to be configured to match the GPIO type. The registers on
+> some QCOM SoCs are access restricted, while on other SoCs are not. They
+> SoCs with access restriction to these SPI registers need to be written
+> from the firmware using the SCM interface. Add a flag to indicate if the
+> register is to be written using SCM interface.
+> 
+> Cc: devicetree@vger.kernel.org
+> Signed-off-by: Lina Iyer <ilina@codeaurora.org>
+> ---
+>  .../devicetree/bindings/interrupt-controller/qcom,pdc.txt   | 13 ++++++++++++-
+>  1 file changed, 12 insertions(+), 1 deletion(-)
+> 
 
-> please pull the following set of fixes. Two are core code, one is a fix for
-> a driver. All are stable material.
->
-> The following changes since commit 4d856f72c10ecb060868ed10ff1b1453943fc6c8:
->
->   Linux 5.3 (2019-09-15 14:19:32 -0700)
->
-> are available in the Git repository at:
->
->   git://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git tags/gpio-v5.4-rc1-fixes-for-linus
->
-> for you to fetch changes up to a94b734a563498ac4b8fff61179a3c2bba781a4e:
->
->   gpio: eic: sprd: Fix the incorrect EIC offset when toggling (2019-09-17 10:08:35 +0200)
-
-This doesn't work with v5.4 for some reason:
-
-$ git pull git://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git
-tags/gpio-v5.4-rc1-fixes-for-linus
-
-remote: Counting objects: 16, done.
-remote: Compressing objects: 100% (16/16), done.
-remote: Total 16 (delta 7), reused 0 (delta 0)
-Unpacking objects: 100% (16/16), done.
-From git://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux
- * tag                         gpio-v5.4-rc1-fixes-for-linus -> FETCH_HEAD
-Auto-merging drivers/gpio/gpiolib.c
-CONFLICT (content): Merge conflict in drivers/gpio/gpiolib.c
-Auto-merging drivers/gpio/gpio-eic-sprd.c
-warning: inexact rename detection was skipped due to too many files.
-warning: you may want to set your merge.renamelimit variable to at
-least 1294 and retry the command.
-Automatic merge failed; fix conflicts and then commit the result.
-
-Do you think you could rebase on the v5.4-rc1 and send me a new pull
-request? I'm afraid of trying to fix it and screwing up, so would prefer
-a rebase.
-
-Yours,
-Linus Walleij
+Reviewed-by: Rob Herring <robh@kernel.org>
