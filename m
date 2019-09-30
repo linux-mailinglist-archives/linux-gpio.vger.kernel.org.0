@@ -2,136 +2,259 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 476EDC1B1B
-	for <lists+linux-gpio@lfdr.de>; Mon, 30 Sep 2019 07:48:02 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7280DC239C
+	for <lists+linux-gpio@lfdr.de>; Mon, 30 Sep 2019 16:50:45 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726121AbfI3FsB (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 30 Sep 2019 01:48:01 -0400
-Received: from wout4-smtp.messagingengine.com ([64.147.123.20]:39411 "EHLO
-        wout4-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726032AbfI3FsB (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>);
-        Mon, 30 Sep 2019 01:48:01 -0400
-Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailout.west.internal (Postfix) with ESMTP id 861E850C;
-        Mon, 30 Sep 2019 01:47:59 -0400 (EDT)
-Received: from imap2 ([10.202.2.52])
-  by compute4.internal (MEProxy); Mon, 30 Sep 2019 01:47:59 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aj.id.au; h=
-        mime-version:message-id:in-reply-to:references:date:from:to:cc
-        :subject:content-type; s=fm3; bh=vzT1ByUgeJKjxPkK+JWawNEjyLQKq1/
-        ZnFXbt0DlL6o=; b=GT1/oaQDZnoXsYa7QAIEmkfRiL7bhXzJ2d961vIza+zm1xW
-        6edvh+lPd5uRBv8lhbyQVvw/aNO4pI5Sdl8/847pUBp60GBfDhFV+SCmvfvVBUfJ
-        GRFl3YWNk5edW7SSpyl1PSG34LF707BZ2VCt57I5u6hGyFWaufSQv+aPqhNmVUkp
-        RvDL0cQBXF5j+wvbnyiBvSqfBOVakmbyfd0kAoZidGHNfonavldG5138RhM9nH03
-        fVpOqjCuIKrIsvbZdXW6M3Nr63MtBiuUQUg98y5JA4ucEh8GwQX8njtrBPKIwBGt
-        T1plBlMiK4EXUA+mFIbjtjsgtMbrAHTTCyzbbAg==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=vzT1By
-        UgeJKjxPkK+JWawNEjyLQKq1/ZnFXbt0DlL6o=; b=p158RKfZ7NU2THmNxjC13l
-        g2lou/FMbjSDIYmRGeaFiikEKuzd7eIH02bqg0G8LIJhPhY1Pi1Z7OpK2VRh4wFH
-        J4iGyfThzgwFoPTfOfe8QW1AJqU4cWA/7ydS7ZYuvteqkonnZrebBiI8onk3peQn
-        HmVqs8j8yZKyIvkWwhSMZGjBti6v7vQ8a0BOGnbdQd7FfGG9GzbXAYx6bdck3gFk
-        2/AWt0loh6+su7E0GnPJ6Iwer5Acgdf4cDTkwW3Ibd9pUzqKDswru08ZBE+JM48K
-        eoiMZtSoAWDOJWHJbYWqStEn02kIY3zxU8HGGEg4X6S+gwO6HuLdENojHsQ+QyTw
-        ==
-X-ME-Sender: <xms:DpeRXeAVTpI24rylQ010yLIXhe1EQYT8MPckr0L4l8CyvFAeDQMmgA>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedufedrgedugdellecutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpefofgggkfgjfhffhffvufgtsehttdertderredtnecuhfhrohhmpedftehnughr
-    vgifucflvghffhgvrhihfdcuoegrnhgurhgvfiesrghjrdhiugdrrghuqeenucfrrghrrg
-    hmpehmrghilhhfrhhomheprghnughrvgifsegrjhdrihgurdgruhenucevlhhushhtvghr
-    ufhiiigvpedt
-X-ME-Proxy: <xmx:DpeRXSXY0VDQaO1GXqKhIoOVpFL7mLtDKV4dXQRp5j1GRFtDQgYz6w>
-    <xmx:DpeRXQYxT09VfvK_3ROADuc5Qu6ba-xc8DaWwVV6tZtPfQ8h5Qxivw>
-    <xmx:DpeRXYJtsO7cFoWQLYVl7U9eu8fBfw9jB2bcq1ZXS1ZmImKJUbUfkg>
-    <xmx:D5eRXXGHBX-rdIIIgkaMpli5eO6FOdofv-x550crm2hpwgeqt9pJkw>
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-        id 9EB03E00A5; Mon, 30 Sep 2019 01:47:58 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.1.7-305-g4111847-fmstable-20190924v1
-Mime-Version: 1.0
-Message-Id: <b76831b5-a3e2-4b73-9b0d-7e792d48933b@www.fastmail.com>
-In-Reply-To: <20190927114833.12551-1-linus.walleij@linaro.org>
-References: <20190927114833.12551-1-linus.walleij@linaro.org>
-Date:   Mon, 30 Sep 2019 15:18:46 +0930
-From:   "Andrew Jeffery" <andrew@aj.id.au>
-To:     "Linus Walleij" <linus.walleij@linaro.org>,
-        linux-gpio@vger.kernel.org
-Cc:     "Bartosz Golaszewski" <bgolaszewski@baylibre.com>,
-        "Hongwei Zhang" <hongweiz@ami.com>
-Subject: Re: [PATCH] gpio: aspeed-sgpio: Rename and add Kconfig/Makefile
-Content-Type: text/plain
+        id S1731459AbfI3Ouo (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 30 Sep 2019 10:50:44 -0400
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:41088 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730809AbfI3Ouo (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 30 Sep 2019 10:50:44 -0400
+Received: by mail-oi1-f193.google.com with SMTP id w17so11339188oiw.8;
+        Mon, 30 Sep 2019 07:50:43 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=nR5Jwg73RW1Z4kze1rphymQfRWGvcGxE51i7zcwab9k=;
+        b=eefR3f92iB5pXXIOnqUopWFjwIbzUBDGaZTDxOxDEOJkZz8kao1h7e5diFjU5kTRPj
+         D1sSx+kQ8oAiJXeb8VZmklflO3tb68ptNTcNbZfvjLJ6jGJEVR6hDmCEntO/2gF/Jbkf
+         02NLiJsw3JhBuBs4KPwXaQziwoZsZLyY1L9zQeDoXYlWfFQQtZ5it9MeQeQe8irVdpFS
+         HyLqoGr/tVBLrY4g68scGKRaRwAZEyikpQJEwy+DDZcOejaFWJAcTdHvgqeDpk/ePypj
+         dsWtAcR/QWKgshAf7MK/6ScuFd5iRDxngKx8G+6cE8CuuvMSNz3RUJKAX5PYQh1aTF8u
+         LBhA==
+X-Gm-Message-State: APjAAAWzmFpm8N/AZeQbs6Ua8o3Q5XNcAUkosqWRCxVbPce6KEnVdQkS
+        qu14dcCBZe515g3ONCpR2w==
+X-Google-Smtp-Source: APXvYqz8/qjSeRO3rEliVHDjsp5N6t03KTRdTo9Jh0fwwBXF5ZO110mfe4yI51XoLBLQS1liaQb6cQ==
+X-Received: by 2002:aca:d408:: with SMTP id l8mr18365364oig.113.1569855043203;
+        Mon, 30 Sep 2019 07:50:43 -0700 (PDT)
+Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id k204sm4383299oif.33.2019.09.30.07.50.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 30 Sep 2019 07:50:42 -0700 (PDT)
+Date:   Mon, 30 Sep 2019 09:50:42 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Rahul Tanwar <rahul.tanwar@linux.intel.com>
+Cc:     linus.walleij@linaro.org, mark.rutland@arm.com,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, andriy.shevchenko@intel.com,
+        qi-ming.wu@intel.com, yixin.zhu@linux.intel.com,
+        cheol.yong.kim@intel.com
+Subject: Re: [PATCH v1 2/2] dt-bindings: pinctrl: intel: Add for new SoC
+Message-ID: <20190930145042.GA29258@bogus>
+References: <cover.1568274587.git.rahul.tanwar@linux.intel.com>
+ <c53173f380d47e9a5feaef9a35de535c6de9f6cb.1568274587.git.rahul.tanwar@linux.intel.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <c53173f380d47e9a5feaef9a35de535c6de9f6cb.1568274587.git.rahul.tanwar@linux.intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-
-
-On Fri, 27 Sep 2019, at 21:18, Linus Walleij wrote:
-> This renames the "gpio-aspeed" driver to conform with other
-> GPIO drivers as "gpio-aspeed-sgpio.c". All GPIO drivers
-> should start with the string "gpio-" no special exceptions.
+On Thu, Sep 12, 2019 at 03:59:11PM +0800, Rahul Tanwar wrote:
+> Add dt bindings document & include file for pinmux & GPIO controller driver of
+> Intel Lightning Mountain SoC.
 > 
-> Also the Kconfig and Makefile entries should normally
-> go with the driver but I missed this in my review, sorry
-> for mistake. "CONFIG_GPIO_ASPEED_SGPIO" is used to
-> activate this driver.
-> 
-> Cc: Hongwei Zhang <hongweiz@ami.com>
-> Cc: Andrew Jeffery <andrew@aj.id.au>
-> Fixes: 7db47faae79b ("gpio: aspeed: Add SGPIO driver")
-> Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
-
-Acked-by: Andrew Jeffery <andrew@aj.id.au>
-
+> Signed-off-by: Rahul Tanwar <rahul.tanwar@linux.intel.com>
 > ---
->  drivers/gpio/Kconfig                                 | 8 ++++++++
->  drivers/gpio/Makefile                                | 1 +
->  drivers/gpio/{sgpio-aspeed.c => gpio-aspeed-sgpio.c} | 0
->  3 files changed, 9 insertions(+)
->  rename drivers/gpio/{sgpio-aspeed.c => gpio-aspeed-sgpio.c} (100%)
+>  .../bindings/pinctrl/intel,lgm-pinctrl.yaml        | 131 +++++++++++++++++++++
+>  include/dt-bindings/pinctrl/intel,equilibrium.h    |  23 ++++
+>  2 files changed, 154 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/pinctrl/intel,lgm-pinctrl.yaml
+>  create mode 100644 include/dt-bindings/pinctrl/intel,equilibrium.h
 > 
-> diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
-> index 38e096e6925f..7138290cdd36 100644
-> --- a/drivers/gpio/Kconfig
-> +++ b/drivers/gpio/Kconfig
-> @@ -120,6 +120,14 @@ config GPIO_ASPEED
->  	help
->  	  Say Y here to support Aspeed AST2400 and AST2500 GPIO controllers.
->  
-> +config GPIO_ASPEED_SGPIO
-> +	bool "Aspeed SGPIO support"
-> +	depends on (ARCH_ASPEED || COMPILE_TEST) && OF_GPIO
-> +	select GPIO_GENERIC
-> +	select GPIOLIB_IRQCHIP
-> +	help
-> +	  Say Y here to support Aspeed AST2500 SGPIO functionality.
+> diff --git a/Documentation/devicetree/bindings/pinctrl/intel,lgm-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/intel,lgm-pinctrl.yaml
+> new file mode 100644
+> index 000000000000..1aee42f0057e
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/pinctrl/intel,lgm-pinctrl.yaml
+> @@ -0,0 +1,131 @@
+> +# SPDX-License-Identifier: GPL-2.0-only
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/bindings/pinctrl/intel,lgm-pinctrl.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
 > +
->  config GPIO_ATH79
->  	tristate "Atheros AR71XX/AR724X/AR913X GPIO support"
->  	default y if ATH79
-> diff --git a/drivers/gpio/Makefile b/drivers/gpio/Makefile
-> index d2fd19c15bae..e4599f90f702 100644
-> --- a/drivers/gpio/Makefile
-> +++ b/drivers/gpio/Makefile
-> @@ -32,6 +32,7 @@ obj-$(CONFIG_GPIO_AMD_FCH)		+= gpio-amd-fch.o
->  obj-$(CONFIG_GPIO_AMDPT)		+= gpio-amdpt.o
->  obj-$(CONFIG_GPIO_ARIZONA)		+= gpio-arizona.o
->  obj-$(CONFIG_GPIO_ASPEED)		+= gpio-aspeed.o
-> +obj-$(CONFIG_GPIO_ASPEED_SGPIO)		+= gpio-aspeed-sgpio.o
->  obj-$(CONFIG_GPIO_ATH79)		+= gpio-ath79.o
->  obj-$(CONFIG_GPIO_BCM_KONA)		+= gpio-bcm-kona.o
->  obj-$(CONFIG_GPIO_BD70528)		+= gpio-bd70528.o
-> diff --git a/drivers/gpio/sgpio-aspeed.c b/drivers/gpio/gpio-aspeed-sgpio.c
-> similarity index 100%
-> rename from drivers/gpio/sgpio-aspeed.c
-> rename to drivers/gpio/gpio-aspeed-sgpio.c
+> +title: Intel Lightning Mountain SoC pinmux & GPIO controller binding
+> +
+> +maintainers:
+> +  - Rahul Tanwar <rahul.tanwar@linux.intel.com>
+> +
+> +description: |
+> +  Pinmux & GPIO controller controls pin multiplexing & configuration including
+> +  GPIO function selection & GPIO attributes configuration.
+> +
+> +  Please refer to [1] for details of the common pinctrl bindings used by the
+> +  client devices.
+> +
+> +  [1] Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt
+> +
+> +properties:
+> +  compatible:
+> +    const: intel,lgm-pinctrl
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +# Client device subnode's properties
+> +patternProperties:
+> +  "^.*@[0-9a-fA-F]+$":
+> +    type: object
+> +    description:
+> +      Pinctrl node's client devices use subnodes for desired pin configuration.
+> +      Client device subnodes use below defined properties.
+> +
+> +    properties:
+> +      intel,function:
+> +        $ref: /schemas/types.yaml#/definitions/string
+> +        description:
+> +          A string containing the name of the function to mux to the group.
+> +
+> +      intel,groups:
+> +        $ref: /schemas/types.yaml#/definitions/string-array
+> +        description:
+> +          An array of strings identifying the list of groups.
+> +
+> +      intel,pins:
+> +        $ref: /schemas/types.yaml#/definitions/uint32-array
+> +        description:
+> +          List of pins to select with this function.
+> +
+> +      intel,mux:
+> +        description: The applicable mux group.
+> +        allOf:
+> +          - $ref: "/schemas/types.yaml#/definitions/uint32"
+> +          - enum:
+> +              # Refer include/dt-bindings/pinctrl/intel,equilibrium.h
+> +              - PINMUX_0 # 0 PINMUX_GPIO
+> +              - PINMUX_1 # 1
+> +              - PINMUX_2 # 2
+> +              - PINMUX_3 # 3
+> +              - PINMUX_4 # 4
+> +
+> +      intel,pullup:
+> +        $ref: /schemas/types.yaml#/definitions/uint32
+> +        description: Specifies pull-up configuration.
+> +
+> +      intel,pulldown:
+> +        $ref: /schemas/types.yaml#/definitions/uint32
+> +        description: Specifies pull-down configuration.
+> +
+> +      intel,drive-current:
+> +        $ref: /schemas/types.yaml#/definitions/uint32
+> +        description: Enables driver-current.
+> +
+> +      intel,slew-rate:
+> +        $ref: /schemas/types.yaml#/definitions/uint32
+> +        description: Enables slew-rate.
+> +
+> +      intel,open-drain:
+> +        $ref: /schemas/types.yaml#/definitions/uint32
+> +        description: Specifies open-drain configuration.
+> +
+> +      intel,output:
+> +        $ref: /schemas/types.yaml#/definitions/uint32
+> +        description: Specifies if the pin is to be configured as output.
+
+We have a whole slew of standard properties for pinctrl and you aren't 
+using any of them.
+
+Rob
+
+> +
+> +
+> +    required:
+> +      - intel,function
+> +      - intel,groups
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +
+> +examples:
+> +  # Pinmux controller node
+> +  - |
+> +    pinctrl: pinctrl@e2880000 {
+> +          compatible = "intel,lgm-pinctrl";
+> +          reg = <0xe2880000 0x100000>;
+> +    };
+> +
+> +  # Client device node
+> +  - |
+
+These are not really separate examples.
+
+> +    asc0: serial@e0a00000 {
+> +          compatible = "intel,lgm-asc";
+> +          reg = <0xe0a00000 0x1000>;
+> +          interrupt-parent = <&ioapic1>;
+> +          interrupts = <128 1>;
+> +          interrupt-names = "asc_irq";
+> +          clocks = <&cgu0 31>, <&cgu0 98>;
+> +          clock-names = "freq", "asc";
+> +          pinctrl-names = "default";
+> +          pinctrl-0 = <&uart0>;
+> +    };
+> +
+> +   # Client device subnode
+> +  - |
+> +    uart0:uart0 {
+
+This should be a child of pinctrl node.
+
+> +          intel,pins = <64>, /* UART_RX0 */
+> +                       <65>; /* UART_TX0 */
+> +          intel,function = "CONSOLE_UART0";
+> +          intel,mux = <1>,
+> +                      <1>;
+> +          intel,groups = "CONSOLE_UART0";
+> +    };
+> +
+> +
+> +...
+> diff --git a/include/dt-bindings/pinctrl/intel,equilibrium.h b/include/dt-bindings/pinctrl/intel,equilibrium.h
+> new file mode 100644
+> index 000000000000..c37bfbea8ff1
+> --- /dev/null
+> +++ b/include/dt-bindings/pinctrl/intel,equilibrium.h
+> @@ -0,0 +1,23 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +
+> +#ifndef __DT_BINDINGS_PINCTRL_INTEL_EQUILIBRIUM_H_
+> +#define __DT_BINDINGS_PINCTRL_INTEL_EQUILIBRIUM_H_
+> +
+> +#define PINCTRL_DRCC_2_MA	0
+> +#define PINCTRL_DRCC_4_MA	1
+> +#define PINCTRL_DRCC_8_MA	2
+> +#define PINCTRL_DRCC_12_MA	3
+
+Use the property that defines drive strength in terms of microamps and 
+convert to register values in the driver.
+
+> +
+> +#define PINMUX_0		0
+> +#define PINMUX_1		1
+> +#define PINMUX_2		2
+> +#define PINMUX_3		3
+> +#define PINMUX_4		4
+
+Not useful defines. Just use the numbers directly.
+
+> +#define PINMUX_GPIO		PINMUX_0
+> +
+> +#define PINCTRL_GROUP		"intel,groups"
+> +#define PINCTRL_FUNCTION	"intel,function"
+> +#define PINCTRL_PINS		"intel,pins"
+> +#define PINCTRL_MUX		"intel,mux"
+
+We don't create defines for property names (really for any strings).
+
+> +
+> +#endif /* __DT_BINDINGS_PINCTRL_INTEL_EQUILIBRIUM_H_ */
 > -- 
-> 2.21.0
+> 2.11.0
 > 
->
