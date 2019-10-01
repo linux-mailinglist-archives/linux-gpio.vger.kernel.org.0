@@ -2,102 +2,116 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 86FDBC30C1
-	for <lists+linux-gpio@lfdr.de>; Tue,  1 Oct 2019 12:00:23 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 002F0C30C2
+	for <lists+linux-gpio@lfdr.de>; Tue,  1 Oct 2019 12:00:24 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726532AbfJAJ6H (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 1 Oct 2019 05:58:07 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:40180 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725765AbfJAJ6H (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 1 Oct 2019 05:58:07 -0400
-Received: by mail-wm1-f66.google.com with SMTP id b24so2494816wmj.5
-        for <linux-gpio@vger.kernel.org>; Tue, 01 Oct 2019 02:58:04 -0700 (PDT)
+        id S1726349AbfJAJ7A (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 1 Oct 2019 05:59:00 -0400
+Received: from mail-io1-f67.google.com ([209.85.166.67]:41877 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725765AbfJAJ7A (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 1 Oct 2019 05:59:00 -0400
+Received: by mail-io1-f67.google.com with SMTP id n26so17813684ioj.8
+        for <linux-gpio@vger.kernel.org>; Tue, 01 Oct 2019 02:58:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=etK08N7ZF6NsU8FkN/l/SbA8M1JK8ta03JqNnfXjkv8=;
-        b=oRDN2kSg1LCOwYS0j4FwIkSeHW3CaVMQeO9Pkf/wL8geht+j72RgG9Tb82LIBOgCAb
-         UhbObF0Cm7kvpLV9kRqONsfHxU1YQXPBlJ+NYjjxzEhf61RandPD8/gZMtlSoTYtUXsS
-         bn9OurHEqAk+ffPg1DwEiHDuvQrZb+TO9EzPIxqV3GuMcaQrZTe4U6D54qHfvK3FX21l
-         QSzinvw+MeuZAVgfw5CWG4BT304xmxFjSejFZAeuXn/gp1XhqO6JCsT3xRt3LnCtReK1
-         Dco1kCsj1u4F6MFff46hs9USl7fWkCsclBDym7Ipa9ezaWTQ6ixfCJHLzG/uGJ0yPyus
-         L2VQ==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=4+D66yQ1XKt+D031cr690YzqRQkc0yeAkqK1XV5/0I8=;
+        b=w9Q9l7i50MhvL+34yCWYD+B3rDKo0/O55Ga5W+YLsaizENRIGygtUzu0O+uiVpOm33
+         41rKEC09scVfx6DOhvQilfnNkkvbb9i13wfQRxV/QNIxkvVEm+9UNnpDndZuvdAa/bod
+         e8oaAxxu9M9ndSfLdK17AjaKXGva1R8sUvQqoRE5/S2zBpmPJWFrYZBOJ74OKA9JW8CS
+         3BqXMjokCLRGazRQU1GvL2OlOfXfAnWvxQ4pmR3iXMWFfyywDwiPeW1au1vZb1EAQHqX
+         neZPgdAJKvAT56OTZN8Dk2RqER61r4QbToqbrUpNQF8mwL1Wle7vL5JwMnR6GwkmYIiL
+         yaGQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=etK08N7ZF6NsU8FkN/l/SbA8M1JK8ta03JqNnfXjkv8=;
-        b=hcenixwBV5tELngc11IWLkg7pAlz4S2oBAMs+3fUa/sCsqbhGxNTjgh2Q/anfyOibq
-         J/ggl+XFc1baBbEqZyWS78J10/4/ysgwLVJQKDSRw3x5U8JNb13sPIVxEKomHIFvndDg
-         48Rla2Cz1ct2Kpj5t1rItEtOWNVZF79GBqBGtknGxlBzh0n449MOIqRIA+peeRffINHP
-         Lbjv5j8cz+Og+Gie2Ubntk9BgHs4RI5p/3myAXgIjMMkt+b0yBcacISuLFSLWz74y7H7
-         YxjnFbj3SKWeKCXgQg5FK2QVxT94EM//yKlri3A+paPoV0gTbwALUXiYBnCfh/pXRyA8
-         +3NQ==
-X-Gm-Message-State: APjAAAW1iG5fVYtKdmRRgHbX5CNamNWF7fpnPZV35jOaD+lAQXPF2upp
-        jrfmhvAp3Ok/oP/UTRdvV8OAcA==
-X-Google-Smtp-Source: APXvYqy8E6bf8MfLl+eEDckePorIebUX8j6kX8FG8kB5BpfwIlaGXxwp/Rlb5UDpyi4OfFaOcBbT3A==
-X-Received: by 2002:a7b:cf38:: with SMTP id m24mr2672365wmg.24.1569923883691;
-        Tue, 01 Oct 2019 02:58:03 -0700 (PDT)
-Received: from localhost.localdomain (amontpellier-652-1-281-69.w109-210.abo.wanadoo.fr. [109.210.96.69])
-        by smtp.gmail.com with ESMTPSA id z125sm4174909wme.37.2019.10.01.02.58.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 01 Oct 2019 02:58:03 -0700 (PDT)
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     linux-gpio@vger.kernel.org,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: [GIT PULL] gpio: fixes for v5.4-rc2
-Date:   Tue,  1 Oct 2019 11:58:00 +0200
-Message-Id: <20191001095800.28966-1-brgl@bgdev.pl>
-X-Mailer: git-send-email 2.23.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=4+D66yQ1XKt+D031cr690YzqRQkc0yeAkqK1XV5/0I8=;
+        b=AxY7iwjbpzng/kLHba4dHc1InSd2dVti66s+CEL8z2BhIMWp4K09rh9HcpnnQxDvPR
+         J/8GLlm7lGCdqzQgsBEulUulp69dIuJqjhzt2RCjac7V/QYgAPn+uq1RMT+xvBL+Lpkb
+         f4f3gtxIp95FyFUR0WSFvyLQLIZpiFTQCkGSOxTQZe8Xwrz4GQZkjP1w7Ex/aox8nZP3
+         4RwIF1N8X+lXSWaWwtb7zof8GXnilyA+JAt0zIKw9XzMlU61itGP4C6PNFAgzMcKh3rU
+         DSLwP7CM55/Bf68OkjcxwyImoCQkn7AQx3kXfxaepa2oiA8jm93vjfUrKRXyZLzS9lXe
+         NwYA==
+X-Gm-Message-State: APjAAAWK5J+1MH/RZnla6udrgDSuFt8rHcx6GdwASvzQ6PqclVNZRGLD
+        toYQtPpfVVOiC4DETowdlCGbqHFkN3ZaaljJjgD52g==
+X-Google-Smtp-Source: APXvYqxv7evUpx09uWrXctIA7vmC7mHZOXLyVWlsBou0ow8G4n3Z3A3MDdQZCAOeyyN5ioPq4KWW9/EUg2ByR/HrhEk=
+X-Received: by 2002:a5d:8911:: with SMTP id b17mr25433333ion.287.1569923939163;
+ Tue, 01 Oct 2019 02:58:59 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20190919132403.1835-1-brgl@bgdev.pl> <CACRpkdaiKzbE6bKX+Wg-KxO1QkG3245evvaM-xCNgDTYdf-qKg@mail.gmail.com>
+In-Reply-To: <CACRpkdaiKzbE6bKX+Wg-KxO1QkG3245evvaM-xCNgDTYdf-qKg@mail.gmail.com>
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+Date:   Tue, 1 Oct 2019 11:58:48 +0200
+Message-ID: <CAMRc=Mdvx7E-PO7eST-A9n3TM+YuF7p0t2_u5KEqsm7BJd4EWQ@mail.gmail.com>
+Subject: Re: [GIT PULL] gpio: fixes for v5.4-rc1
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+wt., 1 pa=C5=BA 2019 o 00:12 Linus Walleij <linus.walleij@linaro.org> napis=
+a=C5=82(a):
+>
+> On Thu, Sep 19, 2019 at 3:24 PM Bartosz Golaszewski <brgl@bgdev.pl> wrote=
+:
+>
+> > please pull the following set of fixes. Two are core code, one is a fix=
+ for
+> > a driver. All are stable material.
+> >
+> > The following changes since commit 4d856f72c10ecb060868ed10ff1b1453943f=
+c6c8:
+> >
+> >   Linux 5.3 (2019-09-15 14:19:32 -0700)
+> >
+> > are available in the Git repository at:
+> >
+> >   git://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git tags/gpi=
+o-v5.4-rc1-fixes-for-linus
+> >
+> > for you to fetch changes up to a94b734a563498ac4b8fff61179a3c2bba781a4e=
+:
+> >
+> >   gpio: eic: sprd: Fix the incorrect EIC offset when toggling (2019-09-=
+17 10:08:35 +0200)
+>
+> This doesn't work with v5.4 for some reason:
+>
+> $ git pull git://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git
+> tags/gpio-v5.4-rc1-fixes-for-linus
+>
+> remote: Counting objects: 16, done.
+> remote: Compressing objects: 100% (16/16), done.
+> remote: Total 16 (delta 7), reused 0 (delta 0)
+> Unpacking objects: 100% (16/16), done.
+> From git://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux
+>  * tag                         gpio-v5.4-rc1-fixes-for-linus -> FETCH_HEA=
+D
+> Auto-merging drivers/gpio/gpiolib.c
+> CONFLICT (content): Merge conflict in drivers/gpio/gpiolib.c
+> Auto-merging drivers/gpio/gpio-eic-sprd.c
+> warning: inexact rename detection was skipped due to too many files.
+> warning: you may want to set your merge.renamelimit variable to at
+> least 1294 and retry the command.
+> Automatic merge failed; fix conflicts and then commit the result.
+>
+> Do you think you could rebase on the v5.4-rc1 and send me a new pull
+> request? I'm afraid of trying to fix it and screwing up, so would prefer
+> a rebase.
+>
 
-Hi Linus,
-
-this is the previous PR rebased on top of v5.4-rc1. Please pull.
+Done. This was due to some functions being moved around during merge window=
+.
 
 Bart
 
-The following changes since commit 54ecb8f7028c5eb3d740bb82b0f1d90f2df63c5c:
-
-  Linux 5.4-rc1 (2019-09-30 10:35:40 -0700)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git tags/gpio-v5.4-rc2-fixes-for-linus
-
-for you to fetch changes up to e91aafcb51f3c5001ae76c3ee027beb0b8506447:
-
-  gpio: eic: sprd: Fix the incorrect EIC offset when toggling (2019-10-01 11:50:40 +0200)
-
-----------------------------------------------------------------
-gpio: fixes for v5.4-rc2
-
-- fix a bug with emulated open-drain/source where lines' values can no longer
-  be changed
-- fix getting nonexclusive gpiods from DT
-- fix an incorrect offset for the level trigger in gpio-eic-sprd
-
-----------------------------------------------------------------
-Bartosz Golaszewski (1):
-      gpiolib: don't clear FLAG_IS_OUT when emulating open-drain/open-source
-
-Bruce Chen (1):
-      gpio: eic: sprd: Fix the incorrect EIC offset when toggling
-
-Marco Felsch (1):
-      gpio: fix getting nonexclusive gpiods from DT
-
- drivers/gpio/gpio-eic-sprd.c |  7 ++++---
- drivers/gpio/gpiolib-of.c    |  2 +-
- drivers/gpio/gpiolib.c       | 27 +++++++++++++++++++--------
- 3 files changed, 24 insertions(+), 12 deletions(-)
+> Yours,
+> Linus Walleij
