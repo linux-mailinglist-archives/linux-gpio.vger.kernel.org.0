@@ -2,58 +2,59 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 2A7EEC35CB
-	for <lists+linux-gpio@lfdr.de>; Tue,  1 Oct 2019 15:34:30 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8644FC3663
+	for <lists+linux-gpio@lfdr.de>; Tue,  1 Oct 2019 15:55:01 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387564AbfJANeR (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 1 Oct 2019 09:34:17 -0400
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:43105 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726852AbfJANeR (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 1 Oct 2019 09:34:17 -0400
-Received: by mail-lj1-f193.google.com with SMTP id n14so13362239ljj.10
-        for <linux-gpio@vger.kernel.org>; Tue, 01 Oct 2019 06:34:15 -0700 (PDT)
+        id S2388567AbfJANxz (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 1 Oct 2019 09:53:55 -0400
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:40321 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726152AbfJANxz (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 1 Oct 2019 09:53:55 -0400
+Received: by mail-lj1-f195.google.com with SMTP id 7so13449950ljw.7
+        for <linux-gpio@vger.kernel.org>; Tue, 01 Oct 2019 06:53:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=FUj6K4dDkFvpw0wi3+DLE5g+vXOcMyC8YgD4hMZZctU=;
-        b=BYUpUBOS6plQRYjYXZCz1Gxdmc4LZb0CoEH5KvMWaw9eFOrYZI51ucgnGCifB6wtQ/
-         KAAKOiSYLUztSaOf6q/Nux6V0W+phpMNIWB+qoXbgBtIjHhpnrBu+CT9/OeT/db5s9jw
-         QN/gdTm0E1GTZqMyalrdVFj/+G7QIGyIrl0FVzRe8TPaYvnvV1bGHjKhqakHSQZEfYdb
-         bNz0U4W/k33XaMF3Jmc/p0YIVZqdnD8KpaVGXZauryjWHNKlt677UxoMYfdIkeqH1bnW
-         G464C6QdqJI1pZTjspYURE/Ofn/xNNvUAXyiWPHlJFCWiQw5yOEk9sT4SQher2A+/16M
-         o++A==
+        bh=gvBQeIEI/x9mXZQVwgqeZ7kaM6LzZwxLRjfLMfWieM8=;
+        b=J83fHGTjCSsnD1rpKCckbThsAiZLaz7BVzauZaMZH8+lchnX36lKowk7qjMYE7ZEv1
+         Qku5To+b/dbVZG5xuY7GWm4aftlo9M4Yz3Wriy0IvA4VQxyW84JY/IL0PFSrIvbL1fBB
+         w2xbBUW/rqv4fJXsfMHiFtgiuQdeZKxkshbQResFrF2Ddb2gavWImZgr+fkPqOi1OMiE
+         JeerwhtL60jma8sDEiEHeY/ZrxMeIklXF7AEySjNsf6CGZQbTACH5rTCctySiNTV50ka
+         Y8dcxGFIAkzzJlO7fr40MrBVKAk2zRNSLQYiSQ+Fr5jwfc7OlMufup6gh3ZP0jUzglh2
+         EOoQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=FUj6K4dDkFvpw0wi3+DLE5g+vXOcMyC8YgD4hMZZctU=;
-        b=J/RpctlbpdHC5aupC3YCiOrTvXsqKwvthJKBD6IktPc8yb9pTcXvgV6JMNTuvMq2ss
-         I0sgomUgtRS0VIDRTDeKknT0KSB8lQ0AKzb0Md3LkHZ1vaSYdJKTAClg8FCWr8DVVWM9
-         jveSyCH+6ldq4csH8yu6+3aKSYsE/nifqyahdSFZ1kywy9L8LwnpoAPDcauAsfL/z8rT
-         srxozJIMnaloVnqWt1JdrVpvL+QDA0Tm7BfpMcLf6WVqb4fCDZqD+fUwaxSVIKA4CVAO
-         bn+bbWrDU5kW1bpyzIz7J9UrVFZeia4PUT9qWyhuzDyMpUszIv/L4iL6jU6JNMZZHpoS
-         P43Q==
-X-Gm-Message-State: APjAAAUww4B0tjc1W0GnqyZv30r0sj5eR/m+DiD1uyZD1lQPk4+y3Tq9
-        9I2lVXpL/dNwSEuMRJJlvbm3+zPq2T4QUQ==
-X-Google-Smtp-Source: APXvYqzfiHpwtlCn3+AV1Y7qC2aIX2Li8w58PGFJmupb5LlPGSFOJBdgN6j0yUrDOx5vDv62/s/JVg==
-X-Received: by 2002:a2e:90d9:: with SMTP id o25mr12103512ljg.94.1569936854019;
-        Tue, 01 Oct 2019 06:34:14 -0700 (PDT)
+        bh=gvBQeIEI/x9mXZQVwgqeZ7kaM6LzZwxLRjfLMfWieM8=;
+        b=aXMQtLi+ffIe8paVtv05zCkTF7+IeS9rQS958srdPePaNPt4CgvoJETuLKtpzib00M
+         BbryQ7v5dYVpERm3dyd5ZZVKY9rTpHLijh4xtvvB7z6Za0TsaIZoMdu4Cyiz+e1r5i4G
+         h3t9rK0zetoyhHRWr92YBk8uWMepB+IQF6pz65qcb8Y8ydthG08+aSPzxI/znujxBamF
+         W5pZrR/r9VteOfBDK7xOxyERGNwsAFwvaD7MQwLGBwj3IFkR6CyNShM9Hh896INLQYxt
+         KAH39ew2wLF3/GrxTFO78IVs6I5HXa1nRKkNUP6uou6/8VQ+tTEs4xBUeJdlpPTfmzpE
+         P0kA==
+X-Gm-Message-State: APjAAAXDO3rxW7Icefjubpb3fb+pml6FHVazV8TpmRfA7ZVRZ8AUZihH
+        BXfc2m4/TY5a7yT64Owkj6ZInOxWuVaQSA==
+X-Google-Smtp-Source: APXvYqyZDaI0VtCasFRcQPlFjyYv/DYWdRbQW/uJWEUBYqm7b58A9uP4Pg9r3KzkcgPH6sjHqQj8BQ==
+X-Received: by 2002:a2e:730a:: with SMTP id o10mr15969464ljc.214.1569938033179;
+        Tue, 01 Oct 2019 06:53:53 -0700 (PDT)
 Received: from localhost.localdomain (c-79c8225c.014-348-6c756e10.bbcust.telenor.se. [92.34.200.121])
-        by smtp.gmail.com with ESMTPSA id k23sm4025590ljc.13.2019.10.01.06.34.12
+        by smtp.gmail.com with ESMTPSA id e19sm4024023lja.8.2019.10.01.06.53.51
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 01 Oct 2019 06:34:12 -0700 (PDT)
+        Tue, 01 Oct 2019 06:53:52 -0700 (PDT)
 From:   Linus Walleij <linus.walleij@linaro.org>
 To:     linux-gpio@vger.kernel.org
 Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
         Linus Walleij <linus.walleij@linaro.org>,
-        Zhou Yanjie <zhouyanjie@zoho.com>,
-        Paul Cercueil <paul@crapouillou.net>,
+        Benjamin Gaignard <benjamin.gaignard@st.com>,
+        Amelie Delaunay <amelie.delaunay@st.com>,
+        Patrice Chotard <patrice.chotard@st.com>,
         Thierry Reding <thierry.reding@gmail.com>
-Subject: [PATCH] pinctrl: ingenic: Pass irqchip when adding gpiochip
-Date:   Tue,  1 Oct 2019 15:32:09 +0200
-Message-Id: <20191001133209.17164-1-linus.walleij@linaro.org>
+Subject: [PATCH] pinctrl: st: Pass irqchip when adding gpiochip
+Date:   Tue,  1 Oct 2019 15:51:47 +0200
+Message-Id: <20191001135147.29416-1-linus.walleij@linaro.org>
 X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -67,66 +68,103 @@ setup along when adding the gpio_chip. For more info see
 drivers/gpio/TODO.
 
 For chained irqchips this is a pretty straight-forward
-conversion.
+conversion: the ST pin controller errors out of adding a
+irqchip if the interrupt is invalid or missing or if the
+irqmux is not present: the irqchip should not be added
+if either of these errors happen, so rewrite the code to
+deal with that. Keep the exit path where the gpio_chip
+is added no matter what the status of the irq is.
 
-Cc: Zhou Yanjie <zhouyanjie@zoho.com>
-Cc: Paul Cercueil <paul@crapouillou.net>
+Cc: Benjamin Gaignard <benjamin.gaignard@st.com>
+Cc: Amelie Delaunay <amelie.delaunay@st.com>
+Cc: Patrice Chotard <patrice.chotard@st.com>
 Cc: Thierry Reding <thierry.reding@gmail.com>
 Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
 ---
- drivers/pinctrl/pinctrl-ingenic.c | 22 ++++++++++++++--------
- 1 file changed, 14 insertions(+), 8 deletions(-)
+ drivers/pinctrl/pinctrl-st.c | 53 ++++++++++++++++++++++--------------
+ 1 file changed, 32 insertions(+), 21 deletions(-)
 
-diff --git a/drivers/pinctrl/pinctrl-ingenic.c b/drivers/pinctrl/pinctrl-ingenic.c
-index 6e2683016c1f..06cae38f6daf 100644
---- a/drivers/pinctrl/pinctrl-ingenic.c
-+++ b/drivers/pinctrl/pinctrl-ingenic.c
-@@ -1940,6 +1940,7 @@ static int __init ingenic_gpio_probe(struct ingenic_pinctrl *jzpc,
- {
- 	struct ingenic_gpio_chip *jzgc;
- 	struct device *dev = jzpc->dev;
-+	struct gpio_irq_chip *girq;
- 	unsigned int bank;
- 	int err;
+diff --git a/drivers/pinctrl/pinctrl-st.c b/drivers/pinctrl/pinctrl-st.c
+index 00db8b9efb2c..4f39a7945d01 100644
+--- a/drivers/pinctrl/pinctrl-st.c
++++ b/drivers/pinctrl/pinctrl-st.c
+@@ -1477,7 +1477,7 @@ static int st_gpiolib_register_bank(struct st_pinctrl *info,
+ 	struct device *dev = info->dev;
+ 	int bank_num = of_alias_get_id(np, "gpio");
+ 	struct resource res, irq_res;
+-	int gpio_irq = 0, err;
++	int err;
  
-@@ -1982,10 +1983,6 @@ static int __init ingenic_gpio_probe(struct ingenic_pinctrl *jzpc,
- 		jzgc->gc.free = gpiochip_generic_free;
- 	}
- 
--	err = devm_gpiochip_add_data(dev, &jzgc->gc, jzgc);
--	if (err)
+ 	if (of_address_to_resource(np, 0, &res))
+ 		return -ENODEV;
+@@ -1500,12 +1500,6 @@ static int st_gpiolib_register_bank(struct st_pinctrl *info,
+ 	range->pin_base = range->base = range->id * ST_GPIO_PINS_PER_BANK;
+ 	range->npins = bank->gpio_chip.ngpio;
+ 	range->gc = &bank->gpio_chip;
+-	err  = gpiochip_add_data(&bank->gpio_chip, bank);
+-	if (err) {
+-		dev_err(dev, "Failed to add gpiochip(%d)!\n", bank_num);
 -		return err;
--
- 	jzgc->irq = irq_of_parse_and_map(node, 0);
- 	if (!jzgc->irq)
- 		return -EINVAL;
-@@ -2000,13 +1997,22 @@ static int __init ingenic_gpio_probe(struct ingenic_pinctrl *jzpc,
- 	jzgc->irq_chip.irq_set_wake = ingenic_gpio_irq_set_wake;
- 	jzgc->irq_chip.flags = IRQCHIP_MASK_ON_SUSPEND;
+-	}
+-	dev_info(dev, "%s bank added.\n", range->name);
  
--	err = gpiochip_irqchip_add(&jzgc->gc, &jzgc->irq_chip, 0,
--			handle_level_irq, IRQ_TYPE_NONE);
-+	girq = &jzgc->gc.irq;
-+	girq->chip = &jzgc->irq_chip;
-+	girq->parent_handler = ingenic_gpio_irq_handler;
-+	girq->num_parents = 1;
-+	girq->parents = devm_kcalloc(dev, 1, sizeof(*girq->parents),
-+				     GFP_KERNEL);
-+	if (!girq->parents)
-+		return -ENOMEM;
-+	girq->parents[0] = jzgc->irq;
-+	girq->default_type = IRQ_TYPE_NONE;
-+	girq->handler = handle_level_irq;
+ 	/**
+ 	 * GPIO bank can have one of the two possible types of
+@@ -1527,23 +1521,40 @@ static int st_gpiolib_register_bank(struct st_pinctrl *info,
+ 	 */
+ 
+ 	if (of_irq_to_resource(np, 0, &irq_res) > 0) {
+-		gpio_irq = irq_res.start;
+-		gpiochip_set_chained_irqchip(&bank->gpio_chip, &st_gpio_irqchip,
+-					     gpio_irq, st_gpio_irq_handler);
+-	}
++		struct gpio_irq_chip *girq;
++		int gpio_irq = irq_res.start;
+ 
+-	if (info->irqmux_base || gpio_irq > 0) {
+-		err = gpiochip_irqchip_add(&bank->gpio_chip, &st_gpio_irqchip,
+-					   0, handle_simple_irq,
+-					   IRQ_TYPE_NONE);
+-		if (err) {
+-			gpiochip_remove(&bank->gpio_chip);
+-			dev_info(dev, "could not add irqchip\n");
+-			return err;
++		/* This is not a valid IRQ */
++		if (gpio_irq <= 0) {
++			dev_err(dev, "invalid IRQ for %pOF bank\n", np);
++			goto skip_irq;
+ 		}
+-	} else {
+-		dev_info(dev, "No IRQ support for %pOF bank\n", np);
++		/* We need to have a mux as well */
++		if (!info->irqmux_base) {
++			dev_err(dev, "no irqmux for %pOF bank\n", np);
++			goto skip_irq;
++		}
 +
-+	err = devm_gpiochip_add_data(dev, &jzgc->gc, jzgc);
- 	if (err)
- 		return err;
++		girq = &bank->gpio_chip.irq;
++		girq->chip = &st_gpio_irqchip;
++		girq->parent_handler = st_gpio_irq_handler;
++		girq->num_parents = 1;
++		girq->parents = devm_kcalloc(dev, 1, sizeof(*girq->parents),
++					     GFP_KERNEL);
++		if (!girq->parents)
++			return -ENOMEM;
++		girq->parents[0] = gpio_irq;
++		girq->default_type = IRQ_TYPE_NONE;
++		girq->handler = handle_simple_irq;
++	}
++
++skip_irq:
++	err  = gpiochip_add_data(&bank->gpio_chip, bank);
++	if (err) {
++		dev_err(dev, "Failed to add gpiochip(%d)!\n", bank_num);
++		return err;
+ 	}
++	dev_info(dev, "%s bank added.\n", range->name);
  
--	gpiochip_set_chained_irqchip(&jzgc->gc, &jzgc->irq_chip,
--			jzgc->irq, ingenic_gpio_irq_handler);
  	return 0;
  }
- 
 -- 
 2.21.0
 
