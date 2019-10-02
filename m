@@ -2,59 +2,59 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 68414C8D0C
-	for <lists+linux-gpio@lfdr.de>; Wed,  2 Oct 2019 17:40:02 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 03E04C8D16
+	for <lists+linux-gpio@lfdr.de>; Wed,  2 Oct 2019 17:41:32 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726368AbfJBPkB (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 2 Oct 2019 11:40:01 -0400
-Received: from mail-wm1-f51.google.com ([209.85.128.51]:36245 "EHLO
-        mail-wm1-f51.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726233AbfJBPkB (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 2 Oct 2019 11:40:01 -0400
-Received: by mail-wm1-f51.google.com with SMTP id m18so7497316wmc.1
-        for <linux-gpio@vger.kernel.org>; Wed, 02 Oct 2019 08:39:59 -0700 (PDT)
+        id S1727837AbfJBPlb (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 2 Oct 2019 11:41:31 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:36650 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727451AbfJBPlb (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 2 Oct 2019 11:41:31 -0400
+Received: by mail-wm1-f68.google.com with SMTP id m18so7501970wmc.1
+        for <linux-gpio@vger.kernel.org>; Wed, 02 Oct 2019 08:41:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=kernelci-org.20150623.gappssmtp.com; s=20150623;
         h=message-id:date:mime-version:content-transfer-encoding:subject:to
          :from;
-        bh=lYj/rKLh6ndHoC1wOVPNm8BrVYYEnX1a2LLh6i2dO+Q=;
-        b=1vlo4i2nV3m9KTcYBRrcgnMFt2X5X2XJ7EokJiyg3RnVNl09JOZVV5Gf47sFoW0riu
-         jWzNQXQ4ujJhE4hi6J+lVGKgT1yN8cziEfCL+nBuZ3hQAENusDH4iHNUMkOHm6k73JVf
-         VQgisQAD6sH3XrmUBJGw3oTxXn5zmp62OOwWFW0krHYzd/5EetS/zozlO/+iHopJrxCY
-         JNar6JKSVQlkMB7y+fiKyZuA9EaWp2lTchGsvcGH6uk8nIv3/dk1Ilb6cV5KuHgmQkmH
-         IWkXQbL374ExwWdWkfpIzjIwYJSY4lDs4fkbpEzR77SZ0BQ+EgMduVxTM1had7zhMzaw
-         HrbA==
+        bh=8fV+3XPZXX4ovkjK4XOP29D1LoKME7MlnCBMwsjmB84=;
+        b=hblyUWBvcd1/d6KXUMLD79P0MkBw8bDGSibmIX/PQ2GzPzPzxxB+6tJY1Dl12NaZrC
+         PcLO2FBTWwiUafdqBWPI94XJnzk1x9nVsZvtF1u6W/aPdX6NoKeB81smmgK5OW6PFUkH
+         dSPcL0qC1l7kqYc0hzXMtaQGj+ZRM9tjXYme537xD7kz6oyD0k8jTb4EPCDxQ88NlkNV
+         CTciM47X8r3mXU+QQjkh9JGJlkgUDQR25a598P7wzLLVEMdgT273CR5//IsKP1YMZb6T
+         chaUPS4zYjbBI1LHDO58+IR3KM00O6OKHDOnw0WpGbWQzqEXpvSZttLGt2+U7U6+wV6l
+         SA4Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:message-id:date:mime-version
          :content-transfer-encoding:subject:to:from;
-        bh=lYj/rKLh6ndHoC1wOVPNm8BrVYYEnX1a2LLh6i2dO+Q=;
-        b=acqjKdKKpvynMKr67/JIOQbFcFm6EGXvPnwzhhhFLkKXbrnVYX2KrDPtt1o8W+gzWP
-         z/j/Ofa0+U4BM/B0+SMs/1dC6QAx8Vbg1Zl9U6BJW/mD000IFWs7Rz56FMiisLJIcV0B
-         GSoKKWHUIzLc3eEgKm0CgZaJHNKLsPx2AS9d6uJXrNBp3hXw+kfTcAimVcZo2wNfZNmX
-         sN66XhrHwk8fV4yI4Ynt1rYau0zp+5ZdO+Y4YgaWieZGjaoCs/6qYqNC+ztAfqXq+wEa
-         ls+fsqP8EdXAHt3YYCaPdfKeXxBhJgeQFi3MhgWhTcM5HsDDp/8pFapDmT/Lgw65qzvE
-         oCpg==
-X-Gm-Message-State: APjAAAWooGtXY5/YQVTLJPEqURf88Hi10kUwhO48g11wQmJ+srfW46hX
-        aCKSFZyTuH1ZlxpbMllfXvzJZqPJcLMpug==
-X-Google-Smtp-Source: APXvYqyKGxC3yAH6C5qNkFkKWXG9YXLxeY5fjtTBeJPwC1nnIsEEzAtJq0VgI9IgN9xVxMndlPehHg==
-X-Received: by 2002:a1c:9a46:: with SMTP id c67mr3402191wme.115.1570030798389;
-        Wed, 02 Oct 2019 08:39:58 -0700 (PDT)
+        bh=8fV+3XPZXX4ovkjK4XOP29D1LoKME7MlnCBMwsjmB84=;
+        b=tgKMzfeKiX87AQiaq2IFKT8ulI/txK9rxxtdq4HfpTQq67CUrA4Qa6KZgs9cMC/rqb
+         rAii9rU+LhFkq9/RgxAMk766Yfa2OM5UKtwp2cgR3ePHrrjSQfv4d+tUuDQ1n9Zn5LFE
+         f5yeMVT1G0s+3oeRcaFrQbqoViAOv3EHCJvBcQ3cEu6JigmLC+SWcTFUswFkWDo9Izr7
+         8QqtjdVvqiTLstObta17SGHqZ/2NafISTw3Liz1AlVg6rf1PV9Y45CN89NtrlzSoF/Bb
+         eNEEc9P2QFrwvKebkLuP+CxUEtMF4CLCIR952DhGDC5CGMiWl2CFBsBTbH0TPtKrDkVF
+         opWA==
+X-Gm-Message-State: APjAAAXyFyM0qo3Z9OqzQoFvRgDAZto2xuzNYGi/U4Wd/Lpv+o/k9Gg9
+        H45AMAbhEBbsmCMHbsgFiXnoW/KMQCWBPQ==
+X-Google-Smtp-Source: APXvYqwpo7dmO4/7z33T6jg5wY37ENgf99/qKqhI+/llm7MOCvliUHQpOLLRQHO9ta7jafrZsYvmnA==
+X-Received: by 2002:a05:600c:1009:: with SMTP id c9mr3313146wmc.64.1570030888038;
+        Wed, 02 Oct 2019 08:41:28 -0700 (PDT)
 Received: from [148.251.42.114] ([2a01:4f8:201:9271::2])
-        by smtp.gmail.com with ESMTPSA id w9sm3283235wrt.62.2019.10.02.08.39.57
+        by smtp.gmail.com with ESMTPSA id x5sm19591779wrt.75.2019.10.02.08.41.26
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 02 Oct 2019 08:39:57 -0700 (PDT)
-Message-ID: <5d94c4cd.1c69fb81.5bff.04f8@mx.google.com>
-Date:   Wed, 02 Oct 2019 08:39:57 -0700 (PDT)
+        Wed, 02 Oct 2019 08:41:27 -0700 (PDT)
+Message-ID: <5d94c527.1c69fb81.a143d.b805@mx.google.com>
+Date:   Wed, 02 Oct 2019 08:41:27 -0700 (PDT)
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 X-Kernelci-Report-Type: build
-X-Kernelci-Kernel: v5.4-rc1-1-gf8b410e3695a
-X-Kernelci-Branch: devel
+X-Kernelci-Kernel: v5.4-rc1-4-gb8cd253a06dc
+X-Kernelci-Branch: fixes
 X-Kernelci-Tree: linusw
-Subject: linusw/devel build: 6 builds: 0 failed, 6 passed,
- 13 warnings (v5.4-rc1-1-gf8b410e3695a)
+Subject: linusw/fixes build: 6 builds: 0 failed, 6 passed,
+ 13 warnings (v5.4-rc1-4-gb8cd253a06dc)
 To:     linux-gpio@vger.kernel.org, fellows@kernelci.org
 From:   "kernelci.org bot" <bot@kernelci.org>
 Sender: linux-gpio-owner@vger.kernel.org
@@ -62,16 +62,16 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-linusw/devel build: 6 builds: 0 failed, 6 passed, 13 warnings (v5.4-rc1-1-g=
-f8b410e3695a)
+linusw/fixes build: 6 builds: 0 failed, 6 passed, 13 warnings (v5.4-rc1-4-g=
+b8cd253a06dc)
 
-Full Build Summary: https://kernelci.org/build/linusw/branch/devel/kernel/v=
-5.4-rc1-1-gf8b410e3695a/
+Full Build Summary: https://kernelci.org/build/linusw/branch/fixes/kernel/v=
+5.4-rc1-4-gb8cd253a06dc/
 
 Tree: linusw
-Branch: devel
-Git Describe: v5.4-rc1-1-gf8b410e3695a
-Git Commit: f8b410e3695a86686f4075b997bc53c8a178e4e2
+Branch: fixes
+Git Describe: v5.4-rc1-4-gb8cd253a06dc
+Git Commit: b8cd253a06dc1d06dfed5c0ed1ec886e1706d3fe
 Git URL: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-gpio.=
 git/
 Built: 6 unique architectures
@@ -103,10 +103,10 @@ Warnings summary:
     2    WARNING: "HYPERVISOR_platform_op" [vmlinux] is a static EXPORT_SYM=
 BOL_GPL
     1    depmod: WARNING: /home/buildslave/workspace/workspace/kernel-build=
-@4/linux/build/_modules_/lib/modules/5.4.0-rc1/kernel/drivers/usb/storage/u=
+@7/linux/build/_modules_/lib/modules/5.4.0-rc1/kernel/drivers/usb/storage/u=
 as.ko needs unknown symbol usb_stor_sense_invalidCDB
     1    depmod: WARNING: /home/buildslave/workspace/workspace/kernel-build=
-@4/linux/build/_modules_/lib/modules/5.4.0-rc1/kernel/drivers/usb/storage/u=
+@7/linux/build/_modules_/lib/modules/5.4.0-rc1/kernel/drivers/usb/storage/u=
 as.ko needs unknown symbol usb_stor_adjust_quirks
     1    arch/arm64/configs/defconfig:726:warning: symbol value 'm' invalid=
  for REMOTEPROC
@@ -158,10 +158,10 @@ Warnings:
 id for REMOTEPROC
     WARNING: "return_address" [vmlinux] is a static EXPORT_SYMBOL_GPL
     WARNING: "return_address" [vmlinux] is a static EXPORT_SYMBOL_GPL
-    depmod: WARNING: /home/buildslave/workspace/workspace/kernel-build@4/li=
+    depmod: WARNING: /home/buildslave/workspace/workspace/kernel-build@7/li=
 nux/build/_modules_/lib/modules/5.4.0-rc1/kernel/drivers/usb/storage/uas.ko=
  needs unknown symbol usb_stor_sense_invalidCDB
-    depmod: WARNING: /home/buildslave/workspace/workspace/kernel-build@4/li=
+    depmod: WARNING: /home/buildslave/workspace/workspace/kernel-build@7/li=
 nux/build/_modules_/lib/modules/5.4.0-rc1/kernel/drivers/usb/storage/uas.ko=
  needs unknown symbol usb_stor_adjust_quirks
 
