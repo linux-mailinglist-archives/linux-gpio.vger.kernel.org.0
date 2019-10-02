@@ -2,84 +2,102 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 3CA4DC8B07
-	for <lists+linux-gpio@lfdr.de>; Wed,  2 Oct 2019 16:20:01 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DFD57C8B7B
+	for <lists+linux-gpio@lfdr.de>; Wed,  2 Oct 2019 16:41:57 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728294AbfJBOTf (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 2 Oct 2019 10:19:35 -0400
-Received: from mail-qt1-f196.google.com ([209.85.160.196]:45345 "EHLO
-        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728230AbfJBOTe (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 2 Oct 2019 10:19:34 -0400
-Received: by mail-qt1-f196.google.com with SMTP id c21so26492019qtj.12;
-        Wed, 02 Oct 2019 07:19:33 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:date:from:subject:references
-         :in-reply-to:mime-version:content-transfer-encoding:cc:cc:to;
-        bh=xEcXpQ/NEwyCKzNgI7asImKqcpzGOLlroU+HXRPzw4Y=;
-        b=pbl8cfHVjygWxRJrxDOT49+2J+Ri/7m9++D1QRchMBW3FEQG7zQUcPOUe3cs5urfnb
-         Q0gi2YkQr/rIhtBd4h2+T8G1NFLNChz2+zexhlEqwu4rmW2YMR9lB7T64NehQhKocP4q
-         9Oof/LI67NNKSHmCrrDHJEOuPP6bBGCyBGC5smgkm7/bkFddY6Ro0A5olq3/DoKy8LPT
-         VSz4k0vEnlmGSeeBekTIGef9GXNwC/JLQmW6DhDUdufbYzI+SLB5g9gL1v8HuBvHeHht
-         7F7uup4R07DdNjMlFi/n+lQ8sl+Q5OYoOegcWTcoFqzJjEBOqGmw4nIkEZp46o3gLEfY
-         HqUg==
-X-Gm-Message-State: APjAAAUH2F5bdtEQ+UKEMKF0F+bvtIM7tC0pjFVK6R7af0s0XgIMZNEW
-        OOmvhU5p749tQMYsynvR6f4F9yQQOA==
-X-Google-Smtp-Source: APXvYqxaLnHeciWkdlweE2LBBH7eoNN5RyZrMPdqv69QmbChVl6tENsSTpMqu/HDsjtpBHL6zYeZPA==
-X-Received: by 2002:a0c:a5a5:: with SMTP id z34mr3240240qvz.110.1570025972605;
-        Wed, 02 Oct 2019 07:19:32 -0700 (PDT)
-Received: from localhost ([132.205.230.8])
-        by smtp.gmail.com with ESMTPSA id d45sm12737320qtc.70.2019.10.02.07.19.31
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 02 Oct 2019 07:19:32 -0700 (PDT)
-Message-ID: <5d94b1f4.1c69fb81.6f9ad.2586@mx.google.com>
-Date:   Wed, 02 Oct 2019 09:19:29 -0500
-From:   Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 1/3] docs: fix some broken references
-References: <b87385b2ac6ce6c75df82062fce2976149bbaa6b.1569330078.git.mchehab+samsung@kernel.org>
-In-Reply-To: <b87385b2ac6ce6c75df82062fce2976149bbaa6b.1569330078.git.mchehab+samsung@kernel.org>
+        id S1728337AbfJBOlu (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 2 Oct 2019 10:41:50 -0400
+Received: from mout.gmx.net ([212.227.15.18]:58165 "EHLO mout.gmx.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728322AbfJBOlu (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Wed, 2 Oct 2019 10:41:50 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+        s=badeba3b8450; t=1570027304;
+        bh=LEhTMKW5en/jej5WrXelG7JFpmCLnLL3D9Fno0SqqiE=;
+        h=X-UI-Sender-Class:From:To:Cc:Subject:Date;
+        b=ZzXRNOW+ZhSDxD/PHTD7oPaHkJX6SKVzNwPSQDWltGhgozJ8789ySKvST1l8vzEzC
+         6yadNZn9jATrP7drL9DQtMW3k+JkhVLKaHa+7+AqhVfaHUpN9K8X6fTOXKxmSDIS+9
+         EaSdEh1Aa1M/Yh+wLu1vGf8mFtW6nGUf8bR1mJSo=
+X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
+Received: from longitude ([109.90.233.87]) by mail.gmx.com (mrgmx005
+ [212.227.17.190]) with ESMTPSA (Nemesis) id 1MvbFs-1hxRz437yw-00siDI; Wed, 02
+ Oct 2019 16:41:44 +0200
+From:   =?UTF-8?q?Jonathan=20Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>
+To:     linux-gpio@vger.kernel.org
+Cc:     =?UTF-8?q?Jonathan=20Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] Documentation: gpio: driver: Format code blocks properly
+Date:   Wed,  2 Oct 2019 16:41:41 +0200
+Message-Id: <20191002144141.9732-1-j.neuschaefer@gmx.net>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Cc:     Linux Doc Mailing List <linux-doc@vger.kernel.org>, corbet@lwn.net
-Cc:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Mauro Carvalho Chehab <mchehab@infradead.org>,
-        linux-kernel@vger.kernel.org,
-        "David S. Miller" <davem@davemloft.net>,
-        Shannon Nelson <snelson@pensando.io>,
-        Pensando Drivers <drivers@pensando.io>,
-        Steve French <sfrench@samba.org>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Palmer Dabbelt <palmer@sifive.com>,
-        Albert Ou <aou@eecs.berkeley.edu>, devicetree@vger.kernel.org,
-        linux-gpio@vger.kernel.org, linux-hwmon@vger.kernel.org,
-        linux-mips@vger.kernel.org, netdev@vger.kernel.org,
-        linux-rdma@vger.kernel.org, linux-cifs@vger.kernel.org,
-        samba-technical@lists.samba.org, linux-riscv@lists.infradead.org
-To:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:YFez/7mfyanK8mMCrXHvqTnhrX6cN+9wLIY25EBKnAxkL3cgsh9
+ 7qafulLSxZIx20FSFlPX6o9yd9y9ZoDrSx3BncrhWl2V9n0HG5ES0x6XSCCSKsliCAR7Yp7
+ Vh6yNmCbZN5bVqpqwY8ja5uQcpm4B/CJWLUDkKQ3nWT3k7goBNCaGp5SsLFf7/HKAn9yAMl
+ xx8AZXJRK6PlcAP1YkBsg==
+X-Spam-Flag: NO
+X-UI-Out-Filterresults: notjunk:1;V03:K0:34aLev9KuC8=:KnTFspfp4RsaTlnHrzoorr
+ yd/9iE+D3j6WGB6LbHcN8pT+jqwTJcGPQGKt4uSqhU24NUeZ8f4XHYP6Y3S3m3U2OZdesqnbZ
+ HvXA3NqSHhM5J/qGMg7lw9h+fCt1VRRHwO5SFTPikob5qwQ07/wbtMKNRRzIe77+A9mLKAxpe
+ DudyktU9ArLNzCL9dysvfml+6vFU0US72sIlSg6b2FwJrBgsqND16gEIab60Dc2ZwdPL1ryzw
+ Cbh+ZSyNyhJcHdSor0C7NJSgr/OfhfqQvKdKgKW966PIbyiAWLKBHHXDNZqUwaz7COktjT1Fh
+ EzBvG2CgTqp+Wqe+uoVl/GhePnNjQlLyO6xE2zM6VU8srxwol3L2wDH2y+yYLy6qxyoI9J6zl
+ G/unlI20blLaArgVb6yh72pKtsQHXe0Sho5WvZb7PRDs6QEWtdQ70y7zxxRCCWtjY3aW4BCtk
+ fVx5CsBSl2ER/Ra9k047ux77i2Kjp5ycQ7Ti/JjcU+3BUdHGnFwGGnhrjcCTdBIekohBHi3qo
+ kSsVYvri5gZ3f26GldDadEXQRASuOIuukOGVRzW2cmGEpiQMjcmkytBw8dQWq6ErnyHPNSumA
+ 5+qcU5sy4EeLnvjFGMnNa2aQhaP9q420XbB3hfpuL5Ym6PRhAv5CtSKGKYvLr9H81askQH2WE
+ +aYJL3UF7/3MYMIGKPpahH0pzSl5I16D8Kc8uzXddoxw8Dd/NujBH9IIBOTZX+nVeXBDVoLop
+ 5XuAXTRjKVspATyoZrxqlhrgGzB9+xFFQ6UZw8HbKhi6dxBb2nOsqfWR3BgVIdwTdjXJplatb
+ QvdpEL3fnbMpHN/XaJAuwG0RqcrdIGJSFHq/5SPW3JBQyifnV4ezcJTfeMcUqOD0AGFmvl2xC
+ SDV4lEtCAtHU7FeNK4ztaBvliwOzZATK8zcF5EO3kg1NtZ8CT9ZCFq3qTfrgGwGZSE6bl8q4o
+ nIL2J+lIbv3T8rLuEY+/35HeSTx9icIVxK3uvsALWA7h54MojeCBcBC7M9volxWb5LIR2eeEB
+ a58OFPc7HZ+Vj3ODokdDBKMfrHe4QS/ckPZ3hUKf6lGNs1HPstS+kMS78MXB5A8eVvjLBIUBa
+ gWhjd8aXkAT4KkVK3LCXSrgyzGOj3T78bHRMl4uVs+iRvPyqF4c1pFrsU+07qG0Cm9T3Zr5aa
+ Xo9aBZ8fV9Rpg/xH3K/enlcv0LCP2xhJfiockuVd1QH8DtyPCwKJrViI+MMe1dA8Ti3ruYBMK
+ tpti6OwcW2Oh3EDDQ90jCJUvchiCEP/uY26m9V1s5GngUvNjzUOqTcy30XBg=
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, 24 Sep 2019 10:01:28 -0300, Mauro Carvalho Chehab wrote:
-> There are a number of documentation files that got moved or
-> renamed. update their references.
-> 
-> Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-> ---
->  Documentation/devicetree/bindings/cpu/cpu-topology.txt    | 2 +-
->  Documentation/devicetree/bindings/timer/ingenic,tcu.txt   | 2 +-
->  Documentation/driver-api/gpio/driver.rst                  | 2 +-
->  Documentation/hwmon/inspur-ipsps1.rst                     | 2 +-
->  Documentation/mips/ingenic-tcu.rst                        | 2 +-
->  Documentation/networking/device_drivers/mellanox/mlx5.rst | 2 +-
->  MAINTAINERS                                               | 2 +-
->  drivers/net/ethernet/faraday/ftgmac100.c                  | 2 +-
->  drivers/net/ethernet/pensando/ionic/ionic_if.h            | 4 ++--
->  fs/cifs/cifsfs.c                                          | 2 +-
->  10 files changed, 11 insertions(+), 11 deletions(-)
-> 
+This fixes a lot of Sphinx warnings, and makes the code blocks look nice
+in HTML.
 
-Acked-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Jonathan Neusch=C3=A4fer <j.neuschaefer@gmx.net>
+=2D--
+ Documentation/driver-api/gpio/driver.rst | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/Documentation/driver-api/gpio/driver.rst b/Documentation/driv=
+er-api/gpio/driver.rst
+index 3fdb32422f8a..18dca55eddfd 100644
+=2D-- a/Documentation/driver-api/gpio/driver.rst
++++ b/Documentation/driver-api/gpio/driver.rst
+@@ -415,6 +415,8 @@ If you do this, the additional irq_chip will be set up=
+ by gpiolib at the
+ same time as setting up the rest of the GPIO functionality. The following
+ is a typical example of a cascaded interrupt handler using gpio_irq_chip:
+
++.. code-block:: c
++
+   /* Typical state container with dynamic irqchip */
+   struct my_gpio {
+       struct gpio_chip gc;
+@@ -450,6 +452,8 @@ is a typical example of a cascaded interrupt handler u=
+sing gpio_irq_chip:
+ The helper support using hierarchical interrupt controllers as well.
+ In this case the typical set-up will look like this:
+
++.. code-block:: c
++
+   /* Typical state container with dynamic irqchip */
+   struct my_gpio {
+       struct gpio_chip gc;
+=2D-
+2.20.1
 
