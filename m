@@ -2,127 +2,136 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 62702C8780
-	for <lists+linux-gpio@lfdr.de>; Wed,  2 Oct 2019 13:45:00 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 20FBAC878F
+	for <lists+linux-gpio@lfdr.de>; Wed,  2 Oct 2019 13:49:50 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726489AbfJBLo7 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 2 Oct 2019 07:44:59 -0400
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:45150 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726436AbfJBLo7 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 2 Oct 2019 07:44:59 -0400
-Received: by mail-lf1-f66.google.com with SMTP id r134so12452376lff.12
-        for <linux-gpio@vger.kernel.org>; Wed, 02 Oct 2019 04:44:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=EerdR1LpUJZvAsHuXgTuzOOB6ENDUncZ+hDjL7OX2GA=;
-        b=VSUZD7I6P9fqH4b0brYt2bs4r05jr9Ho7a68ADRD6UZEJtet+7OVEuXIpfeBHPkUO1
-         l+pm1IJdsGDk9SmPDZ4f6ZBmNVBW+63Q77ZpHcK8ag3XwfUx9Fvhk1/lF77sw60Dahae
-         C1bb3tEyk7hYq9Q3FuSrkxUY4CydCo2p0zVj7GXOHaAjHtU7wPhIAkvF4ThtzX7Y2jBW
-         E3A8FwjzI2uiGEHlGNgwMdKdH6N4hpgFov3eEjSAQeEM/FhB4cJCaE9l7fDdXkR6UuFo
-         J2NKIhCrq7Y7ySk46XRXuGAaz7Ml2PkW3t1LnusWfbNOWaLeQjqsxjBntwUvGZ4aqSTU
-         7lJg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=EerdR1LpUJZvAsHuXgTuzOOB6ENDUncZ+hDjL7OX2GA=;
-        b=NsDFCkBdkGEBQWCPG1rI7s4oGXdA8Gey9QxCZ+1niEzm8OoF6Fy/Emlz0SSgpy2xCm
-         85dakffF84j8KcOc2zqsmyppRy7wQw8qAfwL8bNMv48oqanyDskf39wiqSEJy+wr8Xbg
-         5rX+eFBRsP97GPBZt8pbELwx7vFKcN4dtRcN36Iq/uYeYCv0cjAdGI9B+hnyFiGlVU+h
-         LRTYlZ9xtFpjzB346UmhpkYW2+2y1UMyF+Qg8s3VINdt1qStRz8TKoLZscsbHermXiUu
-         8ranIfm6fxcxWqrzbqBxnAxkO/RpJ6NN+YOyGUZLDjjzPSWsWiTso904LPEBGfpXpvKn
-         DtXA==
-X-Gm-Message-State: APjAAAUS1aeLX7X4XdAY3hhsTq9c5Y2vuqmfxPpbYQczBgUSNhvP7G11
-        Ds2A1ggUPCnfCNrx8NraSNwxWCXufv1yDg==
-X-Google-Smtp-Source: APXvYqzwzAlCpOJukl1i3wqx8OuObRjMwl4lL4RgqQEEY+aHp7Mw29/UhcEEoytZW0MBZzc0FbE65A==
-X-Received: by 2002:a19:5516:: with SMTP id n22mr2191541lfe.49.1570016697381;
-        Wed, 02 Oct 2019 04:44:57 -0700 (PDT)
-Received: from genomnajs.ideon.se ([85.235.10.227])
-        by smtp.gmail.com with ESMTPSA id i17sm4736846ljd.2.2019.10.02.04.44.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 02 Oct 2019 04:44:56 -0700 (PDT)
-From:   Linus Walleij <linus.walleij@linaro.org>
-To:     linux-gpio@vger.kernel.org
+        id S1726657AbfJBLtt (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 2 Oct 2019 07:49:49 -0400
+Received: from sender4-pp-o95.zoho.com ([136.143.188.95]:25502 "EHLO
+        sender4-pp-o95.zoho.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726267AbfJBLtt (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 2 Oct 2019 07:49:49 -0400
+ARC-Seal: i=1; a=rsa-sha256; t=1570016976; cv=none; 
+        d=zoho.com; s=zohoarc; 
+        b=LBch/wz5i394L5o18V5AI7R9hLkEzpG0wNWiJqD6FLu/cmkjmxE7W6tO344De5MamRfYR1lUKZ1YcKvHlhh/R+VepDR3vFTyfO+cUffG8vt+3a1fgr71HufZ5xsu2ekj7lp+YUmg74UF9kNzwMdTlevqWqGIU2Y6itsYm3k0jcA=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zoho.com; s=zohoarc; 
+        t=1570016976; h=Content-Type:Content-Transfer-Encoding:Cc:Date:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:To:ARC-Authentication-Results; 
+        bh=ox92V9Adzorjx0tQrqc3RRslx2hsZpMbg8dujiDq1WE=; 
+        b=WLPti2tcn0SPN7YMFFawCIw03VmLhtel2ezlj2JLy66oxzx+NXuvKz0BL21hW8R6BkOAfQEVuczDms+eo+2ScQzhlwgPJgY2/wrAEcNnHMG5Q0mF+cJ8aLqxyktNB2fTRFmnb57RDPkKfHkWyhDxFJzw4wg+4s/330owDrH1xgY=
+ARC-Authentication-Results: i=1; mx.zoho.com;
+        dkim=pass  header.i=zoho.com;
+        spf=pass  smtp.mailfrom=zhouyanjie@zoho.com;
+        dmarc=pass header.from=<zhouyanjie@zoho.com> header.from=<zhouyanjie@zoho.com>
+DomainKey-Signature: a=rsa-sha1; q=dns; c=nofws; 
+  s=zapps768; d=zoho.com; 
+  h=subject:to:references:cc:from:message-id:date:user-agent:mime-version:in-reply-to:content-type; 
+  b=S7A5gEUQHZzrEscYNjA5e/IryV7r7IWv6Rz5N5Wr/5RMXngvwOXCV17BLRAT7B/L9k6SXOtYXed4
+    sG96VbCcNWFGQ0BLgWtfRYsCoyRBKX5R2Mk8XdzbQ2Q40BypEaHV  
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1570016976;
+        s=zm2019; d=zoho.com; i=zhouyanjie@zoho.com;
+        h=Subject:To:References:Cc:From:Message-ID:Date:MIME-Version:In-Reply-To:Content-Type:Content-Transfer-Encoding;
+        l=2536; bh=ox92V9Adzorjx0tQrqc3RRslx2hsZpMbg8dujiDq1WE=;
+        b=KwvfWHWWbAacHHBfNKiujkaYdP8aQGPzmSRcnmdp/DoxGGivvxb5ZSqiiGsmQgL3
+        9rz8EOLdCSe2Q2TLXlgNsdnsFiL4xdy8ZTLgz7SlA14airq+qpWNVSoXae49K/NHp53
+        DiYW36cUScw2u0fq8XHzfAqqfWWJWJ8uoGkDm6do=
+Received: from [192.168.88.140] (171.221.113.164 [171.221.113.164]) by mx.zohomail.com
+        with SMTPS id 1570016975340643.5907458374162; Wed, 2 Oct 2019 04:49:35 -0700 (PDT)
+Subject: Re: [PATCH] pinctrl: ingenic: Pass irqchip when adding gpiochip
+To:     Linus Walleij <linus.walleij@linaro.org>,
+        linux-gpio@vger.kernel.org
+References: <20191001133209.17164-1-linus.walleij@linaro.org>
 Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Paul Cercueil <paul@crapouillou.net>,
         Thierry Reding <thierry.reding@gmail.com>
-Subject: [PATCH] pinctrl: ocelot: Pass irqchip when adding gpiochip
-Date:   Wed,  2 Oct 2019 13:44:54 +0200
-Message-Id: <20191002114454.9684-1-linus.walleij@linaro.org>
-X-Mailer: git-send-email 2.21.0
+From:   Zhou Yanjie <zhouyanjie@zoho.com>
+Message-ID: <5D948ECE.2050007@zoho.com>
+Date:   Wed, 2 Oct 2019 19:49:34 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:38.0) Gecko/20100101
+ Thunderbird/38.8.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20191001133209.17164-1-linus.walleij@linaro.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: quoted-printable
+X-ZohoMailClient: External
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-We need to convert all old gpio irqchips to pass the irqchip
-setup along when adding the gpio_chip. For more info see
-drivers/gpio/TODO.
 
-For chained irqchips this is a pretty straight-forward
-conversion.
+On 2019=E5=B9=B410=E6=9C=8801=E6=97=A5 21:32, Linus Walleij wrote:
+> We need to convert all old gpio irqchips to pass the irqchip
+> setup along when adding the gpio_chip. For more info see
+> drivers/gpio/TODO.
+>
+> For chained irqchips this is a pretty straight-forward
+> conversion.
 
-Cc: Alexandre Belloni <alexandre.belloni@bootlin.com>
-Cc: Thierry Reding <thierry.reding@gmail.com>
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
----
- drivers/pinctrl/pinctrl-ocelot.c | 23 ++++++++++++++---------
- 1 file changed, 14 insertions(+), 9 deletions(-)
+Acked-by: Zhou Yanjie <zhouyanjie@zoho.com>
 
-diff --git a/drivers/pinctrl/pinctrl-ocelot.c b/drivers/pinctrl/pinctrl-ocelot.c
-index fb76fb2e9ea5..eb3dd0d46d6c 100644
---- a/drivers/pinctrl/pinctrl-ocelot.c
-+++ b/drivers/pinctrl/pinctrl-ocelot.c
-@@ -736,6 +736,7 @@ static int ocelot_gpiochip_register(struct platform_device *pdev,
- 				    struct ocelot_pinctrl *info)
- {
- 	struct gpio_chip *gc;
-+	struct gpio_irq_chip *girq;
- 	int ret, irq;
- 
- 	info->gpio_chip = ocelot_gpiolib_chip;
-@@ -747,22 +748,26 @@ static int ocelot_gpiochip_register(struct platform_device *pdev,
- 	gc->of_node = info->dev->of_node;
- 	gc->label = "ocelot-gpio";
- 
--	ret = devm_gpiochip_add_data(&pdev->dev, gc, info);
--	if (ret)
--		return ret;
--
- 	irq = irq_of_parse_and_map(pdev->dev.of_node, 0);
- 	if (irq <= 0)
- 		return irq;
- 
--	ret = gpiochip_irqchip_add(gc, &ocelot_irqchip, 0, handle_edge_irq,
--				   IRQ_TYPE_NONE);
-+	girq = &gc->irq;
-+	girq->chip = &ocelot_irqchip;
-+	girq->parent_handler = ocelot_irq_handler;
-+	girq->num_parents = 1;
-+	girq->parents = devm_kcalloc(&pdev->dev, 1, sizeof(*girq->parents),
-+				     GFP_KERNEL);
-+	if (!girq->parents)
-+		return -ENOMEM;
-+	girq->parents[0] = irq;
-+	girq->default_type = IRQ_TYPE_NONE;
-+	girq->handler = handle_edge_irq;
-+
-+	ret = devm_gpiochip_add_data(&pdev->dev, gc, info);
- 	if (ret)
- 		return ret;
- 
--	gpiochip_set_chained_irqchip(gc, &ocelot_irqchip, irq,
--				     ocelot_irq_handler);
--
- 	return 0;
- }
- 
--- 
-2.21.0
+>
+> Cc: Zhou Yanjie <zhouyanjie@zoho.com>
+> Cc: Paul Cercueil <paul@crapouillou.net>
+> Cc: Thierry Reding <thierry.reding@gmail.com>
+> Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+> ---
+>   drivers/pinctrl/pinctrl-ingenic.c | 22 ++++++++++++++--------
+>   1 file changed, 14 insertions(+), 8 deletions(-)
+>
+> diff --git a/drivers/pinctrl/pinctrl-ingenic.c b/drivers/pinctrl/pinctrl-=
+ingenic.c
+> index 6e2683016c1f..06cae38f6daf 100644
+> --- a/drivers/pinctrl/pinctrl-ingenic.c
+> +++ b/drivers/pinctrl/pinctrl-ingenic.c
+> @@ -1940,6 +1940,7 @@ static int __init ingenic_gpio_probe(struct ingenic=
+_pinctrl *jzpc,
+>   {
+>   =09struct ingenic_gpio_chip *jzgc;
+>   =09struct device *dev =3D jzpc->dev;
+> +=09struct gpio_irq_chip *girq;
+>   =09unsigned int bank;
+>   =09int err;
+>  =20
+> @@ -1982,10 +1983,6 @@ static int __init ingenic_gpio_probe(struct ingeni=
+c_pinctrl *jzpc,
+>   =09=09jzgc->gc.free =3D gpiochip_generic_free;
+>   =09}
+>  =20
+> -=09err =3D devm_gpiochip_add_data(dev, &jzgc->gc, jzgc);
+> -=09if (err)
+> -=09=09return err;
+> -
+>   =09jzgc->irq =3D irq_of_parse_and_map(node, 0);
+>   =09if (!jzgc->irq)
+>   =09=09return -EINVAL;
+> @@ -2000,13 +1997,22 @@ static int __init ingenic_gpio_probe(struct ingen=
+ic_pinctrl *jzpc,
+>   =09jzgc->irq_chip.irq_set_wake =3D ingenic_gpio_irq_set_wake;
+>   =09jzgc->irq_chip.flags =3D IRQCHIP_MASK_ON_SUSPEND;
+>  =20
+> -=09err =3D gpiochip_irqchip_add(&jzgc->gc, &jzgc->irq_chip, 0,
+> -=09=09=09handle_level_irq, IRQ_TYPE_NONE);
+> +=09girq =3D &jzgc->gc.irq;
+> +=09girq->chip =3D &jzgc->irq_chip;
+> +=09girq->parent_handler =3D ingenic_gpio_irq_handler;
+> +=09girq->num_parents =3D 1;
+> +=09girq->parents =3D devm_kcalloc(dev, 1, sizeof(*girq->parents),
+> +=09=09=09=09     GFP_KERNEL);
+> +=09if (!girq->parents)
+> +=09=09return -ENOMEM;
+> +=09girq->parents[0] =3D jzgc->irq;
+> +=09girq->default_type =3D IRQ_TYPE_NONE;
+> +=09girq->handler =3D handle_level_irq;
+> +
+> +=09err =3D devm_gpiochip_add_data(dev, &jzgc->gc, jzgc);
+>   =09if (err)
+>   =09=09return err;
+>  =20
+> -=09gpiochip_set_chained_irqchip(&jzgc->gc, &jzgc->irq_chip,
+> -=09=09=09jzgc->irq, ingenic_gpio_irq_handler);
+>   =09return 0;
+>   }
+>  =20
+
+
 
