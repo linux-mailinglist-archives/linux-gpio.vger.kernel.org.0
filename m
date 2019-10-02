@@ -2,123 +2,106 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id C7CCFC9413
-	for <lists+linux-gpio@lfdr.de>; Thu,  3 Oct 2019 00:10:08 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 90075C94D6
+	for <lists+linux-gpio@lfdr.de>; Thu,  3 Oct 2019 01:29:43 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726128AbfJBWKH (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 2 Oct 2019 18:10:07 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:44296 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726081AbfJBWKH (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 2 Oct 2019 18:10:07 -0400
-Received: by mail-io1-f68.google.com with SMTP id w12so874379iol.11
-        for <linux-gpio@vger.kernel.org>; Wed, 02 Oct 2019 15:10:07 -0700 (PDT)
+        id S1728616AbfJBX3k (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 2 Oct 2019 19:29:40 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:46716 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726798AbfJBX3j (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 2 Oct 2019 19:29:39 -0400
+Received: by mail-pf1-f195.google.com with SMTP id q5so451012pfg.13
+        for <linux-gpio@vger.kernel.org>; Wed, 02 Oct 2019 16:29:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google;
-        h=date:from:to:cc:subject:in-reply-to:message-id:references
-         :user-agent:mime-version;
-        bh=6c+UtI1uYDbyYxUQwSa9jl5b6+0JQI0MJumhi18xfQg=;
-        b=kboGfl6VR6AFG/YCMnKlVG1+DLAnMRlmrb8TUPJMLPA8HrsPJg1Wv8qBfjT/1q4Bki
-         bBHNbIFDJCUEivY6JcJ8nmU4c1/OM5zE+nbfYeEhQBMkd4DgnMpt27LQCB66JR4ey7Zc
-         LS2WLuNO7xZj1wj/3HEnrW2rj2gpzQnUmlwALGcM0Wm9pCjPbLzsr0mq1mz7Kq+YUbob
-         9ht8eU3m5L9/xHmvhA1RZaSsMCPDzEHDCd0xVDaqVHUzRaHAY/ldADDT6KFMPW0FPa54
-         yvmv+K2YV95Qr4Cy6BOpBN7bF6oZcWYlKVB7T3RlKmOz/SK53j9xC0hFrC1dwk4swq6R
-         0EfQ==
+        d=broadcom.com; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-transfer-encoding:content-language;
+        bh=mfYTRE2wrHnGHdzN9pNRX0i1wlfEpry7vj/JNYrQ7CY=;
+        b=Mf3QWc+S+bv5pPGAm5l5TcASwdcoob1IpAJzIYmCUhXcHc9GZtCIr3XT5pjbAuSPTS
+         AWmeLFS3b+jY913B1ysUu3DmViojEU2i9R/tFiFtAV+95O7xfx1ymyUlCoel6td6Eh1e
+         Aeti9QCjKm2ld4obHKXX8u4j/MNnSQabQF1YY=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
-         :references:user-agent:mime-version;
-        bh=6c+UtI1uYDbyYxUQwSa9jl5b6+0JQI0MJumhi18xfQg=;
-        b=Uk8YZrJrl9VvteS3G0ZFZ92pbXca0OUxMP4ZGtN8u2Ttv0GbMhBS0ETnnq8f+zTQOr
-         a9A+xPfpX9YGHsvE1NKZlA7ZgYlRzoVMcnWHVi+bNdAiyTn3F0gYQUcHP4C7LNmF44Cd
-         W9WJLMZwV92DA91J3dpantPYBcx+1hc1wTOoDly3/ZVQV23K/A1Vw4utjq7LMmZ01f/v
-         MDEalHQ1pE1TZ0U+59k0PpEtcUB55J1VkWW8cUySfVuJjRsLsTa7ZCU92pkPxIjL7pM/
-         b3LxtHd0CnWjo/HdaA+VVhTk+JVG/4yM/Fa58MrVhr5h2GRH03yCb5gP+ZWZA/RifjdS
-         ovkQ==
-X-Gm-Message-State: APjAAAVxUqR8yT/D9bElEhiIaemM3Qx6Uk/TtOu6yCD0yG7vtj9TdN8q
-        d2iZj2bdLTwVqyb2bDmxvYAlrA==
-X-Google-Smtp-Source: APXvYqwYei1g/xOWE2U+PJHvvft5qrbaOfrE6nk3lP1n8pcWvN76f2qecpvDskoigtVrXYEOtuSqcA==
-X-Received: by 2002:a6b:8bd4:: with SMTP id n203mr5741864iod.133.1570054206751;
-        Wed, 02 Oct 2019 15:10:06 -0700 (PDT)
-Received: from localhost (67-0-10-3.albq.qwest.net. [67.0.10.3])
-        by smtp.gmail.com with ESMTPSA id l16sm350067ilm.67.2019.10.02.15.10.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 02 Oct 2019 15:10:05 -0700 (PDT)
-Date:   Wed, 2 Oct 2019 15:10:05 -0700 (PDT)
-From:   Paul Walmsley <paul.walmsley@sifive.com>
-X-X-Sender: paulw@viisi.sifive.com
-To:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-cc:     Linux Doc Mailing List <linux-doc@vger.kernel.org>, corbet@lwn.net,
-        Mark Rutland <mark.rutland@arm.com>,
-        James Hogan <jhogan@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Palmer Dabbelt <palmer@sifive.com>, linux-mips@vger.kernel.org,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        linux-riscv@lists.infradead.org,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-cifs@vger.kernel.org, Leon Romanovsky <leon@kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        linux-rdma@vger.kernel.org,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Saeed Mahameed <saeedm@mellanox.com>,
-        Guenter Roeck <linux@roeck-us.net>, devicetree@vger.kernel.org,
-        Jean Delvare <jdelvare@suse.com>,
-        Mauro Carvalho Chehab <mchehab@infradead.org>,
-        linux-gpio@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
-        Pensando Drivers <drivers@pensando.io>,
-        linux-hwmon@vger.kernel.org, netdev@vger.kernel.org,
-        samba-technical@lists.samba.org, linux-kernel@vger.kernel.org,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Steve French <sfrench@samba.org>,
-        Paul Burton <paul.burton@mips.com>,
-        Shannon Nelson <snelson@pensando.io>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: Re: [PATCH 1/3] docs: fix some broken references
-In-Reply-To: <b87385b2ac6ce6c75df82062fce2976149bbaa6b.1569330078.git.mchehab+samsung@kernel.org>
-Message-ID: <alpine.DEB.2.21.9999.1910021509260.3732@viisi.sifive.com>
-References: <b87385b2ac6ce6c75df82062fce2976149bbaa6b.1569330078.git.mchehab+samsung@kernel.org>
-User-Agent: Alpine 2.21.9999 (DEB 301 2018-08-15)
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-transfer-encoding
+         :content-language;
+        bh=mfYTRE2wrHnGHdzN9pNRX0i1wlfEpry7vj/JNYrQ7CY=;
+        b=oxTLp8OtcdJCSvOSDmKYAjFkOhuYVxHxDPbTxMw/HS4OdKLOVMuVEIv5LMn4FHWL61
+         Pm9P28yoG/1s3bTKlJ6EwdZ3/1kFjSfYLKnkKNt7S6CvWGWJYO1r1rNXdQFmzDeca5H4
+         sjhR95a+RnTKKMrSxhfi24HxI6P56nsYV+dwVy5+BerIWxnFdQRtxNnPmPQrCsSR0Tb3
+         WYdpnMzNG2Xq+ZLlLqOE7QcBGdvIQ8xcYslKva2e9uesPn3L8/VQq7TuDG9Vnhxzv1Fd
+         fsfO5rkonlkvR5V4OavI+aJKJp/6xvSmYJ5c3uhbH3KtJajgFqQs/HSiogqUQaIt22NH
+         z9kw==
+X-Gm-Message-State: APjAAAVNLjQdrAg6mlpZ+pVQYuZzqaVmDJPzs6pWTbz+FDjubWJjvPG2
+        PcVVqkTVx5mpXgWNfBs/WCd1tZt/wjmz+A==
+X-Google-Smtp-Source: APXvYqwb1v+OFwGH/X+Zf8U8nxSjb6n41/d9STpAf2augV7Q8TlFtC9GLo/vHrIL44A4Hqi6BErSww==
+X-Received: by 2002:a63:e14:: with SMTP id d20mr6038229pgl.33.1570058977001;
+        Wed, 02 Oct 2019 16:29:37 -0700 (PDT)
+Received: from [10.136.13.65] ([192.19.228.250])
+        by smtp.gmail.com with ESMTPSA id l72sm342214pjb.7.2019.10.02.16.29.32
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 02 Oct 2019 16:29:36 -0700 (PDT)
+Subject: Re: [PATCH] pinctrl: iproc: improve error handling
+To:     Chris Packham <chris.packham@alliedtelesis.co.nz>,
+        linus.walleij@linaro.org, rjui@broadcom.com, sbranden@broadcom.com,
+        bcm-kernel-feedback-list@broadcom.com,
+        rayagonda.kokatanur@broadcom.com, li.jin@broadcom.com
+Cc:     linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+References: <20191002220034.2034-1-chris.packham@alliedtelesis.co.nz>
+From:   Scott Branden <scott.branden@broadcom.com>
+Message-ID: <045d67e2-5618-3742-5519-c4fb9518c118@broadcom.com>
+Date:   Wed, 2 Oct 2019 16:29:28 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <20191002220034.2034-1-chris.packham@alliedtelesis.co.nz>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, 24 Sep 2019, Mauro Carvalho Chehab wrote:
+Hi Chris,
 
-> There are a number of documentation files that got moved or
-> renamed. update their references.
-> 
-> Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+On 2019-10-02 3:00 p.m., Chris Packham wrote:
+> platform_get_irq() can return an error code. Allow for this when getting
+> the irq.
+Above matches change in 1st line of commit.  Please add a Fixes: tag
+for such fix.
+>    While we're here use the dev_name(dev) for the irqc->name so
+> that we get unique names when we have multiple instances of this driver.
+The dev_name change should be in a different commit to keep things
+bisectable.
+>
+> Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
 > ---
->  Documentation/devicetree/bindings/cpu/cpu-topology.txt    | 2 +-
->  Documentation/devicetree/bindings/timer/ingenic,tcu.txt   | 2 +-
->  Documentation/driver-api/gpio/driver.rst                  | 2 +-
->  Documentation/hwmon/inspur-ipsps1.rst                     | 2 +-
->  Documentation/mips/ingenic-tcu.rst                        | 2 +-
->  Documentation/networking/device_drivers/mellanox/mlx5.rst | 2 +-
->  MAINTAINERS                                               | 2 +-
->  drivers/net/ethernet/faraday/ftgmac100.c                  | 2 +-
->  drivers/net/ethernet/pensando/ionic/ionic_if.h            | 4 ++--
->  fs/cifs/cifsfs.c                                          | 2 +-
->  10 files changed, 11 insertions(+), 11 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/cpu/cpu-topology.txt b/Documentation/devicetree/bindings/cpu/cpu-topology.txt
-> index 99918189403c..9bd530a35d14 100644
-> --- a/Documentation/devicetree/bindings/cpu/cpu-topology.txt
-> +++ b/Documentation/devicetree/bindings/cpu/cpu-topology.txt
-> @@ -549,5 +549,5 @@ Example 3: HiFive Unleashed (RISC-V 64 bit, 4 core system)
->  [2] Devicetree NUMA binding description
->      Documentation/devicetree/bindings/numa.txt
->  [3] RISC-V Linux kernel documentation
-> -    Documentation/devicetree/bindings/riscv/cpus.txt
-> +    Documentation/devicetree/bindings/riscv/cpus.yaml
->  [4] https://www.devicetree.org/specifications/
-
-For the RISC-V related change:
-
-Acked-by: Paul Walmsley <paul.walmsley@sifive.com> # RISC-V
-
-
-- Paul
+> Noticed this while debugging another problem.
+>
+>   drivers/pinctrl/bcm/pinctrl-iproc-gpio.c | 4 ++--
+>   1 file changed, 2 insertions(+), 2 deletions(-)
+>
+> diff --git a/drivers/pinctrl/bcm/pinctrl-iproc-gpio.c b/drivers/pinctrl/bcm/pinctrl-iproc-gpio.c
+> index 6f7d3a2f2e97..c24d49d436ce 100644
+> --- a/drivers/pinctrl/bcm/pinctrl-iproc-gpio.c
+> +++ b/drivers/pinctrl/bcm/pinctrl-iproc-gpio.c
+> @@ -853,12 +853,12 @@ static int iproc_gpio_probe(struct platform_device *pdev)
+>   
+>   	/* optional GPIO interrupt support */
+>   	irq = platform_get_irq(pdev, 0);
+> -	if (irq) {
+> +	if (irq > 0) {
+>   		struct irq_chip *irqc;
+>   		struct gpio_irq_chip *girq;
+>   
+>   		irqc = &chip->irqchip;
+> -		irqc->name = "bcm-iproc-gpio";
+> +		irqc->name = dev_name(dev);
+>   		irqc->irq_ack = iproc_gpio_irq_ack;
+>   		irqc->irq_mask = iproc_gpio_irq_mask;
+>   		irqc->irq_unmask = iproc_gpio_irq_unmask;
+Thanks,
+Scott
