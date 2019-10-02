@@ -2,173 +2,96 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id DC580C8818
-	for <lists+linux-gpio@lfdr.de>; Wed,  2 Oct 2019 14:16:05 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 232EDC886F
+	for <lists+linux-gpio@lfdr.de>; Wed,  2 Oct 2019 14:28:31 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725766AbfJBMQF (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 2 Oct 2019 08:16:05 -0400
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:35213 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726427AbfJBMQF (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 2 Oct 2019 08:16:05 -0400
-Received: by mail-lf1-f66.google.com with SMTP id w6so12565415lfl.2
-        for <linux-gpio@vger.kernel.org>; Wed, 02 Oct 2019 05:16:03 -0700 (PDT)
+        id S1725875AbfJBM2a (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 2 Oct 2019 08:28:30 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:42402 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725848AbfJBM23 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 2 Oct 2019 08:28:29 -0400
+Received: by mail-wr1-f67.google.com with SMTP id n14so19415351wrw.9;
+        Wed, 02 Oct 2019 05:28:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
+        d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=ImypWLeaPw/IThbY3ERMJs+WlUwaWz3UPu+vStY0+xg=;
-        b=CPGdgpHCbq+lLfgVY/gDSJX9rdNp01d0LUHV1NXeg8xuiuYoynZPKp7MGH02ZbWXfv
-         KbQ15+7lUuDNiBUZ8fRrsHTn9Y3UQkvKSGO/OClC9Uce/Bkm6nccasrIOj/j6vqeqtvW
-         JEoD/HWTR8sE3rWY1de7vHb34aSnSqVhzOfy7kJM5nDJvM2udWPFMbrIhNDxSbT9ivdM
-         iKaC6fI+PW0McZ6fdJANuefGd0lqlRpAmHwzjqbvtK961HkAKImAwYUZYyigPX/pufOP
-         tN+ICf5RYnDsjjazrpi3/m2w0lLodpt/Yf7PxkaDsHmMkDzSqLpNb6iBfn132gc+hE8J
-         5yHQ==
+        bh=qP9mbplmTy0EguziRYmdZKFvmKZpgiY1goXlhQxV0/8=;
+        b=Xe4ozWCsxpb6DK1agUyM9eUxlP6G03BBFhI5g4JErak3F1hsMTKXmoyANoMKXxS+UF
+         OWRiAkrVC3cQOJczX/+7HhZQ8bMC3apl96os1jO6/JWJEP2BHZpDAF0bRyJQdbd0lmMA
+         afH1TDc/aCLYhrc6UF4IMSf4Noe9cSvoyQYpo0qgpxktdn7I/jv5ztIFWEVBOuEfDveP
+         hKAmMRuOGlokBd9/+TirOM307HbJYDWAZ8Wko3G+bYcw41RSULf9eN0mQPLmeF/+J9tC
+         XwaypBneeu3VeCmfU/DxP1duZ3pCcnwOu5nrzdHsS6ow28T2CVk8VvAAZGEU1cUIX4Z+
+         +hkw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=ImypWLeaPw/IThbY3ERMJs+WlUwaWz3UPu+vStY0+xg=;
-        b=UT82UCTOMpEnq7TO9qS6cf+KxVgLXP9hNwNqBLMwtzZbfPRh8wcHCgzcRhfiwexrRb
-         111F3mmfJA6T4m6Z/HpM1yWUp1MDa6UGGHepW/ZV8ZxhE5Rh0UR+2/NTnNuLM2Gpheh+
-         azY3O+kDHmzkn8YXkVWog2d4dAjkD7C9OqpQkXMq55Mi2lDEiJGWGcA1674x9pFufN2b
-         p6QDSyk+csg9+kjijQYMMtGOKhsGesmXxzH6Mdpn20pEPPCUgseI676AUJtx7Zk49bJE
-         LK6NYnlzbrWVwK6U8Im9xu7JsR5zSzXOkl54VOxP7S67SISFKL1xvGOw1FtMycK16LhF
-         QkTw==
-X-Gm-Message-State: APjAAAVzT7BlS3K2CLd2VubTpyG6XPH9aAOg/YktvkLTOa03kpRrhN9C
-        oRQ6xD7PnoaNvCxcEwXW1JBKultdcD++2A==
-X-Google-Smtp-Source: APXvYqzEihJ8UJ3hOCglDxtDxOhuDqKvgq96I7XdrtLPBoDS1Gib2unUJ2KwglA0B/aFvJcLsKPhhA==
-X-Received: by 2002:ac2:558e:: with SMTP id v14mr2119401lfg.161.1570018562917;
-        Wed, 02 Oct 2019 05:16:02 -0700 (PDT)
-Received: from genomnajs.ideon.se ([85.235.10.227])
-        by smtp.gmail.com with ESMTPSA id a8sm4725441ljf.47.2019.10.02.05.16.01
+        bh=qP9mbplmTy0EguziRYmdZKFvmKZpgiY1goXlhQxV0/8=;
+        b=akVGfKDGN9KlaS7GfDnHx98C2QeedcAeu8RIoCS8uh0twWVOZMZKbUY6M/2HaZKsPI
+         38mOkZ2CRPyO1EzbpI9UU6hHXfohMTHuWX0pTdvkFXn+TfZPAxJa1fVRhHgOcknkhb/U
+         JBzse/qoFFdlsRK3kY6I+0R1YyyAD2SDlzfax4U6ew8DL0icpWegiNEXnIno/7b6sIt2
+         9u9PEHk+1AdQkgS/tVRAFdVg6rrYMbUFkh1JAYsEED71D2IR38JmdUfjsW0Bi1aohXuz
+         F8LOoB0G33BszHljgknOYlHF4tPGDitMVI+giV3UgwXEWHKFgimUJKOb1nyg+4fcVOLO
+         2g1g==
+X-Gm-Message-State: APjAAAX5YpK/Xf8BgNQ7EyD7TzARRLtN4fRfLcEXIT3fZkDHf5xGyxPi
+        jnbTBpi+UDekDgGOQiVnsoo=
+X-Google-Smtp-Source: APXvYqw9HA6mSwE4O/MajE0OyTuT/xQaPqMRcrU+p/RXgMiP+Q297cH5ORneUFjHbOQpwrdgestsJw==
+X-Received: by 2002:adf:fe05:: with SMTP id n5mr2716992wrr.355.1570019307315;
+        Wed, 02 Oct 2019 05:28:27 -0700 (PDT)
+Received: from localhost (p2E5BE2CE.dip0.t-ipconnect.de. [46.91.226.206])
+        by smtp.gmail.com with ESMTPSA id e17sm5719759wma.15.2019.10.02.05.28.25
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 02 Oct 2019 05:16:01 -0700 (PDT)
-From:   Linus Walleij <linus.walleij@linaro.org>
-To:     linux-gpio@vger.kernel.org
-Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Gregory CLEMENT <gregory.clement@bootlin.com>,
-        =?UTF-8?q?Marek=20Beh=C3=BAn?= <marek.behun@nic.cz>,
-        Thierry Reding <thierry.reding@gmail.com>
-Subject: [PATCH] pinctrl: armada-37xx: Pass irqchip when adding gpiochip
-Date:   Wed,  2 Oct 2019 14:15:50 +0200
-Message-Id: <20191002121550.16104-1-linus.walleij@linaro.org>
-X-Mailer: git-send-email 2.21.0
+        Wed, 02 Oct 2019 05:28:26 -0700 (PDT)
+From:   Thierry Reding <thierry.reding@gmail.com>
+To:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Cc:     Timo Alho <talho@nvidia.com>, linux-gpio@vger.kernel.org,
+        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 1/3] gpio: max77620: Use correct unit for debounce times
+Date:   Wed,  2 Oct 2019 14:28:23 +0200
+Message-Id: <20191002122825.3948322-1-thierry.reding@gmail.com>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-We need to convert all old gpio irqchips to pass the irqchip
-setup along when adding the gpio_chip. For more info see
-drivers/gpio/TODO.
+From: Thierry Reding <treding@nvidia.com>
 
-For chained irqchips this is a pretty straight-forward
-conversion.
+The gpiod_set_debounce() function takes the debounce time in
+microseconds. Adjust the switch/case values in the MAX77620 GPIO to use
+the correct unit.
 
-Cc: Miquel Raynal <miquel.raynal@bootlin.com>
-Cc: Gregory CLEMENT <gregory.clement@bootlin.com>
-Cc: Marek Behún <marek.behun@nic.cz>
-Cc: Thierry Reding <thierry.reding@gmail.com>
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+Signed-off-by: Thierry Reding <treding@nvidia.com>
 ---
- drivers/pinctrl/mvebu/pinctrl-armada-37xx.c | 34 ++++++++++++---------
- 1 file changed, 19 insertions(+), 15 deletions(-)
+ drivers/gpio/gpio-max77620.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/pinctrl/mvebu/pinctrl-armada-37xx.c b/drivers/pinctrl/mvebu/pinctrl-armada-37xx.c
-index 6462d3ca7ceb..952cf4e87e82 100644
---- a/drivers/pinctrl/mvebu/pinctrl-armada-37xx.c
-+++ b/drivers/pinctrl/mvebu/pinctrl-armada-37xx.c
-@@ -722,6 +722,8 @@ static int armada_37xx_irqchip_register(struct platform_device *pdev,
- 	struct device_node *np = info->dev->of_node;
- 	struct gpio_chip *gc = &info->gpio_chip;
- 	struct irq_chip *irqchip = &info->irq_chip;
-+	struct gpio_irq_chip *girq = &gc->irq;
-+	struct device *dev = &pdev->dev;
- 	struct resource res;
- 	int ret = -ENODEV, i, nr_irq_parent;
- 
-@@ -732,19 +734,21 @@ static int armada_37xx_irqchip_register(struct platform_device *pdev,
- 			break;
- 		}
- 	};
--	if (ret)
-+	if (ret) {
-+		dev_err(dev, "no gpio-controller child node\n");
- 		return ret;
-+	}
- 
- 	nr_irq_parent = of_irq_count(np);
- 	spin_lock_init(&info->irq_lock);
- 
- 	if (!nr_irq_parent) {
--		dev_err(&pdev->dev, "Invalid or no IRQ\n");
-+		dev_err(dev, "invalid or no IRQ\n");
- 		return 0;
- 	}
- 
- 	if (of_address_to_resource(info->dev->of_node, 1, &res)) {
--		dev_err(info->dev, "cannot find IO resource\n");
-+		dev_err(dev, "cannot find IO resource\n");
- 		return -ENOENT;
- 	}
- 
-@@ -759,27 +763,27 @@ static int armada_37xx_irqchip_register(struct platform_device *pdev,
- 	irqchip->irq_set_type = armada_37xx_irq_set_type;
- 	irqchip->irq_startup = armada_37xx_irq_startup;
- 	irqchip->name = info->data->name;
--	ret = gpiochip_irqchip_add(gc, irqchip, 0,
--				   handle_edge_irq, IRQ_TYPE_NONE);
--	if (ret) {
--		dev_info(&pdev->dev, "could not add irqchip\n");
--		return ret;
--	}
--
-+	girq->chip = irqchip;
-+	girq->parent_handler = armada_37xx_irq_handler;
- 	/*
- 	 * Many interrupts are connected to the parent interrupt
- 	 * controller. But we do not take advantage of this and use
- 	 * the chained irq with all of them.
- 	 */
-+	girq->num_parents = nr_irq_parent;
-+	girq->parents = devm_kcalloc(&pdev->dev, nr_irq_parent,
-+				     sizeof(*girq->parents), GFP_KERNEL);
-+	if (!girq->parents)
-+		return -ENOMEM;
- 	for (i = 0; i < nr_irq_parent; i++) {
- 		int irq = irq_of_parse_and_map(np, i);
- 
- 		if (irq < 0)
- 			continue;
--
--		gpiochip_set_chained_irqchip(gc, irqchip, irq,
--					     armada_37xx_irq_handler);
-+		girq->parents[i] = irq;
- 	}
-+	girq->default_type = IRQ_TYPE_NONE;
-+	girq->handler = handle_edge_irq;
- 
- 	return 0;
- }
-@@ -809,10 +813,10 @@ static int armada_37xx_gpiochip_register(struct platform_device *pdev,
- 	gc->of_node = np;
- 	gc->label = info->data->name;
- 
--	ret = devm_gpiochip_add_data(&pdev->dev, gc, info);
-+	ret = armada_37xx_irqchip_register(pdev, info);
- 	if (ret)
- 		return ret;
--	ret = armada_37xx_irqchip_register(pdev, info);
-+	ret = devm_gpiochip_add_data(&pdev->dev, gc, info);
- 	if (ret)
- 		return ret;
- 
+diff --git a/drivers/gpio/gpio-max77620.c b/drivers/gpio/gpio-max77620.c
+index 47d05e357e61..faf86ea9c51a 100644
+--- a/drivers/gpio/gpio-max77620.c
++++ b/drivers/gpio/gpio-max77620.c
+@@ -192,13 +192,13 @@ static int max77620_gpio_set_debounce(struct max77620_gpio *mgpio,
+ 	case 0:
+ 		val = MAX77620_CNFG_GPIO_DBNC_None;
+ 		break;
+-	case 1 ... 8:
++	case 1000 ... 8000:
+ 		val = MAX77620_CNFG_GPIO_DBNC_8ms;
+ 		break;
+-	case 9 ... 16:
++	case 9000 ... 16000:
+ 		val = MAX77620_CNFG_GPIO_DBNC_16ms;
+ 		break;
+-	case 17 ... 32:
++	case 17000 ... 32000:
+ 		val = MAX77620_CNFG_GPIO_DBNC_32ms;
+ 		break;
+ 	default:
 -- 
-2.21.0
+2.23.0
 
