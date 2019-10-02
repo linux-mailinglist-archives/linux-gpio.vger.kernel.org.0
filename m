@@ -2,132 +2,121 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 1117EC42EB
-	for <lists+linux-gpio@lfdr.de>; Tue,  1 Oct 2019 23:47:44 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C1A65C46B4
+	for <lists+linux-gpio@lfdr.de>; Wed,  2 Oct 2019 06:49:12 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726875AbfJAVrn (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 1 Oct 2019 17:47:43 -0400
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:44579 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726681AbfJAVrn (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 1 Oct 2019 17:47:43 -0400
-Received: by mail-lf1-f68.google.com with SMTP id q11so11074143lfc.11
-        for <linux-gpio@vger.kernel.org>; Tue, 01 Oct 2019 14:47:41 -0700 (PDT)
+        id S1726150AbfJBEtL (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 2 Oct 2019 00:49:11 -0400
+Received: from mail-eopbgr1400091.outbound.protection.outlook.com ([40.107.140.91]:5440
+        "EHLO JPN01-TY1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725851AbfJBEtL (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Wed, 2 Oct 2019 00:49:11 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=hEdB2iXv9eQRkgnmDKrr8DM2CUQiWWWk8fFbFQu1Ws4G9eVzHzHQaPegEAxviKbKugVZcNMLjWipBxJHT02eErNEMBz+sshTWPGwzMei8ZDfsHuBPZyt1z5HhcJ8PszIktSS5j52jLXmD59HuGAwPUa0bXYNHpJsufRnWUKM/hBsayU6wN9qJdNA7OBKzR/rEg45ZrCRtcK3rXAKd3GfnzvVtm3av26nDAWtFV8moDuwUwFECXmOUdKTQ9s3KPa5MqUboGLHW60eqaE0L2f3dkOeaHNMRTD9VegUE7UivvYJ59zHSpRKY3cfcyY++ZpghZ/MAyHsMx7imKWco812HQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=D9hDdM4738NmP3dLSdP19Xy33BH6WLU4ENP8SMfgomg=;
+ b=j206n2ELU+nGeugjs9MPJlCRC/aDrN+BV08tYZ2eZGlKM+TO0lGBxwQCpbBRM0g8o5UzRLj5Onqef0YvHptSbVVxNMnQSrNH3JXWbDY9FMUz9cE43vqhSU8ShmNgqrCYXu6YRvqbr+CLS8qX5yB/mjAnvL9ogSYFdM3x15SrGoqts//WmnCWsG4KDxWLr8pRMIQmYIxX3OxiINKoguYm5qhfo91+pLTHiw4HVtH27Yd4WDjv+6S77AjKavlyfsAo3sPTsP4DIpgF3ndj0r8aqInmOEGp08SngRZKBrZiAkpR3uBGo5hcEXJu3c4sf9EApVfrUBcbK6iHL5dU9/2t1g==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=renesas.com; dmarc=pass action=none header.from=renesas.com;
+ dkim=pass header.d=renesas.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=BJwlGq1TtQwFLSgA6mfwP2x59Db9d4N/6A5413/kJSw=;
-        b=fafDBKHzPMe46dlC+vWZdpTYk4ywxKJh4qYmxIP/tcZGLXtLur2G9iPA/JWcPXzekE
-         QeFDmTPX0xV2iVdL+jsuUUQ/llBquj75LWTdmnlXQWHG6yiSeRQ6XMQ53pTlR6isEmjh
-         MYPngRaqcvfhuN8RJ7tumQooig+3FvbYj2kjG+499M73EZvb1FyukoDsMo52czisoFIc
-         2FPnE1nefZ6x+qL4G0F9xBeLRwawGEQ4LUcJFYKorVG2w6O1Cr3cuXjTZ8heyb2hg9xw
-         Yqyzw8eQPqDObd+E6iqx4Av4CcQ9Zt5zWFxtyxCLJ9v8fEaNchJBfyT6hm6YSgxzsLE/
-         QbNQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=BJwlGq1TtQwFLSgA6mfwP2x59Db9d4N/6A5413/kJSw=;
-        b=CuEY0xX3sEbGdkRK0LhsbWPu1sKMyGNeSXYxX8SI2VbFLLy6K4xHFTQn6iE+5yaLhV
-         RJwgRRAhpH6Km2ssb9iLV6khjtE/GXZoUtT+FYFUvJFLM4zQbW+t2KAdmLNDj8sk3B+H
-         tUuieutAA88lvLy0lHcAbwjA4aeSbrDPhcURQxUm3IiOcVdsrnt7hX6WHQc1C8iR7OVk
-         7tgs4VgRDJSj1mIqC01/vv+ic0jCPDFHgVYn1UDEczKyxtphIXZ3zemJEoiASOqmdoet
-         VPLY1C0kgUMCy5u5VkFjBemNyx7kysCSKiE/BKJrusZme7ZvE8OgDtlQsqrYhBulzwND
-         f/Kg==
-X-Gm-Message-State: APjAAAX7Ttve5+fh8ebym/Q+YorKFZWkeBpz7J48ApQ8v4fO+GVD132Q
-        78rC1XOeVF5SvCpq/VVdeWWET1ftA5J5gA==
-X-Google-Smtp-Source: APXvYqwJCziPbrHg5axA7CMt1PF+BaUA4DTVuTIggaPtHx8VhHTQUY+Z2RAB4J/Tw1lT9ufNRXn9gA==
-X-Received: by 2002:a19:f111:: with SMTP id p17mr16533610lfh.187.1569966460659;
-        Tue, 01 Oct 2019 14:47:40 -0700 (PDT)
-Received: from localhost.localdomain (c-79c8225c.014-348-6c756e10.bbcust.telenor.se. [92.34.200.121])
-        by smtp.gmail.com with ESMTPSA id m17sm5432706lje.0.2019.10.01.14.47.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 01 Oct 2019 14:47:39 -0700 (PDT)
-From:   Linus Walleij <linus.walleij@linaro.org>
-To:     linux-gpio@vger.kernel.org
-Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Andrew Bresticker <abrestic@chromium.org>,
-        James Hartley <james.hartley@sondrel.com>,
-        Thierry Reding <thierry.reding@gmail.com>
-Subject: [PATCH] pinctrl: pistachio: Pass irqchip when adding gpiochip
-Date:   Tue,  1 Oct 2019 23:45:36 +0200
-Message-Id: <20191001214536.18477-1-linus.walleij@linaro.org>
-X-Mailer: git-send-email 2.21.0
+ d=renesasgroup.onmicrosoft.com; s=selector2-renesasgroup-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=D9hDdM4738NmP3dLSdP19Xy33BH6WLU4ENP8SMfgomg=;
+ b=Drt3nx/7A2caadUoHVTYR9ENEmKIDQV8aN/h6KlPkRjlXfgI5PzBxQz2GwHqhw6RDiXU9Wpt34UU7FC9nLOy/zyM7u3v/6QYXBNZB3O3FVYF32zqw/4jUH1wx9p6TeqfqVS5n6omj+DsW/f0KrVnjl2uVi6LVy7O0ouSHBqQvns=
+Received: from TYAPR01MB4544.jpnprd01.prod.outlook.com (20.179.175.203) by
+ TYAPR01MB4880.jpnprd01.prod.outlook.com (20.179.186.16) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2305.20; Wed, 2 Oct 2019 04:49:08 +0000
+Received: from TYAPR01MB4544.jpnprd01.prod.outlook.com
+ ([fe80::548:32de:c810:1947]) by TYAPR01MB4544.jpnprd01.prod.outlook.com
+ ([fe80::548:32de:c810:1947%4]) with mapi id 15.20.2305.022; Wed, 2 Oct 2019
+ 04:49:08 +0000
+From:   Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+To:     Geert Uytterhoeven <geert+renesas@glider.be>,
+        Linus Walleij <linus.walleij@linaro.org>
+CC:     Stephen Boyd <swboyd@chromium.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "linux-renesas-soc@vger.kernel.org" 
+        <linux-renesas-soc@vger.kernel.org>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH] pinctrl: sh-pfc: Do not use platform_get_irq() to count
+ interrupts
+Thread-Topic: [PATCH] pinctrl: sh-pfc: Do not use platform_get_irq() to count
+ interrupts
+Thread-Index: AQHVeILgaUPul0Haq06mblXJMjnnpKdGw9gw
+Date:   Wed, 2 Oct 2019 04:49:07 +0000
+Message-ID: <TYAPR01MB4544F103234D1ECBB2893AC9D89C0@TYAPR01MB4544.jpnprd01.prod.outlook.com>
+References: <20191001180547.734-1-geert+renesas@glider.be>
+In-Reply-To: <20191001180547.734-1-geert+renesas@glider.be>
+Accept-Language: ja-JP, en-US
+Content-Language: ja-JP
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=yoshihiro.shimoda.uh@renesas.com; 
+x-originating-ip: [150.249.235.54]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 0ae37060-f5f1-4a2a-9d97-08d746f3dc2a
+x-ms-office365-filtering-ht: Tenant
+x-ms-traffictypediagnostic: TYAPR01MB4880:
+x-microsoft-antispam-prvs: <TYAPR01MB4880CC48C44D90449A83BDD8D89C0@TYAPR01MB4880.jpnprd01.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:5516;
+x-forefront-prvs: 0178184651
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(376002)(346002)(366004)(136003)(396003)(39860400002)(199004)(189003)(14454004)(229853002)(81156014)(476003)(86362001)(76176011)(8936002)(7696005)(8676002)(2906002)(186003)(66066001)(486006)(6506007)(14444005)(33656002)(102836004)(6246003)(26005)(256004)(11346002)(99286004)(446003)(6436002)(305945005)(54906003)(52536014)(9686003)(4744005)(5660300002)(74316002)(55016002)(7736002)(6116002)(71190400001)(81166006)(71200400001)(66946007)(66556008)(25786009)(64756008)(66476007)(66446008)(478600001)(4326008)(110136005)(3846002)(316002)(76116006);DIR:OUT;SFP:1102;SCL:1;SRVR:TYAPR01MB4880;H:TYAPR01MB4544.jpnprd01.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: renesas.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: wByeZGS+4yrsyRNIkrAqQ6VqldtgljcKasL8qYIoVwvaNWx/EsfVFQjA5Jj1JTBw4xUjPZ6EvQh97aFL/IsGhcoeDPFmx65E21/2ak1fs7dMV+J/pVJJpMQS6QXMd0HmBf4iWpFbsLdoSLCU7UascNKzqoxSbgErHxKzNY389CRSbt0yOFUbjvdgtT5gZLMFSjgCRw16znp/3+W9hsgpq2cQ9w0hnpB1b9zIyBjWu8E4I4isW7uJLrx1LNAzZjLhZ23qoKMmB1HgqzODMOWPwCNs+CA62VRoI+vU6gzkyE7sKizvNLPB1DkI4BDi/2eXAwyWamV3SB13+3YUdamJKsShNDB4NGnwY0rUnnDba8tx8ZyWRKCQsw226Vd5m0qhd4uzjh71mfay4K68Ij50E2hdgJWodnWiljLEAftzi3M=
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-OriginatorOrg: renesas.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 0ae37060-f5f1-4a2a-9d97-08d746f3dc2a
+X-MS-Exchange-CrossTenant-originalarrivaltime: 02 Oct 2019 04:49:08.0022
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 53d82571-da19-47e4-9cb4-625a166a4a2a
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: CPqdZ6sOhQoYVgaVIDdY6YmqxrExIJ39t1aI0ulVJUea3hktLX4B4EvvtKl5HdZDel49nrXqsfpIyEfDucLFavKnVbVKUPYEGjRZwF9+rebRrTbQl/mmD8xFx9Y5EgMM
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: TYAPR01MB4880
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-We need to convert all old gpio irqchips to pass the irqchip
-setup along when adding the gpio_chip. For more info see
-drivers/gpio/TODO.
+Hi Geert-san,
 
-For chained irqchips this is a pretty straight-forward
-conversion.
+> From: Geert Uytterhoeven, Sent: Wednesday, October 2, 2019 3:06 AM
+>=20
+> As platform_get_irq() now prints an error when the interrupt does not
+> exist, counting interrupts by looping until failure causes the printing
+> of scary messages like:
+>=20
+>     sh-pfc e6060000.pin-controller: IRQ index 0 not found
+>=20
+> Fix this by using the platform_irq_count() helper instead.
+>=20
+> Fixes: 7723f4c5ecdb8d83 ("driver core: platform: Add an error message to =
+platform_get_irq*()")
+> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> ---
+> This is a fix for v5.4-rc1.
 
-Cc: Andrew Bresticker <abrestic@chromium.org>
-Cc: James Hartley <james.hartley@sondrel.com>
-Cc: Thierry Reding <thierry.reding@gmail.com>
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
----
- drivers/pinctrl/pinctrl-pistachio.c | 26 ++++++++++++++++----------
- 1 file changed, 16 insertions(+), 10 deletions(-)
+Thank you for the patch!
 
-diff --git a/drivers/pinctrl/pinctrl-pistachio.c b/drivers/pinctrl/pinctrl-pistachio.c
-index 379e9a6a6d89..eb40ae9f8639 100644
---- a/drivers/pinctrl/pinctrl-pistachio.c
-+++ b/drivers/pinctrl/pinctrl-pistachio.c
-@@ -1352,6 +1352,7 @@ static int pistachio_gpio_register(struct pistachio_pinctrl *pctl)
- 	for (i = 0; i < pctl->nbanks; i++) {
- 		char child_name[sizeof("gpioXX")];
- 		struct device_node *child;
-+		struct gpio_irq_chip *girq;
- 
- 		snprintf(child_name, sizeof(child_name), "gpio%d", i);
- 		child = of_get_child_by_name(node, child_name);
-@@ -1383,23 +1384,28 @@ static int pistachio_gpio_register(struct pistachio_pinctrl *pctl)
- 
- 		bank->gpio_chip.parent = pctl->dev;
- 		bank->gpio_chip.of_node = child;
--		ret = gpiochip_add_data(&bank->gpio_chip, bank);
--		if (ret < 0) {
--			dev_err(pctl->dev, "Failed to add GPIO chip %u: %d\n",
--				i, ret);
-+
-+		girq = &bank->gpio_chip.irq;
-+		girq->chip = &bank->irq_chip;
-+		girq->parent_handler = pistachio_gpio_irq_handler;
-+		girq->num_parents = 1;
-+		girq->parents = devm_kcalloc(pctl->dev, 1,
-+					     sizeof(*girq->parents),
-+					     GFP_KERNEL);
-+		if (!girq->parents) {
-+			ret = -ENOMEM;
- 			goto err;
- 		}
-+		girq->parents[0] = irq;
-+		girq->default_type = IRQ_TYPE_NONE;
-+		girq->handler = handle_level_irq;
- 
--		ret = gpiochip_irqchip_add(&bank->gpio_chip, &bank->irq_chip,
--					   0, handle_level_irq, IRQ_TYPE_NONE);
-+		ret = gpiochip_add_data(&bank->gpio_chip, bank);
- 		if (ret < 0) {
--			dev_err(pctl->dev, "Failed to add IRQ chip %u: %d\n",
-+			dev_err(pctl->dev, "Failed to add GPIO chip %u: %d\n",
- 				i, ret);
--			gpiochip_remove(&bank->gpio_chip);
- 			goto err;
- 		}
--		gpiochip_set_chained_irqchip(&bank->gpio_chip, &bank->irq_chip,
--					     irq, pistachio_gpio_irq_handler);
- 
- 		ret = gpiochip_add_pin_range(&bank->gpio_chip,
- 					     dev_name(pctl->dev), 0,
--- 
-2.21.0
+Reviewed-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+
+And, I tested this patch on R-Car H3. So,
+
+Tested-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+
+Best regards,
+Yoshihiro Shimoda
 
