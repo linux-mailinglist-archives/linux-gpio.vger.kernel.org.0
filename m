@@ -2,104 +2,97 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id CBD90C8E58
-	for <lists+linux-gpio@lfdr.de>; Wed,  2 Oct 2019 18:29:29 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0CBA5C8F2A
+	for <lists+linux-gpio@lfdr.de>; Wed,  2 Oct 2019 19:02:59 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725975AbfJBQ1L (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 2 Oct 2019 12:27:11 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:33544 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725893AbfJBQ1L (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 2 Oct 2019 12:27:11 -0400
-Received: by mail-pf1-f194.google.com with SMTP id q10so10659257pfl.0
-        for <linux-gpio@vger.kernel.org>; Wed, 02 Oct 2019 09:27:11 -0700 (PDT)
+        id S1726101AbfJBRC6 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 2 Oct 2019 13:02:58 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:40862 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726076AbfJBRC6 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 2 Oct 2019 13:02:58 -0400
+Received: by mail-wr1-f65.google.com with SMTP id l3so20514256wru.7
+        for <linux-gpio@vger.kernel.org>; Wed, 02 Oct 2019 10:02:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-transfer-encoding:content-language;
-        bh=0+DSqW87gNjtxwRUkSu5B39M7fq7s1SU2DBpFCKQPIU=;
-        b=UmjLkl5ZTCX7NlC+qBayte0C9W/RFDkq2t9lhAk8TYQ+tQ5L6fx0elhCAfgvajP9Sz
-         IHHVu6cj7HKcmm5le4pl62ccdT34ICCIsqGWOjGL5ylvzXlAn0PL4KJm1dTlaIfjJNKT
-         /Ps1sa9bIHw+CWOBpP7z/qdx5Jxtj6W8y5kh8=
+        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=j6mEZW97cwRM3vW7U2lOpw/fWWoNmGcPeVDFJW5o5aI=;
+        b=a2Gbtd+4W12wuYhZwNclrG1CiaE+Ig5ZKGP7L2XIgw2aMZEt5v/lArhsfbIH0rlNyg
+         8VNYvFqtCW5eDYw37XpGCiasH2cgZpTSFxRG6OjqQBzQHGpS+IP3piTuKe+HBdIGG7pR
+         Gy18ypVO/6vOJxxoJF1y3/sxycQ6cKb0rN0qUjq4rBIDNWSN4kWBiY5T7fmu0vw1IUIQ
+         Mdw1BETnD9crNfwgo+dt0G5BcEGpwohvE793VDVImLQTNlXj5Nu2941+maXLXQQilTZh
+         wbeHu96UYwNJ0ux/6BtvU4YU+6uIbZHy1wmfj7Xb72Wk9VKSR1T3Uthmq5wkHSGKdV2b
+         m6qQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding
-         :content-language;
-        bh=0+DSqW87gNjtxwRUkSu5B39M7fq7s1SU2DBpFCKQPIU=;
-        b=i2gdv7XdhW/m1LwyE+R/oYZmCtA72lADCwdiBL1FhqGi+vIIEAXcl8kqRgVHerzKqL
-         +P8w8XTcoiTB5ZhmfN7YUYqVPmOPA4lJwBeCpSItMPz1HhQj4h3ZUTxm9Ocx54IhtfRG
-         YZPPUjsYQnz1d0A7iAbo5gfx1kp17XBKjc7pL19/Iq9YD24qPitSPN0C8apvfqT6P/rS
-         1cT6471RYhD9rpX7SvAbUzXApHuCCU2A3/98PT4S0ueQ+Ozh6En5r08bH+a2LaTizi0A
-         rBD2iSucuJMaA6ESEuKl8Wo42afPYzT7Q4rcLwX/8xr9PdDJvEJLfi0YivQscnGMWYNl
-         EYNg==
-X-Gm-Message-State: APjAAAXTzsLfcdY1WHWGFdRCQDJw8ACEiXCK6vcGRabY/+2wYDJeM4oV
-        IDpYbRx2vIkz3ETXg1Tmw5beGg==
-X-Google-Smtp-Source: APXvYqy+OleRPHf71cX9SCIyvsS+a6RJUvdP+tClz/ATA33UKfXeg38M9PMLt2KbiZ7H2XLrO57KdQ==
-X-Received: by 2002:a62:3342:: with SMTP id z63mr5515517pfz.222.1570033630607;
-        Wed, 02 Oct 2019 09:27:10 -0700 (PDT)
-Received: from [10.136.13.65] ([192.19.228.250])
-        by smtp.gmail.com with ESMTPSA id b22sm19291593pfo.85.2019.10.02.09.27.09
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 02 Oct 2019 09:27:10 -0700 (PDT)
-Subject: Re: [PATCH v2] pinctrl: bcm-iproc: Use SPDX header
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=j6mEZW97cwRM3vW7U2lOpw/fWWoNmGcPeVDFJW5o5aI=;
+        b=CK5yxKdMSGcWy+/7Qk1QrdUs//qFwW3PqUgp4qAeAUNL7aLc38RhlSPkXGlI0OCFsO
+         wEiAVDrS7UKDF6nIWzTw1TaRxvEEd9OzXTmxA4LkpwQbJmijXRe5FEWWQlMwQrMtJNhl
+         du2sjDWjGbYqZwgAMg/mD6EkA7jDovy+dcfyKNLVrpNz6OC58uDG/e+vYtEbE9i3dBoP
+         5rosa741rB6rK0n2ErwAUfzcTjSNM7zSb7mJC+qChNqJRXkl24mo1wuvaiVSvU644C9Y
+         9NNKIvTRfsV/R+cK4P/SeEYp7tovtQezH5FQVaLKSVqEEeq+ujPJXqOIQKxiRkNoeZjx
+         ZNfw==
+X-Gm-Message-State: APjAAAVLyfDJOKInaJyVANY+J5bKKqT6bLdj0bs9G28qjiE93/mSHreo
+        ZKeY1gb6J9RKY/w1q3HaHK5lTg==
+X-Google-Smtp-Source: APXvYqyfHPaXuTDHKR0G+6d4PXNieCa79JUKUPWeNcTxzobXu39t6AQ29qJUgKxoLoO72YNBEn6chw==
+X-Received: by 2002:adf:e988:: with SMTP id h8mr3531294wrm.354.1570035776511;
+        Wed, 02 Oct 2019 10:02:56 -0700 (PDT)
+Received: from debian-brgl.home ([2a01:cb1d:af:5b00:6d6c:8493:1ab5:dad7])
+        by smtp.gmail.com with ESMTPSA id b62sm11188575wmc.13.2019.10.02.10.02.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 02 Oct 2019 10:02:55 -0700 (PDT)
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
 To:     Linus Walleij <linus.walleij@linaro.org>,
-        linux-gpio@vger.kernel.org
-Cc:     Pramod Kumar <pramodku@broadcom.com>, Ray Jui <rjui@broadcom.com>,
-        Scott Branden <sbranden@broadcom.com>
-References: <20191002130217.4491-1-linus.walleij@linaro.org>
-From:   Scott Branden <scott.branden@broadcom.com>
-Message-ID: <40d3bdf1-48b0-55bf-f4e0-a8b14f6313ae@broadcom.com>
-Date:   Wed, 2 Oct 2019 09:27:08 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Alban Bedel <albeu@free.fr>
+Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Subject: [PATCH 0/6] gpio: replace nocache ioremap functions with devm_platform_ioremap_resource()
+Date:   Wed,  2 Oct 2019 19:02:43 +0200
+Message-Id: <20191002170249.17366-1-brgl@bgdev.pl>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
-In-Reply-To: <20191002130217.4491-1-linus.walleij@linaro.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-thanks.
+From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 
-On 2019-10-02 6:02 a.m., Linus Walleij wrote:
-> This convert the BCM IPROC driver to use the SPDX header
-> for indicating GPL v2.0 only licensing.
->
-> Cc: Pramod Kumar <pramodku@broadcom.com>
-> Cc: Ray Jui <rjui@broadcom.com>
-> Cc: Scott Branden <sbranden@broadcom.com>
-> Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
-Acked-by: Scott Branden <scott.branden@broadcom.com>
-> ---
-> ChangeLog v1->v2:
-> - Don't merge the two comment blocks. Broadcom
->    don't like it.
-> ---
->   drivers/pinctrl/bcm/pinctrl-iproc-gpio.c | 10 +---------
->   1 file changed, 1 insertion(+), 9 deletions(-)
->
-> diff --git a/drivers/pinctrl/bcm/pinctrl-iproc-gpio.c b/drivers/pinctrl/bcm/pinctrl-iproc-gpio.c
-> index 6f7d3a2f2e97..61352cc6c0d3 100644
-> --- a/drivers/pinctrl/bcm/pinctrl-iproc-gpio.c
-> +++ b/drivers/pinctrl/bcm/pinctrl-iproc-gpio.c
-> @@ -1,14 +1,6 @@
-> +// SPDX-License-Identifier: GPL-2.0-only
->   /*
->    * Copyright (C) 2014-2017 Broadcom
-> - *
-> - * This program is free software; you can redistribute it and/or
-> - * modify it under the terms of the GNU General Public License as
-> - * published by the Free Software Foundation version 2.
-> - *
-> - * This program is distributed "as is" WITHOUT ANY WARRANTY of any
-> - * kind, whether express or implied; without even the implied warranty
-> - * of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> - * GNU General Public License for more details.
->    */
->   
->   /*
+According to Arnd Bergmann:
+
+"The only architecture that actually has a difference between
+ioremap() and ioremap_nocache() seems to be ia64. I would
+generally assume that any driver using ioremap_nocache()
+that is not ia64 specific should just use ioremap()."
+
+This series converts all users of nocache ioremap variants that aren't
+ia64-specific to using devm_platform_ioremap_resource().
+
+Most of these don't call request_mem_region() currently, which
+devm_platform_ioremap_resource() does implicitly, so testing would
+be appreciated.
+
+Included are two minor fixes for xgene and htc-egpio.
+
+Bartosz Golaszewski (6):
+  gpio: xgene: remove redundant error message
+  gpio: xgene: use devm_platform_ioremap_resource()
+  gpio: em: use devm_platform_ioremap_resource()
+  gpio: ath79: use devm_platform_ioremap_resource()
+  gpio: htc-egpio: use devm_platform_ioremap_resource()
+  gpio: htc-egpio: remove redundant error message
+
+ drivers/gpio/gpio-ath79.c     | 10 +++-------
+ drivers/gpio/gpio-em.c        | 20 ++++++++-----------
+ drivers/gpio/gpio-htc-egpio.c | 37 ++++++++++++-----------------------
+ drivers/gpio/gpio-xgene.c     | 27 ++++++-------------------
+ 4 files changed, 30 insertions(+), 64 deletions(-)
+
+-- 
+2.23.0
 
