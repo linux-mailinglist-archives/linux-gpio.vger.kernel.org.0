@@ -2,78 +2,129 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id B0A15C8705
-	for <lists+linux-gpio@lfdr.de>; Wed,  2 Oct 2019 13:10:53 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DA26FC8772
+	for <lists+linux-gpio@lfdr.de>; Wed,  2 Oct 2019 13:38:28 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727590AbfJBLKx (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 2 Oct 2019 07:10:53 -0400
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:33868 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725991AbfJBLKx (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 2 Oct 2019 07:10:53 -0400
-Received: by mail-lj1-f196.google.com with SMTP id j19so16707618lja.1
-        for <linux-gpio@vger.kernel.org>; Wed, 02 Oct 2019 04:10:51 -0700 (PDT)
+        id S1726942AbfJBLi2 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 2 Oct 2019 07:38:28 -0400
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:39694 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726917AbfJBLi1 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 2 Oct 2019 07:38:27 -0400
+Received: by mail-lj1-f194.google.com with SMTP id y3so16752261ljj.6
+        for <linux-gpio@vger.kernel.org>; Wed, 02 Oct 2019 04:38:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=PwI8NApt5Ezi/UOFwN4vepl5V2JxgALUwiv2PyNJ1Dk=;
-        b=t/dWnBYZCjYS1uXNdlZktt16ajOwPdVZkvUhV83hOauAwIOhkzA2rlgxijbDZ9gTv/
-         JOpZpcnLw5NqtzxxGrBcPkS4YHL80CVjjyGFS87q3o3UZpOyN6g4p3odgDYQhigp4ZWe
-         6iVC6Psz4DDqcLAs9PrP791lTNlyA+DyvTph0JBEDhKQAJ2d6mwSjOLdeu1zB93VFAEs
-         mQ0nIGYOWJV0mOdk0LQQx4oSXMFNFIijZ99+dFE242NtTGfY3B7MnJ/z5Mpgfgx2kHLR
-         FnL/9DG3sQkTnDcJPPMpxjIpcfWWYj5f+NGf9EPakhd4jWeZpAzlBmlpVnCRLDzedpxy
-         Xi2g==
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Aqd+0N9DK4RPDIWd3OXKq9bYDzE//xBJ4F1SiyVcLPg=;
+        b=b8IdKvlekM1g/jmCK/dcdiFc6DMxiq3XaGknGYm8WiW6N3tsbhidLAT3L6mv2tHPFz
+         4ds7r5KyKiwjKaXfiBcRAp/zsPfpo1wAclVI5ii5JKvX9iQuh6kiwlA6xKEgjL43h3ss
+         ujT5c0MCqAltRnILKx/30FMc+AIk56boR73selhdWs9dxwHCyNQ1EkVh1ni0o0et8YEb
+         lf59//nQgRqX/HcLl2ziBwhsxTh36rh/PGGdyZy5oOu8ob4mxy9vExkuyOWTfy7eHH23
+         A1WlTTpDtt0/geRtIXmkVkVfMbmd3y+ETPtkIlbnjrR/Pem4Otcja+lL7xgqHEh+NUKB
+         GXig==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=PwI8NApt5Ezi/UOFwN4vepl5V2JxgALUwiv2PyNJ1Dk=;
-        b=PWTsAkwv/RH2QryhkWZmkG6mXiTf5V5UxGceJIgGb2UoTH8CX2zmbumM9EVTpG8ue8
-         1GUWmbEbqArL0YfjCEfrYLYU7CCZzuMw0XVfjGTXucpy4+Eq+zGwcZDlKGzEq3zjxvpz
-         9SxrpXkGea25I5A3CxrJgAwP8Z4uGNKW9B1jxXBiQfA7AoqaYl8RRR90urtNwLu/6SGP
-         rW4DMvfzGvKKPKJkvfldFHBC0UwMPRYOTSXymMA6xb7XqH4h9nyxwprT8m8X/qtWOb43
-         CtQI3z149sLJe8MaVkM/pdrrWFaHnMjkeLSuT9GGlXsvAW1ra9jfbP0rx+lPL9Kb7agH
-         DCrQ==
-X-Gm-Message-State: APjAAAUDCJOqQwz3flFeWvbrUEMm7RyQZ4lz7VLhhEx/QZXgEYXiA/Ob
-        TtsNvZiApFi4/Z9m9K1OHyVppEKbB1hvPj8v8TYsO32FwqU=
-X-Google-Smtp-Source: APXvYqwkxOykoE4IohBVAmNhI2imnKOCl1cqKLzNy3zuEP5/JbRKIxNjiaKVZ47jnp4fFYE29J/Ijkdl/JXt8ZoYAp4=
-X-Received: by 2002:a2e:412:: with SMTP id 18mr2093014lje.96.1570014650827;
- Wed, 02 Oct 2019 04:10:50 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190921102522.8970-1-drew@pdp7.com> <CAMRc=Me=6JeOOv_SRhKt+vOsd3p5yOVkWyNu4Oo+DeCwMJHmaA@mail.gmail.com>
-In-Reply-To: <CAMRc=Me=6JeOOv_SRhKt+vOsd3p5yOVkWyNu4Oo+DeCwMJHmaA@mail.gmail.com>
-From:   Drew Fustini <pdp7pdp7@gmail.com>
-Date:   Wed, 2 Oct 2019 13:10:39 +0200
-Message-ID: <CAEf4M_AaSRppq06G4yfQ=+=8JzqPRq1+D+Sp=o+16+VKVdOY=Q@mail.gmail.com>
-Subject: Re: [RFC] gpio: expose pull-up/pull-down line flags to userspace
-To:     Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Aqd+0N9DK4RPDIWd3OXKq9bYDzE//xBJ4F1SiyVcLPg=;
+        b=hegngU1XSJommeA04IaeGsdp6ruSdit68uxiKBM61u6O0I4ij67tmBttwj5VihQzwO
+         Rn1T+eFoUv67R3v5w2XeNTxRNQV6nBJoy7ZEjbuk01YkQ64ErozZn/+hAx4qemZxJ8pG
+         /QiQoumsPL3pSfNghFmNnfNFI3Qqt0WCWS7RIhTxvjcjsl5I1lwlaDQt8BcJjxSn/Rwe
+         v0TqKLOXGaMuSOyBasmwwFWe4kVXRcorvL28+n+o17P1icWS6Yc5bSi+F+7R04ipshdM
+         2TILO+MomxzcVYtcnrei541I4DThGiXoP+Mq4yAyTViSOWY9LzJv9MKJKLr4hMogTzm7
+         PjcA==
+X-Gm-Message-State: APjAAAXRqAzsY2l4BCJISU7E2hlGBVrfAzzrLM5renQYZtrSp6/bPZEP
+        M5qGMGtvAccggZ1ylz1Frl6+V33Bg2vVTA==
+X-Google-Smtp-Source: APXvYqy8jZzniycP2f7qSjsJ9Vpjj03dOFcrcCFOLMw87eo6Ei3Y8lG+x8SUBvvtvuBn6fTbA/h6vg==
+X-Received: by 2002:a2e:412:: with SMTP id 18mr2183811lje.96.1570016305326;
+        Wed, 02 Oct 2019 04:38:25 -0700 (PDT)
+Received: from genomnajs.ideon.se ([85.235.10.227])
+        by smtp.gmail.com with ESMTPSA id y26sm5317149ljj.90.2019.10.02.04.38.23
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 02 Oct 2019 04:38:24 -0700 (PDT)
+From:   Linus Walleij <linus.walleij@linaro.org>
+To:     linux-gpio@vger.kernel.org
+Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
         Linus Walleij <linus.walleij@linaro.org>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Content-Type: text/plain; charset="UTF-8"
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Thierry Reding <thierry.reding@gmail.com>
+Subject: [PATCH] pinctrl: oxnas: Pass irqchip when adding gpiochip
+Date:   Wed,  2 Oct 2019 13:38:19 +0200
+Message-Id: <20191002113819.4927-1-linus.walleij@linaro.org>
+X-Mailer: git-send-email 2.21.0
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Sep 23, 2019 at 10:38 AM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
-> I remember discussing it with Linus some time ago. This may not be as
-> straightforward as simply adding new flags. Since PULL-UP/DOWN
-> resistors can - among other parameters - also have configurable
-> resistance, we'll probably need some kind of a structure for this
-> ioctl() to pass any additional information to the kernel. Since we
-> can't change ABI this may require adding a whole new ioctl() for
-> extended configuration. This in turn has to be as future-proof as
-> possible - if someone asks for user-space-configurable drive-strength,
-> the new ioctl() should be ready for it.
+We need to convert all old gpio irqchips to pass the irqchip
+setup along when adding the gpio_chip. For more info see
+drivers/gpio/TODO.
 
-Thanks for the insight, Bartosz.  Would you be able to point me to the
-discussion if is available in an archive?  I would like to improve my
-understanding.
+For chained irqchips this is a pretty straight-forward
+conversion.
 
-What do you think of adding pull-up/down flags first, and then
-implementing the extended configuration ioctl() later if necessary?
+Cc: Neil Armstrong <narmstrong@baylibre.com>
+Cc: Thierry Reding <thierry.reding@gmail.com>
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+---
+ drivers/pinctrl/pinctrl-oxnas.c | 25 +++++++++++++------------
+ 1 file changed, 13 insertions(+), 12 deletions(-)
 
-Thank you,
-Drew
+diff --git a/drivers/pinctrl/pinctrl-oxnas.c b/drivers/pinctrl/pinctrl-oxnas.c
+index 55488ca246f1..40dc1251432a 100644
+--- a/drivers/pinctrl/pinctrl-oxnas.c
++++ b/drivers/pinctrl/pinctrl-oxnas.c
+@@ -1197,6 +1197,7 @@ static int oxnas_gpio_probe(struct platform_device *pdev)
+ 	unsigned int id, ngpios;
+ 	int irq, ret;
+ 	struct resource *res;
++	struct gpio_irq_chip *girq;
+ 
+ 	if (of_parse_phandle_with_fixed_args(np, "gpio-ranges",
+ 					     3, 0, &pinspec)) {
+@@ -1232,6 +1233,18 @@ static int oxnas_gpio_probe(struct platform_device *pdev)
+ 	bank->gpio_chip.parent = &pdev->dev;
+ 	bank->gpio_chip.of_node = np;
+ 	bank->gpio_chip.ngpio = ngpios;
++	girq = &bank->gpio_chip.irq;
++	girq->chip = &bank->irq_chip;
++	girq->parent_handler = oxnas_gpio_irq_handler;
++	girq->num_parents = 1;
++	girq->parents = devm_kcalloc(&pdev->dev, 1, sizeof(*girq->parents),
++				     GFP_KERNEL);
++	if (!girq->parents)
++		return -ENOMEM;
++	girq->parents[0] = irq;
++	girq->default_type = IRQ_TYPE_NONE;
++	girq->handler = handle_level_irq;
++
+ 	ret = gpiochip_add_data(&bank->gpio_chip, bank);
+ 	if (ret < 0) {
+ 		dev_err(&pdev->dev, "Failed to add GPIO chip %u: %d\n",
+@@ -1239,18 +1252,6 @@ static int oxnas_gpio_probe(struct platform_device *pdev)
+ 		return ret;
+ 	}
+ 
+-	ret = gpiochip_irqchip_add(&bank->gpio_chip, &bank->irq_chip,
+-				0, handle_level_irq, IRQ_TYPE_NONE);
+-	if (ret < 0) {
+-		dev_err(&pdev->dev, "Failed to add IRQ chip %u: %d\n",
+-			id, ret);
+-		gpiochip_remove(&bank->gpio_chip);
+-		return ret;
+-	}
+-
+-	gpiochip_set_chained_irqchip(&bank->gpio_chip, &bank->irq_chip,
+-				     irq, oxnas_gpio_irq_handler);
+-
+ 	return 0;
+ }
+ 
+-- 
+2.21.0
+
