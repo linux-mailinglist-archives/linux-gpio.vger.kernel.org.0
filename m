@@ -2,74 +2,103 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 1C100C9F03
-	for <lists+linux-gpio@lfdr.de>; Thu,  3 Oct 2019 15:04:00 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B71C3C9F70
+	for <lists+linux-gpio@lfdr.de>; Thu,  3 Oct 2019 15:30:19 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729553AbfJCND7 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 3 Oct 2019 09:03:59 -0400
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:38512 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726677AbfJCND7 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 3 Oct 2019 09:03:59 -0400
-Received: by mail-lj1-f194.google.com with SMTP id b20so2658311ljj.5
-        for <linux-gpio@vger.kernel.org>; Thu, 03 Oct 2019 06:03:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=XioN7puVbcYRckEVTHmiB34pXF9Ej7EG9KjZda45NBU=;
-        b=H94StjHmQA5TRSAC4/Abc0WwiGKQyKwCI6pdiTuyEJXIa3nnrlCVWv1OfoqEiZeATy
-         4rZPkzd75ThGs8M0AIqY9Wvu3A9FcnYfOU4mOUbVNGCKmx/1uzJ8jnSiX6zIp5Z36COi
-         8WmP9tmekQx+0CkLz3OC5EmxRSpVr8YOW7KbPDumSoW075JjFSIcd5R/jxX6YspjsWw1
-         9qYL7XV7RHxSa6PoCa322+GkEVjjXxGqk0lHLgwL71qsXwx0NgdwR5gtckiKyeW8nXxs
-         jPCUYskSLjqw4MJQ2ILs6Hsk+8qXt/PsDnwV0QlLxvOOdnw9jgYr/rY9xIsVcaqtCCUt
-         49Zg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=XioN7puVbcYRckEVTHmiB34pXF9Ej7EG9KjZda45NBU=;
-        b=YrY2tfwborMufrIo1M/s5vlWvB6X8sKgFnr2accACUJf1et/lQDg7L6jkFV0g71TdH
-         L2JvaWht25qGsMSKEauRRLroq43f2PpN8Rc9H1EDhb3tTK3bzwMksD4PZjHX1l1hkGcF
-         AJWjFwUeONLRNWxHNpFHkHNGG5AA/phUIHatWl5duDxgIU93SWg9sNRlMBLAVqM/9e2c
-         O2PfSDyag7P24kvkZXYTwtH4B/6R4koigilz+FWDvr27eXU+rf1wkEYOuAlyPw9eSnPg
-         3ISP5L7kEDmApJRi4tyd61liTLARNDtphvQWRWP0NtaOaZ1pozzlS+b0QbHXLiDng6NG
-         k/sg==
-X-Gm-Message-State: APjAAAV9rUTuxjAIl2jn4qYB87nE03SmyaR4PuFyj9MfyK4kynQ8vcNB
-        BO4PrHSzN3BVFsSexW73ZJhvQVVys8+oyXWBGYal0A==
-X-Google-Smtp-Source: APXvYqwLTqJ6PluifEhLN3LXeppRw6SC+TULeLNjobndGDebZcb+fp7ss3iiSIMMyr4V9i2taRe0ub66NlmSxoi3y7o=
-X-Received: by 2002:a2e:6e04:: with SMTP id j4mr5309093ljc.99.1570107837087;
- Thu, 03 Oct 2019 06:03:57 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190914111010.24384-1-masneyb@onstation.org>
-In-Reply-To: <20190914111010.24384-1-masneyb@onstation.org>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Thu, 3 Oct 2019 15:03:45 +0200
-Message-ID: <CACRpkdZeKbNRqC+2Qs2tvWjWYDFJdg22YQ8mxMNu18n9O8cyig@mail.gmail.com>
-Subject: Re: [PATCH] qcom: ssbi-gpio: convert to hierarchical IRQ helpers in
- gpio core
-To:     Brian Masney <masneyb@onstation.org>
-Cc:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        MSM <linux-arm-msm@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        id S1730415AbfJCNaS (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 3 Oct 2019 09:30:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48330 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729655AbfJCNaS (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Thu, 3 Oct 2019 09:30:18 -0400
+Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B53D2207FF;
+        Thu,  3 Oct 2019 13:30:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1570109417;
+        bh=+vZNSuj5CLm8gcAmu27ZLgAdEbY/2YdMMvRqm8UjGpI=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=J3BGEMEZWWnTW+MyQ4U/TofVfzu0O0SxMZ45RD9OMOYdaU0PF9y/zk1yr8yom7599
+         SEATzOa5QuObf6Yj7y42d72fe+QRiA5cczVygzrtgTIWLpX6NCswZMBpZWB0lyKoDK
+         vggthv0v/96f15LJN8YVUTIrIrm+UPuPML+f/f80=
+Date:   Thu, 3 Oct 2019 14:30:13 +0100
+From:   Will Deacon <will@kernel.org>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Subject: Re: [RESEND PATCH] pinctrl: devicetree: Avoid taking direct
+ reference to device name string
+Message-ID: <20191003133012.7a64vxj7tz6si56c@willie-the-truck>
+References: <20191002124206.22928-1-will@kernel.org>
+ <CACRpkdYFzrUT9YE3VvRdWpx-n9szyvoOnEBM7GWLZAv8t1drww@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CACRpkdYFzrUT9YE3VvRdWpx-n9szyvoOnEBM7GWLZAv8t1drww@mail.gmail.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Sat, Sep 14, 2019 at 1:10 PM Brian Masney <masneyb@onstation.org> wrote:
+On Thu, Oct 03, 2019 at 02:54:21PM +0200, Linus Walleij wrote:
+> On Wed, Oct 2, 2019 at 2:42 PM Will Deacon <will@kernel.org> wrote:
+> > When populating the pinctrl mapping table entries for a device, the
+> > 'dev_name' field for each entry is initialised to point directly at the
+> > string returned by 'dev_name()' for the device and subsequently used by
+> > 'create_pinctrl()' when looking up the mappings for the device being
+> > probed.
+> >
+> > This is unreliable in the presence of calls to 'dev_set_name()', which may
+> > reallocate the device name string leaving the pinctrl mappings with a
+> > dangling reference. This then leads to a use-after-free every time the
+> > name is dereferenced by a device probe:
+> >
+> >   | BUG: KASAN: invalid-access in strcmp+0x20/0x64
+> >   | Read of size 1 at addr 13ffffc153494b00 by task modprobe/590
+> >   | Pointer tag: [13], memory tag: [fe]
+> >   |
+> >   | Call trace:
+> >   |  __kasan_report+0x16c/0x1dc
+> >   |  kasan_report+0x10/0x18
+> >   |  check_memory_region
+> >   |  __hwasan_load1_noabort+0x4c/0x54
+> >   |  strcmp+0x20/0x64
+> >   |  create_pinctrl+0x18c/0x7f4
+> >   |  pinctrl_get+0x90/0x114
+> >   |  devm_pinctrl_get+0x44/0x98
+> >   |  pinctrl_bind_pins+0x5c/0x450
+> >   |  really_probe+0x1c8/0x9a4
+> >   |  driver_probe_device+0x120/0x1d8
+> >
+> > Follow the example of sysfs, and duplicate the device name string before
+> > stashing it away in the pinctrl mapping entries.
+> >
+> > Cc: Linus Walleij <linus.walleij@linaro.org>
+> > Reported-by: Elena Petrova <lenaptr@google.com>
+> > Tested-by: Elena Petrova <lenaptr@google.com>
+> > Signed-off-by: Will Deacon <will@kernel.org>
+> 
+> Patch applied, sorry for not getting back to you earlier.
 
-> Now that the GPIO core has support for hierarchical IRQ chips, convert
-> Qualcomm's ssbi-gpio over to use these new helpers to reduce duplicated
-> code across drivers.
->
-> Signed-off-by: Brian Masney <masneyb@onstation.org>
+No need to apologise -- I posted it during the merge window!
 
-Patch applied for v5.5. I didn't have time to test before the merge
-window, sorry, not it's in!
+> The fact that dev_set_name() is reallocating the name is a bit
+> scary, it doesn't feel super-stable, but I suppose there is some
+> particularly good reason for it.
+> 
+> I guess the look-up table still refers to the struct device *
+> directly so pin control functionality will work, but the pin controller
+> device name down in /sys/kernel/debug/pinctrl
+> is going to be bogus, am I right? Like the name given there
+> will be whatever the name was before the call to dev_set_name().
 
-Yours,
-Linus Walleij
+Yeah, but I think that's a least consistent with other sysfs entries
+(i.e. those created by driver_sysfs_add()) so callers of dev_set_name()
+need to be super careful about how they use it. In reality, it's going
+to be mostly confined to bus code, but copying the string (as in this
+patch) avoids pinctrl being the thing that blows up.
+
+Will
