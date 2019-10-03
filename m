@@ -2,164 +2,108 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 0A240CA027
-	for <lists+linux-gpio@lfdr.de>; Thu,  3 Oct 2019 16:15:45 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B9BCDCA05F
+	for <lists+linux-gpio@lfdr.de>; Thu,  3 Oct 2019 16:31:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730479AbfJCOPo (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 3 Oct 2019 10:15:44 -0400
-Received: from relay9-d.mail.gandi.net ([217.70.183.199]:53959 "EHLO
-        relay9-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730454AbfJCOPo (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 3 Oct 2019 10:15:44 -0400
-X-Originating-IP: 132.205.229.212
-Received: from aptenodytes (unknown [132.205.229.212])
-        (Authenticated sender: paul.kocialkowski@bootlin.com)
-        by relay9-d.mail.gandi.net (Postfix) with ESMTPSA id 9BCCEFF807;
-        Thu,  3 Oct 2019 14:15:39 +0000 (UTC)
-Date:   Thu, 3 Oct 2019 10:15:37 -0400
-From:   Paul Kocialkowski <paul.kocialkowski@bootlin.com>
-To:     Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Cc:     linux-gpio <linux-gpio@vger.kernel.org>,
-        linux-devicetree <devicetree@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Subject: Re: [PATCH v3 3/5] gpio: syscon: Add support for a custom get
- operation
-Message-ID: <20191003141537.GE24151@aptenodytes>
-References: <20190927100407.1863293-1-paul.kocialkowski@bootlin.com>
- <20190927100407.1863293-4-paul.kocialkowski@bootlin.com>
- <CAMpxmJUHPuGPPPFSctyhtfj0oAk6oJ+=mvgN4=7jmLxAfHs45Q@mail.gmail.com>
- <20191003112610.GA28856@aptenodytes>
- <CAMpxmJVfgDTNcwk6qmCwfwQkp_tw+8CVbO1mSeHQkBzJgoWLXg@mail.gmail.com>
+        id S1728855AbfJCObK (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 3 Oct 2019 10:31:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43530 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726393AbfJCObK (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Thu, 3 Oct 2019 10:31:10 -0400
+Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net [24.9.64.241])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3B56220865;
+        Thu,  3 Oct 2019 14:31:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1570113070;
+        bh=ja887EgzBcZzPkb4rXU45yrEXXzEuRz1I3W6sB1AWUk=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=YO+x/CU8yx5nIEieP2GQwzeKy8Bhu3L1P4StryiRUy79wgYddP6O1muAn0fbCoZMX
+         2PnZCz4yke0tVLVa6mS6ypabRHZMvmWWV/GYoVVntzXrSGAqXh0JjsU6jaQLw3QYmC
+         BH/XTSfQ6UqXIHe8QlaBHC0GmWhiOyfGua+RydXY=
+Subject: Re: Linux 5.4 kselftest known issues - update
+To:     Shuah Khan <skhan@linuxfoundation.org>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Christian Brauner <christian@brauner.io>, kvm@vger.kernel.org,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        bgolaszewski@baylibre.com, Daniel Borkmann <daniel@iogearbox.net>,
+        bpf <bpf@vger.kernel.org>, Networking <netdev@vger.kernel.org>,
+        shuah <shuah@kernel.org>
+References: <a293684f-4ab6-51af-60b1-caf4eb97ff05@linuxfoundation.org>
+From:   shuah <shuah@kernel.org>
+Message-ID: <2a835150-d7f1-1c4a-80cb-d385f799dd14@kernel.org>
+Date:   Thu, 3 Oct 2019 08:30:55 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="TD8GDToEDw0WLGOL"
-Content-Disposition: inline
-In-Reply-To: <CAMpxmJVfgDTNcwk6qmCwfwQkp_tw+8CVbO1mSeHQkBzJgoWLXg@mail.gmail.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+In-Reply-To: <a293684f-4ab6-51af-60b1-caf4eb97ff05@linuxfoundation.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+On 9/26/19 11:41 AM, Shuah Khan wrote:
+> Here are the know kselftest issues on Linux 5.4 with
+> top commit commit 619e17cf75dd58905aa67ccd494a6ba5f19d6cc6
+> on x86_64:
+> 
+> The goal is to get these addressed before 5.4 comes out.
 
---TD8GDToEDw0WLGOL
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+All of these issues are now fixed, except the bpf llvm dependency.
+These fixes should all be in linux-next if they haven't already.
 
-Hi,
+> 
+> 3 build failures and status:
+> 
+> pidfd - undefined reference to `pthread_create' collect2: error: ld 
+> returned 1 exit status
+> 
+> Fixed: https://patchwork.kernel.org/patch/11159517/
 
-On Thu 03 Oct 19, 16:05, Bartosz Golaszewski wrote:
-> czw., 3 pa=C5=BA 2019 o 13:26 Paul Kocialkowski
-> <paul.kocialkowski@bootlin.com> napisa=C5=82(a):
-> >
-> > Hi,
-> >
-> > On Thu 03 Oct 19, 10:24, Bartosz Golaszewski wrote:
-> > > pt., 27 wrz 2019 o 12:04 Paul Kocialkowski
-> > > <paul.kocialkowski@bootlin.com> napisa=C5=82(a):
-> > > >
-> > > > Some drivers might need a custom get operation to match custom
-> > > > behavior implemented in the set operation.
-> > > >
-> > > > Add plumbing for supporting that.
-> > > >
-> > > > Signed-off-by: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
-> > > > ---
-> > > >  drivers/gpio/gpio-syscon.c | 7 ++++---
-> > > >  1 file changed, 4 insertions(+), 3 deletions(-)
-> > > >
-> > > > diff --git a/drivers/gpio/gpio-syscon.c b/drivers/gpio/gpio-syscon.c
-> > > > index 31f332074d7d..05c537ed73f1 100644
-> > > > --- a/drivers/gpio/gpio-syscon.c
-> > > > +++ b/drivers/gpio/gpio-syscon.c
-> > > > @@ -43,8 +43,9 @@ struct syscon_gpio_data {
-> > > >         unsigned int    bit_count;
-> > > >         unsigned int    dat_bit_offset;
-> > > >         unsigned int    dir_bit_offset;
-> > > > -       void            (*set)(struct gpio_chip *chip,
-> > > > -                              unsigned offset, int value);
-> > > > +       int             (*get)(struct gpio_chip *chip, unsigned off=
-set);
-> > > > +       void            (*set)(struct gpio_chip *chip, unsigned off=
-set,
-> > > > +                              int value);
-> > >
-> > > Why did you change this line? Doesn't seem necessary and pollutes the=
- history.
-> >
-> > This is for consistency since both the "chip" and "offset" arguments ca=
-n fit
-> > in a single line. Since I want the "get" addition to fit in a single li=
-ne,
-> > bringing back "offset" on the previous line of "set" makes things consi=
-stent.
-> > There's probably no particular reason for the split in the first place.
-> >
-> > Do you think it needs a separate cosmetic commit only for that?
-> > I'd rather add a note in the commit message and keep the change as-is.
-> >
->=20
-> The line is still broken - just in a different place. I'd prefer to
-> leave it as it is frankly, there's nothing wrong with it.
+In
+> 
+> bfp (two issues)
+> 
+> 1. "make TARGETS=bpf kselftest" build fails
+> Makefile:127: tools/build/Makefile.include: No such file or directory
 
-The point is rather that this introduces inconsistency between the two line=
-s.
-It's definitely not a major issue, but I still believe it is a coding style
-issue. It surely doesn't hurt to fix it.
+https://patchwork.kernel.org/patch/11163601/
+In bpf fixes tree
 
-Cheers,
+> 
+> This is due to recent kbuild changes and I have a patch ready to send.
+> 
+> 2. Related to llvm latest version dependency. This is a hard dependency.
+> Unless users upgrade to latest llvvm, bpf test won't run. The new llvm
+> might not be supported on all distros yet, in which case bpf will not
+> get tested in some rings and on some architectures.
+> 
+> gpio
+> 
+> "make TARGETS=gpio kselftest" build fails
+> 
+> Makefile:23: tools/build/Makefile.include: No such file or directory
 
-Paul
+https://patchwork.kernel.org/patch/11163603/
 
-> Bart
->=20
-> > Cheers,
-> >
-> > Paul
-> >
-> > > Bart
-> > >
-> > > >  };
-> > > >
-> > > >  struct syscon_gpio_priv {
-> > > > @@ -252,7 +253,7 @@ static int syscon_gpio_probe(struct platform_de=
-vice *pdev)
-> > > >         priv->chip.label =3D dev_name(dev);
-> > > >         priv->chip.base =3D -1;
-> > > >         priv->chip.ngpio =3D priv->data->bit_count;
-> > > > -       priv->chip.get =3D syscon_gpio_get;
-> > > > +       priv->chip.get =3D priv->data->get ? : syscon_gpio_get;
-> > > >         if (priv->data->flags & GPIO_SYSCON_FEAT_IN)
-> > > >                 priv->chip.direction_input =3D syscon_gpio_dir_in;
-> > > >         if (priv->data->flags & GPIO_SYSCON_FEAT_OUT) {
-> > > > --
-> > > > 2.23.0
-> > > >
-> >
-> > --
-> > Paul Kocialkowski, Bootlin
-> > Embedded Linux and kernel engineering
-> > https://bootlin.com
+> 
+> This is due to recent kbuild changes and I have a patch ready to send.
+> 
+> kvm
+> 
+> "make TARGETS=kvm kselftest" build fails due --no-pie flags.
 
---TD8GDToEDw0WLGOL
-Content-Type: application/pgp-signature; name="signature.asc"
+https://patchwork.kernel.org/patch/11171893/
 
------BEGIN PGP SIGNATURE-----
+I haven't found any new ones on x86_64 as of 5.4-rc1
 
-iQEzBAEBCAAdFiEEJZpWjZeIetVBefti3cLmz3+fv9EFAl2WAokACgkQ3cLmz3+f
-v9FNqQgAjU19Rf3TG//SDczLv2Sv0l+hsFLxHpRmO+JvfFeZ72FxUnUAY4VhUfqn
-ThnnBkKBtQYBEGZCagM7DCUGWUr3z6wxIF6IPlUMmHC8tbemBRx3aX95Yer2MVVd
-m2/BpErSNNfdjbYPcRumpCFbOUXQJ0JxTLP7Aw1kDh8OkLI81q+tL4Klhs+19vaw
-wAFbf1CenAEJQlDzlqE2IAN+45h6cuMQSgLRYsZ5ahggs+gE9reX57Dk++xSSK/k
-LMG6ZiNY0Xxqxv+TJ8VQnu0OtJeAVgrrWWc1eFg6dc8aFNy5jFbMvLfz90iR4Lc1
-OqiWTc0Bfpd2Ef2oa20KCEUCVmmqjw==
-=/Q2n
------END PGP SIGNATURE-----
-
---TD8GDToEDw0WLGOL--
+thanks,
+-- Shuah
