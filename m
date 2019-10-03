@@ -2,103 +2,148 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id B71C3C9F70
-	for <lists+linux-gpio@lfdr.de>; Thu,  3 Oct 2019 15:30:19 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 24072CA006
+	for <lists+linux-gpio@lfdr.de>; Thu,  3 Oct 2019 16:05:35 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730415AbfJCNaS (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 3 Oct 2019 09:30:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48330 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729655AbfJCNaS (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Thu, 3 Oct 2019 09:30:18 -0400
-Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B53D2207FF;
-        Thu,  3 Oct 2019 13:30:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570109417;
-        bh=+vZNSuj5CLm8gcAmu27ZLgAdEbY/2YdMMvRqm8UjGpI=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=J3BGEMEZWWnTW+MyQ4U/TofVfzu0O0SxMZ45RD9OMOYdaU0PF9y/zk1yr8yom7599
-         SEATzOa5QuObf6Yj7y42d72fe+QRiA5cczVygzrtgTIWLpX6NCswZMBpZWB0lyKoDK
-         vggthv0v/96f15LJN8YVUTIrIrm+UPuPML+f/f80=
-Date:   Thu, 3 Oct 2019 14:30:13 +0100
-From:   Will Deacon <will@kernel.org>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [RESEND PATCH] pinctrl: devicetree: Avoid taking direct
- reference to device name string
-Message-ID: <20191003133012.7a64vxj7tz6si56c@willie-the-truck>
-References: <20191002124206.22928-1-will@kernel.org>
- <CACRpkdYFzrUT9YE3VvRdWpx-n9szyvoOnEBM7GWLZAv8t1drww@mail.gmail.com>
+        id S1730069AbfJCOFe (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 3 Oct 2019 10:05:34 -0400
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:46442 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729546AbfJCOFe (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 3 Oct 2019 10:05:34 -0400
+Received: by mail-ot1-f68.google.com with SMTP id 89so2330252oth.13
+        for <linux-gpio@vger.kernel.org>; Thu, 03 Oct 2019 07:05:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=CjkcCbQk4BfKYjIfcsA27jNMdWtxDDNMFITjeJ5N6Yo=;
+        b=YOXOx+TpchFlAH//++YWGEZLm1lokUcPLph2RU/Nu9ijloryGxTZofWrIGe7Ku03q1
+         Tzs93SvjWVnXX4Ix9pEmfQIydneey+OnWoUywuxD3xJQPit7fR4RUkv3aCY0Kc+nZUxm
+         74IRyYDFNglOCzz0yKXO9ne/egBQUOI6ITzGRMC12TIdQSjjilUgUphdDgCgCpck92wN
+         r2cHZIFAaEc1uAzwLfz4edoSRcU/EkpLCUMNfxMbwb1NTL3TEaklMlhG+jHSbZ0c5eHH
+         9NjN3q0urk1H//CSeEOj3BexelnRhpkPQ8G+WhdF02b5vB5+lmVLGU4A1NMUd2nN6D4Q
+         Q0cw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=CjkcCbQk4BfKYjIfcsA27jNMdWtxDDNMFITjeJ5N6Yo=;
+        b=rXeFTxab1/MqeYoUx80SUarT7Xri7UUrmZ9o49CzNVeEy8optAXMyLlLkHG75ECaOh
+         yGFOCZzNMvKCD6tnbpLsbaUMbL5CgOMTGDyuoq5eP5TtuphDDK339FdilNTPFKayxS/D
+         lmnf5iE7GwNtONHLbg8eAtpWwmKuKlrPtZ28sJfka0C/zQ8TGzQDCmZ4h+rMR8UZ0lFJ
+         +hFgyU/C/HUDNLkPHfPqkeKv5sOlciN1z4xCrbERLdCaR8iUsnAUjwKSNKEIgAa/Wn68
+         SyO3Z6avwkaM9zQvVx9D9cRh9efT+8xYZRZOBvRkziBBlx4HGFfNRLki+JhWhIytbnO7
+         3DIg==
+X-Gm-Message-State: APjAAAVG3juVjXu/69e1BTNa7bCTvp9OUlp7kcv21Zl+AMfGXt9pn5z9
+        5jRlho08V200TgVcvq6NUuNqUp5it4pWp6/FlzfpKWKV
+X-Google-Smtp-Source: APXvYqzJLEJexAn72R2rPNacy6O7n9DNnITIY6sTbrSg2g0w3x+cqeu7psGfMmvb0/+z5UR1x9WrNfk4Bm8i08YwGxo=
+X-Received: by 2002:a05:6830:609:: with SMTP id w9mr6937958oti.292.1570111533275;
+ Thu, 03 Oct 2019 07:05:33 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CACRpkdYFzrUT9YE3VvRdWpx-n9szyvoOnEBM7GWLZAv8t1drww@mail.gmail.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
+References: <20190927100407.1863293-1-paul.kocialkowski@bootlin.com>
+ <20190927100407.1863293-4-paul.kocialkowski@bootlin.com> <CAMpxmJUHPuGPPPFSctyhtfj0oAk6oJ+=mvgN4=7jmLxAfHs45Q@mail.gmail.com>
+ <20191003112610.GA28856@aptenodytes>
+In-Reply-To: <20191003112610.GA28856@aptenodytes>
+From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Date:   Thu, 3 Oct 2019 16:05:22 +0200
+Message-ID: <CAMpxmJVfgDTNcwk6qmCwfwQkp_tw+8CVbO1mSeHQkBzJgoWLXg@mail.gmail.com>
+Subject: Re: [PATCH v3 3/5] gpio: syscon: Add support for a custom get operation
+To:     Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+Cc:     linux-gpio <linux-gpio@vger.kernel.org>,
+        linux-devicetree <devicetree@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Oct 03, 2019 at 02:54:21PM +0200, Linus Walleij wrote:
-> On Wed, Oct 2, 2019 at 2:42 PM Will Deacon <will@kernel.org> wrote:
-> > When populating the pinctrl mapping table entries for a device, the
-> > 'dev_name' field for each entry is initialised to point directly at the
-> > string returned by 'dev_name()' for the device and subsequently used by
-> > 'create_pinctrl()' when looking up the mappings for the device being
-> > probed.
+czw., 3 pa=C5=BA 2019 o 13:26 Paul Kocialkowski
+<paul.kocialkowski@bootlin.com> napisa=C5=82(a):
+>
+> Hi,
+>
+> On Thu 03 Oct 19, 10:24, Bartosz Golaszewski wrote:
+> > pt., 27 wrz 2019 o 12:04 Paul Kocialkowski
+> > <paul.kocialkowski@bootlin.com> napisa=C5=82(a):
+> > >
+> > > Some drivers might need a custom get operation to match custom
+> > > behavior implemented in the set operation.
+> > >
+> > > Add plumbing for supporting that.
+> > >
+> > > Signed-off-by: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+> > > ---
+> > >  drivers/gpio/gpio-syscon.c | 7 ++++---
+> > >  1 file changed, 4 insertions(+), 3 deletions(-)
+> > >
+> > > diff --git a/drivers/gpio/gpio-syscon.c b/drivers/gpio/gpio-syscon.c
+> > > index 31f332074d7d..05c537ed73f1 100644
+> > > --- a/drivers/gpio/gpio-syscon.c
+> > > +++ b/drivers/gpio/gpio-syscon.c
+> > > @@ -43,8 +43,9 @@ struct syscon_gpio_data {
+> > >         unsigned int    bit_count;
+> > >         unsigned int    dat_bit_offset;
+> > >         unsigned int    dir_bit_offset;
+> > > -       void            (*set)(struct gpio_chip *chip,
+> > > -                              unsigned offset, int value);
+> > > +       int             (*get)(struct gpio_chip *chip, unsigned offse=
+t);
+> > > +       void            (*set)(struct gpio_chip *chip, unsigned offse=
+t,
+> > > +                              int value);
 > >
-> > This is unreliable in the presence of calls to 'dev_set_name()', which may
-> > reallocate the device name string leaving the pinctrl mappings with a
-> > dangling reference. This then leads to a use-after-free every time the
-> > name is dereferenced by a device probe:
+> > Why did you change this line? Doesn't seem necessary and pollutes the h=
+istory.
+>
+> This is for consistency since both the "chip" and "offset" arguments can =
+fit
+> in a single line. Since I want the "get" addition to fit in a single line=
+,
+> bringing back "offset" on the previous line of "set" makes things consist=
+ent.
+> There's probably no particular reason for the split in the first place.
+>
+> Do you think it needs a separate cosmetic commit only for that?
+> I'd rather add a note in the commit message and keep the change as-is.
+>
+
+The line is still broken - just in a different place. I'd prefer to
+leave it as it is frankly, there's nothing wrong with it.
+
+Bart
+
+> Cheers,
+>
+> Paul
+>
+> > Bart
 > >
-> >   | BUG: KASAN: invalid-access in strcmp+0x20/0x64
-> >   | Read of size 1 at addr 13ffffc153494b00 by task modprobe/590
-> >   | Pointer tag: [13], memory tag: [fe]
-> >   |
-> >   | Call trace:
-> >   |  __kasan_report+0x16c/0x1dc
-> >   |  kasan_report+0x10/0x18
-> >   |  check_memory_region
-> >   |  __hwasan_load1_noabort+0x4c/0x54
-> >   |  strcmp+0x20/0x64
-> >   |  create_pinctrl+0x18c/0x7f4
-> >   |  pinctrl_get+0x90/0x114
-> >   |  devm_pinctrl_get+0x44/0x98
-> >   |  pinctrl_bind_pins+0x5c/0x450
-> >   |  really_probe+0x1c8/0x9a4
-> >   |  driver_probe_device+0x120/0x1d8
-> >
-> > Follow the example of sysfs, and duplicate the device name string before
-> > stashing it away in the pinctrl mapping entries.
-> >
-> > Cc: Linus Walleij <linus.walleij@linaro.org>
-> > Reported-by: Elena Petrova <lenaptr@google.com>
-> > Tested-by: Elena Petrova <lenaptr@google.com>
-> > Signed-off-by: Will Deacon <will@kernel.org>
-> 
-> Patch applied, sorry for not getting back to you earlier.
-
-No need to apologise -- I posted it during the merge window!
-
-> The fact that dev_set_name() is reallocating the name is a bit
-> scary, it doesn't feel super-stable, but I suppose there is some
-> particularly good reason for it.
-> 
-> I guess the look-up table still refers to the struct device *
-> directly so pin control functionality will work, but the pin controller
-> device name down in /sys/kernel/debug/pinctrl
-> is going to be bogus, am I right? Like the name given there
-> will be whatever the name was before the call to dev_set_name().
-
-Yeah, but I think that's a least consistent with other sysfs entries
-(i.e. those created by driver_sysfs_add()) so callers of dev_set_name()
-need to be super careful about how they use it. In reality, it's going
-to be mostly confined to bus code, but copying the string (as in this
-patch) avoids pinctrl being the thing that blows up.
-
-Will
+> > >  };
+> > >
+> > >  struct syscon_gpio_priv {
+> > > @@ -252,7 +253,7 @@ static int syscon_gpio_probe(struct platform_devi=
+ce *pdev)
+> > >         priv->chip.label =3D dev_name(dev);
+> > >         priv->chip.base =3D -1;
+> > >         priv->chip.ngpio =3D priv->data->bit_count;
+> > > -       priv->chip.get =3D syscon_gpio_get;
+> > > +       priv->chip.get =3D priv->data->get ? : syscon_gpio_get;
+> > >         if (priv->data->flags & GPIO_SYSCON_FEAT_IN)
+> > >                 priv->chip.direction_input =3D syscon_gpio_dir_in;
+> > >         if (priv->data->flags & GPIO_SYSCON_FEAT_OUT) {
+> > > --
+> > > 2.23.0
+> > >
+>
+> --
+> Paul Kocialkowski, Bootlin
+> Embedded Linux and kernel engineering
+> https://bootlin.com
