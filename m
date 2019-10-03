@@ -2,57 +2,60 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 9054AC99B7
-	for <lists+linux-gpio@lfdr.de>; Thu,  3 Oct 2019 10:23:13 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7911DC99C5
+	for <lists+linux-gpio@lfdr.de>; Thu,  3 Oct 2019 10:24:35 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727259AbfJCIXM (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 3 Oct 2019 04:23:12 -0400
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:42323 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726154AbfJCIXM (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 3 Oct 2019 04:23:12 -0400
-Received: by mail-oi1-f193.google.com with SMTP id i185so1784617oif.9
-        for <linux-gpio@vger.kernel.org>; Thu, 03 Oct 2019 01:23:11 -0700 (PDT)
+        id S1727832AbfJCIYe (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 3 Oct 2019 04:24:34 -0400
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:43924 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727943AbfJCIYe (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 3 Oct 2019 04:24:34 -0400
+Received: by mail-oi1-f196.google.com with SMTP id t84so1784268oih.10
+        for <linux-gpio@vger.kernel.org>; Thu, 03 Oct 2019 01:24:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baylibre-com.20150623.gappssmtp.com; s=20150623;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc:content-transfer-encoding;
-        bh=UrOVvtok0uymTGoBhO1tPdn3aCgpqxGA17M9N6XBPfA=;
-        b=U/Jlme74zOUlrCR8ZhKj+vaPPMPWfOKQBc9zFQhJlUukL0kL1HFbBVd0OXD3wX+5E9
-         MtfWQYuSv+TprRuG11V58kHZUkcF5q8MKOPBOtNlCMqp6s/bsZ32ONk7mLgPDfOx9Tte
-         Fthh7HkbWZaSfU/kqVvaB1Ti4PFfY3bNnSElArV2bEHQuN5gQMz0d202zjTBsTDcpLuj
-         vV3aoeSVXwN4xxHtCqCNKXQDI+TTfy40fQtKwJqtQpjfHbt19B0iAXipmxkN6FqkWxdU
-         eZ4jAE48tGg3Y9dfgISSkQF7TE+t9vL6qPEyp93rtsOpT+6fXIdfVxsS2+cL4ohD1V4O
-         29Hw==
+        bh=zUA3u1BSXrY9Ik2AcFkwsTNlxrkAsn7Y3a8AWnLHJCs=;
+        b=h8H/vn0shPR2AQlVRPOxIV+d0a78GeWR741CrWoHLD3dQOd8vPoKvYNHrJKMbaehoQ
+         g+1ZWq8e7ceYDz55w85Fq4ItKbhbWp/wBG5z0dxFFSzCndVZDS0eWZgKNcEQ8I/t2Z4n
+         JHWrq7ZA11DmqXcrylhwOdrOoQc+XOOyedUM2kThILG39klPkX7nDWG2jx5TLwThdjbJ
+         vHiC8Ht83H6rHcZ7sig02tHHEr+IARV+x142dHmtqsyVvPunKJ7XYEPpTxnKRXUkLpbX
+         RNnMVyfBJjzVQigFX1u4VrbZAcorMoOXxBQsu9VamHRjxWNY+dWfNEviJOPqMg3m5OJT
+         LrMQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc:content-transfer-encoding;
-        bh=UrOVvtok0uymTGoBhO1tPdn3aCgpqxGA17M9N6XBPfA=;
-        b=bA1BLv0WcAoJNwondWMJ5w7KetCsF5iGRgNCCsjR2/UP3o2bdPjZxAAqibBf+i3h6P
-         EblrD1+TLb20D/5uQcZ15IXVop9ToPTtxUsPaKQpJ7tTkUFeGI3u86TEBg36T8hP9QI8
-         f2dVtVZdu2xfyeoFYHCU4+QuRyIYeY6ccjTKQEjY+6V4EDaPrZ/omumkOYSQ6VErY0jh
-         RS8xGTfDQZ/kvW9UmCzoV1ypmPEzg0IPjiY/hkqm4R2RZS7FSoxxQkqh8LdROfXOynE9
-         YvSQ4H1mFi817SxGSXvuRcKxJqeoRBw8D9eoEVNPZa1G8u3wAxFYI7hsmC82w/j9tFpL
-         dYuQ==
-X-Gm-Message-State: APjAAAX1OKGU6mFZY/qlhz/mIMw7o+BpBvORQk9G2hr1c+BOQlJA9Mcb
-        /WL5H0cZkM+Wu2LAeyzwPk0mRBrh5pmQjQeKeRwS4Q==
-X-Google-Smtp-Source: APXvYqyXucKIw3BGYj4GTqQI5auzDGDNuJyDj9w+notR7ZJAI7zH2iAfnJ/YYeT28C6YiaNwWk9eOZlB82+RfG5usgg=
-X-Received: by 2002:a54:4f8a:: with SMTP id g10mr1905955oiy.147.1570090991558;
- Thu, 03 Oct 2019 01:23:11 -0700 (PDT)
+        bh=zUA3u1BSXrY9Ik2AcFkwsTNlxrkAsn7Y3a8AWnLHJCs=;
+        b=U+RRDYM1pNt375ZP4PeIHRlLF3VgCZ4VG5KljtWbhwrolWsaEpovJYyfq4ToPX1BvB
+         mmTVYS7M4vpSs9mkatFNZlWS/izdFv+K+et/7Pew2OBZbsSfnEGhT/3mMHiae2eOkv7e
+         Z3wSsjoUGUGiE6sM0h4XqHBY46olmtY8wTleXEWJBwgwG62hOyYAwQVKwe0/SqCxBVKQ
+         8hiEwPaPW8FSuxXQYxPyGCGFwhRiHgXdF6/fRptzfdUHVBrlLvKmX0CP3R/WomjP7Ibp
+         5dUHf8YMtzAnH+DA/m9h6bKoXZc4K6bseahb28o8wVIeQZhZcw9aImFWj1Np6rg0i1l6
+         aD3A==
+X-Gm-Message-State: APjAAAX1kU5Wn3Au8rNuQtvVzCgXdnlFL3z5Q0H2Wf/VUmXoYBC2vaA3
+        HM6w8r95wSDZJaPTpuTDTsiB+p4aL+oZvG/ENLdbEQ==
+X-Google-Smtp-Source: APXvYqxhCodm6x8Cy94oJgXJLhll1GesYiXNbQJAVbEpxh6rdxy/3quBYU1XRWlZwgnpUDbJPTiVbsltQ7qhcwlVcgA=
+X-Received: by 2002:a54:4f8a:: with SMTP id g10mr1908892oiy.147.1570091072850;
+ Thu, 03 Oct 2019 01:24:32 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190927011641.4858-1-skhan@linuxfoundation.org>
-In-Reply-To: <20190927011641.4858-1-skhan@linuxfoundation.org>
+References: <20190927100407.1863293-1-paul.kocialkowski@bootlin.com> <20190927100407.1863293-4-paul.kocialkowski@bootlin.com>
+In-Reply-To: <20190927100407.1863293-4-paul.kocialkowski@bootlin.com>
 From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Date:   Thu, 3 Oct 2019 10:23:00 +0200
-Message-ID: <CAMpxmJXJB=KjSqtqKNmm2N8UbgSrJXvpKwgDj9DtSwfR7owFfQ@mail.gmail.com>
-Subject: Re: [PATCH RESEND] tools: gpio: Use !building_out_of_srctree to
- determine srctree
-To:     Shuah Khan <skhan@linuxfoundation.org>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        linux-gpio <linux-gpio@vger.kernel.org>,
+Date:   Thu, 3 Oct 2019 10:24:22 +0200
+Message-ID: <CAMpxmJUHPuGPPPFSctyhtfj0oAk6oJ+=mvgN4=7jmLxAfHs45Q@mail.gmail.com>
+Subject: Re: [PATCH v3 3/5] gpio: syscon: Add support for a custom get operation
+To:     Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+Cc:     linux-gpio <linux-gpio@vger.kernel.org>,
+        linux-devicetree <devicetree@vger.kernel.org>,
         LKML <linux-kernel@vger.kernel.org>,
-        linux-kselftest@vger.kernel.org
+        Linus Walleij <linus.walleij@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 Sender: linux-gpio-owner@vger.kernel.org
@@ -60,52 +63,51 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-pt., 27 wrz 2019 o 03:16 Shuah Khan <skhan@linuxfoundation.org> napisa=C5=
-=82(a):
+pt., 27 wrz 2019 o 12:04 Paul Kocialkowski
+<paul.kocialkowski@bootlin.com> napisa=C5=82(a):
 >
-> make TARGETS=3Dgpio kselftest fails with:
+> Some drivers might need a custom get operation to match custom
+> behavior implemented in the set operation.
 >
-> Makefile:23: tools/build/Makefile.include: No such file or directory
+> Add plumbing for supporting that.
 >
-> When the gpio tool make is invoked from tools Makefile, srctree is
-> cleared and the current logic check for srctree equals to empty
-> string to determine srctree location from CURDIR.
->
-> When the build in invoked from selftests/gpio Makefile, the srctree
-> is set to "." and the same logic used for srctree equals to empty is
-> needed to determine srctree.
->
-> Check building_out_of_srctree undefined as the condition for both
-> cases to fix "make TARGETS=3Dgpio kselftest" build failure.
->
-> Signed-off-by: Shuah Khan <skhan@linuxfoundation.org>
+> Signed-off-by: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
 > ---
-> Rsending with corrected address for linux-kselftest@vger.kernel.org
+>  drivers/gpio/gpio-syscon.c | 7 ++++---
+>  1 file changed, 4 insertions(+), 3 deletions(-)
 >
->  tools/gpio/Makefile | 6 +++++-
->  1 file changed, 5 insertions(+), 1 deletion(-)
->
-> diff --git a/tools/gpio/Makefile b/tools/gpio/Makefile
-> index 6ecdd1067826..1178d302757e 100644
-> --- a/tools/gpio/Makefile
-> +++ b/tools/gpio/Makefile
-> @@ -3,7 +3,11 @@ include ../scripts/Makefile.include
->
->  bindir ?=3D /usr/bin
->
-> -ifeq ($(srctree),)
-> +# This will work when gpio is built in tools env. where srctree
-> +# isn't set and when invoked from selftests build, where srctree
-> +# is set to ".". building_out_of_srctree is undefined for in srctree
-> +# builds
-> +ifndef building_out_of_srctree
->  srctree :=3D $(patsubst %/,%,$(dir $(CURDIR)))
->  srctree :=3D $(patsubst %/,%,$(dir $(srctree)))
->  endif
-> --
-> 2.20.1
->
+> diff --git a/drivers/gpio/gpio-syscon.c b/drivers/gpio/gpio-syscon.c
+> index 31f332074d7d..05c537ed73f1 100644
+> --- a/drivers/gpio/gpio-syscon.c
+> +++ b/drivers/gpio/gpio-syscon.c
+> @@ -43,8 +43,9 @@ struct syscon_gpio_data {
+>         unsigned int    bit_count;
+>         unsigned int    dat_bit_offset;
+>         unsigned int    dir_bit_offset;
+> -       void            (*set)(struct gpio_chip *chip,
+> -                              unsigned offset, int value);
+> +       int             (*get)(struct gpio_chip *chip, unsigned offset);
+> +       void            (*set)(struct gpio_chip *chip, unsigned offset,
+> +                              int value);
 
-Applied for fixes, thanks!
+Why did you change this line? Doesn't seem necessary and pollutes the histo=
+ry.
 
 Bart
+
+>  };
+>
+>  struct syscon_gpio_priv {
+> @@ -252,7 +253,7 @@ static int syscon_gpio_probe(struct platform_device *=
+pdev)
+>         priv->chip.label =3D dev_name(dev);
+>         priv->chip.base =3D -1;
+>         priv->chip.ngpio =3D priv->data->bit_count;
+> -       priv->chip.get =3D syscon_gpio_get;
+> +       priv->chip.get =3D priv->data->get ? : syscon_gpio_get;
+>         if (priv->data->flags & GPIO_SYSCON_FEAT_IN)
+>                 priv->chip.direction_input =3D syscon_gpio_dir_in;
+>         if (priv->data->flags & GPIO_SYSCON_FEAT_OUT) {
+> --
+> 2.23.0
+>
