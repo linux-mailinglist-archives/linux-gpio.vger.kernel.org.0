@@ -2,80 +2,145 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 5DD31CA320
-	for <lists+linux-gpio@lfdr.de>; Thu,  3 Oct 2019 18:14:47 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 70A53CADBA
+	for <lists+linux-gpio@lfdr.de>; Thu,  3 Oct 2019 20:10:16 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388051AbfJCQM2 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 3 Oct 2019 12:12:28 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:38057 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388046AbfJCQM2 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 3 Oct 2019 12:12:28 -0400
-Received: by mail-pf1-f193.google.com with SMTP id h195so2076443pfe.5
-        for <linux-gpio@vger.kernel.org>; Thu, 03 Oct 2019 09:12:27 -0700 (PDT)
+        id S1731241AbfJCR7A (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 3 Oct 2019 13:59:00 -0400
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:41086 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731234AbfJCR7A (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 3 Oct 2019 13:59:00 -0400
+Received: by mail-lf1-f67.google.com with SMTP id r2so2522734lfn.8
+        for <linux-gpio@vger.kernel.org>; Thu, 03 Oct 2019 10:58:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=message-id:mime-version:content-transfer-encoding:in-reply-to
-         :references:from:to:cc:subject:user-agent:date;
-        bh=XiVsYRW0n3APOo8SN5jHN6423sGK1hzLkdW22R6gUlQ=;
-        b=b8geVaxUUmJEPSmYVZ/urv+GIDjPVA+tUw7s237kt7/4+W9qC3LDCPfcGAQhQ7qMnw
-         4T4SP4lmYuQYPQV6SzMaM7KOid5w+rycvgqMZD86rgttuyzqDiKJchqoCKkH6tOvuN0f
-         TWekoQ3fbZ0zfYkqUHWkpN71y1uBl7+ZV27Vg=
+        d=ragnatech-se.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=7n4NvKPpvqFXigh24b8twI7kqYMuMZj67/WZMAs3RxU=;
+        b=Bc59P60swsi5ASH0o5bE7smNybp94litM+wgTLMSxSgPd5K15x8U0/hr2VKJ878+XV
+         MilBKq3+odr5y0VWyRb/XBMSYwoWETfuVy++Sb96L0dcUzajIqLC5+SXyKPItpcVOtXU
+         V7waP48q3moqUtP7yay9xfqnifEMYp3y20JQb1IuXZaL4WUJKFKTLytYE3YeoH89QWxP
+         5KQJHxLrUgz4EX/l2eWDswh0AMuDLckAI8e9h3Jncr7VY+HuitMt7/ovb5Ur4zSXniny
+         YVJD7JbJVeqvTGutlM4TDZS/9trFAQwaAFZkGcd4lRdH041X6MblRVccYT7deFr+PZtS
+         zkbA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:mime-version
-         :content-transfer-encoding:in-reply-to:references:from:to:cc:subject
-         :user-agent:date;
-        bh=XiVsYRW0n3APOo8SN5jHN6423sGK1hzLkdW22R6gUlQ=;
-        b=fsF0mi/YsuHXTB745EMba4ecR/YZzscYMiq7yh4jI+v85mBplIrwbEstVBcKbo33T5
-         OZ3+b7cAxAcAo1L/r9n18vHQ5exR1JrrnWYKlO31cpKfLybvmbJXWn6WTpisFXcKvDYX
-         nhGPd6QYHqFj8cFlX8f0hNPU2aAtJo0w5WjgyKrdKGcle9Ag1i2X0dPt6OktCiPz8ije
-         WnzFkpHl8w3FMCArJxLBfw9sbC1tBOkAM61sir/kJufIrTzgEXNmtVJBaMSHiKyZmhfV
-         3rZwVQRNNjY8akpEwFO7Plg8ectkBR3ztVEkzKcoq3aOa0fHEkpQQHglm+DJBoVtRDlp
-         whZQ==
-X-Gm-Message-State: APjAAAXXl38TlwTAXWJx2psKYhf6i2mkWwiqfgUKUrWtn7JytIM0/kvU
-        0lK0lnznJYHM/2sETEUH1NI5Ww==
-X-Google-Smtp-Source: APXvYqz1b4RepNxT7vkrCPPzJdtlfmm8TflfIc9vumG8d7od9p989etC+nr8zMpohgtuvg7k7k8vtw==
-X-Received: by 2002:a62:5847:: with SMTP id m68mr11824475pfb.23.1570119147433;
-        Thu, 03 Oct 2019 09:12:27 -0700 (PDT)
-Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
-        by smtp.gmail.com with ESMTPSA id o9sm3228540pfp.67.2019.10.03.09.12.26
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=7n4NvKPpvqFXigh24b8twI7kqYMuMZj67/WZMAs3RxU=;
+        b=NqMNu3iRxRy/YDucRkmPk5bgdMvfKN7f8xHjE6BvFjeONSkQY735os/YG/WHamudfW
+         /ULvoaH7B2r/chwyhaqhoFFZWiod9GmHDW6plUkcgk3UeRaH4dmrufuDjMsBTHq7/FkC
+         3iZaG8Ps4OfH5tlsR1ooGPcxdwt/8ukL3UGOGaE3vDU8TDJQruCdF3zse2VQvlCpWN6d
+         e4gCnfyZgmeutL5pb2iGddvVVQ7VG2bilqQKUVZQ/0GlzigNjC9JbKvPti65dcUCs6Sj
+         e+cJvKNebvcwTv6p2nC24VGhYUl6eInBcSwQayIuyXMEr/ZJGNCSqri2cBQx4J9taI5T
+         Zu+A==
+X-Gm-Message-State: APjAAAUKOgeOyI+KbJSw0XN/OxQ3H96a6o4twWw0kDG7uu30KE18GZrl
+        l/Q918lT3Bgi6kb4FaDkG5GFJQ==
+X-Google-Smtp-Source: APXvYqyH+AcaXNZ6JODwQr/ES+A9IWCabDZeg8LQhr5NHAvWxm1esJUv+eY/UinGqTGd7ZU/FVL5uQ==
+X-Received: by 2002:ac2:48ba:: with SMTP id u26mr6538208lfg.164.1570125537473;
+        Thu, 03 Oct 2019 10:58:57 -0700 (PDT)
+Received: from localhost (h-93-159.A463.priv.bahnhof.se. [46.59.93.159])
+        by smtp.gmail.com with ESMTPSA id t22sm588754lfg.91.2019.10.03.10.58.56
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 03 Oct 2019 09:12:26 -0700 (PDT)
-Message-ID: <5d961dea.1c69fb81.d0777.9f4b@mx.google.com>
-Content-Type: text/plain; charset="utf-8"
-MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20191001180547.734-1-geert+renesas@glider.be>
-References: <20191001180547.734-1-geert+renesas@glider.be>
-From:   Stephen Boyd <swboyd@chromium.org>
-To:     Geert Uytterhoeven <geert+renesas@glider.be>,
-        Linus Walleij <linus.walleij@linaro.org>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Thu, 03 Oct 2019 10:58:56 -0700 (PDT)
+Date:   Thu, 3 Oct 2019 19:58:55 +0200
+From:   Niklas =?iso-8859-1?Q?S=F6derlund?= 
+        <niklas.soderlund@ragnatech.se>
+To:     Geert Uytterhoeven <geert+renesas@glider.be>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         linux-renesas-soc@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: Re: [PATCH] pinctrl: sh-pfc: Do not use platform_get_irq() to count interrupts
-User-Agent: alot/0.8.1
-Date:   Thu, 03 Oct 2019 09:12:26 -0700
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] pinctrl: sh-pfc: Do not use platform_get_irq() to count
+ interrupts
+Message-ID: <20191003175855.GB1322@bigcity.dyn.berto.se>
+References: <20191001180547.734-1-geert+renesas@glider.be>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20191001180547.734-1-geert+renesas@glider.be>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Quoting Geert Uytterhoeven (2019-10-01 11:05:47)
+Hi Geert,
+
+Thanks for your work.
+
+On 2019-10-01 20:05:47 +0200, Geert Uytterhoeven wrote:
 > As platform_get_irq() now prints an error when the interrupt does not
 > exist, counting interrupts by looping until failure causes the printing
 > of scary messages like:
->=20
+> 
 >     sh-pfc e6060000.pin-controller: IRQ index 0 not found
->=20
+> 
 > Fix this by using the platform_irq_count() helper instead.
->=20
-> Fixes: 7723f4c5ecdb8d83 ("driver core: platform: Add an error message to =
-platform_get_irq*()")
+> 
+> Fixes: 7723f4c5ecdb8d83 ("driver core: platform: Add an error message to platform_get_irq*()")
 > Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+
+Nice change.
+
+Reviewed-by: Niklas Söderlund <niklas.soderlund+renesas@ragnatech.se>
+
 > ---
+> This is a fix for v5.4-rc1.
+> ---
+>  drivers/pinctrl/sh-pfc/core.c | 16 ++++++----------
+>  1 file changed, 6 insertions(+), 10 deletions(-)
+> 
+> diff --git a/drivers/pinctrl/sh-pfc/core.c b/drivers/pinctrl/sh-pfc/core.c
+> index b8640ad41bef26be..ce983247c9e28bfe 100644
+> --- a/drivers/pinctrl/sh-pfc/core.c
+> +++ b/drivers/pinctrl/sh-pfc/core.c
+> @@ -29,12 +29,12 @@
+>  static int sh_pfc_map_resources(struct sh_pfc *pfc,
+>  				struct platform_device *pdev)
+>  {
+> -	unsigned int num_windows, num_irqs;
+>  	struct sh_pfc_window *windows;
+>  	unsigned int *irqs = NULL;
+> +	unsigned int num_windows;
+>  	struct resource *res;
+>  	unsigned int i;
+> -	int irq;
+> +	int num_irqs;
+>  
+>  	/* Count the MEM and IRQ resources. */
+>  	for (num_windows = 0;; num_windows++) {
+> @@ -42,17 +42,13 @@ static int sh_pfc_map_resources(struct sh_pfc *pfc,
+>  		if (!res)
+>  			break;
+>  	}
+> -	for (num_irqs = 0;; num_irqs++) {
+> -		irq = platform_get_irq(pdev, num_irqs);
+> -		if (irq == -EPROBE_DEFER)
+> -			return irq;
+> -		if (irq < 0)
+> -			break;
+> -	}
+> -
+>  	if (num_windows == 0)
+>  		return -EINVAL;
+>  
+> +	num_irqs = platform_irq_count(pdev);
+> +	if (num_irqs < 0)
+> +		return num_irqs;
+> +
+>  	/* Allocate memory windows and IRQs arrays. */
+>  	windows = devm_kcalloc(pfc->dev, num_windows, sizeof(*windows),
+>  			       GFP_KERNEL);
+> -- 
+> 2.17.1
+> 
 
-Reviewed-by: Stephen Boyd <swboyd@chromium.org>
-
+-- 
+Regards,
+Niklas Söderlund
