@@ -2,100 +2,80 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 4907ECA168
-	for <lists+linux-gpio@lfdr.de>; Thu,  3 Oct 2019 17:53:18 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5DD31CA320
+	for <lists+linux-gpio@lfdr.de>; Thu,  3 Oct 2019 18:14:47 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729763AbfJCPxR (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 3 Oct 2019 11:53:17 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:34397 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727024AbfJCPxR (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 3 Oct 2019 11:53:17 -0400
-Received: by mail-pg1-f195.google.com with SMTP id y35so2058514pgl.1;
-        Thu, 03 Oct 2019 08:53:16 -0700 (PDT)
+        id S2388051AbfJCQM2 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 3 Oct 2019 12:12:28 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:38057 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388046AbfJCQM2 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 3 Oct 2019 12:12:28 -0400
+Received: by mail-pf1-f193.google.com with SMTP id h195so2076443pfe.5
+        for <linux-gpio@vger.kernel.org>; Thu, 03 Oct 2019 09:12:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=1wqB6OZNdAWXlilaMCSpXU3dW8zf1TakKdGobbh4lqo=;
-        b=tJDWBKQfkYG6j7dTjY7u63ZnzNoDHCHuPQoSGsP9Cwd10QAabJ71wYeSDMbD+2tbML
-         vDUecy1ZRk0qFDimsSJWyQBM8CxqEQTZjwiEFE800kp61Xwhir7kRwS4R0vgp3yYbIER
-         XhbJMaNYYL41LDNzOhsfFVn+eeThyw7X3j4XPlpV/5i08O0T8/jZgITZ9zasEn8Bto2M
-         1jJZj9aG7l1rdbtmwZvfHdE1Wyc8XPRwe0EpgDIzoC6NEI9nX6WNKOM1T2hheyB1XY+N
-         Tm1xe8mIDuZHXT/L85qUYKbPKVjh1kBdVXB8VGRXS516j9RwHq5d2gEwBcjkRCvd65Dm
-         jCOw==
+        d=chromium.org; s=google;
+        h=message-id:mime-version:content-transfer-encoding:in-reply-to
+         :references:from:to:cc:subject:user-agent:date;
+        bh=XiVsYRW0n3APOo8SN5jHN6423sGK1hzLkdW22R6gUlQ=;
+        b=b8geVaxUUmJEPSmYVZ/urv+GIDjPVA+tUw7s237kt7/4+W9qC3LDCPfcGAQhQ7qMnw
+         4T4SP4lmYuQYPQV6SzMaM7KOid5w+rycvgqMZD86rgttuyzqDiKJchqoCKkH6tOvuN0f
+         TWekoQ3fbZ0zfYkqUHWkpN71y1uBl7+ZV27Vg=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=1wqB6OZNdAWXlilaMCSpXU3dW8zf1TakKdGobbh4lqo=;
-        b=E0aunpWzkDxRx3vJprXOxGQXP1MMNWGvrRmIbxikgim4+rHafLaLLOVRg+Wr+PTv8K
-         1OzHQAQUcNEHIOiaLbFszTyNE+qb/5MieLJFjFHeFlpgBkSRtJQJpofuzfJ3cFvPvRKh
-         Gla3pohIMx7NBZisMK8CZQAAcK1bUxXiZvINdooB8nCPiSSEbkrYTO3KVD4pBCkUF7nP
-         iBL+DDyN1DtsI0EP7xuEYa5WQKG2VB33zy+NrbPZx/lOxnxNOddw41GcxABc3si7BXpn
-         GYeEcC9me/aSZV/J92jtZDNjfSjXNKXkpREOVjUQlcLe7anMtvjP/dUrpKa0bIrlqK8O
-         3q2Q==
-X-Gm-Message-State: APjAAAXeu1aqywvukasqf5xjeI8R1WLJ2Za4Iubvv2hBHPDSB2SMsyo/
-        m/QzmkQ1EqVSbJYLFdbA5oM=
-X-Google-Smtp-Source: APXvYqwTxuuMApyhcjWNrwEKc2wo9IJ44wvLub5GBlE26WCqQKGZg+xTcVBGAiBqFOqiS3iNLC822A==
-X-Received: by 2002:aa7:81d3:: with SMTP id c19mr11732627pfn.85.1570117995085;
-        Thu, 03 Oct 2019 08:53:15 -0700 (PDT)
-Received: from dtor-ws ([2620:15c:202:201:3adc:b08c:7acc:b325])
-        by smtp.gmail.com with ESMTPSA id a13sm4649830pfg.10.2019.10.03.08.53.13
+        h=x-gm-message-state:message-id:mime-version
+         :content-transfer-encoding:in-reply-to:references:from:to:cc:subject
+         :user-agent:date;
+        bh=XiVsYRW0n3APOo8SN5jHN6423sGK1hzLkdW22R6gUlQ=;
+        b=fsF0mi/YsuHXTB745EMba4ecR/YZzscYMiq7yh4jI+v85mBplIrwbEstVBcKbo33T5
+         OZ3+b7cAxAcAo1L/r9n18vHQ5exR1JrrnWYKlO31cpKfLybvmbJXWn6WTpisFXcKvDYX
+         nhGPd6QYHqFj8cFlX8f0hNPU2aAtJo0w5WjgyKrdKGcle9Ag1i2X0dPt6OktCiPz8ije
+         WnzFkpHl8w3FMCArJxLBfw9sbC1tBOkAM61sir/kJufIrTzgEXNmtVJBaMSHiKyZmhfV
+         3rZwVQRNNjY8akpEwFO7Plg8ectkBR3ztVEkzKcoq3aOa0fHEkpQQHglm+DJBoVtRDlp
+         whZQ==
+X-Gm-Message-State: APjAAAXXl38TlwTAXWJx2psKYhf6i2mkWwiqfgUKUrWtn7JytIM0/kvU
+        0lK0lnznJYHM/2sETEUH1NI5Ww==
+X-Google-Smtp-Source: APXvYqz1b4RepNxT7vkrCPPzJdtlfmm8TflfIc9vumG8d7od9p989etC+nr8zMpohgtuvg7k7k8vtw==
+X-Received: by 2002:a62:5847:: with SMTP id m68mr11824475pfb.23.1570119147433;
+        Thu, 03 Oct 2019 09:12:27 -0700 (PDT)
+Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
+        by smtp.gmail.com with ESMTPSA id o9sm3228540pfp.67.2019.10.03.09.12.26
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 03 Oct 2019 08:53:14 -0700 (PDT)
-Date:   Thu, 3 Oct 2019 08:53:11 -0700
-From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: Re: [PATCH v2 0/2] Add support for software nodes to gpiolib
-Message-ID: <20191003155311.GA22365@dtor-ws>
-References: <20190913032240.50333-1-dmitry.torokhov@gmail.com>
- <CACRpkdYm=qK7x0cLg3HjPmGYhZ076cDN1Kvd774p6g0UEg9C7w@mail.gmail.com>
+        Thu, 03 Oct 2019 09:12:26 -0700 (PDT)
+Message-ID: <5d961dea.1c69fb81.d0777.9f4b@mx.google.com>
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CACRpkdYm=qK7x0cLg3HjPmGYhZ076cDN1Kvd774p6g0UEg9C7w@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20191001180547.734-1-geert+renesas@glider.be>
+References: <20191001180547.734-1-geert+renesas@glider.be>
+From:   Stephen Boyd <swboyd@chromium.org>
+To:     Geert Uytterhoeven <geert+renesas@glider.be>,
+        Linus Walleij <linus.walleij@linaro.org>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-renesas-soc@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: Re: [PATCH] pinctrl: sh-pfc: Do not use platform_get_irq() to count interrupts
+User-Agent: alot/0.8.1
+Date:   Thu, 03 Oct 2019 09:12:26 -0700
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Oct 03, 2019 at 12:07:47PM +0200, Linus Walleij wrote:
-> On Fri, Sep 13, 2019 at 5:22 AM Dmitry Torokhov
-> <dmitry.torokhov@gmail.com> wrote:
-> 
-> > This is a part of the larger series previously posted at
-> >
-> > https://lore.kernel.org/linux-gpio/20190911075215.78047-1-dmitry.torokhov@gmail.com
-> >
-> > that was rebased on top of linux-gpio devel branch.
-> >
-> > Changes in v2:
-> > - switched export to be EXPORT_SYMBOL_GPL to match the new export
-> >   markings for the rest of GPIO devres functions
-> > - rebased on top of Linus W devel branch
-> > - added Andy's Reviewed-by
-> 
-> I failed to get this into v5.4 because of misc stress, sorry :(
-> 
-> I have queued it on an immutable branch:
-> https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-gpio.git/log/?h=ib-fwnode-gpiod-get-index
-> then pulled that into my devel branch for v5.5.
-> 
-> So you can ask subsystem maintainers to pull this in to do conversions.
-> 
-> Apologies for the inconvenience.
+Quoting Geert Uytterhoeven (2019-10-01 11:05:47)
+> As platform_get_irq() now prints an error when the interrupt does not
+> exist, counting interrupts by looping until failure causes the printing
+> of scary messages like:
+>=20
+>     sh-pfc e6060000.pin-controller: IRQ index 0 not found
+>=20
+> Fix this by using the platform_irq_count() helper instead.
+>=20
+> Fixes: 7723f4c5ecdb8d83 ("driver core: platform: Add an error message to =
+platform_get_irq*()")
+> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> ---
 
-Hey, no worries and thank you for making a branch. It does not really
-matter if we land it one release earlier or later.
+Reviewed-by: Stephen Boyd <swboyd@chromium.org>
 
-Hope you are feeling better.
-
--- 
-Dmitry
