@@ -2,92 +2,83 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id E7710CC51D
-	for <lists+linux-gpio@lfdr.de>; Fri,  4 Oct 2019 23:45:10 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0384DCC545
+	for <lists+linux-gpio@lfdr.de>; Fri,  4 Oct 2019 23:54:37 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731002AbfJDVon (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 4 Oct 2019 17:44:43 -0400
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:33470 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726927AbfJDVon (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 4 Oct 2019 17:44:43 -0400
-Received: by mail-lj1-f196.google.com with SMTP id a22so7947954ljd.0
-        for <linux-gpio@vger.kernel.org>; Fri, 04 Oct 2019 14:44:41 -0700 (PDT)
+        id S1728841AbfJDVyZ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 4 Oct 2019 17:54:25 -0400
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:34216 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730626AbfJDVyZ (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 4 Oct 2019 17:54:25 -0400
+Received: by mail-lf1-f65.google.com with SMTP id r22so5492233lfm.1
+        for <linux-gpio@vger.kernel.org>; Fri, 04 Oct 2019 14:54:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=Am86CuSg4L4/4SThzqZ+x3OfLvEnqGtERkpRQqbTyyo=;
-        b=mHoyMz44D2WiAxEQObuEHX6G00RlGGHzOJlRf4ram5Uw4WSYGsCgGObrFsOGL0bJUT
-         aiOzQh7CHwV1qQrdMAcusBqOeNWE6EjE6sSFbCZcwuTGGZn02ga15PNfBS2AMwITwVdF
-         EgKmzjP7XWS2xGmR0xPdrifdKD01SMM9eyR/Bt3tAd77+2Ivj48bbb+2FqdbrTquiFwI
-         AcH8C6wUr68r8TNz0boFXRi344UGq9c9qA49TbQE5FyalLJ0dE328a/7G+MyE//kvAAz
-         jYVahOt3Ou685MUsdu1JMEGKJNG2KJmxEad8vqpvyFD797Go+4+z9KOMWd+4luzNMZhI
-         +H7w==
+        bh=zoPNMzdQSsaX6T9xeXeKifKMZMvmutkXru6+TSI0b7Y=;
+        b=wPWEuKlFUYzqdz4qs+FuWOkgujk6xQg4W88Gbwdt69yuCS4wF7jXBJ4GRPkZgyv8Kn
+         gK3sYtTACAkkDIUWPIZxxu/0w1Eg23rseLUrwOcuHfzFts5eaU2ossk8ApAjQMalVPBh
+         v/j+CjSbylx2eql609qx6b5pr/aMdpGxO+GwWP5fJlJL0YOCSX+tr4e5YbT0x/k5AWzK
+         SwQVCCveut9k7OqNDYdHhgBL00/dvo11ApelQlPEGNEN2wE56jYEVWfGecor/prMr+fw
+         blM71t5HKQTpeN7ZQUyQfoi0MuHKD/nGja/CpKC9T8UldLJFGLerfT0g3clJhEkHa6Uq
+         tB3Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=Am86CuSg4L4/4SThzqZ+x3OfLvEnqGtERkpRQqbTyyo=;
-        b=YC6GFiOWrII2FCZYHiW9JruKUfW5rzV4FnEpMEQ4wSnyZr/DGpA0tTJZBBoUX9atRb
-         2SU3AKFNEqOfWME9CsiL+vamHLIiwUXJ+j8HlIzzRO0jGXFe1r2ra8/ly+POCdEJUZpH
-         9/J/WFLvJUpjhnFCLlvG1Li+/s2JvR5CdrcumgnMvCLMgySi7ToO7m5u/ov55s147KcM
-         /Va24Ithq9iVFceeU97v3pYVGZb2F8fFiaxspD4gQXEwlugFaQwUYAl83utr2xwy8aR0
-         6n5m8uZI3r/6r6nY6Ndm7379l6BQB7urKlYmcksYcXVnc3lALKs3w+kbnaY+urPxIcr2
-         7c5w==
-X-Gm-Message-State: APjAAAWW8idXl7X/T5WBtIjQ5w1RAtLFoXqMenz/Od/PwzJPjSZzp4YT
-        mSL12UVH1a++i9b1X5hcpEe99fmn+5yuj2OOJ2mtsw==
-X-Google-Smtp-Source: APXvYqwroM5221kd6DE0lMFbDD6+AtmXgtU5HwVqu+4VQvfXVATqsHb0Kap1NezC3fWlTCLdds9tQ/fVqjmiw3vaPP0=
-X-Received: by 2002:a2e:894b:: with SMTP id b11mr10681582ljk.152.1570225481142;
- Fri, 04 Oct 2019 14:44:41 -0700 (PDT)
+        bh=zoPNMzdQSsaX6T9xeXeKifKMZMvmutkXru6+TSI0b7Y=;
+        b=XImG4d2Nj0+27kBjY4bA9nlyPg/5Z4EbqEqC6+N+U+CmC7rOMBXZ5Cc0ZafpTXdc1E
+         XeVpicAs/EQLVX/9ChUBYPkwG/jdkNG6xVuhoc1IaoLiMRQBI/HJZ8ZwDzmqb0qBEIJz
+         Rmx+Q/pIVOXxLIGDvFXn4gDcIRZkYvXQp1/0Rjg80cDKikkKrzr3yuyFw3jxeGEc4w84
+         46Ke8vt86g8mK85BHIQ1dhkz1kZkGO0zXkG3qhh21NsXH4zUcnQjmAplSxrrFi2FXagS
+         y12jIVQtcgalqkMY3y+Db2wgLvJlRE8e/2JqF2MX16TrrhmUnVhttz7ynuu+W+pTwiz2
+         y1Bg==
+X-Gm-Message-State: APjAAAV/yXZ+HBXhPAOhrnp1DM416CsCfx17Wz5wBgwlw4/JV3bIlUGm
+        BF7KUTFJ+ytqaMjM2hQWdyAaZOz3b7EPg+8CGN5rJg==
+X-Google-Smtp-Source: APXvYqws72vP4SKYhJ249ciHl03mUZyS9feS1uY1gUxq8IxgZYM6e4vR28Xp5ay5FGaGgDRYYJMV4A6rfFLyAwnEyp4=
+X-Received: by 2002:a19:117:: with SMTP id 23mr10232144lfb.115.1570226062105;
+ Fri, 04 Oct 2019 14:54:22 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190911075215.78047-1-dmitry.torokhov@gmail.com>
- <CACRpkdb=s67w2DCGubhbLQTtxpWtiW8S1MECMO4cvec=bF6OdA@mail.gmail.com>
- <20190917002207.GJ237523@dtor-ws> <20190930224456.GV237523@dtor-ws>
-In-Reply-To: <20190930224456.GV237523@dtor-ws>
+References: <20190618160105.26343-3-alpawi@amazon.com> <20191001154634.96165-1-alpawi@amazon.com>
+In-Reply-To: <20191001154634.96165-1-alpawi@amazon.com>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Fri, 4 Oct 2019 23:44:29 +0200
-Message-ID: <CACRpkdZB2Z5fgbgq=aqBmw7wJ_uSE0_fyeOx6f7JvxJwfwjjMg@mail.gmail.com>
-Subject: Re: [PATCH 00/11] Add support for software nodes to gpiolib
-To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+Date:   Fri, 4 Oct 2019 23:54:10 +0200
+Message-ID: <CACRpkdY7bYBytGq-AnMrRVWn=-ASz=xTA-_-5wCfsymch4qW9A@mail.gmail.com>
+Subject: Re: [PATCH v2] pinctrl: armada-37xx: fix control of pins 32 and up
+To:     Patrick Williams <alpawi@amazon.com>
+Cc:     Patrick Williams <patrick@stwcx.xyz>,
+        stable <stable@vger.kernel.org>,
+        Jason Cooper <jason@lakedaemon.net>,
         Andrew Lunn <andrew@lunn.ch>,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        David Airlie <airlied@linux.ie>,
-        "David S. Miller" <davem@davemloft.net>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Jernej Skrabec <jernej.skrabec@siol.net>,
-        Jonas Karlman <jonas@kwiboo.se>,
-        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Russell King <linux@armlinux.org.uk>,
-        "open list:DRM PANEL DRIVERS" <dri-devel@lists.freedesktop.org>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        netdev <netdev@vger.kernel.org>
+        Gregory Clement <gregory.clement@bootlin.com>,
+        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Oct 1, 2019 at 12:45 AM Dmitry Torokhov
-<dmitry.torokhov@gmail.com> wrote:
+On Tue, Oct 1, 2019 at 5:49 PM Patrick Williams <alpawi@amazon.com> wrote:
 
-> So I guess we missed -rc1. Any chance we could get an immutable branch
-> off -rc1 that you will pull into your main branch and I hopefully can
-> persuade other maintainers to pull as well so we do not need to drag it
-> over 2+ merge windows?
+> The 37xx configuration registers are only 32 bits long, so
+> pins 32-35 spill over into the next register.  The calculation
+> for the register address was done, but the bitmask was not, so
+> any configuration to pin 32 or above resulted in a bitmask that
+> overflowed and performed no action.
+>
+> Fix the register / offset calculation to also adjust the offset.
+>
+> Fixes: 5715092a458c ("pinctrl: armada-37xx: Add gpio support")
+> Signed-off-by: Patrick Williams <alpawi@amazon.com>
+> Acked-by: Gregory CLEMENT <gregory.clement@bootlin.com>
+> Cc: <stable@vger.kernel.org>
 
-Yes I'm sorry. I was swamped with stabilizing the kernel.
-I made an immutable branch and tried to use zeroday for testing
-but it timed out so I folded it in for-next anyways after som basic
-tests.
+Patch applied for fixes.
 
 Yours,
 Linus Walleij
