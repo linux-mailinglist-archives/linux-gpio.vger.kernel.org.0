@@ -2,108 +2,88 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 15E5CCB904
-	for <lists+linux-gpio@lfdr.de>; Fri,  4 Oct 2019 13:20:56 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 259EBCBA4D
+	for <lists+linux-gpio@lfdr.de>; Fri,  4 Oct 2019 14:23:58 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730598AbfJDLUz (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 4 Oct 2019 07:20:55 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:45492 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729585AbfJDLUz (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 4 Oct 2019 07:20:55 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id AD9756034E; Fri,  4 Oct 2019 11:20:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1570188053;
-        bh=13JrP6NAsup1Fp+Re+RfVIJcKlXbS8TUEZmgMR+KpCs=;
-        h=From:To:Cc:Subject:Date:From;
-        b=gLU47tsMK/5sQwAf2jcRZzGVW0l5rd49H73OaDttdUekdzxKisaK+Vr3o/zGj1Mjj
-         /2rYSfYecyxhqadepobOlCYmpekoFBdrsix3IWL1trV9ruswT23NKjlgXRe7vd8l/+
-         fNflSgIVTlsw4JZlEwlnGeRJbWJO9CPWqideMdzE=
-X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
-        pdx-caf-mail.web.codeaurora.org
-X-Spam-Level: 
-X-Spam-Status: No, score=-2.7 required=2.0 tests=ALL_TRUSTED,BAYES_00,
-        DKIM_INVALID,DKIM_SIGNED,SPF_NONE autolearn=no autolearn_force=no
-        version=3.4.0
-Received: from kgunda-linux.qualcomm.com (blr-c-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.19.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: kgunda@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id A1E7D60A4E;
-        Fri,  4 Oct 2019 11:20:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1570188053;
-        bh=13JrP6NAsup1Fp+Re+RfVIJcKlXbS8TUEZmgMR+KpCs=;
-        h=From:To:Cc:Subject:Date:From;
-        b=gLU47tsMK/5sQwAf2jcRZzGVW0l5rd49H73OaDttdUekdzxKisaK+Vr3o/zGj1Mjj
-         /2rYSfYecyxhqadepobOlCYmpekoFBdrsix3IWL1trV9ruswT23NKjlgXRe7vd8l/+
-         fNflSgIVTlsw4JZlEwlnGeRJbWJO9CPWqideMdzE=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org A1E7D60A4E
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=kgunda@codeaurora.org
-From:   Kiran Gunda <kgunda@codeaurora.org>
-To:     bjorn.andersson@linaro.org, Andy Gross <agross@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Kiran Gunda <kgunda@codeaurora.org>
-Subject: [PATCH V1] dt-bindings: pinctrl: qcom-pmic-gpio: Add support for pm6150/pm6150l
-Date:   Fri,  4 Oct 2019 16:50:39 +0530
-Message-Id: <1570188039-22122-1-git-send-email-kgunda@codeaurora.org>
-X-Mailer: git-send-email 1.9.1
+        id S1728927AbfJDMX5 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 4 Oct 2019 08:23:57 -0400
+Received: from mx07-00178001.pphosted.com ([62.209.51.94]:49565 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727451AbfJDMX5 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 4 Oct 2019 08:23:57 -0400
+Received: from pps.filterd (m0046037.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id x94C6SFo002761;
+        Fri, 4 Oct 2019 14:23:45 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-type; s=STMicroelectronics;
+ bh=dn3SRm7He6o8fWRPcG/dCMdLktN0g0uPy1Ih8W/R/RU=;
+ b=a9JaEf0MxZAwzo7nMA07qKyXGlCaouKJWTW1SdXRMtGGb5c3DraiCdErBx5WnRO2/Vdr
+ 6EPZxkiv/fnc4yNIFYvC5V9IrEvYTMy1eiW5YZka3zp/0fkWKarRpTz8ekF+zqY2Hbr5
+ hmKR9tKpwvCFbBxH3hWj0aLRWyJQI5+mYZqaLM6YhpWWBEnj4/3wdeuwoargiqKHuCHe
+ kzzMhKILnnM3MYbOFpBF+/pDaLHyZp7s7Vn16CMOE2J0R84uY7xPePyaXSaiacQO+qCx
+ lgydOt80+ekIZ4N0XS83b2iZVOyZ2zUEGa64QCYufvhjleCqZUiKayh2wc/jL/wBU815 9A== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 2v9w9wavvv-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 04 Oct 2019 14:23:45 +0200
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 2AD4A10002A;
+        Fri,  4 Oct 2019 14:23:45 +0200 (CEST)
+Received: from Webmail-eu.st.com (Safex1hubcas21.st.com [10.75.90.44])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 1D9D62BDA9A;
+        Fri,  4 Oct 2019 14:23:45 +0200 (CEST)
+Received: from SAFEX1HUBCAS24.st.com (10.75.90.95) by SAFEX1HUBCAS21.st.com
+ (10.75.90.44) with Microsoft SMTP Server (TLS) id 14.3.439.0; Fri, 4 Oct 2019
+ 14:23:45 +0200
+Received: from localhost (10.201.22.141) by webmail-ga.st.com (10.75.90.48)
+ with Microsoft SMTP Server (TLS) id 14.3.439.0; Fri, 4 Oct 2019 14:23:43
+ +0200
+From:   Amelie Delaunay <amelie.delaunay@st.com>
+To:     Linus Walleij <linus.walleij@linaro.org>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>
+CC:     <linux-gpio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        Amelie Delaunay <amelie.delaunay@st.com>
+Subject: [PATCH 1/1] pinctrl: stmfx: fix null pointer on remove
+Date:   Fri, 4 Oct 2019 14:23:42 +0200
+Message-ID: <20191004122342.22018-1-amelie.delaunay@st.com>
+X-Mailer: git-send-email 2.17.1
+MIME-Version: 1.0
+Content-Type: text/plain
+X-Originating-IP: [10.201.22.141]
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,1.0.8
+ definitions=2019-10-04_06:2019-10-03,2019-10-04 signatures=0
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Add support for the PM6150 and PM6150L GPIO support to the
-Qualcomm PMIC GPIO binding.
+dev_get_platdata(&pdev->dev) returns a pointer on struct stmfx_pinctrl,
+not on struct stmfx (platform_set_drvdata(pdev, pctl); in probe).
+Pointer on struct stmfx is stored in driver data of pdev parent (in probe:
+struct stmfx *stmfx = dev_get_drvdata(pdev->dev.parent);).
 
-Signed-off-by: Kiran Gunda <kgunda@codeaurora.org>
+Fixes: 1490d9f841b1 ("pinctrl: Add STMFX GPIO expander Pinctrl/GPIO driver")
+Signed-off-by: Amelie Delaunay <amelie.delaunay@st.com>
 ---
- Documentation/devicetree/bindings/pinctrl/qcom,pmic-gpio.txt | 4 ++++
- drivers/pinctrl/qcom/pinctrl-spmi-gpio.c                     | 2 ++
- 2 files changed, 6 insertions(+)
+ drivers/pinctrl/pinctrl-stmfx.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/Documentation/devicetree/bindings/pinctrl/qcom,pmic-gpio.txt b/Documentation/devicetree/bindings/pinctrl/qcom,pmic-gpio.txt
-index c32bf32..2f48cca 100644
---- a/Documentation/devicetree/bindings/pinctrl/qcom,pmic-gpio.txt
-+++ b/Documentation/devicetree/bindings/pinctrl/qcom,pmic-gpio.txt
-@@ -23,6 +23,8 @@ PMIC's from Qualcomm.
- 		    "qcom,pms405-gpio"
- 		    "qcom,pm8150-gpio"
- 		    "qcom,pm8150b-gpio"
-+		    "qcom,pm6150-gpio"
-+		    "qcom,pm6150l-gpio"
+diff --git a/drivers/pinctrl/pinctrl-stmfx.c b/drivers/pinctrl/pinctrl-stmfx.c
+index 974973777395..564660028fcc 100644
+--- a/drivers/pinctrl/pinctrl-stmfx.c
++++ b/drivers/pinctrl/pinctrl-stmfx.c
+@@ -705,7 +705,7 @@ static int stmfx_pinctrl_probe(struct platform_device *pdev)
  
- 		    And must contain either "qcom,spmi-gpio" or "qcom,ssbi-gpio"
- 		    if the device is on an spmi bus or an ssbi bus respectively
-@@ -100,6 +102,8 @@ to specify in a pin configuration subnode:
- 					     and gpio8)
- 		    gpio1-gpio12 for pm8150b (holes on gpio3, gpio4, gpio7)
- 		    gpio1-gpio12 for pm8150l (hole on gpio7)
-+		    gpio1-gpio10 for pm6150
-+		    gpio1-gpio12 for pm6150l
+ static int stmfx_pinctrl_remove(struct platform_device *pdev)
+ {
+-	struct stmfx *stmfx = dev_get_platdata(&pdev->dev);
++	struct stmfx *stmfx = dev_get_drvdata(pdev->dev.parent);
  
- - function:
- 	Usage: required
-diff --git a/drivers/pinctrl/qcom/pinctrl-spmi-gpio.c b/drivers/pinctrl/qcom/pinctrl-spmi-gpio.c
-index f1fece5..387917c 100644
---- a/drivers/pinctrl/qcom/pinctrl-spmi-gpio.c
-+++ b/drivers/pinctrl/qcom/pinctrl-spmi-gpio.c
-@@ -1121,6 +1121,8 @@ static int pmic_gpio_remove(struct platform_device *pdev)
- 	{ .compatible = "qcom,pm8150b-gpio", .data = (void *) 12 },
- 	/* pm8150l has 12 GPIOs with holes on 7 */
- 	{ .compatible = "qcom,pm8150l-gpio", .data = (void *) 12 },
-+	{ .compatible = "qcom,pm6150-gpio", .data = (void *) 10 },
-+	{ .compatible = "qcom,pm6150l-gpio", .data = (void *) 12 },
- 	{ },
- };
- 
+ 	return stmfx_function_disable(stmfx,
+ 				      STMFX_FUNC_GPIO |
 -- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
- a Linux Foundation Collaborative Project
+2.17.1
 
