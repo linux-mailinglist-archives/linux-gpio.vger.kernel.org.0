@@ -2,253 +2,519 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 7EEA1CC388
-	for <lists+linux-gpio@lfdr.de>; Fri,  4 Oct 2019 21:27:59 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id EE41DCC42D
+	for <lists+linux-gpio@lfdr.de>; Fri,  4 Oct 2019 22:28:32 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730447AbfJDT16 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 4 Oct 2019 15:27:58 -0400
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:44404 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725932AbfJDT16 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 4 Oct 2019 15:27:58 -0400
-Received: by mail-lj1-f194.google.com with SMTP id m13so7589108ljj.11
-        for <linux-gpio@vger.kernel.org>; Fri, 04 Oct 2019 12:27:56 -0700 (PDT)
+        id S1730947AbfJDU2b (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 4 Oct 2019 16:28:31 -0400
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:43215 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731104AbfJDU2b (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 4 Oct 2019 16:28:31 -0400
+Received: by mail-lj1-f195.google.com with SMTP id n14so7734576ljj.10
+        for <linux-gpio@vger.kernel.org>; Fri, 04 Oct 2019 13:28:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=axnij1y7FO8cXnb92aV+0qai4cKt140DN5gamj9hPfE=;
-        b=ObR7AiEE5/zKN72wYmXDP+pegzvZELL/zjK6DehC4kCmB6fyHvpVInVt1O/Aq7eFls
-         FWYrYwfTcG8O2tKuqjqBF8Fh83IwVc/eue1B7Pi6dcNO5b3ollxUKLIJXZga6kAtt+/b
-         zKhhcITs4ourJFGnZMTY/2wbK0A/K/ep1IaEaX+rrgi35X1U3HrFhS0lDrQmjm4tourS
-         Peh8xy6KnXgOuS1b4vUw0QkjvlB0lPgpu15OVfWjhFQcsZVbDsPvUs1fMHEC2wriNOeb
-         /d+v7oTFAcpIzqQOpN/zBDKnu4uVEbMSlU1J9tylSiQTPuuNzDV4jrm8uHIstjsOyQiS
-         7ZVQ==
+        bh=DmuBCT6DgL6itaWFoxeQWoH1LVbchfnraupeJ5lYDdA=;
+        b=LgoVak/dsMpsma44xWiwwM0sUW9ybzmHrzY+NPC5+mYPiPNM+1+IAUXpoHkdjAnGIf
+         qk1U2yvTOcYdpPCFOoDnLwL+v+GhZXb/e6PHNpfdGpeky4eCMH5dsiENZhaUQbBXmqHU
+         Ti5qS1iKywIBO5OE0YwJawONpj0Nj5ityXI9ixbWcSWRR456sdXDDOZt7gIg8qrKaH3Z
+         TQqEbFCuToiQY2b1l+XNG8mzXV+nhIp9rZt+FNgTf0FaJOE3I902TF94SdZySYuR6L83
+         5mP64Okh4ZrMrHSMNtF9cRR2pCAileGVS7KqSu9d1Pj73tCGBPnCe535LYk6zMe1/x/h
+         fIGQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=axnij1y7FO8cXnb92aV+0qai4cKt140DN5gamj9hPfE=;
-        b=TtND1152hZXNBtBfIDaZ3F1C35vvnKRMMMTdWSq86r3BHGO/6nbQ1zE44YE1rBkTPF
-         3MdFWvAEnW6pH08DQUJS7YtyGJQ5lfsL9nhbB2JvCyqBf5XOulEJBfBNZYTazzju5kUm
-         bm3U+QqnZeQnUfQyaPGTXg1ZmmaNP/WMVtWTnnIis3o0RHZUo8d6O76ltznahKdQaOCD
-         9RJBSBoKK9H86pTGqqLkICJKNUz4TrKxAhe3NNIJnWQOepdVjBK50sg9DnNDhNJh75ZD
-         9kDCDvkS/pznhLMLl5XANNmnJHSHHZaYAv6oHzICGp6NEfLWKp7jQ2vNrgbxKluU3gbB
-         RweA==
-X-Gm-Message-State: APjAAAXIp5nSz/RdQ/6g6PWWk5fRQO8Uf7r/43kwaZMIPkBRn78eUdev
-        5toPkuCx+4joV6btbTQONt8IEQgU9QUysNdArtsHCw==
-X-Google-Smtp-Source: APXvYqxkfoGOWQM8kSaXwz6sx32rmLZokTiTPvY72qNNOaDtrSDbtX2FfQakGUtFsX3FSyw6/zi7oNcbGSYQbiAnUBM=
-X-Received: by 2002:a2e:6e04:: with SMTP id j4mr9166616ljc.99.1570217275180;
- Fri, 04 Oct 2019 12:27:55 -0700 (PDT)
+        bh=DmuBCT6DgL6itaWFoxeQWoH1LVbchfnraupeJ5lYDdA=;
+        b=o9CY9GoO/yCB6/p94mxMHqToFKvHsV7pJDmf1XT0IsJPoXUYjfP3aM8Zec/bnfycBm
+         9H0r9qm1mEpIFIQbRzsjzd9nap30fVPIT/60ZUcnxPzKVXoH+81Qjzr5b786SI8R8Roh
+         w0FBINETlp1ZIs+yi839niCEjpejuuBoT3ybmrR22CEMxRs7TbC8yxv0Vo4g7UqLaQsH
+         TtGqTU4aLkkESt4G3ovAMnuK72C4Uac4mo+EyGd0CN9XdO4xBPAMEB4nSVtVXH2wAXR1
+         bLjpSqB21w5jP7jxnsxZ3U9gRI7ZvPMMt9DXgwopaUNcSV5cmaS9Snir29GaNCeTnXKE
+         6Y2Q==
+X-Gm-Message-State: APjAAAUg+ncQktHb1oNZjsKCEp6EBsUYazzghzhdO/vRed8AWHlQ6JnB
+        XMS8EJkde2aHQ+RHXEGNn/k5J/TQrp/HyzsmU9GgRg==
+X-Google-Smtp-Source: APXvYqytlnsPpzqPLainDGe13NKBn9FNsQAOj+xWRgVRRcuxRcO4HorZOHsiUiNlyMufYZap03zzMRdEFFQdkwVtBbg=
+X-Received: by 2002:a2e:6e04:: with SMTP id j4mr9278200ljc.99.1570220908068;
+ Fri, 04 Oct 2019 13:28:28 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190917105902.445-1-m.felsch@pengutronix.de> <20190917105902.445-4-m.felsch@pengutronix.de>
-In-Reply-To: <20190917105902.445-4-m.felsch@pengutronix.de>
+References: <cover.1568274587.git.rahul.tanwar@linux.intel.com> <65898579e78b4b3bb5db9ddc884a818046c1eb4c.1568274587.git.rahul.tanwar@linux.intel.com>
+In-Reply-To: <65898579e78b4b3bb5db9ddc884a818046c1eb4c.1568274587.git.rahul.tanwar@linux.intel.com>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Fri, 4 Oct 2019 21:27:43 +0200
-Message-ID: <CACRpkdbbmVo3hem1xFqtmq9-htg9+QUXQpZoSyffdTZQ5kUo5Q@mail.gmail.com>
-Subject: Re: [PATCH 3/3] gpio: da9062: add driver support
-To:     Marco Felsch <m.felsch@pengutronix.de>
-Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Support Opensource <support.opensource@diasemi.com>,
-        Adam Thomson <Adam.Thomson.Opensource@diasemi.com>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
+Date:   Fri, 4 Oct 2019 22:28:16 +0200
+Message-ID: <CACRpkdbFDTR140_a1FabyjCP2MnBTg-xo2BWnchEvCP161cFLw@mail.gmail.com>
+Subject: Re: [PATCH v1 1/2] pinctrl: Add pinmux & GPIO controller driver for
+ new SoC
+To:     Rahul Tanwar <rahul.tanwar@linux.intel.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Sascha Hauer <kernel@pengutronix.de>
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, Rob Herring <robh@kernel.org>,
+        Andriy Shevchenko <andriy.shevchenko@intel.com>,
+        qi-ming.wu@intel.com, yixin.zhu@linux.intel.com,
+        cheol.yong.kim@intel.com
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Sep 17, 2019 at 12:59 PM Marco Felsch <m.felsch@pengutronix.de> wrote:
+Hi Rahul,
 
-> The DA9062 is a mfd pmic device which supports 5 GPIOs. The GPIOs can
-> be used as input, output or have a special use-case.
+this is an interesting patch!
+
+Let's dive in and fix the things not already pointed out in review.
+
+It will need some work but I am sure you can get there.
+
+On Thu, Sep 12, 2019 at 9:59 AM Rahul Tanwar
+<rahul.tanwar@linux.intel.com> wrote:
+
+> Intel Lightning Mountain SoC has a pinmux controller & GPIO controller IP
+> which controls pin multiplexing & configuration including GPIO functions
+> selection & GPIO attributes configuration. Add GPIO & pin control framework
+> based driver for this IP.
 >
-> The patch adds the support for the normal input/output use-case.
->
-> Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
+> Signed-off-by: Rahul Tanwar <rahul.tanwar@linux.intel.com>
+(...)
 
-Nice to get this covered!
+> +config PINCTRL_EQUILIBRIUM
+> +       tristate "Generic pinctrl and GPIO driver for Intel Lightning Mountain SoC"
+> +       select PINMUX
+> +       select PINCONF
+> +       select GPIOLIB
+> +       select GPIOLIB_IRQCHIP
 
-> +#define DA9062_TYPE(offset)            (4 * (offset % 2))
-> +#define DA9062_PIN_SHIFT(offset)       (4 * (offset % 2))
-> +#define DA9062_PIN_ALTERNATE           0x00 /* gpio alternate mode */
+Nice use of the GPIOLIB_IRQCHIP.
 
-The there is pin control related to the DA9062, we should put the driver
-in drivers/pinctrl/pinctrl-da9062.c from day one.
+Are you sure you can't just use GPIO_GENERIC as well?
+This is almost always usable when you have a register with
+n consecutive bits representing GPIO lines.
 
-I am not saying you have to implement pin control from scratch, just
-have it there and look at sibling drivers to make sure we don't
-screw something up for also adding pin control later on.
+Look how we use bgpio_init() in e.g. drivers/gpio/gpio-ftgpio010.c
+to cut down on boilerplate code, and we also get a spinlock
+protection and .get/.set_multiple() implementation for free.
 
-> +int da9062_gpio_get_hwgpio(struct gpio_desc *desc)
+> +#include <linux/pinctrl/consumer.h>
+> +#include <linux/pinctrl/machine.h>
+
+Why do you need these two includes?
+
+> +static const struct pin_config pin_cfg_type[] = {
+> +       {"intel,pullup",                PINCONF_TYPE_PULL_UP},
+> +       {"intel,pulldown",              PINCONF_TYPE_PULL_DOWN},
+> +       {"intel,drive-current",         PINCONF_TYPE_DRIVE_CURRENT},
+> +       {"intel,slew-rate",             PINCONF_TYPE_SLEW_RATE},
+> +       {"intel,open-drain",            PINCONF_TYPE_OPEN_DRAIN},
+> +       {"intel,output",                PINCONF_TYPE_OUTPUT},
+> +};
+
+So... if we are adding a new driver with a new DT binding,
+why use the made-up "intel," prefixed flags when we have the
+standard DT flags from
+Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt
+already handled by the core?
+
+> +static inline void eqbr_set_val(void __iomem *addr, u32 offset,
+> +                               u32 mask, u32 set, raw_spinlock_t *lock)
 > +{
-> +       return gpio_chip_hwgpio(desc);
+> +       u32 val;
+> +       unsigned long flags;
+> +
+> +       raw_spin_lock_irqsave(lock, flags);
+> +       val = readl(addr) & ~(mask << offset);
+> +       writel(val | ((set & mask) << offset), addr);
+> +       raw_spin_unlock_irqrestore(lock, flags);
 > +}
-> +EXPORT_SYMBOL_GPL(da9062_gpio_get_hwgpio);
 
-I would have to look at the other patch to see why this is needed.
-Normally other drivers should just have their GPIOs assigned
-like anyone else, no shortcuts into the hardware offsets
-like this.
+Mask-and-set is usually achieved with regmap-mmio if you
+dont use GPIO_GENERIC, but I think you can just use
+GPIO_GENERIC. All of these:
 
-> +static int da9062_gpio_get(struct gpio_chip *gc, unsigned int offset)
+> +static int intel_eqbr_gpio_get_dir(struct gpio_chip *gc, unsigned int offset)
+> +static int intel_eqbr_gpio_dir_input(struct gpio_chip *gc, unsigned int offset)
+> +static int intel_eqbr_gpio_dir_output(struct gpio_chip *gc, unsigned int offset,
+> +static void intel_eqbr_gpio_set(struct gpio_chip *gc,
+> +                               unsigned int offset, int dir)
+> +static int intel_eqbr_gpio_get(struct gpio_chip *gc, unsigned int offset)
+
+Look very bit-per-bit mapped.
+
+> +static int eqbr_irq_map(struct irq_domain *d,
+> +                       unsigned int virq, irq_hw_number_t hw)
 > +{
-> +       struct da9062_gpio *gpio = gpiochip_get_data(gc);
-> +       struct regmap *regmap = gpio->da9062->regmap;
-> +       int gpio_dir, val;
-> +       int ret;
+> +       struct intel_gpio_desc *desc = d->host_data;
 > +
-> +       gpio_dir = da9062_gpio_get_pin_mode(regmap, offset);
-
-This includes other things than the direction of the pin so call
-the variable gpio_mode or something rather than gpio_dir.
-
-> +       if (gpio_dir < 0)
-> +               return gpio_dir;
+> +       irq_set_chip_data(virq, desc);
+> +       irq_set_chip_and_handler(virq, desc->ic, handle_level_irq);
+> +       return 0;
+> +}
 > +
-> +       switch (gpio_dir) {
-> +       case DA9062_PIN_ALTERNATE:
-> +               return -ENOTSUPP;
-
-This is fine for now. Toss in a comment that we may add pin muxing
-later.
-
-> +static int da9062_gpio_get_direction(struct gpio_chip *gc, unsigned int offset)
-
-Same comments as above.
-
-> +static int da9062_gpio_direction_input(struct gpio_chip *gc,
-> +                                      unsigned int offset)
+> +static const struct irq_domain_ops gc_irqdomain_ops = {
+> +       .map    = eqbr_irq_map,
+> +       .xlate  = irq_domain_xlate_twocell,
+> +};
+> +
+(...)
+> +static int intel_eqbr_gpio_to_irq(struct gpio_chip *gc, unsigned int offset)
 > +{
-> +       struct da9062_gpio *gpio = gpiochip_get_data(gc);
-> +       struct regmap *regmap = gpio->da9062->regmap;
-> +       struct gpio_desc *desc = gpiochip_get_desc(gc, offset);
-> +       unsigned int gpi_type;
-> +       int ret;
+> +       struct intel_gpio_desc *desc = gpiochip_get_data(gc);
+
+Since struct gpio_desc means a per-line state container
+and struct intel_gpio_desc refers to the whole chip, I think this
+struct should be renamed something like struct eqbr_gpio.
+
+> +       unsigned int virq;
 > +
-> +       ret = da9062_gpio_set_pin_mode(regmap, offset, DA9062_PIN_GPI);
+> +       if (!desc->irq_domain)
+> +               return -ENODEV;
+> +
+> +       virq = irq_find_mapping(desc->irq_domain, offset);
+> +       if (virq)
+> +               return virq;
+> +       else
+> +               return irq_create_mapping(desc->irq_domain, offset);
+> +}
+> +
+> +static int gpiochip_setup(struct device *dev, struct intel_gpio_desc *desc)
+> +{
+(...)
+> +       gc->to_irq              = intel_eqbr_gpio_to_irq;
+
+You don't need any of this funku stuff. The GPIOLIB_IRQCHIP
+provides default implementations to do all this for you.
+Just look in drivers/gpio/gpio-ftgpio010.c and follow
+the pattern (look how I set up struct gpio_irq_chip using
+*girq etc). If you need anything custom we need some
+special motivation here.
+
+> +       gc->of_node             = desc->node;
+> +       gc->parent              = dev;
+
+I would allocate a dynamic irqchip as part of the
+struct intel_gpio_desc and populate it dynamically with
+function pointers.
+
+struct gpio_irq_chip *girq;
+
+girq = &gc->irq;
+girq->chip = ...
+
+> +       ret = devm_gpiochip_add_data(dev, gc, desc);
 > +       if (ret)
-> +               return ret;
-
-Fair enough.
-
-> +       /*
-> +        * If the gpio is active low we should set it in hw too. No worries
-> +        * about gpio_get() because we read and return the gpio-level. So the
-> +        * gpiolob active_low handling is still correct.
-
-gpiolib?
-
-> +        *
-> +        * 0 - active low, 1 - active high
-> +        */
-> +       gpi_type = !gpiod_is_active_low(desc);
-> +       return regmap_update_bits(regmap, DA9062AA_GPIO_0_1 + (offset >> 1),
-> +                               DA9062AA_GPIO0_TYPE_MASK << DA9062_TYPE(offset),
-> +                               gpi_type << DA9062_TYPE(offset));
+> +               dev_err(dev, "failed to register gpiochip: %s, err: %d\n",
+> +                       gc->label, ret);
+> +
+> +       return ret;
 > +}
 
-So this does not affect the value out set by da9062_gpio_set()?
-
-What is the electrical effect of this then, really? To me that seems like
-something that is mostly going to be related to how interrupts
-trigger (like whether to trig on rising or falling edge) and then it
-should really be in the .set_type() callback, should it not?
-
-> +static int da9062_gpio_direction_output(struct gpio_chip *gc,
-> +                                       unsigned int offset, int value)
+(...)
+> +static int eqbr_gpio_irq_req_res(struct irq_data *d)
 > +{
-> +       /* Push-Pull / Open-Drain options are configured during set_config */
-> +       da9062_gpio_set(gc, offset, value);
+> +       struct intel_gpio_desc *desc = irq_data_get_irq_chip_data(d);
+> +       unsigned int offset;
+> +       int ret;
+> +
+> +       offset = irqd_to_hwirq(d);
+> +
+> +       /* gpio must be set as input */
+> +       intel_eqbr_gpio_dir_input(&desc->chip, offset);
+
+Please move this to the .irq_enable() callback instead.
+
+> +       ret = gpiochip_lock_as_irq(&desc->chip, offset);
+> +       if (ret) {
+> +               pr_err("%s: Failed to lock gpio %u as irq!\n",
+> +                      desc->name, offset);
+> +               return ret;
+> +       }
+> +       eqbr_gpio_enable_irq(d);
+
+Why are you calling this here? It is premature I think,
+isn't the call in .unmask() soon enough? The latter is
+what we rely upon.
+
+> +static void eqbr_gpio_irq_rel_res(struct irq_data *d)
+> +{
+> +       struct intel_gpio_desc *desc = irq_data_get_irq_chip_data(d);
+> +       unsigned int offset = irqd_to_hwirq(d);
+> +
+> +       eqbr_gpio_disable_irq(d);
+
+No need to do this, .irq_mask() has already done it at this
+point.
+
+> +       gpiochip_unlock_as_irq(&desc->chip, offset);
+> +}
+
+I think the core default implementations should be fine for both
+reqres and relres.
+
+> +static struct irq_chip eqbr_irq_chip = {
+> +       .name                   = "gpio_irq",
+> +       .irq_mask               = eqbr_gpio_disable_irq,
+> +       .irq_unmask             = eqbr_gpio_enable_irq,
+> +       .irq_ack                = eqbr_gpio_ack_irq,
+> +       .irq_mask_ack           = eqbr_gpio_mask_ack_irq,
+> +       .irq_set_type           = eqbr_gpio_set_irq_type,
+> +       .irq_request_resources  = eqbr_gpio_irq_req_res,
+> +       .irq_release_resources  = eqbr_gpio_irq_rel_res,
+> +};
+
+So please add a struct irq_chip to the state container
+(struct intel_gpio_desc) and assign these functions directly
+in probe (again look at gpio-ftgpio010.c).
+
+> +static void eqbr_irq_handler(struct irq_desc *desc)
+> +{
+> +       struct intel_gpio_desc *gc;
+> +       struct irq_chip *ic;
+> +       u32 pins, offset;
+> +       unsigned int virq;
+> +
+> +       gc = irq_desc_get_handler_data(desc);
+> +       ic = irq_desc_get_chip(desc);
+
+When using the GPIOLIB_IRQCHIP follow the pattern from
+other drivers and assume the handler data is the struct gpio_chip
+instead.
+
+struct gpio_chip *gc = irq_desc_get_handler_data(desc);
+struct intel_gpio_desc *i = gpiochip_get_data(gc);
+(...)
+
+> +static int irqchip_setup(struct device *dev, struct intel_gpio_desc *desc)
+> +{
+> +       struct device_node *np = desc->node;
+> +
+> +       if (!of_property_read_bool(np, "interrupt-controller")) {
+> +               dev_info(dev, "gc %s: doesn't act as interrupt controller!\n",
+> +                        desc->name);
+> +               return 0;
+> +       }
+
+OK just skip assigning *girq with the chip etc for this case.
+
+> +       desc->irq_domain = irq_domain_add_linear(desc->node,
+> +                                                desc->bank->nr_pins,
+> +                                                &gc_irqdomain_ops, desc);
+> +       if (!desc->irq_domain) {
+> +               dev_err(dev, "%s: failed to create gpio irq domain!\n",
+> +                       desc->name);
+> +               return -ENODEV;
+> +       }
+> +       irq_set_chained_handler_and_data(desc->virq, eqbr_irq_handler, desc);
+
+Let GPIOLIB_IRQCHIP handle these things for you instead of
+making your own domain etc.
+
+> +static int gpiolib_reg(struct intel_pinctrl_drv_data *drvdata)
+> +{
+> +       struct device_node *np;
+> +       struct intel_gpio_desc *desc;
+> +       struct device *dev;
+> +       int i, ret;
+> +       char name[32];
+> +       struct resource res;
+> +
+> +       dev = drvdata->dev;
+> +       for (i = 0; i < drvdata->nr_gpio_descs; i++) {
+> +               desc = drvdata->gpio_desc + i;
+> +               np = desc->node;
+> +               sprintf(name, "gpiochip%d", i);
+> +               desc->name = devm_kmemdup(dev, name,
+> +                                         strlen(name) + 1, GFP_KERNEL);
+> +               if (!desc->name)
+> +                       return -ENOMEM;
+> +               if (of_address_to_resource(np, 0, &res)) {
+> +                       dev_err(dev, "Failed to get GPIO register addrss\n");
+
+Speling
+
+> +                       return -ENXIO;
+> +               }
+> +               desc->membase = devm_ioremap_resource(dev, &res);
+> +               if (IS_ERR(desc->membase)) {
+> +                       dev_err(dev, "ioremap fail\n");
+> +                       return PTR_ERR(desc->membase);
+> +               }
+> +               dev_dbg(dev, "gpio resource: %pr\n", &res);
+> +               dev_dbg(dev, "gpiochip membase: %px\n", desc->membase);
+> +
+> +               desc->virq = irq_of_parse_and_map(np, 0);
+> +               if (!desc->virq) {
+> +                       dev_err(dev, "%s: failed to parse and map irq\n",
+> +                               name);
+> +                       return -ENXIO;
+> +               }
+> +               raw_spin_lock_init(&desc->lock);
+> +
+> +               ret = gpiochip_setup(dev, desc);
+> +               if (ret)
+> +                       return ret;
+> +               ret = irqchip_setup(dev, desc);
+> +               if (ret)
+> +                       return ret;
+
+Bake these two into a single function setting up gpio_chip and
+irq_chip. With proper use of GPIOLIB_IRQCHIP it will be so
+much simpler anyway.
+
+> +static int parse_mux_info(struct device_node *np)
+> +{
+> +       int ret;
+> +       const char *str;
+> +
+> +       ret = of_property_read_string(np, "intel,function", &str);
+> +       if (ret)
+> +               return -ENODEV;
+> +       ret = of_property_read_string(np, "intel,groups", &str);
+> +       if (ret)
+> +               return -ENODEV;
+> +
+> +       return ret;
+> +}
+
+Again these are intel,foo-specific properties for things we already
+have standard bindings for, so use those.
+
+> +static int add_config(struct intel_pinctrl_drv_data *drvdata,
+> +                     unsigned long **confs, unsigned int *nr_conf,
+> +                     unsigned long pinconf)
+> +{
+> +       unsigned long *configs;
+> +       struct device *dev = drvdata->dev;
+> +       unsigned int num_conf = *nr_conf + 1;
+> +
+> +       if (!(*nr_conf)) {
+> +               configs = devm_kcalloc(dev, 1, sizeof(pinconf), GFP_KERNEL);
+> +               if (!configs)
+> +                       return -ENOMEM;
+> +       } else {
+> +               configs = devm_kmemdup(dev, *confs,
+> +                                      num_conf * sizeof(pinconf), GFP_KERNEL);
+> +               if (!configs)
+> +                       return -ENOMEM;
+> +               devm_kfree(dev, *confs);
+> +       }
+> +
+> +       configs[num_conf - 1] = pinconf;
+> +       *confs = configs;
+> +       *nr_conf = num_conf;
+> +
+> +       return 0;
+> +}
+> +
+> +static void eqbr_add_map_mux(struct device_node *np, struct pinctrl_map **map,
+> +                            int *index)
+> +{
+> +       int idx = *index;
+> +       const char *function, *group;
+> +
+> +       of_property_read_string(np, "intel,function", &function);
+> +       of_property_read_string(np, "intel,groups", &group);
+> +
+> +       (*map)[idx].type = PIN_MAP_TYPE_MUX_GROUP;
+> +       (*map)[idx].data.mux.group = group;
+> +       (*map)[idx].data.mux.function = function;
+> +       *index = idx + 1;
+> +}
+> +
+> +static void eqbr_add_map_configs(struct device_node *np,
+> +                                struct pinctrl_map **map, int *index,
+> +                                unsigned long *configs, unsigned int nr_config)
+> +{
+> +       int idx = *index;
+> +       const char *group;
+> +
+> +       of_property_read_string(np, "intel,groups", &group);
+> +       (*map)[idx].type = PIN_MAP_TYPE_CONFIGS_GROUP;
+> +       (*map)[idx].data.configs.group_or_pin = group;
+> +       (*map)[idx].data.configs.configs = configs;
+> +       (*map)[idx].data.configs.num_configs = nr_config;
+> +       *index = idx + 1;
+> +}
+> +
+> +static int eqbr_dt_node_to_map(struct pinctrl_dev *pctldev,
+> +                              struct device_node *np,
+> +                              struct pinctrl_map **map, unsigned int *num_maps)
+> +{
+> +       struct intel_pinctrl_drv_data *pctl = pinctrl_dev_get_drvdata(pctldev);
+> +       unsigned int map_cnt, nr_config;
+> +       unsigned long pin_conf, *configs = NULL;
+> +       int i, ret;
+> +       unsigned int val;
+> +       bool func = false;
+> +
+> +       *map = NULL;
+> +       *num_maps = map_cnt = nr_config = 0;
+> +
+> +       ret = parse_mux_info(np);
+> +       if (!ret) {
+> +               map_cnt++;
+> +               func = true;
+> +       }
+> +
+> +       for (i = 0; i < ARRAY_SIZE(pin_cfg_type); i++) {
+> +               ret = of_property_read_u32(np, pin_cfg_type[i].property, &val);
+> +               if (!ret) {
+> +                       pin_conf = PINCONF_PACK(pin_cfg_type[i].type, val);
+> +                       ret = add_config(pctl, &configs, &nr_config, pin_conf);
+> +                       if (ret)
+> +                               return ret;
+> +               }
+> +       }
+> +
+> +       /**
+> +        * Create pinctrl_map for each groups, per group per entry.
+> +        * Create pinctrl_map for pin config, per group per entry.
+> +        */
+> +       if (nr_config)
+> +               map_cnt++;
+> +
+> +       *map = devm_kcalloc(pctl->dev, map_cnt, sizeof(**map), GFP_KERNEL);
+> +       if (!*map)
+> +               return -ENOMEM;
+> +
+> +       i = 0;
+> +       if (func)
+> +               eqbr_add_map_mux(np, map, &i);
+> +       if (nr_config)
+> +               eqbr_add_map_configs(np, map, &i, configs, nr_config);
+> +
+> +       *num_maps = map_cnt;
 > +
 > +       return 0;
 > +}
 
-You probably want to make sure to clear the active low bit in this function,
-right?
+With the library code for the standard bindings select
+GENERIC_PINMUX_FUNCTIONS and select GENERIC_PINCONF
+most of the above goes away as well.
 
-> +static int da9062_gpio_set_config(struct gpio_chip *gc, unsigned int offset,
-> +                                 unsigned long config)
+> +static void eqbr_dt_free_map(struct pinctrl_dev *pctldev,
+> +                            struct pinctrl_map *map, unsigned int num_maps)
 > +{
-> +       struct da9062_gpio *gpio = gpiochip_get_data(gc);
-> +       struct regmap *regmap = gpio->da9062->regmap;
-> +       int gpio_dir;
-
-Name this gpio_mode
-
-> +       switch (pinconf_to_config_param(config)) {
-> +       case PIN_CONFIG_BIAS_PULL_DOWN:
-> +               /* PD only if pin is input */
-
-Info from datasheet? Electrical limitation? Add to comment!
-
-> +               gpio_dir = da9062_gpio_get_pin_mode(regmap, offset);
-> +               if (gpio_dir < 0)
-> +                       return -EINVAL;
-> +               else if (gpio_dir != DA9062_PIN_GPI)
-> +                       return -ENOTSUPP;
-> +               return regmap_update_bits(regmap, DA9062AA_CONFIG_K,
-> +                                         BIT(offset), BIT(offset));
-> +       case PIN_CONFIG_BIAS_PULL_UP:
-> +               /* PU only if pin is output open-drain */
-
-Dito.
-
-> +               gpio_dir = da9062_gpio_get_pin_mode(regmap, offset);
-> +               if (gpio_dir < 0)
-> +                       return -EINVAL;
-> +               else if (gpio_dir != DA9062_PIN_GPO_OD)
-> +                       return -ENOTSUPP;
-> +               return regmap_update_bits(regmap, DA9062AA_CONFIG_K,
-> +                                         BIT(offset), BIT(offset));
-> +       case PIN_CONFIG_DRIVE_OPEN_DRAIN:
-> +               return da9062_gpio_set_pin_mode(regmap, offset,
-> +                                               DA9062_PIN_GPO_OD);
-> +       case PIN_CONFIG_DRIVE_PUSH_PULL:
-> +               return da9062_gpio_set_pin_mode(regmap, offset,
-> +                                               DA9062_PIN_GPO_PP);
-> +       default:
-> +               return -ENOTSUPP;
-> +       }
-
-Overall very nice use of this callback.
-
-> +static int da9062_gpio_to_irq(struct gpio_chip *gc, unsigned int offset)
-> +{
-> +       struct da9062_gpio *gpio = gpiochip_get_data(gc);
-> +       struct da9062 *da9062 = gpio->da9062;
+> +       struct intel_pinctrl_drv_data *pctl = pinctrl_dev_get_drvdata(pctldev);
+> +       int i;
 > +
-> +       return regmap_irq_get_virq(da9062->regmap_irq,
-> +                                  DA9062_IRQ_GPI0 + offset);
+> +       for (i = 0; i < num_maps; i++)
+> +               if (map[i].type == PIN_MAP_TYPE_CONFIGS_GROUP)
+> +                       devm_kfree(pctl->dev, map[i].data.configs.configs);
+> +       devm_kfree(pctl->dev, map);
 > +}
 
-That's interesting. I never saw that before. It's fine, I guess,
-I can't figure out whether these slow expanders could be set as
-hierarchical though, what do you think? Saw a comment on this
-from Bartosz as well. But I generally trust his comment on that
-it should be fine unless you have subnodes (i.e. hierarchy).
+In this case I think you can use the library function
+pinctrl_utils_free_map() just as is.
 
-> +++ b/include/linux/mfd/da9062/gpio.h
-> @@ -0,0 +1,13 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +/*
-> + * Copyright (C) 2019 Pengutronix, Marco Felsch <kernel@pengutronix.de>
-> + */
-> +
-> +#ifndef __MFD_DA9062_GPIO_H__
-> +#define __MFD_DA9062_GPIO_H__
-> +
-> +struct gpio_desc;
-> +
-> +int da9062_gpio_get_hwgpio(struct gpio_desc *desc);
-> +
-> +#endif /* __MFD_DA9062_GPIO_H__ */
-
-So I'm sceptical about this and it needs a very good motivation.
+Now I ran out of time, but the generic advice is to use
+library code and standard bindings as much as you can
+and all will shrink down considerably. Start with the
+above pointers and I will look closer after that!
 
 Yours,
 Linus Walleij
