@@ -2,72 +2,92 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 19FCDCC4C7
-	for <lists+linux-gpio@lfdr.de>; Fri,  4 Oct 2019 23:27:20 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E7710CC51D
+	for <lists+linux-gpio@lfdr.de>; Fri,  4 Oct 2019 23:45:10 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729079AbfJDV1T (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 4 Oct 2019 17:27:19 -0400
-Received: from mail-lf1-f67.google.com ([209.85.167.67]:39530 "EHLO
-        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728812AbfJDV1T (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 4 Oct 2019 17:27:19 -0400
-Received: by mail-lf1-f67.google.com with SMTP id 72so5425651lfh.6
-        for <linux-gpio@vger.kernel.org>; Fri, 04 Oct 2019 14:27:17 -0700 (PDT)
+        id S1731002AbfJDVon (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 4 Oct 2019 17:44:43 -0400
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:33470 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726927AbfJDVon (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 4 Oct 2019 17:44:43 -0400
+Received: by mail-lj1-f196.google.com with SMTP id a22so7947954ljd.0
+        for <linux-gpio@vger.kernel.org>; Fri, 04 Oct 2019 14:44:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=TmpGrwSq0XPnJhwom/TVm/5c5N1P1jlAi5DA1JlEF1g=;
-        b=Ha6lkOgwkTpL5AMiiK4IECKVOL0pcN9MTeXWPS7e8RxpVDW7M5swL4KQa0dTtrLyu3
-         DS72wkeVbSerc5JEVwnIS/UXzbtS1L9oFQlmzCorY8I0vlBZeSk1qnu/edYfQmNklhbx
-         TfWYAxCfb/y1zApmj3ShaHheHplRkHqzVGd3CCiJgJqTXAhGZ6EmIvhuW4XemXP3v9wF
-         YzVJteyPL+lKrmvVGpMIfzncPgv3zQHKMu9BCdJ/DlNAwdmOeHydBxhErJ9TO/cJdPgj
-         TvW7NPP1erd6PD3Oka5hDjuLJRhKgKT5hKfRRotzYzH/UlIUezp0iq8WCQMwcuZlM9v+
-         atrg==
+        bh=Am86CuSg4L4/4SThzqZ+x3OfLvEnqGtERkpRQqbTyyo=;
+        b=mHoyMz44D2WiAxEQObuEHX6G00RlGGHzOJlRf4ram5Uw4WSYGsCgGObrFsOGL0bJUT
+         aiOzQh7CHwV1qQrdMAcusBqOeNWE6EjE6sSFbCZcwuTGGZn02ga15PNfBS2AMwITwVdF
+         EgKmzjP7XWS2xGmR0xPdrifdKD01SMM9eyR/Bt3tAd77+2Ivj48bbb+2FqdbrTquiFwI
+         AcH8C6wUr68r8TNz0boFXRi344UGq9c9qA49TbQE5FyalLJ0dE328a/7G+MyE//kvAAz
+         jYVahOt3Ou685MUsdu1JMEGKJNG2KJmxEad8vqpvyFD797Go+4+z9KOMWd+4luzNMZhI
+         +H7w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=TmpGrwSq0XPnJhwom/TVm/5c5N1P1jlAi5DA1JlEF1g=;
-        b=UB88uVdseDKyFCANusfswM1PRjWUYT4WhxAr6VQJ2S7UgyKMu4nFOOPdNR12HnjM2o
-         nQl1e6dGVGxrVKeUUerFQgem8/49s4Qfu/Rdrgqmz3uYo8HlIs/f1TLeCfVyOyyQXVX/
-         MRR+hQzNzPQWEgGLgSUcYrFZodxq6Db7zzLoTJZmOMMt0waiQ750C8YQs2sfM36lhZPM
-         UU2+WNQb05UoQDQ8soeoHCwNN949QbtvXg9n5hKrsJXbzQfNyL/ZF49h7LHZ5mUC+sHd
-         2H0hTo39RyVJ69PmNJiPKDr1WcZUfUHu+WHCy7xmE1hs5alKGDWUMV7P4m7XWYMTgt19
-         918g==
-X-Gm-Message-State: APjAAAWJtROicTVzjV9dVwvhX7lmfoLFjzax5mb6WvO4uEF9Dq97kBab
-        mRMbrqf7AnSeQOnlfeadw3ecnaLoWzm5IZby57gmXw==
-X-Google-Smtp-Source: APXvYqy1iXUFswdxVf7v5hts0g+S2c4fvXDUV5/d2xpEaHizj7JznUIXFYBa+srWPaWsj3gelqZqN3ypEP9s4wr/g24=
-X-Received: by 2002:ac2:46ee:: with SMTP id q14mr9393307lfo.152.1570224437094;
- Fri, 04 Oct 2019 14:27:17 -0700 (PDT)
+        bh=Am86CuSg4L4/4SThzqZ+x3OfLvEnqGtERkpRQqbTyyo=;
+        b=YC6GFiOWrII2FCZYHiW9JruKUfW5rzV4FnEpMEQ4wSnyZr/DGpA0tTJZBBoUX9atRb
+         2SU3AKFNEqOfWME9CsiL+vamHLIiwUXJ+j8HlIzzRO0jGXFe1r2ra8/ly+POCdEJUZpH
+         9/J/WFLvJUpjhnFCLlvG1Li+/s2JvR5CdrcumgnMvCLMgySi7ToO7m5u/ov55s147KcM
+         /Va24Ithq9iVFceeU97v3pYVGZb2F8fFiaxspD4gQXEwlugFaQwUYAl83utr2xwy8aR0
+         6n5m8uZI3r/6r6nY6Ndm7379l6BQB7urKlYmcksYcXVnc3lALKs3w+kbnaY+urPxIcr2
+         7c5w==
+X-Gm-Message-State: APjAAAWW8idXl7X/T5WBtIjQ5w1RAtLFoXqMenz/Od/PwzJPjSZzp4YT
+        mSL12UVH1a++i9b1X5hcpEe99fmn+5yuj2OOJ2mtsw==
+X-Google-Smtp-Source: APXvYqwroM5221kd6DE0lMFbDD6+AtmXgtU5HwVqu+4VQvfXVATqsHb0Kap1NezC3fWlTCLdds9tQ/fVqjmiw3vaPP0=
+X-Received: by 2002:a2e:894b:: with SMTP id b11mr10681582ljk.152.1570225481142;
+ Fri, 04 Oct 2019 14:44:41 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190923142005.5632-1-linux@rasmusvillemoes.dk>
-In-Reply-To: <20190923142005.5632-1-linux@rasmusvillemoes.dk>
+References: <20190911075215.78047-1-dmitry.torokhov@gmail.com>
+ <CACRpkdb=s67w2DCGubhbLQTtxpWtiW8S1MECMO4cvec=bF6OdA@mail.gmail.com>
+ <20190917002207.GJ237523@dtor-ws> <20190930224456.GV237523@dtor-ws>
+In-Reply-To: <20190930224456.GV237523@dtor-ws>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Fri, 4 Oct 2019 23:27:05 +0200
-Message-ID: <CACRpkdYTD9x0TH0sxNatxRA_nedcXt13QfWRS=_7+rmRGT=_hQ@mail.gmail.com>
-Subject: Re: [PATCH] pinctrl: devicetree.c: remove orphan pinctrl_dt_has_hogs()
-To:     Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Cc:     Tony Lindgren <tony@atomide.com>,
+Date:   Fri, 4 Oct 2019 23:44:29 +0200
+Message-ID: <CACRpkdZB2Z5fgbgq=aqBmw7wJ_uSE0_fyeOx6f7JvxJwfwjjMg@mail.gmail.com>
+Subject: Re: [PATCH 00/11] Add support for software nodes to gpiolib
+To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+        Andrew Lunn <andrew@lunn.ch>,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        David Airlie <airlied@linux.ie>,
+        "David S. Miller" <davem@davemloft.net>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Russell King <linux@armlinux.org.uk>,
+        "open list:DRM PANEL DRIVERS" <dri-devel@lists.freedesktop.org>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        netdev <netdev@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Sep 23, 2019 at 4:20 PM Rasmus Villemoes
-<linux@rasmusvillemoes.dk> wrote:
+On Tue, Oct 1, 2019 at 12:45 AM Dmitry Torokhov
+<dmitry.torokhov@gmail.com> wrote:
 
-> The helper pinctrl_dt_has_hogs() was introduced in
-> 99e4f67508e1 (pinctrl: core: Use delayed work for hogs), but the sole
-> use then got removed shortly after in 950b0d91dc10 (pinctrl: core: Fix
-> regression caused by delayed work for hogs).
->
-> Signed-off-by: Rasmus Villemoes <linux@rasmusvillemoes.dk>
+> So I guess we missed -rc1. Any chance we could get an immutable branch
+> off -rc1 that you will pull into your main branch and I hopefully can
+> persuade other maintainers to pull as well so we do not need to drag it
+> over 2+ merge windows?
 
-Patch applied with Tony's ACK!
+Yes I'm sorry. I was swamped with stabilizing the kernel.
+I made an immutable branch and tried to use zeroday for testing
+but it timed out so I folded it in for-next anyways after som basic
+tests.
 
 Yours,
 Linus Walleij
