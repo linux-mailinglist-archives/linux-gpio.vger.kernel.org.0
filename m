@@ -2,82 +2,126 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 15C29CC350
-	for <lists+linux-gpio@lfdr.de>; Fri,  4 Oct 2019 21:06:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E69ADCC379
+	for <lists+linux-gpio@lfdr.de>; Fri,  4 Oct 2019 21:17:11 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730090AbfJDTGz (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 4 Oct 2019 15:06:55 -0400
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:46103 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727308AbfJDTGv (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 4 Oct 2019 15:06:51 -0400
-Received: by mail-lj1-f195.google.com with SMTP id d1so7542149ljl.13
-        for <linux-gpio@vger.kernel.org>; Fri, 04 Oct 2019 12:06:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=JYj5Vuu2wwz5/1bubcaD27zMhmuUTtHi+dTrlxCeEQo=;
-        b=WkdazjxwXwGBBU0OPmDk7Htn7m2xKTQ8eGPNzHJur5HfrO6gY6RnZ86tbKbx2SW/F5
-         BUnxhc6enI1bM/H5poFAxSYKQikJ7b17bqABQoX0xtYthyQlS1HTquO4Qnu8Ez13SNbX
-         7YkCztFJFieyUhqsJEhpRgTensIzMriCnhTpaSnccvzTPdlCZ/KnCNeooScFZ5gkT+xg
-         u1KL3MHvokRekQOYKIfy930xlNX0cT2cdRoWgTexquyGdFCzmOGjbfm0JfEMJAxYbHic
-         NkWXe0+sjVoGs2VTv3q/8N4Sua45qNVNyIma0u5499juQTId9Ov3oIiTyFVgCZ+YNnC9
-         /zeA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=JYj5Vuu2wwz5/1bubcaD27zMhmuUTtHi+dTrlxCeEQo=;
-        b=Y+vWXRCf0WIwVIEJnw5EmGHBHsdxK19WEFq1JOtI3hJsACPfcHx0RFwx6YuEnJc01m
-         QreZHtRDS5YAtHB4as6cCEk82oNXhnZqZHr6GGKOjseNCQCfhuyYbNCMqz1t5xf1SBcF
-         UynbqvA9d/GbjS/r2StGnJcsfl8azIRMDkBK7LwnjoBi8Vfb/Ka5HwkrReZsOlycTs4F
-         TRvSzbkdDRErnW1SPmHtMuzXLg4hy3QWTuHlhxIXhXOQcBoWvd/rdTTb8qtRZHM2d0fq
-         qpP/HyQoPBMBabsGq1eg1gFkXCPkgQwF/YFk9vrjYE0ibolp/OCCzOYynk3ov2V1ri6K
-         tvpQ==
-X-Gm-Message-State: APjAAAVSP9PxL03brK9/MkfxAUaXc3otVZWG5ql/nXxlzFS71xPALGtu
-        8zLZFro79avLUwQF2KL5obNvH5f5t8tpOL4NDUMrR6Y4pRiVjw==
-X-Google-Smtp-Source: APXvYqzV7LwLHfUN/uOof+1pMQj65BBC/djNC3BS8vZC+QuB1i0JvUK986VyoSTMIAIDmGIg0K85ux9PRsidtiGsiOI=
-X-Received: by 2002:a2e:80d3:: with SMTP id r19mr10234333ljg.41.1570216009077;
- Fri, 04 Oct 2019 12:06:49 -0700 (PDT)
+        id S1728762AbfJDTRL (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 4 Oct 2019 15:17:11 -0400
+Received: from avon.wwwdotorg.org ([104.237.132.123]:54188 "EHLO
+        avon.wwwdotorg.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725932AbfJDTRK (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 4 Oct 2019 15:17:10 -0400
+X-Greylist: delayed 584 seconds by postgrey-1.27 at vger.kernel.org; Fri, 04 Oct 2019 15:17:10 EDT
+Received: from [10.20.204.51] (unknown [216.228.112.24])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by avon.wwwdotorg.org (Postfix) with ESMTPSA id CDE061C0728;
+        Fri,  4 Oct 2019 13:07:24 -0600 (MDT)
+X-Virus-Status: Clean
+X-Virus-Scanned: clamav-milter 0.100.3 at avon.wwwdotorg.org
+Subject: Re: [PATCH V4 2/2] gpio: inverter: document the inverter bindings
+To:     Eugeniu Rosca <erosca@de.adit-jv.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Harish Jenny K N <harish_kandiga@mentor.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>
+Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Balasubramani Vivekanandan 
+        <balasubramani_vivekanandan@mentor.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Stephen Warren <swarren@nvidia.com>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Phil Reid <preid@electromag.com.au>,
+        Enrico Weigelt <info@metux.net>, linux-gpio@vger.kernel.org,
+        devicetree@vger.kernel.org, Eugeniu Rosca <roscaeugeniu@gmail.com>
+References: <1561714250-19613-1-git-send-email-harish_kandiga@mentor.com>
+ <20190925165133.GA4164@vmlxhi-102.adit-jv.com>
+From:   Stephen Warren <swarren@wwwdotorg.org>
+Message-ID: <06a1acab-fcc4-7b3a-697b-4d253c354513@wwwdotorg.org>
+Date:   Fri, 4 Oct 2019 13:07:23 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-References: <20190917105902.445-1-m.felsch@pengutronix.de> <20190917105902.445-2-m.felsch@pengutronix.de>
- <AM5PR1001MB099472B4C90EF215134EF5AB80840@AM5PR1001MB0994.EURPRD10.PROD.OUTLOOK.COM>
-In-Reply-To: <AM5PR1001MB099472B4C90EF215134EF5AB80840@AM5PR1001MB0994.EURPRD10.PROD.OUTLOOK.COM>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Fri, 4 Oct 2019 21:06:36 +0200
-Message-ID: <CACRpkda_RuK_UfAVd+m5PZwMHUv3G-vSYdu+LWL2BG2HQqim2A@mail.gmail.com>
-Subject: Re: [PATCH 1/3] dt-bindings: mfd: da9062: add gpio bindings
-To:     Adam Thomson <Adam.Thomson.Opensource@diasemi.com>
-Cc:     Marco Felsch <m.felsch@pengutronix.de>,
-        "bgolaszewski@baylibre.com" <bgolaszewski@baylibre.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        Support Opensource <Support.Opensource@diasemi.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20190925165133.GA4164@vmlxhi-102.adit-jv.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Sep 24, 2019 at 12:53 PM Adam Thomson
-<Adam.Thomson.Opensource@diasemi.com> wrote:
+On 9/25/19 10:51 AM, Eugeniu Rosca wrote:
+> Hi All,
+> 
+> I've additionally Cc-ed Laurent and Stephen, since their fruitful
+> discussion in [1] back in 2014 concluded with a useful documentation
+> update [2] which is precisely related to the interpretation and usage
+> of the polarity flag in GPIO specifiers.
+> 
+> I've also Cc-ed those people who have participated in reviewing the
+> previous patch iterations (Geert, Phil, Enrico).
+> 
+> Before leaving this thread in limbo, I would like to attempt clarifying
+> what it actually tried to accomplish, one more time.
+> 
+> First of all, it stems from the need to implement a specific customer
+> requirement. Whether this requirement is sane or not, that's actually
+> a very important question, but I haven't found much discussion around
+> it the comments posted so far.
+> 
+> To paraphrase what Harish stated in [3], the customer has a list of GPIO
+> pins which need to be controlled from userspace. Of course, the customer
+> can set the polarity of those pins from userspace, as pointed out by
+> Linus in [4] (thanks!). But, keeping track of GPIO polarity in userspace
+> is seen like a burden. The customer thinks that the right place for this
+> HW-specific detail is in device trees. Do you think this preference
+> is ill-formed?
 
-> As mentioned for your other patch set where the regulator driver makes use of
-> GPIOs for control, I think here you should probably have pinctrl to define
-> alternate functions of each GPIO. It seems that mostly pinctrl drivers support
-> GPIO functionality rather than the other way, so maybe that's the direction
-> to go in? Maybe Linus has some input on this too.
+I think the DT should represent the device that's attached to the GPIOs. 
+That way, there's already a clear way to represent the GPIO polarity, as 
+described in the document linked by Eugenui in [2] below.
 
-Usually the both functions can coexist but the simplest if often to put
-them in the same driver.
+If for some reason that's not possible, then I think keeping track of 
+the GPIO polarity in user-space is entirely reasonable, and is the 
+correct approach. To claim that tracking GPIO polarity in user-space is 
+too much burden, yet to also allow user-space to control GPIOs at all, 
+and hence to know exactly which GPIOs must be controlled, is an 
+inconsistent assertion.
 
-drivers/pinctrl/pinctrl-stmfx.c
-Documentation/devicetree/bindings/pinctrl/pinctrl-stmfx.txt
+Put another way: If a piece of user-space SW controls GPIOs, it must 
+know which GPIO number to use for each logical purpose. This information 
+presumably varies on different platforms, so the SW must have a list of 
+GPIO numbers and GPIO controller IDs per platform. Additionally storing 
+a polarity bit along with that information seems entirely trivial to me.
 
-is a recent slow bus driver doing this.
+Is there some other issue that I'm overlooking?
 
-Yours,
-Linus Walleij
+If the list of GPIO IDs is retrieved from DT by the user-space SW, I 
+could see an argument for storing the polarity information in DT along 
+with that list of GPIO IDs. However, I don't believe there's any 
+standard way of representing "a list of GPIO IDs for user space use" in DT.
+
+> If we hog a GPIO pin in DTS (which allows specifying its polarity),
+> userspace no longer has access to that pin. There isn't a way to define
+> GPIO polarity by means of DTS without affecting userspace access
+> (can anybody contradict this statement?).
+
+GPIO hog doesn't seem like the right approach; its intent is to actively 
+configure the GPIO in a fixed state, which is logically incompatible 
+with user-space control of the GPIO.
+
+> Whether it is obvious or not, the main goal of this series is actually
+> to provide the possibility of inverting the default ACTIVE_HIGH polarity
+> for GPIO pin X _via DTS_ while still allowing to operate on that pin
+> _from userspace_. My two questions are then:
+>   - I hope it is something sane to desire?
+>   - If it is sane, how can this be accomplished, if the functionality
+>     implemented by Harish doesn't pass the community review?
+> 
+> [1] https://marc.info/?l=linux-gpio&m=139204273132477&w=4 ("Correct meaning of the GPIO active low flag")
+> [2] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=51e8afc1c43c75 ("gpio: document polarity flag best practices")
+> [3] https://marc.info/?l=linux-gpio&m=155721267517644&w=2 ("[PATCH V1 1/2] gpio: make it possible to set active-state on GPIO lines")
+> [4] https://marc.info/?l=linux-gpio&m=155713157122847&w=2 ("[PATCH V1 1/2] gpio: make it possible to set active-state on GPIO lines")
+> 
+
