@@ -2,89 +2,133 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 335FDCC04D
-	for <lists+linux-gpio@lfdr.de>; Fri,  4 Oct 2019 18:11:49 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B93DFCC0FC
+	for <lists+linux-gpio@lfdr.de>; Fri,  4 Oct 2019 18:41:57 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390233AbfJDQLs (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 4 Oct 2019 12:11:48 -0400
-Received: from mail-qk1-f193.google.com ([209.85.222.193]:39861 "EHLO
-        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389835AbfJDQLs (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 4 Oct 2019 12:11:48 -0400
-Received: by mail-qk1-f193.google.com with SMTP id 4so6301765qki.6
-        for <linux-gpio@vger.kernel.org>; Fri, 04 Oct 2019 09:11:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=R07EKHfHzY/HdNN/noW7yeQ0bjZQh+4YnPBELSh0yDA=;
-        b=VQzujsrLoyjMGoF+OydWTdVN4MTRcjjwjBmukKfhbJRAF6AYFjhPetMQ1bYs44uwlV
-         ADu/wSEZkfv2RUq9r5hsQ6i22oY9MNbphvSBy2qTEWZdmXcikMCIYbBHT4hKQ5Z6+hSJ
-         ZCj4PYXzV20KgYCbrBv2oADF+56ljQP9vdkIzCnqXZ3i5o1mGAEC26KrbnhAbAIneuI9
-         N59FfrmAZYV/Z7CLmYs1RhPZTEq8k3XVNpr34DbXWF0/lwxAAJR62dcs/UKOpFuLK58K
-         e9HRXdmh4ut1ZK5d3as7TKTO7k24rFRLIL0SmRxDKwAo4HRVhAH3ljUWjUyk5BwZbIJ8
-         z70Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=R07EKHfHzY/HdNN/noW7yeQ0bjZQh+4YnPBELSh0yDA=;
-        b=qENT0HhSeirynyt/dCv7Ng9EmiavMUzY6QOFDYSFIbQn4jI3j5zUywa1Ex8fJEnltd
-         Y6mTpLoG6viNHnlIT0uuGyXuoIV4raBfpBFVA6Fsvhiy7565P1Gui/kd5m+gL6njD/7n
-         8VeShHknMMaEMLtnwG+VJaBeScCeYLytfKm3uBSLk9LQAe6zGRGMRNGCT8FhFUB2ep9p
-         LMLFKcUqAUYdgLnOJnmmPsfWzCGx4y+Hv0G9pOXnwIr9yE4+a2vyIx4JsAblfhYG0Ij4
-         HZ6OKgKzcIU3njCKWPU9Qidi9D2eoX6zIhp8dTYvM9ux6Dk+mQD73e5FtvKMnIoQdF8T
-         3r8g==
-X-Gm-Message-State: APjAAAUCUg4iyV+rtb5lMWZDyDIwB8X9j/rG2q78yl2TLpIGxZSxP608
-        +zYhyHMyH8LgnGXmILF5S2IVeJ7l
-X-Google-Smtp-Source: APXvYqxSoApMia1dbC0AXmKJgo3gnV4M1IeFH5QhGBxGAQDSh8bsezSDPQUXN8MEXLHLGya8b3cTSg==
-X-Received: by 2002:ae9:d803:: with SMTP id u3mr10475938qkf.131.1570205506072;
-        Fri, 04 Oct 2019 09:11:46 -0700 (PDT)
-Received: from dhcp-172-16-33-230.uml.edu ([129.63.116.33])
-        by smtp.googlemail.com with ESMTPSA id i30sm4517303qte.27.2019.10.04.09.11.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 04 Oct 2019 09:11:45 -0700 (PDT)
-From:   joelsavitz@gmail.com
+        id S1726111AbfJDQl4 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 4 Oct 2019 12:41:56 -0400
+Received: from mout.gmx.net ([212.227.17.22]:37241 "EHLO mout.gmx.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725775AbfJDQl4 (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Fri, 4 Oct 2019 12:41:56 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+        s=badeba3b8450; t=1570207294;
+        bh=eFr7a8OZETIn8xG0qail3KyCHLTVqHhYrjKexW97lX8=;
+        h=X-UI-Sender-Class:From:To:Cc:Subject:Date;
+        b=Yf5Pa5vHgQY7HIjWtZZ4knzzkUnAan0UU1AoZmbF1iD0Mvi5I1Mi9+TiiaTJeUF0U
+         jJcZZi2mkdqBjNDletLrpBEnSTe4DK+RWhBipKZzK7xn4tKNGlTjcbb9Ikr3A3b6nL
+         VVJQLW9sXCLtxQsVckkOzSEGc39NvK/xngfxcShM=
+X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
+Received: from longitude ([89.0.25.131]) by mail.gmx.com (mrgmx105
+ [212.227.17.168]) with ESMTPSA (Nemesis) id 1N6sit-1i3We922Ot-018NUU; Fri, 04
+ Oct 2019 18:41:34 +0200
+From:   =?UTF-8?q?Jonathan=20Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>
 To:     linux-gpio@vger.kernel.org
-Cc:     Joel Savitz <joelsavitz@gmail.com>, fedora-rpi@googlegroups.com
-Subject: [libgpiod] [PATCH] build: check for python-config in configure
-Date:   Fri,  4 Oct 2019 12:11:26 -0400
-Message-Id: <20191004161126.13814-1-joelsavitz@gmail.com>
-X-Mailer: git-send-email 2.21.0
+Cc:     Michael Buesch <m@bues.ch>, Jonathan Corbet <corbet@lwn.net>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Logan Gunthorpe <logang@deltatee.com>,
+        =?UTF-8?q?Jonathan=20Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Cornelia Huck <cohuck@redhat.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 1/2] docs: driver-api: Move bt8xxgpio to the gpio directory
+Date:   Fri,  4 Oct 2019 18:40:55 +0200
+Message-Id: <20191004164059.10397-1-j.neuschaefer@gmx.net>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:yfsD6jNuHAIbkUh5UzDF+8NaYHabqBLXETfcVTlqX/IfAg3kA0t
+ EDmj1YQTZp+ySRJIRhUzJ8VwqfPy09Y15WE8RzzwSbxbkWj3Ht6589uiv+ui93hX/YIII+Q
+ c9uzbaZkeZtyGKjdNpumIip9txpQfXFoTgMOI/iw0EIJ6xIFrwM0ywi0tHe3MqwAP1Lq0Vg
+ dUGKTkcco3HOgZOv1WxKw==
+X-Spam-Flag: NO
+X-UI-Out-Filterresults: notjunk:1;V03:K0:p4dfBfkoXqw=:UkZtJOMZwGJNsNehqS7KjJ
+ OuEd/dsrZU5cDr1Ekx+QGR7PAHf3vp3kou/HBu1eBHAeWxukQKfOzCHp2bkBjc1dj9dh/HM4I
+ 8k4vTaDQHjeOq5J65VDC3QPorh5FsbVNHtKgc7+h3RCwzHRb//2XNEQaX+JliVULgtxk+9y5/
+ QCoqB5SGGSrts8N1Q7rmyIGbjsnMXTsgRGWREggFt5eaNh+5Qm6ieoOHQdKMdD+VNhV4670BK
+ fWDCuJO+auVc70QIfRxxPBVQH4rrAocCEe0o6SQj/eDqGKsgWUvfkWtfXX/y0GPPW/PK0/ZfI
+ kvZ6It5znlyru/dAJ2kCz9nSqWjd4AJDd01wzkHe7JY+doLKAH0fXACAQcuJyBc9dS7VmnMe2
+ 4g2Ba3WTmXqLISSsb9BrTYImW9oxnpd0pfmjrkKBqC9dHh9LmJi7RmYcUg8NoWANrmGhZ2Qjc
+ VX3/XJEAoG9BkcTpt2BMaEk/x/z1Z/rzp9rimoQ5R/f5JT9Y8ImRbQe1F1KZySCOaREi38ZtJ
+ qOtTmp5p1iRhSE5zeJF0ANJzr5ym4M471Ta8bpMxperm+2QZ6xhGBWmd4KZgZudZ0kE9pT56c
+ p32ODIQY5ZyjZlXdAnb9j0xq8DiOXO24earL10PmQvBN372b/f4OkklO8rYoMhK/qMcFGSM53
+ kUeZaY39Y/ESWTxUM7QHyCC3jH+vZ09RtqEAq0TfMqV/DRSFQJH/SI8uld2cnmyPtiuVOZB+G
+ DP4s7Ft2LFjdXZicqd42O5GErm2i+eMI4VW2+21aUNv32NyHpYgDt3tFGUcFs54UfoTmZz4rd
+ Xe+PdoQrLXJhbWEV3F/mWHqsioHyOMPs6aQ7S2VArjkgTAxqoIjhYaq414WvEoiUjODIPgTJ5
+ LoNJXdIo8aXk2XLX0pF36N2k3oM8Ox+8K3JNDaavpnlybRmDDICaorFJYQv3oXwrGZJE57IDW
+ OtiDw5SFYr1QtuajiKnBpGtPkSUJSnlwxQFVZwRQEyf/3jHtJP4OMZreE6Ev1qB9NKeMrIb/i
+ WJZ+C3NpwX7IhSC/qWfVTZVXNUl9nyYBff6JGfTt8CQcXIu3Co+h8f01k27aHGubQDQuhgwGn
+ to7UvndKuhhWa4XQw3KPJ2K6IdaDY+EmTbbx0gnxXTJ4hj42NJ17ViBXe5y/vedkZkz9lre4X
+ RzZCPMju8yXfbRl6TSf/n1SUqQaBx0+u4M0s8v8QpsP/hio3mL58y4MdgOjZBqNa8+nno5Q2J
+ I2yJb4/jXPOuzqMk2FqMQerYcFcZHhjWd97zFk9wXXnEA6WTPhKvcqyk0ANI=
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-From: Joel Savitz <joelsavitz@gmail.com>
+Let's declutter Documentation/driver-api a bit.
 
-Currently, configure succeeds when python is installed without its
-development components, i.e. python-config and headers. The subsequent
-make will fail when gcc cannot locate Python.h.
+Signed-off-by: Jonathan Neusch=C3=A4fer <j.neuschaefer@gmx.net>
+=2D--
 
-This patch fixes that behavior by throwing an error at configure-time if
-python-config cannot be found.
+Is this where we want to put documentation about specific GPIO
+drivers/chips? Or perhaps under a subheading?
+=2D--
+ Documentation/driver-api/{ =3D> gpio}/bt8xxgpio.rst | 0
+ Documentation/driver-api/gpio/index.rst           | 1 +
+ Documentation/driver-api/index.rst                | 1 -
+ drivers/gpio/Kconfig                              | 2 +-
+ 4 files changed, 2 insertions(+), 2 deletions(-)
+ rename Documentation/driver-api/{ =3D> gpio}/bt8xxgpio.rst (100%)
 
-Signed-off-by: Joel Savitz <joelsavitz@gmail.com>
----
- configure.ac | 2 ++
- 1 file changed, 2 insertions(+)
+diff --git a/Documentation/driver-api/bt8xxgpio.rst b/Documentation/driver=
+-api/gpio/bt8xxgpio.rst
+similarity index 100%
+rename from Documentation/driver-api/bt8xxgpio.rst
+rename to Documentation/driver-api/gpio/bt8xxgpio.rst
+diff --git a/Documentation/driver-api/gpio/index.rst b/Documentation/drive=
+r-api/gpio/index.rst
+index c5b8467f9104..5b61032aa4ea 100644
+=2D-- a/Documentation/driver-api/gpio/index.rst
++++ b/Documentation/driver-api/gpio/index.rst
+@@ -13,6 +13,7 @@ Contents:
+    board
+    drivers-on-gpio
+    legacy
++   bt8xxgpio
 
-diff --git a/configure.ac b/configure.ac
-index 41321c1..066c1ad 100644
---- a/configure.ac
-+++ b/configure.ac
-@@ -183,6 +183,8 @@ if test "x$with_bindings_python" = xtrue
- then
- 	AM_PATH_PYTHON([3.0], [],
- 		[AC_MSG_ERROR([python3 not found - needed for python bindings])])
-+	AC_CHECK_FILE(["$PYTHON-config"], [],
-+		[AC_MSG_ERROR([python3-config not found - needed for python bindings])])
- 	AS_IF([test -z "$PYTHON_CPPFLAGS"],
- 		[AC_SUBST(PYTHON_CPPFLAGS, [`$PYTHON-config --includes`])])
- 	AS_IF([test -z "$PYTHON_LIBS"],
--- 
-2.21.0
+ Core
+ =3D=3D=3D=3D
+diff --git a/Documentation/driver-api/index.rst b/Documentation/driver-api=
+/index.rst
+index 38e638abe3eb..2b3b6949381e 100644
+=2D-- a/Documentation/driver-api/index.rst
++++ b/Documentation/driver-api/index.rst
+@@ -69,7 +69,6 @@ available subsections can be seen below.
+    fpga/index
+    acpi/index
+    backlight/lp855x-driver.rst
+-   bt8xxgpio
+    connector
+    console
+    dcdbas
+diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
+index 38e096e6925f..d96fb9923d30 100644
+=2D-- a/drivers/gpio/Kconfig
++++ b/drivers/gpio/Kconfig
+@@ -1320,7 +1320,7 @@ config GPIO_BT8XX
+ 	  The card needs to be physically altered for using it as a
+ 	  GPIO card. For more information on how to build a GPIO card
+ 	  from a BT8xx TV card, see the documentation file at
+-	  Documentation/driver-api/bt8xxgpio.rst
++	  Documentation/driver-api/gpio/bt8xxgpio.rst
+
+ 	  If unsure, say N.
+
+=2D-
+2.20.1
 
