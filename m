@@ -2,172 +2,151 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 5D526CCC64
-	for <lists+linux-gpio@lfdr.de>; Sat,  5 Oct 2019 20:47:03 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 656EACCC78
+	for <lists+linux-gpio@lfdr.de>; Sat,  5 Oct 2019 21:17:57 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388037AbfJESqz (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sat, 5 Oct 2019 14:46:55 -0400
-Received: from mail-yb1-f194.google.com ([209.85.219.194]:42515 "EHLO
-        mail-yb1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387861AbfJESqz (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sat, 5 Oct 2019 14:46:55 -0400
-Received: by mail-yb1-f194.google.com with SMTP id z5so2101864ybk.9;
-        Sat, 05 Oct 2019 11:46:54 -0700 (PDT)
+        id S1729389AbfJETR4 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sat, 5 Oct 2019 15:17:56 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:32843 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729309AbfJETRz (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sat, 5 Oct 2019 15:17:55 -0400
+Received: by mail-wm1-f66.google.com with SMTP id r17so11916684wme.0;
+        Sat, 05 Oct 2019 12:17:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=TBJjABokkrKZ/d54kCejrL00qG1tE+E2KRyIwFedZfQ=;
-        b=RODcag4X4gLNgSIcrEODfVVVCxgSvlzgu2+GzOBREj+1fYMTpqnIi3FaI3Gij0vbxO
-         teEzYNgVAMvOT9ghtfx0DVSy0VNyihzmempv+773xWR5LlJvR14sndko+V5lO75yEC5x
-         HN2OS01Wqb1OH5a2mrpqlhapTCz56K3b77FpiYl/x3LoviZNbP1DoSU4QaRQCxjP26BJ
-         Vet5FFTzOliBWSKomDmoCVkOkLVGzZGnrZuFJo53pV5hVs0jnLd/mzWdvOO6N/GOmgfZ
-         jr0BKOowuP5rBZoBuN3Ca+UHTQ9TnF+TCHK5Mb6y8jxTktTVxn1e240U0uOn/ve3yGs9
-         s53w==
+        h=subject:to:cc:references:from:openpgp:autocrypt:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=ckpXFKsyeCaxlwtXczS7lilPUBGGcLYMC3cD9mbHP64=;
+        b=oA+Y12oURx4C8tWMwRV46VwkQVHyn68gQgb3f6kiWd4zREOS2vjwgTrYKnPh+iKyeH
+         62yx+zXDNamnQfLLCS+e2Muz3C1lHpoW61LIBua/p11mhJviFXrMNnmJdo5BSMXNEFB9
+         PcRbWerodlB6aeDrgyrjf1rUwmWY110TvF3SVso1oKtNOlKqoN9d1XbBOpR2ILV+ONCQ
+         npOfSVIOBgUAMHMu9fH0Wp7wZNxHIw6Yg0skl0yZ7fGxIm7bFcQlCNSRlg61oyHaSLs+
+         4N6YGQTNbj5AjCfjg+fvk+mcTVdBiEFiocMGl12aspV/MfdJm/L8UiZI5g8pexv3SkIJ
+         gK/w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=TBJjABokkrKZ/d54kCejrL00qG1tE+E2KRyIwFedZfQ=;
-        b=XnjqZ1qZaAJHoEAvBVW8tqy5/wTKY03mzvQwfknH6JGKpD8U+MYGBr+EdFXiBxOQtm
-         tYwMZLTM/aSSQBr0TIDFlXnwWqC8rvNlqSc29GTPxlM2ySFOkm3VfhE1aJpX7znXw+gz
-         kQHFvYQ4sI6vzuOahAhVz4vX7VVeUrgDGW2YWuabJUfRlrbJSvN0jb7MoZ2h5s6SPzFJ
-         FjQtV3nKzdHRVgrsAltq4q0B+vwq9qKfyMTn2xj6rWvP6NocnNJl7ebR5+4CghcsbuS0
-         LOH2qvidH+SZOSFJ73CJnIkmQ3mH0fKqN9Yhl2v/otT4bNjraG7t67vNKp7B5NbufVYA
-         50pQ==
-X-Gm-Message-State: APjAAAVELzTX/iFjjWy9ZKmZkylto65wvf3/OKdxeqMytkkaJ5snfPj8
-        hm3kE/X3H5q7hCVMgJNo4aw=
-X-Google-Smtp-Source: APXvYqypjGkV6aP1OrkE5Eb3ln3sgMaerj4stbaQyuaW82pGa7hVgOgDYlnVuxRaYbSmwQJ8cx8w9w==
-X-Received: by 2002:a25:ab21:: with SMTP id u30mr1521570ybi.143.1570301214234;
-        Sat, 05 Oct 2019 11:46:54 -0700 (PDT)
-Received: from icarus (072-189-084-142.res.spectrum.com. [72.189.84.142])
-        by smtp.gmail.com with ESMTPSA id p204sm2597405ywp.110.2019.10.05.11.46.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 05 Oct 2019 11:46:53 -0700 (PDT)
-Date:   Sat, 5 Oct 2019 14:46:40 -0400
-From:   William Breathitt Gray <vilhelm.gray@gmail.com>
-To:     linus.walleij@linaro.org, bgolaszewski@baylibre.com
-Cc:     akpm@linux-foundation.org, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
-        andriy.shevchenko@linux.intel.com, linux@rasmusvillemoes.dk,
-        yamada.masahiro@socionext.com,
-        linux-arm-kernel@lists.infradead.org, linux-pm@vger.kernel.org,
-        geert@linux-m68k.org, preid@electromag.com.au, lukas@wunner.de,
-        sean.nyekjaer@prevas.dk, morten.tiljeset@prevas.dk
-Subject: Re: [PATCH v15 00/14] Introduce the for_each_set_clump8 macro
-Message-ID: <20191005184640.GA117093@icarus>
-References: <cover.1570299719.git.vilhelm.gray@gmail.com>
+        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=ckpXFKsyeCaxlwtXczS7lilPUBGGcLYMC3cD9mbHP64=;
+        b=tEcY3J1uMVe1/FeWumv1IGVspAgzSHh1vqE5ulFRO7+tno1JNOiCnXJQ1+MbOrFcAF
+         cdE0ijuPpgoUlUEqH9JFoZ9tnXe/OBLPZeM/V1hLF2n2UXj/eqhD4dj66leIuJ5KZ+IW
+         8UPCyEHayMGSJLsa5ONb+/XfAobZmPxI16fXBD5Bud0C2ng+SfgwEBUciHuRkqoBP8nx
+         FaK8eD3wDaxNTfmLVduNOhA+3R1N2DHjLskHVyOKIMJ8dtuKpr7O7k+CM3UBGQM4JZab
+         PHIANrtaKDvrFP6c3vTfzsR45vJuL1C8OVBzvNIJEsiEvtRW5GbD4n3N/BJoa/JrX92W
+         iF+w==
+X-Gm-Message-State: APjAAAXbU5IjwA3FYyH+3sG+kv6/Fh9LVrc8wMzZje++T6NE2wUetwK8
+        VRPfTYcWq8py2yCI+xTqtaDIQGHM
+X-Google-Smtp-Source: APXvYqwIuuNYhduObTCaD/V6VB9RhI4nUI6cwMQo7C00XcAS5zhaAvoV2j1MbP5Ldh3HHDYYAeZ2dw==
+X-Received: by 2002:a7b:c258:: with SMTP id b24mr14737704wmj.21.1570303072707;
+        Sat, 05 Oct 2019 12:17:52 -0700 (PDT)
+Received: from [192.168.1.19] (bku134.neoplus.adsl.tpnet.pl. [83.28.188.134])
+        by smtp.gmail.com with ESMTPSA id t8sm8903365wrx.76.2019.10.05.12.17.50
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sat, 05 Oct 2019 12:17:51 -0700 (PDT)
+Subject: Re: [PATCH] leds: gpio: support multi-level brightness
+To:     Akinobu Mita <akinobu.mita@gmail.com>
+Cc:     linux-leds@vger.kernel.org, linux-gpio@vger.kernel.org,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>
+References: <1570203299-4270-1-git-send-email-akinobu.mita@gmail.com>
+ <96ac332f-359f-531a-7890-45b39e168b82@gmail.com>
+ <CAC5umyggUm26JHU9QeND=rTozjXwH5uMiVvoK=Zqo31eBn69pg@mail.gmail.com>
+From:   Jacek Anaszewski <jacek.anaszewski@gmail.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=jacek.anaszewski@gmail.com; prefer-encrypt=mutual; keydata=
+ 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
+Message-ID: <7d451092-bf8a-e1d4-996c-8af3cc816fc7@gmail.com>
+Date:   Sat, 5 Oct 2019 21:17:49 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
+In-Reply-To: <CAC5umyggUm26JHU9QeND=rTozjXwH5uMiVvoK=Zqo31eBn69pg@mail.gmail.com>
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <cover.1570299719.git.vilhelm.gray@gmail.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Sat, Oct 05, 2019 at 02:36:54PM -0400, William Breathitt Gray wrote:
-> Changes in v15:
->   - Move find_next_clump8 to lib/find_bit.c since it requires round_down
->     (I want this to be static inline like the others, but I need help)
->   - Utilize for_each_set_clump8 in pisosr, max3191x, and pca953x
+On 10/5/19 3:20 PM, Akinobu Mita wrote:
+> 2019年10月5日(土) 6:17 Jacek Anaszewski <jacek.anaszewski@gmail.com>:
+>>
+>> Hi Akinobu,
+>>
+>> Why do you think this change is needed? Does it solve
+>> some use case for you?
 > 
-> While adding GPIO get_multiple/set_multiple callback support for various
-> drivers, I noticed a pattern of looping manifesting that would be useful
-> standardized as a macro.
+> It can be useful when using with an LED trigger that could set the
+> brightness values other than LED_FULL or LED_OFF.
 > 
-> This patchset introduces the for_each_set_clump8 macro and utilizes it
-> in several GPIO drivers. The for_each_set_clump macro8 facilitates a
-> for-loop syntax that iterates over a memory region entire groups of set
-> bits at a time.
-> 
-> For example, suppose you would like to iterate over a 32-bit integer 8
-> bits at a time, skipping over 8-bit groups with no set bit, where
-> XXXXXXXX represents the current 8-bit group:
-> 
->     Example:        10111110 00000000 11111111 00110011
->     First loop:     10111110 00000000 11111111 XXXXXXXX
->     Second loop:    10111110 00000000 XXXXXXXX 00110011
->     Third loop:     XXXXXXXX 00000000 11111111 00110011
-> 
-> Each iteration of the loop returns the next 8-bit group that has at
-> least one set bit.
-> 
-> The for_each_set_clump8 macro has four parameters:
-> 
->     * start: set to the bit offset of the current clump
->     * clump: set to the current clump value
->     * bits: bitmap to search within
->     * size: bitmap size in number of bits
-> 
-> In this version of the patchset, the for_each_set_clump macro has been
-> reimplemented and simplified based on the suggestions provided by Rasmus
-> Villemoes and Andy Shevchenko in the version 4 submission.
-> 
-> In particular, the function of the for_each_set_clump macro has been
-> restricted to handle only 8-bit clumps; the drivers that use the
-> for_each_set_clump macro only handle 8-bit ports so a generic
-> for_each_set_clump implementation is not necessary. Thus, a solution for
-> large clumps (i.e. those larger than the width of a bitmap word) can be
-> postponed until a driver appears that actually requires such a generic
-> for_each_set_clump implementation.
-> 
-> For what it's worth, a semi-generic for_each_set_clump (i.e. for clumps
-> smaller than the width of a bitmap word) can be implemented by simply
-> replacing the hardcoded '8' and '0xFF' instances with respective
-> variables. I have not yet had a need for such an implementation, and
-> since it falls short of a true generic for_each_set_clump function, I
-> have decided to forgo such an implementation for now.
-> 
-> In addition, the bitmap_get_value8 and bitmap_set_value8 functions are
-> introduced to get and set 8-bit values respectively. Their use is based
-> on the behavior suggested in the patchset version 4 review.
-> 
-> William Breathitt Gray (14):
->   bitops: Introduce the for_each_set_clump8 macro
->   lib/test_bitmap.c: Add for_each_set_clump8 test cases
->   gpio: 104-dio-48e: Utilize for_each_set_clump8 macro
->   gpio: 104-idi-48: Utilize for_each_set_clump8 macro
->   gpio: gpio-mm: Utilize for_each_set_clump8 macro
->   gpio: ws16c48: Utilize for_each_set_clump8 macro
->   gpio: pci-idio-16: Utilize for_each_set_clump8 macro
->   gpio: pcie-idio-24: Utilize for_each_set_clump8 macro
->   gpio: uniphier: Utilize for_each_set_clump8 macro
->   gpio: 74x164: Utilize the for_each_set_clump8 macro
->   thermal: intel: intel_soc_dts_iosf: Utilize for_each_set_clump8 macro
->   gpio: pisosr: Utilize the for_each_set_clump8 macro
->   gpio: max3191x: Utilize the for_each_set_clump8 macro
->   gpio: pca953x: Utilize the for_each_set_clump8 macro
-> 
->  drivers/gpio/gpio-104-dio-48e.c            |  73 ++++----------
->  drivers/gpio/gpio-104-idi-48.c             |  36 ++-----
->  drivers/gpio/gpio-74x164.c                 |  19 ++--
->  drivers/gpio/gpio-gpio-mm.c                |  73 ++++----------
->  drivers/gpio/gpio-max3191x.c               |  19 ++--
->  drivers/gpio/gpio-pca953x.c                |  17 ++--
->  drivers/gpio/gpio-pci-idio-16.c            |  75 +++++---------
->  drivers/gpio/gpio-pcie-idio-24.c           | 109 ++++++++-------------
->  drivers/gpio/gpio-pisosr.c                 |  12 +--
->  drivers/gpio/gpio-uniphier.c               |  16 ++-
->  drivers/gpio/gpio-ws16c48.c                |  73 ++++----------
->  drivers/thermal/intel/intel_soc_dts_iosf.c |  29 +++---
->  drivers/thermal/intel/intel_soc_dts_iosf.h |   2 -
->  include/asm-generic/bitops/find.h          |  50 ++++++++++
->  include/linux/bitops.h                     |   5 +
->  lib/find_bit.c                             |  14 +++
->  lib/test_bitmap.c                          |  65 ++++++++++++
->  17 files changed, 325 insertions(+), 362 deletions(-)
-> 
-> -- 
-> 2.23.0
+> The LED CPU trigger for all CPUs (not per CPU) sets the brightness value
+> depending on the number of active CPUs.  We can define the multi brightness
+> level gpio LED with fewer number of GPIO LEDs than the total number of
+> CPUs, and the LEDs can be viewed as a level meter.
 
-This patchset only implements for_each_set_clump8 which restricts the
-looping to 8 bits at a time. The drivers/gpio/gpio-thunderx.c file has a
-set_multiple callback that loops 64 bits at a time. That would be one
-case where a more general for_each_set_clump macro would be useful.
+Can't you achieve exactly the same effect by creating separate LED class
+device for each GPIO LED and registering each of them for separate cpuN
+trigger?
 
-However, we can focus on the simpler for_each_set_clump8 macro for now
-since looping by 8 bits at a time is the most common situation.
-
-William Breathitt Gray
+-- 
+Best regards,
+Jacek Anaszewski
