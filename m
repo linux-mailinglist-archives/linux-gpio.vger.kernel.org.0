@@ -2,121 +2,79 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 5298ACCB77
-	for <lists+linux-gpio@lfdr.de>; Sat,  5 Oct 2019 18:49:54 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E86B8CCB8D
+	for <lists+linux-gpio@lfdr.de>; Sat,  5 Oct 2019 19:03:14 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728499AbfJEQtx (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sat, 5 Oct 2019 12:49:53 -0400
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:35046 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725826AbfJEQtx (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sat, 5 Oct 2019 12:49:53 -0400
-Received: by mail-lf1-f68.google.com with SMTP id w6so6549640lfl.2
-        for <linux-gpio@vger.kernel.org>; Sat, 05 Oct 2019 09:49:51 -0700 (PDT)
+        id S1729348AbfJERDO (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sat, 5 Oct 2019 13:03:14 -0400
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:33271 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725826AbfJERDO (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sat, 5 Oct 2019 13:03:14 -0400
+Received: by mail-lj1-f195.google.com with SMTP id a22so9587137ljd.0
+        for <linux-gpio@vger.kernel.org>; Sat, 05 Oct 2019 10:03:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=bFYXbByYhGEXfOvEgQ/Yv7O8maPlLwNPKG6/+oAaKb0=;
-        b=F5Qjpvpi6G+ab+VeuCiBsb6tm18qqaMtmFRT4reLGjpmUHLQIKEy38RCdhiSjtQoYr
-         gxUT6twp6LaP1bTlGnWGv4bQySjuigIwrgHhmPKCbxPGBjd7/LYxeuA+gBsCmRkysK3O
-         pH/XMlhMcKe8iXOk/2VDpQk54SIR+ndpxUrBJzAe/NI5B0WdIBaj5ogYjdYehYK3cQ35
-         Uz82JVR+RRWh/cH1+2hUTPNVyI31grf74MbU6CHnN01sEYQskDQY5F905me9Q1O4MIuO
-         66UKqnl76X1MvlQ2KDltSwqSE5p2wZNmWRtT45rianVJwNaprLpXKDq9dfy+9WkxiBB0
-         rISQ==
+        bh=8ddXseKGv3/4SKLZ5SVHPZUcCGGOrS8Arg9a3AfDJ4U=;
+        b=Xqf61BwvcS/rFfd0wz4vNV9veNGdL7VAfXV8dSdJ9cLhFvhz6TbDdSXAfBl3w+tsEk
+         bE6Se2xBAaoy0VM2T8kU0o1r/pp57sp3P/H7oHuZ4Lz0UQXNuOPUA9nnFYJeHVF6adBz
+         tKqH8jMFJpW0gWbstEwFPhsshv5ay7/rSvwmr+d3hZzhqZZ3fXBFpzrNr3Kf/X/yw6mT
+         +FCpvIaaQdUmgz5HjOnvf2SrTIW8t0J8KyyH6zO3DS95waglbQ2mlSbELrK+FwCgCopv
+         kGWKCDuj0o7xhlUdLR9Pqz/FllWp863da6pdFOsAgeRzi2bmVGTP1Rj4XfBWK1MgguLW
+         AXTQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=bFYXbByYhGEXfOvEgQ/Yv7O8maPlLwNPKG6/+oAaKb0=;
-        b=ZKCjxv0xadWjnxWU8nXGniT/Ci87AFhxqkLUSU37xLOWr8aG7VIff3vGq4xdbXhVD7
-         WmjZDLnJxC12iIi/S6NZWt93RVvi6LtZhXePr/uyWkIBiV770qI46MWLnoKZ0A1lpTaf
-         XhE6APYgkM38JTDRvSBrYVKBZvyahjh1af70GmSibKcFKjYqGgzTHFk588T7YLiWDNyv
-         mUn+NjC9NVumrFXeEoKMM3c4fOyixjELstXSDA8FyOEZwBGiUoAQ0XCCd/Abb6z081q9
-         ckt/VrqAHOK/Zr3yFzjScE8R4z4TRr9XtlvdO4ZBoE20xF7EISmCaSWB31xuU03v+6kc
-         uOWg==
-X-Gm-Message-State: APjAAAV3LC30Jo6p+TWWnjrPURNemPllc+p2maw2IdoyIqPzGLufSGTT
-        ws9rL5Mn//jbH+KG9OJpvStHjIK1cVwrvtEnPJwwKKP3NMz9gQ==
-X-Google-Smtp-Source: APXvYqzWLIXea2bSktYcXAMWUxPBnRthWgHgKi9V9cmgUV7xXLZpltHmYaRhUSOORfu5uwvTkgz2I3T7Lp7NJCXeluc=
-X-Received: by 2002:ac2:5c11:: with SMTP id r17mr12207816lfp.61.1570294190713;
- Sat, 05 Oct 2019 09:49:50 -0700 (PDT)
+        bh=8ddXseKGv3/4SKLZ5SVHPZUcCGGOrS8Arg9a3AfDJ4U=;
+        b=LVryYbgmosoLDkimmwN4xtVUcmIwbjcPNo/qR+AdurNoHE1+zXgQDsrOkDiG93/gDy
+         vJSgVKRU1uVqrsq38DfF05eWBcpnZkuPRHyE08NArbAyW38BsCXMso7r2QC4lr5+8xDf
+         fBrJg+QyGpnxdUYta+lFaH19CJ0sxw487xr8/EprXRgSY2hoHytGW1Oso44o6ieMVo6W
+         fovKsLeAzFTyPCnFvI3vraDoDCcVF/KwiBUgYbJ2EfZvAS8xeOpxpQ0Iiki5ebrRNOky
+         Gw5Emps6RU130SrP553JPWhVBT6Wt7n0pJu1Ht/hbeZGYaV6/K5UYaxMD4qAIfcwnE9b
+         vd6Q==
+X-Gm-Message-State: APjAAAVVJQoFQGbiAZhIJrsWwOqr9p3an4eV5wljgZB0Q/lOVT2Skoru
+        7U/VYcmC9syKltzMxkS8puHjGMIUFyUu8R1amiOHWEP6/Ew=
+X-Google-Smtp-Source: APXvYqwx2pmDu6fo2GmW7KjDXSgU9KCpAgfn1umVPmNgf9cwxEakvOiLABhSZCeVxH+vPM/w25JxcW7jjbz4fyLAQNY=
+X-Received: by 2002:a2e:5dc3:: with SMTP id v64mr13342905lje.118.1570294990791;
+ Sat, 05 Oct 2019 10:03:10 -0700 (PDT)
 MIME-Version: 1.0
-References: <20191004122923.22674-1-amelie.delaunay@st.com>
-In-Reply-To: <20191004122923.22674-1-amelie.delaunay@st.com>
+References: <20190921102522.8970-1-drew@pdp7.com> <CAMRc=Me=6JeOOv_SRhKt+vOsd3p5yOVkWyNu4Oo+DeCwMJHmaA@mail.gmail.com>
+ <CACRpkdZjswY4zW232ahSQSGfprbgBx8YL4Wb0i3ebegT00v3jQ@mail.gmail.com> <CAMRc=McH=ui1c9yTMtuMwVUT2-yBHhV=r0VGsKY0KbYMLHJhPA@mail.gmail.com>
+In-Reply-To: <CAMRc=McH=ui1c9yTMtuMwVUT2-yBHhV=r0VGsKY0KbYMLHJhPA@mail.gmail.com>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Sat, 5 Oct 2019 18:49:37 +0200
-Message-ID: <CACRpkda6CyYCt-s-VkaK856Jt3TxQg+HVDz-5Ww9T9KNHHAjaQ@mail.gmail.com>
-Subject: Re: [PATCH 1/1] pinctrl: stmfx: add irq_request/release_resources callbacks
-To:     Amelie Delaunay <amelie.delaunay@st.com>
-Cc:     Alexandre Torgue <alexandre.torgue@st.com>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+Date:   Sat, 5 Oct 2019 19:02:58 +0200
+Message-ID: <CACRpkdZP8GYPUk4ZB+2Ei4hrrT0Orq0MUEszJ+YM=npuh1uH9w@mail.gmail.com>
+Subject: Re: [RFC] gpio: expose pull-up/pull-down line flags to userspace
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     Drew Fustini <drew@pdp7.com>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        linux-stm32@st-md-mailman.stormreply.com
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Oct 4, 2019 at 2:29 PM Amelie Delaunay <amelie.delaunay@st.com> wrote:
+On Fri, Oct 4, 2019 at 9:22 AM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
 
-> When an STMFX IO is used as interrupt through the interrupt-controller
-> binding, the STMFX driver should configure this IO as input. Default
-> value of STMFX IO direction is input, but if the IO is used as output
-> before the interrupt use, it will not work without these callbacks.
->
-> Signed-off-by: Amelie Delaunay <amelie.delaunay@st.com>
+> The config ioctl (or
+> something similar) you're mentioning may appear sooner actually -
+> users of libgpiod have been requesting a way of changing the direction
+> of a line without releasing it - something that's possible in the
+> kernel, but not from user-space at the moment. I'll submit something
+> that allows to change the configuration of a requested line soon.
 
-OK I see what you want to achieve.
+Hm! I guess I assumed that userspace users would be using the lines
+for either input or output, not complex use cases like that, reversing
+direction and what not.
 
-> +static int stmfx_gpio_irq_request_resources(struct irq_data *data)
-> +{
-> +       struct gpio_chip *gpio_chip = irq_data_get_irq_chip_data(data);
-> +       struct stmfx_pinctrl *pctl = gpiochip_get_data(gpio_chip);
-> +       int ret;
-> +
-> +       ret = stmfx_gpio_direction_input(&pctl->gpio_chip, data->hwirq);
-> +       if (ret)
-> +               return ret;
-> +
-> +       ret = gpiochip_lock_as_irq(&pctl->gpio_chip, data->hwirq);
-> +       if (ret) {
-> +               dev_err(pctl->dev, "Unable to lock gpio %lu as IRQ: %d\n",
-> +                       data->hwirq, ret);
-> +               return ret;
-> +       }
-> +
-> +       return 0;
-> +}
-
-Just call gpiochip_reqres_irq() instead of calling the lock etc
-explicitly.
-
-> +static void stmfx_gpio_irq_release_resources(struct irq_data *data)
-> +{
-> +       struct gpio_chip *gpio_chip = irq_data_get_irq_chip_data(data);
-> +       struct stmfx_pinctrl *pctl = gpiochip_get_data(gpio_chip);
-> +
-> +       gpiochip_unlock_as_irq(&pctl->gpio_chip, data->hwirq);
-> +}
-
-Just call gpiochip_relres_irq()
-
-But all this duplicated a lot of code from the core which is not so nice.
-
-> @@ -678,6 +706,8 @@ static int stmfx_pinctrl_probe(struct platform_device *pdev)
->         pctl->irq_chip.irq_set_type = stmfx_pinctrl_irq_set_type;
->         pctl->irq_chip.irq_bus_lock = stmfx_pinctrl_irq_bus_lock;
->         pctl->irq_chip.irq_bus_sync_unlock = stmfx_pinctrl_irq_bus_sync_unlock;
-> +       pctl->irq_chip.irq_request_resources = stmfx_gpio_irq_request_resources;
-> +       pctl->irq_chip.irq_release_resources = stmfx_gpio_irq_release_resources;
-
-What about just adding
-
-pctl->irq_chip.irq_enable and do stmfx_gpio_direction_input()
-in that callback instead? gpiolib will helpfully wrap it.
+What kind of usecase is this? I certainly hope nothing like doing
+userspace drivers for complex hardware ... those should be in
+the kernel... the current ABI is a bit oriented around industrial
+automation and prototyping use cases.
 
 Yours,
 Linus Walleij
