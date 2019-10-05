@@ -2,81 +2,139 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 9734BCC61D
-	for <lists+linux-gpio@lfdr.de>; Sat,  5 Oct 2019 00:55:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 94064CC793
+	for <lists+linux-gpio@lfdr.de>; Sat,  5 Oct 2019 05:59:37 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726669AbfJDWzY (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 4 Oct 2019 18:55:24 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:40805 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725730AbfJDWzY (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 4 Oct 2019 18:55:24 -0400
-Received: by mail-wr1-f66.google.com with SMTP id h4so195341wrv.7
-        for <linux-gpio@vger.kernel.org>; Fri, 04 Oct 2019 15:55:23 -0700 (PDT)
+        id S1726814AbfJED7g (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 4 Oct 2019 23:59:36 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:41793 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726803AbfJED7g (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 4 Oct 2019 23:59:36 -0400
+Received: by mail-pg1-f193.google.com with SMTP id s1so4842803pgv.8
+        for <linux-gpio@vger.kernel.org>; Fri, 04 Oct 2019 20:59:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernelci-org.20150623.gappssmtp.com; s=20150623;
-        h=message-id:date:mime-version:content-transfer-encoding:subject:to
-         :from;
-        bh=YfRhZiMeq1yXFMfNcs4GaPZqOt8cJ/kkN3vPBsnNvb4=;
-        b=J1fyH+Mie9NXxlO7keplwGWqXgZl4+EvETUTVHC7WdrWhEgoHK5oE7lBw6rrIQgOPa
-         TkfzJizEOrVXq5v5H5CfJCzkqWPLg36vkI2psQiUp6ZdnTgLldbizdVELkSFmE+fG0Wk
-         8RuxezBTOZzdLB/FbQmDfp74/V4CFlAcB+foO7NcM67Kx7IHKytIayFaGMPKcaM36Rfs
-         0qarBu7IET9BLEtH7JZIadLVmj5okqvr+tcH017WSWXxme+dOpsuHCYuEsExhRY9mDtB
-         i+H5V1zcp3BN4u6C9R1IsSe+GKy54oOnShsG+Pp+/jKSZ8ZjEo770t2n0qTenaOu3Z4i
-         pwGQ==
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=gpGqz6qLsuq0UsH1+84/WmkwPkrLAGN7fBYEexcSldM=;
+        b=uK++wzGosptpGduXlSUxTUHmlRO1XWli+xCI7im3pB0zG8jAFV2/Qb2ASfjQpbv3OP
+         hhX5dlNkKgV8w7EVNVVbAshg+Ep8TLo6MDHeflph1ILzI6HTyk+JVqxsCbrYeUUX8rbk
+         p4VF5L7SGVWmZO3N1gNqRBw6n70jg8S7KhWjlxNLhz6LP1reXQGjaPvlyCdUk7kXZp8e
+         cYc6XYG8mrLCun653UUFiHKWRnwj9SHtbbc2AzEwJ3UkHTVHssAS8uvTE73JqyByuyo0
+         GDFYYaAHekIUKdVLufze88m8V5f4+FKVbOXyEALvi2EGhyOlnKXBaTDYVsZPXezylaOO
+         165Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:date:mime-version
-         :content-transfer-encoding:subject:to:from;
-        bh=YfRhZiMeq1yXFMfNcs4GaPZqOt8cJ/kkN3vPBsnNvb4=;
-        b=rYrBCpQqSnZZ8hAq27hA3SH5fe5MOaYkJOt3hpE3gUBA2rCrdbZR2LpPZPFQowzOKs
-         XdP4cq9FMktAY+thUwGt1bVHwIm8GUfaN1OWs7I4fJISfRKPileb9p/t3+4t8iEXrqhu
-         8c1lkVcLgjuEyf98pEwH+o7flvSV2qQm+U07e5KMf6FiBcboBhntH8e8X2L9BhnO7eZc
-         D9jkQ1tXUc/dQHLey6MbTih8re89K9ZUD/Fy3lvIk/5e1bmCLiF6IdAAxgaCdm9j/UUp
-         rmt3YlJEEbbLcEignrE3H/SZwu1ra8hgKSznl2enlmpTZRnChFUK1uWfFz0jAVZUXIOp
-         G6Bw==
-X-Gm-Message-State: APjAAAXE9fzS/reiLyJGlcak2ZRM9+UrAfaz+sUstbGCUR+ko2LIf6Ef
-        BUbZB2VFOpPBlmZXRtJs7yR8+LBRhNXlIA==
-X-Google-Smtp-Source: APXvYqw4N1ovATCdDXls+uF5RP1gecenBohDJefkTpDuxfWEFvpm0OrqnUT0dlSEwQKqQJoQoHPA5A==
-X-Received: by 2002:adf:9b81:: with SMTP id d1mr12274558wrc.157.1570229722417;
-        Fri, 04 Oct 2019 15:55:22 -0700 (PDT)
-Received: from [148.251.42.114] ([2a01:4f8:201:9271::2])
-        by smtp.gmail.com with ESMTPSA id c9sm7889802wrt.7.2019.10.04.15.55.21
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 04 Oct 2019 15:55:21 -0700 (PDT)
-Message-ID: <5d97cdd9.1c69fb81.b78c8.5b8c@mx.google.com>
-Date:   Fri, 04 Oct 2019 15:55:21 -0700 (PDT)
-Content-Type: text/plain; charset="utf-8"
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=gpGqz6qLsuq0UsH1+84/WmkwPkrLAGN7fBYEexcSldM=;
+        b=bKKQPN1maX/hGR80Cc9i/xX1wmTLiZPS8GcM8mKO4/Lwrp4BhQbHwKRQ4XRRuZ6sVA
+         bdX/nLSwMayDRC5SSKK0S/WwI20nDz6cHTpZxEEKgZazmbUGOCgXUXTjqWGVOFhEpUbQ
+         BX+HHYs2zUehPVSl8TJs3zbn8EhMsWETwHiBnjZsoKcbaLpjSsGJerlRhBwlso2fTmCb
+         Ky2cLczmFSNm7Di33SQz4V7F0nwFoRv9Jn82f71eBVo0Q5RaiAcMwMU7q/4RXc+/HJCU
+         M4eTwBon68lMTRKh2QRfW9XxIPNO1k541d3w3VqGt9Rxxh1k9PIh6pFtFc4DRUBBKL1O
+         sfdw==
+X-Gm-Message-State: APjAAAWx41I+2MYWLkeUwTJq6/6LMdccxwZsh3EHNbSLS6sSklDbIbVM
+        TDXjWhIHfg0adkyw8bmpd63EgA==
+X-Google-Smtp-Source: APXvYqxupw1jvo2pAKkclaXYZJvV74UNrF9j5Q4wH5Pb4D0Yq8va+heTNSZw6zDzEa07ocHUbUr/pA==
+X-Received: by 2002:aa7:9216:: with SMTP id 22mr21381031pfo.214.1570247974353;
+        Fri, 04 Oct 2019 20:59:34 -0700 (PDT)
+Received: from tuxbook-pro (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id f15sm7808398pfd.141.2019.10.04.20.59.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 04 Oct 2019 20:59:33 -0700 (PDT)
+Date:   Fri, 4 Oct 2019 20:59:31 -0700
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     kholk11@gmail.com
+Cc:     linux-arm-msm@vger.kernel.org, marijns95@gmail.com,
+        agross@kernel.org, mturquette@baylibre.com, sboyd@kernel.org,
+        robh+dt@kernel.org, mark.rutland@arm.com, linus.walleij@linaro.org,
+        linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org
+Subject: Re: [PATCH 1/5] pinctrl: qcom: Add a pinctrl driver for MSM8976 and
+ 8956
+Message-ID: <20191005035931.GC2999@tuxbook-pro>
+References: <20190921101207.65042-1-kholk11@gmail.com>
+ <20190921101207.65042-2-kholk11@gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-Kernelci-Report-Type: boot
-X-Kernelci-Kernel: v5.4-rc1-9-gff8baf289f37
-X-Kernelci-Tree: linusw
-X-Kernelci-Branch: for-next
-Subject: linusw/for-next boot: 38 boots: 0 failed,
- 38 passed (v5.4-rc1-9-gff8baf289f37)
-To:     linux-gpio@vger.kernel.org, fellows@kernelci.org
-From:   "kernelci.org bot" <bot@kernelci.org>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190921101207.65042-2-kholk11@gmail.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-linusw/for-next boot: 38 boots: 0 failed, 38 passed (v5.4-rc1-9-gff8baf289f=
-37)
+On Sat 21 Sep 03:12 PDT 2019, kholk11@gmail.com wrote:
 
-Full Boot Summary: https://kernelci.org/boot/all/job/linusw/branch/for-next=
-/kernel/v5.4-rc1-9-gff8baf289f37/
-Full Build Summary: https://kernelci.org/build/linusw/branch/for-next/kerne=
-l/v5.4-rc1-9-gff8baf289f37/
+> From: "Angelo G. Del Regno" <kholk11@gmail.com>
+> 
+> Add the pinctrl driver to support pin configuration with the
+> pinctrl framework on MSM8976, MSM8956, APQ8056, APQ8076.
+> 
+> Signed-off-by: Angelo G. Del Regno <kholk11@gmail.com>
+> ---
+>  .../bindings/pinctrl/qcom,msm8976-pinctrl.txt |  183 +++
+>  drivers/pinctrl/qcom/Kconfig                  |   10 +
+>  drivers/pinctrl/qcom/Makefile                 |    1 +
+>  drivers/pinctrl/qcom/pinctrl-msm8976.c        | 1128 +++++++++++++++++
+>  4 files changed, 1322 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/pinctrl/qcom,msm8976-pinctrl.txt
+>  create mode 100644 drivers/pinctrl/qcom/pinctrl-msm8976.c
+> 
+> diff --git a/Documentation/devicetree/bindings/pinctrl/qcom,msm8976-pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/qcom,msm8976-pinctrl.txt
+> new file mode 100644
+> index 000000000000..4e944f84b7d7
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/pinctrl/qcom,msm8976-pinctrl.txt
+> @@ -0,0 +1,183 @@
+> +Qualcomm MSM8976 TLMM block
 
-Tree: linusw
-Branch: for-next
-Git Describe: v5.4-rc1-9-gff8baf289f37
-Git Commit: ff8baf289f37efb0c90ce2de1ea9a9f6feea30d5
-Git URL: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-gpio.=
-git/
-Tested: 35 unique boards, 13 SoC families, 3 builds out of 6
+As Linus indicated, please send your the DT bindings in separate
+patches.
 
----
-For more info write to <info@kernelci.org>
+> +
+[..]
+> +Example:
+> +
+> +	tlmm: pinctrl@1000000 {
+> +		compatible = "qcom,msm8976-pinctrl";
+> +		reg = <0x1000000 0x300000>;
+> +		interrupts = <0 208 0>;
+
+<GIC_SPI 208 IRQ_TYPE_LEVEL_HIGH>
+
+> +		gpio-controller;
+> +		#gpio-cells = <2>;
+> +		gpio-ranges = <&tlmm 0 0 145>;
+> +		interrupt-controller;
+> +		#interrupt-cells = <2>;
+> +
+> +		blsp1_uart2_active: blsp1_uart2_active {
+> +			mux {
+> +				pins = "gpio4", "gpio5", "gpio6", "gpio7";
+> +				function = "blsp_uart2";
+> +			};
+> +
+> +			config {
+> +				pins = "gpio4", "gpio5", "gpio6", "gpio7";
+> +				drive-strength = <2>;
+> +				bias-disable;
+> +			};
+> +		};
+> +	};
+> diff --git a/drivers/pinctrl/qcom/Kconfig b/drivers/pinctrl/qcom/Kconfig
+[..]
+> +static struct platform_driver msm8976_pinctrl_driver = {
+> +	.driver = {
+> +		.name = "msm8976-pinctrl",
+> +		.owner = THIS_MODULE,
+
+No need to specify .onwer on platform_drivers anymore.
+
+
+Apart from that, I think this patch looks good.
+
+Regards,
+Bjorn
