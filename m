@@ -2,151 +2,140 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 656EACCC78
-	for <lists+linux-gpio@lfdr.de>; Sat,  5 Oct 2019 21:17:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 195C5CCCC1
+	for <lists+linux-gpio@lfdr.de>; Sat,  5 Oct 2019 22:50:03 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729389AbfJETR4 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sat, 5 Oct 2019 15:17:56 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:32843 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729309AbfJETRz (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sat, 5 Oct 2019 15:17:55 -0400
-Received: by mail-wm1-f66.google.com with SMTP id r17so11916684wme.0;
-        Sat, 05 Oct 2019 12:17:53 -0700 (PDT)
+        id S1725789AbfJEUuC (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sat, 5 Oct 2019 16:50:02 -0400
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:34885 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725775AbfJEUuC (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sat, 5 Oct 2019 16:50:02 -0400
+Received: by mail-lf1-f66.google.com with SMTP id w6so6741332lfl.2
+        for <linux-gpio@vger.kernel.org>; Sat, 05 Oct 2019 13:49:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:openpgp:autocrypt:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=ckpXFKsyeCaxlwtXczS7lilPUBGGcLYMC3cD9mbHP64=;
-        b=oA+Y12oURx4C8tWMwRV46VwkQVHyn68gQgb3f6kiWd4zREOS2vjwgTrYKnPh+iKyeH
-         62yx+zXDNamnQfLLCS+e2Muz3C1lHpoW61LIBua/p11mhJviFXrMNnmJdo5BSMXNEFB9
-         PcRbWerodlB6aeDrgyrjf1rUwmWY110TvF3SVso1oKtNOlKqoN9d1XbBOpR2ILV+ONCQ
-         npOfSVIOBgUAMHMu9fH0Wp7wZNxHIw6Yg0skl0yZ7fGxIm7bFcQlCNSRlg61oyHaSLs+
-         4N6YGQTNbj5AjCfjg+fvk+mcTVdBiEFiocMGl12aspV/MfdJm/L8UiZI5g8pexv3SkIJ
-         gK/w==
+        bh=Mo3UTLfnKXN5DUCnwv+2wj54tzA/Y3hCT/sLyqvVb3E=;
+        b=OL1k1JDe5j4+FhjpzdDPWrWXad4ysnko6KP8JK3iEreF/OS93MhAj24cGmCs5Cx3wK
+         nX9DCtnwSL1brCAezPORNCMX1d1uHMscwcuEupekMUyH/7OL5oe2y9M3inGFk8W1GGLf
+         K6xn0MklYDb16slweJPsHuZCyNkojNtnVIH1iD8Cky6CsCd0nskhQsJ0X0OVdLWCwOVA
+         DI2AlJ/ycxwmG5ydt6UyfRxzwOOEZtBDooH2gOEOHtCEwroODx0iC2SVxhqSz/fGlilg
+         nEFWEQiMs5y8EYDhZPIyRMIUSM9xFU903xpwqajtKeIQIMjBECHefepXzoZcWYDUINXb
+         BJuw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=ckpXFKsyeCaxlwtXczS7lilPUBGGcLYMC3cD9mbHP64=;
-        b=tEcY3J1uMVe1/FeWumv1IGVspAgzSHh1vqE5ulFRO7+tno1JNOiCnXJQ1+MbOrFcAF
-         cdE0ijuPpgoUlUEqH9JFoZ9tnXe/OBLPZeM/V1hLF2n2UXj/eqhD4dj66leIuJ5KZ+IW
-         8UPCyEHayMGSJLsa5ONb+/XfAobZmPxI16fXBD5Bud0C2ng+SfgwEBUciHuRkqoBP8nx
-         FaK8eD3wDaxNTfmLVduNOhA+3R1N2DHjLskHVyOKIMJ8dtuKpr7O7k+CM3UBGQM4JZab
-         PHIANrtaKDvrFP6c3vTfzsR45vJuL1C8OVBzvNIJEsiEvtRW5GbD4n3N/BJoa/JrX92W
-         iF+w==
-X-Gm-Message-State: APjAAAXbU5IjwA3FYyH+3sG+kv6/Fh9LVrc8wMzZje++T6NE2wUetwK8
-        VRPfTYcWq8py2yCI+xTqtaDIQGHM
-X-Google-Smtp-Source: APXvYqwIuuNYhduObTCaD/V6VB9RhI4nUI6cwMQo7C00XcAS5zhaAvoV2j1MbP5Ldh3HHDYYAeZ2dw==
-X-Received: by 2002:a7b:c258:: with SMTP id b24mr14737704wmj.21.1570303072707;
-        Sat, 05 Oct 2019 12:17:52 -0700 (PDT)
-Received: from [192.168.1.19] (bku134.neoplus.adsl.tpnet.pl. [83.28.188.134])
-        by smtp.gmail.com with ESMTPSA id t8sm8903365wrx.76.2019.10.05.12.17.50
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sat, 05 Oct 2019 12:17:51 -0700 (PDT)
-Subject: Re: [PATCH] leds: gpio: support multi-level brightness
-To:     Akinobu Mita <akinobu.mita@gmail.com>
-Cc:     linux-leds@vger.kernel.org, linux-gpio@vger.kernel.org,
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Mo3UTLfnKXN5DUCnwv+2wj54tzA/Y3hCT/sLyqvVb3E=;
+        b=Y7M+tE7ZlKYlBIRO22v2RWTExYw7N252hMa8qri/+/vmiVotWMt4BhhHfzfdJki2Do
+         AhJ2UFBcZImbMiydlBqKcI/3YiTZ1pVGyBCQGPvJJMBcdDOG1qWIY1ekoYHXgwFuTWRU
+         Kkl9ZVudo/cEMlDTlZX2kJI+z1SlrlF6hF5iNJ0WqOCm4aRV+4ncUUSdBG83bLlNa06+
+         wjLgirLCsKxM/0O+GCp49plFZloLRKC/ONOnmn9dQNIzYUZuanxzOo9EN7++JmMtPpf4
+         OSDz80jx2Zu9ENIb87gRh20bDNhAWWJKIUYXt6xC72aibljuQXvM3jyhNzPl8VtlpEZ6
+         JxFw==
+X-Gm-Message-State: APjAAAX9WjYgscDu2T+4BshFMp1EcUmnIWpgrZpwONZM57G00MBh16ZT
+        xX2CISpOggcX4rEzdSSxIlpa3ykYF5S9Gg==
+X-Google-Smtp-Source: APXvYqy2Gm1xNfUF++Eug1ZJcHDurNwi+Rtai30f/mClrnsXWzl/K9f5Dz7ULyak+NMY16n9iXZ00w==
+X-Received: by 2002:a19:6504:: with SMTP id z4mr12199539lfb.123.1570308598111;
+        Sat, 05 Oct 2019 13:49:58 -0700 (PDT)
+Received: from localhost.localdomain (c-79c8225c.014-348-6c756e10.bbcust.telenor.se. [92.34.200.121])
+        by smtp.gmail.com with ESMTPSA id e19sm2048440lja.8.2019.10.05.13.49.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 05 Oct 2019 13:49:56 -0700 (PDT)
+From:   Linus Walleij <linus.walleij@linaro.org>
+To:     linux-gpio@vger.kernel.org
+Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
         Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>
-References: <1570203299-4270-1-git-send-email-akinobu.mita@gmail.com>
- <96ac332f-359f-531a-7890-45b39e168b82@gmail.com>
- <CAC5umyggUm26JHU9QeND=rTozjXwH5uMiVvoK=Zqo31eBn69pg@mail.gmail.com>
-From:   Jacek Anaszewski <jacek.anaszewski@gmail.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=jacek.anaszewski@gmail.com; prefer-encrypt=mutual; keydata=
- mQINBFWjfaEBEADd66EQbd6yd8YjG0kbEDT2QIkx8C7BqMXR8AdmA1OMApbfSvEZFT1D/ECR
- eWFBS8XtApKQx1xAs1j5z70k3zebk2eeNs5ahxi6vM4Qh89vBM46biSKeeX5fLcv7asmGb/a
- FnHPAfQaKFyG/Bj9V+//ef67hpjJWR3s74C6LZCFLcbZM0z/wTH+baA5Jwcnqr4h/ygosvhP
- X3gkRzJLSFYekmEv+WHieeKXLrJdsUPUvPJTZtvi3ELUxHNOZwX2oRJStWpmL2QGMwPokRNQ
- 29GvnueQdQrIl2ylhul6TSrClMrKZqOajDFng7TLgvNfyVZE8WQwmrkTrdzBLfu3kScjE14Q
- Volq8OtQpTsw5570D4plVKh2ahlhrwXdneSot0STk9Dh1grEB/Jfw8dknvqkdjALUrrM45eF
- FM4FSMxIlNV8WxueHDss9vXRbCUxzGw37Ck9JWYo0EpcpcvwPf33yntYCbnt+RQRjv7vy3w5
- osVwRR4hpbL/fWt1AnZ+RvbP4kYSptOCPQ+Pp1tCw16BOaPjtlqSTcrlD2fo2IbaB5D21SUa
- IsdZ/XkD+V2S9jCrN1yyK2iKgxtDoUkWiqlfRgH2Ep1tZtb4NLF/S0oCr7rNLO7WbqLZQh1q
- ShfZR16h7YW//1/NFwnyCVaG1CP/L/io719dPWgEd/sVSKT2TwARAQABtC1KYWNlayBBbmFz
- emV3c2tpIDxqYWNlay5hbmFzemV3c2tpQGdtYWlsLmNvbT6JAlgEEwEIAEICGwMHCwkIBwMC
- AQYVCAIJCgsDFgIBAh4BAheABQkJZgNMFiEEvx38ClaPBfeVdXCQvWpQHLeLfCYFAl05/9sC
- GQEACgkQvWpQHLeLfCarMQ/9FN/WqJdN2tf6xkP0RFyS4ft0sT04zkOCFfOMxs8mZ+KZoMU+
- X3a+fEppDL7xgRFpHyGaEel7lSi1eqtzsqZ5JiHbDS1Ht1G8TtATb8q8id68qeSeW2mfzaLQ
- 98NPELGfUXFoUqUQkG5z2p92UrGF4Muj1vOIW93pwvE4uDpNsl+jriwHomLtjIUoZtIRjGfZ
- RCyUQI0vi5LYzXCebuzAjGD7Jh2YAp7fDGrv3qTq8sX+DUJ4H/+I8PiL+jXKkEeppqIhlBJJ
- l4WcgggMu3c2uljYDuqRYghte33BXyCPAocfO2/sN+yJRUTVuRFlOxUk4srz/W8SQDwOAwtK
- V7TzdyF1/jOGBxWwS13EjMb4u3XwPMzcPlEQNdIqz76NFmJ99xYEvgkAmFmRioxuBTRv8Fs1
- c1jQ00WWJ5vezqY6lccdDroPalXWeFzfPjIhKbV3LAYTlqv0It75GW9+0TBhPqdTM15DrCVX
- B7Ues7UnD5FBtWwewTnwr+cu8te449VDMzN2I+a9YKJ1s6uZmzh5HnuKn6tAfGyQh8MujSOM
- lZrNHrRsIsLXOjeGVa84Qk/watEcOoyQ7d+YaVosU0OCZl0GldvbGp1z2u8cd2N/HJ7dAgFh
- Q7dtGXmdXpt2WKQvTvQXhIrCWVQErNYbDZDD2V0TZtlPBaZP4fkUDkvH+Sy5Ag0EVaN9oQEQ
- AMPNymBNoCWc13U6qOztXrIKBVsLGZXq/yOaR2n7gFbFACD0TU7XuH2UcnwvNR+uQFwSrRqa
- EczX2V6iIy2CITXKg5Yvg12yn09gTmafuoIyKoU16XvC3aZQQ2Bn3LO2sRP0j/NuMD9GlO37
- pHCVRpI2DPxFE39TMm1PLbHnDG8+lZql+dpNwWw8dDaRgyXx2Le542CcTBT52VCeeWDtqd2M
- wOr4LioYlfGfAqmwcwucBdTEBUxklQaOR3VbJQx6ntI2oDOBlNGvjnVDzZe+iREd5l40l+Oj
- TaiWvBGXkv6OI+wx5TFPp+BM6ATU+6UzFRTUWbj+LqVA/JMqYHQp04Y4H5GtjbHCa8abRvBw
- IKEvpwTyWZlfXPtp8gRlNmxYn6gQlTyEZAWodXwE7CE+KxNnq7bPHeLvrSn8bLNK682PoTGr
- 0Y00bguYLfyvEwuDYek1/h9YSXtHaCR3CEj4LU1B561G1j7FVaeYbX9bKBAoy/GxAW8J5O1n
- mmw7FnkSHuwO/QDe0COoO0QZ620Cf9IBWYHW4m2M2yh5981lUaiMcNM2kPgsJFYloFo2XGn6
- lWU9BrWjEoNDhHZtF+yaPEuwjZo6x/3E2Tu3E5Jj0VpVcE9U1Zq/fquDY79l2RJn5ENogOs5
- +Pi0GjVpEYQVWfm0PTCxNPOzOzGR4QB3BNFvABEBAAGJAiUEGAEIAA8FAlWjfaECGwwFCQlm
- AYAACgkQvWpQHLeLfCZqGxAAlWBWVvjU6xj70GwengiqYZwmW1i8gfS4TNibQT/KRq0zkBnE
- wgKwXRbVoW38pYVuGa5x/JDQMJDrLAJ0wrCOS3XxbSHCWOl/k2ZD9OaxUeXq6N+OmGTzfrYv
- PUvWS1Hy04q9AD1dIaMNruZQmvnRfkOk2UDncDIg0166/NTHiYI09H5mpWGpHn/2aT6dmpVw
- uoM9/rHlF5s5qAAo95tZ0QW2BtIceG9/rbYlL57waSMPF49awvwLQX5RhWoF8mPS5LsBrXXK
- hmizIsn40tLbi2RtWjzDWgZYitqmmqijeCnDvISN4qJ/nCLO4DjiSGs59w5HR+l0nwePDhOC
- A4RYZqS1e2Clx1VSkDXFpL3egabcIsqK7CZ6a21r8lXVpo4RnMlQsmXZTnRx4SajFvX7PrRg
- /02C811fLfh2r5O5if8sKQ6BKKlHpuuioqfj/w9z3B0aQ71e4n1zNJBO1kcdznikPLAbr7jG
- gkBUXT1yJiwpTfRQr5y2Uo12IJsKxohnNFVYtK8X/R6S0deKPjrZWvAkllgIPcHjMi2Va8yw
- KTj/JgcpUO5KN906Pf7ywZISe7Kbcc/qnE0YjPPSqFOvoeZvHe6EZCMW9+xZsaipvlqpByQV
- UHnVg09K9YFvjUBsBPdC8ef6YwgfR9o6AnPmxl0oMUIXkCCC5c99fzJY/k+JAq0EGAEIACAW
- IQS/HfwKVo8F95V1cJC9alAct4t8JgUCWwqKhgIbAgCBCRC9alAct4t8JnYgBBkWCAAdFiEE
- FMMcSshOZf56bfAEYhBsURv0pdsFAlsKioYACgkQYhBsURv0pdvELgD/U+y3/hsz0bIjMQJY
- 0LLxM/rFY9Vz1L43+lQHXjL3MPsA/1lNm5sailsY7aFBVJxAzTa8ZAGWBdVaGo6KCvimDB8G
- 7joP/jx+oGOmdRogs7mG//H+w9DTnBfPpnfkeiiokGYo/+huWO5V0Ac9tTqZeFc//t/YuYJn
- wWvS0Rx+KL0fT3eh9BQo47uF4yDiZIiWLNh4Agpup1MUSVsz4MjD0lW6ghtnLcGlIgoVHW0v
- tPW1m9jATYyJSOG/MC1iDrcYcp9uVYn5tKfkEeQNspuG6iSfS0q3tajPKnT1nJxMTxVOD2RW
- EIGfaV9Scrou92VD/eC+/8INRsiWS93j3hOKIAV5XRNINFqtzkagPYAP8r6wksjSjh01fSTB
- p5zxjfsIwWDDzDrqgzwv83CvrLXRV3OlG1DNUDYA52qJr47paH5QMWmHW5TNuoBX8qb6RW/H
- M3DzPgT+l+r1pPjMPfvL1t7civZUoPuNzoyFpQRj6TvWi2bGGMQKryeYksXG2zi2+avMFnLe
- lOxGdUZ7jn1SJ6Abba5WL3VrXCP+TUE6bZLgfw8kYa8QSXP3ysyeMI0topHFntBZ8a0KXBNs
- qqFCBWmTHXfwsfW0VgBmRtPO7eXVBybjJ1VXKR2RZxwSq/GoNXh/yrRXQxbcpZ+QP3/Tttsb
- FdKciZ4u3ts+5UwYra0BRuvb51RiZR2wRNnUeBnXWagJVTlG7RHBO/2jJOE6wrcdCMjs0Iiw
- PNWmiVoZA930TvHA5UeGENxdGqo2MvMdRJ54YaIR
-Message-ID: <7d451092-bf8a-e1d4-996c-8af3cc816fc7@gmail.com>
-Date:   Sat, 5 Oct 2019 21:17:49 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Thierry Reding <treding@nvidia.com>
+Subject: [PATCH v2] pinctrl: intel: baytrail: Pass irqchip when adding gpiochip
+Date:   Sat,  5 Oct 2019 22:47:47 +0200
+Message-Id: <20191005204747.8952-1-linus.walleij@linaro.org>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-In-Reply-To: <CAC5umyggUm26JHU9QeND=rTozjXwH5uMiVvoK=Zqo31eBn69pg@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 10/5/19 3:20 PM, Akinobu Mita wrote:
-> 2019年10月5日(土) 6:17 Jacek Anaszewski <jacek.anaszewski@gmail.com>:
->>
->> Hi Akinobu,
->>
->> Why do you think this change is needed? Does it solve
->> some use case for you?
-> 
-> It can be useful when using with an LED trigger that could set the
-> brightness values other than LED_FULL or LED_OFF.
-> 
-> The LED CPU trigger for all CPUs (not per CPU) sets the brightness value
-> depending on the number of active CPUs.  We can define the multi brightness
-> level gpio LED with fewer number of GPIO LEDs than the total number of
-> CPUs, and the LEDs can be viewed as a level meter.
+We need to convert all old gpio irqchips to pass the irqchip
+setup along when adding the gpio_chip. For more info see
+drivers/gpio/TODO.
 
-Can't you achieve exactly the same effect by creating separate LED class
-device for each GPIO LED and registering each of them for separate cpuN
-trigger?
+For chained irqchips this is a pretty straight-forward
+conversion.
 
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Mika Westerberg <mika.westerberg@linux.intel.com>
+Cc: Thierry Reding <treding@nvidia.com>
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+---
+ChangeLog v1->v2:
+- Rebase on v5.4-rc1
+---
+ drivers/pinctrl/intel/pinctrl-baytrail.c | 38 ++++++++++++++----------
+ 1 file changed, 22 insertions(+), 16 deletions(-)
+
+diff --git a/drivers/pinctrl/intel/pinctrl-baytrail.c b/drivers/pinctrl/intel/pinctrl-baytrail.c
+index 9ffb22211d2b..64a59fc08b63 100644
+--- a/drivers/pinctrl/intel/pinctrl-baytrail.c
++++ b/drivers/pinctrl/intel/pinctrl-baytrail.c
+@@ -1528,6 +1528,28 @@ static int byt_gpio_probe(struct byt_gpio *vg)
+ 	if (!vg->saved_context)
+ 		return -ENOMEM;
+ #endif
++
++	/* set up interrupts  */
++	irq_rc = platform_get_resource(vg->pdev, IORESOURCE_IRQ, 0);
++	if (irq_rc && irq_rc->start) {
++		struct gpio_irq_chip *girq;
++
++		byt_gpio_irq_init_hw(vg);
++
++		girq = &gc->irq;
++		girq->chip = &byt_irqchip;
++		girq->parent_handler = byt_gpio_irq_handler;
++		girq->num_parents = 1;
++		girq->parents = devm_kcalloc(&vg->pdev->dev, 1,
++					     sizeof(*girq->parents),
++					     GFP_KERNEL);
++		if (!girq->parents)
++			return -ENOMEM;
++		girq->parents[0] = (unsigned int)irq_rc->start;
++		girq->default_type = IRQ_TYPE_NONE;
++		girq->handler = handle_bad_irq;
++	}
++
+ 	ret = devm_gpiochip_add_data(&vg->pdev->dev, gc, vg);
+ 	if (ret) {
+ 		dev_err(&vg->pdev->dev, "failed adding byt-gpio chip\n");
+@@ -1541,22 +1563,6 @@ static int byt_gpio_probe(struct byt_gpio *vg)
+ 		return ret;
+ 	}
+ 
+-	/* set up interrupts  */
+-	irq_rc = platform_get_resource(vg->pdev, IORESOURCE_IRQ, 0);
+-	if (irq_rc && irq_rc->start) {
+-		byt_gpio_irq_init_hw(vg);
+-		ret = gpiochip_irqchip_add(gc, &byt_irqchip, 0,
+-					   handle_bad_irq, IRQ_TYPE_NONE);
+-		if (ret) {
+-			dev_err(&vg->pdev->dev, "failed to add irqchip\n");
+-			return ret;
+-		}
+-
+-		gpiochip_set_chained_irqchip(gc, &byt_irqchip,
+-					     (unsigned)irq_rc->start,
+-					     byt_gpio_irq_handler);
+-	}
+-
+ 	return ret;
+ }
+ 
 -- 
-Best regards,
-Jacek Anaszewski
+2.21.0
+
