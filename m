@@ -2,182 +2,141 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 422FECCBA7
-	for <lists+linux-gpio@lfdr.de>; Sat,  5 Oct 2019 19:24:02 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9B89ACCBD1
+	for <lists+linux-gpio@lfdr.de>; Sat,  5 Oct 2019 19:50:54 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727466AbfJERYB (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sat, 5 Oct 2019 13:24:01 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:35827 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726318AbfJERYB (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sat, 5 Oct 2019 13:24:01 -0400
-Received: by mail-wm1-f68.google.com with SMTP id y21so8638275wmi.0
-        for <linux-gpio@vger.kernel.org>; Sat, 05 Oct 2019 10:23:59 -0700 (PDT)
+        id S1728499AbfJERuh (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sat, 5 Oct 2019 13:50:37 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:33226 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729608AbfJERuh (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sat, 5 Oct 2019 13:50:37 -0400
+Received: by mail-wr1-f67.google.com with SMTP id b9so10703886wrs.0;
+        Sat, 05 Oct 2019 10:50:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernelci-org.20150623.gappssmtp.com; s=20150623;
-        h=message-id:date:mime-version:content-transfer-encoding:subject:to
-         :from;
-        bh=4lpbbb6hiDOImwRO3UAPDlXbLJkLrq6H7yOOXqX5zQs=;
-        b=oXOX4XyGqbBsDTOyCXOeWY3d34ziOvQZB5DR3RaF2NzHy0o31ZZKc1nqmrqDb3yKa+
-         92Au85FrV4NBWaHL02FByAciPDWJ1Lq4jlZi0Zq24ywCGAhqLYA0H9qkSZvEmfJ2XlON
-         ViAMRyNMdQRkb36TrrngL8+tjQVMHz1c+U04wJ52crjv5lB2t40eco5tqA4iYUmB/ZjZ
-         D7auXKFIxfUUQjLknFmjwTxyOZUdiPPZf7IUcbHQlpLZ+TRFMLk8nNOJvJGuJvZwWh/F
-         Mpyk8Y6Iqf78SQozirgr7OTZjMFNSgOzQf4bdNpyVBNiNJCCvAeFAymkSRXfqLWDBW46
-         vYNw==
+        d=gmail.com; s=20161025;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=woGdLkObfzRFeLoqI5/c5x/iMFT/HmZsLV4Tr4PA8q8=;
+        b=YvJJ/RH+r+ZNGn9DmsmptGvTw/7fkvvLkknt1pqKNRNe5BXRwLtSX8S/5z/xoR3qDo
+         oq/6xk/dbnLworgzGxomjTtks8z+QS940l0iPOh6bhLv9Y/fISBam6Z04vamu+7w7VaF
+         /q7/UP96FQrjCgSScsAOtqpdWk+RMBKlEnTCnRsPgCfA6IftthJgyMpQQZk7975d6aFn
+         aSK0WGRYJ3M/Xh+HFiZ2miQxFtmgXwHhS1YmJKaGWCVOR4hKenqO+DDUpxseZg5XI8Cr
+         03+ShYJzWNErice6Ykt9nYRSKqH4iOle+XuxyPFMwDHbTaVSH4bAVc4Du1jFNu1NGg5L
+         NI0Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:date:mime-version
-         :content-transfer-encoding:subject:to:from;
-        bh=4lpbbb6hiDOImwRO3UAPDlXbLJkLrq6H7yOOXqX5zQs=;
-        b=q94lxnNhu0qxpAP7pPu8tKJJii1dPddVRkd6+5wrFI8fD1zOYaSEMDeigJUlbL1Lta
-         gwyllJcbOcWXltjQ/sBSuyrHlKJ5hkPvmlcfbw0R58dgwhuQpt/WQYGnpgQ6V+6Ajkfh
-         /ld7Ph/X0xLurKPxlXqhyVH1dWalHPMkrNZZUPhnViZMlnZjcWro2NI17hhieYH/5iQc
-         FFDUSFysaeD2pBK94POpNRuEUQHZkHWqb5ikYCUKJII5lOaeAR/feBv/LcHAO8VN5pgv
-         BeXN/6qHg2DI8Kbzc/VcHw1YJgm1qSWUvCWEXpW3WVuXbBLfgAuGAuZkLPQv21dD2TWx
-         Fo/w==
-X-Gm-Message-State: APjAAAXfF9dlRxE3b0x+Xsb/OVUZRwd7gUNZ7j6R/PG/D8ppr9r0tETt
-        LGjLvhfGIkHD5if6qyyzWIKRsdGEi1A=
-X-Google-Smtp-Source: APXvYqzH/xVCj4C87ry1f+1z+dwhhXU8trzMuh2Vz2ELGugfo/FMZC5yOPQtZ4mzeB8iqhmx4jezQA==
-X-Received: by 2002:a1c:7f84:: with SMTP id a126mr10352050wmd.42.1570296238448;
-        Sat, 05 Oct 2019 10:23:58 -0700 (PDT)
-Received: from [148.251.42.114] ([2a01:4f8:201:9271::2])
-        by smtp.gmail.com with ESMTPSA id n18sm6655297wmi.20.2019.10.05.10.23.57
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sat, 05 Oct 2019 10:23:58 -0700 (PDT)
-Message-ID: <5d98d1ae.1c69fb81.49db2.c13d@mx.google.com>
-Date:   Sat, 05 Oct 2019 10:23:58 -0700 (PDT)
-Content-Type: text/plain; charset="utf-8"
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=woGdLkObfzRFeLoqI5/c5x/iMFT/HmZsLV4Tr4PA8q8=;
+        b=QupYWYWcXuAunkzOivtrdu/xbadazEBHIMUg24c7ilr0yl4OOwD7zWvWZeSL1yJoB/
+         bs7p6V0zUK6qXZBljwmMluf7XLwMxuAMGCyp20phlwGkgP8miHxFJuYQ6UOUMnBlir43
+         Da/tZ13WZjKdwZn4uVIIHKxkB0NkiBI93DclLRXxk1i2pIF3UsBdQMa4YvYw23YWs9J0
+         hVbBn3wRoJ2Ow+DP374T3NqX097Q2s/RX+gUv1lx4l/pzHvZvU88kGFYg4gRgdDbWwhf
+         Gg5WM26+WGOB1zPsGXEg2aBK0QzrHYWUvxjo93+NEJqeIbUUFcBHES6/bTwKFp8vHTTT
+         Mleg==
+X-Gm-Message-State: APjAAAUplk4IG+LrtJigp6mlYySAtVrXSsnQQ+HTtagySY9CcjqG2Mgt
+        /oF32eHhZO6KY0SFpkn3bx8=
+X-Google-Smtp-Source: APXvYqx3PzUHgdYRUSlZN9M0EPBeF+W+0e93Y2j5mVMXv8fWHuZVnS+5zd4oHSYnQYPi9EGQzPE2Yw==
+X-Received: by 2002:a5d:6885:: with SMTP id h5mr16449681wru.92.1570297834128;
+        Sat, 05 Oct 2019 10:50:34 -0700 (PDT)
+Received: from x230 (ipb218f546.dynamic.kabel-deutschland.de. [178.24.245.70])
+        by smtp.gmail.com with ESMTPSA id o19sm17222631wmh.27.2019.10.05.10.50.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 05 Oct 2019 10:50:33 -0700 (PDT)
+From:   Eugeniu Rosca <roscaeugeniu@gmail.com>
+X-Google-Original-From: Eugeniu Rosca <erosca@de.adit-jv.com>
+Date:   Sat, 5 Oct 2019 19:50:24 +0200
+To:     Stephen Warren <swarren@wwwdotorg.org>
+Cc:     Eugeniu Rosca <erosca@de.adit-jv.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Harish Jenny K N <harish_kandiga@mentor.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Balasubramani Vivekanandan 
+        <balasubramani_vivekanandan@mentor.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Stephen Warren <swarren@nvidia.com>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Phil Reid <preid@electromag.com.au>,
+        Enrico Weigelt <info@metux.net>, linux-gpio@vger.kernel.org,
+        devicetree@vger.kernel.org, Eugeniu Rosca <roscaeugeniu@gmail.com>
+Subject: Re: [PATCH V4 2/2] gpio: inverter: document the inverter bindings
+Message-ID: <20191005175024.GA25394@x230>
+References: <1561714250-19613-1-git-send-email-harish_kandiga@mentor.com>
+ <20190925165133.GA4164@vmlxhi-102.adit-jv.com>
+ <06a1acab-fcc4-7b3a-697b-4d253c354513@wwwdotorg.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-Kernelci-Report-Type: build
-X-Kernelci-Kernel: v5.4-rc1-5-gfffa6af94894
-X-Kernelci-Tree: linusw
-X-Kernelci-Branch: fixes
-Subject: linusw/fixes build: 6 builds: 0 failed, 6 passed,
- 13 warnings (v5.4-rc1-5-gfffa6af94894)
-To:     linux-gpio@vger.kernel.org, fellows@kernelci.org
-From:   "kernelci.org bot" <bot@kernelci.org>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <06a1acab-fcc4-7b3a-697b-4d253c354513@wwwdotorg.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-linusw/fixes build: 6 builds: 0 failed, 6 passed, 13 warnings (v5.4-rc1-5-g=
-fffa6af94894)
+Hi Stephen,
 
-Full Build Summary: https://kernelci.org/build/linusw/branch/fixes/kernel/v=
-5.4-rc1-5-gfffa6af94894/
+On Fri, Oct 04, 2019 at 01:07:23PM -0600, Stephen Warren wrote:
 
-Tree: linusw
-Branch: fixes
-Git Describe: v5.4-rc1-5-gfffa6af94894
-Git Commit: fffa6af94894126994a7600c6f6f09b892e89fa9
-Git URL: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-gpio.=
-git/
-Built: 6 unique architectures
+[..]
 
-Warnings Detected:
+> I think the DT should represent the device that's attached to the GPIOs.
+> That way, there's already a clear way to represent the GPIO polarity, as
+> described in the document linked by Eugenui in [2] below.
+> 
+> If for some reason that's not possible, then I think keeping track of the
+> GPIO polarity in user-space is entirely reasonable, and is the correct
+> approach. To claim that tracking GPIO polarity in user-space is too much
+> burden, yet to also allow user-space to control GPIOs at all, and hence to
+> know exactly which GPIOs must be controlled, is an inconsistent assertion.
+> 
+> Put another way: If a piece of user-space SW controls GPIOs, it must know
+> which GPIO number to use for each logical purpose. This information
+> presumably varies on different platforms, so the SW must have a list of GPIO
+> numbers and GPIO controller IDs per platform. Additionally storing a
+> polarity bit along with that information seems entirely trivial to me.
+> 
+> Is there some other issue that I'm overlooking?
 
-arc:
-    nsim_hs_defconfig (gcc-8): 2 warnings
+Based on the discussions so far, the user who requested this feature
+intends to (in fact already does) "mark" the userspace-relevant gpio
+lines via the "gpio-line-names" [5] DT property, implemented by Linus
+in v4.7 commit [6]. By keeping track of "gpio line name" both in DT and
+in user-space, apparently the user is able to accurately map the
+"line name" (visible in userspace) to the corresponding gpio chip/name
+and gpio line offset in a "platform/board-independent" way.
 
-arm64:
-    defconfig (gcc-8): 3 warnings
+Do you think this is unorthodox?
 
-arm:
-    multi_v7_defconfig (gcc-8): 5 warnings
+> If the list of GPIO IDs is retrieved from DT by the user-space SW, I could
+> see an argument for storing the polarity information in DT along with that
+> list of GPIO IDs. However, I don't believe there's any standard way of
+> representing "a list of GPIO IDs for user space use" in DT.
+> 
+> > If we hog a GPIO pin in DTS (which allows specifying its polarity),
+> > userspace no longer has access to that pin. There isn't a way to define
+> > GPIO polarity by means of DTS without affecting userspace access
+> > (can anybody contradict this statement?).
+> 
+> GPIO hog doesn't seem like the right approach; its intent is to actively
+> configure the GPIO in a fixed state, which is logically incompatible with
+> user-space control of the GPIO.
 
-mips:
-    32r2el_defconfig (gcc-8): 3 warnings
+Agreed. Thanks for strengthening the idea behind hogging the gpios.
 
-riscv:
+[..]
 
-x86_64:
+> > [1] https://marc.info/?l=linux-gpio&m=139204273132477&w=4 ("Correct meaning of the GPIO active low flag")
+> > [2] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=51e8afc1c43c75 ("gpio: document polarity flag best practices")
+> > [3] https://marc.info/?l=linux-gpio&m=155721267517644&w=2 ("[PATCH V1 1/2] gpio: make it possible to set active-state on GPIO lines")
+> > [4] https://marc.info/?l=linux-gpio&m=155713157122847&w=2 ("[PATCH V1 1/2] gpio: make it possible to set active-state on GPIO lines")
+[5] https://marc.info/?l=linux-gpio&m=155712945922102&w=2
+[6] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=fd9c55315db9
+    ("gpio: of: make it possible to name GPIO lines")
 
-
-Warnings summary:
-
-    5    <stdin>:1511:2: warning: #warning syscall clone3 not implemented [=
--Wcpp]
-    2    WARNING: "return_address" [vmlinux] is a static EXPORT_SYMBOL_GPL
-    2    WARNING: "HYPERVISOR_platform_op" [vmlinux] is a static EXPORT_SYM=
-BOL_GPL
-    1    depmod: WARNING: /home/buildslave/workspace/workspace/kernel-build=
-@2/linux/build/_modules_/lib/modules/5.4.0-rc1/kernel/drivers/usb/storage/u=
-as.ko needs unknown symbol usb_stor_sense_invalidCDB
-    1    depmod: WARNING: /home/buildslave/workspace/workspace/kernel-build=
-@2/linux/build/_modules_/lib/modules/5.4.0-rc1/kernel/drivers/usb/storage/u=
-as.ko needs unknown symbol usb_stor_adjust_quirks
-    1    arch/arm64/configs/defconfig:726:warning: symbol value 'm' invalid=
- for REMOTEPROC
-    1    arch/arm/configs/multi_v7_defconfig:936:warning: symbol value 'm' =
-invalid for REMOTEPROC
-
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D
-
-Detailed per-defconfig build reports:
-
----------------------------------------------------------------------------=
------
-32r2el_defconfig (mips, gcc-8) =E2=80=94 PASS, 0 errors, 3 warnings, 0 sect=
-ion mismatches
-
-Warnings:
-    <stdin>:1511:2: warning: #warning syscall clone3 not implemented [-Wcpp]
-    <stdin>:1511:2: warning: #warning syscall clone3 not implemented [-Wcpp]
-    <stdin>:1511:2: warning: #warning syscall clone3 not implemented [-Wcpp]
-
----------------------------------------------------------------------------=
------
-defconfig (riscv, gcc-8) =E2=80=94 PASS, 0 errors, 0 warnings, 0 section mi=
-smatches
-
----------------------------------------------------------------------------=
------
-defconfig (arm64, gcc-8) =E2=80=94 PASS, 0 errors, 3 warnings, 0 section mi=
-smatches
-
-Warnings:
-    arch/arm64/configs/defconfig:726:warning: symbol value 'm' invalid for =
-REMOTEPROC
-    WARNING: "HYPERVISOR_platform_op" [vmlinux] is a static EXPORT_SYMBOL_G=
-PL
-    WARNING: "HYPERVISOR_platform_op" [vmlinux] is a static EXPORT_SYMBOL_G=
-PL
-
----------------------------------------------------------------------------=
------
-multi_v7_defconfig (arm, gcc-8) =E2=80=94 PASS, 0 errors, 5 warnings, 0 sec=
-tion mismatches
-
-Warnings:
-    arch/arm/configs/multi_v7_defconfig:936:warning: symbol value 'm' inval=
-id for REMOTEPROC
-    WARNING: "return_address" [vmlinux] is a static EXPORT_SYMBOL_GPL
-    WARNING: "return_address" [vmlinux] is a static EXPORT_SYMBOL_GPL
-    depmod: WARNING: /home/buildslave/workspace/workspace/kernel-build@2/li=
-nux/build/_modules_/lib/modules/5.4.0-rc1/kernel/drivers/usb/storage/uas.ko=
- needs unknown symbol usb_stor_sense_invalidCDB
-    depmod: WARNING: /home/buildslave/workspace/workspace/kernel-build@2/li=
-nux/build/_modules_/lib/modules/5.4.0-rc1/kernel/drivers/usb/storage/uas.ko=
- needs unknown symbol usb_stor_adjust_quirks
-
----------------------------------------------------------------------------=
------
-nsim_hs_defconfig (arc, gcc-8) =E2=80=94 PASS, 0 errors, 2 warnings, 0 sect=
-ion mismatches
-
-Warnings:
-    <stdin>:1511:2: warning: #warning syscall clone3 not implemented [-Wcpp]
-    <stdin>:1511:2: warning: #warning syscall clone3 not implemented [-Wcpp]
-
----------------------------------------------------------------------------=
------
-x86_64_defconfig (x86_64, gcc-8) =E2=80=94 PASS, 0 errors, 0 warnings, 0 se=
-ction mismatches
-
----
-For more info write to <info@kernelci.org>
+-- 
+Best Regards,
+Eugeniu
