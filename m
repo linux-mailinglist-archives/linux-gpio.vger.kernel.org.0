@@ -2,141 +2,90 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 9B89ACCBD1
-	for <lists+linux-gpio@lfdr.de>; Sat,  5 Oct 2019 19:50:54 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1C3C3CCBEA
+	for <lists+linux-gpio@lfdr.de>; Sat,  5 Oct 2019 20:08:05 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728499AbfJERuh (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sat, 5 Oct 2019 13:50:37 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:33226 "EHLO
+        id S2387527AbfJESIE (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sat, 5 Oct 2019 14:08:04 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:35092 "EHLO
         mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729608AbfJERuh (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sat, 5 Oct 2019 13:50:37 -0400
-Received: by mail-wr1-f67.google.com with SMTP id b9so10703886wrs.0;
-        Sat, 05 Oct 2019 10:50:34 -0700 (PDT)
+        with ESMTP id S2387477AbfJESIE (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sat, 5 Oct 2019 14:08:04 -0400
+Received: by mail-wr1-f67.google.com with SMTP id v8so10724239wrt.2
+        for <linux-gpio@vger.kernel.org>; Sat, 05 Oct 2019 11:08:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=woGdLkObfzRFeLoqI5/c5x/iMFT/HmZsLV4Tr4PA8q8=;
-        b=YvJJ/RH+r+ZNGn9DmsmptGvTw/7fkvvLkknt1pqKNRNe5BXRwLtSX8S/5z/xoR3qDo
-         oq/6xk/dbnLworgzGxomjTtks8z+QS940l0iPOh6bhLv9Y/fISBam6Z04vamu+7w7VaF
-         /q7/UP96FQrjCgSScsAOtqpdWk+RMBKlEnTCnRsPgCfA6IftthJgyMpQQZk7975d6aFn
-         aSK0WGRYJ3M/Xh+HFiZ2miQxFtmgXwHhS1YmJKaGWCVOR4hKenqO+DDUpxseZg5XI8Cr
-         03+ShYJzWNErice6Ykt9nYRSKqH4iOle+XuxyPFMwDHbTaVSH4bAVc4Du1jFNu1NGg5L
-         NI0Q==
+        d=kernelci-org.20150623.gappssmtp.com; s=20150623;
+        h=message-id:date:mime-version:content-transfer-encoding:subject:to
+         :from;
+        bh=da8j9n2dzG7iaA7ch9Qf1s8ticRLc5OTi78QVdccRJM=;
+        b=ZQmG0u+y8iWpdKQQY+3ruyAK/WXsCh+3XGEimwVwBFnKUzu0Av+LEQuVIG1G6bPGnK
+         A1MbIChoyX42wGVYRGk8VIIeLpo4WZ9F/G+bEX2op0CxOdRSrkLv6uiHVScHWX49LwNZ
+         UEIakxcDP90XJwHNU0bwh0pkxen7l+xs45JtgCk4pddXUg4XM+tMPdcSB7QVCqo57Yix
+         pfPKm200qvT/0AloDOO6vBUoBNmIxbzS+cd6GLLaXqZH06EU31QCnnruD6o870ou9+ZU
+         srLWgc1GZLyj//vp7stlEH5Ip6EXhaCTbefdAN/NQh9Kvcmx/GbTTr2CA5dnYhBInrw7
+         mvYg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=woGdLkObfzRFeLoqI5/c5x/iMFT/HmZsLV4Tr4PA8q8=;
-        b=QupYWYWcXuAunkzOivtrdu/xbadazEBHIMUg24c7ilr0yl4OOwD7zWvWZeSL1yJoB/
-         bs7p6V0zUK6qXZBljwmMluf7XLwMxuAMGCyp20phlwGkgP8miHxFJuYQ6UOUMnBlir43
-         Da/tZ13WZjKdwZn4uVIIHKxkB0NkiBI93DclLRXxk1i2pIF3UsBdQMa4YvYw23YWs9J0
-         hVbBn3wRoJ2Ow+DP374T3NqX097Q2s/RX+gUv1lx4l/pzHvZvU88kGFYg4gRgdDbWwhf
-         Gg5WM26+WGOB1zPsGXEg2aBK0QzrHYWUvxjo93+NEJqeIbUUFcBHES6/bTwKFp8vHTTT
-         Mleg==
-X-Gm-Message-State: APjAAAUplk4IG+LrtJigp6mlYySAtVrXSsnQQ+HTtagySY9CcjqG2Mgt
-        /oF32eHhZO6KY0SFpkn3bx8=
-X-Google-Smtp-Source: APXvYqx3PzUHgdYRUSlZN9M0EPBeF+W+0e93Y2j5mVMXv8fWHuZVnS+5zd4oHSYnQYPi9EGQzPE2Yw==
-X-Received: by 2002:a5d:6885:: with SMTP id h5mr16449681wru.92.1570297834128;
-        Sat, 05 Oct 2019 10:50:34 -0700 (PDT)
-Received: from x230 (ipb218f546.dynamic.kabel-deutschland.de. [178.24.245.70])
-        by smtp.gmail.com with ESMTPSA id o19sm17222631wmh.27.2019.10.05.10.50.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 05 Oct 2019 10:50:33 -0700 (PDT)
-From:   Eugeniu Rosca <roscaeugeniu@gmail.com>
-X-Google-Original-From: Eugeniu Rosca <erosca@de.adit-jv.com>
-Date:   Sat, 5 Oct 2019 19:50:24 +0200
-To:     Stephen Warren <swarren@wwwdotorg.org>
-Cc:     Eugeniu Rosca <erosca@de.adit-jv.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Harish Jenny K N <harish_kandiga@mentor.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Balasubramani Vivekanandan 
-        <balasubramani_vivekanandan@mentor.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Stephen Warren <swarren@nvidia.com>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Phil Reid <preid@electromag.com.au>,
-        Enrico Weigelt <info@metux.net>, linux-gpio@vger.kernel.org,
-        devicetree@vger.kernel.org, Eugeniu Rosca <roscaeugeniu@gmail.com>
-Subject: Re: [PATCH V4 2/2] gpio: inverter: document the inverter bindings
-Message-ID: <20191005175024.GA25394@x230>
-References: <1561714250-19613-1-git-send-email-harish_kandiga@mentor.com>
- <20190925165133.GA4164@vmlxhi-102.adit-jv.com>
- <06a1acab-fcc4-7b3a-697b-4d253c354513@wwwdotorg.org>
+        h=x-gm-message-state:message-id:date:mime-version
+         :content-transfer-encoding:subject:to:from;
+        bh=da8j9n2dzG7iaA7ch9Qf1s8ticRLc5OTi78QVdccRJM=;
+        b=XM/85k/ka9j+CLFb1eAe6bjk49SxU9DBQGpN+Tg1bQcW7wUdoH5oh13IEYbA8jbetX
+         U6Jr87ylEl+MXIos+yHf/mdQrSUNVgnlc7nwnmC0+KRdYYRPAZnWpb7rgRE4j/kT4t9S
+         HtWgwmD6qy2JoM07A+vH8fkljkINQvB/Rdn0f5X1KwpkNpDqyqaShtPtKLuU33QF+S6K
+         TbmtwrsTSvA3svo+mxHtTJVJ8cLFtZ0HYHrQNeKA3nyv6jE1l7EvHVV+83uwfyAZjLDk
+         AEPYV1gzSHd3poKRcG+cKzATAcaBayoOWy09DfPQ46HtoAtDOvqrW2/nYU1c6o3TvSO2
+         i4UQ==
+X-Gm-Message-State: APjAAAUVIWMHQwjat9Tn22fhMZFeOTC8lN9eQ6ejFYfRidxPIb+5VlQ9
+        xszLHswtLn3yIaPUrTk0JN0RUY4UIH8=
+X-Google-Smtp-Source: APXvYqxm5hB8c4e7CeWLp+ID6e8u2IVNyuEbsePtKhMdccRBSxGkYqIkTyHuhEa1BRlxtmQjMuPymQ==
+X-Received: by 2002:a5d:4a01:: with SMTP id m1mr11724027wrq.343.1570298881845;
+        Sat, 05 Oct 2019 11:08:01 -0700 (PDT)
+Received: from [148.251.42.114] ([2a01:4f8:201:9271::2])
+        by smtp.gmail.com with ESMTPSA id w125sm17850392wmg.32.2019.10.05.11.08.01
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sat, 05 Oct 2019 11:08:01 -0700 (PDT)
+Message-ID: <5d98dc01.1c69fb81.6b8e2.032e@mx.google.com>
+Date:   Sat, 05 Oct 2019 11:08:01 -0700 (PDT)
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <06a1acab-fcc4-7b3a-697b-4d253c354513@wwwdotorg.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: quoted-printable
+X-Kernelci-Report-Type: boot
+X-Kernelci-Kernel: v5.4-rc1-8-g8c550e94b883
+X-Kernelci-Tree: linusw
+X-Kernelci-Branch: devel
+Subject: linusw/devel boot: 43 boots: 0 failed,
+ 42 passed with 1 untried/unknown (v5.4-rc1-8-g8c550e94b883)
+To:     linux-gpio@vger.kernel.org, fellows@kernelci.org
+From:   "kernelci.org bot" <bot@kernelci.org>
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Stephen,
+linusw/devel boot: 43 boots: 0 failed, 42 passed with 1 untried/unknown (v5=
+.4-rc1-8-g8c550e94b883)
 
-On Fri, Oct 04, 2019 at 01:07:23PM -0600, Stephen Warren wrote:
+Full Boot Summary: https://kernelci.org/boot/all/job/linusw/branch/devel/ke=
+rnel/v5.4-rc1-8-g8c550e94b883/
+Full Build Summary: https://kernelci.org/build/linusw/branch/devel/kernel/v=
+5.4-rc1-8-g8c550e94b883/
 
-[..]
+Tree: linusw
+Branch: devel
+Git Describe: v5.4-rc1-8-g8c550e94b883
+Git Commit: 8c550e94b8835170593169a45b5ba30d3fc72a70
+Git URL: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-gpio.=
+git/
+Tested: 40 unique boards, 14 SoC families, 3 builds out of 6
 
-> I think the DT should represent the device that's attached to the GPIOs.
-> That way, there's already a clear way to represent the GPIO polarity, as
-> described in the document linked by Eugenui in [2] below.
-> 
-> If for some reason that's not possible, then I think keeping track of the
-> GPIO polarity in user-space is entirely reasonable, and is the correct
-> approach. To claim that tracking GPIO polarity in user-space is too much
-> burden, yet to also allow user-space to control GPIOs at all, and hence to
-> know exactly which GPIOs must be controlled, is an inconsistent assertion.
-> 
-> Put another way: If a piece of user-space SW controls GPIOs, it must know
-> which GPIO number to use for each logical purpose. This information
-> presumably varies on different platforms, so the SW must have a list of GPIO
-> numbers and GPIO controller IDs per platform. Additionally storing a
-> polarity bit along with that information seems entirely trivial to me.
-> 
-> Is there some other issue that I'm overlooking?
+Boot Regressions Detected:
 
-Based on the discussions so far, the user who requested this feature
-intends to (in fact already does) "mark" the userspace-relevant gpio
-lines via the "gpio-line-names" [5] DT property, implemented by Linus
-in v4.7 commit [6]. By keeping track of "gpio line name" both in DT and
-in user-space, apparently the user is able to accurately map the
-"line name" (visible in userspace) to the corresponding gpio chip/name
-and gpio line offset in a "platform/board-independent" way.
+arm:
 
-Do you think this is unorthodox?
+    multi_v7_defconfig:
+        gcc-8:
+          am335x-boneblack:
+              lab-drue: new failure (last pass: v5.4-rc1-1-gf8b410e3695a)
 
-> If the list of GPIO IDs is retrieved from DT by the user-space SW, I could
-> see an argument for storing the polarity information in DT along with that
-> list of GPIO IDs. However, I don't believe there's any standard way of
-> representing "a list of GPIO IDs for user space use" in DT.
-> 
-> > If we hog a GPIO pin in DTS (which allows specifying its polarity),
-> > userspace no longer has access to that pin. There isn't a way to define
-> > GPIO polarity by means of DTS without affecting userspace access
-> > (can anybody contradict this statement?).
-> 
-> GPIO hog doesn't seem like the right approach; its intent is to actively
-> configure the GPIO in a fixed state, which is logically incompatible with
-> user-space control of the GPIO.
-
-Agreed. Thanks for strengthening the idea behind hogging the gpios.
-
-[..]
-
-> > [1] https://marc.info/?l=linux-gpio&m=139204273132477&w=4 ("Correct meaning of the GPIO active low flag")
-> > [2] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=51e8afc1c43c75 ("gpio: document polarity flag best practices")
-> > [3] https://marc.info/?l=linux-gpio&m=155721267517644&w=2 ("[PATCH V1 1/2] gpio: make it possible to set active-state on GPIO lines")
-> > [4] https://marc.info/?l=linux-gpio&m=155713157122847&w=2 ("[PATCH V1 1/2] gpio: make it possible to set active-state on GPIO lines")
-[5] https://marc.info/?l=linux-gpio&m=155712945922102&w=2
-[6] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=fd9c55315db9
-    ("gpio: of: make it possible to name GPIO lines")
-
--- 
-Best Regards,
-Eugeniu
+---
+For more info write to <info@kernelci.org>
