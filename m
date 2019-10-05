@@ -2,121 +2,152 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 56CFECC7E8
-	for <lists+linux-gpio@lfdr.de>; Sat,  5 Oct 2019 06:38:56 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8A436CC90C
+	for <lists+linux-gpio@lfdr.de>; Sat,  5 Oct 2019 11:19:51 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726511AbfJEEij (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sat, 5 Oct 2019 00:38:39 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:40147 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726308AbfJEEij (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sat, 5 Oct 2019 00:38:39 -0400
-Received: by mail-pg1-f193.google.com with SMTP id d26so4889154pgl.7
-        for <linux-gpio@vger.kernel.org>; Fri, 04 Oct 2019 21:38:38 -0700 (PDT)
+        id S1727480AbfJEJTu (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sat, 5 Oct 2019 05:19:50 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:55545 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725862AbfJEJTu (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sat, 5 Oct 2019 05:19:50 -0400
+Received: by mail-wm1-f67.google.com with SMTP id a6so7948327wma.5;
+        Sat, 05 Oct 2019 02:19:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=gojjLX+lTwGZmg+qENDnRVGuBFOraGHa2B2vpf7iVZU=;
-        b=aoJD5LqfjCMzYKl2Xwu3Wklmzvu7Hh9AhSF/aixsCOh0sn3oS4pK3FjHL/0jBgFAqU
-         UQ5M799eRDsX9N3DOgF89P6R8Pt9oHIg9YqJ+u22TNw15lvNiMYLxneCH39xxlCkookY
-         E6b9yZ9zR+j8gRX5pq7hv1c5ST9WyOm7pn/Tc8agfncncn9s/5O6d1EohcNBYMSTECtG
-         G2XqTK5nejhi/RHWpIa9Z6yjy7Q2U11yrCrnU2Y0iCOtGhQryHhfmlDctxdCueziuQE+
-         NY13ZbDKQ+Pk3RIT/g4g2KBOYVDSsQm/LHsKj+9MvSP5JCyPS66DWRYHAJMXVqKMuHzf
-         Jg8Q==
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=yvIRA62tf+Id/1C1Iw9pWjY61unNIlcfEnBQ+FsDC9I=;
+        b=SD25cdX2nkZyVjKM8hZcX4l8pxfctJxVJUlwVM6fCHB1wE/QVLmtgKna86JVgJZMyZ
+         WnBh16+K76LYEvhvUlMq1Ggs1kdW8NMa1ut4WIBHMHQSvUfb0FCUGiHdpxzvzuBvWJYf
+         PclPLw8+r84uWQEpjxr4d5QXEZqxBMEHn9q0Zusng9QBo6C7lWLvuFWbwgZZlCVAhY8k
+         4+nxUPtUOm1jPqQTqXISY024InaI+hfTsI7u0vdAlcFkFgzY79UGhsCI2aOpTCgizKqv
+         TBs+HE9koR92+aQU4xrdAB7pUY1uMCYQ1aPu3UfQERzOLdEWIO0tN3Dzjxb3S4UD+ZCv
+         Uqmg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=gojjLX+lTwGZmg+qENDnRVGuBFOraGHa2B2vpf7iVZU=;
-        b=uJ7OpOKLPNng4zXXi6zSpjUU/yGVe+nc4DGJi5nlqYCr5n7AnasGEjuZdqUH4v4L4y
-         ZBDYBuKEhXMT3+pXC8GLZ2hp9oTWTBSr5zk0qlY2b4e+nRRXpOCwBDD9FjpjhR4CEf0l
-         mZErQuFHU8R4Wfi64KybpHWFv5habWmlkV6d/wo8XRg92vrbzLWUlvndaq57GePHyWt8
-         tPjTN8QKooed12cwAaTT4S/WfiQR1l4z1/ZJpFSzdxlOT0MWVh7Gss75QHkewuydVMgg
-         AkSRlCEw7V3Wt2cDpgF5gKST9lFjxi2WKIUKBQjY2zQdoye2tMT3yKrmfDW8klbW5Q2y
-         ZD7g==
-X-Gm-Message-State: APjAAAUNDYKXtWshHL7OTmfMZg5kEn8O4Xdm9B2hK00lPLMe9FGWWBzF
-        XzedFrlj/Dgt6HatHpb0HeNsgA==
-X-Google-Smtp-Source: APXvYqybrYaoAQQO0OhNSmIB0UUOdfqyJ4Qu//EasKPhAapNYmiKSK5FOIodqcUwgnxNhBbXOE/eTQ==
-X-Received: by 2002:a65:5546:: with SMTP id t6mr18868858pgr.441.1570250318244;
-        Fri, 04 Oct 2019 21:38:38 -0700 (PDT)
-Received: from tuxbook-pro (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id 1sm8310336pff.39.2019.10.04.21.38.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 04 Oct 2019 21:38:37 -0700 (PDT)
-Date:   Fri, 4 Oct 2019 21:38:35 -0700
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Kiran Gunda <kgunda@codeaurora.org>
-Cc:     Andy Gross <agross@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=yvIRA62tf+Id/1C1Iw9pWjY61unNIlcfEnBQ+FsDC9I=;
+        b=JgMagZcd3ITyrCkIx0Xirh3l2qO4hUQ7vLlgEd+sf84i6jtnF+rinh631htuKVSgwk
+         PBj3SrBGdHTLEzqh2hEg4okKahEr2Z3HK/guJpcPh2r3AYhRJggQ9dZyHvCAcSPTHq61
+         0Wt+Cc1u6eYGpnR2/RmyqS6hb/dwmiIfjnmkU3oi3d3ZvSzODe9F1O9oZDx2MCYi5ETN
+         i6yhMfyL6bzIByAY7eMR5xk8V+FNWq3evWMJD2is41qitRccVbiEhYwCE4E+2ZSux6Mn
+         6ldVMGvbLGXwj90xPoEHqJs//PljBBPVdBE34K5ZbwnX4uPAiI9A5YuaaFDgKMKpr59K
+         BNaw==
+X-Gm-Message-State: APjAAAVZ073iD5OruiOIobvnRI89Zd5geTnf0DDgZq0cUZVlRpU4myaX
+        vzdDaN02DeKcZp+NVVnTkCiMur8OKtq/8ScfK8E/GKa6
+X-Google-Smtp-Source: APXvYqxwf0KpXaoAxvxmIrDNxz0S67HAfxmjTzqx3HTl7NVvv2rZQ2gyQQddzFjQ1DrQ/Qfyy81p8G7dTKbi3ub7iF4=
+X-Received: by 2002:a1c:4108:: with SMTP id o8mr14550830wma.129.1570267187819;
+ Sat, 05 Oct 2019 02:19:47 -0700 (PDT)
+MIME-Version: 1.0
+References: <20190921101207.65042-1-kholk11@gmail.com> <20190921101207.65042-2-kholk11@gmail.com>
+ <20191005035931.GC2999@tuxbook-pro>
+In-Reply-To: <20191005035931.GC2999@tuxbook-pro>
+From:   AngeloGioacchino Del Regno <kholk11@gmail.com>
+Date:   Sat, 5 Oct 2019 11:19:35 +0200
+Message-ID: <CAK7fi1ahvqbT_EtZTV=nzjMdF-xOr6DBciry56z9L065xLoGhg@mail.gmail.com>
+Subject: Re: [PATCH 1/5] pinctrl: qcom: Add a pinctrl driver for MSM8976 and 8956
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     MSM <linux-arm-msm@vger.kernel.org>, marijns95@gmail.com,
+        agross@kernel.org, Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
         Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH V1] dt-bindings: pinctrl: qcom-pmic-gpio: Add support for
- pm6150/pm6150l
-Message-ID: <20191005043835.GD6390@tuxbook-pro>
-References: <1570188039-22122-1-git-send-email-kgunda@codeaurora.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1570188039-22122-1-git-send-email-kgunda@codeaurora.org>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri 04 Oct 04:20 PDT 2019, Kiran Gunda wrote:
+Il giorno sab 5 ott 2019 alle ore 05:59 Bjorn Andersson
+<bjorn.andersson@linaro.org> ha scritto:
+>
+> On Sat 21 Sep 03:12 PDT 2019, kholk11@gmail.com wrote:
+>
+> > From: "Angelo G. Del Regno" <kholk11@gmail.com>
+> >
+> > Add the pinctrl driver to support pin configuration with the
+> > pinctrl framework on MSM8976, MSM8956, APQ8056, APQ8076.
+> >
+> > Signed-off-by: Angelo G. Del Regno <kholk11@gmail.com>
+> > ---
+> >  .../bindings/pinctrl/qcom,msm8976-pinctrl.txt |  183 +++
+> >  drivers/pinctrl/qcom/Kconfig                  |   10 +
+> >  drivers/pinctrl/qcom/Makefile                 |    1 +
+> >  drivers/pinctrl/qcom/pinctrl-msm8976.c        | 1128 +++++++++++++++++
+> >  4 files changed, 1322 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/pinctrl/qcom,msm8976-pinctrl.txt
+> >  create mode 100644 drivers/pinctrl/qcom/pinctrl-msm8976.c
+> >
+> > diff --git a/Documentation/devicetree/bindings/pinctrl/qcom,msm8976-pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/qcom,msm8976-pinctrl.txt
+> > new file mode 100644
+> > index 000000000000..4e944f84b7d7
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/pinctrl/qcom,msm8976-pinctrl.txt
+> > @@ -0,0 +1,183 @@
+> > +Qualcomm MSM8976 TLMM block
+>
+> As Linus indicated, please send your the DT bindings in separate
+> patches.
+>
+> > +
+> [..]
+> > +Example:
+> > +
+> > +     tlmm: pinctrl@1000000 {
+> > +             compatible = "qcom,msm8976-pinctrl";
+> > +             reg = <0x1000000 0x300000>;
+> > +             interrupts = <0 208 0>;
+>
+> <GIC_SPI 208 IRQ_TYPE_LEVEL_HIGH>
+>
+> > +             gpio-controller;
+> > +             #gpio-cells = <2>;
+> > +             gpio-ranges = <&tlmm 0 0 145>;
+> > +             interrupt-controller;
+> > +             #interrupt-cells = <2>;
+> > +
+> > +             blsp1_uart2_active: blsp1_uart2_active {
+> > +                     mux {
+> > +                             pins = "gpio4", "gpio5", "gpio6", "gpio7";
+> > +                             function = "blsp_uart2";
+> > +                     };
+> > +
+> > +                     config {
+> > +                             pins = "gpio4", "gpio5", "gpio6", "gpio7";
+> > +                             drive-strength = <2>;
+> > +                             bias-disable;
+> > +                     };
+> > +             };
+> > +     };
+> > diff --git a/drivers/pinctrl/qcom/Kconfig b/drivers/pinctrl/qcom/Kconfig
+> [..]
+> > +static struct platform_driver msm8976_pinctrl_driver = {
+> > +     .driver = {
+> > +             .name = "msm8976-pinctrl",
+> > +             .owner = THIS_MODULE,
+>
+> No need to specify .onwer on platform_drivers anymore.
+>
+>
+> Apart from that, I think this patch looks good.
+>
+> Regards,
+> Bjorn
 
-> Add support for the PM6150 and PM6150L GPIO support to the
-> Qualcomm PMIC GPIO binding.
-> 
-> Signed-off-by: Kiran Gunda <kgunda@codeaurora.org>
+Thanks guys for the review.
 
-Acked-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+Well, I did it in one patch after seeing this practice on other
+patches, so I thought to replicate,
+despite the well known rule... but yeah, of course, there's absolutely
+no problem, I'll send the
+two separate patches in a separate series and I'll do the same for the
+GCC driver as well,
+which doesn't seem that it got sent to the list for some obscure reason.
 
-> ---
->  Documentation/devicetree/bindings/pinctrl/qcom,pmic-gpio.txt | 4 ++++
->  drivers/pinctrl/qcom/pinctrl-spmi-gpio.c                     | 2 ++
->  2 files changed, 6 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/pinctrl/qcom,pmic-gpio.txt b/Documentation/devicetree/bindings/pinctrl/qcom,pmic-gpio.txt
-> index c32bf32..2f48cca 100644
-> --- a/Documentation/devicetree/bindings/pinctrl/qcom,pmic-gpio.txt
-> +++ b/Documentation/devicetree/bindings/pinctrl/qcom,pmic-gpio.txt
-> @@ -23,6 +23,8 @@ PMIC's from Qualcomm.
->  		    "qcom,pms405-gpio"
->  		    "qcom,pm8150-gpio"
->  		    "qcom,pm8150b-gpio"
-> +		    "qcom,pm6150-gpio"
-> +		    "qcom,pm6150l-gpio"
->  
->  		    And must contain either "qcom,spmi-gpio" or "qcom,ssbi-gpio"
->  		    if the device is on an spmi bus or an ssbi bus respectively
-> @@ -100,6 +102,8 @@ to specify in a pin configuration subnode:
->  					     and gpio8)
->  		    gpio1-gpio12 for pm8150b (holes on gpio3, gpio4, gpio7)
->  		    gpio1-gpio12 for pm8150l (hole on gpio7)
-> +		    gpio1-gpio10 for pm6150
-> +		    gpio1-gpio12 for pm6150l
->  
->  - function:
->  	Usage: required
-> diff --git a/drivers/pinctrl/qcom/pinctrl-spmi-gpio.c b/drivers/pinctrl/qcom/pinctrl-spmi-gpio.c
-> index f1fece5..387917c 100644
-> --- a/drivers/pinctrl/qcom/pinctrl-spmi-gpio.c
-> +++ b/drivers/pinctrl/qcom/pinctrl-spmi-gpio.c
-> @@ -1121,6 +1121,8 @@ static int pmic_gpio_remove(struct platform_device *pdev)
->  	{ .compatible = "qcom,pm8150b-gpio", .data = (void *) 12 },
->  	/* pm8150l has 12 GPIOs with holes on 7 */
->  	{ .compatible = "qcom,pm8150l-gpio", .data = (void *) 12 },
-> +	{ .compatible = "qcom,pm6150-gpio", .data = (void *) 10 },
-> +	{ .compatible = "qcom,pm6150l-gpio", .data = (void *) 12 },
->  	{ },
->  };
->  
-> -- 
-> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
->  a Linux Foundation Collaborative Project
-> 
+About the requested changes... sure, I will apply them and resend ASAP.
+
+Thanks again!
