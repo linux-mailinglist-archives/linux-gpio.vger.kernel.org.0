@@ -2,79 +2,182 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id E86B8CCB8D
-	for <lists+linux-gpio@lfdr.de>; Sat,  5 Oct 2019 19:03:14 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6ACC2CCBA5
+	for <lists+linux-gpio@lfdr.de>; Sat,  5 Oct 2019 19:23:27 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729348AbfJERDO (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sat, 5 Oct 2019 13:03:14 -0400
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:33271 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725826AbfJERDO (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sat, 5 Oct 2019 13:03:14 -0400
-Received: by mail-lj1-f195.google.com with SMTP id a22so9587137ljd.0
-        for <linux-gpio@vger.kernel.org>; Sat, 05 Oct 2019 10:03:11 -0700 (PDT)
+        id S1725826AbfJERXU (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sat, 5 Oct 2019 13:23:20 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:50681 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729352AbfJERXU (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sat, 5 Oct 2019 13:23:20 -0400
+Received: by mail-wm1-f66.google.com with SMTP id 5so8657807wmg.0
+        for <linux-gpio@vger.kernel.org>; Sat, 05 Oct 2019 10:23:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=8ddXseKGv3/4SKLZ5SVHPZUcCGGOrS8Arg9a3AfDJ4U=;
-        b=Xqf61BwvcS/rFfd0wz4vNV9veNGdL7VAfXV8dSdJ9cLhFvhz6TbDdSXAfBl3w+tsEk
-         bE6Se2xBAaoy0VM2T8kU0o1r/pp57sp3P/H7oHuZ4Lz0UQXNuOPUA9nnFYJeHVF6adBz
-         tKqH8jMFJpW0gWbstEwFPhsshv5ay7/rSvwmr+d3hZzhqZZ3fXBFpzrNr3Kf/X/yw6mT
-         +FCpvIaaQdUmgz5HjOnvf2SrTIW8t0J8KyyH6zO3DS95waglbQ2mlSbELrK+FwCgCopv
-         kGWKCDuj0o7xhlUdLR9Pqz/FllWp863da6pdFOsAgeRzi2bmVGTP1Rj4XfBWK1MgguLW
-         AXTQ==
+        d=kernelci-org.20150623.gappssmtp.com; s=20150623;
+        h=message-id:date:mime-version:content-transfer-encoding:subject:to
+         :from;
+        bh=WXN6IVWvczUFbPWWq/6nXY2nLSr2zU9Yw/UWBhmqQd4=;
+        b=w4vsT4/LuhaOTc2AOh34x96mKubonx/gmyf7vUtOcC+ZedwwRXVFLst3Vt3wYSH/9N
+         MruqACuWY2GsT3mKyCbhHtk07LLClb8zWlQ7B+rBLU2mQ4JjgqKZuDgu8EzP6PnQ5JZ/
+         ObaaaTadVeh2AdFEo7gLs2sgYBOcdFk8nxvCQbRt18riUwHb4VEthWqYGOKSrH5lhv0d
+         90YpyoMwpl+GoZSqeBahJAJUru9TGhLHOAAiBdYs9/vpHZK8irvD8CQaHtZ/4jXWuD5V
+         GYlqsAKktTjGDTdVeem084M0zyUKkEb/JaLWTwnD7fy0gww4MImuUWAu/yeaADBfCOqr
+         zc6g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=8ddXseKGv3/4SKLZ5SVHPZUcCGGOrS8Arg9a3AfDJ4U=;
-        b=LVryYbgmosoLDkimmwN4xtVUcmIwbjcPNo/qR+AdurNoHE1+zXgQDsrOkDiG93/gDy
-         vJSgVKRU1uVqrsq38DfF05eWBcpnZkuPRHyE08NArbAyW38BsCXMso7r2QC4lr5+8xDf
-         fBrJg+QyGpnxdUYta+lFaH19CJ0sxw487xr8/EprXRgSY2hoHytGW1Oso44o6ieMVo6W
-         fovKsLeAzFTyPCnFvI3vraDoDCcVF/KwiBUgYbJ2EfZvAS8xeOpxpQ0Iiki5ebrRNOky
-         Gw5Emps6RU130SrP553JPWhVBT6Wt7n0pJu1Ht/hbeZGYaV6/K5UYaxMD4qAIfcwnE9b
-         vd6Q==
-X-Gm-Message-State: APjAAAVVJQoFQGbiAZhIJrsWwOqr9p3an4eV5wljgZB0Q/lOVT2Skoru
-        7U/VYcmC9syKltzMxkS8puHjGMIUFyUu8R1amiOHWEP6/Ew=
-X-Google-Smtp-Source: APXvYqwx2pmDu6fo2GmW7KjDXSgU9KCpAgfn1umVPmNgf9cwxEakvOiLABhSZCeVxH+vPM/w25JxcW7jjbz4fyLAQNY=
-X-Received: by 2002:a2e:5dc3:: with SMTP id v64mr13342905lje.118.1570294990791;
- Sat, 05 Oct 2019 10:03:10 -0700 (PDT)
+        h=x-gm-message-state:message-id:date:mime-version
+         :content-transfer-encoding:subject:to:from;
+        bh=WXN6IVWvczUFbPWWq/6nXY2nLSr2zU9Yw/UWBhmqQd4=;
+        b=lqZn9ucOU3SLBFUKn07fEAhSV2h1ON9TLdL31d3EMbNJkijdT4sVFLhhmiOSlYaf6L
+         QP7nxL75/CrdeogLlD6TwMxY8DDflziX40981ditS1xSOtglhW2XjSCchMfj9JAYaY35
+         FYNbru1P7u6aNjaWLXSsePlKWbLIc5N+LlZEmdJk2wL8WpA2cJkA3fskDX0QQlwXMEug
+         veHb8U5Ka0focVKDq0Q6M1jpt5Tl3AFdGAi5WbIuspG0j+9nalzpx1KEXRNvOHFu52W7
+         wOyxTA/DTaw8uBCWYoPuRvNC1bqmCGiGwDCvamphn7xXWfVzq/D7fOOfqcmxrjnTLF/4
+         9FJA==
+X-Gm-Message-State: APjAAAXHXEwGUdgp6KOWVgjo7vOBbYtiVMawFiFE/eT1HQGLxZKEI4/E
+        4ZFirto6skVTPe2bdpXP7vEJGa3XZc8=
+X-Google-Smtp-Source: APXvYqwpS/waWHmk+SK4+gZIt9wErhdU7zg2Jc9lD1T63Iu8ZlzEykVuJz57Amem5cXWX42ujj0kbA==
+X-Received: by 2002:a1c:e916:: with SMTP id q22mr14910730wmc.15.1570296197356;
+        Sat, 05 Oct 2019 10:23:17 -0700 (PDT)
+Received: from [148.251.42.114] ([2a01:4f8:201:9271::2])
+        by smtp.gmail.com with ESMTPSA id a3sm17937310wmc.3.2019.10.05.10.23.16
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sat, 05 Oct 2019 10:23:16 -0700 (PDT)
+Message-ID: <5d98d184.1c69fb81.622ac.0da9@mx.google.com>
+Date:   Sat, 05 Oct 2019 10:23:16 -0700 (PDT)
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-References: <20190921102522.8970-1-drew@pdp7.com> <CAMRc=Me=6JeOOv_SRhKt+vOsd3p5yOVkWyNu4Oo+DeCwMJHmaA@mail.gmail.com>
- <CACRpkdZjswY4zW232ahSQSGfprbgBx8YL4Wb0i3ebegT00v3jQ@mail.gmail.com> <CAMRc=McH=ui1c9yTMtuMwVUT2-yBHhV=r0VGsKY0KbYMLHJhPA@mail.gmail.com>
-In-Reply-To: <CAMRc=McH=ui1c9yTMtuMwVUT2-yBHhV=r0VGsKY0KbYMLHJhPA@mail.gmail.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Sat, 5 Oct 2019 19:02:58 +0200
-Message-ID: <CACRpkdZP8GYPUk4ZB+2Ei4hrrT0Orq0MUEszJ+YM=npuh1uH9w@mail.gmail.com>
-Subject: Re: [RFC] gpio: expose pull-up/pull-down line flags to userspace
-To:     Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     Drew Fustini <drew@pdp7.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Kernelci-Report-Type: build
+X-Kernelci-Kernel: v5.4-rc1-8-g8c550e94b883
+X-Kernelci-Tree: linusw
+X-Kernelci-Branch: devel
+Subject: linusw/devel build: 6 builds: 0 failed, 6 passed,
+ 13 warnings (v5.4-rc1-8-g8c550e94b883)
+To:     linux-gpio@vger.kernel.org, fellows@kernelci.org
+From:   "kernelci.org bot" <bot@kernelci.org>
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Oct 4, 2019 at 9:22 AM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
+linusw/devel build: 6 builds: 0 failed, 6 passed, 13 warnings (v5.4-rc1-8-g=
+8c550e94b883)
 
-> The config ioctl (or
-> something similar) you're mentioning may appear sooner actually -
-> users of libgpiod have been requesting a way of changing the direction
-> of a line without releasing it - something that's possible in the
-> kernel, but not from user-space at the moment. I'll submit something
-> that allows to change the configuration of a requested line soon.
+Full Build Summary: https://kernelci.org/build/linusw/branch/devel/kernel/v=
+5.4-rc1-8-g8c550e94b883/
 
-Hm! I guess I assumed that userspace users would be using the lines
-for either input or output, not complex use cases like that, reversing
-direction and what not.
+Tree: linusw
+Branch: devel
+Git Describe: v5.4-rc1-8-g8c550e94b883
+Git Commit: 8c550e94b8835170593169a45b5ba30d3fc72a70
+Git URL: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-gpio.=
+git/
+Built: 6 unique architectures
 
-What kind of usecase is this? I certainly hope nothing like doing
-userspace drivers for complex hardware ... those should be in
-the kernel... the current ABI is a bit oriented around industrial
-automation and prototyping use cases.
+Warnings Detected:
 
-Yours,
-Linus Walleij
+arc:
+    nsim_hs_defconfig (gcc-8): 2 warnings
+
+arm64:
+    defconfig (gcc-8): 3 warnings
+
+arm:
+    multi_v7_defconfig (gcc-8): 5 warnings
+
+mips:
+    32r2el_defconfig (gcc-8): 3 warnings
+
+riscv:
+
+x86_64:
+
+
+Warnings summary:
+
+    5    <stdin>:1511:2: warning: #warning syscall clone3 not implemented [=
+-Wcpp]
+    2    WARNING: "return_address" [vmlinux] is a static EXPORT_SYMBOL_GPL
+    2    WARNING: "HYPERVISOR_platform_op" [vmlinux] is a static EXPORT_SYM=
+BOL_GPL
+    1    depmod: WARNING: /home/buildslave/workspace/workspace/kernel-build=
+@2/linux/build/_modules_/lib/modules/5.4.0-rc1/kernel/drivers/usb/storage/u=
+as.ko needs unknown symbol usb_stor_sense_invalidCDB
+    1    depmod: WARNING: /home/buildslave/workspace/workspace/kernel-build=
+@2/linux/build/_modules_/lib/modules/5.4.0-rc1/kernel/drivers/usb/storage/u=
+as.ko needs unknown symbol usb_stor_adjust_quirks
+    1    arch/arm64/configs/defconfig:726:warning: symbol value 'm' invalid=
+ for REMOTEPROC
+    1    arch/arm/configs/multi_v7_defconfig:936:warning: symbol value 'm' =
+invalid for REMOTEPROC
+
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D
+
+Detailed per-defconfig build reports:
+
+---------------------------------------------------------------------------=
+-----
+32r2el_defconfig (mips, gcc-8) =E2=80=94 PASS, 0 errors, 3 warnings, 0 sect=
+ion mismatches
+
+Warnings:
+    <stdin>:1511:2: warning: #warning syscall clone3 not implemented [-Wcpp]
+    <stdin>:1511:2: warning: #warning syscall clone3 not implemented [-Wcpp]
+    <stdin>:1511:2: warning: #warning syscall clone3 not implemented [-Wcpp]
+
+---------------------------------------------------------------------------=
+-----
+defconfig (riscv, gcc-8) =E2=80=94 PASS, 0 errors, 0 warnings, 0 section mi=
+smatches
+
+---------------------------------------------------------------------------=
+-----
+defconfig (arm64, gcc-8) =E2=80=94 PASS, 0 errors, 3 warnings, 0 section mi=
+smatches
+
+Warnings:
+    arch/arm64/configs/defconfig:726:warning: symbol value 'm' invalid for =
+REMOTEPROC
+    WARNING: "HYPERVISOR_platform_op" [vmlinux] is a static EXPORT_SYMBOL_G=
+PL
+    WARNING: "HYPERVISOR_platform_op" [vmlinux] is a static EXPORT_SYMBOL_G=
+PL
+
+---------------------------------------------------------------------------=
+-----
+multi_v7_defconfig (arm, gcc-8) =E2=80=94 PASS, 0 errors, 5 warnings, 0 sec=
+tion mismatches
+
+Warnings:
+    arch/arm/configs/multi_v7_defconfig:936:warning: symbol value 'm' inval=
+id for REMOTEPROC
+    WARNING: "return_address" [vmlinux] is a static EXPORT_SYMBOL_GPL
+    WARNING: "return_address" [vmlinux] is a static EXPORT_SYMBOL_GPL
+    depmod: WARNING: /home/buildslave/workspace/workspace/kernel-build@2/li=
+nux/build/_modules_/lib/modules/5.4.0-rc1/kernel/drivers/usb/storage/uas.ko=
+ needs unknown symbol usb_stor_sense_invalidCDB
+    depmod: WARNING: /home/buildslave/workspace/workspace/kernel-build@2/li=
+nux/build/_modules_/lib/modules/5.4.0-rc1/kernel/drivers/usb/storage/uas.ko=
+ needs unknown symbol usb_stor_adjust_quirks
+
+---------------------------------------------------------------------------=
+-----
+nsim_hs_defconfig (arc, gcc-8) =E2=80=94 PASS, 0 errors, 2 warnings, 0 sect=
+ion mismatches
+
+Warnings:
+    <stdin>:1511:2: warning: #warning syscall clone3 not implemented [-Wcpp]
+    <stdin>:1511:2: warning: #warning syscall clone3 not implemented [-Wcpp]
+
+---------------------------------------------------------------------------=
+-----
+x86_64_defconfig (x86_64, gcc-8) =E2=80=94 PASS, 0 errors, 0 warnings, 0 se=
+ction mismatches
+
+---
+For more info write to <info@kernelci.org>
