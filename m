@@ -2,265 +2,166 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 5F9D9CC982
-	for <lists+linux-gpio@lfdr.de>; Sat,  5 Oct 2019 12:59:53 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CB6C7CCA00
+	for <lists+linux-gpio@lfdr.de>; Sat,  5 Oct 2019 15:08:05 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725985AbfJEK7r (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sat, 5 Oct 2019 06:59:47 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:42603 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727709AbfJEK7r (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sat, 5 Oct 2019 06:59:47 -0400
-Received: by mail-wr1-f65.google.com with SMTP id n14so9942109wrw.9;
-        Sat, 05 Oct 2019 03:59:44 -0700 (PDT)
+        id S1727108AbfJENIC (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sat, 5 Oct 2019 09:08:02 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:35012 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726125AbfJENIB (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sat, 5 Oct 2019 09:08:01 -0400
+Received: by mail-wr1-f68.google.com with SMTP id v8so10231077wrt.2;
+        Sat, 05 Oct 2019 06:07:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=/qNfj8GbLN+9PGGvc6otSbPpwss0oFPmoNbSZpQa+N0=;
-        b=iU/sh7PGzUaH6isKn+MT11M66BBSfv1MHrs+qTVJQlm3wo13gpEDtPYSkdvFH7HJIP
-         qul9Y8QYDoqAaPKggTklnMpfGtcN0tD1zZzdYnp0M0MWWysoAfSYk7EC3Kn2fI56EeU/
-         +XJz/Pd+Z75mkYaQrVQJgdJSbQXdAFkax9tcr/gHkDzC51uSwEdG4TztnjCSnyUQtzUx
-         dCeejc4iOftqhRQQ6am9AIkkv7T9sTIzqTIthPmaVW+sH4DT0EfBMlhOiYPgTZQueDzw
-         YNDEMfhFgHdbIYs5Yop3PaGdMw93HhaFUbGXKEQy+ojSm3UiKQz7liwlG0CkxQpb8/kj
-         nsrg==
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=Wn70i4M0g6I6OiAhtzXGyX55LyAgmOGTRfNvMSBv4kU=;
+        b=SScte5exofBprLHGb3HqnY3+sxtvhJ9220zKgspaOgCyXrB/nUvvz2TquAfVDrFjPa
+         O+W8iH+eUJxvp8D1Ee58HrmdaPUdfzrSDO7gxwBV69yBEY5CKDdWZsiLMT12ZrPpC2XF
+         YUmzA3mJbVpHXt5ti6s8MJEgwJLdBNFaOjS5WaVlqoRCVlKxScCutAbuev8t0BE4m/IX
+         XkbmVfROS7YpEjCX1ij0h7qDm8YDLaR33QNBsko355G96kJ1dNikuOjSIRxnoi8hTSNk
+         nkJPrb2qGfZ5useF4IIKGuyq5PuB69q3kLw5I6n8lwvwFM7TMR73eE2b7uBuVMj7ECPW
+         PpvQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=/qNfj8GbLN+9PGGvc6otSbPpwss0oFPmoNbSZpQa+N0=;
-        b=SDF4Uegh57vjEQkY9eVPRueGIuKcbOFwruKATAkkXjSVBzzxRlfiOo+Wv0QwN/0Ngs
-         6Eu34RKtks+8xfRDuX55pmUDhQMFsVK69KJabaosD3JJxF93pekTU2ENXVX8vTxI/EAt
-         CioLA5qWp8b5GYnnGtDR09fI5HZE4uJWNaFPbOIcN1ZM01mDn8j2oV0cu4UVT6P2QymP
-         6U1FtPDYCZG26jr6jY8lhz/uZRvLTBzxfj0XgGXh3wDziOJsvkB/v755v7ARvHd+rB2T
-         iw/VNW9G/nTiMIrRWXWzY7WNQVniFHsokPs7ySjEaILKJUB28mW3waDnEv53DLlJ1Gdp
-         81Wg==
-X-Gm-Message-State: APjAAAX2I6N14DKaYPNWimi25rZnJGpXevekjBWhpMPLZj7k0+vjeRLP
-        4WQSC+PeYf2P0U7d1l6zSXwcjcmlDqu49A==
-X-Google-Smtp-Source: APXvYqx5TqwRAIRHvmDFvyypdNJCOmNnhU/CuHI3K/dR8lsEmD1XGB0wB9NcvZum44pb4qquY9WEZA==
-X-Received: by 2002:adf:f58c:: with SMTP id f12mr12415355wro.38.1570273183079;
-        Sat, 05 Oct 2019 03:59:43 -0700 (PDT)
-Received: from IcarusMOD.eternityproject.eu ([93.51.16.173])
-        by smtp.gmail.com with ESMTPSA id u7sm9227678wrp.19.2019.10.05.03.59.42
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sat, 05 Oct 2019 03:59:42 -0700 (PDT)
-From:   kholk11@gmail.com
-To:     linux-arm-msm@vger.kernel.org
-Cc:     linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-        agross@kernel.org, bjorn.andersson@linaro.org,
-        linus.walleij@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com,
-        marijns95@gmail.com, kholk11@gmail.com
-Subject: [PATCH 2/2] dt-bindings: pinctrl: Add MSM8976 driver bindings and documentation
-Date:   Sat,  5 Oct 2019 12:59:36 +0200
-Message-Id: <20191005105936.31216-3-kholk11@gmail.com>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20191005105936.31216-1-kholk11@gmail.com>
-References: <20191005105936.31216-1-kholk11@gmail.com>
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=Wn70i4M0g6I6OiAhtzXGyX55LyAgmOGTRfNvMSBv4kU=;
+        b=T6IxWxVKpurEJc0aXiQhfcwf73ZpeCqO481ctY/yhJfD0Cemqit7fVbhMZJkslVyIw
+         szIsmk7sbpR/lO+HzXH6M7mLEsAzJjbynyRunQkq6vrJqfwj1o1ULArqBWd6Qt0PjEUF
+         3jYmdRJOqnZqHu26SYcYahtTVhjXMBKHPPnONPqUqIygzyLaYUPj3rq3A+hnu2V22eLI
+         tdAfIV47nvMAUUfHXK3JYAytjprs2DBxtJ4fQ64K/dIHsTGma9lW7rw/75IFv1SFk4Rj
+         xHKm5MoZPUFX5rmqoqmDKWukz4FeUcq0mNLC1/CZAKg4+mfOkHTLCsBzP5iAV7rcLZhU
+         BpLw==
+X-Gm-Message-State: APjAAAXphCRx/VElX0b05mbsZMvzVl3Epn07AJJYvkezCKq5R1ILy/ib
+        /SkNAR1aOQD7z3how+Gm6fY=
+X-Google-Smtp-Source: APXvYqxJd5OeaMFJOJv9UssT2A+d4YgCTo0PHexEsguVYnXh7xAXdvzLWCNxkxkduzPH6HpexM5ENg==
+X-Received: by 2002:adf:ce83:: with SMTP id r3mr14284524wrn.219.1570280877226;
+        Sat, 05 Oct 2019 06:07:57 -0700 (PDT)
+Received: from x230 ([178.24.245.70])
+        by smtp.gmail.com with ESMTPSA id a7sm18995630wra.43.2019.10.05.06.07.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 05 Oct 2019 06:07:55 -0700 (PDT)
+From:   Eugeniu Rosca <roscaeugeniu@gmail.com>
+X-Google-Original-From: Eugeniu Rosca <erosca@de.adit-jv.com>
+Date:   Sat, 5 Oct 2019 15:07:40 +0200
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     Eugeniu Rosca <erosca@de.adit-jv.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Harish Jenny K N <harish_kandiga@mentor.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Balasubramani Vivekanandan 
+        <balasubramani_vivekanandan@mentor.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Stephen Warren <swarren@nvidia.com>,
+        Stephen Warren <swarren@wwwdotorg.org>,
+        Phil Reid <preid@electromag.com.au>,
+        Enrico Weigelt <info@metux.net>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Eugeniu Rosca <roscaeugeniu@gmail.com>
+Subject: Re: [PATCH V4 2/2] gpio: inverter: document the inverter bindings
+Message-ID: <20191005130740.GA22620@x230>
+References: <1561714250-19613-1-git-send-email-harish_kandiga@mentor.com>
+ <20190925165133.GA4164@vmlxhi-102.adit-jv.com>
+ <CAMuHMdVt3yDiJzkbUGMdkKKd4+CJ0btWuO-J=YZL+pAo99_WXg@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAMuHMdVt3yDiJzkbUGMdkKKd4+CJ0btWuO-J=YZL+pAo99_WXg@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-From: AngeloGioacchino Del Regno <kholk11@gmail.com>
+Hi Geert,
 
-Add the documentation for this new driver for pin configuration
-with the pinctrl framework on MSM8976/56 and its APQ variants.
----
- .../bindings/pinctrl/qcom,msm8976-pinctrl.txt | 183 ++++++++++++++++++
- 1 file changed, 183 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/pinctrl/qcom,msm8976-pinctrl.txt
+On Fri, Sep 27, 2019 at 11:07:20AM +0200, Geert Uytterhoeven wrote:
 
-diff --git a/Documentation/devicetree/bindings/pinctrl/qcom,msm8976-pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/qcom,msm8976-pinctrl.txt
-new file mode 100644
-index 000000000000..70d04d12f136
---- /dev/null
-+++ b/Documentation/devicetree/bindings/pinctrl/qcom,msm8976-pinctrl.txt
-@@ -0,0 +1,183 @@
-+Qualcomm MSM8976 TLMM block
-+
-+This binding describes the Top Level Mode Multiplexer block found in the
-+MSM8956 and MSM8976 platforms.
-+
-+- compatible:
-+	Usage: required
-+	Value type: <string>
-+	Definition: must be "qcom,msm8976-pinctrl"
-+
-+- reg:
-+	Usage: required
-+	Value type: <prop-encoded-array>
-+	Definition: the base address and size of the TLMM register space.
-+
-+- interrupts:
-+	Usage: required
-+	Value type: <prop-encoded-array>
-+	Definition: should specify the TLMM summary IRQ.
-+
-+- interrupt-controller:
-+	Usage: required
-+	Value type: <none>
-+	Definition: identifies this node as an interrupt controller
-+
-+- #interrupt-cells:
-+	Usage: required
-+	Value type: <u32>
-+	Definition: must be 2. Specifying the pin number and flags, as defined
-+		    in <dt-bindings/interrupt-controller/irq.h>
-+
-+- gpio-controller:
-+	Usage: required
-+	Value type: <none>
-+	Definition: identifies this node as a gpio controller
-+
-+- #gpio-cells:
-+	Usage: required
-+	Value type: <u32>
-+	Definition: must be 2. Specifying the pin number and flags, as defined
-+		    in <dt-bindings/gpio/gpio.h>
-+
-+- gpio-ranges:
-+	Usage: required
-+	Definition:  see ../gpio/gpio.txt
-+
-+- gpio-reserved-ranges:
-+	Usage: optional
-+	Definition: see ../gpio/gpio.txt
-+
-+Please refer to ../gpio/gpio.txt and ../interrupt-controller/interrupts.txt for
-+a general description of GPIO and interrupt bindings.
-+
-+Please refer to pinctrl-bindings.txt in this directory for details of the
-+common pinctrl bindings used by client devices, including the meaning of the
-+phrase "pin configuration node".
-+
-+The pin configuration nodes act as a container for an arbitrary number of
-+subnodes. Each of these subnodes represents some desired configuration for a
-+pin, a group, or a list of pins or groups. This configuration can include the
-+mux function to select on those pin(s)/group(s), and various pin configuration
-+parameters, such as pull-up, drive strength, etc.
-+
-+
-+PIN CONFIGURATION NODES:
-+
-+The name of each subnode is not important; all subnodes should be enumerated
-+and processed purely based on their content.
-+
-+Each subnode only affects those parameters that are explicitly listed. In
-+other words, a subnode that lists a mux function but no pin configuration
-+parameters implies no information about any pin configuration parameters.
-+Similarly, a pin subnode that describes a pullup parameter implies no
-+information about e.g. the mux function.
-+
-+
-+The following generic properties as defined in pinctrl-bindings.txt are valid
-+to specify in a pin configuration subnode:
-+
-+- pins:
-+	Usage: required
-+	Value type: <string-array>
-+	Definition: List of gpio pins affected by the properties specified in
-+		    this subnode.
-+
-+		    Valid pins are:
-+		      gpio0-gpio145
-+		        Supports mux, bias and drive-strength
-+
-+		      sdc1_clk, sdc1_cmd, sdc1_data,
-+		      sdc2_clk, sdc2_cmd, sdc2_data,
-+		      sdc3_clk, sdc3_cmd, sdc3_data
-+		        Supports bias and drive-strength
-+
-+- function:
-+	Usage: required
-+	Value type: <string>
-+	Definition: Specify the alternative function to be configured for the
-+		    specified pins. Functions are only valid for gpio pins.
-+		    Valid values are:
-+
-+		    gpio, blsp_uart1, blsp_spi1, smb_int, blsp_i2c1, blsp_spi2,
-+		    blsp_uart2, blsp_i2c2, gcc_gp1_clk_b, blsp_spi3,
-+		    qdss_tracedata_b, blsp_i2c3, gcc_gp2_clk_b, gcc_gp3_clk_b,
-+		    blsp_spi4, cap_int, blsp_i2c4, blsp_spi5, blsp_uart5,
-+		    qdss_traceclk_a, m_voc, blsp_i2c5, qdss_tracectl_a,
-+		    qdss_tracedata_a, blsp_spi6, blsp_uart6, qdss_tracectl_b,
-+		    blsp_i2c6, qdss_traceclk_b, mdp_vsync, pri_mi2s_mclk_a,
-+		    sec_mi2s_mclk_a, cam_mclk, cci0_i2c, cci1_i2c, blsp1_spi,
-+		    blsp3_spi, gcc_gp1_clk_a, gcc_gp2_clk_a, gcc_gp3_clk_a,
-+		    uim_batt, sd_write, uim1_data, uim1_clk, uim1_reset,
-+		    uim1_present, uim2_data, uim2_clk, uim2_reset,
-+		    uim2_present, ts_xvdd, mipi_dsi0, us_euro, ts_resout,
-+		    ts_sample, sec_mi2s_mclk_b, pri_mi2s, codec_reset,
-+		    cdc_pdm0, us_emitter, pri_mi2s_mclk_b, pri_mi2s_mclk_c,
-+		    lpass_slimbus, lpass_slimbus0, lpass_slimbus1, codec_int1,
-+		    codec_int2, wcss_bt, sdc3, wcss_wlan2, wcss_wlan1,
-+		    wcss_wlan0, wcss_wlan, wcss_fm, key_volp, key_snapshot,
-+		    key_focus, key_home, pwr_down, dmic0_clk, hdmi_int,
-+		    dmic0_data, wsa_vi, wsa_en, blsp_spi8, wsa_irq, blsp_i2c8,
-+		    pa_indicator, modem_tsync, ssbi_wtr1, gsm1_tx, gsm0_tx,
-+		    sdcard_det, sec_mi2s, ss_switch,
-+
-+- bias-disable:
-+	Usage: optional
-+	Value type: <none>
-+	Definition: The specified pins should be configured as no pull.
-+
-+- bias-pull-down:
-+	Usage: optional
-+	Value type: <none>
-+	Definition: The specified pins should be configured as pull down.
-+
-+- bias-pull-up:
-+	Usage: optional
-+	Value type: <none>
-+	Definition: The specified pins should be configured as pull up.
-+
-+- output-high:
-+	Usage: optional
-+	Value type: <none>
-+	Definition: The specified pins are configured in output mode, driven
-+		    high.
-+		    Not valid for sdc pins.
-+
-+- output-low:
-+	Usage: optional
-+	Value type: <none>
-+	Definition: The specified pins are configured in output mode, driven
-+		    low.
-+		    Not valid for sdc pins.
-+
-+- drive-strength:
-+	Usage: optional
-+	Value type: <u32>
-+	Definition: Selects the drive strength for the specified pins, in mA.
-+		    Valid values are: 2, 4, 6, 8, 10, 12, 14 and 16
-+
-+Example:
-+
-+	tlmm: pinctrl@1000000 {
-+		compatible = "qcom,msm8976-pinctrl";
-+		reg = <0x1000000 0x300000>;
-+		interrupts = <GIC_SPI 208 IRQ_TYPE_LEVEL_HIGH>;
-+		gpio-controller;
-+		#gpio-cells = <2>;
-+		gpio-ranges = <&tlmm 0 0 145>;
-+		interrupt-controller;
-+		#interrupt-cells = <2>;
-+
-+		blsp1_uart2_active: blsp1_uart2_active {
-+			mux {
-+				pins = "gpio4", "gpio5", "gpio6", "gpio7";
-+				function = "blsp_uart2";
-+			};
-+
-+			config {
-+				pins = "gpio4", "gpio5", "gpio6", "gpio7";
-+				drive-strength = <2>;
-+				bias-disable;
-+			};
-+		};
-+	};
+[..]
+
+> My standard reply would be: describe the device connected to the GPIO(s)
+> in DT.  The GPIO line polarities are specified in the device's "gpios"
+> properties.
+> 
+> BTW, can you give an example of what's actually connected to those
+> GPIOs?
+> Is it a complex device (the GPIO is only a part of it, it's also hanging
+> off e.g. an I2C bus)?
+> Is it something simple (e.g. an LED ("gpio-leds"), relay, or actuator)?
+
+Since the targeted user of the new feature is not in immediate vicinity,
+we expect some delay in getting this information.
+
+> 
+> Next step would be to use the device from Linux.  For that to work, you
+> need a dedicated driver (for the complex case), or something generic
+> (for the simple case).
+> The latter is not unlike e.g. spidev.  Once you have a generic driver,
+> you can use "driver_override" in sysfs to bind the generic driver to
+> your device.  See e.g. commit 5039563e7c25eccd ("spi: Add
+> driver_override SPI device attribute").
+
+We have passed your suggestions along. Many thanks.
+
+> Currently we don't have a "generic" driver for GPIOs. We do have the
+> GPIO chardev interface, which exports a full gpio_chip.
+> It indeed looks like this "gpio-inverter" could be used as a generic
+> driver.  But it is limited to GPIOs that are inverted, which rules out
+> some use cases.
+> 
+> So what about making it more generic, and dropping the "inverter" from
+> its name, and the "inverted" from the "inverted-gpios" property? After
+> all the inversion can be specified by the polarity of the GPIO cells in
+> the "gpios" property, and the GPIO core will take care of it[*]?
+> Which boils down to adding a simple DT interface to my gpio-aggregator
+> ("[PATCH/RFC v2 0/5] gpio: Add GPIO Aggregator Driver",
+>  https://lore.kernel.org/lkml/20190911143858.13024-1-geert+renesas@glider.be/).
+> And now I have realized[*], we probably no longer need the GPIO
+> Forwarder Helper, as there is no need to add inversion on top.
+
+After having a look at the gpio aggregator (and giving it a try on
+R-Car3 H3ULCB), here is how I interpret the above comment:
+
+If there is still a compelling reason for having gpio-inverter, then it
+probably makes sense to strip it from its "inverter" function (hence,
+transforming it into some kind of "repeater") on the basis that the
+inverting function is more of a collateral/secondary feature, rather
+than its primary one. Just like in the case of gpio aggregator, the
+primary function of gpio inverter is to accept a bunch of GPIO lines and
+to expose those via a dedicated gpiochip. I hope this is a proper
+summary of the first point in your comment. In any case, this is the
+understanding I get based on my experiments with both drivers.
+
+What I also infer is that, assuming gpio-inverter will stay (potentially
+renamed and stripped of its non-essential inverting function), the gpio
+aggregator will need to keep its Forwarder Helper (supposed to act as a
+common foundation for both drivers).
+
+The second point which I extract from your comment is that the "gpio
+aggregator" could alternatively acquire the role of "gpio-inverter"
+(hence superseding it) by adding a "simple DT interface". I actually
+tend to like this proposal, since (as said above) both drivers are
+essentially doing the same thing, i.e. they cluster a number of gpio
+lines and expose this cluster as a new gpiochip (keeping the
+reserved/used gpio lines on hold). That looks like a huge overlap in
+the functionalities of the two drivers.
+
+The only difference which I see is that "gpio-inverter" is getting its
+input from DT and generates the gpiochips at probe time, while
+"gpio aggregator" is getting its input from sysfs and generates the
+gpiochips at runtime, post-probe.
+
+So, assuming no objections from Harish and other reviewers, I would be
+very happy to review and test the DT-based gpio inversion functionality
+as part of gpio aggregator. Thanks!
+
 -- 
-2.21.0
-
+Best Regards,
+Eugeniu
