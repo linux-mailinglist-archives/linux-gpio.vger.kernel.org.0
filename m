@@ -2,154 +2,96 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 5C534CCD9B
-	for <lists+linux-gpio@lfdr.de>; Sun,  6 Oct 2019 03:02:00 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6DC7CCCE05
+	for <lists+linux-gpio@lfdr.de>; Sun,  6 Oct 2019 05:12:28 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726976AbfJFBB7 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sat, 5 Oct 2019 21:01:59 -0400
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:43610 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727005AbfJFBB5 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sat, 5 Oct 2019 21:01:57 -0400
-Received: by mail-lj1-f194.google.com with SMTP id n14so10053374ljj.10
-        for <linux-gpio@vger.kernel.org>; Sat, 05 Oct 2019 18:01:56 -0700 (PDT)
+        id S1725917AbfJFDM1 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sat, 5 Oct 2019 23:12:27 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:43622 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725801AbfJFDM1 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sat, 5 Oct 2019 23:12:27 -0400
+Received: by mail-pl1-f193.google.com with SMTP id f21so5058649plj.10
+        for <linux-gpio@vger.kernel.org>; Sat, 05 Oct 2019 20:12:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=rr3poPIf3VgG4Pe2qvuSKOuLsf+oc1+sEbIckjoOK+g=;
-        b=q+NgPS/AQO148x7zQcw7mJDnCRxinHmTVp6O83jMMFPNZAtrEasL6uMvXRbMdPz+gK
-         FJYco5NOATc3JF6FUCGwOrOqebTsNTujAejQACzq1BOP8ELYpZsCjpZrhR2f1ZK3TfAk
-         JqdxGRHuAl1kcAqyiOpjbLZmmIOvo01O/4Y2oP/sYT6q7PeD4hcJ5AagnnIOkyILb0xj
-         H0NmrzOHI3feKSlSbHPuMtq7DTU9lJN8HAYriOtHNdKtG+yDSazTAgo/9HcVwZ5VMe1l
-         Zd275o+wYj8+QE/K6zS64idpOthgkVnQNRKkyIl+U9Cuf8FG6E8A3ALrguQiiuBc/dzI
-         TT+w==
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=8/5T8SiGioQuxZLiveRC0WYYVw1c4RYL5Igrpyi++IE=;
+        b=qse5u1XBY9DNhE7g6x6vcblmickzNnVnyu9Hmfse3LAfO6LzFDEbxwnFgf1B+W4oqr
+         i/LhrFzCXRQVZsqW8nuJu7rfldr1TWbIR02sIFprcXW/jCS1ktZDjv8E6hqllPKIHZjp
+         EHfkSU+IcOPFbOqXhWYsUyk3RcNTqfJCwmg9pvUeWI1v/hVxlbj372F+hFO7Lc0BnhfG
+         0+W5YiYO4feLKchNv7C12iLhcj8FQxczY+yHlPt1s+bHkTbBBTjBwu5zpyF8D/gh8kL3
+         DEJwarTq0bsNL9Ob2HKNAFQDx1zTGI6R8djNMS7d5/qqbHa7fq4s2/bmiklYB2bxZvZB
+         MLVA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=rr3poPIf3VgG4Pe2qvuSKOuLsf+oc1+sEbIckjoOK+g=;
-        b=BOPCTfGbhufln8k1V1vQYkAh+OPJ785t+ZCVe1naVFTHSnOybKZs/pfd2bfc+qPEJQ
-         p9FEyoEtYe/w4rBaf/wale3QlqJZYtpg5E1n+/FawwfXv8UdW3GwfgfvtPEaRuNaHdfp
-         U3HoZwnmHINzM0z7Z0eNfgWbIp+3SXMTUmx1U26A9TLqtWNz1g07fTXJ1waQjRmQBG0u
-         FK2100pzpYep3/5WFym/AIpRN7n4X5or8sy3z/UoeTrifVRnkYVlnGc6UVhsvcbGc6d1
-         96VhDqa5QqvcIJoQPzPHHDfL1gVXTca5X7TQlrX4KmvFesr8uFpC209qkqbguli57POo
-         +Vfw==
-X-Gm-Message-State: APjAAAUSfk0owj9Govad1NTQuYTpyVCt/P+JxE0L9W6kE7ZELkXPrMGd
-        k37IkrSmXiI3K4nq6HrXsk154bL+GOr84w==
-X-Google-Smtp-Source: APXvYqxkOTeQBo4t6Xc5nBOXAlyvoFdhkjIbWGk0Axjul45GVB6zetABT5CJr5bQNtphmgcKWDCJbw==
-X-Received: by 2002:a05:651c:c4:: with SMTP id 4mr13480748ljr.111.1570323714893;
-        Sat, 05 Oct 2019 18:01:54 -0700 (PDT)
-Received: from localhost.localdomain (c-79c8225c.014-348-6c756e10.bbcust.telenor.se. [92.34.200.121])
-        by smtp.gmail.com with ESMTPSA id m10sm1925268lfo.69.2019.10.05.18.01.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 05 Oct 2019 18:01:53 -0700 (PDT)
-From:   Linus Walleij <linus.walleij@linaro.org>
-To:     linux-gpio@vger.kernel.org
-Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: [PATCH] pinctrl: intel: Pass irqchip when adding gpiochip
-Date:   Sun,  6 Oct 2019 02:59:49 +0200
-Message-Id: <20191006005949.30849-1-linus.walleij@linaro.org>
-X-Mailer: git-send-email 2.21.0
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=8/5T8SiGioQuxZLiveRC0WYYVw1c4RYL5Igrpyi++IE=;
+        b=XWbFmVAkFviwwiIx9x4EJ0oEKOy73Qth09TD+Ko8FmLQYJvkubGpEkloS8geqjFTm6
+         gjCQ86gsSUokvtvs7FCqh5qTpKWxAmOyf/1UaP+rLdpiZ+DFPGZK68UiPht91JvZ27ZF
+         VTG1RMrYngE1w5hqkj3xVLV2WZpkNA/PFQWszG2uOisalOTe+/r+rzgjiXGAwTRe9ULy
+         Pt5kSShP8vrdthbU6WiCpyeCK5+zEs4cUUtgZeZwNOiOtEOx7BN0FuvacxXQqPJAD24d
+         XgxmYulh+JVGXysyti3LIK1kVmrokUE6oNgKE/HOn8htjrE1UzLHPvpNO9/xCj1gsIxJ
+         FZnw==
+X-Gm-Message-State: APjAAAX3EeX/UGZlm1R9U8gVOBu/gu78V1SI9Q/ooHJv2fITQUaZbv97
+        dLYul9iLiC5GG1mPWBH1mmTrw6yjQQir7Q==
+X-Google-Smtp-Source: APXvYqzxVwNECJpMjWmFvrk6m/ylQ0oEXwoQBR5zboZTCtOVsA4cJcy9hukPU9jc34kk++kMmk2XlA==
+X-Received: by 2002:a17:902:9b83:: with SMTP id y3mr24110988plp.25.1570331546094;
+        Sat, 05 Oct 2019 20:12:26 -0700 (PDT)
+Received: from sol (220-235-122-141.dyn.iinet.net.au. [220.235.122.141])
+        by smtp.gmail.com with ESMTPSA id 2sm11294038pfa.43.2019.10.05.20.12.23
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Sat, 05 Oct 2019 20:12:25 -0700 (PDT)
+Date:   Sun, 6 Oct 2019 11:12:20 +0800
+From:   Kent Gibson <warthog618@gmail.com>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     Bartosz Golaszewski <brgl@bgdev.pl>, Drew Fustini <drew@pdp7.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+Subject: Re: [RFC] gpio: expose pull-up/pull-down line flags to userspace
+Message-ID: <20191006031220.GA7957@sol>
+References: <20190921102522.8970-1-drew@pdp7.com>
+ <CAMRc=Me=6JeOOv_SRhKt+vOsd3p5yOVkWyNu4Oo+DeCwMJHmaA@mail.gmail.com>
+ <CACRpkdZjswY4zW232ahSQSGfprbgBx8YL4Wb0i3ebegT00v3jQ@mail.gmail.com>
+ <CAMRc=McH=ui1c9yTMtuMwVUT2-yBHhV=r0VGsKY0KbYMLHJhPA@mail.gmail.com>
+ <CACRpkdZP8GYPUk4ZB+2Ei4hrrT0Orq0MUEszJ+YM=npuh1uH9w@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CACRpkdZP8GYPUk4ZB+2Ei4hrrT0Orq0MUEszJ+YM=npuh1uH9w@mail.gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-We need to convert all old gpio irqchips to pass the irqchip
-setup along when adding the gpio_chip. For more info see
-drivers/gpio/TODO.
+On Sat, Oct 05, 2019 at 07:02:58PM +0200, Linus Walleij wrote:
+> On Fri, Oct 4, 2019 at 9:22 AM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
+> 
+> > The config ioctl (or
+> > something similar) you're mentioning may appear sooner actually -
+> > users of libgpiod have been requesting a way of changing the direction
+> > of a line without releasing it - something that's possible in the
+> > kernel, but not from user-space at the moment. I'll submit something
+> > that allows to change the configuration of a requested line soon.
+> 
+> Hm! I guess I assumed that userspace users would be using the lines
+> for either input or output, not complex use cases like that, reversing
+> direction and what not.
+> 
+> What kind of usecase is this? I certainly hope nothing like doing
+> userspace drivers for complex hardware ... those should be in
+> the kernel... the current ABI is a bit oriented around industrial
+> automation and prototyping use cases.
+> 
+I'm not the only one asking for this, and I can't speak to others' use
+cases, but in my case I'm prototyping and bit bashing a SPI driver for
+an ADC where the MOSI/MISO lines can be tied to save a pin. I need to
+be able to switch line direction without glitching the line and that
+can't be guaranteed with the current UAPI.
 
-This is an unchained irqchip so we use the method from
-drivers/gpio/gpio-mt7621.c that also requests its interrupt
-instead if chaining the interrupt handler.
+Would you consider that "complex hardware"?
 
-Cc: Mika Westerberg <mika.westerberg@linux.intel.com>
-Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
----
-This is based on Andy's patch to dynamically allocate the
-irqchio. Mika maybe you want to queue it with the rest of
-the stuff so you can sync fixes and new development?
----
- drivers/pinctrl/intel/pinctrl-intel.c | 52 ++++++++++++++++-----------
- 1 file changed, 31 insertions(+), 21 deletions(-)
-
-diff --git a/drivers/pinctrl/intel/pinctrl-intel.c b/drivers/pinctrl/intel/pinctrl-intel.c
-index bc013599a9a3..d63566e57f4c 100644
---- a/drivers/pinctrl/intel/pinctrl-intel.c
-+++ b/drivers/pinctrl/intel/pinctrl-intel.c
-@@ -1206,6 +1206,37 @@ static int intel_gpio_probe(struct intel_pinctrl *pctrl, int irq)
- 	pctrl->irqchip.irq_set_wake = intel_gpio_irq_wake;
- 	pctrl->irqchip.flags = IRQCHIP_MASK_ON_SUSPEND;
- 
-+	/*
-+	 * We need to request the interrupt here (instead of using a
-+	 * chained handler) because on some platforms several GPIO
-+	 * controllers share the same interrupt line.
-+	 */
-+	ret = devm_request_irq(pctrl->dev, irq, intel_gpio_irq,
-+			       IRQF_SHARED | IRQF_NO_THREAD,
-+			       dev_name(pctrl->dev), pctrl);
-+	if (!ret) {
-+		struct gpio_irq_chip *girq;
-+
-+		girq = &pctrl->chip.irq;
-+		girq->chip = &pctrl->irqchip;
-+		/*
-+		 * This is an unchained interrupt. Compare to
-+		 * drivers/gpio/gpio-mt7621.c that also does this:
-+		 * assign no parents.
-+		 *
-+		 * FIXME: make the gpiolib flag this and handle unchained
-+		 * GPIO interrupts better if need be.
-+		 */
-+		girq->parent_handler = NULL;
-+		girq->num_parents = 0;
-+		girq->parents = NULL;
-+		girq->default_type = IRQ_TYPE_NONE;
-+		girq->handler = handle_bad_irq;
-+	} else {
-+		/* Skip irqchip, register gpiochip anyway */
-+		dev_err(pctrl->dev, "failed to request interrupt\n");
-+	}
-+
- 	ret = devm_gpiochip_add_data(pctrl->dev, &pctrl->chip, pctrl);
- 	if (ret) {
- 		dev_err(pctrl->dev, "failed to register gpiochip\n");
-@@ -1222,27 +1253,6 @@ static int intel_gpio_probe(struct intel_pinctrl *pctrl, int irq)
- 		}
- 	}
- 
--	/*
--	 * We need to request the interrupt here (instead of providing chip
--	 * to the irq directly) because on some platforms several GPIO
--	 * controllers share the same interrupt line.
--	 */
--	ret = devm_request_irq(pctrl->dev, irq, intel_gpio_irq,
--			       IRQF_SHARED | IRQF_NO_THREAD,
--			       dev_name(pctrl->dev), pctrl);
--	if (ret) {
--		dev_err(pctrl->dev, "failed to request interrupt\n");
--		return ret;
--	}
--
--	ret = gpiochip_irqchip_add(&pctrl->chip, &pctrl->irqchip, 0,
--				   handle_bad_irq, IRQ_TYPE_NONE);
--	if (ret) {
--		dev_err(pctrl->dev, "failed to add irqchip\n");
--		return ret;
--	}
--
--	gpiochip_set_chained_irqchip(&pctrl->chip, &pctrl->irqchip, irq, NULL);
- 	return 0;
- }
- 
--- 
-2.21.0
-
+Kent.
