@@ -2,57 +2,57 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 216C9CD233
-	for <lists+linux-gpio@lfdr.de>; Sun,  6 Oct 2019 16:11:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E954FCD236
+	for <lists+linux-gpio@lfdr.de>; Sun,  6 Oct 2019 16:13:24 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725985AbfJFOLz (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sun, 6 Oct 2019 10:11:55 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:33403 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725976AbfJFOLz (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sun, 6 Oct 2019 10:11:55 -0400
-Received: by mail-pf1-f193.google.com with SMTP id q10so6995426pfl.0;
-        Sun, 06 Oct 2019 07:11:55 -0700 (PDT)
+        id S1726134AbfJFONX (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sun, 6 Oct 2019 10:13:23 -0400
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:35306 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725976AbfJFONX (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sun, 6 Oct 2019 10:13:23 -0400
+Received: by mail-pl1-f194.google.com with SMTP id c3so4103870plo.2;
+        Sun, 06 Oct 2019 07:13:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc:content-transfer-encoding;
-        bh=CC9KVA0zIM+Q1TshWA+BJK6ppT/MaKoRfm3TQLmliFY=;
-        b=pFMnIdCqeL2356sDmaUldFSpLnt+OzX8ly+GSOfmJSpfiiVEoMbmVz0nyF5QqHyRZs
-         2mBbHSqn8mOVXUvjTtRbhMOSgEtP8UVJ95p1l20R6TcowZc4Dr4FZ7xT/kA6il62ex6v
-         kNpMrCKVAMWqVe3+KyBvRnUHyuHQGbIQfe/a3SvwGPzGVrKw3EV5L6FTLcpcGhjlpIRu
-         maxalMtJcx8d+5/Y2Ax7IeLOQIkQLmD6bvNboWZQ1dxkVX005flzCitvPGFqBdQfAL8u
-         msy0kCIEzvskenLbFaAMCzVy/X+PK3W0QyQWOgHmyQM9W1hCMOX/WkUapoxz9Zmsv02h
-         uy0A==
+        bh=NFqrCCqmrRTPlc5WO36jviIgwmi3DrtqFzh1jQbq1I0=;
+        b=nMQqrwsOFBSKN0Bkm0TtBEzU5Ql3X1HM8z5ibGnivfuCkdlMQUpKEdKbYLT2JOXAfj
+         FmydrCBVGBxDPG2d+gK+x53n9XCJsCtFc/KN6pAXCu+ktyJBGbJMUI8UP7pN0ayK2Ujt
+         wcWh+zk6wMKXMHhAboI5LkGSD7pEqY7TmXew3zxDzkPOfVepoUtALqL0Ds7fnjwUtwFj
+         KwEMl215D6dt0NNinGrhj0kktEwaL3iPSiESBb68TtzOkmP/FNnHKRY12TvujUojNjZ7
+         RZDk1V9UbndnQCBEk725IWubGm+KK+/DJ2TyHQDoXw9lh+kvlY7i5GenHMC2ApPM6QsZ
+         SPEw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc:content-transfer-encoding;
-        bh=CC9KVA0zIM+Q1TshWA+BJK6ppT/MaKoRfm3TQLmliFY=;
-        b=Aj6CJ96VyXA+UG7tqeyLxhJC+m0PcbcAL56qmQcuwfaSgXd/QPm5NVFWp7EGQTayDd
-         HW3mB5MMl38micFWIXhXo8CheLGGvL0TDhr6NyGt5TLAyoMo6sG0hvb9XO7crCm+2IH/
-         T/2Z63fmZgtwWAdWEAaC5wHw8ERWah97cDprci0iDl57+AZAeAYByUDPAgjWGcyZl3mf
-         y/WlohO6Fv4HAN1JrFm0zAHMNZwf3cAQ4unnayURh2AugMAb2BiTNlu0Ef2VRJmu/TjG
-         gjPeyvsj0fzyyKaHDMZAzv6kBS7Y65oHnpwogy4Yt47eUSjtPOdu8FXkMs3/LtuiwPzk
-         lBhw==
-X-Gm-Message-State: APjAAAV9WXyftoJnxQIUmnYJiRVO2XtNNrwU8Hu2UZxcn12P9nj0dtkx
-        WonH5nkO/MR2lX6TlUyLsN8Jl/wxnQdN3DGXeDZOrqjJ
-X-Google-Smtp-Source: APXvYqyF5eelmbMsx7TTdIhk1ay8X6cYpBxrsUNV+mexLe1qBP/eTUD7tFbFQsb9kumhBdRvxaEYNMVtTY/dTmPRRHk=
-X-Received: by 2002:a17:90a:8986:: with SMTP id v6mr28668044pjn.115.1570371114847;
- Sun, 06 Oct 2019 07:11:54 -0700 (PDT)
+        bh=NFqrCCqmrRTPlc5WO36jviIgwmi3DrtqFzh1jQbq1I0=;
+        b=MSuCkBWOyUs2FbGxK1bdlLnCu8YReCN4cL1Cm4qnY6YZ9t2LvW5R6bupu7Uyed3S+i
+         nCQrlQRwk0AN/kI+muYqDAxEGnjvJ6QyptXEYhO0WLs9trqByordCSLU6vf5iTcPTaxG
+         9kW6S+7TdE/T89zT7aCO6v5AdDyW26FDPZs+4aB57acS318x8Ngi0sI3FS4XPA3kffOQ
+         2MR2NsbjqyTDYEU5ISxRKYPyvpkbX4Hd42UU4753jfJ/N4+G3wle8wIAzJH4DVSMFKbb
+         YPI59JyFjt0met92PeadZ11Xj3+Zl+qBpgMFP5O+LIDcZoJTKrVceCbTlKlJpdnpvbCe
+         ZD8g==
+X-Gm-Message-State: APjAAAWlp8Sqhsi3SePfNLr9sHs8Crr4yHYWdV6gNcdLbP3s5iByPe2S
+        r3iTphElFUy2BrYVC/n1YPQWwm19lsrtbLG1NUQ=
+X-Google-Smtp-Source: APXvYqyw4DZhyypdRaJfKyyzI4ExR7rNNQMB5kRJCQxKdVNl6r0uGGD2NBIGsLnptKP9EGhXXUVEKcQyo3+zHXm/oUQ=
+X-Received: by 2002:a17:902:8690:: with SMTP id g16mr23827223plo.274.1570371202967;
+ Sun, 06 Oct 2019 07:13:22 -0700 (PDT)
 MIME-Version: 1.0
-References: <1570203299-4270-1-git-send-email-akinobu.mita@gmail.com>
- <96ac332f-359f-531a-7890-45b39e168b82@gmail.com> <CAC5umyggUm26JHU9QeND=rTozjXwH5uMiVvoK=Zqo31eBn69pg@mail.gmail.com>
- <7d451092-bf8a-e1d4-996c-8af3cc816fc7@gmail.com>
-In-Reply-To: <7d451092-bf8a-e1d4-996c-8af3cc816fc7@gmail.com>
+References: <1570203299-4270-1-git-send-email-akinobu.mita@gmail.com> <CAJAp7OhLtWm4kToH2L39ZczEFZcvU82F4ZVdCO0D4JKOsgCGDA@mail.gmail.com>
+In-Reply-To: <CAJAp7OhLtWm4kToH2L39ZczEFZcvU82F4ZVdCO0D4JKOsgCGDA@mail.gmail.com>
 From:   Akinobu Mita <akinobu.mita@gmail.com>
-Date:   Sun, 6 Oct 2019 23:11:43 +0900
-Message-ID: <CAC5umyiK8LBqQ1B1LPQgWXGCk_a+JyKgidrRZpPMDu+NZncDXw@mail.gmail.com>
+Date:   Sun, 6 Oct 2019 23:13:11 +0900
+Message-ID: <CAC5umyiTtVPn_+XtHaBLYCi7EXqZ9ehRjvDzKr=kKZckYb14mw@mail.gmail.com>
 Subject: Re: [PATCH] leds: gpio: support multi-level brightness
-To:     Jacek Anaszewski <jacek.anaszewski@gmail.com>
-Cc:     linux-leds@vger.kernel.org, linux-gpio@vger.kernel.org,
+To:     Bjorn Andersson <bjorn@kryo.se>
+Cc:     Linux LED Subsystem <linux-leds@vger.kernel.org>,
+        linux-gpio@vger.kernel.org,
         Linus Walleij <linus.walleij@linaro.org>,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
         Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
@@ -61,34 +61,34 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-2019=E5=B9=B410=E6=9C=886=E6=97=A5(=E6=97=A5) 4:17 Jacek Anaszewski <jacek.=
-anaszewski@gmail.com>:
+2019=E5=B9=B410=E6=9C=886=E6=97=A5(=E6=97=A5) 13:06 Bjorn Andersson <bjorn@=
+kryo.se>:
 >
-> On 10/5/19 3:20 PM, Akinobu Mita wrote:
-> > 2019=E5=B9=B410=E6=9C=885=E6=97=A5(=E5=9C=9F) 6:17 Jacek Anaszewski <ja=
-cek.anaszewski@gmail.com>:
-> >>
-> >> Hi Akinobu,
-> >>
-> >> Why do you think this change is needed? Does it solve
-> >> some use case for you?
+> On Fri, Oct 4, 2019 at 8:35 AM Akinobu Mita <akinobu.mita@gmail.com> wrot=
+e:
 > >
-> > It can be useful when using with an LED trigger that could set the
-> > brightness values other than LED_FULL or LED_OFF.
+> > Currently, GPIO LED driver allows the GPIO properties to contain one GP=
+IO
+> > phandle.  This enables to contain more than one GPIO phandle and the
+> > brightness of the LEDs is proportional to the number of active GPIOs.
 > >
-> > The LED CPU trigger for all CPUs (not per CPU) sets the brightness valu=
-e
-> > depending on the number of active CPUs.  We can define the multi bright=
-ness
-> > level gpio LED with fewer number of GPIO LEDs than the total number of
-> > CPUs, and the LEDs can be viewed as a level meter.
+> > Describing multi-level brightness GPIO LED is only supported in DT.  It=
+ is
+> > not supported in ACPI and platform data.
+> >
 >
-> Can't you achieve exactly the same effect by creating separate LED class
-> device for each GPIO LED and registering each of them for separate cpuN
-> trigger?
+> This looks interesting.
+>
+> I have a half-baked driver for the NXP PCA9956B; which is a 24-channel
+> LED driver, each channel with brightness control. With these LEDs
+> mounted in a line (like on my devboard), an interface for setting e.g.
+> a percentage and have the appropriate number of LEDs light up seems
+> like an interesting thing to pursue.
+>
+> So I think this would be better represented in some more generic form,
+> perhaps a trigger?
 
-If there are GPIO LEDs as many as the total number of CPUs, we can.
-However, if there are only two GPIO LEDs and six CPUs, we can only know
-the CPU activity for two CPUs out of six CPUs with cpuN trigger.
-So it's different from using cpu (all) trigger with multi level (2-level)
-brightness GPIO LED.
+I think it's good idea to create a generalized multiple LED driver.
+The device consists of multiple LED devices by different drivers and can
+be used as a single LED device.  Although there is a lot more work to do
+than this LED GPIO enhancement.
