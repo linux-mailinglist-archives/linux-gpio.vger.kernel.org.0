@@ -2,132 +2,93 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 36EFFCCEDA
-	for <lists+linux-gpio@lfdr.de>; Sun,  6 Oct 2019 07:40:18 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 216C9CD233
+	for <lists+linux-gpio@lfdr.de>; Sun,  6 Oct 2019 16:11:57 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726217AbfJFFkQ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sun, 6 Oct 2019 01:40:16 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:46534 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726207AbfJFFjl (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sun, 6 Oct 2019 01:39:41 -0400
-Received: by mail-pg1-f195.google.com with SMTP id a3so6114807pgm.13
-        for <linux-gpio@vger.kernel.org>; Sat, 05 Oct 2019 22:39:41 -0700 (PDT)
+        id S1725985AbfJFOLz (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sun, 6 Oct 2019 10:11:55 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:33403 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725976AbfJFOLz (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sun, 6 Oct 2019 10:11:55 -0400
+Received: by mail-pf1-f193.google.com with SMTP id q10so6995426pfl.0;
+        Sun, 06 Oct 2019 07:11:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=EgzlAIhkpsVrchDajp8SP2c8jH/gUd2pLHbFdDZ/+4w=;
-        b=gK/qxRTV8cT9fGDqLH7/3E/uJkniwGKqA6Z2ESMtMIrxYwBaq4TVHAClTb19gjH2h1
-         OFUsaU0X+0/RRFfqCFvK8Oqdl3zScVCT6/pY0C2F0jtEleRLje29sEIImT1EKp6EgSjK
-         nNoVQUzekSglxxspf1y5CkULth8/JgkWxfGe3VVwXd1ARnHscehoI2hWzERVQ7Yufe5M
-         gxHewhguH3lfRtIt+QiPRjYLH5pGoJU8oeH031S8o9jRdo7zsFVpmvPC3anVGA0fmxne
-         GArC8Rbnk68JlbNsKwvXUpq9YToWzqmyAfKH3zdbZbEIix+RkJjX3ARfDxap0sDxrZ1M
-         KPnw==
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=CC9KVA0zIM+Q1TshWA+BJK6ppT/MaKoRfm3TQLmliFY=;
+        b=pFMnIdCqeL2356sDmaUldFSpLnt+OzX8ly+GSOfmJSpfiiVEoMbmVz0nyF5QqHyRZs
+         2mBbHSqn8mOVXUvjTtRbhMOSgEtP8UVJ95p1l20R6TcowZc4Dr4FZ7xT/kA6il62ex6v
+         kNpMrCKVAMWqVe3+KyBvRnUHyuHQGbIQfe/a3SvwGPzGVrKw3EV5L6FTLcpcGhjlpIRu
+         maxalMtJcx8d+5/Y2Ax7IeLOQIkQLmD6bvNboWZQ1dxkVX005flzCitvPGFqBdQfAL8u
+         msy0kCIEzvskenLbFaAMCzVy/X+PK3W0QyQWOgHmyQM9W1hCMOX/WkUapoxz9Zmsv02h
+         uy0A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=EgzlAIhkpsVrchDajp8SP2c8jH/gUd2pLHbFdDZ/+4w=;
-        b=keoR0bvNUmQd49l3ATFRn8gNyUPU/GxISO7iXCoUWu0MCEwsGqaQLh+ZEGtRr2Ob8y
-         vrpPXMvAanOiqifn59RhHIxLofshdaQqspKeoBABcOU0NzcXCqGdhikUBWrBHUDHXSGP
-         OozcBz7npEQfgBBC/Bp6Lz7Lf5NxQ98oF0mpgQZyXggJewNP19dpmeKWZAx8ioZtpZnS
-         hZ73b9+Ltk0s1IyrdhVcED4AoFZLmn+gYRI0ZpqEr0gIWu42hdOdmmRCnAcDTO3UzizK
-         KffiPhNCmTqfzeKacLpQt6AEEtAJZC8UQnRzehx2v5bfzLMdQxf2JCjrVZ2rhsFqVUML
-         4FAg==
-X-Gm-Message-State: APjAAAW7FXdaGc3m1RN5b2IXX0fIZd6b1P4WYvNKsLNmfMddWTEV9GbA
-        1iCcMk01bJ/2WF4A1UBGk3AYgw==
-X-Google-Smtp-Source: APXvYqwS2flP03ODMjWNm+9SJT+cfwwXQTQiQVUCv7+rG+Jn/skkvucUSS0Bd+0q4puJHr9Hggmu8w==
-X-Received: by 2002:a17:90a:a2b:: with SMTP id o40mr26574353pjo.107.1570340380653;
-        Sat, 05 Oct 2019 22:39:40 -0700 (PDT)
-Received: from debian-brgl.local (50-255-47-209-static.hfc.comcastbusiness.net. [50.255.47.209])
-        by smtp.gmail.com with ESMTPSA id q30sm10019320pja.18.2019.10.05.22.39.39
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 05 Oct 2019 22:39:40 -0700 (PDT)
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-To:     Jonathan Corbet <corbet@lwn.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J . Wysocki" <rafael@kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Linus Walleij <linus.walleij@linaro.org>
-Cc:     linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-gpio@vger.kernel.org,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: [PATCH v3 3/8] lib: devres: provide devm_ioremap_resource_wc()
-Date:   Sun,  6 Oct 2019 07:39:11 +0200
-Message-Id: <20191006053916.8849-4-brgl@bgdev.pl>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20191006053916.8849-1-brgl@bgdev.pl>
-References: <20191006053916.8849-1-brgl@bgdev.pl>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=CC9KVA0zIM+Q1TshWA+BJK6ppT/MaKoRfm3TQLmliFY=;
+        b=Aj6CJ96VyXA+UG7tqeyLxhJC+m0PcbcAL56qmQcuwfaSgXd/QPm5NVFWp7EGQTayDd
+         HW3mB5MMl38micFWIXhXo8CheLGGvL0TDhr6NyGt5TLAyoMo6sG0hvb9XO7crCm+2IH/
+         T/2Z63fmZgtwWAdWEAaC5wHw8ERWah97cDprci0iDl57+AZAeAYByUDPAgjWGcyZl3mf
+         y/WlohO6Fv4HAN1JrFm0zAHMNZwf3cAQ4unnayURh2AugMAb2BiTNlu0Ef2VRJmu/TjG
+         gjPeyvsj0fzyyKaHDMZAzv6kBS7Y65oHnpwogy4Yt47eUSjtPOdu8FXkMs3/LtuiwPzk
+         lBhw==
+X-Gm-Message-State: APjAAAV9WXyftoJnxQIUmnYJiRVO2XtNNrwU8Hu2UZxcn12P9nj0dtkx
+        WonH5nkO/MR2lX6TlUyLsN8Jl/wxnQdN3DGXeDZOrqjJ
+X-Google-Smtp-Source: APXvYqyF5eelmbMsx7TTdIhk1ay8X6cYpBxrsUNV+mexLe1qBP/eTUD7tFbFQsb9kumhBdRvxaEYNMVtTY/dTmPRRHk=
+X-Received: by 2002:a17:90a:8986:: with SMTP id v6mr28668044pjn.115.1570371114847;
+ Sun, 06 Oct 2019 07:11:54 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <1570203299-4270-1-git-send-email-akinobu.mita@gmail.com>
+ <96ac332f-359f-531a-7890-45b39e168b82@gmail.com> <CAC5umyggUm26JHU9QeND=rTozjXwH5uMiVvoK=Zqo31eBn69pg@mail.gmail.com>
+ <7d451092-bf8a-e1d4-996c-8af3cc816fc7@gmail.com>
+In-Reply-To: <7d451092-bf8a-e1d4-996c-8af3cc816fc7@gmail.com>
+From:   Akinobu Mita <akinobu.mita@gmail.com>
+Date:   Sun, 6 Oct 2019 23:11:43 +0900
+Message-ID: <CAC5umyiK8LBqQ1B1LPQgWXGCk_a+JyKgidrRZpPMDu+NZncDXw@mail.gmail.com>
+Subject: Re: [PATCH] leds: gpio: support multi-level brightness
+To:     Jacek Anaszewski <jacek.anaszewski@gmail.com>
+Cc:     linux-leds@vger.kernel.org, linux-gpio@vger.kernel.org,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+2019=E5=B9=B410=E6=9C=886=E6=97=A5(=E6=97=A5) 4:17 Jacek Anaszewski <jacek.=
+anaszewski@gmail.com>:
+>
+> On 10/5/19 3:20 PM, Akinobu Mita wrote:
+> > 2019=E5=B9=B410=E6=9C=885=E6=97=A5(=E5=9C=9F) 6:17 Jacek Anaszewski <ja=
+cek.anaszewski@gmail.com>:
+> >>
+> >> Hi Akinobu,
+> >>
+> >> Why do you think this change is needed? Does it solve
+> >> some use case for you?
+> >
+> > It can be useful when using with an LED trigger that could set the
+> > brightness values other than LED_FULL or LED_OFF.
+> >
+> > The LED CPU trigger for all CPUs (not per CPU) sets the brightness valu=
+e
+> > depending on the number of active CPUs.  We can define the multi bright=
+ness
+> > level gpio LED with fewer number of GPIO LEDs than the total number of
+> > CPUs, and the LEDs can be viewed as a level meter.
+>
+> Can't you achieve exactly the same effect by creating separate LED class
+> device for each GPIO LED and registering each of them for separate cpuN
+> trigger?
 
-Provide a variant of devm_ioremap_resource() for write-combined ioremap.
-
-Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
----
- Documentation/driver-api/driver-model/devres.rst |  1 +
- include/linux/device.h                           |  2 ++
- lib/devres.c                                     | 15 +++++++++++++++
- 3 files changed, 18 insertions(+)
-
-diff --git a/Documentation/driver-api/driver-model/devres.rst b/Documentation/driver-api/driver-model/devres.rst
-index 8e3087662daf..e605bb9df6e1 100644
---- a/Documentation/driver-api/driver-model/devres.rst
-+++ b/Documentation/driver-api/driver-model/devres.rst
-@@ -316,6 +316,7 @@ IOMAP
-   devm_ioremap_nocache()
-   devm_ioremap_wc()
-   devm_ioremap_resource() : checks resource, requests memory region, ioremaps
-+  devm_ioremap_resource_wc()
-   devm_platform_ioremap_resource() : calls devm_ioremap_resource() for platform device
-   devm_iounmap()
-   pcim_iomap()
-diff --git a/include/linux/device.h b/include/linux/device.h
-index 297239a08bb7..1f4aaf2d4b2a 100644
---- a/include/linux/device.h
-+++ b/include/linux/device.h
-@@ -946,6 +946,8 @@ extern void devm_free_pages(struct device *dev, unsigned long addr);
- 
- void __iomem *devm_ioremap_resource(struct device *dev,
- 				    const struct resource *res);
-+void __iomem *devm_ioremap_resource_wc(struct device *dev,
-+				       const struct resource *res);
- 
- void __iomem *devm_of_iomap(struct device *dev,
- 			    struct device_node *node, int index,
-diff --git a/lib/devres.c b/lib/devres.c
-index a14c727128c1..97fb44e5b4d6 100644
---- a/lib/devres.c
-+++ b/lib/devres.c
-@@ -169,6 +169,21 @@ void __iomem *devm_ioremap_resource(struct device *dev,
- }
- EXPORT_SYMBOL(devm_ioremap_resource);
- 
-+/**
-+ * devm_ioremap_resource_wc() - write-combined variant of
-+ *				devm_ioremap_resource()
-+ * @dev: generic device to handle the resource for
-+ * @res: resource to be handled
-+ *
-+ * Returns a pointer to the remapped memory or an ERR_PTR() encoded error code
-+ * on failure. Usage example:
-+ */
-+void __iomem *devm_ioremap_resource_wc(struct device *dev,
-+				       const struct resource *res)
-+{
-+	return __devm_ioremap_resource(dev, res, DEVM_IOREMAP_WC);
-+}
-+
- /*
-  * devm_of_iomap - Requests a resource and maps the memory mapped IO
-  *		   for a given device_node managed by a given device
--- 
-2.23.0
-
+If there are GPIO LEDs as many as the total number of CPUs, we can.
+However, if there are only two GPIO LEDs and six CPUs, we can only know
+the CPU activity for two CPUs out of six CPUs with cpuN trigger.
+So it's different from using cpu (all) trigger with multi level (2-level)
+brightness GPIO LED.
