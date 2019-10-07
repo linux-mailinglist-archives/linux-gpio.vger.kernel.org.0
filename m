@@ -2,170 +2,111 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id EBD70CDD0E
-	for <lists+linux-gpio@lfdr.de>; Mon,  7 Oct 2019 10:18:58 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0BCE3CDD20
+	for <lists+linux-gpio@lfdr.de>; Mon,  7 Oct 2019 10:22:04 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727401AbfJGISy (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 7 Oct 2019 04:18:54 -0400
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:40050 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727259AbfJGISy (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 7 Oct 2019 04:18:54 -0400
-Received: by mail-ot1-f67.google.com with SMTP id y39so10215157ota.7;
-        Mon, 07 Oct 2019 01:18:53 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Z1ge6S2/sDk/acD/D1FFy5VOy4auDMP0HxecaIBGRbM=;
-        b=oJfhEVPCoNakDQavTWGdBsQ/1cTkp9afQCLCb+ketATASqd3s0W7ZUflprXOkYWI0k
-         VkMzC6jh0IE6ilvMedZqeAlzEcjJkPgZhlOhIC7LqoQXRHaubVtpaqGcHVzTzNujHKEg
-         fTWb3DYvy8PotFZHRHOfyVTl1gHDBWh63FoT1cMNraI/tOvC8NsQVzUmb07UrMpLBypp
-         EBSNwcAXPqKl8oO/2xH+Y9Tdg9X+OpuUyuIw/SS42JJNi16iTZpWROla4LwyvJhIXx7F
-         jhxUj4YjRmwhhkN3ujkHtOcPZYdJ/SXWBXoGJO+vNryLZMzp76mjYn2cLtVDJpsoRcjA
-         aPmQ==
-X-Gm-Message-State: APjAAAViZeHfvW4Ds3ubMaI9YBQQnym8ZLTema/a2BdKLHaZt35S8Dp4
-        jGWk7V4xiKM6ZDEB2SelwLei5dQ860JdQxT43zx+ED7t
-X-Google-Smtp-Source: APXvYqwaJHUYye+JWAVM8IQM/zd2KOt5hIlHb6bB7MjwLCluYCGJczOFobszV+f1rz4AwsNjXl1y+qnUXB4NGq6DbDw=
-X-Received: by 2002:a9d:7311:: with SMTP id e17mr18969568otk.107.1570436332628;
- Mon, 07 Oct 2019 01:18:52 -0700 (PDT)
+        id S1727103AbfJGIWD (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 7 Oct 2019 04:22:03 -0400
+Received: from mga07.intel.com ([134.134.136.100]:26049 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727028AbfJGIWD (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Mon, 7 Oct 2019 04:22:03 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 07 Oct 2019 01:22:02 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.67,267,1566889200"; 
+   d="scan'208";a="394267379"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by fmsmga006.fm.intel.com with ESMTP; 07 Oct 2019 01:21:58 -0700
+Received: from andy by smile with local (Exim 4.92.2)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1iHOHE-00057o-FW; Mon, 07 Oct 2019 11:21:56 +0300
+Date:   Mon, 7 Oct 2019 11:21:56 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     William Breathitt Gray <vilhelm.gray@gmail.com>
+Cc:     linus.walleij@linaro.org, bgolaszewski@baylibre.com,
+        akpm@linux-foundation.org, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
+        linux@rasmusvillemoes.dk, yamada.masahiro@socionext.com,
+        linux-arm-kernel@lists.infradead.org, linux-pm@vger.kernel.org,
+        geert@linux-m68k.org, preid@electromag.com.au, lukas@wunner.de,
+        sean.nyekjaer@prevas.dk, morten.tiljeset@prevas.dk,
+        Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH v16 01/14] bitops: Introduce the for_each_set_clump8 macro
+Message-ID: <20191007082156.GL32742@smile.fi.intel.com>
+References: <cover.1570374078.git.vilhelm.gray@gmail.com>
+ <c0830858f19c852f6d124395a32410bc645ecd15.1570374078.git.vilhelm.gray@gmail.com>
 MIME-Version: 1.0
-References: <1561714250-19613-1-git-send-email-harish_kandiga@mentor.com>
- <20190925165133.GA4164@vmlxhi-102.adit-jv.com> <CAMuHMdVt3yDiJzkbUGMdkKKd4+CJ0btWuO-J=YZL+pAo99_WXg@mail.gmail.com>
- <20191005130740.GA22620@x230>
-In-Reply-To: <20191005130740.GA22620@x230>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Mon, 7 Oct 2019 10:18:40 +0200
-Message-ID: <CAMuHMdViwrqg48t2Pc2JtZKLGzLPy0cVfzcnqctGo9oaDpC9Wg@mail.gmail.com>
-Subject: Re: [PATCH V4 2/2] gpio: inverter: document the inverter bindings
-To:     Eugeniu Rosca <roscaeugeniu@gmail.com>
-Cc:     Eugeniu Rosca <erosca@de.adit-jv.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Harish Jenny K N <harish_kandiga@mentor.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Balasubramani Vivekanandan 
-        <balasubramani_vivekanandan@mentor.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Stephen Warren <swarren@nvidia.com>,
-        Stephen Warren <swarren@wwwdotorg.org>,
-        Phil Reid <preid@electromag.com.au>,
-        Enrico Weigelt <info@metux.net>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <c0830858f19c852f6d124395a32410bc645ecd15.1570374078.git.vilhelm.gray@gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Eugeniu,
+On Sun, Oct 06, 2019 at 11:10:58AM -0400, William Breathitt Gray wrote:
+> This macro iterates for each 8-bit group of bits (clump) with set bits,
+> within a bitmap memory region. For each iteration, "start" is set to the
+> bit offset of the found clump, while the respective clump value is
+> stored to the location pointed by "clump". Additionally, the
+> bitmap_get_value8 and bitmap_set_value8 functions are introduced to
+> respectively get and set an 8-bit value in a bitmap memory region.
 
-On Sat, Oct 5, 2019 at 3:08 PM Eugeniu Rosca <roscaeugeniu@gmail.com> wrote:
-> On Fri, Sep 27, 2019 at 11:07:20AM +0200, Geert Uytterhoeven wrote:
-> > My standard reply would be: describe the device connected to the GPIO(s)
-> > in DT.  The GPIO line polarities are specified in the device's "gpios"
-> > properties.
+Very much thank you for an update!
+I have comments below.
 
-> > Next step would be to use the device from Linux.  For that to work, you
-> > need a dedicated driver (for the complex case), or something generic
-> > (for the simple case).
-> > The latter is not unlike e.g. spidev.  Once you have a generic driver,
-> > you can use "driver_override" in sysfs to bind the generic driver to
-> > your device.  See e.g. commit 5039563e7c25eccd ("spi: Add
-> > driver_override SPI device attribute").
->
-> We have passed your suggestions along. Many thanks.
->
-> > Currently we don't have a "generic" driver for GPIOs. We do have the
-> > GPIO chardev interface, which exports a full gpio_chip.
-> > It indeed looks like this "gpio-inverter" could be used as a generic
-> > driver.  But it is limited to GPIOs that are inverted, which rules out
-> > some use cases.
-> >
-> > So what about making it more generic, and dropping the "inverter" from
-> > its name, and the "inverted" from the "inverted-gpios" property? After
-> > all the inversion can be specified by the polarity of the GPIO cells in
-> > the "gpios" property, and the GPIO core will take care of it[*]?
-> > Which boils down to adding a simple DT interface to my gpio-aggregator
-> > ("[PATCH/RFC v2 0/5] gpio: Add GPIO Aggregator Driver",
-> >  https://lore.kernel.org/lkml/20190911143858.13024-1-geert+renesas@glider.be/).
-> > And now I have realized[*], we probably no longer need the GPIO
-> > Forwarder Helper, as there is no need to add inversion on top.
->
-> After having a look at the gpio aggregator (and giving it a try on
-> R-Car3 H3ULCB), here is how I interpret the above comment:
->
-> If there is still a compelling reason for having gpio-inverter, then it
-> probably makes sense to strip it from its "inverter" function (hence,
-> transforming it into some kind of "repeater") on the basis that the
-> inverting function is more of a collateral/secondary feature, rather
-> than its primary one. Just like in the case of gpio aggregator, the
-> primary function of gpio inverter is to accept a bunch of GPIO lines and
-> to expose those via a dedicated gpiochip. I hope this is a proper
-> summary of the first point in your comment. In any case, this is the
-> understanding I get based on my experiments with both drivers.
+> +/**
+> + * bitmap_get_value8 - get an 8-bit value within a memory region
 
-Yes, the inverter is basically a "repeater" (or "aggregator", when it has
-multiple GPIOs connected), hardcoded to invert.
+Since it's in find.h I would not collide with bitmap namespace.
+How about
 
-> What I also infer is that, assuming gpio-inverter will stay (potentially
-> renamed and stripped of its non-essential inverting function), the gpio
-> aggregator will need to keep its Forwarder Helper (supposed to act as a
-> common foundation for both drivers).
+	find_and_get_value8()
 
-What I meant is that if the inverter and aggregator would be combinoed
-into a single driver, there would no longer be a need[*] for a separate
-helper, and it could be incorporated into the single driver.
+> + * @addr: address to the bitmap memory region
+> + * @start: bit offset of the 8-bit value; must be a multiple of 8
+> + *
+> + * Returns the 8-bit value located at the @start bit offset within the @addr
+> + * memory region.
+> + */
+> +static inline unsigned long bitmap_get_value8(const unsigned long *addr,
+> +					      unsigned long start)
+> +{
+> +	const size_t index = BIT_WORD(start);
+> +	const unsigned long offset = start % BITS_PER_LONG;
+> +
+> +	return (addr[index] >> offset) & 0xFF;
+> +}
+> +
+> +/**
+> + * bitmap_set_value8 - set an 8-bit value within a memory region
 
-[*] The individual helper functions may still be useful for some other
-     driver, though.
+	find_and_set_value8()
 
-> The second point which I extract from your comment is that the "gpio
-> aggregator" could alternatively acquire the role of "gpio-inverter"
-> (hence superseding it) by adding a "simple DT interface". I actually
-> tend to like this proposal, since (as said above) both drivers are
-> essentially doing the same thing, i.e. they cluster a number of gpio
-> lines and expose this cluster as a new gpiochip (keeping the
-> reserved/used gpio lines on hold). That looks like a huge overlap in
-> the functionalities of the two drivers.
+?
 
-Yes, both drivers are very similar.  The difference lies in how they
-acquire the list of GPIO descriptors.
-
-> The only difference which I see is that "gpio-inverter" is getting its
-> input from DT and generates the gpiochips at probe time, while
-> "gpio aggregator" is getting its input from sysfs and generates the
-> gpiochips at runtime, post-probe.
-
-Exactly.
-
-For my virtualization use case, I need to create the list of GPIO
-descriptors at run-time, hence the sysfs interface. This is
-polarity-agnostic (i.e. the end user needs to care about polarity).
-
-For Harish use case, he needs to describe the list from DT, with
-polarity inverted, which can be done by specifying the GPIO_ACTIVE_LOW
-flag in the node's"gpios" property.
-
-For your use case, you want to describe the list in DT, with line-names,
-and polarity specified.
-
-> So, assuming no objections from Harish and other reviewers, I would be
-> very happy to review and test the DT-based gpio inversion functionality
-> as part of gpio aggregator. Thanks!
-
-Thanks, adding to my list ;-)
-
-Gr{oetje,eeting}s,
-
-                        Geert
+> + * @addr: address to the bitmap memory region
+> + * @value: the 8-bit value; values wider than 8 bits may clobber bitmap
+> + * @start: bit offset of the 8-bit value; must be a multiple of 8
+> + */
+> +static inline void bitmap_set_value8(unsigned long *addr, unsigned long value,
+> +				     unsigned long start)
+> +{
+> +	const size_t index = BIT_WORD(start);
+> +	const unsigned long offset = start % BITS_PER_LONG;
+> +
+> +	addr[index] &= ~(0xFF << offset);
+> +	addr[index] |= value << offset;
+> +}
 
 -- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+With Best Regards,
+Andy Shevchenko
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+
