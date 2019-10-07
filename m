@@ -2,43 +2,41 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 4194BCDCDC
-	for <lists+linux-gpio@lfdr.de>; Mon,  7 Oct 2019 10:08:52 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 29C3DCDCE5
+	for <lists+linux-gpio@lfdr.de>; Mon,  7 Oct 2019 10:11:23 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727103AbfJGIIv (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 7 Oct 2019 04:08:51 -0400
-Received: from mga06.intel.com ([134.134.136.31]:10704 "EHLO mga06.intel.com"
+        id S1727028AbfJGILW (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 7 Oct 2019 04:11:22 -0400
+Received: from mga06.intel.com ([134.134.136.31]:10900 "EHLO mga06.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726889AbfJGIIv (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Mon, 7 Oct 2019 04:08:51 -0400
+        id S1726889AbfJGILW (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Mon, 7 Oct 2019 04:11:22 -0400
 X-Amp-Result: UNKNOWN
 X-Amp-Original-Verdict: FILE UNKNOWN
 X-Amp-File-Uploaded: False
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 07 Oct 2019 01:08:51 -0700
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 07 Oct 2019 01:11:21 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.67,265,1566889200"; 
-   d="scan'208";a="192220136"
+   d="scan'208";a="193028913"
 Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by fmsmga008.fm.intel.com with ESMTP; 07 Oct 2019 01:08:49 -0700
+  by fmsmga007.fm.intel.com with ESMTP; 07 Oct 2019 01:11:20 -0700
 Received: from andy by smile with local (Exim 4.92.2)
         (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1iHO4W-0004yz-Eo; Mon, 07 Oct 2019 11:08:48 +0300
-Date:   Mon, 7 Oct 2019 11:08:48 +0300
+        id 1iHO6x-00050s-Lo; Mon, 07 Oct 2019 11:11:19 +0300
+Date:   Mon, 7 Oct 2019 11:11:19 +0300
 From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 To:     Linus Walleij <linus.walleij@linaro.org>
 Cc:     linux-gpio@vger.kernel.org,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Thierry Reding <treding@nvidia.com>
-Subject: Re: [PATCH v2] pinctrl: intel: baytrail: Pass irqchip when adding
- gpiochip
-Message-ID: <20191007080848.GI32742@smile.fi.intel.com>
-References: <20191005204747.8952-1-linus.walleij@linaro.org>
+        Mika Westerberg <mika.westerberg@linux.intel.com>
+Subject: Re: [PATCH] pinctrl: intel: Pass irqchip when adding gpiochip
+Message-ID: <20191007081119.GJ32742@smile.fi.intel.com>
+References: <20191006005949.30849-1-linus.walleij@linaro.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191005204747.8952-1-linus.walleij@linaro.org>
+In-Reply-To: <20191006005949.30849-1-linus.walleij@linaro.org>
 Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-gpio-owner@vger.kernel.org
@@ -46,88 +44,105 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Sat, Oct 05, 2019 at 10:47:47PM +0200, Linus Walleij wrote:
+On Sun, Oct 06, 2019 at 02:59:49AM +0200, Linus Walleij wrote:
 > We need to convert all old gpio irqchips to pass the irqchip
 > setup along when adding the gpio_chip. For more info see
 > drivers/gpio/TODO.
 > 
-> For chained irqchips this is a pretty straight-forward
-> conversion.
+> This is an unchained irqchip so we use the method from
+> drivers/gpio/gpio-mt7621.c that also requests its interrupt
+> instead if chaining the interrupt handler.
+
+One comment below, after addressing,
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+
 > 
-> Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 > Cc: Mika Westerberg <mika.westerberg@linux.intel.com>
-> Cc: Thierry Reding <treding@nvidia.com>
+> Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 > Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
 > ---
-> ChangeLog v1->v2:
-> - Rebase on v5.4-rc1
+> This is based on Andy's patch to dynamically allocate the
+> irqchio. Mika maybe you want to queue it with the rest of
+> the stuff so you can sync fixes and new development?
 
-I would like to push it to my tree, I need to understand if the for-next is
-the okay target for it.
+My Rb tag Mika may use for fixes stuff in this cycle.
 
 > ---
->  drivers/pinctrl/intel/pinctrl-baytrail.c | 38 ++++++++++++++----------
->  1 file changed, 22 insertions(+), 16 deletions(-)
+>  drivers/pinctrl/intel/pinctrl-intel.c | 52 ++++++++++++++++-----------
+>  1 file changed, 31 insertions(+), 21 deletions(-)
 > 
-> diff --git a/drivers/pinctrl/intel/pinctrl-baytrail.c b/drivers/pinctrl/intel/pinctrl-baytrail.c
-> index 9ffb22211d2b..64a59fc08b63 100644
-> --- a/drivers/pinctrl/intel/pinctrl-baytrail.c
-> +++ b/drivers/pinctrl/intel/pinctrl-baytrail.c
-> @@ -1528,6 +1528,28 @@ static int byt_gpio_probe(struct byt_gpio *vg)
->  	if (!vg->saved_context)
->  		return -ENOMEM;
->  #endif
-> +
-> +	/* set up interrupts  */
-> +	irq_rc = platform_get_resource(vg->pdev, IORESOURCE_IRQ, 0);
-> +	if (irq_rc && irq_rc->start) {
+> diff --git a/drivers/pinctrl/intel/pinctrl-intel.c b/drivers/pinctrl/intel/pinctrl-intel.c
+> index bc013599a9a3..d63566e57f4c 100644
+> --- a/drivers/pinctrl/intel/pinctrl-intel.c
+> +++ b/drivers/pinctrl/intel/pinctrl-intel.c
+> @@ -1206,6 +1206,37 @@ static int intel_gpio_probe(struct intel_pinctrl *pctrl, int irq)
+>  	pctrl->irqchip.irq_set_wake = intel_gpio_irq_wake;
+>  	pctrl->irqchip.flags = IRQCHIP_MASK_ON_SUSPEND;
+>  
+> +	/*
+> +	 * We need to request the interrupt here (instead of using a
+> +	 * chained handler) because on some platforms several GPIO
+> +	 * controllers share the same interrupt line.
+> +	 */
+> +	ret = devm_request_irq(pctrl->dev, irq, intel_gpio_irq,
+> +			       IRQF_SHARED | IRQF_NO_THREAD,
+> +			       dev_name(pctrl->dev), pctrl);
+
+> +	if (!ret) {
+
+Why not positive condition?
+
 > +		struct gpio_irq_chip *girq;
 > +
-> +		byt_gpio_irq_init_hw(vg);
-> +
-> +		girq = &gc->irq;
-> +		girq->chip = &byt_irqchip;
-> +		girq->parent_handler = byt_gpio_irq_handler;
-
-> +		girq->num_parents = 1;
-
-For consistency I would use this below.
-I will update when applying.
-
-> +		girq->parents = devm_kcalloc(&vg->pdev->dev, 1,
-> +					     sizeof(*girq->parents),
-> +					     GFP_KERNEL);
-> +		if (!girq->parents)
-> +			return -ENOMEM;
-> +		girq->parents[0] = (unsigned int)irq_rc->start;
+> +		girq = &pctrl->chip.irq;
+> +		girq->chip = &pctrl->irqchip;
+> +		/*
+> +		 * This is an unchained interrupt. Compare to
+> +		 * drivers/gpio/gpio-mt7621.c that also does this:
+> +		 * assign no parents.
+> +		 *
+> +		 * FIXME: make the gpiolib flag this and handle unchained
+> +		 * GPIO interrupts better if need be.
+> +		 */
+> +		girq->parent_handler = NULL;
+> +		girq->num_parents = 0;
+> +		girq->parents = NULL;
 > +		girq->default_type = IRQ_TYPE_NONE;
 > +		girq->handler = handle_bad_irq;
+> +	} else {
+> +		/* Skip irqchip, register gpiochip anyway */
+> +		dev_err(pctrl->dev, "failed to request interrupt\n");
 > +	}
 > +
->  	ret = devm_gpiochip_add_data(&vg->pdev->dev, gc, vg);
+>  	ret = devm_gpiochip_add_data(pctrl->dev, &pctrl->chip, pctrl);
 >  	if (ret) {
->  		dev_err(&vg->pdev->dev, "failed adding byt-gpio chip\n");
-> @@ -1541,22 +1563,6 @@ static int byt_gpio_probe(struct byt_gpio *vg)
->  		return ret;
+>  		dev_err(pctrl->dev, "failed to register gpiochip\n");
+> @@ -1222,27 +1253,6 @@ static int intel_gpio_probe(struct intel_pinctrl *pctrl, int irq)
+>  		}
 >  	}
 >  
-> -	/* set up interrupts  */
-> -	irq_rc = platform_get_resource(vg->pdev, IORESOURCE_IRQ, 0);
-> -	if (irq_rc && irq_rc->start) {
-> -		byt_gpio_irq_init_hw(vg);
-> -		ret = gpiochip_irqchip_add(gc, &byt_irqchip, 0,
-> -					   handle_bad_irq, IRQ_TYPE_NONE);
-> -		if (ret) {
-> -			dev_err(&vg->pdev->dev, "failed to add irqchip\n");
-> -			return ret;
-> -		}
-> -
-> -		gpiochip_set_chained_irqchip(gc, &byt_irqchip,
-> -					     (unsigned)irq_rc->start,
-> -					     byt_gpio_irq_handler);
+> -	/*
+> -	 * We need to request the interrupt here (instead of providing chip
+> -	 * to the irq directly) because on some platforms several GPIO
+> -	 * controllers share the same interrupt line.
+> -	 */
+> -	ret = devm_request_irq(pctrl->dev, irq, intel_gpio_irq,
+> -			       IRQF_SHARED | IRQF_NO_THREAD,
+> -			       dev_name(pctrl->dev), pctrl);
+> -	if (ret) {
+> -		dev_err(pctrl->dev, "failed to request interrupt\n");
+> -		return ret;
 > -	}
 > -
->  	return ret;
+> -	ret = gpiochip_irqchip_add(&pctrl->chip, &pctrl->irqchip, 0,
+> -				   handle_bad_irq, IRQ_TYPE_NONE);
+> -	if (ret) {
+> -		dev_err(pctrl->dev, "failed to add irqchip\n");
+> -		return ret;
+> -	}
+> -
+> -	gpiochip_set_chained_irqchip(&pctrl->chip, &pctrl->irqchip, irq, NULL);
+>  	return 0;
 >  }
 >  
 > -- 
