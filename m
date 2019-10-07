@@ -2,306 +2,164 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id B8AE4CDDB9
-	for <lists+linux-gpio@lfdr.de>; Mon,  7 Oct 2019 10:52:05 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 26AC8CDE58
+	for <lists+linux-gpio@lfdr.de>; Mon,  7 Oct 2019 11:43:00 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727383AbfJGIwF (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 7 Oct 2019 04:52:05 -0400
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:33793 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727305AbfJGIwE (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 7 Oct 2019 04:52:04 -0400
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <mfe@pengutronix.de>)
-        id 1iHOkK-0007nf-9h; Mon, 07 Oct 2019 10:52:00 +0200
-Received: from mfe by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <mfe@pengutronix.de>)
-        id 1iHOkJ-0005Yo-EW; Mon, 07 Oct 2019 10:51:59 +0200
-Date:   Mon, 7 Oct 2019 10:51:59 +0200
-From:   Marco Felsch <m.felsch@pengutronix.de>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Support Opensource <support.opensource@diasemi.com>,
-        Adam Thomson <Adam.Thomson.Opensource@diasemi.com>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Sascha Hauer <kernel@pengutronix.de>
-Subject: Re: [PATCH 3/3] gpio: da9062: add driver support
-Message-ID: <20191007085159.uo366hmos6zk2ops@pengutronix.de>
-References: <20190917105902.445-1-m.felsch@pengutronix.de>
- <20190917105902.445-4-m.felsch@pengutronix.de>
- <CACRpkdbbmVo3hem1xFqtmq9-htg9+QUXQpZoSyffdTZQ5kUo5Q@mail.gmail.com>
+        id S1727290AbfJGJm7 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 7 Oct 2019 05:42:59 -0400
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:43398 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727103AbfJGJm7 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 7 Oct 2019 05:42:59 -0400
+Received: by mail-lj1-f193.google.com with SMTP id n14so12844656ljj.10
+        for <linux-gpio@vger.kernel.org>; Mon, 07 Oct 2019 02:42:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:reply-to:from:date:message-id:subject:to
+         :content-transfer-encoding;
+        bh=Cyl/d6woglokg3lWDB7KNeNlo4vuXNsoS2nIQA2trnw=;
+        b=WKTYqcjVAxLb2ADSBKcg84I8jhKF7Zzlb5lhaO+6qaOFD4pM0roR1dmD5MjgFYSxi9
+         SrVJc4mMBGL0pnarMm8AJVTiUoLIJ9MClIO6iD7GKzLx7QUCEKb8JKu7/96S70O+Ijwj
+         3Vdq+sh/fu+fyAFBX057gPLK8jT3jRNOopMXWNP3ijl3a2SinDAXqSX+jfuQlLgHRlrf
+         newHROoGkxnnSBlEyVMh0IFek5emR2NrNIbJyT5W1pzPBlQe/Fqsm1SPw0tR4OHqqULI
+         VVZkUJ/saXwUbGc0K/3x4geBhmtQYK9xtzHgtR/CUbTOGeULBpNqE2AJUCjcl89elua7
+         qK1A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
+         :subject:to:content-transfer-encoding;
+        bh=Cyl/d6woglokg3lWDB7KNeNlo4vuXNsoS2nIQA2trnw=;
+        b=V6sv0G5oEqSKrlZuTJlqPb8rtkyzSxB1Q2kz62bUGOSfM0dGQawhXe7XNZJRDZm/EV
+         sfHZSjVIlPGg8T2OZKSaZmLdeyK50Y7e41KNXmldKqvKCpnujDmfAi+TMCbxZj0ZO+oi
+         nbj/FN4AjYUL7KDzD0ghDiugKurPUKWSdSo3o5wRMWLumb6lNw0jY8xl2sagHZd0hIS9
+         zetzqzONVhpdyjg4i2fge9hy/0+8lyY17JP7VbOKVWxikYm5dNrAr44RPGXoBmyWAa2X
+         eiW+uZxp3WrUGu5P+oDJu36gz09/LjRbS+w5RZXF6Ig0u8raCc80TtAGEkFmeS1UkWdd
+         sS4A==
+X-Gm-Message-State: APjAAAWayh5pwy5WzJZxKN1BUUCshXX+UWfYvmmE4zc0mGgyRDmrFwWH
+        D1UZdRGvhmp8wb6+hZLJKec2H1qx2IYds1egpa8=
+X-Google-Smtp-Source: APXvYqz1Of4C+j9ZoMvecsO1UKh/gVQlYQpv4gyNfPtbMB1VHnOEAi5vorEsTgjjOOLDCEY0mfCRVQ5i8rlZKyNAk74=
+X-Received: by 2002:a2e:894b:: with SMTP id b11mr17479057ljk.152.1570441376248;
+ Mon, 07 Oct 2019 02:42:56 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CACRpkdbbmVo3hem1xFqtmq9-htg9+QUXQpZoSyffdTZQ5kUo5Q@mail.gmail.com>
-X-Sent-From: Pengutronix Hildesheim
-X-URL:  http://www.pengutronix.de/
-X-IRC:  #ptxdist @freenode
-X-Accept-Language: de,en
-X-Accept-Content-Type: text/plain
-X-Uptime: 10:17:16 up 142 days, 14:35, 94 users,  load average: 0.01, 0.03,
- 0.06
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: mfe@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-gpio@vger.kernel.org
+Received: by 2002:a2e:9c09:0:0:0:0:0 with HTTP; Mon, 7 Oct 2019 02:42:55 -0700 (PDT)
+Reply-To: aishaelgaddafi@hotmail.com
+From:   aisha Gaddafi <aishael.gaddafi11@gmail.com>
+Date:   Mon, 7 Oct 2019 11:42:55 +0200
+Message-ID: <CADejHN-_CVKJoQDF86_uA2j3JArNnRMx1=oR86EioBLAoDsV1w@mail.gmail.com>
+Subject: Can I invest in your country from Mrs. Aisha El Gaddafi?
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Linus,
+Dearest One
 
-thanks for you feedback.
+Please I want you to exercise some patience reading through this mail
+so that it will enable you have good understanding, meanwhile I will
+appreciate you to ignore and delete this mail from your mail box if
+you are not interested been my partner for the investment project in
+your country.
 
-On 19-10-04 21:27, Linus Walleij wrote:
-> On Tue, Sep 17, 2019 at 12:59 PM Marco Felsch <m.felsch@pengutronix.de> wrote:
-> 
-> > The DA9062 is a mfd pmic device which supports 5 GPIOs. The GPIOs can
-> > be used as input, output or have a special use-case.
-> >
-> > The patch adds the support for the normal input/output use-case.
-> >
-> > Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
-> 
-> Nice to get this covered!
-> 
-> > +#define DA9062_TYPE(offset)            (4 * (offset % 2))
-> > +#define DA9062_PIN_SHIFT(offset)       (4 * (offset % 2))
-> > +#define DA9062_PIN_ALTERNATE           0x00 /* gpio alternate mode */
-> 
-> The there is pin control related to the DA9062, we should put the driver
-> in drivers/pinctrl/pinctrl-da9062.c from day one.
+This letter may come to you as a surprise, but I want you to
+understand that it is only through an opportunity that people can meet
+each other and become friends and business partners in life. Though,
+the society today is so unpredictable that the good and the bad live
+side by side coupled with the monumental hype and crap of the abuse of
+the Internet by some unscrupulous persons in the recent times, thereby
+making it extremely difficult for genuine and legitimate business
+class persons to get attention and recognition. However, Internet was
+established for easy communication and business transaction of far
+partners but today, the same internet is use to deceived some business
+class persons so i will not be surprise to see you rejecting this
+proposal just because of what bad eggs has done to internet today.
 
-Mh.. didn't checked the pinctrl framework and assumed that this place is
-just fine due to the existing da9052/5 drivers which have an alternate
-mode too.
+Nevertheless, i want you to understand that there is still genuine and
+legitimate business class persons in internet world today so i am
+assuring you that this transaction is 100% genuine. You can give it a
+trial.
 
-> I am not saying you have to implement pin control from scratch, just
-> have it there and look at sibling drivers to make sure we don't
-> screw something up for also adding pin control later on.
+I decided to contact you over this business, after a careful thought
+and also going the way of my instincts, believing that you are capable
+of handling this business in honesty and sincerity and also be of
+immense help towards the smooth completion of this transaction.
 
-I will check the pinctrl framework. Maybe I will have upcoming question.
+Before I introduce myself, I wish to inform you that this letter is
+not a hoax mail and I urge you to treat it serious. This letter must,
+come to you as a big surprise, but I believe it is only a day that
+people meet and become great friends and business partners.
 
-> > +int da9062_gpio_get_hwgpio(struct gpio_desc *desc)
-> > +{
-> > +       return gpio_chip_hwgpio(desc);
-> > +}
-> > +EXPORT_SYMBOL_GPL(da9062_gpio_get_hwgpio);
-> 
-> I would have to look at the other patch to see why this is needed.
-> Normally other drivers should just have their GPIOs assigned
-> like anyone else, no shortcuts into the hardware offsets
-> like this.
+Please I want you to read this letter very carefully and I must
+apologize for barging this message into your mail box without any
+formal introduction due to the urgency and confidentiality of this
+business and I know that this message will come to you as a surprise.
+Please, this is not a joke and I will not like you to joke with it OK.
+With due respect to your person and much sincerity of purpose, I make
+this contact with you as I believe that you can be of great
+assistance,  to me.
 
-I saw your comments on the other patch. As you mentioned in the other
-patche it is better to have a api within the gpiolib. I will add this
-api within the other patch series.
+Introductions; My names are Aisha Gaddafi,the only biological daughter
+of late Libya president Gaddafi, I want to use this opportunity to
+inform you that I need a very honest and reliable person that can help
+me look for a profitable business/ company to invest into there in
+your country then you let me know while and provide account where I
+can transfer the sum of$30,500,000.00.Dollars (Thirty million five
+hundred and fifty thousand united state dollars) for the investment in
+your country.
 
-> > +static int da9062_gpio_get(struct gpio_chip *gc, unsigned int offset)
-> > +{
-> > +       struct da9062_gpio *gpio = gpiochip_get_data(gc);
-> > +       struct regmap *regmap = gpio->da9062->regmap;
-> > +       int gpio_dir, val;
-> > +       int ret;
-> > +
-> > +       gpio_dir = da9062_gpio_get_pin_mode(regmap, offset);
-> 
-> This includes other things than the direction of the pin so call
-> the variable gpio_mode or something rather than gpio_dir.
+My late father also deposited 37kg of (GOLD) in Accra Ghana a
+neighboring country where i am presently now. My plan is after
+claiming this fund, we will have enough fund to move for the claim of
+the GOLD.
 
-Okay, I will change that.
+ I am currently residing in  one of the African Countries,
+unfortunately as a refugee. At the meantime, my family is the target
+of Western nations led by Nato who  lead the death of my father at all
+costs and Our investments and bank accounts in several countries are
+their targets to freeze.
 
-> > +       if (gpio_dir < 0)
-> > +               return gpio_dir;
-> > +
-> > +       switch (gpio_dir) {
-> > +       case DA9062_PIN_ALTERNATE:
-> > +               return -ENOTSUPP;
-> 
-> This is fine for now. Toss in a comment that we may add pin muxing
-> later.
-> 
-> > +static int da9062_gpio_get_direction(struct gpio_chip *gc, unsigned int offset)
-> 
-> Same comments as above.
+I have no option rather to contact an interested foreign
+investor/partner who will be able to take absolute control of part of
+the vast cash available in a private account that my late father open
+on my behalf here in the country before his sudden death by the
+western world.
 
-Okay.
+If this transaction interest you, kindly reply me back immediately for
+more details on how to execute the project.Please one more
+veryimportant thing here, is that you don=E2=80=99t have to disclose it to =
+any
+body because of what is going with my entire family, if the united
+nation happens to know this account, they will freeze it as they
+freeze others so keep this transaction for yourself only until we
+finalize it. I want to transfer this money into your account
+immediately for onward investment in your country because I don=E2=80=99t w=
+ant
+the united nation to know about this account of which you are aware of
+my family problems.
 
-> > +static int da9062_gpio_direction_input(struct gpio_chip *gc,
-> > +                                      unsigned int offset)
-> > +{
-> > +       struct da9062_gpio *gpio = gpiochip_get_data(gc);
-> > +       struct regmap *regmap = gpio->da9062->regmap;
-> > +       struct gpio_desc *desc = gpiochip_get_desc(gc, offset);
-> > +       unsigned int gpi_type;
-> > +       int ret;
-> > +
-> > +       ret = da9062_gpio_set_pin_mode(regmap, offset, DA9062_PIN_GPI);
-> > +       if (ret)
-> > +               return ret;
-> 
-> Fair enough.
-> 
-> > +       /*
-> > +        * If the gpio is active low we should set it in hw too. No worries
-> > +        * about gpio_get() because we read and return the gpio-level. So the
-> > +        * gpiolob active_low handling is still correct.
-> 
-> gpiolib?
+About me and the reason why I am now in Burkina Faso as you can read
+more in the linked below Please inter the link to read and know more
+about me and the reason why I contacted you.
 
-Thanks for covering that.
+http://www.telegraph.co.uk/news/worldnews/africaandindianocean/libya/996720=
+3/Gaddafis-daughter-thrown-out-of-Algeria-after-she-set-fire-to-presidentia=
+l-residence.html
 
-> > +        *
-> > +        * 0 - active low, 1 - active high
-> > +        */
-> > +       gpi_type = !gpiod_is_active_low(desc);
-> > +       return regmap_update_bits(regmap, DA9062AA_GPIO_0_1 + (offset >> 1),
-> > +                               DA9062AA_GPIO0_TYPE_MASK << DA9062_TYPE(offset),
-> > +                               gpi_type << DA9062_TYPE(offset));
-> > +}
-> 
-> So this does not affect the value out set by da9062_gpio_set()?
+Once again, i have the sum of US$ 30.5 Thirty Million five hundred
+thousand in one bank in Burkina Faso Called  Banque Commerciale du
+Burkina (BCB).
 
-Please check [1] table 54, the datasheet says it is only gpi
-(gpio-input). So I assume it doesn't affect out values.
+Therefore if you are capable of running an establishment and can
+maintain the high level of secrecy required in this project, kindly
+reply with the following information for details of the project and
+please always reach me on this my below alternative email address for
+urgent attention ok. (aishaelgaddafi@hotmail.com )
 
-[1] https://www.dialog-semiconductor.com/sites/default/files/da9062-a_datasheet_2v3.pdf
+You are advice to contact me immediately for more details if you are
+really interested. As soon as i hear from you, i will give you mor
+details of this transaction.
 
-Unfortunately the other gpio-da90* drivers sets this as active low hard
-within the driver. I wanted to avoid this here since it isn't always
-true.
-
-> What is the electrical effect of this then, really? To me that seems like
-> something that is mostly going to be related to how interrupts
-> trigger (like whether to trig on rising or falling edge) and then it
-> should really be in the .set_type() callback, should it not?
-
-Not only interrupts.. The dialog pmics has a lot of options to use this
-pins e.g. you can set it as voltage-selection input. You saw the patches
-I made for the regulator :)
-
-> > +static int da9062_gpio_direction_output(struct gpio_chip *gc,
-> > +                                       unsigned int offset, int value)
-> > +{
-> > +       /* Push-Pull / Open-Drain options are configured during set_config */
-> > +       da9062_gpio_set(gc, offset, value);
-> > +
-> > +       return 0;
-> > +}
-> 
-> You probably want to make sure to clear the active low bit in this function,
-> right?
-
-Nope, as I mentioned above this is only input related. If we can trust
-the datasheet.
-
-> > +static int da9062_gpio_set_config(struct gpio_chip *gc, unsigned int offset,
-> > +                                 unsigned long config)
-> > +{
-> > +       struct da9062_gpio *gpio = gpiochip_get_data(gc);
-> > +       struct regmap *regmap = gpio->da9062->regmap;
-> > +       int gpio_dir;
-> 
-> Name this gpio_mode
-
-okay.
-
-> > +       switch (pinconf_to_config_param(config)) {
-> > +       case PIN_CONFIG_BIAS_PULL_DOWN:
-> > +               /* PD only if pin is input */
-> 
-> Info from datasheet? Electrical limitation? Add to comment!
-
-Okay, I will add more comments.
-
-> > +               gpio_dir = da9062_gpio_get_pin_mode(regmap, offset);
-> > +               if (gpio_dir < 0)
-> > +                       return -EINVAL;
-> > +               else if (gpio_dir != DA9062_PIN_GPI)
-> > +                       return -ENOTSUPP;
-> > +               return regmap_update_bits(regmap, DA9062AA_CONFIG_K,
-> > +                                         BIT(offset), BIT(offset));
-> > +       case PIN_CONFIG_BIAS_PULL_UP:
-> > +               /* PU only if pin is output open-drain */
-> 
-> Dito.
-
-Here too.
-
-> > +               gpio_dir = da9062_gpio_get_pin_mode(regmap, offset);
-> > +               if (gpio_dir < 0)
-> > +                       return -EINVAL;
-> > +               else if (gpio_dir != DA9062_PIN_GPO_OD)
-> > +                       return -ENOTSUPP;
-> > +               return regmap_update_bits(regmap, DA9062AA_CONFIG_K,
-> > +                                         BIT(offset), BIT(offset));
-> > +       case PIN_CONFIG_DRIVE_OPEN_DRAIN:
-> > +               return da9062_gpio_set_pin_mode(regmap, offset,
-> > +                                               DA9062_PIN_GPO_OD);
-> > +       case PIN_CONFIG_DRIVE_PUSH_PULL:
-> > +               return da9062_gpio_set_pin_mode(regmap, offset,
-> > +                                               DA9062_PIN_GPO_PP);
-> > +       default:
-> > +               return -ENOTSUPP;
-> > +       }
-> 
-> Overall very nice use of this callback.
-> 
-> > +static int da9062_gpio_to_irq(struct gpio_chip *gc, unsigned int offset)
-> > +{
-> > +       struct da9062_gpio *gpio = gpiochip_get_data(gc);
-> > +       struct da9062 *da9062 = gpio->da9062;
-> > +
-> > +       return regmap_irq_get_virq(da9062->regmap_irq,
-> > +                                  DA9062_IRQ_GPI0 + offset);
-> > +}
-> 
-> That's interesting. I never saw that before. It's fine, I guess,
-> I can't figure out whether these slow expanders could be set as
-> hierarchical though, what do you think? Saw a comment on this
-> from Bartosz as well. But I generally trust his comment on that
-> it should be fine unless you have subnodes (i.e. hierarchy).
-
-This v1 had a hierarchy.. but I changed that upon Bartosz comments. So
-there is no hierarchy in the next version.
-
-> > +++ b/include/linux/mfd/da9062/gpio.h
-> > @@ -0,0 +1,13 @@
-> > +/* SPDX-License-Identifier: GPL-2.0 */
-> > +/*
-> > + * Copyright (C) 2019 Pengutronix, Marco Felsch <kernel@pengutronix.de>
-> > + */
-> > +
-> > +#ifndef __MFD_DA9062_GPIO_H__
-> > +#define __MFD_DA9062_GPIO_H__
-> > +
-> > +struct gpio_desc;
-> > +
-> > +int da9062_gpio_get_hwgpio(struct gpio_desc *desc);
-> > +
-> > +#endif /* __MFD_DA9062_GPIO_H__ */
-> 
-> So I'm sceptical about this and it needs a very good motivation.
-
-I will change it to have a common api call as you mentioned it in
-the regulator-patch series.
-
-Regards,
-  Marco
-
-> Yours,
-> Linus Walleij
-> 
-
--- 
-Pengutronix e.K.                           |                             |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+Best Regard
+Mrs.Aisha El Gaddafi
