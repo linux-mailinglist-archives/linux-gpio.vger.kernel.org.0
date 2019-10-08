@@ -2,130 +2,77 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 49BDCD01B6
-	for <lists+linux-gpio@lfdr.de>; Tue,  8 Oct 2019 21:55:43 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D334CD0244
+	for <lists+linux-gpio@lfdr.de>; Tue,  8 Oct 2019 22:40:23 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730778AbfJHTzh (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 8 Oct 2019 15:55:37 -0400
-Received: from mail-ed1-f53.google.com ([209.85.208.53]:39077 "EHLO
-        mail-ed1-f53.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730704AbfJHTzU (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 8 Oct 2019 15:55:20 -0400
-Received: by mail-ed1-f53.google.com with SMTP id a15so16827317edt.6
-        for <linux-gpio@vger.kernel.org>; Tue, 08 Oct 2019 12:55:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:reply-to:from:date:message-id:subject:to;
-        bh=d9t6Rq0RbZ7PXIZmIcLbP2JTBMFny2QBILsKgMXZe9M=;
-        b=aMQQgi7dIXVBnmVMSSMCLgb3oXTzeafbZdgWl2Y7dgh9d3yilS1+9yTnvWoS7+GzUk
-         LWbTYKnbDzuBJ3/U6U4a0Txwis4unkVKDohWYyBjnKYrTLghN7laSYeGp1/FcmznDyEO
-         GS9pgiMN+uT0qCjbihaa5wuvtHOM98vqOW8UVjJ7Cv+EprgLSNS8LJdhrjnJyNqQEN56
-         5sfOyU15h4kpoOXNgzNljIz5N8IZnpl4XHLYJYLCwvTOpHMRDfM3ywlgrk+4Qs+isMtv
-         bwWMXB9P8rpPXCaQx70qpw2S2sG0Q07XznOIe3PPQ9uFVdh7+iWMtRM+rtyrWFblwrYM
-         wXZw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
-         :subject:to;
-        bh=d9t6Rq0RbZ7PXIZmIcLbP2JTBMFny2QBILsKgMXZe9M=;
-        b=R6KRDwUV1GE8TmemHzauI6z9pI7HQJRDDhAnlXB8O8g1GqWsGHQnEQK3NduuFqt9is
-         4VhQ+3PN3N9xKmKVAiFyRoVr97ZLf/sK+F+z4v7vGD6AZefXORk6rbloXgZEeXyVL0sA
-         afNIQDcB6IVESuAbd1QVVM8TYkGLwJl1/gSxGWy7DE33BZojdg7jEmstz+fE6EKnAf4L
-         A0jPt0hXw4g7vBT0Z7tvVdcday3gEXAxDjqWCGxcCf1g3AFM3zCxxW5/H1VcPrKXSnAJ
-         O2AdyK61rMmV/oOgnUDSBAUo67k9tB4VyFa+yPAZcSYGCOGjDg98PpizMBGEYsW+6LB+
-         Wn+A==
-X-Gm-Message-State: APjAAAWX3Xzxk9Xz6daFa04P5MMz6Sywa8YYBm+S07sAiy3gwWHl32hT
-        KAVvcSm5btpa8tlX6exmzQuHyOcjQbGDbYZ7Vmg=
-X-Google-Smtp-Source: APXvYqxaZfvXk0/G1PfPN40JEbEfue6b7v2Lk/SQWmnUxoxmnZyxXwpPNC4UPIh9mJw4kQ9atMHeHG1Orcb22TWXOSk=
-X-Received: by 2002:a50:c306:: with SMTP id a6mr36339639edb.108.1570564517490;
- Tue, 08 Oct 2019 12:55:17 -0700 (PDT)
+        id S1730950AbfJHUkX (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 8 Oct 2019 16:40:23 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:55028 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730523AbfJHUkW (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 8 Oct 2019 16:40:22 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:MIME-Version:Date:Message-ID:Subject:From:Cc:To:Sender:Reply-To:
+        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+        Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=IG1PVwMtQAM28tfOpPtpmdlnReR0UstRu9NVxRsy1Jk=; b=Gz43DLApZQtRZIbtPg1nD6SGm
+        35zFAXuI6KC35Dy5Ms8F2kjxI0uvqyt9UaCdlSrS4SsTPyEp1Gnf/GD3BdnuWinJU84hvDYgm7Gzj
+        OHLAd/U8Qz8kzAh4FJUOTwd9CV9u+k/3jET6jHYR/aH1CwRRw+yQhc+5QQGdt3pJmLBaDSfe2wELq
+        a1vlmVu3vhty/1yXXcnykwEMR1Tz98in9jUrtvAnWxDF2xiC2gTbFNaBHLRP78J4cdmPJGfoUkbMn
+        QNOsVxI/h0KHDZagTuovvTg8z+hU60GcMa2SdOQVzOje/Te5Na2SrzvX+b1Yiu3z9rqu7RRlKdMf9
+        pw/1/eWEg==;
+Received: from [2601:1c0:6280:3f0::9ef4]
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.2 #3 (Red Hat Linux))
+        id 1iHwHO-0003r9-G9; Tue, 08 Oct 2019 20:40:22 +0000
+To:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Subject: [PATCH] gpio: fix kernel-doc for of_gpio_need_valid_mask()
+Message-ID: <6c5d22c8-6e27-3314-9c46-701d932b11a6@infradead.org>
+Date:   Tue, 8 Oct 2019 13:40:21 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.1
 MIME-Version: 1.0
-Received: by 2002:a17:906:cc89:0:0:0:0 with HTTP; Tue, 8 Oct 2019 12:55:16
- -0700 (PDT)
-Reply-To: moneygram.1820@outlook.fr
-From:   MONEY GRAM <currency1000000@gmail.com>
-Date:   Tue, 8 Oct 2019 20:55:16 +0100
-Message-ID: <CAPqfnSEO==O6BEtBbcMMZfh3qcY4Bz0qndhCqbcLqZx4DCs44A@mail.gmail.com>
-Subject: HERE IS YOUR MONEY GRAM PAYMENT HAS BEEN SENT TO YOU HERE IS THE M.T.C.N:78393135
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-HERE IS YOUR MONEY GRAM PAYMENT HAS BEEN SENT TO YOU HERE IS THE
-M.T.C.N:78393135
+From: Randy Dunlap <rdunlap@infradead.org>
 
-Attn: Beneficiary,
+Fix kernel-doc for of_gpio_need_valid_mask().
+Fixes this warning and uses correct Return: format.
 
-This is to inform you that the America Embassy office was instructed
-to transfer your fund $980,000.00 U.S Dollars compensating all the
-SCAM VICTIMS and your email was found as one of the VICTIMS. by
-America security leading team and America representative officers so
-between today the 8th of October till 1ST Of December 2019 you will
-be receiving MONEY GRAM the sum of $6,000 dollars per day. However be informed
-that we have already sent the $6,000 dollars this morning to avoid
-cancellation of your payment, remain the total sum of $980,000.00.
+../drivers/gpio/gpiolib-of.c:92: warning: Excess function parameter 'dev' description in 'of_gpio_need_valid_mask'
 
-You have only six hours to call this office upon the receipt of this
-email the maximum amount you will be receiving per a day starting from
-today's $6,000 and the Money Transfer Control Number of today is
-below.
+Fixes: f626d6dfb709 ("gpio: of: Break out OF-only code")
+Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
+Cc: Linus Walleij <linus.walleij@linaro.org>
+Cc: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Cc: linux-gpio@vger.kernel.org
+---
+ drivers/gpio/gpiolib-of.c |    5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-NOTE; The sent $6,000 is on hold because of the instruction from IMF
-office, they asked us to place it on hold by requesting the (Clean
-Bill Record Certificate) which will cost you $25 in order to fulfill
-all the necessary obligation to avoid any hitches while sending you
-the payment through MONEY GRAM money transfer, the necessary
-obligation I mean here is to obtain the (Clean Bill Record
-Certificate)
+--- linux-next-20191008.orig/drivers/gpio/gpiolib-of.c
++++ linux-next-20191008/drivers/gpio/gpiolib-of.c
+@@ -84,8 +84,9 @@ static struct gpio_desc *of_xlate_and_ge
+ /**
+  * of_gpio_need_valid_mask() - figure out if the OF GPIO driver needs
+  * to set the .valid_mask
+- * @dev: the device for the GPIO provider
+- * @return: true if the valid mask needs to be set
++ * @gc: the target gpio_chip
++ *
++ * Return: true if the valid mask needs to be set
+  */
+ bool of_gpio_need_valid_mask(const struct gpio_chip *gc)
+ {
 
-Below is the information of today track it in our
-
-websitehttps://moneygarm.com/asp/orderStatus.asp?country=global
-to see is available to pick up by the receiver, but if we didn't here
-from you soon we'll pickup it up from line for security reason to
-avoid hackers stealing the money online.
-
-Money Transfer Control Number M.T.C.N)::78393135
-SENDERS FIRST NAME: John
-SENDERS LAST NAME: Chun
-SENDERS COUNTRY...BENIN REPUBLIC
-TEXT QUESTION: A
-ANSWER: B
-AMOUNT: $6,000
-
-We need the below details from you, to enable us place the payment to
-your name and transfer the fund to you.
-
-(Full Receivers name)...................
-(You're Country)................................
-(Address)......................................
-(Phone NuMBER-...............................
-(You're Age)............................
-(OCCUPATION)..REAL ESTATE..................
-(A Copy of Your ID CARD).SEE ATTACHMENTS.............
-
-HOWEVER YOU HAVE TO PAY $25 FOR THE (Clean Bill Record Certificate)
-AND THAT IS ALL YOU HAVE TO DO ASAP.
-
-The payment will be sending to below information, such as:
-
-Receiver.............. ALAN UDE
-Country................Benin Republic
-Amount: ....................$25
-Question: .....................A
-Answer:................... B
-Sender...............Name:
-MTCN :..............
-
-According to the instruction and order we received from IMF the their
-requested $25 must be made directly to the above info's.
-
-Furthermore you are advised to call us as the instruction was passed
-that within 6hours without hearing from you, Count your payment
-canceled. Number to call is below listed manager director office of
-release order:
-DR.ALAN UDE
-Director MONEY GRAM-Benin
