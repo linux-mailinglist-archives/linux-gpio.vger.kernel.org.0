@@ -2,192 +2,119 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 4D33CD0FEC
-	for <lists+linux-gpio@lfdr.de>; Wed,  9 Oct 2019 15:22:48 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6F804D0FF2
+	for <lists+linux-gpio@lfdr.de>; Wed,  9 Oct 2019 15:23:59 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731184AbfJINWr (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 9 Oct 2019 09:22:47 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:55137 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729883AbfJINWr (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 9 Oct 2019 09:22:47 -0400
-Received: by mail-wm1-f65.google.com with SMTP id p7so2589425wmp.4
-        for <linux-gpio@vger.kernel.org>; Wed, 09 Oct 2019 06:22:46 -0700 (PDT)
+        id S1731192AbfJINX6 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 9 Oct 2019 09:23:58 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:41286 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731083AbfJINX6 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 9 Oct 2019 09:23:58 -0400
+Received: by mail-pf1-f196.google.com with SMTP id q7so1622303pfh.8
+        for <linux-gpio@vger.kernel.org>; Wed, 09 Oct 2019 06:23:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=sender:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=7F96pWJHeSMlYdx4G9ZjnlaLCkvOK4Ullao3dee71uE=;
-        b=N0BNwJf4aa/J+ji6F6IqMOUCqvEzeKt43pSjd05UfkukdDKtJhjza+1kUuya6aeZya
-         TnVLCW4XniPTN8pY0lgIWYq94yJ/oGCpkOfwhMR89olzNR79MPDUUtweDPXXHfJIeCwf
-         b35e/u8+a6BJlNm7oOzQ+FuVIL++dmG7XAbr626WeTOYqgaz1m8iruuGY7oF7qukLY0I
-         Ao+szSXk5zY+S7LvLC8gI3/qOGz+ej6Wl64lRdSQhyThn/j8k3xiXIZu7ZygETEhMjqA
-         nPsZnAUU2zWRmquUK1TM0/gmoztBpTm/CdJxvX/6chQlzbU8voS8pJ2xUc5F9srlwZOg
-         pH8A==
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=2UZSBjpDfhWKUkd9zi6zb2LSYd+CI+5a9lamXZLJVe0=;
+        b=LAzUKl1/mUVY1N1MPAD5G4cqYSNVjvxuTKeGpF20Wa34pnq9BX2K32szgdK8eVMk+D
+         kFdck6pgRSAov+RsM1Urb93o8oNlY8EDI083zXbsLj2DIleUAn/juWcfrVIkX3uRC5d4
+         mq1SRKduqDrTCkNqoo/pMv8V7zDK12oVcBhl7eKwLMGPh9u6/3dlvpcCoIr26s4Z3hiH
+         I6L+igeMYzKTuMGwiBv3jRoS1WiKhVCuV4Df0mFbet3oEvGjXpCS+7MfHUXJ5K16mKpT
+         OhYkpj2/Pmsnpy23eNsEmK5VVYa8a3G9GD4smbUJ2iKITtR/1vNryWjO9ay/hU+JmHjn
+         WW3w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
-         :mime-version:content-transfer-encoding;
-        bh=7F96pWJHeSMlYdx4G9ZjnlaLCkvOK4Ullao3dee71uE=;
-        b=RnEU8eUZGvnIXbUBJvCrKXV5/b9EpvybdhzgeyKzdjnCH+M4P043QtTHrEL2N4ijls
-         3sRXiLBSEeT9xt6RLIxdJ1FcaCGhTLNrWXqhR248GgeJ18sbgZ4WkXo9Zqt6oFqYOTRp
-         SAsXf/lgSBQxyw/dMlhQdrC0hV9M/jnqco6E6tzd8NSvLfX9oKLTOhIMkd3MgfKAZ+UY
-         FuDc0vvk2E9p4eBeapkYlIN5aEbYevTjF3iHDLPuedPUxBCGKnnLs7Uhw/R9bTVaJhTk
-         Ush+htveV6nUL9uVrc3G0mbC34C5N7datAY3nafksVtYE6zsVoIXXIlZFSDv9ZPPSwD6
-         0qWA==
-X-Gm-Message-State: APjAAAWHqPhUL3YWWM+ZQgMp6OhuGY+31HlKyGpYVMu/CDLiAuhoD9mc
-        6yE40RAys8gpmDoB8ByMyl0=
-X-Google-Smtp-Source: APXvYqwGCiS49phxvHcrZgNBDiqmWujEm/DWsCG9D0VAzr/2EmfOZQeDIY8dysGP9mq3orWvFBFliA==
-X-Received: by 2002:a1c:1901:: with SMTP id 1mr2644689wmz.28.1570627365673;
-        Wed, 09 Oct 2019 06:22:45 -0700 (PDT)
-Received: from x1.fritz.box ([2001:16b8:5c80:ac01:2d69:222e:6eca:3415])
-        by smtp.gmail.com with ESMTPSA id r65sm2818891wmr.9.2019.10.09.06.22.44
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=2UZSBjpDfhWKUkd9zi6zb2LSYd+CI+5a9lamXZLJVe0=;
+        b=LMMoP4gqp5+zG3bIm5X4uZhX48Qxqd9HSmsZr4ZV94N8iqorDsijgfS4iJ+kyM332/
+         +LsA6Ie+G5pDsAsOuCSMdpwggOzyKKysCrF0ryG89/2eNRqwCS9HptjPCAItu5EPZe3H
+         +YjF3JLaKswRI2nAlkSRjDZ7bD274KT5gI003cmcM4oHwJ36LS/FgH6/k2g2pwaJFlXf
+         /48lf/NLOGX1g5GoH5yMj3A+GGR3fP/xD3jc5yfALwCLATaYDNQ8+ltEiU0MKyuY4bat
+         OvWHM0ug+zGfppsHlhbg8XkM4esOZhjFZMK1gaGw9FPeDBIo+0skCA8GA5+ne43k0lGq
+         CQYA==
+X-Gm-Message-State: APjAAAX7YQaKgLIujoBfeQPZ5AH7m8AN4OO3i+SzuAv93gHyHzXjXCay
+        kojIN0kY3z2ZpQj+aAr2+rw=
+X-Google-Smtp-Source: APXvYqwtLIfMqO6A1imYXyLfpS0LLMrT3Dsu36jFUiKCe9Qybn8JIAm6LhDgGRG4dQznSjdFZlQVrg==
+X-Received: by 2002:a63:ba05:: with SMTP id k5mr4125759pgf.195.1570627437286;
+        Wed, 09 Oct 2019 06:23:57 -0700 (PDT)
+Received: from firefly (220-235-84-126.dyn.iinet.net.au. [220.235.84.126])
+        by smtp.gmail.com with ESMTPSA id a11sm3175918pfg.94.2019.10.09.06.23.54
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 09 Oct 2019 06:22:44 -0700 (PDT)
-From:   Drew Fustini <drew@pdp7.com>
-To:     brgl@bgdev.pl
-Cc:     linux-gpio@vger.kernel.org, linus.walleij@linaro.org,
-        warthog618@gmail.com, Drew Fustini <drew@pdp7.com>
-Subject: [PATCH] libgpoiod: add pull-up/pull-down flags for gpio lines
-Date:   Wed,  9 Oct 2019 15:19:03 +0200
-Message-Id: <20191009131901.16782-1-drew@pdp7.com>
-X-Mailer: git-send-email 2.20.1
+        Wed, 09 Oct 2019 06:23:56 -0700 (PDT)
+Date:   Wed, 9 Oct 2019 13:23:46 +0000
+From:   Kent Gibson <warthog618@gmail.com>
+To:     Drew Fustini <drew@pdp7.com>
+Cc:     Bartosz Golaszewski <brgl@bgdev.pl>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+Subject: Re: [RFC] gpio: expose pull-up/pull-down line flags to userspace
+Message-ID: <20191009132346.GA1384@firefly>
+References: <20190921102522.8970-1-drew@pdp7.com>
+ <20191008061512.GA19956@sol>
+ <CAMRc=Mf8DsEOWcX2BTtdVtsRkNXB3oA-xt2SrWJTn6vt3Fd8Pg@mail.gmail.com>
+ <20191008232120.GA9225@sol>
+ <CAMRc=MdcWUtEx3QAKxEmEEa1Effq7JpRPGNJOGfSYP6Nh0p1Hg@mail.gmail.com>
+ <20191008235626.GA10744@sol>
+ <CAMRc=MdCktRBkofaqAEtjNLNS=60Z9zM9a4QoBLsCsx3bSdxtQ@mail.gmail.com>
+ <20191009002211.GA11168@sol>
+ <20191009065524.GA4061@sol>
+ <20191009125727.GA10800@x1>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191009125727.GA10800@x1>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Add pull-up and pull-down flags to libgpiod now that libgpio in the kernel
-supports these flags for linehandle_create() and lineevent_create().
+On Wed, Oct 09, 2019 at 02:57:27PM +0200, Drew Fustini wrote:
+> 
+> On Wed, Oct 09, 2019 at 02:55:24PM +0800, Kent Gibson wrote:
+> > Safe to assume your code is in your topic/gpio-uapi-config branch?
+> > I hope so, cos I've forked from that into github.com/warthog618/linux 
+> > and have started working on it.
+> > 
+> > So far I've added pull up/down support to lineevent_create, and 
+> > added default_values to the gpiohandle_config (for setting outputs).
+> > Currently looking at implementing the actual set config, and sucking
+> > on whether that is best done by refactoring bit out of
+> > linehandle_create.
+> > 
+> > Will sort that into patches once it is in a fit state.
+> > Feel free to poke me if I'm going off track.
+> > 
+> > Cheers,
+> > Kent.
+> 
+> Great to see that work on this capability is moving foward.  I also have
+> spare time so I'm eager to help however I can.
+> 
+> I had been working from the kernel.org torvalds/linux.git master to
+> create a patch and used 'git send-email' to post a patch.  It is
+> interesting that Bartosz and you have forks of linux where you created
+> topic branches.  I just added warthog618/linux as a remote so I can view
+> and try out your commits.
+> 
+Sorry that the branch is a munge of the pull up/down and set config changes.
+And I have no idea how I'm going to sort this into a reasonable patch
+sequence, but I'll burn that bridge when I get to it.
 
-Signed-off-by: Drew Fustini <drew@pdp7.com>
----
- bindings/cxx/gpiod.hpp        |  4 ++++
- bindings/cxx/line_bulk.cpp    |  4 ++++
- bindings/python/gpiodmodule.c | 14 ++++++++++++++
- include/gpiod.h               |  4 ++++
- lib/core.c                    |  8 ++++++++
- 5 files changed, 34 insertions(+)
+I'm reasonably happy with the state of the pull up/down.  That is
+passing all my tests on gpio-mockup - other than the actual value being
+pulled - but that is because gpio-mockup needs to be updated.
+Which is next on the todo list. Along with building a Pi kernel to test
+real hardware.  
 
-diff --git a/bindings/cxx/gpiod.hpp b/bindings/cxx/gpiod.hpp
-index 13b4d5b..0e53e89 100644
---- a/bindings/cxx/gpiod.hpp
-+++ b/bindings/cxx/gpiod.hpp
-@@ -233,6 +233,10 @@ struct line_request
- 	/**< The line is an open-source port. */
- 	GPIOD_API static const ::std::bitset<32> FLAG_OPEN_DRAIN;
- 	/**< The line is an open-drain port. */
-+	GPIOD_API static const ::std::bitset<32> FLAG_PULL_UP;
-+	/**< The line is has a configurable pull-up resistor */
-+	GPIOD_API static const ::std::bitset<32> FLAG_PULL_DOWN;
-+	/**< The line is has a configurable pull-down resistor */
- 
- 	::std::string consumer;
- 	/**< Consumer name to pass to the request. */
-diff --git a/bindings/cxx/line_bulk.cpp b/bindings/cxx/line_bulk.cpp
-index 8369930..7e583ba 100644
---- a/bindings/cxx/line_bulk.cpp
-+++ b/bindings/cxx/line_bulk.cpp
-@@ -14,6 +14,8 @@ namespace gpiod {
- const ::std::bitset<32> line_request::FLAG_ACTIVE_LOW("001");
- const ::std::bitset<32> line_request::FLAG_OPEN_SOURCE("010");
- const ::std::bitset<32> line_request::FLAG_OPEN_DRAIN("100");
-+const ::std::bitset<32> line_request::FLAG_PULL_UP("101");
-+const ::std::bitset<32> line_request::FLAG_PULL_DOWN("111");
- 
- namespace {
- 
-@@ -38,6 +40,8 @@ const ::std::map<::std::bitset<32>, int, bitset_cmp> reqflag_mapping = {
- 	{ line_request::FLAG_ACTIVE_LOW,	GPIOD_LINE_REQUEST_FLAG_ACTIVE_LOW, },
- 	{ line_request::FLAG_OPEN_DRAIN,	GPIOD_LINE_REQUEST_FLAG_OPEN_DRAIN, },
- 	{ line_request::FLAG_OPEN_SOURCE,	GPIOD_LINE_REQUEST_FLAG_OPEN_SOURCE, },
-+	{ line_request::FLAG_PULL_UP,	GPIOD_LINE_REQUEST_FLAG_PULL_UP, },
-+	{ line_request::FLAG_PULL_DOWN,	GPIOD_LINE_REQUEST_FLAG_PULL_DOWN, },
- };
- 
- } /* namespace */
-diff --git a/bindings/python/gpiodmodule.c b/bindings/python/gpiodmodule.c
-index 69edbbc..75f33ba 100644
---- a/bindings/python/gpiodmodule.c
-+++ b/bindings/python/gpiodmodule.c
-@@ -60,6 +60,8 @@ enum {
- 	gpiod_LINE_REQ_FLAG_OPEN_DRAIN		= GPIOD_BIT(0),
- 	gpiod_LINE_REQ_FLAG_OPEN_SOURCE		= GPIOD_BIT(1),
- 	gpiod_LINE_REQ_FLAG_ACTIVE_LOW		= GPIOD_BIT(2),
-+	gpiod_LINE_REQ_FLAG_PULL_UP		= GPIOD_BIT(3),
-+	gpiod_LINE_REQ_FLAG_PULL_DOWN		= GPIOD_BIT(4),
- };
- 
- enum {
-@@ -1032,6 +1034,10 @@ static void gpiod_MakeRequestConfig(struct gpiod_line_request_config *conf,
- 		conf->flags |= GPIOD_LINE_REQUEST_FLAG_OPEN_SOURCE;
- 	if (flags & gpiod_LINE_REQ_FLAG_ACTIVE_LOW)
- 		conf->flags |= GPIOD_LINE_REQUEST_FLAG_ACTIVE_LOW;
-+	if (flags & gpiod_LINE_REQ_FLAG_PULL_UP)
-+		conf->flags |= GPIOD_LINE_REQUEST_FLAG_PULL_UP;
-+	if (flags & gpiod_LINE_REQ_FLAG_PULL_DOWN)
-+		conf->flags |= GPIOD_LINE_REQUEST_FLAG_PULL_DOWN;
- }
- 
- PyDoc_STRVAR(gpiod_LineBulk_request_doc,
-@@ -2396,6 +2402,14 @@ static gpiod_ModuleConst gpiod_ModuleConsts[] = {
- 		.name = "LINE_REQ_FLAG_ACTIVE_LOW",
- 		.value = gpiod_LINE_REQ_FLAG_ACTIVE_LOW,
- 	},
-+	{
-+		.name = "LINE_REQ_FLAG_PULL_UP",
-+		.value = gpiod_LINE_REQ_FLAG_PULL_UP,
-+	},
-+	{
-+		.name = "LINE_REQ_FLAG_PULL_DOWN",
-+		.value = gpiod_LINE_REQ_FLAG_PULL_DOWN,
-+	},
- 	{ }
- };
- 
-diff --git a/include/gpiod.h b/include/gpiod.h
-index 9860ea8..0fe8abd 100644
---- a/include/gpiod.h
-+++ b/include/gpiod.h
-@@ -792,6 +792,10 @@ enum {
- 	/**< The line is an open-source port. */
- 	GPIOD_LINE_REQUEST_FLAG_ACTIVE_LOW	= GPIOD_BIT(2),
- 	/**< The active state of the line is low (high is the default). */
-+	GPIOD_LINE_REQUEST_FLAG_PULL_UP	= GPIOD_BIT(3),
-+	/**< The line can be configured for pull-up resistor */
-+	GPIOD_LINE_REQUEST_FLAG_PULL_DOWN	= GPIOD_BIT(4),
-+	/**< The line can be configured for pull-down resistor */
- };
- 
- /**
-diff --git a/lib/core.c b/lib/core.c
-index a04514e..f13c752 100644
---- a/lib/core.c
-+++ b/lib/core.c
-@@ -494,6 +494,10 @@ static int line_request_values(struct gpiod_line_bulk *bulk,
- 		req.flags |= GPIOHANDLE_REQUEST_OPEN_SOURCE;
- 	if (config->flags & GPIOD_LINE_REQUEST_FLAG_ACTIVE_LOW)
- 		req.flags |= GPIOHANDLE_REQUEST_ACTIVE_LOW;
-+	if (config->flags & GPIOD_LINE_REQUEST_FLAG_PULL_UP)
-+		req.flags |= GPIOHANDLE_REQUEST_PULL_UP;
-+	if (config->flags & GPIOD_LINE_REQUEST_FLAG_PULL_DOWN)
-+		req.flags |= GPIOHANDLE_REQUEST_PULL_DOWN;
- 
- 	if (config->request_type == GPIOD_LINE_REQUEST_DIRECTION_INPUT)
- 		req.flags |= GPIOHANDLE_REQUEST_INPUT;
-@@ -556,6 +560,10 @@ static int line_request_event_single(struct gpiod_line *line,
- 		req.handleflags |= GPIOHANDLE_REQUEST_OPEN_SOURCE;
- 	if (config->flags & GPIOD_LINE_REQUEST_FLAG_ACTIVE_LOW)
- 		req.handleflags |= GPIOHANDLE_REQUEST_ACTIVE_LOW;
-+	if (config->flags & GPIOD_LINE_REQUEST_FLAG_PULL_UP)
-+		req.handleflags |= GPIOHANDLE_REQUEST_PULL_UP;
-+	if (config->flags & GPIOD_LINE_REQUEST_FLAG_PULL_DOWN)
-+		req.handleflags |= GPIOHANDLE_REQUEST_PULL_DOWN;
- 
- 	if (config->request_type == GPIOD_LINE_REQUEST_EVENT_RISING_EDGE)
- 		req.eventflags |= GPIOEVENT_REQUEST_RISING_EDGE;
--- 
-2.20.1
+I'd steer clear of the SET_CONFIG changes for the moment - those 
+are totally untested.
+But I guess you don't have any code to call the ioctl yet anyway...
+That is slightly further down the todo list.
 
+Cheers,
+Kent.
