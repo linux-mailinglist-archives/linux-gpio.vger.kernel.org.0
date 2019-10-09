@@ -2,97 +2,132 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 97B40D10EB
-	for <lists+linux-gpio@lfdr.de>; Wed,  9 Oct 2019 16:11:43 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8AB0ED119F
+	for <lists+linux-gpio@lfdr.de>; Wed,  9 Oct 2019 16:44:01 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728019AbfJIOLn (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 9 Oct 2019 10:11:43 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:41623 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727769AbfJIOLn (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 9 Oct 2019 10:11:43 -0400
-Received: by mail-pg1-f194.google.com with SMTP id t3so1490150pga.8
-        for <linux-gpio@vger.kernel.org>; Wed, 09 Oct 2019 07:11:41 -0700 (PDT)
+        id S1731168AbfJIOoA (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 9 Oct 2019 10:44:00 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:36865 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730674AbfJIOoA (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 9 Oct 2019 10:44:00 -0400
+Received: by mail-pf1-f196.google.com with SMTP id y5so1777516pfo.4;
+        Wed, 09 Oct 2019 07:44:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=TTZbhErBd2O/4Ybpp1phQUS4h+mMrFOAMzZ1+RmuShM=;
-        b=BaFGRW5oEb9PeStlW/O2Ier+12DRGweaoA6DCPpybzKMNIige4pZZ5JytkCa5HpHy5
-         FAVmqh9CowpC2DfKsvcWcVw10q25iLNBBWjZ8vI/VbOKfzaU83GDwQpxd/fQbnv1VJMY
-         1+a1AGnoA/RJo/FJwPgCvEz0ZQuq/pRTpDKG3xdDj4A/aNrX2UGqVf3qoYvb+B9EjyPY
-         x28mlsZZb6lGPHsMbT8lg2J45y4sZDTgrQT+/mVICgY2QGwL+rg/FJRHtKqYYod3nRLa
-         61lc1d/JNf2PoI13nInL7o2tqhCiqUQ9Y4G6MFrWp5FBnNViYKpK3mKhICGY+t3VQY2i
-         GlJg==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=5YbWDw47LTxNvAXa6P3YF+8i9W9XzDhfs6M2pfOAkWM=;
+        b=tc5pMKydksADIu91GZWjqX0VBdX+cVF3z8Wk9Bf8jkurEKTLGfm1mls3znGBRP8pbz
+         rVEe5EX7ifEShdSInnvqVcqB2PW4FCHmOlQVOkX07J2v9Mil61FvBSJWUwGQwTUkEWpd
+         mv9CNcw686/dbdUsu0OGGkSYt3km/+9UCvdXlO6X87kTE/Wn7fwHqJCn0NniScNwheCF
+         IPxAfrE9DYW+NTisrJJwyqZKTJT70P6+5tXn4evnUYy4D3oksXKKAe0hPstSQYBK4iNw
+         a5K/Ug25XBPUK9aD+8Ft0Dj3RmC/GHm/EtSjOOrSP+pF230wp7snRAu9eUIoNnrLoVtA
+         j+gw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=TTZbhErBd2O/4Ybpp1phQUS4h+mMrFOAMzZ1+RmuShM=;
-        b=mWFvHGBmLchmCz28L7g/rn3gX7Z0768X2e3U0/A3N1D+Oh0d0t5ymIG8kbLBpS1IwB
-         6JPnLAhviaxszFv6jRROLzKDfAYwyk6gPxowSzH0dvWWkLdrCcmZfzDJKi4nOTp311ps
-         N+9et5uvBjMvsHJjOAo14KWlQGICwdJ1v9NBWSUCqpg5Gfcd+81M53toyUgLH3aQL6lg
-         6rFP6a23dB0lugKotvSZ25jDADc2Z8vJDVoVJJeSLTcMYx4zaigJrjqopVpok0ZO/j++
-         JMIGt2Zv9WfwvNWOYYjEUD7giZOwEjXCV6wp29YJYpJVVqWSdvwhPdUMnOSYWgeN6xDR
-         hNew==
-X-Gm-Message-State: APjAAAXeEyQwVhWyOJkMJOxfgP93hpoLp1lyVNxmsL9iI1E4F4AG5AQZ
-        oSp9oyB3J1krhEQRlnmvXiE=
-X-Google-Smtp-Source: APXvYqyZQr6BezK5cpKmHC36yyTYum5O0UcqvXSI60r8ahpYVysXh9tPZlGgm1XlhQjVlKpywY3twg==
-X-Received: by 2002:a17:90a:b304:: with SMTP id d4mr4482838pjr.27.1570630300788;
-        Wed, 09 Oct 2019 07:11:40 -0700 (PDT)
-Received: from sol (220-235-84-126.dyn.iinet.net.au. [220.235.84.126])
-        by smtp.gmail.com with ESMTPSA id l1sm4932747pja.30.2019.10.09.07.11.37
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 09 Oct 2019 07:11:39 -0700 (PDT)
-Date:   Wed, 9 Oct 2019 22:11:34 +0800
-From:   Kent Gibson <warthog618@gmail.com>
-To:     Drew Fustini <drew@pdp7.com>
-Cc:     Bartosz Golaszewski <brgl@bgdev.pl>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [RFC] gpio: expose pull-up/pull-down line flags to userspace
-Message-ID: <20191009141134.GB22016@sol>
-References: <20190921102522.8970-1-drew@pdp7.com>
- <20191008061512.GA19956@sol>
- <CAMRc=Mf8DsEOWcX2BTtdVtsRkNXB3oA-xt2SrWJTn6vt3Fd8Pg@mail.gmail.com>
- <20191008232120.GA9225@sol>
- <CAMRc=MdcWUtEx3QAKxEmEEa1Effq7JpRPGNJOGfSYP6Nh0p1Hg@mail.gmail.com>
- <20191008235626.GA10744@sol>
- <CAMRc=MdCktRBkofaqAEtjNLNS=60Z9zM9a4QoBLsCsx3bSdxtQ@mail.gmail.com>
- <20191009002211.GA11168@sol>
- <20191009065524.GA4061@sol>
- <20191009133037.GA17244@x1>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=5YbWDw47LTxNvAXa6P3YF+8i9W9XzDhfs6M2pfOAkWM=;
+        b=hFg5B8/f0QV/j0/g9HL3ZUXB2Z2NxPxw+1S0SyILwFrM2/hEHMS57vx9i1JKxQa1DQ
+         Gk2Q197Ef/17jG/FFtD0ZMcjEZ3HeDRO9IsyAi0mgj/7+/Cz9kghIKMoyw5ytTDw0/Qz
+         oAMvWur8XJLmab1bQQ0INphXPOdTvjJG4eJbM27ngxYvLJXRhgP/EWvcGczE+kehGowk
+         ya2jnnLBRRIYhSeOLzlbbs/cK/10v7esOgqTICn0Q5ODuzodprmoRuBGT9v5tJeUlkd/
+         bwnin6VRX2LcXYxnOVif1aVWtjEKRnwvr5dqlgxx5I8cLjQFfJo+SkAeLy66vWcJHMnL
+         0RmA==
+X-Gm-Message-State: APjAAAW4Zth6rJ7RiE+GU915UMrbsnxEJpEwScjQDizByuRKDuVtgQq+
+        JDSsqsZosTqcXljBTBIRsR6w/5aTTLiMvfiFBy4=
+X-Google-Smtp-Source: APXvYqzdL7GBRuMgKRuNXYVYcpLezWXgK4k7ZLlsYj93ky2fwCPDdaNQGgBmQas71mY8JUCIh4Jz2+BC1VR8gGP7cww=
+X-Received: by 2002:a63:2c7:: with SMTP id 190mr2811853pgc.18.1570632239553;
+ Wed, 09 Oct 2019 07:43:59 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191009133037.GA17244@x1>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <1570203299-4270-1-git-send-email-akinobu.mita@gmail.com>
+ <96ac332f-359f-531a-7890-45b39e168b82@gmail.com> <CAC5umyggUm26JHU9QeND=rTozjXwH5uMiVvoK=Zqo31eBn69pg@mail.gmail.com>
+ <7d451092-bf8a-e1d4-996c-8af3cc816fc7@gmail.com> <CAC5umyiK8LBqQ1B1LPQgWXGCk_a+JyKgidrRZpPMDu+NZncDXw@mail.gmail.com>
+ <72129a38-d975-74d4-269d-6269556d7aae@gmail.com>
+In-Reply-To: <72129a38-d975-74d4-269d-6269556d7aae@gmail.com>
+From:   Akinobu Mita <akinobu.mita@gmail.com>
+Date:   Wed, 9 Oct 2019 23:43:48 +0900
+Message-ID: <CAC5umyjRbVFV8hQoynA83wEAwumMU1iZ1KouHaXiNruwXfATZQ@mail.gmail.com>
+Subject: Re: [PATCH] leds: gpio: support multi-level brightness
+To:     Jacek Anaszewski <jacek.anaszewski@gmail.com>
+Cc:     Linux LED Subsystem <linux-leds@vger.kernel.org>,
+        linux-gpio@vger.kernel.org,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Oct 09, 2019 at 03:30:37PM +0200, Drew Fustini wrote:
-> On Wed, Oct 09, 2019 at 02:55:24PM +0800, Kent Gibson wrote:
-> > Safe to assume your code is in your topic/gpio-uapi-config branch?
-> > I hope so, cos I've forked from that into github.com/warthog618/linux 
-> > and have started working on it.
-> 
-> Do you also have a fork of libgpiod that you are working in?
-> 
-Actually not yet - I'm using my Go equivalent of libgpiod to drive the
-kernel for my tests.  That is also on github - it is in the uapi
-directory of the feature/pud branch of my gpiod repo.
+2019=E5=B9=B410=E6=9C=889=E6=97=A5(=E6=B0=B4) 5:53 Jacek Anaszewski <jacek.=
+anaszewski@gmail.com>:
+>
+> On 10/6/19 4:11 PM, Akinobu Mita wrote:
+> > 2019=E5=B9=B410=E6=9C=886=E6=97=A5(=E6=97=A5) 4:17 Jacek Anaszewski <ja=
+cek.anaszewski@gmail.com>:
+> >>
+> >> On 10/5/19 3:20 PM, Akinobu Mita wrote:
+> >>> 2019=E5=B9=B410=E6=9C=885=E6=97=A5(=E5=9C=9F) 6:17 Jacek Anaszewski <=
+jacek.anaszewski@gmail.com>:
+> >>>>
+> >>>> Hi Akinobu,
+> >>>>
+> >>>> Why do you think this change is needed? Does it solve
+> >>>> some use case for you?
+> >>>
+> >>> It can be useful when using with an LED trigger that could set the
+> >>> brightness values other than LED_FULL or LED_OFF.
+> >>>
+> >>> The LED CPU trigger for all CPUs (not per CPU) sets the brightness va=
+lue
+> >>> depending on the number of active CPUs.  We can define the multi brig=
+htness
+> >>> level gpio LED with fewer number of GPIO LEDs than the total number o=
+f
+> >>> CPUs, and the LEDs can be viewed as a level meter.
+> >>
+> >> Can't you achieve exactly the same effect by creating separate LED cla=
+ss
+> >> device for each GPIO LED and registering each of them for separate cpu=
+N
+> >> trigger?
+> >
+> > If there are GPIO LEDs as many as the total number of CPUs, we can.
+> > However, if there are only two GPIO LEDs and six CPUs, we can only know
+> > the CPU activity for two CPUs out of six CPUs with cpuN trigger.
+> > So it's different from using cpu (all) trigger with multi level (2-leve=
+l)
+> > brightness GPIO LED.
+>
+> OK, that's a reasonable argument. However, this is clearly
+> trigger-specific functionality and we should not delegate this
+> logic down to the driver.
+>
+> What you propose should be a responsibility of a trigger that would
+> allow registering multiple LEDs for its disposal. This would have to
+> be different from existing LED Trigger mechanism, that blindly
+> applies trigger event to all LEDs that have registered for it.
+>
+> Such a trigger would have to be a separate LED (pattern?) class device.
+> It would need to be told how many LEDs it is going to manage
+> and create files for filling the LED names. This design could be also
+> used for defining patterns spanning on multiple LEDs. Just a rough idea.
+> We can dwell on it if it catches.
 
-> In case it is of any use, I just posted the libgpiod patch for pull-up/down
-> flags that I had been using to test with.
-> 
-> I help maintain Adafruit_Blinka [1] so I would like try testing pull-up/down.
-> I already have a Raspberry Pi 3 booting a cross-compiled kernel with my (now
-> outdated) patch applied and a patched libgpiod.
-> 
-Go nuts.  I hope to be testing on one of Pis, but I don't think I have a
-recent kernel build handy, so I'll be a while.
+What do you think about introducing a new led driver and describing a
+level meter in the following DT node.
 
-Cheers,
-Kent.
+led-level-meter {
+        compatible =3D "led-level-meter";
+        leds =3D <&led0>, <&led1>, <&led2>, <&led3>;
+};
+
+Setting the brightness of led-level-meter to LED_HALF turns on led0 and
+led1 with max brightness and turns off led2 and led3.
+
+This is inspired by led-backlight driver patchset and Bjorn Andersson's
+reply in this thread.
