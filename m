@@ -2,75 +2,97 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id DBC68D0ADB
-	for <lists+linux-gpio@lfdr.de>; Wed,  9 Oct 2019 11:19:33 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DE39DD0B15
+	for <lists+linux-gpio@lfdr.de>; Wed,  9 Oct 2019 11:26:59 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726579AbfJIJT3 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 9 Oct 2019 05:19:29 -0400
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:35611 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730252AbfJIJT2 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 9 Oct 2019 05:19:28 -0400
-Received: by mail-lj1-f195.google.com with SMTP id m7so1743560lji.2
-        for <linux-gpio@vger.kernel.org>; Wed, 09 Oct 2019 02:19:25 -0700 (PDT)
+        id S1725914AbfJIJ0Q (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 9 Oct 2019 05:26:16 -0400
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:44064 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730168AbfJIJ0N (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 9 Oct 2019 05:26:13 -0400
+Received: by mail-lf1-f66.google.com with SMTP id q12so1081385lfc.11
+        for <linux-gpio@vger.kernel.org>; Wed, 09 Oct 2019 02:26:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=SrtyImwGFfBXfTmX10XBxTMxRS3dOgBhxhOkYorBJio=;
-        b=rWE/As9QTJSgcCHZcLIVvg+lCV/orjCblJHb8uOk437G7OsLqIwxuV8L9e50gKWo+T
-         h04ygluyUx7Xx3FA+5zXCLKlttHTXUi22brCE7btt4kIFCJmECsz+qmdAQZXaVo6WIxC
-         6SKqlM9+M9L1hNmpHpRdXpbqQGkRs5sugYHvH1LIVILS4DwCA2s9w5QrhBSY/nVUyuid
-         a9tTWrmFKrT0uf+DXw7Cad3a6ObwMcvuODk8AL/8hPOLIjrPYLA5OuekTZpcRgUh0e/I
-         7daRGk/TM/bsvDv9fHcn2OkzlGVE69der5anWpEv5QAPjICdmWtgQ7dyfb4EZBASDvvj
-         8tnA==
+        bh=SD+HI02CKBBsUnBjBS8AONRJ3UqoWuFlv1/fGBB0L+4=;
+        b=Yp/ezDTokXabk02kHZS4Q9Zcrip4udpQ7qThrEB8fA+oF5/YBaD2Q+THIO35uJ3kfM
+         ijAdu971Sc0u1iXVcq8FmBzJx92WFKIL13rYfNLHAFEcAcABM/XNEWuxdcFUR630+oKt
+         EhOBtNE8brRBt6vUfGQkuPeYH0wO5CD9zsgK8XTxtLlluYKde8xrN7DJnQGKvtMGqrQb
+         301v9yPx51H2ueQoUMiDBqmPbWS6qbm39fIrpFjEigHHHzEF4FAtjiFlUyKtyHYy4pFZ
+         eyTC9foJ37+QThE5FPa4048amnHh8m0WuErFx7J6r28IzNf5kcGpC7qLDNVSqenrhhXu
+         UeXg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=SrtyImwGFfBXfTmX10XBxTMxRS3dOgBhxhOkYorBJio=;
-        b=Mst6LsR9DFmEWg95E/TOAO+oezROV7ET8cTvR2PWbxqV6S9mSSpTJ4uSbrG1yX5vaO
-         2PSJe5NIy5qsj+8hqA5RidbOwb55YeWqBaJlzQACI/rLl86I8amllpb0E8FEHcbAARZg
-         BUhgBfUStbjhYJfX8r+Rox0ZK8aT8H8RxilO5zQgE5BFp5+jTcQC0zRzZq8r05HWI332
-         JVUf4jr9VYGAXzjRVZfzI6f/ncpWfeABPnDrDmzJhgWlu7sOaL1sqSbFTp8W5Mq9XWy4
-         doCDXK1UXAYzVZHL4URCGvVq5uZg7H5dha8V1aqGmhhM8+7AxYhxW2rfS6cgkWgElwTC
-         wRsA==
-X-Gm-Message-State: APjAAAXYVLrx7Iakk9dHZRS9CQixbYfhbcFbo2AxqlFRjCHEmHK6QV7g
-        V1w0UBxafKCIMbGqkyRNouavMfhfi7rN2CPYbbXp4A==
-X-Google-Smtp-Source: APXvYqz5wZWF3goR+xGn5zfKM9UilScaYCcxjmoHcFVD8Yn8v6dgsuS4bgx4jCa+w9Kdlokc7XIobBnrEKzCVCPNEuw=
-X-Received: by 2002:a2e:80d1:: with SMTP id r17mr1663352ljg.118.1570612765058;
- Wed, 09 Oct 2019 02:19:25 -0700 (PDT)
+        bh=SD+HI02CKBBsUnBjBS8AONRJ3UqoWuFlv1/fGBB0L+4=;
+        b=XOjWhzX4dI6qeeR9SoPIAIrXjt4TZ2w3lxaXIqWoNO4I/eg5aSEXzJzncFkxQxSshL
+         f6pNNh4Zwar4eXVQm2KXYUa5sEpbZ6U01ANHw9SBuSKKQ+XPMlC7SMWJ2ebvQQANqGlO
+         WbDA04xoyPOPc2lHmCYG+8VNPsAXPgVBavQxcr+QH5g+HZHL1Pn9DcWmw6/G7zZKyJJt
+         5NYiHZrEE11Di+VJSBFA288aD31uc4ycc2wWVQSyfi2lLWI7bva7UFSva8Os+LZjl8Hq
+         1mWfmUNkM9YFbz1Fn340uZxws979YL6S5vhEh1VfzLLORHQufIPgNPoEyhsr/ykNeqoy
+         svVQ==
+X-Gm-Message-State: APjAAAVUg1B3Ipmo/LCzC/Xhr4rlS8tU3jzSw7JOglTCGiGaPMs+/BeC
+        mfGE09zqnn7GHnEiPUMSB82GPcw7KoBOAkAnyPvLCw==
+X-Google-Smtp-Source: APXvYqzFG7lDdH9uA0MTciR+6xdQMm6jmgxkQ3KIBmF6lJi9ASjDpky3Ev/tMd6UZRmclpoRgOMzubjoi2Xc5yZYX5w=
+X-Received: by 2002:a19:c505:: with SMTP id w5mr1439629lfe.115.1570613170790;
+ Wed, 09 Oct 2019 02:26:10 -0700 (PDT)
 MIME-Version: 1.0
-References: <1570188039-22122-1-git-send-email-kgunda@codeaurora.org>
-In-Reply-To: <1570188039-22122-1-git-send-email-kgunda@codeaurora.org>
+References: <cover.1570299719.git.vilhelm.gray@gmail.com> <be63fa49f036b9168f223152648307a63056f4ee.1570299719.git.vilhelm.gray@gmail.com>
+In-Reply-To: <be63fa49f036b9168f223152648307a63056f4ee.1570299719.git.vilhelm.gray@gmail.com>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Wed, 9 Oct 2019 11:19:13 +0200
-Message-ID: <CACRpkda=ce4B1cGfQStxSjXFCR5-GjyBRMRK-mLunbR25PisTg@mail.gmail.com>
-Subject: Re: [PATCH V1] dt-bindings: pinctrl: qcom-pmic-gpio: Add support for pm6150/pm6150l
-To:     Kiran Gunda <kgunda@codeaurora.org>
-Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Andy Gross <agross@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        MSM <linux-arm-msm@vger.kernel.org>,
+Date:   Wed, 9 Oct 2019 11:25:59 +0200
+Message-ID: <CACRpkdbEszHr3zzVBTinVFQXU+sjOu9YbWC-554+7PYgupYJBA@mail.gmail.com>
+Subject: Re: [PATCH v15 01/14] bitops: Introduce the for_each_set_clump8 macro
+To:     William Breathitt Gray <vilhelm.gray@gmail.com>
+Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        linux-arch@vger.kernel.org,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux PM list <linux-pm@vger.kernel.org>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Phil Reid <preid@electromag.com.au>,
+        Lukas Wunner <lukas@wunner.de>,
+        Sean Nyekjaer <sean.nyekjaer@prevas.dk>,
+        morten.tiljeset@prevas.dk,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Arnd Bergmann <arnd@arndb.de>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Oct 4, 2019 at 1:20 PM Kiran Gunda <kgunda@codeaurora.org> wrote:
+On Sat, Oct 5, 2019 at 8:37 PM William Breathitt Gray
+<vilhelm.gray@gmail.com> wrote:
 
-> Add support for the PM6150 and PM6150L GPIO support to the
-> Qualcomm PMIC GPIO binding.
+> This macro iterates for each 8-bit group of bits (clump) with set bits,
+> within a bitmap memory region. For each iteration, "start" is set to the
+> bit offset of the found clump, while the respective clump value is
+> stored to the location pointed by "clump". Additionally, the
+> bitmap_get_value8 and bitmap_set_value8 functions are introduced to
+> respectively get and set an 8-bit value in a bitmap memory region.
 >
-> Signed-off-by: Kiran Gunda <kgunda@codeaurora.org>
+> Suggested-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+> Suggested-by: Rasmus Villemoes <linux@rasmusvillemoes.dk>
+> Suggested-by: Lukas Wunner <lukas@wunner.de>
+> Cc: Arnd Bergmann <arnd@arndb.de>
+> Cc: Andrew Morton <akpm@linux-foundation.org>
+> Cc: Andy Shevchenko <andy.shevchenko@gmail.com>
+> Cc: Linus Walleij <linus.walleij@linaro.org>
+> Signed-off-by: William Breathitt Gray <vilhelm.gray@gmail.com>
 
-Patch applied.
+As usual I am happy to merge all this but I would need
+Andrew Morton's ACK, as I don't feel like a maintainer for
+the bitops.
 
 Yours,
 Linus Walleij
