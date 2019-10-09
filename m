@@ -2,120 +2,115 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id AE2AAD13DF
-	for <lists+linux-gpio@lfdr.de>; Wed,  9 Oct 2019 18:19:38 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DD981D13E9
+	for <lists+linux-gpio@lfdr.de>; Wed,  9 Oct 2019 18:22:29 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731751AbfJIQTh (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 9 Oct 2019 12:19:37 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:35499 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731083AbfJIQTh (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 9 Oct 2019 12:19:37 -0400
-Received: by mail-pg1-f195.google.com with SMTP id p30so1731064pgl.2
-        for <linux-gpio@vger.kernel.org>; Wed, 09 Oct 2019 09:19:37 -0700 (PDT)
+        id S1731417AbfJIQW3 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 9 Oct 2019 12:22:29 -0400
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:40175 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729644AbfJIQW3 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 9 Oct 2019 12:22:29 -0400
+Received: by mail-oi1-f194.google.com with SMTP id k9so2258225oib.7
+        for <linux-gpio@vger.kernel.org>; Wed, 09 Oct 2019 09:22:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=a+I4pUKM4VI8MaFR/5H7lLYnaGlyVI8IL4klXef86DE=;
-        b=tMwrQONCNsjlGiiycuD7cqp3gySKLq3VRsF5b9qSe7EWK7nr2jUf02pIMCkysxXY4+
-         U2ULGS47ojAj263g57yWf7R+GVpLULtp9T8DgnkA8UfwKmZTPQJr8v4WFmQyp0jhvmXX
-         17usXBhPy6vZBbzcn4vWtHcIhj51fcqJJ/gcxALhZ6U869Z5Byu/hAqV6Lya9pXh4LDr
-         aA6Mg0rsdOIVXoyO7ByuVPhCM0hrhI8WykBPVucY1LU9RFko6ZbTP3kc9vmWxI7wiXJu
-         pjrgsSb5AZj+mjYAovUQWG3WYEWPBKyn2y9ArtRMedKsRDFOu3heTPjhgoen4IifNx5i
-         2Alw==
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=IUUKEe0zhlcZFtagTSvrUaS/BWmjpqqusKCPMPNT3Lg=;
+        b=cxALGUnxRvrQGDezHD9t6ZPKJl+Ssz7AIhSQxFiBfK59tSQ66omb3puTw8ObHhW08e
+         1OuwuqX/8B/WoHg54T7F4hRL2wDKdnNX5V/0X6CQaJnnB6es3GOlfEGAYioVI98V19og
+         OzvDrJwvnoLmfKcURJnZ/RecO6dEpeHYwssrD0pZPbifGbH0RlVaC6m3ppv+ZFMiIkaS
+         d5ezpvYSSBxjOnw6SwYgvZ80RRGaitAhRHc3uKS7fckn0oXZ4mLg5GmMAQvgwggERSMh
+         rZD3dN/ltEJcpPwIjlSvv8Kw2zB6zwpqnxrtl+PgJ2mk7CTH+uP9+Q9X9vL4TDQ7O88U
+         ll4Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=a+I4pUKM4VI8MaFR/5H7lLYnaGlyVI8IL4klXef86DE=;
-        b=HBvKdSlSRYeBpt0qABlUhLeFHQMMRTA3UyMui1yDQtwEbzscychweqMq9tuQ5sSw59
-         yrDI8dja4KBjZ1e7uD0LJAdU+51uIfGm+zKdFr1eho2N9DOamgty84S2/wRXHPW+sVCE
-         3ejIzlU9ZXVWWpZJaQn/9QRvi5vanGHRdaIM1IIevH88TwQ5q0w99/8jYep0XR1e/xux
-         W7H7QLNeQTvjxr1pEr4rTYKsEeVwHLNugs8EyJkjK7wRhL9N9eW9IYvMRYqQxpxkl85V
-         t/1YixxXLrCciJHARbq6TaWT+o1v75AmVKj8Nhzi1MlQKsZE5twloHJvJfco91K0aV/X
-         VIFg==
-X-Gm-Message-State: APjAAAWDR2exfd/cXmLLXsCljsrXbksCOHjzzk2hr3w5pUHI2+KHHNr3
-        z8vcAdMP58Wcjg7LlHaRwpo=
-X-Google-Smtp-Source: APXvYqwoO9gk+YOZO/X+OuiVBp9MnrGwYrkJ/eHwiXP1j9qFb18mjdl2asKvOFVkn+suj5XciqBRkg==
-X-Received: by 2002:a62:31c3:: with SMTP id x186mr4646088pfx.260.1570637976278;
-        Wed, 09 Oct 2019 09:19:36 -0700 (PDT)
-Received: from sol (220-235-84-126.dyn.iinet.net.au. [220.235.84.126])
-        by smtp.gmail.com with ESMTPSA id 192sm4274457pfb.110.2019.10.09.09.19.32
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 09 Oct 2019 09:19:35 -0700 (PDT)
-Date:   Thu, 10 Oct 2019 00:19:29 +0800
-From:   Kent Gibson <warthog618@gmail.com>
-To:     Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     Drew Fustini <drew@pdp7.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [RFC] gpio: expose pull-up/pull-down line flags to userspace
-Message-ID: <20191009161929.GA1976@sol>
-References: <CAMRc=Mf8DsEOWcX2BTtdVtsRkNXB3oA-xt2SrWJTn6vt3Fd8Pg@mail.gmail.com>
- <20191008232120.GA9225@sol>
- <CAMRc=MdcWUtEx3QAKxEmEEa1Effq7JpRPGNJOGfSYP6Nh0p1Hg@mail.gmail.com>
- <20191008235626.GA10744@sol>
- <CAMRc=MdCktRBkofaqAEtjNLNS=60Z9zM9a4QoBLsCsx3bSdxtQ@mail.gmail.com>
- <20191009002211.GA11168@sol>
- <20191009065524.GA4061@sol>
- <20191009133037.GA17244@x1>
- <20191009141134.GB22016@sol>
- <CAMRc=MetgRSK6+4eFkEiVuL4-D+++LZ_trr9yUqQ-H_e1POiFw@mail.gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=IUUKEe0zhlcZFtagTSvrUaS/BWmjpqqusKCPMPNT3Lg=;
+        b=KCOmeZE0E0CsbyNAzATuz308uR+yWiGlQr3woH/YX9EUJiRWvKCTivqsJOobXoUywG
+         W9l93ox3p9v7Hj8aZ0Tr03Snr59BSnrkdX110oO3N5Ou7U6OWFQb0B0WqBEbmQyXHM6l
+         CSPrzupVXB3Q3LP+YN80jNwS5KEJZPHJfOiZf8QUzo04JqE5dh3RkxiVBg0JSJjs0adK
+         uwRlQsGrea8jaEAsuPNAcZIaN7zREFcVbI8EG22ym+CDe27tiPsSQeSo9p3bDOADeaEN
+         RIE9HV2U9Yl8498AP/fz1x4aepdnVIyjcJ2kN9FD0Qm7iJWMtfdzL/dIExurbEviompY
+         RkNg==
+X-Gm-Message-State: APjAAAVhhIWSk0x+faFhkn2eJY4GlfkNWx1LlOiIe5tJphOo/FXYZUmx
+        YnO9c4xT77iRS/RIKC7clkEwSR2WgUtV/HK+xKD1Uw==
+X-Google-Smtp-Source: APXvYqx6lfGfo/boL8j+9ojYBWWa9RaTdZhBcBheUrc8BZB4HqCgAePVDLR7waJHdW48hJrLBL+JRYSovHqKR6Y9inE=
+X-Received: by 2002:aca:5c06:: with SMTP id q6mr3225521oib.175.1570638147577;
+ Wed, 09 Oct 2019 09:22:27 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAMRc=MetgRSK6+4eFkEiVuL4-D+++LZ_trr9yUqQ-H_e1POiFw@mail.gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <20191006144256.23733-1-colin.king@canonical.com> <20191006150759.GA68457@icarus>
+In-Reply-To: <20191006150759.GA68457@icarus>
+From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Date:   Wed, 9 Oct 2019 18:22:16 +0200
+Message-ID: <CAMpxmJWHiFF-525GHf-5RzSkxafAuQmTXvcCuvSJ+NVb_D8-hg@mail.gmail.com>
+Subject: Re: [PATCH] gpio: 104-idi-48e: make array register_offset static,
+ makes object smaller
+To:     William Breathitt Gray <vilhelm.gray@gmail.com>
+Cc:     Colin King <colin.king@canonical.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-gpio <linux-gpio@vger.kernel.org>,
+        kernel-janitors@vger.kernel.org,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Oct 09, 2019 at 05:50:00PM +0200, Bartosz Golaszewski wrote:
-> śr., 9 paź 2019 o 16:11 Kent Gibson <warthog618@gmail.com> napisał(a):
+niedz., 6 pa=C5=BA 2019 o 17:08 William Breathitt Gray
+<vilhelm.gray@gmail.com> napisa=C5=82(a):
+>
+> On Sun, Oct 06, 2019 at 03:42:56PM +0100, Colin King wrote:
+> > From: Colin Ian King <colin.king@canonical.com>
 > >
-> > On Wed, Oct 09, 2019 at 03:30:37PM +0200, Drew Fustini wrote:
-> > > On Wed, Oct 09, 2019 at 02:55:24PM +0800, Kent Gibson wrote:
-> > > > Safe to assume your code is in your topic/gpio-uapi-config branch?
-> > > > I hope so, cos I've forked from that into github.com/warthog618/linux
-> > > > and have started working on it.
-> > >
-> > > Do you also have a fork of libgpiod that you are working in?
-> > >
-> > Actually not yet - I'm using my Go equivalent of libgpiod to drive the
-> > kernel for my tests.  That is also on github - it is in the uapi
-> > directory of the feature/pud branch of my gpiod repo.
+> > Don't populate the array register_offset on the stack but instead make =
+it
+> > static. Makes the object code smaller by 63 bytes.  Also add the int ty=
+pe
+> > specifier to clean up a checkpatch warning.
 > >
-> > > In case it is of any use, I just posted the libgpiod patch for pull-up/down
-> > > flags that I had been using to test with.
-> > >
-> > > I help maintain Adafruit_Blinka [1] so I would like try testing pull-up/down.
-> > > I already have a Raspberry Pi 3 booting a cross-compiled kernel with my (now
-> > > outdated) patch applied and a patched libgpiod.
-> > >
-> > Go nuts.  I hope to be testing on one of Pis, but I don't think I have a
-> > recent kernel build handy, so I'll be a while.
+> > Before:
+> >    text          data     bss     dec     hex filename
+> >    9212          5712    1408   16332    3fcc drivers/gpio/gpio-104-idi=
+-48.o
 > >
-> > Cheers,
-> > Kent.
-> 
-> Hey guys, just one thing: don't send patches as replies - just send a
-> new version as a separate series. Also: please aggregate all the
-> patches (pull-up/down, set config, gpio-mockup changes if any) into a
-> single series.
-> 
-I think the only patch I've sent you was direct to you for feedback,
-not to the list, and so not intended to be applied. And that was only
-cos I thought you might prefer that to looking at the diffs on github.
+> > After:
+> >    text          data     bss     dec     hex filename
+> >    9085          5776    1408   16269    3f8d drivers/gpio/gpio-104-idi=
+-48.o
+> >
+> > (gcc version 9.2.1, amd64)
+> >
+> > Signed-off-by: Colin Ian King <colin.king@canonical.com>
+> > ---
+> >  drivers/gpio/gpio-104-idi-48.c | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> >
+> > diff --git a/drivers/gpio/gpio-104-idi-48.c b/drivers/gpio/gpio-104-idi=
+-48.c
+> > index ff53887bdaa8..c95c93ec0bd7 100644
+> > --- a/drivers/gpio/gpio-104-idi-48.c
+> > +++ b/drivers/gpio/gpio-104-idi-48.c
+> > @@ -65,7 +65,7 @@ static int idi_48_gpio_get(struct gpio_chip *chip, un=
+signed offset)
+> >  {
+> >       struct idi_48_gpio *const idi48gpio =3D gpiochip_get_data(chip);
+> >       unsigned i;
+> > -     const unsigned register_offset[6] =3D { 0, 1, 2, 4, 5, 6 };
+> > +     static const unsigned int register_offset[6] =3D { 0, 1, 2, 4, 5,=
+ 6 };
+> >       unsigned base_offset;
+> >       unsigned mask;
+> >
+> > --
+> > 2.20.1
+>
+> Acked-by: William Breathitt Gray <vilhelm.gray@gmail.com>
 
-Would it be ok to create two patch series - one for pull up/down and the
-other for set config, if one still needs a lot more work?  
-And is it ok to base them on your lineevent_create gotos tidy up
-(f6cfbbe2950b2)?
+Applied for next.
 
-Cheers,
-Kent.
+Bart
