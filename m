@@ -2,77 +2,77 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 8DC77D0901
-	for <lists+linux-gpio@lfdr.de>; Wed,  9 Oct 2019 10:02:58 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 12AF5D0926
+	for <lists+linux-gpio@lfdr.de>; Wed,  9 Oct 2019 10:07:34 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725962AbfJIIC5 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 9 Oct 2019 04:02:57 -0400
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:45212 "EHLO
+        id S1729664AbfJIIHd (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 9 Oct 2019 04:07:33 -0400
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:46926 "EHLO
         mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728054AbfJIIC5 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 9 Oct 2019 04:02:57 -0400
-Received: by mail-lj1-f195.google.com with SMTP id q64so1452642ljb.12
-        for <linux-gpio@vger.kernel.org>; Wed, 09 Oct 2019 01:02:55 -0700 (PDT)
+        with ESMTP id S1725440AbfJIIHd (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 9 Oct 2019 04:07:33 -0400
+Received: by mail-lj1-f195.google.com with SMTP id d1so1459232ljl.13
+        for <linux-gpio@vger.kernel.org>; Wed, 09 Oct 2019 01:07:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=qIcuMqyribGNxdL5/KfaR/0W6xo7KhmFZDC62GSR9uw=;
-        b=rwJgS7yXEf0+np6sEo73SubMwqxNdp4RcAX+jWJULZ3fSRrC1cOhANBPgDq/MHmTqc
-         JFh13IiBSmC44y2+YQGvoQo1N9WvINr38BqrID75SDFU4ztKk4Cr6igNdJS4kJzI5+49
-         pxW7/hEyoeoZF8AShMROjgLKBRoOpICQPs9jrfNOYkESk1LtzP17RhO8jHt8ZVd4xEuo
-         CN60C2uE3+ThAkaX6W99cbN5hve3MQsxbrAf+8O43IfZNSz/tvXBanSJOxIGHnirbV4q
-         8xSs0S8jpBpllANxVKbndvxTaBYdkIW0/xyno71RKh1Fo+8y10HchWjvn3s477Q/XYAE
-         lXCQ==
+        bh=z0LNDSpFSctbTJTf0zAvXYKetHW153zqZU28HUuc6aw=;
+        b=al6Ibeoh+WLVyhfBLsOSWTkDu5aVd8ZnfivuhHFSq+6OfHR5fCwI9BJRWh+2ywdwB2
+         7RaFw6L3+jC4LIu0k784taSAmRoksY9qso+BLF3wsBDjqjeHutXwg+yonzAACVOBlxTa
+         1fNvJCQtMiqEtPNT3EZM0P8KkEskNiBFXuJFwkx/ILoWNWs2Ba0ay4Aend4cvBbhRNu2
+         cL4ZPccP2qxcFEQ28q97/D+wFYD5utOrvGIJyEBDEiAPnBVoodPnydqRBv8hxZ+R+KEx
+         KBazv/AW6mcNv02KdyGRKqRnCw0wBmVQOr0XgE5VO5y6U82uY/UYmxLRHh4nSQybiiaF
+         BEWA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=qIcuMqyribGNxdL5/KfaR/0W6xo7KhmFZDC62GSR9uw=;
-        b=qBTahJgpOsJpesaH06Y4xWXTqh/hClQw1gH+RU9Qu6+pEpWpFm3afv203CpF6uKNkg
-         AEAL7EtlUavmcckvvl9U1D6ShQ7SsRtNelOWG004pMrcu9YadLliUPTjGsKXgm/KFXlu
-         GPmQeHibfrnSFq55BASYWnBqxcM2F96wrAMK0ehaSN5yIOmOcb/2kyYVr7GY0t5IZlD9
-         O+r7hfxdVNY2VA9UWO6W4xLGugQH3MbSOmw9YhT5Ycy2xViqplfrmYVUE3xSEztfw4L6
-         ukJIG5fWp7hquZRVfc/6duY+dH1FMQ8Xq58cTGt9MDP2jJzcwQkkGVSjbwiF8/2Kfx5W
-         ueJA==
-X-Gm-Message-State: APjAAAVI4DNvuf44pXsnzjxSt5RJsVMteawiNZNL+K4X6V5ser58vhBO
-        V+6cAF4TlmwILQCHMgkDvqQ6tZZGUhejHhTjUvuagw==
-X-Google-Smtp-Source: APXvYqzkxO27nVgr+ezF6wWyRFhgeKlah+nA5MKVsuIlBHud+OOcCa69nMnvbinUrxjWWXwcTj43OmtOXQIUqoB6N90=
-X-Received: by 2002:a2e:a415:: with SMTP id p21mr1418505ljn.59.1570608175035;
- Wed, 09 Oct 2019 01:02:55 -0700 (PDT)
+        bh=z0LNDSpFSctbTJTf0zAvXYKetHW153zqZU28HUuc6aw=;
+        b=IUNDRW/jHjHq0dnmtl4sDpgT0a4u0ZGUGDaQJtjtVi/FobbgNIx6MWmldUwkGdnGbj
+         /XupN0qkCg+MlTsOH6T+2laicn0tzrsJdAK2JRqtrZlLIRuQDzs758WQX0yMumVex7kk
+         zY0U4EWfr3QL3+3UU4J6RK757GInVKSbTAnZz6fYngwnFQwH2n6ByoVj0AUr8RufdLww
+         PUlyNE2chzkQdNQEOFsrkuUFeq1j3IihAUfOI/SxAJSHHCRcC8ANpGHxojO4UhMB5lzn
+         Ojbn/OswBX4KPAfx+vI+K/ok2k9/swiYx37d/iQIfIXMWzv1Um7xNkgvqWI4QZ1c02Ws
+         Ct2A==
+X-Gm-Message-State: APjAAAUBEZXNmscZTYgY1yMX74sF4kPjNlveci7vZ+0Cw6/0QbjMFtAp
+        6dAUiwKdbdXc59yYKVwYjENTVj3Tdm3eDm2nSOrfNg==
+X-Google-Smtp-Source: APXvYqw8WgwcmY17xXOAsdHSJSmkcYeQFlwgx89ruHbyb51KBUE6h+72k3lbA4aB1aUnh5XUgrNWfwyOfGRut6XOGxI=
+X-Received: by 2002:a2e:9e0a:: with SMTP id e10mr1513190ljk.35.1570608451497;
+ Wed, 09 Oct 2019 01:07:31 -0700 (PDT)
 MIME-Version: 1.0
-References: <20191001155154.99710-1-alpawi@amazon.com>
-In-Reply-To: <20191001155154.99710-1-alpawi@amazon.com>
+References: <6c5d22c8-6e27-3314-9c46-701d932b11a6@infradead.org>
+In-Reply-To: <6c5d22c8-6e27-3314-9c46-701d932b11a6@infradead.org>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Wed, 9 Oct 2019 10:02:43 +0200
-Message-ID: <CACRpkdah=ofrdEeYUbp6ea+2S+EuN_XhUCXpCbDgm7p5R-Z6_g@mail.gmail.com>
-Subject: Re: [PATCH] pinctrl: armada-37xx: swap polarity on LED group
-To:     Patrick Williams <alpawi@amazon.com>
-Cc:     Patrick Williams <patrick@stwcx.xyz>,
-        stable <stable@vger.kernel.org>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Gregory Clement <gregory.clement@bootlin.com>,
-        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Date:   Wed, 9 Oct 2019 10:07:20 +0200
+Message-ID: <CACRpkdbtRan_7nwPZNGLWE3xWiB54aF0fv6poFvbJpeGOz_TJg@mail.gmail.com>
+Subject: Re: [PATCH] gpio: fix kernel-doc for of_gpio_need_valid_mask()
+To:     Randy Dunlap <rdunlap@infradead.org>
+Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Oct 1, 2019 at 5:52 PM Patrick Williams <alpawi@amazon.com> wrote:
+On Tue, Oct 8, 2019 at 10:40 PM Randy Dunlap <rdunlap@infradead.org> wrote:
 
-> The configuration registers for the LED group have inverted
-> polarity, which puts the GPIO into open-drain state when used in
-> GPIO mode.  Switch to '0' for GPIO and '1' for LED modes.
+> From: Randy Dunlap <rdunlap@infradead.org>
 >
-> Fixes: 87466ccd9401 ("pinctrl: armada-37xx: Add pin controller support for Armada 37xx")
-> Signed-off-by: Patrick Williams <alpawi@amazon.com>
-> Cc: <stable@vger.kernel.org>
+> Fix kernel-doc for of_gpio_need_valid_mask().
+> Fixes this warning and uses correct Return: format.
+>
+> ../drivers/gpio/gpiolib-of.c:92: warning: Excess function parameter 'dev' description in 'of_gpio_need_valid_mask'
+>
+> Fixes: f626d6dfb709 ("gpio: of: Break out OF-only code")
+> Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
+> Cc: Linus Walleij <linus.walleij@linaro.org>
+> Cc: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> Cc: linux-gpio@vger.kernel.org
 
-Patch applied for fixes.
+Patch applied.
 
+Yours,
 Linus Walleij
