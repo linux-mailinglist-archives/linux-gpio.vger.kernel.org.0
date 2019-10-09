@@ -2,122 +2,101 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id C3E17D1292
-	for <lists+linux-gpio@lfdr.de>; Wed,  9 Oct 2019 17:28:21 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id F196DD133A
+	for <lists+linux-gpio@lfdr.de>; Wed,  9 Oct 2019 17:50:12 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731813AbfJIP17 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 9 Oct 2019 11:27:59 -0400
-Received: from mail-yw1-f66.google.com ([209.85.161.66]:38417 "EHLO
-        mail-yw1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731800AbfJIP16 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 9 Oct 2019 11:27:58 -0400
-Received: by mail-yw1-f66.google.com with SMTP id s6so959687ywe.5;
-        Wed, 09 Oct 2019 08:27:58 -0700 (PDT)
+        id S1731158AbfJIPuM (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 9 Oct 2019 11:50:12 -0400
+Received: from mail-io1-f66.google.com ([209.85.166.66]:46912 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731145AbfJIPuM (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 9 Oct 2019 11:50:12 -0400
+Received: by mail-io1-f66.google.com with SMTP id c6so5944362ioo.13
+        for <linux-gpio@vger.kernel.org>; Wed, 09 Oct 2019 08:50:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=+D/uU8MO7mShW9teASkMb7bJZjWkGz/G9NDBF9ekIAA=;
-        b=M6XRUjfZq39AjkcgPSUAdckM2+dSQa7UVUtap+gSKdeq297uOsrTQOStLUzvs00Qrb
-         606E6Wl/7AIVW+481GiVFj9U70JbVhcT4rJQhU8u0cdjRd/ahDVXc08IZfHlfsRisU65
-         HUf/gtgrZDf8ucFfmS7yer7Q2ZO4chbV49OgeG+21rgNRnhnrhWYgbBCAc/TInIbmwv/
-         1kQeiD7tPqfWieHEf4TGMLOkmFlM8tdMHUxPbTMWXppeJrqD/PuAwT34w/ZYKtG9VlRn
-         zeCV/UDX85wFycgwSfM7h2+qKSN4ukBHcA7y8FcnEjOH1cWoWnqsTz0WE5j6yXxO/LoN
-         Tf5g==
+        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=HCWhS2mW72sB0Zov86PFmfhnWXYzQqjRGzIRg9HAdyo=;
+        b=KFZ6J7jzLVr5jyXo4CWJmwzZn64gkXDH0eWHRRte3R+Y/UJ724VGzC8+d06rx2Bwvw
+         F2hGih7WEjluHjNdzuAKh/Wno9NMuy5/mY1NJF90+GNSFVcyULrewYcNqV3fjT0hGBVQ
+         caUF7ZFfBH0HNxHdPqu91fFNTnm5+r2nbAsnQNcjcc62SYVy2tH90H6arO3XoPyJmWbT
+         I+ssvEOsu/a+gbXcuKfNdjsTWFD8MdmZYJO16GDI8nImKxnL2Yq+rUIAT5q5auCHz+J8
+         KYBnlWtDMs13n3rgtQICjDoF/CW5+Bs0zF/qSxRJs6h3yVKEZSAEEPnNhNAcv8+/iLa1
+         gOQw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=+D/uU8MO7mShW9teASkMb7bJZjWkGz/G9NDBF9ekIAA=;
-        b=mnRUMoeAiKH+pNpo4CxoVSDIMGnFWRLt/yxZhbKxVw9rchURr/lsvSLvQsk0LP3e7V
-         HMWhPwNBEaLPtQbQpKYAOZxUJII64ztBxsxpexdt8C7hGkCUAgBRIqQ0TY9t6ejFPcDW
-         ShTpKE1gEy+Ex/RQlinJ0mpmTL8DEScijH392EsW1osRKXiqAD4FjLDU2GaKEBVBEA1c
-         23huAZ04BomRfVZyRA88WQYupsC2oOXrMfymCf4KW/VOM4ABSEtA0CW/mauFyWXdTXGU
-         OyX+5c9fuhF/Ueg2sFbNAMSNaxwD8Fnhj3s4ciWvsOkATFD2QDITVlmzlDjj8WEBp7Qn
-         JYrA==
-X-Gm-Message-State: APjAAAXJNvZm7jfKjHyABZSoC4K9MJeTslTI40QFdsXhNBwL3udT9aTJ
-        Hj+h/AHwTFIPdwTaZ96meuM=
-X-Google-Smtp-Source: APXvYqz0Hy2G/IPQYpNgQ2+jg5eXDNlvGay9DVAaikzPXiFu+PnfuZUhGx/byXO6uT9JyUj3SwB22A==
-X-Received: by 2002:a81:1ec8:: with SMTP id e191mr2994034ywe.447.1570634877541;
-        Wed, 09 Oct 2019 08:27:57 -0700 (PDT)
-Received: from localhost.localdomain (072-189-084-142.res.spectrum.com. [72.189.84.142])
-        by smtp.gmail.com with ESMTPSA id g40sm611863ywk.14.2019.10.09.08.27.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 09 Oct 2019 08:27:56 -0700 (PDT)
-From:   William Breathitt Gray <vilhelm.gray@gmail.com>
-To:     linus.walleij@linaro.org, bgolaszewski@baylibre.com,
-        akpm@linux-foundation.org
-Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arch@vger.kernel.org, andriy.shevchenko@linux.intel.com,
-        linux@rasmusvillemoes.dk, yamada.masahiro@socionext.com,
-        linux-arm-kernel@lists.infradead.org, linux-pm@vger.kernel.org,
-        geert@linux-m68k.org, preid@electromag.com.au, lukas@wunner.de,
-        sean.nyekjaer@prevas.dk, morten.tiljeset@prevas.dk,
-        William Breathitt Gray <vilhelm.gray@gmail.com>
-Subject: [PATCH v17 14/14] gpio: pca953x: Utilize the for_each_set_clump8 macro
-Date:   Wed,  9 Oct 2019 11:27:12 -0400
-Message-Id: <ec3264f6b21c61d3a04e929cc0f84be485decdaa.1570633189.git.vilhelm.gray@gmail.com>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <cover.1570633189.git.vilhelm.gray@gmail.com>
-References: <cover.1570633189.git.vilhelm.gray@gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=HCWhS2mW72sB0Zov86PFmfhnWXYzQqjRGzIRg9HAdyo=;
+        b=BS4IhUHFTmBg2zzsAjTJDWMT3rKiqvQx4KNEE6sGfxcWSn86lUalYlJrtDAC92wKQ4
+         ZLpeD/aebp/Mfz7ma8A73TALiVCkbaMO+8DpWoU48TQKwzTONzppvlED7tqvxmEoDemk
+         GPyCBgMWSh8Ngp5/lbcArVDxNTaVUM9QXPYF37xkklD4Yz8uDg6ZeK8OhMK09UOOG1Vt
+         2c+frOJD+uRWufdijnodEULi0XsFPQV46zzhwHM7KVPY/Mxf7vbxAxiFIh/hPe2hTk/1
+         Rd5p0LplkY1iGxFFsk7SSyrgMyu9TR3mgL0HpW3oe2dOQkMVpIOJLyHXEELcaD5lJf0H
+         Smxw==
+X-Gm-Message-State: APjAAAVjsRI1BH/tuw3O3WoYER029Jk7MRinCSrtY4iYOFGf2OmOORBY
+        H1JNpZCI0oUoAt9a0jql+NUS1IAwMBd2yCeMIjVjSA==
+X-Google-Smtp-Source: APXvYqxMxb7xH6OpW9i2u3LxtbM4JgB6UW226Ez7zFCpUiB37Yycqz46B2flDxtsZMoOEWDozBw0lBQGSJcD8dwILy0=
+X-Received: by 2002:a5e:8e4c:: with SMTP id r12mr4170080ioo.235.1570636211213;
+ Wed, 09 Oct 2019 08:50:11 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20190921102522.8970-1-drew@pdp7.com> <20191008061512.GA19956@sol>
+ <CAMRc=Mf8DsEOWcX2BTtdVtsRkNXB3oA-xt2SrWJTn6vt3Fd8Pg@mail.gmail.com>
+ <20191008232120.GA9225@sol> <CAMRc=MdcWUtEx3QAKxEmEEa1Effq7JpRPGNJOGfSYP6Nh0p1Hg@mail.gmail.com>
+ <20191008235626.GA10744@sol> <CAMRc=MdCktRBkofaqAEtjNLNS=60Z9zM9a4QoBLsCsx3bSdxtQ@mail.gmail.com>
+ <20191009002211.GA11168@sol> <20191009065524.GA4061@sol> <20191009133037.GA17244@x1>
+ <20191009141134.GB22016@sol>
+In-Reply-To: <20191009141134.GB22016@sol>
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+Date:   Wed, 9 Oct 2019 17:50:00 +0200
+Message-ID: <CAMRc=MetgRSK6+4eFkEiVuL4-D+++LZ_trr9yUqQ-H_e1POiFw@mail.gmail.com>
+Subject: Re: [RFC] gpio: expose pull-up/pull-down line flags to userspace
+To:     Kent Gibson <warthog618@gmail.com>
+Cc:     Drew Fustini <drew@pdp7.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Replace verbose implementation in set_multiple callback with
-for_each_set_clump8 macro to simplify code and improve clarity.
+=C5=9Br., 9 pa=C5=BA 2019 o 16:11 Kent Gibson <warthog618@gmail.com> napisa=
+=C5=82(a):
+>
+> On Wed, Oct 09, 2019 at 03:30:37PM +0200, Drew Fustini wrote:
+> > On Wed, Oct 09, 2019 at 02:55:24PM +0800, Kent Gibson wrote:
+> > > Safe to assume your code is in your topic/gpio-uapi-config branch?
+> > > I hope so, cos I've forked from that into github.com/warthog618/linux
+> > > and have started working on it.
+> >
+> > Do you also have a fork of libgpiod that you are working in?
+> >
+> Actually not yet - I'm using my Go equivalent of libgpiod to drive the
+> kernel for my tests.  That is also on github - it is in the uapi
+> directory of the feature/pud branch of my gpiod repo.
+>
+> > In case it is of any use, I just posted the libgpiod patch for pull-up/=
+down
+> > flags that I had been using to test with.
+> >
+> > I help maintain Adafruit_Blinka [1] so I would like try testing pull-up=
+/down.
+> > I already have a Raspberry Pi 3 booting a cross-compiled kernel with my=
+ (now
+> > outdated) patch applied and a patched libgpiod.
+> >
+> Go nuts.  I hope to be testing on one of Pis, but I don't think I have a
+> recent kernel build handy, so I'll be a while.
+>
+> Cheers,
+> Kent.
 
-Cc: Phil Reid <preid@electromag.com.au>
-Signed-off-by: William Breathitt Gray <vilhelm.gray@gmail.com>
----
- drivers/gpio/gpio-pca953x.c | 17 +++++++----------
- 1 file changed, 7 insertions(+), 10 deletions(-)
+Hey guys, just one thing: don't send patches as replies - just send a
+new version as a separate series. Also: please aggregate all the
+patches (pull-up/down, set config, gpio-mockup changes if any) into a
+single series.
 
-diff --git a/drivers/gpio/gpio-pca953x.c b/drivers/gpio/gpio-pca953x.c
-index de5d1383f28d..10b669b8f27d 100644
---- a/drivers/gpio/gpio-pca953x.c
-+++ b/drivers/gpio/gpio-pca953x.c
-@@ -10,6 +10,7 @@
- 
- #include <linux/acpi.h>
- #include <linux/bits.h>
-+#include <linux/bitops.h>
- #include <linux/gpio/driver.h>
- #include <linux/gpio/consumer.h>
- #include <linux/i2c.h>
-@@ -456,7 +457,8 @@ static void pca953x_gpio_set_multiple(struct gpio_chip *gc,
- 				      unsigned long *mask, unsigned long *bits)
- {
- 	struct pca953x_chip *chip = gpiochip_get_data(gc);
--	unsigned int bank_mask, bank_val;
-+	unsigned long offset;
-+	unsigned long bank_mask;
- 	int bank;
- 	u8 reg_val[MAX_BANK];
- 	int ret;
-@@ -466,15 +468,10 @@ static void pca953x_gpio_set_multiple(struct gpio_chip *gc,
- 	if (ret)
- 		goto exit;
- 
--	for (bank = 0; bank < NBANK(chip); bank++) {
--		bank_mask = mask[bank / sizeof(*mask)] >>
--			   ((bank % sizeof(*mask)) * 8);
--		if (bank_mask) {
--			bank_val = bits[bank / sizeof(*bits)] >>
--				  ((bank % sizeof(*bits)) * 8);
--			bank_val &= bank_mask;
--			reg_val[bank] = (reg_val[bank] & ~bank_mask) | bank_val;
--		}
-+	for_each_set_clump8(offset, bank_mask, mask, gc->ngpio) {
-+		bank = offset / 8;
-+		reg_val[bank] &= ~bank_mask;
-+		reg_val[bank] |= bitmap_get_value8(bits, offset) & bank_mask;
- 	}
- 
- 	pca953x_write_regs(chip, chip->regs->output, reg_val);
--- 
-2.23.0
-
+Bart
