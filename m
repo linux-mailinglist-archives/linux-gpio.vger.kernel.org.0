@@ -2,158 +2,139 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 23E15D0C74
-	for <lists+linux-gpio@lfdr.de>; Wed,  9 Oct 2019 12:17:45 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 03C23D0DC4
+	for <lists+linux-gpio@lfdr.de>; Wed,  9 Oct 2019 13:38:46 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730708AbfJIKRm (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 9 Oct 2019 06:17:42 -0400
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:46347 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727657AbfJIKRj (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 9 Oct 2019 06:17:39 -0400
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <mfe@pengutronix.de>)
-        id 1iI92I-0000zf-8w; Wed, 09 Oct 2019 12:17:38 +0200
-Received: from mfe by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <mfe@pengutronix.de>)
-        id 1iI92H-0001wK-R5; Wed, 09 Oct 2019 12:17:37 +0200
-Date:   Wed, 9 Oct 2019 12:17:37 +0200
-From:   Marco Felsch <m.felsch@pengutronix.de>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Support Opensource <support.opensource@diasemi.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Sascha Hauer <kernel@pengutronix.de>,
-        Adam Thomson <Adam.Thomson.Opensource@diasemi.com>
-Subject: Re: [PATCH 3/3] gpio: da9062: add driver support
-Message-ID: <20191009101737.dpsdyyla7nmn6xdi@pengutronix.de>
-References: <20190917105902.445-1-m.felsch@pengutronix.de>
- <20190917105902.445-4-m.felsch@pengutronix.de>
- <CACRpkdbbmVo3hem1xFqtmq9-htg9+QUXQpZoSyffdTZQ5kUo5Q@mail.gmail.com>
- <20191007085159.uo366hmos6zk2ops@pengutronix.de>
- <20191009095612.einxiswkmhvipjht@pengutronix.de>
+        id S1725962AbfJILip (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 9 Oct 2019 07:38:45 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:44216 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725848AbfJILip (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 9 Oct 2019 07:38:45 -0400
+Received: by mail-wr1-f66.google.com with SMTP id z9so2475982wrl.11
+        for <linux-gpio@vger.kernel.org>; Wed, 09 Oct 2019 04:38:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=TljJwf0KxQiABT9yA9WoVggnDZWeRFmQiWV9jmK5nDc=;
+        b=V2QEJ83ZbYLMDaksqA/hfUkMisrt6bC9jYPn7Cu2YqiMV/s0+RR1IKH1v+261VnYtU
+         Q50+cVeh5uqgVmMsaIkjwntSC2hXN1Y6IR2y2oZHbQw9mA2XY3ODsDnEl1h8fo3KSFRD
+         5jV/FP+zE16xsbY/y2TGuqUlFdCQcuo4CpHy9VDl3ShQGbMjb5BfTwFzA5T3ucMNhXEL
+         1pS9c62IPdeHTD0kgYWzvNgIq/2bYZlEg+yceAyfRWdLvJtSAN3xDFgYrqrHvHjAfMrv
+         tBDJzz2HSMgUzLv1661OZc7o8DyNFXFbaMzdp+Hzr41DqbkXSnravaA9PhYEmS1FuUJa
+         da2w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
+         :in-reply-to:references:mime-version:content-transfer-encoding;
+        bh=TljJwf0KxQiABT9yA9WoVggnDZWeRFmQiWV9jmK5nDc=;
+        b=OPcBRr6dEEibZwDWApauCjz9jmHYneEC/gUsKCPYgJizZX2zf2dsIyiDL6BtQrsoTq
+         lWHp6TqfXkLoEyN1kSBHEGdZjPyKZZCdjOCAaWbGZ8/ChAt8xNqyS0wR9WNi0jNvYUkL
+         rnqCjoP7jpv94ACuKUWjlP+S2ad0AU42f0fpmae1+2KBgyhpYOM3nF1YX7j2BOSgRzYk
+         WoMTvoiW25Wg7JMcZ4uHbCQytyCrcbeqh930ZuXPIHea5ZPQQwgt8YUnJ706t6DmPpp/
+         z7yx5s1pFPxYcfBDokkSaaVl2jIRGtXbCcr5VOcL/sflblxluVGQn8wG2HbhcEJeoCJ8
+         sQZg==
+X-Gm-Message-State: APjAAAWH5ZaYLs0N30rdKFHMDHCf760zbyuZityGpJFoKyBlruRwHPH+
+        UUf5InMwaM4RNc3qln3AfL23ijcI6hCoXw==
+X-Google-Smtp-Source: APXvYqxVC8mUxmU7vCRj4pSgWMy0UogFKjw1aq5EThPFyiI3pJV4ysXX6NaKrr0f5yCRixoyaDFr8Q==
+X-Received: by 2002:a5d:660f:: with SMTP id n15mr2287544wru.179.1570621122812;
+        Wed, 09 Oct 2019 04:38:42 -0700 (PDT)
+Received: from x1.fritz.box ([2001:16b8:5c80:ac01:2d69:222e:6eca:3415])
+        by smtp.gmail.com with ESMTPSA id j18sm2016904wrs.85.2019.10.09.04.38.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 09 Oct 2019 04:38:41 -0700 (PDT)
+From:   Drew Fustini <drew@pdp7.com>
+To:     warthog618@gmail.com
+Cc:     linux-gpio@vger.kernel.org, linus.walleij@linaro.org,
+        brgl@bgdev.pl, Drew Fustini <drew@pdp7.com>
+Subject: Re: [RFC] gpio: expose pull-up/pull-down line flags to userspace
+Date:   Wed,  9 Oct 2019 13:32:33 +0200
+Message-Id: <20191009113232.28852-1-drew@pdp7.com>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20191009002211.GA11168@sol>
+References: <20191009002211.GA11168@sol>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191009095612.einxiswkmhvipjht@pengutronix.de>
-X-Sent-From: Pengutronix Hildesheim
-X-URL:  http://www.pengutronix.de/
-X-IRC:  #ptxdist @freenode
-X-Accept-Language: de,en
-X-Accept-Content-Type: text/plain
-X-Uptime: 12:14:58 up 144 days, 16:33, 97 users,  load average: 0.00, 0.05,
- 0.20
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: mfe@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-gpio@vger.kernel.org
+Content-Transfer-Encoding: 8bit
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Linus,
+set pull-up/down flags in lineevent_create and add sanity checks
 
-sorry for the noise..
+Check the pull-up/down flags in lineevent_create() and set the
+corresponding bits.
 
-On 19-10-09 11:56, Marco Felsch wrote:
-> Hi Linus,
-> 
-> On 19-10-07 10:51, Marco Felsch wrote:
-> > Hi Linus,
-> > 
-> > thanks for you feedback.
-> > 
-> > On 19-10-04 21:27, Linus Walleij wrote:
-> > > On Tue, Sep 17, 2019 at 12:59 PM Marco Felsch <m.felsch@pengutronix.de> wrote:
-> > > 
-> > > > +static int da9062_gpio_direction_input(struct gpio_chip *gc,
-> > > > +                                      unsigned int offset)
-> > > > +{
-> > > > +       struct da9062_gpio *gpio = gpiochip_get_data(gc);
-> > > > +       struct regmap *regmap = gpio->da9062->regmap;
-> > > > +       struct gpio_desc *desc = gpiochip_get_desc(gc, offset);
-> 
-> This won't work anymore since I moved the driver to pinctrl and can't
-> include the drivers/gpio/gpiolib.h anymore. What is the right way to
-> get the same result within the pinctrl space? There are three possible
-> ways:
-> 1) Revert commit 1bd6b601fe196b6fbce2c93536ce0f3f53577cec which isn't
->    the best due to safeness.
-> 2) Set the gpio as active low hard as the other da90*-gpio drivers did
-> 3) Introduce a dt-binding (seems wrong because the information is
->    already there).
-> 4) "Re-implement" the gpiochip_get_desc() functionality driver
->    internally.
+Add sanity checks to make pull-up and pull-down flags mutually
+exclusive and only valid when the line is an input.
 
-4) won't work didn't recognize that 'struct gpio_device' is an internal
-struct.
+Signed-off-by: Drew Fustini <drew@pdp7.com>
+---
+ drivers/gpio/gpiolib.c | 36 ++++++++++++++++++++++++++++++++++++
+ 1 file changed, 36 insertions(+)
 
-Regards,
-  Marco
-
-> Thanks for your advice.
-> 
-> Regards,
->   Marco
-> 
-> > > > +       unsigned int gpi_type;
-> > > > +       int ret;
-> > > > +
-> > > > +       ret = da9062_gpio_set_pin_mode(regmap, offset, DA9062_PIN_GPI);
-> > > > +       if (ret)
-> > > > +               return ret;
-> > > 
-> > > Fair enough.
-> > > 
-> > > > +       /*
-> > > > +        * If the gpio is active low we should set it in hw too. No worries
-> > > > +        * about gpio_get() because we read and return the gpio-level. So the
-> > > > +        * gpiolob active_low handling is still correct.
-> > > 
-> > > gpiolib?
-> > 
-> > Thanks for covering that.
-> > 
-> > > > +        *
-> > > > +        * 0 - active low, 1 - active high
-> > > > +        */
-> > > > +       gpi_type = !gpiod_is_active_low(desc);
-> > > > +       return regmap_update_bits(regmap, DA9062AA_GPIO_0_1 + (offset >> 1),
-> > > > +                               DA9062AA_GPIO0_TYPE_MASK << DA9062_TYPE(offset),
-> > > > +                               gpi_type << DA9062_TYPE(offset));
-> > > > +}
-> > > 
-> > > So this does not affect the value out set by da9062_gpio_set()?
-> > 
-> > Please check [1] table 54, the datasheet says it is only gpi
-> > (gpio-input). So I assume it doesn't affect out values.
-> > 
-> > [1] https://www.dialog-semiconductor.com/sites/default/files/da9062-a_datasheet_2v3.pdf
-> > 
-> > Unfortunately the other gpio-da90* drivers sets this as active low hard
-> > within the driver. I wanted to avoid this here since it isn't always
-> > true.
-> > 
-> > > What is the electrical effect of this then, really? To me that seems like
-> > > something that is mostly going to be related to how interrupts
-> > > trigger (like whether to trig on rising or falling edge) and then it
-> > > should really be in the .set_type() callback, should it not?
-> > 
-> > Not only interrupts.. The dialog pmics has a lot of options to use this
-> > pins e.g. you can set it as voltage-selection input. You saw the patches
-> > I made for the regulator :)
-> 
-> 
-
+diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
+index 646ae4cffe26..babc26267561 100644
+--- a/drivers/gpio/gpiolib.c
++++ b/drivers/gpio/gpiolib.c
+@@ -554,6 +554,20 @@ static int linehandle_create(struct gpio_device *gdev, void __user *ip)
+ 	     (lflags & GPIOHANDLE_REQUEST_OPEN_SOURCE)))
+ 		return -EINVAL;
+ 
++	/*
++	 * Do not allow PULL_UP & PULL_DOWN flags to be set as they are
++	 * contradictory.
++	 */
++	if ((lflags & GPIOHANDLE_REQUEST_PULL_UP) &&
++	    (lflags & GPIOHANDLE_REQUEST_PULL_DOWN))
++		return -EINVAL;
++
++	/* PULL_UP and PULL_DOWN flags only make sense for input mode. */
++	if (!(lflags & GPIOHANDLE_REQUEST_INPUT) &&
++	    ((lflags & GPIOHANDLE_REQUEST_PULL_UP) ||
++	     (lflags & GPIOHANDLE_REQUEST_PULL_DOWN)))
++		return -EINVAL;
++
+ 	lh = kzalloc(sizeof(*lh), GFP_KERNEL);
+ 	if (!lh)
+ 		return -ENOMEM;
+@@ -941,6 +955,24 @@ static int lineevent_create(struct gpio_device *gdev, void __user *ip)
+ 		goto out_free_label;
+ 	}
+ 
++	/*
++	 * Do not allow PULL_UP & PULL_DOWN flags to be set as they are
++	 * contradictory.
++	 */
++	if ((lflags & GPIOHANDLE_REQUEST_PULL_UP) &&
++	    (lflags & GPIOHANDLE_REQUEST_PULL_DOWN)) {
++		ret = -EINVAL;
++		goto out_free_label;
++	}
++
++	/* PULL_UP and PULL_DOWN flags only make sense for input mode. */
++	if (!(lflags & GPIOHANDLE_REQUEST_INPUT) &&
++	    ((lflags & GPIOHANDLE_REQUEST_PULL_UP) ||
++	     (lflags & GPIOHANDLE_REQUEST_PULL_DOWN))) {
++		ret = -EINVAL;
++		goto out_free_label;
++	}
++
+ 	desc = &gdev->descs[offset];
+ 	ret = gpiod_request(desc, le->label);
+ 	if (ret)
+@@ -950,6 +982,10 @@ static int lineevent_create(struct gpio_device *gdev, void __user *ip)
+ 
+ 	if (lflags & GPIOHANDLE_REQUEST_ACTIVE_LOW)
+ 		set_bit(FLAG_ACTIVE_LOW, &desc->flags);
++	if (lflags & GPIO_PULL_UP)
++		set_bit(FLAG_PULL_UP, &desc->flags);
++	else if (lflags & GPIO_PULL_DOWN)
++		set_bit(FLAG_PULL_DOWN, &desc->flags);
+ 
+ 	ret = gpiod_direction_input(desc);
+ 	if (ret)
 -- 
-Pengutronix e.K.                           |                             |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+2.20.1
+
