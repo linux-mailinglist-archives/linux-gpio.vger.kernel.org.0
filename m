@@ -2,102 +2,77 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 0E7D8D07B1
-	for <lists+linux-gpio@lfdr.de>; Wed,  9 Oct 2019 08:55:34 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8DC77D0901
+	for <lists+linux-gpio@lfdr.de>; Wed,  9 Oct 2019 10:02:58 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725848AbfJIGzc (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 9 Oct 2019 02:55:32 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:38966 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725776AbfJIGzc (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 9 Oct 2019 02:55:32 -0400
-Received: by mail-pg1-f195.google.com with SMTP id e1so788436pgj.6
-        for <linux-gpio@vger.kernel.org>; Tue, 08 Oct 2019 23:55:31 -0700 (PDT)
+        id S1725962AbfJIIC5 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 9 Oct 2019 04:02:57 -0400
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:45212 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728054AbfJIIC5 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 9 Oct 2019 04:02:57 -0400
+Received: by mail-lj1-f195.google.com with SMTP id q64so1452642ljb.12
+        for <linux-gpio@vger.kernel.org>; Wed, 09 Oct 2019 01:02:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=b7eJRZDHxVoBGAGKlwj0z0FLtTVOSSjHKhBWWeuk0Oc=;
-        b=lSufSjGpCavV9D5mEpHLrn19k8RVTTNMm00VutO3TTavonByIiTfj1YliqUCDErnAE
-         rV5so1ezSP7JGY/iuMJrgJFJhTtwGkq1bV0G9x1/fr3vCTne9o+iQJcdy8H8WoVNkL+B
-         WTWwur1+KZjXJB+wUCdTx/yWwlVtZZQu1+wNXV59uhHAp3crYVU0m6Haj39SyAvD6bwh
-         cSVkOCzFjcN9yzbKBcYGf44r7KzfQWkLrcX0rJj7cY4pwuh4pLPPVcsyYwroxgnY7jMZ
-         dkS4FGxlSdz7vVU0tIT75Z6mdYbbWFdSq9CSMVcD2iu3z31UR5mz/5lAihahxMJojWY5
-         4Hcw==
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=qIcuMqyribGNxdL5/KfaR/0W6xo7KhmFZDC62GSR9uw=;
+        b=rwJgS7yXEf0+np6sEo73SubMwqxNdp4RcAX+jWJULZ3fSRrC1cOhANBPgDq/MHmTqc
+         JFh13IiBSmC44y2+YQGvoQo1N9WvINr38BqrID75SDFU4ztKk4Cr6igNdJS4kJzI5+49
+         pxW7/hEyoeoZF8AShMROjgLKBRoOpICQPs9jrfNOYkESk1LtzP17RhO8jHt8ZVd4xEuo
+         CN60C2uE3+ThAkaX6W99cbN5hve3MQsxbrAf+8O43IfZNSz/tvXBanSJOxIGHnirbV4q
+         8xSs0S8jpBpllANxVKbndvxTaBYdkIW0/xyno71RKh1Fo+8y10HchWjvn3s477Q/XYAE
+         lXCQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=b7eJRZDHxVoBGAGKlwj0z0FLtTVOSSjHKhBWWeuk0Oc=;
-        b=mv1a/YiFK68zIrR+lilBQ8bIx/ghZtxPbf2wl0vdTTh6Qx20B0mnO+U43s8Cy84VMW
-         3zel6FctNg4ia88GKTR31pQmlxdN4KHKku7xwCAPLvOfOpFX0g3EBchYvRRljO279jea
-         L/rj7xHFWoPGp/SPZVkqg2+nq7inPxTTFSllL2OqshQob9YMlhY4cf9uD55w+F5xEYKH
-         fNCR4M+3gGGQfchYmXWH6TFGhQSHW5tiG5CanKEuDlRegw75jz0atO62w8ojs+s4pc64
-         BNSQYg+quJslc/l5Cz60msHREoGS2pfW9Devg14g9hV+f7jNO6N85pAlNLOXF9gD2xtS
-         mnsA==
-X-Gm-Message-State: APjAAAUBPf7OSgoe2fGaiwBUR4Xgtbm9CA3c28BBIYB4obnKPNO4vbkh
-        6yUeRzb7lLM8oSiWd/lM2/vEbWPBgNsejw==
-X-Google-Smtp-Source: APXvYqxAV41Xm55hVSSQsP9wwDZat98XpnZ4SHXALjLqYp1wKAyM/ORxIAZSSyaOCTbiYJ8n3Vumgw==
-X-Received: by 2002:a62:8209:: with SMTP id w9mr2186355pfd.5.1570604131227;
-        Tue, 08 Oct 2019 23:55:31 -0700 (PDT)
-Received: from sol (220-235-84-126.dyn.iinet.net.au. [220.235.84.126])
-        by smtp.gmail.com with ESMTPSA id k65sm2204344pga.94.2019.10.08.23.55.27
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 08 Oct 2019 23:55:30 -0700 (PDT)
-Date:   Wed, 9 Oct 2019 14:55:24 +0800
-From:   Kent Gibson <warthog618@gmail.com>
-To:     Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     Drew Fustini <drew@pdp7.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Subject: Re: [RFC] gpio: expose pull-up/pull-down line flags to userspace
-Message-ID: <20191009065524.GA4061@sol>
-References: <20190921102522.8970-1-drew@pdp7.com>
- <20191008061512.GA19956@sol>
- <CAMRc=Mf8DsEOWcX2BTtdVtsRkNXB3oA-xt2SrWJTn6vt3Fd8Pg@mail.gmail.com>
- <20191008232120.GA9225@sol>
- <CAMRc=MdcWUtEx3QAKxEmEEa1Effq7JpRPGNJOGfSYP6Nh0p1Hg@mail.gmail.com>
- <20191008235626.GA10744@sol>
- <CAMRc=MdCktRBkofaqAEtjNLNS=60Z9zM9a4QoBLsCsx3bSdxtQ@mail.gmail.com>
- <20191009002211.GA11168@sol>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=qIcuMqyribGNxdL5/KfaR/0W6xo7KhmFZDC62GSR9uw=;
+        b=qBTahJgpOsJpesaH06Y4xWXTqh/hClQw1gH+RU9Qu6+pEpWpFm3afv203CpF6uKNkg
+         AEAL7EtlUavmcckvvl9U1D6ShQ7SsRtNelOWG004pMrcu9YadLliUPTjGsKXgm/KFXlu
+         GPmQeHibfrnSFq55BASYWnBqxcM2F96wrAMK0ehaSN5yIOmOcb/2kyYVr7GY0t5IZlD9
+         O+r7hfxdVNY2VA9UWO6W4xLGugQH3MbSOmw9YhT5Ycy2xViqplfrmYVUE3xSEztfw4L6
+         ukJIG5fWp7hquZRVfc/6duY+dH1FMQ8Xq58cTGt9MDP2jJzcwQkkGVSjbwiF8/2Kfx5W
+         ueJA==
+X-Gm-Message-State: APjAAAVI4DNvuf44pXsnzjxSt5RJsVMteawiNZNL+K4X6V5ser58vhBO
+        V+6cAF4TlmwILQCHMgkDvqQ6tZZGUhejHhTjUvuagw==
+X-Google-Smtp-Source: APXvYqzkxO27nVgr+ezF6wWyRFhgeKlah+nA5MKVsuIlBHud+OOcCa69nMnvbinUrxjWWXwcTj43OmtOXQIUqoB6N90=
+X-Received: by 2002:a2e:a415:: with SMTP id p21mr1418505ljn.59.1570608175035;
+ Wed, 09 Oct 2019 01:02:55 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20191009002211.GA11168@sol>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <20191001155154.99710-1-alpawi@amazon.com>
+In-Reply-To: <20191001155154.99710-1-alpawi@amazon.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Wed, 9 Oct 2019 10:02:43 +0200
+Message-ID: <CACRpkdah=ofrdEeYUbp6ea+2S+EuN_XhUCXpCbDgm7p5R-Z6_g@mail.gmail.com>
+Subject: Re: [PATCH] pinctrl: armada-37xx: swap polarity on LED group
+To:     Patrick Williams <alpawi@amazon.com>
+Cc:     Patrick Williams <patrick@stwcx.xyz>,
+        stable <stable@vger.kernel.org>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Gregory Clement <gregory.clement@bootlin.com>,
+        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Oct 09, 2019 at 08:22:11AM +0800, Kent Gibson wrote:
-> On Wed, Oct 09, 2019 at 02:03:58AM +0200, Bartosz Golaszewski wrote:
-> > śr., 9 paź 2019 o 01:56 Kent Gibson <warthog618@gmail.com> napisał(a):
-> > 
-> > But there's absolutely nothing wrong with writing code even if you're
-> > not sure about the solution - it's even encouraged[1]. It's much
-> > easier to discuss existing code than potential solutions.
-> > 
-> > [1] https://lkml.org/lkml/2000/8/25/132
-> > 
-> Exactly - show me your code.
-> 
-Safe to assume your code is in your topic/gpio-uapi-config branch?
-I hope so, cos I've forked from that into github.com/warthog618/linux 
-and have started working on it.
+On Tue, Oct 1, 2019 at 5:52 PM Patrick Williams <alpawi@amazon.com> wrote:
 
-So far I've added pull up/down support to lineevent_create, and 
-added default_values to the gpiohandle_config (for setting outputs).
-Currently looking at implementing the actual set config, and sucking
-on whether that is best done by refactoring bit out of
-linehandle_create.
+> The configuration registers for the LED group have inverted
+> polarity, which puts the GPIO into open-drain state when used in
+> GPIO mode.  Switch to '0' for GPIO and '1' for LED modes.
+>
+> Fixes: 87466ccd9401 ("pinctrl: armada-37xx: Add pin controller support for Armada 37xx")
+> Signed-off-by: Patrick Williams <alpawi@amazon.com>
+> Cc: <stable@vger.kernel.org>
 
-Will sort that into patches once it is in a fit state.
-Feel free to poke me if I'm going off track.
+Patch applied for fixes.
 
-Cheers,
-Kent.
+Linus Walleij
