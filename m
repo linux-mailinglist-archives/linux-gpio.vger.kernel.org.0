@@ -2,143 +2,77 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 3D184D0A07
-	for <lists+linux-gpio@lfdr.de>; Wed,  9 Oct 2019 10:41:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E5D21D0AAD
+	for <lists+linux-gpio@lfdr.de>; Wed,  9 Oct 2019 11:13:44 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725903AbfJIIlR (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 9 Oct 2019 04:41:17 -0400
-Received: from inva021.nxp.com ([92.121.34.21]:57892 "EHLO inva021.nxp.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725440AbfJIIlR (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Wed, 9 Oct 2019 04:41:17 -0400
-Received: from inva021.nxp.com (localhost [127.0.0.1])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id D2C1520039E;
-        Wed,  9 Oct 2019 10:41:14 +0200 (CEST)
-Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 50E90200044;
-        Wed,  9 Oct 2019 10:41:09 +0200 (CEST)
-Received: from titan.ap.freescale.net (TITAN.ap.freescale.net [10.192.208.233])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 95725402DA;
-        Wed,  9 Oct 2019 16:41:02 +0800 (SGT)
-From:   Hui Song <hui.song_1@nxp.com>
-To:     Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Cc:     linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-        Song Hui <hui.song_1@nxp.com>
-Subject: [PATCH v6] gpio/mpc8xxx: change irq handler from chained to normal
-Date:   Wed,  9 Oct 2019 16:30:21 +0800
-Message-Id: <20191009083021.33529-1-hui.song_1@nxp.com>
-X-Mailer: git-send-email 2.9.5
-X-Virus-Scanned: ClamAV using ClamSMTP
+        id S1730398AbfJIJNG (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 9 Oct 2019 05:13:06 -0400
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:40801 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725914AbfJIJNG (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 9 Oct 2019 05:13:06 -0400
+Received: by mail-lf1-f66.google.com with SMTP id d17so1067182lfa.7
+        for <linux-gpio@vger.kernel.org>; Wed, 09 Oct 2019 02:13:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=K78KklRog9ZZ5Yt/jTADpXsNBCoM5afXm2vhqmnA4XA=;
+        b=YCR1uF5O0YeHaczq1oGjKyFOMgQl8W+XqfD8/pIZuPqSpsLclBdC6AoaBAB2hN54uY
+         +bcUtbS/CqiQadb8OPyseWPFUC1X7A/6hqYKmW4Gx8KYNPbTFCgalKjKi4Qdvj012Z4f
+         2YkaxQtEiNsLu9tDvCUvphFtvI+J719sgIRf2CwrRNo4r7kb9TmuQkq6kvfQlZ2M6rtl
+         UzascCi0mh1Ifq9dVtCSjECY5iJyM/ULA3tcpspB3BosT3Hu8n2TBXTwncXSxUwWazAx
+         jzKAD2Dq6zo2XuRXVFEoyWs4P2+Z6E4Eu3DuCZYETPBIyBz4qfy+YIHlT7x+3UpvSpWr
+         sUjA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=K78KklRog9ZZ5Yt/jTADpXsNBCoM5afXm2vhqmnA4XA=;
+        b=ahgqZ+nJGKMamwrUCxtofyElHyysdkveyqiqaQC6GIUMCNJydiV8PfLXSS9KKXj3EU
+         T1sKJzqM/c4EcdB8pKCCGn/b0JN4ZA/gMNWymkb6SA/5ACItDe+3Jh21OhGg6vj0T3uZ
+         k3r5qCWcAzfz4kIb5qpBkbuOrb8N3c2WULtSWezOEW3R7J0adGAbCSUfYS7ZZMJu573T
+         p2tqsDtIFiNRE/h2JBqEZUjAxAtIROF+1U78EBoO3AStZ1HLyuv7KRHAWu8E/Y+CuqxM
+         R9IhYNewMmKGZxfW+rsuFi4qrwiYtJnbCLchdLJPDQEdXwni82CTDwYCRHAUeoUmF/t5
+         QRhQ==
+X-Gm-Message-State: APjAAAX5TVLkq5qoAN5ExRCH07+v3t2Y7EO2XSX6XaB8VkNWgBaSPBdn
+        VG5YfnLRlhri5cSNjZ3AAQRFDhf5CznVfhxxaKtuRw==
+X-Google-Smtp-Source: APXvYqxXSWot6LGbQcOddq5DeyXe6rXtpVH58kxOqwEXgboUiUy3V3ANm6291Eeup+zLJtZxza772BxT8V0iNc+6RXs=
+X-Received: by 2002:a19:c505:: with SMTP id w5mr1408110lfe.115.1570612384646;
+ Wed, 09 Oct 2019 02:13:04 -0700 (PDT)
+MIME-Version: 1.0
+References: <20191004164059.10397-1-j.neuschaefer@gmx.net>
+In-Reply-To: <20191004164059.10397-1-j.neuschaefer@gmx.net>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Wed, 9 Oct 2019 11:12:52 +0200
+Message-ID: <CACRpkdYBfmK0nb3m-RXbnSfCKHY5j2Fns2P8iiAUjN1qO8TruQ@mail.gmail.com>
+Subject: Re: [PATCH 1/2] docs: driver-api: Move bt8xxgpio to the gpio directory
+To:     =?UTF-8?Q?Jonathan_Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>
+Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Michael Buesch <m@bues.ch>, Jonathan Corbet <corbet@lwn.net>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Logan Gunthorpe <logang@deltatee.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Cornelia Huck <cohuck@redhat.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-From: Song Hui <hui.song_1@nxp.com>
+On Fri, Oct 4, 2019 at 6:41 PM Jonathan Neusch=C3=A4fer
+<j.neuschaefer@gmx.net> wrote:
 
-More than one gpio controllers can share one interrupt, change the
-driver to request shared irq.
+> Let's declutter Documentation/driver-api a bit.
+>
+> Signed-off-by: Jonathan Neusch=C3=A4fer <j.neuschaefer@gmx.net>
 
-While this will work, it will mess up userspace accounting of the number
-of interrupts per second in tools such as vmstat.  The reason is that
-for every GPIO interrupt, /proc/interrupts records the count against GIC
-interrupt 68 or 69, as well as the GPIO itself.  So, for every GPIO
-interrupt, the total number of interrupts that the system has seen
-increments by two
+Patch applied.
 
-Signed-off-by: Laurentiu Tudor <Laurentiu.Tudor@nxp.com>
-Signed-off-by: Alex Marginean <alexandru.marginean@nxp.com>
-Signed-off-by: Song Hui <hui.song_1@nxp.com>
----
- Changes in v6:
-	- change request_irq to devm_request_irq and add commit message.
- Changes in v5:
-	- add traverse every bit function.
- Changes in v4:
-	- convert 'pr_err' to 'dev_err'.
- Changes in v3:
-	- update the patch description.
- Changes in v2:
-	- delete the compatible of ls1088a.
-
- drivers/gpio/gpio-mpc8xxx.c | 31 ++++++++++++++++++++-----------
- 1 file changed, 20 insertions(+), 11 deletions(-)
-
-diff --git a/drivers/gpio/gpio-mpc8xxx.c b/drivers/gpio/gpio-mpc8xxx.c
-index 16a47de..f0be284 100644
---- a/drivers/gpio/gpio-mpc8xxx.c
-+++ b/drivers/gpio/gpio-mpc8xxx.c
-@@ -22,6 +22,7 @@
- #include <linux/irq.h>
- #include <linux/gpio/driver.h>
- #include <linux/bitops.h>
-+#include <linux/interrupt.h>
- 
- #define MPC8XXX_GPIO_PINS	32
- 
-@@ -127,20 +128,20 @@ static int mpc8xxx_gpio_to_irq(struct gpio_chip *gc, unsigned offset)
- 		return -ENXIO;
- }
- 
--static void mpc8xxx_gpio_irq_cascade(struct irq_desc *desc)
-+static irqreturn_t mpc8xxx_gpio_irq_cascade(int irq, void *data)
- {
--	struct mpc8xxx_gpio_chip *mpc8xxx_gc = irq_desc_get_handler_data(desc);
--	struct irq_chip *chip = irq_desc_get_chip(desc);
-+	struct mpc8xxx_gpio_chip *mpc8xxx_gc = data;
- 	struct gpio_chip *gc = &mpc8xxx_gc->gc;
- 	unsigned int mask;
-+	int i;
- 
- 	mask = gc->read_reg(mpc8xxx_gc->regs + GPIO_IER)
- 		& gc->read_reg(mpc8xxx_gc->regs + GPIO_IMR);
--	if (mask)
-+	for_each_set_bit(i, &mask, 32)
- 		generic_handle_irq(irq_linear_revmap(mpc8xxx_gc->irq,
--						     32 - ffs(mask)));
--	if (chip->irq_eoi)
--		chip->irq_eoi(&desc->irq_data);
-+						     31 - i));
-+
-+	return IRQ_HANDLED;
- }
- 
- static void mpc8xxx_irq_unmask(struct irq_data *d)
-@@ -388,8 +389,8 @@ static int mpc8xxx_probe(struct platform_device *pdev)
- 
- 	ret = gpiochip_add_data(gc, mpc8xxx_gc);
- 	if (ret) {
--		pr_err("%pOF: GPIO chip registration failed with status %d\n",
--		       np, ret);
-+		dev_err(&pdev->dev, "%pOF: GPIO chip registration failed with status %d\n",
-+			np, ret);
- 		goto err;
- 	}
- 
-@@ -409,8 +410,16 @@ static int mpc8xxx_probe(struct platform_device *pdev)
- 	if (devtype->gpio_dir_in_init)
- 		devtype->gpio_dir_in_init(gc);
- 
--	irq_set_chained_handler_and_data(mpc8xxx_gc->irqn,
--					 mpc8xxx_gpio_irq_cascade, mpc8xxx_gc);
-+	ret = devm_request_irq(&pdev->dev, mpc8xxx_gc->irqn,
-+			       mpc8xxx_gpio_irq_cascade,
-+			       IRQF_NO_THREAD | IRQF_SHARED, "gpio-cascade",
-+			       mpc8xxx_gc);
-+	if (ret) {
-+		dev_err(&pdev->dev, "%s: failed to devm_request_irq(%d), ret = %d\n",
-+			np->full_name, mpc8xxx_gc->irqn, ret);
-+		goto err;
-+	}
-+
- 	return 0;
- err:
- 	iounmap(mpc8xxx_gc->regs);
--- 
-2.9.5
-
+Yours,
+Linus Walleij
