@@ -2,51 +2,50 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id BAF9ED2DC9
-	for <lists+linux-gpio@lfdr.de>; Thu, 10 Oct 2019 17:32:58 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B7CDBD2E60
+	for <lists+linux-gpio@lfdr.de>; Thu, 10 Oct 2019 18:10:50 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726463AbfJJPcs (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 10 Oct 2019 11:32:48 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:39065 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725901AbfJJPcr (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 10 Oct 2019 11:32:47 -0400
-Received: by mail-wm1-f68.google.com with SMTP id v17so7264293wml.4
-        for <linux-gpio@vger.kernel.org>; Thu, 10 Oct 2019 08:32:46 -0700 (PDT)
+        id S1726009AbfJJQKu (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 10 Oct 2019 12:10:50 -0400
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:33121 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726135AbfJJQKu (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 10 Oct 2019 12:10:50 -0400
+Received: by mail-lf1-f68.google.com with SMTP id y127so4844466lfc.0
+        for <linux-gpio@vger.kernel.org>; Thu, 10 Oct 2019 09:10:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:reply-to:from:date:message-id:subject:to;
-        bh=sfUJysz1yNc32MDCXj7042wwWEQgx+uTrfo2ctnNrK4=;
-        b=c1PWJnZ7eWpUG7qw5t+IYwnnpWDMtRVGzO19FTGvWubqtyNfI6wONApHfnX4doOymB
-         Af2ipPh/CKgnzw810mOuibk0HuogSzVAQT6K/7nN7h80c3ioeGfmrGlRgQAEjUJkcAwP
-         Cow6KrGV5Px1rozY7JrRyXBrT4paK6ZlbaLJ9fRa4T7p6Q5vhJNIA/wS5k3ghpunKP9i
-         Qv12qCq8TQT19KZiQoukeYT17pLMR+fkxea0kZCdNAmzBYP60p9M5eDGum6Y5WwBwIEM
-         IcM51lTsgYpOB/tPu9pMRZJNor+WApKCUs49+gOofdqpNKQ+pM7IMr2OtPfrdRW5pXxV
-         FHTQ==
+        bh=rvNKcQa6csvrpV0BR7Qohhs6ik/U0hSG7/A3nrUQ4+g=;
+        b=Ux/dpIp1j5PnP4xRLXlZOIrazPwZ7osbKHGOZa6VeQJo0u2CByLz8ZaSYlopTX+Zys
+         d4LnMhBDP7K5icAwR/upsNcXqlLAjrGyRevrHguWZWmuZ6hKFY6dWxse9OL1ZK/7fH4p
+         Wsmk0aGpWSZLuf90+8sQDw1S6KVWiVh2i7DKz2m6x/dKboFN2rNP6LDFZduc0ZFYVtWc
+         Cv37J6kf2WvVA/kIdti2PjGr21f180vFHDLZ2/mq0XquhUPybaPuKusNdMToB/m8WJ3R
+         4L9ZGAt993NCflCnUpI4R9f1sy5Lq0G+eT0LCzF+ricZ1cFedG62AIAND/yv0ccPJtKe
+         +HIQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:reply-to:from:date:message-id
          :subject:to;
-        bh=sfUJysz1yNc32MDCXj7042wwWEQgx+uTrfo2ctnNrK4=;
-        b=miNkEyfYLvAUHvdOERL7EJaAWjtrj0QhlhUDvm7AzgCxu/dVSdJofnLlxfXtKUFB62
-         fH7Wd7CU8FPai2iejyaVEVZgXvs44/xZA98hJTXP7YUswS8frugXFe/QXLw/Y9YiInPn
-         zAVTmo6iZn+KgBJJslu3XgSSoPvBIihhGH/q5rWhdufTN3TBdJ/fSrvck5Uc32epBivP
-         yhXoAueXnv9r9j4D7CxPYomCbGU+QU14y8HO8Kmd7mTDtItSCaIg3nYtHHqWQjwLdZrE
-         OfurTPbtyD/IA/Mu8x7a2DkoBI/m35j+5+d3q6K1akuBMKg57s1IvWyRlNbVFrp/oEnm
-         Pb3g==
-X-Gm-Message-State: APjAAAUemvvYi5Xoqsgm0TJcFgxcWWJqlfc6OjZQ49HEaQk25eqq0Kcg
-        +B/J5R+zV+js6Qw9mnx6Z3AWZdIfgmy8u2z7z+o=
-X-Google-Smtp-Source: APXvYqyP+lx/O3Vgw50pDWe8qSBYfVZLqPdZjSaq5Zx3hTJ5MpxHN01eGRQYQC8L/Z7+AjZSf88ma08Q8yFs4j6Q8Ho=
-X-Received: by 2002:a1c:99cd:: with SMTP id b196mr8233601wme.105.1570721566075;
- Thu, 10 Oct 2019 08:32:46 -0700 (PDT)
+        bh=rvNKcQa6csvrpV0BR7Qohhs6ik/U0hSG7/A3nrUQ4+g=;
+        b=YEvWVvkX8t1//J+RQv93IAjq7Wk8qea4mF6zWv34mietXQQRgevOxgH4WiaWhk5j1i
+         Gi/MLaj7bfbfuETKI49ODpCAY8TtVBGZivw1Q0MWYc36/8HNqdUL0jMBpvvgCAymreua
+         mqcIibEUg/723yKn6ZitQA3+zUkh6L9P+4spQjGodyZw45wuFp/7+TXU8X4lKWPOMDjV
+         lNrrEbquolJSFrqHmHy6ynbIyQ3tpmTszL+mCvkL+CpuoPWUO5UnW6eiZo+HjXYijul2
+         KO99hgeFsoEECotns0gPqZa/Y2Sc7fCyPctyyu52cVhT50fnckdH30b831IIRIGzrpI3
+         m6GA==
+X-Gm-Message-State: APjAAAUZvIHPubZW0tVBc/XqLqaa8/NvYCtanHJj+V6CUzRoAVxZ7bSf
+        RXVMryRRPEDOUztiedpoB2GBxDzYmDB89nLnlJU=
+X-Google-Smtp-Source: APXvYqw0XlxSRVhSdvsl1aDzz5CAG14hsgoCAEtpsI6ceBk+WX/TxIrK9cMxAnsOtypa9TNfFysYwQd7aAY8H5U37Q8=
+X-Received: by 2002:ac2:5453:: with SMTP id d19mr6551197lfn.89.1570723848529;
+ Thu, 10 Oct 2019 09:10:48 -0700 (PDT)
 MIME-Version: 1.0
-Received: by 2002:a5d:6b87:0:0:0:0:0 with HTTP; Thu, 10 Oct 2019 08:32:45
- -0700 (PDT)
-Reply-To: talabmohamud@outlook.com
-From:   Talab Muhamudu <talabmohamud@gmail.com>
-Date:   Thu, 10 Oct 2019 16:32:45 +0100
-Message-ID: <CAEZ8=RHYnAB0JRg81oZ_ukQJQBmP6LRH91r+5ypq5aP95omV9Q@mail.gmail.com>
-Subject: hope
+Received: by 2002:ab3:25e:0:0:0:0:0 with HTTP; Thu, 10 Oct 2019 09:10:47 -0700 (PDT)
+Reply-To: brianjesse343@gmail.com
+From:   brianjesse <wstrnnln@gmail.com>
+Date:   Thu, 10 Oct 2019 17:10:47 +0100
+Message-ID: <CAALz-Ef37-U_E1FQDq-M6xLx6aA6BaBDhaZZ6U+tPPJOWwf+mQ@mail.gmail.com>
+Subject: Hl
 To:     undisclosed-recipients:;
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
@@ -54,16 +53,34 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Good day , i write to inform you as auditor onbehalf of ORABANK.
+Dear Friend,
 
-Transaction number 000399577OBK have been approved for release
-through VISA ELECTRON ATM Card.
+I hope this message meet you well, after quite a very long time. I'm
+happy to inform you about my success in getting those funds
+transferred under the cooperation of a new partner from India.
+Presently  I'm in India for investment projects with my own share of
+the total sum. meanwhile, I didn't forget your past efforts and
+attempts to assist me in transferring those funds despite that it
+failed us some how.Now contact my secretary in Lome, Togo with his
+below contact,I droped a certified ATM visa card, ask him to send you
+the ATM visa card of $250.000.00 which I left with him for your
+compensation for all the past efforts and attempts to assist me in
+this matter. I appreciated your efforts at that time very much.
 
-Note that you are required to reconfirm your complete mailing address
-for delivery.
+So feel free and get in touch with my secretary in Lome Togo and
+instruct him  where to send the ATM visa card containing amount to
+you.Please do let me know immediately if you receive it so that we can
+share the joy after all the sufferness at that  time together. in the
+moment, I'm very busy here because of the investment projects which me
+and the new partner are having at hand,finally remember that I had
+forwarded instruction to my secretary on your behalf to release the
+ATM visa card to you and you alone, so feel free to get in touch with
+him and forward him your informations,your full names,address and
+contact number for easy communication until your received the ATM visa
+card. if you whish to communicate futher on this issue, you can
+contact my secretery Mr: Vincent Philip through this his email address
+(vincentphilip.sec@gmail.com)
 
-Reconfirm code 000399577OBK to the Director Mr. Patrick Masrellet on ( (
-atm.orabank@iname.com )) for further action.
 
-Regards.
-Talab Mohamud( Esq)
+Best Regards
+Barrister Brian Jesse
