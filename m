@@ -2,177 +2,209 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 89315D289B
-	for <lists+linux-gpio@lfdr.de>; Thu, 10 Oct 2019 14:02:44 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 92603D2A8F
+	for <lists+linux-gpio@lfdr.de>; Thu, 10 Oct 2019 15:13:05 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727917AbfJJMCn (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 10 Oct 2019 08:02:43 -0400
-Received: from mail-sz.amlogic.com ([211.162.65.117]:56402 "EHLO
-        mail-sz.amlogic.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727320AbfJJMCn (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 10 Oct 2019 08:02:43 -0400
-Received: from [10.28.18.45] (10.28.18.45) by mail-sz.amlogic.com (10.28.11.5)
- with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1591.10; Thu, 10 Oct
- 2019 20:02:43 +0800
-Subject: Re: [PATCH v2 2/3] pinctrl: meson-a1: add pinctrl driver for Meson A1
- Soc
-To:     Neil Armstrong <narmstrong@baylibre.com>,
+        id S2387512AbfJJNNA (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 10 Oct 2019 09:13:00 -0400
+Received: from mail-yb1-f193.google.com ([209.85.219.193]:34189 "EHLO
+        mail-yb1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727788AbfJJNNA (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 10 Oct 2019 09:13:00 -0400
+Received: by mail-yb1-f193.google.com with SMTP id m1so1918448ybm.1;
+        Thu, 10 Oct 2019 06:12:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=g7iIHlFzTIGzONjGQDhY1DZUNBV3ZeDhylQVPImHYRg=;
+        b=sMFhuMfBRMpzUHz+CYkqVrZdgWkei0A4Fad+TfuPR4Uy/NScdWJDQN7eQ+HEQV3bpu
+         6Bh0xCrgBg5pSu7VTqty4xrXYCKmQ86fBki5YWb/cW9JQLNodVrYJbRAYGxzu1LAcYOI
+         mf62EtqTs1cAV8tLKRODYuAlJxwxIN5zD4yIcBuJMdeoL38bYvQOS5sbqYaXibtCi6ee
+         jhhSx+/8IetL47htvu7BCdSYhtEjn/Ty7b1G+HakdNvlgozR2I40k3IOpx73Cxo7BhFu
+         iO+iDqHCtjdUXXA52IIm1MdX3PxRjI8tDbzRYq3Kq35hBpXOGueFCjxzBTXu6/I547af
+         OVGw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=g7iIHlFzTIGzONjGQDhY1DZUNBV3ZeDhylQVPImHYRg=;
+        b=RGoUdZaxJibxt+iU36Pqh1GAF8snSlIYK1qKuEJNTdVU1Ozw2b+S15mvoBCQFaXgiE
+         n4sjwC5PJYCAP4Phai9lRlJd+drAghEKjLvVvPdBgJkodz7723ph4DRI3/33NlXGXIqh
+         Msh9sgZ2MMmVfxpKL0YU0yvnP646+8UhQPoFNaQYmXBzGIVt5L0Sg8RbFGAaHuQ5w8RQ
+         jRzSsAR+sKhYd4TWYr+4BnuvtZwjg3egnX1iBLJdiR4I/3zQsrSti7/OMEAuoBmYWJ7B
+         sFLA9udUzvPZfuGiFLGwFj+Udf0eKv2nukf5R0/WZLDufRhCq3wUyoGcdN9LWz5YAK1u
+         CELw==
+X-Gm-Message-State: APjAAAVEtnz2skaJYIvd+zjiNnJ4n6RQWwVZvSTaw7PLfAU4HWaAVx0t
+        hPburJYTd7+j7JWDiem2DzU=
+X-Google-Smtp-Source: APXvYqx5E3qUmv5XC3dFWZqwVZ3OFjslYLwBjhW0QjnM//IFgndffIyLzGAuvTZWF6Qt3GkRR4d+rA==
+X-Received: by 2002:a25:d015:: with SMTP id h21mr6252013ybg.11.1570713178037;
+        Thu, 10 Oct 2019 06:12:58 -0700 (PDT)
+Received: from icarus (072-189-084-142.res.spectrum.com. [72.189.84.142])
+        by smtp.gmail.com with ESMTPSA id a64sm1402333ywe.92.2019.10.10.06.12.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 10 Oct 2019 06:12:57 -0700 (PDT)
+Date:   Thu, 10 Oct 2019 09:12:42 -0400
+From:   William Breathitt Gray <vilhelm.gray@gmail.com>
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
         Linus Walleij <linus.walleij@linaro.org>,
-        <linux-gpio@vger.kernel.org>
-CC:     Jerome Brunet <jbrunet@baylibre.com>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        Carlo Caione <carlo@caione.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Xingyu Chen <xingyu.chen@amlogic.com>,
-        Jianxin Pan <jianxin.pan@amlogic.com>,
-        Hanjie Lin <hanjie.lin@amlogic.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-amlogic@lists.infradead.org>, <linux-kernel@vger.kernel.org>
-References: <1570532999-23302-1-git-send-email-qianggui.song@amlogic.com>
- <1570532999-23302-3-git-send-email-qianggui.song@amlogic.com>
- <cca24aa5-07dc-f2d6-885a-09bc8e20b3b6@baylibre.com>
-From:   Qianggui Song <qianggui.song@amlogic.com>
-Message-ID: <a41f0685-a42c-b21c-d0be-e0e1c3ae7c8f@amlogic.com>
-Date:   Thu, 10 Oct 2019 20:02:42 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        Linux PM mailing list <linux-pm@vger.kernel.org>,
+        Phil Reid <preid@electromag.com.au>,
+        Lukas Wunner <lukas@wunner.de>, sean.nyekjaer@prevas.dk,
+        morten.tiljeset@prevas.dk, Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH v17 01/14] bitops: Introduce the for_each_set_clump8 macro
+Message-ID: <20191010131242.GA3187@icarus>
+References: <CAK7LNATgW7bXUmqV=3QAaJ0Qu73Kox-TgDCQJb=s0=mwewSCUg@mail.gmail.com>
+ <20191009170917.GG32742@smile.fi.intel.com>
+ <CAMuHMdXyyrL4ibKvjMV6r8TuxpmK73=JxsWNEfcRk1NjwsnOjA@mail.gmail.com>
+ <CAK7LNASVdqU_6+_iinWStb9ALqLw494pnZKr46fLW+WJ9nUo6A@mail.gmail.com>
+ <CAHp75VeLkfNZkqhD8tedJdav81L+VA3Z50Kwcd9h4R7zMwjtvA@mail.gmail.com>
+ <CAMuHMdVs=PgET6=-fKgznETOye_Bxqt6h16Ok0nu6J2vXG-r_w@mail.gmail.com>
+ <CAHp75Vc8HX=hs2F2R_wOaFM7cFjaX0k_kENybdxSh742PpVkjw@mail.gmail.com>
+ <CAMuHMdVrQyt=VJ8outiGEXW78-cY=YUWyeVXN-_MFg75erJ=Yg@mail.gmail.com>
+ <20191010080750.GN32742@smile.fi.intel.com>
+ <CAMuHMdVv_pYq7rVLvjAPhkoADLgXF-AFGWUBNqLjaumDPBYGaQ@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <cca24aa5-07dc-f2d6-885a-09bc8e20b3b6@baylibre.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.28.18.45]
-X-ClientProxiedBy: mail-sz.amlogic.com (10.28.11.5) To mail-sz.amlogic.com
- (10.28.11.5)
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <CAMuHMdVv_pYq7rVLvjAPhkoADLgXF-AFGWUBNqLjaumDPBYGaQ@mail.gmail.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi,Neil
+On Thu, Oct 10, 2019 at 10:21:45AM +0200, Geert Uytterhoeven wrote:
+> Hi Andy,
+> 
+> On Thu, Oct 10, 2019 at 10:08 AM Andy Shevchenko
+> <andy.shevchenko@gmail.com> wrote:
+> > On Thu, Oct 10, 2019 at 09:49:51AM +0200, Geert Uytterhoeven wrote:
+> > > On Thu, Oct 10, 2019 at 9:42 AM Andy Shevchenko
+> > > <andy.shevchenko@gmail.com> wrote:
+> > > > On Thu, Oct 10, 2019 at 9:29 AM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
+> > > > > On Thu, Oct 10, 2019 at 7:49 AM Andy Shevchenko
+> > > > > <andy.shevchenko@gmail.com> wrote:
+> > > > > > On Thu, Oct 10, 2019 at 5:31 AM Masahiro Yamada
+> > > > > > <yamada.masahiro@socionext.com> wrote:
+> > > > > > > On Thu, Oct 10, 2019 at 3:54 AM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
+> > > > > > > > On Wed, Oct 9, 2019 at 7:09 PM Andy Shevchenko
+> > > > > > > > <andriy.shevchenko@linux.intel.com> wrote:
+> > > > > > > > > On Thu, Oct 10, 2019 at 01:28:08AM +0900, Masahiro Yamada wrote:
+> > > > > > > > > > On Thu, Oct 10, 2019 at 12:27 AM William Breathitt Gray
+> > > > > > > > > > <vilhelm.gray@gmail.com> wrote:
+> >
+> > > > > > > > > > Why is the return type "unsigned long" where you know
+> > > > > > > > > > it return the 8-bit value ?
+> > > > > > > > >
+> > > > > > > > > Because bitmap API operates on unsigned long type. This is not only
+> > > > > > > > > consistency, but for sake of flexibility in case we would like to introduce
+> > > > > > > > > more calls like clump16 or so.
+> > > > > > > >
+> > > > > > > > TBH, that doesn't convince me: those functions explicitly take/return an
+> > > > > > > > 8-bit value, and have "8" in their name.  The 8-bit value is never
+> > > > > > > > really related to, retrieved from, or stored in a full "unsigned long"
+> > > > > > > > element of a bitmap, only to/from/in a part (byte) of it.
+> > > > > > > >
+> > > > > > > > Following your rationale, all of iowrite{8,16,32,64}*() should take an
+> > > > > > > > "unsigned long" value, too.
+> > > > > > >
+> > > > > > > Using u8/u16/u32/u64 looks more consistent with other bitmap helpers.
+> > > > > > >
+> > > > > > > void bitmap_from_arr32(unsigned long *bitmap, const u32 *buf, unsigned
+> > > > > > > int nbits);
+> > > > > > > void bitmap_to_arr32(u32 *buf, const unsigned long *bitmap, unsigned int nbits);
+> > > > > > > static inline void bitmap_from_u64(unsigned long *dst, u64 mask);
+> > > > > > >
+> > > > > > > If you want to see more examples from other parts,
+> > > > > >
+> > > > > > Geert's and yours examples both are not related. They are about
+> > > > > > fixed-width properies when we know that is the part of protocol.
+> > > > > > Here we have no protocol which stricts us to the mentioned fixed-width types.
+> > > > >
+> > > > > Yes you have: they are functions to store/retrieve an 8-bit value from
+> > > > > the middle of the bitmap, which is reflected in their names ("clump8",
+> > > > > "value8").
+> > > > > The input/output value is clearly separated from the actual bitmap,
+> > > > > which is referenced by the "unsigned long *".
+> > > > >
+> > > > > If you add new "value16" functions, they will be intended to store/retrieve
+> > > > > 16-bit values.
+> > > >
+> > > > And if I add 4-bit, 12-bit or 24-bit values, what should I use?
+> > >
+> > > Whatever is needed to store that?
+> > > I agree "unsigned long" is appropriate for a generic function to extract a
+> > > bit field of 1 to BITS_PER_LONG bits.
+> > >
+> > > > > Besides, if retrieving an 8-bit value requires passing an
+> > > > > "unsigned long *", the caller needs two variables: one unsigned long to
+> > > > > pass the address of, and one u8 to copy the returned value into.
+> > > >
+> > > > Why do you need a temporary variable? In some cases it might make
+> > > > sense, but in general simple cases I don't see what you may achieve
+> > > > with it.
+> > >
+> > > Because find_next_clump8() takes a pointer to store the output value.
+> >
+> > So does regmap_read().
+> 
+> I believe that one is different, as it is a generic function, and the
+> width of the
+> returned value depends on the regmap config.
+> 
+> > 8 appeared there during review when it has been proposed to optimize to 8-bit
+> > clumps as most of the current users utilize it. The initial idea was to be
+> > bit-width agnostic. And with current API it's possible to easy convert to other
+> > formats later if we need.
+> 
+> "optimized for 8-bit clumps" and "out-of-line function that takes an
+> unsigned long pointer for an output parameter" don't match well, IMHO.
+> 
+> Gr{oetje,eeting}s,
+> 
+>                         Geert
+> 
+> -- 
+> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+> 
+> In personal conversations with technical people, I call myself a hacker. But
+> when I'm talking to journalists I just say "programmer" or something like that.
+>                                 -- Linus Torvalds
 
-On 2019/10/8 21:07, Neil Armstrong wrote:
-> Hi,
-> 
-> On 08/10/2019 13:09, Qianggui Song wrote:
->> Add pinctrl driver for Meson A1 Soc which share the same register layout of
->> pinmux with previous Meson-G12A, however there is difference for gpio
->> and pin config register in A1.The main difference is that registers before A1
->> are grouped by function while those of A1 are by bank. The new register layout
->> is as below:
->>
->> /* first bank */	      /* addr */
->> - P_PADCTRL_GPIOP_I         base + 0x00 << 2
->> - P_PADCTRL_GPIOP_O         base + 0x01 << 2
->> - P_PADCTRL_GPIOP_OEN       base + 0x02 << 2
->> - P_PADCTRL_GPIOP_PULL_EN   base + 0x03 << 2
->> - P_PADCTRL_GPIOP_PULL_UP   base + 0x04 << 2
->> - P_PADCTRL_GPIOP_DS        base + 0x05 << 2
->>
->> /* second bank */
->> - P_PADCTRL_GPIOB_I         base + 0x10 << 2
->> - P_PADCTRL_GPIOB_O         base + 0x11 << 2
->> - P_PADCTRL_GPIOB_OEN       base + 0x12 << 2
->> - P_PADCTRL_GPIOB_PULL_EN   base + 0x13 << 2
->> - P_PADCTRL_GPIOB_PULL_UP   base + 0x14 << 2
->> - P_PADCTRL_GPIOB_DS        base + 0x15 << 2
->>
->> Each bank contains at least 6 registers to be configured, if one bank has
->> more than 16 gpios, an extra P_PADCTRL_GPIO[X]_DS_EXT is included. Between
->> two adjacent P_PADCTRL_GPIO[X]_I, there is an offset 0x10, that is to say,
->> for third bank, the offsets will be 0x20,0x21,0x22,0x23,0x24,0x25 according
->> to above register layout.For privous chips, registers are grouped
->> according to their functions while registers of A1 are according to bank.
->>
->> Current Meson pinctrl driver can cover such change by using base address of
->> GPIO as that of drive-strength. While simply giving reg_ds = reg_pullen
->> make wrong value to reg_ds for Socs that do not support drive-strength like
->> AXG.To make things simple, add an extra dt parser function for a1 or later chip
->> and remain the old dt parser function for old Socs.
->>
->> Also note that there is no AO bank in A1.
->>
->> Signed-off-by: Qianggui Song <qianggui.song@amlogic.com>
->> ---
->>  drivers/pinctrl/meson/Kconfig            |   6 +
->>  drivers/pinctrl/meson/Makefile           |   1 +
->>  drivers/pinctrl/meson/pinctrl-meson-a1.c | 942 +++++++++++++++++++++++++++++++
->>  drivers/pinctrl/meson/pinctrl-meson.c    |  16 +-
->>  drivers/pinctrl/meson/pinctrl-meson.h    |   5 +
->>  5 files changed, 969 insertions(+), 1 deletion(-)
->>  create mode 100644 drivers/pinctrl/meson/pinctrl-meson-a1.c
->>
-> 
-> [...]
-> 
->> --- a/drivers/pinctrl/meson/pinctrl-meson.c
->> +++ b/drivers/pinctrl/meson/pinctrl-meson.c
->> @@ -695,6 +695,17 @@ static int meson_pinctrl_parse_dt(struct meson_pinctrl *pc,
->>  	return 0;
->>  }
->>  
->> +int meson_pinctrl_parse_dt_extra(struct meson_pinctrl *pc,
->> +				 struct device_node *node)
->> +{
->> +	int ret;
->> +
->> +	ret = meson_pinctrl_parse_dt(pc, node);
->> +	pc->reg_ds = pc->reg_pullen;
->> +
->> +	return ret;
->> +}
->> +
->>  int meson_pinctrl_probe(struct platform_device *pdev)
->>  {
->>  	struct device *dev = &pdev->dev;
->> @@ -708,7 +719,10 @@ int meson_pinctrl_probe(struct platform_device *pdev)
->>  	pc->dev = dev;
->>  	pc->data = (struct meson_pinctrl_data *) of_device_get_match_data(dev);
->>  
->> -	ret = meson_pinctrl_parse_dt(pc, dev->of_node);
->> +	if (pc->data->parse_dt)
->> +		ret = pc->data->parse_dt(pc, dev->of_node);
->> +	else
->> +		ret = meson_pinctrl_parse_dt(pc, dev->of_node);
->>  	if (ret)
->>  		return ret;
->>  
->> diff --git a/drivers/pinctrl/meson/pinctrl-meson.h b/drivers/pinctrl/meson/pinctrl-meson.h
->> index c696f3241a36..ca29efd90aac 100644
->> --- a/drivers/pinctrl/meson/pinctrl-meson.h
->> +++ b/drivers/pinctrl/meson/pinctrl-meson.h
->> @@ -11,6 +11,7 @@
->>  #include <linux/regmap.h>
->>  #include <linux/types.h>
->>  
->> +struct meson_pinctrl;
->>  /**
->>   * struct meson_pmx_group - a pinmux group
->>   *
->> @@ -114,6 +115,7 @@ struct meson_pinctrl_data {
->>  	unsigned int num_banks;
->>  	const struct pinmux_ops *pmx_ops;
->>  	void *pmx_data;
->> +	int (*parse_dt) (struct meson_pinctrl *pc, struct device_node *node);
->>  };
->>  
->>  struct meson_pinctrl {
->> @@ -171,3 +173,6 @@ int meson_pmx_get_groups(struct pinctrl_dev *pcdev,
->>  
->>  /* Common probe function */
->>  int meson_pinctrl_probe(struct platform_device *pdev);
->> +/* Extra dt parser function for register layout grouped by bank */
->> +int meson_pinctrl_parse_dt_extra(struct meson_pinctrl *pc,
->> +				 struct device_node *node);
->>
-> 
-> I think you should add this parse_dt callback in a separate patch.
-> 
-> Neil
-> 
-> .
-> 
-OK, will do it in the next patch set.
+"Optimize" may not be the best way of describing it. I conceded to
+introducing a restricted implementation (i.e. for_each_set_clump8) since
+there were disagreements on the best approach for an implementation a
+generic for_each_set_clump macro that could support any bit size. So I
+settled for introducing just for_each_set_clump8 since it has an
+implementation everyone could agree on and I didn't want to stall the
+patchset for this introduction.
+
+I'm hoping to propose the generic for_each_set_clump macro again in the
+future after for_each_set_clump8 has had time to be utilized. There are
+some files that I think might benefit from such a generic implementation
+(e.g. gpio-thunderx with 64-bit ports and gpio-xilinx with variable size
+channels). In such case, for_each_set_clump8 would likely be
+reimplemented as a macro hardcoding an 8 passed to for_each_set_clump --
+or perhaps just eliminated and replaced with for_each_set_clump directly
+-- so maintaining clump as unsigned long pointer is useful since we
+won't need to worry about redeclaring variables to match the datatype.
+
+Though I admit that there are advantages in specifying the datatype as
+u8 (or u16, u32, etc.). If we know the size then it's reasonable to
+expect that the implementation can be optimized to not worry about
+variable sizes and boundaries -- as exemplified by the simplicity of the
+for_each_set_clump8 implementation. So that may be an argument for
+keeping the for_each_set_clump8 implementation separate from the generic
+for_each_set_clump implementation.
+
+William Breathitt Gray
