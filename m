@@ -2,78 +2,172 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id E4E82D3440
-	for <lists+linux-gpio@lfdr.de>; Fri, 11 Oct 2019 01:23:46 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 86E9DD354A
+	for <lists+linux-gpio@lfdr.de>; Fri, 11 Oct 2019 02:10:56 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726321AbfJJXXq (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 10 Oct 2019 19:23:46 -0400
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:39025 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726135AbfJJXXq (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 10 Oct 2019 19:23:46 -0400
-Received: by mail-lf1-f66.google.com with SMTP id 72so5648284lfh.6
-        for <linux-gpio@vger.kernel.org>; Thu, 10 Oct 2019 16:23:45 -0700 (PDT)
+        id S1726533AbfJKAKy (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 10 Oct 2019 20:10:54 -0400
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:43043 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726096AbfJKAKy (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 10 Oct 2019 20:10:54 -0400
+Received: by mail-ot1-f65.google.com with SMTP id o44so6466689ota.10
+        for <linux-gpio@vger.kernel.org>; Thu, 10 Oct 2019 17:10:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=eI2LdeT57YLofvFeveNckvQGsjhBiHe01DRAZu3rCss=;
-        b=mm/gsgpc3A7y6M3sUzl5REeS5ScaZ+FzI1mu+CKBNLMkPLhB68yXIzxLTrIWCZl3rt
-         okhAUOwPSrIK7QNx0PptXtO+Xp1iP3rA+c/7vuC6O4nGbvSH+Lun5LAZIesvZFu1v5Ry
-         V68eJmqaOKyJU25ut2glvuysYH2hllEt42E5mgrVbBT/4D+Gut9/IU7X3C3k+Sc7S3vs
-         EmBQdirOXenFxaHdPRFQ35UwwDtTZzL9l5+gtt58pw3V14cIPnsqQ6AwwvQOycQ0C+ET
-         /QPGkgLV2yCEtmBoDg4Om0CkWjCXdwSXlRfYCRXPZBFyEqjSb1u6uGe24uiHBVE6hfqd
-         xEQQ==
+         :cc:content-transfer-encoding;
+        bh=CuWkKPMdB1z+o+XfUfQqodALV/gMtOa1+iT3xGY2djM=;
+        b=V+/1YHgBwaJ9G2xcvRbf0wcjQADYe+tc7H7ZIRB7G1sOOk836UV02AeFA/O5/6uGBT
+         9nDajgKdzPf7ZRtDvF31VQ/FHVVJPLSPoOv22VRoezeLKolwFKGjdfKlG+IlwzA2e8n2
+         0BW9sJtbOq5sGr4eL8Jh8x9OwG5s2bJ0qO7A9RjB3P3Lz0K+nT2EsqZ2QL3ADcDUbv2P
+         sdm0g5BsD4mHrgJT8Br7uZ9O2tAWROQhhddwUZnJlGb/AC0vtckBaGv9BJqIJXfa4Huc
+         SJNgdhq8vYH/xOX+be8gAGhR7ND7CBqEAEVlFn72LIH0B3Hv8u1e94R8e+YZnU3QUU3d
+         TWCw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=eI2LdeT57YLofvFeveNckvQGsjhBiHe01DRAZu3rCss=;
-        b=rvU6j5bBi4e5j4hivKFECpS7kMxahn16Riqgk3NYnnY6n5aWvBmXaw6ROdaybdNiGT
-         Fy6lJ8jbfZ9GTCQUHzyOjYI3w68Hn9U+Yf84S8PrC2QdkLji6Qr3cKZSMfvx3wes3gci
-         7c6vCiHNI0njTi3l42dRBduUiJ8+MKtZMwyOx2O3H3rri1tmIKmecCia7DEdoDa6jeRi
-         0dwgAKO2wBhvlnodS5Mpcv+NHO/EVOlVZlYNNDGqKTT1SsVrNODrCq4yAM8/O/wCfeS0
-         SG3Ew0HNit/npVXzmc658ix8nLBT94Ym7ar3C8vkB9Oxxcjh/iScLTSwIzIGZjwBHp+J
-         IxZA==
-X-Gm-Message-State: APjAAAXrt5WUc6AAUiY3ZXUoXSdqZH2JIUqB6lTmFQuUBFhWxygb8MXy
-        yNyrU18PFbXovqBFUi+7tRIR8isuyW8Rfis/dhr3cgcHBLU=
-X-Google-Smtp-Source: APXvYqzyPzXL99Y14yGQpqbm61Sey+8rDc0ZWW/9zMfQu/jCWJR2MAE9qpLdkxXAifyswozldh9pabWQPjioq3B/rU4=
-X-Received: by 2002:a19:c505:: with SMTP id w5mr7321232lfe.115.1570749824284;
- Thu, 10 Oct 2019 16:23:44 -0700 (PDT)
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=CuWkKPMdB1z+o+XfUfQqodALV/gMtOa1+iT3xGY2djM=;
+        b=Q2bTPU1NY5r/9Qv/3fJE28f356dwGFft+gPaVUvXKmdKt4b8Lmt8Lwhe5yC5YS1wqN
+         pBJOeA07ASKp8/FLWZD1Pizg0JCqu2eCNz6S7a/pQFwPY+zp4IafzT+OJDcuH9aP1tZX
+         Dr2Gww4sB+K2j+FyQZlxqDpR2/2SXVSYC0zffV2kiCt6qSFcsGsIy9qLfXiA1hRIg+SY
+         xOvXJiqwf7kv1l9qXpKAGDP7m0zrXoVnKLbaX3YPZUr93QRUIuD+T7Ddar9FBuz9H3KM
+         SXtatDw5o9kacSLnAP3jUBBpcqYM2w/lpOPmYtuwWsIm13Wbd6dxO6nJMCYp2aJAvxmT
+         gb2A==
+X-Gm-Message-State: APjAAAWOG+mGdqhuknVkcKcmkLh3LmYnrCkhUa6G5I+j4uOOC9dntq7W
+        97nritQTWrGY/UZI3nSWqkIp+Wj1Nhx5KJ5W9nAGpQ==
+X-Google-Smtp-Source: APXvYqxZtpd1aw+WFgfMgVMfM/xQ2kYk0LHsr36Je/tEarbEcU93KFwlv3DkanirryaTd1tkYOZSPT3ZJwWCtI5udb4=
+X-Received: by 2002:a05:6830:1685:: with SMTP id k5mr10285631otr.250.1570752651991;
+ Thu, 10 Oct 2019 17:10:51 -0700 (PDT)
 MIME-Version: 1.0
-References: <20191008110737.GE2819@lahna.fi.intel.com>
-In-Reply-To: <20191008110737.GE2819@lahna.fi.intel.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Fri, 11 Oct 2019 01:23:32 +0200
-Message-ID: <CACRpkdb7D4TXsOr7jXon3F7x4Kxcb8wKezLdOL4RXvv4rx1Bqg@mail.gmail.com>
-Subject: Re: [GIT PULL] intel-pinctrl fixes for v5.4
-To:     Mika Westerberg <mika.westerberg@linux.intel.com>
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Linux pin control <linux-gpio@vger.kernel.org>
+References: <20191010023205.8071-1-hui.song_1@nxp.com>
+In-Reply-To: <20191010023205.8071-1-hui.song_1@nxp.com>
+From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Date:   Fri, 11 Oct 2019 02:10:41 +0200
+Message-ID: <CAMpxmJXyoMu-Z0E0wejLSrgW3aE73fHxHxS3kANBoVY+FhfmGg@mail.gmail.com>
+Subject: Re: [PATCH v7] gpio/mpc8xxx: change irq handler from chained to normal
+To:     Hui Song <hui.song_1@nxp.com>
+Cc:     Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        arm-soc <linux-arm-kernel@lists.infradead.org>,
+        linux-devicetree <devicetree@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-gpio <linux-gpio@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Oct 8, 2019 at 1:07 PM Mika Westerberg
-<mika.westerberg@linux.intel.com> wrote:
+czw., 10 pa=C5=BA 2019 o 04:42 Hui Song <hui.song_1@nxp.com> napisa=C5=82(a=
+):
+>
+> From: Song Hui <hui.song_1@nxp.com>
+>
+> More than one gpio controllers can share one interrupt, change the
+> driver to request shared irq.
+>
+> While this will work, it will mess up userspace accounting of the number
+> of interrupts per second in tools such as vmstat.  The reason is that
+> for every GPIO interrupt, /proc/interrupts records the count against GIC
+> interrupt 68 or 69, as well as the GPIO itself.  So, for every GPIO
+> interrupt, the total number of interrupts that the system has seen
+> increments by two.
+>
+> Signed-off-by: Laurentiu Tudor <Laurentiu.Tudor@nxp.com>
+> Signed-off-by: Alex Marginean <alexandru.marginean@nxp.com>
+> Signed-off-by: Song Hui <hui.song_1@nxp.com>
+> ---
+> Changes in v7:
+>         - make unsigned int convert to unsigned long.
+> Changes in v6:
+>         - change request_irq to devm_request_irq and add commit message.
+> Changes in v5:
+>         - add traverse every bit function.
+> Changes in v4:
+>         - convert 'pr_err' to 'dev_err'.
+> Changes in v3:
+>         - update the patch description.
+> Changes in v2:
+>         - delete the compatible of ls1088a.
+>  drivers/gpio/gpio-mpc8xxx.c | 29 +++++++++++++++++++----------
+>  1 file changed, 19 insertions(+), 10 deletions(-)
+>
+> diff --git a/drivers/gpio/gpio-mpc8xxx.c b/drivers/gpio/gpio-mpc8xxx.c
+> index 16a47de..5a0f030 100644
+> --- a/drivers/gpio/gpio-mpc8xxx.c
+> +++ b/drivers/gpio/gpio-mpc8xxx.c
+> @@ -22,6 +22,7 @@
+>  #include <linux/irq.h>
+>  #include <linux/gpio/driver.h>
+>  #include <linux/bitops.h>
+> +#include <linux/interrupt.h>
+>
+>  #define MPC8XXX_GPIO_PINS      32
+>
+> @@ -127,20 +128,20 @@ static int mpc8xxx_gpio_to_irq(struct gpio_chip *gc=
+, unsigned offset)
+>                 return -ENXIO;
+>  }
+>
+> -static void mpc8xxx_gpio_irq_cascade(struct irq_desc *desc)
+> +static irqreturn_t mpc8xxx_gpio_irq_cascade(int irq, void *data)
+>  {
+> -       struct mpc8xxx_gpio_chip *mpc8xxx_gc =3D irq_desc_get_handler_dat=
+a(desc);
+> -       struct irq_chip *chip =3D irq_desc_get_chip(desc);
+> +       struct mpc8xxx_gpio_chip *mpc8xxx_gc =3D data;
+>         struct gpio_chip *gc =3D &mpc8xxx_gc->gc;
+> -       unsigned int mask;
+> +       unsigned long mask;
+> +       int i;
+>
+>         mask =3D gc->read_reg(mpc8xxx_gc->regs + GPIO_IER)
+>                 & gc->read_reg(mpc8xxx_gc->regs + GPIO_IMR);
+> -       if (mask)
+> +       for_each_set_bit(i, &mask, 32)
+>                 generic_handle_irq(irq_linear_revmap(mpc8xxx_gc->irq,
+> -                                                    32 - ffs(mask)));
+> -       if (chip->irq_eoi)
+> -               chip->irq_eoi(&desc->irq_data);
+> +                                                    31 - i));
 
-> The following changes since commit 54ecb8f7028c5eb3d740bb82b0f1d90f2df63c5c:
->
->   Linux 5.4-rc1 (2019-09-30 10:35:40 -0700)
->
-> are available in the Git repository at:
->
->   git://git.kernel.org/pub/scm/linux/kernel/git/pinctrl/intel.git tags/intel-pinctrl-fixes-v5.4
->
-> for you to fetch changes up to 260996c30f4f3a732f45045e3e0efe27017615e4:
->
->   pinctrl: cherryview: restore Strago DMI workaround for all versions (2019-10-01 17:36:40 +0300)
+This will now fit in 80 characters.
 
-Pulled in for fixes.
+Bart
 
-Thanks for all help!
-
-Yours,
-Linus Walleij
+> +
+> +       return IRQ_HANDLED;
+>  }
+>
+>  static void mpc8xxx_irq_unmask(struct irq_data *d)
+> @@ -409,8 +410,16 @@ static int mpc8xxx_probe(struct platform_device *pde=
+v)
+>         if (devtype->gpio_dir_in_init)
+>                 devtype->gpio_dir_in_init(gc);
+>
+> -       irq_set_chained_handler_and_data(mpc8xxx_gc->irqn,
+> -                                        mpc8xxx_gpio_irq_cascade, mpc8xx=
+x_gc);
+> +       ret =3D devm_request_irq(&pdev->dev, mpc8xxx_gc->irqn,
+> +                              mpc8xxx_gpio_irq_cascade,
+> +                              IRQF_NO_THREAD | IRQF_SHARED, "gpio-cascad=
+e",
+> +                              mpc8xxx_gc);
+> +       if (ret) {
+> +               dev_err(&pdev->dev, "%s: failed to devm_request_irq(%d), =
+ret =3D %d\n",
+> +                       np->full_name, mpc8xxx_gc->irqn, ret);
+> +               goto err;
+> +       }
+> +
+>         return 0;
+>  err:
+>         iounmap(mpc8xxx_gc->regs);
+> --
+> 2.9.5
+>
