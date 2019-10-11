@@ -2,55 +2,55 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 764F9D44BA
-	for <lists+linux-gpio@lfdr.de>; Fri, 11 Oct 2019 17:48:01 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3CA6DD44BB
+	for <lists+linux-gpio@lfdr.de>; Fri, 11 Oct 2019 17:48:06 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728213AbfJKPsB (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 11 Oct 2019 11:48:01 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:39342 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726521AbfJKPsB (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 11 Oct 2019 11:48:01 -0400
-Received: by mail-pf1-f193.google.com with SMTP id v4so6331842pff.6
-        for <linux-gpio@vger.kernel.org>; Fri, 11 Oct 2019 08:48:00 -0700 (PDT)
+        id S1728218AbfJKPsF (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 11 Oct 2019 11:48:05 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:40825 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726521AbfJKPsF (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 11 Oct 2019 11:48:05 -0400
+Received: by mail-pf1-f195.google.com with SMTP id x127so6327882pfb.7
+        for <linux-gpio@vger.kernel.org>; Fri, 11 Oct 2019 08:48:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=H8pWxllBl/HRU6dwk3RzvMewJ/lSEodvQ4T55bbhvxc=;
-        b=FlY8Uu1xwdiAw2UR5YPjvulppFqfYvGkJgMrbjruIRl6xsz4ga7TTDmYKAVVnuz2In
-         Z5PPiBdzmLdztmiM3Y6Yz2ZM7EhQdGrWMPe2WL3A2I5rF5Ws/fO/EMHpZcytqUq6ye8x
-         lOxLUkGP4VFo7eeqsY/n5GLYqQAB4tGdtN54lnEbAo8N71T/rSXWBrbA6k2xsSL/Pl4n
-         y9UCcaaEfXQ4eCQs5zkzt4hn6hofZFJ2Q0GXA52jTbm6wzQGqyShXQ6QexEXbcvvo2qn
-         PAfL3LLCPKCYLidzvXoJl0CusrbiEsmpMK6Vpob4askad0RJNWmYyvuQzwNbVkC7pc4Z
-         dfQw==
+        bh=9yM+7slsNLJm2jMU2/8cO8XX3jrRvDxcj2OR+Xd2zxk=;
+        b=bPGYJob19nzCHOkRZiZw9lcnOYM/32jUdDRTmXqH5wREigpO5PXAzVSfZxl4KA9JVf
+         A9fC33Cisw43YoA1gHD+4uVBWRN5LWRUuotkz29b0SOTlFL2ur24hd+BNb5ldklEn5UB
+         BcS+m6CyL5ewnKCpSpzoHBT9fXQOByBTosnG6N9yfAsCAiDE/mOIXeHbKrr65xyXHHCb
+         UJIHHyO7pXi9pBM5DpFzwjaar1opY7vRllB9+kICMLqxI7L3lAAunTSoXCQEEDApA3jV
+         k5WDlBjuFqSZyuBSc7rW/zwL0sAob/Gv05pqqyFR4vyNAxb3ra45Tyntu22qAT+F2zX/
+         jdNg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=H8pWxllBl/HRU6dwk3RzvMewJ/lSEodvQ4T55bbhvxc=;
-        b=mZlyAaBGJVNjzxrmXXort8DsmAs6HiBDpkuadlYjPRHXlYQijWO6VnsqHrR2pe8Z09
-         NW11a35rCsR/83yIkDLlPsN3zcgD3FrJHxZk2WDBl5WiGVauP5kBnq60jZ51/7LCYdrX
-         NP8HuJNME7jLzeOdJEMkS1CFzS/ghgd7CxI+DkZU3N9LGRaAN2SdZV9w7JD+UaOpMMwW
-         owwRrtT86nhnsgIZB9RgXaZ0ehrute5NCWAuaN5Fp3qgnDle9MCWurO+/hTYLaNC+I52
-         Z41/r9vMtahBI4VjU6jQlzJk1IceXDF2tM/6J07ERokrEXi7dn5LYa94fmMbI0nYQkTW
-         aSzw==
-X-Gm-Message-State: APjAAAXX9Oh3WTannJSOB0Q6lpYinJ0iot48Y8BKmLCHooxe8rbHiui4
-        Ee0aFU3+MyQ2C5IbMXaosx0emMDNCXSV9A==
-X-Google-Smtp-Source: APXvYqwLHJ8wp6/wb+9LIXH+gmYBt3uC/VSqP0kMUl507SahYcgfv7UT7mQSunOhYY3BO5nMgPQtxg==
-X-Received: by 2002:a63:1b0d:: with SMTP id b13mr17560328pgb.312.1570808879854;
-        Fri, 11 Oct 2019 08:47:59 -0700 (PDT)
+        bh=9yM+7slsNLJm2jMU2/8cO8XX3jrRvDxcj2OR+Xd2zxk=;
+        b=RI3Qr6pTwmPV/C07RSb0hBEnevNJFEpeGHUVVSYtEbMiSzY7bi77i1XVRU0E6uJKPd
+         WNkcuYGftZVX8Fi4uAhG8vWPjR/S8XtKBJiBvf7Pg1E3OQh63z9kexC4G+pfbHLhRiQB
+         zkUSHlCooFiwOOCGaO2U0kUi+4tL/9vwFUF5FuTmVN0FzS/YW4A6GpdInM0b510fJ8Mh
+         GZQAFS1DunsNPdi4n9rcdPFrnOsZ+gk8teM9GlUFvShTSzgVNF2kM29CcC7Ap6IUshyZ
+         CiPfAIhvLjRjXTFfrVIb/2lOU3KQXN/h2+rGFI8BbrEyZOxRVRz3gBhZKGr7ABnSXlvr
+         Y6og==
+X-Gm-Message-State: APjAAAVw3xFb4Y+aMo7CqQ2iCOXQl9AqlaWVuWgeYBFhEFdsvioxLUU3
+        B8jyhTDcVKBVVZK4fBOgJT9BSzUh6vgKtw==
+X-Google-Smtp-Source: APXvYqycSvph7wuyWgaxY/gNqi5FEA75xzA7NELOcvDYdiYaiAA4j8bXvfnD1/bK5WsNvqu1mnZXHg==
+X-Received: by 2002:a17:90a:8085:: with SMTP id c5mr6277402pjn.60.1570808883452;
+        Fri, 11 Oct 2019 08:48:03 -0700 (PDT)
 Received: from sol.lan (220-235-84-126.dyn.iinet.net.au. [220.235.84.126])
-        by smtp.gmail.com with ESMTPSA id v28sm13755404pgn.17.2019.10.11.08.47.56
+        by smtp.gmail.com with ESMTPSA id v28sm13755404pgn.17.2019.10.11.08.48.00
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 11 Oct 2019 08:47:59 -0700 (PDT)
+        Fri, 11 Oct 2019 08:48:02 -0700 (PDT)
 From:   Kent Gibson <warthog618@gmail.com>
 To:     linux-gpio@vger.kernel.org, brgl@bgdev.pl,
         linus.walleij@linaro.org, bamv2005@gmail.com
 Cc:     drew@pdp7.com, Kent Gibson <warthog618@gmail.com>
-Subject: [PATCH 1/5] gpiolib: add support for pull up/down to lineevent_create
-Date:   Fri, 11 Oct 2019 23:46:46 +0800
-Message-Id: <20191011154650.1749-2-warthog618@gmail.com>
+Subject: [PATCH 2/5] gpio: mockup: add set_config to support pull up/down
+Date:   Fri, 11 Oct 2019 23:46:47 +0800
+Message-Id: <20191011154650.1749-3-warthog618@gmail.com>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191011154650.1749-1-warthog618@gmail.com>
 References: <20191011154650.1749-1-warthog618@gmail.com>
@@ -61,53 +61,143 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-This patch adds support for pull up/down to lineevent_create.
-Use cases include receiving asynchronous presses from a
-push button without an external pull up/down.
+This patch adds support for the pull up/down state set via gpiolib line
+requests to be reflected in the state of the mockup.
+Use case is for testing of the GPIO uAPI, specifically the pull up/down
+flags.
 
 Signed-off-by: Kent Gibson <warthog618@gmail.com>
 ---
- drivers/gpio/gpiolib.c | 20 ++++++++++++++++++--
- 1 file changed, 18 insertions(+), 2 deletions(-)
+ drivers/gpio/gpio-mockup.c | 94 ++++++++++++++++++++++++--------------
+ 1 file changed, 60 insertions(+), 34 deletions(-)
 
-diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
-index 994e5d71375d..0912a00b2960 100644
---- a/drivers/gpio/gpiolib.c
-+++ b/drivers/gpio/gpiolib.c
-@@ -920,8 +920,20 @@ static int lineevent_create(struct gpio_device *gdev, void __user *ip)
- 	/* This is just wrong: we don't look for events on output lines */
- 	if ((lflags & GPIOHANDLE_REQUEST_OUTPUT) ||
- 	    (lflags & GPIOHANDLE_REQUEST_OPEN_DRAIN) ||
--	    (lflags & GPIOHANDLE_REQUEST_OPEN_SOURCE) ||
--	    (lflags & GPIOHANDLE_REQUEST_PULL_UP) ||
-+	    (lflags & GPIOHANDLE_REQUEST_OPEN_SOURCE))
-+		return -EINVAL;
+diff --git a/drivers/gpio/gpio-mockup.c b/drivers/gpio/gpio-mockup.c
+index 213aedc97dc2..493077229677 100644
+--- a/drivers/gpio/gpio-mockup.c
++++ b/drivers/gpio/gpio-mockup.c
+@@ -146,6 +146,61 @@ static void gpio_mockup_set_multiple(struct gpio_chip *gc,
+ 	mutex_unlock(&chip->lock);
+ }
+ 
++static int gpio_mockup_apply_pull(struct gpio_mockup_chip *chip,
++			unsigned int offset, int value)
++{
++	struct gpio_desc *desc;
++	struct gpio_chip *gc;
++	struct irq_sim *sim;
++	int curr, irq, irq_type;
 +
-+	/* PULL_UP and PULL_DOWN flags only make sense for input mode. */
-+	if (!(lflags & GPIOHANDLE_REQUEST_INPUT) &&
-+	    ((lflags & GPIOHANDLE_REQUEST_PULL_UP) ||
-+	     (lflags & GPIOHANDLE_REQUEST_PULL_DOWN)))
-+		return -EINVAL;
++	gc = &chip->gc;
++	desc = &gc->gpiodev->descs[offset];
++	sim = &chip->irqsim;
 +
-+	/*
-+	 * Do not allow both pull-up and pull-down flags to be set as they
-+	 *  are contradictory.
-+	 */
-+	if ((lflags & GPIOHANDLE_REQUEST_PULL_UP) &&
- 	    (lflags & GPIOHANDLE_REQUEST_PULL_DOWN))
++	mutex_lock(&chip->lock);
++
++	if (test_bit(FLAG_REQUESTED, &desc->flags) &&
++		!test_bit(FLAG_IS_OUT, &desc->flags)) {
++		curr = __gpio_mockup_get(chip, offset);
++		if (curr == value)
++			goto out;
++
++		irq = irq_sim_irqnum(sim, offset);
++		irq_type = irq_get_trigger_type(irq);
++
++		if ((value == 1 && (irq_type & IRQ_TYPE_EDGE_RISING)) ||
++			(value == 0 && (irq_type & IRQ_TYPE_EDGE_FALLING)))
++			irq_sim_fire(sim, offset);
++	}
++
++	/* Change the value unless we're actively driving the line. */
++	if (!test_bit(FLAG_REQUESTED, &desc->flags) ||
++		!test_bit(FLAG_IS_OUT, &desc->flags))
++		__gpio_mockup_set(chip, offset, value);
++
++out:
++	chip->lines[offset].pull = value;
++	mutex_unlock(&chip->lock);
++	return 0;
++}
++
++static int gpio_mockup_set_config(struct gpio_chip *gc,
++				   unsigned int offset, unsigned long config)
++{
++	struct gpio_mockup_chip *chip = gpiochip_get_data(gc);
++
++	switch (pinconf_to_config_param(config)) {
++	case PIN_CONFIG_BIAS_PULL_UP:
++		return gpio_mockup_apply_pull(chip, offset, 1);
++	case PIN_CONFIG_BIAS_PULL_DOWN:
++		return gpio_mockup_apply_pull(chip, offset, 0);
++	default:
++		break;
++	}
++	return -ENOTSUPP;
++}
++
+ static int gpio_mockup_dirout(struct gpio_chip *gc,
+ 			      unsigned int offset, int value)
+ {
+@@ -226,12 +281,8 @@ static ssize_t gpio_mockup_debugfs_write(struct file *file,
+ 					 size_t size, loff_t *ppos)
+ {
+ 	struct gpio_mockup_dbgfs_private *priv;
+-	int rv, val, curr, irq, irq_type;
+-	struct gpio_mockup_chip *chip;
++	int rv, val;
+ 	struct seq_file *sfile;
+-	struct gpio_desc *desc;
+-	struct gpio_chip *gc;
+-	struct irq_sim *sim;
+ 
+ 	if (*ppos != 0)
  		return -EINVAL;
+@@ -244,35 +295,9 @@ static ssize_t gpio_mockup_debugfs_write(struct file *file,
  
-@@ -951,6 +963,10 @@ static int lineevent_create(struct gpio_device *gdev, void __user *ip)
+ 	sfile = file->private_data;
+ 	priv = sfile->private;
+-	chip = priv->chip;
+-	gc = &chip->gc;
+-	desc = &gc->gpiodev->descs[priv->offset];
+-	sim = &chip->irqsim;
+-
+-	mutex_lock(&chip->lock);
+-
+-	if (test_bit(FLAG_REQUESTED, &desc->flags) &&
+-	    !test_bit(FLAG_IS_OUT, &desc->flags)) {
+-		curr = __gpio_mockup_get(chip, priv->offset);
+-		if (curr == val)
+-			goto out;
+-
+-		irq = irq_sim_irqnum(sim, priv->offset);
+-		irq_type = irq_get_trigger_type(irq);
+-
+-		if ((val == 1 && (irq_type & IRQ_TYPE_EDGE_RISING)) ||
+-		    (val == 0 && (irq_type & IRQ_TYPE_EDGE_FALLING)))
+-			irq_sim_fire(sim, priv->offset);
+-	}
+-
+-	/* Change the value unless we're actively driving the line. */
+-	if (!test_bit(FLAG_REQUESTED, &desc->flags) ||
+-	    !test_bit(FLAG_IS_OUT, &desc->flags))
+-		__gpio_mockup_set(chip, priv->offset, val);
+-
+-out:
+-	chip->lines[priv->offset].pull = val;
+-	mutex_unlock(&chip->lock);
++	rv = gpio_mockup_apply_pull(priv->chip, priv->offset, val);
++	if (rv)
++		return rv;
  
- 	if (lflags & GPIOHANDLE_REQUEST_ACTIVE_LOW)
- 		set_bit(FLAG_ACTIVE_LOW, &desc->flags);
-+	if (lflags & GPIOHANDLE_REQUEST_PULL_DOWN)
-+		set_bit(FLAG_PULL_DOWN, &desc->flags);
-+	if (lflags & GPIOHANDLE_REQUEST_PULL_UP)
-+		set_bit(FLAG_PULL_UP, &desc->flags);
+ 	return size;
+ }
+@@ -418,6 +443,7 @@ static int gpio_mockup_probe(struct platform_device *pdev)
+ 	gc->direction_output = gpio_mockup_dirout;
+ 	gc->direction_input = gpio_mockup_dirin;
+ 	gc->get_direction = gpio_mockup_get_direction;
++	gc->set_config = gpio_mockup_set_config;
+ 	gc->to_irq = gpio_mockup_to_irq;
+ 	gc->free = gpio_mockup_free;
  
- 	ret = gpiod_direction_input(desc);
- 	if (ret)
 -- 
 2.23.0
 
