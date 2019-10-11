@@ -2,136 +2,182 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 8DCE1D36B2
-	for <lists+linux-gpio@lfdr.de>; Fri, 11 Oct 2019 03:07:41 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9F430D374F
+	for <lists+linux-gpio@lfdr.de>; Fri, 11 Oct 2019 03:46:18 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727584AbfJKBHk (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 10 Oct 2019 21:07:40 -0400
-Received: from inva020.nxp.com ([92.121.34.13]:34280 "EHLO inva020.nxp.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727518AbfJKBHk (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Thu, 10 Oct 2019 21:07:40 -0400
-Received: from inva020.nxp.com (localhost [127.0.0.1])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 830A51A04A8;
-        Fri, 11 Oct 2019 03:07:37 +0200 (CEST)
-Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 690811A01F0;
-        Fri, 11 Oct 2019 03:07:32 +0200 (CEST)
-Received: from titan.ap.freescale.net (TITAN.ap.freescale.net [10.192.208.233])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id DCE9340299;
-        Fri, 11 Oct 2019 09:07:25 +0800 (SGT)
-From:   Hui Song <hui.song_1@nxp.com>
-To:     Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Cc:     linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-        Song Hui <hui.song_1@nxp.com>
-Subject: [PATCH v8] gpio/mpc8xxx: change irq handler from chained to normal
-Date:   Fri, 11 Oct 2019 08:56:43 +0800
-Message-Id: <20191011005643.41007-1-hui.song_1@nxp.com>
-X-Mailer: git-send-email 2.9.5
-X-Virus-Scanned: ClamAV using ClamSMTP
+        id S1727588AbfJKBqR (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 10 Oct 2019 21:46:17 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:34261 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727584AbfJKBqR (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 10 Oct 2019 21:46:17 -0400
+Received: by mail-wr1-f67.google.com with SMTP id j11so10011383wrp.1
+        for <linux-gpio@vger.kernel.org>; Thu, 10 Oct 2019 18:46:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernelci-org.20150623.gappssmtp.com; s=20150623;
+        h=message-id:date:mime-version:content-transfer-encoding:subject:to
+         :from;
+        bh=0b418pZCpG009MG77qVbcfeVx9k0PGsxw6HVwf78RPk=;
+        b=SUeb5BIwJkfYp+0pTMJEWSIpxbrIIiLlv5rf8Up6gmiQZHBB8s6ReY4LYxGLIxNG0T
+         vSOYmgRO77PYFv5n9LPtz5Xav6LRXPDjnN3p873R18WLtGBC50YPcGARRJdBjV6vbrY9
+         rysHU9rI5u6GvyxIidsf9AbYonJuZPIOb02bQEwLfvWV1xfjfjiE0/tv59QQusR7vdl+
+         WB8RTrdDZljNXJLRp0Vg40Q/ZHoxX5RQfKZjp7oq+LSPcViazgnOPi/NwM7gM/VnpPI3
+         L7EVw8zLwcE4rZkcuF/IzgT1r4iCDZoCLC4ERxDeiGph6lIoWtC+H8dEXXqjEuvCrZ1A
+         +k8g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:date:mime-version
+         :content-transfer-encoding:subject:to:from;
+        bh=0b418pZCpG009MG77qVbcfeVx9k0PGsxw6HVwf78RPk=;
+        b=Xt4Idut6XDbZkuwVjWyer/GBfCTKiMssumIYOK4T+kF7dhhcNy3uQ6Uy1lPzmr3rh9
+         1OnwWajYKEB44/EHh5yMdp9vU502sB9rfB0KrBQ35E+Kk8TR/25soqbSUV/gaejezEnb
+         Tv846/KLYW+setFcjtYsbzK+84kcywU48gJntMDdi5aYMGEo36/EemHVFez2EMAs7BMk
+         dMgye6/0DJWIZuZEOpSmL8tTNF/Mmw7+C8NEq4/nyCqEY+O0J4blWFw5IpqTQHjE/kBE
+         PsrEYkRbWk/8MPpEw+ArbItAk3+dkI11DboaRpD6ILmn5ueQS9kvcKHUJSDkkRR4+dM2
+         2nSg==
+X-Gm-Message-State: APjAAAXBW2q07IAtb4TkgAexhRY0daQ3fx+zLdw6/KMWvMAL9VIax81S
+        B3UZhN76cBStz0/Gxcij7V5Gup+pnf0Xag==
+X-Google-Smtp-Source: APXvYqwDMVsf6y7ccrtvPpO9CstABAosSnh7AxOTGxOWfHoBvr9VIGuGUo6cujeQIxJ235oSsBbWtA==
+X-Received: by 2002:adf:b345:: with SMTP id k5mr11236243wrd.258.1570758372554;
+        Thu, 10 Oct 2019 18:46:12 -0700 (PDT)
+Received: from [148.251.42.114] ([2a01:4f8:201:9271::2])
+        by smtp.gmail.com with ESMTPSA id y14sm10898378wrd.84.2019.10.10.18.46.11
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 10 Oct 2019 18:46:11 -0700 (PDT)
+Message-ID: <5d9fdee3.1c69fb81.e5fbb.5a3c@mx.google.com>
+Date:   Thu, 10 Oct 2019 18:46:11 -0700 (PDT)
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+X-Kernelci-Report-Type: build
+X-Kernelci-Kernel: gpio-v5.4-2-7-gb70471b8a438
+X-Kernelci-Tree: linusw
+X-Kernelci-Branch: fixes
+Subject: linusw/fixes build: 6 builds: 0 failed, 6 passed,
+ 13 warnings (gpio-v5.4-2-7-gb70471b8a438)
+To:     linux-gpio@vger.kernel.org, fellows@kernelci.org
+From:   "kernelci.org bot" <bot@kernelci.org>
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-From: Song Hui <hui.song_1@nxp.com>
+linusw/fixes build: 6 builds: 0 failed, 6 passed, 13 warnings (gpio-v5.4-2-=
+7-gb70471b8a438)
 
-More than one gpio controllers can share one interrupt, change the
-driver to request shared irq.
+Full Build Summary: https://kernelci.org/build/linusw/branch/fixes/kernel/g=
+pio-v5.4-2-7-gb70471b8a438/
 
-While this will work, it will mess up userspace accounting of the number
-of interrupts per second in tools such as vmstat.  The reason is that
-for every GPIO interrupt, /proc/interrupts records the count against GIC
-interrupt 68 or 69, as well as the GPIO itself.  So, for every GPIO
-interrupt, the total number of interrupts that the system has seen
-increments by two.
+Tree: linusw
+Branch: fixes
+Git Describe: gpio-v5.4-2-7-gb70471b8a438
+Git Commit: b70471b8a4382ced9424d39ff57db88c9e616707
+Git URL: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-gpio.=
+git/
+Built: 6 unique architectures
 
-Signed-off-by: Laurentiu Tudor <Laurentiu.Tudor@nxp.com>
-Signed-off-by: Alex Marginean <alexandru.marginean@nxp.com>
-Signed-off-by: Song Hui <hui.song_1@nxp.com>
+Warnings Detected:
+
+arc:
+    nsim_hs_defconfig (gcc-8): 2 warnings
+
+arm64:
+    defconfig (gcc-8): 3 warnings
+
+arm:
+    multi_v7_defconfig (gcc-8): 5 warnings
+
+mips:
+    32r2el_defconfig (gcc-8): 3 warnings
+
+riscv:
+
+x86_64:
+
+
+Warnings summary:
+
+    5    <stdin>:1511:2: warning: #warning syscall clone3 not implemented [=
+-Wcpp]
+    2    WARNING: "return_address" [vmlinux] is a static EXPORT_SYMBOL_GPL
+    2    WARNING: "HYPERVISOR_platform_op" [vmlinux] is a static EXPORT_SYM=
+BOL_GPL
+    1    depmod: WARNING: /home/buildslave/workspace/kernel-build/linux/bui=
+ld/_modules_/lib/modules/5.4.0-rc1/kernel/drivers/usb/storage/uas.ko needs =
+unknown symbol usb_stor_sense_invalidCDB
+    1    depmod: WARNING: /home/buildslave/workspace/kernel-build/linux/bui=
+ld/_modules_/lib/modules/5.4.0-rc1/kernel/drivers/usb/storage/uas.ko needs =
+unknown symbol usb_stor_adjust_quirks
+    1    arch/arm64/configs/defconfig:726:warning: symbol value 'm' invalid=
+ for REMOTEPROC
+    1    arch/arm/configs/multi_v7_defconfig:936:warning: symbol value 'm' =
+invalid for REMOTEPROC
+
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D
+
+Detailed per-defconfig build reports:
+
+---------------------------------------------------------------------------=
+-----
+32r2el_defconfig (mips, gcc-8) =E2=80=94 PASS, 0 errors, 3 warnings, 0 sect=
+ion mismatches
+
+Warnings:
+    <stdin>:1511:2: warning: #warning syscall clone3 not implemented [-Wcpp]
+    <stdin>:1511:2: warning: #warning syscall clone3 not implemented [-Wcpp]
+    <stdin>:1511:2: warning: #warning syscall clone3 not implemented [-Wcpp]
+
+---------------------------------------------------------------------------=
+-----
+defconfig (riscv, gcc-8) =E2=80=94 PASS, 0 errors, 0 warnings, 0 section mi=
+smatches
+
+---------------------------------------------------------------------------=
+-----
+defconfig (arm64, gcc-8) =E2=80=94 PASS, 0 errors, 3 warnings, 0 section mi=
+smatches
+
+Warnings:
+    arch/arm64/configs/defconfig:726:warning: symbol value 'm' invalid for =
+REMOTEPROC
+    WARNING: "HYPERVISOR_platform_op" [vmlinux] is a static EXPORT_SYMBOL_G=
+PL
+    WARNING: "HYPERVISOR_platform_op" [vmlinux] is a static EXPORT_SYMBOL_G=
+PL
+
+---------------------------------------------------------------------------=
+-----
+multi_v7_defconfig (arm, gcc-8) =E2=80=94 PASS, 0 errors, 5 warnings, 0 sec=
+tion mismatches
+
+Warnings:
+    arch/arm/configs/multi_v7_defconfig:936:warning: symbol value 'm' inval=
+id for REMOTEPROC
+    WARNING: "return_address" [vmlinux] is a static EXPORT_SYMBOL_GPL
+    WARNING: "return_address" [vmlinux] is a static EXPORT_SYMBOL_GPL
+    depmod: WARNING: /home/buildslave/workspace/kernel-build/linux/build/_m=
+odules_/lib/modules/5.4.0-rc1/kernel/drivers/usb/storage/uas.ko needs unkno=
+wn symbol usb_stor_sense_invalidCDB
+    depmod: WARNING: /home/buildslave/workspace/kernel-build/linux/build/_m=
+odules_/lib/modules/5.4.0-rc1/kernel/drivers/usb/storage/uas.ko needs unkno=
+wn symbol usb_stor_adjust_quirks
+
+---------------------------------------------------------------------------=
+-----
+nsim_hs_defconfig (arc, gcc-8) =E2=80=94 PASS, 0 errors, 2 warnings, 0 sect=
+ion mismatches
+
+Warnings:
+    <stdin>:1511:2: warning: #warning syscall clone3 not implemented [-Wcpp]
+    <stdin>:1511:2: warning: #warning syscall clone3 not implemented [-Wcpp]
+
+---------------------------------------------------------------------------=
+-----
+x86_64_defconfig (x86_64, gcc-8) =E2=80=94 PASS, 0 errors, 0 warnings, 0 se=
+ction mismatches
+
 ---
-Changes in v8:
-        - merge two lines as one line to fit 80 characters.
-Changes in v7:
-	- make unsigned int convert to unsigned long.
-Changes in v6:
-        - change request_irq to devm_request_irq and add commit message.
-Changes in v5:
-        - add traverse every bit function.
-Changes in v4:
-        - convert 'pr_err' to 'dev_err'.
-Changes in v3:
-        - update the patch description.
-Changes in v2:
-        - delete the compatible of ls1088a.
- drivers/gpio/gpio-mpc8xxx.c | 30 +++++++++++++++++++-----------
- 1 file changed, 19 insertions(+), 11 deletions(-)
-
-diff --git a/drivers/gpio/gpio-mpc8xxx.c b/drivers/gpio/gpio-mpc8xxx.c
-index 16a47de..58ff372 100644
---- a/drivers/gpio/gpio-mpc8xxx.c
-+++ b/drivers/gpio/gpio-mpc8xxx.c
-@@ -22,6 +22,7 @@
- #include <linux/irq.h>
- #include <linux/gpio/driver.h>
- #include <linux/bitops.h>
-+#include <linux/interrupt.h>
- 
- #define MPC8XXX_GPIO_PINS	32
- 
-@@ -127,20 +128,19 @@ static int mpc8xxx_gpio_to_irq(struct gpio_chip *gc, unsigned offset)
- 		return -ENXIO;
- }
- 
--static void mpc8xxx_gpio_irq_cascade(struct irq_desc *desc)
-+static irqreturn_t mpc8xxx_gpio_irq_cascade(int irq, void *data)
- {
--	struct mpc8xxx_gpio_chip *mpc8xxx_gc = irq_desc_get_handler_data(desc);
--	struct irq_chip *chip = irq_desc_get_chip(desc);
-+	struct mpc8xxx_gpio_chip *mpc8xxx_gc = data;
- 	struct gpio_chip *gc = &mpc8xxx_gc->gc;
--	unsigned int mask;
-+	unsigned long mask;
-+	int i;
- 
- 	mask = gc->read_reg(mpc8xxx_gc->regs + GPIO_IER)
- 		& gc->read_reg(mpc8xxx_gc->regs + GPIO_IMR);
--	if (mask)
--		generic_handle_irq(irq_linear_revmap(mpc8xxx_gc->irq,
--						     32 - ffs(mask)));
--	if (chip->irq_eoi)
--		chip->irq_eoi(&desc->irq_data);
-+	for_each_set_bit(i, &mask, 32)
-+		generic_handle_irq(irq_linear_revmap(mpc8xxx_gc->irq, 31 - i));
-+
-+	return IRQ_HANDLED;
- }
- 
- static void mpc8xxx_irq_unmask(struct irq_data *d)
-@@ -409,8 +409,16 @@ static int mpc8xxx_probe(struct platform_device *pdev)
- 	if (devtype->gpio_dir_in_init)
- 		devtype->gpio_dir_in_init(gc);
- 
--	irq_set_chained_handler_and_data(mpc8xxx_gc->irqn,
--					 mpc8xxx_gpio_irq_cascade, mpc8xxx_gc);
-+	ret = devm_request_irq(&pdev->dev, mpc8xxx_gc->irqn,
-+			       mpc8xxx_gpio_irq_cascade,
-+			       IRQF_NO_THREAD | IRQF_SHARED, "gpio-cascade",
-+			       mpc8xxx_gc);
-+	if (ret) {
-+		dev_err(&pdev->dev, "%s: failed to devm_request_irq(%d), ret = %d\n",
-+			np->full_name, mpc8xxx_gc->irqn, ret);
-+		goto err;
-+	}
-+
- 	return 0;
- err:
- 	iounmap(mpc8xxx_gc->regs);
--- 
-2.9.5
-
+For more info write to <info@kernelci.org>
