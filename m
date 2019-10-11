@@ -2,86 +2,92 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 353ADD3D04
-	for <lists+linux-gpio@lfdr.de>; Fri, 11 Oct 2019 12:12:15 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 99FEED3EAD
+	for <lists+linux-gpio@lfdr.de>; Fri, 11 Oct 2019 13:46:14 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726808AbfJKKMO (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 11 Oct 2019 06:12:14 -0400
-Received: from mail-qt1-f194.google.com ([209.85.160.194]:44050 "EHLO
-        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726585AbfJKKMO (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 11 Oct 2019 06:12:14 -0400
-Received: by mail-qt1-f194.google.com with SMTP id u40so13009480qth.11
-        for <linux-gpio@vger.kernel.org>; Fri, 11 Oct 2019 03:12:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:reply-to:from:date:message-id:subject:to;
-        bh=rvNKcQa6csvrpV0BR7Qohhs6ik/U0hSG7/A3nrUQ4+g=;
-        b=Tt/mlaYQ4VVImJWGSkpcngRnredHRtAWswhNSdDMsqNcPrPP0tMSWnsb9eV75+2SvB
-         G4n5hwxzIiz6Z6BFM4txIO3VB0ibBm1AyU+Z/1H9gjrLQnr9zDWzaTaJJ/T3bFYa4aAd
-         errInpFNMs6ho5cV2/tdbcGaJ5gflUKmi9EAgnfUFpu165zrliatFnx5giR2uyk2YH7V
-         ZeXT/n3BdEkhf2WN0TMukxU3GUpyk0DE1UZpKmPWA2Stu3YWFZfpr5krp11HVk9BtLgR
-         p7zZ8kidOmbJIsPs0uovsKJPNTYNl64QobHd5v1foep2gnn9O1dykMLfgf5LITbfTeLQ
-         8ENg==
+        id S1727477AbfJKLqO (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 11 Oct 2019 07:46:14 -0400
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:45367 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727198AbfJKLqO (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 11 Oct 2019 07:46:14 -0400
+Received: by mail-ot1-f65.google.com with SMTP id 41so7667084oti.12;
+        Fri, 11 Oct 2019 04:46:13 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
-         :subject:to;
-        bh=rvNKcQa6csvrpV0BR7Qohhs6ik/U0hSG7/A3nrUQ4+g=;
-        b=FEsEcR2mhegFbLUjynhwfs4RI7HArqyDJ9rSR9EtHykLQzm5jCtwln3aM6mu10cw/3
-         UOF0KS7OfdkKAHB+eAeevhpgPNF6f0w3XLv3RkVxgTWU2EQ8aKM1rB4U0NitzdfGbXdw
-         LI7mHdz9LVhNAJ1GYqQHMg2+fmk9a2/rixXrLlkn25jhUgPyPRbaMv3YM5nCWWMXCRUN
-         dYD6ja0cYDK9q3zZsdDIG683++GEEgOVO+cKt1QT9L10rM4QV5aZWYjhbHozscQsuWen
-         Rj/dekb1Q2UM0HOmqAAx3+APatFwRVX8Mm8xobvsq4eNDfccFJTmO5mYqk2RIfXSSRPb
-         gd2g==
-X-Gm-Message-State: APjAAAVfvh3EYFW20HTdmHMr1UIbys8onw8pGRuiQiwKRfA+C3ciFRqg
-        sWHMjrKDJGjpU45wisa0svhqXIvO+4JLibOifC4=
-X-Google-Smtp-Source: APXvYqy865K4IAIRpsHDdgl9AYRVRbjdVkFMRK+y6EzOAjXVRuz3Osd3eK0p6XBra4ZLoiLuDBSaWQhJgBwcar5G+Oo=
-X-Received: by 2002:ac8:2c7b:: with SMTP id e56mr16276105qta.295.1570788733258;
- Fri, 11 Oct 2019 03:12:13 -0700 (PDT)
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=juzV2eSp/H++DwK4H0Bphy8wWrKxuELOEBeublEi6po=;
+        b=HasfCzUE+Q/mtjS24nGWEqpouO0aP5vrvarkVTtXoWIKtksVMPCjBuylPHN0SyMswT
+         buCgK5J/BjQEMsAZ0pklLKUJmwlASr608Kub/Q4yjidJGu2v1Gw1QRwG9IO4pxD2gJk2
+         QbZ6dCCsRVAc/QdCw+3dGyGPuZC5yEes0smMov+oIWr6q0iLAulPrpIJFuj7BnbTcPv4
+         By6E9RdMYHThNGCFE0voKzWe/JzBNj1DQEYRbT0e6B9/4NfWUZefb4I8g5WbleJv6Iht
+         z2aXZ2D14wCGBOBf0kzMnsMVBuEJI0KgQJMB5/cqQx27KUlnwMDg2GR4K5ddKdzpmLlw
+         qNAg==
+X-Gm-Message-State: APjAAAVSOu9vnrdfP71xAx4PMNj+tpxa6EL1ZzdlDJft/t+rH1ie47Ed
+        +m1tCQKfF5Wd951NJ1ru6BQMA4o14L3tJ2/tv1Xf+ROj
+X-Google-Smtp-Source: APXvYqwmLjg8XGGh3E8+Mly0taJ/4b0SinKvjRPp3H99ZSjUxE3pQ9sqJWUF3CcbyUMTKBW3gKROkBPCZpbSmkASMqE=
+X-Received: by 2002:a9d:70d0:: with SMTP id w16mr11385266otj.107.1570794372939;
+ Fri, 11 Oct 2019 04:46:12 -0700 (PDT)
 MIME-Version: 1.0
-Received: by 2002:a0c:e085:0:0:0:0:0 with HTTP; Fri, 11 Oct 2019 03:12:12
- -0700 (PDT)
-Reply-To: brianjesse343@gmail.com
-From:   brianjesse <davidbojana1@gmail.com>
-Date:   Fri, 11 Oct 2019 11:12:12 +0100
-Message-ID: <CALkFPmsT=5Ykf5VZVkzgLMjrCXRY5xCC727AhcJ6i1y+3u2p6A@mail.gmail.com>
-Subject: Hl
-To:     undisclosed-recipients:;
+References: <20191007140559.11840-1-colin.king@canonical.com>
+In-Reply-To: <20191007140559.11840-1-colin.king@canonical.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Fri, 11 Oct 2019 13:46:01 +0200
+Message-ID: <CAMuHMdUYvNaCYHDK_=HnyyAKa4Zqr+0xe0QnO0KzKpZws4YsCw@mail.gmail.com>
+Subject: Re: [PATCH] pinctrl: rzn1: array reg_drive static, makes object smaller
+To:     Colin King <colin.king@canonical.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        kernel-janitors@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Dear Friend,
+Hi Colin,
 
-I hope this message meet you well, after quite a very long time. I'm
-happy to inform you about my success in getting those funds
-transferred under the cooperation of a new partner from India.
-Presently  I'm in India for investment projects with my own share of
-the total sum. meanwhile, I didn't forget your past efforts and
-attempts to assist me in transferring those funds despite that it
-failed us some how.Now contact my secretary in Lome, Togo with his
-below contact,I droped a certified ATM visa card, ask him to send you
-the ATM visa card of $250.000.00 which I left with him for your
-compensation for all the past efforts and attempts to assist me in
-this matter. I appreciated your efforts at that time very much.
+On Mon, Oct 7, 2019 at 4:06 PM Colin King <colin.king@canonical.com> wrote:
+> From: Colin Ian King <colin.king@canonical.com>
+>
+> Don't populate the array reg_drive on the stack but instead make it
+> static. Makes the object code smaller by 32 bytes.
+>
+> Before:
+>    text    data     bss     dec     hex filename
+>   31991   15696       0   47687    ba47 drivers/pinctrl/pinctrl-rzn1.o
+>
+> After:
+>    text    data     bss     dec     hex filename
+>   31863   15792       0   47655    ba27 drivers/pinctrl/pinctrl-rzn1.o
+>
+> (gcc version 9.2.1, amd64)
+>
+> Signed-off-by: Colin Ian King <colin.king@canonical.com>
 
-So feel free and get in touch with my secretary in Lome Togo and
-instruct him  where to send the ATM visa card containing amount to
-you.Please do let me know immediately if you receive it so that we can
-share the joy after all the sufferness at that  time together. in the
-moment, I'm very busy here because of the investment projects which me
-and the new partner are having at hand,finally remember that I had
-forwarded instruction to my secretary on your behalf to release the
-ATM visa card to you and you alone, so feel free to get in touch with
-him and forward him your informations,your full names,address and
-contact number for easy communication until your received the ATM visa
-card. if you whish to communicate futher on this issue, you can
-contact my secretery Mr: Vincent Philip through this his email address
-(vincentphilip.sec@gmail.com)
+Thanks for your patch!
 
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+i.e. will queue in sh-pfc-for-v5.5.
 
-Best Regards
-Barrister Brian Jesse
+FTR, on arm32, it saves 64 bytes:
+
+   8594     148       0    8742    2226 drivers/pinctrl/pinctrl-rzn1.o.before
+   8530     148       0    8678    21e6 drivers/pinctrl/pinctrl-rzn1.o.after
+
+BTW, what debug options do you have enabled, to get a binary that's
+more than 5x as large? Amd64 code generation can't be that bad...
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
