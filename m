@@ -2,97 +2,104 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 46A49D41C8
-	for <lists+linux-gpio@lfdr.de>; Fri, 11 Oct 2019 15:49:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 909C6D44B9
+	for <lists+linux-gpio@lfdr.de>; Fri, 11 Oct 2019 17:47:58 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727589AbfJKNtt (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 11 Oct 2019 09:49:49 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:41889 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728027AbfJKNtt (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 11 Oct 2019 09:49:49 -0400
-Received: by mail-pg1-f193.google.com with SMTP id t3so5835490pga.8
-        for <linux-gpio@vger.kernel.org>; Fri, 11 Oct 2019 06:49:48 -0700 (PDT)
+        id S1728205AbfJKPr5 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 11 Oct 2019 11:47:57 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:35669 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726521AbfJKPr5 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 11 Oct 2019 11:47:57 -0400
+Received: by mail-pf1-f194.google.com with SMTP id 205so6344230pfw.2
+        for <linux-gpio@vger.kernel.org>; Fri, 11 Oct 2019 08:47:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=FkkdXZCKufhPfpJuUrLtjBXl+mZnj5fRvjRYErS4ujs=;
-        b=LO9BrhRvZE7epUFiyqyJYbhp4xwnr7ZMuGcnmyGsHQVMOxE2BJJVd/PpyjVsJU5H+X
-         RIploftSJdisD5SlkXJMar7mS09q3WNrg6mgkenJIfK7GBSqSQBAKbajSmXFAMaOX0Nw
-         m4BAmOp2wmSBFwMP37L1WK9Gphh+R0Pc5okMqSdbg/gRR0/gAEjvcLlVONXX+XUkFeYM
-         M9IAg+Jz9WTBWjo7pOEqHYyufpMz7nInGyKClJNyLrlzEcxHwnj3hIBxL4Kv1hoMF3DV
-         3RYnaSntHIUJYBNBLp7WootTs0MkO0bUmZJgVbgeo/Vw3e7umL3wXgtTf7NbejIrTiX6
-         0YQA==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=jyvL2IPExI5tRBdOvfxpv34Vt/6I153uPSwxRmavEnI=;
+        b=PJlPBRGhwrZXdq0Sw8bp07BukcVZwfxgmhQCjrU0pMOXiJJfD4o/EvJ8KEESOjVQWR
+         q/Y//j+Ded8U6tBY48fvI4Da0prt948mq4gqwFpiWCZ8wgvAKriZGgpD3MwrTheYOHnm
+         hDXaFG4KkUrD+0ZAB0p++vmsmsF/0KOilSiXT33OhqiXZXveRm4X9qV5jFsjhqas/GEV
+         0FMiEdNeiQD/2XP2SsgT5Nb0ZI/fdV0R5JVFDDWsqg6PNc6CN9oMtX1IYOk9x8FPjMUj
+         aHxro67Ot8hzgaLsu2HhE/4+6WwlpMo0b2LOWDSiYfvyrUEhaLRm/SfQ/lRpGmOUMtrv
+         3ekA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=FkkdXZCKufhPfpJuUrLtjBXl+mZnj5fRvjRYErS4ujs=;
-        b=r3BdKyMEj4uBO1i33tx1WsmXtgkxcG4o5GDYZPfVeD21yh5G95Vzd5tJH4gMu+MXZM
-         CJ7/ag8Uz6g7CxU8rYbudAQsz3oOFt8tMGfJFt0LY3flOg7eCaG7S32Z46uYUynAlTeq
-         H3aJMmZem126mL36Lkkcv83KsBbn2sHIC/+Lnv41Of1Q9d8IrWadazdZ/olmVnA+Jb3c
-         Ul6xFukpOwzNlZ/SA49tL2OQ9h8trfyL17XQitVK+fN4VzqqqYgBNJZRB6WR56chdIq0
-         KDVuau41Cc/8uCWLrnl1+4nD6Klhdnlr1g2xumsmivNOO72A9fDS36Y8L/c7aMwRh7M9
-         7j9Q==
-X-Gm-Message-State: APjAAAX6F4aUyfTIGkrRao+AWkKOkn14I1fOPFno8egXGyjvTcwtQCU1
-        O2xhtCGfx2TlOsaxK7ERtEQ=
-X-Google-Smtp-Source: APXvYqwxt1tDKSuHujrWhL+ecRzB67r6QKu7VRMrxsLk5ICihQJtRjFFz0E7qPxMfRrz4yC+dP9thQ==
-X-Received: by 2002:a65:6817:: with SMTP id l23mr16727719pgt.338.1570801788090;
-        Fri, 11 Oct 2019 06:49:48 -0700 (PDT)
-Received: from sol (220-235-84-126.dyn.iinet.net.au. [220.235.84.126])
-        by smtp.gmail.com with ESMTPSA id l192sm19689557pga.92.2019.10.11.06.49.44
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 11 Oct 2019 06:49:47 -0700 (PDT)
-Date:   Fri, 11 Oct 2019 21:49:41 +0800
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=jyvL2IPExI5tRBdOvfxpv34Vt/6I153uPSwxRmavEnI=;
+        b=qn+rFu668f73fBj0v0T2mb6kcOeCjbo3FSYZvSy0N5jcIDrjK+3hOT/epKVT3YWLf2
+         LUBGRU3oH6zFPg5KXnqzZSZf6Ux7sonxf362GYaDPZ+oXWPsCtt6OkbHTp83cvMlfb/B
+         gwo7CPM7lKV2rxoMWFLRSlSzjemJdAx/eKlGnh1Boxtvjs0sg6ZFUfJTPGYTEq2hN1kn
+         OrvzOfBmxGPFPBy0UA+OpQi8gSFm4xGkzz0ftaoPcOeCWvHkluEdLqVGrPEEFIa/ecky
+         8K5sswzEVCuEh21CK1iSDHPJsdbeGZfLTNl1nsaZjVJ6BFmk5RSd7mU/PJOd9BfstM2r
+         J0IA==
+X-Gm-Message-State: APjAAAXighchiGv7taN01I7Fr16eEzcEMhMvPeFcPq0hLJCpHS8pDXAx
+        edLa6vx6vxl1IIOkZOQKgELMLgE/qYwvuA==
+X-Google-Smtp-Source: APXvYqw8GKraNP8Rag076WD2Sn5z9pm39M9c98p2YLEe2JFAKkN+uaRqOz5Z2tKut0RAQZ6cwqsOjw==
+X-Received: by 2002:a17:90a:2422:: with SMTP id h31mr18714406pje.100.1570808876356;
+        Fri, 11 Oct 2019 08:47:56 -0700 (PDT)
+Received: from sol.lan (220-235-84-126.dyn.iinet.net.au. [220.235.84.126])
+        by smtp.gmail.com with ESMTPSA id v28sm13755404pgn.17.2019.10.11.08.47.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 11 Oct 2019 08:47:55 -0700 (PDT)
 From:   Kent Gibson <warthog618@gmail.com>
-To:     Drew Fustini <pdp7pdp7@gmail.com>
-Cc:     Bartosz Golaszewski <brgl@bgdev.pl>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [RFC] gpio: expose pull-up/pull-down line flags to userspace
-Message-ID: <20191011134941.GA29042@sol>
-References: <CAMRc=MdcWUtEx3QAKxEmEEa1Effq7JpRPGNJOGfSYP6Nh0p1Hg@mail.gmail.com>
- <20191008235626.GA10744@sol>
- <CAMRc=MdCktRBkofaqAEtjNLNS=60Z9zM9a4QoBLsCsx3bSdxtQ@mail.gmail.com>
- <20191009002211.GA11168@sol>
- <20191009065524.GA4061@sol>
- <20191009133037.GA17244@x1>
- <20191009235938.GA10263@sol>
- <CAEf4M_D4C2v87XR7oyc4YLN9j9XhSctJcw1NCt8hPcuf0P_=DA@mail.gmail.com>
- <20191010101421.GA14692@sol>
- <CAEf4M_Av=kgwgqWOT+-4YAwxOKFvMnPs8AvnNFdaGTu5yd90+A@mail.gmail.com>
+To:     linux-gpio@vger.kernel.org, brgl@bgdev.pl,
+        linus.walleij@linaro.org, bamv2005@gmail.com
+Cc:     drew@pdp7.com, Kent Gibson <warthog618@gmail.com>
+Subject: [PATCH 0/5] gpio: expose pull-up/pull-down line flags to userspace
+Date:   Fri, 11 Oct 2019 23:46:45 +0800
+Message-Id: <20191011154650.1749-1-warthog618@gmail.com>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAEf4M_Av=kgwgqWOT+-4YAwxOKFvMnPs8AvnNFdaGTu5yd90+A@mail.gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: 8bit
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Oct 11, 2019 at 03:06:41PM +0200, Drew Fustini wrote:
-> Hi Kent,
-> 
-> I noticed there are some additional commits in your branch including:
-> 7f0bcb88f583  pull up/down on output is actually a valid option
-> 
-Yeah pulls make no sense for push pull lines, but while looking into
-disabling bias I discovered that there are some chips that support
-pull-up/down for open drain/source outputs.
-It seemed reasonable to support them rather than reject them outright,
-hence the reversal.
+This series adds gross control of pull-up/pull-down to the GPIO uAPI.
+Gross control means enabling and disabling of bias functionality,
+not finer grained control such as setting biasing impedances.
 
-> Do you know what the result would be when the line is an output?
-> 
-Behaviour would depend on the driver and chip.
-I'm assuming the user would only request combinations that make sense
-and that the driver would reject any combinations that might have
-unfortunate results.
+The support allows both input and output lines to have any one of the
+following biases applied as part of the line handle or event request:
+ 0. As Is - bias is left alone.  This is the default for ABI compatibility.
+ 1. Pull Up - pull-up bias is enabled.
+ 2. Pull Down - pull-down bias is enabled.
+ 3. Pull None - bias is explicitly disabled.
 
-I'm working on improving my git-fu to collect the pull changes from that
-branch, and hope to mail out a patch set shortly.
+The biases are encoded in two flags, PULL_UP and PULL_DOWN, where
+setting both is interpreted as Pull None. So the flags effectively form
+a two bit field encoding the values above.
 
-Cheers,
-Kent.
+The setting of biases on output lines may seem odd, but is to allow for
+utilisation of internal pull-up/pull-down on open drain and open source
+outputs, where supported in hardware.
+
+Patches are against:
+  github.com/brgl/linux/commit/82fc38f6ab599ee03f7a8ed078de8abb41e6e611
+which contains the initial patch from Drew Fustini, with Bartosz Golaszewski,
+that adds support for pull-up/down flags in line handle requests.
+
+Patch 1 adds support to line event requests.
+Patch 2 adds pull-up/down support to the gpio-mockup for uAPI testing.
+Patch 3 rejects biasing changes to lines requested as-is.
+Patch 4 adds support for disabling bias (pull none).
+Patch 5 adds support for setting bias on output lines.
+
+Kent Gibson (5):
+  gpiolib: add support for pull up/down to lineevent_create
+  gpio: mockup: add set_config to support pull up/down
+  gpiolib: pull requires explicit input mode
+  gpiolib: disable bias on inputs when pull up/down are both set
+  gpiolib: allow pull up/down on outputs
+
+ drivers/gpio/gpio-mockup.c | 94 ++++++++++++++++++++++++--------------
+ drivers/gpio/gpiolib.c     | 55 ++++++++++++++++------
+ 2 files changed, 100 insertions(+), 49 deletions(-)
+
+-- 
+2.23.0
+
