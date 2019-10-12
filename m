@@ -2,141 +2,161 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id D8AF6D4BFE
-	for <lists+linux-gpio@lfdr.de>; Sat, 12 Oct 2019 03:57:15 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 076A4D4D51
+	for <lists+linux-gpio@lfdr.de>; Sat, 12 Oct 2019 07:52:28 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727345AbfJLB5P (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 11 Oct 2019 21:57:15 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:37389 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726903AbfJLB5O (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 11 Oct 2019 21:57:14 -0400
-Received: by mail-pg1-f194.google.com with SMTP id p1so6772483pgi.4
-        for <linux-gpio@vger.kernel.org>; Fri, 11 Oct 2019 18:57:14 -0700 (PDT)
+        id S1727014AbfJLFw1 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sat, 12 Oct 2019 01:52:27 -0400
+Received: from mail-io1-f68.google.com ([209.85.166.68]:34073 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726947AbfJLFw0 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sat, 12 Oct 2019 01:52:26 -0400
+Received: by mail-io1-f68.google.com with SMTP id q1so26200941ion.1
+        for <linux-gpio@vger.kernel.org>; Fri, 11 Oct 2019 22:52:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=DuhvzQhU38wgFVGeqIOao3QuYRbclUqMBiuip6aGEIU=;
-        b=nAcUoxKFRZ9zVQzRMDnKBVz82qgdatPUx68aQEZEYV88AGgXSQtkklq4ZzoYjeFGeX
-         RdmMKTnY7P1GzxC9kJKiwLYKq6TeF3CTo+6oIQrJtf51LTkZzaZ5fxrdKdn0zlOHryxB
-         0nfrpqsoMaw/n0oAk3CN3VR5m2YxE9KNUXyB8Tg6Ptwikb7IYMAGfnLrR2L58cB/frVd
-         BYynz4OSWqTK47XPOMwr4/Gnlg7SBnI96cLFLKwom3zGXKpXkbDnDJFvNVSndHTnL2mr
-         K2PX0Fc3664EvbTwZpWcQ1APwElupl2oMOTd0K0xxK42tdSG8RrMSIe1w8pWPU+eqEUk
-         XNtw==
+        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=mCEJ7xGjTLlsy0UKiyymcgvc3M0XVjrAF4O5ypR6YEk=;
+        b=mzWeAaNLcyqhP1TwpGkxIf6KbmornkHXhKDg4VhZ6l7M9hP5NvbETbKZey472LSS+T
+         psKerTDk1Sgdvojy0aau7fNJbjyEmCFW+Y+IBVQB74NEeZPwjEiwwizb9EK/XezEhQHJ
+         HUQRlK31Gyb2/L1ybo8EVHoBPF6GEb7ZQE6+ou8hhicfzjfCewY34bb6He/qjLlaPSNb
+         TELGWpiynYDADyPVhQnSIK5aUDjZ5PjhiIQ3W6qyDjkRr1tsPe+pK+eV2qVTFHpVPP1i
+         DCLwtOs1eJdGSc0dEto5GXVlRZTrNDUlO4B6dEaoNzkDQS0jTr0I8GVFlxxupLz1v6fQ
+         9o/w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=DuhvzQhU38wgFVGeqIOao3QuYRbclUqMBiuip6aGEIU=;
-        b=LExYYjeOzUcccmRkN0UXAS0TIHF2t9liBwRDjXWa/R83dkVOBTYdnToBIxzrHarQV4
-         FdKVY5f3UsR7H2iPC68aN9IfnXAUAK+3/f91lTADbPbQ6tniMBSYLSazwXwvtm8awGik
-         cp7HOdoF6ujXbKkkr6DhxXTHsEZ3M0AbY55rQqWuwFk8ru4E73oAyFYzlQah3+CHhzif
-         MFmzREv5N4z2szgU+v+2E0LgM7S4e0DRFxhs4zRTblOju4F/NqY0RUJcfHOkQ1Otvo8s
-         J3YU6erXWkInk+eqJ56S9ywzi1voTHlijthJ4rZothLn64zYEHG3NhRTGAqph4quM87S
-         hoPg==
-X-Gm-Message-State: APjAAAUWA5Bq4wKACVjsJmS2n8qWlH5KXubBa60hHaYPPx2m6ZbNvIWP
-        CMr684odqt2wPKiMEFo53TeOF0PW0BD/rg==
-X-Google-Smtp-Source: APXvYqwf2eouH0Y+Hyb15lA2pq6b/7Sd/6l2+0xPbNCPUUFumNjAY3AY32MQk6q3b9VNFz1hR+BGbQ==
-X-Received: by 2002:a62:8209:: with SMTP id w9mr19755770pfd.5.1570845433903;
-        Fri, 11 Oct 2019 18:57:13 -0700 (PDT)
-Received: from sol.lan (220-235-84-126.dyn.iinet.net.au. [220.235.84.126])
-        by smtp.gmail.com with ESMTPSA id b20sm12042242pff.158.2019.10.11.18.57.10
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 11 Oct 2019 18:57:13 -0700 (PDT)
-From:   Kent Gibson <warthog618@gmail.com>
-To:     linux-gpio@vger.kernel.org, brgl@bgdev.pl,
-        linus.walleij@linaro.org, bamv2005@gmail.com
-Cc:     drew@pdp7.com, Kent Gibson <warthog618@gmail.com>
-Subject: [PATCH v2 6/6] gpiolib: allow pull up/down on outputs
-Date:   Sat, 12 Oct 2019 09:56:28 +0800
-Message-Id: <20191012015628.9604-7-warthog618@gmail.com>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20191012015628.9604-1-warthog618@gmail.com>
-References: <20191012015628.9604-1-warthog618@gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=mCEJ7xGjTLlsy0UKiyymcgvc3M0XVjrAF4O5ypR6YEk=;
+        b=HkjqTGkNO5kZvtiLNIsfN6SSafHBbSpS5au9doSX19NHMsNW8GJtzcGGRnmGkscutr
+         vYRTfTmGsMzoDF17U/d/V8yfB/LHZmK+8LSlcp/teXkUpzdzy9iQLcC22Tu8TOHzNkeh
+         HFK4LFZPvC314Db8Jabhb565dhi8gshxJnEJ97NYZQt6Lq6+oyrintDeRtoT3z+t73/i
+         LmlEuc3g/rS7xNLiFmxtGLMKq8MJQjvlR26DLS66xUDtNShmaJdfuZu1CHUyoKZpmXKz
+         ZhozZnmvelQqXPkM0t0fDPbz01Bx6zYbMHBDlK+cn2wO76LWoCE7PcXDCyyLaN7fhmvt
+         klhA==
+X-Gm-Message-State: APjAAAU9I2i6WFXqK/wMZTT9vHuIYhqX1Ix4LTAPjgp1j0vvXwZFetVy
+        Mg0lxBuH18dUVlb93OwWc2iQ7n218/RLZgeQZ9mrGw==
+X-Google-Smtp-Source: APXvYqxHRsoR/ucixYqk+ECBqVpYjHPRjTVPbwwNxUWG1Yb5UQtRnR34iu8U0kO4QdG6YQSrILHrEmFmcRUSlMPAKZo=
+X-Received: by 2002:a5e:db46:: with SMTP id r6mr3709717iop.287.1570859544419;
+ Fri, 11 Oct 2019 22:52:24 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20191011154650.1749-1-warthog618@gmail.com> <CAMRc=Mfkop3poFn7vaotxZfCJn=L+6w9uzNVCXTfa4AuVEmm1g@mail.gmail.com>
+ <20191012005340.GA4059@sol>
+In-Reply-To: <20191012005340.GA4059@sol>
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+Date:   Sat, 12 Oct 2019 07:52:13 +0200
+Message-ID: <CAMRc=MfqezSoanCuAuJhsn-PyQ8Z8+wDHtYsD0Ux0RztGPRo-g@mail.gmail.com>
+Subject: Re: [PATCH 0/5] gpio: expose pull-up/pull-down line flags to userspace
+To:     Kent Gibson <warthog618@gmail.com>
+Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bamvor Jian Zhang <bamv2005@gmail.com>,
+        Drew Fustini <drew@pdp7.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-This patch allows pull up/down bias to be set on outputs.
-Use case is for open source or open drain applications where
-internal pull up/down may conflict with external biasing.
+sob., 12 pa=C5=BA 2019 o 02:53 Kent Gibson <warthog618@gmail.com> napisa=C5=
+=82(a):
+>
+> On Fri, Oct 11, 2019 at 07:51:43PM +0200, Bartosz Golaszewski wrote:
+> > pt., 11 pa=C5=BA 2019 o 17:47 Kent Gibson <warthog618@gmail.com> napisa=
+=C5=82(a):
+> > >
+> > > This series adds gross control of pull-up/pull-down to the GPIO uAPI.
+> > > Gross control means enabling and disabling of bias functionality,
+> > > not finer grained control such as setting biasing impedances.
+> > >
+> > > The support allows both input and output lines to have any one of the
+> > > following biases applied as part of the line handle or event request:
+> > >  0. As Is - bias is left alone.  This is the default for ABI compatib=
+ility.
+> > >  1. Pull Up - pull-up bias is enabled.
+> > >  2. Pull Down - pull-down bias is enabled.
+> > >  3. Pull None - bias is explicitly disabled.
+> > >
+> > > The biases are encoded in two flags, PULL_UP and PULL_DOWN, where
+> > > setting both is interpreted as Pull None. So the flags effectively fo=
+rm
+> > > a two bit field encoding the values above.
+> > >
+> > > The setting of biases on output lines may seem odd, but is to allow f=
+or
+> > > utilisation of internal pull-up/pull-down on open drain and open sour=
+ce
+> > > outputs, where supported in hardware.
+> > >
+> > > Patches are against:
+> > >   github.com/brgl/linux/commit/82fc38f6ab599ee03f7a8ed078de8abb41e6e6=
+11
+> > > which contains the initial patch from Drew Fustini, with Bartosz Gola=
+szewski,
+> > > that adds support for pull-up/down flags in line handle requests.
+> > >
+> > > Patch 1 adds support to line event requests.
+> > > Patch 2 adds pull-up/down support to the gpio-mockup for uAPI testing=
+.
+> > > Patch 3 rejects biasing changes to lines requested as-is.
+> > > Patch 4 adds support for disabling bias (pull none).
+> > > Patch 5 adds support for setting bias on output lines.
+> > >
+> > > Kent Gibson (5):
+> > >   gpiolib: add support for pull up/down to lineevent_create
+> > >   gpio: mockup: add set_config to support pull up/down
+> > >   gpiolib: pull requires explicit input mode
+> > >   gpiolib: disable bias on inputs when pull up/down are both set
+> > >   gpiolib: allow pull up/down on outputs
+> > >
+> > >  drivers/gpio/gpio-mockup.c | 94 ++++++++++++++++++++++++------------=
+--
+> > >  drivers/gpio/gpiolib.c     | 55 ++++++++++++++++------
+> > >  2 files changed, 100 insertions(+), 49 deletions(-)
+> > >
+> > > --
+> > > 2.23.0
+> > >
+> >
+> > Hi Kent,
+> >
+> > thanks for doing that, but please make it easier to review. The cover
+> > letter shouldn't be sent in response to this thread but be part of the
+> > patch series.
+>
+> Not sure what you mean - this is a new thread.
 
-Signed-off-by: Kent Gibson <warthog618@gmail.com>
----
- drivers/gpio/gpiolib.c | 35 +++++++++++++++++++++++------------
- 1 file changed, 23 insertions(+), 12 deletions(-)
+Sorry for that, I just looked at the gmail client and it somehow
+interpreted it as a reply. In my defense: I'm travelling and changing
+timezones ATM thus the confusion. :)
 
-diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
-index f90b20d548b9..9cc0f9077c7b 100644
---- a/drivers/gpio/gpiolib.c
-+++ b/drivers/gpio/gpiolib.c
-@@ -554,8 +554,9 @@ static int linehandle_create(struct gpio_device *gdev, void __user *ip)
- 	     (lflags & GPIOHANDLE_REQUEST_OPEN_SOURCE)))
- 		return -EINVAL;
- 
--	/* PULL_UP and PULL_DOWN flags only make sense for input mode. */
--	if (!(lflags & GPIOHANDLE_REQUEST_INPUT) &&
-+	/* PULL_UP and PULL_DOWN flags only allowed for input or output mode. */
-+	if (!((lflags & GPIOHANDLE_REQUEST_INPUT) ||
-+	      (lflags & GPIOHANDLE_REQUEST_OUTPUT)) &&
- 	    ((lflags & GPIOHANDLE_REQUEST_PULL_UP) ||
- 	     (lflags & GPIOHANDLE_REQUEST_PULL_DOWN)))
- 		return -EINVAL;
-@@ -2932,6 +2933,24 @@ static int gpio_set_config(struct gpio_chip *gc, unsigned offset,
- 	return gc->set_config ? gc->set_config(gc, offset, config) : -ENOTSUPP;
- }
- 
-+static int gpio_set_bias(struct gpio_chip *chip, struct gpio_desc *desc)
-+{
-+	int bias = 0;
-+
-+	if (test_bit(FLAG_PULL_UP, &desc->flags) &&
-+	    test_bit(FLAG_PULL_DOWN, &desc->flags))
-+		bias = PIN_CONFIG_BIAS_DISABLE;
-+	else if (test_bit(FLAG_PULL_UP, &desc->flags))
-+		bias = PIN_CONFIG_BIAS_PULL_UP;
-+	else if (test_bit(FLAG_PULL_DOWN, &desc->flags))
-+		bias = PIN_CONFIG_BIAS_PULL_DOWN;
-+
-+	if (bias)
-+		return gpio_set_config(chip, gpio_chip_hwgpio(desc), bias);
-+
-+	return 0;
-+}
-+
- /**
-  * gpiod_direction_input - set the GPIO direction to input
-  * @desc:	GPIO to set to input
-@@ -2979,16 +2998,7 @@ int gpiod_direction_input(struct gpio_desc *desc)
- 	if (ret == 0)
- 		clear_bit(FLAG_IS_OUT, &desc->flags);
- 
--	if (test_bit(FLAG_PULL_UP, &desc->flags) &&
--		test_bit(FLAG_PULL_DOWN, &desc->flags))
--		gpio_set_config(chip, gpio_chip_hwgpio(desc),
--				PIN_CONFIG_BIAS_DISABLE);
--	else if (test_bit(FLAG_PULL_UP, &desc->flags))
--		gpio_set_config(chip, gpio_chip_hwgpio(desc),
--				PIN_CONFIG_BIAS_PULL_UP);
--	else if (test_bit(FLAG_PULL_DOWN, &desc->flags))
--		gpio_set_config(chip, gpio_chip_hwgpio(desc),
--				PIN_CONFIG_BIAS_PULL_DOWN);
-+	gpio_set_bias(chip, desc);
- 
- 	trace_gpio_direction(desc_to_gpio(desc), 1, ret);
- 
-@@ -3114,6 +3124,7 @@ int gpiod_direction_output(struct gpio_desc *desc, int value)
- 	}
- 
- set_output_value:
-+	gpio_set_bias(gc, desc);
- 	return gpiod_direction_output_raw_commit(desc, value);
- }
- EXPORT_SYMBOL_GPL(gpiod_direction_output);
--- 
-2.23.0
+> Should the updated series be a reply to this email (yours), or a new
+> v2 thread?
+>
 
+In general every new version of a series should start a new thread.
+
+> > Please don't rebase the patches on top of my
+> > development/experimental branch - every patch needs to spend some time
+> > on the mailing list. Rebase the series on top of the latest mainline
+> > release candidate. Pull in Drew's changes and just squash my code into
+> > your patches - it was not finished anyway. You can send patches from
+> > other developers or make them part of your series - there's no problem
+> > with that as long as you keep the authorship.
+> >
+> > That'll make it much easier to review and understand.
+> >
+> Fair enough.  I was unsure about including others' patches in the
+> series, so kept it minimal. Will update the series as soon as I get the
+> chance (and know where to send it).
+>
+
+OK I've got your v2 - looks like something I can apply on top of
+v5.4-rc2, so I'll try to review it tomorrow morning.
+
+Bart
+
+> Cheers,
+> Kent.
