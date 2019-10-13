@@ -2,61 +2,92 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 8E6F5D54FB
-	for <lists+linux-gpio@lfdr.de>; Sun, 13 Oct 2019 09:36:19 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 92D72D55DA
+	for <lists+linux-gpio@lfdr.de>; Sun, 13 Oct 2019 13:40:51 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728679AbfJMHgC (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sun, 13 Oct 2019 03:36:02 -0400
-Received: from [206.81.8.171] ([206.81.8.171]:56546 "EHLO varon.localdomain"
-        rhost-flags-FAIL-FAIL-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728198AbfJMHgB (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Sun, 13 Oct 2019 03:36:01 -0400
-Received: from 127.0.0.1 (varon [127.0.0.1])
-        by varon.localdomain (Postfix) with SMTP id 290C355D635;
-        Fri, 11 Oct 2019 10:21:17 +0000 (UTC)
-Received: from (HELO 1iqb) [176.71.184.19] by 127.0.0.1 for <linhao63@jlonline.com>; Fri, 11 Oct 2019 03:19:21 -0700
-Message-ID: <4-806$5o5$$r$as6q109r731c@hkg.so2qo8>
-From:   "Mr Barrister Hans Erich" <dave@dbsoundfactory.com>
-Reply-To: "Mr Barrister Hans Erich" <dave@dbsoundfactory.com>
-To:     linhao63@jlonline.com
-Subject: RE:PERSONAL LETTER FROM MRS RASHIA AMIRA ??
-Date:   Fri, 11 Oct 19 03:19:21 GMT
-X-Mailer: Microsoft Outlook IMO, Build 9.0.2416 (9.0.2910.0)
-MIME-Version: 1.0
-Content-Type: multipart/alternative;
-        boundary="C.F387.BA..3D"
-X-Priority: 3
-X-MSMail-Priority: Normal
+        id S1728960AbfJMLku (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sun, 13 Oct 2019 07:40:50 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:45271 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728956AbfJMLku (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sun, 13 Oct 2019 07:40:50 -0400
+Received: by mail-pf1-f194.google.com with SMTP id y72so8745997pfb.12
+        for <linux-gpio@vger.kernel.org>; Sun, 13 Oct 2019 04:40:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=JJesClvZPI57LiKAGH+mfL4LvGX/K6XZEsgwxovyzfw=;
+        b=uhxJhoaSSS5T1/0ebEMzWzw7K6b7OXDjdOgSIcbOIkJTJ0I81TmRPxdNTiOG0AQe7o
+         lyjnfkJkE4PAOv5uaLWlBGxOZpdnxbKuRWc1Yw/LNOHo5P6zYTue7Lmu60CvUG0Ihzwf
+         Aol58rW3yf+M7+tDeNidJ5FFuGM3hQ1iV7C+lziFhbIUs3iTzjmGegkZnOVt9d6tlY/b
+         k+3eJAroNZ3EPIbDVHt05eCeNLhSJ75acTNxMLeBhMa5/KqctdGSZkYzyPCPy+DD6A0s
+         xn1cBT/dZ9lEl9j46KsBLRBZXoaQbbFrXQ12/0IX+asRKYpzRI/Eac3F0Ug3g8DBKPtN
+         m3Xw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=JJesClvZPI57LiKAGH+mfL4LvGX/K6XZEsgwxovyzfw=;
+        b=tG0B7pkHAuqo80y5+579ZkHW3VWMqCMYCxoJ20czlYa3K1QuC5LbAK7nLewGBziOtH
+         g1pFxTy22KJ6KwkyYsNBNZwwAldplHQgq6/JPU4hpil8cLNn+8v9TY8Kaovj1m/Ozfi/
+         Tkk3Fea0pDD/QzrETbtE+QpBeJ6Biq3W5K1aFZoQlMX+4FTMe8Ii2a3BG0UoOArp8+Du
+         jOlnYBWTCth3+BJ/KS53NOvnLKI4tBYC5NA3oigmDQROPkc1Igp7uYU5tYcD6Z6FdBbm
+         4LC9DSTH/iWJa2yhkj2/hie/QdgZ46p/Zxvq0UACxi3ucYskzopMHWiwBCXhjm7Of5f9
+         aA3w==
+X-Gm-Message-State: APjAAAXm1hSOibDUhMXxym8UxVSG5jFc00GORMl69iJ0YoC+iyojWSbH
+        crYYAu9izLzp640mnbtmmeDF
+X-Google-Smtp-Source: APXvYqxIeS2C0iQ5M1sifVwuU36Fj7ZdRpllo3pk4Sj4fF4++WdHr5Vc/z9REKwAGjsy3h12qGMzNA==
+X-Received: by 2002:a63:d246:: with SMTP id t6mr27729211pgi.5.1570966849575;
+        Sun, 13 Oct 2019 04:40:49 -0700 (PDT)
+Received: from localhost.localdomain ([2409:4072:8e:4f53:b957:652b:7622:f311])
+        by smtp.gmail.com with ESMTPSA id g12sm23165736pfb.97.2019.10.13.04.40.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 13 Oct 2019 04:40:48 -0700 (PDT)
+From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To:     linus.walleij@linaro.org, bgolaszewski@baylibre.com
+Cc:     linux-arm-kernel@lists.infradead.org,
+        linux-unisoc@lists.infradead.org, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org, orsonzhai@gmail.com,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Subject: [PATCH 0/4] Add GPIO support for RDA8810PL SoC
+Date:   Sun, 13 Oct 2019 17:10:33 +0530
+Message-Id: <20191013114037.9845-1-manivannan.sadhasivam@linaro.org>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+Hello,
 
---C.F387.BA..3D
-Content-Type: text/plain;
-Content-Transfer-Encoding: quoted-printable
+This patchset adds GPIO controller support for RDA Micro RDA8810PL
+SoC. This SoC has 4 GPIO controllers and each handles 32 GPIOs. Except
+GPIOC, all controllers are capable of generating edge/level interrupts
+from first 8 GPIO lines. The pinctrl part for this SoC will be added
+later.
 
-Greetings
+This driver has been validated on 96Boards OrangePi i96 board from
+Shenzhen Xunlong Software Co.,Limited with libgpiod.
 
-My name is Barrister Hans Erich.
+Thanks,
+Mani
 
-I have a client who is interested to invest in your country, she is a well=
- known politician in her country and deserve a lucrative investment partne=
-rship with you outside her country without any delay   Please can you mana=
-ge such investment please Kindly reply for further details.
+Manivannan Sadhasivam (4):
+  dt-bindings: gpio: Add devicetree binding for RDA Micro GPIO
+    controller
+  gpio: Add RDA Micro GPIO controller support
+  ARM: dts: Add RDA8810PL GPIO controllers
+  MAINTAINERS: Add entry for RDA Micro GPIO driver and binding
 
-Your full nameS -----------
+ .../devicetree/bindings/gpio/gpio-rda.yaml    |  50 +++
+ MAINTAINERS                                   |   2 +
+ arch/arm/boot/dts/rda8810pl.dtsi              |  48 +++
+ drivers/gpio/Kconfig                          |   8 +
+ drivers/gpio/Makefile                         |   1 +
+ drivers/gpio/gpio-rda.c                       | 334 ++++++++++++++++++
+ 6 files changed, 443 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/gpio/gpio-rda.yaml
+ create mode 100644 drivers/gpio/gpio-rda.c
 
-
-Your urgent response will be appreciated
-
-Thank you and God bless you.
-
-Barrister Hans Erich
-
-Yours sincerely,
-Barrister Hans Erich
-
---C.F387.BA..3D--
+-- 
+2.17.1
 
