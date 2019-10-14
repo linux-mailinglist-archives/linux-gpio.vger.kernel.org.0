@@ -2,509 +2,486 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id EEDC2D636F
-	for <lists+linux-gpio@lfdr.de>; Mon, 14 Oct 2019 15:10:34 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 79E8BD6510
+	for <lists+linux-gpio@lfdr.de>; Mon, 14 Oct 2019 16:25:43 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730062AbfJNNKd (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 14 Oct 2019 09:10:33 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:43486 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725989AbfJNNKd (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 14 Oct 2019 09:10:33 -0400
-Received: by mail-wr1-f66.google.com with SMTP id j18so19661087wrq.10;
-        Mon, 14 Oct 2019 06:10:29 -0700 (PDT)
+        id S1732707AbfJNOZm (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 14 Oct 2019 10:25:42 -0400
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:40399 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731121AbfJNOZm (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 14 Oct 2019 10:25:42 -0400
+Received: by mail-oi1-f193.google.com with SMTP id k9so13896223oib.7
+        for <linux-gpio@vger.kernel.org>; Mon, 14 Oct 2019 07:25:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=jJpT6NDHI0aqjdFR5LMKovHhafheyDySsX9RwexnpP4=;
-        b=m0ykXKONcdFuY0J6uhZ1ZYszbRmkoX+j3qxRovadx+CJY+sbohQvYxmzdpseS3my/H
-         bwRKLlhsln6RpUwTgBOA2SV6IJsLPGkK5Y5Td8tllG+hyHVkjl1Bqwz+1ICiNfYaZdV5
-         P/9hZVPGRRE6zXuV0+QdKWNY9JVzsAW/snFW31L2LcKhQBNwkyQpuorjWwQ35SYXxCHF
-         WuBU7rmMJc8XqiTuC26Bdg452hcJkNu5r0IQRuMLWCiTDwBqP7QwoHLgDhq/aukt6FlY
-         szHOsxnvkk6elj+vOkAoCxcBVeEKuaGmrhLodsbTkpIbcHOb0aSi7tBCIQWMqKVchbDx
-         4cVQ==
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=IGi1R4moYNLLf/c9IrQAJUNJOBPDadHm6kdzqPuUdCQ=;
+        b=nvkV88TEq9HiyttxgpqGZCEJNG7SqSm5D2f9HWi8Y2TJDOLR0R7smW6WcnJenFvlHu
+         49rQoegBQp5Vk93pOOpl2L44M/XqeOHulEvrvBjxjBSlDVmn+3TTZg04WPsA6W08/PcG
+         y0lMU0Sl+EjtcWZU0XxP0mFMqJMoGaQYpIY8lCnT10qhFoMyRBH9T1hbCm8rpF/rqjKO
+         MbQOowmveEQVwDXDOItyiI7XygoVEwdp4U4uqg8TTzZTUIzUsAPA1EtjWexUFmkopz6i
+         oKuPDoiWGHqAtPjhdcYjjo/USobrHg/pcRh3Xf5tmTID/beJYhdpraosDSzMcvvhpqlc
+         3FNg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=jJpT6NDHI0aqjdFR5LMKovHhafheyDySsX9RwexnpP4=;
-        b=poLDb5TJg45JEerDfd+N7ngDeywtCCVyegfHMIkh6/pyO4xavrHNYy9u1Ee5PEDgTK
-         IVv8TjDjv55o7UaP1aa5whaTEaLc+KkLv2y6W3Kuaf6zO2NFHXS1O0bj58781I29Gqbq
-         1u/FVAedVlWUijv2x9LaLBfgBV5YUsVFUMyovY9PnAJ9L7ID9BSa1lE3ZLkrfOD8El65
-         Qxeu6kBM7HvjL7oP9UTTOHPiDz2WQ5NTHPO0KyTTx2hQQOTaR+sajpP9mZj4SFbh8saa
-         E/PCDEzGd5nXltjWNov6YrnGsj8FBthUk9E3E9kyOarpWEeaEAIlBaD5vVeueLL80eHj
-         CL8w==
-X-Gm-Message-State: APjAAAWz8KUkkIRj1TN/hueZQHrB4bP07EAAs025xN7vDjG7qz2cvs4s
-        wKf9koLgdV1Fl1s3+ML5OUA=
-X-Google-Smtp-Source: APXvYqzmJAlX6Mxs4GxKfSkMp6mnq2ja9hYp3IG5Ufp1Ui9xQ6rKlG6rWKZZ6iIma25loPMEZ0hloA==
-X-Received: by 2002:a5d:510f:: with SMTP id s15mr16640472wrt.244.1571058628727;
-        Mon, 14 Oct 2019 06:10:28 -0700 (PDT)
-Received: from localhost (p2E5BE2CE.dip0.t-ipconnect.de. [46.91.226.206])
-        by smtp.gmail.com with ESMTPSA id b130sm28798196wmh.12.2019.10.14.06.10.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 14 Oct 2019 06:10:27 -0700 (PDT)
-Date:   Mon, 14 Oct 2019 15:10:26 +0200
-From:   Thierry Reding <thierry.reding@gmail.com>
-To:     Miquel Raynal <miquel.raynal@bootlin.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        u.kleine-koenig@pengutronix.de, linux-gpio@vger.kernel.org,
-        linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Subject: Re: [PATCH] gpio: pca953x: Add Maxim MAX7313 PWM support
-Message-ID: <20191014131026.GC422231@ulmo>
-References: <20191014124803.13661-1-miquel.raynal@bootlin.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=IGi1R4moYNLLf/c9IrQAJUNJOBPDadHm6kdzqPuUdCQ=;
+        b=d9eeva1LjchEXDK53VfYoEkGsYEO1zWbicr0hwGu+Srlfmh83iW69V529hqd3gNNUV
+         YEJfpihGGZwzvpIH+o65j14yDQn9k7Bj2xkJ1WHAc8Ji0L3EpIHs2QRVmNNp4hUbzBRm
+         mtr1mt7mFFKBKKRB2rwTfvB/b9sDlThFPudfSeE65nGj7pFV1c4Ps7xELFPQrmjwXE1f
+         Eap16GDt1B4CXAovrnm1vG5dTsTTUneNkLJ1ERIAd8P74LnSXqQ/GKMKL1gUH+SZ4okR
+         bd817hX+0lHqcz3bnqLrUfVnNBx/cs6H5mmAUwG642ESuNpqKP7yQkYg8HudViIGqcKY
+         75xg==
+X-Gm-Message-State: APjAAAWMW2prlXohA6iKzg8DLQ4LN67+UnPIx2wvZj1Cl59pfa9/CSvy
+        32+1wbZFS9H/l2lUJryBYzTakwCz53ypXoCUq+QfZg==
+X-Google-Smtp-Source: APXvYqzG1sZOLuXDxDvhU2hXmcLbwL+mmjNQcB3o4zhXoQXBmxjhbZmXpgvrMDc9NeZlwrHi74xFk4YpsVqoEwcGXHI=
+X-Received: by 2002:a05:6808:114:: with SMTP id b20mr25162674oie.114.1571063140566;
+ Mon, 14 Oct 2019 07:25:40 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="TYecfFk8j8mZq+dy"
-Content-Disposition: inline
-In-Reply-To: <20191014124803.13661-1-miquel.raynal@bootlin.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+References: <20191013114037.9845-1-manivannan.sadhasivam@linaro.org> <20191013114037.9845-3-manivannan.sadhasivam@linaro.org>
+In-Reply-To: <20191013114037.9845-3-manivannan.sadhasivam@linaro.org>
+From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Date:   Mon, 14 Oct 2019 16:25:29 +0200
+Message-ID: <CAMpxmJU6odqXcsAbZiYoh94Ett44z+R05WMygB66jCg8xd0UZw@mail.gmail.com>
+Subject: Re: [PATCH 2/4] gpio: Add RDA Micro GPIO controller support
+To:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        arm-soc <linux-arm-kernel@lists.infradead.org>,
+        linux-unisoc@lists.infradead.org,
+        linux-gpio <linux-gpio@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Orson Zhai <orsonzhai@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+niedz., 13 pa=C5=BA 2019 o 13:40 Manivannan Sadhasivam
+<manivannan.sadhasivam@linaro.org> napisa=C5=82(a):
+>
+> Add support for GPIO controller from RDA Micro.
 
---TYecfFk8j8mZq+dy
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Looks nice and clean, just a couple nits.
 
-On Mon, Oct 14, 2019 at 02:48:03PM +0200, Miquel Raynal wrote:
-> The MAX7313 chip is fully compatible with the PCA9535 on its basic
-> functions but can also manage the intensity on each of its ports with
-> PWM. Each output is independent and may be tuned with 16 values (4
-> bits per output). The period is always 32kHz, only the duty-cycle may
-> be changed. One can use any output as GPIO or PWM.
->=20
-> Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
+>
+> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 > ---
->  drivers/gpio/gpio-pca953x.c | 249 +++++++++++++++++++++++++++++++++++-
->  1 file changed, 247 insertions(+), 2 deletions(-)
->=20
-> diff --git a/drivers/gpio/gpio-pca953x.c b/drivers/gpio/gpio-pca953x.c
-> index de5d1383f28d..16b5a991b32e 100644
-> --- a/drivers/gpio/gpio-pca953x.c
-> +++ b/drivers/gpio/gpio-pca953x.c
-> @@ -18,12 +18,15 @@
->  #include <linux/module.h>
->  #include <linux/of_platform.h>
->  #include <linux/platform_data/pca953x.h>
-> +#include <linux/pwm.h>
->  #include <linux/regmap.h>
->  #include <linux/regulator/consumer.h>
->  #include <linux/slab.h>
-> =20
->  #include <asm/unaligned.h>
-> =20
-> +#include "gpiolib.h"
+>  drivers/gpio/Kconfig    |   8 +
+>  drivers/gpio/Makefile   |   1 +
+>  drivers/gpio/gpio-rda.c | 334 ++++++++++++++++++++++++++++++++++++++++
+>  3 files changed, 343 insertions(+)
+>  create mode 100644 drivers/gpio/gpio-rda.c
+>
+> diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
+> index 38e096e6925f..71826e61fdb3 100644
+> --- a/drivers/gpio/Kconfig
+> +++ b/drivers/gpio/Kconfig
+> @@ -435,6 +435,14 @@ config GPIO_RCAR
+>         help
+>           Say yes here to support GPIO on Renesas R-Car SoCs.
+>
+> +config GPIO_RDA
+> +       bool "RDA Micro GPIO controller support"
+> +       depends on ARCH_RDA || COMPILE_TEST
+> +       depends on OF_GPIO
+> +       select GPIOLIB_IRQCHIP
+> +       help
+> +         Say Y here to support RDA Micro GPIO controller.
 > +
->  #define PCA953X_INPUT		0x00
->  #define PCA953X_OUTPUT		0x01
->  #define PCA953X_INVERT		0x02
-> @@ -63,11 +66,18 @@
-> =20
->  #define PCA_INT			BIT(8)
->  #define PCA_PCAL		BIT(9)
-> +#define MAX_PWM			BIT(10)
->  #define PCA_LATCH_INT		(PCA_PCAL | PCA_INT)
->  #define PCA953X_TYPE		BIT(12)
->  #define PCA957X_TYPE		BIT(13)
->  #define PCA_TYPE_MASK		GENMASK(15, 12)
-> =20
-> +#define MAX7313_MASTER		0x0E
-> +#define MAX7313_CONFIGURATION	0x0F
-> +#define MAX7313_INTENSITY	0x10
+>  config GPIO_REG
+>         bool
+>         help
+> diff --git a/drivers/gpio/Makefile b/drivers/gpio/Makefile
+> index d2fd19c15bae..5c68c9a48fa3 100644
+> --- a/drivers/gpio/Makefile
+> +++ b/drivers/gpio/Makefile
+> @@ -115,6 +115,7 @@ obj-$(CONFIG_GPIO_PXA)                      +=3D gpio=
+-pxa.o
+>  obj-$(CONFIG_GPIO_RASPBERRYPI_EXP)     +=3D gpio-raspberrypi-exp.o
+>  obj-$(CONFIG_GPIO_RC5T583)             +=3D gpio-rc5t583.o
+>  obj-$(CONFIG_GPIO_RCAR)                        +=3D gpio-rcar.o
+> +obj-$(CONFIG_GPIO_RDA)                 +=3D gpio-rda.o
+>  obj-$(CONFIG_GPIO_RDC321X)             +=3D gpio-rdc321x.o
+>  obj-$(CONFIG_GPIO_REG)                 +=3D gpio-reg.o
+>  obj-$(CONFIG_ARCH_SA1100)              +=3D gpio-sa1100.o
+> diff --git a/drivers/gpio/gpio-rda.c b/drivers/gpio/gpio-rda.c
+> new file mode 100644
+> index 000000000000..5a4adeb25f72
+> --- /dev/null
+> +++ b/drivers/gpio/gpio-rda.c
+> @@ -0,0 +1,334 @@
+> +// SPDX-License-Identifier: GPL-2.0-only
+> +/*
+> + * RDA Micro GPIO driver
+> + *
+> + * Copyright (C) 2012 RDA Micro Inc.
+> + * Copyright (C) 2019 Manivannan Sadhasivam
+> + */
 > +
-> +#define MAX7313_GLOB_INTENSITY	BIT(2)
+> +#include <linux/bitops.h>
+> +#include <linux/gpio/driver.h>
+> +#include <linux/kernel.h>
+> +#include <linux/module.h>
+> +#include <linux/of_device.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/spinlock.h>
 > +
->  #define PCA_CHIP_TYPE(x)	((x) & PCA_TYPE_MASK)
-> =20
->  static const struct i2c_device_id pca953x_id[] =3D {
-> @@ -93,7 +103,7 @@ static const struct i2c_device_id pca953x_id[] =3D {
-> =20
->  	{ "max7310", 8  | PCA953X_TYPE, },
->  	{ "max7312", 16 | PCA953X_TYPE | PCA_INT, },
-> -	{ "max7313", 16 | PCA953X_TYPE | PCA_INT, },
-> +	{ "max7313", 16 | PCA953X_TYPE | PCA_INT | MAX_PWM, },
->  	{ "max7315", 8  | PCA953X_TYPE | PCA_INT, },
->  	{ "max7318", 16 | PCA953X_TYPE | PCA_INT, },
->  	{ "pca6107", 8  | PCA953X_TYPE | PCA_INT, },
-> @@ -118,6 +128,16 @@ MODULE_DEVICE_TABLE(acpi, pca953x_acpi_ids);
-> =20
->  #define NBANK(chip) DIV_ROUND_UP(chip->gpio_chip.ngpio, BANK_SZ)
-> =20
-> +#define PWM_CHANNELS 16
-
-Does it really make sense to hard-code this? During PWM chip
-registration you assume that the number of PWM channels is the same as
-the number of GPIO lines, so the hard-coded values here are only going
-to work as long as the chip has 16 GPIO lines. Why not just parameterize
-all the code based on the number of GPIO lines?
-
-> +#define PWM_PER_REG 2
-> +#define PWM_BITS_PER_REG (8 / PWM_PER_REG)
-> +#define PWM_INTENSITY_MASK GENMASK(PWM_BITS_PER_REG - 1, 0)
-> +#define PWM_BANK_SZ (PWM_CHANNELS / PWM_PER_REG)
+> +#define RDA_GPIO_OEN_VAL               0x00
+> +#define RDA_GPIO_OEN_SET_OUT           0x04
+> +#define RDA_GPIO_OEN_SET_IN            0x08
+> +#define RDA_GPIO_VAL                   0x0c
+> +#define RDA_GPIO_SET                   0x10
+> +#define RDA_GPIO_CLR                   0x14
+> +#define RDA_GPIO_INT_CTRL_SET          0x18
+> +#define RDA_GPIO_INT_CTRL_CLR          0x1c
+> +#define RDA_GPIO_INT_CLR               0x20
+> +#define RDA_GPIO_INT_STATUS            0x24
 > +
-> +#define PWM_PERIOD_NS 31250
-> +#define PWM_DC_STATES 16
-> +#define PWM_OFFSET_NS (PWM_PERIOD_NS / PWM_DC_STATES)
+> +#define RDA_GPIO_IRQ_RISE_SHIFT                0
+> +#define RDA_GPIO_IRQ_FALL_SHIFT                8
+> +#define RDA_GPIO_DEBOUCE_SHIFT         16
+> +#define RDA_GPIO_LEVEL_SHIFT           24
 > +
->  struct pca953x_reg_config {
->  	int direction;
->  	int output;
-> @@ -139,6 +159,12 @@ static const struct pca953x_reg_config pca957x_regs =
-=3D {
->  	.invert =3D PCA957X_INVRT,
->  };
-> =20
-> +struct max7313_pwm {
-> +	struct pwm_chip chip;
-> +	struct gpio_desc *gpiods[PWM_CHANNELS];
-
-Have you considered using per pwm_device data to store the GPIO
-descriptors? That avoids having to index some global variable with the
-PWM index and allows you to directly get at the per-PWM channel data.
-
-> +	unsigned int used;
+> +#define RDA_GPIO_IRQ_MASK              0xff
+> +
+> +/* Each bank consists of 32 GPIOs */
+> +#define RDA_GPIO_BANK_NR       32
+> +
+> +struct rda_gpio {
+> +       struct gpio_chip chip;
+> +       void __iomem *base;
+> +       spinlock_t lock;
+> +       struct irq_chip irq_chip;
+> +       int irq;
 > +};
 > +
->  struct pca953x_chip {
->  	unsigned gpio_start;
->  	struct mutex i2c_lock;
-> @@ -161,6 +187,8 @@ struct pca953x_chip {
->  	struct regulator *regulator;
-> =20
->  	const struct pca953x_reg_config *regs;
-> +
-> +	struct max7313_pwm pwm;
->  };
-> =20
->  static int pca953x_bank_shift(struct pca953x_chip *chip)
-> @@ -243,6 +271,13 @@ static bool pca953x_readable_register(struct device =
-*dev, unsigned int reg)
->  	struct pca953x_chip *chip =3D dev_get_drvdata(dev);
->  	u32 bank;
-> =20
-> +	if (PCA_CHIP_TYPE(chip->driver_data) =3D=3D PCA953X_TYPE &&
-> +	    chip->driver_data & MAX_PWM) {
-> +		if (reg >=3D MAX7313_MASTER &&
-> +		    reg < (MAX7313_INTENSITY + PWM_BANK_SZ))
-> +			return true;
-> +	}
-> +
->  	if (PCA_CHIP_TYPE(chip->driver_data) =3D=3D PCA953X_TYPE) {
->  		bank =3D PCA953x_BANK_INPUT | PCA953x_BANK_OUTPUT |
->  		       PCA953x_BANK_POLARITY | PCA953x_BANK_CONFIG;
-> @@ -266,6 +301,13 @@ static bool pca953x_writeable_register(struct device=
- *dev, unsigned int reg)
->  	struct pca953x_chip *chip =3D dev_get_drvdata(dev);
->  	u32 bank;
-> =20
-> +	if (PCA_CHIP_TYPE(chip->driver_data) =3D=3D PCA953X_TYPE &&
-> +	    chip->driver_data & MAX_PWM) {
-> +		if (reg >=3D MAX7313_MASTER &&
-> +		    reg < (MAX7313_INTENSITY + PWM_BANK_SZ))
-> +			return true;
-> +	}
-> +
->  	if (PCA_CHIP_TYPE(chip->driver_data) =3D=3D PCA953X_TYPE) {
->  		bank =3D PCA953x_BANK_OUTPUT | PCA953x_BANK_POLARITY |
->  			PCA953x_BANK_CONFIG;
-> @@ -886,6 +928,206 @@ static int device_pca957x_init(struct pca953x_chip =
-*chip, u32 invert)
->  	return ret;
->  }
-> =20
-> +/* PWM specific methods */
-> +
-> +static struct max7313_pwm *to_max7313_pwm(struct pwm_chip *chip)
+> +static void rda_gpio_update(struct gpio_chip *chip, unsigned int offset,
+> +                           u16 reg, int val)
 > +{
-> +	return container_of(chip, struct max7313_pwm, chip);
-> +}
+> +       struct rda_gpio *rda_gpio =3D gpiochip_get_data(chip);
+> +       void __iomem *base =3D rda_gpio->base;
+> +       unsigned long flags;
+> +       u32 tmp;
 > +
-> +static struct pca953x_chip *to_pca953x(struct max7313_pwm *chip)
-> +{
-> +	return container_of(chip, struct pca953x_chip, pwm);
-> +}
+> +       spin_lock_irqsave(&rda_gpio->lock, flags);
+> +       tmp =3D readl_relaxed(base + reg);
 > +
-> +static int max7313_pwm_set_intensity(struct pca953x_chip *chip,
-> +				     unsigned int idx, u8 duty_cycle)
-> +{
-> +	/* Duty-cycle is in the range [1;16] while registers expect [0;15] */
-> +	u8 intensity =3D (duty_cycle - 1) & PWM_INTENSITY_MASK;
-> +	unsigned int reg, off;
-
-off is really not a good abbreviation because it has a different
-meaning. That means you have to go and actually look at the definition
-to find out what value it contains.
-
-I think it's clearer to name this "offset" or "shift".
-
-> +	u8 val, mask;
-> +	int ret;
+> +       if (val)
+> +               tmp |=3D BIT(offset);
+> +       else
+> +               tmp &=3D ~BIT(offset);
 > +
-> +	reg =3D MAX7313_INTENSITY + (idx / PWM_PER_REG);
-> +	off =3D (idx % PWM_PER_REG) ? PWM_BITS_PER_REG : 0;
-> +
-> +	mask =3D PWM_INTENSITY_MASK << off;
-> +	val =3D intensity << off;
-> +
-> +	mutex_lock(&chip->i2c_lock);
-> +	ret =3D regmap_write_bits(chip->regmap, reg, mask, val);
-> +	mutex_unlock(&chip->i2c_lock);
-> +
-> +	return ret;
-> +}
-> +
-> +static int max7313_pwm_disable(struct pca953x_chip *chip, unsigned int i=
-dx)
-> +{
-> +	return pca953x_gpio_direction_input(&chip->gpio_chip, idx);
+> +       writel_relaxed(tmp, base + reg);
+> +       spin_unlock_irqrestore(&rda_gpio->lock, flags);
 > +}
 
-Does this really do what is expected? In my experience setting a GPIO as
-input will typically make it high-impedance, which usually means it'll
-be seen as "high". That's not what a disabled PWM is supposed to be.
-
-Also, you've already requested the GPIO, why not continue using the GPIO
-as a regular consumer? Seems like that would make all of this a little
-more idiomatic.
+If you used the mmio regmap, you could save all this code and reuse
+regmap's update helpers. This is just a suggestion, not a requirement
+though.
 
 > +
-> +static int max7313_pwm_enable_static_low(struct pca953x_chip *chip,
-> +					 unsigned int idx)
+> +static int rda_gpio_request(struct gpio_chip *chip, unsigned int offset)
 > +{
-> +	/*
-> +	 * For a given PWM channel, when the blink phase 0 bit is set, the
-> +	 * intensity range is only [1/16;16/16]. With this range, a static low
-> +	 * output is physically not possible. When the blink phase 0 bit is
-> +	 * cleared, the intensity range is [15/16;0/16] which then allows a
-> +	 * static low output but not a static high output.
-> +	 *
-> +	 * In this driver we choose to set the blink phase 0 bit by default,
-> +	 * hence we can slide from a low output to a fully high output without
-> +	 * glitch. However,  The only way to get a static low output is by
-> +	 * clearing the blink phase 0 bit, and by changing the intensity value
-> +	 * to its maximum (as, at this moment, intensity is reversed). There is
-> +	 * no way to atomically flip the register *and* change the PWM value at
-> +	 * the same time so this operation will produce a small glitch.
-> +	 */
-> +
-> +	/* Invert the the PWM phase */
-> +	pca953x_gpio_direction_output(&chip->gpio_chip, idx, 0);
-> +
-> +	/* Maximize the low time */
-> +	return max7313_pwm_set_intensity(chip, idx, PWM_DC_STATES);
+> +       /* Not supported currently */
+> +       return 0;
 > +}
 > +
-> +static int max7313_pwm_enable(struct pca953x_chip *chip, unsigned int id=
-x,
-> +			      unsigned int duty_cycle)
+> +static void rda_gpio_free(struct gpio_chip *chip, unsigned int offset)
 > +{
-> +	/* PWM phase must not be inverted to work in the [1/16;16/16] range */
-> +	pca953x_gpio_direction_output(&chip->gpio_chip, idx, 1);
+> +       /* Not supported currently */
+> +}
+
+Just don't implement these callbacks if they're doing nothing.
+
 > +
-> +	/* Set the PWM intensity to the desired duty-cycle */
-> +	return max7313_pwm_set_intensity(chip, idx, duty_cycle);
+> +static int rda_gpio_direction_input(struct gpio_chip *chip, unsigned int=
+ offset)
+> +{
+> +       rda_gpio_update(chip, offset, RDA_GPIO_OEN_SET_IN, 1);
+> +
+> +       return 0;
 > +}
 > +
-> +static int max7313_pwm_request(struct pwm_chip *pwm_chip,
-> +			       struct pwm_device *pwm_device)
+> +static int rda_gpio_direction_output(struct gpio_chip *chip,
+> +                                    unsigned int offset, int value)
 > +{
-> +	struct max7313_pwm *pwm =3D to_max7313_pwm(pwm_chip);
-> +	struct pca953x_chip *chip =3D to_pca953x(pwm);
-> +	int idx =3D pwm_device->hwpwm;
-
-unsigned int to mirror the type of hwpwm.
-
-> +	struct gpio_desc *desc;
-> +	int ret;
+> +       rda_gpio_update(chip, offset, RDA_GPIO_OEN_SET_OUT, 1);
 > +
-> +	if (pwm->gpiods[idx]) {
-> +		ret =3D -EBUSY;
-> +	} else {
-> +		desc =3D gpio_to_desc(chip->gpio_chip.base + idx);
-> +		if (!desc)
-> +			return -ENODEV;
-> +
-> +		ret =3D gpiod_request(desc, "max7313-pwm");
-> +		if (ret)
-> +			return ret;
-> +
-> +		pwm->gpiods[idx] =3D desc;
-
-Can't you do this using gpiochip_request_own_desc()? Seems rather odd to
-go through the global number space to get back at a "local" GPIO
-descriptor.
-
-> +	}
-> +
-> +	ret =3D max7313_pwm_disable(chip, idx);
-> +	if (ret)
-> +		return ret;
-
-->request() shouldn't change the state of the PWM.
-
-> +
-> +	/*
-> +	 * Set master intensity to the maximum level to let individual outputs
-> +	 * the greatest flexibility range. Also enables the internal oscillator.
-> +	 */
-> +	if (!pwm->used) {
-> +		mutex_lock(&chip->i2c_lock);
-> +		ret =3D regmap_write_bits(chip->regmap, MAX7313_MASTER,
-> +					PWM_INTENSITY_MASK << PWM_BITS_PER_REG,
-> +					PWM_INTENSITY_MASK << PWM_BITS_PER_REG);
-> +		mutex_unlock(&chip->i2c_lock);
-> +		if (ret)
-> +			return ret;
-> +	}
-> +
-> +	pwm->used++;
-> +
-> +	return 0;
+> +       return 0;
 > +}
 > +
-> +static void max7313_pwm_free(struct pwm_chip *pwm_chip,
-> +			     struct pwm_device *pwm_device)
+> +static int rda_gpio_get(struct gpio_chip *chip, unsigned int offset)
 > +{
-> +	struct max7313_pwm *pwm =3D to_max7313_pwm(pwm_chip);
-> +	struct pca953x_chip *chip =3D to_pca953x(pwm);
-> +	int idx =3D pwm_device->hwpwm;
-
-unsigned int, please.
-
+> +       struct rda_gpio *rda_gpio =3D gpiochip_get_data(chip);
+> +       void __iomem *base =3D rda_gpio->base;
 > +
-> +	max7313_pwm_disable(chip, idx);
-> +	pwm->used--;
-> +
-> +	/* Disable the internal oscillator if no channel is in use */
-> +	if (!pwm->used) {
-> +		mutex_lock(&chip->i2c_lock);
-> +		regmap_write_bits(chip->regmap, MAX7313_MASTER,
-> +				  PWM_INTENSITY_MASK << PWM_BITS_PER_REG, 0);
-> +		mutex_unlock(&chip->i2c_lock);
-> +	}
-> +
-> +	gpiod_free(pwm->gpiods[idx]);
-> +	pwm->gpiods[idx] =3D NULL;
+> +       if (readl_relaxed(base + RDA_GPIO_OEN_VAL) & BIT(offset))
+> +               return !!(readl_relaxed(base + RDA_GPIO_VAL) & BIT(offset=
+));
+> +       else
+> +               return !!(readl_relaxed(base + RDA_GPIO_SET) & BIT(offset=
+));
 > +}
 > +
-> +static int max7313_pwm_apply(struct pwm_chip *pwm_chip,
-> +			     struct pwm_device *pwm_device,
-> +			     const struct pwm_state *state)
+> +static void rda_gpio_set(struct gpio_chip *chip, unsigned int offset, in=
+t value)
 > +{
-> +	struct max7313_pwm *pwm =3D to_max7313_pwm(pwm_chip);
-> +	struct pca953x_chip *chip =3D to_pca953x(pwm);
-> +	int idx =3D pwm_device->hwpwm;
-
-unsigned int, please.
-
-> +	unsigned int duty_cycle;
-> +
-> +	if (!state->enabled)
-> +		return max7313_pwm_disable(chip, idx);
-> +
-> +	if (!state->period || !state->duty_cycle)
-> +		return max7313_pwm_enable_static_low(chip, idx);
-> +
-> +	/* Convert the duty-cycle to be in the [1;16] range */
-> +	duty_cycle =3D DIV_ROUND_UP(state->duty_cycle * PWM_DC_STATES,
-> +				  state->period);
-> +
-> +	return max7313_pwm_enable(chip, idx, duty_cycle);
+> +       if (value)
+> +               rda_gpio_update(chip, offset, RDA_GPIO_SET, 1);
+> +       else
+> +               rda_gpio_update(chip, offset, RDA_GPIO_CLR, 1);
 > +}
 > +
-> +static const struct pwm_ops max7313_pwm_ops =3D {
-> +	.request =3D max7313_pwm_request,
-> +	.free =3D max7313_pwm_free,
-> +	.apply =3D max7313_pwm_apply,
-> +	.owner =3D THIS_MODULE,
+> +static void rda_gpio_irq_mask(struct irq_data *data)
+> +{
+> +       struct gpio_chip *chip =3D irq_data_get_irq_chip_data(data);
+> +       struct rda_gpio *rda_gpio =3D gpiochip_get_data(chip);
+> +       void __iomem *base =3D rda_gpio->base;
+> +       u32 offset =3D irqd_to_hwirq(data);
+> +       u32 value;
+> +
+> +       value =3D BIT(offset) << RDA_GPIO_IRQ_RISE_SHIFT;
+> +       value |=3D BIT(offset) << RDA_GPIO_IRQ_FALL_SHIFT;
+> +
+> +       writel_relaxed(value, base + RDA_GPIO_INT_CTRL_CLR);
+> +}
+> +
+> +static void rda_gpio_irq_ack(struct irq_data *data)
+> +{
+> +       struct gpio_chip *chip =3D irq_data_get_irq_chip_data(data);
+> +       u32 offset =3D irqd_to_hwirq(data);
+> +
+> +       rda_gpio_update(chip, offset, RDA_GPIO_INT_CLR, 1);
+> +}
+> +
+> +static int rda_gpio_set_irq(struct gpio_chip *chip, u32 offset,
+> +                           unsigned int flow_type)
+> +{
+> +       struct rda_gpio *rda_gpio =3D gpiochip_get_data(chip);
+> +       void __iomem *base =3D rda_gpio->base;
+> +       u32 value;
+> +
+> +       switch (flow_type) {
+> +       case IRQ_TYPE_EDGE_RISING:
+> +               /* Set rising edge trigger */
+> +               value =3D BIT(offset) << RDA_GPIO_IRQ_RISE_SHIFT;
+> +               writel_relaxed(value, base + RDA_GPIO_INT_CTRL_SET);
+> +
+> +               /* Switch to edge trigger interrupt */
+> +               value =3D BIT(offset) << RDA_GPIO_LEVEL_SHIFT;
+> +               writel_relaxed(value, base + RDA_GPIO_INT_CTRL_CLR);
+> +               break;
+> +
+> +       case IRQ_TYPE_EDGE_FALLING:
+> +               /* Set falling edge trigger */
+> +               value =3D BIT(offset) << RDA_GPIO_IRQ_FALL_SHIFT;
+> +               writel_relaxed(value, base + RDA_GPIO_INT_CTRL_SET);
+> +
+> +               /* Switch to edge trigger interrupt */
+> +               value =3D BIT(offset) << RDA_GPIO_LEVEL_SHIFT;
+> +               writel_relaxed(value, base + RDA_GPIO_INT_CTRL_CLR);
+> +               break;
+> +
+> +       case IRQ_TYPE_EDGE_BOTH:
+> +               /* Set both edge trigger */
+> +               value =3D BIT(offset) << RDA_GPIO_IRQ_RISE_SHIFT;
+> +               value |=3D BIT(offset) << RDA_GPIO_IRQ_FALL_SHIFT;
+> +               writel_relaxed(value, base + RDA_GPIO_INT_CTRL_SET);
+> +
+> +               /* Switch to edge trigger interrupt */
+> +               value =3D BIT(offset) << RDA_GPIO_LEVEL_SHIFT;
+> +               writel_relaxed(value, base + RDA_GPIO_INT_CTRL_CLR);
+> +               break;
+> +
+> +       case IRQ_TYPE_LEVEL_HIGH:
+> +               /* Set high level trigger */
+> +               value =3D BIT(offset) << RDA_GPIO_IRQ_RISE_SHIFT;
+> +
+> +               /* Switch to level trigger interrupt */
+> +               value |=3D BIT(offset) << RDA_GPIO_LEVEL_SHIFT;
+> +               writel_relaxed(value, base + RDA_GPIO_INT_CTRL_SET);
+> +               break;
+> +
+> +       case IRQ_TYPE_LEVEL_LOW:
+> +               /* Set low level trigger */
+> +               value =3D BIT(offset) << RDA_GPIO_IRQ_FALL_SHIFT;
+> +
+> +               /* Switch to level trigger interrupt */
+> +               value |=3D BIT(offset) << RDA_GPIO_LEVEL_SHIFT;
+> +               writel_relaxed(value, base + RDA_GPIO_INT_CTRL_SET);
+> +               break;
+> +
+> +       default:
+> +               return -EINVAL;
+> +       }
+> +
+> +       return 0;
+> +}
+> +
+> +static void rda_gpio_irq_unmask(struct irq_data *data)
+> +{
+> +       struct gpio_chip *chip =3D irq_data_get_irq_chip_data(data);
+> +       u32 offset =3D irqd_to_hwirq(data);
+> +       u32 trigger =3D irqd_get_trigger_type(data);
+> +
+> +       rda_gpio_set_irq(chip, offset, trigger);
+> +}
+> +
+> +static int rda_gpio_irq_set_type(struct irq_data *data, unsigned int flo=
+w_type)
+> +{
+> +       struct gpio_chip *chip =3D irq_data_get_irq_chip_data(data);
+> +       u32 offset =3D irqd_to_hwirq(data);
+> +       int ret;
+> +
+> +       ret =3D rda_gpio_set_irq(chip, offset, flow_type);
+> +       if (ret)
+> +               return ret;
+> +
+> +       if (flow_type & (IRQ_TYPE_LEVEL_LOW | IRQ_TYPE_LEVEL_HIGH))
+> +               irq_set_handler_locked(data, handle_level_irq);
+> +       else if (flow_type & (IRQ_TYPE_EDGE_FALLING | IRQ_TYPE_EDGE_RISIN=
+G))
+> +               irq_set_handler_locked(data, handle_edge_irq);
+> +
+> +       return 0;
+> +}
+> +
+> +static void rda_gpio_irq_handler(struct irq_desc *desc)
+> +{
+> +       struct gpio_chip *chip =3D irq_desc_get_handler_data(desc);
+> +       struct irq_chip *ic =3D irq_desc_get_chip(desc);
+> +       struct rda_gpio *rda_gpio =3D gpiochip_get_data(chip);
+> +       unsigned long status;
+> +       u32 n, girq;
+> +
+> +       chained_irq_enter(ic, desc);
+> +
+> +       status =3D readl_relaxed(rda_gpio->base + RDA_GPIO_INT_STATUS);
+> +       /* Only lower 8 bits are capable of generating interrupts */
+> +       status &=3D RDA_GPIO_IRQ_MASK;
+> +
+> +       for_each_set_bit(n, &status, RDA_GPIO_BANK_NR) {
+> +               girq =3D irq_find_mapping(chip->irq.domain, n);
+> +               generic_handle_irq(girq);
+> +       }
+> +
+> +       chained_irq_exit(ic, desc);
+> +}
+> +
+> +static int rda_gpio_probe(struct platform_device *pdev)
+> +{
+> +       struct device_node *np =3D pdev->dev.of_node;
+> +       struct gpio_irq_chip *irq;
+
+Can you call this variable irq_chip? Visually it interferes with
+rda_gpio->irq too much.
+
+> +       struct rda_gpio *rda_gpio;
+> +       u32 ngpios;
+> +       int ret;
+> +
+> +       rda_gpio =3D devm_kzalloc(&pdev->dev, sizeof(*rda_gpio), GFP_KERN=
+EL);
+> +       if (!rda_gpio)
+> +               return -ENOMEM;
+> +
+> +       ret =3D of_property_read_u32(np, "ngpios", &ngpios);
+> +       if (ret < 0)
+> +               return ret;
+> +
+
+Please use the generic device property helpers unless it's really
+necessary to use of_ variants. Also: remove the of_device.h include.
+
+> +       /*
+> +        * Not all ports have interrupt capability. For instance, on
+> +        * RDA8810PL, GPIOC doesn't support interrupt. So we must handle
+> +        * those also.
+> +        */
+> +       rda_gpio->irq =3D platform_get_irq(pdev, 0);
+> +
+> +       rda_gpio->base =3D devm_platform_ioremap_resource(pdev, 0);
+> +       if (IS_ERR(rda_gpio->base))
+> +               return PTR_ERR(rda_gpio->base);
+> +
+> +       spin_lock_init(&rda_gpio->lock);
+> +
+> +       rda_gpio->chip.label =3D dev_name(&pdev->dev);
+> +       rda_gpio->chip.ngpio =3D ngpios;
+> +       rda_gpio->chip.base =3D -1;
+> +       rda_gpio->chip.parent =3D &pdev->dev;
+> +       rda_gpio->chip.of_node =3D np;
+> +       rda_gpio->chip.request =3D rda_gpio_request;
+> +       rda_gpio->chip.free =3D rda_gpio_free;
+> +       rda_gpio->chip.get =3D rda_gpio_get;
+> +       rda_gpio->chip.set =3D rda_gpio_set;
+> +       rda_gpio->chip.direction_input =3D rda_gpio_direction_input;
+> +       rda_gpio->chip.direction_output =3D rda_gpio_direction_output;
+> +
+> +       if (rda_gpio->irq >=3D 0) {
+> +               rda_gpio->irq_chip.name =3D "rda-gpio",
+> +               rda_gpio->irq_chip.irq_ack =3D rda_gpio_irq_ack,
+> +               rda_gpio->irq_chip.irq_mask =3D rda_gpio_irq_mask,
+> +               rda_gpio->irq_chip.irq_unmask =3D rda_gpio_irq_unmask,
+> +               rda_gpio->irq_chip.irq_set_type =3D rda_gpio_irq_set_type=
+,
+> +               rda_gpio->irq_chip.flags =3D IRQCHIP_SKIP_SET_WAKE,
+> +
+> +               irq =3D &rda_gpio->chip.irq;
+> +               irq->chip =3D &rda_gpio->irq_chip;
+> +               irq->handler =3D handle_bad_irq;
+> +               irq->default_type =3D IRQ_TYPE_NONE;
+> +               irq->parent_handler =3D rda_gpio_irq_handler;
+> +               irq->parent_handler_data =3D rda_gpio;
+> +               irq->num_parents =3D 1;
+> +               irq->parents =3D &rda_gpio->irq;
+> +       }
+> +
+> +       ret =3D devm_gpiochip_add_data(&pdev->dev, &rda_gpio->chip, rda_g=
+pio);
+
+I'd simply do 'return devm_gpiochip_add_data()' here, not much else
+can fail in this driver's probe.
+
+Bart
+
+> +       if (ret < 0) {
+> +               dev_err(&pdev->dev, "Could not register gpiochip %d\n", r=
+et);
+> +               return ret;
+> +       }
+> +
+> +       platform_set_drvdata(pdev, rda_gpio);
+> +
+> +       return 0;
+> +}
+> +
+> +static const struct of_device_id rda_gpio_of_match[] =3D {
+> +       { .compatible =3D "rda,8810pl-gpio", },
+> +       { /* sentinel */ }
+> +};
+> +MODULE_DEVICE_TABLE(of, rda_gpio_of_match);
+> +
+> +static struct platform_driver rda_gpio_driver =3D {
+> +       .probe =3D rda_gpio_probe,
+> +       .driver =3D {
+> +               .name =3D "rda-gpio",
+> +               .of_match_table =3D rda_gpio_of_match,
+> +       },
 > +};
 > +
-> +static int max7313_pwm_probe(struct device *dev,
-> +			     struct pca953x_chip *chip)
-> +{
-> +	struct max7313_pwm *pwm =3D &chip->pwm;
-> +	struct pwm_chip *pwm_chip =3D &pwm->chip;
-> +	int ret;
+> +module_platform_driver_probe(rda_gpio_driver, rda_gpio_probe);
 > +
-> +	if (!(chip->driver_data & MAX_PWM))
-> +		return 0;
-> +
-> +	pwm_chip->dev =3D dev;
-> +	pwm_chip->ops =3D &max7313_pwm_ops;
-> +	pwm_chip->npwm =3D chip->gpio_chip.ngpio;
-> +	pwm_chip->base =3D -1;
-> +
-> +	/* Disable global control */
-> +	mutex_lock(&chip->i2c_lock);
-> +	ret =3D regmap_write_bits(chip->regmap, MAX7313_CONFIGURATION,
-> +				MAX7313_GLOB_INTENSITY, 0);
-> +	mutex_unlock(&chip->i2c_lock);
-> +	if (ret)
-> +		return ret;
-> +
-> +	ret =3D pwmchip_add(pwm_chip);
-> +
-> +	return ret;
-
-Just "return pwmchip_add(...);" will do.
-
-Thierry
-
-> +}
-> +
->  static const struct of_device_id pca953x_dt_ids[];
-> =20
->  static int pca953x_probe(struct i2c_client *client,
-> @@ -1018,6 +1260,9 @@ static int pca953x_probe(struct i2c_client *client,
->  			dev_warn(&client->dev, "setup failed, %d\n", ret);
->  	}
-> =20
-> +	if (IS_ENABLED(CONFIG_PWM))
-> +		return max7313_pwm_probe(&client->dev, chip);
-> +
->  	return 0;
-> =20
->  err_exit:
-> @@ -1162,7 +1407,7 @@ static const struct of_device_id pca953x_dt_ids[] =
-=3D {
-> =20
->  	{ .compatible =3D "maxim,max7310", .data =3D OF_953X( 8, 0), },
->  	{ .compatible =3D "maxim,max7312", .data =3D OF_953X(16, PCA_INT), },
-> -	{ .compatible =3D "maxim,max7313", .data =3D OF_953X(16, PCA_INT), },
-> +	{ .compatible =3D "maxim,max7313", .data =3D OF_953X(16, PCA_INT | MAX_=
-PWM), },
->  	{ .compatible =3D "maxim,max7315", .data =3D OF_953X( 8, PCA_INT), },
->  	{ .compatible =3D "maxim,max7318", .data =3D OF_953X(16, PCA_INT), },
-> =20
-> --=20
-> 2.20.1
->=20
-
---TYecfFk8j8mZq+dy
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl2kc78ACgkQ3SOs138+
-s6EFIBAArt4X8ma6dwK1NfRPAnreFPm0CmRtySpfPZOqrAaXCAPqesQSvLN61k+E
-5sN9Dn2fMRLeFKFJbgwrJ+6/PfeTShOkCrVu6KgFVT9i9B7IAA4y8RzihU0qUsBU
-szSX0XN38KMD7ce96pXAmIkE98mPBb4ymndoWkq6Ww5ZiAXicr/TNJ3BVXOClyE/
-BRFJzqZILUisL0F/MofSgF/Z8Uv7YX1dk9dX+GkpUJ8gvKwFh96egfYgo4JlBGpQ
-oKQB+QrVTHoTfOL9P+uIlgAUEBdx8yjrCVRdJM+KFH+egRGCz5jTsSBVC1w11Q/m
-0wfg5D0jDnuS6XBxRObjvxGq0s2WaVU4yB1t60OrbnKfRrjdzjQWX4QEMVDB7D73
-Ab9jbeuwztMIJdSO+c2SeKVV5X6f3KlJ3gz4KTrvqU/PB50f8GvfGEX3JWUnvv2K
-YIXVKfI5uyAiFyktYfvEpf1Br6ZDm0GR3lBWrd4IpJ/b5ps7sA4KRhQFfrRh7kZf
-Ay87UliGnF/ZQi0cBSCq/K2KcYO56cv21Bk3qwsohSnrqsGfALAjWrAqXkNmGPEr
-7leUDW8Nvtyfz0haPNz87vB3/tGwJUYXGDXB2jCCOCnxMXdNJpgjpOlhslwEKs6H
-6df9gwlIHTjISiqXpDycNO13GSSmQYCOP8bzF5s6LGPJdd3cjZY=
-=4Jbf
------END PGP SIGNATURE-----
-
---TYecfFk8j8mZq+dy--
+> +MODULE_DESCRIPTION("RDA Micro GPIO driver");
+> +MODULE_AUTHOR("Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>"=
+);
+> +MODULE_LICENSE("GPL v2");
+> --
+> 2.17.1
+>
