@@ -2,57 +2,57 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id C6D5CD669A
-	for <lists+linux-gpio@lfdr.de>; Mon, 14 Oct 2019 17:54:41 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2D660D66E3
+	for <lists+linux-gpio@lfdr.de>; Mon, 14 Oct 2019 18:10:33 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730561AbfJNPyk (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 14 Oct 2019 11:54:40 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:44659 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730603AbfJNPyk (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 14 Oct 2019 11:54:40 -0400
-Received: by mail-wr1-f67.google.com with SMTP id z9so20327809wrl.11
-        for <linux-gpio@vger.kernel.org>; Mon, 14 Oct 2019 08:54:38 -0700 (PDT)
+        id S1731999AbfJNQKb (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 14 Oct 2019 12:10:31 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:54194 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732195AbfJNQKb (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 14 Oct 2019 12:10:31 -0400
+Received: by mail-wm1-f67.google.com with SMTP id i16so17872802wmd.3
+        for <linux-gpio@vger.kernel.org>; Mon, 14 Oct 2019 09:10:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
         h=from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=TkFjkjTMp886xdjclYNX5BFj79F6kyRdIe7v3CZ5y/U=;
-        b=fW7n9A01iwnlBbKVondMyrjpTQ6E5MaNj5FMF3rNu3dYPEHnpWDK2FD95DncENpD6/
-         CqE7RNAO5nwFdqPydati1E5/Sn9LBMCOYMZKc5YZeqCColWWh1y+jHJfVCLTpfFoiqtO
-         XC6rI8J7UV5hO1x1o5QtjDqbHfURNz6Y/grsEyEGU8aWhu1zee4w7nkvGUsX+6PaRc2V
-         c1kWDAK9X+9H1SRGt5OXUd8x3ZtQY83id+WZMnKQnDsRzd0KVyMvodZTQvJTULq898nf
-         NjUM5+hXALi0QaQqdnT0K8/bQ8BaQMWBvByOQT2j8fQK75TmGAVouY/77mEFKQBdHSU6
-         /Y7A==
+        bh=fdHT8ivUwY4K/O7PUXhsjrPh/KxNdPrKz/rCnEthp2g=;
+        b=oB/o2n+sTLQb0mMT+TNUEFarogNB9IVzXN+2eOk7fQ+XH2wl3FQN7tDFmZHcZaKQDU
+         5Z9Q98L6a/ILIPaLPEEkEQ0tZj/RGM+OckMK1JpetjW/MCQCiEkz+gCP4NnAzJ1IStQK
+         gYIAMkpYjDFdeTKE18Y8Slw8pF4LNChHOnAIkx1PrLbsusZUUHh2WrZbgI9Tb2ilH8ZF
+         VXrV8d4zVKhhi+pjxTUorG2aiAMcFlaf70P3kAkB2+Qqs2dVydw8zLgX1Gt1g7tjnB2b
+         j4vsFzJ6JNVkuFC8MLafwDh4WCxbJmOKL1rHGBzN45bSb6oUG3RfAsuWcUAzDXwIyndH
+         i3Ug==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=TkFjkjTMp886xdjclYNX5BFj79F6kyRdIe7v3CZ5y/U=;
-        b=hc5jJ1unH51PIMQGgHDhoSgunLFzJJK0NFpss6q+He8PhyJcqQ6re6rijfF6UGR/Kj
-         Ov8SMYYyS0z5ijAukGzZgeFPNrTwLcZryY/6PGQvWsYwGgdZY/6ZOooJ1maNc5tMz6N2
-         4Ehv39UIE0mOWcc8Q52/kfoe9BLPALqZmQUCnQIc+cN60bPyVrlh4DoEBz2XedoQ7Kc2
-         cIvr6v1OwqWb7BSdQuTFxNiXu1hz6sF2KbT7g70W8qNPvZ2AVI5L+QkW3VuNd6PutDW8
-         MXQGIOwC+hQ0s+2lgSCW1roM0mlWi4NNai1fHGoSkixBVXL0oAUVqlP5r9WXLHrwimX+
-         3XzA==
-X-Gm-Message-State: APjAAAWmYFm4MmeAp/ntIbdLuvkkbF2ls8MGdCNx6lfDSSDeMyH+nfaE
-        WxjTSKp5RcGBOUHI8lnst/LbDw==
-X-Google-Smtp-Source: APXvYqwOuaJSGmXpozR/Ykv3asUT3rbUKSBJusklWa+bIoUiEbip2/AcI4wIksHipsOrqULNWPgKiw==
-X-Received: by 2002:a5d:4aca:: with SMTP id y10mr15413353wrs.292.1571068478024;
-        Mon, 14 Oct 2019 08:54:38 -0700 (PDT)
+        bh=fdHT8ivUwY4K/O7PUXhsjrPh/KxNdPrKz/rCnEthp2g=;
+        b=J2beDoc6UqnYFzcDqiB42D7T8jQjsIpzPAZz5nlsmwcBWiR+B+kNkYhL2PN4RIKsIH
+         XPuXey3aBLfP1h9q4tNDOxZ+9qTkiLhL1O+/+mEVr5Mt7KCd3MHx+kuLGcOCE6lfUbjI
+         iAJULihPoGK1uGYQMmLiYKPGv2uGspphLFQmDROft4zU+eJPkRbJJYs68s+ryaRCqfHF
+         ZRnenNH4g9EjFt5bAJ6lBBC9RY1nEKUgTiGBNI03afFOPSAcPomEVcGE1avfM2E0MtC5
+         Lq/ZtmRM6o9QoN+fRdzDvEXeBPr79YyXXpdS8eqzqEfBN3xtQNQu/k9jNIh4EiKdo7X4
+         9oqA==
+X-Gm-Message-State: APjAAAUTYRrDRTlT8AYN9KRVHLfpc85s1H04qYSLVUzsK0rTHJ0PBJoH
+        gJRO74YcgRjtXGnKyGdMD5DnkQ==
+X-Google-Smtp-Source: APXvYqzkDoe8bdRO8MAfjPHLrQcgvTAYzar3eF+de15mMhjyRU45QBNIhXHM2/KZneCpcXX3deYGpA==
+X-Received: by 2002:a7b:cc99:: with SMTP id p25mr15161976wma.43.1571069427733;
+        Mon, 14 Oct 2019 09:10:27 -0700 (PDT)
 Received: from localhost.localdomain ([2a01:cb1d:af:5b00:6d6c:8493:1ab5:dad7])
-        by smtp.gmail.com with ESMTPSA id l18sm20936836wrc.18.2019.10.14.08.54.37
+        by smtp.gmail.com with ESMTPSA id z13sm16658694wrq.51.2019.10.14.09.10.26
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 14 Oct 2019 08:54:37 -0700 (PDT)
+        Mon, 14 Oct 2019 09:10:27 -0700 (PDT)
 From:   Bartosz Golaszewski <brgl@bgdev.pl>
 To:     Linus Walleij <linus.walleij@linaro.org>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Cc:     linux-gpio@vger.kernel.org, stable@vger.kernel.org,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>,
         Kent Gibson <warthog618@gmail.com>
-Subject: [PATCH v5.3, v4.19] gpiolib: don't clear FLAG_IS_OUT when emulating open-drain/open-source
-Date:   Mon, 14 Oct 2019 17:54:35 +0200
-Message-Id: <20191014155435.13234-1-brgl@bgdev.pl>
+Subject: [PATCH v4.14] gpiolib: don't clear FLAG_IS_OUT when emulating open-drain/open-source
+Date:   Mon, 14 Oct 2019 18:10:24 +0200
+Message-Id: <20191014161024.17152-1-brgl@bgdev.pl>
 X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -76,46 +76,46 @@ Fixes: c663e5f56737 ("gpio: support native single-ended hardware drivers")
 Cc: stable@vger.kernel.org
 Reported-by: Kent Gibson <warthog618@gmail.com>
 Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-[Bartosz: backported to v5.3, v4.19]
+[Bartosz: backported to v4.14]
 Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 ---
  drivers/gpio/gpiolib.c | 27 +++++++++++++++++++--------
  1 file changed, 19 insertions(+), 8 deletions(-)
 
 diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
-index e4203c1eb869..74a77001b1bd 100644
+index f1809a54fcee..c7f5f0be2d74 100644
 --- a/drivers/gpio/gpiolib.c
 +++ b/drivers/gpio/gpiolib.c
-@@ -2775,8 +2775,10 @@ int gpiod_direction_output(struct gpio_desc *desc, int value)
+@@ -2329,8 +2329,10 @@ static int _gpiod_direction_output_raw(struct gpio_desc *desc, int value)
  		if (!ret)
  			goto set_output_value;
  		/* Emulate open drain by not actively driving the line high */
--		if (value)
+-		if (val)
 -			return gpiod_direction_input(desc);
-+		if (value) {
++		if (val) {
 +			ret = gpiod_direction_input(desc);
 +			goto set_output_flag;
 +		}
  	}
  	else if (test_bit(FLAG_OPEN_SOURCE, &desc->flags)) {
- 		ret = gpio_set_config(gc, gpio_chip_hwgpio(desc),
-@@ -2784,8 +2786,10 @@ int gpiod_direction_output(struct gpio_desc *desc, int value)
+ 		ret = gpio_set_drive_single_ended(gc, gpio_chip_hwgpio(desc),
+@@ -2338,8 +2340,10 @@ static int _gpiod_direction_output_raw(struct gpio_desc *desc, int value)
  		if (!ret)
  			goto set_output_value;
  		/* Emulate open source by not actively driving the line low */
--		if (!value)
+-		if (!val)
 -			return gpiod_direction_input(desc);
-+		if (!value) {
++		if (!val) {
 +			ret = gpiod_direction_input(desc);
 +			goto set_output_flag;
 +		}
  	} else {
- 		gpio_set_config(gc, gpio_chip_hwgpio(desc),
- 				PIN_CONFIG_DRIVE_PUSH_PULL);
-@@ -2793,6 +2797,17 @@ int gpiod_direction_output(struct gpio_desc *desc, int value)
- 
- set_output_value:
- 	return gpiod_direction_output_raw_commit(desc, value);
+ 		gpio_set_drive_single_ended(gc, gpio_chip_hwgpio(desc),
+ 					    PIN_CONFIG_DRIVE_PUSH_PULL);
+@@ -2359,6 +2363,17 @@ static int _gpiod_direction_output_raw(struct gpio_desc *desc, int value)
+ 	trace_gpio_value(desc_to_gpio(desc), 0, val);
+ 	trace_gpio_direction(desc_to_gpio(desc), 0, ret);
+ 	return ret;
 +
 +set_output_flag:
 +	/*
@@ -128,9 +128,9 @@ index e4203c1eb869..74a77001b1bd 100644
 +		set_bit(FLAG_IS_OUT, &desc->flags);
 +	return ret;
  }
- EXPORT_SYMBOL_GPL(gpiod_direction_output);
  
-@@ -3153,8 +3168,6 @@ static void gpio_set_open_drain_value_commit(struct gpio_desc *desc, bool value)
+ /**
+@@ -2540,8 +2555,6 @@ static void _gpio_set_open_drain_value(struct gpio_desc *desc, bool value)
  
  	if (value) {
  		err = chip->direction_input(chip, offset);
@@ -139,7 +139,7 @@ index e4203c1eb869..74a77001b1bd 100644
  	} else {
  		err = chip->direction_output(chip, offset, 0);
  		if (!err)
-@@ -3184,8 +3197,6 @@ static void gpio_set_open_source_value_commit(struct gpio_desc *desc, bool value
+@@ -2571,8 +2584,6 @@ static void _gpio_set_open_source_value(struct gpio_desc *desc, bool value)
  			set_bit(FLAG_IS_OUT, &desc->flags);
  	} else {
  		err = chip->direction_input(chip, offset);
