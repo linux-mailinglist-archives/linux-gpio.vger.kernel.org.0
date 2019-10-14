@@ -2,396 +2,213 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 0DEE8D66ED
-	for <lists+linux-gpio@lfdr.de>; Mon, 14 Oct 2019 18:11:59 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A4B19D6792
+	for <lists+linux-gpio@lfdr.de>; Mon, 14 Oct 2019 18:44:14 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387932AbfJNQLx (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 14 Oct 2019 12:11:53 -0400
-Received: from mga05.intel.com ([192.55.52.43]:35002 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731121AbfJNQLx (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Mon, 14 Oct 2019 12:11:53 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 14 Oct 2019 09:11:52 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.67,296,1566889200"; 
-   d="scan'208";a="185529360"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by orsmga007.jf.intel.com with ESMTP; 14 Oct 2019 09:11:49 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1003)
-        id CFBF6EB; Mon, 14 Oct 2019 19:11:48 +0300 (EEST)
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        linux-gpio@vger.kernel.org
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        William Breathitt Gray <vilhelm.gray@gmail.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Marek Vasut <marek.vasut+renesas@gmail.com>
-Subject: [PATCH v1] gpio: pca953x: Convert to use bitmap API
-Date:   Mon, 14 Oct 2019 19:11:48 +0300
-Message-Id: <20191014161148.10543-1-andriy.shevchenko@linux.intel.com>
-X-Mailer: git-send-email 2.23.0
+        id S1731999AbfJNQoN (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 14 Oct 2019 12:44:13 -0400
+Received: from mail-io1-f67.google.com ([209.85.166.67]:37347 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727038AbfJNQoN (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 14 Oct 2019 12:44:13 -0400
+Received: by mail-io1-f67.google.com with SMTP id b19so39360452iob.4
+        for <linux-gpio@vger.kernel.org>; Mon, 14 Oct 2019 09:44:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=P9BF3Cnb+eUjNmch0DMfUtsHCLSHllVF4mfXYlOM/54=;
+        b=voQpOWUwu5DrduB9BPRDj2VAraNLbNctNkmNolLYCHQ2D4SsGg1VRK7608ZHdmAx0K
+         edfNGqSZlUr42Kc+2BIV5nzmc0BMU/FdI6e2gy0XapZO01SPuKT9i3iz8cUWwB6HyD1V
+         e10/fmiMFNX8boKBgVMF39nQ75PSiVc42sXOkrpbKGYohNkuyc0f8lxLf+qVD70t8acj
+         QgKleN5HMYTHVjidlDGZ1TDRm/fPDW2vVmZVEHBor4dA9F24QoXzJwIEFHiuo7pscMB/
+         qxmejwP4lD3+uzPcYTFEEK5g83URnxP3q7swZ30bVErwWL8pjvZZN+G30MrA2l3bGkC/
+         EHTg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=P9BF3Cnb+eUjNmch0DMfUtsHCLSHllVF4mfXYlOM/54=;
+        b=lCARj04qnpVPr3/wP6ZK3uVjCybVxGtWt5eL4EYr0enm/rSQx8vL9Gk7RxPGpqjCOY
+         Umiy0o+YcSf5T4aWTK4UqBk51vXcJjU69VbLi5cVVTXtmZ7a85/ddECygGr74FGCKPqy
+         IUswKHLn/x8CcZhHF32elMxMmObfy9jEOkaVvNTV1NtH27GaTL0JkLiJIkuPc5PpUhUj
+         +IRRcRnnwzOY3PRVQ4ehEb8SmU41Fc5/AGKtJOLyRV7mOLy7H82z+6GubTSWgKu/02HY
+         ICfNrKAGXeCPloKFVLGDVJy4VHAtealRw7BiuJbqM4KfZWPDtCY37InL8VOnXFv2g9Wu
+         JYbg==
+X-Gm-Message-State: APjAAAWTx6e1x0+4xdDq/mRkjj84vkpnE3cBgoLoxzywfOG/jBn2G3A4
+        Ocm+XfZPhY3nJpBjeo/JP9EKVl48ne+Eb4AHdpTWVg==
+X-Google-Smtp-Source: APXvYqz/LtM73yKxRgms6C+9964tIjQ9IgXmaUlCyhoYzvt2CcYz7qQcyzy1oZ3fMHmj2mLheDeo9CSE6ikFvOOYMXo=
+X-Received: by 2002:a6b:7d4b:: with SMTP id d11mr36998771ioq.40.1571071452598;
+ Mon, 14 Oct 2019 09:44:12 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20191012015628.9604-1-warthog618@gmail.com> <20191012015628.9604-3-warthog618@gmail.com>
+ <CAMRc=McVXbZHbRATN9A6ffDgjB8Bc=gGRYLpbfeqzrNLVeNReg@mail.gmail.com> <20191014125859.GB28012@sol>
+In-Reply-To: <20191014125859.GB28012@sol>
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+Date:   Mon, 14 Oct 2019 18:44:01 +0200
+Message-ID: <CAMRc=MdyvansJ2L=YCf_pQhqubVYH=WPSWkY7wci_9Fq=S7bxg@mail.gmail.com>
+Subject: Re: [PATCH v2 2/6] gpiolib: add support for pull up/down to lineevent_create
+To:     Kent Gibson <warthog618@gmail.com>
+Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bamvor Jian Zhang <bamv2005@gmail.com>,
+        Drew Fustini <drew@pdp7.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Instead of customized approach convert the driver to use bitmap API.
+pon., 14 pa=C5=BA 2019 o 14:59 Kent Gibson <warthog618@gmail.com> napisa=C5=
+=82(a):
+>
+> On Mon, Oct 14, 2019 at 02:35:38PM +0200, Bartosz Golaszewski wrote:
+> > sob., 12 pa=C5=BA 2019 o 03:57 Kent Gibson <warthog618@gmail.com> napis=
+a=C5=82(a):
+> > >
+> > > This patch adds support for pull up/down to lineevent_create.
+> > > Use cases include receiving asynchronous presses from a
+> > > push button without an external pull up/down.
+> > >
+> > > Move all the flags sanitization before any memory allocation in
+> > > lineevent_create() in order to remove a couple unneeded gotos.
+> > > (from Bartosz Golaszewski <bgolaszewski@baylibre.com>)
+> > >
+> >
+> > The patch you pulled in into your commit already sits in my for-next br=
+anch.
+> > I didn't know you would be modifying the code I touched earlier. In thi=
+s case
+> > you can rebase the series on top of gpio/for-next from my tree[1]
+> >
+> You explicitly told me to rebase it onto the latest release candidate,
 
-Depends-on: 6e9c6674d1bf ("gpio: pca953x: utilize the for_each_set_clump8 macro")
-Cc: William Breathitt Gray <vilhelm.gray@gmail.com>
-Cc: Geert Uytterhoeven <geert+renesas@glider.be>
-Cc: Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Cc: Marek Vasut <marek.vasut+renesas@gmail.com>
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
----
- drivers/gpio/gpio-pca953x.c | 170 ++++++++++++++++--------------------
- 1 file changed, 73 insertions(+), 97 deletions(-)
+Yes, because - as you can find out in
+Documentation/process/5.Posting.rst - the general rule is to rebase
+the series against the latest release candidate tag from mainline, but
+it may become necessary to rebase against the maintainer's tree, which
+is the case here.
 
-diff --git a/drivers/gpio/gpio-pca953x.c b/drivers/gpio/gpio-pca953x.c
-index 10b669b8f27d..95c2d6c99f41 100644
---- a/drivers/gpio/gpio-pca953x.c
-+++ b/drivers/gpio/gpio-pca953x.c
-@@ -9,8 +9,7 @@
-  */
- 
- #include <linux/acpi.h>
--#include <linux/bits.h>
--#include <linux/bitops.h>
-+#include <linux/bitmap.h>
- #include <linux/gpio/driver.h>
- #include <linux/gpio/consumer.h>
- #include <linux/i2c.h>
-@@ -116,6 +115,7 @@ MODULE_DEVICE_TABLE(acpi, pca953x_acpi_ids);
- 
- #define MAX_BANK 5
- #define BANK_SZ 8
-+#define MAX_LINE	(MAX_BANK * BANK_SZ)
- 
- #define NBANK(chip) DIV_ROUND_UP(chip->gpio_chip.ngpio, BANK_SZ)
- 
-@@ -147,10 +147,10 @@ struct pca953x_chip {
- 
- #ifdef CONFIG_GPIO_PCA953X_IRQ
- 	struct mutex irq_lock;
--	u8 irq_mask[MAX_BANK];
--	u8 irq_stat[MAX_BANK];
--	u8 irq_trig_raise[MAX_BANK];
--	u8 irq_trig_fall[MAX_BANK];
-+	DECLARE_BITMAP(irq_mask, MAX_LINE);
-+	DECLARE_BITMAP(irq_stat, MAX_LINE);
-+	DECLARE_BITMAP(irq_trig_raise, MAX_LINE);
-+	DECLARE_BITMAP(irq_trig_fall, MAX_LINE);
- 	struct irq_chip irq_chip;
- #endif
- 	atomic_t wakeup_path;
-@@ -334,12 +334,16 @@ static u8 pca953x_recalc_addr(struct pca953x_chip *chip, int reg, int off,
- 	return regaddr;
- }
- 
--static int pca953x_write_regs(struct pca953x_chip *chip, int reg, u8 *val)
-+static int pca953x_write_regs(struct pca953x_chip *chip, int reg, unsigned long *val)
- {
- 	u8 regaddr = pca953x_recalc_addr(chip, reg, 0, true, true);
--	int ret;
-+	u8 value[MAX_BANK];
-+	int i, ret;
-+
-+	for (i = 0; i < NBANK(chip); i++)
-+		value[i] = bitmap_get_value8(val, i * BANK_SZ);
- 
--	ret = regmap_bulk_write(chip->regmap, regaddr, val, NBANK(chip));
-+	ret = regmap_bulk_write(chip->regmap, regaddr, value, NBANK(chip));
- 	if (ret < 0) {
- 		dev_err(&chip->client->dev, "failed writing register\n");
- 		return ret;
-@@ -348,17 +352,21 @@ static int pca953x_write_regs(struct pca953x_chip *chip, int reg, u8 *val)
- 	return 0;
- }
- 
--static int pca953x_read_regs(struct pca953x_chip *chip, int reg, u8 *val)
-+static int pca953x_read_regs(struct pca953x_chip *chip, int reg, unsigned long *val)
- {
- 	u8 regaddr = pca953x_recalc_addr(chip, reg, 0, false, true);
--	int ret;
-+	u8 value[MAX_BANK];
-+	int i, ret;
- 
--	ret = regmap_bulk_read(chip->regmap, regaddr, val, NBANK(chip));
-+	ret = regmap_bulk_read(chip->regmap, regaddr, value, NBANK(chip));
- 	if (ret < 0) {
- 		dev_err(&chip->client->dev, "failed reading register\n");
- 		return ret;
- 	}
- 
-+	for (i = 0; i < NBANK(chip); i++)
-+		bitmap_set_value8(val, value[i], i * BANK_SZ);
-+
- 	return 0;
- }
- 
-@@ -457,10 +465,7 @@ static void pca953x_gpio_set_multiple(struct gpio_chip *gc,
- 				      unsigned long *mask, unsigned long *bits)
- {
- 	struct pca953x_chip *chip = gpiochip_get_data(gc);
--	unsigned long offset;
--	unsigned long bank_mask;
--	int bank;
--	u8 reg_val[MAX_BANK];
-+	DECLARE_BITMAP(reg_val, MAX_LINE);
- 	int ret;
- 
- 	mutex_lock(&chip->i2c_lock);
-@@ -468,11 +473,7 @@ static void pca953x_gpio_set_multiple(struct gpio_chip *gc,
- 	if (ret)
- 		goto exit;
- 
--	for_each_set_clump8(offset, bank_mask, mask, gc->ngpio) {
--		bank = offset / 8;
--		reg_val[bank] &= ~bank_mask;
--		reg_val[bank] |= bitmap_get_value8(bits, offset) & bank_mask;
--	}
-+	bitmap_and(reg_val, bits, mask, gc->ngpio);
- 
- 	pca953x_write_regs(chip, chip->regs->output, reg_val);
- exit:
-@@ -599,10 +600,10 @@ static void pca953x_irq_bus_sync_unlock(struct irq_data *d)
- {
- 	struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
- 	struct pca953x_chip *chip = gpiochip_get_data(gc);
--	u8 new_irqs;
--	int level, i;
--	u8 invert_irq_mask[MAX_BANK];
--	u8 reg_direction[MAX_BANK];
-+	DECLARE_BITMAP(irq_mask, MAX_LINE);
-+	DECLARE_BITMAP(reg_direction, MAX_LINE);
-+	DECLARE_BITMAP(new_irqs, MAX_LINE);
-+	int level;
- 
- 	pca953x_read_regs(chip, chip->regs->direction, reg_direction);
- 
-@@ -610,25 +611,18 @@ static void pca953x_irq_bus_sync_unlock(struct irq_data *d)
- 		/* Enable latch on interrupt-enabled inputs */
- 		pca953x_write_regs(chip, PCAL953X_IN_LATCH, chip->irq_mask);
- 
--		for (i = 0; i < NBANK(chip); i++)
--			invert_irq_mask[i] = ~chip->irq_mask[i];
-+		bitmap_complement(irq_mask, chip->irq_mask, gc->ngpio);
- 
- 		/* Unmask enabled interrupts */
--		pca953x_write_regs(chip, PCAL953X_INT_MASK, invert_irq_mask);
-+		pca953x_write_regs(chip, PCAL953X_INT_MASK, irq_mask);
- 	}
- 
-+	bitmap_or(new_irqs, chip->irq_trig_fall, chip->irq_trig_raise, gc->ngpio);
-+	bitmap_and(irq_mask, new_irqs, reg_direction, gc->ngpio);
-+
- 	/* Look for any newly setup interrupt */
--	for (i = 0; i < NBANK(chip); i++) {
--		new_irqs = chip->irq_trig_fall[i] | chip->irq_trig_raise[i];
--		new_irqs &= reg_direction[i];
--
--		while (new_irqs) {
--			level = __ffs(new_irqs);
--			pca953x_gpio_direction_input(&chip->gpio_chip,
--							level + (BANK_SZ * i));
--			new_irqs &= ~(1 << level);
--		}
--	}
-+	for_each_set_bit(level, irq_mask, gc->ngpio)
-+		pca953x_gpio_direction_input(&chip->gpio_chip, level);
- 
- 	mutex_unlock(&chip->irq_lock);
- }
-@@ -669,15 +663,15 @@ static void pca953x_irq_shutdown(struct irq_data *d)
- 	chip->irq_trig_fall[d->hwirq / BANK_SZ] &= ~mask;
- }
- 
--static bool pca953x_irq_pending(struct pca953x_chip *chip, u8 *pending)
-+static bool pca953x_irq_pending(struct pca953x_chip *chip, unsigned long *pending)
- {
--	u8 cur_stat[MAX_BANK];
--	u8 old_stat[MAX_BANK];
--	bool pending_seen = false;
--	bool trigger_seen = false;
--	u8 trigger[MAX_BANK];
--	u8 reg_direction[MAX_BANK];
--	int ret, i;
-+	struct gpio_chip *gc = &chip->gpio_chip;
-+	DECLARE_BITMAP(reg_direction, MAX_LINE);
-+	DECLARE_BITMAP(old_stat, MAX_LINE);
-+	DECLARE_BITMAP(cur_stat, MAX_LINE);
-+	DECLARE_BITMAP(new_stat, MAX_LINE);
-+	DECLARE_BITMAP(trigger, MAX_LINE);
-+	int ret;
- 
- 	if (chip->driver_data & PCA_PCAL) {
- 		/* Read the current interrupt status from the device */
-@@ -690,16 +684,13 @@ static bool pca953x_irq_pending(struct pca953x_chip *chip, u8 *pending)
- 		if (ret)
- 			return false;
- 
--		for (i = 0; i < NBANK(chip); i++) {
--			/* Apply filter for rising/falling edge selection */
--			pending[i] = (~cur_stat[i] & chip->irq_trig_fall[i]) |
--				(cur_stat[i] & chip->irq_trig_raise[i]);
--			pending[i] &= trigger[i];
--			if (pending[i])
--				pending_seen = true;
--		}
-+		/* Apply filter for rising/falling edge selection */
-+		bitmap_andnot(new_stat, chip->irq_trig_fall, cur_stat, gc->ngpio);
-+		bitmap_and(old_stat, chip->irq_trig_raise, cur_stat, gc->ngpio);
-+		bitmap_or(cur_stat, old_stat, new_stat, gc->ngpio);
-+		bitmap_and(pending, cur_stat, trigger, gc->ngpio);
- 
--		return pending_seen;
-+		return !bitmap_empty(pending, gc->ngpio);
- 	}
- 
- 	ret = pca953x_read_regs(chip, chip->regs->input, cur_stat);
-@@ -708,55 +699,40 @@ static bool pca953x_irq_pending(struct pca953x_chip *chip, u8 *pending)
- 
- 	/* Remove output pins from the equation */
- 	pca953x_read_regs(chip, chip->regs->direction, reg_direction);
--	for (i = 0; i < NBANK(chip); i++)
--		cur_stat[i] &= reg_direction[i];
- 
--	memcpy(old_stat, chip->irq_stat, NBANK(chip));
-+	bitmap_copy(old_stat, chip->irq_stat, gc->ngpio);
- 
--	for (i = 0; i < NBANK(chip); i++) {
--		trigger[i] = (cur_stat[i] ^ old_stat[i]) & chip->irq_mask[i];
--		if (trigger[i])
--			trigger_seen = true;
--	}
-+	bitmap_and(new_stat, cur_stat, reg_direction, gc->ngpio);
-+	bitmap_xor(cur_stat, new_stat, old_stat, gc->ngpio);
-+	bitmap_and(trigger, cur_stat, chip->irq_mask, gc->ngpio);
- 
--	if (!trigger_seen)
-+	if (bitmap_empty(trigger, gc->ngpio))
- 		return false;
- 
--	memcpy(chip->irq_stat, cur_stat, NBANK(chip));
-+	bitmap_copy(chip->irq_stat, new_stat, gc->ngpio);
- 
--	for (i = 0; i < NBANK(chip); i++) {
--		pending[i] = (old_stat[i] & chip->irq_trig_fall[i]) |
--			(cur_stat[i] & chip->irq_trig_raise[i]);
--		pending[i] &= trigger[i];
--		if (pending[i])
--			pending_seen = true;
--	}
-+	bitmap_and(cur_stat, chip->irq_trig_fall, old_stat, gc->ngpio);
-+	bitmap_and(old_stat, chip->irq_trig_raise, new_stat, gc->ngpio);
-+	bitmap_or(new_stat, old_stat, cur_stat, gc->ngpio);
-+	bitmap_and(pending, new_stat, trigger, gc->ngpio);
- 
--	return pending_seen;
-+	return !bitmap_empty(pending, gc->ngpio);
- }
- 
- static irqreturn_t pca953x_irq_handler(int irq, void *devid)
- {
- 	struct pca953x_chip *chip = devid;
--	u8 pending[MAX_BANK];
--	u8 level;
--	unsigned nhandled = 0;
--	int i;
-+	struct gpio_chip *gc = &chip->gpio_chip;
-+	DECLARE_BITMAP(pending, MAX_LINE);
-+	int level;
- 
- 	if (!pca953x_irq_pending(chip, pending))
- 		return IRQ_NONE;
- 
--	for (i = 0; i < NBANK(chip); i++) {
--		while (pending[i]) {
--			level = __ffs(pending[i]);
--			handle_nested_irq(irq_find_mapping(chip->gpio_chip.irq.domain,
--							level + (BANK_SZ * i)));
--			pending[i] &= ~(1 << level);
--			nhandled++;
--		}
--	}
-+	for_each_set_bit(level, pending, gc->ngpio)
-+		handle_nested_irq(irq_find_mapping(gc->irq.domain, level));
- 
--	return (nhandled > 0) ? IRQ_HANDLED : IRQ_NONE;
-+	return bitmap_empty(pending, gc->ngpio) ? IRQ_NONE : IRQ_HANDLED;
- }
- 
- static int pca953x_irq_setup(struct pca953x_chip *chip,
-@@ -764,8 +740,9 @@ static int pca953x_irq_setup(struct pca953x_chip *chip,
- {
- 	struct i2c_client *client = chip->client;
- 	struct irq_chip *irq_chip = &chip->irq_chip;
--	u8 reg_direction[MAX_BANK];
--	int ret, i;
-+	DECLARE_BITMAP(reg_direction, MAX_LINE);
-+	DECLARE_BITMAP(irq_stat, MAX_LINE);
-+	int ret;
- 
- 	if (!client->irq)
- 		return 0;
-@@ -776,7 +753,7 @@ static int pca953x_irq_setup(struct pca953x_chip *chip,
- 	if (!(chip->driver_data & PCA_INT))
- 		return 0;
- 
--	ret = pca953x_read_regs(chip, chip->regs->input, chip->irq_stat);
-+	ret = pca953x_read_regs(chip, chip->regs->input, irq_stat);
- 	if (ret)
- 		return ret;
- 
-@@ -786,8 +763,7 @@ static int pca953x_irq_setup(struct pca953x_chip *chip,
- 	 * this purpose.
- 	 */
- 	pca953x_read_regs(chip, chip->regs->direction, reg_direction);
--	for (i = 0; i < NBANK(chip); i++)
--		chip->irq_stat[i] &= reg_direction[i];
-+	bitmap_and(chip->irq_stat, irq_stat, reg_direction, chip->gpio_chip.ngpio);
- 	mutex_init(&chip->irq_lock);
- 
- 	ret = devm_request_threaded_irq(&client->dev, client->irq,
-@@ -839,8 +815,8 @@ static int pca953x_irq_setup(struct pca953x_chip *chip,
- 
- static int device_pca95xx_init(struct pca953x_chip *chip, u32 invert)
- {
-+	DECLARE_BITMAP(val, MAX_LINE);
- 	int ret;
--	u8 val[MAX_BANK];
- 
- 	ret = regcache_sync_region(chip->regmap, chip->regs->output,
- 				   chip->regs->output + NBANK(chip));
-@@ -854,9 +830,9 @@ static int device_pca95xx_init(struct pca953x_chip *chip, u32 invert)
- 
- 	/* set platform specific polarity inversion */
- 	if (invert)
--		memset(val, 0xFF, NBANK(chip));
-+		bitmap_fill(val, MAX_LINE);
- 	else
--		memset(val, 0, NBANK(chip));
-+		bitmap_zero(val, MAX_LINE);
- 
- 	ret = pca953x_write_regs(chip, chip->regs->invert, val);
- out:
-@@ -865,8 +841,8 @@ static int device_pca95xx_init(struct pca953x_chip *chip, u32 invert)
- 
- static int device_pca957x_init(struct pca953x_chip *chip, u32 invert)
- {
-+	DECLARE_BITMAP(val, MAX_LINE);
- 	int ret;
--	u8 val[MAX_BANK];
- 
- 	ret = device_pca95xx_init(chip, invert);
- 	if (ret)
--- 
-2.23.0
+> and to squash the incomplete changes from your branch into my changes.
+> How did you think that was going to pan out?
+>
 
+When saying that you can squash my change if you like, I referred to
+the unfinished patch[1], not an applied, self-contained change
+from[2].
+
+[1] https://github.com/brgl/linux/commit/99b85d1c26ea51b7b6841b2f2971c31d1d=
+544c2f
+[2] https://github.com/brgl/linux/commit/f6cfbbe2950b2f7ae6a99d5e13285c8fad=
+5975d2
+
+> > > Signed-off-by: Kent Gibson <warthog618@gmail.com>
+> > > ---
+> > >  drivers/gpio/gpiolib.c | 60 +++++++++++++++++++++++++---------------=
+--
+> > >  1 file changed, 36 insertions(+), 24 deletions(-)
+> > >
+> > > diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
+> > > index 9d2a5e2f6e77..053847b6187f 100644
+> > > --- a/drivers/gpio/gpiolib.c
+> > > +++ b/drivers/gpio/gpiolib.c
+> > > @@ -905,6 +905,38 @@ static int lineevent_create(struct gpio_device *=
+gdev, void __user *ip)
+> > >         if (copy_from_user(&eventreq, ip, sizeof(eventreq)))
+> > >                 return -EFAULT;
+> > >
+> > > +       offset =3D eventreq.lineoffset;
+> > > +       lflags =3D eventreq.handleflags;
+> > > +       eflags =3D eventreq.eventflags;
+> > > +
+> > > +       if (offset >=3D gdev->ngpio)
+> > > +               return -EINVAL;
+> > > +
+> > > +       /* Return an error if a unknown flag is set */
+> > > +       if ((lflags & ~GPIOHANDLE_REQUEST_VALID_FLAGS) ||
+> > > +           (eflags & ~GPIOEVENT_REQUEST_VALID_FLAGS))
+> > > +               return -EINVAL;
+> > > +
+> > > +       /* This is just wrong: we don't look for events on output lin=
+es */
+> > > +       if ((lflags & GPIOHANDLE_REQUEST_OUTPUT) ||
+> > > +           (lflags & GPIOHANDLE_REQUEST_OPEN_DRAIN) ||
+> > > +           (lflags & GPIOHANDLE_REQUEST_OPEN_SOURCE))
+> > > +               return -EINVAL;
+> > > +
+> > > +       /* PULL_UP and PULL_DOWN flags only make sense for input mode=
+. */
+> > > +       if (!(lflags & GPIOHANDLE_REQUEST_INPUT) &&
+> > > +           ((lflags & GPIOHANDLE_REQUEST_PULL_UP) ||
+> > > +            (lflags & GPIOHANDLE_REQUEST_PULL_DOWN)))
+> > > +               return -EINVAL;
+> > > +
+> > > +       /*
+> > > +        * Do not allow both pull-up and pull-down flags to be set as=
+ they
+> > > +        *  are contradictory.
+> > > +        */
+> > > +       if ((lflags & GPIOHANDLE_REQUEST_PULL_UP) &&
+> > > +           (lflags & GPIOHANDLE_REQUEST_PULL_DOWN))
+> > > +               return -EINVAL;
+> > > +
+> > >         le =3D kzalloc(sizeof(*le), GFP_KERNEL);
+> > >         if (!le)
+> > >                 return -ENOMEM;
+> > > @@ -922,30 +954,6 @@ static int lineevent_create(struct gpio_device *=
+gdev, void __user *ip)
+> > >                 }
+> > >         }
+> > >
+> > > -       offset =3D eventreq.lineoffset;
+> > > -       lflags =3D eventreq.handleflags;
+> > > -       eflags =3D eventreq.eventflags;
+> > > -
+> > > -       if (offset >=3D gdev->ngpio) {
+> > > -               ret =3D -EINVAL;
+> > > -               goto out_free_label;
+> > > -       }
+> > > -
+> > > -       /* Return an error if a unknown flag is set */
+> > > -       if ((lflags & ~GPIOHANDLE_REQUEST_VALID_FLAGS) ||
+> > > -           (eflags & ~GPIOEVENT_REQUEST_VALID_FLAGS)) {
+> > > -               ret =3D -EINVAL;
+> > > -               goto out_free_label;
+> > > -       }
+> > > -
+> > > -       /* This is just wrong: we don't look for events on output lin=
+es */
+> > > -       if ((lflags & GPIOHANDLE_REQUEST_OUTPUT) ||
+> > > -           (lflags & GPIOHANDLE_REQUEST_OPEN_DRAIN) ||
+> > > -           (lflags & GPIOHANDLE_REQUEST_OPEN_SOURCE)) {
+> > > -               ret =3D -EINVAL;
+> > > -               goto out_free_label;
+> > > -       }
+> > > -
+> > >         desc =3D &gdev->descs[offset];
+> > >         ret =3D gpiod_request(desc, le->label);
+> > >         if (ret)
+> > > @@ -955,6 +963,10 @@ static int lineevent_create(struct gpio_device *=
+gdev, void __user *ip)
+> > >
+> > >         if (lflags & GPIOHANDLE_REQUEST_ACTIVE_LOW)
+> > >                 set_bit(FLAG_ACTIVE_LOW, &desc->flags);
+> > > +       if (lflags & GPIOHANDLE_REQUEST_PULL_DOWN)
+> > > +               set_bit(FLAG_PULL_DOWN, &desc->flags);
+> > > +       if (lflags & GPIOHANDLE_REQUEST_PULL_UP)
+> > > +               set_bit(FLAG_PULL_UP, &desc->flags);
+> > >
+> >
+> > Correct me if I'm wrong but this looks like it should be part of
+> > Drew's patch (1/6) in this series right? You can modify it and add
+> > your Signed-off-by tag. In fact your Signed-off-by is needed anyway if
+> > you're sending someone else's patches.
+> >
+> No problem - you are wrong.  Drew's patch added support on handle request=
+s.
+> This patch adds support on event requests.
+>
+> Or are you do you want me to squash the whole series down to 2 - gpiolib
+> and mockup?
+>
