@@ -2,81 +2,71 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id D61CAD68F0
-	for <lists+linux-gpio@lfdr.de>; Mon, 14 Oct 2019 19:59:14 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9E811D6942
+	for <lists+linux-gpio@lfdr.de>; Mon, 14 Oct 2019 20:15:56 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730616AbfJNR7N (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 14 Oct 2019 13:59:13 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:40707 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726589AbfJNR7N (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 14 Oct 2019 13:59:13 -0400
-Received: by mail-pg1-f196.google.com with SMTP id e13so2320033pga.7;
-        Mon, 14 Oct 2019 10:59:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=XN1W11UdnVSpmM8IBnNjLEn4Slzsx790GpHtKtPVAlo=;
-        b=V60ItJYNKZfadf+Ceewo994i+FEZYS4kU89CY6CLJ2GaPSAo8Py82mDvlMV6izozS3
-         un9AB+fn72Z0RtEFjVwlQeYqgz0hNpvr9qTvV5YETqUQx1b/lzASdk9NSC+Ocvv3BRqA
-         myuHSRQQ6K5IDKPWh7IAJBuP/0tu9m3H5NXCitwRUrQZXuedisaxE69bftubVJNMPp5G
-         nR2txXx17bX0tg1CdPc7yfZXiKNGq7S/HKjC7WEJ9Cof1qgkgy6QdDHYMq9BDRILp/ub
-         sS3fDU1OMOf+gOTopKogew7GgH3K1s/5R9g6Ucy83+ki9uwE2IajqqdJvRH++pznvUf+
-         Otaw==
+        id S1732805AbfJNSPz (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 14 Oct 2019 14:15:55 -0400
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:38077 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731955AbfJNSPz (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 14 Oct 2019 14:15:55 -0400
+Received: by mail-ot1-f65.google.com with SMTP id e11so14592191otl.5;
+        Mon, 14 Oct 2019 11:15:53 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=XN1W11UdnVSpmM8IBnNjLEn4Slzsx790GpHtKtPVAlo=;
-        b=oWWKR3OjaKgB7NC5iYI5QNZIVbxrP5kFpIZy0mY38cK0NwJ/KELwh+lm4BQyMpNvkT
-         j0/l5eNAw30GLr3NHxH0TvxP1sTyE+FkGe8iff0qhnebFOKBm16L9WHdGzWs3M4jUvv9
-         HP3mO5dLcuPnnbfZzcJktNx+j7i/1VXYtL/56xeMBkZZitJRyn7X88Cgg1ZqJ1vApypx
-         uC/hHlAt8qunfGAy4MFN4JO9URx6iPnHuP+mwGQayr+HCh1bitnw09VyZYFSRl8Co3fD
-         S3ew/4GLvVANX7Gaw6mdf6BMDiJCDAcwVsznKMya3O7sXF0FZSqq+ISSVNEARwMa3qlU
-         YTeg==
-X-Gm-Message-State: APjAAAVkrYem8Mt3/bsLXNgJBIqSWJ+PxMkvz/k8gv5yRlJdM0QeK0eF
-        cZR3EBgUDzi4C7QaBwz2L/G5+582K2dGDHDM1JA=
-X-Google-Smtp-Source: APXvYqzraupcIWwI76kQ4DY04c/kHa31m8HupWF67hdf3F6diQxFBi44IWY2xMjlmWlZ/dDNeOT+L8ZlW0sC7Eacqt8=
-X-Received: by 2002:a17:90a:b391:: with SMTP id e17mr38652318pjr.132.1571075952238;
- Mon, 14 Oct 2019 10:59:12 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=TiZbwsrM4/f/r5LoaJ2jEpnL+9g4W53LGZPuPtXJ5LM=;
+        b=Qb6WWSFS5xiw72NuHODsUzYvIlK6C3S0EHPdYaZZ4YzeziQOETw74vmIjKKj8XKhYN
+         fpTZ3/RzVjHxyZGX/3skROiP7fTheLVNhegS29mdJzX0zC4UtXgWrzP74oGKq1sYdHcT
+         xXTdWnojcSkTcEtiHwMAxlf+q9ILEXkk353h2veqYrtYDGZCEcle3PRb8Am962FolkfM
+         MxZUCrErm+z4Ga9CzJBjchTKZWGwokLfHuibSyWyvZmQvfosPZ22nKAV2rvIqYSLTo1j
+         g6edHEP9HTPI74iIkOE13DybYJpZffIxzlpTmvQ95diC7mwNgFTB0o8LvLsYRSyU2InK
+         JojQ==
+X-Gm-Message-State: APjAAAUpr0NxIGOosoGnJkobYwniB66OBBz1iWHsjyFo19Wf5F1ldie/
+        7mIQYGqGWZUizN1NuHAxnQ==
+X-Google-Smtp-Source: APXvYqwwLBpes6pzkDEJ5uGNYvvOO1uZW4E2cZtm+9i7VdKdIHpEhdpbx+gD453w2aQEhuO6bNHFQw==
+X-Received: by 2002:a9d:5f0f:: with SMTP id f15mr23799786oti.251.1571076953138;
+        Mon, 14 Oct 2019 11:15:53 -0700 (PDT)
+Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id d95sm6216527otb.25.2019.10.14.11.15.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 14 Oct 2019 11:15:52 -0700 (PDT)
+Date:   Mon, 14 Oct 2019 13:15:52 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Jianqun Xu <jay.xu@rock-chips.com>
+Cc:     linus.walleij@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com,
+        heiko@sntech.de, linux-gpio@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Jianqun Xu <jay.xu@rock-chips.com>
+Subject: Re: [PATCH v2 1/2] dt-bindings: pinctrl: rockchip: add rk3308 SoC
+ support
+Message-ID: <20191014181552.GA12199@bogus>
+References: <20191012061528.27821-1-jay.xu@rock-chips.com>
+ <20191014030348.18860-1-jay.xu@rock-chips.com>
 MIME-Version: 1.0
-References: <20191014124803.13661-1-miquel.raynal@bootlin.com>
-In-Reply-To: <20191014124803.13661-1-miquel.raynal@bootlin.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Mon, 14 Oct 2019 20:59:01 +0300
-Message-ID: <CAHp75Vc4vnNVKc+Q_TY8DpwV4rLZYGm2MvGBC7r67XjmtNoskQ@mail.gmail.com>
-Subject: Re: [PATCH] gpio: pca953x: Add Maxim MAX7313 PWM support
-To:     Miquel Raynal <miquel.raynal@bootlin.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        linux-pwm@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191014030348.18860-1-jay.xu@rock-chips.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Oct 14, 2019 at 4:09 PM Miquel Raynal <miquel.raynal@bootlin.com> wrote:
->
-> The MAX7313 chip is fully compatible with the PCA9535 on its basic
-> functions but can also manage the intensity on each of its ports with
-> PWM. Each output is independent and may be tuned with 16 values (4
-> bits per output). The period is always 32kHz, only the duty-cycle may
-> be changed. One can use any output as GPIO or PWM.
+On Mon, 14 Oct 2019 11:03:48 +0800, Jianqun Xu wrote:
+> Add rk3308 SoC support to rockchip pinctrl.
+> 
+> Reviewed-by: Heiko Stuebner <heiko@sntech.de>
+> Signed-off-by: Jianqun Xu <jay.xu@rock-chips.com>
+> ---
+> changes since v1:
+> - Add Reviewed-by: Heiko Stuebner <heiko@sntech.de>
+> 
+>  Documentation/devicetree/bindings/pinctrl/rockchip,pinctrl.txt | 1 +
+>  1 file changed, 1 insertion(+)
+> 
 
-Can we rather not contaminate driver with this?
-
-Just register a separate PWM driver and export its functionality to
-GPIO, or other way around (in the latter case we actually have PCA8685
-which provides a GPIO fgunctionality).
-
--- 
-With Best Regards,
-Andy Shevchenko
+Acked-by: Rob Herring <robh@kernel.org>
