@@ -2,71 +2,68 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 9E811D6942
-	for <lists+linux-gpio@lfdr.de>; Mon, 14 Oct 2019 20:15:56 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3D517D6C0F
+	for <lists+linux-gpio@lfdr.de>; Tue, 15 Oct 2019 01:35:53 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732805AbfJNSPz (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 14 Oct 2019 14:15:55 -0400
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:38077 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731955AbfJNSPz (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 14 Oct 2019 14:15:55 -0400
-Received: by mail-ot1-f65.google.com with SMTP id e11so14592191otl.5;
-        Mon, 14 Oct 2019 11:15:53 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=TiZbwsrM4/f/r5LoaJ2jEpnL+9g4W53LGZPuPtXJ5LM=;
-        b=Qb6WWSFS5xiw72NuHODsUzYvIlK6C3S0EHPdYaZZ4YzeziQOETw74vmIjKKj8XKhYN
-         fpTZ3/RzVjHxyZGX/3skROiP7fTheLVNhegS29mdJzX0zC4UtXgWrzP74oGKq1sYdHcT
-         xXTdWnojcSkTcEtiHwMAxlf+q9ILEXkk353h2veqYrtYDGZCEcle3PRb8Am962FolkfM
-         MxZUCrErm+z4Ga9CzJBjchTKZWGwokLfHuibSyWyvZmQvfosPZ22nKAV2rvIqYSLTo1j
-         g6edHEP9HTPI74iIkOE13DybYJpZffIxzlpTmvQ95diC7mwNgFTB0o8LvLsYRSyU2InK
-         JojQ==
-X-Gm-Message-State: APjAAAUpr0NxIGOosoGnJkobYwniB66OBBz1iWHsjyFo19Wf5F1ldie/
-        7mIQYGqGWZUizN1NuHAxnQ==
-X-Google-Smtp-Source: APXvYqwwLBpes6pzkDEJ5uGNYvvOO1uZW4E2cZtm+9i7VdKdIHpEhdpbx+gD453w2aQEhuO6bNHFQw==
-X-Received: by 2002:a9d:5f0f:: with SMTP id f15mr23799786oti.251.1571076953138;
-        Mon, 14 Oct 2019 11:15:53 -0700 (PDT)
-Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id d95sm6216527otb.25.2019.10.14.11.15.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 14 Oct 2019 11:15:52 -0700 (PDT)
-Date:   Mon, 14 Oct 2019 13:15:52 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Jianqun Xu <jay.xu@rock-chips.com>
-Cc:     linus.walleij@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com,
-        heiko@sntech.de, linux-gpio@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Jianqun Xu <jay.xu@rock-chips.com>
-Subject: Re: [PATCH v2 1/2] dt-bindings: pinctrl: rockchip: add rk3308 SoC
- support
-Message-ID: <20191014181552.GA12199@bogus>
-References: <20191012061528.27821-1-jay.xu@rock-chips.com>
- <20191014030348.18860-1-jay.xu@rock-chips.com>
+        id S1726561AbfJNXfu (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 14 Oct 2019 19:35:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57416 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726300AbfJNXfu (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Mon, 14 Oct 2019 19:35:50 -0400
+Received: from localhost (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2D83B217D9;
+        Mon, 14 Oct 2019 23:35:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1571096149;
+        bh=9x7QTlJvEdWt7hKLckN4uAgui8PzFSsEoVxTdJGTrUw=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=VF9S5o431W4XboLdHnMMYjG8rvkeDw+upKBFATqEIzFMIQe0nbSUlN2ewdcxV3YqZ
+         KEwBmGSXv9hBDAfNexU3VbenOTH4DO+fSoBWte0TsuXYIr4FC9va8hgRLM/j/XEfsf
+         vXwEIJBrnzqTLGArScb3aOH3LuWUwbaC58K3eeVs=
+Date:   Mon, 14 Oct 2019 19:35:48 -0400
+From:   Sasha Levin <sashal@kernel.org>
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-gpio@vger.kernel.org, stable@vger.kernel.org,
+        Marco Felsch <m.felsch@pengutronix.de>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Subject: Re: [PATCH v5.3] gpio: fix getting nonexclusive gpiods from DT
+Message-ID: <20191014233548.GD31224@sasha-vm>
+References: <20191014155341.13145-1-brgl@bgdev.pl>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=us-ascii; format=flowed
 Content-Disposition: inline
-In-Reply-To: <20191014030348.18860-1-jay.xu@rock-chips.com>
+In-Reply-To: <20191014155341.13145-1-brgl@bgdev.pl>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, 14 Oct 2019 11:03:48 +0800, Jianqun Xu wrote:
-> Add rk3308 SoC support to rockchip pinctrl.
-> 
-> Reviewed-by: Heiko Stuebner <heiko@sntech.de>
-> Signed-off-by: Jianqun Xu <jay.xu@rock-chips.com>
-> ---
-> changes since v1:
-> - Add Reviewed-by: Heiko Stuebner <heiko@sntech.de>
-> 
->  Documentation/devicetree/bindings/pinctrl/rockchip,pinctrl.txt | 1 +
->  1 file changed, 1 insertion(+)
-> 
+On Mon, Oct 14, 2019 at 05:53:41PM +0200, Bartosz Golaszewski wrote:
+>From: Marco Felsch <m.felsch@pengutronix.de>
+>
+>Since commit ec757001c818 ("gpio: Enable nonexclusive gpiods from DT
+>nodes") we are able to get GPIOD_FLAGS_BIT_NONEXCLUSIVE marked gpios.
+>Currently the gpiolib uses the wrong flags variable for the check. We
+>need to check the gpiod_flags instead of the of_gpio_flags else we
+>return -EBUSY for GPIOD_FLAGS_BIT_NONEXCLUSIVE marked and requested
+>gpiod's.
+>
+>Fixes: ec757001c818 gpio: Enable nonexclusive gpiods from DT nodes
+>Cc: stable@vger.kernel.org
+>Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
+>[Bartosz: the function was moved to gpiolib-of.c so updated the patch]
+>Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+>[Bartosz: backported to v5.3.y]
+>Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 
-Acked-by: Rob Herring <robh@kernel.org>
+Queued this one for 5.3, thanks!
+
+-- 
+Thanks,
+Sasha
