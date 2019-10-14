@@ -2,526 +2,122 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 21B36D59CA
-	for <lists+linux-gpio@lfdr.de>; Mon, 14 Oct 2019 05:05:55 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1E3C4D5DBD
+	for <lists+linux-gpio@lfdr.de>; Mon, 14 Oct 2019 10:43:53 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729550AbfJNDFu (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sun, 13 Oct 2019 23:05:50 -0400
-Received: from lucky1.263xmail.com ([211.157.147.134]:47632 "EHLO
-        lucky1.263xmail.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729358AbfJNDFu (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sun, 13 Oct 2019 23:05:50 -0400
-Received: from localhost (unknown [192.168.167.70])
-        by lucky1.263xmail.com (Postfix) with ESMTP id 6F37F46F49;
-        Mon, 14 Oct 2019 11:04:11 +0800 (CST)
-X-MAIL-GRAY: 0
-X-MAIL-DELIVERY: 1
-X-ADDR-CHECKED4: 1
-X-ANTISPAM-LEVEL: 2
-X-ABS-CHECKED: 0
-Received: from localhost.localdomain (unknown [58.22.7.114])
-        by smtp.263.net (postfix) whith ESMTP id P29289T140069197305600S1571022249836926_;
-        Mon, 14 Oct 2019 11:04:11 +0800 (CST)
-X-IP-DOMAINF: 1
-X-UNIQUE-TAG: <9f4217cdf9a3e140f49507c4be8ce70c>
-X-RL-SENDER: jay.xu@rock-chips.com
-X-SENDER: xjq@rock-chips.com
-X-LOGIN-NAME: jay.xu@rock-chips.com
-X-FST-TO: linus.walleij@linaro.org
-X-SENDER-IP: 58.22.7.114
-X-ATTACHMENT-NUM: 0
-X-DNS-TYPE: 0
-From:   Jianqun Xu <jay.xu@rock-chips.com>
-To:     linus.walleij@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com,
-        heiko@sntech.de, linux-gpio@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc:     Jianqun Xu <jay.xu@rock-chips.com>
-Subject: [PATCH v2 2/2] pinctrl: rockchip: add rk3308 SoC support
-Date:   Mon, 14 Oct 2019 11:04:08 +0800
-Message-Id: <20191014030408.18914-1-jay.xu@rock-chips.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20191012061528.27821-1-jay.xu@rock-chips.com>
-References: <20191012061528.27821-1-jay.xu@rock-chips.com>
+        id S1730474AbfJNInw (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 14 Oct 2019 04:43:52 -0400
+Received: from mga09.intel.com ([134.134.136.24]:61088 "EHLO mga09.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730439AbfJNInw (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Mon, 14 Oct 2019 04:43:52 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 14 Oct 2019 01:43:51 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.67,295,1566889200"; 
+   d="scan'208";a="278805632"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by orsmga001.jf.intel.com with ESMTP; 14 Oct 2019 01:43:50 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1003)
+        id 4F118E3; Mon, 14 Oct 2019 11:43:49 +0300 (EEST)
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Linus Walleij <linus.walleij@linaro.org>,
+        linux-gpio@vger.kernel.org,
+        Mika Westerberg <mika.westerberg@linux.intel.com>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: [PATCH v1 1/3] pinctrl: intel: Introduce intel_restore_padcfg() helper
+Date:   Mon, 14 Oct 2019 11:43:46 +0300
+Message-Id: <20191014084348.42489-1-andriy.shevchenko@linux.intel.com>
+X-Mailer: git-send-email 2.23.0
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-This patch do support pinctrl for RK3308 SoCs.
+Deduplicate restoring PADCFGx registers by using a common helper.
 
-Reviewed-by: Heiko Stuebner <heiko@sntech.de>
-Signed-off-by: Jianqun Xu <jay.xu@rock-chips.com>
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 ---
-changes since v1:
-- Add type case for pull get/set
-- Add Reviewed-by: Heiko Stuebner <heiko@sntech.de>
+ drivers/pinctrl/intel/pinctrl-intel.c | 51 +++++++++++++--------------
+ 1 file changed, 24 insertions(+), 27 deletions(-)
 
- drivers/pinctrl/pinctrl-rockchip.c | 379 +++++++++++++++++++++++++++++
- 1 file changed, 379 insertions(+)
-
-diff --git a/drivers/pinctrl/pinctrl-rockchip.c b/drivers/pinctrl/pinctrl-rockchip.c
-index dc0bbf198cbc..15eff9676ad0 100644
---- a/drivers/pinctrl/pinctrl-rockchip.c
-+++ b/drivers/pinctrl/pinctrl-rockchip.c
-@@ -58,6 +58,7 @@ enum rockchip_pinctrl_type {
- 	RK3128,
- 	RK3188,
- 	RK3288,
-+	RK3308,
- 	RK3368,
- 	RK3399,
- };
-@@ -70,6 +71,7 @@ enum rockchip_pinctrl_type {
- #define IOMUX_SOURCE_PMU	BIT(2)
- #define IOMUX_UNROUTED		BIT(3)
- #define IOMUX_WIDTH_3BIT	BIT(4)
-+#define IOMUX_WIDTH_2BIT	BIT(5)
- 
- /**
-  * @type: iomux variant using IOMUX_* constants
-@@ -656,6 +658,100 @@ static  struct rockchip_mux_recalced_data rk3128_mux_recalced_data[] = {
- 	},
- };
- 
-+static struct rockchip_mux_recalced_data rk3308_mux_recalced_data[] = {
-+	{
-+		.num = 1,
-+		.pin = 14,
-+		.reg = 0x28,
-+		.bit = 12,
-+		.mask = 0xf
-+	}, {
-+		.num = 1,
-+		.pin = 15,
-+		.reg = 0x2c,
-+		.bit = 0,
-+		.mask = 0x3
-+	}, {
-+		.num = 1,
-+		.pin = 18,
-+		.reg = 0x30,
-+		.bit = 4,
-+		.mask = 0xf
-+	}, {
-+		.num = 1,
-+		.pin = 19,
-+		.reg = 0x30,
-+		.bit = 8,
-+		.mask = 0xf
-+	}, {
-+		.num = 1,
-+		.pin = 20,
-+		.reg = 0x30,
-+		.bit = 12,
-+		.mask = 0xf
-+	}, {
-+		.num = 1,
-+		.pin = 21,
-+		.reg = 0x34,
-+		.bit = 0,
-+		.mask = 0xf
-+	}, {
-+		.num = 1,
-+		.pin = 22,
-+		.reg = 0x34,
-+		.bit = 4,
-+		.mask = 0xf
-+	}, {
-+		.num = 1,
-+		.pin = 23,
-+		.reg = 0x34,
-+		.bit = 8,
-+		.mask = 0xf
-+	}, {
-+		.num = 3,
-+		.pin = 12,
-+		.reg = 0x68,
-+		.bit = 8,
-+		.mask = 0xf
-+	}, {
-+		.num = 3,
-+		.pin = 13,
-+		.reg = 0x68,
-+		.bit = 12,
-+		.mask = 0xf
-+	}, {
-+		.num = 2,
-+		.pin = 2,
-+		.reg = 0x608,
-+		.bit = 0,
-+		.mask = 0x7
-+	}, {
-+		.num = 2,
-+		.pin = 3,
-+		.reg = 0x608,
-+		.bit = 4,
-+		.mask = 0x7
-+	}, {
-+		.num = 2,
-+		.pin = 16,
-+		.reg = 0x610,
-+		.bit = 8,
-+		.mask = 0x7
-+	}, {
-+		.num = 3,
-+		.pin = 10,
-+		.reg = 0x610,
-+		.bit = 0,
-+		.mask = 0x7
-+	}, {
-+		.num = 3,
-+		.pin = 11,
-+		.reg = 0x610,
-+		.bit = 4,
-+		.mask = 0x7
-+	},
-+};
-+
- static struct rockchip_mux_recalced_data rk3328_mux_recalced_data[] = {
- 	{
- 		.num = 2,
-@@ -982,6 +1078,192 @@ static struct rockchip_mux_route_data rk3288_mux_route_data[] = {
- 	},
- };
- 
-+static struct rockchip_mux_route_data rk3308_mux_route_data[] = {
-+	{
-+		/* rtc_clk */
-+		.bank_num = 0,
-+		.pin = 19,
-+		.func = 1,
-+		.route_offset = 0x314,
-+		.route_val = BIT(16 + 0) | BIT(0),
-+	}, {
-+		/* uart2_rxm0 */
-+		.bank_num = 1,
-+		.pin = 22,
-+		.func = 2,
-+		.route_offset = 0x314,
-+		.route_val = BIT(16 + 2) | BIT(16 + 3),
-+	}, {
-+		/* uart2_rxm1 */
-+		.bank_num = 4,
-+		.pin = 26,
-+		.func = 2,
-+		.route_offset = 0x314,
-+		.route_val = BIT(16 + 2) | BIT(16 + 3) | BIT(2),
-+	}, {
-+		/* i2c3_sdam0 */
-+		.bank_num = 0,
-+		.pin = 15,
-+		.func = 2,
-+		.route_offset = 0x608,
-+		.route_val = BIT(16 + 8) | BIT(16 + 9),
-+	}, {
-+		/* i2c3_sdam1 */
-+		.bank_num = 3,
-+		.pin = 12,
-+		.func = 2,
-+		.route_offset = 0x608,
-+		.route_val = BIT(16 + 8) | BIT(16 + 9) | BIT(8),
-+	}, {
-+		/* i2c3_sdam2 */
-+		.bank_num = 2,
-+		.pin = 0,
-+		.func = 3,
-+		.route_offset = 0x608,
-+		.route_val = BIT(16 + 8) | BIT(16 + 9) | BIT(9),
-+	}, {
-+		/* i2s-8ch-1-sclktxm0 */
-+		.bank_num = 1,
-+		.pin = 3,
-+		.func = 2,
-+		.route_offset = 0x308,
-+		.route_val = BIT(16 + 3),
-+	}, {
-+		/* i2s-8ch-1-sclkrxm0 */
-+		.bank_num = 1,
-+		.pin = 4,
-+		.func = 2,
-+		.route_offset = 0x308,
-+		.route_val = BIT(16 + 3),
-+	}, {
-+		/* i2s-8ch-1-sclktxm1 */
-+		.bank_num = 1,
-+		.pin = 13,
-+		.func = 2,
-+		.route_offset = 0x308,
-+		.route_val = BIT(16 + 3) | BIT(3),
-+	}, {
-+		/* i2s-8ch-1-sclkrxm1 */
-+		.bank_num = 1,
-+		.pin = 14,
-+		.func = 2,
-+		.route_offset = 0x308,
-+		.route_val = BIT(16 + 3) | BIT(3),
-+	}, {
-+		/* pdm-clkm0 */
-+		.bank_num = 1,
-+		.pin = 4,
-+		.func = 3,
-+		.route_offset = 0x308,
-+		.route_val =  BIT(16 + 12) | BIT(16 + 13),
-+	}, {
-+		/* pdm-clkm1 */
-+		.bank_num = 1,
-+		.pin = 14,
-+		.func = 4,
-+		.route_offset = 0x308,
-+		.route_val = BIT(16 + 12) | BIT(16 + 13) | BIT(12),
-+	}, {
-+		/* pdm-clkm2 */
-+		.bank_num = 2,
-+		.pin = 6,
-+		.func = 2,
-+		.route_offset = 0x308,
-+		.route_val = BIT(16 + 12) | BIT(16 + 13) | BIT(13),
-+	}, {
-+		/* pdm-clkm-m2 */
-+		.bank_num = 2,
-+		.pin = 4,
-+		.func = 3,
-+		.route_offset = 0x600,
-+		.route_val = BIT(16 + 2) | BIT(2),
-+	}, {
-+		/* spi1_miso */
-+		.bank_num = 3,
-+		.pin = 10,
-+		.func = 3,
-+		.route_offset = 0x314,
-+		.route_val = BIT(16 + 9),
-+	}, {
-+		/* spi1_miso_m1 */
-+		.bank_num = 2,
-+		.pin = 4,
-+		.func = 2,
-+		.route_offset = 0x314,
-+		.route_val = BIT(16 + 9) | BIT(9),
-+	}, {
-+		/* owire_m0 */
-+		.bank_num = 0,
-+		.pin = 11,
-+		.func = 3,
-+		.route_offset = 0x314,
-+		.route_val = BIT(16 + 10) | BIT(16 + 11),
-+	}, {
-+		/* owire_m1 */
-+		.bank_num = 1,
-+		.pin = 22,
-+		.func = 7,
-+		.route_offset = 0x314,
-+		.route_val = BIT(16 + 10) | BIT(16 + 11) | BIT(10),
-+	}, {
-+		/* owire_m2 */
-+		.bank_num = 2,
-+		.pin = 2,
-+		.func = 5,
-+		.route_offset = 0x314,
-+		.route_val = BIT(16 + 10) | BIT(16 + 11) | BIT(11),
-+	}, {
-+		/* can_rxd_m0 */
-+		.bank_num = 0,
-+		.pin = 11,
-+		.func = 2,
-+		.route_offset = 0x314,
-+		.route_val = BIT(16 + 12) | BIT(16 + 13),
-+	}, {
-+		/* can_rxd_m1 */
-+		.bank_num = 1,
-+		.pin = 22,
-+		.func = 5,
-+		.route_offset = 0x314,
-+		.route_val = BIT(16 + 12) | BIT(16 + 13) | BIT(12),
-+	}, {
-+		/* can_rxd_m2 */
-+		.bank_num = 2,
-+		.pin = 2,
-+		.func = 4,
-+		.route_offset = 0x314,
-+		.route_val = BIT(16 + 12) | BIT(16 + 13) | BIT(13),
-+	}, {
-+		/* mac_rxd0_m0 */
-+		.bank_num = 1,
-+		.pin = 20,
-+		.func = 3,
-+		.route_offset = 0x314,
-+		.route_val = BIT(16 + 14),
-+	}, {
-+		/* mac_rxd0_m1 */
-+		.bank_num = 4,
-+		.pin = 2,
-+		.func = 2,
-+		.route_offset = 0x314,
-+		.route_val = BIT(16 + 14) | BIT(14),
-+	}, {
-+		/* uart3_rx */
-+		.bank_num = 3,
-+		.pin = 12,
-+		.func = 4,
-+		.route_offset = 0x314,
-+		.route_val = BIT(16 + 15),
-+	}, {
-+		/* uart3_rx_m1 */
-+		.bank_num = 0,
-+		.pin = 17,
-+		.func = 3,
-+		.route_offset = 0x314,
-+		.route_val = BIT(16 + 15) | BIT(15),
-+	},
-+};
-+
- static struct rockchip_mux_route_data rk3328_mux_route_data[] = {
- 	{
- 		/* uart2dbg_rxm0 */
-@@ -1475,6 +1757,26 @@ static int rv1108_calc_schmitt_reg_and_bit(struct rockchip_pin_bank *bank,
- 	return 0;
+diff --git a/drivers/pinctrl/intel/pinctrl-intel.c b/drivers/pinctrl/intel/pinctrl-intel.c
+index bc013599a9a3..18467e2efe99 100644
+--- a/drivers/pinctrl/intel/pinctrl-intel.c
++++ b/drivers/pinctrl/intel/pinctrl-intel.c
+@@ -1588,6 +1588,27 @@ intel_gpio_update_pad_mode(void __iomem *hostown, u32 mask, u32 value)
+ 	return curr;
  }
  
-+#define RK3308_SCHMITT_PINS_PER_REG		8
-+#define RK3308_SCHMITT_BANK_STRIDE		16
-+#define RK3308_SCHMITT_GRF_OFFSET		0x1a0
-+
-+static int rk3308_calc_schmitt_reg_and_bit(struct rockchip_pin_bank *bank,
-+				    int pin_num, struct regmap **regmap,
-+				    int *reg, u8 *bit)
++static void intel_restore_padcfg(struct intel_pinctrl *pctrl, unsigned int pin,
++				 unsigned int reg, u32 value)
 +{
-+	struct rockchip_pinctrl *info = bank->drvdata;
++	struct device *dev = pctrl->dev;
++	unsigned int n = reg / sizeof(u32);
++	void __iomem *padcfg;
++	u32 mask = (reg == PADCFG0) ? PADCFG0_GPIORXSTATE : 0;
++	u32 val;
 +
-+	*regmap = info->regmap_base;
-+	*reg = RK3308_SCHMITT_GRF_OFFSET;
++	padcfg = intel_get_padcfg(pctrl, pin, reg);
++	if (!padcfg)
++		return;
 +
-+	*reg += bank->bank_num * RK3308_SCHMITT_BANK_STRIDE;
-+	*reg += ((pin_num / RK3308_SCHMITT_PINS_PER_REG) * 4);
-+	*bit = pin_num % RK3308_SCHMITT_PINS_PER_REG;
++	val = readl(padcfg) & ~mask;
++	if (val == value)
++		return;
 +
-+	return 0;
++	writel(value, padcfg);
++	dev_dbg(dev, "restored pin %u padcfg%u %#08x\n", pin, n, readl(padcfg));
 +}
 +
- #define RK2928_PULL_OFFSET		0x118
- #define RK2928_PULL_PINS_PER_REG	16
- #define RK2928_PULL_BANK_STRIDE		8
-@@ -1646,6 +1948,40 @@ static void rk3228_calc_drv_reg_and_bit(struct rockchip_pin_bank *bank,
- 	*bit *= RK3288_DRV_BITS_PER_PIN;
- }
+ int intel_pinctrl_resume_noirq(struct device *dev)
+ {
+ 	struct intel_pinctrl *pctrl = dev_get_drvdata(dev);
+@@ -1601,37 +1622,13 @@ int intel_pinctrl_resume_noirq(struct device *dev)
+ 	pads = pctrl->context.pads;
+ 	for (i = 0; i < pctrl->soc->npins; i++) {
+ 		const struct pinctrl_pin_desc *desc = &pctrl->soc->pins[i];
+-		void __iomem *padcfg;
+-		u32 val;
  
-+#define RK3308_PULL_OFFSET		0xa0
-+
-+static void rk3308_calc_pull_reg_and_bit(struct rockchip_pin_bank *bank,
-+				    int pin_num, struct regmap **regmap,
-+				    int *reg, u8 *bit)
-+{
-+	struct rockchip_pinctrl *info = bank->drvdata;
-+
-+	*regmap = info->regmap_base;
-+	*reg = RK3308_PULL_OFFSET;
-+	*reg += bank->bank_num * RK3188_PULL_BANK_STRIDE;
-+	*reg += ((pin_num / RK3188_PULL_PINS_PER_REG) * 4);
-+
-+	*bit = (pin_num % RK3188_PULL_PINS_PER_REG);
-+	*bit *= RK3188_PULL_BITS_PER_PIN;
-+}
-+
-+#define RK3308_DRV_GRF_OFFSET		0x100
-+
-+static void rk3308_calc_drv_reg_and_bit(struct rockchip_pin_bank *bank,
-+				    int pin_num, struct regmap **regmap,
-+				    int *reg, u8 *bit)
-+{
-+	struct rockchip_pinctrl *info = bank->drvdata;
-+
-+	*regmap = info->regmap_base;
-+	*reg = RK3308_DRV_GRF_OFFSET;
-+	*reg += bank->bank_num * RK3288_DRV_BANK_STRIDE;
-+	*reg += ((pin_num / RK3288_DRV_PINS_PER_REG) * 4);
-+
-+	*bit = (pin_num % RK3288_DRV_PINS_PER_REG);
-+	*bit *= RK3288_DRV_BITS_PER_PIN;
-+}
-+
- #define RK3368_PULL_GRF_OFFSET		0x100
- #define RK3368_PULL_PMU_OFFSET		0x10
+ 		if (!intel_pinctrl_should_save(pctrl, desc->number))
+ 			continue;
  
-@@ -1986,6 +2322,7 @@ static int rockchip_get_pull(struct rockchip_pin_bank *bank, int pin_num)
- 	case RV1108:
- 	case RK3188:
- 	case RK3288:
-+	case RK3308:
- 	case RK3368:
- 	case RK3399:
- 		pull_type = bank->pull_type[pin_num / 8];
-@@ -2030,6 +2367,7 @@ static int rockchip_set_pull(struct rockchip_pin_bank *bank,
- 	case RV1108:
- 	case RK3188:
- 	case RK3288:
-+	case RK3308:
- 	case RK3368:
- 	case RK3399:
- 		pull_type = bank->pull_type[pin_num / 8];
-@@ -2293,6 +2631,7 @@ static bool rockchip_pinconf_pull_valid(struct rockchip_pin_ctrl *ctrl,
- 	case RV1108:
- 	case RK3188:
- 	case RK3288:
-+	case RK3308:
- 	case RK3368:
- 	case RK3399:
- 		return (pull != PIN_CONFIG_BIAS_PULL_PIN_DEFAULT);
-@@ -3709,6 +4048,44 @@ static struct rockchip_pin_ctrl rk3288_pin_ctrl = {
- 		.drv_calc_reg		= rk3288_calc_drv_reg_and_bit,
- };
+-		padcfg = intel_get_padcfg(pctrl, desc->number, PADCFG0);
+-		val = readl(padcfg) & ~PADCFG0_GPIORXSTATE;
+-		if (val != pads[i].padcfg0) {
+-			writel(pads[i].padcfg0, padcfg);
+-			dev_dbg(dev, "restored pin %u padcfg0 %#08x\n",
+-				desc->number, readl(padcfg));
+-		}
+-
+-		padcfg = intel_get_padcfg(pctrl, desc->number, PADCFG1);
+-		val = readl(padcfg);
+-		if (val != pads[i].padcfg1) {
+-			writel(pads[i].padcfg1, padcfg);
+-			dev_dbg(dev, "restored pin %u padcfg1 %#08x\n",
+-				desc->number, readl(padcfg));
+-		}
+-
+-		padcfg = intel_get_padcfg(pctrl, desc->number, PADCFG2);
+-		if (padcfg) {
+-			val = readl(padcfg);
+-			if (val != pads[i].padcfg2) {
+-				writel(pads[i].padcfg2, padcfg);
+-				dev_dbg(dev, "restored pin %u padcfg2 %#08x\n",
+-					desc->number, readl(padcfg));
+-			}
+-		}
++		intel_restore_padcfg(pctrl, desc->number, PADCFG0, pads[i].padcfg0);
++		intel_restore_padcfg(pctrl, desc->number, PADCFG1, pads[i].padcfg1);
++		intel_restore_padcfg(pctrl, desc->number, PADCFG2, pads[i].padcfg2);
+ 	}
  
-+static struct rockchip_pin_bank rk3308_pin_banks[] = {
-+	PIN_BANK_IOMUX_FLAGS(0, 32, "gpio0", IOMUX_WIDTH_2BIT,
-+					     IOMUX_WIDTH_2BIT,
-+					     IOMUX_WIDTH_2BIT,
-+					     IOMUX_WIDTH_2BIT),
-+	PIN_BANK_IOMUX_FLAGS(1, 32, "gpio1", IOMUX_WIDTH_2BIT,
-+					     IOMUX_WIDTH_2BIT,
-+					     IOMUX_WIDTH_2BIT,
-+					     IOMUX_WIDTH_2BIT),
-+	PIN_BANK_IOMUX_FLAGS(2, 32, "gpio2", IOMUX_WIDTH_2BIT,
-+					     IOMUX_WIDTH_2BIT,
-+					     IOMUX_WIDTH_2BIT,
-+					     IOMUX_WIDTH_2BIT),
-+	PIN_BANK_IOMUX_FLAGS(3, 32, "gpio3", IOMUX_WIDTH_2BIT,
-+					     IOMUX_WIDTH_2BIT,
-+					     IOMUX_WIDTH_2BIT,
-+					     IOMUX_WIDTH_2BIT),
-+	PIN_BANK_IOMUX_FLAGS(4, 32, "gpio4", IOMUX_WIDTH_2BIT,
-+					     IOMUX_WIDTH_2BIT,
-+					     IOMUX_WIDTH_2BIT,
-+					     IOMUX_WIDTH_2BIT),
-+};
-+
-+static struct rockchip_pin_ctrl rk3308_pin_ctrl = {
-+		.pin_banks		= rk3308_pin_banks,
-+		.nr_banks		= ARRAY_SIZE(rk3308_pin_banks),
-+		.label			= "RK3308-GPIO",
-+		.type			= RK3308,
-+		.grf_mux_offset		= 0x0,
-+		.iomux_recalced		= rk3308_mux_recalced_data,
-+		.niomux_recalced	= ARRAY_SIZE(rk3308_mux_recalced_data),
-+		.iomux_routes		= rk3308_mux_route_data,
-+		.niomux_routes		= ARRAY_SIZE(rk3308_mux_route_data),
-+		.pull_calc_reg		= rk3308_calc_pull_reg_and_bit,
-+		.drv_calc_reg		= rk3308_calc_drv_reg_and_bit,
-+		.schmitt_calc_reg	= rk3308_calc_schmitt_reg_and_bit,
-+};
-+
- static struct rockchip_pin_bank rk3328_pin_banks[] = {
- 	PIN_BANK_IOMUX_FLAGS(0, 32, "gpio0", 0, 0, 0, 0),
- 	PIN_BANK_IOMUX_FLAGS(1, 32, "gpio1", 0, 0, 0, 0),
-@@ -3849,6 +4226,8 @@ static const struct of_device_id rockchip_pinctrl_dt_match[] = {
- 		.data = &rk3228_pin_ctrl },
- 	{ .compatible = "rockchip,rk3288-pinctrl",
- 		.data = &rk3288_pin_ctrl },
-+	{ .compatible = "rockchip,rk3308-pinctrl",
-+		.data = &rk3308_pin_ctrl },
- 	{ .compatible = "rockchip,rk3328-pinctrl",
- 		.data = &rk3328_pin_ctrl },
- 	{ .compatible = "rockchip,rk3368-pinctrl",
+ 	communities = pctrl->context.communities;
 -- 
-2.17.1
-
-
+2.23.0
 
