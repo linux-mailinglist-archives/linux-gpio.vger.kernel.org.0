@@ -2,57 +2,38 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 2D660D66E3
-	for <lists+linux-gpio@lfdr.de>; Mon, 14 Oct 2019 18:10:33 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0DEE8D66ED
+	for <lists+linux-gpio@lfdr.de>; Mon, 14 Oct 2019 18:11:59 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731999AbfJNQKb (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 14 Oct 2019 12:10:31 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:54194 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732195AbfJNQKb (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 14 Oct 2019 12:10:31 -0400
-Received: by mail-wm1-f67.google.com with SMTP id i16so17872802wmd.3
-        for <linux-gpio@vger.kernel.org>; Mon, 14 Oct 2019 09:10:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=fdHT8ivUwY4K/O7PUXhsjrPh/KxNdPrKz/rCnEthp2g=;
-        b=oB/o2n+sTLQb0mMT+TNUEFarogNB9IVzXN+2eOk7fQ+XH2wl3FQN7tDFmZHcZaKQDU
-         5Z9Q98L6a/ILIPaLPEEkEQ0tZj/RGM+OckMK1JpetjW/MCQCiEkz+gCP4NnAzJ1IStQK
-         gYIAMkpYjDFdeTKE18Y8Slw8pF4LNChHOnAIkx1PrLbsusZUUHh2WrZbgI9Tb2ilH8ZF
-         VXrV8d4zVKhhi+pjxTUorG2aiAMcFlaf70P3kAkB2+Qqs2dVydw8zLgX1Gt1g7tjnB2b
-         j4vsFzJ6JNVkuFC8MLafwDh4WCxbJmOKL1rHGBzN45bSb6oUG3RfAsuWcUAzDXwIyndH
-         i3Ug==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=fdHT8ivUwY4K/O7PUXhsjrPh/KxNdPrKz/rCnEthp2g=;
-        b=J2beDoc6UqnYFzcDqiB42D7T8jQjsIpzPAZz5nlsmwcBWiR+B+kNkYhL2PN4RIKsIH
-         XPuXey3aBLfP1h9q4tNDOxZ+9qTkiLhL1O+/+mEVr5Mt7KCd3MHx+kuLGcOCE6lfUbjI
-         iAJULihPoGK1uGYQMmLiYKPGv2uGspphLFQmDROft4zU+eJPkRbJJYs68s+ryaRCqfHF
-         ZRnenNH4g9EjFt5bAJ6lBBC9RY1nEKUgTiGBNI03afFOPSAcPomEVcGE1avfM2E0MtC5
-         Lq/ZtmRM6o9QoN+fRdzDvEXeBPr79YyXXpdS8eqzqEfBN3xtQNQu/k9jNIh4EiKdo7X4
-         9oqA==
-X-Gm-Message-State: APjAAAUTYRrDRTlT8AYN9KRVHLfpc85s1H04qYSLVUzsK0rTHJ0PBJoH
-        gJRO74YcgRjtXGnKyGdMD5DnkQ==
-X-Google-Smtp-Source: APXvYqzkDoe8bdRO8MAfjPHLrQcgvTAYzar3eF+de15mMhjyRU45QBNIhXHM2/KZneCpcXX3deYGpA==
-X-Received: by 2002:a7b:cc99:: with SMTP id p25mr15161976wma.43.1571069427733;
-        Mon, 14 Oct 2019 09:10:27 -0700 (PDT)
-Received: from localhost.localdomain ([2a01:cb1d:af:5b00:6d6c:8493:1ab5:dad7])
-        by smtp.gmail.com with ESMTPSA id z13sm16658694wrq.51.2019.10.14.09.10.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 14 Oct 2019 09:10:27 -0700 (PDT)
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
+        id S2387932AbfJNQLx (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 14 Oct 2019 12:11:53 -0400
+Received: from mga05.intel.com ([192.55.52.43]:35002 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731121AbfJNQLx (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Mon, 14 Oct 2019 12:11:53 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 14 Oct 2019 09:11:52 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.67,296,1566889200"; 
+   d="scan'208";a="185529360"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by orsmga007.jf.intel.com with ESMTP; 14 Oct 2019 09:11:49 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1003)
+        id CFBF6EB; Mon, 14 Oct 2019 19:11:48 +0300 (EEST)
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 To:     Linus Walleij <linus.walleij@linaro.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-gpio@vger.kernel.org, stable@vger.kernel.org,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Kent Gibson <warthog618@gmail.com>
-Subject: [PATCH v4.14] gpiolib: don't clear FLAG_IS_OUT when emulating open-drain/open-source
-Date:   Mon, 14 Oct 2019 18:10:24 +0200
-Message-Id: <20191014161024.17152-1-brgl@bgdev.pl>
+        linux-gpio@vger.kernel.org
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        William Breathitt Gray <vilhelm.gray@gmail.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Marek Vasut <marek.vasut+renesas@gmail.com>
+Subject: [PATCH v1] gpio: pca953x: Convert to use bitmap API
+Date:   Mon, 14 Oct 2019 19:11:48 +0300
+Message-Id: <20191014161148.10543-1-andriy.shevchenko@linux.intel.com>
 X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -61,93 +42,356 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Instead of customized approach convert the driver to use bitmap API.
 
-When emulating open-drain/open-source by not actively driving the output
-lines - we're simply changing their mode to input. This is wrong as it
-will then make it impossible to change the value of such line - it's now
-considered to actually be in input mode. If we want to still use the
-direction_input() callback for simplicity then we need to set FLAG_IS_OUT
-manually in gpiod_direction_output() and not clear it in
-gpio_set_open_drain_value_commit() and
-gpio_set_open_source_value_commit().
-
-Fixes: c663e5f56737 ("gpio: support native single-ended hardware drivers")
-Cc: stable@vger.kernel.org
-Reported-by: Kent Gibson <warthog618@gmail.com>
-Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-[Bartosz: backported to v4.14]
-Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Depends-on: 6e9c6674d1bf ("gpio: pca953x: utilize the for_each_set_clump8 macro")
+Cc: William Breathitt Gray <vilhelm.gray@gmail.com>
+Cc: Geert Uytterhoeven <geert+renesas@glider.be>
+Cc: Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+Cc: Marek Vasut <marek.vasut+renesas@gmail.com>
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 ---
- drivers/gpio/gpiolib.c | 27 +++++++++++++++++++--------
- 1 file changed, 19 insertions(+), 8 deletions(-)
+ drivers/gpio/gpio-pca953x.c | 170 ++++++++++++++++--------------------
+ 1 file changed, 73 insertions(+), 97 deletions(-)
 
-diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
-index f1809a54fcee..c7f5f0be2d74 100644
---- a/drivers/gpio/gpiolib.c
-+++ b/drivers/gpio/gpiolib.c
-@@ -2329,8 +2329,10 @@ static int _gpiod_direction_output_raw(struct gpio_desc *desc, int value)
- 		if (!ret)
- 			goto set_output_value;
- 		/* Emulate open drain by not actively driving the line high */
--		if (val)
--			return gpiod_direction_input(desc);
-+		if (val) {
-+			ret = gpiod_direction_input(desc);
-+			goto set_output_flag;
-+		}
- 	}
- 	else if (test_bit(FLAG_OPEN_SOURCE, &desc->flags)) {
- 		ret = gpio_set_drive_single_ended(gc, gpio_chip_hwgpio(desc),
-@@ -2338,8 +2340,10 @@ static int _gpiod_direction_output_raw(struct gpio_desc *desc, int value)
- 		if (!ret)
- 			goto set_output_value;
- 		/* Emulate open source by not actively driving the line low */
--		if (!val)
--			return gpiod_direction_input(desc);
-+		if (!val) {
-+			ret = gpiod_direction_input(desc);
-+			goto set_output_flag;
-+		}
- 	} else {
- 		gpio_set_drive_single_ended(gc, gpio_chip_hwgpio(desc),
- 					    PIN_CONFIG_DRIVE_PUSH_PULL);
-@@ -2359,6 +2363,17 @@ static int _gpiod_direction_output_raw(struct gpio_desc *desc, int value)
- 	trace_gpio_value(desc_to_gpio(desc), 0, val);
- 	trace_gpio_direction(desc_to_gpio(desc), 0, ret);
- 	return ret;
-+
-+set_output_flag:
-+	/*
-+	 * When emulating open-source or open-drain functionalities by not
-+	 * actively driving the line (setting mode to input) we still need to
-+	 * set the IS_OUT flag or otherwise we won't be able to set the line
-+	 * value anymore.
-+	 */
-+	if (ret == 0)
-+		set_bit(FLAG_IS_OUT, &desc->flags);
-+	return ret;
+diff --git a/drivers/gpio/gpio-pca953x.c b/drivers/gpio/gpio-pca953x.c
+index 10b669b8f27d..95c2d6c99f41 100644
+--- a/drivers/gpio/gpio-pca953x.c
++++ b/drivers/gpio/gpio-pca953x.c
+@@ -9,8 +9,7 @@
+  */
+ 
+ #include <linux/acpi.h>
+-#include <linux/bits.h>
+-#include <linux/bitops.h>
++#include <linux/bitmap.h>
+ #include <linux/gpio/driver.h>
+ #include <linux/gpio/consumer.h>
+ #include <linux/i2c.h>
+@@ -116,6 +115,7 @@ MODULE_DEVICE_TABLE(acpi, pca953x_acpi_ids);
+ 
+ #define MAX_BANK 5
+ #define BANK_SZ 8
++#define MAX_LINE	(MAX_BANK * BANK_SZ)
+ 
+ #define NBANK(chip) DIV_ROUND_UP(chip->gpio_chip.ngpio, BANK_SZ)
+ 
+@@ -147,10 +147,10 @@ struct pca953x_chip {
+ 
+ #ifdef CONFIG_GPIO_PCA953X_IRQ
+ 	struct mutex irq_lock;
+-	u8 irq_mask[MAX_BANK];
+-	u8 irq_stat[MAX_BANK];
+-	u8 irq_trig_raise[MAX_BANK];
+-	u8 irq_trig_fall[MAX_BANK];
++	DECLARE_BITMAP(irq_mask, MAX_LINE);
++	DECLARE_BITMAP(irq_stat, MAX_LINE);
++	DECLARE_BITMAP(irq_trig_raise, MAX_LINE);
++	DECLARE_BITMAP(irq_trig_fall, MAX_LINE);
+ 	struct irq_chip irq_chip;
+ #endif
+ 	atomic_t wakeup_path;
+@@ -334,12 +334,16 @@ static u8 pca953x_recalc_addr(struct pca953x_chip *chip, int reg, int off,
+ 	return regaddr;
  }
  
- /**
-@@ -2540,8 +2555,6 @@ static void _gpio_set_open_drain_value(struct gpio_desc *desc, bool value)
+-static int pca953x_write_regs(struct pca953x_chip *chip, int reg, u8 *val)
++static int pca953x_write_regs(struct pca953x_chip *chip, int reg, unsigned long *val)
+ {
+ 	u8 regaddr = pca953x_recalc_addr(chip, reg, 0, true, true);
+-	int ret;
++	u8 value[MAX_BANK];
++	int i, ret;
++
++	for (i = 0; i < NBANK(chip); i++)
++		value[i] = bitmap_get_value8(val, i * BANK_SZ);
  
- 	if (value) {
- 		err = chip->direction_input(chip, offset);
--		if (!err)
--			clear_bit(FLAG_IS_OUT, &desc->flags);
- 	} else {
- 		err = chip->direction_output(chip, offset, 0);
- 		if (!err)
-@@ -2571,8 +2584,6 @@ static void _gpio_set_open_source_value(struct gpio_desc *desc, bool value)
- 			set_bit(FLAG_IS_OUT, &desc->flags);
- 	} else {
- 		err = chip->direction_input(chip, offset);
--		if (!err)
--			clear_bit(FLAG_IS_OUT, &desc->flags);
+-	ret = regmap_bulk_write(chip->regmap, regaddr, val, NBANK(chip));
++	ret = regmap_bulk_write(chip->regmap, regaddr, value, NBANK(chip));
+ 	if (ret < 0) {
+ 		dev_err(&chip->client->dev, "failed writing register\n");
+ 		return ret;
+@@ -348,17 +352,21 @@ static int pca953x_write_regs(struct pca953x_chip *chip, int reg, u8 *val)
+ 	return 0;
+ }
+ 
+-static int pca953x_read_regs(struct pca953x_chip *chip, int reg, u8 *val)
++static int pca953x_read_regs(struct pca953x_chip *chip, int reg, unsigned long *val)
+ {
+ 	u8 regaddr = pca953x_recalc_addr(chip, reg, 0, false, true);
+-	int ret;
++	u8 value[MAX_BANK];
++	int i, ret;
+ 
+-	ret = regmap_bulk_read(chip->regmap, regaddr, val, NBANK(chip));
++	ret = regmap_bulk_read(chip->regmap, regaddr, value, NBANK(chip));
+ 	if (ret < 0) {
+ 		dev_err(&chip->client->dev, "failed reading register\n");
+ 		return ret;
  	}
- 	trace_gpio_direction(desc_to_gpio(desc), !value, err);
- 	if (err < 0)
+ 
++	for (i = 0; i < NBANK(chip); i++)
++		bitmap_set_value8(val, value[i], i * BANK_SZ);
++
+ 	return 0;
+ }
+ 
+@@ -457,10 +465,7 @@ static void pca953x_gpio_set_multiple(struct gpio_chip *gc,
+ 				      unsigned long *mask, unsigned long *bits)
+ {
+ 	struct pca953x_chip *chip = gpiochip_get_data(gc);
+-	unsigned long offset;
+-	unsigned long bank_mask;
+-	int bank;
+-	u8 reg_val[MAX_BANK];
++	DECLARE_BITMAP(reg_val, MAX_LINE);
+ 	int ret;
+ 
+ 	mutex_lock(&chip->i2c_lock);
+@@ -468,11 +473,7 @@ static void pca953x_gpio_set_multiple(struct gpio_chip *gc,
+ 	if (ret)
+ 		goto exit;
+ 
+-	for_each_set_clump8(offset, bank_mask, mask, gc->ngpio) {
+-		bank = offset / 8;
+-		reg_val[bank] &= ~bank_mask;
+-		reg_val[bank] |= bitmap_get_value8(bits, offset) & bank_mask;
+-	}
++	bitmap_and(reg_val, bits, mask, gc->ngpio);
+ 
+ 	pca953x_write_regs(chip, chip->regs->output, reg_val);
+ exit:
+@@ -599,10 +600,10 @@ static void pca953x_irq_bus_sync_unlock(struct irq_data *d)
+ {
+ 	struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
+ 	struct pca953x_chip *chip = gpiochip_get_data(gc);
+-	u8 new_irqs;
+-	int level, i;
+-	u8 invert_irq_mask[MAX_BANK];
+-	u8 reg_direction[MAX_BANK];
++	DECLARE_BITMAP(irq_mask, MAX_LINE);
++	DECLARE_BITMAP(reg_direction, MAX_LINE);
++	DECLARE_BITMAP(new_irqs, MAX_LINE);
++	int level;
+ 
+ 	pca953x_read_regs(chip, chip->regs->direction, reg_direction);
+ 
+@@ -610,25 +611,18 @@ static void pca953x_irq_bus_sync_unlock(struct irq_data *d)
+ 		/* Enable latch on interrupt-enabled inputs */
+ 		pca953x_write_regs(chip, PCAL953X_IN_LATCH, chip->irq_mask);
+ 
+-		for (i = 0; i < NBANK(chip); i++)
+-			invert_irq_mask[i] = ~chip->irq_mask[i];
++		bitmap_complement(irq_mask, chip->irq_mask, gc->ngpio);
+ 
+ 		/* Unmask enabled interrupts */
+-		pca953x_write_regs(chip, PCAL953X_INT_MASK, invert_irq_mask);
++		pca953x_write_regs(chip, PCAL953X_INT_MASK, irq_mask);
+ 	}
+ 
++	bitmap_or(new_irqs, chip->irq_trig_fall, chip->irq_trig_raise, gc->ngpio);
++	bitmap_and(irq_mask, new_irqs, reg_direction, gc->ngpio);
++
+ 	/* Look for any newly setup interrupt */
+-	for (i = 0; i < NBANK(chip); i++) {
+-		new_irqs = chip->irq_trig_fall[i] | chip->irq_trig_raise[i];
+-		new_irqs &= reg_direction[i];
+-
+-		while (new_irqs) {
+-			level = __ffs(new_irqs);
+-			pca953x_gpio_direction_input(&chip->gpio_chip,
+-							level + (BANK_SZ * i));
+-			new_irqs &= ~(1 << level);
+-		}
+-	}
++	for_each_set_bit(level, irq_mask, gc->ngpio)
++		pca953x_gpio_direction_input(&chip->gpio_chip, level);
+ 
+ 	mutex_unlock(&chip->irq_lock);
+ }
+@@ -669,15 +663,15 @@ static void pca953x_irq_shutdown(struct irq_data *d)
+ 	chip->irq_trig_fall[d->hwirq / BANK_SZ] &= ~mask;
+ }
+ 
+-static bool pca953x_irq_pending(struct pca953x_chip *chip, u8 *pending)
++static bool pca953x_irq_pending(struct pca953x_chip *chip, unsigned long *pending)
+ {
+-	u8 cur_stat[MAX_BANK];
+-	u8 old_stat[MAX_BANK];
+-	bool pending_seen = false;
+-	bool trigger_seen = false;
+-	u8 trigger[MAX_BANK];
+-	u8 reg_direction[MAX_BANK];
+-	int ret, i;
++	struct gpio_chip *gc = &chip->gpio_chip;
++	DECLARE_BITMAP(reg_direction, MAX_LINE);
++	DECLARE_BITMAP(old_stat, MAX_LINE);
++	DECLARE_BITMAP(cur_stat, MAX_LINE);
++	DECLARE_BITMAP(new_stat, MAX_LINE);
++	DECLARE_BITMAP(trigger, MAX_LINE);
++	int ret;
+ 
+ 	if (chip->driver_data & PCA_PCAL) {
+ 		/* Read the current interrupt status from the device */
+@@ -690,16 +684,13 @@ static bool pca953x_irq_pending(struct pca953x_chip *chip, u8 *pending)
+ 		if (ret)
+ 			return false;
+ 
+-		for (i = 0; i < NBANK(chip); i++) {
+-			/* Apply filter for rising/falling edge selection */
+-			pending[i] = (~cur_stat[i] & chip->irq_trig_fall[i]) |
+-				(cur_stat[i] & chip->irq_trig_raise[i]);
+-			pending[i] &= trigger[i];
+-			if (pending[i])
+-				pending_seen = true;
+-		}
++		/* Apply filter for rising/falling edge selection */
++		bitmap_andnot(new_stat, chip->irq_trig_fall, cur_stat, gc->ngpio);
++		bitmap_and(old_stat, chip->irq_trig_raise, cur_stat, gc->ngpio);
++		bitmap_or(cur_stat, old_stat, new_stat, gc->ngpio);
++		bitmap_and(pending, cur_stat, trigger, gc->ngpio);
+ 
+-		return pending_seen;
++		return !bitmap_empty(pending, gc->ngpio);
+ 	}
+ 
+ 	ret = pca953x_read_regs(chip, chip->regs->input, cur_stat);
+@@ -708,55 +699,40 @@ static bool pca953x_irq_pending(struct pca953x_chip *chip, u8 *pending)
+ 
+ 	/* Remove output pins from the equation */
+ 	pca953x_read_regs(chip, chip->regs->direction, reg_direction);
+-	for (i = 0; i < NBANK(chip); i++)
+-		cur_stat[i] &= reg_direction[i];
+ 
+-	memcpy(old_stat, chip->irq_stat, NBANK(chip));
++	bitmap_copy(old_stat, chip->irq_stat, gc->ngpio);
+ 
+-	for (i = 0; i < NBANK(chip); i++) {
+-		trigger[i] = (cur_stat[i] ^ old_stat[i]) & chip->irq_mask[i];
+-		if (trigger[i])
+-			trigger_seen = true;
+-	}
++	bitmap_and(new_stat, cur_stat, reg_direction, gc->ngpio);
++	bitmap_xor(cur_stat, new_stat, old_stat, gc->ngpio);
++	bitmap_and(trigger, cur_stat, chip->irq_mask, gc->ngpio);
+ 
+-	if (!trigger_seen)
++	if (bitmap_empty(trigger, gc->ngpio))
+ 		return false;
+ 
+-	memcpy(chip->irq_stat, cur_stat, NBANK(chip));
++	bitmap_copy(chip->irq_stat, new_stat, gc->ngpio);
+ 
+-	for (i = 0; i < NBANK(chip); i++) {
+-		pending[i] = (old_stat[i] & chip->irq_trig_fall[i]) |
+-			(cur_stat[i] & chip->irq_trig_raise[i]);
+-		pending[i] &= trigger[i];
+-		if (pending[i])
+-			pending_seen = true;
+-	}
++	bitmap_and(cur_stat, chip->irq_trig_fall, old_stat, gc->ngpio);
++	bitmap_and(old_stat, chip->irq_trig_raise, new_stat, gc->ngpio);
++	bitmap_or(new_stat, old_stat, cur_stat, gc->ngpio);
++	bitmap_and(pending, new_stat, trigger, gc->ngpio);
+ 
+-	return pending_seen;
++	return !bitmap_empty(pending, gc->ngpio);
+ }
+ 
+ static irqreturn_t pca953x_irq_handler(int irq, void *devid)
+ {
+ 	struct pca953x_chip *chip = devid;
+-	u8 pending[MAX_BANK];
+-	u8 level;
+-	unsigned nhandled = 0;
+-	int i;
++	struct gpio_chip *gc = &chip->gpio_chip;
++	DECLARE_BITMAP(pending, MAX_LINE);
++	int level;
+ 
+ 	if (!pca953x_irq_pending(chip, pending))
+ 		return IRQ_NONE;
+ 
+-	for (i = 0; i < NBANK(chip); i++) {
+-		while (pending[i]) {
+-			level = __ffs(pending[i]);
+-			handle_nested_irq(irq_find_mapping(chip->gpio_chip.irq.domain,
+-							level + (BANK_SZ * i)));
+-			pending[i] &= ~(1 << level);
+-			nhandled++;
+-		}
+-	}
++	for_each_set_bit(level, pending, gc->ngpio)
++		handle_nested_irq(irq_find_mapping(gc->irq.domain, level));
+ 
+-	return (nhandled > 0) ? IRQ_HANDLED : IRQ_NONE;
++	return bitmap_empty(pending, gc->ngpio) ? IRQ_NONE : IRQ_HANDLED;
+ }
+ 
+ static int pca953x_irq_setup(struct pca953x_chip *chip,
+@@ -764,8 +740,9 @@ static int pca953x_irq_setup(struct pca953x_chip *chip,
+ {
+ 	struct i2c_client *client = chip->client;
+ 	struct irq_chip *irq_chip = &chip->irq_chip;
+-	u8 reg_direction[MAX_BANK];
+-	int ret, i;
++	DECLARE_BITMAP(reg_direction, MAX_LINE);
++	DECLARE_BITMAP(irq_stat, MAX_LINE);
++	int ret;
+ 
+ 	if (!client->irq)
+ 		return 0;
+@@ -776,7 +753,7 @@ static int pca953x_irq_setup(struct pca953x_chip *chip,
+ 	if (!(chip->driver_data & PCA_INT))
+ 		return 0;
+ 
+-	ret = pca953x_read_regs(chip, chip->regs->input, chip->irq_stat);
++	ret = pca953x_read_regs(chip, chip->regs->input, irq_stat);
+ 	if (ret)
+ 		return ret;
+ 
+@@ -786,8 +763,7 @@ static int pca953x_irq_setup(struct pca953x_chip *chip,
+ 	 * this purpose.
+ 	 */
+ 	pca953x_read_regs(chip, chip->regs->direction, reg_direction);
+-	for (i = 0; i < NBANK(chip); i++)
+-		chip->irq_stat[i] &= reg_direction[i];
++	bitmap_and(chip->irq_stat, irq_stat, reg_direction, chip->gpio_chip.ngpio);
+ 	mutex_init(&chip->irq_lock);
+ 
+ 	ret = devm_request_threaded_irq(&client->dev, client->irq,
+@@ -839,8 +815,8 @@ static int pca953x_irq_setup(struct pca953x_chip *chip,
+ 
+ static int device_pca95xx_init(struct pca953x_chip *chip, u32 invert)
+ {
++	DECLARE_BITMAP(val, MAX_LINE);
+ 	int ret;
+-	u8 val[MAX_BANK];
+ 
+ 	ret = regcache_sync_region(chip->regmap, chip->regs->output,
+ 				   chip->regs->output + NBANK(chip));
+@@ -854,9 +830,9 @@ static int device_pca95xx_init(struct pca953x_chip *chip, u32 invert)
+ 
+ 	/* set platform specific polarity inversion */
+ 	if (invert)
+-		memset(val, 0xFF, NBANK(chip));
++		bitmap_fill(val, MAX_LINE);
+ 	else
+-		memset(val, 0, NBANK(chip));
++		bitmap_zero(val, MAX_LINE);
+ 
+ 	ret = pca953x_write_regs(chip, chip->regs->invert, val);
+ out:
+@@ -865,8 +841,8 @@ static int device_pca95xx_init(struct pca953x_chip *chip, u32 invert)
+ 
+ static int device_pca957x_init(struct pca953x_chip *chip, u32 invert)
+ {
++	DECLARE_BITMAP(val, MAX_LINE);
+ 	int ret;
+-	u8 val[MAX_BANK];
+ 
+ 	ret = device_pca95xx_init(chip, invert);
+ 	if (ret)
 -- 
 2.23.0
 
