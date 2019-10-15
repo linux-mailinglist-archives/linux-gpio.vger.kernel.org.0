@@ -2,539 +2,287 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 62C0DD71F3
-	for <lists+linux-gpio@lfdr.de>; Tue, 15 Oct 2019 11:17:23 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 10891D736E
+	for <lists+linux-gpio@lfdr.de>; Tue, 15 Oct 2019 12:39:47 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726917AbfJOJRU (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 15 Oct 2019 05:17:20 -0400
-Received: from lucky1.263xmail.com ([211.157.147.135]:52552 "EHLO
-        lucky1.263xmail.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729119AbfJOJRT (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 15 Oct 2019 05:17:19 -0400
-Received: from localhost (unknown [192.168.167.235])
-        by lucky1.263xmail.com (Postfix) with ESMTP id EF79A45A2D;
-        Tue, 15 Oct 2019 17:17:13 +0800 (CST)
-X-MAIL-GRAY: 0
-X-MAIL-DELIVERY: 1
-X-ADDR-CHECKED4: 1
-X-ANTISPAM-LEVEL: 2
-X-ABS-CHECKED: 0
-Received: from localhost.localdomain (unknown [58.22.7.114])
-        by smtp.263.net (postfix) whith ESMTP id P31702T139879414421248S1571131030242699_;
-        Tue, 15 Oct 2019 17:17:12 +0800 (CST)
-X-IP-DOMAINF: 1
-X-UNIQUE-TAG: <0967eada7b989f5ff4c9f2c8a24a35d5>
-X-RL-SENDER: jay.xu@rock-chips.com
-X-SENDER: xjq@rock-chips.com
-X-LOGIN-NAME: jay.xu@rock-chips.com
-X-FST-TO: linus.walleij@linaro.org
-X-SENDER-IP: 58.22.7.114
-X-ATTACHMENT-NUM: 0
-X-DNS-TYPE: 0
-From:   Jianqun Xu <jay.xu@rock-chips.com>
-To:     linus.walleij@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com,
-        heiko@sntech.de, linux-gpio@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc:     Jianqun Xu <jay.xu@rock-chips.com>
-Subject: [PATCH v3 2/2] pinctrl: rockchip: add rk3308 SoC support
-Date:   Tue, 15 Oct 2019 17:17:08 +0800
-Message-Id: <20191015091708.7934-3-jay.xu@rock-chips.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20191015091708.7934-1-jay.xu@rock-chips.com>
-References: <20191015091708.7934-1-jay.xu@rock-chips.com>
+        id S1730853AbfJOKjp (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 15 Oct 2019 06:39:45 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:37205 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730847AbfJOKjp (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 15 Oct 2019 06:39:45 -0400
+Received: by mail-wr1-f68.google.com with SMTP id p14so23204809wro.4;
+        Tue, 15 Oct 2019 03:39:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=wjXUMmNuYZvxx2qvB5y7TSVYeNKRIfYalXPuISl5bDA=;
+        b=AC+uTzGaTm9k3qtOK0KxFwxVS3jG8wv4RxjgZPQgLkzLIPYUkoCnYx3/4uyw+29jwL
+         abO9cowEEaVjFa/8hZhxtCFF7OkfzSIuTQEyJ+FwqkBhgZwC00aIJEhs0S/hYVgN3AHO
+         snMfDAKcmHH3e7ClYab3vsOpzJUHNOiV4Ss3HIIZJUmUxyqYYHHkwZ6xb2fiCNdoPm3x
+         dtzATgICZpDLW5yXcUNX/R4K+fgcXo1v3vIyY/0Rt3ABqnR5P6cEdEdTJFkMJmP2rTvV
+         sS0ZTnifh/dhDnXViFyHtaMZmnDQJsZLk8DMY6Cxw+DCjT+IFXAmvSlpj9uD7iM4HG93
+         f5tw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=wjXUMmNuYZvxx2qvB5y7TSVYeNKRIfYalXPuISl5bDA=;
+        b=NWVBjkFQi2Sqw2p1Wkl00uy1+UQA01qQ/5OTsJDgLFVjiUy/itLVtefwu1GceAEwtJ
+         UfRT6xKy8f5lgzi4u84I9COrHjXXyEP5u8EUlRkcyWb0BLuES6KvtfsWtzkCBhQ9If5S
+         FvX6pZxYt41LvNZoomsADRqWfwQu9VnIpoDJMfzGouABL7mXyMRl0dN1U19kdME/5eey
+         xEOGVxFUGi7MWOp19HFPo0BZhQnT0iO+T9sjVRGUuymv+LqI0gDF1M78+AjNC6eqsQ5f
+         SccGjHdk4js+Vb3zZcf5ovGQ3z13GVNrKi/4QfpmQgLbwu24kf0yFKpmfti7O1sb/CAp
+         rFEQ==
+X-Gm-Message-State: APjAAAWFykp6mYHWPxg0DAvO3gnw00xts9pRksPte6M/WpSPXxfl6bT0
+        MyFFeFqzVz3IEexo3xWhi0RXac1tk2xNM53pFTz/H4nMq/k/XQ==
+X-Google-Smtp-Source: APXvYqxv5LQwYrq4l/SiJhApIKaoUGJKV02utC0apmPj61dSdCJs1GNEZZbBNo8JPt/GYEpHkSvmXvCINwtnWgfAHXI=
+X-Received: by 2002:adf:ecc7:: with SMTP id s7mr597816wro.305.1571135981658;
+ Tue, 15 Oct 2019 03:39:41 -0700 (PDT)
+MIME-Version: 1.0
+References: <20191005105936.31216-1-kholk11@gmail.com> <20191005105936.31216-3-kholk11@gmail.com>
+ <20191007055643.GK6390@tuxbook-pro>
+In-Reply-To: <20191007055643.GK6390@tuxbook-pro>
+From:   AngeloGioacchino Del Regno <kholk11@gmail.com>
+Date:   Tue, 15 Oct 2019 12:39:30 +0200
+Message-ID: <CAK7fi1bt-TRC0f1JxpEGBEKdGXqS9DVTh8WubxaZGAOC=XPZVw@mail.gmail.com>
+Subject: Re: [PATCH 2/2] dt-bindings: pinctrl: Add MSM8976 driver bindings and documentation
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     MSM <linux-arm-msm@vger.kernel.org>, linux-gpio@vger.kernel.org,
+        devicetree@vger.kernel.org, Andy Gross <agross@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>, marijns95@gmail.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-This patch do support pinctrl for RK3308 SoCs.
+Il giorno lun 7 ott 2019 alle ore 07:56 Bjorn Andersson
+<bjorn.andersson@linaro.org> ha scritto:
+>
+> On Sat 05 Oct 03:59 PDT 2019, kholk11@gmail.com wrote:
+>
+> > From: AngeloGioacchino Del Regno <kholk11@gmail.com>
+> >
+> > Add the documentation for this new driver for pin configuration
+> > with the pinctrl framework on MSM8976/56 and its APQ variants.
+>
+> You forgot your Signed-off-by on this patch.
+>
+> Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+>
+> Regards,
+> Bjorn
+>
 
-Reviewed-by: Heiko Stuebner <heiko@sntech.de>
-Signed-off-by: Jianqun Xu <jay.xu@rock-chips.com>
----
-changes since v2:
-- Fix increase offset according to iomux width
+Oops! That was totally unintentional.
+I don't know how should I proceed in these cases but seems overkill to resend
+the entire thing just to add the tag. If I have to then I will,
+otherwise, whoever
+will apply this, please feel free to add my
 
-changes since v1:
-- Add type case for pull get/set
-- Add Reviewed-by: Heiko Stuebner <heiko@sntech.de>
+Signed-off-by: AngeloGioacchino Del Regno <kholk11@gmail.com>
 
- drivers/pinctrl/pinctrl-rockchip.c | 382 ++++++++++++++++++++++++++++-
- 1 file changed, 381 insertions(+), 1 deletion(-)
+Thanks,
+Angelo
 
-diff --git a/drivers/pinctrl/pinctrl-rockchip.c b/drivers/pinctrl/pinctrl-rockchip.c
-index dc0bbf198cbc..fc9a2a9959d9 100644
---- a/drivers/pinctrl/pinctrl-rockchip.c
-+++ b/drivers/pinctrl/pinctrl-rockchip.c
-@@ -58,6 +58,7 @@ enum rockchip_pinctrl_type {
- 	RK3128,
- 	RK3188,
- 	RK3288,
-+	RK3308,
- 	RK3368,
- 	RK3399,
- };
-@@ -70,6 +71,7 @@ enum rockchip_pinctrl_type {
- #define IOMUX_SOURCE_PMU	BIT(2)
- #define IOMUX_UNROUTED		BIT(3)
- #define IOMUX_WIDTH_3BIT	BIT(4)
-+#define IOMUX_WIDTH_2BIT	BIT(5)
- 
- /**
-  * @type: iomux variant using IOMUX_* constants
-@@ -656,6 +658,100 @@ static  struct rockchip_mux_recalced_data rk3128_mux_recalced_data[] = {
- 	},
- };
- 
-+static struct rockchip_mux_recalced_data rk3308_mux_recalced_data[] = {
-+	{
-+		.num = 1,
-+		.pin = 14,
-+		.reg = 0x28,
-+		.bit = 12,
-+		.mask = 0xf
-+	}, {
-+		.num = 1,
-+		.pin = 15,
-+		.reg = 0x2c,
-+		.bit = 0,
-+		.mask = 0x3
-+	}, {
-+		.num = 1,
-+		.pin = 18,
-+		.reg = 0x30,
-+		.bit = 4,
-+		.mask = 0xf
-+	}, {
-+		.num = 1,
-+		.pin = 19,
-+		.reg = 0x30,
-+		.bit = 8,
-+		.mask = 0xf
-+	}, {
-+		.num = 1,
-+		.pin = 20,
-+		.reg = 0x30,
-+		.bit = 12,
-+		.mask = 0xf
-+	}, {
-+		.num = 1,
-+		.pin = 21,
-+		.reg = 0x34,
-+		.bit = 0,
-+		.mask = 0xf
-+	}, {
-+		.num = 1,
-+		.pin = 22,
-+		.reg = 0x34,
-+		.bit = 4,
-+		.mask = 0xf
-+	}, {
-+		.num = 1,
-+		.pin = 23,
-+		.reg = 0x34,
-+		.bit = 8,
-+		.mask = 0xf
-+	}, {
-+		.num = 3,
-+		.pin = 12,
-+		.reg = 0x68,
-+		.bit = 8,
-+		.mask = 0xf
-+	}, {
-+		.num = 3,
-+		.pin = 13,
-+		.reg = 0x68,
-+		.bit = 12,
-+		.mask = 0xf
-+	}, {
-+		.num = 2,
-+		.pin = 2,
-+		.reg = 0x608,
-+		.bit = 0,
-+		.mask = 0x7
-+	}, {
-+		.num = 2,
-+		.pin = 3,
-+		.reg = 0x608,
-+		.bit = 4,
-+		.mask = 0x7
-+	}, {
-+		.num = 2,
-+		.pin = 16,
-+		.reg = 0x610,
-+		.bit = 8,
-+		.mask = 0x7
-+	}, {
-+		.num = 3,
-+		.pin = 10,
-+		.reg = 0x610,
-+		.bit = 0,
-+		.mask = 0x7
-+	}, {
-+		.num = 3,
-+		.pin = 11,
-+		.reg = 0x610,
-+		.bit = 4,
-+		.mask = 0x7
-+	},
-+};
-+
- static struct rockchip_mux_recalced_data rk3328_mux_recalced_data[] = {
- 	{
- 		.num = 2,
-@@ -982,6 +1078,192 @@ static struct rockchip_mux_route_data rk3288_mux_route_data[] = {
- 	},
- };
- 
-+static struct rockchip_mux_route_data rk3308_mux_route_data[] = {
-+	{
-+		/* rtc_clk */
-+		.bank_num = 0,
-+		.pin = 19,
-+		.func = 1,
-+		.route_offset = 0x314,
-+		.route_val = BIT(16 + 0) | BIT(0),
-+	}, {
-+		/* uart2_rxm0 */
-+		.bank_num = 1,
-+		.pin = 22,
-+		.func = 2,
-+		.route_offset = 0x314,
-+		.route_val = BIT(16 + 2) | BIT(16 + 3),
-+	}, {
-+		/* uart2_rxm1 */
-+		.bank_num = 4,
-+		.pin = 26,
-+		.func = 2,
-+		.route_offset = 0x314,
-+		.route_val = BIT(16 + 2) | BIT(16 + 3) | BIT(2),
-+	}, {
-+		/* i2c3_sdam0 */
-+		.bank_num = 0,
-+		.pin = 15,
-+		.func = 2,
-+		.route_offset = 0x608,
-+		.route_val = BIT(16 + 8) | BIT(16 + 9),
-+	}, {
-+		/* i2c3_sdam1 */
-+		.bank_num = 3,
-+		.pin = 12,
-+		.func = 2,
-+		.route_offset = 0x608,
-+		.route_val = BIT(16 + 8) | BIT(16 + 9) | BIT(8),
-+	}, {
-+		/* i2c3_sdam2 */
-+		.bank_num = 2,
-+		.pin = 0,
-+		.func = 3,
-+		.route_offset = 0x608,
-+		.route_val = BIT(16 + 8) | BIT(16 + 9) | BIT(9),
-+	}, {
-+		/* i2s-8ch-1-sclktxm0 */
-+		.bank_num = 1,
-+		.pin = 3,
-+		.func = 2,
-+		.route_offset = 0x308,
-+		.route_val = BIT(16 + 3),
-+	}, {
-+		/* i2s-8ch-1-sclkrxm0 */
-+		.bank_num = 1,
-+		.pin = 4,
-+		.func = 2,
-+		.route_offset = 0x308,
-+		.route_val = BIT(16 + 3),
-+	}, {
-+		/* i2s-8ch-1-sclktxm1 */
-+		.bank_num = 1,
-+		.pin = 13,
-+		.func = 2,
-+		.route_offset = 0x308,
-+		.route_val = BIT(16 + 3) | BIT(3),
-+	}, {
-+		/* i2s-8ch-1-sclkrxm1 */
-+		.bank_num = 1,
-+		.pin = 14,
-+		.func = 2,
-+		.route_offset = 0x308,
-+		.route_val = BIT(16 + 3) | BIT(3),
-+	}, {
-+		/* pdm-clkm0 */
-+		.bank_num = 1,
-+		.pin = 4,
-+		.func = 3,
-+		.route_offset = 0x308,
-+		.route_val =  BIT(16 + 12) | BIT(16 + 13),
-+	}, {
-+		/* pdm-clkm1 */
-+		.bank_num = 1,
-+		.pin = 14,
-+		.func = 4,
-+		.route_offset = 0x308,
-+		.route_val = BIT(16 + 12) | BIT(16 + 13) | BIT(12),
-+	}, {
-+		/* pdm-clkm2 */
-+		.bank_num = 2,
-+		.pin = 6,
-+		.func = 2,
-+		.route_offset = 0x308,
-+		.route_val = BIT(16 + 12) | BIT(16 + 13) | BIT(13),
-+	}, {
-+		/* pdm-clkm-m2 */
-+		.bank_num = 2,
-+		.pin = 4,
-+		.func = 3,
-+		.route_offset = 0x600,
-+		.route_val = BIT(16 + 2) | BIT(2),
-+	}, {
-+		/* spi1_miso */
-+		.bank_num = 3,
-+		.pin = 10,
-+		.func = 3,
-+		.route_offset = 0x314,
-+		.route_val = BIT(16 + 9),
-+	}, {
-+		/* spi1_miso_m1 */
-+		.bank_num = 2,
-+		.pin = 4,
-+		.func = 2,
-+		.route_offset = 0x314,
-+		.route_val = BIT(16 + 9) | BIT(9),
-+	}, {
-+		/* owire_m0 */
-+		.bank_num = 0,
-+		.pin = 11,
-+		.func = 3,
-+		.route_offset = 0x314,
-+		.route_val = BIT(16 + 10) | BIT(16 + 11),
-+	}, {
-+		/* owire_m1 */
-+		.bank_num = 1,
-+		.pin = 22,
-+		.func = 7,
-+		.route_offset = 0x314,
-+		.route_val = BIT(16 + 10) | BIT(16 + 11) | BIT(10),
-+	}, {
-+		/* owire_m2 */
-+		.bank_num = 2,
-+		.pin = 2,
-+		.func = 5,
-+		.route_offset = 0x314,
-+		.route_val = BIT(16 + 10) | BIT(16 + 11) | BIT(11),
-+	}, {
-+		/* can_rxd_m0 */
-+		.bank_num = 0,
-+		.pin = 11,
-+		.func = 2,
-+		.route_offset = 0x314,
-+		.route_val = BIT(16 + 12) | BIT(16 + 13),
-+	}, {
-+		/* can_rxd_m1 */
-+		.bank_num = 1,
-+		.pin = 22,
-+		.func = 5,
-+		.route_offset = 0x314,
-+		.route_val = BIT(16 + 12) | BIT(16 + 13) | BIT(12),
-+	}, {
-+		/* can_rxd_m2 */
-+		.bank_num = 2,
-+		.pin = 2,
-+		.func = 4,
-+		.route_offset = 0x314,
-+		.route_val = BIT(16 + 12) | BIT(16 + 13) | BIT(13),
-+	}, {
-+		/* mac_rxd0_m0 */
-+		.bank_num = 1,
-+		.pin = 20,
-+		.func = 3,
-+		.route_offset = 0x314,
-+		.route_val = BIT(16 + 14),
-+	}, {
-+		/* mac_rxd0_m1 */
-+		.bank_num = 4,
-+		.pin = 2,
-+		.func = 2,
-+		.route_offset = 0x314,
-+		.route_val = BIT(16 + 14) | BIT(14),
-+	}, {
-+		/* uart3_rx */
-+		.bank_num = 3,
-+		.pin = 12,
-+		.func = 4,
-+		.route_offset = 0x314,
-+		.route_val = BIT(16 + 15),
-+	}, {
-+		/* uart3_rx_m1 */
-+		.bank_num = 0,
-+		.pin = 17,
-+		.func = 3,
-+		.route_offset = 0x314,
-+		.route_val = BIT(16 + 15) | BIT(15),
-+	},
-+};
-+
- static struct rockchip_mux_route_data rk3328_mux_route_data[] = {
- 	{
- 		/* uart2dbg_rxm0 */
-@@ -1475,6 +1757,26 @@ static int rv1108_calc_schmitt_reg_and_bit(struct rockchip_pin_bank *bank,
- 	return 0;
- }
- 
-+#define RK3308_SCHMITT_PINS_PER_REG		8
-+#define RK3308_SCHMITT_BANK_STRIDE		16
-+#define RK3308_SCHMITT_GRF_OFFSET		0x1a0
-+
-+static int rk3308_calc_schmitt_reg_and_bit(struct rockchip_pin_bank *bank,
-+				    int pin_num, struct regmap **regmap,
-+				    int *reg, u8 *bit)
-+{
-+	struct rockchip_pinctrl *info = bank->drvdata;
-+
-+	*regmap = info->regmap_base;
-+	*reg = RK3308_SCHMITT_GRF_OFFSET;
-+
-+	*reg += bank->bank_num * RK3308_SCHMITT_BANK_STRIDE;
-+	*reg += ((pin_num / RK3308_SCHMITT_PINS_PER_REG) * 4);
-+	*bit = pin_num % RK3308_SCHMITT_PINS_PER_REG;
-+
-+	return 0;
-+}
-+
- #define RK2928_PULL_OFFSET		0x118
- #define RK2928_PULL_PINS_PER_REG	16
- #define RK2928_PULL_BANK_STRIDE		8
-@@ -1646,6 +1948,40 @@ static void rk3228_calc_drv_reg_and_bit(struct rockchip_pin_bank *bank,
- 	*bit *= RK3288_DRV_BITS_PER_PIN;
- }
- 
-+#define RK3308_PULL_OFFSET		0xa0
-+
-+static void rk3308_calc_pull_reg_and_bit(struct rockchip_pin_bank *bank,
-+				    int pin_num, struct regmap **regmap,
-+				    int *reg, u8 *bit)
-+{
-+	struct rockchip_pinctrl *info = bank->drvdata;
-+
-+	*regmap = info->regmap_base;
-+	*reg = RK3308_PULL_OFFSET;
-+	*reg += bank->bank_num * RK3188_PULL_BANK_STRIDE;
-+	*reg += ((pin_num / RK3188_PULL_PINS_PER_REG) * 4);
-+
-+	*bit = (pin_num % RK3188_PULL_PINS_PER_REG);
-+	*bit *= RK3188_PULL_BITS_PER_PIN;
-+}
-+
-+#define RK3308_DRV_GRF_OFFSET		0x100
-+
-+static void rk3308_calc_drv_reg_and_bit(struct rockchip_pin_bank *bank,
-+				    int pin_num, struct regmap **regmap,
-+				    int *reg, u8 *bit)
-+{
-+	struct rockchip_pinctrl *info = bank->drvdata;
-+
-+	*regmap = info->regmap_base;
-+	*reg = RK3308_DRV_GRF_OFFSET;
-+	*reg += bank->bank_num * RK3288_DRV_BANK_STRIDE;
-+	*reg += ((pin_num / RK3288_DRV_PINS_PER_REG) * 4);
-+
-+	*bit = (pin_num % RK3288_DRV_PINS_PER_REG);
-+	*bit *= RK3288_DRV_BITS_PER_PIN;
-+}
-+
- #define RK3368_PULL_GRF_OFFSET		0x100
- #define RK3368_PULL_PMU_OFFSET		0x10
- 
-@@ -1986,6 +2322,7 @@ static int rockchip_get_pull(struct rockchip_pin_bank *bank, int pin_num)
- 	case RV1108:
- 	case RK3188:
- 	case RK3288:
-+	case RK3308:
- 	case RK3368:
- 	case RK3399:
- 		pull_type = bank->pull_type[pin_num / 8];
-@@ -2030,6 +2367,7 @@ static int rockchip_set_pull(struct rockchip_pin_bank *bank,
- 	case RV1108:
- 	case RK3188:
- 	case RK3288:
-+	case RK3308:
- 	case RK3368:
- 	case RK3399:
- 		pull_type = bank->pull_type[pin_num / 8];
-@@ -2293,6 +2631,7 @@ static bool rockchip_pinconf_pull_valid(struct rockchip_pin_ctrl *ctrl,
- 	case RV1108:
- 	case RK3188:
- 	case RK3288:
-+	case RK3308:
- 	case RK3368:
- 	case RK3399:
- 		return (pull != PIN_CONFIG_BIAS_PULL_PIN_DEFAULT);
-@@ -3303,7 +3642,8 @@ static struct rockchip_pin_ctrl *rockchip_pinctrl_get_soc_data(
- 			 * 4bit iomux'es are spread over two registers.
- 			 */
- 			inc = (iom->type & (IOMUX_WIDTH_4BIT |
--					    IOMUX_WIDTH_3BIT)) ? 8 : 4;
-+					    IOMUX_WIDTH_3BIT |
-+					    IOMUX_WIDTH_2BIT)) ? 8 : 4;
- 			if (iom->type & IOMUX_SOURCE_PMU)
- 				pmu_offs += inc;
- 			else
-@@ -3709,6 +4049,44 @@ static struct rockchip_pin_ctrl rk3288_pin_ctrl = {
- 		.drv_calc_reg		= rk3288_calc_drv_reg_and_bit,
- };
- 
-+static struct rockchip_pin_bank rk3308_pin_banks[] = {
-+	PIN_BANK_IOMUX_FLAGS(0, 32, "gpio0", IOMUX_WIDTH_2BIT,
-+					     IOMUX_WIDTH_2BIT,
-+					     IOMUX_WIDTH_2BIT,
-+					     IOMUX_WIDTH_2BIT),
-+	PIN_BANK_IOMUX_FLAGS(1, 32, "gpio1", IOMUX_WIDTH_2BIT,
-+					     IOMUX_WIDTH_2BIT,
-+					     IOMUX_WIDTH_2BIT,
-+					     IOMUX_WIDTH_2BIT),
-+	PIN_BANK_IOMUX_FLAGS(2, 32, "gpio2", IOMUX_WIDTH_2BIT,
-+					     IOMUX_WIDTH_2BIT,
-+					     IOMUX_WIDTH_2BIT,
-+					     IOMUX_WIDTH_2BIT),
-+	PIN_BANK_IOMUX_FLAGS(3, 32, "gpio3", IOMUX_WIDTH_2BIT,
-+					     IOMUX_WIDTH_2BIT,
-+					     IOMUX_WIDTH_2BIT,
-+					     IOMUX_WIDTH_2BIT),
-+	PIN_BANK_IOMUX_FLAGS(4, 32, "gpio4", IOMUX_WIDTH_2BIT,
-+					     IOMUX_WIDTH_2BIT,
-+					     IOMUX_WIDTH_2BIT,
-+					     IOMUX_WIDTH_2BIT),
-+};
-+
-+static struct rockchip_pin_ctrl rk3308_pin_ctrl = {
-+		.pin_banks		= rk3308_pin_banks,
-+		.nr_banks		= ARRAY_SIZE(rk3308_pin_banks),
-+		.label			= "RK3308-GPIO",
-+		.type			= RK3308,
-+		.grf_mux_offset		= 0x0,
-+		.iomux_recalced		= rk3308_mux_recalced_data,
-+		.niomux_recalced	= ARRAY_SIZE(rk3308_mux_recalced_data),
-+		.iomux_routes		= rk3308_mux_route_data,
-+		.niomux_routes		= ARRAY_SIZE(rk3308_mux_route_data),
-+		.pull_calc_reg		= rk3308_calc_pull_reg_and_bit,
-+		.drv_calc_reg		= rk3308_calc_drv_reg_and_bit,
-+		.schmitt_calc_reg	= rk3308_calc_schmitt_reg_and_bit,
-+};
-+
- static struct rockchip_pin_bank rk3328_pin_banks[] = {
- 	PIN_BANK_IOMUX_FLAGS(0, 32, "gpio0", 0, 0, 0, 0),
- 	PIN_BANK_IOMUX_FLAGS(1, 32, "gpio1", 0, 0, 0, 0),
-@@ -3849,6 +4227,8 @@ static const struct of_device_id rockchip_pinctrl_dt_match[] = {
- 		.data = &rk3228_pin_ctrl },
- 	{ .compatible = "rockchip,rk3288-pinctrl",
- 		.data = &rk3288_pin_ctrl },
-+	{ .compatible = "rockchip,rk3308-pinctrl",
-+		.data = &rk3308_pin_ctrl },
- 	{ .compatible = "rockchip,rk3328-pinctrl",
- 		.data = &rk3328_pin_ctrl },
- 	{ .compatible = "rockchip,rk3368-pinctrl",
--- 
-2.17.1
-
-
-
+> > ---
+> >  .../bindings/pinctrl/qcom,msm8976-pinctrl.txt | 183 ++++++++++++++++++
+> >  1 file changed, 183 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/pinctrl/qcom,msm8976-pinctrl.txt
+> >
+> > diff --git a/Documentation/devicetree/bindings/pinctrl/qcom,msm8976-pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/qcom,msm8976-pinctrl.txt
+> > new file mode 100644
+> > index 000000000000..70d04d12f136
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/pinctrl/qcom,msm8976-pinctrl.txt
+> > @@ -0,0 +1,183 @@
+> > +Qualcomm MSM8976 TLMM block
+> > +
+> > +This binding describes the Top Level Mode Multiplexer block found in the
+> > +MSM8956 and MSM8976 platforms.
+> > +
+> > +- compatible:
+> > +     Usage: required
+> > +     Value type: <string>
+> > +     Definition: must be "qcom,msm8976-pinctrl"
+> > +
+> > +- reg:
+> > +     Usage: required
+> > +     Value type: <prop-encoded-array>
+> > +     Definition: the base address and size of the TLMM register space.
+> > +
+> > +- interrupts:
+> > +     Usage: required
+> > +     Value type: <prop-encoded-array>
+> > +     Definition: should specify the TLMM summary IRQ.
+> > +
+> > +- interrupt-controller:
+> > +     Usage: required
+> > +     Value type: <none>
+> > +     Definition: identifies this node as an interrupt controller
+> > +
+> > +- #interrupt-cells:
+> > +     Usage: required
+> > +     Value type: <u32>
+> > +     Definition: must be 2. Specifying the pin number and flags, as defined
+> > +                 in <dt-bindings/interrupt-controller/irq.h>
+> > +
+> > +- gpio-controller:
+> > +     Usage: required
+> > +     Value type: <none>
+> > +     Definition: identifies this node as a gpio controller
+> > +
+> > +- #gpio-cells:
+> > +     Usage: required
+> > +     Value type: <u32>
+> > +     Definition: must be 2. Specifying the pin number and flags, as defined
+> > +                 in <dt-bindings/gpio/gpio.h>
+> > +
+> > +- gpio-ranges:
+> > +     Usage: required
+> > +     Definition:  see ../gpio/gpio.txt
+> > +
+> > +- gpio-reserved-ranges:
+> > +     Usage: optional
+> > +     Definition: see ../gpio/gpio.txt
+> > +
+> > +Please refer to ../gpio/gpio.txt and ../interrupt-controller/interrupts.txt for
+> > +a general description of GPIO and interrupt bindings.
+> > +
+> > +Please refer to pinctrl-bindings.txt in this directory for details of the
+> > +common pinctrl bindings used by client devices, including the meaning of the
+> > +phrase "pin configuration node".
+> > +
+> > +The pin configuration nodes act as a container for an arbitrary number of
+> > +subnodes. Each of these subnodes represents some desired configuration for a
+> > +pin, a group, or a list of pins or groups. This configuration can include the
+> > +mux function to select on those pin(s)/group(s), and various pin configuration
+> > +parameters, such as pull-up, drive strength, etc.
+> > +
+> > +
+> > +PIN CONFIGURATION NODES:
+> > +
+> > +The name of each subnode is not important; all subnodes should be enumerated
+> > +and processed purely based on their content.
+> > +
+> > +Each subnode only affects those parameters that are explicitly listed. In
+> > +other words, a subnode that lists a mux function but no pin configuration
+> > +parameters implies no information about any pin configuration parameters.
+> > +Similarly, a pin subnode that describes a pullup parameter implies no
+> > +information about e.g. the mux function.
+> > +
+> > +
+> > +The following generic properties as defined in pinctrl-bindings.txt are valid
+> > +to specify in a pin configuration subnode:
+> > +
+> > +- pins:
+> > +     Usage: required
+> > +     Value type: <string-array>
+> > +     Definition: List of gpio pins affected by the properties specified in
+> > +                 this subnode.
+> > +
+> > +                 Valid pins are:
+> > +                   gpio0-gpio145
+> > +                     Supports mux, bias and drive-strength
+> > +
+> > +                   sdc1_clk, sdc1_cmd, sdc1_data,
+> > +                   sdc2_clk, sdc2_cmd, sdc2_data,
+> > +                   sdc3_clk, sdc3_cmd, sdc3_data
+> > +                     Supports bias and drive-strength
+> > +
+> > +- function:
+> > +     Usage: required
+> > +     Value type: <string>
+> > +     Definition: Specify the alternative function to be configured for the
+> > +                 specified pins. Functions are only valid for gpio pins.
+> > +                 Valid values are:
+> > +
+> > +                 gpio, blsp_uart1, blsp_spi1, smb_int, blsp_i2c1, blsp_spi2,
+> > +                 blsp_uart2, blsp_i2c2, gcc_gp1_clk_b, blsp_spi3,
+> > +                 qdss_tracedata_b, blsp_i2c3, gcc_gp2_clk_b, gcc_gp3_clk_b,
+> > +                 blsp_spi4, cap_int, blsp_i2c4, blsp_spi5, blsp_uart5,
+> > +                 qdss_traceclk_a, m_voc, blsp_i2c5, qdss_tracectl_a,
+> > +                 qdss_tracedata_a, blsp_spi6, blsp_uart6, qdss_tracectl_b,
+> > +                 blsp_i2c6, qdss_traceclk_b, mdp_vsync, pri_mi2s_mclk_a,
+> > +                 sec_mi2s_mclk_a, cam_mclk, cci0_i2c, cci1_i2c, blsp1_spi,
+> > +                 blsp3_spi, gcc_gp1_clk_a, gcc_gp2_clk_a, gcc_gp3_clk_a,
+> > +                 uim_batt, sd_write, uim1_data, uim1_clk, uim1_reset,
+> > +                 uim1_present, uim2_data, uim2_clk, uim2_reset,
+> > +                 uim2_present, ts_xvdd, mipi_dsi0, us_euro, ts_resout,
+> > +                 ts_sample, sec_mi2s_mclk_b, pri_mi2s, codec_reset,
+> > +                 cdc_pdm0, us_emitter, pri_mi2s_mclk_b, pri_mi2s_mclk_c,
+> > +                 lpass_slimbus, lpass_slimbus0, lpass_slimbus1, codec_int1,
+> > +                 codec_int2, wcss_bt, sdc3, wcss_wlan2, wcss_wlan1,
+> > +                 wcss_wlan0, wcss_wlan, wcss_fm, key_volp, key_snapshot,
+> > +                 key_focus, key_home, pwr_down, dmic0_clk, hdmi_int,
+> > +                 dmic0_data, wsa_vi, wsa_en, blsp_spi8, wsa_irq, blsp_i2c8,
+> > +                 pa_indicator, modem_tsync, ssbi_wtr1, gsm1_tx, gsm0_tx,
+> > +                 sdcard_det, sec_mi2s, ss_switch,
+> > +
+> > +- bias-disable:
+> > +     Usage: optional
+> > +     Value type: <none>
+> > +     Definition: The specified pins should be configured as no pull.
+> > +
+> > +- bias-pull-down:
+> > +     Usage: optional
+> > +     Value type: <none>
+> > +     Definition: The specified pins should be configured as pull down.
+> > +
+> > +- bias-pull-up:
+> > +     Usage: optional
+> > +     Value type: <none>
+> > +     Definition: The specified pins should be configured as pull up.
+> > +
+> > +- output-high:
+> > +     Usage: optional
+> > +     Value type: <none>
+> > +     Definition: The specified pins are configured in output mode, driven
+> > +                 high.
+> > +                 Not valid for sdc pins.
+> > +
+> > +- output-low:
+> > +     Usage: optional
+> > +     Value type: <none>
+> > +     Definition: The specified pins are configured in output mode, driven
+> > +                 low.
+> > +                 Not valid for sdc pins.
+> > +
+> > +- drive-strength:
+> > +     Usage: optional
+> > +     Value type: <u32>
+> > +     Definition: Selects the drive strength for the specified pins, in mA.
+> > +                 Valid values are: 2, 4, 6, 8, 10, 12, 14 and 16
+> > +
+> > +Example:
+> > +
+> > +     tlmm: pinctrl@1000000 {
+> > +             compatible = "qcom,msm8976-pinctrl";
+> > +             reg = <0x1000000 0x300000>;
+> > +             interrupts = <GIC_SPI 208 IRQ_TYPE_LEVEL_HIGH>;
+> > +             gpio-controller;
+> > +             #gpio-cells = <2>;
+> > +             gpio-ranges = <&tlmm 0 0 145>;
+> > +             interrupt-controller;
+> > +             #interrupt-cells = <2>;
+> > +
+> > +             blsp1_uart2_active: blsp1_uart2_active {
+> > +                     mux {
+> > +                             pins = "gpio4", "gpio5", "gpio6", "gpio7";
+> > +                             function = "blsp_uart2";
+> > +                     };
+> > +
+> > +                     config {
+> > +                             pins = "gpio4", "gpio5", "gpio6", "gpio7";
+> > +                             drive-strength = <2>;
+> > +                             bias-disable;
+> > +                     };
+> > +             };
+> > +     };
+> > --
+> > 2.21.0
+> >
