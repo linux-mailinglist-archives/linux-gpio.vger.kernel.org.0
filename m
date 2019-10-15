@@ -2,72 +2,99 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id AF3D6D7D8E
-	for <lists+linux-gpio@lfdr.de>; Tue, 15 Oct 2019 19:24:18 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D3CECD7DC8
+	for <lists+linux-gpio@lfdr.de>; Tue, 15 Oct 2019 19:30:50 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730643AbfJORYD (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 15 Oct 2019 13:24:03 -0400
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:41346 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727387AbfJORYD (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 15 Oct 2019 13:24:03 -0400
-Received: by mail-ot1-f65.google.com with SMTP id g13so17625721otp.8;
-        Tue, 15 Oct 2019 10:24:02 -0700 (PDT)
+        id S1729738AbfJORal (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 15 Oct 2019 13:30:41 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:45940 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727040AbfJORak (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 15 Oct 2019 13:30:40 -0400
+Received: by mail-pg1-f195.google.com with SMTP id r1so11361608pgj.12
+        for <linux-gpio@vger.kernel.org>; Tue, 15 Oct 2019 10:30:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=qGTmzDxe583R/v3aUC27S2QW45EmLA5xRgdHBmdZQi8=;
+        b=DONTslugMGlqg9iBy9hmK9+7DEX/oNOpdshb8MJixifpM3883pIwAXkZJP1899eOOe
+         csSfbo+FfCUiV+kVq7hiQ6pfbD6C87oLMXyDBdhV1/GSBdsQlOFUXMCGmLBgSxaz8gVO
+         aq5UY0uVYcnU2VSFQ6oY4dt8Tp8J1z42id9np5S3hIk0vE1uwM3DsdKmQW1R/7aLH8jG
+         q0S2ackCH3BX/uK8e8Yuc1GGllaGYLaTzYn9Koq29PK7q2/q3L2zUh7SxdkvQU/6ZEXI
+         I6iu/jFbMxnwHYX1qP1OeSzoTYe0Sdg3Dnx8IWPp3RvJj1kQ4gTKKM6YsmrjLX56IHwk
+         PeAA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=AMnuJgHGU6R0IzytORO8cFlW8ykU5YUSocCPPL5eBC4=;
-        b=UEiJXYbXmrIOZRPiKZBaVt+kyPYDy/vH44IePvqy+WVoUHfMvdBLwewfDrU+AXGbHE
-         HZMSpz5R6JKF+dm7tDI+Ndb1dfJXp/pvyua/GsbHHvCIcW6lBm69Dx7xDI0JMzK3is/c
-         Ssza4d3tM6KkMgDHcsEMMquLa9Ohi1qDbvFeC0cLPqD0P4t0rlYAx9moGLkpO2IrK2yL
-         Xsnw36SjMUdcfZ0mbjJr7OdUQ+fQIQbbZ6Xz7uk2k+dpMhwHjB/th0vLgC0Sby8wvWCe
-         83dqm79YKPYEJY1k3EBM3tUG3wQjhd1Atow79jcDilPXXI9Il9mXlfVIe4oWFZIS0wrY
-         GSrQ==
-X-Gm-Message-State: APjAAAWK+pLUUAUEF8UGmGyhLy08rzhj5kn8AXMlWWsWzE97lpoQgw9N
-        XS48O1KcJ9uqhV6RUgpARA==
-X-Google-Smtp-Source: APXvYqxeAQyn2woHyJsNz/1A9Qqotnbqgu/lYixgaEz9AtYG4uiKdx1AbMY3H/CJDkTrB7+S/N/KHQ==
-X-Received: by 2002:a05:6830:22ce:: with SMTP id q14mr3987927otc.115.1571160242078;
-        Tue, 15 Oct 2019 10:24:02 -0700 (PDT)
-Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id d194sm6658461oib.47.2019.10.15.10.24.01
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=qGTmzDxe583R/v3aUC27S2QW45EmLA5xRgdHBmdZQi8=;
+        b=mmTbmdr3CHT8xTzWwvVMsmQ6V3Jiei66X662cEMhEMgx6V3HsufbdKI0c7s5GAT8RR
+         BLK/oOJEVjV19Kway2HQIcjHwV6HDkan22t4eMmLf7Ih3itnl+GYawuZD2i+Jq0ezsia
+         JpIpl02frpAngr4+Ml6GuQoMaxra25432DcIEcQdsEzw+CD+zbhZjOcjTB1by/aE7I7F
+         du6rjc01BrvVG1WYeubj290k4A2QKjSSTXjTwDxahyPQGmn83F3OwRGWnxmROGvKXv7L
+         Jyp2jvLxnd7f39DPLYa3dKgCJIV9Tltzfwkrw5Kwk2lpEhqogZPtaKrnPlDHBKDWIw0B
+         NZ+w==
+X-Gm-Message-State: APjAAAX+O3X5bOtc29DNYIJ3oeleuSOGz01CqeWnDV9ztQMIVBwlc9j5
+        tlop0XeGIQB/1pc8F53aOK2v
+X-Google-Smtp-Source: APXvYqwu/2hvE2QpunG0Cb+S5rWtvqa1YDgqbHA1dUUgRwBSbSv1CfKKSL1Lqvwq3gQUc0UEbDlZjw==
+X-Received: by 2002:a63:1f52:: with SMTP id q18mr40306261pgm.35.1571160639901;
+        Tue, 15 Oct 2019 10:30:39 -0700 (PDT)
+Received: from localhost.localdomain ([2409:4072:6003:7cb8:25e8:2c45:fab2:b0c7])
+        by smtp.gmail.com with ESMTPSA id w11sm28033563pfd.116.2019.10.15.10.30.34
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 15 Oct 2019 10:24:01 -0700 (PDT)
-Date:   Tue, 15 Oct 2019 12:24:00 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Alexandre Torgue <alexandre.torgue@st.com>
-Cc:     Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        linux-stm32@st-md-mailman.stormreply.com,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        linux-gpio@vger.kernel.org, linux-usb@vger.kernel.org
-Subject: Re: [PATCH 3/3] dt-bindings: usb: generic-ehci: Add "companion" entry
-Message-ID: <20191015172400.GA724@bogus>
-References: <20191007134410.10337-1-alexandre.torgue@st.com>
- <20191007134410.10337-4-alexandre.torgue@st.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191007134410.10337-4-alexandre.torgue@st.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Tue, 15 Oct 2019 10:30:39 -0700 (PDT)
+From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To:     linus.walleij@linaro.org, bgolaszewski@baylibre.com
+Cc:     linux-arm-kernel@lists.infradead.org,
+        linux-unisoc@lists.infradead.org, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org, orsonzhai@gmail.com,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Subject: [PATCH v2 0/4] Add GPIO support for RDA8810PL SoC
+Date:   Tue, 15 Oct 2019 23:00:22 +0530
+Message-Id: <20191015173026.9962-1-manivannan.sadhasivam@linaro.org>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, 7 Oct 2019 15:44:10 +0200, Alexandre Torgue wrote:
-> "companion" entry is present in "generic.txt" usb binding file. This commit
-> adds it also in generic-ehci yaml binding.
-> 
-> Signed-off-by: Alexandre Torgue <alexandre.torgue@st.com>
-> 
+Hello,
 
-Applied, thanks.
+This patchset adds GPIO controller support for RDA Micro RDA8810PL
+SoC. This SoC has 4 GPIO controllers and each handles 32 GPIOs. Except
+GPIOC, all controllers are capable of generating edge/level interrupts
+from first 8 GPIO lines. The pinctrl part for this SoC will be added
+later.
 
-Rob
+This driver has been validated on 96Boards OrangePi i96 board from
+Shenzhen Xunlong Software Co.,Limited with libgpiod.
+
+Thanks,
+Mani
+
+Changes in v2:
+
+As per the review by Bartosz:
+
+* Dropped the not implemented gpio_request/free callbacks.
+* Used device_* helper to fetch ngpios.
+
+Manivannan Sadhasivam (4):
+  dt-bindings: gpio: Add devicetree binding for RDA Micro GPIO
+    controller
+  ARM: dts: Add RDA8810PL GPIO controllers
+  gpio: Add RDA Micro GPIO controller support
+  MAINTAINERS: Add entry for RDA Micro GPIO driver and binding
+
+ .../devicetree/bindings/gpio/gpio-rda.yaml    |  50 +++
+ MAINTAINERS                                   |   2 +
+ arch/arm/boot/dts/rda8810pl.dtsi              |  48 +++
+ drivers/gpio/Kconfig                          |   8 +
+ drivers/gpio/Makefile                         |   1 +
+ drivers/gpio/gpio-rda.c                       | 315 ++++++++++++++++++
+ 6 files changed, 424 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/gpio/gpio-rda.yaml
+ create mode 100644 drivers/gpio/gpio-rda.c
+
+-- 
+2.17.1
+
