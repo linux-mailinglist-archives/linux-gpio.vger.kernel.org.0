@@ -2,85 +2,115 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 9CEB5D900F
-	for <lists+linux-gpio@lfdr.de>; Wed, 16 Oct 2019 13:52:28 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8D4CAD9056
+	for <lists+linux-gpio@lfdr.de>; Wed, 16 Oct 2019 14:05:31 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392860AbfJPLwY (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 16 Oct 2019 07:52:24 -0400
-Received: from mail-lf1-f67.google.com ([209.85.167.67]:37791 "EHLO
-        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2392849AbfJPLwX (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 16 Oct 2019 07:52:23 -0400
-Received: by mail-lf1-f67.google.com with SMTP id w67so17235695lff.4
-        for <linux-gpio@vger.kernel.org>; Wed, 16 Oct 2019 04:52:21 -0700 (PDT)
+        id S2388630AbfJPMF2 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 16 Oct 2019 08:05:28 -0400
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:40656 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727868AbfJPMF1 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 16 Oct 2019 08:05:27 -0400
+Received: by mail-lf1-f66.google.com with SMTP id f23so1751612lfk.7
+        for <linux-gpio@vger.kernel.org>; Wed, 16 Oct 2019 05:05:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=V6YdXQcJKoGShMqI3meu7thi6SVojkNDq4q5Q658lX4=;
-        b=Xdv5I327YjWZa3Nm+H1+4rToFnyvUW+/gh+fodN4AKk/8IiX4RbxZpoijiRotq5AO2
-         +23rbPzeXxet7G6jM4ddTaNFLmbDW6BbbAvWkUAcmfla5LmPlMlRRRT2GwOmKvSRkGqL
-         Y4gWdoWYqbP02cVUvO7m6JMt8hcBAGurUPVd2k4NjnqsRrMC7kT8t+lYkUd14Z8LPdfQ
-         kP5fm0KBmuxjHB6bK67OfWBON0MJMeJL8VUD2T98PfCoG8AWb49JFwAW+b0w+la93MFS
-         34rGuUYN5fTyBge3ttvTAuARlbZKi3hZhnioEmrM+ky2HYUoHsDOJN00xUwTJqbfqmN/
-         j2BQ==
+         :cc;
+        bh=1lgzvy+YBsjp8TqyBMT1f57Vy5UY6TJqL/3/rtY6CCA=;
+        b=tsZg08CYSu9U7QMMHAV/L/3H4qD8TVH1FP0EVjQ2VibIOBTO/NhQ6vAUOFp+GBgG5U
+         NFzDX98f6laZrG6QuCJtGv9Px7J6uIJRw5O8sxuoehgEIdNnQbKDEjcqkce39nr0r/aQ
+         OM7nEKT/ZjS1p8UpjKK4QkfrUAmOgrKoSWZW/dLJXux/OHn6SRe6wHPAK0X+vawesW5z
+         jjl/7AI6fKYVlR2XCKW/2R9xY04XbWNIMWPG31Cqh8M7C6/At72hqtJJLvItrB4wtHBz
+         pD9B8dQg1pA8wXveuGCMk9G0cR6D3fDVznRLtQ4bFYwgHCVT8WaHnvVuhoAa5Xc+aDcY
+         Zsvg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=V6YdXQcJKoGShMqI3meu7thi6SVojkNDq4q5Q658lX4=;
-        b=ZuDWzV2Su90yKYC7nPk0cxwhjQUQK/OEQRLh3gA+z0iFWNtRfZjeTb0WwAlnVWFDv3
-         128tqRIJtorsQH9njDzcKOwigwsxA5bGHJilsnX3muYGMjt63DNYTF9wCCnbTOEYk0IQ
-         KcFBbDJYzPIW8aV8o9jq/cV19oo4TDAKm50zuRtR6tLk1O7OZcMHYlYwTB9zuVYNhHq0
-         Px8ld76uFkNWWDWA5w9hdVqPxDyS7zvwUmT0hFI8BoSSsTlNSPzhaAAEE+nXwD/HW6ec
-         FE2PEHVtkmnwLpyoVdN/dknJy/f7toEpBYefgkg+PyjmFOKEGCyooWeABtlvjts4tI1i
-         3NTw==
-X-Gm-Message-State: APjAAAWyClzozXVxOprKu3mEY2GilCB0BJ3yEHMylQakUlaeOv07pv1Y
-        oLK6mOv9n1NyUsbHyR4zRMJaJi5HHBvYf1U9zAicfA==
-X-Google-Smtp-Source: APXvYqyafxODfliPqr6HCbdQrUM3eRMnPtQeCPNIN0jpSFzT4brd84bTSliJpWltnkD/FvgLbeu+a8Pfm6NbAZW1nLk=
-X-Received: by 2002:a19:c505:: with SMTP id w5mr24643827lfe.115.1571226741070;
- Wed, 16 Oct 2019 04:52:21 -0700 (PDT)
+         :message-id:subject:to:cc;
+        bh=1lgzvy+YBsjp8TqyBMT1f57Vy5UY6TJqL/3/rtY6CCA=;
+        b=lZ54bFWEsntbbtVIOhgZ/WS6MhrFPlC9reTmhU7xCq4w74vz7P2dMA/PAIKb+V37jr
+         ugwXMb/AwhU5Qpjvbu0/54mnNd+R6vp5CydEwFYZ5fI+mXFfJxNII/IFt2RgM7o6DuJC
+         tj30Fl6TPulo4RBi5LxbcD05oqYNRPVgJEyqPQhIusRypBq9FZQFFMFPjPvNtWOjSbPn
+         6IK83OgdEPVrpdHBUPzwatreijOAyqXMf7dRHJMCht/3XZrf4OyA7xcqN1YSrNcMNm8p
+         Fl66PFlb6O8JSByhO/xrFY1WyknCo5Ah5M5w9MwmxLgaDcTlL7RyDz259yoPeGFqqm7K
+         MreQ==
+X-Gm-Message-State: APjAAAV2yFxxh6LdUU5nhfwJAZ0Cd89UJS3ekeWxHNgZKpfQsUzRhKiv
+        7MNAJFLks5Z5imBZ2fPPQmEZlFP2m9cCYnRlVjQppA==
+X-Google-Smtp-Source: APXvYqxGRhrVxtU32F5Zq/TVBo0846dyytMuOUvb1dZY2mOZsVy3P2HV6Dq97F/HSFJq7W5/iOGwluUUDPICS163Jpk=
+X-Received: by 2002:a19:c505:: with SMTP id w5mr24686046lfe.115.1571227525264;
+ Wed, 16 Oct 2019 05:05:25 -0700 (PDT)
 MIME-Version: 1.0
-References: <20191011154650.1749-1-warthog618@gmail.com> <CAMRc=Mfkop3poFn7vaotxZfCJn=L+6w9uzNVCXTfa4AuVEmm1g@mail.gmail.com>
- <20191012005340.GA4059@sol> <CAMRc=MfqezSoanCuAuJhsn-PyQ8Z8+wDHtYsD0Ux0RztGPRo-g@mail.gmail.com>
-In-Reply-To: <CAMRc=MfqezSoanCuAuJhsn-PyQ8Z8+wDHtYsD0Ux0RztGPRo-g@mail.gmail.com>
+References: <cover.1568274587.git.rahul.tanwar@linux.intel.com>
+ <65898579e78b4b3bb5db9ddc884a818046c1eb4c.1568274587.git.rahul.tanwar@linux.intel.com>
+ <CACRpkdbFDTR140_a1FabyjCP2MnBTg-xo2BWnchEvCP161cFLw@mail.gmail.com> <f4cf3553-be3b-ffed-e801-ecb698309a63@linux.intel.com>
+In-Reply-To: <f4cf3553-be3b-ffed-e801-ecb698309a63@linux.intel.com>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Wed, 16 Oct 2019 13:52:09 +0200
-Message-ID: <CACRpkdbXEJ8mNDbSKVyXxSBJyZ4BLLS9++2teBqGtsTh3O28ew@mail.gmail.com>
-Subject: Re: [PATCH 0/5] gpio: expose pull-up/pull-down line flags to userspace
-To:     Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     Kent Gibson <warthog618@gmail.com>,
+Date:   Wed, 16 Oct 2019 14:05:12 +0200
+Message-ID: <CACRpkdZHKm_f04X16w6=Gfa20DVXTWV_KaHO-Esw7RAEKd5pjw@mail.gmail.com>
+Subject: Re: [PATCH v1 1/2] pinctrl: Add pinmux & GPIO controller driver for
+ new SoC
+To:     "Tanwar, Rahul" <rahul.tanwar@linux.intel.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Bamvor Jian Zhang <bamv2005@gmail.com>,
-        Drew Fustini <drew@pdp7.com>
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, Rob Herring <robh@kernel.org>,
+        Andriy Shevchenko <andriy.shevchenko@intel.com>,
+        qi-ming.wu@intel.com, yixin.zhu@linux.intel.com,
+        cheol.yong.kim@intel.com
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Sat, Oct 12, 2019 at 7:52 AM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
-> sob., 12 pa=C5=BA 2019 o 02:53 Kent Gibson <warthog618@gmail.com> napisa=
-=C5=82(a):
+On Thu, Oct 10, 2019 at 6:35 AM Tanwar, Rahul
+<rahul.tanwar@linux.intel.com> wrote:
 
-> > Should the updated series be a reply to this email (yours), or a new
-> > v2 thread?
->
-> In general every new version of a series should start a new thread.
+> My understanding is
+> that GPIO_GENERIC can support a max of 64 consecutive bits representing
+> GPIO lines.
 
-It's actually a very tricky problem and we discussed it at the lates
-maintainers summit and decided that some elaborate tooling to
-track patch series is needed going forward.
+Correct, it also demand that all GPIOs are accessed in a single
+register of 8, 16, 32 or 64 bits.
 
-See:
-https://lwn.net/Articles/797613/
+> We have more than 100 GPIO's and they are spread out across
+> 4 different banks with non consecutive registers i.e. DATA_IN_0~31@offset0x0,
+> DATA_IN_32~63@offset0x100 and so on. In other words, i think we can not
+> support memory mapped GPIO controller.
 
-> OK I've got your v2 - looks like something I can apply on top of
-> v5.4-rc2, so I'll try to review it tomorrow morning.
+But why can't you just create one device and thus one gpio_chip
+per bank?
 
-I give Bart some slack to look at the patches but I feel
-we can apply them when everyone is aligned.
+This is what most drivers do, it also often makes things easier.
+
+The main reason for not doing this is usually something like
+that some registers are shared inbetween the banks, or their
+registers are mingled in the same MMIO region or so.
+
+If they are just in different memory chunks then create
+one device per bank, and all gets much simpler.
+
+> As mentioned above, we cannot use GPIO_GENERIC. And there was no specific
+> reason/motivation for us to use regmap-mmio because most of the driver's
+> that we referenced were using readl()/write(). Do you recommend us to remove
+> readl()/writel() and switch to regmap-mmio based design ?
+
+I don't really know, usually whatever makes for the simplest
+code. But check if you can use GPIO_GENERIC first.
+
+> Just to clarify, we have 4 different GPIO banks and each GPIO bank is
+> implemented as a separate gpio_chip. So we have 4 instances of gpio_desc
+> each one having its own gpio_chip. What i mean to say is that gpio_desc
+> is actually not a per-line state container, its a per gpio_chip container.
+
+As you're already creating one gpio_chip per bank using GPIO_GENERIC
+should be simple.
+
+Just reference the memory cells directly when calling bgpio_init() for each
+mmio address, you're already half done.
 
 Yours,
 Linus Walleij
