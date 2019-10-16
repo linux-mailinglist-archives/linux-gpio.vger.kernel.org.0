@@ -2,102 +2,85 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id A9B2BD8FCE
-	for <lists+linux-gpio@lfdr.de>; Wed, 16 Oct 2019 13:44:19 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9CEB5D900F
+	for <lists+linux-gpio@lfdr.de>; Wed, 16 Oct 2019 13:52:28 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729186AbfJPLoT (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 16 Oct 2019 07:44:19 -0400
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:41094 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726052AbfJPLoT (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 16 Oct 2019 07:44:19 -0400
-Received: by mail-lj1-f194.google.com with SMTP id f5so23666249ljg.8
-        for <linux-gpio@vger.kernel.org>; Wed, 16 Oct 2019 04:44:17 -0700 (PDT)
+        id S2392860AbfJPLwY (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 16 Oct 2019 07:52:24 -0400
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:37791 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2392849AbfJPLwX (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 16 Oct 2019 07:52:23 -0400
+Received: by mail-lf1-f67.google.com with SMTP id w67so17235695lff.4
+        for <linux-gpio@vger.kernel.org>; Wed, 16 Oct 2019 04:52:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=O7ynzB3CWA40/rW0oocow5qJKo+UWyVMGynzk11MH2o=;
-        b=tqcBEQiwAZuHbNTvZTYeJu3+9qGSGTafGNKw18zAz6r0TQUjtiVV4t5O/34QRyVQuZ
-         pV2bEYsovFOE3BLkhA3Lnxfc0MbhmvGcszsZE8bt4WQFOl9WoJn9XPOaRIBi+r0NBjNj
-         sviQZvtOWM134O6iuxF8rBIjJ8zTpkFrLll55f/UT3A8OQfEUCrjJNfwBWACaA77Cm9j
-         CxcN2GV3PIqidmBxlSCUxfzMqT6ssJCV9LDvF1JQ1iqxAFt4exI1VD8AHxSIaLrayXOk
-         lkyA5FsZsCHKXQdSvO9fSoWSgVtPTwj/BJDxXh0ZN3uz6uBvkBE5CCdXRN5pAAUnY0tM
-         ci/Q==
+         :cc:content-transfer-encoding;
+        bh=V6YdXQcJKoGShMqI3meu7thi6SVojkNDq4q5Q658lX4=;
+        b=Xdv5I327YjWZa3Nm+H1+4rToFnyvUW+/gh+fodN4AKk/8IiX4RbxZpoijiRotq5AO2
+         +23rbPzeXxet7G6jM4ddTaNFLmbDW6BbbAvWkUAcmfla5LmPlMlRRRT2GwOmKvSRkGqL
+         Y4gWdoWYqbP02cVUvO7m6JMt8hcBAGurUPVd2k4NjnqsRrMC7kT8t+lYkUd14Z8LPdfQ
+         kP5fm0KBmuxjHB6bK67OfWBON0MJMeJL8VUD2T98PfCoG8AWb49JFwAW+b0w+la93MFS
+         34rGuUYN5fTyBge3ttvTAuARlbZKi3hZhnioEmrM+ky2HYUoHsDOJN00xUwTJqbfqmN/
+         j2BQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=O7ynzB3CWA40/rW0oocow5qJKo+UWyVMGynzk11MH2o=;
-        b=JuYIuXxKHgCl4/qplUgCT84/DhEdtUX1IsDxJilyB4bLwBv90fYV2Hy42H9Bh9ZrDu
-         +pewjNhDRdvaN/PgUdOwTjmCULAGp2J9Z5SzpQYH2iwJsEYiT/y9+MfjyV8Om0P7FNmc
-         jMDviZOgZr150QQWfgtNrLCdDbZKvgeIR088MGzPB5wPCLJDD2WCElVJ8mJ4vfYj+xya
-         6bojfXs+wm913Jwibd5wuLEMy+pip4pq2S61r4Sa+POLBEe8RE6/Hif8uyujDsf+u6XV
-         hH+BhlNlKz/OTumtINXXgFYDEg5T81Schz8+O3G9FSE42sREvYzolPj+nV2M7fR7BQqb
-         VQqw==
-X-Gm-Message-State: APjAAAXiRMthI4kmSpQgrHFTil7UyQWfnXCHYtplCaULX2pSHyB3q0x4
-        8t23ZxdbbTQv60UKA4U21CugliZyrFJG2MqCMhpfjQ==
-X-Google-Smtp-Source: APXvYqyFOs2Fg7UebeukbqPsBDyEK4Ja4kQKpeIBZd06yULdBvUgHCWhLnH7WEACArx5keMV4Owbn+d4jJVPujVGSJQ=
-X-Received: by 2002:a2e:80d1:: with SMTP id r17mr25580740ljg.118.1571226256777;
- Wed, 16 Oct 2019 04:44:16 -0700 (PDT)
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=V6YdXQcJKoGShMqI3meu7thi6SVojkNDq4q5Q658lX4=;
+        b=ZuDWzV2Su90yKYC7nPk0cxwhjQUQK/OEQRLh3gA+z0iFWNtRfZjeTb0WwAlnVWFDv3
+         128tqRIJtorsQH9njDzcKOwigwsxA5bGHJilsnX3muYGMjt63DNYTF9wCCnbTOEYk0IQ
+         KcFBbDJYzPIW8aV8o9jq/cV19oo4TDAKm50zuRtR6tLk1O7OZcMHYlYwTB9zuVYNhHq0
+         Px8ld76uFkNWWDWA5w9hdVqPxDyS7zvwUmT0hFI8BoSSsTlNSPzhaAAEE+nXwD/HW6ec
+         FE2PEHVtkmnwLpyoVdN/dknJy/f7toEpBYefgkg+PyjmFOKEGCyooWeABtlvjts4tI1i
+         3NTw==
+X-Gm-Message-State: APjAAAWyClzozXVxOprKu3mEY2GilCB0BJ3yEHMylQakUlaeOv07pv1Y
+        oLK6mOv9n1NyUsbHyR4zRMJaJi5HHBvYf1U9zAicfA==
+X-Google-Smtp-Source: APXvYqyafxODfliPqr6HCbdQrUM3eRMnPtQeCPNIN0jpSFzT4brd84bTSliJpWltnkD/FvgLbeu+a8Pfm6NbAZW1nLk=
+X-Received: by 2002:a19:c505:: with SMTP id w5mr24643827lfe.115.1571226741070;
+ Wed, 16 Oct 2019 04:52:21 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190917105902.445-1-m.felsch@pengutronix.de> <20190917105902.445-4-m.felsch@pengutronix.de>
- <CACRpkdbbmVo3hem1xFqtmq9-htg9+QUXQpZoSyffdTZQ5kUo5Q@mail.gmail.com>
- <20191007085159.uo366hmos6zk2ops@pengutronix.de> <20191009095612.einxiswkmhvipjht@pengutronix.de>
- <20191009101737.dpsdyyla7nmn6xdi@pengutronix.de>
-In-Reply-To: <20191009101737.dpsdyyla7nmn6xdi@pengutronix.de>
+References: <20191011154650.1749-1-warthog618@gmail.com> <CAMRc=Mfkop3poFn7vaotxZfCJn=L+6w9uzNVCXTfa4AuVEmm1g@mail.gmail.com>
+ <20191012005340.GA4059@sol> <CAMRc=MfqezSoanCuAuJhsn-PyQ8Z8+wDHtYsD0Ux0RztGPRo-g@mail.gmail.com>
+In-Reply-To: <CAMRc=MfqezSoanCuAuJhsn-PyQ8Z8+wDHtYsD0Ux0RztGPRo-g@mail.gmail.com>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Wed, 16 Oct 2019 13:44:04 +0200
-Message-ID: <CACRpkdZj+3PubdM9sXxtRn0HKtBbtaU9-5C6Sk5pNbnw5uNKhQ@mail.gmail.com>
-Subject: Re: [PATCH 3/3] gpio: da9062: add driver support
-To:     Marco Felsch <m.felsch@pengutronix.de>
-Cc:     "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Support Opensource <support.opensource@diasemi.com>,
+Date:   Wed, 16 Oct 2019 13:52:09 +0200
+Message-ID: <CACRpkdbXEJ8mNDbSKVyXxSBJyZ4BLLS9++2teBqGtsTh3O28ew@mail.gmail.com>
+Subject: Re: [PATCH 0/5] gpio: expose pull-up/pull-down line flags to userspace
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     Kent Gibson <warthog618@gmail.com>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Sascha Hauer <kernel@pengutronix.de>,
-        Adam Thomson <Adam.Thomson.Opensource@diasemi.com>
+        Bamvor Jian Zhang <bamv2005@gmail.com>,
+        Drew Fustini <drew@pdp7.com>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Oct 9, 2019 at 12:17 PM Marco Felsch <m.felsch@pengutronix.de> wrote:
+On Sat, Oct 12, 2019 at 7:52 AM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
+> sob., 12 pa=C5=BA 2019 o 02:53 Kent Gibson <warthog618@gmail.com> napisa=
+=C5=82(a):
 
-> > > > > +static int da9062_gpio_direction_input(struct gpio_chip *gc,
-> > > > > +                                      unsigned int offset)
-> > > > > +{
-> > > > > +       struct da9062_gpio *gpio = gpiochip_get_data(gc);
-> > > > > +       struct regmap *regmap = gpio->da9062->regmap;
-> > > > > +       struct gpio_desc *desc = gpiochip_get_desc(gc, offset);
-> >
-> > This won't work anymore since I moved the driver to pinctrl and can't
-> > include the drivers/gpio/gpiolib.h anymore. What is the right way to
-> > get the same result within the pinctrl space? There are three possible
-> > ways:
-> > 1) Revert commit 1bd6b601fe196b6fbce2c93536ce0f3f53577cec which isn't
-> >    the best due to safeness.
-> > 2) Set the gpio as active low hard as the other da90*-gpio drivers did
-> > 3) Introduce a dt-binding (seems wrong because the information is
-> >    already there).
-> > 4) "Re-implement" the gpiochip_get_desc() functionality driver
-> >    internally.
+> > Should the updated series be a reply to this email (yours), or a new
+> > v2 thread?
 >
-> 4) won't work didn't recognize that 'struct gpio_device' is an internal
-> struct.
+> In general every new version of a series should start a new thread.
 
-This is after all a gpiochip so it can use the internal structures.
-Go with
+It's actually a very tricky problem and we discussed it at the lates
+maintainers summit and decided that some elaborate tooling to
+track patch series is needed going forward.
 
-#include <../gpio/gpiolib.h>
+See:
+https://lwn.net/Articles/797613/
 
-Even if it is a bit ugly.
+> OK I've got your v2 - looks like something I can apply on top of
+> v5.4-rc2, so I'll try to review it tomorrow morning.
 
-One day I want to join the subsystems into one, and then this would
-go away, but until then we have to do this messy thing.
+I give Bart some slack to look at the patches but I feel
+we can apply them when everyone is aligned.
 
 Yours,
 Linus Walleij
