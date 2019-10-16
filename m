@@ -2,78 +2,113 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 7F50ED8FB4
-	for <lists+linux-gpio@lfdr.de>; Wed, 16 Oct 2019 13:39:20 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6BCE0D8FC0
+	for <lists+linux-gpio@lfdr.de>; Wed, 16 Oct 2019 13:42:30 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726248AbfJPLjT (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 16 Oct 2019 07:39:19 -0400
-Received: from mail-lf1-f67.google.com ([209.85.167.67]:38905 "EHLO
-        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726752AbfJPLjT (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 16 Oct 2019 07:39:19 -0400
-Received: by mail-lf1-f67.google.com with SMTP id u28so17187231lfc.5
-        for <linux-gpio@vger.kernel.org>; Wed, 16 Oct 2019 04:39:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=U44zrrUEGPIKyeOF3bZO4ezT9IQ+ohS6tJrNxnkfoIw=;
-        b=cDtS4Ct8KuWqEQHwFav9PV5/jOHM+PFzylmEbTUwCHv8M5H22ez/ZvgXU/AlP81CIn
-         zUg+2LXILvxP4B4af9Kxb2/A2cnMT4tmyYdBWfqseP7P4MYnum45g04lADPpkCG69UnW
-         vVA8/Qv0SaxwIKNR7jbBx3KlHfXludJgao831emYBXLIV8pjFPNqAnlJR/ZTIiewQl+Q
-         owRk7DdyytF3GocIiBNMbCCbV4/lySf8+Vw2fA9MPyUxsbRyTQu6J/8HzTSPD7gGvkIJ
-         RAri2J/k2MjTmbHWeksU8eTZLkYqYQvybVdg29MIySSnluDQq8VkQSOzLvpC47pOQgTM
-         cn0g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=U44zrrUEGPIKyeOF3bZO4ezT9IQ+ohS6tJrNxnkfoIw=;
-        b=ojknR1XkYsa+wAymbdR2dcZmEW+fVcB3mzd3zIFPzUEtHB9oDy4wvtlSrzS2MOYTpa
-         llRn6iYDxBNsFrC02angrmaUTsr88W9/V7tPNe3bTONYajpgzmBXUsdGmdy7Tpqv9m89
-         8uJJ08YmJa4IjDtPzykQ/ZA8DHBLdAcCNTkCcpusEpGcdiRvVxh/g7KiXxkYtimZ8m35
-         Ry3FnM27BPqGWOniQoe5klvHPEBB0h4rDvdsTe6AXjK6E3JgczzQlJFLh4J/YzIcc/Zy
-         IYeYJ/IPbwetdSSCXtSVlbEHfoQumjqhzVt0TPbxZdgv36ehzUfL8mHNDUARWYJEzqpF
-         hTUg==
-X-Gm-Message-State: APjAAAVBnApVsD2TtNXY+ZxYziu7UAXF80Mf9OBCq15fgTyqDgGAGJa4
-        80ygyXsbTSeTx8JD8qJlxKJ+AsOeHtSL+UGuqj7PMQ==
-X-Google-Smtp-Source: APXvYqzfCYDzmJNrYkCLjNO3+528qx9sXazaTJ4hMTfKdtkfJD7qb/QPqfw0WxRQrluNmVoZn4BGeuPjiL8sr+GDC28=
-X-Received: by 2002:a19:22c4:: with SMTP id i187mr5079447lfi.152.1571225955627;
- Wed, 16 Oct 2019 04:39:15 -0700 (PDT)
-MIME-Version: 1.0
-References: <20191009091606.17283-1-amelie.delaunay@st.com>
-In-Reply-To: <20191009091606.17283-1-amelie.delaunay@st.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Wed, 16 Oct 2019 13:39:04 +0200
-Message-ID: <CACRpkdYGAAU5nrMgobQNo_CZyAHdee5owGqTPYcy6D8DYt_Xjw@mail.gmail.com>
-Subject: Re: [PATCH v2 1/1] pinctrl: stmfx: add irq_request/release_resources callbacks
-To:     Amelie Delaunay <amelie.delaunay@st.com>
-Cc:     Alexandre Torgue <alexandre.torgue@st.com>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        id S1726441AbfJPLm3 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 16 Oct 2019 07:42:29 -0400
+Received: from new4-smtp.messagingengine.com ([66.111.4.230]:55109 "EHLO
+        new4-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726423AbfJPLm3 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>);
+        Wed, 16 Oct 2019 07:42:29 -0400
+Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
+        by mailnew.nyi.internal (Postfix) with ESMTP id 1687B5D35;
+        Wed, 16 Oct 2019 07:42:28 -0400 (EDT)
+Received: from imap2 ([10.202.2.52])
+  by compute4.internal (MEProxy); Wed, 16 Oct 2019 07:42:28 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aj.id.au; h=
+        mime-version:message-id:in-reply-to:references:date:from:to:cc
+        :subject:content-type; s=fm1; bh=IgrN1QKfS6jYUgyH1QxRGDIheSI8XFj
+        +2abRpMvasdw=; b=n4kC1/vi1d8rnCHxmhQauRQQ1pH3HhRA/ID8ocwRJrfEoWe
+        /52vmluZn3rs/O3sQ9b5HA047NyHraXZ8RPVnjZ7oTKixOzWhbJ223j3B084VqdK
+        FF6ltTKDUzG26P99xfWI97MCZ544V0Y5L2x0tTZG+a8vJ0adqymt3VIrbWu+e0Ki
+        PRglS8PodtSfcExFjscpaQuHphc4kyA+l71/mhwXfT4ZI6jAiZs2XQ2lsHlJQ8XM
+        IWaZQy0OQ87b340/5jJ6u+vDucLg2K5bWsst5O4Jnv0d3myLATb7xFp/ovJj6ycF
+        Y6bJBjZ94tH49WppyALypYIaD5kQxjToEEIR4uQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; bh=IgrN1Q
+        KfS6jYUgyH1QxRGDIheSI8XFj+2abRpMvasdw=; b=SzVPxq8Fe+GFeXRBcIhspR
+        5RYTxwQE2o4PMPiX2x/CDQ4P+9PpQIOAwRSws2P0BHJnIv6inJ7oZvkJu5t6Sq9E
+        jQ+2eUvnvqWCF39AigC1NDKmJ8QXDKDc0ATnb2/6MyATNp7/8wTMld8F0EJe3HUh
+        JJuGU2rYbgktRU6DZ4/B4MsybPLotJey5OyBPeHQnpCMTjoFiLDLSvdrMY9zqGIX
+        Oxcl2MuKJxwgufAR9buBMPGuRe15JhIN7v7LDtZMO/Weug+p1GgIXdRGnkBj6Dk3
+        TZNOaoXAT6pjNv5nOAqPL1HKvQAjptfWqA1jk4RSKUReImW2Xbxpk+ScVTcBqqUQ
+        ==
+X-ME-Sender: <xms:IgKnXUq-5tRRndAZ4oQfh-Q13sXsUyhXpR2O-M1-dNfMwaC7hSALkw>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedufedrjeehgdeggecutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
+    fjughrpefofgggkfgjfhffhffvufgtsehttdertderredtnecuhfhrohhmpedftehnughr
+    vgifucflvghffhgvrhihfdcuoegrnhgurhgvfiesrghjrdhiugdrrghuqeenucfrrghrrg
+    hmpehmrghilhhfrhhomheprghnughrvgifsegrjhdrihgurdgruhenucevlhhushhtvghr
+    ufhiiigvpedt
+X-ME-Proxy: <xmx:IgKnXduC4r3j3pBJ0RmQR5TMT2_JENIQI68cpOCbnM0imIM7hXBKwQ>
+    <xmx:IgKnXT1RBENUMFhsx1LMXlZjsd84ggTkoXnOxtzNBGXgEnE_FjdwBw>
+    <xmx:IgKnXYHcEQ1W8coqkkFmFcRvPE4aZg4lYaUBiDePQ7R7hiDkulduuw>
+    <xmx:JAKnXQsrR0GXkVK_YQ34ki0MxyXIdJ0BqI13Zc7vjk29T8_M2zqWAQ>
+Received: by mailuser.nyi.internal (Postfix, from userid 501)
+        id 05F06E00A5; Wed, 16 Oct 2019 07:42:26 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
+User-Agent: Cyrus-JMAP/3.1.7-360-g7dda896-fmstable-20191004v2
+Mime-Version: 1.0
+Message-Id: <2de90789-c374-4821-89f9-5d5f01e7d2d6@www.fastmail.com>
+In-Reply-To: <CACRpkda5cWaA7R3XzyiERCCgwUrjnXd+wCBeKvt-wtjex7wNDg@mail.gmail.com>
+References: <20191008044153.12734-1-andrew@aj.id.au>
+ <CACRpkda5cWaA7R3XzyiERCCgwUrjnXd+wCBeKvt-wtjex7wNDg@mail.gmail.com>
+Date:   Wed, 16 Oct 2019 22:11:48 +1030
+From:   "Andrew Jeffery" <andrew@aj.id.au>
+To:     "Linus Walleij" <linus.walleij@linaro.org>
+Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "Rob Herring" <robh+dt@kernel.org>,
+        "Mark Rutland" <mark.rutland@arm.com>,
+        "Joel Stanley" <joel@jms.id.au>,
+        linux-aspeed <linux-aspeed@lists.ozlabs.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        "Linux ARM" <linux-arm-kernel@lists.infradead.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        linux-stm32@st-md-mailman.stormreply.com
-Content-Type: text/plain; charset="UTF-8"
+        "Johnny Huang" <johnny_huang@aspeedtech.com>,
+        "Ryan Chen" <ryanchen.aspeed@gmail.com>
+Subject: Re: [PATCH 0/7] pinctrl: Fixes for AST2600 support
+Content-Type: text/plain
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Oct 9, 2019 at 11:16 AM Amelie Delaunay <amelie.delaunay@st.com> wrote:
 
-> When an STMFX IO is used as interrupt through the interrupt-controller
-> binding, the STMFX driver should configure this IO as input. Default
-> value of STMFX IO direction is input, but if the IO is used as output
-> before the interrupt use, it will not work without these callbacks.
->
-> Signed-off-by: Amelie Delaunay <amelie.delaunay@st.com>
-> ---
-> Changes in V2:
-> - use gpiochip_reqres_irq and gpiochip_relres_irq instead of calling
-> explicitely the lock/unlock.
 
-Patch applied!
+On Wed, 16 Oct 2019, at 21:49, Linus Walleij wrote:
+> On Tue, Oct 8, 2019 at 6:41 AM Andrew Jeffery <andrew@aj.id.au> wrote:
+> 
+> > This series resolves several issues found in testing by Johnny Huang from
+> > ASPEED, who also contributed the patches to fix them. We'll have more patches
+> > from him in the near future (which I'm pretty happy about).
+> >
+> > The major issue resolved is the way I grouped the eMMC pins. What I had was
+> > ugly and I want to get rid of it before the binding is solidified with the 5.4
+> > release.
+> 
+> Should some of these go in with fixes? All of them? Or just some?
+> I applied them to devel right now (for v5.5).
 
-Yours,
-Linus Walleij
+I was hoping to get them into the 5.4 fixes branch: I consider them all fixes - the rework of the eMMC pin groups and functions is a fix for the binding. The rest are fixes for the driver itself. My preference is that they get into a release sooner rather than later.
+
+It's there something that makes you think they shouldn't be merged as fixes for 5.4?
+
+> 
+> > The remaining fixes are minor issues that stem from lack of documentation or
+> > understanding on my part, and at least one brain-fart.
+> 
+> Do they need to go in to v5.4 or not?
+> 
+> I need a shortlist of anything that should go into v5.4 if anything.
+
+IMO all of them should go into 5.4, as above. It's there something I can do in the future to communicate this better? Explicit shortlist in the cover letter? Fixes tags on the relevant patches? Keen to make things easier/more obvious if I can.
+
+Cheers,
+
+Andrew
