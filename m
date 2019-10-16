@@ -2,169 +2,105 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 04842D889E
-	for <lists+linux-gpio@lfdr.de>; Wed, 16 Oct 2019 08:27:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2F45ED8AA3
+	for <lists+linux-gpio@lfdr.de>; Wed, 16 Oct 2019 10:15:40 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388559AbfJPG1X (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 16 Oct 2019 02:27:23 -0400
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:45898 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388042AbfJPG1X (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 16 Oct 2019 02:27:23 -0400
-Received: by mail-pl1-f195.google.com with SMTP id u12so10748531pls.12
-        for <linux-gpio@vger.kernel.org>; Tue, 15 Oct 2019 23:27:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=message-id:mime-version:content-transfer-encoding:in-reply-to
-         :references:from:to:cc:subject:user-agent:date;
-        bh=xcdwT4cF2V+pOFpto6g1hLsKYDE91tN3/jlyW1Fe6XM=;
-        b=NDFsVTzR4A7J/IjHujREEahybZdPIx81kKZJfQf9vrZWcp0Xvh0Y3IY/NPtNxtpUTL
-         DL6CDSipP//uBcELpJWx1twdiIirLRhmrMU3hAjrhPoFCkQI69yJKB0L8AzIGdHqS4R2
-         6D8n2hhpUUCEsJ/3hdBIrLYgexAkwibos7Zrg=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:mime-version
-         :content-transfer-encoding:in-reply-to:references:from:to:cc:subject
-         :user-agent:date;
-        bh=xcdwT4cF2V+pOFpto6g1hLsKYDE91tN3/jlyW1Fe6XM=;
-        b=EEXSajEyAj83S5ChBpZPzULkIv0yOhq1GQPbzg5T5BuqKS5iUXBIanIwRx9Omt7ctO
-         RmXXxKBCnRsxANBIxQZPW/L8Ofn3rOZQc9g7g66kekDf4ExOKyqCeYPMb2zxJUErlnTz
-         KugLsFSxY18LSgGsdiQb+RP0emOZdF3ldXgmwh/RwDWp6Ed9Jms9HxaEGlV7L6RnJb+i
-         iIVgoOIG0mTLnIpb91RjbsqFA6/b9gXXeCE9dH/jXIXoiMRaitfvXQtznxhw99EFlBSD
-         KApDoxohOMIz2vpLsHZhEP//0vFBQNo6FSyfRVEhydYsyWUNVPYXdP7lKSAfjd6Pvoc9
-         RkeQ==
-X-Gm-Message-State: APjAAAXPg2LUGc6akjlLtqUWthwAb4pzFbwNZf8nCPCGD1Zw9udRWDgP
-        M96RH1wYUDvseA6eM7vhJEWo3w==
-X-Google-Smtp-Source: APXvYqw35UsGC1shtlHLmY97gFEhNOpvQbnF+X0xZdpfm3AC4KGJTc7/ShcSDiJwNixAk6+nO3HRxQ==
-X-Received: by 2002:a17:902:b109:: with SMTP id q9mr39203001plr.306.1571207241975;
-        Tue, 15 Oct 2019 23:27:21 -0700 (PDT)
-Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
-        by smtp.gmail.com with ESMTPSA id v4sm22330420pff.181.2019.10.15.23.27.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 15 Oct 2019 23:27:21 -0700 (PDT)
-Message-ID: <5da6b849.1c69fb81.a9b04.1b9f@mx.google.com>
-Content-Type: text/plain; charset="utf-8"
+        id S1726951AbfJPIPg (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 16 Oct 2019 04:15:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55564 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726335AbfJPIPg (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Wed, 16 Oct 2019 04:15:36 -0400
+Received: from localhost (unknown [171.76.123.182])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 93AA22064B;
+        Wed, 16 Oct 2019 08:15:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1571213735;
+        bh=wQkEVazklDAJ7dSbF0KdWXdU8XFXLrPC9CuTZDXFcM4=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=mVi5NeVe2NO8zlPTQNPzHooei1ARBh0FfAAGoui8k9aCAWBlp7R/7/Q+qbztaMc+s
+         t/TfDbgo7dNWOojAuVV6TsOXkFRXz4iC+c3afqIfg809gyhTaNYWAQYEdTThBEgad/
+         EtpmBefX2VJwMZ8LsvVcDfzoB5cRAWZXb0N+URnk=
+Date:   Wed, 16 Oct 2019 13:45:30 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Kiran Gunda <kgunda@codeaurora.org>
+Cc:     bjorn.andersson@linaro.org, Andy Gross <agross@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH V1] dt-bindings: pinctrl: qcom-pmic-gpio: Add support for
+ pm6150/pm6150l
+Message-ID: <20191016081530.GJ2654@vkoul-mobl>
+References: <1570188039-22122-1-git-send-email-kgunda@codeaurora.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <5d92829e.1c69fb81.d860a.9096@mx.google.com>
-References: <1568411962-1022-1-git-send-email-ilina@codeaurora.org> <1568411962-1022-7-git-send-email-ilina@codeaurora.org> <5d92829e.1c69fb81.d860a.9096@mx.google.com>
-From:   Stephen Boyd <swboyd@chromium.org>
-To:     Lina Iyer <ilina@codeaurora.org>, evgreen@chromium.org,
-        linus.walleij@linaro.org, maz@kernel.org
-Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        bjorn.andersson@linaro.org, mkshah@codeaurora.org,
-        linux-gpio@vger.kernel.org, Lina Iyer <ilina@codeaurora.org>,
-        devicetree@vger.kernel.org
-Subject: Re: [PATCH RFC v2 06/14] dt-bindings/interrupt-controller: pdc: add SPI config register
-User-Agent: alot/0.8.1
-Date:   Tue, 15 Oct 2019 23:27:20 -0700
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1570188039-22122-1-git-send-email-kgunda@codeaurora.org>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Quoting Stephen Boyd (2019-09-30 15:33:01)
-> Quoting Lina Iyer (2019-09-13 14:59:14)
-> > In addition to configuring the PDC, additional registers that interface
-> > the GIC have to be configured to match the GPIO type. The registers on
-> > some QCOM SoCs are access restricted, while on other SoCs are not. They
-> > SoCs with access restriction to these SPI registers need to be written
-> > from the firmware using the SCM interface. Add a flag to indicate if the
-> > register is to be written using SCM interface.
-> >=20
-> > Cc: devicetree@vger.kernel.org
-> > Signed-off-by: Lina Iyer <ilina@codeaurora.org>
-> > ---
-> >  .../devicetree/bindings/interrupt-controller/qcom,pdc.txt   | 13 +++++=
-+++++++-
-> >  1 file changed, 12 insertions(+), 1 deletion(-)
-> >=20
-> > diff --git a/Documentation/devicetree/bindings/interrupt-controller/qco=
-m,pdc.txt b/Documentation/devicetree/bindings/interrupt-controller/qcom,pdc=
-.txt
-> > index 8e0797c..e329f8d 100644
-> > --- a/Documentation/devicetree/bindings/interrupt-controller/qcom,pdc.t=
-xt
-> > +++ b/Documentation/devicetree/bindings/interrupt-controller/qcom,pdc.t=
-xt
-> > @@ -24,6 +24,9 @@ Properties:
-> >         Usage: required
-> >         Value type: <prop-encoded-array>
-> >         Definition: Specifies the base physical address for PDC hardwar=
-e.
-> > +                   Optionally, specify the PDC's GIC interface registe=
-rs that
-> > +                   need to be configured for wakeup capable GPIOs rout=
-ed to
-> > +                   the PDC.
-> > =20
-> >  - interrupt-cells:
-> >         Usage: required
-> > @@ -50,15 +53,23 @@ Properties:
-> >                     The second element is the GIC hwirq number for the =
-PDC port.
-> >                     The third element is the number of interrupts in se=
-quence.
-> > =20
-> > +- qcom,scm-spi-cfg:
-> > +       Usage: optional
-> > +       Value type: <bool>
-> > +       Definition: Specifies if the SPI configuration registers have t=
-o be
-> > +                   written from the firmware. Sometimes the PDC interf=
-ace
-> > +                   register to the GIC can only be written from the fi=
-rmware.
-> > +
-> >  Example:
-> > =20
-> >         pdc: interrupt-controller@b220000 {
-> >                 compatible =3D "qcom,sdm845-pdc";
-> > -               reg =3D <0xb220000 0x30000>;
-> > +               reg =3D <0 0x0b220000 0 0x30000>, <0 0x179900f0 0 0x60>;
-> >                 qcom,pdc-ranges =3D <0 512 94>, <94 641 15>, <115 662 7=
->;
-> >                 #interrupt-cells =3D <2>;
-> >                 interrupt-parent =3D <&intc>;
-> >                 interrupt-controller;
-> > +               qcom,scm-spi-cfg;
-> >         };
->=20
-> This overlaps register region with the mailbox node. That node is
-> actually a pile of random "CPU" registers used to ping remote processors
-> and apparently control how the PDC interacts with the GIC. Maybe this
-> can be changed to a phandle and then the driver can interogate the
-> phandle to determine if it's the SCM firmware or if it's the shared
-> mailbox register? If it's a shared mailbox then it can write to it at
-> the offset it knows about (because it's sdm845 compatible specific) and
-> if it's SCM then it can use the hardcoded address as well?
->=20
-> Basically I'm saying that it just needs a phandle.
->=20
->         qcom,spi-cfg =3D <&scm>;
->=20
-> or
->=20
->         qcom,spi-cfg =3D <&mailbox>;
->=20
-> and then driver knows how to use that to write into random registers.
-> Maybe we can have an API in regmap that finds the regmap for a given
-> device node? That way we don't have to funnel everything through syscon
-> for this.
->=20
->         of_get_regmap(struct device_node *np, const char *name);
->=20
-> Where NULL name means "first available" and then do the devres search
-> otherwise for a device that has the matching node pointer.
->=20
+On 04-10-19, 16:50, Kiran Gunda wrote:
+> Add support for the PM6150 and PM6150L GPIO support to the
+> Qualcomm PMIC GPIO binding.
+> 
+> Signed-off-by: Kiran Gunda <kgunda@codeaurora.org>
+> ---
+>  Documentation/devicetree/bindings/pinctrl/qcom,pmic-gpio.txt | 4 ++++
+>  drivers/pinctrl/qcom/pinctrl-spmi-gpio.c                     | 2 ++
+>  2 files changed, 6 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/pinctrl/qcom,pmic-gpio.txt b/Documentation/devicetree/bindings/pinctrl/qcom,pmic-gpio.txt
+> index c32bf32..2f48cca 100644
+> --- a/Documentation/devicetree/bindings/pinctrl/qcom,pmic-gpio.txt
+> +++ b/Documentation/devicetree/bindings/pinctrl/qcom,pmic-gpio.txt
+> @@ -23,6 +23,8 @@ PMIC's from Qualcomm.
+>  		    "qcom,pms405-gpio"
+>  		    "qcom,pm8150-gpio"
+>  		    "qcom,pm8150b-gpio"
+> +		    "qcom,pm6150-gpio"
+> +		    "qcom,pm6150l-gpio"
+>  
+>  		    And must contain either "qcom,spmi-gpio" or "qcom,ssbi-gpio"
+>  		    if the device is on an spmi bus or an ssbi bus respectively
+> @@ -100,6 +102,8 @@ to specify in a pin configuration subnode:
+>  					     and gpio8)
+>  		    gpio1-gpio12 for pm8150b (holes on gpio3, gpio4, gpio7)
+>  		    gpio1-gpio12 for pm8150l (hole on gpio7)
+> +		    gpio1-gpio10 for pm6150
+> +		    gpio1-gpio12 for pm6150l
 
-I had another idea the other day. Maybe a better approach would be to
-make the mailbox or SCM code an interrupt controller with the
-appropriate functions to poke the bits necessary to make the interrupts
-work. Then we can make it a chip in the hierarchy between the GIC and
-PDC and make the interrupts call through from PDC to GIC. The locking
-could be handled in each respective driver if necessary, and otherwise
-we don't have to use a regmap or remap the same registers (except we may
-need to describe if the parent is the mailbox node or the scm fimware
-node).
+No holes on these?
 
+Other than this:
+
+Reviewed-by: Vinod Koul <vkoul@kernel.org>
+
+>  
+>  - function:
+>  	Usage: required
+> diff --git a/drivers/pinctrl/qcom/pinctrl-spmi-gpio.c b/drivers/pinctrl/qcom/pinctrl-spmi-gpio.c
+> index f1fece5..387917c 100644
+> --- a/drivers/pinctrl/qcom/pinctrl-spmi-gpio.c
+> +++ b/drivers/pinctrl/qcom/pinctrl-spmi-gpio.c
+> @@ -1121,6 +1121,8 @@ static int pmic_gpio_remove(struct platform_device *pdev)
+>  	{ .compatible = "qcom,pm8150b-gpio", .data = (void *) 12 },
+>  	/* pm8150l has 12 GPIOs with holes on 7 */
+>  	{ .compatible = "qcom,pm8150l-gpio", .data = (void *) 12 },
+> +	{ .compatible = "qcom,pm6150-gpio", .data = (void *) 10 },
+> +	{ .compatible = "qcom,pm6150l-gpio", .data = (void *) 12 },
+>  	{ },
+>  };
+>  
+> -- 
+> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+>  a Linux Foundation Collaborative Project
+
+-- 
+~Vinod
