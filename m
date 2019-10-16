@@ -2,85 +2,83 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 4AD59D91BA
-	for <lists+linux-gpio@lfdr.de>; Wed, 16 Oct 2019 14:58:47 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 545BED91F8
+	for <lists+linux-gpio@lfdr.de>; Wed, 16 Oct 2019 15:06:31 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388821AbfJPM6q (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 16 Oct 2019 08:58:46 -0400
-Received: from mail-qt1-f195.google.com ([209.85.160.195]:44055 "EHLO
-        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388787AbfJPM6q (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 16 Oct 2019 08:58:46 -0400
-Received: by mail-qt1-f195.google.com with SMTP id u40so35860811qth.11
-        for <linux-gpio@vger.kernel.org>; Wed, 16 Oct 2019 05:58:46 -0700 (PDT)
+        id S2405308AbfJPNGa (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 16 Oct 2019 09:06:30 -0400
+Received: from mail-qk1-f196.google.com ([209.85.222.196]:35797 "EHLO
+        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2405305AbfJPNGa (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 16 Oct 2019 09:06:30 -0400
+Received: by mail-qk1-f196.google.com with SMTP id w2so22658636qkf.2
+        for <linux-gpio@vger.kernel.org>; Wed, 16 Oct 2019 06:06:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=KmA+aKQ+Mz4roVfarz1mhTEhPUBs6dUMbgV2hRJ9D+I=;
-        b=idlvvJzj03O9Dhoii0QwehDgHJo0nSR3M2StWcQWMCo6vOqUSBMbRfpy+pg0hIqH6X
-         PYeUVVfauNdBBUdYTwdnHR/OLPE1V+z99iR8UGdRjikl6zsVv+aH5/nZ7e6WUHzE7QSY
-         i6HC0o6rJtvBwysJxo38EdMH1kwvt/BsdjGe8dmXgh+IkDOHFPQqnOxs/d2yFjlAZr3b
-         EEnDvovROM/5da5tXjvbxBkafdAAICCoWhxgy0D1vgJ/ojcxEFc/ky/eZozyVfMh0DM8
-         4FztcTZ9UIWTart0EL9P7qG280dGOH7mhl3+7N0P7j+w5zNnauJ1ViKgBVgesEwyvDaS
-         pKSA==
+        bh=ibLQ/kFLIHda3Y//bQcDwf2homCjSjyyoH0S4z0cTi0=;
+        b=a94BSy1heELw6oQDUPEnoTERpUHN+acuOd0wnC3jqn9l5uUkZyf9dZrbPfBsgyyjoB
+         46cVLk2CsG3+k+5q4BQZRP+CZ7CIyNtt9MxsxFE1T1Hi3/x7CG7lfGFm7Y12IG6UFBex
+         3dwOAE21oTPYTqCK0ab/6nxRLdx9SmwmLVp8+FfFitRb0jbq+JQ5z8lfl7IFGgmP3plc
+         lSFppFRtCbW6HlaxC++0Ip6P65ryKDvkL+6ngS5Dh+P78wnOxhrM+uqc4grIOclXyUXh
+         YRQZ3y9fQAGFSOkuMZxLHc6xMNt6fNBpmLJrnqHbgvQjqFWyUijlsAuHihXc/qHECE4I
+         ji0g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=KmA+aKQ+Mz4roVfarz1mhTEhPUBs6dUMbgV2hRJ9D+I=;
-        b=Lw9fcUKEnHLEKb2RcP70PTn3hv1Ke3OVh7sapkbwPUal7s5r25c0Wf6WfoLPtFeFj5
-         rrE+98ouXjdiCVtqH29NsmHDiy9kPk/bh109zcMbL2Q3JcB+cuBXNKxWRrHvT+Pyg4xP
-         P0nkqJgz71+pJ43IHkbODNR0NaNlV4Sm5dpt+Zl9wl/a3FRdQC7IuCcz6Fo+oZFA2X4R
-         O59kh3w3PBxLfM5ChYPwqcdJKKKHdpqD1NruTFjcmOiusPgeuAufvmWvd+6eJ2kwLLa0
-         kw4fR+jo/sN075q2oqQ9rXw9apHK5Crklbu3kGTK0+HOYCsrKfgz5qIvMxzScIPcnVv3
-         M/HQ==
-X-Gm-Message-State: APjAAAXIra0lt1SlKNsYRA+A8a2Y/zVd/1UFONtvesOD4e7vT2CTSdqt
-        gnikPZ4QEbXf0L0n3c4EFFReakAwLfAHrtAsmcLEIg==
-X-Google-Smtp-Source: APXvYqzzAj4RRoyWWdn356bmclofAMv7LyLqwE4YshT93mqUtpQ1x6mGLzCX0QswCj37V36hjSDWEY2bBLupcVUzPM0=
-X-Received: by 2002:a0c:d6c3:: with SMTP id l3mr42024556qvi.201.1571230725676;
- Wed, 16 Oct 2019 05:58:45 -0700 (PDT)
+        bh=ibLQ/kFLIHda3Y//bQcDwf2homCjSjyyoH0S4z0cTi0=;
+        b=hCDHcdUut7CpOVlpVXlRHRgaGYfrSr9qAgoTUneHihy8kwhHbb5tsJhfZcq0CkRAu7
+         +52N9uIqk0f9BDY14iypGYzPV1fwUGmUAQk4xedOw9LDauSPL03f2+WIKBLp7Ivur6eh
+         WNdlbs5QrVixD+kXdpIxDkEtizZ3g+J2QBahTxHunaFdPO188oc+1njw+DN5VnMviGt9
+         Y1wBebZTOclmTW2MQpfZbS1YHo8jVvUm40NS8/E/ljEsb6RNjwMAPEe6jwzYgzOw51IT
+         znXMs7Kje+Px1ySW0rf1zfb6hVVkNbHRtS3Gw5vXYTv8H+bFKMVjPAU8hit4EFAgB81G
+         EPOw==
+X-Gm-Message-State: APjAAAXVjAerFfTdCIhRj45gnBy+G3LSygiYUFc3VZcAe2nH9V77sQv5
+        ABMnuIPzTodplhr+XAvgVEMKNC+v5z/hkF6XsIL3WA==
+X-Google-Smtp-Source: APXvYqy+NEWe4TqFletEN/CXcIe/pp7ETy4SmUg71QD2TK/ETQMTLSHfXEKD6o3Wu7yhacbaqLmMOspTKMUXblUjUDI=
+X-Received: by 2002:a05:620a:2f4:: with SMTP id a20mr3378514qko.163.1571231189266;
+ Wed, 16 Oct 2019 06:06:29 -0700 (PDT)
 MIME-Version: 1.0
-References: <20191014095104.77689-1-andriy.shevchenko@linux.intel.com>
-In-Reply-To: <20191014095104.77689-1-andriy.shevchenko@linux.intel.com>
+References: <20191014155341.13145-1-brgl@bgdev.pl>
+In-Reply-To: <20191014155341.13145-1-brgl@bgdev.pl>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Wed, 16 Oct 2019 14:58:34 +0200
-Message-ID: <CACRpkdYK9L6n2CTz+aAoOhTRSboQvq+QTfmkC1-w-6RkOkr=+Q@mail.gmail.com>
-Subject: Re: [PATCH v1] pinctrl: intel: Avoid potential glitches if pin is in
- GPIO mode
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Fei Yang <fei.yang@intel.com>,
-        Oliver Barta <oliver.barta@aptiv.com>,
-        Malin Jonsson <malin.jonsson@ericsson.com>
+Date:   Wed, 16 Oct 2019 15:06:18 +0200
+Message-ID: <CACRpkdYL_PGbksmav7b1t=jPzGZG4Y_mXoH7Dvdgs69Qhh-UFg@mail.gmail.com>
+Subject: Re: [PATCH v5.3] gpio: fix getting nonexclusive gpiods from DT
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        stable <stable@vger.kernel.org>,
+        Marco Felsch <m.felsch@pengutronix.de>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Oct 14, 2019 at 11:51 AM Andy Shevchenko
-<andriy.shevchenko@linux.intel.com> wrote:
+On Mon, Oct 14, 2019 at 5:53 PM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
 
-> When consumer requests a pin, in order to be on the safest side,
-> we switch it first to GPIO mode followed by immediate transition
-> to the input state. Due to posted writes it's luckily to be a single
-> I/O transaction.
+> From: Marco Felsch <m.felsch@pengutronix.de>
 >
-> However, if firmware or boot loader already configures the pin
-> to the GPIO mode, user expects no glitches for the requested pin.
-> We may check if the pin is pre-configured and leave it as is
-> till the actual consumer toggles its state to avoid glitches.
+> Since commit ec757001c818 ("gpio: Enable nonexclusive gpiods from DT
+> nodes") we are able to get GPIOD_FLAGS_BIT_NONEXCLUSIVE marked gpios.
+> Currently the gpiolib uses the wrong flags variable for the check. We
+> need to check the gpiod_flags instead of the of_gpio_flags else we
+> return -EBUSY for GPIOD_FLAGS_BIT_NONEXCLUSIVE marked and requested
+> gpiod's.
 >
-> Fixes: 7981c0015af2 ("pinctrl: intel: Add Intel Sunrisepoint pin controller and GPIO support")
-> Depends-on: f5a26acf0162 ("pinctrl: intel: Initialize GPIO properly when used through irqchip")
-> Cc: fei.yang@intel.com
-> Reported-by: Oliver Barta <oliver.barta@aptiv.com>
-> Reported-by: Malin Jonsson <malin.jonsson@ericsson.com>
-> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> Fixes: ec757001c818 gpio: Enable nonexclusive gpiods from DT nodes
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
+> [Bartosz: the function was moved to gpiolib-of.c so updated the patch]
+> Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> [Bartosz: backported to v5.3.y]
+> Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 
-You surely know this best, should it also be tagged for stable?
+Thanks for fixing up this backport Bartosz, much appreciated!
 
 Yours,
 Linus Walleij
