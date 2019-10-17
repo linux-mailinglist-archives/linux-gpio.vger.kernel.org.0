@@ -2,21 +2,21 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 8DEC9DAD4E
-	for <lists+linux-gpio@lfdr.de>; Thu, 17 Oct 2019 14:50:56 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 493E4DAD41
+	for <lists+linux-gpio@lfdr.de>; Thu, 17 Oct 2019 14:50:50 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2502588AbfJQMsZ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 17 Oct 2019 08:48:25 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:4205 "EHLO huawei.com"
+        id S2388127AbfJQMuk (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 17 Oct 2019 08:50:40 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:59920 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2502586AbfJQMsZ (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Thu, 17 Oct 2019 08:48:25 -0400
-Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 244A2DE6D269943AC0B1;
-        Thu, 17 Oct 2019 20:48:23 +0800 (CST)
-Received: from localhost (10.133.213.239) by DGGEMS402-HUB.china.huawei.com
- (10.3.19.202) with Microsoft SMTP Server id 14.3.439.0; Thu, 17 Oct 2019
- 20:48:16 +0800
+        id S2502626AbfJQMsb (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Thu, 17 Oct 2019 08:48:31 -0400
+Received: from DGGEMS401-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id B4EFF685EF95C51EF687;
+        Thu, 17 Oct 2019 20:48:29 +0800 (CST)
+Received: from localhost (10.133.213.239) by DGGEMS401-HUB.china.huawei.com
+ (10.3.19.201) with Microsoft SMTP Server id 14.3.439.0; Thu, 17 Oct 2019
+ 20:48:19 +0800
 From:   YueHaibing <yuehaibing@huawei.com>
 To:     <linus.walleij@linaro.org>, <manivannan.sadhasivam@linaro.org>,
         <afaerber@suse.de>, <f.fainelli@gmail.com>, <rjui@broadcom.com>,
@@ -34,9 +34,9 @@ CC:     <linux-arm-kernel@lists.infradead.org>,
         <haojian.zhuang@gmail.com>, <wens@csie.org>,
         <thierry.reding@gmail.com>, <jonathanh@nvidia.com>,
         <agross@kernel.org>, YueHaibing <yuehaibing@huawei.com>
-Subject: [PATCH -next 06/30] pinctrl: nsp: use devm_platform_ioremap_resource() to simplify code
-Date:   Thu, 17 Oct 2019 20:26:16 +0800
-Message-ID: <20191017122640.22976-7-yuehaibing@huawei.com>
+Subject: [PATCH -next 07/30] pinctrl: ns2: use devm_platform_ioremap_resource() to simplify code
+Date:   Thu, 17 Oct 2019 20:26:17 +0800
+Message-ID: <20191017122640.22976-8-yuehaibing@huawei.com>
 X-Mailer: git-send-email 2.10.2.windows.1
 In-Reply-To: <20191017122640.22976-1-yuehaibing@huawei.com>
 References: <20191017122640.22976-1-yuehaibing@huawei.com>
@@ -54,14 +54,14 @@ This is detected by coccinelle.
 
 Signed-off-by: YueHaibing <yuehaibing@huawei.com>
 ---
- drivers/pinctrl/bcm/pinctrl-nsp-mux.c | 6 ++----
+ drivers/pinctrl/bcm/pinctrl-ns2-mux.c | 6 ++----
  1 file changed, 2 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/pinctrl/bcm/pinctrl-nsp-mux.c b/drivers/pinctrl/bcm/pinctrl-nsp-mux.c
-index 87618a4..3756fc9 100644
---- a/drivers/pinctrl/bcm/pinctrl-nsp-mux.c
-+++ b/drivers/pinctrl/bcm/pinctrl-nsp-mux.c
-@@ -571,8 +571,7 @@ static int nsp_pinmux_probe(struct platform_device *pdev)
+diff --git a/drivers/pinctrl/bcm/pinctrl-ns2-mux.c b/drivers/pinctrl/bcm/pinctrl-ns2-mux.c
+index 9fabc45..32f268f 100644
+--- a/drivers/pinctrl/bcm/pinctrl-ns2-mux.c
++++ b/drivers/pinctrl/bcm/pinctrl-ns2-mux.c
+@@ -1042,8 +1042,7 @@ static int ns2_pinmux_probe(struct platform_device *pdev)
  	platform_set_drvdata(pdev, pinctrl);
  	spin_lock_init(&pinctrl->lock);
  
@@ -71,15 +71,15 @@ index 87618a4..3756fc9 100644
  	if (IS_ERR(pinctrl->base0))
  		return PTR_ERR(pinctrl->base0);
  
-@@ -586,8 +585,7 @@ static int nsp_pinmux_probe(struct platform_device *pdev)
+@@ -1057,8 +1056,7 @@ static int ns2_pinmux_probe(struct platform_device *pdev)
  		return -ENOMEM;
  	}
  
 -	res = platform_get_resource(pdev, IORESOURCE_MEM, 2);
--	pinctrl->base2 = devm_ioremap_resource(&pdev->dev, res);
-+	pinctrl->base2 = devm_platform_ioremap_resource(pdev, 2);
- 	if (IS_ERR(pinctrl->base2))
- 		return PTR_ERR(pinctrl->base2);
+-	pinctrl->pinconf_base = devm_ioremap_resource(&pdev->dev, res);
++	pinctrl->pinconf_base = devm_platform_ioremap_resource(pdev, 2);
+ 	if (IS_ERR(pinctrl->pinconf_base))
+ 		return PTR_ERR(pinctrl->pinconf_base);
  
 -- 
 2.7.4
