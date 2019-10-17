@@ -2,21 +2,21 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id E42C0DAD04
-	for <lists+linux-gpio@lfdr.de>; Thu, 17 Oct 2019 14:49:56 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 152A2DAD09
+	for <lists+linux-gpio@lfdr.de>; Thu, 17 Oct 2019 14:49:59 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2502801AbfJQMtK (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 17 Oct 2019 08:49:10 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:57294 "EHLO huawei.com"
+        id S2502921AbfJQMtz (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 17 Oct 2019 08:49:55 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:4212 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2502793AbfJQMtK (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Thu, 17 Oct 2019 08:49:10 -0400
-Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 2FE54EC8D68941494BFA;
-        Thu, 17 Oct 2019 20:49:07 +0800 (CST)
-Received: from localhost (10.133.213.239) by DGGEMS403-HUB.china.huawei.com
- (10.3.19.203) with Microsoft SMTP Server id 14.3.439.0; Thu, 17 Oct 2019
- 20:48:56 +0800
+        id S2502791AbfJQMtJ (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Thu, 17 Oct 2019 08:49:09 -0400
+Received: from DGGEMS408-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id F08C7C3E838AE4F9EC76;
+        Thu, 17 Oct 2019 20:49:06 +0800 (CST)
+Received: from localhost (10.133.213.239) by DGGEMS408-HUB.china.huawei.com
+ (10.3.19.208) with Microsoft SMTP Server id 14.3.439.0; Thu, 17 Oct 2019
+ 20:48:58 +0800
 From:   YueHaibing <yuehaibing@huawei.com>
 To:     <linus.walleij@linaro.org>, <manivannan.sadhasivam@linaro.org>,
         <afaerber@suse.de>, <f.fainelli@gmail.com>, <rjui@broadcom.com>,
@@ -34,9 +34,9 @@ CC:     <linux-arm-kernel@lists.infradead.org>,
         <haojian.zhuang@gmail.com>, <wens@csie.org>,
         <thierry.reding@gmail.com>, <jonathanh@nvidia.com>,
         <agross@kernel.org>, YueHaibing <yuehaibing@huawei.com>
-Subject: [PATCH -next 22/30] pinctrl: xway: use devm_platform_ioremap_resource() to simplify code
-Date:   Thu, 17 Oct 2019 20:26:32 +0800
-Message-ID: <20191017122640.22976-23-yuehaibing@huawei.com>
+Subject: [PATCH -next 23/30] pinctrl: rza2: use devm_platform_ioremap_resource() to simplify code
+Date:   Thu, 17 Oct 2019 20:26:33 +0800
+Message-ID: <20191017122640.22976-24-yuehaibing@huawei.com>
 X-Mailer: git-send-email 2.10.2.windows.1
 In-Reply-To: <20191017122640.22976-1-yuehaibing@huawei.com>
 References: <20191017122640.22976-1-yuehaibing@huawei.com>
@@ -54,26 +54,30 @@ This is detected by coccinelle.
 
 Signed-off-by: YueHaibing <yuehaibing@huawei.com>
 ---
- drivers/pinctrl/pinctrl-xway.c | 4 +---
+ drivers/pinctrl/pinctrl-rza2.c | 4 +---
  1 file changed, 1 insertion(+), 3 deletions(-)
 
-diff --git a/drivers/pinctrl/pinctrl-xway.c b/drivers/pinctrl/pinctrl-xway.c
-index 913d38f..5e3f31b 100644
---- a/drivers/pinctrl/pinctrl-xway.c
-+++ b/drivers/pinctrl/pinctrl-xway.c
-@@ -1705,12 +1705,10 @@ static int pinmux_xway_probe(struct platform_device *pdev)
+diff --git a/drivers/pinctrl/pinctrl-rza2.c b/drivers/pinctrl/pinctrl-rza2.c
+index 3be1d83..e27ed2f 100644
+--- a/drivers/pinctrl/pinctrl-rza2.c
++++ b/drivers/pinctrl/pinctrl-rza2.c
+@@ -462,7 +462,6 @@ static const struct pinmux_ops rza2_pinmux_ops = {
+ static int rza2_pinctrl_probe(struct platform_device *pdev)
  {
- 	const struct of_device_id *match;
- 	const struct pinctrl_xway_soc *xway_soc;
+ 	struct rza2_pinctrl_priv *priv;
 -	struct resource *res;
- 	int ret, i;
+ 	int ret;
  
- 	/* get and remap our register range */
+ 	priv = devm_kzalloc(&pdev->dev, sizeof(*priv), GFP_KERNEL);
+@@ -471,8 +470,7 @@ static int rza2_pinctrl_probe(struct platform_device *pdev)
+ 
+ 	priv->dev = &pdev->dev;
+ 
 -	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
--	xway_info.membase[0] = devm_ioremap_resource(&pdev->dev, res);
-+	xway_info.membase[0] = devm_platform_ioremap_resource(pdev, 0);
- 	if (IS_ERR(xway_info.membase[0]))
- 		return PTR_ERR(xway_info.membase[0]);
+-	priv->base = devm_ioremap_resource(&pdev->dev, res);
++	priv->base = devm_platform_ioremap_resource(pdev, 0);
+ 	if (IS_ERR(priv->base))
+ 		return PTR_ERR(priv->base);
  
 -- 
 2.7.4
