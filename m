@@ -2,103 +2,158 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 85FB9DA638
-	for <lists+linux-gpio@lfdr.de>; Thu, 17 Oct 2019 09:18:46 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D5BBBDA731
+	for <lists+linux-gpio@lfdr.de>; Thu, 17 Oct 2019 10:25:02 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727729AbfJQHSp (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 17 Oct 2019 03:18:45 -0400
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:46610 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726208AbfJQHSp (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 17 Oct 2019 03:18:45 -0400
-Received: by mail-lj1-f196.google.com with SMTP id d1so1328532ljl.13
-        for <linux-gpio@vger.kernel.org>; Thu, 17 Oct 2019 00:18:44 -0700 (PDT)
+        id S2392923AbfJQIZC (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 17 Oct 2019 04:25:02 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:34188 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387581AbfJQIZC (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 17 Oct 2019 04:25:02 -0400
+Received: by mail-wm1-f68.google.com with SMTP id y135so6457476wmc.1
+        for <linux-gpio@vger.kernel.org>; Thu, 17 Oct 2019 01:25:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:from:date:message-id:subject:to:cc;
-        bh=hSXKTq2k1WdNjLga2XVFjSkFq3trw/2sXWpj5OjgM5k=;
-        b=B6ZJaxDrKALUj4wti1RvLF+Th9kOUkZKKkx/KE2iIY70qt2kjLMHVOWlvLf3fcRIFU
-         Lp6gbUPqdGjz1x89Rn/jC6bzMfA+yg+CCU+o6bkdzB1HA0wlIBzicPoFeB21S5E4bMt6
-         v+XIshdQQb8s5A6CMAn790AUH026Ai95/78HDObD5G8lHclrY0HxEKTqC1IiaqFER0Lb
-         BpNczUCvov4yr50y9g2V4o1TskofCKseSAGMgKUoRGoAD8329Qx40ZDqpPKgqrjpoGUM
-         T+imwNW4sVTEGbbIsRNWRt7lPKwk4/cMf0eFy6X8sq3z6AmLGftFCN4SlI1qkfcY1sKT
-         5oRw==
+        d=kernelci-org.20150623.gappssmtp.com; s=20150623;
+        h=message-id:date:mime-version:content-transfer-encoding:subject:to
+         :from;
+        bh=2c13upbpkFVKfNUuBhZy/k3BLG9wjeaeGU5fj5L0mWw=;
+        b=npNvMwZUeJLBax6oYl69uLMaETG8v2kP2AEq+ktJhaUJMulax7rR00dh2EwXwMNGvH
+         8F4XYDJqzje7eEowpSNjVpd4ueYapmWPtb4PC9z4x4QCz/6QROVGcMQOq+NytrymhcNo
+         WBh8quBy7GLVbltiTFzlL51BFo33YPDO3DwEztGNppLE85EiyHUDEWlJ2I72c7E0hz8e
+         0v/Vg47O91mbgEBPXk1PiG5F/txJ2CvDCezt/cawOiUhcjli8N5LQ38qWPutPB6xzSol
+         yaeYdaHZA5WYw7BbG54Y3FBKQE1Fl/T0DeQ0mjCyRVP1HQ0UMuvjGmYtulXQvridH53V
+         SYYw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
-        bh=hSXKTq2k1WdNjLga2XVFjSkFq3trw/2sXWpj5OjgM5k=;
-        b=BL5PtO2OWtiOvJpeeRNix35IYec7LVybjhI66kYHWMPIp3cD5li0st4LZdbAbNUW46
-         0+Sh3JTdPOzRQTfzoEXhIzaM3od31hZMLq2CBaVcBa2cC0XhZG4bvSi9vFaE9TQ1e96u
-         s4i72kXZsSh0roXoBVDtaxI90PVjjXc321qSqGjtUWTYfoLnyV0Oxl9TI0oQc2tNEY2f
-         olV5dd6zqfiAZDQvajIJ4GrYVQSR3VJnxVcIESYlAkzLGERj5e0Sue833WClsfHoOzWK
-         77RBmD9omcmPPIPBgmnBA9m7zv/ypZEgjetYDte1twBAbuUQuqfiOeBky+925wXzAPsE
-         0wMg==
-X-Gm-Message-State: APjAAAXGQHmtMciThGRxSh/RmK0rDKGJ7w8w3we0qO6/9fKWPXWo2eph
-        Co9VmxWaGvT5MDNcnBoUfkCsgzPB0LyDJAofLg6ylb52ERE=
-X-Google-Smtp-Source: APXvYqwzOKErt4wziOULA8kqzMDkDiJRR0fAJOjUmr0JbKc9signWOenacf4MVoKrYQlhIyxaC1XTXbu3a5oHPsNOxc=
-X-Received: by 2002:a2e:964c:: with SMTP id z12mr1383464ljh.79.1571296723380;
- Thu, 17 Oct 2019 00:18:43 -0700 (PDT)
+        h=x-gm-message-state:message-id:date:mime-version
+         :content-transfer-encoding:subject:to:from;
+        bh=2c13upbpkFVKfNUuBhZy/k3BLG9wjeaeGU5fj5L0mWw=;
+        b=MiiIHIpKd6HTCY51HvFE6GdoP8KMXCx9LWtOhwvI71HegFbQ6xaQPjF+lEvd/y4wd3
+         mR70XjHw+mWBJor2B1fxn4nY1nqikDa3jVfBP0dg7VnCgFT5eUN5s3ay0yJf8L5irFNa
+         fUd6fUy9ZX/KL/oMofrU3CugzWnl50c3h4L+oy/aNdwB/5pX+5uBqBAe1weTcL/FpHCR
+         R4m1VLbvJKsGZD4SshTJEAX03rvQ7laXKkBnEHoHqKX6+L9yHKHLC7Ll/dKaJRz28khb
+         gy5mGUytGUgxINUA+SKhU5XqvMYgM7VJFFG4/vf3h7sol8OIZvUE3nN06QCK58T45zH+
+         VE8w==
+X-Gm-Message-State: APjAAAUjq31pwGg3pQyHwMztA2OoxvLRCV+8botiIrOuPCqZLDERtJFV
+        dxx+4FaFLybUfnx3LGBjnsH33oRRtAo=
+X-Google-Smtp-Source: APXvYqxNaRHbwNEJqrEd/UB0KAj4yEgiGMBfrO6EsunIevm7UEI6GfdGDS8ZSaexgxlNZBll194+iw==
+X-Received: by 2002:a1c:7219:: with SMTP id n25mr1705108wmc.33.1571300699729;
+        Thu, 17 Oct 2019 01:24:59 -0700 (PDT)
+Received: from [148.251.42.114] ([2a01:4f8:201:9271::2])
+        by smtp.gmail.com with ESMTPSA id c6sm1356017wrm.71.2019.10.17.01.24.58
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 17 Oct 2019 01:24:59 -0700 (PDT)
+Message-ID: <5da8255b.1c69fb81.408bf.61ce@mx.google.com>
+Date:   Thu, 17 Oct 2019 01:24:59 -0700 (PDT)
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Thu, 17 Oct 2019 09:18:32 +0200
-Message-ID: <CACRpkdb_iv9Ywpddu1AiG+b+AMC7LUcnPRjf7yPHnt78JNDtuQ@mail.gmail.com>
-Subject: [GIT PULL] GPIO fixes for v5.4 take two
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Kernelci-Branch: for-next
+X-Kernelci-Tree: linusw
+X-Kernelci-Report-Type: build
+X-Kernelci-Kernel: gpio-v5.4-3-13-g7c547cb52849
+Subject: linusw/for-next build: 6 builds: 0 failed, 6 passed,
+ 5 warnings (gpio-v5.4-3-13-g7c547cb52849)
+To:     linux-gpio@vger.kernel.org, fellows@kernelci.org
+From:   "kernelci.org bot" <bot@kernelci.org>
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Linus,
+linusw/for-next build: 6 builds: 0 failed, 6 passed, 5 warnings (gpio-v5.4-=
+3-13-g7c547cb52849)
 
-here are some GPIO fixes, pertaining to Intel SoCs.
+Full Build Summary: https://kernelci.org/build/linusw/branch/for-next/kerne=
+l/gpio-v5.4-3-13-g7c547cb52849/
 
-Details in the signed tag as usual.
+Tree: linusw
+Branch: for-next
+Git Describe: gpio-v5.4-3-13-g7c547cb52849
+Git Commit: 7c547cb52849e0806a407dccb9b471ef261ba20a
+Git URL: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-gpio.=
+git/
+Built: 6 unique architectures
 
-Please pull it in!
+Warnings Detected:
 
-Yours,
-Linus Walleij
+arc:
+    nsim_hs_defconfig (gcc-8): 2 warnings
 
-The following changes since commit 4f5cafb5cb8471e54afdc9054d973535614f7675:
+arm64:
 
-  Linux 5.4-rc3 (2019-10-13 16:37:36 -0700)
+arm:
+    multi_v7_defconfig (gcc-8): 3 warnings
 
-are available in the Git repository at:
+mips:
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-gpio.git
-tags/gpio-v5.4-3
+riscv:
 
-for you to fetch changes up to 75e99bf5ed8fa74bc80d693d8e0a24eeaa38202b:
+x86_64:
 
-  gpio: lynxpoint: set default handler to be handle_bad_irq()
-(2019-10-15 01:19:05 +0200)
 
-----------------------------------------------------------------
-GPIO fixes for the v5.4 series
+Warnings summary:
 
-The fixes pertain to a problem with initializing the Intel GPIO
-irqchips when adding gpiochips, Andy fixed it up elegantly by
-adding a hardware initialization callback to the struct
-gpio_irq_chip so let's use this. Tested and verified on the
-target hardware.
+    2    <stdin>:1511:2: warning: #warning syscall clone3 not implemented [=
+-Wcpp]
+    1    depmod: WARNING: /home/buildslave/workspace/kernel-build/linux/bui=
+ld/_modules_/lib/modules/5.4.0-rc3/kernel/drivers/usb/storage/uas.ko needs =
+unknown symbol usb_stor_sense_invalidCDB
+    1    depmod: WARNING: /home/buildslave/workspace/kernel-build/linux/bui=
+ld/_modules_/lib/modules/5.4.0-rc3/kernel/drivers/usb/storage/uas.ko needs =
+unknown symbol usb_stor_adjust_quirks
+    1    WARNING: "return_address" [vmlinux] is a static EXPORT_SYMBOL_GPL
 
-----------------------------------------------------------------
-Andy Shevchenko (6):
-      gpio: merrifield: Restore use of irq_base
-      gpiolib: Initialize the hardware with a callback
-      gpio: intel-mid: Move hardware initialization to callback
-      gpio: lynxpoint: Move hardware initialization to callback
-      gpio: merrifield: Move hardware initialization to callback
-      gpio: lynxpoint: set default handler to be handle_bad_irq()
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D
 
- drivers/gpio/gpio-intel-mid.c  |  9 ++++++---
- drivers/gpio/gpio-lynxpoint.c  | 10 ++++++----
- drivers/gpio/gpio-merrifield.c |  9 ++++++---
- drivers/gpio/gpiolib.c         | 22 +++++++++++++++++++++-
- include/linux/gpio/driver.h    |  8 ++++++++
- 5 files changed, 47 insertions(+), 11 deletions(-)
+Detailed per-defconfig build reports:
+
+---------------------------------------------------------------------------=
+-----
+32r2el_defconfig (mips, gcc-8) =E2=80=94 PASS, 0 errors, 0 warnings, 0 sect=
+ion mismatches
+
+---------------------------------------------------------------------------=
+-----
+defconfig (riscv, gcc-8) =E2=80=94 PASS, 0 errors, 0 warnings, 0 section mi=
+smatches
+
+---------------------------------------------------------------------------=
+-----
+defconfig (arm64, gcc-8) =E2=80=94 PASS, 0 errors, 0 warnings, 0 section mi=
+smatches
+
+---------------------------------------------------------------------------=
+-----
+multi_v7_defconfig (arm, gcc-8) =E2=80=94 PASS, 0 errors, 3 warnings, 0 sec=
+tion mismatches
+
+Warnings:
+    WARNING: "return_address" [vmlinux] is a static EXPORT_SYMBOL_GPL
+    depmod: WARNING: /home/buildslave/workspace/kernel-build/linux/build/_m=
+odules_/lib/modules/5.4.0-rc3/kernel/drivers/usb/storage/uas.ko needs unkno=
+wn symbol usb_stor_sense_invalidCDB
+    depmod: WARNING: /home/buildslave/workspace/kernel-build/linux/build/_m=
+odules_/lib/modules/5.4.0-rc3/kernel/drivers/usb/storage/uas.ko needs unkno=
+wn symbol usb_stor_adjust_quirks
+
+---------------------------------------------------------------------------=
+-----
+nsim_hs_defconfig (arc, gcc-8) =E2=80=94 PASS, 0 errors, 2 warnings, 0 sect=
+ion mismatches
+
+Warnings:
+    <stdin>:1511:2: warning: #warning syscall clone3 not implemented [-Wcpp]
+    <stdin>:1511:2: warning: #warning syscall clone3 not implemented [-Wcpp]
+
+---------------------------------------------------------------------------=
+-----
+x86_64_defconfig (x86_64, gcc-8) =E2=80=94 PASS, 0 errors, 0 warnings, 0 se=
+ction mismatches
+
+---
+For more info write to <info@kernelci.org>
