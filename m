@@ -2,21 +2,21 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 152A2DAD09
-	for <lists+linux-gpio@lfdr.de>; Thu, 17 Oct 2019 14:49:59 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 49255DACD9
+	for <lists+linux-gpio@lfdr.de>; Thu, 17 Oct 2019 14:49:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2502921AbfJQMtz (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 17 Oct 2019 08:49:55 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:4212 "EHLO huawei.com"
+        id S2502818AbfJQMtQ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 17 Oct 2019 08:49:16 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:4213 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2502791AbfJQMtJ (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Thu, 17 Oct 2019 08:49:09 -0400
-Received: from DGGEMS408-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id F08C7C3E838AE4F9EC76;
-        Thu, 17 Oct 2019 20:49:06 +0800 (CST)
-Received: from localhost (10.133.213.239) by DGGEMS408-HUB.china.huawei.com
- (10.3.19.208) with Microsoft SMTP Server id 14.3.439.0; Thu, 17 Oct 2019
- 20:48:58 +0800
+        id S2502812AbfJQMtP (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Thu, 17 Oct 2019 08:49:15 -0400
+Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 4030555D330CE5AF0614;
+        Thu, 17 Oct 2019 20:49:12 +0800 (CST)
+Received: from localhost (10.133.213.239) by DGGEMS403-HUB.china.huawei.com
+ (10.3.19.203) with Microsoft SMTP Server id 14.3.439.0; Thu, 17 Oct 2019
+ 20:49:01 +0800
 From:   YueHaibing <yuehaibing@huawei.com>
 To:     <linus.walleij@linaro.org>, <manivannan.sadhasivam@linaro.org>,
         <afaerber@suse.de>, <f.fainelli@gmail.com>, <rjui@broadcom.com>,
@@ -34,9 +34,9 @@ CC:     <linux-arm-kernel@lists.infradead.org>,
         <haojian.zhuang@gmail.com>, <wens@csie.org>,
         <thierry.reding@gmail.com>, <jonathanh@nvidia.com>,
         <agross@kernel.org>, YueHaibing <yuehaibing@huawei.com>
-Subject: [PATCH -next 23/30] pinctrl: rza2: use devm_platform_ioremap_resource() to simplify code
-Date:   Thu, 17 Oct 2019 20:26:33 +0800
-Message-ID: <20191017122640.22976-24-yuehaibing@huawei.com>
+Subject: [PATCH -next 24/30] pinctrl: digicolor: use devm_platform_ioremap_resource() to simplify code
+Date:   Thu, 17 Oct 2019 20:26:34 +0800
+Message-ID: <20191017122640.22976-25-yuehaibing@huawei.com>
 X-Mailer: git-send-email 2.10.2.windows.1
 In-Reply-To: <20191017122640.22976-1-yuehaibing@huawei.com>
 References: <20191017122640.22976-1-yuehaibing@huawei.com>
@@ -54,30 +54,30 @@ This is detected by coccinelle.
 
 Signed-off-by: YueHaibing <yuehaibing@huawei.com>
 ---
- drivers/pinctrl/pinctrl-rza2.c | 4 +---
+ drivers/pinctrl/pinctrl-digicolor.c | 4 +---
  1 file changed, 1 insertion(+), 3 deletions(-)
 
-diff --git a/drivers/pinctrl/pinctrl-rza2.c b/drivers/pinctrl/pinctrl-rza2.c
-index 3be1d83..e27ed2f 100644
---- a/drivers/pinctrl/pinctrl-rza2.c
-+++ b/drivers/pinctrl/pinctrl-rza2.c
-@@ -462,7 +462,6 @@ static const struct pinmux_ops rza2_pinmux_ops = {
- static int rza2_pinctrl_probe(struct platform_device *pdev)
+diff --git a/drivers/pinctrl/pinctrl-digicolor.c b/drivers/pinctrl/pinctrl-digicolor.c
+index 7e1ceee..ff702cf 100644
+--- a/drivers/pinctrl/pinctrl-digicolor.c
++++ b/drivers/pinctrl/pinctrl-digicolor.c
+@@ -270,7 +270,6 @@ static int dc_gpiochip_add(struct dc_pinmap *pmap, struct device_node *np)
+ static int dc_pinctrl_probe(struct platform_device *pdev)
  {
- 	struct rza2_pinctrl_priv *priv;
--	struct resource *res;
- 	int ret;
+ 	struct dc_pinmap *pmap;
+-	struct resource *r;
+ 	struct pinctrl_pin_desc *pins;
+ 	struct pinctrl_desc *pctl_desc;
+ 	char *pin_names;
+@@ -281,8 +280,7 @@ static int dc_pinctrl_probe(struct platform_device *pdev)
+ 	if (!pmap)
+ 		return -ENOMEM;
  
- 	priv = devm_kzalloc(&pdev->dev, sizeof(*priv), GFP_KERNEL);
-@@ -471,8 +470,7 @@ static int rza2_pinctrl_probe(struct platform_device *pdev)
- 
- 	priv->dev = &pdev->dev;
- 
--	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
--	priv->base = devm_ioremap_resource(&pdev->dev, res);
-+	priv->base = devm_platform_ioremap_resource(pdev, 0);
- 	if (IS_ERR(priv->base))
- 		return PTR_ERR(priv->base);
+-	r = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+-	pmap->regs = devm_ioremap_resource(&pdev->dev, r);
++	pmap->regs = devm_platform_ioremap_resource(pdev, 0);
+ 	if (IS_ERR(pmap->regs))
+ 		return PTR_ERR(pmap->regs);
  
 -- 
 2.7.4
