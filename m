@@ -2,41 +2,42 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 071ECDAF21
-	for <lists+linux-gpio@lfdr.de>; Thu, 17 Oct 2019 16:06:07 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 456A4DAFB2
+	for <lists+linux-gpio@lfdr.de>; Thu, 17 Oct 2019 16:19:18 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389690AbfJQOF6 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 17 Oct 2019 10:05:58 -0400
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:36750 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727447AbfJQOF6 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 17 Oct 2019 10:05:58 -0400
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id x9HE5Mua113724;
-        Thu, 17 Oct 2019 09:05:22 -0500
+        id S2394846AbfJQOTS (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 17 Oct 2019 10:19:18 -0400
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:54766 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2394836AbfJQOTR (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 17 Oct 2019 10:19:17 -0400
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id x9HEImiw068201;
+        Thu, 17 Oct 2019 09:18:48 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1571321122;
-        bh=TuHZ8KRPwGU2Rkgim6hEq4jEniT3rPGRU2SQEObt8EU=;
+        s=ti-com-17Q1; t=1571321928;
+        bh=vro4QXqzUHoQgh6wr5eoCT4KAJwAlhiqRKMcQZzOAp0=;
         h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=LXaU/p/LBB/F8s+3Ft48pMaiCD0yisqMy86i8y+kdXLwbe8tEVCI+U2L+aqdyyiLr
-         NTh1lkf9ZOQxpmc0w4fZlbuA6G6G3hvgdVbV6Uw2yN7mj/FFaSEpnBATHKJku7CN+w
-         SK7vCFdzz6dKwkW9iNtDUok5I4JpJDqda2xDJP6c=
-Received: from DLEE109.ent.ti.com (dlee109.ent.ti.com [157.170.170.41])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id x9HE5MTK008076;
-        Thu, 17 Oct 2019 09:05:22 -0500
-Received: from DLEE104.ent.ti.com (157.170.170.34) by DLEE109.ent.ti.com
- (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
+        b=zK3vLTFd6EUCIMjGynTaF0CklRM3h/PGQvulBVRzlBVsWGzIQ/YD0TWVaQPU5UCM5
+         l+wFdkmGmj0GdsyFoliI99ynZ1WDlLbm/FxrIDa8wO1eOECoyrNPHendfWL6PAB0QZ
+         xxwfbmi2DnjsPfbTBkG8RFCRma/pmLc8HFeovNTQ=
+Received: from DLEE103.ent.ti.com (dlee103.ent.ti.com [157.170.170.33])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x9HEIm9a084028
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 17 Oct 2019 09:18:48 -0500
+Received: from DLEE108.ent.ti.com (157.170.170.38) by DLEE103.ent.ti.com
+ (157.170.170.33) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Thu, 17
- Oct 2019 09:05:13 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE104.ent.ti.com
- (157.170.170.34) with Microsoft SMTP Server (version=TLS1_2,
+ Oct 2019 09:18:40 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE108.ent.ti.com
+ (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Thu, 17 Oct 2019 09:05:13 -0500
+ Frontend Transport; Thu, 17 Oct 2019 09:18:40 -0500
 Received: from [10.250.65.13] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id x9HE5KB1121691;
-        Thu, 17 Oct 2019 09:05:20 -0500
-Subject: Re: [RFC PATCH 11/13] led: bd71828: Support LED outputs on ROHM
- BD71828 PMIC
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id x9HEIlff096685;
+        Thu, 17 Oct 2019 09:18:47 -0500
+Subject: Re: [RFC PATCH 12/13] dt-bindings: mfd: Document ROHM BD71282
+ bindings
 To:     Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>,
         <mazziesaccount@gmail.com>
 CC:     Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>,
@@ -55,16 +56,16 @@ CC:     Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>,
         <linux-clk@vger.kernel.org>, <linux-gpio@vger.kernel.org>,
         <linux-leds@vger.kernel.org>, <linux-rtc@vger.kernel.org>
 References: <cover.1571302099.git.matti.vaittinen@fi.rohmeurope.com>
- <af1fb3e010d5f34502d354369b88fa28639f587d.1571302099.git.matti.vaittinen@fi.rohmeurope.com>
+ <05841ff33ea166bc6934456a492adc3c67a90670.1571302099.git.matti.vaittinen@fi.rohmeurope.com>
 From:   Dan Murphy <dmurphy@ti.com>
-Message-ID: <c1e41315-42ad-fb9b-c9db-8b07d4293166@ti.com>
-Date:   Thu, 17 Oct 2019 09:04:48 -0500
+Message-ID: <1d2bc596-0329-d090-2e8d-037c8cad0585@ti.com>
+Date:   Thu, 17 Oct 2019 09:18:15 -0500
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.9.0
 MIME-Version: 1.0
-In-Reply-To: <af1fb3e010d5f34502d354369b88fa28639f587d.1571302099.git.matti.vaittinen@fi.rohmeurope.com>
+In-Reply-To: <05841ff33ea166bc6934456a492adc3c67a90670.1571302099.git.matti.vaittinen@fi.rohmeurope.com>
 Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 Content-Language: en-US
 X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-gpio-owner@vger.kernel.org
@@ -74,191 +75,205 @@ X-Mailing-List: linux-gpio@vger.kernel.org
 
 Matt
 
-On 10/17/19 4:53 AM, Matti Vaittinen wrote:
-> ROHM BD71828 power management IC has two LED outputs for charge status
-> and button pressing indications. The LED outputs can also be forced
-> bs SW so add driver allowing to use these LEDs for other indications
-s/bs/by
-> as well.
+On 10/17/19 4:55 AM, Matti Vaittinen wrote:
+> ROHM BD71828 Power management IC integrates 7 buck converters, 7 LDOs,
+> a real-time clock (RTC), 3 GPO/regulator control pins, HALL input pin
+> and a 32.768 kHz clock gate.
 >
-> Leds are controlled by SW using 'Force ON' bits. Please note the
-> constrains mentioned in data-sheet:
-> 1. If one LED is forced ON - then also the other LED is forced.
-> 	=> You can't use SW control to force ON one LED and allow HW
-> 	   to control the other.
-> 2. You can't force both LEDs OFF. If the FORCE bit for both LED's is
->     zero, then LEDs are controlled by HW and indicate button/charger
->     states as explained in data-sheet.
->
+> Document the dt bindings drivers are using.
+
+This should be patch 1 of X
+
+
 > Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
 > ---
->   drivers/leds/Kconfig        | 10 ++++
->   drivers/leds/Makefile       |  1 +
->   drivers/leds/leds-bd71828.c | 97 +++++++++++++++++++++++++++++++++++++
->   3 files changed, 108 insertions(+)
->   create mode 100644 drivers/leds/leds-bd71828.c
+>   .../bindings/mfd/rohm,bd71828-pmic.txt        | 180 ++++++++++++++++++
+>   1 file changed, 180 insertions(+)
+>   create mode 100644 Documentation/devicetree/bindings/mfd/rohm,bd71828-pmic.txt
 >
-> diff --git a/drivers/leds/Kconfig b/drivers/leds/Kconfig
-> index b0fdeef10bd9..ec59f28bcb39 100644
-> --- a/drivers/leds/Kconfig
-> +++ b/drivers/leds/Kconfig
-> @@ -529,6 +529,16 @@ config LEDS_BD2802
->   	  This option enables support for BD2802GU RGB LED driver chips
->   	  accessed via the I2C bus.
->   
-> +config LEDS_BD71828
-> +	tristate "LED driver for LED pins on ROHM BD71828 PMIC"
-> +	depends on LEDS_CLASS
-doesn't this have a dependency on MFD_ROHM_BD71828
-> +	depends on I2C
-> +	help
-> +	  This option enables support for LED outputs located on ROHM
-> +	   BD71828 power management IC. ROHM BD71828 has two led output pins
-> +	   which can be left to indicate HW states or controlled by SW. Say
-> +	   yes here if you want to enable SW control for these LEDs.
-> +
-
-Add module statement
-
-
->   config LEDS_INTEL_SS4200
->   	tristate "LED driver for Intel NAS SS4200 series"
->   	depends on LEDS_CLASS
-> diff --git a/drivers/leds/Makefile b/drivers/leds/Makefile
-> index 41fb073a39c1..2a8f6a8e4c7c 100644
-> --- a/drivers/leds/Makefile
-> +++ b/drivers/leds/Makefile
-> @@ -15,6 +15,7 @@ obj-$(CONFIG_LEDS_AN30259A)		+= leds-an30259a.o
->   obj-$(CONFIG_LEDS_BCM6328)		+= leds-bcm6328.o
->   obj-$(CONFIG_LEDS_BCM6358)		+= leds-bcm6358.o
->   obj-$(CONFIG_LEDS_BD2802)		+= leds-bd2802.o
-> +obj-$(CONFIG_LEDS_BD71828)		+= leds-bd71828.o
->   obj-$(CONFIG_LEDS_CPCAP)		+= leds-cpcap.o
->   obj-$(CONFIG_LEDS_LOCOMO)		+= leds-locomo.o
->   obj-$(CONFIG_LEDS_LM3530)		+= leds-lm3530.o
-> diff --git a/drivers/leds/leds-bd71828.c b/drivers/leds/leds-bd71828.c
+> diff --git a/Documentation/devicetree/bindings/mfd/rohm,bd71828-pmic.txt b/Documentation/devicetree/bindings/mfd/rohm,bd71828-pmic.txt
 > new file mode 100644
-> index 000000000000..2427619444f5
+> index 000000000000..125efa9f3de0
 > --- /dev/null
-> +++ b/drivers/leds/leds-bd71828.c
-> @@ -0,0 +1,97 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +// Copyright (C) 2019 ROHM Semiconductors
+> +++ b/Documentation/devicetree/bindings/mfd/rohm,bd71828-pmic.txt
+> @@ -0,0 +1,180 @@
+> +* ROHM BD71828 Power Management Integrated Circuit bindings
 > +
-> +#include <linux/device.h>
-> +#include <linux/err.h>
-> +#include <linux/kernel.h>
-> +#include <linux/leds.h>
-> +#include <linux/mfd/rohm-bd71828.h>
-> +#include <linux/module.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/regmap.h>
-> +#include <linux/slab.h>
+> +BD71828GW is a single-chip power management IC for battery-powered portable
+> +devices. The IC integrates 7 buck converters, 7 LDOs, and a 1500 mA single-cell
+> +linear charger. Also included is a Coulomb counter, a real-time clock (RTC),
+> +and a 32.768 kHz clock gate.
 > +
-> +#define BD71828_LED_TO_DATA(l) ((l)->id == ID_GREEN_LED ? \
-> +	container_of((l), struct bd71828_leds, green) : \
-> +	container_of((l), struct bd71828_leds, amber))
-
-I don't think we should be defining the color as the variable. The 
-outputs can drive any color LED.
-
-
+> +Required properties:
+> + - compatible			: Should be "rohm,bd71828".
+> + - reg				: I2C slave address.
+> + - interrupt-parent		: Phandle to the parent interrupt controller.
+> + - interrupts			: The interrupt line the device is connected to.
+> + - clocks			: The parent clock connected to PMIC.
+> + - #clock-cells			: Should be 0.
+> + - regulators			: List of child nodes that specify the
+> +				  regulators. Please see
+> +				  ../regulator/rohm,bd71828-regulator.txt
+> + - gpio-controller		: To indicate BD71828 acts as a GPIO controller.
+> + - #gpio-cells			: Should be 2. The first cell is the pin number
+> +				  and the second cell is used to specify flags.
+> +				  See ../gpio/gpio.txt for more information.
 > +
-> +enum {
-> +	ID_GREEN_LED,
-> +	ID_AMBER_LED,
-> +	ID_NMBR_OF,
-> +};
+> +The BD71828 RUN state is divided into 4 configurable run-levels named RUN0,
+> +RUN1, RUN2 and RUN3. Bucks 1, 2, 6 and 7 can be either controlled individually
+> +via I2C, or some/all of them can be bound to run-levels and controlled as a
+> +group. If bucks are controlled individually these run-levels are ignored. See
+> +../regulator/rohm,bd71828-regulator.txt for how to define regulator voltages
+> +for run-levels. Run-levels can be changed by I2C or GPIO depending on PMIC's OTP
+> +configuration.
 > +
-
-Please use the color_id in linux/include/dt-bindings/leds/common.h
-
-
-> +struct bd71828_led {
-> +	int id;
-> +	struct led_classdev l;
-> +	u8 force_mask;
-> +};
+> +Optional properties:
+> +- clock-output-names		: Should contain name for output clock.
+> +- rohm,dvs-vsel-gpios		: GPIOs used to control PMIC run-levels. Should
+> +				  describe two GPIOs. (See run-level control in
+> +				  data-sheet). If this property is omitted but
+> +				  some bucks are marked to be controlled by
+> +				  run-levels - then OTP option allowing
+> +				  run-level control via I2C is assumed.
+> +- gpio-reserved-ranges		: Usage of GPIO pins can be changed via OTP.
+> +				  This property can be used to mark the pins
+> +				  which should not be configured for GPIO.
+> +				  Please see the ../gpio/gpio.txt for more
+> +				  information.
 > +
-> +struct bd71828_leds {
-> +	struct rohm_regmap_dev *bd71828;
-> +	struct bd71828_led green;
-> +	struct bd71828_led amber;
-> +};
+> +Example:
 > +
-> +static int bd71828_led_brightness_set(struct led_classdev *led_cdev,
-> +				      enum led_brightness value)
-> +{
-> +	struct bd71828_led *l = container_of(led_cdev, struct bd71828_led, l);
-> +	struct bd71828_leds *data;
-> +	unsigned int val = BD71828_LED_OFF;
+> +        /* external oscillator node */
+> +        osc: oscillator {
+> +                compatible = "fixed-clock";
+> +                #clock-cells = <1>;
+> +                clock-frequency  = <32768>;
+> +                clock-output-names = "osc";
+> +        };
 > +
-> +	data = BD71828_LED_TO_DATA(l);
-> +	if (value != LED_OFF)
-> +		val = BD71828_LED_ON;
-> +
-> +	return regmap_update_bits(data->bd71828->regmap, BD71828_REG_LED_CTRL,
-> +			    l->force_mask, val);
-> +}
-> +
-> +static int bd71828_led_probe(struct platform_device *pdev)
-> +{
-> +	struct rohm_regmap_dev *bd71828;
-> +	struct bd71828_leds *l;
-> +	struct bd71828_led *g, *a;
-> +	static const char *GNAME = "bd71828-green-led";
-> +	static const char *ANAME = "bd71828-amber-led";
-The LED class creates the name it can get it from the DT.
-> +	int ret;
-> +
-> +	pr_info("bd71828 LED driver probed\n");
-> +
-> +	bd71828 = dev_get_drvdata(pdev->dev.parent);
-> +	l = devm_kzalloc(&pdev->dev, sizeof(*l), GFP_KERNEL);
-> +	if (!l)
-> +		return -ENOMEM;
-> +	l->bd71828 = bd71828;
-> +	a = &l->amber;
-> +	g = &l->green;
-> +	a->id = ID_AMBER_LED;
-> +	g->id = ID_GREEN_LED;
-> +	a->force_mask = BD71828_MASK_LED_AMBER;
-> +	g->force_mask = BD71828_MASK_LED_GREEN;
-> +
-> +	a->l.name = ANAME;
-> +	g->l.name = GNAME;
-> +	a->l.brightness_set_blocking = bd71828_led_brightness_set;
-> +	g->l.brightness_set_blocking = bd71828_led_brightness_set;
-> +
-> +	ret = devm_led_classdev_register(&pdev->dev, &g->l);
-> +	if (ret)
-> +		return ret;
-> +
-> +	return devm_led_classdev_register(&pdev->dev, &a->l);
-> +}
-> +
-
-This looks different.  Not sure why you register both LEDs in this probe.
-
-You can use the DT to define both LEDs and then each will be probed and 
-registered separately.
-
-This is how it is commonly done.
-
-You can reference the LM36274 led driver as this is a MFD device to the 
-ti-lmu.c in the MFD directory.
-
-
-> +static struct platform_driver bd71828_led_driver = {
-> +	.driver = {
-> +		.name  = "bd71828-led",
-> +	},
-> +	.probe  = bd71828_led_probe,
-> +};
-> +
-> +module_platform_driver(bd71828_led_driver);
-> +
-> +MODULE_AUTHOR("Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>");
-> +MODULE_DESCRIPTION("ROHM BD71828 LED driver");
-> +MODULE_LICENSE("GPL");
-GPL v2
+> +	pmic: pmic@4b {
+> +		compatible = "rohm,bd71828";
+> +		reg = <0x4b>;
+> +		interrupt-parent = <&gpio1>;
+> +		interrupts = <29 GPIO_ACTIVE_LOW>;
+> +		clocks = <&osc 0>;
+> +		#clock-cells = <0>;
+> +		clock-output-names = "bd71828-32k-out";
+> +		gpio-controller;
+> +		#gpio-cells = <2>;
+> +		ngpios = <4>;
+> +		gpio-reserved-ranges = <0 1 2 1>;
+> +		gpio-line-names = "EPDEN";
+> +		rohm,dvs-vsel-gpios = <&gpio1 12 0>,
+> +				      <&gpio1 13 0>;
+> +		regulators {
+> +			buck1: BUCK1 {
+> +				regulator-name = "buck1";
+> +				regulator-min-microvolt = <500000>;
+> +				regulator-max-microvolt = <2000000>;
+> +				regulator-ramp-delay = <2500>;
+> +				rohm,dvs-runlvl-ctrl;
+> +				rohm,dvs-runlevel0-voltage = <500000>;
+> +				rohm,dvs-runlevel1-voltage = <506250>;
+> +				rohm,dvs-runlevel2-voltage = <512500>;
+> +				rohm,dvs-runlevel3-voltage = <518750>;
+> +				regulator-boot-on;
+> +			};
+> +			buck2: BUCK2 {
+> +				regulator-name = "buck2";
+> +				regulator-min-microvolt = <500000>;
+> +				regulator-max-microvolt = <2000000>;
+> +				regulator-ramp-delay = <2500>;
+> +				rohm,dvs-runlvl-ctrl;
+> +				rohm,dvs-runlevel0-voltage = <500000>;
+> +				rohm,dvs-runlevel1-voltage = <506250>;
+> +				rohm,dvs-runlevel2-voltage = <512500>;
+> +				rohm,dvs-runlevel3-voltage = <518750>;
+> +				regulator-boot-on;
+> +			};
+> +			buck3: BUCK3 {
+> +				regulator-name = "buck3";
+> +				regulator-min-microvolt = <1200000>;
+> +				regulator-max-microvolt = <2000000>;
+> +				regulator-boot-on;
+> +			};
+> +			buck4: BUCK4 {
+> +				regulator-name = "buck4";
+> +				regulator-min-microvolt = <1000000>;
+> +				regulator-max-microvolt = <1800000>;
+> +				regulator-boot-on;
+> +			};
+> +			buck5: BUCK5 {
+> +				regulator-name = "buck5";
+> +				regulator-min-microvolt = <2500000>;
+> +				regulator-max-microvolt = <3300000>;
+> +				regulator-boot-on;
+> +			};
+> +			buck6: BUCK6 {
+> +				regulator-name = "buck6";
+> +				regulator-min-microvolt = <500000>;
+> +				regulator-max-microvolt = <2000000>;
+> +				regulator-ramp-delay = <2500>;
+> +				rohm,dvs-runlvl-ctrl;
+> +				rohm,dvs-runlevel0-voltage = <500000>;
+> +				rohm,dvs-runlevel1-voltage = <506250>;
+> +				rohm,dvs-runlevel2-voltage = <512500>;
+> +				rohm,dvs-runlevel3-voltage = <518750>;
+> +				regulator-boot-on;
+> +			};
+> +			buck7: BUCK7 {
+> +				regulator-name = "buck7";
+> +				regulator-min-microvolt = <500000>;
+> +				regulator-max-microvolt = <2000000>;
+> +				regulator-ramp-delay = <2500>;
+> +				rohm,dvs-runlvl-ctrl;
+> +				rohm,dvs-runlevel0-voltage = <500000>;
+> +				rohm,dvs-runlevel1-voltage = <506250>;
+> +				rohm,dvs-runlevel2-voltage = <512500>;
+> +				rohm,dvs-runlevel3-voltage = <518750>;
+> +				regulator-boot-on;
+> +			};
+> +			ldo1: LDO1 {
+> +				regulator-name = "ldo1";
+> +				regulator-min-microvolt = <800000>;
+> +				regulator-max-microvolt = <3300000>;
+> +				regulator-boot-on;
+> +			};
+> +			ldo2: LDO2 {
+> +				regulator-name = "ldo2";
+> +				regulator-min-microvolt = <800000>;
+> +				regulator-max-microvolt = <3300000>;
+> +				regulator-boot-on;
+> +			};
+> +			ldo3: LDO3 {
+> +				regulator-name = "ldo3";
+> +				regulator-min-microvolt = <800000>;
+> +				regulator-max-microvolt = <3300000>;
+> +				regulator-boot-on;
+> +			};
+> +			ldo4: LDO4 {
+> +				regulator-name = "ldo4";
+> +				regulator-min-microvolt = <800000>;
+> +				regulator-max-microvolt = <3300000>;
+> +				regulator-boot-on;
+> +			};
+> +			ldo5: LDO5 {
+> +				regulator-name = "ldo5";
+> +				regulator-min-microvolt = <800000>;
+> +				regulator-max-microvolt = <3300000>;
+> +				regulator-boot-on;
+> +			};
+> +			ldo6: LDO6 {
+> +				regulator-name = "ldo6";
+> +				regulator-min-microvolt = <1800000>;
+> +				regulator-max-microvolt = <1800000>;
+> +				regulator-boot-on;
+> +			};
+> +			ldo7_reg: LDO7 {
+> +				regulator-name = "ldo7";
+> +				regulator-min-microvolt = <800000>;
+> +				regulator-max-microvolt = <3300000>;
+> +				regulator-boot-on;
+> +			};
+> +		};
+> +	};
