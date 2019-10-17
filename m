@@ -2,21 +2,21 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 49255DACD9
-	for <lists+linux-gpio@lfdr.de>; Thu, 17 Oct 2019 14:49:20 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9B10DDACFF
+	for <lists+linux-gpio@lfdr.de>; Thu, 17 Oct 2019 14:49:54 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2502818AbfJQMtQ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 17 Oct 2019 08:49:16 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:4213 "EHLO huawei.com"
+        id S2502825AbfJQMtR (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 17 Oct 2019 08:49:17 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:57498 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2502812AbfJQMtP (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Thu, 17 Oct 2019 08:49:15 -0400
-Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 4030555D330CE5AF0614;
-        Thu, 17 Oct 2019 20:49:12 +0800 (CST)
-Received: from localhost (10.133.213.239) by DGGEMS403-HUB.china.huawei.com
- (10.3.19.203) with Microsoft SMTP Server id 14.3.439.0; Thu, 17 Oct 2019
- 20:49:01 +0800
+        id S2502793AbfJQMtQ (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Thu, 17 Oct 2019 08:49:16 -0400
+Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id C8110B962874AFB30720;
+        Thu, 17 Oct 2019 20:49:13 +0800 (CST)
+Received: from localhost (10.133.213.239) by DGGEMS402-HUB.china.huawei.com
+ (10.3.19.202) with Microsoft SMTP Server id 14.3.439.0; Thu, 17 Oct 2019
+ 20:49:03 +0800
 From:   YueHaibing <yuehaibing@huawei.com>
 To:     <linus.walleij@linaro.org>, <manivannan.sadhasivam@linaro.org>,
         <afaerber@suse.de>, <f.fainelli@gmail.com>, <rjui@broadcom.com>,
@@ -34,9 +34,9 @@ CC:     <linux-arm-kernel@lists.infradead.org>,
         <haojian.zhuang@gmail.com>, <wens@csie.org>,
         <thierry.reding@gmail.com>, <jonathanh@nvidia.com>,
         <agross@kernel.org>, YueHaibing <yuehaibing@huawei.com>
-Subject: [PATCH -next 24/30] pinctrl: digicolor: use devm_platform_ioremap_resource() to simplify code
-Date:   Thu, 17 Oct 2019 20:26:34 +0800
-Message-ID: <20191017122640.22976-25-yuehaibing@huawei.com>
+Subject: [PATCH -next 25/30] pinctrl: coh901: use devm_platform_ioremap_resource() to simplify code
+Date:   Thu, 17 Oct 2019 20:26:35 +0800
+Message-ID: <20191017122640.22976-26-yuehaibing@huawei.com>
 X-Mailer: git-send-email 2.10.2.windows.1
 In-Reply-To: <20191017122640.22976-1-yuehaibing@huawei.com>
 References: <20191017122640.22976-1-yuehaibing@huawei.com>
@@ -54,30 +54,30 @@ This is detected by coccinelle.
 
 Signed-off-by: YueHaibing <yuehaibing@huawei.com>
 ---
- drivers/pinctrl/pinctrl-digicolor.c | 4 +---
+ drivers/pinctrl/pinctrl-coh901.c | 4 +---
  1 file changed, 1 insertion(+), 3 deletions(-)
 
-diff --git a/drivers/pinctrl/pinctrl-digicolor.c b/drivers/pinctrl/pinctrl-digicolor.c
-index 7e1ceee..ff702cf 100644
---- a/drivers/pinctrl/pinctrl-digicolor.c
-+++ b/drivers/pinctrl/pinctrl-digicolor.c
-@@ -270,7 +270,6 @@ static int dc_gpiochip_add(struct dc_pinmap *pmap, struct device_node *np)
- static int dc_pinctrl_probe(struct platform_device *pdev)
+diff --git a/drivers/pinctrl/pinctrl-coh901.c b/drivers/pinctrl/pinctrl-coh901.c
+index 063a629..2905348 100644
+--- a/drivers/pinctrl/pinctrl-coh901.c
++++ b/drivers/pinctrl/pinctrl-coh901.c
+@@ -615,7 +615,6 @@ static struct coh901_pinpair coh901_pintable[] = {
+ static int __init u300_gpio_probe(struct platform_device *pdev)
  {
- 	struct dc_pinmap *pmap;
--	struct resource *r;
- 	struct pinctrl_pin_desc *pins;
- 	struct pinctrl_desc *pctl_desc;
- 	char *pin_names;
-@@ -281,8 +280,7 @@ static int dc_pinctrl_probe(struct platform_device *pdev)
- 	if (!pmap)
- 		return -ENOMEM;
+ 	struct u300_gpio *gpio;
+-	struct resource *memres;
+ 	struct gpio_irq_chip *girq;
+ 	int err = 0;
+ 	int portno;
+@@ -633,8 +632,7 @@ static int __init u300_gpio_probe(struct platform_device *pdev)
+ 	gpio->chip.base = 0;
+ 	gpio->dev = &pdev->dev;
  
--	r = platform_get_resource(pdev, IORESOURCE_MEM, 0);
--	pmap->regs = devm_ioremap_resource(&pdev->dev, r);
-+	pmap->regs = devm_platform_ioremap_resource(pdev, 0);
- 	if (IS_ERR(pmap->regs))
- 		return PTR_ERR(pmap->regs);
+-	memres = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+-	gpio->base = devm_ioremap_resource(&pdev->dev, memres);
++	gpio->base = devm_platform_ioremap_resource(pdev, 0);
+ 	if (IS_ERR(gpio->base))
+ 		return PTR_ERR(gpio->base);
  
 -- 
 2.7.4
