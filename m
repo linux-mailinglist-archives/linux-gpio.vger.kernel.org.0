@@ -2,108 +2,79 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 82DDFDA21D
-	for <lists+linux-gpio@lfdr.de>; Thu, 17 Oct 2019 01:25:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C8955DA433
+	for <lists+linux-gpio@lfdr.de>; Thu, 17 Oct 2019 05:11:10 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406101AbfJPXZv (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 16 Oct 2019 19:25:51 -0400
-Received: from new4-smtp.messagingengine.com ([66.111.4.230]:59849 "EHLO
-        new4-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726595AbfJPXZv (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>);
-        Wed, 16 Oct 2019 19:25:51 -0400
-Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailnew.nyi.internal (Postfix) with ESMTP id E4BBF71D9;
-        Wed, 16 Oct 2019 19:25:49 -0400 (EDT)
-Received: from imap2 ([10.202.2.52])
-  by compute4.internal (MEProxy); Wed, 16 Oct 2019 19:25:49 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aj.id.au; h=
-        mime-version:message-id:in-reply-to:references:date:from:to:cc
-        :subject:content-type; s=fm1; bh=PyvonOcPHFz8rKcmNUUFHGzSVRwDPRH
-        8KZMA87K8oiQ=; b=fKdKzNRokgPjUVrX9f1xJPPL5FlrS4plG8on1QguhO/iuAm
-        Lo5Bj90672xyJdYbVyUa3VgU+Y+2HxL9CkP0vDPDXqrFPk+HkdlPyJ4zBZOv6xbR
-        AC06UzWdsdc6mXOjcwLUnmdpUOsjkr4FOvdCxovZ3hqBTA0w1TGdN2G30G0VO3RL
-        y+DaHnPWZIefPFmx6XBoejbEezNpp+qPUdeq4tbizZE0+K4cemSW7YXaAZ1uQ9J6
-        8Va/knlMgkD3GnObd56nZ5XAmwW1JTMe+VDA8wFrthzeujiwezQhlsCJ5LH0EZHV
-        ajOg3EZJo/sEcpxTujDRiODK+6fjOKw7+beFf4A==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; bh=PyvonO
-        cPHFz8rKcmNUUFHGzSVRwDPRH8KZMA87K8oiQ=; b=omb7k96+2VHVf6VjCeeafg
-        0siHqz/O6s1Oy7hU2nmQ2wlCw8vd3jsuThXLkkCGtgONeG8jLeNFNxXPzZe7+OKn
-        T/7e/jEO//cUsQpRyq8dul+GAUJ3agO093ZnPtkKuf73btmkch0y6Efs/TIK6gtP
-        kVQZpB24Tnqbs+4tnsWgzLDWBwGCUPly78dIr64T4MDegNqzj2pE8BaAug0Fm8OK
-        bv6VUc/RuGRqXlPU+DPQzz2eLqBkn0NHbCZFSNi670PzweDU9nYRrT+Od8LsXGTL
-        dx07/zq5jEtosWNBfLbr8XI27LOg+bN/6TW0mlO2mGuCSkWtAjN9cFveoc2MyShw
-        ==
-X-ME-Sender: <xms:_aanXUngCArMrXAA7-s9c4Qrm5auYWXdza9M0WOYns1PrME8q-OgOQ>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedufedrjeeigddvtdcutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpefofgggkfgjfhffhffvufgtsehttdertderredtnecuhfhrohhmpedftehnughr
-    vgifucflvghffhgvrhihfdcuoegrnhgurhgvfiesrghjrdhiugdrrghuqeenucfrrghrrg
-    hmpehmrghilhhfrhhomheprghnughrvgifsegrjhdrihgurdgruhenucevlhhushhtvghr
-    ufhiiigvpedt
-X-ME-Proxy: <xmx:_aanXSOwracCb3LzQKBJVZOovmxxNA0-0f4Zw9_sMVL51RQo6XuC5g>
-    <xmx:_aanXat8h366CpTcUuN8cE1t1VuiwpVN_HSoPB3fEVwg1In-bqXS2w>
-    <xmx:_aanXVw3N8k8rS7lIIEsu9nO1S99HVu_3B09uTkoA1XFM6F3kpdcWQ>
-    <xmx:_aanXTz6edeXMD7h5uZtGS_XNOlxgfyiI49h0Dnq5VCKKbB13GyWCg>
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-        id E351AE00BE; Wed, 16 Oct 2019 19:25:48 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.1.7-360-g7dda896-fmstable-20191004v2
-Mime-Version: 1.0
-Message-Id: <5fc76c3b-4727-4c4b-88a1-59c9618ccb30@www.fastmail.com>
-In-Reply-To: <CACRpkdbmbyNmW8tL_L0agBajomPybXsjn9ix_F5-B3fZnfuW9A@mail.gmail.com>
-References: <20191008044153.12734-1-andrew@aj.id.au>
- <CACRpkda5cWaA7R3XzyiERCCgwUrjnXd+wCBeKvt-wtjex7wNDg@mail.gmail.com>
- <2de90789-c374-4821-89f9-5d5f01e7d2d6@www.fastmail.com>
- <CACRpkdbmbyNmW8tL_L0agBajomPybXsjn9ix_F5-B3fZnfuW9A@mail.gmail.com>
-Date:   Thu, 17 Oct 2019 09:56:45 +1030
-From:   "Andrew Jeffery" <andrew@aj.id.au>
-To:     "Linus Walleij" <linus.walleij@linaro.org>
-Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "Rob Herring" <robh+dt@kernel.org>,
-        "Mark Rutland" <mark.rutland@arm.com>,
-        "Joel Stanley" <joel@jms.id.au>,
-        linux-aspeed <linux-aspeed@lists.ozlabs.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        "Linux ARM" <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "Johnny Huang" <johnny_huang@aspeedtech.com>,
-        "Ryan Chen" <ryanchen.aspeed@gmail.com>
-Subject: Re: [PATCH 0/7] pinctrl: Fixes for AST2600 support
-Content-Type: text/plain
+        id S1732713AbfJQDLB (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 16 Oct 2019 23:11:01 -0400
+Received: from gate2.alliedtelesis.co.nz ([202.36.163.20]:48891 "EHLO
+        gate2.alliedtelesis.co.nz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732104AbfJQDLB (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 16 Oct 2019 23:11:01 -0400
+Received: from mmarshal3.atlnz.lc (mmarshal3.atlnz.lc [10.32.18.43])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id 204C0891AA;
+        Thu, 17 Oct 2019 16:10:58 +1300 (NZDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alliedtelesis.co.nz;
+        s=mail181024; t=1571281858;
+        bh=xrGrisgeEZb88kf6xkzyTFrAcQCeEBWEESK0FoOUtc0=;
+        h=From:To:Cc:Subject:Date;
+        b=nGz6gBJikh0TD1nGhHqEvLqBtod+Rtybh67nBDFjCW+RnMliQrAguKs8rqbfty/xh
+         VgbdhQaPX6z4SnGwoPPhcNnbFE3u+HkyJGR+joemN6fUKkaI1wbes5ueOUOF6LVD89
+         ctf+IEHEGbf5om0m3x/no1SM7eNo0ETZ5D/Gp69wViSLCcm+1+NqZwnokvs5VQCweX
+         dOhgOAIggoESB8D61WFw+cZDiD1FHI2/VUXv3rLNU9e3u4x9zaw10Tivb5umTmzqi9
+         LFxAiyR+gD19tPHfu4vdB2OQYYAM+dkBn1X329l1Kt6n0WczPlSkJBiBPxjOa4LAMe
+         0aA+ra1qvzbfQ==
+Received: from smtp (Not Verified[10.32.16.33]) by mmarshal3.atlnz.lc with Trustwave SEG (v7,5,8,10121)
+        id <B5da7dbc20000>; Thu, 17 Oct 2019 16:10:58 +1300
+Received: from chrisp-dl.ws.atlnz.lc (chrisp-dl.ws.atlnz.lc [10.33.22.20])
+        by smtp (Postfix) with ESMTP id E94B713EEB6;
+        Thu, 17 Oct 2019 16:11:01 +1300 (NZDT)
+Received: by chrisp-dl.ws.atlnz.lc (Postfix, from userid 1030)
+        id D3787280059; Thu, 17 Oct 2019 16:10:57 +1300 (NZDT)
+From:   Chris Packham <chris.packham@alliedtelesis.co.nz>
+To:     linus.walleij@linaro.org, bgolaszewski@baylibre.com,
+        robh+dt@kernel.org, mark.rutland@arm.com, rjui@broadcom.com,
+        sbranden@broadcom.com, bcm-kernel-feedback-list@broadcom.com
+Cc:     linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Chris Packham <chris.packham@alliedtelesis.co.nz>
+Subject: [PATCH v2 0/2] gpio: brcm: XGS iProc GPIO driver
+Date:   Thu, 17 Oct 2019 16:10:49 +1300
+Message-Id: <20191017031051.20366-1-chris.packham@alliedtelesis.co.nz>
+X-Mailer: git-send-email 2.23.0
+MIME-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+x-atlnz-ls: pat
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+This is ported this from Broadcom's XLDK (now heavily modified). There se=
+em to
+be 3 different IP blocks for 3 separate banks of GPIOs in the iProc chips=
+.
 
+I've dropped everything except support for the Chip Common A GPIO
+controller because the other blocks actually seem to be supportable with
+other drivers. The driver itself is halfway between pinctrl-nsp-gpio.c
+and pinctrl-iproc-gpio.c.
 
-On Thu, 17 Oct 2019, at 00:30, Linus Walleij wrote:
-> On Wed, Oct 16, 2019 at 1:42 PM Andrew Jeffery <andrew@aj.id.au> wrote:
-> 
-> > I was hoping to get them into the 5.4 fixes branch: I consider them all fixes
-> 
-> OK I moved them all to fixes.
+Chris Packham (2):
+  dt-bindings: gpio: brcm: Add bindings for xgs-iproc
+  gpio: Add xgs-iproc driver
 
-Thanks.
+ .../bindings/gpio/brcm,xgs-iproc.yaml         |  83 +++++
+ drivers/gpio/Kconfig                          |   9 +
+ drivers/gpio/Makefile                         |   1 +
+ drivers/gpio/gpio-xgs-iproc.c                 | 301 ++++++++++++++++++
+ 4 files changed, 394 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/gpio/brcm,xgs-iproc=
+.yaml
+ create mode 100644 drivers/gpio/gpio-xgs-iproc.c
 
-> 
-> > > I need a shortlist of anything that should go into v5.4 if anything.
-> >
-> > IMO all of them should go into 5.4, as above.
-> 
-> OK
-> 
-> >  It's there something I can do in the future to communicate this better?
-> 
-> Nah it is a complicated process, things need to be done manually
-> at times, overly obsessing with process is counterproductive.
+--=20
+2.23.0
 
-No worries, happy to carry on as is.
-
-Andrew
