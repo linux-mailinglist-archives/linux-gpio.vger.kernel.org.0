@@ -2,43 +2,41 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 3E33EDA8D2
-	for <lists+linux-gpio@lfdr.de>; Thu, 17 Oct 2019 11:44:27 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 728E7DA8D7
+	for <lists+linux-gpio@lfdr.de>; Thu, 17 Oct 2019 11:44:29 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388989AbfJQJnJ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 17 Oct 2019 05:43:09 -0400
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:35865 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726750AbfJQJnI (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 17 Oct 2019 05:43:08 -0400
-Received: by mail-lj1-f194.google.com with SMTP id v24so1839151ljj.3;
-        Thu, 17 Oct 2019 02:43:07 -0700 (PDT)
+        id S2393929AbfJQJny (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 17 Oct 2019 05:43:54 -0400
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:46248 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2393888AbfJQJnx (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 17 Oct 2019 05:43:53 -0400
+Received: by mail-lj1-f195.google.com with SMTP id d1so1780159ljl.13;
+        Thu, 17 Oct 2019 02:43:51 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=w4waBAdvy4UQosRJ9zSozjZupMev2dHO+f/Dvftkbl8=;
-        b=JUXpD1X2VeDfXdaWBVeYiwH1l0JOSYcjqXpBBpZmL5JJsxo1ojqvv4aowYsf4NLsf0
-         +onl7YHV90Xog+Dc+KASUX8D0v1J9yHBSGklw+7XKWreG3BMR10eGGbhj3aqjGJX9U/7
-         uiKUTrnM5xlC6ce2v01QsLJisqyaCyZ6hoNYy1UzZzs3Wa8OwKtYb18lQ4IBxCyfGcGr
-         kEl5mrwzpVI8wNaPiJs2dnVhd3xubWVd4qbXg/7ky0KZETd4+yJ56Qu8e2HRZPn6pLy4
-         bqFenwzMSE0WC6y7gHYA2oA1cc/SWOYG0fPqhhSyIvKwVIdfPf4MOnnA4qby1EHjdcw/
-         bEPQ==
-X-Gm-Message-State: APjAAAWe+Ks6FEDolsaD7/PP2UUyOjGOA6H1Gd1FQURoPV202U3aHagy
-        OkK4qqzras6h68UYIIMAKPE=
-X-Google-Smtp-Source: APXvYqz8XtT+GDN8yAvJChXBJIn6PPjoVQsNya0269c1+8EHZPyhkW8aqP9ci9aVY1j4INmD9W3ksg==
-X-Received: by 2002:a2e:9e85:: with SMTP id f5mr1793634ljk.247.1571305386310;
-        Thu, 17 Oct 2019 02:43:06 -0700 (PDT)
+        bh=jh4gf950oYClWnD4Coi3ctcStnuW8fLUjgIauH0yMgo=;
+        b=APLexERfkST1AGHTrcIRl/QYrmsbnR0dqG9bBTJy/3cOZYtU6FTJugXRTFYKSj7tig
+         zRm9ZVNa5yQAXJ7o1xhgqaLcAm61c4+JVr1dXeUrz56XWxTV6Ml1+ukOpV0q8TKd+PmI
+         EXWaLsWnICsjTp7WtiLst6M+L0pj7awstb0uZmQ2rJSfBqGDRlYvv+OdcQm2SeRmBYCK
+         GY/ke9wLm/ckDOCa7ti1Tb1gWd9dvSHUmisBH9gM+I+NVPVuglhQAcHhcK+Is5x2LjpQ
+         /YWopDEr8FOWXVhuBiMMwj0RF7Lj2TjrXv0SEHL5Q9xupoxB6da2LvJccpa6IHvBOxQQ
+         PUow==
+X-Gm-Message-State: APjAAAWV1aAdicsG4rcWdK3dgcgU2o1G0dNE5mp2ElaATGt8nWtHzzNy
+        ngX4eHAv8kFqgXixr8aeP70=
+X-Google-Smtp-Source: APXvYqwsqN/v09N3swS+yfo5KQfI30YTYAFNVCYxdNXOmv76b6xaf3XXKut9e+5Ile/SYxEnfoO5Yw==
+X-Received: by 2002:a2e:b049:: with SMTP id d9mr1822102ljl.121.1571305431036;
+        Thu, 17 Oct 2019 02:43:51 -0700 (PDT)
 Received: from localhost.localdomain ([213.255.186.46])
-        by smtp.gmail.com with ESMTPSA id i21sm793392lfl.44.2019.10.17.02.43.04
+        by smtp.gmail.com with ESMTPSA id k68sm788783lje.86.2019.10.17.02.43.49
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 17 Oct 2019 02:43:05 -0700 (PDT)
-Date:   Thu, 17 Oct 2019 12:42:57 +0300
+        Thu, 17 Oct 2019 02:43:50 -0700 (PDT)
+Date:   Thu, 17 Oct 2019 12:43:38 +0300
 From:   Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
 To:     matti.vaittinen@fi.rohmeurope.com, mazziesaccount@gmail.com
-Cc:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
+Cc:     Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Liam Girdwood <lgirdwood@gmail.com>,
         Mark Brown <broonie@kernel.org>,
@@ -53,8 +51,8 @@ Cc:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
         devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org,
         linux-leds@vger.kernel.org, linux-rtc@vger.kernel.org
-Subject: [RFC PATCH 02/13] mfd: input: bd71828: Add power-key support
-Message-ID: <5b69d8cabbd5f6421b73714c6d4fb3442b6efc43.1571302099.git.matti.vaittinen@fi.rohmeurope.com>
+Subject: [RFC PATCH 03/13] clk: bd718x7: Support ROHM BD71828 clk block
+Message-ID: <da2293930832eae746a5e26d07ef00c426635b5b.1571302099.git.matti.vaittinen@fi.rohmeurope.com>
 References: <cover.1571302099.git.matti.vaittinen@fi.rohmeurope.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
@@ -66,78 +64,87 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Use gpio_keys to send power input-event to user-space when power
-button (short) press is detected.
+BD71828GW is a single-chip power management IC for battery-powered portable
+devices. Add support for controlling BD71828 clk using bd718x7 driver.
 
 Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
 ---
- drivers/mfd/rohm-bd71828.c | 28 ++++++++++++++++++++++++++++
- 1 file changed, 28 insertions(+)
+ drivers/clk/Kconfig       |  6 +++---
+ drivers/clk/clk-bd718x7.c | 15 ++++++++++-----
+ 2 files changed, 13 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/mfd/rohm-bd71828.c b/drivers/mfd/rohm-bd71828.c
-index b7de79e1fcdb..f77ba1ec3e99 100644
---- a/drivers/mfd/rohm-bd71828.c
-+++ b/drivers/mfd/rohm-bd71828.c
-@@ -4,7 +4,9 @@
- //
- // ROHM BD71828 PMIC driver
+diff --git a/drivers/clk/Kconfig b/drivers/clk/Kconfig
+index 801fa1cd0321..1d61d94cdb29 100644
+--- a/drivers/clk/Kconfig
++++ b/drivers/clk/Kconfig
+@@ -302,10 +302,10 @@ config COMMON_CLK_STM32H7
+ 	  Support for stm32h7 SoC family clocks
  
-+#include <linux/gpio_keys.h>
- #include <linux/i2c.h>
-+#include <linux/input.h>
- #include <linux/interrupt.h>
- #include <linux/ioport.h>
- #include <linux/irq.h>
-@@ -15,6 +17,18 @@
- #include <linux/regmap.h>
- #include <linux/types.h>
+ config COMMON_CLK_BD718XX
+-	tristate "Clock driver for ROHM BD718x7 PMIC"
+-	depends on MFD_ROHM_BD718XX || MFD_ROHM_BD70528
++	tristate "Clock driver for 32K clk gates on ROHM PMICs"
++	depends on MFD_ROHM_BD718XX || MFD_ROHM_BD70528 || MFD_ROHM_BD71828
+ 	help
+-	  This driver supports ROHM BD71837, ROHM BD71847 and
++	  This driver supports ROHM BD71837, ROHM BD71847, ROHM BD71828 and
+ 	  ROHM BD70528 PMICs clock gates.
  
-+static struct gpio_keys_button button = {
-+	.code = KEY_POWER,
-+	.gpio = -1,
-+	.type = EV_KEY,
-+};
-+
-+static struct gpio_keys_platform_data bd71828_powerkey_data = {
-+	.buttons = &button,
-+	.nbuttons = 1,
-+	.name = "bd71828-pwrkey",
-+};
-+
- static const struct resource rtc_irqs[] = {
- 	DEFINE_RES_IRQ_NAMED(BD71828_INT_RTC0, "bd71828-rtc-alm-0"),
- 	DEFINE_RES_IRQ_NAMED(BD71828_INT_RTC1, "bd71828-rtc-alm-1"),
-@@ -36,6 +50,10 @@ static struct mfd_cell bd71828_mfd_cells[] = {
- 		.name = "bd70528-rtc",
- 		.resources = rtc_irqs,
- 		.num_resources = ARRAY_SIZE(rtc_irqs),
-+	}, {
-+		.name = "gpio-keys",
-+		.platform_data = &bd71828_powerkey_data,
-+		.pdata_size = sizeof(bd71828_powerkey_data),
- 	},
+ config COMMON_CLK_FIXED_MMIO
+diff --git a/drivers/clk/clk-bd718x7.c b/drivers/clk/clk-bd718x7.c
+index ae6e5baee330..d17a19e04592 100644
+--- a/drivers/clk/clk-bd718x7.c
++++ b/drivers/clk/clk-bd718x7.c
+@@ -8,6 +8,7 @@
+ #include <linux/platform_device.h>
+ #include <linux/slab.h>
+ #include <linux/mfd/rohm-bd718x7.h>
++#include <linux/mfd/rohm-bd71828.h>
+ #include <linux/mfd/rohm-bd70528.h>
+ #include <linux/clk-provider.h>
+ #include <linux/clkdev.h>
+@@ -21,10 +22,8 @@ struct bd718xx_clk {
+ 	struct rohm_regmap_dev *mfd;
  };
  
-@@ -288,9 +306,19 @@ static int bd71828_i2c_probe(struct i2c_client *i2c,
- 		dev_err(&i2c->dev, "Failed to add IRQ chip\n");
- 		return ret;
- 	}
-+
- 	dev_dbg(&i2c->dev, "Registered %d IRQs for chip\n",
- 		bd71828_irq_chip.num_irqs);
+-static int bd71837_clk_set(struct clk_hw *hw, int status)
++static int bd71837_clk_set(struct bd718xx_clk *c, int status)
+ {
+-	struct bd718xx_clk *c = container_of(hw, struct bd718xx_clk, hw);
+-
+ 	return regmap_update_bits(c->mfd->regmap, c->reg, c->mask, status);
+ }
  
-+	ret = regmap_irq_get_virq(irq_data, BD71828_INT_SHORTPUSH);
+@@ -33,14 +32,16 @@ static void bd71837_clk_disable(struct clk_hw *hw)
+ 	int rv;
+ 	struct bd718xx_clk *c = container_of(hw, struct bd718xx_clk, hw);
+ 
+-	rv = bd71837_clk_set(hw, 0);
++	rv = bd71837_clk_set(c, 0);
+ 	if (rv)
+ 		dev_dbg(&c->pdev->dev, "Failed to disable 32K clk (%d)\n", rv);
+ }
+ 
+ static int bd71837_clk_enable(struct clk_hw *hw)
+ {
+-	return bd71837_clk_set(hw, 1);
++	struct bd718xx_clk *c = container_of(hw, struct bd718xx_clk, hw);
 +
-+	if (ret < 0) {
-+		dev_err(&i2c->dev, "Failed to get the power-key IRQ\n");
-+		return ret;
-+	}
-+
-+	button.irq = ret;
-+
- 	ret = devm_mfd_add_devices(&i2c->dev, PLATFORM_DEVID_AUTO,
- 				   bd71828_mfd_cells,
- 				   ARRAY_SIZE(bd71828_mfd_cells), NULL, 0,
++	return bd71837_clk_set(c, 0xffffffff);
+ }
+ 
+ static int bd71837_clk_is_enabled(struct clk_hw *hw)
+@@ -93,6 +94,10 @@ static int bd71837_clk_probe(struct platform_device *pdev)
+ 		c->reg = BD718XX_REG_OUT32K;
+ 		c->mask = BD718XX_OUT32K_EN;
+ 		break;
++	case ROHM_CHIP_TYPE_BD71828:
++		c->reg = BD71828_REG_OUT32K;
++		c->mask = BD71828_OUT32K_EN;
++		break;
+ 	case ROHM_CHIP_TYPE_BD70528:
+ 		c->reg = BD70528_REG_CLK_OUT;
+ 		c->mask = BD70528_CLK_OUT_EN_MASK;
 -- 
 2.21.0
 
