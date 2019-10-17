@@ -2,422 +2,267 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 13432DA432
-	for <lists+linux-gpio@lfdr.de>; Thu, 17 Oct 2019 05:11:10 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6AAF3DA4EF
+	for <lists+linux-gpio@lfdr.de>; Thu, 17 Oct 2019 07:07:08 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407512AbfJQDLB (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 16 Oct 2019 23:11:01 -0400
-Received: from gate2.alliedtelesis.co.nz ([202.36.163.20]:48898 "EHLO
-        gate2.alliedtelesis.co.nz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728556AbfJQDLB (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 16 Oct 2019 23:11:01 -0400
-Received: from mmarshal3.atlnz.lc (mmarshal3.atlnz.lc [10.32.18.43])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id 939A4891AC;
-        Thu, 17 Oct 2019 16:10:58 +1300 (NZDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alliedtelesis.co.nz;
-        s=mail181024; t=1571281858;
-        bh=jlsuLmHGaqSrARz5bSRO0ITaS1A+5aEJDtmKxEoxCws=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References;
-        b=rbJBrasr7inbyi3x4cmQwZdzZaO/wVG1cKcV0aE2uoE+i1rfDygV+D70SnivkRZ84
-         7yt9/3Ar5hx51wvqAk6YQuPnuw11OMm+24Ucs5/adI/nE5WaU22uL6MF9787/FwTtX
-         G/shv6kn38OQlVi4vQEgKyYGW7LpT8eaJpolPOcdJyHY+rbKgL9y6NHabeRNrhR9Dz
-         CBjX8w2bSKlY7YbJ7xdtMMGEvfLyQSJqHX86+RNS12PDOTDOlM4xJQ6ZTccBP1+y84
-         U738QpKqS1EJeUBlF8UcA1wZLiNdJe4BJQ9sMH/77Hfup059QVen9j35/urF/vknPV
-         ZvEdphQWVMJrQ==
-Received: from smtp (Not Verified[10.32.16.33]) by mmarshal3.atlnz.lc with Trustwave SEG (v7,5,8,10121)
-        id <B5da7dbc30000>; Thu, 17 Oct 2019 16:10:59 +1300
-Received: from chrisp-dl.ws.atlnz.lc (chrisp-dl.ws.atlnz.lc [10.33.22.20])
-        by smtp (Postfix) with ESMTP id 5BABA13EEB6;
-        Thu, 17 Oct 2019 16:11:02 +1300 (NZDT)
-Received: by chrisp-dl.ws.atlnz.lc (Postfix, from userid 1030)
-        id 46FEF280059; Thu, 17 Oct 2019 16:10:58 +1300 (NZDT)
-From:   Chris Packham <chris.packham@alliedtelesis.co.nz>
-To:     linus.walleij@linaro.org, bgolaszewski@baylibre.com,
-        robh+dt@kernel.org, mark.rutland@arm.com, rjui@broadcom.com,
-        sbranden@broadcom.com, bcm-kernel-feedback-list@broadcom.com
-Cc:     linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Chris Packham <chris.packham@alliedtelesis.co.nz>
-Subject: [PATCH v2 2/2] gpio: Add xgs-iproc driver
-Date:   Thu, 17 Oct 2019 16:10:51 +1300
-Message-Id: <20191017031051.20366-3-chris.packham@alliedtelesis.co.nz>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20191017031051.20366-1-chris.packham@alliedtelesis.co.nz>
-References: <20191017031051.20366-1-chris.packham@alliedtelesis.co.nz>
+        id S2390693AbfJQFG4 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 17 Oct 2019 01:06:56 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:41236 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2395034AbfJQFGz (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 17 Oct 2019 01:06:55 -0400
+Received: by mail-pf1-f195.google.com with SMTP id q7so817218pfh.8
+        for <linux-gpio@vger.kernel.org>; Wed, 16 Oct 2019 22:06:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=Ysq3HNWFxHuaIU5hScRoWkkDMyN+lTeQJa8S35qTxZQ=;
+        b=Sqvdm206uiDImWE+rO+oR7+vTgHm//7cZIfwOeLRz/pVRQe2yxrv/6D6humBgHkmzs
+         Tm8QGyCj7yXvzxbgw/M23cuePK3SjID4Yauv+Lmgs567L34XfliXlj2RWg8L5FSQzbMZ
+         NDgYBAEFOXdIkA6xP89IAEGfc4ndt9WuC3T9u5DJAOnTBLX3zPPpkaReZxMd+6/CVOvi
+         zboJwDSLPZcIV2Re0npLHOEWMNp/+nR8AQs+Ugg6x5GTVAR/86U7y4307qQXJRE6x4X4
+         YG7/QQ4oZ6igAj4eS8fR5SU5GG3t1J3XPM4HPOJ1SmQOPu9tl7sBVzgOvD2zo8hR1D8+
+         RkPQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=Ysq3HNWFxHuaIU5hScRoWkkDMyN+lTeQJa8S35qTxZQ=;
+        b=ad8f13Kbt/Q9p4QefZ1MITS93ucSASRQdpa+kBvEgh3o5cOyRTddT5AR5JL2tCu4Lo
+         PKslqRzK9WxTaonT0EXy/Nv3Zq6dWDiOcmssAxuqQKOkh4kHLj25BUpTa13w358CPAXG
+         ZaifAcpA0dxFuFuXrOsvAwyHylFYkDJw2pixQ9o2v/TX2BBsw0GtFCzeL6o/LYDDFQ1r
+         tQVWDoXyK1rzVeIWQ1WxbCOr60DaksfCBZUP7bt38pTP9ld7nyHqc9XeKuYWdbqMLQKF
+         MAEhdDT+getmautEOxuT7s3Bcse6mbLMt0ImklFGVQzv5zucY2X6USlBhaUhMIu3wYJT
+         8+zQ==
+X-Gm-Message-State: APjAAAUXRnG14oIrUrk2yzJ4uAwEyJW8QLjyidGiDqpXGgaTlQ/Khh6X
+        B2+BBY8q17yRnx3Yx2Z52b0=
+X-Google-Smtp-Source: APXvYqw+7yxRwa7O0r94eB/X+NOj3cZ6Cfaqb8/NrF/dmkl7FC9LdBiAtowG4hT7WgXyO5nzxVEDpw==
+X-Received: by 2002:a17:90a:bb0a:: with SMTP id u10mr2048828pjr.14.1571288813892;
+        Wed, 16 Oct 2019 22:06:53 -0700 (PDT)
+Received: from sol (220-235-84-126.dyn.iinet.net.au. [220.235.84.126])
+        by smtp.gmail.com with ESMTPSA id z20sm1137795pfj.156.2019.10.16.22.06.50
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 16 Oct 2019 22:06:53 -0700 (PDT)
+Date:   Thu, 17 Oct 2019 13:06:47 +0800
+From:   Kent Gibson <warthog618@gmail.com>
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bamvor Jian Zhang <bamv2005@gmail.com>,
+        Drew Fustini <drew@pdp7.com>
+Subject: Re: [PATCH v2 5/6] gpiolib: disable bias on inputs when pull up/down
+ are both set
+Message-ID: <20191017050647.GA21551@sol>
+References: <20191012015628.9604-1-warthog618@gmail.com>
+ <20191012015628.9604-6-warthog618@gmail.com>
+ <CAMRc=McL+Z2J5kiCQUNbHbxJyfyoLf6XOOrFx3NPNH2+tSh4wg@mail.gmail.com>
+ <20191014130425.GC28012@sol>
+ <CAMRc=Md75GmWhi+KBtVTeLJ=efB6cDr8dxsEbZ2A6vc4z6LAwA@mail.gmail.com>
+ <20191015005849.GA7970@sol>
+ <CAMRc=Mf-NVGFjLOgYwtmBvyZ5pu3E0NmGZ91t4aAYZLe8w8rJQ@mail.gmail.com>
+ <20191016010104.GA8083@sol>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-x-atlnz-ls: pat
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20191016010104.GA8083@sol>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-This driver supports the Chip Common A GPIO controller present on a
-number of Broadcom switch ASICs with integrated SoCs. The controller is
-similar to the pinctrl-nsp-gpio and pinctrl-iproc-gpio blocks but
-different enough that a separate driver is required.
+On Wed, Oct 16, 2019 at 09:01:04AM +0800, Kent Gibson wrote:
+> On Tue, Oct 15, 2019 at 02:51:18PM +0200, Bartosz Golaszewski wrote:
+> > wt., 15 paź 2019 o 02:58 Kent Gibson <warthog618@gmail.com> napisał(a):
+> > >
+> > > On Mon, Oct 14, 2019 at 06:50:41PM +0200, Bartosz Golaszewski wrote:
+> > > > pon., 14 paź 2019 o 15:04 Kent Gibson <warthog618@gmail.com> napisał(a):
+> > > > >
+> > > > > On Mon, Oct 14, 2019 at 02:43:54PM +0200, Bartosz Golaszewski wrote:
+> > > > > > sob., 12 paź 2019 o 03:57 Kent Gibson <warthog618@gmail.com> napisał(a):
+> > > > > > >
+> > > > > > > This patch allows pull up/down bias to be disabled, allowing
+> > > > > > > the line to float or to be biased only by external circuitry.
+> > > > > > > Use case is for where the bias has been applied previously,
+> > > > > > > either by default or by the user, but that setting may
+> > > > > > > conflict with the current use of the line.
+> > > > > > >
+> > > > > > > Signed-off-by: Kent Gibson <warthog618@gmail.com>
+> > > > > > > ---
+> > > > > > >  drivers/gpio/gpiolib.c | 22 +++++++---------------
+> > > > > > >  1 file changed, 7 insertions(+), 15 deletions(-)
+> > > > > > >
+> > > > > > > diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
+> > > > > > > index 647334f53622..f90b20d548b9 100644
+> > > > > > > --- a/drivers/gpio/gpiolib.c
+> > > > > > > +++ b/drivers/gpio/gpiolib.c
+> > > > > > > @@ -539,11 +539,6 @@ static int linehandle_create(struct gpio_device *gdev, void __user *ip)
+> > > > > > >             (lflags & GPIOHANDLE_REQUEST_OUTPUT))
+> > > > > > >                 return -EINVAL;
+> > > > > > >
+> > > > > > > -       /* Same with pull-up and pull-down. */
+> > > > > > > -       if ((lflags & GPIOHANDLE_REQUEST_PULL_UP) &&
+> > > > > > > -           (lflags & GPIOHANDLE_REQUEST_PULL_DOWN))
+> > > > > > > -               return -EINVAL;
+> > > > > > > -
+> > > > > > >         /*
+> > > > > > >          * Do not allow OPEN_SOURCE & OPEN_DRAIN flags in a single request. If
+> > > > > > >          * the hardware actually supports enabling both at the same time the
+> > > > > > > @@ -935,14 +930,6 @@ static int lineevent_create(struct gpio_device *gdev, void __user *ip)
+> > > > > > >              (lflags & GPIOHANDLE_REQUEST_PULL_DOWN)))
+> > > > > > >                 return -EINVAL;
+> > > > > > >
+> > > > > > > -       /*
+> > > > > > > -        * Do not allow both pull-up and pull-down flags to be set as they
+> > > > > > > -        *  are contradictory.
+> > > > > > > -        */
+> > > > > > > -       if ((lflags & GPIOHANDLE_REQUEST_PULL_UP) &&
+> > > > > > > -           (lflags & GPIOHANDLE_REQUEST_PULL_DOWN))
+> > > > > > > -               return -EINVAL;
+> > > > > > > -
+> > > > > > >         le = kzalloc(sizeof(*le), GFP_KERNEL);
+> > > > > > >         if (!le)
+> > > > > > >                 return -ENOMEM;
+> > > > > > > @@ -2931,6 +2918,7 @@ static int gpio_set_config(struct gpio_chip *gc, unsigned offset,
+> > > > > > >         unsigned arg;
+> > > > > > >
+> > > > > > >         switch (mode) {
+> > > > > > > +       case PIN_CONFIG_BIAS_DISABLE:
+> > > > > > >         case PIN_CONFIG_BIAS_PULL_DOWN:
+> > > > > > >         case PIN_CONFIG_BIAS_PULL_UP:
+> > > > > > >                 arg = 1;
+> > > > > > > @@ -2991,7 +2979,11 @@ int gpiod_direction_input(struct gpio_desc *desc)
+> > > > > > >         if (ret == 0)
+> > > > > > >                 clear_bit(FLAG_IS_OUT, &desc->flags);
+> > > > > > >
+> > > > > > > -       if (test_bit(FLAG_PULL_UP, &desc->flags))
+> > > > > > > +       if (test_bit(FLAG_PULL_UP, &desc->flags) &&
+> > > > > > > +               test_bit(FLAG_PULL_DOWN, &desc->flags))
+> > > > > > > +               gpio_set_config(chip, gpio_chip_hwgpio(desc),
+> > > > > > > +                               PIN_CONFIG_BIAS_DISABLE);
+> > > > > > > +       else if (test_bit(FLAG_PULL_UP, &desc->flags))
+> > > > > >
+> > > > > > From looking at the code: user-space can disable bias when setting
+> > > > > > both PULL_UP and PULL_DOWN flags. I don't understand why it's done in
+> > > > > > this implicit way? Why not a separate flag?
+> > > > >
+> > > > > An extra flag would waste a bit and add nothing but more sanity checking.
+> > > > >
+> > > >
+> > > > I disagree. The user API needs to be very explicit. Sanity checking is
+> > > > alright - if there'll be too many ifdefs, we can start thinking about
+> > > > adding some core library helpers for sanitizing conflicting flags, I'm
+> > > > sure other frameworks could use something like this as well.
+> > > >
+> > > > Especially in this context: setting PULL_UP and PULL_DOWN together
+> > > > disables bias - this doesn't make sense logically.
+> > > >
+> > > In a way it does make a weird kind of sense - they cancel.  Physically.
+> > >
+> > 
+> > Yes, on some devices we set both bits to disable bias, but on others
+> > the pull-up and pull-down bits need to be cleared and yet others have
+> > a dedicated bit for that. It's not standardized and the pinctrl
+> > framework defines all three values as separate bits to expose a common
+> > programming interface.
+> > 
 
-This has been ported from Broadcom's XLDK 5.0.3 retaining only the CCA
-support (pinctrl-iproc-gpio covers CCB).
+Is there any documentation on this?  The pinctrl docs stay pretty high
+level and doesn't touch on this. And from the pinconf-generic.h 
+documentation, I'd consider drivers that require both pull-up and 
+pull-down set to disable bias to be non-compliant with the API - for 
+BIAS_DISABLE it says "this setting disables all biasing", so you'd think
+the driver would support that and do any mapping (setting both pulls
+high or low or whatever) internally.
 
-Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
----
+> Ok. And, since gpiolib has no knowledge of what combinations are
+> appropriate for a given chip, we can't provide a higher level
+> abstraction and have no option but to expose that pinconf
+> complexity in the GPIO uapi?
+> 
+> In fact, pinconf doesn't just define 3 bias bits - it defines 6:
+> 
+> enum pin_config_param {
+> 	PIN_CONFIG_BIAS_BUS_HOLD,
+> 	PIN_CONFIG_BIAS_DISABLE,
+> 	PIN_CONFIG_BIAS_HIGH_IMPEDANCE,
+> 	PIN_CONFIG_BIAS_PULL_DOWN,
+> 	PIN_CONFIG_BIAS_PULL_PIN_DEFAULT,
+> 	PIN_CONFIG_BIAS_PULL_UP,
+> 
+> Do we need to support any of the remaining 3 in the GPIO uapi, either
+> now or possibly in the future?
+> 
+> And what about the other PIN_CONFIG flags?  Some of these might be
+> candidates for controlling via SET_CONFIG_IOCTL, if not in the request
+> itself? (again this is contemplating the future, not suggesting being part
+> of this patch)
+> 
+> > > Did you read the cover letter?  The problem, as I see it,
+> > > is that we're stuck using a flag field to encode a two bit enum.
+> > > That fact the we only have a flag field to play with can't be
+> > > changed due to ABI.
+> > 
+> > For some reason I haven't received the cover letter on my inbox. I'm
+> > only now seeing it on linux-gpio archives.
+> > 
+> And for some reason I didn't get 0001, yet all 7 parts made it to the mailing
+> list. Spam filters kicking in? Though it isn't in my spam folder either.
+> Something odd going on.
+> 
+> > Anyway: I don't understand why you insist on using two instead of
+> > three bits. You have 32 bits in total that can be used and only 5 are
+> > used so far. There's plenty left.
+> > 
+> Cos it makes no sense to me to encode 4 values into 3 bits when 2 will
+> do.  But if you want to expose part of the pinconf API within the GPIO
+> uapi then that goes out the window - it's not 4 values anymore.
+> 
+> And partly cos I'm frustrated that I'd asked questions regarding how the
+> API should look earlier and got no reply.  This is the sort of thing I
+> usually deal with in the design stage, not review.
+> 
+> I realise you guys are busy, but a little time spent clarifying design 
+> would save a whole lot more time in coding, testing and review.
+> 
+> > I'd prefer to see:
+> > 
+> > GPIOHANDLE_REQUEST_PULL_UP
+> > GPIOHANDLE_REQUEST_PULL_DOWN
+> > GPIOHANDLE_REQUEST_PULL_DISABLED
+> > 
+> > or maybe even
+> > 
+> > GPIOHANDLE_REQUEST_BIAS_PULL_UP
+> > GPIOHANDLE_REQUEST_BIAS_PULL_DOWN
+> > GPIOHANDLE_REQUEST_BIAS_DISABLED
+> > 
+> > to stay consistent with the pinctrl flags. No bit set among these
+> > three would mean AS_IS.
+> > 
+> That makes sense, if we are exposing the pinctrl API here.
+> 
 
-Notes:
-    Changes in v2:
-    - use more of the generic infrastructure for gpio chips
-    - handling the root interrupt is still done manually due to sharing w=
-ith uart0.
+Looking at going with the naming including BIAS...
+What to do with constants defined in headers prior to this patch that 
+don't include the BIAS?  e.g. FLAG_PULL_UP and FLAG_PULL_DOWN in gpiolib.h?
+Safe to assume they can't be renamed?
+So ok to stay with the unBIASed names for both old (cos they are there)
+and also the new (to be consistent with the old)?
 
- drivers/gpio/Kconfig          |   9 +
- drivers/gpio/Makefile         |   1 +
- drivers/gpio/gpio-xgs-iproc.c | 301 ++++++++++++++++++++++++++++++++++
- 3 files changed, 311 insertions(+)
- create mode 100644 drivers/gpio/gpio-xgs-iproc.c
+Also, while the DT interface (gpiod_configure_flags) has GPIO_PULL_UP
+and GPIO_PULL_DOWN, it doesn't support DISABLE, and it explicitly rejects
+both having both PULL_UP and PULL_DOWN set.  Should we be extending the 
+DISABLE support to the DT interface, and should the API behaviour also 
+mirror the pinctrl behaviour you describe above?
 
-diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
-index 38e096e6925f..4b3c0f8397d7 100644
---- a/drivers/gpio/Kconfig
-+++ b/drivers/gpio/Kconfig
-@@ -156,6 +156,15 @@ config GPIO_BRCMSTB
- 	help
- 	  Say yes here to enable GPIO support for Broadcom STB (BCM7XXX) SoCs.
-=20
-+config GPIO_XGS_IPROC
-+	tristate "BRCM XGS iProc GPIO support"
-+	depends on OF_GPIO && (ARCH_BCM_IPROC || COMPILE_TEST)
-+	select GPIO_GENERIC
-+	select GPIOLIB_IRQCHIP
-+	default ARCH_BCM_IPROC
-+	help
-+	  Say yes here to enable GPIO support for Broadcom XGS iProc SoCs.
-+
- config GPIO_CADENCE
- 	tristate "Cadence GPIO support"
- 	depends on OF_GPIO
-diff --git a/drivers/gpio/Makefile b/drivers/gpio/Makefile
-index d2fd19c15bae..3783c3d43fbe 100644
---- a/drivers/gpio/Makefile
-+++ b/drivers/gpio/Makefile
-@@ -37,6 +37,7 @@ obj-$(CONFIG_GPIO_BCM_KONA)		+=3D gpio-bcm-kona.o
- obj-$(CONFIG_GPIO_BD70528)		+=3D gpio-bd70528.o
- obj-$(CONFIG_GPIO_BD9571MWV)		+=3D gpio-bd9571mwv.o
- obj-$(CONFIG_GPIO_BRCMSTB)		+=3D gpio-brcmstb.o
-+obj-$(CONFIG_GPIO_XGS_IPROC)		+=3D gpio-xgs-iproc.o
- obj-$(CONFIG_GPIO_BT8XX)		+=3D gpio-bt8xx.o
- obj-$(CONFIG_GPIO_CADENCE)		+=3D gpio-cadence.o
- obj-$(CONFIG_GPIO_CLPS711X)		+=3D gpio-clps711x.o
-diff --git a/drivers/gpio/gpio-xgs-iproc.c b/drivers/gpio/gpio-xgs-iproc.=
-c
-new file mode 100644
-index 000000000000..a0277acf9369
---- /dev/null
-+++ b/drivers/gpio/gpio-xgs-iproc.c
-@@ -0,0 +1,301 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Copyright (C) 2017 Broadcom Corporation
-+ */
-+
-+#include <linux/kernel.h>
-+#include <linux/init.h>
-+#include <linux/module.h>
-+#include <linux/irq.h>
-+#include <linux/interrupt.h>
-+#include <linux/io.h>
-+#include <linux/ioport.h>
-+#include <linux/of_device.h>
-+#include <linux/of_address.h>
-+#include <linux/of_gpio.h>
-+
-+#define CCA_INT_F_GPIOINT		BIT(0)
-+#define CCA_INT_STS			0x20
-+#define CCA_INT_MASK			0x24
-+
-+#define GPIO_CCA_DIN			0x0
-+#define GPIO_CCA_DOUT			0x4
-+#define GPIO_CCA_OUT_EN			0x8
-+#define GPIO_CCA_INT_LEVEL		0x10
-+#define GPIO_CCA_INT_LEVEL_MASK		0x14
-+#define GPIO_CCA_INT_EVENT		0x18
-+#define GPIO_CCA_INT_EVENT_MASK		0x1C
-+#define GPIO_CCA_INT_EDGE		0x24
-+
-+struct iproc_gpio_chip {
-+	struct irq_chip irqchip;
-+	struct gpio_chip gc;
-+	spinlock_t lock;
-+	struct device *dev;
-+	void __iomem *base;
-+	void __iomem *intr;
-+};
-+
-+static inline struct iproc_gpio_chip *
-+to_iproc_gpio(struct gpio_chip *gc)
-+{
-+	return container_of(gc, struct iproc_gpio_chip, gc);
-+}
-+
-+static void iproc_gpio_irq_ack(struct irq_data *d)
-+{
-+	struct gpio_chip *gc =3D irq_data_get_irq_chip_data(d);
-+	struct iproc_gpio_chip *chip =3D to_iproc_gpio(gc);
-+	int pin =3D d->hwirq;
-+	u32 irq =3D d->irq;
-+	u32 irq_type, event_status =3D 0;
-+
-+	irq_type =3D irq_get_trigger_type(irq);
-+	if (irq_type & IRQ_TYPE_EDGE_BOTH) {
-+		event_status |=3D BIT(pin);
-+		writel(event_status, chip->base + GPIO_CCA_INT_EVENT);
-+	}
-+}
-+
-+static void iproc_gpio_irq_unmask(struct irq_data *d)
-+{
-+	struct gpio_chip *gc =3D irq_data_get_irq_chip_data(d);
-+	struct iproc_gpio_chip *chip =3D to_iproc_gpio(gc);
-+	int pin =3D d->hwirq;
-+	u32 irq =3D d->irq;
-+	u32 int_mask, irq_type, event_mask;
-+
-+	irq_type =3D irq_get_trigger_type(irq);
-+	event_mask =3D readl(chip->base + GPIO_CCA_INT_EVENT_MASK);
-+	int_mask =3D readl(chip->base + GPIO_CCA_INT_LEVEL_MASK);
-+
-+	if (irq_type & IRQ_TYPE_EDGE_BOTH) {
-+		event_mask |=3D 1 << pin;
-+		writel(event_mask, chip->base + GPIO_CCA_INT_EVENT_MASK);
-+	} else {
-+		int_mask |=3D 1 << pin;
-+		writel(int_mask, chip->base + GPIO_CCA_INT_LEVEL_MASK);
-+	}
-+}
-+
-+static void iproc_gpio_irq_mask(struct irq_data *d)
-+{
-+	struct gpio_chip *gc =3D irq_data_get_irq_chip_data(d);
-+	struct iproc_gpio_chip *chip =3D to_iproc_gpio(gc);
-+	int pin =3D d->hwirq;
-+	u32 irq =3D d->irq;
-+	u32 irq_type, int_mask, event_mask;
-+
-+	irq_type =3D irq_get_trigger_type(irq);
-+	event_mask =3D readl(chip->base + GPIO_CCA_INT_EVENT_MASK);
-+	int_mask =3D readl(chip->base + GPIO_CCA_INT_LEVEL_MASK);
-+
-+	if (irq_type & IRQ_TYPE_EDGE_BOTH) {
-+		event_mask &=3D ~BIT(pin);
-+		writel(event_mask, chip->base + GPIO_CCA_INT_EVENT_MASK);
-+	} else {
-+		int_mask &=3D ~BIT(pin);
-+		writel(int_mask, chip->base + GPIO_CCA_INT_LEVEL_MASK);
-+	}
-+}
-+
-+
-+static int iproc_gpio_irq_set_type(struct irq_data *d, u32 type)
-+{
-+	struct gpio_chip *gc =3D irq_data_get_irq_chip_data(d);
-+	struct iproc_gpio_chip *chip =3D to_iproc_gpio(gc);
-+	int pin =3D d->hwirq;
-+	u32 irq =3D d->irq;
-+	u32 event_pol, int_pol;
-+
-+
-+	switch (type & IRQ_TYPE_SENSE_MASK) {
-+	case IRQ_TYPE_EDGE_RISING:
-+		event_pol =3D readl(chip->base + GPIO_CCA_INT_EDGE);
-+		event_pol &=3D ~BIT(pin);
-+		writel(event_pol, chip->base + GPIO_CCA_INT_EDGE);
-+		break;
-+	case IRQ_TYPE_EDGE_FALLING:
-+		event_pol =3D readl(chip->base + GPIO_CCA_INT_EDGE);
-+		event_pol |=3D BIT(pin);
-+		writel(event_pol, chip->base + GPIO_CCA_INT_EDGE);
-+		break;
-+	case IRQ_TYPE_LEVEL_HIGH:
-+		int_pol =3D readl(chip->base + GPIO_CCA_INT_LEVEL);
-+		int_pol &=3D ~BIT(pin);
-+		writel(int_pol, chip->base + GPIO_CCA_INT_LEVEL);
-+		break;
-+	case IRQ_TYPE_LEVEL_LOW:
-+		int_pol =3D readl(chip->base + GPIO_CCA_INT_LEVEL);
-+		int_pol |=3D BIT(pin);
-+		writel(int_pol, chip->base + GPIO_CCA_INT_LEVEL);
-+		break;
-+	default:
-+		/* should not come here */
-+		return -EINVAL;
-+	}
-+
-+	if (type & IRQ_TYPE_LEVEL_MASK)
-+		irq_set_handler_locked(irq_get_irq_data(irq), handle_level_irq);
-+	else if (type & IRQ_TYPE_EDGE_BOTH)
-+		irq_set_handler_locked(irq_get_irq_data(irq), handle_edge_irq);
-+
-+	return 0;
-+}
-+
-+static irqreturn_t iproc_gpio_irq_handler(int irq, void *data)
-+{
-+	struct gpio_chip *gc =3D (struct gpio_chip *)data;
-+	struct iproc_gpio_chip *chip =3D to_iproc_gpio(gc);
-+	int bit;
-+	unsigned long int_bits =3D 0;
-+	u32 int_status;
-+
-+	/* go through the entire GPIOs and handle all interrupts */
-+	int_status =3D readl(chip->intr + CCA_INT_STS);
-+	if (int_status & CCA_INT_F_GPIOINT) {
-+		u32 event, level;
-+
-+		/* Get level and edge interrupts */
-+		event =3D readl(chip->base + GPIO_CCA_INT_EVENT_MASK);
-+		event &=3D readl(chip->base + GPIO_CCA_INT_EVENT);
-+		level =3D readl(chip->base + GPIO_CCA_DIN);
-+		level ^=3D readl(chip->base + GPIO_CCA_INT_LEVEL);
-+		level &=3D readl(chip->base + GPIO_CCA_INT_LEVEL_MASK);
-+		int_bits =3D level | event;
-+
-+		for_each_set_bit(bit, &int_bits, gc->ngpio)
-+			generic_handle_irq(
-+				irq_linear_revmap(gc->irq.domain, bit));
-+	}
-+
-+	return  int_bits ? IRQ_HANDLED : IRQ_NONE;
-+}
-+
-+static int iproc_gpio_probe(struct platform_device *pdev)
-+{
-+	struct device *dev =3D &pdev->dev;
-+	struct device_node *dn =3D pdev->dev.of_node;
-+	struct iproc_gpio_chip *chip;
-+	u32 num_gpios;
-+	int irq, ret;
-+
-+	chip =3D devm_kzalloc(dev, sizeof(*chip), GFP_KERNEL);
-+	if (!chip)
-+		return -ENOMEM;
-+
-+	chip->dev =3D dev;
-+	platform_set_drvdata(pdev, chip);
-+
-+	chip->base =3D devm_platform_ioremap_resource(pdev, 0);
-+	if (IS_ERR(chip->base))
-+		return PTR_ERR(chip->base);
-+
-+	ret =3D bgpio_init(&chip->gc, dev, 4,
-+			 chip->base + GPIO_CCA_DIN,
-+			 chip->base + GPIO_CCA_DOUT,
-+			 NULL,
-+			 chip->base + GPIO_CCA_OUT_EN,
-+			 NULL,
-+			 0);
-+	if (ret) {
-+		dev_err(dev, "unable to init GPIO chip\n");
-+		return ret;
-+	}
-+
-+	chip->gc.label =3D dev_name(dev);
-+	if (of_property_read_u32(dn, "ngpios", &num_gpios))
-+		chip->gc.ngpio =3D num_gpios;
-+
-+	irq =3D platform_get_irq(pdev, 0);
-+	if (irq > 0) {
-+		struct gpio_irq_chip *girq;
-+		struct irq_chip *irqc;
-+		u32 val;
-+
-+		irqc =3D &chip->irqchip;
-+		irqc->name =3D dev_name(dev);
-+		irqc->irq_ack =3D iproc_gpio_irq_ack;
-+		irqc->irq_mask =3D iproc_gpio_irq_mask;
-+		irqc->irq_unmask =3D iproc_gpio_irq_unmask;
-+		irqc->irq_set_type =3D iproc_gpio_irq_set_type;
-+
-+		chip->intr =3D devm_platform_ioremap_resource(pdev, 1);
-+		if (IS_ERR(chip->intr))
-+			return PTR_ERR(chip->intr);
-+
-+		/* Enable GPIO interrupts for CCA GPIO */
-+		val =3D readl(chip->intr + CCA_INT_MASK);
-+		val |=3D CCA_INT_F_GPIOINT;
-+		writel(val, chip->intr + CCA_INT_MASK);
-+
-+		/*
-+		 * Directly request the irq here instead of passing
-+		 * a flow-handler to gpiochip_set_chained_irqchip,
-+		 * because the irq is shared.
-+		 */
-+		ret =3D devm_request_irq(dev, irq, iproc_gpio_irq_handler,
-+				       IRQF_SHARED, chip->gc.label, &chip->gc);
-+		if (ret) {
-+			dev_err(dev, "Fail to request IRQ%d: %d\n", irq, ret);
-+			return ret;
-+		}
-+
-+		girq =3D &chip->gc.irq;
-+		girq->chip =3D  irqc;
-+		/* This will let us handle the parent IRQ in the driver */
-+		girq->parent_handler =3D NULL;
-+		girq->num_parents =3D 0;
-+		girq->parents =3D NULL;
-+		girq->default_type =3D IRQ_TYPE_NONE;
-+		girq->handler =3D handle_simple_irq;
-+	}
-+
-+	ret =3D devm_gpiochip_add_data(dev, &chip->gc, chip);
-+	if (ret) {
-+		dev_err(dev, "unable to add GPIO chip\n");
-+		return ret;
-+	}
-+
-+	return 0;
-+}
-+
-+static int __exit iproc_gpio_remove(struct platform_device *pdev)
-+{
-+	struct iproc_gpio_chip *chip;
-+
-+	chip =3D platform_get_drvdata(pdev);
-+	if (!chip)
-+		return -ENODEV;
-+
-+	if (chip->intr) {
-+		u32 val;
-+
-+		val =3D readl(chip->intr + CCA_INT_MASK);
-+		val &=3D ~CCA_INT_F_GPIOINT;
-+		writel(val, chip->intr + CCA_INT_MASK);
-+	}
-+
-+	return 0;
-+}
-+
-+static const struct of_device_id bcm_iproc_gpio_of_match[] __initconst =3D=
- {
-+	{ .compatible =3D "brcm,iproc-gpio-cca" },
-+	{}
-+};
-+MODULE_DEVICE_TABLE(of, bcm_iproc_gpio_of_match);
-+
-+static struct platform_driver bcm_iproc_gpio_driver =3D {
-+	.driver =3D {
-+		.name =3D "iproc-xgs-gpio",
-+		.owner =3D THIS_MODULE,
-+		.of_match_table =3D bcm_iproc_gpio_of_match,
-+	},
-+	.probe =3D iproc_gpio_probe,
-+	.remove =3D iproc_gpio_remove,
-+};
-+
-+module_platform_driver(bcm_iproc_gpio_driver);
-+
-+MODULE_DESCRIPTION("XGS IPROC GPIO driver");
-+MODULE_LICENSE("GPL v2");
---=20
-2.23.0
+And are there any combinations that are guaranteed to be invalid,
+and so should be rejected, like DISABLE + PULL_UP??  In fact are there
+any combinations that are valid other then PULL_UP + PULL_DOWN?
 
+Cheers,
+Kent.
