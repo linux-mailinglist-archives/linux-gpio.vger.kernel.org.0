@@ -2,21 +2,21 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 1E853DACEE
-	for <lists+linux-gpio@lfdr.de>; Thu, 17 Oct 2019 14:49:47 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3307CDACDE
+	for <lists+linux-gpio@lfdr.de>; Thu, 17 Oct 2019 14:49:31 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2502894AbfJQMtg (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 17 Oct 2019 08:49:36 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:33442 "EHLO huawei.com"
+        id S2502866AbfJQMt1 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 17 Oct 2019 08:49:27 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:4246 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2502853AbfJQMtY (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Thu, 17 Oct 2019 08:49:24 -0400
-Received: from DGGEMS406-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 0D1196BE06B500DCD430;
+        id S2502854AbfJQMtZ (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Thu, 17 Oct 2019 08:49:25 -0400
+Received: from DGGEMS408-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 2908E7E955C150CCF85C;
         Thu, 17 Oct 2019 20:49:22 +0800 (CST)
-Received: from localhost (10.133.213.239) by DGGEMS406-HUB.china.huawei.com
- (10.3.19.206) with Microsoft SMTP Server id 14.3.439.0; Thu, 17 Oct 2019
- 20:49:11 +0800
+Received: from localhost (10.133.213.239) by DGGEMS408-HUB.china.huawei.com
+ (10.3.19.208) with Microsoft SMTP Server id 14.3.439.0; Thu, 17 Oct 2019
+ 20:49:13 +0800
 From:   YueHaibing <yuehaibing@huawei.com>
 To:     <linus.walleij@linaro.org>, <manivannan.sadhasivam@linaro.org>,
         <afaerber@suse.de>, <f.fainelli@gmail.com>, <rjui@broadcom.com>,
@@ -34,9 +34,9 @@ CC:     <linux-arm-kernel@lists.infradead.org>,
         <haojian.zhuang@gmail.com>, <wens@csie.org>,
         <thierry.reding@gmail.com>, <jonathanh@nvidia.com>,
         <agross@kernel.org>, YueHaibing <yuehaibing@huawei.com>
-Subject: [PATCH -next 28/30] pinctrl: actions: use devm_platform_ioremap_resource() to simplify code
-Date:   Thu, 17 Oct 2019 20:26:38 +0800
-Message-ID: <20191017122640.22976-29-yuehaibing@huawei.com>
+Subject: [PATCH -next 29/30] pinctrl: at91-pio4: use devm_platform_ioremap_resource() to simplify code
+Date:   Thu, 17 Oct 2019 20:26:39 +0800
+Message-ID: <20191017122640.22976-30-yuehaibing@huawei.com>
 X-Mailer: git-send-email 2.10.2.windows.1
 In-Reply-To: <20191017122640.22976-1-yuehaibing@huawei.com>
 References: <20191017122640.22976-1-yuehaibing@huawei.com>
@@ -54,30 +54,22 @@ This is detected by coccinelle.
 
 Signed-off-by: YueHaibing <yuehaibing@huawei.com>
 ---
- drivers/pinctrl/actions/pinctrl-owl.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+ drivers/pinctrl/pinctrl-at91-pio4.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/drivers/pinctrl/actions/pinctrl-owl.c b/drivers/pinctrl/actions/pinctrl-owl.c
-index 5dfe718..5a0c8e8 100644
---- a/drivers/pinctrl/actions/pinctrl-owl.c
-+++ b/drivers/pinctrl/actions/pinctrl-owl.c
-@@ -915,7 +915,6 @@ static int owl_gpio_init(struct owl_pinctrl *pctrl)
- int owl_pinctrl_probe(struct platform_device *pdev,
- 				struct owl_pinctrl_soc_data *soc_data)
- {
--	struct resource *res;
- 	struct owl_pinctrl *pctrl;
- 	int ret, i;
- 
-@@ -923,8 +922,7 @@ int owl_pinctrl_probe(struct platform_device *pdev,
- 	if (!pctrl)
- 		return -ENOMEM;
+diff --git a/drivers/pinctrl/pinctrl-at91-pio4.c b/drivers/pinctrl/pinctrl-at91-pio4.c
+index e380202..6949124 100644
+--- a/drivers/pinctrl/pinctrl-at91-pio4.c
++++ b/drivers/pinctrl/pinctrl-at91-pio4.c
+@@ -1017,8 +1017,7 @@ static int atmel_pinctrl_probe(struct platform_device *pdev)
+ 	atmel_pioctrl->nbanks = atmel_pioctrl_data->nbanks;
+ 	atmel_pioctrl->npins = atmel_pioctrl->nbanks * ATMEL_PIO_NPINS_PER_BANK;
  
 -	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
--	pctrl->base = devm_ioremap_resource(&pdev->dev, res);
-+	pctrl->base = devm_platform_ioremap_resource(pdev, 0);
- 	if (IS_ERR(pctrl->base))
- 		return PTR_ERR(pctrl->base);
+-	atmel_pioctrl->reg_base = devm_ioremap_resource(dev, res);
++	atmel_pioctrl->reg_base = devm_platform_ioremap_resource(pdev, 0);
+ 	if (IS_ERR(atmel_pioctrl->reg_base))
+ 		return -EINVAL;
  
 -- 
 2.7.4
