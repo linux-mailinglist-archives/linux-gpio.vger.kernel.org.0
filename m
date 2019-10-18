@@ -2,80 +2,84 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 762DADCF9F
-	for <lists+linux-gpio@lfdr.de>; Fri, 18 Oct 2019 21:52:14 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 59106DD393
+	for <lists+linux-gpio@lfdr.de>; Sat, 19 Oct 2019 00:19:39 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2443369AbfJRTwN (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 18 Oct 2019 15:52:13 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:32990 "EHLO mx1.redhat.com"
+        id S1732555AbfJRWSq (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 18 Oct 2019 18:18:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39298 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2443367AbfJRTwM (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Fri, 18 Oct 2019 15:52:12 -0400
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        id S1732540AbfJRWHL (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Fri, 18 Oct 2019 18:07:11 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id AFA8088FFFC;
-        Fri, 18 Oct 2019 19:52:12 +0000 (UTC)
-Received: from shalem.localdomain.com (ovpn-117-168.ams2.redhat.com [10.36.117.168])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 61D535C1B5;
-        Fri, 18 Oct 2019 19:52:09 +0000 (UTC)
-From:   Hans de Goede <hdegoede@redhat.com>
-To:     Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Linus Walleij <linus.walleij@linaro.org>
-Cc:     Hans de Goede <hdegoede@redhat.com>, linux-gpio@vger.kernel.org,
-        linux-acpi@vger.kernel.org
-Subject: [PATCH] gpiolib: acpi: Print pin number on acpi_gpiochip_alloc_event errors
-Date:   Fri, 18 Oct 2019 21:52:08 +0200
-Message-Id: <20191018195208.94405-1-hdegoede@redhat.com>
+        by mail.kernel.org (Postfix) with ESMTPSA id 7A7E522473;
+        Fri, 18 Oct 2019 22:07:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1571436431;
+        bh=5IFpmLN3JhJf8ksQjkcKwGvyr/g/pPEKDHGq8xP3mCU=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=l1NYLNuKd7VXLDUaOiop+4rsVq26hGMu2DoSDYlwBneh433tlQtCYUm1xTPgB3AJM
+         dl0QrO+FrnVdcXaHKdJW7BK12iaBKYpr+zgiakRi/CtCGp837rQ5yy4gmGT0rBKpu+
+         f4XzqoN2675OIPclN0seZ6hev96W7kaxgPX2g5W4=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Thierry Reding <treding@nvidia.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Sasha Levin <sashal@kernel.org>, linux-gpio@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 072/100] gpio: max77620: Use correct unit for debounce times
+Date:   Fri, 18 Oct 2019 18:04:57 -0400
+Message-Id: <20191018220525.9042-72-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20191018220525.9042-1-sashal@kernel.org>
+References: <20191018220525.9042-1-sashal@kernel.org>
 MIME-Version: 1.0
+X-stable: review
+X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.68]); Fri, 18 Oct 2019 19:52:12 +0000 (UTC)
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Print pin number on acpi_gpiochip_alloc_event errors, to help debugging
-these.
+From: Thierry Reding <treding@nvidia.com>
 
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+[ Upstream commit fffa6af94894126994a7600c6f6f09b892e89fa9 ]
+
+The gpiod_set_debounce() function takes the debounce time in
+microseconds. Adjust the switch/case values in the MAX77620 GPIO to use
+the correct unit.
+
+Signed-off-by: Thierry Reding <treding@nvidia.com>
+Link: https://lore.kernel.org/r/20191002122825.3948322-1-thierry.reding@gmail.com
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpio/gpiolib-acpi.c | 9 ++++++---
- 1 file changed, 6 insertions(+), 3 deletions(-)
+ drivers/gpio/gpio-max77620.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/gpio/gpiolib-acpi.c b/drivers/gpio/gpiolib-acpi.c
-index 609ed16ae933..2911dd6f2625 100644
---- a/drivers/gpio/gpiolib-acpi.c
-+++ b/drivers/gpio/gpiolib-acpi.c
-@@ -230,19 +230,22 @@ static acpi_status acpi_gpiochip_alloc_event(struct acpi_resource *ares,
- 	desc = gpiochip_request_own_desc(chip, pin, "ACPI:Event",
- 					 GPIO_ACTIVE_HIGH, GPIOD_IN);
- 	if (IS_ERR(desc)) {
--		dev_err(chip->parent, "Failed to request GPIO\n");
-+		dev_err(chip->parent,
-+			"Failed to request GPIO for pin 0x%02X\n", pin);
- 		return AE_ERROR;
- 	}
- 
- 	ret = gpiochip_lock_as_irq(chip, pin);
- 	if (ret) {
--		dev_err(chip->parent, "Failed to lock GPIO as interrupt\n");
-+		dev_err(chip->parent,
-+			"Failed to lock GPIO pin 0x%02X as interrupt\n", pin);
- 		goto fail_free_desc;
- 	}
- 
- 	irq = gpiod_to_irq(desc);
- 	if (irq < 0) {
--		dev_err(chip->parent, "Failed to translate GPIO to IRQ\n");
-+		dev_err(chip->parent,
-+			"Failed to translate GPIO pin 0x%02X to IRQ\n", pin);
- 		goto fail_unlock_irq;
- 	}
- 
+diff --git a/drivers/gpio/gpio-max77620.c b/drivers/gpio/gpio-max77620.c
+index 538bce4b5b427..ac6c1c0548b69 100644
+--- a/drivers/gpio/gpio-max77620.c
++++ b/drivers/gpio/gpio-max77620.c
+@@ -163,13 +163,13 @@ static int max77620_gpio_set_debounce(struct max77620_gpio *mgpio,
+ 	case 0:
+ 		val = MAX77620_CNFG_GPIO_DBNC_None;
+ 		break;
+-	case 1 ... 8:
++	case 1000 ... 8000:
+ 		val = MAX77620_CNFG_GPIO_DBNC_8ms;
+ 		break;
+-	case 9 ... 16:
++	case 9000 ... 16000:
+ 		val = MAX77620_CNFG_GPIO_DBNC_16ms;
+ 		break;
+-	case 17 ... 32:
++	case 17000 ... 32000:
+ 		val = MAX77620_CNFG_GPIO_DBNC_32ms;
+ 		break;
+ 	default:
 -- 
-2.23.0
+2.20.1
 
