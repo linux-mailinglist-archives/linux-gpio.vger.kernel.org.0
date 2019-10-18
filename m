@@ -2,194 +2,216 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 42910DBAB5
-	for <lists+linux-gpio@lfdr.de>; Fri, 18 Oct 2019 02:20:48 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5517ADBD65
+	for <lists+linux-gpio@lfdr.de>; Fri, 18 Oct 2019 08:00:14 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2503896AbfJRAUe (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 17 Oct 2019 20:20:34 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:41358 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2503893AbfJRAUM (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 17 Oct 2019 20:20:12 -0400
-Received: by mail-wr1-f67.google.com with SMTP id p4so4260017wrm.8
-        for <linux-gpio@vger.kernel.org>; Thu, 17 Oct 2019 17:20:11 -0700 (PDT)
+        id S2392109AbfJRGAC (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 18 Oct 2019 02:00:02 -0400
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:35434 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727233AbfJRGAC (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 18 Oct 2019 02:00:02 -0400
+Received: by mail-oi1-f195.google.com with SMTP id x3so4261312oig.2
+        for <linux-gpio@vger.kernel.org>; Thu, 17 Oct 2019 23:00:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=GWhC+phGxk4cJHdVi7LihKAUgiJg2uxQnJKT5r5d7UQ=;
-        b=HPGmM9E1W83HgllFgk9pMxwjTYsbQzRckZu/VM7VC6LPNi3RBrdhW9K14HGxL475w1
-         d0kQDj9AIH8llEjBFu7TFoOAshhxYE4kNT1ChG4+rGoOzGTv0wJLd7p36TSfhj8aDL+c
-         /LOXysFNnyYWAGvIRUmU03yEpJzLEK3fka2jYJUOCxrXby2XDCz+xCWjn2pbJtxKdR7i
-         BFLd9g8hwRRxbfwgABRAxB2pBvvLfZXddf828UpwkihvSpHjUxBrMUHeCmjwznUuDu/E
-         /DNMBlvdTWff29L98NL+8nrhAdM/Kn6YgZcJ/iX7jRij8f4q4UbvQoSaLotW0wW71Onw
-         xqiw==
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=UqfvRiIf/2+i2h/4Ujog5bIvchOk5tCgScNdijxQat0=;
+        b=pYwivSRkBCkHKIKFMDxSUQzYxZubKHj+eCQPph1DAVEMONHUi6BTkSvZFnrCvfLDxH
+         V4OwguAODrasciR5IXTpPZ+z7pwLQDiwResq2ZCCpKPZ9gC9ReqObuK06qxyekoEAnkt
+         Lin0M1x80JQOW86VzKE/a/V400dWUexZDggO72ItnaHM0dmXMfVd6xC6Wgn1BvHuCudQ
+         +GULmOf7tQBP3UOhpQk3PQVJyZkQCwRxOjGivUuHXavq2ko60LD+eB6Rc+0/aL0XABBw
+         ZHBPvTIj+om6O9AfsDy4rIhOHzfkZ4RgLtxOeN9hldC0DmH8GJoJBm56IH7+s1eU4WZH
+         szjg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=GWhC+phGxk4cJHdVi7LihKAUgiJg2uxQnJKT5r5d7UQ=;
-        b=Q1nWSPxAiQBvnRFwqLm9RCc3Uym2W+CQ8TankffVXEhSSYfnRQaI3kSeyWD1Pxk+p8
-         gC12Ax4n75wrtLq0ao/n9xfUPnDfEVve7BH+HVAoOjJVuifG2uo5GXdLOcziZntIjwkp
-         zeOF35fLKcP8BueIsiwP+DPjqYJBB1PsS3cRmauC0tzcGfDTVG4xO1NCF+Pvch20mlma
-         WCtgWF9Yy80EtkWQJhsnL/uqkIL3lAQ6dELSRruVzgAfLddbUQSn0ZlV/p4kgMUrNXcw
-         4ceaOhD3AMRxmEeax66oU9xmdte4Qk53h5kC0HHtXiKm4H4MHXZxIk+rNBTmb3rIaiOy
-         zI4w==
-X-Gm-Message-State: APjAAAWaH6nqf/l5yJdiA8CX3dIUzVcVU99hs3MD+r1v8TiHxdAkNxSJ
-        CABtJ2K+5IGy+Qi9jrpouAtVXg==
-X-Google-Smtp-Source: APXvYqybeC8LSQnjicpCNQ8RT3mFa3CNGEJdoMQYNaY4Zxg6lBhzZLJJ1+8IBmV+nqcQqJ8s/WD1Lg==
-X-Received: by 2002:adf:f145:: with SMTP id y5mr5032576wro.330.1571358010901;
-        Thu, 17 Oct 2019 17:20:10 -0700 (PDT)
-Received: from srini-hackbox.lan (cpc89974-aztw32-2-0-cust43.18-1.cable.virginm.net. [86.30.250.44])
-        by smtp.gmail.com with ESMTPSA id z189sm4851248wmc.25.2019.10.17.17.20.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 17 Oct 2019 17:20:10 -0700 (PDT)
-From:   Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-To:     robh@kernel.org, broonie@kernel.org, linus.walleij@linaro.org,
-        lee.jones@linaro.org
-Cc:     vinod.koul@linaro.org, alsa-devel@alsa-project.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        spapothi@codeaurora.org, bgoswami@codeaurora.org,
-        linux-gpio@vger.kernel.org,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Subject: [PATCH v2 11/11] ASoC: qcom: sdm845: add support to DB845c and Lenovo Yoga
-Date:   Fri, 18 Oct 2019 01:18:49 +0100
-Message-Id: <20191018001849.27205-12-srinivas.kandagatla@linaro.org>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20191018001849.27205-1-srinivas.kandagatla@linaro.org>
-References: <20191018001849.27205-1-srinivas.kandagatla@linaro.org>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=UqfvRiIf/2+i2h/4Ujog5bIvchOk5tCgScNdijxQat0=;
+        b=sNVOSsbJmptQ8WtKg4l/RHHwCgnS5OTvgVpLQU3Pm5flNVvzYeFTYV+aCuxxN9unYx
+         Hoed5G6JMEZV/A9PIYbFJ7jvS8Gn+aXsQg+3K3S+LC//lkw29YfOGUn2eWLbeokYtvRI
+         CPO0BGvB5AovuHX97puFLMYAVa0UwNnf/Awc7Yh9vYVLy6f0BRULPvxl8Zl81OKoYh17
+         68dAwhn2CXrtIDsfEV85Q4ZmUZ2BcvgCb1McxxZoy8mAYajkYx/Xp4thrsAYqmcPle/1
+         MOaZSukM9o/jRAtQPOcfutHwYlPehWSsSZzwOeGPpQuL3Bj5I9BTBzqFF4SekJYD/zor
+         Za0g==
+X-Gm-Message-State: APjAAAXlC/yy+jSKhpCU1O7LnYUvv2f18W01UjHXb2np6xT0rE6JiXZP
+        QFI76SM2rFIhZKii71nKIiq8Eg0afaQ9TJuDa7rttA==
+X-Google-Smtp-Source: APXvYqyCvDHaJrg7j1BywNpOntr+hSlB0UMU2FiS9ccSeEXT+v+90TwnyKhF9R7q13vsCdz5mVYJmK4+DYouCWn6Cw8=
+X-Received: by 2002:a54:4e83:: with SMTP id c3mr6575837oiy.170.1571378401053;
+ Thu, 17 Oct 2019 23:00:01 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20191017031051.20366-1-chris.packham@alliedtelesis.co.nz>
+ <20191017031051.20366-2-chris.packham@alliedtelesis.co.nz> <20191017192437.GA24080@bogus>
+In-Reply-To: <20191017192437.GA24080@bogus>
+From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Date:   Fri, 18 Oct 2019 07:59:50 +0200
+Message-ID: <CAMpxmJVrFK38BPjoUtGt99sqgFeOA=wHFAu=QNQg_5Rj1gU92A@mail.gmail.com>
+Subject: Re: [PATCH v2 1/2] dt-bindings: gpio: brcm: Add bindings for xgs-iproc
+To:     Rob Herring <robh@kernel.org>
+Cc:     Chris Packham <chris.packham@alliedtelesis.co.nz>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Mark Rutland <mark.rutland@arm.com>, rjui@broadcom.com,
+        sbranden@broadcom.com, bcm-kernel-feedback-list@broadcom.com,
+        linux-gpio <linux-gpio@vger.kernel.org>,
+        linux-devicetree <devicetree@vger.kernel.org>,
+        arm-soc <linux-arm-kernel@lists.infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-This patch adds support to Lenovo Yoga c630 compatible strings
-and related setup to the sound machine driver.
+czw., 17 pa=C5=BA 2019 o 21:24 Rob Herring <robh@kernel.org> napisa=C5=82(a=
+):
+>
+> On Thu, Oct 17, 2019 at 04:10:50PM +1300, Chris Packham wrote:
+> > This GPIO controller is present on a number of Broadcom switch ASICs
+> > with integrated SoCs. It is similar to the nsp-gpio and iproc-gpio
+> > blocks but different enough to require a separate driver.
+> >
+> > Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
+> > ---
+> >
+> > Notes:
+> >     Changes in v2:
+> >     - Document as DT schema
+> >     - Include ngpios, #gpio-cells and gpio-controller properties
+> >
+> >  .../bindings/gpio/brcm,xgs-iproc.yaml         | 83 +++++++++++++++++++
+> >  1 file changed, 83 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/gpio/brcm,xgs-ipr=
+oc.yaml
+> >
+> > diff --git a/Documentation/devicetree/bindings/gpio/brcm,xgs-iproc.yaml=
+ b/Documentation/devicetree/bindings/gpio/brcm,xgs-iproc.yaml
+> > new file mode 100644
+> > index 000000000000..71998551209e
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/gpio/brcm,xgs-iproc.yaml
+> > @@ -0,0 +1,83 @@
+> > +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+> > +%YAML 1.2
+> > +---
+> > +$id: http://devicetree.org/schemas/gpio/brcm,xgs-iproc.yaml#
+> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > +
+> > +title: Broadcom XGS iProc GPIO controller
+> > +
+> > +maintainers:
+> > +  - Chris Packham <chris.packham@alliedtelesis.co.nz>
+> > +
+> > +description: |
+> > +  This controller is the Chip Common A GPIO present on a number of Bro=
+adcom
+> > +  switch ASICs with integrated SoCs.
+> > +
+> > +properties:
+> > +  compatible:
+> > +    enum:
+> > +      - brcm,iproc-gpio-cca
+>
+> enum vs. const usage depends on whether you think you'll add more
+> compatibles.
+>
 
-Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
----
- sound/soc/qcom/sdm845.c | 71 ++++++++++++++++++++++++++++++++++++++++-
- 1 file changed, 70 insertions(+), 1 deletion(-)
+What if you don't know yet? For instance we use a const compatible and
+then a new chip is released for which we can reuse the driver? Is this
+something that is expected to remain stable in the binding document?
+The question is unrelated to this patch, I'm just unsure about my own
+approach to writing yaml bindings.
 
-diff --git a/sound/soc/qcom/sdm845.c b/sound/soc/qcom/sdm845.c
-index 28f3cef696e6..1ed570c19628 100644
---- a/sound/soc/qcom/sdm845.c
-+++ b/sound/soc/qcom/sdm845.c
-@@ -24,6 +24,9 @@
- #define RIGHT_SPK_TDM_TX_MASK   0xC0
- #define SPK_TDM_RX_MASK         0x03
- #define NUM_TDM_SLOTS           8
-+#define SLIM_MAX_TX_PORTS 16
-+#define SLIM_MAX_RX_PORTS 16
-+#define WCD934X_DEFAULT_MCLK_RATE	9600000
- 
- struct sdm845_snd_data {
- 	struct snd_soc_jack jack;
-@@ -36,6 +39,39 @@ struct sdm845_snd_data {
- 
- static unsigned int tdm_slot_offset[8] = {0, 4, 8, 12, 16, 20, 24, 28};
- 
-+static int sdm845_slim_snd_hw_params(struct snd_pcm_substream *substream,
-+				     struct snd_pcm_hw_params *params)
-+{
-+	struct snd_soc_pcm_runtime *rtd = substream->private_data;
-+	struct snd_soc_dai_link *dai_link = rtd->dai_link;
-+	struct snd_soc_dai *cpu_dai = rtd->cpu_dai;
-+	u32 rx_ch[SLIM_MAX_RX_PORTS], tx_ch[SLIM_MAX_TX_PORTS];
-+	u32 rx_ch_cnt = 0, tx_ch_cnt = 0;
-+	int ret = 0, i;
-+
-+	for (i = 0 ; i < dai_link->num_codecs; i++) {
-+		ret = snd_soc_dai_get_channel_map(rtd->codec_dais[i],
-+				&tx_ch_cnt, tx_ch, &rx_ch_cnt, rx_ch);
-+
-+		if (ret != 0 && ret != -ENOTSUPP) {
-+			pr_err("failed to get codec chan map, err:%d\n", ret);
-+			return ret;
-+		} else if (ret == -ENOTSUPP) {
-+			/* Ignore unsupported */
-+			continue;
-+		}
-+
-+		if (substream->stream == SNDRV_PCM_STREAM_PLAYBACK)
-+			ret = snd_soc_dai_set_channel_map(cpu_dai, 0, NULL,
-+							  rx_ch_cnt, rx_ch);
-+		else
-+			ret = snd_soc_dai_set_channel_map(cpu_dai, tx_ch_cnt,
-+							  tx_ch, 0, NULL);
-+	}
-+
-+	return 0;
-+}
-+
- static int sdm845_tdm_snd_hw_params(struct snd_pcm_substream *substream,
- 					struct snd_pcm_hw_params *params)
- {
-@@ -151,6 +187,9 @@ static int sdm845_snd_hw_params(struct snd_pcm_substream *substream,
- 	case QUATERNARY_TDM_TX_0:
- 		ret = sdm845_tdm_snd_hw_params(substream, params);
- 		break;
-+	case SLIMBUS_0_RX...SLIMBUS_6_TX:
-+		ret = sdm845_slim_snd_hw_params(substream, params);
-+		break;
- 	default:
- 		pr_err("%s: invalid dai id 0x%x\n", __func__, cpu_dai->id);
- 		break;
-@@ -173,7 +212,20 @@ static int sdm845_dai_init(struct snd_soc_pcm_runtime *rtd)
- 	struct snd_soc_dai *cpu_dai = rtd->cpu_dai;
- 	struct sdm845_snd_data *pdata = snd_soc_card_get_drvdata(card);
- 	struct snd_jack *jack;
--	int rval;
-+	struct snd_soc_dai_link *dai_link = rtd->dai_link;
-+	/*
-+	 * Codec SLIMBUS configuration
-+	 * RX1, RX2, RX3, RX4, RX5, RX6, RX7, RX8, RX9, RX10, RX11, RX12, RX13
-+	 * TX1, TX2, TX3, TX4, TX5, TX6, TX7, TX8, TX9, TX10, TX11, TX12, TX13
-+	 * TX14, TX15, TX16
-+	 */
-+	unsigned int rx_ch[SLIM_MAX_RX_PORTS] = {144, 145, 146, 147, 148, 149,
-+					150, 151, 152, 153, 154, 155, 156};
-+	unsigned int tx_ch[SLIM_MAX_TX_PORTS] = {128, 129, 130, 131, 132, 133,
-+					    134, 135, 136, 137, 138, 139,
-+					    140, 141, 142, 143};
-+	int rval, i;
-+
- 
- 	if (!pdata->jack_setup) {
- 		rval = snd_soc_card_jack_new(card, "Headset Jack",
-@@ -211,6 +263,21 @@ static int sdm845_dai_init(struct snd_soc_pcm_runtime *rtd)
- 			return rval;
- 		}
- 		break;
-+	case SLIMBUS_0_RX...SLIMBUS_6_TX:
-+		for (i = 0 ; i < dai_link->num_codecs; i++) {
-+			rval = snd_soc_dai_set_channel_map(rtd->codec_dais[i],
-+							  ARRAY_SIZE(tx_ch),
-+							  tx_ch,
-+							  ARRAY_SIZE(rx_ch),
-+							  rx_ch);
-+			if (rval != 0 && rval != -ENOTSUPP)
-+				return rval;
-+
-+			snd_soc_dai_set_sysclk(rtd->codec_dais[i], 0,
-+					       WCD934X_DEFAULT_MCLK_RATE,
-+					       SNDRV_PCM_STREAM_PLAYBACK);
-+		}
-+		break;
- 	default:
- 		break;
- 	}
-@@ -451,6 +518,8 @@ static int sdm845_snd_platform_remove(struct platform_device *pdev)
- 
- static const struct of_device_id sdm845_snd_device_id[]  = {
- 	{ .compatible = "qcom,sdm845-sndcard" },
-+	{ .compatible = "qcom,db845c-sndcard" },
-+	{ .compatible = "lenovo,yoga-c630-sndcard" },
- 	{},
- };
- MODULE_DEVICE_TABLE(of, sdm845_snd_device_id);
--- 
-2.21.0
+Bart
 
+> > +
+> > +  reg:
+> > +    minItems: 2
+> > +    maxItems: 2
+> > +    description:
+> > +      The first region defines the base I/O address containing
+> > +      the GPIO controller registers. The second region defines
+> > +      the I/O address containing the Chip Common A interrupt
+> > +      registers.
+>
+> items:
+>   - description: the I/O address containing the GPIO controller
+>       registers
+>   - description: the I/O address containing the Chip Common A interrupt
+>       registers
+>
+> And minItems/maxItems can be implicit.
+>
+> > +
+> > +  gpio-controller: true
+> > +
+> > +  '#gpio-cells':
+> > +      const: 2
+> > +
+> > +  ngpios:
+> > +    $ref: /schemas/types.yaml#/definitions/uint32
+>
+> Common property, doesn't need a type definition. Also, it would have to
+> be under an 'allOf' to actually work.
+>
+> > +    minimum: 0
+> > +    maximum: 32
+> > +
+> > +  interrupt-controller:
+> > +    type: boolean
+>
+> Just 'interrupt-controller: true'
+>
+> > +
+> > +  '#interrupt-cells':
+> > +    const: 2
+> > +
+> > +  interrupts:
+> > +    maxItems: 1
+> > +
+> > +required:
+> > +  - compatible
+> > +  - reg
+> > +  - "#gpio-cells"
+> > +  - gpio-controller
+> > +
+> > +allOf:
+> > + - if:
+> > +     properties:
+> > +       interrupt-controller:
+> > +         contains:
+> > +           const: true
+> > +   then:
+> > +     required:
+> > +       - interrupts
+> > +       - '#interrupt-cells'
+>
+> This is mostly handled in the core schema already and 'dependencies'
+> works better for this anyways. All you need here is:
+>
+> dependencies:
+>   interrupt-controller: [ interrupts ]
+>
+> > +
+> > +examples:
+> > +  - |
+> > +    #include <dt-bindings/interrupt-controller/irq.h>
+> > +    #include <dt-bindings/interrupt-controller/arm-gic.h>
+> > +    gpio@18000060 {
+> > +        compatible =3D "brcm,iproc-gpio-cca";
+> > +        #gpio-cells =3D <2>;
+> > +        reg =3D <0x18000060 0x50>,
+> > +              <0x18000000 0x50>;
+> > +        ngpios =3D <12>;
+> > +        gpio-controller;
+> > +        interrupt-controller;
+> > +        #interrupt-cells =3D <2>;
+> > +        interrupts =3D <GIC_SPI 91 IRQ_TYPE_LEVEL_HIGH>;
+> > +    };
+> > +
+> > +
+> > +...
+> > --
+> > 2.23.0
+> >
