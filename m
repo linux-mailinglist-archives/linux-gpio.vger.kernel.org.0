@@ -2,38 +2,38 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 97298DD2B8
-	for <lists+linux-gpio@lfdr.de>; Sat, 19 Oct 2019 00:14:06 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A7F0DDD4A8
+	for <lists+linux-gpio@lfdr.de>; Sat, 19 Oct 2019 00:27:58 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403845AbfJRWNl (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 18 Oct 2019 18:13:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42394 "EHLO mail.kernel.org"
+        id S1727959AbfJRWES (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 18 Oct 2019 18:04:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35916 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389221AbfJRWJq (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Fri, 18 Oct 2019 18:09:46 -0400
+        id S1727868AbfJRWER (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Fri, 18 Oct 2019 18:04:17 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D9BAD22474;
-        Fri, 18 Oct 2019 22:09:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A5D97222C9;
+        Fri, 18 Oct 2019 22:04:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571436585;
-        bh=/tDzpcVlYPUykGvZzZFMA0ytYIsAYipqOHOn2ds+2O4=;
+        s=default; t=1571436257;
+        bh=/TiINZmJsoedbiu+tJ48La03mc4J9pQ/MseuO/2nh5w=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pFHBFobVg0uoCj9+/VX5o8ZWZARumiN993iT/1HLlhABtlAm1zL8gB1sgPYx3jyi5
-         drZbMtqlGhFhRmDtCyuVvbNd+qCIN+bE8asCfnnkTmUWU9nDs4Vnj4IeOIdz/mBhAm
-         e0hdzMrHZ9JGCS/VKPzw9NHZfJzpBGJl/ygrHypE=
+        b=pSMEdOLSqBDzj53vkaNzhLdV8AJnoqwJswIdkaxQVt1TdwPdtF9rJkdESBuaUfDyM
+         JIu73blPGNgwaQdZ74meNukhYD0M+QYZuU3jdv/+NHkZdaA0yQEqEBH047XbELmyNF
+         l3rCAWEjn/4W/0IfNAqvTFNO8VPyfbnxMPkLA+Ec=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Thierry Reding <treding@nvidia.com>,
         Linus Walleij <linus.walleij@linaro.org>,
         Sasha Levin <sashal@kernel.org>, linux-gpio@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 14/29] gpio: max77620: Use correct unit for debounce times
-Date:   Fri, 18 Oct 2019 18:09:05 -0400
-Message-Id: <20191018220920.10545-14-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.3 40/89] gpio: max77620: Use correct unit for debounce times
+Date:   Fri, 18 Oct 2019 18:02:35 -0400
+Message-Id: <20191018220324.8165-40-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191018220920.10545-1-sashal@kernel.org>
-References: <20191018220920.10545-1-sashal@kernel.org>
+In-Reply-To: <20191018220324.8165-1-sashal@kernel.org>
+References: <20191018220324.8165-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -60,10 +60,10 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 3 insertions(+), 3 deletions(-)
 
 diff --git a/drivers/gpio/gpio-max77620.c b/drivers/gpio/gpio-max77620.c
-index b46b436cb97fe..4fe0be5aa2945 100644
+index b7d89e30131e2..06e8caaafa811 100644
 --- a/drivers/gpio/gpio-max77620.c
 +++ b/drivers/gpio/gpio-max77620.c
-@@ -167,13 +167,13 @@ static int max77620_gpio_set_debounce(struct gpio_chip *gc,
+@@ -192,13 +192,13 @@ static int max77620_gpio_set_debounce(struct max77620_gpio *mgpio,
  	case 0:
  		val = MAX77620_CNFG_GPIO_DBNC_None;
  		break;
