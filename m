@@ -2,106 +2,112 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id D2EEADC37C
-	for <lists+linux-gpio@lfdr.de>; Fri, 18 Oct 2019 13:02:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CD850DC4DB
+	for <lists+linux-gpio@lfdr.de>; Fri, 18 Oct 2019 14:28:45 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390121AbfJRLBK (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 18 Oct 2019 07:01:10 -0400
-Received: from baptiste.telenet-ops.be ([195.130.132.51]:60126 "EHLO
-        baptiste.telenet-ops.be" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2633620AbfJRLBG (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 18 Oct 2019 07:01:06 -0400
-Received: from ramsan ([84.194.98.4])
-        by baptiste.telenet-ops.be with bizsmtp
-        id Ez142100D05gfCL01z14un; Fri, 18 Oct 2019 13:01:04 +0200
-Received: from rox.of.borg ([192.168.97.57])
-        by ramsan with esmtp (Exim 4.90_1)
-        (envelope-from <geert@linux-m68k.org>)
-        id 1iLQ0G-0005q3-Gg; Fri, 18 Oct 2019 13:01:04 +0200
-Received: from geert by rox.of.borg with local (Exim 4.90_1)
-        (envelope-from <geert@linux-m68k.org>)
-        id 1iLPF8-0006tt-VN; Fri, 18 Oct 2019 12:12:22 +0200
-From:   Geert Uytterhoeven <geert+renesas@glider.be>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     linux-gpio@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
-        Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [GIT PULL] pinctrl: sh-pfc: Updates for v5.5
-Date:   Fri, 18 Oct 2019 12:12:21 +0200
-Message-Id: <20191018101221.26483-1-geert+renesas@glider.be>
-X-Mailer: git-send-email 2.17.1
+        id S2389693AbfJRM2p (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 18 Oct 2019 08:28:45 -0400
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:44611 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728735AbfJRM2o (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 18 Oct 2019 08:28:44 -0400
+Received: by mail-oi1-f196.google.com with SMTP id w6so5020776oie.11
+        for <linux-gpio@vger.kernel.org>; Fri, 18 Oct 2019 05:28:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=Z5saEV9lETyWEK3ly33oWxhIwKb71eWMfyDB5TVg3z8=;
+        b=GcHg3yCmLwYeLH/bbgZbpOmdPM9HO/1haMTnTyJbnEGPHgC9dLBOHqmLuXGEjICxNG
+         w13kod5HmTpNWEiS3SlEk45tU8lKG/kb4mf0PU31QQA9VweWatWSur7B1JFoJMELQVRM
+         c5SxmfW6+vpwchA7iIoBrsjZKYz1I0BOEdl7V0Dpsoe3WCTRyMglRbbwhN81Gcin2srB
+         Us81x5zPf8RrtYeb1D/ZfgfqgkjDCsJmS94dOFhfR8jlMjHrISzYctmGrNgobvOz7C3f
+         1dBttqmwua4cYdRzjVKsI9hQTi+KdaWXOxKBLZbRQsUsfpVDK9TEkQxQoqcVQ+SSLoPO
+         kfQw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=Z5saEV9lETyWEK3ly33oWxhIwKb71eWMfyDB5TVg3z8=;
+        b=RFD9FQfV/AgP2P2sFAacQdbsVsfoBxJhNAfncH/XMUWuxYIis7Ok4iICHwsOIYMp8/
+         wCe6Y6MXv9Pb9evNN10RnFOCX/kDEfyP4aBBWhVI5KJfK9yTns0WtPN9m/rADlsU0ZiU
+         4kiLZgEe9TirAVDtgNOhzfvPhVBcGoQ1Jy/FxJmqMuty14NoZImVmetdNHDiCK/qsE4N
+         x/NXCIXo/LtsJbObRZvag9T5pNXCNfGMA4g7xoEDP9W+Ek7guOOfaa3MfujxIYihow/q
+         RhjIC2a2pCgPCR0QQn5qUn4qQ0jjy9vpt8XpuMM7GYv5ipLHLIVU1Hl3n8GYQRDkawdh
+         jaSw==
+X-Gm-Message-State: APjAAAUM3LqXJOFegPQaB3HTSjJt++sA+i6GKBES1FDvMKKOLfuZdTxJ
+        JRcR1FK6wrzIgUBCZQYaVKofXuu3FWSGn+vIyCVsjkt3
+X-Google-Smtp-Source: APXvYqw9tshjhquBSOhL6qNyoaeY5QKXzRAeQkBk6B3gPNNSMjJBVxUIzQA+fgCrtqxyNaG+yryZaDx6Wr4HiAr7aSU=
+X-Received: by 2002:a54:4402:: with SMTP id k2mr7825668oiw.147.1571401722886;
+ Fri, 18 Oct 2019 05:28:42 -0700 (PDT)
+MIME-Version: 1.0
+References: <20191018100538.9137-1-l.stach@pengutronix.de>
+In-Reply-To: <20191018100538.9137-1-l.stach@pengutronix.de>
+From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Date:   Fri, 18 Oct 2019 14:28:31 +0200
+Message-ID: <CAMpxmJXwW-ZWwv2i8bbhDkdeya7-dqpqm7knAOFem4cYFsKX0Q@mail.gmail.com>
+Subject: Re: [PATCH] gpio: of: don't warn if ignored GPIO flag matches the behavior
+To:     Lucas Stach <l.stach@pengutronix.de>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        linux-gpio <linux-gpio@vger.kernel.org>,
+        patchwork-lst@pengutronix.de, kernel@pengutronix.de
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-	Hi Linus,
+pt., 18 pa=C5=BA 2019 o 12:05 Lucas Stach <l.stach@pengutronix.de> napisa=
+=C5=82(a):
+>
+> Some devicetrees specify the ACTIVE_LOW flag in the fixed regulator GPIO
+> handle. While this has always been ignored, it's consistent with the
+> behavior of the regulator binding in the absence of the
+> "enable-active-high" DT property. It doesn't make much sense to print a
+> user visible warning for a configuration which is consistent, so only
+> print the warning if the GPIO flag contradicts the behavior dictated by
+> by the enable-active-high property.
+>
+> Signed-off-by: Lucas Stach <l.stach@pengutronix.de>
+> ---
+>  drivers/gpio/gpiolib-of.c | 6 ++++--
+>  1 file changed, 4 insertions(+), 2 deletions(-)
+>
+> diff --git a/drivers/gpio/gpiolib-of.c b/drivers/gpio/gpiolib-of.c
+> index 1eea2c6c2e1d..0b5383706b91 100644
+> --- a/drivers/gpio/gpiolib-of.c
+> +++ b/drivers/gpio/gpiolib-of.c
+> @@ -134,18 +134,20 @@ static void of_gpio_flags_quirks(struct device_node=
+ *np,
+>              (!(strcmp(propname, "enable-gpio") &&
+>                 strcmp(propname, "enable-gpios")) &&
+>               of_device_is_compatible(np, "regulator-gpio")))) {
+> +               bool active_low =3D
+> +                       !of_property_read_bool(np, "enable-active-high");
+>                 /*
+>                  * The regulator GPIO handles are specified such that the
+>                  * presence or absence of "enable-active-high" solely con=
+trols
+>                  * the polarity of the GPIO line. Any phandle flags must
+>                  * be actively ignored.
+>                  */
+> -               if (*flags & OF_GPIO_ACTIVE_LOW) {
+> +               if ((*flags & OF_GPIO_ACTIVE_LOW) && !active_low) {
+>                         pr_warn("%s GPIO handle specifies active low - ig=
+nored\n",
+>                                 of_node_full_name(np));
+>                         *flags &=3D ~OF_GPIO_ACTIVE_LOW;
+>                 }
+> -               if (!of_property_read_bool(np, "enable-active-high"))
+> +               if (active_low)
+>                         *flags |=3D OF_GPIO_ACTIVE_LOW;
+>         }
+>         /*
+> --
+> 2.20.1
+>
 
-The following changes since commit 54ecb8f7028c5eb3d740bb82b0f1d90f2df63c5c:
+This makes perfect sense, so applied right away.
 
-  Linux 5.4-rc1 (2019-09-30 10:35:40 -0700)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/geert/renesas-drivers.git tags/sh-pfc-for-v5.5-tag1
-
-for you to fetch changes up to f846d1e704f2d07a7f359f65eac2c8cac565db35:
-
-  pinctrl: sh-pfc: pfc-r8a77965: Fix typo in pinmux macro for SCL3 (2019-10-14 12:11:12 +0200)
-
-----------------------------------------------------------------
-pinctrl: sh-pfc: Updates for v5.5
-
-  - Add support for the new RZ/G2N (r8a774b1) SoC,
-  - Small fixes and cleanups.
-
-Thanks for pulling!
-
-----------------------------------------------------------------
-Biju Das (2):
-      dt-bindings: pinctrl: sh-pfc: Document r8a774b1 PFC support
-      pinctrl: sh-pfc: r8a77965: Add R8A774B1 PFC support
-
-Chris Brandt (1):
-      pinctrl: rza2: Fix gpio name typos
-
-Colin Ian King (1):
-      pinctrl: rzn1: Make array reg_drive static, makes object smaller
-
-Geert Uytterhoeven (2):
-      Revert "pinctrl: sh-pfc: r8a77990: Fix MOD_SEL1 bit30 when using SSI_SCK2 and SSI_WS2"
-      Revert "pinctrl: sh-pfc: r8a77990: Fix MOD_SEL1 bit31 when using SIM0_D"
-
-Keiya Nobuta (5):
-      pinctrl: sh-pfc: Fix PINMUX_IPSR_PHYS() to set GPSR
-      pinctrl: sh-pfc: pfc-r8a7795: Fix typo in pinmux macro for SCL3
-      pinctrl: sh-pfc: pfc-r8a7795-es1: Fix typo in pinmux macro for SCL3
-      pinctrl: sh-pfc: pfc-r8a7796: Fix typo in pinmux macro for SCL3
-      pinctrl: sh-pfc: pfc-r8a77965: Fix typo in pinmux macro for SCL3
-
-Takeshi Kihara (1):
-      pinctrl: sh-pfc: r8a77990: Rename AVB_AVTP_{MATCH,CAPTURE} pin functions
-
- .../bindings/pinctrl/renesas,pfc-pinctrl.txt       |   1 +
- drivers/pinctrl/pinctrl-rza2.c                     |   4 +-
- drivers/pinctrl/pinctrl-rzn1.c                     |   2 +-
- drivers/pinctrl/sh-pfc/Kconfig                     |   4 +
- drivers/pinctrl/sh-pfc/Makefile                    |   1 +
- drivers/pinctrl/sh-pfc/core.c                      |   6 +
- drivers/pinctrl/sh-pfc/pfc-r8a7795-es1.c           |   2 +-
- drivers/pinctrl/sh-pfc/pfc-r8a7795.c               |   2 +-
- drivers/pinctrl/sh-pfc/pfc-r8a7796.c               |   2 +-
- drivers/pinctrl/sh-pfc/pfc-r8a77965.c              | 863 +++++++++++----------
- drivers/pinctrl/sh-pfc/pfc-r8a77990.c              |  57 +-
- drivers/pinctrl/sh-pfc/sh_pfc.h                    |   5 +-
- 12 files changed, 504 insertions(+), 445 deletions(-)
-
-Gr{oetje,eeting}s,
-
-						Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-							    -- Linus Torvalds
+Bart
