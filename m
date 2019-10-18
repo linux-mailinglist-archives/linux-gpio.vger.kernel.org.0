@@ -2,143 +2,80 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 36153DCF07
-	for <lists+linux-gpio@lfdr.de>; Fri, 18 Oct 2019 21:07:35 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 762DADCF9F
+	for <lists+linux-gpio@lfdr.de>; Fri, 18 Oct 2019 21:52:14 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726421AbfJRTH3 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 18 Oct 2019 15:07:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58594 "EHLO mail.kernel.org"
+        id S2443369AbfJRTwN (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 18 Oct 2019 15:52:13 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:32990 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2436505AbfJRTH3 (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Fri, 18 Oct 2019 15:07:29 -0400
-Received: from mail-qk1-f176.google.com (mail-qk1-f176.google.com [209.85.222.176])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S2443367AbfJRTwM (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Fri, 18 Oct 2019 15:52:12 -0400
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 070A2222CC;
-        Fri, 18 Oct 2019 19:07:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571425648;
-        bh=ZvKSuxQuN/jT3Fmjbjwnw6yt3Bbj3F9A+MC7acj1eYo=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=r3J6l9JZJc1Zp8tJF9mLQSmXEA68DllcySKWuRRg/es60oLadlYjJhDaAjldnASSb
-         ATx8Um+zjpqNtXvhGwZLcVJe0hgMmNdA9edlIZqFx/1a8JB/Sb5YemGVg4SUJXOiKR
-         jRtSfzVPwCdgSZPJWLYASOe3Oyl6UG1dXPjI3dRE=
-Received: by mail-qk1-f176.google.com with SMTP id u184so6302458qkd.4;
-        Fri, 18 Oct 2019 12:07:27 -0700 (PDT)
-X-Gm-Message-State: APjAAAVqzXlNJnNjJ81jSPsM8O8tkPvTcnq71VAfKdCP4a0THxoUFi0+
-        uzBdVPjL2XkndqxsBQZDVGI1oMTwUbSLk2Dtdw==
-X-Google-Smtp-Source: APXvYqyEfCrAtNPgA6gsKBq8urq8H5iqVlTDcHX0aikHpYcOCmiQnShU4x9vV/ge/RWs5MTLKNtafQj54U/NALrxbdY=
-X-Received: by 2002:a05:620a:12f1:: with SMTP id f17mr10482791qkl.152.1571425646996;
- Fri, 18 Oct 2019 12:07:26 -0700 (PDT)
+        by mx1.redhat.com (Postfix) with ESMTPS id AFA8088FFFC;
+        Fri, 18 Oct 2019 19:52:12 +0000 (UTC)
+Received: from shalem.localdomain.com (ovpn-117-168.ams2.redhat.com [10.36.117.168])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 61D535C1B5;
+        Fri, 18 Oct 2019 19:52:09 +0000 (UTC)
+From:   Hans de Goede <hdegoede@redhat.com>
+To:     Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Linus Walleij <linus.walleij@linaro.org>
+Cc:     Hans de Goede <hdegoede@redhat.com>, linux-gpio@vger.kernel.org,
+        linux-acpi@vger.kernel.org
+Subject: [PATCH] gpiolib: acpi: Print pin number on acpi_gpiochip_alloc_event errors
+Date:   Fri, 18 Oct 2019 21:52:08 +0200
+Message-Id: <20191018195208.94405-1-hdegoede@redhat.com>
 MIME-Version: 1.0
-References: <20191017031051.20366-1-chris.packham@alliedtelesis.co.nz>
- <20191017031051.20366-2-chris.packham@alliedtelesis.co.nz>
- <20191017192437.GA24080@bogus> <CAMpxmJVrFK38BPjoUtGt99sqgFeOA=wHFAu=QNQg_5Rj1gU92A@mail.gmail.com>
-In-Reply-To: <CAMpxmJVrFK38BPjoUtGt99sqgFeOA=wHFAu=QNQg_5Rj1gU92A@mail.gmail.com>
-From:   Rob Herring <robh@kernel.org>
-Date:   Fri, 18 Oct 2019 14:07:15 -0500
-X-Gmail-Original-Message-ID: <CAL_Jsq+iad9+SE8kwKdxKfOF6TsbTF1V+3yNOLhNNsgnmhSCiA@mail.gmail.com>
-Message-ID: <CAL_Jsq+iad9+SE8kwKdxKfOF6TsbTF1V+3yNOLhNNsgnmhSCiA@mail.gmail.com>
-Subject: Re: [PATCH v2 1/2] dt-bindings: gpio: brcm: Add bindings for xgs-iproc
-To:     Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Cc:     Chris Packham <chris.packham@alliedtelesis.co.nz>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Ray Jui <rjui@broadcom.com>,
-        Scott Branden <sbranden@broadcom.com>,
-        "maintainer:BROADCOM BCM7XXX ARM ARCHITECTURE" 
-        <bcm-kernel-feedback-list@broadcom.com>,
-        linux-gpio <linux-gpio@vger.kernel.org>,
-        linux-devicetree <devicetree@vger.kernel.org>,
-        arm-soc <linux-arm-kernel@lists.infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.68]); Fri, 18 Oct 2019 19:52:12 +0000 (UTC)
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Oct 18, 2019 at 1:00 AM Bartosz Golaszewski
-<bgolaszewski@baylibre.com> wrote:
->
-> czw., 17 pa=C5=BA 2019 o 21:24 Rob Herring <robh@kernel.org> napisa=C5=82=
-(a):
-> >
-> > On Thu, Oct 17, 2019 at 04:10:50PM +1300, Chris Packham wrote:
-> > > This GPIO controller is present on a number of Broadcom switch ASICs
-> > > with integrated SoCs. It is similar to the nsp-gpio and iproc-gpio
-> > > blocks but different enough to require a separate driver.
-> > >
-> > > Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
-> > > ---
-> > >
-> > > Notes:
-> > >     Changes in v2:
-> > >     - Document as DT schema
-> > >     - Include ngpios, #gpio-cells and gpio-controller properties
-> > >
-> > >  .../bindings/gpio/brcm,xgs-iproc.yaml         | 83 +++++++++++++++++=
-++
-> > >  1 file changed, 83 insertions(+)
-> > >  create mode 100644 Documentation/devicetree/bindings/gpio/brcm,xgs-i=
-proc.yaml
-> > >
-> > > diff --git a/Documentation/devicetree/bindings/gpio/brcm,xgs-iproc.ya=
-ml b/Documentation/devicetree/bindings/gpio/brcm,xgs-iproc.yaml
-> > > new file mode 100644
-> > > index 000000000000..71998551209e
-> > > --- /dev/null
-> > > +++ b/Documentation/devicetree/bindings/gpio/brcm,xgs-iproc.yaml
-> > > @@ -0,0 +1,83 @@
-> > > +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-> > > +%YAML 1.2
-> > > +---
-> > > +$id: http://devicetree.org/schemas/gpio/brcm,xgs-iproc.yaml#
-> > > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > > +
-> > > +title: Broadcom XGS iProc GPIO controller
-> > > +
-> > > +maintainers:
-> > > +  - Chris Packham <chris.packham@alliedtelesis.co.nz>
-> > > +
-> > > +description: |
-> > > +  This controller is the Chip Common A GPIO present on a number of B=
-roadcom
-> > > +  switch ASICs with integrated SoCs.
-> > > +
-> > > +properties:
-> > > +  compatible:
-> > > +    enum:
-> > > +      - brcm,iproc-gpio-cca
-> >
-> > enum vs. const usage depends on whether you think you'll add more
-> > compatibles.
-> >
->
-> What if you don't know yet? For instance we use a const compatible and
-> then a new chip is released for which we can reuse the driver?
+Print pin number on acpi_gpiochip_alloc_event errors, to help debugging
+these.
 
-Then you just change it to an enum (or oneOf if the new compatible has
-a fallback to the old one). Not really a big deal.
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+---
+ drivers/gpio/gpiolib-acpi.c | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
 
-> Is this
-> something that is expected to remain stable in the binding document?
+diff --git a/drivers/gpio/gpiolib-acpi.c b/drivers/gpio/gpiolib-acpi.c
+index 609ed16ae933..2911dd6f2625 100644
+--- a/drivers/gpio/gpiolib-acpi.c
++++ b/drivers/gpio/gpiolib-acpi.c
+@@ -230,19 +230,22 @@ static acpi_status acpi_gpiochip_alloc_event(struct acpi_resource *ares,
+ 	desc = gpiochip_request_own_desc(chip, pin, "ACPI:Event",
+ 					 GPIO_ACTIVE_HIGH, GPIOD_IN);
+ 	if (IS_ERR(desc)) {
+-		dev_err(chip->parent, "Failed to request GPIO\n");
++		dev_err(chip->parent,
++			"Failed to request GPIO for pin 0x%02X\n", pin);
+ 		return AE_ERROR;
+ 	}
+ 
+ 	ret = gpiochip_lock_as_irq(chip, pin);
+ 	if (ret) {
+-		dev_err(chip->parent, "Failed to lock GPIO as interrupt\n");
++		dev_err(chip->parent,
++			"Failed to lock GPIO pin 0x%02X as interrupt\n", pin);
+ 		goto fail_free_desc;
+ 	}
+ 
+ 	irq = gpiod_to_irq(desc);
+ 	if (irq < 0) {
+-		dev_err(chip->parent, "Failed to translate GPIO to IRQ\n");
++		dev_err(chip->parent,
++			"Failed to translate GPIO pin 0x%02X to IRQ\n", pin);
+ 		goto fail_unlock_irq;
+ 	}
+ 
+-- 
+2.23.0
 
-No, only in the sense we want to minimize changes.
-
-> The question is unrelated to this patch, I'm just unsure about my own
-> approach to writing yaml bindings.
-
-We could perhaps just say single entries should always be 'const'
-because then we could write a meta-schema enforcing that:
-
-properties:
-  enum:
-    minItems: 2
-
-I don't think we should be that strict though unless it becomes a
-frequent review topic. So either way is fine, it's up to your
-judgement, and let's stop talking about it before I change my mind. :)
-
-Rob
