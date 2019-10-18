@@ -2,193 +2,144 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 4AB20DB76F
-	for <lists+linux-gpio@lfdr.de>; Thu, 17 Oct 2019 21:24:54 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id EA2BFDBA8A
+	for <lists+linux-gpio@lfdr.de>; Fri, 18 Oct 2019 02:19:58 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2503431AbfJQTYl (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 17 Oct 2019 15:24:41 -0400
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:38462 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2393438AbfJQTYl (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 17 Oct 2019 15:24:41 -0400
-Received: by mail-oi1-f193.google.com with SMTP id k10so856376oij.5;
-        Thu, 17 Oct 2019 12:24:39 -0700 (PDT)
+        id S2503823AbfJRAT6 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 17 Oct 2019 20:19:58 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:54139 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2503821AbfJRAT5 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 17 Oct 2019 20:19:57 -0400
+Received: by mail-wm1-f65.google.com with SMTP id i16so4301648wmd.3
+        for <linux-gpio@vger.kernel.org>; Thu, 17 Oct 2019 17:19:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=/QAhBLGy3kJwx9AVjnikoQwMK78+wDfkG0Z+oCWFsgc=;
+        b=iMvfUq56WMjSs6BbLFNNjBqk4R/wA7XWiEqQ5cOoA5jxbcoXhfFQzScHibNauAjSWt
+         vh7jyvGFEwk4+A3kZ8DRk7o+dl4KexvSALP2OuqduSs5hobn3C3fLqKz+xr4NEFaYnTY
+         hIl2XGSrJC0TdMPqJm5+jJ5CPFzZ0d9nEYQaaPXfxf6PxYoeKHaE91yJBMBacMwqysc1
+         nO5Mk/ZqTq235Rp2qG5WrkXLcfLBfiCNWIwIj+NtG9IvhUjTRONgo3UFTYYjgi6nQ/jd
+         oO5YkCHmVkEyZovZgc9WkbFYmSSqQonesPomVRhwoU3nEwO86woGSE8KHwWr2ATwbUr4
+         lWuA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=JbxUD4/Ch48OCt7IQSmlYFRVjr2GA3XCWfDDRfU4VJU=;
-        b=Lc6AY1pt3sW7zF2T8T636zz4Gsy44kCslv9x9jlzb8QS4BrnlkTt5EC5oUPVOLxVz8
-         57IupVDdiJUTinWI9huz3SY3ZNfMC46IXY/aFQ+u5pPXL5sG/P1JFG57YxXL+oxV51p9
-         rsmc2ZM+vtlauHKmEsoFAa25t5YkbzNoYM2JXQLnHQZcKnpufY8iCkE9GrWJ8g61KF9V
-         DNxcEADzyU9XfneHCeyPWzjWcQL6+BxFNJ3Hj8CEdHQnlu23i+vnrXcO3QOWrIMrFb47
-         WcfLsqYEnwVmi4VaHp5ZSkAuZlZvMoTiPOuZsb8MGTvv/CBRutZrWEnq6m0MF7W7WVIU
-         5tQw==
-X-Gm-Message-State: APjAAAVx0fXPePlmIEqxpSntOr5Gva6fTDFBkehEkBCP/oVX+M9fDfIj
-        thEd3J+K9wcHEPc8CbR61Q==
-X-Google-Smtp-Source: APXvYqz00kRIlvZzcsK3LPl7hBlSHEH3J1/iOr9YAPvYkaFiiR1Q8p/7vSBVdqGPIDLLZFBz4i9Gjg==
-X-Received: by 2002:aca:ef85:: with SMTP id n127mr4771640oih.42.1571340279227;
-        Thu, 17 Oct 2019 12:24:39 -0700 (PDT)
-Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id s6sm818858otr.5.2019.10.17.12.24.38
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=/QAhBLGy3kJwx9AVjnikoQwMK78+wDfkG0Z+oCWFsgc=;
+        b=otl644bwLK8gxwoPRMI2pVELKYczcPE+KT8iRjbn08TiKGET7725ILNR+xemGi+ae6
+         3RrHKkfe10tPHf8NxMsphTvoCGkeTVo0eZco1LM9GlPwTpYG7TcMOCMvXpfvfQDIUSqZ
+         qeyduRrVof+z3XGCSo5KWyaNaj7++fiG/Qj9kcnZtqJN8X5WUWIzrCGv17mYMaNs7/WI
+         kYzKFcNS9qoWYkHZwUV2ofGJ6xcKejKClKq7dbzoybQ1q26135hH6DJC1pvqAIfVCHVw
+         zhC3xc4cLSa4K64hNRusB9xixunvCYeO5Hgwf9NymAHXiKPTeq7+RMGMK/JeLFe09iO4
+         sJLg==
+X-Gm-Message-State: APjAAAX8Z5yF1yNRrChS1hN8c4LnrbDym0ycYb9CcFUW+oPuIU00L3i1
+        HYxmk1EbBttAY8vJRg5U4QwvKA==
+X-Google-Smtp-Source: APXvYqwed+8BHWLv8haNNmapLa2e4SIyZOujwERahm2qLxkUJRKuCwY14eI+b08j5yOWgBtWBOCrGA==
+X-Received: by 2002:a7b:c652:: with SMTP id q18mr760429wmk.148.1571357996011;
+        Thu, 17 Oct 2019 17:19:56 -0700 (PDT)
+Received: from srini-hackbox.lan (cpc89974-aztw32-2-0-cust43.18-1.cable.virginm.net. [86.30.250.44])
+        by smtp.gmail.com with ESMTPSA id z189sm4851248wmc.25.2019.10.17.17.19.54
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 17 Oct 2019 12:24:38 -0700 (PDT)
-Date:   Thu, 17 Oct 2019 14:24:37 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Chris Packham <chris.packham@alliedtelesis.co.nz>
-Cc:     linus.walleij@linaro.org, bgolaszewski@baylibre.com,
-        mark.rutland@arm.com, rjui@broadcom.com, sbranden@broadcom.com,
-        bcm-kernel-feedback-list@broadcom.com, linux-gpio@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 1/2] dt-bindings: gpio: brcm: Add bindings for
- xgs-iproc
-Message-ID: <20191017192437.GA24080@bogus>
-References: <20191017031051.20366-1-chris.packham@alliedtelesis.co.nz>
- <20191017031051.20366-2-chris.packham@alliedtelesis.co.nz>
+        Thu, 17 Oct 2019 17:19:55 -0700 (PDT)
+From:   Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+To:     robh@kernel.org, broonie@kernel.org, linus.walleij@linaro.org,
+        lee.jones@linaro.org
+Cc:     vinod.koul@linaro.org, alsa-devel@alsa-project.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        spapothi@codeaurora.org, bgoswami@codeaurora.org,
+        linux-gpio@vger.kernel.org,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Subject: [PATCH v2 00/11] ASoC: Add support to WCD9340/WCD9341 codec
+Date:   Fri, 18 Oct 2019 01:18:38 +0100
+Message-Id: <20191018001849.27205-1-srinivas.kandagatla@linaro.org>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191017031051.20366-2-chris.packham@alliedtelesis.co.nz>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Oct 17, 2019 at 04:10:50PM +1300, Chris Packham wrote:
-> This GPIO controller is present on a number of Broadcom switch ASICs
-> with integrated SoCs. It is similar to the nsp-gpio and iproc-gpio
-> blocks but different enough to require a separate driver.
-> 
-> Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
-> ---
-> 
-> Notes:
->     Changes in v2:
->     - Document as DT schema
->     - Include ngpios, #gpio-cells and gpio-controller properties
-> 
->  .../bindings/gpio/brcm,xgs-iproc.yaml         | 83 +++++++++++++++++++
->  1 file changed, 83 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/gpio/brcm,xgs-iproc.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/gpio/brcm,xgs-iproc.yaml b/Documentation/devicetree/bindings/gpio/brcm,xgs-iproc.yaml
-> new file mode 100644
-> index 000000000000..71998551209e
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/gpio/brcm,xgs-iproc.yaml
-> @@ -0,0 +1,83 @@
-> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/gpio/brcm,xgs-iproc.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Broadcom XGS iProc GPIO controller
-> +
-> +maintainers:
-> +  - Chris Packham <chris.packham@alliedtelesis.co.nz>
-> +
-> +description: |
-> +  This controller is the Chip Common A GPIO present on a number of Broadcom
-> +  switch ASICs with integrated SoCs.
-> +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - brcm,iproc-gpio-cca
+This patchset adds support to Qualcomm WCD9340/WCD9341 Codec which
+is a standalone Hi-Fi audio codec IC.
+This codec supports both I2S/I2C and SLIMbus audio interfaces.
+On slimbus interface it supports two data lanes; 16 Tx ports
+and 8 Rx ports. It has Five DACs and seven dedicated interpolators,
+Multibutton headset control (MBHC), Active noise cancellation,
+Sidetone paths, MAD (mic activity detection) and codec processing engine.
+It supports Class-H differential earpiece out and stereo single
+ended headphones out.
 
-enum vs. const usage depends on whether you think you'll add more 
-compatibles.
+This codec also has integrated SoundWire controller.
+Patchset for this is already sent for review at
+https://patchwork.kernel.org/cover/11185769/
+    
+This patchset has been tested on SDM845 based DragonBoard DB845c and
+Lenovo Yoga C630 laptop with WSA881x smart speaker amplifiers via
+soundwire and 4 DMICs.
 
-> +
-> +  reg:
-> +    minItems: 2
-> +    maxItems: 2
-> +    description:
-> +      The first region defines the base I/O address containing
-> +      the GPIO controller registers. The second region defines
-> +      the I/O address containing the Chip Common A interrupt
-> +      registers.
+Pin Controller patch does not have any link dependency, it can go by its own.
 
-items:
-  - description: the I/O address containing the GPIO controller 
-      registers
-  - description: the I/O address containing the Chip Common A interrupt 
-      registers
+Most of the code in this driver is rework of Qualcomm downstream drivers
+used in Andriod. Credits to Banajit Goswami and Patrick Lai's Team.
 
-And minItems/maxItems can be implicit.
+If anyone is interested to try, here are working set of patches on top of rc3.
+https://git.linaro.org/people/srinivas.kandagatla/linux.git/log/?h=audio/v5.4-rc3-YOGA-C630
+alsa ucm files:
+https://git.linaro.org/people/srinivas.kandagatla/alsa-lib.git/log/?h=DB845c
 
-> +
-> +  gpio-controller: true
-> +
-> +  '#gpio-cells':
-> +      const: 2
-> +
-> +  ngpios:
-> +    $ref: /schemas/types.yaml#/definitions/uint32
+Thanks,
+srini
 
-Common property, doesn't need a type definition. Also, it would have to 
-be under an 'allOf' to actually work.
+Changes since v1:
+- Code cleanup and convert to proper dpcm widgets where possible.
+- converted to mfd driver.
+- added pinctrl driver to this series
+- added dts changes in this series
+- bindings converted to yaml.
 
-> +    minimum: 0
-> +    maximum: 32
-> +
-> +  interrupt-controller:
-> +    type: boolean
+Srinivas Kandagatla (10):
+  ASoC: dt-bindings: add dt bindings for WCD9340/WCD9341 audio codec
+  mfd: wcd934x: add support to wcd9340/wcd9341 codec
+  ASoC: wcd934x: add support to wcd9340/wcd9341 codec
+  ASoC: wcd934x: add basic controls
+  ASoC: wcd934x: add playback dapm widgets
+  ASoC: wcd934x: add capture dapm widgets
+  ASoC: wcd934x: add audio routings
+  dt-bindings: pinctrl: qcom-wcd934x: Add bindings for gpio
+  ASoC: dt-bindings: Add compatible for DB845c and Lenovo Yoga
+  ASoC: qcom: sdm845: add support to DB845c and Lenovo Yoga
 
-Just 'interrupt-controller: true'
+Yeleswarapu Nagaradhesh (1):
+  pinctrl: qcom-wcd934x: Add support to wcd934x pinctrl driver.
 
-> +
-> +  '#interrupt-cells':
-> +    const: 2
-> +
-> +  interrupts:
-> +    maxItems: 1
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - "#gpio-cells"
-> +  - gpio-controller
-> +
-> +allOf:
-> + - if:
-> +     properties:
-> +       interrupt-controller:
-> +         contains:
-> +           const: true
-> +   then:
-> +     required:
-> +       - interrupts
-> +       - '#interrupt-cells'
+ .../pinctrl/qcom,wcd934x-pinctrl.yaml         |   51 +
+ .../devicetree/bindings/sound/qcom,sdm845.txt |    5 +-
+ .../bindings/sound/qcom,wcd934x.yaml          |  169 +
+ drivers/mfd/Kconfig                           |    8 +
+ drivers/mfd/Makefile                          |    1 +
+ drivers/mfd/wcd934x.c                         |  330 ++
+ drivers/pinctrl/qcom/Kconfig                  |    7 +
+ drivers/pinctrl/qcom/Makefile                 |    1 +
+ drivers/pinctrl/qcom/pinctrl-wcd934x-gpio.c   |  365 ++
+ include/linux/mfd/wcd934x/registers.h         |  529 ++
+ include/linux/mfd/wcd934x/wcd934x.h           |   24 +
+ sound/soc/codecs/Kconfig                      |   10 +
+ sound/soc/codecs/Makefile                     |    2 +
+ sound/soc/codecs/wcd934x.c                    | 5218 +++++++++++++++++
+ sound/soc/qcom/sdm845.c                       |   71 +-
+ 15 files changed, 6789 insertions(+), 2 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/pinctrl/qcom,wcd934x-pinctrl.yaml
+ create mode 100644 Documentation/devicetree/bindings/sound/qcom,wcd934x.yaml
+ create mode 100644 drivers/mfd/wcd934x.c
+ create mode 100644 drivers/pinctrl/qcom/pinctrl-wcd934x-gpio.c
+ create mode 100644 include/linux/mfd/wcd934x/registers.h
+ create mode 100644 include/linux/mfd/wcd934x/wcd934x.h
+ create mode 100644 sound/soc/codecs/wcd934x.c
 
-This is mostly handled in the core schema already and 'dependencies' 
-works better for this anyways. All you need here is:
+-- 
+2.21.0
 
-dependencies:
-  interrupt-controller: [ interrupts ]
-
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/interrupt-controller/irq.h>
-> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
-> +    gpio@18000060 {
-> +        compatible = "brcm,iproc-gpio-cca";
-> +        #gpio-cells = <2>;
-> +        reg = <0x18000060 0x50>,
-> +              <0x18000000 0x50>;
-> +        ngpios = <12>;
-> +        gpio-controller;
-> +        interrupt-controller;
-> +        #interrupt-cells = <2>;
-> +        interrupts = <GIC_SPI 91 IRQ_TYPE_LEVEL_HIGH>;
-> +    };
-> +
-> +
-> +...
-> -- 
-> 2.23.0
-> 
