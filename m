@@ -2,107 +2,143 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 0D884DCC42
-	for <lists+linux-gpio@lfdr.de>; Fri, 18 Oct 2019 19:07:17 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 36153DCF07
+	for <lists+linux-gpio@lfdr.de>; Fri, 18 Oct 2019 21:07:35 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387714AbfJRRHE (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 18 Oct 2019 13:07:04 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:40117 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2634399AbfJRRHD (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 18 Oct 2019 13:07:03 -0400
-Received: by mail-pf1-f195.google.com with SMTP id x127so4259644pfb.7
-        for <linux-gpio@vger.kernel.org>; Fri, 18 Oct 2019 10:07:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=s4mBZS+ljuU08rW884SHkz0i5bxQ4SJXmq8jp6tRUPg=;
-        b=yKhqYHL2pFUl4x0vzuSYcslNeVF/bHclgLn/jbiR4D31jUrWdwXJOkaY4oPnzZDaZX
-         klcUgEiOu86wgFyATnDdOleKOmdqzEPxQNCjfbE8VyOenkKZGNlP9Z90fZLOWTmKCGok
-         yl3Rz2uIwif2Uvh6c9EgeKbCUtKbF5dtcsB/oXeUEiLMe4KrpsGUbU6QQBjowWXagJ1D
-         ARrvds73ksxjjg01m9PTHZ0NCMtz3Rw+CoT7iZeLrJwHGjeYSPWBdfNqGFpb4j1TnRLJ
-         UzAfIkbLArZpKqcv0G8IeTQEGtfEYmRUviwIPPMCXFX0iqk0RpDIaDa9Z0GjVCRI8sIS
-         k+gA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=s4mBZS+ljuU08rW884SHkz0i5bxQ4SJXmq8jp6tRUPg=;
-        b=LuWwlnNDmt7u6RZLrsRRILa8W4DPswRPthRye5vDTb/NUgvbnUVt/w1JJMVrbM//mY
-         MTi3gEgh/z7bgeM3bARQdESEj3t0jy1+1t7aKUNl2BwPjSkAdt3Nnj0GBebIOSqtd1Vw
-         qRD9L8AJP54jZ5cgZ3H1TqafkG28P+y/2bZ9cjw5AOF5WZvWBKlaz0ByeMhGtedyPUWq
-         JvmB7n9rg/yFfkxS1PmpzQpGA8aP42i3XERmwhGM1JqiLFkjOeUqmdecKtXR4496iJwh
-         3ssRYNZ62tfi7Hbdqv73xOopUcUJesIDTQNYEs8KpapvRcPZm+M3itDoWm52UJQQ/Uv3
-         r0Ag==
-X-Gm-Message-State: APjAAAWf5b7K1yhih0JQlgs67W0Q8xiZYAMEJNokTdMTQwMvPX3eCw7u
-        hUa6EpKIxJ3B5KxoRjsev4TyMA==
-X-Google-Smtp-Source: APXvYqzCsL68VirLSBGvWUCdpFt/+Zq1BrRbdAcnSRDaLPTmDpRsFdPQLecri/RwQRFAROsaxnc6qA==
-X-Received: by 2002:a62:6842:: with SMTP id d63mr7792318pfc.16.1571418421377;
-        Fri, 18 Oct 2019 10:07:01 -0700 (PDT)
-Received: from tuxbook-pro (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id f13sm6753490pgr.6.2019.10.18.10.06.59
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 18 Oct 2019 10:07:00 -0700 (PDT)
-Date:   Fri, 18 Oct 2019 10:06:57 -0700
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     YueHaibing <yuehaibing@huawei.com>
-Cc:     linus.walleij@linaro.org, manivannan.sadhasivam@linaro.org,
-        afaerber@suse.de, f.fainelli@gmail.com, rjui@broadcom.com,
-        sbranden@broadcom.com, bcm-kernel-feedback-list@broadcom.com,
-        jesper.nilsson@axis.com, lars.persson@axis.com,
-        ludovic.desroches@microchip.com, nicolas.ferre@microchip.com,
-        alexandre.belloni@bootlin.com, baruch@tkos.co.il,
-        linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@axis.com,
-        linux-oxnas@groups.io, linux-renesas-soc@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, linux-tegra@vger.kernel.org,
-        vz@mleia.com, narmstrong@baylibre.com, geert+renesas@glider.be,
-        daniel@zonque.org, haojian.zhuang@gmail.com, wens@csie.org,
-        thierry.reding@gmail.com, jonathanh@nvidia.com, agross@kernel.org
-Subject: Re: [PATCH -next 11/30] pinctrl: msm: use
- devm_platform_ioremap_resource() to simplify code
-Message-ID: <20191018170657.GD4500@tuxbook-pro>
-References: <20191017122640.22976-1-yuehaibing@huawei.com>
- <20191017122640.22976-12-yuehaibing@huawei.com>
+        id S1726421AbfJRTH3 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 18 Oct 2019 15:07:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58594 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2436505AbfJRTH3 (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Fri, 18 Oct 2019 15:07:29 -0400
+Received: from mail-qk1-f176.google.com (mail-qk1-f176.google.com [209.85.222.176])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 070A2222CC;
+        Fri, 18 Oct 2019 19:07:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1571425648;
+        bh=ZvKSuxQuN/jT3Fmjbjwnw6yt3Bbj3F9A+MC7acj1eYo=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=r3J6l9JZJc1Zp8tJF9mLQSmXEA68DllcySKWuRRg/es60oLadlYjJhDaAjldnASSb
+         ATx8Um+zjpqNtXvhGwZLcVJe0hgMmNdA9edlIZqFx/1a8JB/Sb5YemGVg4SUJXOiKR
+         jRtSfzVPwCdgSZPJWLYASOe3Oyl6UG1dXPjI3dRE=
+Received: by mail-qk1-f176.google.com with SMTP id u184so6302458qkd.4;
+        Fri, 18 Oct 2019 12:07:27 -0700 (PDT)
+X-Gm-Message-State: APjAAAVqzXlNJnNjJ81jSPsM8O8tkPvTcnq71VAfKdCP4a0THxoUFi0+
+        uzBdVPjL2XkndqxsBQZDVGI1oMTwUbSLk2Dtdw==
+X-Google-Smtp-Source: APXvYqyEfCrAtNPgA6gsKBq8urq8H5iqVlTDcHX0aikHpYcOCmiQnShU4x9vV/ge/RWs5MTLKNtafQj54U/NALrxbdY=
+X-Received: by 2002:a05:620a:12f1:: with SMTP id f17mr10482791qkl.152.1571425646996;
+ Fri, 18 Oct 2019 12:07:26 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191017122640.22976-12-yuehaibing@huawei.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+References: <20191017031051.20366-1-chris.packham@alliedtelesis.co.nz>
+ <20191017031051.20366-2-chris.packham@alliedtelesis.co.nz>
+ <20191017192437.GA24080@bogus> <CAMpxmJVrFK38BPjoUtGt99sqgFeOA=wHFAu=QNQg_5Rj1gU92A@mail.gmail.com>
+In-Reply-To: <CAMpxmJVrFK38BPjoUtGt99sqgFeOA=wHFAu=QNQg_5Rj1gU92A@mail.gmail.com>
+From:   Rob Herring <robh@kernel.org>
+Date:   Fri, 18 Oct 2019 14:07:15 -0500
+X-Gmail-Original-Message-ID: <CAL_Jsq+iad9+SE8kwKdxKfOF6TsbTF1V+3yNOLhNNsgnmhSCiA@mail.gmail.com>
+Message-ID: <CAL_Jsq+iad9+SE8kwKdxKfOF6TsbTF1V+3yNOLhNNsgnmhSCiA@mail.gmail.com>
+Subject: Re: [PATCH v2 1/2] dt-bindings: gpio: brcm: Add bindings for xgs-iproc
+To:     Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Cc:     Chris Packham <chris.packham@alliedtelesis.co.nz>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Ray Jui <rjui@broadcom.com>,
+        Scott Branden <sbranden@broadcom.com>,
+        "maintainer:BROADCOM BCM7XXX ARM ARCHITECTURE" 
+        <bcm-kernel-feedback-list@broadcom.com>,
+        linux-gpio <linux-gpio@vger.kernel.org>,
+        linux-devicetree <devicetree@vger.kernel.org>,
+        arm-soc <linux-arm-kernel@lists.infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu 17 Oct 05:26 PDT 2019, YueHaibing wrote:
+On Fri, Oct 18, 2019 at 1:00 AM Bartosz Golaszewski
+<bgolaszewski@baylibre.com> wrote:
+>
+> czw., 17 pa=C5=BA 2019 o 21:24 Rob Herring <robh@kernel.org> napisa=C5=82=
+(a):
+> >
+> > On Thu, Oct 17, 2019 at 04:10:50PM +1300, Chris Packham wrote:
+> > > This GPIO controller is present on a number of Broadcom switch ASICs
+> > > with integrated SoCs. It is similar to the nsp-gpio and iproc-gpio
+> > > blocks but different enough to require a separate driver.
+> > >
+> > > Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
+> > > ---
+> > >
+> > > Notes:
+> > >     Changes in v2:
+> > >     - Document as DT schema
+> > >     - Include ngpios, #gpio-cells and gpio-controller properties
+> > >
+> > >  .../bindings/gpio/brcm,xgs-iproc.yaml         | 83 +++++++++++++++++=
+++
+> > >  1 file changed, 83 insertions(+)
+> > >  create mode 100644 Documentation/devicetree/bindings/gpio/brcm,xgs-i=
+proc.yaml
+> > >
+> > > diff --git a/Documentation/devicetree/bindings/gpio/brcm,xgs-iproc.ya=
+ml b/Documentation/devicetree/bindings/gpio/brcm,xgs-iproc.yaml
+> > > new file mode 100644
+> > > index 000000000000..71998551209e
+> > > --- /dev/null
+> > > +++ b/Documentation/devicetree/bindings/gpio/brcm,xgs-iproc.yaml
+> > > @@ -0,0 +1,83 @@
+> > > +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+> > > +%YAML 1.2
+> > > +---
+> > > +$id: http://devicetree.org/schemas/gpio/brcm,xgs-iproc.yaml#
+> > > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > > +
+> > > +title: Broadcom XGS iProc GPIO controller
+> > > +
+> > > +maintainers:
+> > > +  - Chris Packham <chris.packham@alliedtelesis.co.nz>
+> > > +
+> > > +description: |
+> > > +  This controller is the Chip Common A GPIO present on a number of B=
+roadcom
+> > > +  switch ASICs with integrated SoCs.
+> > > +
+> > > +properties:
+> > > +  compatible:
+> > > +    enum:
+> > > +      - brcm,iproc-gpio-cca
+> >
+> > enum vs. const usage depends on whether you think you'll add more
+> > compatibles.
+> >
+>
+> What if you don't know yet? For instance we use a const compatible and
+> then a new chip is released for which we can reuse the driver?
 
-> Use devm_platform_ioremap_resource() to simplify the code a bit.
-> This is detected by coccinelle.
-> 
-> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+Then you just change it to an enum (or oneOf if the new compatible has
+a fallback to the old one). Not really a big deal.
 
-Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+> Is this
+> something that is expected to remain stable in the binding document?
 
-> ---
->  drivers/pinctrl/qcom/pinctrl-msm.c | 3 +--
->  1 file changed, 1 insertion(+), 2 deletions(-)
-> 
-> diff --git a/drivers/pinctrl/qcom/pinctrl-msm.c b/drivers/pinctrl/qcom/pinctrl-msm.c
-> index 763da0b..62fcae9 100644
-> --- a/drivers/pinctrl/qcom/pinctrl-msm.c
-> +++ b/drivers/pinctrl/qcom/pinctrl-msm.c
-> @@ -1150,8 +1150,7 @@ int msm_pinctrl_probe(struct platform_device *pdev,
->  				return PTR_ERR(pctrl->regs[i]);
->  		}
->  	} else {
-> -		res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> -		pctrl->regs[0] = devm_ioremap_resource(&pdev->dev, res);
-> +		pctrl->regs[0] = devm_platform_ioremap_resource(pdev, 0);
->  		if (IS_ERR(pctrl->regs[0]))
->  			return PTR_ERR(pctrl->regs[0]);
->  	}
-> -- 
-> 2.7.4
-> 
-> 
+No, only in the sense we want to minimize changes.
+
+> The question is unrelated to this patch, I'm just unsure about my own
+> approach to writing yaml bindings.
+
+We could perhaps just say single entries should always be 'const'
+because then we could write a meta-schema enforcing that:
+
+properties:
+  enum:
+    minItems: 2
+
+I don't think we should be that strict though unless it becomes a
+frequent review topic. So either way is fine, it's up to your
+judgement, and let's stop talking about it before I change my mind. :)
+
+Rob
