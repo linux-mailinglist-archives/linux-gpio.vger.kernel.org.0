@@ -2,63 +2,73 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id CDBC2DED80
-	for <lists+linux-gpio@lfdr.de>; Mon, 21 Oct 2019 15:26:39 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A5701DEEE5
+	for <lists+linux-gpio@lfdr.de>; Mon, 21 Oct 2019 16:09:56 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727344AbfJUN0j (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 21 Oct 2019 09:26:39 -0400
-Received: from mga03.intel.com ([134.134.136.65]:33925 "EHLO mga03.intel.com"
+        id S1728096AbfJUOJ4 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 21 Oct 2019 10:09:56 -0400
+Received: from mga14.intel.com ([192.55.52.115]:11004 "EHLO mga14.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727322AbfJUN0j (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Mon, 21 Oct 2019 09:26:39 -0400
+        id S1727344AbfJUOJ4 (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Mon, 21 Oct 2019 10:09:56 -0400
 X-Amp-Result: UNKNOWN
 X-Amp-Original-Verdict: FILE UNKNOWN
 X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 21 Oct 2019 06:26:38 -0700
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 21 Oct 2019 07:09:55 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.67,323,1566889200"; 
-   d="scan'208";a="372174851"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by orsmga005.jf.intel.com with ESMTP; 21 Oct 2019 06:26:36 -0700
-Received: from andy by smile with local (Exim 4.92.2)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1iMXhj-00053z-Eb; Mon, 21 Oct 2019 16:26:35 +0300
-Date:   Mon, 21 Oct 2019 16:26:35 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+   d="scan'208";a="209449417"
+Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.157])
+  by fmsmga001.fm.intel.com with SMTP; 21 Oct 2019 07:09:51 -0700
+Received: by lahna (sSMTP sendmail emulation); Mon, 21 Oct 2019 17:09:51 +0300
+Date:   Mon, 21 Oct 2019 17:09:51 +0300
+From:   Mika Westerberg <mika.westerberg@linux.intel.com>
 To:     Hans de Goede <hdegoede@redhat.com>
-Cc:     Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
         Linus Walleij <linus.walleij@linaro.org>,
-        linux-gpio@vger.kernel.org, linux-acpi@vger.kernel.org
-Subject: Re: [PATCH] gpiolib: acpi: Print pin number on
- acpi_gpiochip_alloc_event errors
-Message-ID: <20191021132635.GU32742@smile.fi.intel.com>
-References: <20191018195208.94405-1-hdegoede@redhat.com>
- <20191021091124.GK32742@smile.fi.intel.com>
+        linux-gpio@vger.kernel.org, linux-acpi@vger.kernel.org,
+        stable@vger.kernel.org
+Subject: Re: [PATCH] pinctrl: cherryview: Fix irq_valid_mask calculation
+Message-ID: <20191021140951.GN2819@lahna.fi.intel.com>
+References: <20191018090842.11189-1-hdegoede@redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191021091124.GK32742@smile.fi.intel.com>
+In-Reply-To: <20191018090842.11189-1-hdegoede@redhat.com>
 Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.10.1 (2018-07-13)
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Oct 21, 2019 at 12:11:24PM +0300, Andy Shevchenko wrote:
-> On Fri, Oct 18, 2019 at 09:52:08PM +0200, Hans de Goede wrote:
-> > Print pin number on acpi_gpiochip_alloc_event errors, to help debugging
-> > these.
+On Fri, Oct 18, 2019 at 11:08:42AM +0200, Hans de Goede wrote:
+> Commit 03c4749dd6c7 ("gpio / ACPI: Drop unnecessary ACPI GPIO to Linux
+> GPIO translation") has made the cherryview gpio numbers sparse, to get
+> a 1:1 mapping between ACPI pin numbers and gpio numbers in Linux.
 > 
-> I'm not sure which one is better decimal or hex, perhaps Mika can help me, in any case
-> Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> This has greatly simplified things, but the code setting the
+> irq_valid_mask was not updated for this, so the valid mask is still in
+> the old "compressed" numbering with the gaps in the pin numbers skipped,
+> which is wrong as irq_valid_mask needs to be expressed in gpio numbers.
+> 
+> This results in the following error on devices using pin 24 (0x0018) on
+> the north GPIO controller as an ACPI event source:
+> 
+> [    0.422452] cherryview-pinctrl INT33FF:01: Failed to translate GPIO to IRQ
+> 
+> This has been reported (by email) to be happening on a Caterpillar CAT T20
+> tablet and I've reproduced this myself on a Medion Akoya e2215t 2-in-1.
+> 
+> This commit uses the pin number instead of the compressed index into
+> community->pins to clear the correct bits in irq_valid_mask for GPIOs
+> using GPEs for interrupts, fixing these errors and in case of the
+> Medion Akoya e2215t also fixing the LID switch not working.
+> 
+> Cc: stable@vger.kernel.org
+> Cc: Mika Westerberg <mika.westerberg@linux.intel.com>
+> Fixes: 03c4749dd6c7 ("gpio / ACPI: Drop unnecessary ACPI GPIO to Linux GPIO translation")
+> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
 
-I have to withdraw this due to potential issue found.
-
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+Applied to intel.git/fixes, thanks!
