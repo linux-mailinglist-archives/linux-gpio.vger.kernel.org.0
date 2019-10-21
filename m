@@ -2,49 +2,49 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 8E481DE45D
-	for <lists+linux-gpio@lfdr.de>; Mon, 21 Oct 2019 08:16:02 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 508D9DE469
+	for <lists+linux-gpio@lfdr.de>; Mon, 21 Oct 2019 08:19:42 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726915AbfJUGQB (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 21 Oct 2019 02:16:01 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:39304 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726125AbfJUGQB (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 21 Oct 2019 02:16:01 -0400
-Received: by mail-pf1-f196.google.com with SMTP id v4so7728843pff.6
-        for <linux-gpio@vger.kernel.org>; Sun, 20 Oct 2019 23:16:01 -0700 (PDT)
+        id S1726081AbfJUGTk (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 21 Oct 2019 02:19:40 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:35254 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726072AbfJUGTf (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 21 Oct 2019 02:19:35 -0400
+Received: by mail-pf1-f194.google.com with SMTP id 205so7738228pfw.2
+        for <linux-gpio@vger.kernel.org>; Sun, 20 Oct 2019 23:19:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=z8AislL9bBizOL/3zmH/pFdDSRFzv2U9ezQYDPpf/uY=;
-        b=eG9C2g2A4PaRfDjkuUYycqvHLpwFwwXFoIHPEJB4S4aqUilQqRiRg5/brU94N70PeD
-         +XbbwDmqAiX+M0nZWiPdZ0r1qUm3xvVo2fsi3TL1IMD9cwuZdQeu1BhWWWD3vazDac0O
-         z1Buvm/bypyjVu5q4P3no2LuGvFRpIYNywAetJM8+Gu75G5kIkeStD/j2p7kWv+r2ji8
-         911oMY2QK9mqZi22+AJOBF/2NTC59N97cofnI1NMRIOMHtRMcTjpRrZRIzalyGpKHNhp
-         Gzw/APURFJ/dMAvGQ7oXi5ITYR04qndf6BcxFQOZ1srgtVPMKwqf58nuZdyTkeaSD2O+
-         FPyg==
+        bh=npNayPk5J2u1XBbRL1kMyLo7Xv1HpI8J+9mr55B2g9k=;
+        b=QDvYpVhOa9llomgrWhkQTV7AvVq+a5nmiWzxknp7M34fEjVS0v79bpDXYYSHLu1xsh
+         3r2LrOxWZCd+j+SAZnX3yRG89haB45hBUtUWfOXkCUWRQjipPwvece8OYwGhB5XPEMcD
+         c23ua7i3PrboPvRFsD5ptap2coA5uv0FIuyTXAuCEXxI5d4XDx9p57AaYol3GG+DWot8
+         rOcaEGRFXQi6qMDjK8Ia0W2wdzqRJnHDWluTgedOmC4Cg7Ox1ipLSdIXb1pVuHVDr6DC
+         5EU+++ld2CJkiSlsN66IxR3O3iwDLczgHbsaQSPQ7rnFNDV0pmIVa35r8FugJDDtWKTi
+         9Bhw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=z8AislL9bBizOL/3zmH/pFdDSRFzv2U9ezQYDPpf/uY=;
-        b=e0NGZ8y0yv0I2cxqhSn9mt3Yjj1ej5ktyImaA/TYKrPQ9cKDMFEYScLG0LNJeByXKV
-         8XRg0MG17Gi9D+AIgtXgBixhItDYvVR8o2JbQKWere81fEE5wIVD/Ukau0WEVpfe5VND
-         8ifMI4OtgROL2R5aFMUKi1ApDZWsOuJ74AREgvees39fLXBqYPa9Qw9He2LzEfW9FR3n
-         bLoBqbnRyWSHsuL6mrhvlkweH2qVXOfAL2/8UJT7+E1P0gZwSrA2Z3oHNwBnsJwrtgBT
-         WKxlDMa6dNUeDxIuG0cMQ8+jv9c9VBV098PyV28Ghk2WmlGYIe4RoaI9XPGxODdvR0+B
-         gpVQ==
-X-Gm-Message-State: APjAAAXk9IsA2SizhuBOpuCfcEB1soca+6j6NKc5DEDZqZfx0PG1PYbe
-        L1u5qc15DuVUkuAEiJGn1gf8
-X-Google-Smtp-Source: APXvYqzq3YMDZBcNbZq7GPKnRRFgy2SO4k0a07WKf/88S3YXLlZv9fCcV5ut+NIOUDsG42YN1kRNVQ==
-X-Received: by 2002:a63:ea48:: with SMTP id l8mr24258354pgk.160.1571638560579;
-        Sun, 20 Oct 2019 23:16:00 -0700 (PDT)
+        bh=npNayPk5J2u1XBbRL1kMyLo7Xv1HpI8J+9mr55B2g9k=;
+        b=iQIrkAYRP7Ij69V+dHvrIkfX2WJ9g92nXR6v5jnogLbQan0ue9dskNFBlzMtQW6OZB
+         3tfbZd1cXgIJ/pf6VyhiaHpQRghP93atAVSsoWEKhVkgNHfFSVA/KvOP5sPE/il8x+xN
+         eo1S5qdTuwksrW27hJH85M9b1yUQ7qRn798E8VBDXv8XgCSO3futpHXtpBA6BqISZW4H
+         ZJB5SyYbaQWFdroko0R5BMwUOi4b1A/5kxdrXUQVxXOLtaJKt/+XiNs2zqYCst3xQcGZ
+         hVaA7+8FcWfFD93mYsSKpo5TnFSNv848hSvnagaGWB64iZ/227aEdeg/NVXQYYsZI7HK
+         +sYg==
+X-Gm-Message-State: APjAAAUSBYXbsbpXPn/UW0eECYG4oxXxS1gyL9E7lcwldUQuVPcBjl0s
+        AnXAomif3y8fQQHXaPWqOhRV
+X-Google-Smtp-Source: APXvYqwa4lMT7wTGnd2y2szR63pKR1Kh4XWszfDbs08XxK1GjzoN2xaHY4ePYHjDl7fkNdK2QUchbw==
+X-Received: by 2002:a62:5c07:: with SMTP id q7mr20788083pfb.159.1571638773575;
+        Sun, 20 Oct 2019 23:19:33 -0700 (PDT)
 Received: from Mani-XPS-13-9360 ([2405:204:700f:8db6:2442:890f:ac37:8127])
-        by smtp.gmail.com with ESMTPSA id a13sm16828601pfg.10.2019.10.20.23.15.55
+        by smtp.gmail.com with ESMTPSA id x65sm14911120pgb.75.2019.10.20.23.19.29
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Sun, 20 Oct 2019 23:15:59 -0700 (PDT)
-Date:   Mon, 21 Oct 2019 11:45:51 +0530
+        Sun, 20 Oct 2019 23:19:32 -0700 (PDT)
+Date:   Mon, 21 Oct 2019 11:49:26 +0530
 From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 To:     Linus Walleij <linus.walleij@linaro.org>
 Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
@@ -53,16 +53,17 @@ Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
         Orson Zhai <orsonzhai@gmail.com>
-Subject: Re: [PATCH v2 1/4] dt-bindings: gpio: Add devicetree binding for RDA
- Micro GPIO controller
-Message-ID: <20191021061551.GA12001@Mani-XPS-13-9360>
+Subject: Re: [PATCH v2 3/4] gpio: Add RDA Micro GPIO controller support
+Message-ID: <20191021061926.GB12001@Mani-XPS-13-9360>
 References: <20191015173026.9962-1-manivannan.sadhasivam@linaro.org>
- <20191015173026.9962-2-manivannan.sadhasivam@linaro.org>
- <CACRpkdY3OC675EjZ4PYhYxnk1XWh4EO-a3JJBha2rdBttySUNQ@mail.gmail.com>
+ <20191015173026.9962-4-manivannan.sadhasivam@linaro.org>
+ <CACRpkdZRY138RAf8N2xGam89r66ik2vW44OZx0bDcCt4P2GBLA@mail.gmail.com>
+ <20191019160513.GA17631@Mani-XPS-13-9360>
+ <CACRpkdbgFGciZMBF-_h5Wi47Hmco7tA9Pr7XegM8SpWxhqLT1A@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CACRpkdY3OC675EjZ4PYhYxnk1XWh4EO-a3JJBha2rdBttySUNQ@mail.gmail.com>
+In-Reply-To: <CACRpkdbgFGciZMBF-_h5Wi47Hmco7tA9Pr7XegM8SpWxhqLT1A@mail.gmail.com>
 User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
@@ -71,38 +72,36 @@ X-Mailing-List: linux-gpio@vger.kernel.org
 
 Hi Linus,
 
-On Wed, Oct 16, 2019 at 02:27:44PM +0200, Linus Walleij wrote:
-> On Tue, Oct 15, 2019 at 7:30 PM Manivannan Sadhasivam
+On Mon, Oct 21, 2019 at 02:57:31AM +0200, Linus Walleij wrote:
+> On Sat, Oct 19, 2019 at 6:05 PM Manivannan Sadhasivam
 > <manivannan.sadhasivam@linaro.org> wrote:
+> > On Wed, Oct 16, 2019 at 02:41:32PM +0200, Linus Walleij wrote:
 > 
-> > Add YAML devicetree binding for RDA Micro GPIO controller.
+> > > select GPIO_GENERIC
 > >
-> > Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> > hmm.. I don't think this driver can use it. Please see the justification
+> > below.
+> (...)
+> > As you can see in this driver, there are 2 separate registers needs to be
+> > read in order to get the value. RDA_GPIO_VAL needs to be read when the pin
+> > is in input state and RDA_GPIO_SET needs to be read when the pin is in output
+> > state.
+> >
+> > The MMIO driver relies on a single `dat` register to read the GPIO state and
+> > this won't fit for this driver and hence my justification for not using it.
 > 
-> First: this looks awesome to me,
-> 
-> Second: since this is kind of a first... could we move the standard GPIOchip
-> YAML business into a generic gpiochip .yaml file?
-> 
-> We currently only have pl061-gpio.yaml and this would duplicate a lot
-> of the stuff from that yaml file.
-> 
-> If you look at how
-> display/panel/panel-common.yaml
-> is used from say
-> display/panel/ti,nspire.yaml
-> 
-> Could we do something similar and lift out all the generics from
-> gpio-pl061.yaml to
-> gpio-common.yaml
-> and reference that also in the new binding?
-> 
-> If it seems hard, tell me and I can take a stab at it.
+> Use RDA_GPIO_VAL for dat, then set BGPIOF_READ_OUTPUT_REG_SET
+> and the mmio core will do what you want I think? That's what the flag is
+> for IIUC.
 > 
 
-Eventhough I really want to help you here, I'm running out of time
-(and you know why). Let's consider merging this, and I'll come back at
-it later.
+Ah, this should work. Sorry for missing this earlier.
+
+> Maybe we should document it better :/
+> 
+
+That's how everything is in kernel for me... If you don't look closer, you'll
+not get it.
 
 Thanks,
 Mani
