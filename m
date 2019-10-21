@@ -2,142 +2,412 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 2A9D4DF091
-	for <lists+linux-gpio@lfdr.de>; Mon, 21 Oct 2019 16:56:30 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1EDAEDF09B
+	for <lists+linux-gpio@lfdr.de>; Mon, 21 Oct 2019 16:57:16 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727111AbfJUO43 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 21 Oct 2019 10:56:29 -0400
-Received: from mailgate1.rohmeurope.com ([178.15.145.194]:51512 "EHLO
-        mailgate1.rohmeurope.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727040AbfJUO43 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 21 Oct 2019 10:56:29 -0400
-X-AuditID: c0a8fbf4-183ff70000001fa6-18-5dadc719495a
-Received: from smtp.reu.rohmeu.com (will-cas001.reu.rohmeu.com [192.168.251.177])
-        by mailgate1.rohmeurope.com (Symantec Messaging Gateway) with SMTP id D1.D0.08102.917CDAD5; Mon, 21 Oct 2019 16:56:25 +0200 (CEST)
-Received: from WILL-MAIL002.REu.RohmEu.com ([fe80::e0c3:e88c:5f22:d174]) by
- WILL-CAS001.REu.RohmEu.com ([fe80::d57e:33d0:7a5d:f0a6%16]) with mapi id
- 14.03.0439.000; Mon, 21 Oct 2019 16:56:12 +0200
-From:   "Vaittinen, Matti" <Matti.Vaittinen@fi.rohmeurope.com>
-To:     "bgolaszewski@baylibre.com" <bgolaszewski@baylibre.com>
-CC:     "dmurphy@ti.com" <dmurphy@ti.com>,
-        "linux-leds@vger.kernel.org" <linux-leds@vger.kernel.org>,
-        "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>,
-        "mazziesaccount@gmail.com" <mazziesaccount@gmail.com>,
-        "mturquette@baylibre.com" <mturquette@baylibre.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "jacek.anaszewski@gmail.com" <jacek.anaszewski@gmail.com>,
-        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
-        "a.zummo@towertech.it" <a.zummo@towertech.it>,
-        "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
-        "pavel@ucw.cz" <pavel@ucw.cz>,
-        "sboyd@kernel.org" <sboyd@kernel.org>,
-        "broonie@kernel.org" <broonie@kernel.org>,
-        "lee.jones@linaro.org" <lee.jones@linaro.org>
-Subject: Re: [RFC PATCH 10/13] gpio: bd71828: Initial support for ROHM
- BD71828 PMIC GPIOs
-Thread-Topic: [RFC PATCH 10/13] gpio: bd71828: Initial support for ROHM
- BD71828 PMIC GPIOs
-Thread-Index: AQHVhNC0M8qm8vzoP0yjRB+AhWv9dadepj4AgAXpHQCAAH9rgIAABXqA
-Date:   Mon, 21 Oct 2019 14:56:11 +0000
-Message-ID: <63a9fca56dbc174bf2c26eb602ba1c0c057488b0.camel@fi.rohmeurope.com>
-References: <cover.1571302099.git.matti.vaittinen@fi.rohmeurope.com>
-         <f8f8c323d378244afe4e94f48c0a94bb296cbbe0.1571302099.git.matti.vaittinen@fi.rohmeurope.com>
-         <CAMpxmJWXQccY8HsM6MXYBW8KC0U+7iOk+Ve-4nk=cpa=Zuk1cg@mail.gmail.com>
-         <3ae3507649f2e9a66053a99b4a71e29786fc3d34.camel@fi.rohmeurope.com>
-         <CAMpxmJVABg-UAzZtaQKu5ADBhi1P7CNArmstxHi5ZfdPiSKyYw@mail.gmail.com>
-In-Reply-To: <CAMpxmJVABg-UAzZtaQKu5ADBhi1P7CNArmstxHi5ZfdPiSKyYw@mail.gmail.com>
-Accept-Language: en-US, de-DE
-Content-Language: de-DE
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [82.203.142.98]
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <C87ABB7EB9CD9C49908822B6FEB2A7F0@de.rohmeurope.com>
-Content-Transfer-Encoding: base64
+        id S1727355AbfJUO5P (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 21 Oct 2019 10:57:15 -0400
+Received: from mail-il1-f194.google.com ([209.85.166.194]:44749 "EHLO
+        mail-il1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727111AbfJUO5P (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 21 Oct 2019 10:57:15 -0400
+Received: by mail-il1-f194.google.com with SMTP id f13so12259898ils.11
+        for <linux-gpio@vger.kernel.org>; Mon, 21 Oct 2019 07:57:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=1x4aFvRRmRDQRkkZygUeehbRn0OfQMIXOF74ObIM6mE=;
+        b=YhMrGMZWjd29AOM7IoHfh7kXt4B+sQFHbt+iPggUJ1DyORsMSP3ZOAEj1/9s2WV2g6
+         CsHTF9ksGLJIkmsyZLHSP5q1VtPO3+7pcdkvRbeahkn7EoYhfbOuKT8O43pWaxV6Sf4k
+         ByHreKkwZT3MZ6IUX15wWllnVe6ALB8xHvNCdm/ce9CVgzju+GVAIXgyy3xM38iIpztq
+         paGdu51a/oDmP8JzhOykJbULo5l1cBKP4qNB8RaE6/UmRi+7PI0XauSoDUCGYKcBsH+E
+         IFVDe/TCEERf7utIdYoqnztnsloGJLEO7RiuTldQ9nO2TJWNFBUKto8iW8hA5Xa6X+MY
+         QXjQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=1x4aFvRRmRDQRkkZygUeehbRn0OfQMIXOF74ObIM6mE=;
+        b=fX/2bvNmlX4Gw6ZZ5YOpcYwMZGO4782cbBzEKqx3ocSj+BgCd7pqHQ6hhHxHd9hDfA
+         d5W8KbBTLtUI2MdqXY1U1dmpMP7s/aV1yQ6/NSIOEKeeuRmfxaDmGAfqN7ifvYXP7wEY
+         kCCExUKBw7Qa1PFSSKDLhCF51UT0Kk5wyvr5V42FMKU9hPazzKafLVsusyFb8kL8T285
+         6RJUBrcvgAE7/lNBuH/UuCXph/equyuZC73aQiLdOUaH3NvGcTqk3l+kwbki7BtgS+CV
+         LvbSx/a3GaT4ytva1Fw3rbmuXwby+gyA192yTY0DFikVgX1Bo6lIpDdfxPMXc0D+vsOe
+         tkaQ==
+X-Gm-Message-State: APjAAAUizVEcEo8CX5C965brSNm377tN79v6cC5w1JDL/8w2E3pZm14+
+        9OE9EIwuz9cP1bgdofiJ7QBbLZYEqGRGHOkbMKcmJg==
+X-Google-Smtp-Source: APXvYqw6eTv4W4bJ79isPRN7pFLEKbPq19QU1eu9dKjA0jMCLLZk6nXChRi6Jp+1/T6Z18u3df5T8ZGgVvlst+0x2Fc=
+X-Received: by 2002:a92:48cf:: with SMTP id j76mr6555230ilg.189.1571669832732;
+ Mon, 21 Oct 2019 07:57:12 -0700 (PDT)
 MIME-Version: 1.0
-X-Brightmail-Tracker: H4sIAAAAAAAAA02TbUwTWRSGc2em08tHzVDBXupKwhhiXCPqasyNuoY/a8ZojMZENyJhBxlp
-        FVqcaRU00e5m/aoYMYofFQrbgAJFXboiajBqBaworlUsEItKRI2Iui74FYk6w6Dw6773vuc9
-        z/lxLiT1j2gjNFtsgmjhs1k6krpc+al2avy1k2nT3wVn4fLgPS3e+eq4Fg+UtFC4qLuHxqWN
-        tzR4z40zGny/7m8KP3zbBPC7tl0EPjh4gsBvCh5o8D+lgwDfvVBM47q+UwA3e9toXNEeJHBx
-        RYDCwZZfcFdLE423X2zU4s+hWioljqtx1wDudcd2Leeu2cKdd3VpOV/1bpoLhxpo7lpHPcEd
-        dn8kuErvey3X70tYGrkqal4Gb9u43JxlmTb/tyhTaVkI5Dom5p3xnCIcoIB1ggiImFno6aXb
-        lBNEQj0TAuj+2VZSvQQA6va/1jgBhDQzDzk7tUoglpmLXrbfJBRNMi6I9noTFD2WSUXFtR2U
-        WrMa9fU/HtYLUP2BclLRFJOEGpyPhvromCVo38s/aJX1kUDhoqKhoghmGep3lw2FATMB7Xa8
-        GoYZkO/pe406NYPKG/4lVR2Hnj/+PDQnYhLRm8poRZLMZHT6wjQ1mYLqap5Qqk5EB/d0D48Q
-        g64f7aEKwTjXKIBrJO0alXaNSrtGpcuAphqgHN6cncXbhBnJomBPFq2mHPlYY83xAXVjBs6B
-        L/6FfkBA4AfxkGDjdIb6k2n6MRnWzHwTL5nSRXu2IPkBgiQbqwtPlz1dJp+/WRCt36zxkGIN
-        uknd+9P0jMJaLwi5gvjN/QFCFulAsxyMEYUsIW+tOds2YhMwQmkeaYyVBEumIPJ2myldWY90
-        Sd4PxYqWua1NClfK5XPkVzXaAqbAwuclHhI2llR4SD1lsVoEo0EXUEoZpdRkt3wH9QIDBOxY
-        XVhxo+Vv871Pr4wgZIQ33qsgbPyIZXSAwj8DUkpiPtH1IqqJS/YUtq9JyPqJnf1X3bptgYJn
-        Zpu9jwv3ZkjLc5v/m2kPbfWkLjpS+f+hHl9BAjzwIt3nIGI7Sye0Ldi0ImnwU97iXSt9VTFz
-        qtxL9s+88vN1aiC44aKlNaMq9cPVzdXOkqudFb/e/HLnxDFj39v43w/v8Glt51hKMvEzfiRF
-        if8K25O4F/MDAAA=
+References: <20191012015628.9604-1-warthog618@gmail.com> <20191012015628.9604-6-warthog618@gmail.com>
+ <CAMRc=McL+Z2J5kiCQUNbHbxJyfyoLf6XOOrFx3NPNH2+tSh4wg@mail.gmail.com>
+ <20191014130425.GC28012@sol> <CAMRc=Md75GmWhi+KBtVTeLJ=efB6cDr8dxsEbZ2A6vc4z6LAwA@mail.gmail.com>
+ <20191015005849.GA7970@sol> <CAMRc=Mf-NVGFjLOgYwtmBvyZ5pu3E0NmGZ91t4aAYZLe8w8rJQ@mail.gmail.com>
+ <20191016010104.GA8083@sol> <20191017050647.GA21551@sol> <CAMRc=Mdc4yVHP=LGgdujW8FbETadM1jFMeARBP-531Yoo-un-w@mail.gmail.com>
+ <20191018101306.GB16347@sol>
+In-Reply-To: <20191018101306.GB16347@sol>
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+Date:   Mon, 21 Oct 2019 16:57:01 +0200
+Message-ID: <CAMRc=Md8CH-YTcDGhF7ODZTLO0hvE47XhaHFsXEe4ebcM-28uQ@mail.gmail.com>
+Subject: Re: [PATCH v2 5/6] gpiolib: disable bias on inputs when pull up/down
+ are both set
+To:     Kent Gibson <warthog618@gmail.com>
+Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bamvor Jian Zhang <bamv2005@gmail.com>,
+        Drew Fustini <drew@pdp7.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-VGhhbmtzIGFnYWluIEJhcnQgPSkNCg0KDQpPbiBNb24sIDIwMTktMTAtMjEgYXQgMTY6MzYgKzAy
-MDAsIEJhcnRvc3ogR29sYXN6ZXdza2kgd3JvdGU6DQo+IHBvbi4sIDIxIHBhxbogMjAxOSBvIDA5
-OjAwIFZhaXR0aW5lbiwgTWF0dGkNCj4gPE1hdHRpLlZhaXR0aW5lbkBmaS5yb2htZXVyb3BlLmNv
-bT4gbmFwaXNhxYIoYSk6DQo+ID4gSGVsbG8gQmFydG9zeiwNCj4gPiANCj4gPiArDQo+ID4gPiA+
-ICsgICAgICAgYmRncGlvLT5jaGlwLmRldiA9ICZwZGV2LT5kZXY7DQo+ID4gPiA+ICsgICAgICAg
-YmRncGlvLT5ncGlvLnBhcmVudCA9IHBkZXYtPmRldi5wYXJlbnQ7DQo+ID4gPiA+ICsgICAgICAg
-YmRncGlvLT5ncGlvLmxhYmVsID0gImJkNzE4MjgtZ3BpbyI7DQo+ID4gPiA+ICsgICAgICAgYmRn
-cGlvLT5ncGlvLm93bmVyID0gVEhJU19NT0RVTEU7DQo+ID4gPiA+ICsgICAgICAgYmRncGlvLT5n
-cGlvLmdldF9kaXJlY3Rpb24gPSBiZDcxODI4X2dldF9kaXJlY3Rpb247DQo+ID4gPiA+ICsgICAg
-ICAgYmRncGlvLT5ncGlvLnNldF9jb25maWcgPSBiZDcxODI4X2dwaW9fc2V0X2NvbmZpZzsNCj4g
-PiA+ID4gKyAgICAgICBiZGdwaW8tPmdwaW8uY2FuX3NsZWVwID0gdHJ1ZTsNCj4gPiA+ID4gKyAg
-ICAgICBiZGdwaW8tPmdwaW8uZ2V0ID0gYmQ3MTgyOF9ncGlvX2dldDsNCj4gPiA+ID4gKyAgICAg
-ICBiZGdwaW8tPmdwaW8uc2V0ID0gYmQ3MTgyOF9ncGlvX3NldDsNCj4gPiA+IA0KPiA+ID4gTm90
-IGltcGxlbWVudGluZyBkaXJlY3Rpb25fb3V0cHV0KCkgYW5kIGRpcmVjdGlvbl9pbnB1dCgpIGhl
-cmUNCj4gPiA+IHdpbGwNCj4gPiA+IHJlc3VsdHMgaW4gd2FybmluZ3MgZnJvbSB0aGUgR1BJTyBm
-cmFtZXdvcms6IGZvciBpbnN0YW5jZSB5b3UNCj4gPiA+IGltcGxlbWVudCBzZXQoKSBidXQgbm90
-IGRpcmVjdGlvbl9vdXRwdXQoKS4gSSdkIHNheToganVzdCBhZGQNCj4gPiA+IHRob3NlDQo+ID4g
-PiBjYWxsYmFja3MgYW5kIHJldHVybiBhbiBlcnJvciBpZiB0aGV5J3JlIGNhbGxlZCBmb3IgaW52
-YWxpZCBsaW5lcw0KPiA+ID4gKGZvcg0KPiA+ID4gaW5zdGFuY2U6IGRpcmVjdGlvbl9vdXRwdXQo
-KSBiZWluZyBjYWxsZWQgZm9yIGxpbmUgMykuDQo+ID4gDQo+ID4gT2suIEkgd2lsbCBpbXBsZW1l
-bnQgZHVtbXkgZnVuY3Rpb25zLg0KPiA+IA0KPiA+IEJ1dCBvdXQgb2YgdGhlIGN1cmlvc2l0eSAt
-IHdoeSB0aGUgR1BJTyBjb3JlIGVtaXRzIHRoZSB3YXJuaW5ncyBpZg0KPiA+IHRoZXNlIGFyZSBu
-b3QgaW1wbGVtZW50ZWQ/IEkgdGhpbmsgdGhlIGNvcmUgc2hvdWxkIG5vdCByZXF1aXJlICJuby0N
-Cj4gPiBvcGVyYXRpb24iIGZ1bmN0aW9ucyB0byBiZSBpbXBsZW1lbnRlZCBmb3IgcGlucyB3aGlj
-aCBkb24ndCBzdXBwb3J0DQo+ID4gYm90aCBvZiB0aGUgZGlyZWN0aW9ucy4gR1BJTyBjb3JlIGNv
-dWxkIG9ubHkgZW1pdCB3YXJuaW5nIGlmIGl0DQo+ID4gbmVlZHMNCj4gPiB0byBzZXQgZGlyZWN0
-aW9uIHRvIHNvbWV0aGluZyB0aGUgSFcgZG9lcyBub3Qgc3VwcG9ydC4gVGhhdCB3b3VsZA0KPiA+
-IGF2b2lkDQo+ID4gYWRkaW5nIHRoZSBkdW1teSBmdW5jdGlvbnMgdG8gYWxsIG9mIHRoZSBkcml2
-ZXJzLCByaWdodD8NCj4gPiANCj4gDQo+IEkgbG9va2VkIGF0IHRoZSBjb2RlIGFnYWluIGFuZCBp
-dCBzZWVtcyBJIHdhcyB3cm9uZy4gSWYgd2UgZG9uJ3QgaGF2ZQ0KPiBkaXJlY3Rpb25faW5wdXQo
-KSBvciBkaXJlY3Rpb25fb3V0cHV0KCkgd2UgY2hlY2sgdGhlIGFjdHVhbCBkaXJlY3Rpb24NCj4g
-d2l0aCBnZXRfZGlyZWN0aW9uKCkgYmVmb3JlIGVtaXR0aW5nIGFueSB3YXJuaW5ncyBhbmQgaWYg
-dGhlcmUncyBubw0KPiBkaXJlY3Rpb25fb3V0cHV0KCksIGJ1dCBsaW5lIGlzIGluIGlucHV0IG1v
-ZGUgdGhlbiBhbGwncyBmaW5lLiBJbg0KPiBvdGhlciB3b3JkczogZmFsc2UgYWxhcm0sIGFuZCB5
-b3UgY2FuIGtlZXAgaXQgdGhpcyB3YXkuDQoNClRoYW5rcyBmb3IgY2xhcmlmeWluZyB0aGlzIC0g
-aXQgbWFrZXMgc2Vuc2UgOikgSSB3b250IGNoYW5nZSB0aGlzIHRoZW4uDQoNCj4gPiA+IERvbid0
-IHlvdSBuZWVkIGEgTU9EVUxFX0FMSUFTKCkgaGVyZSBzaW5jZSB0aGlzIGlzIGFuIE1GRCBzdWIt
-DQo+ID4gPiBtb2R1bGU/DQo+ID4gDQo+ID4gSSBtdXN0IGFkbWl0IEkgZG9uJ3Qga25vdyB0aGUg
-ZGV0YWlscyBvZiBob3cgbW9kdWxlIGxvYWRpbmcgaXMNCj4gPiBkb25lLiBJDQo+ID4gdXNlZCBz
-eXN0ZW0gd2hlcmUgbW9kdWxlcyBhcmUgbG9hZCBieSBzY3JpcHRzLiAoSSBndWVzcyB0aGUgbW9k
-dWxlDQo+ID4gYWxpYXMgY291bGQgYmUgdXNlZCB0byBhbGxvdyBhdXRvbWF0aWMgbW9kdWxlIGxv
-YWRpbmcgW2J5IHVkZXY/XSkNCj4gPiANCj4gPiBDYW4geW91IHBsZWFzZSBlZHVjYXRlIG1lIC0g
-SWYgSSBhZGQgbW9kdWxlIGFsaWFzZXMgbWF0Y2hpbmcgdGhlDQo+ID4gc3ViLQ0KPiA+IGRldmlj
-ZSBuYW1lIGdpdmVuIGluIGluIE1GRCBjZWxsIC0gc2hvdWxkIHRoZSBzdWIgbW9kdWxlIGxvYWRp
-bmcgYmUNCj4gPiBhdXRvbWF0aWMgd2hlbiBNRkQgZHJpdmVyIGdldHMgcHJvYmVkPyBGb3Igc29t
-ZSByZWFzb24gSSBkaWRuJ3QgZ2V0DQo+ID4gdGhhdCB3b3JraW5nIG9uIG15IHRlc3QgYmVkLiBP
-ciBtYXliZSBJIG1pc3VuZGVyc3Rvb2Qgc29tZXRoaW5nLg0KPiA+IA0KPiANCj4gSWYgdGhlIGdw
-aW8gbW9kdWxlIGlzIGEgc3ViLW5vZGUgb24gdGhlIGRldmljZSB0cmVlIHRoYW4geW91IG1heSBu
-ZWVkDQo+IHRvIHVzZSBhIHN1Yi1jb21wYXRpYmxlIHRvIGdldCB0aGUgbW9kdWxlIGxvYWRlZCBi
-eSB1ZGV2Lg0KDQpKdXN0IGZvdW5kIG91dCB0aGF0IHRoZSBsYXN0IHVwZGF0ZSBicm9rZSBteSB0
-ZXN0IGJlZCBJMkMgY29tcGxldGVseS4NCkknbGwgZXhwZXJpbWVudCB3aXRoIHRoZSBNT0RVTEVf
-QUxJQVMgd2hlbiBJIGdldCBteSBib2FyZCBydW5uaW5nLi4uDQoNCkkgZG9uJ3Qgd2FudCB0byBh
-ZGQgb3duIERUIG5vZGUgZm9yIGdwaW8gKGFuZCBhbGwgb3RoZXIgc3ViIGRldmljZXMpLg0KVGhh
-dCBzaG91bGRuJ3QgYmUgbmVlZGVkLiBJdCByZWFsbHkgc2hvdWxkIGJlIGVub3VnaCB0byBraWNr
-IHRoZSBNRkQNCnBhcnQgZnJvbSBEVCB1c2luZyB0aGUgY29tcGF0aWJsZSAtIHN1YmRldmljZXMg
-c2hvdWxkIGJlIGxvYWQgYnkgTUZEDQp3aXRob3V0IGhhdmluZyBvd24gRFQgY29tcGF0aWJsZXMg
-Zm9yIHRoZW0uIEJ1dCBJJ2xsIHNlZSBob3cgdGhpcyB3b3Jrcw0Kb3V0IC0gdGhhbmtzIQ0KDQpC
-ciwNCglNYXR0aSBWYWl0dGluZW4NCg==
+pt., 18 pa=C5=BA 2019 o 12:13 Kent Gibson <warthog618@gmail.com> napisa=C5=
+=82(a):
+>
+> On Fri, Oct 18, 2019 at 10:03:17AM +0200, Bartosz Golaszewski wrote:
+> > czw., 17 pa=C5=BA 2019 o 07:06 Kent Gibson <warthog618@gmail.com> napis=
+a=C5=82(a):
+> > >
+> > > On Wed, Oct 16, 2019 at 09:01:04AM +0800, Kent Gibson wrote:
+> > > > On Tue, Oct 15, 2019 at 02:51:18PM +0200, Bartosz Golaszewski wrote=
+:
+> > > > > wt., 15 pa=C5=BA 2019 o 02:58 Kent Gibson <warthog618@gmail.com> =
+napisa=C5=82(a):
+> > > > > >
+> > > > > > On Mon, Oct 14, 2019 at 06:50:41PM +0200, Bartosz Golaszewski w=
+rote:
+> > > > > > > pon., 14 pa=C5=BA 2019 o 15:04 Kent Gibson <warthog618@gmail.=
+com> napisa=C5=82(a):
+> > > > > > > >
+> > > > > > > > On Mon, Oct 14, 2019 at 02:43:54PM +0200, Bartosz Golaszews=
+ki wrote:
+> > > > > > > > > sob., 12 pa=C5=BA 2019 o 03:57 Kent Gibson <warthog618@gm=
+ail.com> napisa=C5=82(a):
+> > > > > > > > > >
+> > > > > > > > > > This patch allows pull up/down bias to be disabled, all=
+owing
+> > > > > > > > > > the line to float or to be biased only by external circ=
+uitry.
+> > > > > > > > > > Use case is for where the bias has been applied previou=
+sly,
+> > > > > > > > > > either by default or by the user, but that setting may
+> > > > > > > > > > conflict with the current use of the line.
+> > > > > > > > > >
+> > > > > > > > > > Signed-off-by: Kent Gibson <warthog618@gmail.com>
+> > > > > > > > > > ---
+> > > > > > > > > >  drivers/gpio/gpiolib.c | 22 +++++++---------------
+> > > > > > > > > >  1 file changed, 7 insertions(+), 15 deletions(-)
+> > > > > > > > > >
+> > > > > > > > > > diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpio=
+lib.c
+> > > > > > > > > > index 647334f53622..f90b20d548b9 100644
+> > > > > > > > > > --- a/drivers/gpio/gpiolib.c
+> > > > > > > > > > +++ b/drivers/gpio/gpiolib.c
+> > > > > > > > > > @@ -539,11 +539,6 @@ static int linehandle_create(struc=
+t gpio_device *gdev, void __user *ip)
+> > > > > > > > > >             (lflags & GPIOHANDLE_REQUEST_OUTPUT))
+> > > > > > > > > >                 return -EINVAL;
+> > > > > > > > > >
+> > > > > > > > > > -       /* Same with pull-up and pull-down. */
+> > > > > > > > > > -       if ((lflags & GPIOHANDLE_REQUEST_PULL_UP) &&
+> > > > > > > > > > -           (lflags & GPIOHANDLE_REQUEST_PULL_DOWN))
+> > > > > > > > > > -               return -EINVAL;
+> > > > > > > > > > -
+> > > > > > > > > >         /*
+> > > > > > > > > >          * Do not allow OPEN_SOURCE & OPEN_DRAIN flags =
+in a single request. If
+> > > > > > > > > >          * the hardware actually supports enabling both=
+ at the same time the
+> > > > > > > > > > @@ -935,14 +930,6 @@ static int lineevent_create(struct=
+ gpio_device *gdev, void __user *ip)
+> > > > > > > > > >              (lflags & GPIOHANDLE_REQUEST_PULL_DOWN)))
+> > > > > > > > > >                 return -EINVAL;
+> > > > > > > > > >
+> > > > > > > > > > -       /*
+> > > > > > > > > > -        * Do not allow both pull-up and pull-down flag=
+s to be set as they
+> > > > > > > > > > -        *  are contradictory.
+> > > > > > > > > > -        */
+> > > > > > > > > > -       if ((lflags & GPIOHANDLE_REQUEST_PULL_UP) &&
+> > > > > > > > > > -           (lflags & GPIOHANDLE_REQUEST_PULL_DOWN))
+> > > > > > > > > > -               return -EINVAL;
+> > > > > > > > > > -
+> > > > > > > > > >         le =3D kzalloc(sizeof(*le), GFP_KERNEL);
+> > > > > > > > > >         if (!le)
+> > > > > > > > > >                 return -ENOMEM;
+> > > > > > > > > > @@ -2931,6 +2918,7 @@ static int gpio_set_config(struct=
+ gpio_chip *gc, unsigned offset,
+> > > > > > > > > >         unsigned arg;
+> > > > > > > > > >
+> > > > > > > > > >         switch (mode) {
+> > > > > > > > > > +       case PIN_CONFIG_BIAS_DISABLE:
+> > > > > > > > > >         case PIN_CONFIG_BIAS_PULL_DOWN:
+> > > > > > > > > >         case PIN_CONFIG_BIAS_PULL_UP:
+> > > > > > > > > >                 arg =3D 1;
+> > > > > > > > > > @@ -2991,7 +2979,11 @@ int gpiod_direction_input(struct=
+ gpio_desc *desc)
+> > > > > > > > > >         if (ret =3D=3D 0)
+> > > > > > > > > >                 clear_bit(FLAG_IS_OUT, &desc->flags);
+> > > > > > > > > >
+> > > > > > > > > > -       if (test_bit(FLAG_PULL_UP, &desc->flags))
+> > > > > > > > > > +       if (test_bit(FLAG_PULL_UP, &desc->flags) &&
+> > > > > > > > > > +               test_bit(FLAG_PULL_DOWN, &desc->flags))
+> > > > > > > > > > +               gpio_set_config(chip, gpio_chip_hwgpio(=
+desc),
+> > > > > > > > > > +                               PIN_CONFIG_BIAS_DISABLE=
+);
+> > > > > > > > > > +       else if (test_bit(FLAG_PULL_UP, &desc->flags))
+> > > > > > > > >
+> > > > > > > > > From looking at the code: user-space can disable bias whe=
+n setting
+> > > > > > > > > both PULL_UP and PULL_DOWN flags. I don't understand why =
+it's done in
+> > > > > > > > > this implicit way? Why not a separate flag?
+> > > > > > > >
+> > > > > > > > An extra flag would waste a bit and add nothing but more sa=
+nity checking.
+> > > > > > > >
+> > > > > > >
+> > > > > > > I disagree. The user API needs to be very explicit. Sanity ch=
+ecking is
+> > > > > > > alright - if there'll be too many ifdefs, we can start thinki=
+ng about
+> > > > > > > adding some core library helpers for sanitizing conflicting f=
+lags, I'm
+> > > > > > > sure other frameworks could use something like this as well.
+> > > > > > >
+> > > > > > > Especially in this context: setting PULL_UP and PULL_DOWN tog=
+ether
+> > > > > > > disables bias - this doesn't make sense logically.
+> > > > > > >
+> > > > > > In a way it does make a weird kind of sense - they cancel.  Phy=
+sically.
+> > > > > >
+> > > > >
+> > > > > Yes, on some devices we set both bits to disable bias, but on oth=
+ers
+> > > > > the pull-up and pull-down bits need to be cleared and yet others =
+have
+> > > > > a dedicated bit for that. It's not standardized and the pinctrl
+> > > > > framework defines all three values as separate bits to expose a c=
+ommon
+> > > > > programming interface.
+> > > > >
+> > >
+> > > Is there any documentation on this?  The pinctrl docs stay pretty hig=
+h
+> > > level and doesn't touch on this. And from the pinconf-generic.h
+> > > documentation, I'd consider drivers that require both pull-up and
+> > > pull-down set to disable bias to be non-compliant with the API - for
+> > > BIAS_DISABLE it says "this setting disables all biasing", so you'd th=
+ink
+> > > the driver would support that and do any mapping (setting both pulls
+> > > high or low or whatever) internally.
+> > >
+>
+> So no answer for this one?
+>
+> I find it unsettling that we will have a user space API that doesn't
+> provide a definitive way to disable bias, independent of the underlying
+> hardware.  I thought the kernel was all about hardware abstraction?
+>
+
+If you expose three options to user-space: PULL-UP, PULL-DOWN and
+DISABLE and then that gets translated by the driver to whatever the
+driver understands - how is this not abstraction?
+
+> > > > Ok. And, since gpiolib has no knowledge of what combinations are
+> > > > appropriate for a given chip, we can't provide a higher level
+> > > > abstraction and have no option but to expose that pinconf
+> > > > complexity in the GPIO uapi?
+> > > >
+> > > > In fact, pinconf doesn't just define 3 bias bits - it defines 6:
+> > > >
+> > > > enum pin_config_param {
+> > > >       PIN_CONFIG_BIAS_BUS_HOLD,
+> > > >       PIN_CONFIG_BIAS_DISABLE,
+> > > >       PIN_CONFIG_BIAS_HIGH_IMPEDANCE,
+> > > >       PIN_CONFIG_BIAS_PULL_DOWN,
+> > > >       PIN_CONFIG_BIAS_PULL_PIN_DEFAULT,
+> > > >       PIN_CONFIG_BIAS_PULL_UP,
+> > > >
+> > > > Do we need to support any of the remaining 3 in the GPIO uapi, eith=
+er
+> > > > now or possibly in the future?
+> > > >
+> > > > And what about the other PIN_CONFIG flags?  Some of these might be
+> > > > candidates for controlling via SET_CONFIG_IOCTL, if not in the requ=
+est
+> > > > itself? (again this is contemplating the future, not suggesting bei=
+ng part
+> > > > of this patch)
+> > > >
+> > > > > > Did you read the cover letter?  The problem, as I see it,
+> > > > > > is that we're stuck using a flag field to encode a two bit enum=
+.
+> > > > > > That fact the we only have a flag field to play with can't be
+> > > > > > changed due to ABI.
+> > > > >
+> > > > > For some reason I haven't received the cover letter on my inbox. =
+I'm
+> > > > > only now seeing it on linux-gpio archives.
+> > > > >
+> > > > And for some reason I didn't get 0001, yet all 7 parts made it to t=
+he mailing
+> > > > list. Spam filters kicking in? Though it isn't in my spam folder ei=
+ther.
+> > > > Something odd going on.
+> > > >
+> > > > > Anyway: I don't understand why you insist on using two instead of
+> > > > > three bits. You have 32 bits in total that can be used and only 5=
+ are
+> > > > > used so far. There's plenty left.
+> > > > >
+> > > > Cos it makes no sense to me to encode 4 values into 3 bits when 2 w=
+ill
+> > > > do.  But if you want to expose part of the pinconf API within the G=
+PIO
+> > > > uapi then that goes out the window - it's not 4 values anymore.
+> > > >
+> > > > And partly cos I'm frustrated that I'd asked questions regarding ho=
+w the
+> > > > API should look earlier and got no reply.  This is the sort of thin=
+g I
+> > > > usually deal with in the design stage, not review.
+> > > >
+> > > > I realise you guys are busy, but a little time spent clarifying des=
+ign
+> > > > would save a whole lot more time in coding, testing and review.
+> > > >
+> > > > > I'd prefer to see:
+> > > > >
+> > > > > GPIOHANDLE_REQUEST_PULL_UP
+> > > > > GPIOHANDLE_REQUEST_PULL_DOWN
+> > > > > GPIOHANDLE_REQUEST_PULL_DISABLED
+> > > > >
+> > > > > or maybe even
+> > > > >
+> > > > > GPIOHANDLE_REQUEST_BIAS_PULL_UP
+> > > > > GPIOHANDLE_REQUEST_BIAS_PULL_DOWN
+> > > > > GPIOHANDLE_REQUEST_BIAS_DISABLED
+> > > > >
+> > > > > to stay consistent with the pinctrl flags. No bit set among these
+> > > > > three would mean AS_IS.
+> > > > >
+> > > > That makes sense, if we are exposing the pinctrl API here.
+> > > >
+> > >
+> > > Looking at going with the naming including BIAS...
+> > > What to do with constants defined in headers prior to this patch that
+> > > don't include the BIAS?  e.g. FLAG_PULL_UP and FLAG_PULL_DOWN in gpio=
+lib.h?
+> >
+> > But this has nothing to do with user-space. This was added so that
+> > GPIO expanders can use this without pulling in the pinctrl framework.
+> >
+> > > Safe to assume they can't be renamed?
+> >
+> > What for?
+> >
+>
+> For consistency and clarity.  I need to add a flag into the gpio_desc
+> flags, which are usedf throughout gpiolib.c and aredefined in gpiolib.h,
+> and those FLAG_PULL_UP and FLAG_PULL_DOWN are already there.
+>
+> To be consistent I'd be dropping the GPIOHANDLE_REQUEST_BIAS_ from your
+> preferred names when determining the name for the new flag, but then it
+> would be called FLAG_DISABLE, which is obviously too vague.
+>
+> I intend to use FLAG_BIAS_DISABLE, and for consistency it would be nice
+> to rename FLAG_PULL_UP to FLAG_BIAS_PULL_UP, and similarly PULL_DOWN,
+> but that may break things and so be unacceptable, right?
+>
+
+Yeah, not for device tree, no. It sounds fine for core gpiolib but I
+wouldn't change it in this series though personally - let's try to
+limit its scope and we can come back to it later.
+
+> > > So ok to stay with the unBIASed names for both old (cos they are ther=
+e)
+> > > and also the new (to be consistent with the old)?
+> >
+> > There's no need for perfect naming consistency between user and kernel
+> > space declarations. The difference is: you need to be sure to get the
+> > user-space flags right the first time - unlike the kernel APIs, they
+> > cannot be renamed later.
+> >
+>
+> So it may be acceptable to change the gpiolib.h flag names?
+>
+
+As I said above - yes, but I'd wait until this series is at least in
+Linus' or my for-next branch.
+
+> This is one of those cases where I'd rather ask than guess and not find
+> out until the patch gets rejected.
+>
+> > >
+> > > Also, while the DT interface (gpiod_configure_flags) has GPIO_PULL_UP
+> > > and GPIO_PULL_DOWN, it doesn't support DISABLE, and it explicitly rej=
+ects
+> > > both having both PULL_UP and PULL_DOWN set.  Should we be extending t=
+he
+> > > DISABLE support to the DT interface, and should the API behaviour als=
+o
+> > > mirror the pinctrl behaviour you describe above?
+> >
+> > Is someone needing it? Adding new features without users is frowned
+> > upon for good reasons.
+> >
+>
+> Not that I am aware of, so we can always add it later.
+> And that is why I asked - my first instinct is to keep the APIs
+> aligned, especially where we now have the user space API containing
+> functionality not available to DT, but I am also aware that might be
+> considered unimportant or even unacceptable.
+>
+
+In general: we're adding new interfaces when someone needs them, not
+"just in case" someone needs them in the future.
+
+> > >
+> > > And are there any combinations that are guaranteed to be invalid,
+> > > and so should be rejected, like DISABLE + PULL_UP??  In fact are ther=
+e
+> > > any combinations that are valid other then PULL_UP + PULL_DOWN?
+> >
+> > You mean invalid? You just said PULL_UP + PULL_DOWN is rejected.
+> >
+>
+> No, I my example was  DISABLE + PULL_UP, which I assume is an invalid com=
+bo.
+> And then on reflection the only valid combo I could think of was
+> PULL_UP + PULL_DOWN, and even then only because you said we need it to
+> disable bias on some chips.
+
+I think there's some misunderstanding. I said that on some chips there
+are bits in control registers that are used to control the bias and
+sometimes it's three (pull-up, pull-down and disable) and sometimes
+it's two (pull-up, pull-down and both set =3D disabled) but that we
+should only have a single interface in user-space where the
+BIAS_DISABLE bit would be translated to whatever the hardware
+understands by the driver. So in this case: only one of the bits could
+be set.
+
+I understand that this sounds like a task for an enum, but introducing
+an enum in a separate field would modify the ABI while simply adding
+new mutually-exclusive flags would not. Not to mention that encoding
+this enum on two bits of a field that's normally used for flags and is
+even called "flags" would introduce a lot of confusion.
+
+I got your new patches - I'll take a look at them shortly.
+
+Bart
+
+>
+> Cheers,
+> Kent.
