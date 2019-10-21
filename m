@@ -2,43 +2,45 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id E07CFDED57
-	for <lists+linux-gpio@lfdr.de>; Mon, 21 Oct 2019 15:19:59 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AC5D0DED73
+	for <lists+linux-gpio@lfdr.de>; Mon, 21 Oct 2019 15:23:49 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728920AbfJUNT7 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 21 Oct 2019 09:19:59 -0400
-Received: from mga14.intel.com ([192.55.52.115]:7465 "EHLO mga14.intel.com"
+        id S1728827AbfJUNXs (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 21 Oct 2019 09:23:48 -0400
+Received: from mga12.intel.com ([192.55.52.136]:24504 "EHLO mga12.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728919AbfJUNT7 (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Mon, 21 Oct 2019 09:19:59 -0400
+        id S1727256AbfJUNXr (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Mon, 21 Oct 2019 09:23:47 -0400
 X-Amp-Result: UNKNOWN
 X-Amp-Original-Verdict: FILE UNKNOWN
 X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 21 Oct 2019 06:19:59 -0700
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 21 Oct 2019 06:23:47 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.67,323,1566889200"; 
-   d="scan'208";a="222460495"
+   d="scan'208";a="196106820"
 Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by fmsmga004.fm.intel.com with ESMTP; 21 Oct 2019 06:19:58 -0700
+  by fmsmga008.fm.intel.com with ESMTP; 21 Oct 2019 06:23:45 -0700
 Received: from andy by smile with local (Exim 4.92.2)
         (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1iMXbJ-0004zN-GQ; Mon, 21 Oct 2019 16:19:57 +0300
-Date:   Mon, 21 Oct 2019 16:19:57 +0300
+        id 1iMXez-00052V-6L; Mon, 21 Oct 2019 16:23:45 +0300
+Date:   Mon, 21 Oct 2019 16:23:45 +0300
 From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Mika Westerberg <mika.westerberg@linux.intel.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        linux-gpio@vger.kernel.org
-Subject: Re: [PATCH v1 3/3] pinctrl: intel: Introduce intel_restore_intmask()
- helper
-Message-ID: <20191021131957.GS32742@smile.fi.intel.com>
-References: <20191014084348.42489-1-andriy.shevchenko@linux.intel.com>
- <20191014084348.42489-3-andriy.shevchenko@linux.intel.com>
- <20191021122720.GE2819@lahna.fi.intel.com>
+To:     Hans de Goede <hdegoede@redhat.com>
+Cc:     Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-gpio@vger.kernel.org, linux-acpi@vger.kernel.org
+Subject: Re: [PATCH] gpiolib: acpi: Print pin number on
+ acpi_gpiochip_alloc_event errors
+Message-ID: <20191021132345.GT32742@smile.fi.intel.com>
+References: <20191018195208.94405-1-hdegoede@redhat.com>
+ <20191021091124.GK32742@smile.fi.intel.com>
+ <f3294033-8105-8c26-a8e2-3ced55276fdb@redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191021122720.GE2819@lahna.fi.intel.com>
+In-Reply-To: <f3294033-8105-8c26-a8e2-3ced55276fdb@redhat.com>
 Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-gpio-owner@vger.kernel.org
@@ -46,25 +48,19 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Oct 21, 2019 at 03:27:20PM +0300, Mika Westerberg wrote:
-> On Mon, Oct 14, 2019 at 11:43:48AM +0300, Andy Shevchenko wrote:
-> > Refactor restoring GPI_IE registers by using an introduced helper.
-
-> > +	struct device *dev = pctrl->dev;
+On Mon, Oct 21, 2019 at 02:52:13PM +0200, Hans de Goede wrote:
+> On 21-10-2019 11:11, Andy Shevchenko wrote:
+> > On Fri, Oct 18, 2019 at 09:52:08PM +0200, Hans de Goede wrote:
+> > > Print pin number on acpi_gpiochip_alloc_event errors, to help debugging
+> > > these.
+> > 
+> > I'm not sure which one is better decimal or hex, perhaps Mika can help me, in any case
 > 
-> const?
+> They are listed as hex in the dis-assembled DSTD.
 
-It's only about dozen occurrences in 8 drivers altogether in the kernel
-to have const with struct device.
-
-So, I consider this pattern is unusual.
-
-> Also should we do the same here as we do with others and check first
-> whether we need to update the mask at all?
-
-I will look at it.
-I think we may do it as a separate change (this doesn't change any
-functionality).
+Oh, now I noticed the potential issue. The pin can be 16-bit, you pring here
+only for the case when we have evname. Maybe do something similar in these
+messages? Print event name for pin inside byte range and value otherwise?
 
 -- 
 With Best Regards,
