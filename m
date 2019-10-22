@@ -2,104 +2,145 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id BDEF6DFFC7
-	for <lists+linux-gpio@lfdr.de>; Tue, 22 Oct 2019 10:43:36 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A62DEE001A
+	for <lists+linux-gpio@lfdr.de>; Tue, 22 Oct 2019 10:57:26 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388573AbfJVInf (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 22 Oct 2019 04:43:35 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:54033 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388592AbfJVInf (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 22 Oct 2019 04:43:35 -0400
-Received: by mail-wm1-f68.google.com with SMTP id i13so907697wmd.3
-        for <linux-gpio@vger.kernel.org>; Tue, 22 Oct 2019 01:43:32 -0700 (PDT)
+        id S1731255AbfJVI5Z (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 22 Oct 2019 04:57:25 -0400
+Received: from mail-vs1-f67.google.com ([209.85.217.67]:39481 "EHLO
+        mail-vs1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731223AbfJVI5Y (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 22 Oct 2019 04:57:24 -0400
+Received: by mail-vs1-f67.google.com with SMTP id y129so10806208vsc.6
+        for <linux-gpio@vger.kernel.org>; Tue, 22 Oct 2019 01:57:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=jXNXj1e2zC7QQcAuycavLZxRUf6xfVt6rz1LoeDud/w=;
-        b=2QCyA3PXiPUyeYFfuokAvpJI+PvkjVpE4UOc0GXfQNWQLPRIJ0QiOrQS0JzYXAd+n3
-         Szn91AoIXkU1TUwFXYX0ApUs9c5lC5Y5TGYRD81OltYhvuecZU7li+rSgVDjbcAnQ9wq
-         WDqai+Etz77UZ+acGmURkx9RBtZ6h5KdcahbnB2TyEfltA8mCNAFgHETKBRTRNIG9xy8
-         GdlzdG76F+YGV7UVe4OPMrUqElEx17hrl8Yv5dIC5ZavP8i2kjUZrBlwH3DSvF/24Dmp
-         bHOtuWOpcUGSPaVQ3cpAWkjb87PLohAZ5qbXRVxeE1FpXwe5mOf9bHcgEjua7PJi2nd1
-         0Z/g==
+        d=linaro.org; s=google;
+        h=mime-version:from:date:message-id:subject:to:cc;
+        bh=s2KncmuUuzkST0SJuWXi9nSQahdWQWGnhsFKkDCrbOE=;
+        b=ZrQZqDM/6uZMqHcq6Jrzk84v460OZuoA+j4yg8KVF6g/cXJcgjoYKx/7xef20uUG54
+         7//Jf2Ktq7F+0oZtpKtYBt6cmcqVLI+7hs/yeZaQ7WcgKdUb197M9iI4ns0Ay2TNYTdT
+         dHsxxSaPnTCBiEzwyZp3bHA2BifEMBUI79j+OudQvANNBIf1K+LWUKKT8kk3hTcKfsW5
+         wPgt8Tq1dPpJcpU6ESeV5d0/9w2z7weVeiPdU3b/q7kbVEGjBpLmEjiXur42+2TQ1SDS
+         ssmsWzEzKz1kQI92m00QnfDoVm2W0R1SK5ytDmyi+N4cjp9weAITISRGbDdw1PeQJhrf
+         NnqQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=jXNXj1e2zC7QQcAuycavLZxRUf6xfVt6rz1LoeDud/w=;
-        b=dNovf/YdjRZc0mkQTrC5RBNuLZjvRpniOwesF5x61dqPgB3W4rW0mhVYa3XkxHAyqb
-         lMD3tFT4I3tNkFR1p3my7LgkN5DXFzWzXvxatqfGfangrElpZSyE/ALhbas35rDZqju7
-         GVfYZvmwJYZ1UQJU4II45k4MJ/Gi/+L/gCWNN77+s5UexsacuRriE5iSTfnulTYNhIli
-         6aH8oLVWuEF86HKq/2ZSj5w9TuxXMfR48XssjA1fj2clLueFzGfAFPAdiF7SHImumY8B
-         udIZa/barHN3Hd1oGkZcXr22hbRA6teQzncmomIfBA6q7tpQT9GxFFk+TZB3yvVPTixF
-         XwWg==
-X-Gm-Message-State: APjAAAXDYAoCtUsE5Vep1spe92srbcbnk7r2vMiCEWA/0WLg3CjuKSZQ
-        hIErrLtIUYNrzUKIHXy10L4NkA==
-X-Google-Smtp-Source: APXvYqxrmktides0gIu13c3NuG/KSYgp4SuGdxhZ/o9zHotYMfXm0eCSV6Q2f87+20WxPanjVJ0Q0w==
-X-Received: by 2002:a1c:dc83:: with SMTP id t125mr1994370wmg.50.1571733811370;
-        Tue, 22 Oct 2019 01:43:31 -0700 (PDT)
-Received: from localhost.localdomain (amontpellier-652-1-281-69.w109-210.abo.wanadoo.fr. [109.210.96.69])
-        by smtp.gmail.com with ESMTPSA id q25sm477231wra.3.2019.10.22.01.43.30
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 22 Oct 2019 01:43:30 -0700 (PDT)
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-To:     Jonathan Corbet <corbet@lwn.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J . Wysocki" <rafael@kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Linus Walleij <linus.walleij@linaro.org>
-Cc:     linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-gpio@vger.kernel.org,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: [RESEND PATCH v3 8/8] gpio: tegra186: use devm_platform_ioremap_resource_byname()
-Date:   Tue, 22 Oct 2019 10:43:18 +0200
-Message-Id: <20191022084318.22256-9-brgl@bgdev.pl>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20191022084318.22256-1-brgl@bgdev.pl>
-References: <20191022084318.22256-1-brgl@bgdev.pl>
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
+        bh=s2KncmuUuzkST0SJuWXi9nSQahdWQWGnhsFKkDCrbOE=;
+        b=psyeJXF4fqk1m0OyQhye4yB9IwZE6HlbD3AXcjTZewA/aDNd2fpoLCbP4opeb4Dvuk
+         nddaPrnKHD5BOaeqktlkrZzO7kQYd4rf3c447KgHznk8wZkBHZ0vDPH0ubJO695FseCv
+         nN+PfVMtULs1sj0bIJWehiJiin+j0IREi4QmgwMjAlKesh/p3wdFEcr0eUET5SS1y8mw
+         gYd4SwmAYY7MTIfBzqPUs9Is4cxEow4+KGIcho7FCcjhxkKGAYKFZDKvDB7p0v6za03G
+         3HEmKZ36TfbvWDIFjEXkLAJFZln9A+8OfGZZ/v5M1okAN53VG3NtI3HVZ5hJbyMlsQQY
+         OMDw==
+X-Gm-Message-State: APjAAAVsfegVAcGnrqgK8bjUggKCWrGyQMRKl8iJQFVBRnCCkyjJy7KV
+        h2Id1dDu76+hM/R1K8u2WyzekoEiwgIduNFNBswLwQ==
+X-Google-Smtp-Source: APXvYqzk7Pu2o3BNiXte2DnyH90EBqmbScr/BAoGu0ZdVKx0CGqv6wIpK1d1V0WaZS2dbFQWEpVLG/sVjbCZ2UBxVJg=
+X-Received: by 2002:a67:d113:: with SMTP id u19mr1088796vsi.93.1571734642189;
+ Tue, 22 Oct 2019 01:57:22 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Tue, 22 Oct 2019 10:57:10 +0200
+Message-ID: <CACRpkdbiyY9AT5Y8OwMmFgwgvn_DGUFrJVHWbZwyAxnK_bA7HQ@mail.gmail.com>
+Subject: [GIT PULL] pin control fixes for v5.4
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Hi Linus,
 
-Use the devm_platform_ioremap_resource_byname() helper instead of
-calling platform_get_resource_byname() and devm_ioremap_resource()
-separately.
+here is a bunch of pin control fixes. I was lagging behind
+on this one, some fixes should have come in earlier,
+sorry about that.
 
-Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Reviewed-by: Arnd Bergmann <arnd@arndb.de>
----
- drivers/gpio/gpio-tegra186.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+Anyways here it is, pretty straight-forward fixes, the Strago
+fix stand out as something serious affecting a lot of
+machines.
 
-diff --git a/drivers/gpio/gpio-tegra186.c b/drivers/gpio/gpio-tegra186.c
-index a9058fda187e..ef40fbe923cf 100644
---- a/drivers/gpio/gpio-tegra186.c
-+++ b/drivers/gpio/gpio-tegra186.c
-@@ -407,7 +407,6 @@ static int tegra186_gpio_probe(struct platform_device *pdev)
- 	unsigned int i, j, offset;
- 	struct gpio_irq_chip *irq;
- 	struct tegra_gpio *gpio;
--	struct resource *res;
- 	char **names;
- 	int err;
- 
-@@ -417,8 +416,7 @@ static int tegra186_gpio_probe(struct platform_device *pdev)
- 
- 	gpio->soc = of_device_get_match_data(&pdev->dev);
- 
--	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "gpio");
--	gpio->base = devm_ioremap_resource(&pdev->dev, res);
-+	gpio->base = devm_platform_ioremap_resource_byname(pdev, "gpio");
- 	if (IS_ERR(gpio->base))
- 		return PTR_ERR(gpio->base);
- 
--- 
-2.23.0
+Yours,
+Linus Walleij
 
+The following changes since commit 54ecb8f7028c5eb3d740bb82b0f1d90f2df63c5c:
+
+  Linux 5.4-rc1 (2019-09-30 10:35:40 -0700)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git
+tags/pinctrl-v5.4-2
+
+for you to fetch changes up to d6e7a1a5119c4e719b0d63651f09762d7384bfed:
+
+  pinctrl: aspeed-g6: Rename SD3 to EMMC and rework pin groups
+(2019-10-16 15:58:27 +0200)
+
+----------------------------------------------------------------
+Pin control fixes for v5.4:
+
+- Handle multiple instances of Intel chips without complaining.
+- Restore the Intel Strago DMI workaround
+- Make the Armada 37xx handle pins over 32
+- Fix the polarity of the LED group on Armada 37xx
+- Fix an off-by-one bug in the NS2 driver
+- Fix error path for iproc's platform_get_irq()
+- Fix error path on the STMFX driver
+- Fix a typo in the Berlin AS370 driver
+- Fix up misc errors in the Aspeed 2600 BMC support
+- Fix a stray SPDX tag
+
+----------------------------------------------------------------
+Amelie Delaunay (1):
+      pinctrl: stmfx: fix null pointer on remove
+
+Andrew Jeffery (4):
+      dt-bindings: pinctrl: aspeed-g6: Rework SD3 function and groups
+      pinctrl: aspeed-g6: Sort pins for sanity
+      pinctrl: aspeed-g6: Fix I2C14 SDA description
+      pinctrl: aspeed-g6: Make SIG_DESC_CLEAR() behave intuitively
+
+Andy Shevchenko (1):
+      pinctrl: intel: Allocate IRQ chip dynamic
+
+Chris Packham (1):
+      pinctrl: iproc: allow for error from platform_get_irq()
+
+Dan Carpenter (1):
+      pinctrl: ns2: Fix off by one bugs in ns2_pinmux_enable()
+
+Dmitry Torokhov (1):
+      pinctrl: cherryview: restore Strago DMI workaround for all versions
+
+Jisheng Zhang (1):
+      pinctrl: berlin: as370: fix a typo s/spififib/spdifib
+
+Johnny Huang (3):
+      pinctrl: aspeed-g6: Fix I3C3/I3C4 pinmux configuration
+      pinctrl: aspeed-g6: Fix UART13 group pinmux
+      pinctrl: aspeed-g6: Rename SD3 to EMMC and rework pin groups
+
+Linus Walleij (2):
+      pinctrl: bcm-iproc: Use SPDX header
+      Merge tag 'intel-pinctrl-fixes-v5.4' of
+git://git.kernel.org/.../pinctrl/intel into fixes
+
+Patrick Williams (2):
+      pinctrl: armada-37xx: fix control of pins 32 and up
+      pinctrl: armada-37xx: swap polarity on LED group
+
+ .../bindings/pinctrl/aspeed,ast2600-pinctrl.yaml   |  86 +++++++-------
+ drivers/pinctrl/aspeed/pinctrl-aspeed-g6.c         | 124 +++++++++------------
+ drivers/pinctrl/aspeed/pinmux-aspeed.h             |   3 +-
+ drivers/pinctrl/bcm/pinctrl-iproc-gpio.c           |  12 +-
+ drivers/pinctrl/bcm/pinctrl-ns2-mux.c              |   4 +-
+ drivers/pinctrl/berlin/pinctrl-as370.c             |   2 +-
+ drivers/pinctrl/intel/pinctrl-cherryview.c         |   4 -
+ drivers/pinctrl/intel/pinctrl-intel.c              |  27 ++---
+ drivers/pinctrl/mvebu/pinctrl-armada-37xx.c        |  26 ++---
+ drivers/pinctrl/pinctrl-stmfx.c                    |   2 +-
+ 10 files changed, 131 insertions(+), 159 deletions(-)
