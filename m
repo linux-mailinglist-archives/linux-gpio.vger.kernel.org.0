@@ -2,26 +2,26 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 0CB8CE0A9D
-	for <lists+linux-gpio@lfdr.de>; Tue, 22 Oct 2019 19:30:59 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5DBC2E0AA8
+	for <lists+linux-gpio@lfdr.de>; Tue, 22 Oct 2019 19:31:04 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387659AbfJVR32 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 22 Oct 2019 13:29:28 -0400
+        id S2388720AbfJVR3k (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 22 Oct 2019 13:29:40 -0400
 Received: from mga17.intel.com ([192.55.52.151]:50509 "EHLO mga17.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732554AbfJVR32 (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Tue, 22 Oct 2019 13:29:28 -0400
+        id S2388145AbfJVR3a (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Tue, 22 Oct 2019 13:29:30 -0400
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 22 Oct 2019 10:29:27 -0700
+  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 22 Oct 2019 10:29:30 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.68,217,1569308400"; 
-   d="scan'208";a="372605618"
+   d="scan'208";a="372605633"
 Received: from black.fi.intel.com ([10.237.72.28])
-  by orsmga005.jf.intel.com with ESMTP; 22 Oct 2019 10:29:24 -0700
+  by orsmga005.jf.intel.com with ESMTP; 22 Oct 2019 10:29:27 -0700
 Received: by black.fi.intel.com (Postfix, from userid 1003)
-        id E8BB43BB; Tue, 22 Oct 2019 20:29:23 +0300 (EEST)
+        id 0A16240F; Tue, 22 Oct 2019 20:29:24 +0300 (EEST)
 From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 To:     Linus Walleij <linus.walleij@linaro.org>,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>,
@@ -32,9 +32,9 @@ To:     Linus Walleij <linus.walleij@linaro.org>,
         Andrew Morton <akpm@linux-foundation.org>,
         William Breathitt Gray <vilhelm.gray@gmail.com>
 Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: [PATCH v2 03/11] lib/test_bitmap: Name EXP_BYTES properly
-Date:   Tue, 22 Oct 2019 20:29:14 +0300
-Message-Id: <20191022172922.61232-4-andriy.shevchenko@linux.intel.com>
+Subject: [PATCH v2 05/11] lib/test_bitmap: Move exp1 and exp2 upper for others to use
+Date:   Tue, 22 Oct 2019 20:29:16 +0300
+Message-Id: <20191022172922.61232-6-andriy.shevchenko@linux.intel.com>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191022172922.61232-1-andriy.shevchenko@linux.intel.com>
 References: <20191022172922.61232-1-andriy.shevchenko@linux.intel.com>
@@ -45,51 +45,73 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-EXP_BYTES has been wrongly named. It's a size of the exp array in bits.
-
-While here, go ahead and rename to EXP1_IN_BITS to avoid double renaming
-when exp will be renamed to exp1 in the next patch
+Some test cases may re-use predefined exp1 and exp2 bitmaps.
+Move them upper in the file.
 
 Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 ---
- lib/test_bitmap.c | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+ lib/test_bitmap.c | 41 ++++++++++++++++++++---------------------
+ 1 file changed, 20 insertions(+), 21 deletions(-)
 
 diff --git a/lib/test_bitmap.c b/lib/test_bitmap.c
-index d2fa94e45a46..38f923411ada 100644
+index 6b70166ac960..449d0882b488 100644
 --- a/lib/test_bitmap.c
 +++ b/lib/test_bitmap.c
-@@ -374,17 +374,17 @@ static void __init test_bitmap_parselist_user(void)
- 	__test_bitmap_parselist(1);
- }
+@@ -21,6 +21,26 @@ static unsigned failed_tests __initdata;
  
--#define EXP_BYTES	(sizeof(exp) * 8)
-+#define EXP1_IN_BITS	(sizeof(exp) * 8)
+ static char pbl_buffer[PAGE_SIZE] __initdata;
  
- static void __init test_bitmap_arr32(void)
- {
- 	unsigned int nbits, next_bit;
--	u32 arr[sizeof(exp) / 4];
--	DECLARE_BITMAP(bmap2, EXP_BYTES);
-+	u32 arr[EXP1_IN_BITS / 32];
-+	DECLARE_BITMAP(bmap2, EXP1_IN_BITS);
++static const unsigned long exp1[] __initconst = {
++	BITMAP_FROM_U64(1),
++	BITMAP_FROM_U64(2),
++	BITMAP_FROM_U64(0x0000ffff),
++	BITMAP_FROM_U64(0xffff0000),
++	BITMAP_FROM_U64(0x55555555),
++	BITMAP_FROM_U64(0xaaaaaaaa),
++	BITMAP_FROM_U64(0x11111111),
++	BITMAP_FROM_U64(0x22222222),
++	BITMAP_FROM_U64(0xffffffff),
++	BITMAP_FROM_U64(0xfffffffe),
++	BITMAP_FROM_U64(0x3333333311111111ULL),
++	BITMAP_FROM_U64(0xffffffff77777777ULL),
++	BITMAP_FROM_U64(0),
++};
++
++static const unsigned long exp2[] __initconst = {
++	BITMAP_FROM_U64(0x3333333311111111ULL),
++	BITMAP_FROM_U64(0xffffffff77777777ULL),
++};
  
- 	memset(arr, 0xa5, sizeof(arr));
+ static bool __init
+ __check_eq_uint(const char *srcfile, unsigned int line,
+@@ -247,27 +267,6 @@ struct test_bitmap_parselist{
+ 	const int flags;
+ };
  
--	for (nbits = 0; nbits < EXP_BYTES; ++nbits) {
-+	for (nbits = 0; nbits < EXP1_IN_BITS; ++nbits) {
- 		bitmap_to_arr32(arr, exp, nbits);
- 		bitmap_from_arr32(bmap2, arr, nbits);
- 		expect_eq_bitmap(bmap2, exp, nbits);
-@@ -396,7 +396,7 @@ static void __init test_bitmap_arr32(void)
- 				" tail is not safely cleared: %d\n",
- 				nbits, next_bit);
+-static const unsigned long exp1[] __initconst = {
+-	BITMAP_FROM_U64(1),
+-	BITMAP_FROM_U64(2),
+-	BITMAP_FROM_U64(0x0000ffff),
+-	BITMAP_FROM_U64(0xffff0000),
+-	BITMAP_FROM_U64(0x55555555),
+-	BITMAP_FROM_U64(0xaaaaaaaa),
+-	BITMAP_FROM_U64(0x11111111),
+-	BITMAP_FROM_U64(0x22222222),
+-	BITMAP_FROM_U64(0xffffffff),
+-	BITMAP_FROM_U64(0xfffffffe),
+-	BITMAP_FROM_U64(0x3333333311111111ULL),
+-	BITMAP_FROM_U64(0xffffffff77777777ULL),
+-	BITMAP_FROM_U64(0),
+-};
+-
+-static const unsigned long exp2[] __initconst = {
+-	BITMAP_FROM_U64(0x3333333311111111ULL),
+-	BITMAP_FROM_U64(0xffffffff77777777ULL)
+-};
+-
+ static const struct test_bitmap_parselist parselist_tests[] __initconst = {
+ #define step (sizeof(u64) / sizeof(unsigned long))
  
--		if (nbits < EXP_BYTES - 32)
-+		if (nbits < EXP1_IN_BITS - 32)
- 			expect_eq_uint(arr[DIV_ROUND_UP(nbits, 32)],
- 								0xa5a5a5a5);
- 	}
 -- 
 2.23.0
 
