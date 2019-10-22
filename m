@@ -2,34 +2,34 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 834CDE0154
+	by mail.lfdr.de (Postfix) with ESMTP id 196BBE0153
 	for <lists+linux-gpio@lfdr.de>; Tue, 22 Oct 2019 12:00:21 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731567AbfJVKAI (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        id S1731458AbfJVKAI (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
         Tue, 22 Oct 2019 06:00:08 -0400
-Received: from mga06.intel.com ([134.134.136.31]:36515 "EHLO mga06.intel.com"
+Received: from mga17.intel.com ([192.55.52.151]:6884 "EHLO mga17.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
         id S1731344AbfJVKAI (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
         Tue, 22 Oct 2019 06:00:08 -0400
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 22 Oct 2019 03:00:07 -0700
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 22 Oct 2019 03:00:07 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.67,326,1566889200"; 
-   d="scan'208";a="201622092"
+   d="scan'208";a="197074903"
 Received: from black.fi.intel.com ([10.237.72.28])
-  by orsmga006.jf.intel.com with ESMTP; 22 Oct 2019 03:00:06 -0700
+  by fmsmga007.fm.intel.com with ESMTP; 22 Oct 2019 03:00:06 -0700
 Received: by black.fi.intel.com (Postfix, from userid 1003)
-        id ADB3A1C5; Tue, 22 Oct 2019 13:00:05 +0300 (EEST)
+        id BBC3E3BB; Tue, 22 Oct 2019 13:00:05 +0300 (EEST)
 From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 To:     Linus Walleij <linus.walleij@linaro.org>,
         linux-gpio@vger.kernel.org,
         Mika Westerberg <mika.westerberg@linux.intel.com>
 Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: [PATCH v2 1/5] pinctrl: intel: Introduce intel_restore_padcfg() helper
-Date:   Tue, 22 Oct 2019 13:00:00 +0300
-Message-Id: <20191022100004.66532-2-andriy.shevchenko@linux.intel.com>
+Subject: [PATCH v2 2/5] pinctrl: intel: Introduce intel_restore_hostown() helper
+Date:   Tue, 22 Oct 2019 13:00:01 +0300
+Message-Id: <20191022100004.66532-3-andriy.shevchenko@linux.intel.com>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191022100004.66532-1-andriy.shevchenko@linux.intel.com>
 References: <20191022100004.66532-1-andriy.shevchenko@linux.intel.com>
@@ -40,86 +40,69 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Deduplicate restoring PADCFGx registers by using a common helper.
+Refactor restoring HOSTSW_OWN registers by using an introduced helper.
 
 Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 ---
- drivers/pinctrl/intel/pinctrl-intel.c | 51 +++++++++++++--------------
- 1 file changed, 24 insertions(+), 27 deletions(-)
+ drivers/pinctrl/intel/pinctrl-intel.c | 38 +++++++++++++++------------
+ 1 file changed, 21 insertions(+), 17 deletions(-)
 
 diff --git a/drivers/pinctrl/intel/pinctrl-intel.c b/drivers/pinctrl/intel/pinctrl-intel.c
-index 83981ad66a71..181e5c8c1855 100644
+index 181e5c8c1855..1bdc0365e1ad 100644
 --- a/drivers/pinctrl/intel/pinctrl-intel.c
 +++ b/drivers/pinctrl/intel/pinctrl-intel.c
-@@ -1607,6 +1607,27 @@ intel_gpio_update_pad_mode(void __iomem *hostown, u32 mask, u32 value)
+@@ -1607,6 +1607,25 @@ intel_gpio_update_pad_mode(void __iomem *hostown, u32 mask, u32 value)
  	return curr;
  }
  
-+static void intel_restore_padcfg(struct intel_pinctrl *pctrl, unsigned int pin,
-+				 unsigned int reg, u32 saved)
++static void intel_restore_hostown(struct intel_pinctrl *pctrl, unsigned int c,
++				  void __iomem *base, unsigned int gpp, u32 saved)
 +{
-+	u32 mask = (reg == PADCFG0) ? PADCFG0_GPIORXSTATE : 0;
-+	unsigned int n = reg / sizeof(u32);
++	const struct intel_community *community = &pctrl->communities[c];
++	const struct intel_padgroup *padgrp = &community->gpps[gpp];
 +	struct device *dev = pctrl->dev;
-+	void __iomem *padcfg;
-+	u32 value;
++	u32 requested, value;
 +
-+	padcfg = intel_get_padcfg(pctrl, pin, reg);
-+	if (!padcfg)
++	if (padgrp->gpio_base < 0)
 +		return;
 +
-+	value = readl(padcfg) & ~mask;
-+	if (value == saved)
++	requested = intel_gpio_is_requested(&pctrl->chip, padgrp->gpio_base, padgrp->size);
++	value = intel_gpio_update_pad_mode(base + gpp * 4, requested, saved);
++	if (!((value ^ saved) & requested))
 +		return;
 +
-+	writel(saved, padcfg);
-+	dev_dbg(dev, "restored pin %u padcfg%u %#08x\n", pin, n, readl(padcfg));
++	dev_warn(dev, "restored hostown %u/%u %#8x->%#8x\n", c, gpp, value, saved);
 +}
 +
- int intel_pinctrl_resume_noirq(struct device *dev)
+ static void intel_restore_padcfg(struct intel_pinctrl *pctrl, unsigned int pin,
+ 				 unsigned int reg, u32 saved)
  {
- 	struct intel_pinctrl *pctrl = dev_get_drvdata(dev);
-@@ -1620,37 +1641,13 @@ int intel_pinctrl_resume_noirq(struct device *dev)
- 	pads = pctrl->context.pads;
- 	for (i = 0; i < pctrl->soc->npins; i++) {
- 		const struct pinctrl_pin_desc *desc = &pctrl->soc->pins[i];
--		void __iomem *padcfg;
--		u32 val;
+@@ -1664,23 +1683,8 @@ int intel_pinctrl_resume_noirq(struct device *dev)
+ 		}
  
- 		if (!intel_pinctrl_should_save(pctrl, desc->number))
- 			continue;
- 
--		padcfg = intel_get_padcfg(pctrl, desc->number, PADCFG0);
--		val = readl(padcfg) & ~PADCFG0_GPIORXSTATE;
--		if (val != pads[i].padcfg0) {
--			writel(pads[i].padcfg0, padcfg);
--			dev_dbg(dev, "restored pin %u padcfg0 %#08x\n",
--				desc->number, readl(padcfg));
--		}
+ 		base = community->regs + community->hostown_offset;
+-		for (gpp = 0; gpp < community->ngpps; gpp++) {
+-			const struct intel_padgroup *padgrp = &community->gpps[gpp];
+-			u32 requested = 0, value = 0;
+-			u32 saved = communities[i].hostown[gpp];
 -
--		padcfg = intel_get_padcfg(pctrl, desc->number, PADCFG1);
--		val = readl(padcfg);
--		if (val != pads[i].padcfg1) {
--			writel(pads[i].padcfg1, padcfg);
--			dev_dbg(dev, "restored pin %u padcfg1 %#08x\n",
--				desc->number, readl(padcfg));
--		}
+-			if (padgrp->gpio_base < 0)
+-				continue;
 -
--		padcfg = intel_get_padcfg(pctrl, desc->number, PADCFG2);
--		if (padcfg) {
--			val = readl(padcfg);
--			if (val != pads[i].padcfg2) {
--				writel(pads[i].padcfg2, padcfg);
--				dev_dbg(dev, "restored pin %u padcfg2 %#08x\n",
--					desc->number, readl(padcfg));
+-			requested = intel_gpio_is_requested(&pctrl->chip,
+-					padgrp->gpio_base, padgrp->size);
+-			value = intel_gpio_update_pad_mode(base + gpp * 4,
+-					requested, saved);
+-			if ((value ^ saved) & requested) {
+-				dev_warn(dev, "restore hostown %d/%u %#8x->%#8x\n",
+-					i, gpp, value, saved);
 -			}
 -		}
-+		intel_restore_padcfg(pctrl, desc->number, PADCFG0, pads[i].padcfg0);
-+		intel_restore_padcfg(pctrl, desc->number, PADCFG1, pads[i].padcfg1);
-+		intel_restore_padcfg(pctrl, desc->number, PADCFG2, pads[i].padcfg2);
++		for (gpp = 0; gpp < community->ngpps; gpp++)
++			intel_restore_hostown(pctrl, i, base, gpp, communities[i].hostown[gpp]);
  	}
  
- 	communities = pctrl->context.communities;
+ 	return 0;
 -- 
 2.23.0
 
