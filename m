@@ -2,48 +2,48 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 57886DFFC2
-	for <lists+linux-gpio@lfdr.de>; Tue, 22 Oct 2019 10:43:33 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AF516DFFC3
+	for <lists+linux-gpio@lfdr.de>; Tue, 22 Oct 2019 10:43:34 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388522AbfJVInc (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 22 Oct 2019 04:43:32 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:55229 "EHLO
+        id S2388571AbfJVInd (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 22 Oct 2019 04:43:33 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:40289 "EHLO
         mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388571AbfJVInc (ORCPT
+        with ESMTP id S2388566AbfJVInc (ORCPT
         <rfc822;linux-gpio@vger.kernel.org>); Tue, 22 Oct 2019 04:43:32 -0400
-Received: by mail-wm1-f66.google.com with SMTP id p7so16197057wmp.4
-        for <linux-gpio@vger.kernel.org>; Tue, 22 Oct 2019 01:43:30 -0700 (PDT)
+Received: by mail-wm1-f66.google.com with SMTP id b24so15270742wmj.5
+        for <linux-gpio@vger.kernel.org>; Tue, 22 Oct 2019 01:43:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=pZPH7ezKf53/QBMw5BxZ096M4gSklQo/Sa/IUAzrHtk=;
-        b=DZOLMbbWoSzuUITLHQgA1LWlfomVlIuZYFkL4f0ogePF721BvXMWzLC2KLDfCOSMQX
-         07qFmvF+kn0YAlG6RYk54w1luE8PD5W0RYri3EiHp5bTYkyVhJ/Q7Jkj/wKdw4aThGAC
-         cmQcYzemSHsXxF3hRvUxQfcK5wUKBhs9k6nH5HzR52D4XagKAErSiPqZ/kD/hYgmKuUJ
-         /3RoAMML78OadDGsiF8BJ5Ffme8j8U6folglUeM8rYqVDSOhqgHh3giHvm1gkMHYuV1x
-         XOGkVfQVH2+2wD0Lt9k5UwwIO3hbpBNUy2t5KD9eib2RwqmJHf7wY6dAaNT+29bbBe/2
-         wQ1Q==
+        bh=XZ1Tq+ivlbf6wvBItm5ezP35meDLqciZhTnvN+fTm4c=;
+        b=qo2Rv1Z0eU58gxydRv0Vkp/sQ4ZWOor6U2TGeot378xkLW05i6u8erMQgr5oTHKHDE
+         ie3oe1p7R28yNhdIv0Ox+XUpoVLlU4ZyalBZ08W7riO+HoNlWafKNM42GDBgZM0CHAAY
+         TnMcpNxXsHkCVWyik9ycmBgZg5fl4VOocfRl0Zr9v6tznkse8nh9Skjvo3aEjbk7h6YO
+         FX1ZYt1w4gxxusYkyZ8pJnPEQ7jGXeBOUUwL7jaHIXsCDFWpSRjngYt9KpKFJ9N0QbWZ
+         lq2tWMsPL4Dn7dp0/0MLW12TNCSeB3deS4yWiUb6GMmP8nD8kvI4QOf9ktGRYUHXzs/g
+         FUHw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=pZPH7ezKf53/QBMw5BxZ096M4gSklQo/Sa/IUAzrHtk=;
-        b=S2PNXdxnpIaLKECDGYRDdvSFn2QttC/VsD2/h8wkf4MKRl7GVnU5Yj1j1v3vpR6h5W
-         IabdJN5pRkAbnFcC4xWVAeE9znKmYuEiITdKlq7zxN+xldDwuhkzjHOMcpBVHs/tlf8I
-         vi1w5UlLXugSmY161RA4o3QAmtmRAE9IbRTqUqwODot/YQ26tPppXnetqTs7TgtGsvZ9
-         rX7Hoy4zFEJIo7tDF3t+YXYIGMXrllYKwsCWQ4ocJ5FT0wn6nMK+HF/+VmVfT+0xucw4
-         c9YqKLGcuhJChkhukkJRMyL85wWadOy3IDYCfZLcMkieMGhJZMydV5KkgR5w7Bh+ERXn
-         UtPA==
-X-Gm-Message-State: APjAAAVgnzgO3FMEHFwODrUi5UnV1QA1fJA6CctLMw9mM3pdPXdl+3m4
-        w54HNymvKnpeq1cES2hFhamPPQ==
-X-Google-Smtp-Source: APXvYqypXQIXucGUA5pJLdWx/haak2b2SxfPC52Zaw+ESaa0qFsAO8OKx29Ka6dpUstCBehaWxg85w==
-X-Received: by 2002:a1c:4e:: with SMTP id 75mr1981857wma.104.1571733809364;
-        Tue, 22 Oct 2019 01:43:29 -0700 (PDT)
+        bh=XZ1Tq+ivlbf6wvBItm5ezP35meDLqciZhTnvN+fTm4c=;
+        b=FuO/Kz7PCezU7jRgAmhU84h1aKcBVmiw3RrddjqI1By1nSVqXVzcpq+aUl7Z2XEnGy
+         dpNj5BS2Q8q8wkBi+Hc+iA9wLCGF9Eujc+h+473QNTdfJKgoGgrgAI+sTwZ5dsWIxDJx
+         APQ2YMyl52UDJhtAvZpGjIKh7TniRBEn8ctKCTc0jK6H1irmVAs7hHgI6OcW1i83hF98
+         /mWDQjUUT3JzFrfiUG59KSe8fAWBQIjZqooZ6+wya9Ifu+ZCyApaRra/rsP6tbwqphwP
+         PhW2bK3oI4HYJTEYP4yvlTYNET0QyMXimCe9ZL/nCyc5fsljFOkDz3uVJw+Excs+u4Xi
+         zdlg==
+X-Gm-Message-State: APjAAAUB82bLlKQpORDfDCgA1PhYLSpjETzg17czx5zD3rJnQBEyNI8t
+        jrWWA9uyV7G7fRLKvLelASflhw==
+X-Google-Smtp-Source: APXvYqw/J3ds+oC16fHETYZXedeWZdwc9CgxmFHnir6eR67aWv7FN0tpje9jq/xy7X/gyh11GE6QlA==
+X-Received: by 2002:a1c:c90f:: with SMTP id f15mr1949030wmb.125.1571733810379;
+        Tue, 22 Oct 2019 01:43:30 -0700 (PDT)
 Received: from localhost.localdomain (amontpellier-652-1-281-69.w109-210.abo.wanadoo.fr. [109.210.96.69])
-        by smtp.gmail.com with ESMTPSA id q25sm477231wra.3.2019.10.22.01.43.28
+        by smtp.gmail.com with ESMTPSA id q25sm477231wra.3.2019.10.22.01.43.29
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 22 Oct 2019 01:43:28 -0700 (PDT)
+        Tue, 22 Oct 2019 01:43:29 -0700 (PDT)
 From:   Bartosz Golaszewski <brgl@bgdev.pl>
 To:     Jonathan Corbet <corbet@lwn.net>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -53,9 +53,9 @@ To:     Jonathan Corbet <corbet@lwn.net>,
 Cc:     linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-gpio@vger.kernel.org,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: [RESEND PATCH v3 6/8] drivers: provide devm_platform_ioremap_resource_byname()
-Date:   Tue, 22 Oct 2019 10:43:16 +0200
-Message-Id: <20191022084318.22256-7-brgl@bgdev.pl>
+Subject: [RESEND PATCH v3 7/8] gpio: mvebu: use devm_platform_ioremap_resource_byname()
+Date:   Tue, 22 Oct 2019 10:43:17 +0200
+Message-Id: <20191022084318.22256-8-brgl@bgdev.pl>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191022084318.22256-1-brgl@bgdev.pl>
 References: <20191022084318.22256-1-brgl@bgdev.pl>
@@ -68,74 +68,58 @@ X-Mailing-List: linux-gpio@vger.kernel.org
 
 From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 
-Provide a variant of devm_platform_ioremap_resource() that allows to
-lookup resources from platform devices by name rather than by index.
+Use devm_platform_ioremap_resource_byname() instead of calling
+platform_get_resource_byname() and devm_ioremap_resource() separately.
 
 Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 Reviewed-by: Arnd Bergmann <arnd@arndb.de>
 ---
- .../driver-api/driver-model/devres.rst        |  1 +
- drivers/base/platform.c                       | 20 +++++++++++++++++++
- include/linux/platform_device.h               |  3 +++
- 3 files changed, 24 insertions(+)
+ drivers/gpio/gpio-mvebu.c | 19 +++++++------------
+ 1 file changed, 7 insertions(+), 12 deletions(-)
 
-diff --git a/Documentation/driver-api/driver-model/devres.rst b/Documentation/driver-api/driver-model/devres.rst
-index 480b78ca3871..4ab193319d8c 100644
---- a/Documentation/driver-api/driver-model/devres.rst
-+++ b/Documentation/driver-api/driver-model/devres.rst
-@@ -319,6 +319,7 @@ IOMAP
-   devm_ioremap_resource_wc()
-   devm_platform_ioremap_resource() : calls devm_ioremap_resource() for platform device
-   devm_platform_ioremap_resource_wc()
-+  devm_platform_ioremap_resource_byname()
-   devm_iounmap()
-   pcim_iomap()
-   pcim_iomap_regions()	: do request_region() and iomap() on multiple BARs
-diff --git a/drivers/base/platform.c b/drivers/base/platform.c
-index 177010c27516..5cdd72a9e186 100644
---- a/drivers/base/platform.c
-+++ b/drivers/base/platform.c
-@@ -95,6 +95,26 @@ void __iomem *devm_platform_ioremap_resource_wc(struct platform_device *pdev,
- 	res = platform_get_resource(pdev, IORESOURCE_MEM, index);
- 	return devm_ioremap_resource_wc(&pdev->dev, res);
- }
-+
-+/**
-+ * devm_platform_ioremap_resource_byname - call devm_ioremap_resource for
-+ *					   a platform device, retrieve the
-+ *					   resource by name
-+ *
-+ * @pdev: platform device to use both for memory resource lookup as well as
-+ *	  resource management
-+ * @name: name of the resource
-+ */
-+void __iomem *
-+devm_platform_ioremap_resource_byname(struct platform_device *pdev,
-+				      const char *name)
-+{
-+	struct resource *res;
-+
-+	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, name);
-+	return devm_ioremap_resource(&pdev->dev, res);
-+}
-+EXPORT_SYMBOL_GPL(devm_platform_ioremap_resource_byname);
- #endif /* CONFIG_HAS_IOMEM */
+diff --git a/drivers/gpio/gpio-mvebu.c b/drivers/gpio/gpio-mvebu.c
+index 6c0687694341..2f0f50336b9a 100644
+--- a/drivers/gpio/gpio-mvebu.c
++++ b/drivers/gpio/gpio-mvebu.c
+@@ -773,23 +773,12 @@ static int mvebu_pwm_probe(struct platform_device *pdev,
+ {
+ 	struct device *dev = &pdev->dev;
+ 	struct mvebu_pwm *mvpwm;
+-	struct resource *res;
+ 	u32 set;
  
- static int __platform_get_irq(struct platform_device *dev, unsigned int num)
-diff --git a/include/linux/platform_device.h b/include/linux/platform_device.h
-index 74cecb919e5c..43fe441a98ea 100644
---- a/include/linux/platform_device.h
-+++ b/include/linux/platform_device.h
-@@ -60,6 +60,9 @@ devm_platform_ioremap_resource(struct platform_device *pdev,
- extern void __iomem *
- devm_platform_ioremap_resource_wc(struct platform_device *pdev,
- 				  unsigned int index);
-+extern void __iomem *
-+devm_platform_ioremap_resource_byname(struct platform_device *pdev,
-+				      const char *name);
- extern int platform_get_irq(struct platform_device *, unsigned int);
- extern int platform_get_irq_optional(struct platform_device *, unsigned int);
- extern int platform_irq_count(struct platform_device *);
+ 	if (!of_device_is_compatible(mvchip->chip.of_node,
+ 				     "marvell,armada-370-gpio"))
+ 		return 0;
+ 
+-	/*
+-	 * There are only two sets of PWM configuration registers for
+-	 * all the GPIO lines on those SoCs which this driver reserves
+-	 * for the first two GPIO chips. So if the resource is missing
+-	 * we can't treat it as an error.
+-	 */
+-	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "pwm");
+-	if (!res)
+-		return 0;
+-
+ 	if (IS_ERR(mvchip->clk))
+ 		return PTR_ERR(mvchip->clk);
+ 
+@@ -812,7 +801,13 @@ static int mvebu_pwm_probe(struct platform_device *pdev,
+ 	mvchip->mvpwm = mvpwm;
+ 	mvpwm->mvchip = mvchip;
+ 
+-	mvpwm->membase = devm_ioremap_resource(dev, res);
++	/*
++	 * There are only two sets of PWM configuration registers for
++	 * all the GPIO lines on those SoCs which this driver reserves
++	 * for the first two GPIO chips. So if the resource is missing
++	 * we can't treat it as an error.
++	 */
++	mvpwm->membase = devm_platform_ioremap_resource_byname(pdev, "pwm");
+ 	if (IS_ERR(mvpwm->membase))
+ 		return PTR_ERR(mvpwm->membase);
+ 
 -- 
 2.23.0
 
