@@ -2,107 +2,101 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id A639AE1E91
-	for <lists+linux-gpio@lfdr.de>; Wed, 23 Oct 2019 16:49:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5C3A1E1F58
+	for <lists+linux-gpio@lfdr.de>; Wed, 23 Oct 2019 17:31:02 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391231AbfJWOtY (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 23 Oct 2019 10:49:24 -0400
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:41891 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389782AbfJWOtY (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 23 Oct 2019 10:49:24 -0400
-Received: by mail-oi1-f195.google.com with SMTP id g81so17591761oib.8
-        for <linux-gpio@vger.kernel.org>; Wed, 23 Oct 2019 07:49:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=O9ox2pve6NHLhmzZq/Et8NzVsXtqJowAf4+8XmKRml8=;
-        b=dAsNYaoPoa0FVkpWQ+Mw+OCElmBkuYpU/+5PWViTjpSeETA9ynnP/Lnu5J8g+tEwPl
-         Z6CcJN9xhR5BUDtYeZo9pCcZcWgrjwimMU2rLTLsvOJ7Grm6/FgwwLndipgusj6dfSHe
-         uvZCqwqAuX/HwaHmKgRe7nqV6abw2AgJEO2HQsn5NNKSWdI+nMJ2dQj1aHZSNuvlxxkC
-         r7kOEy01YoQHDzoqp0/Pvv9vKFOrtdAqF8yY0wKKCS2JrckS1rrpCWE1NOplPVKbjQCn
-         igGlIMe9VeUAHKuVbdq2nCkNNzar9KcKo+925snr22p2nkRwUyxsNlcn9/dBY+O5puWd
-         DFqQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=O9ox2pve6NHLhmzZq/Et8NzVsXtqJowAf4+8XmKRml8=;
-        b=NoN7M3gHoSVhV4GwZR9J6ukewdOBdYJj3c2AVZgFd5tg4SlNMuRQ7JNLkfmj6g9qko
-         sQ4CPbr9NiAGiDdHUylvVlSaDKkxy/2OSIrkalvhW2iOc+aK7dXZYoAgU68dBo9dg3rw
-         PE/te21RW+kduoqYi9N9nDloHA5EHLpNtKiS+Jem3JsS3CisxCeywE4/EeTiwttiByve
-         id16fDnB6mwqhk+onEH81V2opilJ9NrmbuoMAU2rLi8SMnwpRPk/dZsCSEyOObTPA7NI
-         taucgTj9zAZ8AVEjrIuUbkeqAI1C995zByOitMi5IYh3k6HYekuwsJ62W64eWoQtdNtn
-         Aogg==
-X-Gm-Message-State: APjAAAUst0+rwYVZOs6wHZi0f41SOkdqJWgPIldVvwFd/YsDpYkt+h6o
-        WmC26yK+cSog246twXrGIMMQafGCRxUiBOvTzN+MIQ==
-X-Google-Smtp-Source: APXvYqxcQwBzv+jaQBkvWrghfop7WtOGJow2UATWn++Bc0AtxhpgfFM1bZDEQ52mEG0UiB4ijf7XIJ9Qz1JjTc95Wzg=
-X-Received: by 2002:aca:5c06:: with SMTP id q6mr244007oib.175.1571842163611;
- Wed, 23 Oct 2019 07:49:23 -0700 (PDT)
+        id S2392449AbfJWPbB (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 23 Oct 2019 11:31:01 -0400
+Received: from mga11.intel.com ([192.55.52.93]:9180 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2392441AbfJWPbB (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Wed, 23 Oct 2019 11:31:01 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 23 Oct 2019 08:31:00 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.68,221,1569308400"; 
+   d="scan'208";a="203992073"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by FMSMGA003.fm.intel.com with ESMTP; 23 Oct 2019 08:30:58 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1003)
+        id 360A8BD; Wed, 23 Oct 2019 18:30:56 +0300 (EEST)
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        linux-gpio@vger.kernel.org,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Yury Norov <yury.norov@gmail.com>,
+        linux-kernel@vger.kernel.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        William Breathitt Gray <vilhelm.gray@gmail.com>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: [PATCH v1] gpio: pca953x: Reduce stack usage in couple of functions
+Date:   Wed, 23 Oct 2019 18:30:56 +0300
+Message-Id: <20191023153056.64262-1-andriy.shevchenko@linux.intel.com>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
-References: <20191023122150.GA2524@localhost.localdomain>
-In-Reply-To: <20191023122150.GA2524@localhost.localdomain>
-From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Date:   Wed, 23 Oct 2019 16:49:12 +0200
-Message-ID: <CAMpxmJUhwLOey+NtLrkvvj4apfyZyqLM_P87et+jHvGtBETspA@mail.gmail.com>
-Subject: Re: [PATCH] gpio: bd70528: Add MODULE ALIAS to autoload module
-To:     Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-Cc:     Matti Vaittinen <mazziesaccount@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-gpio <linux-gpio@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-=C5=9Br., 23 pa=C5=BA 2019 o 14:22 Matti Vaittinen
-<matti.vaittinen@fi.rohmeurope.com> napisa=C5=82(a):
->
-> The bd70528 GPIO driver is probed by MFD driver. Add MODULE_ALIAS
-> in order to allow udev to load the module when MFD sub-device cell
-> for GPIO is added.
->
-> Fixes: 18bc64b3aebfa ("gpio: Initial support for ROHM bd70528 GPIO block"=
-)
-> Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-> ---
-> I'm not really sure if this is a bug-fix or feature but I guess the
-> Fixes tag won't harm, right?
+Simple bitmap operations are safe against in-place modifications.
+Due to above we may get rid of temporary variables in some cases.
 
-It's definitely a feature, not a bug-fix. I applied it to for-next but
-dropped the tag.
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+---
 
-Bart
+Andrew, it can be folded into "gpio: pca953x: Convert to use bitmap API"
 
->
->  drivers/gpio/gpio-bd70528.c | 1 +
->  1 file changed, 1 insertion(+)
->
-> diff --git a/drivers/gpio/gpio-bd70528.c b/drivers/gpio/gpio-bd70528.c
-> index fd85605d2dab..8123260a92a2 100644
-> --- a/drivers/gpio/gpio-bd70528.c
-> +++ b/drivers/gpio/gpio-bd70528.c
-> @@ -230,3 +230,4 @@ module_platform_driver(bd70528_gpio);
->  MODULE_AUTHOR("Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>");
->  MODULE_DESCRIPTION("BD70528 voltage regulator driver");
->  MODULE_LICENSE("GPL");
-> +MODULE_ALIAS("platform:bd70528-gpio");
-> --
-> 2.21.0
->
->
-> --
-> Matti Vaittinen, Linux device drivers
-> ROHM Semiconductors, Finland SWDC
-> Kiviharjunlenkki 1E
-> 90220 OULU
-> FINLAND
->
-> ~~~ "I don't think so," said Rene Descartes. Just then he vanished ~~~
-> Simon says - in Latin please.
-> ~~~ "non cogito me" dixit Rene Descarte, deinde evanescavit ~~~
-> Thanks to Simon Glass for the translation =3D]
+ drivers/gpio/gpio-pca953x.c | 10 ++++------
+ 1 file changed, 4 insertions(+), 6 deletions(-)
+
+diff --git a/drivers/gpio/gpio-pca953x.c b/drivers/gpio/gpio-pca953x.c
+index f80ed5a43614..b9e326dfed23 100644
+--- a/drivers/gpio/gpio-pca953x.c
++++ b/drivers/gpio/gpio-pca953x.c
+@@ -468,7 +468,6 @@ static void pca953x_gpio_set_multiple(struct gpio_chip *gc,
+ {
+ 	struct pca953x_chip *chip = gpiochip_get_data(gc);
+ 	DECLARE_BITMAP(reg_val, MAX_LINE);
+-	DECLARE_BITMAP(new_val, MAX_LINE);
+ 	int ret;
+ 
+ 	mutex_lock(&chip->i2c_lock);
+@@ -476,9 +475,9 @@ static void pca953x_gpio_set_multiple(struct gpio_chip *gc,
+ 	if (ret)
+ 		goto exit;
+ 
+-	bitmap_replace(new_val, reg_val, bits, mask, gc->ngpio);
++	bitmap_replace(reg_val, reg_val, bits, mask, gc->ngpio);
+ 
+-	pca953x_write_regs(chip, chip->regs->output, new_val);
++	pca953x_write_regs(chip, chip->regs->output, reg_val);
+ exit:
+ 	mutex_unlock(&chip->i2c_lock);
+ }
+@@ -605,7 +604,6 @@ static void pca953x_irq_bus_sync_unlock(struct irq_data *d)
+ 	struct pca953x_chip *chip = gpiochip_get_data(gc);
+ 	DECLARE_BITMAP(irq_mask, MAX_LINE);
+ 	DECLARE_BITMAP(reg_direction, MAX_LINE);
+-	DECLARE_BITMAP(new_irqs, MAX_LINE);
+ 	int level;
+ 
+ 	pca953x_read_regs(chip, chip->regs->direction, reg_direction);
+@@ -620,8 +618,8 @@ static void pca953x_irq_bus_sync_unlock(struct irq_data *d)
+ 		pca953x_write_regs(chip, PCAL953X_INT_MASK, irq_mask);
+ 	}
+ 
+-	bitmap_or(new_irqs, chip->irq_trig_fall, chip->irq_trig_raise, gc->ngpio);
+-	bitmap_and(irq_mask, new_irqs, reg_direction, gc->ngpio);
++	bitmap_or(irq_mask, chip->irq_trig_fall, chip->irq_trig_raise, gc->ngpio);
++	bitmap_and(irq_mask, irq_mask, reg_direction, gc->ngpio);
+ 
+ 	/* Look for any newly setup interrupt */
+ 	for_each_set_bit(level, irq_mask, gc->ngpio)
+-- 
+2.23.0
+
