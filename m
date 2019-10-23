@@ -2,58 +2,77 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 9B5B8E1CC1
-	for <lists+linux-gpio@lfdr.de>; Wed, 23 Oct 2019 15:36:15 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 080BCE1DBB
+	for <lists+linux-gpio@lfdr.de>; Wed, 23 Oct 2019 16:10:54 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405909AbfJWNgK (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 23 Oct 2019 09:36:10 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:51924 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2392060AbfJWNgK (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 23 Oct 2019 09:36:10 -0400
-Received: by mail-wm1-f66.google.com with SMTP id q70so14109294wme.1
-        for <linux-gpio@vger.kernel.org>; Wed, 23 Oct 2019 06:36:09 -0700 (PDT)
+        id S1733186AbfJWOKx (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 23 Oct 2019 10:10:53 -0400
+Received: from mail-vs1-f66.google.com ([209.85.217.66]:34203 "EHLO
+        mail-vs1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732167AbfJWOKw (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 23 Oct 2019 10:10:52 -0400
+Received: by mail-vs1-f66.google.com with SMTP id d3so13878151vsr.1
+        for <linux-gpio@vger.kernel.org>; Wed, 23 Oct 2019 07:10:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:reply-to:from:date:message-id:subject:to;
-        bh=dVgB2gHwyu9BrwAHrTVrhxxTLMnU+GjkCtVmW3QXNgU=;
-        b=Zp1rNYOb7wPsdMPdMbYe//+9NYjGitazC3K4MBrZR7qVyf3SurlVK/iVTX8rXrD1MV
-         duJiT6vf8/dVRyCoGAADOWO6mdvdO7LXMGSTBsL1aPHRptzHVSr6EVhNUNTbTuXzEcJM
-         CBCb+Jmcnci8Xj7Z+C2D9+RBLni3QkUE+aLyNfm640DulCjNSyCQlNWPphsu43/xiaCJ
-         jGtO0Rf565kxFLQCtlztfZCV3214dAbiLSZKIvSf0BlByQ/4iOlt67agx4AGUfiCjZMI
-         RoTZ6xCVKLtvHbzydaTmcuGrVnWq27zH7gygGQ2YGfnHqhgxkVmC2lGKxGSiWzVcr6KU
-         QN9A==
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=fG37TgkjRgodwOFImG22RhwIkrCCrAzjQbxW8lk57aA=;
+        b=D2NK+E0jUEC6S8U5LXxwgNzVFeiIChH36mUSdgsJZx4/1Q0yUsGFQ91kDxfv6nmUdo
+         d73pvbw5WW0VT366SU5S69b9U1t/ZLipm/28Q5/rXMHI3/fuMNLkJwXwQFb8iJvGBbTp
+         olEDcFDWzo9IU8jfTj7YpKqO9uSrNl8b8wFkuHZh0nfE73ZGxqA+Smbbav8zQh4iUY+6
+         jWGV2W3ThEDm0sRQunB/wKmyPNdiZLPvXGPL1nEp0en1JoDwjSOihiN0fl5YYT+GM5wQ
+         5G1Njjcy+15KJjhQ80PzwazP1lK8UnlMulZozbwZM3Crn+yZ5OPbifcFN8T90x+mfgO1
+         0+NA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
-         :subject:to;
-        bh=dVgB2gHwyu9BrwAHrTVrhxxTLMnU+GjkCtVmW3QXNgU=;
-        b=erphTlAcDAqGVh/2yxmmE3YidNjfv+zo6ihKDzfT/wuwf25b7yhSZVNrZz/Rlhqnhg
-         TkIuOGY47dnHo1fPKMa0nWAvSKfy6JOirse79ZEwlWEWZccb9VwLE4sORvETzlrQeoK1
-         iN0yOIzYkj58RiJrNiIsNG259hCrxpOUIJNVmMLX/baaGJ7LkCmKoZ8UQL92dGXOft43
-         cgov7Y71cGLtJSLgbPKEtSc2PIb4FwdarrRVilWWGF5v1Au//XrfULwQb/CLRAy6Ct9a
-         4nTB06ojqg01TpgumE4u/x8pKRL4l8novT8Ibd7G0zoNdrTliGlwdrMFkB53w1yL4IZa
-         6bGg==
-X-Gm-Message-State: APjAAAX3ZwoLox8n0SHs35P5mL/wLbRGHjaZxJGwwdBKVuVG5x+pFVAy
-        jFJDrKGCmzvT6C2BKA8/DOdqiOkGF/HnXztI2bE=
-X-Google-Smtp-Source: APXvYqzu60dP5ZzLHoNcR4C1Z90wK3ujHk4eIk60CblS8nkYpWGmu8JElmh7udCx+t1YVbQaCRFZhRaASS5NgAdsuk0=
-X-Received: by 2002:a7b:ce84:: with SMTP id q4mr4860246wmj.36.1571837768313;
- Wed, 23 Oct 2019 06:36:08 -0700 (PDT)
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=fG37TgkjRgodwOFImG22RhwIkrCCrAzjQbxW8lk57aA=;
+        b=d4vfHhrQ+0aFvxSvBAbzgHH/1WDlYhG57nEaG5O/COzcIl1/821yfW11H3DgeXlHKE
+         v2FCQy+Hn4fXF7L5wnJ3p64kcgfBKNiFUcUGTQdG0FPb1/y0S6Mk6285J23lbMB7MwkV
+         urQG8k7oqEoPupGoiLne0XUkUrSEtcfyjD/tZ47bAqJWBWlCCYJIaPFPZ7ZyVPqjDhEo
+         Ebo3B3Vsmv6IwFIEG0iubvdDwvQHSHbsuGP4JXcdOUPdgV7a9Epue+lsz/XcuBdhk1Qn
+         whA1x+AneLI+dizBYCevVOhLq2ZneRpDdXU4+RMTcq6+wvlsdhIoqRnF3GECnjp2hLBb
+         engA==
+X-Gm-Message-State: APjAAAUMr6JrGtK5Ba+vzQE7ZuPy9TDZA9bhUINd/XMeVPoRdnBc38oH
+        2arwVzvXcg/tnD1SipyN+NIN8D1DTfTXV2oOr5xhZg==
+X-Google-Smtp-Source: APXvYqyBN27XhVntB3JqKmKsl042MmlixEPkG6vgrf/n1wSvy5PQikVfBPMGE09acfAUnJ/mSqYDFU/nehFejtIl/LE=
+X-Received: by 2002:a67:7944:: with SMTP id u65mr5866520vsc.10.1571839851606;
+ Wed, 23 Oct 2019 07:10:51 -0700 (PDT)
 MIME-Version: 1.0
-Received: by 2002:a5d:400a:0:0:0:0:0 with HTTP; Wed, 23 Oct 2019 06:36:07
- -0700 (PDT)
-Reply-To: mrs.lisarobinson746@gmail.com
-From:   "Mrs. Lisa" <helpdesk.eit.ac.nz@gmail.com>
-Date:   Wed, 23 Oct 2019 06:36:07 -0700
-Message-ID: <CAK7Er8aKyL3H-yzE3WwHqgdy-pvjcQoKmcraD43WMg3fDh48xQ@mail.gmail.com>
-Subject: Mrs. Lisa Charity Donation
-To:     undisclosed-recipients:;
+References: <20191022172922.61232-1-andriy.shevchenko@linux.intel.com>
+In-Reply-To: <20191022172922.61232-1-andriy.shevchenko@linux.intel.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Wed, 23 Oct 2019 16:10:40 +0200
+Message-ID: <CACRpkdYdfaLBgw=dGAK+xyhX3ru9SYa+QPNyAWJD4Y=BbfxUKQ@mail.gmail.com>
+Subject: Re: [PATCH v2 00/11] gpio: pca953x: Convert to bitmap (extended) API
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Yury Norov <yury.norov@gmail.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        William Breathitt Gray <vilhelm.gray@gmail.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
--- 
-I am Lisa Robinson, you have a donation of $1,200,000.00 USD. Contact
-me now for more information.
+On Tue, Oct 22, 2019 at 7:29 PM Andy Shevchenko
+<andriy.shevchenko@linux.intel.com> wrote:
+
+> While converting gpio-pca953x driver to bitmap API, I noticed that we have
+> no function to replace bits.
+>
+> So, that's how patch 7 appears.
+
+Acked-by: Linus Walleij <linus.walleij@linaro.org>
+
+Nice, I see that Andrew picked up the patches so no action required
+from my side I guess? Else poke me.
+
+Yours,
+Linus Walleij
