@@ -2,99 +2,62 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 01F53E0B2C
-	for <lists+linux-gpio@lfdr.de>; Tue, 22 Oct 2019 20:03:14 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D6F2AE1322
+	for <lists+linux-gpio@lfdr.de>; Wed, 23 Oct 2019 09:30:38 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727226AbfJVSDN (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 22 Oct 2019 14:03:13 -0400
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:34426 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727154AbfJVSDN (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 22 Oct 2019 14:03:13 -0400
-Received: by mail-ot1-f65.google.com with SMTP id m19so15039833otp.1;
-        Tue, 22 Oct 2019 11:03:12 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=7ItjeopyPiKJpZ77ZcZWrSuAaklTz62gxnNhsCgncJs=;
-        b=AflVT1wr4zBHpjziNPZCUa2UTPh2bKV0uLxNSxUlJaYbR4EYm18txMpjZwRx9mX9Tk
-         YkUZpaLS2atrhDlOOkeQaEoEcSiiLhNkB8KkqXCUI2+OQC0c+PvGAb44u0JlXvRqWHHF
-         +jfHmRVvEvIFEe9AKuOHoWlk8yOlNAKcrLsFt5E9v46Be+i3OrrdvJQBuL1I3OJLO3DB
-         /SznM9GohyjdpZHJf0LhintaP/e1jbhn1QDOSPdpphW6PGnMWUOO1XsTn1sZrtp+uf1w
-         2Uybl5auWCIuP8p3XcWuXwHtRHpEbPsyB3Qi0i5NSO61qI9rs2oKRV2hIvd8upSK8Iyp
-         Kv+A==
-X-Gm-Message-State: APjAAAU5XFiadRlc/PpUxpvLWrzaWcwb3cNQN/17htSVh3r42d5IUNhv
-        6QEtmcxZ9mZ8y+0gVLm7MR81PsqN6XGLYZ20cvw=
-X-Google-Smtp-Source: APXvYqzUWTtieH1+CaDR8gpTEnIElS3ketncNEVIBegQLyisAT9tHQA8kTmEGlDxAvIeN5653WjWxiyS3D2raysIFrU=
-X-Received: by 2002:a05:6830:1685:: with SMTP id k5mr3871418otr.250.1571767391897;
- Tue, 22 Oct 2019 11:03:11 -0700 (PDT)
-MIME-Version: 1.0
-References: <20191022172922.61232-1-andriy.shevchenko@linux.intel.com> <20191022172922.61232-11-andriy.shevchenko@linux.intel.com>
-In-Reply-To: <20191022172922.61232-11-andriy.shevchenko@linux.intel.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Tue, 22 Oct 2019 20:03:00 +0200
-Message-ID: <CAMuHMdUUvVdg8w0evV4zjrqis9e9Jak_qTnkufYT5wQHUn9j-A@mail.gmail.com>
-Subject: Re: [PATCH v2 10/11] gpio: pca953x: Convert to use bitmap API
+        id S2389845AbfJWHai (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 23 Oct 2019 03:30:38 -0400
+Received: from mga12.intel.com ([192.55.52.136]:6670 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2389459AbfJWHai (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Wed, 23 Oct 2019 03:30:38 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 23 Oct 2019 00:30:37 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.68,220,1569308400"; 
+   d="scan'208";a="209865074"
+Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.157])
+  by fmsmga001.fm.intel.com with SMTP; 23 Oct 2019 00:30:34 -0700
+Received: by lahna (sSMTP sendmail emulation); Wed, 23 Oct 2019 10:30:34 +0300
+Date:   Wed, 23 Oct 2019 10:30:33 +0300
+From:   Mika Westerberg <mika.westerberg@linux.intel.com>
 To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Yury Norov <yury.norov@gmail.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        William Breathitt Gray <vilhelm.gray@gmail.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Marek Vasut <marek.vasut+renesas@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+        linux-gpio@vger.kernel.org
+Subject: Re: [PATCH v2 0/5] pinctrl: intel: Refactor register restoring on
+ resume
+Message-ID: <20191023073033.GM2819@lahna.fi.intel.com>
+References: <20191022100004.66532-1-andriy.shevchenko@linux.intel.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191022100004.66532-1-andriy.shevchenko@linux.intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Andy,
+On Tue, Oct 22, 2019 at 12:59:59PM +0300, Andy Shevchenko wrote:
+> Refactor ->resume() path to be a bit smarter and less noisy.
+> 
+> In v2:
+> - add a patch to reduce a noise in kernel log
+> - drop warning to debug level for one message
+> - constify local pointers (Mika)
+> 
+> Andy Shevchenko (5):
+>   pinctrl: intel: Introduce intel_restore_padcfg() helper
+>   pinctrl: intel: Introduce intel_restore_hostown() helper
+>   pinctrl: intel: Introduce intel_restore_intmask() helper
+>   pinctrl: intel: Drop level from warning to debug in
+>     intel_restore_hostown()
+>   pinctrl: intel: Use helper to restore register values on ->resume()
 
-On Tue, Oct 22, 2019 at 7:29 PM Andy Shevchenko
-<andriy.shevchenko@linux.intel.com> wrote:
-> Instead of customized approach convert the driver to use bitmap API.
->
-> Depends-on: 6e9c6674d1bf ("gpio: pca953x: utilize the for_each_set_clump8 macro")
-> Cc: William Breathitt Gray <vilhelm.gray@gmail.com>
-> Cc: Geert Uytterhoeven <geert+renesas@glider.be>
-> Cc: Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-> Cc: Marek Vasut <marek.vasut+renesas@gmail.com>
-> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+For the whole series,
 
-> --- a/drivers/gpio/gpio-pca953x.c
-> +++ b/drivers/gpio/gpio-pca953x.c
-> @@ -9,8 +9,7 @@
->   */
->
->  #include <linux/acpi.h>
-> -#include <linux/bits.h>
-> -#include <linux/bitops.h>
-> +#include <linux/bitmap.h>
->  #include <linux/gpio/driver.h>
->  #include <linux/gpio/consumer.h>
->  #include <linux/i2c.h>
-> @@ -116,6 +115,7 @@ MODULE_DEVICE_TABLE(acpi, pca953x_acpi_ids);
->
->  #define MAX_BANK 5
->  #define BANK_SZ 8
-> +#define MAX_LINE       (MAX_BANK * BANK_SZ)
-
-Given (almost) everything is now bitmap (i.e. long [])-based, you might
-as well increase MAX_BANK to a multiple of 4 or 8, e.g. 8.
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Acked-by: Mika Westerberg <mika.westerberg@linux.intel.com>
