@@ -2,77 +2,107 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 080BCE1DBB
-	for <lists+linux-gpio@lfdr.de>; Wed, 23 Oct 2019 16:10:54 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A639AE1E91
+	for <lists+linux-gpio@lfdr.de>; Wed, 23 Oct 2019 16:49:25 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733186AbfJWOKx (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 23 Oct 2019 10:10:53 -0400
-Received: from mail-vs1-f66.google.com ([209.85.217.66]:34203 "EHLO
-        mail-vs1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732167AbfJWOKw (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 23 Oct 2019 10:10:52 -0400
-Received: by mail-vs1-f66.google.com with SMTP id d3so13878151vsr.1
-        for <linux-gpio@vger.kernel.org>; Wed, 23 Oct 2019 07:10:52 -0700 (PDT)
+        id S2391231AbfJWOtY (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 23 Oct 2019 10:49:24 -0400
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:41891 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389782AbfJWOtY (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 23 Oct 2019 10:49:24 -0400
+Received: by mail-oi1-f195.google.com with SMTP id g81so17591761oib.8
+        for <linux-gpio@vger.kernel.org>; Wed, 23 Oct 2019 07:49:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=fG37TgkjRgodwOFImG22RhwIkrCCrAzjQbxW8lk57aA=;
-        b=D2NK+E0jUEC6S8U5LXxwgNzVFeiIChH36mUSdgsJZx4/1Q0yUsGFQ91kDxfv6nmUdo
-         d73pvbw5WW0VT366SU5S69b9U1t/ZLipm/28Q5/rXMHI3/fuMNLkJwXwQFb8iJvGBbTp
-         olEDcFDWzo9IU8jfTj7YpKqO9uSrNl8b8wFkuHZh0nfE73ZGxqA+Smbbav8zQh4iUY+6
-         jWGV2W3ThEDm0sRQunB/wKmyPNdiZLPvXGPL1nEp0en1JoDwjSOihiN0fl5YYT+GM5wQ
-         5G1Njjcy+15KJjhQ80PzwazP1lK8UnlMulZozbwZM3Crn+yZ5OPbifcFN8T90x+mfgO1
-         0+NA==
+         :cc:content-transfer-encoding;
+        bh=O9ox2pve6NHLhmzZq/Et8NzVsXtqJowAf4+8XmKRml8=;
+        b=dAsNYaoPoa0FVkpWQ+Mw+OCElmBkuYpU/+5PWViTjpSeETA9ynnP/Lnu5J8g+tEwPl
+         Z6CcJN9xhR5BUDtYeZo9pCcZcWgrjwimMU2rLTLsvOJ7Grm6/FgwwLndipgusj6dfSHe
+         uvZCqwqAuX/HwaHmKgRe7nqV6abw2AgJEO2HQsn5NNKSWdI+nMJ2dQj1aHZSNuvlxxkC
+         r7kOEy01YoQHDzoqp0/Pvv9vKFOrtdAqF8yY0wKKCS2JrckS1rrpCWE1NOplPVKbjQCn
+         igGlIMe9VeUAHKuVbdq2nCkNNzar9KcKo+925snr22p2nkRwUyxsNlcn9/dBY+O5puWd
+         DFqQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=fG37TgkjRgodwOFImG22RhwIkrCCrAzjQbxW8lk57aA=;
-        b=d4vfHhrQ+0aFvxSvBAbzgHH/1WDlYhG57nEaG5O/COzcIl1/821yfW11H3DgeXlHKE
-         v2FCQy+Hn4fXF7L5wnJ3p64kcgfBKNiFUcUGTQdG0FPb1/y0S6Mk6285J23lbMB7MwkV
-         urQG8k7oqEoPupGoiLne0XUkUrSEtcfyjD/tZ47bAqJWBWlCCYJIaPFPZ7ZyVPqjDhEo
-         Ebo3B3Vsmv6IwFIEG0iubvdDwvQHSHbsuGP4JXcdOUPdgV7a9Epue+lsz/XcuBdhk1Qn
-         whA1x+AneLI+dizBYCevVOhLq2ZneRpDdXU4+RMTcq6+wvlsdhIoqRnF3GECnjp2hLBb
-         engA==
-X-Gm-Message-State: APjAAAUMr6JrGtK5Ba+vzQE7ZuPy9TDZA9bhUINd/XMeVPoRdnBc38oH
-        2arwVzvXcg/tnD1SipyN+NIN8D1DTfTXV2oOr5xhZg==
-X-Google-Smtp-Source: APXvYqyBN27XhVntB3JqKmKsl042MmlixEPkG6vgrf/n1wSvy5PQikVfBPMGE09acfAUnJ/mSqYDFU/nehFejtIl/LE=
-X-Received: by 2002:a67:7944:: with SMTP id u65mr5866520vsc.10.1571839851606;
- Wed, 23 Oct 2019 07:10:51 -0700 (PDT)
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=O9ox2pve6NHLhmzZq/Et8NzVsXtqJowAf4+8XmKRml8=;
+        b=NoN7M3gHoSVhV4GwZR9J6ukewdOBdYJj3c2AVZgFd5tg4SlNMuRQ7JNLkfmj6g9qko
+         sQ4CPbr9NiAGiDdHUylvVlSaDKkxy/2OSIrkalvhW2iOc+aK7dXZYoAgU68dBo9dg3rw
+         PE/te21RW+kduoqYi9N9nDloHA5EHLpNtKiS+Jem3JsS3CisxCeywE4/EeTiwttiByve
+         id16fDnB6mwqhk+onEH81V2opilJ9NrmbuoMAU2rLi8SMnwpRPk/dZsCSEyOObTPA7NI
+         taucgTj9zAZ8AVEjrIuUbkeqAI1C995zByOitMi5IYh3k6HYekuwsJ62W64eWoQtdNtn
+         Aogg==
+X-Gm-Message-State: APjAAAUst0+rwYVZOs6wHZi0f41SOkdqJWgPIldVvwFd/YsDpYkt+h6o
+        WmC26yK+cSog246twXrGIMMQafGCRxUiBOvTzN+MIQ==
+X-Google-Smtp-Source: APXvYqxcQwBzv+jaQBkvWrghfop7WtOGJow2UATWn++Bc0AtxhpgfFM1bZDEQ52mEG0UiB4ijf7XIJ9Qz1JjTc95Wzg=
+X-Received: by 2002:aca:5c06:: with SMTP id q6mr244007oib.175.1571842163611;
+ Wed, 23 Oct 2019 07:49:23 -0700 (PDT)
 MIME-Version: 1.0
-References: <20191022172922.61232-1-andriy.shevchenko@linux.intel.com>
-In-Reply-To: <20191022172922.61232-1-andriy.shevchenko@linux.intel.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Wed, 23 Oct 2019 16:10:40 +0200
-Message-ID: <CACRpkdYdfaLBgw=dGAK+xyhX3ru9SYa+QPNyAWJD4Y=BbfxUKQ@mail.gmail.com>
-Subject: Re: [PATCH v2 00/11] gpio: pca953x: Convert to bitmap (extended) API
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Yury Norov <yury.norov@gmail.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        William Breathitt Gray <vilhelm.gray@gmail.com>
+References: <20191023122150.GA2524@localhost.localdomain>
+In-Reply-To: <20191023122150.GA2524@localhost.localdomain>
+From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Date:   Wed, 23 Oct 2019 16:49:12 +0200
+Message-ID: <CAMpxmJUhwLOey+NtLrkvvj4apfyZyqLM_P87et+jHvGtBETspA@mail.gmail.com>
+Subject: Re: [PATCH] gpio: bd70528: Add MODULE ALIAS to autoload module
+To:     Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+Cc:     Matti Vaittinen <mazziesaccount@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-gpio <linux-gpio@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Oct 22, 2019 at 7:29 PM Andy Shevchenko
-<andriy.shevchenko@linux.intel.com> wrote:
-
-> While converting gpio-pca953x driver to bitmap API, I noticed that we have
-> no function to replace bits.
+=C5=9Br., 23 pa=C5=BA 2019 o 14:22 Matti Vaittinen
+<matti.vaittinen@fi.rohmeurope.com> napisa=C5=82(a):
 >
-> So, that's how patch 7 appears.
+> The bd70528 GPIO driver is probed by MFD driver. Add MODULE_ALIAS
+> in order to allow udev to load the module when MFD sub-device cell
+> for GPIO is added.
+>
+> Fixes: 18bc64b3aebfa ("gpio: Initial support for ROHM bd70528 GPIO block"=
+)
+> Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+> ---
+> I'm not really sure if this is a bug-fix or feature but I guess the
+> Fixes tag won't harm, right?
 
-Acked-by: Linus Walleij <linus.walleij@linaro.org>
+It's definitely a feature, not a bug-fix. I applied it to for-next but
+dropped the tag.
 
-Nice, I see that Andrew picked up the patches so no action required
-from my side I guess? Else poke me.
+Bart
 
-Yours,
-Linus Walleij
+>
+>  drivers/gpio/gpio-bd70528.c | 1 +
+>  1 file changed, 1 insertion(+)
+>
+> diff --git a/drivers/gpio/gpio-bd70528.c b/drivers/gpio/gpio-bd70528.c
+> index fd85605d2dab..8123260a92a2 100644
+> --- a/drivers/gpio/gpio-bd70528.c
+> +++ b/drivers/gpio/gpio-bd70528.c
+> @@ -230,3 +230,4 @@ module_platform_driver(bd70528_gpio);
+>  MODULE_AUTHOR("Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>");
+>  MODULE_DESCRIPTION("BD70528 voltage regulator driver");
+>  MODULE_LICENSE("GPL");
+> +MODULE_ALIAS("platform:bd70528-gpio");
+> --
+> 2.21.0
+>
+>
+> --
+> Matti Vaittinen, Linux device drivers
+> ROHM Semiconductors, Finland SWDC
+> Kiviharjunlenkki 1E
+> 90220 OULU
+> FINLAND
+>
+> ~~~ "I don't think so," said Rene Descartes. Just then he vanished ~~~
+> Simon says - in Latin please.
+> ~~~ "non cogito me" dixit Rene Descarte, deinde evanescavit ~~~
+> Thanks to Simon Glass for the translation =3D]
