@@ -2,171 +2,194 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 1832DE1A25
-	for <lists+linux-gpio@lfdr.de>; Wed, 23 Oct 2019 14:30:01 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 54C43E1A8B
+	for <lists+linux-gpio@lfdr.de>; Wed, 23 Oct 2019 14:34:14 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391341AbfJWMaA (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 23 Oct 2019 08:30:00 -0400
-Received: from michel.telenet-ops.be ([195.130.137.88]:37370 "EHLO
-        michel.telenet-ops.be" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2391336AbfJWMaA (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 23 Oct 2019 08:30:00 -0400
-Received: from ramsan ([84.194.98.4])
-        by michel.telenet-ops.be with bizsmtp
-        id H0Vy2100b05gfCL060VysK; Wed, 23 Oct 2019 14:29:58 +0200
-Received: from rox.of.borg ([192.168.97.57])
-        by ramsan with esmtp (Exim 4.90_1)
-        (envelope-from <geert@linux-m68k.org>)
-        id 1iNFm2-0000pA-KE; Wed, 23 Oct 2019 14:29:58 +0200
-Received: from geert by rox.of.borg with local (Exim 4.90_1)
-        (envelope-from <geert@linux-m68k.org>)
-        id 1iNFm2-0003FE-JD; Wed, 23 Oct 2019 14:29:58 +0200
-From:   Geert Uytterhoeven <geert+renesas@glider.be>
-To:     Linus Walleij <linus.walleij@linaro.org>,
+        id S1733214AbfJWMdf (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 23 Oct 2019 08:33:35 -0400
+Received: from mail-sz.amlogic.com ([211.162.65.117]:16838 "EHLO
+        mail-sz.amlogic.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389633AbfJWMde (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 23 Oct 2019 08:33:34 -0400
+Received: from [10.28.18.45] (10.28.18.45) by mail-sz.amlogic.com (10.28.11.5)
+ with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1591.10; Wed, 23 Oct
+ 2019 20:33:42 +0800
+Subject: Re: [PATCH v3 2/4] pinctrl: meson: add a new dt parse callback for
+ Meson-A series SoCs
+To:     Jerome Brunet <jbrunet@baylibre.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        <linux-gpio@vger.kernel.org>
+CC:     Neil Armstrong <narmstrong@baylibre.com>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        Carlo Caione <carlo@caione.org>,
         Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>
-Cc:     Eugeniu Rosca <erosca@de.adit-jv.com>, linux-gpio@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH v2 3/3] pinctrl: sh-pfc: r8a7796: Add R8A77961 PFC support
-Date:   Wed, 23 Oct 2019 14:29:55 +0200
-Message-Id: <20191023122955.12420-4-geert+renesas@glider.be>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20191023122955.12420-1-geert+renesas@glider.be>
-References: <20191023122955.12420-1-geert+renesas@glider.be>
+        Xingyu Chen <xingyu.chen@amlogic.com>,
+        Jianxin Pan <jianxin.pan@amlogic.com>,
+        Hanjie Lin <hanjie.lin@amlogic.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-amlogic@lists.infradead.org>, <linux-kernel@vger.kernel.org>
+References: <1571050492-6598-1-git-send-email-qianggui.song@amlogic.com>
+ <1571050492-6598-3-git-send-email-qianggui.song@amlogic.com>
+ <1j4kzzvnrr.fsf@starbuckisacylon.baylibre.com>
+From:   Qianggui Song <qianggui.song@amlogic.com>
+Message-ID: <4e4aa76e-d315-2b99-91f4-6667eb5221e7@amlogic.com>
+Date:   Wed, 23 Oct 2019 20:33:42 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
+MIME-Version: 1.0
+In-Reply-To: <1j4kzzvnrr.fsf@starbuckisacylon.baylibre.com>
+Content-Type: text/plain; charset="windows-1252"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.28.18.45]
+X-ClientProxiedBy: mail-sz.amlogic.com (10.28.11.5) To mail-sz.amlogic.com
+ (10.28.11.5)
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Add support for the Pin Function Controller in the R-Car M3-W+
-(R8A77961) SoC.
 
-R-Car M3-W+ is pin compatible with R-Car M3-W (R8A77960), which allows
-for both SoCs to share a driver.
 
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Reviewed-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Tested-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
----
-v2:
-  - Add Reviewed-by, Tested-by,
-  - Move r8a7796_pinmux_info rename to a prerequisite patch.
----
- drivers/pinctrl/sh-pfc/Kconfig       |  4 ++++
- drivers/pinctrl/sh-pfc/Makefile      |  1 +
- drivers/pinctrl/sh-pfc/core.c        |  6 ++++++
- drivers/pinctrl/sh-pfc/pfc-r8a7796.c | 29 +++++++++++++++++++++++++++-
- drivers/pinctrl/sh-pfc/sh_pfc.h      |  1 +
- 5 files changed, 40 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/pinctrl/sh-pfc/Kconfig b/drivers/pinctrl/sh-pfc/Kconfig
-index 93d6034be4ff63f2..28d66e7cb098863b 100644
---- a/drivers/pinctrl/sh-pfc/Kconfig
-+++ b/drivers/pinctrl/sh-pfc/Kconfig
-@@ -28,6 +28,7 @@ config PINCTRL_SH_PFC
- 	select PINCTRL_PFC_R8A7794 if ARCH_R8A7794
- 	select PINCTRL_PFC_R8A7795 if ARCH_R8A7795
- 	select PINCTRL_PFC_R8A77960 if ARCH_R8A77960 || ARCH_R8A7796
-+	select PINCTRL_PFC_R8A77961 if ARCH_R8A77961
- 	select PINCTRL_PFC_R8A77965 if ARCH_R8A77965
- 	select PINCTRL_PFC_R8A77970 if ARCH_R8A77970
- 	select PINCTRL_PFC_R8A77980 if ARCH_R8A77980
-@@ -120,6 +121,9 @@ config PINCTRL_PFC_R8A7795
- config PINCTRL_PFC_R8A77960
- 	bool "R-Car M3-W pin control support" if COMPILE_TEST
- 
-+config PINCTRL_PFC_R8A77961
-+	bool "R-Car M3-W+ pin control support" if COMPILE_TEST
-+
- config PINCTRL_PFC_R8A77965
- 	bool "R-Car M3-N pin control support" if COMPILE_TEST
- 
-diff --git a/drivers/pinctrl/sh-pfc/Makefile b/drivers/pinctrl/sh-pfc/Makefile
-index e3594cd2620386af..3bc05666e1a6652e 100644
---- a/drivers/pinctrl/sh-pfc/Makefile
-+++ b/drivers/pinctrl/sh-pfc/Makefile
-@@ -21,6 +21,7 @@ obj-$(CONFIG_PINCTRL_PFC_R8A7794)	+= pfc-r8a7794.o
- obj-$(CONFIG_PINCTRL_PFC_R8A7795)	+= pfc-r8a7795.o
- obj-$(CONFIG_PINCTRL_PFC_R8A7795)	+= pfc-r8a7795-es1.o
- obj-$(CONFIG_PINCTRL_PFC_R8A77960)	+= pfc-r8a7796.o
-+obj-$(CONFIG_PINCTRL_PFC_R8A77961)	+= pfc-r8a7796.o
- obj-$(CONFIG_PINCTRL_PFC_R8A77965)	+= pfc-r8a77965.o
- obj-$(CONFIG_PINCTRL_PFC_R8A77970)	+= pfc-r8a77970.o
- obj-$(CONFIG_PINCTRL_PFC_R8A77980)	+= pfc-r8a77980.o
-diff --git a/drivers/pinctrl/sh-pfc/core.c b/drivers/pinctrl/sh-pfc/core.c
-index e3292abd6c9456f8..2959623e9b724f40 100644
---- a/drivers/pinctrl/sh-pfc/core.c
-+++ b/drivers/pinctrl/sh-pfc/core.c
-@@ -591,6 +591,12 @@ static const struct of_device_id sh_pfc_of_table[] = {
- 		.data = &r8a77960_pinmux_info,
- 	},
- #endif
-+#ifdef CONFIG_PINCTRL_PFC_R8A77961
-+	{
-+		.compatible = "renesas,pfc-r8a77961",
-+		.data = &r8a77961_pinmux_info,
-+	},
-+#endif
- #ifdef CONFIG_PINCTRL_PFC_R8A77965
- 	{
- 		.compatible = "renesas,pfc-r8a77965",
-diff --git a/drivers/pinctrl/sh-pfc/pfc-r8a7796.c b/drivers/pinctrl/sh-pfc/pfc-r8a7796.c
-index 9de2909c7ad9dff0..a2496baca85d23f8 100644
---- a/drivers/pinctrl/sh-pfc/pfc-r8a7796.c
-+++ b/drivers/pinctrl/sh-pfc/pfc-r8a7796.c
-@@ -1,6 +1,6 @@
- // SPDX-License-Identifier: GPL-2.0
- /*
-- * R8A7796 processor support - PFC hardware block.
-+ * R8A7796 (R-Car M3-W/W+) support - PFC hardware block.
-  *
-  * Copyright (C) 2016-2019 Renesas Electronics Corp.
-  *
-@@ -6236,3 +6236,30 @@ const struct sh_pfc_soc_info r8a77960_pinmux_info = {
- 	.pinmux_data_size = ARRAY_SIZE(pinmux_data),
- };
- #endif
-+
-+#ifdef CONFIG_PINCTRL_PFC_R8A77961
-+const struct sh_pfc_soc_info r8a77961_pinmux_info = {
-+	.name = "r8a77961_pfc",
-+	.ops = &r8a7796_pinmux_ops,
-+	.unlock_reg = 0xe6060000, /* PMMR */
-+
-+	.function = { PINMUX_FUNCTION_BEGIN, PINMUX_FUNCTION_END },
-+
-+	.pins = pinmux_pins,
-+	.nr_pins = ARRAY_SIZE(pinmux_pins),
-+	.groups = pinmux_groups.common,
-+	.nr_groups = ARRAY_SIZE(pinmux_groups.common) +
-+		ARRAY_SIZE(pinmux_groups.automotive),
-+	.functions = pinmux_functions.common,
-+	.nr_functions = ARRAY_SIZE(pinmux_functions.common) +
-+		ARRAY_SIZE(pinmux_functions.automotive),
-+
-+	.cfg_regs = pinmux_config_regs,
-+	.drive_regs = pinmux_drive_regs,
-+	.bias_regs = pinmux_bias_regs,
-+	.ioctrl_regs = pinmux_ioctrl_regs,
-+
-+	.pinmux_data = pinmux_data,
-+	.pinmux_data_size = ARRAY_SIZE(pinmux_data),
-+};
-+#endif
-diff --git a/drivers/pinctrl/sh-pfc/sh_pfc.h b/drivers/pinctrl/sh-pfc/sh_pfc.h
-index a7eb527fdc60ae25..640d2a4cb838804f 100644
---- a/drivers/pinctrl/sh-pfc/sh_pfc.h
-+++ b/drivers/pinctrl/sh-pfc/sh_pfc.h
-@@ -321,6 +321,7 @@ extern const struct sh_pfc_soc_info r8a7794_pinmux_info;
- extern const struct sh_pfc_soc_info r8a7795_pinmux_info;
- extern const struct sh_pfc_soc_info r8a7795es1_pinmux_info;
- extern const struct sh_pfc_soc_info r8a77960_pinmux_info;
-+extern const struct sh_pfc_soc_info r8a77961_pinmux_info;
- extern const struct sh_pfc_soc_info r8a77965_pinmux_info;
- extern const struct sh_pfc_soc_info r8a77970_pinmux_info;
- extern const struct sh_pfc_soc_info r8a77980_pinmux_info;
--- 
-2.17.1
-
+On 2019/10/23 17:01, Jerome Brunet wrote:
+> 
+> On Mon 14 Oct 2019 at 12:54, Qianggui Song <qianggui.song@amlogic.com> wrote:
+> 
+>> Meson A1 Soc share the same register layout of pinmux with previous
+>> Meson-G12A, however there is difference for gpio and pin config register
+>> in A1. The main difference is that registers before A1 are grouped by
+>> function while those of A1 are by bank. The new register layout is as
+>> below:
+>>
+>> /* first bank */	      /* addr */
+>> - P_PADCTRL_GPIOP_I         base + 0x00 << 2
+>> - P_PADCTRL_GPIOP_O         base + 0x01 << 2
+>> - P_PADCTRL_GPIOP_OEN       base + 0x02 << 2
+>> - P_PADCTRL_GPIOP_PULL_EN   base + 0x03 << 2
+>> - P_PADCTRL_GPIOP_PULL_UP   base + 0x04 << 2
+>> - P_PADCTRL_GPIOP_DS        base + 0x05 << 2
+>>
+>> /* second bank */
+>> - P_PADCTRL_GPIOB_I         base + 0x10 << 2
+>> - P_PADCTRL_GPIOB_O         base + 0x11 << 2
+>> - P_PADCTRL_GPIOB_OEN       base + 0x12 << 2
+>> - P_PADCTRL_GPIOB_PULL_EN   base + 0x13 << 2
+>> - P_PADCTRL_GPIOB_PULL_UP   base + 0x14 << 2
+>> - P_PADCTRL_GPIOB_DS        base + 0x15 << 2
+>>
+>> Each bank contains at least 6 registers to be configured, if one bank
+>> has more than 16 gpios, an extra P_PADCTRL_GPIO[X]_DS_EXT is included.
+>> Between two adjacent P_PADCTRL_GPIO[X]_I, there is an offset 0x10, that
+>> is to say, for third bank, the offsets will be 0x20,0x21,0x22,0x23,0x24
+>> ,0x25 according to above register layout. For previous chips, registers
+>> are grouped according to their functions while registers of A1 are
+>> according to bank.
+>>
+>> Current Meson pinctrl driver can cover such change by using base address
+>> of GPIO as that of drive-strength.While simply giving reg_ds = reg_pullen
+>> make wrong value to reg_ds for Socs that do not support drive-strength
+>> like AXG.To make things simple, add an extra dt parser function for
+>> a1 or later chip and remain the old dt parser function for old Socs.
+>>
+>> Signed-off-by: Qianggui Song <qianggui.song@amlogic.com>
+>> ---
+>>  drivers/pinctrl/meson/pinctrl-meson.c | 16 +++++++++++++++-
+>>  drivers/pinctrl/meson/pinctrl-meson.h |  7 +++++++
+>>  2 files changed, 22 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/drivers/pinctrl/meson/pinctrl-meson.c b/drivers/pinctrl/meson/pinctrl-meson.c
+>> index 8bba9d053d9f..e8f6298fc96a 100644
+>> --- a/drivers/pinctrl/meson/pinctrl-meson.c
+>> +++ b/drivers/pinctrl/meson/pinctrl-meson.c
+>> @@ -695,6 +695,17 @@ static int meson_pinctrl_parse_dt(struct meson_pinctrl *pc,
+>>  	return 0;
+>>  }
+>>  
+>> +int meson_pinctrl_parse_dt_extra(struct meson_pinctrl *pc,
+>> +				 struct device_node *node)
+> 
+> This function is the fixup for the a1 family, AFAICT.
+> It should be named as such and it belong in pinctrl-meson-a1.c
+> 
+> Every controller performing fixups should have their function as well:
+>  (1) AO of gxbb, gxl and axg 
+>  (2) AO of g12 and sm
+> 
+OK, Will try to move this function to pinctrl-meson-a1.c. That should be
+better than rewriting parse function for each chips EE/AO alone.
+>> +{
+>> +	int ret;
+>> +
+>> +	ret = meson_pinctrl_parse_dt(pc, node);
+> 
+> As said in previous review,  meson_pinctrl_parse_dt() should be called
+> for every SoC to parse the *available* regions.
+> 
+> The fixup, if necessary, will be done by providing a callback
+> 
+> IOW, please:
+>  * rework meson_pinctrl_parse_dt() to only parse the avaialble region
+>  * don't call meson_pinctrl_parse_dt() from the extra function
+>  * provided the extra function for the AO controllers of the other SoCs
+> 
+That means I need to move not only ao fixup but ds to extra function for
+old chips do not support this.But it will touch other Socs, should I do
+this in A1 pinctrl patchset? or do this rework in another patchset.
+>> +	pc->reg_ds = pc->reg_pullen;
+>> +
+>> +	return ret;
+>> +}
+>> +
+>>  int meson_pinctrl_probe(struct platform_device *pdev)
+>>  {
+>>  	struct device *dev = &pdev->dev;
+>> @@ -708,7 +719,10 @@ int meson_pinctrl_probe(struct platform_device *pdev)
+>>  	pc->dev = dev;
+>>  	pc->data = (struct meson_pinctrl_data *) of_device_get_match_data(dev);
+>>  
+>> -	ret = meson_pinctrl_parse_dt(pc, dev->of_node);
+>> +	if (pc->data->parse_dt)
+>> +		ret = pc->data->parse_dt(pc, dev->of_node);
+>> +	else
+>> +		ret = meson_pinctrl_parse_dt(pc, dev->of_node);
+>>  	if (ret)
+> 
+> 
+> 
+>>  		return ret;
+>>  
+>> diff --git a/drivers/pinctrl/meson/pinctrl-meson.h b/drivers/pinctrl/meson/pinctrl-meson.h
+>> index c696f3241a36..0cd6a869cae3 100644
+>> --- a/drivers/pinctrl/meson/pinctrl-meson.h
+>> +++ b/drivers/pinctrl/meson/pinctrl-meson.h
+>> @@ -11,6 +11,8 @@
+>>  #include <linux/regmap.h>
+>>  #include <linux/types.h>
+>>  
+>> +struct meson_pinctrl;
+>> +
+>>  /**
+>>   * struct meson_pmx_group - a pinmux group
+>>   *
+>> @@ -114,6 +116,7 @@ struct meson_pinctrl_data {
+>>  	unsigned int num_banks;
+>>  	const struct pinmux_ops *pmx_ops;
+>>  	void *pmx_data;
+>> +	int (*parse_dt)(struct meson_pinctrl *pc, struct device_node *node);
+>>  };
+>>  
+>>  struct meson_pinctrl {
+>> @@ -171,3 +174,7 @@ int meson_pmx_get_groups(struct pinctrl_dev *pcdev,
+>>  
+>>  /* Common probe function */
+>>  int meson_pinctrl_probe(struct platform_device *pdev);
+>> +
+>> +/* Extra dt parse function for register layout grouped by bank */
+>> +int meson_pinctrl_parse_dt_extra(struct meson_pinctrl *pc,
+>> +				 struct device_node *node);
+> 
+> .
+> 
