@@ -2,88 +2,89 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 3405DE19E5
-	for <lists+linux-gpio@lfdr.de>; Wed, 23 Oct 2019 14:22:24 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 70D32E1A26
+	for <lists+linux-gpio@lfdr.de>; Wed, 23 Oct 2019 14:30:01 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405278AbfJWMWF (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 23 Oct 2019 08:22:05 -0400
-Received: from mail-lf1-f67.google.com ([209.85.167.67]:36302 "EHLO
-        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726636AbfJWMWF (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 23 Oct 2019 08:22:05 -0400
-Received: by mail-lf1-f67.google.com with SMTP id u16so15915478lfq.3;
-        Wed, 23 Oct 2019 05:22:03 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=xkXwREeBStAj9upykTUmZ3LVJRMdaPsgaMN2GgOTWoU=;
-        b=Aq93TynFyD7BNc6JK918UXM5nETc77RaS0a4HknTzslS09BpYlfNHH3OHh37xOSZFZ
-         54ar6Wsftobeib4B9nCKsCkWjgtUE3nplnwPFZWOEse4YFsm45xYQPzuzUekD/yHEyKa
-         jkrE99+Q+HSjUjAiVDBX7jrpxrrpwCOCDI8WnPUjNDsJh1sV+C5tQy0rStGstuB7PuDx
-         RLvcg2Xmkmu5WIXstrB6mT5PtLEDjeJ40+WrEk/5KLuJp8f9CmFK0yRj/fc+t85LToOl
-         1zWtnPZYtj5u/Yq/rBRSD2e5xYIcxK94u3bb/I4vIdxVZY/4VOiFonPNO2SuYpgGG2q+
-         mVpA==
-X-Gm-Message-State: APjAAAXpo2R4q40/yRexg9TU/xYiwck4l9QPvx8tf8a3PMy1z/hOePfG
-        95plpzKhpKkJ3pvmXruNKUE=
-X-Google-Smtp-Source: APXvYqwM3bQU5wHBNEVk5BRziUfB39YFyB5gjHz3Riyjo7ybB6x2Y/GeZghncf9QAcn7kt/vNPQKfA==
-X-Received: by 2002:a19:ee05:: with SMTP id g5mr10547186lfb.70.1571833323119;
-        Wed, 23 Oct 2019 05:22:03 -0700 (PDT)
-Received: from localhost.localdomain ([213.255.186.46])
-        by smtp.gmail.com with ESMTPSA id b10sm9381660lji.48.2019.10.23.05.22.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 23 Oct 2019 05:22:02 -0700 (PDT)
-Date:   Wed, 23 Oct 2019 15:21:50 +0300
-From:   Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-To:     matti.vaittinen@fi.rohmeurope.com, mazziesaccount@gmail.com
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] gpio: bd70528: Add MODULE ALIAS to autoload module
-Message-ID: <20191023122150.GA2524@localhost.localdomain>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.12.1 (2019-06-15)
+        id S2391343AbfJWMaA (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 23 Oct 2019 08:30:00 -0400
+Received: from andre.telenet-ops.be ([195.130.132.53]:46774 "EHLO
+        andre.telenet-ops.be" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388042AbfJWMaA (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 23 Oct 2019 08:30:00 -0400
+Received: from ramsan ([84.194.98.4])
+        by andre.telenet-ops.be with bizsmtp
+        id H0Vy2100b05gfCL010Vyd5; Wed, 23 Oct 2019 14:29:58 +0200
+Received: from rox.of.borg ([192.168.97.57])
+        by ramsan with esmtp (Exim 4.90_1)
+        (envelope-from <geert@linux-m68k.org>)
+        id 1iNFm2-0000oy-Hw; Wed, 23 Oct 2019 14:29:58 +0200
+Received: from geert by rox.of.borg with local (Exim 4.90_1)
+        (envelope-from <geert@linux-m68k.org>)
+        id 1iNFm2-0003F6-Gb; Wed, 23 Oct 2019 14:29:58 +0200
+From:   Geert Uytterhoeven <geert+renesas@glider.be>
+To:     Linus Walleij <linus.walleij@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>
+Cc:     Eugeniu Rosca <erosca@de.adit-jv.com>, linux-gpio@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: [PATCH v2 0/3] pinctrl: sh-pfc: Add r8a77961 support
+Date:   Wed, 23 Oct 2019 14:29:52 +0200
+Message-Id: <20191023122955.12420-1-geert+renesas@glider.be>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-The bd70528 GPIO driver is probed by MFD driver. Add MODULE_ALIAS
-in order to allow udev to load the module when MFD sub-device cell
-for GPIO is added.
+	Hi all,
 
-Fixes: 18bc64b3aebfa ("gpio: Initial support for ROHM bd70528 GPIO block")
-Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
----
-I'm not really sure if this is a bug-fix or feature but I guess the
-Fixes tag won't harm, right?
+This patch series adds support for the Pin Function Controller in the
+Renesas R-Car M3-W+ (R8A77961) SoC.  As R-Car M3-W+ is very similar to
+R-Car M3-W (R8A77960), the existing driver for R-Car M3-W is updated to
+handle both.
 
- drivers/gpio/gpio-bd70528.c | 1 +
- 1 file changed, 1 insertion(+)
+To avoid confusion between R-Car M3-W and M3-W+, the existing config
+symbol for M3-W is renamed to PINCTRL_PFC_R8A77960 in a dependency-free
+way, and references to r8a7796 are updated.
 
-diff --git a/drivers/gpio/gpio-bd70528.c b/drivers/gpio/gpio-bd70528.c
-index fd85605d2dab..8123260a92a2 100644
---- a/drivers/gpio/gpio-bd70528.c
-+++ b/drivers/gpio/gpio-bd70528.c
-@@ -230,3 +230,4 @@ module_platform_driver(bd70528_gpio);
- MODULE_AUTHOR("Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>");
- MODULE_DESCRIPTION("BD70528 voltage regulator driver");
- MODULE_LICENSE("GPL");
-+MODULE_ALIAS("platform:bd70528-gpio");
+Changes compared to v1[1]:
+  - Split in per-subsystem series,
+  - Add Reviewed-by, Tested-by,
+  - Rename PINCTRL_PFC_R8A7796,
+  - Update r8a7796 references,
+
+I intend to queue this series in sh-pfc-for-v5.5.
+
+Thanks for your comments!
+
+[1] "[PATCH/RFC 00/19] arm64: dts: renesas: Initial support for R-Car M3-W+"
+    https://lore.kernel.org/linux-renesas-soc/20191007102332.12196-1-geert+renesas@glider.be/
+
+Geert Uytterhoeven (3):
+  dt-bindings: pinctrl: sh-pfc: Document r8a77961 support
+  pinctrl: sh-pfc: Rename PINCTRL_PFC_R8A7796 to PINCTRL_PFC_R8A77960
+  pinctrl: sh-pfc: r8a7796: Add R8A77961 PFC support
+
+ .../bindings/pinctrl/renesas,pfc-pinctrl.txt  |  3 +-
+ drivers/pinctrl/sh-pfc/Kconfig                |  8 +++--
+ drivers/pinctrl/sh-pfc/Makefile               |  3 +-
+ drivers/pinctrl/sh-pfc/core.c                 | 10 ++++--
+ drivers/pinctrl/sh-pfc/pfc-r8a7796.c          | 33 +++++++++++++++++--
+ drivers/pinctrl/sh-pfc/sh_pfc.h               |  3 +-
+ 6 files changed, 50 insertions(+), 10 deletions(-)
+
 -- 
-2.21.0
+2.17.1
 
+Gr{oetje,eeting}s,
 
--- 
-Matti Vaittinen, Linux device drivers
-ROHM Semiconductors, Finland SWDC
-Kiviharjunlenkki 1E
-90220 OULU
-FINLAND
+						Geert
 
-~~~ "I don't think so," said Rene Descartes. Just then he vanished ~~~
-Simon says - in Latin please.
-~~~ "non cogito me" dixit Rene Descarte, deinde evanescavit ~~~
-Thanks to Simon Glass for the translation =] 
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+							    -- Linus Torvalds
