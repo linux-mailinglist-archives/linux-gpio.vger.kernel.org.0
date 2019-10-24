@@ -2,87 +2,103 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 59848E3468
-	for <lists+linux-gpio@lfdr.de>; Thu, 24 Oct 2019 15:38:51 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CC45DE35A0
+	for <lists+linux-gpio@lfdr.de>; Thu, 24 Oct 2019 16:33:47 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388589AbfJXNiu (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 24 Oct 2019 09:38:50 -0400
-Received: from mga14.intel.com ([192.55.52.115]:21369 "EHLO mga14.intel.com"
+        id S2391794AbfJXOdr (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 24 Oct 2019 10:33:47 -0400
+Received: from mga06.intel.com ([134.134.136.31]:60767 "EHLO mga06.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733296AbfJXNiu (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Thu, 24 Oct 2019 09:38:50 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
+        id S1732293AbfJXOdq (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Thu, 24 Oct 2019 10:33:46 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 24 Oct 2019 06:38:50 -0700
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 24 Oct 2019 07:33:46 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.68,224,1569308400"; 
-   d="scan'208";a="202303360"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by orsmga006.jf.intel.com with ESMTP; 24 Oct 2019 06:38:47 -0700
-Received: from andy by smile with local (Exim 4.92.2)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1iNdKA-0004SI-Qr; Thu, 24 Oct 2019 16:38:46 +0300
-Date:   Thu, 24 Oct 2019 16:38:46 +0300
+   d="scan'208";a="192204707"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by orsmga008.jf.intel.com with ESMTP; 24 Oct 2019 07:33:45 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1003)
+        id 22CF1125; Thu, 24 Oct 2019 17:33:44 +0300 (EEST)
 From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     linux-gpio@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <marc.zyngier@arm.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Thierry Reding <treding@nvidia.com>
-Subject: Re: [PATCH] RFC: pinctrl: cherryview: Pass irqchip when adding
- gpiochip
-Message-ID: <20191024133846.GW32742@smile.fi.intel.com>
-References: <20190813070123.17406-1-linus.walleij@linaro.org>
+To:     Mika Westerberg <mika.westerberg@linux.intel.com>,
+        linux-gpio@vger.kernel.org,
+        Linus Walleij <linus.walleij@linaro.org>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: [PATCH v1 1/2] pinctrl: baytrail: Allocate IRQ chip dynamic
+Date:   Thu, 24 Oct 2019 17:33:42 +0300
+Message-Id: <20191024143343.17638-1-andriy.shevchenko@linux.intel.com>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190813070123.17406-1-linus.walleij@linaro.org>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Aug 13, 2019 at 09:01:23AM +0200, Linus Walleij wrote:
-> We need to convert all old gpio irqchips to pass the irqchip
-> setup along when adding the gpio_chip. For more info see
-> drivers/gpio/TODO.
-> 
-> This driver is something of a special case, so we need to
-> discuss it.
-> 
-> It picks a number of IRQ descriptors before setting up
-> the gpio_irq_chip using devm_irq_alloc_descs() giving a
-> fixed irq base in the IRQ numberspace. It then games the
-> irqchip API by associating IRQs from that base and upward
-> with as many pins there are in the "community" which is a
-> set of pins. Then after each gpio_chip is registered, it
-> fills in the pin to IRQ map for each GPIO range inside
-> that "community" with irq_domain_associate_many() which
-> works fine since the descriptors were allocated
-> previously.
-> 
-> This is actually a hierarchical irq_chip as far as I can
-> tell. The problem is that very likely the Intel root IRQ
-> chip is not hierarchical so it does not support using the
-> facilities for hierarchical irqdomains.
-> 
-> I will soon merge the patch providing hierarchical irqchip
-> support in gpiolib:
-> https://lore.kernel.org/linux-gpio/20190808123242.5359-1-linus.walleij@linaro.org/
-> 
-> Will we need to bite the bullet and convert the root
-> irqchip for the intels to support hierarcical irqdomain?
+Keeping the IRQ chip definition static shares it with multiple instances
+of the GPIO chip in the system. This is bad and now we get this warning
+from GPIO library:
 
-We have few fixes for this driver, perhaps you can send a new version based on
-them when they appear in your tree.
+"detected irqchip that is shared with multiple gpiochips: please fix the driver."
 
+Hence, move the IRQ chip definition from being driver static into the struct
+intel_pinctrl. So a unique IRQ chip is used for each GPIO chip instance.
+
+Fixes: 9f573b98ca50 ("pinctrl: baytrail: Update irq chip operations")
+Depends-on: aee0f04d5f3b ("pinctrl: intel: baytrail: Pass irqchip when adding gpiochip")
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+---
+ drivers/pinctrl/intel/pinctrl-baytrail.c | 19 +++++++++----------
+ 1 file changed, 9 insertions(+), 10 deletions(-)
+
+diff --git a/drivers/pinctrl/intel/pinctrl-baytrail.c b/drivers/pinctrl/intel/pinctrl-baytrail.c
+index 450cb5bf6a9f..9d0e32dbf970 100644
+--- a/drivers/pinctrl/intel/pinctrl-baytrail.c
++++ b/drivers/pinctrl/intel/pinctrl-baytrail.c
+@@ -107,6 +107,7 @@ struct byt_gpio_pin_context {
+ 
+ struct byt_gpio {
+ 	struct gpio_chip chip;
++	struct irq_chip irqchip;
+ 	struct platform_device *pdev;
+ 	struct pinctrl_dev *pctl_dev;
+ 	struct pinctrl_desc pctl_desc;
+@@ -1394,15 +1395,6 @@ static int byt_irq_type(struct irq_data *d, unsigned int type)
+ 	return 0;
+ }
+ 
+-static struct irq_chip byt_irqchip = {
+-	.name		= "BYT-GPIO",
+-	.irq_ack	= byt_irq_ack,
+-	.irq_mask	= byt_irq_mask,
+-	.irq_unmask	= byt_irq_unmask,
+-	.irq_set_type	= byt_irq_type,
+-	.flags		= IRQCHIP_SKIP_SET_WAKE,
+-};
+-
+ static void byt_gpio_irq_handler(struct irq_desc *desc)
+ {
+ 	struct irq_data *data = irq_desc_get_irq_data(desc);
+@@ -1535,8 +1527,15 @@ static int byt_gpio_probe(struct byt_gpio *vg)
+ 	if (irq_rc && irq_rc->start) {
+ 		struct gpio_irq_chip *girq;
+ 
++		vg->irqchip.name = "BYT-GPIO",
++		vg->irqchip.irq_ack = byt_irq_ack,
++		vg->irqchip.irq_mask = byt_irq_mask,
++		vg->irqchip.irq_unmask = byt_irq_unmask,
++		vg->irqchip.irq_set_type = byt_irq_type,
++		vg->irqchip.flags = IRQCHIP_SKIP_SET_WAKE,
++
+ 		girq = &gc->irq;
+-		girq->chip = &byt_irqchip;
++		girq->chip = &vg->irqchip;
+ 		girq->init_hw = byt_gpio_irq_init_hw;
+ 		girq->parent_handler = byt_gpio_irq_handler;
+ 		girq->num_parents = 1;
 -- 
-With Best Regards,
-Andy Shevchenko
-
+2.23.0
 
