@@ -2,95 +2,94 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 65DBAE3270
-	for <lists+linux-gpio@lfdr.de>; Thu, 24 Oct 2019 14:35:23 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 92B29E33A3
+	for <lists+linux-gpio@lfdr.de>; Thu, 24 Oct 2019 15:13:18 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2439143AbfJXMfW convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-gpio@lfdr.de>); Thu, 24 Oct 2019 08:35:22 -0400
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:41463 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2439084AbfJXMfW (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 24 Oct 2019 08:35:22 -0400
-Received: by mail-ot1-f67.google.com with SMTP id 94so564729oty.8;
-        Thu, 24 Oct 2019 05:35:21 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=jSiRc6xB10SUU+vv6d8heaflLgEwqtN8e8jkVm34t6Y=;
-        b=lp4Cq02jhAumMSjqAroZqShlauPH7Fk8+1RacC0y/SHb4BhxEkPIidpzlXQlZDxFPp
-         I/dbWeIEGTYmo3eNgfitDKmeNNnzqtFIy0yy1dBVOts323YB2683pCL9/8zREN/+hz8f
-         Ot3ae3veAirAPY0T3adu8+068WQRDOXSVSB74qTsl6NlqVgIYIhtiSM6NIaddXuXl4OZ
-         YgTxyOlLqbiLwB4vsoUojzrHpqKILeYSkMLJy0a+mlQe2A2Zzkg4uofxUXeZ/4KhbWbH
-         O0z6+XhYcBlSF70Cq7ABbKv0ritdyy7Qi6Jx73TpVRH05IGnScdqjAoEHPim+4Jj6DuN
-         fcLg==
-X-Gm-Message-State: APjAAAVvfgXHpKcLnrKmG2shiQp7OJ+5FgH1ntU1WcID/7CiNFR50Hl9
-        rdohcFrsvx4UkHVFv0ABCDxWZKkvMLc1YU3jRd2DMQ==
-X-Google-Smtp-Source: APXvYqyleEgy6cLO6O8odvlFZlEWdOVD2w1Zn0KJ4M+Gl/rt8Y6NhRXRbfWaeehcWB1Ofknlbw5xmd2iUWlZsWnjapg=
-X-Received: by 2002:a9d:7345:: with SMTP id l5mr5505138otk.39.1571920520926;
- Thu, 24 Oct 2019 05:35:20 -0700 (PDT)
-MIME-Version: 1.0
-References: <20191016142601.28255-1-geert+renesas@glider.be> <CACRpkdathjE3CLWsJYapL-0ri9_mC-uCKrh058zBk_nN5wHkDg@mail.gmail.com>
-In-Reply-To: <CACRpkdathjE3CLWsJYapL-0ri9_mC-uCKrh058zBk_nN5wHkDg@mail.gmail.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Thu, 24 Oct 2019 14:35:09 +0200
-Message-ID: <CAMuHMdVQaCtWR9ZO7N-HKOZS1ivBNWssjqzV1B0XwSBkMFp8Ow@mail.gmail.com>
-Subject: Re: [PATCH v2] pinctrl: sh-pfc: Do not use platform_get_irq() to
- count interrupts
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
+        id S2502349AbfJXNNR (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 24 Oct 2019 09:13:17 -0400
+Received: from michel.telenet-ops.be ([195.130.137.88]:49584 "EHLO
+        michel.telenet-ops.be" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2502401AbfJXNNR (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 24 Oct 2019 09:13:17 -0400
+Received: from ramsan ([84.195.182.253])
+        by michel.telenet-ops.be with bizsmtp
+        id HRDE2100W5USYZQ06RDEZj; Thu, 24 Oct 2019 15:13:15 +0200
+Received: from rox.of.borg ([192.168.97.57])
+        by ramsan with esmtp (Exim 4.90_1)
+        (envelope-from <geert@linux-m68k.org>)
+        id 1iNcvS-00068X-L1; Thu, 24 Oct 2019 15:13:14 +0200
+Received: from geert by rox.of.borg with local (Exim 4.90_1)
+        (envelope-from <geert@linux-m68k.org>)
+        id 1iNcvS-0004LR-JS; Thu, 24 Oct 2019 15:13:14 +0200
+From:   Geert Uytterhoeven <geert+renesas@glider.be>
+To:     Linus Walleij <linus.walleij@linaro.org>,
+        Yoshinori Sato <ysato@users.sourceforge.jp>,
+        Rich Felker <dalias@libc.org>
+Cc:     Ben Dooks <ben.dooks@codethink.co.uk>, linux-gpio@vger.kernel.org,
+        linux-sh@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
+        Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: [PATCH] pinctrl: sh-pfc: sh7734: Fix duplicate TCLK1_B
+Date:   Thu, 24 Oct 2019 15:13:08 +0200
+Message-Id: <20191024131308.16659-1-geert+renesas@glider.be>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Linus,
+The definitions for bit field [19:18] of the Peripheral Function Select
+Register 3 were accidentally copied from bit field [20], leading to
+duplicates for the TCLK1_B function, and missing TCLK0, CAN_CLK_B, and
+ET0_ETXD4 functions.
 
-On Thu, Oct 24, 2019 at 2:07 PM Linus Walleij <linus.walleij@linaro.org> wrote:
-> On Wed, Oct 16, 2019 at 4:26 PM Geert Uytterhoeven
-> <geert+renesas@glider.be> wrote:
-> > As platform_get_irq() now prints an error when the interrupt does not
-> > exist, counting interrupts by looping until failure causes the printing
-> > of scary messages like:
-> >
-> >     sh-pfc e6060000.pin-controller: IRQ index 0 not found
-> >
-> > Fix this by using the platform_irq_count() helper instead.
-> >
-> > Fixes: 7723f4c5ecdb8d83 ("driver core: platform: Add an error message to platform_get_irq*()")
-> > Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> > Reviewed-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-> > Reviewed-by: Stephen Boyd <swboyd@chromium.org>
-> > Reviewed-by: Niklas Söderlund <niklas.soderlund+renesas@ragnatech.se>
-> > Tested-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-> > ---
-> > v2:
-> >   - Add Reviewed-by, Tested-by.
-> >
-> > Linus: Can you please take this one, as it is a fix for v5.4? Thx!
->
-> I'm not sure the little error message counts as
-> a regression, certainly users can live with it.
+Fix this by adding the missing GPIO_FN_CAN_CLK_B and GPIO_FN_ET0_ETXD4
+enum values, and correcting the functions.
 
-Several similar fixes have already made it upstream.
-But the decision is up to you.
+Reported-by: Ben Dooks <ben.dooks@codethink.co.uk>
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+---
+Untested due to lack of hardware.
+To be queued in sh-pfc-for-v5.5.
+---
+ arch/sh/include/cpu-sh4/cpu/sh7734.h | 2 +-
+ drivers/pinctrl/sh-pfc/pfc-sh7734.c  | 4 ++--
+ 2 files changed, 3 insertions(+), 3 deletions(-)
 
-> Can't you just put it in your queue for the next kernel?
-
-Sure, will do (after ELC-E), if you prefer.
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
+diff --git a/arch/sh/include/cpu-sh4/cpu/sh7734.h b/arch/sh/include/cpu-sh4/cpu/sh7734.h
+index 96f0246ad2f2b756..82b63208135aec06 100644
+--- a/arch/sh/include/cpu-sh4/cpu/sh7734.h
++++ b/arch/sh/include/cpu-sh4/cpu/sh7734.h
+@@ -134,7 +134,7 @@ enum {
+ 	GPIO_FN_EX_WAIT1, GPIO_FN_SD1_DAT0_A, GPIO_FN_DREQ2, GPIO_FN_CAN1_TX_C,
+ 		GPIO_FN_ET0_LINK_C, GPIO_FN_ET0_ETXD5_A,
+ 	GPIO_FN_EX_WAIT0, GPIO_FN_TCLK1_B,
+-	GPIO_FN_RD_WR, GPIO_FN_TCLK0,
++	GPIO_FN_RD_WR, GPIO_FN_TCLK0, GPIO_FN_CAN_CLK_B, GPIO_FN_ET0_ETXD4,
+ 	GPIO_FN_EX_CS5, GPIO_FN_SD1_CMD_A, GPIO_FN_ATADIR, GPIO_FN_QSSL_B,
+ 		GPIO_FN_ET0_ETXD3_A,
+ 	GPIO_FN_EX_CS4, GPIO_FN_SD1_WP_A, GPIO_FN_ATAWR, GPIO_FN_QMI_QIO1_B,
+diff --git a/drivers/pinctrl/sh-pfc/pfc-sh7734.c b/drivers/pinctrl/sh-pfc/pfc-sh7734.c
+index 5dfd991ffdaab6e9..dbc36079c3811cde 100644
+--- a/drivers/pinctrl/sh-pfc/pfc-sh7734.c
++++ b/drivers/pinctrl/sh-pfc/pfc-sh7734.c
+@@ -1450,7 +1450,7 @@ static const struct pinmux_func pinmux_func_gpios[] = {
+ 	GPIO_FN(ET0_ETXD2_A),
+ 	GPIO_FN(EX_CS5), GPIO_FN(SD1_CMD_A), GPIO_FN(ATADIR), GPIO_FN(QSSL_B),
+ 	GPIO_FN(ET0_ETXD3_A),
+-	GPIO_FN(RD_WR), GPIO_FN(TCLK1_B),
++	GPIO_FN(RD_WR), GPIO_FN(TCLK0), GPIO_FN(CAN_CLK_B), GPIO_FN(ET0_ETXD4),
+ 	GPIO_FN(EX_WAIT0), GPIO_FN(TCLK1_B),
+ 	GPIO_FN(EX_WAIT1), GPIO_FN(SD1_DAT0_A), GPIO_FN(DREQ2),
+ 		GPIO_FN(CAN1_TX_C), GPIO_FN(ET0_LINK_C), GPIO_FN(ET0_ETXD5_A),
+@@ -1949,7 +1949,7 @@ static const struct pinmux_cfg_reg pinmux_config_regs[] = {
+ 	    /* IP3_20 [1] */
+ 		FN_EX_WAIT0, FN_TCLK1_B,
+ 	    /* IP3_19_18 [2] */
+-		FN_RD_WR, FN_TCLK1_B, 0, 0,
++		FN_RD_WR, FN_TCLK0, FN_CAN_CLK_B, FN_ET0_ETXD4,
+ 	    /* IP3_17_15 [3] */
+ 		FN_EX_CS5, FN_SD1_CMD_A, FN_ATADIR, FN_QSSL_B,
+ 		FN_ET0_ETXD3_A, 0, 0, 0,
 -- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+2.17.1
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
