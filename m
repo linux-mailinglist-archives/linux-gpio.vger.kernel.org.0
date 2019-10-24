@@ -2,124 +2,87 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id A4CE5E3457
-	for <lists+linux-gpio@lfdr.de>; Thu, 24 Oct 2019 15:34:45 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 59848E3468
+	for <lists+linux-gpio@lfdr.de>; Thu, 24 Oct 2019 15:38:51 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2502562AbfJXNep (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 24 Oct 2019 09:34:45 -0400
-Received: from mga07.intel.com ([134.134.136.100]:34753 "EHLO mga07.intel.com"
+        id S2388589AbfJXNiu (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 24 Oct 2019 09:38:50 -0400
+Received: from mga14.intel.com ([192.55.52.115]:21369 "EHLO mga14.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2502516AbfJXNep (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Thu, 24 Oct 2019 09:34:45 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
+        id S1733296AbfJXNiu (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Thu, 24 Oct 2019 09:38:50 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
 X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 24 Oct 2019 06:34:44 -0700
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 24 Oct 2019 06:38:50 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.68,224,1569308400"; 
-   d="scan'208";a="223559645"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by fmsmga004.fm.intel.com with ESMTP; 24 Oct 2019 06:34:43 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1003)
-        id 344731CB; Thu, 24 Oct 2019 16:34:42 +0300 (EEST)
+   d="scan'208";a="202303360"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by orsmga006.jf.intel.com with ESMTP; 24 Oct 2019 06:38:47 -0700
+Received: from andy by smile with local (Exim 4.92.2)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1iNdKA-0004SI-Qr; Thu, 24 Oct 2019 16:38:46 +0300
+Date:   Thu, 24 Oct 2019 16:38:46 +0300
 From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Mika Westerberg <mika.westerberg@linux.intel.com>,
-        linux-gpio@vger.kernel.org,
-        Linus Walleij <linus.walleij@linaro.org>
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: [PATCH v1] pinctrl: cherryview: Allocate IRQ chip dynamic
-Date:   Thu, 24 Oct 2019 16:34:41 +0300
-Message-Id: <20191024133441.76222-1-andriy.shevchenko@linux.intel.com>
-X-Mailer: git-send-email 2.23.0
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     linux-gpio@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <marc.zyngier@arm.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Thierry Reding <treding@nvidia.com>
+Subject: Re: [PATCH] RFC: pinctrl: cherryview: Pass irqchip when adding
+ gpiochip
+Message-ID: <20191024133846.GW32742@smile.fi.intel.com>
+References: <20190813070123.17406-1-linus.walleij@linaro.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190813070123.17406-1-linus.walleij@linaro.org>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Keeping the IRQ chip definition static shares it with multiple instances
-of the GPIO chip in the system. This is bad and now we get this warning
-from GPIO library:
+On Tue, Aug 13, 2019 at 09:01:23AM +0200, Linus Walleij wrote:
+> We need to convert all old gpio irqchips to pass the irqchip
+> setup along when adding the gpio_chip. For more info see
+> drivers/gpio/TODO.
+> 
+> This driver is something of a special case, so we need to
+> discuss it.
+> 
+> It picks a number of IRQ descriptors before setting up
+> the gpio_irq_chip using devm_irq_alloc_descs() giving a
+> fixed irq base in the IRQ numberspace. It then games the
+> irqchip API by associating IRQs from that base and upward
+> with as many pins there are in the "community" which is a
+> set of pins. Then after each gpio_chip is registered, it
+> fills in the pin to IRQ map for each GPIO range inside
+> that "community" with irq_domain_associate_many() which
+> works fine since the descriptors were allocated
+> previously.
+> 
+> This is actually a hierarchical irq_chip as far as I can
+> tell. The problem is that very likely the Intel root IRQ
+> chip is not hierarchical so it does not support using the
+> facilities for hierarchical irqdomains.
+> 
+> I will soon merge the patch providing hierarchical irqchip
+> support in gpiolib:
+> https://lore.kernel.org/linux-gpio/20190808123242.5359-1-linus.walleij@linaro.org/
+> 
+> Will we need to bite the bullet and convert the root
+> irqchip for the intels to support hierarcical irqdomain?
 
-"detected irqchip that is shared with multiple gpiochips: please fix the driver."
+We have few fixes for this driver, perhaps you can send a new version based on
+them when they appear in your tree.
 
-Hence, move the IRQ chip definition from being driver static into the struct
-intel_pinctrl. So a unique IRQ chip is used for each GPIO chip instance.
-
-This patch is heavily based on the attachment to the bug by Christoph Marz.
-
-BugLink: https://bugzilla.kernel.org/show_bug.cgi?id=202543
-Fixes: 6e08d6bbebeb ("pinctrl: Add Intel Cherryview/Braswell pin controller support")
-Depends-on: 83b9dc11312f ("pinctrl: cherryview: Associate IRQ descriptors to irqdomain")
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
----
- drivers/pinctrl/intel/pinctrl-cherryview.c | 24 +++++++++++-----------
- 1 file changed, 12 insertions(+), 12 deletions(-)
-
-diff --git a/drivers/pinctrl/intel/pinctrl-cherryview.c b/drivers/pinctrl/intel/pinctrl-cherryview.c
-index 5af6b20f7334..dff2a81250b6 100644
---- a/drivers/pinctrl/intel/pinctrl-cherryview.c
-+++ b/drivers/pinctrl/intel/pinctrl-cherryview.c
-@@ -147,6 +147,7 @@ struct chv_pin_context {
-  * @pctldesc: Pin controller description
-  * @pctldev: Pointer to the pin controller device
-  * @chip: GPIO chip in this pin controller
-+ * @irqchip: IRQ chip in this pin controller
-  * @regs: MMIO registers
-  * @intr_lines: Stores mapping between 16 HW interrupt wires and GPIO
-  *		offset (in GPIO number space)
-@@ -162,6 +163,7 @@ struct chv_pinctrl {
- 	struct pinctrl_desc pctldesc;
- 	struct pinctrl_dev *pctldev;
- 	struct gpio_chip chip;
-+	struct irq_chip irqchip;
- 	void __iomem *regs;
- 	unsigned intr_lines[16];
- 	const struct chv_community *community;
-@@ -1466,16 +1468,6 @@ static int chv_gpio_irq_type(struct irq_data *d, unsigned int type)
- 	return 0;
- }
- 
--static struct irq_chip chv_gpio_irqchip = {
--	.name = "chv-gpio",
--	.irq_startup = chv_gpio_irq_startup,
--	.irq_ack = chv_gpio_irq_ack,
--	.irq_mask = chv_gpio_irq_mask,
--	.irq_unmask = chv_gpio_irq_unmask,
--	.irq_set_type = chv_gpio_irq_type,
--	.flags = IRQCHIP_SKIP_SET_WAKE,
--};
--
- static void chv_gpio_irq_handler(struct irq_desc *desc)
- {
- 	struct gpio_chip *gc = irq_desc_get_handler_data(desc);
-@@ -1625,7 +1617,15 @@ static int chv_gpio_probe(struct chv_pinctrl *pctrl, int irq)
- 		}
- 	}
- 
--	ret = gpiochip_irqchip_add(chip, &chv_gpio_irqchip, 0,
-+	pctrl->irqchip.name = "chv-gpio";
-+	pctrl->irqchip.irq_startup = chv_gpio_irq_startup;
-+	pctrl->irqchip.irq_ack = chv_gpio_irq_ack;
-+	pctrl->irqchip.irq_mask = chv_gpio_irq_mask;
-+	pctrl->irqchip.irq_unmask = chv_gpio_irq_unmask;
-+	pctrl->irqchip.irq_set_type = chv_gpio_irq_type;
-+	pctrl->irqchip.flags = IRQCHIP_SKIP_SET_WAKE;
-+
-+	ret = gpiochip_irqchip_add(chip, &pctrl->irqchip, 0,
- 				   handle_bad_irq, IRQ_TYPE_NONE);
- 	if (ret) {
- 		dev_err(pctrl->dev, "failed to add IRQ chip\n");
-@@ -1642,7 +1642,7 @@ static int chv_gpio_probe(struct chv_pinctrl *pctrl, int irq)
- 		}
- 	}
- 
--	gpiochip_set_chained_irqchip(chip, &chv_gpio_irqchip, irq,
-+	gpiochip_set_chained_irqchip(chip, &pctrl->irqchip, irq,
- 				     chv_gpio_irq_handler);
- 	return 0;
- }
 -- 
-2.23.0
+With Best Regards,
+Andy Shevchenko
+
 
