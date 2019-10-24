@@ -2,38 +2,38 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 9BFACE3163
-	for <lists+linux-gpio@lfdr.de>; Thu, 24 Oct 2019 13:50:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6C293E3170
+	for <lists+linux-gpio@lfdr.de>; Thu, 24 Oct 2019 13:51:14 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2439217AbfJXLuU (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 24 Oct 2019 07:50:20 -0400
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:46316 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729203AbfJXLuT (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 24 Oct 2019 07:50:19 -0400
-Received: by mail-lf1-f65.google.com with SMTP id t8so18874679lfc.13;
-        Thu, 24 Oct 2019 04:50:15 -0700 (PDT)
+        id S2439322AbfJXLvK (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 24 Oct 2019 07:51:10 -0400
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:46407 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729203AbfJXLvK (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 24 Oct 2019 07:51:10 -0400
+Received: by mail-lf1-f67.google.com with SMTP id t8so18876655lfc.13;
+        Thu, 24 Oct 2019 04:51:07 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=mrlEms7UqZ4vGaozHLMz/3+R7IWy4VYR7Hdk5gom7nY=;
-        b=fKcH99wMIrqrKB5Hy0RSxpAyq2MvFK8ryp/o5jmM9YXlXcxIGKfy2/sTyPS5LXp8EV
-         vGK62faqP/dtRourQTyL4hooHTnSjrecN+4Z35eFAIIp7IFaIPAoVHcnOxlPXRH0qcdc
-         IioNlwlh8th7mcvr0rQpjeRCg2+UCgP+xUo1/RGM6ILOjA0AZnNZtgsaK0vipqSZL28s
-         x9N6m6zqJNdbasCSJ+DlcYCPlUmN7hlC/JmJVZj5jy4dIMsNnWy7ZvW2iBhrJOj2KLHc
-         5NeLtBU6USld8Lojev2bI/oHbfLF48bE4oAKBFiLv87nvgFklgvpaSkvZL5mF65LoqA/
-         ixLQ==
-X-Gm-Message-State: APjAAAVzGwldyjQf7nIZF3gi6qOLt6FQMgJygDPRObfu3gKF3gbtXjY4
-        dFiEHHnvdP62UJs5vBq2HbE=
-X-Google-Smtp-Source: APXvYqzQ8pNVyiXPYUTB870sqwDsom+UvS68qg6x5bg0H2OMKFbxqbSCSf1bD+xlw6sMxl7tPNjWdA==
-X-Received: by 2002:a19:6d12:: with SMTP id i18mr13795955lfc.153.1571917814820;
-        Thu, 24 Oct 2019 04:50:14 -0700 (PDT)
+        bh=gIphDGDSv8NEqMwF1pTBuVOoRo0AxF2fbD2h/akfGgA=;
+        b=sj24fReXzA7sWGFNEkjl2Kqyrws38Tx73i8YjHCsICGkOQ/nd99TVnnlIYK8ExNJAa
+         Ifo7PrV7q7x6RyUBU4ZA/FfzZs95GicBcchx4iL1krBVsVDIrhqo/aBGNRScMbmnEpEV
+         Ur06DvyrDart167qXwuUm3oyq3lhbcpeVCbyMenPQUnWnQ7SvBLYRlw2YixDf7tTsA4h
+         jRJktPM+vpl01xi0/IcOTWzirm9Cps3FJuIchXoUyMapzhuutlvvlLM78T0Rj5sRJCIU
+         Jwj0MiCKet8EwL4LXEQeYGpvE5wK/mK38AU8KRPtkaxXCwd+OyO/IKj/Ar4CwKLnCjL2
+         bl0w==
+X-Gm-Message-State: APjAAAU0O/V15InyIFQ02bYGkwYTf7seLEmTQyk1lZ0Lv7atf3Kg/zNm
+        PhC2o8Xi0klbqXjWScg+kls=
+X-Google-Smtp-Source: APXvYqygf6Ht6n1cD13QjE1EGDaDqzcgZ/6DNjU+ZZAYK8LNCILFz9jKtFX9dakHBc685iT3fhL4vg==
+X-Received: by 2002:a19:640c:: with SMTP id y12mr27584712lfb.78.1571917866217;
+        Thu, 24 Oct 2019 04:51:06 -0700 (PDT)
 Received: from localhost.localdomain ([213.255.186.46])
-        by smtp.gmail.com with ESMTPSA id y13sm11671810ljd.51.2019.10.24.04.50.13
+        by smtp.gmail.com with ESMTPSA id s7sm10199625ljs.16.2019.10.24.04.51.04
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 24 Oct 2019 04:50:14 -0700 (PDT)
-Date:   Thu, 24 Oct 2019 14:50:00 +0300
+        Thu, 24 Oct 2019 04:51:05 -0700 (PDT)
+Date:   Thu, 24 Oct 2019 14:50:53 +0300
 From:   Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
 To:     matti.vaittinen@fi.rohmeurope.com, mazziesaccount@gmail.com
 Cc:     Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>,
@@ -51,8 +51,9 @@ Cc:     Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>,
         devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org,
         linux-leds@vger.kernel.org, linux-rtc@vger.kernel.org
-Subject: [RFC PATCH v2 11/13] rtc: bd70528 add BD71828 support
-Message-ID: <b62668a63fec250c7ffc65162c4ba8c9e3186b69.1571915550.git.matti.vaittinen@fi.rohmeurope.com>
+Subject: [RFC PATCH v2 12/13] gpio: bd71828: Initial support for ROHM BD71828
+ PMIC GPIOs
+Message-ID: <9b53139b7043572b3846a214694dbf8fe1f56f50.1571915550.git.matti.vaittinen@fi.rohmeurope.com>
 References: <cover.1571915550.git.matti.vaittinen@fi.rohmeurope.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
@@ -64,436 +65,226 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-ROHM BD71828 PMIC RTC block is from many parts similar to one
-on BD70528. Support BD71828 RTC using BD70528 RTC driver and
-avoid re-inventing the wheel.
+ROHM BD71828 PMIC contains 4 pins which can be configured by OTP
+to be used for general purposes. First 3 can be used as outputs
+and 4.th pin can be used as input. Allow them to be controlled
+via GPIO framework.
+
+The driver assumes all of the pins are configured as GPIOs and
+trusts that the reserved pins in other OTP configurations are
+excluded from control using "gpio-reserved-ranges" device tree
+property (or left untouched by GPIO users).
+
+Typical use for 4.th pin (input) is to use it as HALL sensor
+input so that this pin state is toggled when HALL sensor detects
+LID position change (from close to open or open to close). PMIC
+HW implements some extra logic which allows PMIC to power-up the
+system when this pin is toggled. Please see the data sheet for
+details of GPIO options which can be selcted by OTP settings.
 
 Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
 ---
 
-Mostly reverted naming changes since v1. Also added own rtc_ops for
-both PMICs.
+Mainly styling fixes since v1.
 
- drivers/rtc/Kconfig              |   5 +-
- drivers/rtc/rtc-bd70528.c        | 145 ++++++++++++++++++++++++++++---
- include/linux/mfd/rohm-bd70528.h |  13 +--
- include/linux/mfd/rohm-bd71828.h |   4 +-
- include/linux/mfd/rohm-shared.h  |  27 ++++++
- 5 files changed, 167 insertions(+), 27 deletions(-)
- create mode 100644 include/linux/mfd/rohm-shared.h
+ drivers/gpio/Kconfig        |  12 +++
+ drivers/gpio/Makefile       |   1 +
+ drivers/gpio/gpio-bd71828.c | 151 ++++++++++++++++++++++++++++++++++++
+ 3 files changed, 164 insertions(+)
+ create mode 100644 drivers/gpio/gpio-bd71828.c
 
-diff --git a/drivers/rtc/Kconfig b/drivers/rtc/Kconfig
-index e72f65b61176..5c5b18a99bf9 100644
---- a/drivers/rtc/Kconfig
-+++ b/drivers/rtc/Kconfig
-@@ -498,11 +498,12 @@ config RTC_DRV_M41T80_WDT
- 	help
- 	  If you say Y here you will get support for the
- 	  watchdog timer in the ST M41T60 and M41T80 RTC chips series.
-+
- config RTC_DRV_BD70528
--	tristate "ROHM BD70528 PMIC RTC"
-+	tristate "ROHM BD70528 and BD71828 PMIC RTC"
- 	help
- 	  If you say Y here you will get support for the RTC
--	  on ROHM BD70528 Power Management IC.
-+	  block on ROHM BD70528 and BD71828 Power Management IC.
- 
+diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
+index bb13c266c329..fb0a099de961 100644
+--- a/drivers/gpio/Kconfig
++++ b/drivers/gpio/Kconfig
+@@ -986,6 +986,18 @@ config GPIO_BD70528
  	  This driver can also be built as a module. If so, the module
- 	  will be called rtc-bd70528.
-diff --git a/drivers/rtc/rtc-bd70528.c b/drivers/rtc/rtc-bd70528.c
-index f9bdd555e1a2..0975728d3cbe 100644
---- a/drivers/rtc/rtc-bd70528.c
-+++ b/drivers/rtc/rtc-bd70528.c
-@@ -6,6 +6,7 @@
+ 	  will be called gpio-bd70528.
  
- #include <linux/bcd.h>
- #include <linux/mfd/rohm-bd70528.h>
++config GPIO_BD71828
++	tristate "ROHM BD71828 GPIO support"
++	depends on MFD_ROHM_BD71828
++	help
++	  Support for GPIOs on ROHM BD71828 PMIC. There are three GPIOs
++	  available on the ROHM PMIC in total. The GPIOs are limited to
++	  outputs only and pins must be configured to GPIO outputs by
++	  OTP. Enable this only if you want to use these pins as outputs.
++
++	  This driver can also be built as a module. If so, the module
++	  will be called gpio-bd71828.
++
+ config GPIO_BD9571MWV
+ 	tristate "ROHM BD9571 GPIO support"
+ 	depends on MFD_BD9571MWV
+diff --git a/drivers/gpio/Makefile b/drivers/gpio/Makefile
+index a4e91175c708..b11932844768 100644
+--- a/drivers/gpio/Makefile
++++ b/drivers/gpio/Makefile
+@@ -35,6 +35,7 @@ obj-$(CONFIG_GPIO_ASPEED)		+= gpio-aspeed.o
+ obj-$(CONFIG_GPIO_ATH79)		+= gpio-ath79.o
+ obj-$(CONFIG_GPIO_BCM_KONA)		+= gpio-bcm-kona.o
+ obj-$(CONFIG_GPIO_BD70528)		+= gpio-bd70528.o
++obj-$(CONFIG_GPIO_BD71828)		+= gpio-bd71828.o
+ obj-$(CONFIG_GPIO_BD9571MWV)		+= gpio-bd9571mwv.o
+ obj-$(CONFIG_GPIO_BRCMSTB)		+= gpio-brcmstb.o
+ obj-$(CONFIG_GPIO_BT8XX)		+= gpio-bt8xx.o
+diff --git a/drivers/gpio/gpio-bd71828.c b/drivers/gpio/gpio-bd71828.c
+new file mode 100644
+index 000000000000..0ec3a1d9adc0
+--- /dev/null
++++ b/drivers/gpio/gpio-bd71828.c
+@@ -0,0 +1,151 @@
++// SPDX-License-Identifier: GPL-2.0
++// Copyright (C) 2018 ROHM Semiconductors
++
++#include <linux/gpio/driver.h>
 +#include <linux/mfd/rohm-bd71828.h>
- #include <linux/module.h>
- #include <linux/of.h>
- #include <linux/platform_device.h>
-@@ -15,7 +16,7 @@
- /*
-  * We read regs RTC_SEC => RTC_YEAR
-  * this struct is ordered according to chip registers.
-- * Keep it u8 only to avoid padding issues.
-+ * Keep it u8 only (or packed) to avoid padding issues.
-  */
- struct bd70528_rtc_day {
- 	u8 sec;
-@@ -36,6 +37,13 @@ struct bd70528_rtc_wake {
- 	u8 ctrl;
- } __packed;
- 
-+struct bd71828_rtc_alm {
-+	struct bd70528_rtc_data alm0;
-+	struct bd70528_rtc_data alm1;
-+	u8 alm_mask;
-+	u8 alm1_mask;
-+} __packed;
++#include <linux/module.h>
++#include <linux/platform_device.h>
++#include <linux/regmap.h>
 +
- struct bd70528_rtc_alm {
- 	struct bd70528_rtc_data data;
- 	u8 alm_mask;
-@@ -45,6 +53,8 @@ struct bd70528_rtc_alm {
- struct bd70528_rtc {
- 	struct rohm_regmap_dev *mfd;
- 	struct device *dev;
-+	u8 reg_time_start;
-+	bool has_rtc_timers;
- };
- 
- static int bd70528_set_wake(struct rohm_regmap_dev *bd70528,
-@@ -152,12 +162,18 @@ static int bd70528_set_rtc_based_timers(struct bd70528_rtc *r, int new_state,
- static int bd70528_re_enable_rtc_based_timers(struct bd70528_rtc *r,
- 					      int old_state)
- {
-+	if (!r->has_rtc_timers)
-+		return 0;
++#define BD71828_OUT 0
++#define BD71828_IN 1
++#define GPIO_OUT_REG(off) (BD71828_REG_GPIO_CTRL1 + (off))
++#define HALL_GPIO_OFFSET 3
 +
- 	return bd70528_set_rtc_based_timers(r, old_state, NULL);
- }
- 
- static int bd70528_disable_rtc_based_timers(struct bd70528_rtc *r,
- 					    int *old_state)
- {
-+	if (!r->has_rtc_timers)
-+		return 0;
-+
- 	return bd70528_set_rtc_based_timers(r, 0, old_state);
- }
- 
-@@ -213,6 +229,36 @@ static inline void rtc2tm(struct bd70528_rtc_data *r, struct rtc_time *t)
- 	t->tm_wday = bcd2bin(r->week & BD70528_MASK_RTC_WEEK);
- }
- 
-+static int bd71828_set_alarm(struct device *dev, struct rtc_wkalrm *a)
-+{
-+	int ret;
-+	struct bd71828_rtc_alm alm;
-+	struct bd70528_rtc *r = dev_get_drvdata(dev);
-+	struct rohm_regmap_dev *bd71828 = r->mfd;
-+
-+	ret = regmap_bulk_read(bd71828->regmap, BD71828_REG_RTC_ALM_START,
-+			       &alm, sizeof(alm));
-+	if (ret) {
-+		dev_err(dev, "Failed to read alarm regs\n");
-+		return ret;
-+	}
-+
-+	tm2rtc(&a->time, &alm.alm0);
-+
-+	if (!a->enabled)
-+		alm.alm_mask &= ~BD70528_MASK_ALM_EN;
-+	else
-+		alm.alm_mask |= BD70528_MASK_ALM_EN;
-+
-+	ret = regmap_bulk_write(bd71828->regmap, BD71828_REG_RTC_ALM_START,
-+				&alm, sizeof(alm));
-+	if (ret)
-+		dev_err(dev, "Failed to set alarm time\n");
-+
-+	return ret;
-+
-+}
-+
- static int bd70528_set_alarm(struct device *dev, struct rtc_wkalrm *a)
- {
- 	struct bd70528_rtc_wake wake;
-@@ -261,6 +307,30 @@ static int bd70528_set_alarm(struct device *dev, struct rtc_wkalrm *a)
- 	return ret;
- }
- 
-+static int bd71828_read_alarm(struct device *dev, struct rtc_wkalrm *a)
-+{
-+	int ret;
-+	struct bd71828_rtc_alm alm;
-+	struct bd70528_rtc *r = dev_get_drvdata(dev);
-+	struct rohm_regmap_dev *bd71828 = r->mfd;
-+
-+	ret = regmap_bulk_read(bd71828->regmap, BD71828_REG_RTC_ALM_START,
-+			       &alm, sizeof(alm));
-+	if (ret) {
-+		dev_err(dev, "Failed to read alarm regs\n");
-+		return ret;
-+	}
-+
-+	rtc2tm(&alm.alm0, &a->time);
-+	a->time.tm_mday = -1;
-+	a->time.tm_mon = -1;
-+	a->time.tm_year = -1;
-+	a->enabled = !!(alm.alm_mask & BD70528_MASK_ALM_EN);
-+	a->pending = 0;
-+
-+	return 0;
-+}
-+
- static int bd70528_read_alarm(struct device *dev, struct rtc_wkalrm *a)
- {
- 	struct bd70528_rtc_alm alm;
-@@ -297,7 +367,7 @@ static int bd70528_set_time_locked(struct device *dev, struct rtc_time *t)
- 		return ret;
- 
- 	tmpret = regmap_bulk_read(bd70528->regmap,
--				  BD70528_REG_RTC_START, &rtc_data,
-+				  r->reg_time_start, &rtc_data,
- 				  sizeof(rtc_data));
- 	if (tmpret) {
- 		dev_err(dev, "Failed to read RTC time registers\n");
-@@ -306,7 +376,7 @@ static int bd70528_set_time_locked(struct device *dev, struct rtc_time *t)
- 	tm2rtc(t, &rtc_data);
- 
- 	tmpret = regmap_bulk_write(bd70528->regmap,
--				   BD70528_REG_RTC_START, &rtc_data,
-+				   r->reg_time_start, &rtc_data,
- 				   sizeof(rtc_data));
- 	if (tmpret) {
- 		dev_err(dev, "Failed to set RTC time\n");
-@@ -341,7 +411,7 @@ static int bd70528_get_time(struct device *dev, struct rtc_time *t)
- 
- 	/* read the RTC date and time registers all at once */
- 	ret = regmap_bulk_read(bd70528->regmap,
--			       BD70528_REG_RTC_START, &rtc_data,
-+			       r->reg_time_start, &rtc_data,
- 			       sizeof(rtc_data));
- 	if (ret) {
- 		dev_err(dev, "Failed to read RTC time (err %d)\n", ret);
-@@ -378,6 +448,23 @@ static int bd70528_alm_enable(struct device *dev, unsigned int enabled)
- 	return ret;
- }
- 
-+static int bd71828_alm_enable(struct device *dev, unsigned int enabled)
-+{
-+	int ret;
-+	struct bd70528_rtc *r = dev_get_drvdata(dev);
-+	unsigned int enableval = BD70528_MASK_ALM_EN;
-+
-+	if (!enabled)
-+		enableval = 0;
-+
-+	ret = regmap_update_bits(r->mfd->regmap, BD71828_REG_RTC_ALM0_MASK,
-+				 BD70528_MASK_ALM_EN, enableval);
-+	if (ret)
-+		dev_err(dev, "Failed to change alarm state\n");
-+
-+	return ret;
-+}
-+
- static const struct rtc_class_ops bd70528_rtc_ops = {
- 	.read_time		= bd70528_get_time,
- 	.set_time		= bd70528_set_time,
-@@ -386,6 +473,14 @@ static const struct rtc_class_ops bd70528_rtc_ops = {
- 	.alarm_irq_enable	= bd70528_alm_enable,
- };
- 
-+static const struct rtc_class_ops bd71828_rtc_ops = {
-+	.read_time		= bd70528_get_time,
-+	.set_time		= bd70528_set_time,
-+	.read_alarm		= bd71828_read_alarm,
-+	.set_alarm		= bd71828_set_alarm,
-+	.alarm_irq_enable	= bd71828_alm_enable,
++struct bd71828_gpio {
++	struct rohm_regmap_dev chip;
++	struct gpio_chip gpio;
 +};
 +
- static irqreturn_t alm_hndlr(int irq, void *data)
- {
- 	struct rtc_device *rtc = data;
-@@ -397,11 +492,15 @@ static irqreturn_t alm_hndlr(int irq, void *data)
- static int bd70528_probe(struct platform_device *pdev)
- {
- 	struct bd70528_rtc *bd_rtc;
-+	const struct rtc_class_ops *rtc_ops;
- 	struct rohm_regmap_dev *mfd;
-+	const char *irq_name;
- 	int ret;
- 	struct rtc_device *rtc;
- 	int irq;
- 	unsigned int hr;
-+	bool enable_main_irq = false;
-+	u8 hour_reg;
- 
- 	mfd = dev_get_drvdata(pdev->dev.parent);
- 	if (!mfd) {
-@@ -415,7 +514,27 @@ static int bd70528_probe(struct platform_device *pdev)
- 	bd_rtc->mfd = mfd;
- 	bd_rtc->dev = &pdev->dev;
- 
--	irq = platform_get_irq_byname(pdev, "bd70528-rtc-alm");
-+	switch (mfd->chip_type) {
-+	case ROHM_CHIP_TYPE_BD70528:
-+		irq_name = "bd70528-rtc-alm";
-+		bd_rtc->has_rtc_timers = true;
-+		bd_rtc->reg_time_start = BD70528_REG_RTC_START;
-+		hour_reg = BD70528_REG_RTC_HOUR;
-+		enable_main_irq = true;
-+		rtc_ops = &bd70528_rtc_ops;
-+		break;
-+	case ROHM_CHIP_TYPE_BD71828:
-+		irq_name = "bd71828-rtc-alm-0";
-+		bd_rtc->reg_time_start = BD71828_REG_RTC_START;
-+		hour_reg = BD71828_REG_RTC_HOUR;
-+		rtc_ops = &bd71828_rtc_ops;
-+		break;
++static void bd71828_gpio_set(struct gpio_chip *chip, unsigned int offset,
++			     int value)
++{
++	int ret;
++	struct bd71828_gpio *bdgpio = gpiochip_get_data(chip);
++	u8 val = (value) ? BD71828_GPIO_OUT_HI : BD71828_GPIO_OUT_LO;
++
++	/*
++	 * The HALL input pin can only be used as input. If this is the pin
++	 * we are dealing with - then we are done
++	 */
++	if (offset == HALL_GPIO_OFFSET)
++		return;
++
++	ret = regmap_update_bits(bdgpio->chip.regmap, GPIO_OUT_REG(offset),
++				 BD71828_GPIO_OUT_MASK, val);
++	if (ret)
++		dev_err(bdgpio->chip.dev, "Could not set gpio to %d\n", value);
++}
++
++static int bd71828_gpio_get(struct gpio_chip *chip, unsigned int offset)
++{
++	int ret;
++	unsigned int val;
++	struct bd71828_gpio *bdgpio = gpiochip_get_data(chip);
++
++	if (offset == HALL_GPIO_OFFSET)
++		ret = regmap_read(bdgpio->chip.regmap, BD71828_REG_IO_STAT,
++				  &val);
++	else
++		ret = regmap_read(bdgpio->chip.regmap, GPIO_OUT_REG(offset),
++				  &val);
++	if (!ret)
++		ret = (val & BD71828_GPIO_OUT_MASK);
++
++	return ret;
++}
++
++static int bd71828_gpio_set_config(struct gpio_chip *chip, unsigned int offset,
++				   unsigned long config)
++{
++	struct bd71828_gpio *bdgpio = gpiochip_get_data(chip);
++
++	if (offset == HALL_GPIO_OFFSET)
++		return -ENOTSUPP;
++
++	switch (pinconf_to_config_param(config)) {
++	case PIN_CONFIG_DRIVE_OPEN_DRAIN:
++		return regmap_update_bits(bdgpio->chip.regmap,
++					  GPIO_OUT_REG(offset),
++					  BD71828_GPIO_DRIVE_MASK,
++					  BD71828_GPIO_OPEN_DRAIN);
++	case PIN_CONFIG_DRIVE_PUSH_PULL:
++		return regmap_update_bits(bdgpio->chip.regmap,
++					  GPIO_OUT_REG(offset),
++					  BD71828_GPIO_DRIVE_MASK,
++					  BD71828_GPIO_PUSH_PULL);
 +	default:
-+		dev_err(&pdev->dev, "Unknown chip\n");
-+		return -ENOENT;
++		break;
++	}
++	return -ENOTSUPP;
++}
++
++static int bd71828_get_direction(struct gpio_chip *chip, unsigned int offset)
++{
++	/*
++	 * Pin usage is selected by OTP data. We can't read it runtime. Hence
++	 * we trust that if the pin is not excluded by "gpio-reserved-ranges"
++	 * the OTP configuration is set to OUT. (Other pins but HALL input pin
++	 * on BD71828 can't really be used for general purpose input - input
++	 * states are used for specific cases like regulator control or
++	 * PMIC_ON_REQ.
++	 */
++	if (offset == HALL_GPIO_OFFSET)
++		return BD71828_IN;
++
++	return BD71828_OUT;
++}
++
++static int bd71828_probe(struct platform_device *pdev)
++{
++	struct bd71828_gpio *bdgpio;
++	struct rohm_regmap_dev *bd71828;
++
++	bd71828 = dev_get_drvdata(pdev->dev.parent);
++	if (!bd71828) {
++		dev_err(&pdev->dev, "No MFD driver data\n");
++		return -EINVAL;
 +	}
 +
-+	irq = platform_get_irq_byname(pdev, irq_name);
- 
- 	if (irq < 0) {
- 		dev_err(&pdev->dev, "Failed to get irq\n");
-@@ -424,7 +543,7 @@ static int bd70528_probe(struct platform_device *pdev)
- 
- 	platform_set_drvdata(pdev, bd_rtc);
- 
--	ret = regmap_read(mfd->regmap, BD70528_REG_RTC_HOUR, &hr);
-+	ret = regmap_read(mfd->regmap, hour_reg, &hr);
- 
- 	if (ret) {
- 		dev_err(&pdev->dev, "Failed to reag RTC clock\n");
-@@ -457,7 +576,7 @@ static int bd70528_probe(struct platform_device *pdev)
- 
- 	rtc->range_min = RTC_TIMESTAMP_BEGIN_2000;
- 	rtc->range_max = RTC_TIMESTAMP_END_2099;
--	rtc->ops = &bd70528_rtc_ops;
-+	rtc->ops = rtc_ops;
- 
- 	/* Request alarm IRQ prior to registerig the RTC */
- 	ret = devm_request_threaded_irq(&pdev->dev, irq, NULL, &alm_hndlr,
-@@ -471,12 +590,14 @@ static int bd70528_probe(struct platform_device *pdev)
- 	 *  leave them enabled as irq-controller should disable irqs
- 	 *  from sub-registers when IRQ is disabled or freed.
- 	 */
--	ret = regmap_update_bits(mfd->regmap,
-+	if (enable_main_irq) {
-+		ret = regmap_update_bits(mfd->regmap,
- 				 BD70528_REG_INT_MAIN_MASK,
- 				 BD70528_INT_RTC_MASK, 0);
--	if (ret) {
--		dev_err(&pdev->dev, "Failed to enable RTC interrupts\n");
--		return ret;
-+		if (ret) {
-+			dev_err(&pdev->dev, "Failed to enable RTC interrupts\n");
-+			return ret;
-+		}
- 	}
- 
- 	ret = rtc_register_device(rtc);
-@@ -496,5 +617,5 @@ static struct platform_driver bd70528_rtc = {
- module_platform_driver(bd70528_rtc);
- 
- MODULE_AUTHOR("Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>");
--MODULE_DESCRIPTION("BD70528 RTC driver");
-+MODULE_DESCRIPTION("ROHM BD70528 and BD71828 PMIC RTC driver");
- MODULE_LICENSE("GPL");
-diff --git a/include/linux/mfd/rohm-bd70528.h b/include/linux/mfd/rohm-bd70528.h
-index 1013e60c5b25..e2859840b09d 100644
---- a/include/linux/mfd/rohm-bd70528.h
-+++ b/include/linux/mfd/rohm-bd70528.h
-@@ -7,6 +7,7 @@
- #include <linux/bits.h>
- #include <linux/device.h>
- #include <linux/mfd/rohm-generic.h>
-+#include <linux/mfd/rohm-shared.h>
- #include <linux/regmap.h>
- 
- enum {
-@@ -313,17 +314,6 @@ enum {
- 
- /* RTC masks to mask out reserved bits */
- 
--#define BD70528_MASK_RTC_SEC		0x7f
--#define BD70528_MASK_RTC_MINUTE		0x7f
--#define BD70528_MASK_RTC_HOUR_24H	0x80
--#define BD70528_MASK_RTC_HOUR_PM	0x20
--#define BD70528_MASK_RTC_HOUR		0x1f
--#define BD70528_MASK_RTC_DAY		0x3f
--#define BD70528_MASK_RTC_WEEK		0x07
--#define BD70528_MASK_RTC_MONTH		0x1f
--#define BD70528_MASK_RTC_YEAR		0xff
--#define BD70528_MASK_RTC_COUNT_L	0x7f
--
- #define BD70528_MASK_ELAPSED_TIMER_EN	0x1
- /* Mask second, min and hour fields
-  * HW would support ALM irq for over 24h
-@@ -332,7 +322,6 @@ enum {
-  * wake-up we limit ALM to 24H and only
-  * unmask sec, min and hour
-  */
--#define BD70528_MASK_ALM_EN		0x7
- #define BD70528_MASK_WAKE_EN		0x1
- 
- /* WDT masks */
-diff --git a/include/linux/mfd/rohm-bd71828.h b/include/linux/mfd/rohm-bd71828.h
-index bbbd4f118550..bd9dfd53759d 100644
---- a/include/linux/mfd/rohm-bd71828.h
-+++ b/include/linux/mfd/rohm-bd71828.h
-@@ -5,6 +5,7 @@
- #define __LINUX_MFD_BD71828_H__
- 
- #include <linux/mfd/rohm-generic.h>
-+#include <linux/mfd/rohm-shared.h>
- 
- /* Regulator IDs */
- enum {
-@@ -160,6 +161,7 @@ enum {
- #define BD71828_REG_RTC_YEAR		0x52
- 
- #define BD71828_REG_RTC_ALM0_SEC	0x53
-+#define BD71828_REG_RTC_ALM_START	BD71828_REG_RTC_ALM0_SEC
- #define BD71828_REG_RTC_ALM0_MINUTE	0x54
- #define BD71828_REG_RTC_ALM0_HOUR	0x55
- #define BD71828_REG_RTC_ALM0_WEEK	0x56
-@@ -178,6 +180,7 @@ enum {
- #define BD71828_REG_RTC_ALM1_MASK	0x62
- 
- #define BD71828_REG_RTC_ALM2		0x63
-+#define BD71828_REG_RTC_START		BD71828_REG_RTC_SEC
- 
- /* Charger/Battey */
- #define BD71828_REG_CHG_STATE		0x65
-@@ -207,7 +210,6 @@ enum {
- #define BD71828_REG_INT_MASK_TEMP	0xdd
- #define BD71828_REG_INT_MASK_RTC	0xde
- 
--
- #define BD71828_REG_INT_MAIN		0xdf
- #define BD71828_REG_INT_BUCK		0xe0
- #define BD71828_REG_INT_DCIN1		0xe1
-diff --git a/include/linux/mfd/rohm-shared.h b/include/linux/mfd/rohm-shared.h
-new file mode 100644
-index 000000000000..f16fc3b5000e
---- /dev/null
-+++ b/include/linux/mfd/rohm-shared.h
-@@ -0,0 +1,27 @@
-+/* SPDX-License-Identifier: GPL-2.0-or-later */
-+/* Copyright (C) 2018 ROHM Semiconductors */
++	bdgpio = devm_kzalloc(&pdev->dev, sizeof(*bdgpio),
++			      GFP_KERNEL);
++	if (!bdgpio)
++		return -ENOMEM;
 +
++	bdgpio->chip.dev = &pdev->dev;
++	bdgpio->gpio.parent = pdev->dev.parent;
++	bdgpio->gpio.label = "bd71828-gpio";
++	bdgpio->gpio.owner = THIS_MODULE;
++	bdgpio->gpio.get_direction = bd71828_get_direction;
++	bdgpio->gpio.set_config = bd71828_gpio_set_config;
++	bdgpio->gpio.can_sleep = true;
++	bdgpio->gpio.get = bd71828_gpio_get;
++	bdgpio->gpio.set = bd71828_gpio_set;
++	bdgpio->gpio.base = -1;
 +
-+#ifndef __LINUX_MFD_ROHM_SHARED_H__
-+#define __LINUX_MFD_ROHM_SHARED_H__
++	/*
++	 * See if we need some implementation to mark some PINs as
++	 * not controllable based on DT info or if core can handle
++	 * "gpio-reserved-ranges" and exclude them from control
++	 */
++	bdgpio->gpio.ngpio = 4;
++	bdgpio->gpio.of_node = pdev->dev.parent->of_node;
++	bdgpio->chip.regmap = bd71828->regmap;
 +
-+/*
-+ * RTC definitions shared between
-+ *
-+ * BD70528
-+ * and BD71828
-+ */
++	return devm_gpiochip_add_data(&pdev->dev, &bdgpio->gpio,
++				     bdgpio);
++}
 +
++static struct platform_driver bd71828_gpio = {
++	.driver = {
++		.name = "bd71828-gpio"
++	},
++	.probe = bd71828_probe,
++};
 +
-+#define BD70528_MASK_RTC_SEC		0x7f
-+#define BD70528_MASK_RTC_MINUTE	0x7f
-+#define BD70528_MASK_RTC_HOUR_24H	0x80
-+#define BD70528_MASK_RTC_HOUR_PM	0x20
-+#define BD70528_MASK_RTC_HOUR		0x3f
-+#define BD70528_MASK_RTC_DAY		0x3f
-+#define BD70528_MASK_RTC_WEEK		0x07
-+#define BD70528_MASK_RTC_MONTH		0x1f
-+#define BD70528_MASK_RTC_YEAR		0xff
-+#define BD70528_MASK_ALM_EN		0x7
++module_platform_driver(bd71828_gpio);
 +
-+#endif /* __LINUX_MFD_ROHM_SHARED_H__ */
++MODULE_AUTHOR("Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>");
++MODULE_DESCRIPTION("BD71828 voltage regulator driver");
++MODULE_LICENSE("GPL");
++MODULE_ALIAS("platform:bd71828-gpio");
 -- 
 2.21.0
 
