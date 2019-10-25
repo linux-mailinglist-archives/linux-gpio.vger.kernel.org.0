@@ -2,64 +2,267 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 692AAE53E4
-	for <lists+linux-gpio@lfdr.de>; Fri, 25 Oct 2019 20:49:51 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 914FAE5553
+	for <lists+linux-gpio@lfdr.de>; Fri, 25 Oct 2019 22:43:41 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726905AbfJYStr (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 25 Oct 2019 14:49:47 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:34992 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726079AbfJYStr (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 25 Oct 2019 14:49:47 -0400
-Received: by mail-wr1-f66.google.com with SMTP id l10so3502910wrb.2
-        for <linux-gpio@vger.kernel.org>; Fri, 25 Oct 2019 11:49:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:reply-to:from:date:message-id:subject:to;
-        bh=4iNp6ilcY15ROqr4aaYjS+PhqQl25tY1avFBkdi3p5o=;
-        b=oAD5N216am6s4YfCPSFAKYnWCiu729NWeQP7IMbEREyyFenntsMUQJq3t5HfIQ4dE2
-         aUOSTYu5vPeZklMlEUiT6uTz1TM6WjGR4MEc+u9mvq0qFkeOaa0dRuSgRJMzl8O6l06U
-         PQuviZUHtHBr5YlTqwzCFs2D8ujnYx2A8iuREDQW1B0TuyXygBS3OJJ9leccc2UHH7ZC
-         5xVvG/rJ9TiwUVo03YuK5Yriu3J5RPRG12Ntjio3HWORMSXbAUlsp3mSWlieZWjOCGwN
-         oQduthvUeBjmpHIJUnaLcGB3I0Po+h7VrubTGa0m4GPZ5/2qZZR3MZZH0bE/TY25xI9J
-         Ed4Q==
+        id S1728568AbfJYUnl (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 25 Oct 2019 16:43:41 -0400
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:36093 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726008AbfJYUnk (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 25 Oct 2019 16:43:40 -0400
+Received: by mail-ot1-f67.google.com with SMTP id c7so2965183otm.3;
+        Fri, 25 Oct 2019 13:43:40 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
-         :subject:to;
-        bh=4iNp6ilcY15ROqr4aaYjS+PhqQl25tY1avFBkdi3p5o=;
-        b=hI9CGKQSVBt/3Kn7qqlpXtXdXQsvnXFC7AMV/vKdDKgGaIPh8ovyJTO4+PvWq1Dclw
-         sr8IkhyavzbYB47/uvrdFKxydD54Ll4qYh22AP+CoMktQRjibiN0QY1T5RLXz6UssUO2
-         lSOsdqxNG+2VsF0z8gQSQmmsMmoGXn7Cq2y1PbljSrVp6bK6jbEnPsDH2CUdLVeD1RXA
-         nq7g0PrWK3NLJr9HWFi4gnXyW9bWf5g2GxcmSVexiNlJ6LvH69iSG2PIxfVk2qqF66Y7
-         1bwK6YW/Yq8kxB3hDNQnFDLpkkDHsrUxNyO0E2aZ/6rEnS/73MSYm7qsm1rrJBiprZ+1
-         eaCA==
-X-Gm-Message-State: APjAAAUF2uj7mL1M7KfQJZGOIpRXAcT/HqzMFMNk1sm2b6zJqNYIG/EP
-        QxahjacNOA/pZ+I5hK8B+YpYiYoZmjX0KdK2lcc=
-X-Google-Smtp-Source: APXvYqxnr7Bb5NSbheZ5uMCch2K3MGTzM0fDDm8OjJFzmJK/15J+zyeaKA4+pRZSzVxALiSZMCG2Qf2TZY77qddaQh8=
-X-Received: by 2002:adf:e38f:: with SMTP id e15mr4167504wrm.218.1572029386233;
- Fri, 25 Oct 2019 11:49:46 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=mY7W9Qwoy2hYsmzd/xysMomRgnBoZZlGLUvtU9rwd9Y=;
+        b=XEUUEBkvFzqf1YBNMq3MwFmqad2yZIMj7V6eHvCAtgO0HoGWwHxJQvnD+tFhfgq83c
+         4fB1yiRBs0pX8V6jvKYNJFrY64aEwNL2kdzV6Ou/R9WLFv96xr/Bx63OqtKYjNDghoXX
+         LK5cxtZMlBqLcFrjEfvPPt/MIbHnOv6x2yOrj2Sn1KOmy/tkdjdNXjZoNOXk7VFMo9U3
+         QCNntRLKL98EGT4AeFB6NjfafWvn6KZnAVIXevb/3UUMgJE3+kSsa6ZX4DeNivrE5Kh5
+         Y7zYdRzOW6j8jxuP52DuDT0USGOxThXkH/fw5TlguPlld6kYR39wjo8kXgarKLH+h9D0
+         NRLQ==
+X-Gm-Message-State: APjAAAUmKa2pK8pYM779goNTWeRTc+7K3vnnWfecjvASBT92vKC+dd+2
+        dyY4qIFPkPIOeWX4dGvjhg==
+X-Google-Smtp-Source: APXvYqwi5q9kWQoXbZEj5r4KamsevqICE/6M+McbMMUn5YYDFa3NKCPG3yUwt8kDDdHYKaPW7z/tuA==
+X-Received: by 2002:a9d:5a0b:: with SMTP id v11mr4410792oth.274.1572036219985;
+        Fri, 25 Oct 2019 13:43:39 -0700 (PDT)
+Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id s6sm1056766otr.5.2019.10.25.13.43.39
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 25 Oct 2019 13:43:39 -0700 (PDT)
+Date:   Fri, 25 Oct 2019 15:43:38 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Cc:     broonie@kernel.org, linus.walleij@linaro.org, lee.jones@linaro.org,
+        vinod.koul@linaro.org, alsa-devel@alsa-project.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        spapothi@codeaurora.org, bgoswami@codeaurora.org,
+        linux-gpio@vger.kernel.org
+Subject: Re: [PATCH v2 01/11] ASoC: dt-bindings: add dt bindings for
+ WCD9340/WCD9341 audio codec
+Message-ID: <20191025204338.GA25892@bogus>
+References: <20191018001849.27205-1-srinivas.kandagatla@linaro.org>
+ <20191018001849.27205-2-srinivas.kandagatla@linaro.org>
 MIME-Version: 1.0
-Received: by 2002:a5d:650e:0:0:0:0:0 with HTTP; Fri, 25 Oct 2019 11:49:45
- -0700 (PDT)
-Reply-To: lisatofan110@gmail.com
-From:   Lisa Tofan <atmcarddepartment725@gmail.com>
-Date:   Fri, 25 Oct 2019 20:49:45 +0200
-Message-ID: <CAKm0Sm9e5pwAiDnha4kcNxpv_Va5ky6CYhrbt3pnYscU2PJjgg@mail.gmail.com>
-Subject: Hello Dear
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191018001849.27205-2-srinivas.kandagatla@linaro.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hello Dear,
+On Fri, Oct 18, 2019 at 01:18:39AM +0100, Srinivas Kandagatla wrote:
+> This patch adds bindings for wcd9340/wcd9341 audio codec which can
+> support both SLIMbus and I2S/I2C interface.
+> 
+> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+> ---
+>  .../bindings/sound/qcom,wcd934x.yaml          | 169 ++++++++++++++++++
+>  1 file changed, 169 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/sound/qcom,wcd934x.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/sound/qcom,wcd934x.yaml b/Documentation/devicetree/bindings/sound/qcom,wcd934x.yaml
+> new file mode 100644
+> index 000000000000..299d6b96c339
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/sound/qcom,wcd934x.yaml
+> @@ -0,0 +1,169 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/sound/qcom,wcd934x.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Bindings for Qualcomm WCD9340/WCD9341 Audio Codec
+> +
+> +maintainers:
+> +  - Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+> +
+> +description: |
+> +  Qualcomm WCD9340/WCD9341 Codec is a standalone Hi-Fi audio codec IC.
+> +  It has in-built Soundwire controller, pin controller, interrupt mux and
+> +  supports both I2S/I2C and SLIMbus audio interfaces.
+> +
+> +properties:
+> +  compatible:
+> +    const: slim217,250
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  interrupts:
+> +    maxItems: 1
+> +
+> +  reset-gpios:
+> +    description: GPIO spec for reset line to use
+> +    maxItems: 1
+> +
+> +  slim-ifc-dev:
+> +    description: SLIMBus Interface device phandle
 
-This is Miss Lisa Tofan, How are you today hope all is well with you,
-please I will need your urgent attention
+phandle or...
 
-regarding this important discussion kindly write me back here :
-lisatofan110@gmail.com: for more details,
-Thanks,
-Miss Lisa Tofan
+> +    maxItems: 1
+
+array?
+
+Needs a type if a phandle.
+
+> +
+> +  clocks:
+> +    maxItems: 1
+> +
+> +  clock-names:
+> +    const: extclk
+> +
+> +  vdd-buck-supply:
+> +    description: A reference to the 1.8V buck supply
+> +
+> +  vdd-buck-sido-supply:
+> +    description: A reference to the 1.8V SIDO buck supply
+> +
+> +  vdd-rx-supply:
+> +    description: A reference to the 1.8V rx supply
+> +
+> +  vdd-tx-supply:
+> +    description: A reference to the 1.8V tx supply
+> +
+> +  vdd-vbat-supply:
+> +    description: A reference to the vbat supply
+> +
+> +  vdd-io-supply:
+> +    description: A reference to the 1.8V I/O supply
+> +
+> +  vdd-micbias-supply:
+> +    description: A reference to the micbias supply
+> +
+> +  qcom,micbias1-millivolt:
+
+The standard unit is '-microvolt' 
+
+> +    description: Voltage betwee 1800mv-2850mv for micbias1 output
+
+typo...
+
+Sounds like constraints.
+
+> +    allOf:
+> +      - $ref: /schemas/types.yaml#/definitions/uint32
+
+With standard units, you can drop the type.
+
+> +
+> +  qcom,micbias2-millivolt:
+> +    description: Voltage betwee 1800mv-2850mv for micbias2 output
+> +    allOf:
+> +      - $ref: /schemas/types.yaml#/definitions/uint32
+> +
+> +  qcom,micbias3-millivolt:
+> +    description: Voltage betwee 1800mv-2850mv for micbias3 output
+> +    allOf:
+> +      - $ref: /schemas/types.yaml#/definitions/uint32
+> +
+> +  qcom,micbias4-millivolt:
+> +    description: Voltage betwee 1800mv-2850mv for micbias4 output
+> +    allOf:
+> +      - $ref: /schemas/types.yaml#/definitions/uint32
+> +
+> +  clock-output-names:
+> +    const: mclk
+> +
+> +  clock-frequency:
+> +    description: Clock frequency of output clk in Hz
+> +
+> +  interrupt-controller: true
+> +
+> +  '#interrupt-cells':
+> +    const: 1
+> +
+> +  '#clock-cells':
+> +    const: 0
+> +
+> +  '#sound-dai-cells':
+> +    const: 1
+> +
+> +  "#address-cells":
+> +    const: 1
+> +
+> +  "#size-cells":
+> +    const: 1
+> +
+> +patternProperties:
+> +  "^.*@[0-9a-f]+$":
+> +    type: object
+> +    description: |
+> +      WCD934x subnode for each slave devices. Bindings of each subnodes
+> +      depends on the specific driver providing the functionality and
+> +      documented in there respective bindings.
+
+s/there/their/
+
+> +
+> +    properties:
+> +      reg:
+> +        maxItems: 1
+> +
+> +    required:
+> +      - reg
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - reset-gpios
+> +  - slim-ifc-dev
+> +  - interrupts
+> +  - interrupt-controller
+> +  - clock-frequency
+> +  - clock-output-names
+> +  - qcom,micbias1-millivolt
+> +  - qcom,micbias2-millivolt
+> +  - qcom,micbias3-millivolt
+> +  - qcom,micbias4-millivolt
+> +  - "#interrupt-cells"
+> +  - "#clock-cells"
+> +  - "#sound-dai-cells"
+> +  - "#address-cells"
+> +  - "#size-cells"
+> +
+> +examples:
+> +  - |
+> +    codec@1,0{
+> +        compatible = "slim217,250";
+> +        reg  = <1 0>;
+> +        reset-gpios = <&tlmm 64 0>;
+> +        slim-ifc-dev  = <&wcd9340_ifd>;
+> +        #sound-dai-cells = <1>;
+> +        interrupt-parent = <&tlmm>;
+> +        interrupts = <54 4>;
+> +        interrupt-controller;
+> +        #interrupt-cells = <1>;
+> +        #clock-cells = <0>;
+> +        clock-frequency = <9600000>;
+> +        clock-output-names = "mclk";
+> +        qcom,micbias1-millivolt = <1800>;
+> +        qcom,micbias2-millivolt = <1800>;
+> +        qcom,micbias3-millivolt = <1800>;
+> +        qcom,micbias4-millivolt = <1800>;
+> +        clock-names = "extclk";
+> +        clocks = <&rpmhcc 2>;
+> +
+> +        #address-cells = <1>;
+> +        #size-cells = <1>;
+> +
+> +        wcdpinctrl@42 {
+> +            reg = <0x42 0x2>;
+> +        };
+> +    };
+> +
+> +...
+> -- 
+> 2.21.0
+> 
