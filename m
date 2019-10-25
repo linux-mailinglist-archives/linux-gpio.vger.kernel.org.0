@@ -2,60 +2,100 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 8EA26E50CC
-	for <lists+linux-gpio@lfdr.de>; Fri, 25 Oct 2019 18:07:43 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9986BE521B
+	for <lists+linux-gpio@lfdr.de>; Fri, 25 Oct 2019 19:12:45 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2504127AbfJYQHn (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 25 Oct 2019 12:07:43 -0400
-Received: from mga05.intel.com ([192.55.52.43]:30736 "EHLO mga05.intel.com"
+        id S2505797AbfJYRMo (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 25 Oct 2019 13:12:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45350 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729004AbfJYQHm (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Fri, 25 Oct 2019 12:07:42 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 25 Oct 2019 09:07:42 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.68,229,1569308400"; 
-   d="scan'208";a="201850048"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by orsmga003.jf.intel.com with ESMTP; 25 Oct 2019 09:07:40 -0700
-Received: from andy by smile with local (Exim 4.92.2)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1iO27o-0000qG-6w; Fri, 25 Oct 2019 19:07:40 +0300
-Date:   Fri, 25 Oct 2019 19:07:40 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Linus Walleij <linus.walleij@linaro.org>,
-        linux-gpio@vger.kernel.org,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        hdegoede@redhat.com
-Subject: Re: [PATCH v1] pinctrl: baytrail: Move IRQ valid mask initialization
- to a dedicated callback
-Message-ID: <20191025160740.GF32742@smile.fi.intel.com>
-References: <20191025140621.43417-1-andriy.shevchenko@linux.intel.com>
+        id S2505842AbfJYRMn (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Fri, 25 Oct 2019 13:12:43 -0400
+Received: from mail-qt1-f179.google.com (mail-qt1-f179.google.com [209.85.160.179])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A06CD21D71;
+        Fri, 25 Oct 2019 17:12:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1572023562;
+        bh=Z9kAbxaXKmbqq+OCusdDlzS7M+q9LbO89gcG35ir0CE=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=LK3DZoETxxt3Vx/AZOSrcG6Svt1lTR1XOwfx4jzOFxa5ghw2U5wmTPAqlPg+/A/MB
+         XuqqbEva2CS6sCg3lPJcyunXWzVhQMKmM0tB+j9+5rMzWzelksgRQX/bbf8EH7ErkV
+         n27ysL5zWgoUkUXAaX9RnB0EXijNmOiVvuhKoRhQ=
+Received: by mail-qt1-f179.google.com with SMTP id m15so4356290qtq.2;
+        Fri, 25 Oct 2019 10:12:42 -0700 (PDT)
+X-Gm-Message-State: APjAAAVt5AuVLM5VVDiMuRrPK96hAC4UotQOzRlLnigp6jk0t/C7fy8d
+        +0oelijbrjrDQ3YrNE5PUr8+8y5mNrlZs+SAIA==
+X-Google-Smtp-Source: APXvYqwyBAHU7XOj/9lEMryFKsyNgzQcpd0Pku9No2ZatJFpJeBh2HE7sqmId/JADfJ+vHbJLB4UWp8J+xFC4MKtpOw=
+X-Received: by 2002:ac8:741a:: with SMTP id p26mr4135876qtq.143.1572023561814;
+ Fri, 25 Oct 2019 10:12:41 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191025140621.43417-1-andriy.shevchenko@linux.intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20191024202703.8017-1-chris.packham@alliedtelesis.co.nz> <20191024202703.8017-2-chris.packham@alliedtelesis.co.nz>
+In-Reply-To: <20191024202703.8017-2-chris.packham@alliedtelesis.co.nz>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Fri, 25 Oct 2019 12:12:30 -0500
+X-Gmail-Original-Message-ID: <CAL_JsqJ6a6cSrZsTg6piXmuB6-zuP+EO9vwkRoeH2aS9AVOT1g@mail.gmail.com>
+Message-ID: <CAL_JsqJ6a6cSrZsTg6piXmuB6-zuP+EO9vwkRoeH2aS9AVOT1g@mail.gmail.com>
+Subject: Re: [PATCH v4 1/2] dt-bindings: gpio: brcm: Add bindings for xgs-iproc
+To:     Chris Packham <chris.packham@alliedtelesis.co.nz>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Ray Jui <rjui@broadcom.com>,
+        Scott Branden <sbranden@broadcom.com>,
+        "maintainer:BROADCOM BCM7XXX ARM ARCHITECTURE" 
+        <bcm-kernel-feedback-list@broadcom.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        devicetree@vger.kernel.org,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Oct 25, 2019 at 05:06:21PM +0300, Andy Shevchenko wrote:
-> There is a logical continuation of the commit 5fbe5b5883f8 ("gpio: Initialize
-> the irqchip valid_mask with a callback") to split IRQ initialization to
-> hardware and valid mask setup parts.
-> 
+On Thu, Oct 24, 2019 at 3:27 PM Chris Packham
+<chris.packham@alliedtelesis.co.nz> wrote:
+>
+> This GPIO controller is present on a number of Broadcom switch ASICs
+> with integrated SoCs. It is similar to the nsp-gpio and iproc-gpio
+> blocks but different enough to require a separate driver.
+>
+> Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
+> ---
+>
+> Notes:
+>     Changes in v4:
+>     - rename brcm,xgs-iproc.yaml -> brcm,xgs-iproc-gpio.yaml as suggested
+>
+>     Changes in v3:
+>     - incorporate review comments from Rob and Bart
+>
+>     Changes in v2:
+>     - Document as DT schema
+>     - Include ngpios, #gpio-cells and gpio-controller properties
+>
+>  .../bindings/gpio/brcm,xgs-iproc-gpio.yaml    | 70 +++++++++++++++++++
+>  1 file changed, 70 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/gpio/brcm,xgs-iproc-gpio.yaml
+>
+> diff --git a/Documentation/devicetree/bindings/gpio/brcm,xgs-iproc-gpio.yaml b/Documentation/devicetree/bindings/gpio/brcm,xgs-iproc-gpio.yaml
+> new file mode 100644
+> index 000000000000..ec1fd3a64aa2
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/gpio/brcm,xgs-iproc-gpio.yaml
+> @@ -0,0 +1,70 @@
+> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/gpio/brcm,xgs-iproc.yaml#
 
-Hans, it will be nice if you would be able to test this as well.
-The better is to use our for-next branch with this applied on top.
+Documentation/devicetree/bindings/gpio/brcm,xgs-iproc-gpio.yaml: $id:
+path/filename 'gpio/brcm,xgs-iproc.yaml' doesn't match actual filename
 
--- 
-With Best Regards,
-Andy Shevchenko
+Otherwise,
 
-
+Reviewed-by: Rob Herring <robh@kernel.org>
