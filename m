@@ -2,78 +2,107 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 70283E578C
-	for <lists+linux-gpio@lfdr.de>; Sat, 26 Oct 2019 02:20:32 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E968CE5A5C
+	for <lists+linux-gpio@lfdr.de>; Sat, 26 Oct 2019 14:08:46 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725907AbfJZAUb (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 25 Oct 2019 20:20:31 -0400
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:46138 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725881AbfJZAUb (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 25 Oct 2019 20:20:31 -0400
-Received: by mail-oi1-f195.google.com with SMTP id c2so2721536oic.13;
-        Fri, 25 Oct 2019 17:20:30 -0700 (PDT)
+        id S1726256AbfJZMIq (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sat, 26 Oct 2019 08:08:46 -0400
+Received: from mail-il1-f196.google.com ([209.85.166.196]:36780 "EHLO
+        mail-il1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726245AbfJZMIp (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sat, 26 Oct 2019 08:08:45 -0400
+Received: by mail-il1-f196.google.com with SMTP id s75so4158883ilc.3
+        for <linux-gpio@vger.kernel.org>; Sat, 26 Oct 2019 05:08:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=qU5RsG9SRhmXJxZ/TH2tRPZyE3CCGzpG3S5xb5efR90=;
+        b=DKromX0O6ZmA9cX57GdslYVKPtnj0wxATKHsp5RG5xITD4+f5ww87RClBcL3VYjV3g
+         Fxb3GsIVYUuC1LxuBzmfKt5WkZdURNJV1x+68JSBka53sQex56WYDAT2bGwio4TjAdbY
+         zCcLW6cor4aNhMYRBWiPZO1/LAAsCLC1xBV6ICxJ/f/cdKHZTioi1I1GzLG9t1EdSEG2
+         Fmk4Xhtn37kkyaEe+M8H++xnb5M1Q2udbRsdlng6mxVuJKEHIXhVfE39H/7FebzSFX8H
+         hPvSF5pxh9jxBym5jYezfmwmdEriEnw0aPBITI8A6iWEnYsJonMK7DwZHk/stqiuu98J
+         RiaQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=xFaVplPix3RECfmw0mP26wLx1h1GSiIqpWNBxTGaapo=;
-        b=AxjjHQ5msHHdkFoPF3zPtrJ9CSTlRyoEVhjaEknKxNqU8DNhiSmj/TEP23XW6uETUr
-         1yNDRvp0BEQkQd4a+ft1DOPTGGwSBfxGQVlYs37x4Vic+cx0hRA3nlcvLAUuQotR2N7R
-         VcPC5IyIHYlqW7QJOPPtE7HwKOrk5gJsP79oy4kQa5JniDBtCckhw0GsCTuREM3v9Udy
-         tL0TcJSNvBcsMkaB1d38PfwY7jlybyylgEuYqqeN7yL6pSDRU7/UjTLT0Oi3sb3OPllo
-         1UlaGLcpuuyuW29QcS78SWgxq3znnSreZP6CZ61vgqOJ2ho7jtEw4Q046twydoDm0Z5/
-         mINQ==
-X-Gm-Message-State: APjAAAXTljrdMeg39U2A6PjIfdcv3jC3Su7EUQqCkINc5hrHmxSJMJ2m
-        Ny+yq7krE/hu+LfIeFQ4Pw==
-X-Google-Smtp-Source: APXvYqzpqk2Jv5TqpJClrIhi+vYwGvPQet1RBJ9Lrp4ewD+6Q8fdl9123Lp4ED+xjPhOJnmC5HuodQ==
-X-Received: by 2002:aca:7543:: with SMTP id q64mr4340495oic.95.1572049230274;
-        Fri, 25 Oct 2019 17:20:30 -0700 (PDT)
-Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id t12sm1250767otq.61.2019.10.25.17.20.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 25 Oct 2019 17:20:29 -0700 (PDT)
-Date:   Fri, 25 Oct 2019 19:20:29 -0500
-From:   Rob Herring <robh@kernel.org>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=qU5RsG9SRhmXJxZ/TH2tRPZyE3CCGzpG3S5xb5efR90=;
+        b=jbj+P1Gg6hVfe7RkOjOOZHvFdXRfsOreGQhjtAuKNYw2fpDsHyR71bWoJKfFZZyiCR
+         XkfFDzWMOuE8+3yrVvs28oUcJ+WnsPP0O8JfZDGmBFV9sluqv17quzCnuwK2XLLLCb0k
+         04VFjym1ZR8e3Fnmhoj2qePvICgsAhaThlThWFlmflDANxjgUGPULjFVv88TTJpmnQNf
+         8MeR5wttODaGoYfVSbNlqmqVj+z9X07THDup6eRBRrj1vn10OrtRemTzKIHGQ6fLdvNa
+         nZgKRtkvXoKlrQP+eQ0zOcW5iccotbSpsORgwCRe0ZxD9B8MwVBut+ZRrwO9r3yk4OPA
+         LAQA==
+X-Gm-Message-State: APjAAAVsee4W4fJTkrTaCHcsPPQyissMO3i3CtG2Y7hijng4PzsH3+b4
+        c0xYOHdRQvZVEOKZsEaM4yW3HhhXnOwnsdgSfDUu3g==
+X-Google-Smtp-Source: APXvYqxTDE3btaAOKG4F5dM/Yfw/0hOeG0Hd/8JTh+BW2U92hL3gWmViQq4lVfRN4h0a6JG+CpELrSmx5PL7PNRmjf0=
+X-Received: by 2002:a92:9a17:: with SMTP id t23mr10068334ili.40.1572091723726;
+ Sat, 26 Oct 2019 05:08:43 -0700 (PDT)
+MIME-Version: 1.0
+References: <20191024122224.11776-1-geert+renesas@glider.be>
+In-Reply-To: <20191024122224.11776-1-geert+renesas@glider.be>
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+Date:   Sat, 26 Oct 2019 14:08:33 +0200
+Message-ID: <CAMRc=Me9Cc=O6t_3cLW5Ow=-XgurQ1x_RpfHe4Lxhb2QB6_WgA@mail.gmail.com>
+Subject: Re: [PATCH v2 0/2] gpio: renesas: Use proper irq_chip name
 To:     Geert Uytterhoeven <geert+renesas@glider.be>
 Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Eugeniu Rosca <erosca@de.adit-jv.com>,
-        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-renesas-soc@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: Re: [PATCH v2 1/3] dt-bindings: pinctrl: sh-pfc: Document r8a77961
- support
-Message-ID: <20191026002029.GA11965@bogus>
-References: <20191023122955.12420-1-geert+renesas@glider.be>
- <20191023122955.12420-2-geert+renesas@glider.be>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191023122955.12420-2-geert+renesas@glider.be>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Marc Zyngier <marc.zyngier@arm.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, 23 Oct 2019 14:29:53 +0200, Geert Uytterhoeven wrote:
-> Add DT binding documentation for the Pin Function Controller in the
-> Renesas R-Car M3-W+ (R8A77961) SoC.
-> 
-> Update all references to R-Car M3-W from "r8a7796" to "r8a77960", to
-> avoid confusion between R-Car M3-W (R8A77960) and M3-W+.
-> 
-> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> Reviewed-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-> ---
-> v2:
->   - Add Reviewed-by,
->   - Update R-Car M3-W references.
-> ---
->  .../devicetree/bindings/pinctrl/renesas,pfc-pinctrl.txt        | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
-> 
+czw., 24 pa=C5=BA 2019 o 14:22 Geert Uytterhoeven <geert+renesas@glider.be>
+napisa=C5=82(a):
+>
+>         Hi Linus, Bartosz,
+>
+> Recently, Marc pointed out some common misconceptions w.r.t. the .name
+> and .parent_device fields in struct irq_chip.  This patch series fixes
+> the names in the Renesas GPIO controller drivers.
+>
+> Changes compared to v1[*]:
+>   - Drop irqchip patches applied to the irqchip tree.
+>
+> Thanks for applying!
+>
+> [*] https://lore.kernel.org/linux-renesas-soc/20190607095858.10028-1-geer=
+t+renesas@glider.be/
+>
+> Geert Uytterhoeven (2):
+>   gpio: em: Use proper irq_chip name
+>   gpio: rcar: Use proper irq_chip name
+>
+>  drivers/gpio/gpio-em.c   | 2 +-
+>  drivers/gpio/gpio-rcar.c | 2 +-
+>  2 files changed, 2 insertions(+), 2 deletions(-)
+>
+> --
+> 2.17.1
+>
+> Gr{oetje,eeting}s,
+>
+>                                                 Geert
+>
+> --
+> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m6=
+8k.org
+>
+> In personal conversations with technical people, I call myself a hacker. =
+But
+> when I'm talking to journalists I just say "programmer" or something like=
+ that.
+>                                                             -- Linus Torv=
+alds
 
-Acked-by: Rob Herring <robh@kernel.org>
+Both applied, thanks!
+
+Bartosz
