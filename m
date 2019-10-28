@@ -2,55 +2,55 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 2E4B7E6D56
-	for <lists+linux-gpio@lfdr.de>; Mon, 28 Oct 2019 08:38:11 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C3989E6D57
+	for <lists+linux-gpio@lfdr.de>; Mon, 28 Oct 2019 08:38:14 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732984AbfJ1HiK (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 28 Oct 2019 03:38:10 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:39261 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732043AbfJ1HiJ (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 28 Oct 2019 03:38:09 -0400
-Received: by mail-pl1-f196.google.com with SMTP id t12so547218plo.6
-        for <linux-gpio@vger.kernel.org>; Mon, 28 Oct 2019 00:38:09 -0700 (PDT)
+        id S1732980AbfJ1HiO (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 28 Oct 2019 03:38:14 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:43487 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732043AbfJ1HiO (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 28 Oct 2019 03:38:14 -0400
+Received: by mail-pg1-f195.google.com with SMTP id l24so6311263pgh.10
+        for <linux-gpio@vger.kernel.org>; Mon, 28 Oct 2019 00:38:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=LsdGXAZDsLtoyIzrg5Nm/vCICJV/ZMXt/g2t+ZwO92U=;
-        b=IVRdALVewCeKOhf/3dprfUokjJiXk4Nyvf9Dqgm/2HW09PFIVkADtmNEx1As4UMlXM
-         ZSCA8ypu2pIkXInaUPjAhcH4I7Af3T1SnJ+lVF0UtgtAIX0bHUMFViLZpTdidYE/YTcG
-         M0GWmlfKA4Mv/LyyP77gvjLKmKvJ9qCswQateofG3VFySFVDhMQFvqVUwdTEkV5c9EVD
-         f2j6Obd2vXPXGMfZkepHbda2mXVDcvw5lup41enNRrdZCSUSDo/iem9c+LpyL27NJDHC
-         3ez/Ui9dsBrdbO+xtpzWp1XBQfHsYVZblKyGvgbMx/mQnYjIIT2VVEtHy9Q3Y3Yp2sd5
-         cbeg==
+        bh=ZkhZto+QMct+ZpMEaVqMJNlf+/jbxDs/0RAyQ9ZpcmM=;
+        b=l+/zS4mhBeHKdwvX/K4bFJlasBPkWPU6ENyOTD46f9Ava7LGcMLSkMH8D0d3PCroDN
+         CmTXoUy40lU6+/uH5rVR/MHxhQUGoGa9mO8xswvRRYdsQYURMSJ06n5uaRT3lFs0sQx3
+         tX0+UHC07d+g++VFNb16SRbhKGGzcAR36FpDjKiD55iNkfyL91QyKvOxWOzv0QC4TJwD
+         jIwUO9FwoDsBtWNk+141auc+qXvp8s5oDCyWt+MDNq1ccy+Ie9n0qhwdfekaa5eNkd8E
+         sitnFdxmWRkhy9iCqtoVdDwET4uWaDzhDMoeO/6UWrdXX4+wale6Fm6tQuycP5wkt0e5
+         AAOw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=LsdGXAZDsLtoyIzrg5Nm/vCICJV/ZMXt/g2t+ZwO92U=;
-        b=BpTj6by9Emd+hXYb8ApaDYpKkqFNDjoHvOtluEtcfrftJOLiC7VGwFyB21q9UZ9CjR
-         2TtLRrkGsyLnDKTqJNNJurZa69mU7ol2sZhPVJqcaSWYuiUOMtNYtvzFQLA/4+zRjQeg
-         6CiNWfQRC/xc3dPAB1sozzJlhkURGdfQk7P15oV47FrlYajkOa2JNdISkAyyUYCUJMdo
-         310wo/s7Aiym5kbHkb3sNfaxJYh0nCOXPW0oVdGrm7DhU9OUem8el3IjB/mpwrMxN4tL
-         7Vrwqepm0f9WAO8qzVYnKCkyw1nOmsWLfQDCcGLP52VuSFEtXCFwjb2vZC6wYyclUn87
-         ibbA==
-X-Gm-Message-State: APjAAAWrRXz1V+sJLVuU3Z0OS9/nWA6n4VgUbGbPel1wvnk+Eqox5slC
-        rvLYaLGnPn6hnSRo5C6Xr1Nd23CtTPWhQhWO
-X-Google-Smtp-Source: APXvYqzcCB9xFHZFz2A/njwtyC2u9AMZ0iYoaDGhe1oL/Iv67NJLbQhibJHRrMPajJFkFavZOAilJw==
-X-Received: by 2002:a17:902:7089:: with SMTP id z9mr16727741plk.51.1572248288687;
-        Mon, 28 Oct 2019 00:38:08 -0700 (PDT)
+        bh=ZkhZto+QMct+ZpMEaVqMJNlf+/jbxDs/0RAyQ9ZpcmM=;
+        b=oizGs+Q+STREoCLplUq3RTpTQVr/AnxPrWrvfZpGHR2SM+EEqSl9rHEaysSwFgs59e
+         GzuwT+Ql/8jWRZoiQsNr05+nOEpcyky3k3OeIGGFKOrQtizzDb8GO3B3YcxmqB47b5B4
+         hUoJKH/S60e/43eD6E6x8Be584uBgjTQ9kLp6fx85wzWJ09QaheZEtlE9BMq+Pr09QCE
+         YDNywIKYoqJCigm2aKVwPzxnc1m+dcvq6xg9lSurBBGeVXAZ3GWZUajkr3jSVlVPC3n+
+         AHmbw+WqwhJcLGPIS+TJYbdfEGlyJT6Cf4f7V/HoEo+FZjwbKgmpZCLuFpuRPyGfQhAr
+         S/pA==
+X-Gm-Message-State: APjAAAWnZLCN0BpLOY7aNcV57t1ET4XV1fXkU58aXDKRwdKrX7OYyvZV
+        KbX38kmu5Ht0gMHzMfcDTQnmqGFMQquottXF
+X-Google-Smtp-Source: APXvYqwfs9WIcrAvajlQerL1ikLOF4R9D1LfjuzjHOvZZ4iyM1GkRxlHnVnRrW/yAEm12/KbR4xqXQ==
+X-Received: by 2002:a63:e055:: with SMTP id n21mr19238114pgj.411.1572248292128;
+        Mon, 28 Oct 2019 00:38:12 -0700 (PDT)
 Received: from sol.lan (220-235-109-115.dyn.iinet.net.au. [220.235.109.115])
-        by smtp.gmail.com with ESMTPSA id b17sm11191015pfr.17.2019.10.28.00.38.05
+        by smtp.gmail.com with ESMTPSA id b17sm11191015pfr.17.2019.10.28.00.38.08
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 28 Oct 2019 00:38:08 -0700 (PDT)
+        Mon, 28 Oct 2019 00:38:11 -0700 (PDT)
 From:   Kent Gibson <warthog618@gmail.com>
 To:     linux-gpio@vger.kernel.org, bgolaszewski@baylibre.com,
         linus.walleij@linaro.org, bamv2005@gmail.com
 Cc:     drew@pdp7.com, Kent Gibson <warthog618@gmail.com>
-Subject: [PATCH v4 3/5] gpio: mockup: add set_config to support pull up/down
-Date:   Mon, 28 Oct 2019 15:37:11 +0800
-Message-Id: <20191028073713.25664-4-warthog618@gmail.com>
+Subject: [PATCH v4 4/5] gpiolib: add support for disabling line bias
+Date:   Mon, 28 Oct 2019 15:37:12 +0800
+Message-Id: <20191028073713.25664-5-warthog618@gmail.com>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191028073713.25664-1-warthog618@gmail.com>
 References: <20191028073713.25664-1-warthog618@gmail.com>
@@ -61,143 +61,190 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Add support for the pull up/down state set via gpiolib line requests to
-be reflected in the state of the mockup.
-Use case is for testing of the GPIO uAPI, specifically the pull up/down
-flags.
+Allow pull up/down bias to be disabled, allowing the line to float
+or to be biased only by external circuitry.
+Use case is for where the bias has been applied previously, either
+by default or by the user, but that setting may conflict with the
+current use of the line.
 
 Signed-off-by: Kent Gibson <warthog618@gmail.com>
 ---
- drivers/gpio/gpio-mockup.c | 94 ++++++++++++++++++++++++--------------
- 1 file changed, 60 insertions(+), 34 deletions(-)
+ drivers/gpio/gpiolib.c    | 61 ++++++++++++++++++++++++++++++++++-----
+ drivers/gpio/gpiolib.h    |  1 +
+ include/uapi/linux/gpio.h |  2 ++
+ 3 files changed, 56 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/gpio/gpio-mockup.c b/drivers/gpio/gpio-mockup.c
-index 213aedc97dc2..c28219962ae2 100644
---- a/drivers/gpio/gpio-mockup.c
-+++ b/drivers/gpio/gpio-mockup.c
-@@ -146,6 +146,61 @@ static void gpio_mockup_set_multiple(struct gpio_chip *gc,
- 	mutex_unlock(&chip->lock);
+diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
+index 7dfbb3676ee0..177d25e19758 100644
+--- a/drivers/gpio/gpiolib.c
++++ b/drivers/gpio/gpiolib.c
+@@ -423,6 +423,7 @@ struct linehandle_state {
+ 	GPIOHANDLE_REQUEST_ACTIVE_LOW | \
+ 	GPIOHANDLE_REQUEST_BIAS_PULL_UP | \
+ 	GPIOHANDLE_REQUEST_BIAS_PULL_DOWN | \
++	GPIOHANDLE_REQUEST_BIAS_DISABLE | \
+ 	GPIOHANDLE_REQUEST_OPEN_DRAIN | \
+ 	GPIOHANDLE_REQUEST_OPEN_SOURCE)
+ 
+@@ -554,12 +555,21 @@ static int linehandle_create(struct gpio_device *gdev, void __user *ip)
+ 	     (lflags & GPIOHANDLE_REQUEST_OPEN_SOURCE)))
+ 		return -EINVAL;
+ 
+-	/* PULL_UP and PULL_DOWN flags only make sense for input mode. */
++	/* Bias flags only allowed for input mode. */
+ 	if (!(lflags & GPIOHANDLE_REQUEST_INPUT) &&
+-	    ((lflags & GPIOHANDLE_REQUEST_BIAS_PULL_UP) ||
++	    ((lflags & GPIOHANDLE_REQUEST_BIAS_DISABLE) ||
++	     (lflags & GPIOHANDLE_REQUEST_BIAS_PULL_UP) ||
+ 	     (lflags & GPIOHANDLE_REQUEST_BIAS_PULL_DOWN)))
+ 		return -EINVAL;
+ 
++	/* Only one bias flag can be set. */
++	if (((lflags & GPIOHANDLE_REQUEST_BIAS_DISABLE) &&
++	     (lflags & (GPIOHANDLE_REQUEST_BIAS_PULL_DOWN |
++			GPIOHANDLE_REQUEST_BIAS_PULL_UP))) ||
++	    ((lflags & GPIOHANDLE_REQUEST_BIAS_PULL_DOWN) &&
++	     (lflags & GPIOHANDLE_REQUEST_BIAS_PULL_UP)))
++		return -EINVAL;
++
+ 	lh = kzalloc(sizeof(*lh), GFP_KERNEL);
+ 	if (!lh)
+ 		return -ENOMEM;
+@@ -600,6 +610,8 @@ static int linehandle_create(struct gpio_device *gdev, void __user *ip)
+ 			set_bit(FLAG_OPEN_DRAIN, &desc->flags);
+ 		if (lflags & GPIOHANDLE_REQUEST_OPEN_SOURCE)
+ 			set_bit(FLAG_OPEN_SOURCE, &desc->flags);
++		if (lflags & GPIOHANDLE_REQUEST_BIAS_DISABLE)
++			set_bit(FLAG_BIAS_DISABLE, &desc->flags);
+ 		if (lflags & GPIOHANDLE_REQUEST_BIAS_PULL_DOWN)
+ 			set_bit(FLAG_PULL_DOWN, &desc->flags);
+ 		if (lflags & GPIOHANDLE_REQUEST_BIAS_PULL_UP)
+@@ -924,6 +936,21 @@ static int lineevent_create(struct gpio_device *gdev, void __user *ip)
+ 	    (lflags & GPIOHANDLE_REQUEST_OPEN_SOURCE))
+ 		return -EINVAL;
+ 
++	/* Bias flags only make sense for input mode. */
++	if (!(lflags & GPIOHANDLE_REQUEST_INPUT) &&
++	    ((lflags & GPIOHANDLE_REQUEST_BIAS_DISABLE) ||
++	     (lflags & GPIOHANDLE_REQUEST_BIAS_PULL_DOWN) ||
++	     (lflags & GPIOHANDLE_REQUEST_BIAS_PULL_UP)))
++		return -EINVAL;
++
++	/* Only one bias flag can be set. */
++	if (((lflags & GPIOHANDLE_REQUEST_BIAS_DISABLE) &&
++	     (lflags & (GPIOHANDLE_REQUEST_BIAS_PULL_DOWN |
++			GPIOHANDLE_REQUEST_BIAS_PULL_UP))) ||
++	    ((lflags & GPIOHANDLE_REQUEST_BIAS_PULL_DOWN) &&
++	     (lflags & GPIOHANDLE_REQUEST_BIAS_PULL_UP)))
++		return -EINVAL;
++
+ 	le = kzalloc(sizeof(*le), GFP_KERNEL);
+ 	if (!le)
+ 		return -ENOMEM;
+@@ -950,6 +977,8 @@ static int lineevent_create(struct gpio_device *gdev, void __user *ip)
+ 
+ 	if (lflags & GPIOHANDLE_REQUEST_ACTIVE_LOW)
+ 		set_bit(FLAG_ACTIVE_LOW, &desc->flags);
++	if (lflags & GPIOHANDLE_REQUEST_BIAS_DISABLE)
++		set_bit(FLAG_BIAS_DISABLE, &desc->flags);
+ 	if (lflags & GPIOHANDLE_REQUEST_BIAS_PULL_DOWN)
+ 		set_bit(FLAG_PULL_DOWN, &desc->flags);
+ 	if (lflags & GPIOHANDLE_REQUEST_BIAS_PULL_UP)
+@@ -1107,6 +1136,8 @@ static long gpio_ioctl(struct file *filp, unsigned int cmd, unsigned long arg)
+ 		if (test_bit(FLAG_OPEN_SOURCE, &desc->flags))
+ 			lineinfo.flags |= (GPIOLINE_FLAG_OPEN_SOURCE |
+ 					   GPIOLINE_FLAG_IS_OUT);
++		if (test_bit(FLAG_BIAS_DISABLE, &desc->flags))
++			lineinfo.flags |= GPIOLINE_FLAG_BIAS_DISABLE;
+ 		if (test_bit(FLAG_PULL_DOWN, &desc->flags))
+ 			lineinfo.flags |= GPIOLINE_FLAG_BIAS_PULL_DOWN;
+ 		if (test_bit(FLAG_PULL_UP, &desc->flags))
+@@ -2786,6 +2817,7 @@ static bool gpiod_free_commit(struct gpio_desc *desc)
+ 		clear_bit(FLAG_OPEN_SOURCE, &desc->flags);
+ 		clear_bit(FLAG_PULL_UP, &desc->flags);
+ 		clear_bit(FLAG_PULL_DOWN, &desc->flags);
++		clear_bit(FLAG_BIAS_DISABLE, &desc->flags);
+ 		clear_bit(FLAG_IS_HOGGED, &desc->flags);
+ 		ret = true;
+ 	}
+@@ -2912,6 +2944,7 @@ static int gpio_set_config(struct gpio_chip *gc, unsigned offset,
+ 	unsigned arg;
+ 
+ 	switch (mode) {
++	case PIN_CONFIG_BIAS_DISABLE:
+ 	case PIN_CONFIG_BIAS_PULL_DOWN:
+ 	case PIN_CONFIG_BIAS_PULL_UP:
+ 		arg = 1;
+@@ -2925,6 +2958,23 @@ static int gpio_set_config(struct gpio_chip *gc, unsigned offset,
+ 	return gc->set_config ? gc->set_config(gc, offset, config) : -ENOTSUPP;
  }
  
-+static int gpio_mockup_apply_pull(struct gpio_mockup_chip *chip,
-+				  unsigned int offset, int value)
++static int gpio_set_bias(struct gpio_chip *chip, struct gpio_desc *desc)
 +{
-+	struct gpio_desc *desc;
-+	struct gpio_chip *gc;
-+	struct irq_sim *sim;
-+	int curr, irq, irq_type;
++	int bias = 0;
 +
-+	gc = &chip->gc;
-+	desc = &gc->gpiodev->descs[offset];
-+	sim = &chip->irqsim;
++	if (test_bit(FLAG_BIAS_DISABLE, &desc->flags))
++		bias |= PIN_CONFIG_BIAS_DISABLE;
++	if (test_bit(FLAG_PULL_UP, &desc->flags))
++		bias |= PIN_CONFIG_BIAS_PULL_UP;
++	if (test_bit(FLAG_PULL_DOWN, &desc->flags))
++		bias |= PIN_CONFIG_BIAS_PULL_DOWN;
 +
-+	mutex_lock(&chip->lock);
++	if (bias)
++		return gpio_set_config(chip, gpio_chip_hwgpio(desc), bias);
 +
-+	if (test_bit(FLAG_REQUESTED, &desc->flags) &&
-+		!test_bit(FLAG_IS_OUT, &desc->flags)) {
-+		curr = __gpio_mockup_get(chip, offset);
-+		if (curr == value)
-+			goto out;
-+
-+		irq = irq_sim_irqnum(sim, offset);
-+		irq_type = irq_get_trigger_type(irq);
-+
-+		if ((value == 1 && (irq_type & IRQ_TYPE_EDGE_RISING)) ||
-+			(value == 0 && (irq_type & IRQ_TYPE_EDGE_FALLING)))
-+			irq_sim_fire(sim, offset);
-+	}
-+
-+	/* Change the value unless we're actively driving the line. */
-+	if (!test_bit(FLAG_REQUESTED, &desc->flags) ||
-+		!test_bit(FLAG_IS_OUT, &desc->flags))
-+		__gpio_mockup_set(chip, offset, value);
-+
-+out:
-+	chip->lines[offset].pull = value;
-+	mutex_unlock(&chip->lock);
 +	return 0;
 +}
 +
-+static int gpio_mockup_set_config(struct gpio_chip *gc,
-+				  unsigned int offset, unsigned long config)
-+{
-+	struct gpio_mockup_chip *chip = gpiochip_get_data(gc);
-+
-+	switch (pinconf_to_config_param(config)) {
-+	case PIN_CONFIG_BIAS_PULL_UP:
-+		return gpio_mockup_apply_pull(chip, offset, 1);
-+	case PIN_CONFIG_BIAS_PULL_DOWN:
-+		return gpio_mockup_apply_pull(chip, offset, 0);
-+	default:
-+		break;
-+	}
-+	return -ENOTSUPP;
-+}
-+
- static int gpio_mockup_dirout(struct gpio_chip *gc,
- 			      unsigned int offset, int value)
- {
-@@ -226,12 +281,8 @@ static ssize_t gpio_mockup_debugfs_write(struct file *file,
- 					 size_t size, loff_t *ppos)
- {
- 	struct gpio_mockup_dbgfs_private *priv;
--	int rv, val, curr, irq, irq_type;
--	struct gpio_mockup_chip *chip;
-+	int rv, val;
- 	struct seq_file *sfile;
--	struct gpio_desc *desc;
--	struct gpio_chip *gc;
--	struct irq_sim *sim;
+ /**
+  * gpiod_direction_input - set the GPIO direction to input
+  * @desc:	GPIO to set to input
+@@ -2972,12 +3022,7 @@ int gpiod_direction_input(struct gpio_desc *desc)
+ 	if (ret == 0)
+ 		clear_bit(FLAG_IS_OUT, &desc->flags);
  
- 	if (*ppos != 0)
- 		return -EINVAL;
-@@ -244,35 +295,9 @@ static ssize_t gpio_mockup_debugfs_write(struct file *file,
+-	if (test_bit(FLAG_PULL_UP, &desc->flags))
+-		gpio_set_config(chip, gpio_chip_hwgpio(desc),
+-				PIN_CONFIG_BIAS_PULL_UP);
+-	else if (test_bit(FLAG_PULL_DOWN, &desc->flags))
+-		gpio_set_config(chip, gpio_chip_hwgpio(desc),
+-				PIN_CONFIG_BIAS_PULL_DOWN);
++	gpio_set_bias(chip, desc);
  
- 	sfile = file->private_data;
- 	priv = sfile->private;
--	chip = priv->chip;
--	gc = &chip->gc;
--	desc = &gc->gpiodev->descs[priv->offset];
--	sim = &chip->irqsim;
--
--	mutex_lock(&chip->lock);
--
--	if (test_bit(FLAG_REQUESTED, &desc->flags) &&
--	    !test_bit(FLAG_IS_OUT, &desc->flags)) {
--		curr = __gpio_mockup_get(chip, priv->offset);
--		if (curr == val)
--			goto out;
--
--		irq = irq_sim_irqnum(sim, priv->offset);
--		irq_type = irq_get_trigger_type(irq);
--
--		if ((val == 1 && (irq_type & IRQ_TYPE_EDGE_RISING)) ||
--		    (val == 0 && (irq_type & IRQ_TYPE_EDGE_FALLING)))
--			irq_sim_fire(sim, priv->offset);
--	}
--
--	/* Change the value unless we're actively driving the line. */
--	if (!test_bit(FLAG_REQUESTED, &desc->flags) ||
--	    !test_bit(FLAG_IS_OUT, &desc->flags))
--		__gpio_mockup_set(chip, priv->offset, val);
--
--out:
--	chip->lines[priv->offset].pull = val;
--	mutex_unlock(&chip->lock);
-+	rv = gpio_mockup_apply_pull(priv->chip, priv->offset, val);
-+	if (rv)
-+		return rv;
+ 	trace_gpio_direction(desc_to_gpio(desc), 1, ret);
  
- 	return size;
- }
-@@ -418,6 +443,7 @@ static int gpio_mockup_probe(struct platform_device *pdev)
- 	gc->direction_output = gpio_mockup_dirout;
- 	gc->direction_input = gpio_mockup_dirin;
- 	gc->get_direction = gpio_mockup_get_direction;
-+	gc->set_config = gpio_mockup_set_config;
- 	gc->to_irq = gpio_mockup_to_irq;
- 	gc->free = gpio_mockup_free;
+diff --git a/drivers/gpio/gpiolib.h b/drivers/gpio/gpiolib.h
+index b8b10a409c7b..ca9bc1e4803c 100644
+--- a/drivers/gpio/gpiolib.h
++++ b/drivers/gpio/gpiolib.h
+@@ -110,6 +110,7 @@ struct gpio_desc {
+ #define FLAG_TRANSITORY 12	/* GPIO may lose value in sleep or reset */
+ #define FLAG_PULL_UP    13	/* GPIO has pull up enabled */
+ #define FLAG_PULL_DOWN  14	/* GPIO has pull down enabled */
++#define FLAG_BIAS_DISABLE    15	/* GPIO has pull disabled */
  
+ 	/* Connection label */
+ 	const char		*label;
+diff --git a/include/uapi/linux/gpio.h b/include/uapi/linux/gpio.h
+index 39e6c7854d63..7cc21c3b0839 100644
+--- a/include/uapi/linux/gpio.h
++++ b/include/uapi/linux/gpio.h
+@@ -35,6 +35,7 @@ struct gpiochip_info {
+ #define GPIOLINE_FLAG_OPEN_SOURCE	(1UL << 4)
+ #define GPIOLINE_FLAG_BIAS_PULL_UP	(1UL << 5)
+ #define GPIOLINE_FLAG_BIAS_PULL_DOWN	(1UL << 6)
++#define GPIOLINE_FLAG_BIAS_DISABLE	(1UL << 7)
+ 
+ /**
+  * struct gpioline_info - Information about a certain GPIO line
+@@ -66,6 +67,7 @@ struct gpioline_info {
+ #define GPIOHANDLE_REQUEST_OPEN_SOURCE	(1UL << 4)
+ #define GPIOHANDLE_REQUEST_BIAS_PULL_UP	(1UL << 5)
+ #define GPIOHANDLE_REQUEST_BIAS_PULL_DOWN	(1UL << 6)
++#define GPIOHANDLE_REQUEST_BIAS_DISABLE	(1UL << 7)
+ 
+ /**
+  * struct gpiohandle_request - Information about a GPIO handle request
 -- 
 2.23.0
 
