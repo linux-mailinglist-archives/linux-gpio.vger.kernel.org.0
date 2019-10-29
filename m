@@ -2,86 +2,107 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 4B6AEE910C
-	for <lists+linux-gpio@lfdr.de>; Tue, 29 Oct 2019 21:48:10 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 33785E922C
+	for <lists+linux-gpio@lfdr.de>; Tue, 29 Oct 2019 22:38:01 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727545AbfJ2UsC (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 29 Oct 2019 16:48:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35364 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727518AbfJ2UsC (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Tue, 29 Oct 2019 16:48:02 -0400
-Received: from mail-qt1-f174.google.com (mail-qt1-f174.google.com [209.85.160.174])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 772812173E;
-        Tue, 29 Oct 2019 20:48:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572382081;
-        bh=Ygn4EvFTkQPU9gL2XGi0tJULzGH0l8RhkL1ooAj5JHg=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=XqxK6ael7sn32QGY8CaCGOGjbhuxgUjpBmpIdAEvJUv89tiObkUkSILVBHDCE7LJZ
-         rV6D+ERGDqoFwIA6Yrqsskn8zciws9s0b8B8ub38xm14dNkk3ymYfSej13WrhlzPkz
-         8JcdPJuAT2cGzKwPOcO8vsbcNpIKxV9thnpvNQvY=
-Received: by mail-qt1-f174.google.com with SMTP id g50so104396qtb.4;
-        Tue, 29 Oct 2019 13:48:01 -0700 (PDT)
-X-Gm-Message-State: APjAAAVvzDXClW/hFyBwBHRpE6DsPW7dKh3B2o4s9m0kJPPXowuVe+Ws
-        1d3py5I7vK+rA8Y68rr1ivBI6Wi0PmD54kxrww==
-X-Google-Smtp-Source: APXvYqxRQv2XrvJIQ3TVSDV3CE8sreLm7dFshwfw+gLwCiGofNx5kLIVQs/5+QRDKOiPEJXkqbqx8OxZBZCu1r+/L10=
-X-Received: by 2002:ac8:70c4:: with SMTP id g4mr1279199qtp.136.1572382080593;
- Tue, 29 Oct 2019 13:48:00 -0700 (PDT)
-MIME-Version: 1.0
-References: <20191018001849.27205-1-srinivas.kandagatla@linaro.org>
- <20191018001849.27205-2-srinivas.kandagatla@linaro.org> <20191025204338.GA25892@bogus>
- <90b2d83b-f2b2-3a5d-4deb-589f4b48b208@linaro.org> <371955d9-ad2d-5ddc-31b4-710729feae42@linaro.org>
-In-Reply-To: <371955d9-ad2d-5ddc-31b4-710729feae42@linaro.org>
+        id S1728549AbfJ2ViA (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 29 Oct 2019 17:38:00 -0400
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:36359 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727706AbfJ2ViA (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 29 Oct 2019 17:38:00 -0400
+Received: by mail-ot1-f68.google.com with SMTP id c7so269535otm.3;
+        Tue, 29 Oct 2019 14:37:59 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=HPk/5F3b4dwjuAgfQmnttu0kTaOON9LgkQM/V749G3U=;
+        b=ldPZRMNoOEsvxQSLrVsZsB2vaAyJMN9JWGghaVvDXtP4u5ecCVsnf9cPa9MCHgY3BD
+         RCVqiSfQJBvo8gHGyuSjeI4SNGjY7AMEvUyW10N2dveXWgnmuFdNr33NMsI7ZbKug887
+         Zc18rEx44urVurPllxdsBjOghfg4v4VyCauNZ41bGId/hgY6zXznaqk8t61vAmWFqNYR
+         CYyaSEDel0TJa+yntGZeQjxuC4HT/vJcTMdNsEEHVI5fdKXh1w8WjYXUgXY+JZu+Sio4
+         fgzFJX/l3obqAL2l+bR8+zC/4Vl6T+WnaMBdDERRjmA/N3k7phxdnDNQAW8u27cYAudt
+         Sn4g==
+X-Gm-Message-State: APjAAAVRR4xeZRZ+w8Cwf+Jyi/hgYlWXPEY4UW07hIekiVGg/kNpAto2
+        6u5Uv3FPgJ/FCIYU+ULOSw==
+X-Google-Smtp-Source: APXvYqy7vhLoX8SU0VKqi+P/9oYgBPX9zkqE7WV/iDYFf8wu0E5QI6Ui9HTTqSZxoCU6ChBhHps5bQ==
+X-Received: by 2002:a9d:6655:: with SMTP id q21mr16322722otm.47.1572385079003;
+        Tue, 29 Oct 2019 14:37:59 -0700 (PDT)
+Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id k10sm4175oig.25.2019.10.29.14.37.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 29 Oct 2019 14:37:58 -0700 (PDT)
+Date:   Tue, 29 Oct 2019 16:37:57 -0500
 From:   Rob Herring <robh@kernel.org>
-Date:   Tue, 29 Oct 2019 15:47:49 -0500
-X-Gmail-Original-Message-ID: <CAL_JsqJmRReW2n0R_Sh4f7AFGYA+ZLxuFDokLTSBKoFTg6uRSg@mail.gmail.com>
-Message-ID: <CAL_JsqJmRReW2n0R_Sh4f7AFGYA+ZLxuFDokLTSBKoFTg6uRSg@mail.gmail.com>
-Subject: Re: [PATCH v2 01/11] ASoC: dt-bindings: add dt bindings for
- WCD9340/WCD9341 audio codec
-To:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Cc:     Mark Brown <broonie@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Lee Jones <lee.jones@linaro.org>,
-        Vinod Koul <vinod.koul@linaro.org>,
-        Linux-ALSA <alsa-devel@alsa-project.org>,
-        devicetree@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        spapothi@codeaurora.org, Banajit Goswami <bgoswami@codeaurora.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+To:     Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
+Cc:     linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        ludovic.desroches@microchip.com, linus.walleij@linaro.org,
+        nicolas.ferre@microchip.com, alexandre.belloni@bootlin.com,
+        claudiu.beznea@microchip.com
+Subject: Re: [PATCH] pinctrl: at91: Enable slewrate by default on SAM9X60
+Message-ID: <20191029213757.GA8829@bogus>
+References: <20191024172234.5267-1-codrin.ciubotariu@microchip.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191024172234.5267-1-codrin.ciubotariu@microchip.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Oct 28, 2019 at 7:45 AM Srinivas Kandagatla
-<srinivas.kandagatla@linaro.org> wrote:
->
->
->
-> On 28/10/2019 12:40, Srinivas Kandagatla wrote:
-> > Its Phandle.
-> >
-> > something like this is okay?
-> >
-> > slim-ifc-dev:
-> >    $ref: '/schemas/types.yaml#/definitions/phandle-array'
->
-> Sorry this should not be an array, so something like this:
->
->    slim-ifc-dev:
->      description: SLIMBus Interface device phandle
+On Thu, Oct 24, 2019 at 08:22:34PM +0300, Codrin Ciubotariu wrote:
+> On SAM9X60, slewrate should be enabled on pins with a switching frequency
+> below 50Mhz. Since most of our pins do not exceed this value, we enable
+> slewrate by default. Pins with a switching value that exceeds 50Mhz will
+> have to explicitly disable slewrate.
+> 
+> Suggested-by: Ludovic Desroches <ludovic.desroches@microchip.com>
+> Signed-off-by: Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
+> ---
+>  drivers/pinctrl/pinctrl-at91.c     | 4 ++--
+>  include/dt-bindings/pinctrl/at91.h | 4 ++--
+>  2 files changed, 4 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/pinctrl/pinctrl-at91.c b/drivers/pinctrl/pinctrl-at91.c
+> index 117075b5798f..c135149e84e9 100644
+> --- a/drivers/pinctrl/pinctrl-at91.c
+> +++ b/drivers/pinctrl/pinctrl-at91.c
+> @@ -85,8 +85,8 @@ enum drive_strength_bit {
+>  					 DRIVE_STRENGTH_SHIFT)
+>  
+>  enum slewrate_bit {
+> -	SLEWRATE_BIT_DIS,
+>  	SLEWRATE_BIT_ENA,
+> +	SLEWRATE_BIT_DIS,
+>  };
+>  
+>  #define SLEWRATE_BIT_MSK(name)		(SLEWRATE_BIT_##name << SLEWRATE_SHIFT)
+> @@ -669,7 +669,7 @@ static void at91_mux_sam9x60_set_slewrate(void __iomem *pio, unsigned pin,
+>  {
+>  	unsigned int tmp;
+>  
+> -	if (setting < SLEWRATE_BIT_DIS || setting > SLEWRATE_BIT_ENA)
+> +	if (setting < SLEWRATE_BIT_ENA || setting > SLEWRATE_BIT_DIS)
+>  		return;
+>  
+>  	tmp = readl_relaxed(pio + SAM9X60_PIO_SLEWR);
+> diff --git a/include/dt-bindings/pinctrl/at91.h b/include/dt-bindings/pinctrl/at91.h
+> index 3831f91fb3ba..e8e117306b1b 100644
+> --- a/include/dt-bindings/pinctrl/at91.h
+> +++ b/include/dt-bindings/pinctrl/at91.h
+> @@ -27,8 +27,8 @@
+>  #define AT91_PINCTRL_DRIVE_STRENGTH_MED			(0x2 << 5)
+>  #define AT91_PINCTRL_DRIVE_STRENGTH_HI			(0x3 << 5)
+>  
+> -#define AT91_PINCTRL_SLEWRATE_DIS	(0x0 << 9)
+> -#define AT91_PINCTRL_SLEWRATE_ENA	(0x1 << 9)
+> +#define AT91_PINCTRL_SLEWRATE_ENA	(0x0 << 9)
+> +#define AT91_PINCTRL_SLEWRATE_DIS	(0x1 << 9)
 
-You're just spelling out the abbreviated name. I can do that much.
-What is 'SLIMBus Interface device'?
+This is an ABI. You can't just change the definition.
 
-Is it a standard SLIMBus property? If so, document it in the right
-place. If not, then needs a vendor prefix.
-
->      $ref: '/schemas/types.yaml#/definitions/phandle'
->
->
-> >    description: SLIMBus Interface device phandle
+Rob
