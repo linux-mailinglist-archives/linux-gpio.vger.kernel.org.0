@@ -2,73 +2,87 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id E64F3E8A84
-	for <lists+linux-gpio@lfdr.de>; Tue, 29 Oct 2019 15:16:38 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C1E6BE8B35
+	for <lists+linux-gpio@lfdr.de>; Tue, 29 Oct 2019 15:52:00 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389287AbfJ2OPo (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 29 Oct 2019 10:15:44 -0400
-Received: from mail-vs1-f68.google.com ([209.85.217.68]:38231 "EHLO
-        mail-vs1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389279AbfJ2OPn (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 29 Oct 2019 10:15:43 -0400
-Received: by mail-vs1-f68.google.com with SMTP id b123so8825205vsb.5
-        for <linux-gpio@vger.kernel.org>; Tue, 29 Oct 2019 07:15:42 -0700 (PDT)
+        id S2389245AbfJ2OwA (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 29 Oct 2019 10:52:00 -0400
+Received: from mail-vs1-f67.google.com ([209.85.217.67]:34382 "EHLO
+        mail-vs1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727255AbfJ2OwA (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 29 Oct 2019 10:52:00 -0400
+Received: by mail-vs1-f67.google.com with SMTP id f8so2772702vsg.1
+        for <linux-gpio@vger.kernel.org>; Tue, 29 Oct 2019 07:51:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=2CJkMB8W25QC+LmwHZCR/dC2OeYvdCpp2yKraECtwkc=;
-        b=erCRbeIBHUu53eIreClKHV+uY6SMssROpbDKJZMSC3l+mDep04YpyeFnPKet5PX5N1
-         K6d9GL7q+TBbHhpf38xASFO/TXfXIgOnQd+2jwtbABwkUzNKRv4crlJCQ5sm33YkfEj4
-         u0npQzAAraEWJu+naiJKHKuW/DZPeUOAf7F1bBLeNGslfkb7ZIPfYWSV9H/PfDxih3hV
-         coNmtYtFiskJu7ap8vyMmzTx37J9AxaFbD9LknHJc/hx3PVruIT1Bbo9+aHjnSy/QjoV
-         6LB1xAnri/kSOeQaJ0PsMW1btfvx/BA9yOxpu4tBlBCWlPodHSRXiAFe8R7+Kv+9rPOU
-         vfBA==
+        bh=AghPO3C3rEgGBPotZ+vICco1DWQsd2uHdndQrS4Mhmg=;
+        b=Hwng/1iREMu58SnENh22U3wjGobxllv5Tqdl4SLxKt2rJHJMiSBnFDHk0tk8PRXMfc
+         Mlmj3c4mAJ+7d58g5EbhSontzBbJAUktNUENdEfVlLgpoFhjxBt+oRDVCNMZLh78ImpF
+         5/1Mu84pLONjy3utBV6gpZ1tNFmoUgr4QV6/NshuMd+VqPjHdERr52EmJwCzO9lVP9DD
+         XV7l8eSunjesHvuWBwX9Xyk00bdIjSaD1mP7kdDLOqE/0Ffk01zex7aFEn8amOJZTYD3
+         Pl85KuEPuIhkiasQ1yQuSw8WFIVc8uI3/QnKLBZk/hZRhXOrRGAnwcJfaBTrb+3IDB07
+         JWUg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=2CJkMB8W25QC+LmwHZCR/dC2OeYvdCpp2yKraECtwkc=;
-        b=TibGAVWR6puw641wxnHOuyyKI1iLTigf7Ds+8HzIbPsQzd7tWbJwPjT09rbnl+B0T5
-         key5yRNmaDrYRIvNnx49nJi4k0v0ZtLBj7IDUEfiNc7fx6FJmhfB2TvfBnsQgqS63Md6
-         MfbRWUrhV0fUww+az7m9NaBxLrUzE4XX95JJ+A0bRkbUFpzx/cZHvE/y8B26ALb8bQYI
-         X5DbxzWoVI5vbxGtpyivurVhrdTniVFyDOlQPOtqne12KDJ0r6o9ScU63UvAqT/8QF2q
-         3x37G3QVkHGL9pquWoueaExIjv9uOddHOWG7v7/BdG5vpuHVj0+yHRYIosucifJ91BeV
-         DUlg==
-X-Gm-Message-State: APjAAAX1xOpiDS50EG/H5jcfrgWrOIraovmq+38gKR7r5AzjXXCcQOeZ
-        Hli44jrbW1+jxvcLCtMe7P0C0FKHELyh1j21/1TOZg==
-X-Google-Smtp-Source: APXvYqzrRPTOdVe3rVj/q8mFjvCWiOOTxiTZFSQn4yLUcuktimo2dgWY3hYMbxvwByEex6FdTHrCbR8bcgRkCp0CTm8=
-X-Received: by 2002:a67:fb5a:: with SMTP id e26mr1980049vsr.200.1572358542448;
- Tue, 29 Oct 2019 07:15:42 -0700 (PDT)
+        bh=AghPO3C3rEgGBPotZ+vICco1DWQsd2uHdndQrS4Mhmg=;
+        b=WPbPbxIWEiKPnY+QT/Pg14pxV/ybkjhpRTMPbq51vcAUXTo0jUFy7fgv4b6XqBdnRz
+         q3cWoYnx6BgwYENHLv1za+jDk40WFzOILuxxHbge6dA8m8mTY4UkZ65fSYlqeYtGLARe
+         U7OdiFkmCavnk0KCBJuSliZSHM0k/J2vB1+0U8a2eztTpRpVNBYf+rsyrgub+g12HAM0
+         YrDb8qF0g1KFGsZ/Lomd9bIGWHVsbIdUgmluB/TRoD8re5kkCBy7rLuLK23Tx7ckjJOv
+         XxT/IYc79vlVewHws6r1l9VrxMCbMS1A623qudId3SaB+CwxHY7+QQ0HCkPgeIpzZiWZ
+         8PXg==
+X-Gm-Message-State: APjAAAUCQNNLz3rEWyXiRGjg8Z9KaaX/lJazJb8yLiYWGV8D0EFxCsgV
+        epBjxT4LfJE06IFoFHDE86FHpGEgYblEvJO9zj9gEA==
+X-Google-Smtp-Source: APXvYqxy+qA6VE5Nq1a9sMm7sQY0Vmiq6oTH38qQ4sCv5Md8fk8HW1K0XuZUl3bbruZa1JoQJbbOkNNLqDYASp6pmRE=
+X-Received: by 2002:a05:6102:2436:: with SMTP id l22mr1897257vsi.93.1572360718925;
+ Tue, 29 Oct 2019 07:51:58 -0700 (PDT)
 MIME-Version: 1.0
-References: <20191021064413.19840-1-manivannan.sadhasivam@linaro.org> <20191021064413.19840-5-manivannan.sadhasivam@linaro.org>
-In-Reply-To: <20191021064413.19840-5-manivannan.sadhasivam@linaro.org>
+References: <20191028200555.27524-1-chris.packham@alliedtelesis.co.nz>
+In-Reply-To: <20191028200555.27524-1-chris.packham@alliedtelesis.co.nz>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Tue, 29 Oct 2019 15:15:31 +0100
-Message-ID: <CACRpkdaZFr+DAthpoEeJgMeqhQfMbDNcd9dVQOEhqfqP6MmP=Q@mail.gmail.com>
-Subject: Re: [PATCH v3 4/4] MAINTAINERS: Add entry for RDA Micro GPIO driver
- and binding
-To:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Date:   Tue, 29 Oct 2019 15:51:47 +0100
+Message-ID: <CACRpkdbJhXxAXTBnTUxj7AkOBv1wBphCD6bJ5Vta4FT78x=--w@mail.gmail.com>
+Subject: Re: [PATCH v5] dt-bindings: gpio: brcm: Add bindings for xgs-iproc
+To:     Chris Packham <chris.packham@alliedtelesis.co.nz>
 Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        linux-unisoc@lists.infradead.org,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Ray Jui <rjui@broadcom.com>,
+        Scott Branden <sbranden@broadcom.com>,
+        bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Orson Zhai <orsonzhai@gmail.com>
+        Rob Herring <robh@kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Oct 21, 2019 at 8:44 AM Manivannan Sadhasivam
-<manivannan.sadhasivam@linaro.org> wrote:
+On Mon, Oct 28, 2019 at 9:06 PM Chris Packham
+<chris.packham@alliedtelesis.co.nz> wrote:
 
-> Add MAINTAINERS entry for RDA Micro GPIO driver and devicetree binding.
+> This GPIO controller is present on a number of Broadcom switch ASICs
+> with integrated SoCs. It is similar to the nsp-gpio and iproc-gpio
+> blocks but different enough to require a separate driver.
 >
-> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
+> Reviewed-by: Rob Herring <robh@kernel.org>
+> ---
+>
+> Notes:
+>     Changes in v5:
+>     - correct $id line following rename
+>     - add reviewed-by from Rob
 
-Patch applied!
+Patch applied.
 
 Yours,
 Linus Walleij
