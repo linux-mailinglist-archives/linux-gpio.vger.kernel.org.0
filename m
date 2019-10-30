@@ -2,39 +2,39 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id EF8BDEA0D6
-	for <lists+linux-gpio@lfdr.de>; Wed, 30 Oct 2019 17:09:16 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 4E8B9EA0F9
+	for <lists+linux-gpio@lfdr.de>; Wed, 30 Oct 2019 17:09:32 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728405AbfJ3Pyh (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 30 Oct 2019 11:54:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56098 "EHLO mail.kernel.org"
+        id S1727782AbfJ3P4N (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 30 Oct 2019 11:56:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57814 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728398AbfJ3Pyh (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Wed, 30 Oct 2019 11:54:37 -0400
+        id S1728775AbfJ3P4M (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Wed, 30 Oct 2019 11:56:12 -0400
 Received: from sasha-vm.mshome.net (100.50.158.77.rev.sfr.net [77.158.50.100])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 231102087E;
-        Wed, 30 Oct 2019 15:54:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B152B2087E;
+        Wed, 30 Oct 2019 15:56:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572450876;
+        s=default; t=1572450972;
         bh=MEbPA6Qcubxag4Ew2M//KXeX4cegr3py9JHVD7ZNsRI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=z/P4/aSpQPd90TyWRkdQztriyfD/1OJ9EW+j/rK+UOm04xQSeuurPQDnxPQetJ7i+
-         QrW0FKnt1T0TORQn2yMMi5MBtD2P0tjgSwhuo+in5d6nBLvNcdt/TzjqckS/dyeA7M
-         5n0UpCxTCeFClNneUuFtTmP73UXmh1cEAILUPYjc=
+        b=Cw8iT3MFZsFlyChNbk++ArpujRm2/98Xky3yXhJOYYnOkfvwF4gh/9PnZVLMJvjtH
+         FDSG7s+DNm4o7QFsxDBBlTqkvShjiM0ReKNHjhvD66QQ0aNvtkH4LErGLzS/WJWnaH
+         ITARGQgtwUnWNj873MYGfaS2BQE2H2P8vfrA/0xI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Dan Carpenter <dan.carpenter@oracle.com>,
         Scott Branden <scott.branden@broadcom.com>,
         Linus Walleij <linus.walleij@linaro.org>,
         Sasha Levin <sashal@kernel.org>, linux-gpio@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 12/38] pinctrl: ns2: Fix off by one bugs in ns2_pinmux_enable()
-Date:   Wed, 30 Oct 2019 11:53:40 -0400
-Message-Id: <20191030155406.10109-12-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.14 07/24] pinctrl: ns2: Fix off by one bugs in ns2_pinmux_enable()
+Date:   Wed, 30 Oct 2019 11:55:38 -0400
+Message-Id: <20191030155555.10494-7-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191030155406.10109-1-sashal@kernel.org>
-References: <20191030155406.10109-1-sashal@kernel.org>
+In-Reply-To: <20191030155555.10494-1-sashal@kernel.org>
+References: <20191030155555.10494-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
