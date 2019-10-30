@@ -2,107 +2,79 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 33785E922C
-	for <lists+linux-gpio@lfdr.de>; Tue, 29 Oct 2019 22:38:01 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 099B9E95B9
+	for <lists+linux-gpio@lfdr.de>; Wed, 30 Oct 2019 05:24:23 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728549AbfJ2ViA (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 29 Oct 2019 17:38:00 -0400
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:36359 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727706AbfJ2ViA (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 29 Oct 2019 17:38:00 -0400
-Received: by mail-ot1-f68.google.com with SMTP id c7so269535otm.3;
-        Tue, 29 Oct 2019 14:37:59 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=HPk/5F3b4dwjuAgfQmnttu0kTaOON9LgkQM/V749G3U=;
-        b=ldPZRMNoOEsvxQSLrVsZsB2vaAyJMN9JWGghaVvDXtP4u5ecCVsnf9cPa9MCHgY3BD
-         RCVqiSfQJBvo8gHGyuSjeI4SNGjY7AMEvUyW10N2dveXWgnmuFdNr33NMsI7ZbKug887
-         Zc18rEx44urVurPllxdsBjOghfg4v4VyCauNZ41bGId/hgY6zXznaqk8t61vAmWFqNYR
-         CYyaSEDel0TJa+yntGZeQjxuC4HT/vJcTMdNsEEHVI5fdKXh1w8WjYXUgXY+JZu+Sio4
-         fgzFJX/l3obqAL2l+bR8+zC/4Vl6T+WnaMBdDERRjmA/N3k7phxdnDNQAW8u27cYAudt
-         Sn4g==
-X-Gm-Message-State: APjAAAVRR4xeZRZ+w8Cwf+Jyi/hgYlWXPEY4UW07hIekiVGg/kNpAto2
-        6u5Uv3FPgJ/FCIYU+ULOSw==
-X-Google-Smtp-Source: APXvYqy7vhLoX8SU0VKqi+P/9oYgBPX9zkqE7WV/iDYFf8wu0E5QI6Ui9HTTqSZxoCU6ChBhHps5bQ==
-X-Received: by 2002:a9d:6655:: with SMTP id q21mr16322722otm.47.1572385079003;
-        Tue, 29 Oct 2019 14:37:59 -0700 (PDT)
-Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id k10sm4175oig.25.2019.10.29.14.37.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 29 Oct 2019 14:37:58 -0700 (PDT)
-Date:   Tue, 29 Oct 2019 16:37:57 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
-Cc:     linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        ludovic.desroches@microchip.com, linus.walleij@linaro.org,
-        nicolas.ferre@microchip.com, alexandre.belloni@bootlin.com,
-        claudiu.beznea@microchip.com
-Subject: Re: [PATCH] pinctrl: at91: Enable slewrate by default on SAM9X60
-Message-ID: <20191029213757.GA8829@bogus>
-References: <20191024172234.5267-1-codrin.ciubotariu@microchip.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191024172234.5267-1-codrin.ciubotariu@microchip.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        id S1726839AbfJ3EYG (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 30 Oct 2019 00:24:06 -0400
+Received: from mga11.intel.com ([192.55.52.93]:25917 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725308AbfJ3EYG (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Wed, 30 Oct 2019 00:24:06 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 29 Oct 2019 21:24:06 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.68,246,1569308400"; 
+   d="scan'208";a="203071467"
+Received: from sgsxdev001.isng.intel.com (HELO localhost) ([10.226.88.11])
+  by orsmga003.jf.intel.com with ESMTP; 29 Oct 2019 21:24:02 -0700
+From:   Rahul Tanwar <rahul.tanwar@linux.intel.com>
+To:     linus.walleij@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com
+Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, robh@kernel.org,
+        andriy.shevchenko@intel.com, qi-ming.wu@intel.com,
+        yixin.zhu@linux.intel.com, cheol.yong.kim@intel.com,
+        Rahul Tanwar <rahul.tanwar@linux.intel.com>
+Subject: [PATCH v2 0/2] pinctrl: Add new pinctrl/GPIO driver
+Date:   Wed, 30 Oct 2019 12:23:58 +0800
+Message-Id: <cover.1572409172.git.rahul.tanwar@linux.intel.com>
+X-Mailer: git-send-email 2.11.0
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Oct 24, 2019 at 08:22:34PM +0300, Codrin Ciubotariu wrote:
-> On SAM9X60, slewrate should be enabled on pins with a switching frequency
-> below 50Mhz. Since most of our pins do not exceed this value, we enable
-> slewrate by default. Pins with a switching value that exceeds 50Mhz will
-> have to explicitly disable slewrate.
-> 
-> Suggested-by: Ludovic Desroches <ludovic.desroches@microchip.com>
-> Signed-off-by: Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
-> ---
->  drivers/pinctrl/pinctrl-at91.c     | 4 ++--
->  include/dt-bindings/pinctrl/at91.h | 4 ++--
->  2 files changed, 4 insertions(+), 4 deletions(-)
-> 
-> diff --git a/drivers/pinctrl/pinctrl-at91.c b/drivers/pinctrl/pinctrl-at91.c
-> index 117075b5798f..c135149e84e9 100644
-> --- a/drivers/pinctrl/pinctrl-at91.c
-> +++ b/drivers/pinctrl/pinctrl-at91.c
-> @@ -85,8 +85,8 @@ enum drive_strength_bit {
->  					 DRIVE_STRENGTH_SHIFT)
->  
->  enum slewrate_bit {
-> -	SLEWRATE_BIT_DIS,
->  	SLEWRATE_BIT_ENA,
-> +	SLEWRATE_BIT_DIS,
->  };
->  
->  #define SLEWRATE_BIT_MSK(name)		(SLEWRATE_BIT_##name << SLEWRATE_SHIFT)
-> @@ -669,7 +669,7 @@ static void at91_mux_sam9x60_set_slewrate(void __iomem *pio, unsigned pin,
->  {
->  	unsigned int tmp;
->  
-> -	if (setting < SLEWRATE_BIT_DIS || setting > SLEWRATE_BIT_ENA)
-> +	if (setting < SLEWRATE_BIT_ENA || setting > SLEWRATE_BIT_DIS)
->  		return;
->  
->  	tmp = readl_relaxed(pio + SAM9X60_PIO_SLEWR);
-> diff --git a/include/dt-bindings/pinctrl/at91.h b/include/dt-bindings/pinctrl/at91.h
-> index 3831f91fb3ba..e8e117306b1b 100644
-> --- a/include/dt-bindings/pinctrl/at91.h
-> +++ b/include/dt-bindings/pinctrl/at91.h
-> @@ -27,8 +27,8 @@
->  #define AT91_PINCTRL_DRIVE_STRENGTH_MED			(0x2 << 5)
->  #define AT91_PINCTRL_DRIVE_STRENGTH_HI			(0x3 << 5)
->  
-> -#define AT91_PINCTRL_SLEWRATE_DIS	(0x0 << 9)
-> -#define AT91_PINCTRL_SLEWRATE_ENA	(0x1 << 9)
-> +#define AT91_PINCTRL_SLEWRATE_ENA	(0x0 << 9)
-> +#define AT91_PINCTRL_SLEWRATE_DIS	(0x1 << 9)
+Hi,
 
-This is an ABI. You can't just change the definition.
+This series is to add pinctrl & GPIO controller driver for a new SoC.
+Patch 1 adds pinmux & GPIO controller driver.
+Patch 2 adds the corresponding dt bindings YAML document.
 
-Rob
+Patches are against Linux 5.4-rc1 at below Git tree:
+git://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git
+
+v2:
+- Enable GENERIC_PINMUX_FUNCTIONS & GENERIC_PINCTRL_GROUPS and use core
+  provided code for pinmux_ops & pinctrl_ops. Remove related code from
+  the driver.
+- Enable GENERIC_PINCONF & use core provided pinconf code. Remove related
+  code from the driver.
+- Use GPIOLIB_IRQCHIP framework core code instead of implementing separtely
+  in the driver.
+- Enable GPIO_GENERIC and switch to core provided memory mapped GPIO banks
+  design. 
+- Use standard pinctrl DT properties instead of custom made properties.
+- Address code quality related review concerns.
+
+v1:
+- Initial version.
+
+Rahul Tanwar (2):
+  pinctrl: Add pinmux & GPIO controller driver for a new SoC
+  dt-bindings: pinctrl: intel: Add for new SoC
+
+ .../bindings/pinctrl/intel,lgm-pinctrl.yaml        | 114 +++
+ drivers/pinctrl/Kconfig                            |  18 +
+ drivers/pinctrl/Makefile                           |   1 +
+ drivers/pinctrl/pinctrl-equilibrium.c              | 957 +++++++++++++++++++++
+ drivers/pinctrl/pinctrl-equilibrium.h              | 150 ++++
+ 5 files changed, 1240 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/pinctrl/intel,lgm-pinctrl.yaml
+ create mode 100644 drivers/pinctrl/pinctrl-equilibrium.c
+ create mode 100644 drivers/pinctrl/pinctrl-equilibrium.h
+
+-- 
+2.11.0
+
