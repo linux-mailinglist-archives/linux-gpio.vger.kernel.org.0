@@ -2,119 +2,136 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 8F110E9C1E
-	for <lists+linux-gpio@lfdr.de>; Wed, 30 Oct 2019 14:15:36 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 600F2E9C4E
+	for <lists+linux-gpio@lfdr.de>; Wed, 30 Oct 2019 14:31:14 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726331AbfJ3NPf (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 30 Oct 2019 09:15:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38322 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726175AbfJ3NPf (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Wed, 30 Oct 2019 09:15:35 -0400
-Received: from mail-qk1-f177.google.com (mail-qk1-f177.google.com [209.85.222.177])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 70214208C0;
-        Wed, 30 Oct 2019 13:15:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572441334;
-        bh=ZQ8wXuUMbmLF+7iLilvz7470uxzp4fCYgdwJ46q8UDw=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=CjVGGXICTSUHgFntIBYl9dCBlQYAW+MolJ+bc1cEfg4Qk0KN9at+PlKX7SqdVumfF
-         k6zoOIVFcoxtZDQlEjFYfxgQ7E/uHptP/kZPhdNoHmjchsJyUkLWmdV0o06LoHfmfi
-         O6nYN/6WmOpqvJL9mz+aHTeYX2sAX0D96pdDA894=
-Received: by mail-qk1-f177.google.com with SMTP id e66so2580432qkf.13;
-        Wed, 30 Oct 2019 06:15:34 -0700 (PDT)
-X-Gm-Message-State: APjAAAVW3tIx6CBaIP0xy506WTxDFB9MjoPwBz5CNLLoDv/wYA2TfMcR
-        lhaCrvVseao7a4Q4NWnEr541gYoQdALSzXz0xA==
-X-Google-Smtp-Source: APXvYqzQvkLpQpCNPJ6YqCXaJT5G04cRDIA6M11aMboAC3ocOQCkAOlN1aYPsgHKxhNaEZf9dV/Q6BaiEbwVRcswYl0=
-X-Received: by 2002:a05:620a:226:: with SMTP id u6mr21719746qkm.393.1572441333508;
- Wed, 30 Oct 2019 06:15:33 -0700 (PDT)
-MIME-Version: 1.0
-References: <20191024172234.5267-1-codrin.ciubotariu@microchip.com>
- <20191029213757.GA8829@bogus> <20191030085305.uwrt5g3mmbwthwms@M43218.corp.atmel.com>
-In-Reply-To: <20191030085305.uwrt5g3mmbwthwms@M43218.corp.atmel.com>
-From:   Rob Herring <robh@kernel.org>
-Date:   Wed, 30 Oct 2019 08:15:22 -0500
-X-Gmail-Original-Message-ID: <CAL_JsqLuPb357uaiyR3N0QOBkcfXOAm57VbWbhaC=90aFmUVkg@mail.gmail.com>
-Message-ID: <CAL_JsqLuPb357uaiyR3N0QOBkcfXOAm57VbWbhaC=90aFmUVkg@mail.gmail.com>
-Subject: Re: [PATCH] pinctrl: at91: Enable slewrate by default on SAM9X60
-To:     Ludovic Desroches <ludovic.desroches@microchip.com>
-Cc:     Codrin Ciubotariu <codrin.ciubotariu@microchip.com>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
+        id S1726345AbfJ3NbO (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 30 Oct 2019 09:31:14 -0400
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:56058 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726119AbfJ3NbN (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 30 Oct 2019 09:31:13 -0400
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id x9UDV5vB101659;
+        Wed, 30 Oct 2019 08:31:05 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1572442265;
+        bh=STjwO10Amw2PZ9XYXEda6DiaqThl/EwMnKhScqY6AdQ=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=TYqPsN7NUV/OLsDdttH86+fZ8BHWyOi4WuAyZ+QF4jEKxX4ZuYyo+0SD6RSz4B8U8
+         RpH805j8GTmIQS8kbR+fnlsQZNv7QZkBlK5Kbd+BL6GDgeGFDxxhDrBBOAto4WMPQ+
+         G5k3JfpVxKkQbnkwrKfzFSsCtkd4laKkTxcqGMXM=
+Received: from DFLE105.ent.ti.com (dfle105.ent.ti.com [10.64.6.26])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x9UDV4l4062652
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 30 Oct 2019 08:31:05 -0500
+Received: from DFLE115.ent.ti.com (10.64.6.36) by DFLE105.ent.ti.com
+ (10.64.6.26) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Wed, 30
+ Oct 2019 08:30:51 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE115.ent.ti.com
+ (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Wed, 30 Oct 2019 08:30:51 -0500
+Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id x9UDV1M8022289;
+        Wed, 30 Oct 2019 08:31:02 -0500
+Subject: Re: [RFC v2 0/2] gpio: Support for shared GPIO lines on boards
+To:     Rob Herring <robh+dt@kernel.org>
+CC:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        devicetree@vger.kernel.org,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Claudiu Beznea <claudiu.beznea@microchip.com>
-Content-Type: text/plain; charset="UTF-8"
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Mark Brown <broonie@kernel.org>, Tero Kristo <t-kristo@ti.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        <devicetree@vger.kernel.org>
+References: <20191030120440.3699-1-peter.ujfalusi@ti.com>
+ <CAL_JsqK-eqoyU7RWiVXMpPZ8BfT8a0WB47756s8AUtyOqbkPXA@mail.gmail.com>
+From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
+Message-ID: <5bca4eb6-6379-394f-c95e-5bbbba5308f1@ti.com>
+Date:   Wed, 30 Oct 2019 15:32:09 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
+MIME-Version: 1.0
+In-Reply-To: <CAL_JsqK-eqoyU7RWiVXMpPZ8BfT8a0WB47756s8AUtyOqbkPXA@mail.gmail.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Oct 30, 2019 at 3:53 AM Ludovic Desroches
-<ludovic.desroches@microchip.com> wrote:
->
-> On Tue, Oct 29, 2019 at 04:37:57PM -0500, Rob Herring wrote:
-> > On Thu, Oct 24, 2019 at 08:22:34PM +0300, Codrin Ciubotariu wrote:
-> > > On SAM9X60, slewrate should be enabled on pins with a switching frequency
-> > > below 50Mhz. Since most of our pins do not exceed this value, we enable
-> > > slewrate by default. Pins with a switching value that exceeds 50Mhz will
-> > > have to explicitly disable slewrate.
-> > >
-> > > Suggested-by: Ludovic Desroches <ludovic.desroches@microchip.com>
-> > > Signed-off-by: Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
-> > > ---
-> > >  drivers/pinctrl/pinctrl-at91.c     | 4 ++--
-> > >  include/dt-bindings/pinctrl/at91.h | 4 ++--
-> > >  2 files changed, 4 insertions(+), 4 deletions(-)
-> > >
-> > > diff --git a/drivers/pinctrl/pinctrl-at91.c b/drivers/pinctrl/pinctrl-at91.c
-> > > index 117075b5798f..c135149e84e9 100644
-> > > --- a/drivers/pinctrl/pinctrl-at91.c
-> > > +++ b/drivers/pinctrl/pinctrl-at91.c
-> > > @@ -85,8 +85,8 @@ enum drive_strength_bit {
-> > >                                      DRIVE_STRENGTH_SHIFT)
-> > >
-> > >  enum slewrate_bit {
-> > > -   SLEWRATE_BIT_DIS,
-> > >     SLEWRATE_BIT_ENA,
-> > > +   SLEWRATE_BIT_DIS,
-> > >  };
-> > >
-> > >  #define SLEWRATE_BIT_MSK(name)             (SLEWRATE_BIT_##name << SLEWRATE_SHIFT)
-> > > @@ -669,7 +669,7 @@ static void at91_mux_sam9x60_set_slewrate(void __iomem *pio, unsigned pin,
-> > >  {
-> > >     unsigned int tmp;
-> > >
-> > > -   if (setting < SLEWRATE_BIT_DIS || setting > SLEWRATE_BIT_ENA)
-> > > +   if (setting < SLEWRATE_BIT_ENA || setting > SLEWRATE_BIT_DIS)
-> > >             return;
-> > >
-> > >     tmp = readl_relaxed(pio + SAM9X60_PIO_SLEWR);
-> > > diff --git a/include/dt-bindings/pinctrl/at91.h b/include/dt-bindings/pinctrl/at91.h
-> > > index 3831f91fb3ba..e8e117306b1b 100644
-> > > --- a/include/dt-bindings/pinctrl/at91.h
-> > > +++ b/include/dt-bindings/pinctrl/at91.h
-> > > @@ -27,8 +27,8 @@
-> > >  #define AT91_PINCTRL_DRIVE_STRENGTH_MED                    (0x2 << 5)
-> > >  #define AT91_PINCTRL_DRIVE_STRENGTH_HI                     (0x3 << 5)
-> > >
-> > > -#define AT91_PINCTRL_SLEWRATE_DIS  (0x0 << 9)
-> > > -#define AT91_PINCTRL_SLEWRATE_ENA  (0x1 << 9)
-> > > +#define AT91_PINCTRL_SLEWRATE_ENA  (0x0 << 9)
-> > > +#define AT91_PINCTRL_SLEWRATE_DIS  (0x1 << 9)
-> >
-> > This is an ABI. You can't just change the definition.
->
-> There is no DT using these definitions. They have been introduced for our new
-> SoC but its DT is not submitted yet. I assume it's not too late to do this
-> change as nothing will be broken.
 
-Okay, then state this in the commit message.
 
-Rob
+On 30/10/2019 15.12, Rob Herring wrote:
+> On Wed, Oct 30, 2019 at 7:03 AM Peter Ujfalusi <peter.ujfalusi@ti.com> wrote:
+>>
+>> Hi,
+>>
+>> The shared GPIO line for external components tends to be a common issue and
+>> there is no 'clean' way of handling it.
+>>
+>> I'm aware of the GPIOD_FLAGS_BIT_NONEXCLUSIVE flag, which must be provided when
+>> a driver tries to request a GPIO which is already in use.
+>> However the driver must know that the component is going to be used in such a
+>> way, which can be said to any external components with GPIO line, so in theory
+>> all drivers must set this flag when requesting the GPIO...
+>>
+>> But with the GPIOD_FLAGS_BIT_NONEXCLUSIVE all clients have full control of the
+>> GPIO line. For example any device using the same GPIO as reset/enable line can
+>> reset/enable other devices, which is not something the other device might like
+>> or can handle.
+>> For example a device needs to be configured after it is enabled, but some other
+>> driver would reset it while handling the same GPIO -> the device is not
+>> operational anymmore as it lost it's configuration.
+>>
+>> With the gpio-shared gpiochip we can overcome this by giving the gpio-shared
+>> the role of making sure that the GPIO line only changes state when it will not
+>> disturb any of the clients sharing the same GPIO line.
+> 
+> Why can't we just add a shared flag like we have for interrupts?
+> Effectively, we have that for resets too, it's just hardcoded in the
+> the drivers.
+
+This would be kind of the same thing what the
+GPIOD_FLAGS_BIT_NONEXCLUSIVE does, which was a quick workaround for
+fixed-regulators afaik.
+
+But let's say that a board design will pick two components (C1 and C2)
+and use the same GPIO line to enable them. We already have the drivers
+for them and they are used in boards already.
+
+Both needs the GPIO line to be high for normal operation.
+One or both of them needs register writes after they are enabled.
+
+During boot both requests the GPIO (OUTPUT_LOW) and sets it high, then
+run the register setup.
+
+C1 request GPIO (LOW)
+C1 gpio_set(1)
+C1 register writes
+C2 requests GPIO (LOW)
+ C1 placed to reset and looses the configuration
+C2 gpio_set(1)
+ C1 also enabled
+C2 register writes
+
+At this point C2 is operational, C1 is not.
+
+In shared GPIO case the GPIO should be handled like a regulator with a
+twist that the 'sticky' state of the GPIO might be low or high depending
+on the needs of the components it is connected to.
+
+The shared GPIO line is a board design quirk and basically any device
+which have reset/enable GPIO must be able to work in a situation when
+they are sharing that line with other components and the driver should
+not know much about this small detail.
+
+- Péter
+
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
