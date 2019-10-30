@@ -2,89 +2,292 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 8B180E9DEC
-	for <lists+linux-gpio@lfdr.de>; Wed, 30 Oct 2019 15:52:34 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E4B2EE9E01
+	for <lists+linux-gpio@lfdr.de>; Wed, 30 Oct 2019 15:55:58 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726269AbfJ3OwK (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 30 Oct 2019 10:52:10 -0400
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:41514 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726175AbfJ3OwK (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 30 Oct 2019 10:52:10 -0400
-Received: by mail-lj1-f195.google.com with SMTP id m9so2989181ljh.8
-        for <linux-gpio@vger.kernel.org>; Wed, 30 Oct 2019 07:52:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=zqOpYQOtw9yFJi81XbFUaSXt11/6onyRVhvsGTXeGrg=;
-        b=Fq7XwGiYDoSgtasnGYLn42sLIZvvnUMKagtyFGjgmekfUdmiD5SBpG2sGNp8txJuxa
-         /iH336ymZqCDVIUoz+zWNNwuLx7IDJsjR9r6ylLJMUeOUqXAzeNyF9e9GD5CDKXSSomZ
-         HN/FNdBvDREepAo7jhEVK068PdN0bPFrOfvDR3YC4d7QTZd1AWKnW03/id8NHNmofXH5
-         avxcuc8sZJ8apf+rF8zSH0haX4ZmTmJ2liXLZiLyt692C5zap4rsAMNOS+ufojrL72q7
-         z0BBGxcwVlKwtl0pn07xmfFmd1zKdjulphANlCn9Hjx48Xwl/pH/x1GnMqFcxgACQJX6
-         cpkQ==
+        id S1726175AbfJ3Oz2 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 30 Oct 2019 10:55:28 -0400
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:56941 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726866AbfJ3Oz2 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>);
+        Wed, 30 Oct 2019 10:55:28 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1572447326;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=3KjKq0B0korzwcQLB3kQ4f03vhwlPOqy/OXwKbOJibk=;
+        b=eO5isIb3Rmh5IXgBGSoC23+jDSRouGDDU9zzViA/V8CsqS/d5/zMQ3qf1tj+++ZpqVdIFG
+        bLOR+dWvB5QUBo9W+eGOgVZil7VTS6BqWKoI7uFHUwFW8VM1KJ94rZo7UVjrOH5V2tRCew
+        q0XkFJNPdPlsLq91S6jZu+BnVAcdhEI=
+Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
+ [209.85.221.72]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-191-fBup0HmLNVeiq6icv9tH3A-1; Wed, 30 Oct 2019 10:55:25 -0400
+Received: by mail-wr1-f72.google.com with SMTP id i10so1472869wrp.7
+        for <linux-gpio@vger.kernel.org>; Wed, 30 Oct 2019 07:55:24 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=zqOpYQOtw9yFJi81XbFUaSXt11/6onyRVhvsGTXeGrg=;
-        b=ctPW7TLcJaUV3GzyAHbSawgPuUxzKMD7lDzJxycw5+WZBiFxtzDQ5QpYhnCTODFIOZ
-         VxBQksKzeO8clZtUpHkAjwqiGF9EFSnaSKvrm0fkRgEeMJ+B5XIScTdf6xgZ6xzqTZDo
-         0HcJcVgQlG3ePzHIYdLxqGLBqCx0LytpvNQsD83ZkaKyFaj4EAALHh5V5oQx/BQ6zT1C
-         DnO3u9rn6+ci2GglxuOpLjnKmVJF4iMjiaESdk3iWXBAMPawpEWwXOv06iaR4rvNVMS+
-         GQ+mz1+9nBduJXTngP8pPC06551vmxMAkKVMf0gMRuaMQ3zI9wWJaRmzw8OmtYayxkgT
-         JcyA==
-X-Gm-Message-State: APjAAAUEGBb8n55qUly6O+07Az9ryWnsY5E0Q9REa/MDD1/CT1HKLBeC
-        L7hZue/JGgUAT0/JlbCXqrHyfETpaAA/hj7HW0PNxQ==
-X-Google-Smtp-Source: APXvYqwk9hOX7lLgR8f9ogl3FoBFAl1r5poFDGFaibIDr6k3XEATSFuXVNycDH5IoM9+27BD+FcJ1/+kF69tEmPuo0I=
-X-Received: by 2002:a2e:93d7:: with SMTP id p23mr75828ljh.251.1572447127577;
- Wed, 30 Oct 2019 07:52:07 -0700 (PDT)
-MIME-Version: 1.0
-References: <20191025140621.43417-1-andriy.shevchenko@linux.intel.com>
- <ddd33998-43c4-7772-16dd-c09c2184c51d@redhat.com> <CACRpkdboOodR4Ux-bNp+XcFkTtxA-QehtP6+H+RsfFk+h6OaXQ@mail.gmail.com>
- <cae76d3c-7a9d-2fdd-2899-b1a98cf0df78@redhat.com>
-In-Reply-To: <cae76d3c-7a9d-2fdd-2899-b1a98cf0df78@redhat.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Wed, 30 Oct 2019 15:51:54 +0100
-Message-ID: <CACRpkdbPSVZqR2RTiy4EB5JLGeY3vT_1ivcU-19uBJ_a+my1kw@mail.gmail.com>
-Subject: Re: [PATCH v1] pinctrl: baytrail: Move IRQ valid mask initialization
- to a dedicated callback
-To:     Hans de Goede <hdegoede@redhat.com>
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=VbmoZXawvKMBBbzWONg1mAGlQvvhNA4Zw2kwo39ApfM=;
+        b=FwvikBRECPsQwuoIe4Rt5eRHxMvtwJPIRb1XYtgMq6hKu2cPs0w6N3tYFJjoaCgS8U
+         aUG/He2PfVgABnfXDIGL+lhXZi07aPprQ1S3dnFBFZR7l9yrx661MqO6mCLOF96BrWSm
+         QGfw70BBYIQzjVh9Qbf7Mrak0lEQtfunEf/iqdVr7ELHoqMDZKFs7nI8HZ/N/f7Ti1KC
+         Pi2dkR4iHpaEojLBy0OawsJQ6VvWoIb8Qc8a3P+toqVFH7GJdMZuO3eLPSQVuD3TNf01
+         zB/au/kx128kwg0nMhA7PuQw6Ei6BSxCMdJN/qYjujRvJ3XBZIvWlh7F4k54lg73whJ/
+         tPpw==
+X-Gm-Message-State: APjAAAVyKeEclVZMJJORdXZKLlYYA8lpENBTRFof79H7UhDYnpGX8wIS
+        65BcySTVDswngk0kphRBnAa+4/nLwD9DevwRiB/lvY5m9fDlAh+kekMfUfK22ymrqRLFF0dveWr
+        rmn2l1DTterqFwStdw9vciQ==
+X-Received: by 2002:a5d:540c:: with SMTP id g12mr211153wrv.335.1572447323121;
+        Wed, 30 Oct 2019 07:55:23 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqzPWbxn7QS2p8vhMcbetehKEG09/8VK3u7lYSwO2J/yAXQ70yfyA5EmTd/i4QKMuZX+wDBotA==
+X-Received: by 2002:a5d:540c:: with SMTP id g12mr211128wrv.335.1572447322848;
+        Wed, 30 Oct 2019 07:55:22 -0700 (PDT)
+Received: from shalem.localdomain (2001-1c00-0c14-2800-ec23-a060-24d5-2453.cable.dynamic.v6.ziggo.nl. [2001:1c00:c14:2800:ec23:a060:24d5:2453])
+        by smtp.gmail.com with ESMTPSA id x7sm628933wrg.63.2019.10.30.07.55.21
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 30 Oct 2019 07:55:22 -0700 (PDT)
+Subject: Re: [PATCH] gpio/pinctrl: Add pin ranges before gpiochip
+To:     Linus Walleij <linus.walleij@linaro.org>,
+        linux-gpio@vger.kernel.org
+Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
         Mika Westerberg <mika.westerberg@linux.intel.com>
-Content-Type: text/plain; charset="UTF-8"
+References: <20191030144940.21133-1-linus.walleij@linaro.org>
+From:   Hans de Goede <hdegoede@redhat.com>
+Message-ID: <cda96f28-053a-002e-d168-0095c0eba047@redhat.com>
+Date:   Wed, 30 Oct 2019 15:55:21 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.1
+MIME-Version: 1.0
+In-Reply-To: <20191030144940.21133-1-linus.walleij@linaro.org>
+Content-Language: en-US
+X-MC-Unique: fBup0HmLNVeiq6icv9tH3A-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Oct 30, 2019 at 2:11 PM Hans de Goede <hdegoede@redhat.com> wrote:
+Hi,
 
-> > (Tell me if I should send this as a separate patch.)
->
-> If you want me to test if this fixes the issue, then yes please.
+On 30-10-2019 15:49, Linus Walleij wrote:
+> This fixes a semantic ordering issue as we need to add
+> pin ranges before adding gpiochips when gpiochips use
+> pin control as a backend: as it needs to talk to the
+> pin control backend during initialization, the backend
+> needs to be there already.
+>=20
+> Other drivers in the tree using pincontrol as backend do
+> not necessarily have this problem, as they might not need
+> to access the pincontrol portions during initialization.
+>=20
+> Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> Cc: Mika Westerberg <mika.westerberg@linux.intel.com>
+> Reported-by: Hans de Goede <hdegoede@redhat.com>
+> Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+> ---
+> Hans: would be great if you could test this. I can't
+> even compiletest right now because of a slow machine
+> as workhorse...
 
-I sent a patch fixing all the instances we can immediately
-spot.
+Thanks, I will give this a test-run asap.
 
-> Right, I did a quick check and at least these x86 pinctrl drivers
-> all 3 have this ordering problem once the irq chip registration is
-> moved to the gpiochip_add_data() call.
->
-> drivers/pinctrl/intel/pinctrl-baytrail.c
-> drivers/pinctrl/intel/pinctrl-cherryview.c
-> drivers/pinctrl/intel/pinctrl-intel.c
-> drivers/pinctrl/pinctrl-amd.c
->
-> And it seems that drivers/gpio/gpio-merrifield.c is already
-> suffering from this problem in 5.4!
+Regards,
 
-I fixed all of these in my patch, let's see what happens.
+Hans
 
-If we need to partially backport it to v5.4 then let's just do
-that.
 
-Yours,
-Linus Walleij
+> ---
+>   drivers/gpio/gpio-merrifield.c             | 18 +++++++++++-------
+>   drivers/pinctrl/intel/pinctrl-baytrail.c   | 14 +++++++++-----
+>   drivers/pinctrl/intel/pinctrl-cherryview.c | 16 ++++++++++------
+>   drivers/pinctrl/intel/pinctrl-intel.c      | 16 ++++++++++------
+>   drivers/pinctrl/pinctrl-amd.c              | 14 +++++++++-----
+>   5 files changed, 49 insertions(+), 29 deletions(-)
+>=20
+> diff --git a/drivers/gpio/gpio-merrifield.c b/drivers/gpio/gpio-merrifiel=
+d.c
+> index 2f1e9da81c1e..195e253cb561 100644
+> --- a/drivers/gpio/gpio-merrifield.c
+> +++ b/drivers/gpio/gpio-merrifield.c
+> @@ -463,13 +463,10 @@ static int mrfld_gpio_probe(struct pci_dev *pdev, c=
+onst struct pci_device_id *id
+>   =09girq->default_type =3D IRQ_TYPE_NONE;
+>   =09girq->handler =3D handle_bad_irq;
+>  =20
+> -=09pci_set_drvdata(pdev, priv);
+> -=09retval =3D devm_gpiochip_add_data(&pdev->dev, &priv->chip, priv);
+> -=09if (retval) {
+> -=09=09dev_err(&pdev->dev, "gpiochip_add error %d\n", retval);
+> -=09=09return retval;
+> -=09}
+> -
+> +=09/*
+> +=09 * Needs to happen first since the gpiochip is using pin
+> +=09 * control as back-end.
+> +=09 */
+>   =09pinctrl_dev_name =3D mrfld_gpio_get_pinctrl_dev_name(priv);
+>   =09for (i =3D 0; i < ARRAY_SIZE(mrfld_gpio_ranges); i++) {
+>   =09=09range =3D &mrfld_gpio_ranges[i];
+> @@ -484,6 +481,13 @@ static int mrfld_gpio_probe(struct pci_dev *pdev, co=
+nst struct pci_device_id *id
+>   =09=09}
+>   =09}
+>  =20
+> +=09pci_set_drvdata(pdev, priv);
+> +=09retval =3D devm_gpiochip_add_data(&pdev->dev, &priv->chip, priv);
+> +=09if (retval) {
+> +=09=09dev_err(&pdev->dev, "gpiochip_add error %d\n", retval);
+> +=09=09return retval;
+> +=09}
+> +
+>   =09return 0;
+>   }
+>  =20
+> diff --git a/drivers/pinctrl/intel/pinctrl-baytrail.c b/drivers/pinctrl/i=
+ntel/pinctrl-baytrail.c
+> index beb26550c25f..b308567c5153 100644
+> --- a/drivers/pinctrl/intel/pinctrl-baytrail.c
+> +++ b/drivers/pinctrl/intel/pinctrl-baytrail.c
+> @@ -1549,16 +1549,20 @@ static int byt_gpio_probe(struct byt_gpio *vg)
+>   =09=09girq->handler =3D handle_bad_irq;
+>   =09}
+>  =20
+> -=09ret =3D devm_gpiochip_add_data(&vg->pdev->dev, gc, vg);
+> +=09/*
+> +=09 * Needs to happen first since the gpiochip is using pin
+> +=09 * control as back-end.
+> +=09 */
+> +=09ret =3D gpiochip_add_pin_range(gc, dev_name(&vg->pdev->dev),
+> +=09=09=09=09     0, 0, vg->soc_data->npins);
+>   =09if (ret) {
+> -=09=09dev_err(&vg->pdev->dev, "failed adding byt-gpio chip\n");
+> +=09=09dev_err(&vg->pdev->dev, "failed to add GPIO pin range\n");
+>   =09=09return ret;
+>   =09}
+>  =20
+> -=09ret =3D gpiochip_add_pin_range(&vg->chip, dev_name(&vg->pdev->dev),
+> -=09=09=09=09     0, 0, vg->soc_data->npins);
+> +=09ret =3D devm_gpiochip_add_data(&vg->pdev->dev, gc, vg);
+>   =09if (ret) {
+> -=09=09dev_err(&vg->pdev->dev, "failed to add GPIO pin range\n");
+> +=09=09dev_err(&vg->pdev->dev, "failed adding byt-gpio chip\n");
+>   =09=09return ret;
+>   =09}
+>  =20
+> diff --git a/drivers/pinctrl/intel/pinctrl-cherryview.c b/drivers/pinctrl=
+/intel/pinctrl-cherryview.c
+> index dff2a81250b6..13144e192c1f 100644
+> --- a/drivers/pinctrl/intel/pinctrl-cherryview.c
+> +++ b/drivers/pinctrl/intel/pinctrl-cherryview.c
+> @@ -1572,12 +1572,10 @@ static int chv_gpio_probe(struct chv_pinctrl *pct=
+rl, int irq)
+>   =09if (need_valid_mask)
+>   =09=09chip->irq.init_valid_mask =3D chv_init_irq_valid_mask;
+>  =20
+> -=09ret =3D devm_gpiochip_add_data(pctrl->dev, chip, pctrl);
+> -=09if (ret) {
+> -=09=09dev_err(pctrl->dev, "Failed to register gpiochip\n");
+> -=09=09return ret;
+> -=09}
+> -
+> +=09/*
+> +=09 * Needs to happen first since the gpiochip is using pin
+> +=09 * control as back-end.
+> +=09 */
+>   =09for (i =3D 0; i < community->ngpio_ranges; i++) {
+>   =09=09range =3D &community->gpio_ranges[i];
+>   =09=09ret =3D gpiochip_add_pin_range(chip, dev_name(pctrl->dev),
+> @@ -1589,6 +1587,12 @@ static int chv_gpio_probe(struct chv_pinctrl *pctr=
+l, int irq)
+>   =09=09}
+>   =09}
+>  =20
+> +=09ret =3D devm_gpiochip_add_data(pctrl->dev, chip, pctrl);
+> +=09if (ret) {
+> +=09=09dev_err(pctrl->dev, "Failed to register gpiochip\n");
+> +=09=09return ret;
+> +=09}
+> +
+>   =09/*
+>   =09 * The same set of machines in chv_no_valid_mask[] have incorrectly
+>   =09 * configured GPIOs that generate spurious interrupts so we use
+> diff --git a/drivers/pinctrl/intel/pinctrl-intel.c b/drivers/pinctrl/inte=
+l/pinctrl-intel.c
+> index b54b27228ad9..78afcf13c444 100644
+> --- a/drivers/pinctrl/intel/pinctrl-intel.c
+> +++ b/drivers/pinctrl/intel/pinctrl-intel.c
+> @@ -1225,12 +1225,10 @@ static int intel_gpio_probe(struct intel_pinctrl =
+*pctrl, int irq)
+>   =09pctrl->irqchip.irq_set_wake =3D intel_gpio_irq_wake;
+>   =09pctrl->irqchip.flags =3D IRQCHIP_MASK_ON_SUSPEND;
+>  =20
+> -=09ret =3D devm_gpiochip_add_data(pctrl->dev, &pctrl->chip, pctrl);
+> -=09if (ret) {
+> -=09=09dev_err(pctrl->dev, "failed to register gpiochip\n");
+> -=09=09return ret;
+> -=09}
+> -
+> +=09/*
+> +=09 * Needs to happen first since the gpiochip is using pin
+> +=09 * control as back-end.
+> +=09 */
+>   =09for (i =3D 0; i < pctrl->ncommunities; i++) {
+>   =09=09struct intel_community *community =3D &pctrl->communities[i];
+>  =20
+> @@ -1241,6 +1239,12 @@ static int intel_gpio_probe(struct intel_pinctrl *=
+pctrl, int irq)
+>   =09=09}
+>   =09}
+>  =20
+> +=09ret =3D devm_gpiochip_add_data(pctrl->dev, &pctrl->chip, pctrl);
+> +=09if (ret) {
+> +=09=09dev_err(pctrl->dev, "failed to register gpiochip\n");
+> +=09=09return ret;
+> +=09}
+> +
+>   =09/*
+>   =09 * We need to request the interrupt here (instead of providing chip
+>   =09 * to the irq directly) because on some platforms several GPIO
+> diff --git a/drivers/pinctrl/pinctrl-amd.c b/drivers/pinctrl/pinctrl-amd.=
+c
+> index 2c61141519f8..3637059083ff 100644
+> --- a/drivers/pinctrl/pinctrl-amd.c
+> +++ b/drivers/pinctrl/pinctrl-amd.c
+> @@ -912,17 +912,21 @@ static int amd_gpio_probe(struct platform_device *p=
+dev)
+>   =09=09return PTR_ERR(gpio_dev->pctrl);
+>   =09}
+>  =20
+> -=09ret =3D gpiochip_add_data(&gpio_dev->gc, gpio_dev);
+> -=09if (ret)
+> -=09=09return ret;
+> -
+> +=09/*
+> +=09 * Needs to happen first since the gpiochip is using pin
+> +=09 * control as back-end.
+> +=09 */
+>   =09ret =3D gpiochip_add_pin_range(&gpio_dev->gc, dev_name(&pdev->dev),
+>   =09=09=09=090, 0, gpio_dev->gc.ngpio);
+>   =09if (ret) {
+>   =09=09dev_err(&pdev->dev, "Failed to add pin range\n");
+> -=09=09goto out2;
+> +=09=09return ret;
+>   =09}
+>  =20
+> +=09ret =3D gpiochip_add_data(&gpio_dev->gc, gpio_dev);
+> +=09if (ret)
+> +=09=09return ret;
+> +
+>   =09ret =3D gpiochip_irqchip_add(&gpio_dev->gc,
+>   =09=09=09=09&amd_gpio_irqchip,
+>   =09=09=09=090,
+>=20
+
