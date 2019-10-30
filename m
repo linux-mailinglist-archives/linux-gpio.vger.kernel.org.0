@@ -2,53 +2,53 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 5F54EEA16D
-	for <lists+linux-gpio@lfdr.de>; Wed, 30 Oct 2019 17:10:22 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id CA7C8EA170
+	for <lists+linux-gpio@lfdr.de>; Wed, 30 Oct 2019 17:10:23 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726423AbfJ3QEh (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 30 Oct 2019 12:04:37 -0400
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:41651 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726175AbfJ3QEh (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 30 Oct 2019 12:04:37 -0400
-Received: by mail-lj1-f193.google.com with SMTP id m9so3271958ljh.8
-        for <linux-gpio@vger.kernel.org>; Wed, 30 Oct 2019 09:04:34 -0700 (PDT)
+        id S1726261AbfJ3QHf (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 30 Oct 2019 12:07:35 -0400
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:35043 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726175AbfJ3QHe (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 30 Oct 2019 12:07:34 -0400
+Received: by mail-lj1-f195.google.com with SMTP id m7so3329226lji.2
+        for <linux-gpio@vger.kernel.org>; Wed, 30 Oct 2019 09:07:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=X3yunMYdFF3SI5PayKTMIHAKS2jsYjXGFX9imdzBdqw=;
-        b=Q9LvvdMQpu6yiLeL5cvG3v0THEAbCel75+yMbNjMGwyTJbqZguzfn7WIDrCe0QSHp7
-         cHsz+JC8lgK1IHYqwO2a25xNp7JL/2a30Y2FLuqXBhs/YZZNNQEwlxEfzpYoD5+5ojw6
-         0L3W8YvATR2zFo4UXs1ygaFFNbRrilM5Ho39xAJq9OISPEtRbd7FO1YQ1jbnmrVdaLk6
-         frVBaOVCwwB6u6B4QcmYOOtFbgTPZrsgAP3T482Ntaz2zIFzIe1/RwYhGvx4K65sKq/O
-         6TuvnkHM7mrlhZgi/zJzS/aGu3qBq74tKVu+Ifaus1E91wez/uL5WxWh8T5IiXNyGynw
-         PeWg==
+        bh=5fjCIatttNjum4+tmpUBOgozlvg+bbVx8X5eZm0n8G8=;
+        b=nWXMbiHe4wDM0YMS1IXy3HYQMJrhHxMBuF+2n3ZpOtX6bZOhZNC2wdl9TM0o0Chbx1
+         Yc59P1aPyEb8GwPOADCaYuMl/gMQc6Mflk2SLBJ8S0E2rWhW+nmNXba7sUxACE4juTIP
+         4vanooQa2r3U9Z89OwmKqtlML20VioEsBlAs9pslSe/CdWlrmrWNS1pcRcq0J3EwyF/H
+         lGA2/YuhCzmKPCzXhesoN1hhF6hHFRPnh2Y72i41J7KL39inZT0gorYQX1Um2yYDB4sZ
+         y9lG99DGHBXwz33i7xQRn9HUrPCH4S0VErwwVoqp7YACyefSRbA2fU04ImWm1Fn/pHyC
+         tw6A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=X3yunMYdFF3SI5PayKTMIHAKS2jsYjXGFX9imdzBdqw=;
-        b=Ooa9U7e5bOHxiWbs3U4Dz54cbdO6cS1o1ohXkjVBvK6BtgScURF4x2VYn6/TC8pq5T
-         SeNOsrFwTyFCIxPUdtt9+sUPqBNDl42Sht+R0say+r+lbFFWkdjuz9oLXmdPqTWsg8oe
-         CtvMqz3xl9UB+kcQCgo2AR21sztlLWe/x5vrK5Bu6vsln51eWqHDfmGlJXo7ZTKmQHG9
-         BDj5H7Yst5WygSTAscSpz3cfjFbgaOSxeWCVMF2cFt4OjTKIiKSZLJPwk2+1B3P5ggh0
-         h4LCM5J0cnPQW2cAK7pvgpQogspBL12nDru77Ft5qSZAldqalc48tVtu/PZphwd10TCq
-         r+Ug==
-X-Gm-Message-State: APjAAAWVnIOf+8BwYiT9RDVkGiPHcsKluVS46KMX1hsp98te5pdFHh0m
-        nEeBTiDq9glY1Pnz8SLtnSveGqYZAnw5qJZoDVu+1g==
-X-Google-Smtp-Source: APXvYqxqinBSLdGw9nIESRMw9vVOKx7tEspUQ/dtoxN2gqUTNb5w1M7hRxUi4yZ0dOYzPSI1vbZ9gGhm6ne+2Bjs4hU=
-X-Received: by 2002:a2e:93d7:: with SMTP id p23mr333680ljh.251.1572451473759;
- Wed, 30 Oct 2019 09:04:33 -0700 (PDT)
+        bh=5fjCIatttNjum4+tmpUBOgozlvg+bbVx8X5eZm0n8G8=;
+        b=rCn5UPQgcuJ6tBXL+JgzpNUrdVy8PtlCDx7pISH7irCzn/U0/IVcKAjGCLV3DaeF1w
+         2Rsr6Qw+GfKa+MASs2umq1cXjw+4/Z+8X7nDMxK5sY1L6kUk9RKz8EJAe1IhA+j3UCm4
+         sqAqK9tHwPkRTITqKD0Qw/6qbZAiiAlSzop8jPmMsIFD6JgtvmeAmwUe8aF4D2mumo8T
+         k46gXpnGaLWmWmh7/sBbvzgBOA7Ib1v2jUFXKwsr0rz/4NE4Q2Z9PZx7WhdoG9/+Rmoj
+         v1ORn7CyaX4f7Fp6LP7uSrR5tsZY3jtfoUpsL7/Q8tDg80DnxHV22LdX8LEwH/tsnSKI
+         0TeA==
+X-Gm-Message-State: APjAAAV5+CQ9VLhUHRXn255zDTCX0bN6HQL/q5tnuoZLLhocsbDVMVtE
+        KuThZrH/R+CwKTrUEistAp5lagSD5kLXffhsGKzqqA==
+X-Google-Smtp-Source: APXvYqyiUxlQqcEW/atZsjBLK2leQgZ69QBESYkWKM7fGO1o2Y4bNf5y7ElteAmqVXt2L6HMckH22YX9b0oIOQzzWog=
+X-Received: by 2002:a2e:93d7:: with SMTP id p23mr343725ljh.251.1572451651079;
+ Wed, 30 Oct 2019 09:07:31 -0700 (PDT)
 MIME-Version: 1.0
-References: <20191030144940.21133-1-linus.walleij@linaro.org>
- <0e8c15d9-c805-c1ee-f8f0-528866c7ac1c@redhat.com> <9d21b3fe-852b-a430-4e71-af0742edcd9b@redhat.com>
-In-Reply-To: <9d21b3fe-852b-a430-4e71-af0742edcd9b@redhat.com>
+References: <20191030144940.21133-1-linus.walleij@linaro.org> <0e8c15d9-c805-c1ee-f8f0-528866c7ac1c@redhat.com>
+In-Reply-To: <0e8c15d9-c805-c1ee-f8f0-528866c7ac1c@redhat.com>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Wed, 30 Oct 2019 17:04:21 +0100
-Message-ID: <CACRpkdb851eSyqkz5nDB6affd4_JO5fhWHkmve1QoMGxpYswCA@mail.gmail.com>
+Date:   Wed, 30 Oct 2019 17:07:17 +0100
+Message-ID: <CACRpkdZZcfttLrVSTH9RQi3ANcB-uvwOtHUQMiH5m4faaekqjg@mail.gmail.com>
 Subject: Re: [PATCH] gpio/pinctrl: Add pin ranges before gpiochip
-To:     Hans de Goede <hdegoede@redhat.com>
+To:     Hans de Goede <hdegoede@redhat.com>,
+        "thierry.reding@gmail.com" <thierry.reding@gmail.com>
 Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>,
         Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
@@ -59,27 +59,27 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Oct 30, 2019 at 5:01 PM Hans de Goede <hdegoede@redhat.com> wrote:
+On Wed, Oct 30, 2019 at 4:48 PM Hans de Goede <hdegoede@redhat.com> wrote:
+> On 30-10-2019 15:49, Linus Walleij wrote:
 
-> For 5.4 we should probably revert
-> "gpio: merrifield: Pass irqchip when adding gpiochip"
-> and the fixes added on top of it, since AFAICT _AEI handling
-> will be broken on merrifield after this change too.
+> This does not seem to work I've tested in both a Bay Trail and
+> a Cherry Trail device and neither will boot the kernel after
+> these changes I'm afraid.
 >
-> So I suggest that we revert the following commits (in revert order):
->
-> 4c87540940cbc7ddbe9674087919c605fd5c2ef1 "gpio: merrifield: Move hardware initialization to callback"
-> 6658f87f219427ee776c498e07c878eb5cad1be2 "gpio: merrifield: Restore use of irq_base"
-> 8f86a5b4ad679e4836733b47414226074eee4e4d "gpio: merrifield: Pass irqchip when adding gpiochip"
->
-> That seems like the safest thing to do at this point in the cycle.
+> I think it might be best to pass in an array of ranges (*) to
+> gpiochip_add_data and have it register the ranges before
+> doing the irq-chip setup.
 
-OK are the Intel people OK with this?
+Yeah this new way of populating GPIO irqchips seems to be
+pretty imperialistic and pull the whole world into the gpiolib.
+I don't mind, once we have the semantic in one place we
+can get it right. (As with the previous ordering issues.)
+Hopefully it saves us from other problems.
 
-If so I'll go and revert them.
+Thierry: is this approach for pin control ranges in line with your
+initial design of the new way of registering gpio irqchips?
 
-Mika: will any of the pin control fixes you sent collide with
-this? (I guess not...)
+I guess I can draft something to test.
 
 Yours,
 Linus Walleij
