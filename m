@@ -2,113 +2,250 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 6CAAEE9D91
-	for <lists+linux-gpio@lfdr.de>; Wed, 30 Oct 2019 15:30:37 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2C39EE9DB7
+	for <lists+linux-gpio@lfdr.de>; Wed, 30 Oct 2019 15:39:12 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726272AbfJ3Oag (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 30 Oct 2019 10:30:36 -0400
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:39410 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726137AbfJ3Oag (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 30 Oct 2019 10:30:36 -0400
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id x9UEURxE009017;
-        Wed, 30 Oct 2019 09:30:27 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1572445827;
-        bh=sjHkzET0W6fegbqYYxLj/nvwD1jevn9Rf6o8Hy+EKt0=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=nsVLguS5Xvh99O0z62zWL3lSC+MN9kBVqEmmfnm/O7m0YbI3dzpEJ9/LF79owtHnr
-         usMVQ1IBXPcMRGu466VKLjcudML79XSK0hQ0OPj4xgGFlq32DI6Skv2fjFvoEEp7h9
-         Sfg1kNWjOF/itYDrveMdsYt3Qy5EDOg9xKn84xnk=
-Received: from DLEE100.ent.ti.com (dlee100.ent.ti.com [157.170.170.30])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id x9UEURZJ063645;
-        Wed, 30 Oct 2019 09:30:27 -0500
-Received: from DLEE111.ent.ti.com (157.170.170.22) by DLEE100.ent.ti.com
- (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Wed, 30
- Oct 2019 09:30:26 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE111.ent.ti.com
- (157.170.170.22) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Wed, 30 Oct 2019 09:30:14 -0500
-Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id x9UEUNHU130877;
-        Wed, 30 Oct 2019 09:30:24 -0500
-Subject: Re: [RFC v2 0/2] gpio: Support for shared GPIO lines on boards
-To:     Mark Brown <broonie@kernel.org>
-CC:     Rob Herring <robh+dt@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Tero Kristo <t-kristo@ti.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        <devicetree@vger.kernel.org>
-References: <20191030120440.3699-1-peter.ujfalusi@ti.com>
- <CAL_JsqK-eqoyU7RWiVXMpPZ8BfT8a0WB47756s8AUtyOqbkPXA@mail.gmail.com>
- <5bca4eb6-6379-394f-c95e-5bbbba5308f1@ti.com>
- <20191030141736.GN4568@sirena.org.uk>
-From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
-Message-ID: <f9c181d1-5e0c-5e82-a740-f4e97822604f@ti.com>
-Date:   Wed, 30 Oct 2019 16:31:31 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        id S1726325AbfJ3OjL (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 30 Oct 2019 10:39:11 -0400
+Received: from mga14.intel.com ([192.55.52.115]:20780 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726175AbfJ3OjL (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Wed, 30 Oct 2019 10:39:11 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 30 Oct 2019 07:39:10 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.68,247,1569308400"; 
+   d="scan'208";a="401526582"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by fmsmga006.fm.intel.com with ESMTP; 30 Oct 2019 07:39:07 -0700
+Received: from andy by smile with local (Exim 4.92.2)
+        (envelope-from <andriy.shevchenko@intel.com>)
+        id 1iPp7r-0007Cs-79; Wed, 30 Oct 2019 16:39:07 +0200
+Date:   Wed, 30 Oct 2019 16:39:07 +0200
+From:   Andy Shevchenko <andriy.shevchenko@intel.com>
+To:     Rahul Tanwar <rahul.tanwar@linux.intel.com>
+Cc:     linus.walleij@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, robh@kernel.org, qi-ming.wu@intel.com,
+        yixin.zhu@linux.intel.com, cheol.yong.kim@intel.com
+Subject: Re: [PATCH v2 1/2] pinctrl: Add pinmux & GPIO controller driver for
+ a new SoC
+Message-ID: <20191030143907.GY32742@smile.fi.intel.com>
+References: <cover.1572409172.git.rahul.tanwar@linux.intel.com>
+ <4bb885fe692d29f2635772dcd04839390f1f5671.1572409172.git.rahul.tanwar@linux.intel.com>
 MIME-Version: 1.0
-In-Reply-To: <20191030141736.GN4568@sirena.org.uk>
-Content-Type: text/plain; charset="windows-1252"
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <4bb885fe692d29f2635772dcd04839390f1f5671.1572409172.git.rahul.tanwar@linux.intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-
-
-On 30/10/2019 16.17, Mark Brown wrote:
-> On Wed, Oct 30, 2019 at 03:32:09PM +0200, Peter Ujfalusi wrote:
->> On 30/10/2019 15.12, Rob Herring wrote:
+On Wed, Oct 30, 2019 at 12:23:59PM +0800, Rahul Tanwar wrote:
+> Intel Lightning Mountain SoC has a pinmux controller & GPIO controller IP which
+> controls pin multiplexing & configuration including GPIO functions selection &
+> GPIO attributes configuration.
 > 
->>> Why can't we just add a shared flag like we have for interrupts?
->>> Effectively, we have that for resets too, it's just hardcoded in the
->>> the drivers.
+> This IP is not based on & does not have anything in common with Chassis
+> specification. The pinctrl drivers under pinctrl/intel/* are all based upon
+> Chassis spec compliant pinctrl IPs. So this driver doesn't fit & can not use
+> pinctrl framework under pinctrl/intel/* and it requires a separate new driver.
 > 
->> This would be kind of the same thing what the
->> GPIOD_FLAGS_BIT_NONEXCLUSIVE does, which was a quick workaround for
->> fixed-regulators afaik.
-> 
-> The theory with that was that any usage of this would need the
-> higher level code using the GPIO to cooperate so they didn't step
-> on each other's toes so the GPIO code should just punt to it.
+> Add a new GPIO & pin control framework based driver for this IP.
 
-But from the client driver point of view a GPIO is still GPIO and if the
-components are unrelated then it is hard to patch things together from
-the top.
+Thanks for an update, my comments below.
 
->> But let's say that a board design will pick two components (C1 and C2)
->> and use the same GPIO line to enable them. We already have the drivers
->> for them and they are used in boards already.
-> 
-> This is basically an attempt to make a generic implementation of
-> that cooperation for simple cases.
+> +#define PIN_NAME_FMT	"io-%d"
+> +#define PIN_NAME_LEN	10
 
-Without some generic implementation we would need to patch up drivers
-(sometimes unrelated) for components which uses the same GPIO line on
-some random board.
+> +static inline void eqbr_set_val(void __iomem *addr, u32 offset,
+> +				u32 mask, u32 set, raw_spinlock_t *lock)
 
-We have such a thing for tlv310aic3x (for Nokia n900). I would need one
-for pcm3168a and there were an attempt for max98927 also.
-We also have boards where one GPIO is used for backlight and panel, etc.
 
-If we would have generic way then it can be tuned for more exotic
-setups, but again, I believe that board designers are not doing things
-just to be evil. What they connect most of the times are 'sane'
+Why is it marked with inline?
 
-- Péter
+> +{
+> +	u32 val;
+> +	unsigned long flags;
+> +
+> +	raw_spin_lock_irqsave(lock, flags);
+> +	val = readl(addr);
 
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+> +	val = (val & ~(mask << offset)) | ((set & mask) << offset);
+
+This is unusual, why offset can't be applied once to the mask?
+
+> +	writel(val, addr);
+> +	raw_spin_unlock_irqrestore(lock, flags);
+
+Hmm... Don't you have more complicated workflow that requires few
+reads/writes/updates to be called atomically?
+
+> +}
+
+> +static void eqbr_gpio_disable_irq(struct irq_data *d)
+> +{
+> +	unsigned int offset = irqd_to_hwirq(d);
+> +	struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
+> +	struct eqbr_gpio_desc *desc = gpiochip_get_data(gc);
+
+> +	writel(BIT(offset), desc->membase + GPIO_IRNENCLR);
+
+Is it okay to be without spin lock?
+Same Q to the rest similar places.
+
+> +}
+
+> +static inline void eqbr_cfg_bit(void __iomem *addr,
+> +				unsigned int offset, unsigned int set)
+> +{
+> +	if (!set)
+
+Why not to use positive condition?
+
+> +		writel(readl(addr) & ~BIT(offset), addr);
+> +	else
+> +		writel(readl(addr) | BIT(offset), addr);
+> +}
+
+> +	struct gpio_irq_type it;
+
+Not sure if this is used properly. Linus may clarify this.
+
+> +static void eqbr_irq_handler(struct irq_desc *desc)
+> +{
+> +	struct gpio_chip *gc = irq_desc_get_handler_data(desc);
+> +	struct eqbr_gpio_desc *gpio_desc = gpiochip_get_data(gc);
+> +	struct irq_chip *ic = irq_desc_get_chip(desc);
+> +	u32 pins, offset;
+> +
+> +	chained_irq_enter(ic, desc);
+> +	pins = readl(gpio_desc->membase + GPIO_IRNCR);
+> +
+
+> +	for_each_set_bit(offset, (unsigned long *)&pins, gc->ngpio)
+
+This casting is no go.
+
+> +		generic_handle_irq(irq_find_mapping(gc->irq.domain, offset));
+> +
+> +	chained_irq_exit(ic, desc);
+> +}
+
+> +static int gpiochip_setup(struct device *dev, struct eqbr_gpio_desc *desc)
+> +{
+> +	struct gpio_irq_chip *girq;
+> +	struct gpio_chip *gc;
+> +
+> +	gc = &desc->chip;
+
+> +	gc->owner = THIS_MODULE;
+
+Do we still need this in the drivers?
+
+> +	gc->label = desc->name;
+> +	gc->of_node = desc->node;
+> +
+
+> +	if (!of_property_read_bool(desc->node, "interrupt-controller")) {
+
+Why is it fatal?
+
+> +		dev_info(dev, "gc %s: doesn't act as interrupt controller!\n",
+> +			 desc->name);
+> +		return 0;
+> +	}
+
+> +	girq->parents = devm_kcalloc(dev, 1, sizeof(*girq->parents),
+> +				     GFP_KERNEL);
+
+I believe it's fine to have it on one line.
+
+> +	if (!girq->parents)
+> +		return -ENOMEM;
+> +
+> +	girq->default_type = IRQ_TYPE_NONE;
+
+> +	girq->handler = handle_level_irq;
+
+Not bad IRQ handler?
+
+> +	girq->parents[0] = desc->virq;
+> +
+> +	return 0;
+> +}
+
+> +static int gpiolib_reg(struct eqbr_pinctrl_drv_data *drvdata)
+> +{
+> +	struct device_node *np;
+> +	struct eqbr_gpio_desc *desc;
+> +	struct device *dev;
+> +	int i, ret;
+> +	struct resource res;
+> +
+> +	dev = drvdata->dev;
+> +	for (i = 0; i < drvdata->nr_gpio_descs; i++) {
+> +		desc = drvdata->gpio_desc + i;
+> +		np = desc->node;
+> +
+> +		desc->name = devm_kasprintf(dev, GFP_KERNEL, "gpiochip%d", i);
+> +		if (!desc->name)
+> +			return -ENOMEM;
+> +
+
+> +		if (of_address_to_resource(np, 0, &res)) {
+> +			dev_err(dev, "Failed to get GPIO register address\n");
+> +			return -ENXIO;
+> +		}
+> +
+> +		desc->membase = devm_ioremap_resource(dev, &res);
+> +		if (IS_ERR(desc->membase)) {
+
+> +			dev_err(dev, "ioremap fail\n");
+
+Redundant.
+
+> +			return PTR_ERR(desc->membase);
+> +	}
+
+Is it per descriptor?!
+
+> +
+> +		desc->virq = irq_of_parse_and_map(np, 0);
+> +		if (!desc->virq) {
+> +			dev_err(dev, "%s: failed to parse and map irq\n",
+> +				desc->name);
+> +			return -ENXIO;
+> +		}
+> +		raw_spin_lock_init(&desc->lock);
+
+> +	}
+> +
+> +	return 0;
+> +}
+
+> +static const struct pinmux_ops eqbr_pinmux_ops = {
+> +	.get_functions_count	= pinmux_generic_get_function_count,
+> +	.get_function_name 	= pinmux_generic_get_function_name,
+> +	.get_function_groups 	= pinmux_generic_get_function_groups,
+> +	.set_mux		= eqbr_pinmux_set_mux,
+> +	.gpio_request_enable	= eqbr_pinmux_gpio_request,
+> +	.strict			= true,
+> +};
+
+TABs/spaces mix.
+
+> +	return 0;
+> +}
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
