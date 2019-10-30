@@ -2,136 +2,92 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 600F2E9C4E
-	for <lists+linux-gpio@lfdr.de>; Wed, 30 Oct 2019 14:31:14 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 6F5D2E9C6D
+	for <lists+linux-gpio@lfdr.de>; Wed, 30 Oct 2019 14:38:14 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726345AbfJ3NbO (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 30 Oct 2019 09:31:14 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:56058 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726119AbfJ3NbN (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 30 Oct 2019 09:31:13 -0400
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id x9UDV5vB101659;
-        Wed, 30 Oct 2019 08:31:05 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1572442265;
-        bh=STjwO10Amw2PZ9XYXEda6DiaqThl/EwMnKhScqY6AdQ=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=TYqPsN7NUV/OLsDdttH86+fZ8BHWyOi4WuAyZ+QF4jEKxX4ZuYyo+0SD6RSz4B8U8
-         RpH805j8GTmIQS8kbR+fnlsQZNv7QZkBlK5Kbd+BL6GDgeGFDxxhDrBBOAto4WMPQ+
-         G5k3JfpVxKkQbnkwrKfzFSsCtkd4laKkTxcqGMXM=
-Received: from DFLE105.ent.ti.com (dfle105.ent.ti.com [10.64.6.26])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x9UDV4l4062652
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 30 Oct 2019 08:31:05 -0500
-Received: from DFLE115.ent.ti.com (10.64.6.36) by DFLE105.ent.ti.com
- (10.64.6.26) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Wed, 30
- Oct 2019 08:30:51 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE115.ent.ti.com
- (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Wed, 30 Oct 2019 08:30:51 -0500
-Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id x9UDV1M8022289;
-        Wed, 30 Oct 2019 08:31:02 -0500
-Subject: Re: [RFC v2 0/2] gpio: Support for shared GPIO lines on boards
-To:     Rob Herring <robh+dt@kernel.org>
-CC:     Linus Walleij <linus.walleij@linaro.org>,
+        id S1726269AbfJ3NiO (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 30 Oct 2019 09:38:14 -0400
+Received: from mga18.intel.com ([134.134.136.126]:41532 "EHLO mga18.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726119AbfJ3NiN (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Wed, 30 Oct 2019 09:38:13 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 30 Oct 2019 06:38:12 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.68,247,1569308400"; 
+   d="scan'208";a="203195838"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by orsmga003.jf.intel.com with ESMTP; 30 Oct 2019 06:38:11 -0700
+Received: from andy by smile with local (Exim 4.92.2)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1iPoAs-0006QN-EQ; Wed, 30 Oct 2019 15:38:10 +0200
+Date:   Wed, 30 Oct 2019 15:38:10 +0200
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     linux-gpio@vger.kernel.org,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Mark Brown <broonie@kernel.org>, Tero Kristo <t-kristo@ti.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        <devicetree@vger.kernel.org>
-References: <20191030120440.3699-1-peter.ujfalusi@ti.com>
- <CAL_JsqK-eqoyU7RWiVXMpPZ8BfT8a0WB47756s8AUtyOqbkPXA@mail.gmail.com>
-From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
-Message-ID: <5bca4eb6-6379-394f-c95e-5bbbba5308f1@ti.com>
-Date:   Wed, 30 Oct 2019 15:32:09 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Hans de Goede <hdegoede@redhat.com>
+Subject: Re: [PATCH] gpiolib: Switch order of valid mask and hw init
+Message-ID: <20191030133810.GW32742@smile.fi.intel.com>
+References: <20191030122914.967-1-linus.walleij@linaro.org>
 MIME-Version: 1.0
-In-Reply-To: <CAL_JsqK-eqoyU7RWiVXMpPZ8BfT8a0WB47756s8AUtyOqbkPXA@mail.gmail.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191030122914.967-1-linus.walleij@linaro.org>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-
-
-On 30/10/2019 15.12, Rob Herring wrote:
-> On Wed, Oct 30, 2019 at 7:03 AM Peter Ujfalusi <peter.ujfalusi@ti.com> wrote:
->>
->> Hi,
->>
->> The shared GPIO line for external components tends to be a common issue and
->> there is no 'clean' way of handling it.
->>
->> I'm aware of the GPIOD_FLAGS_BIT_NONEXCLUSIVE flag, which must be provided when
->> a driver tries to request a GPIO which is already in use.
->> However the driver must know that the component is going to be used in such a
->> way, which can be said to any external components with GPIO line, so in theory
->> all drivers must set this flag when requesting the GPIO...
->>
->> But with the GPIOD_FLAGS_BIT_NONEXCLUSIVE all clients have full control of the
->> GPIO line. For example any device using the same GPIO as reset/enable line can
->> reset/enable other devices, which is not something the other device might like
->> or can handle.
->> For example a device needs to be configured after it is enabled, but some other
->> driver would reset it while handling the same GPIO -> the device is not
->> operational anymmore as it lost it's configuration.
->>
->> With the gpio-shared gpiochip we can overcome this by giving the gpio-shared
->> the role of making sure that the GPIO line only changes state when it will not
->> disturb any of the clients sharing the same GPIO line.
+On Wed, Oct 30, 2019 at 01:29:14PM +0100, Linus Walleij wrote:
+> The GPIO irqchip needs to initialize the valid mask
+> before initializing the IRQ hardware, because sometimes
+> the latter require the former to be executed first.
 > 
-> Why can't we just add a shared flag like we have for interrupts?
-> Effectively, we have that for resets too, it's just hardcoded in the
-> the drivers.
 
-This would be kind of the same thing what the
-GPIOD_FLAGS_BIT_NONEXCLUSIVE does, which was a quick workaround for
-fixed-regulators afaik.
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-But let's say that a board design will pick two components (C1 and C2)
-and use the same GPIO line to enable them. We already have the drivers
-for them and they are used in boards already.
+> Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> Cc: Mika Westerberg <mika.westerberg@linux.intel.com>
+> Reported-by: Hans de Goede <hdegoede@redhat.com>
+> Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+> ---
+> Thinking of applying this for fixes to fix some part
+> of the problems that Hans is seeing.
+> ---
+>  drivers/gpio/gpiolib.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
+> index 9afbc0612126..e865c889ba8d 100644
+> --- a/drivers/gpio/gpiolib.c
+> +++ b/drivers/gpio/gpiolib.c
+> @@ -1411,11 +1411,11 @@ int gpiochip_add_data_with_key(struct gpio_chip *chip, void *data,
+>  
+>  	machine_gpiochip_add(chip);
+>  
+> -	ret = gpiochip_irqchip_init_hw(chip);
+> +	ret = gpiochip_irqchip_init_valid_mask(chip);
+>  	if (ret)
+>  		goto err_remove_acpi_chip;
+>  
+> -	ret = gpiochip_irqchip_init_valid_mask(chip);
+> +	ret = gpiochip_irqchip_init_hw(chip);
+>  	if (ret)
+>  		goto err_remove_acpi_chip;
+>  
+> -- 
+> 2.21.0
+> 
 
-Both needs the GPIO line to be high for normal operation.
-One or both of them needs register writes after they are enabled.
+-- 
+With Best Regards,
+Andy Shevchenko
 
-During boot both requests the GPIO (OUTPUT_LOW) and sets it high, then
-run the register setup.
 
-C1 request GPIO (LOW)
-C1 gpio_set(1)
-C1 register writes
-C2 requests GPIO (LOW)
- C1 placed to reset and looses the configuration
-C2 gpio_set(1)
- C1 also enabled
-C2 register writes
-
-At this point C2 is operational, C1 is not.
-
-In shared GPIO case the GPIO should be handled like a regulator with a
-twist that the 'sticky' state of the GPIO might be low or high depending
-on the needs of the components it is connected to.
-
-The shared GPIO line is a board design quirk and basically any device
-which have reset/enable GPIO must be able to work in a situation when
-they are sharing that line with other components and the driver should
-not know much about this small detail.
-
-- Péter
-
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
