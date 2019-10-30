@@ -2,138 +2,215 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id EC459E9881
-	for <lists+linux-gpio@lfdr.de>; Wed, 30 Oct 2019 09:53:15 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D7A2AE992C
+	for <lists+linux-gpio@lfdr.de>; Wed, 30 Oct 2019 10:31:04 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726065AbfJ3IxP (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 30 Oct 2019 04:53:15 -0400
-Received: from esa6.microchip.iphmx.com ([216.71.154.253]:7319 "EHLO
-        esa6.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726032AbfJ3IxP (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 30 Oct 2019 04:53:15 -0400
-Received-SPF: Pass (esa6.microchip.iphmx.com: domain of
-  Ludovic.Desroches@microchip.com designates 198.175.253.82 as
-  permitted sender) identity=mailfrom;
-  client-ip=198.175.253.82; receiver=esa6.microchip.iphmx.com;
-  envelope-from="Ludovic.Desroches@microchip.com";
-  x-sender="Ludovic.Desroches@microchip.com";
-  x-conformance=spf_only; x-record-type="v=spf1";
-  x-record-text="v=spf1 mx a:ushub1.microchip.com
-  a:smtpout.microchip.com a:mx1.microchip.iphmx.com
-  a:mx2.microchip.iphmx.com include:servers.mcsv.net
-  include:mktomail.com include:spf.protection.outlook.com ~all"
-Received-SPF: None (esa6.microchip.iphmx.com: no sender
-  authenticity information available from domain of
-  postmaster@email.microchip.com) identity=helo;
-  client-ip=198.175.253.82; receiver=esa6.microchip.iphmx.com;
-  envelope-from="Ludovic.Desroches@microchip.com";
-  x-sender="postmaster@email.microchip.com";
-  x-conformance=spf_only
-Authentication-Results: esa6.microchip.iphmx.com; dkim=none (message not signed) header.i=none; spf=Pass smtp.mailfrom=Ludovic.Desroches@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dmarc=pass (p=none dis=none) d=microchip.com
-IronPort-SDR: cI+a4Vq/q5z7vdc74fDOKro/iJQP/AVCXSmzsTcb1alrbT5d75PBB5UIyhnOScb+Fs1uPHNX6e
- 8aGqe9kmE4x20O+5eBwGsnAfT8zIx7lVKQ5/3/2YhdSBGdG5Akc+HSnovvC+YzuUnnYc3wMnDQ
- Fnvbfk4QT5wK0wZRAqTV3eBtwuv4pfAZLqc92ENP5e1mV2kB9uwo/j15g/ijk05lrHzf8ZrWQ4
- lNbuHZ1ItAFaHG036TBKt9O2T/oFH3ve36HXnVZS4531+IxBu55o5oNon1b3pnvJwoQh8Oeacy
- mQU=
-X-IronPort-AV: E=Sophos;i="5.68,246,1569308400"; 
-   d="scan'208";a="52107702"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa6.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 30 Oct 2019 01:53:14 -0700
-Received: from chn-vm-ex03.mchp-main.com (10.10.85.151) by
- chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Wed, 30 Oct 2019 01:53:06 -0700
-Received: from localhost (10.10.85.251) by chn-vm-ex03.mchp-main.com
- (10.10.85.151) with Microsoft SMTP Server id 15.1.1713.5 via Frontend
- Transport; Wed, 30 Oct 2019 01:53:06 -0700
-Date:   Wed, 30 Oct 2019 09:53:05 +0100
-From:   Ludovic Desroches <ludovic.desroches@microchip.com>
-To:     Rob Herring <robh@kernel.org>
-CC:     Codrin Ciubotariu <codrin.ciubotariu@microchip.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-gpio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linus.walleij@linaro.org>,
-        <nicolas.ferre@microchip.com>, <alexandre.belloni@bootlin.com>,
-        <claudiu.beznea@microchip.com>
-Subject: Re: [PATCH] pinctrl: at91: Enable slewrate by default on SAM9X60
-Message-ID: <20191030085305.uwrt5g3mmbwthwms@M43218.corp.atmel.com>
-Mail-Followup-To: Rob Herring <robh@kernel.org>,
-        Codrin Ciubotariu <codrin.ciubotariu@microchip.com>,
-        linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        linus.walleij@linaro.org, nicolas.ferre@microchip.com,
-        alexandre.belloni@bootlin.com, claudiu.beznea@microchip.com
-References: <20191024172234.5267-1-codrin.ciubotariu@microchip.com>
- <20191029213757.GA8829@bogus>
+        id S1726046AbfJ3JbE (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 30 Oct 2019 05:31:04 -0400
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:50074 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726028AbfJ3JbD (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>);
+        Wed, 30 Oct 2019 05:31:03 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1572427862;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=nRdjaU5vumBF04yyG06F0AragDOvRFIp01vZ0gtytIk=;
+        b=hRu2t++902kAnz6KyHcl5hD6hm1Y6ukBEhZIUvGIaW7xdPjylFFmxlk6VRXTWwKZoWx1y8
+        xLE4FoPiCkiHMNBg/OFgt1oDNVdeTY5XcYAHh2BjVcsURyO9iM+/HPXOn0Pa8aYsH5RPku
+        vOpHy69bA8e9H8GsJu9wFAOBhMBaLgk=
+Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
+ [209.85.128.71]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-214-Fi-4S9GXOsyAC7lEqM6-Hg-1; Wed, 30 Oct 2019 05:31:00 -0400
+Received: by mail-wm1-f71.google.com with SMTP id q22so363578wmc.1
+        for <linux-gpio@vger.kernel.org>; Wed, 30 Oct 2019 02:30:59 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=nnzxwOaBx4U9Hb+LOjCv+hcoH1GZH6wkfDh4gvpRos4=;
+        b=hNA6mJx50EUYdHmAYZzlORzQvVA7FaxT9BMZxbfIs3I3KLI4U4Rvnh4UXfkLaaMi4B
+         Ny2nfBnPTEx/l/ShAWQ435YlMeZbj4oJHebjK9gUkEiKkoBsBJHaXjjhUwTrvQjW+iEk
+         jhkjwTD1qzlaESxdsA1Wjil1Rzl9rB3hBKnk1Hk+k1EbWiZFdUonmwv+fD+c0xtWvsbP
+         3V+NV1B4Op9G54KyIhZNZKK5orZJUFgs8vvGSfmfmpQ0imWSq9NZ7HdG8UsD7fk0p9tk
+         otiaX9lEDc9WolYnynDJaeToOyLutAykyrqmJn3oklh4cx0uD4oUhgMb8JG9tuLdh395
+         FXAA==
+X-Gm-Message-State: APjAAAWiaBexOH6QhNi5slgJQNu9r3qiY5WGByxuEOsmAvhbRNMV9VTQ
+        HI00bFsnX46a70L+y2Gur9ZBt2Voig13J1HNMQETR/4uM/wYx6nxCost/6T+QZ2Di6PsLwpqVF4
+        XoPEaoyKC1HrJY9ICyHSNDQ==
+X-Received: by 2002:a05:6000:11d2:: with SMTP id i18mr24972101wrx.109.1572427858873;
+        Wed, 30 Oct 2019 02:30:58 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqxnqVUk76S987VcLJm3duw0zNNqlKCjXBeyvTQcDPYFXvnSqHZOf/68uIKog3IyJ1GhTK9Onw==
+X-Received: by 2002:a05:6000:11d2:: with SMTP id i18mr24972080wrx.109.1572427858595;
+        Wed, 30 Oct 2019 02:30:58 -0700 (PDT)
+Received: from shalem.localdomain (2001-1c00-0c14-2800-ec23-a060-24d5-2453.cable.dynamic.v6.ziggo.nl. [2001:1c00:c14:2800:ec23:a060:24d5:2453])
+        by smtp.gmail.com with ESMTPSA id x21sm1851671wmj.42.2019.10.30.02.30.57
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 30 Oct 2019 02:30:57 -0700 (PDT)
+Subject: Re: [PATCH v1] pinctrl: baytrail: Move IRQ valid mask initialization
+ to a dedicated callback
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-gpio@vger.kernel.org,
+        Mika Westerberg <mika.westerberg@linux.intel.com>
+References: <20191025140621.43417-1-andriy.shevchenko@linux.intel.com>
+From:   Hans de Goede <hdegoede@redhat.com>
+Message-ID: <ddd33998-43c4-7772-16dd-c09c2184c51d@redhat.com>
+Date:   Wed, 30 Oct 2019 10:30:56 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20191029213757.GA8829@bogus>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <20191025140621.43417-1-andriy.shevchenko@linux.intel.com>
+Content-Language: en-US
+X-MC-Unique: Fi-4S9GXOsyAC7lEqM6-Hg-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Oct 29, 2019 at 04:37:57PM -0500, Rob Herring wrote:
-> On Thu, Oct 24, 2019 at 08:22:34PM +0300, Codrin Ciubotariu wrote:
-> > On SAM9X60, slewrate should be enabled on pins with a switching frequency
-> > below 50Mhz. Since most of our pins do not exceed this value, we enable
-> > slewrate by default. Pins with a switching value that exceeds 50Mhz will
-> > have to explicitly disable slewrate.
-> > 
-> > Suggested-by: Ludovic Desroches <ludovic.desroches@microchip.com>
-> > Signed-off-by: Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
-> > ---
-> >  drivers/pinctrl/pinctrl-at91.c     | 4 ++--
-> >  include/dt-bindings/pinctrl/at91.h | 4 ++--
-> >  2 files changed, 4 insertions(+), 4 deletions(-)
-> > 
-> > diff --git a/drivers/pinctrl/pinctrl-at91.c b/drivers/pinctrl/pinctrl-at91.c
-> > index 117075b5798f..c135149e84e9 100644
-> > --- a/drivers/pinctrl/pinctrl-at91.c
-> > +++ b/drivers/pinctrl/pinctrl-at91.c
-> > @@ -85,8 +85,8 @@ enum drive_strength_bit {
-> >  					 DRIVE_STRENGTH_SHIFT)
-> >  
-> >  enum slewrate_bit {
-> > -	SLEWRATE_BIT_DIS,
-> >  	SLEWRATE_BIT_ENA,
-> > +	SLEWRATE_BIT_DIS,
-> >  };
-> >  
-> >  #define SLEWRATE_BIT_MSK(name)		(SLEWRATE_BIT_##name << SLEWRATE_SHIFT)
-> > @@ -669,7 +669,7 @@ static void at91_mux_sam9x60_set_slewrate(void __iomem *pio, unsigned pin,
-> >  {
-> >  	unsigned int tmp;
-> >  
-> > -	if (setting < SLEWRATE_BIT_DIS || setting > SLEWRATE_BIT_ENA)
-> > +	if (setting < SLEWRATE_BIT_ENA || setting > SLEWRATE_BIT_DIS)
-> >  		return;
-> >  
-> >  	tmp = readl_relaxed(pio + SAM9X60_PIO_SLEWR);
-> > diff --git a/include/dt-bindings/pinctrl/at91.h b/include/dt-bindings/pinctrl/at91.h
-> > index 3831f91fb3ba..e8e117306b1b 100644
-> > --- a/include/dt-bindings/pinctrl/at91.h
-> > +++ b/include/dt-bindings/pinctrl/at91.h
-> > @@ -27,8 +27,8 @@
-> >  #define AT91_PINCTRL_DRIVE_STRENGTH_MED			(0x2 << 5)
-> >  #define AT91_PINCTRL_DRIVE_STRENGTH_HI			(0x3 << 5)
-> >  
-> > -#define AT91_PINCTRL_SLEWRATE_DIS	(0x0 << 9)
-> > -#define AT91_PINCTRL_SLEWRATE_ENA	(0x1 << 9)
-> > +#define AT91_PINCTRL_SLEWRATE_ENA	(0x0 << 9)
-> > +#define AT91_PINCTRL_SLEWRATE_DIS	(0x1 << 9)
-> 
-> This is an ABI. You can't just change the definition.
+Hi,
 
-There is no DT using these definitions. They have been introduced for our new
-SoC but its DT is not submitted yet. I assume it's not too late to do this
-change as nothing will be broken.
+On 25-10-2019 16:06, Andy Shevchenko wrote:
+> There is a logical continuation of the commit 5fbe5b5883f8 ("gpio: Initia=
+lize
+> the irqchip valid_mask with a callback") to split IRQ initialization to
+> hardware and valid mask setup parts.
+>=20
+> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-Regards
+So I've been running some tests based on https://git.kernel.org/pub/scm/lin=
+ux/kernel/git/pinctrl/intel.git/log/?h=3Dfor-next
++ this patch.
 
-Ludovic
+That combo causes several issues, so I tried reverting the patches one by o=
+ne,
+if I drop this patch and use just:
 
-> 
-> Rob
+https://git.kernel.org/pub/scm/linux/kernel/git/pinctrl/intel.git/log/?h=3D=
+for-next
+
+Then the kernel does not even boot. I believe this is caused by:
+88583e340a0e ("pinctrl: intel: baytrail: Pass irqchip when adding gpiochip"=
+)
+
+The problem here is that gpiochip_add_data_with_key() calls gpiochip_irqchi=
+p_init_hw()
+before it calls gpiochip_irqchip_init_valid_mask(), so after commit 88583e3=
+40a0e
+when byt_gpio_irq_init_hw runs gc->irq.valid_mask is NULL and we crash with=
+ a NULL
+pointer exception (or so I believe, the kernel never gets far enough to get
+any info out of it without extra work).
+
+Note that this ("[PATCH v1] pinctrl: baytrail: Move IRQ valid mask initiali=
+zation to a dedicated callback")
+patch fixes this since it moves the gc->irq.valid_mask accesses to
+byt_init_irq_valid_mask.
+
+But this change itself triggers another variant of this ordering issue,
+it causes these 2 new errors to get logged:
+
+byt_gpio INT33FC:01: GPIO interrupt error, pins misconfigured. INT_STAT0: 0=
+x01800000
+byt_gpio INT33FC:02: GPIO interrupt error, pins misconfigured. INT_STAT0: 0=
+x00400000
+
+The problem is that before this change the code calculating the valid_mask
+would also disable interrupts on GPIOs which do not have their
+BYT_DIRECT_IRQ_EN bit set. This now happens after the check done in
+byt_gpio_irq_init_hw() causing these false-positive error messages.
+
+Even if we ignore the NULL pointer deref problem for now and we ignore
+these 2 new error messages for now. Things are still broken with the
+current changes in pinctrl/intel.git/for-next switching to letting
+devm_gpiochip_add_data register the irqchip means that
+acpi_gpiochip_request_interrupts() gets called before
+gpiochip_add_pin_range() is called from pinctrl-baytrail.c, causing
+the GPIO lookup of any ACPI _AEI handlers to fail, resulting in
+errors like this one:
+
+byt_gpio INT33FC:02: Failed to request GPIO for pin 0x13: -517
+
+And none of the _AEI handlers working
+
+TL;DR: commit 88583e340a0e ("pinctrl: intel: baytrail: Pass irqchip when ad=
+ding gpiochip")
+breaks a bunch of stuff and should be dropped from pinctrl/intel.git/for-ne=
+xt
+and this needs some more work before it is ready for mainline.
+
+Regards,
+
+Hans
+
+
+
+
+> ---
+>   drivers/pinctrl/intel/pinctrl-baytrail.c | 25 ++++++++++--------------
+>   1 file changed, 10 insertions(+), 15 deletions(-)
+>=20
+> diff --git a/drivers/pinctrl/intel/pinctrl-baytrail.c b/drivers/pinctrl/i=
+ntel/pinctrl-baytrail.c
+> index beb26550c25f..08e2b940cc11 100644
+> --- a/drivers/pinctrl/intel/pinctrl-baytrail.c
+> +++ b/drivers/pinctrl/intel/pinctrl-baytrail.c
+> @@ -1432,22 +1432,10 @@ static void byt_init_irq_valid_mask(struct gpio_c=
+hip *chip,
+>   =09=09=09=09    unsigned long *valid_mask,
+>   =09=09=09=09    unsigned int ngpios)
+>   {
+> -=09/*
+> -=09 * FIXME: currently the valid_mask is filled in as part of
+> -=09 * initializing the irq_chip below in byt_gpio_irq_init_hw().
+> -=09 * when converting this driver to the new way of passing the
+> -=09 * gpio_irq_chip along when adding the gpio_chip, move the
+> -=09 * mask initialization into this callback instead. Right now
+> -=09 * this callback is here to make sure the mask gets allocated.
+> -=09 */
+> -}
+> -
+> -static int byt_gpio_irq_init_hw(struct gpio_chip *gc)
+> -{
+> -=09struct byt_gpio *vg =3D gpiochip_get_data(gc);
+> +=09struct byt_gpio *vg =3D gpiochip_get_data(chip);
+>   =09struct device *dev =3D &vg->pdev->dev;
+>   =09void __iomem *reg;
+> -=09u32 base, value;
+> +=09u32 value;
+>   =09int i;
+>  =20
+>   =09/*
+> @@ -1468,13 +1456,20 @@ static int byt_gpio_irq_init_hw(struct gpio_chip =
+*gc)
+>  =20
+>   =09=09value =3D readl(reg);
+>   =09=09if (value & BYT_DIRECT_IRQ_EN) {
+> -=09=09=09clear_bit(i, gc->irq.valid_mask);
+> +=09=09=09clear_bit(i, valid_mask);
+>   =09=09=09dev_dbg(dev, "excluding GPIO %d from IRQ domain\n", i);
+>   =09=09} else if ((value & BYT_PIN_MUX) =3D=3D byt_get_gpio_mux(vg, i)) =
+{
+>   =09=09=09byt_gpio_clear_triggering(vg, i);
+>   =09=09=09dev_dbg(dev, "disabling GPIO %d\n", i);
+>   =09=09}
+>   =09}
+> +}
+> +
+> +static int byt_gpio_irq_init_hw(struct gpio_chip *gc)
+> +{
+> +=09struct byt_gpio *vg =3D gpiochip_get_data(gc);
+> +=09void __iomem *reg;
+> +=09u32 base, value;
+>  =20
+>   =09/* clear interrupt status trigger registers */
+>   =09for (base =3D 0; base < vg->soc_data->npins; base +=3D 32) {
+>=20
+
