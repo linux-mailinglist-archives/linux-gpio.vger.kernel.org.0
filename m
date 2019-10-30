@@ -2,130 +2,168 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 7234FE9995
-	for <lists+linux-gpio@lfdr.de>; Wed, 30 Oct 2019 10:55:26 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B1E40E9B00
+	for <lists+linux-gpio@lfdr.de>; Wed, 30 Oct 2019 12:44:37 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726728AbfJ3JzS (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 30 Oct 2019 05:55:18 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:42193 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726359AbfJ3JzS (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 30 Oct 2019 05:55:18 -0400
-Received: by mail-wr1-f67.google.com with SMTP id a15so1520241wrf.9
-        for <linux-gpio@vger.kernel.org>; Wed, 30 Oct 2019 02:55:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=hs0Xj3TpOFo7Xi2C92NXMI0mClPmgg9hIzDJgVyM7dI=;
-        b=GOMrdPbtza7bahmXFnK8BFCvQpxJK0EQx9lvmMYCWiUB8A+wjb7ykcc+ZmPoJ8CvTM
-         jbyq/wUOW8NOvHiKNVmSnOYslZCf5BVbXBM+9pgUmRnmYbWAJ63oxlKbgAIbtYO6bvz8
-         m/OtQlCrNANBMhVXthUDHMx4y0ZR3qqXBkI/C5auNKC2tYlJ10Qfxk4M12PXQExMxYb+
-         QWWWervwvAlSmyLn037zf39ucwHSn8ESM+PcaORjBd6NWlYu0Q7I1q9gkWYPO5+X19Ip
-         OSwsj3JqkQxj4M4epdlGZ/m8HpkLhowk+0Reki9OuLANr649y8RLZyGnq1wGz0de2K0q
-         ZJbw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=hs0Xj3TpOFo7Xi2C92NXMI0mClPmgg9hIzDJgVyM7dI=;
-        b=HrVdgWMdw0BtPbOVk/i9Z2V9TxSCgm8Cz6yi2KVkjQTQeVnkMeuwNPF+R1v7UgL8OG
-         YgiA5YAJQXcyZ8cApQALEjR2PY2+EIApK9nVARApycQI4UUExh0Fk0zCQwSpFCq7CqZe
-         aRHs0hDMutRRLVbGFlOOd57Trj4yytwcCXy+oycoBWbmxY+tyTGbVNlU0UvNp/KPVq4l
-         Z1iwCzIrG8ONYNLg2/pWkZ2/E9odqJBn1YAUUHdClm2ILUqwPUBIiMEAHZpCDFJ6SClF
-         S0dsEL/ICqRHBzMI/1nMyyTk2naRB2cY2V0aamwZUdn/D0m9M06F2RQN4swbWHLqbvnU
-         oiBA==
-X-Gm-Message-State: APjAAAWZMoAGhepYJnoEHrL8KiTRwohKiXFoccbe2BFXUV6/MNG1ngM4
-        q9gRqW9phOz10lF7eC3cyRuqx0Z/yPg=
-X-Google-Smtp-Source: APXvYqyEXL1nWX9W5G1Oh1yg4gjs2XsDhJV/J4RZbb5xTf2TxaEp1juTXqmwC1y55FdaXSwMim9fMQ==
-X-Received: by 2002:a5d:4491:: with SMTP id j17mr9057873wrq.46.1572429314643;
-        Wed, 30 Oct 2019 02:55:14 -0700 (PDT)
-Received: from [192.168.86.34] (cpc89974-aztw32-2-0-cust43.18-1.cable.virginm.net. [86.30.250.44])
-        by smtp.googlemail.com with ESMTPSA id g5sm1675086wmg.12.2019.10.30.02.55.13
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 30 Oct 2019 02:55:13 -0700 (PDT)
-Subject: Re: [PATCH v2 01/11] ASoC: dt-bindings: add dt bindings for
- WCD9340/WCD9341 audio codec
-To:     Rob Herring <robh@kernel.org>
-Cc:     Mark Brown <broonie@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Lee Jones <lee.jones@linaro.org>,
-        Vinod Koul <vinod.koul@linaro.org>,
-        Linux-ALSA <alsa-devel@alsa-project.org>,
-        devicetree@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        spapothi@codeaurora.org, Banajit Goswami <bgoswami@codeaurora.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
-References: <20191018001849.27205-1-srinivas.kandagatla@linaro.org>
- <20191018001849.27205-2-srinivas.kandagatla@linaro.org>
- <20191025204338.GA25892@bogus>
- <90b2d83b-f2b2-3a5d-4deb-589f4b48b208@linaro.org>
- <371955d9-ad2d-5ddc-31b4-710729feae42@linaro.org>
- <CAL_JsqJmRReW2n0R_Sh4f7AFGYA+ZLxuFDokLTSBKoFTg6uRSg@mail.gmail.com>
-From:   Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Message-ID: <7811be04-dfda-5953-110c-bca685fdcaa4@linaro.org>
-Date:   Wed, 30 Oct 2019 09:55:12 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        id S1726088AbfJ3Loh (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 30 Oct 2019 07:44:37 -0400
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:44758 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726175AbfJ3Loh (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 30 Oct 2019 07:44:37 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id x9UBiQfA074905;
+        Wed, 30 Oct 2019 06:44:26 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1572435866;
+        bh=nlVr6Zj9+j0vCKO0OY9fSOQFWnGg/l/NYJihfhV2J2g=;
+        h=From:To:CC:Subject:Date;
+        b=RgatHrPxo2Qk0S5LfG5lMAsKmRmuhWcfQ9Tcx+2t6LoYftkhRtEO0vHf/JSFcYPWl
+         xO2pH2PSCt1MW/f0e0hHWAF36vH63zBdL4SeUbcGvJXTkXS8A0ORlA+p3vNQWtZaq3
+         KJMa7v5xtB9qNyJvygaHk6HlZ/cfzQh+xq3t9vQw=
+Received: from DLEE107.ent.ti.com (dlee107.ent.ti.com [157.170.170.37])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x9UBiQuT090539
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 30 Oct 2019 06:44:26 -0500
+Received: from DLEE108.ent.ti.com (157.170.170.38) by DLEE107.ent.ti.com
+ (157.170.170.37) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Wed, 30
+ Oct 2019 06:44:25 -0500
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE108.ent.ti.com
+ (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Wed, 30 Oct 2019 06:44:13 -0500
+Received: from feketebors.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id x9UBiMSv006902;
+        Wed, 30 Oct 2019 06:44:23 -0500
+From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
+To:     <linus.walleij@linaro.org>, <bgolaszewski@baylibre.com>
+CC:     <linux-gpio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <m.szyprowski@samsung.com>, <broonie@kernel.org>,
+        <t-kristo@ti.com>, <mripard@kernel.org>, <p.zabel@pengutronix.de>
+Subject: [RFC 0/2] gpio: Support for shared GPIO lines on boards
+Date:   Wed, 30 Oct 2019 13:45:28 +0200
+Message-ID: <20191030114530.872-1-peter.ujfalusi@ti.com>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
-In-Reply-To: <CAL_JsqJmRReW2n0R_Sh4f7AFGYA+ZLxuFDokLTSBKoFTg6uRSg@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+Hi,
 
+The shared GPIO line for external components tends to be a common issue and
+there is no 'clean' way of handling it.
 
-On 29/10/2019 20:47, Rob Herring wrote:
-> On Mon, Oct 28, 2019 at 7:45 AM Srinivas Kandagatla
-> <srinivas.kandagatla@linaro.org> wrote:
->>
->>
->>
->> On 28/10/2019 12:40, Srinivas Kandagatla wrote:
->>> Its Phandle.
->>>
->>> something like this is okay?
->>>
->>> slim-ifc-dev:
->>>     $ref: '/schemas/types.yaml#/definitions/phandle-array'
->>
->> Sorry this should not be an array, so something like this:
->>
->>     slim-ifc-dev:
->>       description: SLIMBus Interface device phandle
-> 
-> You're just spelling out the abbreviated name. I can do that much.
-> What is 'SLIMBus Interface device'?
+I'm aware of the GPIOD_FLAGS_BIT_NONEXCLUSIVE flag, which must be provided when
+a driver tries to request a GPIO which is already in use.
+However the driver must know that the component is going to be used in such a
+way, which can be said to any external components with GPIO line, so in theory
+all drivers must set this flag when requesting the GPIO...
 
-Each SLIMBus Component contains one Interface Device. Which is 
-responsible for Monitoring and reporting the status of component, Data 
-line to Data pin connection setup for SLIMBus streaming. Interface 
-device is enumerated just like any other slim device.
+But with the GPIOD_FLAGS_BIT_NONEXCLUSIVE all clients have full control of the
+GPIO line. For example any device using the same GPIO as reset/enable line can
+reset/enable other devices, which is not something the other device might like
+or can handle.
+For example a device needs to be configured after it is enabled, but some other
+driver would reset it while handling the same GPIO -> the device is not
+operational anymmore as it lost it's configuration.
 
-We already have exactly same bindings for WCD9335 in upstream at:
+With the gpio-shared gpiochip we can overcome this by giving the gpio-shared
+the role of making sure that the GPIO line only changes state when it will not
+disturb any of the clients sharing the same GPIO line.
 
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/devicetree/bindings/sound/qcom,wcd9335.txt?h=v5.4-rc5#n42
+The 'sticky' state of the line depends on the board design, which can be
+communicated with the hold-active-state property:
 
-> 
-> Is it a standard SLIMBus property? If so, document it in the right
-> place. If not, then needs a vendor prefix.
+GPIO_ACTIVE_HIGH: the line must be high as long as any of the clients want it to
+be high
+GPIO_ACTIVE_LOW: the line must be low as long as any of the clients want it to
+be low
 
-"SLIMBus Interface Device" itself is documented in SLIMBus Specification.
+In board DTS files it is just adding the node to descibe the shared GPIO line
+and point the users of this line to the shared-gpio node instead of the real
+GPIO.
 
-If I remember it correctly You suggested me to move to "slim-ifc-dev" 
-as this is part of SLIMBus Specification.
+Something like this:
 
-Thanks,
-srini
+codec_reset: gpio-shared0 {
+	compatible = "gpio-shared";
+	gpio-controller;
+	#gpio-cells = <2>;
 
+	root-gpios = <&audio_exp 0 GPIO_ACTIVE_HIGH>;
 
-> 
->>       $ref: '/schemas/types.yaml#/definitions/phandle'
->>
->>
->>>     description: SLIMBus Interface device phandle
+	branch-count = <2>;
+	hold-active-state = <GPIO_ACTIVE_HIGH>;
+};
+
+&main_i2c3 {
+	audio_exp: gpio@21 {
+		compatible = "ti,tca6416";
+		reg = <0x21>;
+		gpio-controller;
+		#gpio-cells = <2>;
+	};
+
+	pcm3168a_a: audio-codec@47 {
+		compatible = "ti,pcm3168a";
+		reg = <0x47>;
+
+		#sound-dai-cells = <1>;
+
+		rst-gpios = <&codec_reset 0 GPIO_ACTIVE_HIGH>;
+		...
+	};
+
+	pcm3168a_b: audio-codec@46 {
+		compatible = "ti,pcm3168a";
+		reg = <0x46>;
+
+		#sound-dai-cells = <1>;
+
+		rst-gpios = <&codec_reset 1 GPIO_ACTIVE_HIGH>;
+		...
+	};
+};
+
+If any of the codec requests the GPIO to be high, the line will go up and will
+only going to be low when both of them set's their shared line to low.
+
+Note: other option would be to have something similar to gpio-hog (gpio-shared)
+support in the core itself, but then all of the logic and state handling for the
+users of the shared line needs to be moved there.
+Simply counting the low and high requests would not work as the GPIO framework
+by design does not refcounts the state, iow gpio_set(0) three times and
+gpio_set(1) would set the line high.
+
+I have also looked at the reset framework, but again it can not be applied in a
+generic way for GPIOs shared for other purposes and all existing drivers must
+be converted to use the reset framework (and adding a linux only warpper on top
+of reset GPIOs).
+
+Regards,
+Peter
+---
+Peter Ujfalusi (2):
+  dt-bindings: gpio: Add binding document for shared GPIO
+  gpio: Add new driver for handling 'shared' gpio lines on boards
+
+ .../devicetree/bindings/gpio/gpio-shared.yaml | 100 ++++++++
+ drivers/gpio/Kconfig                          |   6 +
+ drivers/gpio/Makefile                         |   1 +
+ drivers/gpio/gpio-shared.c                    | 229 ++++++++++++++++++
+ 4 files changed, 336 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/gpio/gpio-shared.yaml
+ create mode 100644 drivers/gpio/gpio-shared.c
+
+-- 
+Peter
+
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+
