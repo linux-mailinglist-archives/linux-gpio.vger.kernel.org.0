@@ -2,178 +2,151 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 4B8F1E9BAC
-	for <lists+linux-gpio@lfdr.de>; Wed, 30 Oct 2019 13:42:19 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 625BDE9BB4
+	for <lists+linux-gpio@lfdr.de>; Wed, 30 Oct 2019 13:43:45 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726536AbfJ3MmT (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 30 Oct 2019 08:42:19 -0400
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:33746 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726119AbfJ3MmS (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 30 Oct 2019 08:42:18 -0400
-Received: by mail-lj1-f194.google.com with SMTP id t5so2532313ljk.0
-        for <linux-gpio@vger.kernel.org>; Wed, 30 Oct 2019 05:42:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=I5mZQTqFepO47vaRXrWh5DzOJ3qHuyhm2O0U6chkSUQ=;
-        b=Mfr9mKZulAlznHzMuN7SrDlqRCXz1ys+kuYaoURP8/b+q2ntkdbxqtTP1m1wd2eJqx
-         FqbZmYEdZuS4iB+SjnpVyf1fESTW1zrKXjhGi3Nl7fWIDw1qoWlcLpeYLTrIFFRCY0KD
-         uJkbqYK2nTz9qR+1MYKHMFSZRvthxBNdBMDwdc1JNDf8Do3TZES1qAI0oq6kLwb0NVOT
-         oVz6Z9WySn0pblvlQZfxZh+q5tuvA68QZUOJEyPG4iLblr6YU5nYatoVYiPOwQ1HeaFx
-         T9Qk80aoDfWngNMJtBGi3JTottvBr3aClwdGvzSVUblqo2srOLXosHPdgyEJUg5Bubem
-         B2lQ==
+        id S1726841AbfJ3Mnp (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 30 Oct 2019 08:43:45 -0400
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:32214 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726088AbfJ3Mno (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>);
+        Wed, 30 Oct 2019 08:43:44 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1572439423;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=UY6YEskkdPexmYLlBdt+0Hm6c9p061YRILPo1TQ9/Z4=;
+        b=N6fmFPEPjz4s3RqZjVLyt7X8VzEZ+/15ve6Q2+OEO44NgYZCOwt34dUJzfaBA1WljT79a/
+        CSAaQOWZK6Zm7wNEZcojQmEMZJR/RO/XyAJXF8nKWlUCrh/9ACnnEcIOqAjXKN/tN2sEvI
+        gwH0XOI2Ip7L+M7QOq+U0CdyWze04iE=
+Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
+ [209.85.128.70]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-420-EGc3Yv11MaCisZjsQuxvFg-1; Wed, 30 Oct 2019 08:43:41 -0400
+Received: by mail-wm1-f70.google.com with SMTP id i8so786805wmd.5
+        for <linux-gpio@vger.kernel.org>; Wed, 30 Oct 2019 05:43:40 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=I5mZQTqFepO47vaRXrWh5DzOJ3qHuyhm2O0U6chkSUQ=;
-        b=eyRmi24OeoC63x3aMLKpcT9JBG63f0wR1xD0C2eTCHes39eHdbDiDLfpJKyglzB4Mi
-         0BAkani6QumECJ6Vh6mZYQLLm+1xU+Yx/ipDXTKaMidPnVJfwrxFuhzqHij2H8BWwvEn
-         ttkb1BVdMDAAJbf8OTdZ2ikPgHa5Kd7XJFJomZJMpgJy6+7OX8osv4yUIdn7dqINAWV3
-         RVJPnmhEH0ZVhZPscYyaNG7dC4I9MyYjNIIFfwEjklNrjtJEJAxmPqozkTDu14Vp6oB8
-         sMHr/+i3AgXj9QBj2UXE8pudHiSCZs0M/glDRdvQ1JtyNlF6eXINaTDYH6jVDJVO76OC
-         HgVw==
-X-Gm-Message-State: APjAAAWtb3n0pDy+h70GwH2Ytgano6c3r283CDvWmHmbL1Ny70OkrN9m
-        vrBn8/ulAxO2lucSmlDgnb02zt8/IpLIn5oc5KoFCg==
-X-Google-Smtp-Source: APXvYqwx+ng42kyEDka0fafC+671z3lgcsKTR1Jm48ZIdijisMOcwjKYngNU/xayVuwdVrS9Ta91Tm/8bDQLCpSIYxA=
-X-Received: by 2002:a05:651c:1202:: with SMTP id i2mr6647925lja.218.1572439335753;
- Wed, 30 Oct 2019 05:42:15 -0700 (PDT)
-MIME-Version: 1.0
-References: <20191025140621.43417-1-andriy.shevchenko@linux.intel.com> <ddd33998-43c4-7772-16dd-c09c2184c51d@redhat.com>
-In-Reply-To: <ddd33998-43c4-7772-16dd-c09c2184c51d@redhat.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Wed, 30 Oct 2019 13:42:02 +0100
-Message-ID: <CACRpkdboOodR4Ux-bNp+XcFkTtxA-QehtP6+H+RsfFk+h6OaXQ@mail.gmail.com>
-Subject: Re: [PATCH v1] pinctrl: baytrail: Move IRQ valid mask initialization
- to a dedicated callback
-To:     Hans de Goede <hdegoede@redhat.com>
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=0AdpCDThZGz0lw+RnZznpNr6YrHDsf8ohW+6nHiqEf4=;
+        b=G7Qp48RE3rQWoLCQ7PVwvUb9SXogRQfL3n/mjOEeD9maHfZfY5xjDGCpbWlQFOvhtg
+         yDt29UipRTsxD1BO1ExS053S+TWviJWXlgivgazZ+yNk1tPgirgGnYs3NJ2F7NFMRpSV
+         JPQS/wGuUyI3YqQ2VWTcQCFN2p9k76BH/u8Ns1rxAiRiLjBBar4PMjptcY149L/u6SQK
+         VkS8nYLT6h/EYKKt26Qr++VlzZs1n/5Lr9GyLIEB8YVORIELNZfqF4vXAQQ4xGr7URS0
+         Hj8TJ5Df1z+NRWAQRH71xqa5J+0r3tm3OK3PAwWUmQHBTcjAs3aXY6Psu1wTVfK/yCT3
+         kWjQ==
+X-Gm-Message-State: APjAAAUt13+oAs8reCiCSOHITOOfDXhvWHE/hrU5E14kWWPuO5eUWZzg
+        ChDnDlVJsw+VqAU8YsAuRfM/keTrTUWmP4j+YkDllAa6268Dmjv+AHuxB+0SFNXxZkj4z3vL8fV
+        KaQM29Nlcu7L9nzx2aOqq1w==
+X-Received: by 2002:a7b:ce0c:: with SMTP id m12mr8952784wmc.38.1572439419861;
+        Wed, 30 Oct 2019 05:43:39 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqwb5S7rzjKzFVp+W19N1JzwUEBzKQTGC+8hhGtze90RcUcZynpkrma9fW5XcZRkALxOksIJaQ==
+X-Received: by 2002:a7b:ce0c:: with SMTP id m12mr8952765wmc.38.1572439419605;
+        Wed, 30 Oct 2019 05:43:39 -0700 (PDT)
+Received: from shalem.localdomain (2001-1c00-0c14-2800-ec23-a060-24d5-2453.cable.dynamic.v6.ziggo.nl. [2001:1c00:c14:2800:ec23:a060:24d5:2453])
+        by smtp.gmail.com with ESMTPSA id v16sm75413wrc.84.2019.10.30.05.43.38
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 30 Oct 2019 05:43:39 -0700 (PDT)
+Subject: Re: [PATCH] gpiolib: Switch order of valid mask and hw init
+To:     Linus Walleij <linus.walleij@linaro.org>,
+        linux-gpio@vger.kernel.org
+Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
         Mika Westerberg <mika.westerberg@linux.intel.com>
-Content-Type: text/plain; charset="UTF-8"
+References: <20191030122914.967-1-linus.walleij@linaro.org>
+From:   Hans de Goede <hdegoede@redhat.com>
+Message-ID: <677730df-4960-0572-2de9-6c9c8b31a26f@redhat.com>
+Date:   Wed, 30 Oct 2019 13:43:38 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.1
+MIME-Version: 1.0
+In-Reply-To: <20191030122914.967-1-linus.walleij@linaro.org>
+Content-Language: en-US
+X-MC-Unique: EGc3Yv11MaCisZjsQuxvFg-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Oct 30, 2019 at 10:31 AM Hans de Goede <hdegoede@redhat.com> wrote:
+Hi,
 
-> The problem here is that gpiochip_add_data_with_key() calls gpiochip_irqchip_init_hw()
-> before it calls gpiochip_irqchip_init_valid_mask(), so after commit 88583e340a0e
-> when byt_gpio_irq_init_hw runs gc->irq.valid_mask is NULL and we crash with a NULL
-> pointer exception (or so I believe, the kernel never gets far enough to get
-> any info out of it without extra work).
->
-> Note that this ("[PATCH v1] pinctrl: baytrail: Move IRQ valid mask initialization to a dedicated callback")
-> patch fixes this since it moves the gc->irq.valid_mask accesses to
-> byt_init_irq_valid_mask.
+On 30-10-2019 13:29, Linus Walleij wrote:
+> The GPIO irqchip needs to initialize the valid mask
+> before initializing the IRQ hardware, because sometimes
+> the latter require the former to be executed first.
+>=20
+> Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> Cc: Mika Westerberg <mika.westerberg@linux.intel.com>
+> Reported-by: Hans de Goede <hdegoede@redhat.com>
+> Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
 
-OK so we have a halfway fix there.
+Ack, I was thinking along these lines myself too, but I was
+not sure if this would be an acceptable solution:
 
-> But this change itself triggers another variant of this ordering issue,
-> it causes these 2 new errors to get logged:
->
-> byt_gpio INT33FC:01: GPIO interrupt error, pins misconfigured. INT_STAT0: 0x01800000
-> byt_gpio INT33FC:02: GPIO interrupt error, pins misconfigured. INT_STAT0: 0x00400000
->
-> The problem is that before this change the code calculating the valid_mask
-> would also disable interrupts on GPIOs which do not have their
-> BYT_DIRECT_IRQ_EN bit set. This now happens after the check done in
-> byt_gpio_irq_init_hw() causing these false-positive error messages.
+Acked-by: Hans de Goede <hdegoede@redhat.com>
 
-Isn't that easily fixed with something like this:
+> ---
+> Thinking of applying this for fixes to fix some part
+> of the problems that Hans is seeing.
 
-diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
-index 9afbc0612126..e865c889ba8d 100644
---- a/drivers/gpio/gpiolib.c
-+++ b/drivers/gpio/gpiolib.c
-@@ -1411,11 +1411,11 @@ int gpiochip_add_data_with_key(struct
-gpio_chip *chip, void *data,
+So you want to get this into 5.4, so that when
+"pinctrl: intel: baytrail: Pass irqchip when adding gpiochip"
+lands in 5.5 this is already in place.
 
-        machine_gpiochip_add(chip);
+Ok, I've just checked all the existing users if the
+init_hw callback and none of them use init_valid_mask
+so for them to order should not matter.
 
--       ret = gpiochip_irqchip_init_hw(chip);
-+       ret = gpiochip_irqchip_init_valid_mask(chip);
-        if (ret)
-                goto err_remove_acpi_chip;
+So yes getting this into 5.4 would be good.
 
--       ret = gpiochip_irqchip_init_valid_mask(chip);
-+       ret = gpiochip_irqchip_init_hw(chip);
-        if (ret)
-                goto err_remove_acpi_chip;
+This fixes 2 of the 3 issues I mentioned in my other mail,
+the NULL pointer deref and the false_positive error messages
+from byt_gpio_irq_init_hw().
 
-(I sent a separate patch for this.)
+But as I guess you are aware, that still leaves us with the third
+problem: "acpi_gpiochip_request_interrupts() gets called before
+gpiochip_add_pin_range() is called from pinctrl-baytrail.c, causing
+the GPIO lookup of any ACPI _AEI handlers to fail, resulting in
+errors like this one:
 
-It isn't super-easy to know the right ordering semantics
-for init_hw vs init_valid_mask I think. Sadly we need to
-test it out in practice.
+byt_gpio INT33FC:02: Failed to request GPIO for pin 0x13: -517
 
-> Even if we ignore the NULL pointer deref problem for now and we ignore
-> these 2 new error messages for now. Things are still broken with the
-> current changes in pinctrl/intel.git/for-next switching to letting
-> devm_gpiochip_add_data register the irqchip means that
-> acpi_gpiochip_request_interrupts() gets called before
-> gpiochip_add_pin_range() is called from pinctrl-baytrail.c, causing
-> the GPIO lookup of any ACPI _AEI handlers to fail, resulting in
-> errors like this one:
->
-> byt_gpio INT33FC:02: Failed to request GPIO for pin 0x13: -517
->
-> And none of the _AEI handlers working
+And none of the _AEI handlers working"
 
-I just vaguely understand this...
+Regards,
 
-If what you're saying is that the Baytrail driver is dependent
-on registering the pin ranges *before* registering the GPIO
-chip can we then:
+Hans
 
-diff --git a/drivers/pinctrl/intel/pinctrl-baytrail.c
-b/drivers/pinctrl/intel/pinctrl-baytrail.c
-index beb26550c25f..b308567c5153 100644
---- a/drivers/pinctrl/intel/pinctrl-baytrail.c
-+++ b/drivers/pinctrl/intel/pinctrl-baytrail.c
-@@ -1549,16 +1549,20 @@ static int byt_gpio_probe(struct byt_gpio *vg)
-                girq->handler = handle_bad_irq;
-        }
 
--       ret = devm_gpiochip_add_data(&vg->pdev->dev, gc, vg);
-+       /*
-+        * Needs to happen first since the gpiochip is using pin
-+        * control as back-end.
-+        */
-+       ret = gpiochip_add_pin_range(gc, dev_name(&vg->pdev->dev),
-+                                    0, 0, vg->soc_data->npins);
-        if (ret) {
--               dev_err(&vg->pdev->dev, "failed adding byt-gpio chip\n");
-+               dev_err(&vg->pdev->dev, "failed to add GPIO pin range\n");
-                return ret;
-        }
+> ---
+>   drivers/gpio/gpiolib.c | 4 ++--
+>   1 file changed, 2 insertions(+), 2 deletions(-)
+>=20
+> diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
+> index 9afbc0612126..e865c889ba8d 100644
+> --- a/drivers/gpio/gpiolib.c
+> +++ b/drivers/gpio/gpiolib.c
+> @@ -1411,11 +1411,11 @@ int gpiochip_add_data_with_key(struct gpio_chip *=
+chip, void *data,
+>  =20
+>   =09machine_gpiochip_add(chip);
+>  =20
+> -=09ret =3D gpiochip_irqchip_init_hw(chip);
+> +=09ret =3D gpiochip_irqchip_init_valid_mask(chip);
+>   =09if (ret)
+>   =09=09goto err_remove_acpi_chip;
+>  =20
+> -=09ret =3D gpiochip_irqchip_init_valid_mask(chip);
+> +=09ret =3D gpiochip_irqchip_init_hw(chip);
+>   =09if (ret)
+>   =09=09goto err_remove_acpi_chip;
+>  =20
+>=20
 
--       ret = gpiochip_add_pin_range(&vg->chip, dev_name(&vg->pdev->dev),
--                                    0, 0, vg->soc_data->npins);
-+       ret = devm_gpiochip_add_data(&vg->pdev->dev, gc, vg);
-        if (ret) {
--               dev_err(&vg->pdev->dev, "failed to add GPIO pin range\n");
-+               dev_err(&vg->pdev->dev, "failed adding byt-gpio chip\n");
-                return ret;
-        }
-
-(Tell me if I should send this as a separate patch.)
-
-It's not entirely logical to have this semantic ordering so
-the extra comment explains it, I hope, in case it actually
-works.
-
-> TL;DR: commit 88583e340a0e ("pinctrl: intel: baytrail: Pass irqchip when adding gpiochip")
-> breaks a bunch of stuff and should be dropped from pinctrl/intel.git/for-next
-> and this needs some more work before it is ready for mainline.
-
-I don't know if that is such a good idea if this is a global problem,
-like something that would potentially disturb any ACPI-based
-GPIO chip. We might leave something else broken even if we
-fix the issue locally.
-
-Yours,
-Linus Walleij
