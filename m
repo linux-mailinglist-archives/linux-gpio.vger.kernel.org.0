@@ -2,56 +2,54 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id C7D39EAADA
-	for <lists+linux-gpio@lfdr.de>; Thu, 31 Oct 2019 08:10:14 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B4DAEEAADE
+	for <lists+linux-gpio@lfdr.de>; Thu, 31 Oct 2019 08:11:13 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726596AbfJaHKO (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 31 Oct 2019 03:10:14 -0400
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:34239 "EHLO
+        id S1726584AbfJaHLN (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 31 Oct 2019 03:11:13 -0400
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:46904 "EHLO
         mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726575AbfJaHKN (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 31 Oct 2019 03:10:13 -0400
-Received: by mail-oi1-f195.google.com with SMTP id l202so4313444oig.1
-        for <linux-gpio@vger.kernel.org>; Thu, 31 Oct 2019 00:10:11 -0700 (PDT)
+        with ESMTP id S1726575AbfJaHLN (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 31 Oct 2019 03:11:13 -0400
+Received: by mail-oi1-f195.google.com with SMTP id c2so4261146oic.13
+        for <linux-gpio@vger.kernel.org>; Thu, 31 Oct 2019 00:11:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baylibre-com.20150623.gappssmtp.com; s=20150623;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc:content-transfer-encoding;
-        bh=ckFaCn6NS8lQze7Cdj5CHfHcuRQX9ihC93nje9hqGGY=;
-        b=lzK8HqK8cj7mpJSCz9rDuZ04tF6a4CMQWy/aulYq/r9w7YmOVaQEO0FF4isFDIlh7u
-         Kxf7XJibsRn/FW27C34t4Evs8GatoBnx7xxyh1o3FQr47fDpVcR+vBpiwTlA0OEw24fJ
-         TmQl8ECOXwNjYMLW6XJPSYqmX1KicyuA9USRQGYIvxMMwO3m9R1MW7RjlAqrEsSXI4HQ
-         essGQWBP0u62IOeb7p+6x3Kt5hYvJ51hS8Mi2Zi1Zr9ylO15k5uUnb+3l47qd76Ms0sg
-         8N1ZIOCVZOsuIXo21/pyf+GqqlVXq5rZad2g9WZ5PQdkY231ZxCw41N/YIh93B/ruXW2
-         n0JQ==
+        bh=kvwpnK0xYMVJG8q2IUAIuhIq2977PzZ3j2aspgO5DR8=;
+        b=kcSMisAIZoHPDYDuebzLm6H6juNsdqvcePDqNSUu4Zj6lP8zJtQzx+T95Pz6pvg0hf
+         3wl1SJ/SUzXy+5oVb1A7SCN0CHjrFSyt8pV30MN+ns/PJtPM2nqT5nUUNf9beoRZtpmk
+         +6m1tPj90OmdXNu4gxCA7y/it3O3tYApU9K58QTR9Q5HFKK9aCmdCt0IZgyHoXcWXGkK
+         IarSuYKsNDVd1hZh2Bq+7+XSLyzU5gr9ypE2/2Zl7XPwts7Ul8XTjStJfz2U+FSk523Q
+         1Jo4wGNBykOE3LCCAkHAVoO3xX9WST+SmIchHxVLNmikIDbInlKjETBnKtQgEr7BONtX
+         F0Ng==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc:content-transfer-encoding;
-        bh=ckFaCn6NS8lQze7Cdj5CHfHcuRQX9ihC93nje9hqGGY=;
-        b=pdzgMmIfNO1k0k3ihqxU2FleD68kW8n9Qz0jgnpve8F539PCE5iE1XYh38OntSBn0N
-         7LE/GALKx1MHcXF2jAeTfUhCXsWbK5iQhxwWkoDbwj5f7gTpBWeg3pOi8QQsZGrjPQQ0
-         0k15jN3Rqs3sL5f+12Ew2ztYMcJqEldmeErqtwvC3dnsqeA0YY4rNVpsBfLaIISEZg90
-         P/JkAZgX7hqEW47288vf7qUkXYTzUAhfxQCYk/XLKes8m3ztr83dq6X3RQ2zPCrVw2tX
-         cXEAZ7XQeyP3DwMNI3RWm1a/8Oa2iEmd5JCG9XmokNg4aJnXxe8MI5CUrqECmYwSuBUi
-         QSRw==
-X-Gm-Message-State: APjAAAV6i5XPRYjFdow/WE6aflJT7HleUoHEZZHrheKKfmocCCYfeCBt
-        nu+Fa+ik9PNhv1P0C8mNFjRTQKEcPzUKtF3zf6eg4w==
-X-Google-Smtp-Source: APXvYqw8Saj/usm4WuGLyowqwvSeH8QGt7VqNnNeVQdq6M1i/K3FrPOyAjOF3rBNVdI0JD8z9I+bQEwpuePzS4RzIMo=
-X-Received: by 2002:a05:6808:4c6:: with SMTP id a6mr2931004oie.114.1572505811195;
- Thu, 31 Oct 2019 00:10:11 -0700 (PDT)
+        bh=kvwpnK0xYMVJG8q2IUAIuhIq2977PzZ3j2aspgO5DR8=;
+        b=Pq1gP8gbYeNjcLkQjaRmgcgZQ0yJD9MSNjF9MK4vdSshPRobZQrtcbjDRD+InOr512
+         8LRTeNbqEKy8L9OCUFXz11RqqCXo0VQ1xq7I+I5ZZn7cZThh2Cqkc+Gcq5DURlgO5NBi
+         e7W9fQ28MvMD2Z3WJp5fsyt7N2KNXwajL9n6IyzD9TdV7T3tyIbQmO74pHI/Baisg0cP
+         AnMyebmCFi51xZHGG1CDvPXxDYkTW14sJ6aH5WxMkkVsYQEEw+zkVugKiYSUVcOBFNLd
+         AOnwK3qJrU4E/CKtp5Lg/I8ZTZzh9tsrvy3kSKbFge2AvlPelUpicL2qrHcjf4Q0/4LT
+         +DZQ==
+X-Gm-Message-State: APjAAAVmm91o3SKYm5QFCSZU5n8A2k8XXURwdwziZGUDx8a2hJNUqCYw
+        JmOLAj0OUgkEie1m097dPdF2lxKctwW9SuM93aBMCw==
+X-Google-Smtp-Source: APXvYqzyNUr9BlBPkL/BIHsj56asw3dmZmmCvcShu0+R3uKXpbkSzZLD0Yysfe6OSXLmXkBUI073RojUA2xFd+x1SRU=
+X-Received: by 2002:aca:cc11:: with SMTP id c17mr2867272oig.147.1572505871402;
+ Thu, 31 Oct 2019 00:11:11 -0700 (PDT)
 MIME-Version: 1.0
-References: <20191028073713.25664-1-warthog618@gmail.com>
-In-Reply-To: <20191028073713.25664-1-warthog618@gmail.com>
+References: <20191028073912.25743-1-warthog618@gmail.com>
+In-Reply-To: <20191028073912.25743-1-warthog618@gmail.com>
 From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Date:   Thu, 31 Oct 2019 08:10:00 +0100
-Message-ID: <CAMpxmJUO3O05d6ZQijF4+1OCf5E7oeYOPVMZCmOXBV9-VJz5jw@mail.gmail.com>
-Subject: Re: [PATCH v4 0/5] gpio: expose line bias flags to userspace
-To:     Kent Gibson <warthog618@gmail.com>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+Date:   Thu, 31 Oct 2019 08:11:00 +0100
+Message-ID: <CAMpxmJWb=6QQqMWNsDTJKMEr=cd8h1pq+zewc16cFfosFRwmDQ@mail.gmail.com>
+Subject: Re: [PATCH] gpio: add new SET_CONFIG ioctl() to gpio chardev
+To:     Kent Gibson <warthog618@gmail.com>
 Cc:     linux-gpio <linux-gpio@vger.kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bamvor Jian Zhang <bamv2005@gmail.com>, drew@pdp7.com
+        Linus Walleij <linus.walleij@linaro.org>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 Sender: linux-gpio-owner@vger.kernel.org
@@ -59,96 +57,286 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-pon., 28 pa=C5=BA 2019 o 08:37 Kent Gibson <warthog618@gmail.com> napisa=C5=
+pon., 28 pa=C5=BA 2019 o 08:39 Kent Gibson <warthog618@gmail.com> napisa=C5=
 =82(a):
 >
-> The major changes from v3 is the renaming of flags in patch 1, rather
-> than in later patches, and the addition of sanity checking on bias flag
-> combinations - only allowing one bias flag to be set at a time.
+> Add the GPIOHANDLE_SET_CONFIG_IOCTL to the gpio chardev.
+> The ioctl allows some of the configuration of a requested handle to be
+> changed without having to release the line.
+> The primary use case is the changing of direction for bi-directional
+> lines.
 >
-> There are still some deficiencies that I'm uncertain on how to best
-> resolve:
+> Based on initial work by Bartosz Golaszewski <bgolaszewski@baylibre.com>
 >
-> The setting of bias is performed by gpio_set_bias, which is hooked into
-> gpiod_direction_input and gpiod_direction_output.  It extends the setting
-> of bias that was already present in gpiod_direction_input.
-> In keeping with the existing behaviour, the bias is set on a best-effort
-> basis - no error is returned to the user if an error is returned by the
-> pinctrl driver.  Returning an error makes sense to me, particularly for
-> the uAPI, but that conflicts with the existing gpiod_direction_input
-> behaviour. So leave as best-effort, change gpiod_direction_input
-> behaviour, or restructure to support both behaviours?
+> Signed-off-by: Kent Gibson <warthog618@gmail.com>
+> ---
+>
+> The patch is against Bart's gpio/for-next branch[1] with v4 of my bias
+> patch series "gpio: expose line bias flags to userspace" applied.
+> This is necessary to support setting of the bias flags introduced
+> there.
+>
+> The patch has been successfully tested against gpio-mockup using the
+> feature/pud_set_config branch of my Go gpiod library[2], as libgpiod has
+> not yet been updated with the uAPI change.
+>
+>  drivers/gpio/gpiolib.c    | 163 ++++++++++++++++++++++++++------------
+>  include/uapi/linux/gpio.h |  18 +++++
+>  2 files changed, 132 insertions(+), 49 deletions(-)
+>
+> diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
+> index df27f05f9b8d..62a74e27ad02 100644
+> --- a/drivers/gpio/gpiolib.c
+> +++ b/drivers/gpio/gpiolib.c
+> @@ -427,23 +427,74 @@ struct linehandle_state {
+>         GPIOHANDLE_REQUEST_OPEN_DRAIN | \
+>         GPIOHANDLE_REQUEST_OPEN_SOURCE)
+>
+> +static int linehandle_validate_flags(u32 flags)
+> +{
+> +       /* Return an error if an unknown flag is set */
+> +       if (flags & ~GPIOHANDLE_REQUEST_VALID_FLAGS)
+> +               return -EINVAL;
+> +
+> +       /*
+> +        * Do not allow both INPUT & OUTPUT flags to be set as they are
+> +        * contradictory.
+> +        */
+> +       if ((flags & GPIOHANDLE_REQUEST_INPUT) &&
+> +           (flags & GPIOHANDLE_REQUEST_OUTPUT))
+> +               return -EINVAL;
+> +
+> +       /*
+> +        * Do not allow OPEN_SOURCE & OPEN_DRAIN flags in a single reques=
+t. If
+> +        * the hardware actually supports enabling both at the same time =
+the
+> +        * electrical result would be disastrous.
+> +        */
+> +       if ((flags & GPIOHANDLE_REQUEST_OPEN_DRAIN) &&
+> +           (flags & GPIOHANDLE_REQUEST_OPEN_SOURCE))
+> +               return -EINVAL;
+> +
+> +       /* OPEN_DRAIN and OPEN_SOURCE flags only make sense for output mo=
+de. */
+> +       if (!(flags & GPIOHANDLE_REQUEST_OUTPUT) &&
+> +           ((flags & GPIOHANDLE_REQUEST_OPEN_DRAIN) ||
+> +            (flags & GPIOHANDLE_REQUEST_OPEN_SOURCE)))
+> +               return -EINVAL;
+> +
+> +       /* Bias flags only allowed for input or output mode. */
+> +       if (!((flags & GPIOHANDLE_REQUEST_INPUT) ||
+> +             (flags & GPIOHANDLE_REQUEST_OUTPUT)) &&
+> +           ((flags & GPIOHANDLE_REQUEST_BIAS_DISABLE) ||
+> +            (flags & GPIOHANDLE_REQUEST_BIAS_PULL_UP) ||
+> +            (flags & GPIOHANDLE_REQUEST_BIAS_PULL_DOWN)))
+> +               return -EINVAL;
+> +
+> +       /* Only one bias flag can be set. */
+> +       if (((flags & GPIOHANDLE_REQUEST_BIAS_DISABLE) &&
+> +            (flags & (GPIOHANDLE_REQUEST_BIAS_PULL_DOWN |
+> +                       GPIOHANDLE_REQUEST_BIAS_PULL_UP))) ||
+> +           ((flags & GPIOHANDLE_REQUEST_BIAS_PULL_DOWN) &&
+> +            (flags & GPIOHANDLE_REQUEST_BIAS_PULL_UP)))
+> +               return -EINVAL;
+> +
+> +       return 0;
+> +}
+> +
 
-Thomas: is there any reason not to check the return value of these
-calls for errors other than -EOPNOTSUPP?
+This is great but I'd prefer that it be put into a separate patch with
+its own description that would come before the other changes.
 
+>  static long linehandle_ioctl(struct file *filep, unsigned int cmd,
+>                              unsigned long arg)
+>  {
+>         struct linehandle_state *lh =3D filep->private_data;
+>         void __user *ip =3D (void __user *)arg;
+>         struct gpiohandle_data ghd;
+> +       struct gpiohandle_config gcnf;
+> +       struct gpio_desc *desc;
+>         DECLARE_BITMAP(vals, GPIOHANDLES_MAX);
+> -       int i;
+> +       int i, ret;
+> +       u32 lflags;
 >
-> Also, the gpio_set_bias is hooked into gpiod_direction_output, which is
-> fine for the uAPI, but perhaps it should be hooked into
-> gpiod_direction_output_raw_commit?  Or the setting of direction
-> and bias should be decoupled?
+>         if (cmd =3D=3D GPIOHANDLE_GET_LINE_VALUES_IOCTL) {
+>                 /* NOTE: It's ok to read values of output lines. */
+> -               int ret =3D gpiod_get_array_value_complex(false,
+> -                                                       true,
+> -                                                       lh->numdescs,
+> -                                                       lh->descs,
+> -                                                       NULL,
+> -                                                       vals);
+> +               ret =3D gpiod_get_array_value_complex(false,
+> +                                                   true,
+> +                                                   lh->numdescs,
+> +                                                   lh->descs,
+> +                                                   NULL,
+> +                                                   vals);
+>                 if (ret)
+>                         return ret;
 >
-> And now the actual blurb...
+> @@ -477,6 +528,59 @@ static long linehandle_ioctl(struct file *filep, uns=
+igned int cmd,
+>                                               lh->descs,
+>                                               NULL,
+>                                               vals);
+> +       } else if (cmd =3D=3D GPIOHANDLE_SET_CONFIG_IOCTL) {
+> +               if (copy_from_user(&gcnf, ip, sizeof(gcnf)))
+> +                       return -EFAULT;
+> +
+> +               lflags =3D gcnf.flags;
+> +               ret =3D linehandle_validate_flags(lflags);
+> +               if (ret)
+> +                       return ret;
+> +
+> +               for (i =3D 0; i < lh->numdescs; i++) {
+> +                       desc =3D lh->descs[i];
+> +                       if (lflags & GPIOHANDLE_REQUEST_ACTIVE_LOW)
+> +                               set_bit(FLAG_ACTIVE_LOW, &desc->flags);
+> +                       else
+> +                               clear_bit(FLAG_ACTIVE_LOW, &desc->flags);
+> +                       if (lflags & GPIOHANDLE_REQUEST_OPEN_DRAIN)
+> +                               set_bit(FLAG_OPEN_DRAIN, &desc->flags);
+> +                       else
+> +                               clear_bit(FLAG_OPEN_DRAIN, &desc->flags);
+> +                       if (lflags & GPIOHANDLE_REQUEST_OPEN_SOURCE)
+> +                               set_bit(FLAG_OPEN_SOURCE, &desc->flags);
+> +                       else
+> +                               clear_bit(FLAG_OPEN_SOURCE, &desc->flags)=
+;
+> +                       if (lflags & GPIOHANDLE_REQUEST_BIAS_PULL_UP)
+> +                               set_bit(FLAG_PULL_UP, &desc->flags);
+> +                       else
+> +                               clear_bit(FLAG_PULL_UP, &desc->flags);
+> +                       if (lflags & GPIOHANDLE_REQUEST_BIAS_PULL_DOWN)
+> +                               set_bit(FLAG_PULL_DOWN, &desc->flags);
+> +                       else
+> +                               clear_bit(FLAG_PULL_DOWN, &desc->flags);
+> +                       if (lflags & GPIOHANDLE_REQUEST_BIAS_DISABLE)
+> +                               set_bit(FLAG_BIAS_DISABLE, &desc->flags);
+> +                       else
+> +                               clear_bit(FLAG_BIAS_DISABLE, &desc->flags=
+);
+
+Could you add some new lines between the if elses? I think it'll be
+more readable.
+
+> +
+> +                       /*
+> +                        * Lines have to be requested explicitly for inpu=
+t
+> +                        * or output, else the line will be treated "as i=
+s".
+> +                        */
+> +                       if (lflags & GPIOHANDLE_REQUEST_OUTPUT) {
+> +                               int val =3D !!gcnf.default_values[i];
+> +
+> +                               ret =3D gpiod_direction_output(desc, val)=
+;
+> +                               if (ret)
+> +                                       return ret;
+> +                       } else if (lflags & GPIOHANDLE_REQUEST_INPUT) {
+> +                               ret =3D gpiod_direction_input(desc);
+> +                               if (ret)
+> +                                       return ret;
+> +                       }
+> +               }
+> +               return 0;
+>         }
+>         return -EINVAL;
+>  }
+> @@ -528,48 +632,9 @@ static int linehandle_create(struct gpio_device *gde=
+v, void __user *ip)
 >
-> This series adds gross control of pull-up/pull-down to the GPIO uAPI.
-> Gross control means enabling and disabling of bias functionality,
-> not finer grained control such as setting biasing impedances.
+>         lflags =3D handlereq.flags;
 >
-> The support allows both input and output lines to have any one of the
-> following biases applied as part of the line handle or event request:
->  0. As Is - bias is left alone.  This is the default for ABI compatibilit=
-y.
->  1. Bias Disable - bias is explicitly disabled.
->  2. Pull Down - pull-down bias is enabled.
->  3. Pull Up - pull-up bias is enabled.
+> -       /* Return an error if an unknown flag is set */
+> -       if (lflags & ~GPIOHANDLE_REQUEST_VALID_FLAGS)
+> -               return -EINVAL;
+> -
+> -       /*
+> -        * Do not allow both INPUT & OUTPUT flags to be set as they are
+> -        * contradictory.
+> -        */
+> -       if ((lflags & GPIOHANDLE_REQUEST_INPUT) &&
+> -           (lflags & GPIOHANDLE_REQUEST_OUTPUT))
+> -               return -EINVAL;
+> -
+> -       /*
+> -        * Do not allow OPEN_SOURCE & OPEN_DRAIN flags in a single reques=
+t. If
+> -        * the hardware actually supports enabling both at the same time =
+the
+> -        * electrical result would be disastrous.
+> -        */
+> -       if ((lflags & GPIOHANDLE_REQUEST_OPEN_DRAIN) &&
+> -           (lflags & GPIOHANDLE_REQUEST_OPEN_SOURCE))
+> -               return -EINVAL;
+> -
+> -       /* OPEN_DRAIN and OPEN_SOURCE flags only make sense for output mo=
+de. */
+> -       if (!(lflags & GPIOHANDLE_REQUEST_OUTPUT) &&
+> -           ((lflags & GPIOHANDLE_REQUEST_OPEN_DRAIN) ||
+> -            (lflags & GPIOHANDLE_REQUEST_OPEN_SOURCE)))
+> -               return -EINVAL;
+> -
+> -       /* Bias flags only allowed for input or output mode. */
+> -       if (!((lflags & GPIOHANDLE_REQUEST_INPUT) ||
+> -             (lflags & GPIOHANDLE_REQUEST_OUTPUT)) &&
+> -           ((lflags & GPIOHANDLE_REQUEST_BIAS_DISABLE) ||
+> -            (lflags & GPIOHANDLE_REQUEST_BIAS_PULL_UP) ||
+> -            (lflags & GPIOHANDLE_REQUEST_BIAS_PULL_DOWN)))
+> -               return -EINVAL;
+> -
+> -       /* Only one bias flag can be set. */
+> -       if (((lflags & GPIOHANDLE_REQUEST_BIAS_DISABLE) &&
+> -            (lflags & (GPIOHANDLE_REQUEST_BIAS_PULL_DOWN |
+> -                       GPIOHANDLE_REQUEST_BIAS_PULL_UP))) ||
+> -           ((lflags & GPIOHANDLE_REQUEST_BIAS_PULL_DOWN) &&
+> -            (lflags & GPIOHANDLE_REQUEST_BIAS_PULL_UP)))
+> -               return -EINVAL;
+> +       ret =3D linehandle_validate_flags(lflags);
+> +       if (ret)
+> +               return ret;
 >
-> The biases are set via three flags, BIAS_DISABLE, BIAS_PULL_DOWN
-> and BIAS_PULL_UP.  These map directly to the similarly named
-> pinctrl pin_config_param flags.
-> As Is corresponds to none of the flags being set.
+>         lh =3D kzalloc(sizeof(*lh), GFP_KERNEL);
+>         if (!lh)
+> diff --git a/include/uapi/linux/gpio.h b/include/uapi/linux/gpio.h
+> index 7cc21c3b0839..799cf823d493 100644
+> --- a/include/uapi/linux/gpio.h
+> +++ b/include/uapi/linux/gpio.h
+> @@ -100,6 +100,24 @@ struct gpiohandle_request {
+>         int fd;
+>  };
 >
-> The setting of biases on output lines may seem odd, but is to allow for
-> utilisation of internal pull-up/pull-down on open drain and open source
-> outputs, where supported in hardware.
->
-> Patches are against Bart's gpio/for-next branch[1].
->
-> The patch has been successfully tested against gpio-mockup, and
-> on a Raspberry Pi, in both cases using the feature/pud branch of my Go
-> gpiod library[2], as well as with my feature/pud development branch
-> of libgpiod[3].
->
-> Patch 1 adds support to line handle requests.
-> Patch 2 adds support to line event requests and restricts bias settings
-> to lines explicitly requested as inputs.
-> Patch 3 adds pull-up/down support to the gpio-mockup for uAPI testing.
-> Patch 4 adds support for disabling bias.
-> Patch 5 adds support for setting bias on output lines.
->
-> Drew Fustini (1):
->   gpio: expose pull-up/pull-down line flags to userspace
->
-> Kent Gibson (4):
->   gpiolib: add support for pull up/down to lineevent_create
->   gpio: mockup: add set_config to support pull up/down
->   gpiolib: add support for disabling line bias
->   gpiolib: add support for biasing output lines
->
->  drivers/gpio/gpio-mockup.c | 94 ++++++++++++++++++++++++--------------
->  drivers/gpio/gpiolib.c     | 81 +++++++++++++++++++++++++++++---
->  drivers/gpio/gpiolib.h     |  1 +
->  include/uapi/linux/gpio.h  |  6 +++
->  4 files changed, 142 insertions(+), 40 deletions(-)
->
+> +/**
+> + * struct gpiohandle_config - Configuration for a GPIO handle request
+> + * @flags: updated flags for the requested GPIO lines, such as
+> + * GPIOHANDLE_REQUEST_OUTPUT, GPIOHANDLE_REQUEST_ACTIVE_LOW etc, OR:ed
+> + * together
+> + * @default_values: if the GPIOHANDLE_REQUEST_OUTPUT is set in flags,
+> + * this specifies the default output value, should be 0 (low) or
+> + * 1 (high), anything else than 0 or 1 will be interpreted as 1 (high)
+> + * @padding: reserved for future use and should be zero filled
+> + */
+> +struct gpiohandle_config {
+> +       __u32 flags;
+> +       __u8 default_values[GPIOHANDLES_MAX];
+> +       __u32 padding[4]; /* padding for future use */
+> +};
+> +
+> +#define GPIOHANDLE_SET_CONFIG_IOCTL _IOWR(0xB4, 0x0a, struct gpiohandle_=
+config)
+> +
+>  /**
+>   * struct gpiohandle_data - Information of values on a GPIO handle
+>   * @values: when getting the state of lines this contains the current
 > --
 > 2.23.0
 >
 > [1] git://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git
 > [2] https://github.com/warthog618/gpiod.git
-> [3] https://github.com/warthog618/libgpiod.git
-
-I think this starts to look good. There are some nits and I'd like to
-also hear an opinion from Linus on that, but I personally like that
-and think it'll be useful.
 
 Bart
