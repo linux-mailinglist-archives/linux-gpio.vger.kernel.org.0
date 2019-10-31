@@ -2,59 +2,59 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id EDFDCEB57D
-	for <lists+linux-gpio@lfdr.de>; Thu, 31 Oct 2019 17:55:14 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D4160EB642
+	for <lists+linux-gpio@lfdr.de>; Thu, 31 Oct 2019 18:39:56 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728603AbfJaQzN (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 31 Oct 2019 12:55:13 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:33695 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728561AbfJaQzM (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 31 Oct 2019 12:55:12 -0400
-Received: by mail-wr1-f65.google.com with SMTP id s1so7076375wro.0
-        for <linux-gpio@vger.kernel.org>; Thu, 31 Oct 2019 09:55:11 -0700 (PDT)
+        id S1728837AbfJaRj4 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 31 Oct 2019 13:39:56 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:43933 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728561AbfJaRjz (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 31 Oct 2019 13:39:55 -0400
+Received: by mail-wr1-f66.google.com with SMTP id n1so7192759wra.10
+        for <linux-gpio@vger.kernel.org>; Thu, 31 Oct 2019 10:39:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=kernelci-org.20150623.gappssmtp.com; s=20150623;
         h=message-id:date:mime-version:content-transfer-encoding:subject:to
          :from;
-        bh=Os/I0zz00frZd0xsPT5HK3FbyUw22Y7aC6HyxKaRPRM=;
-        b=pLTJleTTOOmJpVVOUXao+Wyl5bfscim4jN0hlMJRz6kUG/0syJsx2RhNuRjmA5sJGf
-         Rh7i5aFCB3KaAwwWFWalsjHtPTQQblbt+A885yf+jj1nsKuiHQxlbDx003CRsJNyf4yg
-         AmRSA9nXLL56aVnrHe5hCDST/y8lMRYSdckdH2Vkd/QUHVm7mFlFT2XVzffaEJ6mY730
-         Qyer49fOKmP78zI0nTWW1i49FZqXy1nzmXKmdMxpoExsg2fxrbxNM5kO8MllbH3FXFv5
-         4fHdKMjLkgPmBAgRianfqtZup+FLKk3rPPomz5CvGuM0cWUdMPNz6LB5bx1Lcu86spzO
-         pM3g==
+        bh=LYgQR5+79HqwWacz+8ftn5/Kc591xZFZKB6Q6T4MTOY=;
+        b=2O6o/yWMAeGK+u5b3CdwQITX1PuFnkJNuvfBEe4uSaxtUAOxXHJ6TI6rK+YksdL5VB
+         WhVuWzH3Ebrk2YIsBaSMw43RSV4GhrkgXHDHvhOnhclVisIKMZ6bfKGtwakUxjmzPU5k
+         RgzKQH1AsZI44vsQyIq5ezLEow/9ytv/fSVb7dk7mkTSW7yIPncY0jGTXToNWqiYjGd3
+         tf48VabUyUI/rN7V0YdJ6H8BWwTgNxKie58S/Kx6HyT6mFpkyeNiGBgC3+/MJl2fZ+lj
+         hnVDHDSCpWo76ajPYeTomMJESfyJ0Zygxzgkbh17NFxm6ViJVpwWxrNZjHgtg8R+oiRw
+         hm8Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:message-id:date:mime-version
          :content-transfer-encoding:subject:to:from;
-        bh=Os/I0zz00frZd0xsPT5HK3FbyUw22Y7aC6HyxKaRPRM=;
-        b=G32L/3wjv3b0yBNYMQtaPgwPFmfXd0ORRDcKuOFiKK0UMpmPwPHJpw6Ax+8h/5os4P
-         wq+d/uFmTg784gF3F019+dADIUzNRdOxr7JiTm5+pePZoAUxxXmlpNQvudv1l/nv1Eza
-         /mZQMD/rjVOTkajk3bGxLC0Uuj5bQv3HBFVeZ2xvaLAdS8wbVLg3LYGTgKplf9V7sGAO
-         5/TE47ibIYB30uc44DDDNVysSvF3tT45dBkW4j08vjO3MFUDvkoLBGiOvbhkervdSZ4I
-         hLLcWnlXXOe5nMHmMiyYtCvkoRHWfE8ZsmAkVDMD4Rl8KWaxlE8VN8jDZucNaxs3IA5X
-         UWUg==
-X-Gm-Message-State: APjAAAWpueDqKJKpa3LTpT1ooLqCYqosxym0N0Oil6NXa9ahPuw5TfKV
-        36lZvjrzL3n4gtFiEvcWYCuBsuoM5PLxTQ==
-X-Google-Smtp-Source: APXvYqwMdDlTJqR73fgSENQkGjnKu9k6F6FWm64d1PJxtmeOnAaKX0QJSIXj8FOfXUDviALl5CQkGQ==
-X-Received: by 2002:a5d:6104:: with SMTP id v4mr6331709wrt.36.1572540910400;
-        Thu, 31 Oct 2019 09:55:10 -0700 (PDT)
+        bh=LYgQR5+79HqwWacz+8ftn5/Kc591xZFZKB6Q6T4MTOY=;
+        b=aDPsHvtXK2sxp8PW3O3e1uxvAboLKbki28fuqxpqFlpWscwHo2nzLg/zKUCVE0+RKm
+         iKBb5DB4JM2wlFV3XjF8vhXCo+I9Q8rprKpSqeejijBn1wNzZt3zg3HXXiEL9QbjPLhV
+         gRjO3wot7+xbAcg/j63Py/ppNkGLV04kA08UA7BROpbdnQ+s+vunsUt92nwWpAiLPkZ2
+         BVkopg1e1RkLxUD7wcyGtPX3jNbS8nbUrkvTr0nRZ+s7Ucjjpce+W3PeHZTE6160M10/
+         PVw5GuR1ORS3xJjgaekdN3EynB6pSXJbjs/FOrzWvAVul0G/pjcYw7GIAwsSR+dmeYOA
+         Q6dQ==
+X-Gm-Message-State: APjAAAXq2YENEdtCZY/qhvzlGMcdLmfzBLM2TxOg67I2Il6GXLdldGaD
+        YHtPFbdCf38Oa6HvIDFqYc14B1olHT+QRQ==
+X-Google-Smtp-Source: APXvYqySeiD7MgWDN3/VslovWzYKJUsHIjj3z1dBQs9uc/KwBy9vHjSvvf4OY+Lc9gR94FVRu5ZrdA==
+X-Received: by 2002:adf:e38f:: with SMTP id e15mr6565060wrm.218.1572543593709;
+        Thu, 31 Oct 2019 10:39:53 -0700 (PDT)
 Received: from [148.251.42.114] ([2a01:4f8:201:9271::2])
-        by smtp.gmail.com with ESMTPSA id x5sm2377543wmj.7.2019.10.31.09.55.09
+        by smtp.gmail.com with ESMTPSA id p12sm5058644wrm.62.2019.10.31.10.39.53
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 31 Oct 2019 09:55:09 -0700 (PDT)
-Message-ID: <5dbb11ed.1c69fb81.729d3.c13b@mx.google.com>
-Date:   Thu, 31 Oct 2019 09:55:09 -0700 (PDT)
+        Thu, 31 Oct 2019 10:39:53 -0700 (PDT)
+Message-ID: <5dbb1c69.1c69fb81.1ad1a.bc9a@mx.google.com>
+Date:   Thu, 31 Oct 2019 10:39:53 -0700 (PDT)
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 X-Kernelci-Branch: devel
 X-Kernelci-Tree: linusw
 X-Kernelci-Kernel: v5.4-rc1-31-g6a41b6c5fc20
-X-Kernelci-Report-Type: build
-Subject: linusw/devel build: 6 builds: 0 failed, 6 passed,
- 13 warnings (v5.4-rc1-31-g6a41b6c5fc20)
+X-Kernelci-Report-Type: boot
+Subject: linusw/devel boot: 43 boots: 11 failed,
+ 31 passed with 1 untried/unknown (v5.4-rc1-31-g6a41b6c5fc20)
 To:     linux-gpio@vger.kernel.org, fellows@kernelci.org
 From:   "kernelci.org bot" <bot@kernelci.org>
 Sender: linux-gpio-owner@vger.kernel.org
@@ -62,9 +62,11 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-linusw/devel build: 6 builds: 0 failed, 6 passed, 13 warnings (v5.4-rc1-31-=
-g6a41b6c5fc20)
+linusw/devel boot: 43 boots: 11 failed, 31 passed with 1 untried/unknown (v=
+5.4-rc1-31-g6a41b6c5fc20)
 
+Full Boot Summary: https://kernelci.org/boot/all/job/linusw/branch/devel/ke=
+rnel/v5.4-rc1-31-g6a41b6c5fc20/
 Full Build Summary: https://kernelci.org/build/linusw/branch/devel/kernel/v=
 5.4-rc1-31-g6a41b6c5fc20/
 
@@ -74,129 +76,64 @@ Git Describe: v5.4-rc1-31-g6a41b6c5fc20
 Git Commit: 6a41b6c5fc20abced88fa0eed42ae5e5cb70b280
 Git URL: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-gpio.=
 git/
-Built: 6 unique architectures
+Tested: 40 unique boards, 14 SoC families, 3 builds out of 6
 
-Warnings Detected:
-
-arc:
-    nsim_hs_defconfig (gcc-8): 2 warnings
+Boot Regressions Detected:
 
 arm64:
-    defconfig (gcc-8): 3 warnings
 
-arm:
-    multi_v7_defconfig (gcc-8): 5 warnings
+    defconfig:
+        gcc-8:
+          meson-g12a-sei510:
+              lab-baylibre: new failure (last pass: v5.4-rc1-25-gfe12e94375=
+da)
+          meson-g12a-x96-max:
+              lab-baylibre: new failure (last pass: v5.4-rc1-25-gfe12e94375=
+da)
+          meson-g12b-odroid-n2:
+              lab-baylibre: new failure (last pass: v5.4-rc1-25-gfe12e94375=
+da)
+          meson-gxbb-p200:
+              lab-baylibre: new failure (last pass: v5.4-rc1-25-gfe12e94375=
+da)
+          meson-gxl-s805x-libretech-ac:
+              lab-baylibre: new failure (last pass: v5.4-rc1-25-gfe12e94375=
+da)
+          meson-gxl-s805x-p241:
+              lab-baylibre: new failure (last pass: v5.4-rc1-25-gfe12e94375=
+da)
+          meson-gxl-s905x-libretech-cc:
+              lab-baylibre: new failure (last pass: v5.4-rc1-25-gfe12e94375=
+da)
+          meson-gxm-khadas-vim2:
+              lab-baylibre: new failure (last pass: v5.4-rc1-25-gfe12e94375=
+da)
+          r8a7795-salvator-x:
+              lab-baylibre: new failure (last pass: v5.4-rc1-25-gfe12e94375=
+da)
+          r8a7796-m3ulcb:
+              lab-baylibre: new failure (last pass: v5.4-rc1-25-gfe12e94375=
+da)
+          rk3399-puma-haikou:
+              lab-theobroma-systems: new failure (last pass: v5.4-rc1-25-gf=
+e12e94375da)
 
-mips:
-    32r2el_defconfig (gcc-8): 3 warnings
+Boot Failures Detected:
 
-riscv:
-
-x86_64:
-
-
-Warnings summary:
-
-    5    <stdin>:1511:2: warning: #warning syscall clone3 not implemented [=
--Wcpp]
-    2    WARNING: "return_address" [vmlinux] is a static EXPORT_SYMBOL_GPL
-    2    WARNING: "HYPERVISOR_platform_op" [vmlinux] is a static EXPORT_SYM=
-BOL_GPL
-    1    depmod: WARNING: /home/buildslave/workspace/workspace/kernel-build=
-@3/linux/build/_modules_/lib/modules/5.4.0-rc1/kernel/drivers/usb/storage/u=
-as.ko needs unknown symbol usb_stor_sense_invalidCDB
-    1    depmod: WARNING: /home/buildslave/workspace/workspace/kernel-build=
-@3/linux/build/_modules_/lib/modules/5.4.0-rc1/kernel/drivers/usb/storage/u=
-as.ko needs unknown symbol usb_stor_adjust_quirks
-    1    arch/arm64/configs/defconfig:726:warning: symbol value 'm' invalid=
- for REMOTEPROC
-    1    arch/arm/configs/multi_v7_defconfig:936:warning: symbol value 'm' =
-invalid for REMOTEPROC
-
-Section mismatches summary:
-
-    1    WARNING: vmlinux.o(.data+0xbe30c): Section mismatch in reference f=
-rom the variable bcm_iproc_gpio_driver to the (unknown reference) .init.rod=
-ata:(unknown)
-    1    WARNING: vmlinux.o(.data+0x82818): Section mismatch in reference f=
-rom the variable bcm_iproc_gpio_driver to the variable .init.rodata:bcm_ipr=
-oc_gpio_of_match
-
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D
-
-Detailed per-defconfig build reports:
-
----------------------------------------------------------------------------=
------
-32r2el_defconfig (mips, gcc-8) =E2=80=94 PASS, 0 errors, 3 warnings, 0 sect=
-ion mismatches
-
-Warnings:
-    <stdin>:1511:2: warning: #warning syscall clone3 not implemented [-Wcpp]
-    <stdin>:1511:2: warning: #warning syscall clone3 not implemented [-Wcpp]
-    <stdin>:1511:2: warning: #warning syscall clone3 not implemented [-Wcpp]
-
----------------------------------------------------------------------------=
------
-defconfig (riscv, gcc-8) =E2=80=94 PASS, 0 errors, 0 warnings, 0 section mi=
-smatches
-
----------------------------------------------------------------------------=
------
-defconfig (arm64, gcc-8) =E2=80=94 PASS, 0 errors, 3 warnings, 0 section mi=
-smatches
-
-Warnings:
-    arch/arm64/configs/defconfig:726:warning: symbol value 'm' invalid for =
-REMOTEPROC
-    WARNING: "HYPERVISOR_platform_op" [vmlinux] is a static EXPORT_SYMBOL_G=
-PL
-    WARNING: "HYPERVISOR_platform_op" [vmlinux] is a static EXPORT_SYMBOL_G=
-PL
-
-Section mismatches:
-    WARNING: vmlinux.o(.data+0x82818): Section mismatch in reference from t=
-he variable bcm_iproc_gpio_driver to the variable .init.rodata:bcm_iproc_gp=
-io_of_match
-
----------------------------------------------------------------------------=
------
-multi_v7_defconfig (arm, gcc-8) =E2=80=94 PASS, 0 errors, 5 warnings, 0 sec=
-tion mismatches
-
-Warnings:
-    arch/arm/configs/multi_v7_defconfig:936:warning: symbol value 'm' inval=
-id for REMOTEPROC
-    WARNING: "return_address" [vmlinux] is a static EXPORT_SYMBOL_GPL
-    WARNING: "return_address" [vmlinux] is a static EXPORT_SYMBOL_GPL
-    depmod: WARNING: /home/buildslave/workspace/workspace/kernel-build@3/li=
-nux/build/_modules_/lib/modules/5.4.0-rc1/kernel/drivers/usb/storage/uas.ko=
- needs unknown symbol usb_stor_sense_invalidCDB
-    depmod: WARNING: /home/buildslave/workspace/workspace/kernel-build@3/li=
-nux/build/_modules_/lib/modules/5.4.0-rc1/kernel/drivers/usb/storage/uas.ko=
- needs unknown symbol usb_stor_adjust_quirks
-
-Section mismatches:
-    WARNING: vmlinux.o(.data+0xbe30c): Section mismatch in reference from t=
-he variable bcm_iproc_gpio_driver to the (unknown reference) .init.rodata:(=
-unknown)
-
----------------------------------------------------------------------------=
------
-nsim_hs_defconfig (arc, gcc-8) =E2=80=94 PASS, 0 errors, 2 warnings, 0 sect=
-ion mismatches
-
-Warnings:
-    <stdin>:1511:2: warning: #warning syscall clone3 not implemented [-Wcpp]
-    <stdin>:1511:2: warning: #warning syscall clone3 not implemented [-Wcpp]
-
----------------------------------------------------------------------------=
------
-x86_64_defconfig (x86_64, gcc-8) =E2=80=94 PASS, 0 errors, 0 warnings, 0 se=
-ction mismatches
+arm64:
+    defconfig:
+        gcc-8:
+            meson-g12a-sei510: 1 failed lab
+            meson-g12a-x96-max: 1 failed lab
+            meson-g12b-odroid-n2: 1 failed lab
+            meson-gxbb-p200: 1 failed lab
+            meson-gxl-s805x-libretech-ac: 1 failed lab
+            meson-gxl-s805x-p241: 1 failed lab
+            meson-gxl-s905x-khadas-vim: 1 failed lab
+            meson-gxl-s905x-libretech-cc: 1 failed lab
+            meson-gxm-khadas-vim2: 1 failed lab
+            r8a7796-m3ulcb: 1 failed lab
+            rk3399-puma-haikou: 1 failed lab
 
 ---
 For more info write to <info@kernelci.org>
