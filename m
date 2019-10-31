@@ -2,57 +2,57 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 4C97AEAD82
-	for <lists+linux-gpio@lfdr.de>; Thu, 31 Oct 2019 11:35:16 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 6E54BEAD85
+	for <lists+linux-gpio@lfdr.de>; Thu, 31 Oct 2019 11:35:17 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727205AbfJaKfQ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 31 Oct 2019 06:35:16 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:41173 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726864AbfJaKfP (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 31 Oct 2019 06:35:15 -0400
-Received: by mail-wr1-f66.google.com with SMTP id p4so5622201wrm.8;
-        Thu, 31 Oct 2019 03:35:13 -0700 (PDT)
+        id S1727021AbfJaKfR (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 31 Oct 2019 06:35:17 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:43541 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726922AbfJaKfQ (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 31 Oct 2019 06:35:16 -0400
+Received: by mail-wr1-f65.google.com with SMTP id n1so5626227wra.10;
+        Thu, 31 Oct 2019 03:35:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=LJNIZOQTxM0zeJaNJN5sH+4c5oquNyJR2kBX9u+CPCs=;
-        b=U5xTHC14vlwt9GARToj5nzIazVE+hkLcztEtmIdMcB37KOlkPjFn7KdYYBlb4j7S8q
-         So5moPh2R8ujgzeOWjf1rgfbcvv6ZPG9HRaMoAzo3vsxZYgzPGlmTzK3hT1D1fItz47d
-         KGmi1RzBwghJqRzk3QY5CFhUbkRxRFaMT6n/KjxKUQI6Gc12Jj80+i2LwLlRv9jxo3tn
-         iat5o4XUB9U9KWegs1cLje0YsSqQqBHb5LEbX+OHb5cilAwej/yUOjmQh/BISeCT2zm1
-         UYfZn4mAB1fcQ+MWHbJwMAZiw3bP+gLasDMAfePO5M4bZkSTiYG/+jjdgR51gxM23G1/
-         Vv2A==
+        bh=hgkkSSSNB3cUyb1Wf7G1LNn8lte7ZZugUGgXlr9SjTk=;
+        b=TGp9ToQjwqyVkWrRLNgGHwRSJvAjxzIiJIuCo9MAOcb6ndXHHS93pBQvVLYUli0NFl
+         PvTInQHIQ7vq+gWskvedTFMahDwRQ/FEnHZImTY2UULix+zs0kcArTS0eK6v7u+iYtVB
+         Bt5cwvEmwjWDi44pxd/Stt84i9gNgW9R9JrL/lDbrvu9jmXlwpjNIoB0cM8/nDxmcseY
+         he75Jc9/ZGBARqpm1BzApKv6ho9wvQuEJpx/fwHczEuDg0GP4aXbfBhKraqx8QARaKui
+         MkodH9C8YiaIeZEqTuHe2404hnMbsmkAwEeFg/hGE4vhdFnMEX8eslYNSP4KqLai3mrH
+         R0Lg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=LJNIZOQTxM0zeJaNJN5sH+4c5oquNyJR2kBX9u+CPCs=;
-        b=PJvbD+Dw7Qdj6MDcAmHPbDTwkrAaGNG0l++FRZ7enfbFhfF7iUomBI8F5zpv4xfST+
-         8wLWvM5ayrquYDjU0ZVv0lgoJaWiXvnl4dMjyRj9F/JqWwcl31q6e56soTrpj5qNCLtD
-         zbS8oNwFgwILYHZZ5ThHTtbP3kN7u7xDFmdK/Y79biPf24ItHt9YNj1bvLOztO+SEYyC
-         EyFwhSMjfMzrpaf1AyKpHSH1ztMV8o3Ub0hl1+wvJzl3sGBkuQ2YGGxd7h/UumW+IxCE
-         MA8vo1sHxNeX0kSkmF+luaPfZHCMyy9hW3mgfz9Uj6/vcb45jck3adBceBtRPkkfUswE
-         ZuZA==
-X-Gm-Message-State: APjAAAXyjukoPHwv9jebSIRqwhSlAZaq9z2Xm6VzCciDpuLCECBlQdJU
-        1FB8MZdWRmRZKwl9P+nU6mVoj/M2bdc=
-X-Google-Smtp-Source: APXvYqx9RKPCqDI/2b9KXJ3R8DJd2rG249dDMoSkWWGhvc4UAS6dpY13f4eklk+lBBEo3eDopck0fQ==
-X-Received: by 2002:adf:d846:: with SMTP id k6mr4949509wrl.178.1572518112705;
-        Thu, 31 Oct 2019 03:35:12 -0700 (PDT)
+        bh=hgkkSSSNB3cUyb1Wf7G1LNn8lte7ZZugUGgXlr9SjTk=;
+        b=tTqgEtnnTnackMMIBaf9FZXyD0rRGBSivqQhjm5G8EaiiFIirTzizOAd2OZHCWZToE
+         f0eJ+aUhAawJkeGotTbaG58GSVZ9TbuixF9ikujAqRAXczJ+6tqN/rAT7KyRvo857TTY
+         aQSJNr1h3oiNizrHproqKSH2yNHi6Gw8BN4p4I8Lo+eTbPONyBvZrHSoQb7FKIUeLBOE
+         W9KHW2UgRqrlnc24E9dPlLxOXjFZXkuBfg6y+ZM68sxTBOMFmmIaAeGIUHDHaGB6Oev0
+         kYDn5yrHdH3Aw/X0CDs6zbow6WP7EXM449mMnaj6blGaBqfIX4YOKUDYy7K01K65sUgk
+         ioPA==
+X-Gm-Message-State: APjAAAWg1i7Dr0lGU2IeCq/UnKJsOHTfPIuIPPFR7Pnz1ZDKX3+jlhgp
+        Fm6j4KWDDlPxGN4u5tHFDHWYazQtPsg=
+X-Google-Smtp-Source: APXvYqzjD4ElMCPiaOWmEASb+Rwpbbeq4NU0Fp13O33PNPS4bDkrWo1iliNB8HD85a+xt2qhOqXRJg==
+X-Received: by 2002:adf:e64f:: with SMTP id b15mr4533831wrn.372.1572518113792;
+        Thu, 31 Oct 2019 03:35:13 -0700 (PDT)
 Received: from IcarusMOD.eternityproject.eu ([93.51.16.173])
-        by smtp.gmail.com with ESMTPSA id o15sm3414687wrv.76.2019.10.31.03.35.11
+        by smtp.gmail.com with ESMTPSA id o15sm3414687wrv.76.2019.10.31.03.35.12
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 31 Oct 2019 03:35:12 -0700 (PDT)
+        Thu, 31 Oct 2019 03:35:13 -0700 (PDT)
 From:   kholk11@gmail.com
 To:     linux-arm-msm@vger.kernel.org
 Cc:     kholk11@gmail.com, marijns95@gmail.com, bjorn.andersson@linaro.org,
         agross@kernel.org, linus.walleij@linaro.org, robh+dt@kernel.org,
         mark.rutland@arm.com, linux-gpio@vger.kernel.org,
         devicetree@vger.kernel.org
-Subject: [PATCH 2/4] dt-bindings: pinctrl: qcom-pmic-gpio: Add support for PM/PMI8950
-Date:   Thu, 31 Oct 2019 11:35:05 +0100
-Message-Id: <20191031103507.30678-3-kholk11@gmail.com>
+Subject: [PATCH 3/4] pinctrl: qcom: spmi-mpp: Add PM/PMI8950 compatible strings
+Date:   Thu, 31 Oct 2019 11:35:06 +0100
+Message-Id: <20191031103507.30678-4-kholk11@gmail.com>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20191031103507.30678-1-kholk11@gmail.com>
 References: <20191031103507.30678-1-kholk11@gmail.com>
@@ -65,41 +65,26 @@ X-Mailing-List: linux-gpio@vger.kernel.org
 
 From: AngeloGioacchino Del Regno <kholk11@gmail.com>
 
-Document the bindings for PM8950 and PMI8950 PMIC GPIOs.
+PM8950 and PMI8950 have four MPPs and this driver is compatible.
 
 Signed-off-by: AngeloGioacchino Del Regno <kholk11@gmail.com>
 ---
- Documentation/devicetree/bindings/pinctrl/qcom,pmic-gpio.txt | 4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/pinctrl/qcom/pinctrl-spmi-mpp.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/pinctrl/qcom,pmic-gpio.txt b/Documentation/devicetree/bindings/pinctrl/qcom,pmic-gpio.txt
-index 2f48cca1d581..7be5de8d253f 100644
---- a/Documentation/devicetree/bindings/pinctrl/qcom,pmic-gpio.txt
-+++ b/Documentation/devicetree/bindings/pinctrl/qcom,pmic-gpio.txt
-@@ -15,9 +15,11 @@ PMIC's from Qualcomm.
- 		    "qcom,pm8917-gpio"
- 		    "qcom,pm8921-gpio"
- 		    "qcom,pm8941-gpio"
-+		    "qcom,pm8950-gpio"
- 		    "qcom,pm8994-gpio"
- 		    "qcom,pm8998-gpio"
- 		    "qcom,pma8084-gpio"
-+		    "qcom,pmi8950-gpio"
- 		    "qcom,pmi8994-gpio"
- 		    "qcom,pmi8998-gpio"
- 		    "qcom,pms405-gpio"
-@@ -93,9 +95,11 @@ to specify in a pin configuration subnode:
- 		    gpio1-gpio38 for pm8917
- 		    gpio1-gpio44 for pm8921
- 		    gpio1-gpio36 for pm8941
-+		    gpio1-gpio8 for pm8950 (hole on gpio3)
- 		    gpio1-gpio22 for pm8994
- 		    gpio1-gpio26 for pm8998
- 		    gpio1-gpio22 for pma8084
-+		    gpio1-gpio2 for pmi8950
- 		    gpio1-gpio10 for pmi8994
- 		    gpio1-gpio12 for pms405 (holes on gpio1, gpio9 and gpio10)
- 		    gpio1-gpio10 for pm8150 (holes on gpio2, gpio5, gpio7
+diff --git a/drivers/pinctrl/qcom/pinctrl-spmi-mpp.c b/drivers/pinctrl/qcom/pinctrl-spmi-mpp.c
+index 91407b024cf3..48602dba4967 100644
+--- a/drivers/pinctrl/qcom/pinctrl-spmi-mpp.c
++++ b/drivers/pinctrl/qcom/pinctrl-spmi-mpp.c
+@@ -915,6 +915,8 @@ static const struct of_device_id pmic_mpp_of_match[] = {
+ 	{ .compatible = "qcom,pm8841-mpp" },	/* 4 MPP's */
+ 	{ .compatible = "qcom,pm8916-mpp" },	/* 4 MPP's */
+ 	{ .compatible = "qcom,pm8941-mpp" },	/* 8 MPP's */
++	{ .compatible = "qcom,pm8950-mpp" },	/* 4 MPP's */
++	{ .compatible = "qcom,pmi8950-mpp" },	/* 4 MPP's */
+ 	{ .compatible = "qcom,pm8994-mpp" },	/* 8 MPP's */
+ 	{ .compatible = "qcom,pma8084-mpp" },	/* 8 MPP's */
+ 	{ .compatible = "qcom,spmi-mpp" },	/* Generic */
 -- 
 2.21.0
 
