@@ -2,237 +2,250 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 73F41EAAFA
-	for <lists+linux-gpio@lfdr.de>; Thu, 31 Oct 2019 08:34:59 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 89108EAB30
+	for <lists+linux-gpio@lfdr.de>; Thu, 31 Oct 2019 08:57:53 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726535AbfJaHe6 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 31 Oct 2019 03:34:58 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:45636 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726490AbfJaHe6 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 31 Oct 2019 03:34:58 -0400
-Received: by mail-pf1-f196.google.com with SMTP id c7so3695883pfo.12
-        for <linux-gpio@vger.kernel.org>; Thu, 31 Oct 2019 00:34:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=R1G3mFN/LThtAgmOXlGSjewnBDdfV+aGjSUudaD9LIg=;
-        b=vgmdfakV5EsExQ+6inoPqmVbM4Y2QH24KOlnME31oZPluA75FTawHYdGqU3CnxNx+N
-         SHc6OlKwul93jMF6F5/lsLAQei0jaWq8XBqlkypQmTXKFVrN7Hp4OxR1dLSPh/B82V2o
-         yVmKJQ43bzHCdP4/9w8wyOCcS+Wc71V7ZyexYRoLsKZ6iZVP79+MLXSLrE3YClPqgoST
-         z5Opduf1WIV1CfwovpsolirD7De71XBQzNH3+2cMjI2tbB344LmFRQ7/9dz6i+P6KCWZ
-         96IeCVSVqR0huh0wcgJTBWgh19iWXpM+jXGe9KFt2A1YW3UfwBT7HgqbI1kj3viR7yJK
-         DqKQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=R1G3mFN/LThtAgmOXlGSjewnBDdfV+aGjSUudaD9LIg=;
-        b=Y7+29oFtaYF8aD1a25DhOShnOv0Hd/YDfZTVCrSf2F/Xh75GyYF99AZsKSYJvlw5K5
-         0BMn3NEXcTdhbb9fqkPh7VElHklOAuvcR3jKyUEuwCcv/8aONr59ukDrTHIxA/9pRQ0Q
-         PFPWKlUEl0nH2k9iLEdy7F5j/K0ge+tzg2OrEIFZi1nl7Eco9lTK2vbKKZ0QxgA21YWi
-         V7ZTurojDOJbozgYnfYWLTPG/TjSuSOHrRAJdvvCtspUHNHei9MrTagLKRWQs2u7Etq3
-         soB+N//xNFYllY4/dY7K8f9H/t2azXeTCzBSgVKU65AeJVXt+cz+ec0PtSW5J+jynZHo
-         6e9g==
-X-Gm-Message-State: APjAAAXVsrdcCPbAzP0NVG4MgyHSxrLoCYB9iIyN4RUbX71ghCirOlh3
-        mHnt5CeN+3Ow6JY9z5wiKmPUFZvKEeg=
-X-Google-Smtp-Source: APXvYqzxpDHPOSW/Bji3RZCTLrFJZ08tDujemYQ4s/a1ArTBiN4KHjqiiCUHOKG4Gf/b9J2O3KuV1Q==
-X-Received: by 2002:a62:b419:: with SMTP id h25mr4771092pfn.196.1572507297343;
-        Thu, 31 Oct 2019 00:34:57 -0700 (PDT)
-Received: from sol (220-235-109-115.dyn.iinet.net.au. [220.235.109.115])
-        by smtp.gmail.com with ESMTPSA id e26sm2744907pgb.48.2019.10.31.00.34.55
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 31 Oct 2019 00:34:56 -0700 (PDT)
-Date:   Thu, 31 Oct 2019 15:34:52 +0800
-From:   Kent Gibson <warthog618@gmail.com>
-To:     Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Cc:     linux-gpio <linux-gpio@vger.kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH] gpio: add new SET_CONFIG ioctl() to gpio chardev
-Message-ID: <20191031073452.GB25839@sol>
-References: <20191028073912.25743-1-warthog618@gmail.com>
- <CAMpxmJWb=6QQqMWNsDTJKMEr=cd8h1pq+zewc16cFfosFRwmDQ@mail.gmail.com>
+        id S1726991AbfJaH5t (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 31 Oct 2019 03:57:49 -0400
+Received: from mga14.intel.com ([192.55.52.115]:65394 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726769AbfJaH5t (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Thu, 31 Oct 2019 03:57:49 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 31 Oct 2019 00:57:48 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.68,250,1569308400"; 
+   d="scan'208";a="375157005"
+Received: from linux.intel.com ([10.54.29.200])
+  by orsmga005.jf.intel.com with ESMTP; 31 Oct 2019 00:57:48 -0700
+Received: from [10.226.38.65] (rtanwar-mobl.gar.corp.intel.com [10.226.38.65])
+        by linux.intel.com (Postfix) with ESMTP id 7C956580127;
+        Thu, 31 Oct 2019 00:57:45 -0700 (PDT)
+Subject: Re: [PATCH v2 1/2] pinctrl: Add pinmux & GPIO controller driver for a
+ new SoC
+To:     Andy Shevchenko <andriy.shevchenko@intel.com>
+Cc:     linus.walleij@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, robh@kernel.org, qi-ming.wu@intel.com,
+        yixin.zhu@linux.intel.com, cheol.yong.kim@intel.com
+References: <cover.1572409172.git.rahul.tanwar@linux.intel.com>
+ <4bb885fe692d29f2635772dcd04839390f1f5671.1572409172.git.rahul.tanwar@linux.intel.com>
+ <20191030143907.GY32742@smile.fi.intel.com>
+From:   "Tanwar, Rahul" <rahul.tanwar@linux.intel.com>
+Message-ID: <bb9d2c3d-2b01-7239-eefa-0e813b091cc8@linux.intel.com>
+Date:   Thu, 31 Oct 2019 15:57:34 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
+In-Reply-To: <20191030143907.GY32742@smile.fi.intel.com>
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAMpxmJWb=6QQqMWNsDTJKMEr=cd8h1pq+zewc16cFfosFRwmDQ@mail.gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Oct 31, 2019 at 08:11:00AM +0100, Bartosz Golaszewski wrote:
-> pon., 28 paź 2019 o 08:39 Kent Gibson <warthog618@gmail.com> napisał(a):
-> >
-> > Add the GPIOHANDLE_SET_CONFIG_IOCTL to the gpio chardev.
-> > The ioctl allows some of the configuration of a requested handle to be
-> > changed without having to release the line.
-> > The primary use case is the changing of direction for bi-directional
-> > lines.
-> >
-> > Based on initial work by Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> >
-> > Signed-off-by: Kent Gibson <warthog618@gmail.com>
-> > ---
-> >
-> > The patch is against Bart's gpio/for-next branch[1] with v4 of my bias
-> > patch series "gpio: expose line bias flags to userspace" applied.
-> > This is necessary to support setting of the bias flags introduced
-> > there.
-> >
-> > The patch has been successfully tested against gpio-mockup using the
-> > feature/pud_set_config branch of my Go gpiod library[2], as libgpiod has
-> > not yet been updated with the uAPI change.
-> >
-> >  drivers/gpio/gpiolib.c    | 163 ++++++++++++++++++++++++++------------
-> >  include/uapi/linux/gpio.h |  18 +++++
-> >  2 files changed, 132 insertions(+), 49 deletions(-)
-> >
-> > diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
-> > index df27f05f9b8d..62a74e27ad02 100644
-> > --- a/drivers/gpio/gpiolib.c
-> > +++ b/drivers/gpio/gpiolib.c
-> > @@ -427,23 +427,74 @@ struct linehandle_state {
-> >         GPIOHANDLE_REQUEST_OPEN_DRAIN | \
-> >         GPIOHANDLE_REQUEST_OPEN_SOURCE)
-> >
-> > +static int linehandle_validate_flags(u32 flags)
-> > +{
-> > +       /* Return an error if an unknown flag is set */
-> > +       if (flags & ~GPIOHANDLE_REQUEST_VALID_FLAGS)
-> > +               return -EINVAL;
-> > +
-> > +       /*
-> > +        * Do not allow both INPUT & OUTPUT flags to be set as they are
-> > +        * contradictory.
-> > +        */
-> > +       if ((flags & GPIOHANDLE_REQUEST_INPUT) &&
-> > +           (flags & GPIOHANDLE_REQUEST_OUTPUT))
-> > +               return -EINVAL;
-> > +
-> > +       /*
-> > +        * Do not allow OPEN_SOURCE & OPEN_DRAIN flags in a single request. If
-> > +        * the hardware actually supports enabling both at the same time the
-> > +        * electrical result would be disastrous.
-> > +        */
-> > +       if ((flags & GPIOHANDLE_REQUEST_OPEN_DRAIN) &&
-> > +           (flags & GPIOHANDLE_REQUEST_OPEN_SOURCE))
-> > +               return -EINVAL;
-> > +
-> > +       /* OPEN_DRAIN and OPEN_SOURCE flags only make sense for output mode. */
-> > +       if (!(flags & GPIOHANDLE_REQUEST_OUTPUT) &&
-> > +           ((flags & GPIOHANDLE_REQUEST_OPEN_DRAIN) ||
-> > +            (flags & GPIOHANDLE_REQUEST_OPEN_SOURCE)))
-> > +               return -EINVAL;
-> > +
-> > +       /* Bias flags only allowed for input or output mode. */
-> > +       if (!((flags & GPIOHANDLE_REQUEST_INPUT) ||
-> > +             (flags & GPIOHANDLE_REQUEST_OUTPUT)) &&
-> > +           ((flags & GPIOHANDLE_REQUEST_BIAS_DISABLE) ||
-> > +            (flags & GPIOHANDLE_REQUEST_BIAS_PULL_UP) ||
-> > +            (flags & GPIOHANDLE_REQUEST_BIAS_PULL_DOWN)))
-> > +               return -EINVAL;
-> > +
-> > +       /* Only one bias flag can be set. */
-> > +       if (((flags & GPIOHANDLE_REQUEST_BIAS_DISABLE) &&
-> > +            (flags & (GPIOHANDLE_REQUEST_BIAS_PULL_DOWN |
-> > +                       GPIOHANDLE_REQUEST_BIAS_PULL_UP))) ||
-> > +           ((flags & GPIOHANDLE_REQUEST_BIAS_PULL_DOWN) &&
-> > +            (flags & GPIOHANDLE_REQUEST_BIAS_PULL_UP)))
-> > +               return -EINVAL;
-> > +
-> > +       return 0;
-> > +}
-> > +
-> 
-> This is great but I'd prefer that it be put into a separate patch with
-> its own description that would come before the other changes.
-> 
 
-Will do.
+Hi Andy,
 
-> >  static long linehandle_ioctl(struct file *filep, unsigned int cmd,
-> >                              unsigned long arg)
-> >  {
-> >         struct linehandle_state *lh = filep->private_data;
-> >         void __user *ip = (void __user *)arg;
-> >         struct gpiohandle_data ghd;
-> > +       struct gpiohandle_config gcnf;
-> > +       struct gpio_desc *desc;
-> >         DECLARE_BITMAP(vals, GPIOHANDLES_MAX);
-> > -       int i;
-> > +       int i, ret;
-> > +       u32 lflags;
-> >
-> >         if (cmd == GPIOHANDLE_GET_LINE_VALUES_IOCTL) {
-> >                 /* NOTE: It's ok to read values of output lines. */
-> > -               int ret = gpiod_get_array_value_complex(false,
-> > -                                                       true,
-> > -                                                       lh->numdescs,
-> > -                                                       lh->descs,
-> > -                                                       NULL,
-> > -                                                       vals);
-> > +               ret = gpiod_get_array_value_complex(false,
-> > +                                                   true,
-> > +                                                   lh->numdescs,
-> > +                                                   lh->descs,
-> > +                                                   NULL,
-> > +                                                   vals);
-> >                 if (ret)
-> >                         return ret;
-> >
-> > @@ -477,6 +528,59 @@ static long linehandle_ioctl(struct file *filep, unsigned int cmd,
-> >                                               lh->descs,
-> >                                               NULL,
-> >                                               vals);
-> > +       } else if (cmd == GPIOHANDLE_SET_CONFIG_IOCTL) {
-> > +               if (copy_from_user(&gcnf, ip, sizeof(gcnf)))
-> > +                       return -EFAULT;
-> > +
-> > +               lflags = gcnf.flags;
-> > +               ret = linehandle_validate_flags(lflags);
-> > +               if (ret)
-> > +                       return ret;
-> > +
-> > +               for (i = 0; i < lh->numdescs; i++) {
-> > +                       desc = lh->descs[i];
-> > +                       if (lflags & GPIOHANDLE_REQUEST_ACTIVE_LOW)
-> > +                               set_bit(FLAG_ACTIVE_LOW, &desc->flags);
-> > +                       else
-> > +                               clear_bit(FLAG_ACTIVE_LOW, &desc->flags);
-> > +                       if (lflags & GPIOHANDLE_REQUEST_OPEN_DRAIN)
-> > +                               set_bit(FLAG_OPEN_DRAIN, &desc->flags);
-> > +                       else
-> > +                               clear_bit(FLAG_OPEN_DRAIN, &desc->flags);
-> > +                       if (lflags & GPIOHANDLE_REQUEST_OPEN_SOURCE)
-> > +                               set_bit(FLAG_OPEN_SOURCE, &desc->flags);
-> > +                       else
-> > +                               clear_bit(FLAG_OPEN_SOURCE, &desc->flags);
-> > +                       if (lflags & GPIOHANDLE_REQUEST_BIAS_PULL_UP)
-> > +                               set_bit(FLAG_PULL_UP, &desc->flags);
-> > +                       else
-> > +                               clear_bit(FLAG_PULL_UP, &desc->flags);
-> > +                       if (lflags & GPIOHANDLE_REQUEST_BIAS_PULL_DOWN)
-> > +                               set_bit(FLAG_PULL_DOWN, &desc->flags);
-> > +                       else
-> > +                               clear_bit(FLAG_PULL_DOWN, &desc->flags);
-> > +                       if (lflags & GPIOHANDLE_REQUEST_BIAS_DISABLE)
-> > +                               set_bit(FLAG_BIAS_DISABLE, &desc->flags);
-> > +                       else
-> > +                               clear_bit(FLAG_BIAS_DISABLE, &desc->flags);
-> 
-> Could you add some new lines between the if elses? I think it'll be
-> more readable.
-> 
+On 30/10/2019 10:39 PM, Andy Shevchenko wrote:
+> On Wed, Oct 30, 2019 at 12:23:59PM +0800, Rahul Tanwar wrote:
+>> Intel Lightning Mountain SoC has a pinmux controller & GPIO controller IP which
+>> controls pin multiplexing & configuration including GPIO functions selection &
+>> GPIO attributes configuration.
+>>
+>> This IP is not based on & does not have anything in common with Chassis
+>> specification. The pinctrl drivers under pinctrl/intel/* are all based upon
+>> Chassis spec compliant pinctrl IPs. So this driver doesn't fit & can not use
+>> pinctrl framework under pinctrl/intel/* and it requires a separate new driver.
+>>
+>> Add a new GPIO & pin control framework based driver for this IP.
+>>
+>> +static inline void eqbr_set_val(void __iomem *addr, u32 offset,
+>> +				u32 mask, u32 set, raw_spinlock_t *lock)
+>
+> Why is it marked with inline?
 
-Agreed.  I would prefer to call a function that atomically sets or clears
-the flag bit based on the requested state, but there doesn't seem to be one.
+Hard to justify. I can remove inline if you recommend so..
 
-Cheers,
-Kent.
+>> +{
+>> +	u32 val;
+>> +	unsigned long flags;
+>> +
+>> +	raw_spin_lock_irqsave(lock, flags);
+>> +	val = readl(addr);
+>> +	val = (val & ~(mask << offset)) | ((set & mask) << offset);
+> This is unusual, why offset can't be applied once to the mask?
 
+Do you mean like below ? (set still needs to be left shifted by offset)
+
+mask = mask << offset;
+val = (val & ~mask) | ((set << offset) & mask);
+
+>> +	writel(val, addr);
+>> +	raw_spin_unlock_irqrestore(lock, flags);
+> Hmm... Don't you have more complicated workflow that requires few
+> reads/writes/updates to be called atomically?
+
+I don't really see any complicated register programming in this driver.
+Just forpin configuration, mux setting & GPIO IRQ configuration..
+
+>> +}
+>> +static void eqbr_gpio_disable_irq(struct irq_data *d)
+>> +{
+>> +	unsigned int offset = irqd_to_hwirq(d);
+>> +	struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
+>> +	struct eqbr_gpio_desc *desc = gpiochip_get_data(gc);
+>> +	writel(BIT(offset), desc->membase + GPIO_IRNENCLR);
+> Is it okay to be without spin lock?
+> Same Q to the rest similar places.
+
+Yes, you are right. GPIO IRQ ops also needs locking. I was incorrectly
+assuming that gpiolib will provide locking when it calls these ops. I
+will fix it in v3. Thanks.
+
+>> +}
+>> +static inline void eqbr_cfg_bit(void __iomem *addr,
+>> +				unsigned int offset, unsigned int set)
+>> +{
+>> +	if (!set)
+> Why not to use positive condition?
+
+Well noted.
+
+>> +		writel(readl(addr) & ~BIT(offset), addr);
+>> +	else
+>> +		writel(readl(addr) | BIT(offset), addr);
+>> +}
+>> +	struct gpio_irq_type it;
+> Not sure if this is used properly. Linus may clarify this.
+>
+>> +static void eqbr_irq_handler(struct irq_desc *desc)
+>> +{
+>> +	struct gpio_chip *gc = irq_desc_get_handler_data(desc);
+>> +	struct eqbr_gpio_desc *gpio_desc = gpiochip_get_data(gc);
+>> +	struct irq_chip *ic = irq_desc_get_chip(desc);
+>> +	u32 pins, offset;
+>> +
+>> +	chained_irq_enter(ic, desc);
+>> +	pins = readl(gpio_desc->membase + GPIO_IRNCR);
+>> +
+>> +	for_each_set_bit(offset, (unsigned long *)&pins, gc->ngpio)
+> This casting is no go.
+
+Well noted. Copy paste mistake. Will fix it. Thanks.
+
+>> +		generic_handle_irq(irq_find_mapping(gc->irq.domain, offset));
+>> +
+>> +	chained_irq_exit(ic, desc);
+>> +}
+>> +static int gpiochip_setup(struct device *dev, struct eqbr_gpio_desc *desc)
+>> +{
+>> +	struct gpio_irq_chip *girq;
+>> +	struct gpio_chip *gc;
+>> +
+>> +	gc = &desc->chip;
+>> +	gc->owner = THIS_MODULE;
+> Do we still need this in the drivers?
+
+Agree it is redundant. Will remove it. Thanks.
+
+>> +	gc->label = desc->name;
+>> +	gc->of_node = desc->node;
+>> +
+>> +	if (!of_property_read_bool(desc->node, "interrupt-controller")) {
+> Why is it fatal?
+
+It is not fatal, that's why it returns 0 instead of error i.e. if this
+gpio chip is notintended to be used as interrupt controller then do
+not setup gpio_irq_chipand proceed to register gpio chip without
+interrupt support.
+
+>> +		dev_info(dev, "gc %s: doesn't act as interrupt controller!\n",
+>> +			 desc->name);
+>> +		return 0;
+>> +	}
+>> +	girq->parents = devm_kcalloc(dev, 1, sizeof(*girq->parents),
+>> +				     GFP_KERNEL);
+> I believe it's fine to have it on one line.
+
+Well noted.
+
+>> +	if (!girq->parents)
+>> +		return -ENOMEM;
+>> +
+>> +	girq->default_type = IRQ_TYPE_NONE;
+>> +	girq->handler = handle_level_irq;
+> Not bad IRQ handler?
+
+Yes, it should be handle_bad_irq(). Will fix, thanks.
+
+>> +	girq->parents[0] = desc->virq;
+>> +
+>> +	return 0;
+>> +}
+>> +static int gpiolib_reg(struct eqbr_pinctrl_drv_data *drvdata)
+>> +{
+>> +	struct device_node *np;
+>> +	struct eqbr_gpio_desc *desc;
+>> +	struct device *dev;
+>> +	int i, ret;
+>> +	struct resource res;
+>> +
+>> +	dev = drvdata->dev;
+>> +	for (i = 0; i < drvdata->nr_gpio_descs; i++) {
+>> +		desc = drvdata->gpio_desc + i;
+>> +		np = desc->node;
+>> +
+>> +		desc->name = devm_kasprintf(dev, GFP_KERNEL, "gpiochip%d", i);
+>> +		if (!desc->name)
+>> +			return -ENOMEM;
+>> +
+>> +		if (of_address_to_resource(np, 0, &res)) {
+>> +			dev_err(dev, "Failed to get GPIO register address\n");
+>> +			return -ENXIO;
+>> +		}
+>> +
+>> +		desc->membase = devm_ioremap_resource(dev, &res);
+>> +		if (IS_ERR(desc->membase)) {
+>> +			dev_err(dev, "ioremap fail\n");
+> Redundant.
+
+Well noted.
+
+>> +			return PTR_ERR(desc->membase);
+>> +	}
+> Is it per descriptor?!
+
+Yes, it is per descriptor i.e. per gpio_chip. Each gpio_chip has different
+membase.
+
+>> +
+>> +		desc->virq = irq_of_parse_and_map(np, 0);
+>> +		if (!desc->virq) {
+>> +			dev_err(dev, "%s: failed to parse and map irq\n",
+>> +				desc->name);
+>> +			return -ENXIO;
+>> +		}
+>> +		raw_spin_lock_init(&desc->lock);
+>> +	}
+>> +
+>> +	return 0;
+>> +}
+>> +static const struct pinmux_ops eqbr_pinmux_ops = {
+>> +	.get_functions_count	= pinmux_generic_get_function_count,
+>> +	.get_function_name 	= pinmux_generic_get_function_name,
+>> +	.get_function_groups 	= pinmux_generic_get_function_groups,
+>> +	.set_mux		= eqbr_pinmux_set_mux,
+>> +	.gpio_request_enable	= eqbr_pinmux_gpio_request,
+>> +	.strict			= true,
+>> +};
+> TABs/spaces mix.
+
+Well noted. Thanks.
+
+Regards,
+Rahul
