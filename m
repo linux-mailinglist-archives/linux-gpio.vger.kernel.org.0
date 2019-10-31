@@ -2,250 +2,147 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 89108EAB30
-	for <lists+linux-gpio@lfdr.de>; Thu, 31 Oct 2019 08:57:53 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 24146EAB3D
+	for <lists+linux-gpio@lfdr.de>; Thu, 31 Oct 2019 09:01:06 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726991AbfJaH5t (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 31 Oct 2019 03:57:49 -0400
-Received: from mga14.intel.com ([192.55.52.115]:65394 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726769AbfJaH5t (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Thu, 31 Oct 2019 03:57:49 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 31 Oct 2019 00:57:48 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.68,250,1569308400"; 
-   d="scan'208";a="375157005"
-Received: from linux.intel.com ([10.54.29.200])
-  by orsmga005.jf.intel.com with ESMTP; 31 Oct 2019 00:57:48 -0700
-Received: from [10.226.38.65] (rtanwar-mobl.gar.corp.intel.com [10.226.38.65])
-        by linux.intel.com (Postfix) with ESMTP id 7C956580127;
-        Thu, 31 Oct 2019 00:57:45 -0700 (PDT)
-Subject: Re: [PATCH v2 1/2] pinctrl: Add pinmux & GPIO controller driver for a
- new SoC
-To:     Andy Shevchenko <andriy.shevchenko@intel.com>
-Cc:     linus.walleij@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, robh@kernel.org, qi-ming.wu@intel.com,
-        yixin.zhu@linux.intel.com, cheol.yong.kim@intel.com
-References: <cover.1572409172.git.rahul.tanwar@linux.intel.com>
- <4bb885fe692d29f2635772dcd04839390f1f5671.1572409172.git.rahul.tanwar@linux.intel.com>
- <20191030143907.GY32742@smile.fi.intel.com>
-From:   "Tanwar, Rahul" <rahul.tanwar@linux.intel.com>
-Message-ID: <bb9d2c3d-2b01-7239-eefa-0e813b091cc8@linux.intel.com>
-Date:   Thu, 31 Oct 2019 15:57:34 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        id S1726965AbfJaIBF (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 31 Oct 2019 04:01:05 -0400
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:35736 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726698AbfJaIBF (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 31 Oct 2019 04:01:05 -0400
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id x9V80tYr099287;
+        Thu, 31 Oct 2019 03:00:55 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1572508855;
+        bh=TKe46EoF1J60ShuFHgR4qomu3QEwz48sNCBTYx/91/g=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=Z82auzUS36CE6SDIajfIV5GVqXyvm0MdUM2vZQwy7QPNnOg7JRHukjfaOarY/WBY5
+         iQh3/UuGeO55Qlkz/v23GMqgbe4oBFuaJa/fnJt3sBs+p6ipEwo9jCN1YENffpxO+S
+         zKUZkRnJQ2yT2AORtx6k2wFA686JgUYWYe1YRkys=
+Received: from DLEE106.ent.ti.com (dlee106.ent.ti.com [157.170.170.36])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x9V80sEM067010
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 31 Oct 2019 03:00:55 -0500
+Received: from DLEE106.ent.ti.com (157.170.170.36) by DLEE106.ent.ti.com
+ (157.170.170.36) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Thu, 31
+ Oct 2019 03:00:54 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE106.ent.ti.com
+ (157.170.170.36) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Thu, 31 Oct 2019 03:00:54 -0500
+Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id x9V80pDA057797;
+        Thu, 31 Oct 2019 03:00:52 -0500
+Subject: Re: [RFC v2 0/2] gpio: Support for shared GPIO lines on boards
+To:     Rob Herring <robh+dt@kernel.org>
+CC:     Mark Brown <broonie@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Tero Kristo <t-kristo@ti.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        <devicetree@vger.kernel.org>
+References: <20191030120440.3699-1-peter.ujfalusi@ti.com>
+ <CAL_JsqK-eqoyU7RWiVXMpPZ8BfT8a0WB47756s8AUtyOqbkPXA@mail.gmail.com>
+ <5bca4eb6-6379-394f-c95e-5bbbba5308f1@ti.com>
+ <20191030141736.GN4568@sirena.org.uk>
+ <f9c181d1-5e0c-5e82-a740-f4e97822604f@ti.com>
+ <CAL_JsqJ4WdaRvmZcjQG-jVyOOeKZX9fn1WcQZGWfUPqwunQCFw@mail.gmail.com>
+From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
+Message-ID: <1258a5bf-a829-d47a-902f-bf2c3db07513@ti.com>
+Date:   Thu, 31 Oct 2019 10:01:59 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-In-Reply-To: <20191030143907.GY32742@smile.fi.intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <CAL_JsqJ4WdaRvmZcjQG-jVyOOeKZX9fn1WcQZGWfUPqwunQCFw@mail.gmail.com>
+Content-Type: text/plain; charset="utf-8"
 Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
 
-Hi Andy,
 
-On 30/10/2019 10:39 PM, Andy Shevchenko wrote:
-> On Wed, Oct 30, 2019 at 12:23:59PM +0800, Rahul Tanwar wrote:
->> Intel Lightning Mountain SoC has a pinmux controller & GPIO controller IP which
->> controls pin multiplexing & configuration including GPIO functions selection &
->> GPIO attributes configuration.
+On 30/10/2019 20.49, Rob Herring wrote:
+> On Wed, Oct 30, 2019 at 9:30 AM Peter Ujfalusi <peter.ujfalusi@ti.com> wrote:
 >>
->> This IP is not based on & does not have anything in common with Chassis
->> specification. The pinctrl drivers under pinctrl/intel/* are all based upon
->> Chassis spec compliant pinctrl IPs. So this driver doesn't fit & can not use
->> pinctrl framework under pinctrl/intel/* and it requires a separate new driver.
 >>
->> Add a new GPIO & pin control framework based driver for this IP.
 >>
->> +static inline void eqbr_set_val(void __iomem *addr, u32 offset,
->> +				u32 mask, u32 set, raw_spinlock_t *lock)
->
-> Why is it marked with inline?
+>> On 30/10/2019 16.17, Mark Brown wrote:
+>>> On Wed, Oct 30, 2019 at 03:32:09PM +0200, Peter Ujfalusi wrote:
+>>>> On 30/10/2019 15.12, Rob Herring wrote:
+>>>
+>>>>> Why can't we just add a shared flag like we have for interrupts?
+>>>>> Effectively, we have that for resets too, it's just hardcoded in the
+>>>>> the drivers.
+>>>
+>>>> This would be kind of the same thing what the
+>>>> GPIOD_FLAGS_BIT_NONEXCLUSIVE does, which was a quick workaround for
+>>>> fixed-regulators afaik.
+>>>
+>>> The theory with that was that any usage of this would need the
+>>> higher level code using the GPIO to cooperate so they didn't step
+>>> on each other's toes so the GPIO code should just punt to it.
+>>
+>> But from the client driver point of view a GPIO is still GPIO and if the
+>> components are unrelated then it is hard to patch things together from
+>> the top.
+> 
+> You can't escape a driver being aware. If a driver depends on that
+> GPIO to actually be set to states the driver says, then it can't be
+> guaranteed to work. For example, maybe the driver assumes the device
+> is in reset state after toggling reset and doesn't work if not in
+> reset state. The driver has to be aware no matter what you do in DT.
 
-Hard to justify. I can remove inline if you recommend so..
+That's true for some device, but it is also true that some can not
+tolerate being reset without them knowing it.
 
->> +{
->> +	u32 val;
->> +	unsigned long flags;
->> +
->> +	raw_spin_lock_irqsave(lock, flags);
->> +	val = readl(addr);
->> +	val = (val & ~(mask << offset)) | ((set & mask) << offset);
-> This is unusual, why offset can't be applied once to the mask?
+If all users of the shared GPIO have full control over it then they can
+just toggle it whatever way they want. How would a regulator, codec,
+amplifier would negotiate on what to do with the shared GPIO?
 
-Do you mean like below ? (set still needs to be left shifted by offset)
+Another not uncommon setup is when the two components needs different level:
+C1: ENABLE is high active
+C2: RESET is high active
 
-mask = mask << offset;
-val = (val & ~mask) | ((set << offset) & mask);
+To enable C1, the GPIO should be high. To enable C2 the GPIO must be low.
+In the board one of the branch of the shared GPIO needs (and have) a
+logic inverter.
 
->> +	writel(val, addr);
->> +	raw_spin_unlock_irqrestore(lock, flags);
-> Hmm... Don't you have more complicated workflow that requires few
-> reads/writes/updates to be called atomically?
+If they both control the same GPIO then they must have requested it with
+different GPIO_ACTIVE_ since the drivers are written according to chip
+spec, so C1 sets the GPIO to 1, C2 sets it to 0, the inversion for one
+of them must happen in gpio core, right?
 
-I don't really see any complicated register programming in this driver.
-Just forpin configuration, mux setting & GPIO IRQ configuration..
+It should be possible to add pass-through mode for gpio-shared so that
+all requests would propagate to the root GPIO if that's what needed for
+some setups.
 
->> +}
->> +static void eqbr_gpio_disable_irq(struct irq_data *d)
->> +{
->> +	unsigned int offset = irqd_to_hwirq(d);
->> +	struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
->> +	struct eqbr_gpio_desc *desc = gpiochip_get_data(gc);
->> +	writel(BIT(offset), desc->membase + GPIO_IRNENCLR);
-> Is it okay to be without spin lock?
-> Same Q to the rest similar places.
+That way the gpio-shared would nicely handle the GPIO inversions, would
+be able to handle cases to avoid unwanted reset/enable of components or
+allow components to be ninja-reset.
 
-Yes, you are right. GPIO IRQ ops also needs locking. I was incorrectly
-assuming that gpiolib will provide locking when it calls these ops. I
-will fix it in v3. Thanks.
+I think it would be possible to add gpiod_is_shared(struct gpio_desc
+*desc) so users can check if the GPIO is shared - it would only return
+true if the gpio-shared is not in pass-through mode so they can know
+that the state they see on their gpio desc is not necessary matching
+with reality.
+Probably another gpiod_shared_get_root_value() to fetch the root's state?
 
->> +}
->> +static inline void eqbr_cfg_bit(void __iomem *addr,
->> +				unsigned int offset, unsigned int set)
->> +{
->> +	if (!set)
-> Why not to use positive condition?
+I intentionally not returning that in the driver as clients might skip a
+gpio_set_value() seeing that the GPIO line is already in a state they
+would want it, but that would not register their needs for the level.
 
-Well noted.
+- Péter
 
->> +		writel(readl(addr) & ~BIT(offset), addr);
->> +	else
->> +		writel(readl(addr) | BIT(offset), addr);
->> +}
->> +	struct gpio_irq_type it;
-> Not sure if this is used properly. Linus may clarify this.
->
->> +static void eqbr_irq_handler(struct irq_desc *desc)
->> +{
->> +	struct gpio_chip *gc = irq_desc_get_handler_data(desc);
->> +	struct eqbr_gpio_desc *gpio_desc = gpiochip_get_data(gc);
->> +	struct irq_chip *ic = irq_desc_get_chip(desc);
->> +	u32 pins, offset;
->> +
->> +	chained_irq_enter(ic, desc);
->> +	pins = readl(gpio_desc->membase + GPIO_IRNCR);
->> +
->> +	for_each_set_bit(offset, (unsigned long *)&pins, gc->ngpio)
-> This casting is no go.
-
-Well noted. Copy paste mistake. Will fix it. Thanks.
-
->> +		generic_handle_irq(irq_find_mapping(gc->irq.domain, offset));
->> +
->> +	chained_irq_exit(ic, desc);
->> +}
->> +static int gpiochip_setup(struct device *dev, struct eqbr_gpio_desc *desc)
->> +{
->> +	struct gpio_irq_chip *girq;
->> +	struct gpio_chip *gc;
->> +
->> +	gc = &desc->chip;
->> +	gc->owner = THIS_MODULE;
-> Do we still need this in the drivers?
-
-Agree it is redundant. Will remove it. Thanks.
-
->> +	gc->label = desc->name;
->> +	gc->of_node = desc->node;
->> +
->> +	if (!of_property_read_bool(desc->node, "interrupt-controller")) {
-> Why is it fatal?
-
-It is not fatal, that's why it returns 0 instead of error i.e. if this
-gpio chip is notintended to be used as interrupt controller then do
-not setup gpio_irq_chipand proceed to register gpio chip without
-interrupt support.
-
->> +		dev_info(dev, "gc %s: doesn't act as interrupt controller!\n",
->> +			 desc->name);
->> +		return 0;
->> +	}
->> +	girq->parents = devm_kcalloc(dev, 1, sizeof(*girq->parents),
->> +				     GFP_KERNEL);
-> I believe it's fine to have it on one line.
-
-Well noted.
-
->> +	if (!girq->parents)
->> +		return -ENOMEM;
->> +
->> +	girq->default_type = IRQ_TYPE_NONE;
->> +	girq->handler = handle_level_irq;
-> Not bad IRQ handler?
-
-Yes, it should be handle_bad_irq(). Will fix, thanks.
-
->> +	girq->parents[0] = desc->virq;
->> +
->> +	return 0;
->> +}
->> +static int gpiolib_reg(struct eqbr_pinctrl_drv_data *drvdata)
->> +{
->> +	struct device_node *np;
->> +	struct eqbr_gpio_desc *desc;
->> +	struct device *dev;
->> +	int i, ret;
->> +	struct resource res;
->> +
->> +	dev = drvdata->dev;
->> +	for (i = 0; i < drvdata->nr_gpio_descs; i++) {
->> +		desc = drvdata->gpio_desc + i;
->> +		np = desc->node;
->> +
->> +		desc->name = devm_kasprintf(dev, GFP_KERNEL, "gpiochip%d", i);
->> +		if (!desc->name)
->> +			return -ENOMEM;
->> +
->> +		if (of_address_to_resource(np, 0, &res)) {
->> +			dev_err(dev, "Failed to get GPIO register address\n");
->> +			return -ENXIO;
->> +		}
->> +
->> +		desc->membase = devm_ioremap_resource(dev, &res);
->> +		if (IS_ERR(desc->membase)) {
->> +			dev_err(dev, "ioremap fail\n");
-> Redundant.
-
-Well noted.
-
->> +			return PTR_ERR(desc->membase);
->> +	}
-> Is it per descriptor?!
-
-Yes, it is per descriptor i.e. per gpio_chip. Each gpio_chip has different
-membase.
-
->> +
->> +		desc->virq = irq_of_parse_and_map(np, 0);
->> +		if (!desc->virq) {
->> +			dev_err(dev, "%s: failed to parse and map irq\n",
->> +				desc->name);
->> +			return -ENXIO;
->> +		}
->> +		raw_spin_lock_init(&desc->lock);
->> +	}
->> +
->> +	return 0;
->> +}
->> +static const struct pinmux_ops eqbr_pinmux_ops = {
->> +	.get_functions_count	= pinmux_generic_get_function_count,
->> +	.get_function_name 	= pinmux_generic_get_function_name,
->> +	.get_function_groups 	= pinmux_generic_get_function_groups,
->> +	.set_mux		= eqbr_pinmux_set_mux,
->> +	.gpio_request_enable	= eqbr_pinmux_gpio_request,
->> +	.strict			= true,
->> +};
-> TABs/spaces mix.
-
-Well noted. Thanks.
-
-Regards,
-Rahul
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
