@@ -2,195 +2,201 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id AE2EEEB31C
-	for <lists+linux-gpio@lfdr.de>; Thu, 31 Oct 2019 15:49:12 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id EDFDCEB57D
+	for <lists+linux-gpio@lfdr.de>; Thu, 31 Oct 2019 17:55:14 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727995AbfJaOtE (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 31 Oct 2019 10:49:04 -0400
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:40938 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727841AbfJaOtE (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 31 Oct 2019 10:49:04 -0400
-Received: by mail-pl1-f195.google.com with SMTP id e3so689777plt.7
-        for <linux-gpio@vger.kernel.org>; Thu, 31 Oct 2019 07:49:03 -0700 (PDT)
+        id S1728603AbfJaQzN (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 31 Oct 2019 12:55:13 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:33695 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728561AbfJaQzM (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 31 Oct 2019 12:55:12 -0400
+Received: by mail-wr1-f65.google.com with SMTP id s1so7076375wro.0
+        for <linux-gpio@vger.kernel.org>; Thu, 31 Oct 2019 09:55:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=/KIWhZ+w5Vi6sDcWBegYkb0Odafz7JIkaIVtVTdkUHE=;
-        b=VrL0tim7IuKEvKl8nNhQj2Zq24OaMBiotM3mhPE7+QITy0l0BIWz+1JVbucDKwRqjN
-         SDrfcRYB3sh/IU4B9he+Snia+6O+eqbcCbIpatKNKT4RQ9ov1NG8/Wq47Onu5HTl8nbY
-         VuxU6Pih+3mUBzVGxhm6G6xkmnnqAIEZZGfADi0vBcgyftjLXL2Q88p4PKx4hJAESnIQ
-         +XfiIuow/D9X338Pr4AojOtz8YyrF3ethbZ5AQKdUWaPIaS0LChiEpDLOuVc9duV4ohq
-         q79EsUrdDhah36I4EDvg0NGYlUwpBo51GuBTVFEA1/qi1oW5ghQGLM7/MxnPSPannJIe
-         Eaqg==
+        d=kernelci-org.20150623.gappssmtp.com; s=20150623;
+        h=message-id:date:mime-version:content-transfer-encoding:subject:to
+         :from;
+        bh=Os/I0zz00frZd0xsPT5HK3FbyUw22Y7aC6HyxKaRPRM=;
+        b=pLTJleTTOOmJpVVOUXao+Wyl5bfscim4jN0hlMJRz6kUG/0syJsx2RhNuRjmA5sJGf
+         Rh7i5aFCB3KaAwwWFWalsjHtPTQQblbt+A885yf+jj1nsKuiHQxlbDx003CRsJNyf4yg
+         AmRSA9nXLL56aVnrHe5hCDST/y8lMRYSdckdH2Vkd/QUHVm7mFlFT2XVzffaEJ6mY730
+         Qyer49fOKmP78zI0nTWW1i49FZqXy1nzmXKmdMxpoExsg2fxrbxNM5kO8MllbH3FXFv5
+         4fHdKMjLkgPmBAgRianfqtZup+FLKk3rPPomz5CvGuM0cWUdMPNz6LB5bx1Lcu86spzO
+         pM3g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=/KIWhZ+w5Vi6sDcWBegYkb0Odafz7JIkaIVtVTdkUHE=;
-        b=ahS2EM3fiL3EN7LU87BEQSBfSNd454cO22jc679se0OBfqDCeiRwbai0sHxPnfznjz
-         CY2l2yZJMkGnRcjoHG+zJP+WhPscacg5XO0IK0GiYbfglT3d7QHjhpzPNYgIATgUE8P3
-         0mZr+VIpVCjYP34gY9bc6VsLf0+yxLPPTTJrDuzvKO9zfyaF9IArwJTXLIkTHUvFaQgH
-         ju8JLcnJKQecerpy/atVm+kzvtS2fM+U8JHxjJdJwhDeUYoIVx2PEfmU2NYiwP4v4D54
-         sYKun/1486XKSaffv3mmqnm8AHKnPT31wtewEoyWm2QJB+/QrA0gqn+5sEmn1dHQPSzM
-         wNNg==
-X-Gm-Message-State: APjAAAWI5oAI3ohhzhUlIjb+BO6lS9UUB5TIbVcYxuKr0a581oDj5Umm
-        D87YkZs70o9JFyeP0qm8UGiaNwncNuyUjg==
-X-Google-Smtp-Source: APXvYqznKml7dZKxqWa18qc60rHC7NAT/JVnR/qEL42uAMyu8GzZMBcSKF9oR8pknMgGIH4Jz2n4ng==
-X-Received: by 2002:a17:902:7b98:: with SMTP id w24mr6502022pll.299.1572533343129;
-        Thu, 31 Oct 2019 07:49:03 -0700 (PDT)
-Received: from sol.lan (220-235-109-115.dyn.iinet.net.au. [220.235.109.115])
-        by smtp.gmail.com with ESMTPSA id y126sm4568456pfg.74.2019.10.31.07.49.00
+        h=x-gm-message-state:message-id:date:mime-version
+         :content-transfer-encoding:subject:to:from;
+        bh=Os/I0zz00frZd0xsPT5HK3FbyUw22Y7aC6HyxKaRPRM=;
+        b=G32L/3wjv3b0yBNYMQtaPgwPFmfXd0ORRDcKuOFiKK0UMpmPwPHJpw6Ax+8h/5os4P
+         wq+d/uFmTg784gF3F019+dADIUzNRdOxr7JiTm5+pePZoAUxxXmlpNQvudv1l/nv1Eza
+         /mZQMD/rjVOTkajk3bGxLC0Uuj5bQv3HBFVeZ2xvaLAdS8wbVLg3LYGTgKplf9V7sGAO
+         5/TE47ibIYB30uc44DDDNVysSvF3tT45dBkW4j08vjO3MFUDvkoLBGiOvbhkervdSZ4I
+         hLLcWnlXXOe5nMHmMiyYtCvkoRHWfE8ZsmAkVDMD4Rl8KWaxlE8VN8jDZucNaxs3IA5X
+         UWUg==
+X-Gm-Message-State: APjAAAWpueDqKJKpa3LTpT1ooLqCYqosxym0N0Oil6NXa9ahPuw5TfKV
+        36lZvjrzL3n4gtFiEvcWYCuBsuoM5PLxTQ==
+X-Google-Smtp-Source: APXvYqwMdDlTJqR73fgSENQkGjnKu9k6F6FWm64d1PJxtmeOnAaKX0QJSIXj8FOfXUDviALl5CQkGQ==
+X-Received: by 2002:a5d:6104:: with SMTP id v4mr6331709wrt.36.1572540910400;
+        Thu, 31 Oct 2019 09:55:10 -0700 (PDT)
+Received: from [148.251.42.114] ([2a01:4f8:201:9271::2])
+        by smtp.gmail.com with ESMTPSA id x5sm2377543wmj.7.2019.10.31.09.55.09
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 31 Oct 2019 07:49:02 -0700 (PDT)
-From:   Kent Gibson <warthog618@gmail.com>
-To:     linux-gpio@vger.kernel.org, bgolaszewski@baylibre.com,
-        linus.walleij@linaro.org
-Cc:     Kent Gibson <warthog618@gmail.com>
-Subject: [PATCH v2 2/2] gpio: add new SET_CONFIG ioctl() to gpio chardev
-Date:   Thu, 31 Oct 2019 22:48:25 +0800
-Message-Id: <20191031144825.32105-3-warthog618@gmail.com>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20191031144825.32105-1-warthog618@gmail.com>
-References: <20191031144825.32105-1-warthog618@gmail.com>
+        Thu, 31 Oct 2019 09:55:09 -0700 (PDT)
+Message-ID: <5dbb11ed.1c69fb81.729d3.c13b@mx.google.com>
+Date:   Thu, 31 Oct 2019 09:55:09 -0700 (PDT)
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: quoted-printable
+X-Kernelci-Branch: devel
+X-Kernelci-Tree: linusw
+X-Kernelci-Kernel: v5.4-rc1-31-g6a41b6c5fc20
+X-Kernelci-Report-Type: build
+Subject: linusw/devel build: 6 builds: 0 failed, 6 passed,
+ 13 warnings (v5.4-rc1-31-g6a41b6c5fc20)
+To:     linux-gpio@vger.kernel.org, fellows@kernelci.org
+From:   "kernelci.org bot" <bot@kernelci.org>
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Add the GPIOHANDLE_SET_CONFIG_IOCTL to the gpio chardev.
-The ioctl allows some of the configuration of a requested handle to be
-changed without having to release the line.
-The primary use case is the changing of direction for bi-directional 
-lines.
+linusw/devel build: 6 builds: 0 failed, 6 passed, 13 warnings (v5.4-rc1-31-=
+g6a41b6c5fc20)
 
-Based on initial work by Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Full Build Summary: https://kernelci.org/build/linusw/branch/devel/kernel/v=
+5.4-rc1-31-g6a41b6c5fc20/
 
-Signed-off-by: Kent Gibson <warthog618@gmail.com>
+Tree: linusw
+Branch: devel
+Git Describe: v5.4-rc1-31-g6a41b6c5fc20
+Git Commit: 6a41b6c5fc20abced88fa0eed42ae5e5cb70b280
+Git URL: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-gpio.=
+git/
+Built: 6 unique architectures
+
+Warnings Detected:
+
+arc:
+    nsim_hs_defconfig (gcc-8): 2 warnings
+
+arm64:
+    defconfig (gcc-8): 3 warnings
+
+arm:
+    multi_v7_defconfig (gcc-8): 5 warnings
+
+mips:
+    32r2el_defconfig (gcc-8): 3 warnings
+
+riscv:
+
+x86_64:
+
+
+Warnings summary:
+
+    5    <stdin>:1511:2: warning: #warning syscall clone3 not implemented [=
+-Wcpp]
+    2    WARNING: "return_address" [vmlinux] is a static EXPORT_SYMBOL_GPL
+    2    WARNING: "HYPERVISOR_platform_op" [vmlinux] is a static EXPORT_SYM=
+BOL_GPL
+    1    depmod: WARNING: /home/buildslave/workspace/workspace/kernel-build=
+@3/linux/build/_modules_/lib/modules/5.4.0-rc1/kernel/drivers/usb/storage/u=
+as.ko needs unknown symbol usb_stor_sense_invalidCDB
+    1    depmod: WARNING: /home/buildslave/workspace/workspace/kernel-build=
+@3/linux/build/_modules_/lib/modules/5.4.0-rc1/kernel/drivers/usb/storage/u=
+as.ko needs unknown symbol usb_stor_adjust_quirks
+    1    arch/arm64/configs/defconfig:726:warning: symbol value 'm' invalid=
+ for REMOTEPROC
+    1    arch/arm/configs/multi_v7_defconfig:936:warning: symbol value 'm' =
+invalid for REMOTEPROC
+
+Section mismatches summary:
+
+    1    WARNING: vmlinux.o(.data+0xbe30c): Section mismatch in reference f=
+rom the variable bcm_iproc_gpio_driver to the (unknown reference) .init.rod=
+ata:(unknown)
+    1    WARNING: vmlinux.o(.data+0x82818): Section mismatch in reference f=
+rom the variable bcm_iproc_gpio_driver to the variable .init.rodata:bcm_ipr=
+oc_gpio_of_match
+
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D
+
+Detailed per-defconfig build reports:
+
+---------------------------------------------------------------------------=
+-----
+32r2el_defconfig (mips, gcc-8) =E2=80=94 PASS, 0 errors, 3 warnings, 0 sect=
+ion mismatches
+
+Warnings:
+    <stdin>:1511:2: warning: #warning syscall clone3 not implemented [-Wcpp]
+    <stdin>:1511:2: warning: #warning syscall clone3 not implemented [-Wcpp]
+    <stdin>:1511:2: warning: #warning syscall clone3 not implemented [-Wcpp]
+
+---------------------------------------------------------------------------=
+-----
+defconfig (riscv, gcc-8) =E2=80=94 PASS, 0 errors, 0 warnings, 0 section mi=
+smatches
+
+---------------------------------------------------------------------------=
+-----
+defconfig (arm64, gcc-8) =E2=80=94 PASS, 0 errors, 3 warnings, 0 section mi=
+smatches
+
+Warnings:
+    arch/arm64/configs/defconfig:726:warning: symbol value 'm' invalid for =
+REMOTEPROC
+    WARNING: "HYPERVISOR_platform_op" [vmlinux] is a static EXPORT_SYMBOL_G=
+PL
+    WARNING: "HYPERVISOR_platform_op" [vmlinux] is a static EXPORT_SYMBOL_G=
+PL
+
+Section mismatches:
+    WARNING: vmlinux.o(.data+0x82818): Section mismatch in reference from t=
+he variable bcm_iproc_gpio_driver to the variable .init.rodata:bcm_iproc_gp=
+io_of_match
+
+---------------------------------------------------------------------------=
+-----
+multi_v7_defconfig (arm, gcc-8) =E2=80=94 PASS, 0 errors, 5 warnings, 0 sec=
+tion mismatches
+
+Warnings:
+    arch/arm/configs/multi_v7_defconfig:936:warning: symbol value 'm' inval=
+id for REMOTEPROC
+    WARNING: "return_address" [vmlinux] is a static EXPORT_SYMBOL_GPL
+    WARNING: "return_address" [vmlinux] is a static EXPORT_SYMBOL_GPL
+    depmod: WARNING: /home/buildslave/workspace/workspace/kernel-build@3/li=
+nux/build/_modules_/lib/modules/5.4.0-rc1/kernel/drivers/usb/storage/uas.ko=
+ needs unknown symbol usb_stor_sense_invalidCDB
+    depmod: WARNING: /home/buildslave/workspace/workspace/kernel-build@3/li=
+nux/build/_modules_/lib/modules/5.4.0-rc1/kernel/drivers/usb/storage/uas.ko=
+ needs unknown symbol usb_stor_adjust_quirks
+
+Section mismatches:
+    WARNING: vmlinux.o(.data+0xbe30c): Section mismatch in reference from t=
+he variable bcm_iproc_gpio_driver to the (unknown reference) .init.rodata:(=
+unknown)
+
+---------------------------------------------------------------------------=
+-----
+nsim_hs_defconfig (arc, gcc-8) =E2=80=94 PASS, 0 errors, 2 warnings, 0 sect=
+ion mismatches
+
+Warnings:
+    <stdin>:1511:2: warning: #warning syscall clone3 not implemented [-Wcpp]
+    <stdin>:1511:2: warning: #warning syscall clone3 not implemented [-Wcpp]
+
+---------------------------------------------------------------------------=
+-----
+x86_64_defconfig (x86_64, gcc-8) =E2=80=94 PASS, 0 errors, 0 warnings, 0 se=
+ction mismatches
+
 ---
- drivers/gpio/gpiolib.c    | 68 +++++++++++++++++++++++++++++++++++++++
- include/uapi/linux/gpio.h | 18 +++++++++++
- 2 files changed, 86 insertions(+)
-
-diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
-index 4e8fbd74a29c..7c026ee58917 100644
---- a/drivers/gpio/gpiolib.c
-+++ b/drivers/gpio/gpiolib.c
-@@ -475,6 +475,73 @@ static int linehandle_validate_flags(u32 flags)
- 	return 0;
- }
- 
-+static void linehandle_configure_flag(unsigned long *flagsp,
-+				      u32 bit, bool active)
-+{
-+	if (active)
-+		set_bit(bit, flagsp);
-+	else
-+		clear_bit(bit, flagsp);
-+}
-+
-+static long linehandle_set_config(struct linehandle_state *lh,
-+				  void __user *ip)
-+{
-+	struct gpiohandle_config gcnf;
-+	struct gpio_desc *desc;
-+	int i, ret;
-+	u32 lflags;
-+	unsigned long *flagsp;
-+
-+	if (copy_from_user(&gcnf, ip, sizeof(gcnf)))
-+		return -EFAULT;
-+
-+	lflags = gcnf.flags;
-+	ret = linehandle_validate_flags(lflags);
-+	if (ret)
-+		return ret;
-+
-+	for (i = 0; i < lh->numdescs; i++) {
-+		desc = lh->descs[i];
-+		flagsp = &desc->flags;
-+
-+		linehandle_configure_flag(flagsp, FLAG_ACTIVE_LOW,
-+			lflags & GPIOHANDLE_REQUEST_ACTIVE_LOW);
-+
-+		linehandle_configure_flag(flagsp, FLAG_OPEN_DRAIN,
-+			lflags & GPIOHANDLE_REQUEST_OPEN_DRAIN);
-+
-+		linehandle_configure_flag(flagsp, FLAG_OPEN_SOURCE,
-+			lflags & GPIOHANDLE_REQUEST_OPEN_SOURCE);
-+
-+		linehandle_configure_flag(flagsp, FLAG_PULL_UP,
-+			lflags & GPIOHANDLE_REQUEST_BIAS_PULL_UP);
-+
-+		linehandle_configure_flag(flagsp, FLAG_PULL_DOWN,
-+			lflags & GPIOHANDLE_REQUEST_BIAS_PULL_DOWN);
-+
-+		linehandle_configure_flag(flagsp, FLAG_BIAS_DISABLE,
-+			lflags & GPIOHANDLE_REQUEST_BIAS_DISABLE);
-+
-+		/*
-+		 * Lines have to be requested explicitly for input
-+		 * or output, else the line will be treated "as is".
-+		 */
-+		if (lflags & GPIOHANDLE_REQUEST_OUTPUT) {
-+			int val = !!gcnf.default_values[i];
-+
-+			ret = gpiod_direction_output(desc, val);
-+			if (ret)
-+				return ret;
-+		} else if (lflags & GPIOHANDLE_REQUEST_INPUT) {
-+			ret = gpiod_direction_input(desc);
-+			if (ret)
-+				return ret;
-+		}
-+	}
-+	return 0;
-+}
-+
- static long linehandle_ioctl(struct file *filep, unsigned int cmd,
- 			     unsigned long arg)
- {
-@@ -525,6 +592,8 @@ static long linehandle_ioctl(struct file *filep, unsigned int cmd,
- 					      lh->descs,
- 					      NULL,
- 					      vals);
-+	} else if (cmd == GPIOHANDLE_SET_CONFIG_IOCTL) {
-+		return linehandle_set_config(lh, ip);
- 	}
- 	return -EINVAL;
- }
-diff --git a/include/uapi/linux/gpio.h b/include/uapi/linux/gpio.h
-index 7cc21c3b0839..799cf823d493 100644
---- a/include/uapi/linux/gpio.h
-+++ b/include/uapi/linux/gpio.h
-@@ -100,6 +100,24 @@ struct gpiohandle_request {
- 	int fd;
- };
- 
-+/**
-+ * struct gpiohandle_config - Configuration for a GPIO handle request
-+ * @flags: updated flags for the requested GPIO lines, such as
-+ * GPIOHANDLE_REQUEST_OUTPUT, GPIOHANDLE_REQUEST_ACTIVE_LOW etc, OR:ed
-+ * together
-+ * @default_values: if the GPIOHANDLE_REQUEST_OUTPUT is set in flags,
-+ * this specifies the default output value, should be 0 (low) or
-+ * 1 (high), anything else than 0 or 1 will be interpreted as 1 (high)
-+ * @padding: reserved for future use and should be zero filled
-+ */
-+struct gpiohandle_config {
-+	__u32 flags;
-+	__u8 default_values[GPIOHANDLES_MAX];
-+	__u32 padding[4]; /* padding for future use */
-+};
-+
-+#define GPIOHANDLE_SET_CONFIG_IOCTL _IOWR(0xB4, 0x0a, struct gpiohandle_config)
-+
- /**
-  * struct gpiohandle_data - Information of values on a GPIO handle
-  * @values: when getting the state of lines this contains the current
--- 
-2.23.0
-
+For more info write to <info@kernelci.org>
