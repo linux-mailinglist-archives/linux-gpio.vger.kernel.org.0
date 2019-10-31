@@ -2,56 +2,58 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 6198CEB31A
-	for <lists+linux-gpio@lfdr.de>; Thu, 31 Oct 2019 15:48:59 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 845A6EB31B
+	for <lists+linux-gpio@lfdr.de>; Thu, 31 Oct 2019 15:49:02 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727969AbfJaOs6 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 31 Oct 2019 10:48:58 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:46540 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727841AbfJaOs6 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 31 Oct 2019 10:48:58 -0400
-Received: by mail-pf1-f195.google.com with SMTP id 193so3234866pfc.13
-        for <linux-gpio@vger.kernel.org>; Thu, 31 Oct 2019 07:48:58 -0700 (PDT)
+        id S1727990AbfJaOtB (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 31 Oct 2019 10:49:01 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:40933 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727841AbfJaOtB (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 31 Oct 2019 10:49:01 -0400
+Received: by mail-pl1-f193.google.com with SMTP id e3so689709plt.7
+        for <linux-gpio@vger.kernel.org>; Thu, 31 Oct 2019 07:49:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=XAz3dZQ1+PeJBVteQgNZhWc6GtR60GDAt2mWNwMyC6k=;
-        b=MsJc0KGubUkG10/gkEDS4Dgqa1fEFjunO6BW3TjHj0YzRxbR5V/+TydXgYEkFrS4f7
-         WuVi95cm5VlZYrfaPdraa11CxU/6C1IDevxfJD3wSIIS2CMa2OpoFYRfU97gL0YiTeRx
-         pi1662AKFCQTtlDrO7SNGiAsTJ9ffi2N55kDqiLgR0GzIhuAoY7TYQMIHELSzxtBqS83
-         A8Tl8rabJmLdinY2GqtqbxxVtLqgRhYocskWbw/Oebt3ozVyMUwNP+dyHNfNHwmKjRJ3
-         iYN5z2au9XA95oLun33Vn70/fxarFYzg3We7QLumUgInOamK6sslavQz7fy2CED7Fu3Y
-         XYaw==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=H8ar5IOsC7difEPwk7MYWfDqH58Z8xE8CDFxr3/ifJs=;
+        b=DhqUGCSdZqpf3HkyGptB6HNCFMp38b5IdcuuLhEmf0vesrMYOo2Zn0rW6R9ZenXLf5
+         KF3RGJ7b0EcRwLWEhhnl7MIdZK7Ufbz72e8v2TWyWlii3dGzSWKoMukO+ZCbCWzljPrN
+         p87jfmj9r6r8nDHhRD46SkITknm1+itZCVXXZI/XZwPVQC9n+F+CKibM1DBc55iTPKzu
+         L+wqCUkS3HeDtGld5ng29QVxFc9avwml8w+WEdqa9oiS/DDrpLxngyx9nPlpItWM4K3x
+         PWHTGjIXDf9YiJ6vFFHqyTz9R7mngDCa42PIWZ5+pd4WbpQMXOGXSNgfuKnMWthsY1L+
+         FyAQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=XAz3dZQ1+PeJBVteQgNZhWc6GtR60GDAt2mWNwMyC6k=;
-        b=mJ1RSvDUZt6P8tPvjQQRoA0IZL6A//ZFv1/bMpk4Cs4muEF9vk5+ZgJvOLvfTN1RXh
-         1xQ+UHUT/DDEVrKgyA0TzU7CHHb9HeTaGeOnmYHodMesOPbv4A0n+2nGTzl4g+3Z0ZIr
-         ZPOLQ20NQUMz3BPO4E8F1KmrSMRoxS2UKhRjZQ83Qt8kx0zpKfLcJPhVmlwpkONPbW98
-         iuJKOD3ZsjPtpwKjxIdYuV/X37KUQFul4mMNU10YcI/2l4S9eb0xclIEsxVhsAmWj5vY
-         dp6SbAHLNi0AwURSgUkZy9uQiiMYhp4wmlv4BaRqKPSVdZkgzr2S1/fm8zUHgYhBUvz+
-         umng==
-X-Gm-Message-State: APjAAAUjehiDFIrQh0bPNTFqCxVm6IWVtlzl2H3zbyXeHzpj1sb2dYDj
-        jq2LyeU/ehquPd/oVp25FTv3lBsNMdqXXg==
-X-Google-Smtp-Source: APXvYqwGQC9ckzlQfCpRXVab8aaxVPhicOb0M9f59JRJc+jHu5DaCk89S90knGuA96AHCqKEFQwyPA==
-X-Received: by 2002:a17:90a:de4:: with SMTP id 91mr8066267pjv.113.1572533337445;
-        Thu, 31 Oct 2019 07:48:57 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=H8ar5IOsC7difEPwk7MYWfDqH58Z8xE8CDFxr3/ifJs=;
+        b=eaIG6mEJaGD4NZo9qIuRvwsLmP5vw0ELApKG6DpKaicDLa0EJjxudLF6jTP5mCu/TQ
+         NsKdAl2vkR0aF0Z2gcuZj15NrCOmhnzmvrIwK9W2dXl21BpTzPp/9VWHm1CFTkzfzJUa
+         tl25OvBpHu4xOc2/Elhq7KaB9fCLhwyz80w1m636akXD7aNaapHRzCfs4o9+SphIxDCZ
+         n09ru2HLA5yaXh7XqBK+0dnPSXzouN6105zJraOpbehmk76BWFp53VGlDzkhDoSCHHhI
+         A0xXELW3M82bajG9dakgICZie3a5ZCeInq6ZFEfc7vjOR/bTgf32+bwZgdrKQ5qc7umF
+         U1/A==
+X-Gm-Message-State: APjAAAVwxAU3/lFO8DwUyLPBeW9DjKK03jo07qr5LFrUtA/A8MyIF4Uh
+        MHCffIf0iakNDE8j7/DCJjIafc2ZoICwBA==
+X-Google-Smtp-Source: APXvYqxHF7rNxD9WUwfwlEJP5sENL6clgC2BaR7iidugj0uA1ROv9uu2ZkFbj35s+8BWa8X6tCzB7Q==
+X-Received: by 2002:a17:902:bd06:: with SMTP id p6mr6460789pls.120.1572533340126;
+        Thu, 31 Oct 2019 07:49:00 -0700 (PDT)
 Received: from sol.lan (220-235-109-115.dyn.iinet.net.au. [220.235.109.115])
-        by smtp.gmail.com with ESMTPSA id y126sm4568456pfg.74.2019.10.31.07.48.54
+        by smtp.gmail.com with ESMTPSA id y126sm4568456pfg.74.2019.10.31.07.48.57
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 31 Oct 2019 07:48:56 -0700 (PDT)
+        Thu, 31 Oct 2019 07:48:59 -0700 (PDT)
 From:   Kent Gibson <warthog618@gmail.com>
 To:     linux-gpio@vger.kernel.org, bgolaszewski@baylibre.com,
         linus.walleij@linaro.org
 Cc:     Kent Gibson <warthog618@gmail.com>
-Subject: [PATCH v2 0/2] gpio: add new SET_CONFIG ioctl() to gpio chardev
-Date:   Thu, 31 Oct 2019 22:48:23 +0800
-Message-Id: <20191031144825.32105-1-warthog618@gmail.com>
+Subject: [PATCH v2 1/2] gpiolib: move validation of line handle flags into helper function
+Date:   Thu, 31 Oct 2019 22:48:24 +0800
+Message-Id: <20191031144825.32105-2-warthog618@gmail.com>
 X-Mailer: git-send-email 2.23.0
+In-Reply-To: <20191031144825.32105-1-warthog618@gmail.com>
+References: <20191031144825.32105-1-warthog618@gmail.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-gpio-owner@vger.kernel.org
@@ -59,37 +61,126 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Changes from v1:
- Address v1 review comments, specifically refactoring line handle flag 
- validation out of linehandle_create in a separate patch, and refactoring  
- the set_config itself to improve readability and minimize changes to 
- existing code.
+Move validation of line handle flags into helper function.
+This reduces the size and complexity of linehandle_create and allows the 
+validation to be reused elsewhere.
 
-Add the GPIOHANDLE_SET_CONFIG_IOCTL to the gpio chardev.
-The ioctl allows some of the configuration of a requested handle to be
-changed without having to release the line.
-The primary use case is the changing of direction for bi-directional 
-lines.
+Signed-off-by: Kent Gibson <warthog618@gmail.com>
+---
+ drivers/gpio/gpiolib.c | 93 +++++++++++++++++++++++-------------------
+ 1 file changed, 51 insertions(+), 42 deletions(-)
 
-The patch series is against Bart's gpio/for-next branch[1] with v4 of 
-my bias patch series "gpio: expose line bias flags to userspace" applied.
-This is necessary to support setting of the bias flags introduced 
-there.
-
-The patch has been successfully tested against gpio-mockup using the 
-feature/pud_set_config branch of my Go gpiod library[2], as libgpiod has 
-not yet been updated with the uAPI change.
-
-Kent Gibson (2):
-  gpiolib: move validation of line handle flags into helper function
-  gpio: add new SET_CONFIG ioctl() to gpio chardev
-
- drivers/gpio/gpiolib.c    | 162 ++++++++++++++++++++++++++++----------
- include/uapi/linux/gpio.h |  18 +++++
- 2 files changed, 138 insertions(+), 42 deletions(-)
-
+diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
+index df27f05f9b8d..4e8fbd74a29c 100644
+--- a/drivers/gpio/gpiolib.c
++++ b/drivers/gpio/gpiolib.c
+@@ -427,6 +427,54 @@ struct linehandle_state {
+ 	GPIOHANDLE_REQUEST_OPEN_DRAIN | \
+ 	GPIOHANDLE_REQUEST_OPEN_SOURCE)
+ 
++static int linehandle_validate_flags(u32 flags)
++{
++	/* Return an error if an unknown flag is set */
++	if (flags & ~GPIOHANDLE_REQUEST_VALID_FLAGS)
++		return -EINVAL;
++
++	/*
++	 * Do not allow both INPUT & OUTPUT flags to be set as they are
++	 * contradictory.
++	 */
++	if ((flags & GPIOHANDLE_REQUEST_INPUT) &&
++	    (flags & GPIOHANDLE_REQUEST_OUTPUT))
++		return -EINVAL;
++
++	/*
++	 * Do not allow OPEN_SOURCE & OPEN_DRAIN flags in a single request. If
++	 * the hardware actually supports enabling both at the same time the
++	 * electrical result would be disastrous.
++	 */
++	if ((flags & GPIOHANDLE_REQUEST_OPEN_DRAIN) &&
++	    (flags & GPIOHANDLE_REQUEST_OPEN_SOURCE))
++		return -EINVAL;
++
++	/* OPEN_DRAIN and OPEN_SOURCE flags only make sense for output mode. */
++	if (!(flags & GPIOHANDLE_REQUEST_OUTPUT) &&
++	    ((flags & GPIOHANDLE_REQUEST_OPEN_DRAIN) ||
++	     (flags & GPIOHANDLE_REQUEST_OPEN_SOURCE)))
++		return -EINVAL;
++
++	/* Bias flags only allowed for input or output mode. */
++	if (!((flags & GPIOHANDLE_REQUEST_INPUT) ||
++	      (flags & GPIOHANDLE_REQUEST_OUTPUT)) &&
++	    ((flags & GPIOHANDLE_REQUEST_BIAS_DISABLE) ||
++	     (flags & GPIOHANDLE_REQUEST_BIAS_PULL_UP) ||
++	     (flags & GPIOHANDLE_REQUEST_BIAS_PULL_DOWN)))
++		return -EINVAL;
++
++	/* Only one bias flag can be set. */
++	if (((flags & GPIOHANDLE_REQUEST_BIAS_DISABLE) &&
++	     (flags & (GPIOHANDLE_REQUEST_BIAS_PULL_DOWN |
++			GPIOHANDLE_REQUEST_BIAS_PULL_UP))) ||
++	    ((flags & GPIOHANDLE_REQUEST_BIAS_PULL_DOWN) &&
++	     (flags & GPIOHANDLE_REQUEST_BIAS_PULL_UP)))
++		return -EINVAL;
++
++	return 0;
++}
++
+ static long linehandle_ioctl(struct file *filep, unsigned int cmd,
+ 			     unsigned long arg)
+ {
+@@ -528,48 +576,9 @@ static int linehandle_create(struct gpio_device *gdev, void __user *ip)
+ 
+ 	lflags = handlereq.flags;
+ 
+-	/* Return an error if an unknown flag is set */
+-	if (lflags & ~GPIOHANDLE_REQUEST_VALID_FLAGS)
+-		return -EINVAL;
+-
+-	/*
+-	 * Do not allow both INPUT & OUTPUT flags to be set as they are
+-	 * contradictory.
+-	 */
+-	if ((lflags & GPIOHANDLE_REQUEST_INPUT) &&
+-	    (lflags & GPIOHANDLE_REQUEST_OUTPUT))
+-		return -EINVAL;
+-
+-	/*
+-	 * Do not allow OPEN_SOURCE & OPEN_DRAIN flags in a single request. If
+-	 * the hardware actually supports enabling both at the same time the
+-	 * electrical result would be disastrous.
+-	 */
+-	if ((lflags & GPIOHANDLE_REQUEST_OPEN_DRAIN) &&
+-	    (lflags & GPIOHANDLE_REQUEST_OPEN_SOURCE))
+-		return -EINVAL;
+-
+-	/* OPEN_DRAIN and OPEN_SOURCE flags only make sense for output mode. */
+-	if (!(lflags & GPIOHANDLE_REQUEST_OUTPUT) &&
+-	    ((lflags & GPIOHANDLE_REQUEST_OPEN_DRAIN) ||
+-	     (lflags & GPIOHANDLE_REQUEST_OPEN_SOURCE)))
+-		return -EINVAL;
+-
+-	/* Bias flags only allowed for input or output mode. */
+-	if (!((lflags & GPIOHANDLE_REQUEST_INPUT) ||
+-	      (lflags & GPIOHANDLE_REQUEST_OUTPUT)) &&
+-	    ((lflags & GPIOHANDLE_REQUEST_BIAS_DISABLE) ||
+-	     (lflags & GPIOHANDLE_REQUEST_BIAS_PULL_UP) ||
+-	     (lflags & GPIOHANDLE_REQUEST_BIAS_PULL_DOWN)))
+-		return -EINVAL;
+-
+-	/* Only one bias flag can be set. */
+-	if (((lflags & GPIOHANDLE_REQUEST_BIAS_DISABLE) &&
+-	     (lflags & (GPIOHANDLE_REQUEST_BIAS_PULL_DOWN |
+-			GPIOHANDLE_REQUEST_BIAS_PULL_UP))) ||
+-	    ((lflags & GPIOHANDLE_REQUEST_BIAS_PULL_DOWN) &&
+-	     (lflags & GPIOHANDLE_REQUEST_BIAS_PULL_UP)))
+-		return -EINVAL;
++	ret = linehandle_validate_flags(lflags);
++	if (ret)
++		return ret;
+ 
+ 	lh = kzalloc(sizeof(*lh), GFP_KERNEL);
+ 	if (!lh)
 -- 
 2.23.0
 
-[1] git://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git
-[2] https://github.com/warthog618/gpiod.git
