@@ -2,354 +2,529 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 10991EB65A
-	for <lists+linux-gpio@lfdr.de>; Thu, 31 Oct 2019 18:51:15 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5BD81EB75C
+	for <lists+linux-gpio@lfdr.de>; Thu, 31 Oct 2019 19:41:37 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728561AbfJaRvO (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 31 Oct 2019 13:51:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48364 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726602AbfJaRvO (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Thu, 31 Oct 2019 13:51:14 -0400
-Received: from mail-qk1-f180.google.com (mail-qk1-f180.google.com [209.85.222.180])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1B1E42067D;
-        Thu, 31 Oct 2019 17:51:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572544272;
-        bh=zhmMKUTLwGOLkNxC1vCZG7S32lZJoG/WRDbEbnRFarU=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=oT65MvjP6peplfZ/wSFv/rFNulH7Vb0RS4ke6ddCDvWxZz/42xCRCbszNzLb6dzee
-         Y7toaGN7SLHU3pvsILgd8qa0fQaaDRW6FjJP7ybHSPadv7Dvo/OjGs/rc4NGSYH4Cm
-         reZSMMYJJRK81PTFXIPGhur/pKJbzbEPhuIKUgm0=
-Received: by mail-qk1-f180.google.com with SMTP id e66so7847314qkf.13;
-        Thu, 31 Oct 2019 10:51:12 -0700 (PDT)
-X-Gm-Message-State: APjAAAUobNGqUwA36oEJY1deW1yHQoqGiJs2c0b/Kdo3a133x5t9yizh
-        uJI1vn7jqKin4iAyEM2vFuHixrxTAElgqsSnZA==
-X-Google-Smtp-Source: APXvYqyyBycVGgR82w3nJ2gAeNKcxZHW7J9XVnJiGMY/B+GhYIuxpzQdNSLNOx3KK09ue5JgLjpNGUGDtH1dwXd4I9s=
-X-Received: by 2002:a37:9847:: with SMTP id a68mr6570552qke.223.1572544271035;
- Thu, 31 Oct 2019 10:51:11 -0700 (PDT)
+        id S1729266AbfJaSlZ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 31 Oct 2019 14:41:25 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:35568 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729317AbfJaSlZ (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 31 Oct 2019 14:41:25 -0400
+Received: by mail-wr1-f68.google.com with SMTP id l10so7409064wrb.2
+        for <linux-gpio@vger.kernel.org>; Thu, 31 Oct 2019 11:41:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernelci-org.20150623.gappssmtp.com; s=20150623;
+        h=message-id:date:mime-version:content-transfer-encoding:subject:to
+         :from:cc;
+        bh=7/bRNZ6f+2d4L/oUjvqWsQNbnVWR20TLQleMcIRmwFo=;
+        b=JfoUna8kMEF1zFyaGJgt2t3q9Dl5MjP6Gl92izIO0+1gQ85mYOsbwOGgK9Ep2XaRC3
+         zlKeIR04kOenJjqex/B/09KqvvhFEZE8VnMp1rfGtaOielH7jyKy70bSlOG3zm/ILjPd
+         hFVwBzFSFM6HocyUilsQAabUVjZasSLsTgDnchjNfRKVVv+G06OCBlj9zfBMFADibe/X
+         cS9BpeMtAoccUpa3aS0yhas3Cxail6dOCtdRYqn3IUl7a1+IWACRryEuq6lPy7s9xvw0
+         trg66kv/qnpLFROUqDD6trkxjV3TerpU99cjohVW3ewmZohB4XuYIQ9iLAknqx2f5XHY
+         KnLA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:date:mime-version
+         :content-transfer-encoding:subject:to:from:cc;
+        bh=7/bRNZ6f+2d4L/oUjvqWsQNbnVWR20TLQleMcIRmwFo=;
+        b=V1esPGIagDjCtkfWvulX0Udl2WKkqAO3Ps13BQE0ttNg2/8xsBPH2vSj7fEuAHL5LX
+         rvEdIuBwxu1qqC5Qmc3bhH4sSYMRmAY232p1nW1fnD5/ob9XfnzgWQoX7OAEa/p85K7v
+         bcTEEKyKok9p6kUz3qFrHjumhNAxzF1sBkKRt/GS/BmO/xfuHTi29Sqgr9a2J5X12cHk
+         MPmnMiWW5OLForW8trG/ey5O3zu8eXpw7id8BJ/bXqGXoeLhNTnQeJHnxIZwbNi2aIiq
+         ClZ88kFGTdyvt630+3OmPihmQXWcyi6+81saZf9ecpLppP5Ki47Mf9zVr4qXSl7GFfdT
+         KZoA==
+X-Gm-Message-State: APjAAAXvCff7RY7JWZdfePT8G01BrfBxF28o6J/c0TJYG7c8RE3fncbx
+        BZJp8qLeTfMdqrDkJz5av9bVdA==
+X-Google-Smtp-Source: APXvYqxBHSE2zoQxgjv8HPlkW53ESN1X/xGApC8M002GlmgiXT0U6v8Nos1vxzgETS+06c7LmVjIFA==
+X-Received: by 2002:a5d:6402:: with SMTP id z2mr7104167wru.211.1572547280655;
+        Thu, 31 Oct 2019 11:41:20 -0700 (PDT)
+Received: from [148.251.42.114] ([2a01:4f8:201:9271::2])
+        by smtp.gmail.com with ESMTPSA id w81sm3598191wmg.5.2019.10.31.11.41.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 31 Oct 2019 11:41:19 -0700 (PDT)
+Message-ID: <5dbb2acf.1c69fb81.54ce2.2f48@mx.google.com>
+Date:   Thu, 31 Oct 2019 11:41:19 -0700 (PDT)
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-References: <cover.1571915550.git.matti.vaittinen@fi.rohmeurope.com>
- <0182df3c49c6c804ee20ef32fc4b85b50ff45fca.1571915550.git.matti.vaittinen@fi.rohmeurope.com>
- <ed0b2aa8-8a70-0341-4ecf-8959f37c53bd@ti.com> <5c793f1308ccc6e787260b64fe6a875a8d0eb9d0.camel@fi.rohmeurope.com>
- <20191029193440.GA1812@bogus> <3e0f0943cd599cae544bd7a7a49dded46d57a604.camel@fi.rohmeurope.com>
- <CAL_JsqJgnYqv1q=wf++5FOX-niRWQ=H9wWYgUKy+z=H933Qraw@mail.gmail.com> <1e3901d1c7c26f4dbbc1de78b607b92bf9ddc098.camel@fi.rohmeurope.com>
-In-Reply-To: <1e3901d1c7c26f4dbbc1de78b607b92bf9ddc098.camel@fi.rohmeurope.com>
-From:   Rob Herring <robh@kernel.org>
-Date:   Thu, 31 Oct 2019 12:50:59 -0500
-X-Gmail-Original-Message-ID: <CAL_JsqJ6kmZyfXtZy_gz_6sxgK2CTXKTcpARkaf462QiwJXYZA@mail.gmail.com>
-Message-ID: <CAL_JsqJ6kmZyfXtZy_gz_6sxgK2CTXKTcpARkaf462QiwJXYZA@mail.gmail.com>
-Subject: Re: [RFC PATCH v2 02/13] dt-bindings: mfd: Document ROHM BD71828 bindings
-To:     "Vaittinen, Matti" <Matti.Vaittinen@fi.rohmeurope.com>
-Cc:     "lee.jones@linaro.org" <lee.jones@linaro.org>,
-        "dmurphy@ti.com" <dmurphy@ti.com>,
-        "linux-leds@vger.kernel.org" <linux-leds@vger.kernel.org>,
-        "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>,
-        "mazziesaccount@gmail.com" <mazziesaccount@gmail.com>,
-        "mturquette@baylibre.com" <mturquette@baylibre.com>,
-        "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
-        "a.zummo@towertech.it" <a.zummo@towertech.it>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "bgolaszewski@baylibre.com" <bgolaszewski@baylibre.com>,
-        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
-        "sboyd@kernel.org" <sboyd@kernel.org>,
-        "pavel@ucw.cz" <pavel@ucw.cz>,
-        "jacek.anaszewski@gmail.com" <jacek.anaszewski@gmail.com>,
-        "broonie@kernel.org" <broonie@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Kernelci-Lab-Name: lab-theobroma-systems
+X-Kernelci-Branch: devel
+X-Kernelci-Tree: linusw
+X-Kernelci-Kernel: v5.4-rc1-31-g6a41b6c5fc20
+X-Kernelci-Report-Type: bisect
+Subject: linusw/devel boot bisection: v5.4-rc1-31-g6a41b6c5fc20 on
+ rk3399-puma-haikou
+To:     Linus Walleij <linus.walleij@linaro.org>,
+        tomeu.vizoso@collabora.com, guillaume.tucker@collabora.com,
+        mgalka@collabora.com, broonie@kernel.org, matthew.hart@linaro.org,
+        Scott Branden <scott.branden@broadcom.com>,
+        khilman@baylibre.com, enric.balletbo@collabora.com,
+        Chris Packham <chris.packham@alliedtelesis.co.nz>
+From:   "kernelci.org bot" <bot@kernelci.org>
+Cc:     Scott Branden <sbranden@broadcom.com>,
+        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+        bcm-kernel-feedback-list@broadcom.com,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Ray Jui <rjui@broadcom.com>,
+        linux-arm-kernel@lists.infradead.org
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Oct 31, 2019 at 7:54 AM Vaittinen, Matti
-<Matti.Vaittinen@fi.rohmeurope.com> wrote:
->
->
-> On Wed, 2019-10-30 at 14:22 -0500, Rob Herring wrote:
-> > On Wed, Oct 30, 2019 at 3:27 AM Vaittinen, Matti
-> > <Matti.Vaittinen@fi.rohmeurope.com> wrote:
-> > >
-> > > On Tue, 2019-10-29 at 14:34 -0500, Rob Herring wrote:
-> > > > On Fri, Oct 25, 2019 at 05:49:17AM +0000, Vaittinen, Matti wrote:
-> > > > > Hello Dan,
-> > > > >
-> > > > > Thanks again for checking this :)
-> > > > >
-> > > > > On Thu, 2019-10-24 at 14:35 -0500, Dan Murphy wrote:
-> > > > > > Matti
-> > > > > >
-> > > > > > On 10/24/19 6:41 AM, Matti Vaittinen wrote:
-> > > > > > > ROHM BD71828 Power management IC integrates 7 buck
-> > > > > > > converters,
-> > > > > > > 7
-> > > > > > > LDOs,
-> > > > > > > a real-time clock (RTC), 3 GPO/regulator control pins, HALL
-> > > > > > > input
-> > > > > > > and a 32.768 kHz clock gate.
-> > > > > > >
-> > > > > > > Document the dt bindings drivers are using.
-> > > > > > >
-> > > > > > > Signed-off-by: Matti Vaittinen <
-> > > > > > > matti.vaittinen@fi.rohmeurope.com>
-> > > > > > > ---
-> > > > > > >
-> > > > > > > No changes since v1
-> > > > > > >
-> > > > > > >   .../bindings/mfd/rohm,bd71828-pmic.txt        | 180
-> > > > > > > ++++++++++++++++++
-> > > > > > >   1 file changed, 180 insertions(+)
-> > > > > > >   create mode 100644
-> > > > > > > Documentation/devicetree/bindings/mfd/rohm,bd71828-pmic.txt
-> > > > > >
-> > > > > > I will let maintainers weigh in here but if this is new this
-> > > > > > should
-> > > > > > probably be in the yaml format to avoid conversion in the
-> > > > > > future
-> > > > >
-> > > > > Oh... This is new to me. I guess there are reasons for this -
-> > > > > but I
-> > > > > must say I am not excited as I have never used yaml for
-> > > > > anything.
-> > > > > I'll
-> > > > > do as you suggest and wait for what others have to say :)
-> > > > > Thanks
-> > > > > for
-> > > > > pointing this out though.
-> > > >
-> > > > Sorry for your lack of excitement. It could be XML...
-> > >
-> > > Thanks, I appreciate that, apology accepted X-D
-> > >
-> > > > There aren't many MFD examples yet, but there is max77650 in my
-> > > > tree
-> > > > and
-> > > > linux-next.
-> > >
-> > > I looked at the max77650 MFD binding from linux-next. After that I
-> > > also
-> > > looked some of the generic documents for DT bindings (I know - I
-> > > should
-> > > have done that earlier and your job had been easier). But all that
-> > > left
-> > > me "slightly" puzzled. After some further wandering in the virtual
-> > > world I spotted this:
-> > > https://elinux.org/images/6/6b/LPC2018_json-schema_for_Devicetree.pdf
-> > >
-> > > I think this link in some dt-yaml-binding-readme might be helpful.
-> >
-> > Presentations bit rot, so I'd rather not. I'd hope that
-> > writing-schema.rst and example-schema.yaml capture what's in the
-> > presentation. What do you think is missing?
->
-> I personally wanted to understand "why?". Why not text doc. What is the
-> yaml thing aiming at? What are the problems we are solving here. And
-> maybe most crucially - I had no idea what is schema? It sure sounded
-> like some toolchain thingy or perhaps piece of new yaml representation
-> of dts (please note, I somehow thought that dts files were going to be
-> converted to yaml - maybe due to some reading about DTC getting yaml
-> support) which I thought would not need to be touched by me :) It took
-> me quite a while to understand that the old binding doc is actually a
-> schema. Without that piece finding out the new format of binding docs
-> was painful.
+* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+* This automated bisection report was sent to you on the basis  *
+* that you may be involved with the breaking commit it has      *
+* found.  No manual investigation has been done to verify it,   *
+* and the root cause of the problem may be somewhere else.      *
+*                                                               *
+* If you do send a fix, please include this trailer:            *
+*   Reported-by: "kernelci.org bot" <bot@kernelci.org>          *
+*                                                               *
+* Hope this helps!                                              *
+* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 
-I guess 'why' is easy enough to address.
+linusw/devel boot bisection: v5.4-rc1-31-g6a41b6c5fc20 on rk3399-puma-haikou
 
-> Also, binding and binding document were not completely same thing in my
-> mind. I thought that binding is actual piece of dt - probably living
-> under arch/x/boot/dts - binding document is what explains how that
-> should be construct and is under Documentation/devicetree/bindings/.
-> This is probably largely due to my ignorance and habit oh skipping much
-> of reading and just trying out things. But I hoped I had these cleared
-> in first documents I tried reading for creation binding docs..
->
-> ...which brings me here. I looked at the
-> Documentation/devicetree/bindings folder and did read the 'writing-
-> bindings.txt' and 'submitting-patches.txt' from there. Then I also
-> checked the Documentation/devicetree/usage-model.txt None of which
-> helped me out. I did also open the 'writing-schema.rst' but I didn't
-> read it carefully enough. Probably because I thought after reading the
-> opening chapter that this described how to do actual dts in yaml.
+Summary:
+  Start:      6a41b6c5fc20 gpio: Add xgs-iproc driver
+  Details:    https://kernelci.org/boot/id/5dbb12bf59b514404f60ee79
+  Plain log:  https://storage.kernelci.org//linusw/devel/v5.4-rc1-31-g6a41b=
+6c5fc20/arm64/defconfig/gcc-8/lab-theobroma-systems/boot-rk3399-puma-haikou=
+.txt
+  HTML log:   https://storage.kernelci.org//linusw/devel/v5.4-rc1-31-g6a41b=
+6c5fc20/arm64/defconfig/gcc-8/lab-theobroma-systems/boot-rk3399-puma-haikou=
+.html
+  Result:     6a41b6c5fc20 gpio: Add xgs-iproc driver
 
-Things are a bit scattered around I'll admit. I feel like we need a
-'start here', but the challenge is people have different starting
-points.
+Checks:
+  revert:     PASS
+  verify:     PASS
 
-> Anyways, I might add some notes about using yaml format (and perhaps
-> shortly note that the yaml dt binding doc is called schema) in
-> Documentation/devicetree/bindings/writing-bindings.txt and
-> Documentation/devicetree/bindings/submitting-patches.txt
->
-> I could also appreciate some note about benefits/goals of using yaml
-> instead of text docs in writing-schema.rst - although I understand that
-> this may not be relevant for all readers.
->
-> > > So if I understand this correctly, idea is to convert the dts
-> > > sources
-> > > to use yaml (right?). This is seen better because more people
-> > > knowsubmitting-patches.txt
-> > > JSON/YAML than dts format(?) Fair enough. Although some of us know
-> > > dts
-> > > format decently well but have never used JSON or yaml. I guess dts
-> > > support is not going away though and yaml examples do not seem
-> > > terribly
-> > > hard at first sight.
-> >
-> > No, nothing is changing for .dts files (other than fixing errors the
-> > schemas find). The free form, human readable only prose called
-> > binding
-> > documentation is changing to YAML formatted, json-schema vocabulary
-> > binding schema which can be used to validate dts files.
->
-> Thanks for sorting this out. It all makes more sense now.
->
-> > > What comes to binding docs - well, in my eyes (which may be biased)
-> > > writing documentation in anything intended to be interpreted by a
-> > > machine is still a step backwards for a human document reader. Sure
-> > > syntax validation or reviewing is easier if format is machine
-> > > readable
-> > > - but free text info is more, well, informative (form me at least).
-> > > I
-> > > for example wouldn't like reading a book written in any script or
-> > > markup language. Nor writing one. It is difficult for me to
-> > > understand
-> > > the documentation change to yaml, maybe because I am more often
-> > > using
-> > > the binding docs for composing DT for a device than reviewing them
-> > > ;)
-> >
-> > ICYMI, all the kernel docs are in a markup language now...
-> >
-> > Free form descriptions are easier to use because you can put in dts
-> > whatever you want. Nothing is going to check. There's been no
-> > shortage
-> > of errors and inconsistencies that we've already found.
->
-> I won't start arguing on this :)
->
-> > You can have as much description and comments as you like (though I'm
-> > trying to cut down on the copy-n-paste genericish 'clock for the
-> > module' type comments).
->
-> This is good to note. Thanks.
->
-> > > Anyways, I guess I'd better either try learning the yaml, figure
-> > > out
-> > > what are schemas and see how to convert yaml docs to text for nicer
-> > > reading (I assume this is doable) and how to verify yaml binding
-> > > docs
-> > > are Ok - or quit contributing. No one is forcing me to do this.
-> > > Continuing complaining on this is probably not getting us anywhere
-> > > so I
-> > > might as well shut up now :/
-> >
-> > There is some notion to convert the DT spec to schema and then
-> > generate the spec from the schema. Take properties, their type, and
-> > descriptions and put that back into tables for example. Would love to
-> > have someone work on that. :)
->
-> I am glad to hear you have developed / are developing such tooling.
+Parameters:
+  Tree:       linusw
+  URL:        https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-=
+gpio.git/
+  Branch:     devel
+  Target:     rk3399-puma-haikou
+  CPU arch:   arm64
+  Lab:        lab-theobroma-systems
+  Compiler:   gcc-8
+  Config:     defconfig
+  Test suite: boot
 
-TBC, I have not and am not. It's just an idea. There's been nothing
-done beyond experimenting if rST could be embedded into yaml.
+Breaking commit found:
 
-> I
-> really appreciate it. What comes to giving a helping hand - I'd better
-> to stick the simple C drivers for now ;) But if I ever get the feeling
-> that I don't know what to do I'll keep this in mind :] Let me do some
-> calculus... Only 11 years and my youngest son will probably leave our
-> house - do you think 2030 is a bit too late? Just let me know if this
-> is still relevant then - and I'll buy you a beer or write a tool (of
-> some kind) xD
+---------------------------------------------------------------------------=
+----
+commit 6a41b6c5fc20abced88fa0eed42ae5e5cb70b280
+Author: Chris Packham <chris.packham@alliedtelesis.co.nz>
+Date:   Fri Oct 25 09:27:03 2019 +1300
 
-I've scheduled you in for 2030. :)
+    gpio: Add xgs-iproc driver
+    =
 
-> Meanwhile... I have tried to convert the BD71828 DT doc from the RFC
-> patch to yaml - and I am having hard time. Especially with the
-> regulators node - which I would like to place in
-> Documentation/devicetree/bindings/regulator/rohm,bd71828-regulator.yaml
->
-> My problem is the
-> regulators {
-> buck1: BUCK1 {
->                     regulator-name = "buck1";
->                     regulator-min-microvolt = <500000>;
->                     regulator-max-microvolt = <2000000>;
->                     regulator-ramp-delay = <2500>;
->                     rohm,dvs-runlvl-ctrl;
->                     rohm,dvs-runlevel0-voltage = <500000>;
->                     rohm,dvs-runlevel1-voltage = <506250>;
->                     rohm,dvs-runlevel2-voltage = <512500>;
->                     rohm,dvs-runlevel3-voltage = <518750>;
->                     regulator-boot-on;
->     };
->     ...
-> };
-> node which only contains BUCKX and LDOX sub-nodes. It has no own
-> properties.
->
-> From MFD yaml I did try:
->
->   regulators:
->     $ref: ../regulator/rohm,bd71828-regulator.yaml
->     description:
->       List of child nodes that specify the regulators.
->
-> and in rohm,bd71828-regulator.yaml
->
-> I tried doing:
->
-> patternProperties:
->   "^BUCK[1-7]$":
->     type: object
->     description:
->       Properties for single regulator.
->     properties:
->         ...
->
-> but this fails validation as properties: is not given.
->
-> [mvaittin@localhost linux]$ dt-doc-validate
-> Documentation/devicetree/bindings/regulator/rohm,bd71828-
-> regulator.yaml
-> /home/mvaittin/torvalds/linux/Documentation/devicetree/bindings/regulat
-> or/rohm,bd71828-regulator.yaml: 'properties' is a required property
->
-> If I try and add:
->
-> properties:
->   foo: true
->
-> patternProperties:
->     "^BUCK[1-7]$":
->       type: object
->       description:
->         Properties for single regulator.
->       properties:
->         ...
+    This driver supports the Chip Common A GPIO controller present on a
+    number of Broadcom switch ASICs with integrated SoCs. The controller is
+    similar to the pinctrl-nsp-gpio and pinctrl-iproc-gpio blocks but
+    different enough that a separate driver is required.
+    =
 
-That's a case of needing to adjust the meta-schema (the schema that
-checks the schemas). It's a bit overly restrictive just to try to
-contain what's allowed. I've fixed it now. Update dtschema and it
-should work now.
+    This has been ported from Broadcom's XLDK 5.0.3 retaining only the CCA
+    support (pinctrl-iproc-gpio covers CCB).
+    =
 
-BTW, what you will also need is to reference the common schema:
+    Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
+    Link: https://lore.kernel.org/r/20191024202703.8017-3-chris.packham@all=
+iedtelesis.co.nz
+    Acked-by: Scott Branden <scott.branden@broadcom.com>
+    Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
 
-"^BUCK[1-7]$":
-  type: object
-  allOf:
-    - $ref: regulator.yaml#
-  properties:
-   rohm,dvs-runlvl-ctrl:
-     type: boolean
-     description: ...
-   ...
+diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
+index 8ec1f041c98d..e9516393c971 100644
+--- a/drivers/gpio/Kconfig
++++ b/drivers/gpio/Kconfig
+@@ -155,6 +155,15 @@ config GPIO_BCM_KONA
+ 	help
+ 	  Turn on GPIO support for Broadcom "Kona" chips.
+ =
 
-Rob
++config GPIO_BCM_XGS_IPROC
++	tristate "BRCM XGS iProc GPIO support"
++	depends on OF_GPIO && (ARCH_BCM_IPROC || COMPILE_TEST)
++	select GPIO_GENERIC
++	select GPIOLIB_IRQCHIP
++	default ARCH_BCM_IPROC
++	help
++	  Say yes here to enable GPIO support for Broadcom XGS iProc SoCs.
++
+ config GPIO_BRCMSTB
+ 	tristate "BRCMSTB GPIO support"
+ 	default y if (ARCH_BRCMSTB || BMIPS_GENERIC)
+diff --git a/drivers/gpio/Makefile b/drivers/gpio/Makefile
+index 84e05701f500..34eb8b2b12dd 100644
+--- a/drivers/gpio/Makefile
++++ b/drivers/gpio/Makefile
+@@ -35,6 +35,7 @@ obj-$(CONFIG_GPIO_ASPEED)		+=3D gpio-aspeed.o
+ obj-$(CONFIG_GPIO_ASPEED_SGPIO)		+=3D gpio-aspeed-sgpio.o
+ obj-$(CONFIG_GPIO_ATH79)		+=3D gpio-ath79.o
+ obj-$(CONFIG_GPIO_BCM_KONA)		+=3D gpio-bcm-kona.o
++obj-$(CONFIG_GPIO_BCM_XGS_IPROC)	+=3D gpio-xgs-iproc.o
+ obj-$(CONFIG_GPIO_BD70528)		+=3D gpio-bd70528.o
+ obj-$(CONFIG_GPIO_BD9571MWV)		+=3D gpio-bd9571mwv.o
+ obj-$(CONFIG_GPIO_BRCMSTB)		+=3D gpio-brcmstb.o
+diff --git a/drivers/gpio/gpio-xgs-iproc.c b/drivers/gpio/gpio-xgs-iproc.c
+new file mode 100644
+index 000000000000..a3fdd95cc9e6
+--- /dev/null
++++ b/drivers/gpio/gpio-xgs-iproc.c
+@@ -0,0 +1,321 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Copyright (C) 2017 Broadcom
++ */
++
++#include <linux/gpio/driver.h>
++#include <linux/init.h>
++#include <linux/interrupt.h>
++#include <linux/io.h>
++#include <linux/irq.h>
++#include <linux/kernel.h>
++#include <linux/module.h>
++#include <linux/platform_device.h>
++#include <linux/spinlock.h>
++
++#define IPROC_CCA_INT_F_GPIOINT		BIT(0)
++#define IPROC_CCA_INT_STS		0x20
++#define IPROC_CCA_INT_MASK		0x24
++
++#define IPROC_GPIO_CCA_DIN		0x0
++#define IPROC_GPIO_CCA_DOUT		0x4
++#define IPROC_GPIO_CCA_OUT_EN		0x8
++#define IPROC_GPIO_CCA_INT_LEVEL	0x10
++#define IPROC_GPIO_CCA_INT_LEVEL_MASK	0x14
++#define IPROC_GPIO_CCA_INT_EVENT	0x18
++#define IPROC_GPIO_CCA_INT_EVENT_MASK	0x1C
++#define IPROC_GPIO_CCA_INT_EDGE		0x24
++
++struct iproc_gpio_chip {
++	struct irq_chip irqchip;
++	struct gpio_chip gc;
++	spinlock_t lock;
++	struct device *dev;
++	void __iomem *base;
++	void __iomem *intr;
++};
++
++static inline struct iproc_gpio_chip *
++to_iproc_gpio(struct gpio_chip *gc)
++{
++	return container_of(gc, struct iproc_gpio_chip, gc);
++}
++
++static void iproc_gpio_irq_ack(struct irq_data *d)
++{
++	struct gpio_chip *gc =3D irq_data_get_irq_chip_data(d);
++	struct iproc_gpio_chip *chip =3D to_iproc_gpio(gc);
++	int pin =3D d->hwirq;
++	unsigned long flags;
++	u32 irq =3D d->irq;
++	u32 irq_type, event_status =3D 0;
++
++	spin_lock_irqsave(&chip->lock, flags);
++	irq_type =3D irq_get_trigger_type(irq);
++	if (irq_type & IRQ_TYPE_EDGE_BOTH) {
++		event_status |=3D BIT(pin);
++		writel_relaxed(event_status,
++			       chip->base + IPROC_GPIO_CCA_INT_EVENT);
++	}
++	spin_unlock_irqrestore(&chip->lock, flags);
++}
++
++static void iproc_gpio_irq_unmask(struct irq_data *d)
++{
++	struct gpio_chip *gc =3D irq_data_get_irq_chip_data(d);
++	struct iproc_gpio_chip *chip =3D to_iproc_gpio(gc);
++	int pin =3D d->hwirq;
++	unsigned long flags;
++	u32 irq =3D d->irq;
++	u32 int_mask, irq_type, event_mask;
++
++	spin_lock_irqsave(&chip->lock, flags);
++	irq_type =3D irq_get_trigger_type(irq);
++	event_mask =3D readl_relaxed(chip->base + IPROC_GPIO_CCA_INT_EVENT_MASK);
++	int_mask =3D readl_relaxed(chip->base + IPROC_GPIO_CCA_INT_LEVEL_MASK);
++
++	if (irq_type & IRQ_TYPE_EDGE_BOTH) {
++		event_mask |=3D 1 << pin;
++		writel_relaxed(event_mask,
++			       chip->base + IPROC_GPIO_CCA_INT_EVENT_MASK);
++	} else {
++		int_mask |=3D 1 << pin;
++		writel_relaxed(int_mask,
++			       chip->base + IPROC_GPIO_CCA_INT_LEVEL_MASK);
++	}
++	spin_unlock_irqrestore(&chip->lock, flags);
++}
++
++static void iproc_gpio_irq_mask(struct irq_data *d)
++{
++	struct gpio_chip *gc =3D irq_data_get_irq_chip_data(d);
++	struct iproc_gpio_chip *chip =3D to_iproc_gpio(gc);
++	int pin =3D d->hwirq;
++	unsigned long flags;
++	u32 irq =3D d->irq;
++	u32 irq_type, int_mask, event_mask;
++
++	spin_lock_irqsave(&chip->lock, flags);
++	irq_type =3D irq_get_trigger_type(irq);
++	event_mask =3D readl_relaxed(chip->base + IPROC_GPIO_CCA_INT_EVENT_MASK);
++	int_mask =3D readl_relaxed(chip->base + IPROC_GPIO_CCA_INT_LEVEL_MASK);
++
++	if (irq_type & IRQ_TYPE_EDGE_BOTH) {
++		event_mask &=3D ~BIT(pin);
++		writel_relaxed(event_mask,
++			       chip->base + IPROC_GPIO_CCA_INT_EVENT_MASK);
++	} else {
++		int_mask &=3D ~BIT(pin);
++		writel_relaxed(int_mask,
++			       chip->base + IPROC_GPIO_CCA_INT_LEVEL_MASK);
++	}
++	spin_unlock_irqrestore(&chip->lock, flags);
++}
++
++static int iproc_gpio_irq_set_type(struct irq_data *d, u32 type)
++{
++	struct gpio_chip *gc =3D irq_data_get_irq_chip_data(d);
++	struct iproc_gpio_chip *chip =3D to_iproc_gpio(gc);
++	int pin =3D d->hwirq;
++	unsigned long flags;
++	u32 irq =3D d->irq;
++	u32 event_pol, int_pol;
++	int ret =3D 0;
++
++	spin_lock_irqsave(&chip->lock, flags);
++	switch (type & IRQ_TYPE_SENSE_MASK) {
++	case IRQ_TYPE_EDGE_RISING:
++		event_pol =3D readl_relaxed(chip->base + IPROC_GPIO_CCA_INT_EDGE);
++		event_pol &=3D ~BIT(pin);
++		writel_relaxed(event_pol, chip->base + IPROC_GPIO_CCA_INT_EDGE);
++		break;
++	case IRQ_TYPE_EDGE_FALLING:
++		event_pol =3D readl_relaxed(chip->base + IPROC_GPIO_CCA_INT_EDGE);
++		event_pol |=3D BIT(pin);
++		writel_relaxed(event_pol, chip->base + IPROC_GPIO_CCA_INT_EDGE);
++		break;
++	case IRQ_TYPE_LEVEL_HIGH:
++		int_pol =3D readl_relaxed(chip->base + IPROC_GPIO_CCA_INT_LEVEL);
++		int_pol &=3D ~BIT(pin);
++		writel_relaxed(int_pol, chip->base + IPROC_GPIO_CCA_INT_LEVEL);
++		break;
++	case IRQ_TYPE_LEVEL_LOW:
++		int_pol =3D readl_relaxed(chip->base + IPROC_GPIO_CCA_INT_LEVEL);
++		int_pol |=3D BIT(pin);
++		writel_relaxed(int_pol, chip->base + IPROC_GPIO_CCA_INT_LEVEL);
++		break;
++	default:
++		/* should not come here */
++		ret =3D -EINVAL;
++		goto out_unlock;
++	}
++
++	if (type & IRQ_TYPE_LEVEL_MASK)
++		irq_set_handler_locked(irq_get_irq_data(irq), handle_level_irq);
++	else if (type & IRQ_TYPE_EDGE_BOTH)
++		irq_set_handler_locked(irq_get_irq_data(irq), handle_edge_irq);
++
++out_unlock:
++	spin_unlock_irqrestore(&chip->lock, flags);
++
++	return ret;
++}
++
++static irqreturn_t iproc_gpio_irq_handler(int irq, void *data)
++{
++	struct gpio_chip *gc =3D (struct gpio_chip *)data;
++	struct iproc_gpio_chip *chip =3D to_iproc_gpio(gc);
++	int bit;
++	unsigned long int_bits =3D 0;
++	u32 int_status;
++
++	/* go through the entire GPIOs and handle all interrupts */
++	int_status =3D readl_relaxed(chip->intr + IPROC_CCA_INT_STS);
++	if (int_status & IPROC_CCA_INT_F_GPIOINT) {
++		u32 event, level;
++
++		/* Get level and edge interrupts */
++		event =3D
++		    readl_relaxed(chip->base + IPROC_GPIO_CCA_INT_EVENT_MASK);
++		event &=3D readl_relaxed(chip->base + IPROC_GPIO_CCA_INT_EVENT);
++		level =3D readl_relaxed(chip->base + IPROC_GPIO_CCA_DIN);
++		level ^=3D readl_relaxed(chip->base + IPROC_GPIO_CCA_INT_LEVEL);
++		level &=3D
++		    readl_relaxed(chip->base + IPROC_GPIO_CCA_INT_LEVEL_MASK);
++		int_bits =3D level | event;
++
++		for_each_set_bit(bit, &int_bits, gc->ngpio)
++			generic_handle_irq(irq_linear_revmap(gc->irq.domain, bit));
++	}
++
++	return int_bits ? IRQ_HANDLED : IRQ_NONE;
++}
++
++static int iproc_gpio_probe(struct platform_device *pdev)
++{
++	struct device *dev =3D &pdev->dev;
++	struct device_node *dn =3D pdev->dev.of_node;
++	struct iproc_gpio_chip *chip;
++	u32 num_gpios;
++	int irq, ret;
++
++	chip =3D devm_kzalloc(dev, sizeof(*chip), GFP_KERNEL);
++	if (!chip)
++		return -ENOMEM;
++
++	chip->dev =3D dev;
++	platform_set_drvdata(pdev, chip);
++	spin_lock_init(&chip->lock);
++
++	chip->base =3D devm_platform_ioremap_resource(pdev, 0);
++	if (IS_ERR(chip->base))
++		return PTR_ERR(chip->base);
++
++	ret =3D bgpio_init(&chip->gc, dev, 4,
++			 chip->base + IPROC_GPIO_CCA_DIN,
++			 chip->base + IPROC_GPIO_CCA_DOUT,
++			 NULL,
++			 chip->base + IPROC_GPIO_CCA_OUT_EN,
++			 NULL,
++			 0);
++	if (ret) {
++		dev_err(dev, "unable to init GPIO chip\n");
++		return ret;
++	}
++
++	chip->gc.label =3D dev_name(dev);
++	if (of_property_read_u32(dn, "ngpios", &num_gpios))
++		chip->gc.ngpio =3D num_gpios;
++
++	irq =3D platform_get_irq(pdev, 0);
++	if (irq > 0) {
++		struct gpio_irq_chip *girq;
++		struct irq_chip *irqc;
++		u32 val;
++
++		irqc =3D &chip->irqchip;
++		irqc->name =3D dev_name(dev);
++		irqc->irq_ack =3D iproc_gpio_irq_ack;
++		irqc->irq_mask =3D iproc_gpio_irq_mask;
++		irqc->irq_unmask =3D iproc_gpio_irq_unmask;
++		irqc->irq_set_type =3D iproc_gpio_irq_set_type;
++
++		chip->intr =3D devm_platform_ioremap_resource(pdev, 1);
++		if (IS_ERR(chip->intr))
++			return PTR_ERR(chip->intr);
++
++		/* Enable GPIO interrupts for CCA GPIO */
++		val =3D readl_relaxed(chip->intr + IPROC_CCA_INT_MASK);
++		val |=3D IPROC_CCA_INT_F_GPIOINT;
++		writel_relaxed(val, chip->intr + IPROC_CCA_INT_MASK);
++
++		/*
++		 * Directly request the irq here instead of passing
++		 * a flow-handler to gpiochip_set_chained_irqchip,
++		 * because the irq is shared.
++		 */
++		ret =3D devm_request_irq(dev, irq, iproc_gpio_irq_handler,
++				       IRQF_SHARED, chip->gc.label, &chip->gc);
++		if (ret) {
++			dev_err(dev, "Fail to request IRQ%d: %d\n", irq, ret);
++			return ret;
++		}
++
++		girq =3D &chip->gc.irq;
++		girq->chip =3D irqc;
++		/* This will let us handle the parent IRQ in the driver */
++		girq->parent_handler =3D NULL;
++		girq->num_parents =3D 0;
++		girq->parents =3D NULL;
++		girq->default_type =3D IRQ_TYPE_NONE;
++		girq->handler =3D handle_simple_irq;
++	}
++
++	ret =3D devm_gpiochip_add_data(dev, &chip->gc, chip);
++	if (ret) {
++		dev_err(dev, "unable to add GPIO chip\n");
++		return ret;
++	}
++
++	return 0;
++}
++
++static int __exit iproc_gpio_remove(struct platform_device *pdev)
++{
++	struct iproc_gpio_chip *chip;
++
++	chip =3D platform_get_drvdata(pdev);
++	if (!chip)
++		return -ENODEV;
++
++	if (chip->intr) {
++		u32 val;
++
++		val =3D readl_relaxed(chip->intr + IPROC_CCA_INT_MASK);
++		val &=3D ~IPROC_CCA_INT_F_GPIOINT;
++		writel_relaxed(val, chip->intr + IPROC_CCA_INT_MASK);
++	}
++
++	return 0;
++}
++
++static const struct of_device_id bcm_iproc_gpio_of_match[] __initconst =3D=
+ {
++	{ .compatible =3D "brcm,iproc-gpio-cca" },
++	{}
++};
++MODULE_DEVICE_TABLE(of, bcm_iproc_gpio_of_match);
++
++static struct platform_driver bcm_iproc_gpio_driver =3D {
++	.driver =3D {
++		.name =3D "iproc-xgs-gpio",
++		.owner =3D THIS_MODULE,
++		.of_match_table =3D bcm_iproc_gpio_of_match,
++	},
++	.probe =3D iproc_gpio_probe,
++	.remove =3D iproc_gpio_remove,
++};
++
++module_platform_driver(bcm_iproc_gpio_driver);
++
++MODULE_DESCRIPTION("XGS IPROC GPIO driver");
++MODULE_LICENSE("GPL v2");
+---------------------------------------------------------------------------=
+----
+
+
+Git bisection log:
+
+---------------------------------------------------------------------------=
+----
+git bisect start
+# good: [fe12e94375da34d62f7d5556161ce7629212ff80] Merge tag 'gpio-v5.5-upd=
+ates-for-linus-part-1' of git://git.kernel.org/pub/scm/linux/kernel/git/brg=
+l/linux into devel
+git bisect good fe12e94375da34d62f7d5556161ce7629212ff80
+# bad: [6a41b6c5fc20abced88fa0eed42ae5e5cb70b280] gpio: Add xgs-iproc driver
+git bisect bad 6a41b6c5fc20abced88fa0eed42ae5e5cb70b280
+# good: [d57eb825e0dc6f0b5be78251d69cbf1bdd1db622] gpio: Add RDA Micro GPIO=
+ controller support
+git bisect good d57eb825e0dc6f0b5be78251d69cbf1bdd1db622
+# good: [1dfc462a54386d8467ff427ef900f553e2e470e3] dt-bindings: gpio: brcm:=
+ Add bindings for xgs-iproc
+git bisect good 1dfc462a54386d8467ff427ef900f553e2e470e3
+# first bad commit: [6a41b6c5fc20abced88fa0eed42ae5e5cb70b280] gpio: Add xg=
+s-iproc driver
+---------------------------------------------------------------------------=
+----
