@@ -2,86 +2,99 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 4E37CEC255
-	for <lists+linux-gpio@lfdr.de>; Fri,  1 Nov 2019 12:54:02 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B2C6EEC317
+	for <lists+linux-gpio@lfdr.de>; Fri,  1 Nov 2019 13:46:07 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729624AbfKALyB (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 1 Nov 2019 07:54:01 -0400
-Received: from mailgate1.rohmeurope.com ([178.15.145.194]:47546 "EHLO
-        mailgate1.rohmeurope.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726957AbfKALyB (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 1 Nov 2019 07:54:01 -0400
-X-AuditID: c0a8fbf4-183ff70000001fa6-3e-5dbc1cd6536b
-Received: from smtp.reu.rohmeu.com (will-cas001.reu.rohmeu.com [192.168.251.177])
-        by mailgate1.rohmeurope.com (Symantec Messaging Gateway) with SMTP id F8.F0.08102.6DC1CBD5; Fri,  1 Nov 2019 12:53:58 +0100 (CET)
-Received: from WILL-MAIL002.REu.RohmEu.com ([fe80::e0c3:e88c:5f22:d174]) by
- WILL-CAS001.REu.RohmEu.com ([fe80::d57e:33d0:7a5d:f0a6%16]) with mapi id
- 14.03.0439.000; Fri, 1 Nov 2019 12:53:52 +0100
-From:   "Vaittinen, Matti" <Matti.Vaittinen@fi.rohmeurope.com>
-To:     "mazziesaccount@gmail.com" <mazziesaccount@gmail.com>
-CC:     "linux-leds@vger.kernel.org" <linux-leds@vger.kernel.org>,
-        "dmurphy@ti.com" <dmurphy@ti.com>,
-        "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-        "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "mturquette@baylibre.com" <mturquette@baylibre.com>,
-        "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "jacek.anaszewski@gmail.com" <jacek.anaszewski@gmail.com>,
-        "a.zummo@towertech.it" <a.zummo@towertech.it>,
-        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "bgolaszewski@baylibre.com" <bgolaszewski@baylibre.com>,
-        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
-        "sboyd@kernel.org" <sboyd@kernel.org>,
-        "lee.jones@linaro.org" <lee.jones@linaro.org>,
-        "broonie@kernel.org" <broonie@kernel.org>,
-        "pavel@ucw.cz" <pavel@ucw.cz>
-Subject: Re: [RFC PATCH v3 00/15] Support ROHM BD71828 PMIC
-Thread-Topic: [RFC PATCH v3 00/15] Support ROHM BD71828 PMIC
-Thread-Index: AQHVkKd1qqGVhOMLPkqepz477sbTR6d2JAEA
-Date:   Fri, 1 Nov 2019 11:53:51 +0000
-Message-ID: <a973baf96b7379c80c4a3af28338ec4ca7481cb5.camel@fi.rohmeurope.com>
-References: <cover.1572606437.git.matti.vaittinen@fi.rohmeurope.com>
-In-Reply-To: <cover.1572606437.git.matti.vaittinen@fi.rohmeurope.com>
-Accept-Language: en-US, de-DE
-Content-Language: de-DE
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [213.255.186.46]
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <A650176DD30E7641B12D7EBB4994D427@de.rohmeurope.com>
-Content-Transfer-Encoding: base64
+        id S1727329AbfKAMqG convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-gpio@lfdr.de>); Fri, 1 Nov 2019 08:46:06 -0400
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:44710 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726805AbfKAMqG (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 1 Nov 2019 08:46:06 -0400
+Received: by mail-oi1-f195.google.com with SMTP id s71so8014985oih.11;
+        Fri, 01 Nov 2019 05:46:06 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=5ePSdIm6pah0cj12lWYKf0TPdMueWECgaXObaXLnaO0=;
+        b=g5/smSvVe7wGbwQqdRahN0khEVpnicA/L4ySYqrF/dAyVPMoszJywBFK7Nhkqj8nLt
+         vYKbsXCCka35+2xQ4XSw0Kz7RiTK4jSIW0HPuVXUTxHchzOtH7QWO+rGtq47/Zh4zItx
+         PnZxLbppSUAl0kBwEEyj4NbgL7R8PEGDLfhfuGE3n0ZkAUqGpUgJFgj59nSjZcj1MktQ
+         x/l/AiuKohBxpD1rJt6g8/aMFnfr45wJht62ujdYl4NDGQgqHKWDri2RaJTyuLl1URge
+         keZPOpdn73ObJdA91b+DjdX8U64ooExF9BvtVo6z6VcvkKwhTDZrwjumIBuZM06g/iYl
+         6RKg==
+X-Gm-Message-State: APjAAAVVcRqRcmf+A+HG6L3oQAqTu+3iNMvmydwwjXA7fu+O3Q6P6zq8
+        jYTkn+rFigQpouATxAqoXyK7J0WtfCA2J2xgThk=
+X-Google-Smtp-Source: APXvYqwlddboe7ivMWjOKf93FGaNASg7HlPVjO+wJM7HX6dWoWcJ8Gr6urg+mAaFKSAdWCZGC0DaqjEIy8+88o4+A7U=
+X-Received: by 2002:a05:6808:60a:: with SMTP id y10mr1877464oih.102.1572612365503;
+ Fri, 01 Nov 2019 05:46:05 -0700 (PDT)
 MIME-Version: 1.0
-X-Brightmail-Tracker: H4sIAAAAAAAAA02TbUwTSRjHM9vt7hRcs1S4zhU1spqol0gPYuKYMydGjasmRmM0xoTURVaK
-        R1uybQVRI5oYpfoBI8bY8GIIKBFEqfiGrUoPtKDi9aAtni+EO84ED0FFJeQIusuq8GXmP89/
-        fvN/PjwDNfp/KSPMtjlFySbkcFQMea/m/4ZFkZm+9J8v/ZmAq0JhGh8dPE/jD2XtJD7d20fh
-        ipYOLT7+sFGLn127QuKej60Af+o6RuCSsQsEfnfipRZfrRgDuLOplMLXBuoBvl/bReHqaIjA
-        pdVBEofaV+MX7a0UPuJvofF4pIFMS+DryusAP9R9hObL6/bxtzwvaN57sYjin0d8FP+g+wbB
-        nykfJfia2hGaH/bO3hizPXZZhuDcszk7y2b6dUes5Y/RKJXbSOZ3nmykC0EV6QY6iNjFqD98
-        QesGMVDPhgFyNzQT6uEBQH+f8VNuACHFLkPup7Qi49mlqCEUp7AathSi8WMFip7B/oKKn48C
-        RcfLt+/2BUhVp6Jg7Tta0SQ7D1VEwhN1ht2ADp2qpRStZ1eh4p6hCa1jV6NX170TdwA7CxUV
-        DhJqlgF5X41o1Z5ZVOV7olF1Aur/Z/xrnUP+0V5SaVPDLkSXm0wqmoZqnt6iVZ2ESo730moL
-        cajtbB9ZDH7wTEnwTNKeKbRnCu2ZQp8D2osAWYXsnCzBKaYkS6IrWbJbrPK20271AnVgPtwE
-        nwNrA4CAIAB+hASXwOwJ3k7XT8+wZ+61CA6LWXLliI4AQFDDxTM36mWPyRT2FoiS/ZuVCEnO
-        wMzvPZmuZ5Ws30QxV5S+uTMh5BDTafSl6+MkMUvM35Wd45y0CahTHo8xxjtEW6YoCS6nxaxM
-        h9khj4diTZNzBxWcceQKVrmqou0gBRb3l1VqYEtZtbxGh/zVGj1ps9tEo4ExKgCrABaX7Xvc
-        a2CAgJvBzE2U3Wny3/n+2ms5iJCDtg42KUFOYdIyFoL8RytX1T1M22CtNG+pfLyN/33JmpHd
-        RXmJ2PRm3nr6ajC6hFtx6fEC351Q3CHLnGeH/4r1D/O7ku7nLf+YxKe2bc5LMpgzOsZju5vN
-        HRC8fT/UGjmY0cXahQGXrmfL8Lrksf/2t5Wm4sWmLF30QHPw8KwTBcGBTVUvy+tLasKfTBzp
-        sAgpP2kkh/AFtSgFg/gDAAA=
+References: <20191016142601.28255-1-geert+renesas@glider.be>
+ <CACRpkdathjE3CLWsJYapL-0ri9_mC-uCKrh058zBk_nN5wHkDg@mail.gmail.com> <CAMuHMdVQaCtWR9ZO7N-HKOZS1ivBNWssjqzV1B0XwSBkMFp8Ow@mail.gmail.com>
+In-Reply-To: <CAMuHMdVQaCtWR9ZO7N-HKOZS1ivBNWssjqzV1B0XwSBkMFp8Ow@mail.gmail.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Fri, 1 Nov 2019 13:45:53 +0100
+Message-ID: <CAMuHMdVxCEAdxj4xfnU2DEr0UkL5-xNzVdUFkvFgpzr28a7Vfw@mail.gmail.com>
+Subject: Re: [PATCH v2] pinctrl: sh-pfc: Do not use platform_get_irq() to
+ count interrupts
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-DQpPbiBGcmksIDIwMTktMTEtMDEgYXQgMTM6MjggKzAyMDAsIE1hdHRpIFZhaXR0aW5lbiB3cm90
-ZToNCj4gUGF0Y2ggc2VyaWVzIGludHJvZHVjaW5nIHN1cHBvcnQgZm9yIFJPSE0gQkQ3MTgyOCBQ
-TUlDDQo+IA0KLi4uDQo+IA0KPiBQYXRjaCAxNDoNCj4gICAgICAgICBBZGQgZ2VuZXJpYyBHUElP
-IGRpcmVjdGlvbiBkZWZpbmVzDQo+IFBhdGNoIDE1Og0KPiAgICAgICAgIEFsbG93IGNvbnRyb2wg
-b2YgR1AoSSlPIHBpbnMgb24gQkQ3MTgyOCB2aWEgR1BJTyBzdWJzeXN0ZW0NCj4gUGF0Y2ggMTY6
-DQo+ICAgICAgICAgU3VwcG9ydCB0b2dnbGluZyB0aGUgTEVEcw0KDQpTb3JyeSBGb2xrcyAtIHRo
-aXMgaXMgYSBsZWZ0IG92ZXIuIEkgZHJvcHBlZCB0aGUgTEVEIGRyaXZlcmZyb20gdGhlIHNlcmll
-cyBmb3Igbm93Lg0K
+Hi Linus,
+
+On Thu, Oct 24, 2019 at 2:35 PM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
+> On Thu, Oct 24, 2019 at 2:07 PM Linus Walleij <linus.walleij@linaro.org> wrote:
+> > On Wed, Oct 16, 2019 at 4:26 PM Geert Uytterhoeven
+> > <geert+renesas@glider.be> wrote:
+> > > As platform_get_irq() now prints an error when the interrupt does not
+> > > exist, counting interrupts by looping until failure causes the printing
+> > > of scary messages like:
+> > >
+> > >     sh-pfc e6060000.pin-controller: IRQ index 0 not found
+> > >
+> > > Fix this by using the platform_irq_count() helper instead.
+> > >
+> > > Fixes: 7723f4c5ecdb8d83 ("driver core: platform: Add an error message to platform_get_irq*()")
+> > > Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> > > Reviewed-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+> > > Reviewed-by: Stephen Boyd <swboyd@chromium.org>
+> > > Reviewed-by: Niklas Söderlund <niklas.soderlund+renesas@ragnatech.se>
+> > > Tested-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+> > > ---
+> > > v2:
+> > >   - Add Reviewed-by, Tested-by.
+> > >
+> > > Linus: Can you please take this one, as it is a fix for v5.4? Thx!
+> >
+> > I'm not sure the little error message counts as
+> > a regression, certainly users can live with it.
+>
+> Several similar fixes have already made it upstream.
+> But the decision is up to you.
+>
+> > Can't you just put it in your queue for the next kernel?
+>
+> Sure, will do (after ELC-E), if you prefer.
+
+Queuing in sh-pfc-for-v5.5.
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
