@@ -2,227 +2,143 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 5D488EC58A
-	for <lists+linux-gpio@lfdr.de>; Fri,  1 Nov 2019 16:20:59 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7F0C8EC593
+	for <lists+linux-gpio@lfdr.de>; Fri,  1 Nov 2019 16:22:22 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727334AbfKAPU6 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 1 Nov 2019 11:20:58 -0400
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:38830 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727326AbfKAPU6 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 1 Nov 2019 11:20:58 -0400
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id xA1FKlYb015196;
-        Fri, 1 Nov 2019 10:20:47 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1572621647;
-        bh=eeA3umD584w/bAmDdnoCxBa6AsPCzlgHuHEtXWEal/s=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=shkONEcfODmBLwI/jnS5yqQNMP1gCfKDwc8qE4YXsaaZgJobWZNtWIk7LNcDVtFt/
-         GVsnaaqsh4XwAjyOg/KvuB4s2OG8lbfRnAP94OXLJ/KnClkFjXtuAu+81+eZdHUbjj
-         rEHDvcz4nUv1RcQ97hU1JSnMhCfN7dqgm96qT2Y8=
-Received: from DFLE106.ent.ti.com (dfle106.ent.ti.com [10.64.6.27])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xA1FKlxT052853
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 1 Nov 2019 10:20:47 -0500
-Received: from DFLE106.ent.ti.com (10.64.6.27) by DFLE106.ent.ti.com
- (10.64.6.27) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Fri, 1 Nov
- 2019 10:20:33 -0500
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE106.ent.ti.com
- (10.64.6.27) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Fri, 1 Nov 2019 10:20:33 -0500
-Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id xA1FKiSv064409;
-        Fri, 1 Nov 2019 10:20:44 -0500
-Subject: Re: [RFC v2 0/2] gpio: Support for shared GPIO lines on boards
-To:     Rob Herring <robh+dt@kernel.org>
-CC:     Mark Brown <broonie@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        id S1727334AbfKAPWV (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 1 Nov 2019 11:22:21 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:55736 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727308AbfKAPWV (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 1 Nov 2019 11:22:21 -0400
+Received: by mail-wm1-f68.google.com with SMTP id m17so406764wmi.5
+        for <linux-gpio@vger.kernel.org>; Fri, 01 Nov 2019 08:22:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=HaLjPJz8SL1LvC1IMmq/+6QBMZxYTk76MjI2uYbLync=;
+        b=ZZ4EQuQBr3zY4wyU/oZyNFjb47mE3Ttpo0YbPD7Q3a7I59f7pWYBPaK+rmFSAZG3oz
+         qRL7OesEgcbeJt3EUlbqcA+foUUqpKUiym01AtwqS6XQOP8sPGg9LvbKn3IdFJxHU+WL
+         S1Gs++Ut+TQJpu6TtQm2gGI1uP0X0oF4Sba4ZvDE7qHE15bud5MU76F87KNF80KI4OB3
+         55TaH6IIMctoDYD/GsWDlOBM7NVIDAfcF2Bjk28aFv6Y5UQh3mvYmk2DxwMA3rSTNd9w
+         JyreCp3ZLxDxTnoMlVm5W/pWCRLezNcQ2ZeBOxzQFXlsuwjhIVzpbK7ADQzyLcpL5zVf
+         eIQA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=HaLjPJz8SL1LvC1IMmq/+6QBMZxYTk76MjI2uYbLync=;
+        b=sCDhB1Nh+VFPhCD6cyaJBfuL41iP6XGmKn7vliIu4nh+6YV2Glm0nxqFYwQrzVEQfw
+         Va+uy72xC4kCLYCfd0vWZ/J+fwPAOABbz9j0qmZB19xt5oQ3n6evYRC3JIsF1drc3f/A
+         nFv4t1F+wfE/AlZfwUf2NaZ93OYVF/JoOVud9EcreejtvAG/uvudCyyaXR3UL/b6dLIQ
+         upX3g31QV2ei9R0bG4Wd9trOZ7rOGTzd95mK7jVB8fl1KumBE8EpzFvpHlJmrf541ybz
+         +Rtw1KRf0uwiMAj6lmNmoGY4bAqfhs+JT2/USJnoLa0wQU2Ckw+Amc95dZ9Fde+zM+Xi
+         KUOQ==
+X-Gm-Message-State: APjAAAXsgzYuvcyYlML7DCfx2qaGLNHlgadd7wI89pWjGbUf1Q5N+jLy
+        IoRYF57PDg8vbVrMzA3ihnU=
+X-Google-Smtp-Source: APXvYqxefWg/lay/D94L9uZCWFZ9defPWmylu7GW2GQ3Iwtmb7B6GyXgAtOuGR5Dmu0h5CZu6B75XA==
+X-Received: by 2002:a1c:9d07:: with SMTP id g7mr10836024wme.53.1572621738915;
+        Fri, 01 Nov 2019 08:22:18 -0700 (PDT)
+Received: from localhost (p2E5BE2CE.dip0.t-ipconnect.de. [46.91.226.206])
+        by smtp.gmail.com with ESMTPSA id t24sm11685462wra.55.2019.11.01.08.22.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 01 Nov 2019 08:22:17 -0700 (PDT)
+Date:   Fri, 1 Nov 2019 16:22:15 +0100
+From:   Thierry Reding <thierry.reding@gmail.com>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     Hans de Goede <hdegoede@redhat.com>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Tero Kristo <t-kristo@ti.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        <devicetree@vger.kernel.org>
-References: <20191030120440.3699-1-peter.ujfalusi@ti.com>
- <CAL_JsqK-eqoyU7RWiVXMpPZ8BfT8a0WB47756s8AUtyOqbkPXA@mail.gmail.com>
- <5bca4eb6-6379-394f-c95e-5bbbba5308f1@ti.com>
- <20191030141736.GN4568@sirena.org.uk>
- <f9c181d1-5e0c-5e82-a740-f4e97822604f@ti.com>
- <CAL_JsqJ4WdaRvmZcjQG-jVyOOeKZX9fn1WcQZGWfUPqwunQCFw@mail.gmail.com>
- <1258a5bf-a829-d47a-902f-bf2c3db07513@ti.com>
- <CAL_Jsq+V0oAdVCaW+S12CUa4grCJhZD8OGDeu=0ohcGgxOkPVg@mail.gmail.com>
-From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
-Message-ID: <5669a4c1-2bc1-423b-1407-073317f7df7e@ti.com>
-Date:   Fri, 1 Nov 2019 17:21:53 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>
+Subject: Re: [PATCH] gpio/pinctrl: Add pin ranges before gpiochip
+Message-ID: <20191101152215.GA1361939@ulmo>
+References: <20191030144940.21133-1-linus.walleij@linaro.org>
+ <0e8c15d9-c805-c1ee-f8f0-528866c7ac1c@redhat.com>
+ <CACRpkdZZcfttLrVSTH9RQi3ANcB-uvwOtHUQMiH5m4faaekqjg@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <CAL_Jsq+V0oAdVCaW+S12CUa4grCJhZD8OGDeu=0ohcGgxOkPVg@mail.gmail.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="Qxx1br4bt0+wmkIi"
+Content-Disposition: inline
+In-Reply-To: <CACRpkdZZcfttLrVSTH9RQi3ANcB-uvwOtHUQMiH5m4faaekqjg@mail.gmail.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
 
+--Qxx1br4bt0+wmkIi
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-On 01/11/2019 15.46, Rob Herring wrote:
-> On Thu, Oct 31, 2019 at 3:00 AM Peter Ujfalusi <peter.ujfalusi@ti.com> wrote:
->>
->>
->>
->> On 30/10/2019 20.49, Rob Herring wrote:
->>> On Wed, Oct 30, 2019 at 9:30 AM Peter Ujfalusi <peter.ujfalusi@ti.com> wrote:
->>>>
->>>>
->>>>
->>>> On 30/10/2019 16.17, Mark Brown wrote:
->>>>> On Wed, Oct 30, 2019 at 03:32:09PM +0200, Peter Ujfalusi wrote:
->>>>>> On 30/10/2019 15.12, Rob Herring wrote:
->>>>>
->>>>>>> Why can't we just add a shared flag like we have for interrupts?
->>>>>>> Effectively, we have that for resets too, it's just hardcoded in the
->>>>>>> the drivers.
->>>>>
->>>>>> This would be kind of the same thing what the
->>>>>> GPIOD_FLAGS_BIT_NONEXCLUSIVE does, which was a quick workaround for
->>>>>> fixed-regulators afaik.
->>>>>
->>>>> The theory with that was that any usage of this would need the
->>>>> higher level code using the GPIO to cooperate so they didn't step
->>>>> on each other's toes so the GPIO code should just punt to it.
->>>>
->>>> But from the client driver point of view a GPIO is still GPIO and if the
->>>> components are unrelated then it is hard to patch things together from
->>>> the top.
->>>
->>> You can't escape a driver being aware. If a driver depends on that
->>> GPIO to actually be set to states the driver says, then it can't be
->>> guaranteed to work. For example, maybe the driver assumes the device
->>> is in reset state after toggling reset and doesn't work if not in
->>> reset state. The driver has to be aware no matter what you do in DT.
->>
->> That's true for some device, but it is also true that some can not
->> tolerate being reset without them knowing it.
-> 
-> You mean a reset when the driver is not loaded would not work? How
-> could that ever work?
+On Wed, Oct 30, 2019 at 05:07:17PM +0100, Linus Walleij wrote:
+> On Wed, Oct 30, 2019 at 4:48 PM Hans de Goede <hdegoede@redhat.com> wrote:
+> > On 30-10-2019 15:49, Linus Walleij wrote:
+>=20
+> > This does not seem to work I've tested in both a Bay Trail and
+> > a Cherry Trail device and neither will boot the kernel after
+> > these changes I'm afraid.
+> >
+> > I think it might be best to pass in an array of ranges (*) to
+> > gpiochip_add_data and have it register the ranges before
+> > doing the irq-chip setup.
+>=20
+> Yeah this new way of populating GPIO irqchips seems to be
+> pretty imperialistic and pull the whole world into the gpiolib.
+> I don't mind, once we have the semantic in one place we
+> can get it right. (As with the previous ordering issues.)
+> Hopefully it saves us from other problems.
+>=20
+> Thierry: is this approach for pin control ranges in line with your
+> initial design of the new way of registering gpio irqchips?
 
-No, what I mean is that one device is reset because the driver for the
-other device toggles the GPIO line.
+I'm not sure I fully understand what the pin control ranges have to do
+with the embedded IRQ chip. The embedded IRQ chip represents a different
+way of using the GPIO lines, so anything that impacts the IRQ chip would
+presumably also impact the GPIO lines.
 
-If one driver toggles the GPIO line directly then the GPIO line is going
-to be toggled for all the devices the GPIO line is connected to.
+Generally speaking, though, I don't think there's anything wrong with
+adding ranges to a GPIO chip descriptor before registering it. In fact I
+think that's really the only way to make it work if we've got a
+dependency on these ranges being available.
 
-> I don't think you can have any reset control in
-> the drivers in that case.
+So technically at any point after gpiochip_add_data() somebody could
+start using the GPIO chip, which means that technically there could be a
+race between the consumers and the call to gpiochip_add_pin_range(). If
+there's a dependency on the pin control ranges, they must be registered
+before the GPIO chip becomes available to consumers.
 
-The device needs the RST line to be high, otherwise it is not
-accessible. If it does not have reset control how can we make sure that
-the GPIO line is in correct state?
+Again, I don't think this has anything to do with IRQ chip. If you want
+to provide pin control ranges as part of adding the GPIO chip, they
+should be specified as part of the GPIO chip structure.
 
-gpio-hog does not work all the time because we can not trust probe order
-and w/o gpio binding on the user deferred probing is not possible.
-If for some reason the gpio controller is probed after the drivers
-depending on the reset/enable GPIO then there's not much we can do.
+Regarding the imperialistic nature of this: back at the time I think
+your argument had been that you wanted to move as much boiler plate as
+possible into gpiolib. Seems like this is very much in line with that.
 
->> If all users of the shared GPIO have full control over it then they can
->> just toggle it whatever way they want. How would a regulator, codec,
->> amplifier would negotiate on what to do with the shared GPIO?
->>
->> Another not uncommon setup is when the two components needs different level:
->> C1: ENABLE is high active
->> C2: RESET is high active
->>
->> To enable C1, the GPIO should be high. To enable C2 the GPIO must be low.
->> In the board one of the branch of the shared GPIO needs (and have) a
->> logic inverter.
->>
->> If they both control the same GPIO then they must have requested it with
->> different GPIO_ACTIVE_ since the drivers are written according to chip
->> spec, so C1 sets the GPIO to 1, C2 sets it to 0, the inversion for one
->> of them must happen in gpio core, right?
-> 
-> No, drivers are written to set the state to active/inactive.
+Thierry
 
-I think the drivers are written in a way to follow what their datasheets
-are tells. If it say that the GPIO line must be high to enable the
-device then they gpiod_set_value(1), if the line must be low to enable
-them then they will gpiod_set_value(0).
+--Qxx1br4bt0+wmkIi
+Content-Type: application/pgp-signature; name="signature.asc"
 
-> The DT GPIO_ACTIVE_ flags can depend on an inverter being present (BTW, there
-> was a recent attempt to do an inverter binding).
+-----BEGIN PGP SIGNATURE-----
 
-Yes.
-If the line is inverted on the board, than the DT GPIO_ACTIVE_LOW will
-invert it to the correct level.
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl28TaQACgkQ3SOs138+
+s6HXKA//X5MADwyiVvhflkSZCXdZWqQqDm2C6RA4KFDwaNix9eQyz1WdiJm1XpdK
+vuTi/3RAy4DU3mJ+ArsGjrGQzi1tQiUesD3s3dXMIIWdV1I9lKTmjIQI09CE+Ti1
+MkN/q0dTxBR4pF3ebzC7se0oerW4hc0vFoDS7ApcsOuQNYeelTlsIOO/XaHK3Gb8
+shpzDV7F8jLj41P9qWsvC1SSLcftbatETiS1+Cz8CUY1i7EZqa/P4HYfbRPOB4AP
+JvEKHqrmb2/ylIg1SbA/Oy8VSOMi3aA9ks4W0aL1HC+VjsI+qBfB1VeJ/KNOHqq1
+Jky7BrR446T23GgkitHdoltoc51OitIBXbJkEheyrj1ZPVYTg7Ac5arqHOmt3Ehr
+nV71qjV0dOWrsD7ULQEQYeVFabJOw02jgZlPd90tusBMyHMqXcWc9FHynhpMoAM2
+jgjJ376XltFNW8p6+mnOD18N+PC7H2G809HMfL3Hd6hbcZ6nQrQPxgRA4b44rq1V
+SDTOLHM7vQFi4ceJ+gnOGSINsx45WCVoseureRRiZXh1lccqvZTiI4ovPh/JFtak
+XTllrzZfsRruEk2mdejbOoJEjHX1cxPNeAE97ECWsjpNsSs+dzYHNjXZi+rIxX57
+GwzAKFvFW3HISh4vi/Lsjf4Rt/YIh5Go/wIIQus67if2OF9Fo9U=
+=P+iK
+-----END PGP SIGNATURE-----
 
-We have two off the shelf components, C1 and C2. They have a driver
-written based on the datasheets.
-C1 needs HIGH (LOW reset/disable)
- uses gpiod_set_value(1) to enable the device
-
-C2 needs LOW (HIGH reset/disable)
- uses gpiod_set_value(0) to enable the device
-
-When they are connected to a dedicated GPIO the DT binding has
-GPIO_ACTIVE_HIGH since when the GPIO is set to 1 it goes HIGH, right?
-
-If two device is connected to one GPIO one of them needs an inverter on
-the GPIO line after it is split into two, let say C2 got inverted line:
-C1 tells in DT that the line is not inverted: GPIO_ACTIVE_HOGH
-C2 tells in DT that the line is inverted: GPIO_ACTIVE_LOW
-
-GPIO HIGH -> D1 is enabled
-	  -> !HIGH -> LOW -> D2 is enabled
-
-If both would request the same physical GPIO then how would this work? A
-single GPIO can not be handled in inverted and non inverted way at the
-same time.
-
-But this is just a side effect that this would be easy to handle with
-this DT binding and driver.
-After all, it will describe the GPIO line split.
-
->> It should be possible to add pass-through mode for gpio-shared so that
->> all requests would propagate to the root GPIO if that's what needed for
->> some setups.
->>
->> That way the gpio-shared would nicely handle the GPIO inversions, would
->> be able to handle cases to avoid unwanted reset/enable of components or
->> allow components to be ninja-reset.
-> 
-> What does ninja-reset mean?
-
-Ninjas attack from ambush ;)
-The device is reset w/o it's driver being aware that it ever happened as
-other driver toggled the shared GPIO line.
-
->> I think it would be possible to add gpiod_is_shared(struct gpio_desc
->> *desc) so users can check if the GPIO is shared - it would only return
->> true if the gpio-shared is not in pass-through mode so they can know
->> that the state they see on their gpio desc is not necessary matching
->> with reality.
->> Probably another gpiod_shared_get_root_value() to fetch the root's state?
->>
->> I intentionally not returning that in the driver as clients might skip a
->> gpio_set_value() seeing that the GPIO line is already in a state they
->> would want it, but that would not register their needs for the level.
->>
->> - Péter
->>
->> Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
->> Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
-
-- Péter
-
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+--Qxx1br4bt0+wmkIi--
