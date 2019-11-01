@@ -2,38 +2,38 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 5282BEC1E8
-	for <lists+linux-gpio@lfdr.de>; Fri,  1 Nov 2019 12:31:27 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 65E73EC1EA
+	for <lists+linux-gpio@lfdr.de>; Fri,  1 Nov 2019 12:32:05 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727769AbfKALbU (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 1 Nov 2019 07:31:20 -0400
-Received: from mail-lf1-f67.google.com ([209.85.167.67]:35668 "EHLO
-        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725904AbfKALbU (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 1 Nov 2019 07:31:20 -0400
-Received: by mail-lf1-f67.google.com with SMTP id y6so7007618lfj.2;
-        Fri, 01 Nov 2019 04:31:16 -0700 (PDT)
+        id S1726710AbfKALcE (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 1 Nov 2019 07:32:04 -0400
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:42453 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725904AbfKALcE (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 1 Nov 2019 07:32:04 -0400
+Received: by mail-lj1-f193.google.com with SMTP id a21so9879910ljh.9;
+        Fri, 01 Nov 2019 04:32:02 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=U2qiUqK+Gya6f2dE93OhlVDqoNY6vPqxC9cgJH5BO+E=;
-        b=sVne7AWtbrtIrC+CGByrVzIPwJfb4HRbXzeHBGs/klUjwWPDMmiiSzpTLEyMCgInEG
-         DEw4GDEgxQPLj3pDoFxEQhrzJcjQZOqSs1QFzBU2GjW/AinvTv1uF8hEkSg9HO/8hnDK
-         9uIUa0LGN8yNgRpet3xyovjJWdOvyoPDGserZAgQ0WIq+xVZaYF7ZuFqdNzfYHFciy47
-         G3Fns8+xyP/U+cSqX0m7m4tBpk7FAdB/YgjsTXIFrMsVjnu+osEOiqy3SwV3HqKfo6oE
-         PQ3Fr/205r0myN/gcsJBiuOXId7c4Z0+wBfweaMQ3b6ZS7ObVgyRil2f7rGzSn2B8Nmp
-         NyKg==
-X-Gm-Message-State: APjAAAXwN5nBvko84rOI/tCq7EzpaLZgmbvHiEWnKYeKQQB+1NZN4Jp5
-        mf4svZ/GtgtaLWtulCkcDMY=
-X-Google-Smtp-Source: APXvYqxfzyv04ASPdPyTh0Lo/2TSwI5G5IbW6mGLxuzUEswdDAQvb6WZx3oDF791i08v5t1M1Qd+rg==
-X-Received: by 2002:a19:40c7:: with SMTP id n190mr7069656lfa.37.1572607876140;
-        Fri, 01 Nov 2019 04:31:16 -0700 (PDT)
+        bh=g79LlidZ2Q6199flvIi6ql8D8EZxQF1RMl7GiAKKol8=;
+        b=Q/nS53ZfnqFKAlPSqYhHxcsbilyp4cr9voWzIR2AuGuaSx5bJSvf53DSDdACxPBNko
+         uDMyELBF5fble5kCv1GC+E4aG0E3xTRZaSINSaWPX7jkp9AtXN7jRd7lp8SmJNpLi1Fj
+         h2R490LxBXg7s+ZnZSUI2FKMQvw49XMvl/YVnxBLOywJNIWLKLDAio/rrjQjWR7uIhrb
+         IoaTRW27Bx7T55SGksbCoCo7PxCmV08/iSRzqyyot6odpePp1nKcW1YZMxNGUngLA31N
+         m7D3Tai3cnfZ8kfefKQqQvBvBZ6UC6VH0tHegQUhhH16tojWwOxvbc8DlfOolS7HUKJW
+         qHdA==
+X-Gm-Message-State: APjAAAUFY7UCneHgnwhhqP6xG26f5+4uvplvjk+9QLd0GJzsIASvdpQ/
+        bMxQ7djaOVZA/7qnAYjjsWA=
+X-Google-Smtp-Source: APXvYqzriYWSyCdBVM6VFhdgPbXTUL2T3CT5e9dCPC4d7jW2/VjyrY1GTpsschySRC+P+zhNrObcKA==
+X-Received: by 2002:a2e:6a02:: with SMTP id f2mr7726508ljc.174.1572607921509;
+        Fri, 01 Nov 2019 04:32:01 -0700 (PDT)
 Received: from localhost.localdomain ([213.255.186.46])
-        by smtp.gmail.com with ESMTPSA id p88sm3664898ljp.13.2019.11.01.04.31.14
+        by smtp.gmail.com with ESMTPSA id m21sm2438960lfh.39.2019.11.01.04.31.59
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 01 Nov 2019 04:31:15 -0700 (PDT)
-Date:   Fri, 1 Nov 2019 13:31:03 +0200
+        Fri, 01 Nov 2019 04:32:01 -0700 (PDT)
+Date:   Fri, 1 Nov 2019 13:31:46 +0200
 From:   Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
 To:     matti.vaittinen@fi.rohmeurope.com, mazziesaccount@gmail.com
 Cc:     Jacek Anaszewski <jacek.anaszewski@gmail.com>,
@@ -52,8 +52,9 @@ Cc:     Jacek Anaszewski <jacek.anaszewski@gmail.com>,
         linux-leds@vger.kernel.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
         linux-gpio@vger.kernel.org, linux-rtc@vger.kernel.org
-Subject: [RFC PATCH v3 02/15] dt-bindings: mfd: Document ROHM BD71828 bindings
-Message-ID: <ae5d8cf6d276a29432583c1e5241ba7e852036b9.1572606437.git.matti.vaittinen@fi.rohmeurope.com>
+Subject: [RFC PATCH v3 03/15] dt-bindings: regulator: Document ROHM BD71282
+ regulator bindings
+Message-ID: <ce43bfd90455b14216262494f4ba4028827239c0.1572606437.git.matti.vaittinen@fi.rohmeurope.com>
 References: <cover.1572606437.git.matti.vaittinen@fi.rohmeurope.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
@@ -65,276 +66,146 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-ROHM BD71828 Power management IC integrates 7 buck converters, 7 LDOs,
-a real-time clock (RTC), 3 GPO/regulator control pins, HALL input
-and a 32.768 kHz clock gate.
-
-Document the dt bindings drivers are using.
+Document ROHM BD71828 PMIC regulator device tree bindings.
 
 Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
 ---
 
 Changes from v2 - my first encounter with yaml :/
 
- .../bindings/mfd/rohm,bd71828-pmic.yaml       | 249 ++++++++++++++++++
- 1 file changed, 249 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/mfd/rohm,bd71828-pmic.yaml
+ .../regulator/rohm,bd71828-regulator.yaml     | 123 ++++++++++++++++++
+ 1 file changed, 123 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/regulator/rohm,bd71828-regulator.yaml
 
-diff --git a/Documentation/devicetree/bindings/mfd/rohm,bd71828-pmic.yaml b/Documentation/devicetree/bindings/mfd/rohm,bd71828-pmic.yaml
+diff --git a/Documentation/devicetree/bindings/regulator/rohm,bd71828-regulator.yaml b/Documentation/devicetree/bindings/regulator/rohm,bd71828-regulator.yaml
 new file mode 100644
-index 000000000000..b2a88f6e1bb7
+index 000000000000..60715d8b92df
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/mfd/rohm,bd71828-pmic.yaml
-@@ -0,0 +1,249 @@
++++ b/Documentation/devicetree/bindings/regulator/rohm,bd71828-regulator.yaml
+@@ -0,0 +1,123 @@
 +# SPDX-License-Identifier: GPL-2.0
 +%YAML 1.2
 +---
-+$id: http://devicetree.org/schemas/mfd/rohm,bd71828-pmic.yaml#
++$id: http://devicetree.org/schemas/regulator/rohm,bd71828-regulator.yaml#
 +$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
-+title: ROHM BD71828 Power Management Integrated Circuit bindings
++title: ROHM BD71828 Power Management Integrated Circuit regulators
 +
 +maintainers:
-+  - Lee Jones <lee.jones@linaro.org>
-+  - Rob Herring <robh@kernel.org>
++  - Liam Girdwood <lgirdwood@gmail.com>
++  - Mark Brown <broonie@kernel.org>
++  - Rob Herring <robh+dt@kernel.org>
 +  - Mark Rutland <mark.rutland@arm.com>
 +
 +description: |
-+  BD71828GW is a single-chip power management IC for battery-powered portable
-+  devices. The IC integrates 7 buck converters, 7 LDOs, and a 1500 mA
-+  single-cell linear charger. Also included is a Coulomb counter, a real-time
-+  clock (RTC), and a 32.768 kHz clock gate.
++  This module is part of the ROHM BD71828 MFD device. For more details
++  see Documentation/devicetree/bindings/mfd/rohm,bd71828-pmic.yaml.
 +
-+  The BD71828 RUN state is divided into 4 configurable run-levels named RUN0,
-+  RUN1, RUN2 and RUN3. Bucks 1, 2, 6 and 7 can be either controlled individually
-+  via I2C, or some/all of them can be bound to run-levels and controlled as a
-+  group. If bucks are controlled individually these run-levels are ignored. See
-+  ../regulator/rohm,bd71828-regulator.yaml for how to define regulator voltages
-+  for run-levels. Run-levels can be changed by I2C or GPIO depending on PMIC's
-+  OTP configuration.
++  The regulator controller is represented as a sub-node of the PMIC node
++  on the device tree.
 +
-+properties:
-+  compatible:
-+    const: rohm,bd71828
-+  reg:
++  Regulator nodes should be named to BUCK_<number> and LDO_<number>.
++  The valid names for BD71828 regulator nodes are
++  BUCK1, BUCK2, BUCK3, BUCK4, BUCK5, BUCK6, BUCK7
++  LDO1, LDO2, LDO3, LDO4, LDO5, LDO6, LDO7
++
++patternProperties:
++  "^LDO[1-7]$":
++    type: object
++    allOf:
++      - $ref: regulator.yaml#
 +    description:
-+      I2C slave address.
-+    maxItems: 1
++      Properties for single LDO regulator.
 +
-+  interrupts:
-+    maxItems: 1
++    properties:
++      #Is there a nice way to check the name is same as node name but lower case
++      regulator-name:
++        description:
++          should be "ldo1", ..., "ldo7"
++
++  "^BUCK[1-7]$":
++    type: object
++    allOf:
++      - $ref: regulator.yaml#
 +    description:
-+      The interrupt line the device is connected to.
++      Properties for single BUCK regulator.
 +
-+  gpio-controller: true
-+      # Indicate BD71828 acts as a GPIO controller.
++    properties:
++      #Is there a nice way to check the name is same as node name but lower case
++      regulator-name:
++        description:
++          should be "buck1", ..., "buck7"
 +
-+  "#gpio-cells":
-+    const: 2
-+    description: |
-+      The first cell is the pin number and the second cell is used to specify
-+      flags. See ../gpio/gpio.txt for more information.
++      rohm,dvs-run-voltage:
++        $ref: "/schemas/types.yaml#/definitions/uint32"
++        description:
++          PMIC default "RUN" state voltage in uV. See below table for
++          bucks which support this.
 +
-+  clocks:
-+    description:
-+      The parent clock connected to PMIC.
++      rohm,dvs-idle-voltage:
++        $ref: "/schemas/types.yaml#/definitions/uint32"
++        description:
++          PMIC default "IDLE" state voltage in uV. See below table for
++          bucks which support this.
 +
-+  "#clock-cells":
-+    const: 0
++      rohm,dvs-suspend-voltage:
++        $ref: "/schemas/types.yaml#/definitions/uint32"
++        description:
++          PMIC default "SUSPEND" state voltage in uV. See below table for
++          bucks which support this.
 +
-+  rohm,charger-sense-resistor:
-+    $ref: "/schemas/types.yaml#/definitions/uint32"
-+    description: |
-+      BD71827 and BD71828 have SAR ADC for measuring charging currents.
-+      External sense resistor (RSENSE in data sheet) should be used. If some
-+      other but 30MOhm resistor is used the resistance value should be given
-+      here in Ohms.
++      rohm,dvs-lpsr-voltage:
++        $ref: "/schemas/types.yaml#/definitions/uint32"
++        description:
++          PMIC default "LPSR" state voltage in uV. See below table for
++          bucks which support this.
 +
-+  regulators:
-+    $ref: ../regulator/rohm,bd71828-regulator.yaml
-+    description:
-+      List of child nodes that specify the regulators.
++#Supported default DVS states:
++#buck		| run		| idle		| suspend	| lpsr
++#----------------------------------------------------------------------------
++#1, 2, 6, and 7	| supported	| supported	| 	supported (*)
++#----------------------------------------------------------------------------
++#3, 4, and 5	| 			supported (**)
++#----------------------------------------------------------------------------
++#(*)  LPSR and SUSPEND states use same voltage but both states have own enable /
++#     disable settings. Voltage 0 can be specified for a state to make regulator
++#     disabled on that state.
++#(**) All states use same voltage but have own enable / disable settings.
++#     Voltage 0 can be specified for a state to make regulator disabled on that
++#     state.
 +
-+  leds:
-+    $ref: ../leds/rohm,leds-bd71828.yaml
++      rohm,dvs-runlvl-ctrl:
++        description: |
++          buck control is done based on run-level. Regulator is not
++          individually controllable. See ../mfd/rohm,bd71828-pmic.yaml for
++          how to specify run-level control mechanism. Only bucks 1, 2, 6
++          and 7 support this.
++        type: boolean
 +
-+  clock-output-names:
-+    description:
-+      Should contain name for output clock.
++      rohm,dvs-runlevel0-voltage:
++        $ref: "/schemas/types.yaml#/definitions/uint32"
++        description:
++          voltage for run-level 0. Microvolts.
 +
-+  rohm,dvs-vsel-gpios:
-+    description: |
-+      GPIOs used to control PMIC run-levels. Should describe two GPIOs.
-+      (See run-level control in data-sheet). If this property is omitted but
-+      some bucks are marked to be controlled by run-levels - then OTP option
-+      allowing run-level control via I2C is assumed.
++      rohm,dvs-runlevel1-voltage:
++        $ref: "/schemas/types.yaml#/definitions/uint32"
++        description:
++          voltage for run-level 1. Microvolts.
 +
-+  gpio-reserved-ranges:
-+    description: |
-+      Usage of BD71828 GPIO pins can be changed via OTP. This property can be
-+      used to mark the pins which should not be configured for GPIO. Please see
-+      the ../gpio/gpio.txt for more information.
++      rohm,dvs-runlevel2-voltage:
++        $ref: "/schemas/types.yaml#/definitions/uint32"
++        description:
++          voltage for run-level 2. Microvolts.
 +
-+required:
-+  - compatible
-+  - reg
-+  - interrupts
-+  - clocks
-+  - "#clock-cells"
-+  - regulators
-+  - gpio-controller
-+  - "#gpio-cells"
++      rohm,dvs-runlevel3-voltage:
++        $ref: "/schemas/types.yaml#/definitions/uint32"
++        description:
++          voltage for run-level 3. Microvolts.
 +
-+examples:
-+  - |
-+    #include <dt-bindings/interrupt-controller/irq.h>
-+    #include <dt-bindings/leds/common.h>
-+    i2c {
-+        #address-cells = <1>;
-+        #size-cells = <0>;
-+        pmic: pmic@4b {
-+            compatible = "rohm,bd71828";
-+            reg = <0x4b>;
-+
-+            interrupt-parent = <&gpio1>;
-+            interrupts = <29 IRQ_TYPE_LEVEL_LOW>;
-+
-+            clocks = <&osc 0>;
-+            #clock-cells = <0>;
-+            clock-output-names = "bd71828-32k-out";
-+
-+            gpio-controller;
-+            #gpio-cells = <2>;
-+            gpio-reserved-ranges = <0 1 2 1>;
-+
-+            rohm,dvs-vsel-gpios = <&gpio1 12 0>, <&gpio1 13 0>;
-+            rohm,charger-sense-resistor = <10000000>;
-+
-+            regulators {
-+                buck1: BUCK1 {
-+                    regulator-name = "buck1";
-+                    regulator-min-microvolt = <500000>;
-+                    regulator-max-microvolt = <2000000>;
-+                    regulator-ramp-delay = <2500>;
-+                    rohm,dvs-runlvl-ctrl;
-+                    rohm,dvs-runlevel0-voltage = <500000>;
-+                    rohm,dvs-runlevel1-voltage = <506250>;
-+                    rohm,dvs-runlevel2-voltage = <512500>;
-+                    rohm,dvs-runlevel3-voltage = <518750>;
-+                    regulator-boot-on;
-+                };
-+                buck2: BUCK2 {
-+                    regulator-name = "buck2";
-+                    regulator-min-microvolt = <500000>;
-+                    regulator-max-microvolt = <2000000>;
-+                    regulator-ramp-delay = <2500>;
-+                    rohm,dvs-runlvl-ctrl;
-+                    rohm,dvs-runlevel0-voltage = <500000>;
-+                    rohm,dvs-runlevel1-voltage = <506250>;
-+                    rohm,dvs-runlevel2-voltage = <512500>;
-+                    rohm,dvs-runlevel3-voltage = <518750>;
-+                    regulator-boot-on;
-+                };
-+                buck3: BUCK3 {
-+                    regulator-name = "buck3";
-+                    regulator-min-microvolt = <1200000>;
-+                    regulator-max-microvolt = <2000000>;
-+                    regulator-boot-on;
-+                };
-+                buck4: BUCK4 {
-+                    regulator-name = "buck4";
-+                    regulator-min-microvolt = <1000000>;
-+                    regulator-max-microvolt = <1800000>;
-+                    regulator-boot-on;
-+                };
-+                buck5: BUCK5 {
-+                    regulator-name = "buck5";
-+                    regulator-min-microvolt = <2500000>;
-+                    regulator-max-microvolt = <3300000>;
-+                    regulator-boot-on;
-+                };
-+                buck6: BUCK6 {
-+                    regulator-name = "buck6";
-+                    regulator-min-microvolt = <500000>;
-+                    regulator-max-microvolt = <2000000>;
-+                    regulator-ramp-delay = <2500>;
-+                    rohm,dvs-runlvl-ctrl;
-+                    rohm,dvs-runlevel0-voltage = <500000>;
-+                    rohm,dvs-runlevel1-voltage = <506250>;
-+                    rohm,dvs-runlevel2-voltage = <512500>;
-+                    rohm,dvs-runlevel3-voltage = <518750>;
-+                    regulator-boot-on;
-+                };
-+                buck7: BUCK7 {
-+                    regulator-name = "buck7";
-+                    regulator-min-microvolt = <500000>;
-+                    regulator-max-microvolt = <2000000>;
-+                    regulator-ramp-delay = <2500>;
-+                    rohm,dvs-runlvl-ctrl;
-+                    rohm,dvs-runlevel0-voltage = <500000>;
-+                    rohm,dvs-runlevel1-voltage = <506250>;
-+                    rohm,dvs-runlevel2-voltage = <512500>;
-+                    rohm,dvs-runlevel3-voltage = <518750>;
-+                    regulator-boot-on;
-+                };
-+                ldo1: LDO1 {
-+                    regulator-name = "ldo1";
-+                    regulator-min-microvolt = <800000>;
-+                    regulator-max-microvolt = <3300000>;
-+                    regulator-boot-on;
-+                };
-+                ldo2: LDO2 {
-+                    regulator-name = "ldo2";
-+                    regulator-min-microvolt = <800000>;
-+                    regulator-max-microvolt = <3300000>;
-+                    regulator-boot-on;
-+                };
-+                ldo3: LDO3 {
-+                    regulator-name = "ldo3";
-+                    regulator-min-microvolt = <800000>;
-+                    regulator-max-microvolt = <3300000>;
-+                    regulator-boot-on;
-+                };
-+                ldo4: LDO4 {
-+                    regulator-name = "ldo4";
-+                    regulator-min-microvolt = <800000>;
-+                    regulator-max-microvolt = <3300000>;
-+                    regulator-boot-on;
-+                };
-+                ldo5: LDO5 {
-+                    regulator-name = "ldo5";
-+                    regulator-min-microvolt = <800000>;
-+                    regulator-max-microvolt = <3300000>;
-+                    regulator-boot-on;
-+                };
-+                ldo6: LDO6 {
-+                    regulator-name = "ldo6";
-+                    regulator-min-microvolt = <1800000>;
-+                    regulator-max-microvolt = <1800000>;
-+                    regulator-boot-on;
-+                };
-+                ldo7_reg: LDO7 {
-+                    regulator-name = "ldo7";
-+                    regulator-min-microvolt = <800000>;
-+                    regulator-max-microvolt = <3300000>;
-+                    regulator-boot-on;
-+                };
-+            };
-+
-+            leds {
-+                compatible = "rohm,bd71828-led";
-+
-+                led-1 {
-+                    function = LED_FUNCTION_INDICATOR;
-+                    color = <LED_COLOR_ID_GREEN>;
-+                };
-+                led-2 {
-+                    function = LED_FUNCTION_CHARGING;
-+                    color = <LED_COLOR_ID_AMBER>;
-+                };
-+            };
-+        };
-+    };
++    required:
++      - regulator-name
++  additionalProperties: false
++additionalProperties: false
 -- 
 2.21.0
 
