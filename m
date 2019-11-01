@@ -2,38 +2,38 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 3E7CCEC1F4
-	for <lists+linux-gpio@lfdr.de>; Fri,  1 Nov 2019 12:32:49 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 74386EC1FA
+	for <lists+linux-gpio@lfdr.de>; Fri,  1 Nov 2019 12:33:54 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729541AbfKALcn (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 1 Nov 2019 07:32:43 -0400
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:42035 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725904AbfKALcn (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 1 Nov 2019 07:32:43 -0400
-Received: by mail-lf1-f66.google.com with SMTP id z12so6998289lfj.9;
-        Fri, 01 Nov 2019 04:32:41 -0700 (PDT)
+        id S1729811AbfKALdx (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 1 Nov 2019 07:33:53 -0400
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:44340 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725904AbfKALdx (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 1 Nov 2019 07:33:53 -0400
+Received: by mail-lj1-f194.google.com with SMTP id g3so3804664ljl.11;
+        Fri, 01 Nov 2019 04:33:51 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=uO3cZT0ic0CcFPk2pNLXwRpfiUdZPqVh9kgOa3kAJyw=;
-        b=QfrW169GZbkFEDTpAy5H2KxbjfwVsM5wLUzmGroDHOM8nl6zsKi1+95aqTURU9n7gH
-         OnPscFY7Rgz1Z00k7nS3MJvSli0a4ynDM10Ens6zJf8j8YpTgXyO00LqPkUY1rX4R6Pv
-         IpM+bYoqyXQjDBDxGfja6Xc/c0b5e+S3TW+BSLwpERfL7ewS0alUi6rZPCuQKokobr+u
-         oz/7i66tRe7rXJs+nZmvp1XfkexudV9Cz2bTRF+ftwuq/8wpKGYwwx+luNM73/yB/hbk
-         qH1grvNQdEZBySjyFmg3G6kzLVZ4lP1a94oGBGZRLPmzDAt4Y1CBnpI+m9kR+9lUjUjw
-         DCCg==
-X-Gm-Message-State: APjAAAUAWHSQWjPc/qfEEzukvvOMFZRQn4GQYtC26KfIyPGNRz1oaDKv
-        hsyG4UeXR9c98s5J7VYqx7k=
-X-Google-Smtp-Source: APXvYqwuu701wti/qsoFpjZZleMwxBqLpmNNnClhS4X486Ui0XRllnIqWrzHwvFBRzbRkbuTx4NdKw==
-X-Received: by 2002:a19:8c1c:: with SMTP id o28mr7025580lfd.105.1572607960686;
-        Fri, 01 Nov 2019 04:32:40 -0700 (PDT)
+        bh=Vrqlo3hyO170NOon6HiWMgUQFYqrMhoyqTxgOzANokA=;
+        b=jSYUTQCjwNJtMs8SRatnU7Lf19yM5wkXwAzCdiZYHHPdycq2tZKmYaDo37kPJgobNY
+         JbRFwehk8KXaGDEVtqWdMStFXSV6kgQccrvPkxqnh3yCHcm6cuTh/ky67VryU/mjWxJh
+         wNYJ58UIUsYe/aS9x4EUkQxbzHw1/kZ3bGFOjrpplB3ZnojLsE8/Ms1cIZjMRVQ39FBC
+         2S0TGfaoSG+O59bDGUQ1//rWB+pE5ygIrdkpX0/Er3e0Ag0Yh/6Dg153WaKn0U8x+Omf
+         eMFHEJ48EXvp5KJ1xIb8GFwQ0OVG1l8Dnfz/ndNnuJ7vArePRdZtcZNj5QqNnGUxPqkR
+         Fhjg==
+X-Gm-Message-State: APjAAAV9RHbd9HXXVcAADhfa17wZ2b35eZBSP9X0a5axyjubylon29jU
+        /l2UQplcGDZXE2gCGaZB3SI=
+X-Google-Smtp-Source: APXvYqxR+7n0wR8zSiraCCMwUPMV734zVsH3IAuuV5WMP4wJxH8Nstd+WW3fAkM75n9TNP+qRxF1og==
+X-Received: by 2002:a2e:9595:: with SMTP id w21mr7944505ljh.181.1572608030359;
+        Fri, 01 Nov 2019 04:33:50 -0700 (PDT)
 Received: from localhost.localdomain ([213.255.186.46])
-        by smtp.gmail.com with ESMTPSA id t22sm2436245lfg.91.2019.11.01.04.32.38
+        by smtp.gmail.com with ESMTPSA id r19sm2366685lfi.13.2019.11.01.04.33.48
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 01 Nov 2019 04:32:40 -0700 (PDT)
-Date:   Fri, 1 Nov 2019 13:32:33 +0200
+        Fri, 01 Nov 2019 04:33:49 -0700 (PDT)
+Date:   Fri, 1 Nov 2019 13:33:38 +0200
 From:   Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
 To:     matti.vaittinen@fi.rohmeurope.com, mazziesaccount@gmail.com
 Cc:     Jacek Anaszewski <jacek.anaszewski@gmail.com>,
@@ -52,8 +52,8 @@ Cc:     Jacek Anaszewski <jacek.anaszewski@gmail.com>,
         linux-leds@vger.kernel.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
         linux-gpio@vger.kernel.org, linux-rtc@vger.kernel.org
-Subject: [RFC PATCH v3 04/15] dt-bindings: leds: ROHM BD71282 PMIC LED driver
-Message-ID: <f9178204ea3925b454ecbe58df4c297fec346a4f.1572606437.git.matti.vaittinen@fi.rohmeurope.com>
+Subject: [RFC PATCH v3 05/15] mfd: input: bd71828: Add power-key support
+Message-ID: <d7be7969b9fed57e7790811ff90b9a2b4b6478bb.1572606437.git.matti.vaittinen@fi.rohmeurope.com>
 References: <cover.1572606437.git.matti.vaittinen@fi.rohmeurope.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
@@ -65,69 +65,81 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Document ROHM BD71828 PMIC LED driver device tree bindings.
+Use gpio_keys to send power input-event to user-space when power
+button (short) press is detected.
 
 Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
 ---
 
-Changes from v2 - new patch
+Changes from v2 - No changes
 
- .../bindings/leds/rohm,leds-bd71828.yaml      | 46 +++++++++++++++++++
- 1 file changed, 46 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/leds/rohm,leds-bd71828.yaml
+ drivers/mfd/rohm-bd71828.c | 28 ++++++++++++++++++++++++++++
+ 1 file changed, 28 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/leds/rohm,leds-bd71828.yaml b/Documentation/devicetree/bindings/leds/rohm,leds-bd71828.yaml
-new file mode 100644
-index 000000000000..d8aeac9911ef
---- /dev/null
-+++ b/Documentation/devicetree/bindings/leds/rohm,leds-bd71828.yaml
-@@ -0,0 +1,46 @@
-+# SPDX-License-Identifier: GPL-2.0
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/leds/rohm,leds-bd71828.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
+diff --git a/drivers/mfd/rohm-bd71828.c b/drivers/mfd/rohm-bd71828.c
+index b7de79e1fcdb..f77ba1ec3e99 100644
+--- a/drivers/mfd/rohm-bd71828.c
++++ b/drivers/mfd/rohm-bd71828.c
+@@ -4,7 +4,9 @@
+ //
+ // ROHM BD71828 PMIC driver
+ 
++#include <linux/gpio_keys.h>
+ #include <linux/i2c.h>
++#include <linux/input.h>
+ #include <linux/interrupt.h>
+ #include <linux/ioport.h>
+ #include <linux/irq.h>
+@@ -15,6 +17,18 @@
+ #include <linux/regmap.h>
+ #include <linux/types.h>
+ 
++static struct gpio_keys_button button = {
++	.code = KEY_POWER,
++	.gpio = -1,
++	.type = EV_KEY,
++};
 +
-+title: ROHM BD71828 Power Management Integrated Circuit LED driver
++static struct gpio_keys_platform_data bd71828_powerkey_data = {
++	.buttons = &button,
++	.nbuttons = 1,
++	.name = "bd71828-pwrkey",
++};
 +
-+maintainers:
-+  - Jacek Anaszewski <jacek.anaszewski@gmail.com>
-+  - Pavel Machek <pavel@ucw.cz>
-+  - Dan Murphy <dmurphy@ti.com>
-+  - Rob Herring <robh+dt@kernel.org>
-+  - Mark Rutland <mark.rutland@arm.com>
+ static const struct resource rtc_irqs[] = {
+ 	DEFINE_RES_IRQ_NAMED(BD71828_INT_RTC0, "bd71828-rtc-alm-0"),
+ 	DEFINE_RES_IRQ_NAMED(BD71828_INT_RTC1, "bd71828-rtc-alm-1"),
+@@ -36,6 +50,10 @@ static struct mfd_cell bd71828_mfd_cells[] = {
+ 		.name = "bd70528-rtc",
+ 		.resources = rtc_irqs,
+ 		.num_resources = ARRAY_SIZE(rtc_irqs),
++	}, {
++		.name = "gpio-keys",
++		.platform_data = &bd71828_powerkey_data,
++		.pdata_size = sizeof(bd71828_powerkey_data),
+ 	},
+ };
+ 
+@@ -288,9 +306,19 @@ static int bd71828_i2c_probe(struct i2c_client *i2c,
+ 		dev_err(&i2c->dev, "Failed to add IRQ chip\n");
+ 		return ret;
+ 	}
 +
-+description: |
-+  This module is part of the ROHM BD71828 MFD device. For more details
-+  see Documentation/devicetree/bindings/mfd/rohm,bd71828-pmic.yaml.
+ 	dev_dbg(&i2c->dev, "Registered %d IRQs for chip\n",
+ 		bd71828_irq_chip.num_irqs);
+ 
++	ret = regmap_irq_get_virq(irq_data, BD71828_INT_SHORTPUSH);
 +
-+  The LED controller is represented as a sub-node of the PMIC node on the device
-+  tree.
++	if (ret < 0) {
++		dev_err(&i2c->dev, "Failed to get the power-key IRQ\n");
++		return ret;
++	}
 +
-+  The device has two LED outputs referred as GRNLED and AMBLED in data-sheet.
++	button.irq = ret;
 +
-+properties:
-+  compatible:
-+    const: rohm,bd71828-led
-+
-+patternProperties:
-+  "^led-[1-2]$":
-+    type: object
-+    description:
-+      Properties for a single LED. Nodes must be named as led-1 and led-2.
-+    properties:
-+      #$ref: "common.yaml#"
-+      function:
-+        description:
-+          Purpose of LED as defined in dt-bindings/leds/common.h
-+        $ref: "/schemas/types.yaml#/definitions/string"
-+      color:
-+        description:
-+          LED colour as defined in dt-bindings/leds/common.h
-+        $ref: "/schemas/types.yaml#/definitions/uint32"
-+
-+required:
-+  - compatible
+ 	ret = devm_mfd_add_devices(&i2c->dev, PLATFORM_DEVID_AUTO,
+ 				   bd71828_mfd_cells,
+ 				   ARRAY_SIZE(bd71828_mfd_cells), NULL, 0,
 -- 
 2.21.0
 
