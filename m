@@ -2,38 +2,38 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 74386EC1FA
-	for <lists+linux-gpio@lfdr.de>; Fri,  1 Nov 2019 12:33:54 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 20118EC203
+	for <lists+linux-gpio@lfdr.de>; Fri,  1 Nov 2019 12:38:59 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729811AbfKALdx (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 1 Nov 2019 07:33:53 -0400
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:44340 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725904AbfKALdx (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 1 Nov 2019 07:33:53 -0400
-Received: by mail-lj1-f194.google.com with SMTP id g3so3804664ljl.11;
-        Fri, 01 Nov 2019 04:33:51 -0700 (PDT)
+        id S1727968AbfKALi6 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 1 Nov 2019 07:38:58 -0400
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:33717 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725904AbfKALi5 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 1 Nov 2019 07:38:57 -0400
+Received: by mail-lj1-f193.google.com with SMTP id t5so9961369ljk.0;
+        Fri, 01 Nov 2019 04:38:55 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Vrqlo3hyO170NOon6HiWMgUQFYqrMhoyqTxgOzANokA=;
-        b=jSYUTQCjwNJtMs8SRatnU7Lf19yM5wkXwAzCdiZYHHPdycq2tZKmYaDo37kPJgobNY
-         JbRFwehk8KXaGDEVtqWdMStFXSV6kgQccrvPkxqnh3yCHcm6cuTh/ky67VryU/mjWxJh
-         wNYJ58UIUsYe/aS9x4EUkQxbzHw1/kZ3bGFOjrpplB3ZnojLsE8/Ms1cIZjMRVQ39FBC
-         2S0TGfaoSG+O59bDGUQ1//rWB+pE5ygIrdkpX0/Er3e0Ag0Yh/6Dg153WaKn0U8x+Omf
-         eMFHEJ48EXvp5KJ1xIb8GFwQ0OVG1l8Dnfz/ndNnuJ7vArePRdZtcZNj5QqNnGUxPqkR
-         Fhjg==
-X-Gm-Message-State: APjAAAV9RHbd9HXXVcAADhfa17wZ2b35eZBSP9X0a5axyjubylon29jU
-        /l2UQplcGDZXE2gCGaZB3SI=
-X-Google-Smtp-Source: APXvYqxR+7n0wR8zSiraCCMwUPMV734zVsH3IAuuV5WMP4wJxH8Nstd+WW3fAkM75n9TNP+qRxF1og==
-X-Received: by 2002:a2e:9595:: with SMTP id w21mr7944505ljh.181.1572608030359;
-        Fri, 01 Nov 2019 04:33:50 -0700 (PDT)
+        bh=E3NBaCIzLoDA3FRBZFE+VHhKHximovNpQrRs5+2XczE=;
+        b=Vh/ka3r5EXW59s9aNJM3qJCGpaybV9e5jMQuEVZGv1BghgiPmTvXA2nXc3h+wAOiBb
+         6tBbKP4XNJgSBBDnCsMOxst+tAlDYeK6IP06m0FvXq/A/arI+zBXw7pwV9J8veBYCu6u
+         zJPRmpcpNMx4D3krWPhRtsha/bTSve7kJ+zEnAj35rkUP9OO7jW5jOz2ki0Qc0yPBD6J
+         UUyD8LLZ3u6bBdW4HkjiQ6v7j8GEcn1Z4y5IqAx1NJH2gjulX0DlH8GQ/WNbbntM2ZMO
+         faWZv2hKRO4m5SFSykiaL+Pjjos1isMtH6KBnhSd/6d+n8w6kQ46Oe0G7Sepe9pWv2bq
+         d21w==
+X-Gm-Message-State: APjAAAVrKKj6oK0eRmlUcuNWJLJTFHipc3uha7RGqiBDGYJbysUlwd8M
+        9NwNMGWlOlTkKkAaYoxcxVE=
+X-Google-Smtp-Source: APXvYqzwtGLykpwgymDiFuTxrjrbT5XIEkSrhFvw2Ay2tBKvglBn5wTXLHeQFrbmvi5LsAXX2Koy8g==
+X-Received: by 2002:a05:651c:28a:: with SMTP id b10mr7737048ljo.193.1572608334570;
+        Fri, 01 Nov 2019 04:38:54 -0700 (PDT)
 Received: from localhost.localdomain ([213.255.186.46])
-        by smtp.gmail.com with ESMTPSA id r19sm2366685lfi.13.2019.11.01.04.33.48
+        by smtp.gmail.com with ESMTPSA id d9sm4549767lfj.81.2019.11.01.04.38.53
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 01 Nov 2019 04:33:49 -0700 (PDT)
-Date:   Fri, 1 Nov 2019 13:33:38 +0200
+        Fri, 01 Nov 2019 04:38:54 -0700 (PDT)
+Date:   Fri, 1 Nov 2019 13:38:38 +0200
 From:   Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
 To:     matti.vaittinen@fi.rohmeurope.com, mazziesaccount@gmail.com
 Cc:     Jacek Anaszewski <jacek.anaszewski@gmail.com>,
@@ -52,8 +52,8 @@ Cc:     Jacek Anaszewski <jacek.anaszewski@gmail.com>,
         linux-leds@vger.kernel.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
         linux-gpio@vger.kernel.org, linux-rtc@vger.kernel.org
-Subject: [RFC PATCH v3 05/15] mfd: input: bd71828: Add power-key support
-Message-ID: <d7be7969b9fed57e7790811ff90b9a2b4b6478bb.1572606437.git.matti.vaittinen@fi.rohmeurope.com>
+Subject: [RFC PATCH v3 06/15] clk: bd718x7: Support ROHM BD71828 clk block
+Message-ID: <e2e85a1bae1b27a1fc1faa39dcab9b922791f7df.1572606437.git.matti.vaittinen@fi.rohmeurope.com>
 References: <cover.1572606437.git.matti.vaittinen@fi.rohmeurope.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
@@ -65,81 +65,90 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Use gpio_keys to send power input-event to user-space when power
-button (short) press is detected.
+BD71828GW is a single-chip power management IC for battery-powered portable
+devices. Add support for controlling BD71828 clk using bd718x7 driver.
 
 Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
 ---
 
-Changes from v2 - No changes
+Changes from v2 - use unsigned int for clk_set
 
- drivers/mfd/rohm-bd71828.c | 28 ++++++++++++++++++++++++++++
- 1 file changed, 28 insertions(+)
+ drivers/clk/Kconfig       |  6 +++---
+ drivers/clk/clk-bd718x7.c | 15 ++++++++++-----
+ 2 files changed, 13 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/mfd/rohm-bd71828.c b/drivers/mfd/rohm-bd71828.c
-index b7de79e1fcdb..f77ba1ec3e99 100644
---- a/drivers/mfd/rohm-bd71828.c
-+++ b/drivers/mfd/rohm-bd71828.c
-@@ -4,7 +4,9 @@
- //
- // ROHM BD71828 PMIC driver
+diff --git a/drivers/clk/Kconfig b/drivers/clk/Kconfig
+index c44247d0b83e..71c5dfdc78f4 100644
+--- a/drivers/clk/Kconfig
++++ b/drivers/clk/Kconfig
+@@ -293,10 +293,10 @@ config COMMON_CLK_STM32H7
+ 	  Support for stm32h7 SoC family clocks
  
-+#include <linux/gpio_keys.h>
- #include <linux/i2c.h>
-+#include <linux/input.h>
- #include <linux/interrupt.h>
- #include <linux/ioport.h>
- #include <linux/irq.h>
-@@ -15,6 +17,18 @@
- #include <linux/regmap.h>
- #include <linux/types.h>
+ config COMMON_CLK_BD718XX
+-	tristate "Clock driver for ROHM BD718x7 PMIC"
+-	depends on MFD_ROHM_BD718XX || MFD_ROHM_BD70528
++	tristate "Clock driver for 32K clk gates on ROHM PMICs"
++	depends on MFD_ROHM_BD718XX || MFD_ROHM_BD70528 || MFD_ROHM_BD71828
+ 	help
+-	  This driver supports ROHM BD71837, ROHM BD71847 and
++	  This driver supports ROHM BD71837, ROHM BD71847, ROHM BD71828 and
+ 	  ROHM BD70528 PMICs clock gates.
  
-+static struct gpio_keys_button button = {
-+	.code = KEY_POWER,
-+	.gpio = -1,
-+	.type = EV_KEY,
-+};
-+
-+static struct gpio_keys_platform_data bd71828_powerkey_data = {
-+	.buttons = &button,
-+	.nbuttons = 1,
-+	.name = "bd71828-pwrkey",
-+};
-+
- static const struct resource rtc_irqs[] = {
- 	DEFINE_RES_IRQ_NAMED(BD71828_INT_RTC0, "bd71828-rtc-alm-0"),
- 	DEFINE_RES_IRQ_NAMED(BD71828_INT_RTC1, "bd71828-rtc-alm-1"),
-@@ -36,6 +50,10 @@ static struct mfd_cell bd71828_mfd_cells[] = {
- 		.name = "bd70528-rtc",
- 		.resources = rtc_irqs,
- 		.num_resources = ARRAY_SIZE(rtc_irqs),
-+	}, {
-+		.name = "gpio-keys",
-+		.platform_data = &bd71828_powerkey_data,
-+		.pdata_size = sizeof(bd71828_powerkey_data),
- 	},
+ config COMMON_CLK_FIXED_MMIO
+diff --git a/drivers/clk/clk-bd718x7.c b/drivers/clk/clk-bd718x7.c
+index ae6e5baee330..ca627e1d0ef9 100644
+--- a/drivers/clk/clk-bd718x7.c
++++ b/drivers/clk/clk-bd718x7.c
+@@ -8,6 +8,7 @@
+ #include <linux/platform_device.h>
+ #include <linux/slab.h>
+ #include <linux/mfd/rohm-bd718x7.h>
++#include <linux/mfd/rohm-bd71828.h>
+ #include <linux/mfd/rohm-bd70528.h>
+ #include <linux/clk-provider.h>
+ #include <linux/clkdev.h>
+@@ -21,10 +22,8 @@ struct bd718xx_clk {
+ 	struct rohm_regmap_dev *mfd;
  };
  
-@@ -288,9 +306,19 @@ static int bd71828_i2c_probe(struct i2c_client *i2c,
- 		dev_err(&i2c->dev, "Failed to add IRQ chip\n");
- 		return ret;
- 	}
-+
- 	dev_dbg(&i2c->dev, "Registered %d IRQs for chip\n",
- 		bd71828_irq_chip.num_irqs);
+-static int bd71837_clk_set(struct clk_hw *hw, int status)
++static int bd71837_clk_set(struct bd718xx_clk *c, unsigned int status)
+ {
+-	struct bd718xx_clk *c = container_of(hw, struct bd718xx_clk, hw);
+-
+ 	return regmap_update_bits(c->mfd->regmap, c->reg, c->mask, status);
+ }
  
-+	ret = regmap_irq_get_virq(irq_data, BD71828_INT_SHORTPUSH);
+@@ -33,14 +32,16 @@ static void bd71837_clk_disable(struct clk_hw *hw)
+ 	int rv;
+ 	struct bd718xx_clk *c = container_of(hw, struct bd718xx_clk, hw);
+ 
+-	rv = bd71837_clk_set(hw, 0);
++	rv = bd71837_clk_set(c, 0);
+ 	if (rv)
+ 		dev_dbg(&c->pdev->dev, "Failed to disable 32K clk (%d)\n", rv);
+ }
+ 
+ static int bd71837_clk_enable(struct clk_hw *hw)
+ {
+-	return bd71837_clk_set(hw, 1);
++	struct bd718xx_clk *c = container_of(hw, struct bd718xx_clk, hw);
 +
-+	if (ret < 0) {
-+		dev_err(&i2c->dev, "Failed to get the power-key IRQ\n");
-+		return ret;
-+	}
-+
-+	button.irq = ret;
-+
- 	ret = devm_mfd_add_devices(&i2c->dev, PLATFORM_DEVID_AUTO,
- 				   bd71828_mfd_cells,
- 				   ARRAY_SIZE(bd71828_mfd_cells), NULL, 0,
++	return bd71837_clk_set(c, 0xffffffff);
+ }
+ 
+ static int bd71837_clk_is_enabled(struct clk_hw *hw)
+@@ -93,6 +94,10 @@ static int bd71837_clk_probe(struct platform_device *pdev)
+ 		c->reg = BD718XX_REG_OUT32K;
+ 		c->mask = BD718XX_OUT32K_EN;
+ 		break;
++	case ROHM_CHIP_TYPE_BD71828:
++		c->reg = BD71828_REG_OUT32K;
++		c->mask = BD71828_OUT32K_EN;
++		break;
+ 	case ROHM_CHIP_TYPE_BD70528:
+ 		c->reg = BD70528_REG_CLK_OUT;
+ 		c->mask = BD70528_CLK_OUT_EN_MASK;
 -- 
 2.21.0
 
