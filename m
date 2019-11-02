@@ -2,82 +2,78 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id A6C98ECCF0
-	for <lists+linux-gpio@lfdr.de>; Sat,  2 Nov 2019 03:55:51 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E9FF0ECE27
+	for <lists+linux-gpio@lfdr.de>; Sat,  2 Nov 2019 11:53:31 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727637AbfKBCzu (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 1 Nov 2019 22:55:50 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:39111 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727067AbfKBCzu (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 1 Nov 2019 22:55:50 -0400
-Received: by mail-pg1-f196.google.com with SMTP id p12so7587993pgn.6;
-        Fri, 01 Nov 2019 19:55:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=xFTNRYksg5hjJmBCliKtQprKj5dj8NPap0MuwQWTDx4=;
-        b=JzZ54Ca/aYsIg4kl18Pwqdb56A5YbfqFYibHegzjtPq+/nX8Jjnlx/bGP2fg4zmtwo
-         9xDBCMkAHy7y4Xdz9M9qSFy82GikNWN5LpelPlZx5XdwhziozECm7OoX7alN6A8m0X6u
-         r4qKj0mKq4G297mGlLafNrWWjo9yceMvuUh0wMF68fopww0lGjjLjdFOALD2wEXiEihp
-         Auhf9xfLG7yc8vaWgNvjwfNI7SxPj09U9GIlSQP4zFQTNES9deSfyvRgFOIlQuZNKBy+
-         +bykio1h3I2Z95fvIYqXzjvFzj/cRH/+JkJd/odg6JGebDGcB9b8xdBcH3EToVhG1iXF
-         IpMw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=xFTNRYksg5hjJmBCliKtQprKj5dj8NPap0MuwQWTDx4=;
-        b=BCLSO7MvFTHa9UJfjYzW43BIVWB9d0WMaC30H5/Qta3UNFGnZJ6p0wugKAA87FSLco
-         cfUKwHDajSiIpzNFedUUqzxuK3oqq3Aob6PId45TZDbdHHOfXy+xydpcHGt//hFQfBQP
-         if5svLd8cXx4TkcMr3BQyenCRaowTXO84IdZTKMPEb8zBSu0qqUdp5YwMw6tYhyuPP6u
-         b3PNDMPyPGXbIHH+M82sLdnujO8/uhO+sEUysRRkWpvHkqnRkiEbtji62/3P+GnsKUwF
-         V6wCwfVeutwfcwV4fWf5FmMpLPSDYonq9kqDxnJIrTBKZ4bgx7PJLh+IWek6yGke2iHE
-         EhkA==
-X-Gm-Message-State: APjAAAWIiNUar3OPuWxT1+DvZrOCAPYE2GojJ46t657WCzOSOd6IKZcY
-        bl0Qen6RclVjcbVpdGMU6Yo=
-X-Google-Smtp-Source: APXvYqzeyJwMJ3x8rKK5HX81hTOz8v7spnlXbx1lkmavVOINNHDRP65dyZnjDg9DB0XkFShAoj29Cw==
-X-Received: by 2002:a17:90a:9291:: with SMTP id n17mr19824023pjo.60.1572663349847;
-        Fri, 01 Nov 2019 19:55:49 -0700 (PDT)
-Received: from [192.168.1.3] (ip68-111-84-250.oc.oc.cox.net. [68.111.84.250])
-        by smtp.gmail.com with ESMTPSA id a12sm3441851pfo.136.2019.11.01.19.55.47
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 01 Nov 2019 19:55:49 -0700 (PDT)
-Subject: Re: [PATCH 2/2] pinctrl: bcm: nsp: implement get_direction
-To:     Chris Packham <chris.packham@alliedtelesis.co.nz>,
-        linus.walleij@linaro.org, rjui@broadcom.com, sbranden@broadcom.com,
-        bcm-kernel-feedback-list@broadcom.com
-Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-References: <20191101015621.12451-1-chris.packham@alliedtelesis.co.nz>
- <20191101015621.12451-3-chris.packham@alliedtelesis.co.nz>
-From:   Florian Fainelli <f.fainelli@gmail.com>
-Message-ID: <3cc0fc66-c6da-45ba-c2d5-32877a180b57@gmail.com>
-Date:   Fri, 1 Nov 2019 19:55:48 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.0
+        id S1726329AbfKBKxb (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sat, 2 Nov 2019 06:53:31 -0400
+Received: from mga11.intel.com ([192.55.52.93]:44340 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725268AbfKBKxb (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Sat, 2 Nov 2019 06:53:31 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 02 Nov 2019 03:53:29 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.68,259,1569308400"; 
+   d="scan'208";a="191251212"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by orsmga007.jf.intel.com with ESMTP; 02 Nov 2019 03:53:27 -0700
+Received: from andy by smile with local (Exim 4.92.2)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1iQr27-00008s-7J; Sat, 02 Nov 2019 12:53:27 +0200
+Date:   Sat, 2 Nov 2019 12:53:27 +0200
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Mika Westerberg <mika.westerberg@linux.intel.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Hans de Goede <hdegoede@redhat.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Subject: Re: [PATCH] gpio/pinctrl: Add pin ranges before gpiochip
+Message-ID: <20191102105327.GE32742@smile.fi.intel.com>
+References: <20191030144940.21133-1-linus.walleij@linaro.org>
+ <0e8c15d9-c805-c1ee-f8f0-528866c7ac1c@redhat.com>
+ <9d21b3fe-852b-a430-4e71-af0742edcd9b@redhat.com>
+ <CACRpkdb851eSyqkz5nDB6affd4_JO5fhWHkmve1QoMGxpYswCA@mail.gmail.com>
+ <20191030161041.GI2593@lahna.fi.intel.com>
 MIME-Version: 1.0
-In-Reply-To: <20191101015621.12451-3-chris.packham@alliedtelesis.co.nz>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191030161041.GI2593@lahna.fi.intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-
-
-On 10/31/2019 6:56 PM, Chris Packham wrote:
-> The get_direction api is strongly recommended to be implemented. In fact
-> if it is not implemented gpio-hogs will not get the correct direction.
-> Add an implementation of get_direction for the nsp-gpio driver.
+On Wed, Oct 30, 2019 at 06:10:41PM +0200, Mika Westerberg wrote:
+> On Wed, Oct 30, 2019 at 05:04:21PM +0100, Linus Walleij wrote:
+> > On Wed, Oct 30, 2019 at 5:01 PM Hans de Goede <hdegoede@redhat.com> wrote:
+> > 
+> > > For 5.4 we should probably revert
+> > > "gpio: merrifield: Pass irqchip when adding gpiochip"
+> > > and the fixes added on top of it, since AFAICT _AEI handling
+> > > will be broken on merrifield after this change too.
+> > >
+> > > So I suggest that we revert the following commits (in revert order):
+> > >
+> > > 4c87540940cbc7ddbe9674087919c605fd5c2ef1 "gpio: merrifield: Move hardware initialization to callback"
+> > > 6658f87f219427ee776c498e07c878eb5cad1be2 "gpio: merrifield: Restore use of irq_base"
+> > > 8f86a5b4ad679e4836733b47414226074eee4e4d "gpio: merrifield: Pass irqchip when adding gpiochip"
+> > >
+> > > That seems like the safest thing to do at this point in the cycle.
+> > 
+> > OK are the Intel people OK with this?
 > 
-> Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
+> I'm fine but I'll leave this to Andy since that's his stuff.
 
-Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
+Ack.
 
 -- 
-Florian
+With Best Regards,
+Andy Shevchenko
+
+
