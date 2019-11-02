@@ -2,78 +2,79 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id E9FF0ECE27
-	for <lists+linux-gpio@lfdr.de>; Sat,  2 Nov 2019 11:53:31 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 01D3CECE9F
+	for <lists+linux-gpio@lfdr.de>; Sat,  2 Nov 2019 13:16:29 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726329AbfKBKxb (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sat, 2 Nov 2019 06:53:31 -0400
-Received: from mga11.intel.com ([192.55.52.93]:44340 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725268AbfKBKxb (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Sat, 2 Nov 2019 06:53:31 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 02 Nov 2019 03:53:29 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.68,259,1569308400"; 
-   d="scan'208";a="191251212"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by orsmga007.jf.intel.com with ESMTP; 02 Nov 2019 03:53:27 -0700
-Received: from andy by smile with local (Exim 4.92.2)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1iQr27-00008s-7J; Sat, 02 Nov 2019 12:53:27 +0200
-Date:   Sat, 2 Nov 2019 12:53:27 +0200
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Mika Westerberg <mika.westerberg@linux.intel.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Hans de Goede <hdegoede@redhat.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: Re: [PATCH] gpio/pinctrl: Add pin ranges before gpiochip
-Message-ID: <20191102105327.GE32742@smile.fi.intel.com>
-References: <20191030144940.21133-1-linus.walleij@linaro.org>
- <0e8c15d9-c805-c1ee-f8f0-528866c7ac1c@redhat.com>
- <9d21b3fe-852b-a430-4e71-af0742edcd9b@redhat.com>
- <CACRpkdb851eSyqkz5nDB6affd4_JO5fhWHkmve1QoMGxpYswCA@mail.gmail.com>
- <20191030161041.GI2593@lahna.fi.intel.com>
+        id S1726907AbfKBMQ2 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sat, 2 Nov 2019 08:16:28 -0400
+Received: from mail-io1-f67.google.com ([209.85.166.67]:39662 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726396AbfKBMQ2 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sat, 2 Nov 2019 08:16:28 -0400
+Received: by mail-io1-f67.google.com with SMTP id k1so1882953ioj.6
+        for <linux-gpio@vger.kernel.org>; Sat, 02 Nov 2019 05:16:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:from:date:message-id:subject:to;
+        bh=wxcZzS3cKDtizBHzu5MYBxfKlvrYJgDnLg6QIaSCRD8=;
+        b=oZN8jRPelKnFo1NxbuHkWwBgtprdny1Z1c44/pfyImXfqCDVwRHjOYymB4JMWCOnbT
+         Kg20tfKcQKLgs+nx2WaPc4Y+8gYbcXZLSFLGpzw1EJEgOYF/SP5IvZt0LkXkxrnY4Odc
+         YFQH4PIfgenr5gX0oqVxtyKsuKPBszVML9BLsewpD0TzD7X/nvHYOCcXvPI/es5SR4qk
+         5M/1uI7yPT3vkstjT4SesLj/cpK3O77lLckwZyTzBu3S8WWsO65k2r5ZNT760BIe+1ww
+         S0KzMyPOdV62LA700b0aITKGwlD+13rnpXnL4uDOswfFITfbB1gD0BJUoA27VZ6t02zl
+         MZCA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to;
+        bh=wxcZzS3cKDtizBHzu5MYBxfKlvrYJgDnLg6QIaSCRD8=;
+        b=ogilmHLY1I6JrPVlpFWKI9dn/8l1Ra5y6egqqPhj5+fn4qR5oIhE4qGd1Tq4ArkdK+
+         4EEOHdON3+B62aLjSGl806uQ4+54UOEGFNR86IGgJ9y4g0bZfFfIfr0dZmD+lU09zquf
+         Oc/sZiu0oUw0iR1zKaukGP7U0jrJrvg0QjEYcnyi9fw/9xSoJe883o3IOuqk0o/GZU99
+         lqVaKvsJXYxtM4NU1F7vVoVA4rGrHLxrm2rWni6l8cvgZ51IeBVgAgIpTjaaXxlQpCch
+         w8F2IFTsKLVjOW9j+dQwtOyy7LcfoF1BZA/d3J/uBhxQVsyMjlT9nZ4B8AQgiyuHYAR3
+         Gqlw==
+X-Gm-Message-State: APjAAAW6UDLPtsBdgV74m0Ke2W1fdgO9ekPQL5xh+iEkp5htVfMHDtpB
+        JHKChgJckGIPvD+b85qmSm7IKdAwv5m7NwbTOA4=
+X-Google-Smtp-Source: APXvYqza4cXzXVByjO0vFgyNbbRzrGqxAeGMtbaWuakZ9fqSAXbmfz4O2bIfmfNGBHl3P87I3T6Hxo8fg/9ojX/uV0A=
+X-Received: by 2002:a02:3085:: with SMTP id q127mr1406004jaq.140.1572696987062;
+ Sat, 02 Nov 2019 05:16:27 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191030161041.GI2593@lahna.fi.intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Received: by 2002:a6b:4a10:0:0:0:0:0 with HTTP; Sat, 2 Nov 2019 05:16:26 -0700 (PDT)
+From:   Miss Basirat Ibrahim <tarhouni805@gmail.com>
+Date:   Sat, 2 Nov 2019 13:16:26 +0100
+Message-ID: <CAGD2OubikKuf+p7c75T28GLyXrrFW9XqD_j7TSWLMmdr4w=p6w@mail.gmail.com>
+Subject: With due respect From Miss Basirat Ibrahim
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Oct 30, 2019 at 06:10:41PM +0200, Mika Westerberg wrote:
-> On Wed, Oct 30, 2019 at 05:04:21PM +0100, Linus Walleij wrote:
-> > On Wed, Oct 30, 2019 at 5:01 PM Hans de Goede <hdegoede@redhat.com> wrote:
-> > 
-> > > For 5.4 we should probably revert
-> > > "gpio: merrifield: Pass irqchip when adding gpiochip"
-> > > and the fixes added on top of it, since AFAICT _AEI handling
-> > > will be broken on merrifield after this change too.
-> > >
-> > > So I suggest that we revert the following commits (in revert order):
-> > >
-> > > 4c87540940cbc7ddbe9674087919c605fd5c2ef1 "gpio: merrifield: Move hardware initialization to callback"
-> > > 6658f87f219427ee776c498e07c878eb5cad1be2 "gpio: merrifield: Restore use of irq_base"
-> > > 8f86a5b4ad679e4836733b47414226074eee4e4d "gpio: merrifield: Pass irqchip when adding gpiochip"
-> > >
-> > > That seems like the safest thing to do at this point in the cycle.
-> > 
-> > OK are the Intel people OK with this?
-> 
-> I'm fine but I'll leave this to Andy since that's his stuff.
+Hi
 
-Ack.
+My Name is Miss.Basirat Ibrahim from Libya, am 23 years old, am
+presently in St.Christopher's Parish for refugee in Burkina Faso under
+United Nations High commission for Refugee,
 
--- 
-With Best Regards,
-Andy Shevchenko
+ I lost my parents in the recent war in  Libya, right now I am in
+Burkina Faso, please save my life i am in danger need your help in
+transferring my inheritance, my father left behind for me in a Bank in
+Burkina Faso here,
 
+ i have every necessary document for the fund, all i needed is a
+foreigner who will
+stand as the foreign partner to my father and beneficiary of the fund.
 
+The money deposited in the Bank is US10.5 MILLION UNITED STATES
+DOLLAR) I just need this fund to be transfer to your bank account so
+that i will come over to your country and complete my education as you
+know that my country have been in deep crisis due to the war .And I
+cannot go back there again because I have nobody again all of my
+family were killed in the war. If you are interested to save me and
+help me receive my inheritance fund into your bank account with utmost
+good faith
+
+Please get back to me.through my private Email    hm36813999@gmail.com
+
+Miss.Basirat Ibrahim.
