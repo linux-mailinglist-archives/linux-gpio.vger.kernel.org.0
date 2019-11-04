@@ -2,104 +2,118 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id D86E1EE347
-	for <lists+linux-gpio@lfdr.de>; Mon,  4 Nov 2019 16:14:12 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 75DEEEE377
+	for <lists+linux-gpio@lfdr.de>; Mon,  4 Nov 2019 16:18:38 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727838AbfKDPOM (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 4 Nov 2019 10:14:12 -0500
-Received: from mail-lf1-f67.google.com ([209.85.167.67]:39973 "EHLO
+        id S1728607AbfKDPSi (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 4 Nov 2019 10:18:38 -0500
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:41337 "EHLO
         mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727796AbfKDPOL (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 4 Nov 2019 10:14:11 -0500
-Received: by mail-lf1-f67.google.com with SMTP id f4so12517773lfk.7
-        for <linux-gpio@vger.kernel.org>; Mon, 04 Nov 2019 07:14:10 -0800 (PST)
+        with ESMTP id S1728634AbfKDPSh (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 4 Nov 2019 10:18:37 -0500
+Received: by mail-lf1-f67.google.com with SMTP id j14so12535016lfb.8
+        for <linux-gpio@vger.kernel.org>; Mon, 04 Nov 2019 07:18:36 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=ilpqvgDXJg0+dq47GMBv0sWHCDOr8ZTlZSrEqJ5JEgw=;
-        b=EiSwqYnUBxCbkcnuaxl/7P3Yp2mm03tUmJVUWsmgBS7j2mkQnpebROAZHzpUMU+WtR
-         NKU6ISGuAHeMNgRPQMMHHktji7RcXl9yHu3X5rULr708VPhZRdHwftZDZpbdX/gU4Lpy
-         TLyifEzOxaqhpa0TACznUkySBsbKnxFZx1NPRRladig2ana2w1L6XXDG/8DgUW59zGlk
-         wnsK4BSjzyzGWpA95DrI5jcruNJ2SMhedMdrj1fjEt8gq9CgZDPvGgFDM1P/muDlPcPv
-         hFy+JhUGDKV3CN1EXE0rAkW38AO1XVyQhmDBVZhsXD7SmMgO6dJkl2mwQJoBeiWJ7K4d
-         bvxQ==
+        bh=+E7LWzV2qXCNRIBtcAIV+W0ZCP1K/HQKiWB7nT2TOy8=;
+        b=D/cI3U9xqryIIgDDI2eBVyrOv6zSDY4Pv+f328Xd9w0FWRKPL9SepMctPo8vzhaaXq
+         JKh/YWLF8H8HIBlZDPxh1/vPfUusVLkKj9OZoYWNzerJtUMNPqKhjNTdpnRpyqslruwb
+         CegL3eXGFM1VOu/QZKgQ/twCosf0mPtB6Kxb9u42OOC+Ssqzahiso82Zdjw2L1L1kNgH
+         IcnrI8vlT9QbPm3Y1rddZ4S8y8GqiWg7CJ4+g2TaNNPSbjKt8VyTvY6valcRjKybX5Vs
+         5ePdycM5TguOwltalFWXkyGhlR5maH6n+maZG1hptHww/xI9mWVeSA391hIKB7dsGeTZ
+         J89A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=ilpqvgDXJg0+dq47GMBv0sWHCDOr8ZTlZSrEqJ5JEgw=;
-        b=NuGPp/mf1mGAaJSUXigYXJT7Z0WC8UrZA/daC//ofjG2ESMBtqZ4pS2i9BUKnwfdvD
-         a4wyr87s3zpJpOu6Xf+AmXh/uTtMisRTfAltVWS96OyvN27QqPnp+BKpM5RTBsfu2yab
-         1syh+LChIIdQYa2SIRtnbuzZL9JTIl74jsZWerWCsbRXQSTozzmv8Qi47kCKi0VXF8lL
-         wiedeuLl6Oc2oVBRUxcoMs+R+tW0lMQ0G1LngAgcj0UnDQDIE/f3TwX7MWxhPMq0ze/W
-         xJsatcOQ04ttg14DBIfdCCgLIB3b/ciy+SzevVffubZNOYb/0qqHDPU0RTn04LT/uNvO
-         kIlQ==
-X-Gm-Message-State: APjAAAWikpmi9PXwpT+RmUZhn2zljz1JwrlknldQHkagjtu+HZx9KsLB
-        BYT9nrnY/FIGBc1FBSK6MfmGWdgz6vOvq3ljSv3BFnMU4yA=
-X-Google-Smtp-Source: APXvYqyDE31sDBFLxboUH3Nm+n7/yvnTCFuqhoBYYLz+rzIjk1tDejDCAjDP2xnR74vw5Hqg4gs+U1hlXcgztzmSIEU=
-X-Received: by 2002:a19:651b:: with SMTP id z27mr16921087lfb.117.1572880449842;
- Mon, 04 Nov 2019 07:14:09 -0800 (PST)
+        bh=+E7LWzV2qXCNRIBtcAIV+W0ZCP1K/HQKiWB7nT2TOy8=;
+        b=Xkc8BA3iGvoFNvCy+/GswsqnTas9zUoDvMzBrdzIpll7UkXS208x+y9B7cJcuMmL0x
+         LIpo2iLzAwgs3NgReRcqinTGW+SWkP4bBtMzEKq0wRIDt8Kd+pxy7T7pYBB7K7a5VrdN
+         T6Ezkve2RB2Qsysp9E6w9yaRJIvGlE6PHDXu9gbfqG2FP2YY+Wr8P2JdaymVH9NLjWIF
+         UmMYctg7RGtQJUl6k0A+whi3XqQprdKfmUNuiALY1wpyCoroInD4zfNSWE61bWfIJ3IE
+         tpKX/qPyZb3ZOeSwuA1ppd1O+yqhFjRsyh7JtgscO8o6J4rvYuNtlui2JXz3cSBXtG36
+         KUWA==
+X-Gm-Message-State: APjAAAUOiryubcjPagEMz6DuzIuhZDjUeuiwSWBbZuwtsZoriT2OkAXH
+        JPJ8Pa/jytJ7rqKIayIJJqlkFsM/fkODfCJSKXSM8w==
+X-Google-Smtp-Source: APXvYqzj/twzOpW0JzQapnFO7QVDw82naU/CokfBf0anIa43kxBTcOQzzxx1Ne85jRVyIt1xkLGVqg4MTcpngDB6R7k=
+X-Received: by 2002:ac2:4a8f:: with SMTP id l15mr16950975lfp.5.1572880715670;
+ Mon, 04 Nov 2019 07:18:35 -0800 (PST)
 MIME-Version: 1.0
-References: <20190813070123.17406-1-linus.walleij@linaro.org> <20191024133846.GW32742@smile.fi.intel.com>
-In-Reply-To: <20191024133846.GW32742@smile.fi.intel.com>
+References: <5dbb2acf.1c69fb81.54ce2.2f48@mx.google.com> <9d1a6cba9687f94b2d36a82f42f5d4be2b16e7a6.camel@alliedtelesis.co.nz>
+In-Reply-To: <9d1a6cba9687f94b2d36a82f42f5d4be2b16e7a6.camel@alliedtelesis.co.nz>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Mon, 4 Nov 2019 16:13:58 +0100
-Message-ID: <CACRpkdb4WN0vNQZGm-e3EMkOEfK0L+EigmJwd5viv=EjkzBmXw@mail.gmail.com>
-Subject: Re: [PATCH] RFC: pinctrl: cherryview: Pass irqchip when adding gpiochip
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <marc.zyngier@arm.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Thierry Reding <treding@nvidia.com>
+Date:   Mon, 4 Nov 2019 16:18:23 +0100
+Message-ID: <CACRpkdamE_Zyein+6x70noJ5Z6RJpV2qJEHOVwPxysONH+-Rag@mail.gmail.com>
+Subject: Re: linusw/devel boot bisection: v5.4-rc1-31-g6a41b6c5fc20 on rk3399-puma-haikou
+To:     Chris Packham <Chris.Packham@alliedtelesis.co.nz>
+Cc:     "scott.branden@broadcom.com" <scott.branden@broadcom.com>,
+        "enric.balletbo@collabora.com" <enric.balletbo@collabora.com>,
+        "tomeu.vizoso@collabora.com" <tomeu.vizoso@collabora.com>,
+        "mgalka@collabora.com" <mgalka@collabora.com>,
+        "matthew.hart@linaro.org" <matthew.hart@linaro.org>,
+        "broonie@kernel.org" <broonie@kernel.org>,
+        "bot@kernelci.org" <bot@kernelci.org>,
+        "khilman@baylibre.com" <khilman@baylibre.com>,
+        "guillaume.tucker@collabora.com" <guillaume.tucker@collabora.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "bcm-kernel-feedback-list@broadcom.com" 
+        <bcm-kernel-feedback-list@broadcom.com>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        "sbranden@broadcom.com" <sbranden@broadcom.com>,
+        "bgolaszewski@baylibre.com" <bgolaszewski@baylibre.com>,
+        "rjui@broadcom.com" <rjui@broadcom.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Oct 24, 2019 at 3:38 PM Andy Shevchenko
-<andriy.shevchenko@linux.intel.com> wrote:
-> On Tue, Aug 13, 2019 at 09:01:23AM +0200, Linus Walleij wrote:
-> > We need to convert all old gpio irqchips to pass the irqchip
-> > setup along when adding the gpio_chip. For more info see
-> > drivers/gpio/TODO.
-> >
-> > This driver is something of a special case, so we need to
-> > discuss it.
-> >
-> > It picks a number of IRQ descriptors before setting up
-> > the gpio_irq_chip using devm_irq_alloc_descs() giving a
-> > fixed irq base in the IRQ numberspace. It then games the
-> > irqchip API by associating IRQs from that base and upward
-> > with as many pins there are in the "community" which is a
-> > set of pins. Then after each gpio_chip is registered, it
-> > fills in the pin to IRQ map for each GPIO range inside
-> > that "community" with irq_domain_associate_many() which
-> > works fine since the descriptors were allocated
-> > previously.
-> >
-> > This is actually a hierarchical irq_chip as far as I can
-> > tell. The problem is that very likely the Intel root IRQ
-> > chip is not hierarchical so it does not support using the
-> > facilities for hierarchical irqdomains.
-> >
-> > I will soon merge the patch providing hierarchical irqchip
-> > support in gpiolib:
-> > https://lore.kernel.org/linux-gpio/20190808123242.5359-1-linus.walleij@linaro.org/
-> >
-> > Will we need to bite the bullet and convert the root
-> > irqchip for the intels to support hierarcical irqdomain?
->
-> We have few fixes for this driver, perhaps you can send a new version based on
-> them when they appear in your tree.
+On Thu, Oct 31, 2019 at 8:35 PM Chris Packham
+<Chris.Packham@alliedtelesis.co.nz> wrote:
+> On Thu, 2019-10-31 at 11:41 -0700, kernelci.org bot wrote:
 
-I'm pretty scared of this driver so I am keeping my hands off it
-for the time being. Also this patch has compile errors. I try
-not to change to many complicated things at one. Maybe next
-kernel cycle...
+> > Breaking commit found:
+> >
+> > -------------------------------------------------------------------------------
+> > commit 6a41b6c5fc20abced88fa0eed42ae5e5cb70b280
+> > Author: Chris Packham <chris.packham@alliedtelesis.co.nz>
+> > Date:   Fri Oct 25 09:27:03 2019 +1300
+> >
+> >     gpio: Add xgs-iproc driver
+> >
+> >     This driver supports the Chip Common A GPIO controller present on a
+> >     number of Broadcom switch ASICs with integrated SoCs. The controller is
+> >     similar to the pinctrl-nsp-gpio and pinctrl-iproc-gpio blocks but
+> >     different enough that a separate driver is required.
+> >
+> >     This has been ported from Broadcom's XLDK 5.0.3 retaining only the CCA
+> >     support (pinctrl-iproc-gpio covers CCB).
+> >
+> >     Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
+> >     Link: https://lore.kernel.org/r/20191024202703.8017-3-chris.packham@alliedtelesis.co.nz
+> >     Acked-by: Scott Branden <scott.branden@broadcom.com>
+> >     Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+>
+> Hmm,
+>
+> I don't see how this commit would have caused the oops. The new driver
+> shouldn't (and doesn't appear to be) run on any platform as nothing
+> declares .compatible = "brcm,iproc-gpio-cca" (yet).
+
+I think it looks really bogus as well.
+
+Could it be that these systems are memory constrained such that
+the kernel image just exactly right now collides with the upper
+memory limit or corrupts its own ramdisk?
+
+I suppose I can't ask the kernel robot to do any more detailed
+debugging.
+
+I can't see any problem with this patch.
 
 Yours,
 Linus Walleij
