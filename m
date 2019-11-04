@@ -2,158 +2,126 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 059CCEDBA9
-	for <lists+linux-gpio@lfdr.de>; Mon,  4 Nov 2019 10:29:15 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 69C8BEDBAB
+	for <lists+linux-gpio@lfdr.de>; Mon,  4 Nov 2019 10:29:36 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727267AbfKDJ3O (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 4 Nov 2019 04:29:14 -0500
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:51324 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727236AbfKDJ3O (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 4 Nov 2019 04:29:14 -0500
-Received: by mail-wm1-f67.google.com with SMTP id q70so15776543wme.1
-        for <linux-gpio@vger.kernel.org>; Mon, 04 Nov 2019 01:29:13 -0800 (PST)
+        id S1727430AbfKDJ3f (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 4 Nov 2019 04:29:35 -0500
+Received: from mail-io1-f65.google.com ([209.85.166.65]:36828 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727322AbfKDJ3f (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 4 Nov 2019 04:29:35 -0500
+Received: by mail-io1-f65.google.com with SMTP id s3so13793401ioe.3
+        for <linux-gpio@vger.kernel.org>; Mon, 04 Nov 2019 01:29:35 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernelci-org.20150623.gappssmtp.com; s=20150623;
-        h=message-id:date:mime-version:content-transfer-encoding:subject:to
-         :from;
-        bh=zaCAiSDiVW8sIR0CGts0bkNyNBxoZmfgbK6NSMR2Pmc=;
-        b=FUtM1hN30elk+X4GQAiRifiFHXPZdQelY+DTAFkdSfNhtdMYnU6q7Ur6z0EHjv6NoD
-         RaCMG/vJvhuK3zs6DoXGmr3zMD/XGZJpjiTk5b6PYhqTABmhqEIzZU5CAEEUp7eylOaB
-         dwNMvPrJJzvo/VY0AbAe69uG7SdAm3mBPA37UzG705LjyfMDYA/L/fxfiirRiUXNIHXX
-         XRKl0JHc6L5mFtc6CO36PPhKNiVsaCNI8xXxKIvHpEqXhzkb22Uo2QNsQreebMCAzKcp
-         LPJcY14LmrTX6wzY0DZ9lGNYiS4cdrfAQC1W5ByLIdESP0YBrXdfkhAmQA3XbBj7gu98
-         ohPw==
+        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=7LA3aPxO7flmHbs1Fp65T1MxGgeqEVjRl7gRB0nIklg=;
+        b=pIs+r8BGTrZcFZ6o2F9aOev8qXPFSl5BzVzuK8uXfPkmFJ5u78WHAgn7yWhZRgcRF2
+         TQ/fmRIthC7HH1oKRPL+rsIY0xayE+DEbHqMYT/+zihcmnMjln1lQzQBPFD2FkN0gO/R
+         4HhWzrpt1w/0TzsiJgb7btUET/PM7PlsdezH2ASb9obFcGp5X0gZk6uMEwODYssD9ndO
+         EYQFYyql2atk36OPSGopZnAzTs9D12s8ZFpQDSQVqqmYAE3KT9QtIxIc7PjjNvtUIn0I
+         tmEld6xM7W3U54vrFxxBUKCK7vOk3TguwljwVy7KB1EDh9+/aKgSTzCeUR8CWUSEYWZd
+         InJA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:date:mime-version
-         :content-transfer-encoding:subject:to:from;
-        bh=zaCAiSDiVW8sIR0CGts0bkNyNBxoZmfgbK6NSMR2Pmc=;
-        b=fdijOaZKh1d5zCq02fkIcA38hlqMGD/6Pqu9JXX1y1y1aKGjjg+AZpQxbqB9tiMbW+
-         AivweJrVuj5tSJ8DaUmoWAGf4QBeuDZVnOMqJPbj1vTWCYgZcU46bRn/Q5QKV3HHixkR
-         SXRZ5pzLza1/8o3sGZcKbNgkD+uLuuXR34Jjr01wehxI8nSpn/VfjmFInhCqhMc8ynkd
-         qeVOjDijb6EH8XL5ONdPrxT4YVdNMvxF/3mA64vFZSE3Ge847WT64i+Jr6nvB//PfZOv
-         YZeXj6y9IvfbU8SEOuz8UKgVbx2sV12FnNsiIihktKE+u5UnLrhbQHD4GWBbcaXM/btk
-         v8pQ==
-X-Gm-Message-State: APjAAAWVarsZz1BezWNHJYme2lFg+18k6tdm+b/GP85wtz5WTbCLktcw
-        HwLy9/zZDTFpimCH9XvfR94MSnXkgJhyVw==
-X-Google-Smtp-Source: APXvYqwiqQGLcBHIXM59MycRXsg1/DxMIFBsO/BU1IVGl6lrKFTdl3N0Z4p9QCJPiSVPqv3H1Wqk3A==
-X-Received: by 2002:a1c:96d5:: with SMTP id y204mr21291401wmd.63.1572859752215;
-        Mon, 04 Nov 2019 01:29:12 -0800 (PST)
-Received: from [148.251.42.114] ([2a01:4f8:201:9271::2])
-        by smtp.gmail.com with ESMTPSA id f18sm14460155wmh.43.2019.11.04.01.29.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 04 Nov 2019 01:29:11 -0800 (PST)
-Message-ID: <5dbfef67.1c69fb81.30bf0.1117@mx.google.com>
-Date:   Mon, 04 Nov 2019 01:29:11 -0800 (PST)
-Content-Type: text/plain; charset="utf-8"
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=7LA3aPxO7flmHbs1Fp65T1MxGgeqEVjRl7gRB0nIklg=;
+        b=qb2XeWKs12Vi7OFYdKE2xHqxyzMN+zyzp/k1EUEhyN5/lv/GxwRx+BqfuEnWWVZiNQ
+         PFxgkVwDc2YpTd6iAfOJ713WMJW1r/399L9tqdNCbAJmnKIzW+nqYlBxlqlj/H/RAaA/
+         qPVIm2+IVjtRyMiQK+qS2LMJTbItBhDaJp747Qvg1mtq5+GmM5gwMxblkp36PeqfH3iY
+         WONzONwMeMv5AGKyXZeQMymWXo6alPk0PaXs2GPqnz3vos4dhA1+Gdi83fPHrei0gUIL
+         73/hj5LzAhGvO3cQS5qSoZcoZ5NEb+QauX6SUNkZ6SeaN1qcDj7ZY8uNE5kGnKPZNUBm
+         QnEA==
+X-Gm-Message-State: APjAAAU5a35ejQoG3P90KeBLfovOXi5Yv8HOnevFV/KOiHkY1N+EqEVy
+        XjCcNM8fI/wPOBXBzdM86QFX7/KXkAkMqtqmbJchrw==
+X-Google-Smtp-Source: APXvYqyGh8w7aoaD8Ly+KkL+MHjewrNRjU9gjfaUC4B+HarLQYhFCDkzx2C/y4W4+ApkqrVUgvpjDgWLY+BUbVoDQq4=
+X-Received: by 2002:a6b:c705:: with SMTP id x5mr199971iof.189.1572859774524;
+ Mon, 04 Nov 2019 01:29:34 -0800 (PST)
 MIME-Version: 1.0
+References: <20191022084318.22256-1-brgl@bgdev.pl>
+In-Reply-To: <20191022084318.22256-1-brgl@bgdev.pl>
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+Date:   Mon, 4 Nov 2019 10:29:23 +0100
+Message-ID: <CAMRc=MdqDv7FYCEKoK52G5zacNfLTDErrOGZAG5KDOsKh2pfUw@mail.gmail.com>
+Subject: Re: [RESEND PATCH v3 0/8] drivers: add new variants of devm_platform_ioremap_resource()
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-doc <linux-doc@vger.kernel.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        "Rafael J . Wysocki" <rafael@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-X-Kernelci-Branch: fixes
-X-Kernelci-Tree: linusw
-X-Kernelci-Report-Type: build
-X-Kernelci-Kernel: v5.4-rc4-5-g1173c3c28abf
-Subject: linusw/fixes build: 6 builds: 0 failed, 6 passed,
- 5 warnings (v5.4-rc4-5-g1173c3c28abf)
-To:     linux-gpio@vger.kernel.org, fellows@kernelci.org
-From:   "kernelci.org bot" <bot@kernelci.org>
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-linusw/fixes build: 6 builds: 0 failed, 6 passed, 5 warnings (v5.4-rc4-5-g1=
-173c3c28abf)
+wt., 22 pa=C5=BA 2019 o 10:43 Bartosz Golaszewski <brgl@bgdev.pl> napisa=C5=
+=82(a):
+>
+> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+>
+> Note: resending with Arnd's review tags and rebased on top of char-misc-n=
+ext
+>
+> The new devm_platform_ioremap_resource() helper has now been widely
+> adopted and used in many drivers. Users of the write-combined ioremap()
+> variants could benefit from the same code shrinkage. This series provides
+> a write-combined version of devm_platform_ioremap_resource() and uses it =
+in a
+> relevant driver with the assumption that - just like was the case
+> previously - a coccinelle script will be developed to ease the transition
+> for others.
+>
+> There are also users of platform_get_resource_byname() who call
+> devm_ioremap_resource() next, so provide another variant that they can us=
+e
+> together with two examples.
+>
+> v1 -> v2:
+> - dropped everything related to nocache ioremap as this is going away
+>
+> v2 -> v3:
+> - don't call platform_get_resource() as an argument of devm_ioremap_resou=
+rce(),
+>   it actually decreases readability
+> - add devm_platform_ioremap_resource_byname() as another variant
+>
+> Bartosz Golaszewski (8):
+>   Documentation: devres: add missing entry for
+>     devm_platform_ioremap_resource()
+>   lib: devres: prepare devm_ioremap_resource() for more variants
+>   lib: devres: provide devm_ioremap_resource_wc()
+>   drivers: platform: provide devm_platform_ioremap_resource_wc()
+>   misc: sram: use devm_platform_ioremap_resource_wc()
+>   drivers: provide devm_platform_ioremap_resource_byname()
+>   gpio: mvebu: use devm_platform_ioremap_resource_byname()
+>   gpio: tegra186: use devm_platform_ioremap_resource_byname()
+>
+>  .../driver-api/driver-model/devres.rst        |  4 ++
+>  drivers/base/platform.c                       | 39 +++++++++++-
+>  drivers/gpio/gpio-mvebu.c                     | 19 +++---
+>  drivers/gpio/gpio-tegra186.c                  |  4 +-
+>  drivers/misc/sram.c                           | 28 +++------
+>  include/linux/device.h                        |  2 +
+>  include/linux/platform_device.h               |  6 ++
+>  lib/devres.c                                  | 62 +++++++++++++------
+>  8 files changed, 108 insertions(+), 56 deletions(-)
+>
+> --
+> 2.23.0
+>
 
-Full Build Summary: https://kernelci.org/build/linusw/branch/fixes/kernel/v=
-5.4-rc4-5-g1173c3c28abf/
+Hi Greg,
 
-Tree: linusw
-Branch: fixes
-Git Describe: v5.4-rc4-5-g1173c3c28abf
-Git Commit: 1173c3c28abfc3d7b7665db502280ba9322320e6
-Git URL: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-gpio.=
-git/
-Built: 6 unique architectures
+can you pick it up for char-misc for v5.5? This was reviewed by Arnd.
 
-Warnings Detected:
-
-arc:
-    nsim_hs_defconfig (gcc-8): 2 warnings
-
-arm64:
-
-arm:
-    multi_v7_defconfig (gcc-8): 3 warnings
-
-mips:
-
-riscv:
-
-x86_64:
-
-
-Warnings summary:
-
-    2    <stdin>:1511:2: warning: #warning syscall clone3 not implemented [=
--Wcpp]
-    1    depmod: WARNING: /home/buildslave/workspace/kernel-build/linux/bui=
-ld/_modules_/lib/modules/5.4.0-rc4/kernel/drivers/usb/storage/uas.ko needs =
-unknown symbol usb_stor_sense_invalidCDB
-    1    depmod: WARNING: /home/buildslave/workspace/kernel-build/linux/bui=
-ld/_modules_/lib/modules/5.4.0-rc4/kernel/drivers/usb/storage/uas.ko needs =
-unknown symbol usb_stor_adjust_quirks
-    1    WARNING: "return_address" [vmlinux] is a static EXPORT_SYMBOL_GPL
-
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D
-
-Detailed per-defconfig build reports:
-
----------------------------------------------------------------------------=
------
-32r2el_defconfig (mips, gcc-8) =E2=80=94 PASS, 0 errors, 0 warnings, 0 sect=
-ion mismatches
-
----------------------------------------------------------------------------=
------
-defconfig (riscv, gcc-8) =E2=80=94 PASS, 0 errors, 0 warnings, 0 section mi=
-smatches
-
----------------------------------------------------------------------------=
------
-defconfig (arm64, gcc-8) =E2=80=94 PASS, 0 errors, 0 warnings, 0 section mi=
-smatches
-
----------------------------------------------------------------------------=
------
-multi_v7_defconfig (arm, gcc-8) =E2=80=94 PASS, 0 errors, 3 warnings, 0 sec=
-tion mismatches
-
-Warnings:
-    WARNING: "return_address" [vmlinux] is a static EXPORT_SYMBOL_GPL
-    depmod: WARNING: /home/buildslave/workspace/kernel-build/linux/build/_m=
-odules_/lib/modules/5.4.0-rc4/kernel/drivers/usb/storage/uas.ko needs unkno=
-wn symbol usb_stor_sense_invalidCDB
-    depmod: WARNING: /home/buildslave/workspace/kernel-build/linux/build/_m=
-odules_/lib/modules/5.4.0-rc4/kernel/drivers/usb/storage/uas.ko needs unkno=
-wn symbol usb_stor_adjust_quirks
-
----------------------------------------------------------------------------=
------
-nsim_hs_defconfig (arc, gcc-8) =E2=80=94 PASS, 0 errors, 2 warnings, 0 sect=
-ion mismatches
-
-Warnings:
-    <stdin>:1511:2: warning: #warning syscall clone3 not implemented [-Wcpp]
-    <stdin>:1511:2: warning: #warning syscall clone3 not implemented [-Wcpp]
-
----------------------------------------------------------------------------=
------
-x86_64_defconfig (x86_64, gcc-8) =E2=80=94 PASS, 0 errors, 0 warnings, 0 se=
-ction mismatches
-
----
-For more info write to <info@kernelci.org>
+Best regards,
+Bartosz Golaszewski
