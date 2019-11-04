@@ -2,78 +2,113 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 65108ED69F
-	for <lists+linux-gpio@lfdr.de>; Mon,  4 Nov 2019 01:27:37 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 097D6ED6C6
+	for <lists+linux-gpio@lfdr.de>; Mon,  4 Nov 2019 02:07:45 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728267AbfKDA1G (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sun, 3 Nov 2019 19:27:06 -0500
-Received: from mail-vs1-f67.google.com ([209.85.217.67]:38678 "EHLO
-        mail-vs1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727689AbfKDA1G (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sun, 3 Nov 2019 19:27:06 -0500
-Received: by mail-vs1-f67.google.com with SMTP id b184so6398141vsc.5
-        for <linux-gpio@vger.kernel.org>; Sun, 03 Nov 2019 16:27:05 -0800 (PST)
+        id S1726362AbfKDBHo (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sun, 3 Nov 2019 20:07:44 -0500
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:36122 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726310AbfKDBHo (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sun, 3 Nov 2019 20:07:44 -0500
+Received: by mail-pf1-f195.google.com with SMTP id v19so11036488pfm.3
+        for <linux-gpio@vger.kernel.org>; Sun, 03 Nov 2019 17:07:43 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=KmzFkV+LWmPIPCpO9vig8cIX344TiBjHq/XJjQsUEzc=;
-        b=Eb75dHiMRgqGueG6+m/QYIMo/m7wb5ZNEQTIOJB3hYG83xWMzRkhNji+5AA6/UGFxw
-         ZabnonWMCzKqdRF3bSW4RGEd4/TkzGN5qizCdDIWoGIkvId8Cca5n/nsQ3Vukz+O5xoD
-         d//p1fLXgM4+aULE9bcLfJQTHPIjHLTArKXv9COB3pCQ4Rh3LvC/B7Cy3N2BJqlft71A
-         6/Znu6+dhxNiQ4vTbGCWHDrkaCG1bvm2/qeEMAcw0ugW57iyjRI/zfUdwyN3ReHw2E6f
-         Pgp2ivlJIzGNjWOVr1V8nRHJcmvscRFwoGRCqxJp4nDZiAcK+mv78a6KrjArHikE5c3H
-         aLsA==
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=ex0RgYTqJpTfgIpcRIYhFQrgq0WRMUi4bt2zjpq44Uk=;
+        b=MHsi7BDJcJcNBa7NnTa/qvKWjsfwGaeaTbmL02x3EPu2T7NrrMqmHzOd9WOvhYskJv
+         OGtDGFdYdb33hmgYIr9C5NxuDGvDxhcesEIT3RdAsuaNJB0kuJQvXUuJgAXYrfFvsJd+
+         SWCDVsrX0YN+ufftSbPgeUSV2VxwUQWqH7a1hiGJfu9+19dAIjZmchPiwRCHlMBQ39fn
+         QL1BwE6tDur6l1vUgvvSzzzWuIe5a+srP5NXMKQGfgiIKMy+EupYHRmbb1LNsMi0VHDm
+         AK25qUvFYhcyFJ1EBjVAtx0X9i13wXIBY7xTjVzRgD4lXcIrpV6CdPVilPb45ls05I9d
+         xcLA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=KmzFkV+LWmPIPCpO9vig8cIX344TiBjHq/XJjQsUEzc=;
-        b=qGal9PHKhL/ppp5b2zURa9vifvMH18xUsshj7qyE+XTRT1fhVnJZ0lJOt1co5hxI0n
-         16adUvgzjDZ4NUIqj1FevGYzN5YKpHY5IkzGMxv44GFF0jucsXVkrwFywIbuesIw02Q9
-         sudMKPNFfge9vbwmhM38q8Ivd5NrnRt6AJttwUL7ylRDBFoP1er6KUYkXtgRzIYHZFpe
-         PgC/oJMP4bc9u+eVgQ5rcGGyvWLwHMmXRZ99OXJYSuevc5Sd/PKW+NPXOOCMRD8wNNZm
-         NkSl8i8+UD+mFkKkca6b+f/+CDpWfH52myvLj3B43RIsTSPdrRPC2qg4AhELW9cHAxeF
-         QLKQ==
-X-Gm-Message-State: APjAAAU3xJ63ll5jGe/YesQlaIrael2Uh3sbkbzFtDV9jbDV3TKeH/Of
-        XWr4ljH4NdyaBxODkkY4MkTcj+HeC5RqK9mRCnHlOA==
-X-Google-Smtp-Source: APXvYqwrGK07eKZEhiDt7mBtyIqE4qjJOcNW9wsGWCIphsAGo/w165bILKaA3YA7VB8y3MuwgqOIspIooVMmzn+mU5Q=
-X-Received: by 2002:a67:1181:: with SMTP id 123mr802288vsr.67.1572827225315;
- Sun, 03 Nov 2019 16:27:05 -0800 (PST)
-MIME-Version: 1.0
-References: <20191028073713.25664-1-warthog618@gmail.com> <CAMpxmJUO3O05d6ZQijF4+1OCf5E7oeYOPVMZCmOXBV9-VJz5jw@mail.gmail.com>
-In-Reply-To: <CAMpxmJUO3O05d6ZQijF4+1OCf5E7oeYOPVMZCmOXBV9-VJz5jw@mail.gmail.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Mon, 4 Nov 2019 01:26:54 +0100
-Message-ID: <CACRpkdayzONkSnHr+C7e2NVrDP7_Di+PTK6MtM0Kx_Mte+=2Cg@mail.gmail.com>
-Subject: Re: [PATCH v4 0/5] gpio: expose line bias flags to userspace
-To:     Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Cc:     Kent Gibson <warthog618@gmail.com>,
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=ex0RgYTqJpTfgIpcRIYhFQrgq0WRMUi4bt2zjpq44Uk=;
+        b=YW9LqF/TTt0NITZ5GMKT3qABTrR/dWBU+qBDQP2iXp7Mseen8kHOoz83JkkpPq87b0
+         ogqaKO817LrJu0E9ceyF7bGuzFpuKw02e/uZCMoJlf1r143/ta4rl65795/srXHo9kL1
+         rlEKDkMAv143pTwlquQ36sI81sEIOVvR6c2janbhMi0x5w4T13q98+ZiS7ah5GxgSKiV
+         EiLgtO9wqb6XlsUMfulDK9YbqKHAap+M2YHa5cGkFn4Rlmyb5caEGVwJwl3otf5HHdhr
+         O2J7G727iRmiGgFRgaiBbHeXyb33KoxnWgDBtdIDr0cOkyYt+eyl9PtaDiZ7rrEEJBbf
+         uSjw==
+X-Gm-Message-State: APjAAAVSWfo6QJr/b1rsDz2Ax+0n5j8Hx0zv7qqe/tuAZrXVmWTSNZ4K
+        aS3kXeYvShcWmg2Df5NVDIA=
+X-Google-Smtp-Source: APXvYqxCgr5fzNJAbvus1aLnyUERUpD9NYcI1dZBG7+3y1kMDtkmgDdayPOTdOarIHXj23DuRnFI+g==
+X-Received: by 2002:a17:90a:de0d:: with SMTP id m13mr31787411pjv.32.1572829662959;
+        Sun, 03 Nov 2019 17:07:42 -0800 (PST)
+Received: from sol (220-235-109-115.dyn.iinet.net.au. [220.235.109.115])
+        by smtp.gmail.com with ESMTPSA id dw19sm14454266pjb.27.2019.11.03.17.07.39
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Sun, 03 Nov 2019 17:07:42 -0800 (PST)
+Date:   Mon, 4 Nov 2019 09:07:36 +0800
+From:   Kent Gibson <warthog618@gmail.com>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
         Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
         linux-gpio <linux-gpio@vger.kernel.org>,
         Bamvor Jian Zhang <bamv2005@gmail.com>,
         Drew Fustini <drew@pdp7.com>
-Content-Type: text/plain; charset="UTF-8"
+Subject: Re: [PATCH v4 0/5] gpio: expose line bias flags to userspace
+Message-ID: <20191104010736.GA9134@sol>
+References: <20191028073713.25664-1-warthog618@gmail.com>
+ <CAMpxmJUO3O05d6ZQijF4+1OCf5E7oeYOPVMZCmOXBV9-VJz5jw@mail.gmail.com>
+ <CACRpkdayzONkSnHr+C7e2NVrDP7_Di+PTK6MtM0Kx_Mte+=2Cg@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CACRpkdayzONkSnHr+C7e2NVrDP7_Di+PTK6MtM0Kx_Mte+=2Cg@mail.gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Oct 31, 2019 at 8:10 AM Bartosz Golaszewski
-<bgolaszewski@baylibre.com> wrote:
+On Mon, Nov 04, 2019 at 01:26:54AM +0100, Linus Walleij wrote:
+> On Thu, Oct 31, 2019 at 8:10 AM Bartosz Golaszewski
+> <bgolaszewski@baylibre.com> wrote:
+> 
+> > [Kent]
+> > > This series adds gross control of pull-up/pull-down to the GPIO uAPI.
+> > > Gross control means enabling and disabling of bias functionality,
+> > > not finer grained control such as setting biasing impedances.
+> 
+> Right, excellent and persistent work here, much appreciated!
+> 
 
-> [Kent]
-> > This series adds gross control of pull-up/pull-down to the GPIO uAPI.
-> > Gross control means enabling and disabling of bias functionality,
-> > not finer grained control such as setting biasing impedances.
+No problem - hopefully I haven't irritated too many people in the process.
 
-Right, excellent and persistent work here, much appreciated!
+> As long as I get Bartosz's blanket ACK on v5 I think it is ready
+> to merge. His consent is required for this.
+> 
 
-As long as I get Bartosz's blanket ACK on v5 I think it is ready
-to merge. His consent is required for this.
+I'm still waiting on open questions from v4 before submitting v5:
 
-It looks pretty much as I imagined it when I discussed it with
-Drew some while back, with some gritty details fixed up.
+One, handling of errors when setting bias, Bart has referred to Thomas, 
+so waiting for feedback on that.
 
-Yours,
-Linus Walleij
+The other, where gpio_set_bias is hooked into gpiod_direction_output,
+is fine as is for the UAPI - it can always be relocated subsequently if 
+other APIs need to set bias.  On the other hand, if decoupling setting 
+direction and bias is in order then that really should be done now.
+Can I get an an ACK on that either way?
+
+I've also made a couple of minor changes myself while reviewing v4 - 
+reordering the patches to group the gpiolib.c ones and leaving the 
+gpio-mockup til last, and removing the "bias requires input mode" check 
+from lineevent_create as the line is assumed to be input for events 
+regardless of the input flag - there is no such thing as as-is for
+event requests.
+Only mentioning here in case such changes are clearly wrong...
+
+Cheers,
+Kent.
+
+> It looks pretty much as I imagined it when I discussed it with
+> Drew some while back, with some gritty details fixed up.
+> 
+> Yours,
+> Linus Walleij
