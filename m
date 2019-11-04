@@ -2,89 +2,109 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 6E74BEE394
-	for <lists+linux-gpio@lfdr.de>; Mon,  4 Nov 2019 16:21:26 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 12BAFEE39A
+	for <lists+linux-gpio@lfdr.de>; Mon,  4 Nov 2019 16:22:07 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728287AbfKDPV0 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 4 Nov 2019 10:21:26 -0500
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:42576 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727796AbfKDPVZ (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 4 Nov 2019 10:21:25 -0500
-Received: by mail-oi1-f194.google.com with SMTP id i185so14387262oif.9
-        for <linux-gpio@vger.kernel.org>; Mon, 04 Nov 2019 07:21:24 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=m6CiWPA8G8Uq1GDWejV2PJcbtK9o73yo5NgLPE2/PkE=;
-        b=B57C7oyusn/XXPB/BbpXcX9E6OTMYls5dmpYswFDOtHZQ2YtIUJ8+EGBOuNziP5AA1
-         U42+xE7mrJ7lJZJTzWaG75BEzqpY+W+pcMzOsCecn7NTWPXMYkX2G5HsoW4c02EeaeMa
-         uzCGs15fchbdJxLWdUPX08PvYHpbEebEBGLNc1QjAKE4Qm3GNI6LgZHnJJct/BYr0aEr
-         TVe1astEbgi5ranJr1yPrVOBcC0o+EGD7SH8qvEZqc8yn3MzZQhj3An51SLOS8mLPIz9
-         r1wXzQrXc8iB217lkj6NHNss1vSPVPAUu52Yul+2/mHuY2Ux0nEiFmhy7oID/3Tusw6O
-         b90g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=m6CiWPA8G8Uq1GDWejV2PJcbtK9o73yo5NgLPE2/PkE=;
-        b=U+6KZs7QDhGe2/GnPzhQD16ZJ4v5TFQxxNmusJcTLkzFgXItOWZbZCk3GUYKF2Z893
-         YFkxvNKrrVJtO9MUMmoJv1XKAyRWzuetTM+rQmIqTaJESCo6bPA+fPLtWRSW1fMqVx10
-         suuf4Xv89hA7IzzKU1uFeBLu/J8WD9h+cdUx4gtm0N2TAPzkIMmWxOqzIOE1EwPv/DLM
-         bMRz4qW3NtM9yuk3wih88fMuqVINDGkzcsig9E9yGaU0LGTjKHeHZlTEi3KVWPYkLFE0
-         uWrm8cua13af9pPX3tIFFkJcRnQthpLXvkSmo2caSXXjo6+ZDuTjzebwUi8ozrRyMGNv
-         BJMg==
-X-Gm-Message-State: APjAAAUEVO5An2AapzeAoIamafII9BUQvGUtg7L7VFQQ4GWQeMctv7gI
-        YdCmR+v8ip+nOGGWvghyk2V9q5LXjU4hnlGlAx74Ew==
-X-Google-Smtp-Source: APXvYqz55/vf+SDcpUSsfFygQWFfODvKL1/3uXVYuWSV2BxOR+bMOfXXZe12DieuRhmKN2UxlL2TYw/PuA4UynGaZPw=
-X-Received: by 2002:a05:6808:498:: with SMTP id z24mr4589053oid.114.1572880884297;
- Mon, 04 Nov 2019 07:21:24 -0800 (PST)
+        id S1728321AbfKDPWG (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 4 Nov 2019 10:22:06 -0500
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:35914 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727796AbfKDPWG (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 4 Nov 2019 10:22:06 -0500
+Received: from [IPv6:2a00:5f00:102:0:78ab:3ff:fe4c:9c33] (unknown [IPv6:2a00:5f00:102:0:78ab:3ff:fe4c:9c33])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: gtucker)
+        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id 9F56028A9C6;
+        Mon,  4 Nov 2019 15:22:02 +0000 (GMT)
+Subject: Re: linusw/devel boot bisection: v5.4-rc1-31-g6a41b6c5fc20 on
+ rk3399-puma-haikou
+To:     Linus Walleij <linus.walleij@linaro.org>,
+        Chris Packham <Chris.Packham@alliedtelesis.co.nz>
+Cc:     "scott.branden@broadcom.com" <scott.branden@broadcom.com>,
+        "enric.balletbo@collabora.com" <enric.balletbo@collabora.com>,
+        "tomeu.vizoso@collabora.com" <tomeu.vizoso@collabora.com>,
+        "mgalka@collabora.com" <mgalka@collabora.com>,
+        "matthew.hart@linaro.org" <matthew.hart@linaro.org>,
+        "broonie@kernel.org" <broonie@kernel.org>,
+        "bot@kernelci.org" <bot@kernelci.org>,
+        "khilman@baylibre.com" <khilman@baylibre.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "bcm-kernel-feedback-list@broadcom.com" 
+        <bcm-kernel-feedback-list@broadcom.com>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        "sbranden@broadcom.com" <sbranden@broadcom.com>,
+        "bgolaszewski@baylibre.com" <bgolaszewski@baylibre.com>,
+        "rjui@broadcom.com" <rjui@broadcom.com>
+References: <5dbb2acf.1c69fb81.54ce2.2f48@mx.google.com>
+ <9d1a6cba9687f94b2d36a82f42f5d4be2b16e7a6.camel@alliedtelesis.co.nz>
+ <CACRpkdamE_Zyein+6x70noJ5Z6RJpV2qJEHOVwPxysONH+-Rag@mail.gmail.com>
+From:   Guillaume Tucker <guillaume.tucker@collabora.com>
+Message-ID: <fa0ca588-a034-1f00-8492-a3f574a5b24b@collabora.com>
+Date:   Mon, 4 Nov 2019 15:22:00 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-References: <20191024122224.11776-1-geert+renesas@glider.be>
- <20191024122224.11776-2-geert+renesas@glider.be> <CACRpkdZ5DB4fBDpkCG7NMrRohHcejj0EfjqN882c5wc+pahW2A@mail.gmail.com>
-In-Reply-To: <CACRpkdZ5DB4fBDpkCG7NMrRohHcejj0EfjqN882c5wc+pahW2A@mail.gmail.com>
-From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Date:   Mon, 4 Nov 2019 16:21:13 +0100
-Message-ID: <CAMpxmJUnbYGwd0ZudV=aSddviYGaHqr9n9eHZzS7HrOrV3vBdw@mail.gmail.com>
-Subject: Re: [PATCH v2 1/2] gpio: em: Use proper irq_chip name
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
-        Marc Zyngier <marc.zyngier@arm.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <CACRpkdamE_Zyein+6x70noJ5Z6RJpV2qJEHOVwPxysONH+-Rag@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-pon., 4 lis 2019 o 16:10 Linus Walleij <linus.walleij@linaro.org> napisa=C5=
-=82(a):
->
-> On Thu, Oct 24, 2019 at 2:22 PM Geert Uytterhoeven
-> <geert+renesas@glider.be> wrote:
->
-> > The irq_chip .name field should contain the device's class name, not th=
-e
-> > instance's name.
-> >
-> > Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> > ---
-> > Untested due to lack of hardware.
-> > .parent_device not filled in as this driver doesn't use Runtime PM.
-> >
-> > v2:
-> >   - No changes.
->
-> Patch applied.
->
+On 04/11/2019 15:18, Linus Walleij wrote:
+> On Thu, Oct 31, 2019 at 8:35 PM Chris Packham
+> <Chris.Packham@alliedtelesis.co.nz> wrote:
+>> On Thu, 2019-10-31 at 11:41 -0700, kernelci.org bot wrote:
+> 
+>>> Breaking commit found:
+>>>
+>>> -------------------------------------------------------------------------------
+>>> commit 6a41b6c5fc20abced88fa0eed42ae5e5cb70b280
+>>> Author: Chris Packham <chris.packham@alliedtelesis.co.nz>
+>>> Date:   Fri Oct 25 09:27:03 2019 +1300
+>>>
+>>>     gpio: Add xgs-iproc driver
+>>>
+>>>     This driver supports the Chip Common A GPIO controller present on a
+>>>     number of Broadcom switch ASICs with integrated SoCs. The controller is
+>>>     similar to the pinctrl-nsp-gpio and pinctrl-iproc-gpio blocks but
+>>>     different enough that a separate driver is required.
+>>>
+>>>     This has been ported from Broadcom's XLDK 5.0.3 retaining only the CCA
+>>>     support (pinctrl-iproc-gpio covers CCB).
+>>>
+>>>     Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
+>>>     Link: https://lore.kernel.org/r/20191024202703.8017-3-chris.packham@alliedtelesis.co.nz
+>>>     Acked-by: Scott Branden <scott.branden@broadcom.com>
+>>>     Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+>>
+>> Hmm,
+>>
+>> I don't see how this commit would have caused the oops. The new driver
+>> shouldn't (and doesn't appear to be) run on any platform as nothing
+>> declares .compatible = "brcm,iproc-gpio-cca" (yet).
+> 
+> I think it looks really bogus as well.
+> 
+> Could it be that these systems are memory constrained such that
+> the kernel image just exactly right now collides with the upper
+> memory limit or corrupts its own ramdisk?
+> 
+> I suppose I can't ask the kernel robot to do any more detailed
+> debugging.
+> 
+> I can't see any problem with this patch.
 
-Oops I already have those in my tree. I'll back them out before the next PR=
-.
+Yes it's possible that this patch increases the kernel image size
+above a threshold that causes the board to fail to boot.  However
+that board isn't in the Collabora lab so I don't have direct
+access to it.  I'll see what we can do to debug this, will
+disable bisections in lab-theobrama-systems for now to avoid more
+noise.
 
-Bart
-
-> Yours,
-> Linus Walleij
+Guillaume
