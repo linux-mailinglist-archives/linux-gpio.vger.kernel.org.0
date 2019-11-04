@@ -2,84 +2,87 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id E3007EE90E
-	for <lists+linux-gpio@lfdr.de>; Mon,  4 Nov 2019 20:58:43 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 535DFEE90F
+	for <lists+linux-gpio@lfdr.de>; Mon,  4 Nov 2019 20:58:57 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728741AbfKDT6n (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 4 Nov 2019 14:58:43 -0500
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:36571 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728409AbfKDT6m (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 4 Nov 2019 14:58:42 -0500
-Received: by mail-pg1-f196.google.com with SMTP id k13so799669pgh.3
-        for <linux-gpio@vger.kernel.org>; Mon, 04 Nov 2019 11:58:41 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=14/7fGNS6Tdxw1xU02cIYZCJQ9hrk1aeGdD9i1PuoNk=;
-        b=VrgZFnTN/onbUxFLLnhzkPwlo7Z0wFw2jFvZz0jQKLDStLO/76/m6dVkbiWnMskgfJ
-         DAOZ3kaFhzlMw4MBTgwNSO+//YjAVUmIj7ZEUsaYG3/g9Q9Ewnf3CcNxmLZOZNA8UbIW
-         zzfaiHe/Ra/u7j4rXQec2rZ1s+eZGfyaycYGgRT7RkmoGMTCxjDlfOrCx7cotWehvOy5
-         ZKS7IbdQ6MPiP5uT783gvrl0ObW939mSsZFCJhqSsopqya1jYifkRJG3eZ0q29Xo49iG
-         60IgynqYGpeQLHpd+ICcJJEZwocDGE0OOOZ38pDVW6IDX+gxiQfXMx+vGMLr517i1lYR
-         /HPw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=14/7fGNS6Tdxw1xU02cIYZCJQ9hrk1aeGdD9i1PuoNk=;
-        b=PTf9AMfLmJJjWF4WIyGnuzxCFDzeVxvFGFmHT2Q9HNWRyBNbcF/rbvCKW55AmYnIE7
-         C7ywcHbOetZnyAdErDxJQxLos0mbiv8ZBa/XoUycswtkaM35x9+/aVOBTNFssY0Cpfh8
-         /0Go12PBK466FI5m7M9X39ljune4kp5/JGYN1jSY0f7VEDw1Ggz8FvzRmozzU8pDiGYN
-         EuKaac33DHHBxkv7DD+8jftRc0r2YaOHr9X2nHiCg8l0twZ6DuE52OpA3hlKuMs6OeGv
-         lJya1rQKjblxwjCRdSdzd01T2blePQD0UI5gwaPrMZlCcv1D1mlawAB6YaeYbHWyN/wz
-         O/9w==
-X-Gm-Message-State: APjAAAXLEW3xNlS90faflAsBJDEniaJWOwS5EKRBU0glMVGdXNygJIpD
-        OrC538akmBWyuWFvSriJIqs=
-X-Google-Smtp-Source: APXvYqwVo96PqPOLzahpD0jUmhWAmqaMp3Cdg70zNe1+15hA7hWHVEs8OOgzcZdf2K4y0Q2MAuKMHg==
-X-Received: by 2002:a62:1dc6:: with SMTP id d189mr14814829pfd.100.1572897520539;
-        Mon, 04 Nov 2019 11:58:40 -0800 (PST)
-Received: from x1 ([216.243.17.14])
-        by smtp.gmail.com with ESMTPSA id y14sm20409280pff.69.2019.11.04.11.58.39
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 04 Nov 2019 11:58:39 -0800 (PST)
-Date:   Mon, 4 Nov 2019 11:58:38 -0800
-From:   Drew Fustini <drew@pdp7.com>
-To:     Kent Gibson <warthog618@gmail.com>
-Cc:     linux-gpio@vger.kernel.org
-Subject: Re: [PATCH v5 0/7] gpio: expose line bias flags to userspace
-Message-ID: <20191104195838.GA9833@x1>
-References: <20191104153841.16911-1-warthog618@gmail.com>
+        id S1728648AbfKDT65 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 4 Nov 2019 14:58:57 -0500
+Received: from gate2.alliedtelesis.co.nz ([202.36.163.20]:44443 "EHLO
+        gate2.alliedtelesis.co.nz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728409AbfKDT64 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 4 Nov 2019 14:58:56 -0500
+Received: from mmarshal3.atlnz.lc (mmarshal3.atlnz.lc [10.32.18.43])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id 6F3A5891A9;
+        Tue,  5 Nov 2019 08:58:53 +1300 (NZDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alliedtelesis.co.nz;
+        s=mail181024; t=1572897533;
+        bh=HdBTywQc8qrpgd8ZsBDiYT4SQgvtb8dj3sZGk/RXvG0=;
+        h=From:To:CC:Subject:Date:References:In-Reply-To;
+        b=fFaosFEgfCj2/CfG9pTFKZ9c7jlN98OkxyMbJ0ZU0iXJBR/CJC2aQj+CUHtyhSH3Z
+         kw/cyrljwO9a06dRMvlcworxsJ9w1NgI2kC97RqqKK4Zh0CsYPITQmu3Ekfr+zO2yH
+         OSNAjgoUn+NYb2CsaV0V4nfdDzmL4yw/yeHYkpyDoSgA8qddnse/qUEdORrBQ2iCAD
+         PC3RhpP9sJWdlA7WJfdxIn1mME1vmX4ZmZYrBwQeL9IRmbaPoOrib6+2IB6tiiyEjP
+         KKeCghhgeA7vPS8SXJMfuIoI5GObywi2TJ1EBBi/p977IenryFC2+MCa5EElu9tcoz
+         J2Ep4yCIwAbkw==
+Received: from svr-chch-ex1.atlnz.lc (Not Verified[10.32.16.77]) by mmarshal3.atlnz.lc with Trustwave SEG (v7,5,8,10121)
+        id <B5dc082fd0001>; Tue, 05 Nov 2019 08:58:53 +1300
+Received: from svr-chch-ex1.atlnz.lc (2001:df5:b000:bc8:409d:36f5:8899:92e8)
+ by svr-chch-ex1.atlnz.lc (2001:df5:b000:bc8:409d:36f5:8899:92e8) with
+ Microsoft SMTP Server (TLS) id 15.0.1156.6; Tue, 5 Nov 2019 08:58:53 +1300
+Received: from svr-chch-ex1.atlnz.lc ([fe80::409d:36f5:8899:92e8]) by
+ svr-chch-ex1.atlnz.lc ([fe80::409d:36f5:8899:92e8%12]) with mapi id
+ 15.00.1156.000; Tue, 5 Nov 2019 08:58:53 +1300
+From:   Chris Packham <Chris.Packham@alliedtelesis.co.nz>
+To:     "linus.walleij@linaro.org" <linus.walleij@linaro.org>
+CC:     "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "bcm-kernel-feedback-list@broadcom.com" 
+        <bcm-kernel-feedback-list@broadcom.com>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        "sbranden@broadcom.com" <sbranden@broadcom.com>,
+        "rjui@broadcom.com" <rjui@broadcom.com>
+Subject: Re: [PATCH v3 2/2] pinctrl: bcm: nsp: implement get_direction
+Thread-Topic: [PATCH v3 2/2] pinctrl: bcm: nsp: implement get_direction
+Thread-Index: AQHVkqVeZmr/Y3m5nU6eLv+86DO9ead6SMkAgABMjgA=
+Date:   Mon, 4 Nov 2019 19:58:52 +0000
+Message-ID: <ee32b9a0d6f8ecef9c70fb684e5e29b873993cf5.camel@alliedtelesis.co.nz>
+References: <20191104001819.2300-1-chris.packham@alliedtelesis.co.nz>
+         <20191104001819.2300-3-chris.packham@alliedtelesis.co.nz>
+         <CACRpkdb530Do3BnVBA6Q7TWOQ0_QfytqaPHPXCPoZP_742Rvzw@mail.gmail.com>
+In-Reply-To: <CACRpkdb530Do3BnVBA6Q7TWOQ0_QfytqaPHPXCPoZP_742Rvzw@mail.gmail.com>
+Accept-Language: en-NZ, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [2001:df5:b000:22:d0c9:dea8:da1e:f79e]
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <635A444F9D55034FA62731C85A549751@atlnz.lc>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191104153841.16911-1-warthog618@gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Nov 04, 2019 at 11:38:34PM +0800, Kent Gibson wrote:
-> on a Raspberry Pi, in both cases using the feature/pud_set_config 
-> branch of my Go gpiod library[2], as well as with my feature/pud 
-> development branch of libgpiod[3].  Patch 7 has only been tested using 
-> my gpiod library as libgpiod has not yet been updated to support the 
-> SET_CONFIG ioctl.
-> 
-> Patch 1 adds pull-up/pull-down support to line handle requests.
-> Patch 2 adds pull-up/pull-down support to line event requests.
-> Patch 3 adds support for disabling bias.
-> Patch 4 adds support for setting bias on output lines.
-> Patch 5 adds pull-up/down support to the gpio-mockup for uAPI testing.
-> Patch 6 refactors the flag validation from linehandle_create.
-> Patch 7 adds the SET_CONFIG ioctl.
-
-Hi Kent, thanks for continuing pushing this patch series forward.
-
-I've not used gpiomockup before and I was hoping you might be able to share
-the commands you use to run it to test the patches.
-
-thanks,
-drew
+T24gTW9uLCAyMDE5LTExLTA0IGF0IDE2OjI0ICswMTAwLCBMaW51cyBXYWxsZWlqIHdyb3RlOg0K
+PiBPbiBNb24sIE5vdiA0LCAyMDE5IGF0IDE6MTggQU0gQ2hyaXMgUGFja2hhbQ0KPiA8Y2hyaXMu
+cGFja2hhbUBhbGxpZWR0ZWxlc2lzLmNvLm56PiB3cm90ZToNCj4gDQo+ID4gVGhlIGdldF9kaXJl
+Y3Rpb24gYXBpIGlzIHN0cm9uZ2x5IHJlY29tbWVuZGVkIHRvIGJlIGltcGxlbWVudGVkLiBJbiBm
+YWN0DQo+ID4gaWYgaXQgaXMgbm90IGltcGxlbWVudGVkIGdwaW8taG9ncyB3aWxsIG5vdCBnZXQg
+dGhlIGNvcnJlY3QgZGlyZWN0aW9uLg0KPiA+IEFkZCBhbiBpbXBsZW1lbnRhdGlvbiBvZiBnZXRf
+ZGlyZWN0aW9uIGZvciB0aGUgbnNwLWdwaW8gZHJpdmVyLg0KPiA+IA0KPiA+IFNpZ25lZC1vZmYt
+Ynk6IENocmlzIFBhY2toYW0gPGNocmlzLnBhY2toYW1AYWxsaWVkdGVsZXNpcy5jby5uej4NCj4g
+PiBSZXZpZXdlZC1ieTogRmxvcmlhbiBGYWluZWxsaSA8Zi5mYWluZWxsaUBnbWFpbC5jb20+DQo+
+IA0KPiBCVFcgSSB0aGluayBpdCBsb29rcyBsaWtlIHRoaXMgdGhlIEdQSU8gcGFydCBvZiB0aGlz
+IGRyaXZlciBjYW4gYmUNCj4gY29udmVydGVkIHRvIHVzZSBHUElPX0dFTkVSSUMuIENvbXBhcmUg
+dG8gb3RoZXINCj4gZHJpdmVycyBzdWNoIGFzIGRyaXZlcnMvZ3Bpby9ncGlvLWZ0Z3BpbzAxMC5j
+Lg0KPiANCj4gSXQncyBhIGZ1biB3YXkgdG8gY3V0IGRvd24gbGluZXMgaWYgeW91IGhhdmUgdGlt
+ZSB0byBjaGVjaw0KPiBhbmQgdGVzdCENCj4gDQoNCkknbGwgc2VlIGlmIEkgY2FuIGZpdCBpdCBp
+bi4gR290IGFub3RoZXIgcHJvYmxlbSBJJ20gY2hhc2luZyBvbiB0aGUNCnNhbWUgcGxhdGZvcm0u
+DQo=
