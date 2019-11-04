@@ -2,102 +2,131 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 8B1C6EDBB7
-	for <lists+linux-gpio@lfdr.de>; Mon,  4 Nov 2019 10:35:38 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7DF99EDC19
+	for <lists+linux-gpio@lfdr.de>; Mon,  4 Nov 2019 11:07:24 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728138AbfKDJfi (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 4 Nov 2019 04:35:38 -0500
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:45270 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728063AbfKDJfh (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 4 Nov 2019 04:35:37 -0500
-Received: by mail-wr1-f67.google.com with SMTP id q13so16171816wrs.12
-        for <linux-gpio@vger.kernel.org>; Mon, 04 Nov 2019 01:35:36 -0800 (PST)
+        id S1727332AbfKDKHY (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 4 Nov 2019 05:07:24 -0500
+Received: from mail-wm1-f43.google.com ([209.85.128.43]:55999 "EHLO
+        mail-wm1-f43.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727138AbfKDKHY (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 4 Nov 2019 05:07:24 -0500
+Received: by mail-wm1-f43.google.com with SMTP id m17so6653996wmi.5
+        for <linux-gpio@vger.kernel.org>; Mon, 04 Nov 2019 02:07:22 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=/q/Jy46HAl5qDXGb5pMNUar0Ktcd+mxfRNJZDPc+0iA=;
-        b=cbz46ZF4/8Y+P96GJfJgqFSAzXtlzcvpN6rYWoHc+Bc8gxO/OHCXy9vBcfZbht65VU
-         cfjEYKbmRFxx8c4gfyYUwt5aF45wDHFz4Me5jgojTPUDHsJar6DdJRq1Tb5wvK89nWCx
-         mJw8dvIDh0chO6vIDUmC2KucxY+vz8LaxmwiPaqqK+yw6RXFVnJzYYQAov7GqelcbGm0
-         snLp2xSC+qkU8IQ4Jc3t1h87nvBIDMCQCt4RxtWiPdRSa8ibUa4AzoFq0ddXg47PRpL/
-         mkHd/qFeSuq4B1l1WrRgn9gfigdbvZmzt0P5bdt2KC2q1mQ9O+nQekY19UFuTT0firaM
-         U+ug==
+        d=kernelci-org.20150623.gappssmtp.com; s=20150623;
+        h=message-id:date:mime-version:content-transfer-encoding:subject:to
+         :from;
+        bh=TCybtOlw0IOeSQo4O4ylJBSiSe03Dzvxh4UdYaM1Sds=;
+        b=wZOfO+rSwTc9PsxZR8Er+g9xRsgD/LYkuQbbFFfpgHm/cvwJ3QvpLz5IZTwc/e28DL
+         NC5Ii7OHkJtCIFe23RFe/Jhf6W2lxYDuLxxGSJ9vADP7pOLFuouYaYnZIIZF4dOFVS78
+         WF/YMTeQ7UMpt04bppuyjeHzG3xgH63VgV7Gl6OjNSMt0bD1U5yLmBCXxnksX4LSy83R
+         bYoKmClihS6cuRY/ZXwp6A16LYtXB+jFfYuEQaCiZQF271jTVoVj6F2Zjg5yKWcrBcSi
+         4+jsqoJKA/bZQBv2e/tby5GBRMZ7vFzSBVs+muFMZp3xnsvMvE+f2JELH4z2cYVTVVN8
+         Gsvg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=/q/Jy46HAl5qDXGb5pMNUar0Ktcd+mxfRNJZDPc+0iA=;
-        b=rOJ5Y/2UJ9HiqOLRbH3/ugiLrwltDLctpTHqENiihZI68Bv6saNRlsIBWMWz32mpuA
-         Dpw7o00qsnOBJ24abg4BtvwGYyBcDwn5Ph1MXZpJn3HMhq/WBS5Av8jXKr4dhh5gz4Sy
-         jpjCiwfX+OTwgAFjLU/Kkx6m8R/mpmHdNF3H9n49PWaDVLPdx+wDLXuZ4nNP021SpGNT
-         K1DRtVwlGs/f4PIHN6ypYv1Kf2Gm7QWvWLv2gl7RoX171b0ciluuX9vMbErvQ7lXN8Ua
-         2fufWQs+rlf2onl8oBcgmorWyuGQN1VAHK57QU/1MPwuyARtZRF2hK0z7JYv/XLZwbzR
-         nwsg==
-X-Gm-Message-State: APjAAAXsypvuvobBZDLywbUWtBXc62K8+5cfsp9e7DWZ0EfmEuq01/xL
-        6v6GzgH29qz0FPAeWuLBwBj3T1OC20E=
-X-Google-Smtp-Source: APXvYqxElW8oVQU4a1AD6VV1NNkiEHVf6/MACgp9Py33Zz2M9a29Io3XDGtIDAPS4xVT66PYeZxpHQ==
-X-Received: by 2002:adf:e28f:: with SMTP id v15mr21444957wri.130.1572860135741;
-        Mon, 04 Nov 2019 01:35:35 -0800 (PST)
-Received: from [192.168.86.34] (cpc89974-aztw32-2-0-cust43.18-1.cable.virginm.net. [86.30.250.44])
-        by smtp.googlemail.com with ESMTPSA id b8sm9771016wrt.39.2019.11.04.01.35.34
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 04 Nov 2019 01:35:34 -0800 (PST)
-Subject: Re: [PATCH v3 08/11] dt-bindings: pinctrl: qcom-wcd934x: Add bindings
- for gpio
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Rob Herring <robh@kernel.org>, Mark Brown <broonie@kernel.org>,
-        Lee Jones <lee.jones@linaro.org>, vinod.koul@linaro.org,
-        "moderated list:SOUND - SOC LAYER / DYNAMIC AUDIO POWER MANAGEM..." 
-        <alsa-devel@alsa-project.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        spapothi@codeaurora.org, bgoswami@codeaurora.org,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
-References: <20191029112700.14548-1-srinivas.kandagatla@linaro.org>
- <20191029112700.14548-9-srinivas.kandagatla@linaro.org>
- <CACRpkdYc-3Nk7VGj8mAjaM4C0dc_X7ZOK0cptW2Sr+kKwvyFVg@mail.gmail.com>
-From:   Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Message-ID: <4f0e22ab-6aa1-2ed1-a85b-fb66531e0b2a@linaro.org>
-Date:   Mon, 4 Nov 2019 09:35:34 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        h=x-gm-message-state:message-id:date:mime-version
+         :content-transfer-encoding:subject:to:from;
+        bh=TCybtOlw0IOeSQo4O4ylJBSiSe03Dzvxh4UdYaM1Sds=;
+        b=gKgRGCVIJmWDfiJbxgFm1ugEIWqhicYhYKfREZ3rT3dVvhuKZQVUISuH+TqaVgcjtx
+         2U4UQ7WmX1mzfuuDBU7FRrBApbHqYUmv+4tOrFfNqDpHYQ5nLDzJLJyp9jcg2E/gnpi9
+         HMDteC+sxMsMH51bRs2LxE0HCEJPHzOAZyds0PdsoKcEQIHfk8IndmVrjFXM43W4dSTR
+         XwXl2Q/FTq2Y4ilPqR0sTysB3hutDJpu/2kG4HxaCyhY4Xepc4E9fxUYJXS7TVn9CqKU
+         bU1MFSTojjk+rWZ5qyikzAauHrKHpKUxynjti8sBpicCIfRSDcohM6UCBT1SiU80FPmN
+         Ajdg==
+X-Gm-Message-State: APjAAAWxtX28dYWSAmoHTKlRbB7D2+A137D6A+ForOsF2pDYx6mlSUGV
+        Abytx/4/GUuItgaFMr8q/lBldowFfvSrvA==
+X-Google-Smtp-Source: APXvYqwuHXy9Ll5Hwg/jwGL5EMadRcU0aCVcfKiJhPJilVfA8zrLGhHqHcjwWDEh59J55E9Tfq3xEg==
+X-Received: by 2002:a7b:c94f:: with SMTP id i15mr22688895wml.8.1572862041654;
+        Mon, 04 Nov 2019 02:07:21 -0800 (PST)
+Received: from [148.251.42.114] ([2a01:4f8:201:9271::2])
+        by smtp.gmail.com with ESMTPSA id w19sm6485327wmk.36.2019.11.04.02.07.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 04 Nov 2019 02:07:20 -0800 (PST)
+Message-ID: <5dbff858.1c69fb81.8e01.8e07@mx.google.com>
+Date:   Mon, 04 Nov 2019 02:07:20 -0800 (PST)
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-In-Reply-To: <CACRpkdYc-3Nk7VGj8mAjaM4C0dc_X7ZOK0cptW2Sr+kKwvyFVg@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: quoted-printable
+X-Kernelci-Branch: for-next
+X-Kernelci-Tree: linusw
+X-Kernelci-Report-Type: boot
+X-Kernelci-Kernel: v5.4-rc4-37-g1723e834a4aa
+Subject: linusw/for-next boot: 44 boots: 10 failed,
+ 34 passed (v5.4-rc4-37-g1723e834a4aa)
+To:     linux-gpio@vger.kernel.org, fellows@kernelci.org
+From:   "kernelci.org bot" <bot@kernelci.org>
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Thanks for reviewing this!
+linusw/for-next boot: 44 boots: 10 failed, 34 passed (v5.4-rc4-37-g1723e834=
+a4aa)
 
-On 03/11/2019 23:19, Linus Walleij wrote:
-> On Tue, Oct 29, 2019 at 12:29 PM Srinivas Kandagatla
-> <srinivas.kandagatla@linaro.org> wrote:
-> 
->> Qualcomm Technologies Inc WCD9340/WCD9341 Audio Codec has integrated
->> gpio controller to control 5 gpios on the chip. This patch adds
->> required device tree bindings for it.
->>
->> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
->> ---
->>   .../pinctrl/qcom,wcd934x-pinctrl.yaml         | 52 +++++++++++++++++++
-> 
-> The bindings look OK, but remind me if I have asked before (sorry then)
-> does these GPIOs expose some pin control properties and that is why
-> the driver is placed under pin control rather than the GPIO namespace?
-> 
-I don't remember you asking about this before :-),
+Full Boot Summary: https://kernelci.org/boot/all/job/linusw/branch/for-next=
+/kernel/v5.4-rc4-37-g1723e834a4aa/
+Full Build Summary: https://kernelci.org/build/linusw/branch/for-next/kerne=
+l/v5.4-rc4-37-g1723e834a4aa/
 
-This controller just has Output enable bits, No pin control properties.
+Tree: linusw
+Branch: for-next
+Git Describe: v5.4-rc4-37-g1723e834a4aa
+Git Commit: 1723e834a4aafd9a73ba6eb61aed6b092acfde73
+Git URL: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-gpio.=
+git/
+Tested: 37 unique boards, 13 SoC families, 3 builds out of 6
 
-As you suggested I can move this to drivers/gpio in next version.
+Boot Regressions Detected:
 
-Thanks,
-srini
+arm64:
+
+    defconfig:
+        gcc-8:
+          meson-g12a-x96-max:
+              lab-baylibre: failing since 1 day (last pass: v5.4-rc4-28-gac=
+ba5fc211ee - first fail: v5.4-rc4-34-gb0983a8bbfb4)
+          meson-g12b-odroid-n2:
+              lab-baylibre: failing since 1 day (last pass: v5.4-rc4-28-gac=
+ba5fc211ee - first fail: v5.4-rc4-34-gb0983a8bbfb4)
+          meson-gxbb-p200:
+              lab-baylibre: failing since 1 day (last pass: v5.4-rc4-28-gac=
+ba5fc211ee - first fail: v5.4-rc4-34-gb0983a8bbfb4)
+          meson-gxl-s805x-libretech-ac:
+              lab-baylibre: failing since 1 day (last pass: v5.4-rc4-28-gac=
+ba5fc211ee - first fail: v5.4-rc4-34-gb0983a8bbfb4)
+          meson-gxl-s905x-khadas-vim:
+              lab-baylibre: failing since 1 day (last pass: v5.4-rc4-28-gac=
+ba5fc211ee - first fail: v5.4-rc4-34-gb0983a8bbfb4)
+          meson-gxl-s905x-libretech-cc:
+              lab-baylibre: failing since 1 day (last pass: v5.4-rc4-28-gac=
+ba5fc211ee - first fail: v5.4-rc4-34-gb0983a8bbfb4)
+          r8a7795-salvator-x:
+              lab-baylibre: failing since 1 day (last pass: v5.4-rc4-28-gac=
+ba5fc211ee - first fail: v5.4-rc4-34-gb0983a8bbfb4)
+          r8a7796-m3ulcb:
+              lab-baylibre: failing since 1 day (last pass: v5.4-rc4-28-gac=
+ba5fc211ee - first fail: v5.4-rc4-34-gb0983a8bbfb4)
+          rk3399-gru-kevin:
+              lab-collabora: new failure (last pass: v5.4-rc4-28-gacba5fc21=
+1ee)
+
+Boot Failures Detected:
+
+arm64:
+    defconfig:
+        gcc-8:
+            meson-g12a-x96-max: 1 failed lab
+            meson-g12b-odroid-n2: 1 failed lab
+            meson-gxbb-p200: 1 failed lab
+            meson-gxl-s805x-libretech-ac: 1 failed lab
+            meson-gxl-s905x-khadas-vim: 1 failed lab
+            meson-gxl-s905x-libretech-cc: 1 failed lab
+            meson-gxm-khadas-vim2: 1 failed lab
+            r8a7795-salvator-x: 1 failed lab
+            r8a7796-m3ulcb: 1 failed lab
+            rk3399-gru-kevin: 1 failed lab
+
+---
+For more info write to <info@kernelci.org>
