@@ -2,126 +2,102 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 69C8BEDBAB
-	for <lists+linux-gpio@lfdr.de>; Mon,  4 Nov 2019 10:29:36 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 8B1C6EDBB7
+	for <lists+linux-gpio@lfdr.de>; Mon,  4 Nov 2019 10:35:38 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727430AbfKDJ3f (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 4 Nov 2019 04:29:35 -0500
-Received: from mail-io1-f65.google.com ([209.85.166.65]:36828 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727322AbfKDJ3f (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 4 Nov 2019 04:29:35 -0500
-Received: by mail-io1-f65.google.com with SMTP id s3so13793401ioe.3
-        for <linux-gpio@vger.kernel.org>; Mon, 04 Nov 2019 01:29:35 -0800 (PST)
+        id S1728138AbfKDJfi (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 4 Nov 2019 04:35:38 -0500
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:45270 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728063AbfKDJfh (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 4 Nov 2019 04:35:37 -0500
+Received: by mail-wr1-f67.google.com with SMTP id q13so16171816wrs.12
+        for <linux-gpio@vger.kernel.org>; Mon, 04 Nov 2019 01:35:36 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=7LA3aPxO7flmHbs1Fp65T1MxGgeqEVjRl7gRB0nIklg=;
-        b=pIs+r8BGTrZcFZ6o2F9aOev8qXPFSl5BzVzuK8uXfPkmFJ5u78WHAgn7yWhZRgcRF2
-         TQ/fmRIthC7HH1oKRPL+rsIY0xayE+DEbHqMYT/+zihcmnMjln1lQzQBPFD2FkN0gO/R
-         4HhWzrpt1w/0TzsiJgb7btUET/PM7PlsdezH2ASb9obFcGp5X0gZk6uMEwODYssD9ndO
-         EYQFYyql2atk36OPSGopZnAzTs9D12s8ZFpQDSQVqqmYAE3KT9QtIxIc7PjjNvtUIn0I
-         tmEld6xM7W3U54vrFxxBUKCK7vOk3TguwljwVy7KB1EDh9+/aKgSTzCeUR8CWUSEYWZd
-         InJA==
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=/q/Jy46HAl5qDXGb5pMNUar0Ktcd+mxfRNJZDPc+0iA=;
+        b=cbz46ZF4/8Y+P96GJfJgqFSAzXtlzcvpN6rYWoHc+Bc8gxO/OHCXy9vBcfZbht65VU
+         cfjEYKbmRFxx8c4gfyYUwt5aF45wDHFz4Me5jgojTPUDHsJar6DdJRq1Tb5wvK89nWCx
+         mJw8dvIDh0chO6vIDUmC2KucxY+vz8LaxmwiPaqqK+yw6RXFVnJzYYQAov7GqelcbGm0
+         snLp2xSC+qkU8IQ4Jc3t1h87nvBIDMCQCt4RxtWiPdRSa8ibUa4AzoFq0ddXg47PRpL/
+         mkHd/qFeSuq4B1l1WrRgn9gfigdbvZmzt0P5bdt2KC2q1mQ9O+nQekY19UFuTT0firaM
+         U+ug==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=7LA3aPxO7flmHbs1Fp65T1MxGgeqEVjRl7gRB0nIklg=;
-        b=qb2XeWKs12Vi7OFYdKE2xHqxyzMN+zyzp/k1EUEhyN5/lv/GxwRx+BqfuEnWWVZiNQ
-         PFxgkVwDc2YpTd6iAfOJ713WMJW1r/399L9tqdNCbAJmnKIzW+nqYlBxlqlj/H/RAaA/
-         qPVIm2+IVjtRyMiQK+qS2LMJTbItBhDaJp747Qvg1mtq5+GmM5gwMxblkp36PeqfH3iY
-         WONzONwMeMv5AGKyXZeQMymWXo6alPk0PaXs2GPqnz3vos4dhA1+Gdi83fPHrei0gUIL
-         73/hj5LzAhGvO3cQS5qSoZcoZ5NEb+QauX6SUNkZ6SeaN1qcDj7ZY8uNE5kGnKPZNUBm
-         QnEA==
-X-Gm-Message-State: APjAAAU5a35ejQoG3P90KeBLfovOXi5Yv8HOnevFV/KOiHkY1N+EqEVy
-        XjCcNM8fI/wPOBXBzdM86QFX7/KXkAkMqtqmbJchrw==
-X-Google-Smtp-Source: APXvYqyGh8w7aoaD8Ly+KkL+MHjewrNRjU9gjfaUC4B+HarLQYhFCDkzx2C/y4W4+ApkqrVUgvpjDgWLY+BUbVoDQq4=
-X-Received: by 2002:a6b:c705:: with SMTP id x5mr199971iof.189.1572859774524;
- Mon, 04 Nov 2019 01:29:34 -0800 (PST)
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=/q/Jy46HAl5qDXGb5pMNUar0Ktcd+mxfRNJZDPc+0iA=;
+        b=rOJ5Y/2UJ9HiqOLRbH3/ugiLrwltDLctpTHqENiihZI68Bv6saNRlsIBWMWz32mpuA
+         Dpw7o00qsnOBJ24abg4BtvwGYyBcDwn5Ph1MXZpJn3HMhq/WBS5Av8jXKr4dhh5gz4Sy
+         jpjCiwfX+OTwgAFjLU/Kkx6m8R/mpmHdNF3H9n49PWaDVLPdx+wDLXuZ4nNP021SpGNT
+         K1DRtVwlGs/f4PIHN6ypYv1Kf2Gm7QWvWLv2gl7RoX171b0ciluuX9vMbErvQ7lXN8Ua
+         2fufWQs+rlf2onl8oBcgmorWyuGQN1VAHK57QU/1MPwuyARtZRF2hK0z7JYv/XLZwbzR
+         nwsg==
+X-Gm-Message-State: APjAAAXsypvuvobBZDLywbUWtBXc62K8+5cfsp9e7DWZ0EfmEuq01/xL
+        6v6GzgH29qz0FPAeWuLBwBj3T1OC20E=
+X-Google-Smtp-Source: APXvYqxElW8oVQU4a1AD6VV1NNkiEHVf6/MACgp9Py33Zz2M9a29Io3XDGtIDAPS4xVT66PYeZxpHQ==
+X-Received: by 2002:adf:e28f:: with SMTP id v15mr21444957wri.130.1572860135741;
+        Mon, 04 Nov 2019 01:35:35 -0800 (PST)
+Received: from [192.168.86.34] (cpc89974-aztw32-2-0-cust43.18-1.cable.virginm.net. [86.30.250.44])
+        by smtp.googlemail.com with ESMTPSA id b8sm9771016wrt.39.2019.11.04.01.35.34
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 04 Nov 2019 01:35:34 -0800 (PST)
+Subject: Re: [PATCH v3 08/11] dt-bindings: pinctrl: qcom-wcd934x: Add bindings
+ for gpio
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     Rob Herring <robh@kernel.org>, Mark Brown <broonie@kernel.org>,
+        Lee Jones <lee.jones@linaro.org>, vinod.koul@linaro.org,
+        "moderated list:SOUND - SOC LAYER / DYNAMIC AUDIO POWER MANAGEM..." 
+        <alsa-devel@alsa-project.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        spapothi@codeaurora.org, bgoswami@codeaurora.org,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
+References: <20191029112700.14548-1-srinivas.kandagatla@linaro.org>
+ <20191029112700.14548-9-srinivas.kandagatla@linaro.org>
+ <CACRpkdYc-3Nk7VGj8mAjaM4C0dc_X7ZOK0cptW2Sr+kKwvyFVg@mail.gmail.com>
+From:   Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Message-ID: <4f0e22ab-6aa1-2ed1-a85b-fb66531e0b2a@linaro.org>
+Date:   Mon, 4 Nov 2019 09:35:34 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-References: <20191022084318.22256-1-brgl@bgdev.pl>
-In-Reply-To: <20191022084318.22256-1-brgl@bgdev.pl>
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Mon, 4 Nov 2019 10:29:23 +0100
-Message-ID: <CAMRc=MdqDv7FYCEKoK52G5zacNfLTDErrOGZAG5KDOsKh2pfUw@mail.gmail.com>
-Subject: Re: [RESEND PATCH v3 0/8] drivers: add new variants of devm_platform_ioremap_resource()
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-doc <linux-doc@vger.kernel.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        "Rafael J . Wysocki" <rafael@kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <CACRpkdYc-3Nk7VGj8mAjaM4C0dc_X7ZOK0cptW2Sr+kKwvyFVg@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-wt., 22 pa=C5=BA 2019 o 10:43 Bartosz Golaszewski <brgl@bgdev.pl> napisa=C5=
-=82(a):
->
-> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
->
-> Note: resending with Arnd's review tags and rebased on top of char-misc-n=
-ext
->
-> The new devm_platform_ioremap_resource() helper has now been widely
-> adopted and used in many drivers. Users of the write-combined ioremap()
-> variants could benefit from the same code shrinkage. This series provides
-> a write-combined version of devm_platform_ioremap_resource() and uses it =
-in a
-> relevant driver with the assumption that - just like was the case
-> previously - a coccinelle script will be developed to ease the transition
-> for others.
->
-> There are also users of platform_get_resource_byname() who call
-> devm_ioremap_resource() next, so provide another variant that they can us=
-e
-> together with two examples.
->
-> v1 -> v2:
-> - dropped everything related to nocache ioremap as this is going away
->
-> v2 -> v3:
-> - don't call platform_get_resource() as an argument of devm_ioremap_resou=
-rce(),
->   it actually decreases readability
-> - add devm_platform_ioremap_resource_byname() as another variant
->
-> Bartosz Golaszewski (8):
->   Documentation: devres: add missing entry for
->     devm_platform_ioremap_resource()
->   lib: devres: prepare devm_ioremap_resource() for more variants
->   lib: devres: provide devm_ioremap_resource_wc()
->   drivers: platform: provide devm_platform_ioremap_resource_wc()
->   misc: sram: use devm_platform_ioremap_resource_wc()
->   drivers: provide devm_platform_ioremap_resource_byname()
->   gpio: mvebu: use devm_platform_ioremap_resource_byname()
->   gpio: tegra186: use devm_platform_ioremap_resource_byname()
->
->  .../driver-api/driver-model/devres.rst        |  4 ++
->  drivers/base/platform.c                       | 39 +++++++++++-
->  drivers/gpio/gpio-mvebu.c                     | 19 +++---
->  drivers/gpio/gpio-tegra186.c                  |  4 +-
->  drivers/misc/sram.c                           | 28 +++------
->  include/linux/device.h                        |  2 +
->  include/linux/platform_device.h               |  6 ++
->  lib/devres.c                                  | 62 +++++++++++++------
->  8 files changed, 108 insertions(+), 56 deletions(-)
->
-> --
-> 2.23.0
->
+Thanks for reviewing this!
 
-Hi Greg,
+On 03/11/2019 23:19, Linus Walleij wrote:
+> On Tue, Oct 29, 2019 at 12:29 PM Srinivas Kandagatla
+> <srinivas.kandagatla@linaro.org> wrote:
+> 
+>> Qualcomm Technologies Inc WCD9340/WCD9341 Audio Codec has integrated
+>> gpio controller to control 5 gpios on the chip. This patch adds
+>> required device tree bindings for it.
+>>
+>> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+>> ---
+>>   .../pinctrl/qcom,wcd934x-pinctrl.yaml         | 52 +++++++++++++++++++
+> 
+> The bindings look OK, but remind me if I have asked before (sorry then)
+> does these GPIOs expose some pin control properties and that is why
+> the driver is placed under pin control rather than the GPIO namespace?
+> 
+I don't remember you asking about this before :-),
 
-can you pick it up for char-misc for v5.5? This was reviewed by Arnd.
+This controller just has Output enable bits, No pin control properties.
 
-Best regards,
-Bartosz Golaszewski
+As you suggested I can move this to drivers/gpio in next version.
+
+Thanks,
+srini
