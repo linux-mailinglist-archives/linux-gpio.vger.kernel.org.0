@@ -2,132 +2,120 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 593B0EDC48
-	for <lists+linux-gpio@lfdr.de>; Mon,  4 Nov 2019 11:15:17 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0E480EDC5D
+	for <lists+linux-gpio@lfdr.de>; Mon,  4 Nov 2019 11:22:19 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728416AbfKDKPI (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 4 Nov 2019 05:15:08 -0500
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:36758 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728409AbfKDKPI (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 4 Nov 2019 05:15:08 -0500
-Received: by mail-ot1-f68.google.com with SMTP id s3so6298950otk.3
-        for <linux-gpio@vger.kernel.org>; Mon, 04 Nov 2019 02:15:07 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=OgCCsceRy9h7bryx9QISpPy+HkrehZwdB/S8gHBbkX4=;
-        b=sMd7nn1noith/dDz1tDq8h2czg+UsGoXI6SC0aJ2G2cZe/kPrr9EWFfJl4txzZELa4
-         ZGEt+zgFkBrI8xj7OfRluNZ+yfMus93HnvOYx16O9cREy1Uhd5TdvV01AmQqR6KRCZyx
-         SiIYps2WBy0IcYzyAaWvRSahKelraCl5dVdkbYDCpWmnydQy9yMZF86VOKRfbE9LEYJG
-         it+oXazD/etNPcubJOLFsRuGR4XmN4E1TKDk9exulk9o/TL8fX4y63qdW6ANH4Zio+xl
-         cXdOD59c//HoPsQpwkGNuiXeBkjaLXQ2DWDAHSET9SdE0xndE/tBSMK4hstjxsXZ/+SI
-         qxzQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=OgCCsceRy9h7bryx9QISpPy+HkrehZwdB/S8gHBbkX4=;
-        b=OqPFl/1hWtr67+o4pNVZPA7d7wQu/5+pD9cNnlMNOTlNOLByRj8+KCPffQfcEWEpbR
-         YHBY3tY6TAZTPvFbfP0dqLHxgY9veN9X1d7Oo7NvWe4fCGu78nyYYjle/KnSvVzmk8cs
-         SRnGVWJ84eDbosnEURvNdADU+YoKcqfVNMbcGHnV7GfYJVf0Yd+N9L35p+D54HWKA4l5
-         UWkTYEThKnPpj+eVMk2mVAuZSmIXQwWBSoyNNvKjMeT17EAmTcc2LMo+Kq2joPcauRKP
-         p//NGCar5E7qRXIZsgjqBGnZ4KHvkSmXKYVi/0zAaa96K/D6jfQJPCvlMVSMfsgIlZOm
-         xe5Q==
-X-Gm-Message-State: APjAAAWDH9hPSEUNKoCfb7yjEVH8eCXVbfX6tH8qCUv1WDrlTaNY6OAy
-        /amCg1ApzebBVsiKsn3tAdwV+1Wj/nqrsvdpwew+hA==
-X-Google-Smtp-Source: APXvYqzg7uQdAIT4BjfsfaTPzNFPCrnB69h6oY6LvfdUoRYCrFixYr7IhtIPMKB1F+sqgtJUPytDIPtJETmSELPH2J8=
-X-Received: by 2002:a05:6830:210e:: with SMTP id i14mr3866315otc.250.1572862507121;
- Mon, 04 Nov 2019 02:15:07 -0800 (PST)
+        id S1727444AbfKDKWS (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 4 Nov 2019 05:22:18 -0500
+Received: from mx07-00178001.pphosted.com ([62.209.51.94]:37222 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726441AbfKDKWS (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 4 Nov 2019 05:22:18 -0500
+Received: from pps.filterd (m0046668.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xA49utVG002166;
+        Mon, 4 Nov 2019 11:22:08 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=STMicroelectronics;
+ bh=eU6eABG4qyDAE1xkwrnneHH0ZTGv0XqpzXiOHf/PvB4=;
+ b=j00ZwEYhJTDKLSQNtp6gi01FWnzPPaXXE6fU0NQE/41OO2OdjYgNDhaersyBnVi4duq5
+ 8i9WfYiqi0JJpFvASDIS95l7yFBoxP/5TnlCAb26vvjeO4E9cNTMxQXYmSwhZEFZ9wsW
+ XiTzu9wgffgYBNJjicJsb3LRqyzl4Y0V2LUzP+/SPXOJhpRDEVPlcZBKIFp4cKzNi7cx
+ w+rdIvThGJU65NnXoLTTy4ZTMPAwMeB73KdGtC3kk7Z1GqZbARXGhMRYpQENcKdvO4f6
+ LLFzdtDvaz/5VDOizprNJOEeQBDGJ1xdQOdoyac5aBLNa6VBZZAZjSeEPmRMGNO0PfH6 NA== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 2w1054gw6p-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 04 Nov 2019 11:22:08 +0100
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 283CF10002A;
+        Mon,  4 Nov 2019 11:22:08 +0100 (CET)
+Received: from Webmail-eu.st.com (sfhdag3node2.st.com [10.75.127.8])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 1AB272BC5C3;
+        Mon,  4 Nov 2019 11:22:08 +0100 (CET)
+Received: from lmecxl0912.lme.st.com (10.75.127.50) by SFHDAG3NODE2.st.com
+ (10.75.127.8) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Mon, 4 Nov
+ 2019 11:22:07 +0100
+Subject: Re: [PATCH 1/1] pinctrl: stmfx: fix valid_mask init sequence
+To:     Amelie Delaunay <amelie.delaunay@st.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>
+CC:     <linux-gpio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>
+References: <20191104100908.10880-1-amelie.delaunay@st.com>
+From:   Alexandre Torgue <alexandre.torgue@st.com>
+Message-ID: <3767f869-7454-c230-5e6c-487b436cb58f@st.com>
+Date:   Mon, 4 Nov 2019 11:22:07 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-References: <20191028073713.25664-1-warthog618@gmail.com> <CAMpxmJUO3O05d6ZQijF4+1OCf5E7oeYOPVMZCmOXBV9-VJz5jw@mail.gmail.com>
- <CACRpkdayzONkSnHr+C7e2NVrDP7_Di+PTK6MtM0Kx_Mte+=2Cg@mail.gmail.com> <20191104010736.GA9134@sol>
-In-Reply-To: <20191104010736.GA9134@sol>
-From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Date:   Mon, 4 Nov 2019 11:14:56 +0100
-Message-ID: <CAMpxmJUim4SV43McHR2X0Ukc2_zZrdj=cZPvAaETyp4kSObCSA@mail.gmail.com>
-Subject: Re: [PATCH v4 0/5] gpio: expose line bias flags to userspace
-To:     Kent Gibson <warthog618@gmail.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        linux-gpio <linux-gpio@vger.kernel.org>,
-        Bamvor Jian Zhang <bamv2005@gmail.com>,
-        Drew Fustini <drew@pdp7.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20191104100908.10880-1-amelie.delaunay@st.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.75.127.50]
+X-ClientProxiedBy: SFHDAG7NODE2.st.com (10.75.127.20) To SFHDAG3NODE2.st.com
+ (10.75.127.8)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,1.0.8
+ definitions=2019-11-04_06:2019-11-01,2019-11-04 signatures=0
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-pon., 4 lis 2019 o 02:07 Kent Gibson <warthog618@gmail.com> napisa=C5=82(a)=
-:
->
-> On Mon, Nov 04, 2019 at 01:26:54AM +0100, Linus Walleij wrote:
-> > On Thu, Oct 31, 2019 at 8:10 AM Bartosz Golaszewski
-> > <bgolaszewski@baylibre.com> wrote:
-> >
-> > > [Kent]
-> > > > This series adds gross control of pull-up/pull-down to the GPIO uAP=
-I.
-> > > > Gross control means enabling and disabling of bias functionality,
-> > > > not finer grained control such as setting biasing impedances.
-> >
-> > Right, excellent and persistent work here, much appreciated!
-> >
->
-> No problem - hopefully I haven't irritated too many people in the process=
-.
->
-> > As long as I get Bartosz's blanket ACK on v5 I think it is ready
-> > to merge. His consent is required for this.
-> >
->
-> I'm still waiting on open questions from v4 before submitting v5:
->
-> One, handling of errors when setting bias, Bart has referred to Thomas,
-> so waiting for feedback on that.
->
+Hi Amélie,
 
-If we can get it merged for v5.5, then I don't want to block it
-waiting for answers. Looking at the code I think we should only ignore
-the EOPNOTSUPP error and propagate all other codes. Can you add a
-patch changing that and then fix the other nits I pointed out? Also:
-please Cc Thomas Petazzoni so that he gets the chance to yell at us if
-it breaks something.
+On 11/4/19 11:09 AM, Amelie Delaunay wrote:
+> With stmfx_pinctrl_gpio_init_valid_mask callback, gpio_valid_mask was used
+> to initialize gpiochip valid_mask for gpiolib. But gpio_valid_mask was not
+> yet initialized. gpio_valid_mask required gpio-ranges to be registered,
+> this is the case after gpiochip_add_data call. But init_valid_mask
+> callback is also called under gpiochip_add_data. gpio_valid_mask
+> initialization cannot be moved before gpiochip_add_data because
+> gpio-ranges are not registered.
+> So, it is not possible to use init_valid_mask callback.
+> To avoid this issue, get rid of valid_mask and rely on ranges.
+> 
+> Fixes: da9b142ab2c5 ("pinctrl: stmfx: Use the callback to populate valid_mask")
+> Signed-off-by: Amelie Delaunay <amelie.delaunay@st.com>
 
-> The other, where gpio_set_bias is hooked into gpiod_direction_output,
-> is fine as is for the UAPI - it can always be relocated subsequently if
-> other APIs need to set bias.  On the other hand, if decoupling setting
-> direction and bias is in order then that really should be done now.
-> Can I get an an ACK on that either way?
->
+Acked-by: Alexandre TORGUE <alexandre.torgue@st.com>
 
-This is in line with what you did for input. I don't think it should
-be decoupled (any particular reason for that? There is none mentioned
-in the cover letter), so I propose to leave it as it is in patch 5/5.
-
-One more thing - since we all want this to make it for v5.5 - can you
-make the set config patches part of this series (simply bunch it all
-together)? This will make it easy to review and merge everything.
-
-Thanks in advance and great job!
-Bartosz
-
-> I've also made a couple of minor changes myself while reviewing v4 -
-> reordering the patches to group the gpiolib.c ones and leaving the
-> gpio-mockup til last, and removing the "bias requires input mode" check
-> from lineevent_create as the line is assumed to be input for events
-> regardless of the input flag - there is no such thing as as-is for
-> event requests.
-> Only mentioning here in case such changes are clearly wrong...
->
-> Cheers,
-> Kent.
->
-> > It looks pretty much as I imagined it when I discussed it with
-> > Drew some while back, with some gritty details fixed up.
-> >
-> > Yours,
-> > Linus Walleij
+> ---
+>   drivers/pinctrl/pinctrl-stmfx.c | 14 --------------
+>   1 file changed, 14 deletions(-)
+> 
+> diff --git a/drivers/pinctrl/pinctrl-stmfx.c b/drivers/pinctrl/pinctrl-stmfx.c
+> index 564660028fcc..ccdf0bb21414 100644
+> --- a/drivers/pinctrl/pinctrl-stmfx.c
+> +++ b/drivers/pinctrl/pinctrl-stmfx.c
+> @@ -585,19 +585,6 @@ static int stmfx_pinctrl_gpio_function_enable(struct stmfx_pinctrl *pctl)
+>   	return stmfx_function_enable(pctl->stmfx, func);
+>   }
+>   
+> -static int stmfx_pinctrl_gpio_init_valid_mask(struct gpio_chip *gc,
+> -					      unsigned long *valid_mask,
+> -					      unsigned int ngpios)
+> -{
+> -	struct stmfx_pinctrl *pctl = gpiochip_get_data(gc);
+> -	u32 n;
+> -
+> -	for_each_clear_bit(n, &pctl->gpio_valid_mask, ngpios)
+> -		clear_bit(n, valid_mask);
+> -
+> -	return 0;
+> -}
+> -
+>   static int stmfx_pinctrl_probe(struct platform_device *pdev)
+>   {
+>   	struct stmfx *stmfx = dev_get_drvdata(pdev->dev.parent);
+> @@ -660,7 +647,6 @@ static int stmfx_pinctrl_probe(struct platform_device *pdev)
+>   	pctl->gpio_chip.ngpio = pctl->pctl_desc.npins;
+>   	pctl->gpio_chip.can_sleep = true;
+>   	pctl->gpio_chip.of_node = np;
+> -	pctl->gpio_chip.init_valid_mask = stmfx_pinctrl_gpio_init_valid_mask;
+>   
+>   	ret = devm_gpiochip_add_data(pctl->dev, &pctl->gpio_chip, pctl);
+>   	if (ret) {
+> 
