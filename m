@@ -2,131 +2,112 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 7DF99EDC19
-	for <lists+linux-gpio@lfdr.de>; Mon,  4 Nov 2019 11:07:24 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 760F5EDC1F
+	for <lists+linux-gpio@lfdr.de>; Mon,  4 Nov 2019 11:09:23 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727332AbfKDKHY (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 4 Nov 2019 05:07:24 -0500
-Received: from mail-wm1-f43.google.com ([209.85.128.43]:55999 "EHLO
-        mail-wm1-f43.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727138AbfKDKHY (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 4 Nov 2019 05:07:24 -0500
-Received: by mail-wm1-f43.google.com with SMTP id m17so6653996wmi.5
-        for <linux-gpio@vger.kernel.org>; Mon, 04 Nov 2019 02:07:22 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernelci-org.20150623.gappssmtp.com; s=20150623;
-        h=message-id:date:mime-version:content-transfer-encoding:subject:to
-         :from;
-        bh=TCybtOlw0IOeSQo4O4ylJBSiSe03Dzvxh4UdYaM1Sds=;
-        b=wZOfO+rSwTc9PsxZR8Er+g9xRsgD/LYkuQbbFFfpgHm/cvwJ3QvpLz5IZTwc/e28DL
-         NC5Ii7OHkJtCIFe23RFe/Jhf6W2lxYDuLxxGSJ9vADP7pOLFuouYaYnZIIZF4dOFVS78
-         WF/YMTeQ7UMpt04bppuyjeHzG3xgH63VgV7Gl6OjNSMt0bD1U5yLmBCXxnksX4LSy83R
-         bYoKmClihS6cuRY/ZXwp6A16LYtXB+jFfYuEQaCiZQF271jTVoVj6F2Zjg5yKWcrBcSi
-         4+jsqoJKA/bZQBv2e/tby5GBRMZ7vFzSBVs+muFMZp3xnsvMvE+f2JELH4z2cYVTVVN8
-         Gsvg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:date:mime-version
-         :content-transfer-encoding:subject:to:from;
-        bh=TCybtOlw0IOeSQo4O4ylJBSiSe03Dzvxh4UdYaM1Sds=;
-        b=gKgRGCVIJmWDfiJbxgFm1ugEIWqhicYhYKfREZ3rT3dVvhuKZQVUISuH+TqaVgcjtx
-         2U4UQ7WmX1mzfuuDBU7FRrBApbHqYUmv+4tOrFfNqDpHYQ5nLDzJLJyp9jcg2E/gnpi9
-         HMDteC+sxMsMH51bRs2LxE0HCEJPHzOAZyds0PdsoKcEQIHfk8IndmVrjFXM43W4dSTR
-         XwXl2Q/FTq2Y4ilPqR0sTysB3hutDJpu/2kG4HxaCyhY4Xepc4E9fxUYJXS7TVn9CqKU
-         bU1MFSTojjk+rWZ5qyikzAauHrKHpKUxynjti8sBpicCIfRSDcohM6UCBT1SiU80FPmN
-         Ajdg==
-X-Gm-Message-State: APjAAAWxtX28dYWSAmoHTKlRbB7D2+A137D6A+ForOsF2pDYx6mlSUGV
-        Abytx/4/GUuItgaFMr8q/lBldowFfvSrvA==
-X-Google-Smtp-Source: APXvYqwuHXy9Ll5Hwg/jwGL5EMadRcU0aCVcfKiJhPJilVfA8zrLGhHqHcjwWDEh59J55E9Tfq3xEg==
-X-Received: by 2002:a7b:c94f:: with SMTP id i15mr22688895wml.8.1572862041654;
-        Mon, 04 Nov 2019 02:07:21 -0800 (PST)
-Received: from [148.251.42.114] ([2a01:4f8:201:9271::2])
-        by smtp.gmail.com with ESMTPSA id w19sm6485327wmk.36.2019.11.04.02.07.20
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 04 Nov 2019 02:07:20 -0800 (PST)
-Message-ID: <5dbff858.1c69fb81.8e01.8e07@mx.google.com>
-Date:   Mon, 04 Nov 2019 02:07:20 -0800 (PST)
-Content-Type: text/plain; charset="utf-8"
+        id S1727138AbfKDKJW (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 4 Nov 2019 05:09:22 -0500
+Received: from mx08-00178001.pphosted.com ([91.207.212.93]:40668 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726526AbfKDKJW (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 4 Nov 2019 05:09:22 -0500
+Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
+        by mx08-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xA49v3Rs000518;
+        Mon, 4 Nov 2019 11:09:10 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-type; s=STMicroelectronics;
+ bh=U9KCydVK6sJdJRHNSjl7mEURKAb4YJru4EdsVNMkITQ=;
+ b=dOYmOnFANYCPUzeQaGiW+FvY8wehFx+hNgUF+fUTevgw9/BnWaZL8tOJD7gr1UtjVPqA
+ Bh9kp/YVV9AKIZpRLpv/nZ2EWTsYuwMGeRwZz2kgFUGBJ27G7bpJfwjE+DtO9ID7SoLl
+ 5t6VPD7wHC4oWVvW3QBfpipTDgKiiqWAv1J1VelefuUczOLVmx+Xued0h30O06P7mokI
+ DMgN4sNPoQ26GRNUxh5eB1NKHuHm3yT2RO2PNIQAy9B98qAW24TSqp0qdlBtkxnLMJKj
+ kvyM7Un/rysfr/BQ7tRzFh0vnQGnAtLbcmtt4w4PTG/zWgJwac4G9HWMYqvaty8HxZH9 aA== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx08-00178001.pphosted.com with ESMTP id 2w11jn12g1-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 04 Nov 2019 11:09:10 +0100
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id D547010002A;
+        Mon,  4 Nov 2019 11:09:09 +0100 (CET)
+Received: from Webmail-eu.st.com (Safex1hubcas22.st.com [10.75.90.92])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id C65EA2BB05D;
+        Mon,  4 Nov 2019 11:09:09 +0100 (CET)
+Received: from SAFEX1HUBCAS24.st.com (10.75.90.95) by Safex1hubcas22.st.com
+ (10.75.90.92) with Microsoft SMTP Server (TLS) id 14.3.439.0; Mon, 4 Nov 2019
+ 11:09:09 +0100
+Received: from localhost (10.201.22.141) by webmail-ga.st.com (10.75.90.48)
+ with Microsoft SMTP Server (TLS) id 14.3.439.0; Mon, 4 Nov 2019 11:09:09
+ +0100
+From:   Amelie Delaunay <amelie.delaunay@st.com>
+To:     Linus Walleij <linus.walleij@linaro.org>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>
+CC:     <linux-gpio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        Amelie Delaunay <amelie.delaunay@st.com>
+Subject: [PATCH 1/1] pinctrl: stmfx: fix valid_mask init sequence
+Date:   Mon, 4 Nov 2019 11:09:08 +0100
+Message-ID: <20191104100908.10880-1-amelie.delaunay@st.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-Kernelci-Branch: for-next
-X-Kernelci-Tree: linusw
-X-Kernelci-Report-Type: boot
-X-Kernelci-Kernel: v5.4-rc4-37-g1723e834a4aa
-Subject: linusw/for-next boot: 44 boots: 10 failed,
- 34 passed (v5.4-rc4-37-g1723e834a4aa)
-To:     linux-gpio@vger.kernel.org, fellows@kernelci.org
-From:   "kernelci.org bot" <bot@kernelci.org>
+Content-Type: text/plain
+X-Originating-IP: [10.201.22.141]
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,1.0.8
+ definitions=2019-11-04_06:2019-11-01,2019-11-04 signatures=0
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-linusw/for-next boot: 44 boots: 10 failed, 34 passed (v5.4-rc4-37-g1723e834=
-a4aa)
+With stmfx_pinctrl_gpio_init_valid_mask callback, gpio_valid_mask was used
+to initialize gpiochip valid_mask for gpiolib. But gpio_valid_mask was not
+yet initialized. gpio_valid_mask required gpio-ranges to be registered,
+this is the case after gpiochip_add_data call. But init_valid_mask
+callback is also called under gpiochip_add_data. gpio_valid_mask
+initialization cannot be moved before gpiochip_add_data because
+gpio-ranges are not registered.
+So, it is not possible to use init_valid_mask callback.
+To avoid this issue, get rid of valid_mask and rely on ranges.
 
-Full Boot Summary: https://kernelci.org/boot/all/job/linusw/branch/for-next=
-/kernel/v5.4-rc4-37-g1723e834a4aa/
-Full Build Summary: https://kernelci.org/build/linusw/branch/for-next/kerne=
-l/v5.4-rc4-37-g1723e834a4aa/
-
-Tree: linusw
-Branch: for-next
-Git Describe: v5.4-rc4-37-g1723e834a4aa
-Git Commit: 1723e834a4aafd9a73ba6eb61aed6b092acfde73
-Git URL: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-gpio.=
-git/
-Tested: 37 unique boards, 13 SoC families, 3 builds out of 6
-
-Boot Regressions Detected:
-
-arm64:
-
-    defconfig:
-        gcc-8:
-          meson-g12a-x96-max:
-              lab-baylibre: failing since 1 day (last pass: v5.4-rc4-28-gac=
-ba5fc211ee - first fail: v5.4-rc4-34-gb0983a8bbfb4)
-          meson-g12b-odroid-n2:
-              lab-baylibre: failing since 1 day (last pass: v5.4-rc4-28-gac=
-ba5fc211ee - first fail: v5.4-rc4-34-gb0983a8bbfb4)
-          meson-gxbb-p200:
-              lab-baylibre: failing since 1 day (last pass: v5.4-rc4-28-gac=
-ba5fc211ee - first fail: v5.4-rc4-34-gb0983a8bbfb4)
-          meson-gxl-s805x-libretech-ac:
-              lab-baylibre: failing since 1 day (last pass: v5.4-rc4-28-gac=
-ba5fc211ee - first fail: v5.4-rc4-34-gb0983a8bbfb4)
-          meson-gxl-s905x-khadas-vim:
-              lab-baylibre: failing since 1 day (last pass: v5.4-rc4-28-gac=
-ba5fc211ee - first fail: v5.4-rc4-34-gb0983a8bbfb4)
-          meson-gxl-s905x-libretech-cc:
-              lab-baylibre: failing since 1 day (last pass: v5.4-rc4-28-gac=
-ba5fc211ee - first fail: v5.4-rc4-34-gb0983a8bbfb4)
-          r8a7795-salvator-x:
-              lab-baylibre: failing since 1 day (last pass: v5.4-rc4-28-gac=
-ba5fc211ee - first fail: v5.4-rc4-34-gb0983a8bbfb4)
-          r8a7796-m3ulcb:
-              lab-baylibre: failing since 1 day (last pass: v5.4-rc4-28-gac=
-ba5fc211ee - first fail: v5.4-rc4-34-gb0983a8bbfb4)
-          rk3399-gru-kevin:
-              lab-collabora: new failure (last pass: v5.4-rc4-28-gacba5fc21=
-1ee)
-
-Boot Failures Detected:
-
-arm64:
-    defconfig:
-        gcc-8:
-            meson-g12a-x96-max: 1 failed lab
-            meson-g12b-odroid-n2: 1 failed lab
-            meson-gxbb-p200: 1 failed lab
-            meson-gxl-s805x-libretech-ac: 1 failed lab
-            meson-gxl-s905x-khadas-vim: 1 failed lab
-            meson-gxl-s905x-libretech-cc: 1 failed lab
-            meson-gxm-khadas-vim2: 1 failed lab
-            r8a7795-salvator-x: 1 failed lab
-            r8a7796-m3ulcb: 1 failed lab
-            rk3399-gru-kevin: 1 failed lab
-
+Fixes: da9b142ab2c5 ("pinctrl: stmfx: Use the callback to populate valid_mask")
+Signed-off-by: Amelie Delaunay <amelie.delaunay@st.com>
 ---
-For more info write to <info@kernelci.org>
+ drivers/pinctrl/pinctrl-stmfx.c | 14 --------------
+ 1 file changed, 14 deletions(-)
+
+diff --git a/drivers/pinctrl/pinctrl-stmfx.c b/drivers/pinctrl/pinctrl-stmfx.c
+index 564660028fcc..ccdf0bb21414 100644
+--- a/drivers/pinctrl/pinctrl-stmfx.c
++++ b/drivers/pinctrl/pinctrl-stmfx.c
+@@ -585,19 +585,6 @@ static int stmfx_pinctrl_gpio_function_enable(struct stmfx_pinctrl *pctl)
+ 	return stmfx_function_enable(pctl->stmfx, func);
+ }
+ 
+-static int stmfx_pinctrl_gpio_init_valid_mask(struct gpio_chip *gc,
+-					      unsigned long *valid_mask,
+-					      unsigned int ngpios)
+-{
+-	struct stmfx_pinctrl *pctl = gpiochip_get_data(gc);
+-	u32 n;
+-
+-	for_each_clear_bit(n, &pctl->gpio_valid_mask, ngpios)
+-		clear_bit(n, valid_mask);
+-
+-	return 0;
+-}
+-
+ static int stmfx_pinctrl_probe(struct platform_device *pdev)
+ {
+ 	struct stmfx *stmfx = dev_get_drvdata(pdev->dev.parent);
+@@ -660,7 +647,6 @@ static int stmfx_pinctrl_probe(struct platform_device *pdev)
+ 	pctl->gpio_chip.ngpio = pctl->pctl_desc.npins;
+ 	pctl->gpio_chip.can_sleep = true;
+ 	pctl->gpio_chip.of_node = np;
+-	pctl->gpio_chip.init_valid_mask = stmfx_pinctrl_gpio_init_valid_mask;
+ 
+ 	ret = devm_gpiochip_add_data(pctl->dev, &pctl->gpio_chip, pctl);
+ 	if (ret) {
+-- 
+2.17.1
+
