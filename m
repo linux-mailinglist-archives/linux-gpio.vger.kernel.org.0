@@ -2,538 +2,192 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id B7067EDD94
-	for <lists+linux-gpio@lfdr.de>; Mon,  4 Nov 2019 12:18:28 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 43165EDDF6
+	for <lists+linux-gpio@lfdr.de>; Mon,  4 Nov 2019 12:48:47 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728592AbfKDLS1 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 4 Nov 2019 06:18:27 -0500
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:43784 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728554AbfKDLS1 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 4 Nov 2019 06:18:27 -0500
-Received: by mail-wr1-f67.google.com with SMTP id n1so16583045wra.10
-        for <linux-gpio@vger.kernel.org>; Mon, 04 Nov 2019 03:18:24 -0800 (PST)
+        id S1728559AbfKDLsq (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 4 Nov 2019 06:48:46 -0500
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:35966 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727236AbfKDLsq (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 4 Nov 2019 06:48:46 -0500
+Received: by mail-oi1-f195.google.com with SMTP id j7so13818121oib.3
+        for <linux-gpio@vger.kernel.org>; Mon, 04 Nov 2019 03:48:44 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernelci-org.20150623.gappssmtp.com; s=20150623;
-        h=message-id:date:mime-version:content-transfer-encoding:subject:to
-         :from:cc;
-        bh=BRdfAqaLn4mHiW3qecrruhnWiILMaGe15z98wtjP6nM=;
-        b=Z0bChFyDOVkbOozXphlVlXwcMpm5rj82OA4rz/R4Kk0dv3elU+x9VdvmBDbSo5WHQC
-         gzk1KIAX4a3+4Gu6M9T0E1Zn63IbaoyIlnxn2RU1Q/qhp5j7sZBf5xsuqC3U4wsQZMJD
-         LPhioXaUc9EwVy3EpLl21vLArIhtJT2QtEIZCY2SLKvoCcsma5tP8CxPMYg68wFb75mC
-         DuVJ6Qmn9WFMwVLYCeeOGjfFgSERTYDg3XwHbEirdmKG55XW/CBC8XQvl5P88w/stG2Q
-         sHRaOII9g/rB8HQTm9UQAXA//tvHVXt/6HZg17OJOL4BsB/lT/tT7M9d3tJMRgEGfORP
-         zRLA==
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=O8ZmDZKkoASAsh4aV2Ytwhz0285X4104BbaGTgC+HiQ=;
+        b=Zz9f8vNAi50d6GVSXiIPOMVXr/QT/LNkdBudBNO0Vd5hoOZAJBeXutMZS8fS79a85m
+         NlDAqxwPeWmRO+6zGWrJKV7xz6jMwWqLUTNfYeGDwYL41BEqZLsIXzUVBpUCa+4w2LLZ
+         eXtRSpPetpO1Mf6MGKk2pip2OXnzrB9sPwfkAclxEzpiANIDepF+mdQXmrF0HBCox/tk
+         hYgDk7V80g9fdjpFwnUyJjG9yFB5z81ZDHUyl9nZ7RhH22/Mqb65bRyorkZ5BGKtXU5x
+         WeiAX7Yj0ov9LYZrOOxTDNsjpx4K+0x2miT8LcuMfgvuz4LyAcaTav9YqW0JXkAZGI0b
+         k+nA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:date:mime-version
-         :content-transfer-encoding:subject:to:from:cc;
-        bh=BRdfAqaLn4mHiW3qecrruhnWiILMaGe15z98wtjP6nM=;
-        b=cvQuHkKo5py8M+1nQi+ysmqMCGC9F11pvcAX46naLYB5xf23QGhb20RhdIS82nbrU8
-         JRRTzwR40IFo3WW7v67JLTMKT1ZxHTRqpWydJJbVx8Ec/fDeY1wdK50R4JjmARuNY3aK
-         yis2dNJqF7a5Y5/uugRWWNPaLN4lNvy3YGGo59UG8Mia8oN0yr3H8fTHT5SZtXoe8Dj8
-         /2RMYGQme7xFYIpnponhSmOqF2ZEFnJPRDxOWQiSPkGrMxePMXvigTEVyfiHsO4x0bzX
-         fd6xv2DYkme5YL5vi7OgOu2iiolVKm78ivBELHMbWr3osEPLsCzP8PQ+fOqvWwlHmTbq
-         +lYA==
-X-Gm-Message-State: APjAAAWMtH/hCwKpZzF2MCEy6N8REHwM8avsXceQu3VfzBbLt/mh9QAq
-        3rhoP/3gL5h6lMNfFIY+P5q5+A==
-X-Google-Smtp-Source: APXvYqwp6lQQkelPghpxUVZWkV+kNb5UvEGQzLAXjRI7F+yb44I1LwEPeVmHfJlw4QsxJNzjYBs6Wg==
-X-Received: by 2002:adf:b1d1:: with SMTP id r17mr22505321wra.201.1572866303723;
-        Mon, 04 Nov 2019 03:18:23 -0800 (PST)
-Received: from [148.251.42.114] ([2a01:4f8:201:9271::2])
-        by smtp.gmail.com with ESMTPSA id h17sm16414214wmb.33.2019.11.04.03.18.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 04 Nov 2019 03:18:23 -0800 (PST)
-Message-ID: <5dc008ff.1c69fb81.2664d.ab38@mx.google.com>
-Date:   Mon, 04 Nov 2019 03:18:23 -0800 (PST)
-Content-Type: text/plain; charset="utf-8"
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=O8ZmDZKkoASAsh4aV2Ytwhz0285X4104BbaGTgC+HiQ=;
+        b=ZfYn9VRi5oSjWl6Sk45r5IcXriOJ7vCGQes06JvgU8pZUdkmz5cK9cZWB+GEuaM04t
+         1SxXyDH8i15nGAxbX0SvdPag//o5buPfTw0DeM/Xilv27cF13oRXNnaZLXfR2vujaisE
+         vMI21k9Hady33LHXTJkqiRWu4AN2gElkJEgCGf9o8yvEaDLOKUvdg/BzzHsPzXIzEpcQ
+         qRhbwpZxppt7xlRNrIJsiLsk9eMGgDOLaxBVTqyiYHY2u/Gaa8qfIATLOUpzq9N3NZzj
+         d0Z0jU2yffmatxQ1pXJZdk6w79r4xQQjxW+zarK+QRoLdXr3wZmfFVI5FVh6GHrFxByp
+         uAbA==
+X-Gm-Message-State: APjAAAU/pE8CPkCXSCqc1c6N2afEeerwNt/kk7JhDgdjlx9jRdSCLuNH
+        es8rVkhFHCirzrhm1k5/dx72lLQaxDOJQfS7fTMkzA==
+X-Google-Smtp-Source: APXvYqxDo6Bm6v8gSamZ/GUoFEomlfON3V8u04JSbiUJykhpwUvSF+WbrWffFNoQru8j5BRCnekFzmBdq0+VKDl73FE=
+X-Received: by 2002:aca:d904:: with SMTP id q4mr12246946oig.21.1572868124240;
+ Mon, 04 Nov 2019 03:48:44 -0800 (PST)
 MIME-Version: 1.0
+References: <20191028073713.25664-1-warthog618@gmail.com> <CAMpxmJUO3O05d6ZQijF4+1OCf5E7oeYOPVMZCmOXBV9-VJz5jw@mail.gmail.com>
+ <CACRpkdayzONkSnHr+C7e2NVrDP7_Di+PTK6MtM0Kx_Mte+=2Cg@mail.gmail.com>
+ <20191104010736.GA9134@sol> <CAMpxmJUim4SV43McHR2X0Ukc2_zZrdj=cZPvAaETyp4kSObCSA@mail.gmail.com>
+ <20191104111148.GA3648@firefly>
+In-Reply-To: <20191104111148.GA3648@firefly>
+From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Date:   Mon, 4 Nov 2019 12:48:33 +0100
+Message-ID: <CAMpxmJWqsZxK-C7UYz_PbgFA=bNVz6xvbCXEoxgbVZQ7znk86w@mail.gmail.com>
+Subject: Re: [PATCH v4 0/5] gpio: expose line bias flags to userspace
+To:     Kent Gibson <warthog618@gmail.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        linux-gpio <linux-gpio@vger.kernel.org>,
+        Bamvor Jian Zhang <bamv2005@gmail.com>,
+        Drew Fustini <drew@pdp7.com>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-X-Kernelci-Branch: for-next
-X-Kernelci-Lab-Name: lab-baylibre
-X-Kernelci-Tree: linusw
-X-Kernelci-Report-Type: bisect
-X-Kernelci-Kernel: v5.4-rc4-37-g1723e834a4aa
-Subject: linusw/for-next boot bisection: v5.4-rc4-37-g1723e834a4aa on
- meson-g12b-odroid-n2
-To:     Linus Walleij <linus.walleij@linaro.org>,
-        tomeu.vizoso@collabora.com, guillaume.tucker@collabora.com,
-        mgalka@collabora.com, broonie@kernel.org, matthew.hart@linaro.org,
-        Scott Branden <scott.branden@broadcom.com>,
-        khilman@baylibre.com, enric.balletbo@collabora.com,
-        Chris Packham <chris.packham@alliedtelesis.co.nz>
-From:   "kernelci.org bot" <bot@kernelci.org>
-Cc:     Scott Branden <sbranden@broadcom.com>,
-        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-        bcm-kernel-feedback-list@broadcom.com,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Ray Jui <rjui@broadcom.com>,
-        linux-arm-kernel@lists.infradead.org
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-* This automated bisection report was sent to you on the basis  *
-* that you may be involved with the breaking commit it has      *
-* found.  No manual investigation has been done to verify it,   *
-* and the root cause of the problem may be somewhere else.      *
-*                                                               *
-* If you do send a fix, please include this trailer:            *
-*   Reported-by: "kernelci.org bot" <bot@kernelci.org>          *
-*                                                               *
-* Hope this helps!                                              *
-* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+pon., 4 lis 2019 o 12:12 Kent Gibson <warthog618@gmail.com> napisa=C5=82(a)=
+:
+>
+> On Mon, Nov 04, 2019 at 11:14:56AM +0100, Bartosz Golaszewski wrote:
+> > pon., 4 lis 2019 o 02:07 Kent Gibson <warthog618@gmail.com> napisa=C5=
+=82(a):
+> > >
+> > > On Mon, Nov 04, 2019 at 01:26:54AM +0100, Linus Walleij wrote:
+> > > > On Thu, Oct 31, 2019 at 8:10 AM Bartosz Golaszewski
+> > > > <bgolaszewski@baylibre.com> wrote:
+> > > >
+> > > > > [Kent]
+> > > > > > This series adds gross control of pull-up/pull-down to the GPIO=
+ uAPI.
+> > > > > > Gross control means enabling and disabling of bias functionalit=
+y,
+> > > > > > not finer grained control such as setting biasing impedances.
+> > > >
+> > > > Right, excellent and persistent work here, much appreciated!
+> > > >
+> > >
+> > > No problem - hopefully I haven't irritated too many people in the pro=
+cess.
+> > >
+> > > > As long as I get Bartosz's blanket ACK on v5 I think it is ready
+> > > > to merge. His consent is required for this.
+> > > >
+> > >
+> > > I'm still waiting on open questions from v4 before submitting v5:
+> > >
+> > > One, handling of errors when setting bias, Bart has referred to Thoma=
+s,
+> > > so waiting for feedback on that.
+> > >
+> >
+> > If we can get it merged for v5.5, then I don't want to block it
+> > waiting for answers. Looking at the code I think we should only ignore
+> > the EOPNOTSUPP error and propagate all other codes. Can you add a
+> > patch changing that and then fix the other nits I pointed out? Also:
+> > please Cc Thomas Petazzoni so that he gets the chance to yell at us if
+> > it breaks something.
+> >
+>
+> Will do.
+>
+> > > The other, where gpio_set_bias is hooked into gpiod_direction_output,
+> > > is fine as is for the UAPI - it can always be relocated subsequently =
+if
+> > > other APIs need to set bias.  On the other hand, if decoupling settin=
+g
+> > > direction and bias is in order then that really should be done now.
+> > > Can I get an an ACK on that either way?
+> > >
+> >
+> > This is in line with what you did for input. I don't think it should
+> > be decoupled (any particular reason for that? There is none mentioned
+> > in the cover letter), so I propose to leave it as it is in patch 5/5.
+> >
+>
+> Wrt decoupling, I was thinking of both input and output, not just output,
+> though it was the output that got me onto that line of thought as
+> gpiod_direction_output sets bias, but gpiod_direction_output_raw doesn't.
+> That seemed totally arbitrary.
+>
+> That lead to thinking that the gpiod_direction_output (and _input) is now
+> doing more than implied by the name, and by the documentation for that
+> matter.  So perhaps it should be split out and promote gpio_set_bias to
+> gpiod_set_bias?  Anyway, that was the line of thought.
+> The problem there being some callers of gpiod_direction_input already
+> expect it to set bias, at least on a best effort basis, and they would
+> have to be updated to call gpiod_set_bias.
+>
 
-linusw/for-next boot bisection: v5.4-rc4-37-g1723e834a4aa on meson-g12b-odr=
-oid-n2
+I see. I think that in this case, the _raw variants should stay as
+simple as possible (hence the name) while the bias *should* be set in
+the regular gpiod_direction_intput()/output(). For now I don't think
+we need an exported gpiod_set_bias(), but if someone should request it
+in the future it will be straightforward to add.
 
-Summary:
-  Start:      1723e834a4aa Merge branch 'devel' into for-next
-  Details:    https://kernelci.org/boot/id/5dbfeed759b5144db1138e01
-  Plain log:  https://storage.kernelci.org//linusw/for-next/v5.4-rc4-37-g17=
-23e834a4aa/arm64/defconfig/gcc-8/lab-baylibre/boot-meson-g12b-odroid-n2.txt
-  HTML log:   https://storage.kernelci.org//linusw/for-next/v5.4-rc4-37-g17=
-23e834a4aa/arm64/defconfig/gcc-8/lab-baylibre/boot-meson-g12b-odroid-n2.html
-  Result:     6a41b6c5fc20 gpio: Add xgs-iproc driver
+> Maybe just update the documentation for exported functions that do set
+> bias?
 
-Checks:
-  revert:     PASS
-  verify:     PASS
+Sure, sounds good. You can even extend the doc to include other flags
+these functions handle.
 
-Parameters:
-  Tree:       linusw
-  URL:        https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-=
-gpio.git/
-  Branch:     for-next
-  Target:     meson-g12b-odroid-n2
-  CPU arch:   arm64
-  Lab:        lab-baylibre
-  Compiler:   gcc-8
-  Config:     defconfig
-  Test suite: boot
+>
+> > One more thing - since we all want this to make it for v5.5 - can you
+> > make the set config patches part of this series (simply bunch it all
+> > together)? This will make it easy to review and merge everything.
+> >
+>
+> May as well - I've got it all in the one branch anyway.
+>
+> > Thanks in advance and great job!
+>
+> I was about to start updating libgpiod to add set_config, after adding
+> the equivalent to my gpiod library (nearly finished writing the tests
+> for that), but I'll put all that on the back burner and get v5,
+> including in the set_config patches, out as soon as I can.
+>
 
-Breaking commit found:
+Let me know if you still want to do it and you'll have patches ready
+before v5.5 is released. Otherwise I can do it myself too if needed.
 
----------------------------------------------------------------------------=
-----
-commit 6a41b6c5fc20abced88fa0eed42ae5e5cb70b280
-Author: Chris Packham <chris.packham@alliedtelesis.co.nz>
-Date:   Fri Oct 25 09:27:03 2019 +1300
+Bart
 
-    gpio: Add xgs-iproc driver
-    =
-
-    This driver supports the Chip Common A GPIO controller present on a
-    number of Broadcom switch ASICs with integrated SoCs. The controller is
-    similar to the pinctrl-nsp-gpio and pinctrl-iproc-gpio blocks but
-    different enough that a separate driver is required.
-    =
-
-    This has been ported from Broadcom's XLDK 5.0.3 retaining only the CCA
-    support (pinctrl-iproc-gpio covers CCB).
-    =
-
-    Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
-    Link: https://lore.kernel.org/r/20191024202703.8017-3-chris.packham@all=
-iedtelesis.co.nz
-    Acked-by: Scott Branden <scott.branden@broadcom.com>
-    Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
-
-diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
-index 8ec1f041c98d..e9516393c971 100644
---- a/drivers/gpio/Kconfig
-+++ b/drivers/gpio/Kconfig
-@@ -155,6 +155,15 @@ config GPIO_BCM_KONA
- 	help
- 	  Turn on GPIO support for Broadcom "Kona" chips.
- =
-
-+config GPIO_BCM_XGS_IPROC
-+	tristate "BRCM XGS iProc GPIO support"
-+	depends on OF_GPIO && (ARCH_BCM_IPROC || COMPILE_TEST)
-+	select GPIO_GENERIC
-+	select GPIOLIB_IRQCHIP
-+	default ARCH_BCM_IPROC
-+	help
-+	  Say yes here to enable GPIO support for Broadcom XGS iProc SoCs.
-+
- config GPIO_BRCMSTB
- 	tristate "BRCMSTB GPIO support"
- 	default y if (ARCH_BRCMSTB || BMIPS_GENERIC)
-diff --git a/drivers/gpio/Makefile b/drivers/gpio/Makefile
-index 84e05701f500..34eb8b2b12dd 100644
---- a/drivers/gpio/Makefile
-+++ b/drivers/gpio/Makefile
-@@ -35,6 +35,7 @@ obj-$(CONFIG_GPIO_ASPEED)		+=3D gpio-aspeed.o
- obj-$(CONFIG_GPIO_ASPEED_SGPIO)		+=3D gpio-aspeed-sgpio.o
- obj-$(CONFIG_GPIO_ATH79)		+=3D gpio-ath79.o
- obj-$(CONFIG_GPIO_BCM_KONA)		+=3D gpio-bcm-kona.o
-+obj-$(CONFIG_GPIO_BCM_XGS_IPROC)	+=3D gpio-xgs-iproc.o
- obj-$(CONFIG_GPIO_BD70528)		+=3D gpio-bd70528.o
- obj-$(CONFIG_GPIO_BD9571MWV)		+=3D gpio-bd9571mwv.o
- obj-$(CONFIG_GPIO_BRCMSTB)		+=3D gpio-brcmstb.o
-diff --git a/drivers/gpio/gpio-xgs-iproc.c b/drivers/gpio/gpio-xgs-iproc.c
-new file mode 100644
-index 000000000000..a3fdd95cc9e6
---- /dev/null
-+++ b/drivers/gpio/gpio-xgs-iproc.c
-@@ -0,0 +1,321 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Copyright (C) 2017 Broadcom
-+ */
-+
-+#include <linux/gpio/driver.h>
-+#include <linux/init.h>
-+#include <linux/interrupt.h>
-+#include <linux/io.h>
-+#include <linux/irq.h>
-+#include <linux/kernel.h>
-+#include <linux/module.h>
-+#include <linux/platform_device.h>
-+#include <linux/spinlock.h>
-+
-+#define IPROC_CCA_INT_F_GPIOINT		BIT(0)
-+#define IPROC_CCA_INT_STS		0x20
-+#define IPROC_CCA_INT_MASK		0x24
-+
-+#define IPROC_GPIO_CCA_DIN		0x0
-+#define IPROC_GPIO_CCA_DOUT		0x4
-+#define IPROC_GPIO_CCA_OUT_EN		0x8
-+#define IPROC_GPIO_CCA_INT_LEVEL	0x10
-+#define IPROC_GPIO_CCA_INT_LEVEL_MASK	0x14
-+#define IPROC_GPIO_CCA_INT_EVENT	0x18
-+#define IPROC_GPIO_CCA_INT_EVENT_MASK	0x1C
-+#define IPROC_GPIO_CCA_INT_EDGE		0x24
-+
-+struct iproc_gpio_chip {
-+	struct irq_chip irqchip;
-+	struct gpio_chip gc;
-+	spinlock_t lock;
-+	struct device *dev;
-+	void __iomem *base;
-+	void __iomem *intr;
-+};
-+
-+static inline struct iproc_gpio_chip *
-+to_iproc_gpio(struct gpio_chip *gc)
-+{
-+	return container_of(gc, struct iproc_gpio_chip, gc);
-+}
-+
-+static void iproc_gpio_irq_ack(struct irq_data *d)
-+{
-+	struct gpio_chip *gc =3D irq_data_get_irq_chip_data(d);
-+	struct iproc_gpio_chip *chip =3D to_iproc_gpio(gc);
-+	int pin =3D d->hwirq;
-+	unsigned long flags;
-+	u32 irq =3D d->irq;
-+	u32 irq_type, event_status =3D 0;
-+
-+	spin_lock_irqsave(&chip->lock, flags);
-+	irq_type =3D irq_get_trigger_type(irq);
-+	if (irq_type & IRQ_TYPE_EDGE_BOTH) {
-+		event_status |=3D BIT(pin);
-+		writel_relaxed(event_status,
-+			       chip->base + IPROC_GPIO_CCA_INT_EVENT);
-+	}
-+	spin_unlock_irqrestore(&chip->lock, flags);
-+}
-+
-+static void iproc_gpio_irq_unmask(struct irq_data *d)
-+{
-+	struct gpio_chip *gc =3D irq_data_get_irq_chip_data(d);
-+	struct iproc_gpio_chip *chip =3D to_iproc_gpio(gc);
-+	int pin =3D d->hwirq;
-+	unsigned long flags;
-+	u32 irq =3D d->irq;
-+	u32 int_mask, irq_type, event_mask;
-+
-+	spin_lock_irqsave(&chip->lock, flags);
-+	irq_type =3D irq_get_trigger_type(irq);
-+	event_mask =3D readl_relaxed(chip->base + IPROC_GPIO_CCA_INT_EVENT_MASK);
-+	int_mask =3D readl_relaxed(chip->base + IPROC_GPIO_CCA_INT_LEVEL_MASK);
-+
-+	if (irq_type & IRQ_TYPE_EDGE_BOTH) {
-+		event_mask |=3D 1 << pin;
-+		writel_relaxed(event_mask,
-+			       chip->base + IPROC_GPIO_CCA_INT_EVENT_MASK);
-+	} else {
-+		int_mask |=3D 1 << pin;
-+		writel_relaxed(int_mask,
-+			       chip->base + IPROC_GPIO_CCA_INT_LEVEL_MASK);
-+	}
-+	spin_unlock_irqrestore(&chip->lock, flags);
-+}
-+
-+static void iproc_gpio_irq_mask(struct irq_data *d)
-+{
-+	struct gpio_chip *gc =3D irq_data_get_irq_chip_data(d);
-+	struct iproc_gpio_chip *chip =3D to_iproc_gpio(gc);
-+	int pin =3D d->hwirq;
-+	unsigned long flags;
-+	u32 irq =3D d->irq;
-+	u32 irq_type, int_mask, event_mask;
-+
-+	spin_lock_irqsave(&chip->lock, flags);
-+	irq_type =3D irq_get_trigger_type(irq);
-+	event_mask =3D readl_relaxed(chip->base + IPROC_GPIO_CCA_INT_EVENT_MASK);
-+	int_mask =3D readl_relaxed(chip->base + IPROC_GPIO_CCA_INT_LEVEL_MASK);
-+
-+	if (irq_type & IRQ_TYPE_EDGE_BOTH) {
-+		event_mask &=3D ~BIT(pin);
-+		writel_relaxed(event_mask,
-+			       chip->base + IPROC_GPIO_CCA_INT_EVENT_MASK);
-+	} else {
-+		int_mask &=3D ~BIT(pin);
-+		writel_relaxed(int_mask,
-+			       chip->base + IPROC_GPIO_CCA_INT_LEVEL_MASK);
-+	}
-+	spin_unlock_irqrestore(&chip->lock, flags);
-+}
-+
-+static int iproc_gpio_irq_set_type(struct irq_data *d, u32 type)
-+{
-+	struct gpio_chip *gc =3D irq_data_get_irq_chip_data(d);
-+	struct iproc_gpio_chip *chip =3D to_iproc_gpio(gc);
-+	int pin =3D d->hwirq;
-+	unsigned long flags;
-+	u32 irq =3D d->irq;
-+	u32 event_pol, int_pol;
-+	int ret =3D 0;
-+
-+	spin_lock_irqsave(&chip->lock, flags);
-+	switch (type & IRQ_TYPE_SENSE_MASK) {
-+	case IRQ_TYPE_EDGE_RISING:
-+		event_pol =3D readl_relaxed(chip->base + IPROC_GPIO_CCA_INT_EDGE);
-+		event_pol &=3D ~BIT(pin);
-+		writel_relaxed(event_pol, chip->base + IPROC_GPIO_CCA_INT_EDGE);
-+		break;
-+	case IRQ_TYPE_EDGE_FALLING:
-+		event_pol =3D readl_relaxed(chip->base + IPROC_GPIO_CCA_INT_EDGE);
-+		event_pol |=3D BIT(pin);
-+		writel_relaxed(event_pol, chip->base + IPROC_GPIO_CCA_INT_EDGE);
-+		break;
-+	case IRQ_TYPE_LEVEL_HIGH:
-+		int_pol =3D readl_relaxed(chip->base + IPROC_GPIO_CCA_INT_LEVEL);
-+		int_pol &=3D ~BIT(pin);
-+		writel_relaxed(int_pol, chip->base + IPROC_GPIO_CCA_INT_LEVEL);
-+		break;
-+	case IRQ_TYPE_LEVEL_LOW:
-+		int_pol =3D readl_relaxed(chip->base + IPROC_GPIO_CCA_INT_LEVEL);
-+		int_pol |=3D BIT(pin);
-+		writel_relaxed(int_pol, chip->base + IPROC_GPIO_CCA_INT_LEVEL);
-+		break;
-+	default:
-+		/* should not come here */
-+		ret =3D -EINVAL;
-+		goto out_unlock;
-+	}
-+
-+	if (type & IRQ_TYPE_LEVEL_MASK)
-+		irq_set_handler_locked(irq_get_irq_data(irq), handle_level_irq);
-+	else if (type & IRQ_TYPE_EDGE_BOTH)
-+		irq_set_handler_locked(irq_get_irq_data(irq), handle_edge_irq);
-+
-+out_unlock:
-+	spin_unlock_irqrestore(&chip->lock, flags);
-+
-+	return ret;
-+}
-+
-+static irqreturn_t iproc_gpio_irq_handler(int irq, void *data)
-+{
-+	struct gpio_chip *gc =3D (struct gpio_chip *)data;
-+	struct iproc_gpio_chip *chip =3D to_iproc_gpio(gc);
-+	int bit;
-+	unsigned long int_bits =3D 0;
-+	u32 int_status;
-+
-+	/* go through the entire GPIOs and handle all interrupts */
-+	int_status =3D readl_relaxed(chip->intr + IPROC_CCA_INT_STS);
-+	if (int_status & IPROC_CCA_INT_F_GPIOINT) {
-+		u32 event, level;
-+
-+		/* Get level and edge interrupts */
-+		event =3D
-+		    readl_relaxed(chip->base + IPROC_GPIO_CCA_INT_EVENT_MASK);
-+		event &=3D readl_relaxed(chip->base + IPROC_GPIO_CCA_INT_EVENT);
-+		level =3D readl_relaxed(chip->base + IPROC_GPIO_CCA_DIN);
-+		level ^=3D readl_relaxed(chip->base + IPROC_GPIO_CCA_INT_LEVEL);
-+		level &=3D
-+		    readl_relaxed(chip->base + IPROC_GPIO_CCA_INT_LEVEL_MASK);
-+		int_bits =3D level | event;
-+
-+		for_each_set_bit(bit, &int_bits, gc->ngpio)
-+			generic_handle_irq(irq_linear_revmap(gc->irq.domain, bit));
-+	}
-+
-+	return int_bits ? IRQ_HANDLED : IRQ_NONE;
-+}
-+
-+static int iproc_gpio_probe(struct platform_device *pdev)
-+{
-+	struct device *dev =3D &pdev->dev;
-+	struct device_node *dn =3D pdev->dev.of_node;
-+	struct iproc_gpio_chip *chip;
-+	u32 num_gpios;
-+	int irq, ret;
-+
-+	chip =3D devm_kzalloc(dev, sizeof(*chip), GFP_KERNEL);
-+	if (!chip)
-+		return -ENOMEM;
-+
-+	chip->dev =3D dev;
-+	platform_set_drvdata(pdev, chip);
-+	spin_lock_init(&chip->lock);
-+
-+	chip->base =3D devm_platform_ioremap_resource(pdev, 0);
-+	if (IS_ERR(chip->base))
-+		return PTR_ERR(chip->base);
-+
-+	ret =3D bgpio_init(&chip->gc, dev, 4,
-+			 chip->base + IPROC_GPIO_CCA_DIN,
-+			 chip->base + IPROC_GPIO_CCA_DOUT,
-+			 NULL,
-+			 chip->base + IPROC_GPIO_CCA_OUT_EN,
-+			 NULL,
-+			 0);
-+	if (ret) {
-+		dev_err(dev, "unable to init GPIO chip\n");
-+		return ret;
-+	}
-+
-+	chip->gc.label =3D dev_name(dev);
-+	if (of_property_read_u32(dn, "ngpios", &num_gpios))
-+		chip->gc.ngpio =3D num_gpios;
-+
-+	irq =3D platform_get_irq(pdev, 0);
-+	if (irq > 0) {
-+		struct gpio_irq_chip *girq;
-+		struct irq_chip *irqc;
-+		u32 val;
-+
-+		irqc =3D &chip->irqchip;
-+		irqc->name =3D dev_name(dev);
-+		irqc->irq_ack =3D iproc_gpio_irq_ack;
-+		irqc->irq_mask =3D iproc_gpio_irq_mask;
-+		irqc->irq_unmask =3D iproc_gpio_irq_unmask;
-+		irqc->irq_set_type =3D iproc_gpio_irq_set_type;
-+
-+		chip->intr =3D devm_platform_ioremap_resource(pdev, 1);
-+		if (IS_ERR(chip->intr))
-+			return PTR_ERR(chip->intr);
-+
-+		/* Enable GPIO interrupts for CCA GPIO */
-+		val =3D readl_relaxed(chip->intr + IPROC_CCA_INT_MASK);
-+		val |=3D IPROC_CCA_INT_F_GPIOINT;
-+		writel_relaxed(val, chip->intr + IPROC_CCA_INT_MASK);
-+
-+		/*
-+		 * Directly request the irq here instead of passing
-+		 * a flow-handler to gpiochip_set_chained_irqchip,
-+		 * because the irq is shared.
-+		 */
-+		ret =3D devm_request_irq(dev, irq, iproc_gpio_irq_handler,
-+				       IRQF_SHARED, chip->gc.label, &chip->gc);
-+		if (ret) {
-+			dev_err(dev, "Fail to request IRQ%d: %d\n", irq, ret);
-+			return ret;
-+		}
-+
-+		girq =3D &chip->gc.irq;
-+		girq->chip =3D irqc;
-+		/* This will let us handle the parent IRQ in the driver */
-+		girq->parent_handler =3D NULL;
-+		girq->num_parents =3D 0;
-+		girq->parents =3D NULL;
-+		girq->default_type =3D IRQ_TYPE_NONE;
-+		girq->handler =3D handle_simple_irq;
-+	}
-+
-+	ret =3D devm_gpiochip_add_data(dev, &chip->gc, chip);
-+	if (ret) {
-+		dev_err(dev, "unable to add GPIO chip\n");
-+		return ret;
-+	}
-+
-+	return 0;
-+}
-+
-+static int __exit iproc_gpio_remove(struct platform_device *pdev)
-+{
-+	struct iproc_gpio_chip *chip;
-+
-+	chip =3D platform_get_drvdata(pdev);
-+	if (!chip)
-+		return -ENODEV;
-+
-+	if (chip->intr) {
-+		u32 val;
-+
-+		val =3D readl_relaxed(chip->intr + IPROC_CCA_INT_MASK);
-+		val &=3D ~IPROC_CCA_INT_F_GPIOINT;
-+		writel_relaxed(val, chip->intr + IPROC_CCA_INT_MASK);
-+	}
-+
-+	return 0;
-+}
-+
-+static const struct of_device_id bcm_iproc_gpio_of_match[] __initconst =3D=
- {
-+	{ .compatible =3D "brcm,iproc-gpio-cca" },
-+	{}
-+};
-+MODULE_DEVICE_TABLE(of, bcm_iproc_gpio_of_match);
-+
-+static struct platform_driver bcm_iproc_gpio_driver =3D {
-+	.driver =3D {
-+		.name =3D "iproc-xgs-gpio",
-+		.owner =3D THIS_MODULE,
-+		.of_match_table =3D bcm_iproc_gpio_of_match,
-+	},
-+	.probe =3D iproc_gpio_probe,
-+	.remove =3D iproc_gpio_remove,
-+};
-+
-+module_platform_driver(bcm_iproc_gpio_driver);
-+
-+MODULE_DESCRIPTION("XGS IPROC GPIO driver");
-+MODULE_LICENSE("GPL v2");
----------------------------------------------------------------------------=
-----
-
-
-Git bisection log:
-
----------------------------------------------------------------------------=
-----
-git bisect start
-# good: [7d194c2100ad2a6dded545887d02754948ca5241] Linux 5.4-rc4
-git bisect good 7d194c2100ad2a6dded545887d02754948ca5241
-# bad: [1723e834a4aafd9a73ba6eb61aed6b092acfde73] Merge branch 'devel' into=
- for-next
-git bisect bad 1723e834a4aafd9a73ba6eb61aed6b092acfde73
-# good: [698b8eeaed7287970fc2b6d322618850fd1b1e6c] gpio/mpc8xxx: change irq=
- handler from chained to normal
-git bisect good 698b8eeaed7287970fc2b6d322618850fd1b1e6c
-# good: [228fc01040704f55fd884ab41daf3eafd2644b54] gpio: of: don't warn if =
-ignored GPIO flag matches the behavior
-git bisect good 228fc01040704f55fd884ab41daf3eafd2644b54
-# good: [1dfc462a54386d8467ff427ef900f553e2e470e3] dt-bindings: gpio: brcm:=
- Add bindings for xgs-iproc
-git bisect good 1dfc462a54386d8467ff427ef900f553e2e470e3
-# good: [806766af3909258ccab74265e33ce8afd21af952] Revert "gpio: merrifield=
-: Move hardware initialization to callback"
-git bisect good 806766af3909258ccab74265e33ce8afd21af952
-# good: [1173c3c28abfc3d7b7665db502280ba9322320e6] Revert "gpio: merrifield=
-: Pass irqchip when adding gpiochip"
-git bisect good 1173c3c28abfc3d7b7665db502280ba9322320e6
-# bad: [6a41b6c5fc20abced88fa0eed42ae5e5cb70b280] gpio: Add xgs-iproc driver
-git bisect bad 6a41b6c5fc20abced88fa0eed42ae5e5cb70b280
-# first bad commit: [6a41b6c5fc20abced88fa0eed42ae5e5cb70b280] gpio: Add xg=
-s-iproc driver
----------------------------------------------------------------------------=
-----
+> Cheers,
+> Kent.
+>
+> > Bartosz
+> >
+> > > I've also made a couple of minor changes myself while reviewing v4 -
+> > > reordering the patches to group the gpiolib.c ones and leaving the
+> > > gpio-mockup til last, and removing the "bias requires input mode" che=
+ck
+> > > from lineevent_create as the line is assumed to be input for events
+> > > regardless of the input flag - there is no such thing as as-is for
+> > > event requests.
+> > > Only mentioning here in case such changes are clearly wrong...
+> > >
+> > > Cheers,
+> > > Kent.
+> > >
+> > > > It looks pretty much as I imagined it when I discussed it with
+> > > > Drew some while back, with some gritty details fixed up.
+> > > >
+> > > > Yours,
+> > > > Linus Walleij
