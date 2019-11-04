@@ -2,77 +2,138 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 097F8EE336
-	for <lists+linux-gpio@lfdr.de>; Mon,  4 Nov 2019 16:10:49 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id F26B0EE33B
+	for <lists+linux-gpio@lfdr.de>; Mon,  4 Nov 2019 16:11:07 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727861AbfKDPKk (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 4 Nov 2019 10:10:40 -0500
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:41876 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728507AbfKDPKk (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 4 Nov 2019 10:10:40 -0500
-Received: by mail-lj1-f194.google.com with SMTP id m9so17986772ljh.8
-        for <linux-gpio@vger.kernel.org>; Mon, 04 Nov 2019 07:10:38 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Lkzso/KNS4hPCWEFFoEdJwSnP6JYaHS9kqjVc2qBLSg=;
-        b=SMvGj4rLv4lmHgh6tBdDDlAO4lvw7wMFUoDufFyH+ziZ0UeHgeQPQJbGZci20EcAHt
-         PPpaNu/TBpGR9j1QGJ4hWhCdObjhVAC+gZusQ0wywmtqTPaD4ddufGoinKU8XZqJxruA
-         Y/LjPWwzOQGpeuqnzhJX32rH186w4wZITKVSTBD+vYjx0mh7EmLvpMKdwNmHXeEFXr6f
-         FaBCNSm1Qnpm/Mnu9y00UeWyS6LGG7gW47pvDHqCAu1XKV3xjFsvF/EUS2weJGW7uT8F
-         Md7syfTnNQYkDbOvm0/F5ub5XxdmHsxoslJh8UfeXy1hN07IxgesCiCMgpOUHQdcbFcZ
-         TYnQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Lkzso/KNS4hPCWEFFoEdJwSnP6JYaHS9kqjVc2qBLSg=;
-        b=imoMvVGpN1DCQnxKUBPEQSp6VsCbAxH4+A7ZXNVqMnnXNBLoWGcKCBoJCUDAKs29iT
-         8Gfnyz8SrIDXeIabuDD8/LNwkGySQvg6LijEiGhXS/I+WRJbM2U2xqgabHUgdL2HL3CS
-         Pt8exDzV1XeUZjl1OGiQODIjMknn1yN4JRWEHjdhPPQT0R2y1y2fFqKOlGMOWmX8eY/T
-         2IACU3l/6GApOi5R/KuHznTDIT0vlAfaCbtBx0X3J/YoJjWXOyOzrsL8QP2NAyYe4/Lx
-         wzaFXjcINIKvgpmWqEbQvMsyXBH66rPSTs+eQuTDNIZq13YBMl4RlzOXGM5polKc9ViV
-         DQNw==
-X-Gm-Message-State: APjAAAXU9crA0jxNxKzoHha+Z6MmuwvGA0GNeVt80uL7hPyyF1kjv7tq
-        F43mvF2PXXBEhlouVaQ6pzy2c46Ln4dBdvQsclqltcU4PeQ=
-X-Google-Smtp-Source: APXvYqxZtILYkVZBV9bycwH3O8sWpn9j3Ct4pCpd4ecnL+1Hju1pNe6Oca2Ie8ZfAXakNm8baLEjMec9iW9V7cbVpvk=
-X-Received: by 2002:a2e:5c46:: with SMTP id q67mr18480680ljb.42.1572880237929;
- Mon, 04 Nov 2019 07:10:37 -0800 (PST)
-MIME-Version: 1.0
-References: <20191024122224.11776-1-geert+renesas@glider.be> <20191024122224.11776-2-geert+renesas@glider.be>
-In-Reply-To: <20191024122224.11776-2-geert+renesas@glider.be>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Mon, 4 Nov 2019 16:10:25 +0100
-Message-ID: <CACRpkdZ5DB4fBDpkCG7NMrRohHcejj0EfjqN882c5wc+pahW2A@mail.gmail.com>
-Subject: Re: [PATCH v2 1/2] gpio: em: Use proper irq_chip name
-To:     Geert Uytterhoeven <geert+renesas@glider.be>
-Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Marc Zyngier <marc.zyngier@arm.com>,
+        id S1728178AbfKDPLH convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-gpio@lfdr.de>); Mon, 4 Nov 2019 10:11:07 -0500
+Received: from relay1-d.mail.gandi.net ([217.70.183.193]:56735 "EHLO
+        relay1-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727998AbfKDPLG (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 4 Nov 2019 10:11:06 -0500
+X-Originating-IP: 86.250.200.211
+Received: from xps13 (lfbn-1-17395-211.w86-250.abo.wanadoo.fr [86.250.200.211])
+        (Authenticated sender: miquel.raynal@bootlin.com)
+        by relay1-d.mail.gandi.net (Postfix) with ESMTPSA id 63294240015;
+        Mon,  4 Nov 2019 15:11:04 +0000 (UTC)
+Date:   Mon, 4 Nov 2019 16:11:03 +0100
+From:   Miquel Raynal <miquel.raynal@bootlin.com>
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Uwe =?UTF-8?B?S2xlaW5lLUvDtm5pZw==?= 
+        <u.kleine-koenig@pengutronix.de>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        linux-pwm@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+Subject: Re: [PATCH] gpio: pca953x: Add Maxim MAX7313 PWM support
+Message-ID: <20191104161103.64995b8a@xps13>
+In-Reply-To: <CAHp75VemkA7kap0O7=iACX4cD5_r6QXaLF6nS8R94ErStK0DwA@mail.gmail.com>
+References: <20191014124803.13661-1-miquel.raynal@bootlin.com>
+        <CAHp75Vc4vnNVKc+Q_TY8DpwV4rLZYGm2MvGBC7r67XjmtNoskQ@mail.gmail.com>
+        <20191015163055.0d8f44e5@xps13>
+        <CAHp75VemkA7kap0O7=iACX4cD5_r6QXaLF6nS8R94ErStK0DwA@mail.gmail.com>
+Organization: Bootlin
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Oct 24, 2019 at 2:22 PM Geert Uytterhoeven
-<geert+renesas@glider.be> wrote:
+Hi Linus,
 
-> The irq_chip .name field should contain the device's class name, not the
-> instance's name.
->
-> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> ---
-> Untested due to lack of hardware.
-> .parent_device not filled in as this driver doesn't use Runtime PM.
->
-> v2:
->   - No changes.
+Andy Shevchenko <andy.shevchenko@gmail.com> wrote on Tue, 15 Oct 2019
+17:55:33 +0300:
 
-Patch applied.
+> On Tue, Oct 15, 2019 at 5:30 PM Miquel Raynal <miquel.raynal@bootlin.com> wrote:
+> >
+> > Hi Andy,
+> >
+> > Thanks for the feedback.
+> >
+> > Andy Shevchenko <andy.shevchenko@gmail.com> wrote on Mon, 14 Oct 2019
+> > 20:59:01 +0300:
+> >  
+> > > On Mon, Oct 14, 2019 at 4:09 PM Miquel Raynal <miquel.raynal@bootlin.com> wrote:  
+> > > >
+> > > > The MAX7313 chip is fully compatible with the PCA9535 on its basic
+> > > > functions but can also manage the intensity on each of its ports with
+> > > > PWM. Each output is independent and may be tuned with 16 values (4
+> > > > bits per output). The period is always 32kHz, only the duty-cycle may
+> > > > be changed. One can use any output as GPIO or PWM.  
+> > >
+> > > Can we rather not contaminate driver with this?
+> > >
+> > > Just register a separate PWM driver and export its functionality to
+> > > GPIO, or other way around (in the latter case we actually have PCA8685
+> > > which provides a GPIO fgunctionality).
+> > >  
+> >
+> > I understand your concern but I am not sure to understand which
+> > solution you have in mind. In the former case, could you explain a bit
+> > more what you are thinking about? Would linking the PWM support with
+> > the GPIO driver (code would be located in another .c file) work for
+> > you? Or maybe you would prefer an MFD on top of the GPIO driver?
+> >
+> > As for the later case, I am not willing to re-implement GPIO support in
+> > an alternate driver for an already supported chip, it is too much work
+> > for the time I can spend on it.  
+> 
+> 
+> drivers/pwm/pwm-max7313.c:
+> 
+> probe(platform_device)
+> {
+>   struct regmap = pdata;
+>   ...
+> }
+> 
+> --- 8< --- 8< ---
+> drivers/gpio/gpio-pca953x.c:
+> 
+> probe()
+> {
+>   struct regmap rm;
+> ...
+>   if (dev_has_pwm)
+>    pca953x_register_pwm_driver(rm);
+> ...
+> }
+> 
+> In the above regmap may be replaced with some (shared) container.
+> 
+> Or other way around. PWM registers GPIO (which actually I prefer since
+> we have PCA9685 case where PWM provides GPIO functionality, though via
+> different means)
+> 
 
-Yours,
-Linus Walleij
+Can I have your input on this proposal?
+
+On one hand I agree that the GPIO driver is already quite big due to
+its genericity and the amount of controllers it supports, on the other
+hand:
+1/ Registering a PWM driver from the GPIO core seems strange. Maybe
+registering a platform device could do the trick but I am not convinced
+it is worth the trouble.
+2/ Putting the PWM logic in the drivers/pwm/ directory is not very
+convenient as the object file will have to be embedded within the GPIO
+one; this line in drivers/gpio/Makefile would be horrible:
+... += gpio-pca953x.o ../pwm/pwm-max7313.o (not even sure it works)
+3/ In any cases, the regmap's ->readable_reg(), ->writable_reg()
+callbacks shall be tweaked to turn the PWM registers accessible, so we
+would still have PWM related code in the PCA953x GPIO driver.
+
+In the end, I wonder if keeping everything in one file is not better?
+Eventually I can create a separate file and fill it with just the PWM
+helpers/hooks. Please advise on the better solution for you, I'll wait
+your feedback before addressing Thierry Reding's other review and
+resubmit.
+
+
+Thanks,
+Miquèl
