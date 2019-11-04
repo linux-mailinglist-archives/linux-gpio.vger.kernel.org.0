@@ -2,120 +2,111 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 0E480EDC5D
-	for <lists+linux-gpio@lfdr.de>; Mon,  4 Nov 2019 11:22:19 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id EFDDAEDC6F
+	for <lists+linux-gpio@lfdr.de>; Mon,  4 Nov 2019 11:24:57 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727444AbfKDKWS (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 4 Nov 2019 05:22:18 -0500
-Received: from mx07-00178001.pphosted.com ([62.209.51.94]:37222 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726441AbfKDKWS (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 4 Nov 2019 05:22:18 -0500
-Received: from pps.filterd (m0046668.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xA49utVG002166;
-        Mon, 4 Nov 2019 11:22:08 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=STMicroelectronics;
- bh=eU6eABG4qyDAE1xkwrnneHH0ZTGv0XqpzXiOHf/PvB4=;
- b=j00ZwEYhJTDKLSQNtp6gi01FWnzPPaXXE6fU0NQE/41OO2OdjYgNDhaersyBnVi4duq5
- 8i9WfYiqi0JJpFvASDIS95l7yFBoxP/5TnlCAb26vvjeO4E9cNTMxQXYmSwhZEFZ9wsW
- XiTzu9wgffgYBNJjicJsb3LRqyzl4Y0V2LUzP+/SPXOJhpRDEVPlcZBKIFp4cKzNi7cx
- w+rdIvThGJU65NnXoLTTy4ZTMPAwMeB73KdGtC3kk7Z1GqZbARXGhMRYpQENcKdvO4f6
- LLFzdtDvaz/5VDOizprNJOEeQBDGJ1xdQOdoyac5aBLNa6VBZZAZjSeEPmRMGNO0PfH6 NA== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 2w1054gw6p-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 04 Nov 2019 11:22:08 +0100
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 283CF10002A;
-        Mon,  4 Nov 2019 11:22:08 +0100 (CET)
-Received: from Webmail-eu.st.com (sfhdag3node2.st.com [10.75.127.8])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 1AB272BC5C3;
-        Mon,  4 Nov 2019 11:22:08 +0100 (CET)
-Received: from lmecxl0912.lme.st.com (10.75.127.50) by SFHDAG3NODE2.st.com
- (10.75.127.8) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Mon, 4 Nov
- 2019 11:22:07 +0100
-Subject: Re: [PATCH 1/1] pinctrl: stmfx: fix valid_mask init sequence
-To:     Amelie Delaunay <amelie.delaunay@st.com>,
+        id S1728397AbfKDKYy (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 4 Nov 2019 05:24:54 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34516 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726633AbfKDKYx (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Mon, 4 Nov 2019 05:24:53 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id F278021D7F;
+        Mon,  4 Nov 2019 10:24:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1572863091;
+        bh=rH8hwXH0FtHi+uAht/YzU82eRlA9su1m3ek62QSRXZo=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=viXH/GT48v+LgNLGJfktn2RMvrdadSig6yYI6V1q0Y13ZJXBOUrFchlkDEyTQxasz
+         mxv10bIBLULMNQyuJoDB2QJg2o3LpXV+UfYzLD8NJ2rhtKr7mGAw6HApRp1Qxzi0Lz
+         WlxoUm8IiLz3t+G3O5Pld1C3rXLkHTjklKTa/Rqc=
+Date:   Mon, 4 Nov 2019 11:24:49 +0100
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     linux-doc <linux-doc@vger.kernel.org>,
+        Jonathan Corbet <corbet@lwn.net>,
         Linus Walleij <linus.walleij@linaro.org>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>
-CC:     <linux-gpio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>
-References: <20191104100908.10880-1-amelie.delaunay@st.com>
-From:   Alexandre Torgue <alexandre.torgue@st.com>
-Message-ID: <3767f869-7454-c230-5e6c-487b436cb58f@st.com>
-Date:   Mon, 4 Nov 2019 11:22:07 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Arnd Bergmann <arnd@arndb.de>,
+        "Rafael J . Wysocki" <rafael@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Subject: Re: [RESEND PATCH v3 0/8] drivers: add new variants of
+ devm_platform_ioremap_resource()
+Message-ID: <20191104102449.GA1780310@kroah.com>
+References: <20191022084318.22256-1-brgl@bgdev.pl>
+ <CAMRc=MdqDv7FYCEKoK52G5zacNfLTDErrOGZAG5KDOsKh2pfUw@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20191104100908.10880-1-amelie.delaunay@st.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.75.127.50]
-X-ClientProxiedBy: SFHDAG7NODE2.st.com (10.75.127.20) To SFHDAG3NODE2.st.com
- (10.75.127.8)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,1.0.8
- definitions=2019-11-04_06:2019-11-01,2019-11-04 signatures=0
+In-Reply-To: <CAMRc=MdqDv7FYCEKoK52G5zacNfLTDErrOGZAG5KDOsKh2pfUw@mail.gmail.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Amélie,
-
-On 11/4/19 11:09 AM, Amelie Delaunay wrote:
-> With stmfx_pinctrl_gpio_init_valid_mask callback, gpio_valid_mask was used
-> to initialize gpiochip valid_mask for gpiolib. But gpio_valid_mask was not
-> yet initialized. gpio_valid_mask required gpio-ranges to be registered,
-> this is the case after gpiochip_add_data call. But init_valid_mask
-> callback is also called under gpiochip_add_data. gpio_valid_mask
-> initialization cannot be moved before gpiochip_add_data because
-> gpio-ranges are not registered.
-> So, it is not possible to use init_valid_mask callback.
-> To avoid this issue, get rid of valid_mask and rely on ranges.
+On Mon, Nov 04, 2019 at 10:29:23AM +0100, Bartosz Golaszewski wrote:
+> wt., 22 paź 2019 o 10:43 Bartosz Golaszewski <brgl@bgdev.pl> napisał(a):
+> >
+> > From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> >
+> > Note: resending with Arnd's review tags and rebased on top of char-misc-next
+> >
+> > The new devm_platform_ioremap_resource() helper has now been widely
+> > adopted and used in many drivers. Users of the write-combined ioremap()
+> > variants could benefit from the same code shrinkage. This series provides
+> > a write-combined version of devm_platform_ioremap_resource() and uses it in a
+> > relevant driver with the assumption that - just like was the case
+> > previously - a coccinelle script will be developed to ease the transition
+> > for others.
+> >
+> > There are also users of platform_get_resource_byname() who call
+> > devm_ioremap_resource() next, so provide another variant that they can use
+> > together with two examples.
+> >
+> > v1 -> v2:
+> > - dropped everything related to nocache ioremap as this is going away
+> >
+> > v2 -> v3:
+> > - don't call platform_get_resource() as an argument of devm_ioremap_resource(),
+> >   it actually decreases readability
+> > - add devm_platform_ioremap_resource_byname() as another variant
+> >
+> > Bartosz Golaszewski (8):
+> >   Documentation: devres: add missing entry for
+> >     devm_platform_ioremap_resource()
+> >   lib: devres: prepare devm_ioremap_resource() for more variants
+> >   lib: devres: provide devm_ioremap_resource_wc()
+> >   drivers: platform: provide devm_platform_ioremap_resource_wc()
+> >   misc: sram: use devm_platform_ioremap_resource_wc()
+> >   drivers: provide devm_platform_ioremap_resource_byname()
+> >   gpio: mvebu: use devm_platform_ioremap_resource_byname()
+> >   gpio: tegra186: use devm_platform_ioremap_resource_byname()
+> >
+> >  .../driver-api/driver-model/devres.rst        |  4 ++
+> >  drivers/base/platform.c                       | 39 +++++++++++-
+> >  drivers/gpio/gpio-mvebu.c                     | 19 +++---
+> >  drivers/gpio/gpio-tegra186.c                  |  4 +-
+> >  drivers/misc/sram.c                           | 28 +++------
+> >  include/linux/device.h                        |  2 +
+> >  include/linux/platform_device.h               |  6 ++
+> >  lib/devres.c                                  | 62 +++++++++++++------
+> >  8 files changed, 108 insertions(+), 56 deletions(-)
+> >
+> > --
+> > 2.23.0
+> >
 > 
-> Fixes: da9b142ab2c5 ("pinctrl: stmfx: Use the callback to populate valid_mask")
-> Signed-off-by: Amelie Delaunay <amelie.delaunay@st.com>
-
-Acked-by: Alexandre TORGUE <alexandre.torgue@st.com>
-
-> ---
->   drivers/pinctrl/pinctrl-stmfx.c | 14 --------------
->   1 file changed, 14 deletions(-)
+> Hi Greg,
 > 
-> diff --git a/drivers/pinctrl/pinctrl-stmfx.c b/drivers/pinctrl/pinctrl-stmfx.c
-> index 564660028fcc..ccdf0bb21414 100644
-> --- a/drivers/pinctrl/pinctrl-stmfx.c
-> +++ b/drivers/pinctrl/pinctrl-stmfx.c
-> @@ -585,19 +585,6 @@ static int stmfx_pinctrl_gpio_function_enable(struct stmfx_pinctrl *pctl)
->   	return stmfx_function_enable(pctl->stmfx, func);
->   }
->   
-> -static int stmfx_pinctrl_gpio_init_valid_mask(struct gpio_chip *gc,
-> -					      unsigned long *valid_mask,
-> -					      unsigned int ngpios)
-> -{
-> -	struct stmfx_pinctrl *pctl = gpiochip_get_data(gc);
-> -	u32 n;
-> -
-> -	for_each_clear_bit(n, &pctl->gpio_valid_mask, ngpios)
-> -		clear_bit(n, valid_mask);
-> -
-> -	return 0;
-> -}
-> -
->   static int stmfx_pinctrl_probe(struct platform_device *pdev)
->   {
->   	struct stmfx *stmfx = dev_get_drvdata(pdev->dev.parent);
-> @@ -660,7 +647,6 @@ static int stmfx_pinctrl_probe(struct platform_device *pdev)
->   	pctl->gpio_chip.ngpio = pctl->pctl_desc.npins;
->   	pctl->gpio_chip.can_sleep = true;
->   	pctl->gpio_chip.of_node = np;
-> -	pctl->gpio_chip.init_valid_mask = stmfx_pinctrl_gpio_init_valid_mask;
->   
->   	ret = devm_gpiochip_add_data(pctl->dev, &pctl->gpio_chip, pctl);
->   	if (ret) {
-> 
+> can you pick it up for char-misc for v5.5? This was reviewed by Arnd.
+
+Yes, sorry, am backlogged on patches at the moment, will get to it this
+week...
+
+greg k-h
