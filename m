@@ -2,99 +2,116 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id BF62CEE429
-	for <lists+linux-gpio@lfdr.de>; Mon,  4 Nov 2019 16:48:33 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 357FEEE43F
+	for <lists+linux-gpio@lfdr.de>; Mon,  4 Nov 2019 16:50:43 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728336AbfKDPsd (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 4 Nov 2019 10:48:33 -0500
-Received: from mailgate1.rohmeurope.com ([178.15.145.194]:49486 "EHLO
-        mailgate1.rohmeurope.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727838AbfKDPsc (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 4 Nov 2019 10:48:32 -0500
-X-AuditID: c0a8fbf4-183ff70000001fa6-92-5dc0484eb3ae
-Received: from smtp.reu.rohmeu.com (will-cas001.reu.rohmeu.com [192.168.251.177])
-        by mailgate1.rohmeurope.com (Symantec Messaging Gateway) with SMTP id DB.5F.08102.E4840CD5; Mon,  4 Nov 2019 16:48:30 +0100 (CET)
-Received: from WILL-MAIL002.REu.RohmEu.com ([fe80::e0c3:e88c:5f22:d174]) by
- WILL-CAS001.REu.RohmEu.com ([fe80::d57e:33d0:7a5d:f0a6%16]) with mapi id
- 14.03.0439.000; Mon, 4 Nov 2019 16:48:17 +0100
-From:   "Vaittinen, Matti" <Matti.Vaittinen@fi.rohmeurope.com>
-To:     "linus.walleij@linaro.org" <linus.walleij@linaro.org>
-CC:     "linux-leds@vger.kernel.org" <linux-leds@vger.kernel.org>,
-        "dmurphy@ti.com" <dmurphy@ti.com>,
-        "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-        "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "mturquette@baylibre.com" <mturquette@baylibre.com>,
-        "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "mazziesaccount@gmail.com" <mazziesaccount@gmail.com>,
-        "a.zummo@towertech.it" <a.zummo@towertech.it>,
-        "jacek.anaszewski@gmail.com" <jacek.anaszewski@gmail.com>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "bgolaszewski@baylibre.com" <bgolaszewski@baylibre.com>,
-        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
-        "sboyd@kernel.org" <sboyd@kernel.org>,
-        "lee.jones@linaro.org" <lee.jones@linaro.org>,
-        "broonie@kernel.org" <broonie@kernel.org>,
-        "pavel@ucw.cz" <pavel@ucw.cz>
-Subject: Re: [RFC PATCH v3 14/15] gpio: Add definition for GPIO direction
-Thread-Topic: [RFC PATCH v3 14/15] gpio: Add definition for GPIO direction
-Thread-Index: AQHVkKp+hdqKw9vEbUql9O/haZZyiad5+mgAgAEiGoA=
-Date:   Mon, 4 Nov 2019 15:48:17 +0000
-Message-ID: <411ac5e107cd2a6c628d1fb46e7d284c8f594768.camel@fi.rohmeurope.com>
-References: <cover.1572606437.git.matti.vaittinen@fi.rohmeurope.com>
-         <f08d265c12ebf185c0e1dbbfe0a3f86de4907194.1572606437.git.matti.vaittinen@fi.rohmeurope.com>
-         <CACRpkdYhasTEQq2btQ_3GSo=hMJetp128jFo-6hE=JMeX4MJSA@mail.gmail.com>
-In-Reply-To: <CACRpkdYhasTEQq2btQ_3GSo=hMJetp128jFo-6hE=JMeX4MJSA@mail.gmail.com>
-Accept-Language: en-US, de-DE
-Content-Language: de-DE
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [176.93.201.147]
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <FFD78040917F6B49BA61C44DADDD2B28@de.rohmeurope.com>
-Content-Transfer-Encoding: base64
+        id S1728138AbfKDPum (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 4 Nov 2019 10:50:42 -0500
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:43679 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727998AbfKDPum (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 4 Nov 2019 10:50:42 -0500
+Received: by mail-ot1-f67.google.com with SMTP id l14so451088oti.10
+        for <linux-gpio@vger.kernel.org>; Mon, 04 Nov 2019 07:50:41 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=Qgd1UJFQkweovlaiJamyJ/Ta+NwAbYv69j4GTr5sQ1Q=;
+        b=vkE/ofR4dmVHfr4TywjVPTFMm+gMxFQPM+4kmbmmuxMAP/FisPEk67R53Tutai+B6l
+         +sTilsCmQSXIn9kUfFz4kiKsSD0gyZuGH6pHu5w4qsVplZaUc8yqAnYHDrFwl5hujIaZ
+         noFc6AVYUm/J49wFIrwCNSsz8OjttfqyOm/+ewmLR/7IWIw+Apnnt1bD6kd0tI2nWZXB
+         SjYpTRcCF+7J/HKPojCljpi6RkzjB8j+qoyUJn113g/bDuyhZ1XLpGYYGyIkWgLD/wjq
+         RsKSHhqerkF8lZ07NBHlaonDKna0aaGnp9/sOGrv4UdgDYGFZBM9sI2Py5fYWwxifWX2
+         3cHw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=Qgd1UJFQkweovlaiJamyJ/Ta+NwAbYv69j4GTr5sQ1Q=;
+        b=Dm2cOmdIRe1IwBu6b0ttaXgiuvarzSdjI+hkytbHurS/Js4PGme6CNLp+58klAd2IN
+         ZaREkLIdt5uSIlIEPLNcO3aIhw9BRZYwJgWyie8LtdLwr48ZwKzHKsvauG3uZXqGW+kO
+         wejT2EUVw2K84XqnwxCo8x6aRyJFMXHkLJ7Kme3tvdOH2qmCfB4TY4rMZEgBJJLB0kQN
+         JC0f4NRDertqBpdhhUx2a/3NYL8fciQwC4zZiJgi13JaIBvVpinb+PY9OcAeYGaukMbf
+         oHXYBWu0nYpay9f32etAUsUwIDhyFuLdugZ+TbyF/Z3yBDleJip4p4B+drXyGc6nBlWT
+         4AUg==
+X-Gm-Message-State: APjAAAW9FupFGkAYtlgHFF0JFkMEj5WIboR8Hm55E7iMBEWvIlRqWpum
+        2aayMYiFT/mioEjoYJay5A/8OkT+YLQBP2WICmDsqg==
+X-Google-Smtp-Source: APXvYqwj/0NXi7aMwKxR+jhZeFzg0Lk7AK0MGqds9UDxx8eMfTH1It2XYmkse2Pm72NNsQLl+Ymj9rqRxxXCRL8NGz0=
+X-Received: by 2002:a9d:39e3:: with SMTP id y90mr15562769otb.194.1572882641493;
+ Mon, 04 Nov 2019 07:50:41 -0800 (PST)
 MIME-Version: 1.0
-X-Brightmail-Tracker: H4sIAAAAAAAAA02Ta1BMYRzGvee2p9bh2Mq+FuGMcScZH14m5ANODY3LjHGZJoeOdml3c3ZD
-        jJkdMw1tzGQmyU4Xk80lTSlChLValzWDnbbUqIiGKU2NEYZWnNOiPp1n/s/z/H/nw/+lcc0b
-        SkcbTFZRMgmpHBVKuC4NVM1P4F2JCx82RCOnr1GFjvVeUKH+Qi+BTnd0Uqi4/jmJsp9dJ9Hr
-        mqsEevPVA9A3/3EM5QYuYujziXYSXSsOANRwu4BCNT0VAD264qdQ6SsfhgpKnxDI512F2rwe
-        CmXerVehwaYqIjaCLy8qB3xfc6aKLyo/zNc62lR8dVkWxbc21VH84+abGH+m6AfGX7ryXcV/
-        qY5cH7pNHbNTsO7fZEgxRS3fodb7jwbItHvqg80v8oAN5KvtgKYhuxja8yU7CKE1bCOAg2cN
-        dhAq68cA9g4OkEqGYmOgvUWlZMLZJfDhkwJCyeBsAQ0vtz8nFSOMjYP3A96/oXiYe86FB/VS
-        +LP4BqXsIdjpsKomUhkzbAJ0dvWQQdYnAD1f3w11Q9gN8PJbN6ZowE6GWbbeIY2zWlj94fsQ
-        C7IsdNa9wIM6Ana9H/w752Ddj/OYwsLZ2bDydlSwGgt/nSoDQT0N5mZ3qIL/MA4+PdtJ5IDx
-        jhEEx3DbMaLtGNF2jGifA2QZgEbBkJoiWMXoBZKYvkAy643yZ5fZWA2CB9N/C/x2x7kBRgM3
-        mEBjXAQzb6krUTNmpzk5Qy9Y9ElSeqpocQNI41w448u/m6hhkoWMQ6Jk/mdNpAlOy8zsOJWo
-        YRXWXlFME6V/7iSa5iAjrJGXjpPEFPHgbkOqddjG6BBleagu3CKakkVJSLfqk5TrSLLI56FY
-        o2Xuy9VynbGkCUZ5Gqx6wVw6p6uwBKfrC0tLcA1hMptEnZaZrZBYJapPN/0HdQMtDbgwhpCf
-        h2a0/Gr+7+mWEZiMWPv+noKwCsOWzgYyMm2v26+POuI/U7KnJeBRG1p1TVvIGyVgirZ1c9TJ
-        FdbAjMw7O/zTKxbFGwce9FMr76w5IOZE5rU4Y27647K291QkVNZGSfatz7oLN66bld3ZV3Ts
-        wthArWNCw4x9bpfN53I3ZuX9Mve5yp0NVxM8c8LamM9Tr3H3Y8d+7KvULuMIi16InoNLFuEP
-        d930ovIDAAA=
+References: <20191104153841.16911-1-warthog618@gmail.com> <20191104153841.16911-5-warthog618@gmail.com>
+In-Reply-To: <20191104153841.16911-5-warthog618@gmail.com>
+From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Date:   Mon, 4 Nov 2019 16:50:30 +0100
+Message-ID: <CAMpxmJUExXZ=ptMyRczvdujc7x9JP62Zy9m+WByYD4=w=1180w@mail.gmail.com>
+Subject: Re: [PATCH v5 4/7] gpiolib: add support for biasing output lines
+To:     Kent Gibson <warthog618@gmail.com>
+Cc:     linux-gpio <linux-gpio@vger.kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bamvor Jian Zhang <bamv2005@gmail.com>,
+        Drew Fustini <drew@pdp7.com>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-SGVsbG8gQWxsLA0KDQpPbiBTdW4sIDIwMTktMTEtMDMgYXQgMjM6MzAgKzAxMDAsIExpbnVzIFdh
-bGxlaWogd3JvdGU6DQo+IEhpIE1hdHRpIQ0KPiANCj4gR29vZCBpbml0aWF0aXZlIChhbmQgSSB3
-aWxsIHNlZSBhIHRvbiBvZiBqYW5pdG9yaWFsIHBhdGNoZXMgYXMgYQ0KPiByZXN1bHQgb2YgdGhp
-cy4uLikNCg0KSSBoYXZlIHNvbWV3aGVyZSBuZWFyIDYyIHBhdGNoZXMgd2FpdGluZyB0byBiZSBz
-ZW50ID0pIFRoZXkncmUgcHJldHR5DQpzbWFsbCBidXQgSSdkIGFwcHJlY2lhdGUgdGhvcm91Z2gg
-cmV2aWV3IGFzIHRoZXkncmUgbW9zdGx5IHVudGVzdGVkLi4uDQpEbyB5b3UgbWluZCByZWNlaXZp
-bmcgdGhlbSBhbGwgaW4gb25lIGdvPyBPciBkbyB5b3UgdGhpbmsgSSBzaG91bGQgc2VuZA0KdGhl
-IHNlcmllcyBpbiBzbWFsbGVyIGNodW5ja3M/DQoNCj4gT24gRnJpLCBOb3YgMSwgMjAxOSBhdCAx
-Mjo1MCBQTSBNYXR0aSBWYWl0dGluZW4NCj4gPG1hdHRpLnZhaXR0aW5lbkBmaS5yb2htZXVyb3Bl
-LmNvbT4gd3JvdGU6DQo+IA0KPiA+IEF0IGxlYXN0IGZvciBtZSBpdCBpcyBkaWZmaWN1bHQgdG8g
-cmVtZW1iZXIgdGhlIG1lYW5pbmcgb2YgR1BJTw0KPiA+IGRpcmVjdGlvbiB2YWx1ZXMuIERlZmlu
-ZSBHUElPX0lOIGFuZCBHUElPX09VVCBzbyB0aGF0IG9jY2FzaW9uYWwNCj4gPiBHUElPIGNvbnRy
-aWJ1dG9ycyB3b3VsZCBub3QgbmVlZCB0byBhbHdheXMgY2hlY2sgdGhlIG1lYW5pbmcgb2YNCj4g
-PiBoYXJkIGNvZGVkIHZhbHVlcyAxIGFuZCAwLg0KPiA+IA0KPiA+IFNpZ25lZC1vZmYtYnk6IE1h
-dHRpIFZhaXR0aW5lbiA8bWF0dGkudmFpdHRpbmVuQGZpLnJvaG1ldXJvcGUuY29tPg0KPiAoLi4u
-KQ0KPiA+ICsjZGVmaW5lIEdQSU9fSU4gICAgICAgICAgICAgICAgMQ0KPiA+ICsjZGVmaW5lIEdQ
-SU9fT1VUICAgICAgIDANCj4gDQo+IFBsZWFzZSBzcGVsbCBpdCBvdXQgb3IgcGVvcGxlIHdpbGwg
-YmUgY29uZnVzZWQ6DQo+IA0KPiBHUElPX0xJTkVfRElSRUNUSU9OX0lODQo+IEdQSU9fTElORV9E
-SVJFQ1RJT05fT1VUDQo+IA0KPiBZb3VycywNCj4gTGludXMgV2FsbGVpag0KDQo=
+pon., 4 lis 2019 o 16:39 Kent Gibson <warthog618@gmail.com> napisa=C5=82(a)=
+:
+>
+> Allow pull up/down bias to be set on output lines.
+> Use case is for open source or open drain applications where
+> internal pull up/down may conflict with external biasing.
+>
+> Signed-off-by: Kent Gibson <warthog618@gmail.com>
+> ---
+>  drivers/gpio/gpiolib.c | 8 ++++++--
+>  1 file changed, 6 insertions(+), 2 deletions(-)
+>
+> diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
+> index 7d8ff52ada42..de08d1a4a3fb 100644
+> --- a/drivers/gpio/gpiolib.c
+> +++ b/drivers/gpio/gpiolib.c
+> @@ -555,8 +555,9 @@ static int linehandle_create(struct gpio_device *gdev=
+, void __user *ip)
+>              (lflags & GPIOHANDLE_REQUEST_OPEN_SOURCE)))
+>                 return -EINVAL;
+>
+> -       /* Bias flags only allowed for input mode. */
+> -       if (!(lflags & GPIOHANDLE_REQUEST_INPUT) &&
+> +       /* Bias flags only allowed for input or output mode. */
+> +       if (!((lflags & GPIOHANDLE_REQUEST_INPUT) ||
+> +             (lflags & GPIOHANDLE_REQUEST_OUTPUT)) &&
+>             ((lflags & GPIOHANDLE_REQUEST_BIAS_DISABLE) ||
+>              (lflags & GPIOHANDLE_REQUEST_BIAS_PULL_UP) ||
+>              (lflags & GPIOHANDLE_REQUEST_BIAS_PULL_DOWN)))
+> @@ -3144,6 +3145,9 @@ int gpiod_direction_output(struct gpio_desc *desc, =
+int value)
+>         }
+>
+>  set_output_value:
+> +       ret =3D gpio_set_bias(gc, desc);
+> +       if (ret)
+> +               return ret;
+>         return gpiod_direction_output_raw_commit(desc, value);
+
+Ugh, I missed one thing here - my for-next branch doesn't contain the
+following commit e735244e2cf0 ("gpiolib: don't clear FLAG_IS_OUT when
+emulating open-drain/open-source") which happens to modify this
+function.
+
+If I provided you with a branch containing it - would it be a lot of
+effort on your part to rebase it on top of it? If so - I can do it
+myself.
+
+Bart
+
+>  }
+>  EXPORT_SYMBOL_GPL(gpiod_direction_output);
+> --
+> 2.23.0
+>
