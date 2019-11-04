@@ -2,109 +2,100 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 05C94ED68D
-	for <lists+linux-gpio@lfdr.de>; Mon,  4 Nov 2019 01:18:28 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B6BEFED697
+	for <lists+linux-gpio@lfdr.de>; Mon,  4 Nov 2019 01:18:47 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728468AbfKDAS1 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sun, 3 Nov 2019 19:18:27 -0500
-Received: from gate2.alliedtelesis.co.nz ([202.36.163.20]:43395 "EHLO
-        gate2.alliedtelesis.co.nz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728459AbfKDAS0 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sun, 3 Nov 2019 19:18:26 -0500
-Received: from mmarshal3.atlnz.lc (mmarshal3.atlnz.lc [10.32.18.43])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id CD48C891A9;
-        Mon,  4 Nov 2019 13:18:22 +1300 (NZDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alliedtelesis.co.nz;
-        s=mail181024; t=1572826702;
-        bh=Ww5LQFHvbo1fwdgP1bkCVCNF1HEAuKW3lV2I1m2dQwE=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References;
-        b=uLNjZDL9Q4LJ7STNSwyA9ewHBZvwq80xe3ly/mU2sXD2NLQlsWv85cDVNdk0Ezv9I
-         YtQC/28PkfNB8iR06X067h0iVWhGvlYWmSh/BxbhJojfIwFuYUZQ4rGBydZa9PxLBf
-         mju8AV8yKCavZhmTu2AlyHujzl4W6cCF5QQKrqy3SxXzzoB/YZYL/rD96z0o2P6qam
-         Au58QP6hbvNr2+AcDZnqZYLiA0ZaIXlwxS97djAMr26qhyzr80PAgXfniKUy+DAnA+
-         Jl0HVdWBQFG07eQXdZGQA1hpIg8kUAZph5oNLWpmw7NZT/CL+vEcy+Qtoe2Vam8fUa
-         nOftw1uzS39nw==
-Received: from smtp (Not Verified[10.32.16.33]) by mmarshal3.atlnz.lc with Trustwave SEG (v7,5,8,10121)
-        id <B5dbf6e4a0002>; Mon, 04 Nov 2019 13:18:21 +1300
-Received: from chrisp-dl.ws.atlnz.lc (chrisp-dl.ws.atlnz.lc [10.33.22.20])
-        by smtp (Postfix) with ESMTP id 6864B13EF97;
-        Mon,  4 Nov 2019 13:18:18 +1300 (NZDT)
-Received: by chrisp-dl.ws.atlnz.lc (Postfix, from userid 1030)
-        id 927DD28005D; Mon,  4 Nov 2019 13:18:19 +1300 (NZDT)
-From:   Chris Packham <chris.packham@alliedtelesis.co.nz>
-To:     linus.walleij@linaro.org, rjui@broadcom.com, sbranden@broadcom.com,
-        bcm-kernel-feedback-list@broadcom.com
-Cc:     linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Chris Packham <chris.packham@alliedtelesis.co.nz>
-Subject: [PATCH v3 2/2] pinctrl: bcm: nsp: implement get_direction
-Date:   Mon,  4 Nov 2019 13:18:19 +1300
-Message-Id: <20191104001819.2300-3-chris.packham@alliedtelesis.co.nz>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20191104001819.2300-1-chris.packham@alliedtelesis.co.nz>
-References: <20191104001819.2300-1-chris.packham@alliedtelesis.co.nz>
+        id S1728372AbfKDASq (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sun, 3 Nov 2019 19:18:46 -0500
+Received: from mail-ua1-f67.google.com ([209.85.222.67]:38682 "EHLO
+        mail-ua1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728646AbfKDASp (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sun, 3 Nov 2019 19:18:45 -0500
+Received: by mail-ua1-f67.google.com with SMTP id u99so4436429uau.5
+        for <linux-gpio@vger.kernel.org>; Sun, 03 Nov 2019 16:18:43 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=+5L2eq9DWTqYID3ithkG+AoL6nhEs7tI6RGB4Dd8Zf4=;
+        b=oAlES9Uid7iSYZ2y6NPfHWjyad0j5hCqs5prmtdgJ2mK997WAVlxzJG3ynZVmC7nVi
+         mB54L2mfLf/Ymo2mr37VdY7P/VmPPDIkSj6dVPXoVoUbv4/bi0abmhjwnmb/FELUCiFe
+         WUmE0cxKBRBV/GLK0T6OlpT++peIpQTvzfheDW+VYHwnVh2WMPfAGGv0Jll4lQ9KmdAX
+         KUTaR0YLzT9+mGViBviY1QVrl63MXjbWJ1L7dXjYhxykfLjDCnezbRw37cjm6t8NlKrx
+         vUEPiPlqJXQVEvz5N1BTYEZa2S6mllw04JXsrNQAwnirXTN3hH91Hd5eJcmUXVJGR71Z
+         pSrA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=+5L2eq9DWTqYID3ithkG+AoL6nhEs7tI6RGB4Dd8Zf4=;
+        b=fqg9T1EDsDtyH8zyc98KBu3sOghSAJjIKr6/c7TI2OTFIMatSNXLFQcSvxKh6TT2iz
+         w86GzQI3b2HWxL8iBWLibjBwRQoL5gM4RmyujVaMRf9moBHCwXpCoBVo3UAhKDzk6gHP
+         U/7AUx7YDoNvkguo0FohVF4HatuA5Oy7AK/1h2c7E42mUS1JsuPm8EUzKdtBfToEcLlq
+         QUx0d8orbs2Rd5zjvsAxpL/zJlKoWoZHx5/j3D0xD7LRY9l/WOPyenC55z+XDSIs0+iq
+         A9bGDzHoawiBGYodFmo8ybiylzEnA2YLw3dwIZa8lkUwpfbU5tfkGMbDdd/qHhVOG904
+         8IXg==
+X-Gm-Message-State: APjAAAXjIc4US7paqWjBkcDAPgHzbLDw7CdHjLkIU9pDNbdzwP5VKc0y
+        uLhyUsBAGKsXpoxXI6JjqZTgRJqwNH+IpdHVW00BXw==
+X-Google-Smtp-Source: APXvYqxaDMOhPupmDshbsu4K1ddLDJNFp+Loev7XOmTsYtFTpgq7W/3FH8VrI3bEONc6DjxIfdtklet+o4Mib1wkwhc=
+X-Received: by 2002:ab0:70a9:: with SMTP id q9mr4518172ual.84.1572826722501;
+ Sun, 03 Nov 2019 16:18:42 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-x-atlnz-ls: pat
+References: <20191017122640.22976-1-yuehaibing@huawei.com> <20191017122640.22976-2-yuehaibing@huawei.com>
+In-Reply-To: <20191017122640.22976-2-yuehaibing@huawei.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Mon, 4 Nov 2019 01:18:31 +0100
+Message-ID: <CACRpkdb8D_zxHfzY=+ramnNjXVsN9MMO8Q-3=iZFLS2A_ZDQuw@mail.gmail.com>
+Subject: Re: [PATCH -next 01/30] pinctrl: pxa25x: use devm_platform_ioremap_resource()
+ to simplify code
+To:     YueHaibing <yuehaibing@huawei.com>
+Cc:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Ray Jui <rjui@broadcom.com>,
+        Scott Branden <sbranden@broadcom.com>,
+        bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>,
+        Jesper Nilsson <jesper.nilsson@axis.com>,
+        Lars Persson <lars.persson@axis.com>,
+        Ludovic Desroches <ludovic.desroches@microchip.com>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Baruch Siach <baruch@tkos.co.il>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        linux-arm-kernel@axis.com, linux-oxnas@groups.io,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        MSM <linux-arm-msm@vger.kernel.org>, linux-tegra@vger.kernel.org,
+        Vladimir Zapolskiy <vz@mleia.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Daniel Mack <daniel@zonque.org>,
+        Haojian Zhuang <haojian.zhuang@gmail.com>,
+        Chen-Yu Tsai <wens@csie.org>,
+        "thierry.reding@gmail.com" <thierry.reding@gmail.com>,
+        Jon Hunter <jonathanh@nvidia.com>,
+        Andy Gross <agross@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-The get_direction api is strongly recommended to be implemented. In fact
-if it is not implemented gpio-hogs will not get the correct direction.
-Add an implementation of get_direction for the nsp-gpio driver.
+On Thu, Oct 17, 2019 at 2:48 PM YueHaibing <yuehaibing@huawei.com> wrote:
 
-Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
-Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
----
+> Use devm_platform_ioremap_resource() to simplify the code a bit.
+> This is detected by coccinelle.
+>
+> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
 
-Notes:
-    Changes in v3:
-    - add revew from Florian
-    Changes in v2:
-    - New
+These are too many patches changing too little.
+One patch should be one technical step.
 
- drivers/pinctrl/bcm/pinctrl-nsp-gpio.c | 14 ++++++++++++++
- 1 file changed, 14 insertions(+)
+I'd say squash them all into one big patch and resend.
 
-diff --git a/drivers/pinctrl/bcm/pinctrl-nsp-gpio.c b/drivers/pinctrl/bcm=
-/pinctrl-nsp-gpio.c
-index 45ae29b22548..bed0124388c0 100644
---- a/drivers/pinctrl/bcm/pinctrl-nsp-gpio.c
-+++ b/drivers/pinctrl/bcm/pinctrl-nsp-gpio.c
-@@ -297,6 +297,19 @@ static int nsp_gpio_direction_output(struct gpio_chi=
-p *gc, unsigned gpio,
- 	return 0;
- }
-=20
-+static int nsp_gpio_get_direction(struct gpio_chip *gc, unsigned gpio)
-+{
-+	struct nsp_gpio *chip =3D gpiochip_get_data(gc);
-+	unsigned long flags;
-+	int val;
-+
-+	raw_spin_lock_irqsave(&chip->lock, flags);
-+	val =3D nsp_get_bit(chip, REG, NSP_GPIO_OUT_EN, gpio);
-+	raw_spin_unlock_irqrestore(&chip->lock, flags);
-+
-+	return !val;
-+}
-+
- static void nsp_gpio_set(struct gpio_chip *gc, unsigned gpio, int val)
- {
- 	struct nsp_gpio *chip =3D gpiochip_get_data(gc);
-@@ -641,6 +654,7 @@ static int nsp_gpio_probe(struct platform_device *pde=
-v)
- 	gc->free =3D gpiochip_generic_free;
- 	gc->direction_input =3D nsp_gpio_direction_input;
- 	gc->direction_output =3D nsp_gpio_direction_output;
-+	gc->get_direction =3D nsp_gpio_get_direction;
- 	gc->set =3D nsp_gpio_set;
- 	gc->get =3D nsp_gpio_get;
-=20
---=20
-2.23.0
+You can collect the ACKs you received, but don't put
+too many people on CC, they will be annoyed.
 
+Yours,
+Linus Walleij
