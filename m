@@ -2,117 +2,354 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 56808ED9C2
-	for <lists+linux-gpio@lfdr.de>; Mon,  4 Nov 2019 08:05:21 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 02B40EDA38
+	for <lists+linux-gpio@lfdr.de>; Mon,  4 Nov 2019 08:59:33 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727327AbfKDHFU (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 4 Nov 2019 02:05:20 -0500
-Received: from mailgate1.rohmeurope.com ([178.15.145.194]:55086 "EHLO
-        mailgate1.rohmeurope.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726633AbfKDHFU (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 4 Nov 2019 02:05:20 -0500
-X-AuditID: c0a8fbf4-183ff70000001fa6-c3-5dbfcdad7647
-Received: from smtp.reu.rohmeu.com (will-cas001.reu.rohmeu.com [192.168.251.177])
-        by mailgate1.rohmeurope.com (Symantec Messaging Gateway) with SMTP id E7.DB.08102.DADCFBD5; Mon,  4 Nov 2019 08:05:17 +0100 (CET)
-Received: from WILL-MAIL002.REu.RohmEu.com ([fe80::e0c3:e88c:5f22:d174]) by
- WILL-CAS001.REu.RohmEu.com ([fe80::d57e:33d0:7a5d:f0a6%16]) with mapi id
- 14.03.0439.000; Mon, 4 Nov 2019 08:05:07 +0100
-From:   "Vaittinen, Matti" <Matti.Vaittinen@fi.rohmeurope.com>
-To:     "linus.walleij@linaro.org" <linus.walleij@linaro.org>
-CC:     "linux-leds@vger.kernel.org" <linux-leds@vger.kernel.org>,
-        "dmurphy@ti.com" <dmurphy@ti.com>,
-        "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-        "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "mturquette@baylibre.com" <mturquette@baylibre.com>,
-        "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "mazziesaccount@gmail.com" <mazziesaccount@gmail.com>,
-        "a.zummo@towertech.it" <a.zummo@towertech.it>,
-        "jacek.anaszewski@gmail.com" <jacek.anaszewski@gmail.com>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "bgolaszewski@baylibre.com" <bgolaszewski@baylibre.com>,
-        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
-        "sboyd@kernel.org" <sboyd@kernel.org>,
-        "lee.jones@linaro.org" <lee.jones@linaro.org>,
-        "broonie@kernel.org" <broonie@kernel.org>,
-        "pavel@ucw.cz" <pavel@ucw.cz>
-Subject: Re: [RFC PATCH v3 10/15] regulator: bd71828: Add GPIO based
- run-level control for regulators
-Thread-Topic: [RFC PATCH v3 10/15] regulator: bd71828: Add GPIO based
- run-level control for regulators
-Thread-Index: AQHVkKmUb1A5TsbkA0WleApZHP5SaKd5+YkAgACQyoA=
-Date:   Mon, 4 Nov 2019 07:05:06 +0000
-Message-ID: <1550472ac1e105bd38da25803358cfbc0404bf38.camel@fi.rohmeurope.com>
-References: <cover.1572606437.git.matti.vaittinen@fi.rohmeurope.com>
-         <2a8fa03308b08b2a15019d9b457d9bff7aafce94.1572606437.git.matti.vaittinen@fi.rohmeurope.com>
-         <CACRpkdZYw3QQcQ4h5y_C0UD6+4Wz9AdmQ0qSrrjfUweuJj8hyQ@mail.gmail.com>
-In-Reply-To: <CACRpkdZYw3QQcQ4h5y_C0UD6+4Wz9AdmQ0qSrrjfUweuJj8hyQ@mail.gmail.com>
-Accept-Language: en-US, de-DE
-Content-Language: de-DE
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [213.255.186.46]
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <E431E9F5DA350547A5D0E307336A633F@de.rohmeurope.com>
-Content-Transfer-Encoding: base64
+        id S1728117AbfKDH73 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 4 Nov 2019 02:59:29 -0500
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:38400 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726633AbfKDH73 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 4 Nov 2019 02:59:29 -0500
+Received: by mail-wr1-f68.google.com with SMTP id v9so15840655wrq.5
+        for <linux-gpio@vger.kernel.org>; Sun, 03 Nov 2019 23:59:26 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=references:user-agent:from:to:cc:subject:in-reply-to:date
+         :message-id:mime-version;
+        bh=hSqKVwc6bJDp4a89lIu+lMczQX467huhHqDN052faFc=;
+        b=PTpN+ZwuBfKdTAnpKvgXZbCQQz8WC79oxCbnZC40CQUEiVfD2FtrVOMZ5NN9Bo1E6n
+         JiK5bdp5cK+hp+p/9TNcOFtm9nhIUavOaMwWe8ax6rOSeoktiO6dhHb9Bl1kxwAqsL0q
+         r4TyWsvBdiQDG1raUx51YG7ig11HGrErgih91DR/ntB8ScPFh7XOPUfNAljcjYH3FsES
+         JRJdZjSKE1bkEqj23pOcnFEwBZhvF5hyw4lwezIFVO+0pqeOYlMh7mVb2TrxZ4+vHztR
+         OCIDgOSYRU530s60ouz5Sx2assCn2tEWmMo6fmK2DLnmHZLtanyVk+iz0E88GmhX5AoM
+         ktBQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:references:user-agent:from:to:cc:subject
+         :in-reply-to:date:message-id:mime-version;
+        bh=hSqKVwc6bJDp4a89lIu+lMczQX467huhHqDN052faFc=;
+        b=YkFcwfsTuCkOrgP+415KfPgb56PJYpzSpwJgBE/9bjo6Onak8K8VWNjIFEri8eyxOc
+         TUS3ryMRglAZ+fxhOVXgfKpAuQ88NmCc8NedXjFCrh8InG9Gr6vs3oteGFQpKPhcg+t7
+         AhTzZxChBtZe7nI+XvLcbap42bjr9BtLISPVZd3xgPwSpVw/dNnxNTXMXNw4jWHBtCRv
+         212JlkkH065OJ4XDKpDttzQEvwjaZZj5ZsbsJzSyZTsolr/krQ2k57AOP6ZpWG9kihya
+         a7EaKu+lhgcfd9Bl8Ntl4ttCA75QDxZm5mFZrirzU+ytnPHAVf3egJl/ZtKPpUrMJHXw
+         CDxQ==
+X-Gm-Message-State: APjAAAUQJ7rRlMo/8RFInLtIgPEISIdnb39Jj/PB9l3DH0TUeZj3kavj
+        tKmM59b6PD9J5MXpOO6kyb2QxQ==
+X-Google-Smtp-Source: APXvYqy9al4urCFA6fpYb/D7VafuMc4Y5ZvLTdzSKfLU5CvIPNYPDX/9vIxtpAlJPzcLdVUySVhz8w==
+X-Received: by 2002:adf:fb0b:: with SMTP id c11mr22574436wrr.50.1572854365762;
+        Sun, 03 Nov 2019 23:59:25 -0800 (PST)
+Received: from localhost (laubervilliers-658-1-213-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
+        by smtp.gmail.com with ESMTPSA id o81sm7133638wmb.38.2019.11.03.23.59.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 03 Nov 2019 23:59:24 -0800 (PST)
+References: <1572004167-24150-1-git-send-email-qianggui.song@amlogic.com> <1572004167-24150-3-git-send-email-qianggui.song@amlogic.com>
+User-agent: mu4e 1.3.3; emacs 26.2
+From:   Jerome Brunet <jbrunet@baylibre.com>
+To:     Qianggui Song <qianggui.song@amlogic.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-gpio@vger.kernel.org
+Cc:     Neil Armstrong <narmstrong@baylibre.com>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        Carlo Caione <carlo@caione.org>,
+        "Rob Herring" <robh+dt@kernel.org>,
+        Xingyu Chen <xingyu.chen@amlogic.com>,
+        "Jianxin Pan" <jianxin.pan@amlogic.com>,
+        Hanjie Lin <hanjie.lin@amlogic.com>,
+        "Mark Rutland" <mark.rutland@arm.com>,
+        linux-arm-kernel@lists.infradead.org,
+        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 2/4] pinctrl: meson: add a new callback for SoCs fixup
+In-reply-to: <1572004167-24150-3-git-send-email-qianggui.song@amlogic.com>
+Date:   Mon, 04 Nov 2019 08:59:23 +0100
+Message-ID: <1jeeyo3wdg.fsf@starbuckisacylon.baylibre.com>
 MIME-Version: 1.0
-X-Brightmail-Tracker: H4sIAAAAAAAAA01TXUwcVRjNnd+7244MwyJXqiauJgZFamM1t6YxfbBxqkSrPDRp3OCsjAxh
-        f8jMYsDWlgerlmpCG8S6XagS2NYCLT+tKELRlT8pYNaWdhssZEOjgdIaWihiN+Bcpy083XPP
-        +c459+G7kJbGuXRY4Auouk/xODk789PxOy3PNA13u54NlT+P66KjPP7kRpjHc9WDDP4ifpXD
-        R3tGWHzg3GkWj51pZvDEfC/Aty98SuHKxDEKz342zuK2owmAz3eEOHxm5iTAfQ0XOFx/KUrh
-        UP0Ag6ODW/GVwV4O7+vq4fHSxRZmS6rcWNMI5L9j+3i5pnGX/EPwCi+3ntjPyX9c7OTk/lg7
-        JX9Zs0jJxxsWePlW66Pb7TvXbHYrgfdzCvJ96196Z422PNFCF910lNya6WTLQKOjHNggEjei
-        lsU+thzYoSSOAjTbMMxZl36AmiILpgIhJ25G5Zd5YnCIm9AvAyGGzNBiCKJvx0dYIqSI+ajq
-        o4OcNaSh+f7P7xpeRP9W/cyTHEZ8AtWGPyS0IL6O2r85TxMsidcAiiVUgm3imyg8Fv6fB+Ij
-        aH/ZDYpgWkxDrX8usNajRVTX+Rtt4VQ0Nbl0l3eirsU4Q6poMQOd6lhvwS2o/fcdVspjqPJA
-        nLdekIx+/eoqUwEeDK4qCK6Ygyvm4CpzcJX5a8CeAMirFHjylYC6IUtXi7N0v+Y1j3f93lZg
-        7cvc92A5si0CKAgi4CFIOVOF2ktnXdIDbn9eqaYYWq5e7FGNCECQdjqE6OEulyTkKaUfqLr/
-        nrQOMs404cn4QZckkq5CVS1S9XvqwxA6kZA41+2SknU1Xy15r8ATWJEpaCPh9nSHofryVF0p
-        Dmi5ZDlyDXM7iLTW7G0bMu2CUaR4TdayDoKnYcVUdS0Ne6rra2mJ8fl9anqasIeMimRUK/bd
-        L5oGaRA4U4TbRF1rfpr7OdNmBWVWZE+eJRUBZUVKLwM9iVfdGUZSfN3yx6evpxzaNFJzBNwc
-        n5MrS2KvJScVJoWnMp472Zzz8uFJ98JS804h8xWbu+uFY3tnLu94S/ird3F6I3vqzmzd0Nbp
-        Cmk053HvkfneKiMp274rdu3HzGyjdDkHJjfb/uloKHvDU9T09rZqh9aR6Ti0fWziu8K23VHO
-        yRiasuEpWjeU/wDZVjMd8QMAAA==
+Content-Type: text/plain
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-SGVsbG8gTGludXMsDQoNCk9uIFN1biwgMjAxOS0xMS0wMyBhdCAyMzoyNyArMDEwMCwgTGludXMg
-V2FsbGVpaiB3cm90ZToNCj4gT24gRnJpLCBOb3YgMSwgMjAxOSBhdCAxMjo0MyBQTSBNYXR0aSBW
-YWl0dGluZW4NCj4gPG1hdHRpLnZhaXR0aW5lbkBmaS5yb2htZXVyb3BlLmNvbT4gd3JvdGU6DQo+
-IA0KPiA+IEJ1Y2tzIDEsMiw2IGFuZCA3IG9uIFJPSE0gQkQ3MTgyOCBjYW4gYmUgZWl0aGVyIGNv
-bnRyb2xsZWQgYXMNCj4gPiBpbmRpdmlkdWFsIHJlZ3VsYXJ0b3JzIC0gb3IgdGhleSBjYW4gYmUg
-Z3JvdXBlZCB0byBhIGdyb3VwIG9mDQo+ID4gcmVndWxhdG9ycyB0aGF0IGFyZSBjb250cm9sbGVk
-IGJ5ICdydW4gbGV2ZWxzJy4gVGhpcyBjYW4gYmUNCj4gPiBkb25lIHZpYSBJMkMuIEVhY2ggcmVn
-dWxhdG9yIGNhbiBiZSBhc3NpZ25lZCBhIHZvbHRhZ2UgYW5kDQo+ID4gZW5hYmxlL2Rpc2FibGUg
-c3RhdHVzIGZvciBlYWNoIHJ1bi1sZXZlbC4gVGhlc2Ugc3RhdHVzZXMgYXJlDQo+ID4gYWxzbyBj
-aGFuZ2VhYmxlIHZpYSBJMkMuDQo+ID4gDQo+ID4gUnVuLWxldmVscyBjYW4gdGhlbiBiZSBjaGFu
-Z2VkIGVpdGhlciBieSBJMkMgb3IgR1BJTy4gVGhpcw0KPiA+IGNvbnRyb2wgbWVjaGFuaXNtIGlz
-IHNlbGVjdGVkIGJ5IGRhdGEgaW4gb25lIHRpbWUgcHJvZ3JhbW1hYmxlDQo+ID4gYXJlYSAoZHVy
-aW5nIHByb2R1Y3Rpb24pIGFuZCBjYW4ndCBiZSBjaGFuZ2VkIGxhdGVyLg0KPiA+IA0KPiA+IEFs
-bG93IHJlZ3VsYXRvcnMgdG8gYmUgY29udHJvbGxlZCB2aWEgcnVuLWxldmVscyBhbmQgYWxsb3cN
-Cj4gPiBnZXR0aW5nL3NldHRpbmcgdGhlIGN1cnJlbnQgcnVuLWxldmVsIGFsc28gdmlhIEdQSU8u
-DQo+ID4gDQo+ID4gU2lnbmVkLW9mZi1ieTogTWF0dGkgVmFpdHRpbmVuIDxtYXR0aS52YWl0dGlu
-ZW5AZmkucm9obWV1cm9wZS5jb20+DQo+IA0KPiBJIGxpa2UgdGhlIHdheSB5b3UgdXNlIHRoZSBn
-cGlvIEFQSSBzbyBGV0lXOg0KPiBSZXZpZXdlZC1ieTogTGludXMgV2FsbGVpaiA8bGludXMud2Fs
-bGVpakBsaW5hcm8ub3JnPg0KDQpUaGFua3MuIEFuZCBJIGxpa2UgdGhlIEdQSU8gc2V0IG11bHRp
-cGxlIC0gdGhhdCdzIHJlcXVpcmVkIGluIG9yZGVyIHRvDQpkbyBzb21lIG9mIHRoZSBydW4tbGV2
-ZWwgY2hhbmdlcyB3aXRob3V0IGludGVybWVkaWF0ZSBzdGF0ZXMuIChFZy4gYm90aA0KRFZTIEdQ
-SU9zIG5lZWQgdG8gYmUgdG9nZ2xlZCB2aWEgc2luZ2xlIHJlZ2lzdGVyIHdyaXRlKS4NCg0KPiBJ
-IGRvIG5vdCB1bmRlcnN0YW5kIHRoZSByZWd1bGF0b3IgcGFydHMgb2YgdGhlIHBhdGNoLg0KDQpJ
-J20gc29ycnkuIFRoZSBwYXRjaCBpcyBub3QgY2xlYXJlc3Qgb25lIHdoYXQgY29tZXMgdG8gdGhl
-IHJlZ3VsYXRvcg0Kc3R1ZmYuIEkgY2FuIHRyeSBzcGxpdHRpbmcgaXQgdG8gc21hbGxlciBhbmQg
-bW9yZSBsb2dpY2FsIGNoYW5nZXMgaWYNCnlvdSwgTWFyayBvciBvdGhlciBpbnRlcmVzdGVkIHBl
-b3BsZSBob3BlIHRvIGdldCBpdCBzcGxpdHRlZC4gT3INCnBlcmhhcHMgaXQgd291bGQgYmUgc2lt
-cGxlc3QgdG8gcmV2aWV3IGlmIGl0IHdhcyBhbGwgaW4gb25lIHBhdGNoPyANCg0KUmF0aW9uYWxl
-IGZvciBzcGxpdHRpbmcgaXQgaW4gZmlyc3QgcGxhY2Ugd2FzIHRoYXQgSSBob3BlZCB0aGUgYmFz
-aWMNCnN1cHBvcnQgKGZpcnN0IHR3byByZWd1bGF0b3IgcGF0Y2hlcykgdG8gYmUgYWNjZXB0YWJs
-ZSB3aXRob3V0IGh1Z2UNCmNoYW5nZXMgLSB3aGVyZWFzIHRoZSBmb2xsb3cgdXAgcGF0Y2hlcyBh
-cmUgbW9yZSBsaWtlIHF1ZXN0aW9uIHRoYXQgaG93DQp0aGUgaGVjayBzaG91bGQgSSBpbXBsZW1l
-bnQgdGhpcyA6XSBJJ3ZlIG5vdCBoaXQgc2ltaWxhciAnY2hhbmdlIGJ1bmNoDQpvZiByZWd1bGF0
-b3Igc3RhdGVzIGF0IG9uZSBnbycgZHJpdmVycy9oYXJkd2FyZSBiZWZvcmUuDQoNCkJyLA0KCU1h
-dHRpIFZhaXR0aW5lbg0K
+
+On Fri 25 Oct 2019 at 13:49, Qianggui Song <qianggui.song@amlogic.com> wrote:
+
+> In meson_pinctrl_parse_dt, it contains two parts: reg parsing and
+> SoC relative fixup for AO. Several fixups in the same code make it hard
+> to maintain, so move all fixups to each SoC's callback and make
+> meson_pinctrl_parse_dt just do the reg parsing, separate these two
+> parts.Overview of all current Meson SoCs fixup is as below:
+>
+> +------+--------------------------------------+--------------------------+
+> |      |                                      |                          |
+> | SoC  |                EE domain             |        AO domain         |
+> +------+--------------------------------------+--------------------------+
+> |m8    | parse regs:                          | parse regs:              |
+> |m8b   |   gpio,mux,pull,pull-enable(skip ds) |    gpio,mux,pull(skip ds)|
+> |gxl   | fixup:                               | fixup:                   |
+> |gxbb  |   no                                 |     pull-enable = pull   |
+> |axg   |                                      |                          |
+> +------+--------------------------------------+--------------------------+
+> |g12a  | parse regs:                          | parse regs:              |
+> |sm1   |   gpio,mux,pull,pull-enable,ds       |   gpio,mux,ds            |
+> |      | fixup:                               | fixup:                   |
+> |      |   no                                 |   pull = gpio            |
+> |      |                                      |   pull-enable = gpio     |
+> +------+--------------------------------------+--------------------------+
+> |a1 or | parse regs:                                                     |
+> |later |  gpio/mux (without ao domain)                                   |
+> |SoCs  | fixup:                                                          |
+> |      |  pull=gpio; pull-enable=gpio; ds=gpio                           |
+> +------+-----------------------------------------------------------------+
+>
+> Signed-off-by: Qianggui Song <qianggui.song@amlogic.com>
+> ---
+>  drivers/pinctrl/meson/pinctrl-meson-axg.c  | 11 +++++++++++
+>  drivers/pinctrl/meson/pinctrl-meson-g12a.c |  9 +++++++++
+>  drivers/pinctrl/meson/pinctrl-meson-gxbb.c | 11 +++++++++++
+>  drivers/pinctrl/meson/pinctrl-meson-gxl.c  | 11 +++++++++++
+>  drivers/pinctrl/meson/pinctrl-meson.c      |  9 +++++----
+>  drivers/pinctrl/meson/pinctrl-meson.h      |  3 +++
+>  drivers/pinctrl/meson/pinctrl-meson8.c     | 11 +++++++++++
+>  drivers/pinctrl/meson/pinctrl-meson8b.c    | 11 +++++++++++
+>  8 files changed, 72 insertions(+), 4 deletions(-)
+>
+> diff --git a/drivers/pinctrl/meson/pinctrl-meson-axg.c b/drivers/pinctrl/meson/pinctrl-meson-axg.c
+> index ad502eda4afa..9c07f4423c37 100644
+> --- a/drivers/pinctrl/meson/pinctrl-meson-axg.c
+> +++ b/drivers/pinctrl/meson/pinctrl-meson-axg.c
+> @@ -1040,6 +1040,16 @@
+>  	.num_pmx_banks = ARRAY_SIZE(meson_axg_aobus_pmx_banks),
+>  };
+>  
+> +static int meson_axg_aobus_parse_dt_extra(struct meson_pinctrl *pc)
+> +{
+> +	if (!pc->reg_pull)
+> +		return -EINVAL;
+> +
+> +	pc->reg_pullen = pc->reg_pull;
+> +
+> +	return 0;
+> +}
+> +
+>  static struct meson_pinctrl_data meson_axg_periphs_pinctrl_data = {
+>  	.name		= "periphs-banks",
+>  	.pins		= meson_axg_periphs_pins,
+> @@ -1066,6 +1076,7 @@
+>  	.num_banks	= ARRAY_SIZE(meson_axg_aobus_banks),
+>  	.pmx_ops	= &meson_axg_pmx_ops,
+>  	.pmx_data	= &meson_axg_aobus_pmx_banks_data,
+> +	.parse_dt	= meson_axg_aobus_parse_dt_extra,
+>  };
+>  
+>  static const struct of_device_id meson_axg_pinctrl_dt_match[] = {
+> diff --git a/drivers/pinctrl/meson/pinctrl-meson-g12a.c b/drivers/pinctrl/meson/pinctrl-meson-g12a.c
+> index 582665fd362a..41850e3c0091 100644
+> --- a/drivers/pinctrl/meson/pinctrl-meson-g12a.c
+> +++ b/drivers/pinctrl/meson/pinctrl-meson-g12a.c
+> @@ -1362,6 +1362,14 @@
+>  	.num_pmx_banks	= ARRAY_SIZE(meson_g12a_aobus_pmx_banks),
+>  };
+>  
+> +static int meson_g12a_aobus_parse_dt_extra(struct meson_pinctrl *pc)
+> +{
+> +	pc->reg_pull = pc->reg_gpio;
+> +	pc->reg_pullen = pc->reg_gpio;
+> +
+> +	return 0;
+> +}
+> +
+>  static struct meson_pinctrl_data meson_g12a_periphs_pinctrl_data = {
+>  	.name		= "periphs-banks",
+>  	.pins		= meson_g12a_periphs_pins,
+> @@ -1388,6 +1396,7 @@
+>  	.num_banks	= ARRAY_SIZE(meson_g12a_aobus_banks),
+>  	.pmx_ops	= &meson_axg_pmx_ops,
+>  	.pmx_data	= &meson_g12a_aobus_pmx_banks_data,
+> +	.parse_dt	= meson_g12a_aobus_parse_dt_extra,
+>  };
+>  
+>  static const struct of_device_id meson_g12a_pinctrl_dt_match[] = {
+> diff --git a/drivers/pinctrl/meson/pinctrl-meson-gxbb.c b/drivers/pinctrl/meson/pinctrl-meson-gxbb.c
+> index 5bfa56f3847e..f5494a948200 100644
+> --- a/drivers/pinctrl/meson/pinctrl-meson-gxbb.c
+> +++ b/drivers/pinctrl/meson/pinctrl-meson-gxbb.c
+> @@ -827,6 +827,16 @@
+>  	BANK("AO",   GPIOAO_0,  GPIOAO_13, 0, 13, 0,  16, 0, 0,   0,  0,  0, 16,  1,  0),
+>  };
+>  
+> +static int meson_gxbb_aobus_parse_dt_extra(struct meson_pinctrl *pc)
+> +{
+> +	if (!pc->reg_pull)
+> +		return -EINVAL;
+> +
+> +	pc->reg_pullen = pc->reg_pull;
+> +
+> +	return 0;
+> +}
+
+Can you share the definition of this function instead of repeating it ?
+
+> +
+>  static struct meson_pinctrl_data meson_gxbb_periphs_pinctrl_data = {
+>  	.name		= "periphs-banks",
+>  	.pins		= meson_gxbb_periphs_pins,
+> @@ -851,6 +861,7 @@
+>  	.num_funcs	= ARRAY_SIZE(meson_gxbb_aobus_functions),
+>  	.num_banks	= ARRAY_SIZE(meson_gxbb_aobus_banks),
+>  	.pmx_ops	= &meson8_pmx_ops,
+> +	.parse_dt	= meson_gxbb_aobus_parse_dt_extra,
+>  };
+>  
+>  static const struct of_device_id meson_gxbb_pinctrl_dt_match[] = {
+> diff --git a/drivers/pinctrl/meson/pinctrl-meson-gxl.c b/drivers/pinctrl/meson/pinctrl-meson-gxl.c
+> index 72c5373c8dc1..943fb27dab08 100644
+> --- a/drivers/pinctrl/meson/pinctrl-meson-gxl.c
+> +++ b/drivers/pinctrl/meson/pinctrl-meson-gxl.c
+> @@ -796,6 +796,16 @@
+>  	BANK("AO",   GPIOAO_0,  GPIOAO_9, 0, 9, 0,  16, 0, 0,   0,  0,  0, 16,  1,  0),
+>  };
+>  
+> +static int meson_gxl_aobus_parse_dt_extra(struct meson_pinctrl *pc)
+> +{
+> +	if (!pc->reg_pull)
+> +		return -EINVAL;
+> +
+> +	pc->reg_pullen = pc->reg_pull;
+> +
+> +	return 0;
+> +}
+
+Same
+
+> +
+>  static struct meson_pinctrl_data meson_gxl_periphs_pinctrl_data = {
+>  	.name		= "periphs-banks",
+>  	.pins		= meson_gxl_periphs_pins,
+> @@ -820,6 +830,7 @@
+>  	.num_funcs	= ARRAY_SIZE(meson_gxl_aobus_functions),
+>  	.num_banks	= ARRAY_SIZE(meson_gxl_aobus_banks),
+>  	.pmx_ops	= &meson8_pmx_ops,
+> +	.parse_dt 	= meson_gxl_aobus_parse_dt_extra,
+>  };
+>  
+>  static const struct of_device_id meson_gxl_pinctrl_dt_match[] = {
+> diff --git a/drivers/pinctrl/meson/pinctrl-meson.c b/drivers/pinctrl/meson/pinctrl-meson.c
+> index 8bba9d053d9f..e182583422a4 100644
+> --- a/drivers/pinctrl/meson/pinctrl-meson.c
+> +++ b/drivers/pinctrl/meson/pinctrl-meson.c
+> @@ -677,14 +677,12 @@ static int meson_pinctrl_parse_dt(struct meson_pinctrl *pc,
+>  	}
+>  
+>  	pc->reg_pull = meson_map_resource(pc, gpio_np, "pull");
+> -	/* Use gpio region if pull one is not present */
+>  	if (IS_ERR(pc->reg_pull))
+> -		pc->reg_pull = pc->reg_gpio;
+> +		pc->reg_pull = NULL;
+
+Instead of doing this fixup, could modifhy meson_map_ressourse() to
+return NULL instead of -ENOENT ?
+
+Then you should IS_ERR_OR_NULL() for "mux" and "gpio" and just IS_ERR()
+for the rest
+
+>  
+>  	pc->reg_pullen = meson_map_resource(pc, gpio_np, "pull-enable");
+> -	/* Use pull region if pull-enable one is not present */
+>  	if (IS_ERR(pc->reg_pullen))
+> -		pc->reg_pullen = pc->reg_pull;
+> +		pc->reg_pullen = NULL;
+>  
+>  	pc->reg_ds = meson_map_resource(pc, gpio_np, "ds");
+>  	if (IS_ERR(pc->reg_ds)) {
+> @@ -692,6 +690,9 @@ static int meson_pinctrl_parse_dt(struct meson_pinctrl *pc,
+>  		pc->reg_ds = NULL;
+>  	}
+>  
+> +	if (pc->data->parse_dt)
+> +		return pc->data->parse_dt(pc);
+> +
+>  	return 0;
+>  }
+>  
+> diff --git a/drivers/pinctrl/meson/pinctrl-meson.h b/drivers/pinctrl/meson/pinctrl-meson.h
+> index c696f3241a36..d570f7c53045 100644
+> --- a/drivers/pinctrl/meson/pinctrl-meson.h
+> +++ b/drivers/pinctrl/meson/pinctrl-meson.h
+> @@ -11,6 +11,8 @@
+>  #include <linux/regmap.h>
+>  #include <linux/types.h>
+>  
+> +struct meson_pinctrl;
+> +
+>  /**
+>   * struct meson_pmx_group - a pinmux group
+>   *
+> @@ -114,6 +116,7 @@ struct meson_pinctrl_data {
+>  	unsigned int num_banks;
+>  	const struct pinmux_ops *pmx_ops;
+>  	void *pmx_data;
+> +	int (*parse_dt)(struct meson_pinctrl *pc);
+>  };
+>  
+>  struct meson_pinctrl {
+> diff --git a/drivers/pinctrl/meson/pinctrl-meson8.c b/drivers/pinctrl/meson/pinctrl-meson8.c
+> index 0b97befa6335..65c70c9b7070 100644
+> --- a/drivers/pinctrl/meson/pinctrl-meson8.c
+> +++ b/drivers/pinctrl/meson/pinctrl-meson8.c
+> @@ -1079,6 +1079,16 @@
+>  	BANK("AO",   GPIOAO_0, GPIO_TEST_N, 0, 13, 0, 16,  0,  0,  0,  0,  0, 16,  1,  0),
+>  };
+>  
+> +static int meson8_aobus_parse_dt_extra(struct meson_pinctrl *pc)
+> +{
+> +	if (!pc->reg_pull)
+> +		return -EINVAL;
+> +
+> +	pc->reg_pullen = pc->reg_pull;
+> +
+> +	return 0;
+> +}
+> +
+>  static struct meson_pinctrl_data meson8_cbus_pinctrl_data = {
+>  	.name		= "cbus-banks",
+>  	.pins		= meson8_cbus_pins,
+> @@ -1103,6 +1113,7 @@
+>  	.num_funcs	= ARRAY_SIZE(meson8_aobus_functions),
+>  	.num_banks	= ARRAY_SIZE(meson8_aobus_banks),
+>  	.pmx_ops	= &meson8_pmx_ops,
+> +	.parse_dt	= &meson8_aobus_parse_dt_extra,
+>  };
+>  
+>  static const struct of_device_id meson8_pinctrl_dt_match[] = {
+> diff --git a/drivers/pinctrl/meson/pinctrl-meson8b.c b/drivers/pinctrl/meson/pinctrl-meson8b.c
+> index a7de388388e6..85dc12e0c839 100644
+> --- a/drivers/pinctrl/meson/pinctrl-meson8b.c
+> +++ b/drivers/pinctrl/meson/pinctrl-meson8b.c
+> @@ -938,6 +938,16 @@
+>  	BANK("AO",   GPIOAO_0, GPIO_TEST_N, 0, 13, 0,  16, 0, 0,  0,  0,  0, 16,  1,  0),
+>  };
+>  
+> +static int meson8b_aobus_parse_dt_extra(struct meson_pinctrl *pc)
+> +{
+> +	if (!pc->reg_pull)
+> +		return -EINVAL;
+> +
+> +	pc->reg_pullen = pc->reg_pull;
+> +
+> +	return 0;
+> +}
+> +
+>  static struct meson_pinctrl_data meson8b_cbus_pinctrl_data = {
+>  	.name		= "cbus-banks",
+>  	.pins		= meson8b_cbus_pins,
+> @@ -962,6 +972,7 @@
+>  	.num_funcs	= ARRAY_SIZE(meson8b_aobus_functions),
+>  	.num_banks	= ARRAY_SIZE(meson8b_aobus_banks),
+>  	.pmx_ops	= &meson8_pmx_ops,
+> +	.parse_dt	= &meson8b_aobus_parse_dt_extra,
+>  };
+>  
+>  static const struct of_device_id meson8b_pinctrl_dt_match[] = {
+
