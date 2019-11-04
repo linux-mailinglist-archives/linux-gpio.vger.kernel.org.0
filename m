@@ -2,100 +2,130 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id B6BEFED697
-	for <lists+linux-gpio@lfdr.de>; Mon,  4 Nov 2019 01:18:47 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id CF422ED69C
+	for <lists+linux-gpio@lfdr.de>; Mon,  4 Nov 2019 01:21:47 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728372AbfKDASq (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sun, 3 Nov 2019 19:18:46 -0500
-Received: from mail-ua1-f67.google.com ([209.85.222.67]:38682 "EHLO
-        mail-ua1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728646AbfKDASp (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sun, 3 Nov 2019 19:18:45 -0500
-Received: by mail-ua1-f67.google.com with SMTP id u99so4436429uau.5
-        for <linux-gpio@vger.kernel.org>; Sun, 03 Nov 2019 16:18:43 -0800 (PST)
+        id S1727733AbfKDAVr (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sun, 3 Nov 2019 19:21:47 -0500
+Received: from mail-wr1-f41.google.com ([209.85.221.41]:35930 "EHLO
+        mail-wr1-f41.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727689AbfKDAVr (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sun, 3 Nov 2019 19:21:47 -0500
+Received: by mail-wr1-f41.google.com with SMTP id w18so15121019wrt.3
+        for <linux-gpio@vger.kernel.org>; Sun, 03 Nov 2019 16:21:45 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=+5L2eq9DWTqYID3ithkG+AoL6nhEs7tI6RGB4Dd8Zf4=;
-        b=oAlES9Uid7iSYZ2y6NPfHWjyad0j5hCqs5prmtdgJ2mK997WAVlxzJG3ynZVmC7nVi
-         mB54L2mfLf/Ymo2mr37VdY7P/VmPPDIkSj6dVPXoVoUbv4/bi0abmhjwnmb/FELUCiFe
-         WUmE0cxKBRBV/GLK0T6OlpT++peIpQTvzfheDW+VYHwnVh2WMPfAGGv0Jll4lQ9KmdAX
-         KUTaR0YLzT9+mGViBviY1QVrl63MXjbWJ1L7dXjYhxykfLjDCnezbRw37cjm6t8NlKrx
-         vUEPiPlqJXQVEvz5N1BTYEZa2S6mllw04JXsrNQAwnirXTN3hH91Hd5eJcmUXVJGR71Z
-         pSrA==
+        d=kernelci-org.20150623.gappssmtp.com; s=20150623;
+        h=message-id:date:mime-version:content-transfer-encoding:subject:to
+         :from;
+        bh=rcjhldl50Lke5NfhZZA9Ta/hjioREERsZ/C3JzzcxM8=;
+        b=f6jzM7wM/r3zwNK2bvVoZJP/7b80SXEYg8xe21jT7s9JaSyAbe/Cl4nA9Ua2yc0ZhA
+         SL9jSILBF/CQY8cUyGouPSCLIPMb/PtHeRZP0vl3s0FfBHVJKKn2vhcc46DjbN4ESRBb
+         ya437BHK+wc99An/wZDoEt+bVVKTWC1slOd6v2FlbJA9jilujUI0mdSJ9XmAab2W6493
+         GbeVbWX7UXO2CuogJ+B/ZpzaugJqUsycWw31fEDlE9MkC9i65ijp6TMez2czhEeeh0KB
+         XXwAGpEHAMbN5odJbmAFCOg1+v1008fqJmjlR/r3PGaM6uWepX5Zz97JLDHNiXl+wCRD
+         VvBg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=+5L2eq9DWTqYID3ithkG+AoL6nhEs7tI6RGB4Dd8Zf4=;
-        b=fqg9T1EDsDtyH8zyc98KBu3sOghSAJjIKr6/c7TI2OTFIMatSNXLFQcSvxKh6TT2iz
-         w86GzQI3b2HWxL8iBWLibjBwRQoL5gM4RmyujVaMRf9moBHCwXpCoBVo3UAhKDzk6gHP
-         U/7AUx7YDoNvkguo0FohVF4HatuA5Oy7AK/1h2c7E42mUS1JsuPm8EUzKdtBfToEcLlq
-         QUx0d8orbs2Rd5zjvsAxpL/zJlKoWoZHx5/j3D0xD7LRY9l/WOPyenC55z+XDSIs0+iq
-         A9bGDzHoawiBGYodFmo8ybiylzEnA2YLw3dwIZa8lkUwpfbU5tfkGMbDdd/qHhVOG904
-         8IXg==
-X-Gm-Message-State: APjAAAXjIc4US7paqWjBkcDAPgHzbLDw7CdHjLkIU9pDNbdzwP5VKc0y
-        uLhyUsBAGKsXpoxXI6JjqZTgRJqwNH+IpdHVW00BXw==
-X-Google-Smtp-Source: APXvYqxaDMOhPupmDshbsu4K1ddLDJNFp+Loev7XOmTsYtFTpgq7W/3FH8VrI3bEONc6DjxIfdtklet+o4Mib1wkwhc=
-X-Received: by 2002:ab0:70a9:: with SMTP id q9mr4518172ual.84.1572826722501;
- Sun, 03 Nov 2019 16:18:42 -0800 (PST)
+        h=x-gm-message-state:message-id:date:mime-version
+         :content-transfer-encoding:subject:to:from;
+        bh=rcjhldl50Lke5NfhZZA9Ta/hjioREERsZ/C3JzzcxM8=;
+        b=pvBAa3t/+aZMmWL1X33PwoxB5bqQi0nadPpJC5byk8197GwPLorJdsUkrQhkB5wT/g
+         0MnoNN2LasRQTQ8TjPaglsDGnfsHmC6RDFWzysL8TI7QdgkriLYCFqug9xvNXb/txjvO
+         bX+MFroMNSLxFu5Sbyi2IckT3M66nbwUBSq2F4GpUtEKpSA36xiIYUA4ew/fgTletT6z
+         b5FEnhCJx76mMlLuPpn+k/f5sHnk/P+U4hHbagBm5OcPcPDoAhXWePFFQfOgKjncCji9
+         wS/3JTMOkoyR/ASt9uqjtce4flt0DIhU8TLOfASJrxEKOlp/f2VkveSbp35x9XKRiBNN
+         21Kw==
+X-Gm-Message-State: APjAAAXWd2oqBbwei4ljRpFAXBhfsxp0WPHqzO4etn8gELx5TYXKh0CR
+        nhFb+muV1Mwwa+SsyrzFyqmQfuluhnuKaw==
+X-Google-Smtp-Source: APXvYqzzljt2ALGOc0l3IrAhVZR2GesOFU0KpT321t5Qks3i0HW3XIpExgHq9YajncvXcmWgxkQ+NQ==
+X-Received: by 2002:adf:fc10:: with SMTP id i16mr19683389wrr.157.1572826904859;
+        Sun, 03 Nov 2019 16:21:44 -0800 (PST)
+Received: from [148.251.42.114] ([2a01:4f8:201:9271::2])
+        by smtp.gmail.com with ESMTPSA id y16sm5826759wro.25.2019.11.03.16.21.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 03 Nov 2019 16:21:44 -0800 (PST)
+Message-ID: <5dbf6f18.1c69fb81.b9aa8.35e4@mx.google.com>
+Date:   Sun, 03 Nov 2019 16:21:44 -0800 (PST)
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-References: <20191017122640.22976-1-yuehaibing@huawei.com> <20191017122640.22976-2-yuehaibing@huawei.com>
-In-Reply-To: <20191017122640.22976-2-yuehaibing@huawei.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Mon, 4 Nov 2019 01:18:31 +0100
-Message-ID: <CACRpkdb8D_zxHfzY=+ramnNjXVsN9MMO8Q-3=iZFLS2A_ZDQuw@mail.gmail.com>
-Subject: Re: [PATCH -next 01/30] pinctrl: pxa25x: use devm_platform_ioremap_resource()
- to simplify code
-To:     YueHaibing <yuehaibing@huawei.com>
-Cc:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Ray Jui <rjui@broadcom.com>,
-        Scott Branden <sbranden@broadcom.com>,
-        bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>,
-        Jesper Nilsson <jesper.nilsson@axis.com>,
-        Lars Persson <lars.persson@axis.com>,
-        Ludovic Desroches <ludovic.desroches@microchip.com>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Baruch Siach <baruch@tkos.co.il>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        linux-arm-kernel@axis.com, linux-oxnas@groups.io,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        MSM <linux-arm-msm@vger.kernel.org>, linux-tegra@vger.kernel.org,
-        Vladimir Zapolskiy <vz@mleia.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Daniel Mack <daniel@zonque.org>,
-        Haojian Zhuang <haojian.zhuang@gmail.com>,
-        Chen-Yu Tsai <wens@csie.org>,
-        "thierry.reding@gmail.com" <thierry.reding@gmail.com>,
-        Jon Hunter <jonathanh@nvidia.com>,
-        Andy Gross <agross@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Kernelci-Branch: for-next
+X-Kernelci-Tree: linusw
+X-Kernelci-Report-Type: boot
+X-Kernelci-Kernel: v5.4-rc4-34-gb0983a8bbfb4
+Subject: linusw/for-next boot: 28 boots: 9 failed,
+ 19 passed (v5.4-rc4-34-gb0983a8bbfb4)
+To:     linux-gpio@vger.kernel.org, fellows@kernelci.org
+From:   "kernelci.org bot" <bot@kernelci.org>
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Oct 17, 2019 at 2:48 PM YueHaibing <yuehaibing@huawei.com> wrote:
+linusw/for-next boot: 28 boots: 9 failed, 19 passed (v5.4-rc4-34-gb0983a8bb=
+fb4)
 
-> Use devm_platform_ioremap_resource() to simplify the code a bit.
-> This is detected by coccinelle.
->
-> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+Full Boot Summary: https://kernelci.org/boot/all/job/linusw/branch/for-next=
+/kernel/v5.4-rc4-34-gb0983a8bbfb4/
+Full Build Summary: https://kernelci.org/build/linusw/branch/for-next/kerne=
+l/v5.4-rc4-34-gb0983a8bbfb4/
 
-These are too many patches changing too little.
-One patch should be one technical step.
+Tree: linusw
+Branch: for-next
+Git Describe: v5.4-rc4-34-gb0983a8bbfb4
+Git Commit: b0983a8bbfb45d16760b34c23436a3d9b5834dbf
+Git URL: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-gpio.=
+git/
+Tested: 28 unique boards, 9 SoC families, 3 builds out of 6
 
-I'd say squash them all into one big patch and resend.
+Boot Regressions Detected:
 
-You can collect the ACKs you received, but don't put
-too many people on CC, they will be annoyed.
+arm64:
 
-Yours,
-Linus Walleij
+    defconfig:
+        gcc-8:
+          meson-g12a-x96-max:
+              lab-baylibre: new failure (last pass: v5.4-rc4-28-gacba5fc211=
+ee)
+          meson-g12b-odroid-n2:
+              lab-baylibre: new failure (last pass: v5.4-rc4-28-gacba5fc211=
+ee)
+          meson-gxbb-p200:
+              lab-baylibre: new failure (last pass: v5.4-rc4-28-gacba5fc211=
+ee)
+          meson-gxl-s805x-libretech-ac:
+              lab-baylibre: new failure (last pass: v5.4-rc4-28-gacba5fc211=
+ee)
+          meson-gxl-s905x-khadas-vim:
+              lab-baylibre: new failure (last pass: v5.4-rc4-28-gacba5fc211=
+ee)
+          meson-gxl-s905x-libretech-cc:
+              lab-baylibre: new failure (last pass: v5.4-rc4-28-gacba5fc211=
+ee)
+          meson-gxm-khadas-vim2:
+              lab-baylibre: new failure (last pass: v5.4-rc4-28-gacba5fc211=
+ee)
+          r8a7795-salvator-x:
+              lab-baylibre: new failure (last pass: v5.4-rc4-28-gacba5fc211=
+ee)
+          r8a7796-m3ulcb:
+              lab-baylibre: new failure (last pass: v5.4-rc4-28-gacba5fc211=
+ee)
+
+Boot Failures Detected:
+
+arm64:
+    defconfig:
+        gcc-8:
+            meson-g12a-x96-max: 1 failed lab
+            meson-g12b-odroid-n2: 1 failed lab
+            meson-gxbb-p200: 1 failed lab
+            meson-gxl-s805x-libretech-ac: 1 failed lab
+            meson-gxl-s905x-khadas-vim: 1 failed lab
+            meson-gxl-s905x-libretech-cc: 1 failed lab
+            meson-gxm-khadas-vim2: 1 failed lab
+            r8a7795-salvator-x: 1 failed lab
+            r8a7796-m3ulcb: 1 failed lab
+
+---
+For more info write to <info@kernelci.org>
