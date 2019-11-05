@@ -2,69 +2,108 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 383A3EFB6A
-	for <lists+linux-gpio@lfdr.de>; Tue,  5 Nov 2019 11:34:30 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id BC745EFB6C
+	for <lists+linux-gpio@lfdr.de>; Tue,  5 Nov 2019 11:34:40 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388297AbfKEKeW (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 5 Nov 2019 05:34:22 -0500
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:39110 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387905AbfKEKeW (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 5 Nov 2019 05:34:22 -0500
-Received: by mail-oi1-f196.google.com with SMTP id v138so17042335oif.6;
-        Tue, 05 Nov 2019 02:34:21 -0800 (PST)
+        id S2388197AbfKEKej (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 5 Nov 2019 05:34:39 -0500
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:35547 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387905AbfKEKej (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 5 Nov 2019 05:34:39 -0500
+Received: by mail-lf1-f65.google.com with SMTP id y6so14723456lfj.2;
+        Tue, 05 Nov 2019 02:34:38 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=IzfnrwkMeyc93hSNQBNHnPEfXYeanr/FufFx7fnxCoQ=;
-        b=ZT002xkn6GkqosctOyAxtZC3zUkYLmR1EYyiBAU01+OaZ628ZLM1vIEHrKjG5QMKyA
-         Fl2fnKa0Lhe42FjdC3ekiQnOYtIMlZbVpQqfVBV7sCYWm3wzEImcVZUfTFNpQOhQOghm
-         nfy18byPajuBjzKJ9Sz0C14/vhUAaaZodmcUI9eh/bRGNTrULnav2g12SSGPjC8P8vkp
-         E7h0BwtP/+qb3mNvEGyhTtEyfUdU5LwBFgVtGqrDFYtjWaU6GWmghwWfCrYj7NzUuDN1
-         AVyzhH1+UvY/HjA8oBCIF/fd03kx4qQRpEHqgiamq/ujE3/JsNP9+lUBkeJ3hzJEUDAJ
-         +8Wg==
-X-Gm-Message-State: APjAAAVJJ4effBghLR1pMUin0bkcMZe9nDhZ+0ixnKAS34ONJSZa1hxj
-        nzyqtg5dH9xVnHB3NFLvk72PiYSq9q46j5F/SKA=
-X-Google-Smtp-Source: APXvYqwe4Pb9xkaXXJR4FYlmpNLRzZYbEcrK8CNbjm/sFyZu0DiesJrfpVh/kY6zqWc8hG7rVS2AuusfJqyo94qCBPE=
-X-Received: by 2002:aca:fc92:: with SMTP id a140mr3165011oii.153.1572950061048;
- Tue, 05 Nov 2019 02:34:21 -0800 (PST)
-MIME-Version: 1.0
-References: <cover.1572945644.git.matti.vaittinen@fi.rohmeurope.com> <208e7b0c1d8e282cdd91d3d31f6c2054b45032fd.1572945644.git.matti.vaittinen@fi.rohmeurope.com>
-In-Reply-To: <208e7b0c1d8e282cdd91d3d31f6c2054b45032fd.1572945644.git.matti.vaittinen@fi.rohmeurope.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Tue, 5 Nov 2019 11:34:10 +0100
-Message-ID: <CAMuHMdVpiZL2dzLzKXhn0EsDcWc5yCnptRLrF2T0XcT9skUWcg@mail.gmail.com>
-Subject: Re: [PATCH 05/62] gpio: gpio-74xx-mmio: Use new GPIO_LINE_DIRECTION
-To:     Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-Cc:     Matti Vaittinen <mazziesaccount@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=UGM+pDYo96qs+1n4Tb8RbGly4iALdbyniGajedA7jHk=;
+        b=PmM0637foMfG7KiQy4I8MMeLj/t1CyzgiTS0mTDhvh2qm4MR2AIMhNw2bh2io29772
+         PWgEGcoYd26nghCr6N7yXG8QTMeveSsgtZgAXL/8JD123EK+a5+bINh2DRSoqRiI/qeV
+         xhJwlxmcs4gpzkT0ZcBYAURhodwQ8m0EUn2itepMSzYHNCzojhzHl+Q1c4ZtClg+StYm
+         GU9M8pG/i6GHf+cmSL+Ea8VTWdGAc9bamKsGSR0mW/naX7jycHbo8YLe0mTTemZzT3JV
+         vpeKHhEAkvvnT9KpaG88Teea93iXdZzSzi5JEW92wgTRV8ydg6qSzl+NnLNSVKv5REiL
+         TVJg==
+X-Gm-Message-State: APjAAAVagL+R4Y234UNzbrcYyakAmI+22Rc3rJk6wtIqYAsndgfsjlPS
+        wGTeBRtwOPiTpHfrGcYxcuE=
+X-Google-Smtp-Source: APXvYqxnyRKexvDm1n2SDoApnKEC/g855BPd2woo1Nhp0HmCn3FOUmqq9cx9A7sz3wPoHqvZJFUO3Q==
+X-Received: by 2002:ac2:4822:: with SMTP id 2mr20127015lft.115.1572950077489;
+        Tue, 05 Nov 2019 02:34:37 -0800 (PST)
+Received: from localhost.localdomain ([213.255.186.46])
+        by smtp.gmail.com with ESMTPSA id g25sm10973730ljk.36.2019.11.05.02.34.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 05 Nov 2019 02:34:37 -0800 (PST)
+Date:   Tue, 5 Nov 2019 12:34:28 +0200
+From:   Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+To:     matti.vaittinen@fi.rohmeurope.com, mazziesaccount@gmail.com
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 49/62] gpio: gpio-tps68470: Use new GPIO_LINE_DIRECTION
+Message-ID: <819708cadd2b365216242df920e1fe17b731a2d3.1572945982.git.matti.vaittinen@fi.rohmeurope.com>
+References: <cover.1572945981.git.matti.vaittinen@fi.rohmeurope.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <cover.1572945981.git.matti.vaittinen@fi.rohmeurope.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Nov 5, 2019 at 11:14 AM Matti Vaittinen
-<matti.vaittinen@fi.rohmeurope.com> wrote:
-> It's hard for occasional GPIO code reader/writer to know if values 0/1
-> equal to IN or OUT. Use defined GPIO_LINE_DIRECTION_IN and
-> GPIO_LINE_DIRECTION_OUT to help them out.
->
-> Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+It's hard for occasional GPIO code reader/writer to know if values 0/1
+equal to IN or OUT. Use defined GPIO_LINE_DIRECTION_IN and
+GPIO_LINE_DIRECTION_OUT to help them out.
 
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+---
+ drivers/gpio/gpio-tps68470.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-Gr{oetje,eeting}s,
+diff --git a/drivers/gpio/gpio-tps68470.c b/drivers/gpio/gpio-tps68470.c
+index aff6e504c666..f7f5f770e0fb 100644
+--- a/drivers/gpio/gpio-tps68470.c
++++ b/drivers/gpio/gpio-tps68470.c
+@@ -47,7 +47,6 @@ static int tps68470_gpio_get(struct gpio_chip *gc, unsigned int offset)
+ 	return !!(val & BIT(offset));
+ }
+ 
+-/* Return 0 if output, 1 if input */
+ static int tps68470_gpio_get_direction(struct gpio_chip *gc,
+ 				       unsigned int offset)
+ {
+@@ -57,7 +56,7 @@ static int tps68470_gpio_get_direction(struct gpio_chip *gc,
+ 
+ 	/* rest are always outputs */
+ 	if (offset >= TPS68470_N_REGULAR_GPIO)
+-		return 0;
++		return GPIO_LINE_DIRECTION_OUT;
+ 
+ 	ret = regmap_read(regmap, TPS68470_GPIO_CTL_REG_A(offset), &val);
+ 	if (ret) {
+@@ -67,7 +66,8 @@ static int tps68470_gpio_get_direction(struct gpio_chip *gc,
+ 	}
+ 
+ 	val &= TPS68470_GPIO_MODE_MASK;
+-	return val >= TPS68470_GPIO_MODE_OUT_CMOS ? 0 : 1;
++	return val >= TPS68470_GPIO_MODE_OUT_CMOS ? GPIO_LINE_DIRECTION_OUT :
++						    GPIO_LINE_DIRECTION_IN;
+ }
+ 
+ static void tps68470_gpio_set(struct gpio_chip *gc, unsigned int offset,
+-- 
+2.21.0
 
-                        Geert
 
 -- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+Matti Vaittinen, Linux device drivers
+ROHM Semiconductors, Finland SWDC
+Kiviharjunlenkki 1E
+90220 OULU
+FINLAND
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+~~~ "I don't think so," said Rene Descartes. Just then he vanished ~~~
+Simon says - in Latin please.
+~~~ "non cogito me" dixit Rene Descarte, deinde evanescavit ~~~
+Thanks to Simon Glass for the translation =] 
