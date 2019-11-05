@@ -2,343 +2,135 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 9250AEF394
-	for <lists+linux-gpio@lfdr.de>; Tue,  5 Nov 2019 03:38:50 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 654FFEF50A
+	for <lists+linux-gpio@lfdr.de>; Tue,  5 Nov 2019 06:34:59 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729717AbfKECiu (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 4 Nov 2019 21:38:50 -0500
-Received: from mail-sz.amlogic.com ([211.162.65.117]:10466 "EHLO
-        mail-sz.amlogic.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729897AbfKECit (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 4 Nov 2019 21:38:49 -0500
-Received: from [10.28.18.45] (10.28.18.45) by mail-sz.amlogic.com (10.28.11.5)
- with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1591.10; Tue, 5 Nov
- 2019 10:39:04 +0800
-Subject: Re: [PATCH v4 2/4] pinctrl: meson: add a new callback for SoCs fixup
-To:     Jerome Brunet <jbrunet@baylibre.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        <linux-gpio@vger.kernel.org>
-CC:     Neil Armstrong <narmstrong@baylibre.com>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        Carlo Caione <carlo@caione.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Xingyu Chen <xingyu.chen@amlogic.com>,
-        Jianxin Pan <jianxin.pan@amlogic.com>,
-        Hanjie Lin <hanjie.lin@amlogic.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-amlogic@lists.infradead.org>, <linux-kernel@vger.kernel.org>
-References: <1572004167-24150-1-git-send-email-qianggui.song@amlogic.com>
- <1572004167-24150-3-git-send-email-qianggui.song@amlogic.com>
- <1jeeyo3wdg.fsf@starbuckisacylon.baylibre.com>
-From:   Qianggui Song <qianggui.song@amlogic.com>
-Message-ID: <25885aef-1ea6-600e-c022-6f0385d78559@amlogic.com>
-Date:   Tue, 5 Nov 2019 10:39:04 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        id S1725991AbfKEFe7 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 5 Nov 2019 00:34:59 -0500
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:41246 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725800AbfKEFe6 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 5 Nov 2019 00:34:58 -0500
+Received: by mail-pg1-f193.google.com with SMTP id l3so13186236pgr.8
+        for <linux-gpio@vger.kernel.org>; Mon, 04 Nov 2019 21:34:58 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=YAtyN9gS0XmBgI5dhzDRgTUy6cuYsScut6Kcp5MRN9E=;
+        b=VYzxKMUW55up/k0aXwTOgSMFgXF+OFc5dSoNufF++PAihtQGxUtxHTlReQ9cmCb8Ih
+         1WMLYh9bJCRUKTNmLfh2NAfD8FdvlyItA+G6KwMD6y4B0ISycqH4U/Z7e/lJApGZ3uYm
+         aLCIUY4gMt4UzoI1qCVZl9nZyhAjkiaQyBJWA41UpBJrHxbVtZyp8A7sKtjxosh8w4BU
+         /7Z1YMFGQ1Mlg2VCInfb4SOtZQDpywaABnHh92NpK+xSkcVNUZ4hS+toX0+AbwGozT8X
+         AaeFZwQuS2iLcnx6gPdqvTwcB1n1cJ6qHjT3/+6PA+GV6fiZqXypQTGHMJRzJZLC1/Wc
+         vFXQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=YAtyN9gS0XmBgI5dhzDRgTUy6cuYsScut6Kcp5MRN9E=;
+        b=DWTiH8Wb+gi5h25Cv3B2QumxPPVdMarMLlf2ECWuTNzZHc0QQpoc6xhEiXWkl3G1un
+         hvn8E+YYRM1F92YO5h7cDbC0YxaC+ihkkFzFxIXmncivzzPbkfIdsxovBd66JjDDVMX8
+         P+XujqTR+buEnECCUvEUr6MMybex6HH/jFS7tPqRz8DtmFcCD+KpBvItriLl6z4midQJ
+         I9yBQ5VLx+CQ0R2gi63VcookXEpD/FKpTix8TLiM67zPoWZalc0gadvXv/mPekoYDZPg
+         Ly1QygvqDuMNnokUbBY+ZW89azIMLrYWYzcPRvFGY9e5F1vOdzTpk6iInY/5my7XBVUO
+         uoFw==
+X-Gm-Message-State: APjAAAVxB/N48NYD8FYd43NYfLI01LS7PmXDD23WDFHV+epfeUoxlcGV
+        SPUfJIKGyhIdq5WeoS+r+Bv6mYb20P0=
+X-Google-Smtp-Source: APXvYqykLnCS4lLOqJ/SZLa1xBhjOkqMxXh0nFRmbpNwMuJyJlsVCwbX/vZksGML6JvK1SCvRe19GQ==
+X-Received: by 2002:a63:381b:: with SMTP id f27mr32516127pga.291.1572932097574;
+        Mon, 04 Nov 2019 21:34:57 -0800 (PST)
+Received: from sol (220-235-109-115.dyn.iinet.net.au. [220.235.109.115])
+        by smtp.gmail.com with ESMTPSA id e198sm20297973pfh.83.2019.11.04.21.34.54
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 04 Nov 2019 21:34:56 -0800 (PST)
+Date:   Tue, 5 Nov 2019 13:34:51 +0800
+From:   Kent Gibson <warthog618@gmail.com>
+To:     Drew Fustini <drew@pdp7.com>
+Cc:     linux-gpio@vger.kernel.org
+Subject: Re: [PATCH v5 0/7] gpio: expose line bias flags to userspace
+Message-ID: <20191105053451.GA32084@sol>
+References: <20191104153841.16911-1-warthog618@gmail.com>
+ <20191104195838.GA9833@x1>
+ <20191105001213.GA3685@sol>
 MIME-Version: 1.0
-In-Reply-To: <1jeeyo3wdg.fsf@starbuckisacylon.baylibre.com>
-Content-Type: text/plain; charset="windows-1252"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.28.18.45]
-X-ClientProxiedBy: mail-sz.amlogic.com (10.28.11.5) To mail-sz.amlogic.com
- (10.28.11.5)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191105001213.GA3685@sol>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+On Tue, Nov 05, 2019 at 08:12:13AM +0800, Kent Gibson wrote:
+> On Mon, Nov 04, 2019 at 11:58:38AM -0800, Drew Fustini wrote:
+> > On Mon, Nov 04, 2019 at 11:38:34PM +0800, Kent Gibson wrote:
+> > > on a Raspberry Pi, in both cases using the feature/pud_set_config 
+> > > branch of my Go gpiod library[2], as well as with my feature/pud 
+> > > development branch of libgpiod[3].  Patch 7 has only been tested using 
+> > > my gpiod library as libgpiod has not yet been updated to support the 
+> > > SET_CONFIG ioctl.
+> > > 
+> > > Patch 1 adds pull-up/pull-down support to line handle requests.
+> > > Patch 2 adds pull-up/pull-down support to line event requests.
+> > > Patch 3 adds support for disabling bias.
+> > > Patch 4 adds support for setting bias on output lines.
+> > > Patch 5 adds pull-up/down support to the gpio-mockup for uAPI testing.
+> > > Patch 6 refactors the flag validation from linehandle_create.
+> > > Patch 7 adds the SET_CONFIG ioctl.
+> > 
+> > Hi Kent, thanks for continuing pushing this patch series forward.
+> > 
+> > I've not used gpiomockup before and I was hoping you might be able to share
+> > the commands you use to run it to test the patches.
+> > 
+> 
+> I refer you to the libgpiod tests, particularly
+> libgpiod/tests/mockup/gpio-mockup.c as well as gpio/gpio-mockup.c
+> itself.
+> 
+> If you run the libgpiod tests they will load and manipulate the module
+> themselves.  My gpiod tests do similarly.  I run them in a VM to ensure
+> they can't interfere with real hardware by accident.
+> 
 
+It occurs to me that you might want to know how to run the Go tests that
+I'm refering to when I say I've tested against gpio-mockup using gpiod.
+While that is probably obvious for Go developers, it probably isn't 
+so obvious for kernel developers.
 
-On 2019/11/4 15:59, Jerome Brunet wrote:
-> 
-> On Fri 25 Oct 2019 at 13:49, Qianggui Song <qianggui.song@amlogic.com> wrote:
-> 
->> In meson_pinctrl_parse_dt, it contains two parts: reg parsing and
->> SoC relative fixup for AO. Several fixups in the same code make it hard
->> to maintain, so move all fixups to each SoC's callback and make
->> meson_pinctrl_parse_dt just do the reg parsing, separate these two
->> parts.Overview of all current Meson SoCs fixup is as below:
->>
->> +------+--------------------------------------+--------------------------+
->> |      |                                      |                          |
->> | SoC  |                EE domain             |        AO domain         |
->> +------+--------------------------------------+--------------------------+
->> |m8    | parse regs:                          | parse regs:              |
->> |m8b   |   gpio,mux,pull,pull-enable(skip ds) |    gpio,mux,pull(skip ds)|
->> |gxl   | fixup:                               | fixup:                   |
->> |gxbb  |   no                                 |     pull-enable = pull   |
->> |axg   |                                      |                          |
->> +------+--------------------------------------+--------------------------+
->> |g12a  | parse regs:                          | parse regs:              |
->> |sm1   |   gpio,mux,pull,pull-enable,ds       |   gpio,mux,ds            |
->> |      | fixup:                               | fixup:                   |
->> |      |   no                                 |   pull = gpio            |
->> |      |                                      |   pull-enable = gpio     |
->> +------+--------------------------------------+--------------------------+
->> |a1 or | parse regs:                                                     |
->> |later |  gpio/mux (without ao domain)                                   |
->> |SoCs  | fixup:                                                          |
->> |      |  pull=gpio; pull-enable=gpio; ds=gpio                           |
->> +------+-----------------------------------------------------------------+
->>
->> Signed-off-by: Qianggui Song <qianggui.song@amlogic.com>
->> ---
->>  drivers/pinctrl/meson/pinctrl-meson-axg.c  | 11 +++++++++++
->>  drivers/pinctrl/meson/pinctrl-meson-g12a.c |  9 +++++++++
->>  drivers/pinctrl/meson/pinctrl-meson-gxbb.c | 11 +++++++++++
->>  drivers/pinctrl/meson/pinctrl-meson-gxl.c  | 11 +++++++++++
->>  drivers/pinctrl/meson/pinctrl-meson.c      |  9 +++++----
->>  drivers/pinctrl/meson/pinctrl-meson.h      |  3 +++
->>  drivers/pinctrl/meson/pinctrl-meson8.c     | 11 +++++++++++
->>  drivers/pinctrl/meson/pinctrl-meson8b.c    | 11 +++++++++++
->>  8 files changed, 72 insertions(+), 4 deletions(-)
->>
->> diff --git a/drivers/pinctrl/meson/pinctrl-meson-axg.c b/drivers/pinctrl/meson/pinctrl-meson-axg.c
->> index ad502eda4afa..9c07f4423c37 100644
->> --- a/drivers/pinctrl/meson/pinctrl-meson-axg.c
->> +++ b/drivers/pinctrl/meson/pinctrl-meson-axg.c
->> @@ -1040,6 +1040,16 @@
->>  	.num_pmx_banks = ARRAY_SIZE(meson_axg_aobus_pmx_banks),
->>  };
->>  
->> +static int meson_axg_aobus_parse_dt_extra(struct meson_pinctrl *pc)
->> +{
->> +	if (!pc->reg_pull)
->> +		return -EINVAL;
->> +
->> +	pc->reg_pullen = pc->reg_pull;
->> +
->> +	return 0;
->> +}
->> +
->>  static struct meson_pinctrl_data meson_axg_periphs_pinctrl_data = {
->>  	.name		= "periphs-banks",
->>  	.pins		= meson_axg_periphs_pins,
->> @@ -1066,6 +1076,7 @@
->>  	.num_banks	= ARRAY_SIZE(meson_axg_aobus_banks),
->>  	.pmx_ops	= &meson_axg_pmx_ops,
->>  	.pmx_data	= &meson_axg_aobus_pmx_banks_data,
->> +	.parse_dt	= meson_axg_aobus_parse_dt_extra,
->>  };
->>  
->>  static const struct of_device_id meson_axg_pinctrl_dt_match[] = {
->> diff --git a/drivers/pinctrl/meson/pinctrl-meson-g12a.c b/drivers/pinctrl/meson/pinctrl-meson-g12a.c
->> index 582665fd362a..41850e3c0091 100644
->> --- a/drivers/pinctrl/meson/pinctrl-meson-g12a.c
->> +++ b/drivers/pinctrl/meson/pinctrl-meson-g12a.c
->> @@ -1362,6 +1362,14 @@
->>  	.num_pmx_banks	= ARRAY_SIZE(meson_g12a_aobus_pmx_banks),
->>  };
->>  
->> +static int meson_g12a_aobus_parse_dt_extra(struct meson_pinctrl *pc)
->> +{
->> +	pc->reg_pull = pc->reg_gpio;
->> +	pc->reg_pullen = pc->reg_gpio;
->> +
->> +	return 0;
->> +}
->> +
->>  static struct meson_pinctrl_data meson_g12a_periphs_pinctrl_data = {
->>  	.name		= "periphs-banks",
->>  	.pins		= meson_g12a_periphs_pins,
->> @@ -1388,6 +1396,7 @@
->>  	.num_banks	= ARRAY_SIZE(meson_g12a_aobus_banks),
->>  	.pmx_ops	= &meson_axg_pmx_ops,
->>  	.pmx_data	= &meson_g12a_aobus_pmx_banks_data,
->> +	.parse_dt	= meson_g12a_aobus_parse_dt_extra,
->>  };
->>  
->>  static const struct of_device_id meson_g12a_pinctrl_dt_match[] = {
->> diff --git a/drivers/pinctrl/meson/pinctrl-meson-gxbb.c b/drivers/pinctrl/meson/pinctrl-meson-gxbb.c
->> index 5bfa56f3847e..f5494a948200 100644
->> --- a/drivers/pinctrl/meson/pinctrl-meson-gxbb.c
->> +++ b/drivers/pinctrl/meson/pinctrl-meson-gxbb.c
->> @@ -827,6 +827,16 @@
->>  	BANK("AO",   GPIOAO_0,  GPIOAO_13, 0, 13, 0,  16, 0, 0,   0,  0,  0, 16,  1,  0),
->>  };
->>  
->> +static int meson_gxbb_aobus_parse_dt_extra(struct meson_pinctrl *pc)
->> +{
->> +	if (!pc->reg_pull)
->> +		return -EINVAL;
->> +
->> +	pc->reg_pullen = pc->reg_pull;
->> +
->> +	return 0;
->> +}
-> 
-> Can you share the definition of this function instead of repeating it ?
-> 
-Seems like this common function can only be placed in pinctrl-meson.c, I
-will try to write a meson_aobus_parse_dt_extra in pinctrl-meson.c and
-assign it to each SoCs  driver before g12a.
->> +
->>  static struct meson_pinctrl_data meson_gxbb_periphs_pinctrl_data = {
->>  	.name		= "periphs-banks",
->>  	.pins		= meson_gxbb_periphs_pins,
->> @@ -851,6 +861,7 @@
->>  	.num_funcs	= ARRAY_SIZE(meson_gxbb_aobus_functions),
->>  	.num_banks	= ARRAY_SIZE(meson_gxbb_aobus_banks),
->>  	.pmx_ops	= &meson8_pmx_ops,
->> +	.parse_dt	= meson_gxbb_aobus_parse_dt_extra,
->>  };
->>  
->>  static const struct of_device_id meson_gxbb_pinctrl_dt_match[] = {
->> diff --git a/drivers/pinctrl/meson/pinctrl-meson-gxl.c b/drivers/pinctrl/meson/pinctrl-meson-gxl.c
->> index 72c5373c8dc1..943fb27dab08 100644
->> --- a/drivers/pinctrl/meson/pinctrl-meson-gxl.c
->> +++ b/drivers/pinctrl/meson/pinctrl-meson-gxl.c
->> @@ -796,6 +796,16 @@
->>  	BANK("AO",   GPIOAO_0,  GPIOAO_9, 0, 9, 0,  16, 0, 0,   0,  0,  0, 16,  1,  0),
->>  };
->>  
->> +static int meson_gxl_aobus_parse_dt_extra(struct meson_pinctrl *pc)
->> +{
->> +	if (!pc->reg_pull)
->> +		return -EINVAL;
->> +
->> +	pc->reg_pullen = pc->reg_pull;
->> +
->> +	return 0;
->> +}
-> 
-> Same
-will do it for above and below other platform.
-> 
->> +
->>  static struct meson_pinctrl_data meson_gxl_periphs_pinctrl_data = {
->>  	.name		= "periphs-banks",
->>  	.pins		= meson_gxl_periphs_pins,
->> @@ -820,6 +830,7 @@
->>  	.num_funcs	= ARRAY_SIZE(meson_gxl_aobus_functions),
->>  	.num_banks	= ARRAY_SIZE(meson_gxl_aobus_banks),
->>  	.pmx_ops	= &meson8_pmx_ops,
->> +	.parse_dt 	= meson_gxl_aobus_parse_dt_extra,
->>  };
->>  
->>  static const struct of_device_id meson_gxl_pinctrl_dt_match[] = {
->> diff --git a/drivers/pinctrl/meson/pinctrl-meson.c b/drivers/pinctrl/meson/pinctrl-meson.c
->> index 8bba9d053d9f..e182583422a4 100644
->> --- a/drivers/pinctrl/meson/pinctrl-meson.c
->> +++ b/drivers/pinctrl/meson/pinctrl-meson.c
->> @@ -677,14 +677,12 @@ static int meson_pinctrl_parse_dt(struct meson_pinctrl *pc,
->>  	}
->>  
->>  	pc->reg_pull = meson_map_resource(pc, gpio_np, "pull");
->> -	/* Use gpio region if pull one is not present */
->>  	if (IS_ERR(pc->reg_pull))
->> -		pc->reg_pull = pc->reg_gpio;
->> +		pc->reg_pull = NULL;
-> 
-> Instead of doing this fixup, could modifhy meson_map_ressourse() to
-> return NULL instead of -ENOENT ?
-> 
-> Then you should IS_ERR_OR_NULL() for "mux" and "gpio" and just IS_ERR()
-> for the rest
-> 
-Ok, will modify this in the next patch set
->>  
->>  	pc->reg_pullen = meson_map_resource(pc, gpio_np, "pull-enable");
->> -	/* Use pull region if pull-enable one is not present */
->>  	if (IS_ERR(pc->reg_pullen))
->> -		pc->reg_pullen = pc->reg_pull;
->> +		pc->reg_pullen = NULL;
->>  
->>  	pc->reg_ds = meson_map_resource(pc, gpio_np, "ds");
->>  	if (IS_ERR(pc->reg_ds)) {
->> @@ -692,6 +690,9 @@ static int meson_pinctrl_parse_dt(struct meson_pinctrl *pc,
->>  		pc->reg_ds = NULL;
->>  	}
->>  
->> +	if (pc->data->parse_dt)
->> +		return pc->data->parse_dt(pc);
->> +
->>  	return 0;
->>  }
->>  
->> diff --git a/drivers/pinctrl/meson/pinctrl-meson.h b/drivers/pinctrl/meson/pinctrl-meson.h
->> index c696f3241a36..d570f7c53045 100644
->> --- a/drivers/pinctrl/meson/pinctrl-meson.h
->> +++ b/drivers/pinctrl/meson/pinctrl-meson.h
->> @@ -11,6 +11,8 @@
->>  #include <linux/regmap.h>
->>  #include <linux/types.h>
->>  
->> +struct meson_pinctrl;
->> +
->>  /**
->>   * struct meson_pmx_group - a pinmux group
->>   *
->> @@ -114,6 +116,7 @@ struct meson_pinctrl_data {
->>  	unsigned int num_banks;
->>  	const struct pinmux_ops *pmx_ops;
->>  	void *pmx_data;
->> +	int (*parse_dt)(struct meson_pinctrl *pc);
->>  };
->>  
->>  struct meson_pinctrl {
->> diff --git a/drivers/pinctrl/meson/pinctrl-meson8.c b/drivers/pinctrl/meson/pinctrl-meson8.c
->> index 0b97befa6335..65c70c9b7070 100644
->> --- a/drivers/pinctrl/meson/pinctrl-meson8.c
->> +++ b/drivers/pinctrl/meson/pinctrl-meson8.c
->> @@ -1079,6 +1079,16 @@
->>  	BANK("AO",   GPIOAO_0, GPIO_TEST_N, 0, 13, 0, 16,  0,  0,  0,  0,  0, 16,  1,  0),
->>  };
->>  
->> +static int meson8_aobus_parse_dt_extra(struct meson_pinctrl *pc)
->> +{
->> +	if (!pc->reg_pull)
->> +		return -EINVAL;
->> +
->> +	pc->reg_pullen = pc->reg_pull;
->> +
->> +	return 0;
->> +}
->> +
->>  static struct meson_pinctrl_data meson8_cbus_pinctrl_data = {
->>  	.name		= "cbus-banks",
->>  	.pins		= meson8_cbus_pins,
->> @@ -1103,6 +1113,7 @@
->>  	.num_funcs	= ARRAY_SIZE(meson8_aobus_functions),
->>  	.num_banks	= ARRAY_SIZE(meson8_aobus_banks),
->>  	.pmx_ops	= &meson8_pmx_ops,
->> +	.parse_dt	= &meson8_aobus_parse_dt_extra,
->>  };
->>  
->>  static const struct of_device_id meson8_pinctrl_dt_match[] = {
->> diff --git a/drivers/pinctrl/meson/pinctrl-meson8b.c b/drivers/pinctrl/meson/pinctrl-meson8b.c
->> index a7de388388e6..85dc12e0c839 100644
->> --- a/drivers/pinctrl/meson/pinctrl-meson8b.c
->> +++ b/drivers/pinctrl/meson/pinctrl-meson8b.c
->> @@ -938,6 +938,16 @@
->>  	BANK("AO",   GPIOAO_0, GPIO_TEST_N, 0, 13, 0,  16, 0, 0,  0,  0,  0, 16,  1,  0),
->>  };
->>  
->> +static int meson8b_aobus_parse_dt_extra(struct meson_pinctrl *pc)
->> +{
->> +	if (!pc->reg_pull)
->> +		return -EINVAL;
->> +
->> +	pc->reg_pullen = pc->reg_pull;
->> +
->> +	return 0;
->> +}
->> +
->>  static struct meson_pinctrl_data meson8b_cbus_pinctrl_data = {
->>  	.name		= "cbus-banks",
->>  	.pins		= meson8b_cbus_pins,
->> @@ -962,6 +972,7 @@
->>  	.num_funcs	= ARRAY_SIZE(meson8b_aobus_functions),
->>  	.num_banks	= ARRAY_SIZE(meson8b_aobus_banks),
->>  	.pmx_ops	= &meson8_pmx_ops,
->> +	.parse_dt	= &meson8b_aobus_parse_dt_extra,
->>  };
->>  
->>  static const struct of_device_id meson8b_pinctrl_dt_match[] = {
-> 
-> .
-> 
+So here is a quick guide for running the gpiod tests:
+
+1. Install Go[1].
+
+2. Checkout gpiod:
+  git clone https://github.com/warthog618/gpiod.git
+
+3. The uapi sub-package contains the tests for the uapi itself so
+  cd gpiod/uapi
+
+4. Checkout the appropriate branch - in this case 
+  git checkout feature/pud_set_config
+
+5. Build the tests
+  go test -c
+
+6. Run the tests (requires modprobe rights hence the sudo)
+  sudo ./uapi.test
+
+You can get a list of the tests being run by adding a --test.v
+parameter to uapi.test, or run particular tests with 
+  uapi.test --test.run [pattern]
+
+The tests themselves are in uapi_test.go, in case you get errors or want
+to see what they do.  The gpio-mockup wrapper is in gpiod/mockup.
+
+There are also tests for gpiod itself in gpiod/*_test.go, though 
+those focus on the gpiod library rather than the uapi and kernel.
+
+Cheers,
+Kent.
+
+[1] https://golang.org/doc/install
+
