@@ -2,95 +2,100 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 160D8EFA8F
-	for <lists+linux-gpio@lfdr.de>; Tue,  5 Nov 2019 11:12:45 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 6C498EFA94
+	for <lists+linux-gpio@lfdr.de>; Tue,  5 Nov 2019 11:13:17 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387905AbfKEKMo (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 5 Nov 2019 05:12:44 -0500
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:45072 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387832AbfKEKMo (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 5 Nov 2019 05:12:44 -0500
-Received: by mail-lj1-f196.google.com with SMTP id n21so7498444ljg.12;
-        Tue, 05 Nov 2019 02:12:41 -0800 (PST)
+        id S2388224AbfKEKNN (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 5 Nov 2019 05:13:13 -0500
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:34546 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387832AbfKEKNM (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 5 Nov 2019 05:13:12 -0500
+Received: by mail-lj1-f193.google.com with SMTP id 139so21165752ljf.1;
+        Tue, 05 Nov 2019 02:13:11 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=V7qLFq4K93vUH8fK9wNC+b3dmkN6TfhoYmCQsWeu7yY=;
-        b=GRl+eYtlXh8Tlc9+vvBqJKMumuMmm9CUAZg97vp9HS0Jjc4xZ2+wE96e7QgheAyl8O
-         KdoMBP8P1sF0oy4N1Z7KAFSYEl9TAhjpvl+JT93UXSmHgr50B5KuzTwFjmOeYjQE2dKt
-         BsNd9fKTeIeDDYpu0imlve4AOFnJP5J3XgVl/XdmWtrb6wVMnbJ/48IlNuX7Ktj7l2Yi
-         umdW1aV2gxqxIAK7SgVfblZpLZ4Ic61jAUzIVr53yikLSdJMUEH2FFuPZ8A1KbokmUrR
-         K7nn8GzUzr2K622UmbIt7irEI8GGlrcjBruSdsnqCWXUrMZDzFPBzjBiW/YMfUIZmd1W
-         YUlg==
-X-Gm-Message-State: APjAAAXz4pjNOaK9PGjGDi9OzW9O5dfzuV7+L2QH07wKyNWG70w0SbY4
-        lwJEYJd6vpGjpnq5nR8eGN4=
-X-Google-Smtp-Source: APXvYqwjjYsGhWJv9rnRxQZ46vKzy4j+wiUPekzGtjMuNsXdHE3646nl8SjkCccQfYCbSzyJz8M77w==
-X-Received: by 2002:a2e:28a:: with SMTP id y10mr20290638lje.155.1572948760228;
-        Tue, 05 Nov 2019 02:12:40 -0800 (PST)
+        bh=U3vzg7JtiRq6nihOTFmfvTDWxL5xsAMJm30LLF8lj+U=;
+        b=Cqg58o+v1IBJnMZvKRzaRyMtm15h9U00WJPCXGqYaBLO62cRV81I5ULA5AkrdUXvZ1
+         4EHjJ94EhqMTy1G3yff6MPsaNo4JfOE0JtTe5HfimdzfMwTUfl/JvUvpfWrVvNXjOHo7
+         xaGKcQETr4Wmn6R1CpRuTu1vi8vzNy4qe/J4S0egkEN/VhLifAXYxqpsourfc3BE0EHe
+         5i6JwqJaLDPeWec8FblhxsXikGtyYDO3fcWcA6I/dnDEWT+Q3hrtiC54n6TZFQRfmA+D
+         UP5s+Z86b2dS1s4gIkk86bYHODBEKKF2SJEbN5kAvg9HJOOO3f3FkYy1RIVjnDNiEz13
+         PAbw==
+X-Gm-Message-State: APjAAAWWfYoa4JtfkTBu8Xd14cKNwJBAFMGQrl+lmkAZVVUXCdQzLoE8
+        55venR6TB54ct/3qtNRjkLo=
+X-Google-Smtp-Source: APXvYqxMQYIO0zOq4D+1esjyAJ62F5VggRgJVkXzcHx8gC74WTor+3HJU9RnEZkSVIxEjzQtodmJGw==
+X-Received: by 2002:a2e:984f:: with SMTP id e15mr6631596ljj.109.1572948790980;
+        Tue, 05 Nov 2019 02:13:10 -0800 (PST)
 Received: from localhost.localdomain ([213.255.186.46])
-        by smtp.gmail.com with ESMTPSA id k9sm1362903lfj.97.2019.11.05.02.12.39
+        by smtp.gmail.com with ESMTPSA id z20sm11291230ljj.85.2019.11.05.02.13.09
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 05 Nov 2019 02:12:39 -0800 (PST)
-Date:   Tue, 5 Nov 2019 12:12:30 +0200
+        Tue, 05 Nov 2019 02:13:10 -0800 (PST)
+Date:   Tue, 5 Nov 2019 12:13:01 +0200
 From:   Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
 To:     matti.vaittinen@fi.rohmeurope.com, mazziesaccount@gmail.com
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
+Cc:     Ray Jui <rjui@broadcom.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Joel Stanley <joel@jms.id.au>,
-        Andrew Jeffery <andrew@aj.id.au>, linux-gpio@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 07/62] gpio: gpio-aspeed: Use new GPIO_LINE_DIRECTION
-Message-ID: <493e2f9ed5aff112519adcdf2d3044bf54c2d91a.1572945709.git.matti.vaittinen@fi.rohmeurope.com>
-References: <cover.1572945709.git.matti.vaittinen@fi.rohmeurope.com>
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Scott Branden <sbranden@broadcom.com>,
+        bcm-kernel-feedback-list@broadcom.com, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH 08/62] gpio: gpio-bcm-kona: Use new GPIO_LINE_DIRECTION
+Message-ID: <47840e5f6268d598ed511dcdefcfeb9435109c21.1572945719.git.matti.vaittinen@fi.rohmeurope.com>
+References: <cover.1572945719.git.matti.vaittinen@fi.rohmeurope.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <cover.1572945709.git.matti.vaittinen@fi.rohmeurope.com>
+In-Reply-To: <cover.1572945719.git.matti.vaittinen@fi.rohmeurope.com>
 User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-It's hard for occasional GPIO code reader/writer to know if values 0/1
+t's hard for occasional GPIO code reader/writer to know if values 0/1
 equal to IN or OUT. Use defined GPIO_LINE_DIRECTION_IN and
 GPIO_LINE_DIRECTION_OUT to help them out.
 
 Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
 ---
- drivers/gpio/gpio-aspeed.c | 7 +++----
- 1 file changed, 3 insertions(+), 4 deletions(-)
+ drivers/gpio/gpio-bcm-kona.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/gpio/gpio-aspeed.c b/drivers/gpio/gpio-aspeed.c
-index 09e53c5f3b0a..f1037b61f763 100644
---- a/drivers/gpio/gpio-aspeed.c
-+++ b/drivers/gpio/gpio-aspeed.c
-@@ -487,10 +487,10 @@ static int aspeed_gpio_get_direction(struct gpio_chip *gc, unsigned int offset)
+diff --git a/drivers/gpio/gpio-bcm-kona.c b/drivers/gpio/gpio-bcm-kona.c
+index 9fa6d3a967d2..4122683eb1f9 100644
+--- a/drivers/gpio/gpio-bcm-kona.c
++++ b/drivers/gpio/gpio-bcm-kona.c
+@@ -127,7 +127,7 @@ static int bcm_kona_gpio_get_dir(struct gpio_chip *chip, unsigned gpio)
  	u32 val;
  
- 	if (!have_input(gpio, offset))
--		return 0;
-+		return GPIO_LINE_DIRECTION_OUT;
- 
- 	if (!have_output(gpio, offset))
--		return 1;
-+		return GPIO_LINE_DIRECTION_IN;
- 
- 	spin_lock_irqsave(&gpio->lock, flags);
- 
-@@ -498,8 +498,7 @@ static int aspeed_gpio_get_direction(struct gpio_chip *gc, unsigned int offset)
- 
- 	spin_unlock_irqrestore(&gpio->lock, flags);
- 
--	return !val;
--
-+	return val ? GPIO_LINE_DIRECTION_OUT : GPIO_LINE_DIRECTION_IN;
+ 	val = readl(reg_base + GPIO_CONTROL(gpio)) & GPIO_GPCTR0_IOTR_MASK;
+-	return !!val;
++	return val ? GPIO_LINE_DIRECTION_IN : GPIO_LINE_DIRECTION_OUT;
  }
  
- static inline int irqd_to_aspeed_gpio_data(struct irq_data *d,
+ static void bcm_kona_gpio_set(struct gpio_chip *chip, unsigned gpio, int value)
+@@ -144,7 +144,7 @@ static void bcm_kona_gpio_set(struct gpio_chip *chip, unsigned gpio, int value)
+ 	raw_spin_lock_irqsave(&kona_gpio->lock, flags);
+ 
+ 	/* this function only applies to output pin */
+-	if (bcm_kona_gpio_get_dir(chip, gpio) == 1)
++	if (bcm_kona_gpio_get_dir(chip, gpio) == GPIO_LINE_DIRECTION_IN)
+ 		goto out;
+ 
+ 	reg_offset = value ? GPIO_OUT_SET(bank_id) : GPIO_OUT_CLEAR(bank_id);
+@@ -170,7 +170,7 @@ static int bcm_kona_gpio_get(struct gpio_chip *chip, unsigned gpio)
+ 	reg_base = kona_gpio->reg_base;
+ 	raw_spin_lock_irqsave(&kona_gpio->lock, flags);
+ 
+-	if (bcm_kona_gpio_get_dir(chip, gpio) == 1)
++	if (bcm_kona_gpio_get_dir(chip, gpio) == GPIO_LINE_DIRECTION_IN)
+ 		reg_offset = GPIO_IN_STATUS(bank_id);
+ 	else
+ 		reg_offset = GPIO_OUT_STATUS(bank_id);
 -- 
 2.21.0
 
