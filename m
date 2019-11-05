@@ -2,79 +2,87 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id D7646F0014
-	for <lists+linux-gpio@lfdr.de>; Tue,  5 Nov 2019 15:41:40 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5747AF001F
+	for <lists+linux-gpio@lfdr.de>; Tue,  5 Nov 2019 15:44:25 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729092AbfKEOlk (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 5 Nov 2019 09:41:40 -0500
-Received: from mail-lf1-f67.google.com ([209.85.167.67]:45215 "EHLO
-        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728909AbfKEOlk (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 5 Nov 2019 09:41:40 -0500
-Received: by mail-lf1-f67.google.com with SMTP id v8so15283287lfa.12
-        for <linux-gpio@vger.kernel.org>; Tue, 05 Nov 2019 06:41:39 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=jBzTOxq85jxdofnlZM+XjruaJTIDQtuSsbh7qG9jKHg=;
-        b=bBozmJV5Qw6b9lVapPQvukL2eua22QYk1tsW4G0355k0kjw9pURqm/uRwStnFEhLZR
-         qC+5Ag8kIoG1xVD1hfQfSl7+po3u37+/b6N0zQAdCCEZWLhKMeOM3qvwZbD/y5ZPSoh6
-         MTpvr6/VaUaAyoUz4Y8JccTmFEyS+gGu9TWdmB4keanawpHY4PkyNbC/Voz7M14+OnwZ
-         TAYmCLZMTmHCvh1OlS+QhfLx88suOLdzkGHhH4anmzik178Ir6mYQkjWWe3B1jcu/+04
-         a4brbdKi5sikiFVFPQq2Ib0/aLqGEoQrOSpOQwKU5qoOl+r+i4V2u+8HjMNE1sB13TOv
-         FTSw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=jBzTOxq85jxdofnlZM+XjruaJTIDQtuSsbh7qG9jKHg=;
-        b=qETjJqrgT6TKO6BNYlbxgWRbdNSuCx2dmQoWWRXs9d977nD6VU/5DDTRzuXIdUaWZh
-         xffuwgycaAzvQUy9miFpJwDGzCh3cr8C5SLYdF7DCZH/Ubby1UNxZoRDoZJxB5LrbdYj
-         5pWr+4/WBO4n4RG8rlI3uR8f+za1G9J583uoEsVWQTtoKQ9Uq3XXYfE7OoJe2Do7B4u/
-         86HaPVS1ngGEJh6NJBst7NgMZ1TqJnD52rN3I24oumZtdu8y5wTx8TP+yrO56XKMYVHF
-         7+3e5f082aON/jUx80eTkwoAmIwXoq681MmVsZyJcwoTUPIvm44MBxt9/d/VjPT5FOqn
-         m6OA==
-X-Gm-Message-State: APjAAAXgr4hrXfuSwIn/GDKnNxrDbT8n9BcUVB6piMlGT1Qj6lEMt9My
-        iY+mypdPdY1BEqrg2vfW6pK3YLeq3oxvq9qte5ORe06/YJg=
-X-Google-Smtp-Source: APXvYqwfEk1h321csKMTRrt3DsgpCia8GUNn3QPeXjglwCRgaQ1riCiRrh9/anJdOd37y0N/igvpYMZJnznCmdaOJ5c=
-X-Received: by 2002:a19:651b:: with SMTP id z27mr20715395lfb.117.1572964898491;
- Tue, 05 Nov 2019 06:41:38 -0800 (PST)
+        id S2387584AbfKEOoY convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-gpio@lfdr.de>); Tue, 5 Nov 2019 09:44:24 -0500
+Received: from relay12.mail.gandi.net ([217.70.178.232]:47597 "EHLO
+        relay12.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725385AbfKEOoY (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 5 Nov 2019 09:44:24 -0500
+Received: from xps13 (lfbn-1-17395-211.w86-250.abo.wanadoo.fr [86.250.200.211])
+        (Authenticated sender: miquel.raynal@bootlin.com)
+        by relay12.mail.gandi.net (Postfix) with ESMTPSA id 358F920000E;
+        Tue,  5 Nov 2019 14:44:20 +0000 (UTC)
+Date:   Tue, 5 Nov 2019 15:44:19 +0100
+From:   Miquel Raynal <miquel.raynal@bootlin.com>
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     Uwe =?UTF-8?B?S2xlaW5lLUvDtm5pZw==?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        linux-pwm@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Sascha Hauer <kernel@pengutronix.de>
+Subject: Re: [PATCH] gpio: pca953x: Add Maxim MAX7313 PWM support
+Message-ID: <20191105154419.11e7f625@xps13>
+In-Reply-To: <CAHp75Ve6_8dXJgF6c2OdZDeV=icyRondvMKwTxhom-RXDACfUA@mail.gmail.com>
+References: <20191014124803.13661-1-miquel.raynal@bootlin.com>
+        <CAHp75Vc4vnNVKc+Q_TY8DpwV4rLZYGm2MvGBC7r67XjmtNoskQ@mail.gmail.com>
+        <20191015163055.0d8f44e5@xps13>
+        <CAHp75VemkA7kap0O7=iACX4cD5_r6QXaLF6nS8R94ErStK0DwA@mail.gmail.com>
+        <20191104161103.64995b8a@xps13>
+        <CAMpxmJVjyUXSNFEiTxMC1bdzXTex74DqeiHPqLBPdnb2_LYRnQ@mail.gmail.com>
+        <20191104203346.epdbzflnynh2gf3z@pengutronix.de>
+        <CAHp75VdULzZ6NXP7fp=6KQFAHOSvoJ-_WTqfcmhQJbrLUw3M4Q@mail.gmail.com>
+        <20191105100157.2b6eb22b@xps13>
+        <CAHp75Ve6_8dXJgF6c2OdZDeV=icyRondvMKwTxhom-RXDACfUA@mail.gmail.com>
+Organization: Bootlin
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-References: <20191104175744.12041-1-krzk@kernel.org>
-In-Reply-To: <20191104175744.12041-1-krzk@kernel.org>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Tue, 5 Nov 2019 15:41:27 +0100
-Message-ID: <CACRpkda6mtF=yjPMJReO50q1Xnys6i51zm2iJvHRidxZJCKU6w@mail.gmail.com>
-Subject: Re: [GIT PULL] pinctrl: samsung: Pull for v5.5
-To:     Krzysztof Kozlowski <krzk@kernel.org>
-Cc:     Tomasz Figa <tomasz.figa@gmail.com>,
-        Sylwester Nawrocki <snawrocki@kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        linux-samsung-soc <linux-samsung-soc@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Nov 4, 2019 at 6:57 PM Krzysztof Kozlowski <krzk@kernel.org> wrote:
+Hi Andy,
 
-> The following changes since commit 54ecb8f7028c5eb3d740bb82b0f1d90f2df63c5c:
->
->   Linux 5.4-rc1 (2019-09-30 10:35:40 -0700)
->
-> are available in the Git repository at:
->
->   https://git.kernel.org/pub/scm/linux/kernel/git/pinctrl/samsung.git tags/samsung-pinctrl-5.5
->
-> for you to fetch changes up to a322b3377f4bac32aa25fb1acb9e7afbbbbd0137:
->
->   pinctrl: samsung: Fix device node refcount leaks in init code (2019-10-01 20:22:04 +0200)
+Andy Shevchenko <andy.shevchenko@gmail.com> wrote on Tue, 5 Nov 2019
+11:08:39 +0200:
 
-Pulled into my pinctrl "devel" branch for v5.5, thanks!
+> On Tue, Nov 5, 2019 at 11:02 AM Miquel Raynal <miquel.raynal@bootlin.com> wrote:
+> > Andy Shevchenko <andy.shevchenko@gmail.com> wrote on Tue, 5 Nov 2019
+> > 09:06:37 +0200:  
+> > > On Mon, Nov 4, 2019 at 10:33 PM Uwe Kleine-König
+> > > <u.kleine-koenig@pengutronix.de> wrote:  
+> 
+> > > For me it sounds more likely that PWM is a *pin function* of a pin
+> > > controller and actually this GPIO driver should be a pin controller
+> > > with corresponding function(s).
+> > >  
+> >
+> > Ok, thanks for the input, I will address Thierry's comments and
+> > re-submit as a single file (same shape as in v1).  
+> 
+> Perhaps I have to be more clear. What I meant is that pin control
+> should support PWM pin function and PCA953x be converted to a pin
+> control + GPIO + PWM.
+> Above definitely is not what you did and it's not for immediate submission.
 
-Yours,
-Linus Walleij
+Sorry for the misunderstanding, I was answering Uwe.
+
+> I really would like to hear if it makes sense.
+
+While this would probably be the nicest and cleanest solution, I don't
+think it is doable in a reasonable amount of time compared to the
+benefits.
+
+
+Thanks,
+Miquèl
