@@ -2,97 +2,98 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id BA4C9EFB32
-	for <lists+linux-gpio@lfdr.de>; Tue,  5 Nov 2019 11:31:11 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 461D7EFB35
+	for <lists+linux-gpio@lfdr.de>; Tue,  5 Nov 2019 11:31:41 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388266AbfKEKbK (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 5 Nov 2019 05:31:10 -0500
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:44250 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388093AbfKEKbK (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 5 Nov 2019 05:31:10 -0500
-Received: by mail-lj1-f196.google.com with SMTP id g3so15056548ljl.11;
-        Tue, 05 Nov 2019 02:31:08 -0800 (PST)
+        id S2388093AbfKEKba (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 5 Nov 2019 05:31:30 -0500
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:35708 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388022AbfKEKba (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 5 Nov 2019 05:31:30 -0500
+Received: by mail-oi1-f193.google.com with SMTP id n16so17059730oig.2;
+        Tue, 05 Nov 2019 02:31:29 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=ggSCNAhKWDAQfnI1StH0nU3POuONxOaNf53ZjEk0tRo=;
-        b=kXA47VE1jn35t7REZkc4DfgsBLUShx5soMmHRDa2ywLDOQJ9LY7pLoj10S9OVHeAOO
-         uPm+OV9QxpJ20f8TFaHwrmyXa5JjxzAg5fckC/6mwZpaITIjmCJ/Br4TwPWdK3jpc7ip
-         13liA0mLqcpp5JEnktahH9Dix9M8qZ22G/w5IeYqxe7wyAPrBRlPJl6nOxz9vaYQX0RW
-         8RFs6+ZwNHAWg17ymvVoYhGnBL+sY2475lHoMV5WoVkeZAQQbKSAFEdB1CPAPdB2zkzN
-         uP2GI8rSTUuWKTZD78vIn3DFs88cluXxd4nUJLv9BCALNo6GOZQuLlCYuJ2s4TN35WOe
-         k9Fg==
-X-Gm-Message-State: APjAAAXdUptCPQiicshlSZYyLjiiz5ZtE9LjhjmhmFDwh5H4vVzxoq1O
-        9K6R1xxU+tBzFD/8SSkH0FE=
-X-Google-Smtp-Source: APXvYqz0UZmZK1gDDAdaOfCCRbxurzlfXmRgO3ZpZ9vcag4bLsqt98u9MkIOWp/ylNFSuRY4eaGaIA==
-X-Received: by 2002:a2e:9016:: with SMTP id h22mr14151346ljg.137.1572949868198;
-        Tue, 05 Nov 2019 02:31:08 -0800 (PST)
-Received: from localhost.localdomain ([213.255.186.46])
-        by smtp.gmail.com with ESMTPSA id k19sm8781244ljg.18.2019.11.05.02.31.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 05 Nov 2019 02:31:07 -0800 (PST)
-Date:   Tue, 5 Nov 2019 12:30:58 +0200
-From:   Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-To:     matti.vaittinen@fi.rohmeurope.com, mazziesaccount@gmail.com
-Cc:     Thorsten Scherer <t.scherer@eckelmann.de>,
-        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=9X0DXNrB/4MiRITEvRdYyhvXbr57xrW/zeknfciLamY=;
+        b=stQApTNmuVIa2YAZasv7ex8oC/1Ab5qa1jvJlpJhQDljcVjHa+p7t5sIvREtwxMm2X
+         ZB+az4J4gWm/bILHqBmFz8E9Sah4j7RDMDmLy7+yRaDT6jocfnbli5AzN/nff4fmGcU3
+         6k2VT4j/4CU7y6qCIovZOuqua4Chwk2VlJSkZ3Xq5hlndFh30PbmLTd/utJQcqr8pREn
+         SHD1qaMFEy6UZSgaUZOn4W0VHHtDVYL5pmgQABz9KZpEIUBfAoXz2+eFgVrIIhUCWG1r
+         C0XolAacoaUEScnZVxfX5B8uCQ1w+f1W6WgYT51LrM1XRrRx2JWfJgN/yRzKGIaGSKJh
+         Njqw==
+X-Gm-Message-State: APjAAAWM2qxDMV4fQvSefIS0Uc8QVClZCqJyEZhQgrUQWBpxANhyoiuV
+        RVJpodJMjVxAULSRCMUO9L4AZd7XDCyql2ABhUg=
+X-Google-Smtp-Source: APXvYqzaVPIaoOsr7E7sRmBza2Q4igYoE9YRw29ruaDMLtQK+/3iEy/DNnyBgGw6IdcB0+QMJ54HHaB16f6Jz5fA+eo=
+X-Received: by 2002:aca:fc92:: with SMTP id a140mr3154328oii.153.1572949889346;
+ Tue, 05 Nov 2019 02:31:29 -0800 (PST)
+MIME-Version: 1.0
+References: <cover.1572945734.git.matti.vaittinen@fi.rohmeurope.com> <07ed3f5b199c81fcb214b9e0e6e37bfed079e2f7.1572945734.git.matti.vaittinen@fi.rohmeurope.com>
+In-Reply-To: <07ed3f5b199c81fcb214b9e0e6e37bfed079e2f7.1572945734.git.matti.vaittinen@fi.rohmeurope.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Tue, 5 Nov 2019 11:31:18 +0100
+Message-ID: <CAMuHMdWOBXQ0VzS_OBNSxGG3QhroFQ6-H=8oedk+V43UYC14uw@mail.gmail.com>
+Subject: Re: [PATCH 10/62] gpio: gpio-bd9571mwv: Use new GPIO_LINE_DIRECTION
+To:     Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+Cc:     Matti Vaittinen <mazziesaccount@gmail.com>,
+        Marek Vasut <marek.vasut+renesas@gmail.com>,
         Linus Walleij <linus.walleij@linaro.org>,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 40/62] gpio: gpio-siox: Use new GPIO_LINE_DIRECTION
-Message-ID: <91a796dd2811b58f4be30875f5ef644f0e43f241.1572945896.git.matti.vaittinen@fi.rohmeurope.com>
-References: <cover.1572945896.git.matti.vaittinen@fi.rohmeurope.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <cover.1572945896.git.matti.vaittinen@fi.rohmeurope.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-It's hard for occasional GPIO code reader/writer to know if values 0/1
-equal to IN or OUT. Use defined GPIO_LINE_DIRECTION_IN and
-GPIO_LINE_DIRECTION_OUT to help them out.
+Hi Matti,
 
-Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
----
- drivers/gpio/gpio-siox.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+On Tue, Nov 5, 2019 at 11:15 AM Matti Vaittinen
+<matti.vaittinen@fi.rohmeurope.com> wrote:
+> It's hard for occasional GPIO code reader/writer to know if values 0/1
+> equal to IN or OUT. Use defined GPIO_LINE_DIRECTION_IN and
+> GPIO_LINE_DIRECTION_OUT to help them out.
+>
+> NOTE: This commit also changes the return value for direction get
+> to equal 1 for direction INPUT. Prior this commit the driver returned
+> different values depending on GPIO pin for the INPUT state.
 
-diff --git a/drivers/gpio/gpio-siox.c b/drivers/gpio/gpio-siox.c
-index 006a7e6a75f2..311f66757b92 100644
---- a/drivers/gpio/gpio-siox.c
-+++ b/drivers/gpio/gpio-siox.c
-@@ -203,9 +203,9 @@ static int gpio_siox_direction_output(struct gpio_chip *chip,
- static int gpio_siox_get_direction(struct gpio_chip *chip, unsigned int offset)
- {
- 	if (offset < 12)
--		return 1; /* input */
-+		return GPIO_LINE_DIRECTION_IN;
- 	else
--		return 0; /* output */
-+		return GPIO_LINE_DIRECTION_OUT;
- }
- 
- static int gpio_siox_probe(struct siox_device *sdevice)
--- 
-2.21.0
+Indeed. Which means you cannot assume the assembler output
+before/after is identical (which it should be for most changes).
 
+> Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
 
--- 
-Matti Vaittinen, Linux device drivers
-ROHM Semiconductors, Finland SWDC
-Kiviharjunlenkki 1E
-90220 OULU
-FINLAND
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-~~~ "I don't think so," said Rene Descartes. Just then he vanished ~~~
-Simon says - in Latin please.
-~~~ "non cogito me" dixit Rene Descarte, deinde evanescavit ~~~
-Thanks to Simon Glass for the translation =] 
+> --- a/drivers/gpio/gpio-bd9571mwv.c
+> +++ b/drivers/gpio/gpio-bd9571mwv.c
+> @@ -37,8 +37,10 @@ static int bd9571mwv_gpio_get_direction(struct gpio_chip *chip,
+>         ret = regmap_read(gpio->bd->regmap, BD9571MWV_GPIO_DIR, &val);
+>         if (ret < 0)
+>                 return ret;
+
+Nit: I'd keep the blank line here.
+
+> +       if (val & BIT(offset))
+> +               return GPIO_LINE_DIRECTION_IN;
+>
+> -       return val & BIT(offset);
+> +       return GPIO_LINE_DIRECTION_OUT;
+>  }
+>
+>  static int bd9571mwv_gpio_direction_input(struct gpio_chip *chip,
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
