@@ -2,93 +2,70 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 8A958EFB05
-	for <lists+linux-gpio@lfdr.de>; Tue,  5 Nov 2019 11:26:00 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 924F2EFB0B
+	for <lists+linux-gpio@lfdr.de>; Tue,  5 Nov 2019 11:26:51 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388353AbfKEKZ7 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 5 Nov 2019 05:25:59 -0500
-Received: from mail-lf1-f67.google.com ([209.85.167.67]:36827 "EHLO
-        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388022AbfKEKZ7 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 5 Nov 2019 05:25:59 -0500
-Received: by mail-lf1-f67.google.com with SMTP id a6so11287962lfo.3;
-        Tue, 05 Nov 2019 02:25:58 -0800 (PST)
+        id S2388230AbfKEK0d (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 5 Nov 2019 05:26:33 -0500
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:35655 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387905AbfKEK0d (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 5 Nov 2019 05:26:33 -0500
+Received: by mail-lj1-f195.google.com with SMTP id r7so12481487ljg.2
+        for <linux-gpio@vger.kernel.org>; Tue, 05 Nov 2019 02:26:32 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=kLvUPtvtHKjgemXlXrBT42+PdbyBvxn4T43Za3BsRPg=;
+        b=p9q2QPI/mv3KLNsbCeaP7eraT0yNcrVmfyIlo2F4Gir5b+tgxtrZRkXRnraOfhmwB8
+         pkC2Z4rRM0fz0ItRoA2f8qcBBDasA1q6LUMYifLr0Q3n4Ajjz66Z5nNLrEduqrRejg3I
+         do26cwXRXrTTdb6JGSqHTCSUcj2y26CzdTx6VJrhIf0igHSPef0kCOAH60UT2Hrv/h+M
+         GiZncqRDgnYe4RfG3h4o8jwBprMFCmPU0dlwVtUV3ngXf6phWor0CaughaVFPGvljoAU
+         sbas0KelWyykvYFL4rVWkqc6ll0GC2jWEjgnEVQu6MrZYtlcMxMzmz0xrUjhSBMAFA3l
+         Pb3Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Q3EU3PFDxzbABDOEU3Nh58uvPPNzhd0ptTKha1CeP5E=;
-        b=g5Vt16P/1dvdw0bs1f2D9dDgwooSBC106LecK/43nY64sjFWP1fGZ/YQMlO0dbD09o
-         DqBmPxQcIktDBB06bQVOr2DGCbAjlKD/o9/RS1i1UuwmOE2MW20ytV8FZqvczZHHhOqJ
-         kT5JCqC9FJ++ipFYx0nalDSu4C9pqsjzUZBDVlpJETzPDq0l293VNaAa2vqhP+/oXpMG
-         i/OFl/3XOeBlFj8vOGg8DJ0vmYETQJ8095X3nQvBt3+EtRdN2JUSsV2NYuoMFhKD9tah
-         6dfUtYBb0VY8kn3ezikFsBWq9lwLTNpVa7S+glWLwAVnONfmyRLVy9WrFJaLDrjP8BzY
-         g75A==
-X-Gm-Message-State: APjAAAUqnuFUU+dzZk+typM5TpFNC7zlnUVKqBne3CsuLuRxSLzwHHqe
-        ZGlnF6z8n0AOEcWZMdYuTGo=
-X-Google-Smtp-Source: APXvYqzUg5ML8A6OCKXgQJp9pNhL+np8kVlPZqbb7r3PlE53j0mB2zKW91q7uiNNlZ60rsp1iWEXjw==
-X-Received: by 2002:a19:6759:: with SMTP id e25mr19266682lfj.80.1572949557418;
-        Tue, 05 Nov 2019 02:25:57 -0800 (PST)
-Received: from localhost.localdomain ([213.255.186.46])
-        by smtp.gmail.com with ESMTPSA id v21sm6540529ljh.53.2019.11.05.02.25.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 05 Nov 2019 02:25:57 -0800 (PST)
-Date:   Tue, 5 Nov 2019 12:25:48 +0200
-From:   Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-To:     matti.vaittinen@fi.rohmeurope.com, mazziesaccount@gmail.com
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 29/62] gpio: gpio-pca953x: Use new GPIO_LINE_DIRECTION
-Message-ID: <88f0dbb0b6dd84ffafa9294808b78526b1a9c160.1572945854.git.matti.vaittinen@fi.rohmeurope.com>
-References: <cover.1572945854.git.matti.vaittinen@fi.rohmeurope.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=kLvUPtvtHKjgemXlXrBT42+PdbyBvxn4T43Za3BsRPg=;
+        b=Gdee2Qa6k1WNbijSt766QI2JtcZQHDsZk1IbBOi4trWb4vZb8kQD5CAho17uIMzhPk
+         vh/OoSSpze7YxO8ahTxIws3qCZmVptTcCdT5xwXu5daglxlERqoec5xxaaUPQSnvf7rb
+         1ou1F3eWf7XkGqG+mmdI/9KAK/YhpZbqceZNgKBTPxNIsOzF1QSPikFaa7que2mQQlo/
+         TfX2fo/u+Z/0EnylMzw7BMAutEzHR0POJ3C8oQ1Tatc/3nd+DjsDzpoEKgZM3Xiqp+DF
+         gGKBr2ktpuuDUvw/jS5QmEXE6cCsiRq5SAQU6tYTD49ohWsWuETgc/j36NzNZZeJVYoT
+         3i+w==
+X-Gm-Message-State: APjAAAUaI4Jr+oFFNL2CmTbmnb60pq1tz4jhhRoZuwfAC1+qxNbi6e7T
+        ULYMU1YsPO+mnCeiBzo84aKE2FJti5yReebDZGN7Vg==
+X-Google-Smtp-Source: APXvYqwTPyIvvf4EpYlsgAh9Pr1HrUwypabBqniAQygRTuy+8l+ZH6hqZnQRH1n46KGAIJN8WYMpN9pGk953D0hCvhE=
+X-Received: by 2002:a2e:a0c9:: with SMTP id f9mr22795513ljm.77.1572949591253;
+ Tue, 05 Nov 2019 02:26:31 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <cover.1572945854.git.matti.vaittinen@fi.rohmeurope.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+References: <29421e7720443a2454830963186f00583c76ce1e.1572588550.git.lijiazi@xiaomi.com>
+In-Reply-To: <29421e7720443a2454830963186f00583c76ce1e.1572588550.git.lijiazi@xiaomi.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Tue, 5 Nov 2019 11:26:19 +0100
+Message-ID: <CACRpkdbG5biQFxZJGMfNREfTXFLXEGUuQdUGL2js_RVEGngKyA@mail.gmail.com>
+Subject: Re: [PATCH] pinctrl: just return if no valid maps
+To:     lijiazi <jqqlijiazi@gmail.com>
+Cc:     lijiazi <lijiazi@xiaomi.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-It's hard for occasional GPIO code reader/writer to know if values 0/1
-equal to IN or OUT. Use defined GPIO_LINE_DIRECTION_IN and
-GPIO_LINE_DIRECTION_OUT to help them out.
+On Fri, Nov 1, 2019 at 12:44 PM lijiazi <jqqlijiazi@gmail.com> wrote:
 
-Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
----
- drivers/gpio/gpio-pca953x.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+> If there is a problem with a pinctrl node of a device,
+> for example, config child node do not have prop specified in
+> dt_params, num_maps maybe 0. On this condition, no need remember
+> this map.
+>
+> Signed-off-by: lijiazi <lijiazi@xiaomi.com>
 
-diff --git a/drivers/gpio/gpio-pca953x.c b/drivers/gpio/gpio-pca953x.c
-index de5d1383f28d..82122c3c688a 100644
---- a/drivers/gpio/gpio-pca953x.c
-+++ b/drivers/gpio/gpio-pca953x.c
-@@ -449,7 +449,10 @@ static int pca953x_gpio_get_direction(struct gpio_chip *gc, unsigned off)
- 	if (ret < 0)
- 		return ret;
- 
--	return !!(reg_val & bit);
-+	if (reg_val & bit)
-+		return GPIO_LINE_DIRECTION_IN;
-+
-+	return GPIO_LINE_DIRECTION_OUT;
- }
- 
- static void pca953x_gpio_set_multiple(struct gpio_chip *gc,
--- 
-2.21.0
+Good find. Patch applied! (I tweaked the text a bit.)
 
-
--- 
-Matti Vaittinen, Linux device drivers
-ROHM Semiconductors, Finland SWDC
-Kiviharjunlenkki 1E
-90220 OULU
-FINLAND
-
-~~~ "I don't think so," said Rene Descartes. Just then he vanished ~~~
-Simon says - in Latin please.
-~~~ "non cogito me" dixit Rene Descarte, deinde evanescavit ~~~
-Thanks to Simon Glass for the translation =] 
+Yours,
+Linus Walleij
