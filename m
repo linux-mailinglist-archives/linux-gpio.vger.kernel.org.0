@@ -2,44 +2,44 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 429B8EFD07
-	for <lists+linux-gpio@lfdr.de>; Tue,  5 Nov 2019 13:16:30 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5435EEFD29
+	for <lists+linux-gpio@lfdr.de>; Tue,  5 Nov 2019 13:31:54 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730894AbfKEMQ3 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 5 Nov 2019 07:16:29 -0500
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:60148 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726524AbfKEMQ3 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 5 Nov 2019 07:16:29 -0500
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id xA5CGMSt016434;
-        Tue, 5 Nov 2019 06:16:22 -0600
+        id S2388373AbfKEMbq (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 5 Nov 2019 07:31:46 -0500
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:60950 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387744AbfKEMbp (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 5 Nov 2019 07:31:45 -0500
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id xA5CVZZo047725;
+        Tue, 5 Nov 2019 06:31:36 -0600
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1572956182;
-        bh=J4BEpU/N6/Oxb2b5/LtAcYX01H5ycdx3Kno1gFw5vSA=;
+        s=ti-com-17Q1; t=1572957096;
+        bh=AsxrQckfPatpgdXRQ/zXSSwH2VQIm6gqK/OKDHYLkXU=;
         h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=mDuRAvy14zR8lx8Y2JwG5vqINJJtK83X0YcGOJyz1xctRQBBZH8V4x0gjb6MBB4Rq
-         THyVWe+9qeHPj7lwQcP3UQGwcVj3I3w3vGKJNadKOxqzNeo8TXKQmaAjafiRnkBk5K
-         ewu0KC8uBZUabaAIaI08r/H3lABHcTGQ7NAlW930=
-Received: from DFLE100.ent.ti.com (dfle100.ent.ti.com [10.64.6.21])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xA5CGMvr125639
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 5 Nov 2019 06:16:22 -0600
-Received: from DFLE113.ent.ti.com (10.64.6.34) by DFLE100.ent.ti.com
- (10.64.6.21) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Tue, 5 Nov
- 2019 06:16:07 -0600
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE113.ent.ti.com
- (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
+        b=iFm/jmPaNGC/yLH5UF0oufH/eeGZYSkq55Y0PmYIuxjqGXceUzv5U3cs2iRykwXVQ
+         Ze+oGlsL8Sdrgaj9Tw+IQwj2CP1d9jgpyR/p6cfjBeeUMQFg3ZVrnaOWq92Orqhc0h
+         meV3owl5qa2Cesv+fYrnGceHoSaphMMcn7ZPkBUg=
+Received: from DFLE112.ent.ti.com (dfle112.ent.ti.com [10.64.6.33])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id xA5CVZIh086961;
+        Tue, 5 Nov 2019 06:31:35 -0600
+Received: from DFLE108.ent.ti.com (10.64.6.29) by DFLE112.ent.ti.com
+ (10.64.6.33) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Tue, 5 Nov
+ 2019 06:31:20 -0600
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE108.ent.ti.com
+ (10.64.6.29) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Tue, 5 Nov 2019 06:16:07 -0600
+ Frontend Transport; Tue, 5 Nov 2019 06:31:20 -0600
 Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id xA5CGI88018698;
-        Tue, 5 Nov 2019 06:16:19 -0600
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id xA5CVVML087123;
+        Tue, 5 Nov 2019 06:31:32 -0600
 Subject: Re: [RFC v2 0/2] gpio: Support for shared GPIO lines on boards
-To:     Rob Herring <robh+dt@kernel.org>
-CC:     Mark Brown <broonie@kernel.org>,
+To:     Grygorii Strashko <grygorii.strashko@ti.com>,
         Linus Walleij <linus.walleij@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>
+CC:     Mark Brown <broonie@kernel.org>,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
@@ -47,6 +47,7 @@ CC:     Mark Brown <broonie@kernel.org>,
         Tero Kristo <t-kristo@ti.com>,
         Maxime Ripard <mripard@kernel.org>,
         Philipp Zabel <p.zabel@pengutronix.de>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
         <devicetree@vger.kernel.org>
 References: <20191030120440.3699-1-peter.ujfalusi@ti.com>
  <CAL_JsqK-eqoyU7RWiVXMpPZ8BfT8a0WB47756s8AUtyOqbkPXA@mail.gmail.com>
@@ -58,13 +59,15 @@ References: <20191030120440.3699-1-peter.ujfalusi@ti.com>
  <CAL_Jsq+V0oAdVCaW+S12CUa4grCJhZD8OGDeu=0ohcGgxOkPVg@mail.gmail.com>
  <5669a4c1-2bc1-423b-1407-073317f7df7e@ti.com>
  <CAL_JsqJbhG+-zVs9bjHg8asGuM1+FNnGJ0xx7qcPBwuRX35ijw@mail.gmail.com>
+ <CACRpkdbiG5mt3WGEeHWsu-L3dzQJUQjxjGwQXK0cLgZNZ74yWg@mail.gmail.com>
+ <109f9ff2-81e0-6d3d-db60-d48cb0a4e74f@ti.com>
 From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
-Message-ID: <7d60ec02-9f00-eb6f-919e-9bab1704e93e@ti.com>
-Date:   Tue, 5 Nov 2019 14:17:30 +0200
+Message-ID: <ffb8e042-7f22-0e6e-f855-afa0dc3236bb@ti.com>
+Date:   Tue, 5 Nov 2019 14:32:43 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.9.0
 MIME-Version: 1.0
-In-Reply-To: <CAL_JsqJbhG+-zVs9bjHg8asGuM1+FNnGJ0xx7qcPBwuRX35ijw@mail.gmail.com>
+In-Reply-To: <109f9ff2-81e0-6d3d-db60-d48cb0a4e74f@ti.com>
 Content-Type: text/plain; charset="utf-8"
 Content-Language: en-US
 Content-Transfer-Encoding: 8bit
@@ -76,169 +79,97 @@ X-Mailing-List: linux-gpio@vger.kernel.org
 
 
 
-On 04/11/2019 21.11, Rob Herring wrote:
->> If one driver toggles the GPIO line directly then the GPIO line is going
->> to be toggled for all the devices the GPIO line is connected to.
+On 05/11/2019 14.15, Grygorii Strashko wrote:
 > 
-> Of course. That would be the typical case. I'd assume we would want to
-> handle that the same way as shared resets. Reset can only be asserted
-> when all clients want reset asserted. I guess when the first client
-> probes, it asserts and deasserts the reset.
-
-The exclusive flavor of reset API acts like a GPIO, while the shared
-ones will result in refcounted behavior.
-
-With describing the hw via gpio-shared we could support different modes:
-- pass-through: like a GPIO with nonexclusive, any request will
-propagate to the root-gpio
-- refcounted low: the line is kept low as long as at least one client is
-requiring to to be low
-- refcounted high: the line is kept high as long as at least one client
-is requiring to to be high
-
->>> I don't think you can have any reset control in
->>> the drivers in that case.
->>
->> The device needs the RST line to be high, otherwise it is not
->> accessible. If it does not have reset control how can we make sure that
->> the GPIO line is in correct state?
 > 
-> Just like the reset code, drivers register their use of the reset and
-> the core tracks users and prevents resetting when not safe. Maybe the
-> reset subsystem needs to learn about GPIO resets. It could even
-> default to knowing 'reset-gpios' property as we've somewhat
-> standardized that. Then you just register your GPIO reset line with
-> the reset subsystem. When it gets the same line registered more than
-> once, then it knows to handle sharing the line. If you need to know
-> the line is shared before then, then you need something in DT. A flag
-> is enough for that.
-
-What about things where the gpio is not a reset or enable for the chip,
-but an enable for one of it's output?
-Or if a shared GPIO is connected to address select pins?
-
->>> No, drivers are written to set the state to active/inactive.
->>
->> I think the drivers are written in a way to follow what their datasheets
->> are tells. If it say that the GPIO line must be high to enable the
->> device then they gpiod_set_value(1), if the line must be low to enable
->> them then they will gpiod_set_value(0).
-> 
-> gpiod_set_value(1) sets the line to the active state defined in DT
-> GPIO flags, not the electrical level of the signal. This issue is a
-> good example of precisely why the gpiod API was defined this way. I do
-> think it is a bit confusing though. Perhaps reusing _{get,set}_value
-> API was not the best naming.
-
-Yes, it is confusing and I think most drivers are using it following
-their corresponding datasheets, iow if the datasheet say the line must
-be low then set_value(0) is used.
-
-It does look weird to use set_value(reset_gpio, 1) in the code when the
-documentation say that the reset pin must be _low_ to place the part
-into reset, even if you look up the DT documentation and dts files for
-GPIO_ACTIVE_HIGH/LOW usage among boards.
-
-Especially if you have two peripherals where both is enabled when their
-pin is LOW, but one names it RST and is high active, the other names it
-EN and it is low active. especially that lots of devices do not even
-states any active mode for the pin, just if high, it is in reset, if low
-then it is enabled.
-
-I get the notion of how it is, but it does feel a bit unnatural in times.
-
->>> The DT GPIO_ACTIVE_ flags can depend on an inverter being present (BTW, there
->>> was a recent attempt to do an inverter binding).
->>
->> Yes.
->> If the line is inverted on the board, than the DT GPIO_ACTIVE_LOW will
->> invert it to the correct level.
-> 
-> Yes, if the signal is normally GPIO_ACTIVE_HIGH.
-> 
->> We have two off the shelf components, C1 and C2. They have a driver
->> written based on the datasheets.
->> C1 needs HIGH (LOW reset/disable)
->>  uses gpiod_set_value(1) to enable the device
-> 
-> No. The active state for a 'reset-gpios' is the state in which reset
-> is active/asserted. So gpiod_set_value(1) should always mean 'assert
-> reset'.
-> 
-> If we're talking about an 'enable-gpios', then the active state is
-> when the device is active/enabled. So it's the inverse of
-> 'reset-gpios'.
-> 
->> C2 needs LOW (HIGH reset/disable)
->>  uses gpiod_set_value(0) to enable the device
-> 
-> Yes. The GPIO flag would be GPIO_ACTIVE_HIGH and gpiod_set_value(0) is
-> reset de-asserted.
-> 
->> When they are connected to a dedicated GPIO the DT binding has
->> GPIO_ACTIVE_HIGH since when the GPIO is set to 1 it goes HIGH, right?
-> 
-> No, as explained above. C2 would be GPIO_ACTIVE_HIGH, C1 would be
-> GPIO_ACTIVE_LOW normally.
-> 
->> If two device is connected to one GPIO one of them needs an inverter on
->> the GPIO line after it is split into two, let say C2 got inverted line:
->> C1 tells in DT that the line is not inverted: GPIO_ACTIVE_HOGH
->> C2 tells in DT that the line is inverted: GPIO_ACTIVE_LOW
-> 
-> C1 needs GPIO_ACTIVE_LOW here.
-
-Hrm, so the GPIO_ACTIVE_ can not be used as a means to tell that if the
-gpio line is active (set to 1) at the source then the signal at the
-component's pin is going to be high (GPIO_ACTIVE_HIGH) or low
-(GPIO_ACTIVE_LOW)?
-
-> 
->> GPIO HIGH -> D1 is enabled
->>           -> !HIGH -> LOW -> D2 is enabled
->>
->> If both would request the same physical GPIO then how would this work? A
->> single GPIO can not be handled in inverted and non inverted way at the
->> same time.
->>
->> But this is just a side effect that this would be easy to handle with
->> this DT binding and driver.
->> After all, it will describe the GPIO line split.
->>
->>>> It should be possible to add pass-through mode for gpio-shared so that
->>>> all requests would propagate to the root GPIO if that's what needed for
->>>> some setups.
->>>>
->>>> That way the gpio-shared would nicely handle the GPIO inversions, would
->>>> be able to handle cases to avoid unwanted reset/enable of components or
->>>> allow components to be ninja-reset.
+> On 05/11/2019 11:58, Linus Walleij wrote:
+>> On Mon, Nov 4, 2019 at 8:11 PM Rob Herring <robh+dt@kernel.org> wrote:
+>>> [Peter]
+>>>> The device needs the RST line to be high, otherwise it is not
+>>>> accessible. If it does not have reset control how can we make sure that
+>>>> the GPIO line is in correct state?
 >>>
->>> What does ninja-reset mean?
+>>> Just like the reset code, drivers register their use of the reset and
+>>> the core tracks users and prevents resetting when not safe. Maybe the
+>>> reset subsystem needs to learn about GPIO resets. (...)
 >>
->> Ninjas attack from ambush ;)
->> The device is reset w/o it's driver being aware that it ever happened as
->> other driver toggled the shared GPIO line.
+>> I agree. Certainly the reset subsystem can do what the regulator
+>> subsystem is already doing: request the GPIO line nonexclusive
+>> and handle any reference counting and/or quirks that are needed
+>> in a hypothetical drivers/reset/reset-gpio.c driver.
 >>
->>>> I think it would be possible to add gpiod_is_shared(struct gpio_desc
->>>> *desc) so users can check if the GPIO is shared - it would only return
->>>> true if the gpio-shared is not in pass-through mode so they can know
->>>> that the state they see on their gpio desc is not necessary matching
->>>> with reality.
->>>> Probably another gpiod_shared_get_root_value() to fetch the root's state?
->>>>
->>>> I intentionally not returning that in the driver as clients might skip a
->>>> gpio_set_value() seeing that the GPIO line is already in a state they
->>>> would want it, but that would not register their needs for the level.
->>>>
->>>> - Péter
->>>>
->>>> Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
->>>> Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+>> There is no such driver today, just a "reset" driver in
+>> drivers/power/reset that resets the whole system.
 >>
->> - Péter
+>> But I see no problem in creating a proper reset driver in drivers/reset
+>> to handle a few peripherals with a shared GPIO reset line.
+> 
+> Personally, I agree with Mark's comment here:
+> 
+>> [Mark]
+>> The theory with that was that any usage of this would need the
+>> higher level code using the GPIO to cooperate so they didn't step
+>> on each other's toes so the GPIO code should just punt to it.
 >>
->> Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
->> Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+>>> But let's say that a board design will pick two components (C1 and C2)
+>>> and use the same GPIO line to enable them. We already have the drivers
+>>> for them and they are used in boards already.
+>>
+>> This is basically an attempt to make a generic implementation of
+>> that cooperation for simple cases.
+>>
+> 
+> This looks like unsolvable problem in generic way.
+> Lets assume there are some generic shared reset controller invented, but
+> then
+> - What if some driver is loaded/unloaded and corresponding device uses
+> shared
+>   reset which is de-asserted already?
+>   In this case, driver should never ever expect that target device has all
+>   registers in default state.
+> - What if reset is required as part of error recovery procedure? The
+> error recovery
+>   will not be supported by such design.
+> - PM: Device reset could be part of suspend/resume sequence. if one of
+> the devices
+>   is wake-up source, but other are not, those devices might be in very
+> unexpected state during resume.
+> - There could be dependencies on reset timings, shared reset might work for
+>   similar devices (like set of net phys) and does not work if connected
+> devices are different.
+
+and some driver shamelessly implements runtime power/reset control while
+other driver does not (they were never used on board where they had
+shared GPIO, probably power at most)
+
+> 
+> It seems, the only one case when it might help is system boot when:
+>  - similar devices are connected to the reset line
+>  - drivers are not expected to be re-loaded
+>  - device reset is not part of any recovery procedure
+>  - safe reset timings can be defined for all connected devices
+> (but hey - if this is boot only then gpio-hogs should work. Are they?)
+
+That is another thing which almost works ;)
+w/o gpio binding deferred probing is not possible if the GPIO controller
+is probed later.
+In some cases it might be even impossible to make sure that the GPIO
+controller would probe first (GPIO extender on different i2c bus than
+the user(s) of the gpio line)
+In some cases moving around nodes in DT might artificially make things
+work, but then someone compiles the expander as module, or some 'small'
+change in kernel and the probe order on the bus changes.
+I don't think it is a valid thing to have commits on the DT files
+saying: move the expander front/after the hog affected user since since
+Monday the probe order has changed. Then move it back two weeks later ;)
+
+> 
+> Actually, MDIO bus is one such example where reset line can be toggled by
+> as by MDIO bus controller as by PHY drivers.
+> 
+> So, even thing will move forward with this - it'll be good to have noted
+> above restrictions in documentation.
+> 
 
 - Péter
 
