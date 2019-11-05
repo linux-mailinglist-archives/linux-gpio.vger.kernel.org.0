@@ -2,52 +2,50 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 6C9B3EFB94
-	for <lists+linux-gpio@lfdr.de>; Tue,  5 Nov 2019 11:40:44 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3F3B9EFB97
+	for <lists+linux-gpio@lfdr.de>; Tue,  5 Nov 2019 11:41:09 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388148AbfKEKkn (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 5 Nov 2019 05:40:43 -0500
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:45777 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388098AbfKEKkn (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 5 Nov 2019 05:40:43 -0500
-Received: by mail-lj1-f195.google.com with SMTP id n21so7597288ljg.12;
-        Tue, 05 Nov 2019 02:40:41 -0800 (PST)
+        id S2388400AbfKEKlI (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 5 Nov 2019 05:41:08 -0500
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:42291 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388098AbfKEKlI (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 5 Nov 2019 05:41:08 -0500
+Received: by mail-lf1-f65.google.com with SMTP id z12so14719808lfj.9;
+        Tue, 05 Nov 2019 02:41:07 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=IHVLnZpvti7kYubzGuAOCqnl9G7u/7Mk5Hsa0dcUqxo=;
-        b=Qj05WPsZkUWaDiG76jKMe0nwvzzOxMPIBoNUxmYwrAQfYA/sQ0XtD7MxucIFgf7Lgv
-         f9ikR2bn/T1pfVYjI3WSKIGPm1+lbAXN7HoYHmM8dsGzpKUg9RXQHIKX/gTdSWW3ooQU
-         DT/+6suvzcyi4BVmHGv+/orhgqjP5XlQS09xcTgttCVC4bMtXpBYkaITou1uiaxQ4uM5
-         7/eL5yN/PNeWo5OIMFPPTnWWi+PsseUpdbnzAtYFfgzgKU53ptcAkVVaXdl1oUL8oB8F
-         2J9n4iUsaCS7pzCkMNSupUPjgX8jgrKxw+i2o2eSF6h56aTlAm8lwArVOz3S/TTgdCw4
-         Q16Q==
-X-Gm-Message-State: APjAAAXPZREtsYPcJsI4Naqkz0xCaDSEhbT4eJPHPfo54nnonHb7G0ov
-        4pRzsxuSMRD+WwHjywapEFI=
-X-Google-Smtp-Source: APXvYqwimd8o/BHmE5NIoxB7Pal0yHYLbggrwuzo9Wj10a1ugIpMkJVn+AXIoXE/WqvLKNk0aYNS8g==
-X-Received: by 2002:a2e:8654:: with SMTP id i20mr23048472ljj.238.1572950441184;
-        Tue, 05 Nov 2019 02:40:41 -0800 (PST)
+        bh=ab8TgE96NXL7wNNnxX7ASO1X5IKhAsP6Q26bpn2VZYY=;
+        b=AQLHBY5nV3T7qF4yECjhV2phBZt//J5R7ab4xvBKY22Seck8w29lOJ2RiaqHIgDH2b
+         P6vykzwFT/Fcl+Xq2sJie3gLh9SwwOQVUtmhkkjkzUxkwS86Ni34xZI5rMKLalIYAqgt
+         oo+WdlzJj5vEXlbnLT2hBBqycJqgfSWRMIvYh0D2sZjCuSj/XqFXU4a+/JAAke2KXOMJ
+         d33w6zoCzoU9B4NdlmL66h8LiQAnQqdCfGo7wTI117067iy3ExpeZ/Bjp84l3ru87GJy
+         oSOrJiWeVS+dyUjnK5HFgUJ3L53+Xmm/jzH0wkLsXP1AgRHtWzD7TLKTDlNMm3ZDI68E
+         T5SQ==
+X-Gm-Message-State: APjAAAW1ifKmRCeWUO1IBR+2QN0EtKQVi/W18IvNjblHDdUYXqe97JAh
+        gyYzLUU1XEv0WLwM+dLH8Xc=
+X-Google-Smtp-Source: APXvYqyd7BPLVlXltvwQx3q/6/93eoazHHJAhFGgTMBf28mtqzAfCdmqA/1SC1YAlBltoIfJMpVCgA==
+X-Received: by 2002:a19:40cf:: with SMTP id n198mr20334435lfa.189.1572950466340;
+        Tue, 05 Nov 2019 02:41:06 -0800 (PST)
 Received: from localhost.localdomain ([213.255.186.46])
-        by smtp.gmail.com with ESMTPSA id i8sm10605111ljj.11.2019.11.05.02.40.40
+        by smtp.gmail.com with ESMTPSA id b67sm18399134ljf.5.2019.11.05.02.41.05
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 05 Nov 2019 02:40:40 -0800 (PST)
-Date:   Tue, 5 Nov 2019 12:40:35 +0200
+        Tue, 05 Nov 2019 02:41:05 -0800 (PST)
+Date:   Tue, 5 Nov 2019 12:40:56 +0200
 From:   Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
 To:     matti.vaittinen@fi.rohmeurope.com, mazziesaccount@gmail.com
 Cc:     Linus Walleij <linus.walleij@linaro.org>,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Michal Simek <michal.simek@xilinx.com>,
-        linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 60/62] gpio: gpio-zynq: Use new GPIO_LINE_DIRECTION
-Message-ID: <e3a74a28d9c0831fe798909d95695dc978d43030.1572946015.git.matti.vaittinen@fi.rohmeurope.com>
-References: <cover.1572946015.git.matti.vaittinen@fi.rohmeurope.com>
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 61/62] gpio: gpio-sa1100: Use new GPIO_LINE_DIRECTION
+Message-ID: <95cc1f0c0925da53696fe8b69109cfc6c2d35794.1572946026.git.matti.vaittinen@fi.rohmeurope.com>
+References: <cover.1572946026.git.matti.vaittinen@fi.rohmeurope.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <cover.1572946015.git.matti.vaittinen@fi.rohmeurope.com>
+In-Reply-To: <cover.1572946026.git.matti.vaittinen@fi.rohmeurope.com>
 User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
@@ -60,34 +58,25 @@ GPIO_LINE_DIRECTION_OUT to help them out.
 
 Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
 ---
- drivers/gpio/gpio-zynq.c | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+ drivers/gpio/gpio-sa1100.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/gpio/gpio-zynq.c b/drivers/gpio/gpio-zynq.c
-index cd475ff4bcad..4c3f6370eab4 100644
---- a/drivers/gpio/gpio-zynq.c
-+++ b/drivers/gpio/gpio-zynq.c
-@@ -360,7 +360,7 @@ static int zynq_gpio_dir_out(struct gpio_chip *chip, unsigned int pin,
-  *
-  * This function returns the direction of the specified GPIO.
-  *
-- * Return: 0 for output, 1 for input
-+ * Return: GPIO_LINE_DIRECTION_OUT or GPIO_LINE_DIRECTION_IN
-  */
- static int zynq_gpio_get_direction(struct gpio_chip *chip, unsigned int pin)
+diff --git a/drivers/gpio/gpio-sa1100.c b/drivers/gpio/gpio-sa1100.c
+index 46b7cf23fb0f..edff5e81489f 100644
+--- a/drivers/gpio/gpio-sa1100.c
++++ b/drivers/gpio/gpio-sa1100.c
+@@ -53,7 +53,10 @@ static int sa1100_get_direction(struct gpio_chip *chip, unsigned offset)
  {
-@@ -372,7 +372,10 @@ static int zynq_gpio_get_direction(struct gpio_chip *chip, unsigned int pin)
+ 	void __iomem *gpdr = sa1100_gpio_chip(chip)->membase + R_GPDR;
  
- 	reg = readl_relaxed(gpio->base_addr + ZYNQ_GPIO_DIRM_OFFSET(bank_num));
- 
--	return !(reg & BIT(bank_pin_num));
-+	if (reg & BIT(bank_pin_num))
+-	return !(readl_relaxed(gpdr) & BIT(offset));
++	if (readl_relaxed(gpdr) & BIT(offset))
 +		return GPIO_LINE_DIRECTION_OUT;
 +
 +	return GPIO_LINE_DIRECTION_IN;
  }
  
- /**
+ static int sa1100_direction_input(struct gpio_chip *chip, unsigned offset)
 -- 
 2.21.0
 
