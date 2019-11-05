@@ -2,50 +2,52 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 3DEFFEFA97
-	for <lists+linux-gpio@lfdr.de>; Tue,  5 Nov 2019 11:13:51 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id AB1D5EFA9B
+	for <lists+linux-gpio@lfdr.de>; Tue,  5 Nov 2019 11:14:35 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730633AbfKEKNu (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 5 Nov 2019 05:13:50 -0500
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:36814 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730592AbfKEKNu (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 5 Nov 2019 05:13:50 -0500
-Received: by mail-lj1-f196.google.com with SMTP id k15so9009186lja.3;
-        Tue, 05 Nov 2019 02:13:49 -0800 (PST)
+        id S2387905AbfKEKOe (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 5 Nov 2019 05:14:34 -0500
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:42741 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730699AbfKEKOe (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 5 Nov 2019 05:14:34 -0500
+Received: by mail-lj1-f193.google.com with SMTP id n5so10117145ljc.9;
+        Tue, 05 Nov 2019 02:14:32 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=g9ArBOXxeak8/k5hSwiQQAZ4PDJGGb7ikKTk3zxYWmg=;
-        b=tomx9NQftiLn+a2W3wl4WMOYL5PAA/24QD2qNun14kVTCj84hG78nDF1zUe3j9fKWK
-         jXP6RdhNG8xSl/9ZCGMbqwXPtKpTlWxT0hmQEVLAVE+s3/u3sG9mj/DbPTeyeTA+x6/8
-         LNuDltZSYuaWlml75GZnEg98tqsnY9qvCCpV2/bRQws3O4IgR544pPVxAz6KjmNx6Cpw
-         TWZRyyrAtuIbYs2TX2Vl/Zhs6wZ0HDuaMW/raOfhIRrMX9wUOx4mn/91yx74ZmJ3JNMH
-         2uSS1OGUC8QWTg+zKFhDWoJjLfmLti5mhXDYvvJNLHHMNt0fQhczl4yKd/6MHHuOpZY8
-         zpIA==
-X-Gm-Message-State: APjAAAVnw3SGix03wcsqczHRPAva/OdAp0cqEVZOpYbp8X49VBF+HWJx
-        R+QXKm2/Qoi25qfxcxAJK0Y=
-X-Google-Smtp-Source: APXvYqzWpYdnXcrQSYUHBgRUVk/US5wIbhEDj2OK7J6ZkqkjQjGF9l24/9i2KDbdvYaIM1Iynim/8A==
-X-Received: by 2002:a2e:970a:: with SMTP id r10mr6680643lji.142.1572948828331;
-        Tue, 05 Nov 2019 02:13:48 -0800 (PST)
+        bh=sgRER2GYufZWIyTdQOoGwRBfIIq1xVCwP+DGjXPxhLc=;
+        b=Y7rFzLgZpX7TUin2U8nGCoA9hD8JU3aJbKJ4Bbi8Z51j5j7aqF0B407jmVAWq+hMCA
+         mGLGxhrrpIh+SiikTBpARfCthZckWYh1h+s1dgGsZ9+ADr62+/tN43e1QUC4NJIOwB3W
+         kpoF3vMgwlPn3nqivKer1fTyBAzzXwPlRRdy6teWNalyLfYN3v0E/QxLWSetIPMbwCOm
+         e2s6Hu2HaUlcVS9frGOaVZ6p0B6b3ilIsDGzhLStUqbp9vsQCPOqQKNOdu+Y/vKRRQem
+         owL+2MyTYzijbcvDPksxPXPTsDsoEge3g+c6ipDGsdHpGVVms08ly7FkRjkJlJBKPCUb
+         fIBw==
+X-Gm-Message-State: APjAAAUJJKxcvWhsf7tk1UqS76jTHGwv1EpGA46jo0ST81M2jpNzzX3z
+        jCmF9buxy2ftdZqDNTTilGfNrEVJRmY=
+X-Google-Smtp-Source: APXvYqwE4ANDsQZUs2OibgHsxyfenXEROHlXWR5+RLW0h19avgiFRurwS7VraARAmCbepvAREu/jrg==
+X-Received: by 2002:a05:651c:390:: with SMTP id e16mr22497104ljp.196.1572948872186;
+        Tue, 05 Nov 2019 02:14:32 -0800 (PST)
 Received: from localhost.localdomain ([213.255.186.46])
-        by smtp.gmail.com with ESMTPSA id b67sm18268337ljf.5.2019.11.05.02.13.47
+        by smtp.gmail.com with ESMTPSA id v6sm14267659ljd.15.2019.11.05.02.14.30
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 05 Nov 2019 02:13:47 -0800 (PST)
-Date:   Tue, 5 Nov 2019 12:13:38 +0200
+        Tue, 05 Nov 2019 02:14:31 -0800 (PST)
+Date:   Tue, 5 Nov 2019 12:14:22 +0200
 From:   Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
 To:     matti.vaittinen@fi.rohmeurope.com, mazziesaccount@gmail.com
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
+Cc:     Marek Vasut <marek.vasut+renesas@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 09/62] gpio: gpio-bd70528: Use new GPIO_LINE_DIRECTION
-Message-ID: <e3aa60c61175eb7360402bb99a9dcce145b02a7e.1572945725.git.matti.vaittinen@fi.rohmeurope.com>
-References: <cover.1572945725.git.matti.vaittinen@fi.rohmeurope.com>
+        linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
+        linux-gpio@vger.kernel.org
+Subject: [PATCH 10/62] gpio: gpio-bd9571mwv: Use new GPIO_LINE_DIRECTION
+Message-ID: <07ed3f5b199c81fcb214b9e0e6e37bfed079e2f7.1572945734.git.matti.vaittinen@fi.rohmeurope.com>
+References: <cover.1572945734.git.matti.vaittinen@fi.rohmeurope.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <cover.1572945725.git.matti.vaittinen@fi.rohmeurope.com>
+In-Reply-To: <cover.1572945734.git.matti.vaittinen@fi.rohmeurope.com>
 User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
@@ -56,39 +58,31 @@ It's hard for occasional GPIO code reader/writer to know if values 0/1
 equal to IN or OUT. Use defined GPIO_LINE_DIRECTION_IN and
 GPIO_LINE_DIRECTION_OUT to help them out.
 
+NOTE: This commit also changes the return value for direction get
+to equal 1 for direction INPUT. Prior this commit the driver returned
+different values depending on GPIO pin for the INPUT state.
+
 Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
 ---
- drivers/gpio/gpio-bd70528.c | 8 +++++---
- 1 file changed, 5 insertions(+), 3 deletions(-)
+ drivers/gpio/gpio-bd9571mwv.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/gpio/gpio-bd70528.c b/drivers/gpio/gpio-bd70528.c
-index 0c1ead12d883..734be6b752d0 100644
---- a/drivers/gpio/gpio-bd70528.c
-+++ b/drivers/gpio/gpio-bd70528.c
-@@ -54,8 +54,10 @@ static int bd70528_get_direction(struct gpio_chip *chip, unsigned int offset)
- 		dev_err(bdgpio->chip.dev, "Could not read gpio direction\n");
+diff --git a/drivers/gpio/gpio-bd9571mwv.c b/drivers/gpio/gpio-bd9571mwv.c
+index 5224a946e8ab..c0abc9c6851b 100644
+--- a/drivers/gpio/gpio-bd9571mwv.c
++++ b/drivers/gpio/gpio-bd9571mwv.c
+@@ -37,8 +37,10 @@ static int bd9571mwv_gpio_get_direction(struct gpio_chip *chip,
+ 	ret = regmap_read(gpio->bd->regmap, BD9571MWV_GPIO_DIR, &val);
+ 	if (ret < 0)
  		return ret;
- 	}
-+	if (val & BD70528_GPIO_OUT_EN_MASK)
-+		return GPIO_LINE_DIRECTION_OUT;
++	if (val & BIT(offset))
++		return GPIO_LINE_DIRECTION_IN;
  
--	return !(val & BD70528_GPIO_OUT_EN_MASK);
-+	return GPIO_LINE_DIRECTION_IN;
+-	return val & BIT(offset);
++	return GPIO_LINE_DIRECTION_OUT;
  }
  
- static int bd70528_gpio_set_config(struct gpio_chip *chip, unsigned int offset,
-@@ -166,9 +168,9 @@ static int bd70528_gpio_get(struct gpio_chip *chip, unsigned int offset)
- 	 * locking would make no sense.
- 	 */
- 	ret = bd70528_get_direction(chip, offset);
--	if (ret == 0)
-+	if (ret == GPIO_LINE_DIRECTION_OUT)
- 		ret = bd70528_gpio_get_o(bdgpio, offset);
--	else if (ret == 1)
-+	else if (ret == GPIO_LINE_DIRECTION_IN)
- 		ret = bd70528_gpio_get_i(bdgpio, offset);
- 	else
- 		dev_err(bdgpio->chip.dev, "failed to read GPIO direction\n");
+ static int bd9571mwv_gpio_direction_input(struct gpio_chip *chip,
 -- 
 2.21.0
 
