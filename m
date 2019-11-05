@@ -2,119 +2,143 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id A3019EE9A9
-	for <lists+linux-gpio@lfdr.de>; Mon,  4 Nov 2019 21:34:09 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E34B5EF1B0
+	for <lists+linux-gpio@lfdr.de>; Tue,  5 Nov 2019 01:12:20 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729652AbfKDUdu (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 4 Nov 2019 15:33:50 -0500
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:46789 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729644AbfKDUdu (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 4 Nov 2019 15:33:50 -0500
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1iRj2p-00051i-3m; Mon, 04 Nov 2019 21:33:47 +0100
-Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1iRj2o-00070j-61; Mon, 04 Nov 2019 21:33:46 +0100
-Date:   Mon, 4 Nov 2019 21:33:46 +0100
-From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-To:     Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Cc:     Miquel Raynal <miquel.raynal@bootlin.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        linux-pwm@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        kernel@pengutronix.de
-Subject: Re: [PATCH] gpio: pca953x: Add Maxim MAX7313 PWM support
-Message-ID: <20191104203346.epdbzflnynh2gf3z@pengutronix.de>
-References: <20191014124803.13661-1-miquel.raynal@bootlin.com>
- <CAHp75Vc4vnNVKc+Q_TY8DpwV4rLZYGm2MvGBC7r67XjmtNoskQ@mail.gmail.com>
- <20191015163055.0d8f44e5@xps13>
- <CAHp75VemkA7kap0O7=iACX4cD5_r6QXaLF6nS8R94ErStK0DwA@mail.gmail.com>
- <20191104161103.64995b8a@xps13>
- <CAMpxmJVjyUXSNFEiTxMC1bdzXTex74DqeiHPqLBPdnb2_LYRnQ@mail.gmail.com>
+        id S1729934AbfKEAMT (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 4 Nov 2019 19:12:19 -0500
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:41361 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729863AbfKEAMT (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 4 Nov 2019 19:12:19 -0500
+Received: by mail-pl1-f195.google.com with SMTP id d29so2123098plj.8
+        for <linux-gpio@vger.kernel.org>; Mon, 04 Nov 2019 16:12:19 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=rACpq2W15sHjD8PUevaIE6hemq4DlQ32/6cqcI6Zg5c=;
+        b=uQVNxdcc8RwLTA8R25P/PwF3Fcrtvw0gj1Vl/8JkT5P3uxbrqGaPF4mRDAo1kR02xg
+         0pYxxjFOaWb4KQZXBfAkrnYUP/cB4QKouJuK0ePu6cPIsFZr5T1uJfi3msHj/H6zTHFZ
+         xpVeG4cjOpCojI/H0sH2rdiN8aRwIsII4lNYwMzgDIcpqTaW40OgRxpjUpH8bBq6KvNi
+         n1WO02mGEPATvcWwe8tROuQS51XKFEf0CLaNoDP5ZWotbnVc3bilE9lp4ZUr3AfGX0F4
+         fEl1bG4eE3pyyxRV83LIb+MtXLx5Dk32ttoxShiP/ky8UCXwki/NWOa+Pbaw7MARGIVj
+         c74w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=rACpq2W15sHjD8PUevaIE6hemq4DlQ32/6cqcI6Zg5c=;
+        b=cLIvddUKG3B7O6ZYY2ACignAyGsAby+7CZhb/zfaJhYLpo+q5FgWYVLp2aPlo+iXmn
+         uzgbpNhVHY2SXjwp80dZScB8Sl696NauKYoX8VtTjeF+W3nmfnlA71KGoMOPZlc3FkjK
+         ce3TkKLqFcNMK9oRCEnWAJ3RHRQSGBF4FX9Z9EC+ms8YcBAm7DLYJfYkHtpPJPnuDnfT
+         V8D7WVnK7Rjnp2dYkUd4Cu3diaq3G3IjeKVYgFlgNGt3j6PuOkh/aauZ4Gwv735+G9IV
+         42zvjHXIWFlPpjaW1RR0xwvUlqwto5j4HAjzg4N/oVoC89Vic2Y/+hforeXpWedwfwDV
+         pAHw==
+X-Gm-Message-State: APjAAAX+z3U3RFCN+/kwR8mduV/t08odeEH1WYHzX4WCPhqpGkjcVIxD
+        ewUazbj+7v/08SJ0970J46BeoNtU/cw=
+X-Google-Smtp-Source: APXvYqyldbqZVvGYwxPn/I32e6CmiQkvFG/naLmGyI9Q+pGJPlOXqrYJmAle8UX03qIx1s9y5zSvNg==
+X-Received: by 2002:a17:902:9689:: with SMTP id n9mr30580118plp.222.1572912738337;
+        Mon, 04 Nov 2019 16:12:18 -0800 (PST)
+Received: from sol (220-235-109-115.dyn.iinet.net.au. [220.235.109.115])
+        by smtp.gmail.com with ESMTPSA id y36sm15390766pgk.66.2019.11.04.16.12.16
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 04 Nov 2019 16:12:17 -0800 (PST)
+Date:   Tue, 5 Nov 2019 08:12:13 +0800
+From:   Kent Gibson <warthog618@gmail.com>
+To:     Drew Fustini <drew@pdp7.com>
+Cc:     linux-gpio@vger.kernel.org
+Subject: Re: [PATCH v5 0/7] gpio: expose line bias flags to userspace
+Message-ID: <20191105001213.GA3685@sol>
+References: <20191104153841.16911-1-warthog618@gmail.com>
+ <20191104195838.GA9833@x1>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAMpxmJVjyUXSNFEiTxMC1bdzXTex74DqeiHPqLBPdnb2_LYRnQ@mail.gmail.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-gpio@vger.kernel.org
+In-Reply-To: <20191104195838.GA9833@x1>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hello,
-
-On Mon, Nov 04, 2019 at 04:32:23PM +0100, Bartosz Golaszewski wrote:
-> pon., 4 lis 2019 o 16:11 Miquel Raynal <miquel.raynal@bootlin.com> napisał(a):
-> > Andy Shevchenko <andy.shevchenko@gmail.com> wrote on Tue, 15 Oct 2019
-> > 17:55:33 +0300:
-> >
-> > > Or other way around. PWM registers GPIO (which actually I prefer since
-> > > we have PCA9685 case where PWM provides GPIO functionality, though via
-> > > different means)
-> > >
-> >
-> > Can I have your input on this proposal?
-> >
-> > On one hand I agree that the GPIO driver is already quite big due to
-> > its genericity and the amount of controllers it supports, on the other
-> > hand:
-> > 1/ Registering a PWM driver from the GPIO core seems strange. Maybe
-> > registering a platform device could do the trick but I am not convinced
-> > it is worth the trouble.
-> > 2/ Putting the PWM logic in the drivers/pwm/ directory is not very
-> > convenient as the object file will have to be embedded within the GPIO
-> > one; this line in drivers/gpio/Makefile would be horrible:
-> > ... += gpio-pca953x.o ../pwm/pwm-max7313.o (not even sure it works)
-> > 3/ In any cases, the regmap's ->readable_reg(), ->writable_reg()
-> > callbacks shall be tweaked to turn the PWM registers accessible, so we
-> > would still have PWM related code in the PCA953x GPIO driver.
-> >
-> > In the end, I wonder if keeping everything in one file is not better?
-> > Eventually I can create a separate file and fill it with just the PWM
-> > helpers/hooks. Please advise on the better solution for you, I'll wait
-> > your feedback before addressing Thierry Reding's other review and
-> > resubmit.
-> >
+On Mon, Nov 04, 2019 at 11:58:38AM -0800, Drew Fustini wrote:
+> On Mon, Nov 04, 2019 at 11:38:34PM +0800, Kent Gibson wrote:
+> > on a Raspberry Pi, in both cases using the feature/pud_set_config 
+> > branch of my Go gpiod library[2], as well as with my feature/pud 
+> > development branch of libgpiod[3].  Patch 7 has only been tested using 
+> > my gpiod library as libgpiod has not yet been updated to support the 
+> > SET_CONFIG ioctl.
+> > 
+> > Patch 1 adds pull-up/pull-down support to line handle requests.
+> > Patch 2 adds pull-up/pull-down support to line event requests.
+> > Patch 3 adds support for disabling bias.
+> > Patch 4 adds support for setting bias on output lines.
+> > Patch 5 adds pull-up/down support to the gpio-mockup for uAPI testing.
+> > Patch 6 refactors the flag validation from linehandle_create.
+> > Patch 7 adds the SET_CONFIG ioctl.
 > 
-> I'm not sure if this has been discussed, but is it possible to create
-> an MFD driver for this chip and conditionally plug in the GPIO part
-> from pca953x? I don't like the idea of having PWM functionality in a
-> GPIO driver either.
+> Hi Kent, thanks for continuing pushing this patch series forward.
+> 
+> I've not used gpiomockup before and I was hoping you might be able to share
+> the commands you use to run it to test the patches.
+> 
 
-I didn't check the manual or driver in depth, but I guess it doesn't
-match the MFD abstraction well. (That is, the PWM and GPIO parts live in
-different address areas of the chip and can be used independently of
-each other.)
+I refer you to the libgpiod tests, particularly
+libgpiod/tests/mockup/gpio-mockup.c as well as gpio/gpio-mockup.c
+itself.
 
-While it's not nice to have a driver that provides two different devices
-(here: gpio controller and pwm controller) similar things are not
-unseen. And for example the splitting of watchdog
-(drivers/watchdog/stmp3xxx_rtc_wdt.c) and rtc
-(drivers/rtc/rtc-stmp3xxx.c) of the device in the mx28 is more trouble
-than worth.
+If you run the libgpiod tests they will load and manipulate the module
+themselves.  My gpiod tests do similarly.  I run them in a VM to ensure
+they can't interfere with real hardware by accident.
 
-So I'd vote for putting it in a single file that lives where the
-bigger/more complex part fits to. So assuming that's the GPIO part (as
-the driver supports several variants and not all of them have a PWM
-function if I'm not mistaken) having it in drivers/gpio is fine for me.
+Here is a quick guide to using the mockup manually.
 
-Best regards
-Uwe
+Load the module with two chips with 4 and 8 lines respectively:  
 
--- 
-Pengutronix e.K.                           | Uwe Kleine-König            |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+ modprobe gpio-mockup gpio_mockup_named_lines gpio_mockup_ranges=-1,4,-1,8
+
+$ gpiodetect
+gpiochip0 [gpio-mockup-A] (4 lines)
+gpiochip1 [gpio-mockup-B] (8 lines)
+
+You add a -1,N pair for each chip you want mocked.
+The -1s is there for historical reasons.
+
+The gpio_mockup_named_lines is optional and creates labels for the lines 
+based on chip and line number (the labels are quoted here):
+
+$ gpioinfo
+gpiochip0 - 4 lines:
+	line   0: "gpio-mockup-A-0" unused input active-high
+	line   1: "gpio-mockup-A-1" unused input active-high
+	line   2: "gpio-mockup-A-2" unused input active-high
+	line   3: "gpio-mockup-A-3" unused input active-high
+gpiochip1 - 8 lines:
+	line   0: "gpio-mockup-B-0" unused input active-high
+	line   1: "gpio-mockup-B-1" unused input active-high
+	line   2: "gpio-mockup-B-2" unused input active-high
+	line   3: "gpio-mockup-B-3" unused input active-high
+	line   4: "gpio-mockup-B-4" unused input active-high
+	line   5: "gpio-mockup-B-5" unused input active-high
+	line   6: "gpio-mockup-B-6" unused input active-high
+	line   7: "gpio-mockup-B-7" unused input active-high
+
+You manipulate the lines using debugfs as per these examples.
+
+Pull line 1 of chip 0 high:
+
+ echo 1 > /sys/kernel/debug/gpio-mockup/gpiochip0/1
+
+Pull line 2 of chip 1 low:
+
+ echo 0 > /sys/kernel/debug/gpio-mockup/gpiochip1/2
+
+Check the value of a line, which can be set from the kernel side
+for gpio output lines:
+
+ cat /sys/kernel/debug/gpio-mockup/gpiochip0/1
+
+Cheers,
+Kent.
+
