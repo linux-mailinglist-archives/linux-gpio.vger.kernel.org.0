@@ -2,52 +2,50 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id B4D0DEFAB9
-	for <lists+linux-gpio@lfdr.de>; Tue,  5 Nov 2019 11:17:46 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7DFC9EFABF
+	for <lists+linux-gpio@lfdr.de>; Tue,  5 Nov 2019 11:18:19 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388361AbfKEKRh (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 5 Nov 2019 05:17:37 -0500
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:45791 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388128AbfKEKRh (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 5 Nov 2019 05:17:37 -0500
-Received: by mail-lf1-f68.google.com with SMTP id v8so14630787lfa.12;
-        Tue, 05 Nov 2019 02:17:35 -0800 (PST)
+        id S2388335AbfKEKSI (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 5 Nov 2019 05:18:08 -0500
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:38322 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388154AbfKEKSI (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 5 Nov 2019 05:18:08 -0500
+Received: by mail-lj1-f194.google.com with SMTP id v8so5487168ljh.5;
+        Tue, 05 Nov 2019 02:18:06 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=1gKqrETxlCTjerlOYNB/e2kAmDwEVlVg6eTrg5Qnlsg=;
-        b=ptZosCUqBDU03b9u/301FB5TTHdeg2powtFN8DXnJ/1Ov3zmN64lfDL0+1JJxjMUXW
-         cU9OkNg3FAMIU6DJ6HxzLjGiU7LxAD7S0W2IAo95YMCQQK9y4QhDvYtyPCDvbHhS+P11
-         OGDq2oKsIPPnrISZp57JLO0KaVETdvPJDdzcsIGAfnZC8ioGkXp89dfGh4OrpBE1qOa8
-         eHe3TKgxmbP2KfzFZ/AwwGkAH2J1bIa2Rxw3yepX9dUfOm9iA4FAQagcGe+G8r4jGnCh
-         hudyCP8CXVLG6h0hc3w+fQnDqw7bvRctuZ9/kJr7/86122F9c+ayQJ9zN5g4Rne9QFR/
-         Z8oA==
-X-Gm-Message-State: APjAAAX4MxxCc3W5y/ez/QzQBycQBKklLZ/ZKVZfv+M/GPKqxTxPoOHe
-        AS21FZH+DRWOCRDR2zcfG7U=
-X-Google-Smtp-Source: APXvYqyQ+LD8n5jB1J8ikqZ9zUoKuoBTytrgbBFHu1s46xTRaFGFpjzwqSv/CFsI2gGafR8gle4dcA==
-X-Received: by 2002:a05:6512:1de:: with SMTP id f30mr19972306lfp.176.1572949054571;
-        Tue, 05 Nov 2019 02:17:34 -0800 (PST)
+        bh=rE64YBUFBpssw5HSHcGsR1skBXXoL6cAXEqo/3wJhk8=;
+        b=ReI4/ymwO14KXtRKxEZVec0oKrmE1RSEAgYWDPuSK2CeWIxmh9FojZvI0DVuKie5eB
+         V35ZNpv3OBba7cZNQ6oqvOBXL9+3g/4vmjpPgEPGTxu7CNY8A344QtSDqOkQ6w0fwc8z
+         9SCX0vST9xbqpunKDHF0Bih3/g7LKiVZ0eJKU22xR61633mzb4jCPwgeGR/t8ygZCOtw
+         5JfwrbuBKCcxvLReoGjKr6LaE8BQjk5K9fnOLIdDeSPnTVhrqNQ6kWrW+oQWKNaqettP
+         XwZkGue4c4fGr9dsZGoiCj0ugXDcLTL8IMIjo2RpWpye/tE9xYe9XqYXtwLXobQchP5E
+         ZMrA==
+X-Gm-Message-State: APjAAAXf4TUHIB7GVz8kS6G7JwbDHIvEusgF5rN62yu/Z2o4PVHok0yI
+        QmIOQ7ZwbKGKEZLaciGU/+o=
+X-Google-Smtp-Source: APXvYqwAId6+rd9q8mVTWvyavGDaz+2/I0qGNLGOAWMb4EGvc2Vh0FtYIVUkIK2BQhWdIoe1to9WBg==
+X-Received: by 2002:a2e:2a43:: with SMTP id q64mr16661247ljq.242.1572949085485;
+        Tue, 05 Nov 2019 02:18:05 -0800 (PST)
 Received: from localhost.localdomain ([213.255.186.46])
-        by smtp.gmail.com with ESMTPSA id h12sm4934955lfp.62.2019.11.05.02.17.33
+        by smtp.gmail.com with ESMTPSA id u2sm2459126ljg.34.2019.11.05.02.18.04
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 05 Nov 2019 02:17:34 -0800 (PST)
-Date:   Tue, 5 Nov 2019 12:17:24 +0200
+        Tue, 05 Nov 2019 02:18:05 -0800 (PST)
+Date:   Tue, 5 Nov 2019 12:17:56 +0200
 From:   Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
 To:     matti.vaittinen@fi.rohmeurope.com, mazziesaccount@gmail.com
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Peter Tyser <ptyser@xes-inc.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>,
         linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 16/62] gpio: gpio-ich: Use new GPIO_LINE_DIRECTION
-Message-ID: <6f826c5cf6108cd4381130fd67802181f73fc056.1572945771.git.matti.vaittinen@fi.rohmeurope.com>
-References: <cover.1572945771.git.matti.vaittinen@fi.rohmeurope.com>
+Subject: [PATCH 17/62] gpio: gpio-kempld: Use new GPIO_LINE_DIRECTION
+Message-ID: <d86a3caffb9edcb024eae26f216c8d9a2539141e.1572945773.git.matti.vaittinen@fi.rohmeurope.com>
+References: <cover.1572945773.git.matti.vaittinen@fi.rohmeurope.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <cover.1572945771.git.matti.vaittinen@fi.rohmeurope.com>
+In-Reply-To: <cover.1572945773.git.matti.vaittinen@fi.rohmeurope.com>
 User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
@@ -60,25 +58,25 @@ GPIO_LINE_DIRECTION_OUT to help them out.
 
 Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
 ---
- drivers/gpio/gpio-ich.c | 5 ++++-
+ drivers/gpio/gpio-kempld.c | 5 ++++-
  1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/gpio/gpio-ich.c b/drivers/gpio/gpio-ich.c
-index 90bf7742f9b0..2f086d0aa1f4 100644
---- a/drivers/gpio/gpio-ich.c
-+++ b/drivers/gpio/gpio-ich.c
-@@ -159,7 +159,10 @@ static bool ichx_gpio_check_available(struct gpio_chip *gpio, unsigned nr)
+diff --git a/drivers/gpio/gpio-kempld.c b/drivers/gpio/gpio-kempld.c
+index ef51638f3f75..4ea15f08e0f4 100644
+--- a/drivers/gpio/gpio-kempld.c
++++ b/drivers/gpio/gpio-kempld.c
+@@ -104,7 +104,10 @@ static int kempld_gpio_get_direction(struct gpio_chip *chip, unsigned offset)
+ 	struct kempld_gpio_data *gpio = gpiochip_get_data(chip);
+ 	struct kempld_device_data *pld = gpio->pld;
  
- static int ichx_gpio_get_direction(struct gpio_chip *gpio, unsigned nr)
- {
--	return ichx_read_bit(GPIO_IO_SEL, nr);
-+	if (ichx_read_bit(GPIO_IO_SEL, nr))
-+		return GPIO_LINE_DIRECTION_IN;
+-	return !kempld_gpio_get_bit(pld, KEMPLD_GPIO_DIR_NUM(offset), offset);
++	if (kempld_gpio_get_bit(pld, KEMPLD_GPIO_DIR_NUM(offset), offset))
++		return GPIO_LINE_DIRECTION_OUT;
 +
-+	return GPIO_LINE_DIRECTION_OUT;
++	return GPIO_LINE_DIRECTION_IN;
  }
  
- static int ichx_gpio_direction_input(struct gpio_chip *gpio, unsigned nr)
+ static int kempld_gpio_pincount(struct kempld_device_data *pld)
 -- 
 2.21.0
 
