@@ -2,141 +2,90 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id E8916EF55E
-	for <lists+linux-gpio@lfdr.de>; Tue,  5 Nov 2019 07:06:57 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id BB874EF5B2
+	for <lists+linux-gpio@lfdr.de>; Tue,  5 Nov 2019 07:49:56 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726842AbfKEGG5 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 5 Nov 2019 01:06:57 -0500
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:38657 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725800AbfKEGG4 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 5 Nov 2019 01:06:56 -0500
-Received: by mail-pf1-f196.google.com with SMTP id c13so14342680pfp.5
-        for <linux-gpio@vger.kernel.org>; Mon, 04 Nov 2019 22:06:56 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=NE23qJQJ5NK4cF2goz+qk8PtMYKv58p4q/UOiEKdFkA=;
-        b=DBaGMWa0KWRtkgKxGocAvhiKgGdI3BT9sPd/UyuYgFT5cxcXL/J3NHPApU9MYzlVWR
-         g2Wt7oGHFo9Z4yctdbHlrd9BbdXcefuhOT00+bWfdG4x8HerF9JJZk0XM2z3pVoHgEPr
-         WAD6pMhUZOSAENcFQE+NIIe9gwATf4y9tqzh8ayd/RYpETOVxFOEPeS5McE5n+PRm8rk
-         xR0bQ9RnfHIRMtZ5GRyu0h1ktonokOFwG12ixwM7bEtwXc3TJyKbGJnejS37wLasGA0c
-         3xb1lO+wcXKmhABHQKerE2/pv5Cx8qtP5ZVL2DoBbmW+M68goFPVfeF55rqIwpbzoE57
-         Sr9Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=NE23qJQJ5NK4cF2goz+qk8PtMYKv58p4q/UOiEKdFkA=;
-        b=N8W57x+WJy9WRcpUXHYdOLwvE2VgEN7tMira9up77VXZyqe9LcFichTsrpL108RtQp
-         TcTTAIU8QS9wugdxmfifqt6qLeE/03+HSX2+ygJEqIjsjJAw7fIdGPVHGVnH3xDQsaLI
-         DeMyIC96UoiQcaKVrkEJbrv+uAZOjziDEjlbyZoP/98JqsU+ReGu+RwqNXSFDXq/DXZE
-         /rZjURPu+UE6hJTDSHd0C5vmsqLNy0vVOl+FNjpl+/jmX3xPqmVH4coHsUTmjloCxyRo
-         EMY/2GvSswHgxyynKD383WoP8vR+3aAtNVMHdTc82DoeZ3YOoqWjWNjrrujPj0fua91V
-         YTHA==
-X-Gm-Message-State: APjAAAUc06rv3/znac3F3RGwwCpZxyTBl+ZuTjOMmIE/71ifhgIX0GiD
-        QRlUUzGWSTOC1JAY86ZrYlM=
-X-Google-Smtp-Source: APXvYqwhi6eIE+wRrtU1iUuxp3rBK2QgfAntY1LfrHGzUdIcm7W/UBgLPqiFn12ehtIvD4XT194w1g==
-X-Received: by 2002:a63:5f44:: with SMTP id t65mr26854334pgb.124.1572934015743;
-        Mon, 04 Nov 2019 22:06:55 -0800 (PST)
-Received: from sol (220-235-109-115.dyn.iinet.net.au. [220.235.109.115])
-        by smtp.gmail.com with ESMTPSA id b21sm16158822pfd.74.2019.11.04.22.06.52
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 04 Nov 2019 22:06:55 -0800 (PST)
-Date:   Tue, 5 Nov 2019 14:06:49 +0800
-From:   Kent Gibson <warthog618@gmail.com>
-To:     Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Cc:     linux-gpio <linux-gpio@vger.kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bamvor Jian Zhang <bamv2005@gmail.com>,
-        Drew Fustini <drew@pdp7.com>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Subject: Re: [PATCH v5 4/7] gpiolib: add support for biasing output lines
-Message-ID: <20191105060649.GA1302@sol>
-References: <20191104153841.16911-1-warthog618@gmail.com>
- <20191104153841.16911-5-warthog618@gmail.com>
- <CAMpxmJUExXZ=ptMyRczvdujc7x9JP62Zy9m+WByYD4=w=1180w@mail.gmail.com>
- <20191104155927.GA17106@sol>
- <CAMpxmJUTFb_Bxsc8e006ohP6D3PP+kQgFYAPoZA2T1-HA41vSA@mail.gmail.com>
- <20191105020342.GA16739@sol>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20191105020342.GA16739@sol>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+        id S2387561AbfKEGtu (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 5 Nov 2019 01:49:50 -0500
+Received: from mga02.intel.com ([134.134.136.20]:10735 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725806AbfKEGtt (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Tue, 5 Nov 2019 01:49:49 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 04 Nov 2019 22:49:49 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.68,270,1569308400"; 
+   d="scan'208";a="204878425"
+Received: from sgsxdev001.isng.intel.com (HELO localhost) ([10.226.88.11])
+  by orsmga003.jf.intel.com with ESMTP; 04 Nov 2019 22:49:45 -0800
+From:   Rahul Tanwar <rahul.tanwar@linux.intel.com>
+To:     linus.walleij@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com
+Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, robh@kernel.org,
+        andriy.shevchenko@intel.com, qi-ming.wu@intel.com,
+        yixin.zhu@linux.intel.com, cheol.yong.kim@intel.com,
+        Rahul Tanwar <rahul.tanwar@linux.intel.com>
+Subject: [PATCH v3 0/2] pinctrl: Add new pinctrl/GPIO driver
+Date:   Tue,  5 Nov 2019 14:49:41 +0800
+Message-Id: <cover.1572926608.git.rahul.tanwar@linux.intel.com>
+X-Mailer: git-send-email 2.11.0
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Nov 05, 2019 at 10:03:42AM +0800, Kent Gibson wrote:
-> On Mon, Nov 04, 2019 at 05:19:14PM +0100, Bartosz Golaszewski wrote:
-> > pon., 4 lis 2019 o 16:59 Kent Gibson <warthog618@gmail.com> napisał(a):
-> > >
-> > > > Ugh, I missed one thing here - my for-next branch doesn't contain the
-> > > > following commit e735244e2cf0 ("gpiolib: don't clear FLAG_IS_OUT when
-> > > > emulating open-drain/open-source") which happens to modify this
-> > > > function.
-> > > >
-> > > > If I provided you with a branch containing it - would it be a lot of
-> > > > effort on your part to rebase it on top of it? If so - I can do it
-> > > > myself.
-> > > >
-> > >
-> > > I can do a rebase - though not until tomorrow (it is getting late here).
-> > > I would like that commit in as well - I suspect it being missing is
-> > > the reason a couple of the gpiod tests I was working on are failing.
-> > > I was in the process of tracking that down when I switched back to this.
-> > >
-> > > Cheers,
-> > > Kent.
-> > >
-> > >
-> > 
-> > No problem, it can wait until tomorrow. Please use the following
-> > branch - gpio/for-kent - from my tree.
-> > 
-> 
-> That was a lot simpler than I expected - it rebased cleanly onto the 
-> new branch.  And fixed the gpiod test errors I was trying to track down.
-> Will submit v6 shortly.
-> 
+Hi,
 
-Maybe I'm missing something, but given that the rebase was clean, was 
-there actually any need for v6?
-i.e. anyone can rebase the v5 patch onto gpio/for-kent:
+This series is to add pinctrl & GPIO controller driver for a new SoC.
+Patch 1 adds pinmux & GPIO controller driver.
+Patch 2 adds the corresponding dt bindings YAML document.
 
-$ git checkout -b pud_rebase brgl/gpio/for-next
-Branch 'pud_rebase' set up to track remote branch 'gpio/for-next' from 'brgl'.
-Switched to a new branch 'pud_rebase'
-$ git am PATCH-v5-0-7-gpio-expose-line-bias-flags-to-userspace.mbox
-Applying: gpio: expose pull-up/pull-down line flags to userspace
-Applying: gpiolib: add support for pull up/down to lineevent_create
-Applying: gpiolib: add support for disabling line bias
-Applying: gpiolib: add support for biasing output lines
-Applying: gpio: mockup: add set_config to support pull up/down
-Applying: gpiolib: move validation of line handle flags into helper function
-Applying: gpio: add new SET_CONFIG ioctl() to gpio chardev
-$ git rebase brgl/gpio/for-kent
-First, rewinding head to replay your work on top of it...
-Applying: gpio: expose pull-up/pull-down line flags to userspace
-Applying: gpiolib: add support for pull up/down to lineevent_create
-Applying: gpiolib: add support for disabling line bias
-Applying: gpiolib: add support for biasing output lines
-Using index info to reconstruct a base tree...
-M	drivers/gpio/gpiolib.c
-Falling back to patching base and 3-way merge...
-Auto-merging drivers/gpio/gpiolib.c
-Applying: gpio: mockup: add set_config to support pull up/down
-Applying: gpiolib: move validation of line handle flags into helper function
-Applying: gpio: add new SET_CONFIG ioctl() to gpio chardev
+Patches are against Linux 5.4-rc1 at below Git tree:
+git://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git
 
-Or was it more about eyeballing and retesting the rebase in case the
-3-way merge went haywire?
+v3:
+- Add locking for GPIO IRQ ops.
+- Fix property naming mistake in dt bindings document.
+- Address other code quality related review concerns.
+- Fix a build error reported by kbuild test robot.
+- Remove deleted structure fields from comments.
 
-Cheers,
-Kent.
+v2:
+- Enable GENERIC_PINMUX_FUNCTIONS & GENERIC_PINCTRL_GROUPS and use core
+  provided code for pinmux_ops & pinctrl_ops. Remove related code from
+  the driver.
+- Enable GENERIC_PINCONF & use core provided pinconf code. Remove related
+  code from the driver.
+- Use GPIOLIB_IRQCHIP framework core code instead of implementing separtely
+  in the driver.
+- Enable GPIO_GENERIC and switch to core provided memory mapped GPIO banks
+  design. 
+- Use standard pinctrl DT properties instead of custom made properties.
+- Address review concerns for dt bindings document.
+- Address code quality related review concerns.
+
+v1:
+- Initial version.
+
+
+
+
+Rahul Tanwar (2):
+  pinctrl: Add pinmux & GPIO controller driver for a new SoC
+  dt-bindings: pinctrl: intel: Add for new SoC
+
+ .../bindings/pinctrl/intel,lgm-pinctrl.yaml        | 114 +++
+ drivers/pinctrl/Kconfig                            |  18 +
+ drivers/pinctrl/Makefile                           |   1 +
+ drivers/pinctrl/pinctrl-equilibrium.c              | 964 +++++++++++++++++++++
+ drivers/pinctrl/pinctrl-equilibrium.h              | 141 +++
+ 5 files changed, 1238 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/pinctrl/intel,lgm-pinctrl.yaml
+ create mode 100644 drivers/pinctrl/pinctrl-equilibrium.c
+ create mode 100644 drivers/pinctrl/pinctrl-equilibrium.h
+
+-- 
+2.11.0
+
