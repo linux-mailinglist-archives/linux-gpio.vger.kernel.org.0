@@ -2,135 +2,141 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 654FFEF50A
-	for <lists+linux-gpio@lfdr.de>; Tue,  5 Nov 2019 06:34:59 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E8916EF55E
+	for <lists+linux-gpio@lfdr.de>; Tue,  5 Nov 2019 07:06:57 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725991AbfKEFe7 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 5 Nov 2019 00:34:59 -0500
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:41246 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725800AbfKEFe6 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 5 Nov 2019 00:34:58 -0500
-Received: by mail-pg1-f193.google.com with SMTP id l3so13186236pgr.8
-        for <linux-gpio@vger.kernel.org>; Mon, 04 Nov 2019 21:34:58 -0800 (PST)
+        id S1726842AbfKEGG5 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 5 Nov 2019 01:06:57 -0500
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:38657 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725800AbfKEGG4 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 5 Nov 2019 01:06:56 -0500
+Received: by mail-pf1-f196.google.com with SMTP id c13so14342680pfp.5
+        for <linux-gpio@vger.kernel.org>; Mon, 04 Nov 2019 22:06:56 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=YAtyN9gS0XmBgI5dhzDRgTUy6cuYsScut6Kcp5MRN9E=;
-        b=VYzxKMUW55up/k0aXwTOgSMFgXF+OFc5dSoNufF++PAihtQGxUtxHTlReQ9cmCb8Ih
-         1WMLYh9bJCRUKTNmLfh2NAfD8FdvlyItA+G6KwMD6y4B0ISycqH4U/Z7e/lJApGZ3uYm
-         aLCIUY4gMt4UzoI1qCVZl9nZyhAjkiaQyBJWA41UpBJrHxbVtZyp8A7sKtjxosh8w4BU
-         /7Z1YMFGQ1Mlg2VCInfb4SOtZQDpywaABnHh92NpK+xSkcVNUZ4hS+toX0+AbwGozT8X
-         AaeFZwQuS2iLcnx6gPdqvTwcB1n1cJ6qHjT3/+6PA+GV6fiZqXypQTGHMJRzJZLC1/Wc
-         vFXQ==
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=NE23qJQJ5NK4cF2goz+qk8PtMYKv58p4q/UOiEKdFkA=;
+        b=DBaGMWa0KWRtkgKxGocAvhiKgGdI3BT9sPd/UyuYgFT5cxcXL/J3NHPApU9MYzlVWR
+         g2Wt7oGHFo9Z4yctdbHlrd9BbdXcefuhOT00+bWfdG4x8HerF9JJZk0XM2z3pVoHgEPr
+         WAD6pMhUZOSAENcFQE+NIIe9gwATf4y9tqzh8ayd/RYpETOVxFOEPeS5McE5n+PRm8rk
+         xR0bQ9RnfHIRMtZ5GRyu0h1ktonokOFwG12ixwM7bEtwXc3TJyKbGJnejS37wLasGA0c
+         3xb1lO+wcXKmhABHQKerE2/pv5Cx8qtP5ZVL2DoBbmW+M68goFPVfeF55rqIwpbzoE57
+         Sr9Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=YAtyN9gS0XmBgI5dhzDRgTUy6cuYsScut6Kcp5MRN9E=;
-        b=DWTiH8Wb+gi5h25Cv3B2QumxPPVdMarMLlf2ECWuTNzZHc0QQpoc6xhEiXWkl3G1un
-         hvn8E+YYRM1F92YO5h7cDbC0YxaC+ihkkFzFxIXmncivzzPbkfIdsxovBd66JjDDVMX8
-         P+XujqTR+buEnECCUvEUr6MMybex6HH/jFS7tPqRz8DtmFcCD+KpBvItriLl6z4midQJ
-         I9yBQ5VLx+CQ0R2gi63VcookXEpD/FKpTix8TLiM67zPoWZalc0gadvXv/mPekoYDZPg
-         Ly1QygvqDuMNnokUbBY+ZW89azIMLrYWYzcPRvFGY9e5F1vOdzTpk6iInY/5my7XBVUO
-         uoFw==
-X-Gm-Message-State: APjAAAVxB/N48NYD8FYd43NYfLI01LS7PmXDD23WDFHV+epfeUoxlcGV
-        SPUfJIKGyhIdq5WeoS+r+Bv6mYb20P0=
-X-Google-Smtp-Source: APXvYqykLnCS4lLOqJ/SZLa1xBhjOkqMxXh0nFRmbpNwMuJyJlsVCwbX/vZksGML6JvK1SCvRe19GQ==
-X-Received: by 2002:a63:381b:: with SMTP id f27mr32516127pga.291.1572932097574;
-        Mon, 04 Nov 2019 21:34:57 -0800 (PST)
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=NE23qJQJ5NK4cF2goz+qk8PtMYKv58p4q/UOiEKdFkA=;
+        b=N8W57x+WJy9WRcpUXHYdOLwvE2VgEN7tMira9up77VXZyqe9LcFichTsrpL108RtQp
+         TcTTAIU8QS9wugdxmfifqt6qLeE/03+HSX2+ygJEqIjsjJAw7fIdGPVHGVnH3xDQsaLI
+         DeMyIC96UoiQcaKVrkEJbrv+uAZOjziDEjlbyZoP/98JqsU+ReGu+RwqNXSFDXq/DXZE
+         /rZjURPu+UE6hJTDSHd0C5vmsqLNy0vVOl+FNjpl+/jmX3xPqmVH4coHsUTmjloCxyRo
+         EMY/2GvSswHgxyynKD383WoP8vR+3aAtNVMHdTc82DoeZ3YOoqWjWNjrrujPj0fua91V
+         YTHA==
+X-Gm-Message-State: APjAAAUc06rv3/znac3F3RGwwCpZxyTBl+ZuTjOMmIE/71ifhgIX0GiD
+        QRlUUzGWSTOC1JAY86ZrYlM=
+X-Google-Smtp-Source: APXvYqwhi6eIE+wRrtU1iUuxp3rBK2QgfAntY1LfrHGzUdIcm7W/UBgLPqiFn12ehtIvD4XT194w1g==
+X-Received: by 2002:a63:5f44:: with SMTP id t65mr26854334pgb.124.1572934015743;
+        Mon, 04 Nov 2019 22:06:55 -0800 (PST)
 Received: from sol (220-235-109-115.dyn.iinet.net.au. [220.235.109.115])
-        by smtp.gmail.com with ESMTPSA id e198sm20297973pfh.83.2019.11.04.21.34.54
+        by smtp.gmail.com with ESMTPSA id b21sm16158822pfd.74.2019.11.04.22.06.52
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 04 Nov 2019 21:34:56 -0800 (PST)
-Date:   Tue, 5 Nov 2019 13:34:51 +0800
+        Mon, 04 Nov 2019 22:06:55 -0800 (PST)
+Date:   Tue, 5 Nov 2019 14:06:49 +0800
 From:   Kent Gibson <warthog618@gmail.com>
-To:     Drew Fustini <drew@pdp7.com>
-Cc:     linux-gpio@vger.kernel.org
-Subject: Re: [PATCH v5 0/7] gpio: expose line bias flags to userspace
-Message-ID: <20191105053451.GA32084@sol>
+To:     Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Cc:     linux-gpio <linux-gpio@vger.kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bamvor Jian Zhang <bamv2005@gmail.com>,
+        Drew Fustini <drew@pdp7.com>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+Subject: Re: [PATCH v5 4/7] gpiolib: add support for biasing output lines
+Message-ID: <20191105060649.GA1302@sol>
 References: <20191104153841.16911-1-warthog618@gmail.com>
- <20191104195838.GA9833@x1>
- <20191105001213.GA3685@sol>
+ <20191104153841.16911-5-warthog618@gmail.com>
+ <CAMpxmJUExXZ=ptMyRczvdujc7x9JP62Zy9m+WByYD4=w=1180w@mail.gmail.com>
+ <20191104155927.GA17106@sol>
+ <CAMpxmJUTFb_Bxsc8e006ohP6D3PP+kQgFYAPoZA2T1-HA41vSA@mail.gmail.com>
+ <20191105020342.GA16739@sol>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20191105001213.GA3685@sol>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20191105020342.GA16739@sol>
 User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Nov 05, 2019 at 08:12:13AM +0800, Kent Gibson wrote:
-> On Mon, Nov 04, 2019 at 11:58:38AM -0800, Drew Fustini wrote:
-> > On Mon, Nov 04, 2019 at 11:38:34PM +0800, Kent Gibson wrote:
-> > > on a Raspberry Pi, in both cases using the feature/pud_set_config 
-> > > branch of my Go gpiod library[2], as well as with my feature/pud 
-> > > development branch of libgpiod[3].  Patch 7 has only been tested using 
-> > > my gpiod library as libgpiod has not yet been updated to support the 
-> > > SET_CONFIG ioctl.
-> > > 
-> > > Patch 1 adds pull-up/pull-down support to line handle requests.
-> > > Patch 2 adds pull-up/pull-down support to line event requests.
-> > > Patch 3 adds support for disabling bias.
-> > > Patch 4 adds support for setting bias on output lines.
-> > > Patch 5 adds pull-up/down support to the gpio-mockup for uAPI testing.
-> > > Patch 6 refactors the flag validation from linehandle_create.
-> > > Patch 7 adds the SET_CONFIG ioctl.
+On Tue, Nov 05, 2019 at 10:03:42AM +0800, Kent Gibson wrote:
+> On Mon, Nov 04, 2019 at 05:19:14PM +0100, Bartosz Golaszewski wrote:
+> > pon., 4 lis 2019 o 16:59 Kent Gibson <warthog618@gmail.com> napisał(a):
+> > >
+> > > > Ugh, I missed one thing here - my for-next branch doesn't contain the
+> > > > following commit e735244e2cf0 ("gpiolib: don't clear FLAG_IS_OUT when
+> > > > emulating open-drain/open-source") which happens to modify this
+> > > > function.
+> > > >
+> > > > If I provided you with a branch containing it - would it be a lot of
+> > > > effort on your part to rebase it on top of it? If so - I can do it
+> > > > myself.
+> > > >
+> > >
+> > > I can do a rebase - though not until tomorrow (it is getting late here).
+> > > I would like that commit in as well - I suspect it being missing is
+> > > the reason a couple of the gpiod tests I was working on are failing.
+> > > I was in the process of tracking that down when I switched back to this.
+> > >
+> > > Cheers,
+> > > Kent.
+> > >
+> > >
 > > 
-> > Hi Kent, thanks for continuing pushing this patch series forward.
-> > 
-> > I've not used gpiomockup before and I was hoping you might be able to share
-> > the commands you use to run it to test the patches.
+> > No problem, it can wait until tomorrow. Please use the following
+> > branch - gpio/for-kent - from my tree.
 > > 
 > 
-> I refer you to the libgpiod tests, particularly
-> libgpiod/tests/mockup/gpio-mockup.c as well as gpio/gpio-mockup.c
-> itself.
-> 
-> If you run the libgpiod tests they will load and manipulate the module
-> themselves.  My gpiod tests do similarly.  I run them in a VM to ensure
-> they can't interfere with real hardware by accident.
+> That was a lot simpler than I expected - it rebased cleanly onto the 
+> new branch.  And fixed the gpiod test errors I was trying to track down.
+> Will submit v6 shortly.
 > 
 
-It occurs to me that you might want to know how to run the Go tests that
-I'm refering to when I say I've tested against gpio-mockup using gpiod.
-While that is probably obvious for Go developers, it probably isn't 
-so obvious for kernel developers.
+Maybe I'm missing something, but given that the rebase was clean, was 
+there actually any need for v6?
+i.e. anyone can rebase the v5 patch onto gpio/for-kent:
 
-So here is a quick guide for running the gpiod tests:
+$ git checkout -b pud_rebase brgl/gpio/for-next
+Branch 'pud_rebase' set up to track remote branch 'gpio/for-next' from 'brgl'.
+Switched to a new branch 'pud_rebase'
+$ git am PATCH-v5-0-7-gpio-expose-line-bias-flags-to-userspace.mbox
+Applying: gpio: expose pull-up/pull-down line flags to userspace
+Applying: gpiolib: add support for pull up/down to lineevent_create
+Applying: gpiolib: add support for disabling line bias
+Applying: gpiolib: add support for biasing output lines
+Applying: gpio: mockup: add set_config to support pull up/down
+Applying: gpiolib: move validation of line handle flags into helper function
+Applying: gpio: add new SET_CONFIG ioctl() to gpio chardev
+$ git rebase brgl/gpio/for-kent
+First, rewinding head to replay your work on top of it...
+Applying: gpio: expose pull-up/pull-down line flags to userspace
+Applying: gpiolib: add support for pull up/down to lineevent_create
+Applying: gpiolib: add support for disabling line bias
+Applying: gpiolib: add support for biasing output lines
+Using index info to reconstruct a base tree...
+M	drivers/gpio/gpiolib.c
+Falling back to patching base and 3-way merge...
+Auto-merging drivers/gpio/gpiolib.c
+Applying: gpio: mockup: add set_config to support pull up/down
+Applying: gpiolib: move validation of line handle flags into helper function
+Applying: gpio: add new SET_CONFIG ioctl() to gpio chardev
 
-1. Install Go[1].
-
-2. Checkout gpiod:
-  git clone https://github.com/warthog618/gpiod.git
-
-3. The uapi sub-package contains the tests for the uapi itself so
-  cd gpiod/uapi
-
-4. Checkout the appropriate branch - in this case 
-  git checkout feature/pud_set_config
-
-5. Build the tests
-  go test -c
-
-6. Run the tests (requires modprobe rights hence the sudo)
-  sudo ./uapi.test
-
-You can get a list of the tests being run by adding a --test.v
-parameter to uapi.test, or run particular tests with 
-  uapi.test --test.run [pattern]
-
-The tests themselves are in uapi_test.go, in case you get errors or want
-to see what they do.  The gpio-mockup wrapper is in gpiod/mockup.
-
-There are also tests for gpiod itself in gpiod/*_test.go, though 
-those focus on the gpiod library rather than the uapi and kernel.
+Or was it more about eyeballing and retesting the rebase in case the
+3-way merge went haywire?
 
 Cheers,
 Kent.
-
-[1] https://golang.org/doc/install
-
