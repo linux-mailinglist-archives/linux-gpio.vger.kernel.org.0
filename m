@@ -2,244 +2,98 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 2880AF05FE
-	for <lists+linux-gpio@lfdr.de>; Tue,  5 Nov 2019 20:31:04 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 9DF3FF06A5
+	for <lists+linux-gpio@lfdr.de>; Tue,  5 Nov 2019 21:08:05 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389724AbfKETbD (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 5 Nov 2019 14:31:03 -0500
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:33997 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389691AbfKETbD (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 5 Nov 2019 14:31:03 -0500
-Received: by mail-ot1-f65.google.com with SMTP id t4so7190903otr.1;
-        Tue, 05 Nov 2019 11:31:02 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=eXCrqaM2ReNAR8xM9spgb2Ee5zhCWir3DnZ51DYqUs0=;
-        b=YWsfZJwEFvAcw0YM7AT9gmKK9ZA6rxygwrCRQX1GOiZ+W4ujfnLD6T6Lyiw9/0zJwE
-         TG4+R2ZQVqdO8Cm5nVBlIS/45Rz2X1Lm7wxo82nB7yuhba42V66f6HhF38SudfU8rFDb
-         iSKgt83IvsYeMYCAWPNVCFcNHZP6KVV44QI5kAJ/8i8fsBQbflAfRazFwVM7s9MFuyHO
-         ZXm3UYbEbbEDyCtHXyWFl1aeKUclFtnW6QK+g4MfIfRZ4s1uH6nAh22GSC1KaAHj1v1X
-         Gv0P3zSncTCq4y1zXLwGz6FTmnXgtJAFGZ6BUeng2ZDBl0MjrA275Zswks65KEgA27LN
-         R53A==
-X-Gm-Message-State: APjAAAVdATyFE3gOW1tBgI8affRsWa0F1B9QbZx9QROeJJEqdRjMDyzV
-        SMoaOC0TmQ0Pw41kM8wu4A==
-X-Google-Smtp-Source: APXvYqzre2W/9ZqnBFFrz/aj+RCDtEBQysbqFeG7AzSN3ieOnpHrDpu7BFOp+KDwAVrQMDlaLseVCw==
-X-Received: by 2002:a05:6830:46:: with SMTP id d6mr13605649otp.7.1572982261489;
-        Tue, 05 Nov 2019 11:31:01 -0800 (PST)
-Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id y7sm6891792ote.81.2019.11.05.11.31.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 05 Nov 2019 11:31:00 -0800 (PST)
-Date:   Tue, 5 Nov 2019 13:31:00 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Cc:     broonie@kernel.org, lee.jones@linaro.org, linus.walleij@linaro.org,
-        vinod.koul@linaro.org, alsa-devel@alsa-project.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        spapothi@codeaurora.org, bgoswami@codeaurora.org,
-        linux-gpio@vger.kernel.org
-Subject: Re: [PATCH v3 01/11] ASoC: dt-bindings: add dt bindings for
- WCD9340/WCD9341 audio codec
-Message-ID: <20191105193100.GB4709@bogus>
-References: <20191029112700.14548-1-srinivas.kandagatla@linaro.org>
- <20191029112700.14548-2-srinivas.kandagatla@linaro.org>
+        id S1726141AbfKEUHz (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 5 Nov 2019 15:07:55 -0500
+Received: from gate2.alliedtelesis.co.nz ([202.36.163.20]:46185 "EHLO
+        gate2.alliedtelesis.co.nz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725806AbfKEUHy (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 5 Nov 2019 15:07:54 -0500
+Received: from mmarshal3.atlnz.lc (mmarshal3.atlnz.lc [10.32.18.43])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id B6B03886BF;
+        Wed,  6 Nov 2019 09:07:49 +1300 (NZDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alliedtelesis.co.nz;
+        s=mail181024; t=1572984469;
+        bh=lHjwz71E/Xg4m738q0J/T5/3YlB+63AdTckR6CbpTf8=;
+        h=From:To:CC:Subject:Date:References:In-Reply-To;
+        b=sbMfx1ncLH2xNDcnnjsrpyEOYMV4A5Xmp1wQ+aoovd95E2gMR8deiWjdQIHC6A/gc
+         flkdKoFwf4E8fcA8d3cA+m8dJADMOshyt1pbTwCLaPCGjeWXFxnNWh+s2r/ZRRUrxt
+         /lSTb31yObZniMqgDlnlXZ0sPrajuUNC3ec1HkGYW17UQnNVTigsiAwhK+czrwX8H1
+         rbow6hqbGlimL09AgB6m3fpde6IXLNJsFPIGCZXXR3mZxMi3jBEKvMwTU3YIW0eo2N
+         3nzqhmysAaOk/BAZXud2j1E/PnJ4tosJZmiHSWIcK94NZ+ENnGNbQThOfcRfxSQwZy
+         p5B0SEZ29LGbw==
+Received: from svr-chch-ex1.atlnz.lc (Not Verified[10.32.16.77]) by mmarshal3.atlnz.lc with Trustwave SEG (v7,5,8,10121)
+        id <B5dc1d6950000>; Wed, 06 Nov 2019 09:07:49 +1300
+Received: from svr-chch-ex1.atlnz.lc (2001:df5:b000:bc8:409d:36f5:8899:92e8)
+ by svr-chch-ex1.atlnz.lc (2001:df5:b000:bc8:409d:36f5:8899:92e8) with
+ Microsoft SMTP Server (TLS) id 15.0.1156.6; Wed, 6 Nov 2019 09:07:47 +1300
+Received: from svr-chch-ex1.atlnz.lc ([fe80::409d:36f5:8899:92e8]) by
+ svr-chch-ex1.atlnz.lc ([fe80::409d:36f5:8899:92e8%12]) with mapi id
+ 15.00.1156.000; Wed, 6 Nov 2019 09:07:47 +1300
+From:   Chris Packham <Chris.Packham@alliedtelesis.co.nz>
+To:     "broonie@kernel.org" <broonie@kernel.org>,
+        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
+        "bgolaszewski@baylibre.com" <bgolaszewski@baylibre.com>
+CC:     "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "bcm-kernel-feedback-list@broadcom.com" 
+        <bcm-kernel-feedback-list@broadcom.com>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>
+Subject: Re: [PATCH] gpio: xgs-iproc: Fix section mismatch on device tree
+ match table
+Thread-Topic: [PATCH] gpio: xgs-iproc: Fix section mismatch on device tree
+ match table
+Thread-Index: AQHVk9d2GHMYQw+EyUqkZ/V+4uyDVad8J8QA
+Date:   Tue, 5 Nov 2019 20:07:47 +0000
+Message-ID: <b8563b7fde5bf3fa7ac255e8d3149dcd6d773f7f.camel@alliedtelesis.co.nz>
+References: <20191105124915.34100-1-broonie@kernel.org>
+In-Reply-To: <20191105124915.34100-1-broonie@kernel.org>
+Accept-Language: en-NZ, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [2001:df5:b000:22:d4b1:92dc:7823:3af2]
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <212704B755D168488BFC89B45BF894EA@atlnz.lc>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191029112700.14548-2-srinivas.kandagatla@linaro.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Oct 29, 2019 at 11:26:50AM +0000, Srinivas Kandagatla wrote:
-> This patch adds bindings for wcd9340/wcd9341 audio codec which can
-> support both SLIMbus and I2S/I2C interface.
-> 
-> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-> ---
->  .../bindings/sound/qcom,wcd934x.yaml          | 162 ++++++++++++++++++
->  1 file changed, 162 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/sound/qcom,wcd934x.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/sound/qcom,wcd934x.yaml b/Documentation/devicetree/bindings/sound/qcom,wcd934x.yaml
-> new file mode 100644
-> index 000000000000..d6cfde6597db
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/sound/qcom,wcd934x.yaml
-> @@ -0,0 +1,162 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/sound/qcom,wcd934x.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Bindings for Qualcomm WCD9340/WCD9341 Audio Codec
-> +
-> +maintainers:
-> +  - Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-> +
-> +description: |
-> +  Qualcomm WCD9340/WCD9341 Codec is a standalone Hi-Fi audio codec IC.
-> +  It has in-built Soundwire controller, pin controller, interrupt mux and
-> +  supports both I2S/I2C and SLIMbus audio interfaces.
-> +
-> +properties:
-> +  compatible:
-> +    const: slim217,250
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  interrupts:
-> +    maxItems: 1
-> +
-> +  reset-gpios:
-> +    description: GPIO spec for reset line to use
-> +    maxItems: 1
-> +
-> +  slim-ifc-dev:
-> +    description: SLIMBus Interface device phandle
-> +    $ref: '/schemas/types.yaml#/definitions/phandle'
-> +    maxItems: 1
-
-Replied on previous version.
-
-> +
-> +  clocks:
-> +    maxItems: 1
-> +
-> +  clock-names:
-> +    const: extclk
-> +
-> +  vdd-buck-supply:
-> +    description: A reference to the 1.8V buck supply
-> +
-> +  vdd-buck-sido-supply:
-> +    description: A reference to the 1.8V SIDO buck supply
-> +
-> +  vdd-rx-supply:
-> +    description: A reference to the 1.8V rx supply
-> +
-> +  vdd-tx-supply:
-> +    description: A reference to the 1.8V tx supply
-> +
-> +  vdd-vbat-supply:
-> +    description: A reference to the vbat supply
-> +
-> +  vdd-io-supply:
-> +    description: A reference to the 1.8V I/O supply
-> +
-> +  vdd-micbias-supply:
-> +    description: A reference to the micbias supply
-> +
-> +  qcom,micbias1-microvolts:
-
-The standard unit is 'microvolt', not 'microvolts'.
-
-> +    description: micbias1 voltage between 1800000 - 2850000 microvolts
-> +
-> +  qcom,micbias2-microvolts:
-> +    description: micbias2 voltage between 1800000 - 2850000 microvolts
-> +
-> +  qcom,micbias3-microvolts:
-> +    description: micbias3 voltage between 1800000 - 2850000 microvolts
-> +
-> +  qcom,micbias4-microvolts:
-> +    description: micbias4 voltage between 1800000 - 2850000 microvolts
-> +
-> +  clock-output-names:
-> +    const: mclk
-> +
-> +  clock-frequency:
-> +    description: Clock frequency of output clk in Hz
-> +
-> +  interrupt-controller: true
-> +
-> +  '#interrupt-cells':
-> +    const: 1
-> +
-> +  '#clock-cells':
-> +    const: 0
-> +
-> +  '#sound-dai-cells':
-> +    const: 1
-> +
-> +  "#address-cells":
-> +    const: 1
-> +
-> +  "#size-cells":
-> +    const: 1
-> +
-> +patternProperties:
-> +  "^.*@[0-9a-f]+$":
-> +    type: object
-> +    description: |
-> +      WCD934x subnode for each slave devices. Bindings of each subnodes
-> +      depends on the specific driver providing the functionality and
-> +      documented in their respective bindings.
-> +
-> +    properties:
-> +      reg:
-> +        maxItems: 1
-> +
-> +    required:
-> +      - reg
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - reset-gpios
-> +  - slim-ifc-dev
-> +  - interrupts
-> +  - interrupt-controller
-> +  - clock-frequency
-> +  - clock-output-names
-> +  - qcom,micbias1-microvolts
-> +  - qcom,micbias2-microvolts
-> +  - qcom,micbias3-microvolts
-> +  - qcom,micbias4-microvolts
-> +  - "#interrupt-cells"
-> +  - "#clock-cells"
-> +  - "#sound-dai-cells"
-> +  - "#address-cells"
-> +  - "#size-cells"
-> +
-> +examples:
-> +  - |
-> +    codec@1,0{
-> +        compatible = "slim217,250";
-> +        reg  = <1 0>;
-> +        reset-gpios = <&tlmm 64 0>;
-> +        slim-ifc-dev  = <&wcd9340_ifd>;
-> +        #sound-dai-cells = <1>;
-> +        interrupt-parent = <&tlmm>;
-> +        interrupts = <54 4>;
-> +        interrupt-controller;
-> +        #interrupt-cells = <1>;
-> +        #clock-cells = <0>;
-> +        clock-frequency = <9600000>;
-> +        clock-output-names = "mclk";
-> +        qcom,micbias1-microvolts = <1800000>;
-> +        qcom,micbias2-microvolts = <1800000>;
-> +        qcom,micbias3-microvolts = <1800000>;
-> +        qcom,micbias4-microvolts = <1800000>;
-> +        clock-names = "extclk";
-> +        clocks = <&rpmhcc 2>;
-> +
-> +        #address-cells = <1>;
-> +        #size-cells = <1>;
-> +
-> +        pinctrl@42 {
-> +            reg = <0x42 0x2>;
-> +        };
-> +    };
-> +
-> +...
-> -- 
-> 2.21.0
-> 
+SGkgTWFyaywNCg0KT24gVHVlLCAyMDE5LTExLTA1IGF0IDEyOjQ5ICswMDAwLCBNYXJrIEJyb3du
+IHdyb3RlOg0KPiBUaGUgdGFibGUgb2YgZGV2aWNldHJlZSBpZGVudGlmaWVycyBpcyBhbm5vdGF0
+ZWQgYXMgX19pbml0Y29uc3QNCj4gaW5kaWNhdGluZyB0aGF0IGl0IGNhbiBiZSBkaXNjYXJkZWQg
+YWZ0ZXIga2VybmVsIGJvb3QgYnV0IGl0IGlzDQo+IHJlZmVyZW5jZWQgZnJvbSB0aGUgZHJpdmVy
+IHN0cnVjdCB3aGljaCBoYXMgbm8gaW5pdCBhbm5vdGF0aW9uIGxlYWRpbmcNCj4gdG8gYSBsaW5r
+ZXIgd2FybmluZzoNCj4gDQo+IFdBUk5JTkc6IHZtbGludXgubyguZGF0YSsweDgyZDU4KTogU2Vj
+dGlvbiBtaXNtYXRjaCBpbiByZWZlcmVuY2UgZnJvbSB0aGUgdmFyaWFibGUgYmNtX2lwcm9jX2dw
+aW9fZHJpdmVyIHRvIHRoZSB2YXJpYWJsZSAuaW5pdC5yb2RhdGE6YmNtX2lwcm9jX2dwaW9fb2Zf
+bWF0Y2gNCj4gVGhlIHZhcmlhYmxlIGJjbV9pcHJvY19ncGlvX2RyaXZlciByZWZlcmVuY2VzDQo+
+IHRoZSB2YXJpYWJsZSBfX2luaXRjb25zdCBiY21faXByb2NfZ3Bpb19vZl9tYXRjaA0KPiANCj4g
+U2luY2UgZHJpdmVycyBjYW4gYmUgcHJvYmVkIGFmdGVyIGluaXQgdGhlIGxhY2sgb2YgYW5ub3Rh
+dGlvbiBvbiB0aGUNCj4gZHJpdmVyIHN0cnVjdCBpcyBjb3JyZWN0IHNvIHJlbW92ZSB0aGUgYW5u
+b3RhdGlvbiBmcm9tIHRoZSBtYXRjaCB0YWJsZS4NCj4gDQo+IFNpZ25lZC1vZmYtYnk6IE1hcmsg
+QnJvd24gPGJyb29uaWVAa2VybmVsLm9yZz4NCg0KVGhhbmtzIGZvciBwaWNraW5nIHRoaXMgdXAN
+Cg0KUmV2aWV3ZWQtYnk6IENocmlzIFBhY2toYW0gPGNocmlzLnBhY2toYW1AYWxsaWVkdGVsZXNp
+cy5jby5uej4NCg0KSXMgaXQgd29ydGggaW5jbHVkaW5nICdGaXhlczogNmE0MWI2YzVmYzIwICgi
+Z3BpbzogQWRkIHhncy1pcHJvYw0KZHJpdmVyIiknPw0KDQo+IC0tLQ0KPiAgZHJpdmVycy9ncGlv
+L2dwaW8teGdzLWlwcm9jLmMgfCAyICstDQo+ICAxIGZpbGUgY2hhbmdlZCwgMSBpbnNlcnRpb24o
+KyksIDEgZGVsZXRpb24oLSkNCj4gDQo+IGRpZmYgLS1naXQgYS9kcml2ZXJzL2dwaW8vZ3Bpby14
+Z3MtaXByb2MuYyBiL2RyaXZlcnMvZ3Bpby9ncGlvLXhncy1pcHJvYy5jDQo+IGluZGV4IGEzZmRk
+OTVjYzllNi4uYmIxODNmNTg0ZDkyIDEwMDY0NA0KPiAtLS0gYS9kcml2ZXJzL2dwaW8vZ3Bpby14
+Z3MtaXByb2MuYw0KPiArKysgYi9kcml2ZXJzL2dwaW8vZ3Bpby14Z3MtaXByb2MuYw0KPiBAQCAt
+Mjk5LDcgKzI5OSw3IEBAIHN0YXRpYyBpbnQgX19leGl0IGlwcm9jX2dwaW9fcmVtb3ZlKHN0cnVj
+dCBwbGF0Zm9ybV9kZXZpY2UgKnBkZXYpDQo+ICAJcmV0dXJuIDA7DQo+ICB9DQo+ICANCj4gLXN0
+YXRpYyBjb25zdCBzdHJ1Y3Qgb2ZfZGV2aWNlX2lkIGJjbV9pcHJvY19ncGlvX29mX21hdGNoW10g
+X19pbml0Y29uc3QgPSB7DQo+ICtzdGF0aWMgY29uc3Qgc3RydWN0IG9mX2RldmljZV9pZCBiY21f
+aXByb2NfZ3Bpb19vZl9tYXRjaFtdID0gew0KPiAgCXsgLmNvbXBhdGlibGUgPSAiYnJjbSxpcHJv
+Yy1ncGlvLWNjYSIgfSwNCj4gIAl7fQ0KPiAgfTsNCg==
