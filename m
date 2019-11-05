@@ -2,179 +2,116 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id F3E06F04B1
-	for <lists+linux-gpio@lfdr.de>; Tue,  5 Nov 2019 19:07:17 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C5E81F04CB
+	for <lists+linux-gpio@lfdr.de>; Tue,  5 Nov 2019 19:14:48 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390476AbfKESHR (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 5 Nov 2019 13:07:17 -0500
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:51610 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388711AbfKESHQ (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 5 Nov 2019 13:07:16 -0500
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id xA5I76k5038978;
-        Tue, 5 Nov 2019 12:07:06 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1572977226;
-        bh=BLXyPhYlFgpHXpZNKuPMNoN7RMejmelp1TZNMcnkh1c=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=Cjsw63jRToooey3bcDzwZK3piGbsy7+SamjcK5P+YilD1HSgnPjHnFlCiL/0soeUS
-         mlYqbFktBRtPVaXLMW/SXj1WMEu0AKAavA//We5tsQDDXWlcMJ9kplQp47DMDgHavL
-         hh8FefGrJWlbKPBkFVqOfxVuqvAJ87f0dlLeZ5ko=
-Received: from DLEE100.ent.ti.com (dlee100.ent.ti.com [157.170.170.30])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xA5I76sV088470
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 5 Nov 2019 12:07:06 -0600
-Received: from DLEE113.ent.ti.com (157.170.170.24) by DLEE100.ent.ti.com
- (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Tue, 5 Nov
- 2019 12:06:51 -0600
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE113.ent.ti.com
- (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Tue, 5 Nov 2019 12:06:51 -0600
-Received: from [10.250.98.116] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id xA5I73D4070611;
-        Tue, 5 Nov 2019 12:07:03 -0600
-Subject: Re: [RFC v2 0/2] gpio: Support for shared GPIO lines on boards
-To:     Peter Ujfalusi <peter.ujfalusi@ti.com>,
+        id S2390569AbfKESOs (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 5 Nov 2019 13:14:48 -0500
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:35812 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390452AbfKESOr (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 5 Nov 2019 13:14:47 -0500
+Received: by mail-wr1-f66.google.com with SMTP id l10so22577652wrb.2
+        for <linux-gpio@vger.kernel.org>; Tue, 05 Nov 2019 10:14:46 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=broadcom.com; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-transfer-encoding:content-language;
+        bh=Mw8czg66zR2+XmJKwa/SXDogHRiTTqLG37/U0FeQDZg=;
+        b=es3U/VTnDu+3ZM21xrCRx4/uVUrsUqwUTRpNRnvLrAbHOVmG+6WQf77+yKNgRhhGMx
+         2wlKSomvPnoON7hMHNQ/XyukARpjX6NdkzxmVDIz+I3iDEExZGT65Q93GxMksYMPWqnP
+         Aj1BZX+rzUEtq/tgb/h1VhsCsFb+XKeCSV/qc=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-transfer-encoding
+         :content-language;
+        bh=Mw8czg66zR2+XmJKwa/SXDogHRiTTqLG37/U0FeQDZg=;
+        b=LtNzy6KHODO2KemQIHQf62uZ7NSmvT2A4+nG3rNzOn5GRg84CopslBm6Lli1u4nATV
+         TshiKP6F+NZ6fzzm2fFQno0EvWeOTdXA1BzzKYIrzvN4tL4x6MEurWztR93qtCDlrkL/
+         vTrR5+JBM+soYwg2icDGqaa6RiuXlqoydY7dUSkE7xvmw4zBj5gVSlcT/nZqg0/zx1aZ
+         wACZsKilNcrnUgF7RNNXVedg4quIuCyQNM08VF6uq6BzgNqGOmkN6SZIBPwZD1/Ofq0a
+         pFsryHIW8SKhSWkCsm4Vh6zTf7OUtle7z/1U1w5ssEFJNTQ5CysEIefIncgRcmyem0gW
+         PQVA==
+X-Gm-Message-State: APjAAAVB0A9noLKOhy23qpgFkzDPZ76DdTiVd0pkPrJ+HjcRv0uwgF/y
+        n2FPT511CL3tRbEmupzSlKYrn26f54DSv2xA
+X-Google-Smtp-Source: APXvYqz3lwEhvIyzPTbk4V3OVt/etmjJyMV0E398p2+KNGQJzZjbszoYvSVEBrTbNZbnkL8toT4L5Q==
+X-Received: by 2002:adf:da4a:: with SMTP id r10mr30681330wrl.356.1572977685512;
+        Tue, 05 Nov 2019 10:14:45 -0800 (PST)
+Received: from [10.136.13.65] ([192.19.228.250])
+        by smtp.gmail.com with ESMTPSA id b4sm37107131wrh.87.2019.11.05.10.14.41
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 05 Nov 2019 10:14:44 -0800 (PST)
+Subject: Re: [PATCH 08/62] gpio: gpio-bcm-kona: Use new GPIO_LINE_DIRECTION
+To:     Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>,
+        mazziesaccount@gmail.com
+Cc:     Ray Jui <rjui@broadcom.com>,
         Linus Walleij <linus.walleij@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>
-CC:     Mark Brown <broonie@kernel.org>,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Tero Kristo <t-kristo@ti.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>
-References: <20191030120440.3699-1-peter.ujfalusi@ti.com>
- <CAL_JsqK-eqoyU7RWiVXMpPZ8BfT8a0WB47756s8AUtyOqbkPXA@mail.gmail.com>
- <5bca4eb6-6379-394f-c95e-5bbbba5308f1@ti.com>
- <20191030141736.GN4568@sirena.org.uk>
- <f9c181d1-5e0c-5e82-a740-f4e97822604f@ti.com>
- <CAL_JsqJ4WdaRvmZcjQG-jVyOOeKZX9fn1WcQZGWfUPqwunQCFw@mail.gmail.com>
- <1258a5bf-a829-d47a-902f-bf2c3db07513@ti.com>
- <CAL_Jsq+V0oAdVCaW+S12CUa4grCJhZD8OGDeu=0ohcGgxOkPVg@mail.gmail.com>
- <5669a4c1-2bc1-423b-1407-073317f7df7e@ti.com>
- <CAL_JsqJbhG+-zVs9bjHg8asGuM1+FNnGJ0xx7qcPBwuRX35ijw@mail.gmail.com>
- <CACRpkdbiG5mt3WGEeHWsu-L3dzQJUQjxjGwQXK0cLgZNZ74yWg@mail.gmail.com>
- <109f9ff2-81e0-6d3d-db60-d48cb0a4e74f@ti.com>
- <ffb8e042-7f22-0e6e-f855-afa0dc3236bb@ti.com>
-From:   Grygorii Strashko <grygorii.strashko@ti.com>
-Message-ID: <61c8c126-3061-e297-8dab-7333316b0754@ti.com>
-Date:   Tue, 5 Nov 2019 20:07:02 +0200
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Scott Branden <sbranden@broadcom.com>,
+        bcm-kernel-feedback-list@broadcom.com, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <cover.1572945719.git.matti.vaittinen@fi.rohmeurope.com>
+ <47840e5f6268d598ed511dcdefcfeb9435109c21.1572945719.git.matti.vaittinen@fi.rohmeurope.com>
+From:   Scott Branden <scott.branden@broadcom.com>
+Message-ID: <2820c3aa-0fc0-a18a-7043-00d12d8cf6b4@broadcom.com>
+Date:   Tue, 5 Nov 2019 10:14:39 -0800
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.9.0
 MIME-Version: 1.0
-In-Reply-To: <ffb8e042-7f22-0e6e-f855-afa0dc3236bb@ti.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
+In-Reply-To: <47840e5f6268d598ed511dcdefcfeb9435109c21.1572945719.git.matti.vaittinen@fi.rohmeurope.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+Unlike some other opinions I've seen, I like the use of an 
+understandable define.
 
-
-On 05/11/2019 14:32, Peter Ujfalusi wrote:
-> 
-> 
-> On 05/11/2019 14.15, Grygorii Strashko wrote:
->>
->>
->> On 05/11/2019 11:58, Linus Walleij wrote:
->>> On Mon, Nov 4, 2019 at 8:11 PM Rob Herring <robh+dt@kernel.org> wrote:
->>>> [Peter]
->>>>> The device needs the RST line to be high, otherwise it is not
->>>>> accessible. If it does not have reset control how can we make sure that
->>>>> the GPIO line is in correct state?
->>>>
->>>> Just like the reset code, drivers register their use of the reset and
->>>> the core tracks users and prevents resetting when not safe. Maybe the
->>>> reset subsystem needs to learn about GPIO resets. (...)
->>>
->>> I agree. Certainly the reset subsystem can do what the regulator
->>> subsystem is already doing: request the GPIO line nonexclusive
->>> and handle any reference counting and/or quirks that are needed
->>> in a hypothetical drivers/reset/reset-gpio.c driver.
->>>
->>> There is no such driver today, just a "reset" driver in
->>> drivers/power/reset that resets the whole system.
->>>
->>> But I see no problem in creating a proper reset driver in drivers/reset
->>> to handle a few peripherals with a shared GPIO reset line.
->>
->> Personally, I agree with Mark's comment here:
->>
->>> [Mark]
->>> The theory with that was that any usage of this would need the
->>> higher level code using the GPIO to cooperate so they didn't step
->>> on each other's toes so the GPIO code should just punt to it.
->>>
->>>> But let's say that a board design will pick two components (C1 and C2)
->>>> and use the same GPIO line to enable them. We already have the drivers
->>>> for them and they are used in boards already.
->>>
->>> This is basically an attempt to make a generic implementation of
->>> that cooperation for simple cases.
->>>
->>
->> This looks like unsolvable problem in generic way.
->> Lets assume there are some generic shared reset controller invented, but
->> then
->> - What if some driver is loaded/unloaded and corresponding device uses
->> shared
->>    reset which is de-asserted already?
->>    In this case, driver should never ever expect that target device has all
->>    registers in default state.
->> - What if reset is required as part of error recovery procedure? The
->> error recovery
->>    will not be supported by such design.
->> - PM: Device reset could be part of suspend/resume sequence. if one of
->> the devices
->>    is wake-up source, but other are not, those devices might be in very
->> unexpected state during resume.
->> - There could be dependencies on reset timings, shared reset might work for
->>    similar devices (like set of net phys) and does not work if connected
->> devices are different.
-> 
-> and some driver shamelessly implements runtime power/reset control while
-> other driver does not (they were never used on board where they had
-> shared GPIO, probably power at most)
-> 
->>
->> It seems, the only one case when it might help is system boot when:
->>   - similar devices are connected to the reset line
->>   - drivers are not expected to be re-loaded
->>   - device reset is not part of any recovery procedure
->>   - safe reset timings can be defined for all connected devices
->> (but hey - if this is boot only then gpio-hogs should work. Are they?)
-> 
-> That is another thing which almost works ;)
-> w/o gpio binding deferred probing is not possible if the GPIO controller
-> is probed later.
-> In some cases it might be even impossible to make sure that the GPIO
-> controller would probe first (GPIO extender on different i2c bus than
-> the user(s) of the gpio line)
-> In some cases moving around nodes in DT might artificially make things
-> work, but then someone compiles the expander as module, or some 'small'
-> change in kernel and the probe order on the bus changes.
-> I don't think it is a valid thing to have commits on the DT files
-> saying: move the expander front/after the hog affected user since since
-> Monday the probe order has changed. Then move it back two weeks later ;)
+On 2019-11-05 2:13 a.m., Matti Vaittinen wrote:
+> t's hard for occasional GPIO code reader/writer to know if values 0/1
+> equal to IN or OUT. Use defined GPIO_LINE_DIRECTION_IN and
+> GPIO_LINE_DIRECTION_OUT to help them out.
 >
+> Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+Acked-by: Scott Branden <scott.branden@broadcom.com>
+> ---
+>   drivers/gpio/gpio-bcm-kona.c | 6 +++---
+>   1 file changed, 3 insertions(+), 3 deletions(-)
+>
+> diff --git a/drivers/gpio/gpio-bcm-kona.c b/drivers/gpio/gpio-bcm-kona.c
+> index 9fa6d3a967d2..4122683eb1f9 100644
+> --- a/drivers/gpio/gpio-bcm-kona.c
+> +++ b/drivers/gpio/gpio-bcm-kona.c
+> @@ -127,7 +127,7 @@ static int bcm_kona_gpio_get_dir(struct gpio_chip *chip, unsigned gpio)
+>   	u32 val;
+>   
+>   	val = readl(reg_base + GPIO_CONTROL(gpio)) & GPIO_GPCTR0_IOTR_MASK;
+> -	return !!val;
+> +	return val ? GPIO_LINE_DIRECTION_IN : GPIO_LINE_DIRECTION_OUT;
+>   }
+>   
+>   static void bcm_kona_gpio_set(struct gpio_chip *chip, unsigned gpio, int value)
+> @@ -144,7 +144,7 @@ static void bcm_kona_gpio_set(struct gpio_chip *chip, unsigned gpio, int value)
+>   	raw_spin_lock_irqsave(&kona_gpio->lock, flags);
+>   
+>   	/* this function only applies to output pin */
+> -	if (bcm_kona_gpio_get_dir(chip, gpio) == 1)
+> +	if (bcm_kona_gpio_get_dir(chip, gpio) == GPIO_LINE_DIRECTION_IN)
+>   		goto out;
+>   
+>   	reg_offset = value ? GPIO_OUT_SET(bank_id) : GPIO_OUT_CLEAR(bank_id);
+> @@ -170,7 +170,7 @@ static int bcm_kona_gpio_get(struct gpio_chip *chip, unsigned gpio)
+>   	reg_base = kona_gpio->reg_base;
+>   	raw_spin_lock_irqsave(&kona_gpio->lock, flags);
+>   
+> -	if (bcm_kona_gpio_get_dir(chip, gpio) == 1)
+> +	if (bcm_kona_gpio_get_dir(chip, gpio) == GPIO_LINE_DIRECTION_IN)
+>   		reg_offset = GPIO_IN_STATUS(bank_id);
+>   	else
+>   		reg_offset = GPIO_OUT_STATUS(bank_id);
 
-Ok. Above sounds like real problem. The implicit dependence is exist, but can't
-be resolved if any driver depends on gpio-hog of some gpio-controller.
-Probe deferring of gpio-controller will not lead to probe differing of dependent driver.
-
-Question: will gpio-hog mechanism resolve your case if it works (and probe differing issues)?
-
--- 
-Best regards,
-grygorii
