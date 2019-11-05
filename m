@@ -2,173 +2,103 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id BE11FEF5B9
-	for <lists+linux-gpio@lfdr.de>; Tue,  5 Nov 2019 07:50:43 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 95259EF5E8
+	for <lists+linux-gpio@lfdr.de>; Tue,  5 Nov 2019 08:06:51 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387668AbfKEGuA (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 5 Nov 2019 01:50:00 -0500
-Received: from mga14.intel.com ([192.55.52.115]:36586 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387556AbfKEGuA (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Tue, 5 Nov 2019 01:50:00 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 04 Nov 2019 22:49:59 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.68,270,1569308400"; 
-   d="scan'208";a="213798760"
-Received: from sgsxdev001.isng.intel.com (HELO localhost) ([10.226.88.11])
-  by orsmga002.jf.intel.com with ESMTP; 04 Nov 2019 22:49:56 -0800
-From:   Rahul Tanwar <rahul.tanwar@linux.intel.com>
-To:     linus.walleij@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com
-Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, robh@kernel.org,
-        andriy.shevchenko@intel.com, qi-ming.wu@intel.com,
-        yixin.zhu@linux.intel.com, cheol.yong.kim@intel.com,
-        Rahul Tanwar <rahul.tanwar@linux.intel.com>
-Subject: [PATCH v3 2/2] dt-bindings: pinctrl: intel: Add for new SoC
-Date:   Tue,  5 Nov 2019 14:49:43 +0800
-Message-Id: <f91001d8c5f0cb2860fda720d0cb6298a4856dd3.1572926608.git.rahul.tanwar@linux.intel.com>
-X-Mailer: git-send-email 2.11.0
-In-Reply-To: <cover.1572926608.git.rahul.tanwar@linux.intel.com>
-References: <cover.1572926608.git.rahul.tanwar@linux.intel.com>
-In-Reply-To: <cover.1572926608.git.rahul.tanwar@linux.intel.com>
-References: <cover.1572926608.git.rahul.tanwar@linux.intel.com>
+        id S2387702AbfKEHGu (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 5 Nov 2019 02:06:50 -0500
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:38183 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387639AbfKEHGu (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 5 Nov 2019 02:06:50 -0500
+Received: by mail-pl1-f193.google.com with SMTP id w8so8900341plq.5;
+        Mon, 04 Nov 2019 23:06:50 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=ShytpwrE9c/FcWybQ1i8wdsSV+dPeLCEN7Fog34ck4M=;
+        b=Qly7w3n56sEAX8+qHxDiN0dOm97fk2e0bMCHv0C7hzT7UxfgIHCXpHeCMbGxEqOu12
+         65kDjs8Q4QCxfhIo3eSam+2r87znfS+EIEpbWO4LkJnMB2KLlRe3E3Vxe9NC+fOnwAlx
+         g0BIa5NvEYLq91N8mr2/gDG40xpT1AI0+/IQYWWZ4XNWuA5nUPdJ0nPTbH7eIkfS+PFd
+         Owwjk8EccsG3BOZFZS8KGioNjnJhZne32XkdNUjXM0NvIboRHqc9qUT2lSq6kEIYm/Mp
+         1kgFJ8CYjbvzPOaU71RrfSiL8A1WQe2dzV8y0Trw6MUfemuDZ/TOhAUojHwDAV1e9dhf
+         5SpQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=ShytpwrE9c/FcWybQ1i8wdsSV+dPeLCEN7Fog34ck4M=;
+        b=gMn4LDaBmmLoFnW1uo5yTDjWrfka6hfyrQCalMwdv4zl2I/8GhaMJFRU7WQ3wwrOaI
+         zOxET5RMdhAUxBuySiaTFRXq/vqZxJjPmOey5E1IZ2ZC3JpI0TWz7ioUEvtou83CLd+/
+         yOjY+xIpv9KJbkuXUpMUlTcTUbm9nL+kBShGtVEKnBIMDxwfdcVvi7kamXbiL6RSnBGA
+         5bgJiki2FWrODaMfjD9eEnWoc0Te2uY65gnkbscKQ1NEj34FPqNZbb5l+0x+imVSAAEJ
+         3pKI0uqRTVqYugD8YBQBYkRo9POMGcMhSh1BHyyYhweoSi52xd1KP5mbwq+BX+kFibK4
+         pT1g==
+X-Gm-Message-State: APjAAAXECVRENdvBxIH/mpAVI8Y24b7CEHBvXHkOT68A9LsMBcuy1GnU
+        s7ytDDZB/QOHg2a4y83oU5YRTRYi8lG5UwdJV/g=
+X-Google-Smtp-Source: APXvYqwCsvxlaaO9BJWDSs1t0acsmzJfTzTMCiW3dcP5aUui10WRJLGndqyUkT6KTRWGUChZEmuWlBLbeXmoPpc0IB4=
+X-Received: by 2002:a17:902:9881:: with SMTP id s1mr32247185plp.18.1572937609577;
+ Mon, 04 Nov 2019 23:06:49 -0800 (PST)
+MIME-Version: 1.0
+References: <20191014124803.13661-1-miquel.raynal@bootlin.com>
+ <CAHp75Vc4vnNVKc+Q_TY8DpwV4rLZYGm2MvGBC7r67XjmtNoskQ@mail.gmail.com>
+ <20191015163055.0d8f44e5@xps13> <CAHp75VemkA7kap0O7=iACX4cD5_r6QXaLF6nS8R94ErStK0DwA@mail.gmail.com>
+ <20191104161103.64995b8a@xps13> <CAMpxmJVjyUXSNFEiTxMC1bdzXTex74DqeiHPqLBPdnb2_LYRnQ@mail.gmail.com>
+ <20191104203346.epdbzflnynh2gf3z@pengutronix.de>
+In-Reply-To: <20191104203346.epdbzflnynh2gf3z@pengutronix.de>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Tue, 5 Nov 2019 09:06:37 +0200
+Message-ID: <CAHp75VdULzZ6NXP7fp=6KQFAHOSvoJ-_WTqfcmhQJbrLUw3M4Q@mail.gmail.com>
+Subject: Re: [PATCH] gpio: pca953x: Add Maxim MAX7313 PWM support
+To:     =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        linux-pwm@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Sascha Hauer <kernel@pengutronix.de>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Add dt bindings document for pinmux & GPIO controller driver of
-Intel Lightning Mountain SoC.
+On Mon, Nov 4, 2019 at 10:33 PM Uwe Kleine-K=C3=B6nig
+<u.kleine-koenig@pengutronix.de> wrote:
+> On Mon, Nov 04, 2019 at 04:32:23PM +0100, Bartosz Golaszewski wrote:
+> > pon., 4 lis 2019 o 16:11 Miquel Raynal <miquel.raynal@bootlin.com> napi=
+sa=C5=82(a):
+> > > Andy Shevchenko <andy.shevchenko@gmail.com> wrote on Tue, 15 Oct 2019
+> > > 17:55:33 +0300:
+> > >
+> > > > Or other way around. PWM registers GPIO (which actually I prefer si=
+nce
+> > > > we have PCA9685 case where PWM provides GPIO functionality, though =
+via
+> > > > different means)
 
-Signed-off-by: Rahul Tanwar <rahul.tanwar@linux.intel.com>
----
- .../bindings/pinctrl/intel,lgm-pinctrl.yaml        | 114 +++++++++++++++++++++
- 1 file changed, 114 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/pinctrl/intel,lgm-pinctrl.yaml
+> While it's not nice to have a driver that provides two different devices
+> (here: gpio controller and pwm controller) similar things are not
+> unseen. And for example the splitting of watchdog
+> (drivers/watchdog/stmp3xxx_rtc_wdt.c) and rtc
+> (drivers/rtc/rtc-stmp3xxx.c) of the device in the mx28 is more trouble
+> than worth.
+>
+> So I'd vote for putting it in a single file that lives where the
+> bigger/more complex part fits to. So assuming that's the GPIO part (as
+> the driver supports several variants and not all of them have a PWM
+> function if I'm not mistaken) having it in drivers/gpio is fine for me.
 
-diff --git a/Documentation/devicetree/bindings/pinctrl/intel,lgm-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/intel,lgm-pinctrl.yaml
-new file mode 100644
-index 000000000000..961ac877a962
---- /dev/null
-+++ b/Documentation/devicetree/bindings/pinctrl/intel,lgm-pinctrl.yaml
-@@ -0,0 +1,114 @@
-+# SPDX-License-Identifier: GPL-2.0-only
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/bindings/pinctrl/intel,lgm-pinctrl.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Intel Lightning Mountain SoC pinmux & GPIO controller binding
-+
-+maintainers:
-+  - Rahul Tanwar <rahul.tanwar@linux.intel.com>
-+
-+description: |
-+  Pinmux & GPIO controller controls pin multiplexing & configuration including
-+  GPIO function selection & GPIO attributes configuration.
-+
-+  Please refer to [1] for details of the common pinctrl bindings used by the
-+  client devices.
-+
-+  [1] Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt
-+
-+properties:
-+  compatible:
-+    const: intel,lgm-pinctrl
-+
-+  reg:
-+    maxItems: 1
-+
-+# Client device subnode's properties
-+patternProperties:
-+  "^.*@[0-9a-fA-F]+$":
-+    type: object
-+    description:
-+      Pinctrl node's client devices use subnodes for desired pin configuration.
-+      Client device subnodes use below standard properties.
-+
-+    properties:
-+      function:
-+        $ref: /schemas/types.yaml#/definitions/string
-+        description:
-+          A string containing the name of the function to mux to the group.
-+
-+      groups:
-+        $ref: /schemas/types.yaml#/definitions/string-array
-+        description:
-+          An array of strings identifying the list of groups.
-+
-+      pins:
-+        $ref: /schemas/types.yaml#/definitions/uint32-array
-+        description:
-+          List of pins to select with this function.
-+
-+      pinmux:
-+        description: The applicable mux group.
-+        allOf:
-+          - $ref: "/schemas/types.yaml#/definitions/uint32"
-+          - enum:
-+              - 0 #PINMUX_GPIO
-+              - 1
-+              - 2
-+              - 3
-+              - 4
-+
-+      bias-pull-up:
-+        $ref: /schemas/types.yaml#/definitions/uint32
-+        description: Specifies pull-up configuration.
-+
-+      bias-pull-down:
-+        $ref: /schemas/types.yaml#/definitions/uint32
-+        description: Specifies pull-down configuration.
-+
-+      drive-strength:
-+        $ref: /schemas/types.yaml#/definitions/uint32
-+        description: Enables driver-current.
-+
-+      slew-rate:
-+        $ref: /schemas/types.yaml#/definitions/uint32
-+        description: Enables slew-rate.
-+
-+      drive-open-drain:
-+        $ref: /schemas/types.yaml#/definitions/uint32
-+        description: Specifies open-drain configuration.
-+
-+      output-enable:
-+        $ref: /schemas/types.yaml#/definitions/uint32
-+        description: Specifies if the pin is to be configured as output.
-+
-+
-+    required:
-+      - function
-+      - groups
-+
-+required:
-+  - compatible
-+  - reg
-+
-+examples:
-+  # Pinmux controller node
-+  - |
-+    pinctrl: pinctrl@e2880000 {
-+          compatible = "intel,lgm-pinctrl";
-+          reg = <0xe2880000 0x100000>;
-+
-+          # Client device subnode
-+          uart0:uart0 {
-+                pins = <64>, /* UART_RX0 */
-+                             <65>; /* UART_TX0 */
-+                function = "CONSOLE_UART0";
-+                pinmux = <1>,
-+                         <1>;
-+                groups = "CONSOLE_UART0";
-+          };
-+    };
-+
-+...
--- 
-2.11.0
+For me it sounds more likely that PWM is a *pin function* of a pin
+controller and actually this GPIO driver should be a pin controller
+with corresponding function(s).
 
+--=20
+With Best Regards,
+Andy Shevchenko
