@@ -2,26 +2,26 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 25353F070B
-	for <lists+linux-gpio@lfdr.de>; Tue,  5 Nov 2019 21:36:05 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 478C4F0709
+	for <lists+linux-gpio@lfdr.de>; Tue,  5 Nov 2019 21:36:04 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727095AbfKEUgD (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        id S1726368AbfKEUgD (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
         Tue, 5 Nov 2019 15:36:03 -0500
-Received: from mga05.intel.com ([192.55.52.43]:56275 "EHLO mga05.intel.com"
+Received: from mga07.intel.com ([134.134.136.100]:56505 "EHLO mga07.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729594AbfKEUgD (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Tue, 5 Nov 2019 15:36:03 -0500
+        id S1725806AbfKEUgC (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Tue, 5 Nov 2019 15:36:02 -0500
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 05 Nov 2019 12:36:02 -0800
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 05 Nov 2019 12:36:02 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.68,271,1569308400"; 
-   d="scan'208";a="205105301"
+   d="scan'208";a="402111876"
 Received: from black.fi.intel.com ([10.237.72.28])
-  by orsmga003.jf.intel.com with ESMTP; 05 Nov 2019 12:36:00 -0800
+  by fmsmga005.fm.intel.com with ESMTP; 05 Nov 2019 12:36:00 -0800
 Received: by black.fi.intel.com (Postfix, from userid 1003)
-        id BFF4E189; Tue,  5 Nov 2019 22:35:59 +0200 (EET)
+        id C525514E; Tue,  5 Nov 2019 22:35:59 +0200 (EET)
 From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 To:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
         Linus Walleij <linus.walleij@linaro.org>,
@@ -29,9 +29,9 @@ To:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
         Mika Westerberg <mika.westerberg@linux.intel.com>,
         Hans de Goede <hdegoede@redhat.com>
 Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: [PATCH v2 3/7] gpiolib: Introduce ->add_pin_ranges() callback
-Date:   Tue,  5 Nov 2019 22:35:53 +0200
-Message-Id: <20191105203557.78562-4-andriy.shevchenko@linux.intel.com>
+Subject: [PATCH v2 4/7] gpio: merrifield: Add GPIO <-> pin mapping ranges via callback
+Date:   Tue,  5 Nov 2019 22:35:54 +0200
+Message-Id: <20191105203557.78562-5-andriy.shevchenko@linux.intel.com>
 X-Mailer: git-send-email 2.24.0.rc1
 In-Reply-To: <20191105203557.78562-1-andriy.shevchenko@linux.intel.com>
 References: <20191105203557.78562-1-andriy.shevchenko@linux.intel.com>
@@ -42,71 +42,100 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-When IRQ chip is being added by GPIO library, the ACPI based platform expects
-GPIO <-> pin mapping ranges to be initialized in order to correctly initialize
-ACPI event mechanism on affected platforms. Unfortunately this step is missed.
+When IRQ chip is instantiated via GPIO library flow, the few functions,
+in particular the ACPI event registration mechanism, on some of ACPI based
+platforms expect that the pin ranges are initialized to that point.
 
-Introduce ->add_pin_ranges() callback to fill the above mentioned gap.
+Add GPIO <-> pin mapping ranges via callback in the GPIO library flow.
 
 Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 ---
- drivers/gpio/gpiolib.c      | 12 ++++++++++++
- include/linux/gpio/driver.h |  5 +++++
- 2 files changed, 17 insertions(+)
+ drivers/gpio/gpio-merrifield.c | 43 ++++++++++++++++++++--------------
+ 1 file changed, 26 insertions(+), 17 deletions(-)
 
-diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
-index aaf9c0a74c38..f888e46f0e93 100644
---- a/drivers/gpio/gpiolib.c
-+++ b/drivers/gpio/gpiolib.c
-@@ -390,6 +390,14 @@ static void gpiochip_free_valid_mask(struct gpio_chip *gpiochip)
- 	gpiochip->valid_mask = NULL;
+diff --git a/drivers/gpio/gpio-merrifield.c b/drivers/gpio/gpio-merrifield.c
+index 3302125e5265..e96d8e517e26 100644
+--- a/drivers/gpio/gpio-merrifield.c
++++ b/drivers/gpio/gpio-merrifield.c
+@@ -393,14 +393,36 @@ static const char *mrfld_gpio_get_pinctrl_dev_name(struct mrfld_gpio *priv)
+ 	return name;
  }
  
-+static int gpiochip_add_pin_ranges(struct gpio_chip *gc)
-+{
-+	if (gc->add_pin_ranges)
-+		return gc->add_pin_ranges(gc);
+-static int mrfld_gpio_probe(struct pci_dev *pdev, const struct pci_device_id *id)
++static int mrfld_gpio_add_pin_ranges(struct gpio_chip *chip)
+ {
++	struct mrfld_gpio *priv = gpiochip_get_data(chip);
+ 	const struct mrfld_gpio_pinrange *range;
+ 	const char *pinctrl_dev_name;
++	unsigned int i;
++	int retval;
++
++	pinctrl_dev_name = mrfld_gpio_get_pinctrl_dev_name(priv);
++	for (i = 0; i < ARRAY_SIZE(mrfld_gpio_ranges); i++) {
++		range = &mrfld_gpio_ranges[i];
++		retval = gpiochip_add_pin_range(&priv->chip,
++						pinctrl_dev_name,
++						range->gpio_base,
++						range->pin_base,
++						range->npins);
++		if (retval) {
++			dev_err(priv->dev, "failed to add GPIO pin range\n");
++			return retval;
++		}
++	}
 +
 +	return 0;
 +}
 +
- bool gpiochip_line_is_valid(const struct gpio_chip *gpiochip,
- 				unsigned int offset)
- {
-@@ -1407,6 +1415,10 @@ int gpiochip_add_data_with_key(struct gpio_chip *chip, void *data,
- 		}
++static int mrfld_gpio_probe(struct pci_dev *pdev, const struct pci_device_id *id)
++{
+ 	struct mrfld_gpio *priv;
+ 	u32 gpio_base, irq_base;
+ 	void __iomem *base;
+-	unsigned int i;
+ 	int retval;
+ 
+ 	retval = pcim_enable_device(pdev);
+@@ -441,30 +463,16 @@ static int mrfld_gpio_probe(struct pci_dev *pdev, const struct pci_device_id *id
+ 	priv->chip.base = gpio_base;
+ 	priv->chip.ngpio = MRFLD_NGPIO;
+ 	priv->chip.can_sleep = false;
++	priv->chip.add_pin_ranges = mrfld_gpio_add_pin_ranges;
+ 
+ 	raw_spin_lock_init(&priv->lock);
+ 
+-	pci_set_drvdata(pdev, priv);
+ 	retval = devm_gpiochip_add_data(&pdev->dev, &priv->chip, priv);
+ 	if (retval) {
+ 		dev_err(&pdev->dev, "gpiochip_add error %d\n", retval);
+ 		return retval;
  	}
  
-+	ret = gpiochip_add_pin_ranges(chip);
-+	if (ret)
-+		goto err_remove_of_chip;
-+
- 	acpi_gpiochip_add(chip);
+-	pinctrl_dev_name = mrfld_gpio_get_pinctrl_dev_name(priv);
+-	for (i = 0; i < ARRAY_SIZE(mrfld_gpio_ranges); i++) {
+-		range = &mrfld_gpio_ranges[i];
+-		retval = gpiochip_add_pin_range(&priv->chip,
+-						pinctrl_dev_name,
+-						range->gpio_base,
+-						range->pin_base,
+-						range->npins);
+-		if (retval) {
+-			dev_err(&pdev->dev, "failed to add GPIO pin range\n");
+-			return retval;
+-		}
+-	}
+-
+ 	retval = gpiochip_irqchip_add(&priv->chip, &mrfld_irqchip, irq_base,
+ 				      handle_bad_irq, IRQ_TYPE_NONE);
+ 	if (retval) {
+@@ -477,6 +485,7 @@ static int mrfld_gpio_probe(struct pci_dev *pdev, const struct pci_device_id *id
+ 	gpiochip_set_chained_irqchip(&priv->chip, &mrfld_irqchip, pdev->irq,
+ 				     mrfld_irq_handler);
  
- 	machine_gpiochip_add(chip);
-diff --git a/include/linux/gpio/driver.h b/include/linux/gpio/driver.h
-index fd860c553ff4..424d03770b26 100644
---- a/include/linux/gpio/driver.h
-+++ b/include/linux/gpio/driver.h
-@@ -287,6 +287,9 @@ struct gpio_irq_chip {
-  *	state (such as pullup/pulldown configuration).
-  * @init_valid_mask: optional routine to initialize @valid_mask, to be used if
-  *	not all GPIOs are valid.
-+ * @add_pin_ranges: optional routine to initialize pin ranges, to be used when
-+ *	requires special mapping of the pins that provides GPIO functionality.
-+ *	It is called after adding GPIO chip and before adding IRQ chip.
-  * @base: identifies the first GPIO number handled by this chip;
-  *	or, if negative during registration, requests dynamic ID allocation.
-  *	DEPRECATION: providing anything non-negative and nailing the base
-@@ -377,6 +380,8 @@ struct gpio_chip {
- 						   unsigned long *valid_mask,
- 						   unsigned int ngpios);
++	pci_set_drvdata(pdev, priv);
+ 	return 0;
+ }
  
-+	int			(*add_pin_ranges)(struct gpio_chip *chip);
-+
- 	int			base;
- 	u16			ngpio;
- 	const char		*const *names;
 -- 
 2.24.0.rc1
 
