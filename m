@@ -2,116 +2,88 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id C5E81F04CB
-	for <lists+linux-gpio@lfdr.de>; Tue,  5 Nov 2019 19:14:48 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id DDB38F0550
+	for <lists+linux-gpio@lfdr.de>; Tue,  5 Nov 2019 19:49:09 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390569AbfKESOs (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 5 Nov 2019 13:14:48 -0500
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:35812 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390452AbfKESOr (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 5 Nov 2019 13:14:47 -0500
-Received: by mail-wr1-f66.google.com with SMTP id l10so22577652wrb.2
-        for <linux-gpio@vger.kernel.org>; Tue, 05 Nov 2019 10:14:46 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-transfer-encoding:content-language;
-        bh=Mw8czg66zR2+XmJKwa/SXDogHRiTTqLG37/U0FeQDZg=;
-        b=es3U/VTnDu+3ZM21xrCRx4/uVUrsUqwUTRpNRnvLrAbHOVmG+6WQf77+yKNgRhhGMx
-         2wlKSomvPnoON7hMHNQ/XyukARpjX6NdkzxmVDIz+I3iDEExZGT65Q93GxMksYMPWqnP
-         Aj1BZX+rzUEtq/tgb/h1VhsCsFb+XKeCSV/qc=
+        id S2390482AbfKEStG (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 5 Nov 2019 13:49:06 -0500
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:34198 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389861AbfKEStG (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 5 Nov 2019 13:49:06 -0500
+Received: by mail-oi1-f194.google.com with SMTP id l202so18522730oig.1;
+        Tue, 05 Nov 2019 10:49:06 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding
-         :content-language;
-        bh=Mw8czg66zR2+XmJKwa/SXDogHRiTTqLG37/U0FeQDZg=;
-        b=LtNzy6KHODO2KemQIHQf62uZ7NSmvT2A4+nG3rNzOn5GRg84CopslBm6Lli1u4nATV
-         TshiKP6F+NZ6fzzm2fFQno0EvWeOTdXA1BzzKYIrzvN4tL4x6MEurWztR93qtCDlrkL/
-         vTrR5+JBM+soYwg2icDGqaa6RiuXlqoydY7dUSkE7xvmw4zBj5gVSlcT/nZqg0/zx1aZ
-         wACZsKilNcrnUgF7RNNXVedg4quIuCyQNM08VF6uq6BzgNqGOmkN6SZIBPwZD1/Ofq0a
-         pFsryHIW8SKhSWkCsm4Vh6zTf7OUtle7z/1U1w5ssEFJNTQ5CysEIefIncgRcmyem0gW
-         PQVA==
-X-Gm-Message-State: APjAAAVB0A9noLKOhy23qpgFkzDPZ76DdTiVd0pkPrJ+HjcRv0uwgF/y
-        n2FPT511CL3tRbEmupzSlKYrn26f54DSv2xA
-X-Google-Smtp-Source: APXvYqz3lwEhvIyzPTbk4V3OVt/etmjJyMV0E398p2+KNGQJzZjbszoYvSVEBrTbNZbnkL8toT4L5Q==
-X-Received: by 2002:adf:da4a:: with SMTP id r10mr30681330wrl.356.1572977685512;
-        Tue, 05 Nov 2019 10:14:45 -0800 (PST)
-Received: from [10.136.13.65] ([192.19.228.250])
-        by smtp.gmail.com with ESMTPSA id b4sm37107131wrh.87.2019.11.05.10.14.41
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 05 Nov 2019 10:14:44 -0800 (PST)
-Subject: Re: [PATCH 08/62] gpio: gpio-bcm-kona: Use new GPIO_LINE_DIRECTION
-To:     Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>,
-        mazziesaccount@gmail.com
-Cc:     Ray Jui <rjui@broadcom.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Scott Branden <sbranden@broadcom.com>,
-        bcm-kernel-feedback-list@broadcom.com, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <cover.1572945719.git.matti.vaittinen@fi.rohmeurope.com>
- <47840e5f6268d598ed511dcdefcfeb9435109c21.1572945719.git.matti.vaittinen@fi.rohmeurope.com>
-From:   Scott Branden <scott.branden@broadcom.com>
-Message-ID: <2820c3aa-0fc0-a18a-7043-00d12d8cf6b4@broadcom.com>
-Date:   Tue, 5 Nov 2019 10:14:39 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=Qj5LiYO9Gp8VVa5aloZ7icPxyBMoZMvJD6YekkOcDko=;
+        b=DZh4DBB6PGYD9EHe8SNxx49+3hErp897GlDbAOarx4jIEVk3pbY4yFS47UNf4UkZOU
+         8pwl4bDqk72chY5FoevbkCSSZmZFIyWsiO8okHJ9z5mpQibVynwYzLFzhWF5bq5uzbtb
+         pRFsUb1IMVeArStTGYqSFoCzVgMoH/lPwhjE+vAsv5MjHtaKba2no6mkSGn4THxHPHgj
+         gaxC6LGbgJUAL2afyeB6gUB/yH99DIji7oFW5yry2ZKP7d0Y7E60BNW2SiidNvccSxSs
+         05vS1e+h3aKyUMUJ7fjyK+oRu+AjgzW+OqMCPiypwwip7D+r+hY+GQPRyeUUXsi+sTYq
+         16bg==
+X-Gm-Message-State: APjAAAWZMzHiLH+kqZc2XN9E5D/zea4QUiIp+hLhMRHECF32OR5JXnNb
+        MI7sIIfx/Kz/oEq+CFboj42HXvY=
+X-Google-Smtp-Source: APXvYqyrkBUlvV4cInkJ0w/GC7dlp4bZRcgeBsiVsjLD/Uy3nlwd90V6BQaJ97S30Z3HKKwFfh/7vw==
+X-Received: by 2002:aca:a842:: with SMTP id r63mr394336oie.118.1572979745545;
+        Tue, 05 Nov 2019 10:49:05 -0800 (PST)
+Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id u18sm2530972otq.31.2019.11.05.10.49.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 05 Nov 2019 10:49:04 -0800 (PST)
+Date:   Tue, 5 Nov 2019 12:49:03 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Mark Brown <broonie@kernel.org>,
+        Lee Jones <lee.jones@linaro.org>,
+        Vinod Koul <vinod.koul@linaro.org>,
+        "moderated list:SOUND - SOC LAYER / DYNAMIC AUDIO POWER MANAGEM..." 
+        <alsa-devel@alsa-project.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        spapothi@codeaurora.org, bgoswami@codeaurora.org,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
+Subject: Re: [PATCH v3 08/11] dt-bindings: pinctrl: qcom-wcd934x: Add
+ bindings for gpio
+Message-ID: <20191105184903.GA4709@bogus>
+References: <20191029112700.14548-1-srinivas.kandagatla@linaro.org>
+ <20191029112700.14548-9-srinivas.kandagatla@linaro.org>
+ <CACRpkdYc-3Nk7VGj8mAjaM4C0dc_X7ZOK0cptW2Sr+kKwvyFVg@mail.gmail.com>
+ <4f0e22ab-6aa1-2ed1-a85b-fb66531e0b2a@linaro.org>
+ <CACRpkda2CdbPe7jsomZSxdJ1wE65OmNYDsZNj1OmfzdvG4kWng@mail.gmail.com>
+ <502c64dd-a249-bb2c-7bc5-8c66fa66be35@linaro.org>
 MIME-Version: 1.0
-In-Reply-To: <47840e5f6268d598ed511dcdefcfeb9435109c21.1572945719.git.matti.vaittinen@fi.rohmeurope.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <502c64dd-a249-bb2c-7bc5-8c66fa66be35@linaro.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Unlike some other opinions I've seen, I like the use of an 
-understandable define.
+On Tue, Nov 05, 2019 at 01:27:45PM +0000, Srinivas Kandagatla wrote:
+> 
+> 
+> On 05/11/2019 13:25, Linus Walleij wrote:
+> > On Mon, Nov 4, 2019 at 10:35 AM Srinivas Kandagatla
+> > <srinivas.kandagatla@linaro.org>  wrote:
+> > 
+> > > This controller just has Output enable bits, No pin control properties.
+> > > 
+> > > As you suggested I can move this to drivers/gpio in next version.
+> > OK perfect, thanks!
+> > 
+> > NB: this probably also affects the compatible-string which contains
+> > "pinctrl*" right?
+> Yes, I will suffix it with "-gpio" instead.
 
-On 2019-11-05 2:13 a.m., Matti Vaittinen wrote:
-> t's hard for occasional GPIO code reader/writer to know if values 0/1
-> equal to IN or OUT. Use defined GPIO_LINE_DIRECTION_IN and
-> GPIO_LINE_DIRECTION_OUT to help them out.
->
-> Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-Acked-by: Scott Branden <scott.branden@broadcom.com>
-> ---
->   drivers/gpio/gpio-bcm-kona.c | 6 +++---
->   1 file changed, 3 insertions(+), 3 deletions(-)
->
-> diff --git a/drivers/gpio/gpio-bcm-kona.c b/drivers/gpio/gpio-bcm-kona.c
-> index 9fa6d3a967d2..4122683eb1f9 100644
-> --- a/drivers/gpio/gpio-bcm-kona.c
-> +++ b/drivers/gpio/gpio-bcm-kona.c
-> @@ -127,7 +127,7 @@ static int bcm_kona_gpio_get_dir(struct gpio_chip *chip, unsigned gpio)
->   	u32 val;
->   
->   	val = readl(reg_base + GPIO_CONTROL(gpio)) & GPIO_GPCTR0_IOTR_MASK;
-> -	return !!val;
-> +	return val ? GPIO_LINE_DIRECTION_IN : GPIO_LINE_DIRECTION_OUT;
->   }
->   
->   static void bcm_kona_gpio_set(struct gpio_chip *chip, unsigned gpio, int value)
-> @@ -144,7 +144,7 @@ static void bcm_kona_gpio_set(struct gpio_chip *chip, unsigned gpio, int value)
->   	raw_spin_lock_irqsave(&kona_gpio->lock, flags);
->   
->   	/* this function only applies to output pin */
-> -	if (bcm_kona_gpio_get_dir(chip, gpio) == 1)
-> +	if (bcm_kona_gpio_get_dir(chip, gpio) == GPIO_LINE_DIRECTION_IN)
->   		goto out;
->   
->   	reg_offset = value ? GPIO_OUT_SET(bank_id) : GPIO_OUT_CLEAR(bank_id);
-> @@ -170,7 +170,7 @@ static int bcm_kona_gpio_get(struct gpio_chip *chip, unsigned gpio)
->   	reg_base = kona_gpio->reg_base;
->   	raw_spin_lock_irqsave(&kona_gpio->lock, flags);
->   
-> -	if (bcm_kona_gpio_get_dir(chip, gpio) == 1)
-> +	if (bcm_kona_gpio_get_dir(chip, gpio) == GPIO_LINE_DIRECTION_IN)
->   		reg_offset = GPIO_IN_STATUS(bank_id);
->   	else
->   		reg_offset = GPIO_OUT_STATUS(bank_id);
+Not a discussion we should be having because you should name this after 
+what's in the chip documentation not the OS subsystem it happens to land 
+in.
 
+Rob
