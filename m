@@ -2,51 +2,54 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id F3A2BEFB30
-	for <lists+linux-gpio@lfdr.de>; Tue,  5 Nov 2019 11:30:45 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id BA4C9EFB32
+	for <lists+linux-gpio@lfdr.de>; Tue,  5 Nov 2019 11:31:11 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388203AbfKEKan (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 5 Nov 2019 05:30:43 -0500
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:38537 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388022AbfKEKan (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 5 Nov 2019 05:30:43 -0500
-Received: by mail-lf1-f65.google.com with SMTP id q28so14730065lfa.5;
-        Tue, 05 Nov 2019 02:30:42 -0800 (PST)
+        id S2388266AbfKEKbK (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 5 Nov 2019 05:31:10 -0500
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:44250 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388093AbfKEKbK (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 5 Nov 2019 05:31:10 -0500
+Received: by mail-lj1-f196.google.com with SMTP id g3so15056548ljl.11;
+        Tue, 05 Nov 2019 02:31:08 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=6AIokuiWLl19H7BGT6dn1FK3ZSR8YHgDjLrqhF1x1T8=;
-        b=Y9TiLLqVtxq/y2fQM6oLmuC4AGT429o91VzCeazalm6d2tUNznN2q2QzBHAGnlgK2N
-         G4VWJxCASDN1Rm/xYu+8ZPNdLswSPBrW8TrX7Ogk2WckaDcSPGwXdlBftKItzrGv+5Z1
-         3qBCrVmWk62i6bNKCB98ob7T1Fr2i5IeDtUWfDz/gv4uEjlpC3EzGE6wVo3Aqd8gJ9zV
-         rrHlrymUGair/ma7lhLk0EICAC+Po6+UAwM2Uc27Noo8XeCTOry0cGf3MJsBBTZ+J5Vz
-         oxJS/o6ZwmHcfp+reNNvyJIA7r4NwY8kNu12jFG3gYfjyfiXSDwNllEiUdLtEQ9KGXWV
-         i1/g==
-X-Gm-Message-State: APjAAAWqtmA+Q2mOmfkJSzbvsWHYFJ9FJpcwaH0ZT/aweUEvGVDc+r4D
-        dfgLZZtFEHj6ozfXwpH3dpjtTbEjhDw=
-X-Google-Smtp-Source: APXvYqyHus6Atd6yI85+wTvHCaIyxPeAIRpnB6esIsSkkFyhvYgaWSOw/cEXsep3Yn3OjTSbA3pjRg==
-X-Received: by 2002:a19:6a0d:: with SMTP id u13mr11298714lfu.86.1572949841518;
-        Tue, 05 Nov 2019 02:30:41 -0800 (PST)
+        bh=ggSCNAhKWDAQfnI1StH0nU3POuONxOaNf53ZjEk0tRo=;
+        b=kXA47VE1jn35t7REZkc4DfgsBLUShx5soMmHRDa2ywLDOQJ9LY7pLoj10S9OVHeAOO
+         uPm+OV9QxpJ20f8TFaHwrmyXa5JjxzAg5fckC/6mwZpaITIjmCJ/Br4TwPWdK3jpc7ip
+         13liA0mLqcpp5JEnktahH9Dix9M8qZ22G/w5IeYqxe7wyAPrBRlPJl6nOxz9vaYQX0RW
+         8RFs6+ZwNHAWg17ymvVoYhGnBL+sY2475lHoMV5WoVkeZAQQbKSAFEdB1CPAPdB2zkzN
+         uP2GI8rSTUuWKTZD78vIn3DFs88cluXxd4nUJLv9BCALNo6GOZQuLlCYuJ2s4TN35WOe
+         k9Fg==
+X-Gm-Message-State: APjAAAXdUptCPQiicshlSZYyLjiiz5ZtE9LjhjmhmFDwh5H4vVzxoq1O
+        9K6R1xxU+tBzFD/8SSkH0FE=
+X-Google-Smtp-Source: APXvYqz0UZmZK1gDDAdaOfCCRbxurzlfXmRgO3ZpZ9vcag4bLsqt98u9MkIOWp/ylNFSuRY4eaGaIA==
+X-Received: by 2002:a2e:9016:: with SMTP id h22mr14151346ljg.137.1572949868198;
+        Tue, 05 Nov 2019 02:31:08 -0800 (PST)
 Received: from localhost.localdomain ([213.255.186.46])
-        by smtp.gmail.com with ESMTPSA id b17sm7086420lfo.16.2019.11.05.02.30.40
+        by smtp.gmail.com with ESMTPSA id k19sm8781244ljg.18.2019.11.05.02.31.07
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 05 Nov 2019 02:30:41 -0800 (PST)
-Date:   Tue, 5 Nov 2019 12:30:36 +0200
+        Tue, 05 Nov 2019 02:31:07 -0800 (PST)
+Date:   Tue, 5 Nov 2019 12:30:58 +0200
 From:   Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
 To:     matti.vaittinen@fi.rohmeurope.com, mazziesaccount@gmail.com
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+Cc:     Thorsten Scherer <t.scherer@eckelmann.de>,
+        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
         Linus Walleij <linus.walleij@linaro.org>,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>,
         linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 39/62] gpio: gpio-sch: Use new GPIO_LINE_DIRECTION
-Message-ID: <65558b9677120e31a842796cea22581655ede706.1572945894.git.matti.vaittinen@fi.rohmeurope.com>
-References: <cover.1572945894.git.matti.vaittinen@fi.rohmeurope.com>
+Subject: [PATCH 40/62] gpio: gpio-siox: Use new GPIO_LINE_DIRECTION
+Message-ID: <91a796dd2811b58f4be30875f5ef644f0e43f241.1572945896.git.matti.vaittinen@fi.rohmeurope.com>
+References: <cover.1572945896.git.matti.vaittinen@fi.rohmeurope.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <cover.1572945894.git.matti.vaittinen@fi.rohmeurope.com>
+In-Reply-To: <cover.1572945896.git.matti.vaittinen@fi.rohmeurope.com>
 User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
@@ -59,25 +62,25 @@ GPIO_LINE_DIRECTION_OUT to help them out.
 
 Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
 ---
- drivers/gpio/gpio-sch.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ drivers/gpio/gpio-siox.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/gpio/gpio-sch.c b/drivers/gpio/gpio-sch.c
-index fb143f28c386..c65f35b68202 100644
---- a/drivers/gpio/gpio-sch.c
-+++ b/drivers/gpio/gpio-sch.c
-@@ -127,7 +127,10 @@ static int sch_gpio_get_direction(struct gpio_chip *gc, unsigned gpio_num)
+diff --git a/drivers/gpio/gpio-siox.c b/drivers/gpio/gpio-siox.c
+index 006a7e6a75f2..311f66757b92 100644
+--- a/drivers/gpio/gpio-siox.c
++++ b/drivers/gpio/gpio-siox.c
+@@ -203,9 +203,9 @@ static int gpio_siox_direction_output(struct gpio_chip *chip,
+ static int gpio_siox_get_direction(struct gpio_chip *chip, unsigned int offset)
  {
- 	struct sch_gpio *sch = gpiochip_get_data(gc);
- 
--	return sch_gpio_reg_get(sch, gpio_num, GIO);
-+	if (sch_gpio_reg_get(sch, gpio_num, GIO))
+ 	if (offset < 12)
+-		return 1; /* input */
 +		return GPIO_LINE_DIRECTION_IN;
-+
-+	return GPIO_LINE_DIRECTION_OUT;
+ 	else
+-		return 0; /* output */
++		return GPIO_LINE_DIRECTION_OUT;
  }
  
- static const struct gpio_chip sch_gpio_chip = {
+ static int gpio_siox_probe(struct siox_device *sdevice)
 -- 
 2.21.0
 
