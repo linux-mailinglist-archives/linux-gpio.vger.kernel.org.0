@@ -2,38 +2,38 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id E162FF0748
-	for <lists+linux-gpio@lfdr.de>; Tue,  5 Nov 2019 21:52:32 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 205E8F0761
+	for <lists+linux-gpio@lfdr.de>; Tue,  5 Nov 2019 21:57:22 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727888AbfKEUwc (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 5 Nov 2019 15:52:32 -0500
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:33417 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725806AbfKEUwb (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 5 Nov 2019 15:52:31 -0500
-Received: by mail-oi1-f193.google.com with SMTP id m193so18901615oig.0;
-        Tue, 05 Nov 2019 12:52:30 -0800 (PST)
+        id S1725806AbfKEU5V (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 5 Nov 2019 15:57:21 -0500
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:35109 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729632AbfKEU5U (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 5 Nov 2019 15:57:20 -0500
+Received: by mail-oi1-f195.google.com with SMTP id n16so18903672oig.2;
+        Tue, 05 Nov 2019 12:57:20 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=/XIB9kBX8rgCqucb9RY+pGi1vrT74BwyH3QkaAjqeZI=;
-        b=sU8J6WEKTeOUi/7uzPBqqod/e15bObVKBzjM3DmmbRt2DSDY8DWUycW+z0japOkKVM
-         o8WBDCuDOjBwzHYC/Jh7KXTdDU8uGnvlNEo23t1OERv/D2rGbenWj+NAavqAobfJcAzB
-         BuJYJqcb0R52C2LaFfTuoiJsm9/Oikovv2WHHZ71WQHBkk07G7hJVuWXx6rllf+g4YU9
-         upAbO7F/ky84yBE2QnFiCzpiS0Nq9rI4DPcyH4ncKy2VQRK5N3A7U5+ezuDQFPdHICj5
-         LCaULAyPWzGG8pscO4+btjiaAjsnoNPLVktrU0WXWomfs02XrdqTPtf6QrDeXTcYFZP9
-         mDHA==
-X-Gm-Message-State: APjAAAWUPG5ply+1qvbBq3+pfvXpENKWT8Xwe/lwLRze7GfxRHAqaodE
-        Qt+IDnvRyHFTomOe6b2FGg==
-X-Google-Smtp-Source: APXvYqziVaKnSp1xfCY+f3pe1zGb9MsRO7KRl9lFwrGYmuJyVtsFZKoZqvFpq4JGdrLoT+WF5ro1Sw==
-X-Received: by 2002:aca:4d8d:: with SMTP id a135mr895431oib.1.1572987150187;
-        Tue, 05 Nov 2019 12:52:30 -0800 (PST)
+        bh=YH8No3YE+SfIIhr1pRJYlkmraO4srBIJPhAWx/BUo7o=;
+        b=LtJCMP9BEuJo7AoGc9whEW4mnbuPZPsc+twyDY6qbUHYR6y48eKt9sSOr024qIZMpC
+         +vBPT3LwkjdhPd8/zomVZvQJYCTFUTe3Na+3wWdneNNiuZy0hk4pTjTYjw8Z4aojRiGN
+         1dMAu7b2yoLyaCXjMxGJOtwYumKQVUkkSp9CNNB2m8j1qDWIk6gM9k6V83Q+U3nx5pEq
+         0XkkGLCXoN6OSU63kzVaLamiCLKMlunMLgpmHv3PJG1W0p26OWQfJDGc0Wc05EBv5HTK
+         V9kabL72vZ/VYqQXAKuMVkp51jG3O1tN28DXCyTqLfAm7ZxD43kfT3cEbOoVglm+SV56
+         AISA==
+X-Gm-Message-State: APjAAAV1sf4kuI/iLEkWfM8e5uV/g4ZlAASe7p8y/PImIdU9nCZ+pf3Z
+        uWfjp2gcTFKOqN1PnI6mJQ==
+X-Google-Smtp-Source: APXvYqz4PTn4LH3MKQJeJhit6JeqNJpYt06BezFqeq80P3WV6oQcYKUwj76O8XCo+mV0pvazH22q3A==
+X-Received: by 2002:aca:ecd0:: with SMTP id k199mr873786oih.166.1572987439487;
+        Tue, 05 Nov 2019 12:57:19 -0800 (PST)
 Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id z6sm6504247otb.66.2019.11.05.12.52.29
+        by smtp.gmail.com with ESMTPSA id o18sm6597103otj.38.2019.11.05.12.57.18
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 05 Nov 2019 12:52:29 -0800 (PST)
-Date:   Tue, 5 Nov 2019 14:52:28 -0600
+        Tue, 05 Nov 2019 12:57:18 -0800 (PST)
+Date:   Tue, 5 Nov 2019 14:57:18 -0600
 From:   Rob Herring <robh@kernel.org>
 To:     Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
 Cc:     mazziesaccount@gmail.com,
@@ -52,50 +52,51 @@ Cc:     mazziesaccount@gmail.com,
         linux-leds@vger.kernel.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
         linux-gpio@vger.kernel.org, linux-rtc@vger.kernel.org
-Subject: Re: [RFC PATCH v3 03/15] dt-bindings: regulator: Document ROHM
- BD71282 regulator bindings
-Message-ID: <20191105205228.GB629@bogus>
+Subject: Re: [RFC PATCH v3 04/15] dt-bindings: leds: ROHM BD71282 PMIC LED
+ driver
+Message-ID: <20191105205718.GC629@bogus>
 References: <cover.1572606437.git.matti.vaittinen@fi.rohmeurope.com>
- <ce43bfd90455b14216262494f4ba4028827239c0.1572606437.git.matti.vaittinen@fi.rohmeurope.com>
+ <f9178204ea3925b454ecbe58df4c297fec346a4f.1572606437.git.matti.vaittinen@fi.rohmeurope.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <ce43bfd90455b14216262494f4ba4028827239c0.1572606437.git.matti.vaittinen@fi.rohmeurope.com>
+In-Reply-To: <f9178204ea3925b454ecbe58df4c297fec346a4f.1572606437.git.matti.vaittinen@fi.rohmeurope.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Nov 01, 2019 at 01:31:46PM +0200, Matti Vaittinen wrote:
-> Document ROHM BD71828 PMIC regulator device tree bindings.
+On Fri, Nov 01, 2019 at 01:32:33PM +0200, Matti Vaittinen wrote:
+> Document ROHM BD71828 PMIC LED driver device tree bindings.
 > 
 > Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
 > ---
 > 
-> Changes from v2 - my first encounter with yaml :/
+> Changes from v2 - new patch
 > 
->  .../regulator/rohm,bd71828-regulator.yaml     | 123 ++++++++++++++++++
->  1 file changed, 123 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/regulator/rohm,bd71828-regulator.yaml
+>  .../bindings/leds/rohm,leds-bd71828.yaml      | 46 +++++++++++++++++++
+>  1 file changed, 46 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/leds/rohm,leds-bd71828.yaml
 > 
-> diff --git a/Documentation/devicetree/bindings/regulator/rohm,bd71828-regulator.yaml b/Documentation/devicetree/bindings/regulator/rohm,bd71828-regulator.yaml
+> diff --git a/Documentation/devicetree/bindings/leds/rohm,leds-bd71828.yaml b/Documentation/devicetree/bindings/leds/rohm,leds-bd71828.yaml
 > new file mode 100644
-> index 000000000000..60715d8b92df
+> index 000000000000..d8aeac9911ef
 > --- /dev/null
-> +++ b/Documentation/devicetree/bindings/regulator/rohm,bd71828-regulator.yaml
-> @@ -0,0 +1,123 @@
+> +++ b/Documentation/devicetree/bindings/leds/rohm,leds-bd71828.yaml
+> @@ -0,0 +1,46 @@
 > +# SPDX-License-Identifier: GPL-2.0
 > +%YAML 1.2
 > +---
-> +$id: http://devicetree.org/schemas/regulator/rohm,bd71828-regulator.yaml#
+> +$id: http://devicetree.org/schemas/leds/rohm,leds-bd71828.yaml#
 > +$schema: http://devicetree.org/meta-schemas/core.yaml#
 > +
-> +title: ROHM BD71828 Power Management Integrated Circuit regulators
+> +title: ROHM BD71828 Power Management Integrated Circuit LED driver
 > +
 > +maintainers:
-> +  - Liam Girdwood <lgirdwood@gmail.com>
-> +  - Mark Brown <broonie@kernel.org>
+> +  - Jacek Anaszewski <jacek.anaszewski@gmail.com>
+> +  - Pavel Machek <pavel@ucw.cz>
+> +  - Dan Murphy <dmurphy@ti.com>
 > +  - Rob Herring <robh+dt@kernel.org>
 > +  - Mark Rutland <mark.rutland@arm.com>
 > +
@@ -103,131 +104,39 @@ On Fri, Nov 01, 2019 at 01:31:46PM +0200, Matti Vaittinen wrote:
 > +  This module is part of the ROHM BD71828 MFD device. For more details
 > +  see Documentation/devicetree/bindings/mfd/rohm,bd71828-pmic.yaml.
 > +
-> +  The regulator controller is represented as a sub-node of the PMIC node
-> +  on the device tree.
+> +  The LED controller is represented as a sub-node of the PMIC node on the device
+> +  tree.
 > +
-> +  Regulator nodes should be named to BUCK_<number> and LDO_<number>.
-> +  The valid names for BD71828 regulator nodes are
-> +  BUCK1, BUCK2, BUCK3, BUCK4, BUCK5, BUCK6, BUCK7
-> +  LDO1, LDO2, LDO3, LDO4, LDO5, LDO6, LDO7
+> +  The device has two LED outputs referred as GRNLED and AMBLED in data-sheet.
+> +
+> +properties:
+> +  compatible:
+> +    const: rohm,bd71828-led
 > +
 > +patternProperties:
-> +  "^LDO[1-7]$":
+> +  "^led-[1-2]$":
 > +    type: object
-> +    allOf:
-> +      - $ref: regulator.yaml#
 > +    description:
-> +      Properties for single LDO regulator.
-> +
+> +      Properties for a single LED. Nodes must be named as led-1 and led-2.
 > +    properties:
-> +      #Is there a nice way to check the name is same as node name but lower case
-
-Well, lowercase nodenames are preferred... But still, no, there's not.
-
-And I think you could just drop this and the nodename is used instead.
-
-> +      regulator-name:
+> +      #$ref: "common.yaml#"
+> +      function:
 > +        description:
-> +          should be "ldo1", ..., "ldo7"
-
-You can at least do:
-
-pattern: "^ldo[1-7]$"
-
-
-> +
-> +  "^BUCK[1-7]$":
-> +    type: object
-> +    allOf:
-> +      - $ref: regulator.yaml#
-> +    description:
-> +      Properties for single BUCK regulator.
-> +
-> +    properties:
-> +      #Is there a nice way to check the name is same as node name but lower case
-> +      regulator-name:
+> +          Purpose of LED as defined in dt-bindings/leds/common.h
+> +        $ref: "/schemas/types.yaml#/definitions/string"
+> +      color:
 > +        description:
-> +          should be "buck1", ..., "buck7"
-> +
-> +      rohm,dvs-run-voltage:
+> +          LED colour as defined in dt-bindings/leds/common.h
 > +        $ref: "/schemas/types.yaml#/definitions/uint32"
-> +        description:
-> +          PMIC default "RUN" state voltage in uV. See below table for
-> +          bucks which support this.
 
-Use standard unit-suffixes on all these (-microvolt). And then drop the 
-$ref.
-
-Any constraints on the range?
+You can assume that we will have a common schema for these. So the only 
+thing needed is whether you use the properties ("true" is enough for 
+that), any additional constraints (not likely here), and whether 
+required or not.
 
 > +
-> +      rohm,dvs-idle-voltage:
-> +        $ref: "/schemas/types.yaml#/definitions/uint32"
-> +        description:
-> +          PMIC default "IDLE" state voltage in uV. See below table for
-> +          bucks which support this.
-> +
-> +      rohm,dvs-suspend-voltage:
-> +        $ref: "/schemas/types.yaml#/definitions/uint32"
-> +        description:
-> +          PMIC default "SUSPEND" state voltage in uV. See below table for
-> +          bucks which support this.
-> +
-> +      rohm,dvs-lpsr-voltage:
-> +        $ref: "/schemas/types.yaml#/definitions/uint32"
-> +        description:
-> +          PMIC default "LPSR" state voltage in uV. See below table for
-> +          bucks which support this.
-> +
-> +#Supported default DVS states:
-> +#buck		| run		| idle		| suspend	| lpsr
-> +#----------------------------------------------------------------------------
-> +#1, 2, 6, and 7	| supported	| supported	| 	supported (*)
-> +#----------------------------------------------------------------------------
-> +#3, 4, and 5	| 			supported (**)
-> +#----------------------------------------------------------------------------
-> +#(*)  LPSR and SUSPEND states use same voltage but both states have own enable /
-> +#     disable settings. Voltage 0 can be specified for a state to make regulator
-> +#     disabled on that state.
-> +#(**) All states use same voltage but have own enable / disable settings.
-> +#     Voltage 0 can be specified for a state to make regulator disabled on that
-> +#     state.
-> +
-> +      rohm,dvs-runlvl-ctrl:
-> +        description: |
-> +          buck control is done based on run-level. Regulator is not
-> +          individually controllable. See ../mfd/rohm,bd71828-pmic.yaml for
-> +          how to specify run-level control mechanism. Only bucks 1, 2, 6
-> +          and 7 support this.
-> +        type: boolean
-> +
-> +      rohm,dvs-runlevel0-voltage:
-> +        $ref: "/schemas/types.yaml#/definitions/uint32"
-> +        description:
-> +          voltage for run-level 0. Microvolts.
-> +
-> +      rohm,dvs-runlevel1-voltage:
-> +        $ref: "/schemas/types.yaml#/definitions/uint32"
-> +        description:
-> +          voltage for run-level 1. Microvolts.
-> +
-> +      rohm,dvs-runlevel2-voltage:
-> +        $ref: "/schemas/types.yaml#/definitions/uint32"
-> +        description:
-> +          voltage for run-level 2. Microvolts.
-> +
-> +      rohm,dvs-runlevel3-voltage:
-> +        $ref: "/schemas/types.yaml#/definitions/uint32"
-> +        description:
-> +          voltage for run-level 3. Microvolts.
-
-Perhaps an array of 4 values for runlevel?
-
-> +
-> +    required:
-> +      - regulator-name
-> +  additionalProperties: false
-> +additionalProperties: false
+> +required:
+> +  - compatible
 > -- 
 > 2.21.0
 > 
