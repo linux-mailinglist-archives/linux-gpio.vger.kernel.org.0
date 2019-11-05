@@ -2,106 +2,142 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 88424EF330
-	for <lists+linux-gpio@lfdr.de>; Tue,  5 Nov 2019 03:03:51 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id AFA08EF335
+	for <lists+linux-gpio@lfdr.de>; Tue,  5 Nov 2019 03:04:52 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729823AbfKECDu (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 4 Nov 2019 21:03:50 -0500
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:38980 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729597AbfKECDu (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 4 Nov 2019 21:03:50 -0500
-Received: by mail-pg1-f194.google.com with SMTP id 29so1558035pgm.6
-        for <linux-gpio@vger.kernel.org>; Mon, 04 Nov 2019 18:03:50 -0800 (PST)
+        id S1729597AbfKECEv (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 4 Nov 2019 21:04:51 -0500
+Received: from mail-pl1-f178.google.com ([209.85.214.178]:38780 "EHLO
+        mail-pl1-f178.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729524AbfKECEv (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 4 Nov 2019 21:04:51 -0500
+Received: by mail-pl1-f178.google.com with SMTP id w8so8587041plq.5
+        for <linux-gpio@vger.kernel.org>; Mon, 04 Nov 2019 18:04:51 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=P7HUvzjr7rLiIVLsln2wY88wldy+mMA3dyacJVEfn8c=;
-        b=GQnAxsKmoYs+B8hkAyqxYX5ojKWGJ62QPsZFdID7uZKLD4pMrY/N3K1Uw3Ekg7nAZD
-         QYol+zmLEe0tSWGz4f4Ff1r/KQY2tN5TMkBTpeL/C+eFJ+X0tEB3bKqdzeHzcumGPiDL
-         toqYbcXesMd+0tx/f4HMCrK0LTvxM3+VC69mIYigwcLzZVy1+KkmC7kV6Q3IjVOxavxF
-         W25wTEIonIhiU0wxslKUhmMWJfKcboGYRmVJjC9lgYetri4YjpnFQBi2dpeDpVGZk5az
-         XshIr3tvMq1+VccdxahSSN2cz8gscRkx6SiDK3gM8J9aO7c3GIxz8qG7nc8nIOrrFCpe
-         1DIA==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=4MjheHLXXHFuxfF3ZTLVn3BPsOFdynnERBGUpMtJfiQ=;
+        b=vIYRTFntu2POiXcubw2Z3VW9IMu1JI4AELgqkTnx2KquN1xOlSY8HnDSvSYiqEwWSM
+         +Vriv5CdWMoAYSBXdTy5XSAk9NDzPAHu9VsCzKhx0lOsE4XSR7bpVxyesSDA5vn2Wzy2
+         w4ZSiguUsltlpGhI+JygNdX56KhtXBSQa4YruvvSU/UA15GUwg2qNAGt72feIPDEXwy1
+         DrfgmR5Quep219oS11ydsTaBrzKuF/QkzuEEzBfBSBHavuLIifQyWCNnG02UKOTAsU6U
+         MDCJMqN9F6q6sAr9z5f0wXu3N8zGbMfJJ3vCUjETGoI/+yBMQ99sDymBl7Bhajec5oeR
+         A8eQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=P7HUvzjr7rLiIVLsln2wY88wldy+mMA3dyacJVEfn8c=;
-        b=qTAaBQ+3sTavobz0x6p4+D/L41E9uuDsB587f+A0UtAl1Gqz9/LRlx8KKSnmBJnFVv
-         zxa4t991RFntaa9IJlIzET/MdmS4uPPNYpV1dvkzYbjIhG648LRcYxP48lqGQ/oHBFFm
-         kCRpGPFyeMyAa6XT19ySSRZYliTOAk3MbkjVpiyDHysbZ9fQ96TbzuWEetrCNOqSAmha
-         gKkKNW/tHA85uQwzqtxMLZD7sT+NU3sSoABglWUZHuEUMW9RJ7Wiva+4Asg+UJ6YDK2g
-         AAuvA0/DZVGop5BDuEs7wlIlbYNII9/fX8SpcK8pQBynrkZKmq/fpzbFetB1/Q/ca9Ys
-         ZVqw==
-X-Gm-Message-State: APjAAAWqdEL7wIRYW6j5ar9W4lJ3EsxCFtuzERC1K0r1NJFXKCHWoI4T
-        CUAylTfbbvtMyy/tLqyUePQFyx3t51okeg==
-X-Google-Smtp-Source: APXvYqyrKxDb+G/RM+0ad/xjRRCeVsEdOeWPrE+YxqPz/SnPCJhtBYakEX3d3eL6UW2KtDotkZMYxw==
-X-Received: by 2002:aa7:9f0e:: with SMTP id g14mr35785667pfr.202.1572919429529;
-        Mon, 04 Nov 2019 18:03:49 -0800 (PST)
-Received: from sol (220-235-109-115.dyn.iinet.net.au. [220.235.109.115])
-        by smtp.gmail.com with ESMTPSA id s13sm13712584pfe.94.2019.11.04.18.03.45
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 04 Nov 2019 18:03:48 -0800 (PST)
-Date:   Tue, 5 Nov 2019 10:03:42 +0800
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=4MjheHLXXHFuxfF3ZTLVn3BPsOFdynnERBGUpMtJfiQ=;
+        b=ke4Wd93RywbFr9hZNydJBeNwM8hrbzqNpy86F73p7teetpIZ49S81XbY9yWrgfPXIu
+         RLKdfg/1e9a4qDSA8FDR4Q3nPWrJA5ugdv0tPR1W5Ir5ImUAq916F0CQlATyXXhBg/0L
+         +vplBM55G6HIdt7T1gY0SHE/rm+Lgco6D1FVvYzXdF26y2yEST3lZ+o3NIXRwUswqmAd
+         9NZLi5QGoiAZlmScmUl7uFm6BRU73zWgDgs30W34TMimuazKeKLkv9vKIzQlaqlKBndl
+         1JnkLpc9N+ENwsHY/Yv5Jxy6gkPsSmOqTyNUIN+CO+L0y5gNbfu2m5lH0FqTtoHki4FQ
+         0f7A==
+X-Gm-Message-State: APjAAAUNUba03tW6ClMP5erkODnwiY+bZRAzICfT7ilWytB5V4RS+9Lx
+        QdDSEio8PxisodOYfq6StdFHFIK+zhCNbw==
+X-Google-Smtp-Source: APXvYqyZm++ScRUuuhJpqSTnOeyyiwgE0eDhb+zRmGDu9X4jQ78GAUmgej2T/BMHpOCa1tGLTKzdlg==
+X-Received: by 2002:a17:902:8208:: with SMTP id x8mr20367340pln.6.1572919490558;
+        Mon, 04 Nov 2019 18:04:50 -0800 (PST)
+Received: from sol.lan (220-235-109-115.dyn.iinet.net.au. [220.235.109.115])
+        by smtp.gmail.com with ESMTPSA id r184sm11641909pfc.106.2019.11.04.18.04.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 04 Nov 2019 18:04:49 -0800 (PST)
 From:   Kent Gibson <warthog618@gmail.com>
-To:     Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Cc:     linux-gpio <linux-gpio@vger.kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bamvor Jian Zhang <bamv2005@gmail.com>,
-        Drew Fustini <drew@pdp7.com>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Subject: Re: [PATCH v5 4/7] gpiolib: add support for biasing output lines
-Message-ID: <20191105020342.GA16739@sol>
-References: <20191104153841.16911-1-warthog618@gmail.com>
- <20191104153841.16911-5-warthog618@gmail.com>
- <CAMpxmJUExXZ=ptMyRczvdujc7x9JP62Zy9m+WByYD4=w=1180w@mail.gmail.com>
- <20191104155927.GA17106@sol>
- <CAMpxmJUTFb_Bxsc8e006ohP6D3PP+kQgFYAPoZA2T1-HA41vSA@mail.gmail.com>
+To:     linux-gpio@vger.kernel.org, bgolaszewski@baylibre.com,
+        linus.walleij@linaro.org, bamv2005@gmail.com
+Cc:     drew@pdp7.com, thomas.petazzoni@bootlin.com,
+        Kent Gibson <warthog618@gmail.com>
+Subject: [PATCH v6 0/7] gpio: expose line bias flags to userspace
+Date:   Tue,  5 Nov 2019 10:04:22 +0800
+Message-Id: <20191105020429.18942-1-warthog618@gmail.com>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAMpxmJUTFb_Bxsc8e006ohP6D3PP+kQgFYAPoZA2T1-HA41vSA@mail.gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Nov 04, 2019 at 05:19:14PM +0100, Bartosz Golaszewski wrote:
-> pon., 4 lis 2019 o 16:59 Kent Gibson <warthog618@gmail.com> napisał(a):
-> >
-> > > Ugh, I missed one thing here - my for-next branch doesn't contain the
-> > > following commit e735244e2cf0 ("gpiolib: don't clear FLAG_IS_OUT when
-> > > emulating open-drain/open-source") which happens to modify this
-> > > function.
-> > >
-> > > If I provided you with a branch containing it - would it be a lot of
-> > > effort on your part to rebase it on top of it? If so - I can do it
-> > > myself.
-> > >
-> >
-> > I can do a rebase - though not until tomorrow (it is getting late here).
-> > I would like that commit in as well - I suspect it being missing is
-> > the reason a couple of the gpiod tests I was working on are failing.
-> > I was in the process of tracking that down when I switched back to this.
-> >
-> > Cheers,
-> > Kent.
-> >
-> >
-> 
-> No problem, it can wait until tomorrow. Please use the following
-> branch - gpio/for-kent - from my tree.
-> 
+The changes from v5: 
+  - rebased onto Bart's gpio/for-kent branch.
 
-That was a lot simpler than I expected - it rebased cleanly onto the 
-new branch.  And fixed the gpiod test errors I was trying to track down.
-Will submit v6 shortly.
+The changes from v4:
+Review changes:
+ - relocate restriction on applying bias to as-is from patch 2 to patch 1.
+ - propagate errors, other than ENOTSUPP, from gpio_set_bias. (squashed 
+   into patches 3 and 4).
+ - include SET_CONFIG patch series v2 (patch 6 and 7 here).
 
-Cheers,
-Kent.
+I've also fixed a few other nits I noticed along the way:
+ - rework gpio_set_bias as flags are mutually exclusive.
+ - remove input flag required to set bias restriction from 
+   lineevent_create as events are implicitly assumed inputs anyway.
+ - reorder patches to group gpiolib bias patches together before the 
+   gpio-mockup changes.
+
+
+This series adds gross control of pull-up/pull-down to the GPIO uAPI.
+Gross control means enabling and disabling of bias functionality,
+not finer grained control such as setting biasing impedances.
+
+The support allows both input and output lines to have any one of the
+following biases applied as part of the line handle or event request:
+ 0. As Is - bias is left alone.  This is the default for ABI compatibility.
+ 1. Bias Disable - bias is explicitly disabled.
+ 2. Pull Down - pull-down bias is enabled.
+ 3. Pull Up - pull-up bias is enabled.
+
+The biases are set via three flags, BIAS_DISABLE, BIAS_PULL_DOWN
+and BIAS_PULL_UP.  These map directly to the similarly named 
+pinctrl pin_config_param flags.
+As Is corresponds to none of the flags being set.
+
+The setting of biases on output lines may seem odd, but is to allow for
+utilisation of internal pull-up/pull-down on open drain and open source
+outputs, where supported in hardware.
+
+The series also adds the GPIOHANDLE_SET_CONFIG_IOCTL to the gpio chardev.
+The ioctl allows some of the configuration of a requested handle to be
+changed without having to release the line.
+The primary use case is the changing of direction for bi-directional 
+lines.
+
+Patches are against Bart's gpio/for-kent branch[1].
+
+The patch has been successfully tested against gpio-mockup, and 
+on a Raspberry Pi, in both cases using the feature/pud_set_config 
+branch of my Go gpiod library[2], as well as with my feature/pud 
+development branch of libgpiod[3].  Patch 7 has only been tested using 
+my gpiod library as libgpiod has not yet been updated to support the 
+SET_CONFIG ioctl.
+
+Patch 1 adds pull-up/pull-down support to line handle requests.
+Patch 2 adds pull-up/pull-down support to line event requests.
+Patch 3 adds support for disabling bias.
+Patch 4 adds support for setting bias on output lines.
+Patch 5 adds pull-up/down support to the gpio-mockup for uAPI testing.
+Patch 6 refactors the flag validation from linehandle_create.
+Patch 7 adds the SET_CONFIG ioctl.
+
+Drew Fustini (1):
+  gpio: expose pull-up/pull-down line flags to userspace
+
+Kent Gibson (6):
+  gpiolib: add support for pull up/down to lineevent_create
+  gpiolib: add support for disabling line bias
+  gpiolib: add support for biasing output lines
+  gpio: mockup: add set_config to support pull up/down
+  gpiolib: move validation of line handle flags into helper function
+  gpio: add new SET_CONFIG ioctl() to gpio chardev
+
+ drivers/gpio/gpio-mockup.c |  94 ++++++++++------
+ drivers/gpio/gpiolib.c     | 213 +++++++++++++++++++++++++++++++------
+ drivers/gpio/gpiolib.h     |   1 +
+ include/uapi/linux/gpio.h  |  24 +++++
+ 4 files changed, 264 insertions(+), 68 deletions(-)
+
+-- 
+2.23.0
+
