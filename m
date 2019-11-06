@@ -2,150 +2,115 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id EAD68F1E84
-	for <lists+linux-gpio@lfdr.de>; Wed,  6 Nov 2019 20:21:09 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 54171F1F1D
+	for <lists+linux-gpio@lfdr.de>; Wed,  6 Nov 2019 20:39:36 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727422AbfKFTVJ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 6 Nov 2019 14:21:09 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55470 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726713AbfKFTVJ (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Wed, 6 Nov 2019 14:21:09 -0500
-Received: from mail-qk1-f169.google.com (mail-qk1-f169.google.com [209.85.222.169])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 23E4D2075C;
-        Wed,  6 Nov 2019 19:21:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573068068;
-        bh=kt51GLtJRGhpxeArH7PbPGc0NGH1R9MH+9Qgg9Bbl2E=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=IEAPWRQpe0iBBUsDao1BwZCcAb28KOkc7oYh6GKs2SroYSjzRVbW7TXz2ar0KL9d3
-         sUnYQrBCCep8Y0basL097DguXypI0HNiAZbSzC4S+d4qPGDr14sHOzYFSytB1ET9y6
-         OdgizA3YtPO8U5omwD7mj8rkAxMmeITXadRB5Qrg=
-Received: by mail-qk1-f169.google.com with SMTP id m16so25331958qki.11;
-        Wed, 06 Nov 2019 11:21:08 -0800 (PST)
-X-Gm-Message-State: APjAAAUmMApYqHhGrHxgINZDJ2HwAvSjwYXCfLEgICffl/G18Lsag116
-        51UTpt7qPDnYGrbs3nvuSBK6iKfoEFOLJ2/Fqg==
-X-Google-Smtp-Source: APXvYqx32bwEhx99vHD/kDAS+/S75zvMWBv+yskX8CR2wiE5zYnXor6TRM6cgKz+ApVQJE7zjdsPqEDMXPf0REI1jX8=
-X-Received: by 2002:a37:4904:: with SMTP id w4mr3368103qka.119.1573068067259;
- Wed, 06 Nov 2019 11:21:07 -0800 (PST)
+        id S1727547AbfKFTjf (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 6 Nov 2019 14:39:35 -0500
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:42588 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727550AbfKFTjf (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 6 Nov 2019 14:39:35 -0500
+Received: by mail-pf1-f195.google.com with SMTP id s5so11445412pfh.9
+        for <linux-gpio@vger.kernel.org>; Wed, 06 Nov 2019 11:39:34 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=a2TL8pUryCnIl3YhMeT7kGh+16Twfz8zRVam6bps6hI=;
+        b=Q3yq+Wz+KJgE3lz+byWEXfBQGCIHepa/sidviXPAEhkHSQSRAw/vXHW61LR10PHB1X
+         Q7yHATjTz6bQuUqS6xdXkt0QynVAsIAG7xNlhg+tq7+AnYznJYAjZkKjc5ikrAaFom0f
+         5oZ1HaJYInq3dAsTpFFJSRab085Q19RNJ/Me0/7EbEiWuVVUnZpNwkVfo4CLoy8J6t5x
+         RBBGNkmz3V1eQUgyNNX0hFShsfLAgiVHsnPgiqvj87OpM6hAdXVALIF8ZSRX1E+FuFMH
+         ina5RcfQbf/niMPPWzTwFOsFaLiQJNjuXnvdEPtJuKqOiyfSHbFQQRcrQS9A17y68GIg
+         wxIg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=a2TL8pUryCnIl3YhMeT7kGh+16Twfz8zRVam6bps6hI=;
+        b=r0Kya3G2hUcWV0ch0WAqHtbAr71fZqD6+VOy6bf+nwB/uqJ1WyClLsU+rgFZv4IXZU
+         kH3sbDIfC2lm0J8xoDoeNBK4NVypWBGtjcRGT8sPoLUpXlvvdlXy4oF+mjI0O2L2af2r
+         0Oae4DmyUrvO3No0JR7yLy0AhuzkNxW9TMqEvRfQFXEMZJV8BVsB/9IwhR3OMB9c29FH
+         4qxeyLF3l8avQngYET4eiH4hAXW999ZCyciKGKpbMFNTt5ydxTipn0Mi5wKtcxIJVtO5
+         +xpKS9u9blNoOzRf5qnQvUafeymI5bJ/K+VEq0MflEwx16kt1Pj1j5ZOOr1i3WW6Z6k5
+         DrEg==
+X-Gm-Message-State: APjAAAVQ+zaqMSl75TMv3qVdA9WQaUE0et9vin8mPlpkssXfOrMCZd/A
+        ihcluGWhwlwi2NnufKOpHhI=
+X-Google-Smtp-Source: APXvYqxTjG7Rw1AyAL7FXrBP4C/llLzFc5f7nVhT2yhOVcK0ULhIMrRjf0ZWYP312laTyIZUfPQzww==
+X-Received: by 2002:a63:364d:: with SMTP id d74mr4901137pga.408.1573069174236;
+        Wed, 06 Nov 2019 11:39:34 -0800 (PST)
+Received: from x1 ([216.243.17.16])
+        by smtp.gmail.com with ESMTPSA id b9sm26683458pfp.77.2019.11.06.11.39.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 06 Nov 2019 11:39:33 -0800 (PST)
+Date:   Wed, 6 Nov 2019 11:39:31 -0800
+From:   Drew Fustini <drew@pdp7.com>
+To:     Kent Gibson <warthog618@gmail.com>
+Cc:     linux-gpio@vger.kernel.org, bgolaszewski@baylibre.com,
+        linus.walleij@linaro.org, bamv2005@gmail.com,
+        thomas.petazzoni@bootlin.com
+Subject: Re: [PATCH v6 4/7] gpiolib: add support for biasing output lines
+Message-ID: <20191106193931.GA3347@x1>
+References: <20191105020429.18942-1-warthog618@gmail.com>
+ <20191105020429.18942-5-warthog618@gmail.com>
 MIME-Version: 1.0
-References: <20191018001849.27205-1-srinivas.kandagatla@linaro.org>
- <20191018001849.27205-2-srinivas.kandagatla@linaro.org> <20191025204338.GA25892@bogus>
- <90b2d83b-f2b2-3a5d-4deb-589f4b48b208@linaro.org> <371955d9-ad2d-5ddc-31b4-710729feae42@linaro.org>
- <CAL_JsqJmRReW2n0R_Sh4f7AFGYA+ZLxuFDokLTSBKoFTg6uRSg@mail.gmail.com>
- <7811be04-dfda-5953-110c-bca685fdcaa4@linaro.org> <CAL_JsqJNcXe7YSUjHWyFO_czncnR3y7w3NP8ofXfCiXpMrqzRw@mail.gmail.com>
- <b3d078a1-f87d-c146-bdf7-7a6b30547bd5@linaro.org>
-In-Reply-To: <b3d078a1-f87d-c146-bdf7-7a6b30547bd5@linaro.org>
-From:   Rob Herring <robh@kernel.org>
-Date:   Wed, 6 Nov 2019 13:20:55 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqK2yBcWbZvK3qUeYW8q+NuWrUmCTBMWqwbAU_0i1fE4rA@mail.gmail.com>
-Message-ID: <CAL_JsqK2yBcWbZvK3qUeYW8q+NuWrUmCTBMWqwbAU_0i1fE4rA@mail.gmail.com>
-Subject: Re: [PATCH v2 01/11] ASoC: dt-bindings: add dt bindings for
- WCD9340/WCD9341 audio codec
-To:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Cc:     Mark Brown <broonie@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Lee Jones <lee.jones@linaro.org>,
-        Vinod Koul <vinod.koul@linaro.org>,
-        Linux-ALSA <alsa-devel@alsa-project.org>,
-        devicetree@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        spapothi@codeaurora.org, Banajit Goswami <bgoswami@codeaurora.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191105020429.18942-5-warthog618@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Nov 6, 2019 at 12:09 PM Srinivas Kandagatla
-<srinivas.kandagatla@linaro.org> wrote:
->
->
->
-> On 05/11/2019 19:08, Rob Herring wrote:
-> > On Wed, Oct 30, 2019 at 4:55 AM Srinivas Kandagatla
-> > <srinivas.kandagatla@linaro.org> wrote:
-> >>
-> >>
-> >>
-> >> On 29/10/2019 20:47, Rob Herring wrote:
-> >>> On Mon, Oct 28, 2019 at 7:45 AM Srinivas Kandagatla
-> >>> <srinivas.kandagatla@linaro.org> wrote:
-> >>>>
-> >>>>
-> >>>>
-> >>>> On 28/10/2019 12:40, Srinivas Kandagatla wrote:
-> >>>>> Its Phandle.
-> >>>>>
-> >>>>> something like this is okay?
-> >>>>>
-> >>>>> slim-ifc-dev:
-> >>>>>      $ref: '/schemas/types.yaml#/definitions/phandle-array'
-> >>>>
-> >>>> Sorry this should not be an array, so something like this:
-> >>>>
-> >>>>      slim-ifc-dev:
-> >>>>        description: SLIMBus Interface device phandle
-> >>>
-> >>> You're just spelling out the abbreviated name. I can do that much.
-> >>> What is 'SLIMBus Interface device'?
-> >>
-> >> Each SLIMBus Component contains one Interface Device. Which is
-> >> responsible for Monitoring and reporting the status of component, Data
-> >> line to Data pin connection setup for SLIMBus streaming. Interface
-> >> device is enumerated just like any other slim device.
-> >
-> > So a standard set of registers every slimbus device has? In hindsight,
-> > I would have made reg have 2 entries with both addresses. I guess that
-> > ship has sailed.
->
-> That will break SLIMBus bindings, Which is expecting one device per
-> device node.
+On Tue, Nov 05, 2019 at 10:04:26AM +0800, Kent Gibson wrote:
+> Allow pull up/down bias to be set on output lines.
+> Use case is for open source or open drain applications where
+> internal pull up/down may conflict with external biasing.
+> 
+> Signed-off-by: Kent Gibson <warthog618@gmail.com>
+> ---
+>  drivers/gpio/gpiolib.c | 8 ++++++--
+>  1 file changed, 6 insertions(+), 2 deletions(-)
 
-Like I said, that ship has sailed...
+I'm not sure if I am doing something wrong but I can't seem to apply this patch
+from the series.
 
-> >
-> > It seems strange you would need both "devices" described as separate
-> > nodes in DT.
->
-> Because they are two different devices on the SLIMBus Component.
->
-> >
-> >>
-> >> We already have exactly same bindings for WCD9335 in upstream at:
-> >>
-> >> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/devicetree/bindings/sound/qcom,wcd9335.txt?h=v5.4-rc5#n42
-> >>
-> >>>
-> >>> Is it a standard SLIMBus property? If so, document it in the right
-> >>> place. If not, then needs a vendor prefix.
-> >>
-> >> "SLIMBus Interface Device" itself is documented in SLIMBus Specification.
-> >>
-> >> If I remember it correctly You suggested me to move to "slim-ifc-dev"
-> >> as this is part of SLIMBus Specification.
-> >
-> > Probably so. If it is common, then document it in bindings/slimbus/bus.txt.
-> >
-> As we are dealing with audio codecs here, it might be that
-> "slim-ifc-dev" is common across wcd9335 and wcd934x but not all devices
-> on the SLIMBus Component would need handle to interface device. SLIMbus
-> can also be used for control buses as well which might not need this.
+I checked out brgl/gpio/for-next.  I opened this mailbox from lore in mutt:
+https://lore.kernel.org/linux-gpio/20191105231533.GA3478@sol/t.mbox.gz
 
-Like you said, it's part of the the spec, so define it somewhere
-common, not in a device specific binding.
+And then I saved each message in the v6 series so I could run 'git am' on each.
+I thought I should be able to run git am on the whole mailbox file but I wasn't
+sure if the cover letter and replies would cause a problem.
 
-> > Then here, 'slim-ifc-dev: true' is sufficient. You can just assume we
-> > convert bus.txt to schema (or feel free to do that :) ).
->
-> We need phandle to the interface device so that we can program the
-> streaming parameters for the SLIMBus Component.
+I'd appreciate any suggestions as to how I can resolve this:
 
-'true' just means 'I'm using the property' and have no other
-constraints. The constraints like type would be defined in the common
-binding and no need to duplicate here.
+pdp7@x1:~/linux$ git checkout -b brgl-gpio-for-next brgl/gpio/for-next 
+Branch 'brgl-gpio-for-next' set up to track remote branch 'gpio/for-next' from 'brgl'.
+Switched to a new branch 'brgl-gpio-for-next'
+pdp7@x1:~/linux$ git log --oneline -1
+228fc0104070 (HEAD -> brgl-gpio-for-next, tag: gpio-v5.5-updates-for-linus-part-1, brgl/gpio/for-next) gpio: of: don't warn if ignored GPIO flag matches the behavior
+pdp7@x1:~/linux$ grep Subject /tmp/7*
+/tmp/71:Subject: [PATCH v6 1/7] gpio: expose pull-up/pull-down line flags to userspace
+/tmp/72:Subject: [PATCH v6 2/7] gpiolib: add support for pull up/down to lineevent_create
+/tmp/73:Subject: [PATCH v6 3/7] gpiolib: add support for disabling line bias
+/tmp/74:Subject: [PATCH v6 4/7] gpiolib: add support for biasing output lines
+/tmp/75:Subject: [PATCH v6 5/7] gpio: mockup: add set_config to support pull up/down
+/tmp/76:Subject: [PATCH v6 6/7] gpiolib: move validation of line handle flags into helper function
+/tmp/77:Subject: [PATCH v6 7/7] gpio: add new SET_CONFIG ioctl() to gpio chardev
+pdp7@x1:~/linux$ git am /tmp/7*
+Applying: gpio: expose pull-up/pull-down line flags to userspace
+Applying: gpiolib: add support for pull up/down to lineevent_create
+Applying: gpiolib: add support for disabling line bias
+Applying: gpiolib: add support for biasing output lines
+error: patch failed: drivers/gpio/gpiolib.c:3168
+error: drivers/gpio/gpiolib.c: patch does not apply
+Patch failed at 0004 gpiolib: add support for biasing output lines
+hint: Use 'git am --show-current-patch' to see the failed patch
+When you have resolved this problem, run "git am --continue".
+If you prefer to skip this patch, run "git am --skip" instead.
+To restore the original branch and stop patching, run "git am --abort".
 
-Rob
+thanks,
+drew
