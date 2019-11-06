@@ -2,115 +2,135 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 54171F1F1D
-	for <lists+linux-gpio@lfdr.de>; Wed,  6 Nov 2019 20:39:36 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7EFECF1F43
+	for <lists+linux-gpio@lfdr.de>; Wed,  6 Nov 2019 20:50:03 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727547AbfKFTjf (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 6 Nov 2019 14:39:35 -0500
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:42588 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727550AbfKFTjf (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 6 Nov 2019 14:39:35 -0500
-Received: by mail-pf1-f195.google.com with SMTP id s5so11445412pfh.9
-        for <linux-gpio@vger.kernel.org>; Wed, 06 Nov 2019 11:39:34 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=a2TL8pUryCnIl3YhMeT7kGh+16Twfz8zRVam6bps6hI=;
-        b=Q3yq+Wz+KJgE3lz+byWEXfBQGCIHepa/sidviXPAEhkHSQSRAw/vXHW61LR10PHB1X
-         Q7yHATjTz6bQuUqS6xdXkt0QynVAsIAG7xNlhg+tq7+AnYznJYAjZkKjc5ikrAaFom0f
-         5oZ1HaJYInq3dAsTpFFJSRab085Q19RNJ/Me0/7EbEiWuVVUnZpNwkVfo4CLoy8J6t5x
-         RBBGNkmz3V1eQUgyNNX0hFShsfLAgiVHsnPgiqvj87OpM6hAdXVALIF8ZSRX1E+FuFMH
-         ina5RcfQbf/niMPPWzTwFOsFaLiQJNjuXnvdEPtJuKqOiyfSHbFQQRcrQS9A17y68GIg
-         wxIg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=a2TL8pUryCnIl3YhMeT7kGh+16Twfz8zRVam6bps6hI=;
-        b=r0Kya3G2hUcWV0ch0WAqHtbAr71fZqD6+VOy6bf+nwB/uqJ1WyClLsU+rgFZv4IXZU
-         kH3sbDIfC2lm0J8xoDoeNBK4NVypWBGtjcRGT8sPoLUpXlvvdlXy4oF+mjI0O2L2af2r
-         0Oae4DmyUrvO3No0JR7yLy0AhuzkNxW9TMqEvRfQFXEMZJV8BVsB/9IwhR3OMB9c29FH
-         4qxeyLF3l8avQngYET4eiH4hAXW999ZCyciKGKpbMFNTt5ydxTipn0Mi5wKtcxIJVtO5
-         +xpKS9u9blNoOzRf5qnQvUafeymI5bJ/K+VEq0MflEwx16kt1Pj1j5ZOOr1i3WW6Z6k5
-         DrEg==
-X-Gm-Message-State: APjAAAVQ+zaqMSl75TMv3qVdA9WQaUE0et9vin8mPlpkssXfOrMCZd/A
-        ihcluGWhwlwi2NnufKOpHhI=
-X-Google-Smtp-Source: APXvYqxTjG7Rw1AyAL7FXrBP4C/llLzFc5f7nVhT2yhOVcK0ULhIMrRjf0ZWYP312laTyIZUfPQzww==
-X-Received: by 2002:a63:364d:: with SMTP id d74mr4901137pga.408.1573069174236;
-        Wed, 06 Nov 2019 11:39:34 -0800 (PST)
-Received: from x1 ([216.243.17.16])
-        by smtp.gmail.com with ESMTPSA id b9sm26683458pfp.77.2019.11.06.11.39.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 06 Nov 2019 11:39:33 -0800 (PST)
-Date:   Wed, 6 Nov 2019 11:39:31 -0800
-From:   Drew Fustini <drew@pdp7.com>
-To:     Kent Gibson <warthog618@gmail.com>
-Cc:     linux-gpio@vger.kernel.org, bgolaszewski@baylibre.com,
-        linus.walleij@linaro.org, bamv2005@gmail.com,
-        thomas.petazzoni@bootlin.com
-Subject: Re: [PATCH v6 4/7] gpiolib: add support for biasing output lines
-Message-ID: <20191106193931.GA3347@x1>
-References: <20191105020429.18942-1-warthog618@gmail.com>
- <20191105020429.18942-5-warthog618@gmail.com>
+        id S1727319AbfKFTtv (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 6 Nov 2019 14:49:51 -0500
+Received: from gate2.alliedtelesis.co.nz ([202.36.163.20]:48262 "EHLO
+        gate2.alliedtelesis.co.nz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727547AbfKFTtv (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 6 Nov 2019 14:49:51 -0500
+Received: from mmarshal3.atlnz.lc (mmarshal3.atlnz.lc [10.32.18.43])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id 6002D886BF;
+        Thu,  7 Nov 2019 08:49:47 +1300 (NZDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alliedtelesis.co.nz;
+        s=mail181024; t=1573069787;
+        bh=qMGdylTyjH/BzjIPsu4mVVVT3VTtcxgSf7MBXN6MV1M=;
+        h=From:To:CC:Subject:Date:References:In-Reply-To;
+        b=b+dGUo26Vm642njRhSmiaoN8E/9bn35fI4qkrwMkz9QUJyS6dQL8pZ+tuE5P5iUYF
+         F8R4xATAS/boYg80RYUNt84Zsr7mGTJXuyRng8D1WA+Iqd0V46x0nuDnctVWiqABLB
+         np2tNNkQLJNDf5QCtsVluRIVs8NNYh+A0w8laLsQ4tBzUhf1s6eCLkUTI9vj2x87os
+         s8h1Ufl3xQTMllJTiFgIiRH8dalzJ/XP6+oVw4AzjAy6GQIhqqGZJo5Jza2e1up2s1
+         GTPjzHQxBxmsaRdClKlK/kuBYWVElXXjWyU5YH3BsxsszQ6N8ZLUWXZmksJaf889xm
+         LlMuYY42UlA2w==
+Received: from svr-chch-ex1.atlnz.lc (Not Verified[10.32.16.77]) by mmarshal3.atlnz.lc with Trustwave SEG (v7,5,8,10121)
+        id <B5dc323d90001>; Thu, 07 Nov 2019 08:49:45 +1300
+Received: from svr-chch-ex1.atlnz.lc (2001:df5:b000:bc8::77) by
+ svr-chch-ex1.atlnz.lc (2001:df5:b000:bc8::77) with Microsoft SMTP Server
+ (TLS) id 15.0.1156.6; Thu, 7 Nov 2019 08:49:47 +1300
+Received: from svr-chch-ex1.atlnz.lc ([fe80::409d:36f5:8899:92e8]) by
+ svr-chch-ex1.atlnz.lc ([fe80::409d:36f5:8899:92e8%12]) with mapi id
+ 15.00.1156.000; Thu, 7 Nov 2019 08:49:47 +1300
+From:   Chris Packham <Chris.Packham@alliedtelesis.co.nz>
+To:     "guillaume.tucker@collabora.com" <guillaume.tucker@collabora.com>,
+        "yoshihiro.shimoda.uh@renesas.com" <yoshihiro.shimoda.uh@renesas.com>,
+        "broonie@kernel.org" <broonie@kernel.org>,
+        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
+        "bgolaszewski@baylibre.com" <bgolaszewski@baylibre.com>
+CC:     "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "bcm-kernel-feedback-list@broadcom.com" 
+        <bcm-kernel-feedback-list@broadcom.com>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>
+Subject: Re: [PATCH] gpio: xgs-iproc: Fix section mismatch on device tree
+ match table
+Thread-Topic: [PATCH] gpio: xgs-iproc: Fix section mismatch on device tree
+ match table
+Thread-Index: AQHVk9d2GHMYQw+EyUqkZ/V+4uyDVad84EwAgADUxIA=
+Date:   Wed, 6 Nov 2019 19:49:46 +0000
+Message-ID: <7057fc47ded887fb2780332739afba53e3c33e4a.camel@alliedtelesis.co.nz>
+References: <20191105124915.34100-1-broonie@kernel.org>
+         <TYAPR01MB45442B7135422BA8D088E29CD8790@TYAPR01MB4544.jpnprd01.prod.outlook.com>
+In-Reply-To: <TYAPR01MB45442B7135422BA8D088E29CD8790@TYAPR01MB4544.jpnprd01.prod.outlook.com>
+Accept-Language: en-NZ, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [2001:df5:b000:22:f81e:1e86:b004:7754]
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <44ABDBCC18A6CB4490B129FD6FBE0DD9@atlnz.lc>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191105020429.18942-5-warthog618@gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Nov 05, 2019 at 10:04:26AM +0800, Kent Gibson wrote:
-> Allow pull up/down bias to be set on output lines.
-> Use case is for open source or open drain applications where
-> internal pull up/down may conflict with external biasing.
-> 
-> Signed-off-by: Kent Gibson <warthog618@gmail.com>
-> ---
->  drivers/gpio/gpiolib.c | 8 ++++++--
->  1 file changed, 6 insertions(+), 2 deletions(-)
-
-I'm not sure if I am doing something wrong but I can't seem to apply this patch
-from the series.
-
-I checked out brgl/gpio/for-next.  I opened this mailbox from lore in mutt:
-https://lore.kernel.org/linux-gpio/20191105231533.GA3478@sol/t.mbox.gz
-
-And then I saved each message in the v6 series so I could run 'git am' on each.
-I thought I should be able to run git am on the whole mailbox file but I wasn't
-sure if the cover letter and replies would cause a problem.
-
-I'd appreciate any suggestions as to how I can resolve this:
-
-pdp7@x1:~/linux$ git checkout -b brgl-gpio-for-next brgl/gpio/for-next 
-Branch 'brgl-gpio-for-next' set up to track remote branch 'gpio/for-next' from 'brgl'.
-Switched to a new branch 'brgl-gpio-for-next'
-pdp7@x1:~/linux$ git log --oneline -1
-228fc0104070 (HEAD -> brgl-gpio-for-next, tag: gpio-v5.5-updates-for-linus-part-1, brgl/gpio/for-next) gpio: of: don't warn if ignored GPIO flag matches the behavior
-pdp7@x1:~/linux$ grep Subject /tmp/7*
-/tmp/71:Subject: [PATCH v6 1/7] gpio: expose pull-up/pull-down line flags to userspace
-/tmp/72:Subject: [PATCH v6 2/7] gpiolib: add support for pull up/down to lineevent_create
-/tmp/73:Subject: [PATCH v6 3/7] gpiolib: add support for disabling line bias
-/tmp/74:Subject: [PATCH v6 4/7] gpiolib: add support for biasing output lines
-/tmp/75:Subject: [PATCH v6 5/7] gpio: mockup: add set_config to support pull up/down
-/tmp/76:Subject: [PATCH v6 6/7] gpiolib: move validation of line handle flags into helper function
-/tmp/77:Subject: [PATCH v6 7/7] gpio: add new SET_CONFIG ioctl() to gpio chardev
-pdp7@x1:~/linux$ git am /tmp/7*
-Applying: gpio: expose pull-up/pull-down line flags to userspace
-Applying: gpiolib: add support for pull up/down to lineevent_create
-Applying: gpiolib: add support for disabling line bias
-Applying: gpiolib: add support for biasing output lines
-error: patch failed: drivers/gpio/gpiolib.c:3168
-error: drivers/gpio/gpiolib.c: patch does not apply
-Patch failed at 0004 gpiolib: add support for biasing output lines
-hint: Use 'git am --show-current-patch' to see the failed patch
-When you have resolved this problem, run "git am --continue".
-If you prefer to skip this patch, run "git am --skip" instead.
-To restore the original branch and stop patching, run "git am --abort".
-
-thanks,
-drew
+KGFkZGluZyBHdWlsbGFtdW1lKSwNCg0KT24gV2VkLCAyMDE5LTExLTA2IGF0IDA3OjA4ICswMDAw
+LCBZb3NoaWhpcm8gU2hpbW9kYSB3cm90ZToNCj4gSGkgTWFyaywNCj4gDQo+ID4gRnJvbTogTWFy
+ayBCcm93biwgU2VudDogVHVlc2RheSwgTm92ZW1iZXIgNSwgMjAxOSA5OjQ5IFBNDQo+ID4gDQo+
+ID4gVGhlIHRhYmxlIG9mIGRldmljZXRyZWUgaWRlbnRpZmllcnMgaXMgYW5ub3RhdGVkIGFzIF9f
+aW5pdGNvbnN0DQo+ID4gaW5kaWNhdGluZyB0aGF0IGl0IGNhbiBiZSBkaXNjYXJkZWQgYWZ0ZXIg
+a2VybmVsIGJvb3QgYnV0IGl0IGlzDQo+ID4gcmVmZXJlbmNlZCBmcm9tIHRoZSBkcml2ZXIgc3Ry
+dWN0IHdoaWNoIGhhcyBubyBpbml0IGFubm90YXRpb24gbGVhZGluZw0KPiA+IHRvIGEgbGlua2Vy
+IHdhcm5pbmc6DQo+ID4gDQo+ID4gV0FSTklORzogdm1saW51eC5vKC5kYXRhKzB4ODJkNTgpOiBT
+ZWN0aW9uIG1pc21hdGNoIGluIHJlZmVyZW5jZSBmcm9tIHRoZSB2YXJpYWJsZSBiY21faXByb2Nf
+Z3Bpb19kcml2ZXIgdG8gdGhlDQo+ID4gdmFyaWFibGUgLmluaXQucm9kYXRhOmJjbV9pcHJvY19n
+cGlvX29mX21hdGNoDQo+ID4gVGhlIHZhcmlhYmxlIGJjbV9pcHJvY19ncGlvX2RyaXZlciByZWZl
+cmVuY2VzDQo+ID4gdGhlIHZhcmlhYmxlIF9faW5pdGNvbnN0IGJjbV9pcHJvY19ncGlvX29mX21h
+dGNoDQo+ID4gDQo+ID4gU2luY2UgZHJpdmVycyBjYW4gYmUgcHJvYmVkIGFmdGVyIGluaXQgdGhl
+IGxhY2sgb2YgYW5ub3RhdGlvbiBvbiB0aGUNCj4gPiBkcml2ZXIgc3RydWN0IGlzIGNvcnJlY3Qg
+c28gcmVtb3ZlIHRoZSBhbm5vdGF0aW9uIGZyb20gdGhlIG1hdGNoIHRhYmxlLg0KPiA+IA0KPiA+
+IFNpZ25lZC1vZmYtYnk6IE1hcmsgQnJvd24gPGJyb29uaWVAa2VybmVsLm9yZz4NCj4gDQo+IFRo
+YW5rIHlvdSBmb3IgdGhlIHBhdGNoISBXaXRob3V0IHRoaXMgcGF0Y2gsIEkgaGFkIGVuY291bnRl
+cmVkIGFub3RoZXINCj4gaXNzdWUgd2hpY2ggbXkgZW52aXJvbm1lbnQgY2F1c2VkIGEgcGFuaWMg
+d2hlbiBJIHRyaWVkIHRvIGluc3RhbGwgYSB1c2IgaG9zdA0KPiBkcml2ZXIgYWZ0ZXIgYm9vdGVk
+IFsxXS4gQnV0LCBJIGNvdWxkIHJlc29sdmVkIHRoZSBpc3N1ZSBhZnRlcg0KPiBJIGFwcGxpZWQg
+dGhpcyBwYXRjaC4gQWxzbywgSSBjb25maXJtZWQgdGhpcyBwYXRjaCBjb3VsZCByZXNvbHZlZCB0
+aGUgd2FybmluZy4NCj4gDQo+IFNvLA0KPiBSZXZpZXdlZC1ieTogWW9zaGloaXJvIFNoaW1vZGEg
+PHlvc2hpaGlyby5zaGltb2RhLnVoQHJlbmVzYXMuY29tPg0KPiBUZXN0ZWQtYnk6IFlvc2hpaGly
+byBTaGltb2RhIDx5b3NoaWhpcm8uc2hpbW9kYS51aEByZW5lc2FzLmNvbT4NCj4gDQo+IEJlc3Qg
+cmVnYXJkcywNCj4gWW9zaGloaXJvIFNoaW1vZGENCj4gDQo+IC0tLQ0KPiBbMV0NCj4gWyAgMTQ2
+LjU0MTE4OF0gVW5hYmxlIHRvIGhhbmRsZSBrZXJuZWwgcGFnaW5nIHJlcXVlc3QgYXQgdmlydHVh
+bCBhZGRyZXNzIGZmZmY4MDAwMTFmNzM1NDANCj4gWyAgMTQ2LjU0OTA5OV0gTWVtIGFib3J0IGlu
+Zm86DQo+IFsgIDE0Ni41NTE4ODVdICAgRVNSID0gMHg5NjAwMDAwNw0KPiBbICAxNDYuNTU0OTM0
+XSAgIEVDID0gMHgyNTogREFCVCAoY3VycmVudCBFTCksIElMID0gMzIgYml0cw0KPiBbICAxNDYu
+NTYwMjM4XSAgIFNFVCA9IDAsIEZuViA9IDANCj4gWyAgMTQ2LjU2MzI4NF0gICBFQSA9IDAsIFMx
+UFRXID0gMA0KPiBbICAxNDYuNTY2NDE2XSBEYXRhIGFib3J0IGluZm86DQo+IFsgIDE0Ni41Njky
+ODldICAgSVNWID0gMCwgSVNTID0gMHgwMDAwMDAwNw0KPiBbICAxNDYuNTczMTE3XSAgIENNID0g
+MCwgV25SID0gMA0KPiBbICAxNDYuNTc2MDc4XSBzd2FwcGVyIHBndGFibGU6IDRrIHBhZ2VzLCA0
+OC1iaXQgVkFzLCBwZ2RwPTAwMDAwMDAwNDllNGEwMDANCj4gWyAgMTQ2LjU4Mjc3MF0gW2ZmZmY4
+MDAwMTFmNzM1NDBdIHBnZD0wMDAwMDAwNzdmZmZmMDAzLCBwdWQ9MDAwMDAwMDc3ZmZmZTAwMywg
+cG1kPTAwMDAwMDA3N2ZmZmIwMDMsIHB0ZT0wMDAwMDAwMDAwMDAwMDAwDQo+IFsgIDE0Ni41OTMz
+NzVdIEludGVybmFsIGVycm9yOiBPb3BzOiA5NjAwMDAwNyBbIzFdIFBSRUVNUFQgU01QDQo+IFsg
+IDE0Ni41OTg5NDRdIENQVTogMCBQSUQ6IDEwNiBDb21tOiBrd29ya2VyLzA6MSBOb3QgdGFpbnRl
+ZCA1LjQuMC1yYzYtbmV4dC0yMDE5MTEwNSAjODcNCj4gWyAgMTQ2LjYwNjc2Nl0gSGFyZHdhcmUg
+bmFtZTogUmVuZXNhcyBTYWx2YXRvci1YIDJuZCB2ZXJzaW9uIGJvYXJkIGJhc2VkIG9uIHI4YTc3
+OTUgRVMyLjArIChEVCkNCj4gWyAgMTQ2LjYxNTIwOV0gV29ya3F1ZXVlOiBldmVudHMgZGVmZXJy
+ZWRfcHJvYmVfd29ya19mdW5jDQo+IFsgIDE0Ni42MjAzNDFdIHBzdGF0ZTogYTAwMDAwODUgKE56
+Q3YgZGFJZiAtUEFOIC1VQU8pDQo+IFsgIDE0Ni42MjUxMzJdIHBjIDogX19vZl9tYXRjaF9ub2Rl
+LnBhcnQuNCsweDNjLzB4NzgNCj4gWyAgMTQ2LjYyOTgzMF0gbHIgOiBvZl9tYXRjaF9ub2RlKzB4
+M2MvMHg3MA0KPiAuLi4NCj4gLS0tDQo+IA0KPiANCj4gU28sDQoNCkkgZ3Vlc3MgdGhhdCBrZXJu
+ZWxjaSBmYWlsdXJlWzFdIHdhc24ndCBib2d1cyBhZnRlciBhbGwuIFNvcnJ5IGFnYWluDQpmb3Ig
+dGhlIGhhc3NsZS4gQW5kIE1hcmssIFlvc2hpaGlybyB0aGFua3MgZm9yIHRoZSBmaXggYW5kIHRl
+c3QuDQoNClsxXSAtIA0KaHR0cHM6Ly9sb3JlLmtlcm5lbC5vcmcvbGttbC81ZGJiMmFjZi4xYzY5
+ZmI4MS41NGNlMi4yZjQ4QG14Lmdvb2dsZS5jb20vDQoNCj4gDQo+IA0KPiBCZXN0IHJlZ2FyZHMs
+DQo+IFlvc2hpaGlybyBTaGltb2RhDQo+IA0KPiANCj4gPiAtLS0NCj4gPiAgZHJpdmVycy9ncGlv
+L2dwaW8teGdzLWlwcm9jLmMgfCAyICstDQo+ID4gIDEgZmlsZSBjaGFuZ2VkLCAxIGluc2VydGlv
+bigrKSwgMSBkZWxldGlvbigtKQ0KPiA+IA0KPiA+IGRpZmYgLS1naXQgYS9kcml2ZXJzL2dwaW8v
+Z3Bpby14Z3MtaXByb2MuYyBiL2RyaXZlcnMvZ3Bpby9ncGlvLXhncy1pcHJvYy5jDQo+ID4gaW5k
+ZXggYTNmZGQ5NWNjOWU2Li5iYjE4M2Y1ODRkOTIgMTAwNjQ0DQo+ID4gLS0tIGEvZHJpdmVycy9n
+cGlvL2dwaW8teGdzLWlwcm9jLmMNCj4gPiArKysgYi9kcml2ZXJzL2dwaW8vZ3Bpby14Z3MtaXBy
+b2MuYw0KPiA+IEBAIC0yOTksNyArMjk5LDcgQEAgc3RhdGljIGludCBfX2V4aXQgaXByb2NfZ3Bp
+b19yZW1vdmUoc3RydWN0IHBsYXRmb3JtX2RldmljZSAqcGRldikNCj4gPiAgCXJldHVybiAwOw0K
+PiA+ICB9DQo+ID4gDQo+ID4gLXN0YXRpYyBjb25zdCBzdHJ1Y3Qgb2ZfZGV2aWNlX2lkIGJjbV9p
+cHJvY19ncGlvX29mX21hdGNoW10gX19pbml0Y29uc3QgPSB7DQo+ID4gK3N0YXRpYyBjb25zdCBz
+dHJ1Y3Qgb2ZfZGV2aWNlX2lkIGJjbV9pcHJvY19ncGlvX29mX21hdGNoW10gPSB7DQo+ID4gIAl7
+IC5jb21wYXRpYmxlID0gImJyY20saXByb2MtZ3Bpby1jY2EiIH0sDQo+ID4gIAl7fQ0KPiA+ICB9
+Ow0KPiA+IC0tDQo+ID4gMi4yMC4xDQo+IA0KPiANCg==
