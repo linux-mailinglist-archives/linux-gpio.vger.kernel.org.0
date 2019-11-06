@@ -2,35 +2,35 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id D2D42F190E
-	for <lists+linux-gpio@lfdr.de>; Wed,  6 Nov 2019 15:48:33 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 4A08DF1910
+	for <lists+linux-gpio@lfdr.de>; Wed,  6 Nov 2019 15:48:34 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731608AbfKFOsd (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        id S1728712AbfKFOsd (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
         Wed, 6 Nov 2019 09:48:33 -0500
-Received: from mga11.intel.com ([192.55.52.93]:26747 "EHLO mga11.intel.com"
+Received: from mga14.intel.com ([192.55.52.115]:45533 "EHLO mga14.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726945AbfKFOsc (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Wed, 6 Nov 2019 09:48:32 -0500
+        id S1726945AbfKFOsd (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Wed, 6 Nov 2019 09:48:33 -0500
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 06 Nov 2019 06:48:32 -0800
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 06 Nov 2019 06:48:32 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.68,275,1569308400"; 
-   d="scan'208";a="201117588"
+   d="scan'208";a="192484618"
 Received: from black.fi.intel.com ([10.237.72.28])
-  by fmsmga007.fm.intel.com with ESMTP; 06 Nov 2019 06:48:30 -0800
+  by orsmga007.jf.intel.com with ESMTP; 06 Nov 2019 06:48:30 -0800
 Received: by black.fi.intel.com (Postfix, from userid 1003)
-        id 127C6115; Wed,  6 Nov 2019 16:48:30 +0200 (EET)
+        id 1793F14E; Wed,  6 Nov 2019 16:48:30 +0200 (EET)
 From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 To:     Mika Westerberg <mika.westerberg@linux.intel.com>,
         linux-gpio@vger.kernel.org,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>,
         Linus Walleij <linus.walleij@linaro.org>
 Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: [PATCH v1 2/8] pinctrl: lynxpoint: Use raw_spinlock for locking
-Date:   Wed,  6 Nov 2019 16:48:23 +0200
-Message-Id: <20191106144829.32275-3-andriy.shevchenko@linux.intel.com>
+Subject: [PATCH v1 3/8] pinctrl: lynxpoint: Correct amount of pins
+Date:   Wed,  6 Nov 2019 16:48:24 +0200
+Message-Id: <20191106144829.32275-4-andriy.shevchenko@linux.intel.com>
 X-Mailer: git-send-email 2.24.0.rc1
 In-Reply-To: <20191106144829.32275-1-andriy.shevchenko@linux.intel.com>
 References: <20191106144829.32275-1-andriy.shevchenko@linux.intel.com>
@@ -41,127 +41,55 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-The Intel Lynxpoint pinctrl driver implements irqchip callbacks which are
-called with desc->lock raw_spinlock held. In mainline this is fine because
-spinlock resolves to raw_spinlock. However, running the same code in -rt
-we will get a BUG() asserted.
-
-This is because in -rt spinlocks are preemptible so taking the driver
-private spinlock in irqchip callbacks causes might_sleep() to trigger.
-
-In order to keep -rt happy but at the same time make sure that register
-accesses get serialized, convert the driver to use raw_spinlock instead.
+When we count from 0 it's possible to get into off-by-one error.
+That's what had happened to this driver. So, correct amount of pins
+and related typos in the code.
 
 Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 ---
- drivers/pinctrl/intel/pinctrl-lynxpoint.c | 28 +++++++++++------------
- 1 file changed, 14 insertions(+), 14 deletions(-)
+ drivers/pinctrl/intel/pinctrl-lynxpoint.c | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
 
 diff --git a/drivers/pinctrl/intel/pinctrl-lynxpoint.c b/drivers/pinctrl/intel/pinctrl-lynxpoint.c
-index e9e47c0d5be7..6467095523cc 100644
+index 6467095523cc..ebc523233df4 100644
 --- a/drivers/pinctrl/intel/pinctrl-lynxpoint.c
 +++ b/drivers/pinctrl/intel/pinctrl-lynxpoint.c
-@@ -47,7 +47,7 @@
- struct lp_gpio {
- 	struct gpio_chip	chip;
- 	struct platform_device	*pdev;
--	spinlock_t		lock;
-+	raw_spinlock_t		lock;
- 	unsigned long		reg_base;
- };
+@@ -18,9 +18,9 @@
+ #include <linux/slab.h>
+ #include <linux/types.h>
  
-@@ -144,7 +144,7 @@ static int lp_irq_type(struct irq_data *d, unsigned type)
- 	if (hwirq >= lg->chip.ngpio)
- 		return -EINVAL;
+-/* LynxPoint chipset has support for 94 gpio pins */
++/* LynxPoint chipset has support for 95 GPIO pins */
  
--	spin_lock_irqsave(&lg->lock, flags);
-+	raw_spin_lock_irqsave(&lg->lock, flags);
- 	value = inl(reg);
+-#define LP_NUM_GPIO	94
++#define LP_NUM_GPIO	95
  
- 	/* set both TRIG_SEL and INV bits to 0 for rising edge */
-@@ -164,7 +164,7 @@ static int lp_irq_type(struct irq_data *d, unsigned type)
- 		value |= TRIG_SEL_BIT | INT_INV_BIT;
- 
- 	outl(value, reg);
--	spin_unlock_irqrestore(&lg->lock, flags);
-+	raw_spin_unlock_irqrestore(&lg->lock, flags);
- 
- 	return 0;
- }
-@@ -181,14 +181,14 @@ static void lp_gpio_set(struct gpio_chip *chip, unsigned offset, int value)
- 	unsigned long reg = lp_gpio_reg(chip, offset, LP_CONFIG1);
- 	unsigned long flags;
- 
--	spin_lock_irqsave(&lg->lock, flags);
-+	raw_spin_lock_irqsave(&lg->lock, flags);
- 
- 	if (value)
- 		outl(inl(reg) | OUT_LVL_BIT, reg);
- 	else
- 		outl(inl(reg) & ~OUT_LVL_BIT, reg);
- 
--	spin_unlock_irqrestore(&lg->lock, flags);
-+	raw_spin_unlock_irqrestore(&lg->lock, flags);
- }
- 
- static int lp_gpio_direction_input(struct gpio_chip *chip, unsigned offset)
-@@ -197,9 +197,9 @@ static int lp_gpio_direction_input(struct gpio_chip *chip, unsigned offset)
- 	unsigned long reg = lp_gpio_reg(chip, offset, LP_CONFIG1);
- 	unsigned long flags;
- 
--	spin_lock_irqsave(&lg->lock, flags);
-+	raw_spin_lock_irqsave(&lg->lock, flags);
- 	outl(inl(reg) | DIR_BIT, reg);
--	spin_unlock_irqrestore(&lg->lock, flags);
-+	raw_spin_unlock_irqrestore(&lg->lock, flags);
- 
- 	return 0;
- }
-@@ -213,9 +213,9 @@ static int lp_gpio_direction_output(struct gpio_chip *chip,
- 
- 	lp_gpio_set(chip, offset, value);
- 
--	spin_lock_irqsave(&lg->lock, flags);
-+	raw_spin_lock_irqsave(&lg->lock, flags);
- 	outl(inl(reg) & ~DIR_BIT, reg);
--	spin_unlock_irqrestore(&lg->lock, flags);
-+	raw_spin_unlock_irqrestore(&lg->lock, flags);
- 
- 	return 0;
- }
-@@ -266,9 +266,9 @@ static void lp_irq_enable(struct irq_data *d)
- 	unsigned long reg = lp_gpio_reg(&lg->chip, hwirq, LP_INT_ENABLE);
- 	unsigned long flags;
- 
--	spin_lock_irqsave(&lg->lock, flags);
-+	raw_spin_lock_irqsave(&lg->lock, flags);
- 	outl(inl(reg) | BIT(hwirq % 32), reg);
--	spin_unlock_irqrestore(&lg->lock, flags);
-+	raw_spin_unlock_irqrestore(&lg->lock, flags);
- }
- 
- static void lp_irq_disable(struct irq_data *d)
-@@ -279,9 +279,9 @@ static void lp_irq_disable(struct irq_data *d)
- 	unsigned long reg = lp_gpio_reg(&lg->chip, hwirq, LP_INT_ENABLE);
- 	unsigned long flags;
- 
--	spin_lock_irqsave(&lg->lock, flags);
-+	raw_spin_lock_irqsave(&lg->lock, flags);
- 	outl(inl(reg) & ~BIT(hwirq % 32), reg);
--	spin_unlock_irqrestore(&lg->lock, flags);
-+	raw_spin_unlock_irqrestore(&lg->lock, flags);
- }
- 
- static struct irq_chip lp_irqchip = {
-@@ -345,7 +345,7 @@ static int lp_gpio_probe(struct platform_device *pdev)
- 		return -EBUSY;
- 	}
- 
--	spin_lock_init(&lg->lock);
-+	raw_spin_lock_init(&lg->lock);
- 
- 	gc = &lg->chip;
- 	gc->label = dev_name(dev);
+ /* Bitmapped register offsets */
+ #define LP_ACPI_OWNED	0x00 /* Bitmap, set by bios, 0: pin reserved for ACPI */
+@@ -54,11 +54,11 @@ struct lp_gpio {
+ /*
+  * Lynxpoint gpios are controlled through both bitmapped registers and
+  * per gpio specific registers. The bitmapped registers are in chunks of
+- * 3 x 32bit registers to cover all 94 gpios
++ * 3 x 32bit registers to cover all 95 GPIOs
+  *
+  * per gpio specific registers consist of two 32bit registers per gpio
+- * (LP_CONFIG1 and LP_CONFIG2), with 94 gpios there's a total of
+- * 188 config registers.
++ * (LP_CONFIG1 and LP_CONFIG2), with 95 GPIOs there's a total of
++ * 190 config registers.
+  *
+  * A simplified view of the register layout look like this:
+  *
+@@ -67,7 +67,7 @@ struct lp_gpio {
+  * LP_ACPI_OWNED[94:64] gpio ownerships for gpios 63-94
+  * ...
+  * LP_INT_ENABLE[31:0] ...
+- * LP_INT_ENABLE[63:31] ...
++ * LP_INT_ENABLE[63:32] ...
+  * LP_INT_ENABLE[94:64] ...
+  * LP0_CONFIG1 (gpio 0) config1 reg for gpio 0 (per gpio registers)
+  * LP0_CONFIG2 (gpio 0) config2 reg for gpio 0
 -- 
 2.24.0.rc1
 
