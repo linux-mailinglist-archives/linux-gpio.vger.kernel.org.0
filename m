@@ -2,73 +2,101 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 5C854F21AB
-	for <lists+linux-gpio@lfdr.de>; Wed,  6 Nov 2019 23:27:06 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 6CBC2F2260
+	for <lists+linux-gpio@lfdr.de>; Thu,  7 Nov 2019 00:10:44 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726798AbfKFW1G (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 6 Nov 2019 17:27:06 -0500
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:39968 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726779AbfKFW1F (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 6 Nov 2019 17:27:05 -0500
-Received: from [IPv6:2a00:5f00:102:0:5c62:8eff:fefa:67] (unknown [IPv6:2a00:5f00:102:0:5c62:8eff:fefa:67])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1727487AbfKFXKH (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 6 Nov 2019 18:10:07 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34466 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727228AbfKFXKH (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Wed, 6 Nov 2019 18:10:07 -0500
+Received: from kernel.org (unknown [104.132.0.74])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        (Authenticated sender: gtucker)
-        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id 9EB7E28FF3E;
-        Wed,  6 Nov 2019 22:26:50 +0000 (GMT)
-Subject: Re: next/master boot bisection: next-20191106 on r8a7795-salvator-x
-To:     Linus Walleij <linus.walleij@linaro.org>,
-        tomeu.vizoso@collabora.com, mgalka@collabora.com,
-        broonie@kernel.org, matthew.hart@linaro.org,
-        Scott Branden <scott.branden@broadcom.com>,
-        khilman@baylibre.com, enric.balletbo@collabora.com,
-        Chris Packham <chris.packham@alliedtelesis.co.nz>
-Cc:     Scott Branden <sbranden@broadcom.com>,
-        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-        bcm-kernel-feedback-list@broadcom.com,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Ray Jui <rjui@broadcom.com>,
-        linux-arm-kernel@lists.infradead.org
-References: <5dc3460a.1c69fb81.bfae4.adf1@mx.google.com>
-From:   Guillaume Tucker <guillaume.tucker@collabora.com>
-Message-ID: <e2ba3c23-4b85-f83b-0ba4-dc0db1b8dd0f@collabora.com>
-Date:   Wed, 6 Nov 2019 22:26:47 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        by mail.kernel.org (Postfix) with ESMTPSA id F2CD820869;
+        Wed,  6 Nov 2019 23:10:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1573081806;
+        bh=phPqrB8jdcQhMXpI7PNcLtByNjzRwAfdzJcKYVWr13E=;
+        h=In-Reply-To:References:Subject:From:To:Cc:Date:From;
+        b=Ujuxe6X1kCsRkxtdQYgSWiR0mYrSc9nQP1ygJUr45CCctRkVEX2Jf9Wnp4kkOvTVm
+         GBOqu/HNFeA6cJMT7QS6PMnl2OKfLo3pUAUZ0MAZ1yEG1+KPhxkjhqPb0cTze2UIjW
+         qce2kBf6A/GX0fvsfQmdvN+ylBBREGi5gRasWjRE=
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-In-Reply-To: <5dc3460a.1c69fb81.bfae4.adf1@mx.google.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <1565984527-5272-8-git-send-email-skomatineni@nvidia.com>
+References: <1565984527-5272-1-git-send-email-skomatineni@nvidia.com> <1565984527-5272-8-git-send-email-skomatineni@nvidia.com>
+Subject: Re: [PATCH v9 07/22] clk: Add API to get index of the clock parent
+From:   Stephen Boyd <sboyd@kernel.org>
+To:     Sowjanya Komatineni <skomatineni@nvidia.com>, jason@lakedaemon.net,
+        jonathanh@nvidia.com, linus.walleij@linaro.org,
+        marc.zyngier@arm.com, mark.rutland@arm.com, stefan@agner.ch,
+        tglx@linutronix.de, thierry.reding@gmail.com
+Cc:     pdeschrijver@nvidia.com, pgaikwad@nvidia.com,
+        linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org,
+        jckuo@nvidia.com, josephl@nvidia.com, talho@nvidia.com,
+        skomatineni@nvidia.com, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org, mperttunen@nvidia.com,
+        spatra@nvidia.com, robh+dt@kernel.org, digetx@gmail.com,
+        devicetree@vger.kernel.org, rjw@rjwysocki.net,
+        viresh.kumar@linaro.org, linux-pm@vger.kernel.org
+User-Agent: alot/0.8.1
+Date:   Wed, 06 Nov 2019 15:10:05 -0800
+Message-Id: <20191106231005.F2CD820869@mail.kernel.org>
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 06/11/2019 22:15, kernelci.org bot wrote:
-> +static const struct of_device_id bcm_iproc_gpio_of_match[] __initconst = {
-> +	{ .compatible = "brcm,iproc-gpio-cca" },
-> +	{}
-> +};
-> +MODULE_DEVICE_TABLE(of, bcm_iproc_gpio_of_match);
+Quoting Sowjanya Komatineni (2019-08-16 12:41:52)
+> This patch adds an API clk_hw_get_parent_index to get index of the
+> clock parent to use during the clock restore operations on system
+> resume.
+
+Is there a reason we can't save the clk hw index at suspend time by
+reading the hardware to understand the current parent? The parent index
+typically doesn't matter unless we're trying to communicate something
+from the framework to the provider driver. Put another way, I would
+think the provider driver can figure out the index itself without having
+to go through the framework to do so.
+
+>=20
+> Reviewed-by: Thierry Reding <treding@nvidia.com>
+> Reviewed-by: Dmitry Osipenko <digetx@gmail.com>
+> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
+>
+> diff --git a/drivers/clk/clk.c b/drivers/clk/clk.c
+> index cbcc333aec84..12ad0e9b8591 100644
+> --- a/drivers/clk/clk.c
+> +++ b/drivers/clk/clk.c
+> @@ -1645,6 +1645,23 @@ static int clk_fetch_parent_index(struct clk_core =
+*core,
+>         return i;
+>  }
+> =20
+> +/**
+> + * clk_hw_get_parent_index - return the index of parent clock
+> + * @hw: clk_hw associated with the clk being consumed
+> + * @parent_hw: clk_hw associated with the parent of clk
+> + *
+> + * Fetches and returns the index of parent clock.
+> + * If hw or parent_hw is NULL, returns -EINVAL.
+> + */
+> +int clk_hw_get_parent_index(struct clk_hw *hw, struct clk_hw *parent_hw)
+> +{
+> +       if (!hw || !parent_hw)
+> +               return -EINVAL;
+
+The caller should be ashamed if they call this with NULL arguments.
+I'd prefer we skip this check and we get an oops.
+
 > +
-> +static struct platform_driver bcm_iproc_gpio_driver = {
-> +	.driver = {
-> +		.name = "iproc-xgs-gpio",
-> +		.owner = THIS_MODULE,
-> +		.of_match_table = bcm_iproc_gpio_of_match,
-> +	},
-> +	.probe = iproc_gpio_probe,
-> +	.remove = iproc_gpio_remove,
-> +};
-
-There's a fix for this which Mark sent yesterday[1] and should
-have now been applied, by removing __initconst for the
-of_device_id table.  So this regression should not be present in
-the next linux-next tag.
-
-Guillaume
-
-[1] https://www.spinics.net/lists/arm-kernel/msg766621.html
-
+> +       return clk_fetch_parent_index(hw->core, parent_hw->core);
+> +}
+> +EXPORT_SYMBOL_GPL(clk_hw_get_parent_index);
+> +
+>  /*
+>   * Update the orphan status of @core and all its children.
+>   */
