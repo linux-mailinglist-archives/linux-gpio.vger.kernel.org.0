@@ -2,112 +2,74 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id B47CCF189A
-	for <lists+linux-gpio@lfdr.de>; Wed,  6 Nov 2019 15:26:59 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 9122FF1911
+	for <lists+linux-gpio@lfdr.de>; Wed,  6 Nov 2019 15:48:34 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727028AbfKFO07 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 6 Nov 2019 09:26:59 -0500
-Received: from mga04.intel.com ([192.55.52.120]:62136 "EHLO mga04.intel.com"
+        id S1731652AbfKFOsd (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 6 Nov 2019 09:48:33 -0500
+Received: from mga06.intel.com ([134.134.136.31]:46609 "EHLO mga06.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726945AbfKFO07 (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Wed, 6 Nov 2019 09:26:59 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
+        id S1728712AbfKFOsd (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Wed, 6 Nov 2019 09:48:33 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 06 Nov 2019 06:26:58 -0800
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 06 Nov 2019 06:48:32 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.68,275,1569308400"; 
-   d="scan'208";a="377062806"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by orsmga005.jf.intel.com with ESMTP; 06 Nov 2019 06:26:56 -0800
-Received: from andy by smile with local (Exim 4.93-RC1)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1iSMGt-0004JY-LA; Wed, 06 Nov 2019 16:26:55 +0200
-Date:   Wed, 6 Nov 2019 16:26:55 +0200
+   d="scan'208";a="353498316"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by orsmga004.jf.intel.com with ESMTP; 06 Nov 2019 06:48:30 -0800
+Received: by black.fi.intel.com (Postfix, from userid 1003)
+        id EDCD3FC; Wed,  6 Nov 2019 16:48:29 +0200 (EET)
 From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Hans de Goede <hdegoede@redhat.com>
-Cc:     Mika Westerberg <mika.westerberg@linux.intel.com>,
+To:     Mika Westerberg <mika.westerberg@linux.intel.com>,
+        linux-gpio@vger.kernel.org,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-gpio@vger.kernel.org, linux-acpi@vger.kernel.org
-Subject: Re: [PATCH] gpiolib: acpi: Add Terra Pad 1061 to the
- run_edge_events_on_boot_blacklist
-Message-ID: <20191106142655.GD32742@smile.fi.intel.com>
-References: <20191106115109.119346-1-hdegoede@redhat.com>
+        Linus Walleij <linus.walleij@linaro.org>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: [PATCH v1 0/8] pinctrl: intel: Move Lynxpoint to pin control umbrella
+Date:   Wed,  6 Nov 2019 16:48:21 +0200
+Message-Id: <20191106144829.32275-1-andriy.shevchenko@linux.intel.com>
+X-Mailer: git-send-email 2.24.0.rc1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191106115109.119346-1-hdegoede@redhat.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Nov 06, 2019 at 12:51:09PM +0100, Hans de Goede wrote:
-> The Terra Pad 1061 has the usual micro-USB-B id-pin handler, but instead
-> of controlling the actual micro-USB-B it turns the 5V boost for the
-> tablet's USB-A connector and its keyboard-cover connector off.
-> 
-> The actual micro-USB-B connector on the tablet is wired for charging only,
-> and its id pin is *not* connected to the GPIO which is used for the
-> (broken) id-pin event handler in the DSDT.
-> 
-> While at it not only add a comment why the Terra Pad 1061 is on the
-> blacklist, but also fix the missing comment for the Minix Neo Z83-4 entry.
+Intel Lynxpoint GPIO is actually half way to the Chassis specification that has
+been established starting from Intel Skylake. It has some pin control
+properties we may utilize. To achieve this, move the driver under pin control
+umbrella and do a bunch of clean ups.
 
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+This is the first step. Next step will be to convert it to the actual pin
+control driver.
 
-Thanks!
+The series has been tested on Harrisbeach Ultrabook where Lynxpoint GPIO is
+exposed to the OS.
 
-> 
-> Fixes: 61f7f7c8f978 ("gpiolib: acpi: Add gpiolib_acpi_run_edge_events_on_boot option and blacklist")
-> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-> ---
->  drivers/gpio/gpiolib-acpi.c | 17 +++++++++++++++++
->  1 file changed, 17 insertions(+)
-> 
-> diff --git a/drivers/gpio/gpiolib-acpi.c b/drivers/gpio/gpiolib-acpi.c
-> index 2911dd6f2625..5372652c38eb 100644
-> --- a/drivers/gpio/gpiolib-acpi.c
-> +++ b/drivers/gpio/gpiolib-acpi.c
-> @@ -1307,11 +1307,28 @@ late_initcall_sync(acpi_gpio_handle_deferred_request_irqs);
->  
->  static const struct dmi_system_id run_edge_events_on_boot_blacklist[] = {
->  	{
-> +		/*
-> +		 * The Minix Neo Z83-4 has a micro-USB-B id-pin handler for
-> +		 * a non existing micro-USB-B connector which puts the HDMI
-> +		 * DDC pins in GPIO mode, breaking HDMI support.
-> +		 */
->  		.matches = {
->  			DMI_MATCH(DMI_SYS_VENDOR, "MINIX"),
->  			DMI_MATCH(DMI_PRODUCT_NAME, "Z83-4"),
->  		}
->  	},
-> +	{
-> +		/*
-> +		 * The Terra Pad 1061 has a micro-USB-B id-pin handler, which
-> +		 * instead of controlling the actual micro-USB-B turns the 5V
-> +		 * boost for its USB-A connector off. The actual micro-USB-B
-> +		 * connector is wired for charging only.
-> +		 */
-> +		.matches = {
-> +			DMI_MATCH(DMI_SYS_VENDOR, "Wortmann_AG"),
-> +			DMI_MATCH(DMI_PRODUCT_NAME, "TERRA_PAD_1061"),
-> +		}
-> +	},
->  	{} /* Terminating entry */
->  };
->  
-> -- 
-> 2.23.0
-> 
+Andy Shevchenko (8):
+  pinctrl: lynxpoint: Move GPIO driver to pin controller folder
+  pinctrl: lynxpoint: Use raw_spinlock for locking
+  pinctrl: lynxpoint: Correct amount of pins
+  pinctrl: lynxpoint: Keep pointer to struct device instead of its
+    container
+  pinctrl: lynxpoint: Use %pR to print IO resource
+  pinctrl: lynxpoint: Switch to memory mapped IO accessors
+  pinctrl: lynxpoint: Convert unsigned to unsigned int
+  pinctrl: lynxpoint: Move ->remove closer to ->probe()
+
+ MAINTAINERS                                   |   1 -
+ drivers/gpio/Kconfig                          |   8 -
+ drivers/gpio/Makefile                         |   1 -
+ drivers/pinctrl/intel/Kconfig                 |  10 ++
+ drivers/pinctrl/intel/Makefile                |   1 +
+ .../intel/pinctrl-lynxpoint.c}                | 168 +++++++++---------
+ 6 files changed, 93 insertions(+), 96 deletions(-)
+ rename drivers/{gpio/gpio-lynxpoint.c => pinctrl/intel/pinctrl-lynxpoint.c} (72%)
 
 -- 
-With Best Regards,
-Andy Shevchenko
-
+2.24.0.rc1
 
