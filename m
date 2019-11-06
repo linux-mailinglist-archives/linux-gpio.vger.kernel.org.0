@@ -2,82 +2,71 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id C92B9F1915
-	for <lists+linux-gpio@lfdr.de>; Wed,  6 Nov 2019 15:48:36 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A9F11F1A4F
+	for <lists+linux-gpio@lfdr.de>; Wed,  6 Nov 2019 16:47:23 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731729AbfKFOsf (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 6 Nov 2019 09:48:35 -0500
-Received: from mga09.intel.com ([134.134.136.24]:65092 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731691AbfKFOsf (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Wed, 6 Nov 2019 09:48:35 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 06 Nov 2019 06:48:35 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.68,275,1569308400"; 
-   d="scan'208";a="377067551"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by orsmga005.jf.intel.com with ESMTP; 06 Nov 2019 06:48:33 -0800
-Received: by black.fi.intel.com (Postfix, from userid 1003)
-        id 582243BC; Wed,  6 Nov 2019 16:48:30 +0200 (EET)
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+        id S1727028AbfKFPrW (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 6 Nov 2019 10:47:22 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:44026 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727631AbfKFPrW (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 6 Nov 2019 10:47:22 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1573055241;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=NmN4OJBBm35WbMBR7Y/Z8itvsVjEWg72ApTODlVnx+A=;
+        b=DhaNTbRVME6yeZmCKaGIq7phiWA9uS3Jd7RWo2UZxw3g9PcdDb56AqI1qbJjqZ7HfAkeqn
+        if7eG8VfexhRs4kpW4i9BsslEEhicxKdHwK2Ao/SeJOmUzmdzDu7UTmRiUMyeEHSYsXxiP
+        vqaNhhpSZ9Piw5/UxEb7wiSE6VZ28lQ=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-202-3bAqftt6OiWXQB1TR-Z_Ug-1; Wed, 06 Nov 2019 10:47:19 -0500
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 6EA1C8017E0;
+        Wed,  6 Nov 2019 15:47:18 +0000 (UTC)
+Received: from shalem.localdomain.com (ovpn-116-167.ams2.redhat.com [10.36.116.167])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 0125E5D70E;
+        Wed,  6 Nov 2019 15:47:16 +0000 (UTC)
+From:   Hans de Goede <hdegoede@redhat.com>
 To:     Mika Westerberg <mika.westerberg@linux.intel.com>,
-        linux-gpio@vger.kernel.org,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>,
         Linus Walleij <linus.walleij@linaro.org>
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: [PATCH v1 8/8] pinctrl: lynxpoint: Move ->remove closer to ->probe()
-Date:   Wed,  6 Nov 2019 16:48:29 +0200
-Message-Id: <20191106144829.32275-9-andriy.shevchenko@linux.intel.com>
-X-Mailer: git-send-email 2.24.0.rc1
-In-Reply-To: <20191106144829.32275-1-andriy.shevchenko@linux.intel.com>
-References: <20191106144829.32275-1-andriy.shevchenko@linux.intel.com>
+Cc:     Hans de Goede <hdegoede@redhat.com>, linux-gpio@vger.kernel.org,
+        linux-acpi@vger.kernel.org
+Subject: [PATCH v2 0/3] pinctrl: cherryview: Pass irqchip when adding gpiochip
+Date:   Wed,  6 Nov 2019 16:47:12 +0100
+Message-Id: <20191106154715.155596-1-hdegoede@redhat.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+X-MC-Unique: 3bAqftt6OiWXQB1TR-Z_Ug-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=WINDOWS-1252
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Consolidate ->remove and ->probe() callbacks for better maintenance.
+Hi All,
 
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
----
- drivers/pinctrl/intel/pinctrl-lynxpoint.c | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+Here is v2 of my series for Cherry Trail devices to pass the irqchip when
+adding the gpiochip instead of registering it separately. Similar to how
+this is done for Bay Trail devices in Andy's recent series:
+"[RESEND][PATCH v2 0/7] gpiolib: fix GPIO <-> pin mapping registration".
 
-diff --git a/drivers/pinctrl/intel/pinctrl-lynxpoint.c b/drivers/pinctrl/intel/pinctrl-lynxpoint.c
-index 49dcdc2c205d..43dc15b9ad4a 100644
---- a/drivers/pinctrl/intel/pinctrl-lynxpoint.c
-+++ b/drivers/pinctrl/intel/pinctrl-lynxpoint.c
-@@ -387,6 +387,12 @@ static int lp_gpio_probe(struct platform_device *pdev)
- 	return 0;
- }
- 
-+static int lp_gpio_remove(struct platform_device *pdev)
-+{
-+	pm_runtime_disable(&pdev->dev);
-+	return 0;
-+}
-+
- static int lp_gpio_runtime_suspend(struct device *dev)
- {
- 	return 0;
-@@ -426,12 +432,6 @@ static const struct acpi_device_id lynxpoint_gpio_acpi_match[] = {
- };
- MODULE_DEVICE_TABLE(acpi, lynxpoint_gpio_acpi_match);
- 
--static int lp_gpio_remove(struct platform_device *pdev)
--{
--	pm_runtime_disable(&pdev->dev);
--	return 0;
--}
--
- static struct platform_driver lp_gpio_driver = {
- 	.probe          = lp_gpio_probe,
- 	.remove         = lp_gpio_remove,
--- 
-2.24.0.rc1
+Note this series depends on that series as well as on the cherryview change=
+s
+currently queued in pinctrl/intel.git/for-next .
+
+Changes in v2:
+- Add kerndoc comments for new chv_pinctrl struct members
+
+Regards,
+
+Hans
 
