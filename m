@@ -2,150 +2,132 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 0C089F15D8
-	for <lists+linux-gpio@lfdr.de>; Wed,  6 Nov 2019 13:10:15 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7D180F1628
+	for <lists+linux-gpio@lfdr.de>; Wed,  6 Nov 2019 13:38:42 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729671AbfKFMKO (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 6 Nov 2019 07:10:14 -0500
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:37816 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729164AbfKFMKO (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 6 Nov 2019 07:10:14 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1573042213;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=5G1asKsUNUKJB03arX4WU6tZHsp+n4Hx8Y8KjnqvdSU=;
-        b=DIpr2lyILmK+js/b7UMb0WfVHfBN5L2uHRRrflMm2i5vLoaSi4NDjWJr/QBd/X7qYkHxGg
-        5AuJ9l+CnL3nQbetVmphx7HcmF/F4WVEepv8mhnuxs1Pu7DY9FFun8GDXL+VgCXfxRsPdD
-        AB1MrRCi558i1jlsAzqG/s5WCKniF8g=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-123-UOnf0gPlP9qCfCgcPB8j_A-1; Wed, 06 Nov 2019 07:10:10 -0500
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 076F61005500;
-        Wed,  6 Nov 2019 12:10:09 +0000 (UTC)
-Received: from shalem.localdomain.com (ovpn-116-167.ams2.redhat.com [10.36.116.167])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 7D31D60852;
-        Wed,  6 Nov 2019 12:10:05 +0000 (UTC)
-From:   Hans de Goede <hdegoede@redhat.com>
-To:     Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Linus Walleij <linus.walleij@linaro.org>
-Cc:     Hans de Goede <hdegoede@redhat.com>, linux-gpio@vger.kernel.org,
-        linux-acpi@vger.kernel.org
-Subject: [PATCH 3/3] pinctrl: cherryview: Pass irqchip when adding gpiochip
-Date:   Wed,  6 Nov 2019 13:09:56 +0100
-Message-Id: <20191106120956.119958-4-hdegoede@redhat.com>
-In-Reply-To: <20191106120956.119958-1-hdegoede@redhat.com>
-References: <20191106120956.119958-1-hdegoede@redhat.com>
+        id S1728140AbfKFMil (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 6 Nov 2019 07:38:41 -0500
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:37353 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727741AbfKFMil (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 6 Nov 2019 07:38:41 -0500
+Received: by mail-ot1-f67.google.com with SMTP id d5so8641168otp.4;
+        Wed, 06 Nov 2019 04:38:40 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=UICFSnf/Q0mqFlP3f0Qejag6EmjSHl2tMUqDxMyFEec=;
+        b=GIS15WkmJsIlA0vgTCWf32aUt24Bx/qMYIF4vQUDVWof6PjKlFJ9MGzbeRqaeKyVV6
+         Bdh7nxZz0t00m5/kWhCUYKEHuuynxrckPwZkxnRAyla948cXoM62mTh7XCAyvd6nQCYM
+         XoyA0axQX+XQBzMRxz4gBphpUA1Pn40fRhpWoov+RXkPmIchij6UFG+9ROX5G0LwS9VU
+         nG50Y+jltLroDOhtVCQGsO1RpdidOvByXcW089wtFlw25BbEAK+T7qRGND06gDlam2Yd
+         sBMpqVobOtTGIFsYKAlgSOJsQcvqFqG+l6cR5sOK+xxBdWA6EtwxGHvmiVbpEu22Bg8Z
+         NVQQ==
+X-Gm-Message-State: APjAAAXhSWaEaOcFnfiM4V/6ZRJO2569DykQYK61b9o7CyztSj7/V3oO
+        p+ly8FT3LOkrlD6CnYWjzeMGsEYGb3nk4O2Nt04=
+X-Google-Smtp-Source: APXvYqyhWIltU0HpSVYfumGqz+3W8qvdpa80PYpaow/79hyU5A9FFee2aF0j51+cFQ12EI04JyhYIado0cMDBe9WX3Q=
+X-Received: by 2002:a9d:73cd:: with SMTP id m13mr1666991otk.145.1573043920420;
+ Wed, 06 Nov 2019 04:38:40 -0800 (PST)
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
-X-MC-Unique: UOnf0gPlP9qCfCgcPB8j_A-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=WINDOWS-1252
-Content-Transfer-Encoding: quoted-printable
+References: <cover.1572945757.git.matti.vaittinen@fi.rohmeurope.com>
+ <0a1fe4365ef599adde42396f0bb735c8623f679c.1572945757.git.matti.vaittinen@fi.rohmeurope.com>
+ <20191106053446.GD5290@kw.sim.vm.gnt> <c7cc7d66a5d3e398bf5109f58260e9dca5a317df.camel@fi.rohmeurope.com>
+In-Reply-To: <c7cc7d66a5d3e398bf5109f58260e9dca5a317df.camel@fi.rohmeurope.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Wed, 6 Nov 2019 13:38:29 +0100
+Message-ID: <CAMuHMdXQ_MP0j1saU1KdQwG5ooA5N5x0=MjJJX+p4EN1e11K-A@mail.gmail.com>
+Subject: Re: [PATCH 13/62] gpio: gpio-f7188x: Use new GPIO_LINE_DIRECTION
+To:     "Vaittinen, Matti" <Matti.Vaittinen@fi.rohmeurope.com>
+Cc:     "simon.guinot@sequanux.org" <simon.guinot@sequanux.org>,
+        "mazziesaccount@gmail.com" <mazziesaccount@gmail.com>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        "bgolaszewski@baylibre.com" <bgolaszewski@baylibre.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linus.walleij@linaro.org" <linus.walleij@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-We need to convert all old gpio irqchips to pass the irqchip
-setup along when adding the gpio_chip. For more info see
-drivers/gpio/TODO.
+Hi Matti,
 
-For chained irqchips this is a pretty straight-forward conversion.
+On Wed, Nov 6, 2019 at 7:45 AM Vaittinen, Matti
+<Matti.Vaittinen@fi.rohmeurope.com> wrote:
+> On Wed, 2019-11-06 at 06:34 +0100, Simon Guinot wrote:
+> > On Tue, Nov 05, 2019 at 12:16:03PM +0200, Matti Vaittinen wrote:
+> > > It's hard for occasional GPIO code reader/writer to know if values
+> > > 0/1
+> > > equal to IN or OUT. Use defined GPIO_LINE_DIRECTION_IN and
+> > > GPIO_LINE_DIRECTION_OUT to help them out.
+> > >
+> > > Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+> > > ---
+> > >  drivers/gpio/gpio-f7188x.c | 5 ++++-
+> > >  1 file changed, 4 insertions(+), 1 deletion(-)
+> > >
+> > > diff --git a/drivers/gpio/gpio-f7188x.c b/drivers/gpio/gpio-
+> > > f7188x.c
+> > > index fdc639f856f1..cadd02993539 100644
+> > > --- a/drivers/gpio/gpio-f7188x.c
+> > > +++ b/drivers/gpio/gpio-f7188x.c
+> > > @@ -250,7 +250,10 @@ static int f7188x_gpio_get_direction(struct
+> > > gpio_chip *chip, unsigned offset)
+> > >
+> > >     superio_exit(sio->addr);
+> > >
+> > > -   return !(dir & 1 << offset);
+> > > +   if (dir & 1 << offset)
+> > > +           return GPIO_LINE_DIRECTION_OUT;
+> > > +
+> > > +   return GPIO_LINE_DIRECTION_IN
+> >
+> > Hi Matti,
+> >
+> > I am probably missing something but I can't find
+> > GPIO_LINE_DIRECTION_IN
+> > and GPIO_LINE_DIRECTION_OUT defined anywhere.
+>
+> Sorry. I accidentally sent the patch 01/62 to limited audience - and
+> also messed up the message-ID from the series so threading messages is
+> probably not working :( I did resend the patch adding defines to all
+> reviewers yesterday - title should be "[RESEND PATCH 01/62] gpio: Add
+> definition for GPIO direction".
+>
+> > Besides I am an occasional code reader/writer and I find the original
+> > code easy to understand.
+>
+> Glad to hear that. When I read code:
+>
+> return !(dir & 1 << offset);
+>
+> It's impossible for me to tell if dir having bit at offset 'offset' set
+> means IN or OUT - I know the meaning of code, it checks this bit for
+> in/out - but which dir value is IN and which is OUT?
+>
+> When this is written as:
+>
+>         if (dir & 1 << offset)
+>                 return GPIO_LINE_DIRECTION_OUT;
+>
+>         return GPIO_LINE_DIRECTION_IN
+>
+> it get's quite obvious even for me that having the matching bit set
+> means direction to be OUT.
 
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
----
- drivers/pinctrl/intel/pinctrl-cherryview.c | 41 +++++++++++-----------
- 1 file changed, 20 insertions(+), 21 deletions(-)
+"suggest parentheses around... " warning?
 
-diff --git a/drivers/pinctrl/intel/pinctrl-cherryview.c b/drivers/pinctrl/i=
-ntel/pinctrl-cherryview.c
-index 38b359db6013..1f9751ae0ed0 100644
---- a/drivers/pinctrl/intel/pinctrl-cherryview.c
-+++ b/drivers/pinctrl/intel/pinctrl-cherryview.c
-@@ -166,6 +166,7 @@ struct chv_pinctrl {
- =09struct irq_chip irqchip;
- =09void __iomem *regs;
- =09bool need_valid_mask;
-+=09unsigned int irq;
- =09unsigned intr_lines[16];
- =09const struct chv_community *community;
- =09u32 saved_intmask;
-@@ -1619,16 +1620,25 @@ static int chv_gpio_probe(struct chv_pinctrl *pctrl=
-, int irq)
- =09chip->add_pin_ranges =3D chv_gpio_add_pin_ranges;
- =09chip->parent =3D pctrl->dev;
- =09chip->base =3D -1;
--=09if (pctrl->need_valid_mask)
--=09=09chip->irq.init_valid_mask =3D chv_init_irq_valid_mask;
-=20
--=09ret =3D devm_gpiochip_add_data(pctrl->dev, chip, pctrl);
--=09if (ret) {
--=09=09dev_err(pctrl->dev, "Failed to register gpiochip\n");
--=09=09return ret;
--=09}
-+=09pctrl->irq =3D irq;
-+=09pctrl->irqchip.name =3D "chv-gpio";
-+=09pctrl->irqchip.irq_startup =3D chv_gpio_irq_startup;
-+=09pctrl->irqchip.irq_ack =3D chv_gpio_irq_ack;
-+=09pctrl->irqchip.irq_mask =3D chv_gpio_irq_mask;
-+=09pctrl->irqchip.irq_unmask =3D chv_gpio_irq_unmask;
-+=09pctrl->irqchip.irq_set_type =3D chv_gpio_irq_type;
-+=09pctrl->irqchip.flags =3D IRQCHIP_SKIP_SET_WAKE;
-=20
--=09chv_gpio_irq_init_hw(chip);
-+=09chip->irq.chip =3D &pctrl->irqchip;
-+=09if (pctrl->need_valid_mask)
-+=09=09chip->irq.init_valid_mask =3D chv_init_irq_valid_mask;
-+=09chip->irq.init_hw =3D chv_gpio_irq_init_hw;
-+=09chip->irq.parent_handler =3D chv_gpio_irq_handler;
-+=09chip->irq.num_parents =3D 1;
-+=09chip->irq.parents =3D &pctrl->irq;
-+=09chip->irq.default_type =3D IRQ_TYPE_NONE;
-+=09chip->irq.handler =3D handle_bad_irq;
-=20
- =09if (!pctrl->need_valid_mask) {
- =09=09irq_base =3D devm_irq_alloc_descs(pctrl->dev, -1, 0,
-@@ -1639,18 +1649,9 @@ static int chv_gpio_probe(struct chv_pinctrl *pctrl,=
- int irq)
- =09=09}
- =09}
-=20
--=09pctrl->irqchip.name =3D "chv-gpio";
--=09pctrl->irqchip.irq_startup =3D chv_gpio_irq_startup;
--=09pctrl->irqchip.irq_ack =3D chv_gpio_irq_ack;
--=09pctrl->irqchip.irq_mask =3D chv_gpio_irq_mask;
--=09pctrl->irqchip.irq_unmask =3D chv_gpio_irq_unmask;
--=09pctrl->irqchip.irq_set_type =3D chv_gpio_irq_type;
--=09pctrl->irqchip.flags =3D IRQCHIP_SKIP_SET_WAKE;
--
--=09ret =3D gpiochip_irqchip_add(chip, &pctrl->irqchip, 0,
--=09=09=09=09   handle_bad_irq, IRQ_TYPE_NONE);
-+=09ret =3D devm_gpiochip_add_data(pctrl->dev, chip, pctrl);
- =09if (ret) {
--=09=09dev_err(pctrl->dev, "failed to add IRQ chip\n");
-+=09=09dev_err(pctrl->dev, "Failed to register gpiochip\n");
- =09=09return ret;
- =09}
-=20
-@@ -1664,8 +1665,6 @@ static int chv_gpio_probe(struct chv_pinctrl *pctrl, =
-int irq)
- =09=09}
- =09}
-=20
--=09gpiochip_set_chained_irqchip(chip, &pctrl->irqchip, irq,
--=09=09=09=09     chv_gpio_irq_handler);
- =09return 0;
- }
-=20
---=20
-2.23.0
+    if (dir & BIT(offset))
+            ...
 
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
