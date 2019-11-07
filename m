@@ -2,150 +2,103 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 62E40F3668
-	for <lists+linux-gpio@lfdr.de>; Thu,  7 Nov 2019 18:58:12 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 494ACF386F
+	for <lists+linux-gpio@lfdr.de>; Thu,  7 Nov 2019 20:19:35 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730110AbfKGR6J (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 7 Nov 2019 12:58:09 -0500
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:46546 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730616AbfKGR6J (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 7 Nov 2019 12:58:09 -0500
-Received: by mail-ot1-f68.google.com with SMTP id n23so2757864otr.13
-        for <linux-gpio@vger.kernel.org>; Thu, 07 Nov 2019 09:58:07 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=gcSBQ9bev1i6y9WBdW6EcenAXOHeP/Zl4mv72+eF84s=;
-        b=dLeID+yiPx8XhimUAzbRyPaANl4eg4H7QeVu2+bmEUSrePXc5WChLPe/EbTAAAiFen
-         K9/nKMGKGdMNHwvQjqCcVzW9sfxZPTUv22qH+j/D8kKDM5KaMM9cLdBJDcMHa8ARbgrr
-         kTAHY/vg7GXVZVDD5KtyIOBoK15LgrwNKZShQ2cD7VwKOqQYpORfpNirVwgV6M6fm2AS
-         KajAPweUrlizvVf67VvcOvigVdV8SacyMl3JZdZss7sMLATgTL4n0LCNwORjJkaRuff6
-         DS33H54hbMAcopqaS5bncsoc/p3HMprRgRRSm/SusRSz2Rq8/s6ZIAj7L57tzP4bQJS9
-         k2UQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=gcSBQ9bev1i6y9WBdW6EcenAXOHeP/Zl4mv72+eF84s=;
-        b=fKMmurP+Jk8N6hRvY9VFM6piYqziP65atqKWdjCVcxqxV5XhSAfcdlGuRr4xmxtbca
-         HNMh9YCHzmtc4aHRnQc3HqoPfUB9nEXY80UPPa9htPE7IHVv8VZv6+5NPNja1W9ptvvo
-         q8RD97hApXhk6YM1T7hU+CVc/DoL96NoCWeWNJQ8ZEJ36S7xL1wRYVfFCsSekgGZt+M5
-         We9LPxxtNAGCM3BMFsAQk2k1nnGyJqjwM81JNwvolrtKI0X++6tYZ9bpvV2D0BpQcZhD
-         zaewr550fx9LPRsXyGrFMHFM7QgM6Ve+eFnhu0H+kP/bKhmUplSdHF3dkHM+qg7xPjSG
-         T7oQ==
-X-Gm-Message-State: APjAAAU27YkPWCB9yctEOgxQLGWr5TEbgMnZcKdaYyxnNUVpegxCwlpk
-        9gErULdkoCavGbSjyw0TbLgsG8Fmsv9rcoTgaFH+hA==
-X-Google-Smtp-Source: APXvYqzq1CkQO9hkkRxRoGYNu/mD+8RoRZ1cxpdAfIN31jr/7kYA+MSBHBj2mx5IpTWX5wr9Th4TB0bb9D8cExWnAP0=
-X-Received: by 2002:a9d:344a:: with SMTP id v68mr4227807otb.85.1573149487135;
- Thu, 07 Nov 2019 09:58:07 -0800 (PST)
+        id S1725941AbfKGTTe (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 7 Nov 2019 14:19:34 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56370 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725851AbfKGTTe (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Thu, 7 Nov 2019 14:19:34 -0500
+Received: from kernel.org (unknown [104.132.0.74])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0B18021D6C;
+        Thu,  7 Nov 2019 19:19:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1573154373;
+        bh=KfubhkiePCi8VGkvdxTatX01GSD+R9bZnDBflQTG4CI=;
+        h=In-Reply-To:References:From:To:Cc:Subject:Date:From;
+        b=RJKgKFVCaeBna9mLw4V8SIefSFJ9vq3dizcCsSfD+RQg0zZnVwYAMsfFiPalN3xTI
+         c3909sJB3vzB95Ew2++B34G5jx/fw9Jiwwehy2+u/MSzo2Zdm9XArrwlFaWu0qnXnN
+         FOQvxYrC2Dl7kO5nQIEbXNtepqcwvm4DJKjYHCRA=
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-References: <20191105020429.18942-1-warthog618@gmail.com>
-In-Reply-To: <20191105020429.18942-1-warthog618@gmail.com>
-From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Date:   Thu, 7 Nov 2019 18:57:56 +0100
-Message-ID: <CAMpxmJWtMojJ5+10Ox50SDgTZ95C0aB-wB0tY6M-v1AsVN=WsQ@mail.gmail.com>
-Subject: Re: [PATCH v6 0/7] gpio: expose line bias flags to userspace
-To:     Kent Gibson <warthog618@gmail.com>
-Cc:     linux-gpio <linux-gpio@vger.kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bamvor Jian Zhang <bamv2005@gmail.com>,
-        Drew Fustini <drew@pdp7.com>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20191107152115.GA2580600@ulmo>
+References: <1565984527-5272-1-git-send-email-skomatineni@nvidia.com> <1565984527-5272-8-git-send-email-skomatineni@nvidia.com> <20191106231005.F2CD820869@mail.kernel.org> <fcc43ccb-8c6e-d518-4c70-503501706ffd@gmail.com> <20191107152115.GA2580600@ulmo>
+From:   Stephen Boyd <sboyd@kernel.org>
+To:     Dmitry Osipenko <digetx@gmail.com>,
+        Thierry Reding <thierry.reding@gmail.com>
+Cc:     Sowjanya Komatineni <skomatineni@nvidia.com>, jason@lakedaemon.net,
+        jonathanh@nvidia.com, linus.walleij@linaro.org,
+        marc.zyngier@arm.com, mark.rutland@arm.com, stefan@agner.ch,
+        tglx@linutronix.de, pdeschrijver@nvidia.com, pgaikwad@nvidia.com,
+        linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org,
+        jckuo@nvidia.com, josephl@nvidia.com, talho@nvidia.com,
+        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org,
+        mperttunen@nvidia.com, spatra@nvidia.com, robh+dt@kernel.org,
+        devicetree@vger.kernel.org, rjw@rjwysocki.net,
+        viresh.kumar@linaro.org, linux-pm@vger.kernel.org
+Subject: Re: [PATCH v9 07/22] clk: Add API to get index of the clock parent
+User-Agent: alot/0.8.1
+Date:   Thu, 07 Nov 2019 11:19:32 -0800
+Message-Id: <20191107191933.0B18021D6C@mail.kernel.org>
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-wt., 5 lis 2019 o 03:04 Kent Gibson <warthog618@gmail.com> napisa=C5=82(a):
->
-> The changes from v5:
->   - rebased onto Bart's gpio/for-kent branch.
->
-> The changes from v4:
-> Review changes:
->  - relocate restriction on applying bias to as-is from patch 2 to patch 1=
-.
->  - propagate errors, other than ENOTSUPP, from gpio_set_bias. (squashed
->    into patches 3 and 4).
->  - include SET_CONFIG patch series v2 (patch 6 and 7 here).
->
-> I've also fixed a few other nits I noticed along the way:
->  - rework gpio_set_bias as flags are mutually exclusive.
->  - remove input flag required to set bias restriction from
->    lineevent_create as events are implicitly assumed inputs anyway.
->  - reorder patches to group gpiolib bias patches together before the
->    gpio-mockup changes.
->
->
-> This series adds gross control of pull-up/pull-down to the GPIO uAPI.
-> Gross control means enabling and disabling of bias functionality,
-> not finer grained control such as setting biasing impedances.
->
-> The support allows both input and output lines to have any one of the
-> following biases applied as part of the line handle or event request:
->  0. As Is - bias is left alone.  This is the default for ABI compatibilit=
-y.
->  1. Bias Disable - bias is explicitly disabled.
->  2. Pull Down - pull-down bias is enabled.
->  3. Pull Up - pull-up bias is enabled.
->
-> The biases are set via three flags, BIAS_DISABLE, BIAS_PULL_DOWN
-> and BIAS_PULL_UP.  These map directly to the similarly named
-> pinctrl pin_config_param flags.
-> As Is corresponds to none of the flags being set.
->
-> The setting of biases on output lines may seem odd, but is to allow for
-> utilisation of internal pull-up/pull-down on open drain and open source
-> outputs, where supported in hardware.
->
-> The series also adds the GPIOHANDLE_SET_CONFIG_IOCTL to the gpio chardev.
-> The ioctl allows some of the configuration of a requested handle to be
-> changed without having to release the line.
-> The primary use case is the changing of direction for bi-directional
-> lines.
->
-> Patches are against Bart's gpio/for-kent branch[1].
->
-> The patch has been successfully tested against gpio-mockup, and
-> on a Raspberry Pi, in both cases using the feature/pud_set_config
-> branch of my Go gpiod library[2], as well as with my feature/pud
-> development branch of libgpiod[3].  Patch 7 has only been tested using
-> my gpiod library as libgpiod has not yet been updated to support the
-> SET_CONFIG ioctl.
->
-> Patch 1 adds pull-up/pull-down support to line handle requests.
-> Patch 2 adds pull-up/pull-down support to line event requests.
-> Patch 3 adds support for disabling bias.
-> Patch 4 adds support for setting bias on output lines.
-> Patch 5 adds pull-up/down support to the gpio-mockup for uAPI testing.
-> Patch 6 refactors the flag validation from linehandle_create.
-> Patch 7 adds the SET_CONFIG ioctl.
->
-> Drew Fustini (1):
->   gpio: expose pull-up/pull-down line flags to userspace
->
-> Kent Gibson (6):
->   gpiolib: add support for pull up/down to lineevent_create
->   gpiolib: add support for disabling line bias
->   gpiolib: add support for biasing output lines
->   gpio: mockup: add set_config to support pull up/down
->   gpiolib: move validation of line handle flags into helper function
->   gpio: add new SET_CONFIG ioctl() to gpio chardev
->
->  drivers/gpio/gpio-mockup.c |  94 ++++++++++------
->  drivers/gpio/gpiolib.c     | 213 +++++++++++++++++++++++++++++++------
->  drivers/gpio/gpiolib.h     |   1 +
->  include/uapi/linux/gpio.h  |  24 +++++
->  4 files changed, 264 insertions(+), 68 deletions(-)
->
-> --
-> 2.23.0
->
+Quoting Thierry Reding (2019-11-07 07:21:15)
+> On Thu, Nov 07, 2019 at 03:54:03AM +0300, Dmitry Osipenko wrote:
+> > 07.11.2019 02:10, Stephen Boyd =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+> > > Quoting Sowjanya Komatineni (2019-08-16 12:41:52)
+> > >> This patch adds an API clk_hw_get_parent_index to get index of the
+> > >> clock parent to use during the clock restore operations on system
+> > >> resume.
+> > > =20
+> > > Is there a reason we can't save the clk hw index at suspend time by
+> > > reading the hardware to understand the current parent? The parent ind=
+ex
+> > > typically doesn't matter unless we're trying to communicate something
+> > > from the framework to the provider driver. Put another way, I would
+> > > think the provider driver can figure out the index itself without hav=
+ing
+> > > to go through the framework to do so.
+> >=20
+> > Isn't it a bit wasteful to duplicate information about the parent within
+> > a provider if framework already has that info? The whole point of this
+> > new API is to allow providers to avoid that unnecessary duplication.
+> >=20
+> > Please note that clk_hw_get_parent_index is getting used only at the
+> > resume time and not at suspend.
+>=20
+> I agree with this. All of the information that we need is already cached
+> in the framework. Doing this in the driver would mean essentially adding
+> a "saved parent" field along with code to read the value at suspend time
+> to the three types of clocks that currently use this core helper.
 
-Applied all patches to for-next. Thanks!
+Don't we already have a "saved parent" field by storing the pointer to
+the clk_hw?
 
-Bart
+>=20
+> That's certainly something that we *can* do, but it doesn't sound like a
+> better option than simply querying the framework for the value that we
+> need.
+>=20
+
+Let me say this another way. Why does this driver want to know the index
+that the framework uses for some clk_hw pointer? Perhaps it happens to
+align with the same value that hardware uses, but I still don't
+understand why the driver wants to know what the framework has decided
+is the index for some clk_hw pointer.
+
+Or is this something like "give me the index for the parent that the
+framework thinks I currently have but in reality don't have anymore
+because the register contents were wiped and we need to reparent it"? A
+generic API to get any index for this question is overkill and we should
+consider adding some sort of API like clk_hw_get_current_parent_index(),
+or a framework flag that tells the framework this parent is incorrect
+and we need to call the .set_parent() op again to reconfigure it.
+
