@@ -2,93 +2,96 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id AA105F2CB4
-	for <lists+linux-gpio@lfdr.de>; Thu,  7 Nov 2019 11:39:51 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 11D14F2D6D
+	for <lists+linux-gpio@lfdr.de>; Thu,  7 Nov 2019 12:28:25 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387796AbfKGKju (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 7 Nov 2019 05:39:50 -0500
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:45071 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387728AbfKGKju (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 7 Nov 2019 05:39:50 -0500
-Received: by mail-pg1-f194.google.com with SMTP id w11so1890686pga.12
-        for <linux-gpio@vger.kernel.org>; Thu, 07 Nov 2019 02:39:50 -0800 (PST)
+        id S1727385AbfKGL2Y (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 7 Nov 2019 06:28:24 -0500
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:34767 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727278AbfKGL2Y (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 7 Nov 2019 06:28:24 -0500
+Received: by mail-oi1-f193.google.com with SMTP id l202so1660890oig.1
+        for <linux-gpio@vger.kernel.org>; Thu, 07 Nov 2019 03:28:22 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=uWwhJ/no4HjBNGE8MdRigigVoWCApSAlQDHTpzX0tEA=;
-        b=WnH2JbkujCDw9Cd+ptok3k0K1r7RKxWEz7EBjFPVnucqOmB/KGVLEds0crkyqw7ApJ
-         SZILBKK/hYQSM6TRlsLvRUdQaPRldbttCp61Op6i+BlETy4NBiPwh3z31VgZV9QG3ko4
-         +hE6OMdxFjuethnaPuBa78DU9JaRDeWEbK8CesRsSDYpa9B7njHI36lbQzutdUBMIjL9
-         3+2SOiOxBS4BPU5Q9wA9LaPIF6pu8dYUJtzlA2o1P3eZtsHU5ylwnfRvteva8vxTixBK
-         hHrPG/RbfUV0UsfRzHree9IQoGs7DYZg99lp0KMtiQzv2pYUHBt9rNhMrYlIiUhSotnj
-         Pqrw==
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=cpQjLE52lJkcpeVm6JFZFPxhm8Z9vm21QtBUWqhYBow=;
+        b=htAguy5FW61tFrSkSlDOiv7+yjXbBbMO/yb00qULAZsW2ANxYVz00/vs8VkurXFjd6
+         7px0Cw8oMBCJrE+LR/inEHVKVmVEm4EkpFf/My5TbEQlxXe0B7egABZM/oLCsM5X398Y
+         ykSC2ipEX6k7aOx6w6A39tg6xfLVtm6CpKrOm3ewqkz4dJGoeBT8itlLcuVX83wkOU0N
+         BddYYcebzpNwSJErQl/syAlBHlMKHHy5wfb+Kf23vaZynw8nzk1W3DogIdhgpbxpOWwq
+         WLlolkCFE9n+RuICPoQRJ19sIvcSNXZPR7xgSEm4rHw20UXy74QFSpjXalNTDmVd5PWq
+         /Uqw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=uWwhJ/no4HjBNGE8MdRigigVoWCApSAlQDHTpzX0tEA=;
-        b=hoOUiXlAR4lygwcxgZPyDU7N1oYcoi1bLue46Rlf04QisAPYo7bYumxiACGCsVn72d
-         9Ivb/WfDwtnkQoNjbOjL+YaFKtQjzscwbu9d7bc+bUFw2Cdbd3U2DMwO0rUwhfWRFits
-         AWXtQM4PkV5FKiF2yvq7rgc0YXzh+P+YwVDz+HM9xBKFKuortE9idL7qRE3ivC0rmWc/
-         4HvfHLbajIV8Cwz18x6K45fC7vREdN6DBylpE3x7G6cUQ9D9ubW3UFJtzhkbqrd28ibs
-         tNjWNN7L7pmkd79JvLw21g3q2RyN+x3jPGw/CILHG5SkF7NcCiPoXWbCsCj78uiksa4H
-         WpoQ==
-X-Gm-Message-State: APjAAAX5HeI+sk0ETVZ9LJ9VhuROKWjMBVPUWAvrHPlg8UeKEYfZDOHt
-        Lp/usQnq/+eq6Z3AiR/5B1mtsAP0ZwA=
-X-Google-Smtp-Source: APXvYqyvveJJZ47dYeOZ0FWzOxKOUJ+rDm1eUVHnaYP9m3qK11v6o+F0w5W16uFfzv+zIYfMCEwz6g==
-X-Received: by 2002:a62:7796:: with SMTP id s144mr2973017pfc.37.1573123189393;
-        Thu, 07 Nov 2019 02:39:49 -0800 (PST)
-Received: from sol (220-235-109-115.dyn.iinet.net.au. [220.235.109.115])
-        by smtp.gmail.com with ESMTPSA id a6sm2764210pja.30.2019.11.07.02.39.46
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 07 Nov 2019 02:39:48 -0800 (PST)
-Date:   Thu, 7 Nov 2019 18:39:43 +0800
-From:   Kent Gibson <warthog618@gmail.com>
-To:     Bartosz Golaszewski <bgolaszewski@baylibre.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=cpQjLE52lJkcpeVm6JFZFPxhm8Z9vm21QtBUWqhYBow=;
+        b=XBiXWhW1KyEPm25Lxp7ryqoFPHDDeL9cc9zAkMfysfSeHvNXAh2mTH8ylpSfKeomsg
+         uP5WiFwsyxzLasiQDeIfEeLeGC2IlRKMwBLxYU13zhao6Kv6sSwd2eKyc9sOy7I89trc
+         mzo7/uDAmqccYtQPuHzhLepPelY1aGZ10bp4ArwsnE8cmAtZ+5hyXuClcjXurWjxNLWU
+         bWd3LoFbx4SZeNmsZ655BAEWGUWVVhnhFgdEJrjq8zOmDli4Wn+fQr/9zVcE8+xgjpRH
+         bNGXClI/x05csXw1D0uzAb/GDK26OnW5VX4KPON1vMJ4WszROYWi39oohn6YS3YHVavI
+         KTRA==
+X-Gm-Message-State: APjAAAXZL1OvcFSE2BcPyLUs2nKossOVZs7nBXz7zZr1KrmPsp2nM7OT
+        MkJFxy0FQrLTTdmedZF1ni5L5W0Ni8FGO9PJqqrOaP7b
+X-Google-Smtp-Source: APXvYqxIWTqQAyAkpyu7yKSh8ZoNQyGU4WKdSLfICR+47q0HfeXLrJi/ylT1m3TTo3D3pnKl1ekVDVJxWcpW9JZVkA8=
+X-Received: by 2002:aca:b757:: with SMTP id h84mr3030666oif.175.1573126101414;
+ Thu, 07 Nov 2019 03:28:21 -0800 (PST)
+MIME-Version: 1.0
+References: <20191105020429.18942-1-warthog618@gmail.com> <20191105152616.GA19978@sol>
+ <CAMpxmJX-gvTDJ9CBBKjtcvd11yBCbqRz1Bw4Y_X7CESSsyJrzw@mail.gmail.com>
+ <CAMpxmJW6R0gv5VG95ayx2wGSdPG1hUnuKqxtBEeWg+MHkcWX3Q@mail.gmail.com>
+ <20191106064842.GB3478@sol> <CAMpxmJVORDjTWJ+j6LUERhKnW8DS_0GopcSuTVNOnda44u=3kg@mail.gmail.com>
+ <20191106165804.GA12770@sol> <20191107103943.GA29374@sol>
+In-Reply-To: <20191107103943.GA29374@sol>
+From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Date:   Thu, 7 Nov 2019 12:28:09 +0100
+Message-ID: <CAMpxmJXJRsUUU34561jVjQEot58N27P8UWFz292yq_XRSW0ftA@mail.gmail.com>
+Subject: Re: [PATCH v6 0/7] gpio: expose line bias flags to userspace
+To:     Kent Gibson <warthog618@gmail.com>
 Cc:     linux-gpio <linux-gpio@vger.kernel.org>,
         Drew Fustini <drew@pdp7.com>,
         Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v6 0/7] gpio: expose line bias flags to userspace
-Message-ID: <20191107103943.GA29374@sol>
-References: <20191105020429.18942-1-warthog618@gmail.com>
- <20191105152616.GA19978@sol>
- <CAMpxmJX-gvTDJ9CBBKjtcvd11yBCbqRz1Bw4Y_X7CESSsyJrzw@mail.gmail.com>
- <CAMpxmJW6R0gv5VG95ayx2wGSdPG1hUnuKqxtBEeWg+MHkcWX3Q@mail.gmail.com>
- <20191106064842.GB3478@sol>
- <CAMpxmJVORDjTWJ+j6LUERhKnW8DS_0GopcSuTVNOnda44u=3kg@mail.gmail.com>
- <20191106165804.GA12770@sol>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191106165804.GA12770@sol>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Nov 07, 2019 at 12:58:04AM +0800, Kent Gibson wrote:
-> I've pushed some more changes with the updated API we discussed earlier.
-> Those new tests I'd added now pass.  Yay.
-> One problem though - gpiod_line_set_config as written has no way to
-> accept an as-is direction.
-> Hopefully I'll have some time to take another look at that tomorrow.
-> 
+czw., 7 lis 2019 o 11:39 Kent Gibson <warthog618@gmail.com> napisa=C5=82(a)=
+:
+>
+> On Thu, Nov 07, 2019 at 12:58:04AM +0800, Kent Gibson wrote:
+> > I've pushed some more changes with the updated API we discussed earlier=
+.
+> > Those new tests I'd added now pass.  Yay.
+> > One problem though - gpiod_line_set_config as written has no way to
+> > accept an as-is direction.
+> > Hopefully I'll have some time to take another look at that tomorrow.
+> >
+>
+> I've pushed some more updates to my libgpiod branch[1].  They fix the
+> direction limitation I mentioned (I was using the wrong set flags),
+> and extend the tests to cover all of the SET_CONFIG fields.
+>
+> That completes the C API changes.
+> If that is ok with you then I can take a look at the corresponding
+> changes to the C++ and Python bindings.
+>
+> And I guess we should move this libgpiod discussion to a new thread?
 
-I've pushed some more updates to my libgpiod branch[1].  They fix the
-direction limitation I mentioned (I was using the wrong set flags), 
-and extend the tests to cover all of the SET_CONFIG fields.
+Yes, and better yet - you could simply send these patches for review
+and we can continue the discussion there.
 
-That completes the C API changes.
-If that is ok with you then I can take a look at the corresponding 
-changes to the C++ and Python bindings.
+Bart
 
-And I guess we should move this libgpiod discussion to a new thread?
-
-Cheers,
-Kent.
-
-[1] https://github.com/warthog618/libgpiod.git
-
+>
+> Cheers,
+> Kent.
+>
+> [1] https://github.com/warthog618/libgpiod.git
+>
