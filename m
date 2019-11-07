@@ -2,105 +2,146 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 2EA4DF2E07
-	for <lists+linux-gpio@lfdr.de>; Thu,  7 Nov 2019 13:18:39 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 86727F2F1C
+	for <lists+linux-gpio@lfdr.de>; Thu,  7 Nov 2019 14:22:42 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733122AbfKGMSi (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 7 Nov 2019 07:18:38 -0500
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:42700 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726810AbfKGMSi (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 7 Nov 2019 07:18:38 -0500
-Received: by mail-pf1-f194.google.com with SMTP id s5so2576802pfh.9
-        for <linux-gpio@vger.kernel.org>; Thu, 07 Nov 2019 04:18:37 -0800 (PST)
+        id S2388368AbfKGNWm (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 7 Nov 2019 08:22:42 -0500
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:45541 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730980AbfKGNWl (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 7 Nov 2019 08:22:41 -0500
+Received: by mail-wr1-f68.google.com with SMTP id h3so2947392wrx.12
+        for <linux-gpio@vger.kernel.org>; Thu, 07 Nov 2019 05:22:38 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=41ffJ72BF8dL4NXbfzrPCuqt8jw339FK3DB/iCjPpT8=;
-        b=TSdDspKMpnd40FqQS1v3A9X/KJctmDO6YWnW3X+BjT/LYROXmNg91rWHROEy68B4SD
-         BPxGj0vRhFDPtN3J5up42E9wRVOKsfdXqzhXtSY3XIFZdtKPukNZ3LlDmh3f8Clw+qyR
-         XX76Gi9TRl5meYbSCWbLY5T/kkqCIYygl7927Ui1l0QW5ezUNgWCGFXqP+03uKlpvurw
-         0iIxP4Xt5rNybQNMw6G22dOKhtYsrWqG2stJ3ZFbOyC0Wd+clIOF9fxc1nv9XEFyLdx2
-         cPsV6Apo2fCM1qx4FKjQcJKwgP0Fmkc5Lhg8LhG+TndZGJCqGv8+Gmk4a3U+s3RM8jPp
-         duPw==
+        d=kernelci-org.20150623.gappssmtp.com; s=20150623;
+        h=message-id:date:mime-version:content-transfer-encoding:subject:to
+         :from;
+        bh=iclmcbsTsptninog0V4pkvY6UnTGE3C3Abd14MrTVuc=;
+        b=V4uhPBLRU0aBWm750ms7ivDPi2rrWouCI3dIVaSwEWpWuUqvMShkEdlf18M7nWxoGO
+         qAsDki0EPiSaGl+Xp3GFov72lYb0q39k8SljtpDkqPEvKuuvDifbgXUnghnqi5DXhbBO
+         rrBk9kSqbA30D6hdmOrnZU4ZYsE8EnWVJNBy8XWoeqJnkPiYbez3MZtJs6JxHg6woJ5S
+         sayYRcEOMG30C9U0RIjnzlrOfQQgbJkrEV45V33a7GsB2QK75ozvP4nRFGGkKBz3MTfS
+         E5rt/Y998Ds50mBXQ4joqV8zhJ1XDJYCbczPzxI1Xhd07EKx8p4tmE3PV+I97p0mlgDI
+         q8TA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=41ffJ72BF8dL4NXbfzrPCuqt8jw339FK3DB/iCjPpT8=;
-        b=aByV0CGO7qF8d73+e6cZLqFGoEJGi6vnTuj6/5XgC+f82BfHngYDeSmMdIQFRhjbz6
-         Mid6jupkfTj9TGZEIrAOVFa0cZaH05ML7W0SgTqBBz1NL/SBWEl1QrGbTfNWQUsnYeVw
-         FqOxTe1tknVa7Gb2Rmmh+gSqoRtBt0t5LPXlXPE/eiB+OyniG1oJLjat9LOnI8uWTyDi
-         oMtx6c8aBfTqt8ObtcLQI6akW4QWowWIaxeBa8o5voRnLA4mxC83JoOFM7kw+77IndjV
-         HLfZwLYlee55DNFPedo5r69pQG44UshQo6cOYPvbWJfApKRfTe8t8TBlkBlLp3uoQDBx
-         BPwg==
-X-Gm-Message-State: APjAAAXum5OHHCpE4ZMQqieTMCqJoz+D0TBx11jdwgt7eGuPieIwCYDh
-        z08WgGe8S//lfnBDEsUEl0M=
-X-Google-Smtp-Source: APXvYqz/2qRD/BSFD4aT9UsscRA7mgbMu9AHIHQYsWpn4so/6f4GOeiyYv7vv7RrLnWQTXsJ7blmsA==
-X-Received: by 2002:a63:f916:: with SMTP id h22mr4213308pgi.423.1573129116965;
-        Thu, 07 Nov 2019 04:18:36 -0800 (PST)
-Received: from sol (220-235-109-115.dyn.iinet.net.au. [220.235.109.115])
-        by smtp.gmail.com with ESMTPSA id t27sm2503813pfq.169.2019.11.07.04.18.34
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 07 Nov 2019 04:18:36 -0800 (PST)
-Date:   Thu, 7 Nov 2019 20:18:31 +0800
-From:   Kent Gibson <warthog618@gmail.com>
-To:     Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Cc:     linux-gpio <linux-gpio@vger.kernel.org>,
-        Drew Fustini <drew@pdp7.com>,
-        Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v6 0/7] gpio: expose line bias flags to userspace
-Message-ID: <20191107121831.GA31526@sol>
-References: <20191105020429.18942-1-warthog618@gmail.com>
- <20191105152616.GA19978@sol>
- <CAMpxmJX-gvTDJ9CBBKjtcvd11yBCbqRz1Bw4Y_X7CESSsyJrzw@mail.gmail.com>
- <CAMpxmJW6R0gv5VG95ayx2wGSdPG1hUnuKqxtBEeWg+MHkcWX3Q@mail.gmail.com>
- <20191106064842.GB3478@sol>
- <CAMpxmJVORDjTWJ+j6LUERhKnW8DS_0GopcSuTVNOnda44u=3kg@mail.gmail.com>
- <20191106165804.GA12770@sol>
- <20191107103943.GA29374@sol>
- <CAMpxmJXJRsUUU34561jVjQEot58N27P8UWFz292yq_XRSW0ftA@mail.gmail.com>
+        h=x-gm-message-state:message-id:date:mime-version
+         :content-transfer-encoding:subject:to:from;
+        bh=iclmcbsTsptninog0V4pkvY6UnTGE3C3Abd14MrTVuc=;
+        b=MwGca+YzmsVBoGl7ZbC42LTSrbsUvFkabiVZgkKaGJaVF5usyvOnTZKJgNIERX5C1t
+         6xm48DT/H1Y2nJBlMBFGm6Nj2vgzfJOE1J+wm/Xyg5WrR+hEnmNpKV1+k3kTa2JBjqxN
+         YiZY/SybrBmU97niXC0ASav4m84he352419nd4bJqTLCRxKU5xPlqMSDY9RVfMZSmKM1
+         pdbE/z7f3J5nIrrhQjQqOiQ8lhmvpzW1pAAnqyZY+x5bm11oHC32ttzllMAlok1TsahR
+         BM5d8pXC6mv/P3B8bDh1LagQy32xFGnHkknrxPj+a11VYaB2fjUq1uemxD+W5WIndOVk
+         xw3g==
+X-Gm-Message-State: APjAAAUer/Gf8qziXTr3tH5uBn3ral60j/NIY+POe6TTLdGzWX4BJTNO
+        mhqwaXCbxlzZzBDYIPdKemlWq9eZxR/C8Q==
+X-Google-Smtp-Source: APXvYqwHOGuhoJwpvbXCTilag6CX0LMVa9Zz404lLgiRxhftrFDPiEM41Nnqbt/CmRD1eAjmNTas6w==
+X-Received: by 2002:a5d:448a:: with SMTP id j10mr3072070wrq.79.1573132958165;
+        Thu, 07 Nov 2019 05:22:38 -0800 (PST)
+Received: from [148.251.42.114] ([2a01:4f8:201:9271::2])
+        by smtp.gmail.com with ESMTPSA id s12sm2352060wme.20.2019.11.07.05.22.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 07 Nov 2019 05:22:37 -0800 (PST)
+Message-ID: <5dc41a9d.1c69fb81.efbc7.c22d@mx.google.com>
+Date:   Thu, 07 Nov 2019 05:22:37 -0800 (PST)
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAMpxmJXJRsUUU34561jVjQEot58N27P8UWFz292yq_XRSW0ftA@mail.gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: quoted-printable
+X-Kernelci-Branch: for-next
+X-Kernelci-Tree: linusw
+X-Kernelci-Report-Type: build
+X-Kernelci-Kernel: v5.4-rc6-40-g39f4fc38d180
+Subject: linusw/for-next build: 6 builds: 0 failed, 6 passed,
+ 3 warnings (v5.4-rc6-40-g39f4fc38d180)
+To:     linux-gpio@vger.kernel.org, fellows@kernelci.org
+From:   "kernelci.org bot" <bot@kernelci.org>
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Nov 07, 2019 at 12:28:09PM +0100, Bartosz Golaszewski wrote:
-> czw., 7 lis 2019 o 11:39 Kent Gibson <warthog618@gmail.com> napisał(a):
-> >
-> > On Thu, Nov 07, 2019 at 12:58:04AM +0800, Kent Gibson wrote:
-> > > I've pushed some more changes with the updated API we discussed earlier.
-> > > Those new tests I'd added now pass.  Yay.
-> > > One problem though - gpiod_line_set_config as written has no way to
-> > > accept an as-is direction.
-> > > Hopefully I'll have some time to take another look at that tomorrow.
-> > >
-> >
-> > I've pushed some more updates to my libgpiod branch[1].  They fix the
-> > direction limitation I mentioned (I was using the wrong set flags),
-> > and extend the tests to cover all of the SET_CONFIG fields.
-> >
-> > That completes the C API changes.
-> > If that is ok with you then I can take a look at the corresponding
-> > changes to the C++ and Python bindings.
-> >
-> > And I guess we should move this libgpiod discussion to a new thread?
-> 
-> Yes, and better yet - you could simply send these patches for review
-> and we can continue the discussion there.
-> 
+linusw/for-next build: 6 builds: 0 failed, 6 passed, 3 warnings (v5.4-rc6-4=
+0-g39f4fc38d180)
 
-I was holding off on putting a patch series together until all the
-functionality was complete - so after the C++ and Python bindings.
+Full Build Summary: https://kernelci.org/build/linusw/branch/for-next/kerne=
+l/v5.4-rc6-40-g39f4fc38d180/
 
-Cheers,
-Kent.
+Tree: linusw
+Branch: for-next
+Git Describe: v5.4-rc6-40-g39f4fc38d180
+Git Commit: 39f4fc38d18072da3326a52f3d0922836987256f
+Git URL: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-gpio.=
+git/
+Built: 6 unique architectures
+
+Warnings Detected:
+
+arc:
+    nsim_hs_defconfig (gcc-8): 2 warnings
+
+arm64:
+
+arm:
+    multi_v7_defconfig (gcc-8): 1 warning
+
+mips:
+
+riscv:
+
+x86_64:
+
+
+Warnings summary:
+
+    2    <stdin>:1511:2: warning: #warning syscall clone3 not implemented [=
+-Wcpp]
+    1    WARNING: "return_address" [vmlinux] is a static EXPORT_SYMBOL_GPL
+
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D
+
+Detailed per-defconfig build reports:
+
+---------------------------------------------------------------------------=
+-----
+32r2el_defconfig (mips, gcc-8) =E2=80=94 PASS, 0 errors, 0 warnings, 0 sect=
+ion mismatches
+
+---------------------------------------------------------------------------=
+-----
+defconfig (riscv, gcc-8) =E2=80=94 PASS, 0 errors, 0 warnings, 0 section mi=
+smatches
+
+---------------------------------------------------------------------------=
+-----
+defconfig (arm64, gcc-8) =E2=80=94 PASS, 0 errors, 0 warnings, 0 section mi=
+smatches
+
+---------------------------------------------------------------------------=
+-----
+multi_v7_defconfig (arm, gcc-8) =E2=80=94 PASS, 0 errors, 1 warning, 0 sect=
+ion mismatches
+
+Warnings:
+    WARNING: "return_address" [vmlinux] is a static EXPORT_SYMBOL_GPL
+
+---------------------------------------------------------------------------=
+-----
+nsim_hs_defconfig (arc, gcc-8) =E2=80=94 PASS, 0 errors, 2 warnings, 0 sect=
+ion mismatches
+
+Warnings:
+    <stdin>:1511:2: warning: #warning syscall clone3 not implemented [-Wcpp]
+    <stdin>:1511:2: warning: #warning syscall clone3 not implemented [-Wcpp]
+
+---------------------------------------------------------------------------=
+-----
+x86_64_defconfig (x86_64, gcc-8) =E2=80=94 PASS, 0 errors, 0 warnings, 0 se=
+ction mismatches
+
+---
+For more info write to <info@kernelci.org>
