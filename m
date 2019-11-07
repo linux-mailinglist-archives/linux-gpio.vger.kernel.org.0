@@ -2,163 +2,87 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 29910F2821
-	for <lists+linux-gpio@lfdr.de>; Thu,  7 Nov 2019 08:37:09 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E523BF2886
+	for <lists+linux-gpio@lfdr.de>; Thu,  7 Nov 2019 08:56:16 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727176AbfKGHhB (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 7 Nov 2019 02:37:01 -0500
-Received: from mga01.intel.com ([192.55.52.88]:5185 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726571AbfKGHhA (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Thu, 7 Nov 2019 02:37:00 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 06 Nov 2019 23:37:00 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.68,277,1569308400"; 
-   d="scan'208";a="285920100"
-Received: from sgsxdev001.isng.intel.com (HELO localhost) ([10.226.88.11])
-  by orsmga001.jf.intel.com with ESMTP; 06 Nov 2019 23:36:57 -0800
-From:   Rahul Tanwar <rahul.tanwar@linux.intel.com>
-To:     linus.walleij@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com
-Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, robh@kernel.org,
-        andriy.shevchenko@intel.com, qi-ming.wu@intel.com,
-        yixin.zhu@linux.intel.com, cheol.yong.kim@intel.com,
-        Rahul Tanwar <rahul.tanwar@linux.intel.com>
-Subject: [PATCH v4 2/2] dt-bindings: pinctrl: intel: Add for new SoC
-Date:   Thu,  7 Nov 2019 15:36:45 +0800
-Message-Id: <778f21b09fabd2fdafeeeb325b35df35ab222690.1573111648.git.rahul.tanwar@linux.intel.com>
-X-Mailer: git-send-email 2.11.0
-In-Reply-To: <cover.1573111648.git.rahul.tanwar@linux.intel.com>
-References: <cover.1573111648.git.rahul.tanwar@linux.intel.com>
-In-Reply-To: <cover.1573111648.git.rahul.tanwar@linux.intel.com>
-References: <cover.1573111648.git.rahul.tanwar@linux.intel.com>
+        id S1726991AbfKGH4P (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 7 Nov 2019 02:56:15 -0500
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:35663 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727415AbfKGH4P (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 7 Nov 2019 02:56:15 -0500
+Received: by mail-lf1-f66.google.com with SMTP id y6so850951lfj.2
+        for <linux-gpio@vger.kernel.org>; Wed, 06 Nov 2019 23:56:14 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=7mVzEAC3PYZ6lpwiL+xf/9aZ7Qv1sjEzD+JY+8MBtWg=;
+        b=o/vg6xLElk2f7BrBS3YYNQnsdnM6poifIjeLagf3IT4HY0bFneDxgynYdByIcS7dHo
+         EzLmS6pL/TyvIYJdQEOzBEsnwOAM7Njv1CFAh7AuC54CbmAw47HZJmHVO7et+nczCN+W
+         7+8o/Voh8wDjNUOFjhCx4CMK4KOz+BHiUSJCtkBLzC40fA5Qb0zg2BvUW7Hm+07pAMXB
+         0lLuQBKWtKJ5TGKj2EMx7k5O722aqWp0xbmm+Bc3j5P+DXUw2Q0hnvWWj88ZONlxPSjo
+         npqEAZU/xnP17zcGp5HbfLkqVBsC7eilbm/0NAMCMG057MaAubYC5365OtbgJSB2ih+c
+         McEw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=7mVzEAC3PYZ6lpwiL+xf/9aZ7Qv1sjEzD+JY+8MBtWg=;
+        b=j0pS/dxglx5BTsZRPblghEgB61U0qAi3Yk+BN6iGQ73x88E8J+FsoUXMtJz2R+Znw7
+         s2tAkh5FtXg1Gu6mkzr37TY7um+6mlc0y4cBOolk6ioC04qXiuEKb34uTloVvSz1S7Nm
+         jS30BFOVcXJhmrXSV1spajzOXoWHVliX1B2znyjQ4C8IsZktLICUGWYJ9QjfSoehfsis
+         SIsTjr23HGneum1NCm/XddGtBCtw4b33vcUOXVPYnQADnGf8LjQFwHY8AxtsxuKUiBlR
+         L+AHHwjklxkK+p+85eZvN3/pnxm8Q+NvzFC0QG+J/sFxo8UP1Uh4Uv4XbE2Z3mGSnsrg
+         lZ1A==
+X-Gm-Message-State: APjAAAU8CeGT3AcGX9EtrYUPOXJykX4MH/Rt3HV2MgltlLigRbcMoDnK
+        J5uXTrL/WEEgg7EyuslnGC3mXAnbnsntV9/petGfhJh/F+c=
+X-Google-Smtp-Source: APXvYqz/ohb7JsLP5oPlc3mF5OTWP6CRzEQS9/wJ3HgdeOitF87zrMa4v8J9ow3u2rGgz4TVrAbl+ne6JhgEadI2dHA=
+X-Received: by 2002:ac2:51dd:: with SMTP id u29mr1354160lfm.135.1573113373506;
+ Wed, 06 Nov 2019 23:56:13 -0800 (PST)
+MIME-Version: 1.0
+References: <20191105124915.34100-1-broonie@kernel.org>
+In-Reply-To: <20191105124915.34100-1-broonie@kernel.org>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Thu, 7 Nov 2019 08:56:02 +0100
+Message-ID: <CACRpkdYps-xADSrObMyF4bMK8vm0bbE+d_o2V9W4iTFBTYBmTg@mail.gmail.com>
+Subject: Re: [PATCH] gpio: xgs-iproc: Fix section mismatch on device tree
+ match table
+To:     Mark Brown <broonie@kernel.org>
+Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Chris Packham <chris.packham@alliedtelesis.co.nz>,
+        bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Add dt bindings document for pinmux & GPIO controller driver of
-Intel Lightning Mountain SoC.
+On Tue, Nov 5, 2019 at 1:49 PM Mark Brown <broonie@kernel.org> wrote:
 
-Signed-off-by: Rahul Tanwar <rahul.tanwar@linux.intel.com>
----
- .../bindings/pinctrl/intel,lgm-pinctrl.yaml        | 104 +++++++++++++++++++++
- 1 file changed, 104 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/pinctrl/intel,lgm-pinctrl.yaml
+> The table of devicetree identifiers is annotated as __initconst
+> indicating that it can be discarded after kernel boot but it is
+> referenced from the driver struct which has no init annotation leading
+> to a linker warning:
+>
+> WARNING: vmlinux.o(.data+0x82d58): Section mismatch in reference from the variable bcm_iproc_gpio_driver to the variable .init.rodata:bcm_iproc_gpio_of_match
+> The variable bcm_iproc_gpio_driver references
+> the variable __initconst bcm_iproc_gpio_of_match
+>
+> Since drivers can be probed after init the lack of annotation on the
+> driver struct is correct so remove the annotation from the match table.
+>
+> Signed-off-by: Mark Brown <broonie@kernel.org>
 
-diff --git a/Documentation/devicetree/bindings/pinctrl/intel,lgm-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/intel,lgm-pinctrl.yaml
-new file mode 100644
-index 000000000000..73e456ee0fc7
---- /dev/null
-+++ b/Documentation/devicetree/bindings/pinctrl/intel,lgm-pinctrl.yaml
-@@ -0,0 +1,104 @@
-+# SPDX-License-Identifier: GPL-2.0-only
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/bindings/pinctrl/intel,lgm-pinctrl.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Intel Lightning Mountain SoC pinmux & GPIO controller binding
-+
-+maintainers:
-+  - Rahul Tanwar <rahul.tanwar@linux.intel.com>
-+
-+description: |
-+  Pinmux & GPIO controller controls pin multiplexing & configuration including
-+  GPIO function selection & GPIO attributes configuration.
-+
-+  Please refer to [1] for details of the common pinctrl bindings used by the
-+  client devices.
-+
-+  [1] Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt
-+
-+properties:
-+  compatible:
-+    const: intel,lgm-pinctrl
-+
-+  reg:
-+    maxItems: 1
-+
-+# Client device subnode's properties
-+patternProperties:
-+  '-pins$':
-+    type: object
-+    description:
-+      Pinctrl node's client devices use subnodes for desired pin configuration.
-+      Client device subnodes use below standard properties.
-+
-+    properties:
-+      function:
-+        $ref: /schemas/types.yaml#/definitions/string
-+        description:
-+          A string containing the name of the function to mux to the group.
-+
-+      groups:
-+        $ref: /schemas/types.yaml#/definitions/string-array
-+        description:
-+          An array of strings identifying the list of groups.
-+
-+      pins:
-+        $ref: /schemas/types.yaml#/definitions/uint32-array
-+        description:
-+          List of pins to select with this function.
-+
-+      pinmux:
-+        description: The applicable mux group.
-+        allOf:
-+          - $ref: "/schemas/types.yaml#/definitions/uint32"
-+          - enum:
-+              - 0 #PINMUX_GPIO
-+              - 1
-+              - 2
-+              - 3
-+              - 4
-+
-+      bias-pull-up:
-+        type: boolean
-+      bias-pull-down:
-+        type: boolean
-+      drive-strength:
-+        type: boolean
-+      slew-rate:
-+        type: boolean
-+      drive-open-drain:
-+        type: boolean
-+      output-enable:
-+        type: boolean
-+
-+    required:
-+      - function
-+      - groups
-+
-+required:
-+  - compatible
-+  - reg
-+
-+additionalProperties: false
-+
-+examples:
-+  # Pinmux controller node
-+  - |
-+    pinctrl: pinctrl@e2880000 {
-+          compatible = "intel,lgm-pinctrl";
-+          reg = <0xe2880000 0x100000>;
-+
-+          # Client device subnode
-+          uart0-pins: uart0 {
-+                pins = <64>, /* UART_RX0 */
-+                       <65>; /* UART_TX0 */
-+                function = "CONSOLE_UART0";
-+                pinmux = <1>,
-+                         <1>;
-+                groups = "CONSOLE_UART0";
-+          };
-+    };
-+
-+...
--- 
-2.11.0
+Oh thanks a LOT Mark!
 
+Hurriedly applied this with the ACKs and pushed out so
+linux-next starts working.
+
+Quite interesting bug, I guess I'll comment on it in the other
+thread.
+
+Yours,
+Linus Walleij
