@@ -2,77 +2,80 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 04048F2929
-	for <lists+linux-gpio@lfdr.de>; Thu,  7 Nov 2019 09:33:35 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 1D1C9F2A25
+	for <lists+linux-gpio@lfdr.de>; Thu,  7 Nov 2019 10:07:26 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726800AbfKGIde (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 7 Nov 2019 03:33:34 -0500
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:42860 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726734AbfKGIde (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 7 Nov 2019 03:33:34 -0500
-Received: by mail-lj1-f196.google.com with SMTP id n5so1244499ljc.9
-        for <linux-gpio@vger.kernel.org>; Thu, 07 Nov 2019 00:33:32 -0800 (PST)
+        id S2387611AbfKGJHY (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 7 Nov 2019 04:07:24 -0500
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:35046 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726800AbfKGJHY (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 7 Nov 2019 04:07:24 -0500
+Received: by mail-lj1-f195.google.com with SMTP id r7so1391447ljg.2
+        for <linux-gpio@vger.kernel.org>; Thu, 07 Nov 2019 01:07:22 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to;
-        bh=8ek09VPNO3gzdUGFBF3TCaBfdeVrnQreDy75VidkR8k=;
-        b=iCIsC9jQ0h7fRCERESyv7qHVa1VfMPNIEi6ybyNfm3mavXJ2bKPuVK0YJFbRRfKZ5v
-         F2jxkUIuVnnrLRXc30fmGVSe+EtmGaIDStPjPgRXYZtT8qAsMvN5UUh/dH4F/iBn09Io
-         /ekD7tQMfPbsAzKmdNB0OxxY5eN7Xib8Y7ehxvjYMBU3ER43wCykG+8vJKSqWsSlngWC
-         v3YzvI2L1pproqIJwQ1QQRr3zd0kiLd842yuaOWhtttnkGgeCZV3e9wChplDJSWbkbER
-         /hE9xlN4GhQ4HAPt0PmwmwX4L+nEKFpKVavCUUuUXXizUn1DsMgr+RaFhRzDuhV3r5SB
-         3tOg==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=4r2I4GWCi4/JcKwrvsl/b6YhN/4C3j/fmn4xKNtK0ZQ=;
+        b=ux2FovIcG1zE1vslYMh2o/uYdWYD97faEpyQnorZ9gkQPiRWvlS2RTooMZAxvF3su+
+         OqoHPDmvTUAi47XsDElIJWqgC3LO7i9KEuHpeu7FdNJRgfNfkzqPuAqSyPGzHXjMB3B6
+         q9wjlHMeQgdsM7gIdR9S7L9ABnXjRR3GhZaPvwnscJwgO+QS/Eipa1O756bS8o8tMYgR
+         uPt/rdMsJw77oSkg6k4BQQLd2cS3JqRU6ZzLbEl1CJ0K0AT0BeYhuoBj1UyAfOdehm9A
+         YKs0s1JZ16Km5J4MR2gu5hILMegt1bUWBpQOx3xf72iFOTqNaIeQ7vGXgdOpXJ5gKTRF
+         /4Kg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to;
-        bh=8ek09VPNO3gzdUGFBF3TCaBfdeVrnQreDy75VidkR8k=;
-        b=IbabdW5biKewsSSRiAI6ab5Ce1+fl5yEm/+x3NOdi+aHddnNZDUopcoaWRcs0yVDcH
-         CjQs+XfRepmaBe+Yh/1+VK2jMr0QVic33pUM1XvGf2p64NBuHHlSNgFiAR8gKPcdDllP
-         DabAnZVVZNaZdrB3xpjGwe31J+7gGiXK+5MW2qtabvY6D56PY4cF9VPyNSIkIhmjUH9n
-         XwsASedZhbSbfeojM7Zh57A9HSrAXkp56dcmQEdLwmv8RjJOGVX4NdVPgB6ZfNZ46NPr
-         WaamspiTbNvYXBle50jTQPK7DictoNuRmg6i7aKYeSV0rExOGoC80BFXJ1yd6/1OX+kY
-         C1HA==
-X-Gm-Message-State: APjAAAW7C3pFZQ1VMAoYlG3nuWTiy04/F3BPFWZBN5Wzf92/dwhfE2WP
-        08ZPf3+a8bSUji3Ue4UcBDXd5L1Cl9rJf0t3fcI+ettLS5Y=
-X-Google-Smtp-Source: APXvYqy3fnhxCS+cSxF49rMSA9qUAdNpF3G5sfzA0e4O7PW8nFLwtb24eO1HlsGaUciuxkXxiUvyYeQ+C+p37lsomlA=
-X-Received: by 2002:a2e:9a12:: with SMTP id o18mr1393623lji.191.1573115612016;
- Thu, 07 Nov 2019 00:33:32 -0800 (PST)
+         :message-id:subject:to:cc;
+        bh=4r2I4GWCi4/JcKwrvsl/b6YhN/4C3j/fmn4xKNtK0ZQ=;
+        b=aAjgcQJxL9HzoCUZETL+weqc7gHXZEh0KlivHM3nPa4YSmhxgDbuFciP1MHUQ/PR2j
+         Yn2phiqo1VKUu8kE+k52PmldAD7EGetZuI3Y4lIRkWAnrMo9wMz8LdQkrRQWbmZoxAhf
+         uKACcmxIKnSywxi6mJ/G1AGRpAQ0zT/Y9rf9aQ/AlLCJ6yOVovYTR7/6d0RZza/n9xF0
+         dEdtlPcGhx3uSHEKNz/rQWPrANmx26hElBVjQ6hSo+2Hc/dSLuCCvNSrIhjSc5irrjkb
+         Dzf2qIKvBcd17aag7ID7cfgrBDVv/cKK4ybEH/VS1uho7T2eCrpTt6l3MfTIpkC/Rbqj
+         /USw==
+X-Gm-Message-State: APjAAAUeDaGCs60mXKvd8FIFSm9ctoNvW3tTThDTvPt1qbS67Fb4S2qJ
+        1ddEhsEe1C3S7rMWRCCa1nJysHeqjl2rAa4BtDVPqw==
+X-Google-Smtp-Source: APXvYqwocIIrCbyry8zer+NUwVaV5Dx7e3lBotAXLq/eYxTJbRgLBTjLohnii7mCSBObKiM3W3u/8TT7mvEO2yLrxeg=
+X-Received: by 2002:a05:651c:1202:: with SMTP id i2mr1583378lja.218.1573117642202;
+ Thu, 07 Nov 2019 01:07:22 -0800 (PST)
 MIME-Version: 1.0
-References: <cover.1573029228.git.matti.vaittinen@fi.rohmeurope.com> <42f40109e2926bca197b30fd9624c609653b23e5.1573029228.git.matti.vaittinen@fi.rohmeurope.com>
-In-Reply-To: <42f40109e2926bca197b30fd9624c609653b23e5.1573029228.git.matti.vaittinen@fi.rohmeurope.com>
+References: <20191104100908.10880-1-amelie.delaunay@st.com>
+In-Reply-To: <20191104100908.10880-1-amelie.delaunay@st.com>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Thu, 7 Nov 2019 09:33:20 +0100
-Message-ID: <CACRpkdZWhN94dd=5vPH+oqdKb69FXdXV_szJEanuX18MNsnxSg@mail.gmail.com>
-Subject: Re: [PATCH v2 2/2] gpio: Use new GPIO_LINE_DIRECTION
-To:     Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
+Date:   Thu, 7 Nov 2019 10:07:10 +0100
+Message-ID: <CACRpkdbFyTV_8aJko8r1+2vXohHfwoJy8ujTofUC0ruG1PeviA@mail.gmail.com>
+Subject: Re: [PATCH 1/1] pinctrl: stmfx: fix valid_mask init sequence
+To:     Amelie Delaunay <amelie.delaunay@st.com>
+Cc:     Alexandre Torgue <alexandre.torgue@st.com>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        linux-stm32@st-md-mailman.stormreply.com
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Nov 6, 2019 at 9:54 AM Matti Vaittinen
-<matti.vaittinen@fi.rohmeurope.com> wrote:
+On Mon, Nov 4, 2019 at 11:09 AM Amelie Delaunay <amelie.delaunay@st.com> wrote:
 
-> It's hard for occasional GPIO code reader/writer to know if values 0/1
-> equal to IN or OUT. Use defined GPIO_LINE_DIRECTION_IN and
-> GPIO_LINE_DIRECTION_OUT to help them out.
+> With stmfx_pinctrl_gpio_init_valid_mask callback, gpio_valid_mask was used
+> to initialize gpiochip valid_mask for gpiolib. But gpio_valid_mask was not
+> yet initialized. gpio_valid_mask required gpio-ranges to be registered,
+> this is the case after gpiochip_add_data call. But init_valid_mask
+> callback is also called under gpiochip_add_data. gpio_valid_mask
+> initialization cannot be moved before gpiochip_add_data because
+> gpio-ranges are not registered.
+> So, it is not possible to use init_valid_mask callback.
+> To avoid this issue, get rid of valid_mask and rely on ranges.
 >
-> NOTE - for gpio-amd-fch and gpio-bd9571mwv:
-> This commit also changes the return value for direction get to equal 1
-> for direction INPUT. Prior this commit these drivers might have
-> returned some other positive value but 1 for INPUT.
->
-> Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-> Acked-by: Scott Branden <scott.branden@broadcom.com>
-> Reviewed-by: Grygorii Strashko <grygorii.strashko@ti.com>
-> Reviewed-by: Michal Simek <michal.simek@xilinx.com>
-> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> Fixes: da9b142ab2c5 ("pinctrl: stmfx: Use the callback to populate valid_mask")
+> Signed-off-by: Amelie Delaunay <amelie.delaunay@st.com>
 
-Patch applied.
+Patch applied for fixes.
 
 Yours,
 Linus Walleij
