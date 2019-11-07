@@ -2,123 +2,99 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id C410BF22EA
-	for <lists+linux-gpio@lfdr.de>; Thu,  7 Nov 2019 00:56:28 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 6FFFAF23A1
+	for <lists+linux-gpio@lfdr.de>; Thu,  7 Nov 2019 01:54:10 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727504AbfKFX42 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 6 Nov 2019 18:56:28 -0500
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:35247 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727498AbfKFX41 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 6 Nov 2019 18:56:27 -0500
-Received: by mail-pg1-f196.google.com with SMTP id q22so320456pgk.2
-        for <linux-gpio@vger.kernel.org>; Wed, 06 Nov 2019 15:56:27 -0800 (PST)
+        id S1727984AbfKGAyJ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 6 Nov 2019 19:54:09 -0500
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:35186 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727393AbfKGAyJ (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 6 Nov 2019 19:54:09 -0500
+Received: by mail-lf1-f66.google.com with SMTP id y6so183501lfj.2;
+        Wed, 06 Nov 2019 16:54:07 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=6BEdL5JGqsEW5n9UTJuRpjh0YKyuOs7hLwthZXwVm9E=;
-        b=lYTMadoQUYJSVqrGNGrg1BVtLh998UlTpOaxjgLro27JUcIKKpDWs0rcFojyJK3PXp
-         ARyaf9t6v8BysngFMgrD2hQgWw+RLgp+2rnkmgsyiESi3ckQsKRNQw5l8RpWNegzQAEg
-         E3DZPungtEekuViwS/cjHDQovAoOcfsmf3vc9bR9AEPmfC1HBPOjkc5/rWD83r4JCIkG
-         OYBSUzugEQSX3ZBkA9Wet6zjgRgC/KCRKeFVY9l0U81oCKOBbDjNtZBkjW5NYNciWpe/
-         w5+cT00sITVIsUM8Ms9NmD8kC0fOApUmHH/Og7JGn+lq8wDkrcntUSxuvfuHV0NoRuuJ
-         fQOg==
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=WQhkDsKZrkd8TdxE2xc3dtoaBDRq8YTpJQNlzZYmMQw=;
+        b=GCq9q+Few97eqD4meVi9vr6WXF86OJWKPepBpJq2bST6zm532Bf+rW18Vv/GFWldBQ
+         x23hBWeI563PFN4/5Jz8qPQEa7utPzvJcVfne9cywHFgiRbhiYZJWpeupr4BpH86JubU
+         tX6S2yzfsKyboUJ5rfZpHNXbbRxr8ieGiQUMtHL4XtmJybGmuj4YuoDzwXQNWH7BBdMO
+         x39BGyk4Ap/TzrRuGrm8j+VR+7mO6B+u4Daz2AkfGT5LHRE+/7DJN2V3zyPppfE3rpgH
+         ++qtEMpxzSEfkUZUDvS9SMIO/FXadF6FirpIEV8EvaA2quWfJKFpSa+6APIpswftHG0V
+         sfiA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=6BEdL5JGqsEW5n9UTJuRpjh0YKyuOs7hLwthZXwVm9E=;
-        b=dupt6Sm3Lztrz+5x1a2/pwFwHFjdmAw+7BHWoTCD8kVzN3iovrQr8oPVTWXF1/5h6J
-         XIpuxwZMjA8xoT0Kelu0sy165q+fagJYsL7kRW31lffEY4rHI8ZZCwXKGGt58+ulcNyc
-         n0VRuigMTdIyUhL3+UBDPIcnyfLgwN4fSZJYfqHSFPBSSRcFdcLRnkAud5ZEMuRZ5pD4
-         xOOw6GcESBMktgokpeNKn33rMmbbn427XBSHNywjw9ivoMWVkLOPujp5HD0LdkQLC+sn
-         exGCqvzqdk6jJ3Y6Wj21cnR0b3Wc2oWaKg6+povtEVtLFDJcMmZFg/bXGf9rrSrFM+b4
-         Y2xA==
-X-Gm-Message-State: APjAAAWJLbtZTAVLPM1K1kAuVv0UmbuH7EV559i+/t4aRU6IbeZ1HtRh
-        lF5uNCewEcx+bIuW8NstpxU=
-X-Google-Smtp-Source: APXvYqzxKtM+zFrSESjT/cFDaRwqBf0ejkJ4iT1aKMf0Awu9gAEPBQZH55rT6I2x7E0HGbS4m12Q6A==
-X-Received: by 2002:a17:90a:bf04:: with SMTP id c4mr796227pjs.5.1573084586868;
-        Wed, 06 Nov 2019 15:56:26 -0800 (PST)
-Received: from sol (220-235-109-115.dyn.iinet.net.au. [220.235.109.115])
-        by smtp.gmail.com with ESMTPSA id f5sm53654pjq.24.2019.11.06.15.56.23
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 06 Nov 2019 15:56:26 -0800 (PST)
-Date:   Thu, 7 Nov 2019 07:56:20 +0800
-From:   Kent Gibson <warthog618@gmail.com>
-To:     Drew Fustini <drew@pdp7.com>
-Cc:     linux-gpio@vger.kernel.org, bgolaszewski@baylibre.com,
-        linus.walleij@linaro.org, bamv2005@gmail.com,
-        thomas.petazzoni@bootlin.com
-Subject: Re: [PATCH v6 4/7] gpiolib: add support for biasing output lines
-Message-ID: <20191106235620.GA4998@sol>
-References: <20191105020429.18942-1-warthog618@gmail.com>
- <20191105020429.18942-5-warthog618@gmail.com>
- <20191106193931.GA3347@x1>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=WQhkDsKZrkd8TdxE2xc3dtoaBDRq8YTpJQNlzZYmMQw=;
+        b=TLdh/gNVKij56gmGcXENtWxZ+1GRIhP4yf9xY1xoTD4H2sStJlkBlUqBz4JWNEWflj
+         6shdtvkmwxlBX+WsxriXf9scKWZqDDCMKi+xJ80hf7XvPweR6nVfjIbfsmbGm0jD8hox
+         l29nDgPY7//Rq/qFyuXkAw8UMwXhgPJCRJoNQhkhcey6BrpOHJt+HnXe8tEXZmAoUnbs
+         IKUpWfcnuJfyRTeWf+WdEzOzOowE26RFmi8zrkPb6vZ2sVh175cZPUhEXwujje8uymqV
+         ogpn2J7jZi+Nl4RMskm5JmBiT9fVfvRfQ8CEEP9t9eu9BGdQinJb07QVM9QWWlhpjWH/
+         88fg==
+X-Gm-Message-State: APjAAAWOuEhrXjRb5wjvLpo7hR8nG8/hdDbvHFeDexQqOMBdv8MeptC1
+        SIo2LctMpM9zlGEAfJU+1ivsIP4x
+X-Google-Smtp-Source: APXvYqwSDxsXmzI4SWeAa6XTM1UPrLMKJFFjcYjACzxgTxJr0xgjPyPe8Ycsw9Y3hBHkx1n12bZAOA==
+X-Received: by 2002:a19:820e:: with SMTP id e14mr210299lfd.29.1573088046030;
+        Wed, 06 Nov 2019 16:54:06 -0800 (PST)
+Received: from [192.168.2.145] (94-29-10-250.dynamic.spd-mgts.ru. [94.29.10.250])
+        by smtp.googlemail.com with ESMTPSA id f25sm198094lfm.26.2019.11.06.16.54.03
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 06 Nov 2019 16:54:04 -0800 (PST)
+Subject: Re: [PATCH v9 07/22] clk: Add API to get index of the clock parent
+To:     Stephen Boyd <sboyd@kernel.org>,
+        Sowjanya Komatineni <skomatineni@nvidia.com>,
+        jason@lakedaemon.net, jonathanh@nvidia.com,
+        linus.walleij@linaro.org, marc.zyngier@arm.com,
+        mark.rutland@arm.com, stefan@agner.ch, tglx@linutronix.de,
+        thierry.reding@gmail.com
+Cc:     pdeschrijver@nvidia.com, pgaikwad@nvidia.com,
+        linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org,
+        jckuo@nvidia.com, josephl@nvidia.com, talho@nvidia.com,
+        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org,
+        mperttunen@nvidia.com, spatra@nvidia.com, robh+dt@kernel.org,
+        devicetree@vger.kernel.org, rjw@rjwysocki.net,
+        viresh.kumar@linaro.org, linux-pm@vger.kernel.org
+References: <1565984527-5272-1-git-send-email-skomatineni@nvidia.com>
+ <1565984527-5272-8-git-send-email-skomatineni@nvidia.com>
+ <20191106231005.F2CD820869@mail.kernel.org>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <fcc43ccb-8c6e-d518-4c70-503501706ffd@gmail.com>
+Date:   Thu, 7 Nov 2019 03:54:03 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191106193931.GA3347@x1>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20191106231005.F2CD820869@mail.kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Nov 06, 2019 at 11:39:31AM -0800, Drew Fustini wrote:
-> On Tue, Nov 05, 2019 at 10:04:26AM +0800, Kent Gibson wrote:
-> > Allow pull up/down bias to be set on output lines.
-> > Use case is for open source or open drain applications where
-> > internal pull up/down may conflict with external biasing.
-> > 
-> > Signed-off-by: Kent Gibson <warthog618@gmail.com>
-> > ---
-> >  drivers/gpio/gpiolib.c | 8 ++++++--
-> >  1 file changed, 6 insertions(+), 2 deletions(-)
-> 
-> I'm not sure if I am doing something wrong but I can't seem to apply this patch
-> from the series.
-> 
-> I checked out brgl/gpio/for-next.  I opened this mailbox from lore in mutt:
-> https://lore.kernel.org/linux-gpio/20191105231533.GA3478@sol/t.mbox.gz
-> 
-> And then I saved each message in the v6 series so I could run 'git am' on each.
-> I thought I should be able to run git am on the whole mailbox file but I wasn't
-> sure if the cover letter and replies would cause a problem.
-> 
-> I'd appreciate any suggestions as to how I can resolve this:
-> 
-> pdp7@x1:~/linux$ git checkout -b brgl-gpio-for-next brgl/gpio/for-next 
+07.11.2019 02:10, Stephen Boyd пишет:
+> Quoting Sowjanya Komatineni (2019-08-16 12:41:52)
+>> This patch adds an API clk_hw_get_parent_index to get index of the
+>> clock parent to use during the clock restore operations on system
+>> resume.
+>  
+> Is there a reason we can't save the clk hw index at suspend time by
+> reading the hardware to understand the current parent? The parent index
+> typically doesn't matter unless we're trying to communicate something
+> from the framework to the provider driver. Put another way, I would
+> think the provider driver can figure out the index itself without having
+> to go through the framework to do so.
 
-As per the cover note, v6 is based on brgl/gpio/for-kent, not brgl/gpio/for-next:
+Isn't it a bit wasteful to duplicate information about the parent within
+a provider if framework already has that info? The whole point of this
+new API is to allow providers to avoid that unnecessary duplication.
 
- The changes from v5:
-  - rebased onto Bart's gpio/for-kent branch.
- 
-That is the only diff between v5 and v6.  Ironically you should be
-applying v5 to your branch :)
+Please note that clk_hw_get_parent_index is getting used only at the
+resume time and not at suspend.
 
-Specifically, in my branch the v6 patch is applied to 
-
-e812692b6e9c (brgl/gpio/for-kent) gpio: rcar: Use proper irq_chip name
-
-which is still the HEAD at time of writing.
-
-Applying the patch to for-next also breaks for me at 0004, so your 
-patches are probably ok.
-
-You aren't the only one wondering if there is an easier way to apply patches
-from lore, especially when there are additional replies in the thread.
-To write my demo showing how anyone, not just those that received the 
-patches by mail, can rebase v5 onto for-kent to get v6, I ended up 
-downloading the mbox.gz, and unzipping and removing the cruft from it.
-Fortunately the mbox is chronological, so it was just removing the cover
-note and then everything after patch 7.
-
-Surely there is a better way to do this?
-Is there a filter for lore or some tool out there that can filter
-the returned mbox for you?
-
-Cheers,
-Kent.
-
+[snip]
