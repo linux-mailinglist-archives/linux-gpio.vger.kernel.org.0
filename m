@@ -2,79 +2,146 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 7A9C1F4D5B
-	for <lists+linux-gpio@lfdr.de>; Fri,  8 Nov 2019 14:39:47 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A7BE6F4E43
+	for <lists+linux-gpio@lfdr.de>; Fri,  8 Nov 2019 15:39:19 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727677AbfKHNjq (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 8 Nov 2019 08:39:46 -0500
-Received: from mga09.intel.com ([134.134.136.24]:6424 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726445AbfKHNjq (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Fri, 8 Nov 2019 08:39:46 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 Nov 2019 05:39:45 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.68,281,1569308400"; 
-   d="scan'208";a="201355734"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by fmsmga008.fm.intel.com with ESMTP; 08 Nov 2019 05:39:43 -0800
-Received: from andy by smile with local (Exim 4.93-RC1)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1iT4UI-0004be-RE; Fri, 08 Nov 2019 15:39:42 +0200
-Date:   Fri, 8 Nov 2019 15:39:42 +0200
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Hans de Goede <hdegoede@redhat.com>
-Subject: Re: [RESEND][PATCH v2 0/7] gpiolib: fix GPIO <-> pin mapping
- registration
-Message-ID: <20191108133942.GH32742@smile.fi.intel.com>
-References: <20191105203557.78562-1-andriy.shevchenko@linux.intel.com>
- <20191106173055.GQ32742@smile.fi.intel.com>
- <CACRpkdaAxY-8A7gindeA8fsQ9rEdnwp8k90CyULxNs4J5VBSBw@mail.gmail.com>
+        id S1726900AbfKHOjS (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 8 Nov 2019 09:39:18 -0500
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:40634 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726036AbfKHOjS (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 8 Nov 2019 09:39:18 -0500
+Received: by mail-wm1-f65.google.com with SMTP id f3so6456695wmc.5
+        for <linux-gpio@vger.kernel.org>; Fri, 08 Nov 2019 06:39:17 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernelci-org.20150623.gappssmtp.com; s=20150623;
+        h=message-id:date:mime-version:content-transfer-encoding:subject:to
+         :from;
+        bh=Sts/ciw8qcmEXytLknvIwDzunxYauek0OKi0Y9hW1tA=;
+        b=Dd6dYrlPw87TC4EwSNUQsKW0oOsje3QJHZW0DE0Gl/U5e6H4WNDWWNnmukq5DIwngA
+         ts5XFSWyHxxING2C1JFH4IxR1ywH+WMZ+zID0B/XCOFTwKT2AVLZvzXjvGZoXfafsyoN
+         MS8Ow8tIlfNUnNCgNKTZU0qsVouKUkksHoZOnrjqdQ1/tdgBOo2AfihFCABhg0nn/nDr
+         ZRHLrVOscHlYjUwTnp2aaG2cF2Lf00QqUP57p71Q+XfQQVdSuFMVqQyzoFQr7pYLMrFz
+         3CAf2raiXLLisAx+fkpK1C1rBJE5S+j5VxOpu0Lxq3UgXScNeAZc5R02jCa/ItMKLT4Y
+         ncvQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:date:mime-version
+         :content-transfer-encoding:subject:to:from;
+        bh=Sts/ciw8qcmEXytLknvIwDzunxYauek0OKi0Y9hW1tA=;
+        b=UDfG1JdisiTKG3CwhkOcbyE7kN9VBc7l1gNr8otGSTT4goc5OhmwOvUibz9Yn/MvFH
+         LACChUZijx7JfmMbf6mANYxgvOF8ugSIkz/3thbvKks2OEnN9mzHVmzGrU59nwMNWi1P
+         /5klJVntc2DKmPGEYtTPmg4HqHvn0GMZmzpV2k5VGUKrN3Jslky9PblMVelSseSuVcfj
+         mxoNjh/dAdcNR1wvyQxxZaGiCMSSGt6sL+XaoRWp9qxYnjaRlEVLZjG29KsXvgpzgQzH
+         9I9aab/edArLDr2208EyxSycJtZKSXgMFTocx6VoTk2j7OJH4Ik0nGL5W9+pK3jovhAv
+         VAfQ==
+X-Gm-Message-State: APjAAAX98kDemekoPXzicv1+fLYGYvl0lWiaUeoYtjorJrtCsRZYCZTG
+        BZxQvd2sQT/DfMwWNqF6EFOw/Kgg6ZOF0w==
+X-Google-Smtp-Source: APXvYqyzmL91SG+yM9QmZ4oHoByL7HXnVDtawTmqedfCVHUTd5H6t2l47eImbgZ/5K3RjxiJRy54Fg==
+X-Received: by 2002:a05:600c:2253:: with SMTP id a19mr8575135wmm.97.1573223956248;
+        Fri, 08 Nov 2019 06:39:16 -0800 (PST)
+Received: from [148.251.42.114] ([2a01:4f8:201:9271::2])
+        by smtp.gmail.com with ESMTPSA id b17sm6152772wrr.37.2019.11.08.06.39.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 08 Nov 2019 06:39:15 -0800 (PST)
+Message-ID: <5dc57e13.1c69fb81.d574f.0c17@mx.google.com>
+Date:   Fri, 08 Nov 2019 06:39:15 -0800 (PST)
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CACRpkdaAxY-8A7gindeA8fsQ9rEdnwp8k90CyULxNs4J5VBSBw@mail.gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: quoted-printable
+X-Kernelci-Branch: for-next
+X-Kernelci-Tree: linusw
+X-Kernelci-Report-Type: build
+X-Kernelci-Kernel: v5.4-rc6-44-g6b240aeb121e
+Subject: linusw/for-next build: 6 builds: 0 failed, 6 passed,
+ 3 warnings (v5.4-rc6-44-g6b240aeb121e)
+To:     linux-gpio@vger.kernel.org, fellows@kernelci.org
+From:   "kernelci.org bot" <bot@kernelci.org>
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Nov 08, 2019 at 10:40:47AM +0100, Linus Walleij wrote:
-> On Wed, Nov 6, 2019 at 6:30 PM Andy Shevchenko
-> <andriy.shevchenko@linux.intel.com> wrote:
-> 
-> > Linus, I think it would be good if we have first 3 (okay, I noticed you have
-> > pushed first one to your devel branch) patches to go to v5.4. It will reduce
-> > dependency burden in v5.5.
-> 
-> At this point in the kernel release cycle I can really only apply
-> patches for serious regressions. That's the policy I need to keep
-> to.
-> 
-> It also causes a problem if I put dependencies on Torvald's
-> tree this late in the kernel cycle, because I need to get the
-> changes back into my tree in order to base new stuff on them.
-> I can't really do that until he releases an -rc that I can merge
-> back.
-> 
-> At this point I'd maybe have to merge back v5.4 and that doesn't
-> feel good at all.
-> 
-> So far I applied patches 1 & 2 for v5.5.
+linusw/for-next build: 6 builds: 0 failed, 6 passed, 3 warnings (v5.4-rc6-4=
+4-g6b240aeb121e)
 
-Thanks! Does it mean that the rest is material for v5.6?
+Full Build Summary: https://kernelci.org/build/linusw/branch/for-next/kerne=
+l/v5.4-rc6-44-g6b240aeb121e/
 
--- 
-With Best Regards,
-Andy Shevchenko
+Tree: linusw
+Branch: for-next
+Git Describe: v5.4-rc6-44-g6b240aeb121e
+Git Commit: 6b240aeb121ec14a528a58413baa9a74f8749604
+Git URL: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-gpio.=
+git/
+Built: 6 unique architectures
+
+Warnings Detected:
+
+arc:
+    nsim_hs_defconfig (gcc-8): 2 warnings
+
+arm64:
+
+arm:
+    multi_v7_defconfig (gcc-8): 1 warning
+
+mips:
+
+riscv:
+
+x86_64:
 
 
+Warnings summary:
+
+    2    <stdin>:1511:2: warning: #warning syscall clone3 not implemented [=
+-Wcpp]
+    1    WARNING: "return_address" [vmlinux] is a static EXPORT_SYMBOL_GPL
+
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D
+
+Detailed per-defconfig build reports:
+
+---------------------------------------------------------------------------=
+-----
+32r2el_defconfig (mips, gcc-8) =E2=80=94 PASS, 0 errors, 0 warnings, 0 sect=
+ion mismatches
+
+---------------------------------------------------------------------------=
+-----
+defconfig (riscv, gcc-8) =E2=80=94 PASS, 0 errors, 0 warnings, 0 section mi=
+smatches
+
+---------------------------------------------------------------------------=
+-----
+defconfig (arm64, gcc-8) =E2=80=94 PASS, 0 errors, 0 warnings, 0 section mi=
+smatches
+
+---------------------------------------------------------------------------=
+-----
+multi_v7_defconfig (arm, gcc-8) =E2=80=94 PASS, 0 errors, 1 warning, 0 sect=
+ion mismatches
+
+Warnings:
+    WARNING: "return_address" [vmlinux] is a static EXPORT_SYMBOL_GPL
+
+---------------------------------------------------------------------------=
+-----
+nsim_hs_defconfig (arc, gcc-8) =E2=80=94 PASS, 0 errors, 2 warnings, 0 sect=
+ion mismatches
+
+Warnings:
+    <stdin>:1511:2: warning: #warning syscall clone3 not implemented [-Wcpp]
+    <stdin>:1511:2: warning: #warning syscall clone3 not implemented [-Wcpp]
+
+---------------------------------------------------------------------------=
+-----
+x86_64_defconfig (x86_64, gcc-8) =E2=80=94 PASS, 0 errors, 0 warnings, 0 se=
+ction mismatches
+
+---
+For more info write to <info@kernelci.org>
