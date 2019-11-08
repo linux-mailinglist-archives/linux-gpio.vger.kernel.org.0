@@ -2,60 +2,49 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id F3BC6F59E2
-	for <lists+linux-gpio@lfdr.de>; Fri,  8 Nov 2019 22:31:11 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 96078F5A73
+	for <lists+linux-gpio@lfdr.de>; Fri,  8 Nov 2019 22:56:17 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726095AbfKHV3c (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 8 Nov 2019 16:29:32 -0500
-Received: from mail-io1-f66.google.com ([209.85.166.66]:40895 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731269AbfKHV3c (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 8 Nov 2019 16:29:32 -0500
-Received: by mail-io1-f66.google.com with SMTP id p6so7892655iod.7
-        for <linux-gpio@vger.kernel.org>; Fri, 08 Nov 2019 13:29:32 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=mRmwhSGnJWcbro1I2NsU98mvkk0pcwQPiXBcJRg/O6I=;
-        b=nKl15u10ItYfNUfRdfrOlRLJn71C4ibsqBZ/3P+B+74i1afpRcQqn+q6zc8jpdWfF/
-         4TlxJXWMVA2CzKaTu4/TkkDz/vWRfcJCJh6ToAyHjyRSfJH2cy+7BAFBE4bUdTXhkVpa
-         +vhUPS0fXQBcgMO/mJWo4oLl/GXv8laDO3g2E=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=mRmwhSGnJWcbro1I2NsU98mvkk0pcwQPiXBcJRg/O6I=;
-        b=tGKlKvaopvdr75J+7g3S4HQ6UtyzhKQLNJ+vbbha3dfGTKqPLDNra6K7Ez2lww5CPu
-         yHRoyyRL0JbagFOdZpos7zPVzHS9WKz0L0ButGVMT/7sWnYiTBYZUr7R9PyHH/6ua5ya
-         heCwg3fjuy1EAiMW4xQeGcjsIamXsyvXk4IjeIz90TGzQa0ELlAMvHlYNbg0EiyRg+5K
-         3cXr4l4OEh1L0gVVJY2NgVmutJlcZhKOYFUXLVKn5+0PWmodjHqp3rrSiX/FoEr/bs2c
-         t0QJP45cXz/reVC6cxhK3qNWzLybRWngEJLjzzHvXQXsacFHexx6PsWOzAx795BQYHVj
-         B76Q==
-X-Gm-Message-State: APjAAAWfr39bYmbomzWjeKuH0lI28AEvrsDQ3AeauFXw1bezZXhEN1h7
-        Ec9XFJuATN3P0qHDEBM/iGLnGNWWENU=
-X-Google-Smtp-Source: APXvYqy7wFl7NE6V4hRs7aXxJFjZTbjoNkgVvPmGPjw6bW4HDhDqA5UqRoLwTgbdgfWNatqkk+K+iA==
-X-Received: by 2002:a02:70c8:: with SMTP id f191mr13358393jac.117.1573248571331;
-        Fri, 08 Nov 2019 13:29:31 -0800 (PST)
-Received: from mail-io1-f54.google.com (mail-io1-f54.google.com. [209.85.166.54])
-        by smtp.gmail.com with ESMTPSA id z20sm510080iof.78.2019.11.08.13.29.30
-        for <linux-gpio@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 08 Nov 2019 13:29:30 -0800 (PST)
-Received: by mail-io1-f54.google.com with SMTP id k1so7916590ioj.6
-        for <linux-gpio@vger.kernel.org>; Fri, 08 Nov 2019 13:29:30 -0800 (PST)
-X-Received: by 2002:a5e:c642:: with SMTP id s2mr914619ioo.218.1573248569668;
- Fri, 08 Nov 2019 13:29:29 -0800 (PST)
-MIME-Version: 1.0
-References: <1568411962-1022-1-git-send-email-ilina@codeaurora.org> <1568411962-1022-6-git-send-email-ilina@codeaurora.org>
-In-Reply-To: <1568411962-1022-6-git-send-email-ilina@codeaurora.org>
-From:   Doug Anderson <dianders@chromium.org>
-Date:   Fri, 8 Nov 2019 13:29:17 -0800
-X-Gmail-Original-Message-ID: <CAD=FV=WeDEaMEEqPr52WBKJ8MLGBZ590ro6nCpemctES0kvvDg@mail.gmail.com>
-Message-ID: <CAD=FV=WeDEaMEEqPr52WBKJ8MLGBZ590ro6nCpemctES0kvvDg@mail.gmail.com>
-Subject: Re: [PATCH RFC v2 05/14] of: irq: document properties for wakeup
- interrupt parent
-To:     Lina Iyer <ilina@codeaurora.org>
+        id S1726349AbfKHV4Q (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 8 Nov 2019 16:56:16 -0500
+Received: from smtp.codeaurora.org ([198.145.29.96]:48610 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726294AbfKHV4Q (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 8 Nov 2019 16:56:16 -0500
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id 6081661288; Fri,  8 Nov 2019 21:54:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1573250066;
+        bh=hul8lX8VnIGCRS89b/7nULSqp+nszvVrJWi5PtzYDAA=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=n1l47WbEkWPWppEnUKOW5qjxziM0B+8buvvyYcpp+Np0neYwio6vedWYzFmo8yDZG
+         /FILx5ekf8uyiOhOvFBdHRLHi+x1ySWXPc9KzouN/LdXMFdjyP/zq11aOi+D6Vhvjd
+         kHcP+YcMoW9JBWCB+GRRqFFMsKxX/btTI1xcL6lU=
+X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
+        pdx-caf-mail.web.codeaurora.org
+X-Spam-Level: 
+X-Spam-Status: No, score=-2.7 required=2.0 tests=ALL_TRUSTED,BAYES_00,
+        DKIM_INVALID,DKIM_SIGNED,SPF_NONE autolearn=no autolearn_force=no
+        version=3.4.0
+Received: from localhost (i-global254.qualcomm.com [199.106.103.254])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: ilina@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 5CE9161203;
+        Fri,  8 Nov 2019 21:54:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1573250065;
+        bh=hul8lX8VnIGCRS89b/7nULSqp+nszvVrJWi5PtzYDAA=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Y4GufecoCySD4iWuwPYQZdHoon0DmqOfsgqrHzw96gGW+eSpfuDlqvQHmhambVNEG
+         /cB2dWLmtMHni8VWeuNLNJxh34ZgbPzZSFJelArzg59JfOEXNV+qHLGzIyqfLtV3QR
+         JxW/2gX38RfesP5AElS6spjmt0BA794FtpYsqtPg=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 5CE9161203
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=ilina@codeaurora.org
+Date:   Fri, 8 Nov 2019 14:54:24 -0700
+From:   Lina Iyer <ilina@codeaurora.org>
+To:     Doug Anderson <dianders@chromium.org>
 Cc:     Stephen Boyd <swboyd@chromium.org>,
         Evan Green <evgreen@chromium.org>, maz@kernel.org,
         LinusW <linus.walleij@linaro.org>,
@@ -63,56 +52,55 @@ Cc:     Stephen Boyd <swboyd@chromium.org>,
         linux-arm-msm <linux-arm-msm@vger.kernel.org>,
         Bjorn Andersson <bjorn.andersson@linaro.org>,
         mkshah@codeaurora.org,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
+Subject: Re: [PATCH RFC v2 04/14] drivers: irqchip: add PDC irqdomain for
+ wakeup capable GPIOs
+Message-ID: <20191108215424.GG16900@codeaurora.org>
+References: <1568411962-1022-1-git-send-email-ilina@codeaurora.org>
+ <1568411962-1022-5-git-send-email-ilina@codeaurora.org>
+ <CAD=FV=WOVHQyk0y3t0eki6cBfBedduQw3T-JZW2dERuCk9tRtA@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <CAD=FV=WOVHQyk0y3t0eki6cBfBedduQw3T-JZW2dERuCk9tRtA@mail.gmail.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi,
-
-On Fri, Sep 13, 2019 at 3:00 PM Lina Iyer <ilina@codeaurora.org> wrote:
+On Fri, Nov 08 2019 at 14:22 -0700, Doug Anderson wrote:
+>Hi,
 >
-> Some interrupt controllers in a SoC, are always powered on and have a
-> select interrupts routed to them, so that they can wakeup the SoC from
-> suspend. Add wakeup-parent DT property to refer to these interrupt
-> controllers.
+>On Fri, Sep 13, 2019 at 3:00 PM Lina Iyer <ilina@codeaurora.org> wrote:
+>>
+>> diff --git a/include/linux/soc/qcom/irq.h b/include/linux/soc/qcom/irq.h
+>> new file mode 100644
+>> index 0000000..85ac4b6
+>> --- /dev/null
+>> +++ b/include/linux/soc/qcom/irq.h
+>> @@ -0,0 +1,19 @@
+>> +/* SPDX-License-Identifier: GPL-2.0-only */
+>> +
+>> +#ifndef __QCOM_IRQ_H
+>> +#define __QCOM_IRQ_H
+>> +
 >
-> Cc: devicetree@vger.kernel.org
-> Signed-off-by: Lina Iyer <ilina@codeaurora.org>
-> Reviewed-by: Rob Herring <robh@kernel.org>
-> ---
->  .../devicetree/bindings/interrupt-controller/interrupts.txt | 13 +++++++++++++
->  1 file changed, 13 insertions(+)
+>I happened to be looking at a pile of patches and one of them added:
 >
-> diff --git a/Documentation/devicetree/bindings/interrupt-controller/interrupts.txt b/Documentation/devicetree/bindings/interrupt-controller/interrupts.txt
-> index 8a3c408..c10e310 100644
-> --- a/Documentation/devicetree/bindings/interrupt-controller/interrupts.txt
-> +++ b/Documentation/devicetree/bindings/interrupt-controller/interrupts.txt
-> @@ -108,3 +108,16 @@ commonly used:
->                         sensitivity = <7>;
->                 };
->         };
-> +
-> +3) Interrupt wakeup parent
-> +--------------------------
-> +
-> +Some interrupt controllers in a SoC, are always powered on and have a select
-> +interrupts routed to them, so that they can wakeup the SoC from suspend. These
-> +interrupt controllers do not fall into the category of a parent interrupt
-> +controller and can be specified by the "wakeup-parent" property and contain a
-> +single phandle referring to the wakeup capable interrupt controller.
-> +
-> +   Example:
-> +       wakeup-parent = <&pdc_intc>;
-> +
+>+#include <linux/irqdomain.h>
+>
+>...right here.  If/when you spin your patch, maybe you should too?  At
+>the moment the patch I was looking at is at:
+>
+>https://android.googlesource.com/kernel/common/+log/refs/heads/android-mainline-tracking
+>
+>Specifically:
+>
+>https://android.googlesource.com/kernel/common/+/448e2302f82a70f52475b6fc32bbe30301052e6b
+>
+>
+Sure, will take care of it in the next spin.
 
-nit: git flags the above line as whitespace damage.  Please remove
-if/when you spin.
+--Lina
 
-Thanks!
-
--Doug
