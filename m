@@ -2,90 +2,65 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 0DFAFF49EA
-	for <lists+linux-gpio@lfdr.de>; Fri,  8 Nov 2019 13:06:52 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E0F87F4B52
+	for <lists+linux-gpio@lfdr.de>; Fri,  8 Nov 2019 13:19:28 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390212AbfKHMFz (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 8 Nov 2019 07:05:55 -0500
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:58504 "EHLO
-        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732305AbfKHMFz (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 8 Nov 2019 07:05:55 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=u1LSxi/xCIm7BKmi90jrl3S/RxiU2mUU9mchFDPyUmk=; b=wvPi+97JaYr5DNz3EiEYA8J1B
-        86NnGoS8DUz4donPwa6uIK0Uh/VQnx7asQLshI9hePIgRQnLk6IDsNzfQMwbGo108UXP4p4RpUAWo
-        uxPeOBGlRcjfUpV2/TkglWeRMWvv4sKtKaZJ7A5ygAf95Tl9ZuqOPJYMbv6xznlW3zjEs=;
-Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=ypsilon.sirena.org.uk)
-        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <broonie@sirena.co.uk>)
-        id 1iT31S-0007Cx-Fg; Fri, 08 Nov 2019 12:05:50 +0000
-Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
-        id 959772740C6C; Fri,  8 Nov 2019 12:05:49 +0000 (GMT)
-Date:   Fri, 8 Nov 2019 12:05:49 +0000
-From:   Mark Brown <broonie@kernel.org>
-To:     Sasha Levin <sashal@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-spi@vger.kernel.org,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        linux-gpio@vger.kernel.org
-Subject: Re: [PATCH AUTOSEL 4.19 124/205] gpio: of: Handle SPI chipselect
- legacy bindings
-Message-ID: <20191108120549.GA5532@sirena.co.uk>
-References: <20191108113752.12502-1-sashal@kernel.org>
- <20191108113752.12502-124-sashal@kernel.org>
+        id S1731610AbfKHMT2 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 8 Nov 2019 07:19:28 -0500
+Received: from mail-vs1-f67.google.com ([209.85.217.67]:37428 "EHLO
+        mail-vs1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729896AbfKHMT1 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 8 Nov 2019 07:19:27 -0500
+Received: by mail-vs1-f67.google.com with SMTP id u6so3636508vsp.4
+        for <linux-gpio@vger.kernel.org>; Fri, 08 Nov 2019 04:19:27 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:from:date:message-id:subject:to;
+        bh=uzkBPRXvCt/DLxmv4J4lMqCgFgNyDxmGoOdWkPBD3nk=;
+        b=XYuw8KZ+t5rMMN7ZnEAcKfmi4FJBjvq+w1CW27MxJ1IBSihw3f6NMB0kz9hNNOKSA9
+         J2Trm5E0Ke7EUM4wqiHmS0TmekryN+dkLvu9mqY2s4zcYsANB3HeeovgFfmzqal7t/kZ
+         3QQVxz0eUXNY5tdL//FLTevuTexH/U++q0QA5MbV4X1gSdWj5rKxPvst3vKDveC/46MI
+         6AKiRdit4PuUSecnX6BNCxQB0CGxTf1yC7PJvQwssN7AkypzbcKaZIXxLHKDcy/Hk7Y4
+         tm2ACH5tX2n7J8sN3FpjF/3zXK+9RFrUwUfGwqj75kSB0fjF3kPpNJqQMdQDi2pOqLIa
+         jz+Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to;
+        bh=uzkBPRXvCt/DLxmv4J4lMqCgFgNyDxmGoOdWkPBD3nk=;
+        b=clex0nVAFWOcXUKUU8H8xs0C2OKM7SYlFPuPSQ+IDIGywEuURKcVuAMt69O8xDDRyf
+         7fzT2m28qxTtMeMLhH532wda9HnwGvzpnsMYr3+1tMiOeHn6zpcc5GSRpIxjtUnD4iUj
+         j9p/5h8DOI1socHWAQ8btGZiR3GewDGP+tLfZcP61atBX6g8SE9dPTSq9ba4z9k1ZlUj
+         NZEFX4IlNvLs8kZaS0JP8KFUT74uDTMSu6TNtH0C6oVDS43IVKAGE6+/4Hr6TIJwlbE1
+         mbmr/9yW+7Pk+PykLytBfIqG/GemMl93I1F5EMdwB4o91v8A0eSb851q7FQghSS6OICV
+         RuwQ==
+X-Gm-Message-State: APjAAAWY89IPOhnhYqGnRTuHcRn4AJvEzGpl3cwoYVB696eYfQZDpoxC
+        wbTmllhi4Hc211+ARMPMSj4BV0HD1xUHmBiZ4mI=
+X-Google-Smtp-Source: APXvYqw8COZPu8g8jYizrANupLDvzdHkKFmM0bfTn9lm7CpQlNF1U0geWswsuIk7loJ6xO4eRv2MGqO+JMDt+NIu4+8=
+X-Received: by 2002:a05:6102:117c:: with SMTP id k28mr7746622vsg.168.1573215566805;
+ Fri, 08 Nov 2019 04:19:26 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="/9DWx/yDrRhgMJTb"
-Content-Disposition: inline
-In-Reply-To: <20191108113752.12502-124-sashal@kernel.org>
-X-Cookie: Life is like a simile.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Received: by 2002:ab0:5929:0:0:0:0:0 with HTTP; Fri, 8 Nov 2019 04:19:26 -0800 (PST)
+From:   Kelani Alfasasi <alfasasikelani1@gmail.com>
+Date:   Fri, 8 Nov 2019 12:19:26 +0000
+Message-ID: <CAC22Kig4iQ2Fxn+gp5RCPkmegqjA-Ed7hd68Sd1F5Bez6jm7aw@mail.gmail.com>
+Subject: hope
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+Good day , i write to inform you as auditor onbehalf of ORABANK.
 
---/9DWx/yDrRhgMJTb
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Transaction number 000399577OBK have been approved for release
+through VISA ELECTRON ATM Card.
 
-On Fri, Nov 08, 2019 at 06:36:31AM -0500, Sasha Levin wrote:
-> From: Linus Walleij <linus.walleij@linaro.org>
->=20
-> [ Upstream commit 6953c57ab1721ce57914fc5741d0ce0568756bb0 ]
->=20
-> The SPI chipselects are assumed to be active low in the current
-> binding, so when we want to use GPIO descriptors and handle
-> the active low/high semantics in gpiolib, we need a special
-> parsing quirk to deal with this.
+Note that you are required to reconfirm your complete mailing address
+for delivery.
 
-This stuff is *incredibly* fragile, are we sure this isn't manifiesting
-in later kernels as a result of some other fix or cleanup exposing
-issues and won't break without that fixup?  I loose track of all the
-GPIO stuff.
+Reconfirm code 000399577OBK to the Director Mr. Patrick Masrellet on ( (
+atm.orabank@iname.com )) for further action.
 
---/9DWx/yDrRhgMJTb
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl3FWhwACgkQJNaLcl1U
-h9D6VAf/aQvUCk5KwmYDafiih+sMdQS5rdG1M0qIchk9PsPJfHsAk/+c+Alwdcq5
-VFhvlX/FDZspFImn1yh2S+YblDxd084LRo3bC/aLlzt5BC3hLBRQoqR3np12R/6B
-sE1WLP9j1G85zUpvCluxCodf5QUPeijr5ByW+L7q70Dmovx8YI8EsNMG7ady8drc
-9sdnO+kpoLizkvJDPsSY67RcxSHmD3gdxq28Bsnc8q2HuHq545Ypip8EicHP1ptX
-Mt+D5+kjLIztZssCVjpYK8Vssqm6kSiz8Acaq7MShBSAo6pVvdDU2cNoLmGXyezg
-R4EkfCZITRI4doWFNGv5hshc54GSng==
-=lio8
------END PGP SIGNATURE-----
-
---/9DWx/yDrRhgMJTb--
+Regards.
+Kelani Alfasasi( Esq)
