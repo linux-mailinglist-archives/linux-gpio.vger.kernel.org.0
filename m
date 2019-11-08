@@ -2,59 +2,59 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id C7DECF59C2
-	for <lists+linux-gpio@lfdr.de>; Fri,  8 Nov 2019 22:25:03 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id F3BC6F59E2
+	for <lists+linux-gpio@lfdr.de>; Fri,  8 Nov 2019 22:31:11 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732202AbfKHVWC (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 8 Nov 2019 16:22:02 -0500
-Received: from mail-io1-f65.google.com ([209.85.166.65]:35289 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732246AbfKHVWB (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 8 Nov 2019 16:22:01 -0500
-Received: by mail-io1-f65.google.com with SMTP id x21so7902298iol.2
-        for <linux-gpio@vger.kernel.org>; Fri, 08 Nov 2019 13:22:01 -0800 (PST)
+        id S1726095AbfKHV3c (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 8 Nov 2019 16:29:32 -0500
+Received: from mail-io1-f66.google.com ([209.85.166.66]:40895 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731269AbfKHV3c (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 8 Nov 2019 16:29:32 -0500
+Received: by mail-io1-f66.google.com with SMTP id p6so7892655iod.7
+        for <linux-gpio@vger.kernel.org>; Fri, 08 Nov 2019 13:29:32 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=hHbuppcDTbd6STg/n36IHSkDQvgwaovyTFQQvw2epkA=;
-        b=OByoOTNcmFJNLtvHQftXOvJ3EwPlUZKslCtZ5oa/wAMLAtwIxqf/4frJZyKSq+/sQ4
-         J9PsCN6ojbD99kHspY9uPywEaqNgmN1H3Kf5nbghcQekUG29P3ibVItxCqTZIN5k8LUV
-         2MYKE8HQtDmNsxMOegMVxCNOlqm8GgCUV1N2A=
+        bh=mRmwhSGnJWcbro1I2NsU98mvkk0pcwQPiXBcJRg/O6I=;
+        b=nKl15u10ItYfNUfRdfrOlRLJn71C4ibsqBZ/3P+B+74i1afpRcQqn+q6zc8jpdWfF/
+         4TlxJXWMVA2CzKaTu4/TkkDz/vWRfcJCJh6ToAyHjyRSfJH2cy+7BAFBE4bUdTXhkVpa
+         +vhUPS0fXQBcgMO/mJWo4oLl/GXv8laDO3g2E=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=hHbuppcDTbd6STg/n36IHSkDQvgwaovyTFQQvw2epkA=;
-        b=PP7hh29TIzxA5AD8Z5C9O/Rs8Lzjg72e3M0LV14WCpcqIcem6IS/yMfY59SIH9y+95
-         AON6K9mjH2XrYw2mHjC0fCvqk+PJd01tuxnRPPags/U+dp8BGwIHD8qeFBXcG7gBYez/
-         4wugRbl1b5al8E1YCMa8h1ZanUBO93UMI6OJDd/YsEQrfCyvzWXsNO1BO1aZkgBCADLM
-         8UMTUKdjL5FT0tCjU8XrC0BCFGj3LaLvzp+A8zW8EfCytj0qIL/iovF3Fc3RezEU9PdD
-         Ner459ARm5pevPUcjsJ9xm3oIVtHZTa6awIX3g02iaNavLcjRO80ve9BzoQhEmewSJ2t
-         3Rjg==
-X-Gm-Message-State: APjAAAW6pIOvhjmXn+Dqr9ZWaJ1QjuvIF907rHaJP9jHedaG2r7PFxIN
-        bM5eo58ggdgY4XCyhhq2o4Mr9UpduKQ=
-X-Google-Smtp-Source: APXvYqwcYWLAGlNeGrIdFw8esu6ERV+yeCjZ8aJz3NQc8zfWhGj7EHQuH/ny3ndNEePhmQg5cAu8ow==
-X-Received: by 2002:a02:6a24:: with SMTP id l36mr13237956jac.46.1573248120413;
-        Fri, 08 Nov 2019 13:22:00 -0800 (PST)
+        bh=mRmwhSGnJWcbro1I2NsU98mvkk0pcwQPiXBcJRg/O6I=;
+        b=tGKlKvaopvdr75J+7g3S4HQ6UtyzhKQLNJ+vbbha3dfGTKqPLDNra6K7Ez2lww5CPu
+         yHRoyyRL0JbagFOdZpos7zPVzHS9WKz0L0ButGVMT/7sWnYiTBYZUr7R9PyHH/6ua5ya
+         heCwg3fjuy1EAiMW4xQeGcjsIamXsyvXk4IjeIz90TGzQa0ELlAMvHlYNbg0EiyRg+5K
+         3cXr4l4OEh1L0gVVJY2NgVmutJlcZhKOYFUXLVKn5+0PWmodjHqp3rrSiX/FoEr/bs2c
+         t0QJP45cXz/reVC6cxhK3qNWzLybRWngEJLjzzHvXQXsacFHexx6PsWOzAx795BQYHVj
+         B76Q==
+X-Gm-Message-State: APjAAAWfr39bYmbomzWjeKuH0lI28AEvrsDQ3AeauFXw1bezZXhEN1h7
+        Ec9XFJuATN3P0qHDEBM/iGLnGNWWENU=
+X-Google-Smtp-Source: APXvYqy7wFl7NE6V4hRs7aXxJFjZTbjoNkgVvPmGPjw6bW4HDhDqA5UqRoLwTgbdgfWNatqkk+K+iA==
+X-Received: by 2002:a02:70c8:: with SMTP id f191mr13358393jac.117.1573248571331;
+        Fri, 08 Nov 2019 13:29:31 -0800 (PST)
 Received: from mail-io1-f54.google.com (mail-io1-f54.google.com. [209.85.166.54])
-        by smtp.gmail.com with ESMTPSA id k22sm586994iot.34.2019.11.08.13.21.59
+        by smtp.gmail.com with ESMTPSA id z20sm510080iof.78.2019.11.08.13.29.30
         for <linux-gpio@vger.kernel.org>
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 08 Nov 2019 13:21:59 -0800 (PST)
-Received: by mail-io1-f54.google.com with SMTP id j20so7616808ioo.11
-        for <linux-gpio@vger.kernel.org>; Fri, 08 Nov 2019 13:21:59 -0800 (PST)
-X-Received: by 2002:a5d:9059:: with SMTP id v25mr8937747ioq.58.1573248118962;
- Fri, 08 Nov 2019 13:21:58 -0800 (PST)
+        Fri, 08 Nov 2019 13:29:30 -0800 (PST)
+Received: by mail-io1-f54.google.com with SMTP id k1so7916590ioj.6
+        for <linux-gpio@vger.kernel.org>; Fri, 08 Nov 2019 13:29:30 -0800 (PST)
+X-Received: by 2002:a5e:c642:: with SMTP id s2mr914619ioo.218.1573248569668;
+ Fri, 08 Nov 2019 13:29:29 -0800 (PST)
 MIME-Version: 1.0
-References: <1568411962-1022-1-git-send-email-ilina@codeaurora.org> <1568411962-1022-5-git-send-email-ilina@codeaurora.org>
-In-Reply-To: <1568411962-1022-5-git-send-email-ilina@codeaurora.org>
+References: <1568411962-1022-1-git-send-email-ilina@codeaurora.org> <1568411962-1022-6-git-send-email-ilina@codeaurora.org>
+In-Reply-To: <1568411962-1022-6-git-send-email-ilina@codeaurora.org>
 From:   Doug Anderson <dianders@chromium.org>
-Date:   Fri, 8 Nov 2019 13:21:46 -0800
-X-Gmail-Original-Message-ID: <CAD=FV=WOVHQyk0y3t0eki6cBfBedduQw3T-JZW2dERuCk9tRtA@mail.gmail.com>
-Message-ID: <CAD=FV=WOVHQyk0y3t0eki6cBfBedduQw3T-JZW2dERuCk9tRtA@mail.gmail.com>
-Subject: Re: [PATCH RFC v2 04/14] drivers: irqchip: add PDC irqdomain for
- wakeup capable GPIOs
+Date:   Fri, 8 Nov 2019 13:29:17 -0800
+X-Gmail-Original-Message-ID: <CAD=FV=WeDEaMEEqPr52WBKJ8MLGBZ590ro6nCpemctES0kvvDg@mail.gmail.com>
+Message-ID: <CAD=FV=WeDEaMEEqPr52WBKJ8MLGBZ590ro6nCpemctES0kvvDg@mail.gmail.com>
+Subject: Re: [PATCH RFC v2 05/14] of: irq: document properties for wakeup
+ interrupt parent
 To:     Lina Iyer <ilina@codeaurora.org>
 Cc:     Stephen Boyd <swboyd@chromium.org>,
         Evan Green <evgreen@chromium.org>, maz@kernel.org,
@@ -63,7 +63,9 @@ Cc:     Stephen Boyd <swboyd@chromium.org>,
         linux-arm-msm <linux-arm-msm@vger.kernel.org>,
         Bjorn Andersson <bjorn.andersson@linaro.org>,
         mkshah@codeaurora.org,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
@@ -74,30 +76,43 @@ Hi,
 
 On Fri, Sep 13, 2019 at 3:00 PM Lina Iyer <ilina@codeaurora.org> wrote:
 >
-> diff --git a/include/linux/soc/qcom/irq.h b/include/linux/soc/qcom/irq.h
-> new file mode 100644
-> index 0000000..85ac4b6
-> --- /dev/null
-> +++ b/include/linux/soc/qcom/irq.h
-> @@ -0,0 +1,19 @@
-> +/* SPDX-License-Identifier: GPL-2.0-only */
+> Some interrupt controllers in a SoC, are always powered on and have a
+> select interrupts routed to them, so that they can wakeup the SoC from
+> suspend. Add wakeup-parent DT property to refer to these interrupt
+> controllers.
+>
+> Cc: devicetree@vger.kernel.org
+> Signed-off-by: Lina Iyer <ilina@codeaurora.org>
+> Reviewed-by: Rob Herring <robh@kernel.org>
+> ---
+>  .../devicetree/bindings/interrupt-controller/interrupts.txt | 13 +++++++++++++
+>  1 file changed, 13 insertions(+)
+>
+> diff --git a/Documentation/devicetree/bindings/interrupt-controller/interrupts.txt b/Documentation/devicetree/bindings/interrupt-controller/interrupts.txt
+> index 8a3c408..c10e310 100644
+> --- a/Documentation/devicetree/bindings/interrupt-controller/interrupts.txt
+> +++ b/Documentation/devicetree/bindings/interrupt-controller/interrupts.txt
+> @@ -108,3 +108,16 @@ commonly used:
+>                         sensitivity = <7>;
+>                 };
+>         };
 > +
-> +#ifndef __QCOM_IRQ_H
-> +#define __QCOM_IRQ_H
+> +3) Interrupt wakeup parent
+> +--------------------------
+> +
+> +Some interrupt controllers in a SoC, are always powered on and have a select
+> +interrupts routed to them, so that they can wakeup the SoC from suspend. These
+> +interrupt controllers do not fall into the category of a parent interrupt
+> +controller and can be specified by the "wakeup-parent" property and contain a
+> +single phandle referring to the wakeup capable interrupt controller.
+> +
+> +   Example:
+> +       wakeup-parent = <&pdc_intc>;
 > +
 
-I happened to be looking at a pile of patches and one of them added:
+nit: git flags the above line as whitespace damage.  Please remove
+if/when you spin.
 
-+#include <linux/irqdomain.h>
-
-...right here.  If/when you spin your patch, maybe you should too?  At
-the moment the patch I was looking at is at:
-
-https://android.googlesource.com/kernel/common/+log/refs/heads/android-mainline-tracking
-
-Specifically:
-
-https://android.googlesource.com/kernel/common/+/448e2302f82a70f52475b6fc32bbe30301052e6b
-
+Thanks!
 
 -Doug
