@@ -2,127 +2,216 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 9F338F4983
-	for <lists+linux-gpio@lfdr.de>; Fri,  8 Nov 2019 13:03:55 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id BB7A7F4A05
+	for <lists+linux-gpio@lfdr.de>; Fri,  8 Nov 2019 13:07:05 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387805AbfKHMDq (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 8 Nov 2019 07:03:46 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56606 "EHLO mail.kernel.org"
+        id S2389148AbfKHLlF (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 8 Nov 2019 06:41:05 -0500
+Received: from mga04.intel.com ([192.55.52.120]:37523 "EHLO mga04.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387835AbfKHLmf (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Fri, 8 Nov 2019 06:42:35 -0500
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 003092245C;
-        Fri,  8 Nov 2019 11:42:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573213354;
-        bh=fzxvrBp3LsbCgd4FvX0URPQl8gN42nJGUeUp4p/M1dU=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=etCCzufy9kcrj+cxjy0aMO0MppMMi8Xbgt/5FNJs+8VhL58rHFiJUP8/Yi8z8QpQ+
-         Lmz7yQxRmKlywc94U6Gq3JbUTlWoDPMnisigVCI8x15sZR76svb472fcLNCOVUQ3J/
-         czWItKC88R9zVOK3O6fBpNyP3H8A6fj5AY4CLXo4=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Ludovic Desroches <ludovic.desroches@microchip.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Sasha Levin <sashal@kernel.org>, linux-gpio@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 185/205] pinctrl: at91: don't use the same irqchip with multiple gpiochips
-Date:   Fri,  8 Nov 2019 06:37:32 -0500
-Message-Id: <20191108113752.12502-185-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191108113752.12502-1-sashal@kernel.org>
-References: <20191108113752.12502-1-sashal@kernel.org>
+        id S2389136AbfKHLlE (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Fri, 8 Nov 2019 06:41:04 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 Nov 2019 03:41:04 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.68,281,1569308400"; 
+   d="scan'208";a="205970904"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by orsmga003.jf.intel.com with ESMTP; 08 Nov 2019 03:40:59 -0800
+Received: from andy by smile with local (Exim 4.93-RC1)
+        (envelope-from <andriy.shevchenko@intel.com>)
+        id 1iT2dO-0002lG-IF; Fri, 08 Nov 2019 13:40:58 +0200
+Date:   Fri, 8 Nov 2019 13:40:58 +0200
+From:   Andy Shevchenko <andriy.shevchenko@intel.com>
+To:     Rahul Tanwar <rahul.tanwar@linux.intel.com>
+Cc:     linus.walleij@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, robh@kernel.org, qi-ming.wu@intel.com,
+        yixin.zhu@linux.intel.com, cheol.yong.kim@intel.com
+Subject: Re: [PATCH v5 1/2] pinctrl: Add pinmux & GPIO controller driver for
+ a new SoC
+Message-ID: <20191108114058.GE32742@smile.fi.intel.com>
+References: <cover.1573196057.git.rahul.tanwar@linux.intel.com>
+ <890db37db56e7e49e83b9fa03903bf3482c624c7.1573196057.git.rahul.tanwar@linux.intel.com>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <890db37db56e7e49e83b9fa03903bf3482c624c7.1573196057.git.rahul.tanwar@linux.intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-From: Ludovic Desroches <ludovic.desroches@microchip.com>
+On Fri, Nov 08, 2019 at 05:42:22PM +0800, Rahul Tanwar wrote:
+> Intel Lightning Mountain SoC has a pinmux controller & GPIO controller IP which
+> controls pin multiplexing & configuration including GPIO functions selection &
+> GPIO attributes configuration.
+> 
+> This IP is not based on & does not have anything in common with Chassis
+> specification. The pinctrl drivers under pinctrl/intel/* are all based upon
+> Chassis spec compliant pinctrl IPs. So this driver doesn't fit & can not use
+> pinctrl framework under pinctrl/intel/* and it requires a separate new driver.
+> 
+> Add a new GPIO & pin control framework based driver for this IP.
 
-[ Upstream commit 0c3dfa176912b5f87732545598200fb55e9c1978 ]
+> +static void eqbr_gpio_enable_irq(struct irq_data *d)
+> +{
+> +	struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
+> +	struct eqbr_gpio_ctrl *gctrl = gpiochip_get_data(gc);
+> +	unsigned int offset = irqd_to_hwirq(d);
+> +	unsigned long flags;
+> +
 
-Sharing the same irqchip with multiple gpiochips is not a good
-practice. For instance, when installing hooks, we change the state
-of the irqchip. The initial state of the irqchip for the second
-gpiochip to register is then disrupted.
+> +	gc->direction_input(gc, offset);
 
-Signed-off-by: Ludovic Desroches <ludovic.desroches@microchip.com>
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/pinctrl/pinctrl-at91.c | 28 ++++++++++++++--------------
- 1 file changed, 14 insertions(+), 14 deletions(-)
+Does this any IO?
+If so, between above and below a window of possible race.
+Ditto for all other functions that do something similar.
 
-diff --git a/drivers/pinctrl/pinctrl-at91.c b/drivers/pinctrl/pinctrl-at91.c
-index 50f0ec42c6372..fad0e132ead84 100644
---- a/drivers/pinctrl/pinctrl-at91.c
-+++ b/drivers/pinctrl/pinctrl-at91.c
-@@ -1574,16 +1574,6 @@ void at91_pinctrl_gpio_resume(void)
- #define gpio_irq_set_wake	NULL
- #endif /* CONFIG_PM */
- 
--static struct irq_chip gpio_irqchip = {
--	.name		= "GPIO",
--	.irq_ack	= gpio_irq_ack,
--	.irq_disable	= gpio_irq_mask,
--	.irq_mask	= gpio_irq_mask,
--	.irq_unmask	= gpio_irq_unmask,
--	/* .irq_set_type is set dynamically */
--	.irq_set_wake	= gpio_irq_set_wake,
--};
--
- static void gpio_irq_handler(struct irq_desc *desc)
- {
- 	struct irq_chip *chip = irq_desc_get_chip(desc);
-@@ -1624,12 +1614,22 @@ static int at91_gpio_of_irq_setup(struct platform_device *pdev,
- 	struct gpio_chip	*gpiochip_prev = NULL;
- 	struct at91_gpio_chip   *prev = NULL;
- 	struct irq_data		*d = irq_get_irq_data(at91_gpio->pioc_virq);
-+	struct irq_chip		*gpio_irqchip;
- 	int ret, i;
- 
-+	gpio_irqchip = devm_kzalloc(&pdev->dev, sizeof(*gpio_irqchip), GFP_KERNEL);
-+	if (!gpio_irqchip)
-+		return -ENOMEM;
-+
- 	at91_gpio->pioc_hwirq = irqd_to_hwirq(d);
- 
--	/* Setup proper .irq_set_type function */
--	gpio_irqchip.irq_set_type = at91_gpio->ops->irq_type;
-+	gpio_irqchip->name = "GPIO";
-+	gpio_irqchip->irq_ack = gpio_irq_ack;
-+	gpio_irqchip->irq_disable = gpio_irq_mask;
-+	gpio_irqchip->irq_mask = gpio_irq_mask;
-+	gpio_irqchip->irq_unmask = gpio_irq_unmask;
-+	gpio_irqchip->irq_set_wake = gpio_irq_set_wake,
-+	gpio_irqchip->irq_set_type = at91_gpio->ops->irq_type;
- 
- 	/* Disable irqs of this PIO controller */
- 	writel_relaxed(~0, at91_gpio->regbase + PIO_IDR);
-@@ -1640,7 +1640,7 @@ static int at91_gpio_of_irq_setup(struct platform_device *pdev,
- 	 * interrupt.
- 	 */
- 	ret = gpiochip_irqchip_add(&at91_gpio->chip,
--				   &gpio_irqchip,
-+				   gpio_irqchip,
- 				   0,
- 				   handle_edge_irq,
- 				   IRQ_TYPE_NONE);
-@@ -1658,7 +1658,7 @@ static int at91_gpio_of_irq_setup(struct platform_device *pdev,
- 	if (!gpiochip_prev) {
- 		/* Then register the chain on the parent IRQ */
- 		gpiochip_set_chained_irqchip(&at91_gpio->chip,
--					     &gpio_irqchip,
-+					     gpio_irqchip,
- 					     at91_gpio->pioc_virq,
- 					     gpio_irq_handler);
- 		return 0;
+> +	raw_spin_lock_irqsave(&gctrl->lock, flags);
+> +	writel(BIT(offset), gctrl->membase + GPIO_IRNRNSET);
+> +	raw_spin_unlock_irqrestore(&gctrl->lock, flags);
+> +}
+
+> +		ret = bgpio_init(&gctrl->chip, dev, gctrl->bank->nr_pins / 8,
+> +				 gctrl->membase + GPIO_IN,
+> +				 gctrl->membase + GPIO_OUTSET,
+> +				 gctrl->membase + GPIO_OUTCLR,
+> +				 gctrl->membase + GPIO_DIR,
+
+> +				 NULL,
+> +				 0);
+
+One line?
+
+> +static int get_drv_cur(void __iomem *mem, unsigned int offset)
+> +{
+> +	unsigned int idx = offset / DRV_CUR_PINS; /* 0-15, 16-31 per register*/
+> +	unsigned int val;
+> +
+> +	val = readl(mem + REG_DRCC(idx));
+
+> +	offset %= DRV_CUR_PINS;
+
+From style point of view is better to have
+	... foo = offset / X;
+	... bar = offset % X;
+
+directly in definition block. Moreover, for example, on x86 it might be
+converted by compiler to single idiv call in assembly that returns in
+(eax, edx) both values at once.
+
+> +	val = PARSE_DRV_CURRENT(val, offset);
+> +
+> +	return val;
+> +}
+
+> +	if (!(bank->aval_pinmap & BIT(offset))) {
+> +		dev_err(pctl->dev,
+> +			"PIN: %u is not valid, pinbase: %u, bitmap: %u\n",
+> +			pin, bank->pin_base, bank->aval_pinmap);
+> +		return -ENODEV;
+> +	}
+
+Looks like aval_pinmap is NIH of valid_mask bitmap in GPIO library.
+Can you check if it suits your purposes?
+
+> +static bool is_func_exist(struct eqbr_pmx_func *funcs, const char *name,
+> +			 unsigned int nr_funcs, unsigned int *idx)
+> +{
+> +	int i;
+> +
+
+> +	if (!funcs || !nr_funcs)
+> +		return false;
+
+nr_funcs check is a dup of the one in for loop.
+
+> +	for (i = 0; i < nr_funcs; i++) {
+
+> +		if (funcs[i].name && (strcmp(funcs[i].name, name) == 0) ) {
+
+An extra space, but you may use !strcmp() and make it shorter without redundant
+parentheses.
+
+> +			*idx = i;
+> +			return true;
+> +		}
+> +	}
+> +
+> +	return false;
+> +}
+
+> +		switch (op) {
+> +			case OP_COUNT_NR_FUNCS:
+
+case goes usually on the same column as switch.
+
+> +				if (!is_func_exist(funcs, fn_name,
+> +						   *nr_funcs, &fid))
+> +					*nr_funcs = *nr_funcs + 1;
+> +				break;
+> +
+> +			case OP_ADD_FUNCS:
+> +				if (!is_func_exist(funcs, fn_name,
+> +						   *nr_funcs, &fid))
+> +					funcs[i].name = fn_name;
+> +				break;
+> +
+> +			case OP_COUNT_NR_FUNC_GRPS:
+> +				if (is_func_exist(funcs, fn_name,
+> +						  *nr_funcs, &fid))
+> +					funcs[fid].nr_groups++;
+> +				break;
+> +
+> +			case OP_ADD_FUNC_GRPS:
+> +				if (is_func_exist(funcs, fn_name,
+> +						  *nr_funcs, &fid)) {
+
+> +					for(j=0;
+
+Other style issueS.
+
+> +					    j < funcs[fid].nr_groups;
+> +					    j++) {
+> +						if (!funcs[fid].groups[j])
+> +							break;
+> +					}
+> +					funcs[fid].groups[j] = prop->value;
+> +				}
+> +				break;
+> +
+> +			default:
+> +				return -EINVAL;
+
+> +
+
+Redundant blank line.
+
+> +		}
+
+> +	for (i = 0; i < nr_funcs; i++) {
+> +		if (funcs[i].nr_groups) {
+
+	if (!foo)
+		continue;
+?
+
+> +			funcs[i].groups = devm_kcalloc(dev, funcs[i].nr_groups,
+> +						       sizeof(*(funcs[i].groups)),
+> +						       GFP_KERNEL);
+> +			if (!funcs[i].groups)
+> +				return -ENOMEM;
+> +		}
+> +	}
+
 -- 
-2.20.1
+With Best Regards,
+Andy Shevchenko
+
 
