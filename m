@@ -2,109 +2,73 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id B2B02F58EE
-	for <lists+linux-gpio@lfdr.de>; Fri,  8 Nov 2019 21:58:21 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id CEC1CF5992
+	for <lists+linux-gpio@lfdr.de>; Fri,  8 Nov 2019 22:24:40 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729683AbfKHUyK (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 8 Nov 2019 15:54:10 -0500
-Received: from jabberwock.ucw.cz ([46.255.230.98]:60538 "EHLO
-        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726231AbfKHUyJ (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 8 Nov 2019 15:54:09 -0500
-Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
-        id 01DCA1C0BEF; Fri,  8 Nov 2019 21:54:08 +0100 (CET)
-Date:   Fri, 8 Nov 2019 21:54:07 +0100
-From:   Pavel Machek <pavel@denx.de>
-To:     Thierry Reding <thierry.reding@gmail.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Pavel Machek <pavel@denx.de>, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/2] gpio: max77620: Fixup debounce delays
-Message-ID: <20191108205407.GE23750@amd>
-References: <20191108160747.3274377-1-thierry.reding@gmail.com>
+        id S1732916AbfKHVPj (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 8 Nov 2019 16:15:39 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56982 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1732926AbfKHVPj (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Fri, 8 Nov 2019 16:15:39 -0500
+Received: from kernel.org (unknown [104.132.0.74])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9543720869;
+        Fri,  8 Nov 2019 21:15:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1573247738;
+        bh=0OHKn/NSP13Adarhq9wPSTSqkcmLeCqcUJ/45x0J6ok=;
+        h=In-Reply-To:References:From:To:Cc:Subject:Date:From;
+        b=JPORAN6QAt8G+verpqAPM4zK4BVLDPAyfMBkFDOckhcyz7af3S2g4htaHUO2ENWJP
+         DTKTvMhfJHfDx+T3Y8TyJhCEu2H2fjd9YVZyu8fBP08ybyWbx5Zk5UkyJLwjjXs6SO
+         m8lVWe7z2JXWJXzXW4h/G08DGtzDTqlIqVemrTgM=
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="r7U+bLA8boMOj+mD"
-Content-Disposition: inline
-In-Reply-To: <20191108160747.3274377-1-thierry.reding@gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20191108185503.GB3384779@ulmo>
+References: <1565984527-5272-1-git-send-email-skomatineni@nvidia.com> <1565984527-5272-8-git-send-email-skomatineni@nvidia.com> <20191106231005.F2CD820869@mail.kernel.org> <fcc43ccb-8c6e-d518-4c70-503501706ffd@gmail.com> <20191107152115.GA2580600@ulmo> <20191107191933.0B18021D6C@mail.kernel.org> <20191108101116.GA2583136@ulmo> <20191108181249.E284E214DB@mail.kernel.org> <20191108185503.GB3384779@ulmo>
+From:   Stephen Boyd <sboyd@kernel.org>
+To:     Thierry Reding <thierry.reding@gmail.com>
+Cc:     Dmitry Osipenko <digetx@gmail.com>,
+        Sowjanya Komatineni <skomatineni@nvidia.com>,
+        jason@lakedaemon.net, jonathanh@nvidia.com,
+        linus.walleij@linaro.org, marc.zyngier@arm.com,
+        mark.rutland@arm.com, stefan@agner.ch, tglx@linutronix.de,
+        pdeschrijver@nvidia.com, pgaikwad@nvidia.com,
+        linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org,
+        jckuo@nvidia.com, josephl@nvidia.com, talho@nvidia.com,
+        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org,
+        mperttunen@nvidia.com, spatra@nvidia.com, robh+dt@kernel.org,
+        devicetree@vger.kernel.org, rjw@rjwysocki.net,
+        viresh.kumar@linaro.org, linux-pm@vger.kernel.org
+Subject: Re: [PATCH v9 07/22] clk: Add API to get index of the clock parent
+User-Agent: alot/0.8.1
+Date:   Fri, 08 Nov 2019 13:15:37 -0800
+Message-Id: <20191108211538.9543720869@mail.kernel.org>
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-
---r7U+bLA8boMOj+mD
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Fri 2019-11-08 17:07:46, Thierry Reding wrote:
-> From: Thierry Reding <treding@nvidia.com>
+Quoting Thierry Reding (2019-11-08 10:55:03)
+> On Fri, Nov 08, 2019 at 10:12:49AM -0800, Stephen Boyd wrote:
+> >=20
+> > Sure a WARN_ON() sounds fair. That will not take the whole task down
+> > and makes sure that drivers aren't doing something incorrect. Otherwise,
+> > this looks good and we can optimize by caching the parent index later if
+> > we really need to.
 >=20
-> When converting milliseconds to microseconds in commit fffa6af94894
-> ("gpio: max77620: Use correct unit for debounce times") some ~1 ms gaps
-> were introduced between the various ranges supported by the controller.
-> Fix this by changing the start of each range to the value immediately
-> following the end of the previous range. This way a debounce time of,
-> say 8250 us will translate into 16 ms instead of returning an -EINVAL
-> error.
+> Okay, great. I'll go replace the above patch in the branch that I have.
+> I'm not sure if you saw it, but I had sent this in a pull request for
+> v5.5-rc1 about a week ago because I've got Tegra clock driver patches
+> that depend on this. I can replace this patch with the above proposal
+> and update the Tegra clock driver branch and then resend the two pull
+> requests.
 >=20
-> Typically the debounce delay is only ever set through device tree and
-> specified in milliseconds, so we can never really hit this issue because
-> debounce times are always a multiple of 1000 us.
+> Does that sound like a plan?
 >=20
-> The only notable exception for this is drivers/mmc/host/mmc-spi.c where
-> the CD GPIO is requested, which passes a 1 us debounce time. According
-> to a comment preceeding that code this should actually be 1 ms (i.e.
-> 1000 us).
->=20
-> Reported-by: Pavel Machek <pavel@denx.de>
-> Signed-off-by: Thierry Reding <treding@nvidia.com>
 
-Thanks for doing this!
+Yes please refresh the PRs. I don't think anything else is concerning
+but I'll go do a sweep over the Tegra patches right now.
 
-Acked-by: Pavel Machek <pavel@denx.de>
-
-And I guess this should be cc: stable, as the commit this fixes was
-making its way there.
-
-Best regards,
-								Pavel
-
-
-> @@ -198,13 +198,13 @@ static int max77620_gpio_set_debounce(struct max776=
-20_gpio *mgpio,
->  	case 0:
->  		val =3D MAX77620_CNFG_GPIO_DBNC_None;
->  		break;
-> -	case 1000 ... 8000:
-> +	case 1 ... 8000:
->  		val =3D MAX77620_CNFG_GPIO_DBNC_8ms;
->  		break;
-> -	case 9000 ... 16000:
-> +	case 8001 ... 16000:
->  		val =3D MAX77620_CNFG_GPIO_DBNC_16ms;
->  		break;
-> -	case 17000 ... 32000:
-> +	case 16001 ... 32000:
->  		val =3D MAX77620_CNFG_GPIO_DBNC_32ms;
->  		break;
->  	default:
-
---=20
-DENX Software Engineering GmbH,      Managing Director: Wolfgang Denk
-HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
-
---r7U+bLA8boMOj+mD
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iF0EABECAB0WIQRPfPO7r0eAhk010v0w5/Bqldv68gUCXcXV7wAKCRAw5/Bqldv6
-8vKwAJ988CosS0NDhsmk4/DwPnSu7GBBUQCeMtBW4yQCEaMMEEoJ6kuTTz3MaVk=
-=JYJa
------END PGP SIGNATURE-----
-
---r7U+bLA8boMOj+mD--
