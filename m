@@ -2,92 +2,83 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 8DAF9F42BB
-	for <lists+linux-gpio@lfdr.de>; Fri,  8 Nov 2019 10:01:06 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3A039F439F
+	for <lists+linux-gpio@lfdr.de>; Fri,  8 Nov 2019 10:41:02 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731110AbfKHJAy (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 8 Nov 2019 04:00:54 -0500
-Received: from mail-sz.amlogic.com ([211.162.65.117]:18424 "EHLO
-        mail-sz.amlogic.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730989AbfKHJAw (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 8 Nov 2019 04:00:52 -0500
-Received: from localhost.localdomain (10.28.8.19) by mail-sz.amlogic.com
- (10.28.11.5) with Microsoft SMTP Server id 15.1.1591.10; Fri, 8 Nov 2019
- 17:00:58 +0800
-From:   Qianggui Song <qianggui.song@amlogic.com>
-To:     Linus Walleij <linus.walleij@linaro.org>,
-        <linux-gpio@vger.kernel.org>
-CC:     Qianggui Song <qianggui.song@amlogic.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Jerome Brunet <jbrunet@baylibre.com>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        Carlo Caione <carlo@caione.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Xingyu Chen <xingyu.chen@amlogic.com>,
-        Jianxin Pan <jianxin.pan@amlogic.com>,
-        Hanjie Lin <hanjie.lin@amlogic.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-amlogic@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>
-Subject: [PATCH v5 3/3] arm64: dts: meson: a1: add pinctrl controller support
-Date:   Fri, 8 Nov 2019 17:00:36 +0800
-Message-ID: <1573203636-7436-4-git-send-email-qianggui.song@amlogic.com>
-X-Mailer: git-send-email 1.9.1
-In-Reply-To: <1573203636-7436-1-git-send-email-qianggui.song@amlogic.com>
-References: <1573203636-7436-1-git-send-email-qianggui.song@amlogic.com>
+        id S1730224AbfKHJlB (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 8 Nov 2019 04:41:01 -0500
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:40229 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730945AbfKHJlB (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 8 Nov 2019 04:41:01 -0500
+Received: by mail-lj1-f195.google.com with SMTP id q2so5486649ljg.7
+        for <linux-gpio@vger.kernel.org>; Fri, 08 Nov 2019 01:40:59 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=2zqIy4ApAQULTvACWcJQGtZM4g+VTM3ApQJZknziE+I=;
+        b=o6//3qQjs2XbV8fThk8UCefcdkesd3AmQR7rJ8rMwsHKi6oKj+Bw6bLafrNZ/wjTYW
+         kjuWctTGryuFJ8FOLZSIoH0E+5AE0I12JeuHDZeL4MyKGTiuyDjeSyANsa+3g+UjeGa7
+         TDwhk/ppmHWY+2czywQkTeCRX6aGkqY8EG0CViJPjm4Ji/LSBdkJjsfYRXCZVEJQD5Te
+         PdMW0CC49uF5X1vJCj1HRedwDTZEevQ32q7PHfqmuCXTW4QSrJoydnmfdBuS4ZFhf5VE
+         3ShfAi0qZjZ0adBw2cbWrEmShZ2OjDlJnK2D2+OtDvhl5Ausju71W1JmSFaalPiTGY1L
+         4vlw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=2zqIy4ApAQULTvACWcJQGtZM4g+VTM3ApQJZknziE+I=;
+        b=rGGW6kn2jSRU4YQ6HHXtOViUwVRqvRDtham0aaS72mxynJt2ShQwARN1uc70EKD238
+         4kfv6rkTCjtXzf4scFkgyE53HaYLJ73V6qk7epRrnxRs0aqIIpZkA6QHQbwnyhzYFWAG
+         PR2yiQ90qTGXiMZkSgW1VtpQqQ/0yGi5PTr6cCjaeFxf3IuRdidMVi/s8tLgIbzLuo81
+         tKy+p3l2apQz1f4IAi74+5anOXtXt9vsbyqSJqzfngUZb/TYDggKLExOJ6wU4j3SOyPx
+         CMLhUejjSQ+Tygl/89X4DiVuH0E/GkXhh6y3QbOLfz6iqZcVTtj78PRo0NJtFtAWmAPQ
+         wv9w==
+X-Gm-Message-State: APjAAAVcOr5Y9YH430+JsPB5vV/NJSmF4HBEcGA6+WifL35fLnBEp6gt
+        btn33VDWXeWmkw9PMdXhXTE/uvXW6epef3aHc3qpcg==
+X-Google-Smtp-Source: APXvYqzuTmfGKfpR74XSrK8V+hihH48vRo2AEVGYdN8z4DVmO//cgwwye+m9+SaG4J9/VHQmlXP9ZPZmejs6iDCoCaI=
+X-Received: by 2002:a2e:5c46:: with SMTP id q67mr5842160ljb.42.1573206059073;
+ Fri, 08 Nov 2019 01:40:59 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.28.8.19]
+References: <20191105203557.78562-1-andriy.shevchenko@linux.intel.com> <20191106173055.GQ32742@smile.fi.intel.com>
+In-Reply-To: <20191106173055.GQ32742@smile.fi.intel.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Fri, 8 Nov 2019 10:40:47 +0100
+Message-ID: <CACRpkdaAxY-8A7gindeA8fsQ9rEdnwp8k90CyULxNs4J5VBSBw@mail.gmail.com>
+Subject: Re: [RESEND][PATCH v2 0/7] gpiolib: fix GPIO <-> pin mapping registration
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Hans de Goede <hdegoede@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-add peripheral pinctrl controller to a1 SoC
+On Wed, Nov 6, 2019 at 6:30 PM Andy Shevchenko
+<andriy.shevchenko@linux.intel.com> wrote:
 
-Signed-off-by: Qianggui Song <qianggui.song@amlogic.com>
----
- arch/arm64/boot/dts/amlogic/meson-a1.dtsi | 18 ++++++++++++++++++
- 1 file changed, 18 insertions(+)
+> Linus, I think it would be good if we have first 3 (okay, I noticed you have
+> pushed first one to your devel branch) patches to go to v5.4. It will reduce
+> dependency burden in v5.5.
 
-diff --git a/arch/arm64/boot/dts/amlogic/meson-a1.dtsi b/arch/arm64/boot/dts/amlogic/meson-a1.dtsi
-index 7210ad049d1d..0965259af869 100644
---- a/arch/arm64/boot/dts/amlogic/meson-a1.dtsi
-+++ b/arch/arm64/boot/dts/amlogic/meson-a1.dtsi
-@@ -5,6 +5,7 @@
- 
- #include <dt-bindings/interrupt-controller/irq.h>
- #include <dt-bindings/interrupt-controller/arm-gic.h>
-+#include <dt-bindings/gpio/meson-a1-gpio.h>
- 
- / {
- 	compatible = "amlogic,a1";
-@@ -74,6 +75,23 @@
- 			#size-cells = <2>;
- 			ranges = <0x0 0x0 0x0 0xfe000000 0x0 0x1000000>;
- 
-+			periphs_pinctrl: pinctrl@0400 {
-+				compatible = "amlogic,meson-a1-periphs-pinctrl";
-+				#address-cells = <2>;
-+				#size-cells = <2>;
-+				ranges;
-+
-+				gpio: bank@0400 {
-+					reg = <0x0 0x0400 0x0 0x003c>,
-+					      <0x0 0x0480 0x0 0x0118>;
-+					reg-names = "mux", "gpio";
-+					gpio-controller;
-+					#gpio-cells = <2>;
-+					gpio-ranges = <&periphs_pinctrl 0 0 62>;
-+				};
-+
-+			};
-+
- 			uart_AO: serial@1c00 {
- 				compatible = "amlogic,meson-gx-uart",
- 					     "amlogic,meson-ao-uart";
--- 
-1.9.1
+At this point in the kernel release cycle I can really only apply
+patches for serious regressions. That's the policy I need to keep
+to.
 
+It also causes a problem if I put dependencies on Torvald's
+tree this late in the kernel cycle, because I need to get the
+changes back into my tree in order to base new stuff on them.
+I can't really do that until he releases an -rc that I can merge
+back.
+
+At this point I'd maybe have to merge back v5.4 and that doesn't
+feel good at all.
+
+So far I applied patches 1 & 2 for v5.5.
+
+Yours,
+Linus Walleij
