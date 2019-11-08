@@ -2,130 +2,98 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 85A73F5BAC
-	for <lists+linux-gpio@lfdr.de>; Sat,  9 Nov 2019 00:14:40 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 8FA3EF5BE1
+	for <lists+linux-gpio@lfdr.de>; Sat,  9 Nov 2019 00:38:27 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726462AbfKHXOj (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 8 Nov 2019 18:14:39 -0500
-Received: from smtp.codeaurora.org ([198.145.29.96]:59216 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726231AbfKHXOj (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 8 Nov 2019 18:14:39 -0500
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 6655161152; Fri,  8 Nov 2019 23:14:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1573254854;
-        bh=IDArQ3miDu7Zqw4xXWBNZx2KTGjzXaYXHVTJFeSlNEY=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=UhfCwh86YrYvf4a9y8pw/eXJonzuoiJ1B0x0DOueZ+QEX5Gid1vauuh+uzta/3wiI
-         1dwA8MawEXRrlFEsMjnBDhMQA5U7+VvK092JLz9t/udljC7zsy/A9qB4/G7Su0E3SU
-         leDobC433TvJreumIV0Gw540ZJJ97oVagVqxkbhc=
-X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
-        pdx-caf-mail.web.codeaurora.org
-X-Spam-Level: 
-X-Spam-Status: No, score=-2.7 required=2.0 tests=ALL_TRUSTED,BAYES_00,
-        DKIM_INVALID,DKIM_SIGNED,SPF_NONE autolearn=no autolearn_force=no
-        version=3.4.0
-Received: from localhost (i-global254.qualcomm.com [199.106.103.254])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: ilina@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 4ACF661152;
-        Fri,  8 Nov 2019 23:14:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1573254853;
-        bh=IDArQ3miDu7Zqw4xXWBNZx2KTGjzXaYXHVTJFeSlNEY=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=TpwbFIzBYwcPZCx1/6DzdirP2TBGzZ2NPDxB/MoqnrhqV0P7d4VcmCYyj9ybtLBY5
-         h6BYuiQmUyS/Z7eU19cQg3C/4QfwUGCtEsmzCaHCPex+/c1Niv76LYhEiP8AJLL6rb
-         0rkfh9EY83V/iBlmMuR+1ylu81r5DTX5vfIRNUaA=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 4ACF661152
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=ilina@codeaurora.org
-Date:   Fri, 8 Nov 2019 16:14:12 -0700
-From:   Lina Iyer <ilina@codeaurora.org>
-To:     Doug Anderson <dianders@chromium.org>
-Cc:     Stephen Boyd <swboyd@chromium.org>,
-        Evan Green <evgreen@chromium.org>, maz@kernel.org,
-        LinusW <linus.walleij@linaro.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        mkshah@codeaurora.org,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
-Subject: Re: [PATCH RFC v2 04/14] drivers: irqchip: add PDC irqdomain for
- wakeup capable GPIOs
-Message-ID: <20191108231412.GI16900@codeaurora.org>
-References: <1568411962-1022-1-git-send-email-ilina@codeaurora.org>
- <1568411962-1022-5-git-send-email-ilina@codeaurora.org>
- <CAD=FV=WOVHQyk0y3t0eki6cBfBedduQw3T-JZW2dERuCk9tRtA@mail.gmail.com>
- <20191108215424.GG16900@codeaurora.org>
- <20191108221636.GH16900@codeaurora.org>
- <CAD=FV=V_hieLP-qqU23=shM0PdeXpu=Spe3O6a-WHur7w+AnAQ@mail.gmail.com>
+        id S1727558AbfKHXiX (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 8 Nov 2019 18:38:23 -0500
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:34821 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726231AbfKHXiX (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 8 Nov 2019 18:38:23 -0500
+Received: by mail-lj1-f193.google.com with SMTP id r7so7949318ljg.2;
+        Fri, 08 Nov 2019 15:38:21 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=7g5vTbYZHmeYxWc2Gp9Pqp9iJ2yMYEuiir3i4U6QyGc=;
+        b=g4c+EHEmb/zwM04L6VsDL30KBvGNvRnetX4OgsnUMzeSIvfsNNMpr7R04r1t36mD1g
+         9N1m/Zxmz0XL4qs1HL0kX9pb93U58ukQJP0DOpUqVsSj8z+XhQ0K1I3NzRuQSX/Xly41
+         m0SRo/ziYu2HH+QVrBiQAj2HXcgyCOQMsbnr/dEg6BqOxBMiHQTxohH10+5PANOlmaoQ
+         Tl9TvVkcHRxwnCh3TW0Vnd5nB8sDfxpwqAa9ImpAL8ANI8tsp/axNPL4rQZZ0bogO231
+         c8vhCOauNTFoeu/q2r5NsyQNJBMc9U1ywy5Nt+reRVSwvIfee+ONnXutViIQR48cU2HG
+         /fDA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=7g5vTbYZHmeYxWc2Gp9Pqp9iJ2yMYEuiir3i4U6QyGc=;
+        b=ayX8AKH753WRo4COxGRoPSlSNmRK3BjEkr4XRNTLPc6m84WeQ1BC9GeRf1YsjHlG2T
+         PstL5nTdKcoQMe6BEan/eD0kmvoTEbMj31m4aa1+1/vV+nC0/F74swJFjI26x8irnmFB
+         mtIPBuobasgkt9ytlf7mxhFKv8PE0We39DeTfOAzvatPdC1sJK8egKTP+yrMSOkUtPSx
+         eQ7chU1YtdHNyRsNpXwLoDYA26mGU7goW7RgmSoFMWkmMZ1ATiFRPD0AyYqdcKG69Zv+
+         gJ8IzrCjdFGT5LkaW/7+ThfOz/SLv5GvecC0GI8djMqWEL14E0SLXUJA9SkybWE73HSH
+         EsoA==
+X-Gm-Message-State: APjAAAVkv0ybh1VoGEKqVOZ4Opj+GuMA/8i7ki6cadCSnRg2TiVa+tYv
+        VsHi3A2vaO53964vml/RrXk5UL4s
+X-Google-Smtp-Source: APXvYqxaj9XZxFaWcLquzKkYuOY6emBFDT9DQB76RUhm8CVhIxzy0iJ36Ofx4pSQCHKNBl6ONxjr1g==
+X-Received: by 2002:a2e:b0f6:: with SMTP id h22mr8250988ljl.171.1573256300397;
+        Fri, 08 Nov 2019 15:38:20 -0800 (PST)
+Received: from [192.168.2.145] (94-29-10-250.dynamic.spd-mgts.ru. [94.29.10.250])
+        by smtp.googlemail.com with ESMTPSA id n21sm3053273ljc.67.2019.11.08.15.38.18
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 08 Nov 2019 15:38:19 -0800 (PST)
+Subject: Re: [PATCH v9 11/22] clk: tegra: clk-dfll: Add suspend and resume
+ support
+To:     Stephen Boyd <sboyd@kernel.org>,
+        Sowjanya Komatineni <skomatineni@nvidia.com>,
+        jason@lakedaemon.net, jonathanh@nvidia.com,
+        linus.walleij@linaro.org, marc.zyngier@arm.com,
+        mark.rutland@arm.com, stefan@agner.ch, tglx@linutronix.de,
+        thierry.reding@gmail.com
+Cc:     pdeschrijver@nvidia.com, pgaikwad@nvidia.com,
+        linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org,
+        jckuo@nvidia.com, josephl@nvidia.com, talho@nvidia.com,
+        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org,
+        mperttunen@nvidia.com, spatra@nvidia.com, robh+dt@kernel.org,
+        devicetree@vger.kernel.org, rjw@rjwysocki.net,
+        viresh.kumar@linaro.org, linux-pm@vger.kernel.org
+References: <1565984527-5272-1-git-send-email-skomatineni@nvidia.com>
+ <1565984527-5272-12-git-send-email-skomatineni@nvidia.com>
+ <20191108212015.07BC720869@mail.kernel.org>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <f644adda-dc6b-9b7e-3fc2-94091a38c99a@gmail.com>
+Date:   Sat, 9 Nov 2019 02:38:17 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <CAD=FV=V_hieLP-qqU23=shM0PdeXpu=Spe3O6a-WHur7w+AnAQ@mail.gmail.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <20191108212015.07BC720869@mail.kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Nov 08 2019 at 15:57 -0700, Doug Anderson wrote:
->Hi,
->
->On Fri, Nov 8, 2019 at 2:16 PM Lina Iyer <ilina@codeaurora.org> wrote:
->>
->> On Fri, Nov 08 2019 at 14:54 -0700, Lina Iyer wrote:
->> >On Fri, Nov 08 2019 at 14:22 -0700, Doug Anderson wrote:
->> >>Hi,
->> >>
->> >>On Fri, Sep 13, 2019 at 3:00 PM Lina Iyer <ilina@codeaurora.org> wrote:
->> >>>
->> >>>diff --git a/include/linux/soc/qcom/irq.h b/include/linux/soc/qcom/irq.h
->> >>>new file mode 100644
->> >>>index 0000000..85ac4b6
->> >>>--- /dev/null
->> >>>+++ b/include/linux/soc/qcom/irq.h
->> >>>@@ -0,0 +1,19 @@
->> >>>+/* SPDX-License-Identifier: GPL-2.0-only */
->> >>>+
->> >>>+#ifndef __QCOM_IRQ_H
->> >>>+#define __QCOM_IRQ_H
->> >>>+
->> >>
->> >>I happened to be looking at a pile of patches and one of them added:
->> >>
->> >>+#include <linux/irqdomain.h>
->> >>
->> >>...right here.  If/when you spin your patch, maybe you should too?  At
->> >>the moment the patch I was looking at is at:
->> >>
->> >>https://android.googlesource.com/kernel/common/+log/refs/heads/android-mainline-tracking
->> >>
->> >>Specifically:
->> >>
->> >>https://android.googlesource.com/kernel/common/+/448e2302f82a70f52475b6fc32bbe30301052e6b
->> >>
->> >>
->> >Sure, will take care of it in the next spin.
->> >
->> Checking for this, it seems like it would not be needed by this header.
->> There is nothing in this file that would need that header. It was
->> probably a older version that pulled into that tree.
->>
->> Is there a reason now that you see this need?
->
->From the note in the commit I found I'd assume that Maulik Shah (who
->is CCed here) has history?
->
->...but looking at it, I see that your header file refers to
->"IRQ_DOMAIN_FLAG_NONCORE" which is defined in "linux/irqdomain.h".
-Ah, ok. That would need the file. Will add.
+09.11.2019 00:20, Stephen Boyd пишет:
+> Quoting Sowjanya Komatineni (2019-08-16 12:41:56)
+>> diff --git a/drivers/clk/tegra/clk-dfll.c b/drivers/clk/tegra/clk-dfll.c
+>> index f8688c2ddf1a..c051d92c2bbf 100644
+>> --- a/drivers/clk/tegra/clk-dfll.c
+>> +++ b/drivers/clk/tegra/clk-dfll.c
+>> @@ -1487,6 +1487,7 @@ static int dfll_init(struct tegra_dfll *td)
+>>         td->last_unrounded_rate = 0;
+>>  
+>>         pm_runtime_enable(td->dev);
+>> +       pm_runtime_irq_safe(td->dev);
+> 
+> Why irq_safe? It would be good to mention it in the commit text or
+> something.
 
->That means it's good hygiene for you to include the header, right?
->Otherwise all your users need to know that they should include the
->header themselves, which is a bit ugly.
->
->-Doug
+That's a good catch. It was somewhat relevant for some older version of
+this patch, but should be irrelevant now.
+
+[snip]
