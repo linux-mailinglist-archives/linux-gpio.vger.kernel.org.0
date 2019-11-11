@@ -2,201 +2,295 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 8742AF6E48
-	for <lists+linux-gpio@lfdr.de>; Mon, 11 Nov 2019 06:59:51 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 9E58BF6E9B
+	for <lists+linux-gpio@lfdr.de>; Mon, 11 Nov 2019 07:44:14 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726780AbfKKF7u (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 11 Nov 2019 00:59:50 -0500
-Received: from mga01.intel.com ([192.55.52.88]:12455 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726205AbfKKF7u (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Mon, 11 Nov 2019 00:59:50 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 10 Nov 2019 21:59:49 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.68,291,1569308400"; 
-   d="scan'208";a="287086311"
-Received: from linux.intel.com ([10.54.29.200])
-  by orsmga001.jf.intel.com with ESMTP; 10 Nov 2019 21:59:49 -0800
-Received: from [10.226.38.118] (rtanwar-mobl.gar.corp.intel.com [10.226.38.118])
-        by linux.intel.com (Postfix) with ESMTP id 0E53F580261;
-        Sun, 10 Nov 2019 21:59:43 -0800 (PST)
-Subject: Re: [PATCH v5 1/2] pinctrl: Add pinmux & GPIO controller driver for a
- new SoC
-To:     Andy Shevchenko <andriy.shevchenko@intel.com>
-Cc:     linus.walleij@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, robh@kernel.org, qi-ming.wu@intel.com,
-        yixin.zhu@linux.intel.com, cheol.yong.kim@intel.com
-References: <cover.1573196057.git.rahul.tanwar@linux.intel.com>
- <890db37db56e7e49e83b9fa03903bf3482c624c7.1573196057.git.rahul.tanwar@linux.intel.com>
- <20191108114058.GE32742@smile.fi.intel.com>
-From:   "Tanwar, Rahul" <rahul.tanwar@linux.intel.com>
-Message-ID: <b6283998-fc3f-678d-1647-384f2c7749ca@linux.intel.com>
-Date:   Mon, 11 Nov 2019 13:59:42 +0800
+        id S1725812AbfKKGoN (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 11 Nov 2019 01:44:13 -0500
+Received: from mail-sz.amlogic.com ([211.162.65.117]:21657 "EHLO
+        mail-sz.amlogic.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726805AbfKKGoN (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 11 Nov 2019 01:44:13 -0500
+Received: from [10.28.39.106] (10.28.39.106) by mail-sz.amlogic.com
+ (10.28.11.5) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1591.10; Mon, 11 Nov
+ 2019 14:44:28 +0800
+Subject: Re: [PATCH v5 1/3] pinctrl: meson: add a new callback for SoCs fixup
+To:     Neil Armstrong <narmstrong@baylibre.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        <linux-gpio@vger.kernel.org>
+CC:     Jerome Brunet <jbrunet@baylibre.com>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        Carlo Caione <carlo@caione.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Xingyu Chen <xingyu.chen@amlogic.com>,
+        Jianxin Pan <jianxin.pan@amlogic.com>,
+        Hanjie Lin <hanjie.lin@amlogic.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-amlogic@lists.infradead.org>, <linux-kernel@vger.kernel.org>
+References: <1573203636-7436-1-git-send-email-qianggui.song@amlogic.com>
+ <1573203636-7436-2-git-send-email-qianggui.song@amlogic.com>
+ <54809378-d4b0-2013-eb22-d6570eff2a8c@baylibre.com>
+From:   Qianggui Song <qianggui.song@amlogic.com>
+Message-ID: <ce76e0e0-62b4-ca89-5d56-982b021af72c@amlogic.com>
+Date:   Mon, 11 Nov 2019 14:44:28 +0800
 User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+ Thunderbird/60.9.1
 MIME-Version: 1.0
-In-Reply-To: <20191108114058.GE32742@smile.fi.intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <54809378-d4b0-2013-eb22-d6570eff2a8c@baylibre.com>
+Content-Type: text/plain; charset="utf-8"
 Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.28.39.106]
+X-ClientProxiedBy: mail-sz.amlogic.com (10.28.11.5) To mail-sz.amlogic.com
+ (10.28.11.5)
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
 
-Hi Andy,
 
-On 8/11/2019 7:40 PM, Andy Shevchenko wrote:
-> On Fri, Nov 08, 2019 at 05:42:22PM +0800, Rahul Tanwar wrote:
->> Intel Lightning Mountain SoC has a pinmux controller & GPIO controller IP which
->> controls pin multiplexing & configuration including GPIO functions selection &
->> GPIO attributes configuration.
+On 2019/11/8 20:50, Neil Armstrong wrote:
+> Hi,
+> 
+> On 08/11/2019 10:00, Qianggui Song wrote:
+>> In meson_pinctrl_parse_dt, it contains two parts: reg parsing and
+>> SoC relative fixup for AO. Several fixups in the same code make it hard
+>> to maintain, so move all fixups to each SoC's callback and make
+>> meson_pinctrl_parse_dt just do the reg parsing, separate these two
+>> parts.Overview of all current Meson SoCs fixup is as below:
 >>
->> This IP is not based on & does not have anything in common with Chassis
->> specification. The pinctrl drivers under pinctrl/intel/* are all based upon
->> Chassis spec compliant pinctrl IPs. So this driver doesn't fit & can not use
->> pinctrl framework under pinctrl/intel/* and it requires a separate new driver.
+>> +------+--------------------------------------+--------------------------+
+>> |      |                                      |                          |
+>> | SoC  |                EE domain             |        AO domain         |
+>> +------+--------------------------------------+--------------------------+
+>> |m8    | parse regs:                          | parse regs:              |
+>> |m8b   |   gpio,mux,pull,pull-enable(skip ds) |    gpio,mux,pull(skip ds)|
+>> |gxl   | fixup:                               | fixup:                   |
+>> |gxbb  |   no                                 |     pull-enable = pull;  |
+>> |axg   |                                      |                          |
+>> +------+--------------------------------------+--------------------------+
+>> |g12a  | parse regs:                          | parse regs:              |
+>> |sm1   |   gpio,mux,pull,pull-enable,ds       |   gpio,mux,ds            |
+>> |      | fixup:                               | fixup:                   |
+>> |      |   no                                 |   pull = gpio;           |
+>> |      |                                      |   pull-enable = gpio;    |
+>> +------+--------------------------------------+--------------------------+
+>> |a1 or | parse regs:                                                     |
+>> |later |  gpio/mux (without ao domain)                                   |
+>> |SoCs  | fixup:                                                          |
+>> |      |  pull = gpio; pull-enable = gpio; ds = gpio;                    |
+>> +------+-----------------------------------------------------------------+
+>> Since m8-axg share the same ao fixup, make a common function
+>> meson8_aobus_parse_dt_extra to do the job.
 >>
->> Add a new GPIO & pin control framework based driver for this IP.
->> +static void eqbr_gpio_enable_irq(struct irq_data *d)
+>> Signed-off-by: Qianggui Song <qianggui.song@amlogic.com>
+>> ---
+>>  drivers/pinctrl/meson/pinctrl-meson-axg.c  |  1 +
+>>  drivers/pinctrl/meson/pinctrl-meson-g12a.c |  9 +++++++++
+>>  drivers/pinctrl/meson/pinctrl-meson-gxbb.c |  1 +
+>>  drivers/pinctrl/meson/pinctrl-meson-gxl.c  |  1 +
+>>  drivers/pinctrl/meson/pinctrl-meson.c      | 25 ++++++++++++++++++-------
+>>  drivers/pinctrl/meson/pinctrl-meson.h      |  5 +++++
+>>  drivers/pinctrl/meson/pinctrl-meson8.c     |  1 +
+>>  drivers/pinctrl/meson/pinctrl-meson8b.c    |  1 +
+>>  8 files changed, 37 insertions(+), 7 deletions(-)
+>>
+>> diff --git a/drivers/pinctrl/meson/pinctrl-meson-axg.c b/drivers/pinctrl/meson/pinctrl-meson-axg.c
+>> index ad502eda4afa..072765db93d7 100644
+>> --- a/drivers/pinctrl/meson/pinctrl-meson-axg.c
+>> +++ b/drivers/pinctrl/meson/pinctrl-meson-axg.c
+>> @@ -1066,6 +1066,7 @@
+>>  	.num_banks	= ARRAY_SIZE(meson_axg_aobus_banks),
+>>  	.pmx_ops	= &meson_axg_pmx_ops,
+>>  	.pmx_data	= &meson_axg_aobus_pmx_banks_data,
+>> +	.parse_dt	= meson8_aobus_parse_dt_extra,
+>>  };
+>>  
+>>  static const struct of_device_id meson_axg_pinctrl_dt_match[] = {
+>> diff --git a/drivers/pinctrl/meson/pinctrl-meson-g12a.c b/drivers/pinctrl/meson/pinctrl-meson-g12a.c
+>> index 582665fd362a..41850e3c0091 100644
+>> --- a/drivers/pinctrl/meson/pinctrl-meson-g12a.c
+>> +++ b/drivers/pinctrl/meson/pinctrl-meson-g12a.c
+>> @@ -1362,6 +1362,14 @@
+>>  	.num_pmx_banks	= ARRAY_SIZE(meson_g12a_aobus_pmx_banks),
+>>  };
+>>  
+>> +static int meson_g12a_aobus_parse_dt_extra(struct meson_pinctrl *pc)
 >> +{
->> +	struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
->> +	struct eqbr_gpio_ctrl *gctrl = gpiochip_get_data(gc);
->> +	unsigned int offset = irqd_to_hwirq(d);
->> +	unsigned long flags;
+>> +	pc->reg_pull = pc->reg_gpio;
+>> +	pc->reg_pullen = pc->reg_gpio;
 >> +
->> +	gc->direction_input(gc, offset);
-> Does this any IO?
-> If so, between above and below a window of possible race.
-> Ditto for all other functions that do something similar.
-
-gpio-mmio lib uses its own spin lock when it does IO in gc->direction_input()
-And that would set pin direction as input (hw ensures that the pin is not
-driven high when set direction) while below will enable interrupton that
-pin. I do not see any possible race condition in that..
-
->> +	raw_spin_lock_irqsave(&gctrl->lock, flags);
->> +	writel(BIT(offset), gctrl->membase + GPIO_IRNRNSET);
->> +	raw_spin_unlock_irqrestore(&gctrl->lock, flags);
+>> +	return 0;
 >> +}
->> +		ret = bgpio_init(&gctrl->chip, dev, gctrl->bank->nr_pins / 8,
->> +				 gctrl->membase + GPIO_IN,
->> +				 gctrl->membase + GPIO_OUTSET,
->> +				 gctrl->membase + GPIO_OUTCLR,
->> +				 gctrl->membase + GPIO_DIR,
->> +				 NULL,
->> +				 0);
-> One line?
+>> +
+>>  static struct meson_pinctrl_data meson_g12a_periphs_pinctrl_data = {
+>>  	.name		= "periphs-banks",
+>>  	.pins		= meson_g12a_periphs_pins,
+>> @@ -1388,6 +1396,7 @@
+>>  	.num_banks	= ARRAY_SIZE(meson_g12a_aobus_banks),
+>>  	.pmx_ops	= &meson_axg_pmx_ops,
+>>  	.pmx_data	= &meson_g12a_aobus_pmx_banks_data,
+>> +	.parse_dt	= meson_g12a_aobus_parse_dt_extra,
+>>  };
+>>  
+>>  static const struct of_device_id meson_g12a_pinctrl_dt_match[] = {
+>> diff --git a/drivers/pinctrl/meson/pinctrl-meson-gxbb.c b/drivers/pinctrl/meson/pinctrl-meson-gxbb.c
+>> index 5bfa56f3847e..926b9997159a 100644
+>> --- a/drivers/pinctrl/meson/pinctrl-meson-gxbb.c
+>> +++ b/drivers/pinctrl/meson/pinctrl-meson-gxbb.c
+>> @@ -851,6 +851,7 @@
+>>  	.num_funcs	= ARRAY_SIZE(meson_gxbb_aobus_functions),
+>>  	.num_banks	= ARRAY_SIZE(meson_gxbb_aobus_banks),
+>>  	.pmx_ops	= &meson8_pmx_ops,
+>> +	.parse_dt	= meson8_aobus_parse_dt_extra,
+>>  };
+>>  
+>>  static const struct of_device_id meson_gxbb_pinctrl_dt_match[] = {
+>> diff --git a/drivers/pinctrl/meson/pinctrl-meson-gxl.c b/drivers/pinctrl/meson/pinctrl-meson-gxl.c
+>> index 72c5373c8dc1..8b1a49f5da43 100644
+>> --- a/drivers/pinctrl/meson/pinctrl-meson-gxl.c
+>> +++ b/drivers/pinctrl/meson/pinctrl-meson-gxl.c
+>> @@ -820,6 +820,7 @@
+>>  	.num_funcs	= ARRAY_SIZE(meson_gxl_aobus_functions),
+>>  	.num_banks	= ARRAY_SIZE(meson_gxl_aobus_banks),
+>>  	.pmx_ops	= &meson8_pmx_ops,
+>> +	.parse_dt 	= meson8_aobus_parse_dt_extra,
+>>  };
+>>  
+>>  static const struct of_device_id meson_gxl_pinctrl_dt_match[] = {
+>> diff --git a/drivers/pinctrl/meson/pinctrl-meson.c b/drivers/pinctrl/meson/pinctrl-meson.c
+>> index 8bba9d053d9f..a812c6d986d9 100644
+>> --- a/drivers/pinctrl/meson/pinctrl-meson.c
+>> +++ b/drivers/pinctrl/meson/pinctrl-meson.c
+>> @@ -625,7 +625,7 @@ static struct regmap *meson_map_resource(struct meson_pinctrl *pc,
+>>  
+>>  	i = of_property_match_string(node, "reg-names", name);
+>>  	if (of_address_to_resource(node, i, &res))
+>> -		return ERR_PTR(-ENOENT);
+>> +		return NULL;
+>>  
+>>  	base = devm_ioremap_resource(pc->dev, &res);
+>>  	if (IS_ERR(base))
+>> @@ -665,26 +665,24 @@ static int meson_pinctrl_parse_dt(struct meson_pinctrl *pc,
+>>  	pc->of_node = gpio_np;
+>>  
+>>  	pc->reg_mux = meson_map_resource(pc, gpio_np, "mux");
+>> -	if (IS_ERR(pc->reg_mux)) {
+>> +	if (IS_ERR_OR_NULL(pc->reg_mux)) {
+>>  		dev_err(pc->dev, "mux registers not found\n");
+>>  		return PTR_ERR(pc->reg_mux);
+> 
+> If pc->reg_mux is NULL, it will return "0" here, which is wrong.
+> 
+> Either keep the return ERR_PTR(-ENOENT); in meson_map_resource, or
+> 	return pc->reg_mux ? -ENOENT : PTR_ERR(pc->reg_mux);
+> 
+ Thanks. ERR_PTR(-ENOENT) to NULL make below region easy to handle, I
+will change to "return pc->reg_mux ? -ENOENT : PTR_ERR(pc->reg_mux);"
 
-Sure, missed it.
-
->> +static int get_drv_cur(void __iomem *mem, unsigned int offset)
+>>  	}
+>>  
+>>  	pc->reg_gpio = meson_map_resource(pc, gpio_np, "gpio");
+>> -	if (IS_ERR(pc->reg_gpio)) {
+>> +	if (IS_ERR_OR_NULL(pc->reg_gpio)) {
+>>  		dev_err(pc->dev, "gpio registers not found\n");
+>>  		return PTR_ERR(pc->reg_gpio);
+> 
+> Ditto
+will do as above.
+> 
+>>  	}
+>>  
+>>  	pc->reg_pull = meson_map_resource(pc, gpio_np, "pull");
+>> -	/* Use gpio region if pull one is not present */
+>>  	if (IS_ERR(pc->reg_pull))
+>> -		pc->reg_pull = pc->reg_gpio;
+>> +		pc->reg_pull = NULL;
+>>  
+>>  	pc->reg_pullen = meson_map_resource(pc, gpio_np, "pull-enable");
+>> -	/* Use pull region if pull-enable one is not present */
+>>  	if (IS_ERR(pc->reg_pullen))
+>> -		pc->reg_pullen = pc->reg_pull;
+>> +		pc->reg_pullen = NULL;
+>>  
+>>  	pc->reg_ds = meson_map_resource(pc, gpio_np, "ds");
+>>  	if (IS_ERR(pc->reg_ds)) {
+>> @@ -692,6 +690,19 @@ static int meson_pinctrl_parse_dt(struct meson_pinctrl *pc,
+>>  		pc->reg_ds = NULL;
+>>  	}
+>>  
+>> +	if (pc->data->parse_dt)
+>> +		return pc->data->parse_dt(pc);
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +int meson8_aobus_parse_dt_extra(struct meson_pinctrl *pc)
 >> +{
->> +	unsigned int idx = offset / DRV_CUR_PINS; /* 0-15, 16-31 per register*/
->> +	unsigned int val;
+>> +	if (!pc->reg_pull)
+>> +		return -EINVAL;
 >> +
->> +	val = readl(mem + REG_DRCC(idx));
->> +	offset %= DRV_CUR_PINS;
-> From style point of view is better to have
-> 	... foo = offset / X;
-> 	... bar = offset % X;
->
-> directly in definition block. Moreover, for example, on x86 it might be
-> converted by compiler to single idiv call in assembly that returns in
-> (eax, edx) both values at once.
-
-Ok, i will change it like that but will have to introduce one more variable.
-
->> +	val = PARSE_DRV_CURRENT(val, offset);
+>> +	pc->reg_pullen = pc->reg_pull;
 >> +
->> +	return val;
->> +}
->> +	if (!(bank->aval_pinmap & BIT(offset))) {
->> +		dev_err(pctl->dev,
->> +			"PIN: %u is not valid, pinbase: %u, bitmap: %u\n",
->> +			pin, bank->pin_base, bank->aval_pinmap);
->> +		return -ENODEV;
->> +	}
-> Looks like aval_pinmap is NIH of valid_mask bitmap in GPIO library.
-> Can you check if it suits your purposes?
-
-I did check about it earlier & now as well. It doesn't suit our purpose.
-aval_pinmapin the driver indicates whether pad control of this pad is
-available or not. It's for all pins irrespective of if it is used as a
-gpio or not. Whereas, valid_mask bitmap of GPIO library is just to
-indicate if that gpio line is valid or not. valid_mask would have been
-useful if this driver was purely a GPIO driver.
-
->> +static bool is_func_exist(struct eqbr_pmx_func *funcs, const char *name,
->> +			 unsigned int nr_funcs, unsigned int *idx)
->> +{
->> +	int i;
+>>  	return 0;
+>>  }
+>>  
+>> diff --git a/drivers/pinctrl/meson/pinctrl-meson.h b/drivers/pinctrl/meson/pinctrl-meson.h
+>> index c696f3241a36..bfa1d3599333 100644
+>> --- a/drivers/pinctrl/meson/pinctrl-meson.h
+>> +++ b/drivers/pinctrl/meson/pinctrl-meson.h
+>> @@ -11,6 +11,8 @@
+>>  #include <linux/regmap.h>
+>>  #include <linux/types.h>
+>>  
+>> +struct meson_pinctrl;
 >> +
->> +	if (!funcs || !nr_funcs)
->> +		return false;
-> nr_funcs check is a dup of the one in for loop.
-
-Sure, noted.
-
->> +	for (i = 0; i < nr_funcs; i++) {
->> +		if (funcs[i].name && (strcmp(funcs[i].name, name) == 0) ) {
-> An extra space, but you may use !strcmp() and make it shorter without redundant
-> parentheses.
-
-Well noted, thanks.
-
->> +			*idx = i;
->> +			return true;
->> +		}
->> +	}
->> +
->> +	return false;
->> +}
->> +		switch (op) {
->> +			case OP_COUNT_NR_FUNCS:
-> case goes usually on the same column as switch.
-
-Sure, will change, didn't know about it. Thanks.
-
->> +				if (!is_func_exist(funcs, fn_name,
->> +						   *nr_funcs, &fid))
->> +					*nr_funcs = *nr_funcs + 1;
->> +				break;
->> +
->> +			case OP_ADD_FUNCS:
->> +				if (!is_func_exist(funcs, fn_name,
->> +						   *nr_funcs, &fid))
->> +					funcs[i].name = fn_name;
->> +				break;
->> +
->> +			case OP_COUNT_NR_FUNC_GRPS:
->> +				if (is_func_exist(funcs, fn_name,
->> +						  *nr_funcs, &fid))
->> +					funcs[fid].nr_groups++;
->> +				break;
->> +
->> +			case OP_ADD_FUNC_GRPS:
->> +				if (is_func_exist(funcs, fn_name,
->> +						  *nr_funcs, &fid)) {
->> +					for(j=0;
-> Other style issueS.
-
-Will fix in v6, thanks.
-
->> +		}
->> +	for (i = 0; i < nr_funcs; i++) {
->> +		if (funcs[i].nr_groups) {
-> 	if (!foo)
-> 		continue;
-> ?
-
-Sure, will change. Thanks.
-
-Regards,
-Rahul
-
+>>  /**
+>>   * struct meson_pmx_group - a pinmux group
+>>   *
+>> @@ -114,6 +116,7 @@ struct meson_pinctrl_data {
+>>  	unsigned int num_banks;
+>>  	const struct pinmux_ops *pmx_ops;
+>>  	void *pmx_data;
+>> +	int (*parse_dt)(struct meson_pinctrl *pc);
+>>  };
+>>  
+>>  struct meson_pinctrl {
+>> @@ -171,3 +174,5 @@ int meson_pmx_get_groups(struct pinctrl_dev *pcdev,
+>>  
+>>  /* Common probe function */
+>>  int meson_pinctrl_probe(struct platform_device *pdev);
+>> +/* Common ao groups extra dt parse function for SoCs before g12a  */
+>> +int meson8_aobus_parse_dt_extra(struct meson_pinctrl *pc);
+>> diff --git a/drivers/pinctrl/meson/pinctrl-meson8.c b/drivers/pinctrl/meson/pinctrl-meson8.c
+>> index 0b97befa6335..dd17100efdcf 100644
+>> --- a/drivers/pinctrl/meson/pinctrl-meson8.c
+>> +++ b/drivers/pinctrl/meson/pinctrl-meson8.c
+>> @@ -1103,6 +1103,7 @@
+>>  	.num_funcs	= ARRAY_SIZE(meson8_aobus_functions),
+>>  	.num_banks	= ARRAY_SIZE(meson8_aobus_banks),
+>>  	.pmx_ops	= &meson8_pmx_ops,
+>> +	.parse_dt	= &meson8_aobus_parse_dt_extra,
+>>  };
+>>  
+>>  static const struct of_device_id meson8_pinctrl_dt_match[] = {
+>> diff --git a/drivers/pinctrl/meson/pinctrl-meson8b.c b/drivers/pinctrl/meson/pinctrl-meson8b.c
+>> index a7de388388e6..2d5339edd0b7 100644
+>> --- a/drivers/pinctrl/meson/pinctrl-meson8b.c
+>> +++ b/drivers/pinctrl/meson/pinctrl-meson8b.c
+>> @@ -962,6 +962,7 @@
+>>  	.num_funcs	= ARRAY_SIZE(meson8b_aobus_functions),
+>>  	.num_banks	= ARRAY_SIZE(meson8b_aobus_banks),
+>>  	.pmx_ops	= &meson8_pmx_ops,
+>> +	.parse_dt	= &meson8_aobus_parse_dt_extra,
+>>  };
+>>  
+>>  static const struct of_device_id meson8b_pinctrl_dt_match[] = {
+>>
+> 
+> .
+> 
