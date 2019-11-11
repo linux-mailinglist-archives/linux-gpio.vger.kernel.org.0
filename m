@@ -2,172 +2,127 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 0BD23F72A4
-	for <lists+linux-gpio@lfdr.de>; Mon, 11 Nov 2019 12:00:14 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 6FEC9F72C5
+	for <lists+linux-gpio@lfdr.de>; Mon, 11 Nov 2019 12:07:59 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726834AbfKKLAN (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 11 Nov 2019 06:00:13 -0500
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:35408 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726823AbfKKLAN (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 11 Nov 2019 06:00:13 -0500
-Received: by mail-wr1-f67.google.com with SMTP id s5so3016077wrw.2
-        for <linux-gpio@vger.kernel.org>; Mon, 11 Nov 2019 03:00:04 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=TYoTnmxtieLkll/Leqoa1DJhCx8L4akQBrFiPa7ShkQ=;
-        b=gds7b1wir0aQ7njohNYUaOjiRjXjdxQt2R2dXFLUyaIaBiii6c/tJCNwHkHV0fZM6t
-         ni5mB5W0ZdShI/TVclwG5A2ovUP/c1HggiQgPUe+NuHK43DANgc4//J4wJyIxk8NNVY9
-         NT7V15COgO6pKoiIFGeu5NQp2rA/K31k9AW5X8frG/X3U8a0+8DJV+t+0SSab8wmX4hh
-         vh7Gvx7UqindMzLD2bNHQ3AQf9mxb9rKmcA9prgFSY892MLE/hsVDXvqPBxn2ncc7SaB
-         iafgnCndvQIi4kFryeXd3NErkTWaSA6uX69HDF4nDu4DWrLma+Cu1zkk4J/p6ZvUT57w
-         RMCg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=TYoTnmxtieLkll/Leqoa1DJhCx8L4akQBrFiPa7ShkQ=;
-        b=aZ1jrD++xeIVbdysSZsX2zRfvL0lFMNs1r4EW0B14tV600ES1Xe5zhvV7J0QT5Pf5h
-         aR0Le5ki62BxvJO9rYxLLbXeXZjyii3QvI2DZr2w6E1XCGJvYeeV753nmu1Ja4fSHScE
-         Z+VxMMHhIrCPcHvH1LpDc1w0obFT2Abwq0KF7BDCTCPNx/dwIbUUEtZjuzsyggCI6c05
-         9XZcN1BJK9F8zJiVzRn63VEMJ175MGOlayAYakVdfin+NvTcZTygMMqXwS9Y2Byrugmm
-         5PL4CHlCRuxQc4cLnj4ZaoXMFjnNVcGo+zNQfUdk9M8V42tQryC2RTtvbKy1BcuwzB1A
-         rU+Q==
-X-Gm-Message-State: APjAAAXwCcMySYCv4BcR3AoCIHwLPq3YoPZbeLoEYyY84G2XqKY0uv9W
-        PnQrNzVw5VZ7wgDK9/sYo+dxfg==
-X-Google-Smtp-Source: APXvYqw1xrTXnJrhBxh8P/A8uStccEhy7+/qu3o4uWIkYoYjhVhXXQjMB6DXFsKksquWgg9sZYWfdQ==
-X-Received: by 2002:a05:6000:12c4:: with SMTP id l4mr9236312wrx.110.1573470003617;
-        Mon, 11 Nov 2019 03:00:03 -0800 (PST)
-Received: from dell ([95.147.198.88])
-        by smtp.gmail.com with ESMTPSA id t5sm14215954wro.76.2019.11.11.03.00.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 11 Nov 2019 03:00:03 -0800 (PST)
-Date:   Mon, 11 Nov 2019 10:59:55 +0000
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-Cc:     mazziesaccount@gmail.com,
-        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        linux-leds@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-gpio@vger.kernel.org, linux-rtc@vger.kernel.org
+        id S1726834AbfKKLHv (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 11 Nov 2019 06:07:51 -0500
+Received: from mailgate1.rohmeurope.com ([178.15.145.194]:60974 "EHLO
+        mailgate1.rohmeurope.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726768AbfKKLHv (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 11 Nov 2019 06:07:51 -0500
+X-AuditID: c0a8fbf4-199ff70000001fa6-3b-5dc941036c88
+Received: from smtp.reu.rohmeu.com (will-cas001.reu.rohmeu.com [192.168.251.177])
+        by mailgate1.rohmeurope.com (Symantec Messaging Gateway) with SMTP id EA.5B.08102.30149CD5; Mon, 11 Nov 2019 12:07:47 +0100 (CET)
+Received: from WILL-MAIL002.REu.RohmEu.com ([fe80::e0c3:e88c:5f22:d174]) by
+ WILL-CAS001.REu.RohmEu.com ([fe80::d57e:33d0:7a5d:f0a6%16]) with mapi id
+ 14.03.0439.000; Mon, 11 Nov 2019 12:07:35 +0100
+From:   "Vaittinen, Matti" <Matti.Vaittinen@fi.rohmeurope.com>
+To:     "lee.jones@linaro.org" <lee.jones@linaro.org>
+CC:     "linux-leds@vger.kernel.org" <linux-leds@vger.kernel.org>,
+        "dmurphy@ti.com" <dmurphy@ti.com>,
+        "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "mturquette@baylibre.com" <mturquette@baylibre.com>,
+        "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "mazziesaccount@gmail.com" <mazziesaccount@gmail.com>,
+        "a.zummo@towertech.it" <a.zummo@towertech.it>,
+        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "jacek.anaszewski@gmail.com" <jacek.anaszewski@gmail.com>,
+        "bgolaszewski@baylibre.com" <bgolaszewski@baylibre.com>,
+        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
+        "sboyd@kernel.org" <sboyd@kernel.org>,
+        "pavel@ucw.cz" <pavel@ucw.cz>,
+        "broonie@kernel.org" <broonie@kernel.org>
 Subject: Re: [RFC PATCH v3 05/15] mfd: input: bd71828: Add power-key support
-Message-ID: <20191111105955.GG3218@dell>
+Thread-Topic: [RFC PATCH v3 05/15] mfd: input: bd71828: Add power-key support
+Thread-Index: AQHVkKg5v/4Zzs7MvEOvRwnttfw/rKeFzDiAgAACKwA=
+Date:   Mon, 11 Nov 2019 11:07:34 +0000
+Message-ID: <c28ce3e2f2fbfc26b531cea423feb0dcfbfdb8ef.camel@fi.rohmeurope.com>
 References: <cover.1572606437.git.matti.vaittinen@fi.rohmeurope.com>
- <d7be7969b9fed57e7790811ff90b9a2b4b6478bb.1572606437.git.matti.vaittinen@fi.rohmeurope.com>
+         <d7be7969b9fed57e7790811ff90b9a2b4b6478bb.1572606437.git.matti.vaittinen@fi.rohmeurope.com>
+         <20191111105955.GG3218@dell>
+In-Reply-To: <20191111105955.GG3218@dell>
+Accept-Language: en-US, de-DE
+Content-Language: de-DE
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [213.255.186.46]
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <B338E0C7B6F16942848F9913FA41CE95@de.rohmeurope.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <d7be7969b9fed57e7790811ff90b9a2b4b6478bb.1572606437.git.matti.vaittinen@fi.rohmeurope.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Brightmail-Tracker: H4sIAAAAAAAAA02Ta0wUVxiGPTOzMwdkzLiAHAE1TkqMWi8ktp5YtWBqHIkaExITTVYcZGSJ
+        7CzOLrpeflBa2rqo0aoRVy7WLIXKRnQRBeKtiLqLVxQWGlHBqlExXpAiW5V2hkHh1/nOed/3
+        e74f34Gk8SEdDTNku6TIYiZPh1IXyt+fmEYm+k0zf70NsbuphcE/v/ydwT1FjRTe3/mIxiUN
+        Nww4/+pJA75bfZzCD/65BHBv8y8E3vehjMBvdtw34KqSDwDfqSukcfWLYwBfrmimcWlrE4EL
+        S30UbmpciO81XqJx3tkGBvcHTlAJkYKn2AOEV215jFDs2SrUuu4xgvfodlpoD5yhhSttpwnh
+        QHGQEMor3jHCW+/45aGrRs5NFe0bkzPS5Rnz14w0V/mbQJY31tHRUQhyQHOME4RAxM1CBX0e
+        xglCoZFrAaiju9SgX3wAlXVVAyeAkObmIudfjBaI4OKR2/eY0jwk54aoItBGakI4twS5rx0D
+        umkp6jr1fjAwB53O9Q94KC4O+Z35hFaz3DLkC5wfhF0E6HWgZMAUwk1G13P3DpgANw5tz3k5
+        UJNcFPI+eWfQx+aQ+8xNUq8j0bO/+wffeXQ22ElpQ5Nqn8q6GXo0AbVW9VJ6PRHty+9k9BlG
+        I//BR9RuMMY1jOAaSruGpV3D0q5h6cPAcBQgi5iRmS7apfjpipQ9XbGaLeqx1mrxAn1nemrA
+        f/WL6wEBQT0YCwk+kv1Y6TMZR6Va0zabRZs5RcnOlGz1AEGSj2BrHKrGpombt0iK9ZMUAyk+
+        ip3Uucdk5DTWeknKkpRPaiyEPGLffus3GUcrUrrkWJeRaR+SCRiiNQ+NjrBJcpqkiNl2c4q2
+        ICk2dUM0KUzlEglqnLVliRb1VY82gqlw97OiIyRsKCo9Qhop2SpL0VFsu0biNKs5W/4Meg6i
+        IODD2S5NDVM/zuc+z1UEoSIuXL+sIezikBSdA3Lq/vAJm3a1e54SwZLghpO5ya+Wftd9l/4q
+        2CqfS1r57zJHOP7+oXut5Zsvf4jpW9SwcsEipaCgWJrvbo01XaF/jJsXEBKDt/ocSf1GfsXF
+        qb6dEyrEjR97/uzOW957SPnpi5avJ5XLqbNTe1zXRtTWrk7vf0yv2zNvxzY28beasMpknrKZ
+        xfgppGIT/weaDKdo9QMAAA==
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, 01 Nov 2019, Matti Vaittinen wrote:
-
-> Use gpio_keys to send power input-event to user-space when power
-> button (short) press is detected.
-> 
-> Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-> ---
-> 
-> Changes from v2 - No changes
-> 
->  drivers/mfd/rohm-bd71828.c | 28 ++++++++++++++++++++++++++++
->  1 file changed, 28 insertions(+)
-> 
-> diff --git a/drivers/mfd/rohm-bd71828.c b/drivers/mfd/rohm-bd71828.c
-> index b7de79e1fcdb..f77ba1ec3e99 100644
-> --- a/drivers/mfd/rohm-bd71828.c
-> +++ b/drivers/mfd/rohm-bd71828.c
-> @@ -4,7 +4,9 @@
->  //
->  // ROHM BD71828 PMIC driver
->  
-> +#include <linux/gpio_keys.h>
->  #include <linux/i2c.h>
-> +#include <linux/input.h>
->  #include <linux/interrupt.h>
->  #include <linux/ioport.h>
->  #include <linux/irq.h>
-> @@ -15,6 +17,18 @@
->  #include <linux/regmap.h>
->  #include <linux/types.h>
->  
-> +static struct gpio_keys_button button = {
-> +	.code = KEY_POWER,
-> +	.gpio = -1,
-> +	.type = EV_KEY,
-> +};
-> +
-> +static struct gpio_keys_platform_data bd71828_powerkey_data = {
-> +	.buttons = &button,
-> +	.nbuttons = 1,
-> +	.name = "bd71828-pwrkey",
-> +};
-> +
->  static const struct resource rtc_irqs[] = {
->  	DEFINE_RES_IRQ_NAMED(BD71828_INT_RTC0, "bd71828-rtc-alm-0"),
->  	DEFINE_RES_IRQ_NAMED(BD71828_INT_RTC1, "bd71828-rtc-alm-1"),
-> @@ -36,6 +50,10 @@ static struct mfd_cell bd71828_mfd_cells[] = {
->  		.name = "bd70528-rtc",
->  		.resources = rtc_irqs,
->  		.num_resources = ARRAY_SIZE(rtc_irqs),
-> +	}, {
-> +		.name = "gpio-keys",
-> +		.platform_data = &bd71828_powerkey_data,
-> +		.pdata_size = sizeof(bd71828_powerkey_data),
->  	},
->  };
->  
-> @@ -288,9 +306,19 @@ static int bd71828_i2c_probe(struct i2c_client *i2c,
->  		dev_err(&i2c->dev, "Failed to add IRQ chip\n");
->  		return ret;
->  	}
-> +
-
-This should be fixed in the last patch.
-
->  	dev_dbg(&i2c->dev, "Registered %d IRQs for chip\n",
->  		bd71828_irq_chip.num_irqs);
->  
-> +	ret = regmap_irq_get_virq(irq_data, BD71828_INT_SHORTPUSH);
-> +
-
-Remove this empty line.
-
-> +	if (ret < 0) {
-> +		dev_err(&i2c->dev, "Failed to get the power-key IRQ\n");
-> +		return ret;
-> +	}
-> +
-> +	button.irq = ret;
-> +
-
-Once fixed, please apply my:
-
-For my own reference:
-  Acked-for-MFD-by: Lee Jones <lee.jones@linaro.org>
-
--- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+SGVsbG8gTGVlLA0KDQpPbiBNb24sIDIwMTktMTEtMTEgYXQgMTA6NTkgKzAwMDAsIExlZSBKb25l
+cyB3cm90ZToNCj4gT24gRnJpLCAwMSBOb3YgMjAxOSwgTWF0dGkgVmFpdHRpbmVuIHdyb3RlOg0K
+PiANCj4gPiBVc2UgZ3Bpb19rZXlzIHRvIHNlbmQgcG93ZXIgaW5wdXQtZXZlbnQgdG8gdXNlci1z
+cGFjZSB3aGVuIHBvd2VyDQo+ID4gYnV0dG9uIChzaG9ydCkgcHJlc3MgaXMgZGV0ZWN0ZWQuDQo+
+ID4gDQo+ID4gU2lnbmVkLW9mZi1ieTogTWF0dGkgVmFpdHRpbmVuIDxtYXR0aS52YWl0dGluZW5A
+Zmkucm9obWV1cm9wZS5jb20+DQo+ID4gLS0tDQo+ID4gDQo+ID4gQ2hhbmdlcyBmcm9tIHYyIC0g
+Tm8gY2hhbmdlcw0KPiA+IA0KPiA+ICBkcml2ZXJzL21mZC9yb2htLWJkNzE4MjguYyB8IDI4ICsr
+KysrKysrKysrKysrKysrKysrKysrKysrKysNCj4gPiAgMSBmaWxlIGNoYW5nZWQsIDI4IGluc2Vy
+dGlvbnMoKykNCj4gPiANCj4gPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9tZmQvcm9obS1iZDcxODI4
+LmMgYi9kcml2ZXJzL21mZC9yb2htLQ0KPiA+IGJkNzE4MjguYw0KPiA+IGluZGV4IGI3ZGU3OWUx
+ZmNkYi4uZjc3YmExZWMzZTk5IDEwMDY0NA0KPiA+IC0tLSBhL2RyaXZlcnMvbWZkL3JvaG0tYmQ3
+MTgyOC5jDQo+ID4gKysrIGIvZHJpdmVycy9tZmQvcm9obS1iZDcxODI4LmMNCj4gPiBAQCAtNCw3
+ICs0LDkgQEANCj4gPiAgLy8NCj4gPiAgLy8gUk9ITSBCRDcxODI4IFBNSUMgZHJpdmVyDQo+ID4g
+IA0KPiA+ICsjaW5jbHVkZSA8bGludXgvZ3Bpb19rZXlzLmg+DQo+ID4gICNpbmNsdWRlIDxsaW51
+eC9pMmMuaD4NCj4gPiArI2luY2x1ZGUgPGxpbnV4L2lucHV0Lmg+DQo+ID4gICNpbmNsdWRlIDxs
+aW51eC9pbnRlcnJ1cHQuaD4NCj4gPiAgI2luY2x1ZGUgPGxpbnV4L2lvcG9ydC5oPg0KPiA+ICAj
+aW5jbHVkZSA8bGludXgvaXJxLmg+DQo+ID4gQEAgLTE1LDYgKzE3LDE4IEBADQo+ID4gICNpbmNs
+dWRlIDxsaW51eC9yZWdtYXAuaD4NCj4gPiAgI2luY2x1ZGUgPGxpbnV4L3R5cGVzLmg+DQo+ID4g
+IA0KPiA+ICtzdGF0aWMgc3RydWN0IGdwaW9fa2V5c19idXR0b24gYnV0dG9uID0gew0KPiA+ICsJ
+LmNvZGUgPSBLRVlfUE9XRVIsDQo+ID4gKwkuZ3BpbyA9IC0xLA0KPiA+ICsJLnR5cGUgPSBFVl9L
+RVksDQo+ID4gK307DQo+ID4gKw0KPiA+ICtzdGF0aWMgc3RydWN0IGdwaW9fa2V5c19wbGF0Zm9y
+bV9kYXRhIGJkNzE4MjhfcG93ZXJrZXlfZGF0YSA9IHsNCj4gPiArCS5idXR0b25zID0gJmJ1dHRv
+biwNCj4gPiArCS5uYnV0dG9ucyA9IDEsDQo+ID4gKwkubmFtZSA9ICJiZDcxODI4LXB3cmtleSIs
+DQo+ID4gK307DQo+ID4gKw0KPiA+ICBzdGF0aWMgY29uc3Qgc3RydWN0IHJlc291cmNlIHJ0Y19p
+cnFzW10gPSB7DQo+ID4gIAlERUZJTkVfUkVTX0lSUV9OQU1FRChCRDcxODI4X0lOVF9SVEMwLCAi
+YmQ3MTgyOC1ydGMtYWxtLTAiKSwNCj4gPiAgCURFRklORV9SRVNfSVJRX05BTUVEKEJENzE4Mjhf
+SU5UX1JUQzEsICJiZDcxODI4LXJ0Yy1hbG0tMSIpLA0KPiA+IEBAIC0zNiw2ICs1MCwxMCBAQCBz
+dGF0aWMgc3RydWN0IG1mZF9jZWxsIGJkNzE4MjhfbWZkX2NlbGxzW10gPSB7DQo+ID4gIAkJLm5h
+bWUgPSAiYmQ3MDUyOC1ydGMiLA0KPiA+ICAJCS5yZXNvdXJjZXMgPSBydGNfaXJxcywNCj4gPiAg
+CQkubnVtX3Jlc291cmNlcyA9IEFSUkFZX1NJWkUocnRjX2lycXMpLA0KPiA+ICsJfSwgew0KPiA+
+ICsJCS5uYW1lID0gImdwaW8ta2V5cyIsDQo+ID4gKwkJLnBsYXRmb3JtX2RhdGEgPSAmYmQ3MTgy
+OF9wb3dlcmtleV9kYXRhLA0KPiA+ICsJCS5wZGF0YV9zaXplID0gc2l6ZW9mKGJkNzE4MjhfcG93
+ZXJrZXlfZGF0YSksDQo+ID4gIAl9LA0KPiA+ICB9Ow0KPiA+ICANCj4gPiBAQCAtMjg4LDkgKzMw
+NiwxOSBAQCBzdGF0aWMgaW50IGJkNzE4MjhfaTJjX3Byb2JlKHN0cnVjdCBpMmNfY2xpZW50DQo+
+ID4gKmkyYywNCj4gPiAgCQlkZXZfZXJyKCZpMmMtPmRldiwgIkZhaWxlZCB0byBhZGQgSVJRIGNo
+aXBcbiIpOw0KPiA+ICAJCXJldHVybiByZXQ7DQo+ID4gIAl9DQo+ID4gKw0KPiANCj4gVGhpcyBz
+aG91bGQgYmUgZml4ZWQgaW4gdGhlIGxhc3QgcGF0Y2guDQo+IA0KPiA+ICAJZGV2X2RiZygmaTJj
+LT5kZXYsICJSZWdpc3RlcmVkICVkIElSUXMgZm9yIGNoaXBcbiIsDQo+ID4gIAkJYmQ3MTgyOF9p
+cnFfY2hpcC5udW1faXJxcyk7DQo+ID4gIA0KPiA+ICsJcmV0ID0gcmVnbWFwX2lycV9nZXRfdmly
+cShpcnFfZGF0YSwgQkQ3MTgyOF9JTlRfU0hPUlRQVVNIKTsNCj4gPiArDQo+IA0KPiBSZW1vdmUg
+dGhpcyBlbXB0eSBsaW5lLg0KPiANCj4gPiArCWlmIChyZXQgPCAwKSB7DQo+ID4gKwkJZGV2X2Vy
+cigmaTJjLT5kZXYsICJGYWlsZWQgdG8gZ2V0IHRoZSBwb3dlci1rZXkNCj4gPiBJUlFcbiIpOw0K
+PiA+ICsJCXJldHVybiByZXQ7DQo+ID4gKwl9DQo+ID4gKw0KPiA+ICsJYnV0dG9uLmlycSA9IHJl
+dDsNCj4gPiArDQo+IA0KPiBPbmNlIGZpeGVkLCBwbGVhc2UgYXBwbHkgbXk6DQo+IA0KPiBGb3Ig
+bXkgb3duIHJlZmVyZW5jZToNCj4gICBBY2tlZC1mb3ItTUZELWJ5OiBMZWUgSm9uZXMgPGxlZS5q
+b25lc0BsaW5hcm8ub3JnPg0KPiANCg0KVGhhbmtzIGZvciBjaGVja2luZyB0aGlzIDopIEknbGwg
+YXBwbHkgZml4ZXMgaW4gcGF0Y2ggdjQuDQoNCg0KDQo=
