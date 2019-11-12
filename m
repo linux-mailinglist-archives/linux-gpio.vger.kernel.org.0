@@ -2,116 +2,115 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 9CA34F94DB
-	for <lists+linux-gpio@lfdr.de>; Tue, 12 Nov 2019 16:57:26 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3C3A3F9677
+	for <lists+linux-gpio@lfdr.de>; Tue, 12 Nov 2019 18:02:01 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726960AbfKLP5Z (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 12 Nov 2019 10:57:25 -0500
-Received: from mga12.intel.com ([192.55.52.136]:64016 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725954AbfKLP5Z (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Tue, 12 Nov 2019 10:57:25 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 12 Nov 2019 07:57:25 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.68,296,1569308400"; 
-   d="scan'208";a="287583262"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by orsmga001.jf.intel.com with ESMTP; 12 Nov 2019 07:57:23 -0800
-Received: by black.fi.intel.com (Postfix, from userid 1003)
-        id 2C2AFFD; Tue, 12 Nov 2019 17:57:22 +0200 (EET)
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Mika Westerberg <mika.westerberg@linux.intel.com>,
-        linux-gpio@vger.kernel.org,
-        Linus Walleij <linus.walleij@linaro.org>
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: [PATCH v1] pinctrl: baytrail: Update North Community pin list
-Date:   Tue, 12 Nov 2019 17:57:21 +0200
-Message-Id: <20191112155721.3760-1-andriy.shevchenko@linux.intel.com>
-X-Mailer: git-send-email 2.24.0
+        id S1726978AbfKLRBv (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 12 Nov 2019 12:01:51 -0500
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:43209 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726936AbfKLRBu (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 12 Nov 2019 12:01:50 -0500
+Received: by mail-pf1-f196.google.com with SMTP id 3so13770206pfb.10
+        for <linux-gpio@vger.kernel.org>; Tue, 12 Nov 2019 09:01:50 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=GDojT++zYyimFKXjGTgtIMvoNwjyBW8FizODRtTHlkU=;
+        b=gqdeS5lER8xfVdf3MPfzRhQWtIdYGVkfvSEfkEikV5sK+iUbNyoUDxfqd0+Gf8qRon
+         qIHWABuQ6RrIuV9KP9et/nCefEYxwgv0VU6xWDH/6WigGjakxakLa/uAk/OZfK6aVs7K
+         LvkNK+dcIIHQrnxcoqA/IqdlZjyzz32xgRlYjaX7VbauzkexzJ8FhEebDZqN5k6CV5bv
+         1E2P4sJBj7B20dAtY+vRdNYhwg7+Crzg+hEcAIZsxPn2ZVIiajYUgAJYOPGKF8JwDcwE
+         0IZzMwP9eCWaBLOLkKUPL66WfWRvEgGNsCoRadK6bSa6QAU6DElkyAo1XDy0qVlKPQZg
+         tUWA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=GDojT++zYyimFKXjGTgtIMvoNwjyBW8FizODRtTHlkU=;
+        b=ckVZ1vu66GGPt/ZY88Fsy39Y7HHCbHv1hW6/DALEWe0KTrUQu0u8XhJYLWsVFeeoun
+         imDxIHi9KI1vVEtFBTka8L0/apsw0XMar7C269AQEq5WDWxcCx58uVetZeqnG45hUHlb
+         Y0pgT8e6p/xpHy+PAqoRtfnUfsyxy9SG83WtXDTJe3Ch9GOBkBO2E3xAKFJua8Zf5QoV
+         8LqsCWZMffZQsQ6qzuRsdDuW0ECfJqnpweghdYoLXdNDshaKaOXQM/Yqoi+1EXRRi7ZZ
+         utLYBz4pB3oDlxQgrlI+hCSzf4EzgT0Sa5uD+aZbb5mwnYO3wXQrtVrQj4+qnw2d8hO8
+         Efug==
+X-Gm-Message-State: APjAAAUFdkIMuhty4bBkXABon94WLtVhgXwe97u7tN7qxk1531hBJuzL
+        Ji4+40+1URirL8NO8DyWcFrxjA==
+X-Google-Smtp-Source: APXvYqw4G8Nv44pA6Fs7EzjALZ0qCpPOe1DYkXKQWUmcJweMaKJlE6IhOyuyuFHl+85B3ZJqZHBicw==
+X-Received: by 2002:aa7:85d7:: with SMTP id z23mr38064618pfn.24.1573578109877;
+        Tue, 12 Nov 2019 09:01:49 -0800 (PST)
+Received: from yoga (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id y138sm20294845pfb.174.2019.11.12.09.01.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 12 Nov 2019 09:01:48 -0800 (PST)
+Date:   Tue, 12 Nov 2019 09:01:44 -0800
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+Cc:     mazziesaccount@gmail.com, Linus Walleij <linus.walleij@linaro.org>,
+        Eric Anholt <eric@anholt.net>,
+        Stefan Wahren <wahrenst@gmx.net>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Ray Jui <rjui@broadcom.com>,
+        Scott Branden <sbranden@broadcom.com>,
+        bcm-kernel-feedback-list@broadcom.com,
+        Sean Wang <sean.wang@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Gregory Clement <gregory.clement@bootlin.com>,
+        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
+        Ludovic Desroches <ludovic.desroches@microchip.com>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Paul Cercueil <paul@crapouillou.net>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Patrice Chotard <patrice.chotard@st.com>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Andy Gross <agross@kernel.org>, linux-gpio@vger.kernel.org,
+        linux-rpi-kernel@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-mediatek@lists.infradead.org, linux-oxnas@groups.io,
+        linux-rockchip@lists.infradead.org,
+        linux-renesas-soc@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-msm@vger.kernel.org
+Subject: Re: [PATCH 2/2] pinctrl: Use new GPIO_LINE_DIRECTION
+Message-ID: <20191112170144.GF3797@yoga>
+References: <20191112141819.GA22076@localhost.localdomain>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191112141819.GA22076@localhost.localdomain>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Update North Community pin list to be more clear about pin functions.
+On Tue 12 Nov 06:18 PST 2019, Matti Vaittinen wrote:
+> diff --git a/drivers/pinctrl/qcom/pinctrl-msm.c b/drivers/pinctrl/qcom/pinctrl-msm.c
+> index 763da0be10d6..8844ca1261d5 100644
+> --- a/drivers/pinctrl/qcom/pinctrl-msm.c
+> +++ b/drivers/pinctrl/qcom/pinctrl-msm.c
+> @@ -485,8 +485,8 @@ static int msm_gpio_get_direction(struct gpio_chip *chip, unsigned int offset)
+>  
+>  	val = msm_readl_ctl(pctrl, g);
+>  
+> -	/* 0 = output, 1 = input */
+> -	return val & BIT(g->oe_bit) ? 0 : 1;
+> +	return val & BIT(g->oe_bit) ? GPIO_LINE_DIRECTION_OUT :
+> +				      GPIO_LINE_DIRECTION_IN;
+>  }
+>  
 
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
----
- drivers/pinctrl/intel/pinctrl-baytrail.c | 56 ++++++++++++------------
- 1 file changed, 28 insertions(+), 28 deletions(-)
+For pinctrl-msm
 
-diff --git a/drivers/pinctrl/intel/pinctrl-baytrail.c b/drivers/pinctrl/intel/pinctrl-baytrail.c
-index cf19a0e28c1c..80cdb976a134 100644
---- a/drivers/pinctrl/intel/pinctrl-baytrail.c
-+++ b/drivers/pinctrl/intel/pinctrl-baytrail.c
-@@ -483,34 +483,34 @@ static const struct intel_pinctrl_soc_data byt_sus_soc_data = {
- };
- 
- static const struct pinctrl_pin_desc byt_ncore_pins[] = {
--	PINCTRL_PIN(0, "GPIO_NCORE0"),
--	PINCTRL_PIN(1, "GPIO_NCORE1"),
--	PINCTRL_PIN(2, "GPIO_NCORE2"),
--	PINCTRL_PIN(3, "GPIO_NCORE3"),
--	PINCTRL_PIN(4, "GPIO_NCORE4"),
--	PINCTRL_PIN(5, "GPIO_NCORE5"),
--	PINCTRL_PIN(6, "GPIO_NCORE6"),
--	PINCTRL_PIN(7, "GPIO_NCORE7"),
--	PINCTRL_PIN(8, "GPIO_NCORE8"),
--	PINCTRL_PIN(9, "GPIO_NCORE9"),
--	PINCTRL_PIN(10, "GPIO_NCORE10"),
--	PINCTRL_PIN(11, "GPIO_NCORE11"),
--	PINCTRL_PIN(12, "GPIO_NCORE12"),
--	PINCTRL_PIN(13, "GPIO_NCORE13"),
--	PINCTRL_PIN(14, "GPIO_NCORE14"),
--	PINCTRL_PIN(15, "GPIO_NCORE15"),
--	PINCTRL_PIN(16, "GPIO_NCORE16"),
--	PINCTRL_PIN(17, "GPIO_NCORE17"),
--	PINCTRL_PIN(18, "GPIO_NCORE18"),
--	PINCTRL_PIN(19, "GPIO_NCORE19"),
--	PINCTRL_PIN(20, "GPIO_NCORE20"),
--	PINCTRL_PIN(21, "GPIO_NCORE21"),
--	PINCTRL_PIN(22, "GPIO_NCORE22"),
--	PINCTRL_PIN(23, "GPIO_NCORE23"),
--	PINCTRL_PIN(24, "GPIO_NCORE24"),
--	PINCTRL_PIN(25, "GPIO_NCORE25"),
--	PINCTRL_PIN(26, "GPIO_NCORE26"),
--	PINCTRL_PIN(27, "GPIO_NCORE27"),
-+	PINCTRL_PIN(0, "HV_DDI0_HPD"),
-+	PINCTRL_PIN(1, "HV_DDI0_DDC_SDA"),
-+	PINCTRL_PIN(2, "HV_DDI0_DDC_SCL"),
-+	PINCTRL_PIN(3, "PANEL0_VDDEN"),
-+	PINCTRL_PIN(4, "PANEL0_BKLTEN"),
-+	PINCTRL_PIN(5, "PANEL0_BKLTCTL"),
-+	PINCTRL_PIN(6, "HV_DDI1_HPD"),
-+	PINCTRL_PIN(7, "HV_DDI1_DDC_SDA"),
-+	PINCTRL_PIN(8, "HV_DDI1_DDC_SCL"),
-+	PINCTRL_PIN(9, "PANEL1_VDDEN"),
-+	PINCTRL_PIN(10, "PANEL1_BKLTEN"),
-+	PINCTRL_PIN(11, "PANEL1_BKLTCTL"),
-+	PINCTRL_PIN(12, "GP_INTD_DSI_TE1"),
-+	PINCTRL_PIN(13, "HV_DDI2_DDC_SDA"),
-+	PINCTRL_PIN(14, "HV_DDI2_DDC_SCL"),
-+	PINCTRL_PIN(15, "GP_CAMERASB00"),
-+	PINCTRL_PIN(16, "GP_CAMERASB01"),
-+	PINCTRL_PIN(17, "GP_CAMERASB02"),
-+	PINCTRL_PIN(18, "GP_CAMERASB03"),
-+	PINCTRL_PIN(19, "GP_CAMERASB04"),
-+	PINCTRL_PIN(20, "GP_CAMERASB05"),
-+	PINCTRL_PIN(21, "GP_CAMERASB06"),
-+	PINCTRL_PIN(22, "GP_CAMERASB07"),
-+	PINCTRL_PIN(23, "GP_CAMERASB08"),
-+	PINCTRL_PIN(24, "GP_CAMERASB09"),
-+	PINCTRL_PIN(25, "GP_CAMERASB10"),
-+	PINCTRL_PIN(26, "GP_CAMERASB11"),
-+	PINCTRL_PIN(27, "GP_INTD_DSI_TE2"),
- };
- 
- static const unsigned int byt_ncore_pins_map[BYT_NGPIO_NCORE] = {
--- 
-2.24.0
+Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 
+Regards,
+Bjorn
