@@ -2,227 +2,150 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id C41D6F8EFB
-	for <lists+linux-gpio@lfdr.de>; Tue, 12 Nov 2019 12:52:47 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C8B45F8F5F
+	for <lists+linux-gpio@lfdr.de>; Tue, 12 Nov 2019 13:11:57 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726497AbfKLLwr (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 12 Nov 2019 06:52:47 -0500
-Received: from esa4.mentor.iphmx.com ([68.232.137.252]:54241 "EHLO
-        esa4.mentor.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725865AbfKLLwr (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 12 Nov 2019 06:52:47 -0500
-IronPort-SDR: ABSiVYxHaraSYYOyqDxHLWNwJH2rSbKw1lK8/oBGspbGVL7JiDORiQXcXdpKo6mpDopfvoNxrF
- 7kOLsrIUbNp3C+H15H7g6q+H6YGJz6B1Q0gaoZx9zriWUGWjupIqAdG0MonjwY8vr7ebnDtxCW
- S7j7nMUCHyVC1KJrNI3K64q3jCkh2mreEZux4MdRC4lRQy7g4FmStGgOAPRJ4XxRV5AI+5jvO2
- yzPhoUi5qGyMl3wsyXEha98fzIJWPpar+40stG+BMLN8xKOnblpTzNn28VI+opcJIntOmS0S2U
- uiE=
-X-IronPort-AV: E=Sophos;i="5.68,296,1569312000"; 
-   d="scan'208";a="43124387"
-Received: from orw-gwy-02-in.mentorg.com ([192.94.38.167])
-  by esa4.mentor.iphmx.com with ESMTP; 12 Nov 2019 03:52:45 -0800
-IronPort-SDR: 2jBl8R2uXVezf101zPumrSER0INNLg/dYSQP/7Xf7cBpFfywVxILkaST/C3/ydb8lFCZRbEZAz
- bn9Z8OuJEmPVZ9u/ZHOkpZHUC/79xmgbzY+9c/kWtaHCiX0L1QaGS18+IRNX91TqpIE1Fskbqp
- oO237xCu+Gxx2yGmMonMF46D7opo48r1fU1Xc6Jv3Ol/VXF0GS2V4mRbSNFgqCEQFZNJa1Ep1G
- 23LxlAeUyTTkY3pBzRYpnB2SHICY2y2mmXCyd5wgGpNy4dj9ozSnZScbweZ4YWYn0MRpfKdg6d
- i9w=
-Subject: Re: [PATCH V4 2/2] gpio: inverter: document the inverter bindings
-From:   Harish Jenny K N <harish_kandiga@mentor.com>
-To:     Geert Uytterhoeven <geert@linux-m68k.org>,
-        Eugeniu Rosca <roscaeugeniu@gmail.com>
-CC:     Eugeniu Rosca <erosca@de.adit-jv.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Balasubramani Vivekanandan 
-        <balasubramani_vivekanandan@mentor.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Stephen Warren <swarren@nvidia.com>,
-        Stephen Warren <swarren@wwwdotorg.org>,
-        Phil Reid <preid@electromag.com.au>,
-        Enrico Weigelt <info@metux.net>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>
-References: <1561714250-19613-1-git-send-email-harish_kandiga@mentor.com>
- <20190925165133.GA4164@vmlxhi-102.adit-jv.com>
- <CAMuHMdVt3yDiJzkbUGMdkKKd4+CJ0btWuO-J=YZL+pAo99_WXg@mail.gmail.com>
- <20191005130740.GA22620@x230>
- <CAMuHMdViwrqg48t2Pc2JtZKLGzLPy0cVfzcnqctGo9oaDpC9Wg@mail.gmail.com>
- <89ddaab4-fb5f-8df2-c691-87cc0b1503d0@mentor.com>
-Message-ID: <57b13084-5b49-6e9d-4f94-e85987d96f6b@mentor.com>
-Date:   Tue, 12 Nov 2019 17:22:29 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
-MIME-Version: 1.0
-In-Reply-To: <89ddaab4-fb5f-8df2-c691-87cc0b1503d0@mentor.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+        id S1726497AbfKLML5 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 12 Nov 2019 07:11:57 -0500
+Received: from mail-eopbgr700074.outbound.protection.outlook.com ([40.107.70.74]:50816
+        "EHLO NAM04-SN1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726376AbfKLML5 (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Tue, 12 Nov 2019 07:11:57 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Glmhw627wh+Z1ASADl39Hk4i1l/dKEAxpjJ8QzT28vp2Y2D26ybf3TmM1ar3METjuXuqi4SrXb5e2fmLnjrmRvJRDHPNBF34PWz1s1uk4f7TmXcfCgzogjza7TQxAaARLcAN1SbVCAW1RNBNi8BnNxh/5SrqSGXKxpJu2JlW1lphx4q4UD0WB4PbKYOKY8GHv2R+y19Ww1i6TkSTOYKwoNjr+dkWBNAfaPI72Q/wSEUfK5HNxjUehH1+XN54qpMJYu4D1WWKaFoca/KXuyoYMiz7Z0AqnjH8TYW0CNaBW1j0T3Ggrm7B2kv0tS4TH5eNC9mMIiRzediBuKl9+fVx3w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=tl7NBQ4gzSbbEmKqn3pg9QSq4ozazJe6kpAJQj+GJuI=;
+ b=loDnL8RwWjyB9i10rAPfEro7s2IiaRFGfsDM5JQNVlGk7Tj8hf+sOrSb1aSThpEaeGhMzx1sVTPL0SRnSzW28qi8zf5CQi0h65Sv0o7AeqPLDKOvtP4eQ35zM7R1q3Pes+UpPMNMWS89Tyx9fVzIMZCe7c4yUsi+GQmqW8203AdkiAqLkBAVX1Azc4n+TBctTiFMkOUAUH/UK2mmdqHLMVJ6Cj8DN4giwYMfbxo3K1h91B3cGIpi1pI+i7qEeICNG5xJax1lQTx0HW87dl1W2cW3ZTqwEOA99vWb/MrGRKVdj7GWc9oFlY0UwWOLL8Pe/Eu/UXUiYfs/kO5mY4RS1A==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=sifive.com; dmarc=pass action=none header.from=sifive.com;
+ dkim=pass header.d=sifive.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sifive.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=tl7NBQ4gzSbbEmKqn3pg9QSq4ozazJe6kpAJQj+GJuI=;
+ b=pfo49ZToY5BEviGrScgEsyzoYbB/+nQnzdSnmuetyz7triaCuguiJQdJzJtHVDTouLLk9BIU+iyS0xef1vTzQIsCh0FJYxOx88ts7XEwXMb56yLHMswqcifdQmrO2qjeVnkdlKwLlkZX47xKgSBEkOwxfpfpMwwJEh8+Fyn0SO0=
+Received: from CH2PR13MB3368.namprd13.prod.outlook.com (52.132.246.90) by
+ CH2PR13MB3541.namprd13.prod.outlook.com (52.132.247.97) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2451.17; Tue, 12 Nov 2019 12:11:52 +0000
+Received: from CH2PR13MB3368.namprd13.prod.outlook.com
+ ([fe80::853e:1256:311e:d29]) by CH2PR13MB3368.namprd13.prod.outlook.com
+ ([fe80::853e:1256:311e:d29%7]) with mapi id 15.20.2451.018; Tue, 12 Nov 2019
+ 12:11:52 +0000
+From:   Yash Shah <yash.shah@sifive.com>
+To:     "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
+        "bgolaszewski@baylibre.com" <bgolaszewski@baylibre.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "palmer@dabbelt.com" <palmer@dabbelt.com>,
+        "Paul Walmsley ( Sifive)" <paul.walmsley@sifive.com>
+CC:     "aou@eecs.berkeley.edu" <aou@eecs.berkeley.edu>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "jason@lakedaemon.net" <jason@lakedaemon.net>,
+        "maz@kernel.org" <maz@kernel.org>,
+        "bmeng.cn@gmail.com" <bmeng.cn@gmail.com>,
+        "atish.patra@wdc.com" <atish.patra@wdc.com>,
+        Sagar Kadam <sagar.kadam@sifive.com>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Sachin Ghadi <sachin.ghadi@sifive.com>,
+        Yash Shah <yash.shah@sifive.com>
+Subject: [PATCH 0/4] GPIO & Hierarchy IRQ support for HiFive Unleashed
+Thread-Topic: [PATCH 0/4] GPIO & Hierarchy IRQ support for HiFive Unleashed
+Thread-Index: AQHVmVJemxZAHPd8SU62eeR4mkkR0Q==
+Date:   Tue, 12 Nov 2019 12:11:52 +0000
+Message-ID: <1573560684-48104-1-git-send-email-yash.shah@sifive.com>
+Accept-Language: en-US
 Content-Language: en-US
-X-Originating-IP: [137.202.0.90]
-X-ClientProxiedBy: svr-ies-mbx-05.mgc.mentorg.com (139.181.222.5) To
- svr-ies-mbx-01.mgc.mentorg.com (139.181.222.1)
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: LNXP265CA0029.GBRP265.PROD.OUTLOOK.COM
+ (2603:10a6:600:5c::17) To CH2PR13MB3368.namprd13.prod.outlook.com
+ (2603:10b6:610:2c::26)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=yash.shah@sifive.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-mailer: git-send-email 2.7.4
+x-originating-ip: [114.143.65.226]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 0178d8da-6f42-4eb3-82b6-08d767698089
+x-ms-traffictypediagnostic: CH2PR13MB3541:
+x-ld-processed: 22f88e9d-ae0d-4ed9-b984-cdc9be1529f1,ExtAddr
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <CH2PR13MB3541BF54E6B62BB94DD857CB8C770@CH2PR13MB3541.namprd13.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:6108;
+x-forefront-prvs: 021975AE46
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(6029001)(39840400004)(136003)(346002)(376002)(396003)(366004)(189003)(199004)(186003)(14454004)(25786009)(486006)(107886003)(2616005)(476003)(66946007)(6116002)(3846002)(36756003)(478600001)(4326008)(7416002)(305945005)(966005)(2501003)(7736002)(2906002)(54906003)(110136005)(316002)(6306002)(99286004)(6486002)(6512007)(44832011)(8676002)(81166006)(6436002)(66066001)(50226002)(81156014)(6636002)(8936002)(52116002)(5660300002)(26005)(386003)(6506007)(86362001)(102836004)(66556008)(66476007)(71200400001)(256004)(64756008)(71190400001)(66446008);DIR:OUT;SFP:1101;SCL:1;SRVR:CH2PR13MB3541;H:CH2PR13MB3368.namprd13.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: sifive.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: Qh65fO5ZxBDTR8C7DMDWVvwCUq6r0pH9ohJHHg9fOZ6OGdduBHrgUYDAGzbKv7P1q1KLSPq4n1qLxnU/C2GgRGIf9HGlwjjt+JkIvQ+MMHCTNcycgEdIMc6OBwg7uYvQ5kB2CWJahHYVNy+QoFPtnTTmtNJKhVwhQTR8FdU/KXxSn+G1dvANMPVCgGDCM6LpYtYwDHPZfjw8vdz0TL2h8Ipb7jMKgwqz1UVWgq5dhIZZd1rjP9qU7lZCegdeg0kKREpCUkL2Q/zoOuBbY8OIROmeV65i8fNagxryDqZ7Cdb0Htxv0nqJmxMSorFpFRKB/j4N2ErZgAnFBS2BdUK8suXqNCn42Eilm7xIn5VjqVxkb7pm297zPwk/oFwZ3piRsmGHB/u7K/9VHC6kk8QALXwT+DQ0aEDOGGEc5HkuH9bvEytS2Q/aoo7CFDQGhHU7
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: sifive.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 0178d8da-6f42-4eb3-82b6-08d767698089
+X-MS-Exchange-CrossTenant-originalarrivaltime: 12 Nov 2019 12:11:52.4615
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 22f88e9d-ae0d-4ed9-b984-cdc9be1529f1
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: ahFEFVsMGt5KlGkg6bHLks+Zuhx+n6txj0cP4YAHMIsyus35eZcgFdEfXaBQ2f60gjAiha0bH3/cfQ/4X3haTw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR13MB3541
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Geert,
+This patch series adds GPIO drivers, DT documentation and DT nodes for
+HiFive Unleashed board. The gpio patches are mostly based on Wesley's patch=
+.
+The patchset also adds hierarchy irq domain support as it is required by th=
+is
+gpio driver.
 
+This patchset is based on Linux 5.4-rc6 and tested on HiFive Unleashed boar=
+d
 
-On 11/10/19 10:05 AM, Harish Jenny K N wrote:
-> Hi Geert,
->
->
-> On 07/10/19 1:48 PM, Geert Uytterhoeven wrote:
->> Hi Eugeniu,
->>
->> On Sat, Oct 5, 2019 at 3:08 PM Eugeniu Rosca <roscaeugeniu@gmail.com> wrote:
->>> On Fri, Sep 27, 2019 at 11:07:20AM +0200, Geert Uytterhoeven wrote:
->>>> My standard reply would be: describe the device connected to the GPIO(s)
->>>> in DT.  The GPIO line polarities are specified in the device's "gpios"
->>>> properties.
->>>> Next step would be to use the device from Linux.  For that to work, you
->>>> need a dedicated driver (for the complex case), or something generic
->>>> (for the simple case).
->>>> The latter is not unlike e.g. spidev.  Once you have a generic driver,
->>>> you can use "driver_override" in sysfs to bind the generic driver to
->>>> your device.  See e.g. commit 5039563e7c25eccd ("spi: Add
->>>> driver_override SPI device attribute").
->>> We have passed your suggestions along. Many thanks.
->>>
->>>> Currently we don't have a "generic" driver for GPIOs. We do have the
->>>> GPIO chardev interface, which exports a full gpio_chip.
->>>> It indeed looks like this "gpio-inverter" could be used as a generic
->>>> driver.  But it is limited to GPIOs that are inverted, which rules out
->>>> some use cases.
->>>>
->>>> So what about making it more generic, and dropping the "inverter" from
->>>> its name, and the "inverted" from the "inverted-gpios" property? After
->>>> all the inversion can be specified by the polarity of the GPIO cells in
->>>> the "gpios" property, and the GPIO core will take care of it[*]?
->>>> Which boils down to adding a simple DT interface to my gpio-aggregator
->>>> ("[PATCH/RFC v2 0/5] gpio: Add GPIO Aggregator Driver",
->>>>  https://lore.kernel.org/lkml/20190911143858.13024-1-geert+renesas@glider.be/).
->>>> And now I have realized[*], we probably no longer need the GPIO
->>>> Forwarder Helper, as there is no need to add inversion on top.
->>> After having a look at the gpio aggregator (and giving it a try on
->>> R-Car3 H3ULCB), here is how I interpret the above comment:
->>>
->>> If there is still a compelling reason for having gpio-inverter, then it
->>> probably makes sense to strip it from its "inverter" function (hence,
->>> transforming it into some kind of "repeater") on the basis that the
->>> inverting function is more of a collateral/secondary feature, rather
->>> than its primary one. Just like in the case of gpio aggregator, the
->>> primary function of gpio inverter is to accept a bunch of GPIO lines and
->>> to expose those via a dedicated gpiochip. I hope this is a proper
->>> summary of the first point in your comment. In any case, this is the
->>> understanding I get based on my experiments with both drivers.
->> Yes, the inverter is basically a "repeater" (or "aggregator", when it has
->> multiple GPIOs connected), hardcoded to invert.
->>
->>> What I also infer is that, assuming gpio-inverter will stay (potentially
->>> renamed and stripped of its non-essential inverting function), the gpio
->>> aggregator will need to keep its Forwarder Helper (supposed to act as a
->>> common foundation for both drivers).
->> What I meant is that if the inverter and aggregator would be combinoed
->> into a single driver, there would no longer be a need[*] for a separate
->> helper, and it could be incorporated into the single driver.
->>
->> [*] The individual helper functions may still be useful for some other
->>      driver, though.
->
-> Agree.
->
->
->>> The second point which I extract from your comment is that the "gpio
->>> aggregator" could alternatively acquire the role of "gpio-inverter"
->>> (hence superseding it) by adding a "simple DT interface". I actually
->>> tend to like this proposal, since (as said above) both drivers are
->>> essentially doing the same thing, i.e. they cluster a number of gpio
->>> lines and expose this cluster as a new gpiochip (keeping the
->>> reserved/used gpio lines on hold). That looks like a huge overlap in
->>> the functionalities of the two drivers.
->> Yes, both drivers are very similar.  The difference lies in how they
->> acquire the list of GPIO descriptors.
-> Yes. In fact my V2 version of the patch tried to implement the same role as repeater/forwarder albeit with a different naming/intention.
->
-> Linus Walleij mentioned that using GPIO_ACTIVE_LOW just to get free inversion inside GPIOLIB was not OK really and this is a hardware description problem and totally different from the implementation problem inside the driver.
->
-> Hence we changed the logic to inverter consumer driver doing inversion inside get and set functions.
->
->>> The only difference which I see is that "gpio-inverter" is getting its
->>> input from DT and generates the gpiochips at probe time, while
->>> "gpio aggregator" is getting its input from sysfs and generates the
->>> gpiochips at runtime, post-probe.
->> Exactly.
->>
->> For my virtualization use case, I need to create the list of GPIO
->> descriptors at run-time, hence the sysfs interface. This is
->> polarity-agnostic (i.e. the end user needs to care about polarity).
->>
->> For Harish use case, he needs to describe the list from DT, with
->> polarity inverted, which can be done by specifying the GPIO_ACTIVE_LOW
->> flag in the node's"gpios" property.
->>
->> For your use case, you want to describe the list in DT, with line-names,
->> and polarity specified.
->>
->>> So, assuming no objections from Harish and other reviewers, I would be
->>> very happy to review and test the DT-based gpio inversion functionality
->>> as part of gpio aggregator. Thanks!
->
-> I tested your aggregator driver with the below minor changes in gpio-aggregator (combined with some minor changes in GPIO forwarder) to get devicetree support.
->
->
-> 195,196d194
-> <     int index = 0;
-> <     int count;
-> 278,295d275
-> <     count = gpiod_count(dev, NULL);
-> <     if (count > 0) {
-> <         while (index < count) {
-> <             desc = devm_gpiod_get_index(dev, NULL, index, GPIOD_ASIS);
-> <
-> <             if (desc == ERR_PTR(-ENOENT))
-> <                 return -EPROBE_DEFER;
-> <
-> <             if (IS_ERR(desc))
-> <                 return PTR_ERR(desc);
-> <
-> <             error = add_gpio(dev, &descs, &n, desc);
-> <             if (error)
-> <                 return error;
-> <             index++;
-> <         }
-> <     }
-> <
-> 316,319d295
-> < static const struct of_device_id gpio_aggregator_match[] = {
-> <     { .compatible =    "gpio-aggregator", }, { },
-> < };
-> <
-> 326d301
-> <         .of_match_table = of_match_ptr(gpio_aggregator_match),
->
->
-> This does work and achieve our aim of inverter driver.
->
-> Hence no objection from my side to merge the drivers. Please let me know if I need to send you a patch on top of your aggregator patch.
->
-> Hoping to get some credits for my work of 5 months effort ! ;)
->
->
-> Best Regards,
->
-> Harish Jenny K N
+Changes since RFC version:
+Incorporated below changes as suggested by Linus Walleij on RFC version of =
+this
+patchset[0]
+- Dropped PWM patches as they are already merged.
+- Include "GPIO_GENERIC" and "REGMAP_MMIO" in Kconfig select option
+- Remove unwanted inclusion of header files
+- Use regmap MMIO instead of customised sifive_assign_bit()
+- Use GPIOLIB_GENERIC and bgpio_init() to set up the accessors
+- Use hierarchical irqdomain
 
+[0] https://lore.kernel.org/linux-riscv/20181010123519.RVexDppaPFpIWl7QU_hp=
+P8tc5qqWPJgeuLYn0FaGbeQ@z/
 
-Is any attempt being made for the newer version of the aggregator/inverter driver ?
+Yash Shah (4):
+  irqchip: sifive: Support hierarchy irq domain
+  gpio: sifive: Add DT documentation for SiFive GPIO
+  gpio: sifive: Add GPIO driver for SiFive SoCs
+  riscv: dts: Add DT support for SiFive FU540 GPIO driver
 
+ .../devicetree/bindings/gpio/gpio-sifive.txt       |  33 +++
+ arch/riscv/boot/dts/sifive/fu540-c000.dtsi         |  14 +-
+ .../riscv/boot/dts/sifive/hifive-unleashed-a00.dts |   4 +
+ drivers/gpio/Kconfig                               |   9 +
+ drivers/gpio/Makefile                              |   1 +
+ drivers/gpio/gpio-sifive.c                         | 255 +++++++++++++++++=
+++++
+ drivers/irqchip/Kconfig                            |   1 +
+ drivers/irqchip/irq-sifive-plic.c                  |  41 +++-
+ 8 files changed, 353 insertions(+), 5 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/gpio/gpio-sifive.txt
+ create mode 100644 drivers/gpio/gpio-sifive.c
 
-Best Regards,
+--=20
+2.7.4
 
-Harish Jenny K N
-
->
