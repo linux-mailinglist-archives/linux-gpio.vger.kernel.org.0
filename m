@@ -2,50 +2,77 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id E173FF9862
-	for <lists+linux-gpio@lfdr.de>; Tue, 12 Nov 2019 19:17:55 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 77537F986B
+	for <lists+linux-gpio@lfdr.de>; Tue, 12 Nov 2019 19:18:54 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727047AbfKLSRv (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 12 Nov 2019 13:17:51 -0500
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:41385 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726906AbfKLSRv (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 12 Nov 2019 13:17:51 -0500
-Received: by mail-oi1-f194.google.com with SMTP id e9so15694455oif.8;
-        Tue, 12 Nov 2019 10:17:50 -0800 (PST)
+        id S1727166AbfKLSSu (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 12 Nov 2019 13:18:50 -0500
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:35328 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726912AbfKLSSu (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 12 Nov 2019 13:18:50 -0500
+Received: by mail-ot1-f68.google.com with SMTP id z6so15177076otb.2;
+        Tue, 12 Nov 2019 10:18:49 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=apbcn+4sF2345Jm7spGk7DwHgRpb64aZnTUJ4t12uLg=;
-        b=JeqAw+j1OoT8YbIFVA3pbXRK2Tari0Ywafu6AvEeXTRcYhaw+6VGXp5mSyANmNQ4eK
-         DrA4hdV3IfGNdI+lky8Bhxl+R9xz2RwmjUmhU8ZOjOgAJIkx+UTnKSrbhf4Yg0CiAesU
-         UhetPaAa0GHZNP1msy1xIuyWmxxKw/MyyLsofaEmeodKIS9Ua9xWJNMHtQissol0yhMc
-         QnIdAMt9WBhGg44jMRXo+CfhnEjrqWiBh8Z763rXvyfhExFdxxi30+0+QKpIgJoVrLGU
-         InmZLb+qfTV2+f9HbXQDSS1ZtWSvAMeXNZ7cSRWBd0VydNb2pclmDcktwY2jhfvc2ut4
-         GHog==
-X-Gm-Message-State: APjAAAVgyBW0L8XIGnqSSmz8fSHR75NtsGa3nDubR42EMo9fwaOQb/PI
-        WmIoq9JzYgvk6uEGqFE4v7xbphi7xEligbxZLRw=
-X-Google-Smtp-Source: APXvYqyVJRey7Eo3u6IB7XCIegs7fVJAoP+7XL/QcuCsEX4q0nKSDAcDk7fBaRLT6qKtY/fuhfTCipYmaHShCQVE3xE=
-X-Received: by 2002:aca:4ac5:: with SMTP id x188mr258343oia.148.1573582670146;
- Tue, 12 Nov 2019 10:17:50 -0800 (PST)
+        bh=XTjrI15sJKpXt7dvewwDXHz0pV+jFPaIY5CBR1+M5B8=;
+        b=RXZsxcyWXB5gzaKeez4c9288OBzj9Zo01HOIeoOMvveHruIEyNKkVi+9s6I1vQd8iF
+         i+dYIsoMTxEf8JcovkcVJTcIYRT+ycop9cdVLSjM6TlecGlUN4I0w8t0Ie1evCREs5XA
+         Fu4XhD6TUw7Hzb0bJ42ImFdOXc5KyjeTQgpiE5qhAfHsOP/5XG2Fz8iV2nBHahEhOsmd
+         Wf4wX9dTfKzWZ0yL22MnPeXcKMDrneO8QMmX7Jxqdd3LOHKeUhHRVbRsP7Dfl+nAxBU3
+         DSlv2NSKKU9luRve65jltlqT6iaoDL94BF1P7CoAJfOxUnjxb9yCqqkSzYbLg1ZazllQ
+         37MA==
+X-Gm-Message-State: APjAAAVT9bCfAHvG7Zphvf40s3IPeB+abFPkC06lFrNgOStTkf9v/yJk
+        vSYpvJcyiobg/f7SS99tA8Ir65o9g7nRVOlXya0=
+X-Google-Smtp-Source: APXvYqzD+0NmN816zDyFVW7CaZTRm/xP/54mEwEWwWhYEoQSfE5Y17LnYKLFTjDPUOLhknTl9poWdDu1inn62pEqTEM=
+X-Received: by 2002:a9d:5511:: with SMTP id l17mr2705329oth.145.1573582728911;
+ Tue, 12 Nov 2019 10:18:48 -0800 (PST)
 MIME-Version: 1.0
-References: <20191112141748.GA22061@localhost.localdomain>
-In-Reply-To: <20191112141748.GA22061@localhost.localdomain>
+References: <20191112141819.GA22076@localhost.localdomain>
+In-Reply-To: <20191112141819.GA22076@localhost.localdomain>
 From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Tue, 12 Nov 2019 19:17:39 +0100
-Message-ID: <CAMuHMdWUWPdRvVJ_pdDqUdZpahYCyjDDS0KWGw9JzjUjaunHQw@mail.gmail.com>
-Subject: Re: [PATCH 1/2] pinctrl: rza1: remove unnecerssary static inline function
+Date:   Tue, 12 Nov 2019 19:18:37 +0100
+Message-ID: <CAMuHMdW2aXF1dcs74joHu4q9xDoPAGmNFwUuVtPVSfFx9EgMmA@mail.gmail.com>
+Subject: Re: [PATCH 2/2] pinctrl: Use new GPIO_LINE_DIRECTION
 To:     Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
 Cc:     Matti Vaittinen <mazziesaccount@gmail.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
         Linus Walleij <linus.walleij@linaro.org>,
+        Eric Anholt <eric@anholt.net>,
+        Stefan Wahren <wahrenst@gmx.net>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Ray Jui <rjui@broadcom.com>,
+        Scott Branden <sbranden@broadcom.com>,
+        bcm-kernel-feedback-list@broadcom.com,
+        Sean Wang <sean.wang@kernel.org>,
         Matthias Brugger <matthias.bgg@gmail.com>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Gregory Clement <gregory.clement@bootlin.com>,
+        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
+        Ludovic Desroches <ludovic.desroches@microchip.com>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Paul Cercueil <paul@crapouillou.net>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Patrice Chotard <patrice.chotard@st.com>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-rpi-kernel <linux-rpi-kernel@lists.infradead.org>,
         Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        linux-mediatek@lists.infradead.org
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-mediatek@lists.infradead.org, linux-oxnas@groups.io,
+        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
@@ -54,23 +81,25 @@ X-Mailing-List: linux-gpio@vger.kernel.org
 
 On Tue, Nov 12, 2019 at 3:18 PM Matti Vaittinen
 <matti.vaittinen@fi.rohmeurope.com> wrote:
-
-s/unnecerssary/unnecessary/
-
-> Having static inline oneliner does not benefit too much when it is
-> only called from another oneliner function. Remove some of the
-> 'onion'. This simplifies also the coming usage of the gpiolib
-> defines. We can do conversion from chip bits to gpiolib direction
-> defines as last step in the get_direction callback. Drivers can
-> use chip specific values in driver internal functions and do
-> conversion only once.
+> Use newly added GPIO defines GPIO_LINE_DIRECTION_IN and
+> GPIO_LINE_DIRECTION_OUT instead of using hard-coded 1 and 0.
+>
+> Main benefit is to make it easier to see which values mean IN and which
+> OUT. As a side effect this helps GPIO framework to change the direction
+> defines to something else if ever needed.
+>
+> Please note that return value from get_direction call on
+> pinctrl-axp209 driver was changed. Previously pinctrl-axp209 might have
+> returned value 2 for direction INPUT.
 >
 > Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
 
+For:
+
+>  drivers/pinctrl/pinctrl-rza1.c                |  5 ++++-
+>  drivers/pinctrl/pinctrl-rza2.c                |  6 +++---
+
 Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-
-As this is a dependency for 2/2, which will go in through the GPIO tree:
-
 Acked-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
 Gr{oetje,eeting}s,
