@@ -2,116 +2,100 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 8AB25FAC97
-	for <lists+linux-gpio@lfdr.de>; Wed, 13 Nov 2019 10:09:23 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 79ECFFAD5F
+	for <lists+linux-gpio@lfdr.de>; Wed, 13 Nov 2019 10:43:44 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727208AbfKMJJG (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 13 Nov 2019 04:09:06 -0500
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:43717 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727171AbfKMJJF (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 13 Nov 2019 04:09:05 -0500
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1iUoe7-0000TC-92; Wed, 13 Nov 2019 10:09:03 +0100
-Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1iUoe6-0002mQ-73; Wed, 13 Nov 2019 10:09:02 +0100
-Date:   Wed, 13 Nov 2019 10:09:02 +0100
-From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-To:     Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-Cc:     "thorsten.scherer@eckelmann.de" <thorsten.scherer@eckelmann.de>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
-        "mazziesaccount@gmail.com" <mazziesaccount@gmail.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "bgolaszewski@baylibre.com" <bgolaszewski@baylibre.com>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>
-Subject: Re: [PATCH 40/62] gpio: gpio-siox: Use new GPIO_LINE_DIRECTION
-Message-ID: <20191113090902.dev6yxyxvbf6bupm@pengutronix.de>
-References: <cover.1572945896.git.matti.vaittinen@fi.rohmeurope.com>
- <91a796dd2811b58f4be30875f5ef644f0e43f241.1572945896.git.matti.vaittinen@fi.rohmeurope.com>
- <20191111072715.GB4117@ws067.eckelmann.group>
- <e38b59d9c8bcf81bbd49fed2d9d17350d4dc4866.camel@fi.rohmeurope.com>
- <20191111104252.5ixcb2tpnj6n5e6t@pengutronix.de>
- <20191113084637.GA23872@localhost.localdomain>
+        id S1726613AbfKMJnn (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 13 Nov 2019 04:43:43 -0500
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:33382 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726598AbfKMJnn (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 13 Nov 2019 04:43:43 -0500
+Received: by mail-lj1-f193.google.com with SMTP id t5so1830573ljk.0
+        for <linux-gpio@vger.kernel.org>; Wed, 13 Nov 2019 01:43:42 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Tob4NUIEyeUP7V9jsc2clQN8jhX7CphW3Ia2IjUxawA=;
+        b=Zhr1yGg/Gml6ges5UVzkCbHlI3VU740oZKlKsq+3ks3G07T96WUdqlVEssPAGtuuA4
+         b5+zELhFaSbfW3uozVJN3YzRA+D2kKPJwLRxPHDti3gGI01abUD2z9+q+W2uR8IOnZNv
+         TekBQe44pXsxfZcKX2t/nAgK1DxBbXBuoAK8tYASQqwrK2N3cCbMphPdWQ59erQ30xIs
+         iypjGsz1FyeMKPbYA0YQTRKq1woWumKqELZb3h3h+X3TdjHaVyCEbWzpxRsaYLD6xrwg
+         94BDtnMKgivsyIl+nkuwHGBCI+OQg9UUFVJ4trXQWcf3NOeoq9PkDrTUgbKMyZ4chOSX
+         mFvw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Tob4NUIEyeUP7V9jsc2clQN8jhX7CphW3Ia2IjUxawA=;
+        b=cWEKsKNh761KunIKPDQrOvZd1NA5E2GQL4KDguTwYURxhCmg+1LRmuGgBwEosIBNJq
+         Y2sPnl+JcdgeD4tPFNEOMt3EW17xn3PoWC9ltcrOzeFieU4KlBeLX6givJM65ZELWQGQ
+         iJiN8UUBvoCjRH9kpiHM9cuKiV6jzk4Q6jrErn8JNrg+C8dsWhlRCK9ZtV5j/iuJdJDZ
+         3lJ8EtCVBwjlw8/Ax3VANLrOLCDsD2tSBldsFZN5I8AFqQzSTKHNponMO+PKiqWcc2gO
+         Zdf6MNSq71DojXZ9YNF1tkwTjWi1IATvqMkOgYAcjN0XQYWbO5Ayn3tve2A75cERCNTi
+         X9DA==
+X-Gm-Message-State: APjAAAUyWsBH5330KNEdRcZvLkZ2xuO//hYW5IITC/Hh72iukNZfQFKF
+        zIwKV82/PJBZN8zTRb3dK0ccrPty1Usd9kg4jKIGAQ==
+X-Google-Smtp-Source: APXvYqzb6EBU7wkpcoRHVc9srXm8XeZArDePpI8IeuQOu1aqagoxQEmrhMgNfUPDWuuIazdke2zfl6/zI0ATrSBNSks=
+X-Received: by 2002:a2e:9699:: with SMTP id q25mr1837732lji.251.1573638221305;
+ Wed, 13 Nov 2019 01:43:41 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20191113084637.GA23872@localhost.localdomain>
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-gpio@vger.kernel.org
+References: <20191105203557.78562-1-andriy.shevchenko@linux.intel.com>
+ <20191106173055.GQ32742@smile.fi.intel.com> <CACRpkdaAxY-8A7gindeA8fsQ9rEdnwp8k90CyULxNs4J5VBSBw@mail.gmail.com>
+ <20191108133942.GH32742@smile.fi.intel.com>
+In-Reply-To: <20191108133942.GH32742@smile.fi.intel.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Wed, 13 Nov 2019 10:43:28 +0100
+Message-ID: <CACRpkdZWh7MD+psE9zndg4S59Eq-PRcmgrs-ABUaTGHnm7S4Sw@mail.gmail.com>
+Subject: Re: [RESEND][PATCH v2 0/7] gpiolib: fix GPIO <-> pin mapping registration
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Hans de Goede <hdegoede@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Nov 13, 2019 at 10:46:37AM +0200, Matti Vaittinen wrote:
-> On Mon, Nov 11, 2019 at 11:42:52AM +0100, Uwe Kleine-König wrote:
-> > Hello Matti,
-> > 
-> > On Mon, Nov 11, 2019 at 07:43:50AM +0000, Vaittinen, Matti wrote:
-> > > On Mon, 2019-11-11 at 08:27 +0100, Thorsten Scherer wrote:
-> > > > Hello,
-> > > > 
-> > > > On Tue, Nov 05, 2019 at 12:30:58PM +0200, Matti Vaittinen wrote:
-> > > > > It's hard for occasional GPIO code reader/writer to know if values
-> > > > > 0/1
-> > > > > equal to IN or OUT. Use defined GPIO_LINE_DIRECTION_IN and
-> > > > > GPIO_LINE_DIRECTION_OUT to help them out.
-> > > > > 
-> > > > > Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-> > > > 
-> > > > for SIOX gpio:
-> > > > 
-> > > > Acked-by: Thorsten Scherer <t.scherer@eckelmann.de>
-> > > > 
-> > > > > Patches are compile-tested only. I have no HW to really test
-> > > > > them.  Thus
-> > > > > I'd appreciate carefull review. This work is mainly about
-> > > > > converting
-> > > > > zeros and ones to the new defines but it wouldn't be first time I
-> > > > > get it wrong in one of the patches
-> > > > > :)                                                   
-> > > > 
-> > > > Applied the patch(es) and tested them with SIOX device
-> > > > 
-> > > > Tested-by: Thorsten Scherer <t.scherer@eckelmann.de>
-> > > 
-> > > Big thanks! It's _really_ nice that someone takes the time to do the
-> > > testing! Highly appreciated! :]
-> > 
-> > without wanting to devalue Thorsten's testing, I think testing your
-> > series can be trivially done without a runtime check as your patches
-> > won't change the compiled result. So just compile once without the patch
-> > and once with and compare the results. If they are bit-by-bit identical
-> > everything is fine.
-> 
-> Right again Uwe. This is correct for most of the modules - assuming
-> there's no __LINE__ or time related macros used. Few of the modules did
-> get actual changes though.
+On Fri, Nov 8, 2019 at 2:39 PM Andy Shevchenko
+<andriy.shevchenko@linux.intel.com> wrote:
+> On Fri, Nov 08, 2019 at 10:40:47AM +0100, Linus Walleij wrote:
+> > On Wed, Nov 6, 2019 at 6:30 PM Andy Shevchenko
+> > <andriy.shevchenko@linux.intel.com> wrote:
+> >
+> > > Linus, I think it would be good if we have first 3 (okay, I noticed you have
+> > > pushed first one to your devel branch) patches to go to v5.4. It will reduce
+> > > dependency burden in v5.5.
+> >
+> > At this point in the kernel release cycle I can really only apply
+> > patches for serious regressions. That's the policy I need to keep
+> > to.
+> >
+> > It also causes a problem if I put dependencies on Torvald's
+> > tree this late in the kernel cycle, because I need to get the
+> > changes back into my tree in order to base new stuff on them.
+> > I can't really do that until he releases an -rc that I can merge
+> > back.
+> >
+> > At this point I'd maybe have to merge back v5.4 and that doesn't
+> > feel good at all.
+> >
+> > So far I applied patches 1 & 2 for v5.5.
+>
+> Thanks! Does it mean that the rest is material for v5.6?
 
-So as you did this research, I think it's worth pointing this out in the
-commit log. Either something like:
+No, if they work for you and Hans both I have 100% trust in you
+guys so just send me a big pull request for all of it for v5.5.
+Besides Torvalds is talking about an -rc8 this next weekend.
 
-	There are no changes in the compile result.
+Please base your pull request on my "devel" branch though,
+since I already applied some of the patches (sorry for the mess!)
 
-or
+We can certainly hash out any remaining nits during the v5.5
+kernel cycle.
 
-	This results in changes to the compiled module because ...
-
-(and probably ... is worth fixing).
-
-Best regards
-Uwe
-
--- 
-Pengutronix e.K.                           | Uwe Kleine-König            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+Yours,
+Linus Walleij
