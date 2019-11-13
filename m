@@ -2,143 +2,91 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 79A44F9CC9
-	for <lists+linux-gpio@lfdr.de>; Tue, 12 Nov 2019 23:10:38 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id EA854FA06B
+	for <lists+linux-gpio@lfdr.de>; Wed, 13 Nov 2019 02:44:51 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726910AbfKLWKi (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 12 Nov 2019 17:10:38 -0500
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:40523 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726896AbfKLWKh (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>);
-        Tue, 12 Nov 2019 17:10:37 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1573596636;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=OGswjGzUffihOSl/n5t/dLNRnhblfx+YfOx5kFh8IX4=;
-        b=MqBBnL1ccLn+386iAV3tNxlXoqjYavAJ4X09ylK6awPfvETwE6Xckg927d9j3Tw+9uiRcz
-        bzqH01q4gYEjEawDnFz7bSAMllHgrbwnYwXa4Df7dtt+22X6tLXXXqJoTgUkcDkuHCrc10
-        5tSsssc+HCEuhO+RqQKkXGwlOwmE9M8=
-Received: from mail-qk1-f197.google.com (mail-qk1-f197.google.com
- [209.85.222.197]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-385-jauRki2nNwWoJGWr97e18w-1; Tue, 12 Nov 2019 17:10:35 -0500
-Received: by mail-qk1-f197.google.com with SMTP id a13so131065qkc.17
-        for <linux-gpio@vger.kernel.org>; Tue, 12 Nov 2019 14:10:35 -0800 (PST)
+        id S1727021AbfKMBov (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 12 Nov 2019 20:44:51 -0500
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:39188 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727001AbfKMBou (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 12 Nov 2019 20:44:50 -0500
+Received: by mail-lj1-f194.google.com with SMTP id p18so632304ljc.6
+        for <linux-gpio@vger.kernel.org>; Tue, 12 Nov 2019 17:44:48 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=TSetjMkcf4RpuPYXlFbAM0zaTljwaDUanV3PLKAWDpw=;
+        b=Gx9/4wLyPBmCchNwrslkyoWt00c+XPhTBrtJRbJaQthp30BZrJ0iqN1q5jOKigdLIS
+         TMxaZcP9iVEuxOhzinjmVT4Y+80rqdy7XN8YBtK5Qk4XgW1U2Ufoqy7Hl0+O+r5FJvH9
+         pUgtMI6o2fbew8jPafNEBEyf1Tg8exaG55ESxXy2zs39Cs7lXPuCo5XJ2wMcLTBXLh9K
+         uVhlE/lDu7PjVrlKD44Ue2/cUaYZPWvzGIB1lD/IvAa6uHvVHad+s/h+fzg4fkGk0wBM
+         vPbXsSCVEAgA441J0C4I8L2Kjb8/VCG2MSDx1mb1AJYo89N0gRRF43oy9qBv5J5w7dNP
+         ARlA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=bYI+fJWrfaTVip21z6+iZIacHnQTlTHn+UZkjofOrJ0=;
-        b=eENKAcnnICKwAYHgW83eh2EGyq66U+5fyA4MjnI07QKsBW/fNzKKQkDL9Xmr5lyQwC
-         KeJKpRY/HBGmb0UEKae/j44uUNxHJxpmwYO97GOSv8erAjpD/12j1tBmDX+3wjPRnvWs
-         jUncxlFzAy4lpPdni7nblYR68mTU6Fh0/MBTpMVqWnKCf0LG1jKIHMvwWPKSDYm6HEYj
-         H+c8+krXl0xmJn7f0kgRoMx22hcZmBBMjpOPN1GgxIOIbomlCMmIdPIhxw7dkNcjsECP
-         59XEr/w+B5QzE48+xt6OhlDTV2YP6FYjmCWkvR7Qwu43zFqebqBZyza2heCaiURO1yu2
-         YM8w==
-X-Gm-Message-State: APjAAAUfojymhtsJQSYth77wk3rkF6/aqVeSgT9NpRQCkDMa6qFvR1xn
-        redCOZAyNnWCOZTWSAtCSJV6mjD7MsmcX3fL255rDLyIBDQ9X2JEjUOcxVxCp9E8x7y6l4ZEf44
-        TnodJ+7cYrQK8uqQ6g9RTnA==
-X-Received: by 2002:ac8:41cc:: with SMTP id o12mr33202587qtm.310.1573596634718;
-        Tue, 12 Nov 2019 14:10:34 -0800 (PST)
-X-Google-Smtp-Source: APXvYqxtJyW+Mbx1NhfAQ3HEARf8vkQ6SiLwJiZfZFujYl6xkNZFUELs855wc2YOfNBe2HIaIxJO6A==
-X-Received: by 2002:ac8:41cc:: with SMTP id o12mr33202571qtm.310.1573596634433;
-        Tue, 12 Nov 2019 14:10:34 -0800 (PST)
-Received: from labbott-redhat.redhat.com (pool-96-235-39-235.pitbpa.fios.verizon.net. [96.235.39.235])
-        by smtp.gmail.com with ESMTPSA id s44sm140751qts.22.2019.11.12.14.10.33
+        bh=TSetjMkcf4RpuPYXlFbAM0zaTljwaDUanV3PLKAWDpw=;
+        b=BQ5/x4cFqtYSfGWFRM59pDdzI/7EuzjYR2lQRim1pFUBGOVvaGboszCKRxlm3adlXv
+         NGJ+lAnYD5xIy8KcCzXsCALXjsZdtPlekIgB+3aVrFeKimbrhJjzJdJHPEeyENooZsZi
+         lzuIChTp9CI0xYRzIMN7x4ceGoDTbv6+S0a1l5s7TxbO+ttDlAeWuUar1U0e5UK6jwSz
+         UDNtNHe1e7KbGgjGCVcG7WczdA4ZuBP3FnXQghX74FXvz08INYoSjQf2Web3liQcTbL4
+         IWgHRVGIxb2/tuWUIuphGDh19nm+IIx7Q8VikHgdCZvnx6vQ1PXrsRbtjpwO7LMZFOvu
+         lnzA==
+X-Gm-Message-State: APjAAAXU/3JweWo9sZ/T0vhdL9B38en40Vc5E+6/FChksyk2Zg9D+pa5
+        c/Jnp5XfYkrci5UlRmhAya7c0w==
+X-Google-Smtp-Source: APXvYqwCX2MBzMEReXX1xV3jUFGB08L4MJtEtvR5BzsZ84X6TT2Gnq8chd6RudqzVPTvjBW857cnqQ==
+X-Received: by 2002:a05:651c:87:: with SMTP id 7mr506151ljq.20.1573609487372;
+        Tue, 12 Nov 2019 17:44:47 -0800 (PST)
+Received: from localhost.bredbandsbolaget (c-79c8225c.014-348-6c756e10.bbcust.telenor.se. [92.34.200.121])
+        by smtp.gmail.com with ESMTPSA id n19sm190440lfl.85.2019.11.12.17.44.45
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 12 Nov 2019 14:10:33 -0800 (PST)
-From:   Laura Abbott <labbott@redhat.com>
-To:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Cc:     Laura Abbott <labbott@redhat.com>, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] tools: gpio: Correctly add make dependencies for gpio_utils
-Date:   Tue, 12 Nov 2019 17:10:26 -0500
-Message-Id: <20191112221026.5859-1-labbott@redhat.com>
+        Tue, 12 Nov 2019 17:44:46 -0800 (PST)
+From:   Linus Walleij <linus.walleij@linaro.org>
+To:     Mark Brown <broonie@kernel.org>, linux-spi@vger.kernel.org
+Cc:     linux-gpio@vger.kernel.org,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Fabio Estevam <festevam@gmail.com>,
+        Christophe Leroy <christophe.leroy@c-s.fr>
+Subject: [PATCH] spi: fsl-cpm: Correct the free:ing
+Date:   Wed, 13 Nov 2019 02:44:42 +0100
+Message-Id: <20191113014442.12100-1-linus.walleij@linaro.org>
 X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-X-MC-Unique: jauRki2nNwWoJGWr97e18w-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=WINDOWS-1252
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+The fsl_spi_cpm_free() function does not make the same
+checks as the error path in fsl_spi_cpm_init() leading
+to crashes on error.
 
-gpio tools fail to build correctly with make parallelization:
-
-$ make -s -j24
-ld: gpio-utils.o: file not recognized: file truncated
-make[1]: *** [/home/labbott/linux_upstream/tools/build/Makefile.build:145: =
-lsgpio-in.o] Error 1
-make: *** [Makefile:43: lsgpio-in.o] Error 2
-make: *** Waiting for unfinished jobs....
-
-This is because gpio-utils.o is used across multiple targets.
-Fix this by making gpio-utios.o a proper dependency.
-
-Signed-off-by: Laura Abbott <labbott@redhat.com>
+Cc: Fabio Estevam <festevam@gmail.com>
+Reported-by: Christophe Leroy <christophe.leroy@c-s.fr>
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
 ---
-I made a similar fix to iio tools
-lore.kernel.org/r/20191018172908.3761-1-labbott@redhat.com
----
- tools/gpio/Build    |  1 +
- tools/gpio/Makefile | 10 +++++++---
- 2 files changed, 8 insertions(+), 3 deletions(-)
+ drivers/spi/spi-fsl-cpm.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/tools/gpio/Build b/tools/gpio/Build
-index 620c1937d957..4141f35837db 100644
---- a/tools/gpio/Build
-+++ b/tools/gpio/Build
-@@ -1,3 +1,4 @@
-+gpio-utils-y +=3D gpio-utils.o
- lsgpio-y +=3D lsgpio.o gpio-utils.o
- gpio-hammer-y +=3D gpio-hammer.o gpio-utils.o
- gpio-event-mon-y +=3D gpio-event-mon.o gpio-utils.o
-diff --git a/tools/gpio/Makefile b/tools/gpio/Makefile
-index 1178d302757e..6080de58861f 100644
---- a/tools/gpio/Makefile
-+++ b/tools/gpio/Makefile
-@@ -35,11 +35,15 @@ $(OUTPUT)include/linux/gpio.h: ../../include/uapi/linux=
-/gpio.h
-=20
- prepare: $(OUTPUT)include/linux/gpio.h
-=20
-+GPIO_UTILS_IN :=3D $(output)gpio-utils-in.o
-+$(GPIO_UTILS_IN): prepare FORCE
-+=09$(Q)$(MAKE) $(build)=3Dgpio-utils
-+
- #
- # lsgpio
- #
- LSGPIO_IN :=3D $(OUTPUT)lsgpio-in.o
--$(LSGPIO_IN): prepare FORCE
-+$(LSGPIO_IN): prepare FORCE $(OUTPUT)gpio-utils-in.o
- =09$(Q)$(MAKE) $(build)=3Dlsgpio
- $(OUTPUT)lsgpio: $(LSGPIO_IN)
- =09$(QUIET_LINK)$(CC) $(CFLAGS) $(LDFLAGS) $< -o $@
-@@ -48,7 +52,7 @@ $(OUTPUT)lsgpio: $(LSGPIO_IN)
- # gpio-hammer
- #
- GPIO_HAMMER_IN :=3D $(OUTPUT)gpio-hammer-in.o
--$(GPIO_HAMMER_IN): prepare FORCE
-+$(GPIO_HAMMER_IN): prepare FORCE $(OUTPUT)gpio-utils-in.o
- =09$(Q)$(MAKE) $(build)=3Dgpio-hammer
- $(OUTPUT)gpio-hammer: $(GPIO_HAMMER_IN)
- =09$(QUIET_LINK)$(CC) $(CFLAGS) $(LDFLAGS) $< -o $@
-@@ -57,7 +61,7 @@ $(OUTPUT)gpio-hammer: $(GPIO_HAMMER_IN)
- # gpio-event-mon
- #
- GPIO_EVENT_MON_IN :=3D $(OUTPUT)gpio-event-mon-in.o
--$(GPIO_EVENT_MON_IN): prepare FORCE
-+$(GPIO_EVENT_MON_IN): prepare FORCE $(OUTPUT)gpio-utils-in.o
- =09$(Q)$(MAKE) $(build)=3Dgpio-event-mon
- $(OUTPUT)gpio-event-mon: $(GPIO_EVENT_MON_IN)
- =09$(QUIET_LINK)$(CC) $(CFLAGS) $(LDFLAGS) $< -o $@
---=20
+diff --git a/drivers/spi/spi-fsl-cpm.c b/drivers/spi/spi-fsl-cpm.c
+index 858f0544289e..54ad0ac121e5 100644
+--- a/drivers/spi/spi-fsl-cpm.c
++++ b/drivers/spi/spi-fsl-cpm.c
+@@ -392,7 +392,8 @@ void fsl_spi_cpm_free(struct mpc8xxx_spi *mspi)
+ 	dma_unmap_single(dev, mspi->dma_dummy_rx, SPI_MRBLR, DMA_FROM_DEVICE);
+ 	dma_unmap_single(dev, mspi->dma_dummy_tx, PAGE_SIZE, DMA_TO_DEVICE);
+ 	cpm_muram_free(cpm_muram_offset(mspi->tx_bd));
+-	cpm_muram_free(cpm_muram_offset(mspi->pram));
++	if (!(mspi->flags & SPI_CPM1))
++		cpm_muram_free(cpm_muram_offset(mspi->pram));
+ 	fsl_spi_free_dummy_rx();
+ }
+ EXPORT_SYMBOL_GPL(fsl_spi_cpm_free);
+-- 
 2.21.0
 
