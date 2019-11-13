@@ -2,85 +2,113 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 29FABFAC30
-	for <lists+linux-gpio@lfdr.de>; Wed, 13 Nov 2019 09:44:08 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A8C8BFAC32
+	for <lists+linux-gpio@lfdr.de>; Wed, 13 Nov 2019 09:46:49 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726120AbfKMIoH (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 13 Nov 2019 03:44:07 -0500
-Received: from mail-lf1-f67.google.com ([209.85.167.67]:44149 "EHLO
-        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726086AbfKMIoH (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 13 Nov 2019 03:44:07 -0500
-Received: by mail-lf1-f67.google.com with SMTP id z188so1216595lfa.11;
-        Wed, 13 Nov 2019 00:44:05 -0800 (PST)
+        id S1725993AbfKMIqs (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 13 Nov 2019 03:46:48 -0500
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:38758 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725966AbfKMIqs (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 13 Nov 2019 03:46:48 -0500
+Received: by mail-lf1-f65.google.com with SMTP id q28so1247172lfa.5;
+        Wed, 13 Nov 2019 00:46:45 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=pk2ACtTMGZnn9qrghFL91NzkenrOmZ1SxROTK/TzMYU=;
-        b=Y4O6dxdihEi/BcjNK2HUEp/Kk2ZpuJRo5tqxHxpaoeCNaLfUgKVlai3h4Hvy5KGo7c
-         1mXnunAItNHkp3zD2KHtYK9Gwovkhs+g3zNE+6xgBB2z4Ei/14QCWtzSNfYKgy2PaAo5
-         6iGsKcu4LBOBaIq7bQ3m41WReY9uZrFelAKD9p3xp/aqoyvUP1KOTHWnaaupUWFBM+jF
-         Lce9y7usbJQH3eNrUvGZPIaf/BEUjaPVRJLf9cu2uAmJ99DI2JVaPTNiQ9uigwY3j9w7
-         xGrG64xnJxyO1Ktd/LzM7Dj+TjI3HeLs2AVrLUbpCZSgbsi27rkx4PRkBk7M6EQkjU4G
-         7WkA==
-X-Gm-Message-State: APjAAAVvIBzcnojSww/8C+RhLGG9u5j+x74HjqE5vaqp2olSNu+iGDXK
-        j7weVSF4Way5yDsrdDS9Tnw=
-X-Google-Smtp-Source: APXvYqwmjxoqsEszgveYdnVc7I9g0Ls7istQIQ05Vi+RPhw8VDf/BKPtzPM7yuRfLEHUv26dTX08Cw==
-X-Received: by 2002:ac2:4a8a:: with SMTP id l10mr1744553lfp.185.1573634644858;
-        Wed, 13 Nov 2019 00:44:04 -0800 (PST)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=W3tx9vTcRy8ZJ0agDP289YKSWdvALbninjws1EFtXz4=;
+        b=OZeGXd/7D+NEOw7+O/VOQ3izsgqYzg+LYQjAJvoYpoYim4nLj8FPb0UuqdQNeC/y9M
+         TujCE3mLi5BYY5tDKvRigetNAp8piHBSCWJ3aC6mT4Ek27DLQ5gDy/XdLjHhdLKHkfkP
+         Wv7IiB0DUj95dXl2O3lwYSCmDZfltwTKIDWVVYoeBQRRUDmrhRd5575dO7m03YIr5Axd
+         RRFxUtJE5HDzMtbcs/CaxiOOk4zlzs2yFIBtCjRaLB1q2l8haPMC2H4o8PQ7hvygpFAB
+         UpPN31/QdgIhFqD946RlEFPCREDWqY+iMdhHvgYCBR1IKQPivsobwGZwhPf6R6ec9+XO
+         QRjg==
+X-Gm-Message-State: APjAAAUoWKuuGbZ5W5XxMwGvIWPYVC/m1PHqV8Vkonz+w2c93HDJfDkh
+        eH+A/m62rlWASChvmcmgm24=
+X-Google-Smtp-Source: APXvYqzDo3RRDc/L+ac2pf0TnNoACT/NaQN97wtt5KkBBc107dV3OctDPavVkgKPOnh+rRtiec+KFg==
+X-Received: by 2002:a19:8092:: with SMTP id b140mr1789808lfd.13.1573634804848;
+        Wed, 13 Nov 2019 00:46:44 -0800 (PST)
 Received: from localhost.localdomain ([213.255.186.46])
-        by smtp.gmail.com with ESMTPSA id i22sm533940ljg.94.2019.11.13.00.44.03
+        by smtp.gmail.com with ESMTPSA id y75sm689653lff.58.2019.11.13.00.46.43
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 13 Nov 2019 00:44:04 -0800 (PST)
-Date:   Wed, 13 Nov 2019 10:43:52 +0200
+        Wed, 13 Nov 2019 00:46:43 -0800 (PST)
+Date:   Wed, 13 Nov 2019 10:46:37 +0200
 From:   Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-To:     matti.vaittinen@fi.rohmeurope.com, mazziesaccount@gmail.com
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] gpio: mmio: remove untrue leftover comment
-Message-ID: <20191113084352.GA25535@localhost.localdomain>
+To:     Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+Cc:     "thorsten.scherer@eckelmann.de" <thorsten.scherer@eckelmann.de>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
+        "mazziesaccount@gmail.com" <mazziesaccount@gmail.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "bgolaszewski@baylibre.com" <bgolaszewski@baylibre.com>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>
+Subject: Re: [PATCH 40/62] gpio: gpio-siox: Use new GPIO_LINE_DIRECTION
+Message-ID: <20191113084637.GA23872@localhost.localdomain>
+References: <cover.1572945896.git.matti.vaittinen@fi.rohmeurope.com>
+ <91a796dd2811b58f4be30875f5ef644f0e43f241.1572945896.git.matti.vaittinen@fi.rohmeurope.com>
+ <20191111072715.GB4117@ws067.eckelmann.group>
+ <e38b59d9c8bcf81bbd49fed2d9d17350d4dc4866.camel@fi.rohmeurope.com>
+ <20191111104252.5ixcb2tpnj6n5e6t@pengutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20191111104252.5ixcb2tpnj6n5e6t@pengutronix.de>
 User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-The comment should have been removed when new GPIO direction
-definitions were taken in use as the function logic was changed. It
-is now perfectly valid and Ok to hit the return from the bottom of
-the direction getting function.
+On Mon, Nov 11, 2019 at 11:42:52AM +0100, Uwe Kleine-König wrote:
+> Hello Matti,
+> 
+> On Mon, Nov 11, 2019 at 07:43:50AM +0000, Vaittinen, Matti wrote:
+> > On Mon, 2019-11-11 at 08:27 +0100, Thorsten Scherer wrote:
+> > > Hello,
+> > > 
+> > > On Tue, Nov 05, 2019 at 12:30:58PM +0200, Matti Vaittinen wrote:
+> > > > It's hard for occasional GPIO code reader/writer to know if values
+> > > > 0/1
+> > > > equal to IN or OUT. Use defined GPIO_LINE_DIRECTION_IN and
+> > > > GPIO_LINE_DIRECTION_OUT to help them out.
+> > > > 
+> > > > Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+> > > 
+> > > for SIOX gpio:
+> > > 
+> > > Acked-by: Thorsten Scherer <t.scherer@eckelmann.de>
+> > > 
+> > > > Patches are compile-tested only. I have no HW to really test
+> > > > them.  Thus
+> > > > I'd appreciate carefull review. This work is mainly about
+> > > > converting
+> > > > zeros and ones to the new defines but it wouldn't be first time I
+> > > > get it wrong in one of the patches
+> > > > :)                                                   
+> > > 
+> > > Applied the patch(es) and tested them with SIOX device
+> > > 
+> > > Tested-by: Thorsten Scherer <t.scherer@eckelmann.de>
+> > 
+> > Big thanks! It's _really_ nice that someone takes the time to do the
+> > testing! Highly appreciated! :]
+> 
+> without wanting to devalue Thorsten's testing, I think testing your
+> series can be trivially done without a runtime check as your patches
+> won't change the compiled result. So just compile once without the patch
+> and once with and compare the results. If they are bit-by-bit identical
+> everything is fine.
 
-Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
----
+Right again Uwe. This is correct for most of the modules - assuming
+there's no __LINE__ or time related macros used. Few of the modules did
+get actual changes though.
 
-Sorry guys. Just noticed that I should've removed this comment in
-original patch series.
-
- drivers/gpio/gpio-mmio.c | 1 -
- 1 file changed, 1 deletion(-)
-
-diff --git a/drivers/gpio/gpio-mmio.c b/drivers/gpio/gpio-mmio.c
-index cd07c948649f..f729e3e9e983 100644
---- a/drivers/gpio/gpio-mmio.c
-+++ b/drivers/gpio/gpio-mmio.c
-@@ -386,7 +386,6 @@ static int bgpio_get_dir(struct gpio_chip *gc, unsigned int gpio)
- 		if (!(gc->read_reg(gc->reg_dir_in) & bgpio_line2mask(gc, gpio)))
- 			return GPIO_LINE_DIRECTION_OUT;
- 
--	/* This should not happen */
- 	return GPIO_LINE_DIRECTION_IN;
- }
- 
-
-base-commit: 70d97e099bb426ecb3ad4bf31e88dbf2ef4b2e4c
--- 
-2.21.0
-
+Br,
+	Matti
 
 -- 
 Matti Vaittinen, Linux device drivers
