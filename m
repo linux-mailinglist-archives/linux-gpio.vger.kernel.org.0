@@ -2,56 +2,56 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id C855EFB0C5
-	for <lists+linux-gpio@lfdr.de>; Wed, 13 Nov 2019 13:48:59 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 046EDFB0CA
+	for <lists+linux-gpio@lfdr.de>; Wed, 13 Nov 2019 13:50:18 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725908AbfKMMs7 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 13 Nov 2019 07:48:59 -0500
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:45705 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726105AbfKMMs6 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 13 Nov 2019 07:48:58 -0500
-Received: by mail-oi1-f196.google.com with SMTP id 14so1609885oir.12
-        for <linux-gpio@vger.kernel.org>; Wed, 13 Nov 2019 04:48:57 -0800 (PST)
+        id S1726195AbfKMMuR (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 13 Nov 2019 07:50:17 -0500
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:42062 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726186AbfKMMuR (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 13 Nov 2019 07:50:17 -0500
+Received: by mail-ot1-f66.google.com with SMTP id b16so1472993otk.9
+        for <linux-gpio@vger.kernel.org>; Wed, 13 Nov 2019 04:50:16 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baylibre-com.20150623.gappssmtp.com; s=20150623;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc:content-transfer-encoding;
-        bh=aRyoGXUpoQzbaPeLeIbMAp8CoHAGIRwzjTcDJSFFYbA=;
-        b=eaN8D4cu3V8Se39U37bhOetVYm0oaIrgslevQieJEmBAT0Ku/zu4kV0qgy4Vae1b+j
-         62bW+1TG7+nv9EV4Y59601+DdJhn7tTbSVKzEBhGEyu493W1Jx+Jdh8Njd6W02rBx0Ls
-         jK/yeaVbtGr6v8uIGcA6NK+GMx54RWN03NbcIxJ4BCHzwRlO/UyBpXx4Tkrdwcb0geJS
-         s6TYjRCu6eobVFYUWqcLnQF09eUbBlxw3Q0NvoxqGl7SbGt7OydDgabm0hOad5VHq1FU
-         BxeqeW43MjfCFYriJmqynUH6pNSEokhAYt9Rg+NhziFaz1uyyrPAFpttlzD5jU35C8X9
-         E1ZA==
+        bh=xKNQ7v4yv1nHmpKbLcQIzTqXHeIHYPJhDQUIafBrUCo=;
+        b=LM0vB6+8Ne7H07hxWLkz3Uwzgsdk3gzgJzHbZ37eVIC4oFtORQ85UnfEtJ8FoHHNBE
+         s26758Ku8mxiQnVuIuR0QbmkIPWXeKlItB7UE/KWXjFyFQCjxbjHpJCMoXuBK0+vPi9H
+         GBut02p0Sjb+QT5pRyEuPPKQAI6iKcUCJbYpsKEfJcoV+dhwmhdwA4WMzoHMFSU3VeCV
+         e5OFRB2axfyh7bXT61SNTbdtpbiEgXWtjQLjzgFbSVz/08lIITk6vbIbczOQdmFj6N5j
+         Y0yUOsInw4IDVgMsRybL3sOt1q7n8Fktow4YtoJAKUCbsRvXfROnji+TXlSff9JEF3SJ
+         +/6A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc:content-transfer-encoding;
-        bh=aRyoGXUpoQzbaPeLeIbMAp8CoHAGIRwzjTcDJSFFYbA=;
-        b=h3WLMcVgzsk6oYVyjYraU+MJ/eQAh6ASN4gm+sOQc7qZbrbtBPZgUafwBOy8T4bhrR
-         QaddHJRZEDDykXRiBLOYE1NfUScPtKWvJPAalwehuB6lJKrk3nRrKleuDJZsaxN60PP1
-         yLx5Xz4S7fZs8ntDGyXpL9H19O+rFN2YbjPiwCMEAETUYTNwCezIR76dFoeFs3uDBWun
-         boeUiv8OgazWlWGkZoGeRE2GKJHxSOk385GjPVNSpR5RPc4dYWDFDCEWDTO/ofFYfQT1
-         T1yNnAJ5LeNWBfUh7ToSW9AZtcN0bk8tPKjRrH6cMx5nx075BX/BeiuL22mzW8H1OY0F
-         zyYw==
-X-Gm-Message-State: APjAAAXvc7XMH9zx4OsL85MW774u02aeGvPDcCaxEYTFD9FeHAfMLjJX
-        SiVzFQoPgGE1+1NzLn1AFKtDqt6AdFMbjLQiQi/4rg==
-X-Google-Smtp-Source: APXvYqyEFsQQTl6eUUaj0CeWJkYCu7CvPeKiWcJU/QOSAhzosed2y5eUxtS1GFj2iv2ME2jzUVJnLHiug20hW3xfemA=
-X-Received: by 2002:aca:451:: with SMTP id 78mr3352328oie.170.1573649336925;
- Wed, 13 Nov 2019 04:48:56 -0800 (PST)
+        bh=xKNQ7v4yv1nHmpKbLcQIzTqXHeIHYPJhDQUIafBrUCo=;
+        b=mb21Ifhu2x3bIk7/zKPcSe5yKk6sX2X9xzGNcm3J0Dn8wdG3N7Ao2Bs0+gyF2pTNjG
+         F6Pt0Qnroxmfi9t2Wj0WHGv/vEA2GguVXbIZQUvYSS+RTE9s9R88wnCNCDE7twanG10z
+         sQOtl3pQHuYFTsMsKF8PKmH2DILRyOur2RzE9XR6lncPysZtEnvYRMmbJmNFQMIj2POk
+         1F6Jf23am8LteZEXNXcjWtk7qcSYM0+E5hU2W4Cy2uh4FpBHY1H3K/POdCJPO8x9rBzd
+         sTT6bjmP/c0TX54eBb51A9AQq8j1XvkWGnwmZ9ctRNdMsMYqzSKLqsG+BaGVdaYsu6+O
+         zNnA==
+X-Gm-Message-State: APjAAAWT08SeCnKkhluDSK+314umTRRJQchg/uqojCHGUxXpYFvxxzpq
+        LqKbi4anqXphWvQn4zSADJaaa9n5yLzTN5BDPAzInNEw
+X-Google-Smtp-Source: APXvYqxVBL98LhQNMDEZ+JCt3DYDZmvFZn/sBaunf1BYMjKSFf+P7kKH1lyOQa8E2L9C+/To/hXUX1yE/Yn5+ZKKqUk=
+X-Received: by 2002:a05:6830:453:: with SMTP id d19mr2708443otc.256.1573649416541;
+ Wed, 13 Nov 2019 04:50:16 -0800 (PST)
 MIME-Version: 1.0
-References: <20191113101103.27821-1-geert+renesas@glider.be>
-In-Reply-To: <20191113101103.27821-1-geert+renesas@glider.be>
+References: <20191113084352.GA25535@localhost.localdomain>
+In-Reply-To: <20191113084352.GA25535@localhost.localdomain>
 From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Date:   Wed, 13 Nov 2019 13:48:45 +0100
-Message-ID: <CAMpxmJVLyBnMWqpggke0TJVH0pGUVpZyqR1E+doxgOhR=sUPNw@mail.gmail.com>
-Subject: Re: [PATCH] gpio: em: Use platform_get_irq() to obtain interrupts
-To:     Geert Uytterhoeven <geert+renesas@glider.be>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        =?UTF-8?Q?Niklas_S=C3=B6derlund?= <niklas.soderlund@ragnatech.se>,
+Date:   Wed, 13 Nov 2019 13:50:05 +0100
+Message-ID: <CAMpxmJU3fSa_dUiLs44FKuuTAVTD+_q3WxUX5PCRuvaWCuxKdA@mail.gmail.com>
+Subject: Re: [PATCH] gpio: mmio: remove untrue leftover comment
+To:     Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+Cc:     Matti Vaittinen <mazziesaccount@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
         linux-gpio <linux-gpio@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>
+        LKML <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 Sender: linux-gpio-owner@vger.kernel.org
@@ -59,82 +59,54 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-=C5=9Br., 13 lis 2019 o 11:11 Geert Uytterhoeven <geert+renesas@glider.be>
-napisa=C5=82(a):
+=C5=9Br., 13 lis 2019 o 09:44 Matti Vaittinen
+<matti.vaittinen@fi.rohmeurope.com> napisa=C5=82(a):
 >
-> Use the platform_get_irq() helper instead of handling resources
-> directly.
+> The comment should have been removed when new GPIO direction
+> definitions were taken in use as the function logic was changed. It
+> is now perfectly valid and Ok to hit the return from the bottom of
+> the direction getting function.
 >
-> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
 > ---
-> Compile-tested only.
-> ---
->  drivers/gpio/gpio-em.c | 21 +++++++++------------
->  1 file changed, 9 insertions(+), 12 deletions(-)
 >
-> diff --git a/drivers/gpio/gpio-em.c b/drivers/gpio/gpio-em.c
-> index adc281daacff4896..17a243c528adeaf8 100644
-> --- a/drivers/gpio/gpio-em.c
-> +++ b/drivers/gpio/gpio-em.c
-> @@ -269,13 +269,12 @@ static void em_gio_irq_domain_remove(void *data)
->  static int em_gio_probe(struct platform_device *pdev)
->  {
->         struct em_gio_priv *p;
-> -       struct resource *irq[2];
->         struct gpio_chip *gpio_chip;
->         struct irq_chip *irq_chip;
->         struct device *dev =3D &pdev->dev;
->         const char *name =3D dev_name(dev);
->         unsigned int ngpios;
-> -       int ret;
-> +       int irq[2], ret;
+> Sorry guys. Just noticed that I should've removed this comment in
+> original patch series.
 >
->         p =3D devm_kzalloc(dev, sizeof(*p), GFP_KERNEL);
->         if (!p)
-> @@ -285,13 +284,13 @@ static int em_gio_probe(struct platform_device *pde=
-v)
->         platform_set_drvdata(pdev, p);
->         spin_lock_init(&p->sense_lock);
+>  drivers/gpio/gpio-mmio.c | 1 -
+>  1 file changed, 1 deletion(-)
 >
-> -       irq[0] =3D platform_get_resource(pdev, IORESOURCE_IRQ, 0);
-> -       irq[1] =3D platform_get_resource(pdev, IORESOURCE_IRQ, 1);
-> +       irq[0] =3D platform_get_irq(pdev, 0);
-> +       if (irq[0] < 0)
-> +               return irq[0];
+> diff --git a/drivers/gpio/gpio-mmio.c b/drivers/gpio/gpio-mmio.c
+> index cd07c948649f..f729e3e9e983 100644
+> --- a/drivers/gpio/gpio-mmio.c
+> +++ b/drivers/gpio/gpio-mmio.c
+> @@ -386,7 +386,6 @@ static int bgpio_get_dir(struct gpio_chip *gc, unsign=
+ed int gpio)
+>                 if (!(gc->read_reg(gc->reg_dir_in) & bgpio_line2mask(gc, =
+gpio)))
+>                         return GPIO_LINE_DIRECTION_OUT;
 >
-> -       if (!irq[0] || !irq[1]) {
-> -               dev_err(dev, "missing IRQ or IOMEM\n");
-> -               return -EINVAL;
-> -       }
-> +       irq[1] =3D platform_get_irq(pdev, 1);
-> +       if (irq[1] < 0)
-> +               return irq[1];
+> -       /* This should not happen */
+>         return GPIO_LINE_DIRECTION_IN;
+>  }
 >
->         p->base0 =3D devm_platform_ioremap_resource(pdev, 0);
->         if (IS_ERR(p->base0))
-> @@ -342,14 +341,12 @@ static int em_gio_probe(struct platform_device *pde=
-v)
->         if (ret)
->                 return ret;
 >
-> -       if (devm_request_irq(dev, irq[0]->start,
-> -                            em_gio_irq_handler, 0, name, p)) {
-> +       if (devm_request_irq(dev, irq[0], em_gio_irq_handler, 0, name, p)=
-) {
->                 dev_err(dev, "failed to request low IRQ\n");
->                 return -ENOENT;
->         }
->
-> -       if (devm_request_irq(dev, irq[1]->start,
-> -                            em_gio_irq_handler, 0, name, p)) {
-> +       if (devm_request_irq(dev, irq[1], em_gio_irq_handler, 0, name, p)=
-) {
->                 dev_err(dev, "failed to request high IRQ\n");
->                 return -ENOENT;
->         }
+> base-commit: 70d97e099bb426ecb3ad4bf31e88dbf2ef4b2e4c
 > --
-> 2.17.1
+> 2.21.0
 >
+>
+> --
+> Matti Vaittinen, Linux device drivers
+> ROHM Semiconductors, Finland SWDC
+> Kiviharjunlenkki 1E
+> 90220 OULU
+> FINLAND
+>
+> ~~~ "I don't think so," said Rene Descartes. Just then he vanished ~~~
+> Simon says - in Latin please.
+> ~~~ "non cogito me" dixit Rene Descarte, deinde evanescavit ~~~
+> Thanks to Simon Glass for the translation =3D]
 
 Queued for v5.5, thanks!
 
