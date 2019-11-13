@@ -2,52 +2,51 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id ABC46FADAC
-	for <lists+linux-gpio@lfdr.de>; Wed, 13 Nov 2019 10:54:43 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 05757FADAD
+	for <lists+linux-gpio@lfdr.de>; Wed, 13 Nov 2019 10:54:52 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727325AbfKMJym (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 13 Nov 2019 04:54:42 -0500
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:43081 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726598AbfKMJym (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 13 Nov 2019 04:54:42 -0500
-Received: by mail-lf1-f65.google.com with SMTP id q5so1404096lfo.10
-        for <linux-gpio@vger.kernel.org>; Wed, 13 Nov 2019 01:54:41 -0800 (PST)
+        id S1726598AbfKMJyv (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 13 Nov 2019 04:54:51 -0500
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:42178 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726155AbfKMJyv (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 13 Nov 2019 04:54:51 -0500
+Received: by mail-lf1-f67.google.com with SMTP id z12so1406917lfj.9
+        for <linux-gpio@vger.kernel.org>; Wed, 13 Nov 2019 01:54:50 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=NjW+IedaOCXAkyJO80s66UdolTisPSVRQNrhxqL8/tI=;
-        b=h+iOJ/lmBaYMUiakQH+OhBK5S6dC19GqPLB5z/c4vRvYSgDYoTphjJwx4S9kWLJqzF
-         UHkNxl0mQQ7uXT9DtPoqDb6d23Ul5FcH7JY69VRMcyOlsYd1I580sxY9whhEs0wB15gV
-         d1iXV8fGxxTwrapFdBCTT9DfhkG5LjkRzRdvZpNeI/3efyGLNDLc+n1QGDoaWKwc0w1r
-         d9Y62XXifEO2jN+sTWEdKiTDt+N2zCZjW9kEFg8YL8TWhatfZyCUeBGeyJFQVwQFwlSW
-         hnZURbviopDz8yce9pOqFLsXchdtuOqei7EIajAyWLn3tuy89OrLF0joZKqXLxu2g/aj
-         WuOg==
+        bh=Dv9PErOjQWP4MBTFjfzSVHBEyXy1w32qea4Oz46T0bI=;
+        b=DsqlNcMOUEMPbHnz8UC8FCoIgRp5xN0qvT6QkpgJQCyZyPZ70X2pC4aZDWRz4ldj51
+         u3L4nerBpVGPAmTTN1KYDVD5DJI/6kZXGTdErnJ+KPAfTc26I4GTYpl96a821u2LJnAb
+         uhjgxUUmZzjAjtPyH/76yjpIB8q3SsK9zQZCo+MNB6OwT8pL2XzBcG1R9WlK2BdJL/NB
+         oLtkFK4A2cx8+9aavpWqHXHikSjk5XFaQmMMDaDpRpZuc5w+JYw713NbpG0i/OaaCSsa
+         3V/WsgdSCAOEZx9tiVBhFEKXgy+nxQNkQJieMmKVvJfZFEPVP3HSgdHDEqoRIRVPGb4/
+         a/nA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=NjW+IedaOCXAkyJO80s66UdolTisPSVRQNrhxqL8/tI=;
-        b=Jgllhn/1CNGuiWPz/J908LUhCtbyaOS1BIw3DtiMD3MTWc3xU2NO+Tmu/YBUlC/zUE
-         eb/IuD4Pra24O4mLN+Octfc9D97U2RKxB+FrI4BSe+n4wcgXlfVFvm2dB5H8zb+4G3zL
-         zQ+m9YBigfF9IMD5IuuowX+v+l6OwupeVz/Ip08qixHHFyYU0dxbu3FqW7q4rT0YC1Mx
-         136RnYNz5hK5grzWe20m2weToEeulUws4K2+CsvGqmzPVCgenXz4/Ait07NJ8KUwAea7
-         pSDAYdD3ryBb6yb/NKlp++Ow6kfAQ93Hdko1w4vtZxiTX5IsLOoKrOIv5imCZYZRJGpi
-         4pXg==
-X-Gm-Message-State: APjAAAVDQjvjaEf7mJ3iy/IPmlHnfe8/BRrEKKx4uV0pthjmfFv/Uv7w
-        SEBKIfKxUZTQQWN5mVZT6oKo6Grm8SasgUHk66AcnFVYEjk=
-X-Google-Smtp-Source: APXvYqyamtJXMe2f4s/In9JRpXnh6uGxtcHeWja7ExhCCCc+QJn0pv+jtpSP6fMfb3dhw93RAvUARXDyzWbgPZTSrkM=
-X-Received: by 2002:a19:651b:: with SMTP id z27mr1991102lfb.117.1573638880545;
- Wed, 13 Nov 2019 01:54:40 -0800 (PST)
+        bh=Dv9PErOjQWP4MBTFjfzSVHBEyXy1w32qea4Oz46T0bI=;
+        b=YrLw611GzKTG22PqmcSncDeEOushmPfiqZRlG86EUGVJ3l9gyhJzMILbc1HWGefAA6
+         covHA2LHzqov56ayRr3LFibhDvbumLZ9JMsWwIIOunVPHR3Fxcx7E3PoJuB6X3IKpR7G
+         9DNvvWw5kFZiumWD3yMlzgG2oO5XhTP1s2+i7WL/aK1rQhpdqhOTvTwDYAxZ4k60ziVU
+         URFNCYwrLlayBMYey4+sicoa/FxJUxUHv0tYyCojugZ2RXlU9xcTguGpihqAdPSFijfC
+         xMKCuXKhb/eFXSci0b2iAIMSDHk6rOkMdmUnmWL0TF8P6QSccqGcozn2MR2H7EBR/v7H
+         Ejbw==
+X-Gm-Message-State: APjAAAWcRqt0yH2C54VZo/48JQB8PTqFkFRJxmtXvuU9OBV+mMGn/Ybb
+        zOhjd4K13S6QgzWmCRF1qWbW1QvnpUzqUwTkAwgEyg==
+X-Google-Smtp-Source: APXvYqwTT4zO0ABQb2IuuaUjdJVhY2+UY7092FU6feNE8zD6YbO1sNMa6L3wzjSDSCZWWZFP7LHXoCyFkFsYEcBjdv4=
+X-Received: by 2002:ac2:51dd:: with SMTP id u29mr2055974lfm.135.1573638889394;
+ Wed, 13 Nov 2019 01:54:49 -0800 (PST)
 MIME-Version: 1.0
-References: <20191106144829.32275-1-andriy.shevchenko@linux.intel.com> <20191106144829.32275-2-andriy.shevchenko@linux.intel.com>
-In-Reply-To: <20191106144829.32275-2-andriy.shevchenko@linux.intel.com>
+References: <20191106144829.32275-1-andriy.shevchenko@linux.intel.com>
+In-Reply-To: <20191106144829.32275-1-andriy.shevchenko@linux.intel.com>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Wed, 13 Nov 2019 10:54:28 +0100
-Message-ID: <CACRpkdYGBk_S4kF2DfZ9abMOj5oH=1rRQ_VBuO3pK_PPbxCUSg@mail.gmail.com>
-Subject: Re: [PATCH v1 1/8] pinctrl: lynxpoint: Move GPIO driver to pin
- controller folder
+Date:   Wed, 13 Nov 2019 10:54:36 +0100
+Message-ID: <CACRpkdZ39j=Ld4WW0JRv0XCdNqXVD+Mgo4RJKgykAN0Z7H8V1w@mail.gmail.com>
+Subject: Re: [PATCH v1 0/8] pinctrl: intel: Move Lynxpoint to pin control umbrella
 To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 Cc:     Mika Westerberg <mika.westerberg@linux.intel.com>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
@@ -61,16 +60,33 @@ X-Mailing-List: linux-gpio@vger.kernel.org
 On Wed, Nov 6, 2019 at 3:48 PM Andy Shevchenko
 <andriy.shevchenko@linux.intel.com> wrote:
 
-This Kconfig symbol goes away:
+> Intel Lynxpoint GPIO is actually half way to the Chassis specification that has
+> been established starting from Intel Skylake. It has some pin control
+> properties we may utilize. To achieve this, move the driver under pin control
+> umbrella and do a bunch of clean ups.
+>
+> This is the first step. Next step will be to convert it to the actual pin
+> control driver.
+>
+> The series has been tested on Harrisbeach Ultrabook where Lynxpoint GPIO is
+> exposed to the OS.
+>
+> Andy Shevchenko (8):
+>   pinctrl: lynxpoint: Move GPIO driver to pin controller folder
+>   pinctrl: lynxpoint: Use raw_spinlock for locking
+>   pinctrl: lynxpoint: Correct amount of pins
+>   pinctrl: lynxpoint: Keep pointer to struct device instead of its
+>     container
+>   pinctrl: lynxpoint: Use %pR to print IO resource
+>   pinctrl: lynxpoint: Switch to memory mapped IO accessors
+>   pinctrl: lynxpoint: Convert unsigned to unsigned int
+>   pinctrl: lynxpoint: Move ->remove closer to ->probe()
 
-> -config GPIO_LYNXPOINT
+I'm a big fan of this refactoring.
 
-This one appears:
-
-> +config PINCTRL_LYNXPOINT
-
-As long as you're certain this will not cause any problems it's
-fine by me (thinking people who have old configs etc).
+Can you send this series as a separate pull request that I can pull into
+the GPIO tree rather than pin control, or maybe both, once you're
+pleased with it?
 
 Yours,
 Linus Walleij
