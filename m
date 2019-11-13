@@ -2,44 +2,44 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 39929FA7A5
-	for <lists+linux-gpio@lfdr.de>; Wed, 13 Nov 2019 04:55:33 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 1C11BFAA07
+	for <lists+linux-gpio@lfdr.de>; Wed, 13 Nov 2019 07:05:49 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727036AbfKMDzc (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 12 Nov 2019 22:55:32 -0500
-Received: from mga01.intel.com ([192.55.52.88]:52064 "EHLO mga01.intel.com"
+        id S1725858AbfKMGFs (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 13 Nov 2019 01:05:48 -0500
+Received: from mga06.intel.com ([134.134.136.31]:28500 "EHLO mga06.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726936AbfKMDzc (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Tue, 12 Nov 2019 22:55:32 -0500
+        id S1725843AbfKMGFs (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Wed, 13 Nov 2019 01:05:48 -0500
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 12 Nov 2019 19:55:31 -0800
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 12 Nov 2019 22:05:47 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.68,299,1569308400"; 
-   d="scan'208";a="194543002"
+   d="scan'208";a="287782908"
 Received: from linux.intel.com ([10.54.29.200])
-  by orsmga007.jf.intel.com with ESMTP; 12 Nov 2019 19:55:31 -0800
+  by orsmga001.jf.intel.com with ESMTP; 12 Nov 2019 22:05:46 -0800
 Received: from [10.226.38.118] (rtanwar-mobl.gar.corp.intel.com [10.226.38.118])
-        by linux.intel.com (Postfix) with ESMTP id DBE89580372;
-        Tue, 12 Nov 2019 19:55:28 -0800 (PST)
-Subject: Re: [PATCH v6 1/2] pinctrl: Add pinmux & GPIO controller driver for a
- new SoC
-To:     Andy Shevchenko <andriy.shevchenko@intel.com>
-Cc:     linus.walleij@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com,
+        by linux.intel.com (Postfix) with ESMTP id C79F9580372;
+        Tue, 12 Nov 2019 22:05:44 -0800 (PST)
+Subject: Re: [PATCH v6 2/2] dt-bindings: pinctrl: intel: Add for new SoC
+To:     Rob Herring <robh@kernel.org>
+Cc:     linus.walleij@linaro.org, mark.rutland@arm.com,
         linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, robh@kernel.org, qi-ming.wu@intel.com,
-        yixin.zhu@linux.intel.com, cheol.yong.kim@intel.com
+        devicetree@vger.kernel.org, andriy.shevchenko@intel.com,
+        qi-ming.wu@intel.com, yixin.zhu@linux.intel.com,
+        cheol.yong.kim@intel.com
 References: <cover.1573455324.git.rahul.tanwar@linux.intel.com>
- <d15b8cf13882902444e33c616d78c06c6b5fdc7b.1573455324.git.rahul.tanwar@linux.intel.com>
- <20191111111808.GO32742@smile.fi.intel.com>
+ <96537f8702501a45501d5a59ca029f92e36a9e4a.1573455324.git.rahul.tanwar@linux.intel.com>
+ <20191112191432.GA19579@bogus>
 From:   "Tanwar, Rahul" <rahul.tanwar@linux.intel.com>
-Message-ID: <7e9ca877-7d7b-3ae6-8a22-adde1fdae929@linux.intel.com>
-Date:   Wed, 13 Nov 2019 11:55:27 +0800
+Message-ID: <5ee8920d-582e-176f-6681-79c0122274fb@linux.intel.com>
+Date:   Wed, 13 Nov 2019 14:05:42 +0800
 User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
  Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <20191111111808.GO32742@smile.fi.intel.com>
+In-Reply-To: <20191112191432.GA19579@bogus>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
 Content-Language: en-US
@@ -49,168 +49,153 @@ List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
 
-Hi Andy,
+Hi Rob,
 
-On 11/11/2019 7:18 PM, Andy Shevchenko wrote:
-> On Mon, Nov 11, 2019 at 06:11:29PM +0800, Rahul Tanwar wrote:
->> Intel Lightning Mountain SoC has a pinmux controller & GPIO controller IP which
->> controls pin multiplexing & configuration including GPIO functions selection &
->> GPIO attributes configuration.
+Thanks for feedback.
+
+On 13/11/2019 3:14 AM, Rob Herring wrote:
+> On Mon, Nov 11, 2019 at 06:11:30PM +0800, Rahul Tanwar wrote:
+>> Add dt bindings document for pinmux & GPIO controller driver of
+>> Intel Lightning Mountain SoC.
 >>
->> This IP is not based on & does not have anything in common with Chassis
->> specification. The pinctrl drivers under pinctrl/intel/* are all based upon
->> Chassis spec compliant pinctrl IPs. So this driver doesn't fit & can not use
->> pinctrl framework under pinctrl/intel/* and it requires a separate new driver.
+>> Signed-off-by: Rahul Tanwar <rahul.tanwar@linux.intel.com>
+>> ---
+>>  .../bindings/pinctrl/intel,lgm-pinctrl.yaml        | 98 ++++++++++++++++++++++
+>>  1 file changed, 98 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/pinctrl/intel,lgm-pinctrl.yaml
 >>
->> Add a new GPIO & pin control framework based driver for this IP.
-> Looking again into this DT parsing and at other drivers, can't you utilize pin
-> control framework better?
+>> diff --git a/Documentation/devicetree/bindings/pinctrl/intel,lgm-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/intel,lgm-pinctrl.yaml
+>> new file mode 100644
+>> index 000000000000..d54a3bda1f4f
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/pinctrl/intel,lgm-pinctrl.yaml
+>> @@ -0,0 +1,98 @@
+>> +# SPDX-License-Identifier: GPL-2.0-only
+> For new bindings:
 >
-> I see some drivers are using
-> 	pinctrl_utils_add_map_mux()
-> among other calls.
+> # SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
 
-pinctrl_utils_add_map_mux() is already used in the driver via below
-generic op:
+Well noted.
 
-pinctrl_ops.dt_node_to_map = pinconf_generic_dt_node_map_all
-
-Please see call graph of pinconf_generic_dt_node_map_all() where it 
-eventually invokes pinctrl_utils_add_map_mux(). 
-
-Drivers where you see explicit usage of pinctrl_utils_add_map_mux() 
-are not using GENERIC_PINCONF of core framework.
-
-Since we are using all possible core framework provided generic ops, 
-so i think utilization of pin control framework should already be 
-maximized.
-
-
-> Some comments below as well.
->
->> +	writel(pmx, mem + (offset << 2));
-> 	offset * 4
-> looks more naturally here. Applies to other similar cases if any.
-
-Noted.
-
->> +	val = readl(mem + REG_DRCC(idx));
->> +	val = PARSE_DRV_CURRENT(val, pin_offset);
+>> +%YAML 1.2
+>> +---
+>> +$id: http://devicetree.org/schemas/bindings/pinctrl/intel,lgm-pinctrl.yaml#
+>> +$schema: http://devicetree.org/meta-schemas/core.yaml#
 >> +
->> +	return val;
-> Can be
-> 	return PARSE_DRV_CURRENT(readl(mem + REG_DRCC(idx)), pin_offset);
->
-> but it's up to you.
-
-Agree, will update.
-
->> +static int eqbr_pinconf_set(struct pinctrl_dev *pctldev, unsigned int pin,
->> +			    unsigned long *configs, unsigned int num_configs)
->> +{
->> +	struct eqbr_pinctrl_drv_data *pctl = pinctrl_dev_get_drvdata(pctldev);
->> +	struct eqbr_gpio_ctrl *gctrl;
->> +	enum pin_config_param param;
->> +	struct eqbr_pin_bank *bank;
->> +	unsigned int val, offset;
->> +	struct gpio_chip *gc;
->> +	unsigned long flags;
->> +	void __iomem *mem;
->> +	u32 regval, mask;
->> +	int i;
+>> +title: Intel Lightning Mountain SoC pinmux & GPIO controller binding
 >> +
->> +	for (i = 0; i < num_configs; i++) {
->> +		param = pinconf_to_config_param(configs[i]);
->> +		val = pinconf_to_config_argument(configs[i]);
+>> +maintainers:
+>> +  - Rahul Tanwar <rahul.tanwar@linux.intel.com>
 >> +
->> +		bank = find_pinbank_via_pin(pctl, pin);
->> +		if (!bank) {
->> +			dev_err(pctl->dev,
->> +				"Couldn't find pin bank for pin %u\n", pin);
->> +			return -ENODEV;
->> +		}
->> +		mem = bank->membase;
->> +		offset = pin - bank->pin_base;
+>> +description: |
+>> +  Pinmux & GPIO controller controls pin multiplexing & configuration including
+>> +  GPIO function selection & GPIO attributes configuration.
 >> +
->> +		switch (param) {
->> +		case PIN_CONFIG_BIAS_PULL_UP:
->> +			mem += REG_PUEN;
->> +			val &= 0x1;
-> Unneeded if use standard pattern (see below).
->
->> +			mask = BIT(offset);
->> +			break;
->> +		case PIN_CONFIG_BIAS_PULL_DOWN:
->> +			mem += REG_PDEN;
->> +			val &= 0x1;
-> Ditto.
->
->> +			mask = BIT(offset);
->> +			break;
->> +		case PIN_CONFIG_DRIVE_OPEN_DRAIN:
->> +			mem += REG_OD;
->> +			val &= 0x1;
-> Ditto.
->
->> +			mask = BIT(offset);
->> +			break;
->> +		case PIN_CONFIG_DRIVE_STRENGTH:
->> +			mem += REG_DRCC(offset / DRV_CUR_PINS);
->> +			offset = (offset % DRV_CUR_PINS) << 1;
->> +			val &= 0x3;
-> Ditto.
->
->> +			mask = GENMASK(offset + 1, offset);
-> GENMASK() badly works with non-constants. Better
->
-> 			mask = GENMASK(1, 0) << offset;
-
-Noted.
-
->> +			break;
->> +		case PIN_CONFIG_SLEW_RATE:
->> +			mem += REG_SRC;
->> +			val &= 0x1;
-> Ditto.
->
->> +			mask = BIT(offset);
->> +			break;
->> +		case PIN_CONFIG_OUTPUT_ENABLE:
->> +			gctrl = get_gpio_ctrls_via_bank(pctl, bank);
->> +			if (!gctrl) {
->> +				dev_err(pctl->dev, "Failed to find gpio via bank pinbase: %u, pin: %u\n",
->> +					bank->pin_base, pin);
->> +				return -ENODEV;
->> +			}
->> +			gc = &gctrl->chip;
->> +			gc->direction_output(gc, offset, 0);
->> +			continue;
->> +		default:
->> +			return -ENOTSUPP;
->> +		}
+>> +  Please refer to [1] for details of the common pinctrl bindings used by the
+>> +  client devices.
 >> +
->> +		raw_spin_lock_irqsave(&pctl->lock, flags);
->> +		regval = readl(mem);
->> +		regval = (regval & ~mask) | (val << offset);
-> Standard pattern is to apply mask here:
-> 		regval = (regval & ~mask) | ((val << offset) & mask);
-
-Agree. In-fact, i had proposed to you exact same pattern earlier but
-it was in a different function call so i guess it was not that obvious.
-Will change, thanks.
-
->> +		writel(regval, mem);
->> +		raw_spin_unlock_irqrestore(&pctl->lock, flags);
->> +	}
+>> +  [1] Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt
 >> +
->> +	return 0;
->> +}
->> +			dev_dbg(dev, "Group %s: not function binded!\n",
->> +				(char *)prop->value);
-> Do you need casting here?
+>> +properties:
+>> +  compatible:
+>> +    const: intel,lgm-pinctrl
+>> +
+>> +  reg:
+>> +    maxItems: 1
+>> +
+>> +# Client device subnode's properties
+>> +patternProperties:
+>> +  '-pins$':
+>> +    type: object
+>> +    description:
+>> +      Pinctrl node's client devices use subnodes for desired pin configuration.
+>> +      Client device subnodes use below standard properties.
+>> +
+>> +    properties:
+>> +      function:
+>> +        $ref: /schemas/types.yaml#/definitions/string
+>> +        description:
+>> +          A string containing the name of the function to mux to the group.
+> Possible strings should be listed out here.
 
-I think yes, to avoid compiler warning..
+Possible number of strings here is a huge number. I agree that it makes
+sense to list out the possible strings here but when the possible strings
+are huge, can we just omit specifying all of the strings ? I see many
+examples here where they only specify the string in examples.
+
+>> +
+>> +      groups:
+>> +        $ref: /schemas/types.yaml#/definitions/string-array
+>> +        description:
+>> +          An array of strings identifying the list of groups.
+> Possible strings should be listed out here.
+
+Same point for groups. Too many strings to list out here.
+
+>> +
+>> +      pins:
+>> +        $ref: /schemas/types.yaml#/definitions/uint32-array
+>> +        description:
+>> +          List of pins to select with this function.
+>> +
+>> +      pinmux:
+>> +        description: The applicable mux group.
+>> +        allOf:
+>> +          - $ref: "/schemas/types.yaml#/definitions/uint32-array"
+>> +
+>> +      bias-pull-up:
+>> +        type: boolean
+>> +      bias-pull-down:
+>> +        type: boolean
+>> +      drive-strength:
+>> +        type: boolean
+> Not a boolean. Need to define possible values.
+
+Agree. My mistake. Will fix it on v7.
+
+>> +      slew-rate:
+>> +        type: boolean
+> Not a boolean. Need to define possible values.
+
+In our case, 0 here means slow slew & 1 means fast slew. There are no other
+possible values. Probably, i can add it in description while keeping data
+type as boolean.
+
+>> +      drive-open-drain:
+>> +        type: boolean
+>> +      output-enable:
+>> +        type: boolean
+>> +
+>> +    required:
+>> +      - function
+>> +      - groups
+> For the -pins nodes too:
+>
+>        additionalProperties: false
+
+Well noted.
+
+>> +
+>> +required:
+>> +  - compatible
+>> +  - reg
+>> +
+>> +additionalProperties: false
+>> +
+>> +examples:
+>> +  # Pinmux controller node
+>> +  - |
+>> +    pinctrl: pinctrl@e2880000 {
+>> +          compatible = "intel,lgm-pinctrl";
+>> +          reg = <0xe2880000 0x100000>;
+>> +
+>> +          # Client device subnode
+>> +          uart0-pins: uart0 {
+> This fails 'make dt_binding_check'. Please fix and run that.
+
+Will run & fix it in v7. Thanks.
 
 Regards,
 Rahul
+
 
