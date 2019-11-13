@@ -2,91 +2,76 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id EA854FA06B
-	for <lists+linux-gpio@lfdr.de>; Wed, 13 Nov 2019 02:44:51 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 4495AFA496
+	for <lists+linux-gpio@lfdr.de>; Wed, 13 Nov 2019 03:19:29 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727021AbfKMBov (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 12 Nov 2019 20:44:51 -0500
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:39188 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727001AbfKMBou (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 12 Nov 2019 20:44:50 -0500
-Received: by mail-lj1-f194.google.com with SMTP id p18so632304ljc.6
-        for <linux-gpio@vger.kernel.org>; Tue, 12 Nov 2019 17:44:48 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=TSetjMkcf4RpuPYXlFbAM0zaTljwaDUanV3PLKAWDpw=;
-        b=Gx9/4wLyPBmCchNwrslkyoWt00c+XPhTBrtJRbJaQthp30BZrJ0iqN1q5jOKigdLIS
-         TMxaZcP9iVEuxOhzinjmVT4Y+80rqdy7XN8YBtK5Qk4XgW1U2Ufoqy7Hl0+O+r5FJvH9
-         pUgtMI6o2fbew8jPafNEBEyf1Tg8exaG55ESxXy2zs39Cs7lXPuCo5XJ2wMcLTBXLh9K
-         uVhlE/lDu7PjVrlKD44Ue2/cUaYZPWvzGIB1lD/IvAa6uHvVHad+s/h+fzg4fkGk0wBM
-         vPbXsSCVEAgA441J0C4I8L2Kjb8/VCG2MSDx1mb1AJYo89N0gRRF43oy9qBv5J5w7dNP
-         ARlA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=TSetjMkcf4RpuPYXlFbAM0zaTljwaDUanV3PLKAWDpw=;
-        b=BQ5/x4cFqtYSfGWFRM59pDdzI/7EuzjYR2lQRim1pFUBGOVvaGboszCKRxlm3adlXv
-         NGJ+lAnYD5xIy8KcCzXsCALXjsZdtPlekIgB+3aVrFeKimbrhJjzJdJHPEeyENooZsZi
-         lzuIChTp9CI0xYRzIMN7x4ceGoDTbv6+S0a1l5s7TxbO+ttDlAeWuUar1U0e5UK6jwSz
-         UDNtNHe1e7KbGgjGCVcG7WczdA4ZuBP3FnXQghX74FXvz08INYoSjQf2Web3liQcTbL4
-         IWgHRVGIxb2/tuWUIuphGDh19nm+IIx7Q8VikHgdCZvnx6vQ1PXrsRbtjpwO7LMZFOvu
-         lnzA==
-X-Gm-Message-State: APjAAAXU/3JweWo9sZ/T0vhdL9B38en40Vc5E+6/FChksyk2Zg9D+pa5
-        c/Jnp5XfYkrci5UlRmhAya7c0w==
-X-Google-Smtp-Source: APXvYqwCX2MBzMEReXX1xV3jUFGB08L4MJtEtvR5BzsZ84X6TT2Gnq8chd6RudqzVPTvjBW857cnqQ==
-X-Received: by 2002:a05:651c:87:: with SMTP id 7mr506151ljq.20.1573609487372;
-        Tue, 12 Nov 2019 17:44:47 -0800 (PST)
-Received: from localhost.bredbandsbolaget (c-79c8225c.014-348-6c756e10.bbcust.telenor.se. [92.34.200.121])
-        by smtp.gmail.com with ESMTPSA id n19sm190440lfl.85.2019.11.12.17.44.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 12 Nov 2019 17:44:46 -0800 (PST)
-From:   Linus Walleij <linus.walleij@linaro.org>
-To:     Mark Brown <broonie@kernel.org>, linux-spi@vger.kernel.org
-Cc:     linux-gpio@vger.kernel.org,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        id S1729124AbfKMBza (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 12 Nov 2019 20:55:30 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47156 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729119AbfKMBz3 (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Tue, 12 Nov 2019 20:55:29 -0500
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 66F0722470;
+        Wed, 13 Nov 2019 01:55:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1573610129;
+        bh=EYGUwQYilh4pekqnanWVL0ztc04HiI88xFpbAfHhJyE=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=SlGhVcLxHQNAjPQpHGBSi4u1KQYLT33gxNHoB3B39tUBGT2uQjFQHeUo7zlBc2KYd
+         /aH5pRJm/L+RBM8u+HQDr8FFqcXnDgBftxt8SoBleQfeWq2zWCPzo7BYP8+s7nlP19
+         5MOh5N7wNzNMLZLeCFLTAi3Nm9VBnQSRgDRFAH0Y=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Marek Vasut <marex@denx.de>,
         Linus Walleij <linus.walleij@linaro.org>,
-        Fabio Estevam <festevam@gmail.com>,
-        Christophe Leroy <christophe.leroy@c-s.fr>
-Subject: [PATCH] spi: fsl-cpm: Correct the free:ing
-Date:   Wed, 13 Nov 2019 02:44:42 +0100
-Message-Id: <20191113014442.12100-1-linus.walleij@linaro.org>
-X-Mailer: git-send-email 2.21.0
+        Sasha Levin <sashal@kernel.org>, linux-gpio@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 179/209] gpio: syscon: Fix possible NULL ptr usage
+Date:   Tue, 12 Nov 2019 20:49:55 -0500
+Message-Id: <20191113015025.9685-179-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20191113015025.9685-1-sashal@kernel.org>
+References: <20191113015025.9685-1-sashal@kernel.org>
 MIME-Version: 1.0
+X-stable: review
+X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-The fsl_spi_cpm_free() function does not make the same
-checks as the error path in fsl_spi_cpm_init() leading
-to crashes on error.
+From: Marek Vasut <marex@denx.de>
 
-Cc: Fabio Estevam <festevam@gmail.com>
-Reported-by: Christophe Leroy <christophe.leroy@c-s.fr>
+[ Upstream commit 70728c29465bc4bfa7a8c14304771eab77e923c7 ]
+
+The priv->data->set can be NULL while flags contains GPIO_SYSCON_FEAT_OUT
+and chip->set is valid pointer. This happens in case the controller uses
+the default GPIO setter. Always use chip->set to access the setter to avoid
+possible NULL pointer dereferencing.
+
+Signed-off-by: Marek Vasut <marex@denx.de>
 Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/spi/spi-fsl-cpm.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/gpio/gpio-syscon.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/spi/spi-fsl-cpm.c b/drivers/spi/spi-fsl-cpm.c
-index 858f0544289e..54ad0ac121e5 100644
---- a/drivers/spi/spi-fsl-cpm.c
-+++ b/drivers/spi/spi-fsl-cpm.c
-@@ -392,7 +392,8 @@ void fsl_spi_cpm_free(struct mpc8xxx_spi *mspi)
- 	dma_unmap_single(dev, mspi->dma_dummy_rx, SPI_MRBLR, DMA_FROM_DEVICE);
- 	dma_unmap_single(dev, mspi->dma_dummy_tx, PAGE_SIZE, DMA_TO_DEVICE);
- 	cpm_muram_free(cpm_muram_offset(mspi->tx_bd));
--	cpm_muram_free(cpm_muram_offset(mspi->pram));
-+	if (!(mspi->flags & SPI_CPM1))
-+		cpm_muram_free(cpm_muram_offset(mspi->pram));
- 	fsl_spi_free_dummy_rx();
+diff --git a/drivers/gpio/gpio-syscon.c b/drivers/gpio/gpio-syscon.c
+index 87c18a5445137..7f3da34c78746 100644
+--- a/drivers/gpio/gpio-syscon.c
++++ b/drivers/gpio/gpio-syscon.c
+@@ -122,7 +122,7 @@ static int syscon_gpio_dir_out(struct gpio_chip *chip, unsigned offset, int val)
+ 				   BIT(offs % SYSCON_REG_BITS));
+ 	}
+ 
+-	priv->data->set(chip, offset, val);
++	chip->set(chip, offset, val);
+ 
+ 	return 0;
  }
- EXPORT_SYMBOL_GPL(fsl_spi_cpm_free);
 -- 
-2.21.0
+2.20.1
 
