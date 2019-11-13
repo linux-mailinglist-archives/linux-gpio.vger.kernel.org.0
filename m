@@ -2,121 +2,86 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 97060FB220
-	for <lists+linux-gpio@lfdr.de>; Wed, 13 Nov 2019 15:06:42 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id ED6DFFB2CA
+	for <lists+linux-gpio@lfdr.de>; Wed, 13 Nov 2019 15:47:01 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726410AbfKMOGl (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 13 Nov 2019 09:06:41 -0500
-Received: from mga09.intel.com ([134.134.136.24]:2050 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726190AbfKMOGl (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Wed, 13 Nov 2019 09:06:41 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 13 Nov 2019 06:06:40 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.68,300,1569308400"; 
-   d="scan'208";a="198449798"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by orsmga008.jf.intel.com with ESMTP; 13 Nov 2019 06:06:39 -0800
-Received: by black.fi.intel.com (Postfix, from userid 1003)
-        id 8C329FD; Wed, 13 Nov 2019 16:06:38 +0200 (EET)
-Date:   Wed, 13 Nov 2019 16:06:38 +0200
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Linux pin control <linux-gpio@vger.kernel.org>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: [GIT PULL] intel-pinctrl for 5.5-1
-Message-ID: <20191113140638.GA78145@black.fi.intel.com>
+        id S1727481AbfKMOrB (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 13 Nov 2019 09:47:01 -0500
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:35071 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727142AbfKMOrA (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 13 Nov 2019 09:47:00 -0500
+Received: by mail-lf1-f67.google.com with SMTP id i26so2204318lfl.2
+        for <linux-gpio@vger.kernel.org>; Wed, 13 Nov 2019 06:46:59 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=yQrWeWf9QtOi7M1gxxpS8uzFCUgWpoqL5CQthXBahco=;
+        b=FgMaQEuSftBWtM2x6N/r8zpt6IzKUvIiO2+PdZgXmtmk8Kvp7kjRJOjg9ItQ0UfS4t
+         YgjvVb8ImGI1+6Ez4nlrKNAYqBndmxNvN0uthRUbrzm+YcxT2jyAxAmsiwt0Ny0Vw+pW
+         84aPL66ZhxRk7EuwOKGi64gKwvdGH3cgOSh2hMqk0qk4q/8lLCBxVmvR4yYSTNIK51Wr
+         1raZQylTVt2BEAd02q4hIEblkJ5PfDVsHESHLYOwaOKOaupbB0GqJ53VwBWLDZQ4z3K6
+         EaIAe9cgXJq2COIq+2VX1yubuS7ph6Lrt8SD0UPdEC41xH1eHf6BdR2W28vJ1YH7BUoQ
+         GhmQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=yQrWeWf9QtOi7M1gxxpS8uzFCUgWpoqL5CQthXBahco=;
+        b=cYZKSMFEjjedDhV5/jxyF80ALVfG9vWJOD1H12HFMLdkOgTxTBEMSBOmXcbs+it3RA
+         8igG4Ym1/Oc2IqgibA2WqP1S6jrP1GmYHk91+tMGQAXIVisKTsE59gYvjx8FbS7tUpXS
+         xaEyiWQWtG2/C+KzK/ug9knvXLg7faLjecvUW+23vhYCWz+XiJ4d0sFW0ysmp08EQntP
+         NJe/pPjzs7HY/ckdhmjRn8YcOF7LB5dvi0zPRLaUOwgDBrCzweH/91UuoFsvO8rejC14
+         rHbvBS+iLXoodyoraGtW0laducVB5pj6PLZlshUnW00De0Q1CxboYvFg9Iouia8Fo1Ne
+         vsoA==
+X-Gm-Message-State: APjAAAV5LAvTA1Ag6FSh16oBHgExj3sXYaVBgqfZEXxU66cM7/vQxSaE
+        pwpgBxpwWcdJwvtvjNNIeWgvwe/uSqoNS2Gw2sX9aw==
+X-Google-Smtp-Source: APXvYqy4Gs+cn1O1Suko5LQ2TXf5Cr45y80cAOlgn3FYsa6mb1dny3EgoAAMi616HeC1eO4Iz0GaDLxmFchKxY7Tcg8=
+X-Received: by 2002:ac2:5a07:: with SMTP id q7mr2850516lfn.86.1573656418885;
+ Wed, 13 Nov 2019 06:46:58 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.12.2 (2019-09-21)
+References: <cover.1573455324.git.rahul.tanwar@linux.intel.com> <96537f8702501a45501d5a59ca029f92e36a9e4a.1573455324.git.rahul.tanwar@linux.intel.com>
+In-Reply-To: <96537f8702501a45501d5a59ca029f92e36a9e4a.1573455324.git.rahul.tanwar@linux.intel.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Wed, 13 Nov 2019 15:46:47 +0100
+Message-ID: <CACRpkdYhy1KLyZd4MNSODpy0Q59_SAcc+wkofrZr4b4N+rYDxw@mail.gmail.com>
+Subject: Re: [PATCH v6 2/2] dt-bindings: pinctrl: intel: Add for new SoC
+To:     Rahul Tanwar <rahul.tanwar@linux.intel.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, Rob Herring <robh@kernel.org>,
+        Andriy Shevchenko <andriy.shevchenko@intel.com>,
+        qi-ming.wu@intel.com, yixin.zhu@linux.intel.com,
+        cheol.yong.kim@intel.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Linus,
+On Mon, Nov 11, 2019 at 11:11 AM Rahul Tanwar
+<rahul.tanwar@linux.intel.com> wrote:
 
-Intel pin control fixes for v5.5. Note, some of the commits are duplicated
-due to previously sent fixes:
-- 4973ddc84264 pinctrl: intel: Avoid potential glitches if pin is in GPIO mode
-- 3739898576a1 pinctrl: cherryview: Fix irq_valid_mask calculation
-- e58e177392b9 pinctrl: cherryview: Allocate IRQ chip dynamic
+> Add dt bindings document for pinmux & GPIO controller driver of
+> Intel Lightning Mountain SoC.
+>
+> Signed-off-by: Rahul Tanwar <rahul.tanwar@linux.intel.com>
+(...)
 
-Thanks,
+> +properties:
+> +  compatible:
+> +    const: intel,lgm-pinctrl
 
-With Best Regards,
-Andy Shevchenko
+Just noted from another review where Rob noted that this name should
+match the internal name in the datasheet for this hardware block. Is it
+really called "lgm-pinctrl" inside Intel?
 
-The following changes since commit d6d5df1db6e9d7f8f76d2911707f7d5877251b02:
+intel,lightning-mountain-io and similar are perfectly fine if that is the
+name it has in your documentation.
 
-  Linux 5.4-rc5 (2019-10-27 13:19:19 -0400)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/pinctrl/intel.git tags/intel-pinctrl-v5.5-1
-
-for you to fetch changes up to 8ae93b5ed9bec003b77c1ffaca852388b8ca490e:
-
-  pinctrl: cherryview: Missed type change to unsigned int (2019-11-07 11:12:10 +0200)
-
-----------------------------------------------------------------
-intel-pinctrl for v5.5-1
-
-* Intel Tigerlake pin controller support has been added.
-* Miscellaneous fixes to the main and Cherryview drivers.
-* Refactoring of the context restoring in the main driver.
-
-The following is an automated git shortlog grouped by driver:
-
-cherryview:
- -  Missed type change to unsigned int
- -  Allocate IRQ chip dynamic
- -  Fix spelling mistake in the comment
- -  Fix irq_valid_mask calculation
-
-intel:
- -  Missed type change to unsigned int
- -  Add Intel Tiger Lake pin controller support
- -  Use helper to restore register values on ->resume()
- -  Drop level from warning to debug in intel_restore_hostown()
- -  Introduce intel_restore_intmask() helper
- -  Introduce intel_restore_hostown() helper
- -  Introduce intel_restore_padcfg() helper
- -  Avoid potential glitches if pin is in GPIO mode
-
-----------------------------------------------------------------
-Andy Shevchenko (11):
-      pinctrl: intel: Avoid potential glitches if pin is in GPIO mode
-      pinctrl: cherryview: Fix spelling mistake in the comment
-      pinctrl: cherryview: Allocate IRQ chip dynamic
-      pinctrl: intel: Introduce intel_restore_padcfg() helper
-      pinctrl: intel: Introduce intel_restore_hostown() helper
-      pinctrl: intel: Introduce intel_restore_intmask() helper
-      pinctrl: intel: Drop level from warning to debug in intel_restore_hostown()
-      pinctrl: intel: Use helper to restore register values on ->resume()
-      pinctrl: intel: Add Intel Tiger Lake pin controller support
-      pinctrl: intel: Missed type change to unsigned int
-      pinctrl: cherryview: Missed type change to unsigned int
-
-Hans de Goede (1):
-      pinctrl: cherryview: Fix irq_valid_mask calculation
-
- drivers/pinctrl/intel/Kconfig              |   7 +
- drivers/pinctrl/intel/Makefile             |   1 +
- drivers/pinctrl/intel/pinctrl-cherryview.c |  32 +-
- drivers/pinctrl/intel/pinctrl-intel.c      | 140 +++++----
- drivers/pinctrl/intel/pinctrl-tigerlake.c  | 454 +++++++++++++++++++++++++++++
- 5 files changed, 561 insertions(+), 73 deletions(-)
- create mode 100644 drivers/pinctrl/intel/pinctrl-tigerlake.c
-
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+Yours,
+Linus Walleij
