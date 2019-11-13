@@ -2,55 +2,56 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id EC0F8FB0BE
-	for <lists+linux-gpio@lfdr.de>; Wed, 13 Nov 2019 13:47:31 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C855EFB0C5
+	for <lists+linux-gpio@lfdr.de>; Wed, 13 Nov 2019 13:48:59 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727122AbfKMMrb (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 13 Nov 2019 07:47:31 -0500
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:35998 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727104AbfKMMrb (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 13 Nov 2019 07:47:31 -0500
-Received: by mail-ot1-f66.google.com with SMTP id f10so1488416oto.3
-        for <linux-gpio@vger.kernel.org>; Wed, 13 Nov 2019 04:47:30 -0800 (PST)
+        id S1725908AbfKMMs7 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 13 Nov 2019 07:48:59 -0500
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:45705 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726105AbfKMMs6 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 13 Nov 2019 07:48:58 -0500
+Received: by mail-oi1-f196.google.com with SMTP id 14so1609885oir.12
+        for <linux-gpio@vger.kernel.org>; Wed, 13 Nov 2019 04:48:57 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baylibre-com.20150623.gappssmtp.com; s=20150623;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc:content-transfer-encoding;
-        bh=hzS4SYZIt6NSpGEyuUnsFmOu8r8EHjFnb42rl1nHgcA=;
-        b=xvcWvOoRVhAn4dsxU4VkYj8ICUAIK3dzZqwz4A12M1b/OSzothi1aeEN8C2VFcy3cG
-         OZeLB4vaYMzrbreteBcvxV1hVxsOXLr0jeOK8wJPtIo3kV2CHdt8M2f2Ys/HXXcBRgqf
-         6BCrGav8suM/KSxRuhhT9VWDu5lvxoqPoGEtKuov3vJyI1ShEeiBjsO02xWCTbfEQ518
-         LeG8hqiedrAYe7QOv27SK0MgO7qUGyrfs9DpZymVAmrjbkgsF9go60tJ8VSoDKxzq4Qq
-         zf3Yv/6GJfIF5GrjZn7cqcdi6BmorlsayObewnKRJ5BiSu8kyUnRFZyU1T75AaO9jOkH
-         ztgw==
+        bh=aRyoGXUpoQzbaPeLeIbMAp8CoHAGIRwzjTcDJSFFYbA=;
+        b=eaN8D4cu3V8Se39U37bhOetVYm0oaIrgslevQieJEmBAT0Ku/zu4kV0qgy4Vae1b+j
+         62bW+1TG7+nv9EV4Y59601+DdJhn7tTbSVKzEBhGEyu493W1Jx+Jdh8Njd6W02rBx0Ls
+         jK/yeaVbtGr6v8uIGcA6NK+GMx54RWN03NbcIxJ4BCHzwRlO/UyBpXx4Tkrdwcb0geJS
+         s6TYjRCu6eobVFYUWqcLnQF09eUbBlxw3Q0NvoxqGl7SbGt7OydDgabm0hOad5VHq1FU
+         BxeqeW43MjfCFYriJmqynUH6pNSEokhAYt9Rg+NhziFaz1uyyrPAFpttlzD5jU35C8X9
+         E1ZA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc:content-transfer-encoding;
-        bh=hzS4SYZIt6NSpGEyuUnsFmOu8r8EHjFnb42rl1nHgcA=;
-        b=K30D52gQTt/XGxuwiPlVKARTRuhr5rWlGG6WE7T5xEqGTVJ7CGhndgO7GH6Dzqpjrw
-         Wztr+fMX5ACVOGPTlbd0kTShAGBsN8NXDIJsp1BuXhJ9ar7mwNG+HCia2jCdAH7x8G4l
-         NPo28WKdZIMKcrSOH46sYZCxL4wn1768F68/sAASESyviCmTFumtQUiWmFe6hhBMV312
-         ueSdsygYsl2ItRpakJncRyb7ydOkqAT8XooNFeOBuvCONOC9hMSI8M7vttn+uRvhrtX6
-         EoPRoVCbgr8ffmz2mk1DPvBEcyJrhMKF41eC3edve4pNEYnYnlQG1c8ieNwOxcQQKOhA
-         5OEQ==
-X-Gm-Message-State: APjAAAX+K5+La3DEizSEd8GIAevj9IRW1J8vDKQC9dtCetqNAXwqJ/BK
-        3kx/V8GopbHx12Z4w+Npqlzb5IgWbbc/GsrE4TNdXg==
-X-Google-Smtp-Source: APXvYqz489t5EwSifbd70BN2wc2Mi+1psbSHgq4dZBXQDgFewdQxLAk6JgWdnkuJm+7Ix7lh2CSmzpOuJ9BaftT5FHU=
-X-Received: by 2002:a9d:344a:: with SMTP id v68mr3084723otb.85.1573649250095;
- Wed, 13 Nov 2019 04:47:30 -0800 (PST)
+        bh=aRyoGXUpoQzbaPeLeIbMAp8CoHAGIRwzjTcDJSFFYbA=;
+        b=h3WLMcVgzsk6oYVyjYraU+MJ/eQAh6ASN4gm+sOQc7qZbrbtBPZgUafwBOy8T4bhrR
+         QaddHJRZEDDykXRiBLOYE1NfUScPtKWvJPAalwehuB6lJKrk3nRrKleuDJZsaxN60PP1
+         yLx5Xz4S7fZs8ntDGyXpL9H19O+rFN2YbjPiwCMEAETUYTNwCezIR76dFoeFs3uDBWun
+         boeUiv8OgazWlWGkZoGeRE2GKJHxSOk385GjPVNSpR5RPc4dYWDFDCEWDTO/ofFYfQT1
+         T1yNnAJ5LeNWBfUh7ToSW9AZtcN0bk8tPKjRrH6cMx5nx075BX/BeiuL22mzW8H1OY0F
+         zyYw==
+X-Gm-Message-State: APjAAAXvc7XMH9zx4OsL85MW774u02aeGvPDcCaxEYTFD9FeHAfMLjJX
+        SiVzFQoPgGE1+1NzLn1AFKtDqt6AdFMbjLQiQi/4rg==
+X-Google-Smtp-Source: APXvYqyEFsQQTl6eUUaj0CeWJkYCu7CvPeKiWcJU/QOSAhzosed2y5eUxtS1GFj2iv2ME2jzUVJnLHiug20hW3xfemA=
+X-Received: by 2002:aca:451:: with SMTP id 78mr3352328oie.170.1573649336925;
+ Wed, 13 Nov 2019 04:48:56 -0800 (PST)
 MIME-Version: 1.0
-References: <20191112221026.5859-1-labbott@redhat.com>
-In-Reply-To: <20191112221026.5859-1-labbott@redhat.com>
+References: <20191113101103.27821-1-geert+renesas@glider.be>
+In-Reply-To: <20191113101103.27821-1-geert+renesas@glider.be>
 From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Date:   Wed, 13 Nov 2019 13:47:19 +0100
-Message-ID: <CAMpxmJX_haxjkY+vmm+ajC6hi-aa6k6m0o+d=RmTz5xjPXuo-g@mail.gmail.com>
-Subject: Re: [PATCH] tools: gpio: Correctly add make dependencies for gpio_utils
-To:     Laura Abbott <labbott@redhat.com>
+Date:   Wed, 13 Nov 2019 13:48:45 +0100
+Message-ID: <CAMpxmJVLyBnMWqpggke0TJVH0pGUVpZyqR1E+doxgOhR=sUPNw@mail.gmail.com>
+Subject: Re: [PATCH] gpio: em: Use platform_get_irq() to obtain interrupts
+To:     Geert Uytterhoeven <geert+renesas@glider.be>
 Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        =?UTF-8?Q?Niklas_S=C3=B6derlund?= <niklas.soderlund@ragnatech.se>,
         linux-gpio <linux-gpio@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 Sender: linux-gpio-owner@vger.kernel.org
@@ -58,83 +59,83 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-wt., 12 lis 2019 o 23:10 Laura Abbott <labbott@redhat.com> napisa=C5=82(a):
+=C5=9Br., 13 lis 2019 o 11:11 Geert Uytterhoeven <geert+renesas@glider.be>
+napisa=C5=82(a):
 >
+> Use the platform_get_irq() helper instead of handling resources
+> directly.
 >
-> gpio tools fail to build correctly with make parallelization:
->
-> $ make -s -j24
-> ld: gpio-utils.o: file not recognized: file truncated
-> make[1]: *** [/home/labbott/linux_upstream/tools/build/Makefile.build:145=
-: lsgpio-in.o] Error 1
-> make: *** [Makefile:43: lsgpio-in.o] Error 2
-> make: *** Waiting for unfinished jobs....
->
-> This is because gpio-utils.o is used across multiple targets.
-> Fix this by making gpio-utios.o a proper dependency.
->
-> Signed-off-by: Laura Abbott <labbott@redhat.com>
+> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
 > ---
-> I made a similar fix to iio tools
-> lore.kernel.org/r/20191018172908.3761-1-labbott@redhat.com
+> Compile-tested only.
 > ---
->  tools/gpio/Build    |  1 +
->  tools/gpio/Makefile | 10 +++++++---
->  2 files changed, 8 insertions(+), 3 deletions(-)
+>  drivers/gpio/gpio-em.c | 21 +++++++++------------
+>  1 file changed, 9 insertions(+), 12 deletions(-)
 >
-> diff --git a/tools/gpio/Build b/tools/gpio/Build
-> index 620c1937d957..4141f35837db 100644
-> --- a/tools/gpio/Build
-> +++ b/tools/gpio/Build
-> @@ -1,3 +1,4 @@
-> +gpio-utils-y +=3D gpio-utils.o
->  lsgpio-y +=3D lsgpio.o gpio-utils.o
->  gpio-hammer-y +=3D gpio-hammer.o gpio-utils.o
->  gpio-event-mon-y +=3D gpio-event-mon.o gpio-utils.o
-> diff --git a/tools/gpio/Makefile b/tools/gpio/Makefile
-> index 1178d302757e..6080de58861f 100644
-> --- a/tools/gpio/Makefile
-> +++ b/tools/gpio/Makefile
-> @@ -35,11 +35,15 @@ $(OUTPUT)include/linux/gpio.h: ../../include/uapi/lin=
-ux/gpio.h
+> diff --git a/drivers/gpio/gpio-em.c b/drivers/gpio/gpio-em.c
+> index adc281daacff4896..17a243c528adeaf8 100644
+> --- a/drivers/gpio/gpio-em.c
+> +++ b/drivers/gpio/gpio-em.c
+> @@ -269,13 +269,12 @@ static void em_gio_irq_domain_remove(void *data)
+>  static int em_gio_probe(struct platform_device *pdev)
+>  {
+>         struct em_gio_priv *p;
+> -       struct resource *irq[2];
+>         struct gpio_chip *gpio_chip;
+>         struct irq_chip *irq_chip;
+>         struct device *dev =3D &pdev->dev;
+>         const char *name =3D dev_name(dev);
+>         unsigned int ngpios;
+> -       int ret;
+> +       int irq[2], ret;
 >
->  prepare: $(OUTPUT)include/linux/gpio.h
+>         p =3D devm_kzalloc(dev, sizeof(*p), GFP_KERNEL);
+>         if (!p)
+> @@ -285,13 +284,13 @@ static int em_gio_probe(struct platform_device *pde=
+v)
+>         platform_set_drvdata(pdev, p);
+>         spin_lock_init(&p->sense_lock);
 >
-> +GPIO_UTILS_IN :=3D $(output)gpio-utils-in.o
-> +$(GPIO_UTILS_IN): prepare FORCE
-> +       $(Q)$(MAKE) $(build)=3Dgpio-utils
-> +
->  #
->  # lsgpio
->  #
->  LSGPIO_IN :=3D $(OUTPUT)lsgpio-in.o
-> -$(LSGPIO_IN): prepare FORCE
-> +$(LSGPIO_IN): prepare FORCE $(OUTPUT)gpio-utils-in.o
->         $(Q)$(MAKE) $(build)=3Dlsgpio
->  $(OUTPUT)lsgpio: $(LSGPIO_IN)
->         $(QUIET_LINK)$(CC) $(CFLAGS) $(LDFLAGS) $< -o $@
-> @@ -48,7 +52,7 @@ $(OUTPUT)lsgpio: $(LSGPIO_IN)
->  # gpio-hammer
->  #
->  GPIO_HAMMER_IN :=3D $(OUTPUT)gpio-hammer-in.o
-> -$(GPIO_HAMMER_IN): prepare FORCE
-> +$(GPIO_HAMMER_IN): prepare FORCE $(OUTPUT)gpio-utils-in.o
->         $(Q)$(MAKE) $(build)=3Dgpio-hammer
->  $(OUTPUT)gpio-hammer: $(GPIO_HAMMER_IN)
->         $(QUIET_LINK)$(CC) $(CFLAGS) $(LDFLAGS) $< -o $@
-> @@ -57,7 +61,7 @@ $(OUTPUT)gpio-hammer: $(GPIO_HAMMER_IN)
->  # gpio-event-mon
->  #
->  GPIO_EVENT_MON_IN :=3D $(OUTPUT)gpio-event-mon-in.o
-> -$(GPIO_EVENT_MON_IN): prepare FORCE
-> +$(GPIO_EVENT_MON_IN): prepare FORCE $(OUTPUT)gpio-utils-in.o
->         $(Q)$(MAKE) $(build)=3Dgpio-event-mon
->  $(OUTPUT)gpio-event-mon: $(GPIO_EVENT_MON_IN)
->         $(QUIET_LINK)$(CC) $(CFLAGS) $(LDFLAGS) $< -o $@
+> -       irq[0] =3D platform_get_resource(pdev, IORESOURCE_IRQ, 0);
+> -       irq[1] =3D platform_get_resource(pdev, IORESOURCE_IRQ, 1);
+> +       irq[0] =3D platform_get_irq(pdev, 0);
+> +       if (irq[0] < 0)
+> +               return irq[0];
+>
+> -       if (!irq[0] || !irq[1]) {
+> -               dev_err(dev, "missing IRQ or IOMEM\n");
+> -               return -EINVAL;
+> -       }
+> +       irq[1] =3D platform_get_irq(pdev, 1);
+> +       if (irq[1] < 0)
+> +               return irq[1];
+>
+>         p->base0 =3D devm_platform_ioremap_resource(pdev, 0);
+>         if (IS_ERR(p->base0))
+> @@ -342,14 +341,12 @@ static int em_gio_probe(struct platform_device *pde=
+v)
+>         if (ret)
+>                 return ret;
+>
+> -       if (devm_request_irq(dev, irq[0]->start,
+> -                            em_gio_irq_handler, 0, name, p)) {
+> +       if (devm_request_irq(dev, irq[0], em_gio_irq_handler, 0, name, p)=
+) {
+>                 dev_err(dev, "failed to request low IRQ\n");
+>                 return -ENOENT;
+>         }
+>
+> -       if (devm_request_irq(dev, irq[1]->start,
+> -                            em_gio_irq_handler, 0, name, p)) {
+> +       if (devm_request_irq(dev, irq[1], em_gio_irq_handler, 0, name, p)=
+) {
+>                 dev_err(dev, "failed to request high IRQ\n");
+>                 return -ENOENT;
+>         }
 > --
-> 2.21.0
+> 2.17.1
 >
 
-Applied for fixes, thanks!
+Queued for v5.5, thanks!
 
 Bartosz
