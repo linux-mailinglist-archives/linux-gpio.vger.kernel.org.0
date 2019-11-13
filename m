@@ -2,294 +2,225 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 0182DFB459
-	for <lists+linux-gpio@lfdr.de>; Wed, 13 Nov 2019 16:54:23 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id DEFD4FB5E9
+	for <lists+linux-gpio@lfdr.de>; Wed, 13 Nov 2019 18:06:39 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726105AbfKMPyW (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 13 Nov 2019 10:54:22 -0500
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:54368 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726074AbfKMPyV (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 13 Nov 2019 10:54:21 -0500
-Received: by mail-wm1-f68.google.com with SMTP id z26so2533773wmi.4
-        for <linux-gpio@vger.kernel.org>; Wed, 13 Nov 2019 07:54:18 -0800 (PST)
+        id S1727987AbfKMRGj (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 13 Nov 2019 12:06:39 -0500
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:41946 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727348AbfKMRGi (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 13 Nov 2019 12:06:38 -0500
+Received: by mail-lf1-f66.google.com with SMTP id j14so2560484lfb.8
+        for <linux-gpio@vger.kernel.org>; Wed, 13 Nov 2019 09:06:36 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=tyDT/bb1rljBBaXw+3Daj+8rBckNT5+/uKf9AQWuFWc=;
-        b=m8UfgP/6eQTJzy1Traw3PNv3do0I8n04EZJudvFmZ3uKEGalOZBcnscjY49b1icDgA
-         /BwfTXOUOjwARzEvXyGHZ4R+KzXzkVxkIgAwTVxx1OkkeucG8E0EfBchdrdchxWVM+Uu
-         Rn19muF6JKGxukeSJF5Yr7ZZmhA8rSJHA2iSuDMbQILnd0qLmMMn3vVfNcl5llTsBUcl
-         C+j0ySDAwA1qijKLfTW2Lgv+vXZjhPzSj65f2pGYUk5xL4C0Er0XVmrUoTMs73l2+Akc
-         4qopi9F2uqD+wVCaGwWt0pQXA+DDD9UfVKdXz9ynnkbNaYmQoOsVQNj/uH+WfkaP6a6I
-         LMxg==
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=YUGF3lpYgO9cloOjHxsuyc+u/ViuA1RPV0SW81a51p8=;
+        b=IJIqQghhZIc7LcLbEwUqf+yG40VtSG/n49YzgeYHcf7KyekEWWFTOKEzfYKUOJc2jD
+         R7uC2QjEtNMsARz9qly8kXRt/ZZiKRZFB09TEfOFHt9IlEoDrn52FFpP6VBbDbG9D4a2
+         LHO+SENLr3b6C5+rQHvAChig7eek+mhi5Fuems3u5+qAA9QYHjXC7WS4epoVrrna/Bji
+         ub9W1mOHkfoJRHXEXleUZSJ5esJCOc553K2wOH6JCmTNsuXdMZsTUuGRkmR++BotgCiZ
+         mJVuZY4wwnl2YPBV/LCzRTxSgHTWzoVPnmN126pvhdlBgRGYTDbpG4QZfMuBl4rQYPod
+         T/Hg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=tyDT/bb1rljBBaXw+3Daj+8rBckNT5+/uKf9AQWuFWc=;
-        b=UsEhgNoGjlP7SklK1Ocpg341nSFVWp+KpCYbKowV/gBPyq+LiYmTNxMd5pZ8e26jBh
-         4Rjb0x5sE0iYOFwgDlM0A6ft9Y3lzrBngZc8r1UPqS7SW0UwkGDDSnyHSaziRcbpQ0qi
-         0dZCptlOPPVU7/LTyMxryYtCUBXX3Np+/Gy0nqso2SxigZM2wNWOST3HU2UoE5DFQg5t
-         oeFPfOHMmL9hExaA/A/PbD+Re15NTbzxITT7H1dZUw+YmzW1qZS4jGQtjYi7YuyDFZUa
-         iIddlrs6PHko8mCzJYqF51rPX4IeyaHYncl5lp1FMqPGKaCDiQoF+qCxCXOQb4wCZEjK
-         OEWg==
-X-Gm-Message-State: APjAAAVTk8TnP8v4u4zMebYFhYJSoniHeE+zt0zCL7kmoXfwIy26QCen
-        bkTqsqmqD65x+4LkpfullocY1A==
-X-Google-Smtp-Source: APXvYqxO1AuqbTFmHoqw7e6tWWD8IhpEnJOsdBOumaKlGpgZhAfxBpVNqE+aQxsgfZQkQNQm+ieDbg==
-X-Received: by 2002:a05:600c:254f:: with SMTP id e15mr3220652wma.37.1573660458066;
-        Wed, 13 Nov 2019 07:54:18 -0800 (PST)
-Received: from debian-brgl.home (lfbn-1-7087-108.w90-116.abo.wanadoo.fr. [90.116.255.108])
-        by smtp.gmail.com with ESMTPSA id x11sm3280445wro.84.2019.11.13.07.54.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 13 Nov 2019 07:54:17 -0800 (PST)
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     linux-gpio@vger.kernel.org,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: [GIT PULL] gpio: updates for v5.5
-Date:   Wed, 13 Nov 2019 16:54:11 +0100
-Message-Id: <20191113155411.20068-1-brgl@bgdev.pl>
-X-Mailer: git-send-email 2.23.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=YUGF3lpYgO9cloOjHxsuyc+u/ViuA1RPV0SW81a51p8=;
+        b=Dg+P/cvRVZExjLetsh5mWwy4LuvqqeI8e1OP4W6J8ZGa6dHFTS4iH4Bm0HyRWF/zPV
+         Als/EHQv/9/k7DC5UE/EhVrYcdq9yHXyKzsQvetha3cdwvsYOy9BypHCjgj1UT3HopmA
+         +R5Eh+i3OF63CVJFl07awYm2A0nAMMUVSMV50VlW3e2wsd8XdLkiL23zykCqS/AqLHka
+         nwlxSH8fibfiif54qSj9cIAFb7HeSHSnadLbpCVrTAeel2QD5Tp0VpyEQ+yP1FJwi5I+
+         GUn2C+87pyrn/DTYy9JBhFrJggFxnA4+Gjs3OAyTDB6Wnab5NbP06o+xnleHHBJPd0sk
+         4GXA==
+X-Gm-Message-State: APjAAAXHFbSeuEhkyu4gpZc3EH20pZIZk5EbxhkzNjTpwQsf2RkVWGC7
+        PB7OEKEajPw336kUMIHvrrRLhwfO68Btfv1xCI15tQ==
+X-Google-Smtp-Source: APXvYqzC+Vh388YW3kxl3FCM93yogKwNCSplmHzAV1zL26+ogaBhxbpWxYMKbiKJu8VyczKRX/qX4SBexvsxIKmXtP4=
+X-Received: by 2002:ac2:5a07:: with SMTP id q7mr3268410lfn.86.1573664796067;
+ Wed, 13 Nov 2019 09:06:36 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <20191030114530.872-1-peter.ujfalusi@ti.com> <CACRpkdbw9MVrQMSgVMenSqAOiti1pAy4d2LvWY-ssx9dhzWEcw@mail.gmail.com>
+ <8bd0f286-dc54-72a6-0aaf-2dc7b9972883@ti.com>
+In-Reply-To: <8bd0f286-dc54-72a6-0aaf-2dc7b9972883@ti.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Wed, 13 Nov 2019 18:06:23 +0100
+Message-ID: <CACRpkdZ-qf3OKAxsoj+36V_N6Y_gFte1LHM+66OqekXBAWxsVA@mail.gmail.com>
+Subject: Re: [RFC 0/2] gpio: Support for shared GPIO lines on boards
+To:     Peter Ujfalusi <peter.ujfalusi@ti.com>
+Cc:     Rajendra Nayak <rnayak@codeaurora.org>,
+        Grant Likely <glikely@secretlab.ca>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Mark Brown <broonie@kernel.org>, Tero Kristo <t-kristo@ti.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+On Fri, Nov 8, 2019 at 12:20 PM Peter Ujfalusi <peter.ujfalusi@ti.com> wrote:
 
-Linus,
+> To start with I would let GPIO core to allow requesting the same GPIO
+> line by multiple consumers all the time.
 
-this is my second batch of GPIO updates for v5.5.
+It already allows that with GPIOD_FLAGS_BIT_NONEXCLUSIVE.
 
-The most important feature are the new user-space interfaces from Kent
-Gibson. Other than that, there are a few minor changes to various
-drivers I picked up. More details are in the signed tag.
+> If the flags for the gpio_request does not contain
+> GPIOD_FLAGS_BIT_NONEXCLUSIVE (probably we can have another define for
+> BIT(4) as GPIOD_FLAGS_BIT_MIGHT_BE_SHARED?) then print with dev_warn()
+> to get the attention of the developer that all users of the shared GPIO
+> line must be checked and change the current dev_info() to dev_dbg() when
+> the flag is provided.
 
-Please note that this PR has Greg KH's driver-core-next branch merged in
-to satisfy the dependencies of the tegra186 patches from Thierry. This
-should still cleanly merge with your for-next branch.
+We already have that. Unless all users request it with the same
+GPIOD_FLAGS_BIT_NONEXCLUSIVE they will simply fail,
+it is an excellent warning since it creates a strict semantic
+requirement for all participating consumer to explicitly specify
+if they want to share a line.
 
-Please pull.
+Adding a GPIOD_FLAGS_BIT_MIGHT_BE_SHARED with some
+soft semantics sort of allowing deviant nonstrict behavior seems
+like a real bad idea to me, it will likely create all kind of ambiguities
+we cannot foresee.
 
-The following changes since commit 70d97e099bb426ecb3ad4bf31e88dbf2ef4b2e4c:
+> When the consumer drivers are checked (and modified if needed) that they
+> behave OK in this situation we can snap the
+> GPIOD_FLAGS_BIT_MIGHT_BE_SHARED to silence the warning.
 
-  Revert "gpio: expose pull-up/pull-down line flags to userspace" (2019-11-08 13:37:54 +0100)
+I have burnt myself a bit on "let's poke in this transitional
+thing that I promise to remove later" and that later never
+happens so I'd say don't do that.
 
-are available in the Git repository at:
+> gpiod_deassert() would be equivalent to Philipp's
+> gpiod_politely_suggest_value()
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git tags/gpio-v5.5-updates-for-linus-part-2
+I don't intuitively understand the semantics of these calls.
+Consider Rusty Russells API design manifesto:
+http://sweng.the-davies.net/Home/rustys-api-design-manifesto
 
-for you to fetch changes up to 0f67f16a6e88749fc3bf88da7515d3fff472a1cc:
+> Not sure how the core would refcount things, but to align with what Rob
+> was saying about the misleading API naming:
+> gpiod_set_value(priv->en_gpio, 1/0) against the DT's
+> GPIO_ACTIVE_HIGH/LOW of the line's active state we might want to have:
+> gpiod_assert(priv->en_gpio);
+> gpiod_deassert(priv->en_gpio);
 
-  gpio: mmio: remove untrue leftover comment (2019-11-13 13:49:42 +0100)
+This is what gpiod_set_value() already does today in a way
+just name
+gpiod_set_value() -> gpio_set_asserted() and change
+the second argument to a bool named "asserted".
 
-----------------------------------------------------------------
-gpio: updates for v5.5
+It seems like a totally different and entirely syntactic problem
+separate from the reset business you're trying to solve?
 
-- add MODULE_ALIAS() for bd70528 (makes it possible to autoload the
-  module from user-space)
-- use proper irc_chip names in gpio-em and gpio-rcar
-- expose the line bias settings to user-space in the form of new request
-  flags
-- expose a new ioctl() to user-space which allows to change certain
-  proprties of requested lines without releasing them first
-- various updates for gpio-tegra186: debounce support, code
-  simplification and interrupt routing
-- use platform_get_irq() in gpio-em for some code shrinkage
-- remove leftovers after recent gpio-mmio changes
+We had this discussion before this week and yeah, if we
+historically named the logical levels on the line "asserted"
+and "deasserted" everywhere it would be great.
 
-----------------------------------------------------------------
-Arkadiusz Drabczyk (1):
-      firmware: Update pointer to documentation
+It is up to someone driving the change and changing it
+everywhere in that case. Preferably with a semantic
+coccinelle patch or sed script since it is purely
+syntactic, then plan where and when to
+run that. Then do that first, wait a kernel cycle and scoop up
+any fallout and leftovers and then start the next thing.
 
-Bartosz Golaszewski (13):
-      drivers: move the early platform device support to arch/sh
-      sh: add the sh_ prefix to early platform symbols
-      Documentation: devres: add missing entry for devm_platform_ioremap_resource()
-      lib: devres: prepare devm_ioremap_resource() for more variants
-      lib: devres: provide devm_ioremap_resource_wc()
-      drivers: platform: provide devm_platform_ioremap_resource_wc()
-      misc: sram: use devm_platform_ioremap_resource_wc()
-      drivers: provide devm_platform_ioremap_resource_byname()
-      gpio: mvebu: use devm_platform_ioremap_resource_byname()
-      gpio: tegra186: use devm_platform_ioremap_resource_byname()
-      Merge tag 'v5.4-rc6' into gpio/for-next
-      Merge remote-tracking branch 'linusw/for-next' into gpio/for-next
-      Merge remote-tracking branch 'driver-core/driver-core-next' into gpio/for-next
+> Basically assert would set the level to the active state defined by the
+> DT.
 
-Drew DeVault (1):
-      firmware loader: log path to loaded firmwares
+Or ACPI. Or machine descriptor tables. I suppose.
+Doing APIs becomes generic, the suggestion I had
+above was more like doing something like detecting
+a shared line *specifically* for device tree and nothing
+else and handle it in gpiolib-of.c but maybe that is not
+possible.
 
-Drew Fustini (1):
-      gpio: expose pull-up/pull-down line flags to userspace
+> Gradually drivers can be moved to this API pair from gpiod_set_value()
+> when it makes sense.
 
-Geert Uytterhoeven (11):
-      Documentation: debugfs: Document debugfs helper for unsigned long values
-      debugfs: Add debugfs_create_xul() for hexadecimal unsigned long
-      mmc: atmel-mci: Fix debugfs on 64-bit platforms
-      mmc: atmel-mci: Remove superfluous cast in debugfs_create_u32() call
-      mmc: dw_mmc: Fix debugfs on 64-bit platforms
-      mmc: dw_mmc: Remove superfluous cast in debugfs_create_u32() call
-      mac80211: Use debugfs_create_xul() helper
-      net: caif: Fix debugfs on 64-bit platforms
-      gpio: em: Use proper irq_chip name
-      gpio: rcar: Use proper irq_chip name
-      gpio: em: Use platform_get_irq() to obtain interrupts
+The problem I have right now as subsystem maintainer is people
+starting things like that and never finishing them.
 
-Greg Kroah-Hartman (14):
-      debugfs: remove return value of debugfs_create_u8()
-      debugfs: remove return value of debugfs_create_u16()
-      debugfs: remove return value of debugfs_create_u64()
-      debugfs: remove return value of debugfs_create_size_t()
-      ntb: ntb_pingpong: no need to check the return value of debugfs calls
-      debugfs: remove return value of debugfs_create_x16()
-      debugfs: remove return value of debugfs_create_x32()
-      debugfs: remove return value of debugfs_create_x64()
-      Merge 5.4-rc5 into driver-core-next
-      powerpc: pseries: no need to check return value of debugfs_create functions
-      debugfs: remove return value of debugfs_create_x8()
-      debugfs: remove return value of debugfs_create_atomic_t()
-      IB: mlx5: no need to check return value of debugfs_create functions
-      media: c8sectpfe: no need to check return value of debugfs_create functions
+If you wanna do this I suggest a fix it everywhere in one swift stroke
+approach with broad buy-in from everyone-approach or fail totally.
+We have too many in-transit API changes.
 
-Kent Gibson (6):
-      gpiolib: add support for pull up/down to lineevent_create
-      gpiolib: add support for disabling line bias
-      gpiolib: add support for biasing output lines
-      gpio: mockup: add set_config to support pull up/down
-      gpiolib: move validation of line handle flags into helper function
-      gpio: add new SET_CONFIG ioctl() to gpio chardev
+> The current gpiod_set_* would operate like as it is right now by not
+> asking politely a level, whatever it is.
+>
+> Hrm, probably both gpiod_assert() and gpiod_deassert() should be polite
+> when asking for level change?
 
-Linus Walleij (5):
-      Merge tag 'gpio-v5.4-rc5-fixes-for-linus' of git://git.kernel.org/.../brgl/linux into fixes
-      Revert "gpio: merrifield: Move hardware initialization to callback"
-      Revert "gpio: merrifield: Restore use of irq_base"
-      Revert "gpio: merrifield: Pass irqchip when adding gpiochip"
-      Merge branch 'devel' into for-next
+These APIs really need names that can be understood right off
+and they should be compile-time optional (a Kconfig option) so
+that drivers that really need them can select to have them
+explicitly.
 
-Matti Vaittinen (2):
-      gpio: bd70528: Add MODULE ALIAS to autoload module
-      gpio: mmio: remove untrue leftover comment
+> If all consumers of the shared line is using gpiod_assert/deassert, then
+> the core should 'protect' the raw level of the gpiod_assert() calls.
+>
+> At the end we will see drivers converted to assert/deassert API when a
+> developer faces issues that they use shared GPIO line on a board.
 
-Murali Nalajala (1):
-      base: soc: Handle custom soc information sysfs entries
+> Another thing is that currently gpio core does not have refcounting and
+> most of the client drivers treat it like that.
 
-Saravana Kannan (17):
-      driver core: Add fwnode_to_dev() to look up device from fwnode
-      driver core: Add support for linking devices during device addition
-      of: property: Add functional dependency link from DT bindings
-      driver core: Add sync_state driver/bus callback
-      of/platform: Pause/resume sync state during init and of_platform_populate()
-      of: property: Create device links for all child-supplier depencencies
-      of: property: Minor code formatting/style clean ups
-      driver: core: Improve documentation for fwnode_operations.add_links()
-      docs: driver-model: Add documentation for sync_state
-      driver core: Add device link support for SYNC_STATE_ONLY flag
-      driver core: Allow a device to wait on optional suppliers
-      driver core: Allow fwnode_operations.add_links to differentiate errors
-      of: property: Make sure child dependencies don't block probing of parent
-      of: property: Skip adding device links to suppliers that aren't devices
-      of: property: Minor style clean up of of_link_to_phandle()
-      of: property: Make it easy to add device links from DT properties
-      of: property: Add device link support for iommus, mboxes and io-channels
+Notably all the drivers specifying GPIOD_FLAGS_BIT_NONEXCLUSIVE
+does not treat it like that and that is why they specify that
+flag. All regulators, I think.
 
-Shuah Khan (1):
-      tools: gpio: Use !building_out_of_srctree to determine srctree
+> It is perfectly fine to
+> gpiod_get(priv->en_gpio,1);
+> gpiod_get(priv->en_gpio,1);
+> gpiod_get(priv->en_gpio,1);
+> gpiod_get(priv->en_gpio,0);
 
-Thierry Reding (3):
-      gpio: tegra186: Derive register offsets from bank/port
-      gpio: tegra186: Program interrupt route mapping
-      gpio: tegra186: Add debounce support
+I guess you mean gpiod_set()
 
-Uwe Kleine-König (1):
-      driver core: simplify definitions of platform_get_irq*
+> at the last call the GPIO value is going to be set to 0 no matter if it
+> was set to 1 three times prior, but I guess this can be worked out when
+> the driver(s) are converted to assert/deassert.
 
- Documentation/admin-guide/kernel-parameters.rst    |   1 +
- Documentation/admin-guide/kernel-parameters.txt    |   6 +
- Documentation/driver-api/device_link.rst           |   3 +-
- Documentation/driver-api/driver-model/devres.rst   |   4 +
- Documentation/driver-api/driver-model/driver.rst   |  43 +++
- Documentation/filesystems/debugfs.txt              |  50 +--
- arch/powerpc/platforms/pseries/dtl.c               |  38 +--
- arch/powerpc/platforms/pseries/hvCall_inst.c       |  12 +-
- arch/powerpc/platforms/pseries/lpar.c              |  15 +-
- arch/sh/drivers/Makefile                           |   2 +-
- arch/sh/drivers/platform_early.c                   | 347 +++++++++++++++++++
- arch/sh/include/asm/platform_early.h               |  61 ++++
- arch/sh/kernel/cpu/sh2/setup-sh7619.c              |   3 +-
- arch/sh/kernel/cpu/sh2a/setup-mxg.c                |   3 +-
- arch/sh/kernel/cpu/sh2a/setup-sh7201.c             |   3 +-
- arch/sh/kernel/cpu/sh2a/setup-sh7203.c             |   3 +-
- arch/sh/kernel/cpu/sh2a/setup-sh7206.c             |   3 +-
- arch/sh/kernel/cpu/sh2a/setup-sh7264.c             |   3 +-
- arch/sh/kernel/cpu/sh2a/setup-sh7269.c             |   3 +-
- arch/sh/kernel/cpu/sh3/setup-sh3.c                 |   1 +
- arch/sh/kernel/cpu/sh3/setup-sh7705.c              |   3 +-
- arch/sh/kernel/cpu/sh3/setup-sh770x.c              |   3 +-
- arch/sh/kernel/cpu/sh3/setup-sh7710.c              |   3 +-
- arch/sh/kernel/cpu/sh3/setup-sh7720.c              |   3 +-
- arch/sh/kernel/cpu/sh4/setup-sh4-202.c             |   3 +-
- arch/sh/kernel/cpu/sh4/setup-sh7750.c              |   9 +-
- arch/sh/kernel/cpu/sh4/setup-sh7760.c              |   3 +-
- arch/sh/kernel/cpu/sh4a/setup-sh7343.c             |   3 +-
- arch/sh/kernel/cpu/sh4a/setup-sh7366.c             |   3 +-
- arch/sh/kernel/cpu/sh4a/setup-sh7722.c             |   3 +-
- arch/sh/kernel/cpu/sh4a/setup-sh7723.c             |   3 +-
- arch/sh/kernel/cpu/sh4a/setup-sh7724.c             |   3 +-
- arch/sh/kernel/cpu/sh4a/setup-sh7734.c             |   3 +-
- arch/sh/kernel/cpu/sh4a/setup-sh7757.c             |   3 +-
- arch/sh/kernel/cpu/sh4a/setup-sh7763.c             |   3 +-
- arch/sh/kernel/cpu/sh4a/setup-sh7770.c             |   3 +-
- arch/sh/kernel/cpu/sh4a/setup-sh7780.c             |   3 +-
- arch/sh/kernel/cpu/sh4a/setup-sh7785.c             |   3 +-
- arch/sh/kernel/cpu/sh4a/setup-sh7786.c             |   3 +-
- arch/sh/kernel/cpu/sh4a/setup-shx3.c               |   3 +-
- arch/sh/kernel/cpu/sh5/setup-sh5.c                 |   3 +-
- arch/sh/kernel/setup.c                             |   3 +-
- arch/sh/kernel/time.c                              |   5 +-
- drivers/base/core.c                                | 245 +++++++++++++-
- drivers/base/firmware_loader/main.c                |   3 +-
- drivers/base/platform.c                            | 374 ++++-----------------
- drivers/base/soc.c                                 |  30 +-
- drivers/clocksource/sh_cmt.c                       |  13 +-
- drivers/clocksource/sh_mtu2.c                      |  13 +-
- drivers/clocksource/sh_tmu.c                       |  14 +-
- drivers/gpio/gpio-bd70528.c                        |   1 +
- drivers/gpio/gpio-em.c                             |  23 +-
- drivers/gpio/gpio-merrifield.c                     |  33 +-
- drivers/gpio/gpio-mmio.c                           |   1 -
- drivers/gpio/gpio-mockup.c                         |  94 ++++--
- drivers/gpio/gpio-mvebu.c                          |  19 +-
- drivers/gpio/gpio-rcar.c                           |   2 +-
- drivers/gpio/gpio-tegra186.c                       | 283 ++++++++++------
- drivers/gpio/gpiolib.c                             | 213 ++++++++++--
- drivers/gpio/gpiolib.h                             |   1 +
- drivers/infiniband/hw/mlx5/main.c                  |  62 +---
- drivers/infiniband/hw/mlx5/mlx5_ib.h               |   9 +-
- .../platform/sti/c8sectpfe/c8sectpfe-debugfs.c     |  26 +-
- drivers/misc/sram.c                                |  28 +-
- drivers/mmc/host/atmel-mci.c                       |  10 +-
- drivers/mmc/host/dw_mmc.c                          |  10 +-
- drivers/net/caif/caif_serial.c                     |   4 +-
- drivers/ntb/test/ntb_pingpong.c                    |   5 +-
- drivers/of/platform.c                              |  12 +
- drivers/of/property.c                              | 298 ++++++++++++++++
- drivers/tty/serial/sh-sci.c                        |  11 +-
- fs/debugfs/file.c                                  |  87 ++---
- include/linux/debugfs.h                            | 131 ++++----
- include/linux/device.h                             |  33 ++
- include/linux/fwnode.h                             |  41 +++
- include/linux/platform_device.h                    |  70 +---
- include/linux/sys_soc.h                            |   1 +
- include/uapi/linux/gpio.h                          |  24 ++
- lib/devres.c                                       |  62 ++--
- net/mac80211/debugfs_sta.c                         |  17 +-
- tools/gpio/Makefile                                |   6 +-
- 81 files changed, 1984 insertions(+), 1006 deletions(-)
- create mode 100644 arch/sh/drivers/platform_early.c
- create mode 100644 arch/sh/include/asm/platform_early.h
+I don't understand why that would not be allowed?
+
+Again I guess not really related to the original problem,
+so if you want to work on that it can be done in isolation.
+
+To the overall question of a refcounting GPIO API:
+
+OK to add a new API like that I would say first convert the
+regulators to use them so we have a strong buy-in from a
+subsystem that already does this. That way we can get rid of
+the existing GPIOD_FLAGS_BIT_NONEXCLUSIVE and pull
+the handling of shared GPIO lines into gpiolib using these
+new APIs.
+
+I'm all for this.
+
+But the general usability needs to be proven.
+It is not a very huge task:
+ git grep BIT_NONEXCLUSIVE |wc -l
+24
+
+24 occurrences in the whole kernel.
+
+If the suggested API doesn't fit regulators as well it is dead
+in the water. Then the usecase is likely specific to resets,
+and what you would need to do is rather improve the
+available semantics in the reset subsystem.
+
+So begin with creating a way to pull the shared handling of
+regulators into gpiolib with these clearly cut semantics
+delete the NONEXCLUSIVE thing and then when you are
+done with that exploit the same
+infrastructure for GPIO reset.
+
+Yours,
+Linus Walleij
