@@ -2,84 +2,114 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id D61E3FBE4C
-	for <lists+linux-gpio@lfdr.de>; Thu, 14 Nov 2019 04:27:37 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 90C95FC02A
+	for <lists+linux-gpio@lfdr.de>; Thu, 14 Nov 2019 07:29:12 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726491AbfKND1g (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 13 Nov 2019 22:27:36 -0500
-Received: from mga01.intel.com ([192.55.52.88]:41987 "EHLO mga01.intel.com"
+        id S1726270AbfKNG3L (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 14 Nov 2019 01:29:11 -0500
+Received: from mga14.intel.com ([192.55.52.115]:33873 "EHLO mga14.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726489AbfKND1g (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Wed, 13 Nov 2019 22:27:36 -0500
+        id S1726190AbfKNG3L (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Thu, 14 Nov 2019 01:29:11 -0500
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 13 Nov 2019 19:27:34 -0800
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 13 Nov 2019 22:29:11 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.68,302,1569308400"; 
-   d="scan'208";a="235515175"
-Received: from linux.intel.com ([10.54.29.200])
-  by fmsmga002.fm.intel.com with ESMTP; 13 Nov 2019 19:27:34 -0800
-Received: from [10.226.38.118] (rtanwar-mobl.gar.corp.intel.com [10.226.38.118])
-        by linux.intel.com (Postfix) with ESMTP id 1724F58049B;
-        Wed, 13 Nov 2019 19:27:31 -0800 (PST)
-Subject: Re: [PATCH v6 2/2] dt-bindings: pinctrl: intel: Add for new SoC
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, Rob Herring <robh@kernel.org>,
-        Andriy Shevchenko <andriy.shevchenko@intel.com>,
-        qi-ming.wu@intel.com, yixin.zhu@linux.intel.com,
-        cheol.yong.kim@intel.com
-References: <cover.1573455324.git.rahul.tanwar@linux.intel.com>
- <96537f8702501a45501d5a59ca029f92e36a9e4a.1573455324.git.rahul.tanwar@linux.intel.com>
- <CACRpkdYhy1KLyZd4MNSODpy0Q59_SAcc+wkofrZr4b4N+rYDxw@mail.gmail.com>
-From:   "Tanwar, Rahul" <rahul.tanwar@linux.intel.com>
-Message-ID: <1d3be294-5f12-462c-855c-e53ecb9190b7@linux.intel.com>
-Date:   Thu, 14 Nov 2019 11:27:31 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
-MIME-Version: 1.0
-In-Reply-To: <CACRpkdYhy1KLyZd4MNSODpy0Q59_SAcc+wkofrZr4b4N+rYDxw@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+   d="scan'208";a="214475381"
+Received: from sgsxdev001.isng.intel.com (HELO localhost) ([10.226.88.11])
+  by fmsmga001.fm.intel.com with ESMTP; 13 Nov 2019 22:29:08 -0800
+From:   Rahul Tanwar <rahul.tanwar@linux.intel.com>
+To:     linus.walleij@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com
+Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, robh@kernel.org,
+        andriy.shevchenko@intel.com, qi-ming.wu@intel.com,
+        yixin.zhu@linux.intel.com, cheol.yong.kim@intel.com,
+        Rahul Tanwar <rahul.tanwar@linux.intel.com>
+Subject: [PATCH v7 0/2] pinctrl: Add new pinctrl/GPIO driver
+Date:   Thu, 14 Nov 2019 14:29:05 +0800
+Message-Id: <cover.1573712059.git.rahul.tanwar@linux.intel.com>
+X-Mailer: git-send-email 2.11.0
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+Hi,
 
-Hi Linus,
+This series is to add pinctrl & GPIO controller driver for a new SoC.
+Patch 1 adds pinmux & GPIO controller driver.
+Patch 2 adds the corresponding dt bindings YAML document.
 
-On 13/11/2019 10:46 PM, Linus Walleij wrote:
-> On Mon, Nov 11, 2019 at 11:11 AM Rahul Tanwar
-> <rahul.tanwar@linux.intel.com> wrote:
->
->> Add dt bindings document for pinmux & GPIO controller driver of
->> Intel Lightning Mountain SoC.
->>
->> Signed-off-by: Rahul Tanwar <rahul.tanwar@linux.intel.com>
-> (...)
->
->> +properties:
->> +  compatible:
->> +    const: intel,lgm-pinctrl
-> Just noted from another review where Rob noted that this name should
-> match the internal name in the datasheet for this hardware block. Is it
-> really called "lgm-pinctrl" inside Intel?
->
-> intel,lightning-mountain-io and similar are perfectly fine if that is the
-> name it has in your documentation.
+Patches are against Linux 5.4-rc1 at below Git tree:
+git://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git
 
-Our documentation does not have any specific names for these hardware
-blocks. It names it in a very generic/standard manner like GPIO, pinmux..
+v7:
+- Fix code quality/style related review concerns.
+- Correct license id & data types used for some properties in dt bindings.
+- Add possible values for drive-strength & slew rate in dt bindings.
+- Rename compatible name to more self explanatory name in dt bindings.
+- Fix make dt_binding_check reported errors. Ensure make dt_binding_check
+  passes.
 
-To make the name explicit & self explanatory, i should probably change
-the name as you suggested i.e. intel,lightning-mountain-io.
+v6:
+- Fix code quality/style/readability related review concerns.
+- Remove enum usage from pinmux property in dt bindings.
 
-Regards,
-Rahul
+v5:
+- Fix code style/readability related review concerns.
+- Change data type of groups property to uint32-array in dt bindings.
+
+v4:
+- Correct data types for some pin config properties in dt bindings.
+- Improve pattern regex as per review feedback in dt bindings.
+- Remove eqbr_set_val() & set_drv_cur() reg update routines & instead
+  do reg updates in eqbr_pinconf_set() routine itself.
+- Add locking in few ops where it was missing.
+- Rename eqbr_gpio_desc struct to eqbr_gpio_ctrl and avoid using desc
+  in variable namings so as not to confuse with GPIO descriptors.
+- Address code quality/convention/style related review concerns.
+
+v3:
+- Add locking for GPIO IRQ ops.
+- Fix property naming mistake in dt bindings document.
+- Address other code quality related review concerns.
+- Fix a build error reported by kbuild test robot.
+- Remove deleted structure fields from comments.
+
+v2:
+- Enable GENERIC_PINMUX_FUNCTIONS & GENERIC_PINCTRL_GROUPS and use core
+  provided code for pinmux_ops & pinctrl_ops. Remove related code from
+  the driver.
+- Enable GENERIC_PINCONF & use core provided pinconf code. Remove related
+  code from the driver.
+- Use GPIOLIB_IRQCHIP framework core code instead of implementing separtely
+  in the driver.
+- Enable GPIO_GENERIC and switch to core provided memory mapped GPIO banks
+  design. 
+- Use standard pinctrl DT properties instead of custom made properties.
+- Address review concerns for dt bindings document.
+- Address code quality related review concerns.
+
+v1:
+- Initial version.
+
+
+Rahul Tanwar (2):
+  pinctrl: Add pinmux & GPIO controller driver for a new SoC
+  dt-bindings: pinctrl: intel: Add for new SoC
+
+ .../bindings/pinctrl/intel,lgm-pinctrl.yaml        | 116 +++
+ drivers/pinctrl/Kconfig                            |  18 +
+ drivers/pinctrl/Makefile                           |   1 +
+ drivers/pinctrl/pinctrl-equilibrium.c              | 944 +++++++++++++++++++++
+ drivers/pinctrl/pinctrl-equilibrium.h              | 144 ++++
+ 5 files changed, 1223 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/pinctrl/intel,lgm-pinctrl.yaml
+ create mode 100644 drivers/pinctrl/pinctrl-equilibrium.c
+ create mode 100644 drivers/pinctrl/pinctrl-equilibrium.h
+
+-- 
+2.11.0
+
