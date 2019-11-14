@@ -2,86 +2,82 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 5EBDBFCDD5
-	for <lists+linux-gpio@lfdr.de>; Thu, 14 Nov 2019 19:36:33 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 00B5AFCDF7
+	for <lists+linux-gpio@lfdr.de>; Thu, 14 Nov 2019 19:43:58 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727364AbfKNSgH (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 14 Nov 2019 13:36:07 -0500
-Received: from smtp.codeaurora.org ([198.145.29.96]:56490 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727223AbfKNSgH (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 14 Nov 2019 13:36:07 -0500
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id C50C96147C; Thu, 14 Nov 2019 18:35:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1573756565;
-        bh=CNUnNySiEOI8Ft3kUF1s7qMezRd7NbAEq1RYYdi4qE8=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ic4YcdcvqBhUL109WwbeqMJRn1WeUuWhpqCBUYvamA1IckRH3Xwcqthb56s6FmEZr
-         dgKvwDs1F7NWMoUaWDfVEX4dhxobM0IFg5besdVSvqHdPp+aZHjfHD71PdJiVccVXh
-         e/jx9IMOS2tIZCPS5SXxXhMeh6zYPxsczItrwFcw=
-X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
-        pdx-caf-mail.web.codeaurora.org
-X-Spam-Level: 
-X-Spam-Status: No, score=-2.7 required=2.0 tests=ALL_TRUSTED,BAYES_00,
-        DKIM_INVALID,DKIM_SIGNED,SPF_NONE autolearn=no autolearn_force=no
-        version=3.4.0
-Received: from codeaurora.org (i-global254.qualcomm.com [199.106.103.254])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: ilina@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 9A8946145C;
-        Thu, 14 Nov 2019 18:35:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1573756551;
-        bh=CNUnNySiEOI8Ft3kUF1s7qMezRd7NbAEq1RYYdi4qE8=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=o8mP17dyftkPeELm8pJUUdkEjat1b52KkbEBsM298TU+bcXj7Tj/QrulT/qGqGIJD
-         BnC6MfkixLkO4Cr/+2o6KAvZUcicpw2KvZuF4/+HFJ0xhyRfQee/Z4VqRKUOoIfL2e
-         hWLdKhBsB8qQUCO6/ELE0I04xNYnbRtCAp2bxIPc=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 9A8946145C
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=ilina@codeaurora.org
-From:   Lina Iyer <ilina@codeaurora.org>
-To:     swboyd@chromium.org, maz@kernel.org, linus.walleij@linaro.org,
-        bjorn.andersson@linaro.org
-Cc:     evgreen@chromium.org, linux-kernel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, mkshah@codeaurora.org,
-        linux-gpio@vger.kernel.org, agross@kernel.org,
-        dianders@chromium.org, Lina Iyer <ilina@codeaurora.org>
-Subject: [PATCH 12/12] arm64: defconfig: enable PDC interrupt controller for Qualcomm SDM845
-Date:   Thu, 14 Nov 2019 11:35:21 -0700
-Message-Id: <1573756521-27373-13-git-send-email-ilina@codeaurora.org>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1573756521-27373-1-git-send-email-ilina@codeaurora.org>
-References: <1573756521-27373-1-git-send-email-ilina@codeaurora.org>
+        id S1726598AbfKNSn6 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 14 Nov 2019 13:43:58 -0500
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:32809 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725976AbfKNSn5 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 14 Nov 2019 13:43:57 -0500
+Received: by mail-lj1-f194.google.com with SMTP id t5so7836565ljk.0
+        for <linux-gpio@vger.kernel.org>; Thu, 14 Nov 2019 10:43:56 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=0akErYpVPfvA95ks+ZVK153tf+Gz8y9EaErbWtVlmI4=;
+        b=OWtGNSoKK0V3J02veluyxQWSi82ISrP2cFU0v00xGFsDqP5uCRLsRSU12PZN0pHXZe
+         NSPvOXGxGPVUJXT5FpEfQXPlxEJvx4b3IXbSJf3sb49wtuP2ZjmMfdgaTAeONOtAj8Zm
+         6aaMq0yT1w5IJhuiFyl9BIpNQtjyeS8Uc2cDKpsPHGxgP8I5rtUnAaCEfu6BxdDkTGYo
+         Matdu/uURSvuMhjmGnKat+vRucBCB9EgwsOJYFuPbHDpPY/icndFOXScl7kM9M3IXU9B
+         P+BtwbcSht22xxU2k83z3ZCHHMKuYD47Tw4rCY6bHywGS8TCqM+RTa5d/b+2Dkp3OvoU
+         gxqg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=0akErYpVPfvA95ks+ZVK153tf+Gz8y9EaErbWtVlmI4=;
+        b=TaCQfui63LhmiieJ1fN/s2A8Xzs6nmf5oXHK8XzMK7k+6WKEJA8Efjrx1GKwyg0RTF
+         u71hOUAYxuVb14ApaMvyLFrUuvpY74ssdPn5eE2vNBKqOoSYlgK2TPx8EOgJ2n+dE/zA
+         3PGa+CncjnUf/phj3V785a9UIMKmJVo92k21B8zTW553xWdLGV1AoV6n8UTK3FYcmDTy
+         /J9yThBCtD2jXCps2cr1FKFTTB9iUCt0OrFeI79nmSfj/kZ50DyAFjZXutZEXSl8uVEN
+         QRni1joMqca+0kNN9g6n+vCeNtERCBXs1bfs5CIo24NKC5Iw5Q2xTptUO61xoI/UiG5p
+         YwEA==
+X-Gm-Message-State: APjAAAV6FHg0v+ZBEJNINIeGwVjKDsYx3NFK2hciL38lDfqqXIDv2yL0
+        Qir6zL70G6CRTyjkZrAh99bVcI01om0u5pGeJWw+Gg==
+X-Google-Smtp-Source: APXvYqztdULr6zBxq7zLFJnIfqPSSqTjnXCgz4FraVOChcfBeCHK0oETCJeBhuCVU21yNsx8uAJjJ9A8j+SNA4YTOKE=
+X-Received: by 2002:a2e:5c46:: with SMTP id q67mr7506336ljb.42.1573757036127;
+ Thu, 14 Nov 2019 10:43:56 -0800 (PST)
+MIME-Version: 1.0
+References: <1573756521-27373-1-git-send-email-ilina@codeaurora.org> <1573756521-27373-9-git-send-email-ilina@codeaurora.org>
+In-Reply-To: <1573756521-27373-9-git-send-email-ilina@codeaurora.org>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Thu, 14 Nov 2019 19:43:44 +0100
+Message-ID: <CACRpkdYZoAnFno630Fxazz_Kvz4fEmKd-wohprdQqeM44f3tAg@mail.gmail.com>
+Subject: Re: [PATCH 08/12] drivers: pinctrl: msm: setup GPIO chip in hierarchy
+To:     Lina Iyer <ilina@codeaurora.org>
+Cc:     Stephen Boyd <swboyd@chromium.org>, Marc Zyngier <maz@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Evan Green <evgreen@chromium.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        MSM <linux-arm-msm@vger.kernel.org>,
+        Maulik Shah <mkshah@codeaurora.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Andy Gross <agross@kernel.org>,
+        Doug Anderson <dianders@chromium.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Enable PDC interrupt controller for SDM845 devices. The interrupt
-controller can detect wakeup capable interrupts when the SoC is in a low
-power state.
+On Thu, Nov 14, 2019 at 7:35 PM Lina Iyer <ilina@codeaurora.org> wrote:
 
-Signed-off-by: Lina Iyer <ilina@codeaurora.org>
----
- arch/arm64/configs/defconfig | 1 +
- 1 file changed, 1 insertion(+)
+> Some GPIOs are marked as wakeup capable and are routed to another
+> interrupt controller that is an always-domain and can detect interrupts
+> even most of the SoC is powered off. The wakeup interrupt controller
+> wakes up the GIC and replays the interrupt at the GIC.
+>
+> Setup the TLMM irqchip in hierarchy with the wakeup interrupt controller
+> and ensure the wakeup GPIOs are handled correctly.
+>
+> Signed-off-by: Maulik Shah <mkshah@codeaurora.org>
+> Signed-off-by: Lina Iyer <ilina@codeaurora.org>
 
-diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
-index c9a867a..8d8d4d5 100644
---- a/arch/arm64/configs/defconfig
-+++ b/arch/arm64/configs/defconfig
-@@ -749,6 +749,7 @@ CONFIG_ARCH_R8A77970=y
- CONFIG_ARCH_R8A77980=y
- CONFIG_ARCH_R8A77990=y
- CONFIG_ARCH_R8A77995=y
-+CONFIG_QCOM_PDC=y
- CONFIG_ROCKCHIP_PM_DOMAINS=y
- CONFIG_ARCH_TEGRA_132_SOC=y
- CONFIG_ARCH_TEGRA_210_SOC=y
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+This looks finished, and elegant.
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 
+Yours,
+Linus Walleij
