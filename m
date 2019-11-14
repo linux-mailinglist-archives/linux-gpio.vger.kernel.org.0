@@ -2,106 +2,146 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 454FDFBCA9
-	for <lists+linux-gpio@lfdr.de>; Thu, 14 Nov 2019 00:40:45 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id DDC6EFBD04
+	for <lists+linux-gpio@lfdr.de>; Thu, 14 Nov 2019 01:28:54 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726363AbfKMXko (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 13 Nov 2019 18:40:44 -0500
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:40313 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726251AbfKMXko (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 13 Nov 2019 18:40:44 -0500
-Received: by mail-lf1-f66.google.com with SMTP id j26so3411356lfh.7
-        for <linux-gpio@vger.kernel.org>; Wed, 13 Nov 2019 15:40:43 -0800 (PST)
+        id S1726251AbfKNA2y (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 13 Nov 2019 19:28:54 -0500
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:42867 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726195AbfKNA2x (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 13 Nov 2019 19:28:53 -0500
+Received: by mail-wr1-f67.google.com with SMTP id a15so4445846wrf.9
+        for <linux-gpio@vger.kernel.org>; Wed, 13 Nov 2019 16:28:50 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=KywlcZjhtRu9xyJPnCSxtXBYCQox6BpnxAExaMeZSY0=;
-        b=zSy8jAI73/MrRV3crQLmVxdOrtAkuOT5xCr9dZgj9iuv4614K2BQBTy4dFIB1pvqY+
-         yD+TP2kWvRARh6xzufTSEV+uAjMAxBEhpA50jm0szk7eO9fcnjIo4rVJSsSMIs5GUFH2
-         /lhQvfGnvgFJYl093QqR6j00NKnTGE+8WSR/mNuFCVcHJKCFgmdSmSv8I6HVRUyGt+mf
-         QEdHhF5kDAKtkkAXOlZSG/UEODQ5CQgqDVCNh3wp5apyJP0nRMSvPh6HZAxOmnYpve50
-         +qG9fBXbUC5DeB/nm4fws4FEensLc7dHXVI7TbE4zm1RLWJTlcd0mM30KLTXdV8YC7Re
-         rzJQ==
+        d=kernelci-org.20150623.gappssmtp.com; s=20150623;
+        h=message-id:date:mime-version:content-transfer-encoding:subject:to
+         :from;
+        bh=ASSAuLnTBeMQFzPTzReTcL3IJD7OYb7+jFS+NCbXsDA=;
+        b=fjTZmaKJfvkjAtM4M4ltPndX3s5WhVqD2841YAhr3EatOxpwx61K0GEtmj7C/6iTj8
+         Zwtf9W3gyLNKCS+pwjHjOKS75rupiRXzasgR9ZxUYzFUkzNvSGseCBfRmmxjbz+SFYKl
+         /nBE97f/+U/V7ZLs+e/Sgla7oGx4AKU6jGUG/rdratVmoEfea1FOXEDX2Xmnx3kZrIDN
+         vJHdG8k4ZEAqpIhdhBKhAxwDXE1bXgUE1egBGkh2ezJfEE0CDG7RfWF7GTUwRE53Vv8j
+         Dt0HA+OfA5Vl8HlqL4vC4r9NrbUwnGiFDjhcYVwO0anVf4OI+AIE6gDa2+ljf4M1BIAX
+         KHYA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=KywlcZjhtRu9xyJPnCSxtXBYCQox6BpnxAExaMeZSY0=;
-        b=LrkSc5AF3PLxITwPl+7OxbDEId1YcA1wyK+W50/QtbAh3BBYNPC282E+IrN+llcmM5
-         ayInUsyykvWMz/MQse366jPfaGvFNHCH81bhAKdpKVJ/wU1GFrZDqPMiA/RxKZs8dWsy
-         Q6YOXeOXnHTDAYSvz+6AQ38HyhaUEEYeRvpzVhw13kAtC6iP/OKyOoDwMPHEWU9PKYWz
-         twh3+FibXdHe2aOl5lUMBZD1AjkA4G9f3QHhuouPLoviAblXk/p3NNzt9kd2x8KnzBxO
-         5O3JT+vGDaZypsKktuBB6VMqyriddW/OcUyrmqMsBDTUMNr/YJrtY8S3eYWVnarTOJ1A
-         c5Aw==
-X-Gm-Message-State: APjAAAWlie3orOkYuRWG/c2jqg8yR3Tazf4nqkibTrJpuoPlpZLJh6l0
-        EK0vUq8g7Rmun3urOsum5lUWhFCCEkXABBrfGASebg==
-X-Google-Smtp-Source: APXvYqzkxJk7zS+PqE55v/RB2uP+et6pSHchdENsELNpwLbj2M68u0EpE5nTbRPuGeX7tEmW+dXSonyzMPlu3a1B098=
-X-Received: by 2002:a19:651b:: with SMTP id z27mr4338330lfb.117.1573688442559;
- Wed, 13 Nov 2019 15:40:42 -0800 (PST)
+        h=x-gm-message-state:message-id:date:mime-version
+         :content-transfer-encoding:subject:to:from;
+        bh=ASSAuLnTBeMQFzPTzReTcL3IJD7OYb7+jFS+NCbXsDA=;
+        b=QSEMspCEmvGhaAyU8QtS1s6XJi3AfuO/QH9zABaiRSqFTJdMvys/Ch+GxQazkmCdEE
+         KbqH6xgNDYWgGt5YoiTWtQhozkMMnTm6poNe5EIrttW+g5KDHX+Xm+Neuu4bb82UtJHC
+         YE3ZjUVVfZ0wQQ825RWbtPsK44e/b2nVjgy4Ipru9AFJxX086Bn5oLjUESlXZ3P/9RVA
+         QS4BCVcrvMe1LDSrPBtUv8R51Md9/9LiD+4QM4syzQc4ueG1esA/1NyaiBH7ADfXvCih
+         SS9pBV7HbCgu2ptNXvegg0Fy2ojfoR7Q1Jczh/hiYzHunJTAzVh8M0avnvH3h4D/Gtll
+         6sRA==
+X-Gm-Message-State: APjAAAXuKCbM54xyFo9UFYCoxagxsMnC2g83JJ5sKZDaCm34w5Z9qKeb
+        /beDU7gWvhp+gYuYZyWcAz8sEq7KbdJHmw==
+X-Google-Smtp-Source: APXvYqxK83HVoSqratV2Ydy2Fa6azLwvQsgCpxlNVOOdh1mJeZ7t8RuvxhoBrOiIiZNEZDLBi96Q9w==
+X-Received: by 2002:adf:e70d:: with SMTP id c13mr5503510wrm.78.1573691330034;
+        Wed, 13 Nov 2019 16:28:50 -0800 (PST)
+Received: from [148.251.42.114] ([2a01:4f8:201:9271::2])
+        by smtp.gmail.com with ESMTPSA id a186sm3648841wmc.48.2019.11.13.16.28.49
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 13 Nov 2019 16:28:49 -0800 (PST)
+Message-ID: <5dcc9fc1.1c69fb81.806cd.29a1@mx.google.com>
+Date:   Wed, 13 Nov 2019 16:28:49 -0800 (PST)
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-References: <20191107214812.Horde.z_ETelVXryT7bme5Ed6oB16@www.vdorst.com>
- <CACRpkdaz23Eug+e+ghKQWWaDHegfdngPQ_UQkaP6zAbnic-7_w@mail.gmail.com> <20191113205425.Horde.MPwTgNxw4tJljEU5DoeUTIr@www.vdorst.com>
-In-Reply-To: <20191113205425.Horde.MPwTgNxw4tJljEU5DoeUTIr@www.vdorst.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Thu, 14 Nov 2019 00:40:30 +0100
-Message-ID: <CACRpkdasYwYszTZwZyhvqjoUg2ku7Z7W4gxnD+qEjZzA=1bahQ@mail.gmail.com>
-Subject: Re: mt7621: gpio-hog not working properly
-To:     =?UTF-8?Q?Ren=C3=A9_van_Dorst?= <opensource@vdorst.com>,
-        Sergio Paracuellos <sergio.paracuellos@gmail.com>
-Cc:     Matthias Brugger <matthias.bgg@gmail.com>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
+X-Kernelci-Branch: fixes
+X-Kernelci-Tree: linusw
+X-Kernelci-Report-Type: build
+X-Kernelci-Kernel: v5.4-rc7-5-gcbdaa5e7bd90
+Subject: linusw/fixes build: 6 builds: 0 failed, 6 passed,
+ 3 warnings (v5.4-rc7-5-gcbdaa5e7bd90)
+To:     linux-gpio@vger.kernel.org, fellows@kernelci.org
+From:   "kernelci.org bot" <bot@kernelci.org>
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Nov 13, 2019 at 9:54 PM Ren=C3=A9 van Dorst <opensource@vdorst.com>=
- wrote:
+linusw/fixes build: 6 builds: 0 failed, 6 passed, 3 warnings (v5.4-rc7-5-gc=
+bdaa5e7bd90)
 
-> mt7621 used bgpio_set_with_clear() because we have `set` and `clear`
-> registers.
-(...)
-> It seems that writing to the 'clear' register doesn't do anything.
-> I noticed that register address is 0x1e000000 in the DTS but in the
-> code it is 0xbe000000.
+Full Build Summary: https://kernelci.org/build/linusw/branch/fixes/kernel/v=
+5.4-rc7-5-gcbdaa5e7bd90/
 
-Do you mean physical memory 0x1e000000 gets remapped
-at virtual memory 0xbe000000?
+Tree: linusw
+Branch: fixes
+Git Describe: v5.4-rc7-5-gcbdaa5e7bd90
+Git Commit: cbdaa5e7bd90db9980ff6187baea9d49fc4de960
+Git URL: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-gpio.=
+git/
+Built: 6 unique architectures
 
-> [    3.158002] bgpio_write32: 0xbe000600 <=3D 0x80
-> [    3.165258] GPIO line 487 (sfp_i2c_clk_gate) hogged as output/high
-> [    3.177532] gpiochip_add_data_with_key: gpiochip0 gpio7: 0x843
->
-> When using program 'io' writing to the `clear` register 0x1e000640
-> does have effect.
->
-> root@OpenWrt:/# io -4 0x1e000620
-> 1e000620:  0b75f7de
-> root@OpenWrt:/# io -4 -w 0x1e000640 0x80
-> root@OpenWrt:/# io -4 0x1e000620
-> 1e000620:  0b75f74e
-(...)
-> If I change the bgpio_init() values so that we don't have the `set`
-> and `clear` registers.
-> With the patch below I do get right results.
+Warnings Detected:
 
-That's weird!
+arc:
+    nsim_hs_defconfig (gcc-8): 2 warnings
 
-> Any idea what this can be?
+arm64:
 
-Try to pass the flag BGPIOF_UNREADABLE_REG_SET,
-it seems the code is using the set register to read back the
-value. In this case it is actually working you just don't see
-it in debugfs.
+arm:
+    multi_v7_defconfig (gcc-8): 1 warning
 
-Cc:ed Sergio maybe he has some ideas.
+mips:
 
-It seems to be hardware related then, hm.
+riscv:
 
-Yours,
-Linus Walleij
+x86_64:
+
+
+Warnings summary:
+
+    2    <stdin>:1511:2: warning: #warning syscall clone3 not implemented [=
+-Wcpp]
+    1    WARNING: "return_address" [vmlinux] is a static EXPORT_SYMBOL_GPL
+
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D
+
+Detailed per-defconfig build reports:
+
+---------------------------------------------------------------------------=
+-----
+32r2el_defconfig (mips, gcc-8) =E2=80=94 PASS, 0 errors, 0 warnings, 0 sect=
+ion mismatches
+
+---------------------------------------------------------------------------=
+-----
+defconfig (riscv, gcc-8) =E2=80=94 PASS, 0 errors, 0 warnings, 0 section mi=
+smatches
+
+---------------------------------------------------------------------------=
+-----
+defconfig (arm64, gcc-8) =E2=80=94 PASS, 0 errors, 0 warnings, 0 section mi=
+smatches
+
+---------------------------------------------------------------------------=
+-----
+multi_v7_defconfig (arm, gcc-8) =E2=80=94 PASS, 0 errors, 1 warning, 0 sect=
+ion mismatches
+
+Warnings:
+    WARNING: "return_address" [vmlinux] is a static EXPORT_SYMBOL_GPL
+
+---------------------------------------------------------------------------=
+-----
+nsim_hs_defconfig (arc, gcc-8) =E2=80=94 PASS, 0 errors, 2 warnings, 0 sect=
+ion mismatches
+
+Warnings:
+    <stdin>:1511:2: warning: #warning syscall clone3 not implemented [-Wcpp]
+    <stdin>:1511:2: warning: #warning syscall clone3 not implemented [-Wcpp]
+
+---------------------------------------------------------------------------=
+-----
+x86_64_defconfig (x86_64, gcc-8) =E2=80=94 PASS, 0 errors, 0 warnings, 0 se=
+ction mismatches
+
+---
+For more info write to <info@kernelci.org>
