@@ -2,93 +2,137 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 2DE22FCBFA
-	for <lists+linux-gpio@lfdr.de>; Thu, 14 Nov 2019 18:39:54 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 9692FFCDBB
+	for <lists+linux-gpio@lfdr.de>; Thu, 14 Nov 2019 19:35:39 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726491AbfKNRjx (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 14 Nov 2019 12:39:53 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52764 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725976AbfKNRjx (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Thu, 14 Nov 2019 12:39:53 -0500
-Received: from mail-qv1-f48.google.com (mail-qv1-f48.google.com [209.85.219.48])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1726474AbfKNSfi (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 14 Nov 2019 13:35:38 -0500
+Received: from smtp.codeaurora.org ([198.145.29.96]:55622 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726098AbfKNSfi (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 14 Nov 2019 13:35:38 -0500
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id DD6D360FBB; Thu, 14 Nov 2019 18:35:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1573756537;
+        bh=SgFbpCmztnSKJcjOZEZx8rMc1JBkIjET0tzBEEjYq5s=;
+        h=From:To:Cc:Subject:Date:From;
+        b=Ks2VJ2mnRXbTWTmhsisVAokjQo4+IGbAcR1PF+SRWRemihKLS4HowgWxWYtVzfR9H
+         189mBeP4114gYnrISooMQJ/9/5eJVzoVoXCyEzCpP79zEPChpOUyjR/21t4c9Nru3D
+         DAzjNMmy7IoUf8/0Mx/XIXJH7K/AHU3OTGh7+Nvg=
+X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
+        pdx-caf-mail.web.codeaurora.org
+X-Spam-Level: 
+X-Spam-Status: No, score=-2.7 required=2.0 tests=ALL_TRUSTED,BAYES_00,
+        DKIM_INVALID,DKIM_SIGNED,SPF_NONE autolearn=no autolearn_force=no
+        version=3.4.0
+Received: from codeaurora.org (i-global254.qualcomm.com [199.106.103.254])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 34B0120718;
-        Thu, 14 Nov 2019 17:39:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573753192;
-        bh=VzKteWn1F/CosCCsd6C4IKUCGWE4H5oQV8jGARZ48tc=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=qN2v5wV095fAUbYtR5P6fE7B5vGnb+vx313xCT936CPIndi5UGPzUwBJ4RrLRuJ3x
-         doWz3mevftGogNgXftWdpHE1RIm0Y5J6GvK5tLIDIKNpwQIF4FFify2At4paexUm3K
-         4SIxI+snb5+OFz1v88ytyKBaUGmq/kZP83rqrNBI=
-Received: by mail-qv1-f48.google.com with SMTP id s18so2698307qvr.4;
-        Thu, 14 Nov 2019 09:39:52 -0800 (PST)
-X-Gm-Message-State: APjAAAWU3N45mXI3Ud44Pp4vYPoEZm/VZN9MOpL5LaaVCp0AL7a7LjP+
-        ZR2aMon3mU4pSQ46aeWgIpGYozdnZqVv/a9nCw==
-X-Google-Smtp-Source: APXvYqxjXzdKzRE0EK2pcCqMsxPiZ4eYz6WenDnilDBfvtuJZs9Eo9skkMhiHprH/vEA4CI6gl4l72fI4G+D1tx4Ce4=
-X-Received: by 2002:a0c:d2b4:: with SMTP id q49mr8873666qvh.135.1573753191385;
- Thu, 14 Nov 2019 09:39:51 -0800 (PST)
-MIME-Version: 1.0
-References: <cover.1573455324.git.rahul.tanwar@linux.intel.com>
- <96537f8702501a45501d5a59ca029f92e36a9e4a.1573455324.git.rahul.tanwar@linux.intel.com>
- <CACRpkdYhy1KLyZd4MNSODpy0Q59_SAcc+wkofrZr4b4N+rYDxw@mail.gmail.com> <1d3be294-5f12-462c-855c-e53ecb9190b7@linux.intel.com>
-In-Reply-To: <1d3be294-5f12-462c-855c-e53ecb9190b7@linux.intel.com>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Thu, 14 Nov 2019 11:39:40 -0600
-X-Gmail-Original-Message-ID: <CAL_Jsq+okgZgqdbosrOHhL1m0BW4E718Kb4tmyuexEfPwAZLmg@mail.gmail.com>
-Message-ID: <CAL_Jsq+okgZgqdbosrOHhL1m0BW4E718Kb4tmyuexEfPwAZLmg@mail.gmail.com>
-Subject: Re: [PATCH v6 2/2] dt-bindings: pinctrl: intel: Add for new SoC
-To:     "Tanwar, Rahul" <rahul.tanwar@linux.intel.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Andriy Shevchenko <andriy.shevchenko@intel.com>,
-        qi-ming.wu@intel.com, yixin zhu <yixin.zhu@linux.intel.com>,
-        cheol.yong.kim@intel.com
-Content-Type: text/plain; charset="UTF-8"
+        (Authenticated sender: ilina@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 0DA7E60EE5;
+        Thu, 14 Nov 2019 18:35:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1573756534;
+        bh=SgFbpCmztnSKJcjOZEZx8rMc1JBkIjET0tzBEEjYq5s=;
+        h=From:To:Cc:Subject:Date:From;
+        b=MiP3pgpl5Q1miW9ZcghzZMG+YCsROKflKxVKM3Y0wmLQKIiWIgRGVaj4N5LYcwQWi
+         cAetRNeWMJxA2DeqjvLYx3ZdCjff9TdXZv+BmBEBugtesb9eQ91MBMtQZey1Envq7H
+         OgJR3jqN3IHTllbf6jTE27gWoJ1EVIAw3dcwtmiM=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 0DA7E60EE5
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=ilina@codeaurora.org
+From:   Lina Iyer <ilina@codeaurora.org>
+To:     swboyd@chromium.org, maz@kernel.org, linus.walleij@linaro.org,
+        bjorn.andersson@linaro.org
+Cc:     evgreen@chromium.org, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, mkshah@codeaurora.org,
+        linux-gpio@vger.kernel.org, agross@kernel.org,
+        dianders@chromium.org, Lina Iyer <ilina@codeaurora.org>
+Subject: [PATCH 00/12] Support wakeup capable GPIOs
+Date:   Thu, 14 Nov 2019 11:35:09 -0700
+Message-Id: <1573756521-27373-1-git-send-email-ilina@codeaurora.org>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Nov 13, 2019 at 9:27 PM Tanwar, Rahul
-<rahul.tanwar@linux.intel.com> wrote:
->
->
-> Hi Linus,
->
-> On 13/11/2019 10:46 PM, Linus Walleij wrote:
-> > On Mon, Nov 11, 2019 at 11:11 AM Rahul Tanwar
-> > <rahul.tanwar@linux.intel.com> wrote:
-> >
-> >> Add dt bindings document for pinmux & GPIO controller driver of
-> >> Intel Lightning Mountain SoC.
-> >>
-> >> Signed-off-by: Rahul Tanwar <rahul.tanwar@linux.intel.com>
-> > (...)
-> >
-> >> +properties:
-> >> +  compatible:
-> >> +    const: intel,lgm-pinctrl
-> > Just noted from another review where Rob noted that this name should
-> > match the internal name in the datasheet for this hardware block. Is it
-> > really called "lgm-pinctrl" inside Intel?
-> >
-> > intel,lightning-mountain-io and similar are perfectly fine if that is the
-> > name it has in your documentation.
->
-> Our documentation does not have any specific names for these hardware
-> blocks. It names it in a very generic/standard manner like GPIO, pinmux..
->
-> To make the name explicit & self explanatory, i should probably change
-> the name as you suggested i.e. intel,lightning-mountain-io.
+Hi all,
 
-You should also be consistent with 'lgm' vs. 'lightning-mountain' use
-across bindings some of which I think have already been accepted.
+Thanks for all the reviews.
 
-Rob
+Here is the next spin of the wakeup capable GPIO support. In order to
+facilitate basic support available in the kernel, I have dropped the SPI
+register configuration. The feature was added when this series was
+restarted based on new hierarchy support in gpiolib. But, the SPI
+configuration can be done in the firmware. This would avoid a whole lot
+of code in linux that serve little to no purpose. Users of GPIO never
+have the need to change the trigger type (level edge and vice-versa) and
+the basic configuration can be set in the firmware before boot.
+
+Changes in v1:
+	- Address review comments
+	- Add Reviewed-by tags
+	- Drop SPI config patches
+	- Rebase on top of Rajendra's PDC changes [6]
+
+Changes in RFC v2[5]:
+        - Address review comments #3, #4, #6, #7, #8, #9, #10
+        - Rebased on top of linux-next GPIO latest patches [1],[3],[4]
+        - Increase PDC max irqs in #2 (avoid merge conflicts with
+          downstream)
+        - Add Reviewed-by #5
+
+Please consider reviewing these patches.
+
+Thanks,
+Lina
+
+[1].
+https://lore.kernel.org/linux-gpio/20190808123242.5359-1-linus.walleij@linaro.org/
+[2].
+https://lkml.org/lkml/2019/5/7/1173
+[3].
+https://lore.kernel.org/r/20190819084904.30027-1-linus.walleij@linaro.org
+[4].
+https://lore.kernel.org/r/20190724083828.7496-1-linus.walleij@linaro.org
+[5].
+https://lore.kernel.org/linux-gpio/5da6b849.1c69fb81.a9b04.1b9f@mx.google.com/t/
+[6].
+https://lore.kernel.org/linux-arm-msm/d622482d92059533f03b65af26c69b9b@www.loen.fr/
+
+Lina Iyer (10):
+  irqdomain: add bus token DOMAIN_BUS_WAKEUP
+  drivers: irqchip: qcom-pdc: update max PDC interrupts
+  drivers: irqchip: pdc: Do not toggle IRQ_ENABLE during mask/unmask
+  drivers: irqchip: add PDC irqdomain for wakeup capable GPIOs
+  of: irq: document properties for wakeup interrupt parent
+  drivers: pinctrl: msm: setup GPIO chip in hierarchy
+  drivers: pinctrl: sdm845: add PDC wakeup interrupt map for GPIOs
+  arm64: dts: qcom: add PDC interrupt controller for SDM845
+  arm64: dts: qcom: setup PDC as the wakeup parent for TLMM on SDM845
+  arm64: defconfig: enable PDC interrupt controller for Qualcomm SDM845
+
+Maulik Shah (2):
+  genirq: Introduce irq_chip_get/set_parent_state calls
+  drivers: irqchip: pdc: Add irqchip set/get state calls
+
+ .../bindings/interrupt-controller/interrupts.txt   |  12 ++
+ arch/arm64/boot/dts/qcom/sdm845.dtsi               |  10 ++
+ arch/arm64/configs/defconfig                       |   1 +
+ drivers/irqchip/qcom-pdc.c                         | 147 +++++++++++++++++++--
+ drivers/pinctrl/qcom/pinctrl-msm.c                 | 113 ++++++++++++++++
+ drivers/pinctrl/qcom/pinctrl-msm.h                 |  16 +++
+ drivers/pinctrl/qcom/pinctrl-sdm845.c              |  23 +++-
+ include/linux/irq.h                                |   6 +
+ include/linux/irqdomain.h                          |   1 +
+ include/linux/soc/qcom/irq.h                       |  34 +++++
+ kernel/irq/chip.c                                  |  44 ++++++
+ 11 files changed, 393 insertions(+), 14 deletions(-)
+ create mode 100644 include/linux/soc/qcom/irq.h
+
+--
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
+
