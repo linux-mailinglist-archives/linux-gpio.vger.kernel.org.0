@@ -2,81 +2,93 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id D72CEFC965
-	for <lists+linux-gpio@lfdr.de>; Thu, 14 Nov 2019 16:00:51 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2DE22FCBFA
+	for <lists+linux-gpio@lfdr.de>; Thu, 14 Nov 2019 18:39:54 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726613AbfKNPAv (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 14 Nov 2019 10:00:51 -0500
-Received: from mail-wr1-f41.google.com ([209.85.221.41]:41603 "EHLO
-        mail-wr1-f41.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726482AbfKNPAu (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 14 Nov 2019 10:00:50 -0500
-Received: by mail-wr1-f41.google.com with SMTP id b18so5354194wrj.8
-        for <linux-gpio@vger.kernel.org>; Thu, 14 Nov 2019 07:00:49 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernelci-org.20150623.gappssmtp.com; s=20150623;
-        h=message-id:date:mime-version:content-transfer-encoding:subject:to
-         :from;
-        bh=0TgDVIvx3EeCSRdfzY3RKDdBP5+3LP0PqX4+3UCKYoc=;
-        b=19r8p+K9rO1MCA6wmz6Na3EalCe9UJovC8xCOQj5roAVjtAQtcBs7oX800R9I/sP+3
-         mc29NR85q9cmQjXgGEFpneiIuI0y9Y9UaUD9tL/0IUWgMkjBMpX7+0U3vlDgpjCcfT5z
-         YlAHll5RYQ808n4cbiQ2vJE0RvKcgwcUihR1NvfC2AXcZGQO+MzRD/OB5JamJT5Wh8Gg
-         FkpFnJ/oMr3xmAIEGXV2TEall75uMuwy/pwNXu025hOsqxMIYJ90swqBQsdskaZgL3Sn
-         G1k4UK9O0Fsx++/qTuJKmk+orcvM+iXEd5lZ43X4zgfv+Q11J5C9mTH9Hyhfr0YNwxiw
-         FT5A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:date:mime-version
-         :content-transfer-encoding:subject:to:from;
-        bh=0TgDVIvx3EeCSRdfzY3RKDdBP5+3LP0PqX4+3UCKYoc=;
-        b=j6v9QzLxMIwhIWRsdUZezpwLyBRapbnupd/BHRHSx28gzcxCLg2j3EpQPozntYt5bi
-         T0dgxO18FXYYbZ/2yDwkeHUh0EUT82Zl4aepTsEJIDTkUTa7DEwH8ti/emCOiAhb6Y4T
-         hvrT8ID+Db89dkZrFSsEGUxGQ7/I5Lx2UC/NubTQHUNl0xqGsrzYukYw/y8jW1YODqMk
-         HPwDyJnYotLMbtpraKwkzXzfv2n8hkpYS8z3zl6QJbSuTIkFnXOvDdPOKr8XKrdrhysn
-         uVt7e3/WDJrTJms9nwZMLOFA+QXD8gdDW7ousNh/v3SQV8sAm73sg52Jprl3z21nzE24
-         OejQ==
-X-Gm-Message-State: APjAAAVkPCZZcTPCOuOZFuWCZAnGBf0HdwqN+cDIIwBLCSdqxQAtGXCU
-        WNKhkOhcF+DLNVYmcFp38VE1YQxm9S7j5g==
-X-Google-Smtp-Source: APXvYqyzUK9/iNKCGswfruFFa/dgqZmSXH99Zcz7/rkm4lDnok7tbggzJ9fDvIjmnW21ylutKOc2PQ==
-X-Received: by 2002:a5d:6cb0:: with SMTP id a16mr9279711wra.194.1573743648580;
-        Thu, 14 Nov 2019 07:00:48 -0800 (PST)
-Received: from [148.251.42.114] ([2a01:4f8:201:9271::2])
-        by smtp.gmail.com with ESMTPSA id a11sm6674989wmh.40.2019.11.14.07.00.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 14 Nov 2019 07:00:47 -0800 (PST)
-Message-ID: <5dcd6c1f.1c69fb81.edf9f.f5c1@mx.google.com>
-Date:   Thu, 14 Nov 2019 07:00:47 -0800 (PST)
-Content-Type: text/plain; charset="utf-8"
+        id S1726491AbfKNRjx (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 14 Nov 2019 12:39:53 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52764 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725976AbfKNRjx (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Thu, 14 Nov 2019 12:39:53 -0500
+Received: from mail-qv1-f48.google.com (mail-qv1-f48.google.com [209.85.219.48])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 34B0120718;
+        Thu, 14 Nov 2019 17:39:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1573753192;
+        bh=VzKteWn1F/CosCCsd6C4IKUCGWE4H5oQV8jGARZ48tc=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=qN2v5wV095fAUbYtR5P6fE7B5vGnb+vx313xCT936CPIndi5UGPzUwBJ4RrLRuJ3x
+         doWz3mevftGogNgXftWdpHE1RIm0Y5J6GvK5tLIDIKNpwQIF4FFify2At4paexUm3K
+         4SIxI+snb5+OFz1v88ytyKBaUGmq/kZP83rqrNBI=
+Received: by mail-qv1-f48.google.com with SMTP id s18so2698307qvr.4;
+        Thu, 14 Nov 2019 09:39:52 -0800 (PST)
+X-Gm-Message-State: APjAAAWU3N45mXI3Ud44Pp4vYPoEZm/VZN9MOpL5LaaVCp0AL7a7LjP+
+        ZR2aMon3mU4pSQ46aeWgIpGYozdnZqVv/a9nCw==
+X-Google-Smtp-Source: APXvYqxjXzdKzRE0EK2pcCqMsxPiZ4eYz6WenDnilDBfvtuJZs9Eo9skkMhiHprH/vEA4CI6gl4l72fI4G+D1tx4Ce4=
+X-Received: by 2002:a0c:d2b4:: with SMTP id q49mr8873666qvh.135.1573753191385;
+ Thu, 14 Nov 2019 09:39:51 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-Kernelci-Branch: for-next
-X-Kernelci-Tree: linusw
-X-Kernelci-Report-Type: boot
-X-Kernelci-Kernel: v5.4-rc7-124-gd0d9531e38a6
-Subject: linusw/for-next boot: 49 boots: 0 failed,
- 49 passed (v5.4-rc7-124-gd0d9531e38a6)
-To:     linux-gpio@vger.kernel.org, fellows@kernelci.org
-From:   "kernelci.org bot" <bot@kernelci.org>
+References: <cover.1573455324.git.rahul.tanwar@linux.intel.com>
+ <96537f8702501a45501d5a59ca029f92e36a9e4a.1573455324.git.rahul.tanwar@linux.intel.com>
+ <CACRpkdYhy1KLyZd4MNSODpy0Q59_SAcc+wkofrZr4b4N+rYDxw@mail.gmail.com> <1d3be294-5f12-462c-855c-e53ecb9190b7@linux.intel.com>
+In-Reply-To: <1d3be294-5f12-462c-855c-e53ecb9190b7@linux.intel.com>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Thu, 14 Nov 2019 11:39:40 -0600
+X-Gmail-Original-Message-ID: <CAL_Jsq+okgZgqdbosrOHhL1m0BW4E718Kb4tmyuexEfPwAZLmg@mail.gmail.com>
+Message-ID: <CAL_Jsq+okgZgqdbosrOHhL1m0BW4E718Kb4tmyuexEfPwAZLmg@mail.gmail.com>
+Subject: Re: [PATCH v6 2/2] dt-bindings: pinctrl: intel: Add for new SoC
+To:     "Tanwar, Rahul" <rahul.tanwar@linux.intel.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Andriy Shevchenko <andriy.shevchenko@intel.com>,
+        qi-ming.wu@intel.com, yixin zhu <yixin.zhu@linux.intel.com>,
+        cheol.yong.kim@intel.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-linusw/for-next boot: 49 boots: 0 failed, 49 passed (v5.4-rc7-124-gd0d9531e=
-38a6)
+On Wed, Nov 13, 2019 at 9:27 PM Tanwar, Rahul
+<rahul.tanwar@linux.intel.com> wrote:
+>
+>
+> Hi Linus,
+>
+> On 13/11/2019 10:46 PM, Linus Walleij wrote:
+> > On Mon, Nov 11, 2019 at 11:11 AM Rahul Tanwar
+> > <rahul.tanwar@linux.intel.com> wrote:
+> >
+> >> Add dt bindings document for pinmux & GPIO controller driver of
+> >> Intel Lightning Mountain SoC.
+> >>
+> >> Signed-off-by: Rahul Tanwar <rahul.tanwar@linux.intel.com>
+> > (...)
+> >
+> >> +properties:
+> >> +  compatible:
+> >> +    const: intel,lgm-pinctrl
+> > Just noted from another review where Rob noted that this name should
+> > match the internal name in the datasheet for this hardware block. Is it
+> > really called "lgm-pinctrl" inside Intel?
+> >
+> > intel,lightning-mountain-io and similar are perfectly fine if that is the
+> > name it has in your documentation.
+>
+> Our documentation does not have any specific names for these hardware
+> blocks. It names it in a very generic/standard manner like GPIO, pinmux..
+>
+> To make the name explicit & self explanatory, i should probably change
+> the name as you suggested i.e. intel,lightning-mountain-io.
 
-Full Boot Summary: https://kernelci.org/boot/all/job/linusw/branch/for-next=
-/kernel/v5.4-rc7-124-gd0d9531e38a6/
-Full Build Summary: https://kernelci.org/build/linusw/branch/for-next/kerne=
-l/v5.4-rc7-124-gd0d9531e38a6/
+You should also be consistent with 'lgm' vs. 'lightning-mountain' use
+across bindings some of which I think have already been accepted.
 
-Tree: linusw
-Branch: for-next
-Git Describe: v5.4-rc7-124-gd0d9531e38a6
-Git Commit: d0d9531e38a6ccd0b4e32acec85d564b677dec41
-Git URL: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-gpio.=
-git/
-Tested: 41 unique boards, 12 SoC families, 3 builds out of 6
-
----
-For more info write to <info@kernelci.org>
+Rob
