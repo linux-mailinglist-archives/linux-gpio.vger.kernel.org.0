@@ -2,69 +2,80 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id F40CFFE2B2
-	for <lists+linux-gpio@lfdr.de>; Fri, 15 Nov 2019 17:27:49 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2C3B7FE53A
+	for <lists+linux-gpio@lfdr.de>; Fri, 15 Nov 2019 19:48:25 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727540AbfKOQ1s (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 15 Nov 2019 11:27:48 -0500
-Received: from sonic316-11.consmr.mail.bf2.yahoo.com ([74.6.130.121]:41077
-        "EHLO sonic316-11.consmr.mail.bf2.yahoo.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727423AbfKOQ1s (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>);
-        Fri, 15 Nov 2019 11:27:48 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1573835267; bh=sgFa7Cs4ss6n8sA+brLiAjHMpjB11xRWsbVGUlCB1X4=; h=Date:From:Reply-To:Subject:From:Subject; b=n4zG5RWorBfhRqGFQ7plRYBYWHlj9gYauh0BpjI8l7BF/YfyksVeg6gllDyIk//mgRMx3fpT8DYBVtptyDniJ4v21r+hHeQSi85ohgR4e/hbEeDBKcE04FIo3JTW9mvccB9TGBp4JyzfOqUmDg+LDAD95xs3bftm1D9dBUgBrLS3GpiRJGJaavv0Z89yzTrQieRQU+SLVfxvo3HM2rlKUScOYJaIOXmXgfgahNRfVS3d1Ip7XCAe/AWFrn/V5QhRWRQGKzo0MNoIeiaU272+lLuwnwBHoo2e1U8Wenu7aNhm4xnMS0+5jIWlyfyeXmg4giVu9FnxFAlE1CQMuyTxdA==
-X-YMail-OSG: .KZi1GUVM1ke_Db7qo_I_MdsHQPaJ1yTOpG4Z.ZkdQZoBXVLr6PBo9AVWBUEnlb
- kJfFHzsp09rXcve0NjbAgeIUmNFUDTYsSEPQrAKMJpMN3QT2BKYmNwfmlgh6U1tTpoDQktCW7It9
- kUKuPTb4sTKyaAVrICybUJh9T8umaCoXb5beMh.TSy8sEJBj2WT.tuaAFlf8f72rxndiw0n0YsVS
- VIdH_6JUAtcGC0_McibIwcS9VV3EppA5hOZvBC7avJmjcfRdoWJf4VHBiFfHbqRfdfI9WusCUlrl
- hU.0iAoScvL0FNt3iOBLJTjI8Dw48YJORjHD0XhCTXZusoWcIM9wR3AhEtfDM9dSICEz1MnYh8_V
- ipR5u6wB4IYpnTxUco8q43tiUBULCYrowaiBBq4B1.fK6tLZ7VW92iaLSfZ8N_.urMKcmRAZzMlN
- W_SSNTHdAL4tQWf0C.nRBk1OCXNFfZ6BremXwByjZltOHVX7EjUEWiN6kaFlR40UMhbzrRW8P84V
- gWWMEPfvdGeWVBfjGP6IA7PCb0_kQfHdTC0S56tj7uA4MT.RAP630Da93Fqbc507jBqoWUEzNmbS
- S.NhA.iDWPXipvGIXJcSgcKCa2pDtjpABNLN3P_EGPeaqzKz1krXANgsC.vf8I6myp9PnBlEs4yB
- IOocnYvG9Gwu8wd9xGJBhRBtutXrCAY9C43SIjb9xotjhu9HWlbYiCrWPXn6kQaHbtmC5ziZn5xJ
- XrxYTPqLj2W6sPeEESJxthewshWyxEhH3YhcD1qh2igxzc5TXFlNnBGYSVh5NM6Uv0hWKdfH9eFE
- 9ljIWt_qSrXMs2NILrntKjVr45UkRQOdCr1Ux6yiNVKdNCmMlS3g.MKmFfEpQRXde8wqtsxYUaNR
- IVLaXZvG8zGYOsTr9dM5wdlNPG5JTmznhmY.H1AILOVpwoRSCTSpQzq.zWZOaWqM4rnFO2ExzqzY
- 6zQQcIlZk4EBZnUfxNZHAJdbEn9UFlHUY8TQHS25noQ2bOJC.KsFXFnqiTNORMIzqQlQtF9Jpeta
- U4bY4hwGSLQikAM3rIQ2x3QHMlDqQMfLLCsxoxVdJZRH374Q9Z46oNYJz3_UKr7ez_cxQp2irKo9
- XwEjyU58DiB9qDZAQ5qqcQDm88sxhGX61wMJbvq0zXh2yo.CKONbVq5eDUIEaCb82dmwOuWEU83v
- Azh.5jjfbItGrXCnRMLEgNBmS5EvfS62qw7Dan.ZuAXgoxoW7oiJSXaNGGryvRb6yWzInOyB_t1T
- qiNh_dS0s8zhqItcDz7Xre4BiGGJnHIkFrI3kigQhft3q5WsjC3z3K7VYXfelfFDKYxPptGB1W5P
- FWQFN
-Received: from sonic.gate.mail.ne1.yahoo.com by sonic316.consmr.mail.bf2.yahoo.com with HTTP; Fri, 15 Nov 2019 16:27:47 +0000
-Date:   Fri, 15 Nov 2019 16:27:44 +0000 (UTC)
-From:   "Dr. Youssef Bakary," <mrs.nathaliehamon888@gmail.com>
-Reply-To: dr.youssefbakary1960@gmail.com
-Message-ID: <1375579144.536090.1573835264383@mail.yahoo.com>
-Subject: Dear Friend
+        id S1726809AbfKOSsY (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 15 Nov 2019 13:48:24 -0500
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:44072 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726766AbfKOSsY (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 15 Nov 2019 13:48:24 -0500
+Received: by mail-pl1-f196.google.com with SMTP id az9so5251366plb.11
+        for <linux-gpio@vger.kernel.org>; Fri, 15 Nov 2019 10:48:22 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=message-id:mime-version:content-transfer-encoding:in-reply-to
+         :references:cc:to:subject:from:user-agent:date;
+        bh=X4twp3pctC7VCYEezfWUSk2DKafsbFD6g/B7PxJ7beE=;
+        b=isV1GwSykbdCIUh1Sq2o8vQA3iKaQVXo2ALyRNUWZ8d6X0VzM46cePA97/qONQhJ00
+         RFJ8tV421WaulCuo3jygFdZGKUKdOYYkry8Skc2I706xbc0HLFhIDEepgOxGqQdmgQS0
+         3vfOyfjJdFFH/sFlt9zScWDVH7vA6ecKloMps=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:mime-version
+         :content-transfer-encoding:in-reply-to:references:cc:to:subject:from
+         :user-agent:date;
+        bh=X4twp3pctC7VCYEezfWUSk2DKafsbFD6g/B7PxJ7beE=;
+        b=V0oPuUysvp2WYmxFde2JzYNrx1RTYcP0U/PcReqb+4DVEz0gM0M4Ojv8F04aAc2Es7
+         LEfyyucTnaPDXgc4hcrKwb2IES0jOptR856V+23fQzckxy42CKKDEOjJu0F+U2rEZcZR
+         i8c5/fF6HzDUWoHmGQU+fLMlVhSeLQFs10InOq3F1zdSx4Akcvq92NuyWV307zbXSUjB
+         2xXdvCAvIlukV5S9WM1pGilR0QgvYhIbgYHIqlqz/xc8tWYwk4Hsagr3nD2m7rd0iFVH
+         CNFtCKoT/mLH1kBcOel5t/nRK1rrknIOQqTb3GsXZ9gz9+gyiaR2zgoJepQysU9e/8Ej
+         /HSg==
+X-Gm-Message-State: APjAAAUGYTzMysDJ7u1UaDigLQ0cihepu5cGbhZ4n5xIoMs4U2cWq83Y
+        nUKcSO1PmwgYiQQopN1A5vNbEA==
+X-Google-Smtp-Source: APXvYqzCEHYKTJk35+KbDAqTeknJ92k5jjiweJcm0Q36J9YfJLytr/wLW+RFHHfKHabR4PfHBGRO9g==
+X-Received: by 2002:a17:902:8ec6:: with SMTP id x6mr16554556plo.151.1573843701878;
+        Fri, 15 Nov 2019 10:48:21 -0800 (PST)
+Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
+        by smtp.gmail.com with ESMTPSA id a26sm11247215pff.155.2019.11.15.10.48.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 15 Nov 2019 10:48:21 -0800 (PST)
+Message-ID: <5dcef2f5.1c69fb81.ccbc2.1a7e@mx.google.com>
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: quoted-printable
-To:     unlisted-recipients:; (no To-header on input)
+In-Reply-To: <1573756521-27373-2-git-send-email-ilina@codeaurora.org>
+References: <1573756521-27373-1-git-send-email-ilina@codeaurora.org> <1573756521-27373-2-git-send-email-ilina@codeaurora.org>
+Cc:     evgreen@chromium.org, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, mkshah@codeaurora.org,
+        linux-gpio@vger.kernel.org, agross@kernel.org,
+        dianders@chromium.org, Lina Iyer <ilina@codeaurora.org>
+To:     Lina Iyer <ilina@codeaurora.org>, bjorn.andersson@linaro.org,
+        linus.walleij@linaro.org, maz@kernel.org
+Subject: Re: [PATCH 01/12] irqdomain: add bus token DOMAIN_BUS_WAKEUP
+From:   Stephen Boyd <swboyd@chromium.org>
+User-Agent: alot/0.8.1
+Date:   Fri, 15 Nov 2019 10:48:20 -0800
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Dear Friend
+Quoting Lina Iyer (2019-11-14 10:35:10)
+> A single controller can handle normal interrupts and wake-up interrupts
+> independently, with a different numbering space. It is thus crucial to
+> allow the driver for such a controller discriminate between the two.
+>=20
+> A simple way to do so is to tag the wake-up irqdomain with a "bus token"
+> that indicates the wake-up domain. This slightly abuses the notion of
+> bus, but also radically simplifies the design of such a driver. Between
+> two evils, we choose the least damaging.
+>=20
+> Suggested-by: Stephen Boyd <swboyd@chromium.org>
+> Signed-off-by: Lina Iyer <ilina@codeaurora.org>
+> ---
 
-I am Dr. Youssef Bakary, I Have a Business Proposal of $5.3 million For You=
-.
-I am aware of the unsafe nature of the internet, and was compelled to use t=
-his medium due to the nature of this project. I have access to very vital i=
-nformation that can be used to transfer this huge amount of money, which ma=
-y culminate into the investment of the said=20
-funds into your company or any lucrative venture in your country.
-If you will like to assist me as a partner then indicate your interest, aft=
-er which we shall both discuss the modalities and the sharing percentage.Up=
-on receipt of your reply on your expression of Interest
- I will give you full details, on how the business will be executed I am op=
-en for negotiation.=20
-Thanks for your anticipated cooperation.
-Note you might receive this message in your inbox or spam or junk folder, d=
-epends on your web host or server network.
+Reviewed-by: Stephen Boyd <swboyd@chromium.org>
 
-Thanks=E2=80=99
-Best Regards
-Dr. Youssef Bakary,
