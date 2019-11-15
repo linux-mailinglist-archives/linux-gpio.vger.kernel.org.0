@@ -2,24 +2,24 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 092ABFE780
-	for <lists+linux-gpio@lfdr.de>; Fri, 15 Nov 2019 23:17:45 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D44BAFE785
+	for <lists+linux-gpio@lfdr.de>; Fri, 15 Nov 2019 23:17:52 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726890AbfKOWRo (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 15 Nov 2019 17:17:44 -0500
-Received: from smtp.codeaurora.org ([198.145.29.96]:46982 "EHLO
+        id S1726894AbfKOWRq (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 15 Nov 2019 17:17:46 -0500
+Received: from smtp.codeaurora.org ([198.145.29.96]:47084 "EHLO
         smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726812AbfKOWRo (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 15 Nov 2019 17:17:44 -0500
+        with ESMTP id S1726661AbfKOWRp (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 15 Nov 2019 17:17:45 -0500
 Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 7E7BA61065; Fri, 15 Nov 2019 22:17:43 +0000 (UTC)
+        id D03356110D; Fri, 15 Nov 2019 22:17:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1573856263;
-        bh=P4+vLW989cfm2UdgXK12lQuYajx248UFh8qFDpzNVq8=;
+        s=default; t=1573856264;
+        bh=H7EIuSj3inAEWMh8l92XUYSE0NT9quVn5kYYn9WSNeM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=biXvbmKHcAVL2QCfPBtmeIhl80VdWv/OCGQkVeuJrfAJceNCId5MMeZbZqQ2ZnJRE
-         /28nNOuySH1+2fdveYD+lY1txShfEFtyiu545IebIVTrS9f3vnrB5MZPg+asFNG/kB
-         8sZA0W797tZE2eltO7IXmvR7CFMsx6f1GFVgyNyc=
+        b=deSp+3nUWvpF1cYsIZYkHSFsPsKZTs+7HRr4c5CgrL8rh8VqXvK5vP1Ub/+xapvRb
+         H9t644yX1/D3uAQOMiBGxnNzkaUypjO1+/t83CxaPagsKgvx3whj3LC1kYuzA6bPoc
+         anknIwvIkivj4SS58zBR/bKrnfMS2iJjHDsk0sfs=
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
         pdx-caf-mail.web.codeaurora.org
 X-Spam-Level: 
@@ -30,16 +30,16 @@ Received: from codeaurora.org (i-global254.qualcomm.com [199.106.103.254])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
         (No client certificate requested)
         (Authenticated sender: ilina@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 30A9460F80;
-        Fri, 15 Nov 2019 22:17:42 +0000 (UTC)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 4DA4661015;
+        Fri, 15 Nov 2019 22:17:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1573856263;
-        bh=P4+vLW989cfm2UdgXK12lQuYajx248UFh8qFDpzNVq8=;
+        s=default; t=1573856264;
+        bh=H7EIuSj3inAEWMh8l92XUYSE0NT9quVn5kYYn9WSNeM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=biXvbmKHcAVL2QCfPBtmeIhl80VdWv/OCGQkVeuJrfAJceNCId5MMeZbZqQ2ZnJRE
-         /28nNOuySH1+2fdveYD+lY1txShfEFtyiu545IebIVTrS9f3vnrB5MZPg+asFNG/kB
-         8sZA0W797tZE2eltO7IXmvR7CFMsx6f1GFVgyNyc=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 30A9460F80
+        b=deSp+3nUWvpF1cYsIZYkHSFsPsKZTs+7HRr4c5CgrL8rh8VqXvK5vP1Ub/+xapvRb
+         H9t644yX1/D3uAQOMiBGxnNzkaUypjO1+/t83CxaPagsKgvx3whj3LC1kYuzA6bPoc
+         anknIwvIkivj4SS58zBR/bKrnfMS2iJjHDsk0sfs=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 4DA4661015
 Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
 Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=ilina@codeaurora.org
 From:   Lina Iyer <ilina@codeaurora.org>
@@ -49,9 +49,9 @@ Cc:     evgreen@chromium.org, linux-kernel@vger.kernel.org,
         linux-arm-msm@vger.kernel.org, mkshah@codeaurora.org,
         linux-gpio@vger.kernel.org, agross@kernel.org,
         dianders@chromium.org, Lina Iyer <ilina@codeaurora.org>
-Subject: [PATCH v2 01/12] irqdomain: add bus token DOMAIN_BUS_WAKEUP
-Date:   Fri, 15 Nov 2019 15:11:44 -0700
-Message-Id: <1573855915-9841-2-git-send-email-ilina@codeaurora.org>
+Subject: [PATCH v2 02/12] drivers: irqchip: qcom-pdc: update max PDC interrupts
+Date:   Fri, 15 Nov 2019 15:11:45 -0700
+Message-Id: <1573855915-9841-3-git-send-email-ilina@codeaurora.org>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1573855915-9841-1-git-send-email-ilina@codeaurora.org>
 References: <1573855915-9841-1-git-send-email-ilina@codeaurora.org>
@@ -60,34 +60,36 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-A single controller can handle normal interrupts and wake-up interrupts
-independently, with a different numbering space. It is thus crucial to
-allow the driver for such a controller discriminate between the two.
+Newer SoCs have increased the number of interrupts routed to the PDC
+interrupt controller. Update the definition of max PDC interrupts.
 
-A simple way to do so is to tag the wake-up irqdomain with a "bus token"
-that indicates the wake-up domain. This slightly abuses the notion of
-bus, but also radically simplifies the design of such a driver. Between
-two evils, we choose the least damaging.
-
-Suggested-by: Stephen Boyd <swboyd@chromium.org>
 Signed-off-by: Lina Iyer <ilina@codeaurora.org>
 Reviewed-by: Stephen Boyd <swboyd@chromium.org>
 ---
- include/linux/irqdomain.h | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/irqchip/qcom-pdc.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/include/linux/irqdomain.h b/include/linux/irqdomain.h
-index 583e7ab..3c340db 100644
---- a/include/linux/irqdomain.h
-+++ b/include/linux/irqdomain.h
-@@ -83,6 +83,7 @@ enum irq_domain_bus_token {
- 	DOMAIN_BUS_IPI,
- 	DOMAIN_BUS_FSL_MC_MSI,
- 	DOMAIN_BUS_TI_SCI_INTA_MSI,
-+	DOMAIN_BUS_WAKEUP,
- };
+diff --git a/drivers/irqchip/qcom-pdc.c b/drivers/irqchip/qcom-pdc.c
+index c175333..690cf10 100644
+--- a/drivers/irqchip/qcom-pdc.c
++++ b/drivers/irqchip/qcom-pdc.c
+@@ -1,6 +1,6 @@
+ // SPDX-License-Identifier: GPL-2.0
+ /*
+- * Copyright (c) 2017-2018, The Linux Foundation. All rights reserved.
++ * Copyright (c) 2017-2019, The Linux Foundation. All rights reserved.
+  */
  
- /**
+ #include <linux/err.h>
+@@ -18,7 +18,7 @@
+ #include <linux/slab.h>
+ #include <linux/types.h>
+ 
+-#define PDC_MAX_IRQS		126
++#define PDC_MAX_IRQS		168
+ 
+ #define CLEAR_INTR(reg, intr)	(reg & ~(1 << intr))
+ #define ENABLE_INTR(reg, intr)	(reg | (1 << intr))
 -- 
 The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
 a Linux Foundation Collaborative Project
