@@ -2,110 +2,69 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 91C21FE29D
-	for <lists+linux-gpio@lfdr.de>; Fri, 15 Nov 2019 17:21:02 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id F40CFFE2B2
+	for <lists+linux-gpio@lfdr.de>; Fri, 15 Nov 2019 17:27:49 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727537AbfKOQUx (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 15 Nov 2019 11:20:53 -0500
-Received: from smtp.codeaurora.org ([198.145.29.96]:34634 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727423AbfKOQUx (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 15 Nov 2019 11:20:53 -0500
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 44D1A60C68; Fri, 15 Nov 2019 16:20:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1573834852;
-        bh=eJ1ougYZsdOPNkP0r+wBt4GiBFElVZxrJfz13RnKkZE=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=ReeTudINlbQwbtqQ5r/zUJlv0s9UFKBNC9KntcUDvbjzJSSR4lMbiHeh756LkaWAW
-         2aUeRlpT4CSjO/B7pedGuhtcFMJ/nuuWBd36TbVaN7x7hzJPLgIE6TQhuf8kAGcNlu
-         DVTZuR9ZR9U/wbzZoNRQc80ibS8tWoUSSZB5Ipw8=
-X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
-        pdx-caf-mail.web.codeaurora.org
-X-Spam-Level: 
-X-Spam-Status: No, score=-2.7 required=2.0 tests=ALL_TRUSTED,BAYES_00,
-        DKIM_INVALID,DKIM_SIGNED,SPF_NONE autolearn=no autolearn_force=no
-        version=3.4.0
-Received: from localhost (i-global254.qualcomm.com [199.106.103.254])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: ilina@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id A93D660264;
-        Fri, 15 Nov 2019 16:20:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1573834851;
-        bh=eJ1ougYZsdOPNkP0r+wBt4GiBFElVZxrJfz13RnKkZE=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=XXGtOSzKx9trGixqE/Y27xNMkIPR1FsEd/hu8loaMI1Ri9mcal41N/RV5vCAlN4mh
-         HzkSC0cv0oF7g+nOS0+rxqh1KEnYbKo1DcrUs+Ye2bx+nhJ5WeoUOa/vlrb+6YS9GL
-         /NNJ2T8fxcWrNEwxQmmncUVFS0RjZaDpPMga5TiE=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org A93D660264
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=ilina@codeaurora.org
-Date:   Fri, 15 Nov 2019 09:20:50 -0700
-From:   Lina Iyer <ilina@codeaurora.org>
-To:     Marc Zyngier <maz@kernel.org>
-Cc:     swboyd@chromium.org, linus.walleij@linaro.org,
-        bjorn.andersson@linaro.org, evgreen@chromium.org,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        mkshah@codeaurora.org, linux-gpio@vger.kernel.org,
-        agross@kernel.org, dianders@chromium.org
-Subject: Re: [PATCH 00/12] Support wakeup capable GPIOs
-Message-ID: <20191115162050.GE18786@codeaurora.org>
-References: <1573756521-27373-1-git-send-email-ilina@codeaurora.org>
- <54da99976d9bd2d543d2341ad9eb982e@www.loen.fr>
+        id S1727540AbfKOQ1s (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 15 Nov 2019 11:27:48 -0500
+Received: from sonic316-11.consmr.mail.bf2.yahoo.com ([74.6.130.121]:41077
+        "EHLO sonic316-11.consmr.mail.bf2.yahoo.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727423AbfKOQ1s (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>);
+        Fri, 15 Nov 2019 11:27:48 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1573835267; bh=sgFa7Cs4ss6n8sA+brLiAjHMpjB11xRWsbVGUlCB1X4=; h=Date:From:Reply-To:Subject:From:Subject; b=n4zG5RWorBfhRqGFQ7plRYBYWHlj9gYauh0BpjI8l7BF/YfyksVeg6gllDyIk//mgRMx3fpT8DYBVtptyDniJ4v21r+hHeQSi85ohgR4e/hbEeDBKcE04FIo3JTW9mvccB9TGBp4JyzfOqUmDg+LDAD95xs3bftm1D9dBUgBrLS3GpiRJGJaavv0Z89yzTrQieRQU+SLVfxvo3HM2rlKUScOYJaIOXmXgfgahNRfVS3d1Ip7XCAe/AWFrn/V5QhRWRQGKzo0MNoIeiaU272+lLuwnwBHoo2e1U8Wenu7aNhm4xnMS0+5jIWlyfyeXmg4giVu9FnxFAlE1CQMuyTxdA==
+X-YMail-OSG: .KZi1GUVM1ke_Db7qo_I_MdsHQPaJ1yTOpG4Z.ZkdQZoBXVLr6PBo9AVWBUEnlb
+ kJfFHzsp09rXcve0NjbAgeIUmNFUDTYsSEPQrAKMJpMN3QT2BKYmNwfmlgh6U1tTpoDQktCW7It9
+ kUKuPTb4sTKyaAVrICybUJh9T8umaCoXb5beMh.TSy8sEJBj2WT.tuaAFlf8f72rxndiw0n0YsVS
+ VIdH_6JUAtcGC0_McibIwcS9VV3EppA5hOZvBC7avJmjcfRdoWJf4VHBiFfHbqRfdfI9WusCUlrl
+ hU.0iAoScvL0FNt3iOBLJTjI8Dw48YJORjHD0XhCTXZusoWcIM9wR3AhEtfDM9dSICEz1MnYh8_V
+ ipR5u6wB4IYpnTxUco8q43tiUBULCYrowaiBBq4B1.fK6tLZ7VW92iaLSfZ8N_.urMKcmRAZzMlN
+ W_SSNTHdAL4tQWf0C.nRBk1OCXNFfZ6BremXwByjZltOHVX7EjUEWiN6kaFlR40UMhbzrRW8P84V
+ gWWMEPfvdGeWVBfjGP6IA7PCb0_kQfHdTC0S56tj7uA4MT.RAP630Da93Fqbc507jBqoWUEzNmbS
+ S.NhA.iDWPXipvGIXJcSgcKCa2pDtjpABNLN3P_EGPeaqzKz1krXANgsC.vf8I6myp9PnBlEs4yB
+ IOocnYvG9Gwu8wd9xGJBhRBtutXrCAY9C43SIjb9xotjhu9HWlbYiCrWPXn6kQaHbtmC5ziZn5xJ
+ XrxYTPqLj2W6sPeEESJxthewshWyxEhH3YhcD1qh2igxzc5TXFlNnBGYSVh5NM6Uv0hWKdfH9eFE
+ 9ljIWt_qSrXMs2NILrntKjVr45UkRQOdCr1Ux6yiNVKdNCmMlS3g.MKmFfEpQRXde8wqtsxYUaNR
+ IVLaXZvG8zGYOsTr9dM5wdlNPG5JTmznhmY.H1AILOVpwoRSCTSpQzq.zWZOaWqM4rnFO2ExzqzY
+ 6zQQcIlZk4EBZnUfxNZHAJdbEn9UFlHUY8TQHS25noQ2bOJC.KsFXFnqiTNORMIzqQlQtF9Jpeta
+ U4bY4hwGSLQikAM3rIQ2x3QHMlDqQMfLLCsxoxVdJZRH374Q9Z46oNYJz3_UKr7ez_cxQp2irKo9
+ XwEjyU58DiB9qDZAQ5qqcQDm88sxhGX61wMJbvq0zXh2yo.CKONbVq5eDUIEaCb82dmwOuWEU83v
+ Azh.5jjfbItGrXCnRMLEgNBmS5EvfS62qw7Dan.ZuAXgoxoW7oiJSXaNGGryvRb6yWzInOyB_t1T
+ qiNh_dS0s8zhqItcDz7Xre4BiGGJnHIkFrI3kigQhft3q5WsjC3z3K7VYXfelfFDKYxPptGB1W5P
+ FWQFN
+Received: from sonic.gate.mail.ne1.yahoo.com by sonic316.consmr.mail.bf2.yahoo.com with HTTP; Fri, 15 Nov 2019 16:27:47 +0000
+Date:   Fri, 15 Nov 2019 16:27:44 +0000 (UTC)
+From:   "Dr. Youssef Bakary," <mrs.nathaliehamon888@gmail.com>
+Reply-To: dr.youssefbakary1960@gmail.com
+Message-ID: <1375579144.536090.1573835264383@mail.yahoo.com>
+Subject: Dear Friend
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <54da99976d9bd2d543d2341ad9eb982e@www.loen.fr>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Nov 15 2019 at 03:36 -0700, Marc Zyngier wrote:
->Hi Lina,
->
->On 2019-11-14 18:35, Lina Iyer wrote:
->>Hi all,
->>
->>Thanks for all the reviews.
->>
->>Here is the next spin of the wakeup capable GPIO support. In order to
->>facilitate basic support available in the kernel, I have dropped the
->>SPI
->>register configuration. The feature was added when this series was
->>restarted based on new hierarchy support in gpiolib. But, the SPI
->>configuration can be done in the firmware. This would avoid a whole
->>lot
->>of code in linux that serve little to no purpose. Users of GPIO never
->>have the need to change the trigger type (level edge and vice-versa)
->>and
->>the basic configuration can be set in the firmware before boot.
->>
->>Changes in v1:
->>	- Address review comments
->>	- Add Reviewed-by tags
->>	- Drop SPI config patches
->>	- Rebase on top of Rajendra's PDC changes [6]
->>
->>Changes in RFC v2[5]:
->>        - Address review comments #3, #4, #6, #7, #8, #9, #10
->>        - Rebased on top of linux-next GPIO latest patches
->>[1],[3],[4]
->>        - Increase PDC max irqs in #2 (avoid merge conflicts with
->>          downstream)
->>        - Add Reviewed-by #5
->>
->>Please consider reviewing these patches.
->
->It has been a long time coming, and I'm minded to take the first 9
->patches into the irqchip tree. Anyone objects? The last 3 patches
->can go via the platform maintainer tree.
->
-Sounds good Marc.
+Dear Friend
 
-Thanks,
-Lina
+I am Dr. Youssef Bakary, I Have a Business Proposal of $5.3 million For You=
+.
+I am aware of the unsafe nature of the internet, and was compelled to use t=
+his medium due to the nature of this project. I have access to very vital i=
+nformation that can be used to transfer this huge amount of money, which ma=
+y culminate into the investment of the said=20
+funds into your company or any lucrative venture in your country.
+If you will like to assist me as a partner then indicate your interest, aft=
+er which we shall both discuss the modalities and the sharing percentage.Up=
+on receipt of your reply on your expression of Interest
+ I will give you full details, on how the business will be executed I am op=
+en for negotiation.=20
+Thanks for your anticipated cooperation.
+Note you might receive this message in your inbox or spam or junk folder, d=
+epends on your web host or server network.
 
+Thanks=E2=80=99
+Best Regards
+Dr. Youssef Bakary,
