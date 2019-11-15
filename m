@@ -2,90 +2,97 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id E6DC9FCE35
-	for <lists+linux-gpio@lfdr.de>; Thu, 14 Nov 2019 19:57:18 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 1A57EFD5A9
+	for <lists+linux-gpio@lfdr.de>; Fri, 15 Nov 2019 07:01:48 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726474AbfKNS5S (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 14 Nov 2019 13:57:18 -0500
-Received: from smtp.codeaurora.org ([198.145.29.96]:35050 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725976AbfKNS5R (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 14 Nov 2019 13:57:17 -0500
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 0B29C60F90; Thu, 14 Nov 2019 18:57:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1573757837;
-        bh=kGHHDhxFcB0ua6Q2kIcueqlm1c4XucBEKXaw5BAbH1o=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=fdjfXYcIIGY0JvsTFSlxLE3edoVnATJC6OW93Xb8sc1V6oJ8Azc/qw9LkU8/GHWKA
-         SKmHT90OnQBIEIh0qzM0rf9UjoyzbXbZVjy7wWWFj3q+5y+Hlh0jJ6iioSNHNfWJwC
-         ZeeeF0ACyVf+OWWALgdHG/HLrQiewyJV5FR8FIkU=
-X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
-        pdx-caf-mail.web.codeaurora.org
-X-Spam-Level: 
-X-Spam-Status: No, score=-2.7 required=2.0 tests=ALL_TRUSTED,BAYES_00,
-        DKIM_INVALID,DKIM_SIGNED,SPF_NONE autolearn=no autolearn_force=no
-        version=3.4.0
-Received: from localhost (i-global254.qualcomm.com [199.106.103.254])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: ilina@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 2584B60EE9;
-        Thu, 14 Nov 2019 18:57:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1573757836;
-        bh=kGHHDhxFcB0ua6Q2kIcueqlm1c4XucBEKXaw5BAbH1o=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=n85C23IjABwJpR203kWCymv2uXERPyhSyVy6Q2OJ0iKVLKD5bHz3lvsgm5PaXBdGp
-         9VyMrayg7ZML1W8ickZKOjD/db7J4zHN5qZ5wc3aBTc6RtiDcix/dPWqQs1FGKb2YB
-         44gr6NjcRzgUmTjWy7WMXWDsRM/UFVecpXbpSdpI=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 2584B60EE9
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=ilina@codeaurora.org
-Date:   Thu, 14 Nov 2019 11:57:15 -0700
-From:   Lina Iyer <ilina@codeaurora.org>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Stephen Boyd <swboyd@chromium.org>, Marc Zyngier <maz@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Evan Green <evgreen@chromium.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        MSM <linux-arm-msm@vger.kernel.org>,
-        Maulik Shah <mkshah@codeaurora.org>,
+        id S1726822AbfKOGBo (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 15 Nov 2019 01:01:44 -0500
+Received: from mga09.intel.com ([134.134.136.24]:20451 "EHLO mga09.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725848AbfKOGBn (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Fri, 15 Nov 2019 01:01:43 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 14 Nov 2019 22:01:43 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.68,307,1569308400"; 
+   d="scan'208";a="405232266"
+Received: from linux.intel.com ([10.54.29.200])
+  by fmsmga005.fm.intel.com with ESMTP; 14 Nov 2019 22:01:42 -0800
+Received: from [10.226.38.118] (rtanwar-mobl.gar.corp.intel.com [10.226.38.118])
+        by linux.intel.com (Postfix) with ESMTP id 47A875802B1;
+        Thu, 14 Nov 2019 22:01:40 -0800 (PST)
+Subject: Re: [PATCH v6 2/2] dt-bindings: pinctrl: intel: Add for new SoC
+To:     Rob Herring <robh+dt@kernel.org>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Mark Rutland <mark.rutland@arm.com>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Andy Gross <agross@kernel.org>,
-        Doug Anderson <dianders@chromium.org>
-Subject: Re: [PATCH 08/12] drivers: pinctrl: msm: setup GPIO chip in hierarchy
-Message-ID: <20191114185715.GC18786@codeaurora.org>
-References: <1573756521-27373-1-git-send-email-ilina@codeaurora.org>
- <1573756521-27373-9-git-send-email-ilina@codeaurora.org>
- <CACRpkdYZoAnFno630Fxazz_Kvz4fEmKd-wohprdQqeM44f3tAg@mail.gmail.com>
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Andriy Shevchenko <andriy.shevchenko@intel.com>,
+        qi-ming.wu@intel.com, yixin zhu <yixin.zhu@linux.intel.com>,
+        cheol.yong.kim@intel.com
+References: <cover.1573455324.git.rahul.tanwar@linux.intel.com>
+ <96537f8702501a45501d5a59ca029f92e36a9e4a.1573455324.git.rahul.tanwar@linux.intel.com>
+ <CACRpkdYhy1KLyZd4MNSODpy0Q59_SAcc+wkofrZr4b4N+rYDxw@mail.gmail.com>
+ <1d3be294-5f12-462c-855c-e53ecb9190b7@linux.intel.com>
+ <CAL_Jsq+okgZgqdbosrOHhL1m0BW4E718Kb4tmyuexEfPwAZLmg@mail.gmail.com>
+From:   "Tanwar, Rahul" <rahul.tanwar@linux.intel.com>
+Message-ID: <0136c596-202c-ec43-8d79-66c3b8c03fe5@linux.intel.com>
+Date:   Fri, 15 Nov 2019 14:01:38 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <CACRpkdYZoAnFno630Fxazz_Kvz4fEmKd-wohprdQqeM44f3tAg@mail.gmail.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <CAL_Jsq+okgZgqdbosrOHhL1m0BW4E718Kb4tmyuexEfPwAZLmg@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Nov 14 2019 at 11:47 -0700, Linus Walleij wrote:
->On Thu, Nov 14, 2019 at 7:35 PM Lina Iyer <ilina@codeaurora.org> wrote:
->
->> Some GPIOs are marked as wakeup capable and are routed to another
->> interrupt controller that is an always-domain and can detect interrupts
->> even most of the SoC is powered off. The wakeup interrupt controller
->> wakes up the GIC and replays the interrupt at the GIC.
->>
->> Setup the TLMM irqchip in hierarchy with the wakeup interrupt controller
->> and ensure the wakeup GPIOs are handled correctly.
->>
->> Signed-off-by: Maulik Shah <mkshah@codeaurora.org>
->> Signed-off-by: Lina Iyer <ilina@codeaurora.org>
->
->This looks finished, and elegant.
->Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
->
-Thanks Linus.
 
--- Lina
+
+On 15/11/2019 1:39 AM, Rob Herring wrote:
+> On Wed, Nov 13, 2019 at 9:27 PM Tanwar, Rahul
+> <rahul.tanwar@linux.intel.com> wrote:
+>>
+>> Hi Linus,
+>>
+>> On 13/11/2019 10:46 PM, Linus Walleij wrote:
+>>> On Mon, Nov 11, 2019 at 11:11 AM Rahul Tanwar
+>>> <rahul.tanwar@linux.intel.com> wrote:
+>>>
+>>>> Add dt bindings document for pinmux & GPIO controller driver of
+>>>> Intel Lightning Mountain SoC.
+>>>>
+>>>> Signed-off-by: Rahul Tanwar <rahul.tanwar@linux.intel.com>
+>>> (...)
+>>>
+>>>> +properties:
+>>>> +  compatible:
+>>>> +    const: intel,lgm-pinctrl
+>>> Just noted from another review where Rob noted that this name should
+>>> match the internal name in the datasheet for this hardware block. Is it
+>>> really called "lgm-pinctrl" inside Intel?
+>>>
+>>> intel,lightning-mountain-io and similar are perfectly fine if that is the
+>>> name it has in your documentation.
+>> Our documentation does not have any specific names for these hardware
+>> blocks. It names it in a very generic/standard manner like GPIO, pinmux..
+>>
+>> To make the name explicit & self explanatory, i should probably change
+>> the name as you suggested i.e. intel,lightning-mountain-io.
+> You should also be consistent with 'lgm' vs. 'lightning-mountain' use
+> across bindings some of which I think have already been accepted.
+>
+
+Yes, other accepted drivers/bindings use 'lgm'. I will rename it to
+'intel,lgm-io'to be consistent.Thanks.
+
+Regards,
+Rahul
+
