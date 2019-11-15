@@ -2,92 +2,107 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 1BCD1FDCF6
-	for <lists+linux-gpio@lfdr.de>; Fri, 15 Nov 2019 13:04:20 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C5669FDDA9
+	for <lists+linux-gpio@lfdr.de>; Fri, 15 Nov 2019 13:26:11 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727527AbfKOMEI (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 15 Nov 2019 07:04:08 -0500
-Received: from mail-sz.amlogic.com ([211.162.65.117]:22340 "EHLO
-        mail-sz.amlogic.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727344AbfKOMEH (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 15 Nov 2019 07:04:07 -0500
-Received: from localhost.localdomain (10.28.8.19) by mail-sz.amlogic.com
- (10.28.11.5) with Microsoft SMTP Server id 15.1.1591.10; Fri, 15 Nov 2019
- 20:04:19 +0800
-From:   Qianggui Song <qianggui.song@amlogic.com>
-To:     Linus Walleij <linus.walleij@linaro.org>,
-        <linux-gpio@vger.kernel.org>
-CC:     Qianggui Song <qianggui.song@amlogic.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Jerome Brunet <jbrunet@baylibre.com>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        Carlo Caione <carlo@caione.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Xingyu Chen <xingyu.chen@amlogic.com>,
-        Jianxin Pan <jianxin.pan@amlogic.com>,
-        Hanjie Lin <hanjie.lin@amlogic.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-amlogic@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>
-Subject: [PATCH v6 3/3] arm64: dts: meson: a1: add pinctrl controller support
-Date:   Fri, 15 Nov 2019 20:03:49 +0800
-Message-ID: <1573819429-6937-4-git-send-email-qianggui.song@amlogic.com>
-X-Mailer: git-send-email 1.9.1
-In-Reply-To: <1573819429-6937-1-git-send-email-qianggui.song@amlogic.com>
-References: <1573819429-6937-1-git-send-email-qianggui.song@amlogic.com>
-MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.28.8.19]
+        id S1727743AbfKOMZV (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 15 Nov 2019 07:25:21 -0500
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:33208 "EHLO
+        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727733AbfKOMZU (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 15 Nov 2019 07:25:20 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
+        Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
+        List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
+        List-Archive; bh=HBh8VwyeABvY6DHkjMBOOalpvrT7tK3xjss5SybD1us=; b=MD9wcjunqubV
+        NGi6UMNeQkDXi5d7SiisFCRJukbrBl6/7Pq+XZekBI9jQlyfXeSX8lmdO0lXvJV4C7yQYeoohMQUF
+        OxJZ/h8PWuToNvsTrtRk2qG9UVAOeDCVmVWReJ4InbN4wCutx/w6a9w8pzKAD0jR93m347aUq7faG
+        5mERY=;
+Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=ypsilon.sirena.org.uk)
+        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <broonie@sirena.co.uk>)
+        id 1iVaf7-0000Mi-TE; Fri, 15 Nov 2019 12:25:17 +0000
+Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
+        id 50F6527415A7; Fri, 15 Nov 2019 12:25:17 +0000 (GMT)
+From:   Mark Brown <broonie@kernel.org>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Christophe Leroy <christophe.leroy@c-s.fr>,
+        Fabio Estevam <festevam@gmail.com>, linux-gpio@vger.kernel.org,
+        linux-spi@vger.kernel.org, Mark Brown <broonie@kernel.org>
+Subject: Applied "spi: fsl-cpm: Correct the free:ing" to the spi tree
+In-Reply-To: <20191113014442.12100-1-linus.walleij@linaro.org>
+X-Patchwork-Hint: ignore
+Message-Id: <20191115122517.50F6527415A7@ypsilon.sirena.org.uk>
+Date:   Fri, 15 Nov 2019 12:25:17 +0000 (GMT)
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-add peripheral pinctrl controller to a1 SoC
+The patch
 
-Signed-off-by: Qianggui Song <qianggui.song@amlogic.com>
+   spi: fsl-cpm: Correct the free:ing
+
+has been applied to the spi tree at
+
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git for-5.4
+
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.  
+
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
+
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
+
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+Thanks,
+Mark
+
+From c5923243eb3208ea63b5ed7905610039c4ca5201 Mon Sep 17 00:00:00 2001
+From: Linus Walleij <linus.walleij@linaro.org>
+Date: Wed, 13 Nov 2019 02:44:42 +0100
+Subject: [PATCH] spi: fsl-cpm: Correct the free:ing
+
+The fsl_spi_cpm_free() function does not make the same
+checks as the error path in fsl_spi_cpm_init() leading
+to crashes on error.
+
+Cc: Fabio Estevam <festevam@gmail.com>
+Reported-by: Christophe Leroy <christophe.leroy@c-s.fr>
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+Link: https://lore.kernel.org/r/20191113014442.12100-1-linus.walleij@linaro.org
+Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- arch/arm64/boot/dts/amlogic/meson-a1.dtsi | 18 ++++++++++++++++++
- 1 file changed, 18 insertions(+)
+ drivers/spi/spi-fsl-cpm.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/arch/arm64/boot/dts/amlogic/meson-a1.dtsi b/arch/arm64/boot/dts/amlogic/meson-a1.dtsi
-index 7210ad049d1d..0965259af869 100644
---- a/arch/arm64/boot/dts/amlogic/meson-a1.dtsi
-+++ b/arch/arm64/boot/dts/amlogic/meson-a1.dtsi
-@@ -5,6 +5,7 @@
- 
- #include <dt-bindings/interrupt-controller/irq.h>
- #include <dt-bindings/interrupt-controller/arm-gic.h>
-+#include <dt-bindings/gpio/meson-a1-gpio.h>
- 
- / {
- 	compatible = "amlogic,a1";
-@@ -74,6 +75,23 @@
- 			#size-cells = <2>;
- 			ranges = <0x0 0x0 0x0 0xfe000000 0x0 0x1000000>;
- 
-+			periphs_pinctrl: pinctrl@0400 {
-+				compatible = "amlogic,meson-a1-periphs-pinctrl";
-+				#address-cells = <2>;
-+				#size-cells = <2>;
-+				ranges;
-+
-+				gpio: bank@0400 {
-+					reg = <0x0 0x0400 0x0 0x003c>,
-+					      <0x0 0x0480 0x0 0x0118>;
-+					reg-names = "mux", "gpio";
-+					gpio-controller;
-+					#gpio-cells = <2>;
-+					gpio-ranges = <&periphs_pinctrl 0 0 62>;
-+				};
-+
-+			};
-+
- 			uart_AO: serial@1c00 {
- 				compatible = "amlogic,meson-gx-uart",
- 					     "amlogic,meson-ao-uart";
+diff --git a/drivers/spi/spi-fsl-cpm.c b/drivers/spi/spi-fsl-cpm.c
+index 858f0544289e..54ad0ac121e5 100644
+--- a/drivers/spi/spi-fsl-cpm.c
++++ b/drivers/spi/spi-fsl-cpm.c
+@@ -392,7 +392,8 @@ void fsl_spi_cpm_free(struct mpc8xxx_spi *mspi)
+ 	dma_unmap_single(dev, mspi->dma_dummy_rx, SPI_MRBLR, DMA_FROM_DEVICE);
+ 	dma_unmap_single(dev, mspi->dma_dummy_tx, PAGE_SIZE, DMA_TO_DEVICE);
+ 	cpm_muram_free(cpm_muram_offset(mspi->tx_bd));
+-	cpm_muram_free(cpm_muram_offset(mspi->pram));
++	if (!(mspi->flags & SPI_CPM1))
++		cpm_muram_free(cpm_muram_offset(mspi->pram));
+ 	fsl_spi_free_dummy_rx();
+ }
+ EXPORT_SYMBOL_GPL(fsl_spi_cpm_free);
 -- 
-1.9.1
+2.20.1
 
