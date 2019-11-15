@@ -2,24 +2,24 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id EEB1EFE795
+	by mail.lfdr.de (Postfix) with ESMTP id 7751CFE794
 	for <lists+linux-gpio@lfdr.de>; Fri, 15 Nov 2019 23:18:24 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727170AbfKOWRx (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 15 Nov 2019 17:17:53 -0500
-Received: from smtp.codeaurora.org ([198.145.29.96]:47448 "EHLO
+        id S1727121AbfKOWRw (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 15 Nov 2019 17:17:52 -0500
+Received: from smtp.codeaurora.org ([198.145.29.96]:47528 "EHLO
         smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727075AbfKOWRv (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 15 Nov 2019 17:17:51 -0500
+        with ESMTP id S1727146AbfKOWRw (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 15 Nov 2019 17:17:52 -0500
 Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 9E576611A6; Fri, 15 Nov 2019 22:17:49 +0000 (UTC)
+        id BF4D4611B4; Fri, 15 Nov 2019 22:17:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1573856269;
-        bh=kvfbMSlyjRr428zvEa7lwNZjaJQ2PcG+aqcLq/uH3ms=;
+        s=default; t=1573856270;
+        bh=nbNFiDBcfX6ZqXmll/SdzG8LzXJgn1NrzNnskwwtMM8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=S59ij60HnxwJWXy/k5H6eJ2lQpOtK764LwQq25NdTCBf4Ec9zGZ4SPRQ9CSJn9YOk
-         MsQ/8In5ctmIWuC3FXe1qRG5gjJJljVDCCb35bkeeET5ieTS0XQALQu8VUTOFBpJaf
-         BwtRC+B6Slz0gkOWsEhG7cOOonJC4hos0/E+PpJY=
+        b=guIrLa2aw9nOjgQFn/7iHXkgq3v4DnmSuPvw5yiZ3I9yd4UJ880IAXoDXJKYk1TUs
+         RR1et2bnOCSmHMZ/ct2DTaMHsPfOUx/9fjGAA4l57MWTmWTK6NbQ6G6zHQQWW9E0gz
+         g9k7ZpK9dzIJT434yFxqmI5WLOBSIP0lytDMXCyQ=
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
         pdx-caf-mail.web.codeaurora.org
 X-Spam-Level: 
@@ -30,16 +30,16 @@ Received: from codeaurora.org (i-global254.qualcomm.com [199.106.103.254])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
         (No client certificate requested)
         (Authenticated sender: ilina@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id D7BA36118E;
-        Fri, 15 Nov 2019 22:17:47 +0000 (UTC)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 084B3611A2;
+        Fri, 15 Nov 2019 22:17:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1573856268;
-        bh=kvfbMSlyjRr428zvEa7lwNZjaJQ2PcG+aqcLq/uH3ms=;
+        s=default; t=1573856269;
+        bh=nbNFiDBcfX6ZqXmll/SdzG8LzXJgn1NrzNnskwwtMM8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZIQe7049s/2ZY6AkDiIvDCRleiWKd5bpPfmJmsPgilJxEJvN4zgIbLV7x0gQjypWY
-         JZld9HJtOfcnm07jwIcBsD/WkifQL5M8SbZoQHLqyyYzsFybCIoLUX42fjMasMg3E8
-         JsCQGyr4WwNr7kvlgZnOYenSdxcwgaKtMYYIww3M=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org D7BA36118E
+        b=YtnHxcy5zzQoO3xXZn/xJPc6HNXGTXMBnGTkR4unbF6m2kOQvuNqxtaI/S/zoI6no
+         rBND7xP/m/F8W2L4fTlpLwrPl8HCamrRXKDxqyfvhbC06E+T91uKGj9W7j8mHD2DrU
+         2KhUdMO8XpdXISEREEn/A65PWbvJLFWprS6XKycg=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 084B3611A2
 Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
 Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=ilina@codeaurora.org
 From:   Lina Iyer <ilina@codeaurora.org>
@@ -49,9 +49,9 @@ Cc:     evgreen@chromium.org, linux-kernel@vger.kernel.org,
         linux-arm-msm@vger.kernel.org, mkshah@codeaurora.org,
         linux-gpio@vger.kernel.org, agross@kernel.org,
         dianders@chromium.org, Lina Iyer <ilina@codeaurora.org>
-Subject: [PATCH v2 06/12] genirq: Introduce irq_chip_get/set_parent_state calls
-Date:   Fri, 15 Nov 2019 15:11:49 -0700
-Message-Id: <1573855915-9841-7-git-send-email-ilina@codeaurora.org>
+Subject: [PATCH v2 07/12] drivers: irqchip: pdc: Add irqchip set/get state calls
+Date:   Fri, 15 Nov 2019 15:11:50 -0700
+Message-Id: <1573855915-9841-8-git-send-email-ilina@codeaurora.org>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1573855915-9841-1-git-send-email-ilina@codeaurora.org>
 References: <1573855915-9841-1-git-send-email-ilina@codeaurora.org>
@@ -62,103 +62,68 @@ X-Mailing-List: linux-gpio@vger.kernel.org
 
 From: Maulik Shah <mkshah@codeaurora.org>
 
-On certain QTI chipsets some GPIOs are direct-connect interrupts to the
-GIC to be used as regular interrupt lines. When the GPIOs are not used
-for interrupt generation the interrupt line is disabled. But disabling
-the interrupt at GIC does not prevent the interrupt to be reported as
-pending at GIC_ISPEND. Later, when drivers call enable_irq() on the
-interrupt, an unwanted interrupt occurs.
-
-Introduce get and set methods for irqchip's parent to clear it's pending
-irq state. This then can be invoked by the GPIO interrupt controller on
-the parents in it hierarchy to clear the interrupt before enabling the
-interrupt.
+Add irqchip calls to set/get interrupt state from the parent interrupt
+controller. When GPIOs are renabled as interrupt lines, it is desirable
+to clear the interrupt state at the GIC. This avoids any unwanted
+interrupt as a result of stale pending state recorded when the line was
+used as a GPIO.
 
 Signed-off-by: Maulik Shah <mkshah@codeaurora.org>
-[updated commit text and minor code fixes]
+[updated commit text, rearranged code]
 Signed-off-by: Lina Iyer <ilina@codeaurora.org>
 Reviewed-by: Stephen Boyd <swboyd@chromium.org>
 ---
-Changes in RFC v2 -
-	- Rephrase commit text
-	- Address code review comments
----
- include/linux/irq.h |  6 ++++++
- kernel/irq/chip.c   | 44 ++++++++++++++++++++++++++++++++++++++++++++
- 2 files changed, 50 insertions(+)
+ drivers/irqchip/qcom-pdc.c | 23 +++++++++++++++++++++++
+ 1 file changed, 23 insertions(+)
 
-diff --git a/include/linux/irq.h b/include/linux/irq.h
-index fb301cf..7853eb9 100644
---- a/include/linux/irq.h
-+++ b/include/linux/irq.h
-@@ -610,6 +610,12 @@ extern int irq_chip_pm_put(struct irq_data *data);
- #ifdef	CONFIG_IRQ_DOMAIN_HIERARCHY
- extern void handle_fasteoi_ack_irq(struct irq_desc *desc);
- extern void handle_fasteoi_mask_irq(struct irq_desc *desc);
-+extern int irq_chip_set_parent_state(struct irq_data *data,
-+				     enum irqchip_irq_state which,
-+				     bool val);
-+extern int irq_chip_get_parent_state(struct irq_data *data,
-+				     enum irqchip_irq_state which,
-+				     bool *state);
- extern void irq_chip_enable_parent(struct irq_data *data);
- extern void irq_chip_disable_parent(struct irq_data *data);
- extern void irq_chip_ack_parent(struct irq_data *data);
-diff --git a/kernel/irq/chip.c b/kernel/irq/chip.c
-index b76703b..b3fa2d8 100644
---- a/kernel/irq/chip.c
-+++ b/kernel/irq/chip.c
-@@ -1298,6 +1298,50 @@ EXPORT_SYMBOL_GPL(handle_fasteoi_mask_irq);
- #endif /* CONFIG_IRQ_FASTEOI_HIERARCHY_HANDLERS */
+diff --git a/drivers/irqchip/qcom-pdc.c b/drivers/irqchip/qcom-pdc.c
+index 4f2c762..6ae9e1f 100644
+--- a/drivers/irqchip/qcom-pdc.c
++++ b/drivers/irqchip/qcom-pdc.c
+@@ -5,6 +5,7 @@
  
- /**
-+ * irq_chip_set_parent_state - set the state of a parent interrupt.
-+ *
-+ * @data: Pointer to interrupt specific data
-+ * @which: State to be restored (one of IRQCHIP_STATE_*)
-+ * @val: Value corresponding to @which
-+ *
-+ * Conditional success, if the underlying irqchip does not implement it.
-+ */
-+int irq_chip_set_parent_state(struct irq_data *data,
-+			      enum irqchip_irq_state which,
-+			      bool val)
+ #include <linux/err.h>
+ #include <linux/init.h>
++#include <linux/interrupt.h>
+ #include <linux/irq.h>
+ #include <linux/irqchip.h>
+ #include <linux/irqdomain.h>
+@@ -50,6 +51,26 @@ static u32 pdc_reg_read(int reg, u32 i)
+ 	return readl_relaxed(pdc_base + reg + i * sizeof(u32));
+ }
+ 
++static int qcom_pdc_gic_get_irqchip_state(struct irq_data *d,
++					  enum irqchip_irq_state which,
++					  bool *state)
 +{
-+	data = data->parent_data;
-+
-+	if (!data || !data->chip->irq_set_irqchip_state)
++	if (d->hwirq == GPIO_NO_WAKE_IRQ)
 +		return 0;
 +
-+	return data->chip->irq_set_irqchip_state(data, which, val);
++	return irq_chip_get_parent_state(d, which, state);
 +}
-+EXPORT_SYMBOL_GPL(irq_chip_set_parent_state);
 +
-+/**
-+ * irq_chip_get_parent_state - get the state of a parent interrupt.
-+ *
-+ * @data: Pointer to interrupt specific data
-+ * @which: one of IRQCHIP_STATE_* the caller wants to know
-+ * @state: a pointer to a boolean where the state is to be stored
-+ *
-+ * Conditional success, if the underlying irqchip does not implement it.
-+ */
-+int irq_chip_get_parent_state(struct irq_data *data,
-+			      enum irqchip_irq_state which,
-+			      bool *state)
++static int qcom_pdc_gic_set_irqchip_state(struct irq_data *d,
++					  enum irqchip_irq_state which,
++					  bool value)
 +{
-+	data = data->parent_data;
-+
-+	if (!data || !data->chip->irq_get_irqchip_state)
++	if (d->hwirq == GPIO_NO_WAKE_IRQ)
 +		return 0;
 +
-+	return data->chip->irq_get_irqchip_state(data, which, state);
++	return irq_chip_set_parent_state(d, which, value);
 +}
-+EXPORT_SYMBOL_GPL(irq_chip_get_parent_state);
 +
-+/**
-  * irq_chip_enable_parent - Enable the parent interrupt (defaults to unmask if
-  * NULL)
-  * @data:	Pointer to interrupt specific data
+ static void pdc_enable_intr(struct irq_data *d, bool on)
+ {
+ 	int pin_out = d->hwirq;
+@@ -178,6 +199,8 @@ static struct irq_chip qcom_pdc_gic_chip = {
+ 	.irq_unmask		= qcom_pdc_gic_unmask,
+ 	.irq_disable		= qcom_pdc_gic_disable,
+ 	.irq_enable		= qcom_pdc_gic_enable,
++	.irq_get_irqchip_state	= qcom_pdc_gic_get_irqchip_state,
++	.irq_set_irqchip_state	= qcom_pdc_gic_set_irqchip_state,
+ 	.irq_retrigger		= irq_chip_retrigger_hierarchy,
+ 	.irq_set_type		= qcom_pdc_gic_set_type,
+ 	.flags			= IRQCHIP_MASK_ON_SUSPEND |
 -- 
 The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
 a Linux Foundation Collaborative Project
