@@ -2,55 +2,57 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 3834EFE057
-	for <lists+linux-gpio@lfdr.de>; Fri, 15 Nov 2019 15:44:19 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 93788FE059
+	for <lists+linux-gpio@lfdr.de>; Fri, 15 Nov 2019 15:44:30 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727646AbfKOOoS (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 15 Nov 2019 09:44:18 -0500
-Received: from mail-pj1-f45.google.com ([209.85.216.45]:34317 "EHLO
-        mail-pj1-f45.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727496AbfKOOoS (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 15 Nov 2019 09:44:18 -0500
-Received: by mail-pj1-f45.google.com with SMTP id bo14so84641pjb.1
-        for <linux-gpio@vger.kernel.org>; Fri, 15 Nov 2019 06:44:18 -0800 (PST)
+        id S1727730AbfKOOo3 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 15 Nov 2019 09:44:29 -0500
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:38962 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727656AbfKOOo3 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 15 Nov 2019 09:44:29 -0500
+Received: by mail-pl1-f193.google.com with SMTP id o9so4804728plk.6
+        for <linux-gpio@vger.kernel.org>; Fri, 15 Nov 2019 06:44:29 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=sj+3pEIt9b7NINms2BIsFgDPXEg4iV0iywUHScFaTrA=;
-        b=XBQN0zK5ObFc5aBLva0UHZKC0OFwG855zAiyarK0DmiEziSs4aj5YCdBxfwsm/7r/i
-         aw02/yB8o8FvYZt62orRJ+LF8E+vSdGVtTTTJ2ZBpXARkX2v8ZflHT9lDqqBzzRl3v1h
-         SL7bAR6x2ArFuB/Y6x2VVtuQWtqqEWm37p7lExTe3oJMOPHlg8zfLLfDpmSGAbccHu06
-         8oinqynYU0txQqo2nihYRehwf8i6NV4n/txtVPVM1KCOXtHrNBL8AD4Sgu2LZFcijg+5
-         wBTHXIuidB7LKZJ2aLMjAXlD8rSv5tnvWe7kDN8FhoIC005GiZPhItvPKmp5gAW+/xij
-         uemA==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=mvD88vYNW9HnvaEhfDiwyXuHVQ3vHAbyWxIkK5B1PWY=;
+        b=JbEdmQCCnosYsvpePNldn6WuujZmGEVdlXV9wksphmNxo0/kGrSBAdjaH7FprJPhPA
+         keIV7zCgfjbNjnaDgWXknLLagUrZ+H3vOst5llm6hE2g9bIki9Oq/3jBxTtEF8dbJMVC
+         koKA7FfWRRM65JMzYWjNeo4IB2VfYRFo8MKMf720GkxvA9z4CXDVTNQdfyhjo2MTIhOV
+         cUGqgHGVZdSfEI2Z8b+p5pPAvttLYsBclk0y2VINKzCdfF9LzqqZcSKLf9+/zVsj1rG+
+         l+1a5wGtc9I/T2i9PaW0RxJ0Q9i4s5ndqM7PNsVdjFAvfl2VgceVv5p/WUm6stEoZyg+
+         iCrQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=sj+3pEIt9b7NINms2BIsFgDPXEg4iV0iywUHScFaTrA=;
-        b=EZaqMr2wvt4wYf6O3Z5UeRvN2tw4xIvbcCeI9wE6Orh+xsHLRAeZWbVAg2yAtZNsF1
-         4sfUYBdk1uNzBAIyFfJROKo4+WPdlznuwhjcF1eyyJ/TFW60hxKAzJD6C9tUaD5+k4C+
-         ZxJMMKniIGkvVBwLMTyRDvt7SeHDi9br+oCBQZnbfqjJ/9ToU3/M/Rf8Uwe5oO8RyoxV
-         q66CsxGSr0mU31SdVjYFPEsRNKXNHy1x3vvn0RL2AVAo+tuQ56C98cnTutHKqYDq7Gek
-         azaPWfuO00+yDga+Uu2VCzIUH8CiXXGpHSTlKtSk5Uggnu2fJNKdbx/KXwq77H3Pp7h3
-         HUvA==
-X-Gm-Message-State: APjAAAWZyvlmt+o838JU14N52QFxLZLu0e/+63RvAA/k2wtT/e9oGqX4
-        9M1UH8UzlIM1yDUzAhgY/5umVN9gdas=
-X-Google-Smtp-Source: APXvYqwQGgiLu7t3kLXFP2rERAdXd23xkbOcNUKVtZxW6HK1OrepKHLpOxxxfbXnqdVdGcoEOVYWEg==
-X-Received: by 2002:a17:90a:22a6:: with SMTP id s35mr19525328pjc.3.1573829057010;
-        Fri, 15 Nov 2019 06:44:17 -0800 (PST)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=mvD88vYNW9HnvaEhfDiwyXuHVQ3vHAbyWxIkK5B1PWY=;
+        b=aiRffpujvwEQhljZ4CC1p9OkZcpQWpluvp22QbaUvf7No4yMYAYnyhGlwP3LDZsZfX
+         ETlojvlY92oGCNbfSnGoA1z2ctux3lY5Or3wWvMBjhiNfJfLk/G3kQBm5hMvMIjF/FO5
+         1IKW5Usi7X/uYv8F1WKgPwwjyI8TO7oFIMLqfT5RgHwUT7C3j4qheftMbZD97MY2hiVo
+         tOy3QE0Eo3YrJVyDXBn/jkMlnTVVi2Xnc4Y+h9WwQCtvfJUY2i+mhfGsGxUDPzqOH/ho
+         frQxf1S/l2JMK+QkF7WRL7imueT8qMiW6dpsh/QcHUq2rucStRCupDISmmWxQ/LodLgx
+         v/zA==
+X-Gm-Message-State: APjAAAU7VnKchNTYH9Se7ZBGwISKsqWdSkYpRdPiSMGZ3cULoLhvHzSq
+        gDTHBtmQFnqf6/0ajPIjJwticaCwrWw=
+X-Google-Smtp-Source: APXvYqzgf09mTuEvHEM4FNAItMVoWVkLABW8SNoF3vCTCwQz6Yzt8kdm9tx1MmeGSmjs+UfyuQ0OBQ==
+X-Received: by 2002:a17:902:8d81:: with SMTP id v1mr12196844plo.289.1573829068580;
+        Fri, 15 Nov 2019 06:44:28 -0800 (PST)
 Received: from sol.lan (220-235-109-115.dyn.iinet.net.au. [220.235.109.115])
-        by smtp.gmail.com with ESMTPSA id y123sm10517726pfg.64.2019.11.15.06.44.13
+        by smtp.gmail.com with ESMTPSA id y123sm10517726pfg.64.2019.11.15.06.44.26
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 15 Nov 2019 06:44:15 -0800 (PST)
+        Fri, 15 Nov 2019 06:44:28 -0800 (PST)
 From:   Kent Gibson <warthog618@gmail.com>
 To:     linux-gpio@vger.kernel.org, bgolaszewski@baylibre.com
 Cc:     Kent Gibson <warthog618@gmail.com>
-Subject: [libgpiod] [PATCH 00/19] Add support for bias flags and SET_CONFIG
-Date:   Fri, 15 Nov 2019 22:43:36 +0800
-Message-Id: <20191115144355.975-1-warthog618@gmail.com>
+Subject: [libgpiod] [PATCH 01/19] core: move request flag to handle flag conversion into a separate function
+Date:   Fri, 15 Nov 2019 22:43:37 +0800
+Message-Id: <20191115144355.975-2-warthog618@gmail.com>
 X-Mailer: git-send-email 2.24.0
+In-Reply-To: <20191115144355.975-1-warthog618@gmail.com>
+References: <20191115144355.975-1-warthog618@gmail.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-gpio-owner@vger.kernel.org
@@ -58,62 +60,79 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-This patch series adds support for changes to the GPIO uAPI that are on
-track to be included in the v5.5 kernel.  There are two components to the
-uAPI changes - the addition of bias flags and a new SET_CONFIG ioctl.  This
-series adds support to the libgpiod API, and to both C++ and Python
-bindings, for both of those components.
+Move common conversion code from line_request_values and
+line_request_event_single into a separate function to simplify adding
+additional flags.
 
-The libgpiod tools are also updated, where appropriate, to support the bias
-flags.
+Signed-off-by: Kent Gibson <warthog618@gmail.com>
+---
+ lib/core.c | 31 +++++++++++++++++--------------
+ 1 file changed, 17 insertions(+), 14 deletions(-)
 
-There are a few additional patches that serve to restructure the code to
-simplify subsequent patches, or to fix minor problems discovered during
-development. These patches are generally adjacent to the main patch most
-relevant to that patch.
-
-The series is based on the current libgpiod master@9ed02fc.
-
-Kent Gibson (19):
-  core: move request flag to handle flag conversion into a separate
-    function
-  API: add support for bias flags
-  core: fix misspelling of parameter
-  tests: add tests for bias flags
-  bindings: cxx: drop noexcept from direction and active_state
-  bindings: cxx: initialise bitset with integer instead of string
-  bindings: cxx: add support for bias flags
-  bindings: cxx: tests: add tests for bias flags
-  bindings: python: add support for bias flags
-  bindings: python: tests: add tests for bias flags
-  API: add support for SET_CONFIG
-  tests: add tests for SET_CONFIG
-  core: allow gpiod_line_set_value_bulk to accept null values
-  bindings: cxx: add support for SET_CONFIG
-  bindings: cxx: tests: add tests for SET_CONFIG methods
-  bindings: python: add support for SET_CONFIG
-  bindings: python: tests: add tests for SET_CONFIG methods
-  tools: add support for bias flags
-  treewide: change "correspond with" to "correspond to"
-
- bindings/cxx/gpiod.hpp                 |  85 +++-
- bindings/cxx/line.cpp                  |  60 ++-
- bindings/cxx/line_bulk.cpp             |  95 ++++-
- bindings/cxx/tests/tests-line.cpp      | 215 ++++++++++
- bindings/python/gpiodmodule.c          | 469 +++++++++++++++++++++-
- bindings/python/tests/gpiod_py_test.py | 254 ++++++++++++
- include/gpiod.h                        | 303 +++++++++++++-
- lib/core.c                             | 250 ++++++++++--
- lib/ctxless.c                          | 115 +++++-
- tests/mockup/gpio-mockup.c             |   2 +-
- tests/tests-ctxless.c                  |  64 ++-
- tests/tests-event.c                    | 120 ++++++
- tests/tests-line.c                     | 522 ++++++++++++++++++++++++-
- tools/gpioget.c                        |  24 +-
- tools/gpiomon.c                        |  28 +-
- tools/gpioset.c                        |  26 +-
- 16 files changed, 2561 insertions(+), 71 deletions(-)
-
+diff --git a/lib/core.c b/lib/core.c
+index a04514e..f05e595 100644
+--- a/lib/core.c
++++ b/lib/core.c
+@@ -463,6 +463,20 @@ static bool line_bulk_all_free(struct gpiod_line_bulk *bulk)
+ 	return true;
+ }
+ 
++static __u32 line_request_flag_to_gpio_handleflag(int flags)
++{
++	int hflags = 0;
++
++	if (flags & GPIOD_LINE_REQUEST_FLAG_OPEN_DRAIN)
++		hflags |= GPIOHANDLE_REQUEST_OPEN_DRAIN;
++	if (flags & GPIOD_LINE_REQUEST_FLAG_OPEN_SOURCE)
++		hflags |= GPIOHANDLE_REQUEST_OPEN_SOURCE;
++	if (flags & GPIOD_LINE_REQUEST_FLAG_ACTIVE_LOW)
++		hflags |= GPIOHANDLE_REQUEST_ACTIVE_LOW;
++
++	return hflags;
++}
++
+ static int line_request_values(struct gpiod_line_bulk *bulk,
+ 			       const struct gpiod_line_request_config *config,
+ 			       const int *default_vals)
+@@ -488,19 +502,14 @@ static int line_request_values(struct gpiod_line_bulk *bulk,
+ 
+ 	memset(&req, 0, sizeof(req));
+ 
+-	if (config->flags & GPIOD_LINE_REQUEST_FLAG_OPEN_DRAIN)
+-		req.flags |= GPIOHANDLE_REQUEST_OPEN_DRAIN;
+-	if (config->flags & GPIOD_LINE_REQUEST_FLAG_OPEN_SOURCE)
+-		req.flags |= GPIOHANDLE_REQUEST_OPEN_SOURCE;
+-	if (config->flags & GPIOD_LINE_REQUEST_FLAG_ACTIVE_LOW)
+-		req.flags |= GPIOHANDLE_REQUEST_ACTIVE_LOW;
++	req.lines = gpiod_line_bulk_num_lines(bulk);
++	req.flags = line_request_flag_to_gpio_handleflag(config->flags);
+ 
+ 	if (config->request_type == GPIOD_LINE_REQUEST_DIRECTION_INPUT)
+ 		req.flags |= GPIOHANDLE_REQUEST_INPUT;
+ 	else if (config->request_type == GPIOD_LINE_REQUEST_DIRECTION_OUTPUT)
+ 		req.flags |= GPIOHANDLE_REQUEST_OUTPUT;
+ 
+-	req.lines = gpiod_line_bulk_num_lines(bulk);
+ 
+ 	gpiod_line_bulk_foreach_line_off(bulk, line, i) {
+ 		req.lineoffsets[i] = gpiod_line_offset(line);
+@@ -548,15 +557,9 @@ static int line_request_event_single(struct gpiod_line *line,
+ 			sizeof(req.consumer_label) - 1);
+ 
+ 	req.lineoffset = gpiod_line_offset(line);
++	req.handleflags = line_request_flag_to_gpio_handleflag(config->flags);
+ 	req.handleflags |= GPIOHANDLE_REQUEST_INPUT;
+ 
+-	if (config->flags & GPIOD_LINE_REQUEST_FLAG_OPEN_DRAIN)
+-		req.handleflags |= GPIOHANDLE_REQUEST_OPEN_DRAIN;
+-	if (config->flags & GPIOD_LINE_REQUEST_FLAG_OPEN_SOURCE)
+-		req.handleflags |= GPIOHANDLE_REQUEST_OPEN_SOURCE;
+-	if (config->flags & GPIOD_LINE_REQUEST_FLAG_ACTIVE_LOW)
+-		req.handleflags |= GPIOHANDLE_REQUEST_ACTIVE_LOW;
+-
+ 	if (config->request_type == GPIOD_LINE_REQUEST_EVENT_RISING_EDGE)
+ 		req.eventflags |= GPIOEVENT_REQUEST_RISING_EDGE;
+ 	else if (config->request_type == GPIOD_LINE_REQUEST_EVENT_FALLING_EDGE)
 -- 
 2.24.0
 
