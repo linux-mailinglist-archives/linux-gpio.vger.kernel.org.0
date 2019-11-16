@@ -2,147 +2,102 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 4D00CFECF4
-	for <lists+linux-gpio@lfdr.de>; Sat, 16 Nov 2019 16:40:36 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7C93FFEF05
+	for <lists+linux-gpio@lfdr.de>; Sat, 16 Nov 2019 16:56:07 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727693AbfKPPkf (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sat, 16 Nov 2019 10:40:35 -0500
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:35955 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727655AbfKPPkf (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sat, 16 Nov 2019 10:40:35 -0500
-Received: by mail-pl1-f194.google.com with SMTP id d7so6821752pls.3
-        for <linux-gpio@vger.kernel.org>; Sat, 16 Nov 2019 07:40:35 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=etg9fHYz7WXIc2RfXQnqDEfb4uSTSSnNU6MTQluwib4=;
-        b=CKQuuFrSpJiTnUmnm1n1w2v779AZJcdjmYb2OjDwOabjtF4WY9M4o4/A3gctf3e0Ax
-         ldKDWqcoXrS3MRyPMTz7JVbzMR4lctelQIPwM4IEDAqHQ5FC3FYi61jPG+ZSerGQyqYZ
-         86SPsMUV8sxL55+baqRhYUNZoetKlrCABZw2LJqEHGAWG4XVr8RiwmtnoDb+68+eP/QB
-         msdREXKo4MFENGo7NwCE30xTDCFmwOo94JtSKYZe8zncUPUPzSpmxY356x5QmH0377GQ
-         kZoWgxqH85CM5bT0QLR7u2lDcm7lkh980q/rUkJfdLFMWxmhrOCP23Xogeg4kcF9vjj8
-         rh4Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=etg9fHYz7WXIc2RfXQnqDEfb4uSTSSnNU6MTQluwib4=;
-        b=nTDTQy8j80BMjpKjm4Yo0ki03WT19fok5mTXy70JWUGgv0lmPJ7JwZGry93kvmabkz
-         471UlaaJ+4mjTuLfHn/y4IMXU6zGzal4epqA3QWT34jzyhaFMeBTiujKvU3Z8YC5gkTU
-         MlJoUC2dtZIevG48CWXAVcIgHJt+wOy0G8dj89y+YzfxVi18R83PKgllNvDeYVVKWIVG
-         8n6eRVjJnLf7u55+SF0PyfewtLbo8QYr93eojhX0qbkaiRVEsbwiUECW9FGtSUcfnXvP
-         Uq934VVlBp/jdVSMQFYJjzGoNG5SbinCvlw5rvFmoE2I9Z6jNHehKKxj+6X7LEQJehXq
-         HxBA==
-X-Gm-Message-State: APjAAAWRbPzsi0AS2UxAexTqEMm0EA33JAof8unBoIpACWNrtok6zoxU
-        TSCpE1VMFlgJL1J+fxaJ5VxbBhCnJVwemw==
-X-Google-Smtp-Source: APXvYqxnjro41OhvyH7nvi9utaY9NiGMdSUsBUL+7XTUGXlU6gZXFJBtidKEW2MdnMDbip2G9yhM6A==
-X-Received: by 2002:a17:90b:11cb:: with SMTP id gv11mr27419477pjb.61.1573918834069;
-        Sat, 16 Nov 2019 07:40:34 -0800 (PST)
-Received: from sol (220-235-109-115.dyn.iinet.net.au. [220.235.109.115])
-        by smtp.gmail.com with ESMTPSA id b82sm14649831pfb.33.2019.11.16.07.40.31
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Sat, 16 Nov 2019 07:40:33 -0800 (PST)
-Date:   Sat, 16 Nov 2019 23:40:28 +0800
-From:   Kent Gibson <warthog618@gmail.com>
-To:     linux-gpio@vger.kernel.org, bgolaszewski@baylibre.com
-Subject: Re: [libgpiod] [PATCH 18/19] tools: add support for bias flags
-Message-ID: <20191116154028.GA30166@sol>
-References: <20191115144355.975-1-warthog618@gmail.com>
- <20191115144355.975-19-warthog618@gmail.com>
+        id S1730263AbfKPPz6 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sat, 16 Nov 2019 10:55:58 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37628 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731627AbfKPPzd (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Sat, 16 Nov 2019 10:55:33 -0500
+Received: from sasha-vm.mshome.net (unknown [50.234.116.4])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A25B92192D;
+        Sat, 16 Nov 2019 15:55:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1573919732;
+        bh=tHz6rQfVRrlihB6AmfT2FhFCw8KS4l93N13Y6nXzowU=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=2IAX7hRBOK7uSI/oP6sQi5n53JJ4J0oPkmMsnH4Yi1pI35Kqqta3nDxeg0GuFUn/r
+         NlE5bTLz7v0LSbn8pKMjJ7wQqcI8DnII5IgF5SwY2BQwVYHrFjc4cS5C9KnErDBafa
+         bVOM2dowvxDrj78cdBcijEqYyJ+g1hA4wsJPkcHw=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Brian Masney <masneyb@onstation.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Sasha Levin <sashal@kernel.org>, linux-arm-msm@vger.kernel.org,
+        linux-gpio@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.4 74/77] pinctrl: qcom: spmi-gpio: fix gpio-hog related boot issues
+Date:   Sat, 16 Nov 2019 10:53:36 -0500
+Message-Id: <20191116155339.11909-74-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20191116155339.11909-1-sashal@kernel.org>
+References: <20191116155339.11909-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191115144355.975-19-warthog618@gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Nov 15, 2019 at 10:43:54PM +0800, Kent Gibson wrote:
-> Add support for bias flags to applicable tools - gpioget, gpioset, and
-> gpiomon.
-> 
-> Signed-off-by: Kent Gibson <warthog618@gmail.com>
-> ---
->  tools/gpioget.c | 24 ++++++++++++++++++++----
->  tools/gpiomon.c | 28 ++++++++++++++++++++++------
->  tools/gpioset.c | 26 +++++++++++++++++++++-----
->  3 files changed, 63 insertions(+), 15 deletions(-)
-> 
-> diff --git a/tools/gpioget.c b/tools/gpioget.c
-> index 196ebeb..025811a 100644
-> --- a/tools/gpioget.c
-> +++ b/tools/gpioget.c
-> @@ -17,10 +17,13 @@ static const struct option longopts[] = {
->  	{ "help",	no_argument,	NULL,	'h' },
->  	{ "version",	no_argument,	NULL,	'v' },
->  	{ "active-low",	no_argument,	NULL,	'l' },
-> +	{ "pull-down",	no_argument,	NULL,	'D' },
-> +	{ "pull-up",	no_argument,	NULL,	'U' },
-> +	{ "bias-disable", no_argument,	NULL,	'B' },
->  	{ GETOPT_NULL_LONGOPT },
->  };
->  
-> -static const char *const shortopts = "+hvl";
-> +static const char *const shortopts = "+hvlDUB";
->  
->  static void print_help(void)
->  {
-> @@ -32,6 +35,9 @@ static void print_help(void)
->  	printf("  -h, --help:\t\tdisplay this message and exit\n");
->  	printf("  -v, --version:\tdisplay the version and exit\n");
->  	printf("  -l, --active-low:\tset the line active state to low\n");
-> +	printf("  -D, --pull-down:\tenable internal pull-down\n");
-> +	printf("  -U, --pull-up:\tenable internal pull-up\n");
-> +	printf("  -B, --bias-disable:\tdisable internal bias\n");
->  }
->  
->  int main(int argc, char **argv)
-> @@ -39,6 +45,7 @@ int main(int argc, char **argv)
->  	unsigned int *offsets, i, num_lines;
->  	int *values, optc, opti, rv;
->  	bool active_low = false;
-> +	int flags = 0;
->  	char *device, *end;
->  
->  	for (;;) {
-> @@ -56,6 +63,15 @@ int main(int argc, char **argv)
->  		case 'l':
->  			active_low = true;
->  			break;
-> +		case 'D':
-> +			flags |= GPIOD_LINE_REQUEST_FLAG_BIAS_PULL_DOWN;
-> +			break;
-> +		case 'U':
-> +			flags |= GPIOD_LINE_REQUEST_FLAG_BIAS_PULL_UP;
-> +			break;
-> +		case 'B':
-> +			flags |= GPIOD_LINE_REQUEST_FLAG_BIAS_DISABLE;
-> +			break;
->  		case '?':
->  			die("try %s --help", get_progname());
->  		default:
-> @@ -86,9 +102,9 @@ int main(int argc, char **argv)
->  			die("invalid GPIO offset: %s", argv[i + 1]);
->  	}
->  
+From: Brian Masney <masneyb@onstation.org>
 
-Nuts - this is wrong - it should be using the CTXLESS flags, not the 
-LINE_REQUEST flags.  That applies to all three of the tools changed.
-I forgot to propagate the last minute CTXLESS changes to the tools.
-And unfortunately we don't have test cases for the tools :-(.
-I've got a fix in my github branch that I will incorporate into v2.
+[ Upstream commit 149a96047237574b756d872007c006acd0cc6687 ]
 
-I'm also wondering if it would be preferable to replace the individual
-bias command line flags with a single bias parameter, e.g. --bias=pull-up
-I've coded that in my github branch as well, if you would care to
-compare.
+When attempting to setup up a gpio hog, device probing would repeatedly
+fail with -EPROBE_DEFERED errors. It was caused by a circular dependency
+between the gpio and pinctrl frameworks. If the gpio-ranges property is
+present in device tree, then the gpio framework will handle the gpio pin
+registration and eliminate the circular dependency.
 
-Let me know if you'd like a v2, otherwise I'll hold off for a few days
-in case something else crops up.
+See Christian Lamparter's commit a86caa9ba5d7 ("pinctrl: msm: fix
+gpio-hog related boot issues") for a detailed commit message that
+explains the issue in much more detail. The code comment in this commit
+came from Christian's commit.
 
-Cheers,
-Kent.
+Signed-off-by: Brian Masney <masneyb@onstation.org>
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/pinctrl/qcom/pinctrl-spmi-gpio.c | 21 +++++++++++++++++----
+ 1 file changed, 17 insertions(+), 4 deletions(-)
+
+diff --git a/drivers/pinctrl/qcom/pinctrl-spmi-gpio.c b/drivers/pinctrl/qcom/pinctrl-spmi-gpio.c
+index 4ea810cafaac6..913b2604d3454 100644
+--- a/drivers/pinctrl/qcom/pinctrl-spmi-gpio.c
++++ b/drivers/pinctrl/qcom/pinctrl-spmi-gpio.c
+@@ -793,10 +793,23 @@ static int pmic_gpio_probe(struct platform_device *pdev)
+ 		goto err_chip;
+ 	}
+ 
+-	ret = gpiochip_add_pin_range(&state->chip, dev_name(dev), 0, 0, npins);
+-	if (ret) {
+-		dev_err(dev, "failed to add pin range\n");
+-		goto err_range;
++	/*
++	 * For DeviceTree-supported systems, the gpio core checks the
++	 * pinctrl's device node for the "gpio-ranges" property.
++	 * If it is present, it takes care of adding the pin ranges
++	 * for the driver. In this case the driver can skip ahead.
++	 *
++	 * In order to remain compatible with older, existing DeviceTree
++	 * files which don't set the "gpio-ranges" property or systems that
++	 * utilize ACPI the driver has to call gpiochip_add_pin_range().
++	 */
++	if (!of_property_read_bool(dev->of_node, "gpio-ranges")) {
++		ret = gpiochip_add_pin_range(&state->chip, dev_name(dev), 0, 0,
++					     npins);
++		if (ret) {
++			dev_err(dev, "failed to add pin range\n");
++			goto err_range;
++		}
+ 	}
+ 
+ 	return 0;
+-- 
+2.20.1
+
