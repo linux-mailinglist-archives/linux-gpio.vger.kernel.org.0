@@ -2,37 +2,36 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 6329AFF3DD
-	for <lists+linux-gpio@lfdr.de>; Sat, 16 Nov 2019 17:28:40 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7EDE6FF388
+	for <lists+linux-gpio@lfdr.de>; Sat, 16 Nov 2019 17:26:25 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727773AbfKPPlS (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sat, 16 Nov 2019 10:41:18 -0500
-Received: from mail.kernel.org ([198.145.29.99]:44244 "EHLO mail.kernel.org"
+        id S1728073AbfKPPl6 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sat, 16 Nov 2019 10:41:58 -0500
+Received: from mail.kernel.org ([198.145.29.99]:45320 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727556AbfKPPlR (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Sat, 16 Nov 2019 10:41:17 -0500
+        id S1728064AbfKPPl6 (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Sat, 16 Nov 2019 10:41:58 -0500
 Received: from sasha-vm.mshome.net (unknown [50.234.116.4])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9936020740;
-        Sat, 16 Nov 2019 15:41:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4B42820854;
+        Sat, 16 Nov 2019 15:41:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573918877;
-        bh=hQREgqaink3iuJiBJ6qFVYV+ZcjGT3/g+cK8dXTXJjc=;
+        s=default; t=1573918917;
+        bh=AFXHZLOietu/5Qoi+Zd8KLI2EG/uE9+32R3/Z1FPs5M=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0uD1gvp1ZST0epJCDOaT2KKMAgVHMfn0yZWSzWqNkIPORrhlfE0GMh7rRqM/0ZhLz
-         DJF3LvGv0uodV0Fd9MLL4Y3QYGTX2wsu9tzZnnmydS6oekJDADyn62yHaaI/GI0I1a
-         KUTg1+fyZem3oZkzYPAt7UF/4qH2g6Fvn6ljXxkY=
+        b=tU2GYp3LbtiPNvimtfHI/QdGk+N9ABAxi78f2U2oYQnEKQGzb/Ju1CZT1RssAfhfx
+         NKQpI/45diwdSkrJF10dRtvDsK8WFFcwAPYXtPTO9qgzob7kmkdIjHrIdLQZ4oxf+i
+         wflhf2tGkoECL0g5yP0SV74a7gV7aYW//W/+2acY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        Charles Keepax <ckeepax@opensource.cirrus.com>,
+Cc:     Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
         Linus Walleij <linus.walleij@linaro.org>,
-        Sasha Levin <sashal@kernel.org>, patches@opensource.cirrus.com,
-        linux-gpio@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 005/237] pinctrl: madera: Fix uninitialized variable bug in madera_mux_set_mux
-Date:   Sat, 16 Nov 2019 10:37:20 -0500
-Message-Id: <20191116154113.7417-5-sashal@kernel.org>
+        Sasha Levin <sashal@kernel.org>, linux-gpio@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 041/237] pinctrl: sunxi: Fix a memory leak in 'sunxi_pinctrl_build_state()'
+Date:   Sat, 16 Nov 2019 10:37:56 -0500
+Message-Id: <20191116154113.7417-41-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191116154113.7417-1-sashal@kernel.org>
 References: <20191116154113.7417-1-sashal@kernel.org>
@@ -45,43 +44,54 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
 
-[ Upstream commit 4fe81669df50889ff1072c030c59df5f1fa6534e ]
+[ Upstream commit a93a676b079144009f55fff2ab0e34c3b7258c8a ]
 
-There is a potential execution path in which variable *ret* is checked
-in an IF statement, and then its value is used to report an error at
-line 659 without being properly initialized previously:
+If 'krealloc()' fails, 'pctl->functions' is set to NULL.
+We should instead use a temp variable in order to be able to free the
+previously allocated memeory, in case of OOM.
 
-659 if (ret)
-660	dev_err(priv->dev, "Failed to write to 0x%x (%d)\n", reg, ret);
-
-Fix this by initializing variable *ret* to 0 in order to
-avoid unpredictable or unintended results.
-
-Addresses-Coverity-ID: 1471969 ("Uninitialized scalar variable")
-Fixes: 218d72a77b0b ("pinctrl: madera: Add driver for Cirrus Logic Madera codecs")
-Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
-Acked-by: Charles Keepax <ckeepax@opensource.cirrus.com>
+Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Acked-by: Maxime Ripard <maxime.ripard@bootlin.com>
 Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pinctrl/cirrus/pinctrl-madera-core.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/pinctrl/sunxi/pinctrl-sunxi.c | 11 +++++++----
+ 1 file changed, 7 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/pinctrl/cirrus/pinctrl-madera-core.c b/drivers/pinctrl/cirrus/pinctrl-madera-core.c
-index c4f4d904e4a61..618e04407ac85 100644
---- a/drivers/pinctrl/cirrus/pinctrl-madera-core.c
-+++ b/drivers/pinctrl/cirrus/pinctrl-madera-core.c
-@@ -608,7 +608,7 @@ static int madera_mux_set_mux(struct pinctrl_dev *pctldev,
- 	unsigned int n_chip_groups = priv->chip->n_pin_groups;
- 	const char *func_name = madera_mux_funcs[selector].name;
- 	unsigned int reg;
--	int i, ret;
-+	int i, ret = 0;
+diff --git a/drivers/pinctrl/sunxi/pinctrl-sunxi.c b/drivers/pinctrl/sunxi/pinctrl-sunxi.c
+index 26ebedc1f6d31..61aaaf58c5993 100644
+--- a/drivers/pinctrl/sunxi/pinctrl-sunxi.c
++++ b/drivers/pinctrl/sunxi/pinctrl-sunxi.c
+@@ -1042,6 +1042,7 @@ static int sunxi_pinctrl_add_function(struct sunxi_pinctrl *pctl,
+ static int sunxi_pinctrl_build_state(struct platform_device *pdev)
+ {
+ 	struct sunxi_pinctrl *pctl = platform_get_drvdata(pdev);
++	void *ptr;
+ 	int i;
  
- 	dev_dbg(priv->dev, "%s selecting %u (%s) for group %u (%s)\n",
- 		__func__, selector, func_name, group,
+ 	/*
+@@ -1108,13 +1109,15 @@ static int sunxi_pinctrl_build_state(struct platform_device *pdev)
+ 	}
+ 
+ 	/* And now allocated and fill the array for real */
+-	pctl->functions = krealloc(pctl->functions,
+-				   pctl->nfunctions * sizeof(*pctl->functions),
+-				   GFP_KERNEL);
+-	if (!pctl->functions) {
++	ptr = krealloc(pctl->functions,
++		       pctl->nfunctions * sizeof(*pctl->functions),
++		       GFP_KERNEL);
++	if (!ptr) {
+ 		kfree(pctl->functions);
++		pctl->functions = NULL;
+ 		return -ENOMEM;
+ 	}
++	pctl->functions = ptr;
+ 
+ 	for (i = 0; i < pctl->desc->npins; i++) {
+ 		const struct sunxi_desc_pin *pin = pctl->desc->pins + i;
 -- 
 2.20.1
 
