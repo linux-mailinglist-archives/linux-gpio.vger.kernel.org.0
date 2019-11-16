@@ -2,38 +2,38 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id A3190FF527
-	for <lists+linux-gpio@lfdr.de>; Sat, 16 Nov 2019 20:01:02 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 961F3FF530
+	for <lists+linux-gpio@lfdr.de>; Sat, 16 Nov 2019 20:01:43 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727675AbfKPTA5 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sat, 16 Nov 2019 14:00:57 -0500
-Received: from mail-lf1-f67.google.com ([209.85.167.67]:46317 "EHLO
-        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727577AbfKPTA5 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sat, 16 Nov 2019 14:00:57 -0500
-Received: by mail-lf1-f67.google.com with SMTP id o65so10547445lff.13;
-        Sat, 16 Nov 2019 11:00:53 -0800 (PST)
+        id S1727785AbfKPTBe (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sat, 16 Nov 2019 14:01:34 -0500
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:41146 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727577AbfKPTBd (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sat, 16 Nov 2019 14:01:33 -0500
+Received: by mail-lj1-f196.google.com with SMTP id m4so9309707ljj.8;
+        Sat, 16 Nov 2019 11:01:30 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=SQwlIZYwgZ7E+PjgzbBwJtHBofQGrr7XQxaCSgUXJEs=;
-        b=fW7+Z9LNAQ2KoqdZt8SDe0oIhdnxp34RwYZGRMEPhnscfr2aoT5zo2/uVwdi4idjyv
-         zzOHnJEu4Ki4xjsmK1Ls9e9KnzAAtyzq4M4FUWbRj03aqMmkTQRQz1JKTaehd5jNpg5i
-         1wrpcyXcmFUS1lO1R0H7MUuTn5+a0uKRv40qZXiZLSnJsGYevhrHV3JUy4Df6CvrpMCp
-         xp/6KB2oTuzK8S0iMgAX233A3Oq3kc16HONYXi+NqKdgqdwe8sGQm/x5txjU1+cQjcGv
-         1W0QpAWTGvO4OliPiZzaju2xmJIXocgtNS0oT8x9rLTB1Pi3gClMkBWIOLk70eKH/J4Z
-         amXg==
-X-Gm-Message-State: APjAAAWKQHg2ctmC55kkYtOuVkew4bXqGxHMyvEvfEK6+mBq24pQ/7QR
-        TWFL/SO9KXbwOKwImdKuzvg=
-X-Google-Smtp-Source: APXvYqzqcfNOjCOwZFxa8T8vyKx9bJfoydU64GyU+d2dttIwOXa4bcHEIygfHfqAleSv7OvnrkJ6ig==
-X-Received: by 2002:a19:9116:: with SMTP id t22mr14427960lfd.99.1573930852121;
-        Sat, 16 Nov 2019 11:00:52 -0800 (PST)
+        bh=TYGztZgtIBfdyWnZSJWF/mf05Z40HRFLXHLJOGgFLyw=;
+        b=MRuurvlHeYnievObIje5U4i7ImeF00LfLxKImb9ugfkfyIIVPhVJ28JFPSsKUKEpuL
+         02fPGQZRxUEYWobyQE2oiuE/inWdHecpayCeBzzTCQMPkHibVheVbDRj3w31nUt1CjVa
+         AR5sSaaPuYoVlph7KZdsMjkS9ESRhnYyEH+JIqeEMHFxpUIJUcTSZPXuDOfHb6vV/jb5
+         rNbp78b3b8y6XgGD9aasGtM9eXdm9QanO2edTpJOYq8DXKlTWcATjr0n4CvYj9SwGnfQ
+         MI1NOJJN57IhD1jqUkZjIYqFOQU4yv2MHiSd5aQjKpxE/QLknqvT4cf3iZzs2kRaUOYr
+         D4og==
+X-Gm-Message-State: APjAAAVgJRBtc3gXC+WkcSIKV2GICPt1yR+RpnZOePVgheD+xhRtAXvn
+        4MGcjyKWZj99q2E1xXwGj9M=
+X-Google-Smtp-Source: APXvYqxwXUBewisqw4T3ERaUjnNvg/sKppQ5d+CCpLYKlw9aTbxSfNyrRP2aqu7wcpAhJymZE427Gw==
+X-Received: by 2002:a2e:9a12:: with SMTP id o18mr1378351lji.191.1573930889363;
+        Sat, 16 Nov 2019 11:01:29 -0800 (PST)
 Received: from localhost.localdomain (dyttqz39y2bkc1ryvyh3t-4.rev.dnainternet.fi. [2001:14bb:420:da5f:a0b0:502a:b811:1af])
-        by smtp.gmail.com with ESMTPSA id d5sm5847233ljc.51.2019.11.16.11.00.49
+        by smtp.gmail.com with ESMTPSA id z22sm5719775ljm.92.2019.11.16.11.01.26
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 16 Nov 2019 11:00:51 -0800 (PST)
-Date:   Sat, 16 Nov 2019 21:00:43 +0200
+        Sat, 16 Nov 2019 11:01:28 -0800 (PST)
+Date:   Sat, 16 Nov 2019 21:01:20 +0200
 From:   Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
 To:     matti.vaittinen@fi.rohmeurope.com, mazziesaccount@gmail.com
 Cc:     Lee Jones <lee.jones@linaro.org>,
@@ -61,9 +61,8 @@ Cc:     Lee Jones <lee.jones@linaro.org>,
         linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
         linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org,
         linux-rtc@vger.kernel.org
-Subject: [PATCH v4 12/16] regulator: bd71828: Add GPIO based run-level
- control for regulators
-Message-ID: <23d38cc0d086069ea0b95229c220465a2336d7f8.1573928775.git.matti.vaittinen@fi.rohmeurope.com>
+Subject: [PATCH v4 13/16] rtc: bd70528 add BD71828 support
+Message-ID: <648d09ab52fb125cab8d26dd13ef71dd4fd5f778.1573928775.git.matti.vaittinen@fi.rohmeurope.com>
 References: <cover.1573928775.git.matti.vaittinen@fi.rohmeurope.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
@@ -75,710 +74,475 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Bucks 1,2,6 and 7 on ROHM BD71828 can be either controlled as
-individual regulartors - or they can be grouped to a group of
-regulators that are controlled by 'run levels'. This can be
-done via I2C. Each regulator can be assigned a voltage and
-enable/disable status for each run-level. These statuses are
-also changeable via I2C.
+ROHM BD71828 PMIC RTC block is from many parts similar to one
+on BD70528. Support BD71828 RTC using BD70528 RTC driver and
+avoid re-inventing the wheel.
 
-Run-levels can then be changed either by I2C or GPIO. This
-control mechanism is selected by data in one time programmable
-area (during production) and can't be changed later.
-
-Allow:
- - configuring regulators to be controlled via run-levels
- - allow getting/setting the current run-level via in-kernel API
-   using either GPIO or I2C underneath
- - Allow run-time changes to run-level voltages via in-kernel API
 Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
 ---
- drivers/regulator/bd71828-regulator.c | 561 +++++++++++++++++++++++++-
- include/linux/mfd/rohm-bd71828.h      |   5 +
- 2 files changed, 556 insertions(+), 10 deletions(-)
+ drivers/rtc/Kconfig              |   3 +-
+ drivers/rtc/rtc-bd70528.c        | 167 ++++++++++++++++++++++++++++---
+ include/linux/mfd/rohm-bd70528.h |  13 +--
+ include/linux/mfd/rohm-bd71828.h |   4 +-
+ include/linux/mfd/rohm-shared.h  |  27 +++++
+ 5 files changed, 185 insertions(+), 29 deletions(-)
+ create mode 100644 include/linux/mfd/rohm-shared.h
 
-diff --git a/drivers/regulator/bd71828-regulator.c b/drivers/regulator/bd71828-regulator.c
-index b113cec41969..411e6a297da6 100644
---- a/drivers/regulator/bd71828-regulator.c
-+++ b/drivers/regulator/bd71828-regulator.c
-@@ -4,8 +4,10 @@
- //
+diff --git a/drivers/rtc/Kconfig b/drivers/rtc/Kconfig
+index 1adf9f815652..d03636ec7311 100644
+--- a/drivers/rtc/Kconfig
++++ b/drivers/rtc/Kconfig
+@@ -509,12 +509,13 @@ config RTC_DRV_M41T80_WDT
+ 	help
+ 	  If you say Y here you will get support for the
+ 	  watchdog timer in the ST M41T60 and M41T80 RTC chips series.
++
+ config RTC_DRV_BD70528
+ 	tristate "ROHM BD70528 PMIC RTC"
+ 	depends on MFD_ROHM_BD70528 && (BD70528_WATCHDOG || !BD70528_WATCHDOG)
+ 	help
+ 	  If you say Y here you will get support for the RTC
+-	  on ROHM BD70528 Power Management IC.
++	  block on ROHM BD70528 and BD71828 Power Management IC.
  
- #include <linux/delay.h>
-+#include <linux/device.h>
- #include <linux/err.h>
- #include <linux/gpio.h>
-+#include <linux/gpio/consumer.h>
- #include <linux/interrupt.h>
- #include <linux/kernel.h>
- #include <linux/mfd/rohm-bd71828.h>
-@@ -17,16 +19,37 @@
- #include <linux/regulator/machine.h>
- #include <linux/regulator/of_regulator.h>
+ 	  This driver can also be built as a module. If so, the module
+ 	  will be called rtc-bd70528.
+diff --git a/drivers/rtc/rtc-bd70528.c b/drivers/rtc/rtc-bd70528.c
+index 7744333b0f40..09524b2712ba 100644
+--- a/drivers/rtc/rtc-bd70528.c
++++ b/drivers/rtc/rtc-bd70528.c
+@@ -6,6 +6,7 @@
  
-+/* Drivers should not do this. But we provide this custom kernel interface
-+ * for users to switch the run-level. Hence we need to get the rdev from
-+ * struct regulator
-+ */
-+#include "internal.h"
-+
-+#define MAX_GPIO_DVS_BUCKS 4
-+#define DVS_RUN_LEVELS 4
-+#define BD71828_RUNLVL_DEFAULT_UV 500000
-+
- struct reg_init {
- 	unsigned int reg;
- 	unsigned int mask;
- 	unsigned int val;
- };
-+
-+struct run_lvl_ctrl {
-+	unsigned int voltage;
-+	bool enabled;
-+};
-+
- struct bd71828_regulator_data {
- 	struct regulator_desc desc;
--	const struct rohm_dvs_config dvs;
-+	struct rohm_dvs_config dvs;
- 	const struct reg_init *reg_inits;
- 	int reg_init_amnt;
-+	struct run_lvl_ctrl run_lvl[DVS_RUN_LEVELS];
-+	struct mutex dvs_lock;
-+	struct gpio_descs *gps;
-+	struct regmap *regmap;
-+	bool allow_runlvl;
- };
+ #include <linux/bcd.h>
+ #include <linux/mfd/rohm-bd70528.h>
++#include <linux/mfd/rohm-bd71828.h>
+ #include <linux/module.h>
+ #include <linux/of.h>
+ #include <linux/platform_device.h>
+@@ -15,7 +16,7 @@
+ /*
+  * We read regs RTC_SEC => RTC_YEAR
+  * this struct is ordered according to chip registers.
+- * Keep it u8 only to avoid padding issues.
++ * Keep it u8 only (or packed) to avoid padding issues.
+  */
+ struct bd70528_rtc_day {
+ 	u8 sec;
+@@ -36,6 +37,13 @@ struct bd70528_rtc_wake {
+ 	u8 ctrl;
+ } __packed;
  
- static const struct reg_init buck1_inits[] = {
-@@ -41,6 +64,14 @@ static const struct reg_init buck1_inits[] = {
- 	},
- };
- 
-+static const struct reg_init buck1_gpio_inits[] = {
-+	{
-+		.reg = BD71828_REG_PS_CTRL_1,
-+		.mask = BD71828_MASK_DVS_BUCK1_CTRL,
-+		.val = BD71828_DVS_BUCK1_USE_RUNLVL,
-+	},
-+};
++struct bd71828_rtc_alm {
++	struct bd70528_rtc_data alm0;
++	struct bd70528_rtc_data alm1;
++	u8 alm_mask;
++	u8 alm1_mask;
++} __packed;
 +
- static const struct reg_init buck2_inits[] = {
- 	{
- 		.reg = BD71828_REG_PS_CTRL_1,
-@@ -49,6 +80,14 @@ static const struct reg_init buck2_inits[] = {
- 	},
+ struct bd70528_rtc_alm {
+ 	struct bd70528_rtc_data data;
+ 	u8 alm_mask;
+@@ -45,6 +53,8 @@ struct bd70528_rtc_alm {
+ struct bd70528_rtc {
+ 	struct rohm_regmap_dev *mfd;
+ 	struct device *dev;
++	u8 reg_time_start;
++	bool has_rtc_timers;
  };
  
-+static const struct reg_init buck2_gpio_inits[] = {
-+	{
-+		.reg = BD71828_REG_PS_CTRL_1,
-+		.mask = BD71828_MASK_DVS_BUCK2_CTRL,
-+		.val = BD71828_DVS_BUCK2_USE_RUNLVL,
-+	},
-+};
-+
- static const struct reg_init buck6_inits[] = {
- 	{
- 		.reg = BD71828_REG_PS_CTRL_1,
-@@ -57,6 +96,14 @@ static const struct reg_init buck6_inits[] = {
- 	},
- };
- 
-+static const struct reg_init buck6_gpio_inits[] = {
-+	{
-+		.reg = BD71828_REG_PS_CTRL_1,
-+		.mask = BD71828_MASK_DVS_BUCK6_CTRL,
-+		.val = BD71828_DVS_BUCK6_USE_RUNLVL,
-+	},
-+};
-+
- static const struct reg_init buck7_inits[] = {
- 	{
- 		.reg = BD71828_REG_PS_CTRL_1,
-@@ -65,6 +112,14 @@ static const struct reg_init buck7_inits[] = {
- 	},
- };
- 
-+static const struct reg_init buck7_gpio_inits[] = {
-+	{
-+		.reg = BD71828_REG_PS_CTRL_1,
-+		.mask = BD71828_MASK_DVS_BUCK7_CTRL,
-+		.val = BD71828_DVS_BUCK7_USE_RUNLVL,
-+	},
-+};
-+
- static const struct regulator_linear_range bd71828_buck1267_volts[] = {
- 	REGULATOR_LINEAR_RANGE(500000, 0x00, 0xef, 6250),
- 	REGULATOR_LINEAR_RANGE(2000000, 0xf0, 0xff, 0),
-@@ -155,6 +210,83 @@ static int buck_set_hw_dvs_levels(struct device_node *np,
- 	return rohm_regulator_set_dvs_levels(&data->dvs, np, desc, cfg->regmap);
- }
- 
-+static int set_runlevel_voltage(struct regmap *regmap,
-+				const struct regulator_desc *desc,
-+				unsigned int uv, unsigned int level)
-+{
-+	int i, ret = -EINVAL;
-+	/*
-+	 * RUN level registers are next to vsel_reg. RUN0 reg is next, then
-+	 * is the RUN 1 reg and so on...
-+	 */
-+	u8 reg = desc->vsel_reg + level + 1;
-+	u8 mask = BD71828_MASK_BUCK1267_VOLT;
-+
-+	for (i = 0; i < desc->n_voltages; i++) {
-+		ret = regulator_desc_list_voltage_linear_range(desc, i);
-+		if (ret < 0)
-+			continue;
-+		if (ret == uv) {
-+			i <<= ffs(desc->vsel_mask) - 1;
-+			ret = regmap_update_bits(regmap, reg, mask, i);
-+			break;
-+		}
-+	}
-+	return ret;
-+}
-+
-+static int buck_set_runlvl_hw_dvs_levels(struct device_node *np,
-+				       const struct regulator_desc *desc,
-+				       struct regulator_config *cfg)
-+{
-+	struct bd71828_regulator_data *data;
-+	/* Default to 'disabled' (0 uV) if no property found */
-+	uint32_t uv[DVS_RUN_LEVELS] = {0};
-+	int i, ret;
-+	const char *prop = "rohm,dvs-runlevel-microvolts";
-+	/* On BD71828 the RUN level control reg is next to enable reg */
-+	u8 en_reg = desc->enable_reg + 1;
-+	u8 en_masks[DVS_RUN_LEVELS] = { BD71828_MASK_RUN0_EN,
-+					BD71828_MASK_RUN1_EN,
-+					BD71828_MASK_RUN2_EN,
-+					BD71828_MASK_RUN3_EN };
-+
-+	data = container_of(desc, struct bd71828_regulator_data, desc);
-+
-+	ret = of_property_read_variable_u32_array(np, prop, uv, 1,
-+						  DVS_RUN_LEVELS);
-+	if (ret < 0 && ret != -EINVAL)
-+		return ret;
-+
-+	mutex_lock(&data->dvs_lock);
-+	for (i = 0; i < DVS_RUN_LEVELS; i++) {
-+		if (uv[i]) {
-+			data->run_lvl[i].voltage = uv[i];
-+			data->run_lvl[i].enabled = true;
-+
-+			ret = set_runlevel_voltage(cfg->regmap, desc, uv[i], i);
-+			if (ret)
-+				goto unlock_out;
-+
-+			ret = regmap_update_bits(cfg->regmap, en_reg,
-+						 en_masks[i], en_masks[i]);
-+		} else {
-+			data->run_lvl[i].voltage = BD71828_RUNLVL_DEFAULT_UV;
-+			ret = regmap_update_bits(cfg->regmap, en_reg,
-+						 en_masks[i], 0);
-+		}
-+		if (ret)
-+			goto unlock_out;
-+	}
-+
-+	ret = rohm_regulator_set_dvs_levels(&data->dvs, np, desc, cfg->regmap);
-+
-+unlock_out:
-+	mutex_unlock(&data->dvs_lock);
-+
-+	return ret;
-+}
-+
- static int ldo6_parse_dt(struct device_node *np,
- 			 const struct regulator_desc *desc,
- 			 struct regulator_config *cfg)
-@@ -189,6 +321,265 @@ static int ldo6_parse_dt(struct device_node *np,
- 	return 0;
- }
- 
-+static int bd71828_dvs_gpio_set_run_level(struct bd71828_regulator_data *rd,
-+					  int val)
-+{
-+	DECLARE_BITMAP(values, 2);
-+
-+	if (rd->gps->ndescs != 2)
-+		return -EINVAL;
-+
-+	if (val < 0 || val > 3)
-+		return -EINVAL;
-+
-+	values[0] = val;
-+
-+	return gpiod_set_array_value_cansleep(rd->gps->ndescs, rd->gps->desc,
-+				     rd->gps->info, values);
-+}
-+
-+/* Get current run level when RUN levels are controlled using I2C */
-+static int bd71828_dvs_i2c_set_run_level(struct regmap *regmap,
-+					 int lvl)
-+{
-+	unsigned int reg;
-+
-+	reg = lvl << (ffs(BD71828_MASK_RUN_LVL_CTRL) - 1);
-+
-+	return regmap_update_bits(regmap, BD71828_REG_PS_CTRL_3,
-+				  BD71828_MASK_RUN_LVL_CTRL, reg);
-+}
-+/* Get current run level when RUN levels are controlled using I2C */
-+static int bd71828_dvs_i2c_get_run_level(struct regmap *regmap,
-+					 struct bd71828_regulator_data *rd)
-+{
-+	int ret;
-+	unsigned int val;
-+
-+	ret = regmap_read(regmap, BD71828_REG_PS_CTRL_3, &val);
-+	if (ret)
-+		return ret;
-+
-+	ret = (val & BD71828_MASK_RUN_LVL_CTRL);
-+	ret >>= ffs(BD71828_MASK_RUN_LVL_CTRL) - 1;
-+
-+	return ret;
-+}
-+
-+/* Get current RUN level when run levels are controlled by GPIO */
-+static int bd71828_dvs_gpio_get_run_level(struct bd71828_regulator_data *rd)
-+{
-+	int run_level;
-+	int ret;
-+	DECLARE_BITMAP(values, 2);
-+
-+	values[0] = 0;
-+
-+	if (rd->gps->ndescs != 2)
-+		return -EINVAL;
-+
-+	ret = gpiod_get_array_value_cansleep(rd->gps->ndescs, rd->gps->desc,
-+				     rd->gps->info, values);
-+	if (ret)
-+		return ret;
-+
-+	run_level = values[0];
-+
-+	return run_level;
-+}
-+
-+/*
-+ * To be used when BD71828 regulator is controlled by RUN levels
-+ * via I2C instead of GPIO
-+ */
-+static int bd71828_dvs_i2c_is_enabled(struct regulator_dev *rdev)
-+{
-+	struct bd71828_regulator_data *data = rdev_get_drvdata(rdev);
-+	int ret;
-+
-+	mutex_lock(&data->dvs_lock);
-+	ret = bd71828_dvs_i2c_get_run_level(rdev->regmap, data);
-+	if (ret < 0)
-+		goto unlock_out;
-+
-+	ret = data->run_lvl[ret].enabled;
-+
-+unlock_out:
-+	mutex_unlock(&data->dvs_lock);
-+
-+	return ret;
-+}
-+
-+/*
-+ * To be used when BD71828 regulator is controlled by RUN levels
-+ * via GPIO
-+ */
-+static int bd71828_dvs_gpio_is_enabled(struct regulator_dev *rdev)
-+{
-+	struct bd71828_regulator_data *data = rdev_get_drvdata(rdev);
-+	int ret;
-+
-+	mutex_lock(&data->dvs_lock);
-+	ret = bd71828_dvs_gpio_get_run_level(data);
-+	if (ret < 0 || ret >= DVS_RUN_LEVELS)
-+		goto unlock_out;
-+
-+	ret = data->run_lvl[ret].enabled;
-+
-+unlock_out:
-+	mutex_unlock(&data->dvs_lock);
-+
-+	return ret;
-+}
-+
-+/*
-+ * To be used when BD71828 regulator is controlled by RUN levels
-+ * via I2C instead of GPIO
-+ */
-+static int bd71828_dvs_i2c_get_voltage(struct regulator_dev *rdev)
-+{
-+	int ret;
-+	struct bd71828_regulator_data *data = rdev_get_drvdata(rdev);
-+
-+	mutex_lock(&data->dvs_lock);
-+	ret = bd71828_dvs_i2c_get_run_level(rdev->regmap, data);
-+	if (ret < 0)
-+		goto unlock_out;
-+
-+	ret = data->run_lvl[ret].voltage;
-+
-+unlock_out:
-+	mutex_unlock(&data->dvs_lock);
-+
-+	return ret;
-+}
-+
-+/*
-+ * To be used when BD71828 regulator is controlled by RUN levels
-+ * via GPIO
-+ */
-+static int bd71828_dvs_gpio_get_voltage(struct regulator_dev *rdev)
-+{
-+	int ret;
-+	struct bd71828_regulator_data *data = rdev_get_drvdata(rdev);
-+
-+	mutex_lock(&data->dvs_lock);
-+	ret = bd71828_dvs_gpio_get_run_level(data);
-+	if (ret < 0 || DVS_RUN_LEVELS <= ret)
-+		goto unlock_out;
-+
-+	ret = data->run_lvl[ret].voltage;
-+
-+unlock_out:
-+	mutex_unlock(&data->dvs_lock);
-+
-+	return ret;
-+}
-+
-+/**
-+ * bd71828_set_runlevel_voltage - change run-level voltage
-+ *
-+ * @regulator:  pointer to regulator for which the run-level voltage is changed
-+ * @uv:		New voltage for run-level in micro volts
-+ * @level:	run-level for which the voltage is to be changed
-+ *
-+ * Changes the run-level voltage for given regulator
-+ */
-+int bd71828_set_runlevel_voltage(struct regulator *regulator, unsigned int uv,
-+				 unsigned int level)
-+{
-+	struct regulator_dev *rdev = regulator->rdev;
-+	struct bd71828_regulator_data *data = rdev_get_drvdata(rdev);
-+	int ret;
-+
-+	if (!data || !data->allow_runlvl)
-+		return -EINVAL;
-+
-+	mutex_lock(&data->dvs_lock);
-+	ret = set_runlevel_voltage(rdev->regmap, rdev->desc, uv, level);
-+	mutex_unlock(&data->dvs_lock);
-+
-+	return ret;
-+}
-+EXPORT_SYMBOL(bd71828_set_runlevel_voltage);
-+
-+/**
-+ * bd71828_set_runlevel - change system run-level.
-+ *
-+ * @regulator:	pointer to one of the BD71828 regulators obtained by
-+ *		call to regulator_get
-+ * @level:	New run-level the system should enter
-+ *
-+ * Changes the system to run-level which was given as argument. This
-+ * operation will change state of all regulators which are set to be
-+ * controlled by run-levels. Note that 'regulator' must point to a
-+ * regulator which is controlled by run-levels.
-+ */
-+int bd71828_set_runlevel(struct regulator *regulator, unsigned int level)
-+{
-+	struct regulator_dev *rdev = regulator->rdev;
-+	struct bd71828_regulator_data *rd = rdev_get_drvdata(rdev);
-+
-+	if (!rd)
-+		return -ENOENT;
-+
-+	if (!rd || !rd->allow_runlvl)
-+		return -EINVAL;
-+
-+	if (rd->gps)
-+		return bd71828_dvs_gpio_set_run_level(rd, level);
-+
-+	return bd71828_dvs_i2c_set_run_level(rd->regmap, level);
-+}
-+EXPORT_SYMBOL(bd71828_set_runlevel);
-+
-+/**
-+ * bd71828_get_runlevel - get the current system run-level.
-+ *
-+ * @regulator:	pointer to one of the BD71828 regulators obtained by
-+ *		call to regulator_get
-+ * @level:	Pointer to value where current run-level is stored
-+ *
-+ * Returns the current system run-level. Note that 'regulator' must
-+ * point to a regulator which is controlled by run-levels.
-+ */
-+int bd71828_get_runlevel(struct regulator *regulator, unsigned int *level)
-+{
-+	struct regulator_dev *rdev = regulator->rdev;
-+	struct bd71828_regulator_data *rd = rdev_get_drvdata(rdev);
-+	int ret;
-+
-+	if (!rd)
-+		return -ENOENT;
-+
-+	if (!rd || !rd->allow_runlvl)
-+		return -EINVAL;
-+
-+	if (!rd->gps)
-+		ret = bd71828_dvs_i2c_get_run_level(rd->regmap, rd);
-+	else
-+		ret = bd71828_dvs_gpio_get_run_level(rd);
-+
-+	if (ret < 0)
-+		return ret;
-+
-+	*level = (unsigned int) ret;
-+
-+	return 0;
-+}
-+EXPORT_SYMBOL(bd71828_get_runlevel);
-+
-+
-+static const struct regulator_ops dvs_buck_gpio_ops = {
-+	.is_enabled = bd71828_dvs_gpio_is_enabled,
-+	.get_voltage = bd71828_dvs_gpio_get_voltage,
-+};
-+
-+static const struct regulator_ops dvs_buck_i2c_ops = {
-+	.is_enabled = bd71828_dvs_i2c_is_enabled,
-+	.get_voltage = bd71828_dvs_i2c_get_voltage,
-+};
-+
- static const struct regulator_ops bd71828_buck_ops = {
- 	.enable = regulator_enable_regmap,
- 	.disable = regulator_disable_regmap,
-@@ -773,6 +1164,127 @@ static const struct bd71828_regulator_data bd71828_rdata[] = {
- 	},
- };
- 
-+struct bd71828_gpio_cfg {
-+	bool use_gpio;
-+	unsigned int runlvl;
-+	struct gpio_descs *gps;
-+};
-+
-+static void mark_regulator_runlvl_controlled(struct device *dev,
-+					     struct device_node *np,
-+					     struct bd71828_gpio_cfg *g)
-+{
-+	int i;
-+
-+	for (i = 1; i <= ARRAY_SIZE(bd71828_rdata); i++) {
-+		if (!of_node_name_eq(np, bd71828_rdata[i-1].desc.of_match))
-+			continue;
-+		switch (i) {
-+		case 1:
-+		case 2:
-+		case 6:
-+		case 7:
-+			g->runlvl |= 1 << (i - 1);
-+			dev_dbg(dev, "buck %d runlevel controlled\n", i);
-+			break;
-+		default:
-+			dev_err(dev,
-+				"Only bucks 1,2,6,7 support run-level dvs\n");
-+			break;
-+		}
-+	}
-+}
-+
-+static int get_runcontrolled_bucks_dt(struct device *dev,
-+				      struct bd71828_gpio_cfg *g)
-+{
-+	struct device_node *np;
-+	struct device_node *nproot = dev->of_node;
-+	const char *prop = "rohm,dvs-runlvl-ctrl";
-+
-+	g->runlvl = 0;
-+
-+	nproot = of_get_child_by_name(nproot, "regulators");
-+	if (!nproot) {
-+		dev_err(dev, "failed to find regulators node\n");
-+		return -ENODEV;
-+	}
-+	for_each_child_of_node(nproot, np)
-+		if (of_property_read_bool(np, prop))
-+			mark_regulator_runlvl_controlled(dev, np, g);
-+
-+	of_node_put(nproot);
-+	return 0;
-+}
-+
-+static int check_dt_for_gpio_controls(struct device *d,
-+				      struct bd71828_gpio_cfg *g)
-+{
-+	int ret;
-+
-+	ret = get_runcontrolled_bucks_dt(d, g);
-+	if (ret)
-+		return ret;
-+
-+	g->use_gpio = false;
-+
-+	/* If the run level control is not requested by any bucks we're done */
-+	if (!g->runlvl)
+ static int bd70528_set_wake(struct rohm_regmap_dev *bd70528,
+@@ -152,12 +162,18 @@ static int bd70528_set_rtc_based_timers(struct bd70528_rtc *r, int new_state,
+ static int bd70528_re_enable_rtc_based_timers(struct bd70528_rtc *r,
+ 					      int old_state)
+ {
++	if (!r->has_rtc_timers)
 +		return 0;
 +
-+	g->gps = devm_gpiod_get_parent_array(d, "rohm,dvs-vsel", GPIOD_OUT_LOW);
+ 	return bd70528_set_rtc_based_timers(r, old_state, NULL);
+ }
+ 
+ static int bd70528_disable_rtc_based_timers(struct bd70528_rtc *r,
+ 					    int *old_state)
+ {
++	if (!r->has_rtc_timers)
++		return 0;
 +
-+	if (IS_ERR(g->gps)) {
-+		ret = PTR_ERR(g->gps);
-+		if (ret == -ENOENT)
-+			return 0;
+ 	return bd70528_set_rtc_based_timers(r, 0, old_state);
+ }
+ 
+@@ -213,6 +229,36 @@ static inline void rtc2tm(struct bd70528_rtc_data *r, struct rtc_time *t)
+ 	t->tm_wday = bcd2bin(r->week & BD70528_MASK_RTC_WEEK);
+ }
+ 
++static int bd71828_set_alarm(struct device *dev, struct rtc_wkalrm *a)
++{
++	int ret;
++	struct bd71828_rtc_alm alm;
++	struct bd70528_rtc *r = dev_get_drvdata(dev);
++	struct rohm_regmap_dev *bd71828 = r->mfd;
++
++	ret = regmap_bulk_read(bd71828->regmap, BD71828_REG_RTC_ALM_START,
++			       &alm, sizeof(alm));
++	if (ret) {
++		dev_err(dev, "Failed to read alarm regs\n");
 +		return ret;
 +	}
 +
-+	if (g->gps->ndescs != 2)
-+		return -ENOENT;
++	tm2rtc(&a->time, &alm.alm0);
 +
-+	g->use_gpio = true;
++	if (!a->enabled)
++		alm.alm_mask &= ~BD70528_MASK_ALM_EN;
++	else
++		alm.alm_mask |= BD70528_MASK_ALM_EN;
++
++	ret = regmap_bulk_write(bd71828->regmap, BD71828_REG_RTC_ALM_START,
++				&alm, sizeof(alm));
++	if (ret)
++		dev_err(dev, "Failed to set alarm time\n");
++
++	return ret;
++
++}
++
+ static int bd70528_set_alarm(struct device *dev, struct rtc_wkalrm *a)
+ {
+ 	struct bd70528_rtc_wake wake;
+@@ -261,6 +307,30 @@ static int bd70528_set_alarm(struct device *dev, struct rtc_wkalrm *a)
+ 	return ret;
+ }
+ 
++static int bd71828_read_alarm(struct device *dev, struct rtc_wkalrm *a)
++{
++	int ret;
++	struct bd71828_rtc_alm alm;
++	struct bd70528_rtc *r = dev_get_drvdata(dev);
++	struct rohm_regmap_dev *bd71828 = r->mfd;
++
++	ret = regmap_bulk_read(bd71828->regmap, BD71828_REG_RTC_ALM_START,
++			       &alm, sizeof(alm));
++	if (ret) {
++		dev_err(dev, "Failed to read alarm regs\n");
++		return ret;
++	}
++
++	rtc2tm(&alm.alm0, &a->time);
++	a->time.tm_mday = -1;
++	a->time.tm_mon = -1;
++	a->time.tm_year = -1;
++	a->enabled = !!(alm.alm_mask & BD70528_MASK_ALM_EN);
++	a->pending = 0;
 +
 +	return 0;
 +}
 +
-+static void set_buck_runlvl_controlled(struct rohm_regmap_dev *bd71828,
-+				      struct bd71828_regulator_data *rd,
-+				      struct bd71828_gpio_cfg *g)
+ static int bd70528_read_alarm(struct device *dev, struct rtc_wkalrm *a)
+ {
+ 	struct bd70528_rtc_alm alm;
+@@ -297,7 +367,7 @@ static int bd70528_set_time_locked(struct device *dev, struct rtc_time *t)
+ 		return ret;
+ 
+ 	tmpret = regmap_bulk_read(bd70528->regmap,
+-				  BD70528_REG_RTC_START, &rtc_data,
++				  r->reg_time_start, &rtc_data,
+ 				  sizeof(rtc_data));
+ 	if (tmpret) {
+ 		dev_err(dev, "Failed to read RTC time registers\n");
+@@ -306,7 +376,7 @@ static int bd70528_set_time_locked(struct device *dev, struct rtc_time *t)
+ 	tm2rtc(t, &rtc_data);
+ 
+ 	tmpret = regmap_bulk_write(bd70528->regmap,
+-				   BD70528_REG_RTC_START, &rtc_data,
++				   r->reg_time_start, &rtc_data,
+ 				   sizeof(rtc_data));
+ 	if (tmpret) {
+ 		dev_err(dev, "Failed to set RTC time\n");
+@@ -321,6 +391,11 @@ static int bd70528_set_time_locked(struct device *dev, struct rtc_time *t)
+ 	return ret;
+ }
+ 
++static int bd71828_set_time(struct device *dev, struct rtc_time *t)
 +{
-+	switch (rd->desc.id) {
-+	case BD71828_BUCK1:
-+		rd->reg_inits = buck1_gpio_inits;
-+		break;
-+	case BD71828_BUCK2:
-+		rd->reg_inits = buck2_gpio_inits;
-+		break;
-+	case BD71828_BUCK6:
-+		rd->reg_inits = buck6_gpio_inits;
-+		break;
-+	case BD71828_BUCK7:
-+		rd->reg_inits = buck7_gpio_inits;
-+		break;
-+	default:
-+		return;
-+	}
-+
-+	/*
-+	 * Disallow setters. Get voltages/enable states based
-+	 * on current RUN level
-+	 */
-+	rd->allow_runlvl = true;
-+
-+	if (g->use_gpio) {
-+		rd->gps = g->gps;
-+		rd->desc.ops = &dvs_buck_gpio_ops;
-+	} else {
-+		rd->desc.ops = &dvs_buck_i2c_ops;
-+	}
-+	rd->desc.of_parse_cb = buck_set_runlvl_hw_dvs_levels;
++	return bd70528_set_time_locked(dev, t);
 +}
 +
- static int bd71828_probe(struct platform_device *pdev)
+ static int bd70528_set_time(struct device *dev, struct rtc_time *t)
  {
- 	struct rohm_regmap_dev *bd71828;
-@@ -780,6 +1292,8 @@ static int bd71828_probe(struct platform_device *pdev)
- 	struct regulator_config config = {
- 		.dev = pdev->dev.parent,
- 	};
-+	struct bd71828_gpio_cfg gcfg = {0};
-+	struct bd71828_regulator_data *rd;
+ 	int ret;
+@@ -341,7 +416,7 @@ static int bd70528_get_time(struct device *dev, struct rtc_time *t)
  
- 	bd71828 = dev_get_drvdata(pdev->dev.parent);
- 	if (!bd71828) {
-@@ -787,30 +1301,57 @@ static int bd71828_probe(struct platform_device *pdev)
- 		return -EINVAL;
+ 	/* read the RTC date and time registers all at once */
+ 	ret = regmap_bulk_read(bd70528->regmap,
+-			       BD70528_REG_RTC_START, &rtc_data,
++			       r->reg_time_start, &rtc_data,
+ 			       sizeof(rtc_data));
+ 	if (ret) {
+ 		dev_err(dev, "Failed to read RTC time (err %d)\n", ret);
+@@ -378,6 +453,23 @@ static int bd70528_alm_enable(struct device *dev, unsigned int enabled)
+ 	return ret;
+ }
+ 
++static int bd71828_alm_enable(struct device *dev, unsigned int enabled)
++{
++	int ret;
++	struct bd70528_rtc *r = dev_get_drvdata(dev);
++	unsigned int enableval = BD70528_MASK_ALM_EN;
++
++	if (!enabled)
++		enableval = 0;
++
++	ret = regmap_update_bits(r->mfd->regmap, BD71828_REG_RTC_ALM0_MASK,
++				 BD70528_MASK_ALM_EN, enableval);
++	if (ret)
++		dev_err(dev, "Failed to change alarm state\n");
++
++	return ret;
++}
++
+ static const struct rtc_class_ops bd70528_rtc_ops = {
+ 	.read_time		= bd70528_get_time,
+ 	.set_time		= bd70528_set_time,
+@@ -386,6 +478,14 @@ static const struct rtc_class_ops bd70528_rtc_ops = {
+ 	.alarm_irq_enable	= bd70528_alm_enable,
+ };
+ 
++static const struct rtc_class_ops bd71828_rtc_ops = {
++	.read_time		= bd70528_get_time,
++	.set_time		= bd71828_set_time,
++	.read_alarm		= bd71828_read_alarm,
++	.set_alarm		= bd71828_set_alarm,
++	.alarm_irq_enable	= bd71828_alm_enable,
++};
++
+ static irqreturn_t alm_hndlr(int irq, void *data)
+ {
+ 	struct rtc_device *rtc = data;
+@@ -397,11 +497,16 @@ static irqreturn_t alm_hndlr(int irq, void *data)
+ static int bd70528_probe(struct platform_device *pdev)
+ {
+ 	struct bd70528_rtc *bd_rtc;
++	const struct rtc_class_ops *rtc_ops;
+ 	struct rohm_regmap_dev *mfd;
++	const char *irq_name;
+ 	int ret;
+ 	struct rtc_device *rtc;
+ 	int irq;
+ 	unsigned int hr;
++	bool enable_main_irq = false;
++	u8 hour_reg;
++	enum rohm_chip_type chip = platform_get_device_id(pdev)->driver_data;
+ 
+ 	mfd = dev_get_drvdata(pdev->dev.parent);
+ 	if (!mfd) {
+@@ -415,13 +520,36 @@ static int bd70528_probe(struct platform_device *pdev)
+ 	bd_rtc->mfd = mfd;
+ 	bd_rtc->dev = &pdev->dev;
+ 
+-	irq = platform_get_irq_byname(pdev, "bd70528-rtc-alm");
+-	if (irq < 0)
++	switch (chip) {
++	case ROHM_CHIP_TYPE_BD70528:
++		irq_name = "bd70528-rtc-alm";
++		bd_rtc->has_rtc_timers = true;
++		bd_rtc->reg_time_start = BD70528_REG_RTC_START;
++		hour_reg = BD70528_REG_RTC_HOUR;
++		enable_main_irq = true;
++		rtc_ops = &bd70528_rtc_ops;
++		break;
++	case ROHM_CHIP_TYPE_BD71828:
++		irq_name = "bd71828-rtc-alm-0";
++		bd_rtc->reg_time_start = BD71828_REG_RTC_START;
++		hour_reg = BD71828_REG_RTC_HOUR;
++		rtc_ops = &bd71828_rtc_ops;
++		break;
++	default:
++		dev_err(&pdev->dev, "Unknown chip\n");
++		return -ENOENT;
++	}
++
++	irq = platform_get_irq_byname(pdev, irq_name);
++
++	if (irq < 0) {
++		dev_err(&pdev->dev, "Failed to get irq\n");
+ 		return irq;
++	}
+ 
+ 	platform_set_drvdata(pdev, bd_rtc);
+ 
+-	ret = regmap_read(mfd->regmap, BD70528_REG_RTC_HOUR, &hr);
++	ret = regmap_read(mfd->regmap, hour_reg, &hr);
+ 
+ 	if (ret) {
+ 		dev_err(&pdev->dev, "Failed to reag RTC clock\n");
+@@ -431,10 +559,10 @@ static int bd70528_probe(struct platform_device *pdev)
+ 	if (!(hr & BD70528_MASK_RTC_HOUR_24H)) {
+ 		struct rtc_time t;
+ 
+-		ret = bd70528_get_time(&pdev->dev, &t);
++		ret = rtc_ops->read_time(&pdev->dev, &t);
+ 
+ 		if (!ret)
+-			ret = bd70528_set_time(&pdev->dev, &t);
++			ret = rtc_ops->set_time(&pdev->dev, &t);
+ 
+ 		if (ret) {
+ 			dev_err(&pdev->dev,
+@@ -454,7 +582,7 @@ static int bd70528_probe(struct platform_device *pdev)
+ 
+ 	rtc->range_min = RTC_TIMESTAMP_BEGIN_2000;
+ 	rtc->range_max = RTC_TIMESTAMP_END_2099;
+-	rtc->ops = &bd70528_rtc_ops;
++	rtc->ops = rtc_ops;
+ 
+ 	/* Request alarm IRQ prior to registerig the RTC */
+ 	ret = devm_request_threaded_irq(&pdev->dev, irq, NULL, &alm_hndlr,
+@@ -468,26 +596,35 @@ static int bd70528_probe(struct platform_device *pdev)
+ 	 *  leave them enabled as irq-controller should disable irqs
+ 	 *  from sub-registers when IRQ is disabled or freed.
+ 	 */
+-	ret = regmap_update_bits(mfd->regmap,
++	if (enable_main_irq) {
++		ret = regmap_update_bits(mfd->regmap,
+ 				 BD70528_REG_INT_MAIN_MASK,
+ 				 BD70528_INT_RTC_MASK, 0);
+-	if (ret) {
+-		dev_err(&pdev->dev, "Failed to enable RTC interrupts\n");
+-		return ret;
++		if (ret) {
++			dev_err(&pdev->dev, "Failed to enable RTC interrupts\n");
++			return ret;
++		}
  	}
  
-+	ret = check_dt_for_gpio_controls(pdev->dev.parent, &gcfg);
-+	if (ret) {
-+		dev_err(&pdev->dev, "Failed to get DVS gpio resources\n");
-+		return ret;
-+	}
-+
-+	/*
-+	 * Allocate device data to allow controlling more than one PMICs
-+	 */
-+	rd = devm_kmalloc_array(&pdev->dev, ARRAY_SIZE(bd71828_rdata),
-+				sizeof(*rd), GFP_KERNEL);
-+	if (!rd)
-+		return -ENOMEM;
-+
-+	dev_set_drvdata(&pdev->dev, rd);
-+
-+	for (i = 0; i < ARRAY_SIZE(bd71828_rdata); i++) {
-+		/* Use bd71828_rdata as template */
-+		rd[i] = bd71828_rdata[i];
-+
-+		mutex_init(&rd[i].dvs_lock);
-+		if (gcfg.runlvl & (1 << i))
-+			set_buck_runlvl_controlled(bd71828, &rd[i], &gcfg);
-+
-+		rd[i].regmap = bd71828->regmap;
-+	}
-+
- 	config.regmap = bd71828->regmap;
+ 	return rtc_register_device(rtc);
+ }
++static const struct platform_device_id bd718x7_rtc_id[] = {
++	{ "bd70528-rtc", ROHM_CHIP_TYPE_BD70528 },
++	{ "bd71828-rtc", ROHM_CHIP_TYPE_BD71828 },
++	{ },
++};
++MODULE_DEVICE_TABLE(platform, bd718x7_rtc_id);
  
- 	for (i = 0; i < ARRAY_SIZE(bd71828_rdata); i++) {
- 		struct regulator_dev *rdev;
--		const struct bd71828_regulator_data *rd;
+ static struct platform_driver bd70528_rtc = {
+ 	.driver = {
+ 		.name = "bd70528-rtc"
+ 	},
+ 	.probe = bd70528_probe,
++	.id_table = bd718x7_rtc_id,
+ };
  
--		rd = &bd71828_rdata[i];
-+		config.driver_data = &rd[i];
-+
- 		rdev = devm_regulator_register(&pdev->dev,
--					       &rd->desc, &config);
-+					       &rd[i].desc, &config);
- 		if (IS_ERR(rdev)) {
- 			dev_err(&pdev->dev,
- 				"failed to register %s regulator\n",
--				rd->desc.name);
-+				rd[i].desc.name);
- 			return PTR_ERR(rdev);
- 		}
--		for (j = 0; j < rd->reg_init_amnt; j++) {
-+		for (j = 0; j < rd[i].reg_init_amnt; j++) {
- 			ret = regmap_update_bits(bd71828->regmap,
--						 rd->reg_inits[j].reg,
--						 rd->reg_inits[j].mask,
--						 rd->reg_inits[j].val);
-+						 rd[i].reg_inits[j].reg,
-+						 rd[i].reg_inits[j].mask,
-+						 rd[i].reg_inits[j].val);
- 			if (ret) {
- 				dev_err(&pdev->dev,
- 					"regulator %s init failed\n",
--					rd->desc.name);
-+					rd[i].desc.name);
- 				return ret;
- 			}
- 		}
+ module_platform_driver(bd70528_rtc);
+ 
+ MODULE_AUTHOR("Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>");
+-MODULE_DESCRIPTION("BD70528 RTC driver");
++MODULE_DESCRIPTION("ROHM BD70528 and BD71828 PMIC RTC driver");
+ MODULE_LICENSE("GPL");
+diff --git a/include/linux/mfd/rohm-bd70528.h b/include/linux/mfd/rohm-bd70528.h
+index 2ad2320d0a96..a57af878fd0c 100644
+--- a/include/linux/mfd/rohm-bd70528.h
++++ b/include/linux/mfd/rohm-bd70528.h
+@@ -7,6 +7,7 @@
+ #include <linux/bits.h>
+ #include <linux/device.h>
+ #include <linux/mfd/rohm-generic.h>
++#include <linux/mfd/rohm-shared.h>
+ #include <linux/regmap.h>
+ 
+ enum {
+@@ -307,17 +308,6 @@ enum {
+ 
+ /* RTC masks to mask out reserved bits */
+ 
+-#define BD70528_MASK_RTC_SEC		0x7f
+-#define BD70528_MASK_RTC_MINUTE		0x7f
+-#define BD70528_MASK_RTC_HOUR_24H	0x80
+-#define BD70528_MASK_RTC_HOUR_PM	0x20
+-#define BD70528_MASK_RTC_HOUR		0x1f
+-#define BD70528_MASK_RTC_DAY		0x3f
+-#define BD70528_MASK_RTC_WEEK		0x07
+-#define BD70528_MASK_RTC_MONTH		0x1f
+-#define BD70528_MASK_RTC_YEAR		0xff
+-#define BD70528_MASK_RTC_COUNT_L	0x7f
+-
+ #define BD70528_MASK_ELAPSED_TIMER_EN	0x1
+ /* Mask second, min and hour fields
+  * HW would support ALM irq for over 24h
+@@ -326,7 +316,6 @@ enum {
+  * wake-up we limit ALM to 24H and only
+  * unmask sec, min and hour
+  */
+-#define BD70528_MASK_ALM_EN		0x7
+ #define BD70528_MASK_WAKE_EN		0x1
+ 
+ /* WDT masks */
 diff --git a/include/linux/mfd/rohm-bd71828.h b/include/linux/mfd/rohm-bd71828.h
-index d013e03f742d..fc0955f0662c 100644
+index fc0955f0662c..093662f3e867 100644
 --- a/include/linux/mfd/rohm-bd71828.h
 +++ b/include/linux/mfd/rohm-bd71828.h
-@@ -418,4 +418,9 @@ enum {
- #define BD71828_OUT_TYPE_OPEN_DRAIN			0x0
- #define BD71828_OUT_TYPE_CMOS				0x2
+@@ -5,6 +5,7 @@
+ #define __LINUX_MFD_BD71828_H__
  
-+int bd71828_set_runlevel_voltage(struct regulator *regulator, unsigned int uv,
-+				 unsigned int level);
-+int bd71828_set_runlevel(struct regulator *regulator, unsigned int level);
-+int bd71828_get_runlevel(struct regulator *regulator, unsigned int *level);
+ #include <linux/mfd/rohm-generic.h>
++#include <linux/mfd/rohm-shared.h>
+ 
+ /* Regulator IDs */
+ enum {
+@@ -160,6 +161,7 @@ enum {
+ #define BD71828_REG_RTC_YEAR		0x52
+ 
+ #define BD71828_REG_RTC_ALM0_SEC	0x53
++#define BD71828_REG_RTC_ALM_START	BD71828_REG_RTC_ALM0_SEC
+ #define BD71828_REG_RTC_ALM0_MINUTE	0x54
+ #define BD71828_REG_RTC_ALM0_HOUR	0x55
+ #define BD71828_REG_RTC_ALM0_WEEK	0x56
+@@ -178,6 +180,7 @@ enum {
+ #define BD71828_REG_RTC_ALM1_MASK	0x62
+ 
+ #define BD71828_REG_RTC_ALM2		0x63
++#define BD71828_REG_RTC_START		BD71828_REG_RTC_SEC
+ 
+ /* Charger/Battey */
+ #define BD71828_REG_CHG_STATE		0x65
+@@ -204,7 +207,6 @@ enum {
+ #define BD71828_REG_INT_MASK_TEMP	0xdd
+ #define BD71828_REG_INT_MASK_RTC	0xde
+ 
+-
+ #define BD71828_REG_INT_MAIN		0xdf
+ #define BD71828_REG_INT_BUCK		0xe0
+ #define BD71828_REG_INT_DCIN1		0xe1
+diff --git a/include/linux/mfd/rohm-shared.h b/include/linux/mfd/rohm-shared.h
+new file mode 100644
+index 000000000000..f16fc3b5000e
+--- /dev/null
++++ b/include/linux/mfd/rohm-shared.h
+@@ -0,0 +1,27 @@
++/* SPDX-License-Identifier: GPL-2.0-or-later */
++/* Copyright (C) 2018 ROHM Semiconductors */
 +
- #endif /* __LINUX_MFD_BD71828_H__ */
++
++#ifndef __LINUX_MFD_ROHM_SHARED_H__
++#define __LINUX_MFD_ROHM_SHARED_H__
++
++/*
++ * RTC definitions shared between
++ *
++ * BD70528
++ * and BD71828
++ */
++
++
++#define BD70528_MASK_RTC_SEC		0x7f
++#define BD70528_MASK_RTC_MINUTE	0x7f
++#define BD70528_MASK_RTC_HOUR_24H	0x80
++#define BD70528_MASK_RTC_HOUR_PM	0x20
++#define BD70528_MASK_RTC_HOUR		0x3f
++#define BD70528_MASK_RTC_DAY		0x3f
++#define BD70528_MASK_RTC_WEEK		0x07
++#define BD70528_MASK_RTC_MONTH		0x1f
++#define BD70528_MASK_RTC_YEAR		0xff
++#define BD70528_MASK_ALM_EN		0x7
++
++#endif /* __LINUX_MFD_ROHM_SHARED_H__ */
 -- 
 2.21.0
 
