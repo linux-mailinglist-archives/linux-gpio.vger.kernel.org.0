@@ -2,462 +2,515 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 83AE810073D
-	for <lists+linux-gpio@lfdr.de>; Mon, 18 Nov 2019 15:20:32 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A7F321007A1
+	for <lists+linux-gpio@lfdr.de>; Mon, 18 Nov 2019 15:48:34 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727233AbfKROUb (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 18 Nov 2019 09:20:31 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:44175 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726668AbfKROUb (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 18 Nov 2019 09:20:31 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1574086830;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=2xkJxot3rS923QhfKRdweCw6/xrZNVn8073ssvYsZ2A=;
-        b=DwIwKzcvbvInEAeIpcCp6niE58+iO9mLX3BT95KfEIMLqUpjszG6bH3DrQnABSf59Zw4Gh
-        XmRDsY8T7mrfFsY02GuXLOSKCOz6BO7uK1CGbT4QpjorZiiMqP6zfuyTLXF8qE2nJJMrRD
-        MJp5qs1IETUo69rSy5QC2JBPsyEmMZI=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-411-6jNS9ll8OuOQKMxeusetTQ-1; Mon, 18 Nov 2019 09:20:26 -0500
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 29B65801FCB;
-        Mon, 18 Nov 2019 14:20:25 +0000 (UTC)
-Received: from shalem.localdomain.com (unknown [10.36.118.166])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 63A945DDAA;
-        Mon, 18 Nov 2019 14:20:23 +0000 (UTC)
-From:   Hans de Goede <hdegoede@redhat.com>
-To:     Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Linus Walleij <linus.walleij@linaro.org>
-Cc:     Hans de Goede <hdegoede@redhat.com>, linux-gpio@vger.kernel.org,
-        linux-acpi@vger.kernel.org, stable@vger.kernel.org
-Subject: [PATCH] pinctrl: baytrail: Really serialize all register accesses
-Date:   Mon, 18 Nov 2019 15:20:20 +0100
-Message-Id: <20191118142020.22256-2-hdegoede@redhat.com>
-In-Reply-To: <20191118142020.22256-1-hdegoede@redhat.com>
-References: <20191118142020.22256-1-hdegoede@redhat.com>
+        id S1727121AbfKROsd (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 18 Nov 2019 09:48:33 -0500
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:37410 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727105AbfKROsd (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 18 Nov 2019 09:48:33 -0500
+Received: by mail-pf1-f194.google.com with SMTP id p24so10511315pfn.4
+        for <linux-gpio@vger.kernel.org>; Mon, 18 Nov 2019 06:48:31 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=zi6Qgt15FSzuMirBfAePXcp99DUcVjfSY2iEU5jAzBQ=;
+        b=aW/mSAonmf/GDbzR673SpOkKD8AKW30LAnlHrikLTUDxvH3wfAhoMFg+1P15HIH1cx
+         9XabhWbki5qf5P3BisFX5+yD618fhWa+mn526uz0lGYuSsvdqK5f4XK8zqGMfBtcve2S
+         FKKtIrfx4Da1PDKg16VWd/5nNW1WorCMJ+wENiCQQbHmuGS/gZz956O46p4HepsZAI2I
+         cjSMwEZbhvA4SGrxNYpLyc2iK6WvThFcG1wMWEdn3phUH6dsWgRChQvtkvqA3+kwRd9K
+         na3+y66T5i9jD5lUP5Grzi4W3NqV+6bfcJTSDr5rzjbOQ/BxgfqFAE+Q5e9h9e6kS6SR
+         9Rnw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=zi6Qgt15FSzuMirBfAePXcp99DUcVjfSY2iEU5jAzBQ=;
+        b=XU8a3AePCrFBVGAm/xCCISEc3uGFdgJ6Y+uv2fZ/pxHl2wKa9vywsLPWnzG/DE3UdW
+         vya1L6pFgI+creCgrs21lmSW9IGR6y2bxgtqoy1rMX2+LGQp3SjmEZOLJv0HJoPgsxXw
+         thPA/CPXvvtxKi16nBjjvzYWUCeXur0pgQfGq5MGfN/wonV0EyN1DkqoMO7cHTiDkUv5
+         hoYWJplLUY321Cq8ixeebfKDphAtggZhTeey/9m42XlATXVrwQ1yWJkEn1wyRRKqI0Rm
+         dmE7mTe6/HRyWiIYFa2TeBA/y+99KTVqRZR+RZMaAqYQMZsm71Y4b5/aofh02Qxc9gi7
+         SoXg==
+X-Gm-Message-State: APjAAAUfRLp45K5qXg7kVnQXz82qwmvaUNWNJV1PN255S6GX/9vK2Fim
+        2/SN4AsLSQCrJ/DhroEACC6PHyOpCtiWGw==
+X-Google-Smtp-Source: APXvYqybDZ3mlXzykMdSwf7Q2/VUGE4jYB2YBuUGeG0GJGqAPzaAeN1K2vstK18MgZZoBqbbVVoXGQ==
+X-Received: by 2002:aa7:8a83:: with SMTP id a3mr34599521pfc.54.1574088510449;
+        Mon, 18 Nov 2019 06:48:30 -0800 (PST)
+Received: from sol (220-235-109-115.dyn.iinet.net.au. [220.235.109.115])
+        by smtp.gmail.com with ESMTPSA id q26sm20330059pff.143.2019.11.18.06.48.28
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 18 Nov 2019 06:48:29 -0800 (PST)
+Date:   Mon, 18 Nov 2019 22:48:25 +0800
+From:   Kent Gibson <warthog618@gmail.com>
+To:     Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Cc:     linux-gpio <linux-gpio@vger.kernel.org>
+Subject: Re: [libgpiod] [PATCH 11/19] API: add support for SET_CONFIG
+Message-ID: <20191118144825.GE27359@sol>
+References: <20191115144355.975-1-warthog618@gmail.com>
+ <20191115144355.975-12-warthog618@gmail.com>
+ <CAMpxmJXcEFO-05H-O0Kjs8Latwhh9RWos0tXzkc_C7KyEye8Yw@mail.gmail.com>
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-X-MC-Unique: 6jNS9ll8OuOQKMxeusetTQ-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=WINDOWS-1252
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAMpxmJXcEFO-05H-O0Kjs8Latwhh9RWos0tXzkc_C7KyEye8Yw@mail.gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Commit 39ce8150a079 ("pinctrl: baytrail: Serialize all register access")
-added a spinlock around all register accesses because:
+On Mon, Nov 18, 2019 at 02:52:04PM +0100, Bartosz Golaszewski wrote:
+> pt., 15 lis 2019 o 15:45 Kent Gibson <warthog618@gmail.com> napisał(a):
+> >
+> > Extend the libgpiod API to support the setting line configuration using the
+> > GPIO GPIOHANDLE_SET_CONFIG_IOCTL uAPI ioctl.
+> >
+> > The core change is the addition of gpiod_line_set_config, which provides a
+> > low level wrapper around the ioctl.
+> >
+> > Additionally, higher level helper functions, gpiod_line_set_flags,
+> > gpiod_line_set_direction_input, and gpiod_line_set_direction_output provide
+> > slightly simplified APIs for common use cases.
+> >
+> > Bulk forms of all functions are also provided.
+> >
+> > Signed-off-by: Kent Gibson <warthog618@gmail.com>
+> > ---
+> >  include/gpiod.h | 115 ++++++++++++++++++++++++++++
+> >  lib/core.c      | 196 +++++++++++++++++++++++++++++++++++++++++++++---
+> >  2 files changed, 300 insertions(+), 11 deletions(-)
+> >
+> > diff --git a/include/gpiod.h b/include/gpiod.h
+> > index 159d745..4053fd2 100644
+> > --- a/include/gpiod.h
+> > +++ b/include/gpiod.h
+> > @@ -1252,6 +1252,14 @@ void gpiod_line_release_bulk(struct gpiod_line_bulk *bulk) GPIOD_API;
+> >   */
+> >  bool gpiod_line_is_requested(struct gpiod_line *line) GPIOD_API;
+> >
+> > +/**
+> > + * @brief Check if the calling user has ownership of this line for values,
+> > + * not events.
+> > + * @param line GPIO line object.
+> > + * @return True if given line was requested, false otherwise.
+> 
+> I'd clarify: "requested for reading/setting values".
+> 
+> > + */
+> > +bool gpiod_line_is_requested_values(struct gpiod_line *line) GPIOD_API;
+> > +
+> >  /**
+> >   * @brief Check if the calling user has neither requested ownership of this
+> >   *        line nor configured any event notifications.
+> > @@ -1311,6 +1319,113 @@ int gpiod_line_set_value(struct gpiod_line *line, int value) GPIOD_API;
+> >  int gpiod_line_set_value_bulk(struct gpiod_line_bulk *bulk,
+> >                               const int *values) GPIOD_API;
+> >
+> > +/**
+> > + * @}
+> > + *
+> > + * @defgroup __line_config__ Setting line configuration
+> > + * @{
+> > + */
+> > +
+> > +/**
+> > + * @brief Update the configuration of a single GPIO line.
+> > + * @param line GPIO line object.
+> > + * @param direction Updated direction which may be one of
+> > + * GPIOD_LINE_REQUEST_DIRECTION_AS_IS, GPIOD_LINE_REQUEST_DIRECTION_INPUT,
+> > + * or GPIOD_LINE_REQUEST_DIRECTION_OUTPUT.
+> > + * @param flags Replacement flags.
+> > + * @param value The new output value for the line when direction is
+> > + * GPIOD_LINE_REQUEST_DIRECTION_OUTPUT.
+> > + * @return 0 is the operation succeeds. In case of an error this routine
+> > + *         returns -1 and sets the last error number.
+> > + */
+> > +int gpiod_line_set_config(struct gpiod_line *line, int direction,
+> > +                         int flags, int value) GPIOD_API;
+> > +
+> > +/**
+> > + * @brief Update the configuration of a set of GPIO lines.
+> > + * @param bulk Set of GPIO lines.
+> > + * @param direction Updated direction which may be one of
+> > + * GPIOD_LINE_REQUEST_DIRECTION_AS_IS, GPIOD_LINE_REQUEST_DIRECTION_INPUT,
+> > + * or GPIOD_LINE_REQUEST_DIRECTION_OUTPUT.
+> > + * @param flags Replacement flags.
+> > + * @param values An array holding line_bulk->num_lines new logical values
+> > + * for lines when direction is GPIOD_LINE_REQUEST_DIRECTION_OUTPUT.
+> > + * @return 0 is the operation succeeds. In case of an error this routine
+> > + *         returns -1 and sets the last error number.
+> > + *
+> > + * If the lines were not previously requested together, the behavior is
+> > + * undefined.
+> > + */
+> > +int gpiod_line_set_config_bulk(struct gpiod_line_bulk *bulk,
+> > +                              int direction, int flags,
+> > +                              const int *values) GPIOD_API;
+> > +
+> > +
+> > +/**
+> > + * @brief Update the configuration flags of a single GPIO line.
+> > + * @param line GPIO line object.
+> > + * @param flags Replacement flags.
+> > + * @return 0 is the operation succeeds. In case of an error this routine
+> > + *         returns -1 and sets the last error number.
+> > + */
+> > +int gpiod_line_set_flags(struct gpiod_line *line, int flags) GPIOD_API;
+> > +
+> > +/**
+> > + * @brief Update the configuration flags of a set of GPIO lines.
+> > + * @param bulk Set of GPIO lines.
+> > + * @param flags Replacement flags.
+> > + * @return 0 is the operation succeeds. In case of an error this routine
+> > + *         returns -1 and sets the last error number.
+> > + *
+> > + * If the lines were not previously requested together, the behavior is
+> > + * undefined.
+> > + */
+> > +int gpiod_line_set_flags_bulk(struct gpiod_line_bulk *bulk,
+> > +                             int flags) GPIOD_API;
+> > +
+> > +/**
+> > + * @brief Set the direction of a single GPIO line to input.
+> > + * @param line GPIO line object.
+> > + * @return 0 is the operation succeeds. In case of an error this routine
+> > + *         returns -1 and sets the last error number.
+> > + */
+> > +int gpiod_line_set_direction_input(struct gpiod_line *line) GPIOD_API;
+> > +
+> > +/**
+> > + * @brief Set the direction of a set of GPIO lines to input.
+> > + * @param bulk Set of GPIO lines.
+> > + * @return 0 is the operation succeeds. In case of an error this routine
+> > + *         returns -1 and sets the last error number.
+> > + *
+> > + * If the lines were not previously requested together, the behavior is
+> > + * undefined.
+> > + */
+> > +int gpiod_line_set_direction_bulk_input(struct gpiod_line_bulk *bulk
+> > +                                       ) GPIOD_API;
+> 
+> Please stick to the current convention of having "_bulk" at the end of
+> the function name.
+> 
 
-"There is a hardware issue in Intel Baytrail where concurrent GPIO register
- access might result reads of 0xffffffff and writes might get dropped
- completely."
+That would be clearer.  Not sure why I went with those names - maybe
+taking the lead from gpiod_line_request_bulk_falling_edge_events_flags?
+Maybe I originally had a core set_direction function, and these were to
+be wrappers around that?
+Anyway - will change it.
 
-Testing has shown that this does not catch all cases, there are still
-2 problems remaining
+> > +
+> > +/**
+> > + * @brief Set the direction of a single GPIO line to output.
+> > + * @param line GPIO line object.
+> > + * @param value The logical value output on the line.
+> > + * @return 0 is the operation succeeds. In case of an error this routine
+> > + *         returns -1 and sets the last error number.
+> > + */
+> > +int gpiod_line_set_direction_output(struct gpiod_line *line,
+> > +                                   int value) GPIOD_API;
+> > +
+> > +/**
+> > + * @brief Set the direction of a set of GPIO lines to output.
+> > + * @param bulk Set of GPIO lines.
+> > + * @values The logical value to output for each line.
+> > + * @return 0 is the operation succeeds. In case of an error this routine
+> > + *         returns -1 and sets the last error number.
+> > + *
+> > + * If the lines were not previously requested together, the behavior is
+> > + * undefined.
+> > + */
+> > +int gpiod_line_set_direction_bulk_output(struct gpiod_line_bulk *bulk,
+> > +                                        const int *values) GPIOD_API;
+> > +
+> >  /**
+> >   * @}
+> >   *
+> > diff --git a/lib/core.c b/lib/core.c
+> > index 9b7d88f..c42cda5 100644
+> > --- a/lib/core.c
+> > +++ b/lib/core.c
+> > @@ -36,10 +36,13 @@ struct gpiod_line {
+> >         unsigned int offset;
+> >         int direction;
+> >         int active_state;
+> > -       __u32 flags;
+> > +       int output_value;
+> > +       __u32 lflags;
+> > +       __u32 cflags;
+> 
+> Ugh, these aren't very fortunate names - at first glance I have no
+> idea what they mean. Either document those or change the names to
+> something more obvious.
+> 
 
-1) The original fix uses a spinlock per byt_gpio device / struct,
-additional testing has shown that this is not sufficient concurent
-accesses to 2 different GPIO banks also suffer from the same problem.
+Yeah - not the best - lflags are line_flags (those returned by
+LINEINFO_IOCTL) and cflags is config_flags (those set in the initial
+line request).  So maybe rename lflags to line_flags or info_flags,
+and rename cflags to handle_flags or req_flags?
+And add some documentation as well.
 
-This commit fixes this by moving to a single global lock.
+> >
+> >         int state;
+> >         bool needs_update;
+> > +       bool as_is;
+> >
+> >         struct gpiod_chip *chip;
+> >         struct line_fd_handle *fd_handle;
+> > @@ -359,11 +362,11 @@ int gpiod_line_active_state(struct gpiod_line *line)
+> >
+> >  int gpiod_line_bias(struct gpiod_line *line)
+> >  {
+> > -       if (line->flags & GPIOLINE_FLAG_BIAS_DISABLE)
+> > +       if (line->lflags & GPIOLINE_FLAG_BIAS_DISABLE)
+> >                 return GPIOD_LINE_BIAS_DISABLE;
+> > -       if (line->flags & GPIOLINE_FLAG_BIAS_PULL_UP)
+> > +       if (line->lflags & GPIOLINE_FLAG_BIAS_PULL_UP)
+> >                 return GPIOD_LINE_BIAS_PULL_UP;
+> > -       if (line->flags & GPIOLINE_FLAG_BIAS_PULL_DOWN)
+> > +       if (line->lflags & GPIOLINE_FLAG_BIAS_PULL_DOWN)
+> >                 return GPIOD_LINE_BIAS_PULL_DOWN;
+> >
+> >         return GPIOD_LINE_BIAS_AS_IS;
+> > @@ -371,17 +374,17 @@ int gpiod_line_bias(struct gpiod_line *line)
+> >
+> >  bool gpiod_line_is_used(struct gpiod_line *line)
+> >  {
+> > -       return line->flags & GPIOLINE_FLAG_KERNEL;
+> > +       return line->lflags & GPIOLINE_FLAG_KERNEL;
+> >  }
+> >
+> >  bool gpiod_line_is_open_drain(struct gpiod_line *line)
+> >  {
+> > -       return line->flags & GPIOLINE_FLAG_OPEN_DRAIN;
+> > +       return line->lflags & GPIOLINE_FLAG_OPEN_DRAIN;
+> >  }
+> >
+> >  bool gpiod_line_is_open_source(struct gpiod_line *line)
+> >  {
+> > -       return line->flags & GPIOLINE_FLAG_OPEN_SOURCE;
+> > +       return line->lflags & GPIOLINE_FLAG_OPEN_SOURCE;
+> >  }
+> >
+> >  bool gpiod_line_needs_update(struct gpiod_line *line)
+> > @@ -408,7 +411,7 @@ int gpiod_line_update(struct gpiod_line *line)
+> >                                                 ? GPIOD_LINE_ACTIVE_STATE_LOW
+> >                                                 : GPIOD_LINE_ACTIVE_STATE_HIGH;
+> >
+> > -       line->flags = info.flags;
+> > +       line->lflags = info.flags;
+> >
+> >         strncpy(line->name, info.name, sizeof(line->name));
+> >         strncpy(line->consumer, info.consumer, sizeof(line->consumer));
+> > @@ -457,6 +460,20 @@ static bool line_bulk_all_requested(struct gpiod_line_bulk *bulk)
+> >         return true;
+> >  }
+> >
+> > +static bool line_bulk_all_requested_values(struct gpiod_line_bulk *bulk)
+> > +{
+> > +       struct gpiod_line *line, **lineptr;
+> > +
+> > +       gpiod_line_bulk_foreach_line(bulk, line, lineptr) {
+> > +               if (!gpiod_line_is_requested_values(line)) {
+> > +                       errno = EPERM;
+> > +                       return false;
+> > +               }
+> > +       }
+> > +
+> > +       return true;
+> > +}
+> > +
+> >  static bool line_bulk_all_free(struct gpiod_line_bulk *bulk)
+> >  {
+> >         struct gpiod_line *line, **lineptr;
+> > @@ -471,6 +488,27 @@ static bool line_bulk_all_free(struct gpiod_line_bulk *bulk)
+> >         return true;
+> >  }
+> >
+> > +static bool line_request_direction_is_valid(int direction)
+> > +{
+> > +       if ((direction == GPIOD_LINE_REQUEST_DIRECTION_AS_IS) ||
+> > +           (direction == GPIOD_LINE_REQUEST_DIRECTION_INPUT) ||
+> > +           (direction == GPIOD_LINE_REQUEST_DIRECTION_OUTPUT))
+> > +               return true;
+> > +
+> > +       errno = EINVAL;
+> > +       return false;
+> > +}
+> > +
+> > +static __u32 line_request_direction_to_gpio_handleflag(int direction)
+> > +{
+> > +       if (direction == GPIOD_LINE_REQUEST_DIRECTION_INPUT)
+> > +               return GPIOHANDLE_REQUEST_INPUT;
+> > +       if (direction == GPIOD_LINE_REQUEST_DIRECTION_OUTPUT)
+> > +               return GPIOHANDLE_REQUEST_OUTPUT;
+> > +
+> > +       return 0;
+> > +}
+> > +
+> >  static __u32 line_request_flag_to_gpio_handleflag(int flags)
+> >  {
+> >         int hflags = 0;
+> > @@ -495,7 +533,7 @@ static int line_request_values(struct gpiod_line_bulk *bulk,
+> >                                const struct gpiod_line_request_config *config,
+> >                                const int *default_vals)
+> >  {
+> > -       struct gpiod_line *line, **lineptr;
+> > +       struct gpiod_line *line;
+> >         struct line_fd_handle *line_fd;
+> >         struct gpiohandle_request req;
+> >         unsigned int i;
+> > @@ -524,7 +562,6 @@ static int line_request_values(struct gpiod_line_bulk *bulk,
+> >         else if (config->request_type == GPIOD_LINE_REQUEST_DIRECTION_OUTPUT)
+> >                 req.flags |= GPIOHANDLE_REQUEST_OUTPUT;
+> >
+> > -
+> >         gpiod_line_bulk_foreach_line_off(bulk, line, i) {
+> >                 req.lineoffsets[i] = gpiod_line_offset(line);
+> >                 if (config->request_type ==
+> > @@ -548,8 +585,14 @@ static int line_request_values(struct gpiod_line_bulk *bulk,
+> >         if (!line_fd)
+> >                 return -1;
+> >
+> > -       gpiod_line_bulk_foreach_line(bulk, line, lineptr) {
+> > +       gpiod_line_bulk_foreach_line_off(bulk, line, i) {
+> >                 line->state = LINE_REQUESTED_VALUES;
+> > +               line->cflags = config->flags;
+> > +               if (config->request_type ==
+> > +                       GPIOD_LINE_REQUEST_DIRECTION_OUTPUT)
+> > +                       line->output_value = req.default_values[i];
+> > +               if (config->request_type == GPIOD_LINE_REQUEST_DIRECTION_AS_IS)
+> > +                       line->as_is = true;
+> >                 line_set_fd(line, line_fd);
+> >                 line_maybe_update(line);
+> >         }
+> > @@ -590,6 +633,7 @@ static int line_request_event_single(struct gpiod_line *line,
+> >                 return -1;
+> >
+> >         line->state = LINE_REQUESTED_EVENTS;
+> > +       line->cflags = config->flags;
+> >         line_set_fd(line, line_fd);
+> >         line_maybe_update(line);
+> >
+> > @@ -688,6 +732,11 @@ bool gpiod_line_is_requested(struct gpiod_line *line)
+> >                 line->state == LINE_REQUESTED_EVENTS);
+> >  }
+> >
+> > +bool gpiod_line_is_requested_values(struct gpiod_line *line)
+> > +{
+> > +       return (line->state == LINE_REQUESTED_VALUES);
+> > +}
+> > +
+> >  bool gpiod_line_is_free(struct gpiod_line *line)
+> >  {
+> >         return line->state == LINE_FREE;
+> > @@ -766,9 +815,134 @@ int gpiod_line_set_value_bulk(struct gpiod_line_bulk *bulk, const int *values)
+> >         if (rv < 0)
+> >                 return -1;
+> >
+> > +       gpiod_line_bulk_foreach_line_off(bulk, line, i)
+> > +               line->output_value = data.values[i];
+> > +
+> > +       return 0;
+> > +}
+> > +
+> > +int gpiod_line_set_config(struct gpiod_line *line, int direction,
+> > +                         int flags, int value)
+> > +{
+> > +       struct gpiod_line_bulk bulk;
+> > +
+> > +       gpiod_line_bulk_init(&bulk);
+> > +       gpiod_line_bulk_add(&bulk, line);
+> > +
+> > +       return gpiod_line_set_config_bulk(&bulk, direction, flags, &value);
+> > +}
+> > +
+> > +int gpiod_line_set_config_bulk(struct gpiod_line_bulk *bulk,
+> > +                              int direction, int flags,
+> > +                              const int *values)
+> > +{
+> > +       struct gpiohandle_config hcfg;
+> > +       struct gpiod_line *line;
+> > +       unsigned int i;
+> > +       int rv, fd;
+> > +       bool as_is;
+> > +
+> > +       if (!line_bulk_same_chip(bulk) ||
+> > +           !line_bulk_all_requested_values(bulk))
+> > +               return -1;
+> > +
+> > +       if (!line_request_direction_is_valid(direction))
+> > +               return -1;
+> > +
+> > +       memset(&hcfg, 0, sizeof(hcfg));
+> > +
+> > +       hcfg.flags = line_request_flag_to_gpio_handleflag(flags);
+> > +       hcfg.flags |= line_request_direction_to_gpio_handleflag(direction);
+> > +       if (direction == GPIOD_LINE_REQUEST_DIRECTION_OUTPUT && values) {
+> > +               for (i = 0; i < gpiod_line_bulk_num_lines(bulk); i++)
+> > +                       hcfg.default_values[i] = (uint8_t)!!values[i];
+> > +       }
+> > +
+> > +       line = gpiod_line_bulk_get_line(bulk, 0);
+> > +       fd = line_get_fd(line);
+> > +
+> > +       rv = ioctl(fd, GPIOHANDLE_SET_CONFIG_IOCTL, &hcfg);
+> > +       if (rv < 0)
+> > +               return -1;
+> > +
+> > +       as_is = line->as_is && direction == GPIOD_LINE_REQUEST_DIRECTION_AS_IS;
+> > +       gpiod_line_bulk_foreach_line_off(bulk, line, i) {
+> > +               line->cflags = flags;
+> > +               if (direction == GPIOD_LINE_REQUEST_DIRECTION_OUTPUT)
+> > +                       line->output_value = hcfg.default_values[i];
+> > +               line->as_is = as_is;
+> > +               line_maybe_update(line);
+> > +       }
+> >         return 0;
+> >  }
+> >
+> > +int gpiod_line_set_flags(struct gpiod_line *line, int flags)
+> > +{
+> > +       struct gpiod_line_bulk bulk;
+> > +
+> > +       gpiod_line_bulk_init(&bulk);
+> > +       gpiod_line_bulk_add(&bulk, line);
+> > +
+> > +       return gpiod_line_set_flags_bulk(&bulk, flags);
+> > +}
+> > +
+> > +int gpiod_line_set_flags_bulk(struct gpiod_line_bulk *bulk, int flags)
+> > +{
+> > +       struct gpiod_line *line;
+> > +       int values[GPIOD_LINE_BULK_MAX_LINES];
+> > +       unsigned int i;
+> > +       int direction;
+> > +
+> > +       line = gpiod_line_bulk_get_line(bulk, 0);
+> > +       if (line->as_is) {
+> 
+> Can you explain the purpose of this as_is field? I'm not sure this is
+> really needed.
+> 
 
-2) The original fix did not add a lock around the register accesses in
-the suspend/resume handling.
+It is there for gpiod_set_flags, which has to populate the direction
+flags in the SET_CONFIG ioctl. The existing line->direction is
+either input or output.  It is drawn from GPIOLINE_FLAG_IS_OUT, so
+as-is is gets mapped to input.
+I didn't want to change the existing line->direction, and adding the
+as-is seemed clearer than adding another flavour of direction that
+contained all three.
 
-Since pinctrl-baytrail.c is using normal suspend/resume handlers,
-interrupts are still enabled during suspend/resume handling. Nothing
-should be using the GPIOs when they are being taken down, _but_ the
-GPIOs themselves may still cause interrupts, which are likely to
-use (read) the triggering GPIO. So we need to protect against
-concurrent GPIO register accesses in the suspend/resume handlers too.
+Happy to entertain alternatives...
 
-This commit fixes this by adding the missing spin_lock / unlock calls.
-
-The 2 fixes together fix the Acer Switch 10 SW5-012 getting completely
-confused after a suspend resume. The DSDT for this device has a bug
-in its _LID method which reprograms the home and power button trigger-
-flags requesting both high and low _level_ interrupts so the IRQs for
-these 2 GPIOs continuously fire. This combined with the saving of
-registers during suspend, triggers concurrent GPIO register accesses
-resulting in saving 0xffffffff as pconf0 value during suspend and then
-when restoring this on resume the pinmux settings get all messed up,
-resulting in various I2C busses being stuck, the wifi no longer working
-and often the tablet simply not coming out of suspend at all.
-
-Cc: stable@vger.kernel.org
-Fixes: 39ce8150a079 ("pinctrl: baytrail: Serialize all register access")
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
----
- drivers/pinctrl/intel/pinctrl-baytrail.c | 81 +++++++++++++-----------
- 1 file changed, 44 insertions(+), 37 deletions(-)
-
-diff --git a/drivers/pinctrl/intel/pinctrl-baytrail.c b/drivers/pinctrl/int=
-el/pinctrl-baytrail.c
-index b18336d42252..1b289f64c3a2 100644
---- a/drivers/pinctrl/intel/pinctrl-baytrail.c
-+++ b/drivers/pinctrl/intel/pinctrl-baytrail.c
-@@ -111,7 +111,6 @@ struct byt_gpio {
- =09struct platform_device *pdev;
- =09struct pinctrl_dev *pctl_dev;
- =09struct pinctrl_desc pctl_desc;
--=09raw_spinlock_t lock;
- =09const struct intel_pinctrl_soc_data *soc_data;
- =09struct intel_community *communities_copy;
- =09struct byt_gpio_pin_context *saved_context;
-@@ -550,6 +549,8 @@ static const struct intel_pinctrl_soc_data *byt_soc_dat=
-a[] =3D {
- =09NULL
- };
-=20
-+static DEFINE_RAW_SPINLOCK(byt_gpio_lock);
-+
- static struct intel_community *byt_get_community(struct byt_gpio *vg,
- =09=09=09=09=09=09 unsigned int pin)
- {
-@@ -659,7 +660,7 @@ static void byt_set_group_simple_mux(struct byt_gpio *v=
-g,
- =09unsigned long flags;
- =09int i;
-=20
--=09raw_spin_lock_irqsave(&vg->lock, flags);
-+=09raw_spin_lock_irqsave(&byt_gpio_lock, flags);
-=20
- =09for (i =3D 0; i < group.npins; i++) {
- =09=09void __iomem *padcfg0;
-@@ -679,7 +680,7 @@ static void byt_set_group_simple_mux(struct byt_gpio *v=
-g,
- =09=09writel(value, padcfg0);
- =09}
-=20
--=09raw_spin_unlock_irqrestore(&vg->lock, flags);
-+=09raw_spin_unlock_irqrestore(&byt_gpio_lock, flags);
- }
-=20
- static void byt_set_group_mixed_mux(struct byt_gpio *vg,
-@@ -689,7 +690,7 @@ static void byt_set_group_mixed_mux(struct byt_gpio *vg=
-,
- =09unsigned long flags;
- =09int i;
-=20
--=09raw_spin_lock_irqsave(&vg->lock, flags);
-+=09raw_spin_lock_irqsave(&byt_gpio_lock, flags);
-=20
- =09for (i =3D 0; i < group.npins; i++) {
- =09=09void __iomem *padcfg0;
-@@ -709,7 +710,7 @@ static void byt_set_group_mixed_mux(struct byt_gpio *vg=
-,
- =09=09writel(value, padcfg0);
- =09}
-=20
--=09raw_spin_unlock_irqrestore(&vg->lock, flags);
-+=09raw_spin_unlock_irqrestore(&byt_gpio_lock, flags);
- }
-=20
- static int byt_set_mux(struct pinctrl_dev *pctldev, unsigned int func_sele=
-ctor,
-@@ -750,11 +751,11 @@ static void byt_gpio_clear_triggering(struct byt_gpio=
- *vg, unsigned int offset)
- =09unsigned long flags;
- =09u32 value;
-=20
--=09raw_spin_lock_irqsave(&vg->lock, flags);
-+=09raw_spin_lock_irqsave(&byt_gpio_lock, flags);
- =09value =3D readl(reg);
- =09value &=3D ~(BYT_TRIG_POS | BYT_TRIG_NEG | BYT_TRIG_LVL);
- =09writel(value, reg);
--=09raw_spin_unlock_irqrestore(&vg->lock, flags);
-+=09raw_spin_unlock_irqrestore(&byt_gpio_lock, flags);
- }
-=20
- static int byt_gpio_request_enable(struct pinctrl_dev *pctl_dev,
-@@ -766,7 +767,7 @@ static int byt_gpio_request_enable(struct pinctrl_dev *=
-pctl_dev,
- =09u32 value, gpio_mux;
- =09unsigned long flags;
-=20
--=09raw_spin_lock_irqsave(&vg->lock, flags);
-+=09raw_spin_lock_irqsave(&byt_gpio_lock, flags);
-=20
- =09/*
- =09 * In most cases, func pin mux 000 means GPIO function.
-@@ -788,7 +789,7 @@ static int byt_gpio_request_enable(struct pinctrl_dev *=
-pctl_dev,
- =09=09=09 "pin %u forcibly re-configured as GPIO\n", offset);
- =09}
-=20
--=09raw_spin_unlock_irqrestore(&vg->lock, flags);
-+=09raw_spin_unlock_irqrestore(&byt_gpio_lock, flags);
-=20
- =09pm_runtime_get(&vg->pdev->dev);
-=20
-@@ -816,7 +817,7 @@ static int byt_gpio_set_direction(struct pinctrl_dev *p=
-ctl_dev,
- =09unsigned long flags;
- =09u32 value;
-=20
--=09raw_spin_lock_irqsave(&vg->lock, flags);
-+=09raw_spin_lock_irqsave(&byt_gpio_lock, flags);
-=20
- =09value =3D readl(val_reg);
- =09value &=3D ~BYT_DIR_MASK;
-@@ -833,7 +834,7 @@ static int byt_gpio_set_direction(struct pinctrl_dev *p=
-ctl_dev,
- =09=09     "Potential Error: Setting GPIO with direct_irq_en to output");
- =09writel(value, val_reg);
-=20
--=09raw_spin_unlock_irqrestore(&vg->lock, flags);
-+=09raw_spin_unlock_irqrestore(&byt_gpio_lock, flags);
-=20
- =09return 0;
- }
-@@ -902,11 +903,11 @@ static int byt_pin_config_get(struct pinctrl_dev *pct=
-l_dev, unsigned int offset,
- =09u32 conf, pull, val, debounce;
- =09u16 arg =3D 0;
-=20
--=09raw_spin_lock_irqsave(&vg->lock, flags);
-+=09raw_spin_lock_irqsave(&byt_gpio_lock, flags);
- =09conf =3D readl(conf_reg);
- =09pull =3D conf & BYT_PULL_ASSIGN_MASK;
- =09val =3D readl(val_reg);
--=09raw_spin_unlock_irqrestore(&vg->lock, flags);
-+=09raw_spin_unlock_irqrestore(&byt_gpio_lock, flags);
-=20
- =09switch (param) {
- =09case PIN_CONFIG_BIAS_DISABLE:
-@@ -933,9 +934,9 @@ static int byt_pin_config_get(struct pinctrl_dev *pctl_=
-dev, unsigned int offset,
- =09=09if (!(conf & BYT_DEBOUNCE_EN))
- =09=09=09return -EINVAL;
-=20
--=09=09raw_spin_lock_irqsave(&vg->lock, flags);
-+=09=09raw_spin_lock_irqsave(&byt_gpio_lock, flags);
- =09=09debounce =3D readl(db_reg);
--=09=09raw_spin_unlock_irqrestore(&vg->lock, flags);
-+=09=09raw_spin_unlock_irqrestore(&byt_gpio_lock, flags);
-=20
- =09=09switch (debounce & BYT_DEBOUNCE_PULSE_MASK) {
- =09=09case BYT_DEBOUNCE_PULSE_375US:
-@@ -987,7 +988,7 @@ static int byt_pin_config_set(struct pinctrl_dev *pctl_=
-dev,
- =09u32 conf, val, debounce;
- =09int i, ret =3D 0;
-=20
--=09raw_spin_lock_irqsave(&vg->lock, flags);
-+=09raw_spin_lock_irqsave(&byt_gpio_lock, flags);
-=20
- =09conf =3D readl(conf_reg);
- =09val =3D readl(val_reg);
-@@ -1095,7 +1096,7 @@ static int byt_pin_config_set(struct pinctrl_dev *pct=
-l_dev,
- =09if (!ret)
- =09=09writel(conf, conf_reg);
-=20
--=09raw_spin_unlock_irqrestore(&vg->lock, flags);
-+=09raw_spin_unlock_irqrestore(&byt_gpio_lock, flags);
-=20
- =09return ret;
- }
-@@ -1120,9 +1121,9 @@ static int byt_gpio_get(struct gpio_chip *chip, unsig=
-ned int offset)
- =09unsigned long flags;
- =09u32 val;
-=20
--=09raw_spin_lock_irqsave(&vg->lock, flags);
-+=09raw_spin_lock_irqsave(&byt_gpio_lock, flags);
- =09val =3D readl(reg);
--=09raw_spin_unlock_irqrestore(&vg->lock, flags);
-+=09raw_spin_unlock_irqrestore(&byt_gpio_lock, flags);
-=20
- =09return !!(val & BYT_LEVEL);
- }
-@@ -1137,13 +1138,13 @@ static void byt_gpio_set(struct gpio_chip *chip, un=
-signed int offset, int value)
- =09if (!reg)
- =09=09return;
-=20
--=09raw_spin_lock_irqsave(&vg->lock, flags);
-+=09raw_spin_lock_irqsave(&byt_gpio_lock, flags);
- =09old_val =3D readl(reg);
- =09if (value)
- =09=09writel(old_val | BYT_LEVEL, reg);
- =09else
- =09=09writel(old_val & ~BYT_LEVEL, reg);
--=09raw_spin_unlock_irqrestore(&vg->lock, flags);
-+=09raw_spin_unlock_irqrestore(&byt_gpio_lock, flags);
- }
-=20
- static int byt_gpio_get_direction(struct gpio_chip *chip, unsigned int off=
-set)
-@@ -1156,9 +1157,9 @@ static int byt_gpio_get_direction(struct gpio_chip *c=
-hip, unsigned int offset)
- =09if (!reg)
- =09=09return -EINVAL;
-=20
--=09raw_spin_lock_irqsave(&vg->lock, flags);
-+=09raw_spin_lock_irqsave(&byt_gpio_lock, flags);
- =09value =3D readl(reg);
--=09raw_spin_unlock_irqrestore(&vg->lock, flags);
-+=09raw_spin_unlock_irqrestore(&byt_gpio_lock, flags);
-=20
- =09if (!(value & BYT_OUTPUT_EN))
- =09=09return 0;
-@@ -1201,14 +1202,14 @@ static void byt_gpio_dbg_show(struct seq_file *s, s=
-truct gpio_chip *chip)
- =09=09const char *label;
- =09=09unsigned int pin;
-=20
--=09=09raw_spin_lock_irqsave(&vg->lock, flags);
-+=09=09raw_spin_lock_irqsave(&byt_gpio_lock, flags);
- =09=09pin =3D vg->soc_data->pins[i].number;
- =09=09reg =3D byt_gpio_reg(vg, pin, BYT_CONF0_REG);
- =09=09if (!reg) {
- =09=09=09seq_printf(s,
- =09=09=09=09   "Could not retrieve pin %i conf0 reg\n",
- =09=09=09=09   pin);
--=09=09=09raw_spin_unlock_irqrestore(&vg->lock, flags);
-+=09=09=09raw_spin_unlock_irqrestore(&byt_gpio_lock, flags);
- =09=09=09continue;
- =09=09}
- =09=09conf0 =3D readl(reg);
-@@ -1217,11 +1218,11 @@ static void byt_gpio_dbg_show(struct seq_file *s, s=
-truct gpio_chip *chip)
- =09=09if (!reg) {
- =09=09=09seq_printf(s,
- =09=09=09=09   "Could not retrieve pin %i val reg\n", pin);
--=09=09=09raw_spin_unlock_irqrestore(&vg->lock, flags);
-+=09=09=09raw_spin_unlock_irqrestore(&byt_gpio_lock, flags);
- =09=09=09continue;
- =09=09}
- =09=09val =3D readl(reg);
--=09=09raw_spin_unlock_irqrestore(&vg->lock, flags);
-+=09=09raw_spin_unlock_irqrestore(&byt_gpio_lock, flags);
-=20
- =09=09comm =3D byt_get_community(vg, pin);
- =09=09if (!comm) {
-@@ -1305,9 +1306,9 @@ static void byt_irq_ack(struct irq_data *d)
- =09if (!reg)
- =09=09return;
-=20
--=09raw_spin_lock(&vg->lock);
-+=09raw_spin_lock(&byt_gpio_lock);
- =09writel(BIT(offset % 32), reg);
--=09raw_spin_unlock(&vg->lock);
-+=09raw_spin_unlock(&byt_gpio_lock);
- }
-=20
- static void byt_irq_mask(struct irq_data *d)
-@@ -1331,7 +1332,7 @@ static void byt_irq_unmask(struct irq_data *d)
- =09if (!reg)
- =09=09return;
-=20
--=09raw_spin_lock_irqsave(&vg->lock, flags);
-+=09raw_spin_lock_irqsave(&byt_gpio_lock, flags);
- =09value =3D readl(reg);
-=20
- =09switch (irqd_get_trigger_type(d)) {
-@@ -1354,7 +1355,7 @@ static void byt_irq_unmask(struct irq_data *d)
-=20
- =09writel(value, reg);
-=20
--=09raw_spin_unlock_irqrestore(&vg->lock, flags);
-+=09raw_spin_unlock_irqrestore(&byt_gpio_lock, flags);
- }
-=20
- static int byt_irq_type(struct irq_data *d, unsigned int type)
-@@ -1368,7 +1369,7 @@ static int byt_irq_type(struct irq_data *d, unsigned =
-int type)
- =09if (!reg || offset >=3D vg->chip.ngpio)
- =09=09return -EINVAL;
-=20
--=09raw_spin_lock_irqsave(&vg->lock, flags);
-+=09raw_spin_lock_irqsave(&byt_gpio_lock, flags);
- =09value =3D readl(reg);
-=20
- =09WARN(value & BYT_DIRECT_IRQ_EN,
-@@ -1390,7 +1391,7 @@ static int byt_irq_type(struct irq_data *d, unsigned =
-int type)
- =09else if (type & IRQ_TYPE_LEVEL_MASK)
- =09=09irq_set_handler_locked(d, handle_level_irq);
-=20
--=09raw_spin_unlock_irqrestore(&vg->lock, flags);
-+=09raw_spin_unlock_irqrestore(&byt_gpio_lock, flags);
-=20
- =09return 0;
- }
-@@ -1417,9 +1418,9 @@ static void byt_gpio_irq_handler(struct irq_desc *des=
-c)
- =09=09=09continue;
- =09=09}
-=20
--=09=09raw_spin_lock(&vg->lock);
-+=09=09raw_spin_lock(&byt_gpio_lock);
- =09=09pending =3D readl(reg);
--=09=09raw_spin_unlock(&vg->lock);
-+=09=09raw_spin_unlock(&byt_gpio_lock);
- =09=09for_each_set_bit(pin, &pending, 32) {
- =09=09=09virq =3D irq_find_mapping(vg->chip.irq.domain, base + pin);
- =09=09=09generic_handle_irq(virq);
-@@ -1646,8 +1647,6 @@ static int byt_pinctrl_probe(struct platform_device *=
-pdev)
- =09=09return PTR_ERR(vg->pctl_dev);
- =09}
-=20
--=09raw_spin_lock_init(&vg->lock);
--
- =09ret =3D byt_gpio_probe(vg);
- =09if (ret)
- =09=09return ret;
-@@ -1662,8 +1661,11 @@ static int byt_pinctrl_probe(struct platform_device =
-*pdev)
- static int byt_gpio_suspend(struct device *dev)
- {
- =09struct byt_gpio *vg =3D dev_get_drvdata(dev);
-+=09unsigned long flags;
- =09int i;
-=20
-+=09raw_spin_lock_irqsave(&byt_gpio_lock, flags);
-+
- =09for (i =3D 0; i < vg->soc_data->npins; i++) {
- =09=09void __iomem *reg;
- =09=09u32 value;
-@@ -1684,14 +1686,18 @@ static int byt_gpio_suspend(struct device *dev)
- =09=09vg->saved_context[i].val =3D value;
- =09}
-=20
-+=09raw_spin_unlock_irqrestore(&byt_gpio_lock, flags);
- =09return 0;
- }
-=20
- static int byt_gpio_resume(struct device *dev)
- {
- =09struct byt_gpio *vg =3D dev_get_drvdata(dev);
-+=09unsigned long flags;
- =09int i;
-=20
-+=09raw_spin_lock_irqsave(&byt_gpio_lock, flags);
-+
- =09for (i =3D 0; i < vg->soc_data->npins; i++) {
- =09=09void __iomem *reg;
- =09=09u32 value;
-@@ -1729,6 +1735,7 @@ static int byt_gpio_resume(struct device *dev)
- =09=09}
- =09}
-=20
-+=09raw_spin_unlock_irqrestore(&byt_gpio_lock, flags);
- =09return 0;
- }
- #endif
---=20
-2.23.0
+Cheers,
+Kent.
 
