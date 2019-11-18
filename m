@@ -2,346 +2,166 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 2E237100129
-	for <lists+linux-gpio@lfdr.de>; Mon, 18 Nov 2019 10:23:00 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 696BA1001F8
+	for <lists+linux-gpio@lfdr.de>; Mon, 18 Nov 2019 11:04:00 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726690AbfKRJW7 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 18 Nov 2019 04:22:59 -0500
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:36328 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726614AbfKRJW7 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 18 Nov 2019 04:22:59 -0500
-Received: by mail-ot1-f68.google.com with SMTP id f10so13899008oto.3
-        for <linux-gpio@vger.kernel.org>; Mon, 18 Nov 2019 01:22:58 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=pFR3llPqLc9xR1rrhErYhQ9Np0pKks1TZnUYHHrrRUA=;
-        b=xkAD0lAA56gY4bQ9ijcGMcEwSp2xt3Cl4rQTLy1jbTkDKHLd06l1Vf+9asPzk9f5y9
-         qhYeCfoGuAy/zCGuCkfoQzT4HcIrC2VuP9yL2rbPP7vp/G2/VuqrqbMBkty0d+dUPvGL
-         Of6gq7BsBPGf2L3B/79FWDnyPUKxX9QYoTcnO/ZmaYPMw4wcparF/NRZaaxDsc50vJ2p
-         FEfsm/xveCH6I8a669jHCzNtCTz4+mQVnP2lNoDbCJcvn75sHcnUW1KtaVw2cbVMEjvj
-         +or6nEgar+TUUTj41/Fv5fw4+bQmG5pYK3R3gBMzYvNx8M1sbfDaEfos4Coeo4ps1jcc
-         lqCQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=pFR3llPqLc9xR1rrhErYhQ9Np0pKks1TZnUYHHrrRUA=;
-        b=qjSRtwIyAKTNL09SGw7dRMs1ptMW1rpUAiQhoorK4L/zTKxWuHdjMS/oeirWil3ig6
-         5VLui2pwZZr4RIRNDu1nWyImS9K+0LiJg2AFhHPZa+8nILz7nnDujHzJiijxGuZjUxGx
-         KhhJY+6CQStitLZvRvQqFaf9gJSn3fNNHsr22RDXiiXFJ86QCMUffhSm5Ime9CwtYd1V
-         HGccDbISpW06ay3xbtsHPQ5VueJDpnVk2yC3X0vSbhbQZ2adlPyhSmjuHFt4gPlhAyCx
-         GS9DPyZlJZqw9b85gSXf7khYvgqqZ0Bj2aJAoKUjRLOW6tXyM7YtJfZviQYwQpa4Sj8Z
-         gS9w==
-X-Gm-Message-State: APjAAAUZr1qQusZ8xcp6jBS9vdhzuYcvqObkZhh/GxS77m0QVxLnF7m0
-        ljaJswA5unuekftThGo5peSbIeFOuihJ/1XqSfH69Q==
-X-Google-Smtp-Source: APXvYqyRoHKVrD1n4Cgd2I6KuFKGN+l5TEEMBuB1e1/s+Se/6WFkJqKeypIw9NLQvd2TOZfc864qCstM5dnQvWHwiLE=
-X-Received: by 2002:a9d:68d4:: with SMTP id i20mr9552898oto.194.1574068977604;
- Mon, 18 Nov 2019 01:22:57 -0800 (PST)
+        id S1726536AbfKRKD7 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 18 Nov 2019 05:03:59 -0500
+Received: from mail-eopbgr800079.outbound.protection.outlook.com ([40.107.80.79]:43025
+        "EHLO NAM03-DM3-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726460AbfKRKD7 (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Mon, 18 Nov 2019 05:03:59 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=D8jEFXDLIm4J0Q9/4aLZhV+3nB4Blm5sKm3TdZiMH+o2vVY2UXsUaRPdzK3YQ77+/RSof8ClYP5GX58tduDUKkO5O06bHyvY4gDp36pqNbS7KWYJz5nPD1AzernxyjRH+F4XkunTvhWeiVVTkW3er9huTMR1Unb1QstBwPDqMr7qXxlTdfWAeli7sQuBJOTJYewV51+mVxcq+NGML6IjpPC0Yrr9m5LiVi+TSa9cFUk9XeGqZQwhaBWMnsUBz+9KavegB5V2lnbS70dPFncrKeAzFjG4tt1VgaBDQG6wDZ2IGkFc0pKSEz34F+Vf3Rzzhj+vFzPsTTU9Hh3Q/ubxbw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=lwc6vQ0hZAJ6YH0zYRRQdWGFpNnpxzVWdPdNo1P+L/Q=;
+ b=QNWPM5Xr+0Bqgoezg1VvG7CEFxfF5anFpLelgMYUba8VEu+gA4QNd2jKHHZf+WSOLRY5LerRv9zx1dlC5lRezMOIzcCkfT4ycd5AbOE6MV+Nk1vBUfQV7lRt4+WnSjiTtZYKgzsPvoe1+dwRAwyrdvep+izZqGQB4fwLrYgd7ziw/j1SaFjr1Q1Q3di0JDbhU0/LhWG8FOyxkzSFcxN/HdbLRLt/ftrgR2tI9YlWO7eugMrhKZI3Z2cJ0oGocvCmsVZtcm9ewJrWfdCJzeeKIdqHK61o8yGmEFJQPKaw7yRyI7x34/sFJQ28NNur7VTqJ2iH/nMulz331mvRS9EM3g==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=sifive.com; dmarc=pass action=none header.from=sifive.com;
+ dkim=pass header.d=sifive.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sifive.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=lwc6vQ0hZAJ6YH0zYRRQdWGFpNnpxzVWdPdNo1P+L/Q=;
+ b=kNkP7VVtLZ+9Q55LJyyswcchY2RgCh00gX61eZyPz3icwxjNL7L6X0YdYVwUfkAP/LKRWv3e8NV8mxfg0olHKr/vhG4V2taQKNHhMKZbQ2pM3Mf3DuNL/CTjkjljfN/kDkW7w9d4V9HBvqs07CvwKmPM9bnYCsvTkE/CvS4zGe4=
+Received: from CH2PR13MB3368.namprd13.prod.outlook.com (52.132.246.90) by
+ CH2PR13MB3496.namprd13.prod.outlook.com (52.132.245.202) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2474.11; Mon, 18 Nov 2019 10:03:53 +0000
+Received: from CH2PR13MB3368.namprd13.prod.outlook.com
+ ([fe80::853e:1256:311e:d29]) by CH2PR13MB3368.namprd13.prod.outlook.com
+ ([fe80::853e:1256:311e:d29%7]) with mapi id 15.20.2474.012; Mon, 18 Nov 2019
+ 10:03:53 +0000
+From:   Yash Shah <yash.shah@sifive.com>
+To:     Bartosz Golaszewski <bgolaszewski@baylibre.com>
+CC:     "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "palmer@dabbelt.com" <palmer@dabbelt.com>,
+        "Paul Walmsley ( Sifive)" <paul.walmsley@sifive.com>,
+        "aou@eecs.berkeley.edu" <aou@eecs.berkeley.edu>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "jason@lakedaemon.net" <jason@lakedaemon.net>,
+        "maz@kernel.org" <maz@kernel.org>,
+        "bmeng.cn@gmail.com" <bmeng.cn@gmail.com>,
+        "atish.patra@wdc.com" <atish.patra@wdc.com>,
+        Sagar Kadam <sagar.kadam@sifive.com>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Sachin Ghadi <sachin.ghadi@sifive.com>
+Subject: RE: [PATCH 3/4] gpio: sifive: Add GPIO driver for SiFive SoCs
+Thread-Topic: [PATCH 3/4] gpio: sifive: Add GPIO driver for SiFive SoCs
+Thread-Index: AQHVmVJqQXFGHo/64k2Vkr22HauCBaeJFM0AgAeCbnA=
+Date:   Mon, 18 Nov 2019 10:03:52 +0000
+Message-ID: <CH2PR13MB33680443C101511E66ECADF08C4D0@CH2PR13MB3368.namprd13.prod.outlook.com>
+References: <1573560684-48104-1-git-send-email-yash.shah@sifive.com>
+ <1573560684-48104-4-git-send-email-yash.shah@sifive.com>
+ <CAMpxmJWcuV7goPWxOWv_Og9GwzGrioF62SfS1LCiHf9eDX=vdw@mail.gmail.com>
+In-Reply-To: <CAMpxmJWcuV7goPWxOWv_Og9GwzGrioF62SfS1LCiHf9eDX=vdw@mail.gmail.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=yash.shah@sifive.com; 
+x-originating-ip: [114.143.65.226]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 7bc38015-7707-4fa0-dc60-08d76c0e9df1
+x-ms-traffictypediagnostic: CH2PR13MB3496:
+x-ld-processed: 22f88e9d-ae0d-4ed9-b984-cdc9be1529f1,ExtAddr
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <CH2PR13MB3496387C9A3D47388ED085598C4D0@CH2PR13MB3496.namprd13.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8273;
+x-forefront-prvs: 0225B0D5BC
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(6029001)(136003)(39850400004)(366004)(396003)(346002)(376002)(189003)(199004)(13464003)(76176011)(186003)(6436002)(3846002)(6506007)(53546011)(6306002)(6116002)(316002)(26005)(66066001)(66476007)(66556008)(64756008)(66446008)(71200400001)(25786009)(86362001)(7696005)(102836004)(305945005)(99286004)(76116006)(4326008)(2906002)(71190400001)(54906003)(66946007)(256004)(7736002)(11346002)(446003)(14444005)(7416002)(81166006)(81156014)(6246003)(55016002)(52536014)(478600001)(476003)(44832011)(33656002)(74316002)(6916009)(107886003)(966005)(229853002)(8936002)(5660300002)(486006)(9686003)(14454004)(8676002);DIR:OUT;SFP:1101;SCL:1;SRVR:CH2PR13MB3496;H:CH2PR13MB3368.namprd13.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: sifive.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: TWvut8dnA7gfmx1/kmaK5LhN2yLlX4LtnCenObv+i+y9nkiMP9PmOfMd9nIexyucfcF8waWGjbznjt0xgFw8PlKwwRZLlw4vnl1U8LqOFWxpl6dy+42AZhLSP4JfDtXAbasFAuZoVjwnqOj8B3PbDH8v8u4zn7evHOJYMJe+pyRF4RyOQ9bILZ3x/X50zqRB1ZylH6kTUavYjKk87apOxMonATiv81zTqHb8rWk9yDNPXPdfT5vFDdxc5uhAPnYnYgL0lQ1izm02PdGrZsVVM4cg7GbH41Sbd5kI9sj/NUZy8n+htk1zMMrG4fwxT077Zxm0ac2S8BH1fJKZ2WcczPKg7bseSZkMl5zYdonGHwbHgZkGTYpZuicH9Sg0/jtRwNeNB/Gb2u7DCC1IkylfG42ZnQDGMLy4SaiH+RHO38GHbWQVk7Fd2FqyGkEP2YOH
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-References: <cover.1574059625.git.matti.vaittinen@fi.rohmeurope.com> <41bf40586bb8f725dc8401696856ecd4a75df748.1574059625.git.matti.vaittinen@fi.rohmeurope.com>
-In-Reply-To: <41bf40586bb8f725dc8401696856ecd4a75df748.1574059625.git.matti.vaittinen@fi.rohmeurope.com>
-From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Date:   Mon, 18 Nov 2019 10:22:46 +0100
-Message-ID: <CAMpxmJVfEXddxFMjtTQN4uHEdvvZY98eVABq+sQZ-ww-OUokCw@mail.gmail.com>
-Subject: Re: [PATCH v5 14/16] gpio: bd71828: Initial support for ROHM BD71828
- PMIC GPIOs
-To:     Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-Cc:     Matti Vaittinen <mazziesaccount@gmail.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
-        Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Nicholas Mc Guire <hofrat@osadl.org>,
-        Phil Edworthy <phil.edworthy@renesas.com>,
-        Linux LED Subsystem <linux-leds@vger.kernel.org>,
-        linux-devicetree <devicetree@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-doc <linux-doc@vger.kernel.org>,
-        linux-clk <linux-clk@vger.kernel.org>,
-        linux-gpio <linux-gpio@vger.kernel.org>,
-        linux-rtc@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-OriginatorOrg: sifive.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 7bc38015-7707-4fa0-dc60-08d76c0e9df1
+X-MS-Exchange-CrossTenant-originalarrivaltime: 18 Nov 2019 10:03:53.0010
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 22f88e9d-ae0d-4ed9-b984-cdc9be1529f1
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: hpKIXy2h0Q+eYAewa034hHzMN2AEgAvED/K+PkkM9FakGaMCKpb5XPaplP8OPNsUVN3Y+leL8J8r4pOsKworGg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR13MB3496
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-pon., 18 lis 2019 o 08:01 Matti Vaittinen
-<matti.vaittinen@fi.rohmeurope.com> napisa=C5=82(a):
->
-> ROHM BD71828 PMIC contains 4 pins which can be configured by OTP
-> to be used for general purposes. First 3 can be used as outputs
-> and 4.th pin can be used as input. Allow them to be controlled
-> via GPIO framework.
->
-> The driver assumes all of the pins are configured as GPIOs and
-> trusts that the reserved pins in other OTP configurations are
-> excluded from control using "gpio-reserved-ranges" device tree
-> property (or left untouched by GPIO users).
->
-> Typical use for 4.th pin (input) is to use it as HALL sensor
-> input so that this pin state is toggled when HALL sensor detects
-> LID position change (from close to open or open to close). PMIC
-> HW implements some extra logic which allows PMIC to power-up the
-> system when this pin is toggled. Please see the data sheet for
-> details of GPIO options which can be selected by OTP settings.
->
-> Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-> ---
->
-> No changes from v4
->
->  drivers/gpio/Kconfig        |  12 +++
->  drivers/gpio/Makefile       |   1 +
->  drivers/gpio/gpio-bd71828.c | 159 ++++++++++++++++++++++++++++++++++++
->  3 files changed, 172 insertions(+)
->  create mode 100644 drivers/gpio/gpio-bd71828.c
->
-> diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
-> index 38e096e6925f..b4089096f7f2 100644
-> --- a/drivers/gpio/Kconfig
-> +++ b/drivers/gpio/Kconfig
-> @@ -994,6 +994,18 @@ config GPIO_BD70528
->           This driver can also be built as a module. If so, the module
->           will be called gpio-bd70528.
->
-> +config GPIO_BD71828
-> +       tristate "ROHM BD71828 GPIO support"
-> +       depends on MFD_ROHM_BD71828
-> +       help
-> +         Support for GPIOs on ROHM BD71828 PMIC. There are three GPIOs
-> +         available on the ROHM PMIC in total. The GPIOs are limited to
-> +         outputs only and pins must be configured to GPIO outputs by
-> +         OTP. Enable this only if you want to use these pins as outputs.
-> +
-> +         This driver can also be built as a module. If so, the module
-> +         will be called gpio-bd71828.
-> +
->  config GPIO_BD9571MWV
->         tristate "ROHM BD9571 GPIO support"
->         depends on MFD_BD9571MWV
-> diff --git a/drivers/gpio/Makefile b/drivers/gpio/Makefile
-> index d2fd19c15bae..034b38996579 100644
-> --- a/drivers/gpio/Makefile
-> +++ b/drivers/gpio/Makefile
-> @@ -35,6 +35,7 @@ obj-$(CONFIG_GPIO_ASPEED)             +=3D gpio-aspeed.=
-o
->  obj-$(CONFIG_GPIO_ATH79)               +=3D gpio-ath79.o
->  obj-$(CONFIG_GPIO_BCM_KONA)            +=3D gpio-bcm-kona.o
->  obj-$(CONFIG_GPIO_BD70528)             +=3D gpio-bd70528.o
-> +obj-$(CONFIG_GPIO_BD71828)             +=3D gpio-bd71828.o
->  obj-$(CONFIG_GPIO_BD9571MWV)           +=3D gpio-bd9571mwv.o
->  obj-$(CONFIG_GPIO_BRCMSTB)             +=3D gpio-brcmstb.o
->  obj-$(CONFIG_GPIO_BT8XX)               +=3D gpio-bt8xx.o
-> diff --git a/drivers/gpio/gpio-bd71828.c b/drivers/gpio/gpio-bd71828.c
-> new file mode 100644
-> index 000000000000..04aade9e0a4d
-> --- /dev/null
-> +++ b/drivers/gpio/gpio-bd71828.c
-> @@ -0,0 +1,159 @@
-> +// SPDX-License-Identifier: GPL-2.0-only
-> +// Copyright (C) 2018 ROHM Semiconductors
-> +
-> +#include <linux/gpio/driver.h>
-> +#include <linux/mfd/rohm-bd71828.h>
-> +#include <linux/module.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/regmap.h>
-> +
-> +#define GPIO_OUT_REG(off) (BD71828_REG_GPIO_CTRL1 + (off))
-> +#define HALL_GPIO_OFFSET 3
-> +
-> +/*
-> + * These defines can be removed when
-> + * "gpio: Add definition for GPIO direction"
-> + * (9208b1e77d6e8e9776f34f46ef4079ecac9c3c25 in GPIO tree) gets merged,
-> + */
-> +#ifndef GPIO_LINE_DIRECTION_IN
-> +       #define GPIO_LINE_DIRECTION_IN 1
-> +       #define GPIO_LINE_DIRECTION_OUT 0
-> +#endif
-> +
-> +struct bd71828_gpio {
-> +       struct rohm_regmap_dev chip;
-> +       struct gpio_chip gpio;
-> +};
-> +
-> +static void bd71828_gpio_set(struct gpio_chip *chip, unsigned int offset=
-,
-> +                            int value)
-> +{
-> +       int ret;
-> +       struct bd71828_gpio *bdgpio =3D gpiochip_get_data(chip);
-> +       u8 val =3D (value) ? BD71828_GPIO_OUT_HI : BD71828_GPIO_OUT_LO;
-> +
-> +       /*
-> +        * The HALL input pin can only be used as input. If this is the p=
-in
-> +        * we are dealing with - then we are done
-> +        */
-> +       if (offset =3D=3D HALL_GPIO_OFFSET)
-> +               return;
-> +
-> +       ret =3D regmap_update_bits(bdgpio->chip.regmap, GPIO_OUT_REG(offs=
-et),
-> +                                BD71828_GPIO_OUT_MASK, val);
-> +       if (ret)
-> +               dev_err(bdgpio->chip.dev, "Could not set gpio to %d\n", v=
-alue);
-> +}
-> +
-> +static int bd71828_gpio_get(struct gpio_chip *chip, unsigned int offset)
-> +{
-> +       int ret;
-> +       unsigned int val;
-> +       struct bd71828_gpio *bdgpio =3D gpiochip_get_data(chip);
-> +
-> +       if (offset =3D=3D HALL_GPIO_OFFSET)
-> +               ret =3D regmap_read(bdgpio->chip.regmap, BD71828_REG_IO_S=
-TAT,
-> +                                 &val);
-> +       else
-> +               ret =3D regmap_read(bdgpio->chip.regmap, GPIO_OUT_REG(off=
-set),
-> +                                 &val);
-> +       if (!ret)
-> +               ret =3D (val & BD71828_GPIO_OUT_MASK);
-> +
-> +       return ret;
-> +}
-> +
-> +static int bd71828_gpio_set_config(struct gpio_chip *chip, unsigned int =
-offset,
-> +                                  unsigned long config)
-> +{
-> +       struct bd71828_gpio *bdgpio =3D gpiochip_get_data(chip);
-> +
-> +       if (offset =3D=3D HALL_GPIO_OFFSET)
-> +               return -ENOTSUPP;
-> +
-> +       switch (pinconf_to_config_param(config)) {
-> +       case PIN_CONFIG_DRIVE_OPEN_DRAIN:
-> +               return regmap_update_bits(bdgpio->chip.regmap,
-> +                                         GPIO_OUT_REG(offset),
-> +                                         BD71828_GPIO_DRIVE_MASK,
-> +                                         BD71828_GPIO_OPEN_DRAIN);
-> +       case PIN_CONFIG_DRIVE_PUSH_PULL:
-> +               return regmap_update_bits(bdgpio->chip.regmap,
-> +                                         GPIO_OUT_REG(offset),
-> +                                         BD71828_GPIO_DRIVE_MASK,
-> +                                         BD71828_GPIO_PUSH_PULL);
-> +       default:
-> +               break;
-> +       }
-> +       return -ENOTSUPP;
-> +}
-> +
-> +static int bd71828_get_direction(struct gpio_chip *chip, unsigned int of=
-fset)
-> +{
-> +       /*
-> +        * Pin usage is selected by OTP data. We can't read it runtime. H=
-ence
-> +        * we trust that if the pin is not excluded by "gpio-reserved-ran=
-ges"
-> +        * the OTP configuration is set to OUT. (Other pins but HALL inpu=
-t pin
-> +        * on BD71828 can't really be used for general purpose input - in=
-put
-> +        * states are used for specific cases like regulator control or
-> +        * PMIC_ON_REQ.
-> +        */
-> +       if (offset =3D=3D HALL_GPIO_OFFSET)
-> +               return GPIO_LINE_DIRECTION_IN;
-> +
-> +       return GPIO_LINE_DIRECTION_OUT;
-> +}
-> +
-> +static int bd71828_probe(struct platform_device *pdev)
-> +{
-> +       struct bd71828_gpio *bdgpio;
-> +       struct rohm_regmap_dev *bd71828;
-> +
-> +       bd71828 =3D dev_get_drvdata(pdev->dev.parent);
-> +       if (!bd71828) {
-> +               dev_err(&pdev->dev, "No MFD driver data\n");
-> +               return -EINVAL;
-> +       }
-> +
-> +       bdgpio =3D devm_kzalloc(&pdev->dev, sizeof(*bdgpio),
-> +                             GFP_KERNEL);
-> +       if (!bdgpio)
-> +               return -ENOMEM;
-> +
-> +       bdgpio->chip.dev =3D &pdev->dev;
-> +       bdgpio->gpio.parent =3D pdev->dev.parent;
-> +       bdgpio->gpio.label =3D "bd71828-gpio";
-> +       bdgpio->gpio.owner =3D THIS_MODULE;
-> +       bdgpio->gpio.get_direction =3D bd71828_get_direction;
-> +       bdgpio->gpio.set_config =3D bd71828_gpio_set_config;
-> +       bdgpio->gpio.can_sleep =3D true;
-> +       bdgpio->gpio.get =3D bd71828_gpio_get;
-> +       bdgpio->gpio.set =3D bd71828_gpio_set;
-> +       bdgpio->gpio.base =3D -1;
-> +
-> +       /*
-> +        * See if we need some implementation to mark some PINs as
-> +        * not controllable based on DT info or if core can handle
-> +        * "gpio-reserved-ranges" and exclude them from control
-> +        */
-> +       bdgpio->gpio.ngpio =3D 4;
-> +       bdgpio->gpio.of_node =3D pdev->dev.parent->of_node;
-> +       bdgpio->chip.regmap =3D bd71828->regmap;
-> +
-> +       return devm_gpiochip_add_data(&pdev->dev, &bdgpio->gpio,
-> +                                    bdgpio);
-> +}
-> +
-> +static struct platform_driver bd71828_gpio =3D {
-> +       .driver =3D {
-> +               .name =3D "bd71828-gpio"
-> +       },
-> +       .probe =3D bd71828_probe,
-> +};
-> +
-> +module_platform_driver(bd71828_gpio);
-> +
-> +MODULE_AUTHOR("Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>");
-> +MODULE_DESCRIPTION("BD71828 voltage regulator driver");
-> +MODULE_LICENSE("GPL");
-> +MODULE_ALIAS("platform:bd71828-gpio");
-> --
-> 2.21.0
->
->
-> --
-> Matti Vaittinen, Linux device drivers
-> ROHM Semiconductors, Finland SWDC
-> Kiviharjunlenkki 1E
-> 90220 OULU
-> FINLAND
->
-> ~~~ "I don't think so," said Rene Descartes. Just then he vanished ~~~
-> Simon says - in Latin please.
-> ~~~ "non cogito me" dixit Rene Descarte, deinde evanescavit ~~~
-> Thanks to Simon Glass for the translation =3D]
-
-Reviewed-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBCYXJ0b3N6IEdvbGFzemV3c2tp
+IDxiZ29sYXN6ZXdza2lAYmF5bGlicmUuY29tPg0KPiBTZW50OiAxMyBOb3ZlbWJlciAyMDE5IDE4
+OjQxDQo+IFRvOiBZYXNoIFNoYWggPHlhc2guc2hhaEBzaWZpdmUuY29tPg0KPiBDYzogbGludXMu
+d2FsbGVpakBsaW5hcm8ub3JnOyByb2JoK2R0QGtlcm5lbC5vcmc7IG1hcmsucnV0bGFuZEBhcm0u
+Y29tOw0KPiBwYWxtZXJAZGFiYmVsdC5jb207IFBhdWwgV2FsbXNsZXkgKCBTaWZpdmUpIDxwYXVs
+LndhbG1zbGV5QHNpZml2ZS5jb20+Ow0KPiBhb3VAZWVjcy5iZXJrZWxleS5lZHU7IHRnbHhAbGlu
+dXRyb25peC5kZTsgamFzb25AbGFrZWRhZW1vbi5uZXQ7DQo+IG1hekBrZXJuZWwub3JnOyBibWVu
+Zy5jbkBnbWFpbC5jb207IGF0aXNoLnBhdHJhQHdkYy5jb207IFNhZ2FyIEthZGFtDQo+IDxzYWdh
+ci5rYWRhbUBzaWZpdmUuY29tPjsgbGludXgtZ3Bpb0B2Z2VyLmtlcm5lbC5vcmc7DQo+IGRldmlj
+ZXRyZWVAdmdlci5rZXJuZWwub3JnOyBsaW51eC1yaXNjdkBsaXN0cy5pbmZyYWRlYWQub3JnOyBs
+aW51eC0NCj4ga2VybmVsQHZnZXIua2VybmVsLm9yZzsgU2FjaGluIEdoYWRpIDxzYWNoaW4uZ2hh
+ZGlAc2lmaXZlLmNvbT4NCj4gU3ViamVjdDogUmU6IFtQQVRDSCAzLzRdIGdwaW86IHNpZml2ZTog
+QWRkIEdQSU8gZHJpdmVyIGZvciBTaUZpdmUgU29Dcw0KPiANCj4gd3QuLCAxMiBsaXMgMjAxOSBv
+IDEzOjEyIFlhc2ggU2hhaCA8eWFzaC5zaGFoQHNpZml2ZS5jb20+IG5hcGlzYcWCKGEpOg0KPiA+
+DQo+ID4gQWRkcyB0aGUgR1BJTyBkcml2ZXIgZm9yIFNpRml2ZSBSSVNDLVYgU29Dcy4NCj4gPg0K
+PiA+IFNpZ25lZC1vZmYtYnk6IFdlc2xleSBXLiBUZXJwc3RyYSA8d2VzbGV5QHNpZml2ZS5jb20+
+DQo+ID4gW0F0aXNoOiBWYXJpb3VzIGZpeGVzIGFuZCBjb2RlIGNsZWFudXBdDQo+ID4gU2lnbmVk
+LW9mZi1ieTogQXRpc2ggUGF0cmEgPGF0aXNoLnBhdHJhQHdkYy5jb20+DQo+ID4gU2lnbmVkLW9m
+Zi1ieTogWWFzaCBTaGFoIDx5YXNoLnNoYWhAc2lmaXZlLmNvbT4NCg0KWy4uLl0NCg0KPiA+ICsN
+Cj4gPiArc3RhdGljIGludCBzaWZpdmVfZ3Bpb19wcm9iZShzdHJ1Y3QgcGxhdGZvcm1fZGV2aWNl
+ICpwZGV2KSB7DQo+ID4gKyAgICAgICBzdHJ1Y3QgZGV2aWNlICpkZXYgPSAmcGRldi0+ZGV2Ow0K
+PiA+ICsgICAgICAgc3RydWN0IGRldmljZV9ub2RlICpub2RlID0gcGRldi0+ZGV2Lm9mX25vZGU7
+DQo+ID4gKyAgICAgICBzdHJ1Y3QgZGV2aWNlX25vZGUgKmlycV9wYXJlbnQ7DQo+ID4gKyAgICAg
+ICBzdHJ1Y3QgaXJxX2RvbWFpbiAqcGFyZW50Ow0KPiA+ICsgICAgICAgc3RydWN0IGdwaW9faXJx
+X2NoaXAgKmdpcnE7DQo+ID4gKyAgICAgICBzdHJ1Y3Qgc2lmaXZlX2dwaW8gKmNoaXA7DQo+ID4g
+KyAgICAgICBzdHJ1Y3QgcmVzb3VyY2UgKnJlczsNCj4gPiArICAgICAgIGludCByZXQsIG5ncGlv
+Ow0KPiA+ICsNCj4gPiArICAgICAgIGNoaXAgPSBkZXZtX2t6YWxsb2MoZGV2LCBzaXplb2YoKmNo
+aXApLCBHRlBfS0VSTkVMKTsNCj4gPiArICAgICAgIGlmICghY2hpcCkNCj4gPiArICAgICAgICAg
+ICAgICAgcmV0dXJuIC1FTk9NRU07DQo+ID4gKw0KPiA+ICsgICAgICAgcmVzID0gcGxhdGZvcm1f
+Z2V0X3Jlc291cmNlKHBkZXYsIElPUkVTT1VSQ0VfTUVNLCAwKTsNCj4gPiArICAgICAgIGNoaXAt
+PmJhc2UgPSBkZXZtX2lvcmVtYXBfcmVzb3VyY2UoZGV2LCByZXMpOw0KPiANCj4gVXNlIGRldm1f
+cGxhdGZvcm1faW9yZW1hcF9yZXNvdXJjZSgpIGFuZCBkcm9wIHRoZSByZXMgdmFyaWFibGUuDQo+
+IA0KDQpTdXJlLCB3aWxsIGRvIHRoYXQuDQoNCj4gPiArICAgICAgIGlmIChJU19FUlIoY2hpcC0+
+YmFzZSkpIHsNCj4gPiArICAgICAgICAgICAgICAgZGV2X2VycihkZXYsICJmYWlsZWQgdG8gYWxs
+b2NhdGUgZGV2aWNlIG1lbW9yeVxuIik7DQo+ID4gKyAgICAgICAgICAgICAgIHJldHVybiBQVFJf
+RVJSKGNoaXAtPmJhc2UpOw0KPiA+ICsgICAgICAgfQ0KPiA+ICsNCj4gPiArICAgICAgIGNoaXAt
+PnJlZ3MgPSBkZXZtX3JlZ21hcF9pbml0X21taW8oZGV2LCBjaGlwLT5iYXNlLA0KPiA+ICsNCj4g
+PiArICZzaWZpdmVfZ3Bpb19yZWdtYXBfY29uZmlnKTsNCj4gDQo+IFdoeSBkbyB5b3UgbmVlZCB0
+aGlzIHJlZ21hcCBoZXJlPyBZb3UgaW5pdGlhbGl6ZSBhIG5ldyByZWdtYXAsIHRoZW4gdXNlDQo+
+IHlvdXIgb3duIGxvY2tpbmcgZGVzcGl0ZSBub3QgaGF2aW5nIGRpc2FibGVkIHRoZSBpbnRlcm5h
+bCBsb2NraW5nIGluIHJlZ21hcCwNCj4gYW5kIHRoZW4geW91IGluaXRpYWxpemUgdGhlIG1taW8g
+Z2VuZXJpYyBHUElPIGNvZGUgd2hpY2ggd2lsbCB1c2UgeWV0DQo+IGFub3RoZXIgbG9jayB0byBv
+cGVyYXRlIG9uIHRoZSBzYW1lIHJlZ2lzdGVycyBhbmQgaW4gdGhlIGVuZCB5b3Ugd3JpdGUgdG8N
+Cj4gdGhvc2UgcmVnaXN0ZXJzIHdpdGhvdXQgdGFraW5nIGFueSBsb2NrIGFueXdheS4NCj4gRG9l
+c24ndCBtYWtlIG11Y2ggc2Vuc2UgdG8gbWUuDQo+IA0KDQpBcyBzdWdnZXN0ZWQgaW4gdGhlIGNv
+bW1lbnRzIHJlY2VpdmVkIG9uIHRoZSBSRkMgdmVyc2lvbiBvZiB0aGlzIHBhdGNoWzBdLCBJIGFt
+IHRyeWluZyB0byB1c2UgcmVnbWFwIE1NSU8gYnkgbG9va2luZyBhdCBncGlvLW12ZWJ1LmMuIEkg
+Z290IHlvdXIgcG9pbnQgcmVnYXJkaW5nIHRoZSB1c2FnZSBvZiBvd24gbG9ja3MgaXMgbm90IG1h
+a2luZyBhbnkgc2Vuc2UuDQpIZXJlIGlzIHdoYXQgSSB3aWxsIGRvIGluIHYyOg0KMS4gZHJvcCB0
+aGUgdXNhZ2Ugb2Ygb3duIGxvY2tzDQoyLiBjb25zaXN0ZW50bHkgdXNlIHJlZ21hcF8qIGFwaXMg
+Zm9yIHJlZ2lzdGVyIGFjY2VzcyAocmVwbGFjZSBhbGwgaW93cml0ZXMpLg0KRG9lcyB0aGlzIG1h
+a2Ugc2Vuc2Ugbm93Pw0KDQo+ID4gKyAgICAgICBpZiAoSVNfRVJSKGNoaXAtPnJlZ3MpKQ0KPiA+
+ICsgICAgICAgICAgICAgICByZXR1cm4gUFRSX0VSUihjaGlwLT5yZWdzKTsNCj4gPiArDQoNClsu
+Li5dDQoNCj4gPiArDQo+ID4gKyAgICAgICByZXQgPSBncGlvY2hpcF9hZGRfZGF0YSgmY2hpcC0+
+Z2MsIGNoaXApOw0KPiA+ICsgICAgICAgaWYgKHJldCkNCj4gPiArICAgICAgICAgICAgICAgcmV0
+dXJuIHJldDsNCj4gPiArDQo+ID4gKyAgICAgICBwbGF0Zm9ybV9zZXRfZHJ2ZGF0YShwZGV2LCBj
+aGlwKTsNCj4gPiArICAgICAgIGRldl9pbmZvKGRldiwgIlNpRml2ZSBHUElPIGNoaXAgcmVnaXN0
+ZXJlZCAlZCBHUElPc1xuIiwNCj4gPiArIG5ncGlvKTsNCj4gDQo+IENvcmUgZ3BpbyBsaWJyYXJ5
+IGVtaXRzIGEgdmVyeSBzaW1pbGFyIGRlYnVnIG1lc3NhZ2UgZnJvbQ0KPiBncGlvY2hpcF9zZXR1
+cF9kZXYoKSwgSSB0aGluayB5b3UgY2FuIGRyb3AgaXQgYW5kIGRpcmVjdGx5IHJldHVybg0KPiBn
+cGlvY2hpcF9hZGRfZGF0YSgpLg0KPiANCj4gQmFydG9zeg0KDQpPay4gV2lsbCBkaXJlY3RseSBy
+ZXR1cm4gZ3Bpb2NoaXBfYWRkX2RhdGEoKS4NClRoYW5rcyBmb3IgeW91ciBjb21tZW50cyENCg0K
+LSBZYXNoDQoNClswXSBodHRwczovL2xvcmUua2VybmVsLm9yZy9saW51eC1yaXNjdi8yMDE4MTAx
+MDEyMzUxOS5SVmV4RHBwYVBGcElXbDdRVV9ocFA4dGM1cXFXUEpnZXVMWW4wRmFHYmVRQHovDQo=
