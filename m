@@ -2,92 +2,143 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id E27FD1007D2
-	for <lists+linux-gpio@lfdr.de>; Mon, 18 Nov 2019 16:01:58 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 86F9F100851
+	for <lists+linux-gpio@lfdr.de>; Mon, 18 Nov 2019 16:36:07 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727111AbfKRPB6 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 18 Nov 2019 10:01:58 -0500
-Received: from mail-pf1-f176.google.com ([209.85.210.176]:42066 "EHLO
-        mail-pf1-f176.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727007AbfKRPB5 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 18 Nov 2019 10:01:57 -0500
-Received: by mail-pf1-f176.google.com with SMTP id s5so10505694pfh.9
-        for <linux-gpio@vger.kernel.org>; Mon, 18 Nov 2019 07:01:57 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=899hTqfMhSqPYDVf7ZLg2pUQKRnnw8vxMDqtO5hYrC8=;
-        b=vC8YOHohdUiPqH0MBHxs1Mf4vrjclZuw1X+YGkVNylvtBpy59nxIhQqoKhJDGr0i16
-         eiXSp+jsuvDz3C2Tt2ieKz0MGnGzxS/eBrPEk9mp0+yhpZlORAdj1AVdQ64XKx5h3kNH
-         0PLY2mF8BPO4B+RRDCqDPEjpHlka1R+oBGSbGBxZbkgZy1Co+VMCb9eXQmc/fmy/QlUU
-         iDjzf/i6dO3J4j0NVhiGaZB4TiMpAlu5comt+CR6OotRpBnfg2Q/fY9S7deqgeg0JtG/
-         kMMEnDS/ofPqZO5shWQRSxwcm/IswylGquzKCkHnA5biRXxrEiKEl3nCYAzxnSOTFjfV
-         RLGA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=899hTqfMhSqPYDVf7ZLg2pUQKRnnw8vxMDqtO5hYrC8=;
-        b=jN8Yv8E4Zf/Ng9wN8bXpawJsTIytljDGeGKdiFMqdebmbnlQ5TDE4eFa4VTCpEVrzV
-         MbQIbPbYU8e7B45+2dWKuKgi6gGZmfsYAgaX7gMPjq0LP4cCxMZ0Gjh0WEJ8ug3Q2Xe0
-         id70KFWwK4uCybbd+2vHLA+O2Ybs0ZcIpXIiXQXjxxCkcClyVJm8hyglABQ3XO1skSP+
-         BJMHHLuaY8mEB4uqo+a+BCGLKSRuFF2SwkqNsmmT3JCXeyA2NXtDy3Xh9OFyapQOyOf5
-         l41GscQ38gQBQHCvDofqf0f+H2DlUKPO9WcCXpp/uFITXhyEoh2ZQLrFsXMsFif5bmcO
-         T1Gg==
-X-Gm-Message-State: APjAAAWCZ8ScRwb5tExB9Xga+CaFunMl5ZHmcUUMa50TULqRtB2a/0bw
-        UpJZdjMt63gxdgXaKlWOajk=
-X-Google-Smtp-Source: APXvYqwWbyH55KLoCQF+DccY/4KaTzbdYqFYpnYJl+2skf1fcdubNTzCbwYVjCf3Tfytq9xhUqM5Cg==
-X-Received: by 2002:a63:745:: with SMTP id 66mr32840021pgh.389.1574089316852;
-        Mon, 18 Nov 2019 07:01:56 -0800 (PST)
-Received: from sol (220-235-109-115.dyn.iinet.net.au. [220.235.109.115])
-        by smtp.gmail.com with ESMTPSA id x13sm21883366pfc.46.2019.11.18.07.01.53
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 18 Nov 2019 07:01:56 -0800 (PST)
-Date:   Mon, 18 Nov 2019 23:01:50 +0800
-From:   Kent Gibson <warthog618@gmail.com>
-To:     Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Cc:     linux-gpio <linux-gpio@vger.kernel.org>
-Subject: Re: [libgpiod] [PATCH 19/19] treewide: change "correspond with" to
- "correspond to"
-Message-ID: <20191118150150.GF27359@sol>
-References: <20191115144355.975-1-warthog618@gmail.com>
- <20191115144355.975-20-warthog618@gmail.com>
- <CAMpxmJVuw84__hhd=HVmZVMhZzeb4VuYNhC==A94QRE-vG3ZUg@mail.gmail.com>
+        id S1726668AbfKRPgG (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 18 Nov 2019 10:36:06 -0500
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:38141 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726654AbfKRPgG (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>);
+        Mon, 18 Nov 2019 10:36:06 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1574091365;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=fFo23KStxZEZFMUYITan3zWjwxcwxZWwrTSTfK3+ezc=;
+        b=MLV1oTPl1TR6k1KcPjR55MwMS3pq0lRin/PNcYUvGSD5Hg8+AC76Bv5iD0AeR1bMpxoPZH
+        M/6mKCyIbxZb+EpW1CCwFpKG7IKH+S2zqHLuSLwSUP2S0yf0xaxZFyFM2QaNRaZRQjA7He
+        bZH6JYcCI9L2H/Wg9920J+oxnrX4Kv4=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-387-Dyt0Vd7EOjuSRmPXbDrCEg-1; Mon, 18 Nov 2019 10:36:00 -0500
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 5612D8E36F6;
+        Mon, 18 Nov 2019 15:35:59 +0000 (UTC)
+Received: from shalem.localdomain.com (unknown [10.36.118.166])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id D66592B7C5;
+        Mon, 18 Nov 2019 15:35:57 +0000 (UTC)
+From:   Hans de Goede <hdegoede@redhat.com>
+To:     "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     Hans de Goede <hdegoede@redhat.com>, linux-gpio@vger.kernel.org,
+        linux-acpi@vger.kernel.org
+Subject: [PATCH] ACPI / button: Add DMI quirk for Acer Switch 10 SW5-032 lid-switch
+Date:   Mon, 18 Nov 2019 16:35:56 +0100
+Message-Id: <20191118153556.28751-1-hdegoede@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAMpxmJVuw84__hhd=HVmZVMhZzeb4VuYNhC==A94QRE-vG3ZUg@mail.gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+X-MC-Unique: Dyt0Vd7EOjuSRmPXbDrCEg-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=WINDOWS-1252
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Nov 18, 2019 at 02:52:56PM +0100, Bartosz Golaszewski wrote:
-> pt., 15 lis 2019 o 15:45 Kent Gibson <warthog618@gmail.com> napisał(a):
-> >
-> > Trivial grammar fix. "correspond with" can mean either being in agreement
-> > with, happening at the same time, or communication between parties.
-> > "correspond to" is used to mean equivalance, which is the intended use
-> > throughout the documentation.
-> >
-> 
-> Thanks for this. I'm not a native English speaker, so if you see any
-> other language issues, please let me know, or feel free to fix them.
-> 
+The Acer Switch 10 SW5-032 _LID method is quite broken, it looks like this:
 
-In general usage you most often see "correspond with" in the
-communication sense. Using it in the other senses is rare.
-Ironically I wasn't totally sure on the usage without looking it up, but
-it felt wrong as it was.  There are one or two cases in the documentation
-where the "in agreement with" interpretation might work, but even there
-the "correspond to" felt more appropriate to me.
+            Method (_LID, 0, NotSerialized)  // _LID: Lid Status
+            {
+                If ((STAS & One))
+                {
+                    Local0 =3D One
+                    PBCG |=3D 0x05000000
+                    HMCG |=3D 0x05000000
+                }
+                Else
+                {
+                    Local0 =3D Zero
+                    PBCG &=3D 0xF0FFFFFF
+                    HMCG &=3D 0xF0FFFFFF
+                }
 
-Cheers,
-Kent.
+                ^^PCI0.GFX0.CLID =3D Local0
+                Return (Local0)
+            }
 
+The problem here is the accesses to the PBCG and HMCG, these are the
+pinconf0 registers for the power, resp. the home button GPIO,
+e.g. PBCG is declared as:
+
+            OperationRegion (PWBT, SystemMemory, 0xFED0E080, 0x10)
+            Field (PWBT, DWordAcc, NoLock, Preserve)
+            {
+                PBCG,   32,
+                PBV1,   32,
+                PBSA,   32,
+                PBV2,   32
+            }
+
+Where 0xFED0E000 is the base address of the GPO2 device and 0x80 is
+the offset for the pin used for the powerbutton.
+
+The problem here is this line in _LID:
+                    PBCG |=3D 0x05000000
+
+This changes the trigger flags of the GPIO, changing when it generates
+interrupts. Note it does not clear the original flags. Linux uses an
+edge triggered interrupt on both positive and negative edges. This |=3D
+adds the BYT_TRIG_LVL flag to this, so now it is turned into a level
+interrupt which fires both when low and high, iow it simply always
+fires leading to an interrupt storm, the tablet immediately waking up
+from suspend again, etc.
+
+There is nothing we can do to fix this, except for a DSDT override,
+which the user needs to do manually. The only thing we can do is
+never call _LID, which requires disabling the lid-switch functionality
+altogether.
+
+This commit adds a quirk for this, as no lid-switch function is better
+then the interrupt storm. A user manually applying a DSDT override can
+also override the quirk on the kernel cmdline.
+
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+---
+ drivers/acpi/button.c | 13 +++++++++++++
+ 1 file changed, 13 insertions(+)
+
+diff --git a/drivers/acpi/button.c b/drivers/acpi/button.c
+index d27b01c0323d..b758b45737f5 100644
+--- a/drivers/acpi/button.c
++++ b/drivers/acpi/button.c
+@@ -77,6 +77,19 @@ MODULE_DEVICE_TABLE(acpi, button_device_ids);
+=20
+ /* Please keep this list sorted alphabetically by vendor and model */
+ static const struct dmi_system_id dmi_lid_quirks[] =3D {
++=09{
++=09=09/*
++=09=09 * Acer Switch 10 SW5-012. _LID method messes with home and
++=09=09 * power button GPIO IRQ settings causing an interrupt storm on
++=09=09 * both GPIOs. This is unfixable without a DSDT override, so we
++=09=09 * have to disable the lid-switch functionality altogether :|
++=09=09 */
++=09=09.matches =3D {
++=09=09=09DMI_MATCH(DMI_SYS_VENDOR, "Acer"),
++=09=09=09DMI_MATCH(DMI_PRODUCT_NAME, "Aspire SW5-012"),
++=09=09},
++=09=09.driver_data =3D (void *)(long)ACPI_BUTTON_LID_INIT_DISABLED,
++=09},
+ =09{
+ =09=09/*
+ =09=09 * Asus T200TA, _LID keeps reporting closed after every second
+--=20
+2.23.0
 
