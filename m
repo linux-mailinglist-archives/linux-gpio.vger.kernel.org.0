@@ -2,125 +2,71 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 5195B100A29
-	for <lists+linux-gpio@lfdr.de>; Mon, 18 Nov 2019 18:23:24 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 8EA77100B08
+	for <lists+linux-gpio@lfdr.de>; Mon, 18 Nov 2019 19:02:59 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726423AbfKRRXX (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 18 Nov 2019 12:23:23 -0500
-Received: from mga05.intel.com ([192.55.52.43]:7477 "EHLO mga05.intel.com"
+        id S1726336AbfKRSC7 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 18 Nov 2019 13:02:59 -0500
+Received: from mga03.intel.com ([134.134.136.65]:23158 "EHLO mga03.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726068AbfKRRXX (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Mon, 18 Nov 2019 12:23:23 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
+        id S1726317AbfKRSC6 (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Mon, 18 Nov 2019 13:02:58 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 18 Nov 2019 09:23:22 -0800
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 18 Nov 2019 10:02:54 -0800
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.68,320,1569308400"; 
-   d="scan'208";a="406159014"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by fmsmga005.fm.intel.com with ESMTP; 18 Nov 2019 09:23:21 -0800
-Received: from andy by smile with local (Exim 4.93-RC1)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1iWkkC-0005at-Mx; Mon, 18 Nov 2019 19:23:20 +0200
-Date:   Mon, 18 Nov 2019 19:23:20 +0200
+X-IronPort-AV: E=Sophos;i="5.68,321,1569308400"; 
+   d="scan'208";a="356852591"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by orsmga004.jf.intel.com with ESMTP; 18 Nov 2019 10:02:53 -0800
+Received: by black.fi.intel.com (Postfix, from userid 1003)
+        id C1E812D5; Mon, 18 Nov 2019 20:02:52 +0200 (EET)
 From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Hans de Goede <hdegoede@redhat.com>
-Cc:     Mika Westerberg <mika.westerberg@linux.intel.com>,
+To:     Linus Walleij <linus.walleij@linaro.org>,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-gpio@vger.kernel.org, linux-acpi@vger.kernel.org
-Subject: Re: [PATCH 0/1] pinctrl: baytrail: Really serialize all register
- accesses
-Message-ID: <20191118172320.GX32742@smile.fi.intel.com>
-References: <20191118142020.22256-1-hdegoede@redhat.com>
+        linux-gpio@vger.kernel.org
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: [PATCH v1] gpio: lynxpoint: Setup correct IRQ handlers
+Date:   Mon, 18 Nov 2019 20:02:51 +0200
+Message-Id: <20191118180251.31439-1-andriy.shevchenko@linux.intel.com>
+X-Mailer: git-send-email 2.24.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191118142020.22256-1-hdegoede@redhat.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Nov 18, 2019 at 03:20:19PM +0100, Hans de Goede wrote:
-> Hi All,
-> 
-> First let me copy-paste a bit of the commit msg for background:
-> 
-> ---begin commit msg---
-> Commit 39ce8150a079 ("pinctrl: baytrail: Serialize all register access")
-> added a spinlock around all register accesses because:
-> 
-> "There is a hardware issue in Intel Baytrail where concurrent GPIO register
->  access might result reads of 0xffffffff and writes might get dropped
->  completely."
-> 
-> Testing has shown that this does not catch all cases, there are still
-> 2 problems remaining
-> 
-> 1) The original fix uses a spinlock per byt_gpio device / struct,
-> additional testing has shown that this is not sufficient concurent
-> accesses to 2 different GPIO banks also suffer from the same problem.
-> 
-> This commit fixes this by moving to a single global lock.
-> 
-> 2) The original fix did not add a lock around the register accesses in
-> the suspend/resume handling.
-> 
-> Since pinctrl-baytrail.c is using normal suspend/resume handlers,
-> interrupts are still enabled during suspend/resume handling. Nothing
-> should be using the GPIOs when they are being taken down, _but_ the
-> GPIOs themselves may still cause interrupts, which are likely to
-> use (read) the triggering GPIO. So we need to protect against
-> concurrent GPIO register accesses in the suspend/resume handlers too.
-> 
-> This commit fixes this by adding the missing spin_lock / unlock calls.
-> ---end commit msg---
-> 
-> I was discussing the problem at my local hackerspace yesterday with
-> someone who knows quite a bit low-level details about Intel CPUs.
-> He said that on "big" core's all the GPIO islands sit behind the IOSF
-> and that there is a bridge which make their registers look like regular
-> mmio registers.
-> 
-> I wonder if the same is happening on BYT, that would point to an issue
-> with concurent accesses being done through the IOSF bridge, which would
-> explain why I've found that we need a single global lock for all GPIO
-> islands (*).
+When commit 75e99bf5ed8f ("gpio: lynxpoint: set default handler to be
+handle_bad_irq()") switched default handler to be handle_bad_irq() the
+lp_irq_type() function remained untouched. It means that even request_irq()
+can't change the handler and we are not able to handle IRQs properly anymore.
+Fix it by setting correct handlers in the lp_irq_type() callback.
 
-> But that in turn would mean that we really need global lock
-> for _all_ accesses done through the IOSF bridge, not just GPIO register
-> accesses...  Which would explain why on some machines BYT has never been
-> really stable with Linux.
+Fixes: 75e99bf5ed8f ("gpio: lynxpoint: set default handler to be handle_bad_irq()")
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+---
+ drivers/gpio/gpio-lynxpoint.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-I don't think so. The Cherriview seems inherited the same silicon issue (see
-comment near to chv_lock), though it seems to be fixed for all new hardware
-(Skylake+).
-
-> Can someone at Intel with access to internal docs about BYT dig a bit into
-> the docs and see if 1. this theory makes sense, 2. if it does if there us
-> anything else behind the IOSF for which we also need to serialize accesses?
-
-Unfortunately I have no time to dig into this right now.
-
-> 
-> Regards,
-> 
-> Hans
-> 
-> 
-> 
-> 
-> *) It seems that the GPIO interrupt storm on the test device I hit
-> this is really good in triggering this
-> 
-
+diff --git a/drivers/gpio/gpio-lynxpoint.c b/drivers/gpio/gpio-lynxpoint.c
+index e9e47c0d5be7..490ce7bae25e 100644
+--- a/drivers/gpio/gpio-lynxpoint.c
++++ b/drivers/gpio/gpio-lynxpoint.c
+@@ -164,6 +164,12 @@ static int lp_irq_type(struct irq_data *d, unsigned type)
+ 		value |= TRIG_SEL_BIT | INT_INV_BIT;
+ 
+ 	outl(value, reg);
++
++	if (type & IRQ_TYPE_EDGE_BOTH)
++		irq_set_handler_locked(d, handle_edge_irq);
++	else if (type & IRQ_TYPE_LEVEL_MASK)
++		irq_set_handler_locked(d, handle_level_irq);
++
+ 	spin_unlock_irqrestore(&lg->lock, flags);
+ 
+ 	return 0;
 -- 
-With Best Regards,
-Andy Shevchenko
-
+2.24.0
 
