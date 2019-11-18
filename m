@@ -2,52 +2,51 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id BD7281006D0
-	for <lists+linux-gpio@lfdr.de>; Mon, 18 Nov 2019 14:51:55 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0A3811006D2
+	for <lists+linux-gpio@lfdr.de>; Mon, 18 Nov 2019 14:52:18 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726909AbfKRNvz (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 18 Nov 2019 08:51:55 -0500
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:40290 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726739AbfKRNvy (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 18 Nov 2019 08:51:54 -0500
-Received: by mail-oi1-f195.google.com with SMTP id d22so8390565oic.7
-        for <linux-gpio@vger.kernel.org>; Mon, 18 Nov 2019 05:51:53 -0800 (PST)
+        id S1726739AbfKRNwR (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 18 Nov 2019 08:52:17 -0500
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:39005 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726703AbfKRNwR (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 18 Nov 2019 08:52:17 -0500
+Received: by mail-ot1-f65.google.com with SMTP id w24so14062867otk.6
+        for <linux-gpio@vger.kernel.org>; Mon, 18 Nov 2019 05:52:15 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baylibre-com.20150623.gappssmtp.com; s=20150623;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc:content-transfer-encoding;
-        bh=xDWgXHdE8gRlajU7D0XMvNQyFkmd96RBvQrzvRsOepo=;
-        b=Krsy8i+IQ7x0+/Qg5VZIK3mKk0tcAqbpa0Fu9agWJA719IayDft97MsYctnnzWOG66
-         86SfTFR0Gjt3TWvgZ/cOM5L7imi2xxeZ6pO935wZ8fDMaCznozrh4/UFg9VnvFPxz3Ig
-         84q+My+1tWOCvdsm3ra/UOuP7NuDR+7Pgz7SAeZ70MgvDKThCdkw4CF7rQg9q5oWsR/9
-         hBXxAOFFEdDDtxkYJEHnkkxV5MYuK1LdTUgJ55hw19mnDe7fIhRBrbVEg85MJ1HjROf/
-         nqb/292axYxSki07F2PzJN5qIR9kaaAu0tJxfSNYKyJkWvWjSvk/MEzO/fQpx5ygqhMP
-         Ug/A==
+        bh=u4lK8yQxDoHBaxMSEONbKuCzOiNgxilC9NOxn/M2LrA=;
+        b=ws2CN468FaHqDm05SQ6SOdk8tqNjlp/Ptxiu6k5WPEOZ18JbQdbwthaPJkTkM5W5r/
+         iRkzTdT7so5i4o9W48M3FKC/iQWmd2er3gn+8K2UcNjzROI1EMNDQDYROqlJabNN7xiT
+         jkbD30PRy1nPD2TsTyokeSMtbu4oDz1ykEQmWN0HFHEFowm+X9SDgEi2A9db1k9YlYf5
+         UxMAE8RtmunQ0ra3FhKf03cglN1WsdFX83/+yzgPLNmjyJE98TM5HzkOzbUoLhjSdkcw
+         kqdzkW7z92d6Sw6w0VBNRSBmT6J5uMranhYPI1sSkdPpkkpqqFdcpnaLtP1Bjb59UpwK
+         ig4A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc:content-transfer-encoding;
-        bh=xDWgXHdE8gRlajU7D0XMvNQyFkmd96RBvQrzvRsOepo=;
-        b=Eb1oPUr/C7Lu0OsAmQ2/cPuqSkeH5uX/sD2jvTUXuW/NkstoVuX5ehdqohL9grWL0I
-         43avgBvWoJM1eZasfOURlMuCwaeCWgcPnkk9esY798QvrMIcQ2FYacZyq/Aelg1DZySW
-         fr0oEnl9QIzyzeTvNDsp5BwyIsRnW8GPetw1GUBG+NlKo383lwe0fR8BtoLO63jaxdDT
-         aV0bcClyIpXqjhiUYyTPvMNWwuQoYV7l/Xhey2nzJqGk+Sh4mzPv8U80DplcwweBylDm
-         MMjIAhtAJZ8TathN0MWIIYs5u8FhS0SPYtjdmVSU0z8CKR5t3vp2XkIvsPygHu/k05T+
-         Kpww==
-X-Gm-Message-State: APjAAAU7B9s20HhM6bCDsYJtlIhYTHW7GqUws1BL6NhkHWt6vJLeETPc
-        d/8uNA+BkULXtmXBNI2tahZQo1NUicqgRxaEpFUAAg==
-X-Google-Smtp-Source: APXvYqxjbJ4uiZYz7H1r5gbjTjobgvI7yegveANlV3CZiTdRY8y7bjCkONDifpn/TsR2QYtYa+DIDUk0XSoiudghwNI=
-X-Received: by 2002:a05:6808:498:: with SMTP id z24mr20380786oid.114.1574085113409;
- Mon, 18 Nov 2019 05:51:53 -0800 (PST)
+        bh=u4lK8yQxDoHBaxMSEONbKuCzOiNgxilC9NOxn/M2LrA=;
+        b=daubka6WQYY0s8zoM6uP3CrdGz0DWsLCuKzhy/rcqvU+kC85hyIMaIjFKwtXSQ1AbJ
+         qlrhWc6FjJzoWGzMTeGhiFCVZBKaBOc7OpM0GydhrMMxOvfYeSkwmgI2pNZ21urZSNzk
+         iaSgW2CtvveLZ76Cw3jYT+obXnc72lQW6A1XnovsSvIeLwLTyndM/A9ZZDj/2ufoFYVs
+         oeHgSxwLP6iHF045xzOB3igqCC7j3FK7yWmdEE6FmYrDu6nGDlIdCrFnnCCszuCpfGVX
+         2PNHcsjIOQ7DyMqosDKM5y2VyV++MBRfpC+DYmfFBYE2AUyCBMMc8k4ufFkA2+SYyHGj
+         VNWg==
+X-Gm-Message-State: APjAAAWX1WHyq+3hZeMU6yHf5nk9TaRlzkpSb+5KyCr+8D3ZdL5bqPat
+        7Gk0bQeB0CAdioNtQvfoPxKcyxBdAo1Wa32JDooB0g==
+X-Google-Smtp-Source: APXvYqyBoDuZbn+8tEMGOwTLzLp6F1t/nPvxFvxenwRVp3ClBro9zCdaC3jvXovvPNp3fcdS113/xy4XHKaac9EoI5s=
+X-Received: by 2002:a9d:344a:: with SMTP id v68mr23160547otb.85.1574085135299;
+ Mon, 18 Nov 2019 05:52:15 -0800 (PST)
 MIME-Version: 1.0
-References: <20191115144355.975-1-warthog618@gmail.com> <20191115144355.975-7-warthog618@gmail.com>
-In-Reply-To: <20191115144355.975-7-warthog618@gmail.com>
+References: <20191115144355.975-1-warthog618@gmail.com> <20191115144355.975-12-warthog618@gmail.com>
+In-Reply-To: <20191115144355.975-12-warthog618@gmail.com>
 From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Date:   Mon, 18 Nov 2019 14:51:42 +0100
-Message-ID: <CAMpxmJUeWMt1AWn7H1BOegW+Tc2MJB7YPS1TpouSFg+qAwRDsA@mail.gmail.com>
-Subject: Re: [libgpiod] [PATCH 06/19] bindings: cxx: initialise bitset with
- integer instead of string
+Date:   Mon, 18 Nov 2019 14:52:04 +0100
+Message-ID: <CAMpxmJXcEFO-05H-O0Kjs8Latwhh9RWos0tXzkc_C7KyEye8Yw@mail.gmail.com>
+Subject: Re: [libgpiod] [PATCH 11/19] API: add support for SET_CONFIG
 To:     Kent Gibson <warthog618@gmail.com>
 Cc:     linux-gpio <linux-gpio@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
@@ -57,40 +56,512 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-pt., 15 lis 2019 o 15:44 Kent Gibson <warthog618@gmail.com> napisa=C5=82(a)=
+pt., 15 lis 2019 o 15:45 Kent Gibson <warthog618@gmail.com> napisa=C5=82(a)=
 :
 >
-> Initialising bitsets with string is inefficient and confusing.
-> Initialise them with the corresponding int instead.
+> Extend the libgpiod API to support the setting line configuration using t=
+he
+> GPIO GPIOHANDLE_SET_CONFIG_IOCTL uAPI ioctl.
 >
-
-I'm not a native English speaker, of course, so correcting you on
-spelling may be risky but I generally try to stick to American
-spelling so "initialise" looks somehow wrong to me. :) Anyway, this is
-just the commit message, so never mind that.
-
+> The core change is the addition of gpiod_line_set_config, which provides =
+a
+> low level wrapper around the ioctl.
+>
+> Additionally, higher level helper functions, gpiod_line_set_flags,
+> gpiod_line_set_direction_input, and gpiod_line_set_direction_output provi=
+de
+> slightly simplified APIs for common use cases.
+>
+> Bulk forms of all functions are also provided.
+>
 > Signed-off-by: Kent Gibson <warthog618@gmail.com>
 > ---
->  bindings/cxx/line_bulk.cpp | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
+>  include/gpiod.h | 115 ++++++++++++++++++++++++++++
+>  lib/core.c      | 196 +++++++++++++++++++++++++++++++++++++++++++++---
+>  2 files changed, 300 insertions(+), 11 deletions(-)
 >
-> diff --git a/bindings/cxx/line_bulk.cpp b/bindings/cxx/line_bulk.cpp
-> index 8369930..c708c8b 100644
-> --- a/bindings/cxx/line_bulk.cpp
-> +++ b/bindings/cxx/line_bulk.cpp
-> @@ -11,9 +11,9 @@
+> diff --git a/include/gpiod.h b/include/gpiod.h
+> index 159d745..4053fd2 100644
+> --- a/include/gpiod.h
+> +++ b/include/gpiod.h
+> @@ -1252,6 +1252,14 @@ void gpiod_line_release_bulk(struct gpiod_line_bul=
+k *bulk) GPIOD_API;
+>   */
+>  bool gpiod_line_is_requested(struct gpiod_line *line) GPIOD_API;
 >
->  namespace gpiod {
+> +/**
+> + * @brief Check if the calling user has ownership of this line for value=
+s,
+> + * not events.
+> + * @param line GPIO line object.
+> + * @return True if given line was requested, false otherwise.
+
+I'd clarify: "requested for reading/setting values".
+
+> + */
+> +bool gpiod_line_is_requested_values(struct gpiod_line *line) GPIOD_API;
+> +
+>  /**
+>   * @brief Check if the calling user has neither requested ownership of t=
+his
+>   *        line nor configured any event notifications.
+> @@ -1311,6 +1319,113 @@ int gpiod_line_set_value(struct gpiod_line *line,=
+ int value) GPIOD_API;
+>  int gpiod_line_set_value_bulk(struct gpiod_line_bulk *bulk,
+>                               const int *values) GPIOD_API;
 >
-> -const ::std::bitset<32> line_request::FLAG_ACTIVE_LOW("001");
-> -const ::std::bitset<32> line_request::FLAG_OPEN_SOURCE("010");
-> -const ::std::bitset<32> line_request::FLAG_OPEN_DRAIN("100");
-> +const ::std::bitset<32> line_request::FLAG_ACTIVE_LOW(GPIOD_BIT(0));
-> +const ::std::bitset<32> line_request::FLAG_OPEN_SOURCE(GPIOD_BIT(1));
-> +const ::std::bitset<32> line_request::FLAG_OPEN_DRAIN(GPIOD_BIT(2));
+> +/**
+> + * @}
+> + *
+> + * @defgroup __line_config__ Setting line configuration
+> + * @{
+> + */
+> +
+> +/**
+> + * @brief Update the configuration of a single GPIO line.
+> + * @param line GPIO line object.
+> + * @param direction Updated direction which may be one of
+> + * GPIOD_LINE_REQUEST_DIRECTION_AS_IS, GPIOD_LINE_REQUEST_DIRECTION_INPU=
+T,
+> + * or GPIOD_LINE_REQUEST_DIRECTION_OUTPUT.
+> + * @param flags Replacement flags.
+> + * @param value The new output value for the line when direction is
+> + * GPIOD_LINE_REQUEST_DIRECTION_OUTPUT.
+> + * @return 0 is the operation succeeds. In case of an error this routine
+> + *         returns -1 and sets the last error number.
+> + */
+> +int gpiod_line_set_config(struct gpiod_line *line, int direction,
+> +                         int flags, int value) GPIOD_API;
+> +
+> +/**
+> + * @brief Update the configuration of a set of GPIO lines.
+> + * @param bulk Set of GPIO lines.
+> + * @param direction Updated direction which may be one of
+> + * GPIOD_LINE_REQUEST_DIRECTION_AS_IS, GPIOD_LINE_REQUEST_DIRECTION_INPU=
+T,
+> + * or GPIOD_LINE_REQUEST_DIRECTION_OUTPUT.
+> + * @param flags Replacement flags.
+> + * @param values An array holding line_bulk->num_lines new logical value=
+s
+> + * for lines when direction is GPIOD_LINE_REQUEST_DIRECTION_OUTPUT.
+> + * @return 0 is the operation succeeds. In case of an error this routine
+> + *         returns -1 and sets the last error number.
+> + *
+> + * If the lines were not previously requested together, the behavior is
+> + * undefined.
+> + */
+> +int gpiod_line_set_config_bulk(struct gpiod_line_bulk *bulk,
+> +                              int direction, int flags,
+> +                              const int *values) GPIOD_API;
+> +
+> +
+> +/**
+> + * @brief Update the configuration flags of a single GPIO line.
+> + * @param line GPIO line object.
+> + * @param flags Replacement flags.
+> + * @return 0 is the operation succeeds. In case of an error this routine
+> + *         returns -1 and sets the last error number.
+> + */
+> +int gpiod_line_set_flags(struct gpiod_line *line, int flags) GPIOD_API;
+> +
+> +/**
+> + * @brief Update the configuration flags of a set of GPIO lines.
+> + * @param bulk Set of GPIO lines.
+> + * @param flags Replacement flags.
+> + * @return 0 is the operation succeeds. In case of an error this routine
+> + *         returns -1 and sets the last error number.
+> + *
+> + * If the lines were not previously requested together, the behavior is
+> + * undefined.
+> + */
+> +int gpiod_line_set_flags_bulk(struct gpiod_line_bulk *bulk,
+> +                             int flags) GPIOD_API;
+> +
+> +/**
+> + * @brief Set the direction of a single GPIO line to input.
+> + * @param line GPIO line object.
+> + * @return 0 is the operation succeeds. In case of an error this routine
+> + *         returns -1 and sets the last error number.
+> + */
+> +int gpiod_line_set_direction_input(struct gpiod_line *line) GPIOD_API;
+> +
+> +/**
+> + * @brief Set the direction of a set of GPIO lines to input.
+> + * @param bulk Set of GPIO lines.
+> + * @return 0 is the operation succeeds. In case of an error this routine
+> + *         returns -1 and sets the last error number.
+> + *
+> + * If the lines were not previously requested together, the behavior is
+> + * undefined.
+> + */
+> +int gpiod_line_set_direction_bulk_input(struct gpiod_line_bulk *bulk
+> +                                       ) GPIOD_API;
+
+Please stick to the current convention of having "_bulk" at the end of
+the function name.
+
+> +
+> +/**
+> + * @brief Set the direction of a single GPIO line to output.
+> + * @param line GPIO line object.
+> + * @param value The logical value output on the line.
+> + * @return 0 is the operation succeeds. In case of an error this routine
+> + *         returns -1 and sets the last error number.
+> + */
+> +int gpiod_line_set_direction_output(struct gpiod_line *line,
+> +                                   int value) GPIOD_API;
+> +
+> +/**
+> + * @brief Set the direction of a set of GPIO lines to output.
+> + * @param bulk Set of GPIO lines.
+> + * @values The logical value to output for each line.
+> + * @return 0 is the operation succeeds. In case of an error this routine
+> + *         returns -1 and sets the last error number.
+> + *
+> + * If the lines were not previously requested together, the behavior is
+> + * undefined.
+> + */
+> +int gpiod_line_set_direction_bulk_output(struct gpiod_line_bulk *bulk,
+> +                                        const int *values) GPIOD_API;
+> +
+>  /**
+>   * @}
+>   *
+> diff --git a/lib/core.c b/lib/core.c
+> index 9b7d88f..c42cda5 100644
+> --- a/lib/core.c
+> +++ b/lib/core.c
+> @@ -36,10 +36,13 @@ struct gpiod_line {
+>         unsigned int offset;
+>         int direction;
+>         int active_state;
+> -       __u32 flags;
+> +       int output_value;
+> +       __u32 lflags;
+> +       __u32 cflags;
+
+Ugh, these aren't very fortunate names - at first glance I have no
+idea what they mean. Either document those or change the names to
+something more obvious.
+
 >
->  namespace {
+>         int state;
+>         bool needs_update;
+> +       bool as_is;
 >
+>         struct gpiod_chip *chip;
+>         struct line_fd_handle *fd_handle;
+> @@ -359,11 +362,11 @@ int gpiod_line_active_state(struct gpiod_line *line=
+)
+>
+>  int gpiod_line_bias(struct gpiod_line *line)
+>  {
+> -       if (line->flags & GPIOLINE_FLAG_BIAS_DISABLE)
+> +       if (line->lflags & GPIOLINE_FLAG_BIAS_DISABLE)
+>                 return GPIOD_LINE_BIAS_DISABLE;
+> -       if (line->flags & GPIOLINE_FLAG_BIAS_PULL_UP)
+> +       if (line->lflags & GPIOLINE_FLAG_BIAS_PULL_UP)
+>                 return GPIOD_LINE_BIAS_PULL_UP;
+> -       if (line->flags & GPIOLINE_FLAG_BIAS_PULL_DOWN)
+> +       if (line->lflags & GPIOLINE_FLAG_BIAS_PULL_DOWN)
+>                 return GPIOD_LINE_BIAS_PULL_DOWN;
+>
+>         return GPIOD_LINE_BIAS_AS_IS;
+> @@ -371,17 +374,17 @@ int gpiod_line_bias(struct gpiod_line *line)
+>
+>  bool gpiod_line_is_used(struct gpiod_line *line)
+>  {
+> -       return line->flags & GPIOLINE_FLAG_KERNEL;
+> +       return line->lflags & GPIOLINE_FLAG_KERNEL;
+>  }
+>
+>  bool gpiod_line_is_open_drain(struct gpiod_line *line)
+>  {
+> -       return line->flags & GPIOLINE_FLAG_OPEN_DRAIN;
+> +       return line->lflags & GPIOLINE_FLAG_OPEN_DRAIN;
+>  }
+>
+>  bool gpiod_line_is_open_source(struct gpiod_line *line)
+>  {
+> -       return line->flags & GPIOLINE_FLAG_OPEN_SOURCE;
+> +       return line->lflags & GPIOLINE_FLAG_OPEN_SOURCE;
+>  }
+>
+>  bool gpiod_line_needs_update(struct gpiod_line *line)
+> @@ -408,7 +411,7 @@ int gpiod_line_update(struct gpiod_line *line)
+>                                                 ? GPIOD_LINE_ACTIVE_STATE=
+_LOW
+>                                                 : GPIOD_LINE_ACTIVE_STATE=
+_HIGH;
+>
+> -       line->flags =3D info.flags;
+> +       line->lflags =3D info.flags;
+>
+>         strncpy(line->name, info.name, sizeof(line->name));
+>         strncpy(line->consumer, info.consumer, sizeof(line->consumer));
+> @@ -457,6 +460,20 @@ static bool line_bulk_all_requested(struct gpiod_lin=
+e_bulk *bulk)
+>         return true;
+>  }
+>
+> +static bool line_bulk_all_requested_values(struct gpiod_line_bulk *bulk)
+> +{
+> +       struct gpiod_line *line, **lineptr;
+> +
+> +       gpiod_line_bulk_foreach_line(bulk, line, lineptr) {
+> +               if (!gpiod_line_is_requested_values(line)) {
+> +                       errno =3D EPERM;
+> +                       return false;
+> +               }
+> +       }
+> +
+> +       return true;
+> +}
+> +
+>  static bool line_bulk_all_free(struct gpiod_line_bulk *bulk)
+>  {
+>         struct gpiod_line *line, **lineptr;
+> @@ -471,6 +488,27 @@ static bool line_bulk_all_free(struct gpiod_line_bul=
+k *bulk)
+>         return true;
+>  }
+>
+> +static bool line_request_direction_is_valid(int direction)
+> +{
+> +       if ((direction =3D=3D GPIOD_LINE_REQUEST_DIRECTION_AS_IS) ||
+> +           (direction =3D=3D GPIOD_LINE_REQUEST_DIRECTION_INPUT) ||
+> +           (direction =3D=3D GPIOD_LINE_REQUEST_DIRECTION_OUTPUT))
+> +               return true;
+> +
+> +       errno =3D EINVAL;
+> +       return false;
+> +}
+> +
+> +static __u32 line_request_direction_to_gpio_handleflag(int direction)
+> +{
+> +       if (direction =3D=3D GPIOD_LINE_REQUEST_DIRECTION_INPUT)
+> +               return GPIOHANDLE_REQUEST_INPUT;
+> +       if (direction =3D=3D GPIOD_LINE_REQUEST_DIRECTION_OUTPUT)
+> +               return GPIOHANDLE_REQUEST_OUTPUT;
+> +
+> +       return 0;
+> +}
+> +
+>  static __u32 line_request_flag_to_gpio_handleflag(int flags)
+>  {
+>         int hflags =3D 0;
+> @@ -495,7 +533,7 @@ static int line_request_values(struct gpiod_line_bulk=
+ *bulk,
+>                                const struct gpiod_line_request_config *co=
+nfig,
+>                                const int *default_vals)
+>  {
+> -       struct gpiod_line *line, **lineptr;
+> +       struct gpiod_line *line;
+>         struct line_fd_handle *line_fd;
+>         struct gpiohandle_request req;
+>         unsigned int i;
+> @@ -524,7 +562,6 @@ static int line_request_values(struct gpiod_line_bulk=
+ *bulk,
+>         else if (config->request_type =3D=3D GPIOD_LINE_REQUEST_DIRECTION=
+_OUTPUT)
+>                 req.flags |=3D GPIOHANDLE_REQUEST_OUTPUT;
+>
+> -
+>         gpiod_line_bulk_foreach_line_off(bulk, line, i) {
+>                 req.lineoffsets[i] =3D gpiod_line_offset(line);
+>                 if (config->request_type =3D=3D
+> @@ -548,8 +585,14 @@ static int line_request_values(struct gpiod_line_bul=
+k *bulk,
+>         if (!line_fd)
+>                 return -1;
+>
+> -       gpiod_line_bulk_foreach_line(bulk, line, lineptr) {
+> +       gpiod_line_bulk_foreach_line_off(bulk, line, i) {
+>                 line->state =3D LINE_REQUESTED_VALUES;
+> +               line->cflags =3D config->flags;
+> +               if (config->request_type =3D=3D
+> +                       GPIOD_LINE_REQUEST_DIRECTION_OUTPUT)
+> +                       line->output_value =3D req.default_values[i];
+> +               if (config->request_type =3D=3D GPIOD_LINE_REQUEST_DIRECT=
+ION_AS_IS)
+> +                       line->as_is =3D true;
+>                 line_set_fd(line, line_fd);
+>                 line_maybe_update(line);
+>         }
+> @@ -590,6 +633,7 @@ static int line_request_event_single(struct gpiod_lin=
+e *line,
+>                 return -1;
+>
+>         line->state =3D LINE_REQUESTED_EVENTS;
+> +       line->cflags =3D config->flags;
+>         line_set_fd(line, line_fd);
+>         line_maybe_update(line);
+>
+> @@ -688,6 +732,11 @@ bool gpiod_line_is_requested(struct gpiod_line *line=
+)
+>                 line->state =3D=3D LINE_REQUESTED_EVENTS);
+>  }
+>
+> +bool gpiod_line_is_requested_values(struct gpiod_line *line)
+> +{
+> +       return (line->state =3D=3D LINE_REQUESTED_VALUES);
+> +}
+> +
+>  bool gpiod_line_is_free(struct gpiod_line *line)
+>  {
+>         return line->state =3D=3D LINE_FREE;
+> @@ -766,9 +815,134 @@ int gpiod_line_set_value_bulk(struct gpiod_line_bul=
+k *bulk, const int *values)
+>         if (rv < 0)
+>                 return -1;
+>
+> +       gpiod_line_bulk_foreach_line_off(bulk, line, i)
+> +               line->output_value =3D data.values[i];
+> +
+> +       return 0;
+> +}
+> +
+> +int gpiod_line_set_config(struct gpiod_line *line, int direction,
+> +                         int flags, int value)
+> +{
+> +       struct gpiod_line_bulk bulk;
+> +
+> +       gpiod_line_bulk_init(&bulk);
+> +       gpiod_line_bulk_add(&bulk, line);
+> +
+> +       return gpiod_line_set_config_bulk(&bulk, direction, flags, &value=
+);
+> +}
+> +
+> +int gpiod_line_set_config_bulk(struct gpiod_line_bulk *bulk,
+> +                              int direction, int flags,
+> +                              const int *values)
+> +{
+> +       struct gpiohandle_config hcfg;
+> +       struct gpiod_line *line;
+> +       unsigned int i;
+> +       int rv, fd;
+> +       bool as_is;
+> +
+> +       if (!line_bulk_same_chip(bulk) ||
+> +           !line_bulk_all_requested_values(bulk))
+> +               return -1;
+> +
+> +       if (!line_request_direction_is_valid(direction))
+> +               return -1;
+> +
+> +       memset(&hcfg, 0, sizeof(hcfg));
+> +
+> +       hcfg.flags =3D line_request_flag_to_gpio_handleflag(flags);
+> +       hcfg.flags |=3D line_request_direction_to_gpio_handleflag(directi=
+on);
+> +       if (direction =3D=3D GPIOD_LINE_REQUEST_DIRECTION_OUTPUT && value=
+s) {
+> +               for (i =3D 0; i < gpiod_line_bulk_num_lines(bulk); i++)
+> +                       hcfg.default_values[i] =3D (uint8_t)!!values[i];
+> +       }
+> +
+> +       line =3D gpiod_line_bulk_get_line(bulk, 0);
+> +       fd =3D line_get_fd(line);
+> +
+> +       rv =3D ioctl(fd, GPIOHANDLE_SET_CONFIG_IOCTL, &hcfg);
+> +       if (rv < 0)
+> +               return -1;
+> +
+> +       as_is =3D line->as_is && direction =3D=3D GPIOD_LINE_REQUEST_DIRE=
+CTION_AS_IS;
+> +       gpiod_line_bulk_foreach_line_off(bulk, line, i) {
+> +               line->cflags =3D flags;
+> +               if (direction =3D=3D GPIOD_LINE_REQUEST_DIRECTION_OUTPUT)
+> +                       line->output_value =3D hcfg.default_values[i];
+> +               line->as_is =3D as_is;
+> +               line_maybe_update(line);
+> +       }
+>         return 0;
+>  }
+>
+> +int gpiod_line_set_flags(struct gpiod_line *line, int flags)
+> +{
+> +       struct gpiod_line_bulk bulk;
+> +
+> +       gpiod_line_bulk_init(&bulk);
+> +       gpiod_line_bulk_add(&bulk, line);
+> +
+> +       return gpiod_line_set_flags_bulk(&bulk, flags);
+> +}
+> +
+> +int gpiod_line_set_flags_bulk(struct gpiod_line_bulk *bulk, int flags)
+> +{
+> +       struct gpiod_line *line;
+> +       int values[GPIOD_LINE_BULK_MAX_LINES];
+> +       unsigned int i;
+> +       int direction;
+> +
+> +       line =3D gpiod_line_bulk_get_line(bulk, 0);
+> +       if (line->as_is) {
+
+Can you explain the purpose of this as_is field? I'm not sure this is
+really needed.
+
+Bart
+
+
+> +               errno =3D EPERM;
+> +               return -1;
+> +       }
+> +       if (line->direction =3D=3D GPIOD_LINE_DIRECTION_OUTPUT) {
+> +               gpiod_line_bulk_foreach_line_off(bulk, line, i) {
+> +                       values[i] =3D line->output_value;
+> +               }
+> +               direction =3D GPIOD_LINE_REQUEST_DIRECTION_OUTPUT;
+> +       } else
+> +               direction =3D GPIOD_LINE_REQUEST_DIRECTION_INPUT;
+> +
+> +       return gpiod_line_set_config_bulk(bulk, direction,
+> +                                         flags, values);
+> +}
+> +
+> +int gpiod_line_set_direction_input(struct gpiod_line *line)
+> +{
+> +       return gpiod_line_set_config(line, GPIOD_LINE_REQUEST_DIRECTION_I=
+NPUT,
+> +                                    line->cflags, 0);
+> +}
+> +
+> +int gpiod_line_set_direction_bulk_input(struct gpiod_line_bulk *bulk)
+> +{
+> +       struct gpiod_line *line;
+> +
+> +       line =3D gpiod_line_bulk_get_line(bulk, 0);
+> +       return gpiod_line_set_config_bulk(bulk,
+> +                                         GPIOD_LINE_REQUEST_DIRECTION_IN=
+PUT,
+> +                                         line->cflags, NULL);
+> +}
+> +
+> +int gpiod_line_set_direction_output(struct gpiod_line *line, int value)
+> +{
+> +       return gpiod_line_set_config(line, GPIOD_LINE_REQUEST_DIRECTION_O=
+UTPUT,
+> +                                    line->cflags, value);
+> +}
+> +
+> +int gpiod_line_set_direction_bulk_output(struct gpiod_line_bulk *bulk,
+> +                                       const int *values)
+> +{
+> +       struct gpiod_line *line;
+> +
+> +       line =3D gpiod_line_bulk_get_line(bulk, 0);
+> +       return gpiod_line_set_config_bulk(bulk,
+> +                                         GPIOD_LINE_REQUEST_DIRECTION_OU=
+TPUT,
+> +                                         line->cflags, values);
+> +}
+> +
+>  int gpiod_line_event_wait(struct gpiod_line *line,
+>                           const struct timespec *timeout)
+>  {
 > --
 > 2.24.0
 >
