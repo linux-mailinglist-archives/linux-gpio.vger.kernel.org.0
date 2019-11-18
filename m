@@ -2,143 +2,112 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 86F9F100851
-	for <lists+linux-gpio@lfdr.de>; Mon, 18 Nov 2019 16:36:07 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id F2158100912
+	for <lists+linux-gpio@lfdr.de>; Mon, 18 Nov 2019 17:20:36 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726668AbfKRPgG (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 18 Nov 2019 10:36:06 -0500
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:38141 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726654AbfKRPgG (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>);
-        Mon, 18 Nov 2019 10:36:06 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1574091365;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=fFo23KStxZEZFMUYITan3zWjwxcwxZWwrTSTfK3+ezc=;
-        b=MLV1oTPl1TR6k1KcPjR55MwMS3pq0lRin/PNcYUvGSD5Hg8+AC76Bv5iD0AeR1bMpxoPZH
-        M/6mKCyIbxZb+EpW1CCwFpKG7IKH+S2zqHLuSLwSUP2S0yf0xaxZFyFM2QaNRaZRQjA7He
-        bZH6JYcCI9L2H/Wg9920J+oxnrX4Kv4=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-387-Dyt0Vd7EOjuSRmPXbDrCEg-1; Mon, 18 Nov 2019 10:36:00 -0500
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 5612D8E36F6;
-        Mon, 18 Nov 2019 15:35:59 +0000 (UTC)
-Received: from shalem.localdomain.com (unknown [10.36.118.166])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id D66592B7C5;
-        Mon, 18 Nov 2019 15:35:57 +0000 (UTC)
-From:   Hans de Goede <hdegoede@redhat.com>
-To:     "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     Hans de Goede <hdegoede@redhat.com>, linux-gpio@vger.kernel.org,
-        linux-acpi@vger.kernel.org
-Subject: [PATCH] ACPI / button: Add DMI quirk for Acer Switch 10 SW5-032 lid-switch
-Date:   Mon, 18 Nov 2019 16:35:56 +0100
-Message-Id: <20191118153556.28751-1-hdegoede@redhat.com>
+        id S1726869AbfKRQUg (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 18 Nov 2019 11:20:36 -0500
+Received: from foss.arm.com ([217.140.110.172]:36694 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726322AbfKRQUf (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Mon, 18 Nov 2019 11:20:35 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id BC2861FB;
+        Mon, 18 Nov 2019 08:20:34 -0800 (PST)
+Received: from localhost (unknown [10.37.6.21])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 2ADEB3F703;
+        Mon, 18 Nov 2019 08:20:34 -0800 (PST)
+Date:   Mon, 18 Nov 2019 16:20:32 +0000
+From:   Mark Brown <broonie@kernel.org>
+To:     Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+Cc:     mazziesaccount@gmail.com, Lee Jones <lee.jones@linaro.org>,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
+        Wolfram Sang <wsa+renesas@sang-engineering.com>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Nicholas Mc Guire <hofrat@osadl.org>,
+        Phil Edworthy <phil.edworthy@renesas.com>,
+        linux-leds@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+        linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-rtc@vger.kernel.org
+Subject: Re: [PATCH v5 09/16] regulator: bd71828: Basic support for ROHM
+ bd71828 PMIC regulators
+Message-ID: <20191118162032.GI9761@sirena.org.uk>
+References: <cover.1574059625.git.matti.vaittinen@fi.rohmeurope.com>
+ <ffd3ea4858f820e565aba88ccac395ce5b661538.1574059625.git.matti.vaittinen@fi.rohmeurope.com>
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
-X-MC-Unique: Dyt0Vd7EOjuSRmPXbDrCEg-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=WINDOWS-1252
-Content-Transfer-Encoding: quoted-printable
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="BWWlCdgt6QLN7tv3"
+Content-Disposition: inline
+In-Reply-To: <ffd3ea4858f820e565aba88ccac395ce5b661538.1574059625.git.matti.vaittinen@fi.rohmeurope.com>
+X-Cookie: no maintenance:
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-The Acer Switch 10 SW5-032 _LID method is quite broken, it looks like this:
 
-            Method (_LID, 0, NotSerialized)  // _LID: Lid Status
-            {
-                If ((STAS & One))
-                {
-                    Local0 =3D One
-                    PBCG |=3D 0x05000000
-                    HMCG |=3D 0x05000000
-                }
-                Else
-                {
-                    Local0 =3D Zero
-                    PBCG &=3D 0xF0FFFFFF
-                    HMCG &=3D 0xF0FFFFFF
-                }
+--BWWlCdgt6QLN7tv3
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-                ^^PCI0.GFX0.CLID =3D Local0
-                Return (Local0)
-            }
+On Mon, Nov 18, 2019 at 08:57:57AM +0200, Matti Vaittinen wrote:
 
-The problem here is the accesses to the PBCG and HMCG, these are the
-pinconf0 registers for the power, resp. the home button GPIO,
-e.g. PBCG is declared as:
+> +static int ramp_delay_supported(struct regulator_dev *rdev)
+> +{
+> +	switch (rdev->desc->id) {
+> +	case BD71828_BUCK1:
+> +	case BD71828_BUCK2:
+> +	case BD71828_BUCK6:
+> +	case BD71828_BUCK7:
+> +		return 1;
+> +	default:
+> +		break;
+> +	}
+> +	return 0;
+> +}
+> +
+> +static int bd71828_set_ramp_delay(struct regulator_dev *rdev, int ramp_delay)
+> +{
+> +	unsigned int val;
+> +
+> +	if (!ramp_delay_supported(rdev)) {
+> +		dev_err(&rdev->dev, "%s: can't set ramp-delay\n",
+> +			rdev->desc->name);
+> +		return -EINVAL;
 
-            OperationRegion (PWBT, SystemMemory, 0xFED0E080, 0x10)
-            Field (PWBT, DWordAcc, NoLock, Preserve)
-            {
-                PBCG,   32,
-                PBV1,   32,
-                PBSA,   32,
-                PBV2,   32
-            }
+Rather than doing this it's better to just not provide the operation for
+devices that don't support it, that makes the handling in the core
+easier.
 
-Where 0xFED0E000 is the base address of the GPO2 device and 0x80 is
-the offset for the pin used for the powerbutton.
+--BWWlCdgt6QLN7tv3
+Content-Type: application/pgp-signature; name="signature.asc"
 
-The problem here is this line in _LID:
-                    PBCG |=3D 0x05000000
+-----BEGIN PGP SIGNATURE-----
 
-This changes the trigger flags of the GPIO, changing when it generates
-interrupts. Note it does not clear the original flags. Linux uses an
-edge triggered interrupt on both positive and negative edges. This |=3D
-adds the BYT_TRIG_LVL flag to this, so now it is turned into a level
-interrupt which fires both when low and high, iow it simply always
-fires leading to an interrupt storm, the tablet immediately waking up
-from suspend again, etc.
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl3SxM8ACgkQJNaLcl1U
+h9Aq0QgAgjb3+2lEoadTP4w8qi9OfeekF/Te3BOzBoRw/N3CEI0LRdBuZ0f+Co++
+QefQkzBXUOq8Pu7bNj+3h6eZiOVqwzPGej79fhswkmFiZGzPNHGJEegNAIQQm0Gt
+FxLz5qVqIfx2orOMrYbVMIYffkH3hHE5twc3PoUf6lTpyUoErQ1miskrOfiKdqe3
+WBlMS73mAzeN65q87QNESqie94xl+DxAY0caeTePuvbEA06Hgf6ZgHvv0uxb/38q
+7lI/AzRptAy7HJqHYy6onIRxd12cBoKYa8SsoOlghgepja3prAwDE0eQ0iXo260q
+kJTWfpuB6S3o/I5A6W0SUuKwiktIEw==
+=/GhS
+-----END PGP SIGNATURE-----
 
-There is nothing we can do to fix this, except for a DSDT override,
-which the user needs to do manually. The only thing we can do is
-never call _LID, which requires disabling the lid-switch functionality
-altogether.
-
-This commit adds a quirk for this, as no lid-switch function is better
-then the interrupt storm. A user manually applying a DSDT override can
-also override the quirk on the kernel cmdline.
-
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
----
- drivers/acpi/button.c | 13 +++++++++++++
- 1 file changed, 13 insertions(+)
-
-diff --git a/drivers/acpi/button.c b/drivers/acpi/button.c
-index d27b01c0323d..b758b45737f5 100644
---- a/drivers/acpi/button.c
-+++ b/drivers/acpi/button.c
-@@ -77,6 +77,19 @@ MODULE_DEVICE_TABLE(acpi, button_device_ids);
-=20
- /* Please keep this list sorted alphabetically by vendor and model */
- static const struct dmi_system_id dmi_lid_quirks[] =3D {
-+=09{
-+=09=09/*
-+=09=09 * Acer Switch 10 SW5-012. _LID method messes with home and
-+=09=09 * power button GPIO IRQ settings causing an interrupt storm on
-+=09=09 * both GPIOs. This is unfixable without a DSDT override, so we
-+=09=09 * have to disable the lid-switch functionality altogether :|
-+=09=09 */
-+=09=09.matches =3D {
-+=09=09=09DMI_MATCH(DMI_SYS_VENDOR, "Acer"),
-+=09=09=09DMI_MATCH(DMI_PRODUCT_NAME, "Aspire SW5-012"),
-+=09=09},
-+=09=09.driver_data =3D (void *)(long)ACPI_BUTTON_LID_INIT_DISABLED,
-+=09},
- =09{
- =09=09/*
- =09=09 * Asus T200TA, _LID keeps reporting closed after every second
---=20
-2.23.0
-
+--BWWlCdgt6QLN7tv3--
