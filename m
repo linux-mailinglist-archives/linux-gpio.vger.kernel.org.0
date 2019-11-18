@@ -2,132 +2,125 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 8EE851009BD
-	for <lists+linux-gpio@lfdr.de>; Mon, 18 Nov 2019 17:53:48 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5195B100A29
+	for <lists+linux-gpio@lfdr.de>; Mon, 18 Nov 2019 18:23:24 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726759AbfKRQxr (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 18 Nov 2019 11:53:47 -0500
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:42683 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726068AbfKRQxr (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 18 Nov 2019 11:53:47 -0500
-Received: by mail-oi1-f196.google.com with SMTP id o12so5815511oic.9;
-        Mon, 18 Nov 2019 08:53:47 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=hqTOasQxtcpYkZR/qyY0Ns887QHHgqrNr6obLQsmNsI=;
-        b=OWcHeOLBFcvsJGM4bLKrsbHY1ywlzAMVlzijeOfEGBK/N0Jh1Sol1ekSSLR02gfBIY
-         FlkgaQ8h39q6D0Fgso6CK23rttxDepbChSmpC+P34nzqkblv0ZgZLLiG1kiLocci25Wu
-         gKiqoU4s9ynUYwdAc9vaBYnCYoAjdAokWu9Fwgr+QW9Hg+Vd89X4ad3PDOhlvm504Ip8
-         iSpdo6mGx6NBP4SobWaSYYnP8ketB8xNkBfvDWUR7nDcuX4d4a2BeKooQ9JmEYGgt4L1
-         Wxkksa8GDAYnPLUhl2UKzOWYYyBARx10vypQ8WkUsonuXflGMrKKAArVOjxC+Hr56jjI
-         VY1Q==
-X-Gm-Message-State: APjAAAVrB1r4NDT2YvrDZc8Z7mfjGQpqMFH1q/Smw4TWoB+dgnrI1ouk
-        PGmlIjgFobWY77uGmg4oRA==
-X-Google-Smtp-Source: APXvYqxhK6+LinJAXcIhwyYoIbpoJYerjNgZrjGX55HdjJe+rrjIeNxntyurC83Ly9lLYUCNhH+m7w==
-X-Received: by 2002:aca:451:: with SMTP id 78mr21727660oie.170.1574096026456;
-        Mon, 18 Nov 2019 08:53:46 -0800 (PST)
-Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id o18sm6447650otj.38.2019.11.18.08.53.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 18 Nov 2019 08:53:45 -0800 (PST)
-Date:   Mon, 18 Nov 2019 10:53:45 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Yash Shah <yash.shah@sifive.com>
-Cc:     "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
-        "bgolaszewski@baylibre.com" <bgolaszewski@baylibre.com>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "palmer@dabbelt.com" <palmer@dabbelt.com>,
-        "Paul Walmsley ( Sifive)" <paul.walmsley@sifive.com>,
-        "aou@eecs.berkeley.edu" <aou@eecs.berkeley.edu>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "jason@lakedaemon.net" <jason@lakedaemon.net>,
-        "maz@kernel.org" <maz@kernel.org>,
-        "bmeng.cn@gmail.com" <bmeng.cn@gmail.com>,
-        "atish.patra@wdc.com" <atish.patra@wdc.com>,
-        Sagar Kadam <sagar.kadam@sifive.com>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Sachin Ghadi <sachin.ghadi@sifive.com>
-Subject: Re: [PATCH 2/4] gpio: sifive: Add DT documentation for SiFive GPIO
-Message-ID: <20191118165345.GA3935@bogus>
-References: <1573560684-48104-1-git-send-email-yash.shah@sifive.com>
- <1573560684-48104-3-git-send-email-yash.shah@sifive.com>
+        id S1726423AbfKRRXX (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 18 Nov 2019 12:23:23 -0500
+Received: from mga05.intel.com ([192.55.52.43]:7477 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726068AbfKRRXX (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Mon, 18 Nov 2019 12:23:23 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 18 Nov 2019 09:23:22 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.68,320,1569308400"; 
+   d="scan'208";a="406159014"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by fmsmga005.fm.intel.com with ESMTP; 18 Nov 2019 09:23:21 -0800
+Received: from andy by smile with local (Exim 4.93-RC1)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1iWkkC-0005at-Mx; Mon, 18 Nov 2019 19:23:20 +0200
+Date:   Mon, 18 Nov 2019 19:23:20 +0200
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Hans de Goede <hdegoede@redhat.com>
+Cc:     Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-gpio@vger.kernel.org, linux-acpi@vger.kernel.org
+Subject: Re: [PATCH 0/1] pinctrl: baytrail: Really serialize all register
+ accesses
+Message-ID: <20191118172320.GX32742@smile.fi.intel.com>
+References: <20191118142020.22256-1-hdegoede@redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1573560684-48104-3-git-send-email-yash.shah@sifive.com>
+In-Reply-To: <20191118142020.22256-1-hdegoede@redhat.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Nov 12, 2019 at 12:12:06PM +0000, Yash Shah wrote:
-> DT documentation for GPIO controller added.
+On Mon, Nov 18, 2019 at 03:20:19PM +0100, Hans de Goede wrote:
+> Hi All,
 > 
-> Signed-off-by: Wesley W. Terpstra <wesley@sifive.com>
-> [Atish: Compatible string update]
-> Signed-off-by: Atish Patra <atish.patra@wdc.com>
-> Signed-off-by: Yash Shah <yash.shah@sifive.com>
-> ---
->  .../devicetree/bindings/gpio/gpio-sifive.txt       | 33 ++++++++++++++++++++++
->  1 file changed, 33 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/gpio/gpio-sifive.txt
+> First let me copy-paste a bit of the commit msg for background:
+> 
+> ---begin commit msg---
+> Commit 39ce8150a079 ("pinctrl: baytrail: Serialize all register access")
+> added a spinlock around all register accesses because:
+> 
+> "There is a hardware issue in Intel Baytrail where concurrent GPIO register
+>  access might result reads of 0xffffffff and writes might get dropped
+>  completely."
+> 
+> Testing has shown that this does not catch all cases, there are still
+> 2 problems remaining
+> 
+> 1) The original fix uses a spinlock per byt_gpio device / struct,
+> additional testing has shown that this is not sufficient concurent
+> accesses to 2 different GPIO banks also suffer from the same problem.
+> 
+> This commit fixes this by moving to a single global lock.
+> 
+> 2) The original fix did not add a lock around the register accesses in
+> the suspend/resume handling.
+> 
+> Since pinctrl-baytrail.c is using normal suspend/resume handlers,
+> interrupts are still enabled during suspend/resume handling. Nothing
+> should be using the GPIOs when they are being taken down, _but_ the
+> GPIOs themselves may still cause interrupts, which are likely to
+> use (read) the triggering GPIO. So we need to protect against
+> concurrent GPIO register accesses in the suspend/resume handlers too.
+> 
+> This commit fixes this by adding the missing spin_lock / unlock calls.
+> ---end commit msg---
+> 
+> I was discussing the problem at my local hackerspace yesterday with
+> someone who knows quite a bit low-level details about Intel CPUs.
+> He said that on "big" core's all the GPIO islands sit behind the IOSF
+> and that there is a bridge which make their registers look like regular
+> mmio registers.
+> 
+> I wonder if the same is happening on BYT, that would point to an issue
+> with concurent accesses being done through the IOSF bridge, which would
+> explain why I've found that we need a single global lock for all GPIO
+> islands (*).
 
-Please make this a schema. See 
-Documentation/devicetree/writing-schema.rst.
+> But that in turn would mean that we really need global lock
+> for _all_ accesses done through the IOSF bridge, not just GPIO register
+> accesses...  Which would explain why on some machines BYT has never been
+> really stable with Linux.
+
+I don't think so. The Cherriview seems inherited the same silicon issue (see
+comment near to chv_lock), though it seems to be fixed for all new hardware
+(Skylake+).
+
+> Can someone at Intel with access to internal docs about BYT dig a bit into
+> the docs and see if 1. this theory makes sense, 2. if it does if there us
+> anything else behind the IOSF for which we also need to serialize accesses?
+
+Unfortunately I have no time to dig into this right now.
 
 > 
-> diff --git a/Documentation/devicetree/bindings/gpio/gpio-sifive.txt b/Documentation/devicetree/bindings/gpio/gpio-sifive.txt
-> new file mode 100644
-> index 0000000..d3416d5
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/gpio/gpio-sifive.txt
-> @@ -0,0 +1,33 @@
-> +SiFive GPIO controller bindings
-> +
-> +Required properties:
-> +- compatible: Should be "sifive,<chip>-gpio" and "sifive,gpio<version>".
-> +  Supported compatible strings are: "sifive,fu540-c000-gpio" for the SiFive
-> +  GPIO v0 as integrated onto the SiFive FU540 chip, and "sifive,gpio0" for the
-> +  SiFive GPIO v0 IP block with no chip integration tweaks.
-> +  Please refer to sifive-blocks-ip-versioning.txt for details.
-> +- reg: Physical base address and length of the controller's registers.
-> +- clocks: Should contain a clock identifier for the GPIO's parent clock.
-> +- #gpio-cells : Should be 2
-> +  - The first cell is the GPIO offset number.
-> +  - The second cell indicates the polarity of the GPIO
-> +- gpio-controller : Marks the device node as a GPIO controller.
-> +- interrupt-controller: Marks the device node as an interrupt controller.
-> +- #interrupt-cells : Should be 2.
-> +  - The first cell is the GPIO offset number within the GPIO controller.
-> +  - The second cell is the edge/level to use for interrupt generation.
-> +- interrupts: Specify the interrupts, one per GPIO
-
-How many GPIOs?
-
-> +
-> +Example:
-> +
-> +gpio: gpio@10060000 {
-> +	compatible = "sifive,fu540-c000-gpio","sifive,gpio0";
-
-space                                         ^
-
-> +	interrupt-parent = <&plic>;
-> +	interrupts = <7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22>;
-> +	reg = <0x0 0x10060000 0x0 0x1000>;
-> +	clocks = <&tlclk>;
-> +	gpio-controller;
-> +	#gpio-cells = <2>;
-> +	interrupt-controller;
-> +	#interrupt-cells = <2>;
-> +};
-> -- 
-> 2.7.4
+> Regards,
 > 
+> Hans
+> 
+> 
+> 
+> 
+> *) It seems that the GPIO interrupt storm on the test device I hit
+> this is really good in triggering this
+> 
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
