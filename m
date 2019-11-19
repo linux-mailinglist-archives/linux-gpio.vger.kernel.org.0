@@ -2,77 +2,82 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id E8121102750
-	for <lists+linux-gpio@lfdr.de>; Tue, 19 Nov 2019 15:50:03 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 6763C10275F
+	for <lists+linux-gpio@lfdr.de>; Tue, 19 Nov 2019 15:52:15 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727979AbfKSOuD (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 19 Nov 2019 09:50:03 -0500
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:45095 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726682AbfKSOuC (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 19 Nov 2019 09:50:02 -0500
-Received: by mail-lj1-f194.google.com with SMTP id n21so23596982ljg.12
-        for <linux-gpio@vger.kernel.org>; Tue, 19 Nov 2019 06:50:01 -0800 (PST)
+        id S1728130AbfKSOwM (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 19 Nov 2019 09:52:12 -0500
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:36808 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727909AbfKSOwM (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 19 Nov 2019 09:52:12 -0500
+Received: by mail-lj1-f193.google.com with SMTP id k15so23653987lja.3
+        for <linux-gpio@vger.kernel.org>; Tue, 19 Nov 2019 06:52:08 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=p9ZQjl9wnsKAB3Zoo4F9RgP5GlFui/VJLm448ki3rBw=;
-        b=vCkQI+d2K135zgtVt+7P2PPf2Rpc8MsPNf2WQPoLquYf8/L7drQL26yA9UAHUJxyqh
-         aKyvyc75wnsr+ma1wiqXJ28O7DcQeoghmTGnmeg6tmxgbkomWa7qrTFwKgugNxbViahZ
-         kPSzFfDpFONKL8bgd1IQ7YFuKo0p+8SmIY120vbz/xGiZYeNAb/dy6+uDZ/+oqOOAU9r
-         zdbkv1/RT9QnRUoMm3iZmlYaLHXZd12EB3PUjcI8ua5L2tpxXDqulpQ4+XhSf7bYXxw+
-         Qh6faNWjS2YKiAay4R9dTNE8C5ccVZn4fFaOhZ4l/oOx3/9D/eyfzJO0TazR1CnydRmE
-         HClQ==
+        bh=yqb0rkinvnzVxsR16s0DvySApOjrl6R+PT2Tv3AwCuQ=;
+        b=Krb1OidY+jIOCRMHX0376ZSV9SJGf/bkadTG+k7yzJiYfM8/OZUrPbsHA2qx7Hh7u9
+         BlD6DBG51uCKeMj2RsnffcZMQfx8lg8Y1P75xjhiqY2ubZSik/BRMA1scOpsllxqiSj1
+         pGFElwRxjYt1QUWiZxwFy1uysySfIgzMuDlnkgVhkQ1UTDrkDxTMysXfIN7qp6pR9LPD
+         hc5EMHcWNF/ZhclLFpOv3TFmIPoeq40Lg4UEVtQI6NG199vB/0lyBRR+8hxcMY3KMnRu
+         HGVupab+psS5dFxKl9qQGHfMHmLmaOa4GcOBPwtTlVYuKpP6uRx5YEQPwfPZxCn3j/xs
+         REbA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=p9ZQjl9wnsKAB3Zoo4F9RgP5GlFui/VJLm448ki3rBw=;
-        b=rfQI/GzB+9Z4GR6G/vIDChkG4fl/XNMt3I5zfnu5Tm+PDveIJ0omO+K6RuCAv8AnvM
-         D2KV6PcBhaNiNKPPKLbUkM3nLlOC/bmp5/XVoNsYhnu2logiCxMoCHjHZUUXuja1VpXW
-         ZVYTmS0Czq6HbVkkdW+bEegrd0pONyaCtyyFySDvIIDLusky75MKYZt/01jhxr3dLNs+
-         Lv2/F+omXIXmZQhkmxPhtnrm+PssfdlNJbdDs4wNVJNXRyof/DOIDNa8L3WIjIPLu2Zu
-         zO+Jwx/vHziGLH1Yt1A2lvXLgrDkC7tX3Oq9FdXXtv2H5OiXS/p2HTfeqsyEFqT+NjMt
-         jB4w==
-X-Gm-Message-State: APjAAAWZh7e9qzkG9eKq7mQ0AFI8f9cKu/Dm8k3eKh6dUxSY02J6RhaN
-        MelRfaWBVl8PWnFLdxsnhwOhFWWw9fUyzynxT8Vr7A==
-X-Google-Smtp-Source: APXvYqzJgWBhYdXEJT831ipF+tbS7McUT2nhsFOn/XLqq39OkcEoN7fRPKqD94tKrLYR0spiriWRyeFk0XTbbtftwxs=
-X-Received: by 2002:a2e:9784:: with SMTP id y4mr4328823lji.77.1574175000780;
- Tue, 19 Nov 2019 06:50:00 -0800 (PST)
+        bh=yqb0rkinvnzVxsR16s0DvySApOjrl6R+PT2Tv3AwCuQ=;
+        b=JntN4JlHCW2fISgPLuycoN2ZOg/TgQZfemQ4MVCPUX8aEzen65A3FjAtUKsy0dnWaS
+         iCQmqpd/0wBcI2X+uRLrCLMGdpJfWhYLqXyJhPyaE4sQUizMyGS1D4EPWKxPoSo8/yD0
+         A3QAomO/ffzgvAS1pnvsL2xmNLLD23GGxMoEygZGhbgDyytG0usDgkFpolxs7A9YLT3C
+         qc371s/b/y4NFxL9ERFR/3MSQ/D8YmeKa9WFv/N2MB0ys6u/dboVEdiH9ERSirTBjcsp
+         1BKvj5yIqOwXEXijVe0f1FsA6geSYJGJTpa8vSt+Mnm+TdqAjkCleDhIu4HKBIkEalQE
+         eHsg==
+X-Gm-Message-State: APjAAAV9WKUorcPEpTnx8NvEl8G2PqukdFauUFhZ6yg69nTUNv+2k8/m
+        EM67Jv0/bO/n9moW52pAScLlmVAHxzP/dsz293UsNg==
+X-Google-Smtp-Source: APXvYqyrJt5cT9l3Z4fNcoLZnVIbrnYb0eYCPsuJ1H4+NpxJM1ojKC8zDKW4wGHoxq9Q3I8PkV9qxBmveRjuWw+hDa4=
+X-Received: by 2002:a2e:8597:: with SMTP id b23mr4342291lji.218.1574175128085;
+ Tue, 19 Nov 2019 06:52:08 -0800 (PST)
 MIME-Version: 1.0
-References: <20191117205439.239211-1-stephan@gerhold.net>
-In-Reply-To: <20191117205439.239211-1-stephan@gerhold.net>
+References: <1573855915-9841-1-git-send-email-ilina@codeaurora.org> <1573855915-9841-9-git-send-email-ilina@codeaurora.org>
+In-Reply-To: <1573855915-9841-9-git-send-email-ilina@codeaurora.org>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Tue, 19 Nov 2019 15:49:49 +0100
-Message-ID: <CACRpkdYZr7LAZ647DP1-_OPxE7eRnEDhfpMbL36XnELHcc4aTQ@mail.gmail.com>
-Subject: Re: [PATCH] pinctrl: nomadik: db8500: Add mc0_a_2 pin group without
- direction control
-To:     Stephan Gerhold <stephan@gerhold.net>
-Cc:     Linux ARM <linux-arm-kernel@lists.infradead.org>,
+Date:   Tue, 19 Nov 2019 15:51:54 +0100
+Message-ID: <CACRpkdYix=G1nYHgdzCKR9WzwchHtJ6N_UUi3R_+sz8UFHmLUg@mail.gmail.com>
+Subject: Re: [PATCH v2 08/12] drivers: pinctrl: msm: setup GPIO chip in hierarchy
+To:     Lina Iyer <ilina@codeaurora.org>
+Cc:     Stephen Boyd <swboyd@chromium.org>, Marc Zyngier <maz@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Evan Green <evgreen@chromium.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        MSM <linux-arm-msm@vger.kernel.org>,
+        Maulik Shah <mkshah@codeaurora.org>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+        Andy Gross <agross@kernel.org>,
+        Doug Anderson <dianders@chromium.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Sun, Nov 17, 2019 at 9:55 PM Stephan Gerhold <stephan@gerhold.net> wrote:
+On Fri, Nov 15, 2019 at 11:17 PM Lina Iyer <ilina@codeaurora.org> wrote:
 
-> Some devices do not make use of the CMD0/DAT0/DAT2 direction control
-> pins of the MMC/SD card 0 interface. In this case we should leave
-> those pins unconfigured.
+> Some GPIOs are marked as wakeup capable and are routed to another
+> interrupt controller that is an always-domain and can detect interrupts
+> even when most of the SoC is powered off. The wakeup interrupt
+> controller wakes up the GIC and replays the interrupt at the GIC.
 >
-> A similar case already exists for "mc1_a_1" vs "mc1_a_2"
-> when the MC1_FBCLK pin is not used.
+> Setup the TLMM irqchip in hierarchy with the wakeup interrupt controller
+> and ensure the wakeup GPIOs are handled correctly.
 >
-> Add a new "mc0_a_2" pin group which is equal to "mc0_a_1" except
-> with the MC0_CMDDIR, MC0_DAT0DIR and MC0_DAT2DIR pins removed.
->
-> Signed-off-by: Stephan Gerhold <stephan@gerhold.net>
+> Co-developed-by: Maulik Shah <mkshah@codeaurora.org>
+> Signed-off-by: Lina Iyer <ilina@codeaurora.org>
+> Reviewed-by: Stephen Boyd <swboyd@chromium.org>
 
-Patch applied.
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 
 Yours,
 Linus Walleij
