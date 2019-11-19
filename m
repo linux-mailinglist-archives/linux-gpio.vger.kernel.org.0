@@ -2,116 +2,174 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 6127F102387
-	for <lists+linux-gpio@lfdr.de>; Tue, 19 Nov 2019 12:46:19 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E073310239F
+	for <lists+linux-gpio@lfdr.de>; Tue, 19 Nov 2019 12:52:30 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726351AbfKSLqS (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 19 Nov 2019 06:46:18 -0500
-Received: from ns.iliad.fr ([212.27.33.1]:58414 "EHLO ns.iliad.fr"
+        id S1727066AbfKSLwa (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 19 Nov 2019 06:52:30 -0500
+Received: from mga01.intel.com ([192.55.52.88]:30916 "EHLO mga01.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726000AbfKSLqS (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Tue, 19 Nov 2019 06:46:18 -0500
-Received: from ns.iliad.fr (localhost [127.0.0.1])
-        by ns.iliad.fr (Postfix) with ESMTP id 2FD4520C6F;
-        Tue, 19 Nov 2019 12:46:16 +0100 (CET)
-Received: from [192.168.108.51] (freebox.vlq16.iliad.fr [213.36.7.13])
-        by ns.iliad.fr (Postfix) with ESMTP id 1577820C65;
-        Tue, 19 Nov 2019 12:46:16 +0100 (CET)
-Subject: Re: Using a GPIO as an interrupt line
-To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>
-Cc:     GPIO <linux-gpio@vger.kernel.org>,
-        MSM <linux-arm-msm@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Marc Zyngier <maz@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Uwe Kleine-Konig <u.kleine-koenig@pengutronix.de>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>
-References: <f0d383f3-8efa-ae68-62af-68f69cd4143f@free.fr>
- <20191119095748.GX25745@shell.armlinux.org.uk>
- <07db59e7-ff16-0457-87f2-fba10dc182d6@free.fr>
- <20191119105814.GZ25745@shell.armlinux.org.uk>
-From:   Marc Gonzalez <marc.w.gonzalez@free.fr>
-Message-ID: <9356da2a-2190-03fd-f5cc-6a0fd8c38e89@free.fr>
-Date:   Tue, 19 Nov 2019 12:46:15 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        id S1726265AbfKSLwa (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Tue, 19 Nov 2019 06:52:30 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 19 Nov 2019 03:52:23 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.68,322,1569308400"; 
+   d="scan'208";a="215525967"
+Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.163])
+  by fmsmga001.fm.intel.com with SMTP; 19 Nov 2019 03:52:21 -0800
+Received: by lahna (sSMTP sendmail emulation); Tue, 19 Nov 2019 13:52:20 +0200
+Date:   Tue, 19 Nov 2019 13:52:20 +0200
+From:   Mika Westerberg <mika.westerberg@linux.intel.com>
+To:     Hans de Goede <hdegoede@redhat.com>
+Cc:     "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        linux-gpio@vger.kernel.org, linux-acpi@vger.kernel.org
+Subject: Re: [PATCH] ACPI / button: Add DMI quirk for Acer Switch 10 SW5-032
+ lid-switch
+Message-ID: <20191119115220.GH11621@lahna.fi.intel.com>
+References: <20191118153556.28751-1-hdegoede@redhat.com>
+ <20191119082642.GF11621@lahna.fi.intel.com>
+ <7a2ac981-1c28-5abb-0599-68da44675bdc@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <20191119105814.GZ25745@shell.armlinux.org.uk>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Virus-Scanned: ClamAV using ClamSMTP ; ns.iliad.fr ; Tue Nov 19 12:46:16 2019 +0100 (CET)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <7a2ac981-1c28-5abb-0599-68da44675bdc@redhat.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 19/11/2019 11:58, Russell King - ARM Linux admin wrote:
-
-> On Tue, Nov 19, 2019 at 11:46:21AM +0100, Marc Gonzalez wrote:
->
->> On 19/11/2019 10:57, Russell King - ARM Linux admin wrote:
->>
->>> On Tue, Nov 19, 2019 at 10:28:15AM +0100, Marc Gonzalez wrote:
->>>
->>>> The board I'm working on provides a TCA9539 I/O expander.
->>>> Or, as the datasheet(*) calls it, a "Low Voltage 16-Bit I2C and
->>>> SMBus Low-Power I/O Expander with Interrupt Output, Reset Pin,
->>>> and Configuration Registers"
->>>>
->>>> (*) http://www.ti.com/lit/ds/symlink/tca9539.pdf
->>>>
->>>> The binding is documented in Documentation/devicetree/bindings/gpio/gpio-pca953x.txt
->>>>
->>>> I have some doubts about the interrupt output, described as:
->>>>
->>>> Optional properties:
->>>>  - interrupts: interrupt specifier for the device's interrupt output.
->>>>
->>>> In my board's DT, the I/O expander is described as:
->>>>
->>>> 	exp1: gpio@74 {
->>>> 		compatible = "ti,tca9539";
->>>> 		reg = <0x74>;
->>>> 		gpio-controller;
->>>> 		#gpio-cells = <2>;
->>>> 		reset-gpios = <&tlmm 96 GPIO_ACTIVE_LOW>;
->>>> 		pinctrl-names = "default";
->>>> 		pinctrl-0 = <&top_exp_rst>;
->>>> 		interrupt-parent = <&tlmm>;
->>>> 		interrupts = <42 IRQ_TYPE_LEVEL_HIGH>;
->>
->> As pointed out by ukleinek on IRC, I might have (??) specified the wrong
->> trigger type. The data-sheet states:
->> "The TCA9539 open-drain interrupt (INTn) output is activated when any input state
->> differs from its corresponding Input Port register state, and is used to indicate
->> to the system master that an input state has changed."
->> (The data sheet speaks of "INT with a line on top"; what is the typical way to
->> write that in ASCII? I was told that adding a trailing 'n' or 'b' was common.)
+On Tue, Nov 19, 2019 at 12:12:35PM +0100, Hans de Goede wrote:
+> Hi,
 > 
-> /INT or nINT are commonly used - I've never heard or seen 'b' (which is
-> commonly used as a suffix on binary numbers) or a trailing 'n'.
+> On 19-11-2019 09:26, Mika Westerberg wrote:
+> > On Mon, Nov 18, 2019 at 04:35:56PM +0100, Hans de Goede wrote:
+> > > The Acer Switch 10 SW5-032 _LID method is quite broken, it looks like this:
+> > > 
+> > >              Method (_LID, 0, NotSerialized)  // _LID: Lid Status
+> > >              {
+> > >                  If ((STAS & One))
+> > >                  {
+> > >                      Local0 = One
+> > >                      PBCG |= 0x05000000
+> > >                      HMCG |= 0x05000000
+> > >                  }
+> > >                  Else
+> > >                  {
+> > >                      Local0 = Zero
+> > >                      PBCG &= 0xF0FFFFFF
+> > >                      HMCG &= 0xF0FFFFFF
+> > >                  }
+> > > 
+> > >                  ^^PCI0.GFX0.CLID = Local0
+> > >                  Return (Local0)
+> > >              }
+> > > 
+> > > The problem here is the accesses to the PBCG and HMCG, these are the
+> > > pinconf0 registers for the power, resp. the home button GPIO,
+> > > e.g. PBCG is declared as:
+> > > 
+> > >              OperationRegion (PWBT, SystemMemory, 0xFED0E080, 0x10)
+> > >              Field (PWBT, DWordAcc, NoLock, Preserve)
+> > >              {
+> > >                  PBCG,   32,
+> > >                  PBV1,   32,
+> > >                  PBSA,   32,
+> > >                  PBV2,   32
+> > >              }
+> > > 
+> > > Where 0xFED0E000 is the base address of the GPO2 device and 0x80 is
+> > > the offset for the pin used for the powerbutton.
+> > > 
+> > > The problem here is this line in _LID:
+> > >                      PBCG |= 0x05000000
+> > > 
+> > > This changes the trigger flags of the GPIO, changing when it generates
+> > > interrupts. Note it does not clear the original flags. Linux uses an
+> > > edge triggered interrupt on both positive and negative edges. This |=
+> > > adds the BYT_TRIG_LVL flag to this, so now it is turned into a level
+> > > interrupt which fires both when low and high, iow it simply always
+> > > fires leading to an interrupt storm, the tablet immediately waking up
+> > > from suspend again, etc.
+> > 
+> > Hmm, does it work in Windows?
+> 
+> I bought this machine 2nd hand and the Windows install is broken
+> (the eMMC is dead) so I do not know with 100% certainty.
+> 
+> I guess it does work in Windows, I would assume so at least. I suspect
+> that the Windows driver for "PNP0C40" GPIO buttons devices uses level
+> interrupts only listening for presses which would match the "5" in the
+> mask.  Note that that would very much go against the ACPI description,
+> which describes the 4 GPIOs for pwrbutton/home/vol+/vol- as follows:
+> 
+>     Method (_CRS, 0, NotSerialized)  // _CRS: Current Resource Settings
+>     {
+>         Name (RBUF, ResourceTemplate ()
+>         {
+>             GpioInt (Edge, ActiveBoth, ExclusiveAndWake, PullDefault, 0x0000,
+>                 "\\_SB.GPO2", 0x00, ResourceConsumer, ,
+>                 )
+>                 {   // Pin list
+>                     0x0010
+>                 }
+>             GpioInt (Edge, ActiveBoth, ExclusiveAndWake, PullDefault, 0x0000,
+>                 "\\_SB.GPO2", 0x00, ResourceConsumer, ,
+>                 )
+>                 {   // Pin list
+>                     0x0015
+>                 }
+>             GpioInt (Edge, ActiveBoth, ExclusiveAndWake, PullDefault, 0x0000,
+>                 "\\_SB.GPO0", 0x00, ResourceConsumer, ,
+>                 )
+>                 {   // Pin list
+>                     0x0001
+>                 }
+>             GpioInt (Edge, ActiveBoth, ExclusiveAndWake, PullDefault, 0x0000,
+>                 "\\_SB.GPO0", 0x00, ResourceConsumer, ,
+>                 )
+>                 {   // Pin list
+>                     0x0000
+>                 }
+>         })
+>         Return (RBUF) /* \_SB_.TBAD._CRS.RBUF */
+>     }
+> 
+> Notice how all GPIOs are specified as GpioInt's which are active on
+> both edges and this is what the linux gpio_keys driver uses.
 
-Perhaps the 'b' suffix is only used in French...
-'b' might stand for "barre" (i.e. the line above the symbol).
+OK thanks for the details.
 
+> Working around this is not impossible, but it will be quite ugly and given
+> the age of the machine IMHO not worth it.
 
-> Is pin 42 something that can be muxed?  If so, it seems sane to specify
-> configuration for it.  Whether it needs to be a GPIO or whether it has
-> a specific "interrupt" function mux state depends on the SoC.
+I agree.
 
-According to drivers/pinctrl/qcom/pinctrl-msm8998.c
-PINGROUP(42, EAST, blsp_spi6, blsp_uart3_b, blsp_uim3_b, _, qdss, _, _, _, _)
+> I've also found out that I need a DSDT override to be able to control
+> the LCD backlight, this is controlled by the 1st PWM controller in the
+> SoC LPSS block, which is normally enumerated through ACPI but the
+> entire Device (PWM1) {} block is missing from the DSDT :|  Adding it
+> from similar hardware fixes things and makes the backlight
+> controllable. TL;DR: it seems that this is one of the rare cased where
+> people who want to run Linux will need to do a manual DSDT override :|
+> 
+> When they do that override they can also fix the _LID method and
+> then re-enable LID functionality on the kernel commandline overriding
+> this DMI quirk.
+> 
+> I will probably do a blog post on this (some people have asked me
+> to do some blogposts about how to analyze DSDT-s, this will be a nice
+> example) and add a link to the DSDT override to the blogpost, I believe
+> that this is the best we can do for users of this device.
+> 
+> In the meantime this quirk at least avoids the interrupt storm making
+> the device mostly usable even without the DSDT override.
 
-I don't think there is an explicit "interrupt" function in
-this pinctrl driver... except FUNCTION(ssc_irq).
-
-static const char * const ssc_irq_groups[] = {
-	"gpio58", "gpio59", "gpio60", "gpio61", "gpio62", "gpio63", "gpio78",
-	"gpio79", "gpio80", "gpio117", "gpio118", "gpio119", "gpio120",
-	"gpio121", "gpio122", "gpio123", "gpio124", "gpio125",
-};
-
-@Bjorn, do you know what these are used for?
-
-Regards.
+Yup, makes sense.
