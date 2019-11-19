@@ -2,167 +2,129 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id EE1F8102CD1
-	for <lists+linux-gpio@lfdr.de>; Tue, 19 Nov 2019 20:35:40 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E00F4102CDE
+	for <lists+linux-gpio@lfdr.de>; Tue, 19 Nov 2019 20:36:40 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727014AbfKSTfb (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 19 Nov 2019 14:35:31 -0500
-Received: from mail-pj1-f67.google.com ([209.85.216.67]:36064 "EHLO
-        mail-pj1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726792AbfKSTfa (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 19 Nov 2019 14:35:30 -0500
-Received: by mail-pj1-f67.google.com with SMTP id cq11so3020612pjb.3
-        for <linux-gpio@vger.kernel.org>; Tue, 19 Nov 2019 11:35:30 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=pjTYxIxtDU6Ze3qBE8rvS00ENOM8wZ4I/N4Ykn0qVII=;
-        b=CiK+y+GTuRsRMXyk56WHfhnPEVdUXSDLW5RtNkYsanzB2ZQRCQM1WnhlhQsjiZH/9E
-         CbR4H8TEHGiIT+nQ4Yyoq32nlAAQNV844/Qrqm+dn50XBdSd/PdvbW/YD3hzGJEAryXF
-         GH9J5moX6NojobP+1yzqKtH0s0FEEF4Q0xGT4/Z+QUKNGCCQ98BmqBD2lQVbE2jBptKY
-         +2MqgJL14bTvGeJ30FCeFbTP0lYWd1An2iHEDxXRROXbPUgNzsWmZi7LNnxdE4C9xCtJ
-         b0GcyW35FXLUDGIQNvkvG2AyZiOh/KhNHm5UgBn/yDWjXmbXiYuswtjI4gHyi27BuUhF
-         vR7A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=pjTYxIxtDU6Ze3qBE8rvS00ENOM8wZ4I/N4Ykn0qVII=;
-        b=rG0EOWV6rzlZK/bzJv7Bn4yQznB9ijgXY3/7O+d0xB+if0NObn2lEbArByl3U+Y2L1
-         i+9Am6lnSkQ8X5LvR4Q6sY7d8/ULQjmJ262xI8IFm/B23TNJJNK74nh59+HmQPv9wQCk
-         qeBUlIK1yJIyfB+bRU2uKBdqjPM22kPZlAtnJcQE2pfmyXTkG5bbcuOxObnaXLCo6yep
-         04CciB/sm9q7rEFW2LhzgStn8Zj+ZWLsBQxDaZkmOaeHq4vH5mt6dE9+jryGNZYxHh0F
-         z/iH+46NKOja9yZ2R888CB14+kKQwK7qECj/zzbpfkrliDSGXmSW11YxPqY1XR4VnLHw
-         CJEA==
-X-Gm-Message-State: APjAAAU83llcfkhIb/61LXIiF2wYHZLZzXYVFtrzTRxwtP1auUvKa2kP
-        3Yp29t3OUwS79KbblKQZ6iSBzTHhMT4=
-X-Google-Smtp-Source: APXvYqzI8OJV08C1RUD9pd/5rXrUsdxhkH+1+3qLDeaPCV1g0IJxT7ZPbQUD4D0lIMnXSJt1zGx06A==
-X-Received: by 2002:a17:902:be07:: with SMTP id r7mr15230932pls.33.1574192129611;
-        Tue, 19 Nov 2019 11:35:29 -0800 (PST)
-Received: from minitux (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id x29sm27336728pfj.131.2019.11.19.11.35.28
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 19 Nov 2019 11:35:28 -0800 (PST)
-Date:   Tue, 19 Nov 2019 11:35:26 -0800
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-Cc:     Marc Gonzalez <marc.w.gonzalez@free.fr>,
-        Marc Zyngier <maz@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Uwe Kleine-Konig <u.kleine-koenig@pengutronix.de>,
-        Russell King - ARM Linux admin <linux@armlinux.org.uk>,
-        GPIO <linux-gpio@vger.kernel.org>,
-        MSM <linux-arm-msm@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>
-Subject: Re: Using a GPIO as an interrupt line
-Message-ID: <20191119193526.GQ36595@minitux>
-References: <f0d383f3-8efa-ae68-62af-68f69cd4143f@free.fr>
- <20191119095748.GX25745@shell.armlinux.org.uk>
- <07db59e7-ff16-0457-87f2-fba10dc182d6@free.fr>
- <20191119105814.GZ25745@shell.armlinux.org.uk>
- <9356da2a-2190-03fd-f5cc-6a0fd8c38e89@free.fr>
- <20191119191958.GP36595@minitux>
- <CAOCk7NoHnFA73GPsvG1=0TCkE9+Hmdm41FVnDyMsunWrVa5xZg@mail.gmail.com>
+        id S1727345AbfKSTgj (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 19 Nov 2019 14:36:39 -0500
+Received: from foss.arm.com ([217.140.110.172]:57450 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726874AbfKSTgj (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Tue, 19 Nov 2019 14:36:39 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4B87931B;
+        Tue, 19 Nov 2019 11:36:38 -0800 (PST)
+Received: from localhost (unknown [10.37.6.21])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id AFB683F703;
+        Tue, 19 Nov 2019 11:36:37 -0800 (PST)
+Date:   Tue, 19 Nov 2019 19:36:36 +0000
+From:   Mark Brown <broonie@kernel.org>
+To:     "Vaittinen, Matti" <Matti.Vaittinen@fi.rohmeurope.com>
+Cc:     "corbet@lwn.net" <corbet@lwn.net>, "pavel@ucw.cz" <pavel@ucw.cz>,
+        "dmurphy@ti.com" <dmurphy@ti.com>,
+        "linux-leds@vger.kernel.org" <linux-leds@vger.kernel.org>,
+        "sboyd@kernel.org" <sboyd@kernel.org>,
+        "jeffrey.t.kirsher@intel.com" <jeffrey.t.kirsher@intel.com>,
+        "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        "mchehab+samsung@kernel.org" <mchehab+samsung@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>,
+        "mturquette@baylibre.com" <mturquette@baylibre.com>,
+        "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
+        "jacek.anaszewski@gmail.com" <jacek.anaszewski@gmail.com>,
+        "mazziesaccount@gmail.com" <mazziesaccount@gmail.com>,
+        "a.zummo@towertech.it" <a.zummo@towertech.it>,
+        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
+        "wsa+renesas@sang-engineering.com" <wsa+renesas@sang-engineering.com>,
+        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "m.szyprowski@samsung.com" <m.szyprowski@samsung.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "hkallweit1@gmail.com" <hkallweit1@gmail.com>,
+        "bgolaszewski@baylibre.com" <bgolaszewski@baylibre.com>,
+        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
+        "phil.edworthy@renesas.com" <phil.edworthy@renesas.com>,
+        "lee.jones@linaro.org" <lee.jones@linaro.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "hofrat@osadl.org" <hofrat@osadl.org>
+Subject: Re: [PATCH v5 01/16] dt-bindings: regulator: Document ROHM BD71282
+ regulator bindings
+Message-ID: <20191119193636.GH3634@sirena.org.uk>
+References: <cover.1574059625.git.matti.vaittinen@fi.rohmeurope.com>
+ <d29e0eb587b764f3ea77647392e45fac67bbd757.1574059625.git.matti.vaittinen@fi.rohmeurope.com>
+ <20191118162502.GJ9761@sirena.org.uk>
+ <fd1e4e652840346bd990c769eabe2f966bda4ed6.camel@fi.rohmeurope.com>
+ <20191119181325.GD3634@sirena.org.uk>
+ <fa69d01504817e3260d2b023ae2637aa2f1b2862.camel@fi.rohmeurope.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="ZPDwMsyfds7q4mrK"
 Content-Disposition: inline
-In-Reply-To: <CAOCk7NoHnFA73GPsvG1=0TCkE9+Hmdm41FVnDyMsunWrVa5xZg@mail.gmail.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+In-Reply-To: <fa69d01504817e3260d2b023ae2637aa2f1b2862.camel@fi.rohmeurope.com>
+X-Cookie: Beam me up, Scotty!  It ate my phaser!
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue 19 Nov 11:23 PST 2019, Jeffrey Hugo wrote:
 
-> On Tue, Nov 19, 2019 at 12:20 PM Bjorn Andersson
-> <bjorn.andersson@linaro.org> wrote:
-> >
-> > On Tue 19 Nov 03:46 PST 2019, Marc Gonzalez wrote:
-> >
-> > > On 19/11/2019 11:58, Russell King - ARM Linux admin wrote:
-> > >
-> > > > On Tue, Nov 19, 2019 at 11:46:21AM +0100, Marc Gonzalez wrote:
-> > > >
-> > > >> On 19/11/2019 10:57, Russell King - ARM Linux admin wrote:
-> > > >>
-> > > >>> On Tue, Nov 19, 2019 at 10:28:15AM +0100, Marc Gonzalez wrote:
-> > > >>>
-> > > >>>> The board I'm working on provides a TCA9539 I/O expander.
-> > > >>>> Or, as the datasheet(*) calls it, a "Low Voltage 16-Bit I2C and
-> > > >>>> SMBus Low-Power I/O Expander with Interrupt Output, Reset Pin,
-> > > >>>> and Configuration Registers"
-> > > >>>>
-> > > >>>> (*) http://www.ti.com/lit/ds/symlink/tca9539.pdf
-> > > >>>>
-> > > >>>> The binding is documented in Documentation/devicetree/bindings/gpio/gpio-pca953x.txt
-> > > >>>>
-> > > >>>> I have some doubts about the interrupt output, described as:
-> > > >>>>
-> > > >>>> Optional properties:
-> > > >>>>  - interrupts: interrupt specifier for the device's interrupt output.
-> > > >>>>
-> > > >>>> In my board's DT, the I/O expander is described as:
-> > > >>>>
-> > > >>>>  exp1: gpio@74 {
-> > > >>>>          compatible = "ti,tca9539";
-> > > >>>>          reg = <0x74>;
-> > > >>>>          gpio-controller;
-> > > >>>>          #gpio-cells = <2>;
-> > > >>>>          reset-gpios = <&tlmm 96 GPIO_ACTIVE_LOW>;
-> > > >>>>          pinctrl-names = "default";
-> > > >>>>          pinctrl-0 = <&top_exp_rst>;
-> > > >>>>          interrupt-parent = <&tlmm>;
-> > > >>>>          interrupts = <42 IRQ_TYPE_LEVEL_HIGH>;
-> > > >>
-> > > >> As pointed out by ukleinek on IRC, I might have (??) specified the wrong
-> > > >> trigger type. The data-sheet states:
-> > > >> "The TCA9539 open-drain interrupt (INTn) output is activated when any input state
-> > > >> differs from its corresponding Input Port register state, and is used to indicate
-> > > >> to the system master that an input state has changed."
-> > > >> (The data sheet speaks of "INT with a line on top"; what is the typical way to
-> > > >> write that in ASCII? I was told that adding a trailing 'n' or 'b' was common.)
-> > > >
-> > > > /INT or nINT are commonly used - I've never heard or seen 'b' (which is
-> > > > commonly used as a suffix on binary numbers) or a trailing 'n'.
-> > >
-> > > Perhaps the 'b' suffix is only used in French...
-> > > 'b' might stand for "barre" (i.e. the line above the symbol).
-> > >
-> > >
-> > > > Is pin 42 something that can be muxed?  If so, it seems sane to specify
-> > > > configuration for it.  Whether it needs to be a GPIO or whether it has
-> > > > a specific "interrupt" function mux state depends on the SoC.
-> > >
-> > > According to drivers/pinctrl/qcom/pinctrl-msm8998.c
-> > > PINGROUP(42, EAST, blsp_spi6, blsp_uart3_b, blsp_uim3_b, _, qdss, _, _, _, _)
-> > >
-> > > I don't think there is an explicit "interrupt" function in
-> > > this pinctrl driver... except FUNCTION(ssc_irq).
-> > >
-> >
-> > No there's no "interrupt" function, the function to be used is "gpio",
-> > which will ensure that the irq logic is available. But in a modern
-> > kernel we're implicitly selecting the "gpio" function if you're
-> > requesting an interrupt. So you shouldn't need to specify this even.
-> >
-> > > static const char * const ssc_irq_groups[] = {
-> > >       "gpio58", "gpio59", "gpio60", "gpio61", "gpio62", "gpio63", "gpio78",
-> > >       "gpio79", "gpio80", "gpio117", "gpio118", "gpio119", "gpio120",
-> > >       "gpio121", "gpio122", "gpio123", "gpio124", "gpio125",
-> > > };
-> > >
-> > > @Bjorn, do you know what these are used for?
-> > >
-> >
-> > The "ssc" would imply that it relates to the secure coprocessor somehow.
-> 
-> Are you sure?  "SSC" is the short hand for the sensor subsystem in the
-> documentation I see.
+--ZPDwMsyfds7q4mrK
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-No, you're right. I guess the last two abbreviations where getting
-old...
+On Tue, Nov 19, 2019 at 06:51:37PM +0000, Vaittinen, Matti wrote:
+> On Tue, 2019-11-19 at 18:13 +0000, Mark Brown wrote:
 
-Regards,
-Bjorn
+> > Ah, OK.  I didn't even notice that patch when I scanned the series.
+> > I'll look out for this next time around but that sounds like it's
+> > generally going in the right direction, especially if it's integrated
+> > with the suspend mode regulator bindings that Chunyan did.
+
+> Probably it is not as I am not familiar with Chunyan's work. I'll try
+> looking what has been done on that front :) And I am pretty sure you
+> might not be happy with that patch - but perhaps you can give me a
+> nudge to better direction...
+
+The driver interface was added in "regulator: add PM suspend and resume
+hooks".
+
+> > Yes, I think this needs clarification as I completely failed to pick
+> > up
+> > on this and did indeed read this as referring to the
+> > modes.  "Voltages
+> > that can be set in RUN mode" or something?  I take it these voltages
+> > are
+> > fixed and the OS can't change them?
+
+> Unfortunately they are not. Voltages and enable/disable statuses for
+> each run-level (and individually for each run-level capable buck) can
+> be changed at runtime via I2C. And a customer requested me also to
+> support this - hence the in-kernel API - but I am sure you have some
+> nice words when you check the patch 12. :]
+
+Ah, that's actually better.  It opens up possiblities for making use of
+the feature without encoding voltages in DT.  For example, you can cache
+the last however many voltages that were set and jump quickly to them or
+do something like put the top of the constraints in to help with
+governors like ondemand.  I'd recommend trying for something like that
+rather than encoding in DT, it'll probably be more robust with things
+like cpufreq changing.
+
+--ZPDwMsyfds7q4mrK
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl3UREMACgkQJNaLcl1U
+h9B3OAf+Kth7jw+jGm3XPY/BVO90YB9fEnA/2D8PBMylpbiqhSemPrFLe0lFyarL
+HbdXnMrZ109/8kllbD3a4ACoFLArQquUb466iT4TEJZpmerdtrwnRzhEVPsHvy8W
+arYRTcgn9eeuTC7vUFN5kJ/l+5XJFmrIvi6FxsXe8yJYVizpwctdeVvSVP19Bpni
+bMDBcbeH2Dz8HNlA08H5m1TgkhVKhLmnpCuYbzr53ExNrTPcztOwSkBAIfdk2DTx
+vjMVkwMQdxUZi2Zk5s88qDvySsUFfve0bmJ1719z13eaGq/y1DpX4E6r7VuTy0N0
+xgJYHUswDWwBRwTr6qcaTLvEE45XYw==
+=b5/M
+-----END PGP SIGNATURE-----
+
+--ZPDwMsyfds7q4mrK--
