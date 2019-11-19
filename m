@@ -2,76 +2,74 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 5066110283B
-	for <lists+linux-gpio@lfdr.de>; Tue, 19 Nov 2019 16:39:01 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3FC3F102864
+	for <lists+linux-gpio@lfdr.de>; Tue, 19 Nov 2019 16:45:53 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728230AbfKSPjA (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 19 Nov 2019 10:39:00 -0500
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:44632 "EHLO
+        id S1727509AbfKSPpv (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 19 Nov 2019 10:45:51 -0500
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:39087 "EHLO
         us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727505AbfKSPjA (ORCPT
+        by vger.kernel.org with ESMTP id S1728379AbfKSPpu (ORCPT
         <rfc822;linux-gpio@vger.kernel.org>);
-        Tue, 19 Nov 2019 10:39:00 -0500
+        Tue, 19 Nov 2019 10:45:50 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1574177939;
+        s=mimecast20190719; t=1574178349;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=FTxJmudlnMQQjRRxh/x/4NOPPe9JpTOrcw07y3bRZ+A=;
-        b=Buu5uhqIVSdcMwUuLapNjtIbK5ZeVDAuijGLsfO5YVt/sG2Y/36Im8lxKmreRRCcGW1Dlj
-        xivnMwPrECyjWEozuF2MOFFDbXSamCUncIygzdRMhMoJSkyybi2z9+pRpfZIHV7KzRP+Zy
-        EKcvVlA7TBZ041NO9F5FCP2/Kg35fkc=
-Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
- [209.85.128.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-198-Y2EqaPCCMCuCRRbKeul1Sw-1; Tue, 19 Nov 2019 10:38:57 -0500
-Received: by mail-wm1-f70.google.com with SMTP id v8so2463477wml.4
-        for <linux-gpio@vger.kernel.org>; Tue, 19 Nov 2019 07:38:57 -0800 (PST)
+        bh=LbnCMkoiZ5CqdtFgMpOj6wQjaMdUNcc3dycuR9m661I=;
+        b=aw74F2QU8Fbxycpb08+EI8gLt+qfq21ukgcnIkku4X2uLKQ8aTfmGnOrrgJBaQnL3mdjPT
+        QItUR+JfYm7KARsYvTEsvDmuFTsDrIlJu6/gbmkhOYdZ0uGtS27O7Q8B8FeAUW28e0JbBL
+        o5Kyrocjd9E+mDl1u6+hHS8ur4K3Zjg=
+Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
+ [209.85.221.69]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-143-TWY-K6IsOjWRkygbPL4uxg-1; Tue, 19 Nov 2019 10:45:48 -0500
+Received: by mail-wr1-f69.google.com with SMTP id e3so18506146wrs.17
+        for <linux-gpio@vger.kernel.org>; Tue, 19 Nov 2019 07:45:48 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=RiyemL711+UTpgAFyILUw1P7Hb8w/e7oipbse+Ru6BU=;
-        b=jcAu3rPCN1x+vX82gnUllGA5jo2F2qZ94PUis5zpNSyzHTiODcN5bo7+Mbtx01HMhV
-         MfUUvwFLqNqh4a3iCI7NGWmKeGlUfwh7bReOzRa2QU88ecpKODez6/kLvM3YBc2yeArj
-         x5sj5hdxpuDB9Aat4kZElIH5Mghiq5W8nkx1Az9rhbNPD8VMgZBgk3csqZGld0yK7jYQ
-         dXJL054tm+d72zvXkohOl/qQuuBk1KBisXlZOzDYZH4wlkJQIfTv0i2UJER0TRgoPySq
-         lVuxHYxc1BLa3vznQzCpKqxU4Kt9NZ7OOM2eE04vYl3K0nusQAezbt1kpMzHszZmi+S8
-         kITw==
-X-Gm-Message-State: APjAAAXeIPaVtCuTFYX93LVHRDRP8ms+e+ZH3Q5b7837U4IPsd5x/S0N
-        EchIS33hQUUFGpo7XiYtk6KoJIyQWmcCJ5VjVL8JOG8PoD+X69CU6TstoaJcDMurq+pAmjvsUY5
-        tZZOnI0vrBXmzm93deY+3Tw==
-X-Received: by 2002:adf:f147:: with SMTP id y7mr30551742wro.236.1574177933984;
-        Tue, 19 Nov 2019 07:38:53 -0800 (PST)
-X-Google-Smtp-Source: APXvYqw6k3t6w/uSt3UhXjSK9V5CC55Oxb8Mdl3qFb0ut7kzii8TvQiUjfOFUwcR8yIASWO9Qk1q3Q==
-X-Received: by 2002:adf:f147:: with SMTP id y7mr30551714wro.236.1574177933754;
-        Tue, 19 Nov 2019 07:38:53 -0800 (PST)
+        bh=8JkyWkzJQJfiHNPGzrnQ6E/SLlDkUPPBDBGlK+/hvWw=;
+        b=Y60+VHD+VFJmPmWJRABi49HxcwPmZR6TIyK+ViKVxjdnTwVBJrVAzU3vIS1fZNzLBA
+         iM8Chs3gfvw4r3fk62jMBvQkKWUJtICxHRTNvfUMx0rKTdlBTQckupJuKfVya0sJMo4y
+         H/yaUFhH5yJelii+3vvHFCiRJUtC6eSoFFkZFFaBHogSFHqSRA/XqXK/eCJ9lPHkqRqh
+         oDXJWxDbJGs91/cSmipJsSSo0q0Dv76+KDn3Ws4kmjhANrdH1PX8ierasbyrrrVEzm/5
+         tg4AbBgeTP9HGzgt0aJ9FkF1YfojksK4mWmS63vCsjdvEdKCeGcGi1EyYRY0mUeObav1
+         3kUA==
+X-Gm-Message-State: APjAAAWj0oO1hURHZTdK2kEIvTpTtIDALLKZfuUvGg2UtY6CgnVc0L+R
+        It4iypB5TRVBkOOtHNRDCH+gneSIVIpwo1wyJSsBcZX3GVs/355MYZFcTZ21OBA9zl+uR2B9xMz
+        SN9NHApSUXrYdmUA2Hsgj+w==
+X-Received: by 2002:a1c:5409:: with SMTP id i9mr6254299wmb.135.1574178346660;
+        Tue, 19 Nov 2019 07:45:46 -0800 (PST)
+X-Google-Smtp-Source: APXvYqxb+yB42mXYCP/zBNiwRYM+7CZhIJ1zCuaeamCMBkXL7xRhB6O+9M4r+8sJAX1quQMM5dQOXw==
+X-Received: by 2002:a1c:5409:: with SMTP id i9mr6254268wmb.135.1574178346422;
+        Tue, 19 Nov 2019 07:45:46 -0800 (PST)
 Received: from shalem.localdomain (84-106-84-65.cable.dynamic.v4.ziggo.nl. [84.106.84.65])
-        by smtp.gmail.com with ESMTPSA id o5sm27292840wrx.15.2019.11.19.07.38.52
+        by smtp.gmail.com with ESMTPSA id 5sm3327537wmk.48.2019.11.19.07.45.45
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 19 Nov 2019 07:38:53 -0800 (PST)
-Subject: Re: [PATCH] ACPI / button: Add DMI quirk for Acer Switch 10 SW5-032
- lid-switch
-To:     Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>, linux-gpio@vger.kernel.org,
-        linux-acpi@vger.kernel.org
-References: <20191118153556.28751-1-hdegoede@redhat.com>
- <20191119082642.GF11621@lahna.fi.intel.com>
- <7a2ac981-1c28-5abb-0599-68da44675bdc@redhat.com>
- <20191119124411.GF32742@smile.fi.intel.com>
- <20191119125757.GJ11621@lahna.fi.intel.com>
+        Tue, 19 Nov 2019 07:45:45 -0800 (PST)
+Subject: Re: [PATCH] pinctrl: baytrail: Really serialize all register accesses
+To:     Mika Westerberg <mika.westerberg@linux.intel.com>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-gpio@vger.kernel.org, linux-acpi@vger.kernel.org,
+        stable@vger.kernel.org
+References: <20191118142020.22256-1-hdegoede@redhat.com>
+ <20191118142020.22256-2-hdegoede@redhat.com>
+ <20191119081909.GE11621@lahna.fi.intel.com>
 From:   Hans de Goede <hdegoede@redhat.com>
-Message-ID: <84e0ce18-500e-b45a-c77a-ad4cc35b1533@redhat.com>
-Date:   Tue, 19 Nov 2019 16:38:52 +0100
+Message-ID: <b5ac836b-a805-aae9-24ff-42913b3a585e@redhat.com>
+Date:   Tue, 19 Nov 2019 16:45:44 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.2.0
 MIME-Version: 1.0
-In-Reply-To: <20191119125757.GJ11621@lahna.fi.intel.com>
+In-Reply-To: <20191119081909.GE11621@lahna.fi.intel.com>
 Content-Language: en-US
-X-MC-Unique: Y2EqaPCCMCuCRRbKeul1Sw-1
+X-MC-Unique: TWY-K6IsOjWRkygbPL4uxg-1
 X-Mimecast-Spam-Score: 0
 Content-Type: text/plain; charset=WINDOWS-1252; format=flowed
 Content-Transfer-Encoding: quoted-printable
@@ -82,77 +80,90 @@ X-Mailing-List: linux-gpio@vger.kernel.org
 
 Hi,
 
-On 19-11-2019 13:57, Mika Westerberg wrote:
-> On Tue, Nov 19, 2019 at 02:44:11PM +0200, Andy Shevchenko wrote:
->> On Tue, Nov 19, 2019 at 12:12:35PM +0100, Hans de Goede wrote:
->>> On 19-11-2019 09:26, Mika Westerberg wrote:
->>>> On Mon, Nov 18, 2019 at 04:35:56PM +0100, Hans de Goede wrote:
+On 19-11-2019 09:19, Mika Westerberg wrote:
+> On Mon, Nov 18, 2019 at 03:20:20PM +0100, Hans de Goede wrote:
+>> Commit 39ce8150a079 ("pinctrl: baytrail: Serialize all register access")
+>> added a spinlock around all register accesses because:
 >>
->>> Working around this is not impossible, but it will be quite ugly and gi=
-ven
->>> the age of the machine IMHO not worth it. I've also found out that I ne=
-ed a
->>> DSDT override to be able to control the LCD backlight, this is controll=
-ed by
->>> the 1st PWM controller in the SoC LPSS block, which is normally enumera=
-ted
->>> through ACPI but the entire Device (PWM1) {} block is missing from the
->>> DSDT :|  Adding it from similar hardware fixes things and makes the bac=
-klight
->>> controllable. TL;DR: it seems that this is one of the rare cased where
->>> people who want to run Linux will need to do a manual DSDT override :|
+>> "There is a hardware issue in Intel Baytrail where concurrent GPIO regis=
+ter
+>>   access might result reads of 0xffffffff and writes might get dropped
+>>   completely."
 >>
->> If it's missing it's easy to inject entire block from EFI variable or us=
-ing
->> ConfigFS (see meta-acpi project [1] for details).
+>> Testing has shown that this does not catch all cases, there are still
+>> 2 problems remaining
 >>
->>> When they do that override they can also fix the _LID method and
->>> then re-enable LID functionality on the kernel commandline overriding
->>> this DMI quirk.
+>> 1) The original fix uses a spinlock per byt_gpio device / struct,
+>> additional testing has shown that this is not sufficient concurent
+>> accesses to 2 different GPIO banks also suffer from the same problem.
 >>
->> Yes, if you override entire DSDT it can be fixed for many bugs at once.
+>> This commit fixes this by moving to a single global lock.
 >>
->>> I will probably do a blog post on this (some people have asked me
->>> to do some blogposts about how to analyze DSDT-s, this will be a nice
->>> example) and add a link to the DSDT override to the blogpost, I believe
->>> that this is the best we can do for users of this device.
+>> 2) The original fix did not add a lock around the register accesses in
+>> the suspend/resume handling.
 >>
->> Perhaps above mentioned project somehow can be extended to keep DSDT ASL=
- code
->> for overriding? Mika?
+>> Since pinctrl-baytrail.c is using normal suspend/resume handlers,
+>> interrupts are still enabled during suspend/resume handling. Nothing
+>> should be using the GPIOs when they are being taken down, _but_ the
+>> GPIOs themselves may still cause interrupts, which are likely to
+>> use (read) the triggering GPIO. So we need to protect against
+>> concurrent GPIO register accesses in the suspend/resume handlers too.
 >>
->> [1]: https://github.com/westeri/meta-acpi/
+>> This commit fixes this by adding the missing spin_lock / unlock calls.
+>>
+>> The 2 fixes together fix the Acer Switch 10 SW5-012 getting completely
+>> confused after a suspend resume. The DSDT for this device has a bug
+>> in its _LID method which reprograms the home and power button trigger-
+>> flags requesting both high and low _level_ interrupts so the IRQs for
+>> these 2 GPIOs continuously fire. This combined with the saving of
+>> registers during suspend, triggers concurrent GPIO register accesses
+>> resulting in saving 0xffffffff as pconf0 value during suspend and then
+>> when restoring this on resume the pinmux settings get all messed up,
+>> resulting in various I2C busses being stuck, the wifi no longer working
+>> and often the tablet simply not coming out of suspend at all.
+>>
+>> Cc: stable@vger.kernel.org
+>> Fixes: 39ce8150a079 ("pinctrl: baytrail: Serialize all register access")
+>> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+>> ---
+>>   drivers/pinctrl/intel/pinctrl-baytrail.c | 81 +++++++++++++-----------
+>>   1 file changed, 44 insertions(+), 37 deletions(-)
+>>
+>> diff --git a/drivers/pinctrl/intel/pinctrl-baytrail.c b/drivers/pinctrl/=
+intel/pinctrl-baytrail.c
+>> index b18336d42252..1b289f64c3a2 100644
+>> --- a/drivers/pinctrl/intel/pinctrl-baytrail.c
+>> +++ b/drivers/pinctrl/intel/pinctrl-baytrail.c
+>> @@ -111,7 +111,6 @@ struct byt_gpio {
+>>   =09struct platform_device *pdev;
+>>   =09struct pinctrl_dev *pctl_dev;
+>>   =09struct pinctrl_desc pctl_desc;
+>> -=09raw_spinlock_t lock;
+>>   =09const struct intel_pinctrl_soc_data *soc_data;
+>>   =09struct intel_community *communities_copy;
+>>   =09struct byt_gpio_pin_context *saved_context;
+>> @@ -550,6 +549,8 @@ static const struct intel_pinctrl_soc_data *byt_soc_=
+data[] =3D {
+>>   =09NULL
+>>   };
+>>  =20
+>> +static DEFINE_RAW_SPINLOCK(byt_gpio_lock);
 >=20
-> No objections.
->=20
-> Maybe we should have a mechanism in the kernel that allows you to have
-> ACPI table quirks like this for multiple different systems (based on DMI
-> indentifiers perhaps) inside a single initrd and the kernel then loads
-> tables only matching the running system. That would allow distros to
-> ship these for broken systems.
+> Can we call it byt_lock instead? Following same convention we use in
+> chv.
 
-I would love to have something like this, but I'm afraid that the distros
-cannot just distribute modified DSDT's. I know we ask people to upload
-acpidump's to bugzilla, etc. all the time. But one can reasonably argue
-that that is fair-use (IANAL, TINLA). OTOH for something to be distributed
-by distros we are going to need something a lot less handwavy wrt
-re-dsitribution of these files, which AFAIK is impossible to get.
+Ok, v2 with this changed coming up.
 
-I had a discussion about this a while ago at my local hackerspace (*),
-and someone there suggested to distribute patch files and have some
-scripts which automatically generate an overlay by doing acpidump +
-acpixtract + iasl -d + apply-patch + iasl -ta. This would then automaticall=
-y
-run at boot so that the next boot will have a fixed DSDT. Which is an
-interesting concept if anyone is willing to work on it ...
+> Other than that looks good and definitely right thing to do. Thanks for
+> doing this Hans!
+
+You are welcome. I must say that this was an interesting adventure :)
+The interrupt storm issue on the Acer SW5-012 really managed to hit this bu=
+g
+very reliably, resulting in all sorts of fun due to the pinmux settings
+getting messed up.
 
 Regards,
 
 Hans
-
-
-
-
-*) While working on fixing something which needed a DSDT override IIRC
-
 
