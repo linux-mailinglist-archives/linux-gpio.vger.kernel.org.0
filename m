@@ -2,148 +2,153 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 2776D102BFE
-	for <lists+linux-gpio@lfdr.de>; Tue, 19 Nov 2019 19:51:43 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 6288D102C76
+	for <lists+linux-gpio@lfdr.de>; Tue, 19 Nov 2019 20:20:03 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727295AbfKSSvm (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 19 Nov 2019 13:51:42 -0500
-Received: from mailgate1.rohmeurope.com ([178.15.145.194]:61826 "EHLO
-        mailgate1.rohmeurope.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726994AbfKSSvm (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 19 Nov 2019 13:51:42 -0500
-X-AuditID: c0a8fbf4-183ff70000001fa6-52-5dd439ba3be6
-Received: from smtp.reu.rohmeu.com (will-cas002.reu.rohmeu.com [192.168.251.178])
-        by mailgate1.rohmeurope.com (Symantec Messaging Gateway) with SMTP id 50.9F.08102.AB934DD5; Tue, 19 Nov 2019 19:51:38 +0100 (CET)
-Received: from WILL-MAIL002.REu.RohmEu.com ([fe80::e0c3:e88c:5f22:d174]) by
- WILL-CAS002.REu.RohmEu.com ([fe80::fc24:4cbc:e287:8659%12]) with mapi id
- 14.03.0439.000; Tue, 19 Nov 2019 19:51:38 +0100
-From:   "Vaittinen, Matti" <Matti.Vaittinen@fi.rohmeurope.com>
-To:     "broonie@kernel.org" <broonie@kernel.org>
-CC:     "corbet@lwn.net" <corbet@lwn.net>, "pavel@ucw.cz" <pavel@ucw.cz>,
-        "dmurphy@ti.com" <dmurphy@ti.com>,
-        "linux-leds@vger.kernel.org" <linux-leds@vger.kernel.org>,
-        "sboyd@kernel.org" <sboyd@kernel.org>,
-        "jeffrey.t.kirsher@intel.com" <jeffrey.t.kirsher@intel.com>,
-        "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-        "mchehab+samsung@kernel.org" <mchehab+samsung@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>,
-        "mturquette@baylibre.com" <mturquette@baylibre.com>,
-        "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
-        "jacek.anaszewski@gmail.com" <jacek.anaszewski@gmail.com>,
-        "mazziesaccount@gmail.com" <mazziesaccount@gmail.com>,
-        "a.zummo@towertech.it" <a.zummo@towertech.it>,
-        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
-        "wsa+renesas@sang-engineering.com" <wsa+renesas@sang-engineering.com>,
-        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "m.szyprowski@samsung.com" <m.szyprowski@samsung.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "hkallweit1@gmail.com" <hkallweit1@gmail.com>,
-        "bgolaszewski@baylibre.com" <bgolaszewski@baylibre.com>,
-        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
-        "phil.edworthy@renesas.com" <phil.edworthy@renesas.com>,
-        "lee.jones@linaro.org" <lee.jones@linaro.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "hofrat@osadl.org" <hofrat@osadl.org>
-Subject: Re: [PATCH v5 01/16] dt-bindings: regulator: Document ROHM BD71282
- regulator bindings
-Thread-Topic: [PATCH v5 01/16] dt-bindings: regulator: Document ROHM BD71282
- regulator bindings
-Thread-Index: AQHVndzxthsd4Y8wKkm7W/92Uslk+KeRDPcAgAAbkICAAZUNgIAACqYA
-Date:   Tue, 19 Nov 2019 18:51:37 +0000
-Message-ID: <fa69d01504817e3260d2b023ae2637aa2f1b2862.camel@fi.rohmeurope.com>
-References: <cover.1574059625.git.matti.vaittinen@fi.rohmeurope.com>
-         <d29e0eb587b764f3ea77647392e45fac67bbd757.1574059625.git.matti.vaittinen@fi.rohmeurope.com>
-         <20191118162502.GJ9761@sirena.org.uk>
-         <fd1e4e652840346bd990c769eabe2f966bda4ed6.camel@fi.rohmeurope.com>
-         <20191119181325.GD3634@sirena.org.uk>
-In-Reply-To: <20191119181325.GD3634@sirena.org.uk>
-Accept-Language: en-US, de-DE
-Content-Language: de-DE
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [82.203.185.189]
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <A333FA58B8AACB4686E37B52BE649857@de.rohmeurope.com>
-Content-Transfer-Encoding: base64
+        id S1726722AbfKSTUC (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 19 Nov 2019 14:20:02 -0500
+Received: from mail-pg1-f173.google.com ([209.85.215.173]:44450 "EHLO
+        mail-pg1-f173.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726555AbfKSTUC (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 19 Nov 2019 14:20:02 -0500
+Received: by mail-pg1-f173.google.com with SMTP id e6so3863057pgi.11
+        for <linux-gpio@vger.kernel.org>; Tue, 19 Nov 2019 11:20:02 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=Qio7ElcX4cvHV7fnYSvJfkUTKXZs/DnMfuV15j1rnnU=;
+        b=zlnSLEE4zmxTmCw6K6/aKxUPsFgv7wkpksrcjnlWPh8xHEbq/zRspg7xYvb0/rVXa4
+         7CcVtsE7z5p+UililVIO7SAUz7KGu71FXaD+cFTpVtOIyxRh9UfTkI8NatrSyvmW6vX4
+         Zzn5g9ycKeDK+UhsNhmRi5Fxiahh1cbpDDPhviJlZi3qc09zCFeNIQo3btb6NOQqyPVt
+         xFCT/bEJL7mX5rtYAEBW/fQeF0phkFHjD9XQ6nLMFT9b1cp45dmIfSC5mxgfEkHaWzxC
+         HBODSodQs/XmYDNAWUfhoDIzqushEJEpLvcUyel2a3mMkGbVZO22nIe1QJ42Shc9bLgc
+         3j3Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=Qio7ElcX4cvHV7fnYSvJfkUTKXZs/DnMfuV15j1rnnU=;
+        b=hWNrAckZgML7AaadwLlycbAcD0aboI6TGAKy3JomNZq4bZqRejMTI5C/JBOjMWzhjq
+         oqeuyR6cmN980BHiuDEWSfK0KWkmhdPGZKPj7aRCRQI9sS90UXq5pUFO5eOepfUZ5YuJ
+         FmuPLCqcsoWMo/kYa5BkPzYqJe4Y7U4l98+o0ioVTkyKjHRsM8RVa6FRf+XGXMJ29MMD
+         g3Wu2v/xUKbmDHRZPqYbAkU17CiEu92L8sKbCLWGQnpVZTGODKCF38WO3E2Wjc5p6kyp
+         A0+Eh0pqP+C3v01Fcc+KN4I2OhfwIi5fphQmt857v6T49V2lbIBzGqn2gBxV+hnyLNNY
+         REMQ==
+X-Gm-Message-State: APjAAAWCZFBmmz7U7Lc7Jq2ktobyI7yhlZxzo2kGEAncjk1Zx8Ld9lEC
+        3ar0Y5YAjv3gNBntV5zJebn3/A==
+X-Google-Smtp-Source: APXvYqy6RoYSL7e0rnhUW+FCU/i+gbbrS4kSfOqX07jXxqCNNdlcu2vwWXYReY6VxGC4PnWjXseE0A==
+X-Received: by 2002:a63:1303:: with SMTP id i3mr7366420pgl.430.1574191201144;
+        Tue, 19 Nov 2019 11:20:01 -0800 (PST)
+Received: from minitux (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id d23sm26930886pfo.140.2019.11.19.11.19.59
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 19 Nov 2019 11:20:00 -0800 (PST)
+Date:   Tue, 19 Nov 2019 11:19:58 -0800
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Marc Gonzalez <marc.w.gonzalez@free.fr>
+Cc:     Russell King - ARM Linux admin <linux@armlinux.org.uk>,
+        GPIO <linux-gpio@vger.kernel.org>,
+        MSM <linux-arm-msm@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Marc Zyngier <maz@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Uwe Kleine-Konig <u.kleine-koenig@pengutronix.de>
+Subject: Re: Using a GPIO as an interrupt line
+Message-ID: <20191119191958.GP36595@minitux>
+References: <f0d383f3-8efa-ae68-62af-68f69cd4143f@free.fr>
+ <20191119095748.GX25745@shell.armlinux.org.uk>
+ <07db59e7-ff16-0457-87f2-fba10dc182d6@free.fr>
+ <20191119105814.GZ25745@shell.armlinux.org.uk>
+ <9356da2a-2190-03fd-f5cc-6a0fd8c38e89@free.fr>
 MIME-Version: 1.0
-X-Brightmail-Tracker: H4sIAAAAAAAAA02Te1BUVRzH59znWeTWdQE5rWZ5ncYeo2ZTeZplHGsmvTU+p6lmKoKr3LiM
-        cJe5u1ta47QzjOKig1CQucn7kcESuuJrW1MQEtFICo0kYFBkXEmZCKHiUfdyVfjrfM/5/r6/
-        z++P34GktZq1wRTVJWuqlCowEdSZg2OBxcGX2uOfDdy14/K2yyzOvFPJ4uGCFgrn9/YxuO9M
-        JsBFja003n2hjsalg1/S2OvdRePOo4co3HykB+Ceu00Aj7TvInDe+NcE/nNPN41LdpZT+EjR
-        OMC/BA8w+Ogf3wL8Q3U7g2sau1hc8WsbgQ9UNFN4cMhL4LaWV3FXSxODM9o6SLzjVCOLJ68c
-        pnB26+qV80V/oR+Igx07WLHQ/4l40tfFimWhMCEGqryM+PuVECOWZX9Oizf3nKXEkYu5lJhd
-        VwXE/pJaSjzXcZwQ9xX+Q4gHq0dZ8a/A/A38O7PiNkmuD99ISVaXrkicpXwfbCXTgwu27j0V
-        Bh5w8fEsYIGIfx51d5YyWSACWvnLAGV0hgjz0gzQeM9eMgtAyPBxKOs31ghE84tR/r9ljKFJ
-        fn8kujqx0dBRfCKqG7hOmTUSKh4ZI0y9Cg34/qYNTfFPIF/oGDA0x69Dty99cY/1HYEGhuqn
-        whb+OVT0zdgUAPCPIq/nDmHCYlGgf5Q2p+ZReegn0tQxKHx98t67gE43tU7NTPJPodrgUjO6
-        Et3wZ9KmXoDydvey5gyz0fn9fVQOmOObQfBNp30z0r4Zad+MdDGgqwBKk1JSkyWXvGyJJruX
-        aA4lTT82O9ICwFy+4RPgv4bXGgABQQN4BBJCDOcB7fHWhzY5krYpklNJ0NypsrMBIEgK0dy6
-        a5firVyStO1jWXPct+ZCSojlFvXmxlt5g7VFltNl7b47D0IBcRMv6k1na3KyvPWDlFTXtE1A
-        i9E8whbtlNUkWZPcLiXB2I8Ep74ghhWpc4eX63HOmS6l6a9mtAU8A3PCBaUkbCyoKCWtlOpQ
-        ZVss531YL+WNUsWtPgDdArEQCFGcHetupP4DH/S5pSMIHXG45mcD4ZKmLZsHJEaNzXsL+uMg
-        Xa+ePbczynn708l8z/b3Iu0/FlW/ub1rkX3OwvcHN1548nzliPSVJ+Pt08XLc8KF1+CWq4dK
-        7J/lrbX4X6k8od14YVWikPt6jLJ5vYVZUXtM2/fRetvQ3HfVNdbxte7VvVS+NlG3MGFUzHZr
-        3Vru8f7ak0pN/WMv3xQopyIte5rUnNL/JfWgXD4EAAA=
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <9356da2a-2190-03fd-f5cc-6a0fd8c38e89@free.fr>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-DQpPbiBUdWUsIDIwMTktMTEtMTkgYXQgMTg6MTMgKzAwMDAsIE1hcmsgQnJvd24gd3JvdGU6DQo+
-IE9uIE1vbiwgTm92IDE4LCAyMDE5IGF0IDA2OjAzOjQyUE0gKzAwMDAsIFZhaXR0aW5lbiwgTWF0
-dGkgd3JvdGU6DQo+ID4gT24gTW9uLCAyMDE5LTExLTE4IGF0IDE2OjI1ICswMDAwLCBNYXJrIEJy
-b3duIHdyb3RlOg0KPiA+ID4gT24gTW9uLCBOb3YgMTgsIDIwMTkgYXQgMDg6NTM6NTdBTSArMDIw
-MCwgTWF0dGkgVmFpdHRpbmVuIHdyb3RlOg0KPiA+ID4gSSBkb24ndCB0aGluayBJIHNhdyB0aGlz
-IGhhdmluZyB0aGUgZWZmZWN0IG9uIHNldF92b2x0YWdlKCkgdGhhdA0KPiA+ID4gSSdkDQo+ID4g
-PiBoYXZlIGV4cGVjdGVkIGluIHRoZSBkcml2ZXI/ICANCj4gPiBUaGUgc3VwcG9ydCBmb3IgdGhp
-cyBpcyBhZGRlZCBpbiBwYXRjaCAxMi4gSSBzaG91bGQndmUgb3JkZXJlZCB0aGUNCj4gPiBwYXRj
-aCBzZXJpZXMgc28gdGhhdCBhbGwgcmVndWxhdG9yIHBhdGNoZXMgd2VyZSBvbmUgYWZ0ZXIgYW5v
-dGhlci4NCj4gPiBTb3JyeSBmb3IgdGhhdC4NCj4gPiBUaGUgcGF0Y2ggMTIgYWRkcyB0aGUgcnVu
-LWxldmVsIHN1cHBvcnQuIFBsZWFzZSBzZWUgdGhlIGZ1bmN0aW9ucw0KPiA+IGdldF9ydW5jb250
-cm9sbGVkX2J1Y2tzX2R0KCksDQo+ID4gbWFya19yZWd1bGF0b3JfcnVubHZsX2NvbnRyb2xsZWQo
-KSAoc2V0cyB0aGUgZy0+cnVubHZsKQ0KPiA+IGFuZCBzZXRfYnVja19ydW5sdmxfY29udHJvbGxl
-ZCgpIChjYWxsZWQgYmFzZWQgb24gZy0+cnVubHZsKQ0KPiA+IHdoaWNoIGNoYW5nZXMgdGhlIG9w
-cyB0byBkaXNhbGxvdyBzZXR0ZXJzIGFuZCB0byBnZXQgdm9sdGFnZSBiYXNlZA0KPiA+IG9uDQo+
-ID4gY3VycmVudCBydW5sZXZlbCAtIGFuZCBkaWZmZXJlbnQgb3BzIGRlcGVuZGluZyBvbiBpZiBy
-dW5sZXZlbHMgYXJlDQo+ID4gY29udHJvbGxlZCBieSBHUElPIG9yIEkyQy4gQWRkaXRpb25hbGx5
-DQo+ID4gc2V0X2J1Y2tfcnVubHZsX2NvbnRyb2xsZWQoKQ0KPiA+IGFkZHMgRFQgcGFyc2luZyBj
-YWxsLWJhY2sgZm9yIHNldHRpbmcgdGhlIGluaXRpYWwgdm9sdGFnZXMuDQo+IA0KPiBBaCwgT0su
-ICBJIGRpZG4ndCBldmVuIG5vdGljZSB0aGF0IHBhdGNoIHdoZW4gSSBzY2FubmVkIHRoZSBzZXJp
-ZXMuDQo+IEknbGwgbG9vayBvdXQgZm9yIHRoaXMgbmV4dCB0aW1lIGFyb3VuZCBidXQgdGhhdCBz
-b3VuZHMgbGlrZSBpdCdzDQo+IGdlbmVyYWxseSBnb2luZyBpbiB0aGUgcmlnaHQgZGlyZWN0aW9u
-LCBlc3BlY2lhbGx5IGlmIGl0J3MgaW50ZWdyYXRlZA0KPiB3aXRoIHRoZSBzdXNwZW5kIG1vZGUg
-cmVndWxhdG9yIGJpbmRpbmdzIHRoYXQgQ2h1bnlhbiBkaWQuDQoNClByb2JhYmx5IGl0IGlzIG5v
-dCBhcyBJIGFtIG5vdCBmYW1pbGlhciB3aXRoIENodW55YW4ncyB3b3JrLiBJJ2xsIHRyeQ0KbG9v
-a2luZyB3aGF0IGhhcyBiZWVuIGRvbmUgb24gdGhhdCBmcm9udCA6KSBBbmQgSSBhbSBwcmV0dHkg
-c3VyZSB5b3UNCm1pZ2h0IG5vdCBiZSBoYXBweSB3aXRoIHRoYXQgcGF0Y2ggLSBidXQgcGVyaGFw
-cyB5b3UgY2FuIGdpdmUgbWUgYQ0KbnVkZ2UgdG8gYmV0dGVyIGRpcmVjdGlvbi4uLg0KDQo+ID4g
-PiA+ICsgICAgICAgIG1pbmltdW06IDANCj4gPiA+ID4gKyAgICAgICAgbWF4aW11bTogMjAwMDAw
-MA0KPiA+ID4gPiArICAgICAgICBtYXhJdGVtczogNA0KPiA+ID4gPiArICAgICAgICBkZXNjcmlw
-dGlvbjoNCj4gPiA+ID4gKyAgICAgICAgICBBcnJheSBvZiB2b2x0YWdlcyBmb3IgcnVuLWxldmVs
-cy4gRmlyc3QgdmFsdWUgaXMgZm9yDQo+ID4gPiA+IHJ1bi1sZXZlbCAwLA0KPiA+ID4gPiArICAg
-ICAgICAgIHNlY29uZCBmb3IgcnVuLWxldmVsIDEgZXRjLiBNaWNyb3ZvbHRzLg0KPiA+ID4gV2hh
-dCdzIHRoZSBtYXBwaW5nIGZyb20gYXJyYXkgaW5kZXhlcyB0byB0aGUgbmFtZXMgdXNlZCBlbHNl
-d2hlcmUNCj4gPiA+IHRvDQo+ID4gPiBzdXBwb3J0IHJ1bmxldmVscz8NCj4gPiBIbW0uIFNvcnJ5
-IE1hcmssIEkgZG9uJ3QgdGhpbmsgSSBmb2xsb3cgeW91ciBxdWVzdGlvbi4gRG8geW91IG1lYW4N
-Cj4gPiBuYW1lcyBsaWtlIExQU1IsIFNVU1BFTkQsIElETEUsIFJVTj8gSWYgc28sIHRoZW4gSSBt
-aWdodCBuZWVkIHRvDQo+ID4gcmVwaHJhc2UgdGhpcy4gVGhlIHJ1bmxldmVscyByZWZlcnJlZCBo
-ZXJlIGFyZSBkaWZmZXJlbnQgZnJvbSBMUFNSLA0KPiA+IFNVU1BFTkQsIElETEUgZXRjLiBUaGV5
-IGFyZSBhY3R1YWxseSAnc3ViLWxldmVscycgZm9yIFBNSUMncyBSVU4NCj4gPiBzdGF0ZS4NCj4g
-PiBFZywga2luZCBvZiBhICdmYXN0IHdheScgdG8gY2hhbmdlIHZvbHRhZ2VzIGZvciBtdWx0aXBs
-ZSBwb3dlcg0KPiA+IHJhaWxzDQo+ID4gd2hlbiBTb0MgaXMgYXQgUlVOIHN0YXRlLiBUaGUgbmFt
-ZXMgSSBoYXZlIHNlZW4gYXJlIFJVTjAsIFJVTjEsDQo+ID4gUlVOMg0KPiA+IGFuZCBSVU4zLiBU
-aGF0IG1hcHBpbmcgaXMgZGVzY3JpYmVkIGluIGRlc2NyaXB0aW9uIGFib3ZlLg0KPiANCj4gWWVz
-LCBJIHRoaW5rIHRoaXMgbmVlZHMgY2xhcmlmaWNhdGlvbiBhcyBJIGNvbXBsZXRlbHkgZmFpbGVk
-IHRvIHBpY2sNCj4gdXANCj4gb24gdGhpcyBhbmQgZGlkIGluZGVlZCByZWFkIHRoaXMgYXMgcmVm
-ZXJyaW5nIHRvIHRoZQ0KPiBtb2Rlcy4gICJWb2x0YWdlcw0KPiB0aGF0IGNhbiBiZSBzZXQgaW4g
-UlVOIG1vZGUiIG9yIHNvbWV0aGluZz8gIEkgdGFrZSBpdCB0aGVzZSB2b2x0YWdlcw0KPiBhcmUN
-Cj4gZml4ZWQgYW5kIHRoZSBPUyBjYW4ndCBjaGFuZ2UgdGhlbT8NCg0KVW5mb3J0dW5hdGVseSB0
-aGV5IGFyZSBub3QuIFZvbHRhZ2VzIGFuZCBlbmFibGUvZGlzYWJsZSBzdGF0dXNlcyBmb3INCmVh
-Y2ggcnVuLWxldmVsIChhbmQgaW5kaXZpZHVhbGx5IGZvciBlYWNoIHJ1bi1sZXZlbCBjYXBhYmxl
-IGJ1Y2spIGNhbg0KYmUgY2hhbmdlZCBhdCBydW50aW1lIHZpYSBJMkMuIEFuZCBhIGN1c3RvbWVy
-IHJlcXVlc3RlZCBtZSBhbHNvIHRvDQpzdXBwb3J0IHRoaXMgLSBoZW5jZSB0aGUgaW4ta2VybmVs
-IEFQSSAtIGJ1dCBJIGFtIHN1cmUgeW91IGhhdmUgc29tZQ0KbmljZSB3b3JkcyB3aGVuIHlvdSBj
-aGVjayB0aGUgcGF0Y2ggMTIuIDpdDQoNCkJyLA0KCU1hdHRpIFZhaXR0aW5lbg0KDQo=
+On Tue 19 Nov 03:46 PST 2019, Marc Gonzalez wrote:
+
+> On 19/11/2019 11:58, Russell King - ARM Linux admin wrote:
+> 
+> > On Tue, Nov 19, 2019 at 11:46:21AM +0100, Marc Gonzalez wrote:
+> >
+> >> On 19/11/2019 10:57, Russell King - ARM Linux admin wrote:
+> >>
+> >>> On Tue, Nov 19, 2019 at 10:28:15AM +0100, Marc Gonzalez wrote:
+> >>>
+> >>>> The board I'm working on provides a TCA9539 I/O expander.
+> >>>> Or, as the datasheet(*) calls it, a "Low Voltage 16-Bit I2C and
+> >>>> SMBus Low-Power I/O Expander with Interrupt Output, Reset Pin,
+> >>>> and Configuration Registers"
+> >>>>
+> >>>> (*) http://www.ti.com/lit/ds/symlink/tca9539.pdf
+> >>>>
+> >>>> The binding is documented in Documentation/devicetree/bindings/gpio/gpio-pca953x.txt
+> >>>>
+> >>>> I have some doubts about the interrupt output, described as:
+> >>>>
+> >>>> Optional properties:
+> >>>>  - interrupts: interrupt specifier for the device's interrupt output.
+> >>>>
+> >>>> In my board's DT, the I/O expander is described as:
+> >>>>
+> >>>> 	exp1: gpio@74 {
+> >>>> 		compatible = "ti,tca9539";
+> >>>> 		reg = <0x74>;
+> >>>> 		gpio-controller;
+> >>>> 		#gpio-cells = <2>;
+> >>>> 		reset-gpios = <&tlmm 96 GPIO_ACTIVE_LOW>;
+> >>>> 		pinctrl-names = "default";
+> >>>> 		pinctrl-0 = <&top_exp_rst>;
+> >>>> 		interrupt-parent = <&tlmm>;
+> >>>> 		interrupts = <42 IRQ_TYPE_LEVEL_HIGH>;
+> >>
+> >> As pointed out by ukleinek on IRC, I might have (??) specified the wrong
+> >> trigger type. The data-sheet states:
+> >> "The TCA9539 open-drain interrupt (INTn) output is activated when any input state
+> >> differs from its corresponding Input Port register state, and is used to indicate
+> >> to the system master that an input state has changed."
+> >> (The data sheet speaks of "INT with a line on top"; what is the typical way to
+> >> write that in ASCII? I was told that adding a trailing 'n' or 'b' was common.)
+> > 
+> > /INT or nINT are commonly used - I've never heard or seen 'b' (which is
+> > commonly used as a suffix on binary numbers) or a trailing 'n'.
+> 
+> Perhaps the 'b' suffix is only used in French...
+> 'b' might stand for "barre" (i.e. the line above the symbol).
+> 
+> 
+> > Is pin 42 something that can be muxed?  If so, it seems sane to specify
+> > configuration for it.  Whether it needs to be a GPIO or whether it has
+> > a specific "interrupt" function mux state depends on the SoC.
+> 
+> According to drivers/pinctrl/qcom/pinctrl-msm8998.c
+> PINGROUP(42, EAST, blsp_spi6, blsp_uart3_b, blsp_uim3_b, _, qdss, _, _, _, _)
+> 
+> I don't think there is an explicit "interrupt" function in
+> this pinctrl driver... except FUNCTION(ssc_irq).
+> 
+
+No there's no "interrupt" function, the function to be used is "gpio",
+which will ensure that the irq logic is available. But in a modern
+kernel we're implicitly selecting the "gpio" function if you're
+requesting an interrupt. So you shouldn't need to specify this even.
+
+> static const char * const ssc_irq_groups[] = {
+> 	"gpio58", "gpio59", "gpio60", "gpio61", "gpio62", "gpio63", "gpio78",
+> 	"gpio79", "gpio80", "gpio117", "gpio118", "gpio119", "gpio120",
+> 	"gpio121", "gpio122", "gpio123", "gpio124", "gpio125",
+> };
+> 
+> @Bjorn, do you know what these are used for?
+> 
+
+The "ssc" would imply that it relates to the secure coprocessor somehow.
+
+Regards,
+Bjorn
