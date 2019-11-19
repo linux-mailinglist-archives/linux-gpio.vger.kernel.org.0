@@ -2,82 +2,81 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 6763C10275F
-	for <lists+linux-gpio@lfdr.de>; Tue, 19 Nov 2019 15:52:15 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id CCB76102769
+	for <lists+linux-gpio@lfdr.de>; Tue, 19 Nov 2019 15:55:04 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728130AbfKSOwM (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 19 Nov 2019 09:52:12 -0500
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:36808 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727909AbfKSOwM (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 19 Nov 2019 09:52:12 -0500
-Received: by mail-lj1-f193.google.com with SMTP id k15so23653987lja.3
-        for <linux-gpio@vger.kernel.org>; Tue, 19 Nov 2019 06:52:08 -0800 (PST)
+        id S1726307AbfKSOzC (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 19 Nov 2019 09:55:02 -0500
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:37184 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726682AbfKSOzC (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 19 Nov 2019 09:55:02 -0500
+Received: by mail-lj1-f195.google.com with SMTP id d5so23668518ljl.4
+        for <linux-gpio@vger.kernel.org>; Tue, 19 Nov 2019 06:55:00 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=yqb0rkinvnzVxsR16s0DvySApOjrl6R+PT2Tv3AwCuQ=;
-        b=Krb1OidY+jIOCRMHX0376ZSV9SJGf/bkadTG+k7yzJiYfM8/OZUrPbsHA2qx7Hh7u9
-         BlD6DBG51uCKeMj2RsnffcZMQfx8lg8Y1P75xjhiqY2ubZSik/BRMA1scOpsllxqiSj1
-         pGFElwRxjYt1QUWiZxwFy1uysySfIgzMuDlnkgVhkQ1UTDrkDxTMysXfIN7qp6pR9LPD
-         hc5EMHcWNF/ZhclLFpOv3TFmIPoeq40Lg4UEVtQI6NG199vB/0lyBRR+8hxcMY3KMnRu
-         HGVupab+psS5dFxKl9qQGHfMHmLmaOa4GcOBPwtTlVYuKpP6uRx5YEQPwfPZxCn3j/xs
-         REbA==
+        bh=30HsnFXKOn2D4Ac/Y1QirFdNbvGbwWtgx1aMNEHaCAk=;
+        b=ct5f1NDggcLQsLtQ+UoakvEeM5R/sTJTQWFTHA2W1uKiXI8ZuWOcM3k9iF30mF4YzS
+         J+VaokKIS/qBkUhKymjArTRRYPXnEU4KBtGZVs/SJNkT3w3Fs7Vad3XifsM7NrtZ6F6U
+         GFNmZtnpojBJKnSJqK/v1aOBZf7iFqqzbfMSY9dEWSih8hbfDxpxlSY4dIti3HIw8aXl
+         xx1LDkOpg+Em8PWpklrLzBayVmyzg9RWJTT0NlKwrEY7jV7/vFL+qVJBbVexwavMiQI2
+         WoCdj91tsUURfX11LPJdWm5Y/o1SzPHM0By0CswZpkQfBxXLasD7Rv5MCESnnIQj+ZQZ
+         AZmg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=yqb0rkinvnzVxsR16s0DvySApOjrl6R+PT2Tv3AwCuQ=;
-        b=JntN4JlHCW2fISgPLuycoN2ZOg/TgQZfemQ4MVCPUX8aEzen65A3FjAtUKsy0dnWaS
-         iCQmqpd/0wBcI2X+uRLrCLMGdpJfWhYLqXyJhPyaE4sQUizMyGS1D4EPWKxPoSo8/yD0
-         A3QAomO/ffzgvAS1pnvsL2xmNLLD23GGxMoEygZGhbgDyytG0usDgkFpolxs7A9YLT3C
-         qc371s/b/y4NFxL9ERFR/3MSQ/D8YmeKa9WFv/N2MB0ys6u/dboVEdiH9ERSirTBjcsp
-         1BKvj5yIqOwXEXijVe0f1FsA6geSYJGJTpa8vSt+Mnm+TdqAjkCleDhIu4HKBIkEalQE
-         eHsg==
-X-Gm-Message-State: APjAAAV9WKUorcPEpTnx8NvEl8G2PqukdFauUFhZ6yg69nTUNv+2k8/m
-        EM67Jv0/bO/n9moW52pAScLlmVAHxzP/dsz293UsNg==
-X-Google-Smtp-Source: APXvYqyrJt5cT9l3Z4fNcoLZnVIbrnYb0eYCPsuJ1H4+NpxJM1ojKC8zDKW4wGHoxq9Q3I8PkV9qxBmveRjuWw+hDa4=
-X-Received: by 2002:a2e:8597:: with SMTP id b23mr4342291lji.218.1574175128085;
- Tue, 19 Nov 2019 06:52:08 -0800 (PST)
+        bh=30HsnFXKOn2D4Ac/Y1QirFdNbvGbwWtgx1aMNEHaCAk=;
+        b=rEUSRgPvB0ZAu1ZNr7YnU+jO7yMUWajkogj5SSM32AZzQw5gDsbmP6VqPVUfAGKWYj
+         1X/yWMiF9ykByegw21Itqt8tu3PMwSwnKLxNwrWnkpB58mSDQKgr15BepNd/1qbiGfwK
+         6I+DHYn232PWw1oS+pOirJoQ7/UPZspM/NeggKpmtyackBxM+zn8NAhNHjJeb/JL/dE4
+         JhfOQzkYOM9xkaXYQ+yN+KLNj2TufVF3IAN/Qv2MVLHOpiohsnDzhGHiwO3JGOHVET+7
+         fpgK/gwz5gmV7rb9sv2l788g3YumzRwHhQDZRvcFA3gwLlgCOj/uOiUY4oP7B0o9j4l9
+         2ShQ==
+X-Gm-Message-State: APjAAAVasti7lErODhq1lynoSR6woudpNp31gAPDOnvEfZuJ7m6I85A/
+        xBbVlRODFQ/Jbg3cFadLZlDRdvjrCNAMlUcxSkw4uA==
+X-Google-Smtp-Source: APXvYqw8q1ClY4DpKAB2UVHvvEiU+KZqkbNXEwB22Kyo/eJ4d51VbtZfIpv7a/9bbEnHVShukCfvJg59ec4RpUNX/qA=
+X-Received: by 2002:a2e:90b:: with SMTP id 11mr4146912ljj.233.1574175300137;
+ Tue, 19 Nov 2019 06:55:00 -0800 (PST)
 MIME-Version: 1.0
-References: <1573855915-9841-1-git-send-email-ilina@codeaurora.org> <1573855915-9841-9-git-send-email-ilina@codeaurora.org>
-In-Reply-To: <1573855915-9841-9-git-send-email-ilina@codeaurora.org>
+References: <1573819429-6937-1-git-send-email-qianggui.song@amlogic.com> <1573819429-6937-2-git-send-email-qianggui.song@amlogic.com>
+In-Reply-To: <1573819429-6937-2-git-send-email-qianggui.song@amlogic.com>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Tue, 19 Nov 2019 15:51:54 +0100
-Message-ID: <CACRpkdYix=G1nYHgdzCKR9WzwchHtJ6N_UUi3R_+sz8UFHmLUg@mail.gmail.com>
-Subject: Re: [PATCH v2 08/12] drivers: pinctrl: msm: setup GPIO chip in hierarchy
-To:     Lina Iyer <ilina@codeaurora.org>
-Cc:     Stephen Boyd <swboyd@chromium.org>, Marc Zyngier <maz@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Evan Green <evgreen@chromium.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        MSM <linux-arm-msm@vger.kernel.org>,
-        Maulik Shah <mkshah@codeaurora.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Andy Gross <agross@kernel.org>,
-        Doug Anderson <dianders@chromium.org>
+Date:   Tue, 19 Nov 2019 15:54:48 +0100
+Message-ID: <CACRpkdbXcT9BSgBurHHhO7tOM67oHsX6s72qEAV7=MrPy-0uZQ@mail.gmail.com>
+Subject: Re: [PATCH v6 1/3] pinctrl: meson: add a new callback for SoCs fixup
+To:     Qianggui Song <qianggui.song@amlogic.com>
+Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Jerome Brunet <jbrunet@baylibre.com>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        Carlo Caione <carlo@caione.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Xingyu Chen <xingyu.chen@amlogic.com>,
+        Jianxin Pan <jianxin.pan@amlogic.com>,
+        Hanjie Lin <hanjie.lin@amlogic.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "open list:ARM/Amlogic Meson..." <linux-amlogic@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Nov 15, 2019 at 11:17 PM Lina Iyer <ilina@codeaurora.org> wrote:
+On Fri, Nov 15, 2019 at 1:03 PM Qianggui Song <qianggui.song@amlogic.com> wrote:
 
-> Some GPIOs are marked as wakeup capable and are routed to another
-> interrupt controller that is an always-domain and can detect interrupts
-> even when most of the SoC is powered off. The wakeup interrupt
-> controller wakes up the GIC and replays the interrupt at the GIC.
->
-> Setup the TLMM irqchip in hierarchy with the wakeup interrupt controller
-> and ensure the wakeup GPIOs are handled correctly.
->
-> Co-developed-by: Maulik Shah <mkshah@codeaurora.org>
-> Signed-off-by: Lina Iyer <ilina@codeaurora.org>
-> Reviewed-by: Stephen Boyd <swboyd@chromium.org>
+> In meson_pinctrl_parse_dt, it contains two parts: reg parsing and
+> SoC relative fixup for AO. Several fixups in the same code make it hard
+> to maintain, so move all fixups to each SoC's callback and make
+> meson_pinctrl_parse_dt just do the reg parsing, separate these two
+> parts.Overview of all current Meson SoCs fixup is as below:
 
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+Patch applied with Neil's Review tag.
 
 Yours,
 Linus Walleij
