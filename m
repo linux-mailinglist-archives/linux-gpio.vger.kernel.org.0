@@ -2,60 +2,103 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id B2AEC103FC5
-	for <lists+linux-gpio@lfdr.de>; Wed, 20 Nov 2019 16:46:41 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id CE13210423E
+	for <lists+linux-gpio@lfdr.de>; Wed, 20 Nov 2019 18:38:03 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730739AbfKTPpc (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 20 Nov 2019 10:45:32 -0500
-Received: from laurent.telenet-ops.be ([195.130.137.89]:51876 "EHLO
-        laurent.telenet-ops.be" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730378AbfKTPpb (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 20 Nov 2019 10:45:31 -0500
-Received: from ramsan ([84.195.182.253])
-        by laurent.telenet-ops.be with bizsmtp
-        id UFlV2100J5USYZQ01FlVea; Wed, 20 Nov 2019 16:45:29 +0100
-Received: from rox.of.borg ([192.168.97.57])
-        by ramsan with esmtp (Exim 4.90_1)
-        (envelope-from <geert@linux-m68k.org>)
-        id 1iXSAb-0002mv-96; Wed, 20 Nov 2019 16:45:29 +0100
-Received: from geert by rox.of.borg with local (Exim 4.90_1)
-        (envelope-from <geert@linux-m68k.org>)
-        id 1iXSAb-0004FN-6U; Wed, 20 Nov 2019 16:45:29 +0100
-From:   Geert Uytterhoeven <geert+renesas@glider.be>
-To:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH] gpio: of: Fix bogus reference to gpiod_get_count()
-Date:   Wed, 20 Nov 2019 16:45:21 +0100
-Message-Id: <20191120154521.16273-1-geert+renesas@glider.be>
-X-Mailer: git-send-email 2.17.1
+        id S1728352AbfKTRiC (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 20 Nov 2019 12:38:02 -0500
+Received: from mga06.intel.com ([134.134.136.31]:33364 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727925AbfKTRiC (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Wed, 20 Nov 2019 12:38:02 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 20 Nov 2019 09:38:01 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,222,1571727600"; 
+   d="scan'208";a="381441510"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by orsmga005.jf.intel.com with ESMTP; 20 Nov 2019 09:37:59 -0800
+Received: from andy by smile with local (Exim 4.93-RC1)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1iXTvS-0000MK-On; Wed, 20 Nov 2019 19:37:58 +0200
+Date:   Wed, 20 Nov 2019 19:37:58 +0200
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Mika Westerberg <mika.westerberg@linux.intel.com>
+Cc:     Hans de Goede <hdegoede@redhat.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-gpio@vger.kernel.org, linux-acpi@vger.kernel.org,
+        stable@vger.kernel.org
+Subject: Re: [PATCH v2] pinctrl: baytrail: Really serialize all register
+ accesses
+Message-ID: <20191120173758.GR32742@smile.fi.intel.com>
+References: <20191119154641.202139-1-hdegoede@redhat.com>
+ <20191119160917.GM11621@lahna.fi.intel.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191119160917.GM11621@lahna.fi.intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-The recommended function is called gpiod_count(), not gpiod_get_count().
+On Tue, Nov 19, 2019 at 06:09:17PM +0200, Mika Westerberg wrote:
+> On Tue, Nov 19, 2019 at 04:46:41PM +0100, Hans de Goede wrote:
+> > Commit 39ce8150a079 ("pinctrl: baytrail: Serialize all register access")
+> > added a spinlock around all register accesses because:
+> > 
+> > "There is a hardware issue in Intel Baytrail where concurrent GPIO register
+> >  access might result reads of 0xffffffff and writes might get dropped
+> >  completely."
+> > 
+> > Testing has shown that this does not catch all cases, there are still
+> > 2 problems remaining
+> > 
+> > 1) The original fix uses a spinlock per byt_gpio device / struct,
+> > additional testing has shown that this is not sufficient concurent
+> > accesses to 2 different GPIO banks also suffer from the same problem.
+> > 
+> > This commit fixes this by moving to a single global lock.
+> > 
+> > 2) The original fix did not add a lock around the register accesses in
+> > the suspend/resume handling.
+> > 
+> > Since pinctrl-baytrail.c is using normal suspend/resume handlers,
+> > interrupts are still enabled during suspend/resume handling. Nothing
+> > should be using the GPIOs when they are being taken down, _but_ the
+> > GPIOs themselves may still cause interrupts, which are likely to
+> > use (read) the triggering GPIO. So we need to protect against
+> > concurrent GPIO register accesses in the suspend/resume handlers too.
+> > 
+> > This commit fixes this by adding the missing spin_lock / unlock calls.
+> > 
+> > The 2 fixes together fix the Acer Switch 10 SW5-012 getting completely
+> > confused after a suspend resume. The DSDT for this device has a bug
+> > in its _LID method which reprograms the home and power button trigger-
+> > flags requesting both high and low _level_ interrupts so the IRQs for
+> > these 2 GPIOs continuously fire. This combined with the saving of
+> > registers during suspend, triggers concurrent GPIO register accesses
+> > resulting in saving 0xffffffff as pconf0 value during suspend and then
+> > when restoring this on resume the pinmux settings get all messed up,
+> > resulting in various I2C busses being stuck, the wifi no longer working
+> > and often the tablet simply not coming out of suspend at all.
+> > 
+> > Cc: stable@vger.kernel.org
+> > Fixes: 39ce8150a079 ("pinctrl: baytrail: Serialize all register access")
+> > Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+> 
+> Acked-by: Mika Westerberg <mika.westerberg@linux.intel.com>
 
-Fixes: f626d6dfb7098525 ("gpio: of: Break out OF-only code")
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
----
- drivers/gpio/gpiolib-of.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Pushed to my review and testing queue, thanks!
 
-diff --git a/drivers/gpio/gpiolib-of.c b/drivers/gpio/gpiolib-of.c
-index bd06743a5d7cd2cc..dc27b1a88e9343a8 100644
---- a/drivers/gpio/gpiolib-of.c
-+++ b/drivers/gpio/gpiolib-of.c
-@@ -27,7 +27,7 @@
-  * This is used by external users of of_gpio_count() from <linux/of_gpio.h>
-  *
-  * FIXME: get rid of those external users by converting them to GPIO
-- * descriptors and let them all use gpiod_get_count()
-+ * descriptors and let them all use gpiod_count()
-  */
- int of_gpio_get_count(struct device *dev, const char *con_id)
- {
 -- 
-2.17.1
+With Best Regards,
+Andy Shevchenko
+
 
