@@ -2,156 +2,116 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id D8116103C8E
-	for <lists+linux-gpio@lfdr.de>; Wed, 20 Nov 2019 14:50:07 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5266A103CBE
+	for <lists+linux-gpio@lfdr.de>; Wed, 20 Nov 2019 14:59:05 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729776AbfKTNuH (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 20 Nov 2019 08:50:07 -0500
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:37242 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729591AbfKTNuG (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 20 Nov 2019 08:50:06 -0500
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id xAKDntNk044995;
-        Wed, 20 Nov 2019 07:49:55 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1574257795;
-        bh=igM4FKkHdrSc7hws60TYIUKdxK6fHbvh4VrbAU0B0qg=;
-        h=Subject:From:To:CC:References:Date:In-Reply-To;
-        b=BzRe+u7s+vnkppJrguEj85EG3WqE4wAKog+ctPf92slMETrjH8ejv45M7RgYClLnm
-         7+/Rkl5lJ+HUltj2xwbh3Ab+rpZjsbgtw8449hJwH5uxI85vrAmog7ky2FCKxWw9UC
-         ylaQ2L3yk5qERQhTz/l0oCKpl5MADxkRn5VJ5Q6c=
-Received: from DFLE103.ent.ti.com (dfle103.ent.ti.com [10.64.6.24])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xAKDntBN009270
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 20 Nov 2019 07:49:55 -0600
-Received: from DFLE103.ent.ti.com (10.64.6.24) by DFLE103.ent.ti.com
- (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Wed, 20
- Nov 2019 07:49:54 -0600
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE103.ent.ti.com
- (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Wed, 20 Nov 2019 07:49:54 -0600
-Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id xAKDnpEt093218;
-        Wed, 20 Nov 2019 07:49:52 -0600
-Subject: Re: [RFC 0/2] gpiolib: Initial, basic support for shared GPIO lines
-From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
-To:     <linus.walleij@linaro.org>, <bgolaszewski@baylibre.com>,
-        <robh+dt@kernel.org>
-CC:     <linux-gpio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <m.szyprowski@samsung.com>, <broonie@kernel.org>,
-        <mripard@kernel.org>, <p.zabel@pengutronix.de>,
-        <devicetree@vger.kernel.org>
-References: <20191120133409.9217-1-peter.ujfalusi@ti.com>
-Message-ID: <4c7eeb1c-12b6-9073-3755-8ce1ffc803e4@ti.com>
-Date:   Wed, 20 Nov 2019 15:49:51 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        id S1728696AbfKTN7E (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 20 Nov 2019 08:59:04 -0500
+Received: from mail-pj1-f65.google.com ([209.85.216.65]:33981 "EHLO
+        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727988AbfKTN7E (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 20 Nov 2019 08:59:04 -0500
+Received: by mail-pj1-f65.google.com with SMTP id bo14so4131331pjb.1
+        for <linux-gpio@vger.kernel.org>; Wed, 20 Nov 2019 05:59:03 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=j7joOdR9Iobvsgf+0QHonCwN9pIZxgqZYcdWE8JAi7s=;
+        b=dKAVi41df2ikXjUWAvuvfVs2uZ7+pr3BFfu3IvTArtTqkE/37IkY9hWSZd6cD/1cR3
+         Y7/Eh3r9KX6Uujb21hQZmur760QQVwC2VHcAORA3qjtx1ygHYeDy7KcCaQlpNzrOG7pB
+         PMg4Ft6/cHcBBrdtKUAt23f3TwEc7gXqw9pK3EjvMOPTioaLGvQz7fgICCWjNgC6gDxG
+         9HCNG1ob4nZNysTk/mmvRqRHb+Ing+rso0sfkL5fzBgB0zx9lf8gRp1yyTk6mSYLCfeh
+         /3M/HxaZJmNVCnJC+dyFNB5/fIty7VmrfbEi86EAz6ZxaBQLqd8swe9k8fIEN6t9aPWm
+         EQog==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=j7joOdR9Iobvsgf+0QHonCwN9pIZxgqZYcdWE8JAi7s=;
+        b=oAclDd607goXFnJX4BeaUdZu8gnSAnWn3Zyr4R1KwJV47ZUcYWgNDv/3/yptrlTIa0
+         eKJh8Ca2JEOE0HU0IlSnoTLdeTKpfMtP0wprYn+B+lqprGXK81GTu+XTI72+NMXwMhpT
+         CXifOK87OYFgfWFMk3G4BwUWm5KUccmLW1riVb1vPlYo8TsH6lHUdSvOqs2dxDQqU429
+         zRg2eHt2/SsRDaElAJ2lgkS+4WlNo3+s2tRsrkdDwR7kZTw07p02rtcE16Jx93VkuDvy
+         loELPszK3nuLevV7exjitEpFOrUKkPi/Qcj8/JxVuemfR/Ll9CjxWKENzaJvDSWV+SQf
+         sJJw==
+X-Gm-Message-State: APjAAAX893ZFGpeY3Zu2BbjOAVKv2zWwYsG8Nj8DX2ueIntlk/eIwEUp
+        1HewB2euXzZ0TB1lvmoKKG8=
+X-Google-Smtp-Source: APXvYqygCS0Afy3pA+kAktNcKykoqlswmbP9fKgKTndLoXu+jJ5u+EMbXeU7zPIPO94G4c7e6BIGFw==
+X-Received: by 2002:a17:902:5a41:: with SMTP id f1mr3179500plm.168.1574258343127;
+        Wed, 20 Nov 2019 05:59:03 -0800 (PST)
+Received: from sol (220-235-109-115.dyn.iinet.net.au. [220.235.109.115])
+        by smtp.gmail.com with ESMTPSA id y11sm30480170pfq.1.2019.11.20.05.59.00
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 20 Nov 2019 05:59:02 -0800 (PST)
+Date:   Wed, 20 Nov 2019 21:58:57 +0800
+From:   Kent Gibson <warthog618@gmail.com>
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        linux-gpio <linux-gpio@vger.kernel.org>
+Subject: Re: [libgpiod] [PATCH 11/19] API: add support for SET_CONFIG
+Message-ID: <20191120135857.GA4218@sol>
+References: <20191115144355.975-1-warthog618@gmail.com>
+ <20191115144355.975-12-warthog618@gmail.com>
+ <CAMpxmJXcEFO-05H-O0Kjs8Latwhh9RWos0tXzkc_C7KyEye8Yw@mail.gmail.com>
+ <20191118144825.GE27359@sol>
+ <20191119155249.GA20834@sol>
+ <CAMRc=MeG2FJeKVdKSywOT3271jA_sDfcPNHe4BzyiEgxRKtKBg@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20191120133409.9217-1-peter.ujfalusi@ti.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+In-Reply-To: <CAMRc=MeG2FJeKVdKSywOT3271jA_sDfcPNHe4BzyiEgxRKtKBg@mail.gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi,
-
-On 20/11/2019 15.34, Peter Ujfalusi wrote:
-> Hi,
+On Wed, Nov 20, 2019 at 12:00:45PM +0100, Bartosz Golaszewski wrote:
+> wt., 19 lis 2019 o 16:53 Kent Gibson <warthog618@gmail.com> napisał(a):
+> >
+> > On Mon, Nov 18, 2019 at 10:48:25PM +0800, Kent Gibson wrote:
+> > > On Mon, Nov 18, 2019 at 02:52:04PM +0100, Bartosz Golaszewski
+> > > > > +
+> > > > > +int gpiod_line_set_flags_bulk(struct gpiod_line_bulk *bulk, int flags)
+> > > > > +{
+> > > > > +       struct gpiod_line *line;
+> > > > > +       int values[GPIOD_LINE_BULK_MAX_LINES];
+> > > > > +       unsigned int i;
+> > > > > +       int direction;
+> > > > > +
+> > > > > +       line = gpiod_line_bulk_get_line(bulk, 0);
+> > > > > +       if (line->as_is) {
+> > > >
+> > > > Can you explain the purpose of this as_is field? I'm not sure this is
+> > > > really needed.
+> > > >
+> > >
+> > > It is there for gpiod_set_flags, which has to populate the direction
+> > > flags in the SET_CONFIG ioctl. The existing line->direction is
+> > > either input or output.  It is drawn from GPIOLINE_FLAG_IS_OUT, so
+> > > as-is is gets mapped to input.
+> > > I didn't want to change the existing line->direction, and adding the
+> > > as-is seemed clearer than adding another flavour of direction that
+> > > contained all three.
+> > >
+> >
+> > Hmmm, I think I see what you were getting at - the line->direction is the
+> > direction from the kernel, so it doesn't hurt to use that value to set the
+> > corresponding request flags - even if the original request was as-is??
+> >
+> > If that is the case then the line->as_is can be dropped throughout.
+> >
+> > Kent.
+> >
 > 
-> The initial support can replace all use of GPIOD_FLAGS_BIT_NONEXCLUSIVE if the
-> shared GPIO is configured to follow pass through 'strategy' for the shared GPIO
-> pin.
-> 
-> I have only implemented DT support.
-> 
-> With the shared gpio support one can choose between three different strategy for
-> managing the shared gpio:
-> refcounted low: Keep the line low as long as there is at least one low
-> 		request is registered
-> refcounted high: Keep the line high as long as there is at least one high
-> 		request is registered
-> pass through: all requests are allowed to go through without refcounting.
-> 
-> Few shortcomings as of now:
-> - can not handle different GPIO_ACTIVE_ on the user side, both the root GPIO
->   (which is shared) and clients must have the same GPIO_ACTIVE_ mode.
->   We are using common gpio_desc.
->   Like with GPIOD_FLAGS_BIT_NONEXCLUSIVE
-> - refcounting counts _all_ 1/0 requests coming from the users of the shared
->   GPIO. This could cause issues if clients are using the gpiod API in unbalanced
->   way.
->   We would need to have separate tracking for each of the clients and agregate
->   the level they are asking for at any moment. Basically a new gpio-chip on top
->   of the real gpio pin can solve this.
-
-I forgot to add an example for DT.
-
-I have this for two pcm3168a codec, their RST pin is connected to
-tca6416's p0 pin.
-The codec's RST line is low active, so the gpio-shared is configured to
-refcounted high to make sure that a codec is not placed in reset when it
-does not want it.
-
-&main_i2c3 {
-	#address-cells = <1>;
-	#size-cells = <0>;
-
-	audio_exp: gpio@21 {
-		compatible = "ti,tca6416";
-		reg = <0x21>;
-		gpio-controller;
-		#gpio-cells = <2>;
-
-		p00 {
-			gpio-shared;
-			gpios = <0 GPIO_ACTIVE_LOW>;
-			output-high;
-			refcounted-high;
-			line-name = "CODEC RESET";
-		};
-	};
-
-	pcm3168a_a: audio-codec@47 {
-		compatible = "ti,pcm3168a";
-		reg = <0x47>;
-		#sound-dai-cells = <1>;
-
-		reset-gpios = <&audio_exp 0 GPIO_ACTIVE_LOW>;
-	};
-
-	pcm3168a_b: audio-codec@46 {
-		compatible = "ti,pcm3168a";
-		reg = <0x46>;
-		#sound-dai-cells = <1>;
-
-		reset-gpios = <&audio_exp 0 GPIO_ACTIVE_LOW>;
-	};
-};
-
-
-> 
-> Regards,
-> Peter
-> ---
-> Peter Ujfalusi (2):
->   dt-bindings: gpio: Document shared GPIO line usage
->   gpiolib: Support for (output only) shared GPIO line
-> 
->  .../devicetree/bindings/gpio/gpio.txt         |  66 +++++++++
->  drivers/gpio/gpiolib-of.c                     |  28 +++-
->  drivers/gpio/gpiolib.c                        | 132 ++++++++++++++++--
->  drivers/gpio/gpiolib.h                        |  10 ++
->  4 files changed, 223 insertions(+), 13 deletions(-)
+> Yes, this is what I was thinking. Just need to make sure the value
+> from the kernel is up-to-date.
 > 
 
-- Péter
+So fail if needs_update?
 
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+Kent.
