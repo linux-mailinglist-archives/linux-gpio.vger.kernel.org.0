@@ -2,71 +2,60 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 8C19B103E26
-	for <lists+linux-gpio@lfdr.de>; Wed, 20 Nov 2019 16:18:47 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B2AEC103FC5
+	for <lists+linux-gpio@lfdr.de>; Wed, 20 Nov 2019 16:46:41 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728776AbfKTPSr (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 20 Nov 2019 10:18:47 -0500
-Received: from mga05.intel.com ([192.55.52.43]:3410 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728142AbfKTPSr (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Wed, 20 Nov 2019 10:18:47 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 20 Nov 2019 07:18:46 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,222,1571727600"; 
-   d="scan'208";a="215832332"
-Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.163])
-  by fmsmga001.fm.intel.com with SMTP; 20 Nov 2019 07:18:44 -0800
-Received: by lahna (sSMTP sendmail emulation); Wed, 20 Nov 2019 17:18:44 +0200
-Date:   Wed, 20 Nov 2019 17:18:43 +0200
-From:   Mika Westerberg <mika.westerberg@linux.intel.com>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     linux-gpio@vger.kernel.org,
-        Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v1] pinctrl: lewisburg: Update pin list according to
- v1.1v6
-Message-ID: <20191120151843.GI11621@lahna.fi.intel.com>
-References: <20191120133739.54332-1-andriy.shevchenko@linux.intel.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191120133739.54332-1-andriy.shevchenko@linux.intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.12.1 (2019-06-15)
+        id S1730739AbfKTPpc (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 20 Nov 2019 10:45:32 -0500
+Received: from laurent.telenet-ops.be ([195.130.137.89]:51876 "EHLO
+        laurent.telenet-ops.be" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730378AbfKTPpb (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 20 Nov 2019 10:45:31 -0500
+Received: from ramsan ([84.195.182.253])
+        by laurent.telenet-ops.be with bizsmtp
+        id UFlV2100J5USYZQ01FlVea; Wed, 20 Nov 2019 16:45:29 +0100
+Received: from rox.of.borg ([192.168.97.57])
+        by ramsan with esmtp (Exim 4.90_1)
+        (envelope-from <geert@linux-m68k.org>)
+        id 1iXSAb-0002mv-96; Wed, 20 Nov 2019 16:45:29 +0100
+Received: from geert by rox.of.borg with local (Exim 4.90_1)
+        (envelope-from <geert@linux-m68k.org>)
+        id 1iXSAb-0004FN-6U; Wed, 20 Nov 2019 16:45:29 +0100
+From:   Geert Uytterhoeven <geert+renesas@glider.be>
+To:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: [PATCH] gpio: of: Fix bogus reference to gpiod_get_count()
+Date:   Wed, 20 Nov 2019 16:45:21 +0100
+Message-Id: <20191120154521.16273-1-geert+renesas@glider.be>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Nov 20, 2019 at 03:37:39PM +0200, Andy Shevchenko wrote:
-> Version 1.1v6 of pin list has some changes in pin names for Intel Lewisburg.
-> 
-> Update the driver accordingly.
-> 
-> Note, it reveals the bug in the driver that misses two pins in GPP_L and
-> has rather two extra ones. That's why the ordering of some groups is changed.
-> 
-> Fixes: e480b745386e ("pinctrl: intel: Add Intel Lewisburg GPIO support")
-> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+The recommended function is called gpiod_count(), not gpiod_get_count().
 
-Acked-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+Fixes: f626d6dfb7098525 ("gpio: of: Break out OF-only code")
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+---
+ drivers/gpio/gpiolib-of.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-> ---
->  drivers/pinctrl/intel/pinctrl-lewisburg.c | 171 +++++++++++-----------
->  1 file changed, 86 insertions(+), 85 deletions(-)
-> 
-> diff --git a/drivers/pinctrl/intel/pinctrl-lewisburg.c b/drivers/pinctrl/intel/pinctrl-lewisburg.c
-> index 2e06fb1464ab..7fdf4257df1e 100644
-> --- a/drivers/pinctrl/intel/pinctrl-lewisburg.c
-> +++ b/drivers/pinctrl/intel/pinctrl-lewisburg.c
-> @@ -33,6 +33,7 @@
->  		.npins = ((e) - (s) + 1),		\
->  	}
->  
-> +/* Lewisburg */
+diff --git a/drivers/gpio/gpiolib-of.c b/drivers/gpio/gpiolib-of.c
+index bd06743a5d7cd2cc..dc27b1a88e9343a8 100644
+--- a/drivers/gpio/gpiolib-of.c
++++ b/drivers/gpio/gpiolib-of.c
+@@ -27,7 +27,7 @@
+  * This is used by external users of of_gpio_count() from <linux/of_gpio.h>
+  *
+  * FIXME: get rid of those external users by converting them to GPIO
+- * descriptors and let them all use gpiod_get_count()
++ * descriptors and let them all use gpiod_count()
+  */
+ int of_gpio_get_count(struct device *dev, const char *con_id)
+ {
+-- 
+2.17.1
 
-This is pretty useless comment. ;-)
