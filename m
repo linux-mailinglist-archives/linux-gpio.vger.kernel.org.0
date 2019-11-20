@@ -2,181 +2,156 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 4A5C3103C18
-	for <lists+linux-gpio@lfdr.de>; Wed, 20 Nov 2019 14:40:54 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D8116103C8E
+	for <lists+linux-gpio@lfdr.de>; Wed, 20 Nov 2019 14:50:07 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728899AbfKTNk0 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 20 Nov 2019 08:40:26 -0500
-Received: from mail.kernel.org ([198.145.29.99]:48202 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728864AbfKTNkZ (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Wed, 20 Nov 2019 08:40:25 -0500
-Received: from localhost.localdomain (unknown [118.189.143.39])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EEE382251E;
-        Wed, 20 Nov 2019 13:40:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574257224;
-        bh=TNLZGml8CKecnxF0PNc2xpp8PoCrtU685Fl9tpYxIng=;
-        h=From:To:Cc:Subject:Date:From;
-        b=SYcuhSqUUWT3+8kdKpV/V1W39uTvAm1oox0iJNJK80w73m9Cqn5oFP4IWxgpcaDb5
-         UshMXRQqp5Dk19a6LEbCptcvaJEOh7sZXhhy85gPfG2P5WKlddCHXuC4pWEGdaL/Wx
-         BoUQa9slmafjIdVkvMEe4C8mGV+0P6mG9pFzAfG8=
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Krzysztof Kozlowski <krzk@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Dong Aisheng <aisheng.dong@nxp.com>,
-        Fabio Estevam <festevam@gmail.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Stefan Agner <stefan@agner.ch>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Andy Gross <agross@kernel.org>, linux-gpio@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org
-Subject: [PATCH] pinctrl: Fix Kconfig indentation
-Date:   Wed, 20 Nov 2019 21:40:19 +0800
-Message-Id: <20191120134019.14333-1-krzk@kernel.org>
-X-Mailer: git-send-email 2.17.1
+        id S1729776AbfKTNuH (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 20 Nov 2019 08:50:07 -0500
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:37242 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729591AbfKTNuG (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 20 Nov 2019 08:50:06 -0500
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id xAKDntNk044995;
+        Wed, 20 Nov 2019 07:49:55 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1574257795;
+        bh=igM4FKkHdrSc7hws60TYIUKdxK6fHbvh4VrbAU0B0qg=;
+        h=Subject:From:To:CC:References:Date:In-Reply-To;
+        b=BzRe+u7s+vnkppJrguEj85EG3WqE4wAKog+ctPf92slMETrjH8ejv45M7RgYClLnm
+         7+/Rkl5lJ+HUltj2xwbh3Ab+rpZjsbgtw8449hJwH5uxI85vrAmog7ky2FCKxWw9UC
+         ylaQ2L3yk5qERQhTz/l0oCKpl5MADxkRn5VJ5Q6c=
+Received: from DFLE103.ent.ti.com (dfle103.ent.ti.com [10.64.6.24])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xAKDntBN009270
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 20 Nov 2019 07:49:55 -0600
+Received: from DFLE103.ent.ti.com (10.64.6.24) by DFLE103.ent.ti.com
+ (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Wed, 20
+ Nov 2019 07:49:54 -0600
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE103.ent.ti.com
+ (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Wed, 20 Nov 2019 07:49:54 -0600
+Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id xAKDnpEt093218;
+        Wed, 20 Nov 2019 07:49:52 -0600
+Subject: Re: [RFC 0/2] gpiolib: Initial, basic support for shared GPIO lines
+From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
+To:     <linus.walleij@linaro.org>, <bgolaszewski@baylibre.com>,
+        <robh+dt@kernel.org>
+CC:     <linux-gpio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <m.szyprowski@samsung.com>, <broonie@kernel.org>,
+        <mripard@kernel.org>, <p.zabel@pengutronix.de>,
+        <devicetree@vger.kernel.org>
+References: <20191120133409.9217-1-peter.ujfalusi@ti.com>
+Message-ID: <4c7eeb1c-12b6-9073-3755-8ce1ffc803e4@ti.com>
+Date:   Wed, 20 Nov 2019 15:49:51 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
+MIME-Version: 1.0
+In-Reply-To: <20191120133409.9217-1-peter.ujfalusi@ti.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Adjust indentation from spaces to tab (+optional two spaces) as in
-coding style with command like:
-	$ sed -e 's/^        /\t/' -i */Kconfig
+Hi,
 
-Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
----
- drivers/pinctrl/Kconfig           | 18 ++++++++--------
- drivers/pinctrl/freescale/Kconfig | 12 +++++------
- drivers/pinctrl/qcom/Kconfig      | 34 +++++++++++++++----------------
- 3 files changed, 32 insertions(+), 32 deletions(-)
+On 20/11/2019 15.34, Peter Ujfalusi wrote:
+> Hi,
+> 
+> The initial support can replace all use of GPIOD_FLAGS_BIT_NONEXCLUSIVE if the
+> shared GPIO is configured to follow pass through 'strategy' for the shared GPIO
+> pin.
+> 
+> I have only implemented DT support.
+> 
+> With the shared gpio support one can choose between three different strategy for
+> managing the shared gpio:
+> refcounted low: Keep the line low as long as there is at least one low
+> 		request is registered
+> refcounted high: Keep the line high as long as there is at least one high
+> 		request is registered
+> pass through: all requests are allowed to go through without refcounting.
+> 
+> Few shortcomings as of now:
+> - can not handle different GPIO_ACTIVE_ on the user side, both the root GPIO
+>   (which is shared) and clients must have the same GPIO_ACTIVE_ mode.
+>   We are using common gpio_desc.
+>   Like with GPIOD_FLAGS_BIT_NONEXCLUSIVE
+> - refcounting counts _all_ 1/0 requests coming from the users of the shared
+>   GPIO. This could cause issues if clients are using the gpiod API in unbalanced
+>   way.
+>   We would need to have separate tracking for each of the clients and agregate
+>   the level they are asking for at any moment. Basically a new gpio-chip on top
+>   of the real gpio pin can solve this.
 
-diff --git a/drivers/pinctrl/Kconfig b/drivers/pinctrl/Kconfig
-index b372419d61f2..25b6c830f2f1 100644
---- a/drivers/pinctrl/Kconfig
-+++ b/drivers/pinctrl/Kconfig
-@@ -32,15 +32,15 @@ config DEBUG_PINCTRL
- 	  Say Y here to add some extra checks and diagnostics to PINCTRL calls.
- 
- config PINCTRL_ARTPEC6
--        bool "Axis ARTPEC-6 pin controller driver"
--        depends on MACH_ARTPEC6
--        select PINMUX
--        select GENERIC_PINCONF
--        help
--          This is the driver for the Axis ARTPEC-6 pin controller. This driver
--          supports pin function multiplexing as well as pin bias and drive
--          strength configuration. Device tree integration instructions can be
--          found in Documentation/devicetree/bindings/pinctrl/axis,artpec6-pinctrl.txt
-+	bool "Axis ARTPEC-6 pin controller driver"
-+	depends on MACH_ARTPEC6
-+	select PINMUX
-+	select GENERIC_PINCONF
-+	help
-+	  This is the driver for the Axis ARTPEC-6 pin controller. This driver
-+	  supports pin function multiplexing as well as pin bias and drive
-+	  strength configuration. Device tree integration instructions can be
-+	  found in Documentation/devicetree/bindings/pinctrl/axis,artpec6-pinctrl.txt
- 
- config PINCTRL_AS3722
- 	tristate "Pinctrl and GPIO driver for ams AS3722 PMIC"
-diff --git a/drivers/pinctrl/freescale/Kconfig b/drivers/pinctrl/freescale/Kconfig
-index 5f4058033ec6..3ea9ce3e0cd9 100644
---- a/drivers/pinctrl/freescale/Kconfig
-+++ b/drivers/pinctrl/freescale/Kconfig
-@@ -39,12 +39,12 @@ config PINCTRL_IMX27
- 
- 
- config PINCTRL_IMX25
--        bool "IMX25 pinctrl driver"
--        depends on OF
--        depends on SOC_IMX25
--        select PINCTRL_IMX
--        help
--          Say Y here to enable the imx25 pinctrl driver
-+	bool "IMX25 pinctrl driver"
-+	depends on OF
-+	depends on SOC_IMX25
-+	select PINCTRL_IMX
-+	help
-+	  Say Y here to enable the imx25 pinctrl driver
- 
- config PINCTRL_IMX35
- 	bool "IMX35 pinctrl driver"
-diff --git a/drivers/pinctrl/qcom/Kconfig b/drivers/pinctrl/qcom/Kconfig
-index 4f5645245b06..dbdf615da94f 100644
---- a/drivers/pinctrl/qcom/Kconfig
-+++ b/drivers/pinctrl/qcom/Kconfig
-@@ -151,10 +151,10 @@ config PINCTRL_QCOM_SPMI_PMIC
-        select GPIOLIB_IRQCHIP
-        select IRQ_DOMAIN_HIERARCHY
-        help
--         This is the pinctrl, pinmux, pinconf and gpiolib driver for the
--         Qualcomm GPIO and MPP blocks found in the Qualcomm PMIC's chips,
--         which are using SPMI for communication with SoC. Example PMIC's
--         devices are pm8841, pm8941 and pma8084.
-+	 This is the pinctrl, pinmux, pinconf and gpiolib driver for the
-+	 Qualcomm GPIO and MPP blocks found in the Qualcomm PMIC's chips,
-+	 which are using SPMI for communication with SoC. Example PMIC's
-+	 devices are pm8841, pm8941 and pma8084.
- 
- config PINCTRL_QCOM_SSBI_PMIC
-        tristate "Qualcomm SSBI PMIC pin controller driver"
-@@ -165,10 +165,10 @@ config PINCTRL_QCOM_SSBI_PMIC
-        select GPIOLIB_IRQCHIP
-        select IRQ_DOMAIN_HIERARCHY
-        help
--         This is the pinctrl, pinmux, pinconf and gpiolib driver for the
--         Qualcomm GPIO and MPP blocks found in the Qualcomm PMIC's chips,
--         which are using SSBI for communication with SoC. Example PMIC's
--         devices are pm8058 and pm8921.
-+	 This is the pinctrl, pinmux, pinconf and gpiolib driver for the
-+	 Qualcomm GPIO and MPP blocks found in the Qualcomm PMIC's chips,
-+	 which are using SSBI for communication with SoC. Example PMIC's
-+	 devices are pm8058 and pm8921.
- 
- config PINCTRL_SC7180
- 	tristate "Qualcomm Technologies Inc SC7180 pin controller driver"
-@@ -184,26 +184,26 @@ config PINCTRL_SDM660
-        depends on GPIOLIB && OF
-        select PINCTRL_MSM
-        help
--         This is the pinctrl, pinmux, pinconf and gpiolib driver for the
--         Qualcomm Technologies Inc TLMM block found on the Qualcomm
--         Technologies Inc SDM660 platform.
-+	 This is the pinctrl, pinmux, pinconf and gpiolib driver for the
-+	 Qualcomm Technologies Inc TLMM block found on the Qualcomm
-+	 Technologies Inc SDM660 platform.
- 
- config PINCTRL_SDM845
-        tristate "Qualcomm Technologies Inc SDM845 pin controller driver"
-        depends on GPIOLIB && (OF || ACPI)
-        select PINCTRL_MSM
-        help
--         This is the pinctrl, pinmux, pinconf and gpiolib driver for the
--         Qualcomm Technologies Inc TLMM block found on the Qualcomm
--         Technologies Inc SDM845 platform.
-+	 This is the pinctrl, pinmux, pinconf and gpiolib driver for the
-+	 Qualcomm Technologies Inc TLMM block found on the Qualcomm
-+	 Technologies Inc SDM845 platform.
- 
- config PINCTRL_SM8150
-        tristate "Qualcomm Technologies Inc SM8150 pin controller driver"
-        depends on GPIOLIB && OF
-        select PINCTRL_MSM
-        help
--         This is the pinctrl, pinmux, pinconf and gpiolib driver for the
--         Qualcomm Technologies Inc TLMM block found on the Qualcomm
--         Technologies Inc SM8150 platform.
-+	 This is the pinctrl, pinmux, pinconf and gpiolib driver for the
-+	 Qualcomm Technologies Inc TLMM block found on the Qualcomm
-+	 Technologies Inc SM8150 platform.
- 
- endif
--- 
-2.17.1
+I forgot to add an example for DT.
 
+I have this for two pcm3168a codec, their RST pin is connected to
+tca6416's p0 pin.
+The codec's RST line is low active, so the gpio-shared is configured to
+refcounted high to make sure that a codec is not placed in reset when it
+does not want it.
+
+&main_i2c3 {
+	#address-cells = <1>;
+	#size-cells = <0>;
+
+	audio_exp: gpio@21 {
+		compatible = "ti,tca6416";
+		reg = <0x21>;
+		gpio-controller;
+		#gpio-cells = <2>;
+
+		p00 {
+			gpio-shared;
+			gpios = <0 GPIO_ACTIVE_LOW>;
+			output-high;
+			refcounted-high;
+			line-name = "CODEC RESET";
+		};
+	};
+
+	pcm3168a_a: audio-codec@47 {
+		compatible = "ti,pcm3168a";
+		reg = <0x47>;
+		#sound-dai-cells = <1>;
+
+		reset-gpios = <&audio_exp 0 GPIO_ACTIVE_LOW>;
+	};
+
+	pcm3168a_b: audio-codec@46 {
+		compatible = "ti,pcm3168a";
+		reg = <0x46>;
+		#sound-dai-cells = <1>;
+
+		reset-gpios = <&audio_exp 0 GPIO_ACTIVE_LOW>;
+	};
+};
+
+
+> 
+> Regards,
+> Peter
+> ---
+> Peter Ujfalusi (2):
+>   dt-bindings: gpio: Document shared GPIO line usage
+>   gpiolib: Support for (output only) shared GPIO line
+> 
+>  .../devicetree/bindings/gpio/gpio.txt         |  66 +++++++++
+>  drivers/gpio/gpiolib-of.c                     |  28 +++-
+>  drivers/gpio/gpiolib.c                        | 132 ++++++++++++++++--
+>  drivers/gpio/gpiolib.h                        |  10 ++
+>  4 files changed, 223 insertions(+), 13 deletions(-)
+> 
+
+- Péter
+
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
