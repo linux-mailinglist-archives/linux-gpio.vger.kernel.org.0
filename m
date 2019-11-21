@@ -2,114 +2,162 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 119EB104440
-	for <lists+linux-gpio@lfdr.de>; Wed, 20 Nov 2019 20:25:58 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E716F104793
+	for <lists+linux-gpio@lfdr.de>; Thu, 21 Nov 2019 01:34:52 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727415AbfKTTZy (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 20 Nov 2019 14:25:54 -0500
-Received: from goliath.siemens.de ([192.35.17.28]:43211 "EHLO
-        goliath.siemens.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727474AbfKTTZx (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 20 Nov 2019 14:25:53 -0500
-X-Greylist: delayed 325 seconds by postgrey-1.27 at vger.kernel.org; Wed, 20 Nov 2019 14:25:50 EST
-Received: from mail2.sbs.de (mail2.sbs.de [192.129.41.66])
-        by goliath.siemens.de (8.15.2/8.15.2) with ESMTPS id xAKJKF28030990
-        (version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 20 Nov 2019 20:20:15 +0100
-Received: from md1f2u6c.ad001.siemens.net ([139.25.68.37])
-        by mail2.sbs.de (8.15.2/8.15.2) with ESMTP id xAKJKFQf024611;
-        Wed, 20 Nov 2019 20:20:15 +0100
-From:   Jan Kiszka <jan.kiszka@siemens.com>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-gpio@vger.kernel.org,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>
-Subject: [PATCH v3 2/2] gpio: sch: Hook into ACPI SCI handler to catch GPIO edge events
-Date:   Wed, 20 Nov 2019 20:20:14 +0100
-Message-Id: <bf556de14a3d093072e50b6a6cf3c64bd62b1730.1574277614.git.jan.kiszka@siemens.com>
-X-Mailer: git-send-email 2.16.4
-In-Reply-To: <cover.1574277614.git.jan.kiszka@siemens.com>
-References: <cover.1574277614.git.jan.kiszka@siemens.com>
-In-Reply-To: <cover.1574277614.git.jan.kiszka@siemens.com>
-References: <cover.1574277614.git.jan.kiszka@siemens.com>
+        id S1726351AbfKUAev (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 20 Nov 2019 19:34:51 -0500
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:40381 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726044AbfKUAev (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 20 Nov 2019 19:34:51 -0500
+Received: by mail-pf1-f195.google.com with SMTP id r4so674982pfl.7
+        for <linux-gpio@vger.kernel.org>; Wed, 20 Nov 2019 16:34:50 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=w0jc3nhu3KAWiFKWh+zpyGdVs1iUHPccdIEeVjCy13s=;
+        b=Wii2YRqwFMlbSaS+M+fPcA/HuRrG1/YoGNOOZbJpiJr1RUmYL01vr2lhEwMRyLiAK1
+         7hXIRa+ws+jm6bludi//A1ToXTwyYYLXPE8d0o+/QKnDTcAhTUrewkpMSWTiC2j3ds9l
+         rMCJFA24HkCkeKmdtpaVVLwylcspXdQQMm7c7ppCxa7UOsJwnyaAafJNc64NVsJqqEJ1
+         dgIrgI9O1XIAnsk3oVWgRHtilPBHM8zTScIS8XtGvP7vCEelvBO9cUexDKFw5+PEokZW
+         uqvLqN2tLfQG3OiyzWY73J5JYadgdzwdREW/gCbzg003r+fVfVShzVGT88SYJCSDbGFB
+         toYw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=w0jc3nhu3KAWiFKWh+zpyGdVs1iUHPccdIEeVjCy13s=;
+        b=SllfwWgd2DAVhqHuLcLAb7Ew6g53VKE1BlaesCVNHuVZDXiZsYcv7A1NEbAK5K5vpq
+         eHSaLY3lFHL1VGRv3A0jzeyEeVURO+jE5WpIfLFW2pzS7w/ajkT9d6XPVRRt2syqOlNY
+         itOD55bFDM+xU4AkUnLWQCJIqqkehzBRkDn8Dq3l5f92r0Zqutb99k8JzaS7VWKgMKcw
+         Y7jR5uYbraDxhzIYwLTVyPxNnaFQsgHd8NQSGgZtTL2tORBOLxEFx15+9buY5HoXIWg9
+         MRC47zieTh4MQTZSviUK2wVTPW6W44qWXiv6F3BZCLjr1d1gc09/6mVq3jZQ8STzSIk9
+         7Jkw==
+X-Gm-Message-State: APjAAAWl9cUgSY+ZGSiafc5Vxk0ahK4iMS7rikAHN7XILzBwCkbWI8++
+        zHAC1LB4V2Lg1fWo+SjtmydJPgetRbs=
+X-Google-Smtp-Source: APXvYqw6P3KWVbWUUvauXWVrYw43IX2lXZmZ4n8GUGz8Fkb1BTyz3xhol6wzLxmxkh0TFBhzFeVJIQ==
+X-Received: by 2002:a65:67c7:: with SMTP id b7mr6207953pgs.339.1574296489448;
+        Wed, 20 Nov 2019 16:34:49 -0800 (PST)
+Received: from sol (220-235-109-115.dyn.iinet.net.au. [220.235.109.115])
+        by smtp.gmail.com with ESMTPSA id f7sm575283pfa.150.2019.11.20.16.34.46
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 20 Nov 2019 16:34:48 -0800 (PST)
+Date:   Thu, 21 Nov 2019 08:34:43 +0800
+From:   Kent Gibson <warthog618@gmail.com>
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        linux-gpio <linux-gpio@vger.kernel.org>
+Subject: Re: [libgpiod] [PATCH 11/19] API: add support for SET_CONFIG
+Message-ID: <20191121003443.GA7695@sol>
+References: <CAMpxmJXcEFO-05H-O0Kjs8Latwhh9RWos0tXzkc_C7KyEye8Yw@mail.gmail.com>
+ <20191118144825.GE27359@sol>
+ <20191119155249.GA20834@sol>
+ <CAMRc=MeG2FJeKVdKSywOT3271jA_sDfcPNHe4BzyiEgxRKtKBg@mail.gmail.com>
+ <20191120135857.GA4218@sol>
+ <CAMRc=McNdcaLJKG3TRvX08Ddwmi-V9AJUDG5zmBgqL8bwjCSYg@mail.gmail.com>
+ <20191120141353.GA5154@sol>
+ <CAMRc=MdWj_+kd2wGUoRVRSd+kq597h-jetiHMwRiOvuUi8qRQQ@mail.gmail.com>
+ <20191120143644.GA5865@sol>
+ <CAMRc=Mex6M9Mmke9ajgLcpy4-Th+GOhycjeEiM+5PMBvmA+Apw@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAMRc=Mex6M9Mmke9ajgLcpy4-Th+GOhycjeEiM+5PMBvmA+Apw@mail.gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-From: Jan Kiszka <jan.kiszka@siemens.com>
+On Wed, Nov 20, 2019 at 04:18:24PM +0100, Bartosz Golaszewski wrote:
+> śr., 20 lis 2019 o 15:36 Kent Gibson <warthog618@gmail.com> napisał(a):
+> >
+> > On Wed, Nov 20, 2019 at 03:18:36PM +0100, Bartosz Golaszewski wrote:
+> > > śr., 20 lis 2019 o 15:13 Kent Gibson <warthog618@gmail.com> napisał(a):
+> > > >
+> > > > On Wed, Nov 20, 2019 at 03:08:57PM +0100, Bartosz Golaszewski wrote:
+> > > > > śr., 20 lis 2019 o 14:59 Kent Gibson <warthog618@gmail.com> napisał(a):
+> > > > > >
+> > > > > > On Wed, Nov 20, 2019 at 12:00:45PM +0100, Bartosz Golaszewski wrote:
+> > > > > > > wt., 19 lis 2019 o 16:53 Kent Gibson <warthog618@gmail.com> napisał(a):
+> > > > > > > >
+> > > > > > > > On Mon, Nov 18, 2019 at 10:48:25PM +0800, Kent Gibson wrote:
+> > > > > > > > > On Mon, Nov 18, 2019 at 02:52:04PM +0100, Bartosz Golaszewski
+> > > > > > > > > > > +
+> > > > > > > > > > > +int gpiod_line_set_flags_bulk(struct gpiod_line_bulk *bulk, int flags)
+> > > > > > > > > > > +{
+> > > > > > > > > > > +       struct gpiod_line *line;
+> > > > > > > > > > > +       int values[GPIOD_LINE_BULK_MAX_LINES];
+> > > > > > > > > > > +       unsigned int i;
+> > > > > > > > > > > +       int direction;
+> > > > > > > > > > > +
+> > > > > > > > > > > +       line = gpiod_line_bulk_get_line(bulk, 0);
+> > > > > > > > > > > +       if (line->as_is) {
+> > > > > > > > > >
+> > > > > > > > > > Can you explain the purpose of this as_is field? I'm not sure this is
+> > > > > > > > > > really needed.
+> > > > > > > > > >
+> > > > > > > > >
+> > > > > > > > > It is there for gpiod_set_flags, which has to populate the direction
+> > > > > > > > > flags in the SET_CONFIG ioctl. The existing line->direction is
+> > > > > > > > > either input or output.  It is drawn from GPIOLINE_FLAG_IS_OUT, so
+> > > > > > > > > as-is is gets mapped to input.
+> > > > > > > > > I didn't want to change the existing line->direction, and adding the
+> > > > > > > > > as-is seemed clearer than adding another flavour of direction that
+> > > > > > > > > contained all three.
+> > > > > > > > >
+> > > > > > > >
+> > > > > > > > Hmmm, I think I see what you were getting at - the line->direction is the
+> > > > > > > > direction from the kernel, so it doesn't hurt to use that value to set the
+> > > > > > > > corresponding request flags - even if the original request was as-is??
+> > > > > > > >
+> > > > > > > > If that is the case then the line->as_is can be dropped throughout.
+> > > > > > > >
+> > > > > > > > Kent.
+> > > > > > > >
+> > > > > > >
+> > > > > > > Yes, this is what I was thinking. Just need to make sure the value
+> > > > > > > from the kernel is up-to-date.
+> > > > > > >
+> > > > > >
+> > > > > > So fail if needs_update?
+> > > > > >
+> > > > > > Kent.
+> > > > >
+> > > > > I'd say: do an implicit update before setting config.
+> > > > >
+> > > >
+> > > > So gpiod_line_update if needs_update, and fail if that fails?
+> > > >
+> > > > Kent.
+> > >
+> > > Without the if - needs_update is only set if an implicit update fails
+> > > in line_maybe_update(). But in this case we need to be sure, so do it
+> > > unconditionally.
+> > >
+> >
+> > Given that line_maybe_update is called at the end of request creation, and
+> > whenever set_config is called, how can line->direction be inconsistent
+> > with the kernel state - as long as needs_update is false?
+> >
+> 
+> I don't think we should call line_maybe_update() on set_config() - in
+> this case we should call gpiod_line_update() and fail in set_config()
+> if it fails.
+> 
+> I hope that's clearer.
+> 
 
-The ACPI description on the Quark platform does not provide the required
-information to do establish generic handling. Therefore, we need to hook
-from the driver directly into SCI handler of the ACPI subsystem in order
-to catch and report GPIO-related events.
+Not really.  I was already shaky on the needs_update and I'm getting more
+confused about the overall needs_update handling policy by the minute.
 
-Validated on the Quark-based IOT2000 platform.
+Perhaps it will be more productive to go to the code.
+I'll send out what I have as v2 and we can go from there.
 
-Signed-off-by: Jan Kiszka <jan.kiszka@siemens.com>
----
- drivers/gpio/gpio-sch.c | 30 ++++++++++++++++++++++++++++++
- 1 file changed, 30 insertions(+)
-
-diff --git a/drivers/gpio/gpio-sch.c b/drivers/gpio/gpio-sch.c
-index 6a9c5500800c..75c95da145d8 100644
---- a/drivers/gpio/gpio-sch.c
-+++ b/drivers/gpio/gpio-sch.c
-@@ -155,6 +155,31 @@ static const struct gpio_chip sch_gpio_chip = {
- 	.to_irq			= sch_gpio_to_irq,
- };
- 
-+static u32 sch_sci_handler(void *context)
-+{
-+	struct sch_gpio *sch = context;
-+	unsigned long core_status, resume_status;
-+	unsigned int resume_gpios, offset;
-+
-+	core_status = inl(sch->iobase + GTS);
-+	resume_status = inl(sch->iobase + GTS + 0x20);
-+
-+	if (core_status == 0 && resume_status == 0)
-+		return ACPI_INTERRUPT_NOT_HANDLED;
-+
-+	for_each_set_bit(offset, &core_status, sch->resume_base)
-+		generic_handle_irq(sch->irq_base + offset);
-+
-+	resume_gpios = sch->chip.ngpio - sch->resume_base;
-+	for_each_set_bit(offset, &resume_status, resume_gpios)
-+		generic_handle_irq(sch->irq_base + sch->resume_base + offset);
-+
-+	outl(core_status, sch->iobase + GTS);
-+	outl(resume_status, sch->iobase + GTS + 0x20);
-+
-+	return ACPI_INTERRUPT_HANDLED;
-+}
-+
- static int sch_irq_type(struct irq_data *d, unsigned int type)
- {
- 	struct irq_chip_generic *gc = irq_data_get_irq_chip_data(d);
-@@ -215,6 +240,7 @@ static int sch_gpio_probe(struct platform_device *pdev)
- 	struct irq_chip_type *ct;
- 	struct sch_gpio *sch;
- 	struct resource *res;
-+	acpi_status status;
- 	int irq_base, ret;
- 
- 	sch = devm_kzalloc(&pdev->dev, sizeof(*sch), GFP_KERNEL);
-@@ -303,6 +329,10 @@ static int sch_gpio_probe(struct platform_device *pdev)
- 	if (ret)
- 		return ret;
- 
-+	status = acpi_install_sci_handler(sch_sci_handler, sch);
-+	if (ACPI_FAILURE(status))
-+		return -EINVAL;
-+
- 	return 0;
- }
- 
--- 
-2.16.4
-
+Cheers,
+Kent.
