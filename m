@@ -2,62 +2,56 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 7F8BE1057DB
-	for <lists+linux-gpio@lfdr.de>; Thu, 21 Nov 2019 18:06:11 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 4B492105899
+	for <lists+linux-gpio@lfdr.de>; Thu, 21 Nov 2019 18:31:22 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727263AbfKURGF (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 21 Nov 2019 12:06:05 -0500
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:46697 "EHLO
+        id S1726722AbfKURbV (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 21 Nov 2019 12:31:21 -0500
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:41541 "EHLO
         mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727234AbfKURGE (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 21 Nov 2019 12:06:04 -0500
-Received: by mail-wr1-f66.google.com with SMTP id z7so1927704wrl.13
-        for <linux-gpio@vger.kernel.org>; Thu, 21 Nov 2019 09:06:02 -0800 (PST)
+        with ESMTP id S1726568AbfKURbV (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 21 Nov 2019 12:31:21 -0500
+Received: by mail-wr1-f66.google.com with SMTP id b18so5430535wrj.8
+        for <linux-gpio@vger.kernel.org>; Thu, 21 Nov 2019 09:31:19 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=UpfkndITw/1h6ZYfXIWQrUX2mzHma7l6m7IK0V8q2nM=;
-        b=vP8djP/yRLnnypdysOXWBqKLhERiga4p54DXB+glxL/S9HWL/r0wr7DSn1WnAHyn0L
-         2+FDhV9km3Qt3a4pjevuPk23hF3U97hYKCPHGZmJQyxxPLv37NJB1F49TAbJNE3vGVoR
-         QVSXZ66gVQB2Ee5K0jGB2kFfjAHKUP8zLMk+lp8RdF//H1ndvjHtZs4Pln4+q1WnJgFl
-         o2eBPXsnSXjFiJ5xvCq4z1ANV78OornQw89DP/em2a1DkQRBF/dPZCul0lV0kL89Gx5Y
-         XYI76xFMJus6bVtX4FYqrjewhQrV3o+sy71OA96yFF8b6ymCKZJsLABixQ+3FD70clyO
-         U66w==
+        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=SrOxBVxr4+WiEoXHzV4Iv6AvYqoIPt+7ktYfe7Nig5M=;
+        b=jIwW+ndRk5tc+ft82RvoxwCKGBvpuRYhAYr1MiPyjNsv2DqaG4q4EPGp6wCqbovOwW
+         HEjcUL2k7lZ0LIIhFhpGeI8qkVhJtmPeqLOwJJzIaHk/zfOx8qRhtoGeMwDte5b8LWfP
+         r4MAvga/R3x/QdKWWFlItW6TP2/opIvzz9sx043gA2d7UyVibcuRJrrwqLFX4E/XuCD/
+         8GTvvLs+b2qgVZY6VWX7jXHx2redwZetn9jVw2avp3GidRIYkN2G38jTk/rfoCaVEQiy
+         G+lv4EsI9WvEO+rMwfU+j5y8D58fOur186vwbOYpXsNhu+rCyFPqq2pC9CleYV/g9+XX
+         5e+w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=UpfkndITw/1h6ZYfXIWQrUX2mzHma7l6m7IK0V8q2nM=;
-        b=bkl8/q75MXw9IH4C1WAI32eeaJkbUjLg31sXBLHLdux/1532DnzIA6wU/nO0bQPWag
-         cNTW08z7gkuxIW1T9DKiKVb5/vfTuxtbGSpcGZ9NSGItmxlpFVnJkPu8NuwM7aVAjpMW
-         EAS8brFlE3z/W95+e1ODy+iDuuJS4OevVLV1H4Hlzulsp6i20dP/y1TPF34/pPLdgnKQ
-         8FlmTR+yBpuCjGCgp8ohKFgQ+97ER0jlt3NFC/w28ILbX5TNTOSvwyBEnLJD/4qXn4AH
-         YYUQKz7wRhYvIOni3+Kdg4oeQaQBD2d7+/FtMlrMNcMV10HwR8iqRgEs/RmOZWfDtf3g
-         FyGQ==
-X-Gm-Message-State: APjAAAXGrai9+FAves94BMSQgVd+2qmZkZAWH4DwdVuann5SMUy2UoRX
-        idric5xCFbLSGqYKIl1sAl1EyQ==
-X-Google-Smtp-Source: APXvYqzxvD7pe4C609uvXbtzp+FxkPLcZ8kNUmCHY3YxyCEHKRpQitJWVBU7Io1c0eq4F2ZJ9Nq3gA==
-X-Received: by 2002:adf:ee92:: with SMTP id b18mr12651008wro.346.1574355961906;
-        Thu, 21 Nov 2019 09:06:01 -0800 (PST)
-Received: from srini-hackbox.lan (cpc89974-aztw32-2-0-cust43.18-1.cable.virginm.net. [86.30.250.44])
-        by smtp.gmail.com with ESMTPSA id i71sm4423731wri.68.2019.11.21.09.06.00
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=SrOxBVxr4+WiEoXHzV4Iv6AvYqoIPt+7ktYfe7Nig5M=;
+        b=TwrgZiCOBPy/tqIDjRL8AL36MLgO1pp8iec30Bv4ynMKTaSOoWnMaAifySRw0nuPYW
+         DCepzguAYJVs9g8x3zk5QPU4rDwLODsX9LWB2bgOLXoPgSqhfV5Rt/nBK2LcEISJ/cGZ
+         nLyaeenEs7u6YvBPDF65+LqTkk9b8a6JM20D0Fd4sVVJXIUBI6JWgJGztp7fe1Br9KX2
+         /LokHENn1n9DtxbaNdA793XxvRnk1M9Lywz3RW/Qf6+8hLvB1qXk4dhNd3fi84vpti+K
+         eXtiuyDISUMTzAntI+TgkKT7le/yS6yFRfVpt4A+SnbX309kmC5UYgaQLkv05QbabvE4
+         ZSRA==
+X-Gm-Message-State: APjAAAUyimpASujpn++FD2erlqDfLf1miPgc50lUwbO/6p9SpIUnKEEW
+        +7h7v+e35M75BrBFZJO/xsDijDBuL/o=
+X-Google-Smtp-Source: APXvYqyPHHcsGpk8w7iWaTTKDCn77izMhY3p9LnPiUddz5inBs1bdoZj+klb5aenYpGwa1/jsAdK0A==
+X-Received: by 2002:adf:df0b:: with SMTP id y11mr11989523wrl.282.1574357478439;
+        Thu, 21 Nov 2019 09:31:18 -0800 (PST)
+Received: from debian-brgl.home ([2a01:cb1d:af:5b00:6d6c:8493:1ab5:dad7])
+        by smtp.gmail.com with ESMTPSA id k1sm4223659wrp.29.2019.11.21.09.31.17
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 21 Nov 2019 09:06:00 -0800 (PST)
-From:   Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-To:     robh@kernel.org, broonie@kernel.org, lee.jones@linaro.org,
-        linus.walleij@linaro.org
-Cc:     vinod.koul@linaro.org, alsa-devel@alsa-project.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        spapothi@codeaurora.org, bgoswami@codeaurora.org,
-        linux-gpio@vger.kernel.org,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Subject: [PATCH v4 12/12] ASoC: qcom: sdm845: add support to DB845c and Lenovo Yoga
-Date:   Thu, 21 Nov 2019 17:05:09 +0000
-Message-Id: <20191121170509.10579-13-srinivas.kandagatla@linaro.org>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20191121170509.10579-1-srinivas.kandagatla@linaro.org>
-References: <20191121170509.10579-1-srinivas.kandagatla@linaro.org>
+        Thu, 21 Nov 2019 09:31:17 -0800 (PST)
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+To:     Kent Gibson <warthog618@gmail.com>
+Cc:     linux-gpio@vger.kernel.org,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Subject: [libgpiod][PATCH] core: deprecate gpiod_needs_update()
+Date:   Thu, 21 Nov 2019 18:31:15 +0100
+Message-Id: <20191121173115.11016-1-brgl@bgdev.pl>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-gpio-owner@vger.kernel.org
@@ -65,167 +59,179 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-This patch adds support to Lenovo Yoga c630 compatible strings
-and related setup to the sound machine driver.
+From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 
-Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+This function and the logic behind have been introduced in an early
+version of libgpiod for reasons that have been long forgotten.
+
+When updating the line info after a line request fails, just propagate
+the error out of the request function instead of setting the internal
+needs_update variable. Drop the entire logic behind gpiod_needs_update(),
+make this routine always return false and mark it as deprecated in the
+header.
+
+Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Suggested-by: Kent Gibson <warthog618@gmail.com>
 ---
- sound/soc/qcom/sdm845.c | 86 ++++++++++++++++++++++++++++++++++++++++-
- 1 file changed, 85 insertions(+), 1 deletion(-)
 
-diff --git a/sound/soc/qcom/sdm845.c b/sound/soc/qcom/sdm845.c
-index 28f3cef696e6..3b5547a27aad 100644
---- a/sound/soc/qcom/sdm845.c
-+++ b/sound/soc/qcom/sdm845.c
-@@ -24,6 +24,9 @@
- #define RIGHT_SPK_TDM_TX_MASK   0xC0
- #define SPK_TDM_RX_MASK         0x03
- #define NUM_TDM_SLOTS           8
-+#define SLIM_MAX_TX_PORTS 16
-+#define SLIM_MAX_RX_PORTS 16
-+#define WCD934X_DEFAULT_MCLK_RATE	9600000
+Kent,
+
+please take a look at this patch. I thought about it and didn't find any
+good reason to keep this function in the API, so I propose to deprecate it
+and propagate any errors from gpiod_line_update() when it's called internally
+as you suggested.
+
+ include/gpiod.h    | 31 +++++++++++--------------------
+ lib/core.c         | 30 ++++++++++++++----------------
+ tests/tests-line.c |  2 --
+ 3 files changed, 25 insertions(+), 38 deletions(-)
+
+diff --git a/include/gpiod.h b/include/gpiod.h
+index 6dfa18a..588198f 100644
+--- a/include/gpiod.h
++++ b/include/gpiod.h
+@@ -729,33 +729,24 @@ bool gpiod_line_is_open_source(struct gpiod_line *line) GPIOD_API;
+  *         returns -1 and sets the last error number.
+  *
+  * The line info is initially retrieved from the kernel by
+- * gpiod_chip_get_line(). Users can use this line to manually re-read the line
+- * info.
++ * gpiod_chip_get_line() and after every successful request. Users can use
++ * this line to manually re-read the line info.
++ *
++ * We currently have no mechanism provided by the kernel for that and for the
++ * sake of speed and simplicity of this low-level library we don't want to
++ * re-read the line info automatically everytime a property is retrieved. Any
++ * daemon using this library must track the state of lines on its own and call
++ * ::gpiod_line_update if needed.
+  */
+ int gpiod_line_update(struct gpiod_line *line) GPIOD_API;
  
- struct sdm845_snd_data {
- 	struct snd_soc_jack jack;
-@@ -36,6 +39,39 @@ struct sdm845_snd_data {
+ /**
+  * @brief Check if the line info needs to be updated.
+  * @param line GPIO line object.
+- * @return Returns false if the line is up-to-date. True otherwise.
+- *
+- * The line is updated by calling gpiod_line_update() from within
+- * gpiod_chip_get_line() and on every line request/release. However: an error
+- * returned from gpiod_line_update() only breaks the execution of the former.
+- * The request/release routines only set the internal needs_update flag to true
+- * and continue their execution. This routine allows to check if a line info
+- * update failed at some point and we should call gpiod_line_update()
+- * explicitly.
+- *
+- * This routine will not indicate any potential changes introduced by external
+- * actors (such as a different process requesting the line). We currently have
+- * no mechanism provided by the kernel for that and for the sake of speed and
+- * simplicity of this low-level library we don't want to re-read the line info
+- * automatically everytime a property is retrieved. Any daemon using this
+- * library must track the state of lines on its own and call
+- * ::gpiod_line_update if needed.
++ * @return Deprecated and no longer functional - always returns false.
+  */
+-bool gpiod_line_needs_update(struct gpiod_line *line) GPIOD_API;
++bool
++gpiod_line_needs_update(struct gpiod_line *line) GPIOD_API GPIOD_DEPRECATED;
  
- static unsigned int tdm_slot_offset[8] = {0, 4, 8, 12, 16, 20, 24, 28};
+ /**
+  * @}
+diff --git a/lib/core.c b/lib/core.c
+index d79e52e..a21918c 100644
+--- a/lib/core.c
++++ b/lib/core.c
+@@ -41,7 +41,6 @@ struct gpiod_line {
+ 	bool open_drain;
  
-+static int sdm845_slim_snd_hw_params(struct snd_pcm_substream *substream,
-+				     struct snd_pcm_hw_params *params)
-+{
-+	struct snd_soc_pcm_runtime *rtd = substream->private_data;
-+	struct snd_soc_dai_link *dai_link = rtd->dai_link;
-+	struct snd_soc_dai *cpu_dai = rtd->cpu_dai;
-+	u32 rx_ch[SLIM_MAX_RX_PORTS], tx_ch[SLIM_MAX_TX_PORTS];
-+	u32 rx_ch_cnt = 0, tx_ch_cnt = 0;
-+	int ret = 0, i;
-+
-+	for (i = 0 ; i < dai_link->num_codecs; i++) {
-+		ret = snd_soc_dai_get_channel_map(rtd->codec_dais[i],
-+				&tx_ch_cnt, tx_ch, &rx_ch_cnt, rx_ch);
-+
-+		if (ret != 0 && ret != -ENOTSUPP) {
-+			pr_err("failed to get codec chan map, err:%d\n", ret);
-+			return ret;
-+		} else if (ret == -ENOTSUPP) {
-+			/* Ignore unsupported */
-+			continue;
-+		}
-+
-+		if (substream->stream == SNDRV_PCM_STREAM_PLAYBACK)
-+			ret = snd_soc_dai_set_channel_map(cpu_dai, 0, NULL,
-+							  rx_ch_cnt, rx_ch);
-+		else
-+			ret = snd_soc_dai_set_channel_map(cpu_dai, tx_ch_cnt,
-+							  tx_ch, 0, NULL);
-+	}
-+
-+	return 0;
-+}
-+
- static int sdm845_tdm_snd_hw_params(struct snd_pcm_substream *substream,
- 					struct snd_pcm_hw_params *params)
+ 	int state;
+-	bool needs_update;
+ 
+ 	struct gpiod_chip *chip;
+ 	struct line_fd_handle *fd_handle;
+@@ -320,15 +319,6 @@ static int line_get_fd(struct gpiod_line *line)
+ 	return line->fd_handle->fd;
+ }
+ 
+-static void line_maybe_update(struct gpiod_line *line)
+-{
+-	int rv;
+-
+-	rv = gpiod_line_update(line);
+-	if (rv < 0)
+-		line->needs_update = true;
+-}
+-
+ struct gpiod_chip *gpiod_line_get_chip(struct gpiod_line *line)
  {
-@@ -151,6 +187,11 @@ static int sdm845_snd_hw_params(struct snd_pcm_substream *substream,
- 	case QUATERNARY_TDM_TX_0:
- 		ret = sdm845_tdm_snd_hw_params(substream, params);
- 		break;
-+	case SLIMBUS_0_RX...SLIMBUS_6_TX:
-+		ret = sdm845_slim_snd_hw_params(substream, params);
-+		break;
-+	case QUATERNARY_MI2S_RX:
-+		break;
- 	default:
- 		pr_err("%s: invalid dai id 0x%x\n", __func__, cpu_dai->id);
- 		break;
-@@ -173,7 +214,20 @@ static int sdm845_dai_init(struct snd_soc_pcm_runtime *rtd)
- 	struct snd_soc_dai *cpu_dai = rtd->cpu_dai;
- 	struct sdm845_snd_data *pdata = snd_soc_card_get_drvdata(card);
- 	struct snd_jack *jack;
--	int rval;
-+	struct snd_soc_dai_link *dai_link = rtd->dai_link;
-+	/*
-+	 * Codec SLIMBUS configuration
-+	 * RX1, RX2, RX3, RX4, RX5, RX6, RX7, RX8, RX9, RX10, RX11, RX12, RX13
-+	 * TX1, TX2, TX3, TX4, TX5, TX6, TX7, TX8, TX9, TX10, TX11, TX12, TX13
-+	 * TX14, TX15, TX16
-+	 */
-+	unsigned int rx_ch[SLIM_MAX_RX_PORTS] = {144, 145, 146, 147, 148, 149,
-+					150, 151, 152, 153, 154, 155, 156};
-+	unsigned int tx_ch[SLIM_MAX_TX_PORTS] = {128, 129, 130, 131, 132, 133,
-+					    134, 135, 136, 137, 138, 139,
-+					    140, 141, 142, 143};
-+	int rval, i;
-+
+ 	return line->chip;
+@@ -374,9 +364,9 @@ bool gpiod_line_is_open_source(struct gpiod_line *line)
+ 	return line->open_source;
+ }
  
- 	if (!pdata->jack_setup) {
- 		rval = snd_soc_card_jack_new(card, "Headset Jack",
-@@ -211,6 +265,21 @@ static int sdm845_dai_init(struct snd_soc_pcm_runtime *rtd)
- 			return rval;
- 		}
- 		break;
-+	case SLIMBUS_0_RX...SLIMBUS_6_TX:
-+		for (i = 0 ; i < dai_link->num_codecs; i++) {
-+			rval = snd_soc_dai_set_channel_map(rtd->codec_dais[i],
-+							  ARRAY_SIZE(tx_ch),
-+							  tx_ch,
-+							  ARRAY_SIZE(rx_ch),
-+							  rx_ch);
-+			if (rval != 0 && rval != -ENOTSUPP)
-+				return rval;
+-bool gpiod_line_needs_update(struct gpiod_line *line)
++bool gpiod_line_needs_update(struct gpiod_line *line GPIOD_UNUSED)
+ {
+-	return line->needs_update;
++	return false;
+ }
+ 
+ int gpiod_line_update(struct gpiod_line *line)
+@@ -405,8 +395,6 @@ int gpiod_line_update(struct gpiod_line *line)
+ 	strncpy(line->name, info.name, sizeof(line->name));
+ 	strncpy(line->consumer, info.consumer, sizeof(line->consumer));
+ 
+-	line->needs_update = false;
+-
+ 	return 0;
+ }
+ 
+@@ -537,7 +525,12 @@ static int line_request_values(struct gpiod_line_bulk *bulk,
+ 	gpiod_line_bulk_foreach_line(bulk, line, lineptr) {
+ 		line->state = LINE_REQUESTED_VALUES;
+ 		line_set_fd(line, line_fd);
+-		line_maybe_update(line);
 +
-+			snd_soc_dai_set_sysclk(rtd->codec_dais[i], 0,
-+					       WCD934X_DEFAULT_MCLK_RATE,
-+					       SNDRV_PCM_STREAM_PLAYBACK);
++		rv = gpiod_line_update(line);
++		if (rv) {
++			gpiod_line_release_bulk(bulk);
++			return rv;
 +		}
-+		break;
- 	default:
- 		break;
  	}
-@@ -256,6 +325,14 @@ static int sdm845_snd_startup(struct snd_pcm_substream *substream)
- 		}
- 		snd_soc_dai_set_fmt(cpu_dai, fmt);
- 		snd_soc_dai_set_fmt(codec_dai, codec_dai_fmt);
-+		break;
-+	case QUATERNARY_MI2S_RX:
-+		snd_soc_dai_set_sysclk(cpu_dai,
-+			Q6AFE_LPASS_CLK_ID_QUAD_MI2S_IBIT,
-+			MI2S_BCLK_RATE, SNDRV_PCM_STREAM_PLAYBACK);
-+		snd_soc_dai_set_fmt(cpu_dai, SND_SOC_DAIFMT_CBS_CFS);
+ 
+ 	return 0;
+@@ -577,7 +570,12 @@ static int line_request_event_single(struct gpiod_line *line,
+ 
+ 	line->state = LINE_REQUESTED_EVENTS;
+ 	line_set_fd(line, line_fd);
+-	line_maybe_update(line);
 +
-+
- 		break;
++	rv = gpiod_line_update(line);
++	if (rv) {
++		gpiod_line_release(line);
++		return rv;
++	}
  
- 	case QUATERNARY_TDM_RX_0:
-@@ -294,6 +371,8 @@ static int sdm845_snd_startup(struct snd_pcm_substream *substream)
- 			}
- 		}
- 		break;
-+	case SLIMBUS_0_RX...SLIMBUS_6_TX:
-+		break;
+ 	return 0;
+ }
+diff --git a/tests/tests-line.c b/tests/tests-line.c
+index 8411132..205c622 100644
+--- a/tests/tests-line.c
++++ b/tests/tests-line.c
+@@ -78,7 +78,6 @@ GPIOD_TEST_CASE(consumer, 0, { 8 })
  
- 	default:
- 		pr_err("%s: invalid dai id 0x%x\n", __func__, cpu_dai->id);
-@@ -338,6 +417,9 @@ static void  sdm845_snd_shutdown(struct snd_pcm_substream *substream)
- 				0, SNDRV_PCM_STREAM_PLAYBACK);
- 		}
- 		break;
-+	case SLIMBUS_0_RX...SLIMBUS_6_TX:
-+	case QUATERNARY_MI2S_RX:
-+		break;
+ 	ret = gpiod_line_request_input(line, GPIOD_TEST_CONSUMER);
+ 	g_assert_cmpint(ret, ==, 0);
+-	g_assert_false(gpiod_line_needs_update(line));
+ 	g_assert_cmpstr(gpiod_line_consumer(line), ==, GPIOD_TEST_CONSUMER);
+ }
  
- 	default:
- 		pr_err("%s: invalid dai id 0x%x\n", __func__, cpu_dai->id);
-@@ -451,6 +533,8 @@ static int sdm845_snd_platform_remove(struct platform_device *pdev)
- 
- static const struct of_device_id sdm845_snd_device_id[]  = {
- 	{ .compatible = "qcom,sdm845-sndcard" },
-+	{ .compatible = "qcom,db845c-sndcard" },
-+	{ .compatible = "lenovo,yoga-c630-sndcard" },
- 	{},
- };
- MODULE_DEVICE_TABLE(of, sdm845_snd_device_id);
+@@ -101,7 +100,6 @@ GPIOD_TEST_CASE(consumer_long_string, 0, { 8 })
+ 	ret = gpiod_line_request_input(line,
+ 			"consumer string over 32 characters long");
+ 	g_assert_cmpint(ret, ==, 0);
+-	g_assert_false(gpiod_line_needs_update(line));
+ 	g_assert_cmpstr(gpiod_line_consumer(line), ==,
+ 			"consumer string over 32 charact");
+ 	g_assert_cmpuint(strlen(gpiod_line_consumer(line)), ==, 31);
 -- 
-2.21.0
+2.23.0
 
