@@ -2,54 +2,54 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 2A6AA104799
-	for <lists+linux-gpio@lfdr.de>; Thu, 21 Nov 2019 01:36:30 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 1274510479A
+	for <lists+linux-gpio@lfdr.de>; Thu, 21 Nov 2019 01:36:33 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726333AbfKUAg3 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 20 Nov 2019 19:36:29 -0500
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:36111 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726044AbfKUAg3 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 20 Nov 2019 19:36:29 -0500
-Received: by mail-pf1-f194.google.com with SMTP id b19so690697pfd.3
-        for <linux-gpio@vger.kernel.org>; Wed, 20 Nov 2019 16:36:28 -0800 (PST)
+        id S1726351AbfKUAgc (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 20 Nov 2019 19:36:32 -0500
+Received: from mail-pj1-f68.google.com ([209.85.216.68]:36379 "EHLO
+        mail-pj1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726044AbfKUAgc (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 20 Nov 2019 19:36:32 -0500
+Received: by mail-pj1-f68.google.com with SMTP id cq11so617969pjb.3
+        for <linux-gpio@vger.kernel.org>; Wed, 20 Nov 2019 16:36:31 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=1QMIzQdivMNr/urrFibb1d3I1FoG0wJ7ERlY8y923yU=;
-        b=hUYGGEYZlYp1TzZioBErw74Toqmh9G+chNd+2cZPBpuaSCd0/8cJP9olbPNhbl766C
-         3aw63c+ohGZq8sbzONCUz+9fkho0q8f9zKvFTHRezEZetvEGESELAX+snl+gOTHW1BJS
-         Y40Zdjj1RxItSGlou4NmrgA6dSaMa+UEHePz1RO39ICnAPmopXxfyZnARNPoknZG21H2
-         mq9xeyxrVxHnDKZDME99o/ijZzSpF19SBbPSMEr5EIo5YkRcWZok6GdiHQtHNmaN/d0V
-         fKAbI2P9bLDx/p0yOxepiM+Efvri85/M2tx6iB3D2TSlX6/6+wEEpeypfEEYAvZUPcZG
-         xyAg==
+        bh=Ji4XS3PkDfmdwlRr49EB6DYi3k4STZ5B6ixXS4OLMWw=;
+        b=b3c4UJf9jhKYpEAqkCPLVCYbxF+dNtyplHsW74SrZMgzsW1yusQV/jOiPRkhQfpemg
+         3MT38dUQvxVu91fP8iqyqboHKFoGj9xqLWUVCyvxPIKW7LOgGYv1yt4b9r2PPm1l+xSZ
+         56dle4lXrlUiVTm8frGMtek5YCEqcVuqcgi2u/dSJrCFCQPI7yd6WvGSAi3heJhmJK/C
+         GeWh7rKty84iB404EfLPPDVN7b24zs5L8hXeDPN5CtUOGU5E2/8MXScTFR8CvD/lPWjd
+         bXngMCeMy4jrx7EzKoSKHVnsWzqSBIfcf/xMosZ3r7Z14OimAn2bxBwo3SxlM2Lu2s0R
+         t8iA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=1QMIzQdivMNr/urrFibb1d3I1FoG0wJ7ERlY8y923yU=;
-        b=EPUED2LYw1jx2QSqFVC8LKJJWBC1KMuqo6rAxe8cKCBMX9K2tCcwp9+z1+NzClFtsM
-         FPNXY0nHQBDt3oBysnc522HeB9aXPMaizdV1REi6brTZicodjjubmuuu7uggzaDBQRnQ
-         q5H0TcQ85XkwFAVKV2J8p7QudyyhCrM4VaJugUaZRPlNJXmjVCIfdmYFeQD+JphaWkKK
-         GtH59L3qBMmK8J+VxxBtSW5MQVLG9Hyf7rGWco6fuiwHiz54F5XyNScZjD0jGDMOadrG
-         7wXK6GSdcjQFPwd0uoicQgpcGF3ny9svCJ25i/m+hDssB9rFpJhs0mVk/CtbpVByBxyL
-         FOMQ==
-X-Gm-Message-State: APjAAAXPoYTcDbD2R0vvd7sjdV1D8PLhtiTNwZm1NZu5prpi44lT+X2E
-        yniG1Uvf73LTzG3nhp/6NWDdhz0SVLo=
-X-Google-Smtp-Source: APXvYqzWjwXq/ODzOslAzdApUwNgBS31rFnlg1RDdgWmEg4PXZ8Y7qDjZt/rDtTL0lXu+ogJeZ9+Jw==
-X-Received: by 2002:a63:5c42:: with SMTP id n2mr6126195pgm.229.1574296587780;
-        Wed, 20 Nov 2019 16:36:27 -0800 (PST)
+        bh=Ji4XS3PkDfmdwlRr49EB6DYi3k4STZ5B6ixXS4OLMWw=;
+        b=YRvKwmnq8vk8wC5QkPS6qVl9axde64gpX6z7YOAuh7kCBElaJcMVjpS2S3v+vJX0RU
+         7m64Onb70nmnY/D6rZpR+aLB+rkwOCUL3OAU4fE5zbAXWiuPVP6VX5tFlcBIawHVR5p+
+         YevqaQoHR1KoxmAIFIYIj2pSVOcc3RKNI1+dRLHxNnIlUDIaSYTUM+f9Fv2WpFrzerbE
+         vT6oAFfa5v+D7Md+lSmPVioD2ild20uXCVjTupl0ldp9fJ1DoN4fJAnUpX6L89+hheuR
+         he38uByp4RQkDzHl2NNbagyDkz13dKVARF1g8GD+Nz1bXoEExK9lM3rwHE4AIQy7f5Aw
+         Ftgg==
+X-Gm-Message-State: APjAAAXAM4nj4Wf0gSG/OEOu24aOnxtQqdQNJuWnmvZarpEUFxt/E+Q+
+        lGI2VO36ZCz887Oemxyd5tN+hzxMyfc=
+X-Google-Smtp-Source: APXvYqwpflVHTxGFL37hUNn9sruenCDcXW3IO68elrsYicZqwvJblilUHFgjkHZjnfHT8hxvb6n4WQ==
+X-Received: by 2002:a17:90a:2a44:: with SMTP id d4mr7521190pjg.91.1574296590387;
+        Wed, 20 Nov 2019 16:36:30 -0800 (PST)
 Received: from sol.lan (220-235-109-115.dyn.iinet.net.au. [220.235.109.115])
-        by smtp.gmail.com with ESMTPSA id s1sm420756pgk.9.2019.11.20.16.36.25
+        by smtp.gmail.com with ESMTPSA id s1sm420756pgk.9.2019.11.20.16.36.28
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 20 Nov 2019 16:36:27 -0800 (PST)
+        Wed, 20 Nov 2019 16:36:29 -0800 (PST)
 From:   Kent Gibson <warthog618@gmail.com>
 To:     linux-gpio@vger.kernel.org, bgolaszewski@baylibre.com
 Cc:     Kent Gibson <warthog618@gmail.com>
-Subject: [libgpiod] [PATCH v2 04/14] bindings: cxx: tests: add tests for bias flags
-Date:   Thu, 21 Nov 2019 08:35:46 +0800
-Message-Id: <20191121003556.9020-5-warthog618@gmail.com>
+Subject: [libgpiod] [PATCH v2 05/14] bindings: python: add support for bias flags
+Date:   Thu, 21 Nov 2019 08:35:47 +0800
+Message-Id: <20191121003556.9020-6-warthog618@gmail.com>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191121003556.9020-1-warthog618@gmail.com>
 References: <20191121003556.9020-1-warthog618@gmail.com>
@@ -60,126 +60,151 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Extend test coverage over the bias flags in requests and the bias setting
-returned by line.bias().
+Add support for bias flags in line requests and returning the line bias
+setting via a bias accessor.
+
+Based on initial work by Drew Fustini <drew@pdp7.com>.
 
 Signed-off-by: Kent Gibson <warthog618@gmail.com>
 ---
- bindings/cxx/tests/tests-line.cpp | 87 +++++++++++++++++++++++++++++++
- 1 file changed, 87 insertions(+)
+ bindings/python/gpiodmodule.c | 82 +++++++++++++++++++++++++++++++++++
+ 1 file changed, 82 insertions(+)
 
-diff --git a/bindings/cxx/tests/tests-line.cpp b/bindings/cxx/tests/tests-line.cpp
-index fedaa05..9a0b488 100644
---- a/bindings/cxx/tests/tests-line.cpp
-+++ b/bindings/cxx/tests/tests-line.cpp
-@@ -52,6 +52,9 @@ TEST_CASE("Line information can be correctly retrieved", "[line]")
- 		REQUIRE(line.consumer().empty());
- 		REQUIRE_FALSE(line.is_requested());
- 		REQUIRE_FALSE(line.is_used());
-+		REQUIRE_FALSE(line.is_open_drain());
-+		REQUIRE_FALSE(line.is_open_source());
-+		REQUIRE(line.bias() == ::gpiod::line::BIAS_AS_IS);
- 	}
+diff --git a/bindings/python/gpiodmodule.c b/bindings/python/gpiodmodule.c
+index 2f6ef51..4723771 100644
+--- a/bindings/python/gpiodmodule.c
++++ b/bindings/python/gpiodmodule.c
+@@ -60,6 +60,9 @@ enum {
+ 	gpiod_LINE_REQ_FLAG_OPEN_DRAIN		= GPIOD_BIT(0),
+ 	gpiod_LINE_REQ_FLAG_OPEN_SOURCE		= GPIOD_BIT(1),
+ 	gpiod_LINE_REQ_FLAG_ACTIVE_LOW		= GPIOD_BIT(2),
++	gpiod_LINE_REQ_FLAG_BIAS_DISABLE	= GPIOD_BIT(3),
++	gpiod_LINE_REQ_FLAG_BIAS_PULL_DOWN	= GPIOD_BIT(4),
++	gpiod_LINE_REQ_FLAG_BIAS_PULL_UP	= GPIOD_BIT(5),
+ };
  
- 	SECTION("exported line")
-@@ -68,6 +71,9 @@ TEST_CASE("Line information can be correctly retrieved", "[line]")
- 		REQUIRE(line.active_state() == ::gpiod::line::ACTIVE_HIGH);
- 		REQUIRE(line.is_requested());
- 		REQUIRE(line.is_used());
-+		REQUIRE_FALSE(line.is_open_drain());
-+		REQUIRE_FALSE(line.is_open_source());
-+		REQUIRE(line.bias() == ::gpiod::line::BIAS_AS_IS);
- 	}
+ enum {
+@@ -72,6 +75,13 @@ enum {
+ 	gpiod_ACTIVE_LOW,
+ };
  
- 	SECTION("exported line with flags")
-@@ -88,6 +94,87 @@ TEST_CASE("Line information can be correctly retrieved", "[line]")
- 		REQUIRE(line.is_used());
- 		REQUIRE(line.is_open_drain());
- 		REQUIRE_FALSE(line.is_open_source());
-+		REQUIRE(line.bias() == ::gpiod::line::BIAS_AS_IS);
-+	}
++enum {
++	gpiod_BIAS_AS_IS = 1,
++	gpiod_BIAS_DISABLE,
++	gpiod_BIAS_PULL_UP,
++	gpiod_BIAS_PULL_DOWN,
++};
 +
-+	SECTION("exported open source line")
-+	{
-+		::gpiod::line_request config;
-+
-+		config.consumer = consumer.c_str();
-+		config.request_type = ::gpiod::line_request::DIRECTION_OUTPUT;
-+		config.flags = ::gpiod::line_request::FLAG_OPEN_SOURCE;
-+		line.request(config);
-+
-+		REQUIRE(line.offset() == 4);
-+		REQUIRE(line.name() == "gpio-mockup-A-4");
-+		REQUIRE(line.direction() == ::gpiod::line::DIRECTION_OUTPUT);
-+		REQUIRE(line.active_state() == ::gpiod::line::ACTIVE_HIGH);
-+		REQUIRE(line.is_requested());
-+		REQUIRE(line.is_used());
-+		REQUIRE_FALSE(line.is_open_drain());
-+		REQUIRE(line.is_open_source());
-+		REQUIRE(line.bias() == ::gpiod::line::BIAS_AS_IS);
-+	}
-+
-+	SECTION("exported bias disable line")
-+	{
-+		::gpiod::line_request config;
-+
-+		config.consumer = consumer.c_str();
-+		config.request_type = ::gpiod::line_request::DIRECTION_OUTPUT;
-+		config.flags = ::gpiod::line_request::FLAG_BIAS_DISABLE;
-+		line.request(config);
-+
-+		REQUIRE(line.offset() == 4);
-+		REQUIRE(line.name() == "gpio-mockup-A-4");
-+		REQUIRE(line.direction() == ::gpiod::line::DIRECTION_OUTPUT);
-+		REQUIRE(line.active_state() == ::gpiod::line::ACTIVE_HIGH);
-+		REQUIRE(line.is_requested());
-+		REQUIRE(line.is_used());
-+		REQUIRE_FALSE(line.is_open_drain());
-+		REQUIRE_FALSE(line.is_open_source());
-+		REQUIRE(line.bias() == ::gpiod::line::BIAS_DISABLE);
-+	}
-+
-+	SECTION("exported pull-down line")
-+	{
-+		::gpiod::line_request config;
-+
-+		config.consumer = consumer.c_str();
-+		config.request_type = ::gpiod::line_request::DIRECTION_OUTPUT;
-+		config.flags = ::gpiod::line_request::FLAG_BIAS_PULL_DOWN;
-+		line.request(config);
-+
-+		REQUIRE(line.offset() == 4);
-+		REQUIRE(line.name() == "gpio-mockup-A-4");
-+		REQUIRE(line.direction() == ::gpiod::line::DIRECTION_OUTPUT);
-+		REQUIRE(line.active_state() == ::gpiod::line::ACTIVE_HIGH);
-+		REQUIRE(line.is_requested());
-+		REQUIRE(line.is_used());
-+		REQUIRE_FALSE(line.is_open_drain());
-+		REQUIRE_FALSE(line.is_open_source());
-+		REQUIRE(line.bias() == ::gpiod::line::BIAS_PULL_DOWN);
-+	}
-+
-+	SECTION("exported pull-up line")
-+	{
-+		::gpiod::line_request config;
-+
-+		config.consumer = consumer.c_str();
-+		config.request_type = ::gpiod::line_request::DIRECTION_OUTPUT;
-+		config.flags = ::gpiod::line_request::FLAG_BIAS_PULL_UP;
-+		line.request(config);
-+
-+		REQUIRE(line.offset() == 4);
-+		REQUIRE(line.name() == "gpio-mockup-A-4");
-+		REQUIRE(line.direction() == ::gpiod::line::DIRECTION_OUTPUT);
-+		REQUIRE(line.active_state() == ::gpiod::line::ACTIVE_HIGH);
-+		REQUIRE(line.is_requested());
-+		REQUIRE(line.is_used());
-+		REQUIRE_FALSE(line.is_open_drain());
-+		REQUIRE_FALSE(line.is_open_source());
-+		REQUIRE(line.bias() == ::gpiod::line::BIAS_PULL_UP);
- 	}
+ enum {
+ 	gpiod_RISING_EDGE = 1,
+ 	gpiod_FALLING_EDGE,
+@@ -358,6 +368,34 @@ static PyObject *gpiod_Line_active_state(gpiod_LineObject *self,
+ 	return ret;
+ }
  
- 	SECTION("update line info")
++PyDoc_STRVAR(gpiod_Line_bias_doc,
++"bias() -> integer\n"
++"\n"
++"Get the bias setting of this GPIO line.");
++
++static PyObject *gpiod_Line_bias(gpiod_LineObject *self,
++				 PyObject *Py_UNUSED(ignored))
++{
++	int bias;
++
++	if (gpiod_ChipIsClosed(self->owner))
++		return NULL;
++
++	bias = gpiod_line_bias(self->line);
++
++	switch (bias) {
++	case GPIOD_LINE_BIAS_PULL_UP:
++		return Py_BuildValue("I", gpiod_BIAS_PULL_UP);
++	case GPIOD_LINE_BIAS_PULL_DOWN:
++		return Py_BuildValue("I", gpiod_BIAS_PULL_DOWN);
++	case GPIOD_LINE_BIAS_DISABLE:
++		return Py_BuildValue("I", gpiod_BIAS_DISABLE);
++	case GPIOD_LINE_BIAS_AS_IS:
++	default:
++		return Py_BuildValue("I", gpiod_BIAS_AS_IS);
++	}
++}
++
+ PyDoc_STRVAR(gpiod_Line_is_used_doc,
+ "is_used() -> boolean\n"
+ "\n"
+@@ -752,6 +790,12 @@ static PyMethodDef gpiod_Line_methods[] = {
+ 		.ml_flags = METH_NOARGS,
+ 		.ml_doc = gpiod_Line_active_state_doc,
+ 	},
++	{
++		.ml_name = "bias",
++		.ml_meth = (PyCFunction)gpiod_Line_bias,
++		.ml_flags = METH_NOARGS,
++		.ml_doc = gpiod_Line_bias_doc,
++	},
+ 	{
+ 		.ml_name = "is_used",
+ 		.ml_meth = (PyCFunction)gpiod_Line_is_used,
+@@ -1030,6 +1074,12 @@ static void gpiod_MakeRequestConfig(struct gpiod_line_request_config *conf,
+ 		conf->flags |= GPIOD_LINE_REQUEST_FLAG_OPEN_SOURCE;
+ 	if (flags & gpiod_LINE_REQ_FLAG_ACTIVE_LOW)
+ 		conf->flags |= GPIOD_LINE_REQUEST_FLAG_ACTIVE_LOW;
++	if (flags & gpiod_LINE_REQ_FLAG_BIAS_DISABLE)
++		conf->flags |= GPIOD_LINE_REQUEST_FLAG_BIAS_DISABLE;
++	if (flags & gpiod_LINE_REQ_FLAG_BIAS_PULL_DOWN)
++		conf->flags |= GPIOD_LINE_REQUEST_FLAG_BIAS_PULL_DOWN;
++	if (flags & gpiod_LINE_REQ_FLAG_BIAS_PULL_UP)
++		conf->flags |= GPIOD_LINE_REQUEST_FLAG_BIAS_PULL_UP;
+ }
+ 
+ PyDoc_STRVAR(gpiod_LineBulk_request_doc,
+@@ -2313,6 +2363,26 @@ static gpiod_ConstDescr gpiod_ConstList[] = {
+ 		.name = "ACTIVE_LOW",
+ 		.val = gpiod_ACTIVE_LOW,
+ 	},
++	{
++		.typeobj = &gpiod_LineType,
++		.name = "BIAS_AS_IS",
++		.val = gpiod_BIAS_AS_IS,
++	},
++	{
++		.typeobj = &gpiod_LineType,
++		.name = "BIAS_DISABLE",
++		.val = gpiod_BIAS_DISABLE,
++	},
++	{
++		.typeobj = &gpiod_LineType,
++		.name = "BIAS_PULL_UP",
++		.val = gpiod_BIAS_PULL_UP,
++	},
++	{
++		.typeobj = &gpiod_LineType,
++		.name = "BIAS_PULL_DOWN",
++		.val = gpiod_BIAS_PULL_DOWN,
++	},
+ 	{
+ 		.typeobj = &gpiod_LineEventType,
+ 		.name = "RISING_EDGE",
+@@ -2381,6 +2451,18 @@ static gpiod_ModuleConst gpiod_ModuleConsts[] = {
+ 		.name = "LINE_REQ_FLAG_ACTIVE_LOW",
+ 		.value = gpiod_LINE_REQ_FLAG_ACTIVE_LOW,
+ 	},
++	{
++		.name = "LINE_REQ_FLAG_BIAS_DISABLE",
++		.value = gpiod_LINE_REQ_FLAG_BIAS_DISABLE,
++	},
++	{
++		.name = "LINE_REQ_FLAG_BIAS_PULL_DOWN",
++		.value = gpiod_LINE_REQ_FLAG_BIAS_PULL_DOWN,
++	},
++	{
++		.name = "LINE_REQ_FLAG_BIAS_PULL_UP",
++		.value = gpiod_LINE_REQ_FLAG_BIAS_PULL_UP,
++	},
+ 	{ }
+ };
+ 
 -- 
 2.24.0
 
