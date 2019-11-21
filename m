@@ -2,53 +2,53 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 1A3F11053B4
-	for <lists+linux-gpio@lfdr.de>; Thu, 21 Nov 2019 14:58:28 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 79AEA1053E2
+	for <lists+linux-gpio@lfdr.de>; Thu, 21 Nov 2019 15:03:02 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726358AbfKUN61 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 21 Nov 2019 08:58:27 -0500
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:37040 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726293AbfKUN61 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 21 Nov 2019 08:58:27 -0500
-Received: by mail-lf1-f68.google.com with SMTP id b20so2730616lfp.4
-        for <linux-gpio@vger.kernel.org>; Thu, 21 Nov 2019 05:58:24 -0800 (PST)
+        id S1727110AbfKUOC6 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 21 Nov 2019 09:02:58 -0500
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:41013 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727040AbfKUOC6 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 21 Nov 2019 09:02:58 -0500
+Received: by mail-lj1-f194.google.com with SMTP id m4so3330977ljj.8
+        for <linux-gpio@vger.kernel.org>; Thu, 21 Nov 2019 06:02:57 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=9ipsO8G+PlO2JeZmN1j9JQktTUe14f3S/xNO/BSaKHA=;
-        b=FFn/lNT3eNa9HLPCugXk2CFK8XSrCw2Q+7P4ZQej4LCB7rKJUXdWNjtwR3lg46vbJ9
-         ekjkUl/89011Wv7dsQaZXtsLvAiBvBRJsku1OwDqJ/ajiQSFfXCVQ2YtBMNXiWstc8z7
-         6Zv84fCJKIOKfjZwEJL4gA7EaqU4mSisIm/wG/I+9xi9AO5KiRil6jnKcOvcNIsLZPVf
-         SkXW3YAlSSedRW2zcPMR4m42YiOhCW7jUfsSuuJ12qg/DeIRD4bWB3iW0jHdlOe2C8e+
-         PhTvdMjvJRd4gQAYT331DcJXD4aH+rr+mi1f4LaMBvM/IgJkt4C200DAheGPGDQyGVD7
-         hCyQ==
+        bh=/dp47ye1jpXPEBYtT1tzSaST9eQHtdYklix3PuaCBWE=;
+        b=f1cK463oeJX+zw/Ijd8FSqaHsAimkV1b0IPi/3QzcFEeJAll1DT3+lXoslRLmbD9US
+         W0KQNjDaFSDt05eec9MJMQjXhIUKlboCtCQqvxv4SMwyAAkYKyEK1N8m2KGe7JL1wIzn
+         D6/LfM3PFR0mOCAGwnVx+9idBnmIuqyE3zHpKPrRpIkbepYnLgQgyjGeP72cb7icu/1w
+         7KffVK/SGsrchmGqtnWts9R+Y055TESSkut4Bt1L0jH3QtLW0rq6pTvf1O26FljJH7cW
+         zKVCMjySH2kKNcm62FH73BiRi33ozwKElCH9HhxYlUFQbNcuyqK8usRvUwFpNBdK3rVP
+         cyOg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=9ipsO8G+PlO2JeZmN1j9JQktTUe14f3S/xNO/BSaKHA=;
-        b=FBwOfPwn0yTmkhOKXJxJI6jZy6gKelo2hN5n8Q5aQGiMCvdsnzhLRIttPFFA/jgObJ
-         /5c2SyD1VA0t6/g2NCBCuYZqywDHsZI944F6rDOjtsbBEcqCPwca+XX+j9YRnYf+7i7P
-         6w1u6Q2UqMHS1uEgRxQkap1DTfqQwEyALdLgyF4rPyh3HEL/2bQGfSQJkmU1DIYlqa/F
-         /Yf1ljy6Lf46cr7gYYNedXAU5O0PvkDofAO+C1mIPbDRWlf3zggrvXcV+hvsYE0umtll
-         s/YvAFod8XUqlby5S4hD6hQNdN4DMD23FjXa/sA4pWs4EDIO2hrQDGuWzfyq7mVuBXEd
-         87XQ==
-X-Gm-Message-State: APjAAAV9wfTxovLMR3v+VgdxvuIopbwjkvqYogR6/JSlBK/iq3qTu8WM
-        UY9TDri2AueORg6QTtj8dB6S5CJMZ9618T6IOFqeTQ==
-X-Google-Smtp-Source: APXvYqyzFNUbbK4bWroWSfdZK68o4Prh66O+riboAPwxuhp9udva1x9wr9B1DfDo0YpMKvqWbnYFd95PRanCE2vJO4o=
-X-Received: by 2002:ac2:4945:: with SMTP id o5mr7456154lfi.93.1574344703644;
- Thu, 21 Nov 2019 05:58:23 -0800 (PST)
+        bh=/dp47ye1jpXPEBYtT1tzSaST9eQHtdYklix3PuaCBWE=;
+        b=G4wieZ41gcFF/guoanFhqyFWoq7Y39ouIhMaO1mrL+UXQj8KxfrxuDMRGs8ZQ4orPE
+         J/ZztapowZZrrLn0zhry28dVjVTxtzKiz+V/sNbF+Ezm6Gjv2u6+K8PHa6GJf2vtu8IV
+         mXG8b8ZXKVkzV0wismOCHSXO+xWxUBxJaQWfYL1Xw0WT64T1reb57luCdZjcoSJPW759
+         B0iVSthRUBZ6GBbJ7ezAW/NIi4PzBKa6XCe5qvGhvWzQ0UmTorPXMU1TgJ9Xpn0NhZNO
+         R5jx7LX/7Pm7xbqrBqkkupbPDm4YMz9J6VuXG7nUlEyvqpMU6ox/eRhaVJMk/PL6lzaa
+         yKSw==
+X-Gm-Message-State: APjAAAWsQhX91kA+gJzcyWuZSBnGzPbzE69kGPZFweRXYFKNxWEdRB06
+        01wQXZbOVULjqulh3v+Tf6e/BRHklfLrtNbB8gKhtg==
+X-Google-Smtp-Source: APXvYqxEgtrJZOOBZnidPPbY4KG7L2631lgrobQbArJbvChwOmenejXbC13NkxAFjaOdceqs3okTqOxsA2bM/47Hxcg=
+X-Received: by 2002:a2e:9699:: with SMTP id q25mr7586649lji.251.1574344976478;
+ Thu, 21 Nov 2019 06:02:56 -0800 (PST)
 MIME-Version: 1.0
-References: <20191118135258.37574-1-andriy.shevchenko@linux.intel.com>
-In-Reply-To: <20191118135258.37574-1-andriy.shevchenko@linux.intel.com>
+References: <20191118180251.31439-1-andriy.shevchenko@linux.intel.com>
+In-Reply-To: <20191118180251.31439-1-andriy.shevchenko@linux.intel.com>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Thu, 21 Nov 2019 14:58:12 +0100
-Message-ID: <CACRpkdZ7XyMH8n6BnZQgkSt+fFW+MzHjiRkRpE01BW82r0DJuw@mail.gmail.com>
-Subject: Re: [PATCH v1] MAINTAINERS: Replace my email by one @kernel.org
+Date:   Thu, 21 Nov 2019 15:02:44 +0100
+Message-ID: <CACRpkdYUxwhf_qNpDTyhdy9_A119yE3NaKshwg_eJhJ41M_dTg@mail.gmail.com>
+Subject: Re: [PATCH v1] gpio: lynxpoint: Setup correct IRQ handlers
 To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     Mika Westerberg <mika.westerberg@linux.intel.com>,
+Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
@@ -56,15 +56,23 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Nov 18, 2019 at 2:53 PM Andy Shevchenko
+On Mon, Nov 18, 2019 at 7:02 PM Andy Shevchenko
 <andriy.shevchenko@linux.intel.com> wrote:
 
-> For the repositories we keep on git.kernel.org replace my email
-> to be on the same domain for sake of consistency.
+> When commit 75e99bf5ed8f ("gpio: lynxpoint: set default handler to be
+> handle_bad_irq()") switched default handler to be handle_bad_irq() the
+> lp_irq_type() function remained untouched. It means that even request_irq()
+> can't change the handler and we are not able to handle IRQs properly anymore.
+> Fix it by setting correct handlers in the lp_irq_type() callback.
 >
+> Fixes: 75e99bf5ed8f ("gpio: lynxpoint: set default handler to be handle_bad_irq()")
 > Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-Patch applied.
+Patch applied!
+This close to the merge window it is better if I just apply stuff
+I think.
+
+Thanks for your hard work on this!
 
 Yours,
 Linus Walleij
