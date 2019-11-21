@@ -2,186 +2,145 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 6149F104CD4
-	for <lists+linux-gpio@lfdr.de>; Thu, 21 Nov 2019 08:46:29 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C7426104DCD
+	for <lists+linux-gpio@lfdr.de>; Thu, 21 Nov 2019 09:26:31 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727007AbfKUHq1 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 21 Nov 2019 02:46:27 -0500
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:42620 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726858AbfKUHq1 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 21 Nov 2019 02:46:27 -0500
-Received: by mail-pl1-f193.google.com with SMTP id j12so1177402plt.9
-        for <linux-gpio@vger.kernel.org>; Wed, 20 Nov 2019 23:46:26 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=v6/XEfMvJz2+57Ver1QqCf40bLCCbRj2C9rdZogouyg=;
-        b=HQkub81qO2aI8DsaqTa/wUcS4vd8xb5q26M0BftVXH4C0ZVpDYXkDxEJvFrmx0E1Sh
-         LxRT22LLpJVTVxi1etmzBsID4O4Bmfi7rTs1SsfjO9TnXufib+w9ujkU18Q2oOu/w2Ls
-         6g6HuVAlragRVgO9oWo0Arn9O2UjiV4a9yoSsmOGVQvZoy6Wnys/0UN+szkOntRrTGub
-         F5JArnH9Q/JChOwMVYuACrUG96aTQWv1lI1uPJKG81s7wpdhHYHWHyFqT3ItmlSIkQfQ
-         HoGutB3AK6XJsFQOaJoCMjX34fgUBoCGKSrHwjojV6wZfziA5MHC3EUgAt4qo9pIi3dt
-         UZVA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=v6/XEfMvJz2+57Ver1QqCf40bLCCbRj2C9rdZogouyg=;
-        b=VGgwWCzyvxJAoVGsfbGjf0V6spANZyumeVaiuK5jf6YcDFwpWkEVn5L85aPYg4IV3M
-         53KJfwEtn2eHDNkBMFhV/U4gaB7Elv43ywd2BNwTMZFw3j2n4B9RTJ5ayZIUM3a3+yXr
-         6z2rnJQESwtHOCjaoOeeuPlbPKRwj7L1vRm/RhkbfL3x9ddBjg03cHdzxs9Rxmd6ThUW
-         VkIpo0pTbycMvzQEJIONQaY1CklrpsNIYVAkXpnkijiG4SBkj+gjyjZi+wzY9vWpdFMT
-         +PQEPlybf3JIO2GyU9mb242juPgi8esGe1x8+0Rm1/zFF4gkyIqkR+ZAhAMTz3gAuvAy
-         JlTQ==
-X-Gm-Message-State: APjAAAUcrviWqleVIlvqiLuU/QGea26jQ/d29m57I9cJYmIDv8WIr2U1
-        qmRZoxzYTohFudZZt47UFXWE4AR6k4U=
-X-Google-Smtp-Source: APXvYqzyQQNu15x5tiDWBHhMFmXvpZ5aBMnctYtHAejGxBtE5WT7HL0GYq6Y7f78CvtaYWDgmzbO6A==
-X-Received: by 2002:a17:90a:634a:: with SMTP id v10mr9684500pjs.4.1574322386165;
-        Wed, 20 Nov 2019 23:46:26 -0800 (PST)
-Received: from sol (220-235-109-115.dyn.iinet.net.au. [220.235.109.115])
-        by smtp.gmail.com with ESMTPSA id w7sm2041793pfb.101.2019.11.20.23.46.23
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 20 Nov 2019 23:46:25 -0800 (PST)
-Date:   Thu, 21 Nov 2019 15:46:21 +0800
-From:   Kent Gibson <warthog618@gmail.com>
-To:     Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        linux-gpio <linux-gpio@vger.kernel.org>
-Subject: Re: [libgpiod] [PATCH 11/19] API: add support for SET_CONFIG
-Message-ID: <20191121074621.GA17026@sol>
-References: <20191119155249.GA20834@sol>
- <CAMRc=MeG2FJeKVdKSywOT3271jA_sDfcPNHe4BzyiEgxRKtKBg@mail.gmail.com>
- <20191120135857.GA4218@sol>
- <CAMRc=McNdcaLJKG3TRvX08Ddwmi-V9AJUDG5zmBgqL8bwjCSYg@mail.gmail.com>
- <20191120141353.GA5154@sol>
- <CAMRc=MdWj_+kd2wGUoRVRSd+kq597h-jetiHMwRiOvuUi8qRQQ@mail.gmail.com>
- <20191120143644.GA5865@sol>
- <CAMRc=Mex6M9Mmke9ajgLcpy4-Th+GOhycjeEiM+5PMBvmA+Apw@mail.gmail.com>
- <20191121003443.GA7695@sol>
- <CAMRc=MebbS86gvXytYrCBOyNVr74fTiVXG+NP0sx0F6SkAL_+A@mail.gmail.com>
+        id S1726265AbfKUI02 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 21 Nov 2019 03:26:28 -0500
+Received: from mail-eopbgr790074.outbound.protection.outlook.com ([40.107.79.74]:10435
+        "EHLO NAM03-CO1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726170AbfKUI02 (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Thu, 21 Nov 2019 03:26:28 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=CML7GUZk99wddAzTZgJK0AaDnNwvapOsIHhdhQFxSLOZ8yxALndivk+YIXO4pnhV3CbIzXcDCB9XFcNEX8CDIia+9Pxh/G3fwFCdG1KatuhpSsf3cbjgNRqtNU8Nc+EgrQ6plPIm0g5HACmsN9GnXEL60i+fxjhKqyS7bls71G5i5NhmW2aEVhsxf4mDtxaWNi+K/+cp4JhpqoPmOOeKY2gavalM2yjJwWwbWz4Vrbl9Ny0W9WlYrRTVVQzNqGuJ+nyYDrUBNOMWYKuC8jtOUeWp4iMSMtbA9qVTHB/ISr1ZJprG4jF0ht1M+puTCYWbqolzVAXpiZQsB6k72MplNQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=lU9cWMIPiYHwVyQUUrfkQYj1anBgZAlTDlv6URNbx+U=;
+ b=Lk4+5eVZ9ITSwnsoj/dG+twZWL11pxc0gzdXtnyu5p4RfRQzmOcnxIGZrwO23jPBuWcq8IaRR1Qq3KdqBazdvLYNvIOV7lWGukOV3cMsu0ayen3EY1XYsClUcRQkzhy7Z9abUscVmgPjRmIEnvWiNOihBb//wQ0BNbEret9FZv+Xz8UShvH9NCS7+cCXguDS11SZlLfRjYCVLlT7HEl63UkVdP6JUXzIpjKSy6+E90MWJo+6iiJDNkQo+ryczIvPZ40Da7wgi+57syVGQY83bB9L4M4R+t9ec7nro6pllv5zeN9W5iCnTcdl5hDvUw6qNi274r69aTAkx+q9zkYTZA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=sifive.com; dmarc=pass action=none header.from=sifive.com;
+ dkim=pass header.d=sifive.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sifive.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=lU9cWMIPiYHwVyQUUrfkQYj1anBgZAlTDlv6URNbx+U=;
+ b=tK7wnDUNLL4B2fVPf0VYXdRyqZh9wAYb7E9FAoOyNxjIgv7AinVc6g708Xlmm+5GBECGHEDlrdSXFpzCRYLwi4jCQiqG3lhjkLKr4AqEzsdB4PSqdx1IrBq91lVERT3bFYjJtxoyDndYEnn4VWILnNvwE95NQcACqLgOH8u0mVs=
+Received: from CH2PR13MB3368.namprd13.prod.outlook.com (52.132.246.90) by
+ CH2PR13MB3622.namprd13.prod.outlook.com (20.180.4.210) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2474.7; Thu, 21 Nov 2019 08:26:24 +0000
+Received: from CH2PR13MB3368.namprd13.prod.outlook.com
+ ([fe80::853e:1256:311e:d29]) by CH2PR13MB3368.namprd13.prod.outlook.com
+ ([fe80::853e:1256:311e:d29%7]) with mapi id 15.20.2474.018; Thu, 21 Nov 2019
+ 08:26:24 +0000
+From:   Yash Shah <yash.shah@sifive.com>
+To:     Andreas Schwab <schwab@suse.de>
+CC:     "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
+        "bgolaszewski@baylibre.com" <bgolaszewski@baylibre.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "palmer@dabbelt.com" <palmer@dabbelt.com>,
+        "Paul Walmsley ( Sifive)" <paul.walmsley@sifive.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "aou@eecs.berkeley.edu" <aou@eecs.berkeley.edu>,
+        "jason@lakedaemon.net" <jason@lakedaemon.net>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        "maz@kernel.org" <maz@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "atish.patra@wdc.com" <atish.patra@wdc.com>,
+        Sagar Kadam <sagar.kadam@sifive.com>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "bmeng.cn@gmail.com" <bmeng.cn@gmail.com>,
+        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
+        Sachin Ghadi <sachin.ghadi@sifive.com>
+Subject: RE: [PATCH v2 5/5] riscv: dts: Add DT support for SiFive FU540 GPIO
+ driver
+Thread-Topic: [PATCH v2 5/5] riscv: dts: Add DT support for SiFive FU540 GPIO
+ driver
+Thread-Index: AQHVn3AcQeUBZ0Ytu0eVtL/jFebGtqeTxthcgAGEqlA=
+Date:   Thu, 21 Nov 2019 08:26:23 +0000
+Message-ID: <CH2PR13MB3368B53AE4978141B463A1418C4E0@CH2PR13MB3368.namprd13.prod.outlook.com>
+References: <1574233128-28114-1-git-send-email-yash.shah@sifive.com>
+        <1574233128-28114-6-git-send-email-yash.shah@sifive.com>
+ <mvmlfsaoqp3.fsf@suse.de>
+In-Reply-To: <mvmlfsaoqp3.fsf@suse.de>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=yash.shah@sifive.com; 
+x-originating-ip: [114.143.65.226]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 1cd3682b-b9cc-4e31-b7e6-08d76e5c7ee0
+x-ms-traffictypediagnostic: CH2PR13MB3622:
+x-ld-processed: 22f88e9d-ae0d-4ed9-b984-cdc9be1529f1,ExtAddr
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <CH2PR13MB3622C5A58B9702FFDD43C1EA8C4E0@CH2PR13MB3622.namprd13.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:3631;
+x-forefront-prvs: 0228DDDDD7
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(6029001)(39850400004)(346002)(376002)(366004)(396003)(136003)(13464003)(199004)(189003)(446003)(102836004)(6436002)(478600001)(53546011)(6506007)(14454004)(11346002)(66446008)(66476007)(64756008)(66946007)(9686003)(66066001)(55016002)(26005)(4326008)(66556008)(44832011)(186003)(107886003)(3846002)(6246003)(229853002)(6116002)(8676002)(7736002)(8936002)(6916009)(33656002)(99286004)(2906002)(81156014)(81166006)(7416002)(305945005)(54906003)(256004)(316002)(25786009)(76176011)(5660300002)(71190400001)(71200400001)(7696005)(76116006)(52536014)(74316002)(86362001);DIR:OUT;SFP:1101;SCL:1;SRVR:CH2PR13MB3622;H:CH2PR13MB3368.namprd13.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: sifive.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: w3GIV36VhljK/osjGAy0eLVPUX4q63abjzJSkhTor5azxJ7q5t/uriAXIScmKoZtSJry/fJgjvzcvjznSm1+KYuEanPCdVzVqXEv+oUVlmHRhGFH8asrBVM5y+lL/W+G6WP/VQtEN1K0lri1pbKEFXV7geQthOYUujefzBKrRK4VuesZyPh4xAluEyB/1WoK63RTKNdPye2sPrDHJGpDwTCWQtvzLrtGAjjawcQsVM0+7vyQRVkOYkX4in71sW31+9VxaOAxnidTgJEYZxu1ed5pXSwUCYOHRAnuNAQvTbA3RDh2SgE6f5k3BhTj+tZs5OtENwd0GDrr566MQp6e8fI0AEFm6445uagQmcCRY3acc08d9nJ+eA3cJttkVFBZZUZMlIy9THPQQl9FKDZaA+T3Q5ODcDKbjS0rHhbGLFip7Xfbpmo+7R4fIVdUopzt
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAMRc=MebbS86gvXytYrCBOyNVr74fTiVXG+NP0sx0F6SkAL_+A@mail.gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+X-OriginatorOrg: sifive.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 1cd3682b-b9cc-4e31-b7e6-08d76e5c7ee0
+X-MS-Exchange-CrossTenant-originalarrivaltime: 21 Nov 2019 08:26:23.9288
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 22f88e9d-ae0d-4ed9-b984-cdc9be1529f1
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: arigcGFqJ2BvWXXIZxmyo/FsleuY2vE+DqFKZXvynEAi3SNrSoLGikLaQOMtbnneeBCsBjaG2yeQCC/gBSyDZw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR13MB3622
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Nov 21, 2019 at 08:13:42AM +0100, Bartosz Golaszewski wrote:
-> czw., 21 lis 2019 o 01:34 Kent Gibson <warthog618@gmail.com> napisał(a):
-> >
-> > On Wed, Nov 20, 2019 at 04:18:24PM +0100, Bartosz Golaszewski wrote:
-> > > śr., 20 lis 2019 o 15:36 Kent Gibson <warthog618@gmail.com> napisał(a):
-> > > >
-> > > > On Wed, Nov 20, 2019 at 03:18:36PM +0100, Bartosz Golaszewski wrote:
-> > > > > śr., 20 lis 2019 o 15:13 Kent Gibson <warthog618@gmail.com> napisał(a):
-> > > > > >
-> > > > > > On Wed, Nov 20, 2019 at 03:08:57PM +0100, Bartosz Golaszewski wrote:
-> > > > > > > śr., 20 lis 2019 o 14:59 Kent Gibson <warthog618@gmail.com> napisał(a):
-> > > > > > > >
-> > > > > > > > On Wed, Nov 20, 2019 at 12:00:45PM +0100, Bartosz Golaszewski wrote:
-> > > > > > > > > wt., 19 lis 2019 o 16:53 Kent Gibson <warthog618@gmail.com> napisał(a):
-> > > > > > > > > >
-> > > > > > > > > > On Mon, Nov 18, 2019 at 10:48:25PM +0800, Kent Gibson wrote:
-> > > > > > > > > > > On Mon, Nov 18, 2019 at 02:52:04PM +0100, Bartosz Golaszewski
-> > > > > > > > > > > > > +
-> > > > > > > > > > > > > +int gpiod_line_set_flags_bulk(struct gpiod_line_bulk *bulk, int flags)
-> > > > > > > > > > > > > +{
-> > > > > > > > > > > > > +       struct gpiod_line *line;
-> > > > > > > > > > > > > +       int values[GPIOD_LINE_BULK_MAX_LINES];
-> > > > > > > > > > > > > +       unsigned int i;
-> > > > > > > > > > > > > +       int direction;
-> > > > > > > > > > > > > +
-> > > > > > > > > > > > > +       line = gpiod_line_bulk_get_line(bulk, 0);
-> > > > > > > > > > > > > +       if (line->as_is) {
-> > > > > > > > > > > >
-> > > > > > > > > > > > Can you explain the purpose of this as_is field? I'm not sure this is
-> > > > > > > > > > > > really needed.
-> > > > > > > > > > > >
-> > > > > > > > > > >
-> > > > > > > > > > > It is there for gpiod_set_flags, which has to populate the direction
-> > > > > > > > > > > flags in the SET_CONFIG ioctl. The existing line->direction is
-> > > > > > > > > > > either input or output.  It is drawn from GPIOLINE_FLAG_IS_OUT, so
-> > > > > > > > > > > as-is is gets mapped to input.
-> > > > > > > > > > > I didn't want to change the existing line->direction, and adding the
-> > > > > > > > > > > as-is seemed clearer than adding another flavour of direction that
-> > > > > > > > > > > contained all three.
-> > > > > > > > > > >
-> > > > > > > > > >
-> > > > > > > > > > Hmmm, I think I see what you were getting at - the line->direction is the
-> > > > > > > > > > direction from the kernel, so it doesn't hurt to use that value to set the
-> > > > > > > > > > corresponding request flags - even if the original request was as-is??
-> > > > > > > > > >
-> > > > > > > > > > If that is the case then the line->as_is can be dropped throughout.
-> > > > > > > > > >
-> > > > > > > > > > Kent.
-> > > > > > > > > >
-> > > > > > > > >
-> > > > > > > > > Yes, this is what I was thinking. Just need to make sure the value
-> > > > > > > > > from the kernel is up-to-date.
-> > > > > > > > >
-> > > > > > > >
-> > > > > > > > So fail if needs_update?
-> > > > > > > >
-> > > > > > > > Kent.
-> > > > > > >
-> > > > > > > I'd say: do an implicit update before setting config.
-> > > > > > >
-> > > > > >
-> > > > > > So gpiod_line_update if needs_update, and fail if that fails?
-> > > > > >
-> > > > > > Kent.
-> > > > >
-> > > > > Without the if - needs_update is only set if an implicit update fails
-> > > > > in line_maybe_update(). But in this case we need to be sure, so do it
-> > > > > unconditionally.
-> > > > >
-> > > >
-> > > > Given that line_maybe_update is called at the end of request creation, and
-> > > > whenever set_config is called, how can line->direction be inconsistent
-> > > > with the kernel state - as long as needs_update is false?
-> > > >
-> > >
-> > > I don't think we should call line_maybe_update() on set_config() - in
-> > > this case we should call gpiod_line_update() and fail in set_config()
-> > > if it fails.
-> > >
-> > > I hope that's clearer.
-> > >
-> >
-> > Not really.  I was already shaky on the needs_update and I'm getting more
-> > confused about the overall needs_update handling policy by the minute.
-> >
-> 
-> Yeah it's not optimal. If you have better ideas on how to handle the
-> fact that the kernel can't really notify us about the changes in
-> line's flags introduced by other processes - I'll be more than glad to
-> give them a try. At some point I was thinking about another ioctl()
-> that - for a requested line - would return a file descriptor which
-> would emit events when a line changes - for instance, it's requested
-> by someone else or its direction is changed etc.
-> 
 
-I didn't realise it was possible for a requested line's flags to be
-changed by other processes.  Quite the opposite - I thought that was one
-of the reasons for GPIOD was to allow the userspace to prevent other from
-processes messing with requested lines.
 
-Kent.
+> -----Original Message-----
+> From: Andreas Schwab <schwab@suse.de>
+> Sent: 20 November 2019 14:44
+> To: Yash Shah <yash.shah@sifive.com>
+> Cc: linus.walleij@linaro.org; bgolaszewski@baylibre.com;
+> robh+dt@kernel.org; mark.rutland@arm.com; palmer@dabbelt.com; Paul
+> Walmsley ( Sifive) <paul.walmsley@sifive.com>;
+> devicetree@vger.kernel.org; aou@eecs.berkeley.edu;
+> jason@lakedaemon.net; linux-gpio@vger.kernel.org; maz@kernel.org; linux-
+> kernel@vger.kernel.org; atish.patra@wdc.com; Sagar Kadam
+> <sagar.kadam@sifive.com>; tglx@linutronix.de; bmeng.cn@gmail.com;
+> linux-riscv@lists.infradead.org; Sachin Ghadi <sachin.ghadi@sifive.com>
+> Subject: Re: [PATCH v2 5/5] riscv: dts: Add DT support for SiFive FU540 G=
+PIO
+> driver
+>=20
+> On Nov 20 2019, Yash Shah wrote:
+>=20
+> > diff --git a/arch/riscv/boot/dts/sifive/hifive-unleashed-a00.dts
+> > b/arch/riscv/boot/dts/sifive/hifive-unleashed-a00.dts
+> > index 88cfcb9..609198c 100644
+> > --- a/arch/riscv/boot/dts/sifive/hifive-unleashed-a00.dts
+> > +++ b/arch/riscv/boot/dts/sifive/hifive-unleashed-a00.dts
+> > @@ -94,3 +94,7 @@
+> >  &pwm1 {
+> >  	status =3D "okay";
+> >  };
+> > +
+> > +&gpio {
+> > +	status =3D "okay";
+> > +};
+>=20
+> How about adding a gpio-restart?
 
-> I then thought that nobody is requesting this yet and so it may be overkill.
-> 
-> Bart
-> 
-> > Perhaps it will be more productive to go to the code.
-> > I'll send out what I have as v2 and we can go from there.
-> >
-> > Cheers,
-> > Kent.
+I am planning to add it in a separate patch.
+
+- Yash
+
