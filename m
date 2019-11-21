@@ -2,248 +2,232 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id C4317104FF4
-	for <lists+linux-gpio@lfdr.de>; Thu, 21 Nov 2019 11:04:28 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B365410504F
+	for <lists+linux-gpio@lfdr.de>; Thu, 21 Nov 2019 11:18:26 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727051AbfKUKDp (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 21 Nov 2019 05:03:45 -0500
-Received: from mail-io1-f67.google.com ([209.85.166.67]:38063 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726614AbfKUKDp (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 21 Nov 2019 05:03:45 -0500
-Received: by mail-io1-f67.google.com with SMTP id u24so984678iob.5
-        for <linux-gpio@vger.kernel.org>; Thu, 21 Nov 2019 02:03:44 -0800 (PST)
+        id S1726342AbfKUKSR (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 21 Nov 2019 05:18:17 -0500
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:42585 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726165AbfKUKSR (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 21 Nov 2019 05:18:17 -0500
+Received: by mail-pl1-f195.google.com with SMTP id j12so1350438plt.9
+        for <linux-gpio@vger.kernel.org>; Thu, 21 Nov 2019 02:18:14 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=Y3Z0zDVlTPlNhNJ5RUPyFqzaLbtvM/FHVTTZSw7nDKw=;
-        b=fkxHr5C6PGf4JEPkxvECkXuYO0fmpPV1j1DXQODelAV045gsU/awCJtHC/I93icdJd
-         Q9teSeQHHh+Q9zMo0dTcy2UUnYxpVupsqsy7/m3zxLZc9kwTX3xKFYOJkr+VzxxmQvaF
-         eJ9F01DTdKNwWgdSguXIEVevuDSXEeJOF4IYBJK9uDW1o83Z+YICci87VEJhCxyJINbP
-         wL1BPMjwLsOpPE29Sj9/GU59nmHpfYpUfM0WtZEnztydiyE/Ro6vi5VkDegzoypCB6oC
-         zk81DS9scklAntn5g7puIjU8jbLLJzSqm68aT7X+MgCzbQWKTc9UGr6MbZ/CRatH7IrD
-         xtBA==
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=SZVnmO59ObLcoGH1DQAICEjqylxMm+y5Kvl+2X/07PM=;
+        b=iZHWAINNOrzhtuw9X/qBPixZkBXLHquJVQ1w5XwUfo6Ev/xWGni3/kIu65OU6Qxe9L
+         nFoohmV+X4VIt2E1ostsWGrsavufyUK64PSmiA/Thvyu/Mn7BkDex57rCyLRkipvaOUf
+         3BpKh0895pjATuqFZiZUNLziOxQ8k0Ljd6TDXoyocCVJKgn2bUGmeA0gMKaEPkeG84bn
+         M9/afU1L7tArCuPE78x+30mrQ3sBTqxc57IWdh9MMk+p2Fxuu9eppjS4IsONff+PXsWJ
+         LubtT6rQMrNOiazIleuDLUwPbgH2gPOSkDkfkb0WGElIYqxxUypNi5pFH4sS7uq2yfye
+         m5hw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=Y3Z0zDVlTPlNhNJ5RUPyFqzaLbtvM/FHVTTZSw7nDKw=;
-        b=OTojw1Rb5wrL+/OVGrEZomzGwlaqi51bjTeClQ2fRUGmT5ICIkEkzlcp56RrlWwI8P
-         okguKcW/fQpepvRB/1YZNDB8i3B2M/tQsomDSoSe0CaP6HkRL4gEFHgXmzd5GpEdPBvq
-         O3MC/CPNssRooc5DSX3AKLOPTA1xFaUdHxSd7175zrhWkEqSsTs5fKhIWvsOeENk58AL
-         TZmMn6ynwxyMe6Ij0Fm/FHFNN36Bw03ZpdtiK+3BESvCHj0AZ7bTqyct7xjkQFvLNEuw
-         9yWOzbEkWtba8K4gSQJH/5rSfoW39Nqp7VtoZMkj19DMaHC4X+YAjtagwrLew751Ru94
-         C0vQ==
-X-Gm-Message-State: APjAAAXHGhDrqAPFlRGAVS3Y7bS7nZR/JKeKPvwqTIUSNv0X5w1k7bj3
-        Do1Ot7jgLj1VeGEo2+eq3JeXnAePWHzoxkMYU/DOMmTC8nw=
-X-Google-Smtp-Source: APXvYqzZ42F4P/nuyToJw+4wS4HCT4XYRovA5M/bCk8ivmHpDKJS1AcEDoMgVu32MdUV51O5yW+BVKEHwyobIZlSh5M=
-X-Received: by 2002:a6b:18c1:: with SMTP id 184mr6821240ioy.40.1574330623919;
- Thu, 21 Nov 2019 02:03:43 -0800 (PST)
-MIME-Version: 1.0
-References: <20191120135857.GA4218@sol> <CAMRc=McNdcaLJKG3TRvX08Ddwmi-V9AJUDG5zmBgqL8bwjCSYg@mail.gmail.com>
- <20191120141353.GA5154@sol> <CAMRc=MdWj_+kd2wGUoRVRSd+kq597h-jetiHMwRiOvuUi8qRQQ@mail.gmail.com>
- <20191120143644.GA5865@sol> <CAMRc=Mex6M9Mmke9ajgLcpy4-Th+GOhycjeEiM+5PMBvmA+Apw@mail.gmail.com>
- <20191121003443.GA7695@sol> <CAMRc=MebbS86gvXytYrCBOyNVr74fTiVXG+NP0sx0F6SkAL_+A@mail.gmail.com>
- <20191121074621.GA17026@sol> <CAMRc=MeOAsOU4PVuUd1CPVLhcTWaj_e7AzQSi4u-m3Gf9m3xqQ@mail.gmail.com>
- <20191121093030.GA19142@sol>
-In-Reply-To: <20191121093030.GA19142@sol>
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Thu, 21 Nov 2019 11:03:32 +0100
-Message-ID: <CAMRc=Mcy2yNCZOvX5GN-yped1ZXo13bvvk04S-EyfARpGBcRMQ@mail.gmail.com>
-Subject: Re: [libgpiod] [PATCH 11/19] API: add support for SET_CONFIG
-To:     Kent Gibson <warthog618@gmail.com>
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=SZVnmO59ObLcoGH1DQAICEjqylxMm+y5Kvl+2X/07PM=;
+        b=M3rR/SrYX/sSPRbHDsyyc8RPbpZ8xzon9JAgeKJ0DyJcW7vwaAjRjeD1bQcO93o5F1
+         jRMjFvxQtepxa01kvKEoMciQnXriWeMB1XqpAm/yLtsTyCDhPdAiz0T4FfvZlqNRNmQ4
+         UP4ArHySZJMa+nKE7846kCzwGC+MATxRHWFHbMd4Vf8x/rdJxIQirj/3nogpiQuYh1Hd
+         3tRi4sWDM+nz9TUO0wjkRhWDDQtClFWINTkcACDJY7xdCbDZh96kEs3L2hmR2eliWiqq
+         xmGkwJqTj1xqful1d5WbMkVjGHhn0XPX3q9xs16Btg58NryX2H1a7t4p7k7GmHY499rR
+         gJkA==
+X-Gm-Message-State: APjAAAXkEQq/FBqueWQKe6MOXxgG6PUZgcpJvjXmWfFfTIv8TQzRwGrz
+        6JLxDhZnSn+JDfkIthLH7MNv8UGJ+4I=
+X-Google-Smtp-Source: APXvYqzTdd3NnjgPbx6syVesXiKNXm1APaz1NdnB6uMyWTnsR/hNDfPMVtaYKkfXKitXYifZT9UJvw==
+X-Received: by 2002:a17:90a:3746:: with SMTP id u64mr10322846pjb.4.1574331494020;
+        Thu, 21 Nov 2019 02:18:14 -0800 (PST)
+Received: from sol (220-235-109-115.dyn.iinet.net.au. [220.235.109.115])
+        by smtp.gmail.com with ESMTPSA id b5sm3029938pfp.149.2019.11.21.02.18.11
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 21 Nov 2019 02:18:13 -0800 (PST)
+Date:   Thu, 21 Nov 2019 18:18:08 +0800
+From:   Kent Gibson <warthog618@gmail.com>
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
 Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
         linux-gpio <linux-gpio@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Subject: Re: [libgpiod] [PATCH 11/19] API: add support for SET_CONFIG
+Message-ID: <20191121101808.GA20627@sol>
+References: <20191120141353.GA5154@sol>
+ <CAMRc=MdWj_+kd2wGUoRVRSd+kq597h-jetiHMwRiOvuUi8qRQQ@mail.gmail.com>
+ <20191120143644.GA5865@sol>
+ <CAMRc=Mex6M9Mmke9ajgLcpy4-Th+GOhycjeEiM+5PMBvmA+Apw@mail.gmail.com>
+ <20191121003443.GA7695@sol>
+ <CAMRc=MebbS86gvXytYrCBOyNVr74fTiVXG+NP0sx0F6SkAL_+A@mail.gmail.com>
+ <20191121074621.GA17026@sol>
+ <CAMRc=MeOAsOU4PVuUd1CPVLhcTWaj_e7AzQSi4u-m3Gf9m3xqQ@mail.gmail.com>
+ <20191121093030.GA19142@sol>
+ <CAMRc=Mcy2yNCZOvX5GN-yped1ZXo13bvvk04S-EyfARpGBcRMQ@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAMRc=Mcy2yNCZOvX5GN-yped1ZXo13bvvk04S-EyfARpGBcRMQ@mail.gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-czw., 21 lis 2019 o 10:30 Kent Gibson <warthog618@gmail.com> napisa=C5=82(a=
-):
->
-> On Thu, Nov 21, 2019 at 09:46:07AM +0100, Bartosz Golaszewski wrote:
-> > czw., 21 lis 2019 o 08:46 Kent Gibson <warthog618@gmail.com> napisa=C5=
-=82(a):
-> > >
-> > > On Thu, Nov 21, 2019 at 08:13:42AM +0100, Bartosz Golaszewski wrote:
-> > > > czw., 21 lis 2019 o 01:34 Kent Gibson <warthog618@gmail.com> napisa=
-=C5=82(a):
-> > > > >
-> > > > > On Wed, Nov 20, 2019 at 04:18:24PM +0100, Bartosz Golaszewski wro=
-te:
-> > > > > > =C5=9Br., 20 lis 2019 o 15:36 Kent Gibson <warthog618@gmail.com=
-> napisa=C5=82(a):
-> > > > > > >
-> > > > > > > On Wed, Nov 20, 2019 at 03:18:36PM +0100, Bartosz Golaszewski=
- wrote:
-> > > > > > > > =C5=9Br., 20 lis 2019 o 15:13 Kent Gibson <warthog618@gmail=
-.com> napisa=C5=82(a):
-> > > > > > > > >
-> > > > > > > > > On Wed, Nov 20, 2019 at 03:08:57PM +0100, Bartosz Golasze=
-wski wrote:
-> > > > > > > > > > =C5=9Br., 20 lis 2019 o 14:59 Kent Gibson <warthog618@g=
-mail.com> napisa=C5=82(a):
-> > > > > > > > > > >
-> > > > > > > > > > > On Wed, Nov 20, 2019 at 12:00:45PM +0100, Bartosz Gol=
-aszewski wrote:
-> > > > > > > > > > > > wt., 19 lis 2019 o 16:53 Kent Gibson <warthog618@gm=
-ail.com> napisa=C5=82(a):
-> > > > > > > > > > > > >
-> > > > > > > > > > > > > On Mon, Nov 18, 2019 at 10:48:25PM +0800, Kent Gi=
-bson wrote:
-> > > > > > > > > > > > > > On Mon, Nov 18, 2019 at 02:52:04PM +0100, Barto=
-sz Golaszewski
-> > > > > > > > > > > > > > > > +
-> > > > > > > > > > > > > > > > +int gpiod_line_set_flags_bulk(struct gpiod=
-_line_bulk *bulk, int flags)
-> > > > > > > > > > > > > > > > +{
-> > > > > > > > > > > > > > > > +       struct gpiod_line *line;
-> > > > > > > > > > > > > > > > +       int values[GPIOD_LINE_BULK_MAX_LINE=
-S];
-> > > > > > > > > > > > > > > > +       unsigned int i;
-> > > > > > > > > > > > > > > > +       int direction;
-> > > > > > > > > > > > > > > > +
-> > > > > > > > > > > > > > > > +       line =3D gpiod_line_bulk_get_line(b=
-ulk, 0);
-> > > > > > > > > > > > > > > > +       if (line->as_is) {
+On Thu, Nov 21, 2019 at 11:03:32AM +0100, Bartosz Golaszewski wrote:
+> czw., 21 lis 2019 o 10:30 Kent Gibson <warthog618@gmail.com> napisał(a):
+> >
+> > On Thu, Nov 21, 2019 at 09:46:07AM +0100, Bartosz Golaszewski wrote:
+> > > czw., 21 lis 2019 o 08:46 Kent Gibson <warthog618@gmail.com> napisał(a):
+> > > >
+> > > > On Thu, Nov 21, 2019 at 08:13:42AM +0100, Bartosz Golaszewski wrote:
+> > > > > czw., 21 lis 2019 o 01:34 Kent Gibson <warthog618@gmail.com> napisał(a):
+> > > > > >
+> > > > > > On Wed, Nov 20, 2019 at 04:18:24PM +0100, Bartosz Golaszewski wrote:
+> > > > > > > śr., 20 lis 2019 o 15:36 Kent Gibson <warthog618@gmail.com> napisał(a):
+> > > > > > > >
+> > > > > > > > On Wed, Nov 20, 2019 at 03:18:36PM +0100, Bartosz Golaszewski wrote:
+> > > > > > > > > śr., 20 lis 2019 o 15:13 Kent Gibson <warthog618@gmail.com> napisał(a):
+> > > > > > > > > >
+> > > > > > > > > > On Wed, Nov 20, 2019 at 03:08:57PM +0100, Bartosz Golaszewski wrote:
+> > > > > > > > > > > śr., 20 lis 2019 o 14:59 Kent Gibson <warthog618@gmail.com> napisał(a):
+> > > > > > > > > > > >
+> > > > > > > > > > > > On Wed, Nov 20, 2019 at 12:00:45PM +0100, Bartosz Golaszewski wrote:
+> > > > > > > > > > > > > wt., 19 lis 2019 o 16:53 Kent Gibson <warthog618@gmail.com> napisał(a):
+> > > > > > > > > > > > > >
+> > > > > > > > > > > > > > On Mon, Nov 18, 2019 at 10:48:25PM +0800, Kent Gibson wrote:
+> > > > > > > > > > > > > > > On Mon, Nov 18, 2019 at 02:52:04PM +0100, Bartosz Golaszewski
+> > > > > > > > > > > > > > > > > +
+> > > > > > > > > > > > > > > > > +int gpiod_line_set_flags_bulk(struct gpiod_line_bulk *bulk, int flags)
+> > > > > > > > > > > > > > > > > +{
+> > > > > > > > > > > > > > > > > +       struct gpiod_line *line;
+> > > > > > > > > > > > > > > > > +       int values[GPIOD_LINE_BULK_MAX_LINES];
+> > > > > > > > > > > > > > > > > +       unsigned int i;
+> > > > > > > > > > > > > > > > > +       int direction;
+> > > > > > > > > > > > > > > > > +
+> > > > > > > > > > > > > > > > > +       line = gpiod_line_bulk_get_line(bulk, 0);
+> > > > > > > > > > > > > > > > > +       if (line->as_is) {
+> > > > > > > > > > > > > > > >
+> > > > > > > > > > > > > > > > Can you explain the purpose of this as_is field? I'm not sure this is
+> > > > > > > > > > > > > > > > really needed.
+> > > > > > > > > > > > > > > >
 > > > > > > > > > > > > > > >
-> > > > > > > > > > > > > > > Can you explain the purpose of this as_is fie=
-ld? I'm not sure this is
-> > > > > > > > > > > > > > > really needed.
+> > > > > > > > > > > > > > > It is there for gpiod_set_flags, which has to populate the direction
+> > > > > > > > > > > > > > > flags in the SET_CONFIG ioctl. The existing line->direction is
+> > > > > > > > > > > > > > > either input or output.  It is drawn from GPIOLINE_FLAG_IS_OUT, so
+> > > > > > > > > > > > > > > as-is is gets mapped to input.
+> > > > > > > > > > > > > > > I didn't want to change the existing line->direction, and adding the
+> > > > > > > > > > > > > > > as-is seemed clearer than adding another flavour of direction that
+> > > > > > > > > > > > > > > contained all three.
 > > > > > > > > > > > > > > >
 > > > > > > > > > > > > > >
-> > > > > > > > > > > > > > It is there for gpiod_set_flags, which has to p=
-opulate the direction
-> > > > > > > > > > > > > > flags in the SET_CONFIG ioctl. The existing lin=
-e->direction is
-> > > > > > > > > > > > > > either input or output.  It is drawn from GPIOL=
-INE_FLAG_IS_OUT, so
-> > > > > > > > > > > > > > as-is is gets mapped to input.
-> > > > > > > > > > > > > > I didn't want to change the existing line->dire=
-ction, and adding the
-> > > > > > > > > > > > > > as-is seemed clearer than adding another flavou=
-r of direction that
-> > > > > > > > > > > > > > contained all three.
+> > > > > > > > > > > > > > Hmmm, I think I see what you were getting at - the line->direction is the
+> > > > > > > > > > > > > > direction from the kernel, so it doesn't hurt to use that value to set the
+> > > > > > > > > > > > > > corresponding request flags - even if the original request was as-is??
+> > > > > > > > > > > > > >
+> > > > > > > > > > > > > > If that is the case then the line->as_is can be dropped throughout.
+> > > > > > > > > > > > > >
+> > > > > > > > > > > > > > Kent.
 > > > > > > > > > > > > > >
 > > > > > > > > > > > > >
-> > > > > > > > > > > > > Hmmm, I think I see what you were getting at - th=
-e line->direction is the
-> > > > > > > > > > > > > direction from the kernel, so it doesn't hurt to =
-use that value to set the
-> > > > > > > > > > > > > corresponding request flags - even if the origina=
-l request was as-is??
-> > > > > > > > > > > > >
-> > > > > > > > > > > > > If that is the case then the line->as_is can be d=
-ropped throughout.
-> > > > > > > > > > > > >
-> > > > > > > > > > > > > Kent.
+> > > > > > > > > > > > > Yes, this is what I was thinking. Just need to make sure the value
+> > > > > > > > > > > > > from the kernel is up-to-date.
 > > > > > > > > > > > > >
 > > > > > > > > > > > >
-> > > > > > > > > > > > Yes, this is what I was thinking. Just need to make=
- sure the value
-> > > > > > > > > > > > from the kernel is up-to-date.
+> > > > > > > > > > > > So fail if needs_update?
 > > > > > > > > > > > >
+> > > > > > > > > > > > Kent.
 > > > > > > > > > > >
-> > > > > > > > > > > So fail if needs_update?
+> > > > > > > > > > > I'd say: do an implicit update before setting config.
 > > > > > > > > > > >
-> > > > > > > > > > > Kent.
 > > > > > > > > > >
-> > > > > > > > > > I'd say: do an implicit update before setting config.
+> > > > > > > > > > So gpiod_line_update if needs_update, and fail if that fails?
 > > > > > > > > > >
+> > > > > > > > > > Kent.
 > > > > > > > > >
-> > > > > > > > > So gpiod_line_update if needs_update, and fail if that fa=
-ils?
+> > > > > > > > > Without the if - needs_update is only set if an implicit update fails
+> > > > > > > > > in line_maybe_update(). But in this case we need to be sure, so do it
+> > > > > > > > > unconditionally.
 > > > > > > > > >
-> > > > > > > > > Kent.
 > > > > > > > >
-> > > > > > > > Without the if - needs_update is only set if an implicit up=
-date fails
-> > > > > > > > in line_maybe_update(). But in this case we need to be sure=
-, so do it
-> > > > > > > > unconditionally.
+> > > > > > > > Given that line_maybe_update is called at the end of request creation, and
+> > > > > > > > whenever set_config is called, how can line->direction be inconsistent
+> > > > > > > > with the kernel state - as long as needs_update is false?
 > > > > > > > >
 > > > > > > >
-> > > > > > > Given that line_maybe_update is called at the end of request =
-creation, and
-> > > > > > > whenever set_config is called, how can line->direction be inc=
-onsistent
-> > > > > > > with the kernel state - as long as needs_update is false?
+> > > > > > > I don't think we should call line_maybe_update() on set_config() - in
+> > > > > > > this case we should call gpiod_line_update() and fail in set_config()
+> > > > > > > if it fails.
+> > > > > > >
+> > > > > > > I hope that's clearer.
 > > > > > > >
 > > > > > >
-> > > > > > I don't think we should call line_maybe_update() on set_config(=
-) - in
-> > > > > > this case we should call gpiod_line_update() and fail in set_co=
-nfig()
-> > > > > > if it fails.
-> > > > > >
-> > > > > > I hope that's clearer.
+> > > > > > Not really.  I was already shaky on the needs_update and I'm getting more
+> > > > > > confused about the overall needs_update handling policy by the minute.
 > > > > > >
 > > > > >
-> > > > > Not really.  I was already shaky on the needs_update and I'm gett=
-ing more
-> > > > > confused about the overall needs_update handling policy by the mi=
-nute.
+> > > > > Yeah it's not optimal. If you have better ideas on how to handle the
+> > > > > fact that the kernel can't really notify us about the changes in
+> > > > > line's flags introduced by other processes - I'll be more than glad to
+> > > > > give them a try. At some point I was thinking about another ioctl()
+> > > > > that - for a requested line - would return a file descriptor which
+> > > > > would emit events when a line changes - for instance, it's requested
+> > > > > by someone else or its direction is changed etc.
 > > > > >
 > > > >
-> > > > Yeah it's not optimal. If you have better ideas on how to handle th=
-e
-> > > > fact that the kernel can't really notify us about the changes in
-> > > > line's flags introduced by other processes - I'll be more than glad=
- to
-> > > > give them a try. At some point I was thinking about another ioctl()
-> > > > that - for a requested line - would return a file descriptor which
-> > > > would emit events when a line changes - for instance, it's requeste=
-d
-> > > > by someone else or its direction is changed etc.
+> > > > I didn't realise it was possible for a requested line's flags to be
+> > > > changed by other processes.  Quite the opposite - I thought that was one
+> > > > of the reasons for GPIOD was to allow the userspace to prevent other from
+> > > > processes messing with requested lines.
 > > > >
 > > >
-> > > I didn't realise it was possible for a requested line's flags to be
-> > > changed by other processes.  Quite the opposite - I thought that was =
-one
-> > > of the reasons for GPIOD was to allow the userspace to prevent other =
-from
-> > > processes messing with requested lines.
+> > > Ugh, sorry, was writing it before coffee. I was thinking about a
+> > > non-requested line. Something like lineinfo ioctl() but returning an
+> > > fd notifying about changes. Maybe we could even consider having
+> > > lineinfo2 ioctl() which would be extended with this functionality -
+> > > not only would it fill the relevant structure but also pass a new fd
+> > > for notification about changes.
 > > >
 > >
-> > Ugh, sorry, was writing it before coffee. I was thinking about a
-> > non-requested line. Something like lineinfo ioctl() but returning an
-> > fd notifying about changes. Maybe we could even consider having
-> > lineinfo2 ioctl() which would be extended with this functionality -
-> > not only would it fill the relevant structure but also pass a new fd
-> > for notification about changes.
+> > Whew - that makes more sense. Had me worried there.
 > >
->
-> Whew - that makes more sense. Had me worried there.
->
-> Not sure how useful an async info ioctl would be.  Couldn't you build
-> something equivalent in userspace with the existing API - as long as you
-> don't mind the daemon holding the line, and so having to control the
-> line via the daemon.  You want to be able to monitor without requesting
-> the line?
->
+> > Not sure how useful an async info ioctl would be.  Couldn't you build
+> > something equivalent in userspace with the existing API - as long as you
+> > don't mind the daemon holding the line, and so having to control the
+> > line via the daemon.  You want to be able to monitor without requesting
+> > the line?
+> >
+> 
+> I'm not sure if I was expressing myself clearly enough: a hypothetical
+> daemon calls LINEINFO ioctl(). Now a different program or kernel
+> driver requests this line. The daemon is not up-to-date on its state
+> unless it polls the line all the time. If a user now asks the daemon
+> about this line's state - it will be given outdated info. Listening on
+> this fd would allow us to be informed about such changes immediately.
+> 
 
-I'm not sure if I was expressing myself clearly enough: a hypothetical
-daemon calls LINEINFO ioctl(). Now a different program or kernel
-driver requests this line. The daemon is not up-to-date on its state
-unless it polls the line all the time. If a user now asks the daemon
-about this line's state - it will be given outdated info. Listening on
-this fd would allow us to be informed about such changes immediately.
+I think I understand you - but you might not be getting my meaning...
+I was thinking the daemon would request the lines it wanted to monitor
+- which is why you would then have to control the line via the daemon.
+The daemon then always knows the state of the line.
+That obviously isn't the case if you want to monitor a line without
+requesting it, hence the "You want to be able to monitor without requesting
+the line?" question.
 
-> I'm still puzzled as to when the existing info ioctl could fail on a
-> requested line - which is when needs_update gets set in
-> line_maybe_update().  Hardware being unplugged?
->
 
-If the ioctl() can fail, then we're obligated to check the return
-value. As you say: unplugging the device is a good example - it may be
-a GPIO expander on an HID device (e.g. Silicon Labs CP2112) that can
-be easily disconnected from USB.
+> > I'm still puzzled as to when the existing info ioctl could fail on a
+> > requested line - which is when needs_update gets set in
+> > line_maybe_update().  Hardware being unplugged?
+> >
+> 
+> If the ioctl() can fail, then we're obligated to check the return
+> value. As you say: unplugging the device is a good example - it may be
+> a GPIO expander on an HID device (e.g. Silicon Labs CP2112) that can
+> be easily disconnected from USB.
+> 
 
-Bart
+Fair enough. But for failures of that scale shouldn't the line request
+fail - rather than just setting needs_update?  Or are there less
+catastrohpic failure modes?
 
-> Cheers,
-> Kent.
+Kent.
