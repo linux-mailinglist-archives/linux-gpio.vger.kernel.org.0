@@ -2,83 +2,255 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 7EDF110480D
-	for <lists+linux-gpio@lfdr.de>; Thu, 21 Nov 2019 02:27:40 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E4CB1104904
+	for <lists+linux-gpio@lfdr.de>; Thu, 21 Nov 2019 04:20:07 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725956AbfKUB1j (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 20 Nov 2019 20:27:39 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60364 "EHLO mail.kernel.org"
+        id S1726541AbfKUDTs (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 20 Nov 2019 22:19:48 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33224 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725819AbfKUB1j (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Wed, 20 Nov 2019 20:27:39 -0500
-Received: from mail-lj1-f176.google.com (mail-lj1-f176.google.com [209.85.208.176])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1727295AbfKUDTs (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Wed, 20 Nov 2019 22:19:48 -0500
+Received: from PC-kkoz.proceq.com (unknown [213.160.61.66])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4A7B920898;
-        Thu, 21 Nov 2019 01:27:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D8C1A208A3;
+        Thu, 21 Nov 2019 03:19:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574299658;
-        bh=R22Op0DeOX2LBrbP7cckMdDgBWRoMNkNLhX1uIRD5F0=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=wE2IQ5OAY/1KErp65KA9zmFBjOLSjmEtUmphJIXe1FjaHxf1TQj7dlkU0XrQyFa7y
-         nrgue+jE0nOxEOBQc0eymSqqMe9BbPZ8ZIuXHNwVvOrVF5fSgLkc2Jcf58FHiQDnEy
-         yIAACPiyW+z66nBGhD+t86wNZXC+zUEsABeuG7H0=
-Received: by mail-lj1-f176.google.com with SMTP id d5so1292059ljl.4;
-        Wed, 20 Nov 2019 17:27:38 -0800 (PST)
-X-Gm-Message-State: APjAAAUDxLsErrAcWOq2melSLhtoVrT4HFEXQP0L+ChKxyZ9VG94bFcP
-        EYXIjvuNBWkjotgdZMa6Hf7mf0liSaYj2bHzIgU=
-X-Google-Smtp-Source: APXvYqzzC4/Fcn5mZhi9416C655teQ+R71jRODP7JGvSHDRSKX27QQZKpiWfBMhadkypvz5QsSQ19ELC6H8QXJSBa5o=
-X-Received: by 2002:a2e:9a55:: with SMTP id k21mr4599321ljj.85.1574299656479;
- Wed, 20 Nov 2019 17:27:36 -0800 (PST)
-MIME-Version: 1.0
-References: <20191120134019.14333-1-krzk@kernel.org> <279930f8-7463-555a-2dce-7c50fec8067e@pengutronix.de>
-In-Reply-To: <279930f8-7463-555a-2dce-7c50fec8067e@pengutronix.de>
+        s=default; t=1574306387;
+        bh=LSzFWPpsVO+DHMVTB1mAdrxBaXS9PyPnO6OGbCDZ6n0=;
+        h=From:To:Cc:Subject:Date:From;
+        b=jiF6umi+XcgpJlFZE8vEjUctCZj2HQWnz9Sy8ndxleVr2m/4yCtQEgB7M1+o/oNEN
+         ccZP47LhIHcpySVlkZc6yl8aZgRYhf2bPtrtmqTWAAgtdbZtkVCEs0+fcffnMrNDfz
+         DiqkNnfdHY81g9j3ZbdT+xnb2RVUdf8AZAVB5XMc=
 From:   Krzysztof Kozlowski <krzk@kernel.org>
-Date:   Thu, 21 Nov 2019 09:27:24 +0800
-X-Gmail-Original-Message-ID: <CAJKOXPc6C5WE0mV4=YRGBkKxLb_CWYKGAK=v43NjJW8MY8FMEQ@mail.gmail.com>
-Message-ID: <CAJKOXPc6C5WE0mV4=YRGBkKxLb_CWYKGAK=v43NjJW8MY8FMEQ@mail.gmail.com>
-Subject: Re: [PATCH] pinctrl: Fix Kconfig indentation
-To:     Ahmad Fatoum <a.fatoum@pengutronix.de>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+To:     linux-kernel@vger.kernel.org
+Cc:     Krzysztof Kozlowski <krzk@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
         Dong Aisheng <aisheng.dong@nxp.com>,
         Fabio Estevam <festevam@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
+        Shawn Guo <shawnguo@kernel.org>,
         Stefan Agner <stefan@agner.ch>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        linux-gpio@vger.kernel.org, Andy Gross <agross@kernel.org>,
         Pengutronix Kernel Team <kernel@pengutronix.de>,
-        linux-arm-msm@vger.kernel.org, Shawn Guo <shawnguo@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Jason Cooper <jason@lakedaemon.net>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Gregory Clement <gregory.clement@bootlin.com>,
+        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-arm-msm@vger.kernel.org
+Subject: [PATCH v2] pinctrl: Fix Kconfig indentation
+Date:   Thu, 21 Nov 2019 04:19:41 +0100
+Message-Id: <1574306382-32516-1-git-send-email-krzk@kernel.org>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, 20 Nov 2019 at 22:15, Ahmad Fatoum <a.fatoum@pengutronix.de> wrote:
->
-> Hello Krzysztof,
->
-> On 11/20/19 2:40 PM, Krzysztof Kozlowski wrote:
-> > Adjust indentation from spaces to tab (+optional two spaces) as in
-> > coding style with command like:
-> >       $ sed -e 's/^        /\t/' -i */Kconfig
->
-> >  config PINCTRL_ARTPEC6
-> > -        bool "Axis ARTPEC-6 pin controller driver"
-> > +     bool "Axis ARTPEC-6 pin controller driver"
->
-> Here you replace spaces for tabs before the prompt type.
->
-> >  config PINCTRL_SM8150
-> >         tristate "Qualcomm Technologies Inc SM8150 pin controller driver"
->
-> Here you leave the spaces before intact.
->
-> Intentional?
+Adjust indentation from spaces to tab (+optional two spaces) as in
+coding style with command like:
+	$ sed -e 's/^        /\t/' -i */Kconfig
 
-No, not intentional. Thanks for pointing it out. I made the sed
-patterns precise - 8 spaces -> tab, and there you have 7 spaces
-(ugh!). I'll send a follow up.
+Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 
-Best regards,
-Krzysztof
+---
+
+Changes since v1:
+1. Fix also 7-space and tab+1 space indentation issues.
+---
+ drivers/pinctrl/Kconfig           | 18 ++++----
+ drivers/pinctrl/freescale/Kconfig | 12 ++---
+ drivers/pinctrl/mvebu/Kconfig     | 10 ++---
+ drivers/pinctrl/qcom/Kconfig      | 92 +++++++++++++++++++--------------------
+ 4 files changed, 66 insertions(+), 66 deletions(-)
+
+diff --git a/drivers/pinctrl/Kconfig b/drivers/pinctrl/Kconfig
+index b372419d61f2..25b6c830f2f1 100644
+--- a/drivers/pinctrl/Kconfig
++++ b/drivers/pinctrl/Kconfig
+@@ -32,15 +32,15 @@ config DEBUG_PINCTRL
+ 	  Say Y here to add some extra checks and diagnostics to PINCTRL calls.
+ 
+ config PINCTRL_ARTPEC6
+-        bool "Axis ARTPEC-6 pin controller driver"
+-        depends on MACH_ARTPEC6
+-        select PINMUX
+-        select GENERIC_PINCONF
+-        help
+-          This is the driver for the Axis ARTPEC-6 pin controller. This driver
+-          supports pin function multiplexing as well as pin bias and drive
+-          strength configuration. Device tree integration instructions can be
+-          found in Documentation/devicetree/bindings/pinctrl/axis,artpec6-pinctrl.txt
++	bool "Axis ARTPEC-6 pin controller driver"
++	depends on MACH_ARTPEC6
++	select PINMUX
++	select GENERIC_PINCONF
++	help
++	  This is the driver for the Axis ARTPEC-6 pin controller. This driver
++	  supports pin function multiplexing as well as pin bias and drive
++	  strength configuration. Device tree integration instructions can be
++	  found in Documentation/devicetree/bindings/pinctrl/axis,artpec6-pinctrl.txt
+ 
+ config PINCTRL_AS3722
+ 	tristate "Pinctrl and GPIO driver for ams AS3722 PMIC"
+diff --git a/drivers/pinctrl/freescale/Kconfig b/drivers/pinctrl/freescale/Kconfig
+index 5f4058033ec6..3ea9ce3e0cd9 100644
+--- a/drivers/pinctrl/freescale/Kconfig
++++ b/drivers/pinctrl/freescale/Kconfig
+@@ -39,12 +39,12 @@ config PINCTRL_IMX27
+ 
+ 
+ config PINCTRL_IMX25
+-        bool "IMX25 pinctrl driver"
+-        depends on OF
+-        depends on SOC_IMX25
+-        select PINCTRL_IMX
+-        help
+-          Say Y here to enable the imx25 pinctrl driver
++	bool "IMX25 pinctrl driver"
++	depends on OF
++	depends on SOC_IMX25
++	select PINCTRL_IMX
++	help
++	  Say Y here to enable the imx25 pinctrl driver
+ 
+ config PINCTRL_IMX35
+ 	bool "IMX35 pinctrl driver"
+diff --git a/drivers/pinctrl/mvebu/Kconfig b/drivers/pinctrl/mvebu/Kconfig
+index d69c25798871..0d12894d3ee1 100644
+--- a/drivers/pinctrl/mvebu/Kconfig
++++ b/drivers/pinctrl/mvebu/Kconfig
+@@ -46,8 +46,8 @@ config PINCTRL_ORION
+ 	select PINCTRL_MVEBU
+ 
+ config PINCTRL_ARMADA_37XX
+-       bool
+-       select GENERIC_PINCONF
+-       select MFD_SYSCON
+-       select PINCONF
+-       select PINMUX
++	bool
++	select GENERIC_PINCONF
++	select MFD_SYSCON
++	select PINCONF
++	select PINMUX
+diff --git a/drivers/pinctrl/qcom/Kconfig b/drivers/pinctrl/qcom/Kconfig
+index 4f5645245b06..811af2f81c39 100644
+--- a/drivers/pinctrl/qcom/Kconfig
++++ b/drivers/pinctrl/qcom/Kconfig
+@@ -142,33 +142,33 @@ config PINCTRL_QDF2XXX
+ 	  Qualcomm Technologies QDF2xxx SOCs.
+ 
+ config PINCTRL_QCOM_SPMI_PMIC
+-       tristate "Qualcomm SPMI PMIC pin controller driver"
+-       depends on GPIOLIB && OF && SPMI
+-       select REGMAP_SPMI
+-       select PINMUX
+-       select PINCONF
+-       select GENERIC_PINCONF
+-       select GPIOLIB_IRQCHIP
+-       select IRQ_DOMAIN_HIERARCHY
+-       help
+-         This is the pinctrl, pinmux, pinconf and gpiolib driver for the
+-         Qualcomm GPIO and MPP blocks found in the Qualcomm PMIC's chips,
+-         which are using SPMI for communication with SoC. Example PMIC's
+-         devices are pm8841, pm8941 and pma8084.
++	tristate "Qualcomm SPMI PMIC pin controller driver"
++	depends on GPIOLIB && OF && SPMI
++	select REGMAP_SPMI
++	select PINMUX
++	select PINCONF
++	select GENERIC_PINCONF
++	select GPIOLIB_IRQCHIP
++	select IRQ_DOMAIN_HIERARCHY
++	help
++	 This is the pinctrl, pinmux, pinconf and gpiolib driver for the
++	 Qualcomm GPIO and MPP blocks found in the Qualcomm PMIC's chips,
++	 which are using SPMI for communication with SoC. Example PMIC's
++	 devices are pm8841, pm8941 and pma8084.
+ 
+ config PINCTRL_QCOM_SSBI_PMIC
+-       tristate "Qualcomm SSBI PMIC pin controller driver"
+-       depends on GPIOLIB && OF
+-       select PINMUX
+-       select PINCONF
+-       select GENERIC_PINCONF
+-       select GPIOLIB_IRQCHIP
+-       select IRQ_DOMAIN_HIERARCHY
+-       help
+-         This is the pinctrl, pinmux, pinconf and gpiolib driver for the
+-         Qualcomm GPIO and MPP blocks found in the Qualcomm PMIC's chips,
+-         which are using SSBI for communication with SoC. Example PMIC's
+-         devices are pm8058 and pm8921.
++	tristate "Qualcomm SSBI PMIC pin controller driver"
++	depends on GPIOLIB && OF
++	select PINMUX
++	select PINCONF
++	select GENERIC_PINCONF
++	select GPIOLIB_IRQCHIP
++	select IRQ_DOMAIN_HIERARCHY
++	help
++	 This is the pinctrl, pinmux, pinconf and gpiolib driver for the
++	 Qualcomm GPIO and MPP blocks found in the Qualcomm PMIC's chips,
++	 which are using SSBI for communication with SoC. Example PMIC's
++	 devices are pm8058 and pm8921.
+ 
+ config PINCTRL_SC7180
+ 	tristate "Qualcomm Technologies Inc SC7180 pin controller driver"
+@@ -180,30 +180,30 @@ config PINCTRL_SC7180
+ 	  Technologies Inc SC7180 platform.
+ 
+ config PINCTRL_SDM660
+-       tristate "Qualcomm Technologies Inc SDM660 pin controller driver"
+-       depends on GPIOLIB && OF
+-       select PINCTRL_MSM
+-       help
+-         This is the pinctrl, pinmux, pinconf and gpiolib driver for the
+-         Qualcomm Technologies Inc TLMM block found on the Qualcomm
+-         Technologies Inc SDM660 platform.
++	tristate "Qualcomm Technologies Inc SDM660 pin controller driver"
++	depends on GPIOLIB && OF
++	select PINCTRL_MSM
++	help
++	 This is the pinctrl, pinmux, pinconf and gpiolib driver for the
++	 Qualcomm Technologies Inc TLMM block found on the Qualcomm
++	 Technologies Inc SDM660 platform.
+ 
+ config PINCTRL_SDM845
+-       tristate "Qualcomm Technologies Inc SDM845 pin controller driver"
+-       depends on GPIOLIB && (OF || ACPI)
+-       select PINCTRL_MSM
+-       help
+-         This is the pinctrl, pinmux, pinconf and gpiolib driver for the
+-         Qualcomm Technologies Inc TLMM block found on the Qualcomm
+-         Technologies Inc SDM845 platform.
++	tristate "Qualcomm Technologies Inc SDM845 pin controller driver"
++	depends on GPIOLIB && (OF || ACPI)
++	select PINCTRL_MSM
++	help
++	 This is the pinctrl, pinmux, pinconf and gpiolib driver for the
++	 Qualcomm Technologies Inc TLMM block found on the Qualcomm
++	 Technologies Inc SDM845 platform.
+ 
+ config PINCTRL_SM8150
+-       tristate "Qualcomm Technologies Inc SM8150 pin controller driver"
+-       depends on GPIOLIB && OF
+-       select PINCTRL_MSM
+-       help
+-         This is the pinctrl, pinmux, pinconf and gpiolib driver for the
+-         Qualcomm Technologies Inc TLMM block found on the Qualcomm
+-         Technologies Inc SM8150 platform.
++	tristate "Qualcomm Technologies Inc SM8150 pin controller driver"
++	depends on GPIOLIB && OF
++	select PINCTRL_MSM
++	help
++	 This is the pinctrl, pinmux, pinconf and gpiolib driver for the
++	 Qualcomm Technologies Inc TLMM block found on the Qualcomm
++	 Technologies Inc SM8150 platform.
+ 
+ endif
+-- 
+2.7.4
+
