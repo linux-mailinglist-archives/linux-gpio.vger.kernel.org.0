@@ -2,162 +2,112 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id E716F104793
-	for <lists+linux-gpio@lfdr.de>; Thu, 21 Nov 2019 01:34:52 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 70AE7104795
+	for <lists+linux-gpio@lfdr.de>; Thu, 21 Nov 2019 01:36:24 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726351AbfKUAev (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 20 Nov 2019 19:34:51 -0500
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:40381 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726044AbfKUAev (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 20 Nov 2019 19:34:51 -0500
-Received: by mail-pf1-f195.google.com with SMTP id r4so674982pfl.7
-        for <linux-gpio@vger.kernel.org>; Wed, 20 Nov 2019 16:34:50 -0800 (PST)
+        id S1726380AbfKUAgT (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 20 Nov 2019 19:36:19 -0500
+Received: from mail-pf1-f177.google.com ([209.85.210.177]:43350 "EHLO
+        mail-pf1-f177.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726044AbfKUAgT (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 20 Nov 2019 19:36:19 -0500
+Received: by mail-pf1-f177.google.com with SMTP id 3so669683pfb.10
+        for <linux-gpio@vger.kernel.org>; Wed, 20 Nov 2019 16:36:18 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=w0jc3nhu3KAWiFKWh+zpyGdVs1iUHPccdIEeVjCy13s=;
-        b=Wii2YRqwFMlbSaS+M+fPcA/HuRrG1/YoGNOOZbJpiJr1RUmYL01vr2lhEwMRyLiAK1
-         7hXIRa+ws+jm6bludi//A1ToXTwyYYLXPE8d0o+/QKnDTcAhTUrewkpMSWTiC2j3ds9l
-         rMCJFA24HkCkeKmdtpaVVLwylcspXdQQMm7c7ppCxa7UOsJwnyaAafJNc64NVsJqqEJ1
-         dgIrgI9O1XIAnsk3oVWgRHtilPBHM8zTScIS8XtGvP7vCEelvBO9cUexDKFw5+PEokZW
-         uqvLqN2tLfQG3OiyzWY73J5JYadgdzwdREW/gCbzg003r+fVfVShzVGT88SYJCSDbGFB
-         toYw==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=0vKpzKlZ6/i4VjUJ1bjeLTlQb2ZJfj75BggY+jjwiTw=;
+        b=dIt5+wIxDYbSzim+l2+NDe+Q2wWO5bfsRKbsSN4DTffPWGGvqfE/3omwdg+Wp4WN5h
+         a5J3EKRIr1wFptyCY0D+vTRVV65SqbrpKNZct1olxYg954rmJ9ItSKrMtjVD8LWmOKrB
+         NfLB6ObZQOOAa3FsMa3zR75P8cANsA+9UHwiKRT25quyI/8r66aCLMuWlv2RRbdRRCWm
+         UJQvxMsKO00a2u+9+57psCvJ7eDPFIiDLA6TGRHn9a1NxG74wvs8Xi2OY+eWzM+i3VfA
+         Y1xDnobR9XBYHxVa74MtRjG1xv0QkS9ku/mvsi4vDMQuSHOldD3RRXm/GTFqv6ID7ioT
+         KfsQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=w0jc3nhu3KAWiFKWh+zpyGdVs1iUHPccdIEeVjCy13s=;
-        b=SllfwWgd2DAVhqHuLcLAb7Ew6g53VKE1BlaesCVNHuVZDXiZsYcv7A1NEbAK5K5vpq
-         eHSaLY3lFHL1VGRv3A0jzeyEeVURO+jE5WpIfLFW2pzS7w/ajkT9d6XPVRRt2syqOlNY
-         itOD55bFDM+xU4AkUnLWQCJIqqkehzBRkDn8Dq3l5f92r0Zqutb99k8JzaS7VWKgMKcw
-         Y7jR5uYbraDxhzIYwLTVyPxNnaFQsgHd8NQSGgZtTL2tORBOLxEFx15+9buY5HoXIWg9
-         MRC47zieTh4MQTZSviUK2wVTPW6W44qWXiv6F3BZCLjr1d1gc09/6mVq3jZQ8STzSIk9
-         7Jkw==
-X-Gm-Message-State: APjAAAWl9cUgSY+ZGSiafc5Vxk0ahK4iMS7rikAHN7XILzBwCkbWI8++
-        zHAC1LB4V2Lg1fWo+SjtmydJPgetRbs=
-X-Google-Smtp-Source: APXvYqw6P3KWVbWUUvauXWVrYw43IX2lXZmZ4n8GUGz8Fkb1BTyz3xhol6wzLxmxkh0TFBhzFeVJIQ==
-X-Received: by 2002:a65:67c7:: with SMTP id b7mr6207953pgs.339.1574296489448;
-        Wed, 20 Nov 2019 16:34:49 -0800 (PST)
-Received: from sol (220-235-109-115.dyn.iinet.net.au. [220.235.109.115])
-        by smtp.gmail.com with ESMTPSA id f7sm575283pfa.150.2019.11.20.16.34.46
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 20 Nov 2019 16:34:48 -0800 (PST)
-Date:   Thu, 21 Nov 2019 08:34:43 +0800
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=0vKpzKlZ6/i4VjUJ1bjeLTlQb2ZJfj75BggY+jjwiTw=;
+        b=SfEnK7h0GJQfDgqFlRw6plzCcNdhtQs7hBMxuo766NT7UzZK3a7NbWaQuHxIC26hoH
+         4Rm2DJscgooUY1HJFLW39xvx6pBijEUaAUNT0GqKDBq86uToXEOen3ahWhZT36EEnIEB
+         E31ovWwHOjhFRL6TmeOiO7qeqwCfKfa+1PTHPQD8tM98WNS4vYGEeT5nLF9ZcKUsIYiO
+         NQL19Gk84xSSEZ/aiuyYJjjQF+LxhYLi2H9qhbAaTR7SDHJ4nwb/RJviuA6u/n05e0IP
+         3+kCsTCSwaKmiwsS6MkoKUuNawmQ2K4uSjE6Mdil/k1y0j697o7ovBdYOhaLEEBgcWrg
+         vPaA==
+X-Gm-Message-State: APjAAAVaDlGK3D3Aqs6atmvd5IM7uvlUs0odPbg4Ddnqbnd4sVnHv3dG
+        iW4S5npM2yk1O7NahSUP5ZUPA/cix9o=
+X-Google-Smtp-Source: APXvYqwQoewR572OtPmcMdmL4SxwY31eLGucJ0slfzOy2PwuU9tNdKRCIReYj3OjCWEWUWlhZpdDNQ==
+X-Received: by 2002:a63:c01:: with SMTP id b1mr6223063pgl.342.1574296577482;
+        Wed, 20 Nov 2019 16:36:17 -0800 (PST)
+Received: from sol.lan (220-235-109-115.dyn.iinet.net.au. [220.235.109.115])
+        by smtp.gmail.com with ESMTPSA id s1sm420756pgk.9.2019.11.20.16.36.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 20 Nov 2019 16:36:16 -0800 (PST)
 From:   Kent Gibson <warthog618@gmail.com>
-To:     Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        linux-gpio <linux-gpio@vger.kernel.org>
-Subject: Re: [libgpiod] [PATCH 11/19] API: add support for SET_CONFIG
-Message-ID: <20191121003443.GA7695@sol>
-References: <CAMpxmJXcEFO-05H-O0Kjs8Latwhh9RWos0tXzkc_C7KyEye8Yw@mail.gmail.com>
- <20191118144825.GE27359@sol>
- <20191119155249.GA20834@sol>
- <CAMRc=MeG2FJeKVdKSywOT3271jA_sDfcPNHe4BzyiEgxRKtKBg@mail.gmail.com>
- <20191120135857.GA4218@sol>
- <CAMRc=McNdcaLJKG3TRvX08Ddwmi-V9AJUDG5zmBgqL8bwjCSYg@mail.gmail.com>
- <20191120141353.GA5154@sol>
- <CAMRc=MdWj_+kd2wGUoRVRSd+kq597h-jetiHMwRiOvuUi8qRQQ@mail.gmail.com>
- <20191120143644.GA5865@sol>
- <CAMRc=Mex6M9Mmke9ajgLcpy4-Th+GOhycjeEiM+5PMBvmA+Apw@mail.gmail.com>
+To:     linux-gpio@vger.kernel.org, bgolaszewski@baylibre.com
+Cc:     Kent Gibson <warthog618@gmail.com>
+Subject: [libgpiod][PATCH v2 00/14] Add support for bias flags and SET_CONFIG
+Date:   Thu, 21 Nov 2019 08:35:42 +0800
+Message-Id: <20191121003556.9020-1-warthog618@gmail.com>
+X-Mailer: git-send-email 2.24.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAMRc=Mex6M9Mmke9ajgLcpy4-Th+GOhycjeEiM+5PMBvmA+Apw@mail.gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Nov 20, 2019 at 04:18:24PM +0100, Bartosz Golaszewski wrote:
-> śr., 20 lis 2019 o 15:36 Kent Gibson <warthog618@gmail.com> napisał(a):
-> >
-> > On Wed, Nov 20, 2019 at 03:18:36PM +0100, Bartosz Golaszewski wrote:
-> > > śr., 20 lis 2019 o 15:13 Kent Gibson <warthog618@gmail.com> napisał(a):
-> > > >
-> > > > On Wed, Nov 20, 2019 at 03:08:57PM +0100, Bartosz Golaszewski wrote:
-> > > > > śr., 20 lis 2019 o 14:59 Kent Gibson <warthog618@gmail.com> napisał(a):
-> > > > > >
-> > > > > > On Wed, Nov 20, 2019 at 12:00:45PM +0100, Bartosz Golaszewski wrote:
-> > > > > > > wt., 19 lis 2019 o 16:53 Kent Gibson <warthog618@gmail.com> napisał(a):
-> > > > > > > >
-> > > > > > > > On Mon, Nov 18, 2019 at 10:48:25PM +0800, Kent Gibson wrote:
-> > > > > > > > > On Mon, Nov 18, 2019 at 02:52:04PM +0100, Bartosz Golaszewski
-> > > > > > > > > > > +
-> > > > > > > > > > > +int gpiod_line_set_flags_bulk(struct gpiod_line_bulk *bulk, int flags)
-> > > > > > > > > > > +{
-> > > > > > > > > > > +       struct gpiod_line *line;
-> > > > > > > > > > > +       int values[GPIOD_LINE_BULK_MAX_LINES];
-> > > > > > > > > > > +       unsigned int i;
-> > > > > > > > > > > +       int direction;
-> > > > > > > > > > > +
-> > > > > > > > > > > +       line = gpiod_line_bulk_get_line(bulk, 0);
-> > > > > > > > > > > +       if (line->as_is) {
-> > > > > > > > > >
-> > > > > > > > > > Can you explain the purpose of this as_is field? I'm not sure this is
-> > > > > > > > > > really needed.
-> > > > > > > > > >
-> > > > > > > > >
-> > > > > > > > > It is there for gpiod_set_flags, which has to populate the direction
-> > > > > > > > > flags in the SET_CONFIG ioctl. The existing line->direction is
-> > > > > > > > > either input or output.  It is drawn from GPIOLINE_FLAG_IS_OUT, so
-> > > > > > > > > as-is is gets mapped to input.
-> > > > > > > > > I didn't want to change the existing line->direction, and adding the
-> > > > > > > > > as-is seemed clearer than adding another flavour of direction that
-> > > > > > > > > contained all three.
-> > > > > > > > >
-> > > > > > > >
-> > > > > > > > Hmmm, I think I see what you were getting at - the line->direction is the
-> > > > > > > > direction from the kernel, so it doesn't hurt to use that value to set the
-> > > > > > > > corresponding request flags - even if the original request was as-is??
-> > > > > > > >
-> > > > > > > > If that is the case then the line->as_is can be dropped throughout.
-> > > > > > > >
-> > > > > > > > Kent.
-> > > > > > > >
-> > > > > > >
-> > > > > > > Yes, this is what I was thinking. Just need to make sure the value
-> > > > > > > from the kernel is up-to-date.
-> > > > > > >
-> > > > > >
-> > > > > > So fail if needs_update?
-> > > > > >
-> > > > > > Kent.
-> > > > >
-> > > > > I'd say: do an implicit update before setting config.
-> > > > >
-> > > >
-> > > > So gpiod_line_update if needs_update, and fail if that fails?
-> > > >
-> > > > Kent.
-> > >
-> > > Without the if - needs_update is only set if an implicit update fails
-> > > in line_maybe_update(). But in this case we need to be sure, so do it
-> > > unconditionally.
-> > >
-> >
-> > Given that line_maybe_update is called at the end of request creation, and
-> > whenever set_config is called, how can line->direction be inconsistent
-> > with the kernel state - as long as needs_update is false?
-> >
-> 
-> I don't think we should call line_maybe_update() on set_config() - in
-> this case we should call gpiod_line_update() and fail in set_config()
-> if it fails.
-> 
-> I hope that's clearer.
-> 
+Changes since v1:
+ - address all v1 review comments
+ - tools accept bias flag field rather than individual flags
+ - add tests for tool changes
+ 
+This patch series adds support for changes to the GPIO uAPI that are on
+track to be included in the v5.5 kernel.  There are two components to the
+uAPI changes - the addition of bias flags and a new SET_CONFIG ioctl.  This
+series adds support to the libgpiod API, and to both C++ and Python
+bindings, for both of those components.
 
-Not really.  I was already shaky on the needs_update and I'm getting more
-confused about the overall needs_update handling policy by the minute.
+The libgpiod tools are also updated, where appropriate, to support the bias
+flags.
 
-Perhaps it will be more productive to go to the code.
-I'll send out what I have as v2 and we can go from there.
+The series is based on the current libgpiod master@bb3dc9e.
 
-Cheers,
-Kent.
+Kent Gibson (14):
+  core: add support for bias flags
+  tests: add tests for bias flags
+  bindings: cxx: add support for bias flags
+  bindings: cxx: tests: add tests for bias flags
+  bindings: python: add support for bias flags
+  bindings: python: tests: add tests for bias flags
+  core: add support for SET_CONFIG
+  tests: add tests for SET_CONFIG
+  bindings: cxx: add support for SET_CONFIG
+  bindings: cxx: tests: add tests for SET_CONFIG methods
+  bindings: python: add support for SET_CONFIG
+  bindings: python: tests: add tests for SET_CONFIG methods
+  tools: add support for bias flags
+  tools: add tests for bias and drive flags
+
+ bindings/cxx/gpiod.hpp                 |  81 +++++
+ bindings/cxx/line.cpp                  |  56 +++
+ bindings/cxx/line_bulk.cpp             |  89 +++++
+ bindings/cxx/tests/tests-line.cpp      | 215 ++++++++++++
+ bindings/python/gpiodmodule.c          | 463 +++++++++++++++++++++++-
+ bindings/python/tests/gpiod_py_test.py | 254 ++++++++++++++
+ include/gpiod.h                        | 306 ++++++++++++++++
+ lib/core.c                             | 216 +++++++++++-
+ lib/ctxless.c                          | 114 +++++-
+ tests/tests-ctxless.c                  |  64 +++-
+ tests/tests-event.c                    | 120 +++++++
+ tests/tests-line.c                     | 468 ++++++++++++++++++++++++-
+ tools/gpio-tools-test.bats             | 139 ++++++++
+ tools/gpioget.c                        |  32 +-
+ tools/gpiomon.c                        |  36 +-
+ tools/gpioset.c                        |  54 ++-
+ 16 files changed, 2666 insertions(+), 41 deletions(-)
+
+-- 
+2.24.0
+
