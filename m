@@ -2,109 +2,191 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id C61CC104B0F
-	for <lists+linux-gpio@lfdr.de>; Thu, 21 Nov 2019 08:12:01 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 25FDD104B23
+	for <lists+linux-gpio@lfdr.de>; Thu, 21 Nov 2019 08:13:56 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726623AbfKUHL7 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 21 Nov 2019 02:11:59 -0500
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:44112 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726230AbfKUHL6 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 21 Nov 2019 02:11:58 -0500
-Received: by mail-lf1-f68.google.com with SMTP id v201so663218lfa.11
-        for <linux-gpio@vger.kernel.org>; Wed, 20 Nov 2019 23:11:55 -0800 (PST)
+        id S1726343AbfKUHNz (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 21 Nov 2019 02:13:55 -0500
+Received: from mail-il1-f196.google.com ([209.85.166.196]:36889 "EHLO
+        mail-il1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725842AbfKUHNz (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 21 Nov 2019 02:13:55 -0500
+Received: by mail-il1-f196.google.com with SMTP id s5so2288252iln.4
+        for <linux-gpio@vger.kernel.org>; Wed, 20 Nov 2019 23:13:53 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:from:date:message-id:subject:to:cc;
-        bh=C8kRodRL8XSmhyVZocIedEzxOc9YWRiTUdGRplCklx8=;
-        b=br53oIpbhWMQuSOBZ85hloBwEXKLJa6ayX8pjCUt5ja0k5GVVkZPsX4Sg0buNDkSnl
-         cYYKZaQ6Kg9yIs8i5OS8bzspp4023qzP8y3BtUdKZKZkdK1paYt2ZeHc6taGagwEWZP2
-         Kh5FC+xlQNXxwZf1bRlzQqoS7Rhs+j/iqLAU5kQMQ+Ta46YaNv4EMzkmIIEeB1TbgVJn
-         Os6J01kqT+WreZVH53NTfc2EV6PtgaCcCpPDo4Tmxaz2Ys0YDdVNL3dbrqI/GVODO9NR
-         ULZPQLtfRv22prhV0EdyQBeWJ9kVlQ9EG2XVL/0eUe/SF01OFoZhQZ1zOYFLyFmZKGF5
-         0xaw==
+        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=H5eZbelhZBusLtNbHD4GUAhb1UqQXeIIxNeX4fuaWJI=;
+        b=xhRJ4su+pFMh3Ig+tS1kda+KpNAcsF0spbrTzK8/w3ve8QHlbgqX8OBworsJuPXtoR
+         +IBLs9YV7eSRbt82j5VYGQ1jefzf/KtsD7YhpzbhK1sJlz5yYQvTkzd1AUcxYUIqGxh3
+         x+PrJaQSbhW7lquyEa3FGa25Sa6xw2Jzz0a7vFBtM4sOZ3d3Pmf+gDEFHEUG3JLRgtE8
+         LPgD4dd8FJrCQt+SgeXCSifQK9G+lMLYQCL4tvPfeLW4AgUPCx7n54vdeT+Pj/RkTSvV
+         t4Gj7rpLC0AanAxrBEggExFzAj7SsEuUwuaDUlr6ckdT8SCW+lynwwYuS9oIn7+duMPk
+         s6wA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
-        bh=C8kRodRL8XSmhyVZocIedEzxOc9YWRiTUdGRplCklx8=;
-        b=GCRJpyutEDLd5GNaSb+8M1ewILUoqepVOxdfavucFdL9upG8E3kaIBm6EnlzxDS8mA
-         a/B2Wc+nf1AOnPqgQli5U5RSkmmwh8oYaNCZD6MU5+uBvWovS0PR86DyGxvZ0LNdRKcK
-         nkuGDWZJcMNYFDYx9iukHW4hHuE7IPKwHa5ryoi6Sc3PTdtLp5+N5ry9r0THuBOzDMKB
-         XVzi5z1nxfDsNriK1fhvFhhosDNnofCdjsM0h6jX/UWGYj99TM8QGrugX+84Pnrhh1N/
-         qTojqBD0Y+aONax043Pz4eKOl5CiXhNjUQNCectVk16+4F3pBLkkrEq7BfVJz8WcpYJM
-         cdkQ==
-X-Gm-Message-State: APjAAAWirkckuNn/bcy8KQnMOfeZAlAkX3SMan8z4wQSnsn0l4LlcDj2
-        HNmwYztqW0W9vf9iKiLoOPykhw6QUYZiLxLTrVD5SQ==
-X-Google-Smtp-Source: APXvYqyNFkF/zk17TtnoDXV2+D0NUTf4ixhVv9c3tjT5yI5EgRyIj8a9Gf/3mBaaFZML6AdzHBAZfMhU2TypEvDE2Yw=
-X-Received: by 2002:ac2:4a8f:: with SMTP id l15mr6156904lfp.5.1574320314719;
- Wed, 20 Nov 2019 23:11:54 -0800 (PST)
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=H5eZbelhZBusLtNbHD4GUAhb1UqQXeIIxNeX4fuaWJI=;
+        b=RFGjVGXToCGHbyIIWHctUAIAkdU+rbHeRjH+RTtHKFKwNzEswtEY3/HyGmFYkV86tW
+         Nvmb+NAadZnGAOOeaNhbMlP00ESXqKv/j1XKehbjouvnqEfEWJTRs35rMkrkEFSUP4hT
+         mp8B1so4yp1hrLeUsxU7Yu1HJPFSGkGJ/vZ/2c7kUH5wIZLD1mEBufpr98saNygS1M8t
+         EzmQgvj1fnfeZ4Dy5ChPzaLe4vqDJ9xLUkB6Ldym70A+8tzTK7auSGok+VmyPVyexbX6
+         SwGVmSoOH/To7eCKF/hObsBAT7+Y9kRVfFnL9BW2V3GnUvqcPvO5OonTwmImiVpQqdR4
+         OckQ==
+X-Gm-Message-State: APjAAAUGQuJKNxqVPkXMSyLkl3ylFyrqe85rHaPMgB5XZoSCJusErRgh
+        5YaBUOOzhaqDR77ifEhEoAjQIapydgqjKFRfSYbLOA==
+X-Google-Smtp-Source: APXvYqwmHTcwmxDDgxgCcXOPv0UXWw0Zne4yWCbzNyYSvPETpb01ApA8lgWUOqoIwxrFCmJ6uF9JTd5o5Mnof8bBsUo=
+X-Received: by 2002:a92:ba09:: with SMTP id o9mr8984784ili.6.1574320433350;
+ Wed, 20 Nov 2019 23:13:53 -0800 (PST)
 MIME-Version: 1.0
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Thu, 21 Nov 2019 08:11:43 +0100
-Message-ID: <CACRpkdbfVvxAUEeGApGx7jhagkOrNY7_G=ch4kzUE5YCD_N3ZA@mail.gmail.com>
-Subject: [GIT PULL] GPIO fixes for v5.4
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "thierry.reding@gmail.com" <thierry.reding@gmail.com>,
-        Laura Abbott <labbott@redhat.com>,
-        Hans de Goede <hdegoede@redhat.com>
+References: <CAMpxmJXcEFO-05H-O0Kjs8Latwhh9RWos0tXzkc_C7KyEye8Yw@mail.gmail.com>
+ <20191118144825.GE27359@sol> <20191119155249.GA20834@sol> <CAMRc=MeG2FJeKVdKSywOT3271jA_sDfcPNHe4BzyiEgxRKtKBg@mail.gmail.com>
+ <20191120135857.GA4218@sol> <CAMRc=McNdcaLJKG3TRvX08Ddwmi-V9AJUDG5zmBgqL8bwjCSYg@mail.gmail.com>
+ <20191120141353.GA5154@sol> <CAMRc=MdWj_+kd2wGUoRVRSd+kq597h-jetiHMwRiOvuUi8qRQQ@mail.gmail.com>
+ <20191120143644.GA5865@sol> <CAMRc=Mex6M9Mmke9ajgLcpy4-Th+GOhycjeEiM+5PMBvmA+Apw@mail.gmail.com>
+ <20191121003443.GA7695@sol>
+In-Reply-To: <20191121003443.GA7695@sol>
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+Date:   Thu, 21 Nov 2019 08:13:42 +0100
+Message-ID: <CAMRc=MebbS86gvXytYrCBOyNVr74fTiVXG+NP0sx0F6SkAL_+A@mail.gmail.com>
+Subject: Re: [libgpiod] [PATCH 11/19] API: add support for SET_CONFIG
+To:     Kent Gibson <warthog618@gmail.com>
+Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        linux-gpio <linux-gpio@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Linus,
+czw., 21 lis 2019 o 01:34 Kent Gibson <warthog618@gmail.com> napisa=C5=82(a=
+):
+>
+> On Wed, Nov 20, 2019 at 04:18:24PM +0100, Bartosz Golaszewski wrote:
+> > =C5=9Br., 20 lis 2019 o 15:36 Kent Gibson <warthog618@gmail.com> napisa=
+=C5=82(a):
+> > >
+> > > On Wed, Nov 20, 2019 at 03:18:36PM +0100, Bartosz Golaszewski wrote:
+> > > > =C5=9Br., 20 lis 2019 o 15:13 Kent Gibson <warthog618@gmail.com> na=
+pisa=C5=82(a):
+> > > > >
+> > > > > On Wed, Nov 20, 2019 at 03:08:57PM +0100, Bartosz Golaszewski wro=
+te:
+> > > > > > =C5=9Br., 20 lis 2019 o 14:59 Kent Gibson <warthog618@gmail.com=
+> napisa=C5=82(a):
+> > > > > > >
+> > > > > > > On Wed, Nov 20, 2019 at 12:00:45PM +0100, Bartosz Golaszewski=
+ wrote:
+> > > > > > > > wt., 19 lis 2019 o 16:53 Kent Gibson <warthog618@gmail.com>=
+ napisa=C5=82(a):
+> > > > > > > > >
+> > > > > > > > > On Mon, Nov 18, 2019 at 10:48:25PM +0800, Kent Gibson wro=
+te:
+> > > > > > > > > > On Mon, Nov 18, 2019 at 02:52:04PM +0100, Bartosz Golas=
+zewski
+> > > > > > > > > > > > +
+> > > > > > > > > > > > +int gpiod_line_set_flags_bulk(struct gpiod_line_bu=
+lk *bulk, int flags)
+> > > > > > > > > > > > +{
+> > > > > > > > > > > > +       struct gpiod_line *line;
+> > > > > > > > > > > > +       int values[GPIOD_LINE_BULK_MAX_LINES];
+> > > > > > > > > > > > +       unsigned int i;
+> > > > > > > > > > > > +       int direction;
+> > > > > > > > > > > > +
+> > > > > > > > > > > > +       line =3D gpiod_line_bulk_get_line(bulk, 0);
+> > > > > > > > > > > > +       if (line->as_is) {
+> > > > > > > > > > >
+> > > > > > > > > > > Can you explain the purpose of this as_is field? I'm =
+not sure this is
+> > > > > > > > > > > really needed.
+> > > > > > > > > > >
+> > > > > > > > > >
+> > > > > > > > > > It is there for gpiod_set_flags, which has to populate =
+the direction
+> > > > > > > > > > flags in the SET_CONFIG ioctl. The existing line->direc=
+tion is
+> > > > > > > > > > either input or output.  It is drawn from GPIOLINE_FLAG=
+_IS_OUT, so
+> > > > > > > > > > as-is is gets mapped to input.
+> > > > > > > > > > I didn't want to change the existing line->direction, a=
+nd adding the
+> > > > > > > > > > as-is seemed clearer than adding another flavour of dir=
+ection that
+> > > > > > > > > > contained all three.
+> > > > > > > > > >
+> > > > > > > > >
+> > > > > > > > > Hmmm, I think I see what you were getting at - the line->=
+direction is the
+> > > > > > > > > direction from the kernel, so it doesn't hurt to use that=
+ value to set the
+> > > > > > > > > corresponding request flags - even if the original reques=
+t was as-is??
+> > > > > > > > >
+> > > > > > > > > If that is the case then the line->as_is can be dropped t=
+hroughout.
+> > > > > > > > >
+> > > > > > > > > Kent.
+> > > > > > > > >
+> > > > > > > >
+> > > > > > > > Yes, this is what I was thinking. Just need to make sure th=
+e value
+> > > > > > > > from the kernel is up-to-date.
+> > > > > > > >
+> > > > > > >
+> > > > > > > So fail if needs_update?
+> > > > > > >
+> > > > > > > Kent.
+> > > > > >
+> > > > > > I'd say: do an implicit update before setting config.
+> > > > > >
+> > > > >
+> > > > > So gpiod_line_update if needs_update, and fail if that fails?
+> > > > >
+> > > > > Kent.
+> > > >
+> > > > Without the if - needs_update is only set if an implicit update fai=
+ls
+> > > > in line_maybe_update(). But in this case we need to be sure, so do =
+it
+> > > > unconditionally.
+> > > >
+> > >
+> > > Given that line_maybe_update is called at the end of request creation=
+, and
+> > > whenever set_config is called, how can line->direction be inconsisten=
+t
+> > > with the kernel state - as long as needs_update is false?
+> > >
+> >
+> > I don't think we should call line_maybe_update() on set_config() - in
+> > this case we should call gpiod_line_update() and fail in set_config()
+> > if it fails.
+> >
+> > I hope that's clearer.
+> >
+>
+> Not really.  I was already shaky on the needs_update and I'm getting more
+> confused about the overall needs_update handling policy by the minute.
+>
 
-a last set of small fixes for GPIO, this cycle was quite busy.
+Yeah it's not optimal. If you have better ideas on how to handle the
+fact that the kernel can't really notify us about the changes in
+line's flags introduced by other processes - I'll be more than glad to
+give them a try. At some point I was thinking about another ioctl()
+that - for a requested line - would return a file descriptor which
+would emit events when a line changes - for instance, it's requested
+by someone else or its direction is changed etc.
 
-Details in the signed tag, please pull it in!
+I then thought that nobody is requesting this yet and so it may be overkill=
+.
 
-Yours,
-Linus Walleij
+Bart
 
-The following changes since commit 31f4f5b495a62c9a8b15b1c3581acd5efeb9af8c:
-
-  Linux 5.4-rc7 (2019-11-10 16:17:15 -0800)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-gpio.git
-tags/gpio-v5.4-5
-
-for you to fetch changes up to cbdaa5e7bd90db9980ff6187baea9d49fc4de960:
-
-  Merge tag 'gpio-v5.4-rc8-fixes-for-linus' of
-git://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux into fixes
-(2019-11-13 22:58:01 +0100)
-
-----------------------------------------------------------------
-GPIO fixes for v5.4:
-
-- Fix debounce delays on the MAX77620 GPIO expander
-- Use the correct unit for debounce times on the BD70528 GPIO expander
-- Get proper deps for parallel builds of the GPIO tools
-- Add a specific ACPI quirk for the Terra Pad 1061
-
-----------------------------------------------------------------
-Hans de Goede (1):
-      gpiolib: acpi: Add Terra Pad 1061 to the run_edge_events_on_boot_blacklist
-
-Laura Abbott (1):
-      tools: gpio: Correctly add make dependencies for gpio_utils
-
-Linus Walleij (1):
-      Merge tag 'gpio-v5.4-rc8-fixes-for-linus' of
-git://git.kernel.org/.../brgl/linux into fixes
-
-Thierry Reding (2):
-      gpio: max77620: Fixup debounce delays
-      gpio: bd70528: Use correct unit for debounce times
-
- drivers/gpio/gpio-bd70528.c  |  6 +++---
- drivers/gpio/gpio-max77620.c |  6 +++---
- drivers/gpio/gpiolib-acpi.c  | 17 +++++++++++++++++
- tools/gpio/Build             |  1 +
- tools/gpio/Makefile          | 10 +++++++---
- 5 files changed, 31 insertions(+), 9 deletions(-)
+> Perhaps it will be more productive to go to the code.
+> I'll send out what I have as v2 and we can go from there.
+>
+> Cheers,
+> Kent.
