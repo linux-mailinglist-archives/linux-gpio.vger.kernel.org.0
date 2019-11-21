@@ -2,59 +2,59 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 4DF51105155
-	for <lists+linux-gpio@lfdr.de>; Thu, 21 Nov 2019 12:24:14 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id BC53F105211
+	for <lists+linux-gpio@lfdr.de>; Thu, 21 Nov 2019 13:08:14 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726230AbfKULYN (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 21 Nov 2019 06:24:13 -0500
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:40972 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726197AbfKULYN (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 21 Nov 2019 06:24:13 -0500
-Received: by mail-wr1-f67.google.com with SMTP id b18so3898846wrj.8
-        for <linux-gpio@vger.kernel.org>; Thu, 21 Nov 2019 03:24:12 -0800 (PST)
+        id S1726546AbfKUMIO (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 21 Nov 2019 07:08:14 -0500
+Received: from mail-wr1-f50.google.com ([209.85.221.50]:42027 "EHLO
+        mail-wr1-f50.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726500AbfKUMIN (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 21 Nov 2019 07:08:13 -0500
+Received: by mail-wr1-f50.google.com with SMTP id a15so4071643wrf.9
+        for <linux-gpio@vger.kernel.org>; Thu, 21 Nov 2019 04:08:12 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=kernelci-org.20150623.gappssmtp.com; s=20150623;
         h=message-id:date:mime-version:content-transfer-encoding:subject:to
          :from;
-        bh=w0heEbc4zhxSXYpD7XDylm+dPSMxWNrGNqhAV03Zn/s=;
-        b=c8zTO9qLyUXyDQMAQz60b3VShhlQTINtysi3gNODIw1/Bd+zU5ipApW3oBidrmP8GZ
-         hqr84JA4Mo5CcSm/0bbRVss0kkhkigYznKCCXdxbI2e5Vqku6ElJkgfS6ziZ6i4/kOct
-         SMqMkKWylEtaplcbc5RR3+zeeJmID5s0CFZqaaMkJN8tqkKa0fKY99EH6i+Wn7Dy5fGp
-         8aW6Cs2+bW0hQncwGtJzv0zFzrH7ibW2yom5qXXv9Jjxz0FCatQK4JGpd8FST6Ns3Wqz
-         E9cqaNnh0QRUSL2378T6oCNhC97lD2QjmSQNv0RSAscQ1tmzaaLsnU03PMKhYo03zUxM
-         BdOA==
+        bh=uEa7di2Lz7VIScowZAi9LS+k/YS/AcqfHQznl3OUsqA=;
+        b=qqdu0+H4S0FiK/xjklRFbp3gkQkGuwmLN7+JGA8yufsoU0/lqvBrEqV08/qY7UIt8T
+         YDoc79nAgCCHICOP9wOsZS9X6jdzl0KsPFnRvek55XbGZjC+yILymjnxj9p9IZgS9K9J
+         zkSog0xmVmwCXab+gvo22ec2r72iYPbOCUq7c4m+41OaIP34wONuLUd/T0/TV0srHOqr
+         hhoIalFh5Tk+fFM0oEHlBsssnfA6Grs19LZ/4K4wI6+fsbgHVX6PlXduhMYZbG3BhE/8
+         cKX11CVbwZwM3drpb2jYG7/ml3t2mW1ymfLC+pcI3QxMNgU6B+6RhZteeDvM+QI4lvOA
+         FdYw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:message-id:date:mime-version
          :content-transfer-encoding:subject:to:from;
-        bh=w0heEbc4zhxSXYpD7XDylm+dPSMxWNrGNqhAV03Zn/s=;
-        b=WPRwX0NAU8l1enkjsTgduMKtubssxKyhTs2GFgV9Og7Jo9UBSOPx0NUD7rQyDPcZFv
-         3TaiCTopJsz/ZZ5nYJ7UtfHIMw4s3eNRWvUolUv4pvQpp4HK9IfCiB0vhsVF6BwlqDzZ
-         H0foYEs3A1CIbcHC0hRSOcEE6bugPBx0R3C52L2V9yfsaeVERubkVwLMKQWaIe0m1Laj
-         ykJ2MU6V2UMQIuK2iRMf3g7Mfn5QaUcPgZmg58R1pQOdXrwC8Qq5rG2DSMZw1lEEZikS
-         dV6gkheaxaKb7JcwIErnZNaMhYH4T7oXZihnXHtgKAzNi4RORF2P7hE1497+OTr6HGjD
-         tjtA==
-X-Gm-Message-State: APjAAAWwfk5yd4Z8DYMu8j2oPz8YLe5TSG0Sgqfz5g2Z0C8xsTwpGWLl
-        Fh3IC44jfa+63Q1WD9i3SHnT2yh7aRxOvQ==
-X-Google-Smtp-Source: APXvYqzPOcqK4dmfZnpBcp7E7/D/BxMfmrDo2m3i3PWq18DE5VmZI8cxbzFemMy2PvB55ssShcH8eA==
-X-Received: by 2002:a5d:570f:: with SMTP id a15mr9735006wrv.316.1574335451416;
-        Thu, 21 Nov 2019 03:24:11 -0800 (PST)
+        bh=uEa7di2Lz7VIScowZAi9LS+k/YS/AcqfHQznl3OUsqA=;
+        b=H2CxtO2U/fwEkr3hUdtRVEOdJz12CRhdtf8xKHmrZC4n3UFogpztW9h/Ghr4UVKf3p
+         CWhpQJo5PBmxxdqUHxbOkyXY0pd0rmGFtjCJXr4ccvFGq7Ahx0u5kaqfDvPK47FDGxrZ
+         04hS6xV66u3PPmBpX1v/m3oBUy23Ii5Szjd95Y2XUFHh/zcwU8Avh14j+eOFKFmLbaT0
+         N57MAEQxonRpexfi4KpFmREilhHf2NUJJ2S3grL370dV6Fz70vE7uznxvhiJSy0hp8A3
+         5EpZSAolUPXSNLlS9vJk0tlUsHX4fmefyI+STGzvsUAYQ0d4Tnbx6KzZR8o0Tb0rlo9I
+         CdMw==
+X-Gm-Message-State: APjAAAXCjdiwXbcIVnq9M9SGn4JWOaMKnf89MSfcJIBeYgk9X8dZHDhi
+        2NZ/tbNim4e3mxFaYoJJE8z0pfwvK7Ge/w==
+X-Google-Smtp-Source: APXvYqyW9CH4oz1h1Wzt47JDLdtSGT8ly7/MX8WR1L++OCCuo0FcdyKoZfxiA6Vy4YOo2c+ccVSxDg==
+X-Received: by 2002:a5d:6ac9:: with SMTP id u9mr9884647wrw.383.1574338091562;
+        Thu, 21 Nov 2019 04:08:11 -0800 (PST)
 Received: from [148.251.42.114] ([2a01:4f8:201:9271::2])
-        by smtp.gmail.com with ESMTPSA id y11sm993125wrq.12.2019.11.21.03.24.10
+        by smtp.gmail.com with ESMTPSA id u16sm3036357wrr.65.2019.11.21.04.08.10
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 21 Nov 2019 03:24:10 -0800 (PST)
-Message-ID: <5dd673da.1c69fb81.55581.5418@mx.google.com>
-Date:   Thu, 21 Nov 2019 03:24:10 -0800 (PST)
+        Thu, 21 Nov 2019 04:08:10 -0800 (PST)
+Message-ID: <5dd67e2a.1c69fb81.ce0f2.eea4@mx.google.com>
+Date:   Thu, 21 Nov 2019 04:08:10 -0800 (PST)
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
-X-Kernelci-Branch: devel
+X-Kernelci-Branch: for-next
 X-Kernelci-Tree: linusw
-X-Kernelci-Report-Type: build
-X-Kernelci-Kernel: v5.4-rc6-124-g3f86a7e090d1
-Subject: linusw/devel build: 6 builds: 0 failed, 6 passed,
- 3 warnings (v5.4-rc6-124-g3f86a7e090d1)
+X-Kernelci-Report-Type: boot
+X-Kernelci-Kernel: gpio-v5.4-5-120-gac72719b626f
+Subject: linusw/for-next boot: 59 boots: 2 failed,
+ 57 passed (gpio-v5.4-5-120-gac72719b626f)
 To:     linux-gpio@vger.kernel.org, fellows@kernelci.org
 From:   "kernelci.org bot" <bot@kernelci.org>
 Sender: linux-gpio-owner@vger.kernel.org
@@ -62,86 +62,39 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-linusw/devel build: 6 builds: 0 failed, 6 passed, 3 warnings (v5.4-rc6-124-=
-g3f86a7e090d1)
+linusw/for-next boot: 59 boots: 2 failed, 57 passed (gpio-v5.4-5-120-gac727=
+19b626f)
 
-Full Build Summary: https://kernelci.org/build/linusw/branch/devel/kernel/v=
-5.4-rc6-124-g3f86a7e090d1/
+Full Boot Summary: https://kernelci.org/boot/all/job/linusw/branch/for-next=
+/kernel/gpio-v5.4-5-120-gac72719b626f/
+Full Build Summary: https://kernelci.org/build/linusw/branch/for-next/kerne=
+l/gpio-v5.4-5-120-gac72719b626f/
 
 Tree: linusw
-Branch: devel
-Git Describe: v5.4-rc6-124-g3f86a7e090d1
-Git Commit: 3f86a7e090d1dfb974a9dc9d44049f9bff01e6a5
+Branch: for-next
+Git Describe: gpio-v5.4-5-120-gac72719b626f
+Git Commit: ac72719b626fa213950e2f2248d5256b4218af49
 Git URL: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-gpio.=
 git/
-Built: 6 unique architectures
+Tested: 48 unique boards, 15 SoC families, 3 builds out of 6
 
-Warnings Detected:
-
-arc:
-    nsim_hs_defconfig (gcc-8): 2 warnings
+Boot Regressions Detected:
 
 arm64:
 
-arm:
-    multi_v7_defconfig (gcc-8): 1 warning
+    defconfig:
+        gcc-8:
+          meson-gxl-s905d-p230:
+              lab-baylibre: new failure (last pass: v5.4-rc7-124-gd0d9531e3=
+8a6)
 
-mips:
+Boot Failures Detected:
 
-riscv:
-
-x86_64:
-
-
-Warnings summary:
-
-    2    <stdin>:1511:2: warning: #warning syscall clone3 not implemented [=
--Wcpp]
-    1    WARNING: "return_address" [vmlinux] is a static EXPORT_SYMBOL_GPL
-
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D
-
-Detailed per-defconfig build reports:
-
----------------------------------------------------------------------------=
------
-32r2el_defconfig (mips, gcc-8) =E2=80=94 PASS, 0 errors, 0 warnings, 0 sect=
-ion mismatches
-
----------------------------------------------------------------------------=
------
-defconfig (riscv, gcc-8) =E2=80=94 PASS, 0 errors, 0 warnings, 0 section mi=
-smatches
-
----------------------------------------------------------------------------=
------
-defconfig (arm64, gcc-8) =E2=80=94 PASS, 0 errors, 0 warnings, 0 section mi=
-smatches
-
----------------------------------------------------------------------------=
------
-multi_v7_defconfig (arm, gcc-8) =E2=80=94 PASS, 0 errors, 1 warning, 0 sect=
-ion mismatches
-
-Warnings:
-    WARNING: "return_address" [vmlinux] is a static EXPORT_SYMBOL_GPL
-
----------------------------------------------------------------------------=
------
-nsim_hs_defconfig (arc, gcc-8) =E2=80=94 PASS, 0 errors, 2 warnings, 0 sect=
-ion mismatches
-
-Warnings:
-    <stdin>:1511:2: warning: #warning syscall clone3 not implemented [-Wcpp]
-    <stdin>:1511:2: warning: #warning syscall clone3 not implemented [-Wcpp]
-
----------------------------------------------------------------------------=
------
-x86_64_defconfig (x86_64, gcc-8) =E2=80=94 PASS, 0 errors, 0 warnings, 0 se=
-ction mismatches
+arm64:
+    defconfig:
+        gcc-8:
+            meson-gxl-s905d-p230: 1 failed lab
+            meson-gxm-q200: 1 failed lab
 
 ---
 For more info write to <info@kernelci.org>
