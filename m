@@ -2,35 +2,35 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 3D0531065D0
-	for <lists+linux-gpio@lfdr.de>; Fri, 22 Nov 2019 07:27:03 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id DAD161065C2
+	for <lists+linux-gpio@lfdr.de>; Fri, 22 Nov 2019 07:26:56 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727811AbfKVFui (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 22 Nov 2019 00:50:38 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55286 "EHLO mail.kernel.org"
+        id S1727880AbfKVFut (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 22 Nov 2019 00:50:49 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55632 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727804AbfKVFui (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Fri, 22 Nov 2019 00:50:38 -0500
+        id S1727877AbfKVFus (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Fri, 22 Nov 2019 00:50:48 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CB61B2071C;
-        Fri, 22 Nov 2019 05:50:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 98BE120731;
+        Fri, 22 Nov 2019 05:50:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574401837;
-        bh=5PXEbBylnnhAkoiwvd/bOD51FRWOQedouhurN35w0Hc=;
+        s=default; t=1574401848;
+        bh=fY0cUHA/BGwsaXhpKpud9uM8lZl5kyKXm4wqjazhbmM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=SthQBrfiOcHXiyisTuX3ZoE8CR2BqRKJ4NBlYHi+BwJcW/o6rs9jf1C2CF88QEAo8
-         f6O1PWHy9mZZiSot5c1WNCrEl4Bgk+ot2r0QdlJOdd7EJu/fvegQrbI4wmw++wQSLn
-         mBBcUx99eD9xJvSWnTci29Py2po1uHjWdbTYHskI=
+        b=XE5AF4ncdQR7PbJdFmvcXrJAA6iYwTnPFCgosTfgV3o+FLv8IhEf1Bo2WDsgizhcR
+         eqbc8t3GWuw6670kqtzNVIqa6B3lxFwwK/y2LAHGPawEJutM2q8vH8BdDZiW2O86e0
+         SbrqA9dAOdUurqj1l7RlzGU4aui8skK16w9AfjYw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+Cc:     Martin Schiller <ms@dev.tdt.de>, John Crispin <john@phrozen.org>,
         Linus Walleij <linus.walleij@linaro.org>,
         Sasha Levin <sashal@kernel.org>, linux-gpio@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 078/219] gpio: raspberrypi-exp: decrease refcount on firmware dt node
-Date:   Fri, 22 Nov 2019 00:46:50 -0500
-Message-Id: <20191122054911.1750-71-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 086/219] pinctrl: xway: fix gpio-hog related boot issues
+Date:   Fri, 22 Nov 2019 00:46:58 -0500
+Message-Id: <20191122054911.1750-79-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191122054911.1750-1-sashal@kernel.org>
 References: <20191122054911.1750-1-sashal@kernel.org>
@@ -43,34 +43,87 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-From: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+From: Martin Schiller <ms@dev.tdt.de>
 
-[ Upstream commit 85af74c474b21940e88483fd48f6094145c89d97 ]
+[ Upstream commit 9b4924da4711674e62d97d4f5360446cc78337af ]
 
-We're getting a reference RPi's firmware node in order to be able to
-communicate with it's driver. We should decrease the reference count on
-the dt node after being done with it.
+This patch is based on commit a86caa9ba5d7 ("pinctrl: msm: fix gpio-hog
+related boot issues").
 
-Fixes: a98d90e7d588 ("gpio: raspberrypi-exp: Driver for RPi3 GPIO expander via mailbox service")
-Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+It fixes the issue that the gpio ranges needs to be defined before
+gpiochip_add().
+
+Therefore, we also have to swap the order of registering the pinctrl
+driver and registering the gpio chip.
+
+You also have to add the "gpio-ranges" property to the pinctrl device
+node to get it finally working.
+
+Signed-off-by: Martin Schiller <ms@dev.tdt.de>
+Acked-by: John Crispin <john@phrozen.org>
 Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpio/gpio-raspberrypi-exp.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/pinctrl/pinctrl-xway.c | 39 +++++++++++++++++++++++-----------
+ 1 file changed, 27 insertions(+), 12 deletions(-)
 
-diff --git a/drivers/gpio/gpio-raspberrypi-exp.c b/drivers/gpio/gpio-raspberrypi-exp.c
-index d6d36d537e373..b77ea16ffa031 100644
---- a/drivers/gpio/gpio-raspberrypi-exp.c
-+++ b/drivers/gpio/gpio-raspberrypi-exp.c
-@@ -206,6 +206,7 @@ static int rpi_exp_gpio_probe(struct platform_device *pdev)
+diff --git a/drivers/pinctrl/pinctrl-xway.c b/drivers/pinctrl/pinctrl-xway.c
+index 93f8bd04e7fe6..ae74b260b014b 100644
+--- a/drivers/pinctrl/pinctrl-xway.c
++++ b/drivers/pinctrl/pinctrl-xway.c
+@@ -1746,14 +1746,6 @@ static int pinmux_xway_probe(struct platform_device *pdev)
+ 	}
+ 	xway_pctrl_desc.pins = xway_info.pads;
+ 
+-	/* register the gpio chip */
+-	xway_chip.parent = &pdev->dev;
+-	ret = devm_gpiochip_add_data(&pdev->dev, &xway_chip, NULL);
+-	if (ret) {
+-		dev_err(&pdev->dev, "Failed to register gpio chip\n");
+-		return ret;
+-	}
+-
+ 	/* setup the data needed by pinctrl */
+ 	xway_pctrl_desc.name	= dev_name(&pdev->dev);
+ 	xway_pctrl_desc.npins	= xway_chip.ngpio;
+@@ -1775,10 +1767,33 @@ static int pinmux_xway_probe(struct platform_device *pdev)
+ 		return ret;
  	}
  
- 	fw = rpi_firmware_get(fw_node);
-+	of_node_put(fw_node);
- 	if (!fw)
- 		return -EPROBE_DEFER;
- 
+-	/* finish with registering the gpio range in pinctrl */
+-	xway_gpio_range.npins = xway_chip.ngpio;
+-	xway_gpio_range.base = xway_chip.base;
+-	pinctrl_add_gpio_range(xway_info.pctrl, &xway_gpio_range);
++	/* register the gpio chip */
++	xway_chip.parent = &pdev->dev;
++	xway_chip.owner = THIS_MODULE;
++	xway_chip.of_node = pdev->dev.of_node;
++	ret = devm_gpiochip_add_data(&pdev->dev, &xway_chip, NULL);
++	if (ret) {
++		dev_err(&pdev->dev, "Failed to register gpio chip\n");
++		return ret;
++	}
++
++	/*
++	 * For DeviceTree-supported systems, the gpio core checks the
++	 * pinctrl's device node for the "gpio-ranges" property.
++	 * If it is present, it takes care of adding the pin ranges
++	 * for the driver. In this case the driver can skip ahead.
++	 *
++	 * In order to remain compatible with older, existing DeviceTree
++	 * files which don't set the "gpio-ranges" property or systems that
++	 * utilize ACPI the driver has to call gpiochip_add_pin_range().
++	 */
++	if (!of_property_read_bool(pdev->dev.of_node, "gpio-ranges")) {
++		/* finish with registering the gpio range in pinctrl */
++		xway_gpio_range.npins = xway_chip.ngpio;
++		xway_gpio_range.base = xway_chip.base;
++		pinctrl_add_gpio_range(xway_info.pctrl, &xway_gpio_range);
++	}
++
+ 	dev_info(&pdev->dev, "Init done\n");
+ 	return 0;
+ }
 -- 
 2.20.1
 
