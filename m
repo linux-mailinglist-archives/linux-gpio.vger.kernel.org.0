@@ -2,76 +2,78 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 7EDB0107295
-	for <lists+linux-gpio@lfdr.de>; Fri, 22 Nov 2019 13:59:49 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id F31D31072AD
+	for <lists+linux-gpio@lfdr.de>; Fri, 22 Nov 2019 14:01:51 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726985AbfKVM7s (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 22 Nov 2019 07:59:48 -0500
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:44607 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726792AbfKVM7s (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 22 Nov 2019 07:59:48 -0500
-Received: by mail-lf1-f66.google.com with SMTP id v201so4398448lfa.11
-        for <linux-gpio@vger.kernel.org>; Fri, 22 Nov 2019 04:59:47 -0800 (PST)
+        id S1727867AbfKVNBt (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 22 Nov 2019 08:01:49 -0500
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:33608 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727809AbfKVNBt (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 22 Nov 2019 08:01:49 -0500
+Received: by mail-lf1-f65.google.com with SMTP id d6so5482589lfc.0
+        for <linux-gpio@vger.kernel.org>; Fri, 22 Nov 2019 05:01:48 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=q8dmnxZ8Ub8Bxc2H8I3mPfzbqfpB7OPPdHaZygHcHFE=;
-        b=DaPJMLk8AL1aq2ByFGb2IWSuYlXpiez43Oi25BeBN7wROv9RgVJ815FEIM9S8LtBJZ
-         UtonKNOJCNB+rDeRCfVWO5NE1S5bLZRNGDZx5UjRfDgZm2YJuJxWT3yNlrS0LoHq2F9k
-         VmT47cxRT8H/xf7AvyCN4gT1bdBoBYAV65OH4MLbzwZBnPytv2hJUwu3qpR9fvPqCcFS
-         42q0IyZgsuI1qoYCQAr18hOe6tsMEwOYuN6ucIdogf/4horoUpS9E6Gyl91z//4QGT81
-         7TaGOV1qU8P3so2gBU0fMgkq3aA5Sjpa17HQ6ejQ77o4kRSxZAXUcPe5NBsEVnvbzrEy
-         lyuw==
+        bh=Dn2Q+lxc2hD365R8dpx/qDcvh0SW6iReRcimhdnvJVs=;
+        b=T3iDSlAsyuLG+UJUCmoncxR1Bu/bnkXL+KTq5dtWsOPEk5RpZ8edNc98Onwl6slav+
+         /6e8hX+pTkWaSIXGqEuy9X9rZyNwmY4TERtxiAfEDekog4Gkz38xdZQ0RSgGTrgjfXWm
+         Owq4J8pZTVADQ/t5uY4imCraJJ2dIrTT2uwE0EY2E3x+Uro8T1zF0BkVxkc8pF0FsqBl
+         y6GKP5K6axb8BQ38YAG8H8sPZiX4W7XuFOsvWqrZ1MviJOCm684lRjpNZpMzH8na0jOx
+         wqdeYsaHigtxhdjowwJZrUBM8VUa8C/SZB2DM3PbahSmncXpmbcvjBgy4Xy+mo3eR0h4
+         1WBg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=q8dmnxZ8Ub8Bxc2H8I3mPfzbqfpB7OPPdHaZygHcHFE=;
-        b=dvMZ7B6nkXmhaaAfXB6LZ/2kwtrb1bfRGxAAThjBtfcNFuwc+znVXahqTUgol0L8op
-         XmODzm6fZaJxNosdNnSMXXfra2Arq6fU/u33UMbH7qq84ZiRXuX/ntThbpiUnSruvHx9
-         BAAo8wWp3yE3ZP1GamYGv58xk3KMbIcSRZvgSvUn8sk1/6XlrTut3e12S6Ift8QYfqhd
-         924ovj3jIhKWho2+qnvmSihCxL4Bh72cQV4q6YW4MCV2klM2E2pyRaQxMphBuATAOier
-         R+mIKtsjsFV90D9UHYrzjo64PubJ0UpQnkI+YUeMd4iLU6R9Q8fqNqqnAizh3ynBtYKC
-         W1eA==
-X-Gm-Message-State: APjAAAUFu9WogtLRxYrlenXgGBi2XKb3Zosgp52UBcWh6ACd6nOt8mqD
-        X6own4jcbzITxhFdfhFpP25IdZsCBMoJTZjBX/gyYw==
-X-Google-Smtp-Source: APXvYqwYz+6QGdIRe/6VX6sUO09vd4ONwLVaGPGso7wwY07jjid5xDn5gxKiF4dN+YxhEi01937w3jc/iLYs/k5FSsM=
-X-Received: by 2002:ac2:5b86:: with SMTP id o6mr11970188lfn.44.1574427586437;
- Fri, 22 Nov 2019 04:59:46 -0800 (PST)
+        bh=Dn2Q+lxc2hD365R8dpx/qDcvh0SW6iReRcimhdnvJVs=;
+        b=QevOo0Vfe+zNzn6g9j9M4/wd36rgdlARRPkQM8lDNZccyxIGLUrhRtyok4ikBWs9zS
+         5mU0bb80GBrNo54Ggn5PxxHi2I/wuS6yoOgN2Y4pYKXgNe4CZShOcsXHr2tO88GZQjCC
+         QetKXLLhR/8HLzFlmFJbN1Z7Ahrm7/iNXRRVBn1GHXomRKmztAlmF3fO/kWoYZv2ZMtY
+         sI+5KD4qZOOgTusyRlczDRQjaNQ2fFixtqoBVjeAuks44bltKnNS768IbwRHDjhjn4UU
+         DmbPwGrjQgFNyGXfFdj5CAAqiYUjnrvI0u8fUXD57QRFyBNLyVukKUKxWm4KPOSRs80E
+         9+UA==
+X-Gm-Message-State: APjAAAXKR1QyeBZ8hSHfaztR6FYiEPD4jdy2pL9PihuNolKsqDu76lXv
+        xgCnwgcYHFRMXEuiJEP8ZEh6vmsq6ar3ZS6eH4Wnzg==
+X-Google-Smtp-Source: APXvYqzo/k0rIsJGGL399pE+GzotZ33QW/YQlNt/JpZVm7SU204RwrS3/eFE+xu+DFtDva5eWFhzGzqC/njjDmo3YqM=
+X-Received: by 2002:ac2:4945:: with SMTP id o5mr11596350lfi.93.1574427707515;
+ Fri, 22 Nov 2019 05:01:47 -0800 (PST)
 MIME-Version: 1.0
-References: <20191122034702.58563-1-dwlsalmeida@gmail.com>
-In-Reply-To: <20191122034702.58563-1-dwlsalmeida@gmail.com>
+References: <20191122061839.24904-1-hui.song_1@nxp.com>
+In-Reply-To: <20191122061839.24904-1-hui.song_1@nxp.com>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Fri, 22 Nov 2019 13:59:33 +0100
-Message-ID: <CACRpkdbaDEmZ4JCnWGinVVjzbVB=efTjMSTa+mrzuuaK_sCqmw@mail.gmail.com>
-Subject: Re: [PATCH] Documentation: gpio: driver.rst: Fix warnings
-To:     "Daniel W. S. Almeida" <dwlsalmeida@gmail.com>
-Cc:     Jonathan Corbet <corbet@lwn.net>,
+Date:   Fri, 22 Nov 2019 14:01:35 +0100
+Message-ID: <CACRpkdYhLoGdGQt_jzj5aFa-EY_kMimoVShi7QFLG3sZbC436w@mail.gmail.com>
+Subject: Re: [PATCH v1] gpio : mpc8xxx : ls1088a/ls1028a edge detection mode
+ bug fixs.
+To:     Hui Song <hui.song_1@nxp.com>
+Cc:     Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        skhan@linuxfoundation.org,
-        linux-kernel-mentees@lists.linuxfoundation.org
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Nov 22, 2019 at 4:55 AM Daniel W. S. Almeida
-<dwlsalmeida@gmail.com> wrote:
+On Fri, Nov 22, 2019 at 7:18 AM Hui Song <hui.song_1@nxp.com> wrote:
 
-> From: "Daniel W. S. Almeida" <dwlsalmeida@gmail.com>
+> From: Song Hui <hui.song_1@nxp.com>
 >
-> Fix warnings due to incorrect rst markup. Also improved the presentation
-> a little without changing the underlying content.
+> On these boards, the irq_set_type must point one valid function pointer
+> that can correctly set both edge and falling edge.
 >
-> Signed-off-by: Daniel W. S. Almeida <dwlsalmeida@gmail.com>
+> Signed-off-by: Song Hui <hui.song_1@nxp.com>
 
-Thanks a lot, patch applied!
+Patch applied!
 
 Yours,
 Linus Walleij
