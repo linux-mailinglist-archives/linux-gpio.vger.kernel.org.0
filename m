@@ -2,79 +2,86 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 2794610730C
-	for <lists+linux-gpio@lfdr.de>; Fri, 22 Nov 2019 14:23:45 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id EF7DE10731C
+	for <lists+linux-gpio@lfdr.de>; Fri, 22 Nov 2019 14:27:44 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727811AbfKVNXo (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 22 Nov 2019 08:23:44 -0500
-Received: from mail-lf1-f67.google.com ([209.85.167.67]:41622 "EHLO
-        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726719AbfKVNXn (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 22 Nov 2019 08:23:43 -0500
-Received: by mail-lf1-f67.google.com with SMTP id m30so3649531lfp.8
-        for <linux-gpio@vger.kernel.org>; Fri, 22 Nov 2019 05:23:42 -0800 (PST)
+        id S1726638AbfKVN1o (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 22 Nov 2019 08:27:44 -0500
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:42459 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726526AbfKVN1o (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 22 Nov 2019 08:27:44 -0500
+Received: by mail-lj1-f193.google.com with SMTP id n5so7341176ljc.9
+        for <linux-gpio@vger.kernel.org>; Fri, 22 Nov 2019 05:27:42 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=G64bQ8A3yMTqtNBBWlyBmb0qrNhP58uWiyeN1U5KLKw=;
-        b=oOCpH0ULI7JqIinV2acu9vs3mEAOQ46GMMMuuiYjz4Q2A0TM3VKB5XZ/sQ6BG/fQsG
-         Mo7R9HmO1Hr5pSFYXX9CUQ7Bec3RIsAildBF3DJ9hs9r9e5hCU+THo3i9MqeRiPp1eYn
-         uUy3QlRloKM4ueQJrjNnpm2brSNUHHJEewfQsc1CXYOvTcdDYHHrCjWH9TO1NLL1YyRg
-         E/1iOC8vb52G/qpBQkYGnCJirqwadUlUIXiFpmGl9e84F8QwImAAIb8LLvTQdDb9JeSO
-         kEfI67Ph4F9eEap5SGeKceaBfvA6yM6yKL+qd4Sbrh0PF2aahIU91XTuwhG6gFrFz0N1
-         6ojQ==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Tdqdc6GlLGKNFIVpHsNHNB/9gnpCM649CYJvlrBtXXU=;
+        b=gMc0cdHnX/Yvn/AGWg04HeYarp0o5t4XKrnKA09KndSOlhYSGhzEv8K7FDHetoqirr
+         kvXrg98JATd4kcwQhJskvtlUgKLFLu2LXwzIvad/RK64bAoZ6xvZqwLXLu/rflOhW8tv
+         3lba/Z8WAA5j5uQOFQHysT5dEVIMg8AJMQddmtvBq2EnIo8Fd0k5whndvDPPcwxNFPn1
+         WGyxrPK6Q0n0EbdJhb+vvi/sLCsKR35XBj9QNrMsUHh1VRdN9YbhbwjHiczWgibXHpWw
+         n5G/RpKuupEjv455sLt9xAo4gPXfdWO8JZS+5AQXuKAMbMyQoRmMqJ8GjDvBBc823bxD
+         te3g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=G64bQ8A3yMTqtNBBWlyBmb0qrNhP58uWiyeN1U5KLKw=;
-        b=rOU5NYHL7Y8NzctNKEMbb9fNmBtXglQFxAcJ4y87RMPn+J6XCEdG/BIq867hCnS6hl
-         x17H5k4HqW7mPMFNTbjjDRjTNqzhU7sqyB13q1t94kHnPdGc7DahxIlsXuIH/70rP6Zu
-         3pHfRaSlRy12YGYXmAHPOIx1c2BbAusJfTFN2yJ45Tujo+iGLoygZ6/1h+KjU+MWL8KO
-         IIhpLf7djFPvRE/3m9+1NhA0oZjXMK8lZ5vLzFaL8DaX7oBZ0lcPdZ4OCn6k0N3eFfZZ
-         QSrR+xFDb7zR7fWirSoPGrrgQ+wZT+Mymmff4c1++QLFppcMKcvAXORJ+JMKLD32qinJ
-         FsOA==
-X-Gm-Message-State: APjAAAVDbQB/QTm/MYERLD51Sf1lmJNvQ9342X0nQFd8dEmd3IKpJI6J
-        TMh4XVcqg2NlQr+cALnwj8wlSVo6gd50FE5sywo5FG14tQQ=
-X-Google-Smtp-Source: APXvYqwEF+IMct0sUqko73DZ1FYEj7WuVXA1c8Q04GTvwlG6eN/OQ1Bt+LcQ4w0/EWe1WDQ1kXUaUsPRu4TNl11V9Co=
-X-Received: by 2002:ac2:5b86:: with SMTP id o6mr12054376lfn.44.1574429021774;
- Fri, 22 Nov 2019 05:23:41 -0800 (PST)
-MIME-Version: 1.0
-References: <20191122113230.16486-1-miquel.raynal@bootlin.com>
-In-Reply-To: <20191122113230.16486-1-miquel.raynal@bootlin.com>
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Tdqdc6GlLGKNFIVpHsNHNB/9gnpCM649CYJvlrBtXXU=;
+        b=uGlNeQn7y+XorsJxIiEZT+8S86xFGmOwUreJdAqWZOAZIURzmYuQjiCWj7sCQEJU8/
+         qCzppuptlw7PS3CkCKl6mM0mz1UPddxpZwnrPr9dSlSFkjVRu94lVdR00z31Qqw5bv3T
+         dR0gnk3FOz+rp7c4s1zdPKG6l/NUFY7IQo498svUEJZDhDifQEyZx13MJ9QveQTK31ks
+         c83gEm42T9WDzGOqaqkFJcaCTITUeV0mkqj+khZYsxMIZDxzMazxKcvqxgxTl6eugfgn
+         6OG8Nfq3O+ePtK6ZZnkSgnDqSMFfuqYdLAXVR+PRbL6KnSETSoba+lcPrEU0DVc/mCw5
+         H2kw==
+X-Gm-Message-State: APjAAAVBWpXOMPMfuD7CpGextxi3nhuAi9Y4A6nmyMumFUzImatCvGtq
+        u5ZRdFbUkxObvgYuCn3xrDcJUUwZ9XU=
+X-Google-Smtp-Source: APXvYqzLr8qUrTfYhkw3JyTo4MTPASkr39Qo8LHBvJMEAxPE1vos57CqlaF3oeK3mNqzYO1U5lfKlw==
+X-Received: by 2002:a2e:9905:: with SMTP id v5mr12277652lji.213.1574429261649;
+        Fri, 22 Nov 2019 05:27:41 -0800 (PST)
+Received: from genomnajs.ideon.se ([85.235.10.227])
+        by smtp.gmail.com with ESMTPSA id s23sm3035106ljm.20.2019.11.22.05.27.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 22 Nov 2019 05:27:40 -0800 (PST)
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Fri, 22 Nov 2019 14:23:30 +0100
-Message-ID: <CACRpkdYMoRXT0vGT2NfQaSq6jU-0m3A4JGrk7YAhtDih3meBQA@mail.gmail.com>
-Subject: Re: [PATCH v3] gpio: pca953x: Add Maxim MAX7313 PWM support
-To:     Miquel Raynal <miquel.raynal@bootlin.com>,
-        Thierry Reding <thierry.reding@gmail.com>
+To:     linux-gpio@vger.kernel.org
 Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        linux-pwm@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Content-Type: text/plain; charset="UTF-8"
+        Linus Walleij <linus.walleij@linaro.org>
+Subject: [PATCH] gpio: Add TODO item for regmap helper
+Date:   Fri, 22 Nov 2019 14:27:38 +0100
+Message-Id: <20191122132738.8857-1-linus.walleij@linaro.org>
+X-Mailer: git-send-email 2.23.0
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Nov 22, 2019 at 12:32 PM Miquel Raynal
-<miquel.raynal@bootlin.com> wrote:
+Add a TODO item for a generic MMIO regmap helper.
 
-> The MAX7313 chip is fully compatible with the PCA9535 on its basic
-> functions but can also manage the intensity on each of its ports with
-> PWM. Each output is independent and may be tuned with 16 values (4
-> bits per output). The period is always 32kHz, only the duty-cycle may
-> be changed. One can use any output as GPIO or PWM.
->
-> Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
+Suggested-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+---
+ drivers/gpio/TODO | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-I'm happy with this patch, but I would need Thierry's consent
-to merge it so waiting for his ACK.
+diff --git a/drivers/gpio/TODO b/drivers/gpio/TODO
+index 9c048f10c9ad..76f8c7ff18ff 100644
+--- a/drivers/gpio/TODO
++++ b/drivers/gpio/TODO
+@@ -80,6 +80,10 @@ Work items:
+ - Look over and identify any remaining easily converted drivers and
+   dry-code conversions to MMIO GPIO for maintainers to test
+ 
++- Expand the MMIO GPIO or write a new library for regmap-based I/O
++  helpers for GPIO drivers on regmap that simply use offsets
++  0..n in some register to drive GPIO lines
++
+ - Expand the MMIO GPIO or write a new library for port-mapped I/O
+   helpers (x86 inb()/outb()) and convert port-mapped I/O drivers to use
+   this with dry-coding and sending to maintainers to test
+-- 
+2.23.0
 
-Yours,
-Linus Walleij
