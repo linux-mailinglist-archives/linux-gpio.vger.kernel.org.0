@@ -2,129 +2,82 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 4B3D0105F20
-	for <lists+linux-gpio@lfdr.de>; Fri, 22 Nov 2019 04:55:21 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 911DD106606
+	for <lists+linux-gpio@lfdr.de>; Fri, 22 Nov 2019 07:29:12 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726539AbfKVDzM (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 21 Nov 2019 22:55:12 -0500
-Received: from mail-qk1-f196.google.com ([209.85.222.196]:34277 "EHLO
-        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726510AbfKVDzM (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 21 Nov 2019 22:55:12 -0500
-Received: by mail-qk1-f196.google.com with SMTP id b188so5164498qkg.1;
-        Thu, 21 Nov 2019 19:55:11 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=qJgHMdwa86FwHH2BnJx9o+uMlPWtDWtUBpBKhEzQlcY=;
-        b=Sxmjshlz5yQTTOAu4nNlUJS9ai2wiwJeX0ygWPGzFMWcijwQNby78HeDWMV3GcWFGr
-         dKFhOWQ+5YutSHLh/72G2qH+4/W/9tSp4AA31Y17O1jJPG6dwxRTnkOdA6du+xVZ+quh
-         EoZTOmtQLwoPJaAEegsbqDbIgy0UZpXXwViXBAgv7b3Xe9y06o8mZPHcEABc4PUQqYup
-         9OqZ8KgEUA3NgMcEitln6PK2S1p99eQMyVYhWJCxOIuUEoSSP2jamezxHyVeU5pMMa2r
-         oJn7oOSLBcxArtpGepvPTBLbKlJz2OGAk5n3usrTUVmWwKNXBS2W5JxY0x+ZE9sw+ZF8
-         gHXw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=qJgHMdwa86FwHH2BnJx9o+uMlPWtDWtUBpBKhEzQlcY=;
-        b=eCR0sQa5xuzv6+vWCDekk/WU2IEVw6xohO/za4VOHIixxIIWlzxeQ+qNmYHD1Kq2Oc
-         rqFaIY14cUDaVnPmug9vBeLZrhl+wq0tGUAlIMuJW8wweOgAvNriudzdd5TLV1rmHDWM
-         30/2u93qbOdJTBvCRa0Zpmk3/h+LD0vWH0JI84UWEhpq6kbKyeHR51hAUGzfdO1wN0IV
-         1UTIZizN5cwPLAkysF9QZqUYmOA1rd5q4+XTznR+wQKcfI8Dpcyvrj3BShW2EtO7G1kq
-         p1qR1NeRKT81I143eqTcJ74bIpxMc6pJXbVCBMLERUoG6X7J/GT6wiuw2pmHGsOaUtrE
-         stKQ==
-X-Gm-Message-State: APjAAAULqbr4zJmcbcWuxiJXgFXohuI+UMM9hdPnKHAK/u/++yAHKAss
-        ptW1fF3csXeDn4n2slfgS3Y=
-X-Google-Smtp-Source: APXvYqyUtQvoeHjTF0Q5RJf3zqSSH2BrJdKM5Vc34ZQusjqABGdyO8t9oxG78TRsAwjdEakEXLs4mw==
-X-Received: by 2002:a37:4884:: with SMTP id v126mr11657411qka.45.1574394910917;
-        Thu, 21 Nov 2019 19:55:10 -0800 (PST)
-Received: from localhost.localdomain ([2804:14d:72b1:8920:a2ce:f815:f14d:bfac])
-        by smtp.gmail.com with ESMTPSA id p54sm2873833qta.39.2019.11.21.19.55.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 21 Nov 2019 19:55:10 -0800 (PST)
-From:   "Daniel W. S. Almeida" <dwlsalmeida@gmail.com>
-X-Google-Original-From: Daniel W. S. Almeida
-To:     linus.walleij@linaro.org, corbet@lwn.net, bgolaszewski@baylibre.com
-Cc:     "Daniel W. S. Almeida" <dwlsalmeida@gmail.com>,
-        linux-gpio@vger.kernel.org, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, skhan@linuxfoundation.org,
-        linux-kernel-mentees@lists.linuxfoundation.org
-Subject: [PATCH] Documentation: gpio: driver.rst: Fix warnings
-Date:   Fri, 22 Nov 2019 00:47:02 -0300
-Message-Id: <20191122034702.58563-1-dwlsalmeida@gmail.com>
-X-Mailer: git-send-email 2.24.0
+        id S1727553AbfKVG1z (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 22 Nov 2019 01:27:55 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54862 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727535AbfKVFuU (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Fri, 22 Nov 2019 00:50:20 -0500
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id EA90520717;
+        Fri, 22 Nov 2019 05:50:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1574401819;
+        bh=niKuEWpHYMiGBDyVgEHosl+UrqPkEyiUFP+M5ijO2mg=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=iZQm0y34LmLtXoAsjl8BJ7RnQjmM0IzdqqJBqz3f/OHtT1pqzdK3886GgPtUiLNhS
+         tTOBOePtR+Lr0pZSpcqQJz8+Jw129rTS+pJmFyw4reYvLKE2GwCeZRZDP5+IEnA5Vy
+         +wbPOFheGhtoX63L0rgugRCgDfGw6yQ2gNtp9nPc=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Marek Vasut <marek.vasut@gmail.com>,
+        Marek Vasut <marek.vasut+renesas@gmail.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Sasha Levin <sashal@kernel.org>, linux-gpio@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 063/219] gpio: pca953x: Fix AI overflow on PCAL6524
+Date:   Fri, 22 Nov 2019 00:46:35 -0500
+Message-Id: <20191122054911.1750-56-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20191122054911.1750-1-sashal@kernel.org>
+References: <20191122054911.1750-1-sashal@kernel.org>
 MIME-Version: 1.0
+X-stable: review
+X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-From: "Daniel W. S. Almeida" <dwlsalmeida@gmail.com>
+From: Marek Vasut <marek.vasut@gmail.com>
 
-Fix warnings due to incorrect rst markup. Also improved the presentation
-a little without changing the underlying content.
+[ Upstream commit 92f45ebe68181c2d7f76633ffae55bc9447d62cd ]
 
-Signed-off-by: Daniel W. S. Almeida <dwlsalmeida@gmail.com>
+The PCAL_PINCTRL_MASK is too large. The extended register block on
+PCAL6524, which is the largest chip with this block, has the block
+limited to address range 0x40..0x7f. This is because the bit 7 in
+the command register is used for the Address Increment functionality.
+
+Trim the mask to 0x60 to match the datasheet and to prevent accidental
+overwrite of the AI bit.
+
+Signed-off-by: Marek Vasut <marek.vasut+renesas@gmail.com>
+Reviewed-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- Documentation/driver-api/gpio/driver.rst | 21 ++++++++++++---------
- 1 file changed, 12 insertions(+), 9 deletions(-)
+ drivers/gpio/gpio-pca953x.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/Documentation/driver-api/gpio/driver.rst b/Documentation/driver-api/gpio/driver.rst
-index 3fdb32422f8a..c58f54783237 100644
---- a/Documentation/driver-api/gpio/driver.rst
-+++ b/Documentation/driver-api/gpio/driver.rst
-@@ -5,7 +5,7 @@ GPIO Driver Interface
- This document serves as a guide for writers of GPIO chip drivers.
+diff --git a/drivers/gpio/gpio-pca953x.c b/drivers/gpio/gpio-pca953x.c
+index e0657fc72d31f..0232c25a15864 100644
+--- a/drivers/gpio/gpio-pca953x.c
++++ b/drivers/gpio/gpio-pca953x.c
+@@ -58,7 +58,7 @@
+ #define PCA_GPIO_MASK		0x00FF
  
- Each GPIO controller driver needs to include the following header, which defines
--the structures used to define a GPIO driver:
-+the structures used to define a GPIO driver::
+ #define PCAL_GPIO_MASK		0x1f
+-#define PCAL_PINCTRL_MASK	0xe0
++#define PCAL_PINCTRL_MASK	0x60
  
- 	#include <linux/gpio/driver.h>
- 
-@@ -398,12 +398,15 @@ provided. A big portion of overhead code will be managed by gpiolib,
- under the assumption that your interrupts are 1-to-1-mapped to the
- GPIO line index:
- 
--  GPIO line offset   Hardware IRQ
--  0                  0
--  1                  1
--  2                  2
--  ...                ...
--  ngpio-1            ngpio-1
-+.. csv-table::
-+    :header: GPIO line offset, Hardware IRQ
-+
-+    0,0
-+    1,1
-+    2,2
-+    ...,...
-+    ngpio-1, ngpio-1
-+
- 
- If some GPIO lines do not have corresponding IRQs, the bitmask valid_mask
- and the flag need_valid_mask in gpio_irq_chip can be used to mask off some
-@@ -413,7 +416,7 @@ The preferred way to set up the helpers is to fill in the
- struct gpio_irq_chip inside struct gpio_chip before adding the gpio_chip.
- If you do this, the additional irq_chip will be set up by gpiolib at the
- same time as setting up the rest of the GPIO functionality. The following
--is a typical example of a cascaded interrupt handler using gpio_irq_chip:
-+is a typical example of a cascaded interrupt handler using gpio_irq_chip::
- 
-   /* Typical state container with dynamic irqchip */
-   struct my_gpio {
-@@ -448,7 +451,7 @@ is a typical example of a cascaded interrupt handler using gpio_irq_chip:
-   return devm_gpiochip_add_data(dev, &g->gc, g);
- 
- The helper support using hierarchical interrupt controllers as well.
--In this case the typical set-up will look like this:
-+In this case the typical set-up will look like this::
- 
-   /* Typical state container with dynamic irqchip */
-   struct my_gpio {
+ #define PCA_INT			0x0100
+ #define PCA_PCAL		0x0200
 -- 
-2.24.0
+2.20.1
 
