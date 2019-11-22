@@ -2,35 +2,36 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 7F0A61063D6
-	for <lists+linux-gpio@lfdr.de>; Fri, 22 Nov 2019 07:13:33 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B893B10645C
+	for <lists+linux-gpio@lfdr.de>; Fri, 22 Nov 2019 07:17:27 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728865AbfKVGNX (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 22 Nov 2019 01:13:23 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50588 "EHLO mail.kernel.org"
+        id S1729282AbfKVGNa (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 22 Nov 2019 01:13:30 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50724 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729282AbfKVGNX (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Fri, 22 Nov 2019 01:13:23 -0500
+        id S1729341AbfKVGN3 (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Fri, 22 Nov 2019 01:13:29 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 61A2E2070E;
-        Fri, 22 Nov 2019 06:13:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4965120717;
+        Fri, 22 Nov 2019 06:13:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574403203;
-        bh=qiar1VaVBvPmu92UC81QiJx1uqOjg2HjOpaJCa2CW2c=;
+        s=default; t=1574403209;
+        bh=2ruCfQM2uGTJfrjE1Ri3MmU/nY3aN8p9UYu2mdRhDEo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=YbvKiV+S3Jc0hkCsifGqLj7xqNmWWuRIjwY0iScH0xvHxLKKzZfoalrxgJSCuIcpm
-         O9Y23X13L03PmNQT6KiiBx7EG9dwrkczoHB8AGsM6iH3LrFPhSlOJrZIo0JrCezlJ8
-         DiLx5eLGTPKXy/7a8mN3QsyGYTrHKESPtN3uJ9FM=
+        b=iTeCl7qqXYlufENNnS2Lnc9aobQr252ZcKWaQzMn+EZFKjijGqkr7UuZ12kMhLBry
+         1vwLbVKC1cmlpNzsIFEFt8W4SfAwqAvPRNfRBF/Y6OC4/gCGt784glBpREy5wchJyo
+         Ok3mcCNOZchm7Un6oDlTCLm9Z8yrBdSMiNYo1wbk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Krzysztof Kozlowski <krzk@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Sasha Levin <sashal@kernel.org>, linux-gpio@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.4 19/68] gpiolib: Fix return value of gpio_to_desc() stub if !GPIOLIB
-Date:   Fri, 22 Nov 2019 01:12:12 -0500
-Message-Id: <20191122061301.4947-18-sashal@kernel.org>
+Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
+        Simon Horman <horms+renesas@verge.net.au>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-renesas-soc@vger.kernel.org, linux-gpio@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.4 24/68] pinctrl: sh-pfc: sh7264: Fix PFCR3 and PFCR0 register configuration
+Date:   Fri, 22 Nov 2019 01:12:17 -0500
+Message-Id: <20191122061301.4947-23-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191122061301.4947-1-sashal@kernel.org>
 References: <20191122061301.4947-1-sashal@kernel.org>
@@ -43,37 +44,55 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-From: Krzysztof Kozlowski <krzk@kernel.org>
+From: Geert Uytterhoeven <geert+renesas@glider.be>
 
-[ Upstream commit c5510b8dafce5f3f5a039c9b262ebcae0092c462 ]
+[ Upstream commit 1b99d0c80bbe1810572c2cb77b90f67886adfa8d ]
 
-If CONFIG_GPOILIB is not set, the stub of gpio_to_desc() should return
-the same type of error as regular version: NULL.  All the callers
-compare the return value of gpio_to_desc() against NULL, so returned
-ERR_PTR would be treated as non-error case leading to dereferencing of
-error value.
+The Port F Control Register 3 (PFCR3) contains only a single field.
+However, counting from left to right, it is the fourth field, not the
+first field.
+Insert the missing dummy configuration values (3 fields of 16 values) to
+fix this.
 
-Fixes: 79a9becda894 ("gpiolib: export descriptor-based GPIO interface")
-Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+The descriptor for the Port F Control Register 0 (PFCR0) lacks the
+description for the 4th field (PF0 Mode, PF0MD[2:0]).
+Add the missing configuration values to fix this.
+
+Fixes: a8d42fc4217b1ea1 ("sh-pfc: Add sh7264 pinmux support")
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/linux/gpio/consumer.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/pinctrl/sh-pfc/pfc-sh7264.c | 9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
 
-diff --git a/include/linux/gpio/consumer.h b/include/linux/gpio/consumer.h
-index fb0fde686cb1f..4a9838feb0866 100644
---- a/include/linux/gpio/consumer.h
-+++ b/include/linux/gpio/consumer.h
-@@ -398,7 +398,7 @@ static inline int gpiod_to_irq(const struct gpio_desc *desc)
+diff --git a/drivers/pinctrl/sh-pfc/pfc-sh7264.c b/drivers/pinctrl/sh-pfc/pfc-sh7264.c
+index 8070765311dbf..e1c34e19222ee 100644
+--- a/drivers/pinctrl/sh-pfc/pfc-sh7264.c
++++ b/drivers/pinctrl/sh-pfc/pfc-sh7264.c
+@@ -1716,6 +1716,9 @@ static const struct pinmux_cfg_reg pinmux_config_regs[] = {
+ 	},
  
- static inline struct gpio_desc *gpio_to_desc(unsigned gpio)
- {
--	return ERR_PTR(-EINVAL);
-+	return NULL;
- }
+ 	{ PINMUX_CFG_REG("PFCR3", 0xfffe38a8, 16, 4) {
++		0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
++		0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
++		0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+ 		PF12MD_000, PF12MD_001, 0, PF12MD_011,
+ 		PF12MD_100, PF12MD_101, 0, 0,
+ 		0, 0, 0, 0, 0, 0, 0, 0 }
+@@ -1759,8 +1762,10 @@ static const struct pinmux_cfg_reg pinmux_config_regs[] = {
+ 		0, 0, 0, 0, 0, 0, 0, 0,
+ 		PF1MD_000, PF1MD_001, PF1MD_010, PF1MD_011,
+ 		PF1MD_100, PF1MD_101, 0, 0,
+-		0, 0, 0, 0, 0, 0, 0, 0
+-	 }
++		0, 0, 0, 0, 0, 0, 0, 0,
++		PF0MD_000, PF0MD_001, PF0MD_010, PF0MD_011,
++		PF0MD_100, PF0MD_101, 0, 0,
++		0, 0, 0, 0, 0, 0, 0, 0 }
+ 	},
  
- static inline int desc_to_gpio(const struct gpio_desc *desc)
+ 	{ PINMUX_CFG_REG("PFIOR0", 0xfffe38b2, 16, 1) {
 -- 
 2.20.1
 
