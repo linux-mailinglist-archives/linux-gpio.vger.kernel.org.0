@@ -2,97 +2,133 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 33D7010671E
-	for <lists+linux-gpio@lfdr.de>; Fri, 22 Nov 2019 08:35:34 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 870F01069C5
+	for <lists+linux-gpio@lfdr.de>; Fri, 22 Nov 2019 11:17:20 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726500AbfKVHfd (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 22 Nov 2019 02:35:33 -0500
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:42446 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726018AbfKVHfc (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 22 Nov 2019 02:35:32 -0500
-Received: by mail-lj1-f193.google.com with SMTP id n5so6166991ljc.9
-        for <linux-gpio@vger.kernel.org>; Thu, 21 Nov 2019 23:35:31 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=tDdbFgRZ/DftFdgsbV1nBG702kIvVQNLzAtOboImYho=;
-        b=ApxNRYnw7RNF7PQvsGNN/DGujlE3iWNW2XQcseTQC8u0Pd8ru6z/ihzMNEJkIcm/re
-         /LgurCblgfHcKgzlyNijDGy8esKo60XlrWoZ1jP96DaMcmnyTswzH1mSc50dWs1F1v6p
-         DChNeXGO+KcAUNpmKRxK9PTjk3FytEiEkwFrTKUtmQOIPaecR9udfRrtBYCHvKOSuLG2
-         ZI3L5jQyEbN/4DIT8GQGcITW7ZNT+bz3gtGpbhDn5CMS9SpsMJeQ4hkPudMH7bjIeYzi
-         HG4QPdag6HJhjC3hXPzqpN3FoxrF8xrV+AgQDeJZvIllNJxedvTfZkEGoIf64zWC6KMQ
-         2lmg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=tDdbFgRZ/DftFdgsbV1nBG702kIvVQNLzAtOboImYho=;
-        b=YxLk07D+fjeXgfs8E7bRmsxVkplzckQeZ5Gj2RbI4iK7RTB/sz2h60imzoATt/QS4E
-         RmdT7CMS+VnDJmuTyEWmwctOg1RiIlr3kM56K5/atP5BK//N9j5sWhCHnINo+5EwJ3J1
-         RFxK8c5RFucoAQ2UvGRFbDt/EFB+Eme18nkHPke7pMIfth1XfaS0hft7zZTJqNNROcie
-         5knEcYkjQuKtrXZS4jPHeJXL57HbagkZfWsRPsTYzL8Ng1WBIsGoaQnzJSevrkbqjh3L
-         6TmUO5cgjuroQPK6sI9zfRdZISd5L9wb/T46e5hbqYNdl/PJppjLqyBW/WeBcAiVXxtn
-         empA==
-X-Gm-Message-State: APjAAAXPb+FQJLuDtf0L3OpwpVcX3gC7Z7Ybftz5Yd1ZLu7GtrFuK9nW
-        O7MX0HztrXeQXO/y6ciIYNr3uE+Se1FHCzcxQr/lKg==
-X-Google-Smtp-Source: APXvYqzL2vp/KKseaTOghvkAWrY9JxbNs0Ofv2U7rE+Ia0IND/xSVGjjfDmSUff7cjBMwjzExoBAvD7ZWm0tIyzIfVs=
-X-Received: by 2002:a2e:9784:: with SMTP id y4mr11128660lji.77.1574408130240;
- Thu, 21 Nov 2019 23:35:30 -0800 (PST)
+        id S1726767AbfKVKRS (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 22 Nov 2019 05:17:18 -0500
+Received: from inca-roads.misterjones.org ([213.251.177.50]:44231 "EHLO
+        inca-roads.misterjones.org" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726500AbfKVKRS (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>);
+        Fri, 22 Nov 2019 05:17:18 -0500
+Received: from www-data by cheepnis.misterjones.org with local (Exim 4.80)
+        (envelope-from <maz@kernel.org>)
+        id 1iY5zt-00071W-8E; Fri, 22 Nov 2019 11:17:05 +0100
+To:     Yash Shah <yash.shah@sifive.com>
+Subject: Re: [PATCH v2 2/5] irqchip: sifive: Support hierarchy irq domain
+X-PHP-Originating-Script: 0:main.inc
 MIME-Version: 1.0
-References: <cover.1573797249.git.rahul.tanwar@linux.intel.com>
- <b59afc497e41404fea06aa48d633cba183ee944d.1573797249.git.rahul.tanwar@linux.intel.com>
- <CACRpkdYZi-0LRjih8+2cgWZ6u-eFN5+3sW1eV2ujYRd0UBoEKQ@mail.gmail.com> <bf8396af-3ace-7463-0fef-890b2f5cc487@linux.intel.com>
-In-Reply-To: <bf8396af-3ace-7463-0fef-890b2f5cc487@linux.intel.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Fri, 22 Nov 2019 08:35:17 +0100
-Message-ID: <CACRpkdafN-NjGNqqu_6-Qz6qWkZ4VGuBz_iyGirgUscz-Qk6VA@mail.gmail.com>
-Subject: Re: [PATCH v8 2/2] dt-bindings: pinctrl: intel: Add for new SoC
-To:     "Tanwar, Rahul" <rahul.tanwar@linux.intel.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, Rob Herring <robh@kernel.org>,
-        Andriy Shevchenko <andriy.shevchenko@intel.com>,
-        qi-ming.wu@intel.com, yixin.zhu@linux.intel.com,
-        cheol.yong.kim@intel.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Fri, 22 Nov 2019 10:17:05 +0000
+From:   Marc Zyngier <maz@kernel.org>
+Cc:     <linus.walleij@linaro.org>, <bgolaszewski@baylibre.com>,
+        <robh+dt@kernel.org>, <mark.rutland@arm.com>, <palmer@dabbelt.com>,
+        "Paul Walmsley ( Sifive)" <paul.walmsley@sifive.com>,
+        <aou@eecs.berkeley.edu>, <tglx@linutronix.de>,
+        <jason@lakedaemon.net>, <bmeng.cn@gmail.com>,
+        <atish.patra@wdc.com>, Sagar Kadam <sagar.kadam@sifive.com>,
+        <linux-gpio@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-riscv@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
+        Sachin Ghadi <sachin.ghadi@sifive.com>
+In-Reply-To: <1574233128-28114-3-git-send-email-yash.shah@sifive.com>
+References: <1574233128-28114-1-git-send-email-yash.shah@sifive.com>
+ <1574233128-28114-3-git-send-email-yash.shah@sifive.com>
+Message-ID: <6bc97c77172ac277e0c28f68eb1ca440@www.loen.fr>
+X-Sender: maz@kernel.org
+User-Agent: Roundcube Webmail/0.7.2
+X-SA-Exim-Connect-IP: <locally generated>
+X-SA-Exim-Rcpt-To: yash.shah@sifive.com, linus.walleij@linaro.org, bgolaszewski@baylibre.com, robh+dt@kernel.org, mark.rutland@arm.com, palmer@dabbelt.com, paul.walmsley@sifive.com, aou@eecs.berkeley.edu, tglx@linutronix.de, jason@lakedaemon.net, bmeng.cn@gmail.com, atish.patra@wdc.com, sagar.kadam@sifive.com, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org, sachin.ghadi@sifive.com
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on cheepnis.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Nov 22, 2019 at 3:24 AM Tanwar, Rahul
-<rahul.tanwar@linux.intel.com> wrote:
+On 2019-11-20 06:59, Yash Shah wrote:
+> Add support for hierarchy irq domains. This is needed as 
+> pre-requisite for
+> gpio-sifive driver.
+>
+> Signed-off-by: Yash Shah <yash.shah@sifive.com>
+> ---
+>  drivers/irqchip/Kconfig           |  1 +
+>  drivers/irqchip/irq-sifive-plic.c | 30 
+> ++++++++++++++++++++++++++----
+>  2 files changed, 27 insertions(+), 4 deletions(-)
+>
+> diff --git a/drivers/irqchip/Kconfig b/drivers/irqchip/Kconfig
+> index ccbb897..a398552 100644
+> --- a/drivers/irqchip/Kconfig
+> +++ b/drivers/irqchip/Kconfig
+> @@ -488,6 +488,7 @@ endmenu
+>  config SIFIVE_PLIC
+>  	bool "SiFive Platform-Level Interrupt Controller"
+>  	depends on RISCV
+> +	select IRQ_DOMAIN_HIERARCHY
+>  	help
+>  	   This enables support for the PLIC chip found in SiFive (and
+>  	   potentially other) RISC-V systems.  The PLIC controls devices
+> diff --git a/drivers/irqchip/irq-sifive-plic.c
+> b/drivers/irqchip/irq-sifive-plic.c
+> index 7d0a12f..750e366 100644
+> --- a/drivers/irqchip/irq-sifive-plic.c
+> +++ b/drivers/irqchip/irq-sifive-plic.c
+> @@ -154,15 +154,37 @@ static struct irq_chip plic_chip = {
+>  static int plic_irqdomain_map(struct irq_domain *d, unsigned int 
+> irq,
+>  			      irq_hw_number_t hwirq)
+>  {
+> -	irq_set_chip_and_handler(irq, &plic_chip, handle_fasteoi_irq);
+> -	irq_set_chip_data(irq, NULL);
+> +	irq_domain_set_info(d, irq, hwirq, &plic_chip, d->host_data,
+> +			    handle_fasteoi_irq, NULL, NULL);
+>  	irq_set_noprobe(irq);
+>  	return 0;
+>  }
+>
+> +static int plic_irq_domain_alloc(struct irq_domain *domain, unsigned
+> int virq,
+> +				 unsigned int nr_irqs, void *arg)
+> +{
+> +	int i, ret;
+> +	irq_hw_number_t hwirq;
+> +	unsigned int type = IRQ_TYPE_NONE;
 
-> Thanks. Yes, i have gone through Rob's generic pinctrl bindings patch
-> seriesand i was double minded if you should still proceed with this
-> patch or waitfor generic bindings patch to get merged.
+You shouldn't need this init here. The whole point of 
+irq_domain_translate_onecell
+is that it either gives you a valid value, or an error.
 
-It's a compromise actually.
+> +	struct irq_fwspec *fwspec = arg;
+> +
+> +	ret = irq_domain_translate_onecell(domain, fwspec, &hwirq, &type);
+> +	if (ret)
+> +		return ret;
+> +
+> +	for (i = 0; i < nr_irqs; i++) {
+> +		ret = plic_irqdomain_map(domain, virq + i, hwirq + i);
+> +		if (ret)
+> +			return ret;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+>  static const struct irq_domain_ops plic_irqdomain_ops = {
+> -	.map		= plic_irqdomain_map,
+> -	.xlate		= irq_domain_xlate_onecell,
+> +	.translate	= irq_domain_translate_onecell,
+> +	.alloc		= plic_irq_domain_alloc,
+> +	.free		= irq_domain_free_irqs_top,
+>  };
+>
+>  static struct irq_domain *plic_irqdomain;
 
-It's a bit of struggle and tough sometimes since I care both
-about the kernel and the autonomy of the DT bindings
-communities.
+Otherwise looks OK.
 
-We are in a transition phase to YAML bindings, and what is important
-for me as maintainer is to have developer buy-in, and
-it is more motivating for developers to work on this in-tree
-than having patches held back. I personally know how
-important it is to feel that things move forward in
-development.
-
-Now it should be a separate task on top of what we have,
-which is less stressful and gives the feeling of a bit of
-accomplishment.
-
-When the new generic YAML bindings are proven to work
-on two drivers or so I will be more demanding that people
-use them in their bindings from day 1. But we need to make
-sure it works first and that is a separate task.
-
-Yours,
-Linus Walleij
+         M.
+-- 
+Jazz is not dead. It just smells funny...
