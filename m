@@ -2,35 +2,36 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 0D9F3106396
-	for <lists+linux-gpio@lfdr.de>; Fri, 22 Nov 2019 07:11:51 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C7C6710638F
+	for <lists+linux-gpio@lfdr.de>; Fri, 22 Nov 2019 07:11:47 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729153AbfKVF42 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 22 Nov 2019 00:56:28 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34256 "EHLO mail.kernel.org"
+        id S1727987AbfKVGLU (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 22 Nov 2019 01:11:20 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34392 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729147AbfKVF41 (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Fri, 22 Nov 2019 00:56:27 -0500
+        id S1727923AbfKVF4e (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Fri, 22 Nov 2019 00:56:34 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 149862071F;
-        Fri, 22 Nov 2019 05:56:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 00BA22070A;
+        Fri, 22 Nov 2019 05:56:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574402186;
-        bh=puEy/f7+ZYZ6FdHQS/eQpBxy58+YBZzkDNytPQt3Aww=;
+        s=default; t=1574402193;
+        bh=2ruCfQM2uGTJfrjE1Ri3MmU/nY3aN8p9UYu2mdRhDEo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=t0+y3+AGfuGZ/i70OG2tq9mZXQ+d1vkKCV1qOuVmY0hE43dHtJfQPD1MbvlL9IQeU
-         0xi06HaEC3WAHU/U92f5AXqZQB2GXCtW4h52a9cPhSlTR1FSiSr/mzXvfYUkAqDMQ5
-         Bki2SUFu8VHmyVCiRcGJKaH0sJiBiNBwR7mwZn/I=
+        b=hPIter8JCQ/ELTkZn8yIH+V3Xnd9H7M76npVv08dyQL9In7wuL3exdU27vxuN7kwU
+         apGpkPW0qqag1rMG4ikuCivUTFdjd+azahEbaW0eUrReq3lkxKeYQS3rraAGS+B+2g
+         wIRYUsUU3NtvedQuNBQUhfpc8DdhHJCJTj9FQBDE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Martin Schiller <ms@dev.tdt.de>, John Crispin <john@phrozen.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Sasha Levin <sashal@kernel.org>, linux-gpio@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 037/127] pinctrl: xway: fix gpio-hog related boot issues
-Date:   Fri, 22 Nov 2019 00:54:15 -0500
-Message-Id: <20191122055544.3299-36-sashal@kernel.org>
+Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
+        Simon Horman <horms+renesas@verge.net.au>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-renesas-soc@vger.kernel.org, linux-gpio@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 043/127] pinctrl: sh-pfc: sh7264: Fix PFCR3 and PFCR0 register configuration
+Date:   Fri, 22 Nov 2019 00:54:21 -0500
+Message-Id: <20191122055544.3299-42-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191122055544.3299-1-sashal@kernel.org>
 References: <20191122055544.3299-1-sashal@kernel.org>
@@ -43,87 +44,55 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-From: Martin Schiller <ms@dev.tdt.de>
+From: Geert Uytterhoeven <geert+renesas@glider.be>
 
-[ Upstream commit 9b4924da4711674e62d97d4f5360446cc78337af ]
+[ Upstream commit 1b99d0c80bbe1810572c2cb77b90f67886adfa8d ]
 
-This patch is based on commit a86caa9ba5d7 ("pinctrl: msm: fix gpio-hog
-related boot issues").
+The Port F Control Register 3 (PFCR3) contains only a single field.
+However, counting from left to right, it is the fourth field, not the
+first field.
+Insert the missing dummy configuration values (3 fields of 16 values) to
+fix this.
 
-It fixes the issue that the gpio ranges needs to be defined before
-gpiochip_add().
+The descriptor for the Port F Control Register 0 (PFCR0) lacks the
+description for the 4th field (PF0 Mode, PF0MD[2:0]).
+Add the missing configuration values to fix this.
 
-Therefore, we also have to swap the order of registering the pinctrl
-driver and registering the gpio chip.
-
-You also have to add the "gpio-ranges" property to the pinctrl device
-node to get it finally working.
-
-Signed-off-by: Martin Schiller <ms@dev.tdt.de>
-Acked-by: John Crispin <john@phrozen.org>
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+Fixes: a8d42fc4217b1ea1 ("sh-pfc: Add sh7264 pinmux support")
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pinctrl/pinctrl-xway.c | 39 +++++++++++++++++++++++-----------
- 1 file changed, 27 insertions(+), 12 deletions(-)
+ drivers/pinctrl/sh-pfc/pfc-sh7264.c | 9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/pinctrl/pinctrl-xway.c b/drivers/pinctrl/pinctrl-xway.c
-index f9e98a7d4f0ce..1b0c5958c56a7 100644
---- a/drivers/pinctrl/pinctrl-xway.c
-+++ b/drivers/pinctrl/pinctrl-xway.c
-@@ -1748,14 +1748,6 @@ static int pinmux_xway_probe(struct platform_device *pdev)
- 	}
- 	xway_pctrl_desc.pins = xway_info.pads;
+diff --git a/drivers/pinctrl/sh-pfc/pfc-sh7264.c b/drivers/pinctrl/sh-pfc/pfc-sh7264.c
+index 8070765311dbf..e1c34e19222ee 100644
+--- a/drivers/pinctrl/sh-pfc/pfc-sh7264.c
++++ b/drivers/pinctrl/sh-pfc/pfc-sh7264.c
+@@ -1716,6 +1716,9 @@ static const struct pinmux_cfg_reg pinmux_config_regs[] = {
+ 	},
  
--	/* register the gpio chip */
--	xway_chip.parent = &pdev->dev;
--	ret = devm_gpiochip_add_data(&pdev->dev, &xway_chip, NULL);
--	if (ret) {
--		dev_err(&pdev->dev, "Failed to register gpio chip\n");
--		return ret;
--	}
--
- 	/* setup the data needed by pinctrl */
- 	xway_pctrl_desc.name	= dev_name(&pdev->dev);
- 	xway_pctrl_desc.npins	= xway_chip.ngpio;
-@@ -1777,10 +1769,33 @@ static int pinmux_xway_probe(struct platform_device *pdev)
- 		return ret;
- 	}
+ 	{ PINMUX_CFG_REG("PFCR3", 0xfffe38a8, 16, 4) {
++		0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
++		0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
++		0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+ 		PF12MD_000, PF12MD_001, 0, PF12MD_011,
+ 		PF12MD_100, PF12MD_101, 0, 0,
+ 		0, 0, 0, 0, 0, 0, 0, 0 }
+@@ -1759,8 +1762,10 @@ static const struct pinmux_cfg_reg pinmux_config_regs[] = {
+ 		0, 0, 0, 0, 0, 0, 0, 0,
+ 		PF1MD_000, PF1MD_001, PF1MD_010, PF1MD_011,
+ 		PF1MD_100, PF1MD_101, 0, 0,
+-		0, 0, 0, 0, 0, 0, 0, 0
+-	 }
++		0, 0, 0, 0, 0, 0, 0, 0,
++		PF0MD_000, PF0MD_001, PF0MD_010, PF0MD_011,
++		PF0MD_100, PF0MD_101, 0, 0,
++		0, 0, 0, 0, 0, 0, 0, 0 }
+ 	},
  
--	/* finish with registering the gpio range in pinctrl */
--	xway_gpio_range.npins = xway_chip.ngpio;
--	xway_gpio_range.base = xway_chip.base;
--	pinctrl_add_gpio_range(xway_info.pctrl, &xway_gpio_range);
-+	/* register the gpio chip */
-+	xway_chip.parent = &pdev->dev;
-+	xway_chip.owner = THIS_MODULE;
-+	xway_chip.of_node = pdev->dev.of_node;
-+	ret = devm_gpiochip_add_data(&pdev->dev, &xway_chip, NULL);
-+	if (ret) {
-+		dev_err(&pdev->dev, "Failed to register gpio chip\n");
-+		return ret;
-+	}
-+
-+	/*
-+	 * For DeviceTree-supported systems, the gpio core checks the
-+	 * pinctrl's device node for the "gpio-ranges" property.
-+	 * If it is present, it takes care of adding the pin ranges
-+	 * for the driver. In this case the driver can skip ahead.
-+	 *
-+	 * In order to remain compatible with older, existing DeviceTree
-+	 * files which don't set the "gpio-ranges" property or systems that
-+	 * utilize ACPI the driver has to call gpiochip_add_pin_range().
-+	 */
-+	if (!of_property_read_bool(pdev->dev.of_node, "gpio-ranges")) {
-+		/* finish with registering the gpio range in pinctrl */
-+		xway_gpio_range.npins = xway_chip.ngpio;
-+		xway_gpio_range.base = xway_chip.base;
-+		pinctrl_add_gpio_range(xway_info.pctrl, &xway_gpio_range);
-+	}
-+
- 	dev_info(&pdev->dev, "Init done\n");
- 	return 0;
- }
+ 	{ PINMUX_CFG_REG("PFIOR0", 0xfffe38b2, 16, 1) {
 -- 
 2.20.1
 
