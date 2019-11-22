@@ -2,51 +2,51 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 57A991071FB
-	for <lists+linux-gpio@lfdr.de>; Fri, 22 Nov 2019 13:10:44 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A3CB7107216
+	for <lists+linux-gpio@lfdr.de>; Fri, 22 Nov 2019 13:22:52 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727625AbfKVMKn (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 22 Nov 2019 07:10:43 -0500
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:38123 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726686AbfKVMKn (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 22 Nov 2019 07:10:43 -0500
-Received: by mail-lj1-f195.google.com with SMTP id v8so7106457ljh.5
-        for <linux-gpio@vger.kernel.org>; Fri, 22 Nov 2019 04:10:42 -0800 (PST)
+        id S1727388AbfKVMWh (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 22 Nov 2019 07:22:37 -0500
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:40241 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726676AbfKVMWh (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 22 Nov 2019 07:22:37 -0500
+Received: by mail-lj1-f194.google.com with SMTP id q2so7149367ljg.7
+        for <linux-gpio@vger.kernel.org>; Fri, 22 Nov 2019 04:22:35 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=wlDWTRSDtzcsrS/LzPR3YwO7p6W49eS5hMAX/W8yQE0=;
-        b=pRhLjYM0wx/YizczTitjIGOaQJ3d7C3HKug/L0+xWBQiV0c0Nk9AKah2Tcvn321RB3
-         64UTqFpyIj5U2Ub+uUJK230TnnmsIC0mrbFcrSmcxEIUxGLmWyVS7j5EsqUE8B+GChJo
-         lgeNS4EfhmVVmA559xgRF4VUIAPfwtS7U2APxgfRXw89iaTSfvKyb9t5ejHGo6AaRITK
-         fCbEqJTC/0ae3U9y3iHN54/jQrdvW0XfE8xUf22m+gmlCdaMwCJ6ROoOu4ROGxijXKuZ
-         vtmU2XXCvOaF4G3M1IsTO7THcDosvQdEjs+XpakwnqGfgryu+C3GHNuU6zcYnFW8J813
-         B9gw==
+        bh=Nmv33MELYtHNW1JfSh62V5xviPKhtu29GeC7rSDHuak=;
+        b=ldxD3IhYiBpXt0HtDqPy+vLU768rI80wemhHlXIxuozaMFv5BDMGXKOwBdiTtG9qrR
+         K7zRO7F/VgnMzk8I8ViyED5oc2rFQNjKTHMCKLQzSVexza+EwBbDstq+EFImT/WDe/zG
+         503aY643zXLckIPlmPcnJgLOZJdjVCE1nglK67MKhx6dB+GbBLtRnybiR8UXj6qrbp9x
+         dqZlKECSFxFo0Hoi4CrvCufy4IpzUbDbldl2pNTGpKSx5NJLQo5vB78ttUb88d8B/gwV
+         ogwPci75B5adEZt65PD+NaL85SKKIgd2iVepO5qxnX7cs08JeYbvg5nc8A2VuhY8jRZr
+         KH+Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=wlDWTRSDtzcsrS/LzPR3YwO7p6W49eS5hMAX/W8yQE0=;
-        b=D0g1mp8rNbQjUBGYIhgY+eytPfwNFLCbfAYLKN9eYNN39YoAsDXld9W8F/5pqiEk7T
-         kq7UKfgwJcj7tDL0hzUcVOf3oVu6k0VmuW8gtWFyLrtPJx87l4yO4V7q5r+tIMVMFqoz
-         WtBUIl0+QXCwUxbrJ/aOv8KKZMkgLKVyG+/v6IoPi8iccXLTI+B9eQniMvSe/xOPOhy8
-         aPATS8ifV297DEdufDZeKYv1f0VchlJNzd9Bq3Sa93nC5AUK6H/eCDA+Kv8hMaAB3uva
-         6D84wE44Tuuz4g2WUfGbtHHtoAD7oEWVOJcOnR/kGbXFww35/0MndLQXY1GvuhpO2WMF
-         ncbg==
-X-Gm-Message-State: APjAAAUYr8PawDACv1mNUQr5jsVZsuEaerLgln4JOOUZ14dBopAJChdA
-        IJ+Gex38Je2w3faDtqh5sKymXolQ9dTWr9ACaJmTog==
-X-Google-Smtp-Source: APXvYqyqKXD0yVNT+urjoUi2GUYSWy9M9yz+lnGATBdyiLh4EoHM658sZ5KV3XTNbO32a5Dg4fjfdP6zwcFqrraCeP4=
-X-Received: by 2002:a2e:161b:: with SMTP id w27mr12053927ljd.183.1574424641250;
- Fri, 22 Nov 2019 04:10:41 -0800 (PST)
+        bh=Nmv33MELYtHNW1JfSh62V5xviPKhtu29GeC7rSDHuak=;
+        b=F6Tz/c6fwZ7YXYmdBOI4+U1xmwwwFFj3d80sq6+HWqlYmO74s6omh8+wWWM3ykxYsX
+         lErlQW6EH4a/A5Ktq50zrqmU3Ljo3o7FWbnfaN3fafskVPTKg3ZRsppEbamUfhiFjntx
+         eU+oIFO/j08IwiMAGXYFADMWPJQA0iLD5wjeOI/ms+roNGai4EQ4KQ2lWtHdOkuZZ3Pu
+         5XvpNwwbNMr6Rg+Tmdv/h949XuImcyaEjUUg2K/30KypVStaLkPsYmCZDDjNJCN2u1Di
+         QBwR9nfKRdAnCcObFYl0aTc8FKejuSKSocvy3p3m0sWv78yok4D1PhLJC91r0yBwSx/m
+         J36w==
+X-Gm-Message-State: APjAAAVnowkJKK0ZNUQM6cAAwX2KGry9Kmlv4S64pku0HGcUQpXyiWwt
+        CjdajLSXJ5HSYlV1IlVTemJWaC3mtPhmkq7vJfnaJA==
+X-Google-Smtp-Source: APXvYqyuibo8EMRCgLutCbJAKbmXaQdrAZ0ALQbk7n8Lv+v95MQiTUFmPlM0+aEEhGrw1vBXS7BDDJdva4A7Rhaxntk=
+X-Received: by 2002:a2e:8597:: with SMTP id b23mr12114009lji.218.1574425354454;
+ Fri, 22 Nov 2019 04:22:34 -0800 (PST)
 MIME-Version: 1.0
-References: <20191120133409.9217-1-peter.ujfalusi@ti.com> <20191120133409.9217-2-peter.ujfalusi@ti.com>
-In-Reply-To: <20191120133409.9217-2-peter.ujfalusi@ti.com>
+References: <20191120133409.9217-1-peter.ujfalusi@ti.com> <20191120133409.9217-3-peter.ujfalusi@ti.com>
+In-Reply-To: <20191120133409.9217-3-peter.ujfalusi@ti.com>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Fri, 22 Nov 2019 13:10:29 +0100
-Message-ID: <CACRpkdbXX3=1EGpGRf6NgwUfY2Q0AKbGM8gJvVpY+BRAo5MQvQ@mail.gmail.com>
-Subject: Re: [RFC 1/2] dt-bindings: gpio: Document shared GPIO line usage
+Date:   Fri, 22 Nov 2019 13:22:23 +0100
+Message-ID: <CACRpkdYt5P=GNc3EgHb-ry9fxMbXfpZd4FC=tuLqonNJKUM2wg@mail.gmail.com>
+Subject: Re: [RFC 2/2] gpiolib: Support for (output only) shared GPIO line
 To:     Peter Ujfalusi <peter.ujfalusi@ti.com>
 Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
         Rob Herring <robh+dt@kernel.org>,
@@ -66,66 +66,94 @@ X-Mailing-List: linux-gpio@vger.kernel.org
 
 On Wed, Nov 20, 2019 at 2:34 PM Peter Ujfalusi <peter.ujfalusi@ti.com> wrote:
 
-> Boards might use the same GPIO line to control several external devices.
-> Add section to document on how a shared GPIO pin can be described.
+> This patch adds basic support for handling shared GPIO lines in the core.
+> The line must be configured with a child node in DT.
+> Based on the configuration the core will use different strategy to manage
+> the shared line:
+> refcounted low: Keep the line low as long as there is at least one low
+>                 request is registered
+> refcounted high: Keep the line high as long as there is at least one high
+>                 request is registered
+> pass through: all requests are allowed to go through without refcounting.
+>
+> The pass through mode is equivalent to how currently the
+> GPIOD_FLAGS_BIT_NONEXCLUSIVE is handled.
 >
 > Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
 
-As I've stated earlier I think this information is surplus.
-If two devices have a phandle to the same GPIO line
-then it is by definition shared.
+This is a good start! Some ideas on how I'd like this to develop.
 
-> +               line_a {
-> +                       gpio-shared;
+>  drivers/gpio/gpiolib-of.c |  28 ++++++--
+>  drivers/gpio/gpiolib.c    | 132 +++++++++++++++++++++++++++++++++++---
 
-So this is unnecessary: if the same line is referenced
-by phandle from two places it is shared, simple as that.
-It is up to code in the operating system (like Linux) to
-detect if they are shared in practice (both consumer
-nodes are enabled) and then deal with the outcome.
+Please put this API under its own Kconfig option
+and in its own file in
+drivers/gpio/gpiolib-refcounted.c
+local header in
+drivers/gpio/gpiolib-refcounted.h
+only built in if the appropriate Kconfig is selected.
 
-> +                       gpios = <5 0>;
-> +                       output-low;
+Consumer header in
+include/linux/gpio/reference-counted.h
+And add external driver API to this last file.
 
-This is overlapping with the use case to define initial
-state values for GPIOs, something that has been
-brought up repeatedly and I've collected links for
-previous discussions several times.
+> --- a/drivers/gpio/gpiolib-of.c
 
-I guess if need be I have to look them up again.
+No commenting on this because as pointed out in the binding
+patch I want this done by simply detecting the same GPIO
+being referenced by several <&gpio N> phandles.
 
-The DT maintainers don't like the hog syntax so
-something else is desired for this.
+> diff --git a/drivers/gpio/gpiolib.h b/drivers/gpio/gpiolib.h
+> index ca9bc1e4803c..0eec0857e3a8 100644
+> --- a/drivers/gpio/gpiolib.h
+> +++ b/drivers/gpio/gpiolib.h
+> @@ -111,11 +111,18 @@ struct gpio_desc {
+>  #define FLAG_PULL_UP    13     /* GPIO has pull up enabled */
+>  #define FLAG_PULL_DOWN  14     /* GPIO has pull down enabled */
+>  #define FLAG_BIAS_DISABLE    15        /* GPIO has pull disabled */
+> +#define FLAG_IS_SHARED 16      /* GPIO is shared */
 
-> +                       refcounted-high;
-(snip)
-> +The shared GPIO line management strategy can be selected with either of the
-> +following properties:
-> +- refcounted-low: The line must be kept low as long as there is at least one
-> +               request asking it to be low.
-> +- refcounted-high: The line must be kept high as long as there is at least one
-> +               request asking it to be high.
+This is a good way of flagging that this is a refcounted GPIO
+I would call it FLAG_IS_REFERENCE_COUNTED as it is
+more precise to what it means.
 
-Is this really needed? Isn't it more appropriate to just define the
-semantics such that as soon as some consumer requests the line
-high it will be refcounted high, and as soon as it is requested
-low by any consumer it will be refcounted low.
+> +#define FLAG_REFCOUNT_LOW 17   /* Shared GPIO is refcounted for raw low */
+> +#define FLAG_REFCOUNT_HIGH 18  /* Shared GPIO is refcounted for raw high */
 
-> +If neither of the refcounting strategy was selected then the shared GPIO is
-> +handled as pass through. In this mode all user requests will be forwarded to the
-> +shared GPIO pin without refcounting.
+Do not put this here, keep it in the local refcounted GPIO
+struct gpio_refcount_desc.
 
-Why should this even be allowed? If we are defining a special semantic
-for refcounted GPIOs (even defining a separate API in the Linux
-OS, though it is beside the point) why do we have to have a fallback
-to the old behaviour at all?
+>         /* Connection label */
+>         const char              *label;
+>         /* Name of the GPIO */
+>         const char              *name;
+> +       /* Number of users of a shared GPIO */
+> +       int                     shared_users;
+> +       /* Reference counter for shared GPIO (low or high level) */
+> +       int                     level_refcount;
 
-I think you can do this by just detecting multiple phandles to the
-same GPIO and implicit refcounting for > 1 consumers.
+We can't expand this struct for everyone on the planet like this.
 
-I.e. no new bindings at all, maybe some patches explaining the
-semantic effect of using the same GPIO from two consumer
-nodes.
+In the local header
+
+drivers/gpio/gpiolib-refcount.h create something like:
+
+struct gpio_refcount_desc {
+    struct gpio_desc *gd;
+    int shared_users;
+    int level_refcount;
+};
+
+This should be the opaque cookie returned to consumers of this new
+refcounted API.
+
+It defines the reference counted API as separate and optional from
+the non-reference counted API, also using its own API.
+
+The only effect on the core
+gpiolib will be the single flag in struct gpio_desc; and some
+calls into the shared code with stubs if the support for systems
+that do not enable the reference counting API.
 
 Yours,
 Linus Walleij
