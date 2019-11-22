@@ -2,35 +2,35 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id AF2A2106307
-	for <lists+linux-gpio@lfdr.de>; Fri, 22 Nov 2019 07:08:07 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 1AB411062D8
+	for <lists+linux-gpio@lfdr.de>; Fri, 22 Nov 2019 07:07:47 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727710AbfKVGH4 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 22 Nov 2019 01:07:56 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40162 "EHLO mail.kernel.org"
+        id S1729423AbfKVGB7 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 22 Nov 2019 01:01:59 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40374 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728746AbfKVGBv (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Fri, 22 Nov 2019 01:01:51 -0500
+        id S1729405AbfKVGB6 (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Fri, 22 Nov 2019 01:01:58 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 157AD20714;
-        Fri, 22 Nov 2019 06:01:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A69ED2071B;
+        Fri, 22 Nov 2019 06:01:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574402510;
-        bh=qiar1VaVBvPmu92UC81QiJx1uqOjg2HjOpaJCa2CW2c=;
+        s=default; t=1574402517;
+        bh=zs1S8QTcATifZyvgM4wdwaUFVuzz3zhjmwNFWrMfG6c=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JItR1sLLEdQxc9toUSCQYHHFRWCBbfLwY+MQ5I9zs4IjOKXot0CUYTPF2hK21ua2u
-         ImKhdHYmq58poEg5Ac6X6GoECsEGnDae6TDh2R2sG1Qxhl+xeC0wTOtMuYYBHBhATl
-         NZFf2d38g+3McH9zb10gikc5AT56ORWh7Yu5mZbo=
+        b=nuX4lvwgL8tXT9cs6c8LHt2miDG+UR+65r4Wi7oX9tRVK5+emRdm5iyRxBYvv09wk
+         KiqZ5F25uxeg3P4XQKfxhb6meczHrlE+A8zyRHC9ldG2t/WPgJdgWIwH23yqB68Nvo
+         5lBib6zIPOKhu5sk3YsDNpYAYmraqa4uAAFoaA8Q=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Krzysztof Kozlowski <krzk@kernel.org>,
+Cc:     Martin Schiller <ms@dev.tdt.de>, John Crispin <john@phrozen.org>,
         Linus Walleij <linus.walleij@linaro.org>,
         Sasha Levin <sashal@kernel.org>, linux-gpio@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 20/91] gpiolib: Fix return value of gpio_to_desc() stub if !GPIOLIB
-Date:   Fri, 22 Nov 2019 01:00:18 -0500
-Message-Id: <20191122060129.4239-19-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.9 26/91] pinctrl: xway: fix gpio-hog related boot issues
+Date:   Fri, 22 Nov 2019 01:00:24 -0500
+Message-Id: <20191122060129.4239-25-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191122060129.4239-1-sashal@kernel.org>
 References: <20191122060129.4239-1-sashal@kernel.org>
@@ -43,37 +43,87 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-From: Krzysztof Kozlowski <krzk@kernel.org>
+From: Martin Schiller <ms@dev.tdt.de>
 
-[ Upstream commit c5510b8dafce5f3f5a039c9b262ebcae0092c462 ]
+[ Upstream commit 9b4924da4711674e62d97d4f5360446cc78337af ]
 
-If CONFIG_GPOILIB is not set, the stub of gpio_to_desc() should return
-the same type of error as regular version: NULL.  All the callers
-compare the return value of gpio_to_desc() against NULL, so returned
-ERR_PTR would be treated as non-error case leading to dereferencing of
-error value.
+This patch is based on commit a86caa9ba5d7 ("pinctrl: msm: fix gpio-hog
+related boot issues").
 
-Fixes: 79a9becda894 ("gpiolib: export descriptor-based GPIO interface")
-Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+It fixes the issue that the gpio ranges needs to be defined before
+gpiochip_add().
+
+Therefore, we also have to swap the order of registering the pinctrl
+driver and registering the gpio chip.
+
+You also have to add the "gpio-ranges" property to the pinctrl device
+node to get it finally working.
+
+Signed-off-by: Martin Schiller <ms@dev.tdt.de>
+Acked-by: John Crispin <john@phrozen.org>
 Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/linux/gpio/consumer.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/pinctrl/pinctrl-xway.c | 39 +++++++++++++++++++++++-----------
+ 1 file changed, 27 insertions(+), 12 deletions(-)
 
-diff --git a/include/linux/gpio/consumer.h b/include/linux/gpio/consumer.h
-index fb0fde686cb1f..4a9838feb0866 100644
---- a/include/linux/gpio/consumer.h
-+++ b/include/linux/gpio/consumer.h
-@@ -398,7 +398,7 @@ static inline int gpiod_to_irq(const struct gpio_desc *desc)
+diff --git a/drivers/pinctrl/pinctrl-xway.c b/drivers/pinctrl/pinctrl-xway.c
+index dd85ad1807f52..8ea1c6e2a6b2b 100644
+--- a/drivers/pinctrl/pinctrl-xway.c
++++ b/drivers/pinctrl/pinctrl-xway.c
+@@ -1748,14 +1748,6 @@ static int pinmux_xway_probe(struct platform_device *pdev)
+ 	}
+ 	xway_pctrl_desc.pins = xway_info.pads;
  
- static inline struct gpio_desc *gpio_to_desc(unsigned gpio)
- {
--	return ERR_PTR(-EINVAL);
-+	return NULL;
+-	/* register the gpio chip */
+-	xway_chip.parent = &pdev->dev;
+-	ret = devm_gpiochip_add_data(&pdev->dev, &xway_chip, NULL);
+-	if (ret) {
+-		dev_err(&pdev->dev, "Failed to register gpio chip\n");
+-		return ret;
+-	}
+-
+ 	/* setup the data needed by pinctrl */
+ 	xway_pctrl_desc.name	= dev_name(&pdev->dev);
+ 	xway_pctrl_desc.npins	= xway_chip.ngpio;
+@@ -1777,10 +1769,33 @@ static int pinmux_xway_probe(struct platform_device *pdev)
+ 		return ret;
+ 	}
+ 
+-	/* finish with registering the gpio range in pinctrl */
+-	xway_gpio_range.npins = xway_chip.ngpio;
+-	xway_gpio_range.base = xway_chip.base;
+-	pinctrl_add_gpio_range(xway_info.pctrl, &xway_gpio_range);
++	/* register the gpio chip */
++	xway_chip.parent = &pdev->dev;
++	xway_chip.owner = THIS_MODULE;
++	xway_chip.of_node = pdev->dev.of_node;
++	ret = devm_gpiochip_add_data(&pdev->dev, &xway_chip, NULL);
++	if (ret) {
++		dev_err(&pdev->dev, "Failed to register gpio chip\n");
++		return ret;
++	}
++
++	/*
++	 * For DeviceTree-supported systems, the gpio core checks the
++	 * pinctrl's device node for the "gpio-ranges" property.
++	 * If it is present, it takes care of adding the pin ranges
++	 * for the driver. In this case the driver can skip ahead.
++	 *
++	 * In order to remain compatible with older, existing DeviceTree
++	 * files which don't set the "gpio-ranges" property or systems that
++	 * utilize ACPI the driver has to call gpiochip_add_pin_range().
++	 */
++	if (!of_property_read_bool(pdev->dev.of_node, "gpio-ranges")) {
++		/* finish with registering the gpio range in pinctrl */
++		xway_gpio_range.npins = xway_chip.ngpio;
++		xway_gpio_range.base = xway_chip.base;
++		pinctrl_add_gpio_range(xway_info.pctrl, &xway_gpio_range);
++	}
++
+ 	dev_info(&pdev->dev, "Init done\n");
+ 	return 0;
  }
- 
- static inline int desc_to_gpio(const struct gpio_desc *desc)
 -- 
 2.20.1
 
