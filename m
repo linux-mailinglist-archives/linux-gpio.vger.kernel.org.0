@@ -2,90 +2,79 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id B83E31072C3
-	for <lists+linux-gpio@lfdr.de>; Fri, 22 Nov 2019 14:08:12 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2794610730C
+	for <lists+linux-gpio@lfdr.de>; Fri, 22 Nov 2019 14:23:45 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726719AbfKVNIM (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 22 Nov 2019 08:08:12 -0500
-Received: from ssl.serverraum.org ([176.9.125.105]:35661 "EHLO
-        ssl.serverraum.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726712AbfKVNIM (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 22 Nov 2019 08:08:12 -0500
-Received: from ssl.serverraum.org (web.serverraum.org [172.16.0.2])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ssl.serverraum.org (Postfix) with ESMTPSA id C8C842304F;
-        Fri, 22 Nov 2019 14:08:08 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
-        t=1574428089;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:  in-reply-to:in-reply-to;
-        bh=//5nPzIuRm2evQRb9acrI4hqDZiiDLIkRjl4f5sxneQ=;
-        b=Fyrp8yuJV16DLrKi+FF4jNZLBtL0W4BGrdemubN8pw2rZzEV79OsvUW4elJJos5Ec30Tgk
-        OPbn46jipXAN8EWBWg3ocL5WBCURrjYE8vf5JuM5SOnf9Mmny/VBEqBLbXI2qOT25Z7ICJ
-        zzAkke/VvecTIFaDsLAXvZTe1oP7MXA=
+        id S1727811AbfKVNXo (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 22 Nov 2019 08:23:44 -0500
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:41622 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726719AbfKVNXn (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 22 Nov 2019 08:23:43 -0500
+Received: by mail-lf1-f67.google.com with SMTP id m30so3649531lfp.8
+        for <linux-gpio@vger.kernel.org>; Fri, 22 Nov 2019 05:23:42 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=G64bQ8A3yMTqtNBBWlyBmb0qrNhP58uWiyeN1U5KLKw=;
+        b=oOCpH0ULI7JqIinV2acu9vs3mEAOQ46GMMMuuiYjz4Q2A0TM3VKB5XZ/sQ6BG/fQsG
+         Mo7R9HmO1Hr5pSFYXX9CUQ7Bec3RIsAildBF3DJ9hs9r9e5hCU+THo3i9MqeRiPp1eYn
+         uUy3QlRloKM4ueQJrjNnpm2brSNUHHJEewfQsc1CXYOvTcdDYHHrCjWH9TO1NLL1YyRg
+         E/1iOC8vb52G/qpBQkYGnCJirqwadUlUIXiFpmGl9e84F8QwImAAIb8LLvTQdDb9JeSO
+         kEfI67Ph4F9eEap5SGeKceaBfvA6yM6yKL+qd4Sbrh0PF2aahIU91XTuwhG6gFrFz0N1
+         6ojQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=G64bQ8A3yMTqtNBBWlyBmb0qrNhP58uWiyeN1U5KLKw=;
+        b=rOU5NYHL7Y8NzctNKEMbb9fNmBtXglQFxAcJ4y87RMPn+J6XCEdG/BIq867hCnS6hl
+         x17H5k4HqW7mPMFNTbjjDRjTNqzhU7sqyB13q1t94kHnPdGc7DahxIlsXuIH/70rP6Zu
+         3pHfRaSlRy12YGYXmAHPOIx1c2BbAusJfTFN2yJ45Tujo+iGLoygZ6/1h+KjU+MWL8KO
+         IIhpLf7djFPvRE/3m9+1NhA0oZjXMK8lZ5vLzFaL8DaX7oBZ0lcPdZ4OCn6k0N3eFfZZ
+         QSrR+xFDb7zR7fWirSoPGrrgQ+wZT+Mymmff4c1++QLFppcMKcvAXORJ+JMKLD32qinJ
+         FsOA==
+X-Gm-Message-State: APjAAAVDbQB/QTm/MYERLD51Sf1lmJNvQ9342X0nQFd8dEmd3IKpJI6J
+        TMh4XVcqg2NlQr+cALnwj8wlSVo6gd50FE5sywo5FG14tQQ=
+X-Google-Smtp-Source: APXvYqwEF+IMct0sUqko73DZ1FYEj7WuVXA1c8Q04GTvwlG6eN/OQ1Bt+LcQ4w0/EWe1WDQ1kXUaUsPRu4TNl11V9Co=
+X-Received: by 2002:ac2:5b86:: with SMTP id o6mr12054376lfn.44.1574429021774;
+ Fri, 22 Nov 2019 05:23:41 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Fri, 22 Nov 2019 14:08:08 +0100
-From:   Michael Walle <michael@walle.cc>
-To:     linus.walleij@linaro.org
-Cc:     bgolaszewski@baylibre.com, devicetree@vger.kernel.org,
-        hui.song_1@nxp.com, leoyang.li@nxp.com,
-        linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org, mark.rutland@arm.com,
-        robh+dt@kernel.org, shawnguo@kernel.org
-Subject: Re: [PATCH v1] gpio : mpc8xxx : ls1088a/ls1028a edge detection mode
- bug fixs.
-In-Reply-To: <CACRpkdYhLoGdGQt_jzj5aFa-EY_kMimoVShi7QFLG3sZbC436w@mail.gmail.com>
-Message-ID: <563f2fdf0c32103d95a53fc1e7fd84c0@walle.cc>
-X-Sender: michael@walle.cc
-User-Agent: Roundcube Webmail/1.3.8
-X-Spamd-Bar: +
-X-Spam-Level: *
-X-Rspamd-Server: web
-X-Spam-Status: No, score=1.40
-X-Spam-Score: 1.40
-X-Rspamd-Queue-Id: C8C842304F
-X-Spamd-Result: default: False [1.40 / 15.00];
-         ARC_NA(0.00)[];
-         FROM_HAS_DN(0.00)[];
-         TO_MATCH_ENVRCPT_ALL(0.00)[];
-         TAGGED_RCPT(0.00)[dt];
-         MIME_GOOD(-0.10)[text/plain];
-         TO_DN_NONE(0.00)[];
-         DKIM_SIGNED(0.00)[];
-         RCPT_COUNT_SEVEN(0.00)[11];
-         NEURAL_HAM(-0.00)[-0.923];
-         RCVD_COUNT_ZERO(0.00)[0];
-         FROM_EQ_ENVFROM(0.00)[];
-         MIME_TRACE(0.00)[0:+];
-         MID_RHS_MATCH_FROM(0.00)[];
-         SUSPICIOUS_RECIPS(1.50)[]
+References: <20191122113230.16486-1-miquel.raynal@bootlin.com>
+In-Reply-To: <20191122113230.16486-1-miquel.raynal@bootlin.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Fri, 22 Nov 2019 14:23:30 +0100
+Message-ID: <CACRpkdYMoRXT0vGT2NfQaSq6jU-0m3A4JGrk7YAhtDih3meBQA@mail.gmail.com>
+Subject: Re: [PATCH v3] gpio: pca953x: Add Maxim MAX7313 PWM support
+To:     Miquel Raynal <miquel.raynal@bootlin.com>,
+        Thierry Reding <thierry.reding@gmail.com>
+Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        linux-pwm@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
->> From: Song Hui <hui.song_1@nxp.com>
->> 
->> On these boards, the irq_set_type must point one valid function 
->> pointer
->> that can correctly set both edge and falling edge.
->> 
->> Signed-off-by: Song Hui <hui.song_1@nxp.com>
-> 
-> Patch applied!
-> 
-> Yours,
-> Linus Walleij
+On Fri, Nov 22, 2019 at 12:32 PM Miquel Raynal
+<miquel.raynal@bootlin.com> wrote:
 
-mhh.. this bug should already be fixed in a better way with [1]:
-   gpio: mpc8xxx: Don't overwrite default irq_set_type callback
+> The MAX7313 chip is fully compatible with the PCA9535 on its basic
+> functions but can also manage the intensity on each of its ports with
+> PWM. Each output is independent and may be tuned with 16 values (4
+> bits per output). The period is always 32kHz, only the duty-cycle may
+> be changed. One can use any output as GPIO or PWM.
+>
+> Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
 
--michael
+I'm happy with this patch, but I would need Thierry's consent
+to merge it so waiting for his ACK.
 
-[1] 
-https://lore.kernel.org/lkml/CACRpkdZ5eWHEV-oN77QxH9X4DZRUB3zM=gP=+rM=ZLAX6Wxw9w@mail.gmail.com/
+Yours,
+Linus Walleij
