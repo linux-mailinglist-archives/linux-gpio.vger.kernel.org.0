@@ -2,38 +2,38 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 411FC107BE5
-	for <lists+linux-gpio@lfdr.de>; Sat, 23 Nov 2019 01:09:38 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7A566107BEC
+	for <lists+linux-gpio@lfdr.de>; Sat, 23 Nov 2019 01:16:21 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726736AbfKWAJh (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 22 Nov 2019 19:09:37 -0500
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:39038 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726089AbfKWAJh (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 22 Nov 2019 19:09:37 -0500
-Received: by mail-ot1-f67.google.com with SMTP id w24so7750136otk.6;
-        Fri, 22 Nov 2019 16:09:36 -0800 (PST)
+        id S1726690AbfKWAQU (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 22 Nov 2019 19:16:20 -0500
+Received: from mail-yb1-f194.google.com ([209.85.219.194]:46947 "EHLO
+        mail-yb1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726666AbfKWAQU (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 22 Nov 2019 19:16:20 -0500
+Received: by mail-yb1-f194.google.com with SMTP id v15so3404489ybp.13;
+        Fri, 22 Nov 2019 16:16:18 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=CGWjpDGzyUOYwEt0Dc6PSe57AXzajvuc/FnHMXylxJ4=;
-        b=iYL3OuV6RNdan0KdjoKZSPPKZWvUov3Ay4JD6uuGC23sW9uj2X4sKFMYP1er1QBRnB
-         JNYN/UlkcY38W5qOCVUq8XyPcyTu4tuzr0YoUWaOiGVcdcYvyZ56ycYJlrymdehyDB6h
-         EIBHynoECsgzgQ1aF3LMIutI+smktqPBeCBTzs6aQ5Mi2DGxlNYAhOOKz6+XqXwWPt8a
-         hxDIf16ZMQi16NcNWyw0eFYi5IAkw0o2RqQWJGcmRY+IBXdTogixcom0VxhRYL9gHTUu
-         Y2/tjr2ZswjPJwwjm+cuoHl8nAt9tHXoqlMSctFnEL1nYztmMsSXL8Cdd7mLa0s4of0f
-         q4Kw==
-X-Gm-Message-State: APjAAAUUz9GaWgXq0qxE47TPSp3GW6SfFxzXL9rUGHz5gR48LzK9BDiJ
-        fXKe+cMobyCsl4yPm3DRIA==
-X-Google-Smtp-Source: APXvYqwG0ZCNJRh0x4/KDrbttT0DNuGmTMw67FdWOi3jmALsWc6tyN7zUAKOMHcy6+7bvS+PY3CObg==
-X-Received: by 2002:a05:6830:1b65:: with SMTP id d5mr12220774ote.122.1574467775783;
-        Fri, 22 Nov 2019 16:09:35 -0800 (PST)
-Received: from localhost ([2607:fb90:bd7:3743:c9ec:246b:67b7:9768])
-        by smtp.gmail.com with ESMTPSA id l18sm2725815oti.11.2019.11.22.16.09.34
+        bh=AWbc+0xnr2iQmZkFdWIsFKG7VK+BrYiOiqfXMahXEMs=;
+        b=cFse6kS06qpWgFGFc/5kGqC+FlJogobX8tMHPgVshR91tQWYyD77JE983EYu/piUSe
+         2p+ovUO3L6Es5pjttECNYHKT+j99cD1ErLyUogl8nODZiENOT7cApsxMJGJgCB48lM7R
+         3svF7r58IiTiTnJRCQz0GPjImunz2MZd0V2CjY+U2lctSzQqnkMrWKXjfAiKHhh7nCpy
+         PZRzpD/z8PfyXb4KSzzDsZrGxNSlZSZdCg26uQJ83PArv6iXqz9DBjgQogIrqY6kRTb+
+         mLle+KgEMKnbyx4wMnjrq9eB4yBvRZqYJj25CUt8S/a3F6O/VHQP33/xkEs+04zAYTd7
+         9XVA==
+X-Gm-Message-State: APjAAAVEvMg/s5nUniZMKcCE+DMD+KGzpGNZhy+IcObXOXy3MPLd8e1c
+        616kHkTM3KTIG3bBbi7rdw==
+X-Google-Smtp-Source: APXvYqz/sLrbRW9iMhll2c9BISO6QwOZWioWX9WaKgBH2VVlBP61QPYa8IBQnSEMMKkjvnDGqcxnsA==
+X-Received: by 2002:a25:ab87:: with SMTP id v7mr13072126ybi.329.1574468178231;
+        Fri, 22 Nov 2019 16:16:18 -0800 (PST)
+Received: from localhost ([172.58.139.180])
+        by smtp.gmail.com with ESMTPSA id n128sm2333957ywc.99.2019.11.22.16.16.16
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 22 Nov 2019 16:09:35 -0800 (PST)
-Date:   Fri, 22 Nov 2019 18:09:33 -0600
+        Fri, 22 Nov 2019 16:16:17 -0800 (PST)
+Date:   Fri, 22 Nov 2019 18:15:58 -0600
 From:   Rob Herring <robh@kernel.org>
 To:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
 Cc:     broonie@kernel.org, lee.jones@linaro.org, linus.walleij@linaro.org,
@@ -41,210 +41,41 @@ Cc:     broonie@kernel.org, lee.jones@linaro.org, linus.walleij@linaro.org,
         devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
         spapothi@codeaurora.org, bgoswami@codeaurora.org,
         linux-gpio@vger.kernel.org
-Subject: Re: [PATCH v4 02/12] ASoC: dt-bindings: add dt bindings for
- WCD9340/WCD9341 audio codec
-Message-ID: <20191123000933.GA30441@bogus>
+Subject: Re: [PATCH v4 09/12] dt-bindings: gpio: wcd934x: Add bindings for
+ gpio
+Message-ID: <20191123001356.GA5528@bogus>
 References: <20191121170509.10579-1-srinivas.kandagatla@linaro.org>
- <20191121170509.10579-3-srinivas.kandagatla@linaro.org>
+ <20191121170509.10579-10-srinivas.kandagatla@linaro.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191121170509.10579-3-srinivas.kandagatla@linaro.org>
+In-Reply-To: <20191121170509.10579-10-srinivas.kandagatla@linaro.org>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Nov 21, 2019 at 05:04:59PM +0000, Srinivas Kandagatla wrote:
-> This patch adds bindings for wcd9340/wcd9341 audio codec which can
-> support both SLIMbus and I2S/I2C interface.
+On Thu, Nov 21, 2019 at 05:05:06PM +0000, Srinivas Kandagatla wrote:
+> Qualcomm Technologies Inc WCD9340/WCD9341 Audio Codec has integrated
+> gpio controller to control 5 gpios on the chip. This patch adds
+> required device tree bindings for it.
 > 
 > Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
 > ---
->  .../bindings/sound/qcom,wcd934x.yaml          | 163 ++++++++++++++++++
->  1 file changed, 163 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/sound/qcom,wcd934x.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/sound/qcom,wcd934x.yaml b/Documentation/devicetree/bindings/sound/qcom,wcd934x.yaml
-> new file mode 100644
-> index 000000000000..197a53bfa6cb
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/sound/qcom,wcd934x.yaml
-> @@ -0,0 +1,163 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/sound/qcom,wcd934x.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Bindings for Qualcomm WCD9340/WCD9341 Audio Codec
-> +
-> +maintainers:
-> +  - Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-> +
-> +description: |
-> +  Qualcomm WCD9340/WCD9341 Codec is a standalone Hi-Fi audio codec IC.
-> +  It has in-built Soundwire controller, pin controller, interrupt mux and
-> +  supports both I2S/I2C and SLIMbus audio interfaces.
-> +
-> +properties:
-> +  compatible:
-> +    const: slim217,250
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  interrupts:
-> +    maxItems: 1
-> +
-> +  reset-gpios:
-> +    description: GPIO spec for reset line to use
-> +    maxItems: 1
-> +
-> +  slim-ifc-dev: true
-> +
-> +  clocks:
-> +    maxItems: 1
-> +
-> +  clock-names:
-> +    const: extclk
-> +
-> +  vdd-buck-supply:
-> +    description: A reference to the 1.8V buck supply
-> +
-> +  vdd-buck-sido-supply:
-> +    description: A reference to the 1.8V SIDO buck supply
-> +
-> +  vdd-rx-supply:
-> +    description: A reference to the 1.8V rx supply
-> +
-> +  vdd-tx-supply:
-> +    description: A reference to the 1.8V tx supply
-> +
-> +  vdd-vbat-supply:
-> +    description: A reference to the vbat supply
-> +
-> +  vdd-io-supply:
-> +    description: A reference to the 1.8V I/O supply
-> +
-> +  vdd-micbias-supply:
-> +    description: A reference to the micbias supply
-> +
-> +  qcom,micbias1-microvolt:
-> +    $ref: '/schemas/types.yaml#/definitions/uint32'
+>  .../bindings/gpio/qcom,wcd934x-gpio.yaml      | 47 +++++++++++++++++++
+>  1 file changed, 47 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/gpio/qcom,wcd934x-gpio.yaml
 
-Don't need a type here, standard units already have a type.
+Reviewed-by: Rob Herring <robh@kernel.org>
 
-> +    description: micbias1 voltage between 1800000 - 2850000 microvolt
+However, this should be referenced from the main file:
 
-Sounds like constraints:
+gpio@42:
+  type: object
+  allOf:
+    - $ref: ../gpio/qcom,wcd934x-gpio.yaml#
 
-minimum: 1800000
-maximum: 2850000
+And better to move the example there to be complete.
 
-
-> +
-> +  qcom,micbias2-microvolt:
-> +    $ref: '/schemas/types.yaml#/definitions/uint32'
-> +    description: micbias2 voltage between 1800000 - 2850000 microvolt
-> +
-> +  qcom,micbias3-microvolt:
-> +    $ref: '/schemas/types.yaml#/definitions/uint32'
-> +    description: micbias3 voltage between 1800000 - 2850000 microvolt
-> +
-> +  qcom,micbias4-microvolt:
-> +    $ref: '/schemas/types.yaml#/definitions/uint32'
-> +    description: micbias4 voltage between 1800000 - 2850000 microvolt
-> +
-> +  clock-output-names:
-> +    const: mclk
-> +
-> +  clock-frequency:
-> +    description: Clock frequency of output clk in Hz
-> +
-> +  interrupt-controller: true
-> +
-> +  '#interrupt-cells':
-> +    const: 1
-> +
-> +  '#clock-cells':
-> +    const: 0
-> +
-> +  '#sound-dai-cells':
-> +    const: 1
-> +
-> +  "#address-cells":
-> +    const: 1
-> +
-> +  "#size-cells":
-> +    const: 1
-> +
-> +patternProperties:
-> +  "^.*@[0-9a-f]+$":
-> +    type: object
-> +    description: |
-> +      WCD934x subnode for each slave devices. Bindings of each subnodes
-> +      depends on the specific driver providing the functionality and
-> +      documented in their respective bindings.
-> +
-> +    properties:
-> +      reg:
-> +        maxItems: 1
-> +
-> +    required:
-> +      - reg
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - reset-gpios
-> +  - slim-ifc-dev
-> +  - interrupts
-> +  - interrupt-controller
-> +  - clock-frequency
-> +  - clock-output-names
-> +  - qcom,micbias1-microvolt
-> +  - qcom,micbias2-microvolt
-> +  - qcom,micbias3-microvolt
-> +  - qcom,micbias4-microvolt
-> +  - "#interrupt-cells"
-> +  - "#clock-cells"
-> +  - "#sound-dai-cells"
-> +  - "#address-cells"
-> +  - "#size-cells"
-> +
-> +examples:
-> +  - |
-> +    codec@1,0{
-> +        compatible = "slim217,250";
-> +        reg  = <1 0>;
-> +        reset-gpios = <&tlmm 64 0>;
-> +        slim-ifc-dev  = <&wcd9340_ifd>;
-> +        #sound-dai-cells = <1>;
-> +        interrupt-parent = <&tlmm>;
-> +        interrupts = <54 4>;
-> +        interrupt-controller;
-> +        #interrupt-cells = <1>;
-> +        #clock-cells = <0>;
-> +        clock-frequency = <9600000>;
-> +        clock-output-names = "mclk";
-> +        qcom,micbias1-microvolt = <1800000>;
-> +        qcom,micbias2-microvolt = <1800000>;
-> +        qcom,micbias3-microvolt = <1800000>;
-> +        qcom,micbias4-microvolt = <1800000>;
-> +        clock-names = "extclk";
-> +        clocks = <&rpmhcc 2>;
-> +
-> +        #address-cells = <1>;
-> +        #size-cells = <1>;
-> +
-> +        gpioctrl@42 {
-> +            reg = <0x42 0x2>;
-> +        };
-> +    };
-> +
-> +...
-> -- 
-> 2.21.0
-> 
+Rob
