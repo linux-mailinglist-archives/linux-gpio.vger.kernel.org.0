@@ -2,146 +2,89 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 6888B108D55
-	for <lists+linux-gpio@lfdr.de>; Mon, 25 Nov 2019 12:56:22 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 43970108D7A
+	for <lists+linux-gpio@lfdr.de>; Mon, 25 Nov 2019 13:02:38 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727218AbfKYL4V (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 25 Nov 2019 06:56:21 -0500
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:33505 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725828AbfKYL4U (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 25 Nov 2019 06:56:20 -0500
-Received: by mail-wm1-f68.google.com with SMTP id t26so12100468wmi.0
-        for <linux-gpio@vger.kernel.org>; Mon, 25 Nov 2019 03:56:19 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernelci-org.20150623.gappssmtp.com; s=20150623;
-        h=message-id:date:mime-version:content-transfer-encoding:subject:to
-         :from;
-        bh=+qOMe9sTUP7181N92BZiAfKQN+cPH9PP3d/sG49N4E4=;
-        b=0C3dib9MyLPJrHddwjYrZ+uK1j6/b7Ezyrc4c2A0ZksPQS1jSBxEF2IF2NPInxLlQM
-         OEah0EEBnS98JZ+tjShaCOPHC3ow4AR6DGR5FLxivG2R5cMU2d5N1dgczVm4Xo9CeVfu
-         iavl6fdyXaeDm1kwE1NEl6s9k06+ChUI5mxdU0UdJF4LOhixHXbMlKBW+hGHG3Unu8jK
-         5ujQlzIM1yFNM4nRXQ/QtNwZhspWupoTiN+TYwcAGq0H/cObsZkOiO61b8H3ncfhMd2U
-         NcRAbSX+0s4AvABvVcgFpq30VktDKfkA2hJFjGbjddZJl55X1anJ1NQuWcmUYJTyIYSM
-         9OmA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:date:mime-version
-         :content-transfer-encoding:subject:to:from;
-        bh=+qOMe9sTUP7181N92BZiAfKQN+cPH9PP3d/sG49N4E4=;
-        b=kDUQXQEhXBjfv3VDs98WFHUjb8HC9Z6X54yXCHHIUGpWqTKRQxi9iS5Y9sFK/B2zt0
-         GodvFzyh1bW+lb6ZbwINoOgXakdchnJry9Pv1pMqrkNCXKIYhCKJdF2aKE4kGr3IUvfr
-         IN8DW6zrT0yDIZ31iU2HlPr52iCyELIIQ3j1Eovk2zTuKKAJOZBB63F6wKHoL+XSXZtV
-         1j70FIEeia5Z+KMkpHp72lah3JxIlEzKtJQsPUFtqC2OWiPLZ94iHXD0kzw5yEOd0Uqk
-         pmW5F3P66l79rRp72Ap4QPLwCU64vcbHdf6iyBAVbcYqTimvRQp5mzNgul4bp5RUoO1r
-         eJkQ==
-X-Gm-Message-State: APjAAAX2PUCs/uNxDoV3GaW9vrMn/OxYca/C4ekEqjts/pitOWu5S+GW
-        tXC2WcFx7120esBQnA95QRM8UneMsdDrxg==
-X-Google-Smtp-Source: APXvYqwWITsh/6PLFYSm4VxRvO5VAaIe4rKYzEOq8ih5qc15AX2uJ2kFIAU6wtjn63jUWoODJs+5cw==
-X-Received: by 2002:a7b:c632:: with SMTP id p18mr28447206wmk.73.1574682979050;
-        Mon, 25 Nov 2019 03:56:19 -0800 (PST)
-Received: from [148.251.42.114] ([2a01:4f8:201:9271::2])
-        by smtp.gmail.com with ESMTPSA id w4sm10148480wrs.1.2019.11.25.03.56.18
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 25 Nov 2019 03:56:18 -0800 (PST)
-Message-ID: <5ddbc162.1c69fb81.90b33.29bb@mx.google.com>
-Date:   Mon, 25 Nov 2019 03:56:18 -0800 (PST)
-Content-Type: text/plain; charset="utf-8"
+        id S1726980AbfKYMCh (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 25 Nov 2019 07:02:37 -0500
+Received: from mga06.intel.com ([134.134.136.31]:48778 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725868AbfKYMCh (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Mon, 25 Nov 2019 07:02:37 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 25 Nov 2019 04:02:37 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,241,1571727600"; 
+   d="scan'208";a="358825784"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by orsmga004.jf.intel.com with ESMTP; 25 Nov 2019 04:02:35 -0800
+Received: from andy by smile with local (Exim 4.93-RC1)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1iZD4d-0002Ht-CW; Mon, 25 Nov 2019 14:02:35 +0200
+Date:   Mon, 25 Nov 2019 14:02:35 +0200
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     Mika Westerberg <mika.westerberg@linux.intel.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Subject: Re: [PATCH v1 0/8] pinctrl: intel: Move Lynxpoint to pin control
+ umbrella
+Message-ID: <20191125120235.GC32742@smile.fi.intel.com>
+References: <20191106144829.32275-1-andriy.shevchenko@linux.intel.com>
+ <CACRpkdZ39j=Ld4WW0JRv0XCdNqXVD+Mgo4RJKgykAN0Z7H8V1w@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-Kernelci-Kernel: v5.4-rc6-133-g41c4616bb81f
-X-Kernelci-Tree: linusw
-X-Kernelci-Branch: for-next
-X-Kernelci-Report-Type: build
-Subject: linusw/for-next build: 6 builds: 0 failed, 6 passed,
- 3 warnings (v5.4-rc6-133-g41c4616bb81f)
-To:     linux-gpio@vger.kernel.org, fellows@kernelci.org
-From:   "kernelci.org bot" <bot@kernelci.org>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CACRpkdZ39j=Ld4WW0JRv0XCdNqXVD+Mgo4RJKgykAN0Z7H8V1w@mail.gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-linusw/for-next build: 6 builds: 0 failed, 6 passed, 3 warnings (v5.4-rc6-1=
-33-g41c4616bb81f)
+On Wed, Nov 13, 2019 at 10:54:36AM +0100, Linus Walleij wrote:
+> On Wed, Nov 6, 2019 at 3:48 PM Andy Shevchenko
+> <andriy.shevchenko@linux.intel.com> wrote:
+> 
+> > Intel Lynxpoint GPIO is actually half way to the Chassis specification that has
+> > been established starting from Intel Skylake. It has some pin control
+> > properties we may utilize. To achieve this, move the driver under pin control
+> > umbrella and do a bunch of clean ups.
+> >
+> > This is the first step. Next step will be to convert it to the actual pin
+> > control driver.
+> >
+> > The series has been tested on Harrisbeach Ultrabook where Lynxpoint GPIO is
+> > exposed to the OS.
+> >
+> > Andy Shevchenko (8):
+> >   pinctrl: lynxpoint: Move GPIO driver to pin controller folder
+> >   pinctrl: lynxpoint: Use raw_spinlock for locking
+> >   pinctrl: lynxpoint: Correct amount of pins
+> >   pinctrl: lynxpoint: Keep pointer to struct device instead of its
+> >     container
+> >   pinctrl: lynxpoint: Use %pR to print IO resource
+> >   pinctrl: lynxpoint: Switch to memory mapped IO accessors
+> >   pinctrl: lynxpoint: Convert unsigned to unsigned int
+> >   pinctrl: lynxpoint: Move ->remove closer to ->probe()
+> 
+> I'm a big fan of this refactoring.
 
-Full Build Summary: https://kernelci.org/build/linusw/branch/for-next/kerne=
-l/v5.4-rc6-133-g41c4616bb81f/
+Glad we are on the same page about it!
 
-Tree: linusw
-Branch: for-next
-Git Describe: v5.4-rc6-133-g41c4616bb81f
-Git Commit: 41c4616bb81ff9b2efd981453f2c5d8f57d0c0b8
-Git URL: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-gpio.=
-git/
-Built: 6 unique architectures
+> Can you send this series as a separate pull request that I can pull into
+> the GPIO tree rather than pin control, or maybe both, once you're
+> pleased with it?
 
-Warnings Detected:
+I have done more and it still requires some work. I will send v2 after merge
+window being closed.
 
-arc:
-    nsim_hs_defconfig (gcc-8): 2 warnings
-
-arm64:
-
-arm:
-    multi_v7_defconfig (gcc-8): 1 warning
-
-mips:
-
-riscv:
-
-x86_64:
+-- 
+With Best Regards,
+Andy Shevchenko
 
 
-Warnings summary:
-
-    2    <stdin>:1511:2: warning: #warning syscall clone3 not implemented [=
--Wcpp]
-    1    WARNING: "return_address" [vmlinux] is a static EXPORT_SYMBOL_GPL
-
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D
-
-Detailed per-defconfig build reports:
-
----------------------------------------------------------------------------=
------
-32r2el_defconfig (mips, gcc-8) =E2=80=94 PASS, 0 errors, 0 warnings, 0 sect=
-ion mismatches
-
----------------------------------------------------------------------------=
------
-defconfig (arm64, gcc-8) =E2=80=94 PASS, 0 errors, 0 warnings, 0 section mi=
-smatches
-
----------------------------------------------------------------------------=
------
-defconfig (riscv, gcc-8) =E2=80=94 PASS, 0 errors, 0 warnings, 0 section mi=
-smatches
-
----------------------------------------------------------------------------=
------
-multi_v7_defconfig (arm, gcc-8) =E2=80=94 PASS, 0 errors, 1 warning, 0 sect=
-ion mismatches
-
-Warnings:
-    WARNING: "return_address" [vmlinux] is a static EXPORT_SYMBOL_GPL
-
----------------------------------------------------------------------------=
------
-nsim_hs_defconfig (arc, gcc-8) =E2=80=94 PASS, 0 errors, 2 warnings, 0 sect=
-ion mismatches
-
-Warnings:
-    <stdin>:1511:2: warning: #warning syscall clone3 not implemented [-Wcpp]
-    <stdin>:1511:2: warning: #warning syscall clone3 not implemented [-Wcpp]
-
----------------------------------------------------------------------------=
------
-x86_64_defconfig (x86_64, gcc-8) =E2=80=94 PASS, 0 errors, 0 warnings, 0 se=
-ction mismatches
-
----
-For more info write to <info@kernelci.org>
