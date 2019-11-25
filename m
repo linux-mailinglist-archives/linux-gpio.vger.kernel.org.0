@@ -2,54 +2,54 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id C09EC10900D
-	for <lists+linux-gpio@lfdr.de>; Mon, 25 Nov 2019 15:33:03 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D645D10900E
+	for <lists+linux-gpio@lfdr.de>; Mon, 25 Nov 2019 15:33:04 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728158AbfKYOdD (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 25 Nov 2019 09:33:03 -0500
-Received: from mail-pf1-f176.google.com ([209.85.210.176]:45554 "EHLO
-        mail-pf1-f176.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728026AbfKYOdC (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 25 Nov 2019 09:33:02 -0500
-Received: by mail-pf1-f176.google.com with SMTP id z4so7455005pfn.12
-        for <linux-gpio@vger.kernel.org>; Mon, 25 Nov 2019 06:33:01 -0800 (PST)
+        id S1728159AbfKYOdE (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 25 Nov 2019 09:33:04 -0500
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:44874 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728026AbfKYOdE (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 25 Nov 2019 09:33:04 -0500
+Received: by mail-pf1-f194.google.com with SMTP id d199so2824146pfd.11
+        for <linux-gpio@vger.kernel.org>; Mon, 25 Nov 2019 06:33:03 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=E7W94xtx0uI56sv+Ld6LRQS5pGxu5wsVfKel0MWTCao=;
-        b=crEXOkrWtBcrBshD/3sXzfy+oR3yJKjmtnUfKDvzYSxDi4SOqq25Ubv/NpNSf2aKdZ
-         /T8efd2sU/4/3HDyrj1A/tBbFWJCOPT0htGH1ZldbGjHpVjFegzL+9KUn2FYd1++5fbf
-         4CH/vIKITNEK0/wzhHzMFj9VtFf6wOKnT3f+WPIOyOZhmNwsRm1QeDAUVR+/BV4KdS57
-         Xo689JRdMqKyKRnBRS+yX+tWksF0lbQ2FjPNjbBEBbYbOY5PPMfiLW2VL1n8yAwFDBk3
-         OdTe5VeYcspaQO9yeOKaaa35pZC31hhyxPyJORnR6bvtkajlmMxffj0lWCiKh2KcOhzd
-         puCA==
+        bh=kSnyeo1X2JTqBLbCys03JvqhhOkGJtDeDc2nw0RC24E=;
+        b=hXF2Zc8aN2Q/A+5j96vzIeNkjVJP3ZFH2UGdrknYJ+thfWig8BmENw+ekBLih1FXUj
+         irgmzG4CTMpTg9dFhM5FLk+IZkcxNw92HEqKgPwg0x2mKtDAin3X/NteGkl5VfdMuffl
+         xn+uNnT52fBsA/Pq9+PearyWSv/G8d1KUIV8I1Ho5O2iV7oHcMlNgbVx1DERrPuyUFjj
+         0i0gVMPYhc8HOLI2pLQweKeadHJmov8UbgzLLnXfaoWc58RzZumm5E6afKMKzwsk5iVF
+         2wZjXkH8mfQI7DAv+d+1rLEd1g7QlRe9pxosoARuZkgcYqWld7vccCkgdGlPsArj17G1
+         1uZA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=E7W94xtx0uI56sv+Ld6LRQS5pGxu5wsVfKel0MWTCao=;
-        b=UjOibJ1c8Ub7furKlhA9yt7R1UbE0eToGBf8wizwQEObr5+K4NGXvGt87dyFrmgfPG
-         sesXu9YAp31s1G7YIR23Y4QjL44HaePpnoaSb62FKB1yXxZql8tVqAf5NdDvUwfYcTL9
-         HYA7Iw8CwVtIBM+KP/WbggQsnEczxRAWAbTC9KEsugAZ4JmB/u/fE+/g4dvHItNDY3ed
-         CoKX7bKkoNmo38X3m4B4RrjITB9gTTDEfZfaZs2LJJIeC/t20cZM2qk/wObc2ZxNXcxc
-         D0G81mBdPfZdhuhePsktlaOsuJzrAoiiho96G9OwUG2Z2TYipXXu5dVmtGNIKvgyEYkC
-         ha0g==
-X-Gm-Message-State: APjAAAWt8f+9bcF0gnoryLmfFgQw8JytNSUNy82MbBUjmofcH8Tt+tdH
-        ay/7O4Jis3izMLRWlL2m64jVSL+YmGHQgw==
-X-Google-Smtp-Source: APXvYqzkQOCJ7wwinkCV7BruLZ2GgZXPCqNTUzCQzISbgWJ3pQKAFf4xE87DwDHzFfTf9c2nZdCTvA==
-X-Received: by 2002:aa7:959d:: with SMTP id z29mr34196559pfj.208.1574692380447;
-        Mon, 25 Nov 2019 06:33:00 -0800 (PST)
+        bh=kSnyeo1X2JTqBLbCys03JvqhhOkGJtDeDc2nw0RC24E=;
+        b=MMCbKoA6yzrP6UlAUqQYsZmSoeVAMNxZoONHkuxMY2gFdgXcSFR7BR4UiVQTsbNfvH
+         lr3VSMGDouR5l21GFOq+ccTFqIowRdlJ2OQzY5traPTCjxmhdt+F75ejaU1yNluYTBt7
+         //Glb5oKhovjpnMCAzv/KHXTsN7qKZSmckv0LOUjf//FJaHkhcHth63MaiEcwao8RsNX
+         0tdW7zZqJm2Il62geDrAhIzY1Ft9pT1vvgpPH6AmfOLIy50LqJKEnIBFQEwcbQvLwsRs
+         qzLcmS8qtx062A7pVYAyrlS0lmCgwL2zN7vrZvdZ//g4eX7JANz3thFd8Cj5v+tIMUiW
+         /5Yg==
+X-Gm-Message-State: APjAAAWJXLZOVpipu5h5dKWTv39mSAHQada9k1jZTkTE0ocy4wk5Pj54
+        RMLeEDscoYqOFb2Mx02BDYLTlJMeev6lpg==
+X-Google-Smtp-Source: APXvYqxTB0Sz/kHVjLPNmtzEwncL13rjhTD/hZQFTlzhZoWQL2WwTwov1dTIPGLrXdFa6N8lI4+LvA==
+X-Received: by 2002:a65:46c1:: with SMTP id n1mr33193325pgr.257.1574692382903;
+        Mon, 25 Nov 2019 06:33:02 -0800 (PST)
 Received: from sol.lan (220-235-109-115.dyn.iinet.net.au. [220.235.109.115])
-        by smtp.gmail.com with ESMTPSA id i5sm8642100pfo.52.2019.11.25.06.32.58
+        by smtp.gmail.com with ESMTPSA id i5sm8642100pfo.52.2019.11.25.06.33.00
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 25 Nov 2019 06:32:59 -0800 (PST)
+        Mon, 25 Nov 2019 06:33:02 -0800 (PST)
 From:   Kent Gibson <warthog618@gmail.com>
 To:     linux-gpio@vger.kernel.org, bgolaszewski@baylibre.com
 Cc:     Kent Gibson <warthog618@gmail.com>
-Subject: [libgpiod][PATCH v3 09/14] bindings: cxx: add support for SET_CONFIG
-Date:   Mon, 25 Nov 2019 22:31:52 +0800
-Message-Id: <20191125143157.26154-10-warthog618@gmail.com>
+Subject: [libgpiod][PATCH v3 10/14] bindings: cxx: tests: add tests for SET_CONFIG methods
+Date:   Mon, 25 Nov 2019 22:31:53 +0800
+Message-Id: <20191125143157.26154-11-warthog618@gmail.com>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191125143157.26154-1-warthog618@gmail.com>
 References: <20191125143157.26154-1-warthog618@gmail.com>
@@ -60,230 +60,153 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Add methods to support setting line configuration.
+Extend test coverage over set_config, set_flags, set_direction_input, and
+set_direction_output methods.
 
 Signed-off-by: Kent Gibson <warthog618@gmail.com>
 ---
- bindings/cxx/gpiod.hpp     | 55 +++++++++++++++++++++++++
- bindings/cxx/line.cpp      | 37 +++++++++++++++++
- bindings/cxx/line_bulk.cpp | 83 ++++++++++++++++++++++++++++++++++++++
- 3 files changed, 175 insertions(+)
+ bindings/cxx/tests/tests-line.cpp | 128 ++++++++++++++++++++++++++++++
+ 1 file changed, 128 insertions(+)
 
-diff --git a/bindings/cxx/gpiod.hpp b/bindings/cxx/gpiod.hpp
-index 2b1a6ab..dcae431 100644
---- a/bindings/cxx/gpiod.hpp
-+++ b/bindings/cxx/gpiod.hpp
-@@ -381,6 +381,32 @@ public:
- 	 */
- 	GPIOD_API void set_value(int val) const;
- 
-+	/**
-+	 * @brief Set configuration of this line.
-+	 * @param direction New direction.
-+	 * @param flags Replacement flags.
-+	 * @param value New value (0 or 1) - only matters for OUTPUT direction.
-+	 */
-+	GPIOD_API void set_config(int direction, ::std::bitset<32> flags,
-+			int value = 0) const;
-+
-+	/**
-+	 * @brief Set configuration flags of this line.
-+	 * @param flags Replacement flags.
-+	 */
-+	GPIOD_API void set_flags(::std::bitset<32> flags) const;
-+
-+	/**
-+	 * @brief Change the direction this line to input.
-+	 */
-+	GPIOD_API void set_direction_input() const;
-+
-+	/**
-+	 * @brief Change the direction this lines to output.
-+	 * @param value New value (0 or 1).
-+	 */
-+	GPIOD_API void set_direction_output(int value = 0) const;
-+
- 	/**
- 	 * @brief Wait for an event on this line.
- 	 * @param timeout Time to wait before returning if no event occurred.
-@@ -648,6 +674,35 @@ public:
- 	 */
- 	GPIOD_API void set_values(const ::std::vector<int>& values) const;
- 
-+	/**
-+	 * @brief Set configuration of all lines held by this object.
-+	 * @param direction New direction.
-+	 * @param flags Replacement flags.
-+	 * @param values Vector of values to set. Must be the same size as the
-+	 *        number of lines held by this line_bulk.
-+	 * 	  Only relevant for output direction requests.
-+	 */
-+	GPIOD_API void set_config(int direction, ::std::bitset<32> flags,
-+			const ::std::vector<int> values = std::vector<int>()) const;
-+
-+	/**
-+	 * @brief Set configuration flags of all lines held by this object.
-+	 * @param flags Replacement flags.
-+	 */
-+	GPIOD_API void set_flags(::std::bitset<32> flags) const;
-+
-+	/**
-+	 * @brief Change the direction all lines held by this object to input.
-+	 */
-+	GPIOD_API void set_direction_input() const;
-+
-+	/**
-+	 * @brief Change the direction all lines held by this object to output.
-+	 * @param values Vector of values to set. Must be the same size as the
-+	 *        number of lines held by this line_bulk.
-+	 */
-+	GPIOD_API void set_direction_output(const ::std::vector<int>& values) const;
-+
- 	/**
- 	 * @brief Poll the set of lines for line events.
- 	 * @param timeout Number of nanoseconds to wait before returning an
-diff --git a/bindings/cxx/line.cpp b/bindings/cxx/line.cpp
-index dd6bb6a..a688b5d 100644
---- a/bindings/cxx/line.cpp
-+++ b/bindings/cxx/line.cpp
-@@ -158,6 +158,43 @@ void line::set_value(int val) const
- 	bulk.set_values({ val });
+diff --git a/bindings/cxx/tests/tests-line.cpp b/bindings/cxx/tests/tests-line.cpp
+index 9a0b488..5353093 100644
+--- a/bindings/cxx/tests/tests-line.cpp
++++ b/bindings/cxx/tests/tests-line.cpp
+@@ -324,6 +324,134 @@ TEST_CASE("Line values can be set and read", "[line]")
+ 	}
  }
  
-+void line::set_config(int direction, ::std::bitset<32> flags,
-+			int value) const
++TEST_CASE("Line can be reconfigured", "[line]")
 +{
-+	this->throw_if_null();
++	mockup::probe_guard mockup_chips({ 8 });
++	::gpiod::chip chip(mockup::instance().chip_name(0));
++	::gpiod::line_request config;
 +
-+	line_bulk bulk({ *this });
++	config.consumer = consumer.c_str();
 +
-+	bulk.set_config(direction, flags, { value });
-+}
++	SECTION("set config (single line, active-state)")
++	{
++		auto line = chip.get_line(3);
++		config.request_type = ::gpiod::line_request::DIRECTION_INPUT;
++		config.flags = 0;
++		line.request(config);
++		REQUIRE(line.direction() == ::gpiod::line::DIRECTION_INPUT);
++		REQUIRE(line.active_state() == ::gpiod::line::ACTIVE_HIGH);
 +
-+void line::set_flags(::std::bitset<32> flags) const
-+{
-+	this->throw_if_null();
++		line.set_config(::gpiod::line_request::DIRECTION_OUTPUT,
++			::gpiod::line_request::FLAG_ACTIVE_LOW,1);
++		REQUIRE(line.direction() == ::gpiod::line::DIRECTION_OUTPUT);
++		REQUIRE(line.active_state() == ::gpiod::line::ACTIVE_LOW);
++		REQUIRE(mockup::instance().chip_get_value(0, 3) == 0);
++		line.set_value(0);
++		REQUIRE(mockup::instance().chip_get_value(0, 3) == 1);
 +
-+	line_bulk bulk({ *this });
-+
-+	bulk.set_flags(flags);
-+}
-+
-+void line::set_direction_input() const
-+{
-+	this->throw_if_null();
-+
-+	line_bulk bulk({ *this });
-+
-+	bulk.set_direction_input();
-+}
-+
-+void line::set_direction_output(int value) const
-+{
-+	this->throw_if_null();
-+
-+	line_bulk bulk({ *this });
-+
-+	bulk.set_direction_output({ value });
-+}
-+
- bool line::event_wait(const ::std::chrono::nanoseconds& timeout) const
- {
- 	this->throw_if_null();
-diff --git a/bindings/cxx/line_bulk.cpp b/bindings/cxx/line_bulk.cpp
-index 5f1cac4..b8f5eb7 100644
---- a/bindings/cxx/line_bulk.cpp
-+++ b/bindings/cxx/line_bulk.cpp
-@@ -176,6 +176,89 @@ void line_bulk::set_values(const ::std::vector<int>& values) const
- 					  "error setting GPIO line values");
- }
- 
-+void line_bulk::set_config(int direction, ::std::bitset<32> flags,
-+			   const ::std::vector<int> values) const
-+{
-+	this->throw_if_empty();
-+
-+	if (!values.empty() && this->_m_bulk.size() != values.size())
-+		throw ::std::invalid_argument("the number of default values must correspond with the number of lines");
-+
-+	::gpiod_line_bulk bulk;
-+	int rv, gflags;
-+
-+	gflags = 0;
-+
-+	for (auto& it: reqflag_mapping) {
-+		if ((it.first & flags).to_ulong())
-+			gflags |= it.second;
++		line.set_config(::gpiod::line_request::DIRECTION_OUTPUT, 0);
++		REQUIRE(line.direction() == ::gpiod::line::DIRECTION_OUTPUT);
++		REQUIRE(line.active_state() == ::gpiod::line::ACTIVE_HIGH);
++		REQUIRE(mockup::instance().chip_get_value(0, 3) == 0);
++		line.set_value(1);
++		REQUIRE(mockup::instance().chip_get_value(0, 3) == 1);
 +	}
 +
-+	this->to_line_bulk(::std::addressof(bulk));
++	SECTION("set flags (single line, active-state)")
++	{
++		auto line = chip.get_line(3);
++		config.request_type = ::gpiod::line_request::DIRECTION_OUTPUT;
++		config.flags = 0;
++		line.request(config,1);
++		REQUIRE(mockup::instance().chip_get_value(0, 3) == 1);
 +
-+	rv = ::gpiod_line_set_config_bulk(::std::addressof(bulk), direction,
-+					  gflags, values.data());
-+	if (rv)
-+		throw ::std::system_error(errno, ::std::system_category(),
-+					  "error setting GPIO line config");
-+}
++		line.set_flags(::gpiod::line_request::FLAG_ACTIVE_LOW);
++		REQUIRE(line.direction() == ::gpiod::line::DIRECTION_OUTPUT);
++		REQUIRE(line.active_state() == ::gpiod::line::ACTIVE_LOW);
++		REQUIRE(mockup::instance().chip_get_value(0, 3) == 0);
 +
-+void line_bulk::set_flags(::std::bitset<32> flags) const
-+{
-+	this->throw_if_empty();
-+
-+	::gpiod_line_bulk bulk;
-+	int rv, gflags;
-+
-+	this->to_line_bulk(::std::addressof(bulk));
-+
-+	gflags = 0;
-+
-+	for (auto& it: reqflag_mapping) {
-+		if ((it.first & flags).to_ulong())
-+			gflags |= it.second;
++		line.set_flags(0);
++		REQUIRE(line.direction() == ::gpiod::line::DIRECTION_OUTPUT);
++		REQUIRE(line.active_state() == ::gpiod::line::ACTIVE_HIGH);
++		REQUIRE(mockup::instance().chip_get_value(0, 3) == 1);
 +	}
 +
-+	rv = ::gpiod_line_set_flags_bulk(::std::addressof(bulk), gflags);
-+	if (rv)
-+		throw ::std::system_error(errno, ::std::system_category(),
-+					  "error setting GPIO line flags");
++	SECTION("set flags (single line, drive)")
++	{
++		auto line = chip.get_line(3);
++		config.request_type = ::gpiod::line_request::DIRECTION_OUTPUT;
++		config.flags = 0;
++		line.request(config);
++		REQUIRE(line.direction() == ::gpiod::line::DIRECTION_OUTPUT);
++		REQUIRE_FALSE(line.is_open_drain());
++		REQUIRE_FALSE(line.is_open_source());
++
++		line.set_flags(::gpiod::line_request::FLAG_OPEN_DRAIN);
++		REQUIRE(line.direction() == ::gpiod::line::DIRECTION_OUTPUT);
++		REQUIRE(line.is_open_drain());
++		REQUIRE_FALSE(line.is_open_source());
++
++		line.set_flags(::gpiod::line_request::FLAG_OPEN_SOURCE);
++		REQUIRE(line.direction() == ::gpiod::line::DIRECTION_OUTPUT);
++		REQUIRE_FALSE(line.is_open_drain());
++		REQUIRE(line.is_open_source());
++
++		line.set_flags(0);
++		REQUIRE(line.direction() == ::gpiod::line::DIRECTION_OUTPUT);
++		REQUIRE_FALSE(line.is_open_drain());
++		REQUIRE_FALSE(line.is_open_source());
++	}
++
++	SECTION("set flags (single line, bias)")
++	{
++		auto line = chip.get_line(3);
++		config.request_type = ::gpiod::line_request::DIRECTION_OUTPUT;
++		config.flags = 0;
++		line.request(config);
++		REQUIRE(line.direction() == ::gpiod::line::DIRECTION_OUTPUT);
++		REQUIRE_FALSE(line.is_open_drain());
++		REQUIRE_FALSE(line.is_open_source());
++
++		line.set_flags(::gpiod::line_request::FLAG_OPEN_DRAIN);
++		REQUIRE(line.direction() == ::gpiod::line::DIRECTION_OUTPUT);
++		REQUIRE(line.is_open_drain());
++		REQUIRE_FALSE(line.is_open_source());
++
++		line.set_flags(::gpiod::line_request::FLAG_OPEN_SOURCE);
++		REQUIRE(line.direction() == ::gpiod::line::DIRECTION_OUTPUT);
++		REQUIRE_FALSE(line.is_open_drain());
++		REQUIRE(line.is_open_source());
++
++		line.set_flags(0);
++		REQUIRE(line.direction() == ::gpiod::line::DIRECTION_OUTPUT);
++		REQUIRE_FALSE(line.is_open_drain());
++		REQUIRE_FALSE(line.is_open_source());
++	}
++
++	SECTION("set direction input (single line)")
++	{
++		auto line = chip.get_line(3);
++		config.request_type = ::gpiod::line_request::DIRECTION_OUTPUT;
++		config.flags = 0;
++		line.request(config);
++		REQUIRE(line.direction() == ::gpiod::line::DIRECTION_OUTPUT);
++		line.set_direction_input();
++		REQUIRE(line.direction() == ::gpiod::line::DIRECTION_INPUT);
++	}
++
++	SECTION("set direction output (single line)")
++	{
++		auto line = chip.get_line(3);
++		config.request_type = ::gpiod::line_request::DIRECTION_INPUT;
++		config.flags = 0;
++		line.request(config);
++		REQUIRE(line.direction() == ::gpiod::line::DIRECTION_INPUT);
++		line.set_direction_output(1);
++		REQUIRE(line.direction() == ::gpiod::line::DIRECTION_OUTPUT);
++		REQUIRE(mockup::instance().chip_get_value(0, 3) == 1);
++	}
 +}
 +
-+void line_bulk::set_direction_input() const
-+{
-+	this->throw_if_empty();
-+
-+	::gpiod_line_bulk bulk;
-+	int rv;
-+
-+	this->to_line_bulk(::std::addressof(bulk));
-+
-+	rv = ::gpiod_line_set_direction_input_bulk(::std::addressof(bulk));
-+	if (rv)
-+		throw ::std::system_error(errno, ::std::system_category(),
-+			"error setting GPIO line direction to input");
-+}
-+
-+void line_bulk::set_direction_output(const ::std::vector<int>& values) const
-+{
-+	this->throw_if_empty();
-+
-+	if (values.size() != this->_m_bulk.size())
-+		throw ::std::invalid_argument("the size of values array must correspond with the number of lines");
-+
-+	::gpiod_line_bulk bulk;
-+	int rv;
-+
-+	this->to_line_bulk(::std::addressof(bulk));
-+
-+	rv = ::gpiod_line_set_direction_output_bulk(::std::addressof(bulk),
-+						    values.data());
-+	if (rv)
-+		throw ::std::system_error(errno, ::std::system_category(),
-+			"error setting GPIO line direction to output");
-+}
-+
- line_bulk line_bulk::event_wait(const ::std::chrono::nanoseconds& timeout) const
+ TEST_CASE("Exported line can be released", "[line]")
  {
- 	this->throw_if_empty();
+ 	mockup::probe_guard mockup_chips({ 8 });
 -- 
 2.24.0
 
