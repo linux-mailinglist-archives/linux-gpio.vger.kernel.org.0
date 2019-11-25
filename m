@@ -2,68 +2,58 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id A3DB5108D0D
-	for <lists+linux-gpio@lfdr.de>; Mon, 25 Nov 2019 12:33:42 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 21D6C108D2D
+	for <lists+linux-gpio@lfdr.de>; Mon, 25 Nov 2019 12:49:01 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727026AbfKYLdm (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 25 Nov 2019 06:33:42 -0500
-Received: from mga05.intel.com ([192.55.52.43]:60588 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725828AbfKYLdm (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Mon, 25 Nov 2019 06:33:42 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 25 Nov 2019 03:33:41 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,241,1571727600"; 
-   d="scan'208";a="216915188"
-Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.163])
-  by fmsmga001.fm.intel.com with SMTP; 25 Nov 2019 03:33:38 -0800
-Received: by lahna (sSMTP sendmail emulation); Mon, 25 Nov 2019 13:33:37 +0200
-Date:   Mon, 25 Nov 2019 13:33:37 +0200
-From:   Mika Westerberg <mika.westerberg@linux.intel.com>
-To:     Hans de Goede <hdegoede@redhat.com>
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        linux-gpio@vger.kernel.org, linux-acpi@vger.kernel.org
-Subject: Re: [PATCH 2/2] gpiolib: acpi: Add honor_wakeup module-option +
- quirk mechanism
-Message-ID: <20191125113337.GQ11621@lahna.fi.intel.com>
-References: <20191122192334.61490-1-hdegoede@redhat.com>
- <20191122192334.61490-3-hdegoede@redhat.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191122192334.61490-3-hdegoede@redhat.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.12.1 (2019-06-15)
+        id S1727382AbfKYLsy (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 25 Nov 2019 06:48:54 -0500
+Received: from sender4-pp-o97.zoho.com ([136.143.188.97]:25783 "EHLO
+        sender4-pp-o97.zoho.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727080AbfKYLsy (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 25 Nov 2019 06:48:54 -0500
+ARC-Seal: i=1; a=rsa-sha256; t=1574682301; cv=none; 
+        d=zohomail.com; s=zohoarc; 
+        b=Zh1hUCvlJMGk6y97KQ2gY/URuGJEHGH5+nMwXLmVUOaGb5XQQGgLQHyu4AbM32/B7nbZQr9PnB9ELnbXxJV9cnjzzFh7ULUYaLuCgxr2oRAfNCDrS1DHw7PIt+ZHKDYKsEXo0T6MlM4fNC4S/EXDjmzzVQZ+wKECbhS3FwMIACk=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+        t=1574682301; h=Cc:Date:From:Message-ID:Subject:To; 
+        bh=vR8FHznq9weoQe98IITab9ng2yy00364n8MMah+Ma50=; 
+        b=GpSHTS8DBWOKRxkasFoiLcz2UDbeUn79DlB40XYf+0DAc2kz8+xikMtKeKhouA+/679dEx54GK5i69EOFhoZOSimTgx5MFxQLqae2bfJH6S/oq+HU4moCLWJLd9CtWpzgUAkax4q+aE8V2L2puLkBWq7hfGSAUjQIQbd77CD3qM=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+        dkim=pass  header.i=zoho.com;
+        spf=pass  smtp.mailfrom=zhouyanjie@zoho.com;
+        dmarc=pass header.from=<zhouyanjie@zoho.com> header.from=<zhouyanjie@zoho.com>
+DomainKey-Signature: a=rsa-sha1; q=dns; c=nofws; 
+  s=zapps768; d=zoho.com; 
+  h=from:to:cc:subject:date:message-id; 
+  b=lQvQimSMRz0te5LQ+Y3/2PZJNtX30kdHo62qCnmc8N6YVq4W4iKtaQpVg0sHhKj9HQ2sJL3Q2vQP
+    8fB4co2XHyWbG9TrcFeQzXAH/dS1FfuRA5qP62fnads5acK0KhVV  
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1574682301;
+        s=zm2019; d=zoho.com; i=zhouyanjie@zoho.com;
+        h=From:To:Cc:Subject:Date:Message-Id;
+        bh=vR8FHznq9weoQe98IITab9ng2yy00364n8MMah+Ma50=;
+        b=sYgGKEbh3ZwHUF6NXWO5ICAOJcfCCAcq9LRg5ambTxarGfHp+T5TZCd4Ys5wv8xL
+        Q9Ob7ATbJlgcWtUp0KbRDqMkwp5xOGA4Na7B1V2PCWuxQyiHMT989O95TpkkyNk5NoV
+        hzzqUL+RUquBBivxMIfRuiROUht3eg8PL20FEa0I=
+Received: from zhouyanjie-virtual-machine.localdomain (171.221.113.185 [171.221.113.185]) by mx.zohomail.com
+        with SMTPS id 1574682299618124.63314918176911; Mon, 25 Nov 2019 03:44:59 -0800 (PST)
+From:   Zhou Yanjie <zhouyanjie@zoho.com>
+To:     linux-mips@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+        devicetree@vger.kernel.org, robh+dt@kernel.org,
+        paul.burton@mips.com, paulburton@kernel.org, paul@crapouillou.net,
+        mark.rutland@arm.com, syq@debian.org
+Subject: Fix bugs in X1000/X1500 and add X1830 pinctrl driver v5.
+Date:   Mon, 25 Nov 2019 19:44:39 +0800
+Message-Id: <1574682283-87655-1-git-send-email-zhouyanjie@zoho.com>
+X-Mailer: git-send-email 2.7.4
+X-ZohoMailClient: External
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Nov 22, 2019 at 08:23:34PM +0100, Hans de Goede wrote:
-> On some laptops enabling wakeup on the GPIO interrupts used for ACPI _AEI
-> event handling causes spurious wakeups.
-> 
-> This commit adds a new honor_wakeup option, defaulting to true (our current
-> behavior), which can be used to disable wakeup on troublesome hardware
-> to avoid these spurious wakeups.
-> 
-> This is a workaround for an architectural problem with s2idle under Linux
-> where we do not have any mechanism to immediately go back to sleep after
-> wakeup events, other then for embedded-controller events using the standard
-> ACPI EC interface, for details see:
-> https://lore.kernel.org/linux-acpi/61450f9b-cbc6-0c09-8b3a-aff6bf9a0b3c@redhat.com/
-> 
-> One series of laptops which is not able to suspend without this workaround
-> is the HP x2 10 Cherry Trail models, this commit adds a DMI based quirk
-> which makes sets honor_wakeup to false on these models.
-> 
-> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+v4-v5:
+Fix compile-time warnings.
+Reported-by: kbuild test robot <lkp@intel.com>
 
-Acked-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+
