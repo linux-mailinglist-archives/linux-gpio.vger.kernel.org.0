@@ -2,191 +2,103 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 1EF61109910
-	for <lists+linux-gpio@lfdr.de>; Tue, 26 Nov 2019 07:09:49 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5488510995D
+	for <lists+linux-gpio@lfdr.de>; Tue, 26 Nov 2019 07:51:17 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727282AbfKZGJh (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 26 Nov 2019 01:09:37 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60406 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726947AbfKZGJg (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Tue, 26 Nov 2019 01:09:36 -0500
-Received: from mail-lf1-f52.google.com (mail-lf1-f52.google.com [209.85.167.52])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 92C282073F;
-        Tue, 26 Nov 2019 06:09:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574748575;
-        bh=pHxQw4eAkDVM2NOdyDU2Qf2aPQMBOwtOkM9PYH46Vws=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=kiBuFTigYwZGLvOACGTXFW13iDjzjtD3cPkIOnekL34wG1IppWnQZpwTnlvmjcWTV
-         sjZhepeFmfbcT3aa0oJirH+VZRIrULYBuu4/NJM3r2zz107qZwcSd3j2D6mpZZUDPD
-         VUzLSTlamDYz0Sb7zz+ucMU3kzft7sObn55ekn3I=
-Received: by mail-lf1-f52.google.com with SMTP id b20so13047692lfp.4;
-        Mon, 25 Nov 2019 22:09:35 -0800 (PST)
-X-Gm-Message-State: APjAAAUiJjOBytTkUvI5p5ABxCjUAN7vNV9A6m/SrJRpKJdQBPKsM5KQ
-        nO/wZ6yh61rOdrq8bJQlaQb+jNKQBP3X7CZZ7iY=
-X-Google-Smtp-Source: APXvYqz+mGoODbXvuWOpDuoB4deHWZfXkDpLgYpz6o9dXanE8DhcvBX9SLi7XUWlKABR+ahnXp9G2qAt2UtBvsZP3es=
-X-Received: by 2002:ac2:51b5:: with SMTP id f21mr23141783lfk.159.1574748573659;
- Mon, 25 Nov 2019 22:09:33 -0800 (PST)
-MIME-Version: 1.0
-References: <CGME20191121072643epcas2p452071a503725c7764acf5084d24425b1@epcas2p4.samsung.com>
- <001001d5a03d$05de1f70$119a5e50$@samsung.com> <CAJKOXPckbRowhCmnJfT8-DT3gYaTpDOf0wVxmxdf-tZpOyM5ew@mail.gmail.com>
- <028901d5a3f6$e2d72310$a8856930$@samsung.com>
-In-Reply-To: <028901d5a3f6$e2d72310$a8856930$@samsung.com>
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-Date:   Tue, 26 Nov 2019 14:09:22 +0800
-X-Gmail-Original-Message-ID: <CAJKOXPdy=oxkwspt3CpF-qV5XRPMKrupMOpbWXJT3e7trqvXkw@mail.gmail.com>
-Message-ID: <CAJKOXPdy=oxkwspt3CpF-qV5XRPMKrupMOpbWXJT3e7trqvXkw@mail.gmail.com>
-Subject: Re: [PATCH] pinctrl: samsung: modularize samsung pinctrl driver
-To:     Hyunki Koo <hyunki00.koo@samsung.com>
-Cc:     Tomasz Figa <tomasz.figa@gmail.com>, s.nawrocki@samsung.com,
-        linus.walleij@linaro.org, linux-arm-kernel@lists.infradead.org,
-        "linux-samsung-soc@vger.kernel.org" 
-        <linux-samsung-soc@vger.kernel.org>, linux-gpio@vger.kernel.org,
+        id S1726873AbfKZGvQ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 26 Nov 2019 01:51:16 -0500
+Received: from mail-eopbgr1320072.outbound.protection.outlook.com ([40.107.132.72]:56950
+        "EHLO APC01-PU1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725765AbfKZGvQ (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Tue, 26 Nov 2019 01:51:16 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=ZmezPBoOVc9Hl7c4LLFMsMOyhNbTeFxk6sADIjH+TW5l4aDXw5fkn91tyEboeWAliW6A9j2cJ4wV2d15AAc+HGE+MMjHqGtnQcWu8AVYZ1HlAq+pPLr01/YixHmfQevKlRnBZpBZsX2hsHAnj4c17JrqAB/dwL3lXplqT2fRNcGs45knJZAWPSZ1QrTsDjQ0doSeNVZhCDzvNGY8G0DZKUheRO5omk4C54un5aDNabI51IrthYTPYN2ncJ0HGo0Rgt91Nc3SsDKMedPhR5e3QYfHVTMs/55TrRnIJwPG+suv4Tzj8MfyvCwzqBoLpjK03AgSx3M/CxVt1JftofoKqA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=PAvGeHrYVs0u28y5fklfGe+uVEqwHjftzaCDWqKkimc=;
+ b=KaX9Q9BynNTH2aZ1Rv6NxK7BZyl/fDguHYng7us+I6qNA+ZgoI7oVSzCDeG6D5iLOD1TgsEy3ZeM8diM2FFkN9ntipCihuCvbOB6C4oQ7ODgHJR4ljJ/0cwCxWeEWJi67mL85fqxFJQrFb/eszi2ib3afJfvpCAgZXt5Ij7ZcgE17+VtwMQQ+XmV3MkHk1NpQkFHJMl4+RHgGDIPhzz3dhi1I/tvrR956EPPlo5jxOr79vVN5d4qYpnFxvYw+0mP4IURuQCVz9zmm7Z7+U/wkHm2zll5MscqdWX49kXwawlX611Qv5xLvPtpWZm8LHTmbuOs0mr3F/uocy6VrQy2vw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=moxa.com; dmarc=pass action=none header.from=moxa.com;
+ dkim=pass header.d=moxa.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Moxa.onmicrosoft.com;
+ s=selector2-Moxa-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=PAvGeHrYVs0u28y5fklfGe+uVEqwHjftzaCDWqKkimc=;
+ b=ou+bxXOagHEzTwrHZ+EFgMCKkBAVIJ+PcdfeH29O8IsS9w9pbYVbpPffB9jxR6p8r7JOkCU6yuap+O7ET3Sr6F1prTTmjR/16NacjJmCUNvu8RPiOtJhv2rEBZeAqWllRszKNu9oEMaeYOA9nxh8z2KDNrQAASLpMUu0NrGsEsk=
+Received: from HK0PR01MB3521.apcprd01.prod.exchangelabs.com (52.132.237.22) by
+ HK0PR01MB2561.apcprd01.prod.exchangelabs.com (20.177.148.17) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2495.17; Tue, 26 Nov 2019 06:51:11 +0000
+Received: from HK0PR01MB3521.apcprd01.prod.exchangelabs.com
+ ([fe80::1c05:3356:2d9:76f0]) by HK0PR01MB3521.apcprd01.prod.exchangelabs.com
+ ([fe80::1c05:3356:2d9:76f0%7]) with mapi id 15.20.2474.023; Tue, 26 Nov 2019
+ 06:51:11 +0000
+From:   =?utf-8?B?Sm9obnNvbiBDSCBDaGVuICjpmbPmmK3li7Mp?= 
+        <JohnsonCH.Chen@moxa.com>
+To:     Linus Walleij <linus.walleij@linaro.org>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+CC:     "zero19850401@gmail.com" <zero19850401@gmail.com>
+Subject: [PATCH] gpio: mpc8xxx: Add platform device to gpiochip->parent
+Thread-Topic: [PATCH] gpio: mpc8xxx: Add platform device to gpiochip->parent
+Thread-Index: AdWkH7vaz5Ef4E8gS664B0rXeaPjDQ==
+Date:   Tue, 26 Nov 2019 06:51:11 +0000
+Message-ID: <HK0PR01MB3521489269F76467DFD7843FFA450@HK0PR01MB3521.apcprd01.prod.exchangelabs.com>
+Accept-Language: zh-TW, en-US
+Content-Language: zh-TW
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=JohnsonCH.Chen@moxa.com; 
+x-originating-ip: [122.146.92.136]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 8b58f6f1-da1a-4438-2370-08d7723d05fc
+x-ms-traffictypediagnostic: HK0PR01MB2561:
+x-microsoft-antispam-prvs: <HK0PR01MB256167F39BBBF0279EAE483EFA450@HK0PR01MB2561.apcprd01.prod.exchangelabs.com>
+x-ms-oob-tlc-oobclassifiers: OLM:6108;
+x-forefront-prvs: 0233768B38
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(366004)(396003)(39850400004)(136003)(376002)(346002)(189003)(199004)(316002)(110136005)(33656002)(76116006)(66066001)(25786009)(2906002)(81166006)(8676002)(81156014)(66476007)(64756008)(2501003)(8936002)(99286004)(66556008)(66446008)(14454004)(9686003)(256004)(7696005)(4326008)(2201001)(3846002)(66946007)(6116002)(966005)(478600001)(85182001)(413944005)(86362001)(5660300002)(6306002)(4744005)(6436002)(305945005)(55016002)(52536014)(102836004)(7736002)(186003)(74316002)(71200400001)(71190400001)(26005)(6506007)(32563001);DIR:OUT;SFP:1101;SCL:1;SRVR:HK0PR01MB2561;H:HK0PR01MB3521.apcprd01.prod.exchangelabs.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: moxa.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: Bk0pawp7m4IIwSmgFIdsY/a8uYkMX0QooaJIGWTyFGpoHrfBqBGYunqGKyf0FKm1CmA6TiQLOEVhzcyKknV3l0D4LIgoFr747f2GP+2FYgOV9l68qDjJYdYVk2E8QZETd9r4rTrKc+jr0UuwDSKV6WJuB7SSQWt4qskAk4kNNMjikwJMsQDb+adTX9WDeXoudLt72FiBO8hRBtxqua7KtnFplvdwRuVOHFlNfmKvZrJgAGf7qDPJWQOtzttk4vdusG5RyJjE1/rVSv9oIjoXKRzDSh5j8qSj/BW5Khv9dsGZLXbYpBB6XQKq1SofATHFNhifcjTukqdli9WV9Z1/dq2xjg4uM8CHuB9GwreofsDjTYzjkDNdwc2+CzKOuKZakugtKEBJrKt4cbPdMSQL6XA72GSL0XB8hUPCRWdeMVsBnUHzmucQqjky6zTwXASwl3Kb5QeXZ25+Guv+xwTfHDFJJWvf1GwsJwqoFsoL/Hk=
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-OriginatorOrg: moxa.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 8b58f6f1-da1a-4438-2370-08d7723d05fc
+X-MS-Exchange-CrossTenant-originalarrivaltime: 26 Nov 2019 06:51:11.3627
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 5571c7d4-286b-47f6-9dd5-0aa688773c8e
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: Pf2JL0U64KEKfCCRUEU37OzkY6tWfxrSGr0wVP5ar2oG5EAdlCEx6xCM9UsjKu1kc6skyWHqfcYOrqaezWkGBA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: HK0PR01MB2561
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, 26 Nov 2019 at 09:14, Hyunki Koo <hyunki00.koo@samsung.com> wrote:
->
-> On Thu, 21 Nov 2019 at 16:38, Krzysztof Kozlowski <krzk@kernel.org> wrote=
-:
-> > Hi,
-> >
-> > Thanks for the patch. Few comments below:
-> >
-> > On Thu, 21 Nov 2019 at 15:26, =EA=B5=AC=ED=98=84=EA=B8=B0 <hyunki00.koo=
-@samsung.com> wrote:
-> >>
-> >> Enable samsung pinctrl driver to be compiled as modules.
-> >
-> > Why? What's the benefit? Are platforms capable of such boot? Pinctrl is=
- needed early - even before mounting rootfs...
-> > What about module unloading? Is it reasonable?
-> > Please answer to all this also in commit message.
-> >
->
-> Sorry to late and Thank you for your comment, I would like to apply GKI o=
-n the pinctrl driver
-> So I would like to cut off dependency from ARCH_EXYNOS.
-
-This is driver for Exynos and S3C so why cutting off the dependency? I
-mean, wait, it is a driver for Exynos so it cannot work on other
-boards...
-
-> I will split into two part,
-> First, cut off the dependency with ARCH_EXYNOS in arch/arm64/Kconfig.plat=
-form.
-> Second, I will make the pinctrl driver as a module.
-
-Then you are doing it in wrong order - this patch makes it as a module
-but you send it as first one.
-
-You did not resolve however my questions about:
-1. Will this even work? Will platforms boot?
-2. How are you going to handle module unloading since on purpose we
-added suppress_bind?
-
->
-> >>
-> >> Change-Id: I92a9953c92831a316f7f50146898ff19831549ec
-> >
-> > This does not belong to Git.
-> >
-> >> Signed-off-by: Hyunki Koo <hyunki00.koo@samsung.com>
-> >
-> >You "From" name is different than written here in Signed-off-by. They sh=
-ould match and I do not know Korean to be able to tell whether they really =
-match or not :).
-> >How about using Latin transliteration also in "From" field?
-> >
-> >> ---
-> >>  drivers/pinctrl/samsung/Kconfig                |  5 +----
-> >>  drivers/pinctrl/samsung/Makefile               | 13 +++++++------
-> >>  drivers/pinctrl/samsung/pinctrl-exynos-arm.c   |  2 ++
-> >>  drivers/pinctrl/samsung/pinctrl-exynos-arm64.c |  2 ++
-> >>  drivers/pinctrl/samsung/pinctrl-exynos.c       |  2 ++
-> >>  drivers/pinctrl/samsung/pinctrl-samsung.c      | 13 +++++++++++++
-> >>  6 files changed, 27 insertions(+), 10 deletions(-)
-> >>
-> >> diff --git a/drivers/pinctrl/samsung/Kconfig
-> >> b/drivers/pinctrl/samsung/Kconfig index 425fadd6c346..25e16984ef23
-> >> 100644
-> >> --- a/drivers/pinctrl/samsung/Kconfig
-> >> +++ b/drivers/pinctrl/samsung/Kconfig
-> >> @@ -3,14 +3,13 @@
-> >>  # Samsung Pin control drivers
-> >>  #
-> >>  config PINCTRL_SAMSUNG
-> >> -       bool
-> >> +       tristate "Pinctrl driver data for Samsung SoCs"
-> >>         select PINMUX
-> >>         select PINCONF
-> >>
-> >>  config PINCTRL_EXYNOS
-> >>         bool "Pinctrl driver data for Samsung EXYNOS SoCs"
-> >>         depends on OF && GPIOLIB && (ARCH_EXYNOS || ARCH_S5PV210)
-> >> -       select PINCTRL_SAMSUNG
-> >>         select PINCTRL_EXYNOS_ARM if ARM && (ARCH_EXYNOS || ARCH_S5PV2=
-10)
-> >>         select PINCTRL_EXYNOS_ARM64 if ARM64 && ARCH_EXYNOS
-> >>
-> >> @@ -25,9 +24,7 @@ config PINCTRL_EXYNOS_ARM64  config PINCTRL_S3C24XX
-> >>         bool "Samsung S3C24XX SoC pinctrl driver"
-> >>         depends on ARCH_S3C24XX && OF
-> >> -       select PINCTRL_SAMSUNG
-> >>
-> >>  config PINCTRL_S3C64XX
-> >>         bool "Samsung S3C64XX SoC pinctrl driver"
-> >>         depends on ARCH_S3C64XX
-> >> -       select PINCTRL_SAMSUNG
-> >> diff --git a/drivers/pinctrl/samsung/Makefile
-> >> b/drivers/pinctrl/samsung/Makefile
-> >> index ed951df6a112..b3ac01838b8a 100644
-> >> --- a/drivers/pinctrl/samsung/Makefile
-> >> +++ b/drivers/pinctrl/samsung/Makefile
-> >> @@ -1,9 +1,10 @@
-> >>  # SPDX-License-Identifier: GPL-2.0
-> >>  # Samsung pin control drivers
-> >>
-> >> -obj-$(CONFIG_PINCTRL_SAMSUNG)  +=3D pinctrl-samsung.o
-> >> -obj-$(CONFIG_PINCTRL_EXYNOS)   +=3D pinctrl-exynos.o
-> >> -obj-$(CONFIG_PINCTRL_EXYNOS_ARM)       +=3D pinctrl-exynos-arm.o
-> >> -obj-$(CONFIG_PINCTRL_EXYNOS_ARM64)     +=3D pinctrl-exynos-arm64.o
-> >> -obj-$(CONFIG_PINCTRL_S3C24XX)  +=3D pinctrl-s3c24xx.o
-> >> -obj-$(CONFIG_PINCTRL_S3C64XX)  +=3D pinctrl-s3c64xx.o
-> >> +obj-$(CONFIG_PINCTRL_SAMSUNG)  +=3D pinctrl-samsung-super.o
-> >> +pinctrl-samsung-super-$(CONFIG_PINCTRL_SAMSUNG)        +=3D pinctrl-s=
-amsung.o
-> >> +pinctrl-samsung-super-$(CONFIG_PINCTRL_EXYNOS) +=3D pinctrl-exynos.o
-> >> +pinctrl-samsung-super-$(CONFIG_PINCTRL_EXYNOS_ARM)     +=3D pinctrl-e=
-xynos-
-> >> arm.o
-> >> +pinctrl-samsung-super-$(CONFIG_PINCTRL_EXYNOS_ARM64)   +=3D pinctrl-e=
-xynos-
-> >> arm64.o
-> >> +pinctrl-samsung-super-$(CONFIG_PINCTRL_S3C24XX)        +=3D pinctrl-s=
-3c24xx.o
-> >> +pinctrl-samsung-super-$(CONFIG_PINCTRL_S3C64XX)        +=3D pinctrl-s=
-3c64xx.o
-> >
-> > I don't get why you need to rename obj to pinctrl-samsung-super?
->
-> I would like to make pinctrl as a super module. It is many dependency bet=
-ween pinctrl-exynos, pinctr-exynos-arm64 and pinctrl-samsung
-
-Might be a stupid question but what is "Super module"?
-
-Second, the dependencies are there because this is a integral part of them.
-
-I think I miss some bigger picture here because I still do not
-understand what you want to achieve in the end (why doing this)?
-
-Best regards,
-Krzysztof
+RGVhciBMaW51cyBXYWxsZWlqLA0KDQpJbiBvbGQga2VybmVscywgc29tZSBBUElzIHN0aWxsIHRy
+eSB0byB1c2UgcGFyZW50LT5vZl9ub2RlIGZyb20gc3RydWN0IGdwaW9fY2hpcCwNCmFuZCBpdCBj
+b3VsZCBiZSByZXN1bHRlZCBpbiBrZXJuZWwgcGFuaWMgYmVjYXVzZSBwYXJlbnQgaXMgTlVMTC4g
+QWRkaW5nIHBsYXRmb3JtDQpkZXZpY2UgdG8gZ3Bpb2NoaXAtPnBhcmVudCBjYW4gZml4IHRoaXMg
+cHJvYmxlbS4NCg0KU2lnbmVkLW9mZi1ieTogSm9obnNvbiBDaGVuIDxqb2huc29uY2guY2hlbkBt
+b3hhLmNvbT4NCkxpbms6IGh0dHBzOi8vcGF0Y2h3b3JrLmtlcm5lbC5vcmcvcGF0Y2gvMTEyMzQ2
+MDkNCg0KLS0tDQogZHJpdmVycy9ncGlvL2dwaW8tbXBjOHh4eC5jIHwgMSArDQogMSBmaWxlIGNo
+YW5nZWQsIDEgaW5zZXJ0aW9uKCspDQoNCmRpZmYgLS1naXQgYS9kcml2ZXJzL2dwaW8vZ3Bpby1t
+cGM4eHh4LmMgYi9kcml2ZXJzL2dwaW8vZ3Bpby1tcGM4eHh4LmMNCmluZGV4IDE2YTQ3ZGUyOWM5
+NC4uMTYxZTNmZjQxMDZhIDEwMDY0NA0KLS0tIGEvZHJpdmVycy9ncGlvL2dwaW8tbXBjOHh4eC5j
+DQorKysgYi9kcml2ZXJzL2dwaW8vZ3Bpby1tcGM4eHh4LmMNCkBAIC0zNDYsNiArMzQ2LDcgQEAg
+c3RhdGljIGludCBtcGM4eHh4X3Byb2JlKHN0cnVjdCBwbGF0Zm9ybV9kZXZpY2UgKnBkZXYpDQog
+CQlyZXR1cm4gLUVOT01FTTsNCiANCiAJZ2MgPSAmbXBjOHh4eF9nYy0+Z2M7DQorCWdjLT5wYXJl
+bnQgPSAmcGRldi0+ZGV2Ow0KIA0KIAlpZiAob2ZfcHJvcGVydHlfcmVhZF9ib29sKG5wLCAibGl0
+dGxlLWVuZGlhbiIpKSB7DQogCQlyZXQgPSBiZ3Bpb19pbml0KGdjLCAmcGRldi0+ZGV2LCA0LA0K
+LS0gDQoyLjExLjANCg0KQmVzdCByZWdhcmRzLA0KSm9obnNvbg0KDQpNb3hhIEluYy4NCkZsLiA0
+LCBOby4gMTM1LCBMYW5lIDIzNSwgQmFvcWlhbyBSZC4NClhpbmRpYW4gRGlzdC4sIE5ldyBUYWlw
+ZWkgQ2l0eSwgVGFpd2FuLCBSLk8uQy4NClRlbCA6ICs4ODYtMi04OTE5LTEyMzAgZXh0LjEwNzUN
+CkpvaG5zb25DSC5DaGVuQG1veGEuY29tIA0K
