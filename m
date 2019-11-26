@@ -2,523 +2,267 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id AF1A51094B6
-	for <lists+linux-gpio@lfdr.de>; Mon, 25 Nov 2019 21:38:54 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 6C52110977C
+	for <lists+linux-gpio@lfdr.de>; Tue, 26 Nov 2019 02:14:53 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726985AbfKYUix (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 25 Nov 2019 15:38:53 -0500
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:60689 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726980AbfKYUix (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 25 Nov 2019 15:38:53 -0500
-Received: from ptx.hi.pengutronix.de ([2001:67c:670:100:1d::c0])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1iZL8E-0007GV-TZ; Mon, 25 Nov 2019 21:38:50 +0100
-Received: from ukl by ptx.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1iZL8D-0001fp-Tk; Mon, 25 Nov 2019 21:38:49 +0100
-Date:   Mon, 25 Nov 2019 21:38:49 +0100
-From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-To:     Miquel Raynal <miquel.raynal@bootlin.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        linux-gpio@vger.kernel.org, linux-pwm@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Subject: Re: [PATCH v3] gpio: pca953x: Add Maxim MAX7313 PWM support
-Message-ID: <20191125203849.fxvg74xrzp6rxahy@pengutronix.de>
-References: <20191122113230.16486-1-miquel.raynal@bootlin.com>
+        id S1727233AbfKZBOw (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 25 Nov 2019 20:14:52 -0500
+Received: from mailout3.samsung.com ([203.254.224.33]:29749 "EHLO
+        mailout3.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726957AbfKZBOw (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 25 Nov 2019 20:14:52 -0500
+Received: from epcas2p2.samsung.com (unknown [182.195.41.54])
+        by mailout3.samsung.com (KnoxPortal) with ESMTP id 20191126011448epoutp03e5f4088856479e640ac28144df9a8689~akWZouhZ60171601716epoutp037
+        for <linux-gpio@vger.kernel.org>; Tue, 26 Nov 2019 01:14:48 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout3.samsung.com 20191126011448epoutp03e5f4088856479e640ac28144df9a8689~akWZouhZ60171601716epoutp037
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1574730888;
+        bh=qWv1nppkeTYmHRJPMpTCBTwc9cQ4Z7/0In6wd4P3aiw=;
+        h=From:To:Cc:In-Reply-To:Subject:Date:References:From;
+        b=deYa45UWsjnz7lPd6cpDYZB3AoNa6d2ks7hB7UYjgB763aYQem/4F40JrYgyc4gxt
+         vPeLNi20vXKpj4jNmwO86it/GxXa4O0axTUNH/8skG/xYaLuHg3mt6075+9qfwu61P
+         0tM81M84V9J4Ys/YAsqli2XNCvtgwQSaDnS6R/go=
+Received: from epsnrtp2.localdomain (unknown [182.195.42.163]) by
+        epcas2p3.samsung.com (KnoxPortal) with ESMTP id
+        20191126011448epcas2p386e62dfedb12cc84acff2d908913f5e3~akWZVjisC1490214902epcas2p3R;
+        Tue, 26 Nov 2019 01:14:48 +0000 (GMT)
+Received: from epsmges2p1.samsung.com (unknown [182.195.40.185]) by
+        epsnrtp2.localdomain (Postfix) with ESMTP id 47MQtF6s0DzMqYkv; Tue, 26 Nov
+        2019 01:14:45 +0000 (GMT)
+Received: from epcas2p2.samsung.com ( [182.195.41.54]) by
+        epsmges2p1.samsung.com (Symantec Messaging Gateway) with SMTP id
+        74.5F.24889.48C7CDD5; Tue, 26 Nov 2019 10:14:44 +0900 (KST)
+Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
+        epcas2p4.samsung.com (KnoxPortal) with ESMTPA id
+        20191126011443epcas2p446cdece191e5f8db67971059a182a063~akWVHSB8A1168911689epcas2p4x;
+        Tue, 26 Nov 2019 01:14:43 +0000 (GMT)
+Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
+        epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
+        20191126011443epsmtrp2314e73504a5a76bf566b607b66565c37~akWVGla981613716137epsmtrp2q;
+        Tue, 26 Nov 2019 01:14:43 +0000 (GMT)
+X-AuditID: b6c32a45-493ff70000016139-dd-5ddc7c84002f
+Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
+        epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
+        74.D2.10238.38C7CDD5; Tue, 26 Nov 2019 10:14:43 +0900 (KST)
+Received: from KORNO0023990000 (unknown [12.36.165.128]) by
+        epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
+        20191126011443epsmtip20ed8f84c1ae068d88c32844ceeaa9994~akWU8MX6-3130031300epsmtip2l;
+        Tue, 26 Nov 2019 01:14:43 +0000 (GMT)
+From:   "Hyunki Koo" <hyunki00.koo@samsung.com>
+To:     "'Krzysztof Kozlowski'" <krzk@kernel.org>
+Cc:     "'Tomasz Figa'" <tomasz.figa@gmail.com>, <s.nawrocki@samsung.com>,
+        <linus.walleij@linaro.org>, <linux-arm-kernel@lists.infradead.org>,
+        <linux-samsung-soc@vger.kernel.org>, <linux-gpio@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+In-Reply-To: <CAJKOXPckbRowhCmnJfT8-DT3gYaTpDOf0wVxmxdf-tZpOyM5ew@mail.gmail.com>
+Subject: RE: [PATCH] pinctrl: samsung: modularize samsung pinctrl driver
+Date:   Tue, 26 Nov 2019 10:14:42 +0900
+Message-ID: <028901d5a3f6$e2d72310$a8856930$@samsung.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20191122113230.16486-1-miquel.raynal@bootlin.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c0
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-gpio@vger.kernel.org
+Content-Transfer-Encoding: quoted-printable
+X-Mailer: Microsoft Outlook 14.0
+Content-Language: ko
+Thread-Index: AQJ+RvWTv0zrR0xzbBBQ4/Koidr2qQIbsHhoAgL+PSumKmWXkA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA02SfUhTURjGObvb3Z22uk3Nw+hjXCu0mu6aW3eVfZqttDCCBHHMi7tNcV/s
+        bpERpRGa9mn1x1rSd2nTsqaEiZqoYRkqUYqVIeZHopampBUGbbtF/vc7zznP+77POQdDJOWo
+        FMs02xmbmTYSaAD/SVOESn7yaI9W0XcnmOroeCSkLs+W8ChPf5eAqrw+C6g3NcUo5eyo51FN
+        Y/kCyl0zC7Zgmqeuj0KNx12Aanq6alFN5Z3jmnNVbqCZ8ixNQlOMGzMYWs/YZIw53aLPNBti
+        iYT9uu06pUpBykk1tY6QmWkTE0vEJSbJ4zON3nkI2SHa6PBKSTTLElGbNtosDjsjy7Cw9liC
+        seqNVpK0RrK0iXWYDZHpFtN6UqGIVnpPphkz7t/8zLfe1R5uGX3LywFtKYVAhEE8BuYP54NC
+        EIBJ8GoAa0fLedxiEsCh/Lq/O9MAlt1q4hcCzG9pntjM6XUA5uYOIb5SEvwLgKWTyT5GcTl8
+        c3uA5+NgL1d2lwh9BsRX1Vk35C8kwvfBL6f9Z4JwDXzePgx8zMdXwF6Py6+LcTXsOj8u5Hgh
+        fHllgO9jBF8N790cRbgIMljdNgo4PRheLchDuL7bYNevKn8AiE+h0PnpBMIFiINVFcmcNwiO
+        tFQJOZbCqa91KMfHYX1ekZDzngHw58SggNtYC11DvvvCvM0iYEVNFFcyDDa//zvafHiq6beQ
+        k8XwVJ6EM66ED6eHeRwvhuWDNcILgHDNCeaaE8w1J4zrf68bgO8GixgrazIwbLSVnPvUHuD/
+        qat2VANne2IjwDFAzBP/aPuglQjoQ2y2qRFADCGCxfFt3VqJWE9nH2FsFp3NYWTYRqD03nsR
+        Ig1Jt3j/vdmuI5XRKpVCraSUqmiKCBVXBr5LleAG2s5kMYyVsf3z8TCRNAes+XavcIbdc7C/
+        NSvg1eSlBcmiBulrvkMU8Vg7EzNcfwBJUy9LLZhJ22u4VnLsxYD6WVnvBfn4QPaDrUcublie
+        F9re2/K9Fx1D9JFjO90pIUWHWzcHhTubw3TXpuXhDdOBZLtStmTk7MrigNL0QOZ2XF/56q+7
+        dks6BeA1XdyZYCH4bAZNrkJsLP0Hgd1ywb8DAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprBIsWRmVeSWpSXmKPExsWy7bCSvG5zzZ1Ygy1LDC3On9/AbjHlz3Im
+        i02Pr7FabJ7/h9Hi8q45bBYzzu9jsjj8pp3VYtWuP4wOHB47Z91l99i0qpPN4861PWwem5fU
+        e/RtWcXo8XmTXABbFJdNSmpOZllqkb5dAlfG/2l3GQtuOlY0P17F3MDYYNbFyMEhIWAiceSD
+        fRcjF4eQwG5GicfTL7J2MXICxWUkJrxYwgxhC0vcbznCClH0mlFi468DTCAJNgFdicuLn4DZ
+        IkD25hvL2UFsZoEfjBIzj3pANFxglDjVv48VZBunQKDE226wemEBD4mj514wgtgsAqoS9zfN
+        AovzClhKXOt/zw5hC0qcnPmEBWKmtkTvw1ZGGHvZwtdQxylI7Dj7GiouIjG7s40Z4h4niWu/
+        tjBOYBSehWTULCSjZiEZNQtJ+wJGllWMkqkFxbnpucWGBYZ5qeV6xYm5xaV56XrJ+bmbGMHx
+        paW5g/HykvhDjAIcjEo8vD/O3o4VYk0sK67MPcQowcGsJMLrdvZGrBBvSmJlVWpRfnxRaU5q
+        8SFGaQ4WJXHep3nHIoUE0hNLUrNTUwtSi2CyTBycUg2Mi59f2rHE4AHzhaexru9tjRiqGU+3
+        9Rpem1AhH5s3e+mxDxvLe/RtgoQtCuo3b1PwnNZ7g3H9eY9088i9Rxkvp8nc7b207HbtTcng
+        olMFj+UXefy5Lq/n4bn5r3da5+70DzyntlVxRub4v+addzG8+UVNY13QS+Ew3aItzQ3BS/lO
+        5E9RttinxFKckWioxVxUnAgAZVAhO6sCAAA=
+X-CMS-MailID: 20191126011443epcas2p446cdece191e5f8db67971059a182a063
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-Sendblock-Type: AUTO_CONFIDENTIAL
+CMS-TYPE: 102P
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20191121072643epcas2p452071a503725c7764acf5084d24425b1
+References: <CGME20191121072643epcas2p452071a503725c7764acf5084d24425b1@epcas2p4.samsung.com>
+        <001001d5a03d$05de1f70$119a5e50$@samsung.com>
+        <CAJKOXPckbRowhCmnJfT8-DT3gYaTpDOf0wVxmxdf-tZpOyM5ew@mail.gmail.com>
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hello,
-
-On Fri, Nov 22, 2019 at 12:32:30PM +0100, Miquel Raynal wrote:
-> The MAX7313 chip is fully compatible with the PCA9535 on its basic
-> functions but can also manage the intensity on each of its ports with
-> PWM. Each output is independent and may be tuned with 16 values (4
-> bits per output). The period is always 32kHz, only the duty-cycle may
-> be changed. One can use any output as GPIO or PWM.
-> 
-> Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
-> ---
-> 
-> Changes in v3:
-> * Added two error messages in ->request().
-> * Protected the PWM count agains races with an additional mutex.
-> * Dropped an useless check on the period value in ->apply().
-> * Forced the .period to be constant.
-> * Checked state->polarity when needed.
-> * Used DIV_ROUND_DOWN_ULL for computing the duty_cycle.
-> * Implemented ->get_state().
-> * Added a comment to explain that the GPIO functionality is not harmed
->   by the global intensity setting.
-> 
-> Changes in v2:
-> * Removed the hardcoding of PWM_CHANNELS, changed the code to use the
->   number of GPIO lines which is programatically known.
-> * Used per pwm_device chip data to store the GPIO descriptors instead
->   of having a static array of GPIO descriptors in the private PWM
->   structure. It also enhanced the readability.
-> * Rename an offset variable: s/off/shift/.
-> * The default PWM state is now static low instead of input.
-> * Used the GPIO as regular consumer thanks to the stored GPIO
->   descriptors to "make it more idiomatic" (requested by Thierry).
-> * Used gpiochip_request_own_desc() instead of
->   gpio_to_desc()/gpiod_request(). This prevented the build issue and
->   an additional dependency that would have requested a DEPENDS ON line
->   in Kconfig.
-> * Enhanced the return line of max7313_pwm_probe().
-> 
-> 
->  drivers/gpio/gpio-pca953x.c | 332 +++++++++++++++++++++++++++++++++++-
->  1 file changed, 330 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/gpio/gpio-pca953x.c b/drivers/gpio/gpio-pca953x.c
-> index de5d1383f28d..baf639bec18d 100644
-> --- a/drivers/gpio/gpio-pca953x.c
-> +++ b/drivers/gpio/gpio-pca953x.c
-> @@ -12,18 +12,22 @@
->  #include <linux/bits.h>
->  #include <linux/gpio/driver.h>
->  #include <linux/gpio/consumer.h>
-> +#include <linux/gpio/machine.h>
->  #include <linux/i2c.h>
->  #include <linux/init.h>
->  #include <linux/interrupt.h>
->  #include <linux/module.h>
->  #include <linux/of_platform.h>
->  #include <linux/platform_data/pca953x.h>
-> +#include <linux/pwm.h>
->  #include <linux/regmap.h>
->  #include <linux/regulator/consumer.h>
->  #include <linux/slab.h>
->  
->  #include <asm/unaligned.h>
->  
-> +#include "gpiolib.h"
-> +
->  #define PCA953X_INPUT		0x00
->  #define PCA953X_OUTPUT		0x01
->  #define PCA953X_INVERT		0x02
-> @@ -63,11 +67,18 @@
->  
->  #define PCA_INT			BIT(8)
->  #define PCA_PCAL		BIT(9)
-> +#define MAX_PWM			BIT(10)
->  #define PCA_LATCH_INT		(PCA_PCAL | PCA_INT)
->  #define PCA953X_TYPE		BIT(12)
->  #define PCA957X_TYPE		BIT(13)
->  #define PCA_TYPE_MASK		GENMASK(15, 12)
->  
-> +#define MAX7313_MASTER		0x0E
-> +#define MAX7313_CONFIGURATION	0x0F
-> +#define MAX7313_INTENSITY	0x10
-> +
-> +#define MAX7313_GLOB_INTENSITY	BIT(2)
-> +
->  #define PCA_CHIP_TYPE(x)	((x) & PCA_TYPE_MASK)
->  
->  static const struct i2c_device_id pca953x_id[] = {
-> @@ -93,7 +104,7 @@ static const struct i2c_device_id pca953x_id[] = {
->  
->  	{ "max7310", 8  | PCA953X_TYPE, },
->  	{ "max7312", 16 | PCA953X_TYPE | PCA_INT, },
-> -	{ "max7313", 16 | PCA953X_TYPE | PCA_INT, },
-> +	{ "max7313", 16 | PCA953X_TYPE | PCA_INT | MAX_PWM, },
->  	{ "max7315", 8  | PCA953X_TYPE | PCA_INT, },
->  	{ "max7318", 16 | PCA953X_TYPE | PCA_INT, },
->  	{ "pca6107", 8  | PCA953X_TYPE | PCA_INT, },
-> @@ -118,6 +129,14 @@ MODULE_DEVICE_TABLE(acpi, pca953x_acpi_ids);
->  
->  #define NBANK(chip) DIV_ROUND_UP(chip->gpio_chip.ngpio, BANK_SZ)
->  
-> +#define PWM_PER_REG 2
-> +#define PWM_BITS_PER_REG (8 / PWM_PER_REG)
-> +#define PWM_INTENSITY_MASK GENMASK(PWM_BITS_PER_REG - 1, 0)
-> +
-> +#define PWM_PERIOD_NS 31250
-> +#define PWM_DC_STATES 16
-> +#define PWM_OFFSET_NS (PWM_PERIOD_NS / PWM_DC_STATES)
-> +
->  struct pca953x_reg_config {
->  	int direction;
->  	int output;
-> @@ -139,6 +158,22 @@ static const struct pca953x_reg_config pca957x_regs = {
->  	.invert = PCA957X_INVRT,
->  };
->  
-> +struct max7313_pwm_data {
-> +	struct gpio_desc *desc;
-> +	bool enabled;
-> +	unsigned int duty_cycle;
-> +};
-> +
-> +struct max7313_pwm {
-> +	struct pwm_chip chip;
-> +	/*
-> +	 * Protect races when counting active PWMs for enabling or disabling
-> +	 * the internal oscillator.
-> +	 */
-> +	struct mutex count_lock;
-> +	unsigned int count;
-> +};
-> +
->  struct pca953x_chip {
->  	unsigned gpio_start;
->  	struct mutex i2c_lock;
-> @@ -161,6 +196,8 @@ struct pca953x_chip {
->  	struct regulator *regulator;
->  
->  	const struct pca953x_reg_config *regs;
-> +
-> +	struct max7313_pwm pwm;
->  };
->  
->  static int pca953x_bank_shift(struct pca953x_chip *chip)
-> @@ -241,8 +278,16 @@ static bool pca953x_check_register(struct pca953x_chip *chip, unsigned int reg,
->  static bool pca953x_readable_register(struct device *dev, unsigned int reg)
->  {
->  	struct pca953x_chip *chip = dev_get_drvdata(dev);
-> +	unsigned int bank_sz = chip->driver_data & PCA_GPIO_MASK;
->  	u32 bank;
->  
-> +	if (PCA_CHIP_TYPE(chip->driver_data) == PCA953X_TYPE &&
-> +	    chip->driver_data & MAX_PWM) {
-> +		if (reg >= MAX7313_MASTER &&
-> +		    reg < (MAX7313_INTENSITY + bank_sz))
-> +			return true;
-> +	}
-> +
->  	if (PCA_CHIP_TYPE(chip->driver_data) == PCA953X_TYPE) {
->  		bank = PCA953x_BANK_INPUT | PCA953x_BANK_OUTPUT |
->  		       PCA953x_BANK_POLARITY | PCA953x_BANK_CONFIG;
-> @@ -264,8 +309,16 @@ static bool pca953x_readable_register(struct device *dev, unsigned int reg)
->  static bool pca953x_writeable_register(struct device *dev, unsigned int reg)
->  {
->  	struct pca953x_chip *chip = dev_get_drvdata(dev);
-> +	unsigned int bank_sz = chip->driver_data & PCA_GPIO_MASK;
->  	u32 bank;
->  
-> +	if (PCA_CHIP_TYPE(chip->driver_data) == PCA953X_TYPE &&
-> +	    chip->driver_data & MAX_PWM) {
-> +		if (reg >= MAX7313_MASTER &&
-> +		    reg < (MAX7313_INTENSITY + bank_sz))
-> +			return true;
-> +	}
-> +
->  	if (PCA_CHIP_TYPE(chip->driver_data) == PCA953X_TYPE) {
->  		bank = PCA953x_BANK_OUTPUT | PCA953x_BANK_POLARITY |
->  			PCA953x_BANK_CONFIG;
-> @@ -886,6 +939,278 @@ static int device_pca957x_init(struct pca953x_chip *chip, u32 invert)
->  	return ret;
->  }
->  
-> +/* PWM specific methods */
-> +
-> +static struct max7313_pwm *to_max7313_pwm(struct pwm_chip *chip)
-> +{
-> +	return container_of(chip, struct max7313_pwm, chip);
-> +}
-> +
-> +static struct pca953x_chip *to_pca953x(struct max7313_pwm *chip)
-> +{
-> +	return container_of(chip, struct pca953x_chip, pwm);
-> +}
-> +
-> +static u8 max7313_pwm_get_intensity(struct pca953x_chip *chip,
-> +				    unsigned int idx)
-> +{
-> +	unsigned int reg, shift, val;
-> +	u8 duty_cycle;
-> +
-> +	reg = MAX7313_INTENSITY + (idx / PWM_PER_REG);
-> +	shift = (idx % PWM_PER_REG) ? PWM_BITS_PER_REG : 0;
-> +
-> +	mutex_lock(&chip->i2c_lock);
-> +	regmap_read(chip->regmap, reg, &val);
-> +	mutex_unlock(&chip->i2c_lock);
-> +
-> +	if (shift)
-> +		val >>= shift;
-> +
-> +	val &= PWM_INTENSITY_MASK;
-> +
-> +	/*
-> +	 * Register values in the [0;15] range mean a value in the [1;16] range.
-> +	 * A register value of 16 means the logic has been inverted to produce a
-> +	 * static low output.
-> +	 */
-> +	if (val == PWM_INTENSITY_MASK)
-> +		duty_cycle = 0;
-> +	else
-> +		duty_cycle = val + 1;
-> +
-> +	return duty_cycle;
-> +}
-> +
-> +static int max7313_pwm_set_intensity(struct pca953x_chip *chip,
-> +				     unsigned int idx, u8 duty_cycle)
-> +{
-> +	/* Duty-cycle is in the range [1;16] while registers expect [0;15] */
-> +	u8 intensity = (duty_cycle - 1) & PWM_INTENSITY_MASK;
-> +	unsigned int reg, shift;
-> +	u8 val, mask;
-> +	int ret;
-> +
-> +	reg = MAX7313_INTENSITY + (idx / PWM_PER_REG);
-> +	shift = (idx % PWM_PER_REG) ? PWM_BITS_PER_REG : 0;
-> +
-> +	mask = PWM_INTENSITY_MASK << shift;
-> +	val = intensity << shift;
-> +
-> +	mutex_lock(&chip->i2c_lock);
-> +	ret = regmap_write_bits(chip->regmap, reg, mask, val);
-> +	mutex_unlock(&chip->i2c_lock);
-> +
-> +	return ret;
-> +}
-> +
-> +/*
-> + * For a given PWM channel, when the blink phase 0 bit is set, the intensity
-> + * range is only [1/16;16/16]. With this range, a static low output is
-> + * physically not possible. When the blink phase 0 bit is cleared, the intensity
-> + * range is [15/16;0/16] which then allows a static low output but not a static
-> + * high output.
-> + *
-> + * In this driver we choose to set the blink phase 0 bit by default, hence we
-> + * can slide from a low output to a fully high output without glitch. However,
-> + * the only way to get a static low output is by clearing the blink phase 0 bit,
-> + * and by changing the intensity value to its maximum (as, at this moment,
-> + * intensity is reversed). There is no way to atomically flip the register *and*
-> + * change the PWM value at the same time so this will produce a small glitch.
-> + */
-> +static int max7313_pwm_set_state(struct pca953x_chip *chip,
-> +				 struct pwm_device *pwm_device,
-> +				 unsigned int duty_cycle)
-
-I'd like to see a better name than "duty_cycle" here. In the comment
-above you call it "intensity" which is more clear IMHO.
-
-> +{
-> +	struct max7313_pwm_data *data = pwm_get_chip_data(pwm_device);
-> +	struct gpio_desc *desc = data->desc;
-> +	int ret;
-> +
-> +	/* A null duty_cycle will invert the phase */
-> +	ret = gpiod_direction_output(desc, duty_cycle);
-> +	if (ret)
-> +		return ret;
-> +
-> +	/* Maximize the low time in case of static low state */
-> +	if (!duty_cycle)
-> +		duty_cycle = PWM_DC_STATES;
-> +
-> +	return max7313_pwm_set_intensity(chip, pwm_device->hwpwm, duty_cycle);
-
-Thierry already commented that the call to gpiod_direction_output is a
-bit strange. What about:
-
-	if (intensity) {
-		gpiod_direction_output(desc, 1);
-		max7313_pwm_set_intensity(chip, pwm_device->hwpwm, intensity - 1)
-	} else {
-		gpiod_direction_output(desc, 0);
-		max7313_pwm_set_intensity(chip, pwm_device->hwpwm, 15);
-	}
-
-Also when switching from 0% to 50% you could prevent a glitch by
-sticking to an unset blink phase 0 bit.
-
-> +}
-> +
-> +static int max7313_pwm_request(struct pwm_chip *pwm_chip,
-> +			       struct pwm_device *pwm_device)
-> +{
-> +	struct max7313_pwm *pwm = to_max7313_pwm(pwm_chip);
-> +	struct pca953x_chip *chip = to_pca953x(pwm);
-> +	struct max7313_pwm_data *data;
-> +	struct gpio_desc *desc;
-> +	int ret;
-> +
-> +	desc = gpiochip_request_own_desc(&chip->gpio_chip, pwm_device->hwpwm,
-> +					 "max7313-pwm", GPIO_ACTIVE_HIGH,
-> +					 GPIOD_OUT_LOW);
-> +	if (IS_ERR(desc)) {
-> +		dev_err(&chip->client->dev,
-> +			"pin already in use (probably as GPIO)\n");
-> +		return PTR_ERR(desc);
-> +	}
-> +
-> +	data = devm_kzalloc(&chip->client->dev, sizeof(*data), GFP_KERNEL);
-> +	if (!data)
-> +		return -ENOMEM;
-> +
-> +	data->desc = desc;
-> +	pwm_set_chip_data(pwm_device, data);
-> +
-> +	ret = max7313_pwm_set_state(chip, pwm_device, 0);
-> +	if (ret) {
-> +		dev_err(&chip->client->dev, "cannot set PWM default state\n");
-
-Would be good to include the error code here. I suggest to use
-
-	dev_err(&chip->client->dev, "cannot set PWM default state: %pe\n",
-		ERR_PTR(ret));
-
-Ditto for the error message above when gpiochip_request_own_desc fails.
-
-If I'm not mistaken this already initializes the PWM, however .request
-isn't supposed to do that. The output state should be unmodified to
-allow to take over an already initialized PWM from the boot loader.
-
-> +		goto free_gpiod;
-> +	}
-> +
-> +	/*
-> +	 * Set master intensity to the maximum level to let individual outputs
-> +	 * the greatest flexibility range. Also enables the internal oscillator.
-> +	 */
-> +	mutex_lock(&pwm->count_lock);
-> +	if (!pwm->count) {
-> +		mutex_lock(&chip->i2c_lock);
-> +		ret = regmap_write_bits(chip->regmap, MAX7313_MASTER,
-> +					PWM_INTENSITY_MASK << PWM_BITS_PER_REG,
-> +					PWM_INTENSITY_MASK << PWM_BITS_PER_REG);
-> +		mutex_unlock(&chip->i2c_lock);
-> +	}
-> +
-> +	if (!ret)
-> +		pwm->count++;
-> +
-> +	mutex_unlock(&pwm->count_lock);
-> +
-> +	if (ret)
-> +		goto free_gpiod;
-> +
-> +	return 0;
-> +
-> +free_gpiod:
-> +	gpiochip_free_own_desc(data->desc);
-> +
-> +	return ret;
-> +}
-> +
-> +static void max7313_pwm_free(struct pwm_chip *pwm_chip,
-> +			     struct pwm_device *pwm_device)
-> +{
-> +	struct max7313_pwm_data *data = pwm_get_chip_data(pwm_device);
-> +	struct max7313_pwm *pwm = to_max7313_pwm(pwm_chip);
-> +	struct pca953x_chip *chip = to_pca953x(pwm);
-> +
-> +	max7313_pwm_set_state(chip, pwm_device, 0);
-
-As .request above also .free is not supposed to modify the output.
-
-> +	mutex_lock(&pwm->count_lock);
-> +
-> +	pwm->count--;
-> +
-> +	/* Disable the internal oscillator if no channel is in use */
-> +	if (!pwm->count) {
-> +		mutex_lock(&chip->i2c_lock);
-> +		regmap_write_bits(chip->regmap, MAX7313_MASTER,
-> +				  PWM_INTENSITY_MASK << PWM_BITS_PER_REG, 0);
-> +		mutex_unlock(&chip->i2c_lock);
-> +	}
-
-What happens to the output pin when the oscillator gets disabled?
-
-> +	mutex_unlock(&pwm->count_lock);
-> +
-> +	gpiochip_free_own_desc(data->desc);
-> +}
-> +
-> +static int max7313_pwm_apply(struct pwm_chip *pwm_chip,
-> +			     struct pwm_device *pwm_device,
-> +			     const struct pwm_state *state)
-> +{
-> +	struct max7313_pwm_data *data = pwm_get_chip_data(pwm_device);
-> +	struct max7313_pwm *pwm = to_max7313_pwm(pwm_chip);
-> +	struct pca953x_chip *chip = to_pca953x(pwm);
-> +	unsigned int duty_cycle;
-> +
-> +	if (state->period != PWM_PERIOD_NS ||
-> +	    state->polarity != PWM_POLARITY_NORMAL)
-> +		return -EINVAL;
-
-The check for period is too strong. Anything bigger than PWM_PERIOD_NS
-is acceptable, too. (The policy I'd like to see is: Provide the biggest
-period possible not bigger than the requested policy.)
-
-> +	data->enabled = state->enabled;
-> +	data->duty_cycle = state->duty_cycle;
-
-Storing these is only to let .get_state yield the last set values,
-right?
-
-> +	if (!state->enabled || !state->duty_cycle)
-> +		duty_cycle = 0;
-> +	else
-> +		/* Convert the duty-cycle to be in the [1;16] range */
-> +		duty_cycle = DIV_ROUND_DOWN_ULL(state->duty_cycle,
-> +						PWM_OFFSET_NS);
-> +
-> +	/* The hardware is supposedly glitch-free */
-> +	return max7313_pwm_set_state(chip, pwm_device, duty_cycle);
-> +}
-> +
-> +static void max7313_pwm_get_state(struct pwm_chip *pwm_chip,
-> +				  struct pwm_device *pwm_device,
-> +				  struct pwm_state *state)
-> +{
-> +	struct max7313_pwm_data *data = pwm_get_chip_data(pwm_device);
-> +	struct max7313_pwm *pwm = to_max7313_pwm(pwm_chip);
-> +	struct pca953x_chip *chip = to_pca953x(pwm);
-> +	u8 duty_cycle;
-> +
-> +	state->period = PWM_PERIOD_NS;
-> +	state->polarity = PWM_POLARITY_NORMAL;
-> +
-> +	if (!data)
-> +		return;
-> +
-> +	state->enabled = data->enabled;
-
-data->enabled is not initialized from hardware in .probe, so currently
-.get doesn't provide anything useful for the initial call. :-|
-
-> +	if (!state->enabled) {
-> +		state->duty_cycle = data->duty_cycle;
-> +	} else {
-> +		duty_cycle = max7313_pwm_get_intensity(chip, pwm_device->hwpwm);
-> +		state->duty_cycle = duty_cycle * PWM_OFFSET_NS;
-
-if the hardware is configured with blink phase 0 bit unset the returned
-value is wrong, isn't it?
-
-> +	}
-> +};
-
-Best regards
-Uwe
-
--- 
-Pengutronix e.K.                           | Uwe Kleine-König            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+On Thu, 21 Nov 2019 at 16:38, Krzysztof Kozlowski <krzk=40kernel.org> wrote=
+:
+> Hi,
+>
+> Thanks for the patch. Few comments below:
+>
+> On Thu, 21 Nov 2019 at 15:26, =EA=B5=AC=ED=98=84=EA=B8=B0=20<hyunki00.koo=
+=40samsung.com>=20wrote:=0D=0A>>=0D=0A>>=20Enable=20samsung=20pinctrl=20dri=
+ver=20to=20be=20compiled=20as=20modules.=0D=0A>=0D=0A>=20Why?=20What's=20th=
+e=20benefit?=20Are=20platforms=20capable=20of=20such=20boot?=20Pinctrl=20is=
+=20needed=20early=20-=20even=20before=20mounting=20rootfs...=0D=0A>=20What=
+=20about=20module=20unloading?=20Is=20it=20reasonable?=0D=0A>=20Please=20an=
+swer=20to=20all=20this=20also=20in=20commit=20message.=0D=0A>=0D=0A=0D=0ASo=
+rry=20to=20late=20and=20Thank=20you=20for=20your=20comment,=20I=20would=20l=
+ike=20to=20apply=20GKI=20on=20the=20pinctrl=20driver=0D=0ASo=20I=20would=20=
+like=20to=20cut=20off=20dependency=20from=20ARCH_EXYNOS.=0D=0AI=20will=20sp=
+lit=20into=20two=20part,=0D=0AFirst,=20cut=20off=20the=20dependency=20with=
+=20ARCH_EXYNOS=20in=20arch/arm64/Kconfig.platform.=0D=0ASecond,=20I=20will=
+=20make=20the=20pinctrl=20driver=20as=20a=20module.=0D=0A=0D=0A>>=0D=0A>>=
+=20Change-Id:=20I92a9953c92831a316f7f50146898ff19831549ec=0D=0A>=0D=0A>=20T=
+his=20does=20not=20belong=20to=20Git.=0D=0A>=0D=0A>>=20Signed-off-by:=20Hyu=
+nki=20Koo=20<hyunki00.koo=40samsung.com>=0D=0A>=0D=0A>You=20=22From=22=20na=
+me=20is=20different=20than=20written=20here=20in=20Signed-off-by.=20They=20=
+should=20match=20and=20I=20do=20not=20know=20Korean=20to=20be=20able=20to=
+=20tell=20whether=20they=20really=20match=20or=20not=20:).=0D=0A>How=20abou=
+t=20using=20Latin=20transliteration=20also=20in=20=22From=22=20field?=0D=0A=
+>=0D=0A>>=20---=0D=0A>>=20=20drivers/pinctrl/samsung/Kconfig=20=20=20=20=20=
+=20=20=20=20=20=20=20=20=20=20=20=7C=20=205=20+----=0D=0A>>=20=20drivers/pi=
+nctrl/samsung/Makefile=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=7C=2013=
+=20+++++++------=0D=0A>>=20=20drivers/pinctrl/samsung/pinctrl-exynos-arm.c=
+=20=20=20=7C=20=202=20++=0D=0A>>=20=20drivers/pinctrl/samsung/pinctrl-exyno=
+s-arm64.c=20=7C=20=202=20++=0D=0A>>=20=20drivers/pinctrl/samsung/pinctrl-ex=
+ynos.c=20=20=20=20=20=20=20=7C=20=202=20++=0D=0A>>=20=20drivers/pinctrl/sam=
+sung/pinctrl-samsung.c=20=20=20=20=20=20=7C=2013=20+++++++++++++=0D=0A>>=20=
+=206=20files=20changed,=2027=20insertions(+),=2010=20deletions(-)=0D=0A>>=
+=0D=0A>>=20diff=20--git=20a/drivers/pinctrl/samsung/Kconfig=20=0D=0A>>=20b/=
+drivers/pinctrl/samsung/Kconfig=20index=20425fadd6c346..25e16984ef23=20=0D=
+=0A>>=20100644=0D=0A>>=20---=20a/drivers/pinctrl/samsung/Kconfig=0D=0A>>=20=
++++=20b/drivers/pinctrl/samsung/Kconfig=0D=0A>>=20=40=40=20-3,14=20+3,13=20=
+=40=40=0D=0A>>=20=20=23=20Samsung=20Pin=20control=20drivers=0D=0A>>=20=20=
+=23=0D=0A>>=20=20config=20PINCTRL_SAMSUNG=0D=0A>>=20-=20=20=20=20=20=20=20b=
+ool=0D=0A>>=20+=20=20=20=20=20=20=20tristate=20=22Pinctrl=20driver=20data=
+=20for=20Samsung=20SoCs=22=0D=0A>>=20=20=20=20=20=20=20=20=20select=20PINMU=
+X=0D=0A>>=20=20=20=20=20=20=20=20=20select=20PINCONF=0D=0A>>=0D=0A>>=20=20c=
+onfig=20PINCTRL_EXYNOS=0D=0A>>=20=20=20=20=20=20=20=20=20bool=20=22Pinctrl=
+=20driver=20data=20for=20Samsung=20EXYNOS=20SoCs=22=0D=0A>>=20=20=20=20=20=
+=20=20=20=20depends=20on=20OF=20&&=20GPIOLIB=20&&=20(ARCH_EXYNOS=20=7C=7C=
+=20ARCH_S5PV210)=0D=0A>>=20-=20=20=20=20=20=20=20select=20PINCTRL_SAMSUNG=
+=0D=0A>>=20=20=20=20=20=20=20=20=20select=20PINCTRL_EXYNOS_ARM=20if=20ARM=
+=20&&=20(ARCH_EXYNOS=20=7C=7C=20ARCH_S5PV210)=0D=0A>>=20=20=20=20=20=20=20=
+=20=20select=20PINCTRL_EXYNOS_ARM64=20if=20ARM64=20&&=20ARCH_EXYNOS=0D=0A>>=
+=0D=0A>>=20=40=40=20-25,9=20+24,7=20=40=40=20config=20PINCTRL_EXYNOS_ARM64=
+=20=20config=20PINCTRL_S3C24XX=0D=0A>>=20=20=20=20=20=20=20=20=20bool=20=22=
+Samsung=20S3C24XX=20SoC=20pinctrl=20driver=22=0D=0A>>=20=20=20=20=20=20=20=
+=20=20depends=20on=20ARCH_S3C24XX=20&&=20OF=0D=0A>>=20-=20=20=20=20=20=20=
+=20select=20PINCTRL_SAMSUNG=0D=0A>>=0D=0A>>=20=20config=20PINCTRL_S3C64XX=
+=0D=0A>>=20=20=20=20=20=20=20=20=20bool=20=22Samsung=20S3C64XX=20SoC=20pinc=
+trl=20driver=22=0D=0A>>=20=20=20=20=20=20=20=20=20depends=20on=20ARCH_S3C64=
+XX=0D=0A>>=20-=20=20=20=20=20=20=20select=20PINCTRL_SAMSUNG=0D=0A>>=20diff=
+=20--git=20a/drivers/pinctrl/samsung/Makefile=0D=0A>>=20b/drivers/pinctrl/s=
+amsung/Makefile=0D=0A>>=20index=20ed951df6a112..b3ac01838b8a=20100644=0D=0A=
+>>=20---=20a/drivers/pinctrl/samsung/Makefile=0D=0A>>=20+++=20b/drivers/pin=
+ctrl/samsung/Makefile=0D=0A>>=20=40=40=20-1,9=20+1,10=20=40=40=0D=0A>>=20=
+=20=23=20SPDX-License-Identifier:=20GPL-2.0=0D=0A>>=20=20=23=20Samsung=20pi=
+n=20control=20drivers=0D=0A>>=0D=0A>>=20-obj-=24(CONFIG_PINCTRL_SAMSUNG)=20=
+=20+=3D=20pinctrl-samsung.o=0D=0A>>=20-obj-=24(CONFIG_PINCTRL_EXYNOS)=20=20=
+=20+=3D=20pinctrl-exynos.o=0D=0A>>=20-obj-=24(CONFIG_PINCTRL_EXYNOS_ARM)=20=
+=20=20=20=20=20=20+=3D=20pinctrl-exynos-arm.o=0D=0A>>=20-obj-=24(CONFIG_PIN=
+CTRL_EXYNOS_ARM64)=20=20=20=20=20+=3D=20pinctrl-exynos-arm64.o=0D=0A>>=20-o=
+bj-=24(CONFIG_PINCTRL_S3C24XX)=20=20+=3D=20pinctrl-s3c24xx.o=0D=0A>>=20-obj=
+-=24(CONFIG_PINCTRL_S3C64XX)=20=20+=3D=20pinctrl-s3c64xx.o=0D=0A>>=20+obj-=
+=24(CONFIG_PINCTRL_SAMSUNG)=20=20+=3D=20pinctrl-samsung-super.o=0D=0A>>=20+=
+pinctrl-samsung-super-=24(CONFIG_PINCTRL_SAMSUNG)=20=20=20=20=20=20=20=20+=
+=3D=20pinctrl-samsung.o=0D=0A>>=20+pinctrl-samsung-super-=24(CONFIG_PINCTRL=
+_EXYNOS)=20+=3D=20pinctrl-exynos.o=0D=0A>>=20+pinctrl-samsung-super-=24(CON=
+FIG_PINCTRL_EXYNOS_ARM)=20=20=20=20=20+=3D=20pinctrl-exynos-=0D=0A>>=20arm.=
+o=0D=0A>>=20+pinctrl-samsung-super-=24(CONFIG_PINCTRL_EXYNOS_ARM64)=20=20=
+=20+=3D=20pinctrl-exynos-=0D=0A>>=20arm64.o=0D=0A>>=20+pinctrl-samsung-supe=
+r-=24(CONFIG_PINCTRL_S3C24XX)=20=20=20=20=20=20=20=20+=3D=20pinctrl-s3c24xx=
+.o=0D=0A>>=20+pinctrl-samsung-super-=24(CONFIG_PINCTRL_S3C64XX)=20=20=20=20=
+=20=20=20=20+=3D=20pinctrl-s3c64xx.o=0D=0A>=0D=0A>=20I=20don't=20get=20why=
+=20you=20need=20to=20rename=20obj=20to=20pinctrl-samsung-super?=0D=0A=0D=0A=
+I=20would=20like=20to=20make=20pinctrl=20as=20a=20super=20module.=20It=20is=
+=20many=20dependency=20between=20pinctrl-exynos,=20pinctr-exynos-arm64=20an=
+d=20pinctrl-samsung=0D=0A>=0D=0A>>=20diff=20--git=20a/drivers/pinctrl/samsu=
+ng/pinctrl-exynos-arm.c=0D=0A>>=20b/drivers/pinctrl/samsung/pinctrl-exynos-=
+arm.c=0D=0A>>=20index=2085ddf49a5188..28906bf213c4=20100644=0D=0A>>=20---=
+=20a/drivers/pinctrl/samsung/pinctrl-exynos-arm.c=0D=0A>>=20+++=20b/drivers=
+/pinctrl/samsung/pinctrl-exynos-arm.c=0D=0A>>=20=40=40=20-14,6=20+14,7=20=
+=40=40=0D=0A>>=20=20//=20external=20gpio=20and=20wakeup=20interrupt=20suppo=
+rt.=0D=0A>>=0D=0A>>=20=20=23include=20<linux/device.h>=0D=0A>>=20+=23includ=
+e=20<linux/module.h>=0D=0A>>=20=20=23include=20<linux/of_address.h>=0D=0A>>=
+=20=20=23include=20<linux/slab.h>=0D=0A>>=20=20=23include=20<linux/err.h>=
+=0D=0A>>=20=40=40=20-891,3=20+892,4=20=40=40=20const=20struct=20samsung_pin=
+ctrl_of_match_data=20=0D=0A>>=20exynos5420_of_data=20__initconst=20=3D=20=
+=7B=0D=0A>>=20=20=20=20=20=20=20=20=20.ctrl=20=20=20=20=20=20=20=20=20=20=
+=20=3D=20exynos5420_pin_ctrl,=0D=0A>>=20=20=20=20=20=20=20=20=20.num_ctrl=
+=20=20=20=20=20=20=20=3D=20ARRAY_SIZE(exynos5420_pin_ctrl),=0D=0A>>=20=20=
+=7D;=0D=0A>>=20+MODULE_LICENSE(=22GPL=22);=0D=0A>>=20diff=20--git=20a/drive=
+rs/pinctrl/samsung/pinctrl-exynos-arm64.c=0D=0A>>=20b/drivers/pinctrl/samsu=
+ng/pinctrl-exynos-arm64.c=0D=0A>>=20index=20b6e56422a700..2b19476ad5ff=2010=
+0644=0D=0A>>=20---=20a/drivers/pinctrl/samsung/pinctrl-exynos-arm64.c=0D=0A=
+>>=20+++=20b/drivers/pinctrl/samsung/pinctrl-exynos-arm64.c=0D=0A>>=20=40=
+=40=20-14,6=20+14,7=20=40=40=0D=0A>>=20=20//=20external=20gpio=20and=20wake=
+up=20interrupt=20support.=0D=0A>>=0D=0A>>=20=20=23include=20<linux/slab.h>=
+=0D=0A>>=20+=23include=20<linux/module.h>=0D=0A>>=20=20=23include=20<linux/=
+soc/samsung/exynos-regs-pmu.h>=0D=0A>>=0D=0A>>=20=20=23include=20=22pinctrl=
+-samsung.h=22=0D=0A>>=20=40=40=20-422,3=20+423,4=20=40=40=20const=20struct=
+=20samsung_pinctrl_of_match_data=20=0D=0A>>=20exynos7_of_data=20__initconst=
+=20=3D=20=7B=0D=0A>>=20=20=20=20=20=20=20=20=20.ctrl=20=20=20=20=20=20=20=
+=20=20=20=20=3D=20exynos7_pin_ctrl,=0D=0A>>=20=20=20=20=20=20=20=20=20.num_=
+ctrl=20=20=20=20=20=20=20=3D=20ARRAY_SIZE(exynos7_pin_ctrl),=0D=0A>>=20=20=
+=7D;=0D=0A>>=20+MODULE_LICENSE(=22GPL=22);=0D=0A>>=20diff=20--git=20a/drive=
+rs/pinctrl/samsung/pinctrl-exynos.c=0D=0A>>=20b/drivers/pinctrl/samsung/pin=
+ctrl-exynos.c=0D=0A>>=20index=20ebc27b06718c..630d606330f1=20100644=0D=0A>>=
+=20---=20a/drivers/pinctrl/samsung/pinctrl-exynos.c=0D=0A>>=20+++=20b/drive=
+rs/pinctrl/samsung/pinctrl-exynos.c=0D=0A>>=20=40=40=20-18,6=20+18,7=20=40=
+=40=0D=0A>>=20=20=23include=20<linux/irqdomain.h>=0D=0A>>=20=20=23include=
+=20<linux/irq.h>=0D=0A>>=20=20=23include=20<linux/irqchip/chained_irq.h>=0D=
+=0A>>=20+=23include=20<linux/module.h>=0D=0A>>=20=20=23include=20<linux/of.=
+h>=0D=0A>>=20=20=23include=20<linux/of_irq.h>=0D=0A>>=20=20=23include=20<li=
+nux/slab.h>=0D=0A>>=20=40=40=20-713,3=20+714,4=20=40=40=20exynos_retention_=
+init(struct=20=0D=0A>>=20samsung_pinctrl_drv_data=20*drvdata,=0D=0A>>=0D=0A=
+>>=20=20=20=20=20=20=20=20=20return=20ctrl;=0D=0A>>=20=20=7D=0D=0A>>=20+MOD=
+ULE_LICENSE(=22GPL=22);=0D=0A>>=20diff=20--git=20a/drivers/pinctrl/samsung/=
+pinctrl-samsung.c=0D=0A>>=20b/drivers/pinctrl/samsung/pinctrl-samsung.c=0D=
+=0A>>=20index=20de0477bb469d..4483eaed27f8=20100644=0D=0A>>=20---=20a/drive=
+rs/pinctrl/samsung/pinctrl-samsung.c=0D=0A>>=20+++=20b/drivers/pinctrl/sams=
+ung/pinctrl-samsung.c=0D=0A>>=20=40=40=20-15,6=20+15,7=20=40=40=0D=0A>>=20=
+=20//=20but=20provides=20extensions=20to=20which=20platform=20specific=20im=
+plementation=20=0D=0A>>=20of=20the=20gpio=20=20//=20and=20wakeup=20interrup=
+ts=20can=20be=20hooked=20to.=0D=0A>>=0D=0A>>=20+=23include=20<linux/module.=
+h>=0D=0A>>=20=20=23include=20<linux/init.h>=0D=0A>>=20=20=23include=20<linu=
+x/platform_device.h>=0D=0A>>=20=20=23include=20<linux/io.h>=0D=0A>>=20=40=
+=40=20-1275,6=20+1276,7=20=40=40=20static=20const=20struct=20of_device_id=
+=20=0D=0A>>=20samsung_pinctrl_dt_match=5B=5D=20=3D=20=7B=20=20=23endif=0D=
+=0A>>=20=20=20=20=20=20=20=20=20=7B=7D,=0D=0A>>=20=20=7D;=0D=0A>>=20+MODULE=
+_DEVICE_TABLE(of,=20samsung_pinctrl_dt_match);=0D=0A>>=0D=0A>>=20=20static=
+=20const=20struct=20dev_pm_ops=20samsung_pinctrl_pm_ops=20=3D=20=7B=0D=0A>>=
+=20=20=20=20=20=20=20=20=20SET_LATE_SYSTEM_SLEEP_PM_OPS(samsung_pinctrl_sus=
+pend,=0D=0A>>=20=40=40=20-1296,3=20+1298,14=20=40=40=20static=20int=20__ini=
+t=20samsung_pinctrl_drv_register(void)=0D=0A>>=20=20=20=20=20=20=20=20=20re=
+turn=20platform_driver_register(&samsung_pinctrl_driver);=0D=0A>>=20=20=7D=
+=0D=0A>>=20=20postcore_initcall(samsung_pinctrl_drv_register);=0D=0A>>=20+=
+=0D=0A>>=20+static=20void=20__exit=20samsung_pinctrl_drv_unregister(void)=
+=0D=0A>>=20+=7B=0D=0A>>=20+=20=20=20=20=20=20=20platform_driver_unregister(=
+&samsung_pinctrl_driver);=0D=0A>>=20+=7D=0D=0A>>=20+module_exit(samsung_pin=
+ctrl_drv_unregister);=0D=0A>=0D=0A>=20Since=20.suppress_bind_attrs=20are=20=
+defined,=20I=20find=20it=20weird=20to=20be=20able=20to=20unload=20module...=
+=20Another=20warning=20sign...=0D=0A=0D=0AOkay=20I=20will=20apply=20your=20=
+comment=0D=0A>=0D=0A>>=20+=0D=0A>>=20+=0D=0A>>=20+MODULE_LICENSE(=22GPL=22)=
+;=0D=0A>>=20+MODULE_AUTHOR(=22Hyunki=20Koo=20<hyunki00.koo=40samsung.com>=
+=22);=0D=0A>=0D=0A>=20I=20cannot=20find=20any=20contributions=20to=20this=
+=20file=20from=20you.=20The=20author=20should=20be=20the=20main=20contribut=
+or(s).=20You=20need=20to=20go=20through=20history...=0D=0A>=0D=0A>>=20+MODU=
+LE_DESCRIPTION(=22Samsung=20Exynos=20PINCTRL=20driver=22);=0D=0A>=0D=0A>=20=
+That's=20not=20Exynos=20but=20Samsung-generic=20part...=20Samsung=20Exynos/=
+S3C/S5P=20pinctrl=20driver.=0D=0A>=0D=0A=0D=0AOkay=20I=20will=20apply=20you=
+r=20comment=0D=0A=0D=0A
