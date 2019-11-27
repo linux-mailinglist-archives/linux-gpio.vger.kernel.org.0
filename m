@@ -2,102 +2,122 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 4B34D10B0D0
-	for <lists+linux-gpio@lfdr.de>; Wed, 27 Nov 2019 15:04:02 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2EB9110B0ED
+	for <lists+linux-gpio@lfdr.de>; Wed, 27 Nov 2019 15:15:55 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726673AbfK0OEB (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 27 Nov 2019 09:04:01 -0500
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:49935 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726920AbfK0OEB (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 27 Nov 2019 09:04:01 -0500
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <mfe@pengutronix.de>)
-        id 1iZxv9-0006Fb-Hn; Wed, 27 Nov 2019 15:03:55 +0100
-Received: from mfe by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <mfe@pengutronix.de>)
-        id 1iZxv8-00023l-Ng; Wed, 27 Nov 2019 15:03:54 +0100
-Date:   Wed, 27 Nov 2019 15:03:54 +0100
-From:   Marco Felsch <m.felsch@pengutronix.de>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Marc Zyngier <marc.zyngier@arm.com>,
-        Mark Brown <broonie@kernel.org>,
+        id S1726698AbfK0OPl (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 27 Nov 2019 09:15:41 -0500
+Received: from smtp1.de.adit-jv.com ([93.241.18.167]:43267 "EHLO
+        smtp1.de.adit-jv.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726320AbfK0OPl (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 27 Nov 2019 09:15:41 -0500
+Received: from localhost (smtp1.de.adit-jv.com [127.0.0.1])
+        by smtp1.de.adit-jv.com (Postfix) with ESMTP id E725A3C057C;
+        Wed, 27 Nov 2019 15:15:37 +0100 (CET)
+Received: from smtp1.de.adit-jv.com ([127.0.0.1])
+        by localhost (smtp1.de.adit-jv.com [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id bipKjdt3AzRZ; Wed, 27 Nov 2019 15:15:32 +0100 (CET)
+Received: from HI2EXCH01.adit-jv.com (hi2exch01.adit-jv.com [10.72.92.24])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by smtp1.de.adit-jv.com (Postfix) with ESMTPS id D79383C00BE;
+        Wed, 27 Nov 2019 15:15:32 +0100 (CET)
+Received: from vmlxhi-102.adit-jv.com (10.72.93.184) by HI2EXCH01.adit-jv.com
+ (10.72.92.24) with Microsoft SMTP Server (TLS) id 14.3.468.0; Wed, 27 Nov
+ 2019 15:15:32 +0100
+Date:   Wed, 27 Nov 2019 15:15:29 +0100
+From:   Eugeniu Rosca <erosca@de.adit-jv.com>
+To:     Geert Uytterhoeven <geert+renesas@glider.be>
+CC:     Linus Walleij <linus.walleij@linaro.org>,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Jonathan Corbet <corbet@lwn.net>,
         Rob Herring <robh+dt@kernel.org>,
-        Support Opensource <support.opensource@diasemi.com>,
-        Adam Thomson <Adam.Thomson.Opensource@diasemi.com>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, Sascha Hauer <kernel@pengutronix.de>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
-Subject: Re: [PATCH v2 2/3] mfd: da9062: add support for the DA9062 GPIOs in
- the core
-Message-ID: <20191127140354.3cmtrh53npbqmrkj@pengutronix.de>
-References: <20191127115619.20278-1-m.felsch@pengutronix.de>
- <20191127115619.20278-3-m.felsch@pengutronix.de>
- <CACRpkdYLeSjsXaG6Bg4Y2-8PW41ALn4PN7QUvp3tA7XReWrKGg@mail.gmail.com>
+        Mark Rutland <mark.rutland@arm.com>,
+        Harish Jenny K N <harish_kandiga@mentor.com>,
+        Eugeniu Rosca <erosca@de.adit-jv.com>,
+        Alexander Graf <graf@amazon.com>,
+        Peter Maydell <peter.maydell@linaro.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Phil Reid <preid@electromag.com.au>,
+        Marc Zyngier <marc.zyngier@arm.com>,
+        Christoffer Dall <christoffer.dall@arm.com>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        <linux-gpio@vger.kernel.org>, <linux-doc@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-renesas-soc@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <qemu-devel@nongnu.org>,
+        Eugeniu Rosca <roscaeugeniu@gmail.com>
+Subject: Re: [PATCH v3 5/7] gpio: Add GPIO Aggregator/Repeater driver
+Message-ID: <20191127141529.GA18189@vmlxhi-102.adit-jv.com>
+References: <20191127084253.16356-1-geert+renesas@glider.be>
+ <20191127084253.16356-6-geert+renesas@glider.be>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="utf-8"
 Content-Disposition: inline
-In-Reply-To: <CACRpkdYLeSjsXaG6Bg4Y2-8PW41ALn4PN7QUvp3tA7XReWrKGg@mail.gmail.com>
-X-Sent-From: Pengutronix Hildesheim
-X-URL:  http://www.pengutronix.de/
-X-IRC:  #ptxdist @freenode
-X-Accept-Language: de,en
-X-Accept-Content-Type: text/plain
-X-Uptime: 14:59:53 up 12 days,  5:18, 24 users,  load average: 0.01, 0.02,
- 0.00
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: mfe@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-gpio@vger.kernel.org
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20191127084253.16356-6-geert+renesas@glider.be>
+User-Agent: Mutt/1.12.1+40 (7f8642d4ee82) (2019-06-28)
+X-Originating-IP: [10.72.93.184]
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Linus,
+Hi Geert,
 
-thanks for your feedback.
+Many thanks for the series upgrade.
+A few static-analysis findings below (could be false positives).
 
-On 19-11-27 14:35, Linus Walleij wrote:
-> On Wed, Nov 27, 2019 at 12:56 PM Marco Felsch <m.felsch@pengutronix.de> wrote:
-> 
-> > Currently the da9062 GPIO's aren't available. The patch adds the support
-> > to make these available by adding a gpio device with the corresponding
-> > irq resources. Furthermore the patch fixes a minor style issue for the
-> > onkey device.
-> >
-> > Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
-> 
-> This is a regmap irqchip so I guess not much to say about it.
-> Acked-by: Linus Walleij <linus.walleij@linaro.org>
-> 
-> HOWEVER: this looks very much hierarchical does it not?
+On Wed, Nov 27, 2019 at 09:42:51AM +0100, Geert Uytterhoeven wrote:
 
-Yes it that's right and I converted it upon Bartosz comments.
+[..]
 
-> I can clearly see that regmap's irqchip does not support
-> hierarchical interrupt domains, so we should just make a
-> mental note somewhere that "oh yeah and then one day
-> we should make regmap irqchips play well with hierarchical
-> interrupts".
+> +static bool isrange(const char *s)
+> +{
+> +	size_t n = strlen(s);
 
-That's right, should I add this somewhere and if the answer is yes then
-where?
+Cppcheck 1.40-18521-ge6d692d96058:
+drivers/gpio/gpio-aggregator.c:69:11: style: Variable 'n' is assigned a value that is never used. [unreadVariable]
 
-Regards,
-  Marco
+Smatch v0.5.0-6150-gc1ed13e4ee7b:
+drivers/gpio/gpio-aggregator.c:69 isrange() warn: unused return: n = strlen()
 
-> 
-> Yours,
-> Linus Walleij
-> 
+[..]
+
+> +	aggr->lookups->dev_id = kasprintf(GFP_KERNEL, "%s.%d", DRV_NAME, id);
+> +	if (!aggr->lookups) {
+> +		res = -ENOMEM;
+> +		goto remove_idr;
+> +	}
+
+s/aggr->lookups/aggr->lookups->dev_id/ ?
+
+[..]
+
+> +static int gpio_fwd_get_multiple(struct gpio_chip *chip, unsigned long *mask,
+> +				 unsigned long *bits)
+> +{
+> +	struct gpiochip_fwd *fwd = gpiochip_get_data(chip);
+> +	unsigned long *values, flags;
+
+gcc 9.2.1:
+warning: ‘flags’ may be used uninitialized in this function [-Wmaybe-uninitialized]
+
+[..]
+
+> +static void gpio_fwd_set_multiple(struct gpio_chip *chip, unsigned long *mask,
+> +				  unsigned long *bits)
+> +{
+> +	struct gpiochip_fwd *fwd = gpiochip_get_data(chip);
+> +	unsigned long *values, flags;
+
+gcc 9.2.1, same as above:
+warning: ‘flags’ may be used uninitialized in this function [-Wmaybe-uninitialized]
+
+Should these be silenced like in 2bf593f101f3ca ("xilinx_uartps.c:
+suppress "may be used uninitialised" warning") ?
+
+I plan to do some runtime testing soon.
 
 -- 
-Pengutronix e.K.                           |                             |
-Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
-31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+Best Regards,
+Eugeniu
