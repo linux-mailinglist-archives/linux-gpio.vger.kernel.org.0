@@ -2,24 +2,48 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id EC7E410BD2B
-	for <lists+linux-gpio@lfdr.de>; Wed, 27 Nov 2019 22:28:09 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0165610BBF4
+	for <lists+linux-gpio@lfdr.de>; Wed, 27 Nov 2019 22:17:34 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731848AbfK0VCO (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 27 Nov 2019 16:02:14 -0500
-Received: from mx2.suse.de ([195.135.220.15]:43338 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1731840AbfK0VCL (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Wed, 27 Nov 2019 16:02:11 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 7B612AC1A;
-        Wed, 27 Nov 2019 21:02:09 +0000 (UTC)
-Subject: Re: [PATCH 1/5] pinctrl: actions: Use the correct style for SPDX
+        id S1733175AbfK0VRU convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-gpio@lfdr.de>); Wed, 27 Nov 2019 16:17:20 -0500
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:33656 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732942AbfK0VMw (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 27 Nov 2019 16:12:52 -0500
+Received: by mail-ot1-f67.google.com with SMTP id q23so14553812otn.0;
+        Wed, 27 Nov 2019 13:12:51 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=cImB892YXUVPGGhFezh816WamO3nmCEALpwjUr8+dkg=;
+        b=RbKyDyUvhoYEyGwnd4XwOAQk91C3qXm5+tXlUAkZ++aa7hlj0RbkYAUoEI3q0TtOFl
+         Fq7aIi7retxQwbC1yQBEbsro9vwRZ4xG2IymiU+sQ+xlqTmcNeF4ijIO+2jPcX1ZXQOj
+         sEMsJEkIyCWVgrEUcBiSNSYdc9hTzOD/23/2n2HiWEyYMxmoOq7hI7A8ZDNMfOfzjsvs
+         kHgys8t+Wp1yim9DQ9x1lK5w8w3ySJCs1Pi7YgWQGN0/axtp7XkscD4oDKYPRPV4cxeL
+         yp7a1jEhw9zvplzZXCL1EskiZtPDzUeUnUvbwWikE73VFfLoFESc1zhB+Mk14VKJPCEk
+         sLaA==
+X-Gm-Message-State: APjAAAVkP6xci/9VL1L5vjfKvYlbddXt1zIGrb1aoB21UbyJzi//TvF1
+        6VYU6a24oNQ0zJQb3jwKJD0wK8EsJNRdHnscZtc=
+X-Google-Smtp-Source: APXvYqxh3g09zK8yoW4/yyNAk1QlyeyoV8wcshHdQWMv3ezyM47GygheulvdavD9PmPbPqN6RamYKOqEfquQDCZNc+o=
+X-Received: by 2002:a9d:17ca:: with SMTP id j68mr5270571otj.250.1574889171373;
+ Wed, 27 Nov 2019 13:12:51 -0800 (PST)
+MIME-Version: 1.0
+References: <cover.1574871463.git.nishadkamdar@gmail.com> <5a7ed2e4b58ba7ff2f0638a2435a3a1e1c62c9f6.1574871463.git.nishadkamdar@gmail.com>
+ <CAMuHMdUqfRioTBV27AKx9zv9YuSqEod6x+A4aguf=h20TDXr6w@mail.gmail.com>
+ <9bacc7d9-6bd9-0b7c-18cd-d614796397dd@suse.de> <ae40eb808f420f5de4a140b8757dfbc426a8cf90.camel@perches.com>
+In-Reply-To: <ae40eb808f420f5de4a140b8757dfbc426a8cf90.camel@perches.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Wed, 27 Nov 2019 22:12:39 +0100
+Message-ID: <CAMuHMdUSSHvQ74c156tuhWShp05TQuSmXa-kY3HNbYj0VL_d4g@mail.gmail.com>
+Subject: Re: [PATCH 4/5] pinctrl: sh-pfc: Use the correct style for SPDX
  License Identifier
-To:     Nishad Kamdar <nishadkamdar@gmail.com>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc:     Sean Wang <sean.wang@kernel.org>,
+To:     Joe Perches <joe@perches.com>
+Cc:     =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>,
+        Nishad Kamdar <nishadkamdar@gmail.com>,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        Sean Wang <sean.wang@kernel.org>,
         Linus Walleij <linus.walleij@linaro.org>,
         Matthias Brugger <matthias.bgg@gmail.com>,
         Kevin Hilman <khilman@baylibre.com>,
@@ -27,75 +51,43 @@ Cc:     Sean Wang <sean.wang@kernel.org>,
         Maxime Coquelin <mcoquelin.stm32@gmail.com>,
         Alexandre Torgue <alexandre.torgue@st.com>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Joe Perches <joe@perches.com>,
-        =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>,
-        linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, linux-gpio@vger.kernel.org,
-        linux-amlogic@lists.infradead.org,
-        linux-renesas-soc@vger.kernel.org,
+        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        linux-mediatek@lists.infradead.org,
+        linux-gpio <linux-gpio@vger.kernel.org>,
+        linux-amlogic <linux-amlogic@lists.infradead.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
         linux-stm32@st-md-mailman.stormreply.com,
-        linux-kernel@vger.kernel.org
-References: <cover.1574871463.git.nishadkamdar@gmail.com>
- <5b588fc885efca6efdc73869aa4b1eeeb3d6f6c5.1574871463.git.nishadkamdar@gmail.com>
-From:   =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber@suse.de>
-Organization: SUSE Software Solutions Germany GmbH
-Message-ID: <c76290a7-b9bb-7f70-e750-04fe6fdbb7e1@suse.de>
-Date:   Wed, 27 Nov 2019 22:02:08 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.1
-MIME-Version: 1.0
-In-Reply-To: <5b588fc885efca6efdc73869aa4b1eeeb3d6f6c5.1574871463.git.nishadkamdar@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Am 27.11.19 um 17:40 schrieb Nishad Kamdar:
-> This patch corrects the SPDX License Identifier style in
-> header file related Actions Semi OWL pinctrl driver.
+On Wed, Nov 27, 2019 at 9:59 PM Joe Perches <joe@perches.com> wrote:
+> On Wed, 2019-11-27 at 21:55 +0100, Andreas Färber wrote:
+> > However, if we're touching these lines anyway, shouldn't we be updating
+> > the SPDX Identifier to GPL-2.0-only while at it?
+>
+> Probably better to do that with a treewide script one day.
 
-Owl
+Yeah... But it's already more than one year after
 
-> For C header files Documentation/process/license-rules.rst
-> mandates C-like comments (opposed to C source files where
-> C++ style should be used).
-> 
-> Changes made by using a script provided by Joe Perches here:
-> https://lkml.org/lkml/2019/2/7/46.
-> 
-> Suggested-by: Joe Perches <joe@perches.com>
-> Signed-off-by: Nishad Kamdar <nishadkamdar@gmail.com>
-> ---
->  drivers/pinctrl/actions/pinctrl-owl.h | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/pinctrl/actions/pinctrl-owl.h b/drivers/pinctrl/actions/pinctrl-owl.h
-> index dae2e8363fd5..feee7ad7e27e 100644
-> --- a/drivers/pinctrl/actions/pinctrl-owl.h
-> +++ b/drivers/pinctrl/actions/pinctrl-owl.h
-> @@ -1,4 +1,4 @@
-> -// SPDX-License-Identifier: GPL-2.0+
-> +/* SPDX-License-Identifier: GPL-2.0+ */
+> https://lkml.org/lkml/2018/8/16/487
 
-This is not a uapi or asm header, which that /* */ rule was later added
-for, I thought?
+and Documentation/process/license-rules.rst (which is the authoritive
+rule?) still hasn't been updated...
 
->  /*
->   * OWL SoC's Pinctrl definitions
->   *
+Gr{oetje,eeting}s,
 
-Not objecting, just making sure we're not blindly refactoring code.
-
-If doing this, I suggest updating to GPL-2.0-or-later.
-
-Regards,
-Andreas
+                        Geert
 
 -- 
-SUSE Software Solutions Germany GmbH
-Maxfeldstr. 5, 90409 Nürnberg, Germany
-GF: Felix Imendörffer
-HRB 36809 (AG Nürnberg)
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
