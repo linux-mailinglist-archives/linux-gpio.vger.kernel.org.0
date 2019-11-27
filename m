@@ -2,158 +2,140 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 21EE210B150
-	for <lists+linux-gpio@lfdr.de>; Wed, 27 Nov 2019 15:29:49 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3378410B173
+	for <lists+linux-gpio@lfdr.de>; Wed, 27 Nov 2019 15:33:52 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726719AbfK0O3r (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 27 Nov 2019 09:29:47 -0500
-Received: from pegase1.c-s.fr ([93.17.236.30]:10830 "EHLO pegase1.c-s.fr"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726514AbfK0O3r (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Wed, 27 Nov 2019 09:29:47 -0500
-Received: from localhost (mailhub1-ext [192.168.12.233])
-        by localhost (Postfix) with ESMTP id 47NNT410cYz9v0wR;
-        Wed, 27 Nov 2019 15:29:44 +0100 (CET)
-Authentication-Results: localhost; dkim=pass
-        reason="1024-bit key; insecure key"
-        header.d=c-s.fr header.i=@c-s.fr header.b=rYJczCvJ; dkim-adsp=pass;
-        dkim-atps=neutral
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id 98grrAO57arH; Wed, 27 Nov 2019 15:29:44 +0100 (CET)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 47NNT373Z1z9v0wP;
-        Wed, 27 Nov 2019 15:29:43 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
-        t=1574864984; bh=muXKaZ6jgUY6RAFPnrDsPdJo2Ku8sbUfRybI9HofgPw=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=rYJczCvJ98rg+SmmmPAe8DNmT8e4aJZEddPWfQarlac6rPu2LbIObEHmsjBNkGrsI
-         kEXFHyZSnX823EeaIgm1CMG/odu0IMr6ROPhCHPwtPn8sHRuIw1CUj9GQKfAcOplH0
-         2s04Kdnyf047v6qA0J/Up1zpqYY3uEACkxnCCP1Q=
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 541218B864;
-        Wed, 27 Nov 2019 15:29:45 +0100 (CET)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id KlPyQKuJgAWd; Wed, 27 Nov 2019 15:29:45 +0100 (CET)
-Received: from [192.168.4.90] (unknown [192.168.4.90])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 92F258B862;
-        Wed, 27 Nov 2019 15:29:44 +0100 (CET)
-Subject: Re: Boot failure with 5.4-rc5, bisected to 0f0581b24bd0 ("spi: fsl:
- Convert to use CS GPIO descriptors")
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     linux-spi <linux-spi@vger.kernel.org>,
-        Mark Brown <broonie@kernel.org>,
-        Fabio Estevam <festevam@gmail.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
-References: <e9981d69-2a33-fec9-7d12-15fcb948364d@c-s.fr>
- <CACRpkdYUBj+45Jr94kdERKJogVoL96JH6i85o_bVUtjmkTt19g@mail.gmail.com>
- <3c79a8b9-65e4-bfc9-d718-b8530fe1e672@c-s.fr>
- <b06679da-0332-2322-13f8-07307f611542@c-s.fr>
- <CACRpkdbOzM3X2_BMnf5eSqCt_UsnXo4eXD2fUbTLk6=Uo3gB2g@mail.gmail.com>
- <582b5ccf-8993-6345-94d1-3c2fc94e4d4f@c-s.fr>
- <CACRpkdawu5DcCA5rnRbOe+meBPtxctL7HuWciqboOEkCHZKA7A@mail.gmail.com>
- <e6a39aba-a41b-d781-966a-647977216b87@c-s.fr>
- <CACRpkda-wjRm7UYsFTX_xFfNPT29U1PTMyuU4AP=WShiC_vV9g@mail.gmail.com>
- <b2925217-9cbd-2f4e-c92f-9e1c92824193@c-s.fr>
- <CACRpkdaKg45uHMZ9mz6OGkAUqYX7GzhTrjrAc1feVhn68ZXrqg@mail.gmail.com>
- <748eb503-b692-6d30-bc5e-94539a939b06@c-s.fr>
- <CACRpkdb15n4DpxAGEw+Av89XZDxi7Amh1XEyJEzWBd4tet7C2Q@mail.gmail.com>
- <8b50ce56-0600-373d-178c-92aa780e5376@c-s.fr>
- <CACRpkdZRWojQAgHtBaNWdjKqv8aX3P-KjatgoG+DLCcYeJ7ztg@mail.gmail.com>
- <99f48a7e-e4f4-2a77-657c-452d7a656ec5@c-s.fr>
- <CACRpkdat-qtxCn=e1sqPMFF7urue0OoJJcixUwL1=nAT-F+H3Q@mail.gmail.com>
-From:   Christophe Leroy <christophe.leroy@c-s.fr>
-Message-ID: <c3090d62-d049-5c9b-d48e-380b71755bfb@c-s.fr>
-Date:   Wed, 27 Nov 2019 15:29:44 +0100
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.1
+        id S1727085AbfK0Odr convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-gpio@lfdr.de>); Wed, 27 Nov 2019 09:33:47 -0500
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:37618 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726655AbfK0Odr (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 27 Nov 2019 09:33:47 -0500
+Received: by mail-oi1-f195.google.com with SMTP id 128so12195533oih.4;
+        Wed, 27 Nov 2019 06:33:46 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=p4HQ0sBvX9KwKME5QSEdWqGhxNVzafG2qhuy+QctP4M=;
+        b=uIu88hPH1HKUcJ9FxgIQiprCpNhBB3D/sjX+Z3Buoc3AY63eSySYBxawinLs6HB6ak
+         zufvG2EoASpJW4XPnzxzHwG1rlMVyeKe3ZNCeUEHK7NaAQEPF3hHHk/ZT6rbeQB3ct6r
+         ELxVeKaPffJqNdMQnrI5XdNkjLZC8Rjz9wPZIeG+PZqXI7EQpkrCLxR3w7Luf9iDTPV5
+         /quCP4xMzEftrmR/M6Gtrmkh1AlUIy7P9LNX9/hcFqFLk8M15dB6JogP3eYYNFrK4cNo
+         H2vByTo8FwlazB57PN3FpoWbmHSaDHpdWyhrRK7Q/SY+v4kCx9+mtCuStIq08XIKNkMo
+         s7sA==
+X-Gm-Message-State: APjAAAXTwa0AZ28VipTYnZc8636eEGfZjcCxegeiRt/BV5yfvpHuyTBl
+        pd46WN4VEFe4E4sOpkoN6hELorBye9nwkAivyhU=
+X-Google-Smtp-Source: APXvYqxCCNIKdr71l4+aem/37DJmvPbfkWnFnSlhjT3Aiy6bb+myMARYI5vlJfzw8lh/LBhhdEQ2bi0iWvwnKGpu9eY=
+X-Received: by 2002:a05:6808:b17:: with SMTP id s23mr4564212oij.102.1574865225731;
+ Wed, 27 Nov 2019 06:33:45 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <CACRpkdat-qtxCn=e1sqPMFF7urue0OoJJcixUwL1=nAT-F+H3Q@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: fr
-Content-Transfer-Encoding: 8bit
+References: <20191127084253.16356-1-geert+renesas@glider.be>
+ <20191127084253.16356-6-geert+renesas@glider.be> <20191127141529.GA18189@vmlxhi-102.adit-jv.com>
+In-Reply-To: <20191127141529.GA18189@vmlxhi-102.adit-jv.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Wed, 27 Nov 2019 15:33:34 +0100
+Message-ID: <CAMuHMdVMoo0rJ-Ji1ek-DqHEkRqM5Fk5o9RzQV08Z8SSdS9APA@mail.gmail.com>
+Subject: Re: [PATCH v3 5/7] gpio: Add GPIO Aggregator/Repeater driver
+To:     Eugeniu Rosca <erosca@de.adit-jv.com>
+Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Harish Jenny K N <harish_kandiga@mentor.com>,
+        Alexander Graf <graf@amazon.com>,
+        Peter Maydell <peter.maydell@linaro.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Phil Reid <preid@electromag.com.au>,
+        Marc Zyngier <marc.zyngier@arm.com>,
+        Christoffer Dall <christoffer.dall@arm.com>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        QEMU Developers <qemu-devel@nongnu.org>,
+        Eugeniu Rosca <roscaeugeniu@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+Hi Eugeniu,
 
+On Wed, Nov 27, 2019 at 3:15 PM Eugeniu Rosca <erosca@de.adit-jv.com> wrote:
+> On Wed, Nov 27, 2019 at 09:42:51AM +0100, Geert Uytterhoeven wrote:
+> > +static bool isrange(const char *s)
+> > +{
+> > +     size_t n = strlen(s);
+>
+> Cppcheck 1.40-18521-ge6d692d96058:
+> drivers/gpio/gpio-aggregator.c:69:11: style: Variable 'n' is assigned a value that is never used. [unreadVariable]
+>
+> Smatch v0.5.0-6150-gc1ed13e4ee7b:
+> drivers/gpio/gpio-aggregator.c:69 isrange() warn: unused return: n = strlen()
 
-Le 27/11/2019 à 14:56, Linus Walleij a écrit :
-> On Wed, Nov 27, 2019 at 2:54 PM Christophe Leroy
-> <christophe.leroy@c-s.fr> wrote:
->> Le 27/11/2019 à 14:52, Linus Walleij a écrit :
->>> On Wed, Nov 27, 2019 at 2:45 PM Christophe Leroy
->>> <christophe.leroy@c-s.fr> wrote:
->>>> Le 27/11/2019 à 14:00, Linus Walleij a écrit :
->>>
->>>>> Try to remove the "spi-cs-high" bool flag from your nodes,
->>>>> because it seems like the old code was ignoring them.
->>>>>
->>>>> Does that solve the problem?
->>>>
->>>> Yes it does. Many thanks. I let you manage the packaging of fixes.
->>>
->>> OK I will send a final batch of 3 patches fixing this.
->>>
->>> Do you have these old device trees deployed so that we
->>> also need to make sure that old device trees that have this
->>> ambigous syntax will force precendence for the flag on the
->>> GPIO line if both are specified for the "fsl,spi" instances?
->>>
->>
->> No, we deliver device trees together with Linux kernel (embedded in an
->> Uboot ITS/ITB image) so no worry on old device trees.
-> 
-> OK thanks!
-> 
-> I sent three patches, can you apply them on a clean tree
-> and confirm it solves the problem (fingers crossed...)
-> 
-> Thanks a lot for helping me fix this!
+Correct, this is a remainder of code present temporarily during development.
+Will drop.
 
-The series is OK if using 'cs-gpios'.
+(where are the days gcc itself warned about that?)
 
-With 'gpios' in the DTS, I get:
+> > +     aggr->lookups->dev_id = kasprintf(GFP_KERNEL, "%s.%d", DRV_NAME, id);
+> > +     if (!aggr->lookups) {
+> > +             res = -ENOMEM;
+> > +             goto remove_idr;
+> > +     }
+>
+> s/aggr->lookups/aggr->lookups->dev_id/ ?
 
-[    3.154747] fsl_spi ff000a80.spi: cs1 >= max 1
-[    3.159207] spi_master spi0: spi_device register error 
-/soc@ff000000/cpm@9c0/spi@a80/lm74@1
-[    3.167344] spi_master spi0: Failed to create SPI device for 
-/soc@ff000000/cpm@9c0/spi@a80/lm74@1
-[    3.176303] fsl_spi ff000a80.spi: cs2 >= max 1
-[    3.180626] spi_master spi0: spi_device register error 
-/soc@ff000000/cpm@9c0/spi@a80/sicofi_gw@2
-[    3.189329] spi_master spi0: Failed to create SPI device for 
-/soc@ff000000/cpm@9c0/spi@a80/sicofi_gw@2
-[    3.198574] fsl_spi ff000a80.spi: cs3 >= max 1
-[    3.202788] spi_master spi0: spi_device register error 
-/soc@ff000000/cpm@9c0/spi@a80/eeprom@3
-[    3.211364] spi_master spi0: Failed to create SPI device for 
-/soc@ff000000/cpm@9c0/spi@a80/eeprom@3
-[    3.220361] fsl_spi ff000a80.spi: cs4 >= max 1
-[    3.224561] spi_master spi0: spi_device register error 
-/soc@ff000000/cpm@9c0/spi@a80/sicofi@4
-[    3.233137] spi_master spi0: Failed to create SPI device for 
-/soc@ff000000/cpm@9c0/spi@a80/sicofi@4
-[    3.242120] fsl_spi ff000a80.spi: cs5 >= max 1
-[    3.246336] spi_master spi0: spi_device register error 
-/soc@ff000000/cpm@9c0/spi@a80/lm74@5
-[    3.254740] spi_master spi0: Failed to create SPI device for 
-/soc@ff000000/cpm@9c0/spi@a80/lm74@5
-[    3.263552] fsl_spi ff000a80.spi: cs6 >= max 1
-[    3.267764] spi_master spi0: spi_device register error 
-/soc@ff000000/cpm@9c0/spi@a80/eeprom@6
-[    3.276342] spi_master spi0: Failed to create SPI device for 
-/soc@ff000000/cpm@9c0/spi@a80/eeprom@6
-[    3.285328] fsl_spi ff000a80.spi: cs7 >= max 1
-[    3.289667] spi_master spi0: spi_device register error 
-/soc@ff000000/cpm@9c0/spi@a80/csfavgw@7
-[    3.298070] spi_master spi0: Failed to create SPI device for 
-/soc@ff000000/cpm@9c0/spi@a80/csfavgw@7
+Thanks, will fix.
 
+> > +static int gpio_fwd_get_multiple(struct gpio_chip *chip, unsigned long *mask,
+> > +                              unsigned long *bits)
+> > +{
+> > +     struct gpiochip_fwd *fwd = gpiochip_get_data(chip);
+> > +     unsigned long *values, flags;
+>
+> gcc 9.2.1:
+> warning: ‘flags’ may be used uninitialized in this function [-Wmaybe-uninitialized]
+>
+> [..]
+>
+> > +static void gpio_fwd_set_multiple(struct gpio_chip *chip, unsigned long *mask,
+> > +                               unsigned long *bits)
+> > +{
+> > +     struct gpiochip_fwd *fwd = gpiochip_get_data(chip);
+> > +     unsigned long *values, flags;
+>
+> gcc 9.2.1, same as above:
+> warning: ‘flags’ may be used uninitialized in this function [-Wmaybe-uninitialized]
 
-Christophe
+So newer gcc is (again) no longer smart enough to notice the check is
+the same for initializer and user...
+
+> Should these be silenced like in 2bf593f101f3ca ("xilinx_uartps.c:
+> suppress "may be used uninitialised" warning") ?
+
+TBH, I'm not a big fan of silencing false positives.
+But if people like to see flags preinitialized to zero, that can be done...
+
+> I plan to do some runtime testing soon.
+
+Thanks, looking forward to the results!
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
