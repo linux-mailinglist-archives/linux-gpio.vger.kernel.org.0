@@ -2,140 +2,217 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 3378410B173
-	for <lists+linux-gpio@lfdr.de>; Wed, 27 Nov 2019 15:33:52 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0FB6110B1C3
+	for <lists+linux-gpio@lfdr.de>; Wed, 27 Nov 2019 16:01:53 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727085AbfK0Odr convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-gpio@lfdr.de>); Wed, 27 Nov 2019 09:33:47 -0500
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:37618 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726655AbfK0Odr (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 27 Nov 2019 09:33:47 -0500
-Received: by mail-oi1-f195.google.com with SMTP id 128so12195533oih.4;
-        Wed, 27 Nov 2019 06:33:46 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=p4HQ0sBvX9KwKME5QSEdWqGhxNVzafG2qhuy+QctP4M=;
-        b=uIu88hPH1HKUcJ9FxgIQiprCpNhBB3D/sjX+Z3Buoc3AY63eSySYBxawinLs6HB6ak
-         zufvG2EoASpJW4XPnzxzHwG1rlMVyeKe3ZNCeUEHK7NaAQEPF3hHHk/ZT6rbeQB3ct6r
-         ELxVeKaPffJqNdMQnrI5XdNkjLZC8Rjz9wPZIeG+PZqXI7EQpkrCLxR3w7Luf9iDTPV5
-         /quCP4xMzEftrmR/M6Gtrmkh1AlUIy7P9LNX9/hcFqFLk8M15dB6JogP3eYYNFrK4cNo
-         H2vByTo8FwlazB57PN3FpoWbmHSaDHpdWyhrRK7Q/SY+v4kCx9+mtCuStIq08XIKNkMo
-         s7sA==
-X-Gm-Message-State: APjAAAXTwa0AZ28VipTYnZc8636eEGfZjcCxegeiRt/BV5yfvpHuyTBl
-        pd46WN4VEFe4E4sOpkoN6hELorBye9nwkAivyhU=
-X-Google-Smtp-Source: APXvYqxCCNIKdr71l4+aem/37DJmvPbfkWnFnSlhjT3Aiy6bb+myMARYI5vlJfzw8lh/LBhhdEQ2bi0iWvwnKGpu9eY=
-X-Received: by 2002:a05:6808:b17:: with SMTP id s23mr4564212oij.102.1574865225731;
- Wed, 27 Nov 2019 06:33:45 -0800 (PST)
-MIME-Version: 1.0
-References: <20191127084253.16356-1-geert+renesas@glider.be>
- <20191127084253.16356-6-geert+renesas@glider.be> <20191127141529.GA18189@vmlxhi-102.adit-jv.com>
-In-Reply-To: <20191127141529.GA18189@vmlxhi-102.adit-jv.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Wed, 27 Nov 2019 15:33:34 +0100
-Message-ID: <CAMuHMdVMoo0rJ-Ji1ek-DqHEkRqM5Fk5o9RzQV08Z8SSdS9APA@mail.gmail.com>
-Subject: Re: [PATCH v3 5/7] gpio: Add GPIO Aggregator/Repeater driver
-To:     Eugeniu Rosca <erosca@de.adit-jv.com>
-Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Jonathan Corbet <corbet@lwn.net>,
+        id S1726537AbfK0PBw (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 27 Nov 2019 10:01:52 -0500
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:59777 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726729AbfK0PBw (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 27 Nov 2019 10:01:52 -0500
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <mfe@pengutronix.de>)
+        id 1iZyp9-0004PD-IJ; Wed, 27 Nov 2019 16:01:47 +0100
+Received: from mfe by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <mfe@pengutronix.de>)
+        id 1iZyp8-0004Ih-HL; Wed, 27 Nov 2019 16:01:46 +0100
+Date:   Wed, 27 Nov 2019 16:01:46 +0100
+From:   Marco Felsch <m.felsch@pengutronix.de>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
         Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Harish Jenny K N <harish_kandiga@mentor.com>,
-        Alexander Graf <graf@amazon.com>,
-        Peter Maydell <peter.maydell@linaro.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Phil Reid <preid@electromag.com.au>,
-        Marc Zyngier <marc.zyngier@arm.com>,
-        Christoffer Dall <christoffer.dall@arm.com>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+        Support Opensource <support.opensource@diasemi.com>,
+        Adam Thomson <Adam.Thomson.Opensource@diasemi.com>,
         "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        QEMU Developers <qemu-devel@nongnu.org>,
-        Eugeniu Rosca <roscaeugeniu@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
+        <devicetree@vger.kernel.org>, Sascha Hauer <kernel@pengutronix.de>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
+Subject: Re: [PATCH v2 3/3] pinctrl: da9062: add driver support
+Message-ID: <20191127150146.bbwse77eef6haita@pengutronix.de>
+References: <20191127115619.20278-1-m.felsch@pengutronix.de>
+ <20191127115619.20278-4-m.felsch@pengutronix.de>
+ <CACRpkdbd4J-FUNi=F12YQfNPajNCVaoKyqWU7qjmfFMbonzDKg@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CACRpkdbd4J-FUNi=F12YQfNPajNCVaoKyqWU7qjmfFMbonzDKg@mail.gmail.com>
+X-Sent-From: Pengutronix Hildesheim
+X-URL:  http://www.pengutronix.de/
+X-IRC:  #ptxdist @freenode
+X-Accept-Language: de,en
+X-Accept-Content-Type: text/plain
+X-Uptime: 15:09:12 up 12 days,  5:27, 23 users,  load average: 0.01, 0.05,
+ 0.02
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: mfe@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-gpio@vger.kernel.org
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Eugeniu,
+Hi Linus,
 
-On Wed, Nov 27, 2019 at 3:15 PM Eugeniu Rosca <erosca@de.adit-jv.com> wrote:
-> On Wed, Nov 27, 2019 at 09:42:51AM +0100, Geert Uytterhoeven wrote:
-> > +static bool isrange(const char *s)
+On 19-11-27 14:49, Linus Walleij wrote:
+> Hi Marco,
+> 
+> thanks for your patch!
+
+thanks for your fast response.
+
+> On Wed, Nov 27, 2019 at 12:56 PM Marco Felsch <m.felsch@pengutronix.de> wrote:
+> 
+> > The DA9062 is a mfd pmic device which supports 5 GPIOs. The GPIOs can
+> > be used as input, output or have a special use-case.
+> >
+> > The patch adds the support for the normal input/output use-case.
+> >
+> > Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
+> (...)
+> 
+> > +config PINCTRL_DA9062
+> > +       tristate "Dialog Semiconductor DA9062 PMIC pinctrl and GPIO Support"
+> > +       depends on MFD_DA9062
+> > +       select GPIOLIB
+> 
+> Hm this would be one of those that could use GENERIC_REGMAP_GPIO
+> the day we invent it but we haven't invented it yet.
+
+Yes it is. Is there a plan for GENERIC_REGMAP_GPIO?
+
+> > +#include <../gpio/gpiolib.h>
+> 
+> Put a comment above this telling us why you do this thing.
+
+Okay.
+
+> > +static int da9062_gpio_get(struct gpio_chip *gc, unsigned int offset)
 > > +{
-> > +     size_t n = strlen(s);
->
-> Cppcheck 1.40-18521-ge6d692d96058:
-> drivers/gpio/gpio-aggregator.c:69:11: style: Variable 'n' is assigned a value that is never used. [unreadVariable]
->
-> Smatch v0.5.0-6150-gc1ed13e4ee7b:
-> drivers/gpio/gpio-aggregator.c:69 isrange() warn: unused return: n = strlen()
+> (...)
+> > +       return val & BIT(offset);
+> 
+> You should #include <linux/bits.h> since you use BIT()
 
-Correct, this is a remainder of code present temporarily during development.
-Will drop.
+Argh.. of course I will add the include.
 
-(where are the days gcc itself warned about that?)
+> Usually I clamp it like this:
+> return !!(val & BIT(offset));
 
-> > +     aggr->lookups->dev_id = kasprintf(GFP_KERNEL, "%s.%d", DRV_NAME, id);
-> > +     if (!aggr->lookups) {
-> > +             res = -ENOMEM;
-> > +             goto remove_idr;
-> > +     }
->
-> s/aggr->lookups/aggr->lookups->dev_id/ ?
+Okay, I can change that too.
 
-Thanks, will fix.
-
-> > +static int gpio_fwd_get_multiple(struct gpio_chip *chip, unsigned long *mask,
-> > +                              unsigned long *bits)
+> > +static int da9062_gpio_get_direction(struct gpio_chip *gc, unsigned int offset)
 > > +{
-> > +     struct gpiochip_fwd *fwd = gpiochip_get_data(chip);
-> > +     unsigned long *values, flags;
->
-> gcc 9.2.1:
-> warning: ‘flags’ may be used uninitialized in this function [-Wmaybe-uninitialized]
->
-> [..]
->
-> > +static void gpio_fwd_set_multiple(struct gpio_chip *chip, unsigned long *mask,
-> > +                               unsigned long *bits)
+> > +       struct da9062_pctl *pctl = gpiochip_get_data(gc);
+> > +       struct regmap *regmap = pctl->da9062->regmap;
+> > +       int gpio_mode;
+> > +
+> > +       gpio_mode = da9062_pctl_get_pin_mode(regmap, offset);
+> > +       if (gpio_mode < 0)
+> > +               return gpio_mode;
+> > +
+> > +       switch (gpio_mode) {
+> > +       case DA9062_PIN_ALTERNATE:
+> > +               return -ENOTSUPP;
+> > +       case DA9062_PIN_GPI:
+> > +               return 1;
+> > +       case DA9062_PIN_GPO_OD:
+> > +       case DA9062_PIN_GPO_PP:
+> > +               return 0;
+> 
+> We recently added defines for these directions in
+> <linux/gpio/driver.h>:
+> 
+> #define GPIO_LINE_DIRECTION_IN  1
+> #define GPIO_LINE_DIRECTION_OUT 0
+> 
+> Please use these. (Soon in Torvald's tree, else
+> in my "devel" branch.)
+
+I rebased it onto your devel, thanks for the hint.
+
+> > +static int da9062_gpio_direction_input(struct gpio_chip *gc,
+> > +                                      unsigned int offset)
 > > +{
-> > +     struct gpiochip_fwd *fwd = gpiochip_get_data(chip);
-> > +     unsigned long *values, flags;
->
-> gcc 9.2.1, same as above:
-> warning: ‘flags’ may be used uninitialized in this function [-Wmaybe-uninitialized]
+> > +       struct da9062_pctl *pctl = gpiochip_get_data(gc);
+> > +       struct regmap *regmap = pctl->da9062->regmap;
+> > +       struct gpio_desc *desc = gpiochip_get_desc(gc, offset);
+> > +       unsigned int gpi_type;
+> > +       int ret;
+> > +
+> > +       ret = da9062_pctl_set_pin_mode(regmap, offset, DA9062_PIN_GPI);
+> > +       if (ret)
+> > +               return ret;
+> > +
+> > +       /*
+> > +        * If the gpio is active low we should set it in hw too. No worries
+> > +        * about gpio_get() because we read and return the gpio-level. So the
+> > +        * gpiolib active_low handling is still correct.
+> > +        *
+> > +        * 0 - active low, 1 - active high
+> > +        */
+> > +       gpi_type = !gpiod_is_active_low(desc);
+> 
+> That's interesting. Correct too, I guess.
 
-So newer gcc is (again) no longer smart enough to notice the check is
-the same for initializer and user...
+Double checked it again and the datasheet calls it gpio-level so I
+assume that this is correct.
 
-> Should these be silenced like in 2bf593f101f3ca ("xilinx_uartps.c:
-> suppress "may be used uninitialised" warning") ?
+> > +static int da9062_gpio_direction_output(struct gpio_chip *gc,
+> > +                                       unsigned int offset, int value)
+> > +{
+> > +       /* Push-Pull / Open-Drain options are configured during set_config */
+> > +       da9062_gpio_set(gc, offset, value);
+> 
+> That looks dangerous. There is no guarantee that .set_config()
+> always gets called.
 
-TBH, I'm not a big fan of silencing false positives.
-But if people like to see flags preinitialized to zero, that can be done...
+Hm.. it seems that other drivers using this assumption too:
+  - gpio-lp87565.c
+  - gpio-tps65218.c
+  - ...
 
-> I plan to do some runtime testing soon.
+But you're right I missed the possible users of
+gpiod_direction_output_raw().
 
-Thanks, looking forward to the results!
+> Please create a local state container for the mode of each pin in
+> struct da9062_pctl and set it to push-pull by default at probe, then
+> set this to whatever the state is here and let the .set_config()
+> alter it later if need be.
+> 
+> If we don't do that you will get boot-time defaults I think and that
+> might create bugs.
 
-Gr{oetje,eeting}s,
+I will add a container for each pin, thanks for covering that.
 
-                        Geert
+> > +static int da9062_gpio_set_config(struct gpio_chip *gc, unsigned int offset,
+> > +                                 unsigned long config)
+> > +{
+> (...)
+> > +       case PIN_CONFIG_DRIVE_OPEN_DRAIN:
+> > +               return da9062_pctl_set_pin_mode(regmap, offset,
+> > +                                               DA9062_PIN_GPO_OD);
+> > +       case PIN_CONFIG_DRIVE_PUSH_PULL:
+> > +               return da9062_pctl_set_pin_mode(regmap, offset,
+> > +                                               DA9062_PIN_GPO_PP);
+> 
+> So also store this in the per-pin state.
+
+Of course.
+
+Regards,
+  Marco
+
+> 
+> Yours,
+> Linus Walleij
+> 
 
 -- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Pengutronix e.K.                           |                             |
+Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
+31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
