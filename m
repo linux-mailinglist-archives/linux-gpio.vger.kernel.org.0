@@ -2,110 +2,132 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 4C2D310ADF2
-	for <lists+linux-gpio@lfdr.de>; Wed, 27 Nov 2019 11:41:00 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E283610AE09
+	for <lists+linux-gpio@lfdr.de>; Wed, 27 Nov 2019 11:45:20 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726591AbfK0Kk4 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 27 Nov 2019 05:40:56 -0500
-Received: from pegase1.c-s.fr ([93.17.236.30]:45798 "EHLO pegase1.c-s.fr"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727141AbfK0Kjp (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Wed, 27 Nov 2019 05:39:45 -0500
-Received: from localhost (mailhub1-ext [192.168.12.233])
-        by localhost (Postfix) with ESMTP id 47NHMf0FdNz9tytq;
-        Wed, 27 Nov 2019 11:39:42 +0100 (CET)
-Authentication-Results: localhost; dkim=pass
-        reason="1024-bit key; insecure key"
-        header.d=c-s.fr header.i=@c-s.fr header.b=kWIzEDNT; dkim-adsp=pass;
-        dkim-atps=neutral
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id jwb7r-R0sh0X; Wed, 27 Nov 2019 11:39:41 +0100 (CET)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 47NHMd6J22z9tytm;
-        Wed, 27 Nov 2019 11:39:41 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
-        t=1574851181; bh=YAoJUkpNn9+eoDMhzZkqkbOPlQd5fIZwb21M8VPkm7I=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=kWIzEDNTFSkjgnsk54jyYFFOgrsYvv+iXZmsqpRfXC3mdfTIhVux8bxFN4dNsZ0w7
-         rxI3Iqz/WDsbIX0MRMy9IzIHrwFZfsGK7fzoRzMD1KF1CWSJ88uom94BF2M3QmnDaC
-         riWbAHoEy0zqCKc0gKX8909G5oG3aPcd4Ulf2ucM=
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id C6DAB8B847;
-        Wed, 27 Nov 2019 11:39:42 +0100 (CET)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id Z-yqxHs69KXl; Wed, 27 Nov 2019 11:39:42 +0100 (CET)
-Received: from [192.168.4.90] (unknown [192.168.4.90])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 488B18B84E;
-        Wed, 27 Nov 2019 11:39:42 +0100 (CET)
-Subject: Re: Boot failure with 5.4-rc5, bisected to 0f0581b24bd0 ("spi: fsl:
- Convert to use CS GPIO descriptors")
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     linux-spi <linux-spi@vger.kernel.org>,
-        Mark Brown <broonie@kernel.org>,
-        Fabio Estevam <festevam@gmail.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
-References: <e9981d69-2a33-fec9-7d12-15fcb948364d@c-s.fr>
- <CACRpkdYLEibwyK_BGO3gsJ_aQFWZNJCky-GezHVmHfRSzD2zBg@mail.gmail.com>
- <1efb797c-e3c1-25a4-0e81-78b5bbadb355@c-s.fr>
- <CACRpkdYUBj+45Jr94kdERKJogVoL96JH6i85o_bVUtjmkTt19g@mail.gmail.com>
- <3c79a8b9-65e4-bfc9-d718-b8530fe1e672@c-s.fr>
- <b06679da-0332-2322-13f8-07307f611542@c-s.fr>
- <CACRpkdbOzM3X2_BMnf5eSqCt_UsnXo4eXD2fUbTLk6=Uo3gB2g@mail.gmail.com>
- <582b5ccf-8993-6345-94d1-3c2fc94e4d4f@c-s.fr>
- <CACRpkdawu5DcCA5rnRbOe+meBPtxctL7HuWciqboOEkCHZKA7A@mail.gmail.com>
- <e6a39aba-a41b-d781-966a-647977216b87@c-s.fr>
- <CACRpkda-wjRm7UYsFTX_xFfNPT29U1PTMyuU4AP=WShiC_vV9g@mail.gmail.com>
-From:   Christophe Leroy <christophe.leroy@c-s.fr>
-Message-ID: <b2925217-9cbd-2f4e-c92f-9e1c92824193@c-s.fr>
-Date:   Wed, 27 Nov 2019 11:39:42 +0100
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.1
+        id S1726526AbfK0KpU (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 27 Nov 2019 05:45:20 -0500
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:20227 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726204AbfK0KpT (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>);
+        Wed, 27 Nov 2019 05:45:19 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1574851517;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=Bnw/JE6G7WBFxtJlfgLoHmCZeXBV03M8cJNxgo4wXLM=;
+        b=SjdopcPs2qBv68S++L7yKzfooSqC7xWHmJZjS0xri2TF7OvT+qXSEWEWcjfmBmH7b6SFsz
+        FCdncKNjfZb+CV4SgX/ziqVDuxAviLb4SMDzIxajYicw8yE6e13K75zeSPijM7x0soOlYS
+        wOHZHRoIZclB4iLWKtkaHaCN1JrIPjs=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-110-zmpbOc9tMy681AvRESSF-Q-1; Wed, 27 Nov 2019 05:45:14 -0500
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id DB615107BAAB;
+        Wed, 27 Nov 2019 10:45:12 +0000 (UTC)
+Received: from shalem.localdomain.com (ovpn-117-253.ams2.redhat.com [10.36.117.253])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 4CFA35D9D6;
+        Wed, 27 Nov 2019 10:45:11 +0000 (UTC)
+From:   Hans de Goede <hdegoede@redhat.com>
+To:     Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Linus Walleij <linus.walleij@linaro.org>
+Cc:     Hans de Goede <hdegoede@redhat.com>, linux-gpio@vger.kernel.org,
+        linux-acpi@vger.kernel.org
+Subject: [PATCH v2 1/2] gpiolib: acpi: Turn dmi_system_id table into a generic quirk table
+Date:   Wed, 27 Nov 2019 11:45:08 +0100
+Message-Id: <20191127104509.10196-1-hdegoede@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <CACRpkda-wjRm7UYsFTX_xFfNPT29U1PTMyuU4AP=WShiC_vV9g@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: fr
-Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-MC-Unique: zmpbOc9tMy681AvRESSF-Q-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+Turn the existing run_edge_events_on_boot_blacklist dmi_system_id table
+into a generic quirk table, storing the quirks in the driver_data ptr.
 
+This is a preparation patch for adding other types of (DMI based) quirks.
 
-Le 27/11/2019 à 11:02, Linus Walleij a écrit :
-> On Wed, Nov 27, 2019 at 10:34 AM Christophe Leroy
-> <christophe.leroy@c-s.fr> wrote:
-> 
->> In the meantime, I have tried changing "gpios" by "cs-gpios" in the
->> device tree, and I get the following warning:
-> (...)
->> [    3.156654] WARNING: CPU: 0 PID: 1 at drivers/spi/spi-fsl-spi.c:716
->> fsl_spi_cs_control+0x64/0x7c
-> 
-> That should be this one:
-> 
-> if (WARN_ON_ONCE(!pinfo->immr_spi_cs))
->     return;
-> 
-> That happens when spi->cs_gpiod is NULL so the
-> chipselect isn't found and assigned, and the code
-> goes on to check the native CS and find that this isn't
-> available either and issues the warning.
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Acked-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+---
+ drivers/gpio/gpiolib-acpi.c | 19 +++++++++++++++----
+ 1 file changed, 15 insertions(+), 4 deletions(-)
 
-That's in spi_add_device(), it is spi->cs_gpio and not spi->cs_gpiod 
-which is assigned, so spi->cs_gpiod remains NULL.
+diff --git a/drivers/gpio/gpiolib-acpi.c b/drivers/gpio/gpiolib-acpi.c
+index d30e57dc755c..2b47d906d536 100644
+--- a/drivers/gpio/gpiolib-acpi.c
++++ b/drivers/gpio/gpiolib-acpi.c
+@@ -21,6 +21,8 @@
+ #include "gpiolib.h"
+ #include "gpiolib-acpi.h"
+=20
++#define QUIRK_NO_EDGE_EVENTS_ON_BOOT=09=090x01l
++
+ static int run_edge_events_on_boot =3D -1;
+ module_param(run_edge_events_on_boot, int, 0444);
+ MODULE_PARM_DESC(run_edge_events_on_boot,
+@@ -1309,7 +1311,7 @@ static int acpi_gpio_handle_deferred_request_irqs(voi=
+d)
+ /* We must use _sync so that this runs after the first deferred_probe run =
+*/
+ late_initcall_sync(acpi_gpio_handle_deferred_request_irqs);
+=20
+-static const struct dmi_system_id run_edge_events_on_boot_blacklist[] =3D =
+{
++static const struct dmi_system_id gpiolib_acpi_quirks[] =3D {
+ =09{
+ =09=09/*
+ =09=09 * The Minix Neo Z83-4 has a micro-USB-B id-pin handler for
+@@ -1319,7 +1321,8 @@ static const struct dmi_system_id run_edge_events_on_=
+boot_blacklist[] =3D {
+ =09=09.matches =3D {
+ =09=09=09DMI_MATCH(DMI_SYS_VENDOR, "MINIX"),
+ =09=09=09DMI_MATCH(DMI_PRODUCT_NAME, "Z83-4"),
+-=09=09}
++=09=09},
++=09=09.driver_data =3D (void *)QUIRK_NO_EDGE_EVENTS_ON_BOOT,
+ =09},
+ =09{
+ =09=09/*
+@@ -1331,15 +1334,23 @@ static const struct dmi_system_id run_edge_events_o=
+n_boot_blacklist[] =3D {
+ =09=09.matches =3D {
+ =09=09=09DMI_MATCH(DMI_SYS_VENDOR, "Wortmann_AG"),
+ =09=09=09DMI_MATCH(DMI_PRODUCT_NAME, "TERRA_PAD_1061"),
+-=09=09}
++=09=09},
++=09=09.driver_data =3D (void *)QUIRK_NO_EDGE_EVENTS_ON_BOOT,
+ =09},
+ =09{} /* Terminating entry */
+ };
+=20
+ static int acpi_gpio_setup_params(void)
+ {
++=09const struct dmi_system_id *id;
++=09long quirks =3D 0;
++
++=09id =3D dmi_first_match(gpiolib_acpi_quirks);
++=09if (id)
++=09=09quirks =3D (long)id->driver_data;
++
+ =09if (run_edge_events_on_boot < 0) {
+-=09=09if (dmi_check_system(run_edge_events_on_boot_blacklist))
++=09=09if (quirks & QUIRK_NO_EDGE_EVENTS_ON_BOOT)
+ =09=09=09run_edge_events_on_boot =3D 0;
+ =09=09else
+ =09=09=09run_edge_events_on_boot =3D 1;
+--=20
+2.23.0
 
-Christophe
-
-> 
-> That one is a bit puzzling because I know we have this
-> working with other "cs-gpios" consumer drivers working
-> just fine. :/
-> 
-> Yours,
-> Linus Walleij
-> 
