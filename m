@@ -2,83 +2,95 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 2415610AB5D
-	for <lists+linux-gpio@lfdr.de>; Wed, 27 Nov 2019 08:58:38 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B271110ABAE
+	for <lists+linux-gpio@lfdr.de>; Wed, 27 Nov 2019 09:26:26 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726281AbfK0H6e (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 27 Nov 2019 02:58:34 -0500
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:41198 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726426AbfK0H6e (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 27 Nov 2019 02:58:34 -0500
-Received: by mail-lj1-f196.google.com with SMTP id m4so23300123ljj.8
-        for <linux-gpio@vger.kernel.org>; Tue, 26 Nov 2019 23:58:31 -0800 (PST)
+        id S1726125AbfK0I00 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 27 Nov 2019 03:26:26 -0500
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:42996 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726194AbfK0I00 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 27 Nov 2019 03:26:26 -0500
+Received: by mail-lj1-f194.google.com with SMTP id n5so23396445ljc.9
+        for <linux-gpio@vger.kernel.org>; Wed, 27 Nov 2019 00:26:23 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=bbcrs/kI0pTK9FOJP+Wv13rPCiF+hN+1C4Agw6T2rIU=;
-        b=objLnNseuznC0txiinrwy8QyrEZ7UyuUmwPV5oF+NR+gEsYfrAO9zBx4pXg3v02RzZ
-         66UzhBrJ4DhcGoHcDweZQR+pXwfUft7Y/5oXtR9jKLVACnNWPl6wRNPKcTRb+M4oSADb
-         hiCUuDJ3UTk5a5VtPSAYiV74J/W2qqcsFC+uClQvY7supDZ0zRvwRHWbHu2xjiOZN03K
-         e+XcZNPaJHI7ykrJwuWsLLicrxelKYjFioS+0cIW1Zsffhp+EpDOUud2r9nL4a9tQ5x2
-         Z26EfqUe/52WwFLQgEjxn71xn4bT3SIyxINqbkDXay/Gm0xxjAiaQ0499fIsMAQ5XffC
-         HBSw==
+        bh=EtlRW7Zv5WKr6zMoDEd4iR5nTnfjs8gcond8279/uso=;
+        b=QZKjuOH8L91oMw8/x7vKUMLPdQtpLsV5zsZPR0IYNcqCjAHp48gDX95W9i/wNdgZ8V
+         FQSxbSdJUOSgrVE8/mt1FVzAK/Vkk/HO57i56yr7yNCR8S1th47E6/RZ6KM8KrXTHR5E
+         aV3AtZz7PuHu9vTfS2UMTuZI0T4JZC/JRgXH/nfek/IWZ3RyV8tczC0Yczl3As+1LHLP
+         BfyFsFDqd7kj/IiGINFzPcDnP2vhCHO5j65kVITVY0HAPI6Ca2vgv2MjLrLIE9zZK3Ch
+         IWaxu07RWI0rpa36SIK79asxwvtGc9ota2cboAbDzrQgVbA7fQWVDgXMr4v+kAKQOtDV
+         jUxQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=bbcrs/kI0pTK9FOJP+Wv13rPCiF+hN+1C4Agw6T2rIU=;
-        b=CMWEA8/nQU6K86fulFoWWT1e2E383AgKkr2+jDyImwk+rQ8Xwx3GXAxllXKVmPX741
-         +4TMfOb9e1cvhwFRPKV2vXekQBgnMWVvfnw2JcIL+uVj1HPreQaSB1PUt2BnOlJIxi4s
-         AVU7azQxRHWRgFH8N0cgu4Gw2IGeJbYW9IGX0g/NIqIVWoJHCCVtIW7qdE1mnHtVWt/3
-         0OuEuxnrMTx9ZHFGmadR2E+Q6qUEO3OHB9sitwgHvsNR9U5lviJN74NeT8jSHO1JJTlt
-         +xMB9Gh+MmOQrKHweBLmKxDXHbU91gfWfKiQjJajwAMvIPqSHX15QrjqghtD5vKEhQPX
-         xzuw==
-X-Gm-Message-State: APjAAAUe8AEt5NT9OUfmVrdwFatFDbax6HzNON0v2HIJcEg6iValHMB4
-        zjMDraqaJS4viEs5NsTKKXHZWTgr5ikQwawoBxuPNA==
-X-Google-Smtp-Source: APXvYqwXokp6S08/9H2q2tiKF4c70CagV2hXIPK2TWYczw+i5IFfpgrIPZDP3kFvcpNvJhRVZ4WRkmYWwtH3POwkE5w=
-X-Received: by 2002:a2e:b4f6:: with SMTP id s22mr17213389ljm.218.1574841510592;
- Tue, 26 Nov 2019 23:58:30 -0800 (PST)
+        bh=EtlRW7Zv5WKr6zMoDEd4iR5nTnfjs8gcond8279/uso=;
+        b=NufrU9bN1HOM24DQF/it6YmvJ1c0KT/Q6m0whWBx0HCxGy0FVqz8znw6mlgXjXRPLq
+         tHDC6zMao33LDn2dVI+Eg8sYlRwyNv67D70PQWGQfgloVsPoYWalw3TcN2MblahCfpMP
+         9pAEX7/9E6Y1YJVDkyt5PN1KO6+pWoK2Ko4BtdZrT+J87fetEHUmsNZ4kiSkwmOhyzuK
+         Qm/eLT0cjDdBMjm9ZVLQF6hVEc/BVOUnL/rsyKbOYk8Su/pFkxGFxtaiWCTUuUqZleks
+         n+HCZigKdlQhWLDJ3qQBOEMxS3iFaMbX2+KPmKGIU+3zqpHl2vf0dgSo62jEm58oFT6e
+         pSZQ==
+X-Gm-Message-State: APjAAAWSpiW4d7tkpj8DCqoWwTc71IWFJAneyvSS4v/Z3aIGOWg9OfBc
+        GObfxPE0+T3t53/beBzksLVEMp63PwNmAIrKIZVvhg==
+X-Google-Smtp-Source: APXvYqxXGQ2RA0UrDyenqWCR2MPe2w1V9LQ+O26pNg03ZAW5VOPpyvVm+WNSb2zDi8QrExFP6UmyToP9pnQGAyfCZo8=
+X-Received: by 2002:a2e:9699:: with SMTP id q25mr29840309lji.251.1574843183092;
+ Wed, 27 Nov 2019 00:26:23 -0800 (PST)
 MIME-Version: 1.0
-References: <CGME20191121072643epcas2p452071a503725c7764acf5084d24425b1@epcas2p4.samsung.com>
- <001001d5a03d$05de1f70$119a5e50$@samsung.com> <CAJKOXPckbRowhCmnJfT8-DT3gYaTpDOf0wVxmxdf-tZpOyM5ew@mail.gmail.com>
- <028901d5a3f6$e2d72310$a8856930$@samsung.com>
-In-Reply-To: <028901d5a3f6$e2d72310$a8856930$@samsung.com>
+References: <e9981d69-2a33-fec9-7d12-15fcb948364d@c-s.fr> <CACRpkdYLEibwyK_BGO3gsJ_aQFWZNJCky-GezHVmHfRSzD2zBg@mail.gmail.com>
+ <1efb797c-e3c1-25a4-0e81-78b5bbadb355@c-s.fr> <CACRpkdYUBj+45Jr94kdERKJogVoL96JH6i85o_bVUtjmkTt19g@mail.gmail.com>
+ <3c79a8b9-65e4-bfc9-d718-b8530fe1e672@c-s.fr> <b06679da-0332-2322-13f8-07307f611542@c-s.fr>
+In-Reply-To: <b06679da-0332-2322-13f8-07307f611542@c-s.fr>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Wed, 27 Nov 2019 08:58:18 +0100
-Message-ID: <CACRpkdbX-RQY+0Sa6x3BFeovNb3vSkTTnZjcXDDFEyDQWms6zg@mail.gmail.com>
-Subject: Re: [PATCH] pinctrl: samsung: modularize samsung pinctrl driver
-To:     Hyunki Koo <hyunki00.koo@samsung.com>
-Cc:     Krzysztof Kozlowski <krzk@kernel.org>,
-        Tomasz Figa <tomasz.figa@gmail.com>,
-        Sylwester Nawrocki <s.nawrocki@samsung.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        linux-samsung-soc <linux-samsung-soc@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Date:   Wed, 27 Nov 2019 09:26:11 +0100
+Message-ID: <CACRpkdbOzM3X2_BMnf5eSqCt_UsnXo4eXD2fUbTLk6=Uo3gB2g@mail.gmail.com>
+Subject: Re: Boot failure with 5.4-rc5, bisected to 0f0581b24bd0 ("spi: fsl:
+ Convert to use CS GPIO descriptors")
+To:     Christophe Leroy <christophe.leroy@c-s.fr>
+Cc:     linux-spi <linux-spi@vger.kernel.org>,
+        Mark Brown <broonie@kernel.org>,
+        Fabio Estevam <festevam@gmail.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Nov 26, 2019 at 2:14 AM Hyunki Koo <hyunki00.koo@samsung.com> wrote:
+On Tue, Nov 26, 2019 at 8:14 PM Christophe Leroy
+<christophe.leroy@c-s.fr> wrote:
 
-> I would like to apply GKI on the pinctrl driver
-> So I would like to cut off dependency from ARCH_EXYNOS.
+> > Digging a bit further, I see that devm_spi_register_master() fails in
+> > spi_register_controler() because ctlr->num_chipselect is 0
 
-If the pins need to be configured for the system to boot that needs
-to be in the big kernel image anyway. And then it should be bool.
+Aha, I see what the problem is I think. The old code for mpc8xxx had this:
 
-Example: to mount the root filesystem on external flash pin
-configuration needs to happen.
+       ngpios = of_gpio_count(np);
+       ngpios = max(ngpios, 0);
+       if (ngpios == 0 && !spisel_boot) {
+               /*
+                * SPI w/o chip-select line. One SPI device is still permitted
+                * though.
+                */
+               pdata->max_chipselect = 1;
+               return 0;
+       }
+(...)
+      master->num_chipselect = pdata->max_chipselect;
 
-There is a slight paradigm shift sometimes: in distribution
-kernels it might be required that necessary modules are
-included in an initramfs attached to the kernel. I do not know
-if we want to encourage that type of configuration for embedded
-ARM.
+But the new code in the core has this:
+
+    nb = gpiod_count(dev, "cs");
+    ctlr->num_chipselect = max_t(int, nb, ctlr->num_chipselect);
+
+So it relied on inspecting the device tree and set  this to 1
+if it didn't find anything.
+
+I will send a patch to test!
 
 Yours,
 Linus Walleij
