@@ -2,172 +2,132 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 0659B10AF3B
-	for <lists+linux-gpio@lfdr.de>; Wed, 27 Nov 2019 13:05:02 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E38AB10AF9D
+	for <lists+linux-gpio@lfdr.de>; Wed, 27 Nov 2019 13:36:46 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726514AbfK0MFA (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 27 Nov 2019 07:05:00 -0500
-Received: from pegase1.c-s.fr ([93.17.236.30]:60849 "EHLO pegase1.c-s.fr"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726383AbfK0MFA (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Wed, 27 Nov 2019 07:05:00 -0500
-Received: from localhost (mailhub1-ext [192.168.12.233])
-        by localhost (Postfix) with ESMTP id 47NKFy1zVqz9tyRL;
-        Wed, 27 Nov 2019 13:04:54 +0100 (CET)
-Authentication-Results: localhost; dkim=pass
-        reason="1024-bit key; insecure key"
-        header.d=c-s.fr header.i=@c-s.fr header.b=KYmvJSUg; dkim-adsp=pass;
-        dkim-atps=neutral
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id 4FMUXxvGT2-E; Wed, 27 Nov 2019 13:04:54 +0100 (CET)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 47NKFy0vZ2z9tyQf;
-        Wed, 27 Nov 2019 13:04:54 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
-        t=1574856294; bh=YrapcC/HVg6e8aDsKuBNC2m/96JAN3UPdGnslNUtr+Q=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=KYmvJSUg7KxC1oZgZIuZq8bsZpMJ3r2Z9Md0D12CRHAstrNmLnBCdwnrnfqd2Rr/D
-         Lrjtfj9gFbe/UA/p3AtNdT076AarDAS9/eDxc5PpgyYfNIpqhdYsm1NTvdTScp/T8I
-         s87T2CelqX9kYrl81aad1+GWucr6UTv53V7LSkAw=
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 53CA78B856;
-        Wed, 27 Nov 2019 13:04:55 +0100 (CET)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id ZkzIjcslfA-7; Wed, 27 Nov 2019 13:04:55 +0100 (CET)
-Received: from [192.168.4.90] (unknown [192.168.4.90])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id AE0428B855;
-        Wed, 27 Nov 2019 13:04:54 +0100 (CET)
-Subject: Re: Boot failure with 5.4-rc5, bisected to 0f0581b24bd0 ("spi: fsl:
- Convert to use CS GPIO descriptors")
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     linux-spi <linux-spi@vger.kernel.org>,
-        Mark Brown <broonie@kernel.org>,
-        Fabio Estevam <festevam@gmail.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
-References: <e9981d69-2a33-fec9-7d12-15fcb948364d@c-s.fr>
- <CACRpkdYLEibwyK_BGO3gsJ_aQFWZNJCky-GezHVmHfRSzD2zBg@mail.gmail.com>
- <1efb797c-e3c1-25a4-0e81-78b5bbadb355@c-s.fr>
- <CACRpkdYUBj+45Jr94kdERKJogVoL96JH6i85o_bVUtjmkTt19g@mail.gmail.com>
- <3c79a8b9-65e4-bfc9-d718-b8530fe1e672@c-s.fr>
- <b06679da-0332-2322-13f8-07307f611542@c-s.fr>
- <CACRpkdbOzM3X2_BMnf5eSqCt_UsnXo4eXD2fUbTLk6=Uo3gB2g@mail.gmail.com>
- <582b5ccf-8993-6345-94d1-3c2fc94e4d4f@c-s.fr>
- <CACRpkdawu5DcCA5rnRbOe+meBPtxctL7HuWciqboOEkCHZKA7A@mail.gmail.com>
- <e6a39aba-a41b-d781-966a-647977216b87@c-s.fr>
- <CACRpkda-wjRm7UYsFTX_xFfNPT29U1PTMyuU4AP=WShiC_vV9g@mail.gmail.com>
- <b2925217-9cbd-2f4e-c92f-9e1c92824193@c-s.fr>
- <CACRpkdaKg45uHMZ9mz6OGkAUqYX7GzhTrjrAc1feVhn68ZXrqg@mail.gmail.com>
-From:   Christophe Leroy <christophe.leroy@c-s.fr>
-Message-ID: <748eb503-b692-6d30-bc5e-94539a939b06@c-s.fr>
-Date:   Wed, 27 Nov 2019 13:04:54 +0100
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.1
+        id S1726520AbfK0Mgq (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 27 Nov 2019 07:36:46 -0500
+Received: from mail-ua1-f51.google.com ([209.85.222.51]:36889 "EHLO
+        mail-ua1-f51.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726515AbfK0Mgp (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 27 Nov 2019 07:36:45 -0500
+Received: by mail-ua1-f51.google.com with SMTP id l38so6910732uad.4
+        for <linux-gpio@vger.kernel.org>; Wed, 27 Nov 2019 04:36:43 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=x4+dp/IvtnZLwKEKhja2wgs6nPctc4v2DuCodEWDqcs=;
+        b=JDvm+YAeCCFzlWGPTtT28hlukA3HxH0LOI5qtjteFUIVFpy/P8ZQF4qzE79rONA91W
+         EX6rMXLnKIkTnZaLwU5HVXbYftLCAvjtG6D3VwVO2yRuAIpFrCjNUNHByrhc3aNkLT+f
+         fhWWaNMwWb56+j3MVJXTUXU+NqxKhfakA/GmCZ1tTEOIj7zGVYLWwVQWw2/y41P474pN
+         o3D7WtO4TMa4nGzpmKrGZPA0eIxvN/cNvN3p2VZ3eVICzjGaW3oPEweaKjlqD8DpkXuj
+         kk9mLU54Yrvb0ZVr6ZpvaBVr3dqZcBx3a4NHFlZxKrPyfwypMmfKTfoGPOC8eYO285Xz
+         +Upg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=x4+dp/IvtnZLwKEKhja2wgs6nPctc4v2DuCodEWDqcs=;
+        b=gJnio5F3pyV4Nm7IJOTqnIjxLeHEypwd6hEfStMB/uWvunDRL2gloCvtJcQvoDRMHX
+         j/kARMltqHtBYvoJaQuoVdnsHSfNFL0SPhXM5Jhyo8M/6JR+68qxLxCQgVeRIWJDDr3R
+         cVZ9JA70j8cQHkd6p0vmxnlzvuI75DW6zmjYnf99IGwD3yhK3nrYZqyLQa2VOIy7k/qY
+         ZXjDG9EMhR+/eX3+adSD5uAi0fqqw1diDawUymHkpm83U5Z0QCXCrn2nnP9SUS05/P14
+         JYU0RqJhHXHIQ3rT2zEUwqLFIX2+QznithpnTfkfBEUDOJABq3QXN1OmTsgGa69hyKfa
+         JoOQ==
+X-Gm-Message-State: APjAAAWpSTFkciQA+hMTwzs1j3EkuUEnqTuLF05Dj05LFgsAWI5R8MRs
+        s5yB8o9PHgdCEu0gsmN0K/UI3Y3DVAU1KWgD5sipGg==
+X-Google-Smtp-Source: APXvYqwY2Q3iJ57aajkDk90rym40Bm2ukfUnT0o25Xpf9KPN4n2dRfBBeQyhCOnRCGNNzRYozwNHCafgIuwVx9DyEuM=
+X-Received: by 2002:ab0:608f:: with SMTP id i15mr2384386ual.20.1574858203122;
+ Wed, 27 Nov 2019 04:36:43 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <CACRpkdaKg45uHMZ9mz6OGkAUqYX7GzhTrjrAc1feVhn68ZXrqg@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: fr
-Content-Transfer-Encoding: 8bit
+References: <d8f95334-789e-995b-9abf-7bb15abb1daa@raspberrypi.org>
+In-Reply-To: <d8f95334-789e-995b-9abf-7bb15abb1daa@raspberrypi.org>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Wed, 27 Nov 2019 13:36:31 +0100
+Message-ID: <CACRpkdbWZqNzEcLAjCma8=YdjDPbnZaxt3KYvZTdELLrGzm_FQ@mail.gmail.com>
+Subject: Re: Multiple SPI MCP23S17s sharing a CS line
+To:     Phil Elwell <phil@raspberrypi.org>,
+        Phil Reid <preid@electromag.com.au>,
+        Jason Kridner <jkridner@gmail.com>,
+        =?UTF-8?B?SmFuIEt1bmRyw6F0?= <jan.kundrat@cesnet.cz>,
+        Sebastian Reichel <sre@kernel.org>
+Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+Hi Phil,
 
+I think the people I added to the To: line are better suited to answer
+this question, they have used the MCP23* chips in practice more
+than me and know how they work.
 
-Le 27/11/2019 à 11:55, Linus Walleij a écrit :
-> On Wed, Nov 27, 2019 at 11:39 AM Christophe Leroy
-> <christophe.leroy@c-s.fr> wrote:
->> Le 27/11/2019 à 11:02, Linus Walleij a écrit :
->>> On Wed, Nov 27, 2019 at 10:34 AM Christophe Leroy
->>> <christophe.leroy@c-s.fr> wrote:
->>>
->>>> In the meantime, I have tried changing "gpios" by "cs-gpios" in the
->>>> device tree, and I get the following warning:
->>> (...)
->>>> [    3.156654] WARNING: CPU: 0 PID: 1 at drivers/spi/spi-fsl-spi.c:716
->>>> fsl_spi_cs_control+0x64/0x7c
->>>
->>> That should be this one:
->>>
->>> if (WARN_ON_ONCE(!pinfo->immr_spi_cs))
->>>      return;
->>>
->>> That happens when spi->cs_gpiod is NULL so the
->>> chipselect isn't found and assigned, and the code
->>> goes on to check the native CS and find that this isn't
->>> available either and issues the warning.
->>
->> That's in spi_add_device(), it is spi->cs_gpio and not spi->cs_gpiod
->> which is assigned, so spi->cs_gpiod remains NULL.
-> 
-> That's weird, because when ->use_gpio_descriptors is set
-> (as for this driver) the core only attempts to look up
-> spi->cs_gpiods and not spi->cs_gpios, and consequently
-> can only assign spi->cd_gpiod and not spi->cs_gpio:
+Some minor comments inline.
 
-That's it. ->use_gpio_descriptors isn't set for the FSL driver:
+On Wed, Nov 27, 2019 at 12:20 PM Phil Elwell <phil@raspberrypi.org> wrote:
 
-[root@po16098vm linux-powerpc]# git grep use_gpio_descriptors drivers/spi/
-drivers/spi/spi-ath79.c:	master->use_gpio_descriptors = true;
-drivers/spi/spi-atmel.c:	master->use_gpio_descriptors = true;
-drivers/spi/spi-bcm2835.c:	 * as the flag use_gpio_descriptors enforces 
-SPI_CS_HIGH.
-drivers/spi/spi-bcm2835.c:	ctlr->use_gpio_descriptors = true;
-drivers/spi/spi-cadence.c:	master->use_gpio_descriptors = true;
-drivers/spi/spi-clps711x.c:	master->use_gpio_descriptors = true;
-drivers/spi/spi-davinci.c:	master->use_gpio_descriptors = true;
-drivers/spi/spi-dw.c:	master->use_gpio_descriptors = true;
-drivers/spi/spi-ep93xx.c:	master->use_gpio_descriptors = true;
-drivers/spi/spi-gpio.c:	master->use_gpio_descriptors = true;
-drivers/spi/spi-sh-msiof.c:	ctlr->use_gpio_descriptors = true;
-drivers/spi/spi-tegra114.c:	master->use_gpio_descriptors = true;
-drivers/spi/spi.c:	if (ctlr->use_gpio_descriptors)
-drivers/spi/spi.c:		if (ctlr->use_gpio_descriptors) {
+> We have a user asking for help to construct a Device Tree overlay to use
+> the GPIOs exported by multiple MCP23S17s sharing an SPI Chip Select
+> line. This is a special feature of the MCP devices whereby the SPI bus
+> is treated rather like an I2C bus with each device assigned a unique
+> address. His problem is in constructing gpiospecs to refer to all of the
+> GPIOs.
+>
+> The mcp23s08 driver claims to support this feature, and there is a DT
+> property ("microchip,spi-present-mask") to declare which addresses are
+> used buy the devices.
 
-I have now added it, together with the DTS cs-gpios name change (without 
-your counting patch with crashes), and I get something which is almost 
-working: I get temperature back into sensors, but temperature is 0°C !!!
+It's an interesting hack and I kind of see why they are doing it.
 
-root@vgoip:~# sensors
-lm74-spi-0-5
-Adapter: SPI adapter
-Temperature processeur:   +0.0 C
+>  I've spent an hour or so looking at the driver
+> code and crawling through the kernel GPIO infrastructure, and I don't
+> think it's possible. Here's my logic:
+>
+> 1. Although all devices that are found are presented as a single SPI
+> device, they are each registered as independent gpio_chips.
 
-lm74-spi-0-1
-Adapter: SPI adapter
-Temperature MIAE:   +0.0 C
+So they are presented as a single SPI device, but they are
+different physical packages (right?) so it is actually correct to
+have several gpio_chips but incorrect that they are all
+represented in a single device tree node.
 
+Interestingly there is not a single device tree in the entire
+kernel that uses the "*,spi-present-mask" attribute.
 
-Looking into dmesg, I see:
+Could you provide an example?
 
-[    3.153521] lm74@1 GPIO handle specifies active low - ignored
-[    3.178093] lm74@5 GPIO handle specifies active low - ignored
+I *THINK* the idea behind this attribute is just plain wrong
+and cannot be made to work.
 
-Any link with the problem ?
+Instead the device should be represented as one SPI node
+with subnodes for each separate physical device when this
+attribute would be used.
 
-Christophe
+mcp {
+    compatible = "microchip,mcp23s08";
+    microchip,spi-present-mask = <0x03>;
+    mcp0: chip0 {
+        reg = <0>;
+      ....
+    }
+    mcp1: chip1 {
+        reg = <1>;
+      ....
+    }
+};
 
-> 
-> if (ctlr->use_gpio_descriptors) {
->      status = spi_get_gpio_descs(ctlr);
-> (...)
-> } else {
-> (....)
->      status = of_spi_get_gpio_numbers(ctlr);
-> }
-> (...)
-> /* Descriptors take precedence */
-> if (ctlr->cs_gpiods)
->      spi->cs_gpiod = ctlr->cs_gpiods[spi->chip_select];
-> else if (ctlr->cs_gpios)
->      spi->cs_gpio = ctlr->cs_gpios[spi->chip_select];
-> 
-> So I'm a bit confused...
-> 
-> Yours,
-> Linus Walleij
-> 
+By introducing such child nodes it gets possible to reference
+these chips by phandle <&mcp1 ...>;
+
+Notice use of reg attribute to address subchip.
+
+IIUC this needs to be figured out and both the DT bindings
+and the driver need to be fixed to support this peculiar addressing
+scheme.
+
+Yours,
+Linus Walleij
