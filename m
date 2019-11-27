@@ -2,162 +2,115 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 0E1BF10AE0B
-	for <lists+linux-gpio@lfdr.de>; Wed, 27 Nov 2019 11:45:23 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 959B210AE40
+	for <lists+linux-gpio@lfdr.de>; Wed, 27 Nov 2019 11:55:26 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726219AbfK0KpW (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 27 Nov 2019 05:45:22 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:30335 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726515AbfK0KpW (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 27 Nov 2019 05:45:22 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1574851520;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=l/3MGv98rgFgoCMZfAmBw7k1xxpvoLbBGUfXwIUDWQc=;
-        b=ha9dLUpQhZH/EMk3Q+MogtmYyHyiIwljvKVTTJNdnEj8E/Vo3M5i7MPQFo8DGp9DxZ9lx/
-        D5ax2pWyhpAR1TehqrUm9xOfCHIZEqQqVLPiexPf1n+9wMhkvXe/yzFQ75SbAldTlT1aUE
-        luAg+IikHqTAFcRVCqGJft+LoneuBBI=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-146-dUi1VHUqNaeAbivw9GHNVg-1; Wed, 27 Nov 2019 05:45:16 -0500
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 940981852E3F;
-        Wed, 27 Nov 2019 10:45:14 +0000 (UTC)
-Received: from shalem.localdomain.com (ovpn-117-253.ams2.redhat.com [10.36.117.253])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 2B7075D9E1;
-        Wed, 27 Nov 2019 10:45:13 +0000 (UTC)
-From:   Hans de Goede <hdegoede@redhat.com>
-To:     Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Linus Walleij <linus.walleij@linaro.org>
-Cc:     Hans de Goede <hdegoede@redhat.com>, linux-gpio@vger.kernel.org,
-        linux-acpi@vger.kernel.org
-Subject: [PATCH v2 2/2] gpiolib: acpi: Add honor_wakeup module-option + quirk mechanism
-Date:   Wed, 27 Nov 2019 11:45:09 +0100
-Message-Id: <20191127104509.10196-2-hdegoede@redhat.com>
-In-Reply-To: <20191127104509.10196-1-hdegoede@redhat.com>
-References: <20191127104509.10196-1-hdegoede@redhat.com>
+        id S1726149AbfK0KzZ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 27 Nov 2019 05:55:25 -0500
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:40719 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726219AbfK0KzZ (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 27 Nov 2019 05:55:25 -0500
+Received: by mail-lf1-f68.google.com with SMTP id y5so4066148lfy.7
+        for <linux-gpio@vger.kernel.org>; Wed, 27 Nov 2019 02:55:24 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=jW/pZi/y7a7Ae7GsA2SiR3pv/ZpPmeNnnKBaKGvs4nQ=;
+        b=np33cXFuYCi7Ag+hHFaFtO8V12ydTEIpVr7AwOxdpDamhr66FZEHogbPxaY2lMHkN+
+         xRz1LgFIspcU1kM1iolo0TADGEVZN+2yg4XMCQ+m2Dq/AGhcb2vmvotCkdg0J10h25Wc
+         H45HfRSnu/tA3baBINT5U9E8f43ROd8AbWaWecPGDprWFF5EjfzklVi2qA/md/NVlsFd
+         Nvij3sCckbD6jm9STKjKPPOGwrnScXLbFqdP1OX0j2lbh8T3dfRNrB7RpctqDyn6Ri3R
+         Qe22NKeKIZkXbR0WIBPDf8/o8JuGTmxTi59lwk81z9MYGp69Zpg4boqIZTQvSIImmCv8
+         ReTA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=jW/pZi/y7a7Ae7GsA2SiR3pv/ZpPmeNnnKBaKGvs4nQ=;
+        b=GEphj+fQMpkZF2I0hCcOS0//SW8hZf+H84Ji4brVwWvRcU/qTpmMoHODZnJxs6opv9
+         G5gaxT0YSh6LNGdhabtG3v+ifyjyx/mHbqVrEEhBwPG05YNqfotC9HDTRbnYY9f8D72J
+         tkts0TLPv5FjLxS9xv4XO6QJEtXyCiVV5wSj3JR0GiDRC8zfROM/nY5tYo8HrYkSQq7G
+         sF+zHB2Y6JqJACmfJfxXKs2avdVdKABPpO92qnB6LydWlc/vOzmpxfv1NRa3hUJAtHRR
+         qOG+HHF0WBi5vLicPRtyB82tR4XZUhpjcm2p1aMDoHs2cuCRVt8ck73rYXfN7pmp5cUz
+         AgnA==
+X-Gm-Message-State: APjAAAUDqBcPfNNuh3nqlz/WPw0Je9Ls25Ni5xv0TObhQA3rGXNVhvrN
+        8b9ERmJCtkxqkTBYcGLyNOq/hYrXfHQIMtYigmezrg==
+X-Google-Smtp-Source: APXvYqxSDzlsMjH492pTspJWX8yOEHID6Rg4E3k5Lzb9nw7VmCsZKMc81+9VysxjWAsiWF2Zgvf+PB4pP4qhtUsZ9NQ=
+X-Received: by 2002:ac2:4945:: with SMTP id o5mr27663867lfi.93.1574852123515;
+ Wed, 27 Nov 2019 02:55:23 -0800 (PST)
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-X-MC-Unique: dUi1VHUqNaeAbivw9GHNVg-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=US-ASCII
+References: <e9981d69-2a33-fec9-7d12-15fcb948364d@c-s.fr> <CACRpkdYLEibwyK_BGO3gsJ_aQFWZNJCky-GezHVmHfRSzD2zBg@mail.gmail.com>
+ <1efb797c-e3c1-25a4-0e81-78b5bbadb355@c-s.fr> <CACRpkdYUBj+45Jr94kdERKJogVoL96JH6i85o_bVUtjmkTt19g@mail.gmail.com>
+ <3c79a8b9-65e4-bfc9-d718-b8530fe1e672@c-s.fr> <b06679da-0332-2322-13f8-07307f611542@c-s.fr>
+ <CACRpkdbOzM3X2_BMnf5eSqCt_UsnXo4eXD2fUbTLk6=Uo3gB2g@mail.gmail.com>
+ <582b5ccf-8993-6345-94d1-3c2fc94e4d4f@c-s.fr> <CACRpkdawu5DcCA5rnRbOe+meBPtxctL7HuWciqboOEkCHZKA7A@mail.gmail.com>
+ <e6a39aba-a41b-d781-966a-647977216b87@c-s.fr> <CACRpkda-wjRm7UYsFTX_xFfNPT29U1PTMyuU4AP=WShiC_vV9g@mail.gmail.com>
+ <b2925217-9cbd-2f4e-c92f-9e1c92824193@c-s.fr>
+In-Reply-To: <b2925217-9cbd-2f4e-c92f-9e1c92824193@c-s.fr>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Wed, 27 Nov 2019 11:55:11 +0100
+Message-ID: <CACRpkdaKg45uHMZ9mz6OGkAUqYX7GzhTrjrAc1feVhn68ZXrqg@mail.gmail.com>
+Subject: Re: Boot failure with 5.4-rc5, bisected to 0f0581b24bd0 ("spi: fsl:
+ Convert to use CS GPIO descriptors")
+To:     Christophe Leroy <christophe.leroy@c-s.fr>
+Cc:     linux-spi <linux-spi@vger.kernel.org>,
+        Mark Brown <broonie@kernel.org>,
+        Fabio Estevam <festevam@gmail.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On some laptops enabling wakeup on the GPIO interrupts used for ACPI _AEI
-event handling causes spurious wakeups.
+On Wed, Nov 27, 2019 at 11:39 AM Christophe Leroy
+<christophe.leroy@c-s.fr> wrote:
+> Le 27/11/2019 =C3=A0 11:02, Linus Walleij a =C3=A9crit :
+> > On Wed, Nov 27, 2019 at 10:34 AM Christophe Leroy
+> > <christophe.leroy@c-s.fr> wrote:
+> >
+> >> In the meantime, I have tried changing "gpios" by "cs-gpios" in the
+> >> device tree, and I get the following warning:
+> > (...)
+> >> [    3.156654] WARNING: CPU: 0 PID: 1 at drivers/spi/spi-fsl-spi.c:716
+> >> fsl_spi_cs_control+0x64/0x7c
+> >
+> > That should be this one:
+> >
+> > if (WARN_ON_ONCE(!pinfo->immr_spi_cs))
+> >     return;
+> >
+> > That happens when spi->cs_gpiod is NULL so the
+> > chipselect isn't found and assigned, and the code
+> > goes on to check the native CS and find that this isn't
+> > available either and issues the warning.
+>
+> That's in spi_add_device(), it is spi->cs_gpio and not spi->cs_gpiod
+> which is assigned, so spi->cs_gpiod remains NULL.
 
-This commit adds a new honor_wakeup option, defaulting to true (our current
-behavior), which can be used to disable wakeup on troublesome hardware
-to avoid these spurious wakeups.
+That's weird, because when ->use_gpio_descriptors is set
+(as for this driver) the core only attempts to look up
+spi->cs_gpiods and not spi->cs_gpios, and consequently
+can only assign spi->cd_gpiod and not spi->cs_gpio:
 
-This is a workaround for an architectural problem with s2idle under Linux
-where we do not have any mechanism to immediately go back to sleep after
-wakeup events, other then for embedded-controller events using the standard
-ACPI EC interface, for details see:
-https://lore.kernel.org/linux-acpi/61450f9b-cbc6-0c09-8b3a-aff6bf9a0b3c@red=
-hat.com/
+if (ctlr->use_gpio_descriptors) {
+    status =3D spi_get_gpio_descs(ctlr);
+(...)
+} else {
+(....)
+    status =3D of_spi_get_gpio_numbers(ctlr);
+}
+(...)
+/* Descriptors take precedence */
+if (ctlr->cs_gpiods)
+    spi->cs_gpiod =3D ctlr->cs_gpiods[spi->chip_select];
+else if (ctlr->cs_gpios)
+    spi->cs_gpio =3D ctlr->cs_gpios[spi->chip_select];
 
-One series of laptops which is not able to suspend without this workaround
-is the HP x2 10 Cherry Trail models, this commit adds a DMI based quirk
-which makes sets honor_wakeup to false on these models.
+So I'm a bit confused...
 
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Acked-by: Mika Westerberg <mika.westerberg@linux.intel.com>
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
----
-Changes in v2:
-- Use honor_wakeup && ... instead of if (honor_wakeup) ...
-- Fix some typos in the comment explaining the need for the quirk
----
- drivers/gpio/gpiolib-acpi.c | 32 +++++++++++++++++++++++++++++++-
- 1 file changed, 31 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/gpio/gpiolib-acpi.c b/drivers/gpio/gpiolib-acpi.c
-index 2b47d906d536..31fee5e918b7 100644
---- a/drivers/gpio/gpiolib-acpi.c
-+++ b/drivers/gpio/gpiolib-acpi.c
-@@ -22,12 +22,18 @@
- #include "gpiolib-acpi.h"
-=20
- #define QUIRK_NO_EDGE_EVENTS_ON_BOOT=09=090x01l
-+#define QUIRK_NO_WAKEUP=09=09=09=090x02l
-=20
- static int run_edge_events_on_boot =3D -1;
- module_param(run_edge_events_on_boot, int, 0444);
- MODULE_PARM_DESC(run_edge_events_on_boot,
- =09=09 "Run edge _AEI event-handlers at boot: 0=3Dno, 1=3Dyes, -1=3Dauto")=
-;
-=20
-+static int honor_wakeup =3D -1;
-+module_param(honor_wakeup, int, 0444);
-+MODULE_PARM_DESC(honor_wakeup,
-+=09=09 "Honor the ACPI wake-capable flag: 0=3Dno, 1=3Dyes, -1=3Dauto");
-+
- /**
-  * struct acpi_gpio_event - ACPI GPIO event handler data
-  *
-@@ -283,7 +289,7 @@ static acpi_status acpi_gpiochip_alloc_event(struct acp=
-i_resource *ares,
- =09event->handle =3D evt_handle;
- =09event->handler =3D handler;
- =09event->irq =3D irq;
--=09event->irq_is_wake =3D agpio->wake_capable =3D=3D ACPI_WAKE_CAPABLE;
-+=09event->irq_is_wake =3D honor_wakeup && agpio->wake_capable =3D=3D ACPI_=
-WAKE_CAPABLE;
- =09event->pin =3D pin;
- =09event->desc =3D desc;
-=20
-@@ -1337,6 +1343,23 @@ static const struct dmi_system_id gpiolib_acpi_quirk=
-s[] =3D {
- =09=09},
- =09=09.driver_data =3D (void *)QUIRK_NO_EDGE_EVENTS_ON_BOOT,
- =09},
-+=09{
-+=09=09/*
-+=09=09 * Various HP X2 10 Cherry Trail models use an external
-+=09=09 * embedded-controller connected via I2C + an ACPI GPIO
-+=09=09 * event handler. The embedded controller generates various
-+=09=09 * spurious wakeup events when suspended. So disable wakeup
-+=09=09 * for its handler (it uses the only ACPI GPIO event handler).
-+=09=09 * This breaks wakeup when opening the lid, the user needs
-+=09=09 * to press the power-button to wakeup the system. The
-+=09=09 * alternative is suspend simply not working, which is worse.
-+=09=09 */
-+=09=09.matches =3D {
-+=09=09=09DMI_MATCH(DMI_SYS_VENDOR, "HP"),
-+=09=09=09DMI_MATCH(DMI_PRODUCT_NAME, "HP x2 Detachable 10-p0XX"),
-+=09=09},
-+=09=09.driver_data =3D (void *)QUIRK_NO_WAKEUP,
-+=09},
- =09{} /* Terminating entry */
- };
-=20
-@@ -1356,6 +1379,13 @@ static int acpi_gpio_setup_params(void)
- =09=09=09run_edge_events_on_boot =3D 1;
- =09}
-=20
-+=09if (honor_wakeup < 0) {
-+=09=09if (quirks & QUIRK_NO_WAKEUP)
-+=09=09=09honor_wakeup =3D 0;
-+=09=09else
-+=09=09=09honor_wakeup =3D 1;
-+=09}
-+
- =09return 0;
- }
-=20
---=20
-2.23.0
-
+Yours,
+Linus Walleij
