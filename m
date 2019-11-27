@@ -2,104 +2,102 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 4393010B0B1
-	for <lists+linux-gpio@lfdr.de>; Wed, 27 Nov 2019 14:56:36 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 4B34D10B0D0
+	for <lists+linux-gpio@lfdr.de>; Wed, 27 Nov 2019 15:04:02 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726603AbfK0N4f (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 27 Nov 2019 08:56:35 -0500
-Received: from mail-vs1-f68.google.com ([209.85.217.68]:36332 "EHLO
-        mail-vs1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726558AbfK0N4e (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 27 Nov 2019 08:56:34 -0500
-Received: by mail-vs1-f68.google.com with SMTP id m5so10573306vsj.3
-        for <linux-gpio@vger.kernel.org>; Wed, 27 Nov 2019 05:56:34 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=z9fftCSYc5ofDnoqK20/VtKJgAPcKl2ujIOcF/S6914=;
-        b=L1ITjBOtbYPyX4bYqNRMPejtoJ1s18qQNhwlgTGoKgBjgjJvrImkddXl2Ybz0Z0Sw7
-         KKuViCH1qAH+Cy3qL1q0ifim1rQh39PhsYcPgP9AzmBVVez7nSardtC7Ob5uaFMWzycD
-         0YQpdcs/xSPaETwgzspI30wNfh+Gc8l4YoT1pW84i+NCp2q2ViOft7VQ0xpyR4CiF8F0
-         mUz2+iDne4e9bmtBRzOCatzcmBp2Nt7paNCW/6l+/fqBHty2RavIgkUmT6PKxeo6XqFr
-         uBecFfkp+1QLhbxjTAkW0xLi8hR574Cr2dG7TLLsk1Ti7oNTY6Mn3l7gIbj+UKFHvYAy
-         cpJQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=z9fftCSYc5ofDnoqK20/VtKJgAPcKl2ujIOcF/S6914=;
-        b=DP7V1N30n6fj1YSTUtJ+3UKK5N/CFRlTMd4xphndJZNtyzg/JbM/LScX22Mf2WNwgS
-         tKStnT+3N07dGHFHhfn3JL/6VF1byFkJ3tg1008ngF9MnZ/VxTqmPjDQs2N0f1h7GUgN
-         X6+rgG6K4EulYTmdkUUF/BjEGTyjStT3SA/vPmTNBL1p7FRIA4rWAgD8QE7VGGeKs5/I
-         Aiw4OZKg/tcnmcmtqUFpzja6CJHEwgWYNjchAEwvwoJ7ZDjh2VWCS0dEpijQWOh1NaZ9
-         tPF+hAg9iM8m546E0DF3pKmQySCoMzE50Y57QPZZXrs8i6WxcC5cHGN4N6JyPGlcxU0B
-         XtcA==
-X-Gm-Message-State: APjAAAWsS4+z8zMaKP1tKaf8mCczmaT98gT+ZPFQMCEMumQgbNtGgAWi
-        FOLpESWBeg7zcLfqBFDlEwSxY7deTgvPmt+aER5ScA==
-X-Google-Smtp-Source: APXvYqxGad2QoQOM5rAGChyibn9jgxf2zm1Q9YO8riiD/EDeK5oC6QjH2wftPylo8R+RrIcwmNMVuSg+0ryA8QkT+5o=
-X-Received: by 2002:a67:8703:: with SMTP id j3mr4160640vsd.99.1574862993814;
- Wed, 27 Nov 2019 05:56:33 -0800 (PST)
-MIME-Version: 1.0
-References: <e9981d69-2a33-fec9-7d12-15fcb948364d@c-s.fr> <CACRpkdYLEibwyK_BGO3gsJ_aQFWZNJCky-GezHVmHfRSzD2zBg@mail.gmail.com>
- <1efb797c-e3c1-25a4-0e81-78b5bbadb355@c-s.fr> <CACRpkdYUBj+45Jr94kdERKJogVoL96JH6i85o_bVUtjmkTt19g@mail.gmail.com>
- <3c79a8b9-65e4-bfc9-d718-b8530fe1e672@c-s.fr> <b06679da-0332-2322-13f8-07307f611542@c-s.fr>
- <CACRpkdbOzM3X2_BMnf5eSqCt_UsnXo4eXD2fUbTLk6=Uo3gB2g@mail.gmail.com>
- <582b5ccf-8993-6345-94d1-3c2fc94e4d4f@c-s.fr> <CACRpkdawu5DcCA5rnRbOe+meBPtxctL7HuWciqboOEkCHZKA7A@mail.gmail.com>
- <e6a39aba-a41b-d781-966a-647977216b87@c-s.fr> <CACRpkda-wjRm7UYsFTX_xFfNPT29U1PTMyuU4AP=WShiC_vV9g@mail.gmail.com>
- <b2925217-9cbd-2f4e-c92f-9e1c92824193@c-s.fr> <CACRpkdaKg45uHMZ9mz6OGkAUqYX7GzhTrjrAc1feVhn68ZXrqg@mail.gmail.com>
- <748eb503-b692-6d30-bc5e-94539a939b06@c-s.fr> <CACRpkdb15n4DpxAGEw+Av89XZDxi7Amh1XEyJEzWBd4tet7C2Q@mail.gmail.com>
- <8b50ce56-0600-373d-178c-92aa780e5376@c-s.fr> <CACRpkdZRWojQAgHtBaNWdjKqv8aX3P-KjatgoG+DLCcYeJ7ztg@mail.gmail.com>
- <99f48a7e-e4f4-2a77-657c-452d7a656ec5@c-s.fr>
-In-Reply-To: <99f48a7e-e4f4-2a77-657c-452d7a656ec5@c-s.fr>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Wed, 27 Nov 2019 14:56:22 +0100
-Message-ID: <CACRpkdat-qtxCn=e1sqPMFF7urue0OoJJcixUwL1=nAT-F+H3Q@mail.gmail.com>
-Subject: Re: Boot failure with 5.4-rc5, bisected to 0f0581b24bd0 ("spi: fsl:
- Convert to use CS GPIO descriptors")
-To:     Christophe Leroy <christophe.leroy@c-s.fr>
-Cc:     linux-spi <linux-spi@vger.kernel.org>,
+        id S1726673AbfK0OEB (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 27 Nov 2019 09:04:01 -0500
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:49935 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726920AbfK0OEB (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 27 Nov 2019 09:04:01 -0500
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <mfe@pengutronix.de>)
+        id 1iZxv9-0006Fb-Hn; Wed, 27 Nov 2019 15:03:55 +0100
+Received: from mfe by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <mfe@pengutronix.de>)
+        id 1iZxv8-00023l-Ng; Wed, 27 Nov 2019 15:03:54 +0100
+Date:   Wed, 27 Nov 2019 15:03:54 +0100
+From:   Marco Felsch <m.felsch@pengutronix.de>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     Marc Zyngier <marc.zyngier@arm.com>,
         Mark Brown <broonie@kernel.org>,
-        Fabio Estevam <festevam@gmail.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Support Opensource <support.opensource@diasemi.com>,
+        Adam Thomson <Adam.Thomson.Opensource@diasemi.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, Sascha Hauer <kernel@pengutronix.de>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH v2 2/3] mfd: da9062: add support for the DA9062 GPIOs in
+ the core
+Message-ID: <20191127140354.3cmtrh53npbqmrkj@pengutronix.de>
+References: <20191127115619.20278-1-m.felsch@pengutronix.de>
+ <20191127115619.20278-3-m.felsch@pengutronix.de>
+ <CACRpkdYLeSjsXaG6Bg4Y2-8PW41ALn4PN7QUvp3tA7XReWrKGg@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CACRpkdYLeSjsXaG6Bg4Y2-8PW41ALn4PN7QUvp3tA7XReWrKGg@mail.gmail.com>
+X-Sent-From: Pengutronix Hildesheim
+X-URL:  http://www.pengutronix.de/
+X-IRC:  #ptxdist @freenode
+X-Accept-Language: de,en
+X-Accept-Content-Type: text/plain
+X-Uptime: 14:59:53 up 12 days,  5:18, 24 users,  load average: 0.01, 0.02,
+ 0.00
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: mfe@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-gpio@vger.kernel.org
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Nov 27, 2019 at 2:54 PM Christophe Leroy
-<christophe.leroy@c-s.fr> wrote:
-> Le 27/11/2019 =C3=A0 14:52, Linus Walleij a =C3=A9crit :
-> > On Wed, Nov 27, 2019 at 2:45 PM Christophe Leroy
-> > <christophe.leroy@c-s.fr> wrote:
-> >> Le 27/11/2019 =C3=A0 14:00, Linus Walleij a =C3=A9crit :
-> >
-> >>> Try to remove the "spi-cs-high" bool flag from your nodes,
-> >>> because it seems like the old code was ignoring them.
-> >>>
-> >>> Does that solve the problem?
-> >>
-> >> Yes it does. Many thanks. I let you manage the packaging of fixes.
-> >
-> > OK I will send a final batch of 3 patches fixing this.
-> >
-> > Do you have these old device trees deployed so that we
-> > also need to make sure that old device trees that have this
-> > ambigous syntax will force precendence for the flag on the
-> > GPIO line if both are specified for the "fsl,spi" instances?
-> >
->
-> No, we deliver device trees together with Linux kernel (embedded in an
-> Uboot ITS/ITB image) so no worry on old device trees.
+Hi Linus,
 
-OK thanks!
+thanks for your feedback.
 
-I sent three patches, can you apply them on a clean tree
-and confirm it solves the problem (fingers crossed...)
+On 19-11-27 14:35, Linus Walleij wrote:
+> On Wed, Nov 27, 2019 at 12:56 PM Marco Felsch <m.felsch@pengutronix.de> wrote:
+> 
+> > Currently the da9062 GPIO's aren't available. The patch adds the support
+> > to make these available by adding a gpio device with the corresponding
+> > irq resources. Furthermore the patch fixes a minor style issue for the
+> > onkey device.
+> >
+> > Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
+> 
+> This is a regmap irqchip so I guess not much to say about it.
+> Acked-by: Linus Walleij <linus.walleij@linaro.org>
+> 
+> HOWEVER: this looks very much hierarchical does it not?
 
-Thanks a lot for helping me fix this!
+Yes it that's right and I converted it upon Bartosz comments.
 
-Yours,
-Linus Walleij
+> I can clearly see that regmap's irqchip does not support
+> hierarchical interrupt domains, so we should just make a
+> mental note somewhere that "oh yeah and then one day
+> we should make regmap irqchips play well with hierarchical
+> interrupts".
+
+That's right, should I add this somewhere and if the answer is yes then
+where?
+
+Regards,
+  Marco
+
+> 
+> Yours,
+> Linus Walleij
+> 
+
+-- 
+Pengutronix e.K.                           |                             |
+Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
+31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
