@@ -2,51 +2,51 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 00D0D10C6AA
-	for <lists+linux-gpio@lfdr.de>; Thu, 28 Nov 2019 11:29:48 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id DC99F10C6AB
+	for <lists+linux-gpio@lfdr.de>; Thu, 28 Nov 2019 11:29:59 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726587AbfK1K3r (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 28 Nov 2019 05:29:47 -0500
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:33106 "EHLO
+        id S1726191AbfK1K37 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 28 Nov 2019 05:29:59 -0500
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:45728 "EHLO
         mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726510AbfK1K3r (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 28 Nov 2019 05:29:47 -0500
-Received: by mail-oi1-f194.google.com with SMTP id x21so15803384oic.0
-        for <linux-gpio@vger.kernel.org>; Thu, 28 Nov 2019 02:29:44 -0800 (PST)
+        with ESMTP id S1726252AbfK1K36 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 28 Nov 2019 05:29:58 -0500
+Received: by mail-oi1-f194.google.com with SMTP id 14so22843370oir.12
+        for <linux-gpio@vger.kernel.org>; Thu, 28 Nov 2019 02:29:56 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baylibre-com.20150623.gappssmtp.com; s=20150623;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc:content-transfer-encoding;
-        bh=uInBE7rwP7H9dvF2TgC2G6IJOl8n/3Lw+eMi2U1rWJA=;
-        b=Gqfv4uib9XDaaEy2kBkX5PGmOdx9n4MjYGaucskMATh6bsAZcl1PxlRgPLRwa6UPEG
-         kzeVUYBXQMVECL1Ty4maC3KalOeliOXtSSq6Vhb9P8t0dWWM8vNqwe5IWRHowhbjFHpM
-         5O48kI+b5lJw/nqD/HZVh5GRUqwcME2dYo2ZVzICGwj6oKOu5pe8Edf3iJ8DgcQk7eW/
-         eemVTuB9uP3bSEuMljMTlcQAWKdpzu54TWznh4TSXYG972QeoswGFziFwkRk5fFg6+Ln
-         g/QWaC6otU5mkfQVxaMMOSBXoAMSqJ03EKZVtoV4frUSLprRyhh/ILfNtzhOZgEPiidP
-         p7Ag==
+        bh=sujkTkF6l3QxWA/nIBi49KgKzAh2lIJD2cEe6m6IJv4=;
+        b=nOz2buMY+Mg1D3Hz8fXVXKCLScCMToCcsQewAgCSttKL6wVbghl9oWgs+wAMZglwPU
+         zRe42iDz3rA9i3EPLv1/7CFKBhvuOwTHeQm+Yyzm1xCTaI9kc8rt0pUwcCopzyob8sIV
+         NC378IimyZZnl1W8dSjK54x5G6d+rzjl0+hgZ6vRKGhbNAewLkc6vGnuMjViq9xmE5eW
+         y1YP4mS15iNrN2k3nlIQ1ysMNCgrXUMV33HKEjGyz4ZFIA99HLtgAyDH5lSlBXzAXg70
+         TE5Ph5dmjQ6QN1YYzB2K0v/e8LP5KYnBzFmQWgAApdlwdH0c4RVonTRVxu3vmyO11XoT
+         qTWQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc:content-transfer-encoding;
-        bh=uInBE7rwP7H9dvF2TgC2G6IJOl8n/3Lw+eMi2U1rWJA=;
-        b=dpSXydGxFJrbkn+qWvAO90pK4nMKiSdByL06a3q//1MJ2W1sIGeFgzitwPWJFFdxZq
-         opmgLGySrl1Ydl7vla7kqWzRRhwOnCED8PxySJBoT1iV/Q3H5rUmcTJ3eSubsSkJR2bb
-         VhGF5kcsVkHDqXxZ1aXBKfNo0b4hHIv1Kf8iWZ3tFAwZ0P7hUMFm83Aum3kYfeLR5AZN
-         BxJ0TgeeZq3nJ0ayFX56W6ZCAIpNNLoi432At+V0Od1oksU/DydAwRcC/uq9XB406Po0
-         84XKLC7QRR9gQ7Vw149VlEVlZdFIoCH/AHng8w1nR9afYq3rnuaIu44GjINoxvUdB7iu
-         6sjA==
-X-Gm-Message-State: APjAAAWPVIxevY5AiHxpREL7HxfKngL8yrKaEZKxSOc4hmnBwnGhxipf
-        cWD3V0KHX9iDO4uPpEccgf/0W3621jOzpL2ekl7+ew==
-X-Google-Smtp-Source: APXvYqzWBz2bJLN3WWQIqTSpe1jo4zAwd69eqaGzTlqxkYjV/mrQLWl628eVdStvw4mWPL+Z/Nn/hLBBn4va9tAdccM=
-X-Received: by 2002:aca:4756:: with SMTP id u83mr8007296oia.147.1574936984090;
- Thu, 28 Nov 2019 02:29:44 -0800 (PST)
+        bh=sujkTkF6l3QxWA/nIBi49KgKzAh2lIJD2cEe6m6IJv4=;
+        b=QiOL/iZWOoHP45W9xxTLKfvI27aUXbfk6jd48749FGIiHpSiRtfN70n9QKJSF2WH2R
+         z4d/9DOq2AWf+ft5SsZQXWEn6W7fXdoAodf/Suby1H4nmfEpwEWBWS8KIRdxew0XEc2o
+         DluluRPWWur4w5RmoGXnuVfVL2NNYT0h7lLkqRwWBDtuA/wkYkWO1TVcbUe2kHnq68Yl
+         JTAdBSBCjJt+/G7CL76IPiayY1NOti+ffESkIDrpT6LVmYWu5yAid9qKora6gk9nd8xw
+         ULgEdwIaa3qVP36oeIZ3HuTelXW1IwXibZUFusdVG9GMGh2s2Rz9/AmoKaaUX0JOKNf8
+         vGmQ==
+X-Gm-Message-State: APjAAAVF2G5JffyJ8/Blv3cw1yTIbxNB9UOOa0WMnDuLp6ZSfhusY+XT
+        NN2oIeTpB2Ij83hTkVeclH1IatM+d5SPHi9MWK1Eqw==
+X-Google-Smtp-Source: APXvYqz1z43ynhJeZQtyQhYUicg54JPZSm/lFDuRpagtVwFJ64G/Hi+er67Ncpnno8u32ZV4G0Aso+M/5OL1fsAXtYo=
+X-Received: by 2002:a05:6808:9a1:: with SMTP id e1mr8052979oig.175.1574936996108;
+ Thu, 28 Nov 2019 02:29:56 -0800 (PST)
 MIME-Version: 1.0
-References: <20191125143157.26154-1-warthog618@gmail.com> <20191125143157.26154-12-warthog618@gmail.com>
-In-Reply-To: <20191125143157.26154-12-warthog618@gmail.com>
+References: <20191125143157.26154-1-warthog618@gmail.com> <20191125143157.26154-14-warthog618@gmail.com>
+In-Reply-To: <20191125143157.26154-14-warthog618@gmail.com>
 From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Date:   Thu, 28 Nov 2019 11:29:33 +0100
-Message-ID: <CAMpxmJU81_Taz-UHhN_+ArJhd2EfxM0B886xjPtRZ7io7thvaw@mail.gmail.com>
-Subject: Re: [libgpiod][PATCH v3 11/14] bindings: python: add support for SET_CONFIG
+Date:   Thu, 28 Nov 2019 11:29:45 +0100
+Message-ID: <CAMpxmJVzZafHY0vFA5qfyGQDdSV=eXJOjvhUS3GboGmxLDJhEw@mail.gmail.com>
+Subject: Re: [libgpiod][PATCH v3 13/14] tools: add support for bias flags
 To:     Kent Gibson <warthog618@gmail.com>
 Cc:     linux-gpio <linux-gpio@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
@@ -59,474 +59,326 @@ X-Mailing-List: linux-gpio@vger.kernel.org
 pon., 25 lis 2019 o 15:33 Kent Gibson <warthog618@gmail.com> napisa=C5=82(a=
 ):
 >
-> Add methods to support setting line configuration.
+> Add support for bias flags to applicable tools - gpioget, gpioset, and
+> gpiomon.
 >
 > Signed-off-by: Kent Gibson <warthog618@gmail.com>
 > ---
->  bindings/python/gpiodmodule.c | 381 +++++++++++++++++++++++++++++++++-
->  1 file changed, 379 insertions(+), 2 deletions(-)
+>  tools/gpioget.c | 32 +++++++++++++++++++++++++----
+>  tools/gpiomon.c | 36 +++++++++++++++++++++++++++------
+>  tools/gpioset.c | 54 ++++++++++++++++++++++++++++++++++++++++++++-----
+>  3 files changed, 107 insertions(+), 15 deletions(-)
 >
-> diff --git a/bindings/python/gpiodmodule.c b/bindings/python/gpiodmodule.=
-c
-> index 4723771..4f5e117 100644
-> --- a/bindings/python/gpiodmodule.c
-> +++ b/bindings/python/gpiodmodule.c
-> @@ -585,14 +585,149 @@ static PyObject *gpiod_Line_set_value(gpiod_LineOb=
-ject *self, PyObject *args)
->         if (!bulk_obj)
->                 return NULL;
+> diff --git a/tools/gpioget.c b/tools/gpioget.c
+> index 196ebeb..17614cb 100644
+> --- a/tools/gpioget.c
+> +++ b/tools/gpioget.c
+> @@ -17,10 +17,11 @@ static const struct option longopts[] =3D {
+>         { "help",       no_argument,    NULL,   'h' },
+>         { "version",    no_argument,    NULL,   'v' },
+>         { "active-low", no_argument,    NULL,   'l' },
+> +       { "bias", required_argument,    NULL,   'B' },
+>         { GETOPT_NULL_LONGOPT },
+>  };
 >
-> -       vals =3D Py_BuildValue("((O))", val);
-> +       vals =3D Py_BuildValue("(O)", val);
-
-Please don't try to sneak in changes like this. If you think this
-should be changed, make it a separate commit with proper explanation.
-I vaguely remember using this because previously I didn't use
-PyObject_CallMethod() but called the set_values() function directly
-and it was easier to package it right away. Anyway - is it broken? Do
-we gain something from changing it? If so, let's have a separate patch
-for this.
-
->         if (!vals) {
->                 Py_DECREF(bulk_obj);
->                 return NULL;
->         }
+> -static const char *const shortopts =3D "+hvl";
+> +static const char *const shortopts =3D "+hvlB:";
 >
->         ret =3D PyObject_CallMethod((PyObject *)bulk_obj,
-> -                                 "set_values", "O", vals);
-> +                                 "set_values", "(O)", vals);
-> +       Py_DECREF(bulk_obj);
-> +       Py_DECREF(vals);
-> +
-> +       return ret;
-> +}
-> +
-> +PyDoc_STRVAR(gpiod_Line_set_config_doc,
-> +"set_config(direction,flags,value) -> None\n"
-> +"\n"
-> +"Set the configuration of this GPIO line.\n"
-> +"\n"
-> +"  direction\n"
-> +"    New direction (integer)\n"
-> +"  flags\n"
-> +"    New flags (integer)\n"
-> +"  value\n"
-> +"    New value (integer)");
-> +
-> +static PyObject *gpiod_Line_set_config(gpiod_LineObject *self, PyObject =
-*args)
-> +{
-> +       gpiod_LineBulkObject *bulk_obj;
-> +       PyObject *dirn, *flags, *val, *vals, *ret;
-> +       int rv;
-> +
-> +       val =3D NULL;
-> +       rv =3D PyArg_ParseTuple(args, "OO|O", &dirn, &flags, &val);
-> +       if (!rv)
-> +               return NULL;
-> +
-> +       bulk_obj =3D gpiod_LineToLineBulk(self);
-> +       if (!bulk_obj)
-> +               return NULL;
-> +
-> +       if (val) {
-> +               vals =3D Py_BuildValue("(O)", val);
-> +               if (!vals) {
-> +                       Py_DECREF(bulk_obj);
-> +                       return NULL;
-> +               }
-> +               ret =3D PyObject_CallMethod((PyObject *)bulk_obj,
-> +                               "set_config", "OO(O)", dirn, flags, vals)=
+>  static void print_help(void)
+>  {
+> @@ -32,6 +33,25 @@ static void print_help(void)
+>         printf("  -h, --help:\t\tdisplay this message and exit\n");
+>         printf("  -v, --version:\tdisplay the version and exit\n");
+>         printf("  -l, --active-low:\tset the line active state to low\n")=
 ;
-> +               Py_DECREF(vals);
-> +       } else
-> +               ret =3D PyObject_CallMethod((PyObject *)bulk_obj,
-> +                               "set_config", "OO", dirn, flags);
-
-Please use brackets here even if it's a single line after you used it
-in the first branch. Same elsewhere if needed.
-
-> +
-> +       Py_DECREF(bulk_obj);
-> +
-> +       return ret;
+> +       printf("  -B, --bias=3D[as-is|disable|pull-down|pull-up] (default=
+s to 'as-is'):\n");
+> +       printf("                set the line bias\n");
+> +       printf("\n");
+> +       printf("Biases:\n");
+> +       printf("  as-is:\tleave bias unchanged\n");
+> +       printf("  disable:\tdisable bias\n");
+> +       printf("  pull-up:\tenable pull-up\n");
+> +       printf("  pull-down:\tenable pull-down\n");
 > +}
 > +
-> +PyDoc_STRVAR(gpiod_Line_set_flags_doc,
-> +"set_flags(flags) -> None\n"
-> +"\n"
-> +"Set the flags of this GPIO line.\n"
-> +"\n"
-> +"  flags\n"
-> +"    New flags (integer)");
-> +
-> +static PyObject *gpiod_Line_set_flags(gpiod_LineObject *self, PyObject *=
-args)
+> +static int bias_flags(const char *option)
 > +{
-> +       gpiod_LineBulkObject *bulk_obj;
-> +       PyObject *ret;
-> +
-> +       bulk_obj =3D gpiod_LineToLineBulk(self);
-> +       if (!bulk_obj)
-> +               return NULL;
-> +
-> +       ret =3D PyObject_CallMethod((PyObject *)bulk_obj,
-> +                                 "set_flags", "O", args);
-> +       Py_DECREF(bulk_obj);
-> +
-> +       return ret;
-> +}
-> +
-> +PyDoc_STRVAR(gpiod_Line_set_direction_input_doc,
-> +"set_direction_input() -> None\n"
-> +"\n"
-> +"Set the direction of this GPIO line to input.\n");
-> +
-> +static PyObject *gpiod_Line_set_direction_input(gpiod_LineObject *self,
-> +                                               PyObject *Py_UNUSED(ignor=
-ed))
-> +{
-> +       gpiod_LineBulkObject *bulk_obj;
-> +       PyObject *ret;
-> +
-> +       bulk_obj =3D gpiod_LineToLineBulk(self);
-> +       if (!bulk_obj)
-> +               return NULL;
-> +
-> +       ret =3D PyObject_CallMethod((PyObject *)bulk_obj,
-> +                                 "set_direction_input", "");
-> +       Py_DECREF(bulk_obj);
-> +
-> +       return ret;
-> +}
-> +
-> +PyDoc_STRVAR(gpiod_Line_set_direction_output_doc,
-> +"set_direction_output(value) -> None\n"
-> +"\n"
-> +"Set the direction of this GPIO line to output.\n"
-> +"\n"
-> +"  value\n"
-> +"    New value (integer)");
-> +
-> +static PyObject *gpiod_Line_set_direction_output(gpiod_LineObject *self,
-> +                                                PyObject *args)
-> +{
-> +       gpiod_LineBulkObject *bulk_obj;
-> +       PyObject *val, *vals, *ret;
-> +       int rv;
-> +       const char *fmt;
-> +
-> +       val =3D NULL;
-> +       rv =3D PyArg_ParseTuple(args, "|O", &val);
-> +       if (!rv)
-> +               return NULL;
-> +
-> +       if (val) {
-> +               fmt =3D "(O)";
-> +               vals =3D Py_BuildValue(fmt, val);
-> +       } else {
-> +               vals =3D Py_BuildValue("()");
-> +               fmt =3D "O"; /* pass empty args to bulk */
-> +       }
-> +       if (!vals)
-> +               return NULL;
-> +
-> +       bulk_obj =3D gpiod_LineToLineBulk(self);
-> +       if (!bulk_obj)
-> +               return NULL;
-> +
-> +       ret =3D PyObject_CallMethod((PyObject *)bulk_obj,
-> +                                 "set_direction_output", fmt, vals);
-> +
->         Py_DECREF(bulk_obj);
->         Py_DECREF(vals);
->
-> @@ -838,6 +973,30 @@ static PyMethodDef gpiod_Line_methods[] =3D {
->                 .ml_flags =3D METH_VARARGS,
->                 .ml_doc =3D gpiod_Line_set_value_doc,
->         },
-> +       {
-> +               .ml_name =3D "set_config",
-> +               .ml_meth =3D (PyCFunction)gpiod_Line_set_config,
-> +               .ml_flags =3D METH_VARARGS,
-> +               .ml_doc =3D gpiod_Line_set_config_doc,
-> +       },
-> +       {
-> +               .ml_name =3D "set_flags",
-> +               .ml_meth =3D (PyCFunction)gpiod_Line_set_flags,
-> +               .ml_flags =3D METH_VARARGS,
-> +               .ml_doc =3D gpiod_Line_set_flags_doc,
-> +       },
-> +       {
-> +               .ml_name =3D "set_direction_input",
-> +               .ml_meth =3D (PyCFunction)gpiod_Line_set_direction_input,
-> +               .ml_flags =3D METH_NOARGS,
-> +               .ml_doc =3D gpiod_Line_set_direction_input_doc,
-> +       },
-> +       {
-> +               .ml_name =3D "set_direction_output",
-> +               .ml_meth =3D (PyCFunction)gpiod_Line_set_direction_output=
-,
-> +               .ml_flags =3D METH_VARARGS,
-> +               .ml_doc =3D gpiod_Line_set_direction_output_doc,
-> +       },
->         {
->                 .ml_name =3D "release",
->                 .ml_meth =3D (PyCFunction)gpiod_Line_release,
-> @@ -1283,6 +1442,200 @@ static PyObject *gpiod_LineBulk_set_values(gpiod_=
-LineBulkObject *self,
->         Py_RETURN_NONE;
+> +       if (strcmp(option, "pull-down") =3D=3D 0)
+> +               return GPIOD_CTXLESS_FLAG_BIAS_PULL_DOWN;
+> +       if (strcmp(option, "pull-up") =3D=3D 0)
+> +               return GPIOD_CTXLESS_FLAG_BIAS_PULL_UP;
+> +       if (strcmp(option, "disable") =3D=3D 0)
+> +               return GPIOD_CTXLESS_FLAG_BIAS_DISABLE;
+> +       return 0;
 >  }
 >
-> +static int convert_values(PyObject *src, int *dst, Py_ssize_t n)
-
-Coding convention and readability: this module is a bit different as I
-tried to stay consistent with Python C code when naming symbols.
-Please use the common 'gpiod_' prefix even for non-exported functions
-and maybe name this routine something else as "convert_values" doesn't
-really indicate concrete functionality. I'm still not sure what it
-does.
-
-
-> +{
-> +       int val;
-> +       Py_ssize_t num_vals, i;
-> +       PyObject *iter, *next;
-> +
-> +       num_vals =3D PyObject_Size(src);
-> +       if (num_vals !=3D n) {
-> +               PyErr_SetString(PyExc_TypeError,
-> +                       "Number of values must correspond to the number o=
-f lines");
-> +               return -1;
-> +       }
-> +       iter =3D PyObject_GetIter(src);
-> +       if (!iter)
-> +               return -1;
-> +       for (i =3D 0;; i++) {
-> +               next =3D PyIter_Next(iter);
-> +               if (!next) {
-> +                       Py_DECREF(iter);
+>  int main(int argc, char **argv)
+> @@ -39,6 +59,7 @@ int main(int argc, char **argv)
+>         unsigned int *offsets, i, num_lines;
+>         int *values, optc, opti, rv;
+>         bool active_low =3D false;
+> +       int flags =3D 0;
+>         char *device, *end;
+>
+>         for (;;) {
+> @@ -56,6 +77,9 @@ int main(int argc, char **argv)
+>                 case 'l':
+>                         active_low =3D true;
+>                         break;
+> +               case 'B':
+> +                       flags =3D bias_flags(optarg);
 > +                       break;
-> +               }
-> +               val =3D PyLong_AsLong(next);
-> +               Py_DECREF(next);
-> +               if (PyErr_Occurred()) {
-> +                       Py_DECREF(iter);
-> +                       return -1;
-> +               }
-> +               dst[i] =3D (int)val;
-> +       }
+>                 case '?':
+>                         die("try %s --help", get_progname());
+>                 default:
+> @@ -86,9 +110,9 @@ int main(int argc, char **argv)
+>                         die("invalid GPIO offset: %s", argv[i + 1]);
+>         }
+>
+> -       rv =3D gpiod_ctxless_get_value_multiple(device, offsets, values,
+> -                                             num_lines, active_low,
+> -                                             "gpioget");
+> +       rv =3D gpiod_ctxless_get_value_multiple_ext(device, offsets, valu=
+es,
+> +                                                 num_lines, active_low,
+> +                                                 "gpioget", flags);
+>         if (rv < 0)
+>                 die_perror("error reading GPIO values");
+>
+> diff --git a/tools/gpiomon.c b/tools/gpiomon.c
+> index 9a1843b..687212d 100644
+> --- a/tools/gpiomon.c
+> +++ b/tools/gpiomon.c
+> @@ -22,6 +22,7 @@ static const struct option longopts[] =3D {
+>         { "help",               no_argument,            NULL,   'h' },
+>         { "version",            no_argument,            NULL,   'v' },
+>         { "active-low",         no_argument,            NULL,   'l' },
+> +       { "bias",               required_argument,      NULL,   'B' },
+>         { "num-events",         required_argument,      NULL,   'n' },
+>         { "silent",             no_argument,            NULL,   's' },
+>         { "rising-edge",        no_argument,            NULL,   'r' },
+> @@ -31,7 +32,7 @@ static const struct option longopts[] =3D {
+>         { GETOPT_NULL_LONGOPT },
+>  };
+>
+> -static const char *const shortopts =3D "+hvln:srfbF:";
+> +static const char *const shortopts =3D "+hvlB:n:srfbF:";
+>
+>  static void print_help(void)
+>  {
+> @@ -43,6 +44,8 @@ static void print_help(void)
+>         printf("  -h, --help:\t\tdisplay this message and exit\n");
+>         printf("  -v, --version:\tdisplay the version and exit\n");
+>         printf("  -l, --active-low:\tset the line active state to low\n")=
+;
+> +       printf("  -B, --bias=3D[as-is|disable|pull-down|pull-up] (default=
+s to 'as-is'):\n");
+> +       printf("                set the line bias\n");
+>         printf("  -n, --num-events=3DNUM:\texit after processing NUM even=
+ts\n");
+>         printf("  -s, --silent:\t\tdon't print event info\n");
+>         printf("  -r, --rising-edge:\tonly process rising edge events\n")=
+;
+> @@ -50,6 +53,12 @@ static void print_help(void)
+>         printf("  -b, --line-buffered:\tset standard output as line buffe=
+red\n");
+>         printf("  -F, --format=3DFMT\tspecify custom output format\n");
+>         printf("\n");
+> +       printf("Biases:\n");
+> +       printf("  as-is:\tleave bias unchanged\n");
+> +       printf("  disable:\tdisable bias\n");
+> +       printf("  pull-up:\tenable pull-up\n");
+> +       printf("  pull-down:\tenable pull-down\n");
+> +       printf("\n");
+>         printf("Format specifiers:\n");
+>         printf("  %%o:  GPIO line offset\n");
+>         printf("  %%e:  event type (0 - falling edge, 1 rising edge)\n");
+> @@ -240,10 +249,22 @@ static int make_signalfd(void)
+>         return sigfd;
+>  }
+>
+> +static int bias_flags(const char *option)
+> +{
+> +       if (strcmp(option, "pull-down") =3D=3D 0)
+> +               return GPIOD_CTXLESS_FLAG_BIAS_PULL_DOWN;
+> +       if (strcmp(option, "pull-up") =3D=3D 0)
+> +               return GPIOD_CTXLESS_FLAG_BIAS_PULL_UP;
+> +       if (strcmp(option, "disable") =3D=3D 0)
+> +               return GPIOD_CTXLESS_FLAG_BIAS_DISABLE;
+> +       return 0;
+
+Does it mean that any other string would be interpreted as 'as-is'?
+I'd prefer it to bail out on invalid value.
+
+> +}
+> +
+>  int main(int argc, char **argv)
+>  {
+>         unsigned int offsets[GPIOD_LINE_BULK_MAX_LINES], num_lines =3D 0,=
+ offset;
+>         bool active_low =3D false, watch_rising =3D false, watch_falling =
+=3D false;
+> +       int flags =3D 0;
+>         struct timespec timeout =3D { 10, 0 };
+>         int optc, opti, rv, i, event_type;
+>         struct mon_ctx ctx;
+> @@ -266,6 +287,9 @@ int main(int argc, char **argv)
+>                 case 'l':
+>                         active_low =3D true;
+>                         break;
+> +               case 'B':
+> +                       flags =3D bias_flags(optarg);
+> +                       break;
+>                 case 'n':
+>                         ctx.events_wanted =3D strtoul(optarg, &end, 10);
+>                         if (*end !=3D '\0')
+> @@ -320,11 +344,11 @@ int main(int argc, char **argv)
+>
+>         ctx.sigfd =3D make_signalfd();
+>
+> -       rv =3D gpiod_ctxless_event_monitor_multiple(argv[0], event_type,
+> -                                                 offsets, num_lines,
+> -                                                 active_low, "gpiomon",
+> -                                                 &timeout, poll_callback=
+,
+> -                                                 event_callback, &ctx);
+> +       rv =3D gpiod_ctxless_event_monitor_multiple_ext(
+> +                               argv[0], event_type, offsets,
+> +                               num_lines, active_low, "gpiomon",
+> +                               &timeout, poll_callback,
+> +                               event_callback, &ctx, flags);
+>         if (rv)
+>                 die_perror("error waiting for events");
+>
+> diff --git a/tools/gpioset.c b/tools/gpioset.c
+> index d9977a7..b91baea 100644
+> --- a/tools/gpioset.c
+> +++ b/tools/gpioset.c
+> @@ -23,6 +23,8 @@ static const struct option longopts[] =3D {
+>         { "help",               no_argument,            NULL,   'h' },
+>         { "version",            no_argument,            NULL,   'v' },
+>         { "active-low",         no_argument,            NULL,   'l' },
+> +       { "bias",               required_argument,      NULL,   'B' },
+> +       { "drive",              required_argument,      NULL,   'D' },
+>         { "mode",               required_argument,      NULL,   'm' },
+>         { "sec",                required_argument,      NULL,   's' },
+>         { "usec",               required_argument,      NULL,   'u' },
+> @@ -30,7 +32,7 @@ static const struct option longopts[] =3D {
+>         { GETOPT_NULL_LONGOPT },
+>  };
+>
+> -static const char *const shortopts =3D "+hvlm:s:u:b";
+> +static const char *const shortopts =3D "+hvlB:D:m:s:u:b";
+>
+>  static void print_help(void)
+>  {
+> @@ -42,12 +44,27 @@ static void print_help(void)
+>         printf("  -h, --help:\t\tdisplay this message and exit\n");
+>         printf("  -v, --version:\tdisplay the version and exit\n");
+>         printf("  -l, --active-low:\tset the line active state to low\n")=
+;
+> +       printf("  -B, --bias=3D[as-is|disable|pull-down|pull-up] (default=
+s to 'as-is'):\n");
+> +       printf("                set the line bias\n");
+> +       printf("  -D, --drive=3D[push-pull|open-drain|open-source] (defau=
+lts to 'push-pull'):\n");
+> +       printf("                set the line drive mode\n");
+>         printf("  -m, --mode=3D[exit|wait|time|signal] (defaults to 'exit=
+'):\n");
+>         printf("                tell the program what to do after setting=
+ values\n");
+>         printf("  -s, --sec=3DSEC:\tspecify the number of seconds to wait=
+ (only valid for --mode=3Dtime)\n");
+>         printf("  -u, --usec=3DUSEC:\tspecify the number of microseconds =
+to wait (only valid for --mode=3Dtime)\n");
+>         printf("  -b, --background:\tafter setting values: detach from th=
+e controlling terminal\n");
+>         printf("\n");
+> +       printf("Biases:\n");
+> +       printf("  as-is:\tleave bias unchanged\n");
+> +       printf("  disable:\tdisable bias\n");
+> +       printf("  pull-up:\tenable pull-up\n");
+> +       printf("  pull-down:\tenable pull-down\n");
+> +       printf("\n");
+> +       printf("Drives:\n");
+> +       printf("  push-pull:\tdrive the line both high and low\n");
+> +       printf("  open-drain:\tdrive the line low or go high impedance\n"=
+);
+> +       printf("  open-source:\tdrive the line high or go high impedance\=
+n");
+> +       printf("\n");
+>         printf("Modes:\n");
+>         printf("  exit:\t\tset values and exit immediately\n");
+>         printf("  wait:\t\tset values and wait for user to press ENTER\n"=
+);
+> @@ -178,11 +195,31 @@ static const struct mode_mapping *parse_mode(const =
+char *mode)
+>         return NULL;
+>  }
+>
+> +static int bias_flags(const char *option)
+> +{
+> +       if (strcmp(option, "pull-down") =3D=3D 0)
+> +               return GPIOD_CTXLESS_FLAG_BIAS_PULL_DOWN;
+> +       if (strcmp(option, "pull-up") =3D=3D 0)
+> +               return GPIOD_CTXLESS_FLAG_BIAS_PULL_UP;
+> +       if (strcmp(option, "disable") =3D=3D 0)
+> +               return GPIOD_CTXLESS_FLAG_BIAS_DISABLE;
 > +       return 0;
 > +}
 > +
-> +PyDoc_STRVAR(gpiod_LineBulk_set_config_doc,
-> +"set_config(direction,flags,values) -> None\n"
-> +"\n"
-> +"Set the configuration of all the lines held by this LineBulk object.\n"
-> +"\n"
-> +"  direction\n"
-> +"    New direction (integer)\n"
-> +"  flags\n"
-> +"    New flags (integer)\n"
-> +"  values\n"
-> +"    List of values (integers) to set when direction is output.\n"
-> +"\n"
-> +"The number of values in the list passed as argument must be the same as=
-\n"
-> +"the number of lines held by this gpiod.LineBulk object. The index of ea=
-ch\n"
-> +"value corresponds to the index of each line in the object.\n");
-> +
-> +static PyObject *gpiod_LineBulk_set_config(gpiod_LineBulkObject *self,
-> +                                          PyObject *args)
+> +static int drive_flags(const char *option)
 > +{
-> +       int rv, vals[GPIOD_LINE_BULK_MAX_LINES];
-> +       PyObject *val_list;
-> +       struct gpiod_line_bulk bulk;
-> +       const int *valp;
-> +       int dirn, flags;
-> +
-> +       if (gpiod_LineBulkOwnerIsClosed(self))
-> +               return NULL;
-> +
-> +       gpiod_LineBulkObjToCLineBulk(self, &bulk);
-> +
-> +       val_list =3D NULL;
-> +       rv =3D PyArg_ParseTuple(args, "ii|(O)", &dirn, &flags, &val_list)=
-;
-> +       if (!rv)
-> +               return NULL;
-> +
-> +       if (val_list =3D=3D NULL)
-> +               valp =3D NULL;
-> +       else {
-> +               memset(vals, 0, sizeof(vals));
-> +               rv =3D convert_values(val_list, vals, self->num_lines);
-> +               if (rv)
-> +                       return NULL;
-> +               valp =3D vals;
-> +       }
-> +
-> +       Py_BEGIN_ALLOW_THREADS;
-> +       rv =3D gpiod_line_set_config_bulk(&bulk, dirn, flags, valp);
-> +       Py_END_ALLOW_THREADS;
-> +       if (rv)
-> +               return PyErr_SetFromErrno(PyExc_OSError);
-> +
-> +       Py_RETURN_NONE;
+> +       if (strcmp(option, "open-drain") =3D=3D 0)
+> +               return GPIOD_CTXLESS_FLAG_OPEN_DRAIN;
+> +       if (strcmp(option, "open-source") =3D=3D 0)
+> +               return GPIOD_CTXLESS_FLAG_OPEN_SOURCE;
+> +       return 0;
+
+Thanks for doing this, but please put it into a separate commit that
+adds support for drive flags.
+
+
 > +}
 > +
-> +PyDoc_STRVAR(gpiod_LineBulk_set_flags_doc,
-> +"set_flags(flags) -> None\n"
-> +"\n"
-> +"Set the flags of all the lines held by this LineBulk object.\n"
-> +"\n"
-> +"  flags\n"
-> +"    New flags (integer)");
-> +
-> +static PyObject *gpiod_LineBulk_set_flags(gpiod_LineBulkObject *self,
-> +                                         PyObject *args)
-> +{
-> +       int rv;
-> +       struct gpiod_line_bulk bulk;
-> +       int flags;
-> +
-> +       if (gpiod_LineBulkOwnerIsClosed(self))
-> +               return NULL;
-> +
-> +       gpiod_LineBulkObjToCLineBulk(self, &bulk);
-> +
-> +       rv =3D PyArg_ParseTuple(args, "i", &flags);
-> +       if (!rv)
-> +               return NULL;
-> +
-> +       Py_BEGIN_ALLOW_THREADS;
-> +       rv =3D gpiod_line_set_flags_bulk(&bulk, flags);
-> +       Py_END_ALLOW_THREADS;
-> +       if (rv)
-> +               return PyErr_SetFromErrno(PyExc_OSError);
-> +
-> +       Py_RETURN_NONE;
-> +}
-> +
-> +PyDoc_STRVAR(gpiod_LineBulk_set_direction_input_doc,
-> +"set_direction_input() -> None\n"
-> +"\n"
-> +"Set the direction of all the lines held by this LineBulk object to inpu=
-t.\n");
-> +
-> +static PyObject *gpiod_LineBulk_set_direction_input(gpiod_LineBulkObject=
- *self,
-> +                                               PyObject *Py_UNUSED(ignor=
-ed))
-> +{
-> +       struct gpiod_line_bulk bulk;
-> +       int rv;
-> +
-> +       if (gpiod_LineBulkOwnerIsClosed(self))
-> +               return NULL;
-> +
-> +       gpiod_LineBulkObjToCLineBulk(self, &bulk);
-> +
-> +       Py_BEGIN_ALLOW_THREADS;
-> +       rv =3D gpiod_line_set_direction_input_bulk(&bulk);
-> +       Py_END_ALLOW_THREADS;
-> +       if (rv)
-> +               return PyErr_SetFromErrno(PyExc_OSError);
-> +
-> +       Py_RETURN_NONE;
-> +}
-> +
-> +PyDoc_STRVAR(gpiod_LineBulk_set_direction_output_doc,
-> +"set_direction_output(value) -> None\n"
-> +"\n"
-> +"Set the direction of all the lines held by this LineBulk object to outp=
-ut.\n"
-> +"\n"
-> +"  values\n"
-> +"    List of values (integers) to set when direction is output.\n"
-> +"\n"
-> +"The number of values in the list passed as argument must be the same as=
-\n"
-> +"the number of lines held by this gpiod.LineBulk object. The index of ea=
-ch\n"
-> +"value corresponds to the index of each line in the object.\n");
-> +
-> +static PyObject *gpiod_LineBulk_set_direction_output(
-> +                               gpiod_LineBulkObject *self,
-> +                               PyObject *args)
-> +{
-> +       int rv, vals[GPIOD_LINE_BULK_MAX_LINES];
-> +       PyObject *val_list;
-> +       struct gpiod_line_bulk bulk;
-> +       const int *valp;
-> +
-> +       if (gpiod_LineBulkOwnerIsClosed(self))
-> +               return NULL;
-> +
-> +       gpiod_LineBulkObjToCLineBulk(self, &bulk);
-> +
-> +       val_list =3D NULL;
-> +       rv =3D PyArg_ParseTuple(args, "|O", &val_list);
-> +       if (!rv)
-> +               return NULL;
-> +
-> +       if (val_list =3D=3D NULL)
-> +               valp =3D NULL;
-> +       else {
-> +               memset(vals, 0, sizeof(vals));
-> +               rv =3D convert_values(val_list, vals, self->num_lines);
-> +               if (rv)
-> +                       return NULL;
-> +               valp =3D vals;
-> +       }
-> +
-> +       Py_BEGIN_ALLOW_THREADS;
-> +       rv =3D gpiod_line_set_direction_output_bulk(&bulk, valp);
-> +       Py_END_ALLOW_THREADS;
-> +       if (rv)
-> +               return PyErr_SetFromErrno(PyExc_OSError);
-> +
-> +       Py_RETURN_NONE;
-> +}
-> +
->  PyDoc_STRVAR(gpiod_LineBulk_release_doc,
->  "release() -> None\n"
->  "\n"
-> @@ -1431,6 +1784,30 @@ static PyMethodDef gpiod_LineBulk_methods[] =3D {
->                 .ml_doc =3D gpiod_LineBulk_set_values_doc,
->                 .ml_flags =3D METH_VARARGS,
->         },
-> +       {
-> +               .ml_name =3D "set_config",
-> +               .ml_meth =3D (PyCFunction)gpiod_LineBulk_set_config,
-> +               .ml_flags =3D METH_VARARGS,
-> +               .ml_doc =3D gpiod_LineBulk_set_config_doc,
-> +       },
-> +       {
-> +               .ml_name =3D "set_flags",
-> +               .ml_meth =3D (PyCFunction)gpiod_LineBulk_set_flags,
-> +               .ml_flags =3D METH_VARARGS,
-> +               .ml_doc =3D gpiod_LineBulk_set_flags_doc,
-> +       },
-> +       {
-> +               .ml_name =3D "set_direction_input",
-> +               .ml_meth =3D (PyCFunction)gpiod_LineBulk_set_direction_in=
-put,
-> +               .ml_flags =3D METH_NOARGS,
-> +               .ml_doc =3D gpiod_LineBulk_set_direction_input_doc,
-> +       },
-> +       {
-> +               .ml_name =3D "set_direction_output",
-> +               .ml_meth =3D (PyCFunction)gpiod_LineBulk_set_direction_ou=
-tput,
-> +               .ml_flags =3D METH_VARARGS,
-> +               .ml_doc =3D gpiod_LineBulk_set_direction_output_doc,
-> +       },
->         {
->                 .ml_name =3D "release",
->                 .ml_meth =3D (PyCFunction)gpiod_LineBulk_release,
+>  int main(int argc, char **argv)
+>  {
+>         const struct mode_mapping *mode =3D &modes[MODE_EXIT];
+>         unsigned int *offsets, num_lines, i;
+> -       int *values, rv, optc, opti;
+> +       int *values, rv, optc, opti, flags =3D 0;
+>         struct callback_data cbdata;
+>         bool active_low =3D false;
+>         char *device, *end;
+> @@ -204,6 +241,12 @@ int main(int argc, char **argv)
+>                 case 'l':
+>                         active_low =3D true;
+>                         break;
+> +               case 'B':
+> +                       flags |=3D bias_flags(optarg);
+> +                       break;
+> +               case 'D':
+> +                       flags |=3D drive_flags(optarg);
+> +                       break;
+>                 case 'm':
+>                         mode =3D parse_mode(optarg);
+>                         if (!mode)
+> @@ -268,9 +311,10 @@ int main(int argc, char **argv)
+>                         die("invalid offset: %s", argv[i + 1]);
+>         }
+>
+> -       rv =3D gpiod_ctxless_set_value_multiple(device, offsets, values,
+> -                                             num_lines, active_low, "gpi=
+oset",
+> -                                             mode->callback, &cbdata);
+> +       rv =3D gpiod_ctxless_set_value_multiple_ext(
+> +                               device, offsets, values,
+> +                               num_lines, active_low, "gpioset",
+> +                               mode->callback, &cbdata, flags);
+>         if (rv < 0)
+>                 die_perror("error setting the GPIO line values");
+>
 > --
 > 2.24.0
 >
