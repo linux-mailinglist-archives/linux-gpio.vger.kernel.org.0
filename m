@@ -2,82 +2,93 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 17F5510C4CB
-	for <lists+linux-gpio@lfdr.de>; Thu, 28 Nov 2019 09:16:29 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5368210C55D
+	for <lists+linux-gpio@lfdr.de>; Thu, 28 Nov 2019 09:43:08 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727126AbfK1IQW (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 28 Nov 2019 03:16:22 -0500
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:45310 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726301AbfK1IQV (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 28 Nov 2019 03:16:21 -0500
-Received: by mail-lj1-f196.google.com with SMTP id n21so27430510ljg.12
-        for <linux-gpio@vger.kernel.org>; Thu, 28 Nov 2019 00:16:18 -0800 (PST)
+        id S1727080AbfK1InH (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 28 Nov 2019 03:43:07 -0500
+Received: from mail-lj1-f175.google.com ([209.85.208.175]:40830 "EHLO
+        mail-lj1-f175.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726694AbfK1InG (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 28 Nov 2019 03:43:06 -0500
+Received: by mail-lj1-f175.google.com with SMTP id s22so8537166ljs.7
+        for <linux-gpio@vger.kernel.org>; Thu, 28 Nov 2019 00:43:05 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=dlwaqEfjT5graM8RWQ1ek299Dj4eK17tSarlzL5nZUM=;
-        b=l+E4ygaS3q5mYwlHDuFCSXQ77eYxgnZq4FdzjB4K2crLne5PNmNtouWf5MmH+0mP+a
-         KyoynhY40PGrUD+TebyOwFZ7I8rILisxXtwWvkjSjp+QFIcKF3t6ro7XSoXsUbsGa8uH
-         XHyTKCRmj/e/0OnKWOD2Y7d+xWz/TgL9/VHd5f1gwQc0UxFZ7PH3t3xWXhoCptaVW2I1
-         QmskW4aj5jbewzlKdZv7gv1VOEU0aFmTaAujR/2y70Cbdydft/nWRUpxbAauXDasusdc
-         q2007xskJ60GRtI5D8u2I2U9rHNvg6+7n279miEuRgOumNA8L9DgosI68SPwk/58zh8v
-         WFsQ==
+         :cc:content-transfer-encoding;
+        bh=0A7PAHErMXMiLWk/qlmZsqTmhq9IxC9JLoTdr7xyNiQ=;
+        b=Cg3UGJZ/IHjtMYKApRdIpTGOjYJc7oZQQIUXDlVVuLP3ZdHHfbAyQAzgDnBxCPCKTa
+         Ag94QWvb+bxutTkfIoKAxlGUwcodZW7arG8jINfdOpcytagMOOjdynJx+a4vOnjOlWcD
+         O4kBCBV904z5Gx4HDBe4Kkivh1EMfeoY6sm3NkusDl+SLiwAZ/nKenGNR4LrwH/Clf0Z
+         TWF72Yc8RJm2kXK/wnEkPZ9BD3wEKuwn7AQCsvIUB95fCmTVGdpGygpGZRicm/rXCni8
+         kzH76vSAgfF4z/qKxVwEBLcbx5O7xJM3gFq+5I0pbcK8BLpbIFk/7IHU0tDY0HlwOlZU
+         ROaw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=dlwaqEfjT5graM8RWQ1ek299Dj4eK17tSarlzL5nZUM=;
-        b=FS9m3ZlNc+CQ5o07K8QqniSbYRXPbh8tcYg0FBTSVO1jPcz3oOJL6FUxeaxUQcKSFE
-         anofWWwX5QJ55ex4HUktQkkstccvy/X+yXlv82js29dBGVymgTdj1L7qtaCx5BeFtlmy
-         zWgC6Rf7Lc2sMqJH1jDKzRE2zYZoHaFkjZv/vJtAvKNr772yW5GcJcWSSPdBh2OKzfNY
-         /s27GDQha5ofWUTMd66sFbCPJiEJK62OINyxIzXUr8BPTA8C+GdMB/gcLroAJIP+NLWA
-         YQ49ixGkk7EkU+U/IVceiz7Fj0FGHy+DLxUEJCZR2js71Q/Db3+20DIKA/4LWnysH800
-         tdPA==
-X-Gm-Message-State: APjAAAWaiMYzbpUEzBMbyP3j8TTfrZc/yoOmduSHwLUd4CcsR8JdPdmb
-        g3nImdfuRzS5owlXUyuA6YzD593hBJGUdi0AdsDQdg==
-X-Google-Smtp-Source: APXvYqyTE9eYnDMIvHYYYoLUZ9fGJAvAWhf7bt6cQqx4sbnSjEzG3In1wSpDQ95JnJ/UyfSwZGmvFUTCfZ/EW9cdkyw=
-X-Received: by 2002:a2e:9699:: with SMTP id q25mr33605730lji.251.1574928978081;
- Thu, 28 Nov 2019 00:16:18 -0800 (PST)
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=0A7PAHErMXMiLWk/qlmZsqTmhq9IxC9JLoTdr7xyNiQ=;
+        b=V+YUPqpki9au4dqNFl4fS8JJ4o/mqwNAnJMUwPGAzupzyH826R3u8flWj9wIO3Qkhm
+         WJVeUpdieA2bjHtPVIufLYgXfu9QZQ+H0GY+NeAdd6qYRGlFCVqi6qh8mxxakqyN1m/d
+         /80GMDpZW46hq80BP6NA7mXnrSIYNK1ZwAPoyGcgFMpl+pS6Fc214s8K+QFmMh40v4iq
+         wmkyQzSEPqyt5Ecy682Cr1Jn0X3/Vm0IHFM7QVkxpijjMFkYewISzKUa2aQidwR8Xkgy
+         YZd1Vtw8R9oM5P+QmWTLoa+IZqT553s/dttrcHHHgrK4PpET7uhyhqT0+ZYwRIsEEQcZ
+         9zKQ==
+X-Gm-Message-State: APjAAAUA8r/NjM5LKbU1kUMqlkDxhoD7N+OalVldqQaBqZ0y1thUgD8n
+        LMpHExQB8pl6KgGOAQHyifTOBVpxFh0fMLWHzYrGRg==
+X-Google-Smtp-Source: APXvYqws92QE8ol5i46q8ypAJK4FbwtxVhvRJcANz8h3/vN7+CfayttMwqgCnT2dIJTYx8jp+gnG7guxcpOHvro8IG8=
+X-Received: by 2002:a2e:161b:: with SMTP id w27mr33863903ljd.183.1574930584775;
+ Thu, 28 Nov 2019 00:43:04 -0800 (PST)
 MIME-Version: 1.0
-References: <20191128080832.13529-1-rahul.tanwar@linux.intel.com> <20191128080832.13529-2-rahul.tanwar@linux.intel.com>
-In-Reply-To: <20191128080832.13529-2-rahul.tanwar@linux.intel.com>
+References: <e9981d69-2a33-fec9-7d12-15fcb948364d@c-s.fr> <CACRpkdYUBj+45Jr94kdERKJogVoL96JH6i85o_bVUtjmkTt19g@mail.gmail.com>
+ <3c79a8b9-65e4-bfc9-d718-b8530fe1e672@c-s.fr> <b06679da-0332-2322-13f8-07307f611542@c-s.fr>
+ <CACRpkdbOzM3X2_BMnf5eSqCt_UsnXo4eXD2fUbTLk6=Uo3gB2g@mail.gmail.com>
+ <582b5ccf-8993-6345-94d1-3c2fc94e4d4f@c-s.fr> <CACRpkdawu5DcCA5rnRbOe+meBPtxctL7HuWciqboOEkCHZKA7A@mail.gmail.com>
+ <e6a39aba-a41b-d781-966a-647977216b87@c-s.fr> <CACRpkda-wjRm7UYsFTX_xFfNPT29U1PTMyuU4AP=WShiC_vV9g@mail.gmail.com>
+ <b2925217-9cbd-2f4e-c92f-9e1c92824193@c-s.fr> <CACRpkdaKg45uHMZ9mz6OGkAUqYX7GzhTrjrAc1feVhn68ZXrqg@mail.gmail.com>
+ <748eb503-b692-6d30-bc5e-94539a939b06@c-s.fr> <CACRpkdb15n4DpxAGEw+Av89XZDxi7Amh1XEyJEzWBd4tet7C2Q@mail.gmail.com>
+ <8b50ce56-0600-373d-178c-92aa780e5376@c-s.fr> <CACRpkdZRWojQAgHtBaNWdjKqv8aX3P-KjatgoG+DLCcYeJ7ztg@mail.gmail.com>
+ <99f48a7e-e4f4-2a77-657c-452d7a656ec5@c-s.fr> <CACRpkdat-qtxCn=e1sqPMFF7urue0OoJJcixUwL1=nAT-F+H3Q@mail.gmail.com>
+ <c3090d62-d049-5c9b-d48e-380b71755bfb@c-s.fr>
+In-Reply-To: <c3090d62-d049-5c9b-d48e-380b71755bfb@c-s.fr>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Thu, 28 Nov 2019 09:16:06 +0100
-Message-ID: <CACRpkdbKE6eHsyuCM5oCkhj=bP4H=omiFfdA6qf+g7xQzJBYQQ@mail.gmail.com>
-Subject: Re: [PATCH 1/1] pinctrl: Fix warning by adding missing MODULE_LICENSE
-To:     Rahul Tanwar <rahul.tanwar@linux.intel.com>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Andriy Shevchenko <andriy.shevchenko@intel.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux-Next Mailing List <linux-next@vger.kernel.org>
+Date:   Thu, 28 Nov 2019 09:42:53 +0100
+Message-ID: <CACRpkdYPxSip9UAa-6sgXSgnCfdaXb8dxoh7ud=j7P+n_ax48A@mail.gmail.com>
+Subject: Re: Boot failure with 5.4-rc5, bisected to 0f0581b24bd0 ("spi: fsl:
+ Convert to use CS GPIO descriptors")
+To:     Christophe Leroy <christophe.leroy@c-s.fr>
+Cc:     linux-spi <linux-spi@vger.kernel.org>,
+        Mark Brown <broonie@kernel.org>,
+        Fabio Estevam <festevam@gmail.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Nov 28, 2019 at 9:08 AM Rahul Tanwar
-<rahul.tanwar@linux.intel.com> wrote:
+On Wed, Nov 27, 2019 at 3:29 PM Christophe Leroy
+<christophe.leroy@c-s.fr> wrote:
+> Le 27/11/2019 =C3=A0 14:56, Linus Walleij a =C3=A9crit :
 
-> Fix below build warning
+> > I sent three patches, can you apply them on a clean tree
+> > and confirm it solves the problem (fingers crossed...)
+> >
+> > Thanks a lot for helping me fix this!
 >
->    WARNING: modpost: missing MODULE_LICENSE() in
->    drivers/pinctrl/pinctrl-equilibrium.o
+> The series is OK if using 'cs-gpios'.
 >
-> Introduced by commit
+> With 'gpios' in the DTS, I get:
 >
->    1948d5c51dba ("pinctrl: Add pinmux & GPIO controller driver for a new SoC")
->
-> by adding missing MODULE_LICENSE.
->
-> Signed-off-by: Rahul Tanwar <rahul.tanwar@linux.intel.com>
+> [    3.154747] fsl_spi ff000a80.spi: cs1 >=3D max 1
+> [    3.159207] spi_master spi0: spi_device register error
 
-Patch applied, I will send by express to Torvalds once the build
-servers are happy :)
+Ooops I looked over the gpiolib patch and found (I think) my mistake.
+
+I sent a v3 patch set that hopefully will make everything work as
+expected with just gpios =3D <...>;
 
 Yours,
 Linus Walleij
