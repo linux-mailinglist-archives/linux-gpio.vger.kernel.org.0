@@ -2,66 +2,82 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 306D810C4B7
-	for <lists+linux-gpio@lfdr.de>; Thu, 28 Nov 2019 09:08:48 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 17F5510C4CB
+	for <lists+linux-gpio@lfdr.de>; Thu, 28 Nov 2019 09:16:29 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727408AbfK1IIn (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 28 Nov 2019 03:08:43 -0500
-Received: from mga09.intel.com ([134.134.136.24]:39725 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727378AbfK1IIn (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Thu, 28 Nov 2019 03:08:43 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 28 Nov 2019 00:08:42 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,252,1571727600"; 
-   d="scan'208";a="221249719"
-Received: from sgsxdev001.isng.intel.com (HELO localhost) ([10.226.88.11])
-  by orsmga002.jf.intel.com with ESMTP; 28 Nov 2019 00:08:40 -0800
-From:   Rahul Tanwar <rahul.tanwar@linux.intel.com>
-To:     linus.walleij@linaro.org
-Cc:     torvalds@linux-foundation.org, sfr@canb.auug.org.au,
-        andriy.shevchenko@intel.com, linux-kernel@vger.kernel.org,
-        linux-gpio@vger.kernel.org, linux-next@vger.kernel.org,
-        Rahul Tanwar <rahul.tanwar@linux.intel.com>
-Subject: [PATCH 1/1] pinctrl: Fix warning by adding missing MODULE_LICENSE
-Date:   Thu, 28 Nov 2019 16:08:32 +0800
-Message-Id: <20191128080832.13529-2-rahul.tanwar@linux.intel.com>
-X-Mailer: git-send-email 2.11.0
-In-Reply-To: <20191128080832.13529-1-rahul.tanwar@linux.intel.com>
-References: <20191128080832.13529-1-rahul.tanwar@linux.intel.com>
+        id S1727126AbfK1IQW (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 28 Nov 2019 03:16:22 -0500
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:45310 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726301AbfK1IQV (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 28 Nov 2019 03:16:21 -0500
+Received: by mail-lj1-f196.google.com with SMTP id n21so27430510ljg.12
+        for <linux-gpio@vger.kernel.org>; Thu, 28 Nov 2019 00:16:18 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=dlwaqEfjT5graM8RWQ1ek299Dj4eK17tSarlzL5nZUM=;
+        b=l+E4ygaS3q5mYwlHDuFCSXQ77eYxgnZq4FdzjB4K2crLne5PNmNtouWf5MmH+0mP+a
+         KyoynhY40PGrUD+TebyOwFZ7I8rILisxXtwWvkjSjp+QFIcKF3t6ro7XSoXsUbsGa8uH
+         XHyTKCRmj/e/0OnKWOD2Y7d+xWz/TgL9/VHd5f1gwQc0UxFZ7PH3t3xWXhoCptaVW2I1
+         QmskW4aj5jbewzlKdZv7gv1VOEU0aFmTaAujR/2y70Cbdydft/nWRUpxbAauXDasusdc
+         q2007xskJ60GRtI5D8u2I2U9rHNvg6+7n279miEuRgOumNA8L9DgosI68SPwk/58zh8v
+         WFsQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=dlwaqEfjT5graM8RWQ1ek299Dj4eK17tSarlzL5nZUM=;
+        b=FS9m3ZlNc+CQ5o07K8QqniSbYRXPbh8tcYg0FBTSVO1jPcz3oOJL6FUxeaxUQcKSFE
+         anofWWwX5QJ55ex4HUktQkkstccvy/X+yXlv82js29dBGVymgTdj1L7qtaCx5BeFtlmy
+         zWgC6Rf7Lc2sMqJH1jDKzRE2zYZoHaFkjZv/vJtAvKNr772yW5GcJcWSSPdBh2OKzfNY
+         /s27GDQha5ofWUTMd66sFbCPJiEJK62OINyxIzXUr8BPTA8C+GdMB/gcLroAJIP+NLWA
+         YQ49ixGkk7EkU+U/IVceiz7Fj0FGHy+DLxUEJCZR2js71Q/Db3+20DIKA/4LWnysH800
+         tdPA==
+X-Gm-Message-State: APjAAAWaiMYzbpUEzBMbyP3j8TTfrZc/yoOmduSHwLUd4CcsR8JdPdmb
+        g3nImdfuRzS5owlXUyuA6YzD593hBJGUdi0AdsDQdg==
+X-Google-Smtp-Source: APXvYqyTE9eYnDMIvHYYYoLUZ9fGJAvAWhf7bt6cQqx4sbnSjEzG3In1wSpDQ95JnJ/UyfSwZGmvFUTCfZ/EW9cdkyw=
+X-Received: by 2002:a2e:9699:: with SMTP id q25mr33605730lji.251.1574928978081;
+ Thu, 28 Nov 2019 00:16:18 -0800 (PST)
+MIME-Version: 1.0
+References: <20191128080832.13529-1-rahul.tanwar@linux.intel.com> <20191128080832.13529-2-rahul.tanwar@linux.intel.com>
+In-Reply-To: <20191128080832.13529-2-rahul.tanwar@linux.intel.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Thu, 28 Nov 2019 09:16:06 +0100
+Message-ID: <CACRpkdbKE6eHsyuCM5oCkhj=bP4H=omiFfdA6qf+g7xQzJBYQQ@mail.gmail.com>
+Subject: Re: [PATCH 1/1] pinctrl: Fix warning by adding missing MODULE_LICENSE
+To:     Rahul Tanwar <rahul.tanwar@linux.intel.com>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Andriy Shevchenko <andriy.shevchenko@intel.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux-Next Mailing List <linux-next@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Fix below build warning
+On Thu, Nov 28, 2019 at 9:08 AM Rahul Tanwar
+<rahul.tanwar@linux.intel.com> wrote:
 
-   WARNING: modpost: missing MODULE_LICENSE() in
-   drivers/pinctrl/pinctrl-equilibrium.o
+> Fix below build warning
+>
+>    WARNING: modpost: missing MODULE_LICENSE() in
+>    drivers/pinctrl/pinctrl-equilibrium.o
+>
+> Introduced by commit
+>
+>    1948d5c51dba ("pinctrl: Add pinmux & GPIO controller driver for a new SoC")
+>
+> by adding missing MODULE_LICENSE.
+>
+> Signed-off-by: Rahul Tanwar <rahul.tanwar@linux.intel.com>
 
-Introduced by commit
+Patch applied, I will send by express to Torvalds once the build
+servers are happy :)
 
-   1948d5c51dba ("pinctrl: Add pinmux & GPIO controller driver for a new SoC")
-
-by adding missing MODULE_LICENSE.
-
-Signed-off-by: Rahul Tanwar <rahul.tanwar@linux.intel.com>
----
- drivers/pinctrl/pinctrl-equilibrium.c | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/drivers/pinctrl/pinctrl-equilibrium.c b/drivers/pinctrl/pinctrl-equilibrium.c
-index 36c9072c5ece..067271b7d35a 100644
---- a/drivers/pinctrl/pinctrl-equilibrium.c
-+++ b/drivers/pinctrl/pinctrl-equilibrium.c
-@@ -942,3 +942,4 @@ module_platform_driver(eqbr_pinctrl_driver);
- 
- MODULE_AUTHOR("Zhu Yixin <yixin.zhu@intel.com>, Rahul Tanwar <rahul.tanwar@intel.com>");
- MODULE_DESCRIPTION("Pinctrl Driver for LGM SoC (Equilibrium)");
-+MODULE_LICENSE("GPL v2");
--- 
-2.11.0
-
+Yours,
+Linus Walleij
