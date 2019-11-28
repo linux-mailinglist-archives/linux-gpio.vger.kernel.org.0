@@ -2,83 +2,79 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id B0D2910C995
-	for <lists+linux-gpio@lfdr.de>; Thu, 28 Nov 2019 14:35:43 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 9773A10C997
+	for <lists+linux-gpio@lfdr.de>; Thu, 28 Nov 2019 14:39:24 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726565AbfK1Nfm (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 28 Nov 2019 08:35:42 -0500
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:43606 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726561AbfK1Nfm (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 28 Nov 2019 08:35:42 -0500
-Received: by mail-lf1-f66.google.com with SMTP id l14so20059745lfh.10
-        for <linux-gpio@vger.kernel.org>; Thu, 28 Nov 2019 05:35:40 -0800 (PST)
+        id S1726446AbfK1NjY (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 28 Nov 2019 08:39:24 -0500
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:45423 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726401AbfK1NjY (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 28 Nov 2019 08:39:24 -0500
+Received: by mail-lf1-f68.google.com with SMTP id 203so20060690lfa.12
+        for <linux-gpio@vger.kernel.org>; Thu, 28 Nov 2019 05:39:22 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=jvu9OZfemBYDKg0MnhgqQk6YdpE94ksYWMXeOTcKvqI=;
-        b=rZpffZGhAtCrVfEJ0STTAMBuizBQYAW52mwdkSePWuUDC6OQ0zz8Z9UVdUnR6H2hrY
-         K8Zvn9LxDwzAlWTeJB7Ldx3bCWiqA26Hw3n9v/gp2fQF0eKMGpFlNmWAhySJS3XNTdas
-         UUYv0H6vIgRTCERz1VJr2aOhsjB4FMCFbAux9lo6Cj8a+zIJaKjQ2RPLedJmZmMefZkO
-         2hd68TxsA4uugErhZ0gKWJvLLL3X1uaEi7ucIqoM58qk7UPERby7BEqxbpuqpWVJFpK0
-         FvtarJybUCicf7nDe5WUj+gFj10VYyPHsGggZmdyoMKuoCbUs3mvy/kEGkC9/BW9M5mK
-         RBqg==
+         :cc:content-transfer-encoding;
+        bh=D6I+KTtT5RrNfHy8HpHYMT8VJs7SJnMqAJdYid/7wUs=;
+        b=S7EvmoCibbEzYx4xPT50J8NUwH/UMgvuVazKBvgS4zza0WtWGyRCvCa9WB0DDo/hEz
+         G1LYwoBExE7YLI7D+UDPPe97azpnDtR7nZF+AL6ZQl9vtYN4gXE9QA07mQY1sEF0FViN
+         gUoh4lR3UKPkFf2l4AZjz/U+Ym4YxfYABShVh8NHMnvdQM1yuvtz3zPQbaUypD/44PNS
+         x1CJRsFsxVUNAxi6/GW2m/WLDk/SjNQVpI6qPgITf8yOxoIZLa6HQACdu731z7tKkEFf
+         9xWKoMcYUmInatclY86KOmBz1ClgA0FPDWy0YPsgvEgwABbvaGQvo5iqlM0lBTts/BlG
+         H2/w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=jvu9OZfemBYDKg0MnhgqQk6YdpE94ksYWMXeOTcKvqI=;
-        b=PKVriIOK7X40KHrp8EjupIyAoIILB14Ps1gpSnWZQKg/EAIwlPxWHfl7o7giBEbrx8
-         misdO2r/hrgWNWyJ04WssIVFWJoGigFrHoC7nTctPaC07s2dp95JiAEyTdEla4Fy2+zm
-         oD7FhOApYvba3YwiKstoRgHGKSGP3JLrfR2QsYtxgG4KeOwKpvzFfpoZizw88t8IP/QQ
-         vCpihzUsTEVKN1LKsFYi9AwpqUByL4uqe24jeBY98ZQbFDqmbyIE9YuA2ATYJJQbdzZk
-         8TWfuasUjods6TEwE3ZPiwpKebVQx2cskMwp2b8C6FL69B0QF9ktIH4HMz5mWIa+pbTM
-         evYg==
-X-Gm-Message-State: APjAAAU50WNscFxE+lXEX/1MvYfEo1AFRj4Jt3Lz2M2zhPKj2Y164lsp
-        rKCqYt32NR0vb20xhZZWiCbTCY5A8s5YXQjQPkv8Vg==
-X-Google-Smtp-Source: APXvYqzK0FbZzikTAfGQ/Uf5e40RCuK+895pCTYy155zY+oNBupV1A0B056rLvdFg3jVNLYSLcvbRBi8zlZyV8ONdPA=
-X-Received: by 2002:a19:645b:: with SMTP id b27mr22047811lfj.117.1574948139781;
- Thu, 28 Nov 2019 05:35:39 -0800 (PST)
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=D6I+KTtT5RrNfHy8HpHYMT8VJs7SJnMqAJdYid/7wUs=;
+        b=XNaLTVnB/BV/V1SHy2s+XhHfR88L+a2GayHoUswe1odjrpzyCo1kCvQ/ASgWL9twjV
+         kvg5rbeMejfoqD7TplQAXaWxSO7d6F8+nPiIGa+G5Ym6QzSIWew0cXRkzSESmZJFZXmo
+         nE/IAO6/JuvaaBVTEJihznqcm50VVIT5lvHDkSyG6lRNqWaADJaBskH1N9ONOIU0APYW
+         LGfS4+nm/VEuYY2VXc2cXvr077UwF8W3sa5OzLrMN3krRQaK5NLOzi7s10vztWgpDHOT
+         wQzBAH68Y+T2RQEzLiOM4EWYCEyi2Q9pPKOun6nr6dvoOyvJZ+m0vnSRoPrgU4ZMI/eR
+         jiiw==
+X-Gm-Message-State: APjAAAWvrVB27AdrKWQbpQo0htbH87Z4dzfBYEKtQWSDsoCnyIxX4QC3
+        36Sjq1vsTupM6aEMZp4qVZA5VKmn4e3SLIuMV1B6Cw==
+X-Google-Smtp-Source: APXvYqxmlz69tEBni6zXCDozi9A2S9iyrzZrXFUiEi/GPCF1jeCwI9TC1gpKuquuR4/Kv2cZ5E8a8cVfVuetJqrnSG8=
+X-Received: by 2002:a19:c84:: with SMTP id 126mr18591776lfm.5.1574948361862;
+ Thu, 28 Nov 2019 05:39:21 -0800 (PST)
 MIME-Version: 1.0
-References: <20191127104509.10196-1-hdegoede@redhat.com>
-In-Reply-To: <20191127104509.10196-1-hdegoede@redhat.com>
+References: <HK0PR01MB3521489269F76467DFD7843FFA450@HK0PR01MB3521.apcprd01.prod.exchangelabs.com>
+In-Reply-To: <HK0PR01MB3521489269F76467DFD7843FFA450@HK0PR01MB3521.apcprd01.prod.exchangelabs.com>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Thu, 28 Nov 2019 14:35:28 +0100
-Message-ID: <CACRpkdZVPJyagQT4UwZDUHBvg0erFCwQumNKX9U3=AcHi=ZQGw@mail.gmail.com>
-Subject: Re: [PATCH v2 1/2] gpiolib: acpi: Turn dmi_system_id table into a
- generic quirk table
-To:     Hans de Goede <hdegoede@redhat.com>
-Cc:     Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>
+Date:   Thu, 28 Nov 2019 14:39:10 +0100
+Message-ID: <CACRpkdax5H0ar3ujKDohXvDZAXPWNWFKE1_AX9tn1FEOv5Yteg@mail.gmail.com>
+Subject: Re: [PATCH] gpio: mpc8xxx: Add platform device to gpiochip->parent
+To:     =?UTF-8?B?Sm9obnNvbiBDSCBDaGVuICjpmbPmmK3li7Mp?= 
+        <JohnsonCH.Chen@moxa.com>
+Cc:     "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "zero19850401@gmail.com" <zero19850401@gmail.com>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Nov 27, 2019 at 11:45 AM Hans de Goede <hdegoede@redhat.com> wrote:
+Hi Johnson,
 
-> Turn the existing run_edge_events_on_boot_blacklist dmi_system_id table
-> into a generic quirk table, storing the quirks in the driver_data ptr.
+On Tue, Nov 26, 2019 at 7:51 AM Johnson CH Chen (=E9=99=B3=E6=98=AD=E5=8B=
+=B3)
+<JohnsonCH.Chen@moxa.com> wrote:
+
+> In old kernels, some APIs still try to use parent->of_node from struct gp=
+io_chip,
+> and it could be resulted in kernel panic because parent is NULL. Adding p=
+latform
+> device to gpiochip->parent can fix this problem.
 >
-> This is a preparation patch for adding other types of (DMI based) quirks.
->
-> Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> Acked-by: Mika Westerberg <mika.westerberg@linux.intel.com>
-> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+> Signed-off-by: Johnson Chen <johnsonch.chen@moxa.com>
+> Link: https://patchwork.kernel.org/patch/11234609
 
-This patch does not apply to my "devel" branch, which I am about
-to send to Torvalds, so it will very soon be the mainline.
-
-Could you rebase it and I will queue it up for fixes.
-
-Also: should these two be tagged for stable? (I.e. a non-v5.5
-problem.) I suppose that requires backporting for -stable
-though.
+Patch applied for fixes!
 
 Yours,
 Linus Walleij
