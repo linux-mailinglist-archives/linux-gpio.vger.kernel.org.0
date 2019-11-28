@@ -2,93 +2,83 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 58CE610C957
-	for <lists+linux-gpio@lfdr.de>; Thu, 28 Nov 2019 14:19:10 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B0D2910C995
+	for <lists+linux-gpio@lfdr.de>; Thu, 28 Nov 2019 14:35:43 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726734AbfK1NTH (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 28 Nov 2019 08:19:07 -0500
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:45804 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726726AbfK1NTG (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 28 Nov 2019 08:19:06 -0500
-Received: by mail-lf1-f65.google.com with SMTP id 203so20014938lfa.12
-        for <linux-gpio@vger.kernel.org>; Thu, 28 Nov 2019 05:19:03 -0800 (PST)
+        id S1726565AbfK1Nfm (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 28 Nov 2019 08:35:42 -0500
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:43606 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726561AbfK1Nfm (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 28 Nov 2019 08:35:42 -0500
+Received: by mail-lf1-f66.google.com with SMTP id l14so20059745lfh.10
+        for <linux-gpio@vger.kernel.org>; Thu, 28 Nov 2019 05:35:40 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=mime-version:from:date:message-id:subject:to:cc;
-        bh=a6UykuI2ITtmBK53f/J/gVoOVqoOXR1NtFRyFCtxoEc=;
-        b=mb3MIbxtl/blBcrQRjuFDoZUW5guLzIK8vDrdeEmPfM0TgQscB8bx+QXwUdKHptcrW
-         LUsKmQKHDKE/Gj2KYgIUHJYVsMguz+FL1i/16M16CXRYvG141LShZ3uAoWeBgCXpl3XD
-         YpBcYs5oSbYWRIsJYNBAQyboCcuMHBt7vVZThWALc0HOCu0VMMi+Zp6oszCHhCpLTplF
-         q7THgvqpOIjaAkrR9M/RC/7ugTyiDZ/SbTNmTgBASeXsqsK4Ws0vo1ddvCQY2qhpg86J
-         EGL9iR/UFL7h36bARljzkRPjvl+4T3Vn6ZtdDIzxTEx2YlZ/HlWX55i+LjJ3S5OYe4Dd
-         00CQ==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=jvu9OZfemBYDKg0MnhgqQk6YdpE94ksYWMXeOTcKvqI=;
+        b=rZpffZGhAtCrVfEJ0STTAMBuizBQYAW52mwdkSePWuUDC6OQ0zz8Z9UVdUnR6H2hrY
+         K8Zvn9LxDwzAlWTeJB7Ldx3bCWiqA26Hw3n9v/gp2fQF0eKMGpFlNmWAhySJS3XNTdas
+         UUYv0H6vIgRTCERz1VJr2aOhsjB4FMCFbAux9lo6Cj8a+zIJaKjQ2RPLedJmZmMefZkO
+         2hd68TxsA4uugErhZ0gKWJvLLL3X1uaEi7ucIqoM58qk7UPERby7BEqxbpuqpWVJFpK0
+         FvtarJybUCicf7nDe5WUj+gFj10VYyPHsGggZmdyoMKuoCbUs3mvy/kEGkC9/BW9M5mK
+         RBqg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
-        bh=a6UykuI2ITtmBK53f/J/gVoOVqoOXR1NtFRyFCtxoEc=;
-        b=Zf0iI/05W79tFQcY1QoPLaasI36RBx53eB1/WwONkY5lWuqMaLtH8GA1DwDuOSzLDH
-         0aeGG+sR6DoZ1OQg0eusryScVyUUJ4wwQqOS0ST5jj+2COnTuBEz9+NNtlRpDxib3AZb
-         9zAqq8Uw6hTA3kpCPKKNaXxcAAiY9p/JHhJoSqoBfPn+gvMfgVrvf3rkR6IWDLIrEOca
-         VPu98Ej9veG9EvVK0yCGxrDan8odBQ6Ir8M2Qnu7+rvTVEClH1dLzLYkBsQSQwftwETf
-         FuGNR+L+ILp/IBYHHkowJQQJo6hWftSfarGqAiMCxwq2rjtwuGCr1x9tPnjc6M5TABmY
-         MEQg==
-X-Gm-Message-State: APjAAAVKe30KIj/ezxSUPGNOL5Op+GrD8OiOCB9BWnqhpbKZL+Yb2ths
-        Qn99ps7Lc3DF3ZUy8QI7+GdNMyImNi1MLWkBeTUSzQ==
-X-Google-Smtp-Source: APXvYqwYXHWQE8HF3VzPJ7gwhW7vLjPmEWwu9T2UbexqzTjOPa39f/ftjXJJSpBmdc1RK+4dxxgWXAT/gWFx58pcByE=
-X-Received: by 2002:ac2:410a:: with SMTP id b10mr5039588lfi.135.1574947142730;
- Thu, 28 Nov 2019 05:19:02 -0800 (PST)
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=jvu9OZfemBYDKg0MnhgqQk6YdpE94ksYWMXeOTcKvqI=;
+        b=PKVriIOK7X40KHrp8EjupIyAoIILB14Ps1gpSnWZQKg/EAIwlPxWHfl7o7giBEbrx8
+         misdO2r/hrgWNWyJ04WssIVFWJoGigFrHoC7nTctPaC07s2dp95JiAEyTdEla4Fy2+zm
+         oD7FhOApYvba3YwiKstoRgHGKSGP3JLrfR2QsYtxgG4KeOwKpvzFfpoZizw88t8IP/QQ
+         vCpihzUsTEVKN1LKsFYi9AwpqUByL4uqe24jeBY98ZQbFDqmbyIE9YuA2ATYJJQbdzZk
+         8TWfuasUjods6TEwE3ZPiwpKebVQx2cskMwp2b8C6FL69B0QF9ktIH4HMz5mWIa+pbTM
+         evYg==
+X-Gm-Message-State: APjAAAU50WNscFxE+lXEX/1MvYfEo1AFRj4Jt3Lz2M2zhPKj2Y164lsp
+        rKCqYt32NR0vb20xhZZWiCbTCY5A8s5YXQjQPkv8Vg==
+X-Google-Smtp-Source: APXvYqzK0FbZzikTAfGQ/Uf5e40RCuK+895pCTYy155zY+oNBupV1A0B056rLvdFg3jVNLYSLcvbRBi8zlZyV8ONdPA=
+X-Received: by 2002:a19:645b:: with SMTP id b27mr22047811lfj.117.1574948139781;
+ Thu, 28 Nov 2019 05:35:39 -0800 (PST)
 MIME-Version: 1.0
+References: <20191127104509.10196-1-hdegoede@redhat.com>
+In-Reply-To: <20191127104509.10196-1-hdegoede@redhat.com>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Thu, 28 Nov 2019 14:18:51 +0100
-Message-ID: <CACRpkdb_5xjLBSPaGrDadHUj=4Npz13YELJw+Ov+JyigGPBZjg@mail.gmail.com>
-Subject: [GIT PULL] Oneliner fix for the pinctrl pull request
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Rahul Tanwar <rahul.tanwar@linux.intel.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
+Date:   Thu, 28 Nov 2019 14:35:28 +0100
+Message-ID: <CACRpkdZVPJyagQT4UwZDUHBvg0erFCwQumNKX9U3=AcHi=ZQGw@mail.gmail.com>
+Subject: Re: [PATCH v2 1/2] gpiolib: acpi: Turn dmi_system_id table into a
+ generic quirk table
+To:     Hans de Goede <hdegoede@redhat.com>
+Cc:     Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Linus,
+On Wed, Nov 27, 2019 at 11:45 AM Hans de Goede <hdegoede@redhat.com> wrote:
 
-as requested yesterday, a oneliner fix adding the license to
-the new Intel pin controller.
+> Turn the existing run_edge_events_on_boot_blacklist dmi_system_id table
+> into a generic quirk table, storing the quirks in the driver_data ptr.
+>
+> This is a preparation patch for adding other types of (DMI based) quirks.
+>
+> Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> Acked-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
 
-This time just based on the top of your tree from yesterday.
+This patch does not apply to my "devel" branch, which I am about
+to send to Torvalds, so it will very soon be the mainline.
 
-Please pull it in.
+Could you rebase it and I will queue it up for fixes.
 
-Sorry for the mess.
+Also: should these two be tagged for stable? (I.e. a non-v5.5
+problem.) I suppose that requires backporting for -stable
+though.
 
 Yours,
 Linus Walleij
-
-The following changes since commit a6ed68d6468bd5a3da78a103344ded1435fed57a:
-
-  Merge tag 'drm-next-2019-11-27' of
-git://anongit.freedesktop.org/drm/drm (2019-11-27 17:45:48 -0800)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git
-tags/pinctrl-v5.5-2
-
-for you to fetch changes up to 6d29032c2cef31633db5dfd946fbcf9190dddef0:
-
-  pinctrl: Fix warning by adding missing MODULE_LICENSE (2019-11-28
-09:12:43 +0100)
-
-----------------------------------------------------------------
-Fixes a MODULE_LICENSE() problem in the Equilibrium pin
-controller.
-
-----------------------------------------------------------------
-Rahul Tanwar (1):
-      pinctrl: Fix warning by adding missing MODULE_LICENSE
-
- drivers/pinctrl/pinctrl-equilibrium.c | 1 +
- 1 file changed, 1 insertion(+)
