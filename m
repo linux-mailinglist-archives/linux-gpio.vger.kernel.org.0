@@ -2,93 +2,95 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 5368210C55D
-	for <lists+linux-gpio@lfdr.de>; Thu, 28 Nov 2019 09:43:08 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 6E1FB10C5CB
+	for <lists+linux-gpio@lfdr.de>; Thu, 28 Nov 2019 10:17:16 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727080AbfK1InH (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 28 Nov 2019 03:43:07 -0500
-Received: from mail-lj1-f175.google.com ([209.85.208.175]:40830 "EHLO
-        mail-lj1-f175.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726694AbfK1InG (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 28 Nov 2019 03:43:06 -0500
-Received: by mail-lj1-f175.google.com with SMTP id s22so8537166ljs.7
-        for <linux-gpio@vger.kernel.org>; Thu, 28 Nov 2019 00:43:05 -0800 (PST)
+        id S1726296AbfK1JRP (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 28 Nov 2019 04:17:15 -0500
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:45632 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726092AbfK1JRP (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 28 Nov 2019 04:17:15 -0500
+Received: by mail-lj1-f194.google.com with SMTP id n21so27628691ljg.12
+        for <linux-gpio@vger.kernel.org>; Thu, 28 Nov 2019 01:17:13 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=0A7PAHErMXMiLWk/qlmZsqTmhq9IxC9JLoTdr7xyNiQ=;
-        b=Cg3UGJZ/IHjtMYKApRdIpTGOjYJc7oZQQIUXDlVVuLP3ZdHHfbAyQAzgDnBxCPCKTa
-         Ag94QWvb+bxutTkfIoKAxlGUwcodZW7arG8jINfdOpcytagMOOjdynJx+a4vOnjOlWcD
-         O4kBCBV904z5Gx4HDBe4Kkivh1EMfeoY6sm3NkusDl+SLiwAZ/nKenGNR4LrwH/Clf0Z
-         TWF72Yc8RJm2kXK/wnEkPZ9BD3wEKuwn7AQCsvIUB95fCmTVGdpGygpGZRicm/rXCni8
-         kzH76vSAgfF4z/qKxVwEBLcbx5O7xJM3gFq+5I0pbcK8BLpbIFk/7IHU0tDY0HlwOlZU
-         ROaw==
+         :cc;
+        bh=AAhyWvAj0DllZ8ve6+5K9EM0d7Du36EBTTCNiXlO/bA=;
+        b=F+EDIJqH7d7OyUqXE4dFcF9L8aq9Hiz8BzLIc5zJNa+4xI4ZnlPt2vrAyeWOyrxbqT
+         k+40jGa+ckr2SLe0lxl2tPiNeHkQ1R9ZZ28kzma0PxCzyOmLDvgTikVPzoQpuRLxVJcG
+         sACru+xRlqyI6I/TGfMl28B9tEfpeQ6XVt9TxDxh/eZZDC2tS2TJstDZHPnyguKkaL3X
+         YBk65Dsk5b6Ld/xpEsM51S9klQXIC9A+DjLTlXwrer13B0T4MYZGfWekcQJ7KFyWjTWP
+         9FxhcRaEAf+RvklyTTBXn88youOXTVXce2j9TWt3XXm0fZkRf0MHuVFSqkw3TSRR7kut
+         7hlQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=0A7PAHErMXMiLWk/qlmZsqTmhq9IxC9JLoTdr7xyNiQ=;
-        b=V+YUPqpki9au4dqNFl4fS8JJ4o/mqwNAnJMUwPGAzupzyH826R3u8flWj9wIO3Qkhm
-         WJVeUpdieA2bjHtPVIufLYgXfu9QZQ+H0GY+NeAdd6qYRGlFCVqi6qh8mxxakqyN1m/d
-         /80GMDpZW46hq80BP6NA7mXnrSIYNK1ZwAPoyGcgFMpl+pS6Fc214s8K+QFmMh40v4iq
-         wmkyQzSEPqyt5Ecy682Cr1Jn0X3/Vm0IHFM7QVkxpijjMFkYewISzKUa2aQidwR8Xkgy
-         YZd1Vtw8R9oM5P+QmWTLoa+IZqT553s/dttrcHHHgrK4PpET7uhyhqT0+ZYwRIsEEQcZ
-         9zKQ==
-X-Gm-Message-State: APjAAAUA8r/NjM5LKbU1kUMqlkDxhoD7N+OalVldqQaBqZ0y1thUgD8n
-        LMpHExQB8pl6KgGOAQHyifTOBVpxFh0fMLWHzYrGRg==
-X-Google-Smtp-Source: APXvYqws92QE8ol5i46q8ypAJK4FbwtxVhvRJcANz8h3/vN7+CfayttMwqgCnT2dIJTYx8jp+gnG7guxcpOHvro8IG8=
-X-Received: by 2002:a2e:161b:: with SMTP id w27mr33863903ljd.183.1574930584775;
- Thu, 28 Nov 2019 00:43:04 -0800 (PST)
+         :message-id:subject:to:cc;
+        bh=AAhyWvAj0DllZ8ve6+5K9EM0d7Du36EBTTCNiXlO/bA=;
+        b=DTMj6G2zxb/JKeJUGaCsmXlNUEhNHavH18LsDaRKsD1FGIMmPk7PGo/nbrvchyLcKg
+         DEWIc5przxkKIbdnXPVKZWX3W1lF0XhaH64TVsRSfMqLAuRgciyK7eYFgP7iTPeFrABc
+         ozfipQz7g/bR5Be4xInc8MkAVaxeteEUCmY/4onzRGlcfnBqHdC6EWfWNj0LAKbCU/XJ
+         sBCJ/I1FxsV75qRzBZImdIDLYmOvmMX7fmrVKYiiNyHufkHXKcNL6iFqY0Saqqn68Z+l
+         n4tmwHfxoWA7QTAiqjB8b+qgnX3S2Bh1adQMOGON+P8l8Btms0Ctd8KFE/rX95y9xFDW
+         anFg==
+X-Gm-Message-State: APjAAAW9wI2eQCF+dwZ7TnV+f0YISdthJs+I8i3VHHIzRQyRJl0mwv5y
+        y0kFA6agTEBqOoARb8AC6Cf7AHEAvZpPenyXiuI9Iw==
+X-Google-Smtp-Source: APXvYqwczNmhsrp97hbeZJ/j5MP19zr5kyWzopv1KxozixDSRs+Lv9/0+NUJFNc3hmWqxOeqM3W62Yph6tHQ/JcRbrI=
+X-Received: by 2002:a2e:9a12:: with SMTP id o18mr33671728lji.191.1574932633134;
+ Thu, 28 Nov 2019 01:17:13 -0800 (PST)
 MIME-Version: 1.0
-References: <e9981d69-2a33-fec9-7d12-15fcb948364d@c-s.fr> <CACRpkdYUBj+45Jr94kdERKJogVoL96JH6i85o_bVUtjmkTt19g@mail.gmail.com>
- <3c79a8b9-65e4-bfc9-d718-b8530fe1e672@c-s.fr> <b06679da-0332-2322-13f8-07307f611542@c-s.fr>
- <CACRpkdbOzM3X2_BMnf5eSqCt_UsnXo4eXD2fUbTLk6=Uo3gB2g@mail.gmail.com>
- <582b5ccf-8993-6345-94d1-3c2fc94e4d4f@c-s.fr> <CACRpkdawu5DcCA5rnRbOe+meBPtxctL7HuWciqboOEkCHZKA7A@mail.gmail.com>
- <e6a39aba-a41b-d781-966a-647977216b87@c-s.fr> <CACRpkda-wjRm7UYsFTX_xFfNPT29U1PTMyuU4AP=WShiC_vV9g@mail.gmail.com>
- <b2925217-9cbd-2f4e-c92f-9e1c92824193@c-s.fr> <CACRpkdaKg45uHMZ9mz6OGkAUqYX7GzhTrjrAc1feVhn68ZXrqg@mail.gmail.com>
- <748eb503-b692-6d30-bc5e-94539a939b06@c-s.fr> <CACRpkdb15n4DpxAGEw+Av89XZDxi7Amh1XEyJEzWBd4tet7C2Q@mail.gmail.com>
- <8b50ce56-0600-373d-178c-92aa780e5376@c-s.fr> <CACRpkdZRWojQAgHtBaNWdjKqv8aX3P-KjatgoG+DLCcYeJ7ztg@mail.gmail.com>
- <99f48a7e-e4f4-2a77-657c-452d7a656ec5@c-s.fr> <CACRpkdat-qtxCn=e1sqPMFF7urue0OoJJcixUwL1=nAT-F+H3Q@mail.gmail.com>
- <c3090d62-d049-5c9b-d48e-380b71755bfb@c-s.fr>
-In-Reply-To: <c3090d62-d049-5c9b-d48e-380b71755bfb@c-s.fr>
+References: <d8f95334-789e-995b-9abf-7bb15abb1daa@raspberrypi.org>
+ <CACRpkdbWZqNzEcLAjCma8=YdjDPbnZaxt3KYvZTdELLrGzm_FQ@mail.gmail.com> <943fd3dd-9090-0c7b-3010-c92c139503b0@electromag.com.au>
+In-Reply-To: <943fd3dd-9090-0c7b-3010-c92c139503b0@electromag.com.au>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Thu, 28 Nov 2019 09:42:53 +0100
-Message-ID: <CACRpkdYPxSip9UAa-6sgXSgnCfdaXb8dxoh7ud=j7P+n_ax48A@mail.gmail.com>
-Subject: Re: Boot failure with 5.4-rc5, bisected to 0f0581b24bd0 ("spi: fsl:
- Convert to use CS GPIO descriptors")
-To:     Christophe Leroy <christophe.leroy@c-s.fr>
-Cc:     linux-spi <linux-spi@vger.kernel.org>,
-        Mark Brown <broonie@kernel.org>,
-        Fabio Estevam <festevam@gmail.com>,
+Date:   Thu, 28 Nov 2019 10:17:01 +0100
+Message-ID: <CACRpkdZ23ncXQE+aqEDeZoppToXmWV+TpnJHjVvK3nxnN78+rA@mail.gmail.com>
+Subject: Re: Multiple SPI MCP23S17s sharing a CS line
+To:     Phil Reid <preid@electromag.com.au>
+Cc:     Phil Elwell <phil@raspberrypi.org>,
+        Jason Kridner <jkridner@gmail.com>,
+        =?UTF-8?B?SmFuIEt1bmRyw6F0?= <jan.kundrat@cesnet.cz>,
+        Sebastian Reichel <sre@kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Nov 27, 2019 at 3:29 PM Christophe Leroy
-<christophe.leroy@c-s.fr> wrote:
-> Le 27/11/2019 =C3=A0 14:56, Linus Walleij a =C3=A9crit :
+On Thu, Nov 28, 2019 at 5:11 AM Phil Reid <preid@electromag.com.au> wrote:
+> On 27/11/2019 20:36, Linus Walleij wrote:
 
-> > I sent three patches, can you apply them on a clean tree
-> > and confirm it solves the problem (fingers crossed...)
+> > IIUC this needs to be figured out and both the DT bindings
+> > and the driver need to be fixed to support this peculiar addressing
+> > scheme.
 > >
-> > Thanks a lot for helping me fix this!
 >
-> The series is OK if using 'cs-gpios'.
+> Similar problem has come up before with gpio line props from Jan.
+> The above was similar to what was discussed previously a couple of times.
+> eg: https://patchwork.ozlabs.org/patch/1052925/
 >
-> With 'gpios' in the DTS, I get:
->
-> [    3.154747] fsl_spi ff000a80.spi: cs1 >=3D max 1
-> [    3.159207] spi_master spi0: spi_device register error
+> I'd say it's the way to solve the problem.
 
-Ooops I looked over the gpiolib patch and found (I think) my mistake.
+OK I see.
 
-I sent a v3 patch set that hopefully will make everything work as
-expected with just gpios =3D <...>;
+Actually this comment from Jan:
+
+"Linux  does not support multiple child devices "within" one SPI slave.
+If there  was proper support for this, this patch would be superfluous."
+
+This is not a real limitation, we can have children inside SPI devices,
+no problem at all. The driver can just parse them with something like
+for_each_available_child_of_node(parent, child) from
+<linux/of.h>.
+
+It is possible for the driver to create proper subdevices for each
+node or just create (I think) the different gpio_chip:s with
+a reference to the unique DT node for each chip and then the
+.xlate function will figure out the GPIO translation.
 
 Yours,
 Linus Walleij
