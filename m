@@ -2,51 +2,51 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 593D710C87E
-	for <lists+linux-gpio@lfdr.de>; Thu, 28 Nov 2019 13:18:28 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id EF96310C894
+	for <lists+linux-gpio@lfdr.de>; Thu, 28 Nov 2019 13:20:44 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726448AbfK1MS1 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 28 Nov 2019 07:18:27 -0500
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:46997 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726252AbfK1MS1 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 28 Nov 2019 07:18:27 -0500
-Received: by mail-lf1-f68.google.com with SMTP id a17so19876000lfi.13
-        for <linux-gpio@vger.kernel.org>; Thu, 28 Nov 2019 04:18:26 -0800 (PST)
+        id S1726401AbfK1MUo (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 28 Nov 2019 07:20:44 -0500
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:36763 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726281AbfK1MUn (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 28 Nov 2019 07:20:43 -0500
+Received: by mail-lj1-f193.google.com with SMTP id k15so28308130lja.3
+        for <linux-gpio@vger.kernel.org>; Thu, 28 Nov 2019 04:20:42 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=+9HaPIwDGWIORg/ZtcvZAIKmu4aZIOqFrtCVzv15Uo8=;
-        b=P9He/jdZelhAF63c66JOtESkD9SWLHGoK4fcKXecnAKf5ycE/xInVMP5Id/tMj3hH6
-         Eot7YcHkj6OIenHQPCoyPdDUMMGen9pcS+VlrkT4DTKC4AybqCnhpzdjooSoRj7PVtHV
-         ECHxDrBKPIoRWVvwdJu+FH9TbmcBCA7YyDG2L2Rcfld6g7X6DH1nXRnyvIXtipPtyGu0
-         OIJUACG6vpMSL4VRwwpCnhSEGh97UwtAOzcrV90ler+nsjpdHlOmdo40cQk2SkGDsGG4
-         D5C017GmYOZtYttdL71Ygqefe9MCirKwDf1Htcj8o/01X5bZAL7OZv4XkVAUxYzWfgqa
-         Z9vA==
+        bh=qmf6jeZshq1jDY76loZcrxtrhAg7lwPCb71uVMENsw0=;
+        b=FRYu0UXFOIpf1bWRYoJ1c9xHbXgvePCRjx4PZ5IZ5RV3Yz07xamodlI746hL9a9kcu
+         oM/33Jk8YUVjiLAWEcliFiYtvfVwP69h8KPk0v0GARBdSoyaSNFtsfMYbyX7Dqk9AABs
+         W2Ftf/w30gEOA5INs/fO0ChaN4+or7M8h5eE61FnIshjUh38nh7BbyelaZmeOAL0hi75
+         emwPQn9+FGy139ZtDVsjT91HSxrtPW2QsuEAD/AhE5pO+wCEJ/YlJy2U+74OENsvW3gQ
+         wNux0h4Q+8bJN52v8Cdk7gR/N9vmkXJYOwJ1h3c1h26ULVZ+s7IBMeExpJ8BhUSIvipq
+         qocw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=+9HaPIwDGWIORg/ZtcvZAIKmu4aZIOqFrtCVzv15Uo8=;
-        b=ee9E6nAisrwNsBewszUtf94CIE2wXiDOwKX+J8rfnSW0IjNIZjd5fx3RguNaRXgdzL
-         TzCGXcZEhM/2pP6w8B9W/1C9mdXqYDCTfZN8+DZgS/1oLgfkptnQ/p3kweKBt7ZA5HxF
-         gx4Kq5grXpytftunMHgrKZcabJxetjH2jv+Vl3OTwrVclK52kuX640P+XZvgMu9J+Nc6
-         xzAzqMYKpZ1yiKesYMfbynGWZF6TCkpY2yJCjoELat9iNsS36uxofIm02WXbu43FKSYA
-         SZkmDldvO4nsfmkk4fAgXdXHObxDZ3MY2MaX0ZhjxP7NLoP8yWWMyT72AMSaFZkSsSMO
-         OuRw==
-X-Gm-Message-State: APjAAAVn/+Ce1mv+dhCLIfLCguwStb28/ccJQ6V2JJlJxYeuF/wic6yM
-        2xIcOtgHYlfKih3ldxysF4gwbY+5l4Eh2MfEdG9J9g==
-X-Google-Smtp-Source: APXvYqwfcdHhm4gyrSY0PXoqGz1WH61ou574arqZCBcFKymILHOQyJwQZjM0A1Ke/HyiK4TldEM2Asch76SNuXwaHnE=
-X-Received: by 2002:a19:645b:: with SMTP id b27mr21863272lfj.117.1574943505250;
- Thu, 28 Nov 2019 04:18:25 -0800 (PST)
+        bh=qmf6jeZshq1jDY76loZcrxtrhAg7lwPCb71uVMENsw0=;
+        b=eOw/RnuT5tyE2KgJrm5g7Ex5sdyJjy9CJl41f++9om3hJp8MkBJ60vt0OJmNvZB+Ga
+         2m2Z1FMxhWzjq6Ia3oM1Uo8gU3g9VLYvXgbOARfp8O3z3nIItHf2tk8VroDE4TI1VJKn
+         RV3TCJiQGsFFN+vkWSvXmMFyjwb5/9Xr2nvTAVz82tRZJPsiZmcDsGPUQKzXqVodI+cs
+         7ltvwy/HxXUgBouhTjEaEpLiRE5SbYAeJ1O89HeMd7HcnsqmtgKAvcDVFnM6Zzh4QfQY
+         l7J5nP7ubHnnxnQsRdHx/SP+7eePDUD9yCKWw4/2ZOFtK9MgC5ioSYHxaImnU+ezxj4A
+         wboA==
+X-Gm-Message-State: APjAAAVderC0PIfX1nwgRhyFe6OFahEWw1Jsb7Q3nA7Ne/Y0Olm1Bzj4
+        Ui/A9uT42c2sA334Of9njQ1nyBIMicyVzyoUgX/wQA==
+X-Google-Smtp-Source: APXvYqy5FIUKPl7C4nNCrIegY7/L/e3N0NOcZm89h/t+XCUHcKulKwvWZPZSi8sYlGYMiq1wU75t2SUzdLcDQIXtsPc=
+X-Received: by 2002:a05:651c:102a:: with SMTP id w10mr5221499ljm.77.1574943641831;
+ Thu, 28 Nov 2019 04:20:41 -0800 (PST)
 MIME-Version: 1.0
-References: <1574661437-28486-1-git-send-email-yash.shah@sifive.com> <1574661437-28486-5-git-send-email-yash.shah@sifive.com>
-In-Reply-To: <1574661437-28486-5-git-send-email-yash.shah@sifive.com>
+References: <1574661437-28486-1-git-send-email-yash.shah@sifive.com> <1574661437-28486-6-git-send-email-yash.shah@sifive.com>
+In-Reply-To: <1574661437-28486-6-git-send-email-yash.shah@sifive.com>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Thu, 28 Nov 2019 13:18:13 +0100
-Message-ID: <CACRpkdZt53578c3tWFodq6-HwNzc+gp6mc-n-8-GKkGyy61JKQ@mail.gmail.com>
-Subject: Re: [PATCH v3 4/6] gpio: sifive: Add DT documentation for SiFive GPIO
+Date:   Thu, 28 Nov 2019 13:20:29 +0100
+Message-ID: <CACRpkdY7fGvTPcwwC0XU+XN2w_QUCj0MmOYhp183P3Lj7Qw8WA@mail.gmail.com>
+Subject: Re: [PATCH v3 5/6] gpio: sifive: Add GPIO driver for SiFive SoCs
 To:     Yash Shah <yash.shah@sifive.com>
 Cc:     "bgolaszewski@baylibre.com" <bgolaszewski@baylibre.com>,
         "robh+dt@kernel.org" <robh+dt@kernel.org>,
@@ -73,14 +73,19 @@ X-Mailing-List: linux-gpio@vger.kernel.org
 
 On Mon, Nov 25, 2019 at 6:58 AM Yash Shah <yash.shah@sifive.com> wrote:
 
-> DT json-schema for GPIO controller added.
+> Adds the GPIO driver for SiFive RISC-V SoCs.
 >
 > Signed-off-by: Wesley W. Terpstra <wesley@sifive.com>
-> [Atish: Compatible string update]
+> [Atish: Various fixes and code cleanup]
 > Signed-off-by: Atish Patra <atish.patra@wdc.com>
 > Signed-off-by: Yash Shah <yash.shah@sifive.com>
 
 Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+
+I suppose Marc will merge all patches into the irqchip tree
+as they are logically dependent? If you want the GPIO bindings
+and this driver directly merged (no deps) then I can do that
+as well.
 
 Yours,
 Linus Walleij
