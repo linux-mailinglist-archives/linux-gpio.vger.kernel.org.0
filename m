@@ -2,51 +2,51 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 0BA3110C6A9
-	for <lists+linux-gpio@lfdr.de>; Thu, 28 Nov 2019 11:29:40 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 00D0D10C6AA
+	for <lists+linux-gpio@lfdr.de>; Thu, 28 Nov 2019 11:29:48 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726583AbfK1K3h (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 28 Nov 2019 05:29:37 -0500
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:44667 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726383AbfK1K3g (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 28 Nov 2019 05:29:36 -0500
-Received: by mail-ot1-f68.google.com with SMTP id c19so21789560otr.11
-        for <linux-gpio@vger.kernel.org>; Thu, 28 Nov 2019 02:29:36 -0800 (PST)
+        id S1726587AbfK1K3r (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 28 Nov 2019 05:29:47 -0500
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:33106 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726510AbfK1K3r (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 28 Nov 2019 05:29:47 -0500
+Received: by mail-oi1-f194.google.com with SMTP id x21so15803384oic.0
+        for <linux-gpio@vger.kernel.org>; Thu, 28 Nov 2019 02:29:44 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baylibre-com.20150623.gappssmtp.com; s=20150623;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc:content-transfer-encoding;
-        bh=+G7oZZMj6ZOZMpeqAy8kOQBtK+zeWOqSdsYlUES+uM8=;
-        b=i4I9RbJxt7qubAhVdHXGYfGE/p67RoXCsCDoPYSD8BfN3l+1tXUaXqls1E9bzUkw6T
-         CoWT+JSGu1fmMGESs4eaj3sJRs69izxtBRoLnhqdmXOIb02jnQXXdZ0Tac3rf0CJeIk9
-         gifavAsJ83wu03Czm4PI4/IEi6F4JheUJBq/8gliS/wmCgY8aAsgSHZbyaYRDr0rY8Nd
-         Vx4aLsiyMfH0/a+86D+ZrelIgmJLmn+tuUXb4NQmLMszrPbd+3sXlPhbEo0uhBJDIe9F
-         YGJfihwkCCt3mMn0s9pw6RByilfft6RPTh90n5s1+VSqfBOjcBcETQXav0brRE2MilRu
-         X3TQ==
+        bh=uInBE7rwP7H9dvF2TgC2G6IJOl8n/3Lw+eMi2U1rWJA=;
+        b=Gqfv4uib9XDaaEy2kBkX5PGmOdx9n4MjYGaucskMATh6bsAZcl1PxlRgPLRwa6UPEG
+         kzeVUYBXQMVECL1Ty4maC3KalOeliOXtSSq6Vhb9P8t0dWWM8vNqwe5IWRHowhbjFHpM
+         5O48kI+b5lJw/nqD/HZVh5GRUqwcME2dYo2ZVzICGwj6oKOu5pe8Edf3iJ8DgcQk7eW/
+         eemVTuB9uP3bSEuMljMTlcQAWKdpzu54TWznh4TSXYG972QeoswGFziFwkRk5fFg6+Ln
+         g/QWaC6otU5mkfQVxaMMOSBXoAMSqJ03EKZVtoV4frUSLprRyhh/ILfNtzhOZgEPiidP
+         p7Ag==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc:content-transfer-encoding;
-        bh=+G7oZZMj6ZOZMpeqAy8kOQBtK+zeWOqSdsYlUES+uM8=;
-        b=p6pMmjKAMkHElENdUOe0dKsEQfDGCrbCZP4ZqmXWLrPEQDl34LBf/Q7Zr3i5L9fZ2R
-         M7MOtYZqNlDSEDdouzH0/RVzPgvEZP1gkUICDrlyFUuf/HNvzoZZQZo+sTNv64c7uO1U
-         xUrRzQ0nURTpRz8GVjOTJoY046KJgaBzxWwimRV2BKSKsz0zQe/UynQjPyxFzFXWy02B
-         qh4MYWR4+vl/6yzE3bzcP2KKBD/x5LSOg2fydHuJUd9AIygenouZMB7r668sElUwKD/O
-         FY6Ru/etNjAtO5Matsrl1nGPBE4lR1YvaLkc4lkXUaUuvlM7ostzQ5KSg7Iow//sZMAT
-         D6iw==
-X-Gm-Message-State: APjAAAVmtmM3/Aome6iHGvFSy9wvZKxdUd1+71nf1EDmVUFx+poTVxBL
-        upyy92yn82InUeWRrlXJjUFDhV3XNxnd/sGDt3lRLrRy
-X-Google-Smtp-Source: APXvYqw3BDYRKeZoc1aWDhKb2OMNZ4BsGfAhCh3Kc5X5eLF13sCm3x36acw527HOGvfNOzVCOzjIS0lV3iF+rpEOqOo=
-X-Received: by 2002:a05:6830:453:: with SMTP id d19mr6787309otc.256.1574936975974;
- Thu, 28 Nov 2019 02:29:35 -0800 (PST)
+        bh=uInBE7rwP7H9dvF2TgC2G6IJOl8n/3Lw+eMi2U1rWJA=;
+        b=dpSXydGxFJrbkn+qWvAO90pK4nMKiSdByL06a3q//1MJ2W1sIGeFgzitwPWJFFdxZq
+         opmgLGySrl1Ydl7vla7kqWzRRhwOnCED8PxySJBoT1iV/Q3H5rUmcTJ3eSubsSkJR2bb
+         VhGF5kcsVkHDqXxZ1aXBKfNo0b4hHIv1Kf8iWZ3tFAwZ0P7hUMFm83Aum3kYfeLR5AZN
+         BxJ0TgeeZq3nJ0ayFX56W6ZCAIpNNLoi432At+V0Od1oksU/DydAwRcC/uq9XB406Po0
+         84XKLC7QRR9gQ7Vw149VlEVlZdFIoCH/AHng8w1nR9afYq3rnuaIu44GjINoxvUdB7iu
+         6sjA==
+X-Gm-Message-State: APjAAAWPVIxevY5AiHxpREL7HxfKngL8yrKaEZKxSOc4hmnBwnGhxipf
+        cWD3V0KHX9iDO4uPpEccgf/0W3621jOzpL2ekl7+ew==
+X-Google-Smtp-Source: APXvYqzWBz2bJLN3WWQIqTSpe1jo4zAwd69eqaGzTlqxkYjV/mrQLWl628eVdStvw4mWPL+Z/Nn/hLBBn4va9tAdccM=
+X-Received: by 2002:aca:4756:: with SMTP id u83mr8007296oia.147.1574936984090;
+ Thu, 28 Nov 2019 02:29:44 -0800 (PST)
 MIME-Version: 1.0
-References: <20191125143157.26154-1-warthog618@gmail.com> <20191125143157.26154-10-warthog618@gmail.com>
-In-Reply-To: <20191125143157.26154-10-warthog618@gmail.com>
+References: <20191125143157.26154-1-warthog618@gmail.com> <20191125143157.26154-12-warthog618@gmail.com>
+In-Reply-To: <20191125143157.26154-12-warthog618@gmail.com>
 From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Date:   Thu, 28 Nov 2019 11:29:25 +0100
-Message-ID: <CAMpxmJUCYBywL1yRa4j9zYkDg7A1YyS9=f69fJ9-yZbdYjPBRw@mail.gmail.com>
-Subject: Re: [libgpiod][PATCH v3 09/14] bindings: cxx: add support for SET_CONFIG
+Date:   Thu, 28 Nov 2019 11:29:33 +0100
+Message-ID: <CAMpxmJU81_Taz-UHhN_+ArJhd2EfxM0B886xjPtRZ7io7thvaw@mail.gmail.com>
+Subject: Re: [libgpiod][PATCH v3 11/14] bindings: python: add support for SET_CONFIG
 To:     Kent Gibson <warthog618@gmail.com>
 Cc:     linux-gpio <linux-gpio@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
@@ -63,258 +63,470 @@ pon., 25 lis 2019 o 15:33 Kent Gibson <warthog618@gmail.com> napisa=C5=82(a=
 >
 > Signed-off-by: Kent Gibson <warthog618@gmail.com>
 > ---
->  bindings/cxx/gpiod.hpp     | 55 +++++++++++++++++++++++++
->  bindings/cxx/line.cpp      | 37 +++++++++++++++++
->  bindings/cxx/line_bulk.cpp | 83 ++++++++++++++++++++++++++++++++++++++
->  3 files changed, 175 insertions(+)
+>  bindings/python/gpiodmodule.c | 381 +++++++++++++++++++++++++++++++++-
+>  1 file changed, 379 insertions(+), 2 deletions(-)
 >
-> diff --git a/bindings/cxx/gpiod.hpp b/bindings/cxx/gpiod.hpp
-> index 2b1a6ab..dcae431 100644
-> --- a/bindings/cxx/gpiod.hpp
-> +++ b/bindings/cxx/gpiod.hpp
-> @@ -381,6 +381,32 @@ public:
->          */
->         GPIOD_API void set_value(int val) const;
+> diff --git a/bindings/python/gpiodmodule.c b/bindings/python/gpiodmodule.=
+c
+> index 4723771..4f5e117 100644
+> --- a/bindings/python/gpiodmodule.c
+> +++ b/bindings/python/gpiodmodule.c
+> @@ -585,14 +585,149 @@ static PyObject *gpiod_Line_set_value(gpiod_LineOb=
+ject *self, PyObject *args)
+>         if (!bulk_obj)
+>                 return NULL;
 >
-> +       /**
-> +        * @brief Set configuration of this line.
-> +        * @param direction New direction.
-> +        * @param flags Replacement flags.
-> +        * @param value New value (0 or 1) - only matters for OUTPUT dire=
-ction.
-> +        */
-> +       GPIOD_API void set_config(int direction, ::std::bitset<32> flags,
-> +                       int value =3D 0) const;
+> -       vals =3D Py_BuildValue("((O))", val);
+> +       vals =3D Py_BuildValue("(O)", val);
 
-Please align this with the opening bracket. Same elsewhere.
+Please don't try to sneak in changes like this. If you think this
+should be changed, make it a separate commit with proper explanation.
+I vaguely remember using this because previously I didn't use
+PyObject_CallMethod() but called the set_values() function directly
+and it was easier to package it right away. Anyway - is it broken? Do
+we gain something from changing it? If so, let's have a separate patch
+for this.
 
-
-
+>         if (!vals) {
+>                 Py_DECREF(bulk_obj);
+>                 return NULL;
+>         }
+>
+>         ret =3D PyObject_CallMethod((PyObject *)bulk_obj,
+> -                                 "set_values", "O", vals);
+> +                                 "set_values", "(O)", vals);
+> +       Py_DECREF(bulk_obj);
+> +       Py_DECREF(vals);
 > +
-> +       /**
-> +        * @brief Set configuration flags of this line.
-> +        * @param flags Replacement flags.
-> +        */
-> +       GPIOD_API void set_flags(::std::bitset<32> flags) const;
+> +       return ret;
+> +}
 > +
-> +       /**
-> +        * @brief Change the direction this line to input.
-> +        */
-> +       GPIOD_API void set_direction_input() const;
+> +PyDoc_STRVAR(gpiod_Line_set_config_doc,
+> +"set_config(direction,flags,value) -> None\n"
+> +"\n"
+> +"Set the configuration of this GPIO line.\n"
+> +"\n"
+> +"  direction\n"
+> +"    New direction (integer)\n"
+> +"  flags\n"
+> +"    New flags (integer)\n"
+> +"  value\n"
+> +"    New value (integer)");
 > +
-> +       /**
-> +        * @brief Change the direction this lines to output.
-> +        * @param value New value (0 or 1).
-> +        */
-> +       GPIOD_API void set_direction_output(int value =3D 0) const;
+> +static PyObject *gpiod_Line_set_config(gpiod_LineObject *self, PyObject =
+*args)
+> +{
+> +       gpiod_LineBulkObject *bulk_obj;
+> +       PyObject *dirn, *flags, *val, *vals, *ret;
+> +       int rv;
 > +
->         /**
->          * @brief Wait for an event on this line.
->          * @param timeout Time to wait before returning if no event occur=
-red.
-> @@ -648,6 +674,35 @@ public:
->          */
->         GPIOD_API void set_values(const ::std::vector<int>& values) const=
+> +       val =3D NULL;
+> +       rv =3D PyArg_ParseTuple(args, "OO|O", &dirn, &flags, &val);
+> +       if (!rv)
+> +               return NULL;
+> +
+> +       bulk_obj =3D gpiod_LineToLineBulk(self);
+> +       if (!bulk_obj)
+> +               return NULL;
+> +
+> +       if (val) {
+> +               vals =3D Py_BuildValue("(O)", val);
+> +               if (!vals) {
+> +                       Py_DECREF(bulk_obj);
+> +                       return NULL;
+> +               }
+> +               ret =3D PyObject_CallMethod((PyObject *)bulk_obj,
+> +                               "set_config", "OO(O)", dirn, flags, vals)=
 ;
+> +               Py_DECREF(vals);
+> +       } else
+> +               ret =3D PyObject_CallMethod((PyObject *)bulk_obj,
+> +                               "set_config", "OO", dirn, flags);
+
+Please use brackets here even if it's a single line after you used it
+in the first branch. Same elsewhere if needed.
+
+> +
+> +       Py_DECREF(bulk_obj);
+> +
+> +       return ret;
+> +}
+> +
+> +PyDoc_STRVAR(gpiod_Line_set_flags_doc,
+> +"set_flags(flags) -> None\n"
+> +"\n"
+> +"Set the flags of this GPIO line.\n"
+> +"\n"
+> +"  flags\n"
+> +"    New flags (integer)");
+> +
+> +static PyObject *gpiod_Line_set_flags(gpiod_LineObject *self, PyObject *=
+args)
+> +{
+> +       gpiod_LineBulkObject *bulk_obj;
+> +       PyObject *ret;
+> +
+> +       bulk_obj =3D gpiod_LineToLineBulk(self);
+> +       if (!bulk_obj)
+> +               return NULL;
+> +
+> +       ret =3D PyObject_CallMethod((PyObject *)bulk_obj,
+> +                                 "set_flags", "O", args);
+> +       Py_DECREF(bulk_obj);
+> +
+> +       return ret;
+> +}
+> +
+> +PyDoc_STRVAR(gpiod_Line_set_direction_input_doc,
+> +"set_direction_input() -> None\n"
+> +"\n"
+> +"Set the direction of this GPIO line to input.\n");
+> +
+> +static PyObject *gpiod_Line_set_direction_input(gpiod_LineObject *self,
+> +                                               PyObject *Py_UNUSED(ignor=
+ed))
+> +{
+> +       gpiod_LineBulkObject *bulk_obj;
+> +       PyObject *ret;
+> +
+> +       bulk_obj =3D gpiod_LineToLineBulk(self);
+> +       if (!bulk_obj)
+> +               return NULL;
+> +
+> +       ret =3D PyObject_CallMethod((PyObject *)bulk_obj,
+> +                                 "set_direction_input", "");
+> +       Py_DECREF(bulk_obj);
+> +
+> +       return ret;
+> +}
+> +
+> +PyDoc_STRVAR(gpiod_Line_set_direction_output_doc,
+> +"set_direction_output(value) -> None\n"
+> +"\n"
+> +"Set the direction of this GPIO line to output.\n"
+> +"\n"
+> +"  value\n"
+> +"    New value (integer)");
+> +
+> +static PyObject *gpiod_Line_set_direction_output(gpiod_LineObject *self,
+> +                                                PyObject *args)
+> +{
+> +       gpiod_LineBulkObject *bulk_obj;
+> +       PyObject *val, *vals, *ret;
+> +       int rv;
+> +       const char *fmt;
+> +
+> +       val =3D NULL;
+> +       rv =3D PyArg_ParseTuple(args, "|O", &val);
+> +       if (!rv)
+> +               return NULL;
+> +
+> +       if (val) {
+> +               fmt =3D "(O)";
+> +               vals =3D Py_BuildValue(fmt, val);
+> +       } else {
+> +               vals =3D Py_BuildValue("()");
+> +               fmt =3D "O"; /* pass empty args to bulk */
+> +       }
+> +       if (!vals)
+> +               return NULL;
+> +
+> +       bulk_obj =3D gpiod_LineToLineBulk(self);
+> +       if (!bulk_obj)
+> +               return NULL;
+> +
+> +       ret =3D PyObject_CallMethod((PyObject *)bulk_obj,
+> +                                 "set_direction_output", fmt, vals);
+> +
+>         Py_DECREF(bulk_obj);
+>         Py_DECREF(vals);
 >
-> +       /**
-> +        * @brief Set configuration of all lines held by this object.
-> +        * @param direction New direction.
-> +        * @param flags Replacement flags.
-> +        * @param values Vector of values to set. Must be the same size a=
-s the
-> +        *        number of lines held by this line_bulk.
-> +        *        Only relevant for output direction requests.
-> +        */
-> +       GPIOD_API void set_config(int direction, ::std::bitset<32> flags,
-> +                       const ::std::vector<int> values =3D std::vector<i=
-nt>()) const;
-> +
-> +       /**
-> +        * @brief Set configuration flags of all lines held by this objec=
-t.
-> +        * @param flags Replacement flags.
-> +        */
-> +       GPIOD_API void set_flags(::std::bitset<32> flags) const;
-> +
-> +       /**
-> +        * @brief Change the direction all lines held by this object to i=
-nput.
-> +        */
-> +       GPIOD_API void set_direction_input() const;
-> +
-> +       /**
-> +        * @brief Change the direction all lines held by this object to o=
-utput.
-> +        * @param values Vector of values to set. Must be the same size a=
-s the
-> +        *        number of lines held by this line_bulk.
-> +        */
-> +       GPIOD_API void set_direction_output(const ::std::vector<int>& val=
-ues) const;
-> +
->         /**
->          * @brief Poll the set of lines for line events.
->          * @param timeout Number of nanoseconds to wait before returning =
-an
-> diff --git a/bindings/cxx/line.cpp b/bindings/cxx/line.cpp
-> index dd6bb6a..a688b5d 100644
-> --- a/bindings/cxx/line.cpp
-> +++ b/bindings/cxx/line.cpp
-> @@ -158,6 +158,43 @@ void line::set_value(int val) const
->         bulk.set_values({ val });
+> @@ -838,6 +973,30 @@ static PyMethodDef gpiod_Line_methods[] =3D {
+>                 .ml_flags =3D METH_VARARGS,
+>                 .ml_doc =3D gpiod_Line_set_value_doc,
+>         },
+> +       {
+> +               .ml_name =3D "set_config",
+> +               .ml_meth =3D (PyCFunction)gpiod_Line_set_config,
+> +               .ml_flags =3D METH_VARARGS,
+> +               .ml_doc =3D gpiod_Line_set_config_doc,
+> +       },
+> +       {
+> +               .ml_name =3D "set_flags",
+> +               .ml_meth =3D (PyCFunction)gpiod_Line_set_flags,
+> +               .ml_flags =3D METH_VARARGS,
+> +               .ml_doc =3D gpiod_Line_set_flags_doc,
+> +       },
+> +       {
+> +               .ml_name =3D "set_direction_input",
+> +               .ml_meth =3D (PyCFunction)gpiod_Line_set_direction_input,
+> +               .ml_flags =3D METH_NOARGS,
+> +               .ml_doc =3D gpiod_Line_set_direction_input_doc,
+> +       },
+> +       {
+> +               .ml_name =3D "set_direction_output",
+> +               .ml_meth =3D (PyCFunction)gpiod_Line_set_direction_output=
+,
+> +               .ml_flags =3D METH_VARARGS,
+> +               .ml_doc =3D gpiod_Line_set_direction_output_doc,
+> +       },
+>         {
+>                 .ml_name =3D "release",
+>                 .ml_meth =3D (PyCFunction)gpiod_Line_release,
+> @@ -1283,6 +1442,200 @@ static PyObject *gpiod_LineBulk_set_values(gpiod_=
+LineBulkObject *self,
+>         Py_RETURN_NONE;
 >  }
 >
-> +void line::set_config(int direction, ::std::bitset<32> flags,
-> +                       int value) const
+> +static int convert_values(PyObject *src, int *dst, Py_ssize_t n)
+
+Coding convention and readability: this module is a bit different as I
+tried to stay consistent with Python C code when naming symbols.
+Please use the common 'gpiod_' prefix even for non-exported functions
+and maybe name this routine something else as "convert_values" doesn't
+really indicate concrete functionality. I'm still not sure what it
+does.
+
+
 > +{
-> +       this->throw_if_null();
+> +       int val;
+> +       Py_ssize_t num_vals, i;
+> +       PyObject *iter, *next;
 > +
-> +       line_bulk bulk({ *this });
-> +
-> +       bulk.set_config(direction, flags, { value });
+> +       num_vals =3D PyObject_Size(src);
+> +       if (num_vals !=3D n) {
+> +               PyErr_SetString(PyExc_TypeError,
+> +                       "Number of values must correspond to the number o=
+f lines");
+> +               return -1;
+> +       }
+> +       iter =3D PyObject_GetIter(src);
+> +       if (!iter)
+> +               return -1;
+> +       for (i =3D 0;; i++) {
+> +               next =3D PyIter_Next(iter);
+> +               if (!next) {
+> +                       Py_DECREF(iter);
+> +                       break;
+> +               }
+> +               val =3D PyLong_AsLong(next);
+> +               Py_DECREF(next);
+> +               if (PyErr_Occurred()) {
+> +                       Py_DECREF(iter);
+> +                       return -1;
+> +               }
+> +               dst[i] =3D (int)val;
+> +       }
+> +       return 0;
 > +}
 > +
-> +void line::set_flags(::std::bitset<32> flags) const
+> +PyDoc_STRVAR(gpiod_LineBulk_set_config_doc,
+> +"set_config(direction,flags,values) -> None\n"
+> +"\n"
+> +"Set the configuration of all the lines held by this LineBulk object.\n"
+> +"\n"
+> +"  direction\n"
+> +"    New direction (integer)\n"
+> +"  flags\n"
+> +"    New flags (integer)\n"
+> +"  values\n"
+> +"    List of values (integers) to set when direction is output.\n"
+> +"\n"
+> +"The number of values in the list passed as argument must be the same as=
+\n"
+> +"the number of lines held by this gpiod.LineBulk object. The index of ea=
+ch\n"
+> +"value corresponds to the index of each line in the object.\n");
+> +
+> +static PyObject *gpiod_LineBulk_set_config(gpiod_LineBulkObject *self,
+> +                                          PyObject *args)
 > +{
-> +       this->throw_if_null();
+> +       int rv, vals[GPIOD_LINE_BULK_MAX_LINES];
+> +       PyObject *val_list;
+> +       struct gpiod_line_bulk bulk;
+> +       const int *valp;
+> +       int dirn, flags;
 > +
-> +       line_bulk bulk({ *this });
+> +       if (gpiod_LineBulkOwnerIsClosed(self))
+> +               return NULL;
 > +
-> +       bulk.set_flags(flags);
-> +}
+> +       gpiod_LineBulkObjToCLineBulk(self, &bulk);
 > +
-> +void line::set_direction_input() const
-> +{
-> +       this->throw_if_null();
+> +       val_list =3D NULL;
+> +       rv =3D PyArg_ParseTuple(args, "ii|(O)", &dirn, &flags, &val_list)=
+;
+> +       if (!rv)
+> +               return NULL;
 > +
-> +       line_bulk bulk({ *this });
-> +
-> +       bulk.set_direction_input();
-> +}
-> +
-> +void line::set_direction_output(int value) const
-> +{
-> +       this->throw_if_null();
-> +
-> +       line_bulk bulk({ *this });
-> +
-> +       bulk.set_direction_output({ value });
-> +}
-> +
->  bool line::event_wait(const ::std::chrono::nanoseconds& timeout) const
->  {
->         this->throw_if_null();
-> diff --git a/bindings/cxx/line_bulk.cpp b/bindings/cxx/line_bulk.cpp
-> index 5f1cac4..b8f5eb7 100644
-> --- a/bindings/cxx/line_bulk.cpp
-> +++ b/bindings/cxx/line_bulk.cpp
-> @@ -176,6 +176,89 @@ void line_bulk::set_values(const ::std::vector<int>&=
- values) const
->                                           "error setting GPIO line values=
-");
->  }
->
-> +void line_bulk::set_config(int direction, ::std::bitset<32> flags,
-> +                          const ::std::vector<int> values) const
-> +{
-> +       this->throw_if_empty();
-> +
-> +       if (!values.empty() && this->_m_bulk.size() !=3D values.size())
-> +               throw ::std::invalid_argument("the number of default valu=
-es must correspond with the number of lines");
-> +
-> +       ::gpiod_line_bulk bulk;
-> +       int rv, gflags;
-> +
-> +       gflags =3D 0;
-> +
-> +       for (auto& it: reqflag_mapping) {
-> +               if ((it.first & flags).to_ulong())
-> +                       gflags |=3D it.second;
+> +       if (val_list =3D=3D NULL)
+> +               valp =3D NULL;
+> +       else {
+> +               memset(vals, 0, sizeof(vals));
+> +               rv =3D convert_values(val_list, vals, self->num_lines);
+> +               if (rv)
+> +                       return NULL;
+> +               valp =3D vals;
 > +       }
 > +
-> +       this->to_line_bulk(::std::addressof(bulk));
-> +
-> +       rv =3D ::gpiod_line_set_config_bulk(::std::addressof(bulk), direc=
-tion,
-> +                                         gflags, values.data());
+> +       Py_BEGIN_ALLOW_THREADS;
+> +       rv =3D gpiod_line_set_config_bulk(&bulk, dirn, flags, valp);
+> +       Py_END_ALLOW_THREADS;
 > +       if (rv)
-> +               throw ::std::system_error(errno, ::std::system_category()=
-,
-> +                                         "error setting GPIO line config=
-");
+> +               return PyErr_SetFromErrno(PyExc_OSError);
+> +
+> +       Py_RETURN_NONE;
 > +}
 > +
-> +void line_bulk::set_flags(::std::bitset<32> flags) const
+> +PyDoc_STRVAR(gpiod_LineBulk_set_flags_doc,
+> +"set_flags(flags) -> None\n"
+> +"\n"
+> +"Set the flags of all the lines held by this LineBulk object.\n"
+> +"\n"
+> +"  flags\n"
+> +"    New flags (integer)");
+> +
+> +static PyObject *gpiod_LineBulk_set_flags(gpiod_LineBulkObject *self,
+> +                                         PyObject *args)
 > +{
-> +       this->throw_if_empty();
+> +       int rv;
+> +       struct gpiod_line_bulk bulk;
+> +       int flags;
 > +
-> +       ::gpiod_line_bulk bulk;
-> +       int rv, gflags;
+> +       if (gpiod_LineBulkOwnerIsClosed(self))
+> +               return NULL;
 > +
-> +       this->to_line_bulk(::std::addressof(bulk));
+> +       gpiod_LineBulkObjToCLineBulk(self, &bulk);
 > +
-> +       gflags =3D 0;
+> +       rv =3D PyArg_ParseTuple(args, "i", &flags);
+> +       if (!rv)
+> +               return NULL;
 > +
-> +       for (auto& it: reqflag_mapping) {
-> +               if ((it.first & flags).to_ulong())
-> +                       gflags |=3D it.second;
+> +       Py_BEGIN_ALLOW_THREADS;
+> +       rv =3D gpiod_line_set_flags_bulk(&bulk, flags);
+> +       Py_END_ALLOW_THREADS;
+> +       if (rv)
+> +               return PyErr_SetFromErrno(PyExc_OSError);
+> +
+> +       Py_RETURN_NONE;
+> +}
+> +
+> +PyDoc_STRVAR(gpiod_LineBulk_set_direction_input_doc,
+> +"set_direction_input() -> None\n"
+> +"\n"
+> +"Set the direction of all the lines held by this LineBulk object to inpu=
+t.\n");
+> +
+> +static PyObject *gpiod_LineBulk_set_direction_input(gpiod_LineBulkObject=
+ *self,
+> +                                               PyObject *Py_UNUSED(ignor=
+ed))
+> +{
+> +       struct gpiod_line_bulk bulk;
+> +       int rv;
+> +
+> +       if (gpiod_LineBulkOwnerIsClosed(self))
+> +               return NULL;
+> +
+> +       gpiod_LineBulkObjToCLineBulk(self, &bulk);
+> +
+> +       Py_BEGIN_ALLOW_THREADS;
+> +       rv =3D gpiod_line_set_direction_input_bulk(&bulk);
+> +       Py_END_ALLOW_THREADS;
+> +       if (rv)
+> +               return PyErr_SetFromErrno(PyExc_OSError);
+> +
+> +       Py_RETURN_NONE;
+> +}
+> +
+> +PyDoc_STRVAR(gpiod_LineBulk_set_direction_output_doc,
+> +"set_direction_output(value) -> None\n"
+> +"\n"
+> +"Set the direction of all the lines held by this LineBulk object to outp=
+ut.\n"
+> +"\n"
+> +"  values\n"
+> +"    List of values (integers) to set when direction is output.\n"
+> +"\n"
+> +"The number of values in the list passed as argument must be the same as=
+\n"
+> +"the number of lines held by this gpiod.LineBulk object. The index of ea=
+ch\n"
+> +"value corresponds to the index of each line in the object.\n");
+> +
+> +static PyObject *gpiod_LineBulk_set_direction_output(
+> +                               gpiod_LineBulkObject *self,
+> +                               PyObject *args)
+> +{
+> +       int rv, vals[GPIOD_LINE_BULK_MAX_LINES];
+> +       PyObject *val_list;
+> +       struct gpiod_line_bulk bulk;
+> +       const int *valp;
+> +
+> +       if (gpiod_LineBulkOwnerIsClosed(self))
+> +               return NULL;
+> +
+> +       gpiod_LineBulkObjToCLineBulk(self, &bulk);
+> +
+> +       val_list =3D NULL;
+> +       rv =3D PyArg_ParseTuple(args, "|O", &val_list);
+> +       if (!rv)
+> +               return NULL;
+> +
+> +       if (val_list =3D=3D NULL)
+> +               valp =3D NULL;
+> +       else {
+> +               memset(vals, 0, sizeof(vals));
+> +               rv =3D convert_values(val_list, vals, self->num_lines);
+> +               if (rv)
+> +                       return NULL;
+> +               valp =3D vals;
 > +       }
 > +
-> +       rv =3D ::gpiod_line_set_flags_bulk(::std::addressof(bulk), gflags=
-);
+> +       Py_BEGIN_ALLOW_THREADS;
+> +       rv =3D gpiod_line_set_direction_output_bulk(&bulk, valp);
+> +       Py_END_ALLOW_THREADS;
 > +       if (rv)
-> +               throw ::std::system_error(errno, ::std::system_category()=
-,
-> +                                         "error setting GPIO line flags"=
-);
+> +               return PyErr_SetFromErrno(PyExc_OSError);
+> +
+> +       Py_RETURN_NONE;
 > +}
 > +
-> +void line_bulk::set_direction_input() const
-> +{
-> +       this->throw_if_empty();
-> +
-> +       ::gpiod_line_bulk bulk;
-> +       int rv;
-> +
-> +       this->to_line_bulk(::std::addressof(bulk));
-> +
-> +       rv =3D ::gpiod_line_set_direction_input_bulk(::std::addressof(bul=
-k));
-> +       if (rv)
-> +               throw ::std::system_error(errno, ::std::system_category()=
-,
-> +                       "error setting GPIO line direction to input");
-> +}
-> +
-> +void line_bulk::set_direction_output(const ::std::vector<int>& values) c=
-onst
-> +{
-> +       this->throw_if_empty();
-> +
-> +       if (values.size() !=3D this->_m_bulk.size())
-> +               throw ::std::invalid_argument("the size of values array m=
-ust correspond with the number of lines");
-> +
-> +       ::gpiod_line_bulk bulk;
-> +       int rv;
-> +
-> +       this->to_line_bulk(::std::addressof(bulk));
-> +
-> +       rv =3D ::gpiod_line_set_direction_output_bulk(::std::addressof(bu=
-lk),
-> +                                                   values.data());
-> +       if (rv)
-> +               throw ::std::system_error(errno, ::std::system_category()=
-,
-> +                       "error setting GPIO line direction to output");
-> +}
-> +
->  line_bulk line_bulk::event_wait(const ::std::chrono::nanoseconds& timeou=
-t) const
->  {
->         this->throw_if_empty();
+>  PyDoc_STRVAR(gpiod_LineBulk_release_doc,
+>  "release() -> None\n"
+>  "\n"
+> @@ -1431,6 +1784,30 @@ static PyMethodDef gpiod_LineBulk_methods[] =3D {
+>                 .ml_doc =3D gpiod_LineBulk_set_values_doc,
+>                 .ml_flags =3D METH_VARARGS,
+>         },
+> +       {
+> +               .ml_name =3D "set_config",
+> +               .ml_meth =3D (PyCFunction)gpiod_LineBulk_set_config,
+> +               .ml_flags =3D METH_VARARGS,
+> +               .ml_doc =3D gpiod_LineBulk_set_config_doc,
+> +       },
+> +       {
+> +               .ml_name =3D "set_flags",
+> +               .ml_meth =3D (PyCFunction)gpiod_LineBulk_set_flags,
+> +               .ml_flags =3D METH_VARARGS,
+> +               .ml_doc =3D gpiod_LineBulk_set_flags_doc,
+> +       },
+> +       {
+> +               .ml_name =3D "set_direction_input",
+> +               .ml_meth =3D (PyCFunction)gpiod_LineBulk_set_direction_in=
+put,
+> +               .ml_flags =3D METH_NOARGS,
+> +               .ml_doc =3D gpiod_LineBulk_set_direction_input_doc,
+> +       },
+> +       {
+> +               .ml_name =3D "set_direction_output",
+> +               .ml_meth =3D (PyCFunction)gpiod_LineBulk_set_direction_ou=
+tput,
+> +               .ml_flags =3D METH_VARARGS,
+> +               .ml_doc =3D gpiod_LineBulk_set_direction_output_doc,
+> +       },
+>         {
+>                 .ml_name =3D "release",
+>                 .ml_meth =3D (PyCFunction)gpiod_LineBulk_release,
 > --
 > 2.24.0
 >
