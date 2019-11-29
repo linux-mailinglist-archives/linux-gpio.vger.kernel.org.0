@@ -2,160 +2,181 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 4365810D575
-	for <lists+linux-gpio@lfdr.de>; Fri, 29 Nov 2019 13:09:29 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 8E53F10D5EC
+	for <lists+linux-gpio@lfdr.de>; Fri, 29 Nov 2019 13:58:12 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726604AbfK2MJ2 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 29 Nov 2019 07:09:28 -0500
-Received: from foss.arm.com ([217.140.110.172]:46922 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726360AbfK2MJ2 (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Fri, 29 Nov 2019 07:09:28 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8653C1FB;
-        Fri, 29 Nov 2019 04:09:27 -0800 (PST)
-Received: from localhost (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 1B4ED3F52E;
-        Fri, 29 Nov 2019 04:09:27 -0800 (PST)
-Date:   Fri, 29 Nov 2019 12:09:25 +0000
-From:   Mark Brown <broonie@kernel.org>
-To:     "Vaittinen, Matti" <Matti.Vaittinen@fi.rohmeurope.com>
-Cc:     "corbet@lwn.net" <corbet@lwn.net>,
-        "lee.jones@linaro.org" <lee.jones@linaro.org>,
-        "hofrat@osadl.org" <hofrat@osadl.org>,
-        "linux-leds@vger.kernel.org" <linux-leds@vger.kernel.org>,
-        "dmurphy@ti.com" <dmurphy@ti.com>,
-        "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>,
-        "jeffrey.t.kirsher@intel.com" <jeffrey.t.kirsher@intel.com>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-        "mchehab+samsung@kernel.org" <mchehab+samsung@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>,
-        "mturquette@baylibre.com" <mturquette@baylibre.com>,
-        "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
-        "jacek.anaszewski@gmail.com" <jacek.anaszewski@gmail.com>,
-        "mazziesaccount@gmail.com" <mazziesaccount@gmail.com>,
-        "a.zummo@towertech.it" <a.zummo@towertech.it>,
-        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
-        "wsa+renesas@sang-engineering.com" <wsa+renesas@sang-engineering.com>,
-        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "m.szyprowski@samsung.com" <m.szyprowski@samsung.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "hkallweit1@gmail.com" <hkallweit1@gmail.com>,
-        "bgolaszewski@baylibre.com" <bgolaszewski@baylibre.com>,
-        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
-        "sboyd@kernel.org" <sboyd@kernel.org>,
-        "pavel@ucw.cz" <pavel@ucw.cz>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "phil.edworthy@renesas.com" <phil.edworthy@renesas.com>
-Subject: Re: [PATCH v5 01/16] dt-bindings: regulator: Document ROHM BD71282
- regulator bindings
-Message-ID: <20191129120925.GA5747@sirena.org.uk>
-References: <cover.1574059625.git.matti.vaittinen@fi.rohmeurope.com>
- <d29e0eb587b764f3ea77647392e45fac67bbd757.1574059625.git.matti.vaittinen@fi.rohmeurope.com>
- <20191118162502.GJ9761@sirena.org.uk>
- <fd1e4e652840346bd990c769eabe2f966bda4ed6.camel@fi.rohmeurope.com>
- <20191119181325.GD3634@sirena.org.uk>
- <fa69d01504817e3260d2b023ae2637aa2f1b2862.camel@fi.rohmeurope.com>
- <20191119193636.GH3634@sirena.org.uk>
- <eb685cc78b936bc61ed9f7fbfa18c96398b00909.camel@fi.rohmeurope.com>
+        id S1726709AbfK2M6M (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 29 Nov 2019 07:58:12 -0500
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:44730 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726360AbfK2M6L (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 29 Nov 2019 07:58:11 -0500
+Received: by mail-lj1-f196.google.com with SMTP id c19so4903606lji.11
+        for <linux-gpio@vger.kernel.org>; Fri, 29 Nov 2019 04:58:09 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=BwDOxdYS9C1nAUpyH/ENu81FUiSCQpCKczP+61pjasQ=;
+        b=crS2ePN38PPEdrAGga5X5SdPjSCGysWoJ7Y6HLdDsk28UI2ZbxwM1PyppFNC62+y5U
+         P9UTM7kIAj03cHMSBUzAOr5d3Tfav933DVsnK5KH36MQ3Z5ttizoLkoEZesl/hqUCJXf
+         XIYfZmIC6PokZn4jYhaxzULdNslyrdrfdiwU0dJiWp3EEU2ECbHkTqh9W3rHFKymEBZf
+         C5kHeB9TrPuM8avK+IVNX2WfGhIb9wAYIYDW3yG5Qlp2BAYhYC9xRHTMXl6CrMjsOFXz
+         DpX4hol7LMmnH7mq2BDPvPAUiyc7QIhNQsHRMGT62gaapRYYJErrL2wMqJ6VIKOr17Ge
+         6gJA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=BwDOxdYS9C1nAUpyH/ENu81FUiSCQpCKczP+61pjasQ=;
+        b=oMH7zW/dzNH9eDfJYiBazJJArhWcx5XGYuHMnZYQxWaYHuxzaEuQuDy2UlJEbnouEl
+         L208PAu8hdCO/zFEVQti3XaY+nDNB4hvNq0k9zmvHZhwMcRFODr0pdgUKvYWuAIA1Yfy
+         A5t73t1GyOOPGcssCttwbWobtFvx7j+3FIiiNLN92fsfOoeGRLHGsRBzFMYMs6WoGDkz
+         HCzM5xqex1U/sLsulQtY4rsUJCyGUS4NFRWIdJq/UyyhnIMm4HxyKKbuC4xTdBAtxLue
+         GbXq/PuFLU8FkyQ3NMOjV1NTFYcSBNXRoiqi8lPGcN5YtofTkW2ROzc5XZaN4+V3Eeoz
+         lCxA==
+X-Gm-Message-State: APjAAAU/jgqS64dQqHRqFaJHcYP8ZgxxZj7Di/NY81wIM7UFR1qjxxOz
+        LF1pxeErsn+zcNz9+XAP+15U2RCKYalA5maS2FuFeg==
+X-Google-Smtp-Source: APXvYqzV1iuQAGMcFSVgJ5Bw2ISZGQZlKilK4xyHtnxgDDNOEVpKbQ4Cr8PmcDQpNXQ7TiMFF4aTomfOMID3PXP8h88=
+X-Received: by 2002:a05:651c:1049:: with SMTP id x9mr16863113ljm.233.1575032288806;
+ Fri, 29 Nov 2019 04:58:08 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="tThc/1wpZn/ma/RB"
-Content-Disposition: inline
-In-Reply-To: <eb685cc78b936bc61ed9f7fbfa18c96398b00909.camel@fi.rohmeurope.com>
-X-Cookie: To love is good, love being difficult.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20191127133510.10614-1-brgl@bgdev.pl> <CACRpkdZ6e0GaE9KBJ1-E+cS_KnPY-EKLNxJFqjArr28hYMQqOg@mail.gmail.com>
+ <CAMRc=McH6m3Lsvz8g1JSD_c-QNdb-Kh0+8BH5EKcEW2vM2VYJA@mail.gmail.com>
+In-Reply-To: <CAMRc=McH6m3Lsvz8g1JSD_c-QNdb-Kh0+8BH5EKcEW2vM2VYJA@mail.gmail.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Fri, 29 Nov 2019 13:57:57 +0100
+Message-ID: <CACRpkdaW8YxjEBN0jX5AYmzGyftGv=b-KOCsjMMxoqqESBDsyA@mail.gmail.com>
+Subject: Re: [PATCH 0/8] gpiolib: add an ioctl() for monitoring line status changes
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     Kent Gibson <warthog618@gmail.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+On Fri, Nov 29, 2019 at 11:58 AM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
+> pt., 29 lis 2019 o 11:04 Linus Walleij <linus.walleij@linaro.org> napisa=
+=C5=82(a):
 
---tThc/1wpZn/ma/RB
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+> > Is the *main* use case different userspace processes trying
+> > to use the same pins and getting denied? Because in that
+> > case we might be putting a bit too much userspace plumbing
+> > into the kernel and we need to think about that for a while.
+> > (Binder and kdbus etc comes to mind.)
+>
+> No, it really is just about keeping the line information in user-space
+> synchronized with the one in the kernel without re-reading the line
+> info periodically. Whether it's the kernel that requests the line or
+> other user-space process doesn't matter. We just want to stay
+> up-to-date with the information we already do have access to.
 
-On Fri, Nov 29, 2019 at 07:48:13AM +0000, Vaittinen, Matti wrote:
-> On Tue, 2019-11-19 at 19:36 +0000, Mark Brown wrote:
+I was more after whether the expected conflict we resolve
+will be mostly between kernel and userspace or between
+userspace and userspace, statistically speaking. Like: what
+is happening to actual systems people are trying to deploy.
 
-> > The driver interface was added in "regulator: add PM suspend and
-> > resume
-> > hooks".
+> > So there is some feature growth happening here and I want
+> > to be aware of the whole picture.
+>
+> It may seem like a feature-creep because this is the third new feature
+> being added to the character device in a short span of time. But at
+> the same time: user-space wants to use GPIOs and they're mostly doing
+> it over sysfs. If you want people to switch over to the character
+> device - we must make it at least as useful as sysfs.
 
-> I looked through the set but didn't spot any new interface towards the
-> regulator driver (which accesses the HW). I saw interface towards
-> regulator consumer driver which can be used to set the constrains
-> though.
+So a part of the design criteria is to provide the same functions
+as e.g. putting inotify's on /sys/class/gpio/* and watching as
+files come and go or something like this?
 
-The regulator driver has a bunch fo set_suspend_ operations.
+(That sounds reasonable.)
 
-> Specifically, I don't see voltage setting callback for different run-
-> modes. Nor do I see voltage setting (or differentiation) of more than
-> one suspend state.
+> These new features are not unjustified: I receive a significant amount
+> of mail with feature-requests for libgpiod (also from people who are
+> not well aware that I can only support features exposed by mainline
+> kernel).
 
-set_suspend_voltage.
+OK
 
-> To explain it further - my assumption is that the BD71828 'run-levels'
-> (RUN0, ... RUN3) could be mapped to regulator modes
-> REGULATOR_MODE_FAST, REGULATOR_MODE_NORMAL, REGULATOR_MODE_IDLE and=20
-> REGULATOR_MODE_STANDBY. But regulators which are controlled by these
+> It turns out that RPi people really wanted the BIAS settings because
+> the downstream RPi GPIO interface supports it. Having added this may
+> now make them switch to libgpiod.
 
-That doesn't make sense at all, the modes affect the quality of
-regulation not the voltage that is set.
+That's good news, I think Drew said the same thing about
+Beagle.
 
-> run-levels, can't be individually controlled. If state for one is
-> changed, the state is changed for all of them. The DVS bucks 1,2,6 and
+> Old sysfs interface allows to change the direction of lines or their
+> active-low setting at run-time and it turned out this too is a
+> functionality people want to see in libgpiod. Thanks to Kent's effort
+> we now have it.
 
-We don't really have anything that'd only work for group configuration
-except for the suspend modes.
+Yeah that's a win.
 
-> > Ah, that's actually better.  It opens up possiblities for making use
-> > of
-> > the feature without encoding voltages in DT.  For example, you can
-> > cache
-> > the last however many voltages that were set and jump quickly to them
-> > or
-> > do something like put the top of the constraints in to help with
-> > governors like ondemand.  I'd recommend trying for something like
-> > that
-> > rather than encoding in DT, it'll probably be more robust with things
-> > like cpufreq changing.
+> Last thing that users often complain about is the fact that with the
+> character device, the state of GPIO lines used by user-space needs to
+> be kept by the process using them. This unfortunately often comes from
+> the lack of understanding of how a character device functions, but it
+> really seems users want to have a centralized agent that takes control
+> of the lines, provides standardized interface to interact with them
+> and exports their metadata. Recognizing this fact, I implemented a
+> proof-of-concept dbus daemon, but one thing that it could really
+> benefit from is dynamic, event-based synchronization and this series
+> tries to add just that (BTW please take a look at the discussion under
+> patch 7/8 - the code in this series will probably change a lot).
 
-> I wish I was working with the full product so that I could see and
-> learn a proper example on how the cpufreq actually uses these
-> interfaces :) I'd really like to understand this much better. Maybe
-> this could be a topic for you to present in some Linux conference ;)
-> Just please ping me when you are doing that and I'll be listening there
-> for sure ;)
+OK
 
-The cpufreq code is all there in kernel - drivers/cpufreq.  I can't
-remember if Android still has a custom governor in their trees but it
-doesn't really make much difference in terms of how it interacts with
-the regulator drivers.
+> I believe this may be the last missing piece and after that we can
+> really consider this ABI feature-complete.
 
-> Anyways, my idea was to set the inital voltage values for these states
-> via DT - but allow the voltages to be changed at run-time too (I guess
-> this idea is visible in the patch 12).
+OK that is a good point.
 
-It'd be much better if you could avoid putting the voltages in the
-binding if they're not strictly required.
+My own pet peeve is the industrial automation and control use
+case: here we have the design space where people today use
+either PLC:s or RaspberryPi's or Beagle boards, or even some
+custom computers.
 
---tThc/1wpZn/ma/RB
-Content-Type: application/pgp-signature; name="signature.asc"
+For me personally that is a design space we should cover and
+if this helps the RaspberryPi to do that better I'm all for it.
 
------BEGIN PGP SIGNATURE-----
+An especially interesting case is multiple GPIO expanders
+plugged in on pluggable busses such as PCI or USB. I think
+that kind of discoverability and dynamically expandable GPIO
+blocks is something people in the industry are quite keen to
+get.
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl3hCnMACgkQJNaLcl1U
-h9DYngf+IXV00SV4baSzbbPD499t+tcmC50xm6QHtyWWK8Cp9civk8HKVm+I8Hq4
-QD4QuFuR+eqK2qDTm+BAX6fTA64j0WeXKdEzN7PL83q4TlUI+f6n3l7baWyikfS+
-jvtHyZGD6QeSMlTBIpR3pDt4u61HM7aFgSH6m86zZX/trPBDfMqk5AynMT4kePZ1
-/F2ygmNUUbuZKkS1NLLKsQxr7nvtNvGyR+4HbQbNBuLlMN9BZaFGnQPmVzeksPe4
-PnJgOV90Ka3VvoJfRUKKs2z2hvdUP7j+NVjib9COrIhiz987HedXU52OxS/Ae90c
-08uWP7tcnqokEsVNIdA6qRO5Jn/lug==
-=D2yP
------END PGP SIGNATURE-----
+What we need to do is to make it dirt simple to use GPIOs for
+custom hacks and construction of factories and doorstops
+and what not, while at the same time strongly discouraging
+it to be used to manage hardware such as laptops, tablets
+or phones from userspace. That's maybe hard, and we might
+be victims of our own success ...
 
---tThc/1wpZn/ma/RB--
+However the eradication of the sysfs ABI seems to be well
+on track!
+
+> > On a side track:
+> >
+> > There is a bit about policy that needs to happen here I suppose,
+> > like for example what if the kernel actually wants one of the
+> > lines that userspace has picked? Should userspace be kicked
+> > out and kernel get what it wants? (Arguably yes.)
+> >
+>
+> We should probably start a new thread on this. I'll play the
+> user-space's advocate and say: has anyone ever needed this? Do other
+> kernel sub-systems do this?
+
+So far it was designed under the assumption that this kind of
+collisions are handled on a first-come-first serve basis, and
+that is indeed how it works today.
+
+I'm just not sure that this assumption is going to hold in the
+future so wanted to make a little check-up.
+
+Linus
