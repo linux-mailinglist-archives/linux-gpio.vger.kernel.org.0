@@ -2,95 +2,70 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id E8AB310DA6F
-	for <lists+linux-gpio@lfdr.de>; Fri, 29 Nov 2019 21:07:44 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2950E10DC17
+	for <lists+linux-gpio@lfdr.de>; Sat, 30 Nov 2019 02:50:36 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727073AbfK2UHn (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 29 Nov 2019 15:07:43 -0500
-Received: from mga03.intel.com ([134.134.136.65]:9917 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726926AbfK2UHn (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Fri, 29 Nov 2019 15:07:43 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 29 Nov 2019 12:07:42 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,258,1571727600"; 
-   d="scan'208";a="411065291"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by fmsmga006.fm.intel.com with ESMTP; 29 Nov 2019 12:07:40 -0800
-Received: from andy by smile with local (Exim 4.93-RC1)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1iamYF-0000um-KR; Fri, 29 Nov 2019 22:07:39 +0200
-Date:   Fri, 29 Nov 2019 22:07:39 +0200
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Hans de Goede <hdegoede@redhat.com>
-Cc:     Jani Nikula <jani.nikula@linux.intel.com>,
-        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>,
-        Ville =?iso-8859-1?Q?Syrj=E4l=E4?= 
-        <ville.syrjala@linux.intel.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        intel-gfx <intel-gfx@lists.freedesktop.org>,
-        dri-devel@lists.freedesktop.org, linux-gpio@vger.kernel.org,
-        linux-acpi@vger.kernel.org
-Subject: Re: [PATCH 0/2] drm/i915/vlv_dsi: Control panel and backlight enable
- GPIOs on BYT
-Message-ID: <20191129200739.GB32742@smile.fi.intel.com>
-References: <20191129185836.2789-1-hdegoede@redhat.com>
+        id S1727175AbfK3BuP (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 29 Nov 2019 20:50:15 -0500
+Received: from szxga07-in.huawei.com ([45.249.212.35]:48724 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727171AbfK3BuP (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Fri, 29 Nov 2019 20:50:15 -0500
+Received: from DGGEMS409-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 756CDFABC129D1FBD040;
+        Sat, 30 Nov 2019 09:50:11 +0800 (CST)
+Received: from localhost (10.133.213.239) by DGGEMS409-HUB.china.huawei.com
+ (10.3.19.209) with Microsoft SMTP Server id 14.3.439.0; Sat, 30 Nov 2019
+ 09:50:03 +0800
+From:   YueHaibing <yuehaibing@huawei.com>
+To:     <linus.walleij@linaro.org>, <bgolaszewski@baylibre.com>,
+        <broonie@kernel.org>
+CC:     <linux-gpio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-spi@vger.kernel.org>, YueHaibing <yuehaibing@huawei.com>
+Subject: [PATCH v2 -next] gpiolib: of: Make of_gpio_spi_cs_get_count static
+Date:   Sat, 30 Nov 2019 09:28:28 +0800
+Message-ID: <20191130012828.14504-1-yuehaibing@huawei.com>
+X-Mailer: git-send-email 2.10.2.windows.1
+In-Reply-To: <CACRpkdbeKdEAEtoPZH8+fWcZEOqJ6cdGTRSkrKx8L9avxnPQQg@mail.gmail.com>
+References: <CACRpkdbeKdEAEtoPZH8+fWcZEOqJ6cdGTRSkrKx8L9avxnPQQg@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191129185836.2789-1-hdegoede@redhat.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain
+X-Originating-IP: [10.133.213.239]
+X-CFilter-Loop: Reflected
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Nov 29, 2019 at 07:58:34PM +0100, Hans de Goede wrote:
-> Hi All,
-> 
-> On Bay Trail devices the MIPI power on/off sequences for DSI LCD panels
-> do not control the LCD panel- and backlight-enable GPIOs. So far, when
-> the VBT indicates we should use the SoC for backlight control, we have
-> been relying on these GPIOs being configured as output and driven high by
-> the Video BIOS (GOP) when it initializes the panel.
-> 
-> This does not work when the device is booted with a HDMI monitor connected
-> as then the GOP will initialize the HDMI instead of the panel, leaving the
-> panel black, even though the i915 driver tries to output an image to it.
-> 
-> Likewise on some device-models when the GOP does not initialize the DSI
-> panel it also leaves the mux of the PWM0 pin in generic GPIO mode instead
-> of muxing it to the PWM controller.
-> 
-> This series contains 2 patches which together fix this.
-> 
-> To avoid new errors in the intel-gfx CI (assuming there is atleast 1
-> BYT device there with a DSI panel), we need both of these patches to
-> be merged through the drm-intel tree.
-> 
-> Unfortunately there is some churn currently going on in the
-> pinctrl-baytrail.c code, but not in the part of the file which this
-> touches, so merging the pinctrl-baytrail.c changes through the
-> drm-intel tree should not lead to conflicts later.
-> 
-> Andy, Mika, assuming you are happy with the changes, can I get your ack
-> for merging the pinctrl-baytrail patch throught the drm-inteol tree?
+Fix sparse warning:
 
-I'm not okay with this. I will tell more next week how I see this to be
-implemented in a better way.
+drivers/gpio/gpiolib-of.c:35:5: warning:
+ symbol 'of_gpio_spi_cs_get_count' was not declared. Should it be static?
 
-Happy Black Friday! :-)
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+---
+v2: This is caused by commit 71b8f600b034 ("gpio: Handle counting of Freescale chipselects"),
+	should be applied to spi tree.
+---
+ drivers/gpio/gpiolib-of.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
+diff --git a/drivers/gpio/gpiolib-of.c b/drivers/gpio/gpiolib-of.c
+index 610c6622f62d..b696e4598a24 100644
+--- a/drivers/gpio/gpiolib-of.c
++++ b/drivers/gpio/gpiolib-of.c
+@@ -32,7 +32,7 @@
+  * the counting of "cs-gpios" to count "gpios" transparent to the
+  * driver.
+  */
+-int of_gpio_spi_cs_get_count(struct device *dev, const char *con_id)
++static int of_gpio_spi_cs_get_count(struct device *dev, const char *con_id)
+ {
+ 	struct device_node *np = dev->of_node;
+ 
 -- 
-With Best Regards,
-Andy Shevchenko
+2.20.1
 
 
