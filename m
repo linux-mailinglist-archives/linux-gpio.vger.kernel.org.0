@@ -2,54 +2,54 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 1E68810E03D
-	for <lists+linux-gpio@lfdr.de>; Sun,  1 Dec 2019 04:25:09 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 12E2D10E03E
+	for <lists+linux-gpio@lfdr.de>; Sun,  1 Dec 2019 04:25:10 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727282AbfLADZI (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sat, 30 Nov 2019 22:25:08 -0500
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:40676 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727012AbfLADZI (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sat, 30 Nov 2019 22:25:08 -0500
-Received: by mail-pl1-f196.google.com with SMTP id g6so6259232plp.7
-        for <linux-gpio@vger.kernel.org>; Sat, 30 Nov 2019 19:25:06 -0800 (PST)
+        id S1727298AbfLADZJ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sat, 30 Nov 2019 22:25:09 -0500
+Received: from mail-pj1-f43.google.com ([209.85.216.43]:36255 "EHLO
+        mail-pj1-f43.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727012AbfLADZJ (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sat, 30 Nov 2019 22:25:09 -0500
+Received: by mail-pj1-f43.google.com with SMTP id n96so3984368pjc.3
+        for <linux-gpio@vger.kernel.org>; Sat, 30 Nov 2019 19:25:09 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=mG768MWmqjKNRckkf2HeDPNccDhDcXV8ey4go2iJ3xg=;
-        b=gVwlG7oxjbWJOnqNaeyqr4vsPE5zOwiNWrf59zK23/bev1DjCKIc+WvOP1wTnVRHrl
-         zng6kMVyLUF/3xRNQUn0VbO567mIvcZOtb+Ezi/6x6WXYDBZBNDfWdJioQHTzVumPimX
-         zWkZbzuHHblPuScKjjunuiJCTXk86bZSRvef3CSUjSsJ3S2ivE0VDxtYBSgdoDRkVcFD
-         Lb0WQppJN1x4Ks0hY5yq6RHE+mLYQy6fbyJlmVZYo1Y40xxKX2kegJgfzCUycVZgxt5R
-         KARQ0/SOspjkO1zRNi4HBWJIRVntfi8+r3LsdcsXaArAtMQkSJPt8SVfhbkfOKZ+Epo3
-         9I6A==
+        bh=HGXnvpoxzk5OaFntPyBsvJHbKAR2Hhr+Iqt0HtcJ7fY=;
+        b=L+W/uYg11MxjU770Ju6/nSwf372Wqq6McUAXXIkWVQX0erD4HBupfPwt6YMBIPPPzS
+         VkJ5NG7lRYuKx36KBIvyiTyj2XWWvGkhOPX3vla1Fy0UDyzsT5cuyehLVkygUm12y64+
+         6oCZ4mQTGEjKcaVBGoPRfVT6PmkMy67u6zYJxJAdPjnSelIqHiMe4UHOhtl7dMOSPWsm
+         sn3f9UMuP5U0qajrEkHouYeOn/A6wUqhKtNVmOfiAxPFwMD4mahQao0W4d6geIacYv8b
+         RifpdbjVe6ZFrI2y3ctZnjWbRrvlWq5DSGMT4LjGASOgBu8xervQfg6EKveCauQEl6oR
+         WnlQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=mG768MWmqjKNRckkf2HeDPNccDhDcXV8ey4go2iJ3xg=;
-        b=IdKttkKZT4k0SK11cPxEMQi/Lj1UJc7qUMuBP00EJaPBdycWpDkJiN06DD3sva2MvN
-         bHGFKc44xtFsI44BxYDg4DIs5fvBqk2kTM0HUjch2fINuArn3BuRNSloYQKU9Go3E/5G
-         2zDyqroj+JceU86AR35X5c9cEvO70l0vhwhI8U/AI9fnDi2COofy0V8YznnTiOz7YGv0
-         nH3ab1VFkW/ig6pTbPlK+4biyRk6BE60DdhZLZ+dFK+aMexRsN3Mm52UcBYnz0hsFlnh
-         +wnsQQfGbACJOYzJBsoxCMdN1PSYWdYL5ygnW82Jp7vt000Bpb4T/tXk3zUPFfmc6ps7
-         J8Sw==
-X-Gm-Message-State: APjAAAX15xW1yAXMXmTtf8zH+VhZFWbcSk9qMuGRhhXtLGYbIfBUMlSh
-        QKMthXNrUF8FdM0C6zFUiemim1fk
-X-Google-Smtp-Source: APXvYqwYJTGyaFWB7kAQ/sK88hfhgdMqSEt3pWT8YAiQV/6e/oMX/S7jZjYo9QPFCQ1hk6PIZKWDgg==
-X-Received: by 2002:a17:902:a986:: with SMTP id bh6mr19988813plb.165.1575170706017;
-        Sat, 30 Nov 2019 19:25:06 -0800 (PST)
+        bh=HGXnvpoxzk5OaFntPyBsvJHbKAR2Hhr+Iqt0HtcJ7fY=;
+        b=LNbsnG61lXeuhjtvbcdbEPPr0dt49cpV9Zpd9t6gsjtw3cqO52vO2Pz+q7zies8jX3
+         80hh/towPod+LsmJPKFts7s0MljiPfVzf+zSsBRPMHj7hCd6BN6O1FbhYSvLN0JBkymQ
+         Susqa47E3wFICyYsu32xCY0u1nhlrI3c2+oDgFhwiC0c3m1hgLv11k5DNu4HGkgl5kC+
+         Fler5zK+xz53afCGVTW4fdRFAVeFz1ai+G3e5L19JGcJkIIsmIkONFja3oQZ6VVzVSWt
+         uS26NAxPJSWhWV7YVdOTetgUDh7mfIyiLSIbwSFZwjyWh4n6+PNxObyJQK39Daq6pm4+
+         Bl2Q==
+X-Gm-Message-State: APjAAAUJSGbTsBd7hj2u5fNzakGfw6i/Z+/cwY5dWipMbGotU/67oUc0
+        1VnlqTkA+/IsCBcsdfczensAlS7C
+X-Google-Smtp-Source: APXvYqyru2P3v8W0YlsDRg83jJrfOgAe6rLNvwIgFykvADu46pTT705mq1IH1blvmAALzkutJfoKFA==
+X-Received: by 2002:a17:90a:21a1:: with SMTP id q30mr27879763pjc.8.1575170708447;
+        Sat, 30 Nov 2019 19:25:08 -0800 (PST)
 Received: from sol.lan (220-235-109-115.dyn.iinet.net.au. [220.235.109.115])
-        by smtp.gmail.com with ESMTPSA id z1sm30307655pfk.61.2019.11.30.19.25.03
+        by smtp.gmail.com with ESMTPSA id z1sm30307655pfk.61.2019.11.30.19.25.06
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 30 Nov 2019 19:25:05 -0800 (PST)
+        Sat, 30 Nov 2019 19:25:08 -0800 (PST)
 From:   Kent Gibson <warthog618@gmail.com>
 To:     linux-gpio@vger.kernel.org, bgolaszewski@baylibre.com
 Cc:     Kent Gibson <warthog618@gmail.com>
-Subject: [libgpiod][PATCH v4 08/20] tests: add tests for SET_CONFIG
-Date:   Sun,  1 Dec 2019 11:23:55 +0800
-Message-Id: <20191201032407.23589-9-warthog618@gmail.com>
+Subject: [libgpiod][PATCH v4 09/20] bindings: cxx: add support for SET_CONFIG
+Date:   Sun,  1 Dec 2019 11:23:56 +0800
+Message-Id: <20191201032407.23589-10-warthog618@gmail.com>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191201032407.23589-1-warthog618@gmail.com>
 References: <20191201032407.23589-1-warthog618@gmail.com>
@@ -60,418 +60,230 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Extend test coverage over the SET_CONFIG functions.
+Add methods to support setting line configuration.
 
 Signed-off-by: Kent Gibson <warthog618@gmail.com>
 ---
- tests/tests-line.c | 370 ++++++++++++++++++++++++++++++++++++++++++++-
- 1 file changed, 369 insertions(+), 1 deletion(-)
+ bindings/cxx/gpiod.hpp     | 55 +++++++++++++++++++++++++
+ bindings/cxx/line.cpp      | 37 +++++++++++++++++
+ bindings/cxx/line_bulk.cpp | 83 ++++++++++++++++++++++++++++++++++++++
+ 3 files changed, 175 insertions(+)
 
-diff --git a/tests/tests-line.c b/tests/tests-line.c
-index 4bf7c02..97b7df9 100644
---- a/tests/tests-line.c
-+++ b/tests/tests-line.c
-@@ -265,6 +265,7 @@ GPIOD_TEST_CASE(set_value, 0, { 8 })
+diff --git a/bindings/cxx/gpiod.hpp b/bindings/cxx/gpiod.hpp
+index 2b1a6ab..514354d 100644
+--- a/bindings/cxx/gpiod.hpp
++++ b/bindings/cxx/gpiod.hpp
+@@ -381,6 +381,32 @@ public:
+ 	 */
+ 	GPIOD_API void set_value(int val) const;
  
- 	ret = gpiod_line_request_output(line, GPIOD_TEST_CONSUMER, 0);
- 	g_assert_cmpint(ret, ==, 0);
-+	g_assert_cmpint(gpiod_test_chip_get_value(0, 2), ==, 0);
++	/**
++	 * @brief Set configuration of this line.
++	 * @param direction New direction.
++	 * @param flags Replacement flags.
++	 * @param value New value (0 or 1) - only matters for OUTPUT direction.
++	 */
++	GPIOD_API void set_config(int direction, ::std::bitset<32> flags,
++				  int value = 0) const;
++
++	/**
++	 * @brief Set configuration flags of this line.
++	 * @param flags Replacement flags.
++	 */
++	GPIOD_API void set_flags(::std::bitset<32> flags) const;
++
++	/**
++	 * @brief Change the direction this line to input.
++	 */
++	GPIOD_API void set_direction_input() const;
++
++	/**
++	 * @brief Change the direction this lines to output.
++	 * @param value New value (0 or 1).
++	 */
++	GPIOD_API void set_direction_output(int value = 0) const;
++
+ 	/**
+ 	 * @brief Wait for an event on this line.
+ 	 * @param timeout Time to wait before returning if no event occurred.
+@@ -648,6 +674,35 @@ public:
+ 	 */
+ 	GPIOD_API void set_values(const ::std::vector<int>& values) const;
  
- 	ret = gpiod_line_set_value(line, 1);
- 	g_assert_cmpint(ret, ==, 0);
-@@ -327,6 +328,351 @@ GPIOD_TEST_CASE(set_value_bulk, 0, { 8 })
- 	g_assert_cmpint(gpiod_test_chip_get_value(0, 2), ==, 0);
++	/**
++	 * @brief Set configuration of all lines held by this object.
++	 * @param direction New direction.
++	 * @param flags Replacement flags.
++	 * @param values Vector of values to set. Must be the same size as the
++	 *               number of lines held by this line_bulk.
++	 *               Only relevant for output direction requests.
++	 */
++	GPIOD_API void set_config(int direction, ::std::bitset<32> flags,
++				  const ::std::vector<int> values = std::vector<int>()) const;
++
++	/**
++	 * @brief Set configuration flags of all lines held by this object.
++	 * @param flags Replacement flags.
++	 */
++	GPIOD_API void set_flags(::std::bitset<32> flags) const;
++
++	/**
++	 * @brief Change the direction all lines held by this object to input.
++	 */
++	GPIOD_API void set_direction_input() const;
++
++	/**
++	 * @brief Change the direction all lines held by this object to output.
++	 * @param values Vector of values to set. Must be the same size as the
++	 *               number of lines held by this line_bulk.
++	 */
++	GPIOD_API void set_direction_output(const ::std::vector<int>& values) const;
++
+ 	/**
+ 	 * @brief Poll the set of lines for line events.
+ 	 * @param timeout Number of nanoseconds to wait before returning an
+diff --git a/bindings/cxx/line.cpp b/bindings/cxx/line.cpp
+index 29ea5b2..ed6ef55 100644
+--- a/bindings/cxx/line.cpp
++++ b/bindings/cxx/line.cpp
+@@ -158,6 +158,43 @@ void line::set_value(int val) const
+ 	bulk.set_values({ val });
  }
  
-+GPIOD_TEST_CASE(set_config_bulk_null_values, 0, { 8 })
++void line::set_config(int direction, ::std::bitset<32> flags,
++			int value) const
 +{
-+	g_autoptr(gpiod_chip_struct) chip = NULL;
-+	struct gpiod_line_bulk bulk = GPIOD_LINE_BULK_INITIALIZER;
-+	struct gpiod_line *line0, *line1, *line2;
-+	gint ret;
++	this->throw_if_null();
 +
-+	chip = gpiod_chip_open(gpiod_test_chip_path(0));
-+	g_assert_nonnull(chip);
-+	gpiod_test_return_if_failed();
++	line_bulk bulk({ *this });
 +
-+	line0 = gpiod_chip_get_line(chip, 0);
-+	line1 = gpiod_chip_get_line(chip, 1);
-+	line2 = gpiod_chip_get_line(chip, 2);
-+
-+	g_assert_nonnull(line0);
-+	g_assert_nonnull(line1);
-+	g_assert_nonnull(line2);
-+	gpiod_test_return_if_failed();
-+
-+	gpiod_line_bulk_add(&bulk, line0);
-+	gpiod_line_bulk_add(&bulk, line1);
-+	gpiod_line_bulk_add(&bulk, line2);
-+
-+	ret = gpiod_line_request_bulk_output(&bulk, GPIOD_TEST_CONSUMER, 0);
-+	g_assert_cmpint(ret, ==, 0);
-+	g_assert_cmpint(gpiod_line_active_state(line0), ==,
-+			GPIOD_LINE_ACTIVE_STATE_HIGH);
-+	g_assert_cmpint(gpiod_line_active_state(line1), ==,
-+			GPIOD_LINE_ACTIVE_STATE_HIGH);
-+	g_assert_cmpint(gpiod_line_active_state(line2), ==,
-+			GPIOD_LINE_ACTIVE_STATE_HIGH);
-+	g_assert_cmpint(gpiod_test_chip_get_value(0, 0), ==, 0);
-+	g_assert_cmpint(gpiod_test_chip_get_value(0, 1), ==, 0);
-+	g_assert_cmpint(gpiod_test_chip_get_value(0, 2), ==, 0);
-+
-+	ret = gpiod_line_set_config_bulk(&bulk,
-+			GPIOD_LINE_REQUEST_DIRECTION_OUTPUT,
-+			GPIOD_LINE_REQUEST_FLAG_ACTIVE_LOW, NULL);
-+	g_assert_cmpint(ret, ==, 0);
-+	g_assert_cmpint(gpiod_line_active_state(line0), ==,
-+			GPIOD_LINE_ACTIVE_STATE_LOW);
-+	g_assert_cmpint(gpiod_line_active_state(line1), ==,
-+			GPIOD_LINE_ACTIVE_STATE_LOW);
-+	g_assert_cmpint(gpiod_line_active_state(line2), ==,
-+			GPIOD_LINE_ACTIVE_STATE_LOW);
-+	g_assert_cmpint(gpiod_test_chip_get_value(0, 0), ==, 1);
-+	g_assert_cmpint(gpiod_test_chip_get_value(0, 1), ==, 1);
-+	g_assert_cmpint(gpiod_test_chip_get_value(0, 2), ==, 1);
-+
-+	ret = gpiod_line_set_config_bulk(&bulk,
-+			GPIOD_LINE_REQUEST_DIRECTION_OUTPUT, 0, NULL);
-+	g_assert_cmpint(ret, ==, 0);
-+	g_assert_cmpint(gpiod_line_active_state(line0), ==,
-+			GPIOD_LINE_ACTIVE_STATE_HIGH);
-+	g_assert_cmpint(gpiod_line_active_state(line1), ==,
-+			GPIOD_LINE_ACTIVE_STATE_HIGH);
-+	g_assert_cmpint(gpiod_line_active_state(line2), ==,
-+			GPIOD_LINE_ACTIVE_STATE_HIGH);
-+	g_assert_cmpint(gpiod_test_chip_get_value(0, 0), ==, 0);
-+	g_assert_cmpint(gpiod_test_chip_get_value(0, 1), ==, 0);
-+	g_assert_cmpint(gpiod_test_chip_get_value(0, 2), ==, 0);
++	bulk.set_config(direction, flags, { value });
 +}
 +
-+GPIOD_TEST_CASE(set_flags_active_state, 0, { 8 })
++void line::set_flags(::std::bitset<32> flags) const
 +{
-+	g_autoptr(gpiod_chip_struct) chip = NULL;
-+	struct gpiod_line *line;
-+	gint ret;
++	this->throw_if_null();
 +
-+	chip = gpiod_chip_open(gpiod_test_chip_path(0));
-+	g_assert_nonnull(chip);
-+	gpiod_test_return_if_failed();
++	line_bulk bulk({ *this });
 +
-+	line = gpiod_chip_get_line(chip, 2);
-+	g_assert_nonnull(line);
-+	gpiod_test_return_if_failed();
-+
-+	ret = gpiod_line_request_output(line, GPIOD_TEST_CONSUMER, 1);
-+	g_assert_cmpint(ret, ==, 0);
-+	g_assert_cmpint(gpiod_line_active_state(line), ==,
-+			GPIOD_LINE_ACTIVE_STATE_HIGH);
-+	g_assert_cmpint(gpiod_test_chip_get_value(0, 2), ==, 1);
-+
-+	ret = gpiod_line_set_flags(line, GPIOD_LINE_REQUEST_FLAG_ACTIVE_LOW);
-+	g_assert_cmpint(ret, ==, 0);
-+	g_assert_cmpint(gpiod_line_active_state(line), ==,
-+			GPIOD_LINE_ACTIVE_STATE_LOW);
-+	g_assert_cmpint(gpiod_test_chip_get_value(0, 2), ==, 0);
-+
-+	ret = gpiod_line_set_flags(line, 0);
-+	g_assert_cmpint(ret, ==, 0);
-+	g_assert_cmpint(gpiod_line_active_state(line), ==,
-+			GPIOD_LINE_ACTIVE_STATE_HIGH);
-+	g_assert_cmpint(gpiod_test_chip_get_value(0, 2), ==, 1);
++	bulk.set_flags(flags);
 +}
 +
-+GPIOD_TEST_CASE(set_flags_bias, 0, { 8 })
++void line::set_direction_input() const
 +{
-+	g_autoptr(gpiod_chip_struct) chip = NULL;
-+	struct gpiod_line *line;
-+	gint ret;
++	this->throw_if_null();
 +
-+	chip = gpiod_chip_open(gpiod_test_chip_path(0));
-+	g_assert_nonnull(chip);
-+	gpiod_test_return_if_failed();
++	line_bulk bulk({ *this });
 +
-+	line = gpiod_chip_get_line(chip, 2);
-+	g_assert_nonnull(line);
-+	gpiod_test_return_if_failed();
-+
-+	ret = gpiod_line_request_input(line, GPIOD_TEST_CONSUMER);
-+	g_assert_cmpint(ret, ==, 0);
-+	g_assert_cmpint(gpiod_line_bias(line), ==, GPIOD_LINE_BIAS_AS_IS);
-+
-+	ret = gpiod_line_set_flags(line,
-+		GPIOD_LINE_REQUEST_FLAG_BIAS_DISABLE);
-+	g_assert_cmpint(ret, ==, 0);
-+	g_assert_cmpint(gpiod_line_bias(line), ==, GPIOD_LINE_BIAS_DISABLE);
-+
-+	ret = gpiod_line_set_flags(line,
-+		GPIOD_LINE_REQUEST_FLAG_BIAS_PULL_UP);
-+	g_assert_cmpint(ret, ==, 0);
-+	g_assert_cmpint(gpiod_line_bias(line), ==, GPIOD_LINE_BIAS_PULL_UP);
-+	g_assert_cmpint(gpiod_test_chip_get_value(0, 2), ==, 1);
-+
-+	ret = gpiod_line_set_flags(line,
-+		GPIOD_LINE_REQUEST_FLAG_BIAS_PULL_DOWN);
-+	g_assert_cmpint(ret, ==, 0);
-+	g_assert_cmpint(gpiod_line_bias(line), ==, GPIOD_LINE_BIAS_PULL_DOWN);
-+	g_assert_cmpint(gpiod_test_chip_get_value(0, 2), ==, 0);
++	bulk.set_direction_input();
 +}
 +
-+GPIOD_TEST_CASE(set_flags_drive, 0, { 8 })
++void line::set_direction_output(int value) const
 +{
-+	g_autoptr(gpiod_chip_struct) chip = NULL;
-+	struct gpiod_line *line;
-+	gint ret;
++	this->throw_if_null();
 +
-+	chip = gpiod_chip_open(gpiod_test_chip_path(0));
-+	g_assert_nonnull(chip);
-+	gpiod_test_return_if_failed();
++	line_bulk bulk({ *this });
 +
-+	line = gpiod_chip_get_line(chip, 2);
-+	g_assert_nonnull(line);
-+	gpiod_test_return_if_failed();
-+
-+	ret = gpiod_line_request_output(line, GPIOD_TEST_CONSUMER, 0);
-+	g_assert_cmpint(ret, ==, 0);
-+	g_assert_cmpint(gpiod_line_is_open_drain(line), ==, false);
-+	g_assert_cmpint(gpiod_line_is_open_source(line), ==, false);
-+
-+	ret = gpiod_line_set_flags(line,
-+		GPIOD_LINE_REQUEST_FLAG_OPEN_DRAIN);
-+	g_assert_cmpint(ret, ==, 0);
-+	g_assert_cmpint(gpiod_line_is_open_drain(line), ==, true);
-+	g_assert_cmpint(gpiod_line_is_open_source(line), ==, false);
-+
-+	ret = gpiod_line_set_flags(line,
-+		GPIOD_LINE_REQUEST_FLAG_OPEN_SOURCE);
-+	g_assert_cmpint(ret, ==, 0);
-+	g_assert_cmpint(gpiod_line_is_open_drain(line), ==, false);
-+	g_assert_cmpint(gpiod_line_is_open_source(line), ==, true);
++	bulk.set_direction_output({ value });
 +}
 +
-+GPIOD_TEST_CASE(set_direction, 0, { 8 })
-+{
-+	g_autoptr(gpiod_chip_struct) chip = NULL;
-+	struct gpiod_line *line;
-+	gint ret;
-+
-+	chip = gpiod_chip_open(gpiod_test_chip_path(0));
-+	g_assert_nonnull(chip);
-+	gpiod_test_return_if_failed();
-+
-+	line = gpiod_chip_get_line(chip, 2);
-+	g_assert_nonnull(line);
-+	gpiod_test_return_if_failed();
-+
-+	ret = gpiod_line_request_output(line, GPIOD_TEST_CONSUMER, 0);
-+	g_assert_cmpint(ret, ==, 0);
-+	g_assert_cmpint(gpiod_line_direction(line), ==,
-+			GPIOD_LINE_DIRECTION_OUTPUT);
-+	g_assert_cmpint(gpiod_test_chip_get_value(0, 2), ==, 0);
-+
-+	ret = gpiod_line_set_direction_input(line);
-+	g_assert_cmpint(ret, ==, 0);
-+	g_assert_cmpint(gpiod_line_direction(line), ==,
-+			GPIOD_LINE_DIRECTION_INPUT);
-+
-+	ret = gpiod_line_set_direction_output(line, 1);
-+	g_assert_cmpint(ret, ==, 0);
-+	g_assert_cmpint(gpiod_line_direction(line), ==,
-+			GPIOD_LINE_DIRECTION_OUTPUT);
-+	g_assert_cmpint(gpiod_test_chip_get_value(0, 2), ==, 1);
-+}
-+
-+GPIOD_TEST_CASE(set_direction_bulk, 0, { 8 })
-+{
-+	g_autoptr(gpiod_chip_struct) chip = NULL;
-+	struct gpiod_line_bulk bulk = GPIOD_LINE_BULK_INITIALIZER;
-+	struct gpiod_line *line0, *line1, *line2;
-+	int values[3];
-+	gint ret;
-+
-+	chip = gpiod_chip_open(gpiod_test_chip_path(0));
-+	g_assert_nonnull(chip);
-+	gpiod_test_return_if_failed();
-+
-+	line0 = gpiod_chip_get_line(chip, 0);
-+	line1 = gpiod_chip_get_line(chip, 1);
-+	line2 = gpiod_chip_get_line(chip, 2);
-+
-+	g_assert_nonnull(line0);
-+	g_assert_nonnull(line1);
-+	g_assert_nonnull(line2);
-+	gpiod_test_return_if_failed();
-+
-+	gpiod_line_bulk_add(&bulk, line0);
-+	gpiod_line_bulk_add(&bulk, line1);
-+	gpiod_line_bulk_add(&bulk, line2);
-+
-+	values[0] = 0;
-+	values[1] = 1;
-+	values[2] = 2;
-+
-+	ret = gpiod_line_request_bulk_output(&bulk,
-+			GPIOD_TEST_CONSUMER, values);
-+	g_assert_cmpint(ret, ==, 0);
-+	g_assert_cmpint(gpiod_line_direction(line0), ==,
-+			GPIOD_LINE_DIRECTION_OUTPUT);
-+	g_assert_cmpint(gpiod_line_direction(line1), ==,
-+			GPIOD_LINE_DIRECTION_OUTPUT);
-+	g_assert_cmpint(gpiod_line_direction(line2), ==,
-+			GPIOD_LINE_DIRECTION_OUTPUT);
-+	g_assert_cmpint(gpiod_test_chip_get_value(0, 0), ==, 0);
-+	g_assert_cmpint(gpiod_test_chip_get_value(0, 1), ==, 1);
-+	g_assert_cmpint(gpiod_test_chip_get_value(0, 2), ==, 1);
-+
-+	ret = gpiod_line_set_direction_input_bulk(&bulk);
-+	g_assert_cmpint(ret, ==, 0);
-+	g_assert_cmpint(gpiod_line_direction(line0), ==,
-+			GPIOD_LINE_DIRECTION_INPUT);
-+	g_assert_cmpint(gpiod_line_direction(line1), ==,
-+			GPIOD_LINE_DIRECTION_INPUT);
-+	g_assert_cmpint(gpiod_line_direction(line2), ==,
-+			GPIOD_LINE_DIRECTION_INPUT);
-+
-+	values[0] = 2;
-+	values[1] = 1;
-+	values[2] = 0;
-+
-+	ret = gpiod_line_set_direction_output_bulk(&bulk, values);
-+	g_assert_cmpint(ret, ==, 0);
-+	g_assert_cmpint(gpiod_line_direction(line0), ==,
-+			GPIOD_LINE_DIRECTION_OUTPUT);
-+	g_assert_cmpint(gpiod_line_direction(line1), ==,
-+			GPIOD_LINE_DIRECTION_OUTPUT);
-+	g_assert_cmpint(gpiod_line_direction(line2), ==,
-+			GPIOD_LINE_DIRECTION_OUTPUT);
-+	g_assert_cmpint(gpiod_test_chip_get_value(0, 0), ==, 1);
-+	g_assert_cmpint(gpiod_test_chip_get_value(0, 1), ==, 1);
-+	g_assert_cmpint(gpiod_test_chip_get_value(0, 2), ==, 0);
-+
-+	ret = gpiod_line_set_direction_output_bulk(&bulk, NULL);
-+	g_assert_cmpint(ret, ==, 0);
-+	g_assert_cmpint(gpiod_line_direction(line0), ==,
-+			GPIOD_LINE_DIRECTION_OUTPUT);
-+	g_assert_cmpint(gpiod_line_direction(line1), ==,
-+			GPIOD_LINE_DIRECTION_OUTPUT);
-+	g_assert_cmpint(gpiod_line_direction(line2), ==,
-+			GPIOD_LINE_DIRECTION_OUTPUT);
-+	g_assert_cmpint(gpiod_test_chip_get_value(0, 0), ==, 0);
-+	g_assert_cmpint(gpiod_test_chip_get_value(0, 1), ==, 0);
-+	g_assert_cmpint(gpiod_test_chip_get_value(0, 2), ==, 0);
-+}
-+
-+GPIOD_TEST_CASE(output_value_caching, 0, { 8 })
-+{
-+	g_autoptr(gpiod_chip_struct) chip = NULL;
-+	struct gpiod_line *line;
-+	struct gpiod_line_bulk bulk;
-+	gint ret;
-+
-+	chip = gpiod_chip_open(gpiod_test_chip_path(0));
-+	g_assert_nonnull(chip);
-+	gpiod_test_return_if_failed();
-+
-+	line = gpiod_chip_get_line(chip, 2);
-+	g_assert_nonnull(line);
-+	gpiod_test_return_if_failed();
-+
-+	/* check cached by request... */
-+	ret = gpiod_line_request_output(line, GPIOD_TEST_CONSUMER, 1);
-+	g_assert_cmpint(ret, ==, 0);
-+	g_assert_cmpint(gpiod_test_chip_get_value(0, 2), ==, 1);
-+
-+	/* ...by checking cached value applied by set_flags */
-+	ret = gpiod_line_set_flags(line, 0);
-+	g_assert_cmpint(ret, ==, 0);
-+	g_assert_cmpint(gpiod_test_chip_get_value(0, 2), ==, 1);
-+
-+	/* check cached by set_value */
-+	ret = gpiod_line_set_value(line, 0);
-+	g_assert_cmpint(ret, ==, 0);
-+	g_assert_cmpint(gpiod_test_chip_get_value(0, 2), ==, 0);
-+
-+	ret = gpiod_line_set_flags(line, 0);
-+	g_assert_cmpint(ret, ==, 0);
-+	g_assert_cmpint(gpiod_test_chip_get_value(0, 2), ==, 0);
-+
-+	ret = gpiod_line_set_value(line, 1);
-+	g_assert_cmpint(ret, ==, 0);
-+	g_assert_cmpint(gpiod_test_chip_get_value(0, 2), ==, 1);
-+
-+	ret = gpiod_line_set_flags(line, 0);
-+	g_assert_cmpint(ret, ==, 0);
-+	g_assert_cmpint(gpiod_test_chip_get_value(0, 2), ==, 1);
-+
-+	/* check cached by set_config */
-+	ret = gpiod_line_set_config(line, GPIOD_LINE_REQUEST_DIRECTION_OUTPUT,
-+				    0, 0);
-+	g_assert_cmpint(ret, ==, 0);
-+	g_assert_cmpint(gpiod_test_chip_get_value(0, 2), ==, 0);
-+
-+	ret = gpiod_line_set_flags(line, 0);
-+	g_assert_cmpint(ret, ==, 0);
-+	g_assert_cmpint(gpiod_test_chip_get_value(0, 2), ==, 0);
-+
-+	/* check cached by set_value_bulk default */
-+	ret = gpiod_line_set_value(line, 1);
-+	g_assert_cmpint(ret, ==, 0);
-+	g_assert_cmpint(gpiod_test_chip_get_value(0, 2), ==, 1);
-+
-+	gpiod_line_bulk_init(&bulk);
-+	gpiod_line_bulk_add(&bulk, line);
-+	ret = gpiod_line_set_value_bulk(&bulk, NULL);
-+	g_assert_cmpint(ret, ==, 0);
-+	g_assert_cmpint(gpiod_test_chip_get_value(0, 2), ==, 0);
-+
-+	ret = gpiod_line_set_flags(line, 0);
-+	g_assert_cmpint(ret, ==, 0);
-+	g_assert_cmpint(gpiod_test_chip_get_value(0, 2), ==, 0);
-+}
-+
- GPIOD_TEST_CASE(get_value_different_chips, 0, { 8, 8 })
+ bool line::event_wait(const ::std::chrono::nanoseconds& timeout) const
  {
- 	g_autoptr(gpiod_chip_struct) chipA = NULL;
-@@ -441,10 +787,11 @@ GPIOD_TEST_CASE(direction, 0, { 8 })
- 	g_assert_nonnull(line);
- 	gpiod_test_return_if_failed();
- 
--	ret = gpiod_line_request_output(line, GPIOD_TEST_CONSUMER, 0);
-+	ret = gpiod_line_request_output(line, GPIOD_TEST_CONSUMER, 1);
- 	g_assert_cmpint(ret, ==, 0);
- 	g_assert_cmpint(gpiod_line_direction(line), ==,
- 			GPIOD_LINE_DIRECTION_OUTPUT);
-+	g_assert_cmpint(gpiod_test_chip_get_value(0, 5), ==, 1);
- 
- 	gpiod_line_release(line);
- 
-@@ -482,6 +829,27 @@ GPIOD_TEST_CASE(active_state, 0, { 8 })
- 
- 	g_assert_cmpint(gpiod_line_direction(line), ==,
- 			GPIOD_LINE_DIRECTION_INPUT);
-+
-+	gpiod_line_release(line);
-+
-+	ret = gpiod_line_request_output_flags(line, GPIOD_TEST_CONSUMER,
-+			GPIOD_LINE_REQUEST_FLAG_ACTIVE_LOW, 0);
-+	g_assert_cmpint(ret, ==, 0);
-+
-+	g_assert_cmpint(gpiod_line_direction(line), ==,
-+			GPIOD_LINE_DIRECTION_OUTPUT);
-+	g_assert_cmpint(gpiod_test_chip_get_value(0, 5), ==, 1);
-+
-+	gpiod_line_release(line);
-+
-+	ret = gpiod_line_request_output_flags(line,
-+			GPIOD_TEST_CONSUMER, 0, 0);
-+	g_assert_cmpint(ret, ==, 0);
-+
-+	g_assert_cmpint(gpiod_line_direction(line), ==,
-+			GPIOD_LINE_DIRECTION_OUTPUT);
-+	g_assert_cmpint(gpiod_test_chip_get_value(0, 5), ==, 0);
-+
+ 	this->throw_if_null();
+diff --git a/bindings/cxx/line_bulk.cpp b/bindings/cxx/line_bulk.cpp
+index 5f1cac4..b8f5eb7 100644
+--- a/bindings/cxx/line_bulk.cpp
++++ b/bindings/cxx/line_bulk.cpp
+@@ -176,6 +176,89 @@ void line_bulk::set_values(const ::std::vector<int>& values) const
+ 					  "error setting GPIO line values");
  }
  
- GPIOD_TEST_CASE(misc_flags, 0, { 8 })
++void line_bulk::set_config(int direction, ::std::bitset<32> flags,
++			   const ::std::vector<int> values) const
++{
++	this->throw_if_empty();
++
++	if (!values.empty() && this->_m_bulk.size() != values.size())
++		throw ::std::invalid_argument("the number of default values must correspond with the number of lines");
++
++	::gpiod_line_bulk bulk;
++	int rv, gflags;
++
++	gflags = 0;
++
++	for (auto& it: reqflag_mapping) {
++		if ((it.first & flags).to_ulong())
++			gflags |= it.second;
++	}
++
++	this->to_line_bulk(::std::addressof(bulk));
++
++	rv = ::gpiod_line_set_config_bulk(::std::addressof(bulk), direction,
++					  gflags, values.data());
++	if (rv)
++		throw ::std::system_error(errno, ::std::system_category(),
++					  "error setting GPIO line config");
++}
++
++void line_bulk::set_flags(::std::bitset<32> flags) const
++{
++	this->throw_if_empty();
++
++	::gpiod_line_bulk bulk;
++	int rv, gflags;
++
++	this->to_line_bulk(::std::addressof(bulk));
++
++	gflags = 0;
++
++	for (auto& it: reqflag_mapping) {
++		if ((it.first & flags).to_ulong())
++			gflags |= it.second;
++	}
++
++	rv = ::gpiod_line_set_flags_bulk(::std::addressof(bulk), gflags);
++	if (rv)
++		throw ::std::system_error(errno, ::std::system_category(),
++					  "error setting GPIO line flags");
++}
++
++void line_bulk::set_direction_input() const
++{
++	this->throw_if_empty();
++
++	::gpiod_line_bulk bulk;
++	int rv;
++
++	this->to_line_bulk(::std::addressof(bulk));
++
++	rv = ::gpiod_line_set_direction_input_bulk(::std::addressof(bulk));
++	if (rv)
++		throw ::std::system_error(errno, ::std::system_category(),
++			"error setting GPIO line direction to input");
++}
++
++void line_bulk::set_direction_output(const ::std::vector<int>& values) const
++{
++	this->throw_if_empty();
++
++	if (values.size() != this->_m_bulk.size())
++		throw ::std::invalid_argument("the size of values array must correspond with the number of lines");
++
++	::gpiod_line_bulk bulk;
++	int rv;
++
++	this->to_line_bulk(::std::addressof(bulk));
++
++	rv = ::gpiod_line_set_direction_output_bulk(::std::addressof(bulk),
++						    values.data());
++	if (rv)
++		throw ::std::system_error(errno, ::std::system_category(),
++			"error setting GPIO line direction to output");
++}
++
+ line_bulk line_bulk::event_wait(const ::std::chrono::nanoseconds& timeout) const
+ {
+ 	this->throw_if_empty();
 -- 
 2.24.0
 
