@@ -2,93 +2,111 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id ABE5410E9BB
-	for <lists+linux-gpio@lfdr.de>; Mon,  2 Dec 2019 12:45:02 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 033F110E9CF
+	for <lists+linux-gpio@lfdr.de>; Mon,  2 Dec 2019 12:53:15 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727426AbfLBLpB (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 2 Dec 2019 06:45:01 -0500
-Received: from mail-lf1-f67.google.com ([209.85.167.67]:37509 "EHLO
-        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727381AbfLBLpB (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 2 Dec 2019 06:45:01 -0500
-Received: by mail-lf1-f67.google.com with SMTP id b15so3470443lfc.4
-        for <linux-gpio@vger.kernel.org>; Mon, 02 Dec 2019 03:45:00 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=9dbeOa/yZiXLwAKhqVdLm2n/zVETLaeGOMkXijhyOxI=;
-        b=JLrik/Q57hkA2pLMTsCgFgbbXQCV50ILFodTufcKAu1zVJThyK0XovKHqlm3wjIFXo
-         thgwxcec57cupokH5vqIRP6Afm0WjEpc8qBe4nJwWGCNznGEyDTdlFrWzt3OQTWUtu7B
-         9ojKBJ/a48Jp/wQ+CQoM8wncSSs9mNnuHZ41QHW7sAbD1bWBUOfgQH8nXdwsrzD82tOh
-         +IJzbYXg/z1w5aY7ZGrLvj9474omGAyq7H6tFWkuH4FUM5PHsVMnE5lVUh/cwKaJl5tf
-         /hhm7GuvMk6MXuDzwMfDqLgev32ArbhFfgAw6Pg0WZ76yLzTdJvlrpcRC1xyT7XWfzk0
-         QIiA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=9dbeOa/yZiXLwAKhqVdLm2n/zVETLaeGOMkXijhyOxI=;
-        b=JvGtEWejb9RoxAgHII0cSx1XXsLlv0ZqX8f6Y1tT68EsVJ/kTM5iQAsFDUDDuppUjU
-         8Wpbg0NkxhMeSO/fSv+SefwpVExy8eCH6NnaNDK1dP+KqIYh3+Pdji0P8V9Z+cAp8skU
-         zWD5iojdPphVUCLLK4r8qm8ctL7TFYVQdI2WCOvr/WB0dnvnU+KjzTT0vFWVf/aLZ+HS
-         bNDEVx7w8KyIl7pn5Y+04NhzySSKKRlvEN2tNRYRv75W+N2xPOQWqM1N/fgHDsY3AXRw
-         FdQnOGXRpUDjb3DN8yqVoB7OcqRd6aY5Tp5h53nf9+p5N/hQ/g+7vBWEYvW0myPr9bYy
-         7WKA==
-X-Gm-Message-State: APjAAAV7/epVJVkE3rezqU0HA5yg07VcjIubn4TfesIqHHDt1G7VfGMc
-        b7P4AlwED8zdKyEUQS3lSS4wdLZiNkI1fFNG3KcKdw==
-X-Google-Smtp-Source: APXvYqyoHJVudY4Th9gkUkwA7ZvcT7SMc/yaucVRZjkFgzCxhl/qzF5ng9XGEy78xknVHWJ5WXqV+foidMFPzNGJqww=
-X-Received: by 2002:ac2:4945:: with SMTP id o5mr41600526lfi.93.1575287099487;
- Mon, 02 Dec 2019 03:44:59 -0800 (PST)
-MIME-Version: 1.0
-References: <20191129172537.31410-1-m.felsch@pengutronix.de>
-In-Reply-To: <20191129172537.31410-1-m.felsch@pengutronix.de>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Mon, 2 Dec 2019 12:44:48 +0100
-Message-ID: <CACRpkdaSmwORgetv7aZjtgk+2OchcvQR4SBjdWQ4KsRMHuUvSg@mail.gmail.com>
-Subject: Re: [PATCH v3 0/6] DA9062 PMIC features
-To:     Marco Felsch <m.felsch@pengutronix.de>
-Cc:     Support Opensource <support.opensource@diasemi.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
+        id S1727378AbfLBLxO (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 2 Dec 2019 06:53:14 -0500
+Received: from mga07.intel.com ([134.134.136.100]:31447 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726149AbfLBLxO (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Mon, 2 Dec 2019 06:53:14 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 02 Dec 2019 03:53:13 -0800
+X-IronPort-AV: E=Sophos;i="5.69,268,1571727600"; 
+   d="scan'208";a="204529220"
+Received: from jnikula-mobl3.fi.intel.com (HELO localhost) ([10.237.66.161])
+  by orsmga008-auth.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 02 Dec 2019 03:53:08 -0800
+From:   Jani Nikula <jani.nikula@linux.intel.com>
+To:     Linus Walleij <linus.walleij@linaro.org>,
+        Hans de Goede <hdegoede@redhat.com>
+Cc:     Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        Ville =?utf-8?B?U3lyasOkbMOk?= <ville.syrjala@linux.intel.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Joel Stanley <joel@jms.id.au>,
-        Andrew Jeffery <andrew@aj.id.au>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        linux-aspeed <linux-aspeed@lists.ozlabs.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Sascha Hauer <kernel@pengutronix.de>
-Content-Type: text/plain; charset="UTF-8"
+        intel-gfx <intel-gfx@lists.freedesktop.org>,
+        "open list\:DRM PANEL DRIVERS" <dri-devel@lists.freedesktop.org>,
+        "open list\:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>
+Subject: Re: [PATCH 2/2] drm/i915/vlv_dsi: Control panel and backlight enable GPIOs on BYT
+In-Reply-To: <CACRpkdbRb-LF2tNN-ueo=tKuJc+u4B7Y20+BCyqnN7wYbm8y7Q@mail.gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+References: <20191129185836.2789-1-hdegoede@redhat.com> <20191129185836.2789-3-hdegoede@redhat.com> <CACRpkdbRb-LF2tNN-ueo=tKuJc+u4B7Y20+BCyqnN7wYbm8y7Q@mail.gmail.com>
+Date:   Mon, 02 Dec 2019 13:53:04 +0200
+Message-ID: <87wobfj65b.fsf@intel.com>
+MIME-Version: 1.0
+Content-Type: text/plain
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Nov 29, 2019 at 6:25 PM Marco Felsch <m.felsch@pengutronix.de> wrote:
+On Mon, 02 Dec 2019, Linus Walleij <linus.walleij@linaro.org> wrote:
+> Hi Hans,
+>
+> thank you for your patch!
+>
+> On Fri, Nov 29, 2019 at 7:58 PM Hans de Goede <hdegoede@redhat.com> wrote:
+>
+>> -       /* GPIO Desc for CRC based Panel control */
+>> +       /* GPIO Desc for panel and backlight control */
+>>         struct gpio_desc *gpio_panel;
+>> +       struct gpio_desc *gpio_backlight;
+>
+> I think what happens here is that you reimplement
+> drivers/video/backlight/gpio_backlight.c
+>
+> The existing power control GPIO also reimplements
+> drivers/regulator/fixed.c in a sense but I am under the
+> impression that x86 in general and ACPI in particular
+> has a problem with the regulator subsystem so I am
+> uncertain about that one.
+>
+> When I look at the code I get more confused because
+> nominally panels should have their own drivers in
+> drivers/gpu/drm/panel/* especially DSI panels, and the
+> panels control their own GPIOs or regulators for power
+> and backlight.
+>
+> I was under the impression that Heikki's and Dmitry's
+> recent additions to software nodes would make it
+> possible to actually spawn devices like the GPIO backlight
+> and/or fixed regulator and put references to them so
+> that the drivers can pick them up from the respective
+> frameworks and manage them?
+>
+> Maybe I misunderstood things here though, I am a bit
+> under the impression that elder DRM drivers are
+> considered "elder gods" and do not need to use separate
+> panel drivers, backlight abstraction etc, and in that
+> case just go ahead, I guess.
+>
+> But I suspect some separation
+> would help the day the i915 driver wants to reuse some
+> really complex DSI panel from drivers/gpu/drm/panel/*
+> though.
 
-> this series address all comments made on [1]. Patch "gpio: add support
-> to get local gpio number" is splitted into:
->  - "gpio: treewide rename gpio_chip_hwgpio to gpiod_to_offset"
->  - "gpio: make gpiod_to_offset() available for other users"
-> Please check the discussion [1] for more information. You need to apply
-> [2] to test the new features.
+Sadly I don't think that's going to happen, though.
 
-I am very happy with the shape of patches (1) and (2).
+For i915 the panels are described by VBT, or Video BIOS Tables. We don't
+really know the make or model of the panels, we just get the timings and
+sequences etc. from there. There's no info to probe a separate panel
+driver. So we just have a "generic" DSI driver that's part of i915 which
+uses the data from the VBT to drive all the possible panels.
 
-I can apply these on an immutable branch and merge into the
-GPIO tree at v5.5-rc1 and offer to other subsystem maintainers
-to pull in so they can merge the rest of the patch series on
-top.
+We do use some of the drm DSI framework as a library to abstract things
+a bit better, but that's about it.
 
-Alternatively I can merge all the patches into the GPIO tree.
+The sequences should include details about GPIOs to toggle as well, so
+in that sense I feel like the gpio calls should be bolted there.
 
-I suppose this is not so much of a MFD business at this
-point so whatever the regulator maintainer prefers I suppose?
+BR,
+Jani.
 
-Yours,
-Linus Walleij
+
+-- 
+Jani Nikula, Intel Open Source Graphics Center
