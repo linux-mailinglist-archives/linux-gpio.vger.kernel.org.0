@@ -2,123 +2,208 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id B8B9A10EB55
-	for <lists+linux-gpio@lfdr.de>; Mon,  2 Dec 2019 15:08:07 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id ED86510ECA2
+	for <lists+linux-gpio@lfdr.de>; Mon,  2 Dec 2019 16:49:25 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727535AbfLBOIG (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 2 Dec 2019 09:08:06 -0500
-Received: from mga02.intel.com ([134.134.136.20]:14019 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727501AbfLBOIG (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Mon, 2 Dec 2019 09:08:06 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 02 Dec 2019 06:08:05 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,268,1571727600"; 
-   d="scan'208";a="200623094"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by orsmga007.jf.intel.com with ESMTP; 02 Dec 2019 06:08:04 -0800
-Received: from andy by smile with local (Exim 4.93-RC1)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1ibmMu-0003RH-4i; Mon, 02 Dec 2019 16:08:04 +0200
-Date:   Mon, 2 Dec 2019 16:08:04 +0200
-From:   "andriy.shevchenko@linux.intel.com" 
-        <andriy.shevchenko@linux.intel.com>
-To:     "Stanimir, Vasile-Laurentiu" 
-        <Vasile-Laurentiu.Stanimir@windriver.com>
-Cc:     "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
-        "mika.westerberg@linux.intel.com" <mika.westerberg@linux.intel.com>
-Subject: Re: [PATCH] gpiolib-acpi: Set gpiod flags for ACPI GPIO resources
- based on pullup and polarity
-Message-ID: <20191202140804.GK32742@smile.fi.intel.com>
-References: <D4218E93E3D74741B4028993B2A8DBE0534BF84B@ALA-MBD.corp.ad.wrs.com>
- <20191202130553.GG32742@smile.fi.intel.com>
- <D4218E93E3D74741B4028993B2A8DBE0534BF86E@ALA-MBD.corp.ad.wrs.com>
+        id S1727509AbfLBPtY (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 2 Dec 2019 10:49:24 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:29677 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727612AbfLBPtY (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 2 Dec 2019 10:49:24 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1575301762;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=BckxIR8B8BRMaMS0XFEan4pdnPP5uhBwBvuJccFnJ8Q=;
+        b=A61CqwShmC5423Udy7o9aOqq/6lNsJ2NYVfdPVQfdO2ajWgR5P1gRvWIrAXk1c6Rzt/gcJ
+        /zEuETi06nZe/Op5g7nbY6KSGqgmjz9m1bNeAXYu2rqboVX6mMzKHT3r68KrkftXaLQDGm
+        NqUQKo2FZ4WbZEPa+6MN2xqvo6R3Auo=
+Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
+ [209.85.128.71]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-192-HE6I93XcOiSNXTPYuZX1Bw-1; Mon, 02 Dec 2019 10:49:21 -0500
+Received: by mail-wm1-f71.google.com with SMTP id g8so38208wmg.6
+        for <linux-gpio@vger.kernel.org>; Mon, 02 Dec 2019 07:49:21 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=BckxIR8B8BRMaMS0XFEan4pdnPP5uhBwBvuJccFnJ8Q=;
+        b=UFIthnLExsGoo+BJJc1A7RS3cKDV55mhB786qQUCT5EE5JMIkeo/z3TWsR7sCK+NGD
+         szNr99ZrIewQHVqOM/CIrJ3/fld1NdaPQMjwiFWmpyKYdvT4RubVqzpKQnFaVNv2CF7E
+         vpitx6xkbkkku2w8Bte+/DTv7yko9QgEjXa2GhGTh1Xebi6FT3C0v5v6vnCd4CM+eJmp
+         i6Ks/i18MT08KPXr0M6jY10KH6wDe/d06eMa6OezfaTT4cX8l/SqYcwX5rRiaZuS/OGa
+         sUgW89dbadjHSJW4SkOeKfa81n3JhMjUhaPQRiGOpm3kn8iD7rehM77B86uoKcNB8yDj
+         VaCw==
+X-Gm-Message-State: APjAAAVuX6PQiEaTM2OVNHkO/mdZ2Ew7k0ye82QsgXZvxJ63SqVsrymU
+        5enrUzTrASMEFnlztxppTKbCqmsmgpTudhRqYWyf4bho7OfpBXbp9kDuVihmh48sbaaXT+K3lCr
+        cUCdIdMTxB7In5U+XM+i3nQ==
+X-Received: by 2002:a5d:6692:: with SMTP id l18mr6456716wru.382.1575301760248;
+        Mon, 02 Dec 2019 07:49:20 -0800 (PST)
+X-Google-Smtp-Source: APXvYqzbHZlEWNG5Tykxe0xX+zM5Eoc9OUvf0CW0XqAwtTuft7mCuNUQ/uAHoVleCkgr1rQJLPOzqw==
+X-Received: by 2002:a5d:6692:: with SMTP id l18mr6456671wru.382.1575301759962;
+        Mon, 02 Dec 2019 07:49:19 -0800 (PST)
+Received: from shalem.localdomain (84-106-84-65.cable.dynamic.v4.ziggo.nl. [84.106.84.65])
+        by smtp.gmail.com with ESMTPSA id h97sm43564707wrh.56.2019.12.02.07.49.18
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 02 Dec 2019 07:49:19 -0800 (PST)
+Subject: Re: [PATCH 2/2] drm/i915/vlv_dsi: Control panel and backlight enable
+ GPIOs on BYT
+To:     Jani Nikula <jani.nikula@linux.intel.com>,
+        Linus Walleij <linus.walleij@linaro.org>
+Cc:     Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        =?UTF-8?B?VmlsbGUgU3lyasOkbMOk?= <ville.syrjala@linux.intel.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        intel-gfx <intel-gfx@lists.freedesktop.org>,
+        "open list:DRM PANEL DRIVERS" <dri-devel@lists.freedesktop.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>
+References: <20191129185836.2789-1-hdegoede@redhat.com>
+ <20191129185836.2789-3-hdegoede@redhat.com>
+ <CACRpkdbRb-LF2tNN-ueo=tKuJc+u4B7Y20+BCyqnN7wYbm8y7Q@mail.gmail.com>
+ <87wobfj65b.fsf@intel.com>
+From:   Hans de Goede <hdegoede@redhat.com>
+Message-ID: <47c36b75-bc30-502b-7f8d-035cf2348fc4@redhat.com>
+Date:   Mon, 2 Dec 2019 16:49:18 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <D4218E93E3D74741B4028993B2A8DBE0534BF86E@ALA-MBD.corp.ad.wrs.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <87wobfj65b.fsf@intel.com>
+Content-Language: en-US
+X-MC-Unique: HE6I93XcOiSNXTPYuZX1Bw-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Dec 02, 2019 at 01:44:04PM +0000, Stanimir, Vasile-Laurentiu wrote:
-> ________________________________________
-> From: andriy.shevchenko@linux.intel.com [andriy.shevchenko@linux.intel.com]
-> Sent: Monday, December 02, 2019 3:05 PM
-> To: Stanimir, Vasile-Laurentiu
-> Cc: linux-gpio@vger.kernel.org; linus.walleij@linaro.org; mika.westerberg@linux.intel.com
-> Subject: Re: [PATCH] gpiolib-acpi: Set gpiod flags for ACPI GPIO resources based on pullup and polarity
-> 
-> On Mon, Dec 02, 2019 at 12:36:47PM +0000, Stanimir, Vasile-Laurentiu wrote:
-> > From f8093f2c73c636b75fcf4dee4178af0e24c2f878 Mon Sep 17 00:00:00 2001
-> > From: Vasile-Laurentiu Stanimir <vasile-laurentiu.stanimir@windriver.com>
-> > Date: Mon, 2 Dec 2019 14:20:11 +0200
-> > Subject: [PATCH] gpiolib-acpi: Set gpiod flags for ACPI GPIO resources based
-> >  on pullup and polarity
-> >
-> > ACPI GPIO resources don't contain an initial value for the
-> > GPIO. Therefore instead of deducting its value based on pullup field
-> > we should deduce that value from the polarity and the pull field.
-> > Typical scenario is when ACPI is defined in acpi-table and its polarity
-> > is defined as ACTIVE-LOW in the following call:
-> >
-> > acpi_populate_gpio_lookup(struct acpi_resource *ares, void *data)
-> >   acpi_gpio_to_gpiod_flags(const struct acpi_resource_gpio *agpio)
-> >
-> > it will return GPIOD_OUT_HIGH if pull_up is set no matter if
-> > polarity is GPIO_ACTIVE_LOW, so it will return the current level instead
-> > of the logical level.
-> 
-> Thank you for the patch.
-> 
-> I have question in general. If we have Active Low polarity and Pull Down,
-> isn't it simple a bad ACPI table and rather quirk is needed here?
-> 
-> --
-> With Best Regards,
-> Andy Shevchenko
-> 
-> 
-> Hi, 
-> 
-> It may be, also it may be a bad hardware design but it is also a possible situation.
-> 
-> In our case here we have an FPGA whose pcie link is held in reset by BIOS during 
-> boot, the reset pin is active low, and its configuration is specified in the Acpi DSDT 
-> table. When Linux starts, our userspace driver shall load the FPGA, and the first 
-> step is to request all GPIO's needed to configure the pcie phy on the FPGA side; 
-> the pcie link reset should be held active while this configuration (loading of the 
-> Altera fpp image) is ongoing.
-> Now all active low pins have their initial value inverted by the kernel. This means 
-> that the pcie link reset is briefly released, which generates a pcie hot unplug event, 
-> which in turn delays start of a successful loading sequence, and so SW has to make 
-> a second reload attempt which will delay too much the normal boot sequence.
-> 
-> Sorry for giving you too much details which probability are not important but I only
-> wanted to emphasise that it may be a real situation whether or not it is a good
-> design.
+HI,
 
-No need to sorry, the details are useful as well as knowing your use case.
+On 02-12-2019 12:53, Jani Nikula wrote:
+> On Mon, 02 Dec 2019, Linus Walleij <linus.walleij@linaro.org> wrote:
+>> Hi Hans,
+>>
+>> thank you for your patch!
+>>
+>> On Fri, Nov 29, 2019 at 7:58 PM Hans de Goede <hdegoede@redhat.com> wrote:
+>>
+>>> -       /* GPIO Desc for CRC based Panel control */
+>>> +       /* GPIO Desc for panel and backlight control */
+>>>          struct gpio_desc *gpio_panel;
+>>> +       struct gpio_desc *gpio_backlight;
+>>
+>> I think what happens here is that you reimplement
+>> drivers/video/backlight/gpio_backlight.c
+>>
+>> The existing power control GPIO also reimplements
+>> drivers/regulator/fixed.c in a sense but I am under the
+>> impression that x86 in general and ACPI in particular
+>> has a problem with the regulator subsystem so I am
+>> uncertain about that one.
+>>
+>> When I look at the code I get more confused because
+>> nominally panels should have their own drivers in
+>> drivers/gpu/drm/panel/* especially DSI panels, and the
+>> panels control their own GPIOs or regulators for power
+>> and backlight.
+>>
+>> I was under the impression that Heikki's and Dmitry's
+>> recent additions to software nodes would make it
+>> possible to actually spawn devices like the GPIO backlight
+>> and/or fixed regulator and put references to them so
+>> that the drivers can pick them up from the respective
+>> frameworks and manage them?
+>>
+>> Maybe I misunderstood things here though, I am a bit
+>> under the impression that elder DRM drivers are
+>> considered "elder gods" and do not need to use separate
+>> panel drivers, backlight abstraction etc, and in that
+>> case just go ahead, I guess.
+>>
+>> But I suspect some separation
+>> would help the day the i915 driver wants to reuse some
+>> really complex DSI panel from drivers/gpu/drm/panel/*
+>> though.
+> 
+> Sadly I don't think that's going to happen, though.
+> 
+> For i915 the panels are described by VBT, or Video BIOS Tables. We don't
+> really know the make or model of the panels, we just get the timings and
+> sequences etc. from there. There's no info to probe a separate panel
+> driver. So we just have a "generic" DSI driver that's part of i915 which
+> uses the data from the VBT to drive all the possible panels.
+> 
+> We do use some of the drm DSI framework as a library to abstract things
+> a bit better, but that's about it.
+> 
+> The sequences should include details about GPIOs to toggle as well, so
+> in that sense I feel like the gpio calls should be bolted there.
 
-Q1: who is providing DSDT?
-Q2: why it can't be fixed?
-Q3: how the GPIO lines are being requested?
-Q4: how are they described, btw, in DSDT?
+Hmm, yes that makes sense, the problem really is that the VBT sequences
+for DSI panels on BYT are incomplete (*) and the MIPI_SEQ_POWER_ON / _OFF
+and MIPI_SEQ_BACKLIGHT_ON / _OFF sequences do not containt the
+"instructions" to toggle the panel-enable, resp. backlight enable
+GPIOs as they do on CHT and newer devices.
 
-Side note, if it will be no other choice left, the above code still can be
-added as a quirk (see code related to ACPI_GPIO_QUIRK_NO_IO_RESTRICTION
-and ACPI_GPIO_QUIRK_ONLY_GPIOIO).
+So if we see all this of a shortcoming of the VBT tables, then it makes
+sense to move all special handling for this to intel_dsi_vbt.c, so we
+put the adding of the lookup table, the getting of the pins and the
+controlling of the pins all in there.
 
--- 
-With Best Regards,
-Andy Shevchenko
+Jani, is that what you have in mind ?
 
+This would also solve the problem of Linus and Andy not liking the
+polution of the pinctrl driver with the adding of the platform
+specific lookups; and then we could only add the lookups when the
+VBT says the SoC is used for backlight control, leaving things
+as is (not even adding the lookups) when the PMIC is used for
+backlight control.
+
+There is only one problem, currently is is not possible to
+unregister a mapping added with pinctrl_register_mappings
+and the i915 driver is typically a module which can be unloaded
+and I believe actually is unloaded as part of the i915 CI.
+
+pinctrl_register_mappings copies the passed in mapping, but
+it is a shallow copy, so it contains pointers to the modules
+const segment and we do not want to re-add another copy of
+the mapping when the module loads a second time.
+
+Fixing this is easy though, there already is a pinctrl_unregister_map()
+function, we just need to export it so that the i915 driver can
+remove the mapping when it is unbound.
+
+Linus would exporting this function be ok with you?
+
+Linus, question what is the purpose of the "dupping" / shallow
+copying of the argument passed to pinctrl_register_map ? Since
+it is shallow the mem for any pointers contained within there need
+to be kept around by the caller, so why not let the caller keep
+the pinctrl_map struct itself around too?
+
+If we are going to export pinctrl_unregister_map() we need to make it
+do the right thing for dupped maps too, we can just store the dup flag
+in struct pinctrl_maps. So this is easy, but I wonder if we cannot
+get rid of the dupping all together ?
+
+Regards,
+
+Hans
+
+
+
+
+*) I suspect these are all version 2 VBT sequences (I guess I should check
+this) and according to the comment in vlv_dsi.c which documents the sequences,
+for v2 these sequences are not used, e.g. instead of executing the
+MIPIPanelPowerOn sequence the "panel-on" step is described simply as "power on".
+and the MIPIBacklightOn/Off sequences are described as being VBT v3+ only
 
