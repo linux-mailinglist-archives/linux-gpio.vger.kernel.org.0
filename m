@@ -2,155 +2,128 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id C3D1810E528
-	for <lists+linux-gpio@lfdr.de>; Mon,  2 Dec 2019 05:59:52 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0E67410E52D
+	for <lists+linux-gpio@lfdr.de>; Mon,  2 Dec 2019 06:00:58 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727460AbfLBE7v (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sun, 1 Dec 2019 23:59:51 -0500
-Received: from out2-smtp.messagingengine.com ([66.111.4.26]:52145 "EHLO
-        out2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727454AbfLBE7v (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sun, 1 Dec 2019 23:59:51 -0500
-Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailout.nyi.internal (Postfix) with ESMTP id 992F32264B;
-        Sun,  1 Dec 2019 23:59:50 -0500 (EST)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute4.internal (MEProxy); Sun, 01 Dec 2019 23:59:50 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aj.id.au; h=from
-        :to:cc:subject:date:message-id:mime-version
-        :content-transfer-encoding; s=fm1; bh=5XPvx7dahHaDCSKQZYma+ndFTi
-        gH3Ld8SyUwmsY1Bo8=; b=R0+LAX5U287DyZdJvzISx2Z8v04k0VhqfVy9Bsi/TD
-        OwQcI6ed1AXa5FFyN31+clQSrlPUv7hg7DpmryaO9JI9GrqcmynI5UunfvqjKqSf
-        Ncp8eBz1YCkK0RSvL8SJIbcLLPvprLHew4vD02p9lMrK6q2G1iSDbrtFPX2niYys
-        ZJXsyi188ZbcD2q38ZDA50VAl2raNujf8a4Ayiba8yZ+hYiAwH9hxwfB8YhGi1Ck
-        m8Z7X/uSXXS4Ku1BjQrQYSVrfqOg71+U8kohp/vJ4AgzVyDgbJMDdFhnHnIy+Jh7
-        QSAVS0sEguZDVNVXFRSmdjeeC/SFXXEQqXd2BBCrOoeQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-transfer-encoding:date:from
-        :message-id:mime-version:subject:to:x-me-proxy:x-me-proxy
-        :x-me-sender:x-me-sender:x-sasl-enc; s=fm1; bh=5XPvx7dahHaDCSKQZ
-        Yma+ndFTigH3Ld8SyUwmsY1Bo8=; b=OCKffBQh7LpEgoLyLhgn2hJAinj99yu15
-        yZJ/ulmnElXGZvEQlGtI11sLjz3Yd4tdZdoiOtMuMuahYT0poIQpORPobLvC71j4
-        FO9bHGMUyyJOJWZZmkHM8a/WHveY86KfVHd44XM0+pcMuhBRw7m9awRBV9FqIH5j
-        2GPUrW3AHtUEdyqKj5mSxOVPvqUM69jBIMZkjquxoc6SEqee5/j79UrlG2Zt199L
-        ZtfaPyGn7pHMaFalEwzajk51wlWGA3wiJzHYcE5jeq+nnkJWDi/NiIf+pjfx5DTn
-        uMeaWRAPAWZa0kjLxwuZywOwdElMw+sCVeXyodhaC8CLfZ/9H0/GA==
-X-ME-Sender: <xms:RprkXQa84OItlhQTmireRt-2LaF61iOyP3d49Iz1lBSz5wqTqtxi-A>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedufedrudejgedgjeekucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucenucfjughrpefhvffufffkofgggfestdekredtre
-    dttdenucfhrhhomheptehnughrvgifucflvghffhgvrhihuceorghnughrvgifsegrjhdr
-    ihgurdgruheqnecukfhppeduudekrddvuddurdelvddrudefnecurfgrrhgrmhepmhgrih
-    hlfhhrohhmpegrnhgurhgvfiesrghjrdhiugdrrghunecuvehluhhsthgvrhfuihiivgep
-    td
-X-ME-Proxy: <xmx:RprkXc7b9lXzgySKP6g8pv66xsglicsxZa3-fqGjgcxkHPC41dVvhw>
-    <xmx:RprkXfgJju1cRJGZLD1nOvdTZxTMMkqXax2HpTQHjdEcq7kDGpctXQ>
-    <xmx:RprkXaK4AKeDegGat-p9e_dWJN5lqkDBfyHuGvXwl0bQ_XvavCwchw>
-    <xmx:RprkXYUZVpCY4stLwh50XOG0_YoZpn8N4w8l5O65pXTyptA61BpCTg>
-Received: from localhost.localdomain (unknown [118.211.92.13])
-        by mail.messagingengine.com (Postfix) with ESMTPA id C40DC3060122;
-        Sun,  1 Dec 2019 23:59:47 -0500 (EST)
-From:   Andrew Jeffery <andrew@aj.id.au>
+        id S1726707AbfLBFA5 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 2 Dec 2019 00:00:57 -0500
+Received: from mail-eopbgr740083.outbound.protection.outlook.com ([40.107.74.83]:53664
+        "EHLO NAM01-BN3-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726399AbfLBFA5 (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Mon, 2 Dec 2019 00:00:57 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=hkM+s+R865ycntaZNjBbLZXrxyowgHW1sWSiV8WcDoGUdpyqvW4xYXFLezSDypAa4xbGHe+a2/FZFA9NpEtxVN4LkMFm8+WeU3KBEsCytQJsqN7JwvPWre8lhtVqqqiI8e2otxiLf0vcKJJoiT9Ga5VtNvV8YYIe/eVbhC+f6HZ2TYBsz9iblShbZVE4Y0jH8cQi9cIYmfOAJ9fSBE3IbJ9Hv5W+fXYWWu7fHeWG3Fz6L+50/woNPkd/tcv+W1mpibqeJ3UdqO3eJxmlX8ErEVgTrCYXhREqOyBtBXlOAMfjqz4vAwI+RT0PukowT2Ygbn1A9eC/upUZ5dge6Cdbkw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=BxXdEauffoAjQrkRE8eQ/RalQl9E+fa8D7Bp5aT7hl4=;
+ b=TolCZAS3OruzADbA7/z9gbiiEIV30YlZxX6X+HdKBpairzeXqOCjF+K7PPtuSYCehyrG9T2N4olllp78xxJNl2HUQopK7ekYZkuCPZ61p+0P6JTqOUKiEi995uCjKx3UBmENqLTabxt03YBdO5h7lQdExk4UK+ZBpbEQokiK6XZvvb6eYAQO+CqhgmKW4WYqwa0cPcxdEp0Q8mPIPljItf8mfiyfQ1Cn6bPWwLXGNc0ZwLOOzrPfqzsF+lnGd0Tq3HRFE+jx1JLU/27mCxhx0KGmE3KN0mTShutPqwysVSXqxOEKmzKWV2pMcLGXcLjv6LaSHRErzZdRHyIonmiLDw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 60.241.24.90) smtp.rcpttodomain=opengear.com smtp.mailfrom=opengear.com;
+ dmarc=pass (p=none sp=none pct=100) action=none header.from=opengear.com;
+ dkim=none (message not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=opengear.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=BxXdEauffoAjQrkRE8eQ/RalQl9E+fa8D7Bp5aT7hl4=;
+ b=GutPNEVgy4S/0t076/KQEajHskg9P3AMb70soW1usRno/Sx+ardXO9ggJ+qFoDt0Y9dbMmAAO3kC+gNs8SAX2FBVFntnEjkvFqmkyk0Lryg1JPtQpUYgam8V+bWLJK1/r8uvs3j0ZWDgJTmDIavhhpark7LdGcyEr5wAlpQksmI=
+Received: from MN2PR15CA0032.namprd15.prod.outlook.com (2603:10b6:208:1b4::45)
+ by BYAPR15MB2231.namprd15.prod.outlook.com (2603:10b6:a02:8f::23) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2495.22; Mon, 2 Dec
+ 2019 05:00:52 +0000
+Received: from CO1NAM04FT005.eop-NAM04.prod.protection.outlook.com
+ (2a01:111:f400:7e4d::208) by MN2PR15CA0032.outlook.office365.com
+ (2603:10b6:208:1b4::45) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2495.18 via Frontend
+ Transport; Mon, 2 Dec 2019 05:00:50 +0000
+Authentication-Results: spf=pass (sender IP is 60.241.24.90)
+ smtp.mailfrom=opengear.com; opengear.com; dkim=none (message not signed)
+ header.d=none;opengear.com; dmarc=pass action=none header.from=opengear.com;
+Received-SPF: Pass (protection.outlook.com: domain of opengear.com designates
+ 60.241.24.90 as permitted sender) receiver=protection.outlook.com;
+ client-ip=60.241.24.90; helo=postman.bne.opengear.com;
+Received: from postman.bne.opengear.com (60.241.24.90) by
+ CO1NAM04FT005.mail.protection.outlook.com (10.152.90.149) with Microsoft SMTP
+ Server id 15.20.2495.18 via Frontend Transport; Mon, 2 Dec 2019 05:00:47
+ +0000
+Received: from galangal.danc.bne.opengear.com (danc.bne.opengear.com [192.168.254.90])
+        by postman.bne.opengear.com (Postfix) with ESMTPS id 30ACCDEB6E;
+        Mon,  2 Dec 2019 15:00:43 +1000 (AEST)
+Received: by galangal.danc.bne.opengear.com (Postfix, from userid 1090)
+        id 0FE6242945E4; Mon,  2 Dec 2019 15:00:43 +1000 (AEST)
+From:   Dan Callaghan <dan.callaghan@opengear.com>
 To:     linux-gpio@vger.kernel.org
-Cc:     linus.walleij@linaro.org, joel@jms.id.au,
-        linux-aspeed@lists.ozlabs.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] pinctrl: aspeed-g6: Fix LPC/eSPI mux configuration
-Date:   Mon,  2 Dec 2019 15:31:10 +1030
-Message-Id: <20191202050110.15340-1-andrew@aj.id.au>
-X-Mailer: git-send-email 2.20.1
+Cc:     Dan Callaghan <dan.callaghan@opengear.com>
+Subject: [PATCH] gpiolib: hold gpio devices lock until ->descs array is initialised
+Date:   Mon,  2 Dec 2019 14:59:54 +1000
+Message-Id: <20191202045954.28572-1-dan.callaghan@opengear.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-EOPAttributedMessage: 0
+X-Forefront-Antispam-Report: CIP:60.241.24.90;IPV:CAL;CTRY:AU;EFV:NLI;SFV:NSPM;SFS:(10009020)(4636009)(396003)(346002)(136003)(39840400004)(376002)(189003)(199004)(426003)(76130400001)(14444005)(8676002)(5660300002)(70206006)(1076003)(103686004)(51416003)(356004)(36756003)(106002)(26826003)(50226002)(7636002)(305945005)(8936002)(6666004)(4326008)(70586007)(2906002)(246002)(2870700001)(26005)(336012)(478600001)(48376002)(107886003)(186003)(47776003)(44832011)(2351001)(6916009)(316002)(6266002)(42186006)(2361001)(2616005)(50466002);DIR:OUT;SFP:1101;SCL:1;SRVR:BYAPR15MB2231;H:postman.bne.opengear.com;FPR:;SPF:Pass;LANG:en;PTR:brisbane.opengear.com;MX:1;A:1;
+Content-Type: text/plain
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 38d59a78-64df-4c78-ca3b-08d776e49920
+X-MS-TrafficTypeDiagnostic: BYAPR15MB2231:|BYAPR15MB2231:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <BYAPR15MB22310389290C1C2841E75912B8430@BYAPR15MB2231.namprd15.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:6790;
+X-Forefront-PRVS: 0239D46DB6
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: jr6NNDKC/EYGQpGBhb0UH9VY7z5AZvCFZBTmv3LRgRL3bBWZEwWsyLvfe3/mpUvkR/MqKg+E03PtLuEB5le0Fg99esXp9/CZAARdplnRPIoQqQtPhNbz44biAwgBV1QSoymGlUpQU80X+F32ia28jL5A1sKenboCxv2u18Xamu+FRH9I7meUFoWzxAipo3MTjh/XcMDydIqsX3c+vowScHBdh2NH2EcmZ1vY8F3N2M7JcZJanJ/Fru92LQ3sNQ6eRsiWcEGs1/UFh+VCKufThTKOfQt8zlK4xluogWe5R4qvDEtamwxaNMNq1cDUDpORYvxc5Xepc2pvxb91UWl0LEnPq2kG8PE7PFKO5U4dHej9n7Zro2PkY5rrDYW4hpozE2MD7PYy+QPFEsvNETvcOZsUeX6sK89UQG2DQqY60WTKXvyKnCrzOqe8jl3KOS3r
+X-OriginatorOrg: opengear.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Dec 2019 05:00:47.6267
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 38d59a78-64df-4c78-ca3b-08d776e49920
+X-MS-Exchange-CrossTenant-Id: a6251c26-d21f-4164-a225-1f4eaebf5f9a
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=a6251c26-d21f-4164-a225-1f4eaebf5f9a;Ip=[60.241.24.90];Helo=[postman.bne.opengear.com]
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR15MB2231
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Early revisions of the AST2600 datasheet are conflicted about the state
-of the LPC/eSPI strapping bit (SCU510[6]). Conversations with ASPEED
-determined that the reference pinmux configuration tables were in error
-and the SCU documentation contained the correct configuration. Update
-the driver to reflect the state described in the SCU documentation.
+If a driver consuming the GPIO chip is being probed at the same time as
+the GPIO driver is registering the chip, it is possible for the
+consuming driver to see the ->descs array in an uninitialised state.
+For example, the gpio-keys-polled driver can fail like this:
 
-Fixes: 2eda1cdec49f ("pinctrl: aspeed: Add AST2600 pinmux support")
-Signed-off-by: Andrew Jeffery <andrew@aj.id.au>
+    kernel: gpiod_request: invalid GPIO (no device)
+    kernel: gpio-keys-polled PRP0001:07: failed to get gpio: -22
+    kernel: gpio-keys-polled: probe of PRP0001:07 failed with error -22
+
+This patch makes gpiochip_add() hold the lock protecting gpio_devices
+until it has finished setting desc->gdev on the newly inserted list
+entry.
+
+Signed-off-by: Dan Callaghan <dan.callaghan@opengear.com>
 ---
- drivers/pinctrl/aspeed/pinctrl-aspeed-g6.c | 24 ++++++++--------------
- 1 file changed, 8 insertions(+), 16 deletions(-)
+ drivers/gpio/gpiolib.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/pinctrl/aspeed/pinctrl-aspeed-g6.c b/drivers/pinctrl/aspeed/pinctrl-aspeed-g6.c
-index c6800d220920..bb07024d22ed 100644
---- a/drivers/pinctrl/aspeed/pinctrl-aspeed-g6.c
-+++ b/drivers/pinctrl/aspeed/pinctrl-aspeed-g6.c
-@@ -1088,60 +1088,52 @@ SSSF_PIN_DECL(AF15, GPIOV7, LPCSMI, SIG_DESC_SET(SCU434, 15));
+diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
+index dce0b31f4125..93eec6dbd9c7 100644
+--- a/drivers/gpio/gpiolib.c
++++ b/drivers/gpio/gpiolib.c
+@@ -1487,11 +1487,11 @@ int gpiochip_add_data_with_key(struct gpio_chip *chip, void *data,
+ 		goto err_free_label;
+ 	}
  
- #define AB7 176
- SIG_EXPR_LIST_DECL_SESG(AB7, LAD0, LPC, SIG_DESC_SET(SCU434, 16),
--			  SIG_DESC_CLEAR(SCU510, 6));
--SIG_EXPR_LIST_DECL_SESG(AB7, ESPID0, ESPI, SIG_DESC_SET(SCU434, 16),
- 			  SIG_DESC_SET(SCU510, 6));
-+SIG_EXPR_LIST_DECL_SESG(AB7, ESPID0, ESPI, SIG_DESC_SET(SCU434, 16));
- PIN_DECL_2(AB7, GPIOW0, LAD0, ESPID0);
+-	spin_unlock_irqrestore(&gpio_lock, flags);
+-
+ 	for (i = 0; i < chip->ngpio; i++)
+ 		gdev->descs[i].gdev = gdev;
  
- #define AB8 177
- SIG_EXPR_LIST_DECL_SESG(AB8, LAD1, LPC, SIG_DESC_SET(SCU434, 17),
--			  SIG_DESC_CLEAR(SCU510, 6));
--SIG_EXPR_LIST_DECL_SESG(AB8, ESPID1, ESPI, SIG_DESC_SET(SCU434, 17),
- 			  SIG_DESC_SET(SCU510, 6));
-+SIG_EXPR_LIST_DECL_SESG(AB8, ESPID1, ESPI, SIG_DESC_SET(SCU434, 17));
- PIN_DECL_2(AB8, GPIOW1, LAD1, ESPID1);
- 
- #define AC8 178
- SIG_EXPR_LIST_DECL_SESG(AC8, LAD2, LPC, SIG_DESC_SET(SCU434, 18),
--			  SIG_DESC_CLEAR(SCU510, 6));
--SIG_EXPR_LIST_DECL_SESG(AC8, ESPID2, ESPI, SIG_DESC_SET(SCU434, 18),
- 			  SIG_DESC_SET(SCU510, 6));
-+SIG_EXPR_LIST_DECL_SESG(AC8, ESPID2, ESPI, SIG_DESC_SET(SCU434, 18));
- PIN_DECL_2(AC8, GPIOW2, LAD2, ESPID2);
- 
- #define AC7 179
- SIG_EXPR_LIST_DECL_SESG(AC7, LAD3, LPC, SIG_DESC_SET(SCU434, 19),
--			  SIG_DESC_CLEAR(SCU510, 6));
--SIG_EXPR_LIST_DECL_SESG(AC7, ESPID3, ESPI, SIG_DESC_SET(SCU434, 19),
- 			  SIG_DESC_SET(SCU510, 6));
-+SIG_EXPR_LIST_DECL_SESG(AC7, ESPID3, ESPI, SIG_DESC_SET(SCU434, 19));
- PIN_DECL_2(AC7, GPIOW3, LAD3, ESPID3);
- 
- #define AE7 180
- SIG_EXPR_LIST_DECL_SESG(AE7, LCLK, LPC, SIG_DESC_SET(SCU434, 20),
--			  SIG_DESC_CLEAR(SCU510, 6));
--SIG_EXPR_LIST_DECL_SESG(AE7, ESPICK, ESPI, SIG_DESC_SET(SCU434, 20),
- 			  SIG_DESC_SET(SCU510, 6));
-+SIG_EXPR_LIST_DECL_SESG(AE7, ESPICK, ESPI, SIG_DESC_SET(SCU434, 20));
- PIN_DECL_2(AE7, GPIOW4, LCLK, ESPICK);
- 
- #define AF7 181
- SIG_EXPR_LIST_DECL_SESG(AF7, LFRAME, LPC, SIG_DESC_SET(SCU434, 21),
--			  SIG_DESC_CLEAR(SCU510, 6));
--SIG_EXPR_LIST_DECL_SESG(AF7, ESPICS, ESPI, SIG_DESC_SET(SCU434, 21),
- 			  SIG_DESC_SET(SCU510, 6));
-+SIG_EXPR_LIST_DECL_SESG(AF7, ESPICS, ESPI, SIG_DESC_SET(SCU434, 21));
- PIN_DECL_2(AF7, GPIOW5, LFRAME, ESPICS);
- 
- #define AD7 182
- SIG_EXPR_LIST_DECL_SESG(AD7, LSIRQ, LSIRQ, SIG_DESC_SET(SCU434, 22),
--			  SIG_DESC_CLEAR(SCU510, 6));
--SIG_EXPR_LIST_DECL_SESG(AD7, ESPIALT, ESPIALT, SIG_DESC_SET(SCU434, 22),
- 			  SIG_DESC_SET(SCU510, 6));
-+SIG_EXPR_LIST_DECL_SESG(AD7, ESPIALT, ESPIALT, SIG_DESC_SET(SCU434, 22));
- PIN_DECL_2(AD7, GPIOW6, LSIRQ, ESPIALT);
- FUNC_GROUP_DECL(LSIRQ, AD7);
- FUNC_GROUP_DECL(ESPIALT, AD7);
- 
- #define AD8 183
- SIG_EXPR_LIST_DECL_SESG(AD8, LPCRST, LPC, SIG_DESC_SET(SCU434, 23),
--			  SIG_DESC_CLEAR(SCU510, 6));
--SIG_EXPR_LIST_DECL_SESG(AD8, ESPIRST, ESPI, SIG_DESC_SET(SCU434, 23),
- 			  SIG_DESC_SET(SCU510, 6));
-+SIG_EXPR_LIST_DECL_SESG(AD8, ESPIRST, ESPI, SIG_DESC_SET(SCU434, 23));
- PIN_DECL_2(AD8, GPIOW7, LPCRST, ESPIRST);
- 
- FUNC_GROUP_DECL(LPC, AB7, AB8, AC8, AC7, AE7, AF7, AD8);
++	spin_unlock_irqrestore(&gpio_lock, flags);
++
+ #ifdef CONFIG_PINCTRL
+ 	INIT_LIST_HEAD(&gdev->pin_ranges);
+ #endif
 -- 
-2.20.1
+2.21.0
 
