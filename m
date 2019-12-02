@@ -2,55 +2,55 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 24AF710E5CE
-	for <lists+linux-gpio@lfdr.de>; Mon,  2 Dec 2019 07:14:05 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 8004910E5D1
+	for <lists+linux-gpio@lfdr.de>; Mon,  2 Dec 2019 07:14:06 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727221AbfLBGNC (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 2 Dec 2019 01:13:02 -0500
-Received: from out3-smtp.messagingengine.com ([66.111.4.27]:37455 "EHLO
+        id S1727356AbfLBGNI (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 2 Dec 2019 01:13:08 -0500
+Received: from out3-smtp.messagingengine.com ([66.111.4.27]:49975 "EHLO
         out3-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726474AbfLBGNC (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 2 Dec 2019 01:13:02 -0500
+        by vger.kernel.org with ESMTP id S1726474AbfLBGNI (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 2 Dec 2019 01:13:08 -0500
 Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailout.nyi.internal (Postfix) with ESMTP id 03B3C224A7;
-        Mon,  2 Dec 2019 01:13:01 -0500 (EST)
+        by mailout.nyi.internal (Postfix) with ESMTP id 4F61822657;
+        Mon,  2 Dec 2019 01:13:05 -0500 (EST)
 Received: from mailfrontend1 ([10.202.2.162])
-  by compute4.internal (MEProxy); Mon, 02 Dec 2019 01:13:01 -0500
+  by compute4.internal (MEProxy); Mon, 02 Dec 2019 01:13:05 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aj.id.au; h=from
         :to:cc:subject:date:message-id:in-reply-to:references
-        :mime-version:content-transfer-encoding; s=fm1; bh=E36weiBH8m/Vq
-        E8nSge2uRzO3FAv6UpmEY1p78whbww=; b=jUMO0tAq6sSANBEBAqloK9D6C+At/
-        7pKA4p8v1B83EeZGnmkMqr6hvuOLo2lUeP4PVgGM4K+Xr8II+xxjfkSBbzA7v3e2
-        M1x1fiAHcSXpDvjEaij7r1AIjhi3dWXjhiy9Hx//sN/C2dzn2pKGAHVDlPcN5mDC
-        FpU2Q01mo7M+0PG4rW9bjmLHMfYIkbrjVkbUbBJnZz5gW/+dI1f/cTqyXDXZnlKr
-        4pXMFRSsZmSzUDvdbtVy4bMT5nHNpS3YVlC8TeoZA/C9wQQpuQ2e5Bmk0y2/WbRD
-        DHu71Vg1wpxK/pWV0L7jgLhR/T496lUVoCe/KAoc80umrosWdB9F/hJtA==
+        :mime-version:content-transfer-encoding; s=fm1; bh=wtnMwWeyb7nP2
+        m6le0SvJ5RzrmGbJRGtCQLkRpR1Aac=; b=A1+8rEeu3+qqc/E39p3oJPT/GbIT7
+        uS2ckdWgLUzl5mxzm1TZvPfs5bLa1gPLtLtn+JFeb7zQyxcolWTw/lsBDEf8iZz4
+        Ik9sJcWYnqbLPBvEfKbvNNDN5FJDwmaYvxt9X++sp9bK6yEi+BFBCzqReCliYgD8
+        Z6qU6JjLkrqGyk2GIUCUkTQ6Yq2Xq73sIdgjA5kjAZ7nu74qYrzWzwgSa1AxkLtl
+        MGrwVUMY4J+k8H5bMGEctdhFfdhmyopmukUSKTLOvZ+cOBw5YmvWL+2Pr9OyGFQW
+        nhqzgxAcyOfTsQ/il0qwM3/WwGQ58l28Z6BkJNQx0tRSDlsJSQ+QJZFmQ==
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
         messagingengine.com; h=cc:content-transfer-encoding:date:from
         :in-reply-to:message-id:mime-version:references:subject:to
         :x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-        fm1; bh=E36weiBH8m/VqE8nSge2uRzO3FAv6UpmEY1p78whbww=; b=kX8Hyyls
-        KJrDhRrXYadinZ9nW87eF0NNch6DNgd50WOhXMz4OyBn/uANa/JNDZaNc4dJMJ75
-        wXDy4iFsBT1lf816s8oBaJpzAirBJlvlDJqp7Oa95trAVSz0vCP6PtU3uBMrNs4I
-        Jc5b2kgWqKWohQWbLQy1+pVx7oBGemrZ1290T4li9oFE47a8c0XPPeyP1NI+CYoh
-        lxpRKGM+WQDXUGRZ6+cRet/L0ep88E5n9Nl3fejEfgiIcNyJu/cytVr+xNBircee
-        1hR/4+PmwgLw1GtEe4DePLN8JAy3WrNwCUMozKv1upfCzH6YtXE7RZztbJPrbiKs
-        DCiT+ED4G12qyQ==
-X-ME-Sender: <xms:bKvkXbM7RnNqDD1p4qbScRMALn1XcMKYSmUkTUFlWo9GiOGJeGjfnQ>
+        fm1; bh=wtnMwWeyb7nP2m6le0SvJ5RzrmGbJRGtCQLkRpR1Aac=; b=l2adr0w6
+        vp6BK2r8fF+bJ0CQng5lyhKh9CS3ssr8RAK8SRoSVJbHHXgROaKoxFDOXaJgieCi
+        t34vsp8lpgVgU2tJLvOWxx+zkk3/AxrzUxGr7482x582ABFMWFbODfTmHRgDaz+2
+        cxBm229eiVK4efRJtLfE2vXLimvewoHh8vTG9o0l9HrWjBU6gK/FrrGUhVNKIcRO
+        /Mm0kiBQ5xF2STMYOtkuSvAnjLFmrieMsydwLixaxY3A/GVMYIIT/yVHPp9+63lU
+        6druh1x/You/Uha86bvEmnnFE1/MlcjGhjF3zAileEhkuLk35vcfP0yryQw7i3/L
+        ALsiUt1P/zFx4A==
+X-ME-Sender: <xms:cavkXcU4d0XtrhmzSzJJckcnBQGrqKSH3P--b7GV4T77mgU_7WO7pA>
 X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedufedrudejgedgleegucetufdoteggodetrfdotf
     fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
     uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
     cujfgurhephffvufffkffojghfggfgsedtkeertdertddtnecuhfhrohhmpeetnhgurhgv
     ficulfgvfhhfvghrhicuoegrnhgurhgvfiesrghjrdhiugdrrghuqeenucfkphepudduke
     drvdduuddrledvrddufeenucfrrghrrghmpehmrghilhhfrhhomheprghnughrvgifsegr
-    jhdrihgurdgruhenucevlhhushhtvghrufhiiigvpedv
-X-ME-Proxy: <xmx:bKvkXbgqzOXSGuwt8SAmYkdFv4jMB7lKLJ8EweNg79ZOYnU8OLrKGA>
-    <xmx:bKvkXcRXloOcOO5l0QB5UmLc7XBM6P0ol7x8DoJyzx7d6XilCHsczQ>
-    <xmx:bKvkXeMag0KRyE-_6w9NQzeHc8QCEe0i-VwbUWT6KhvLew9PaDpf0A>
-    <xmx:bKvkXZwmr-NkiYvIaAwMi-kD88sl4i3jIIZMtM4FEc4-9hLEQS4HaQ>
+    jhdrihgurdgruhenucevlhhushhtvghrufhiiigvpeef
+X-ME-Proxy: <xmx:cavkXQxdiWAXkiBcPOEfI_zTNEpC4w-397fi5jjFugZEPxSTEyUWfw>
+    <xmx:cavkXet0lFBPjY1PcPpiAsJnBKpjhxI3C5tboHaAwNpSL6Lump-QDg>
+    <xmx:cavkXZE5v2IX-61nWHo7INca02crhDmvIt_LstUo5Bbp8NwBawIB4g>
+    <xmx:cavkXTN8ozFGg332zABeHAM-y8DLiXiQz5n9SgGc9-TliEH-kLxTfw>
 Received: from mistburn.lan (unknown [118.211.92.13])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 527EE8005B;
-        Mon,  2 Dec 2019 01:12:57 -0500 (EST)
+        by mail.messagingengine.com (Postfix) with ESMTPA id 5CB508005B;
+        Mon,  2 Dec 2019 01:13:01 -0500 (EST)
 From:   Andrew Jeffery <andrew@aj.id.au>
 To:     linux-gpio@vger.kernel.org
 Cc:     Johnny Huang <johnny_huang@aspeedtech.com>,
@@ -58,9 +58,9 @@ Cc:     Johnny Huang <johnny_huang@aspeedtech.com>,
         joel@jms.id.au, linux-aspeed@lists.ozlabs.org,
         devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 3/7] pinctrl: aspeed-g6: Add support for the AST2600 USB pinmux
-Date:   Mon,  2 Dec 2019 16:44:28 +1030
-Message-Id: <20191202061432.3996-4-andrew@aj.id.au>
+Subject: [PATCH 4/7] pinctrl: aspeed: Add ASPEED_SB_PINCONF() helper
+Date:   Mon,  2 Dec 2019 16:44:29 +1030
+Message-Id: <20191202061432.3996-5-andrew@aj.id.au>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191202061432.3996-1-andrew@aj.id.au>
 References: <20191202061432.3996-1-andrew@aj.id.au>
@@ -73,163 +73,471 @@ X-Mailing-List: linux-gpio@vger.kernel.org
 
 From: Johnny Huang <johnny_huang@aspeedtech.com>
 
-AST2600 has two USB ports, A, B:
+This helper macro is for declaring single bit (SB) mask pinconf,
+and is used to prepare for modifying aspeed_pin_config
+structure, the aspeed_pin_config structure @bit variable will be
+modified to @mask.
 
-Port A supports 4 distinct modes:
-	1. PCIe EHCI to Hub
-	2. Hub to PHY
-	3. BMC EHCI to PHY
-	4. PCIe EHCI to PHY
-
-Port B support 3 modes:
-	1. USB1.1 HID controller
-	2. USB2.0 Device controller
-	3. BMC EHCI port2
-
-Implement pinmux support by mapping each ports' functions onto a single
-pin group for each port.
+This case is common in the AST2400/AST2500 which the mask is a single bit.
 
 Signed-off-by: Johnny Huang <johnny_huang@aspeedtech.com>
 Signed-off-by: Andrew Jeffery <andrew@aj.id.au>
 ---
- drivers/pinctrl/aspeed/pinctrl-aspeed-g6.c | 69 +++++++++++++++++++++-
- drivers/pinctrl/aspeed/pinmux-aspeed.h     |  1 +
- 2 files changed, 69 insertions(+), 1 deletion(-)
+ drivers/pinctrl/aspeed/pinctrl-aspeed-g4.c | 160 ++++++++--------
+ drivers/pinctrl/aspeed/pinctrl-aspeed-g5.c | 202 ++++++++++-----------
+ drivers/pinctrl/aspeed/pinctrl-aspeed.h    |   7 +
+ 3 files changed, 188 insertions(+), 181 deletions(-)
 
-diff --git a/drivers/pinctrl/aspeed/pinctrl-aspeed-g6.c b/drivers/pinctrl/aspeed/pinctrl-aspeed-g6.c
-index 49fc4824ccee..22e6c07149c3 100644
---- a/drivers/pinctrl/aspeed/pinctrl-aspeed-g6.c
-+++ b/drivers/pinctrl/aspeed/pinctrl-aspeed-g6.c
-@@ -26,6 +26,7 @@
- #define SCU430		0x430 /* Multi-function Pin Control #8  */
- #define SCU434		0x434 /* Multi-function Pin Control #9  */
- #define SCU438		0x438 /* Multi-function Pin Control #10 */
-+#define SCU440		0x440 /* USB Multi-function Pin Control #12 */
- #define SCU450		0x450 /* Multi-function Pin Control #14 */
- #define SCU4B0		0x4B0 /* Multi-function Pin Control #17 */
- #define SCU4B4		0x4B4 /* Multi-function Pin Control #18 */
-@@ -36,8 +37,9 @@
- #define SCU500		0x500 /* Hardware Strap 1 */
- #define SCU510		0x510 /* Hardware Strap 2 */
- #define SCU694		0x694 /* Multi-function Pin Control #25 */
-+#define SCUC20		0xC20 /* PCIE configuration Setting Control */
+diff --git a/drivers/pinctrl/aspeed/pinctrl-aspeed-g4.c b/drivers/pinctrl/aspeed/pinctrl-aspeed-g4.c
+index 95ea593fa29d..c56ded0ac57e 100644
+--- a/drivers/pinctrl/aspeed/pinctrl-aspeed-g4.c
++++ b/drivers/pinctrl/aspeed/pinctrl-aspeed-g4.c
+@@ -2439,88 +2439,88 @@ static const struct aspeed_pin_function aspeed_g4_functions[] = {
  
--#define ASPEED_G6_NR_PINS 252
-+#define ASPEED_G6_NR_PINS 256
+ static const struct aspeed_pin_config aspeed_g4_configs[] = {
+ 	/* GPIO banks ranges [A, B], [D, J], [M, R] */
+-	{ PIN_CONFIG_BIAS_PULL_DOWN, { D6,  D5  }, SCU8C, 16 },
+-	{ PIN_CONFIG_BIAS_DISABLE,   { D6,  D5  }, SCU8C, 16 },
+-	{ PIN_CONFIG_BIAS_PULL_DOWN, { J21, E18 }, SCU8C, 17 },
+-	{ PIN_CONFIG_BIAS_DISABLE,   { J21, E18 }, SCU8C, 17 },
+-	{ PIN_CONFIG_BIAS_PULL_DOWN, { A18, E15 }, SCU8C, 19 },
+-	{ PIN_CONFIG_BIAS_DISABLE,   { A18, E15 }, SCU8C, 19 },
+-	{ PIN_CONFIG_BIAS_PULL_DOWN, { D15, B14 }, SCU8C, 20 },
+-	{ PIN_CONFIG_BIAS_DISABLE,   { D15, B14 }, SCU8C, 20 },
+-	{ PIN_CONFIG_BIAS_PULL_DOWN, { D18, C17 }, SCU8C, 21 },
+-	{ PIN_CONFIG_BIAS_DISABLE,   { D18, C17 }, SCU8C, 21 },
+-	{ PIN_CONFIG_BIAS_PULL_DOWN, { A14, U18 }, SCU8C, 22 },
+-	{ PIN_CONFIG_BIAS_DISABLE,   { A14, U18 }, SCU8C, 22 },
+-	{ PIN_CONFIG_BIAS_PULL_DOWN, { A8,  E7  }, SCU8C, 23 },
+-	{ PIN_CONFIG_BIAS_DISABLE,   { A8,  E7  }, SCU8C, 23 },
+-	{ PIN_CONFIG_BIAS_PULL_DOWN, { C22, E20 }, SCU8C, 24 },
+-	{ PIN_CONFIG_BIAS_DISABLE,   { C22, E20 }, SCU8C, 24 },
+-	{ PIN_CONFIG_BIAS_PULL_DOWN, { J5,  T1  }, SCU8C, 25 },
+-	{ PIN_CONFIG_BIAS_DISABLE,   { J5,  T1  }, SCU8C, 25 },
+-	{ PIN_CONFIG_BIAS_PULL_DOWN, { U1,  U5  }, SCU8C, 26 },
+-	{ PIN_CONFIG_BIAS_DISABLE,   { U1,  U5  }, SCU8C, 26 },
+-	{ PIN_CONFIG_BIAS_PULL_DOWN, { V3,  V5  }, SCU8C, 27 },
+-	{ PIN_CONFIG_BIAS_DISABLE,   { V3,  V5  }, SCU8C, 27 },
+-	{ PIN_CONFIG_BIAS_PULL_DOWN, { W4,  AB2 }, SCU8C, 28 },
+-	{ PIN_CONFIG_BIAS_DISABLE,   { W4,  AB2 }, SCU8C, 28 },
+-	{ PIN_CONFIG_BIAS_PULL_DOWN, { V6,  V7  }, SCU8C, 29 },
+-	{ PIN_CONFIG_BIAS_DISABLE,   { V6,  V7  }, SCU8C, 29 },
+-	{ PIN_CONFIG_BIAS_PULL_DOWN, { Y6,  AB7 }, SCU8C, 30 },
+-	{ PIN_CONFIG_BIAS_DISABLE,   { Y6,  AB7 }, SCU8C, 30 },
+-	{ PIN_CONFIG_BIAS_PULL_DOWN, { V20, A5  }, SCU8C, 31 },
+-	{ PIN_CONFIG_BIAS_DISABLE,   { V20, A5  }, SCU8C, 31 },
++	ASPEED_SB_PINCONF(PIN_CONFIG_BIAS_PULL_DOWN, D6,  D5,  SCU8C, 16),
++	ASPEED_SB_PINCONF(PIN_CONFIG_BIAS_DISABLE,   D6,  D5,  SCU8C, 16),
++	ASPEED_SB_PINCONF(PIN_CONFIG_BIAS_PULL_DOWN, J21, E18, SCU8C, 17),
++	ASPEED_SB_PINCONF(PIN_CONFIG_BIAS_DISABLE,   J21, E18, SCU8C, 17),
++	ASPEED_SB_PINCONF(PIN_CONFIG_BIAS_PULL_DOWN, A18, E15, SCU8C, 19),
++	ASPEED_SB_PINCONF(PIN_CONFIG_BIAS_DISABLE,   A18, E15, SCU8C, 19),
++	ASPEED_SB_PINCONF(PIN_CONFIG_BIAS_PULL_DOWN, D15, B14, SCU8C, 20),
++	ASPEED_SB_PINCONF(PIN_CONFIG_BIAS_DISABLE,   D15, B14, SCU8C, 20),
++	ASPEED_SB_PINCONF(PIN_CONFIG_BIAS_PULL_DOWN, D18, C17, SCU8C, 21),
++	ASPEED_SB_PINCONF(PIN_CONFIG_BIAS_DISABLE,   D18, C17, SCU8C, 21),
++	ASPEED_SB_PINCONF(PIN_CONFIG_BIAS_PULL_DOWN, A14, U18, SCU8C, 22),
++	ASPEED_SB_PINCONF(PIN_CONFIG_BIAS_DISABLE,   A14, U18, SCU8C, 22),
++	ASPEED_SB_PINCONF(PIN_CONFIG_BIAS_PULL_DOWN, A8,  E7,  SCU8C, 23),
++	ASPEED_SB_PINCONF(PIN_CONFIG_BIAS_DISABLE,   A8,  E7,  SCU8C, 23),
++	ASPEED_SB_PINCONF(PIN_CONFIG_BIAS_PULL_DOWN, C22, E20, SCU8C, 24),
++	ASPEED_SB_PINCONF(PIN_CONFIG_BIAS_DISABLE,   C22, E20, SCU8C, 24),
++	ASPEED_SB_PINCONF(PIN_CONFIG_BIAS_PULL_DOWN, J5,  T1,  SCU8C, 25),
++	ASPEED_SB_PINCONF(PIN_CONFIG_BIAS_DISABLE,   J5,  T1,  SCU8C, 25),
++	ASPEED_SB_PINCONF(PIN_CONFIG_BIAS_PULL_DOWN, U1,  U5,  SCU8C, 26),
++	ASPEED_SB_PINCONF(PIN_CONFIG_BIAS_DISABLE,   U1,  U5,  SCU8C, 26),
++	ASPEED_SB_PINCONF(PIN_CONFIG_BIAS_PULL_DOWN, V3,  V5,  SCU8C, 27),
++	ASPEED_SB_PINCONF(PIN_CONFIG_BIAS_DISABLE,   V3,  V5,  SCU8C, 27),
++	ASPEED_SB_PINCONF(PIN_CONFIG_BIAS_PULL_DOWN, W4,  AB2, SCU8C, 28),
++	ASPEED_SB_PINCONF(PIN_CONFIG_BIAS_DISABLE,   W4,  AB2, SCU8C, 28),
++	ASPEED_SB_PINCONF(PIN_CONFIG_BIAS_PULL_DOWN, V6,  V7,  SCU8C, 29),
++	ASPEED_SB_PINCONF(PIN_CONFIG_BIAS_DISABLE,   V6,  V7,  SCU8C, 29),
++	ASPEED_SB_PINCONF(PIN_CONFIG_BIAS_PULL_DOWN, Y6,  AB7, SCU8C, 30),
++	ASPEED_SB_PINCONF(PIN_CONFIG_BIAS_DISABLE,   Y6,  AB7, SCU8C, 30),
++	ASPEED_SB_PINCONF(PIN_CONFIG_BIAS_PULL_DOWN, V20, A5,  SCU8C, 31),
++	ASPEED_SB_PINCONF(PIN_CONFIG_BIAS_DISABLE,   V20, A5,  SCU8C, 31),
  
- #define M24 0
- SIG_EXPR_LIST_DECL_SESG(M24, MDC3, MDIO3, SIG_DESC_SET(SCU410, 0));
-@@ -1562,6 +1564,58 @@ PIN_DECL_(AE22, SIG_EXPR_LIST_PTR(AE22, I3C2SDA));
+ 	/* GPIOs T[0-5] (RGMII1 Tx pins) */
+-	{ PIN_CONFIG_DRIVE_STRENGTH, { A12, A13 }, SCU90, 9  },
+-	{ PIN_CONFIG_BIAS_PULL_DOWN, { A12, A13 }, SCU90, 12 },
+-	{ PIN_CONFIG_BIAS_DISABLE,   { A12, A13 }, SCU90, 12 },
++	ASPEED_SB_PINCONF(PIN_CONFIG_DRIVE_STRENGTH, A12, A13, SCU90, 9),
++	ASPEED_SB_PINCONF(PIN_CONFIG_BIAS_PULL_DOWN, A12, A13, SCU90, 12),
++	ASPEED_SB_PINCONF(PIN_CONFIG_BIAS_DISABLE,   A12, A13, SCU90, 12),
  
- FUNC_GROUP_DECL(I3C2, AF22, AE22);
+ 	/* GPIOs T[6-7], U[0-3] (RGMII2 TX pins) */
+-	{ PIN_CONFIG_DRIVE_STRENGTH, { D9,  D10 }, SCU90, 11 },
+-	{ PIN_CONFIG_BIAS_PULL_DOWN, { D9,  D10 }, SCU90, 14 },
+-	{ PIN_CONFIG_BIAS_DISABLE,   { D9,  D10 }, SCU90, 14 },
++	ASPEED_SB_PINCONF(PIN_CONFIG_DRIVE_STRENGTH, D9,  D10, SCU90, 11),
++	ASPEED_SB_PINCONF(PIN_CONFIG_BIAS_PULL_DOWN, D9,  D10, SCU90, 14),
++	ASPEED_SB_PINCONF(PIN_CONFIG_BIAS_DISABLE,   D9,  D10, SCU90, 14),
  
-+#define USB2ADP_DESC   { ASPEED_IP_SCU, SCU440, GENMASK(25, 24), 0, 0 }
-+#define USB2AD_DESC    { ASPEED_IP_SCU, SCU440, GENMASK(25, 24), 1, 0 }
-+#define USB2AH_DESC    { ASPEED_IP_SCU, SCU440, GENMASK(25, 24), 2, 0 }
-+#define USB2AHP_DESC   { ASPEED_IP_SCU, SCU440, GENMASK(25, 24), 3, 0 }
-+#define USB11BHID_DESC { ASPEED_IP_SCU, SCU440, GENMASK(29, 28), 0, 0 }
-+#define USB2BD_DESC    { ASPEED_IP_SCU, SCU440, GENMASK(29, 28), 1, 0 }
-+#define USB2BH_DESC    { ASPEED_IP_SCU, SCU440, GENMASK(29, 28), 2, 0 }
-+
-+#define A4 252
-+SIG_EXPR_LIST_DECL_SEMG(A4, USB2ADPDP, USBA, USB2ADP, USB2ADP_DESC,
-+			SIG_DESC_SET(SCUC20, 16));
-+SIG_EXPR_LIST_DECL_SEMG(A4, USB2ADDP, USBA, USB2AD, USB2AD_DESC);
-+SIG_EXPR_LIST_DECL_SEMG(A4, USB2AHDP, USBA, USB2AH, USB2AH_DESC);
-+SIG_EXPR_LIST_DECL_SEMG(A4, USB2AHPDP, USBA, USB2AHP, USB2AHP_DESC);
-+PIN_DECL_(A4, SIG_EXPR_LIST_PTR(A4, USB2ADPDP), SIG_EXPR_LIST_PTR(A4, USB2ADDP),
-+	  SIG_EXPR_LIST_PTR(A4, USB2AHDP));
-+
-+#define B4 253
-+SIG_EXPR_LIST_DECL_SEMG(B4, USB2ADPDN, USBA, USB2ADP, USB2ADP_DESC);
-+SIG_EXPR_LIST_DECL_SEMG(B4, USB2ADDN, USBA, USB2AD, USB2AD_DESC);
-+SIG_EXPR_LIST_DECL_SEMG(B4, USB2AHDN, USBA, USB2AH, USB2AH_DESC);
-+SIG_EXPR_LIST_DECL_SEMG(B4, USB2AHPDN, USBA, USB2AHP, USB2AHP_DESC);
-+PIN_DECL_(B4, SIG_EXPR_LIST_PTR(B4, USB2ADPDN), SIG_EXPR_LIST_PTR(B4, USB2ADDN),
-+	  SIG_EXPR_LIST_PTR(B4, USB2AHDN));
-+
-+GROUP_DECL(USBA, A4, B4);
-+
-+FUNC_DECL_1(USB2ADP, USBA);
-+FUNC_DECL_1(USB2AD, USBA);
-+FUNC_DECL_1(USB2AH, USBA);
-+FUNC_DECL_1(USB2AHP, USBA);
-+
-+#define A6 254
-+SIG_EXPR_LIST_DECL_SEMG(A6, USB11BDP, USBB, USB11BHID, USB11BHID_DESC);
-+SIG_EXPR_LIST_DECL_SEMG(A6, USB2BDDP, USBB, USB2BD, USB2BD_DESC);
-+SIG_EXPR_LIST_DECL_SEMG(A6, USB2BHDP, USBB, USB2BH, USB2BH_DESC);
-+PIN_DECL_(A6, SIG_EXPR_LIST_PTR(A6, USB11BDP), SIG_EXPR_LIST_PTR(A6, USB2BDDP),
-+	  SIG_EXPR_LIST_PTR(A6, USB2BHDP));
-+
-+#define B6 255
-+SIG_EXPR_LIST_DECL_SEMG(B6, USB11BDN, USBB, USB11BHID, USB11BHID_DESC);
-+SIG_EXPR_LIST_DECL_SEMG(B6, USB2BDDN, USBB, USB2BD, USB2BD_DESC);
-+SIG_EXPR_LIST_DECL_SEMG(B6, USB2BHDN, USBB, USB2BH, USB2BH_DESC);
-+PIN_DECL_(B6, SIG_EXPR_LIST_PTR(B6, USB11BDN), SIG_EXPR_LIST_PTR(B6, USB2BDDN),
-+	  SIG_EXPR_LIST_PTR(B6, USB2BHDN));
-+
-+GROUP_DECL(USBB, A6, B6);
-+
-+FUNC_DECL_1(USB11BHID, USBB);
-+FUNC_DECL_1(USB2BD, USBB);
-+FUNC_DECL_1(USB2BH, USBB);
-+
- /* Pins, groups and functions are sort(1):ed alphabetically for sanity */
+ 	/* GPIOs U[4-7], V[0-1] (RGMII1 Rx pins) */
+-	{ PIN_CONFIG_BIAS_PULL_DOWN, { E11, E10 }, SCU90, 13 },
+-	{ PIN_CONFIG_BIAS_DISABLE,   { E11, E10 }, SCU90, 13 },
++	ASPEED_SB_PINCONF(PIN_CONFIG_BIAS_PULL_DOWN, E11, E10, SCU90, 13),
++	ASPEED_SB_PINCONF(PIN_CONFIG_BIAS_DISABLE,   E11, E10, SCU90, 13),
  
- static struct pinctrl_pin_desc aspeed_g6_pins[ASPEED_G6_NR_PINS] = {
-@@ -1582,6 +1636,8 @@ static struct pinctrl_pin_desc aspeed_g6_pins[ASPEED_G6_NR_PINS] = {
- 	ASPEED_PINCTRL_PIN(A24),
- 	ASPEED_PINCTRL_PIN(A25),
- 	ASPEED_PINCTRL_PIN(A3),
-+	ASPEED_PINCTRL_PIN(A4),
-+	ASPEED_PINCTRL_PIN(A6),
- 	ASPEED_PINCTRL_PIN(AA11),
- 	ASPEED_PINCTRL_PIN(AA12),
- 	ASPEED_PINCTRL_PIN(AA16),
-@@ -1686,6 +1742,8 @@ static struct pinctrl_pin_desc aspeed_g6_pins[ASPEED_G6_NR_PINS] = {
- 	ASPEED_PINCTRL_PIN(B25),
- 	ASPEED_PINCTRL_PIN(B26),
- 	ASPEED_PINCTRL_PIN(B3),
-+	ASPEED_PINCTRL_PIN(B4),
-+	ASPEED_PINCTRL_PIN(B6),
- 	ASPEED_PINCTRL_PIN(C1),
- 	ASPEED_PINCTRL_PIN(C11),
- 	ASPEED_PINCTRL_PIN(C12),
-@@ -2046,6 +2104,8 @@ static const struct aspeed_pin_group aspeed_g6_groups[] = {
- 	ASPEED_PINCTRL_GROUP(UART7),
- 	ASPEED_PINCTRL_GROUP(UART8),
- 	ASPEED_PINCTRL_GROUP(UART9),
-+	ASPEED_PINCTRL_GROUP(USBA),
-+	ASPEED_PINCTRL_GROUP(USBB),
- 	ASPEED_PINCTRL_GROUP(VB),
- 	ASPEED_PINCTRL_GROUP(VGAHS),
- 	ASPEED_PINCTRL_GROUP(VGAVS),
-@@ -2257,6 +2317,13 @@ static const struct aspeed_pin_function aspeed_g6_functions[] = {
- 	ASPEED_PINCTRL_FUNC(UART7),
- 	ASPEED_PINCTRL_FUNC(UART8),
- 	ASPEED_PINCTRL_FUNC(UART9),
-+	ASPEED_PINCTRL_FUNC(USB11BHID),
-+	ASPEED_PINCTRL_FUNC(USB2AD),
-+	ASPEED_PINCTRL_FUNC(USB2ADP),
-+	ASPEED_PINCTRL_FUNC(USB2AH),
-+	ASPEED_PINCTRL_FUNC(USB2AHP),
-+	ASPEED_PINCTRL_FUNC(USB2BD),
-+	ASPEED_PINCTRL_FUNC(USB2BH),
- 	ASPEED_PINCTRL_FUNC(VB),
- 	ASPEED_PINCTRL_FUNC(VGAHS),
- 	ASPEED_PINCTRL_FUNC(VGAVS),
-diff --git a/drivers/pinctrl/aspeed/pinmux-aspeed.h b/drivers/pinctrl/aspeed/pinmux-aspeed.h
-index 140c5ce9fbc1..f86739e800c3 100644
---- a/drivers/pinctrl/aspeed/pinmux-aspeed.h
-+++ b/drivers/pinctrl/aspeed/pinmux-aspeed.h
-@@ -737,6 +737,7 @@ struct aspeed_pin_desc {
- #define FUNC_DECL_(func, ...) \
- 	static const char *FUNC_SYM(func)[] = { __VA_ARGS__ }
+ 	/* GPIOs V[2-7] (RGMII2 Rx pins) */
+-	{ PIN_CONFIG_BIAS_PULL_DOWN, { C9,  C8  }, SCU90, 15 },
+-	{ PIN_CONFIG_BIAS_DISABLE,   { C9,  C8  }, SCU90, 15 },
++	ASPEED_SB_PINCONF(PIN_CONFIG_BIAS_PULL_DOWN, C9,  C8,  SCU90, 15),
++	ASPEED_SB_PINCONF(PIN_CONFIG_BIAS_DISABLE,   C9,  C8,  SCU90, 15),
  
-+#define FUNC_DECL_1(func, group) FUNC_DECL_(func, #group)
- #define FUNC_DECL_2(func, one, two) FUNC_DECL_(func, #one, #two)
- #define FUNC_DECL_3(func, one, two, three) FUNC_DECL_(func, #one, #two, #three)
+ 	/* ADC pull-downs (SCUA8[19:4]) */
+-	{ PIN_CONFIG_BIAS_PULL_DOWN, { L5,  L5  }, SCUA8, 4 },
+-	{ PIN_CONFIG_BIAS_DISABLE,   { L5,  L5  }, SCUA8, 4 },
+-	{ PIN_CONFIG_BIAS_PULL_DOWN, { L4,  L4  }, SCUA8, 5 },
+-	{ PIN_CONFIG_BIAS_DISABLE,   { L4,  L4  }, SCUA8, 5 },
+-	{ PIN_CONFIG_BIAS_PULL_DOWN, { L3,  L3  }, SCUA8, 6 },
+-	{ PIN_CONFIG_BIAS_DISABLE,   { L3,  L3  }, SCUA8, 6 },
+-	{ PIN_CONFIG_BIAS_PULL_DOWN, { L2,  L2  }, SCUA8, 7 },
+-	{ PIN_CONFIG_BIAS_DISABLE,   { L2,  L2  }, SCUA8, 7 },
+-	{ PIN_CONFIG_BIAS_PULL_DOWN, { L1,  L1  }, SCUA8, 8 },
+-	{ PIN_CONFIG_BIAS_DISABLE,   { L1,  L1  }, SCUA8, 8 },
+-	{ PIN_CONFIG_BIAS_PULL_DOWN, { M5,  M5  }, SCUA8, 9 },
+-	{ PIN_CONFIG_BIAS_DISABLE,   { M5,  M5  }, SCUA8, 9 },
+-	{ PIN_CONFIG_BIAS_PULL_DOWN, { M4,  M4  }, SCUA8, 10 },
+-	{ PIN_CONFIG_BIAS_DISABLE,   { M4,  M4  }, SCUA8, 10 },
+-	{ PIN_CONFIG_BIAS_PULL_DOWN, { M3,  M3  }, SCUA8, 11 },
+-	{ PIN_CONFIG_BIAS_DISABLE,   { M3,  M3  }, SCUA8, 11 },
+-	{ PIN_CONFIG_BIAS_PULL_DOWN, { M2,  M2  }, SCUA8, 12 },
+-	{ PIN_CONFIG_BIAS_DISABLE,   { M2,  M2  }, SCUA8, 12 },
+-	{ PIN_CONFIG_BIAS_PULL_DOWN, { M1,  M1  }, SCUA8, 13 },
+-	{ PIN_CONFIG_BIAS_DISABLE,   { M1,  M1  }, SCUA8, 13 },
+-	{ PIN_CONFIG_BIAS_PULL_DOWN, { N5,  N5  }, SCUA8, 14 },
+-	{ PIN_CONFIG_BIAS_DISABLE,   { N5,  N5  }, SCUA8, 14 },
+-	{ PIN_CONFIG_BIAS_PULL_DOWN, { N4,  N4  }, SCUA8, 15 },
+-	{ PIN_CONFIG_BIAS_DISABLE,   { N4,  N4  }, SCUA8, 15 },
+-	{ PIN_CONFIG_BIAS_PULL_DOWN, { N3,  N3  }, SCUA8, 16 },
+-	{ PIN_CONFIG_BIAS_DISABLE,   { N3,  N3  }, SCUA8, 16 },
+-	{ PIN_CONFIG_BIAS_PULL_DOWN, { N2,  N2  }, SCUA8, 17 },
+-	{ PIN_CONFIG_BIAS_DISABLE,   { N2,  N2  }, SCUA8, 17 },
+-	{ PIN_CONFIG_BIAS_PULL_DOWN, { N1,  N1  }, SCUA8, 18 },
+-	{ PIN_CONFIG_BIAS_DISABLE,   { N1,  N1  }, SCUA8, 18 },
+-	{ PIN_CONFIG_BIAS_PULL_DOWN, { P5,  P5  }, SCUA8, 19 },
+-	{ PIN_CONFIG_BIAS_DISABLE,   { P5,  P5  }, SCUA8, 19 },
++	ASPEED_SB_PINCONF(PIN_CONFIG_BIAS_PULL_DOWN, L5,  L5,  SCUA8, 4),
++	ASPEED_SB_PINCONF(PIN_CONFIG_BIAS_DISABLE,   L5,  L5,  SCUA8, 4),
++	ASPEED_SB_PINCONF(PIN_CONFIG_BIAS_PULL_DOWN, L4,  L4,  SCUA8, 5),
++	ASPEED_SB_PINCONF(PIN_CONFIG_BIAS_DISABLE,   L4,  L4,  SCUA8, 5),
++	ASPEED_SB_PINCONF(PIN_CONFIG_BIAS_PULL_DOWN, L3,  L3,  SCUA8, 6),
++	ASPEED_SB_PINCONF(PIN_CONFIG_BIAS_DISABLE,   L3,  L3,  SCUA8, 6),
++	ASPEED_SB_PINCONF(PIN_CONFIG_BIAS_PULL_DOWN, L2,  L2,  SCUA8, 7),
++	ASPEED_SB_PINCONF(PIN_CONFIG_BIAS_DISABLE,   L2,  L2,  SCUA8, 7),
++	ASPEED_SB_PINCONF(PIN_CONFIG_BIAS_PULL_DOWN, L1,  L1,  SCUA8, 8),
++	ASPEED_SB_PINCONF(PIN_CONFIG_BIAS_DISABLE,   L1,  L1,  SCUA8, 8),
++	ASPEED_SB_PINCONF(PIN_CONFIG_BIAS_PULL_DOWN, M5,  M5,  SCUA8, 9),
++	ASPEED_SB_PINCONF(PIN_CONFIG_BIAS_DISABLE,   M5,  M5,  SCUA8, 9),
++	ASPEED_SB_PINCONF(PIN_CONFIG_BIAS_PULL_DOWN, M4,  M4,  SCUA8, 10),
++	ASPEED_SB_PINCONF(PIN_CONFIG_BIAS_DISABLE,   M4,  M4,  SCUA8, 10),
++	ASPEED_SB_PINCONF(PIN_CONFIG_BIAS_PULL_DOWN, M3,  M3,  SCUA8, 11),
++	ASPEED_SB_PINCONF(PIN_CONFIG_BIAS_DISABLE,   M3,  M3,  SCUA8, 11),
++	ASPEED_SB_PINCONF(PIN_CONFIG_BIAS_PULL_DOWN, M2,  M2,  SCUA8, 12),
++	ASPEED_SB_PINCONF(PIN_CONFIG_BIAS_DISABLE,   M2,  M2,  SCUA8, 12),
++	ASPEED_SB_PINCONF(PIN_CONFIG_BIAS_PULL_DOWN, M1,  M1,  SCUA8, 13),
++	ASPEED_SB_PINCONF(PIN_CONFIG_BIAS_DISABLE,   M1,  M1,  SCUA8, 13),
++	ASPEED_SB_PINCONF(PIN_CONFIG_BIAS_PULL_DOWN, N5,  N5,  SCUA8, 14),
++	ASPEED_SB_PINCONF(PIN_CONFIG_BIAS_DISABLE,   N5,  N5,  SCUA8, 14),
++	ASPEED_SB_PINCONF(PIN_CONFIG_BIAS_PULL_DOWN, N4,  N4,  SCUA8, 15),
++	ASPEED_SB_PINCONF(PIN_CONFIG_BIAS_DISABLE,   N4,  N4,  SCUA8, 15),
++	ASPEED_SB_PINCONF(PIN_CONFIG_BIAS_PULL_DOWN, N3,  N3,  SCUA8, 16),
++	ASPEED_SB_PINCONF(PIN_CONFIG_BIAS_DISABLE,   N3,  N3,  SCUA8, 16),
++	ASPEED_SB_PINCONF(PIN_CONFIG_BIAS_PULL_DOWN, N2,  N2,  SCUA8, 17),
++	ASPEED_SB_PINCONF(PIN_CONFIG_BIAS_DISABLE,   N2,  N2,  SCUA8, 17),
++	ASPEED_SB_PINCONF(PIN_CONFIG_BIAS_PULL_DOWN, N1,  N1,  SCUA8, 18),
++	ASPEED_SB_PINCONF(PIN_CONFIG_BIAS_DISABLE,   N1,  N1,  SCUA8, 18),
++	ASPEED_SB_PINCONF(PIN_CONFIG_BIAS_PULL_DOWN, P5,  P5,  SCUA8, 19),
++	ASPEED_SB_PINCONF(PIN_CONFIG_BIAS_DISABLE,   P5,  P5,  SCUA8, 19),
+ 
+ 	/*
+ 	 * Debounce settings for GPIOs D and E passthrough mode are in
+@@ -2531,14 +2531,14 @@ static const struct aspeed_pin_config aspeed_g4_configs[] = {
+ 	 * controller. Due to this tangle between GPIO and pinctrl we don't yet
+ 	 * fully support pass-through debounce.
+ 	 */
+-	{ PIN_CONFIG_INPUT_DEBOUNCE, { A18, D16 }, SCUA8, 20 },
+-	{ PIN_CONFIG_INPUT_DEBOUNCE, { B17, A17 }, SCUA8, 21 },
+-	{ PIN_CONFIG_INPUT_DEBOUNCE, { C16, B16 }, SCUA8, 22 },
+-	{ PIN_CONFIG_INPUT_DEBOUNCE, { A16, E15 }, SCUA8, 23 },
+-	{ PIN_CONFIG_INPUT_DEBOUNCE, { D15, C15 }, SCUA8, 24 },
+-	{ PIN_CONFIG_INPUT_DEBOUNCE, { B15, A15 }, SCUA8, 25 },
+-	{ PIN_CONFIG_INPUT_DEBOUNCE, { E14, D14 }, SCUA8, 26 },
+-	{ PIN_CONFIG_INPUT_DEBOUNCE, { C14, B14 }, SCUA8, 27 },
++	ASPEED_SB_PINCONF(PIN_CONFIG_INPUT_DEBOUNCE, A18, D16, SCUA8, 20),
++	ASPEED_SB_PINCONF(PIN_CONFIG_INPUT_DEBOUNCE, B17, A17, SCUA8, 21),
++	ASPEED_SB_PINCONF(PIN_CONFIG_INPUT_DEBOUNCE, C16, B16, SCUA8, 22),
++	ASPEED_SB_PINCONF(PIN_CONFIG_INPUT_DEBOUNCE, A16, E15, SCUA8, 23),
++	ASPEED_SB_PINCONF(PIN_CONFIG_INPUT_DEBOUNCE, D15, C15, SCUA8, 24),
++	ASPEED_SB_PINCONF(PIN_CONFIG_INPUT_DEBOUNCE, B15, A15, SCUA8, 25),
++	ASPEED_SB_PINCONF(PIN_CONFIG_INPUT_DEBOUNCE, E14, D14, SCUA8, 26),
++	ASPEED_SB_PINCONF(PIN_CONFIG_INPUT_DEBOUNCE, C14, B14, SCUA8, 27),
+ };
+ 
+ static int aspeed_g4_sig_expr_set(struct aspeed_pinmux_data *ctx,
+diff --git a/drivers/pinctrl/aspeed/pinctrl-aspeed-g5.c b/drivers/pinctrl/aspeed/pinctrl-aspeed-g5.c
+index d8a804b9f958..b2fe47b98fa0 100644
+--- a/drivers/pinctrl/aspeed/pinctrl-aspeed-g5.c
++++ b/drivers/pinctrl/aspeed/pinctrl-aspeed-g5.c
+@@ -2476,124 +2476,124 @@ static const struct aspeed_pin_function aspeed_g5_functions[] = {
+ 
+ static struct aspeed_pin_config aspeed_g5_configs[] = {
+ 	/* GPIOA, GPIOQ */
+-	{ PIN_CONFIG_BIAS_PULL_DOWN, { B14, B13 }, SCU8C, 16 },
+-	{ PIN_CONFIG_BIAS_DISABLE,   { B14, B13 }, SCU8C, 16 },
+-	{ PIN_CONFIG_BIAS_PULL_DOWN, { A11, N20 }, SCU8C, 16 },
+-	{ PIN_CONFIG_BIAS_DISABLE,   { A11, N20 }, SCU8C, 16 },
++	ASPEED_SB_PINCONF(PIN_CONFIG_BIAS_PULL_DOWN, B14, B13, SCU8C, 16),
++	ASPEED_SB_PINCONF(PIN_CONFIG_BIAS_DISABLE,   B14, B13, SCU8C, 16),
++	ASPEED_SB_PINCONF(PIN_CONFIG_BIAS_PULL_DOWN, A11, N20, SCU8C, 16),
++	ASPEED_SB_PINCONF(PIN_CONFIG_BIAS_DISABLE,   A11, N20, SCU8C, 16),
+ 
+ 	/* GPIOB, GPIOR */
+-	{ PIN_CONFIG_BIAS_PULL_DOWN, { K19, H20 }, SCU8C, 17 },
+-	{ PIN_CONFIG_BIAS_DISABLE,   { K19, H20 }, SCU8C, 17 },
+-	{ PIN_CONFIG_BIAS_PULL_DOWN, { AA19, E10 }, SCU8C, 17 },
+-	{ PIN_CONFIG_BIAS_DISABLE,   { AA19, E10 }, SCU8C, 17 },
++	ASPEED_SB_PINCONF(PIN_CONFIG_BIAS_PULL_DOWN, K19, H20, SCU8C, 17),
++	ASPEED_SB_PINCONF(PIN_CONFIG_BIAS_DISABLE,   K19, H20, SCU8C, 17),
++	ASPEED_SB_PINCONF(PIN_CONFIG_BIAS_PULL_DOWN, AA19, E10, SCU8C, 17),
++	ASPEED_SB_PINCONF(PIN_CONFIG_BIAS_DISABLE,   AA19, E10, SCU8C, 17),
+ 
+ 	/* GPIOC, GPIOS*/
+-	{ PIN_CONFIG_BIAS_PULL_DOWN, { C12, B11 }, SCU8C, 18 },
+-	{ PIN_CONFIG_BIAS_DISABLE,   { C12, B11 }, SCU8C, 18 },
+-	{ PIN_CONFIG_BIAS_PULL_DOWN, { V20, AA20 }, SCU8C, 18 },
+-	{ PIN_CONFIG_BIAS_DISABLE,   { V20, AA20 }, SCU8C, 18 },
++	ASPEED_SB_PINCONF(PIN_CONFIG_BIAS_PULL_DOWN, C12, B11, SCU8C, 18),
++	ASPEED_SB_PINCONF(PIN_CONFIG_BIAS_DISABLE,   C12, B11, SCU8C, 18),
++	ASPEED_SB_PINCONF(PIN_CONFIG_BIAS_PULL_DOWN, V20, AA20, SCU8C, 18),
++	ASPEED_SB_PINCONF(PIN_CONFIG_BIAS_DISABLE,   V20, AA20, SCU8C, 18),
+ 
+ 	/* GPIOD, GPIOY */
+-	{ PIN_CONFIG_BIAS_PULL_DOWN, { F19, C21 }, SCU8C, 19 },
+-	{ PIN_CONFIG_BIAS_DISABLE,   { F19, C21 }, SCU8C, 19 },
+-	{ PIN_CONFIG_BIAS_PULL_DOWN, { R22, P20 }, SCU8C, 19 },
+-	{ PIN_CONFIG_BIAS_DISABLE,   { R22, P20 }, SCU8C, 19 },
++	ASPEED_SB_PINCONF(PIN_CONFIG_BIAS_PULL_DOWN, F19, C21, SCU8C, 19),
++	ASPEED_SB_PINCONF(PIN_CONFIG_BIAS_DISABLE,   F19, C21, SCU8C, 19),
++	ASPEED_SB_PINCONF(PIN_CONFIG_BIAS_PULL_DOWN, R22, P20, SCU8C, 19),
++	ASPEED_SB_PINCONF(PIN_CONFIG_BIAS_DISABLE,   R22, P20, SCU8C, 19),
+ 
+ 	/* GPIOE, GPIOZ */
+-	{ PIN_CONFIG_BIAS_PULL_DOWN, { B20, B19 }, SCU8C, 20 },
+-	{ PIN_CONFIG_BIAS_DISABLE,   { B20, B19 }, SCU8C, 20 },
+-	{ PIN_CONFIG_BIAS_PULL_DOWN, { Y20, W21 }, SCU8C, 20 },
+-	{ PIN_CONFIG_BIAS_DISABLE,   { Y20, W21 }, SCU8C, 20 },
++	ASPEED_SB_PINCONF(PIN_CONFIG_BIAS_PULL_DOWN, B20, B19, SCU8C, 20),
++	ASPEED_SB_PINCONF(PIN_CONFIG_BIAS_DISABLE,   B20, B19, SCU8C, 20),
++	ASPEED_SB_PINCONF(PIN_CONFIG_BIAS_PULL_DOWN, Y20, W21, SCU8C, 20),
++	ASPEED_SB_PINCONF(PIN_CONFIG_BIAS_DISABLE,   Y20, W21, SCU8C, 20),
+ 
+ 	/* GPIOF, GPIOAA */
+-	{ PIN_CONFIG_BIAS_PULL_DOWN, { J19, H18 }, SCU8C, 21 },
+-	{ PIN_CONFIG_BIAS_DISABLE,   { J19, H18 }, SCU8C, 21 },
+-	{ PIN_CONFIG_BIAS_PULL_DOWN, { Y21, P19 }, SCU8C, 21 },
+-	{ PIN_CONFIG_BIAS_DISABLE,   { Y21, P19 }, SCU8C, 21 },
++	ASPEED_SB_PINCONF(PIN_CONFIG_BIAS_PULL_DOWN, J19, H18, SCU8C, 21),
++	ASPEED_SB_PINCONF(PIN_CONFIG_BIAS_DISABLE,   J19, H18, SCU8C, 21),
++	ASPEED_SB_PINCONF(PIN_CONFIG_BIAS_PULL_DOWN, Y21, P19, SCU8C, 21),
++	ASPEED_SB_PINCONF(PIN_CONFIG_BIAS_DISABLE,   Y21, P19, SCU8C, 21),
+ 
+-	/* GPIOG, GPIOAB */
+-	{ PIN_CONFIG_BIAS_PULL_DOWN, { A19, E14 }, SCU8C, 22 },
+-	{ PIN_CONFIG_BIAS_DISABLE,   { A19, E14 }, SCU8C, 22 },
+-	{ PIN_CONFIG_BIAS_PULL_DOWN, { N19, R20 }, SCU8C, 22 },
+-	{ PIN_CONFIG_BIAS_DISABLE,   { N19, R20 }, SCU8C, 22 },
++		/* GPIOG, GPIOAB */
++	ASPEED_SB_PINCONF(PIN_CONFIG_BIAS_PULL_DOWN, A19, E14, SCU8C, 22),
++	ASPEED_SB_PINCONF(PIN_CONFIG_BIAS_DISABLE,   A19, E14, SCU8C, 22),
++	ASPEED_SB_PINCONF(PIN_CONFIG_BIAS_PULL_DOWN, N19, R20, SCU8C, 22),
++	ASPEED_SB_PINCONF(PIN_CONFIG_BIAS_DISABLE,   N19, R20, SCU8C, 22),
+ 
+ 	/* GPIOH, GPIOAC */
+-	{ PIN_CONFIG_BIAS_PULL_DOWN, { A18,  D18  }, SCU8C, 23 },
+-	{ PIN_CONFIG_BIAS_DISABLE,   { A18,  D18  }, SCU8C, 23 },
+-	{ PIN_CONFIG_BIAS_PULL_DOWN, { G21,  G22  }, SCU8C, 23 },
+-	{ PIN_CONFIG_BIAS_DISABLE,   { G21,  G22  }, SCU8C, 23 },
++	ASPEED_SB_PINCONF(PIN_CONFIG_BIAS_PULL_DOWN, A18,  D18, SCU8C, 23),
++	ASPEED_SB_PINCONF(PIN_CONFIG_BIAS_DISABLE,   A18,  D18, SCU8C, 23),
++	ASPEED_SB_PINCONF(PIN_CONFIG_BIAS_PULL_DOWN, G21,  G22, SCU8C, 23),
++	ASPEED_SB_PINCONF(PIN_CONFIG_BIAS_DISABLE,   G21,  G22, SCU8C, 23),
+ 
+ 	/* GPIOs [I, P] */
+-	{ PIN_CONFIG_BIAS_PULL_DOWN, { C18, A15 }, SCU8C, 24 },
+-	{ PIN_CONFIG_BIAS_DISABLE,   { C18, A15 }, SCU8C, 24 },
+-	{ PIN_CONFIG_BIAS_PULL_DOWN, { R2,  T3  }, SCU8C, 25 },
+-	{ PIN_CONFIG_BIAS_DISABLE,   { R2,  T3  }, SCU8C, 25 },
+-	{ PIN_CONFIG_BIAS_PULL_DOWN, { L3,  R1  }, SCU8C, 26 },
+-	{ PIN_CONFIG_BIAS_DISABLE,   { L3,  R1  }, SCU8C, 26 },
+-	{ PIN_CONFIG_BIAS_PULL_DOWN, { T2,  W1  }, SCU8C, 27 },
+-	{ PIN_CONFIG_BIAS_DISABLE,   { T2,  W1  }, SCU8C, 27 },
+-	{ PIN_CONFIG_BIAS_PULL_DOWN, { Y1,  T5  }, SCU8C, 28 },
+-	{ PIN_CONFIG_BIAS_DISABLE,   { Y1,  T5  }, SCU8C, 28 },
+-	{ PIN_CONFIG_BIAS_PULL_DOWN, { V2,  T4  }, SCU8C, 29 },
+-	{ PIN_CONFIG_BIAS_DISABLE,   { V2,  T4  }, SCU8C, 29 },
+-	{ PIN_CONFIG_BIAS_PULL_DOWN, { U5,  W4  }, SCU8C, 30 },
+-	{ PIN_CONFIG_BIAS_DISABLE,   { U5,  W4  }, SCU8C, 30 },
+-	{ PIN_CONFIG_BIAS_PULL_DOWN, { V4,  V6  }, SCU8C, 31 },
+-	{ PIN_CONFIG_BIAS_DISABLE,   { V4,  V6  }, SCU8C, 31 },
++	ASPEED_SB_PINCONF(PIN_CONFIG_BIAS_PULL_DOWN, C18, A15, SCU8C, 24),
++	ASPEED_SB_PINCONF(PIN_CONFIG_BIAS_DISABLE,   C18, A15, SCU8C, 24),
++	ASPEED_SB_PINCONF(PIN_CONFIG_BIAS_PULL_DOWN, R2,  T3,  SCU8C, 25),
++	ASPEED_SB_PINCONF(PIN_CONFIG_BIAS_DISABLE,   R2,  T3,  SCU8C, 25),
++	ASPEED_SB_PINCONF(PIN_CONFIG_BIAS_PULL_DOWN, L3,  R1,  SCU8C, 26),
++	ASPEED_SB_PINCONF(PIN_CONFIG_BIAS_DISABLE,   L3,  R1,  SCU8C, 26),
++	ASPEED_SB_PINCONF(PIN_CONFIG_BIAS_PULL_DOWN, T2,  W1,  SCU8C, 27),
++	ASPEED_SB_PINCONF(PIN_CONFIG_BIAS_DISABLE,   T2,  W1,  SCU8C, 27),
++	ASPEED_SB_PINCONF(PIN_CONFIG_BIAS_PULL_DOWN, Y1,  T5,  SCU8C, 28),
++	ASPEED_SB_PINCONF(PIN_CONFIG_BIAS_DISABLE,   Y1,  T5,  SCU8C, 28),
++	ASPEED_SB_PINCONF(PIN_CONFIG_BIAS_PULL_DOWN, V2,  T4,  SCU8C, 29),
++	ASPEED_SB_PINCONF(PIN_CONFIG_BIAS_DISABLE,   V2,  T4,  SCU8C, 29),
++	ASPEED_SB_PINCONF(PIN_CONFIG_BIAS_PULL_DOWN, U5,  W4,  SCU8C, 30),
++	ASPEED_SB_PINCONF(PIN_CONFIG_BIAS_DISABLE,   U5,  W4,  SCU8C, 30),
++	ASPEED_SB_PINCONF(PIN_CONFIG_BIAS_PULL_DOWN, V4,  V6,  SCU8C, 31),
++	ASPEED_SB_PINCONF(PIN_CONFIG_BIAS_DISABLE,   V4,  V6,  SCU8C, 31),
+ 
+ 	/* GPIOs T[0-5] (RGMII1 Tx pins) */
+-	{ PIN_CONFIG_DRIVE_STRENGTH, { B5, B5 }, SCU90, 8 },
+-	{ PIN_CONFIG_DRIVE_STRENGTH, { E9, A5 }, SCU90, 9 },
+-	{ PIN_CONFIG_BIAS_PULL_DOWN, { B5, D7 }, SCU90, 12 },
+-	{ PIN_CONFIG_BIAS_DISABLE,   { B5, D7 }, SCU90, 12 },
++	ASPEED_SB_PINCONF(PIN_CONFIG_DRIVE_STRENGTH, B5, B5, SCU90, 8),
++	ASPEED_SB_PINCONF(PIN_CONFIG_DRIVE_STRENGTH, E9, A5, SCU90, 9),
++	ASPEED_SB_PINCONF(PIN_CONFIG_BIAS_PULL_DOWN, B5, D7, SCU90, 12),
++	ASPEED_SB_PINCONF(PIN_CONFIG_BIAS_DISABLE,   B5, D7, SCU90, 12),
+ 
+ 	/* GPIOs T[6-7], U[0-3] (RGMII2 TX pins) */
+-	{ PIN_CONFIG_DRIVE_STRENGTH, { B2, B2 }, SCU90, 10 },
+-	{ PIN_CONFIG_DRIVE_STRENGTH, { B1, B3 }, SCU90, 11 },
+-	{ PIN_CONFIG_BIAS_PULL_DOWN, { B2, D4 }, SCU90, 14 },
+-	{ PIN_CONFIG_BIAS_DISABLE,   { B2, D4 }, SCU90, 14 },
++	ASPEED_SB_PINCONF(PIN_CONFIG_DRIVE_STRENGTH, B2, B2, SCU90, 10),
++	ASPEED_SB_PINCONF(PIN_CONFIG_DRIVE_STRENGTH, B1, B3, SCU90, 11),
++	ASPEED_SB_PINCONF(PIN_CONFIG_BIAS_PULL_DOWN, B2, D4, SCU90, 14),
++	ASPEED_SB_PINCONF(PIN_CONFIG_BIAS_DISABLE,   B2, D4, SCU90, 14),
+ 
+ 	/* GPIOs U[4-7], V[0-1] (RGMII1 Rx pins) */
+-	{ PIN_CONFIG_BIAS_PULL_DOWN, { B4, C4 }, SCU90, 13 },
+-	{ PIN_CONFIG_BIAS_DISABLE,   { B4, C4 }, SCU90, 13 },
++	ASPEED_SB_PINCONF(PIN_CONFIG_BIAS_PULL_DOWN, B4, C4, SCU90, 13),
++	ASPEED_SB_PINCONF(PIN_CONFIG_BIAS_DISABLE,   B4, C4, SCU90, 13),
+ 
+ 	/* GPIOs V[2-7] (RGMII2 Rx pins) */
+-	{ PIN_CONFIG_BIAS_PULL_DOWN, { C2, E6 }, SCU90, 15 },
+-	{ PIN_CONFIG_BIAS_DISABLE,   { C2, E6 }, SCU90, 15 },
++	ASPEED_SB_PINCONF(PIN_CONFIG_BIAS_PULL_DOWN, C2, E6, SCU90, 15),
++	ASPEED_SB_PINCONF(PIN_CONFIG_BIAS_DISABLE,   C2, E6, SCU90, 15),
+ 
+ 	/* ADC pull-downs (SCUA8[19:4]) */
+-	{ PIN_CONFIG_BIAS_PULL_DOWN, { F4, F4 }, SCUA8, 4 },
+-	{ PIN_CONFIG_BIAS_DISABLE,   { F4, F4 }, SCUA8, 4 },
+-	{ PIN_CONFIG_BIAS_PULL_DOWN, { F5, F5 }, SCUA8, 5 },
+-	{ PIN_CONFIG_BIAS_DISABLE,   { F5, F5 }, SCUA8, 5 },
+-	{ PIN_CONFIG_BIAS_PULL_DOWN, { E2, E2 }, SCUA8, 6 },
+-	{ PIN_CONFIG_BIAS_DISABLE,   { E2, E2 }, SCUA8, 6 },
+-	{ PIN_CONFIG_BIAS_PULL_DOWN, { E1, E1 }, SCUA8, 7 },
+-	{ PIN_CONFIG_BIAS_DISABLE,   { E1, E1 }, SCUA8, 7 },
+-	{ PIN_CONFIG_BIAS_PULL_DOWN, { F3, F3 }, SCUA8, 8 },
+-	{ PIN_CONFIG_BIAS_DISABLE,   { F3, F3 }, SCUA8, 8 },
+-	{ PIN_CONFIG_BIAS_PULL_DOWN, { E3, E3 }, SCUA8, 9 },
+-	{ PIN_CONFIG_BIAS_DISABLE,   { E3, E3 }, SCUA8, 9 },
+-	{ PIN_CONFIG_BIAS_PULL_DOWN, { G5, G5 }, SCUA8, 10 },
+-	{ PIN_CONFIG_BIAS_DISABLE,   { G5, G5 }, SCUA8, 10 },
+-	{ PIN_CONFIG_BIAS_PULL_DOWN, { G4, G4 }, SCUA8, 11 },
+-	{ PIN_CONFIG_BIAS_DISABLE,   { G4, G4 }, SCUA8, 11 },
+-	{ PIN_CONFIG_BIAS_PULL_DOWN, { F2, F2 }, SCUA8, 12 },
+-	{ PIN_CONFIG_BIAS_DISABLE,   { F2, F2 }, SCUA8, 12 },
+-	{ PIN_CONFIG_BIAS_PULL_DOWN, { G3, G3 }, SCUA8, 13 },
+-	{ PIN_CONFIG_BIAS_DISABLE,   { G3, G3 }, SCUA8, 13 },
+-	{ PIN_CONFIG_BIAS_PULL_DOWN, { G2, G2 }, SCUA8, 14 },
+-	{ PIN_CONFIG_BIAS_DISABLE,   { G2, G2 }, SCUA8, 14 },
+-	{ PIN_CONFIG_BIAS_PULL_DOWN, { F1, F1 }, SCUA8, 15 },
+-	{ PIN_CONFIG_BIAS_DISABLE,   { F1, F1 }, SCUA8, 15 },
+-	{ PIN_CONFIG_BIAS_PULL_DOWN, { H5, H5 }, SCUA8, 16 },
+-	{ PIN_CONFIG_BIAS_DISABLE,   { H5, H5 }, SCUA8, 16 },
+-	{ PIN_CONFIG_BIAS_PULL_DOWN, { G1, G1 }, SCUA8, 17 },
+-	{ PIN_CONFIG_BIAS_DISABLE,   { G1, G1 }, SCUA8, 17 },
+-	{ PIN_CONFIG_BIAS_PULL_DOWN, { H3, H3 }, SCUA8, 18 },
+-	{ PIN_CONFIG_BIAS_DISABLE,   { H3, H3 }, SCUA8, 18 },
+-	{ PIN_CONFIG_BIAS_PULL_DOWN, { H4, H4 }, SCUA8, 19 },
+-	{ PIN_CONFIG_BIAS_DISABLE,   { H4, H4 }, SCUA8, 19 },
++	ASPEED_SB_PINCONF(PIN_CONFIG_BIAS_PULL_DOWN, F4, F4, SCUA8, 4),
++	ASPEED_SB_PINCONF(PIN_CONFIG_BIAS_DISABLE,   F4, F4, SCUA8, 4),
++	ASPEED_SB_PINCONF(PIN_CONFIG_BIAS_PULL_DOWN, F5, F5, SCUA8, 5),
++	ASPEED_SB_PINCONF(PIN_CONFIG_BIAS_DISABLE,   F5, F5, SCUA8, 5),
++	ASPEED_SB_PINCONF(PIN_CONFIG_BIAS_PULL_DOWN, E2, E2, SCUA8, 6),
++	ASPEED_SB_PINCONF(PIN_CONFIG_BIAS_DISABLE,   E2, E2, SCUA8, 6),
++	ASPEED_SB_PINCONF(PIN_CONFIG_BIAS_PULL_DOWN, E1, E1, SCUA8, 7),
++	ASPEED_SB_PINCONF(PIN_CONFIG_BIAS_DISABLE,   E1, E1, SCUA8, 7),
++	ASPEED_SB_PINCONF(PIN_CONFIG_BIAS_PULL_DOWN, F3, F3, SCUA8, 8),
++	ASPEED_SB_PINCONF(PIN_CONFIG_BIAS_DISABLE,   F3, F3, SCUA8, 8),
++	ASPEED_SB_PINCONF(PIN_CONFIG_BIAS_PULL_DOWN, E3, E3, SCUA8, 9),
++	ASPEED_SB_PINCONF(PIN_CONFIG_BIAS_DISABLE,   E3, E3, SCUA8, 9),
++	ASPEED_SB_PINCONF(PIN_CONFIG_BIAS_PULL_DOWN, G5, G5, SCUA8, 10),
++	ASPEED_SB_PINCONF(PIN_CONFIG_BIAS_DISABLE,   G5, G5, SCUA8, 10),
++	ASPEED_SB_PINCONF(PIN_CONFIG_BIAS_PULL_DOWN, G4, G4, SCUA8, 11),
++	ASPEED_SB_PINCONF(PIN_CONFIG_BIAS_DISABLE,   G4, G4, SCUA8, 11),
++	ASPEED_SB_PINCONF(PIN_CONFIG_BIAS_PULL_DOWN, F2, F2, SCUA8, 12),
++	ASPEED_SB_PINCONF(PIN_CONFIG_BIAS_DISABLE,   F2, F2, SCUA8, 12),
++	ASPEED_SB_PINCONF(PIN_CONFIG_BIAS_PULL_DOWN, G3, G3, SCUA8, 13),
++	ASPEED_SB_PINCONF(PIN_CONFIG_BIAS_DISABLE,   G3, G3, SCUA8, 13),
++	ASPEED_SB_PINCONF(PIN_CONFIG_BIAS_PULL_DOWN, G2, G2, SCUA8, 14),
++	ASPEED_SB_PINCONF(PIN_CONFIG_BIAS_DISABLE,   G2, G2, SCUA8, 14),
++	ASPEED_SB_PINCONF(PIN_CONFIG_BIAS_PULL_DOWN, F1, F1, SCUA8, 15),
++	ASPEED_SB_PINCONF(PIN_CONFIG_BIAS_DISABLE,   F1, F1, SCUA8, 15),
++	ASPEED_SB_PINCONF(PIN_CONFIG_BIAS_PULL_DOWN, H5, H5, SCUA8, 16),
++	ASPEED_SB_PINCONF(PIN_CONFIG_BIAS_DISABLE,   H5, H5, SCUA8, 16),
++	ASPEED_SB_PINCONF(PIN_CONFIG_BIAS_PULL_DOWN, G1, G1, SCUA8, 17),
++	ASPEED_SB_PINCONF(PIN_CONFIG_BIAS_DISABLE,   G1, G1, SCUA8, 17),
++	ASPEED_SB_PINCONF(PIN_CONFIG_BIAS_PULL_DOWN, H3, H3, SCUA8, 18),
++	ASPEED_SB_PINCONF(PIN_CONFIG_BIAS_DISABLE,   H3, H3, SCUA8, 18),
++	ASPEED_SB_PINCONF(PIN_CONFIG_BIAS_PULL_DOWN, H4, H4, SCUA8, 19),
++	ASPEED_SB_PINCONF(PIN_CONFIG_BIAS_DISABLE,   H4, H4, SCUA8, 19),
+ 
+ 	/*
+ 	 * Debounce settings for GPIOs D and E passthrough mode are in
+@@ -2604,14 +2604,14 @@ static struct aspeed_pin_config aspeed_g5_configs[] = {
+ 	 * controller. Due to this tangle between GPIO and pinctrl we don't yet
+ 	 * fully support pass-through debounce.
+ 	 */
+-	{ PIN_CONFIG_INPUT_DEBOUNCE, { F19, E21 }, SCUA8, 20 },
+-	{ PIN_CONFIG_INPUT_DEBOUNCE, { F20, D20 }, SCUA8, 21 },
+-	{ PIN_CONFIG_INPUT_DEBOUNCE, { D21, E20 }, SCUA8, 22 },
+-	{ PIN_CONFIG_INPUT_DEBOUNCE, { G18, C21 }, SCUA8, 23 },
+-	{ PIN_CONFIG_INPUT_DEBOUNCE, { B20, C20 }, SCUA8, 24 },
+-	{ PIN_CONFIG_INPUT_DEBOUNCE, { F18, F17 }, SCUA8, 25 },
+-	{ PIN_CONFIG_INPUT_DEBOUNCE, { E18, D19 }, SCUA8, 26 },
+-	{ PIN_CONFIG_INPUT_DEBOUNCE, { A20, B19 }, SCUA8, 27 },
++	ASPEED_SB_PINCONF(PIN_CONFIG_INPUT_DEBOUNCE, F19, E21, SCUA8, 20),
++	ASPEED_SB_PINCONF(PIN_CONFIG_INPUT_DEBOUNCE, F20, D20, SCUA8, 21),
++	ASPEED_SB_PINCONF(PIN_CONFIG_INPUT_DEBOUNCE, D21, E20, SCUA8, 22),
++	ASPEED_SB_PINCONF(PIN_CONFIG_INPUT_DEBOUNCE, G18, C21, SCUA8, 23),
++	ASPEED_SB_PINCONF(PIN_CONFIG_INPUT_DEBOUNCE, B20, C20, SCUA8, 24),
++	ASPEED_SB_PINCONF(PIN_CONFIG_INPUT_DEBOUNCE, F18, F17, SCUA8, 25),
++	ASPEED_SB_PINCONF(PIN_CONFIG_INPUT_DEBOUNCE, E18, D19, SCUA8, 26),
++	ASPEED_SB_PINCONF(PIN_CONFIG_INPUT_DEBOUNCE, A20, B19, SCUA8, 27),
+ };
+ 
+ static struct regmap *aspeed_g5_acquire_regmap(struct aspeed_pinmux_data *ctx,
+diff --git a/drivers/pinctrl/aspeed/pinctrl-aspeed.h b/drivers/pinctrl/aspeed/pinctrl-aspeed.h
+index a5d83986f32e..a7db31202033 100644
+--- a/drivers/pinctrl/aspeed/pinctrl-aspeed.h
++++ b/drivers/pinctrl/aspeed/pinctrl-aspeed.h
+@@ -35,6 +35,13 @@ struct aspeed_pin_config {
+ 		.drv_data = (void *) &(PIN_SYM(name_)) \
+ 	}
+ 
++#define ASPEED_SB_PINCONF(param_, pin0_, pin1_, reg_, bit_) { \
++	.param = param_, \
++	.pins = {pin0_, pin1_}, \
++	.reg = reg_, \
++	.bit = bit_ \
++}
++
+ struct aspeed_pinctrl_data {
+ 	struct regmap *scu;
  
 -- 
 2.20.1
