@@ -2,450 +2,188 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 646AE10E5DB
-	for <lists+linux-gpio@lfdr.de>; Mon,  2 Dec 2019 07:14:11 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7AC8E10E689
+	for <lists+linux-gpio@lfdr.de>; Mon,  2 Dec 2019 08:57:30 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727445AbfLBGNT (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 2 Dec 2019 01:13:19 -0500
-Received: from out3-smtp.messagingengine.com ([66.111.4.27]:44433 "EHLO
-        out3-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726474AbfLBGNS (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 2 Dec 2019 01:13:18 -0500
-Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailout.nyi.internal (Postfix) with ESMTP id 8D485224A5;
-        Mon,  2 Dec 2019 01:13:17 -0500 (EST)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute4.internal (MEProxy); Mon, 02 Dec 2019 01:13:17 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aj.id.au; h=from
-        :to:cc:subject:date:message-id:in-reply-to:references
-        :mime-version:content-transfer-encoding; s=fm1; bh=5S70UP2s59NKb
-        v1ur4upNyNg7zU1s1pJOCcPCe+t0HU=; b=dp4a07mBrIQ7SeQA4ZsiRHIcyyEyN
-        NXMPBEHGQvsgfhzJjJT9q/Zz2OqDThmPv31+hNwkTjSqdEWDqELziMrS85YGIvA2
-        JAj6sNSKELX7AqGf4Ufv8mhu4JIbcpbpiKe2QdLvF5Hzdb3izhrrbLJvwBkdFx/3
-        23/dY6zENimdpKpnyVXXRRrEfHNpjiBwY93NeF3VNOIPokOO1gRIK3vtz+IK2u+u
-        gyAbec8rgLM5clOSM3hT5c8oYyXNNRF+l61D7CVMZAjO/j55Uqz/nv3Uv67zXdkD
-        yL04I2/2/k06TFgShwpjpdbkns+qaLrsmQEWKNBOe3OWyn1dLivkf2vRA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-transfer-encoding:date:from
-        :in-reply-to:message-id:mime-version:references:subject:to
-        :x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-        fm1; bh=5S70UP2s59NKbv1ur4upNyNg7zU1s1pJOCcPCe+t0HU=; b=iTNJpnYb
-        FzWMZlhlzIuLSoIVh1J9tvEwflnK6ANt77OGvpEVTzwo5XiTNZ7HasjF7loPtefm
-        doW8zKgB7pQzpVhIgJolLNh6XCHWWgAOyMK94Fkt1W1jL15Jx084RDRQ0GEmmn4G
-        /yQWCbBGkTOKy+wgJBU3SL6LTExy580Owspq52+FrTZU87sNXgyFpRRK+YW3Ru8P
-        gO/x8T1RP7IXOy4wTrI4kDbJzJRujWiFT8pCg09ulZ8//6N09LDqBex/XFoYZRox
-        SKegX6m5XDuUu0C3+ndR/fSgS6L6GVVPKJJURLZFoZ8AfOiqAiOntk9uJAhN6DCf
-        /mvvcqS+CCijcw==
-X-ME-Sender: <xms:favkXVfvK_w8YzGPIRvLX78HDTt9rTWHx6ejTEOr8RqeR8R9t_qxGA>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedufedrudejgedgleegucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhephffvufffkffojghfggfgsedtkeertdertddtnecuhfhrohhmpeetnhgurhgv
-    ficulfgvfhhfvghrhicuoegrnhgurhgvfiesrghjrdhiugdrrghuqeenucfkphepudduke
-    drvdduuddrledvrddufeenucfrrghrrghmpehmrghilhhfrhhomheprghnughrvgifsegr
-    jhdrihgurdgruhenucevlhhushhtvghrufhiiigvpeei
-X-ME-Proxy: <xmx:favkXXcHFo-pUqS6emk7FRFlCdGkiyliz51PRNWju1v_A2VW4B31Cw>
-    <xmx:favkXZgEdYyePjwpMsnCBgWETIKvt6Cj5herAIR_LrlS8gu18BAifw>
-    <xmx:favkXTSOEguUEZtwMH_WMFVPUETGCpYc9hUxJlCbica6nAYSBdhJvg>
-    <xmx:favkXYnCZtR_F3oigzjTX4-VOANKiDWtsr9F5otGKAVWcml7XRGxFA>
-Received: from mistburn.lan (unknown [118.211.92.13])
-        by mail.messagingengine.com (Postfix) with ESMTPA id D658D8005A;
-        Mon,  2 Dec 2019 01:13:13 -0500 (EST)
-From:   Andrew Jeffery <andrew@aj.id.au>
-To:     linux-gpio@vger.kernel.org
-Cc:     Johnny Huang <johnny_huang@aspeedtech.com>,
-        linus.walleij@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com,
-        joel@jms.id.au, linux-aspeed@lists.ozlabs.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 7/7] pinctrl: aspeed-g6: Add AST2600 pinconf support
-Date:   Mon,  2 Dec 2019 16:44:32 +1030
-Message-Id: <20191202061432.3996-8-andrew@aj.id.au>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191202061432.3996-1-andrew@aj.id.au>
-References: <20191202061432.3996-1-andrew@aj.id.au>
+        id S1726139AbfLBH52 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 2 Dec 2019 02:57:28 -0500
+Received: from mailgate1.rohmeurope.com ([178.15.145.194]:54580 "EHLO
+        mailgate1.rohmeurope.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725977AbfLBH51 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 2 Dec 2019 02:57:27 -0500
+X-AuditID: c0a8fbf4-183ff70000001fa6-43-5de4c3e41a47
+Received: from smtp.reu.rohmeu.com (will-cas002.reu.rohmeu.com [192.168.251.178])
+        by mailgate1.rohmeurope.com (Symantec Messaging Gateway) with SMTP id D5.A9.08102.4E3C4ED5; Mon,  2 Dec 2019 08:57:24 +0100 (CET)
+Received: from WILL-MAIL002.REu.RohmEu.com ([fe80::e0c3:e88c:5f22:d174]) by
+ WILL-CAS002.REu.RohmEu.com ([fe80::fc24:4cbc:e287:8659%12]) with mapi id
+ 14.03.0439.000; Mon, 2 Dec 2019 08:57:13 +0100
+From:   "Vaittinen, Matti" <Matti.Vaittinen@fi.rohmeurope.com>
+To:     "broonie@kernel.org" <broonie@kernel.org>
+CC:     "corbet@lwn.net" <corbet@lwn.net>,
+        "hkallweit1@gmail.com" <hkallweit1@gmail.com>,
+        "phil.edworthy@renesas.com" <phil.edworthy@renesas.com>,
+        "dmurphy@ti.com" <dmurphy@ti.com>,
+        "linux-leds@vger.kernel.org" <linux-leds@vger.kernel.org>,
+        "jeffrey.t.kirsher@intel.com" <jeffrey.t.kirsher@intel.com>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        "mchehab+samsung@kernel.org" <mchehab+samsung@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>,
+        "mturquette@baylibre.com" <mturquette@baylibre.com>,
+        "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
+        "jacek.anaszewski@gmail.com" <jacek.anaszewski@gmail.com>,
+        "mazziesaccount@gmail.com" <mazziesaccount@gmail.com>,
+        "a.zummo@towertech.it" <a.zummo@towertech.it>,
+        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
+        "wsa+renesas@sang-engineering.com" <wsa+renesas@sang-engineering.com>,
+        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
+        "hofrat@osadl.org" <hofrat@osadl.org>,
+        "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "m.szyprowski@samsung.com" <m.szyprowski@samsung.com>,
+        "bgolaszewski@baylibre.com" <bgolaszewski@baylibre.com>,
+        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
+        "lee.jones@linaro.org" <lee.jones@linaro.org>,
+        "sboyd@kernel.org" <sboyd@kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "pavel@ucw.cz" <pavel@ucw.cz>
+Subject: Re: [PATCH v5 01/16] dt-bindings: regulator: Document ROHM BD71282
+ regulator bindings
+Thread-Topic: [PATCH v5 01/16] dt-bindings: regulator: Document ROHM BD71282
+ regulator bindings
+Thread-Index: AQHVndzxthsd4Y8wKkm7W/92Uslk+KeRDPcAgAAbkICAAZUNgIAACqYAgAAMmACADvFigIAASP2AgARwk4A=
+Date:   Mon, 2 Dec 2019 07:57:13 +0000
+Message-ID: <297fa021fb243072dbbb7bca455e57c13e8c6843.camel@fi.rohmeurope.com>
+References: <cover.1574059625.git.matti.vaittinen@fi.rohmeurope.com>
+         <d29e0eb587b764f3ea77647392e45fac67bbd757.1574059625.git.matti.vaittinen@fi.rohmeurope.com>
+         <20191118162502.GJ9761@sirena.org.uk>
+         <fd1e4e652840346bd990c769eabe2f966bda4ed6.camel@fi.rohmeurope.com>
+         <20191119181325.GD3634@sirena.org.uk>
+         <fa69d01504817e3260d2b023ae2637aa2f1b2862.camel@fi.rohmeurope.com>
+         <20191119193636.GH3634@sirena.org.uk>
+         <eb685cc78b936bc61ed9f7fbfa18c96398b00909.camel@fi.rohmeurope.com>
+         <20191129120925.GA5747@sirena.org.uk>
+In-Reply-To: <20191129120925.GA5747@sirena.org.uk>
+Accept-Language: en-US, de-DE
+Content-Language: de-DE
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [213.255.186.46]
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <BD37C78CAFCD2B44BB3E47197F63E2B6@de.rohmeurope.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA02TbVBUVRjH59x77gvIda4rxmlLZ7w549SMKKZ1ZqK0ZqrbB83GZppx2sGL
+        XNkdYZfZXRqwPtALwoJDWCqwLrgImCJKLpjJAOq6CK0FUcqbrevGioIFpQiBJN27N4Uv5/zP
+        +Z/f838+PIcldR5Gz5rMdtlqltIEOhpeOPbQsyp8KWxYM976Iq7uvsbgvNGjDB4v90N8IBSm
+        cfhCHsCHfZ0ULrzSSOEjY6UUdjjyKXz9zLcQdzQEAQ4+aAN44mo+gffPfEPgv/feoHDlnmqI
+        Gw7PAPxrk4vGZ/44BfDlE1dpfNIXYHBNbzeBXTUdEI/dcxC42/8mDvjbaPx5dx+Jc1t8DH7U
+        cxrios63Ny4T6yrqgDjWl8uIFXUfi+ecAUasah4mRE+tgxZ/62mmxaqirynxzt5LUJz4cR8U
+        ixprgThUWQ/F9r6zhFhSMUWIx05MMuJ9z7It/LYFicmS/aOtplTz6te2LzBODwWYjJ9fympo
+        HSVygGt9AYhiEb8O/dk+RBaAaFbHXwPoq2EXrR3aAfqpzQsLAMvSfCIq6GdUIJZfhQ5MV0Xe
+        kHxZDLpx8CCtGov57ajx7iDUHknIPfGQ0HQyOvTlTASG/ApUM+UGqub4zcjbf57Qwsogch+6
+        SKlGFL8WtfzbE9GAX4ocOaORQiQfhzxDk5TWNo+qm7tITS9Bw4OP/r8XUMtUKNI0yT+P6ptW
+        a+hGNHAnn9b0crS/MMRoPSxCP5SFYTF4yjkvwTlHO+fRznm0cx7tBlQtQOmSKS1VsssJ8VY5
+        M95qMaYr2w5Lugdo0zf+PZj1vuMFBAu84GmWEJZwbvegQbcw2ZKSbZRsxiRrZpps8wLEkkIs
+        1yuEDDouRcreLVstj61nWCjEcStD+ww6Xs3aJcsZsvWx+yzLCohbczFs0C2yyqly1k5Tmn3O
+        JtgotXi0PtYmm1Nkq5RpNyapA5JkUyZEtWKU3KBXwTlbhpSu3GqoHySwxcPlR0i2obxGWX3q
+        qoNmi1nWx3HTKsCrgDHT/CRuBMSxQFjMnVPdGOUjPqk2ogQRStDLX/yuBtmlOUufA97t/WzK
+        WP1d6ac318bH1N995ehs1/j63IHWTev4/tzB5R+s2PBW1j++keOn/9pz6+ZWCE2dm25TvpL7
+        13XB0sTbJVdE/KCLHThFnJ1t2Xwvqjh7Z3DppJ/IHmjKo4mqQPLJ+N1vvLph4XMf8vpfPnm/
+        5PXKQt8W6dZKzpU4EnjPXNYxIUCbUUp4gbTapP8ADkX8gkUEAAA=
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-From: Johnny Huang <johnny_huang@aspeedtech.com>
-
-The AST2600 pinconf is a little different from previous generations of
-ASPEED BMC SoCs in terms of architecture. The pull-down setting is
-per-pin setting now, and drive-strength support 4 kind of value (e.g.
-4ma, 8ma, 12ma, 16ma).
-
-Signed-off-by: Johnny Huang <johnny_huang@aspeedtech.com>
-[AJ: Trim unused pinctrl register macros]
-Signed-off-by: Andrew Jeffery <andrew@aj.id.au>
----
- drivers/pinctrl/aspeed/pinctrl-aspeed-g6.c | 290 +++++++++++++++++++++
- drivers/pinctrl/aspeed/pinctrl-aspeed.h    |   7 +
- 2 files changed, 297 insertions(+)
-
-diff --git a/drivers/pinctrl/aspeed/pinctrl-aspeed-g6.c b/drivers/pinctrl/aspeed/pinctrl-aspeed-g6.c
-index 22e6c07149c3..eb0c11a9fbf2 100644
---- a/drivers/pinctrl/aspeed/pinctrl-aspeed-g6.c
-+++ b/drivers/pinctrl/aspeed/pinctrl-aspeed-g6.c
-@@ -28,6 +28,8 @@
- #define SCU438		0x438 /* Multi-function Pin Control #10 */
- #define SCU440		0x440 /* USB Multi-function Pin Control #12 */
- #define SCU450		0x450 /* Multi-function Pin Control #14 */
-+#define SCU454		0x454 /* Multi-function Pin Control #15 */
-+#define SCU458		0x458 /* Multi-function Pin Control #16 */
- #define SCU4B0		0x4B0 /* Multi-function Pin Control #17 */
- #define SCU4B4		0x4B4 /* Multi-function Pin Control #18 */
- #define SCU4B8		0x4B8 /* Multi-function Pin Control #19 */
-@@ -36,6 +38,13 @@
- #define SCU4D8		0x4D8 /* Multi-function Pin Control #23 */
- #define SCU500		0x500 /* Hardware Strap 1 */
- #define SCU510		0x510 /* Hardware Strap 2 */
-+#define SCU610		0x610 /* Disable GPIO Internal Pull-Down #0 */
-+#define SCU614		0x614 /* Disable GPIO Internal Pull-Down #1 */
-+#define SCU618		0x618 /* Disable GPIO Internal Pull-Down #2 */
-+#define SCU61C		0x61c /* Disable GPIO Internal Pull-Down #3 */
-+#define SCU620		0x620 /* Disable GPIO Internal Pull-Down #4 */
-+#define SCU634		0x634 /* Disable GPIO Internal Pull-Down #5 */
-+#define SCU638		0x638 /* Disable GPIO Internal Pull-Down #6 */
- #define SCU694		0x694 /* Multi-function Pin Control #25 */
- #define SCUC20		0xC20 /* PCIE configuration Setting Control */
- 
-@@ -2333,6 +2342,260 @@ static const struct aspeed_pin_function aspeed_g6_functions[] = {
- 	ASPEED_PINCTRL_FUNC(WDTRST4),
- };
- 
-+static struct aspeed_pin_config aspeed_g6_configs[] = {
-+	/* GPIOB7 */
-+	ASPEED_PULL_DOWN_PINCONF(J24, SCU610, 15),
-+	/* GPIOB6 */
-+	ASPEED_PULL_DOWN_PINCONF(H25, SCU610, 14),
-+	/* GPIOB5 */
-+	ASPEED_PULL_DOWN_PINCONF(G26, SCU610, 13),
-+	/* GPIOB4 */
-+	ASPEED_PULL_DOWN_PINCONF(J23, SCU610, 12),
-+	/* GPIOB3 */
-+	ASPEED_PULL_DOWN_PINCONF(J25, SCU610, 11),
-+	/* GPIOB2 */
-+	ASPEED_PULL_DOWN_PINCONF(H26, SCU610, 10),
-+	/* GPIOB1 */
-+	ASPEED_PULL_DOWN_PINCONF(K23, SCU610, 9),
-+	/* GPIOB0 */
-+	ASPEED_PULL_DOWN_PINCONF(J26, SCU610, 8),
-+
-+	/* GPIOH3 */
-+	ASPEED_PULL_DOWN_PINCONF(A17, SCU614, 27),
-+	/* GPIOH2 */
-+	ASPEED_PULL_DOWN_PINCONF(C18, SCU614, 26),
-+	/* GPIOH1 */
-+	ASPEED_PULL_DOWN_PINCONF(B18, SCU614, 25),
-+	/* GPIOH0 */
-+	ASPEED_PULL_DOWN_PINCONF(A18, SCU614, 24),
-+
-+	/* GPIOL7 */
-+	ASPEED_PULL_DOWN_PINCONF(C14, SCU618, 31),
-+	/* GPIOL6 */
-+	ASPEED_PULL_DOWN_PINCONF(B14, SCU618, 30),
-+	/* GPIOL5 */
-+	ASPEED_PULL_DOWN_PINCONF(F15, SCU618, 29),
-+	/* GPIOL4 */
-+	ASPEED_PULL_DOWN_PINCONF(C15, SCU618, 28),
-+
-+	/* GPIOJ7 */
-+	ASPEED_PULL_UP_PINCONF(D19, SCU618, 15),
-+	/* GPIOJ6 */
-+	ASPEED_PULL_UP_PINCONF(C20, SCU618, 14),
-+	/* GPIOJ5 */
-+	ASPEED_PULL_UP_PINCONF(A19, SCU618, 13),
-+	/* GPIOJ4 */
-+	ASPEED_PULL_UP_PINCONF(C19, SCU618, 12),
-+	/* GPIOJ3 */
-+	ASPEED_PULL_UP_PINCONF(D20, SCU618, 11),
-+	/* GPIOJ2 */
-+	ASPEED_PULL_UP_PINCONF(E19, SCU618, 10),
-+	/* GPIOJ1 */
-+	ASPEED_PULL_UP_PINCONF(A20, SCU618, 9),
-+	/* GPIOJ0 */
-+	ASPEED_PULL_UP_PINCONF(B20, SCU618, 8),
-+
-+	/* GPIOI7 */
-+	ASPEED_PULL_DOWN_PINCONF(A15, SCU618, 7),
-+	/* GPIOI6 */
-+	ASPEED_PULL_DOWN_PINCONF(B16, SCU618, 6),
-+	/* GPIOI5 */
-+	ASPEED_PULL_DOWN_PINCONF(E16, SCU618, 5),
-+	/* GPIOI4 */
-+	ASPEED_PULL_DOWN_PINCONF(C16, SCU618, 4),
-+	/* GPIOI3 */
-+	ASPEED_PULL_DOWN_PINCONF(D16, SCU618, 3),
-+	/* GPIOI2 */
-+	ASPEED_PULL_DOWN_PINCONF(E17, SCU618, 2),
-+	/* GPIOI1 */
-+	ASPEED_PULL_DOWN_PINCONF(A16, SCU618, 1),
-+	/* GPIOI0 */
-+	ASPEED_PULL_DOWN_PINCONF(D17, SCU618, 0),
-+
-+	/* GPIOP7 */
-+	ASPEED_PULL_DOWN_PINCONF(Y23, SCU61C, 31),
-+	/* GPIOP6 */
-+	ASPEED_PULL_DOWN_PINCONF(AB24, SCU61C, 30),
-+	/* GPIOP5 */
-+	ASPEED_PULL_DOWN_PINCONF(AB23, SCU61C, 29),
-+	/* GPIOP4 */
-+	ASPEED_PULL_DOWN_PINCONF(W23, SCU61C, 28),
-+	/* GPIOP3 */
-+	ASPEED_PULL_DOWN_PINCONF(AA24, SCU61C, 27),
-+	/* GPIOP2 */
-+	ASPEED_PULL_DOWN_PINCONF(AA23, SCU61C, 26),
-+	/* GPIOP1 */
-+	ASPEED_PULL_DOWN_PINCONF(W24, SCU61C, 25),
-+	/* GPIOP0 */
-+	ASPEED_PULL_DOWN_PINCONF(AB22, SCU61C, 24),
-+
-+	/* GPIOO7 */
-+	ASPEED_PULL_DOWN_PINCONF(AC23, SCU61C, 23),
-+	/* GPIOO6 */
-+	ASPEED_PULL_DOWN_PINCONF(AC24, SCU61C, 22),
-+	/* GPIOO5 */
-+	ASPEED_PULL_DOWN_PINCONF(AC22, SCU61C, 21),
-+	/* GPIOO4 */
-+	ASPEED_PULL_DOWN_PINCONF(AD25, SCU61C, 20),
-+	/* GPIOO3 */
-+	ASPEED_PULL_DOWN_PINCONF(AD24, SCU61C, 19),
-+	/* GPIOO2 */
-+	ASPEED_PULL_DOWN_PINCONF(AD23, SCU61C, 18),
-+	/* GPIOO1 */
-+	ASPEED_PULL_DOWN_PINCONF(AD22, SCU61C, 17),
-+	/* GPIOO0 */
-+	ASPEED_PULL_DOWN_PINCONF(AD26, SCU61C, 16),
-+
-+	/* GPION7 */
-+	ASPEED_PULL_DOWN_PINCONF(M26, SCU61C, 15),
-+	/* GPION6 */
-+	ASPEED_PULL_DOWN_PINCONF(N26, SCU61C, 14),
-+	/* GPION5 */
-+	ASPEED_PULL_DOWN_PINCONF(M23, SCU61C, 13),
-+	/* GPION4 */
-+	ASPEED_PULL_DOWN_PINCONF(P26, SCU61C, 12),
-+	/* GPION3 */
-+	ASPEED_PULL_DOWN_PINCONF(N24, SCU61C, 11),
-+	/* GPION2 */
-+	ASPEED_PULL_DOWN_PINCONF(N25, SCU61C, 10),
-+	/* GPION1 */
-+	ASPEED_PULL_DOWN_PINCONF(N23, SCU61C, 9),
-+	/* GPION0 */
-+	ASPEED_PULL_DOWN_PINCONF(P25, SCU61C, 8),
-+
-+	/* GPIOM7 */
-+	ASPEED_PULL_DOWN_PINCONF(D13, SCU61C, 7),
-+	/* GPIOM6 */
-+	ASPEED_PULL_DOWN_PINCONF(C13, SCU61C, 6),
-+	/* GPIOM5 */
-+	ASPEED_PULL_DOWN_PINCONF(C12, SCU61C, 5),
-+	/* GPIOM4 */
-+	ASPEED_PULL_DOWN_PINCONF(B12, SCU61C, 4),
-+	/* GPIOM3 */
-+	ASPEED_PULL_DOWN_PINCONF(E14, SCU61C, 3),
-+	/* GPIOM2 */
-+	ASPEED_PULL_DOWN_PINCONF(A12, SCU61C, 2),
-+	/* GPIOM1 */
-+	ASPEED_PULL_DOWN_PINCONF(B13, SCU61C, 1),
-+	/* GPIOM0 */
-+	ASPEED_PULL_DOWN_PINCONF(D14, SCU61C, 0),
-+
-+	/* GPIOS7 */
-+	ASPEED_PULL_DOWN_PINCONF(T24, SCU620, 23),
-+	/* GPIOS6 */
-+	ASPEED_PULL_DOWN_PINCONF(P23, SCU620, 22),
-+	/* GPIOS5 */
-+	ASPEED_PULL_DOWN_PINCONF(P24, SCU620, 21),
-+	/* GPIOS4 */
-+	ASPEED_PULL_DOWN_PINCONF(R26, SCU620, 20),
-+	/* GPIOS3*/
-+	ASPEED_PULL_DOWN_PINCONF(R24, SCU620, 19),
-+	/* GPIOS2 */
-+	ASPEED_PULL_DOWN_PINCONF(T26, SCU620, 18),
-+	/* GPIOS1 */
-+	ASPEED_PULL_DOWN_PINCONF(T25, SCU620, 17),
-+	/* GPIOS0 */
-+	ASPEED_PULL_DOWN_PINCONF(R23, SCU620, 16),
-+
-+	/* GPIOR7 */
-+	ASPEED_PULL_DOWN_PINCONF(U26, SCU620, 15),
-+	/* GPIOR6 */
-+	ASPEED_PULL_DOWN_PINCONF(W26, SCU620, 14),
-+	/* GPIOR5 */
-+	ASPEED_PULL_DOWN_PINCONF(T23, SCU620, 13),
-+	/* GPIOR4 */
-+	ASPEED_PULL_DOWN_PINCONF(U25, SCU620, 12),
-+	/* GPIOR3*/
-+	ASPEED_PULL_DOWN_PINCONF(V26, SCU620, 11),
-+	/* GPIOR2 */
-+	ASPEED_PULL_DOWN_PINCONF(V24, SCU620, 10),
-+	/* GPIOR1 */
-+	ASPEED_PULL_DOWN_PINCONF(U24, SCU620, 9),
-+	/* GPIOR0 */
-+	ASPEED_PULL_DOWN_PINCONF(V25, SCU620, 8),
-+
-+	/* GPIOX7 */
-+	ASPEED_PULL_DOWN_PINCONF(AB10, SCU634, 31),
-+	/* GPIOX6 */
-+	ASPEED_PULL_DOWN_PINCONF(AF9, SCU634, 30),
-+	/* GPIOX5 */
-+	ASPEED_PULL_DOWN_PINCONF(AD9, SCU634, 29),
-+	/* GPIOX4 */
-+	ASPEED_PULL_DOWN_PINCONF(AB9, SCU634, 28),
-+	/* GPIOX3*/
-+	ASPEED_PULL_DOWN_PINCONF(AF8, SCU634, 27),
-+	/* GPIOX2 */
-+	ASPEED_PULL_DOWN_PINCONF(AC9, SCU634, 26),
-+	/* GPIOX1 */
-+	ASPEED_PULL_DOWN_PINCONF(AA9, SCU634, 25),
-+	/* GPIOX0 */
-+	ASPEED_PULL_DOWN_PINCONF(AE8, SCU634, 24),
-+
-+	/* GPIOV7 */
-+	ASPEED_PULL_DOWN_PINCONF(AF15, SCU634, 15),
-+	/* GPIOV6 */
-+	ASPEED_PULL_DOWN_PINCONF(AD15, SCU634, 14),
-+	/* GPIOV5 */
-+	ASPEED_PULL_DOWN_PINCONF(AE14, SCU634, 13),
-+	/* GPIOV4 */
-+	ASPEED_PULL_DOWN_PINCONF(AE15, SCU634, 12),
-+	/* GPIOV3*/
-+	ASPEED_PULL_DOWN_PINCONF(AC15, SCU634, 11),
-+	/* GPIOV2 */
-+	ASPEED_PULL_DOWN_PINCONF(AD14, SCU634, 10),
-+	/* GPIOV1 */
-+	ASPEED_PULL_DOWN_PINCONF(AF14, SCU634, 9),
-+	/* GPIOV0 */
-+	ASPEED_PULL_DOWN_PINCONF(AB15, SCU634, 8),
-+
-+	/* GPIOZ7 */
-+	ASPEED_PULL_DOWN_PINCONF(AF10, SCU638, 15),
-+	/* GPIOZ6 */
-+	ASPEED_PULL_DOWN_PINCONF(AD11, SCU638, 14),
-+	/* GPIOZ5 */
-+	ASPEED_PULL_DOWN_PINCONF(AA11, SCU638, 13),
-+	/* GPIOZ4 */
-+	ASPEED_PULL_DOWN_PINCONF(AC11, SCU638, 12),
-+	/* GPIOZ3*/
-+	ASPEED_PULL_DOWN_PINCONF(AB11, SCU638, 11),
-+
-+	/* GPIOZ1 */
-+	ASPEED_PULL_DOWN_PINCONF(AD10, SCU638, 9),
-+	/* GPIOZ0 */
-+	ASPEED_PULL_DOWN_PINCONF(AC10, SCU638, 8),
-+
-+	/* GPIOY6 */
-+	ASPEED_PULL_DOWN_PINCONF(AC12, SCU638, 6),
-+	/* GPIOY5 */
-+	ASPEED_PULL_DOWN_PINCONF(AF12, SCU638, 5),
-+	/* GPIOY4 */
-+	ASPEED_PULL_DOWN_PINCONF(AE12, SCU638, 4),
-+	/* GPIOY3 */
-+	ASPEED_PULL_DOWN_PINCONF(AA12, SCU638, 3),
-+	/* GPIOY2 */
-+	ASPEED_PULL_DOWN_PINCONF(AE11, SCU638, 2),
-+	/* GPIOY1 */
-+	ASPEED_PULL_DOWN_PINCONF(AD12, SCU638, 1),
-+	/* GPIOY0 */
-+	ASPEED_PULL_DOWN_PINCONF(AF11, SCU638, 0),
-+
-+	/* LAD3 */
-+	{ PIN_CONFIG_DRIVE_STRENGTH, { AC7, AC7 }, SCU454, GENMASK(31, 30)},
-+	/* LAD2 */
-+	{ PIN_CONFIG_DRIVE_STRENGTH, { AC8, AC8 }, SCU454, GENMASK(29, 28)},
-+	/* LAD1 */
-+	{ PIN_CONFIG_DRIVE_STRENGTH, { AB8, AB8 }, SCU454, GENMASK(27, 26)},
-+	/* LAD0 */
-+	{ PIN_CONFIG_DRIVE_STRENGTH, { AB7, AB7 }, SCU454, GENMASK(25, 24)},
-+
-+	/* MAC3 */
-+	{ PIN_CONFIG_POWER_SOURCE,   { H24, E26 }, SCU458, BIT_MASK(4)},
-+	{ PIN_CONFIG_DRIVE_STRENGTH, { H24, E26 }, SCU458, GENMASK(1, 0)},
-+	/* MAC4 */
-+	{ PIN_CONFIG_POWER_SOURCE,   { F24, B24 }, SCU458, BIT_MASK(5)},
-+	{ PIN_CONFIG_DRIVE_STRENGTH, { F24, B24 }, SCU458, GENMASK(3, 2)},
-+};
-+
- /**
-  * Configure a pin's signal by applying an expression's descriptor state for
-  * all descriptors in the expression.
-@@ -2400,6 +2663,20 @@ static int aspeed_g6_sig_expr_set(struct aspeed_pinmux_data *ctx,
- 	return 0;
- }
- 
-+static const struct aspeed_pin_config_map aspeed_g6_pin_config_map[] = {
-+	{ PIN_CONFIG_BIAS_PULL_DOWN,  0,   1, BIT_MASK(0)},
-+	{ PIN_CONFIG_BIAS_PULL_DOWN, -1,   0, BIT_MASK(0)},
-+	{ PIN_CONFIG_BIAS_PULL_UP,    0,   1, BIT_MASK(0)},
-+	{ PIN_CONFIG_BIAS_PULL_UP,   -1,   0, BIT_MASK(0)},
-+	{ PIN_CONFIG_BIAS_DISABLE,   -1,   1, BIT_MASK(0)},
-+	{ PIN_CONFIG_DRIVE_STRENGTH,  4,   0, GENMASK(1, 0)},
-+	{ PIN_CONFIG_DRIVE_STRENGTH,  8,   1, GENMASK(1, 0)},
-+	{ PIN_CONFIG_DRIVE_STRENGTH, 12,   2, GENMASK(1, 0)},
-+	{ PIN_CONFIG_DRIVE_STRENGTH, 16,   3, GENMASK(1, 0)},
-+	{ PIN_CONFIG_POWER_SOURCE,   3300, 0, BIT_MASK(0)},
-+	{ PIN_CONFIG_POWER_SOURCE,   1800, 1, BIT_MASK(0)},
-+};
-+
- static const struct aspeed_pinmux_ops aspeed_g5_ops = {
- 	.set = aspeed_g6_sig_expr_set,
- };
-@@ -2414,6 +2691,10 @@ static struct aspeed_pinctrl_data aspeed_g6_pinctrl_data = {
- 		.functions = aspeed_g6_functions,
- 		.nfunctions = ARRAY_SIZE(aspeed_g6_functions),
- 	},
-+	.configs = aspeed_g6_configs,
-+	.nconfigs = ARRAY_SIZE(aspeed_g6_configs),
-+	.confmaps = aspeed_g6_pin_config_map,
-+	.nconfmaps = ARRAY_SIZE(aspeed_g6_pin_config_map),
- };
- 
- static const struct pinmux_ops aspeed_g6_pinmux_ops = {
-@@ -2434,12 +2715,21 @@ static const struct pinctrl_ops aspeed_g6_pinctrl_ops = {
- 	.dt_free_map = pinctrl_utils_free_map,
- };
- 
-+static const struct pinconf_ops aspeed_g6_conf_ops = {
-+	.is_generic = true,
-+	.pin_config_get = aspeed_pin_config_get,
-+	.pin_config_set = aspeed_pin_config_set,
-+	.pin_config_group_get = aspeed_pin_config_group_get,
-+	.pin_config_group_set = aspeed_pin_config_group_set,
-+};
-+
- static struct pinctrl_desc aspeed_g6_pinctrl_desc = {
- 	.name = "aspeed-g6-pinctrl",
- 	.pins = aspeed_g6_pins,
- 	.npins = ARRAY_SIZE(aspeed_g6_pins),
- 	.pctlops = &aspeed_g6_pinctrl_ops,
- 	.pmxops = &aspeed_g6_pinmux_ops,
-+	.confops = &aspeed_g6_conf_ops,
- };
- 
- static int aspeed_g6_pinctrl_probe(struct platform_device *pdev)
-diff --git a/drivers/pinctrl/aspeed/pinctrl-aspeed.h b/drivers/pinctrl/aspeed/pinctrl-aspeed.h
-index 6f0f03395617..4dcde3bc29c8 100644
---- a/drivers/pinctrl/aspeed/pinctrl-aspeed.h
-+++ b/drivers/pinctrl/aspeed/pinctrl-aspeed.h
-@@ -41,6 +41,13 @@ struct aspeed_pin_config {
- 	.mask = BIT_MASK(bit_) \
- }
- 
-+#define ASPEED_PULL_DOWN_PINCONF(pin_, reg_, bit_) \
-+	ASPEED_SB_PINCONF(PIN_CONFIG_BIAS_PULL_DOWN, pin_, pin_, reg_, bit_), \
-+	ASPEED_SB_PINCONF(PIN_CONFIG_BIAS_DISABLE,   pin_, pin_, reg_, bit_)
-+
-+#define ASPEED_PULL_UP_PINCONF(pin_, reg_, bit_) \
-+	ASPEED_SB_PINCONF(PIN_CONFIG_BIAS_PULL_UP, pin_, pin_, reg_, bit_), \
-+	ASPEED_SB_PINCONF(PIN_CONFIG_BIAS_DISABLE, pin_, pin_, reg_, bit_)
- /*
-  * Aspeed pin configuration description.
-  *
--- 
-2.20.1
-
+SGVsbG8gTWFyayENCg0KT24gRnJpLCAyMDE5LTExLTI5IGF0IDEyOjA5ICswMDAwLCBNYXJrIEJy
+b3duIHdyb3RlOg0KPiBPbiBGcmksIE5vdiAyOSwgMjAxOSBhdCAwNzo0ODoxM0FNICswMDAwLCBW
+YWl0dGluZW4sIE1hdHRpIHdyb3RlOg0KPiA+IE9uIFR1ZSwgMjAxOS0xMS0xOSBhdCAxOTozNiAr
+MDAwMCwgTWFyayBCcm93biB3cm90ZToNCj4gPiA+IFRoZSBkcml2ZXIgaW50ZXJmYWNlIHdhcyBh
+ZGRlZCBpbiAicmVndWxhdG9yOiBhZGQgUE0gc3VzcGVuZCBhbmQNCj4gPiA+IHJlc3VtZQ0KPiA+
+ID4gaG9va3MiLg0KPiA+IEkgbG9va2VkIHRocm91Z2ggdGhlIHNldCBidXQgZGlkbid0IHNwb3Qg
+YW55IG5ldyBpbnRlcmZhY2UgdG93YXJkcw0KPiA+IHRoZQ0KPiA+IHJlZ3VsYXRvciBkcml2ZXIg
+KHdoaWNoIGFjY2Vzc2VzIHRoZSBIVykuIEkgc2F3IGludGVyZmFjZSB0b3dhcmRzDQo+ID4gcmVn
+dWxhdG9yIGNvbnN1bWVyIGRyaXZlciB3aGljaCBjYW4gYmUgdXNlZCB0byBzZXQgdGhlIGNvbnN0
+cmFpbnMNCj4gPiB0aG91Z2guDQo+IA0KPiBUaGUgcmVndWxhdG9yIGRyaXZlciBoYXMgYSBidW5j
+aCBmbyBzZXRfc3VzcGVuZF8gb3BlcmF0aW9ucy4NCg0KSG1tLiBJIHNhdyB0aGVzZS4gQnV0IHVu
+bGVzcyBJIGFtIG1pc3Rha2VuIGxpbnV4IG9ubHkga25vd3Mgb25lDQonc3VzcGVuZCcgc3RhdGUg
+d2hlcmVhcyB0aGUgUE1JQyBoYXMgYSBmZXcgc2VwYXJhdGUgc3RhdGVzIEkgY2FuIHNlZSBhcw0K
+J3N1c3BlbmQnIHN0YXRlcy4gQXMgZmFyIGFzIEkgdW5kZXJzdG9vZCB0aGUgc2V0X3N1c3BlbmRf
+dm9sdGFnZSBkb2VzDQpub3QgYWxsb3cgc2V0dGluZyBzZXBhcmF0ZSBzdXNwZW5kIHZvbHRhZ2Vz
+IGRlcGVuZGluZyBvbiB0aGUgInR5cGUgb2YNCnN1c3BlbmQiIChhcyB0aGVyZSBpcyBvbmx5IG9u
+ZSAnc3VzcGVuZCcgc3RhdGUpLg0KDQpGb3IgZXhhbXBsZSwgZnJvbSBDUFUgcG9pbnQgb2Ygdmll
+dyB0aGUgQkQ3MTgyOCBQTUlDIHN0YXRlcyBISUJFUk5BVEUNCmFuZCBMUFNSIGFyZSBwcm9iYWJs
+eSBib3RoIGp1c3QgInN1c3BlbmQiIC0gYnV0IHRoZSBQTUlDIGNvdWxkIHNldA0KZGlmZmVyZW50
+IHZvbHRhZ2VzIG9yIE9OL09GRiBzdGF0ZXMgZm9yIHNvbWUgcmVndWxhdG9ycyBkZXBlbmRpbmcg
+b24NCnRoZSAnc3VzcGVuZCcgdGFyZ2V0IChMUFNSIG9yIEhJQkVSTkFURSBvciBTVEFOREJZKS4N
+Cg0KWWV0LCBhcyBJIHNhaWQsIEkgaGF2ZW4ndCBzZWVuIGhvdyB0aGVzZSBzdGF0ZXMgYXJlIHVz
+ZWQgYnkgcmVhbA0KZGV2aWNlcyAtIHdlIGRvbid0IGN1cnJlbnRseSBoYXZlIGFueSBpbi10cmVl
+IFNvQ3Mgd2hpY2ggdXNlIEJENzE4MjgNCmFuZCB1dGlsaXplIHRoZXNlIHN0YXRlcyAoYXMgZmFy
+IGFzIEkga25vdykuIEhlbmNlIEkgY2FuJ3QgcmVhbGx5DQpmaWd1cmUgb3V0IGhvdyB0byBhZGQg
+c3VwcG9ydCBmb3IgdGhlc2UgUE1JQyBmZWF0dXJlcyBpZiB0aGVyZSBpcyBubw0KJ2RlLWZhY3Rv
+JyBtZWNoYW5pc20gaW4gcGxhY2UgOigNCj4gDQo+ID4gU3BlY2lmaWNhbGx5LCBJIGRvbid0IHNl
+ZSB2b2x0YWdlIHNldHRpbmcgY2FsbGJhY2sgZm9yIGRpZmZlcmVudA0KPiA+IHJ1bi0NCj4gPiBt
+b2Rlcy4gTm9yIGRvIEkgc2VlIHZvbHRhZ2Ugc2V0dGluZyAob3IgZGlmZmVyZW50aWF0aW9uKSBv
+ZiBtb3JlDQo+ID4gdGhhbg0KPiA+IG9uZSBzdXNwZW5kIHN0YXRlLg0KPiANCj4gc2V0X3N1c3Bl
+bmRfdm9sdGFnZS4NCg0KWWVzLiBCdXQgdGhpcyBkb2VzIG9ubHkgYWxsb3cgc2V0dGluZyBvbmUg
+c3VzcGVuZCB2b2x0YWdlIGZvcg0KcmVndWxhdG9yLCBub3Qgb3duIHZvbHRhZ2UgZm9yIEhJQkVS
+TkFURSwgTFBTUiwgU1RBTkRCWSBldGMgLSBvciBhbSBJDQptaXN0YWtlbj8NCg0KPiA+IFRvIGV4
+cGxhaW4gaXQgZnVydGhlciAtIG15IGFzc3VtcHRpb24gaXMgdGhhdCB0aGUgQkQ3MTgyOCAncnVu
+LQ0KPiA+IGxldmVscycNCj4gPiAoUlVOMCwgLi4uIFJVTjMpIGNvdWxkIGJlIG1hcHBlZCB0byBy
+ZWd1bGF0b3IgbW9kZXMNCj4gPiBSRUdVTEFUT1JfTU9ERV9GQVNULCBSRUdVTEFUT1JfTU9ERV9O
+T1JNQUwsIFJFR1VMQVRPUl9NT0RFX0lETEUNCj4gPiBhbmQgDQo+ID4gUkVHVUxBVE9SX01PREVf
+U1RBTkRCWS4gQnV0IHJlZ3VsYXRvcnMgd2hpY2ggYXJlIGNvbnRyb2xsZWQgYnkNCj4gPiB0aGVz
+ZQ0KPiANCj4gVGhhdCBkb2Vzbid0IG1ha2Ugc2Vuc2UgYXQgYWxsLCB0aGUgbW9kZXMgYWZmZWN0
+IHRoZSBxdWFsaXR5IG9mDQo+IHJlZ3VsYXRpb24gbm90IHRoZSB2b2x0YWdlIHRoYXQgaXMgc2V0
+Lg0KDQpUaGFua3MuIEkgbWlzdW5kZXJzdG9vZCB0aGlzLiBJIHRob3VnaHQgdGhlc2Ugc3RhdGVz
+IGNvdWxkIGJlIHVzZWQgZm9yDQpzb21lIGFkYXB0aXZlIHZvbHRhZ2VzLiBNeSB1bmRlcnN0YW5k
+aW5nIGlzIHRoYXQgdGhlIFJVTjAsLi4uUlVOMyBhcmUNCmRlc2lnbmVkIGZvciB0aGF0IC0gYnV0
+IEkgZGlkbid0IGtub3cgaWYgcmVndWxhdG9yIGZyYW1ld29yayBpcw0KZGVzaWduZWQgZm9yIHRo
+aXMuDQoNCj4gPiBydW4tbGV2ZWxzLCBjYW4ndCBiZSBpbmRpdmlkdWFsbHkgY29udHJvbGxlZC4g
+SWYgc3RhdGUgZm9yIG9uZSBpcw0KPiA+IGNoYW5nZWQsIHRoZSBzdGF0ZSBpcyBjaGFuZ2VkIGZv
+ciBhbGwgb2YgdGhlbS4gVGhlIERWUyBidWNrcyAxLDIsNg0KPiA+IGFuZA0KPiANCj4gV2UgZG9u
+J3QgcmVhbGx5IGhhdmUgYW55dGhpbmcgdGhhdCdkIG9ubHkgd29yayBmb3IgZ3JvdXANCj4gY29u
+ZmlndXJhdGlvbg0KPiBleGNlcHQgZm9yIHRoZSBzdXNwZW5kIG1vZGVzLg0KDQpUaGFua3MuIEFz
+IEkgc2FpZCwgSSB0aG91Z2h0IHRoZSAncXVhbGl0eSBvZiByZWd1bGF0aW9uJyBzdGF0ZXMgY291
+bGQNCmhhdmUgYmVlbiBzdXBwb3J0aW5nIGFsc28gY2hhbmdpbmcgdGhlIHZvbHRhZ2VzLg0KDQo+
+IA0KPiA+ID4gQWgsIHRoYXQncyBhY3R1YWxseSBiZXR0ZXIuICBJdCBvcGVucyB1cCBwb3NzaWJs
+aXRpZXMgZm9yIG1ha2luZw0KPiA+ID4gdXNlDQo+ID4gPiBvZg0KPiA+ID4gdGhlIGZlYXR1cmUg
+d2l0aG91dCBlbmNvZGluZyB2b2x0YWdlcyBpbiBEVC4gIEZvciBleGFtcGxlLCB5b3UNCj4gPiA+
+IGNhbg0KPiA+ID4gY2FjaGUNCj4gPiA+IHRoZSBsYXN0IGhvd2V2ZXIgbWFueSB2b2x0YWdlcyB0
+aGF0IHdlcmUgc2V0IGFuZCBqdW1wIHF1aWNrbHkgdG8NCj4gPiA+IHRoZW0NCj4gPiA+IG9yDQo+
+ID4gPiBkbyBzb21ldGhpbmcgbGlrZSBwdXQgdGhlIHRvcCBvZiB0aGUgY29uc3RyYWludHMgaW4g
+dG8gaGVscCB3aXRoDQo+ID4gPiBnb3Zlcm5vcnMgbGlrZSBvbmRlbWFuZC4gIEknZCByZWNvbW1l
+bmQgdHJ5aW5nIGZvciBzb21ldGhpbmcgbGlrZQ0KPiA+ID4gdGhhdA0KPiA+ID4gcmF0aGVyIHRo
+YW4gZW5jb2RpbmcgaW4gRFQsIGl0J2xsIHByb2JhYmx5IGJlIG1vcmUgcm9idXN0IHdpdGgNCj4g
+PiA+IHRoaW5ncw0KPiA+ID4gbGlrZSBjcHVmcmVxIGNoYW5naW5nLg0KPiA+IEkgd2lzaCBJIHdh
+cyB3b3JraW5nIHdpdGggdGhlIGZ1bGwgcHJvZHVjdCBzbyB0aGF0IEkgY291bGQgc2VlIGFuZA0K
+PiA+IGxlYXJuIGEgcHJvcGVyIGV4YW1wbGUgb24gaG93IHRoZSBjcHVmcmVxIGFjdHVhbGx5IHVz
+ZXMgdGhlc2UNCj4gPiBpbnRlcmZhY2VzIDopIEknZCByZWFsbHkgbGlrZSB0byB1bmRlcnN0YW5k
+IHRoaXMgbXVjaCBiZXR0ZXIuIE1heWJlDQo+ID4gdGhpcyBjb3VsZCBiZSBhIHRvcGljIGZvciB5
+b3UgdG8gcHJlc2VudCBpbiBzb21lIExpbnV4IGNvbmZlcmVuY2UNCj4gPiA7KQ0KPiA+IEp1c3Qg
+cGxlYXNlIHBpbmcgbWUgd2hlbiB5b3UgYXJlIGRvaW5nIHRoYXQgYW5kIEknbGwgYmUgbGlzdGVu
+aW5nDQo+ID4gdGhlcmUNCj4gPiBmb3Igc3VyZSA7KQ0KPiANCj4gVGhlIGNwdWZyZXEgY29kZSBp
+cyBhbGwgdGhlcmUgaW4ga2VybmVsIC0gZHJpdmVycy9jcHVmcmVxLiAgSSBjYW4ndA0KPiByZW1l
+bWJlciBpZiBBbmRyb2lkIHN0aWxsIGhhcyBhIGN1c3RvbSBnb3Zlcm5vciBpbiB0aGVpciB0cmVl
+cyBidXQgaXQNCj4gZG9lc24ndCByZWFsbHkgbWFrZSBtdWNoIGRpZmZlcmVuY2UgaW4gdGVybXMg
+b2YgaG93IGl0IGludGVyYWN0cyB3aXRoDQo+IHRoZSByZWd1bGF0b3IgZHJpdmVycy4NCg0KUmln
+aHQuIEkgZ3Vlc3MgeW91ciBhbnN3ZXJzIG1lYW4gdGhhdCB0aGVyZSBpcyBubyAicmVndWxhdG9y
+IGdyb3VwDQpjb250cm9sIiBmb3IgImFkYXB0aXZlIHZvbHRhZ2UgY2hhbmdlcyIgc3VwcG9ydGVk
+IGJ5IHJlZ3VsYXRvcg0KZnJhbWV3b3JrIC8gY3B1ZnJlcSAtIGFzIG9mIG5vdy4gRnVydGhlcm1v
+cmUsIEkgaGF2ZSB1bmRlcnN0b29kIHRoYXQgaXQNCmlzIGRpZmZlcmVudCBzdG9yeSBkZXBlbmRp
+bmcgb24gUE1JQyBhbmQgQ1BVL1NvQyBjYXBhYmlsaXRpZXMuIChMaWtlDQpQTUlDIGluYnVpbHQg
+c3RhdGVzIGFuZCBzdGF0ZSBjaGFuZ2UgbWVjaGFuaXNtcywgU29DIHZvbHRhZ2Ugc2NhbGluZw0K
+c3VwcG9ydCBldGMuKQ0KDQo+ICBBbnl3YXlzLCBteSBpZGVhIHdhcyB0byBzZXQgdGhlIGluaXRh
+bCB2b2x0YWdlIHZhbHVlcyBmb3IgdGhlc2UNCj4gc3RhdGVzDQo+ID4gdmlhIERUIC0gYnV0IGFs
+bG93IHRoZSB2b2x0YWdlcyB0byBiZSBjaGFuZ2VkIGF0IHJ1bi10aW1lIHRvbyAoSQ0KPiA+IGd1
+ZXNzDQo+ID4gdGhpcyBpZGVhIGlzIHZpc2libGUgaW4gdGhlIHBhdGNoIDEyKS4NCj4gDQo+IEl0
+J2QgYmUgbXVjaCBiZXR0ZXIgaWYgeW91IGNvdWxkIGF2b2lkIHB1dHRpbmcgdGhlIHZvbHRhZ2Vz
+IGluIHRoZQ0KPiBiaW5kaW5nIGlmIHRoZXkncmUgbm90IHN0cmljdGx5IHJlcXVpcmVkLg0KDQpI
+bW0uLiBJIGd1ZXNzIEkgY2FuIG9taXQgdGhhdCBmcm9tIGluLXRyZWUgZHJpdmVyIGZvciBub3cu
+IEkgY2FuIHRyeQ0KbWFpbnRhaW5pbmcgb3duIHNldCBvZiBwYXRjaGVzIGZvciBleGlzdGluZyBj
+dXN0b21lcnMgZm9yIG5vdy4gSSB0aGluaw0KYWRkaW5nIHRoZXNlIHRvIGJpbmRpbmdzIGxhdGVy
+IGlzIG5vdCBpbXBvc3NpYmxlIDopIFJlbW92aW5nIHRoZW0gd291bGQNCnByb2JhYmx5IGJlIGhh
+cmRlci4NCg0KVGhhbmtzIGFnYWluIE1hcmsuIEkgdHJ1bHkgYXBwcmVjaWF0ZSB5b3VyIGhlbHAg
+YW5kIGd1aWRhbmNlIDopDQoNCkJyLA0KCU1hdHRpDQoNCg0K
