@@ -2,128 +2,103 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 0E67410E52D
-	for <lists+linux-gpio@lfdr.de>; Mon,  2 Dec 2019 06:00:58 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 1ED1410E5BB
+	for <lists+linux-gpio@lfdr.de>; Mon,  2 Dec 2019 07:12:53 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726707AbfLBFA5 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 2 Dec 2019 00:00:57 -0500
-Received: from mail-eopbgr740083.outbound.protection.outlook.com ([40.107.74.83]:53664
-        "EHLO NAM01-BN3-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726399AbfLBFA5 (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Mon, 2 Dec 2019 00:00:57 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=hkM+s+R865ycntaZNjBbLZXrxyowgHW1sWSiV8WcDoGUdpyqvW4xYXFLezSDypAa4xbGHe+a2/FZFA9NpEtxVN4LkMFm8+WeU3KBEsCytQJsqN7JwvPWre8lhtVqqqiI8e2otxiLf0vcKJJoiT9Ga5VtNvV8YYIe/eVbhC+f6HZ2TYBsz9iblShbZVE4Y0jH8cQi9cIYmfOAJ9fSBE3IbJ9Hv5W+fXYWWu7fHeWG3Fz6L+50/woNPkd/tcv+W1mpibqeJ3UdqO3eJxmlX8ErEVgTrCYXhREqOyBtBXlOAMfjqz4vAwI+RT0PukowT2Ygbn1A9eC/upUZ5dge6Cdbkw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=BxXdEauffoAjQrkRE8eQ/RalQl9E+fa8D7Bp5aT7hl4=;
- b=TolCZAS3OruzADbA7/z9gbiiEIV30YlZxX6X+HdKBpairzeXqOCjF+K7PPtuSYCehyrG9T2N4olllp78xxJNl2HUQopK7ekYZkuCPZ61p+0P6JTqOUKiEi995uCjKx3UBmENqLTabxt03YBdO5h7lQdExk4UK+ZBpbEQokiK6XZvvb6eYAQO+CqhgmKW4WYqwa0cPcxdEp0Q8mPIPljItf8mfiyfQ1Cn6bPWwLXGNc0ZwLOOzrPfqzsF+lnGd0Tq3HRFE+jx1JLU/27mCxhx0KGmE3KN0mTShutPqwysVSXqxOEKmzKWV2pMcLGXcLjv6LaSHRErzZdRHyIonmiLDw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 60.241.24.90) smtp.rcpttodomain=opengear.com smtp.mailfrom=opengear.com;
- dmarc=pass (p=none sp=none pct=100) action=none header.from=opengear.com;
- dkim=none (message not signed); arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=opengear.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=BxXdEauffoAjQrkRE8eQ/RalQl9E+fa8D7Bp5aT7hl4=;
- b=GutPNEVgy4S/0t076/KQEajHskg9P3AMb70soW1usRno/Sx+ardXO9ggJ+qFoDt0Y9dbMmAAO3kC+gNs8SAX2FBVFntnEjkvFqmkyk0Lryg1JPtQpUYgam8V+bWLJK1/r8uvs3j0ZWDgJTmDIavhhpark7LdGcyEr5wAlpQksmI=
-Received: from MN2PR15CA0032.namprd15.prod.outlook.com (2603:10b6:208:1b4::45)
- by BYAPR15MB2231.namprd15.prod.outlook.com (2603:10b6:a02:8f::23) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2495.22; Mon, 2 Dec
- 2019 05:00:52 +0000
-Received: from CO1NAM04FT005.eop-NAM04.prod.protection.outlook.com
- (2a01:111:f400:7e4d::208) by MN2PR15CA0032.outlook.office365.com
- (2603:10b6:208:1b4::45) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2495.18 via Frontend
- Transport; Mon, 2 Dec 2019 05:00:50 +0000
-Authentication-Results: spf=pass (sender IP is 60.241.24.90)
- smtp.mailfrom=opengear.com; opengear.com; dkim=none (message not signed)
- header.d=none;opengear.com; dmarc=pass action=none header.from=opengear.com;
-Received-SPF: Pass (protection.outlook.com: domain of opengear.com designates
- 60.241.24.90 as permitted sender) receiver=protection.outlook.com;
- client-ip=60.241.24.90; helo=postman.bne.opengear.com;
-Received: from postman.bne.opengear.com (60.241.24.90) by
- CO1NAM04FT005.mail.protection.outlook.com (10.152.90.149) with Microsoft SMTP
- Server id 15.20.2495.18 via Frontend Transport; Mon, 2 Dec 2019 05:00:47
- +0000
-Received: from galangal.danc.bne.opengear.com (danc.bne.opengear.com [192.168.254.90])
-        by postman.bne.opengear.com (Postfix) with ESMTPS id 30ACCDEB6E;
-        Mon,  2 Dec 2019 15:00:43 +1000 (AEST)
-Received: by galangal.danc.bne.opengear.com (Postfix, from userid 1090)
-        id 0FE6242945E4; Mon,  2 Dec 2019 15:00:43 +1000 (AEST)
-From:   Dan Callaghan <dan.callaghan@opengear.com>
+        id S1725920AbfLBGMw (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 2 Dec 2019 01:12:52 -0500
+Received: from out3-smtp.messagingengine.com ([66.111.4.27]:41067 "EHLO
+        out3-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725807AbfLBGMw (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 2 Dec 2019 01:12:52 -0500
+Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
+        by mailout.nyi.internal (Postfix) with ESMTP id 85EBE22639;
+        Mon,  2 Dec 2019 01:12:50 -0500 (EST)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute4.internal (MEProxy); Mon, 02 Dec 2019 01:12:50 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aj.id.au; h=from
+        :to:cc:subject:date:message-id:mime-version
+        :content-transfer-encoding; s=fm1; bh=0RjErlsd2BgGPzWKY9035wj5+w
+        1sayMAH/KmpcDz7N0=; b=ic8mng/k1DqnwT6Gl3dHcq25QjL4puHw+CyRFrcjRO
+        SSY7IGpT8mmRmFsxz2qYv3Xc3b9vlyT4Xkfm99QJimK0YafQ+8HOHtAuZoqbNeCZ
+        G6u6uerhmJlfdm5cXkRHA+gZ3LjfIn0nzwUQW4PIRiFBXHXBFjuCm2+f/msR5ObV
+        /dod50vtchx47qZAvTxev57NgvkjflpWcE4NLA8KCW0Rd1iHWnFNCHBtRY/Rbpz8
+        s079MHvJo8fOtdV9CIzjlqTFeLxiwExMHhNBKnPMew7u9Na6/nb5L9FPqc4gOmFZ
+        laozeS1WEdrbw+/gAibQSjN2I1nvgcvhouLFBF/WjkjQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-transfer-encoding:date:from
+        :message-id:mime-version:subject:to:x-me-proxy:x-me-proxy
+        :x-me-sender:x-me-sender:x-sasl-enc; s=fm1; bh=0RjErlsd2BgGPzWKY
+        9035wj5+w1sayMAH/KmpcDz7N0=; b=UFQ+ITXGYvmYQjvyDNA2IYiO7w2MnBI1K
+        7x9B6Q0St7fwbUcJ4jsJuBKjdZxohm5U+ghYDuMkVWYnFyXPOFKINrbCKBZon5qP
+        RYkWFcK8cgT17qA+S3Ind7WAKDZ9Gpo6M6A4xHtTvlF/Czsugw8ZDXrxMYDf746t
+        1YXSc53OO7ZiM8d1VxLR7CJx5m7ztoNs2CTvVXc8NC6AciC/7A5qznHxBJIB6/Tv
+        1kllmuxdxY08QpsYdwPRM8gOIVaRp1WxYh+HFbpxXebk3L+oLRtLAXwSrrVTDXwH
+        xSVnOW8yl8mg+kAPJt63ldKiMlnKvk0eT+aZnfcdFGbUCUBcOGy1w==
+X-ME-Sender: <xms:YKvkXTtUo9MuWIb4KRGwNzRSB6KEmk60U2YiyaFwcq6-DNMnor8gww>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedufedrudejgedgleegucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucenucfjughrpefhvffufffkofgggfestdekredtre
+    dttdenucfhrhhomheptehnughrvgifucflvghffhgvrhihuceorghnughrvgifsegrjhdr
+    ihgurdgruheqnecukfhppeduudekrddvuddurdelvddrudefnecurfgrrhgrmhepmhgrih
+    hlfhhrohhmpegrnhgurhgvfiesrghjrdhiugdrrghunecuvehluhhsthgvrhfuihiivgep
+    td
+X-ME-Proxy: <xmx:YKvkXQ1ffOumc3312OXu_BO_dhduMphO8uo0uIZE0SeR5zU9UVX1xQ>
+    <xmx:YKvkXbO3ESr9sYNGBCOALc6hnrwD1rbGdkvonL0h7minx4vzuGinNQ>
+    <xmx:YKvkXQUez-46vBL-lcju1Yhmy76kz6jjcdnItmBN6EiH85gXdEvmJA>
+    <xmx:YqvkXdbwbi_GhewCX739IsuQ7ztsMluU8SB46CIkruCFZDo5Y3r35w>
+Received: from mistburn.lan (unknown [118.211.92.13])
+        by mail.messagingengine.com (Postfix) with ESMTPA id AE8D080062;
+        Mon,  2 Dec 2019 01:12:45 -0500 (EST)
+From:   Andrew Jeffery <andrew@aj.id.au>
 To:     linux-gpio@vger.kernel.org
-Cc:     Dan Callaghan <dan.callaghan@opengear.com>
-Subject: [PATCH] gpiolib: hold gpio devices lock until ->descs array is initialised
-Date:   Mon,  2 Dec 2019 14:59:54 +1000
-Message-Id: <20191202045954.28572-1-dan.callaghan@opengear.com>
-X-Mailer: git-send-email 2.21.0
+Cc:     linus.walleij@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com,
+        joel@jms.id.au, linux-aspeed@lists.ozlabs.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH 0/7] pinctrl: aspeed-g6: USB and pinconf support
+Date:   Mon,  2 Dec 2019 16:44:25 +1030
+Message-Id: <20191202061432.3996-1-andrew@aj.id.au>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-EOPAttributedMessage: 0
-X-Forefront-Antispam-Report: CIP:60.241.24.90;IPV:CAL;CTRY:AU;EFV:NLI;SFV:NSPM;SFS:(10009020)(4636009)(396003)(346002)(136003)(39840400004)(376002)(189003)(199004)(426003)(76130400001)(14444005)(8676002)(5660300002)(70206006)(1076003)(103686004)(51416003)(356004)(36756003)(106002)(26826003)(50226002)(7636002)(305945005)(8936002)(6666004)(4326008)(70586007)(2906002)(246002)(2870700001)(26005)(336012)(478600001)(48376002)(107886003)(186003)(47776003)(44832011)(2351001)(6916009)(316002)(6266002)(42186006)(2361001)(2616005)(50466002);DIR:OUT;SFP:1101;SCL:1;SRVR:BYAPR15MB2231;H:postman.bne.opengear.com;FPR:;SPF:Pass;LANG:en;PTR:brisbane.opengear.com;MX:1;A:1;
-Content-Type: text/plain
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 38d59a78-64df-4c78-ca3b-08d776e49920
-X-MS-TrafficTypeDiagnostic: BYAPR15MB2231:|BYAPR15MB2231:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <BYAPR15MB22310389290C1C2841E75912B8430@BYAPR15MB2231.namprd15.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:6790;
-X-Forefront-PRVS: 0239D46DB6
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: jr6NNDKC/EYGQpGBhb0UH9VY7z5AZvCFZBTmv3LRgRL3bBWZEwWsyLvfe3/mpUvkR/MqKg+E03PtLuEB5le0Fg99esXp9/CZAARdplnRPIoQqQtPhNbz44biAwgBV1QSoymGlUpQU80X+F32ia28jL5A1sKenboCxv2u18Xamu+FRH9I7meUFoWzxAipo3MTjh/XcMDydIqsX3c+vowScHBdh2NH2EcmZ1vY8F3N2M7JcZJanJ/Fru92LQ3sNQ6eRsiWcEGs1/UFh+VCKufThTKOfQt8zlK4xluogWe5R4qvDEtamwxaNMNq1cDUDpORYvxc5Xepc2pvxb91UWl0LEnPq2kG8PE7PFKO5U4dHej9n7Zro2PkY5rrDYW4hpozE2MD7PYy+QPFEsvNETvcOZsUeX6sK89UQG2DQqY60WTKXvyKnCrzOqe8jl3KOS3r
-X-OriginatorOrg: opengear.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Dec 2019 05:00:47.6267
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 38d59a78-64df-4c78-ca3b-08d776e49920
-X-MS-Exchange-CrossTenant-Id: a6251c26-d21f-4164-a225-1f4eaebf5f9a
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=a6251c26-d21f-4164-a225-1f4eaebf5f9a;Ip=[60.241.24.90];Helo=[postman.bne.opengear.com]
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR15MB2231
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-If a driver consuming the GPIO chip is being probed at the same time as
-the GPIO driver is registering the chip, it is possible for the
-consuming driver to see the ->descs array in an uninitialised state.
-For example, the gpio-keys-polled driver can fail like this:
+Hello,
 
-    kernel: gpiod_request: invalid GPIO (no device)
-    kernel: gpio-keys-polled PRP0001:07: failed to get gpio: -22
-    kernel: gpio-keys-polled: probe of PRP0001:07 failed with error -22
+This series adds USB and pinconf support to the AST2600 pincontrol driver. The
+patches have largely been developed by Johnny Huang from ASPEED and have been
+used for bringup and verification of the chip. The were developed around the
+time of the 5.4 merge window but I got distracted for a while and haven't had
+an opportunity to send them until now. They've had a run in the OpenBMC kernel
+tree and so shouldn't cause any issues, but given where we are for 5.5 I'm just
+getting them in early for 5.6 so we don't miss another release.
 
-This patch makes gpiochip_add() hold the lock protecting gpio_devices
-until it has finished setting desc->gdev on the newly inserted list
-entry.
+Please review!
 
-Signed-off-by: Dan Callaghan <dan.callaghan@opengear.com>
----
- drivers/gpio/gpiolib.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+Andrew Jeffery (1):
+  dt-bindings: pinctrl: aspeed-g6: Add USB functions and groups
 
-diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
-index dce0b31f4125..93eec6dbd9c7 100644
---- a/drivers/gpio/gpiolib.c
-+++ b/drivers/gpio/gpiolib.c
-@@ -1487,11 +1487,11 @@ int gpiochip_add_data_with_key(struct gpio_chip *chip, void *data,
- 		goto err_free_label;
- 	}
- 
--	spin_unlock_irqrestore(&gpio_lock, flags);
--
- 	for (i = 0; i < chip->ngpio; i++)
- 		gdev->descs[i].gdev = gdev;
- 
-+	spin_unlock_irqrestore(&gpio_lock, flags);
-+
- #ifdef CONFIG_PINCTRL
- 	INIT_LIST_HEAD(&gdev->pin_ranges);
- #endif
+Johnny Huang (6):
+  pinctrl: aspeed-g6: Add AST2600 I3C1 and I3C2 pinmux config
+  pinctrl: aspeed-g6: Add support for the AST2600 USB pinmux
+  pinctrl: aspeed: Add ASPEED_SB_PINCONF() helper
+  pinctrl: aspeed: Move aspeed_pin_config_map to separate source file
+  pinctrl: aspeed: Use masks to describe pinconf bitfields
+  pinctrl: aspeed-g6: Add AST2600 pinconf support
+
+ .../pinctrl/aspeed,ast2600-pinctrl.yaml       |   9 +-
+ drivers/pinctrl/aspeed/pinctrl-aspeed-g4.c    | 170 ++++----
+ drivers/pinctrl/aspeed/pinctrl-aspeed-g5.c    | 212 +++++-----
+ drivers/pinctrl/aspeed/pinctrl-aspeed-g6.c    | 387 +++++++++++++++++-
+ drivers/pinctrl/aspeed/pinctrl-aspeed.c       |  50 +--
+ drivers/pinctrl/aspeed/pinctrl-aspeed.h       |  38 +-
+ drivers/pinctrl/aspeed/pinmux-aspeed.h        |   1 +
+ 7 files changed, 640 insertions(+), 227 deletions(-)
+
 -- 
-2.21.0
+2.20.1
 
