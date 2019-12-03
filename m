@@ -2,261 +2,229 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id F198810F230
-	for <lists+linux-gpio@lfdr.de>; Mon,  2 Dec 2019 22:31:16 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 9B50310F4CE
+	for <lists+linux-gpio@lfdr.de>; Tue,  3 Dec 2019 03:09:30 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725954AbfLBVbQ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 2 Dec 2019 16:31:16 -0500
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:34980 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725801AbfLBVbQ (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 2 Dec 2019 16:31:16 -0500
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id xB2LV6E6080747;
-        Mon, 2 Dec 2019 15:31:06 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1575322266;
-        bh=YOU/tE/GgwM2e8lr07xh4JwbNuzF8RidPoRRVOBtWg8=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=SoKFJhgXql7/7rMTEHqrsYjnBzabgQAKK/ppNfWhXfC7td1dzd3GI8W7xPAZxMbal
-         bGI6rMEKGf2CBS2YA+MJss7jIw2oXRIwVBx0gzHDTs2CXkM3trJp38jr/OJVoqqT4E
-         d4Jiv7oqEw298hh9jTa9eS0g6nqJH2KT5ocF5PD4=
-Received: from DLEE115.ent.ti.com (dlee115.ent.ti.com [157.170.170.26])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id xB2LV5DD099915;
-        Mon, 2 Dec 2019 15:31:05 -0600
-Received: from DLEE111.ent.ti.com (157.170.170.22) by DLEE115.ent.ti.com
- (157.170.170.26) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Mon, 2 Dec
- 2019 15:31:03 -0600
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE111.ent.ti.com
- (157.170.170.22) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Mon, 2 Dec 2019 15:31:03 -0600
-Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id xB2LV1NM065806;
-        Mon, 2 Dec 2019 15:31:01 -0600
-Subject: Re: [RFC 1/2] dt-bindings: gpio: Document shared GPIO line usage
-To:     Linus Walleij <linus.walleij@linaro.org>
-CC:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Rob Herring <robh+dt@kernel.org>,
+        id S1726008AbfLCCJ3 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 2 Dec 2019 21:09:29 -0500
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:44641 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725919AbfLCCJ3 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 2 Dec 2019 21:09:29 -0500
+Received: by mail-pg1-f193.google.com with SMTP id x7so821293pgl.11;
+        Mon, 02 Dec 2019 18:09:29 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=Xe9IJkX82hr3CFWVtYT5KfCW7BSXtUq9zhuGMmcDS24=;
+        b=LlSvCQGGriIxrQJn9PhmXjE5saKv8Toa7LqKttEIXWqwFU8/+tdn1oePjJHbaKBz9B
+         2uE6/zpo8tHC68ky113GQmVmyRSCoJ+PBSbO41Ma7pDu0SuTCoNaoUCCw+YYrz+vwF+s
+         o40RwpGPCy3eIJuRRdY7/+UWjIhdEQTKigowdPzUOTRcLbNKcecvmiCHZZwvphdGdgLE
+         Pz2nFbaMsUifKfr7Yj9i6oBZ7t3dxNTr40cTJE+F/CR6XOnTv3accbLSw8y8yup/WBjA
+         OiWY5G8vrA7t5dYtjrQvCituShNepLYcdGnkUTfmTUMNDf4BVfAn/b7zSUePiSydqqBZ
+         +dSw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=Xe9IJkX82hr3CFWVtYT5KfCW7BSXtUq9zhuGMmcDS24=;
+        b=GdtPE6DaLaod+TU4l3EjF73i3N7/n3NYR0CM63Cjne/ucMP+eyrewFxLOjIah1i224
+         2/XdFxxEqtq2WaxyIumltoRvKWDYXSLpmtX+Oc5w0GX5t6vQfzwNAk0eVNtp8tN5fjwz
+         31+DVV6sZggbBDCmlmIOypEp9CzOEqpSYO0zwBfbwo869Nb4KpX4vf3NVgjAy0lsjOzS
+         oAkAsIgNIlorl0OD2Iu7NWSkm2OMO7cbGypQPSI9cFvu4ygy++2Zev4MprW+xxfozEEq
+         B0pENmrggFKS3Xlsj1VKtDY+XqU/QeTTpbZa5xOIHW9+VrytDWC8tkfgcbqkngMBWWjr
+         IZpA==
+X-Gm-Message-State: APjAAAWBzUeCuSm+WF3aq8xReIWZAODrpb+rZMdlvYNDjnzoz8bfN9c+
+        V3mw3V1DrXpGUKHN1ayIWyQ=
+X-Google-Smtp-Source: APXvYqyLUPNvoW/1522v3CBoFEpopVYcSXN224HltWgLxpNIYww9I2VQcBdURBB2QPZn5N6Pu/RpMA==
+X-Received: by 2002:a63:4f59:: with SMTP id p25mr2705844pgl.230.1575338968346;
+        Mon, 02 Dec 2019 18:09:28 -0800 (PST)
+Received: from sol (220-235-109-115.dyn.iinet.net.au. [220.235.109.115])
+        by smtp.gmail.com with ESMTPSA id d65sm838841pfa.159.2019.12.02.18.09.24
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 02 Dec 2019 18:09:27 -0800 (PST)
+Date:   Tue, 3 Dec 2019 10:09:21 +0800
+From:   Kent Gibson <warthog618@gmail.com>
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Mark Brown <broonie@kernel.org>,
-        Maxime Ripard <mripard@kernel.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>
-References: <20191120133409.9217-1-peter.ujfalusi@ti.com>
- <20191120133409.9217-2-peter.ujfalusi@ti.com>
- <CACRpkdbXX3=1EGpGRf6NgwUfY2Q0AKbGM8gJvVpY+BRAo5MQvQ@mail.gmail.com>
- <d423bc53-31df-b1b4-37da-932b7208a29e@ti.com>
- <CACRpkdafEdsN6i16SA175wE4J_4+EhS5Uw4Qsg=cZ=EuDYHmgg@mail.gmail.com>
-From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
-Message-ID: <89afb07f-fb70-3f44-2396-df350ca15690@ti.com>
-Date:   Mon, 2 Dec 2019 23:31:05 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 7/8] gpiolib: add new ioctl() for monitoring changes in
+ line info
+Message-ID: <20191203020921.GA7900@sol>
+References: <20191127232330.GA3761@sol>
+ <CAMRc=Me5kNUuPQCTM_H=2QjUL=7R-ii+uRvdNvAz3SqL_sPzcQ@mail.gmail.com>
+ <20191128141028.GA15454@sol>
+ <CAMRc=MeZzjuU25L_-qjP9n3O6Z3ucYUZkUoCA3sX0Z0yaXtgMw@mail.gmail.com>
+ <20191128150200.GA16492@sol>
+ <CAMRc=Md6aQobSoDVnAiLFQyZ1dKq8j4Wwm-_Zv9vrYReJvoCgA@mail.gmail.com>
+ <20191129134907.GA24580@sol>
+ <CAMpxmJUCjsWgZ0NHD2Uz-uG0F61J=BZe0G83=i=fewYYpWhrjQ@mail.gmail.com>
+ <20191201234318.GA6832@sol>
+ <CAMRc=MeVNWo-weCT=ROQz0mVc-2Lh4JnBrDSf=3rBAPPCYL5Bw@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <CACRpkdafEdsN6i16SA175wE4J_4+EhS5Uw4Qsg=cZ=EuDYHmgg@mail.gmail.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+In-Reply-To: <CAMRc=MeVNWo-weCT=ROQz0mVc-2Lh4JnBrDSf=3rBAPPCYL5Bw@mail.gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-
-
-On 28/11/2019 12.06, Linus Walleij wrote:
-> On Fri, Nov 22, 2019 at 2:36 PM Peter Ujfalusi <peter.ujfalusi@ti.com> wrote:
->> On 22/11/2019 14.10, Linus Walleij wrote:
->>> On Wed, Nov 20, 2019 at 2:34 PM Peter Ujfalusi <peter.ujfalusi@ti.com> wrote:
->>>
->>>> Boards might use the same GPIO line to control several external devices.
->>>> Add section to document on how a shared GPIO pin can be described.
->>>>
->>>> Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
->>>
->>> As I've stated earlier I think this information is surplus.
->>> If two devices have a phandle to the same GPIO line
->>> then it is by definition shared.
->>
->> Well, phandle + line number to be precise.
+On Mon, Dec 02, 2019 at 06:11:06PM +0100, Bartosz Golaszewski wrote:
+> pon., 2 gru 2019 o 00:43 Kent Gibson <warthog618@gmail.com> napisał(a):
+> >
 > 
-> This is what I mean when I say "phandle to the same GPIO line".
-> Like this:
+> [snip!]
 > 
-> foo-gpios = <&gpio0 5 GPIO_ACTIVE_LOW>;
+> > > > >
+> > > > > How about reusing the already existing file descriptor associated with
+> > > > > the chip itself? We currently only implement the ioctl() operation on
+> > > > > it - the poll() and read() callbacks are empty.
+> > > > >
+> > > > > We'd need to add two new ioctls(): GPIOLINE_WATCH_IOCTL and
+> > > > > GPIOLINE_UNWATCH_IOCTL. The structures for both would look like this:
+> > > > >
+> > > > > struct gpioline_watch_request {
+> > > > >     __u32 lineoffset
+> > > > >     struct gpioline_info info;
+> > > > > };
+> > > > >
+> > > > > struct gpioline_unwatch_request {
+> > > > >     __u32 lineoffset;
+> > > > > };
+> > > > >
+> > > > > When GPIOLINE_WATCH_IOCTL is called, we'd setup a watch for given
+> > > > > line: the embedded gpioline_info structure would be filled with
+> > > > > initial info and we can now poll the gpiochip descriptor for events
+> > > > > and read them. The event structure would looks like this:
+> > > > >
+> > > > > struct gpioline_changed {
+> > > > >     __u32 event_type;
+> > > > >     __u64 timestamp;
+> > > > >     struct gpioline_info info;
+> > > > > };
+> > > > >
+> > > > > Calling GPIOLINE_UNWATCH_IOCTL would of course make the kernel stop
+> > > > > emitting events for given line.
+> > > > >
+> > > > > Does it make sense?
+> > > > >
+> > > >
+> > > > That makes sense.  But it doesn't really address the underlying problem
+> > > > that you have identified - it just makes it less likely that you will
+> > > > fill the kfifo.
+> > > >
+> > > > Correct me if I'm wrong, but a pathological process or processes could
+> > > > still swamp your kfifo with events, particularly if they are operating
+> > > > on bulks.
+> > >
+> > > Don't get me wrong - the assumption is that a process knows what it's
+> > > doing. We expect that if it watches lines for events, then it will
+> > > actually read them as soon as they arrive on the other end of the
+> > > FIFO. If not - then this won't affect others, it will fill up the FIFO
+> > > associated with this process' file descriptor and we'll just drop new
+> > > events until it consumes old ones. In other words: I'm not worried
+> > > about pathological processes.
+> > >
+> >
+> > The reader can't guarantee that it can read faster than changes can occur,
+> > no matter how well intentioned it is.
+> >
+> > I am a bit worried if you just drop events, as there is no indication to
+> > userspace that that has occured.
 > 
-> If the phandle <&gpio0 5 *>; appear in some other
-> (non-disabled) node it has > 1 users.
-
-I thought so.
-Not sure how to look up (and how expensive it is) to find the nodes
-which contain any gpio(lib) binding pointing to the given line.
-
+> This is what happens now with line events anyway. I added a patch to
+> the v2 of this series that adds a ratelimited debug message when the
+> kfifo is full. At least that will leave a trace in the kernel log.
+> Unfortunately there's no other way than limiting the FIFO's size -
+> otherwise a malicious process could hog all the memory by not reading
+> events.
 > 
->>>> +               line_a {
->>>> +                       gpio-shared;
->>>
->>> So this is unnecessary: if the same line is referenced
->>> by phandle from two places it is shared, simple as that.
->>
->> phandle is pointing to the gpio controller, not to the line.
+> >
+> > > The problem here is that the file descriptor is created and there are
+> > > already several (up to 64) events waiting to be read. This just
+> > > doesn't feel right. If the process doesn't manage to consume all
+> > > initial events in time, we'll drop new ones. The alternative is to
+> > > allocate a larger FIFO but I just have a feeling that this whole
+> > > approach is wrong. I'm not sure any other subsystem does something
+> > > like this.
+> > >
+> > > >
+> > > > I'd be happier with a solution that addresses what happens when the
+> > > > kfifo is full, or even better prevents it from filling, and then see
+> > > > how that feeds back to the startup case.
+> > > >
+> > >
+> > > You can't really prevent it from overflowing as you can't
+> > > update/modify elements in the middle.
+> > >
+> >
+> > You can if you let go of the idea of adding something to the fifo for
+> > every change.  If you know the change you want to signal is already in
+> > the fifo then you don't need to add it again.
+> >
+> > The idea I'm suggesting now is for the fifo to contain "your info on
+> > line X is stale" messages.  If that hasn't been ACKed by userspace then
+> > there is no point adding another for that line.  So worst case you have
+> > num_lines messages in the fifo at any time.
 > 
-> Cleared up above.
-> 
->>>> +                       gpios = <5 0>;
->>>> +                       output-low;
->>>
->>> This is overlapping with the use case to define initial
->>> state values for GPIOs, something that has been
->>> brought up repeatedly and I've collected links for
->>> previous discussions several times.
->>
->> I don't mind this to go away and the first set would configure the level.
->> Kept it here so I can reuse the gpio-hog code from gpiolib-of ;)
-> 
-> People have tried to reuse the hog code to set up
-> initial line levels as well, it failed because they could
-> not get the DT bindings through the door.
-
-But we are happily using the gpio-hog to control board level muxes to
-select functionality...
-
-Initial level is a tricky one, for outputs there is a valid use case for
-them for sure. If the GPIO is used to control LCD backlight for example.
-You want the backlight to not flicker due to gpio state changes.
-
-It depends on how it is configured when the kernel boots, do we have
-users of the given GPIO.
-
-Again, different issue.
-
->>> I guess if need be I have to look them up again.
->>>
->>> The DT maintainers don't like the hog syntax so
->>> something else is desired for this.
->>
->> I see, so the gpio-hog might change?
-> 
-> They will not change since they are ABI, but their
-> use case will not be extended AFAICT.
-> Not my pick, I liked the hog syntax but we need
-> consensus.
-
-OK.
-
->>> (snip)
->>>> +The shared GPIO line management strategy can be selected with either of the
->>>> +following properties:
->>>> +- refcounted-low: The line must be kept low as long as there is at least one
->>>> +               request asking it to be low.
->>>> +- refcounted-high: The line must be kept high as long as there is at least one
->>>> +               request asking it to be high.
->>>
->>> Is this really needed? Isn't it more appropriate to just define the
->>> semantics such that as soon as some consumer requests the line
->>> high it will be refcounted high, and as soon as it is requested
->>> low by any consumer it will be refcounted low.
->>
->> Well. How do we decide which level is the one that should be preserved?
-> 
-> First come first serve.
-> 
-> If there is any conflict amongst the consumers we are
-> screwed anyway so why try to establish where they should
-> agree if they don't agree?
-
-They must agree on the (precious, must be preserved) level _on_ the GPIO
-chip side.
-It is another matter if one driver will power down it's device at probe,
-the other would enable it.
-This must not matter, both of them needs the same level to be enabled
-and it might not be the level they will request first.
-
->> How would the core decide what to in a simplest case:
->> two device, they are the same part.
->> ENABLE pin which needs to be high to enable the device.
->> When the driver probes it asks for initial deasserted GPIO as the device
->> is not in active use.
-> 
-> This makes me think it should be a unique driver
-> with a unique compatible string, as it embodies
-> use cases.
-
-Like the gpio-shared from the previous RFC ;)
-
-> It is too broad to just define
-> refcounted-high or refcounted-low, that is hiding the
-> real use case, so I would go for something like a
-> resource in the device tree that all other devices that
-> need it can take.
-> 
-> Like a reset controller, precisely:
-> 
-> reset: reset-controller {
->     compatible = "reset-gpio";
->     gpios = <&gpio0 5 GPIO_ACTIVE_LOW>;
->     #reset-cells = <0>;
-> };
-> 
-> dev0 {
->     resets = <&reset>;
-> };
-> 
-> dev1 {
->     resets = <&reset>;
-> };
-> 
-> The ambition to use refcounted GPIOs to solve this
-> usecase is probably wrong, I would say try to go for a
-> GPIO-based reset controller instead.
-
-I did that. A bit more lines of code than the gpio-shared.
-Only works if all clients are converted to reset controller, all must
-use reset_control_get_shared()
-
-But my biggest issue was that how would you put a resets/reset-names to
-DT for a device where the gpio is used for enabling an output/input pin
-and not to place the device or part of the device to reset.
-
-Sure, one can say that something is in 'reset' when it is not enabled,
-but do you put the LCD backlight to 'reset' when you turn it off?
-
-Is your DC motor in 'reset' when it is not working?
-
-GPIO stands for General Purpose Input/Output, one of the purpose is to
-enable/disable things, reset things, turn on/off things or anything one
-could use 3.3V (or more/less).
-
-> The fact that some Linux drivers are already using explicit
-> GPIO's for their reset handling is maybe unfortunate,
-> they will simply have to grow code to deal with a reset
-> alternatively to GPIO, like first try to grab a reset
-> handle and if that doesn't fall back to use a GPIO.
-
-Sure, it can be done, but when we hit a case when the reset framework is
-not fitting for some devices use of the shared GPIO, then what we will do?
-
-> I would say don't try to shoehorn this use case into the
-> gpio library but instead try to create a reset controller that
-> takes care of arbitrating the use of a single GPIO line.
-
-It would certainly cover the use case I have.
-
-How would it satisfy the regulator use case? We put the regulators to
-'reset' when they are turned off / disabled?
-
-> 
-> Yours,
-> Linus Walleij
+> I see. But in this case I'm not sure a file descriptor is the right
+> interface. When POLLIN events are detected by poll() called on an fd -
+> it means there's data to read on the file descriptor: there's data
+> already in the FIFO waiting to be consumed by the user-space.
 > 
 
-- Péter
+Agree with file descriptors not being ideal for this, but what other
+options are there?
 
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+> Let's imagine the following situation: we detect one of the conditions
+> for emitting the event in the kernel, we set the "needs_update" flag,
+> we then wake up the polling process, but it calls the LINE_INFO
+> ioctl() on the changed line without ever reading the event from the
+> fd. What would happen now? Does the unread event disappear from the fd
+> because the user "acked" the event? What about ordering of events when
+> line X gets updated, then line Y, then X again but the process didn't
+> read the first event?
+> 
+
+The unread event can't disappear from the fifo. The fifo is write only
+from the kernel side, right?
+
+You are right that things don't go well if userspace doesn't strictly
+follow the read from fd then LINEINFO ioctl ordering.
+
+So probably best to keep things simple.
+
+And we should accept that overflows may occur.  As that would leave
+userspace with stale info, userspace should poll the LINEINFO ioctl
+occassionally to check that it is still in sync.
+
+> IIRC the way the line events are handled in sysfs (polling
+> 'gpioXYZ/value', while 'gpioXYZ/value' doesn't work as a FIFO) was
+> criticized for its unreliability and was one of the reasons for
+> developing the chardev.
+> 
+
+Tarring it with the sysfs brush is a bit harsh!
+You are comparing apples and oranges.
+In the sysfs case the problem was losing events.
+In this case losing events is not critical.
+
+> I would be much happier with your previous proposal: getting line_info
+> when setting the watch and then getting it all again every time the
+> status changes. We also get the "history" of changes that way.
+> 
+
+I believe the previous proposal was yours - adding watch and unwatch
+ioctls to the chip fd.
+
+Kent.
+
+</snip>
